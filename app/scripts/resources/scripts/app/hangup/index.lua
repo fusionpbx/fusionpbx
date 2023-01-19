@@ -115,7 +115,7 @@
 					);
 
 					if (debug["info"]) then
-						freeswitch.consoleLog("notice", "[missed call] " .. caller_id_number .. "->" .. sip_to_user .. "emailed to " .. missed_call_data .. "\n");
+						freeswitch.consoleLog("notice", "[missed call] " .. caller_id_name .. " " .. caller_id_number .. " " .. sip_to_user .. "emailed to " .. missed_call_data .. "\n");
 					end
 			end
 		end
@@ -135,6 +135,7 @@
 	dialed_user = env:getHeader("dialed_user");
 	missed_call_app = env:getHeader("missed_call_app");
 	missed_call_data = env:getHeader("missed_call_data");
+	call_direction = env:getHeader("call_direction");
 
 -- get the Caller ID
 	caller_id_name = env:getHeader("caller_id_name");
@@ -144,6 +145,9 @@
 	end
 	if (caller_id_number == nil) then
 		caller_id_number = env:getHeader("Caller-Caller-ID-Number");
+	end
+	if (call_direction == "local") then
+		caller_id_name = env:getHeader("effective_caller_id_name");
 	end
 
 --show the logs
