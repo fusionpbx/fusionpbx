@@ -369,6 +369,7 @@
 			draggable: ".widget",
 			preventOnFilter: true,
 			ghostClass: 'ghost',
+			/*
 			onChange: function (evt) {
 				//check if chart exists
 				let chart_status = Chart.getChart(evt.item.id + "_chart");
@@ -383,6 +384,7 @@
 					chart = new Chart(context, config);
 				}
 			},
+			*/
 			onSort: function (evt) {
 				let widget_ids = document.querySelectorAll("#widgets > div[id]");
 				let widget_ids_list = [];
