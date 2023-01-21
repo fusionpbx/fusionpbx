@@ -883,6 +883,27 @@ $text['label-destination_timeout']['ru-ru'] = "Тайм-аут";
 $text['label-destination_timeout']['sv-se'] = "Tidsgräns";
 $text['label-destination_timeout']['uk-ua'] = "Таймаут";
 
+$text['label-destination_enabled']['en-us'] = "Enabled";
+$text['label-destination_enabled']['en-gb'] = "Enabled";
+$text['label-destination_enabled']['ar-eg'] = "";
+$text['label-destination_enabled']['de-at'] = "Aktiviert"; //copied from de-de
+$text['label-destination_enabled']['de-ch'] = "Aktiviert"; //copied from de-de
+$text['label-destination_enabled']['de-de'] = "Aktiviert";
+$text['label-destination_enabled']['es-cl'] = "Activado";
+$text['label-destination_enabled']['es-mx'] = "Activado"; //copied from es-cl
+$text['label-destination_enabled']['fr-ca'] = "Activé"; //copied from fr-fr
+$text['label-destination_enabled']['fr-fr'] = "Activé";
+$text['label-destination_enabled']['he-il'] = "מופעל";
+$text['label-destination_enabled']['it-it'] = "Abilitato";
+$text['label-destination_enabled']['nl-nl'] = "Aan";
+$text['label-destination_enabled']['pl-pl'] = "Włączony";
+$text['label-destination_enabled']['pt-br'] = "Ativado";
+$text['label-destination_enabled']['pt-pt'] = "Habilitado";
+$text['label-destination_enabled']['ro-ro'] = "";
+$text['label-destination_enabled']['ru-ru'] = "Включено";
+$text['label-destination_enabled']['sv-se'] = "Aktiverad";
+$text['label-destination_enabled']['uk-ua'] = "Включено";
+
 $text['label-destination_prompt_confirm']['en-us'] = "Confirm";
 $text['label-destination_prompt_confirm']['en-gb'] = "Confirm";
 $text['label-destination_prompt_confirm']['ar-eg'] = "";

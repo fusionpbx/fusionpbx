@@ -368,14 +368,16 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "numeric";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_prompt";
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = "numeric"; //confirm,announce
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
-		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_enabled";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "boolean";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['toggle'] = ['true','false'];
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_prompt";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "numeric";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "insert_date";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'timestamptz';
