@@ -25,8 +25,11 @@
  Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 
-//includes
-	require_once "root.php";
+//set the include path
+	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+	set_include_path(parse_ini_file($conf[0])['document.root']);
+
+//includes files
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
@@ -129,10 +132,17 @@
 						//add the domain name
 							$domain_enabled = 'true';
 							$domain_uuid = uuid();
+
+						//build the domain array
 							$array['domains'][0]['domain_uuid'] = $domain_uuid;
 							$array['domains'][0]['domain_name'] = $domain_name;
 							$array['domains'][0]['domain_enabled'] = $domain_enabled;
 							$array['domains'][0]['domain_description'] = $domain_description;
+
+						//create a copy of the domain array as the database save method empties the array that we still need.
+							$domain_array = $array;
+
+						//add the new domain
 							$database = new database;
 							$database->app_name = 'domains';
 							$database->app_uuid = '8b91605b-f6d2-42e6-a56d-5d1ded01bb44';
@@ -142,7 +152,7 @@
 							if (file_exists($_SERVER["PROJECT_ROOT"]."/app/dialplans/app_config.php")) {
 								//import the dialplans
 								$dialplan = new dialplan;
-								$dialplan->import($array['domains']);
+								$dialplan->import($domain_array['domains']);
 								unset($array);
 
 								//add xml for each dialplan where the dialplan xml is empty

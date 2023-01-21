@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2022
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -27,8 +27,11 @@
 //set a timeout
 	set_time_limit(15*60); //15 minutes
 
-//includes
-	require_once "root.php";
+//set the include path
+	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+	set_include_path(parse_ini_file($conf[0])['document.root']);
+
+//includes files
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
@@ -54,10 +57,11 @@
 //process the http post
 	if (sizeof($_POST) > 0) {
 
-		$do = $_POST['do'];
+		//get the action options: source, schema, app_defaults, menu_defaults, permisisons
+		$action = $_POST['action'];
 
-		// run source update
-		if ($do["source"] && permission_exists("upgrade_source") && !is_dir("/usr/share/examples/fusionpbx")) {
+		//run source update
+		if ($action["upgrade_source"] && permission_exists("upgrade_source") && !is_dir("/usr/share/examples/fusionpbx")) {
 			$cwd = getcwd();
 			chdir($_SERVER["PROJECT_ROOT"]);
 			exec("git pull 2>&1", $response_source_update);
@@ -84,27 +88,27 @@
 			}
 		}
 
-		// load an array of the database schema and compare it with the active database
-		if ($do["schema"] && permission_exists("upgrade_schema")) {
+		//load an array of the database schema and compare it with the active database
+		if ($action["upgrade_schema"] && permission_exists("upgrade_schema")) {
 			require_once "resources/classes/schema.php";
 			$obj = new schema();
-			if (isset($do["data_types"]) && $do["data_types"] == 'true') {
+			if (isset($action["data_types"]) && $action["data_types"] == 'true') {
 				$obj->data_types = true;
 			}
 			$_SESSION["response"]["schema"] = $obj->schema("html");
 			message::add($text['message-upgrade_schema'], null, $message_timeout);
 		}
 
-		// process the apps defaults
-		if ($do["apps"] && permission_exists("upgrade_apps")) {
+		//process the apps defaults
+		if ($action["app_defaults"] && permission_exists("upgrade_apps")) {
 			require_once "resources/classes/domains.php";
 			$domain = new domains;
 			$domain->upgrade();
 			message::add($text['message-upgrade_apps'], null, $message_timeout);
 		}
 
-		// restore defaults of the selected menu
-		if ($do["menu"] && permission_exists("menu_restore")) {
+		//restore defaults of the selected menu
+		if ($action["menu_defaults"] && permission_exists("menu_restore")) {
 			$sel_menu = explode('|', check_str($_POST["sel_menu"]));
 			$menu_uuid = $sel_menu[0];
 			$menu_language = $sel_menu[1];
@@ -114,13 +118,14 @@
 			message::add($text['message-upgrade_menu'], null, $message_timeout);
 		}
 
-		// restore default permissions
-		if ($do["permissions"] && permission_exists("group_edit")) {
+		//restore default permissions
+		if ($action["permission_defaults"] && permission_exists("group_edit")) {
 			$included = true;
 			require_once("core/groups/permissions_default.php");
 			message::add($text['message-upgrade_permissions'], null, $message_timeout);
 		}
-
+		
+		//redirect the browser
 		header("Location: ".PROJECT_PATH."/core/upgrade/index.php");
 		exit;
 
@@ -158,7 +163,7 @@
 		echo "		".$text['label-upgrade_source'];
 		echo "	</td>\n";
 		echo "	<td width='70%' class='vtable' style='height: 50px;'>\n";
-		echo "		<input type='checkbox' name='do[source]' id='do_source' value='1'> &nbsp;".$text['description-upgrade_source']."<br />\n";
+		echo "		<input type='checkbox' name='action[upgrade_source]' id='do_source' value='1'> &nbsp;".$text['description-upgrade_source']."<br />\n";
 
 		// show current git version info
 		chdir($_SERVER["PROJECT_ROOT"]);
@@ -188,7 +193,7 @@
 		echo "		".$text['label-upgrade_schema'];
 		echo "	</td>\n";
 		echo "	<td width='70%' class='vtable' style='height: 50px;'>\n";
-		echo "		<input type='checkbox' name='do[schema]' id='do_schema' value='1' onchange=\"$('#do_data_types').prop('checked', false); $('#tr_data_types').slideToggle('fast');\"> &nbsp;".$text['description-upgrade_schema']."\n";
+		echo "		<input type='checkbox' name='action[upgrade_schema]' id='do_schema' value='1' onchange=\"$('#do_data_types').prop('checked', false); $('#tr_data_types').slideToggle('fast');\"> &nbsp;".$text['description-upgrade_schema']."\n";
 		echo "	</td>\n";
 		echo "</tr>\n";
 		echo "</table>\n";
@@ -201,7 +206,7 @@
 		echo "		".$text['label-upgrade_data_types'];
 		echo "	</td>\n";
 		echo "	<td width='70%' class='vtable' style='height: 50px;'>\n";
-		echo "		<input type='checkbox' name='do[data_types]' id='do_data_types' value='true'> &nbsp;".$text['description-upgrade_data_types']."\n";
+		echo "		<input type='checkbox' name='action[data_types]' id='do_data_types' value='true'> &nbsp;".$text['description-upgrade_data_types']."\n";
 		echo "	</td>\n";
 		echo "</tr>\n";
 		echo "</table>\n";
@@ -216,7 +221,7 @@
 		echo "		".$text['label-upgrade_apps'];
 		echo "	</td>\n";
 		echo "	<td width='70%' class='vtable' style='height: 50px;'>\n";
-		echo "		<input type='checkbox' name='do[apps]' id='do_apps' value='1'> &nbsp;".$text['description-upgrade_apps']."\n";
+		echo "		<input type='checkbox' name='action[app_defaults]' id='do_apps' value='1'> &nbsp;".$text['description-upgrade_apps']."\n";
 		echo "	</td>\n";
 		echo "</tr>\n";
 		echo "</table>\n";
@@ -230,7 +235,7 @@
 		echo "		".$text['label-upgrade_menu'];
 		echo "	</td>\n";
 		echo "	<td width='70%' class='vtable' style='height: 50px;'>\n";
-		echo 			"<input type='checkbox' name='do[menu]' id='do_menu' value='1' onchange=\"$('#sel_menu').fadeToggle('fast');\">";
+		echo 			"<input type='checkbox' name='action[menu_defaults]' id='do_menu' value='1' onchange=\"$('#sel_menu').fadeToggle('fast');\">";
 		echo 			"<select name='sel_menu' id='sel_menu' class='formfld' style='display: none; vertical-align: middle; margin-left: 5px;'>";
 		$sql = "select * from v_menus ";
 		$database = new database;
@@ -256,7 +261,7 @@
 		echo "		".$text['label-upgrade_permissions'];
 		echo "	</td>\n";
 		echo "	<td width='70%' class='vtable' style='height: 50px;'>\n";
-		echo "		<input type='checkbox' name='do[permissions]' id='do_permissions' value='1'> &nbsp;".$text['description-upgrade_permissions']."\n";
+		echo "		<input type='checkbox' name='action[permission_defaults]' id='do_permissions' value='1'> &nbsp;".$text['description-upgrade_permissions']."\n";
 		echo "	</td>\n";
 		echo "</tr>\n";
 		echo "</table>\n";

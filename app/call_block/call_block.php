@@ -27,8 +27,11 @@
 	All of it has been rewritten over years.
 */
 
-//includes
-	require_once "root.php";
+//set the include path
+	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+	set_include_path(parse_ini_file($conf[0])['document.root']);
+
+//includes files
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
@@ -95,9 +98,9 @@
 //prepare to page the results
 	$sql = "select count(*) from view_call_block ";
 	$sql .= "where true ";
-	if ($_GET['show'] == "all" && permission_exists('call_forward_all')) {
-		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
-		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	if ($_GET['show'] == "all" && permission_exists('call_block_all')) {
+		//$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
+		//$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	}
 	else {
 		$sql .= "and (domain_uuid = :domain_uuid) ";
@@ -124,7 +127,7 @@
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
 	$param = "&search=".$search;
-	if ($_GET['show'] == "all" && permission_exists('call_forward_all')) {
+	if ($_GET['show'] == "all" && permission_exists('call_block_all')) {
 		$param .= "&show=all";
 	}
 	$page = $_GET['page'];
@@ -136,9 +139,9 @@
 //get the list
 	$sql = "select * from view_call_block ";
 	$sql .= "where true ";
-	if ($_GET['show'] == "all" && permission_exists('call_forward_all')) {
-		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
-		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	if ($_GET['show'] == "all" && permission_exists('call_block_all')) {
+		//$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
+		//$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	}
 	else {
 		$sql .= "and (domain_uuid = :domain_uuid) ";
@@ -189,7 +192,7 @@
 		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','name'=>'btn_delete','style'=>'display: none;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
 	echo 		"<form id='form_search' class='inline' method='get'>\n";
-	if (permission_exists('call_forward_all')) {
+	if (permission_exists('call_block_all')) {
 		if ($_GET['show'] == 'all') {
 			echo "		<input type='hidden' name='show' value='all'>";
 		}

@@ -199,7 +199,15 @@
 {if $sip_transport_1 == 'udp'}{$tp=0}{/if}
 {if $sip_transport_1 == 'tcp'}{$tp=1}{/if}
 {if $sip_transport_1 == 'tls'}{$tp=2}{/if}
-{if $sip_transport_1 == 'dns srv'}{$tp=1}{/if}
+{if $sip_transport_1 == 'dns srv'}
+    {if isset($grandstream_dnssrv_transport)}
+        {if $grandstream_dnssrv_transport == 'udp'}{$tp=0}
+        {elseif $grandstream_dnssrv_transport == 'tls'}{$tp=2}
+        {else}{$tp=1}
+        {/if}
+   	{else}{$tp=1}
+    {/if}
+{/if}
 <P130>{$tp}</P130>
 
 <!-- # Local SIP Port. Default is 5060 -->
@@ -455,6 +463,10 @@
 <!-- # Account 1/Call Settings -->
 <!-- ############################################################### -->
 <!-- # Call Features -->
+<!-- # Start Video Automatically. 0 - Disable, 1 - Enable. Default is 1. -->
+<!-- # Number: 0, 1 -->
+<P2314>0</P2314>
+
 <!-- # Auto Answer When Idle.  0 - No, 1 - Yes, 2 - Enable Intercom/Paging  -->
 <!-- # Number: 0, 1, 2. Default is 0 -->
 <!-- # Mandatory -->
@@ -560,13 +572,21 @@
 
 <!-- # Matching Incoming Caller ID. Matching Rule 1 -->
 <!-- # String -->
+{if isset($grandstream_distinctive_ringtone_name_1)}
 <P1488>{$grandstream_distinctive_ringtone_name_1}</P1488>
+{else}
+<P1488>ring1</P1488>
+{/if}
 
 <!-- # Matching Rule 1 Distinctive Ringtone (Cannot be provisioned by config template currently) -->
 
 <!-- # Matching Incoming Caller ID. Matching Rule 2 -->
 <!-- # String -->
+{if isset($grandstream_distinctive_ringtone_name_2)}
 <P1490>{$grandstream_distinctive_ringtone_name_2}</P1490>
+{else}
+<P1490>ring2</P1490>
+{/if}
 
 <!-- # Matching Rule 2 Distinctive Ringtone (Cannot be provisioned by config template currently) -->
 
@@ -832,7 +852,15 @@
 {if $sip_transport_2 == 'udp'}{$tp=0}{/if}
 {if $sip_transport_2 == 'tcp'}{$tp=1}{/if}
 {if $sip_transport_2 == 'tls'}{$tp=2}{/if}
-{if $sip_transport_2 == 'dns srv'}{$tp=1}{/if}
+{if $sip_transport_2 == 'dns srv'}
+    {if isset($grandstream_dnssrv_transport)}
+        {if $grandstream_dnssrv_transport == 'udp'}{$tp=0}
+        {elseif $grandstream_dnssrv_transport == 'tls'}{$tp=2}
+        {else}{$tp=1}
+        {/if}
+   	{else}{$tp=1}
+    {/if}
+{/if}
 <P448>{$tp}</P448>
 
 <!-- # Local SIP Port. Default is 5060 -->
@@ -1001,17 +1029,29 @@
 <!-- # Send DTMF: In-audio. 0 - No, 1 - Yes. Default is 0 -->
 <!-- # Number: 0, 1 -->
 <!-- # Mandatory -->
-<P2301>0</P2301>
+{if isset($grandstream_senddtmf_inaudio) }    
+    <P2301>{$grandstream_senddtmf_inaudio}</P2301>
+{else}
+    <P2301>0</P2301>
+{/if}
 
 <!-- # Send DTMF: Via RTP (RFC2833). 0 - No, 1 - Yes. Default is 1 -->
 <!-- # Number: 0, 1 -->
 <!-- # Mandatory -->
-<P2302>1</P2302>
+{if isset($grandstream_senddtmf_rtp) }    
+    <P2302>{$grandstream_senddtmf_rtp}</P2302>
+{else}
+    <P2302>1</P2302>
+{/if}
 
 <!-- # Send DTMF: Via SIP INFO. 0 - No, 1 - Yes. Default is 0 -->
 <!-- # Number: 0, 1 -->
 <!-- # Mandatory -->
-<P2303>0</P2303>
+{if isset($grandstream_senddtmf_sipinfo) }    
+    <P2303>{$grandstream_senddtmf_sipinfo}</P2303>
+{else}
+    <P2303>0</P2303>
+{/if}
 
 <!-- # DTMF Payload Type. Default is 101 -->
 <!-- # Number: 96 - 127 -->
@@ -1344,6 +1384,14 @@
 <!-- #################################################################### -->
 <!-- # Phone Settings/Call Settings                   				  ## -->
 <!-- #################################################################### -->
+<!-- # Enable Video Call. 0 - Yes, 1 - No. Default is 0. -->
+<!-- # Number: 0, 1 -->
+<P22091>1</P22091>
+
+<!-- # Default Video Zoom Area. Default is 0. -->
+<!-- # Number: 0 - 9 -->
+<P22324>0</P22324>
+
 <!-- # Disable Call Waiting. 0 - No, 1 - Yes. Default is 0 -->
 <!-- # Number: 0, 1 -->
 <!-- # Mandatory -->
@@ -1477,7 +1525,11 @@
 <!-- # Enable/Disable PTT (Spectralink). 0 - Disable, 1 - Enable. Default is 0. -->
 <!-- # Number: 0, 1 -->
 <!-- # Mandatory -->
+{if isset($grandstream_ptt_enable)}
+<P22177>{$grandstream_ptt_enable}</P22177>
+{else}
 <P22177>0</P22177>
+{/if}
 
 <!-- # PTT payload size (ms). 10, 20, 30, 40, 50, 60. Default is 30. -->
 <!-- # Number: 10, 20, 30, 40, 50, 60 -->
@@ -1492,7 +1544,7 @@
 <!-- # PTT audio codecs. 0 - G711, 1 - G722, 2 - Opus. Default is 0. -->
 <!-- # Number: 0, 1, 2 -->
 <!-- # Mandatory -->
-<P22180>0</P22180>
+<P22180>1</P22180>
 
 <!-- # Emergency PTT/Paging Volume. 1-8. Default is 8. -->
 <!-- # Number: 1-8 -->
@@ -1501,7 +1553,7 @@
 
 <!-- # PTT caller ID -->
 <!-- # String -->
-<P22182>channel(*)</P22182>
+<P22182>{$account.1.display_name}</P22182>
 
 <!-- # (Spectralink) multicast address and port -->
 <!-- # String -->
@@ -1738,6 +1790,18 @@
 <!-- # String -->
 <P1588></P1588>
 
+<!-- # Wallpaper Settings -->
+<!-- # Wallpaper Source. 0 - Default, 1 - Download, 2-USB, 3 - Uploaded, 4 - Color Background -->
+<!-- # Number: 0-4 -->
+<!-- # Mandatory -->
+<!-- <P2916>1</P2916> -->
+<!-- # Wallpaper Server Path -->
+<!-- # String  -->
+{if isset($grandstream_wallpaper_url)}
+<P2916>1</P2916>
+<P2917>{$grandstream_wallpaper_url}</P2917>
+{/if}
+
 <!-- #################################################################### -->
 <!-- # Network Settings/Wi-Fi Settings/Wi-Fi Basics                    ## -->
 <!-- #################################################################### -->
@@ -1899,7 +1963,7 @@
 <!-- # When set to Yes(1), it will override the configured Time Zone setting if available  -->
 <!-- # Number: 0, 1 -->
 <!-- # Mandatory -->
-<P143>1</P143>
+{if isset($grandstream_dhcp_time_zone)}<P143>{$grandstream_dhcp_time_zone}</P143>{else}<P143>0</P143>{/if}
 
 <!-- # Time Zone -->
 <!-- # Web GUI Option       			   							    P Value            							 -->
@@ -2013,7 +2077,11 @@
 <!-- # Date Display Format. 0 - Normal(M/D/YYYY), 1 - YYYY/MM/DD, 2 - MM/DD/YYYY, 3 - DD/MM/YYYY.  Default value is 1. -->
 <!-- # Number: 0, 1, 2, 3 -->
 <!-- # Mandatory -->
+{if isset($grandstream_date_display_format)}
+<P102>{$grandstream_date_display_format}</P102>
+{else}
 <P102>2</P102>
+{/if}
 
 <!-- #################################################################### -->
 <!-- # System Settings/Time and Language/Language                      ## -->
@@ -2184,11 +2252,11 @@
 <!-- # Number: 0, 1 -->
 <!-- # Mandatory -->
 <!-- # Reboot -->
-<P1409>0</P1409>
+<P1409>1</P1409>
 
 <!-- # ACS URL -->
 <!-- # String  -->
-<P4503></P4503>
+<P4503>https://acs.gdms.cloud</P4503>
 
 <!-- # TR-069 Username -->
 <!-- # String -->
@@ -2208,11 +2276,11 @@
 
 <!-- # Connection Request Username	 -->
 <!-- # String: a-z, A-Z, 0-9 -->
-<P4511></P4511>
+<P4511>{$mac|replace:'-':''|upper}</P4511>
 
 <!-- # Connection Request Password	 -->
 <!-- # String: a-z, A-Z, 0-9 -->
-<P4512></P4512>
+<P4512>{$mac|replace:'-':''|upper}</P4512>
 
 <!-- # Connection Request Port.  -->
 <!-- # Number -->
@@ -2236,14 +2304,20 @@
 <!-- # Firmware Upgrade Via. 0 - TFTP,  1 - HTTP, 2 - HTTPS, 3 - FTP, 4 - FTPS. Default is 1. Default is 2 -->
 <!-- # Number: 0, 1, 2, 3, 4 -->
 <!-- # Mandatory -->
+{if isset($grandstream_firmware_upgrade_protocol) }
+<P6767>{$grandstream_firmware_upgrade_protocol}</P6767>
+{else}
 <P6767>2</P6767>
+{/if}
 
 <!-- # Firmware Server Path -->
 <!-- # String -->
-{if isset($grandstream_firmware_path)}
+{if isset($grandstream_firmware_path) && isset($firmware_version)}
+<P192>{$grandstream_firmware_path}/{$firmware_version}</P192>
+{elseif isset($grandstream_firmware_path)}
 <P192>{$grandstream_firmware_path}</P192>
 {else}
-<P192>{$domain_name}{$project_path}/app/provision</P192>
+<P192>{$domain_name}{$project_path}/app/provision/resources/firmware/</P192>
 {/if}
 
 <!-- # Firmware HTTP/HTTPS User Name -->
@@ -2321,7 +2395,7 @@
 <!-- # Default is No -->
 <!-- # Number: 0, 1, 2, 3 -->
 <!-- # Mandatory -->
-<P194>1</P194>
+<P194>0</P194>
 
 <!-- # Automatic Upgrade Check Interval (m). Minimum 60 minutes. Default value is 10080 (7 days) -->
 <!-- # Number: 60 - 5256000 -->

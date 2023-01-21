@@ -17,15 +17,18 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2021
+ Portions created by the Initial Developer are Copyright (C) 2008-2022
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
  Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//includes
-	require_once "root.php";
+//set the include path
+	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+	set_include_path(parse_ini_file($conf[0])['document.root']);
+
+//includes files
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
@@ -63,6 +66,20 @@
 		$default_setting_description = $_POST["default_setting_description"];
 	}
 
+//sanitize the variables
+	$search = preg_replace('#[^a-zA-Z0-9_\-\. ]#', '', $search);
+	$default_setting_category = preg_replace('#[^a-zA-Z0-9_\-\.]#', '', $default_setting_category);
+
+//build the query string
+	$query_string = '';
+	if ($search != '') {
+		$query_string .= 'search='.urlencode($search);
+	}
+	if ($default_setting_category != '') {
+		if ($query_string == '') { $query_string = ''; } else { $query_string .= '&'; }
+		$query_string .= 'default_setting_category='.urlencode($default_setting_category);
+	}
+
 //process the http post
 	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
@@ -78,7 +95,7 @@
 			$token = new token;
 			if (!$token->validate($_SERVER['PHP_SELF'])) {
 				message::add($text['message-invalid_token'],'negative');
-				header('Location: default_settings.php');
+				header('Location: default_settings.php?'.$query_string);
 				exit;
 			}
 
@@ -197,12 +214,12 @@
 				//set the message and redirect the user
 				if ($action == "add" && permission_exists('default_setting_add')) {
 					message::add($text['message-add']);
-					header("Location: default_settings.php".(($search != '') ? "?search=".$search : null)."#anchor_".$default_setting_category);
+					header("Location: default_settings.php?".$query_string."#anchor_".$default_setting_category);
 					return;
 				}
 				if ($action == "update" && permission_exists('default_setting_edit')) {
 					message::add($text['message-update']);
-					header("Location: default_settings.php".(($search != '') ? "?search=".$search : null)."#anchor_".$default_setting_category);
+					header("Location: default_settings.php?".$query_string."#anchor_".$default_setting_category);
 					return;
 				}
 			} //if ($_POST["persistformvar"] != "true")
@@ -255,7 +272,7 @@
 	}
 	echo "	</div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'default_settings.php'.($search != '' ? "?search=".urlencode($search) : null)]);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'default_settings.php?'.$query_string]);
 	echo button::create(['type'=>'button','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save','onclick'=>'submit_form();']);
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";

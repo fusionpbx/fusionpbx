@@ -73,10 +73,14 @@
     <!-- # 0 - No, 1 - Yes (default is No) -->
     <P22030>0</P22030>
 
-    <!-- # Firmware Upgrade and Privisioning. 0 - TFTP Upgrade, 1 - HTTP Upgrade, 2 - HTTPS Upgrade, 3 - FTP Upgrade, 4 - FTPS Upgrade. -->
+    <!-- # Firmware Upgrade and Provisioning. 0 - TFTP Upgrade, 1 - HTTP Upgrade, 2 - HTTPS Upgrade, 3 - FTP Upgrade, 4 - FTPS Upgrade. -->
     <!-- # Number: 0, 1, 2, 3, 4 -->
     <!-- # Mandatory -->
-    <P212>2</P212>
+    {if isset($grandstream_firmware_upgrade_protocol) }
+    <P212>{$grandstream_firmware_upgrade_protocol}</P212>
+    {else}
+    <P212>1</P212>
+    {/if}
 
     <!-- # Firmware Server Path -->
     <!-- # Server address -->
@@ -213,7 +217,7 @@
     <P1409>1</P1409>
 
     <!-- # ACS URL -->
-    <!-- #P4503= -->
+    <P4503>https://acs.gdms.cloud</P4503>
 
     <!-- # ACS Username -->
     <!-- # String -->
@@ -234,11 +238,11 @@
 
     <!-- # Connection Request Username -->
     <!-- # String -->
-    <P4511></P4511>
+    <P4511>{$mac|replace:'-':''|upper}</P4511>
 
     <!-- # Connection Request Password -->
     <!-- # String -->
-    <P4512></P4512>
+    <P4512>{$mac|replace:'-':''|upper}</P4512>
 
     <!-- # CPE SSL Certificate -->
     <P8220></P8220>
@@ -855,29 +859,37 @@
     <!-- # Distinctive Ring Tone Choice 1 -->
     <!-- # Number: 0-9 -->
     <!-- # Mandatory -->
-    <P870>0</P870>
+    <P870>{$grandstream_distinctive_ringtone_1}</P870>
 
     <!-- # Choice 1 incoming caller ID -->
     <!-- # String -->
-    <P871></P871>
+{if isset($grandstream_distinctive_ringtone_name_1)}
+    <P871>{$grandstream_distinctive_ringtone_name_1}</P871>
+{else}
+    <P871>ring1</P871>
+{/if}
 
     <!-- # Distinctive Ring Tone Choice 2 -->
     <!-- # Number: 0-9 -->
     <!-- # Mandatory -->
-    <P872>0</P872>
+    <P872>{$grandstream_distinctive_ringtone_2}</P872>
 
     <!-- # Choice 2 incoming caller ID -->
     <!-- # String -->
-    <P873></P873>
+{if isset($grandstream_distinctive_ringtone_name_2)}
+    <P873>{$grandstream_distinctive_ringtone_name_2}</P873>
+{else}
+    <P873>ring2</P873>
+{/if}
 
     <!-- # Distinctive Ring Tone Choice 3 -->
     <!-- # Number: 0-9 -->
     <!-- # Mandatory -->
-    <P874>0</P874>
+    <P874>{$grandstream_distinctive_ringtone_3}</P874>
 
     <!-- # Choice 3 incoming caller ID -->
     <!-- # String -->
-    <P875></P875>
+    <P875>{$grandstream_distinctive_ringtone_name_3}</P875>
 
     <!-- # Disable Call-Waiting. 0 - No, 1 - Yes -->
     <!-- # Number: 0, 1 -->
@@ -2017,7 +2029,7 @@
     <!-- # Allow DHCP server to set Time Zone. 0 - No, 1 - Yes -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P143>1</P143>
+    {if isset($grandstream_dhcp_time_zone)}<P143>{$grandstream_dhcp_time_zone}</P143>{else}<P143>0</P143>{/if}
 
     <!-- # Language. 0 - English, 4 - Chinese, 10 - Spanish -->
     <!-- # Number: 0, 4, 10 -->

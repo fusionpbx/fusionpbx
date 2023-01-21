@@ -24,8 +24,11 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//includes
-	require_once "root.php";
+//set the include path
+	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+	set_include_path(parse_ini_file($conf[0])['document.root']);
+
+//includes files
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
@@ -46,6 +49,11 @@
 	$order_by = $_GET["order_by"];
 	$order = $_GET["order"];
 
+//connect to the database
+	if (!isset($database)) {
+		$database = new database;
+	}
+
 //setup the event socket connection
 	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 
@@ -59,7 +67,6 @@
 							$array['call_center_agents'][0]['call_center_agent_uuid'] = $row['id'];
 							$array['call_center_agents'][0]['domain_uuid'] = $_SESSION['user']['domain_uuid'];
 							$array['call_center_agents'][0]['agent_status'] = $row['agent_status'];
-							$database = new database;
 							$database->app_name = 'call_centers_dashboard';
 							$database->app_uuid = '95788e50-9500-079e-2807-fd530b0ea370';
 							$database->save($array);
@@ -100,7 +107,6 @@
 	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= "order by queue_extension asc ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$database = new database;
 	$call_center_queues = $database->select($sql, $parameters, 'all');
 	$num_rows = !is_array($call_center_queues) ? 0 : @sizeof($call_center_queues);
 	unset($sql, $parameters);
@@ -111,7 +117,6 @@
 	$sql .= "and domain_uuid = :domain_uuid";
 	$parameters['user_uuid'] = $_SESSION['user_uuid'];
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$database = new database;
 	$agents = $database->select($sql, $parameters, 'all');
 	if (count($agents) > 0) {
 		$agent = $agents[0];

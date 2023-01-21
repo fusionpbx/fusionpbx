@@ -42,6 +42,7 @@
 			agent_authorized = session:getVariable("agent_authorized");
 			agent_action = session:getVariable("agent_action");
 			agent_id = session:getVariable("agent_id");
+			agent_name = session:getVariable("agent_name");
 			agent_password = session:getVariable("agent_password");
 
 		--set the sounds path for the language, dialect and voice
@@ -63,7 +64,7 @@
 	sounds_dir = sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice;
 
 --get the agent_id from the caller
-	if (agent_id == nil) then
+	if (agent_id == nil and agent_name == nil) then
 		min_digits = 2;
 		max_digits = 20;
 		max_tries = 3;
@@ -79,10 +80,14 @@
 	end
 
 --get the agent password
-	local params = {domain_uuid = domain_uuid, agent_id = agent_id}
+	local params = {domain_uuid = domain_uuid, agent_id = agent_id, agent_name = agent_name}
 	local sql = "SELECT * FROM v_call_center_agents ";
 	sql = sql .. "WHERE domain_uuid = :domain_uuid ";
-	sql = sql .. "AND agent_id = :agent_id ";
+	if (agent_id ~= nil) then
+		sql = sql .. "AND agent_id = :agent_id ";
+	else
+		sql = sql .. "AND agent_name = :agent_name ";
+	end
 	if (agent_authorized ~= 'true') then
 		sql = sql .. "AND agent_password = :agent_password ";
 		params.agent_password = agent_password;
@@ -199,7 +204,8 @@
 			end
 			if string.find(agent_name, 'agent+', nil, true) ~= 1 then
 				presence_in.turn_lamp( blf_status,
-					'agent+'..agent_name.."@"..domain_name
+					'agent+'..agent_name.."@"..domain_name,
+					uuid
 				);
 			end			
 	end

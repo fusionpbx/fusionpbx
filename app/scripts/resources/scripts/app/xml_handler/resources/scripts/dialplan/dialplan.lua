@@ -1,6 +1,6 @@
 --	xml_handler.lua
 --	Part of FusionPBX
---	Copyright (C) 2013-2020 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2013-2022 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -38,6 +38,37 @@
 	end
 
 --get the dialplan mode from the cache
+	dialplan_destination_key = "dialplan:destination";
+	dialplan_destination, err = cache.get(dialplan_destination_key);
+
+--if not found in the cache then get it from the database
+	if (err == 'NOT FOUND') then
+		--get the mode from default settings
+		sql = "select default_setting_value from v_default_settings "
+		sql = sql .. "where default_setting_category = 'dialplan' ";
+		sql = sql .. "and default_setting_subcategory = 'destination' ";
+		dialplan_destination = dbh:first_value(sql, nil);
+		if (dialplan_destination) then
+			local ok, err = cache.set(dialplan_destination_key, dialplan_destination, expire["dialplan"]);
+		end
+
+		--set the default
+		if (dialplan_destination == nil or dialplan_destination == '') then
+			dialplan_destination = "destination_number";
+		end
+
+		--send a message to the log
+		if (debug['cache']) then
+			log.notice(dialplan_destination_key.." source: database destination: "..dialplan_destination);
+		end
+	else
+		--send a message to the log
+		if (debug['cache']) then
+			log.notice(dialplan_destination_key.." source: cache destination: "..dialplan_destination);
+		end
+	end
+
+--get the dialplan mode from the cache
 	dialplan_mode_key = "dialplan:mode";
 	dialplan_mode, err = cache.get(dialplan_mode_key);
 
@@ -50,6 +81,11 @@
 		dialplan_mode = dbh:first_value(sql, nil);
 		if (dialplan_mode) then
 			local ok, err = cache.set(dialplan_mode_key, dialplan_mode, expire["dialplan"]);
+		end
+
+		--set the default
+		if (dialplan_mode == nil or dialplan_mode == '') then
+			dialplan_mode = "multiple";
 		end
 
 		--send a message to the log
@@ -74,13 +110,25 @@
 	if (call_context == "public" or string.sub(call_context, 0, 7) == "public@" or string.sub(call_context, -7) == ".public") then
 		context_name = 'public';
 	end
-	--freeswitch.consoleLog("notice", "[xml_handler] ".. dialplan_mode .. " key:" .. dialplan_cache_key .. "\n");
+
+--use alternative sip_to_user instead of the default
+	if (dialplan_destination == '${sip_to_user}' or dialplan_destination == 'sip_to_user') then
+		destination_number = api:execute("url_decode", sip_to_user);
+	end
+
+--use alternative sip_req_user instead of the default
+	if (dialplan_destination == '${sip_req_user}' or dialplan_destination == 'sip_req_user') then
+		destination_number = api:execute("url_decode", sip_req_user);
+	end
 
 --set the dialplan cache key
 	local dialplan_cache_key = "dialplan:" .. call_context;
 	if (context_name == 'public' and dialplan_mode == "single") then
 		dialplan_cache_key = "dialplan:" .. call_context .. ":" .. destination_number;
 	end
+
+--log the dialplan mode and dialplan cache key
+	freeswitch.consoleLog("notice", "[xml_handler] ".. dialplan_mode .. " key:" .. dialplan_cache_key .. "\n");
 
 --get the cache
 	XML_STRING, err = cache.get(dialplan_cache_key);
@@ -105,14 +153,14 @@
 			assert(dbh:connected());
 
 		--get the hostname
-			hostname = trim(api:execute("switchname", ""));
+			hostname = trim(api:execute("hostname", ""));
 
 		--set the xml array and then concatenate the array to a string
 			local xml = {}
 			table.insert(xml, [[<?xml version="1.0" encoding="UTF-8" standalone="no"?>]]);
 			table.insert(xml, [[<document type="freeswitch/xml">]]);
 			table.insert(xml, [[	<section name="dialplan" description="">]]);
-			table.insert(xml, [[		<context name="]] .. call_context .. [[">]]);
+			table.insert(xml, [[		<context name="]] .. call_context .. [[" destination_number="]]..destination_number..[[" hostname="]]..hostname..[[">]]);
 
 		--get the dialplan xml
 			if (context_name == 'public' and dialplan_mode == 'single') then

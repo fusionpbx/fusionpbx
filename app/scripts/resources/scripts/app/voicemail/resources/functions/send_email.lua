@@ -34,7 +34,8 @@
 		local settings = Settings.new(db, domain_name, domain_uuid)
 		local transcribe_enabled = settings:get('voicemail', 'transcribe_enabled', 'boolean');
 		local email_queue_enabled = settings:get('email_queue', 'enabled', 'boolean') or "false";
-		
+		local http_protocol = settings:get('domain', 'http_protocol', 'text') or "https";
+
 		--get voicemail message details
 			local sql = [[SELECT * FROM v_voicemails
 				WHERE domain_uuid = :domain_uuid

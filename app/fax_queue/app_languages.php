@@ -661,4 +661,64 @@
 		$text['description-fax_command']['sv-se'] = '';
 		$text['description-fax_command']['uk-ua'] = '';
 
+		$text['label-waiting']['en-us'] = 'waiting';
+		$text['label-waiting']['ar-eg'] = '';
+		$text['label-waiting']['de-at'] = '';
+		$text['label-waiting']['de-ch'] = '';
+		$text['label-waiting']['de-de'] = '';
+		$text['label-waiting']['es-cl'] = '';
+		$text['label-waiting']['es-mx'] = '';
+		$text['label-waiting']['fr-ca'] = '';
+		$text['label-waiting']['fr-fr'] = '';
+		$text['label-waiting']['he-il'] = '';
+		$text['label-waiting']['it-it'] = '';
+		$text['label-waiting']['nl-nl'] = '';
+		$text['label-waiting']['pl-pl'] = '';
+		$text['label-waiting']['pt-br'] = '';
+		$text['label-waiting']['pt-pt'] = '';
+		$text['label-waiting']['ro-ro'] = '';
+		$text['label-waiting']['ru-ru'] = '';
+		$text['label-waiting']['sv-se'] = '';
+		$text['label-waiting']['uk-ua'] = '';
+
+		$text['label-failed']['en-us'] = 'failed';
+		$text['label-failed']['ar-eg'] = '';
+		$text['label-failed']['de-at'] = '';
+		$text['label-failed']['de-ch'] = '';
+		$text['label-failed']['de-de'] = '';
+		$text['label-failed']['es-cl'] = '';
+		$text['label-failed']['es-mx'] = '';
+		$text['label-failed']['fr-ca'] = '';
+		$text['label-failed']['fr-fr'] = '';
+		$text['label-failed']['he-il'] = '';
+		$text['label-failed']['it-it'] = '';
+		$text['label-failed']['nl-nl'] = '';
+		$text['label-failed']['pl-pl'] = '';
+		$text['label-failed']['pt-br'] = '';
+		$text['label-failed']['pt-pt'] = '';
+		$text['label-failed']['ro-ro'] = '';
+		$text['label-failed']['ru-ru'] = '';
+		$text['label-failed']['sv-se'] = '';
+		$text['label-failed']['uk-ua'] = '';
+
+		$text['label-sent']['en-us'] = 'sent';
+		$text['label-sent']['ar-eg'] = '';
+		$text['label-sent']['de-at'] = '';
+		$text['label-sent']['de-ch'] = '';
+		$text['label-sent']['de-de'] = '';
+		$text['label-sent']['es-cl'] = '';
+		$text['label-sent']['es-mx'] = '';
+		$text['label-sent']['fr-ca'] = '';
+		$text['label-sent']['fr-fr'] = '';
+		$text['label-sent']['he-il'] = '';
+		$text['label-sent']['it-it'] = '';
+		$text['label-sent']['nl-nl'] = '';
+		$text['label-sent']['pl-pl'] = '';
+		$text['label-sent']['pt-br'] = '';
+		$text['label-sent']['pt-pt'] = '';
+		$text['label-sent']['ro-ro'] = '';
+		$text['label-sent']['ru-ru'] = '';
+		$text['label-sent']['sv-se'] = '';
+		$text['label-sent']['uk-ua'] = '';
+
 ?>

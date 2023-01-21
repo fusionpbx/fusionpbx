@@ -28,8 +28,11 @@
 //set the max php execution time
 	ini_set('max_execution_time', 7200);
 
-//includes
-	include "root.php";
+//set the include path
+	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+	set_include_path(parse_ini_file($conf[0])['document.root']);
+
+//includes files
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
@@ -113,20 +116,20 @@
 		$_POST['a'] == "upload"
 		&& permission_exists('recording_upload')
 		&& $_POST['type'] == 'rec'
-		&& is_uploaded_file($_FILES['ulfile']['tmp_name'])
+		&& is_uploaded_file($_FILES['file']['tmp_name'])
 		) {
 
 		//remove special characters
-			$recording_filename = str_replace(" ", "_", $_FILES['ulfile']['name']);
+			$recording_filename = str_replace(" ", "_", $_FILES['file']['name']);
 			$recording_filename = str_replace("'", "", $recording_filename);
 
 		//make sure the destination directory exists
 			if (!is_dir($_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'])) {
-				mkdir($_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'], 0770, true);
+				mkdir($_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'], 0770, false);
 			}
 
 		//move the uploaded files
-			move_uploaded_file($_FILES['ulfile']['tmp_name'], $_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/'.$recording_filename);
+			$result = move_uploaded_file($_FILES['file']['tmp_name'], $_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/'.$recording_filename);
 
 		//clear the destinations session array
 			if (isset($_SESSION['destinations']['array'])) {
@@ -137,7 +140,7 @@
 			message::add($text['message-uploaded'].": ".htmlentities($recording_filename));
 
 		//set the file name to be inserted as the recording description
-			$recording_description = $_FILES['ulfile']['name'];
+			$recording_description = $_FILES['file']['name'];
 			header("Location: recordings.php?rd=".urlencode($recording_description));
 			exit;
 	}
@@ -363,7 +366,7 @@
 		echo 	"<span id='form_upload' style='display: none;'>";
 		echo button::create(['label'=>$text['button-cancel'],'icon'=>$_SESSION['theme']['button_icon_cancel'],'type'=>'button','id'=>'btn_upload_cancel','onclick'=>"$('span#form_upload').fadeOut(250, function(){ document.getElementById('form_upload').reset(); $('#btn_add').fadeIn(250) });"]);
 		echo 		"<input type='text' class='txt' style='width: 100px; cursor: pointer;' id='filename' placeholder='Select...' onclick=\"document.getElementById('ulfile').click(); this.blur();\" onfocus='this.blur();'>";
-		echo 		"<input type='file' id='ulfile' name='ulfile' style='display: none;' accept='.wav,.mp3,.ogg' onchange=\"document.getElementById('filename').value = this.files.item(0).name; check_file_type(this);\">";
+		echo 		"<input type='file' id='ulfile' name='file' style='display: none;' accept='.wav,.mp3,.ogg' onchange=\"document.getElementById('filename').value = this.files.item(0).name; check_file_type(this);\">";
 		echo button::create(['type'=>'submit','label'=>$text['button-upload'],'icon'=>$_SESSION['theme']['button_icon_upload']]);
 		echo 	"</span>\n";
 		echo 	"</form>";
@@ -576,7 +579,7 @@
 			// If the range starts with an '-' we start from the beginning
 			// If not, we forward the file pointer
 			// And make sure to get the end byte if spesified
-			if ($range0 == '-') {
+			if ($range == '-') {
 				// The n-number of the last bytes is requested
 				$c_start = $size - substr($range, 1);
 			}

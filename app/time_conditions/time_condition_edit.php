@@ -24,8 +24,11 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//includes
-	include "root.php";
+//set the include path
+	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+	set_include_path(parse_ini_file($conf[0])['document.root']);
+
+//includes files
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
@@ -176,7 +179,7 @@
 
 				//build update array
 					$array['dialplans'][0]['dialplan_uuid'] = $dialplan_uuid;
-					$array['dialplans'][0]['dialplan_continue'] = 'true';
+					$array['dialplans'][0]['dialplan_continue'] = 'false';
 					if (strlen($dialplan_context) > 0) {
 						$array['dialplans'][0]['dialplan_context'] = $dialplan_context;
 					}
@@ -766,7 +769,7 @@
 				switch (condition_var) {
 
 					case 'year': //years
-						for (y = <?php echo date('Y')?>; y <= <?php echo (date('Y') + 10)?>; y++) {
+						for (y = <?php echo (date('Y') - 5) ?>; y <= <?php echo (date('Y') + 10)?>; y++) {
 							sel_start.options[sel_start.options.length] = new Option(y, y);
 							sel_stop.options[sel_stop.options.length] = new Option(y, y);
 						}

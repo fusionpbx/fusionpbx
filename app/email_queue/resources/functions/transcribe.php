@@ -7,7 +7,7 @@ if (!function_exists('transcribe')) {
 			$transcribe_provider = $_SESSION['voicemail']['transcribe_provider']['text'];
 			$transcribe_language = $_SESSION['voicemail']['transcribe_language']['text'];
 
-		//transribe - watson
+		//transcribe - watson
 			if ($transcribe_provider == 'watson') {
 				$api_key = $_SESSION['voicemail']['watson_key']['text'];
 				$api_url = $_SESSION['voicemail']['watson_url']['text'];
@@ -115,7 +115,7 @@ if (!function_exists('transcribe')) {
 				}
 			}
 
-		//transribe - google
+		//transcribe - google
 			if ($transcribe_provider == 'google') {
 				$api_key = $_SESSION['voicemail']['google_key']['text'];
 				$api_url = $_SESSION['voicemail']['google_url']['text'];
@@ -178,7 +178,7 @@ if (!function_exists('transcribe')) {
 				}
 			}
 
-		//transribe - azure
+		//transcribe - azure
 			if ($transcribe_provider == 'azure') {
 				$api_key = $_SESSION['voicemail']['azure_key']['text'];
 				$api_url = $_SESSION['voicemail']['azure_server_region']['text'];
@@ -221,6 +221,43 @@ if (!function_exists('transcribe')) {
 					return $array;
 				}
 
+			}
+
+			//transcribe - custom
+			//Works with Mozilla DeepSpeech or Coqui with https://github.com/AccelerateNetworks/DeepSpeech_Frontend
+			//or Vosk with https://git.callpipe.com/fusionpbx/vosk_frontend
+			if ($transcribe_provider == 'custom') {
+				$api_key = $_SESSION['voicemail']['api_key']['text'];
+				$api_url = $_SESSION['voicemail']['transcription_server']['text'];
+
+				if (strlen($transcribe_language) == 0) {
+					$transcribe_language = 'en-US';
+				}
+
+				if ($file_extension == "mp3") {
+					$content_type = 'audio/mp3';
+				}
+				if ($file_extension == "wav") {
+					$content_type = 'audio/wav';
+				}
+
+				$file_path = $file_path.'/'.$file_name;
+				$command = "curl -X POST ".$api_url." -H 'Authorization: Bearer ".$api_key."' -F file=@".$file_path;
+				echo $command."\n";
+				$http_response = shell_exec($command);
+				$array = json_decode($http_response, true);
+				if ($array === null) {
+					return false;
+				}
+				else {
+					$message = $array['message'];
+				}
+				$array['provider'] = $transcribe_provider;
+				$array['language'] = $transcribe_language;
+				$array['api_key'] = $api_key;
+				$array['command'] = $command;
+				$array['message'] = $message;
+				return $array;
 			}
 
 	}

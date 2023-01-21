@@ -24,8 +24,11 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//includes
-	include "root.php";
+//set the include path
+	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+	set_include_path(parse_ini_file($conf[0])['document.root']);
+
+//includes files;
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
@@ -159,7 +162,7 @@
 		$fax_extension = substr($fax_extension, 0, 15);
 		$accountcode = substr($accountcode, 0, 80);
 		$fax_prefix = substr($fax_prefix, 0, 12);
-		$fax_caller_id_name = substr($fax_caller_id_name, 0, 20);
+		$fax_caller_id_name = substr($fax_caller_id_name, 0, 40);
 		$fax_caller_id_number = substr($fax_caller_id_number, 0, 20);
 		$fax_forward_number = substr($fax_forward_number, 0, 20);
 	}
@@ -254,6 +257,9 @@
 				require_once "resources/footer.php";
 				return;
 			}
+
+		//sanitize the fax extension number
+			$fax_extension = preg_replace('#[^0-9]#', '', $fax_extension);
 
 		//replace the spaces with a dash
 			$fax_name = str_replace(" ", "-", $fax_name);
@@ -645,7 +651,7 @@
 		echo "	".$text['label-caller-id-name']."\n";
 		echo "</td>\n";
 		echo "<td width='70%' class='vtable' align='left'>\n";
-		echo "	<input class='formfld' type='text' name='fax_caller_id_name' maxlength='20' value=\"".escape($fax_caller_id_name)."\">\n";
+		echo "	<input class='formfld' type='text' name='fax_caller_id_name' maxlength='40' value=\"".escape($fax_caller_id_name)."\">\n";
 		echo "<br />\n";
 		echo "".$text['description-caller-id-name']."\n";
 		echo "</td>\n";

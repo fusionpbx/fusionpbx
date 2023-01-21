@@ -197,7 +197,15 @@
 {if $sip_transport_1 == 'udp'}{$tp=0}{/if}
 {if $sip_transport_1 == 'tcp'}{$tp=1}{/if}
 {if $sip_transport_1 == 'tls'}{$tp=2}{/if}
-{if $sip_transport_1 == 'dns srv'}{$tp=1}{/if}
+{if $sip_transport_1 == 'dns srv'}
+    {if isset($grandstream_dnssrv_transport)}
+        {if $grandstream_dnssrv_transport == 'udp'}{$tp=0}
+        {elseif $grandstream_dnssrv_transport == 'tls'}{$tp=2}
+        {else}{$tp=1}
+        {/if}
+   	{else}{$tp=1}
+    {/if}
+{/if}
     <P130>{$tp}</P130>
 
     <!-- SIP Listening Mode. -->
@@ -620,7 +628,11 @@
 
     <!-- Matching Incoming Caller ID. Matching Rule 1 -->
     <!-- String -->
+{if isset($grandstream_distinctive_ringtone_name_1)}
     <P1488>{$grandstream_distinctive_ringtone_name_1}</P1488>
+{else}
+    <P1488>ring1</P1488>
+{/if}
 
     <!-- Matching Rule 1 Distinctive Ringtone -->
     <!-- 0 - Default Ringtone -->
@@ -630,7 +642,11 @@
 
     <!-- Matching Incoming Caller ID. Matching Rule 2 -->
     <!-- String -->
+{if isset($grandstream_distinctive_ringtone_name_2)}
     <P1490>{$grandstream_distinctive_ringtone_name_2}</P1490>
+{else}
+    <P1490>ring2</P1490>
+{/if}
 
     <!-- Matching Rule 2 Distinctive Ringtone -->
     <!-- 0 - Default Ringtone -->
@@ -941,7 +957,15 @@
 {if $sip_transport_2 == 'udp'}{$tp=0}{/if}
 {if $sip_transport_2 == 'tcp'}{$tp=1}{/if}
 {if $sip_transport_2 == 'tls'}{$tp=2}{/if}
-{if $sip_transport_2 == 'dns srv'}{$tp=1}{/if}
+{if $sip_transport_2 == 'dns srv'}
+    {if isset($grandstream_dnssrv_transport)}
+        {if $grandstream_dnssrv_transport == 'udp'}{$tp=0}
+        {elseif $grandstream_dnssrv_transport == 'tls'}{$tp=2}
+        {else}{$tp=1}
+        {/if}
+   	{else}{$tp=1}
+    {/if}
+{/if}
     <P448>{$tp}</P448>
 
     <!-- SIP Listening Mode. -->
@@ -1734,7 +1758,7 @@
 
     <!-- Allow DHCP Option 2 to Override Time Zone Setting -->
     <!-- Number: 0, 1 -->
-    <P143>1</P143>
+    {if isset($grandstream_dhcp_time_zone)}<P143>{$grandstream_dhcp_time_zone}</P143>{else}<P143>0</P143>{/if}
 
     <!-- Self Defined Time Zone. Max length allowed is 64 characters -->
     <!-- String -->
@@ -1985,14 +2009,20 @@
     <!-- Firmware Upgrade Via. 0 - TFTP,  1 - HTTP, 2 - HTTPS, 3 - FTP, 4 - FTPS. Default is 1. -->
     <!-- Number: 0, 1, 2, 3, 4 -->
     <!-- Mandatory -->
-    <P6767>1</P6767>
+{if isset($grandstream_firmware_upgrade_protocol) }
+    <P6767>{$grandstream_firmware_upgrade_protocol}</P6767>
+{else}
+    <P6767>2</P6767>
+{/if}
 
     <!-- Firmware Server Path -->
     <!-- String -->
-{if isset($grandstream_firmware_path)}
+{if isset($grandstream_firmware_path) && isset($firmware_version)}
+    <P192>{$grandstream_firmware_path}/{$firmware_version}</P192>
+{elseif isset($grandstream_firmware_path)}
     <P192>{$grandstream_firmware_path}</P192>
 {else}
-    <P192>{$domain_name}{$project_path}/app/provision</P192>
+    <P192>{$domain_name}{$project_path}/app/provision/resources/firmware/</P192>
 {/if}
 
     <!-- Firmware HTTP/HTTPS Username -->
@@ -2115,11 +2145,11 @@
 
     <!-- Connection Request Username -->
     <!-- String: a-z, A-Z, 0-9 -->
-    <P4511></P4511>
+    <P4511>{$mac|replace:'-':''|upper}</P4511>
 
     <!-- Connection Request Password -->
     <!-- String: a-z, A-Z, 0-9 -->
-    <P4512></P4512>
+    <P4512>{$mac|replace:'-':''|upper}</P4512>
 
     <!-- Connection Request Port. Default is 7547. -->
     <!-- Number -->

@@ -24,8 +24,11 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//includes
-	require_once "root.php";
+//set the include path
+	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+	set_include_path(parse_ini_file($conf[0])['document.root']);
+
+//includes files
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
@@ -288,17 +291,20 @@
 										$result[$key] = preg_replace('{\D}', '', $result[$key]);
 									}
 
+									//set the extension enabled to lower case
+									if ($field_name == 'enabled') {
+										$result[$key] = strtolower($result[$key]);
+									}
+
 									//build the data array
 									if (strlen($table_name) > 0) {
 										if (strlen($parent) == 0) {
 											$array[$table_name][$row_id]['domain_uuid'] = $domain_uuid;
 											$array[$table_name][$row_id][$field_name] = $result[$key];
 										}
-										else {
-											if ($field_name != "username") {
-												$array[$parent][$row_id][$table_name][$y]['domain_uuid'] = $domain_uuid;
-												$array[$parent][$row_id][$table_name][$y][$field_name] = $result[$key];
-											}
+										elseif ($field_name != "username") {
+											$array[$parent][$row_id][$table_name][$y]['domain_uuid'] = $domain_uuid;
+											$array[$parent][$row_id][$table_name][$y][$field_name] = $result[$key];
 										}
 
 										if ($field_name == "username") {

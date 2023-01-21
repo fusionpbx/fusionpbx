@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2013-2021
+	Portions created by the Initial Developer are Copyright (C) 2013-2022
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -25,8 +25,11 @@
 	James Rose <james.o.rose@gmail.com>
 */
 
-//includes
-	require_once "root.php";
+//set the include path
+	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+	set_include_path(parse_ini_file($conf[0])['document.root']);
+
+//includes files
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
@@ -47,6 +50,11 @@
 //get variables used to control the order
 	$order_by = $_GET["order_by"];
 	$order = $_GET["order"];
+
+//connect to the database
+	if (!isset($database)) {
+		$database = new database;
+	}
 
 //find the path
 	switch ($_SERVER['REQUEST_URI']) {
@@ -88,7 +96,6 @@
 				$p = new permissions;
 				$p->add('ring_group_edit', 'temp');
 
-				$database = new database;
 				$database->app_name = 'ring_groups';
 				$database->app_uuid = '1d61fb65-1eec-bc73-a6ee-a6203b4fe6f2';
 				$database->save($array);
@@ -122,7 +129,6 @@
 		$parameters['domain_uuid'] = $domain_uuid;
 		$parameters['user_uuid'] = $_SESSION['user']['user_uuid'];
 	}
-	$database = new database;
 	$num_rows = $database->select($sql, $parameters, 'column');
 	unset($parameters);
 
@@ -155,7 +161,6 @@
 	}
 	$sql .= order_by($order_by, $order, 'ring_group_extension', 'asc');
 	$sql .= limit_offset($rows_per_page, $offset);
-	$database = new database;
 	$result = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 

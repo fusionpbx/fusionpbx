@@ -25,8 +25,11 @@
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 
-//includes
-	require_once "root.php";
+//set the include path
+	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+	set_include_path(parse_ini_file($conf[0])['document.root']);
+
+//includes files
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
@@ -108,10 +111,14 @@
 
 		//disable xml entities and load the xml object to test if the xml is valid
 			libxml_disable_entity_loader(true);
-			$xml = simplexml_load_string($dialplan_xml, 'SimpleXMLElement', LIBXML_NOCDATA);
-			if (!$xml) {
-				//$errors = libxml_get_errors();
-				$dialplan_valid = false;
+			preg_match_all('/^\s*<extension.+>(?:[\S\s])+<\/extension>\s*$/mU', $dialplan_xml, $matches);
+			foreach($matches as $match) {
+				$xml = simplexml_load_string($match[0], 'SimpleXMLElement', LIBXML_NOCDATA);
+				if (!$xml) {
+					//$errors = libxml_get_errors();
+					$dialplan_valid = false;
+					break;
+				}
 			}
 
 		//save the xml to the database

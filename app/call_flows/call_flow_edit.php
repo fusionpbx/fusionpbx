@@ -25,8 +25,11 @@
 	Lewis Hallam <lewishallam80@gmail.com>
 */
 
-//includes
-	require_once "root.php";
+//set the include path
+	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+	set_include_path(parse_ini_file($conf[0])['document.root']);
+
+//includes files
 	require_once "resources/require.php";
 
 //check permissions
@@ -241,6 +244,31 @@
 		//remove the temporary permission
 			$p->delete("dialplan_add", "temp");
 			$p->delete("dialplan_edit", "temp");
+
+		// Update subscribed endpoints
+		$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+		if ($fp) {
+			//send the event
+				$event = "sendevent PRESENCE_IN\n";
+				$event .= "proto: flow\n";
+				$event .= "event_type: presence\n";
+				$event .= "alt_event_type: dialog\n";
+				$event .= "Presence-Call-Direction: outbound\n";
+				$event .= "state: Active (1 waiting)\n";
+				$event .= "from: flow+".$call_flow_feature_code."@".$_SESSION['domain_name']."\n";
+				$event .= "login: flow+".$call_flow_feature_code."@".$_SESSION['domain_name']."\n";
+				$event .= "unique-id: ".$call_flow_uuid."\n";
+				if ($call_flow_status == "true") {
+					$event .= "answer-state: confirmed\n";
+				} else {
+					$event .= "answer-state: terminated\n";
+				}
+
+				event_socket_request($fp, $event);
+				//echo $event."<br />";
+			fclose($fp);
+
+		}
 
 		//debug info
 			//echo "<pre>";
