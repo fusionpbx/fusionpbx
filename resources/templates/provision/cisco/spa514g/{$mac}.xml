@@ -44,14 +44,14 @@
 <Secondary_NTP_Server>{$ntp_server_secondary}</Secondary_NTP_Server>
 
 <!-- System/VLAN_Settings -->
-<Enable_VLAN group="System/VLAN_Settings">No</Enable_VLAN>
+<Enable_VLAN group="System/VLAN_Settings">{$spa_vlan_enable}</Enable_VLAN>
 <Enable_CDP group="System/VLAN_Settings">Yes</Enable_CDP>
 <Enable_LLDP-MED group="System/VLAN_Settings">Yes</Enable_LLDP-MED>
 <Network_Startup_Delay group="System/VLAN_Settings">3</Network_Startup_Delay>
-<VLAN_ID group="System/VLAN_Settings">1</VLAN_ID>
+<VLAN_ID group="System/VLAN_Settings">${spa_vlan_id}</VLAN_ID>
 <PC_Port_VLAN_Highest_Priority group="System/VLAN_Settings">No Limit</PC_Port_VLAN_Highest_Priority>
 <Enable_PC_Port_VLAN_Tagging group="System/VLAN_Settings">No</Enable_PC_Port_VLAN_Tagging>
-<PC_Port_VLAN_ID group="System/VLAN_Settings">1</PC_Port_VLAN_ID>
+<PC_Port_VLAN_ID group="System/VLAN_Settings">${spa_vlan_pc_id}</PC_Port_VLAN_ID>
 
 <!-- System/Inventory_Settings -->
 <Asset_ID group="System/Inventory_Settings" />
