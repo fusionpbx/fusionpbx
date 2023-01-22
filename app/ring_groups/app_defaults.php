@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2019
+	Portions created by the Initial Developer are Copyright (C) 2019 - 2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -62,6 +62,14 @@ if ($domains_processed == 1) {
 				$p->delete('ring_group_edit', 'temp');
 		}
 	}
+
+	//enable ring group destinations by default 
+	$sql = "update v_ring_group_destinations ";
+	$sql .= "set destination_enabled = true ";
+	$sql .= "where destination_enabled is null; ";
+	$database = new database;
+	$database->execute($sql, null);
+	unset($sql);
 
 }
 
