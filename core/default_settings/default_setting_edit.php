@@ -665,6 +665,13 @@
 		echo "    	<option value='none' ".(($default_setting_value == "none") ? "selected='selected'" : null).">".$text['label-none']."</option>\n";
 		echo "    </select>\n";
 	}
+	elseif ($category == "theme" && $subcategory == "input_toggle_style" && $name == "text" ) {
+		echo "	<select class='formfld' id='default_setting_value' name='default_setting_value'>\n";
+		echo "    	<option value='select'>".$text['option-select']."</option>\n";
+		echo "    	<option value='switch_round' ".(($default_setting_value == "switch_round") ? "selected='selected'" : null).">".$text['option-switch_round']."</option>\n";
+		echo "    	<option value='switch_square' ".(($default_setting_value == "switch_square") ? "selected='selected'" : null).">".$text['option-switch_square']."</option>\n";
+		echo "	</select>\n";
+	}
 	elseif ($category == "users" && $subcategory == "username_format" && $name == "text" ) {
 		echo "	<select class='formfld' id='default_setting_value' name='default_setting_value'>\n";
 		echo "    	<option value='any' ".($default_setting_value == 'any' ? "selected='selected'" : null).">".$text['option-username_format_any']."</option>\n";
