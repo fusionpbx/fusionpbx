@@ -1693,7 +1693,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "switch_round";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the toggle control style. Options: 'select' (default), 'switch_square', 'switch_round'";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the toggle control style.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "c2630eb3-a04e-4a32-9990-45f37af70005";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
