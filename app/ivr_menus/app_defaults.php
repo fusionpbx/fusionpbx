@@ -83,6 +83,14 @@ if ($domains_processed == 1) {
 	$ivr_menus = $database->select($sql, null, 'all');
 	unset($sql);
 
+	//enable existing ivr menu options by default
+	$sql = "update v_ivr_menu_options ";
+	$sql .= "set ivr_menu_option_enabled = true ";
+	$sql .= "where ivr_menu_option_enabled is null; ";
+	$database = new database;
+	$database->execute($sql, null);
+	unset($sql);
+
 }
 
 ?>
