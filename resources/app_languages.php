@@ -4891,4 +4891,25 @@ $text['option-manual']['sv-se'] = "Manual";
 $text['option-manual']['uk-ua'] = "Manual";
 $text['option-manual']['tr-tr'] = "Manual";
 
+$text['title-languages']['en-us'] = "Languages";
+$text['title-languages']['en-gb'] = "Languages";
+$text['title-languages']['ar-eg'] = "";
+$text['title-languages']['de-at'] = "Sprache"; //copied from de-de
+$text['title-languages']['de-ch'] = "Sprache"; //copied from de-de
+$text['title-languages']['de-de'] = "Sprache";
+$text['title-languages']['es-cl'] = "Idioma";
+$text['title-languages']['es-mx'] = "Idioma"; //copied from es-cl
+$text['title-languages']['fr-ca'] = "Langue"; //copied from fr-fr
+$text['title-languages']['fr-fr'] = "Langue";
+$text['title-languages']['he-il'] = "";
+$text['title-languages']['it-it'] = "";
+$text['title-languages']['nl-nl'] = "Taal";
+$text['title-languages']['pl-pl'] = "Język";
+$text['title-languages']['pt-br'] = "Língua"; //copied from pt-pt
+$text['title-languages']['pt-pt'] = "Língua";
+$text['title-languages']['ro-ro'] = "";
+$text['title-languages']['ru-ru'] = "";
+$text['title-languages']['sv-se'] = "Språk";
+$text['title-languages']['uk-ua'] = "";
+
 ?>
