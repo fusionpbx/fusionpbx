@@ -422,7 +422,8 @@
 				echo escape($row['default_setting_subcategory']);
 			}
 			echo "	</td>\n";
-			echo "	<td class='hide-sm-dn'>".escape($row['default_setting_name'])."</td>\n";
+			$setting_types = ['Array','Boolean','Code','Dir','Name','Numeric','Text','UUID'];
+			echo "	<td class='hide-sm-dn'>".$setting_types[array_search(strtolower($row['default_setting_name']), array_map('strtolower',$setting_types))]."</td>\n";
 			echo "	<td class='overflow no-wrap' title=\"".escape($default_value)."\" style=\"".$setting_bold."\">\n";
 
 			$category = $row['default_setting_category'];
@@ -497,6 +498,9 @@
 				echo "		".$text['label-'.$row['default_setting_value']]."\n";
 			}
 			else if ($category == 'destinations' && $subcategory == 'select_mode' && $name == 'text') {
+				echo "		".$text['label-'.$row['default_setting_value']]."\n";
+			}
+			else if ($row['default_setting_value'] == 'true' || $row['default_setting_value'] == 'false') {
 				echo "		".$text['label-'.$row['default_setting_value']]."\n";
 			}
 			else {

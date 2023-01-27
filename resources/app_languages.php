@@ -4503,8 +4503,8 @@ $text['description-value']['sv-se'] = "Ange värdet på inställningen.";
 $text['description-value']['uk-ua'] = "Введіть значенння змінної";
 $text['description-value']['tr-tr'] = "Değer girin.";
 
-$text['description-type']['en-us'] = "Enter the setting type (ie. uuid, name, var, dir, etc).";
-$text['description-type']['en-gb'] = "Enter the setting type (ie. uuid, name, var, dir, etc).";
+$text['description-type']['en-us'] = "Select the data type.";
+$text['description-type']['en-gb'] = "Select the data type.";
 $text['description-type']['ar-eg'] = "";
 $text['description-type']['de-at'] = "Geben Sie den Typ für diese Einstellung an (z.B. uuid, name, var, dir, etc)."; //copied from de-de
 $text['description-type']['de-ch'] = "Geben Sie den Typ für diese Einstellung an (z.B. uuid, name, var, dir, etc)."; //copied from de-de
