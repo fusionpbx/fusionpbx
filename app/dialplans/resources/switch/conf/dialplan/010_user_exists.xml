@@ -9,6 +9,8 @@
 		</condition>
 		<condition field="${user_exists}" expression="^true$" break="">
 			<action application="set" data="extension_uuid=${user_data ${destination_number}@${domain_name} var extension_uuid}" inline="true"/>
+			<action application="set" data="extension_caller_id_name=${user_data ${destination_number}@${domain_name} var effective_caller_id_name}" inline="true"/>
+			<action application="set" data="extension_caller_id_number=${user_data ${destination_number}@${domain_name} var effective_caller_id_number}" inline="true"/>
 			<action application="set" data="forward_all_enabled=${user_data ${destination_number}@${domain_name} var forward_all_enabled}" inline="true"/>
 			<action application="set" data="forward_all_destination=${user_data ${destination_number}@${domain_name} var forward_all_destination}" inline="true"/>
 			<action application="set" data="forward_busy_enabled=${user_data ${destination_number}@${domain_name} var forward_busy_enabled}" inline="true"/>
