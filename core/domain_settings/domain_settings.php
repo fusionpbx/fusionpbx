@@ -279,7 +279,8 @@
 				echo escape($row['domain_setting_subcategory']);
 			}
 			echo "	</td>\n";
-			echo "	<td class='hide-sm-dn'>".escape($row['domain_setting_name'])."</td>\n";
+			$setting_types = ['Array','Boolean','Code','Dir','Name','Numeric','Text','UUID'];
+			echo "	<td class='hide-sm-dn'>".$setting_types[array_search(strtolower($row['domain_setting_name']), array_map('strtolower',$setting_types))]."</td>\n";
 			echo "	<td class='overflow no-wrap'>\n";
 			$category = $row['domain_setting_category'];
 			$subcategory = $row['domain_setting_subcategory'];
@@ -352,6 +353,9 @@
 				echo "		".$text['label-'.$row['domain_setting_value']]."\n";
 			}
 			else if ($category == 'destinations' && $subcategory == 'select_mode' && $name == 'text') {
+				echo "		".$text['label-'.$row['domain_setting_value']]."\n";
+			}
+			else if ($row['domain_setting_value'] == 'true' || $row['domain_setting_value'] == 'false') {
 				echo "		".$text['label-'.$row['domain_setting_value']]."\n";
 			}
 			else {
