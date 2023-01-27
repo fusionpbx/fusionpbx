@@ -355,6 +355,9 @@
 			else if ($category == 'destinations' && $subcategory == 'select_mode' && $name == 'text') {
 				echo "		".$text['label-'.$row['domain_setting_value']]."\n";
 			}
+			else if ($category == 'voicemail' && ($subcategory == 'message_caller_id_number' || $subcategory == 'message_date_time') && $name == 'text') {
+				echo "		".$text['label-'.$row['domain_setting_value']]."\n";
+			}
 			else if ($row['domain_setting_value'] == 'true' || $row['domain_setting_value'] == 'false') {
 				echo "		".$text['label-'.$row['domain_setting_value']]."\n";
 			}

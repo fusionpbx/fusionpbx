@@ -99,7 +99,7 @@
 			if (effective_caller_id_name ~= nil) then
 				caller_id_name = effective_caller_id_name;
 			end
-	
+
 		--set default values
 			if (string.sub(caller_id_number, 1, 1) == "/") then
 				caller_id_number = string.sub(caller_id_number, 2, -1);
@@ -112,12 +112,6 @@
 			end
 			if (not vm_message_ext) then
 				vm_message_ext = 'wav';
-			end
-			if (not vm_say_caller_id_number) then
-				vm_say_caller_id_number = "true";
-			end
-			if (not vm_say_date_time) then
-				vm_say_date_time = "true";
 			end
 
 		--set the sounds path for the language, dialect and voice
@@ -186,6 +180,26 @@
 					if (settings['voicemail']['message_order']['text'] ~= nil) then
 						message_order = settings['voicemail']['message_order']['text'];
 					end
+				end
+
+				if (not vm_say_caller_id_number) then
+					if (settings['voicemail']['message_caller_id_number'] ~= nil) then
+						if (settings['voicemail']['message_caller_id_number']['text'] ~= nil) then
+							vm_say_caller_id_number = settings['voicemail']['message_caller_id_number']['text'];
+						end
+					end
+				else
+					vm_say_caller_id_number = "before";
+				end
+
+				if (not vm_say_date_time) then
+					if (settings['voicemail']['message_date_time'] ~= nil) then
+						if (settings['voicemail']['message_date_time']['text'] ~= nil) then
+							vm_say_date_time = settings['voicemail']['message_date_time']['text'];
+						end
+					end
+				else
+					vm_say_date_time = "before";
 				end
 
 				remote_access = '';
@@ -400,7 +414,7 @@
 
 			--send to the main menu
 				timeouts = 0;
-				if (voicemail_tutorial == "true") then 
+				if (voicemail_tutorial == "true") then
 					tutorial("intro");
 				else
 					main_menu();
@@ -479,7 +493,7 @@
 					--freeswitch.consoleLog("notice", "[voicemail][destinations] SQL:" .. sql .. "; params:" .. json.encode(params) .. "\n");
 					destinations = {};
 					x = 1;
-					
+
 					dbh:query(sql, params, function(row)
 						destinations[x] = row;
 						x = x + 1;
@@ -487,12 +501,12 @@
 					table.insert(destinations, {domain_uuid=domain_uuid,voicemail_destination_uuid=voicemail_uuid,voicemail_uuid=voicemail_uuid,voicemail_uuid_copy=voicemail_uuid});
 				--show the storage type
 					freeswitch.consoleLog("notice", "[voicemail] ".. storage_type .. "\n");
-					
+
 					count = 0
 					for k,v in pairs(destinations) do
 						count = count + 1
 					end
-					
+
 				--loop through the voicemail destinations
 					y = 1;
 					for key,row in pairs(destinations) do
