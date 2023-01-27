@@ -699,6 +699,13 @@
 		echo "    	<option value='false' ".(($default_setting_value == "false") ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
 		echo "	</select>\n";
 	}
+	elseif ($category == "voicemail" && ($subcategory == "message_caller_id_number" || $subcategory == "message_date_time") && $name == "text" ) {
+		echo "	<select class='formfld' id='default_setting_value' name='default_setting_value'>\n";
+		echo "    	<option value='before'>".$text['label-before']."</option>\n";
+		echo "    	<option value='after' ".(($default_setting_value == "after") ? "selected='selected'" : null).">".$text['label-after']."</option>\n";
+		echo "    	<option value='false' ".(($default_setting_value == "false") ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
+		echo "	</select>\n";
+	}
 	elseif ($category == "recordings" && $subcategory == "storage_type" && $name == "text" ) {
 		echo "	<select class='formfld' id='default_setting_value' name='default_setting_value'>\n";
 		echo "    	<option value='file'>".$text['label-file']."</option>\n";
