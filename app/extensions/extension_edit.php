@@ -1619,7 +1619,6 @@
 		}
 		echo "    </select>\n";
 		echo "<br />\n";
-		echo "<br />\n";
 		echo $text['description-directory_visible']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
@@ -1643,7 +1642,6 @@
 			echo "    <option value='false'>".$text['label-false']."</option>\n";
 		}
 		echo "    </select>\n";
-		echo "<br />\n";
 		echo "<br />\n";
 		echo $text['description-directory_exten_visible']."\n";
 		echo "</td>\n";
