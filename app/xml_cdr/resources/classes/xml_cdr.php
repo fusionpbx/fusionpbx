@@ -423,11 +423,15 @@ if (!class_exists('xml_cdr')) {
 							//answered call
 							$missed_call = 'false';
 						}
+						elseif (isset($xml->variables->cc_side) && $xml->variables->cc_side == 'agent') {
+							//call center
+							$missed_call = 'false';
+						}
 						else {
 							//missed call
 							$missed_call = 'true';
 						}
-						
+
 					//get the last bridge_uuid from the call to preserve previous behavior
 						foreach ($xml->variables->bridge_uuids as $bridge) {
 							$last_bridge = urldecode($bridge);
