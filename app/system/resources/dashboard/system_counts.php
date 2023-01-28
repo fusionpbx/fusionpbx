@@ -285,7 +285,7 @@
 	if ($show_stat) {
 		//add doughnut chart
 		?>
-		<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 20px;'>
+		<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 20px; cursor: pointer;' onclick="$('#hud_system_counts_details').slideToggle('fast');">
 			<div style='width: 250px; height: 175px;'><canvas id='system_counts_chart'></canvas></div>
 		</div>
 
