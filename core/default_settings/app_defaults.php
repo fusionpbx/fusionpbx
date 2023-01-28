@@ -502,6 +502,17 @@
 			$database->execute($sql);
 			unset($sql);
 
+		//update login destination 
+			$sql = "update v_default_settings set ";
+			$sql .= "default_setting_uuid = 'e2b9406f-37cf-4226-8111-e5d11d0bfd73', ";
+			$sql .= "default_setting_name = 'text' ";
+			$sql .= "where default_setting_category = 'login' ";
+			$sql .= "and default_setting_subcategory = 'destination' ";
+			$sql .= "and default_setting_name = 'url' ";
+			$database = new database;
+			$database->execute($sql);
+			unset($sql);
+
 	}
 
 ?>
