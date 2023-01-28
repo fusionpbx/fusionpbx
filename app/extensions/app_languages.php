@@ -2851,8 +2851,8 @@ $text['description-cidr']['ru-ru'] = "Введите IP-адрес (наприм
 $text['description-cidr']['sv-se'] = "Ange CIDR här.";
 $text['description-cidr']['uk-ua'] = "";
 
-$text['description-call_timeout']['en-us'] = "Enter the call timeout.";
-$text['description-call_timeout']['en-gb'] = "Enter the call timeout.";
+$text['description-call_timeout']['en-us'] = "Enter the ring time (delay in seconds) before sending a call to voicemail.";
+$text['description-call_timeout']['en-gb'] = "Enter the ring time (delay in seconds) before sending a call to voicemail.";
 $text['description-call_timeout']['ar-eg'] = "";
 $text['description-call_timeout']['de-at'] = "Geben Sie die Zeitbeschränkung für Anrufe an."; //copied from de-de
 $text['description-call_timeout']['de-ch'] = "Geben Sie die Zeitbeschränkung für Anrufe an."; //copied from de-de
