@@ -233,7 +233,10 @@
 				if (PHP_OS == "Linux") {
 					//set the default template dir
 						if (strlen($this->template_dir) == 0) {
-							if (file_exists('/etc/fusionpbx/resources/templates/provision')) {
+							if (file_exists('/usr/share/fusionpbx/templates/provision')) {
+								$this->template_dir = '/usr/share/fusionpbx/templates/provision';
+							}
+							elseif (file_exists('/etc/fusionpbx/resources/templates/provision')) {
 								$this->template_dir = '/etc/fusionpbx/resources/templates/provision';
 							}
 							else {
@@ -243,17 +246,12 @@
 				}
 				elseif (PHP_OS == "FreeBSD") {
 					//if the FreeBSD port is installed use the following paths by default.
-						if (file_exists('/usr/local/etc/fusionpbx/resources/templates/provision')) {
-							if (strlen($this->template_dir) == 0) {
+						if (strlen($this->template_dir) == 0) {
+							if (file_exists('/usr/local/share/fusionpbx/templates/provision')) {
+								$this->template_dir = '/usr/local/share/fusionpbx/templates/provision';
+							}
+							elseif (file_exists('/usr/local/etc/fusionpbx/resources/templates/provision')) {
 								$this->template_dir = '/usr/local/etc/fusionpbx/resources/templates/provision';
-							}
-							else {
-								$this->template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/provision';
-							}
-						}
-						else {
-							if (strlen($this->template_dir) == 0) {
-								$this->template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/provision';
 							}
 							else {
 								$this->template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/provision';
