@@ -273,7 +273,13 @@
 	echo "	</div>\n";
 	echo "	<div class='actions'>\n";
 	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'default_settings.php?'.$query_string]);
+	if (permission_exists('default_setting_clone') && $action == "update") {
+		echo button::create(['type'=>'button','label'=>$text['button-clone'],'icon'=>$_SESSION['theme']['button_icon_clone'],'name'=>'btn_clone','style'=>'margin-right: 15px;','onclick'=>"modal_open('modal-clone','btn_clone');"]);
+	}
 	echo button::create(['type'=>'button','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save','onclick'=>'submit_form();']);
+	if (permission_exists('default_setting_clone') && $action == "update") {
+		echo modal::create(['id'=>'modal-clone','type'=>'general','message'=>$text['confirm-clone'],'actions'=>button::create(['type'=>'button','label'=>$text['button-clone'],'icon'=>'clone','id'=>'btn_clone','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); window.location.href='default_setting_clone.php?id=".$default_setting_uuid."'"])]);
+	}
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";

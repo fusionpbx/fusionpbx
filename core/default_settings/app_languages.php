@@ -301,6 +301,27 @@ $text['message-toggled']['ru-ru'] = "Переключить выполнено";
 $text['message-toggled']['sv-se'] = "Växla Avslutade";
 $text['message-toggled']['uk-ua'] = "переключити Завершений";
 
+$text['message-cloned']['en-us'] = "Setting Cloned";
+$text['message-cloned']['en-gb'] = "Setting Cloned";
+$text['message-cloned']['ar-eg'] = "Setting Cloned";
+$text['message-cloned']['de-at'] = "Setting Cloned";
+$text['message-cloned']['de-ch'] = "Setting Cloned";
+$text['message-cloned']['de-de'] = "Setting Cloned";
+$text['message-cloned']['es-cl'] = "Setting Cloned";
+$text['message-cloned']['es-mx'] = "Setting Cloned";
+$text['message-cloned']['fr-ca'] = "Setting Cloned";
+$text['message-cloned']['fr-fr'] = "Setting Cloned";
+$text['message-cloned']['he-il'] = "Setting Cloned";
+$text['message-cloned']['it-it'] = "Setting Cloned";
+$text['message-cloned']['nl-nl'] = "Setting Cloned";
+$text['message-cloned']['pl-pl'] = "Setting Cloned";
+$text['message-cloned']['pt-br'] = "Setting Cloned";
+$text['message-cloned']['pt-pt'] = "Setting Cloned";
+$text['message-cloned']['ro-ro'] = "Setting Cloned";
+$text['message-cloned']['ru-ru'] = "Setting Cloned";
+$text['message-cloned']['sv-se'] = "Setting Cloned";
+$text['message-cloned']['uk-ua'] = "Setting Cloned";
+
 $text['message-settings_reloaded']['en-us'] = "Settings Reloaded";
 $text['message-settings_reloaded']['en-gb'] = "Settings Reloaded";
 $text['message-settings_reloaded']['ar-eg'] = "";

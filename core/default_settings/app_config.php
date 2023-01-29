@@ -41,6 +41,9 @@
 		$apps[$x]['permissions'][$y]['name'] = "default_setting_edit";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "default_setting_clone";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "default_setting_delete";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 
