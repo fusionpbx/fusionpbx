@@ -2327,14 +2327,6 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "4323a528-06f4-4550-9b9b-3190c8325958";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "button_icon_clone";
-		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "fas fa-clone";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
-		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "75424d2d-cb7d-4469-9269-7cb814e863b8";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "button_icon_expand";
