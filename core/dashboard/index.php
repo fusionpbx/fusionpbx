@@ -392,22 +392,6 @@
 					draggable: ".widget",
 					preventOnFilter: true,
 					ghostClass: 'ghost',
-					/*
-					onChange: function (evt) {
-						//check if chart exists
-						let chart_status = Chart.getChart(evt.item.id + "_chart");
-						if(chart_status !== undefined && chart_status !== null) {
-							let context = eval(evt.item.id + "_chart_context");
-							let chart = Chart.getChart(context);
-							let config = eval(evt.item.id + "_chart_config");
-
-							//re render the chart
-							chart.destroy();
-							chart.options.animation = { duration: 0 };
-							chart = new Chart(context, config);
-						}
-					},
-					*/
 					onSort: function (evt) {
 						let widget_ids = document.querySelectorAll("#widgets > div[id]");
 						let widget_ids_list = [];
@@ -417,26 +401,6 @@
 						document.getElementById('widget_order').value = widget_ids_list;
 					},
 				});
-
-				/*
-				//warn the user before leaving the page
-				var formSubmitting = false;
-				var setFormSubmitting = function() { formSubmitting = true; };
-
-				window.onload = function() {
-					window.addEventListener("beforeunload", function (e) {
-						var confirmationMessage = 'You have unsaved changes which will not be saved.';
-
-						if (formSubmitting) {
-							return undefined;
-						}
-
-						(e || window.event).returnValue = confirmationMessage;
-						return confirmationMessage;
-					});
-				};
-				*/
-
 			}
 			else { // off
 
