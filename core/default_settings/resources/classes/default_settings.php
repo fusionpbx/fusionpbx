@@ -215,7 +215,7 @@ if (!class_exists('default_settings')) {
 							}
 
 						//copy settings
-							if (is_uuid($this->domain_uuid) && is_array($uuids) && sizeof($uuids) > 0) {
+							if (is_array($uuids) && sizeof($uuids) > 0) {
 								$settings_copied = 0;
 								foreach ($uuids as $x => $uuid) {
 
@@ -233,6 +233,7 @@ if (!class_exists('default_settings')) {
 										$default_setting_order = $row["default_setting_order"];
 										$default_setting_enabled = $row["default_setting_enabled"];
 										$default_setting_description = $row["default_setting_description"];
+										$default_setting = $row; // all values
 									}
 									unset($sql, $parameters, $row);
 
@@ -241,48 +242,76 @@ if (!class_exists('default_settings')) {
 										$default_setting_value = generate_password();
 									}
 
-									// check if exists
-									$sql = "select domain_setting_uuid from v_domain_settings ";
-									$sql .= "where domain_uuid = :domain_uuid ";
-									$sql .= "and domain_setting_category = :domain_setting_category ";
-									$sql .= "and domain_setting_subcategory = :domain_setting_subcategory ";
-									$sql .= "and domain_setting_name = :domain_setting_name ";
-									$sql .= "and domain_setting_name <> 'array' ";
-									$parameters['domain_uuid'] = $this->domain_uuid;
-									$parameters['domain_setting_category'] = $default_setting_category;
-									$parameters['domain_setting_subcategory'] = $default_setting_subcategory;
-									$parameters['domain_setting_name'] = $default_setting_name;
-									$database = new database;
-									$target_domain_setting_uuid = $database->select($sql, $parameters, 'column');
-									$message = $database->message;
+									//copy to domain
+									if (is_uuid($this->domain_uuid)) {
 
-									$action = is_uuid($target_domain_setting_uuid) ? 'update' : 'add';
-									unset($sql, $parameters);
+										// check if exists
+										$sql = "select domain_setting_uuid from v_domain_settings ";
+										$sql .= "where domain_uuid = :domain_uuid ";
+										$sql .= "and domain_setting_category = :domain_setting_category ";
+										$sql .= "and domain_setting_subcategory = :domain_setting_subcategory ";
+										$sql .= "and domain_setting_name = :domain_setting_name ";
+										$sql .= "and domain_setting_name <> 'array' ";
+										$parameters['domain_uuid'] = $this->domain_uuid;
+										$parameters['domain_setting_category'] = $default_setting_category;
+										$parameters['domain_setting_subcategory'] = $default_setting_subcategory;
+										$parameters['domain_setting_name'] = $default_setting_name;
+										$database = new database;
+										$target_domain_setting_uuid = $database->select($sql, $parameters, 'column');
+										$message = $database->message;
 
-									// fix null
-									$default_setting_order = $default_setting_order != '' ? $default_setting_order : null;
+										$action = is_uuid($target_domain_setting_uuid) ? 'update' : 'add';
+										unset($sql, $parameters);
 
-									//begin array
-									$array['domain_settings'][$x]['domain_uuid'] = $this->domain_uuid;
-									$array['domain_settings'][$x]['domain_setting_category'] = $default_setting_category;
-									$array['domain_settings'][$x]['domain_setting_subcategory'] = $default_setting_subcategory;
-									$array['domain_settings'][$x]['domain_setting_name'] = $default_setting_name;
-									$array['domain_settings'][$x]['domain_setting_value'] = $default_setting_value;
-									$array['domain_settings'][$x]['domain_setting_order'] = $default_setting_order;
-									$array['domain_settings'][$x]['domain_setting_enabled'] = $default_setting_enabled ?: 0;
-									$array['domain_settings'][$x]['domain_setting_description'] = $default_setting_description;
+										// fix null
+										$default_setting_order = $default_setting_order != '' ? $default_setting_order : null;
 
-									//insert
-									if ($action == "add" && permission_exists("domain_select") && permission_exists("domain_setting_add") && count($_SESSION['domains']) > 1) {
-										$array['domain_settings'][$x]['domain_setting_uuid'] = uuid();
+										//begin array
+										$array['domain_settings'][$x]['domain_uuid'] = $this->domain_uuid;
+										$array['domain_settings'][$x]['domain_setting_category'] = $default_setting_category;
+										$array['domain_settings'][$x]['domain_setting_subcategory'] = $default_setting_subcategory;
+										$array['domain_settings'][$x]['domain_setting_name'] = $default_setting_name;
+										$array['domain_settings'][$x]['domain_setting_value'] = $default_setting_value;
+										$array['domain_settings'][$x]['domain_setting_order'] = $default_setting_order;
+										$array['domain_settings'][$x]['domain_setting_enabled'] = $default_setting_enabled ?: 0;
+										$array['domain_settings'][$x]['domain_setting_description'] = $default_setting_description;
+
+										//insert
+										if ($action == "add" && permission_exists("domain_select") && permission_exists("domain_setting_add") && count($_SESSION['domains']) > 1) {
+											$array['domain_settings'][$x]['domain_setting_uuid'] = uuid();
+										}
+										//update
+										if ($action == "update" && permission_exists('domain_setting_edit')) {
+											$array['domain_settings'][$x]['domain_setting_uuid'] = $target_domain_setting_uuid;
+										}
+
+										//execute
+										if (is_uuid($array['domain_settings'][$x]['domain_setting_uuid'])) {
+											$database = new database;
+											$database->app_name = $this->table;
+											$database->app_uuid = $this->app_uuid;
+											$database->save($array);
+											$message = $database->message;
+											unset($array);
+
+											$settings_copied++;
+										}
+
 									}
-									//update
-									if ($action == "update" && permission_exists('domain_setting_edit')) {
-										$array['domain_settings'][$x]['domain_setting_uuid'] = $target_domain_setting_uuid;
-									}
 
-									//execute
-									if (is_uuid($array['domain_settings'][$x]['domain_setting_uuid'])) {
+									//duplicate default setting
+									else {
+
+										//populate and adjust array
+										$array['default_settings'][$x] = $default_setting;
+										$array['default_settings'][$x]['default_setting_uuid'] = uuid();
+										$array['default_settings'][$x]['default_setting_description'] .= ' (Copy)';
+										unset($array['default_settings'][$x]['insert_date']);
+										unset($array['default_settings'][$x]['insert_user']);
+										unset($array['default_settings'][$x]['update_date']);
+										unset($array['default_settings'][$x]['update_user']);
+
+										//execute
 										$database = new database;
 										$database->app_name = $this->table;
 										$database->app_uuid = $this->app_uuid;
@@ -291,6 +320,7 @@ if (!class_exists('default_settings')) {
 										unset($array);
 
 										$settings_copied++;
+
 									}
 
 								} // foreach
