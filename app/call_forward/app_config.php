@@ -93,7 +93,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "dashboard";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "call_forward_chart_color_follow_me";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "#00b337";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "#03c04a";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
@@ -101,7 +101,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "dashboard";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "call_forward_chart_color_do_not_disturb";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "#b30000";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "#ea4c46";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
