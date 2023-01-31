@@ -2589,16 +2589,16 @@ $text['label-active']['ru-ru'] = "Активные";
 $text['label-active']['sv-se'] = "Aktiv";
 $text['label-active']['uk-ua'] = "";
 
-$text['label-inactive']['en-us'] = "InActive";
-$text['label-inactive']['en-gb'] = "InActive";
+$text['label-inactive']['en-us'] = "Inactive";
+$text['label-inactive']['en-gb'] = "Inactive";
 $text['label-inactive']['ar-eg'] = "";
-$text['label-inactive']['de-at'] = "InAktiv"; //copied from de-de
-$text['label-inactive']['de-ch'] = "InAktiv"; //copied from de-de
-$text['label-inactive']['de-de'] = "InAktiv";
+$text['label-inactive']['de-at'] = "Inaktiv"; //copied from de-de
+$text['label-inactive']['de-ch'] = "Inaktiv"; //copied from de-de
+$text['label-inactive']['de-de'] = "Inaktiv";
 $text['label-inactive']['es-cl'] = "";
 $text['label-inactive']['es-mx'] = "";
-$text['label-inactive']['fr-ca'] = "InActif";
-$text['label-inactive']['fr-fr'] = "InActif";
+$text['label-inactive']['fr-ca'] = "Inactif";
+$text['label-inactive']['fr-fr'] = "Inactif";
 $text['label-inactive']['he-il'] = "";
 $text['label-inactive']['it-it'] = "Non Attivo";
 $text['label-inactive']['nl-nl'] = "";
@@ -2607,7 +2607,7 @@ $text['label-inactive']['pt-br'] = "";
 $text['label-inactive']['pt-pt'] = "";
 $text['label-inactive']['ro-ro'] = "";
 $text['label-inactive']['ru-ru'] = "Неактивный";
-$text['label-inactive']['sv-se'] = "InAktiv";
+$text['label-inactive']['sv-se'] = "Inaktiv";
 $text['label-inactive']['uk-ua'] = "";
 
 ?>

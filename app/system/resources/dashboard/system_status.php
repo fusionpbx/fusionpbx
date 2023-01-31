@@ -41,7 +41,7 @@
 		if ($percent_disk_usage != '') {
 			//add half doughnut chart
 			?>
-			<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 20px; cursor: pointer;' onclick="$('#hud_system_status_details').slideToggle('fast');">
+			<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 20px;' onclick="$('#hud_system_status_details').slideToggle('fast');">
 				<div><canvas id='system_status_chart' width='175px' height='175px'></canvas></div>
 			</div>
 
