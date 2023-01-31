@@ -172,6 +172,14 @@
 	</script>
 	<?php
 
+// determine initial state all button to display
+	if (is_array($dashboard) && @sizeof($dashboard) != 0) {
+		$expanded_all = true;
+		foreach ($dashboard as $row) {
+			if ($row['dashboard_details_state'] == 'contracted') { $expanded_all = false; }
+		}
+	}
+
 //show the content
 	echo "<form id='dashboard' method='POST' onsubmit='setFormSubmitting()'>\n";
 	echo "<div class='action_bar' id='action_bar'>\n";
@@ -181,13 +189,13 @@
 		echo "		".$text['label-welcome']." <a href='".PROJECT_PATH."/core/users/user_edit.php?id=user'>".$_SESSION["username"]."</a>&nbsp; &nbsp;";
 	}
 	if (permission_exists('dashboard_edit')) {
-		if ($_GET['edit'] == 'true') {
-			echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','name'=>'btn_back','link'=>'index.php']);
-			echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save','name'=>'btn_save']);
-		}
-		else {
-			echo button::create(['type'=>'button','label'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'id'=>'btn_edit','name'=>'btn_edit','link'=>'index.php?edit=true']);
-		}
+		echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','name'=>'btn_back','style'=>'display: none;','onclick'=>"edit_mode('off');"]);
+		echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save','name'=>'btn_save','style'=>'display: none; margin-left: 15px;']);
+		echo "<span id='expand_contract'>\n";
+			echo button::create(['type'=>'button','label'=>$text['button-expand_all'],'icon'=>$_SESSION['theme']['button_icon_expand'],'id'=>'btn_expand','name'=>'btn_expand','style'=>($expanded_all ? 'display: none;' : null),'onclick'=>"$('.hud_details').slideDown('fast'); $(this).hide(); $('#btn_contract').show();"]);
+			echo button::create(['type'=>'button','label'=>$text['button-contract_all'],'icon'=>$_SESSION['theme']['button_icon_contract'],'id'=>'btn_contract','name'=>'btn_contract','style'=>(!$expanded_all ? 'display: none;' : null),'onclick'=>"$('.hud_details').slideUp('fast'); $(this).hide(); $('#btn_expand').show();"]);
+		echo "</span>\n";
+		echo button::create(['type'=>'button','label'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'id'=>'btn_edit','name'=>'btn_edit','style'=>'margin-left: 15px;','onclick'=>"edit_mode('on');"]);
 		echo button::create(['type'=>'button','label'=>$text['button-settings'],'icon'=>$_SESSION['theme']['button_icon_add'],'id'=>'btn_add','name'=>'btn_add','link'=>'dashboard.php']);
 	}
 	echo "	</div>\n";
@@ -213,6 +221,7 @@
 
 .widget {
   /*background-color: #eee;*/
+  cursor: pointer;
 }
 
 .widgets {
@@ -312,11 +321,7 @@
 	foreach($dashboard as $row) {
 		$dashboard_name = strtolower($row['dashboard_name']);
 		$dashboard_name = str_replace(" ", "_", $dashboard_name);
-		$draggable = '';
-		if ($_GET['edit'] == 'true') {
-			$draggable = "draggable='true'";
-		}
-		echo "<div class='widget' id='".$dashboard_name."' ".$draggable.">\n";
+		echo "<div class='widget' id='".$dashboard_name."' draggable='false'>\n";
 			include($row['dashboard_path']);
 		echo "</div>\n";
 		$x++;
@@ -324,7 +329,7 @@
 	echo "</div>\n";
 
 //begin edit
-	if ($_GET['edit'] == 'true') {
+	if (permission_exists('dashboard_edit')) {
 		?>
 
 		<style>
@@ -336,83 +341,112 @@
 			user-select: none;
 		}
 
-		.widget {
+		div.widget.editable {
 			cursor: move;
 		}
 
-		.hud_box {
+		.hud_box.editable {
 			transition: 0.2s;
+			border: 1px dashed rgba(0,0,0,0.4);
 		}
 
-		.hud_box:hover {
+		.hud_box.editable:hover {
 			box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+			border: 1px dashed rgba(0,0,0,0.4);
 			transform: scale(1.03, 1.03);
 			transition: 0.2s;
 		}
 
-		.hud_box .hud_box:hover {
+		.hud_box .hud_box.editable:hover {
 			box-shadow: none;
 			transform: none;
 		}
 
 		.ghost {
-			border: 3px dashed rgba(0,0,0,1);
+			border: 2px dashed rgba(0,0,0,1);
+			<?php $br = format_border_radius($_SESSION['theme']['dashboard_border_radius']['text'], '5px'); ?>
+			-webkit-border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
+			-moz-border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
+			border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
+			<?php unset($br); ?>
 			opacity: 0.2;
 		}
 		</style>
 
 		<script>
-		//make widgets draggable
 		var widgets = document.getElementById('widgets');
-		var sortable = Sortable.create(widgets, {
-			animation: 150,
-			draggable: ".widget",
-			preventOnFilter: true,
-			ghostClass: 'ghost',
-			/*
-			onChange: function (evt) {
-				//check if chart exists
-				let chart_status = Chart.getChart(evt.item.id + "_chart");
-				if(chart_status !== undefined && chart_status !== null) {
-					let context = eval(evt.item.id + "_chart_context");
-					let chart = Chart.getChart(context);
-					let config = eval(evt.item.id + "_chart_config");
+		var sortable;
+		//make widgets draggable
+		function edit_mode(state) {
 
-					//re render the chart
-					chart.destroy();
-					chart.options.animation = { duration: 0 };
-					chart = new Chart(context, config);
-				}
-			},
-			*/
-			onSort: function (evt) {
-				let widget_ids = document.querySelectorAll("#widgets > div[id]");
-				let widget_ids_list = [];
-				for (let i = 0; i < widget_ids.length; i++) {
-					widget_ids_list.push(widget_ids[i].id);
-				}
-				document.getElementById('widget_order').value = widget_ids_list;
-			},
-		});
+			if (state == 'on') {
+				$('span#expand_contract, #btn_edit, #btn_add').hide();
+				$('.hud_box').addClass('editable');
+				$('#btn_back, #btn_save').show();
+				$('div.widget').attr('draggable',true).addClass('editable');
 
-		/*
-		//warn the user before leaving the page
-		var formSubmitting = false;
-		var setFormSubmitting = function() { formSubmitting = true; };
+				sortable = Sortable.create(widgets, {
+					animation: 150,
+					draggable: ".widget",
+					preventOnFilter: true,
+					ghostClass: 'ghost',
+					/*
+					onChange: function (evt) {
+						//check if chart exists
+						let chart_status = Chart.getChart(evt.item.id + "_chart");
+						if(chart_status !== undefined && chart_status !== null) {
+							let context = eval(evt.item.id + "_chart_context");
+							let chart = Chart.getChart(context);
+							let config = eval(evt.item.id + "_chart_config");
 
-		window.onload = function() {
-			window.addEventListener("beforeunload", function (e) {
-				var confirmationMessage = 'You have unsaved changes which will not be saved.';
+							//re render the chart
+							chart.destroy();
+							chart.options.animation = { duration: 0 };
+							chart = new Chart(context, config);
+						}
+					},
+					*/
+					onSort: function (evt) {
+						let widget_ids = document.querySelectorAll("#widgets > div[id]");
+						let widget_ids_list = [];
+						for (let i = 0; i < widget_ids.length; i++) {
+							widget_ids_list.push(widget_ids[i].id);
+						}
+						document.getElementById('widget_order').value = widget_ids_list;
+					},
+				});
 
-				if (formSubmitting) {
-					return undefined;
-				}
+				/*
+				//warn the user before leaving the page
+				var formSubmitting = false;
+				var setFormSubmitting = function() { formSubmitting = true; };
 
-				(e || window.event).returnValue = confirmationMessage;
-				return confirmationMessage;
-			});
-		};
-		*/
+				window.onload = function() {
+					window.addEventListener("beforeunload", function (e) {
+						var confirmationMessage = 'You have unsaved changes which will not be saved.';
+
+						if (formSubmitting) {
+							return undefined;
+						}
+
+						(e || window.event).returnValue = confirmationMessage;
+						return confirmationMessage;
+					});
+				};
+				*/
+
+			}
+			else { // off
+
+				$('div.widget').attr('draggable',false).removeClass('editable');
+				$('.hud_box').removeClass('editable');
+				$('#btn_back, #btn_save').hide();
+				$('span#expand_contract, #btn_edit, #btn_add').show();
+
+				sortable.option('disabled', true);
+
+			}
+		}
 		</script>
 		<?php
 	} //end edit

@@ -79,7 +79,7 @@
 
 //add doughnut chart
 	?>
-	<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 20px; cursor: pointer;' onclick="$('#hud_switch_status_details').slideToggle('fast');">
+	<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 20px;' onclick="$('#hud_switch_status_details').slideToggle('fast');">
 		<canvas id='switch_status_chart' width='175px' height='175px'></canvas>
 	</div>
 

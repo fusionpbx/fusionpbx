@@ -56,7 +56,7 @@
 
 //add half doughnut chart
 	?>
-	<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 20px; cursor: pointer;' onclick="$('#hud_system_cpu_status_details').slideToggle('fast');">
+	<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 20px;' onclick="$('#hud_system_cpu_status_details').slideToggle('fast');">
 		<div><canvas id='system_cpu_status_chart' width='175px' height='175px' ></canvas></div>
 	</div>
 
