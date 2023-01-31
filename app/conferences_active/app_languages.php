@@ -106,6 +106,27 @@ $text['message-click_to_mute']['ru-ru'] = "Нажмите, чтобы отклю
 $text['message-click_to_mute']['sv-se'] = "Klicka för att Stänga Av Deltagares Mikrofon";
 $text['message-click_to_mute']['uk-ua'] = "Натисніть, щоб вилючити учасника";
 
+$text['label-conference_center_room']['en-us'] = "Conference Center Room";
+$text['label-conference_center_room']['en-gb'] = "Conference Center Room";
+$text['label-conference_center_room']['ar-eg'] = "";
+$text['label-conference_center_room']['de-at'] = "Konferenz Zentrale"; //copied from de-de
+$text['label-conference_center_room']['de-ch'] = "Konferenz Zentrale"; //copied from de-de
+$text['label-conference_center_room']['de-de'] = "Konferenz Zentrale";
+$text['label-conference_center_room']['es-cl'] = "Centro de Conferencia";
+$text['label-conference_center_room']['es-mx'] = "Centro de Conferencia"; //copied from es-cl
+$text['label-conference_center_room']['fr-ca'] = "Centre de conférence"; //copied from fr-fr
+$text['label-conference_center_room']['fr-fr'] = "Centre de conférence";
+$text['label-conference_center_room']['he-il'] = "";
+$text['label-conference_center_room']['it-it'] = "Centro Conferenza";
+$text['label-conference_center_room']['nl-nl'] = "Conferentie centrum";
+$text['label-conference_center_room']['pl-pl'] = "Centrum Konferencyjne";
+$text['label-conference_center_room']['pt-br'] = "Centro de conferência";
+$text['label-conference_center_room']['pt-pt'] = "Centro de Conferência";
+$text['label-conference_center_room']['ro-ro'] = "";
+$text['label-conference_center_room']['ru-ru'] = "Конференц-центр";
+$text['label-conference_center_room']['sv-se'] = "Konferenscenter";
+$text['label-conference_center_room']['uk-ua'] = "Конференц-центр";
+
 $text['label-yes']['en-us'] = "Yes";
 $text['label-yes']['en-gb'] = "Yes";
 $text['label-yes']['ar-eg'] = "";

@@ -799,4 +799,25 @@ $text['label-account_code']['ru-ru'] = "Код Учетной Записи";
 $text['label-account_code']['sv-se'] = "Kontokod";
 $text['label-account_code']['uk-ua'] = "";
 
+$text['label-view']['en-us'] = "View";
+$text['label-view']['en-gb'] = "View";
+$text['label-view']['ar-eg'] = "";
+$text['label-view']['de-at'] = "Ansicht"; //copied from de-de
+$text['label-view']['de-ch'] = "Ansicht"; //copied from de-de
+$text['label-view']['de-de'] = "Ansicht";
+$text['label-view']['es-cl'] = "Ver";
+$text['label-view']['es-mx'] = "Ver"; //copied from es-cl
+$text['label-view']['fr-ca'] = "Vue"; //copied from fr-fr
+$text['label-view']['fr-fr'] = "Vue";
+$text['label-view']['he-il'] = "";
+$text['label-view']['it-it'] = "Mostra";
+$text['label-view']['nl-nl'] = "Bekijken";
+$text['label-view']['pl-pl'] = "Widok";
+$text['label-view']['pt-br'] = "Visualizar";
+$text['label-view']['pt-pt'] = "Vista";
+$text['label-view']['ro-ro'] = "";
+$text['label-view']['ru-ru'] = "Просмотр";
+$text['label-view']['sv-se'] = "Visa";
+$text['label-view']['uk-ua'] = "Перегляд";
+
 ?>
