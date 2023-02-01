@@ -335,6 +335,12 @@
 														$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_break'] = $row['@attributes']['break'];
 													}
 													$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = $group;
+													if (isset($row['@attributes']['enabled'])) {
+														$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_enabled'] = $row['@attributes']['enabled'];
+													}
+													else {
+														$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_enabled'] = 'true';
+													}
 													$y++;
 
 													if (is_array($row['action']) || is_array($row['anti-action'])) {
