@@ -18,11 +18,7 @@ FsDatabase._backend_name = 'native'
 function FsDatabase.new(name)
   local dbh = assert(name)
   if type(name) == 'string' then
-    if name == 'switch' and file_exists(database_dir.."/core.db") then
-      dbh = freeswitch.Dbh("sqlite://"..database_dir.."/core.db")
-    else
-      dbh = database_handle(name)
-    end
+    dbh = database_handle(name)
   end
   assert(dbh:connected())
 
