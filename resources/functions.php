@@ -261,12 +261,40 @@
 	}
 
 	if (!function_exists('permission_exists')) {
-		function permission_exists($permission) {
-			//set default false
+		function permission_exists($permission, $operator = 'or') {
+			//set default
 				$result = false;
-			//find the permission
-				if (is_array($_SESSION["permissions"]) && $_SESSION["permissions"][$permission] == true) {
-					$result = true;
+			//permissions exist
+				if (is_array($_SESSION["permissions"]) && @sizeof($_SESSION['permissions']) != 0) {
+				//array
+					if (is_array($permission) && @sizeof($permission) != 0) {
+						if ($operator == 'and') {
+							$exists_all = true;
+							foreach ($permission as $perm) {
+								if ($_SESSION["permissions"][$permission] != true) {
+									$exists_all = false;
+									break;
+								}
+							}
+							$result = $exists_all;
+						}
+						else {
+							$exists_one = false;
+							foreach ($permission as $perm) {
+								if ($_SESSION["permissions"][$permission] != true) {
+									$exists_one = true;
+									break;
+								}
+							}
+							$result = $exists_one;
+						}
+					}
+				//single
+					else {
+						if ($_SESSION["permissions"][$permission] == true) {
+							$result = true;
+						}
+					}
 				}
 			//return the result
 				return $result;
