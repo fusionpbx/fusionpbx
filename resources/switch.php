@@ -308,11 +308,14 @@ function save_gateway_xml() {
 									break;
 								case "tls":
 									$xml .= "      <param name=\"register-transport\" value=\"tls\"/>\n";
-									$xml .= "      <param name=\"contact-params\" value=\"transport=tls\"/>\n";
 									break;
 								default:
 									$xml .= "      <param name=\"register-transport\" value=\"" . $row['register_transport'] . "\"/>\n";
 								}
+							}
+
+							if (strlen($row['contact_params']) > 0) {
+								$xml .= "      <param name=\"contact-params\" value=\"" . $row['contact_params'] . "\"/>\n";
 							}
 
 							if (strlen($row['retry_seconds']) > 0) {

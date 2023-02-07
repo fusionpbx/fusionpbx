@@ -71,6 +71,7 @@
 				$expire_seconds = $row["expire_seconds"];
 				$register = $row["register"];
 				$register_transport = $row["register_transport"];
+				$contact_params = $row["contact_params"];
 				$retry_seconds = $row["retry_seconds"];
 				$extension = $row["extension"];
 				$codec_prefs = $row["codec_prefs"];
@@ -116,6 +117,7 @@
 			$array['gateways'][0]['expire_seconds'] = $expire_seconds;
 			$array['gateways'][0]['register'] = $register;
 			$array['gateways'][0]['register_transport'] = $register_transport;
+			$array['gateways'][0]['contact_params'] = $contact_params;
 			$array['gateways'][0]['retry_seconds'] = $retry_seconds;
 			$array['gateways'][0]['extension'] = $extension;
 			$array['gateways'][0]['codec_prefs'] = $codec_prefs;
@@ -123,7 +125,7 @@
 			//$array['gateways'][0]['channels'] = $channels;
 			$array['gateways'][0]['caller_id_in_from'] = $caller_id_in_from;
 			$array['gateways'][0]['supress_cng'] = $supress_cng;
-         		$array['gateways'][0]['sip_cid_type'] = $sip_cid_type;
+			$array['gateways'][0]['sip_cid_type'] = $sip_cid_type;
 			$array['gateways'][0]['extension_in_contact'] = $extension_in_contact;
 			$array['gateways'][0]['context'] = $context;
 			$array['gateways'][0]['profile'] = $profile;

@@ -172,10 +172,14 @@
 										table.insert(xml, [[							<param name="register-transport" value="tcp"/>]]);
 									elseif (field.register_transport == "tls") then
 										table.insert(xml, [[							<param name="register-transport" value="tls"/>]]);
-										table.insert(xml, [[							<param name="contact-params" value="transport=tls"/>]]);
+										
 									else
 										table.insert(xml, [[							<param name="register-transport" value="udp"/>]]);
 									end
+								end
+
+								if (field.contact_params) then
+									table.insert(xml, [[							<param name="contact-params" value="]] .. field.contact_params .. [["/>]]);
 								end
 
 								if (string.len(field.retry_seconds) > 0) then
