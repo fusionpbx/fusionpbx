@@ -153,7 +153,7 @@
 
 		//save the data
 			$database = new database;
-			$database->app_name = 'extension settings';
+			$database->app_name = 'extension_settings';
 			$database->app_uuid = '1416a250-f6e1-4edc-91a6-5c9b883638fd';
 			$database->save($array);
 		
@@ -182,36 +182,21 @@
 	}
 
 //pre-populate the form
-	if (is_array($_GET) && $_POST["persistformvar"] != "true") {
-		$sql = "select ";
-		//$sql .= "extension_uuid, ";
-		//$sql .= "domain_uuid, ";
-		$sql .= "extension_setting_uuid, ";
-		$sql .= "extension_setting_type, ";
-		$sql .= "extension_setting_name, ";
-		$sql .= "extension_setting_value, ";
-		$sql .= "cast(extension_setting_enabled as text), ";
-		$sql .= "extension_setting_description ";
-		$sql .= "from v_extension_settings ";
-		$sql .= "where extension_setting_uuid = :extension_setting_uuid ";
-		//$sql .= "and domain_uuid = :domain_uuid ";
-		//$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-		$parameters['extension_setting_uuid'] = $extension_setting_uuid;
-		$database = new database;
-		$row = $database->select($sql, $parameters, 'row');
-		if (is_array($row) && @sizeof($row) != 0) {
-			if (is_uuid($row["extension_uuid"])) {
-				$extension_uuid = $row["extension_uuid"];
-			}
-			//$domain_uuid = $row["domain_uuid"];
-			$extension_setting_type = $row["extension_setting_type"];
-			$extension_setting_name = $row["extension_setting_name"];
-			$extension_setting_value = $row["extension_setting_value"];
-			$extension_setting_enabled = $row["extension_setting_enabled"];
-			$extension_setting_description = $row["extension_setting_description"];
+if (is_array($_GET) && $_POST["persistformvar"] != "true") {
+	$extension_setting = extension_settings::get($extension_setting_uuid);
+	if (is_array($extension_setting) && @sizeof($extension_setting) != 0) {
+		if (is_uuid($extension_setting["extension_uuid"])) {
+			$extension_uuid = $extension_setting["extension_uuid"];
 		}
-		unset($sql, $parameters, $row);
+		//$domain_uuid = $extension_setting["domain_uuid"];
+		$extension_setting_type = $extension_setting["extension_setting_type"];
+		$extension_setting_name = $extension_setting["extension_setting_name"];
+		$extension_setting_value = $extension_setting["extension_setting_value"];
+		$extension_setting_enabled = $extension_setting["extension_setting_enabled"];
+		$extension_setting_description = $extension_setting["extension_setting_description"];
 	}
+	unset($extension_setting);
+}
 
 //create token
 	$object = new token;

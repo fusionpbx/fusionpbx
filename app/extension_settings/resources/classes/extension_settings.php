@@ -72,6 +72,76 @@ if (!class_exists('extension_settings')) {
 		}
 
 		/**
+		 * list settings for given extension by uuid
+		 */
+		public static function list($extension_uuid, $search, $order_by, $order) {
+			$sql = "select ";
+			$sql .= "extension_setting_uuid, ";
+			$sql .= "extension_setting_type, ";
+			$sql .= "extension_setting_name, ";
+			$sql .= "extension_setting_value, ";
+			$sql .= "cast(extension_setting_enabled as text), ";
+			$sql .= "extension_setting_description ";
+			$sql .= "from v_extension_settings as e ";
+			$sql .= "where extension_uuid = :extension_uuid ";
+			if (isset($search)) {
+				$sql .= "and (";
+				$sql .= "	lower(extension_setting_type) like :search ";
+				$sql .= "	or lower(extension_setting_name) like :search ";
+				$sql .= "	or lower(extension_setting_description) like :search ";
+				$sql .= ") ";
+				$parameters['search'] = '%'.$search.'%';
+			}
+		
+			$sql .= order_by($order_by, $order, 'extension_setting_type', 'asc');
+			$parameters['extension_uuid'] = $extension_uuid;
+			$database = new database;
+			return $database->select($sql, $parameters, 'all');
+		}
+
+		/**
+		 * count settings for an extensnion
+		 */
+		public static function count($extension_uuid, $search) {
+			$sql = "select count(extension_setting_uuid) ";
+			$sql .= "from v_extension_settings ";
+			$sql .= "where extension_uuid = :extension_uuid ";
+			if (isset($search)) {
+				$sql .= "and (";
+				$sql .= "	lower(extension_setting_type) like :search ";
+				$sql .= "	or lower(extension_setting_name) like :search ";
+				$sql .= "	or lower(extension_setting_description) like :search ";
+				$sql .= ") ";
+				$parameters['search'] = '%'.$search.'%';
+			}
+			$parameters['extension_uuid'] = $extension_uuid;
+			$database = new database;
+			return $database->select($sql, $parameters, 'column');
+		}
+
+		/**
+		 * retreive extension setting by uuid
+		 */
+		public static function get($extension_setting_uuid) {
+			$sql = "select ";
+			//$sql .= "extension_uuid, ";
+			//$sql .= "domain_uuid, ";
+			$sql .= "extension_setting_uuid, ";
+			$sql .= "extension_setting_type, ";
+			$sql .= "extension_setting_name, ";
+			$sql .= "extension_setting_value, ";
+			$sql .= "cast(extension_setting_enabled as text), ";
+			$sql .= "extension_setting_description ";
+			$sql .= "from v_extension_settings ";
+			$sql .= "where extension_setting_uuid = :extension_setting_uuid ";
+			//$sql .= "and domain_uuid = :domain_uuid ";
+			//$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+			$parameters['extension_setting_uuid'] = $extension_setting_uuid;
+			$database = new database;
+			return $database->select($sql, $parameters, 'row');
+		}
+
+		/**
 		 * delete rows from the database
 		 */
 		public function delete($records) {

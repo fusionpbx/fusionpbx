@@ -103,59 +103,10 @@
 	}
 
 //get the count
-	$sql = "select count(extension_setting_uuid) ";
-	$sql .= "from v_extension_settings ";
-	$sql .= "where extension_uuid = :extension_uuid ";
-	if (isset($search)) {
-		$sql .= "and (";
-		$sql .= "	lower(extension_setting_type) like :search ";
-		$sql .= "	or lower(extension_setting_name) like :search ";
-		$sql .= "	or lower(extension_setting_description) like :search ";
-		$sql .= ") ";
-		$parameters['search'] = '%'.$search.'%';
-	}
-	else {
-		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
-		if (isset($sql_search)) {
-			$sql .= "and ".$sql_search;
-		}
-		$parameters['domain_uuid'] = $domain_uuid;
-	}
-	$parameters['extension_uuid'] = $extension_uuid;
-	$database = new database;
-	$num_rows = $database->select($sql, $parameters, 'column');
-	unset($sql, $parameters);
+	$num_rows = extension_settings::count($extension_uuid, $search);
 
 //get the list
-	$sql = "select ";
-	//$sql .= "d.domain_name, ";
-	$sql .= "extension_setting_uuid, ";
-	$sql .= "extension_setting_type, ";
-	$sql .= "extension_setting_name, ";
-	$sql .= "extension_setting_value, ";
-	$sql .= "cast(extension_setting_enabled as text), ";
-	$sql .= "extension_setting_description ";
-	$sql .= "from v_extension_settings as e ";
-	//$sql .= ",v_domains as d ";
-	$sql .= "where extension_uuid = :extension_uuid ";
-	$sql .= "and (e.domain_uuid = :domain_uuid or e.domain_uuid is null) ";
-	//$sql .= "and d.domain_uuid = e.domain_uuid ";
-	if (isset($_GET["search"])) {
-		$sql .= "and (";
-		$sql .= "	lower(extension_setting_type) like :search ";
-		$sql .= "	or lower(extension_setting_name) like :search ";
-		$sql .= "	or lower(extension_setting_description) like :search ";
-		$sql .= ") ";
-		$parameters['search'] = '%'.$search.'%';
-	}
-
-	$sql .= order_by($order_by, $order, 'extension_setting_type', 'asc');
-	$sql .= limit_offset($rows_per_page, $offset);
-	$parameters['extension_uuid'] = $extension_uuid;
-	$parameters['domain_uuid'] = $domain_uuid;
-	$database = new database;
-	$extension_settings = $database->select($sql, $parameters, 'all');
-	unset($sql, $parameters);
+	$extension_settings = extension_settings::list($extension_uuid, $search, $order_by, $order);
 
 //create token
 	$object = new token;
