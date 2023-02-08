@@ -41,15 +41,8 @@ else {
 	exit;
 }
 
-//add multi-lingual support
-// 	$language = new text;
-// 	$text = $language->get();
-
 //set the variables
 	$search = $_REQUEST['search'];
-
-//add a message
-// 	message::add($text['message-settings_reloaded']);
 
 //create event socket connection
 	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
