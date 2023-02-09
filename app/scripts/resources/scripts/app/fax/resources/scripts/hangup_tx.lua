@@ -344,7 +344,7 @@
 		sql = "update v_fax_queue ";
 		sql = sql .. "set fax_status = :fax_status, fax_log_uuid = :fax_log_uuid ";
 		sql = sql .. "where fax_queue_uuid = :fax_queue_uuid ";
-		local params = {fax_queue_uuid = fax_queue_uuid, fax_status = fax_status, fax_log_uuid = uuid}
+		local params = {fax_queue_uuid = fax_queue_uuid, fax_status = 'sent', fax_log_uuid = uuid}
 		dbh:query(sql, params);
 	end
 
