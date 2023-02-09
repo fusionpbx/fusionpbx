@@ -134,38 +134,17 @@
 				require_once "resources/footer.php";
 				return;
 			}
-
-		//add the extension_setting_uuid
-			if (!is_uuid($extension_setting_uuid)) {
-				$extension_setting_uuid = uuid();
-			}
-
-		//prepare the array
-			$array['extension_settings'][0]['extension_setting_uuid'] = $extension_setting_uuid;
-			$array['extension_settings'][0]['extension_uuid'] = $extension_uuid;
-			$array['extension_settings'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
-			//$array['extension_settings'][0]['domain_uuid'] = $domain_uuid;
-			$array['extension_settings'][0]['extension_setting_type'] = $extension_setting_type;
-			$array['extension_settings'][0]['extension_setting_name'] = $extension_setting_name;
-			$array['extension_settings'][0]['extension_setting_value'] = $extension_setting_value;
-			$array['extension_settings'][0]['extension_setting_enabled'] = $extension_setting_enabled;
-			$array['extension_settings'][0]['extension_setting_description'] = $extension_setting_description;
-
-		//save the data
-			$database = new database;
-			$database->app_name = 'extension_settings';
-			$database->app_uuid = '1416a250-f6e1-4edc-91a6-5c9b883638fd';
-			$database->save($array);
-		
-		//clear the cache	
-			$sql = "select extension, number_alias, user_context from v_extensions ";
-			$sql .= "where extension_uuid = :extension_uuid ";
-			$parameters['extension_uuid'] = $extension_uuid;
-			$database = new database;
-			$extension = $database->select($sql, $parameters, 'row');
-			$cache = new cache;
-			$cache->delete("directory:".$extension["extension"]."@".$extension["user_context"]);
-			$cache->delete("directory:".$extension["number_alias"]."@".$extension["user_context"]);
+			
+		//save the setting
+			$ext_setting = new extension_settings;
+			$extension_setting_uuid = $ext_setting->save( [ 'extension_setting_uuid' => $extension_setting_uuid,
+									'extension_uuid' => $extension_uuid,
+									'domain_uuid' => $_SESSION['domain_uuid'],
+									'extension_setting_type' => $extension_setting_type,
+									'extension_setting_name' => $extension_setting_name,
+									'extension_setting_value' => $extension_setting_value,
+									'extension_setting_enabled' => $extension_setting_enabled,
+									'extension_setting_description' => $extension_setting_description ] );
 		
 		//redirect the user
 			if (isset($action)) {
@@ -182,21 +161,21 @@
 	}
 
 //pre-populate the form
-if (is_array($_GET) && $_POST["persistformvar"] != "true") {
-	$extension_setting = extension_settings::get($extension_setting_uuid);
-	if (is_array($extension_setting) && @sizeof($extension_setting) != 0) {
-		if (is_uuid($extension_setting["extension_uuid"])) {
-			$extension_uuid = $extension_setting["extension_uuid"];
+	if (is_array($_GET) && $_POST["persistformvar"] != "true") {
+		$extension_setting = extension_settings::get($extension_setting_uuid);
+		if (is_array($extension_setting) && @sizeof($extension_setting) != 0) {
+			if (is_uuid($extension_setting["extension_uuid"])) {
+				$extension_uuid = $extension_setting["extension_uuid"];
+			}
+			//$domain_uuid = $extension_setting["domain_uuid"];
+			$extension_setting_type = $extension_setting["extension_setting_type"];
+			$extension_setting_name = $extension_setting["extension_setting_name"];
+			$extension_setting_value = $extension_setting["extension_setting_value"];
+			$extension_setting_enabled = $extension_setting["extension_setting_enabled"];
+			$extension_setting_description = $extension_setting["extension_setting_description"];
 		}
-		//$domain_uuid = $extension_setting["domain_uuid"];
-		$extension_setting_type = $extension_setting["extension_setting_type"];
-		$extension_setting_name = $extension_setting["extension_setting_name"];
-		$extension_setting_value = $extension_setting["extension_setting_value"];
-		$extension_setting_enabled = $extension_setting["extension_setting_enabled"];
-		$extension_setting_description = $extension_setting["extension_setting_description"];
+		unset($extension_setting);
 	}
-	unset($extension_setting);
-}
 
 //create token
 	$object = new token;

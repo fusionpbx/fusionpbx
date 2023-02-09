@@ -744,6 +744,19 @@
 						unset($sql, $parameters);
 					}
 
+				//update extension_settings domain if necessary
+					$extension_settings = extension_settings::list($extension_uuid);
+					foreach ((array) $extension_settings as $setting) {
+						if ($setting['domain_uuid'] == $domain_uuid) {
+							continue;
+						}
+
+						$setting['domain_uuid'] = $domain_uuid;
+						$extension_settings = new extension_settings;
+						$extension_settings->save($setting);
+						unset($extension_settings);
+					}
+
 				//save to the data
 					$database = new database;
 					$database->app_name = 'extensions';
@@ -1619,6 +1632,7 @@
 		}
 		echo "    </select>\n";
 		echo "<br />\n";
+		echo "<br />\n";
 		echo $text['description-directory_visible']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
@@ -1642,6 +1656,7 @@
 			echo "    <option value='false'>".$text['label-false']."</option>\n";
 		}
 		echo "    </select>\n";
+		echo "<br />\n";
 		echo "<br />\n";
 		echo $text['description-directory_exten_visible']."\n";
 		echo "</td>\n";

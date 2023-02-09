@@ -45,6 +45,7 @@ if (!class_exists('extension_settings')) {
 		private $toggle_values;
 		private $description_field;
 		private $location;
+		private $extension_uuid;
 
 		/**
 		 * called when the object is created
@@ -72,10 +73,70 @@ if (!class_exists('extension_settings')) {
 		}
 
 		/**
+		 * Add or Update extension_settings
+		 */
+		public function save($setting) {
+			if (!permission_exists($this->name.'_edit')) {
+				return false;
+			}
+			if (!is_array($setting) || @sizeof($setting) == 0) {
+				return false;
+			}
+
+
+			//add multi-lingual support
+				$language = new text;
+				$text = $language->get();
+
+			//validate the token
+				$token = new token;
+				if (!$token->validate($_SERVER['PHP_SELF'])) {
+					message::add($text['message-invalid_token'],'negative');
+					header('Location: '.$this->location);
+					exit;
+				}
+
+				$setting_name = $setting['extension_setting_name'];
+				$extension_uuid = $setting['extension_uuid'];
+
+			//find existing or generate new uuid
+				if ( !isset($setting['extension_setting_uuid']) ) {
+					$setting['extension_setting_uuid'] = $this->get($setting_name,$extension_uuid)['extension_setting_uuid'] ?: uuid();
+				}
+
+				$array['extension_settings'][] = $setting;
+
+				// echo "$this->app_name";exit;
+
+			//save the changes
+			//save the array
+				$database = new database;
+				$database->app_name = "extension_settings";
+				$database->app_uuid = $this->app_uuid;
+				$database->save($array);
+				unset($array);
+				
+			//clear the cache	
+				$sql = "select extension, number_alias, user_context from v_extensions ";
+				$sql .= "where extension_uuid = :extension_uuid ";
+				$parameters['extension_uuid'] = $setting['extension_uuid'];
+				$database = new database;
+				$extension = $database->select($sql, $parameters, 'row');
+				$cache = new cache;
+				$cache->delete("directory:".$extension["extension"]."@".$extension["user_context"]);
+				$cache->delete("directory:".$extension["number_alias"]."@".$extension["user_context"]);
+
+
+				return $setting['extension_setting_uuid'];
+
+		}
+
+		/**
 		 * list settings for given extension by uuid
 		 */
-		public static function list($extension_uuid, $search, $order_by, $order) {
+		public static function list($extension_uuid, $search = null, $order_by = null, $order = null) {
 			$sql = "select ";
+			$sql .= "domain_uuid, ";
 			$sql .= "extension_setting_uuid, ";
 			$sql .= "extension_setting_type, ";
 			$sql .= "extension_setting_name, ";
@@ -120,9 +181,9 @@ if (!class_exists('extension_settings')) {
 		}
 
 		/**
-		 * retreive extension setting by uuid
+		 * retreive extension setting by uuid or name + extension_uuid
 		 */
-		public static function get($extension_setting_uuid) {
+		public static function get($extension_setting, $extension_uuid = null) {
 			$sql = "select ";
 			//$sql .= "extension_uuid, ";
 			//$sql .= "domain_uuid, ";
@@ -133,10 +194,17 @@ if (!class_exists('extension_settings')) {
 			$sql .= "cast(extension_setting_enabled as text), ";
 			$sql .= "extension_setting_description ";
 			$sql .= "from v_extension_settings ";
-			$sql .= "where extension_setting_uuid = :extension_setting_uuid ";
+			if (is_uuid($extension_setting)) {
+				$sql .= "where extension_setting_uuid = :extension_setting ";
+			}
+			else {
+				$sql .= "where extension_setting_name = :extension_setting ";
+				$sql .= " and extension_uuid = :extension_uuid ";
+				$parameters['extension_uuid'] = $extension_uuid;
+			}
 			//$sql .= "and domain_uuid = :domain_uuid ";
 			//$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-			$parameters['extension_setting_uuid'] = $extension_setting_uuid;
+			$parameters['extension_setting'] = $extension_setting;
 			$database = new database;
 			return $database->select($sql, $parameters, 'row');
 		}
