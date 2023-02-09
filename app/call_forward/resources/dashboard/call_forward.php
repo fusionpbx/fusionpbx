@@ -92,69 +92,74 @@
 //begin widget
 	echo "<div class='hud_box'>\n";
 
-//doughnut chart
-	if ($show_stat) {
-		echo "<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 20px;' onclick=\"$('#hud_call_forward_details').slideToggle('fast');\">\n";
-		echo "	<div style='width: 250px; height: 175px;'><canvas id='call_forward_chart'></canvas></div>\n";
-		echo "</div>\n";
+//set defaults
+	if ($stats['dnd'] == null) { $stats['dnd'] = 0; }
+	if ($stats['follow_me'] == null) { $stats['follow_me'] = 0; }
+	if ($stats['call_forward'] == null) { $stats['call_forward'] = 0; }
+	if ($stats['active'] == null) { $stats['active'] = 0; }
 
-		echo "<script>\n";
-		echo "	const call_forward_chart = new Chart(\n";
-		echo "		document.getElementById('call_forward_chart').getContext('2d'),\n";
-		echo "		{\n";
-		echo "			type: 'doughnut',\n";
-		echo "			data: {\n";
-		echo "				labels: [\n";
-		echo "					'".$text['label-dnd'].": ".$stats['dnd']."',\n";
-		echo "					'".$text['label-follow_me'].": ".$stats['follow_me']."',\n";
-		echo "					'".$text['label-call_forward'].": ".$stats['call_forward']."',\n";
-		echo "					'".$text['label-active'].": ".$stats['active']."',\n";
-		echo "					],\n";
-		echo "				datasets: [{\n";
-		echo "					data: [\n";
-		echo "						'".$stats['dnd']."',\n";
-		echo "						'".$stats['follow_me']."',\n";
-		echo "						'".$stats['call_forward']."',\n";
-		echo "						'".$stats['active']."',\n";
-		echo "						],\n";
-		echo "					backgroundColor: [\n";
-		echo "						'".$_SESSION['dashboard']['call_forward_chart_color_do_not_disturb']['text']."',\n";
-		echo "						'".$_SESSION['dashboard']['call_forward_chart_color_follow_me']['text']."',\n";
-		echo "						'".$_SESSION['dashboard']['call_forward_chart_color_call_forward']['text']."',\n";
-		echo "						'".$_SESSION['dashboard']['call_forward_chart_color_active']['text']."',\n";
-		echo "						'#000',\n";
-		echo "					],\n";
-		echo "					borderColor: '".$_SESSION['dashboard']['call_forward_chart_border_color']['text']."',\n";
-		echo "					borderWidth: '".$_SESSION['dashboard']['call_forward_chart_border_width']['text']."',\n";
-		echo "					cutout: chart_cutout\n";
-		echo "				}]\n";
-		echo "			},\n";
-		echo "			options: {\n";
-		echo "			responsive: true,\n";
-		echo "				maintainAspectRatio: false,\n";
-		echo "				plugins: {\n";
-		echo "					chart_counter: {\n";
-		echo "						chart_text: '".$stats['call_forward']."'\n";
-		echo "					},\n";
-		echo "					legend: {\n";
-		echo "					position: 'right',\n";
-		echo "						reverse: true,\n";
-		echo "						labels: {\n";
-		echo "							usePointStyle: true,\n";
-		echo "							pointStyle: 'rect'\n";
-		echo "						}\n";
-		echo "					},\n";
-		echo "					title: {\n";
-		echo "						display: true,\n";
-		echo "						text: '".$text['header-call_forward']."'\n";
-		echo "					}\n";
-		echo "				}\n";
-		echo "			},\n";
-		echo "			plugins: [chart_counter],\n";
-		echo "		}\n";
-		echo "	);\n";
-		echo "</script>\n";
-	}
+//doughnut chart
+	echo "<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 20px;' onclick=\"$('#hud_call_forward_details').slideToggle('fast');\">\n";
+	echo "	<div style='width: 275px; height: 175px;'><canvas id='call_forward_chart'></canvas></div>\n";
+	echo "</div>\n";
+
+	echo "<script>\n";
+	echo "	const call_forward_chart = new Chart(\n";
+	echo "		document.getElementById('call_forward_chart').getContext('2d'),\n";
+	echo "		{\n";
+	echo "			type: 'doughnut',\n";
+	echo "			data: {\n";
+	echo "				labels: [\n";
+	echo "					'".$text['label-dnd'].": ".$stats['dnd']."',\n";
+	echo "					'".$text['label-follow_me'].": ".$stats['follow_me']."',\n";
+	echo "					'".$text['label-call_forward'].": ".$stats['call_forward']."',\n";
+	echo "					'".$text['label-active'].": ".$stats['active']."',\n";
+	echo "					],\n";
+	echo "				datasets: [{\n";
+	echo "					data: [\n";
+	echo "						'".$stats['dnd']."',\n";
+	echo "						'".$stats['follow_me']."',\n";
+	echo "						'".$stats['call_forward']."',\n";
+	echo "						'".$stats['active']."',\n";
+	echo "						0.00001,\n";
+	echo "						],\n";
+	echo "					backgroundColor: [\n";
+	echo "						'".$_SESSION['dashboard']['call_forward_chart_color_do_not_disturb']['text']."',\n";
+	echo "						'".$_SESSION['dashboard']['call_forward_chart_color_follow_me']['text']."',\n";
+	echo "						'".$_SESSION['dashboard']['call_forward_chart_color_call_forward']['text']."',\n";
+	echo "						'".$_SESSION['dashboard']['call_forward_chart_color_active']['text']."',\n";
+	echo "						'".$_SESSION['dashboard']['call_forward_chart_color_active']['text']."',\n";
+	echo "					],\n";
+	echo "					borderColor: '".$_SESSION['dashboard']['call_forward_chart_border_color']['text']."',\n";
+	echo "					borderWidth: '".$_SESSION['dashboard']['call_forward_chart_border_width']['text']."',\n";
+	echo "					cutout: chart_cutout,\n";
+	echo "				}]\n";
+	echo "			},\n";
+	echo "			options: {\n";
+	echo "				responsive: true,\n";
+	echo "				maintainAspectRatio: false,\n";
+	echo "				plugins: {\n";
+	echo "					chart_counter: {\n";
+	echo "						chart_text: '".$stats['call_forward']."'\n";
+	echo "					},\n";
+	echo "					legend: {\n";
+	echo "					position: 'right',\n";
+	echo "						reverse: true,\n";
+	echo "						labels: {\n";
+	echo "							usePointStyle: true,\n";
+	echo "							pointStyle: 'rect'\n";
+	echo "						}\n";
+	echo "					},\n";
+	echo "					title: {\n";
+	echo "						display: true,\n";
+	echo "						text: '".$text['header-call_forward']."'\n";
+	echo "					}\n";
+	echo "				}\n";
+	echo "			},\n";
+	echo "			plugins: [chart_counter],\n";
+	echo "		}\n";
+	echo "	);\n";
+	echo "</script>\n";
 
 //details
 	echo "<div class='hud_details hud_box' id='hud_call_forward_details'>";
