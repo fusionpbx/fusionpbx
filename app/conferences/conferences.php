@@ -260,6 +260,9 @@
 			else {
 				echo "		&nsbp;\n";
 			}
+			if (permission_exists('conference_cdr_view')) {
+				echo "		<a href='".PROJECT_PATH.'/app/conference_cdr/conference_cdr.php?id='.urlencode($row['conference_uuid'])."'>".$text['label-cdr']."</a>\n";
+			}
 			echo "	</td>\n";
 			if (permission_exists('conference_edit')) {
 				echo "	<td class='no-link center'>";
