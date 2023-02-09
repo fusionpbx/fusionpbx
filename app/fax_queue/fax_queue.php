@@ -151,6 +151,7 @@
 //get the list
 	$sql = "select \n";
 	$sql .= "d.domain_name, \n";
+	$sql .= "q.domain_uuid, \n";
 	$sql .= "q.fax_queue_uuid, \n";
 	$sql .= "q.fax_uuid, \n";
 	$sql .= "q.fax_date, \n";
