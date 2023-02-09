@@ -356,8 +356,37 @@
 				$fax_uri = $route_array[0];
 			}
 
-		//set the fax file name without the extension
-			$fax_instance_id = pathinfo($fax_file, PATHINFO_FILENAME);
+		//update the fax_queue table
+			if ($fp) {
+				//set the fax file name without the extension
+				$fax_instance_id = pathinfo($fax_file, PATHINFO_FILENAME);
+
+				//set the fax status
+				$fax_status = 'trying';
+
+				//update the database to say status to trying and set the command
+				$array['fax_queue'][0]['fax_queue_uuid'] = $fax_queue_uuid;
+				$array['fax_queue'][0]['domain_uuid'] = $domain_uuid;
+				$array['fax_queue'][0]['origination_uuid'] = $origination_uuid;
+				$array['fax_queue'][0]['fax_status'] = $fax_status;
+				$array['fax_queue'][0]['fax_retry_count'] = $fax_retry_count;
+				$array['fax_queue'][0]['fax_retry_date'] = 'now()';
+				$array['fax_queue'][0]['fax_command'] = $fax_command;
+
+				//add temporary permissions
+				$p = new permissions;
+				$p->add('fax_queue_edit', 'temp');
+
+				//save the data
+				$database = new database;
+				$database->app_name = 'fax queue';
+				$database->app_uuid = '3656287f-4b22-4cf1-91f6-00386bf488f4';
+				$database->save($array, false);
+				unset($array);
+
+				//remove temporary permissions
+				$p->delete('fax_queue_edit', 'temp');
+			}
 
 		//set the origination uuid
 			$origination_uuid = uuid();
@@ -394,32 +423,6 @@
 			else {
 				echo "fax file missing: ".$fax_file."\n";
 			}
-
-		//set the fax status
-			$fax_status = 'trying';
-
-		//update the database to say status to trying and set the command
-			$array['fax_queue'][0]['fax_queue_uuid'] = $fax_queue_uuid;
-			$array['fax_queue'][0]['domain_uuid'] = $domain_uuid;
-			$array['fax_queue'][0]['origination_uuid'] = $origination_uuid;
-			$array['fax_queue'][0]['fax_status'] = $fax_status;
-			$array['fax_queue'][0]['fax_retry_count'] = $fax_retry_count;
-			$array['fax_queue'][0]['fax_retry_date'] = 'now()';
-			$array['fax_queue'][0]['fax_command'] = $fax_command;
-
-		//add temporary permissions
-			$p = new permissions;
-			$p->add('fax_queue_edit', 'temp');
-
-		//save the data
-			$database = new database;
-			$database->app_name = 'fax queue';
-			$database->app_uuid = '3656287f-4b22-4cf1-91f6-00386bf488f4';
-			$database->save($array, false);
-			unset($array);
-
-		//remove temporary permissions
-			$p->delete('fax_queue_edit', 'temp');
 
 	}
 
