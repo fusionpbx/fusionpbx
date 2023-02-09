@@ -251,6 +251,7 @@
 	echo th_order_by('gateway', $text['label-gateway'], $order_by, $order);
 	echo "<th class='hide-sm-dn'>".$text['label-proxy']."</th>\n";
 	echo th_order_by('context', $text['label-context'], $order_by, $order);
+	echo th_order_by('register', $text['label-register'], $order_by, $order);
 	if ($fp) {
 		echo "<th class='hide-sm-dn'>".$text['label-status']."</th>\n";
 		if (permission_exists('gateway_edit')) {
@@ -299,6 +300,7 @@
 			echo "	</td>\n";
 			echo "	<td>".escape($row["proxy"])."</td>\n";
 			echo "	<td>".escape($row["context"])."</td>\n";
+			echo "	<td>".ucwords(escape($row["register"]))."</td>\n";
 			if ($fp) {
 				if ($row["enabled"] == "true") {
 					$response = switch_gateway_status($row["gateway_uuid"]);
