@@ -1594,20 +1594,18 @@
 	echo "	".$text['label-enabled']."\n";
 	echo "</td>\n";
 	echo "<td width=\"70%\" class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='ivr_menu_enabled'>\n";
-	if ($ivr_menu_enabled == "true") {
-		echo "	<option value='true' selected='selected'>".$text['option-true']."</option>\n";
+	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
+		echo "	<label class='switch'>\n";
+		echo "		<input type='checkbox' id='ivr_menu_enabled' name='ivr_menu_enabled' value='true' ".($ivr_menu_enabled == 'true' ? "checked='checked'" : null).">\n";
+		echo "		<span class='slider'></span>\n";
+		echo "	</label>\n";
 	}
 	else {
-		echo "	<option value='true'>".$text['option-true']."</option>\n";
+		echo "	<select class='formfld' id='ivr_menu_enabled' name='ivr_menu_enabled'>\n";
+		echo "		<option value='false'>".$text['option-false']."</option>\n";
+		echo "		<option value='true' ".($field['ivr_menu_enabled'] == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "	</select>\n";
 	}
-	if ($ivr_menu_enabled == "false") {
-		echo "	<option value='false' selected='selected'>".$text['option-false']."</option>\n";
-	}
-	else {
-		echo "	<option value='false'>".$text['option-false']."</option>\n";
-	}
-	echo "	</select>\n";
 	echo "<br />\n";
 	echo $text['description-enabled']."\n";
 	echo "</td>\n";
