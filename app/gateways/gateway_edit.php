@@ -885,7 +885,7 @@
 	else {
 		echo "	<select class='formfld' id='enabled' name='enabled'>\n";
 		echo "		<option value='false'>".$text['option-false']."</option>\n";
-		echo "		<option value='true' ".($field['enabled'] == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='true' ".($enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
 		echo "	</select>\n";
 	}
 	echo "<br />\n";
