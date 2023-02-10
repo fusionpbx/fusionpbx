@@ -61,7 +61,7 @@
 		$dashboard_column_span = $_POST["dashboard_column_span"];
 		$dashboard_details_state = $_POST["dashboard_details_state"];
 		$dashboard_order = $_POST["dashboard_order"];
-		$dashboard_enabled = $_POST["dashboard_enabled"];
+		$dashboard_enabled = $_POST["dashboard_enabled"] ?: 'false';
 		$dashboard_description = $_POST["dashboard_description"];
 	}
 
@@ -204,7 +204,7 @@
 		$sql .= " dashboard_column_span, ";
 		$sql .= " dashboard_details_state, ";
 		$sql .= " dashboard_order, ";
-		$sql .= " cast(dashboard_enabled as text), ";
+		$sql .= " dashboard_enabled, ";
 		$sql .= " dashboard_description ";
 		$sql .= "from v_dashboard ";
 		$sql .= "where dashboard_uuid = :dashboard_uuid ";
@@ -469,21 +469,18 @@
 	echo "	".$text['label-dashboard_enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<select class='formfld' name='dashboard_enabled'>\n";
-	echo "		<option value=''></option>\n";
-	if ($dashboard_enabled == "true") {
-		echo "		<option value='true' selected='selected'>".$text['label-true']."</option>\n";
+	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
+		echo "	<label class='switch'>\n";
+		echo "		<input type='checkbox' id='dashboard_enabled' name='dashboard_enabled' value='true' ".($dashboard_enabled == true ? "checked='checked'" : null).">\n";
+		echo "		<span class='slider'></span>\n";
+		echo "	</label>\n";
 	}
 	else {
-		echo "		<option value='true'>".$text['label-true']."</option>\n";
+		echo "	<select class='formfld' id='dashboard_enabled' name='dashboard_enabled'>\n";
+		echo "		<option value='false'>".$text['option-false']."</option>\n";
+		echo "		<option value='true' ".($dashboard_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "	</select>\n";
 	}
-	if ($dashboard_enabled == "false") {
-		echo "		<option value='false' selected='selected'>".$text['label-false']."</option>\n";
-	}
-	else {
-		echo "		<option value='false'>".$text['label-false']."</option>\n";
-	}
-	echo "	</select>\n";
 	echo "<br />\n";
 	echo $text['description-dashboard_enabled']."\n";
 	echo "</td>\n";

@@ -315,7 +315,7 @@
 								chart_text: '<?php echo $domain_total; ?>'
 							},
 							legend: {
-							position: 'right',
+								position: 'right',
 								reverse: true,
 								labels: {
 									usePointStyle: true,

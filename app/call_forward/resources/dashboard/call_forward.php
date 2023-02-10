@@ -143,7 +143,7 @@
 	echo "						chart_text: '".$stats['call_forward']."'\n";
 	echo "					},\n";
 	echo "					legend: {\n";
-	echo "					position: 'right',\n";
+	echo "						position: 'right',\n";
 	echo "						reverse: true,\n";
 	echo "						labels: {\n";
 	echo "							usePointStyle: true,\n";
