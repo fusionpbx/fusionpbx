@@ -111,7 +111,7 @@
 			//$device_uuid = $_POST["device_uuid"];
 			//$device_line = $_POST["device_line"];
 			$voicemail_password = $_POST["voicemail_password"];
-			$voicemail_enabled = $_POST["voicemail_enabled"];
+			$voicemail_enabled = $_POST["voicemail_enabled"] ?: 'false';
 			$voicemail_mail_to = $_POST["voicemail_mail_to"];
 			$voicemail_transcription_enabled = $_POST["voicemail_transcription_enabled"];
 			$voicemail_file = $_POST["voicemail_file"];
@@ -2168,7 +2168,7 @@
 		echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "    ".$text['label-enabled']."\n";
 		echo "</td>\n";
-		echo "<td class='vtable' align='left'>\n";
+		echo "<td class='vtable' align='left'>\n";/*
 		echo "    <select class='formfld' name='enabled'>\n";
 		if ($enabled == "true") {
 			echo "    <option value='true' selected='selected'>".$text['label-true']."</option>\n";
@@ -2182,7 +2182,19 @@
 		else {
 			echo "    <option value='false'>".$text['label-false']."</option>\n";
 		}
-		echo "    </select>\n";
+		echo "    </select>\n";*/
+		if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
+			echo "	<label class='switch'>\n";
+			echo "		<input type='checkbox' id='enabled' name='enabled' value='true' ".($enabled == 'true' ? "checked='checked'" : null).">\n";
+			echo "		<span class='slider'></span>\n";
+			echo "	</label>\n";
+		}
+		else {
+			echo "	<select class='formfld' id='enabled' name='enabled'>\n";
+			echo "		<option value='false'>".$text['option-false']."</option>\n";
+			echo "		<option value='true' ".($field['enabled'] == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+			echo "	</select>\n";
+		}
 		echo "<br />\n";
 		echo $text['description-enabled']."\n";
 		echo "</td>\n";
