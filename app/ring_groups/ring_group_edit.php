@@ -183,7 +183,7 @@
 			$ring_group_forward_enabled = $_POST["ring_group_forward_enabled"];
 			$ring_group_forward_destination = $_POST["ring_group_forward_destination"];
 			$ring_group_forward_toll_allow = $_POST["ring_group_forward_toll_allow"];
-			$ring_group_enabled = $_POST["ring_group_enabled"];
+			$ring_group_enabled = $_POST["ring_group_enabled"] ?: 'false';
 			$ring_group_description = $_POST["ring_group_description"];
 			$dialplan_uuid = $_POST["dialplan_uuid"];
 			//$ring_group_timeout_action = "transfer:1001 XML default";
@@ -203,6 +203,7 @@
 			else if ($action == 'add') {
 				$ring_group_context = $_SESSION['domain_name'];
 			}
+
 	}
 
 //assign the user to the ring group
@@ -254,7 +255,6 @@
 			//if (strlen($ring_group_cid_name_prefix) == 0) { $msg .= "Please provide: Caller ID Name Prefix<br>\n"; }
 			//if (strlen($ring_group_cid_number_prefix) == 0) { $msg .= "Please provide: Caller ID Number Prefix<br>\n"; }
 			//if (strlen($ring_group_ringback) == 0) { $msg .= "Please provide: Ringback<br>\n"; }
-			if (strlen($ring_group_enabled) == 0) { $msg .= $text['message-enabled']."<br>\n"; }
 			//if (strlen($ring_group_description) == 0) { $msg .= "Please provide: Description<br>\n"; }
 			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				require_once "resources/header.php";
