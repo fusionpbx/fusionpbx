@@ -128,9 +128,10 @@
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
-	$param = $search ? "&search=".$search : null;
-	$param = ($_GET['show'] == 'all' && permission_exists('email_queue_all')) ? "&show=all" : null;
-	$page = is_numeric($_GET['page']) ? $_GET['page'] : 0;
+	$param = $_GET["email_status"] ? "&email_status=".urlencode($_GET["email_status"]) : null;
+	$param .= $search ? "&search=".urlencode($search) : null;
+	$param .= ($_REQUEST['show'] == 'all' && permission_exists('email_queue_all')) ? "&show=all" : null;
+	$page = is_numeric($_REQUEST['page']) ? $_REQUEST['page'] : 0;
 	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
 	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
