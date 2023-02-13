@@ -302,11 +302,11 @@
 	$email->body = $email_body;
 	$email->attachments = $email_attachments;
 	$email->method = 'direct';
-	$sent = $email->send();
-	//$response = $email->email_error;
+	$email_response = $email->send();
+	$email_error = $email->email_error;
 
 //send the email
-	if ($sent) {
+	if ($email_response) {
 
 		//set the email status to sent
 		$sql = "update v_email_queue ";
@@ -437,15 +437,13 @@
 		else {
 			$sql .= "set email_status = 'trying', ";
 		}
+		$sql .= "email_debug = :email_debug, ";
 		$sql .= "email_retry_count = :email_retry_count, ";
 		$sql .= "update_date = now() ";
-		//$sql .= ", email_debug = :email_debug ";
 		$sql .= "where email_queue_uuid = :email_queue_uuid; ";
 		$parameters['email_queue_uuid'] = $email_queue_uuid;
-		//$parameters['email_debug'] = $mailer_error;
+		$parameters['email_debug'] = $mailer_error;
 		$parameters['email_retry_count'] = $email_retry_count;
-		//echo $sql."\n";
-		//print_r($parameters);
 		$database = new database;
 		$database->execute($sql, $parameters);
 		unset($parameters);
