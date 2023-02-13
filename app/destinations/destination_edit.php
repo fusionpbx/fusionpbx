@@ -109,7 +109,7 @@
 			$user_uuid = $_POST["user_uuid"];
 			$group_uuid = $_POST["group_uuid"];
 			$destination_order= $_POST["destination_order"];
-			$destination_enabled = $_POST["destination_enabled"];
+			$destination_enabled = $_POST["destination_enabled"] ?: 'false';
 			$destination_description = $_POST["destination_description"];
 			$destination_sell = check_float($_POST["destination_sell"]);
 			$currency = $_POST["currency"];
@@ -1735,15 +1735,23 @@
 	echo "	".$text['label-destination_enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='destination_enabled'>\n";
-	switch ($destination_enabled) {
-		case "true" :	$selected[1] = "selected='selected'";	break;
-		case "false" :	$selected[2] = "selected='selected'";	break;
+	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
+		echo "	<label class='switch'>\n";
+		echo "		<input type='checkbox' id='destination_enabled' name='destination_enabled' value='true' ".($destination_enabled == 'true' ? "checked='checked'" : null).">\n";
+		echo "		<span class='slider'></span>\n";
+		echo "	</label>\n";
 	}
-	echo "	<option value='true' ".$selected[1].">".$text['label-true']."</option>\n";
-	echo "	<option value='false' ".$selected[2].">".$text['label-false']."</option>\n";
-	unset($selected);
-	echo "	</select>\n";
+	else {
+		echo "	<select class='formfld' name='destination_enabled'>\n";
+		switch ($destination_enabled) {
+			case "true" :	$selected[1] = "selected='selected'";	break;
+			case "false" :	$selected[2] = "selected='selected'";	break;
+		}
+		echo "	<option value='true' ".$selected[1].">".$text['label-true']."</option>\n";
+		echo "	<option value='false' ".$selected[2].">".$text['label-false']."</option>\n";
+		unset($selected);
+		echo "	</select>\n";
+	}
 	echo "<br />\n";
 	echo $text['description-destination_enabled']."\n";
 	echo "</td>\n";
