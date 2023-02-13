@@ -165,6 +165,7 @@
 			$email_status = $row["email_status"];
 			$email_retry_count = $row["email_retry_count"];
 			//$email_action_before = $row["email_action_before"];
+			$email_debug = $row["email_debug"];
 			$email_action_after = $row["email_action_after"];
 		}
 		unset($sql, $parameters, $row);
@@ -311,6 +312,19 @@
 	echo $text['description-email_action_after']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
+
+	if (isset($_REQUEST['debug'])) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-email_debug']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' style='position: relative;' align='left'>\n";
+		echo "	<textarea class='formfld' style='width: 450px; height: 100px;' name='email_debug'>".$email_debug."</textarea>\n";
+		echo "<br />\n";
+		echo $text['description-email_debug']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
 
 	echo "</table>";
 	echo "<br /><br />";
