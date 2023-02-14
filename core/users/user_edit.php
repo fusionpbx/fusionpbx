@@ -1063,7 +1063,7 @@
 	else {
 		echo "	<select class='formfld' id='user_enabled' name='user_enabled'>\n";
 		echo "		<option value='true' ".($user_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-		echo "		<option value='false' ".($user_enabled == 'true' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "		<option value='false' ".($user_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 		echo "	</select>\n";
 	}
 	echo "<br />\n";
