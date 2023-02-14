@@ -159,7 +159,7 @@
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='profile_enabled'>\n";
-	echo "		<option value='true'>".$text['label-true']."</option>\n";
+	echo "		<option value='true' ".($profile_enabled == "true" ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
 	echo "		<option value='false' ".($profile_enabled == "false" ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
 	echo "	</select>\n";
 	echo "<br />\n";
