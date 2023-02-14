@@ -285,6 +285,7 @@
 	if ($_REQUEST['show'] == "all" && permission_exists('xml_cdr_all')) {
 		$sql .= ", c.domain_name \n";
 	}
+	$sql .= ", record_type \n";
 	$sql .= "from v_xml_cdr as c \n";
 	$sql .= "left join v_extensions as e on e.extension_uuid = c.extension_uuid \n";
 	$sql .= "inner join v_domains as d on d.domain_uuid = c.domain_uuid \n";
