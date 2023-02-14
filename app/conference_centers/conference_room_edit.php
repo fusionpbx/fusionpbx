@@ -79,7 +79,7 @@
 		$created_by = $_POST["created_by"];
 		$email_address = $_POST["email_address"];
 		$account_code = $_POST["account_code"];
-		$enabled = $_POST["enabled"];
+		$enabled = $_POST["enabled"] ?: 'false';
 		$description = $_POST["description"];
 
 		//remove any pin number formatting
@@ -918,21 +918,18 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>".$text['label-enabled']."</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<select class='formfld' name='enabled'>\n";
-		echo "	<option value=''></option>\n";
-		if ($enabled == "true") {
-			echo "	<option value='true' selected='selected'>".$text['label-true']."</option>\n";
+		if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
+			echo "	<label class='switch'>\n";
+			echo "		<input type='checkbox' id='enabled' name='enabled' value='true' ".($enabled == 'true' ? "checked='checked'" : null).">\n";
+			echo "		<span class='slider'></span>\n";
+			echo "	</label>\n";
 		}
 		else {
-			echo "	<option value='true'>".$text['label-true']."</option>\n";
+			echo "	<select class='formfld' id='enabled' name='enabled'>\n";
+			echo "		<option value='true' ".($enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+			echo "		<option value='false' ".($enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+			echo "	</select>\n";
 		}
-		if ($enabled == "false") {
-			echo "	<option value='false' selected='selected'>".$text['label-false']."</option>\n";
-		}
-		else {
-			echo "	<option value='false'>".$text['label-false']."</option>\n";
-		}
-		echo "	</select>\n";
 		echo "<br />\n";
 		echo "\n";
 		echo "</td>\n";
