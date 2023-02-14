@@ -60,7 +60,7 @@
 		$template_subject = $_POST["template_subject"];
 		$template_body = $_POST["template_body"];
 		$template_type = $_POST["template_type"];
-		$template_enabled = $_POST["template_enabled"] ?: 'false';
+		$template_enabled = $_POST["template_enabled"];
 		$template_description = $_POST["template_description"];
 	}
 
@@ -438,8 +438,8 @@
 	}
 	else {
 		echo "	<select class='formfld' id='template_enabled' name='template_enabled'>\n";
-		echo "		<option value='false'>".$text['option-false']."</option>\n";
 		echo "		<option value='true' ".($template_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($template_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 		echo "	</select>\n";
 	}
 	echo "<br />\n";

@@ -58,7 +58,7 @@
 		$stream_uuid = $_POST["stream_uuid"];
 		$stream_name = $_POST["stream_name"];
 		$stream_location = $_POST["stream_location"];
-		$stream_enabled = $_POST["stream_enabled"] ?: 'false';
+		$stream_enabled = $_POST["stream_enabled"];
 		$stream_description = $_POST["stream_description"];
 	}
 
@@ -217,8 +217,8 @@
 	}
 	else {
 		echo "	<select class='formfld' id='stream_enabled' name='stream_enabled'>\n";
-		echo "		<option value='false'>".$text['option-false']."</option>\n";
 		echo "		<option value='true' ".($stream_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($stream_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 		echo "	</select>\n";
 	}
 	echo "<br />\n";

@@ -768,8 +768,8 @@
 	}
 	else {
 		echo "	<select class='formfld' id='voicemail_enabled' name='voicemail_enabled'>\n";
-		echo "		<option value='false'>".$text['option-false']."</option>\n";
 		echo "		<option value='true' ".($voicemail_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($voicemail_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 		echo "	</select>\n";
 	}
 	echo "<br />\n";

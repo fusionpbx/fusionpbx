@@ -1870,8 +1870,8 @@
 		}
 		else {
 			echo "	<select class='formfld' id='device_enabled' name='device_enabled'>\n";
-			echo "		<option value='false'>".$text['option-false']."</option>\n";
 			echo "		<option value='true' ".($device_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+			echo "		<option value='false' ".($device_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 			echo "	</select>\n";
 		}
 		echo "<br />\n";

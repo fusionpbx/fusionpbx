@@ -352,8 +352,8 @@
 	}
 	else {
 		echo "	<select class='formfld' id='number_translation_enabled' name='number_translation_enabled'>\n";
-		echo "		<option value='false'>".$text['option-false']."</option>\n";
 		echo "		<option value='true' ".($number_translation_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($number_translation_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 		echo "	</select>\n";
 	}
 	echo "<br />\n";
