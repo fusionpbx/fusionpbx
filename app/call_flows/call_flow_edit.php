@@ -76,7 +76,7 @@
 			$call_flow_alternate_sound = $_POST["call_flow_alternate_sound"];
 			$call_flow_alternate_destination = $_POST["call_flow_alternate_destination"];
 			$call_flow_context = $_POST["call_flow_context"];
-			$call_flow_enabled = $_POST["call_flow_enabled"] ?: 'false';
+			$call_flow_enabled = $_POST["call_flow_enabled"];
 			$call_flow_description = $_POST["call_flow_description"];
 
 		//seperate the action and the param
@@ -725,8 +725,8 @@
 	}
 	else {
 		echo "	<select class='formfld' id='call_flow_enabled' name='call_flow_enabled'>\n";
-		echo "		<option value='false'>".$text['option-false']."</option>\n";
 		echo "		<option value='true' ".($call_flow_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($call_flow_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 		echo "	</select>\n";
 	}
 	echo "<tr>\n";

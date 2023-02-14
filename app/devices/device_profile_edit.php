@@ -80,7 +80,7 @@
 			$device_profile_name = $_POST["device_profile_name"];
 			$device_profile_keys = $_POST["device_profile_keys"];
 			$device_profile_settings = $_POST["device_profile_settings"];
-			$device_profile_enabled = $_POST["device_profile_enabled"];
+			$device_profile_enabled = $_POST["device_profile_enabled"] ?: 'false';
 			$device_profile_description = $_POST["device_profile_description"];
 			$device_profile_keys_delete = $_POST["device_profile_keys_delete"];
 			$device_profile_settings_delete = $_POST["device_profile_settings_delete"];
@@ -724,10 +724,18 @@
 	echo "	".$text['label-device_profile_enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<select class='formfld' name='device_profile_enabled'>\n";
-	echo "		<option value='true'>".$text['label-true']."</option>\n";
-	echo "		<option value='false' ".($device_profile_enabled == "false" ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
-	echo "	</select>\n";
+	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
+		echo "	<label class='switch'>\n";
+		echo "		<input type='checkbox' id='device_profile_enabled' name='device_profile_enabled' value='true' ".($device_profile_enabled == 'true' ? "checked='checked'" : null).">\n";
+		echo "		<span class='slider'></span>\n";
+		echo "	</label>\n";
+	}
+	else {
+		echo "	<select class='formfld' id='device_profile_enabled' name='device_profile_enabled'>\n";
+		echo "		<option value='true' ".($device_profile_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($device_profile_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "	</select>\n";
+	}
 	echo "<br />\n";
 	echo $text['description-device_profile_enabled']."\n";
 	echo "</td>\n";

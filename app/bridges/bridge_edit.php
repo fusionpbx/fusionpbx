@@ -54,7 +54,7 @@
 		$bridge_uuid = $_POST["bridge_uuid"];
 		$bridge_name = $_POST["bridge_name"];
 		$bridge_destination = $_POST["bridge_destination"];
-		$bridge_enabled = $_POST["bridge_enabled"] ?: 'false';
+		$bridge_enabled = $_POST["bridge_enabled"];
 		$bridge_description = $_POST["bridge_description"];
 	}
 
@@ -226,8 +226,8 @@
 	}
 	else {
 		echo "	<select class='formfld' id='bridge_enabled' name='bridge_enabled'>\n";
-		echo "		<option value='false'>".$text['option-false']."</option>\n";
 		echo "		<option value='true' ".($bridge_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($bridge_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 		echo "	</select>\n";
 	}
 	echo "<br />\n";

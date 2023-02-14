@@ -33,7 +33,7 @@
 //get http post variables and set them to php variables
 	if (is_array($_POST)) {
 		$control_name = $_POST["control_name"];
-		$control_enabled = $_POST["control_enabled"] ?: 'false';
+		$control_enabled = $_POST["control_enabled"];
 		$control_description = $_POST["control_description"];
 	}
 
@@ -169,8 +169,8 @@
 	}
 	else {
 		echo "	<select class='formfld' id='control_enabled' name='control_enabled'>\n";
-		echo "		<option value='false'>".$text['option-false']."</option>\n";
 		echo "		<option value='true' ".($control_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($control_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 		echo "	</select>\n";
 	}
 	echo "<br />\n";
