@@ -441,7 +441,7 @@ if (!class_exists('xml_cdr')) {
 
 					//misc
 						$uuid = urldecode($xml->variables->uuid);
-						$this->array[$key]['record_type'] = isset($_REQUEST['record_type'])?$_REQUEST['record_type']:urldecode($xml->variables->record_type);
+						$this->array[$key]['record_type'] = isset($xml->variables->record_type)?urldecode($xml->variables->record_type):$_REQUEST['record_type']; 
 						$this->array[$key]['xml_cdr_uuid'] = $uuid;
 						$this->array[$key]['destination_number'] = $destination_number;
 						$this->array[$key]['sip_call_id'] = urldecode($xml->variables->sip_call_id);
