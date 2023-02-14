@@ -84,7 +84,7 @@
 		if (permission_exists('time_condition_context')) {
 			$dialplan_context = $_POST["dialplan_context"];
 		}
-		$dialplan_enabled = $_POST["dialplan_enabled"];
+		$dialplan_enabled = $_POST["dialplan_enabled"] ?: 'false';
 		$dialplan_description = $_POST["dialplan_description"];
 
 		if (!permission_exists('time_condition_domain')) {
@@ -1271,10 +1271,18 @@ if ($action == 'update') {
 	echo "    ".$text['label-enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "<select class='formfld' name='dialplan_enabled'>\n";
-	echo "	<option value='true' ".(($dialplan_enabled == "true") ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
-	echo "	<option value='false' ".(($dialplan_enabled == "false") ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
-	echo "</select>\n";
+	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
+		echo "	<label class='switch'>\n";
+		echo "		<input type='checkbox' id='dialplan_enabled' name='dialplan_enabled' value='true' ".($dialplan_enabled == 'true' ? "checked='checked'" : null).">\n";
+		echo "		<span class='slider'></span>\n";
+		echo "	</label>\n";
+	}
+	else {
+		echo "	<select class='formfld' id='dialplan_enabled' name='dialplan_enabled'>\n";
+		echo "		<option value='false'>".$text['option-false']."</option>\n";
+		echo "		<option value='true' ".($dialplan_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "	</select>\n";
+	}
 	echo "<br />\n";
 	echo "</td>\n";
 	echo "</tr>\n";

@@ -33,7 +33,7 @@
 //get http post variables and set them to php variables
 	if (is_array($_POST)) {
 		$control_name = $_POST["control_name"];
-		$control_enabled = $_POST["control_enabled"];
+		$control_enabled = $_POST["control_enabled"] ?: 'false';
 		$control_description = $_POST["control_description"];
 	}
 
@@ -161,10 +161,18 @@
 	echo "	".$text['label-control_enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='control_enabled'>\n";
-	echo "		<option value='true'>".$text['label-true']."</option>\n";
-	echo "		<option value='false' ".($control_enabled == "false" ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
-	echo "	</select>\n";
+	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
+		echo "	<label class='switch'>\n";
+		echo "		<input type='checkbox' id='control_enabled' name='control_enabled' value='true' ".($control_enabled == 'true' ? "checked='checked'" : null).">\n";
+		echo "		<span class='slider'></span>\n";
+		echo "	</label>\n";
+	}
+	else {
+		echo "	<select class='formfld' id='control_enabled' name='control_enabled'>\n";
+		echo "		<option value='false'>".$text['option-false']."</option>\n";
+		echo "		<option value='true' ".($control_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "	</select>\n";
+	}
 	echo "<br />\n";
 	echo $text['description-control_enabled']."\n";
 	echo "</td>\n";
