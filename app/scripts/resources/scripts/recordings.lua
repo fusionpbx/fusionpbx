@@ -39,6 +39,7 @@
 --add functions
 	require "resources.functions.mkdir";
 	require "resources.functions.explode";
+	local cache = require "resources.functions.cache"
 
 --setup the database connection
 	local Database = require "resources.functions.database";
@@ -53,22 +54,29 @@
 --get the domain_uuid
 	if (session:ready()) then
 		domain_uuid = session:getVariable("domain_uuid");
+		user_uuid = session:getVariable("user_uuid");
 	end
 
 --initialize the recordings
 	api = freeswitch.API();
 
+--clear cached prefix and password, refreshed from database settings
+	if cache.support() then
+		cache.del("setting::recordings.recording_prefix.text")
+		cache.del("setting::recordings.recording_password.numeric")
+	end
+
 --load lazy settings library
 	local Settings = require "resources.functions.lazy_settings";
 
 --get the recordings settings
-	local settings = Settings.new(db, domain_name, domain_uuid);
+	local settings = Settings.new(db, domain_name, domain_uuid, user_uuid);
 
 --set the storage type and path
 	storage_type = settings:get('recordings', 'storage_type', 'text') or '';
 	storage_path = settings:get('recordings', 'storage_path', 'text') or '';
 	if (storage_path ~= '') then
-		storage_path = storage_path:gsub("${domain_name}",  session:getVariable("domain_name"));
+		storage_path = storage_path:gsub("${domain_name}", session:getVariable("domain_name"));
 		storage_path = storage_path:gsub("${domain_uuid}", domain_uuid);
 	end
 
@@ -98,7 +106,7 @@
 			if (not default_dialect) then default_dialect = 'us'; end
 			if (not default_voice) then default_voice = 'callie'; end
 			recording_id = session:getVariable("recording_id");
-			recording_prefix = session:getVariable("recording_prefix");
+			recording_prefix = settings:get('recordings', 'recording_prefix', 'text') or session:getVariable("recording_prefix");
 			recording_name = session:getVariable("recording_name");
 			record_ext = session:getVariable("record_ext");
 			domain_name = session:getVariable("domain_name");
@@ -294,7 +302,7 @@ if (session:ready()) then
 	session:answer();
 
 	--get the dialplan variables and set them as local variables
-		pin_number = session:getVariable("pin_number");
+		pin_number = settings:get('recordings', 'recording_password', 'numeric') or session:getVariable("pin_number");
 		sounds_dir = session:getVariable("sounds_dir");
 		domain_name = session:getVariable("domain_name");
 		domain_uuid = session:getVariable("domain_uuid");
