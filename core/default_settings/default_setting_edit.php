@@ -62,7 +62,7 @@
 		$default_setting_name = strtolower($_POST["default_setting_name"]);
 		$default_setting_value = $_POST["default_setting_value"];
 		$default_setting_order = $_POST["default_setting_order"];
-		$default_setting_enabled = $_POST["default_setting_enabled"] ?: 'false';
+		$default_setting_enabled = $_POST["default_setting_enabled"];
 		$default_setting_description = $_POST["default_setting_description"];
 	}
 
@@ -793,8 +793,8 @@
 	}
 	else {
 		echo "	<select class='formfld' id='default_setting_enabled' name='default_setting_enabled'>\n";
-		echo "		<option value='false'>".$text['option-false']."</option>\n";
 		echo "		<option value='true' ".($default_setting_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($default_setting_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 		echo "	</select>\n";
 	}
 	echo "<br />\n";
