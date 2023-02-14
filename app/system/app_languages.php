@@ -1,5 +1,4 @@
 <?php
-#This file was last reorganized on 19th of September 2017 08:54:24 AM UTC
 
 $text['title-sys-status']['en-us'] = "System Status";
 $text['title-sys-status']['en-gb'] = "System Status";
@@ -63,6 +62,27 @@ $text['title-os-info']['ro-ro'] = "";
 $text['title-os-info']['ru-ru'] = "Информация о операционной системе";
 $text['title-os-info']['sv-se'] = "Operativsystem Systeminformation";
 $text['title-os-info']['uk-ua'] = "Інформація про Операційна система ";
+
+$text['title-database']['en-us'] = "Database Information";
+$text['title-database']['en-gb'] = "Database Information";
+$text['title-database']['ar-eg'] = "";
+$text['title-database']['de-at'] = "Database Information"; //copied from de-de
+$text['title-database']['de-ch'] = "Database Information"; //copied from de-de
+$text['title-database']['de-de'] = "Database Information";
+$text['title-database']['es-cl'] = "Información de Database";
+$text['title-database']['es-mx'] = "Información de Database"; //copied from es-cl
+$text['title-database']['fr-ca'] = "Information Database"; //copied from fr-fr
+$text['title-database']['fr-fr'] = "Information Database";
+$text['title-database']['he-il'] = "";
+$text['title-database']['it-it'] = "Informazioni Database";
+$text['title-database']['nl-nl'] = "Database Informatie";
+$text['title-database']['pl-pl'] = "";
+$text['title-database']['pt-br'] = "Informação da memória cache";
+$text['title-database']['pt-pt'] = "Informação da Database";
+$text['title-database']['ro-ro'] = "";
+$text['title-database']['ru-ru'] = "";
+$text['title-database']['sv-se'] = "Database Information ";
+$text['title-database']['uk-ua'] = "";
 
 $text['title-memcache']['en-us'] = "Memcache Information";
 $text['title-memcache']['en-gb'] = "Memcache Information";

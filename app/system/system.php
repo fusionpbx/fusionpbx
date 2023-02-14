@@ -312,7 +312,7 @@
 				echo "<br /><br />";
 			}
 		}
-		
+
 		//Windows
 		if (stristr(PHP_OS, 'WIN')) {
 			echo "<!--\n";
@@ -468,6 +468,33 @@
 			echo "	</td>\n";
 			echo "	<td class=\"row_style1\">\n";
 			echo "		$disk_percent_available% \n";
+			echo "	</td>\n";
+			echo "</tr>\n";
+			echo "</table>\n";
+		}
+		echo "<br /><br />";
+	}
+
+//database information
+	if (permission_exists('system_view_database')) {
+		if ($db_type == 'pgsql') {
+
+			$sql = "select version(); ";
+			$database = new database;
+			$database_version = $database->select($sql, null, 'column');
+
+			echo "<table width=\"100%\" border=\"0\" cellpadding=\"7\" cellspacing=\"0\">\n";
+			echo "<tr>\n";
+			echo "	<th class='th' colspan='2' align='left'>".$text['title-database']."</th>\n";
+			echo "</tr>\n";
+			echo "<tr>\n";
+			echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
+			echo "		".$text['label-version']." \n";
+			echo "	</td>\n";
+			echo "	<td class=\"row_style1\">\n";
+			echo "<pre>\n";
+			echo "$database_version<br>";
+			echo "</pre>\n";
 			echo "	</td>\n";
 			echo "</tr>\n";
 			echo "</table>\n";
