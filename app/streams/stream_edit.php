@@ -58,7 +58,7 @@
 		$stream_uuid = $_POST["stream_uuid"];
 		$stream_name = $_POST["stream_name"];
 		$stream_location = $_POST["stream_location"];
-		$stream_enabled = $_POST["stream_enabled"] ?: 'false';
+		$stream_enabled = $_POST["stream_enabled"];
 		$stream_description = $_POST["stream_description"];
 	}
 
