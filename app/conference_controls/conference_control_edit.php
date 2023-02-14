@@ -33,7 +33,7 @@
 //get http post variables and set them to php variables
 	if (is_array($_POST)) {
 		$control_name = $_POST["control_name"];
-		$control_enabled = $_POST["control_enabled"] ?: 'false';
+		$control_enabled = $_POST["control_enabled"];
 		$control_description = $_POST["control_description"];
 	}
 
