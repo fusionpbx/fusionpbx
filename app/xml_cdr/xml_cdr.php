@@ -628,6 +628,10 @@
 				file_exists($theme_image_path."icon_cdr_local_cancelled.png") &&
 				file_exists($theme_image_path."icon_cdr_local_failed.png")
 				) ? true : false;
+			$theme_cdr_type_exist = (
+				file_exists($theme_image_path."icon_call.png") &&
+				file_exists($theme_image_path."icon_text.png")
+				) ? true : false;
 
 		//loop through the results
 			$x = 0;
@@ -673,6 +677,17 @@
 						$content .= "		<input type='hidden' name='xml_cdrs[$x][uuid]' value='".escape($row['xml_cdr_uuid'])."' />\n";
 						$content .= "	</td>\n";
 					}
+
+				// call Type
+					$content .= "<td class='middle'>\n";
+					if ($theme_cdr_type_exist){
+						$image_name_type = 'icon_'.$row['record_type'].".png";
+						$content .= "<img src='".PROJECT_PATH."/themes/".$_SESSION['domain']['template']['name']."/images/".escape($image_name_type)."' width='16' style='border: none; cursor: help;' title='".$text['label-'.$row['record_type']]. "'>\n";
+					}
+					else{
+						$content .= $row['record_type'];
+					}
+					$content .= "</td>\n";			
 
 				//determine call result and appropriate icon
 					if (permission_exists('xml_cdr_direction')) {
