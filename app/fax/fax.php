@@ -149,7 +149,7 @@
 //prepare paging
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
 	$param = $search ? "search=".$search : null;
-	$param .= permission_exists('fax_extension_view_all') && $_GET['show'] == 'all' ? "&show=all" : null;
+	$param .= permission_exists('fax_extension_view_all') && $_GET['show'] == 'all' ? ($search ? '&' : '?')."show=all" : null;
 	$page = is_numeric($_GET['page']) ? $_GET['page'] : 0;
 	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
 	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
