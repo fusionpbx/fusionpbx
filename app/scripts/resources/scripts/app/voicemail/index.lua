@@ -187,9 +187,7 @@
 						if (settings['voicemail']['message_caller_id_number']['text'] ~= nil) then
 							vm_say_caller_id_number = settings['voicemail']['message_caller_id_number']['text'];
 						end
-					end
-				else
-					vm_say_caller_id_number = "before";
+					end;
 				end
 
 				if (not vm_say_date_time) then
@@ -198,7 +196,13 @@
 							vm_say_date_time = settings['voicemail']['message_date_time']['text'];
 						end
 					end
-				else
+				end
+
+				if (not vm_say_caller_id_number) then
+					vm_say_caller_id_number = "before";
+				end
+
+				if (not vm_say_date_time) then
 					vm_say_date_time = "before";
 				end
 
