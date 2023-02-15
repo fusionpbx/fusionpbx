@@ -1602,8 +1602,8 @@
 	}
 	else {
 		echo "	<select class='formfld' id='ivr_menu_enabled' name='ivr_menu_enabled'>\n";
-		echo "		<option value='false'>".$text['option-false']."</option>\n";
-		echo "		<option value='true' ".($field['ivr_menu_enabled'] == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='true' ".($ivr_menu_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($ivr_menu_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 		echo "	</select>\n";
 	}
 	echo "<br />\n";
