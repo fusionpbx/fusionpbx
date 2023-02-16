@@ -259,6 +259,9 @@
 		unset($sql, $parameters, $row);
 	}
 
+//set the defaults
+	if (strlen($sip_profile_enabled) == 0) { $sip_profile_enabled = 'true'; }
+
 //get the child data
 	$sql = "select * from v_sip_profile_settings ";
 	$sql .= "where sip_profile_uuid = :sip_profile_uuid ";
