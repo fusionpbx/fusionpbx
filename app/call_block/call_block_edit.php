@@ -265,7 +265,7 @@
 	}
 
 //set the defaults
-	if (strlen($call_block_enabled) == 0) { $call_block_enabled = "true"; }
+	if (strlen($call_block_enabled) == 0) { $call_block_enabled = 'true'; }
 
 //get the extensions
 	if (permission_exists('call_block_all') || permission_exists('call_block_extension')) {
