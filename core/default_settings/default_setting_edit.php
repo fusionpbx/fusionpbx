@@ -62,7 +62,7 @@
 		$default_setting_name = strtolower($_POST["default_setting_name"]);
 		$default_setting_value = $_POST["default_setting_value"];
 		$default_setting_order = $_POST["default_setting_order"];
-		$default_setting_enabled = $_POST["default_setting_enabled"];
+		$default_setting_enabled = $_POST["default_setting_enabled"] ?: 'false';
 		$default_setting_description = $_POST["default_setting_description"];
 	}
 
@@ -245,6 +245,9 @@
 		}
 		unset($sql, $parameters);
 	}
+
+//set the defaults
+	if (strlen($default_setting_enabled) == 0) { $default_setting_enabled = 'true'; }
 
 //create token
 	$object = new token;
