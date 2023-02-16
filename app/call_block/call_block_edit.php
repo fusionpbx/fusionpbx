@@ -264,6 +264,9 @@
 		unset($sql, $parameters, $row);
 	}
 
+//set the defaults
+	if (strlen($call_block_enabled) == 0) { $call_block_enabled = "true"; }
+
 //get the extensions
 	if (permission_exists('call_block_all') || permission_exists('call_block_extension')) {
 		$sql = "select extension_uuid, extension, number_alias, user_context, description from v_extensions ";
