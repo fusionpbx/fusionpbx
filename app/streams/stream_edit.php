@@ -58,7 +58,7 @@
 		$stream_uuid = $_POST["stream_uuid"];
 		$stream_name = $_POST["stream_name"];
 		$stream_location = $_POST["stream_location"];
-		$stream_enabled = $_POST["stream_enabled"];
+		$stream_enabled = $_POST["stream_enabled"] ?: 'false';
 		$stream_description = $_POST["stream_description"];
 	}
 
@@ -153,6 +153,9 @@
 		}
 		unset($sql, $parameters, $row);
 	}
+
+//set the defaults
+	if (strlen($stream_enabled) == 0) { $stream_enabled = 'true'; }
 
 //need stream_all permission to edit a global stream
 	if (!permission_exists('stream_all') && $domain_uuid == null) {
