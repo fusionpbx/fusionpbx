@@ -121,7 +121,7 @@
 	}
 
 //set the defaults
-	if (strlen($profile_enabled) == 0) { $profile_enabled = "true"; }
+	if (strlen($profile_enabled) == 0) { $profile_enabled = 'true'; }
 
 //create token
 	$object = new token;
