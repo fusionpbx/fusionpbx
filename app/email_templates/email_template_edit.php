@@ -168,6 +168,9 @@
 		unset($sql, $parameters, $row);
 	}
 
+//set the defaults
+	if (strlen($template_enabled) == 0) { $template_enabled = 'true'; }
+
 //load editor preferences/defaults
 	$setting_size = $_SESSION["editor"]["font_size"]["text"] != '' ? $_SESSION["editor"]["font_size"]["text"] : '12px';
 	$setting_theme = $_SESSION["editor"]["theme"]["text"] != '' ? $_SESSION["editor"]["theme"]["text"] : 'cobalt';
