@@ -78,7 +78,7 @@
 		$sip_profile_uuid = $_POST["sip_profile_uuid"];
 		$sip_profile_name = $_POST["sip_profile_name"];
 		$sip_profile_hostname = $_POST["sip_profile_hostname"];
-		$sip_profile_enabled = $_POST["sip_profile_enabled"] ?: 'false';
+		$sip_profile_enabled = $_POST["sip_profile_enabled"] ?: false;
 		$sip_profile_description = $_POST["sip_profile_description"];
 		$sip_profile_domains = $_POST["sip_profile_domains"];
 		$sip_profile_settings = $_POST["sip_profile_settings"];
