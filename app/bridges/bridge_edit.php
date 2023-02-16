@@ -54,7 +54,7 @@
 		$bridge_uuid = $_POST["bridge_uuid"];
 		$bridge_name = $_POST["bridge_name"];
 		$bridge_destination = $_POST["bridge_destination"];
-		$bridge_enabled = $_POST["bridge_enabled"];
+		$bridge_enabled = $_POST["bridge_enabled"] ?: false;
 		$bridge_description = $_POST["bridge_description"];
 	}
 
@@ -161,6 +161,9 @@
 		}
 		unset($sql, $parameters, $row);
 	}
+
+//set the defaults
+	if (strlen($bridge_enabled) == 0) { $bridge_enabled = 'true'; }
 
 //create token
 	$object = new token;
