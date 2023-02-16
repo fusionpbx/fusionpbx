@@ -250,7 +250,7 @@
 				else
 					moderator_flag = "";
 				end
-				session:execute("conference", conference_bridge.."+flags{endconf"..moderator_flag.."}");
+				session:execute("conference", conference_bridge.."+flags{endconf,mintwo"..moderator_flag.."}");
 			else
 				session:execute("playback", "tone_stream://%(500,500,480,620);loops=3");
 			end
