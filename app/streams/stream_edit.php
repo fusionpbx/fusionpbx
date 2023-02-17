@@ -53,7 +53,7 @@
 	}
 
 //get http post variables and set them to php variables
-	if (is_array($_POST)) {
+	if (count($_POST) > 0) {
 		$domain_uuid = $_POST['domain_uuid'];
 		$stream_uuid = $_POST["stream_uuid"];
 		$stream_name = $_POST["stream_name"];
