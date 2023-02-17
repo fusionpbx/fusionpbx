@@ -35,7 +35,7 @@
 	if (is_array($_POST)) {
 		$global_setting_name = $_POST["global_setting_name"];
 		$global_setting_value = $_POST["global_setting_value"];
-		$global_setting_enabled = $_POST["global_setting_enabled"] ?: false;
+		$global_setting_enabled = $_POST["global_setting_enabled"];
 		$global_setting_description = $_POST["global_setting_description"];
 	}
 
