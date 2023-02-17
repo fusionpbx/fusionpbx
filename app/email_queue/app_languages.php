@@ -461,6 +461,26 @@
 		$text['description-email_action_after']['sv-se'] = '';
 		$text['description-email_action_after']['uk-ua'] = '';
 
+		$text['label-email_response']['en-us'] = 'Response';
+		$text['label-email_response']['ar-eg'] = '';
+		$text['label-email_response']['de-at'] = '';
+		$text['label-email_response']['de-ch'] = '';
+		$text['label-email_response']['de-de'] = '';
+		$text['label-email_response']['es-cl'] = '';
+		$text['label-email_response']['es-mx'] = '';
+		$text['label-email_response']['fr-ca'] = '';
+		$text['label-email_response']['fr-fr'] = '';
+		$text['label-email_response']['he-il'] = '';
+		$text['label-email_response']['it-it'] = '';
+		$text['label-email_response']['nl-nl'] = '';
+		$text['label-email_response']['pl-pl'] = '';
+		$text['label-email_response']['pt-br'] = '';
+		$text['label-email_response']['pt-pt'] = '';
+		$text['label-email_response']['ro-ro'] = '';
+		$text['label-email_response']['ru-ru'] = '';
+		$text['label-email_response']['sv-se'] = '';
+		$text['label-email_response']['uk-ua'] = '';
+
 		$text['label-email_retry_count']['en-us'] = 'Retry';
 		$text['label-email_retry_count']['ar-eg'] = '';
 		$text['label-email_retry_count']['de-at'] = '';
