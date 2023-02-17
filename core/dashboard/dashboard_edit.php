@@ -477,8 +477,8 @@
 	}
 	else {
 		echo "	<select class='formfld' id='dashboard_enabled' name='dashboard_enabled'>\n";
-		echo "		<option value='false'>".$text['option-false']."</option>\n";
-		echo "		<option value='true' ".($dashboard_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='true' ".($dashboard_enabled == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($dashboard_enabled == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 		echo "	</select>\n";
 	}
 	echo "<br />\n";
