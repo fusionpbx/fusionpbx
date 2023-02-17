@@ -60,7 +60,7 @@
 		$template_subject = $_POST["template_subject"];
 		$template_body = $_POST["template_body"];
 		$template_type = $_POST["template_type"];
-		$template_enabled = $_POST["template_enabled"] ?: false;
+		$template_enabled = $_POST["template_enabled"];
 		$template_description = $_POST["template_description"];
 	}
 
