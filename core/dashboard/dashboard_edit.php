@@ -54,7 +54,7 @@
 	}
 
 //get http post variables and set them to php variables
-	if (is_array($_POST)) {
+	if (count($_REQUEST) > 0) {
 		$dashboard_name = $_POST["dashboard_name"];
 		$dashboard_path = $_POST["dashboard_path"];
 		$dashboard_groups = $_POST["dashboard_groups"];
@@ -223,6 +223,9 @@
 		}
 		unset($sql, $parameters, $row);
 	}
+
+//set the defaults
+	if (strlen($dashboard_enabled) == 0) { $dashboard_enabled = true; }
 
 //get the child data
 	if (is_uuid($dashboard_uuid)) {
@@ -477,8 +480,8 @@
 	}
 	else {
 		echo "	<select class='formfld' id='dashboard_enabled' name='dashboard_enabled'>\n";
-		echo "		<option value='false'>".$text['option-false']."</option>\n";
-		echo "		<option value='true' ".($dashboard_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='true' ".($dashboard_enabled == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($dashboard_enabled == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 		echo "	</select>\n";
 	}
 	echo "<br />\n";

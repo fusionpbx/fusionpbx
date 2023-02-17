@@ -242,6 +242,9 @@
 		unset ($sql, $parameters);
 	}
 
+//set the defaults
+	if (strlen($device_profile_enabled) == 0) { $device_profile_enabled = 'true'; }
+
 //get the child data
 	if (strlen($device_profile_uuid) > 0) {
 		$sql = "select * from v_device_profile_keys ";

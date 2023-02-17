@@ -137,7 +137,7 @@
 				$contact_name_family = $_POST["contact_name_family"];
 			}
 			$group_uuid_name = $_POST["group_uuid_name"];
-			$user_enabled = $_POST["user_enabled"];
+			$user_enabled = $_POST["user_enabled"] ?: 'false';
 			if (permission_exists('api_key')) {
 				$api_key = $_POST["api_key"];
 			}
@@ -637,6 +637,9 @@
 				unset($sql, $parameters, $result, $row);
 			}
 	}
+
+//set the defaults
+	if (strlen($user_enabled) == 0) { $user_enabled = "true"; }
 
 //create token
 	$object = new token;

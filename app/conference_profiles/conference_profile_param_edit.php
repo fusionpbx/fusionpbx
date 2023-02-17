@@ -128,6 +128,9 @@
 		unset($sql, $parameters);
 	}
 
+//set the defaults
+	if (strlen($profile_param_enabled) == 0) { $profile_param_enabled = 'true'; }
+
 //create token
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);
