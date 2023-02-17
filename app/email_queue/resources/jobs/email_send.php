@@ -449,7 +449,7 @@
 		$sql .= "update_date = now() ";
 		$sql .= "where email_queue_uuid = :email_queue_uuid; ";
 		$parameters['email_queue_uuid'] = $email_queue_uuid;
-		$parameters['email_response'] = $email_response;
+		$parameters['email_response'] = $email_settings."\n".$email_response;
 		$parameters['email_retry_count'] = $email_retry_count;
 		$database = new database;
 		$database->execute($sql, $parameters);
