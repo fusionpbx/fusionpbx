@@ -55,7 +55,7 @@
 	}
 
 //get http post variables and set them to php variables
-	if (is_array($_POST)) {
+	if (count($_POST) > 0) {
 
 		//process the http post data by submitted action
 			if ($_POST['action'] != '' && is_uuid($_POST['sip_profile_uuid'])) {
@@ -78,7 +78,7 @@
 		$sip_profile_uuid = $_POST["sip_profile_uuid"];
 		$sip_profile_name = $_POST["sip_profile_name"];
 		$sip_profile_hostname = $_POST["sip_profile_hostname"];
-		$sip_profile_enabled = $_POST["sip_profile_enabled"];
+		$sip_profile_enabled = $_POST["sip_profile_enabled"] ?: 'false';
 		$sip_profile_description = $_POST["sip_profile_description"];
 		$sip_profile_domains = $_POST["sip_profile_domains"];
 		$sip_profile_settings = $_POST["sip_profile_settings"];
