@@ -59,7 +59,7 @@
 	$destination = new destinations;
 
 //get http post variables and set them to php variables
-	if (is_array($_POST)) {
+	if (count($_POST) > 0) {
 
 		//set the variables from the http values
 			$call_flow_uuid = $_POST["call_flow_uuid"];
@@ -76,7 +76,7 @@
 			$call_flow_alternate_sound = $_POST["call_flow_alternate_sound"];
 			$call_flow_alternate_destination = $_POST["call_flow_alternate_destination"];
 			$call_flow_context = $_POST["call_flow_context"];
-			$call_flow_enabled = $_POST["call_flow_enabled"];
+			$call_flow_enabled = $_POST["call_flow_enabled"] ?: 'false';
 			$call_flow_description = $_POST["call_flow_description"];
 
 		//seperate the action and the param
