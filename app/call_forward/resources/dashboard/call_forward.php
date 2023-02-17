@@ -110,23 +110,41 @@
 	echo "			type: 'doughnut',\n";
 	echo "			data: {\n";
 	echo "				labels: [\n";
-	echo "					'".$text['label-dnd'].": ".$stats['dnd']."',\n";
-	echo "					'".$text['label-follow_me'].": ".$stats['follow_me']."',\n";
-	echo "					'".$text['label-call_forward'].": ".$stats['call_forward']."',\n";
+	if (permission_exists('do_not_disturb')) {
+		echo "				'".$text['label-dnd'].": ".$stats['dnd']."',\n";
+	}
+	if (permission_exists('follow_me')) {
+		echo "				'".$text['label-follow_me'].": ".$stats['follow_me']."',\n";
+	}
+	if (permission_exists('call_forward')) {
+		echo "				'".$text['label-call_forward'].": ".$stats['call_forward']."',\n";
+	}
 	echo "					'".$text['label-active'].": ".$stats['active']."',\n";
 	echo "					],\n";
 	echo "				datasets: [{\n";
 	echo "					data: [\n";
-	echo "						'".$stats['dnd']."',\n";
-	echo "						'".$stats['follow_me']."',\n";
-	echo "						'".$stats['call_forward']."',\n";
+	if (permission_exists('do_not_disturb')) {
+		echo "					'".$stats['dnd']."',\n";
+	}
+	if (permission_exists('follow_me')) {
+		echo "					'".$stats['follow_me']."',\n";
+	}
+	if (permission_exists('call_forward')) {
+		echo "					'".$stats['call_forward']."',\n";
+	}
 	echo "						'".$stats['active']."',\n";
 	echo "						0.00001,\n";
 	echo "						],\n";
 	echo "					backgroundColor: [\n";
-	echo "						'".$_SESSION['dashboard']['call_forward_chart_color_do_not_disturb']['text']."',\n";
-	echo "						'".$_SESSION['dashboard']['call_forward_chart_color_follow_me']['text']."',\n";
-	echo "						'".$_SESSION['dashboard']['call_forward_chart_color_call_forward']['text']."',\n";
+	if (permission_exists('do_not_disturb')) {
+		echo "					'".$_SESSION['dashboard']['call_forward_chart_color_do_not_disturb']['text']."',\n";
+	}
+	if (permission_exists('follow_me')) {
+		echo "					'".$_SESSION['dashboard']['call_forward_chart_color_follow_me']['text']."',\n";
+	}
+	if (permission_exists('call_forward')) {
+		echo "					'".$_SESSION['dashboard']['call_forward_chart_color_call_forward']['text']."',\n";
+	}
 	echo "						'".$_SESSION['dashboard']['call_forward_chart_color_active']['text']."',\n";
 	echo "						'".$_SESSION['dashboard']['call_forward_chart_color_active']['text']."',\n";
 	echo "					],\n";
@@ -179,7 +197,7 @@
 
 // data
 	if (is_array($extensions) && @sizeof($extensions) != 0) {
-		foreach($extensions as $row) {
+		foreach ($extensions as $row) {
 			$tr_link = PROJECT_PATH."/app/call_forward/call_forward_edit.php?id=".$row['extension_uuid'];
 			echo "<tr href='".$tr_link."'>\n";
 			echo "	<td valign='top' class='".$row_style[$c]." hud_text'><a href='".$tr_link."' title=\"".$text['button-edit']."\">".escape($row['extension'])."</a></td>\n";
