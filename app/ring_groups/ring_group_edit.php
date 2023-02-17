@@ -503,7 +503,7 @@
 		}
 	}
 
-//set the default
+//set the defaults
 	$destination_delay_max = $_SESSION['ring_group']['destination_delay_max']['numeric'];
 	$destination_timeout_max = $_SESSION['ring_group']['destination_timeout_max']['numeric'];
 	if (strlen($ring_group_ringback) == 0) {
@@ -512,6 +512,7 @@
 	if (strlen($ring_group_call_timeout) == 0) {
 		$ring_group_call_timeout = '30';
 	}
+	if (strlen($ring_group_enabled) == 0) { $ring_group_enabled = 'true'; }
 
 //get the ring group destination array
 	if ($action == "add") {

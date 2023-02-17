@@ -136,7 +136,7 @@
 			$absolute_codec_string = $_POST["absolute_codec_string"];
 			$force_ping = $_POST["force_ping"];
 			$dial_string = $_POST["dial_string"];
-			$enabled = $_POST["enabled"];
+			$enabled = $_POST["enabled"] ?: 'false';
 			$description = $_POST["description"];
 
 			//outbound caller id number - only allow numeric and +
@@ -1005,6 +1005,7 @@
 	if (strlen($user_record) == 0) { $user_record = $_SESSION['extension']['user_record_default']['text']; }
 	if (strlen($voicemail_transcription_enabled) == 0) { $voicemail_transcription_enabled = $_SESSION['voicemail']['transcription_enabled_default']['boolean']; }
 	if (strlen($voicemail_enabled) == 0) { $voicemail_enabled = $_SESSION['voicemail']['enabled_default']['boolean']; }
+	if (strlen($enabled) == 0) { $enabled = 'true'; }
 
 //create token
 	$object = new token;

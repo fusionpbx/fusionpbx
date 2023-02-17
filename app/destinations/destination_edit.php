@@ -1127,6 +1127,7 @@
 	if (strlen($destination_order) == 0) { $destination_order = '100'; }
 	if (strlen($destination_type) == 0) { $destination_type = 'inbound'; }
 	if (strlen($destination_context) == 0) { $destination_context = 'public'; }
+	if (strlen($destination_enabled) == 0) { $destination_enabled = 'true'; }
 	if ($destination_type =="outbound") { $destination_context = $_SESSION['domain_name']; }
 	if ($destination_type =="local") { $destination_context = $_SESSION['domain_name']; }
 

@@ -163,6 +163,10 @@
 		unset($sql, $parameters, $row);
 	}
 
+//set the defaults
+	if (strlen($module_enabled) == 0) { $module_enabled = 'true'; }
+	if (strlen($module_default_enabled) == 0) { $module_default_enabled = 'true'; }
+
 //create token
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);

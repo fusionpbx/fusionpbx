@@ -527,6 +527,9 @@
 		unset($sql, $parameters, $row);
 	}
 
+//set the defaults
+	if (strlen($device_enabled) == 0) { $device_enabled = 'true'; }
+
 //use the mac address to get the vendor
 	if (strlen($device_vendor) == 0) {
 		//get the device vendor using the mac address

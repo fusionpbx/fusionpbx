@@ -55,7 +55,7 @@
 	}
 
 //get http post variables and set them to php variables
-	if (is_array($_POST)) {
+	if (count($_POST) > 0) {
 
 		//process the http post data by submitted action
 			if ($_POST['action'] != '' && is_uuid($_POST['sip_profile_uuid'])) {
@@ -258,6 +258,9 @@
 		}
 		unset($sql, $parameters, $row);
 	}
+
+//set the defaults
+	if (strlen($sip_profile_enabled) == 0) { $sip_profile_enabled = 'true'; }
 
 //get the child data
 	$sql = "select * from v_sip_profile_settings ";

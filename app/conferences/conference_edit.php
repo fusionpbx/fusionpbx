@@ -296,6 +296,9 @@
 		unset($sql, $parameters, $row);
 	}
 
+//set the defaults
+	if (strlen($conference_enabled) == 0) { $conference_enabled = 'true'; }
+
 //get the conference profiles
 	$sql = "select * ";
 	$sql .= "from v_conference_profiles ";

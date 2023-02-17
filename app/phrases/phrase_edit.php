@@ -286,6 +286,9 @@
 		unset($sql, $parameters, $row);
 	}
 
+//set the defaults
+	if (strlen($phrase_enabled) == 0) { $phrase_enabled = 'true'; }
+
 //get the phrase details
 	if (is_uuid($phrase_uuid)) {
 		$sql = "select * from v_phrase_details ";

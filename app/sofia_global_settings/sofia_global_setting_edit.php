@@ -156,6 +156,9 @@
 		unset($sql, $parameters, $row);
 	}
 
+//set the defaults
+	if (strlen($global_setting_enabled) == 0) { $global_setting_enabled = true; }
+
 //create token
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);
@@ -226,21 +229,18 @@
 	echo "	".$text['label-global_setting_enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<select class='formfld' name='global_setting_enabled'>\n";
-	echo "		<option value=''></option>\n";
-	if ($global_setting_enabled == "true") {
-		echo "		<option value='true' selected='selected'>".$text['label-true']."</option>\n";
+	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
+		echo "	<label class='switch'>\n";
+		echo "		<input type='checkbox' id='global_setting_enabled' name='global_setting_enabled' value='true' ".($global_setting_enabled == true ? "checked='checked'" : null).">\n";
+		echo "		<span class='slider'></span>\n";
+		echo "	</label>\n";
 	}
 	else {
-		echo "		<option value='true'>".$text['label-true']."</option>\n";
+		echo "	<select class='formfld' name='global_setting_enabled'>\n";
+		echo "		<option value='true' ".($global_setting_enabled == "true" ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
+		echo "		<option value='false' ".($global_setting_enabled == "false" ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
+		echo "	</select>\n";
 	}
-	if ($global_setting_enabled == "false") {
-		echo "		<option value='false' selected='selected'>".$text['label-false']."</option>\n";
-	}
-	else {
-		echo "		<option value='false'>".$text['label-false']."</option>\n";
-	}
-	echo "	</select>\n";
 	echo "<br />\n";
 	echo $text['description-global_setting_enabled']."\n";
 	echo "</td>\n";

@@ -348,6 +348,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		unset($sql, $parameters);
 	}
 
+//set the defaults
+	if (strlen($domain_setting_enabled) == 0) { $domain_setting_enabled = 'true'; }
+
 //create token
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);

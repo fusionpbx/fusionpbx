@@ -31,9 +31,9 @@
 	}
 
 //get http post variables and set them to php variables
-	if (is_array($_POST)) {
+	if (count($_POST) > 0) {
 		$control_name = $_POST["control_name"];
-		$control_enabled = $_POST["control_enabled"];
+		$control_enabled = $_POST["control_enabled"] ?: 'false';
 		$control_description = $_POST["control_description"];
 	}
 
@@ -122,6 +122,9 @@
 		}
 		unset($sql, $parameters, $row);
 	}
+
+//set the defaults
+	if (strlen($control_enabled) == 0) { $control_enabled = 'true'; }
 
 //create token
 	$object = new token;

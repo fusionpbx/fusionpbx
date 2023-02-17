@@ -52,7 +52,7 @@
 	}
 
 //get http post variables and set them to php variables
-	if (is_array($_POST)) {
+	if (count($_POST) > 0) {
 		$domain_uuid = $_POST["domain_uuid"];
 		$template_language = $_POST["template_language"];
 		$template_category = $_POST["template_category"];
@@ -60,7 +60,7 @@
 		$template_subject = $_POST["template_subject"];
 		$template_body = $_POST["template_body"];
 		$template_type = $_POST["template_type"];
-		$template_enabled = $_POST["template_enabled"];
+		$template_enabled = $_POST["template_enabled"] ?: 'false';
 		$template_description = $_POST["template_description"];
 	}
 
@@ -167,6 +167,9 @@
 		}
 		unset($sql, $parameters, $row);
 	}
+
+//set the defaults
+	if (strlen($template_enabled) == 0) { $template_enabled = 'true'; }
 
 //load editor preferences/defaults
 	$setting_size = $_SESSION["editor"]["font_size"]["text"] != '' ? $_SESSION["editor"]["font_size"]["text"] : '12px';
