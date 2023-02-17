@@ -2492,6 +2492,13 @@ header('Expires: '.gmdate('D, d M Y H:i:s',time()+3600).' GMT');
 		vertical-align: middle;
 		}
 
+	td.hud_text.input {
+		margin: 0;
+		padding-top: 0;
+		padding-bottom: 0;
+		white-space: nowrap;
+		}
+
 	span.hud_expander {
 		display: block;
 		clear: both;
