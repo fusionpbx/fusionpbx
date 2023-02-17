@@ -172,6 +172,7 @@
 	echo "					data: [\n";
 	echo "						'".$stats['active']."',\n";
 	echo "						'".$stats['forwarding']."',\n";
+	echo "						0.00001,\n";
 	echo "						],\n";
 	echo "					backgroundColor: [\n";
 	echo "						'".$_SESSION['dashboard']['ring_group_forward_chart_color_active']['text']."',\n";
@@ -213,7 +214,9 @@
 
 	echo "<div class='hud_details hud_box' id='hud_ring_group_forward_details' style='text-align: right;'>";
 
-	echo button::create(['type'=>'button','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'collapse'=>false,'style'=>"position: absolute; margin-top: -35px; margin-left: -72px;",'onclick'=>"list_form_submit('form_list_ring_group_forward');"]);
+	if (is_array($result) && @sizeof($result) != 0) {
+		echo button::create(['type'=>'button','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'collapse'=>false,'style'=>"position: absolute; margin-top: -35px; margin-left: -72px;",'onclick'=>"list_form_submit('form_list_ring_group_forward');"]);
+	}
 
 	echo "<table class='tr_hover' width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 	echo "<tr style='position: -webkit-sticky; position: sticky; z-index: 5; top: 0;'>\n";
