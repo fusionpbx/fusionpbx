@@ -218,14 +218,11 @@
 			$dashboard_column_span = $row["dashboard_column_span"];
 			$dashboard_details_state = $row["dashboard_details_state"];
 			$dashboard_order = $row["dashboard_order"];
-			$dashboard_enabled = $row["dashboard_enabled"];
+			$dashboard_enabled = $row["dashboard_enabled"] ?: 'false';
 			$dashboard_description = $row["dashboard_description"];
 		}
 		unset($sql, $parameters, $row);
 	}
-
-//set the defaults
-	if (strlen($dashboard_enabled) == 0) { $dashboard_enabled = true; }
 
 //get the child data
 	if (is_uuid($dashboard_uuid)) {
@@ -474,14 +471,14 @@
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
 	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
 		echo "	<label class='switch'>\n";
-		echo "		<input type='checkbox' id='dashboard_enabled' name='dashboard_enabled' value='true' ".($dashboard_enabled == true ? "checked='checked'" : null).">\n";
+		echo "		<input type='checkbox' id='dashboard_enabled' name='dashboard_enabled' value='true' ".($dashboard_enabled == 'true' ? "checked='checked'" : null).">\n";
 		echo "		<span class='slider'></span>\n";
 		echo "	</label>\n";
 	}
 	else {
 		echo "	<select class='formfld' id='dashboard_enabled' name='dashboard_enabled'>\n";
-		echo "		<option value='true' ".($dashboard_enabled == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-		echo "		<option value='false' ".($dashboard_enabled == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "		<option value='false'>".$text['option-false']."</option>\n";
+		echo "		<option value='true' ".($dashboard_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
 		echo "	</select>\n";
 	}
 	echo "<br />\n";
