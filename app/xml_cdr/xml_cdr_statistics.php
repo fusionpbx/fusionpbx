@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -290,7 +290,7 @@
 	foreach ($stats as $row) {
 		echo "<tr class='list-row'>\n";
 		if ($i <= $hours) {
-			echo "	<td>".($i+1)."</td>\n";
+			echo "	<td>".$row['hours']."</td>\n";
 		}
 		else if ($i == $hours+1) {
 			echo "	<br /><br />\n";
@@ -314,15 +314,15 @@
 			echo "<tr class='list-row'>\n";
 		}
 		if ($i > $hours) {
-			echo "	<td>" . floor(escape($row['hours'])/24) . "</td>\n";
+			echo "	<td>" . floor(escape($row['s_hour'])/24) . "</td>\n";
 		}
 		if ($i <= $hours) {
-			echo "	<td>".date('j M', $row['start_epoch'])."</td>\n";
-			echo "	<td>".date('H:i', $row['start_epoch'])." - ".date('H:i', $row['stop_epoch'])."&nbsp;</td>\n";
+			echo "	<td>".$row['date']."</td>\n";
+			echo "	<td>".$row['time']."&nbsp;</td>\n";
 		}
 		else {
-			echo "	<td>".date('j M', $row['start_epoch'])."&nbsp;</td>\n";
-			echo "	<td>".date('H:i', $row['start_epoch'])." - ".date('j M H:i', $row['stop_epoch'])."&nbsp;</td>\n";
+			echo "	<td>".$row['date']."</td>\n";
+			echo "	<td>".$row['time']."&nbsp;</td>\n";
 		}
 		echo "	<td>".escape($row['volume'])."&nbsp;</td>\n";
 		echo "	<td>".(round(escape($row['minutes']),2))."&nbsp;</td>\n";
