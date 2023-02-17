@@ -285,6 +285,16 @@
 		unset($parameters);
 	}
 
+//add email settings
+	ksort($_SESSION['email']);
+	foreach ($_SESSION['email'] as $name => $setting) {
+		foreach ($setting as $type => $value) {
+			if ($type == 'uuid') { $uuid = $value; continue; }
+			if ($name == 'smtp_password') { $value = '[REDACTED]'; }
+			$email_settings .= $name.': '.$value."\n";
+		}
+	}
+
 //send the email
 	$email = new email;
 	$email->domain_uuid = $domain_uuid;
@@ -314,7 +324,7 @@
 		$sql .= "update_date = now() ";
 		$sql .= "where email_queue_uuid = :email_queue_uuid; ";
 		$parameters['email_queue_uuid'] = $email_queue_uuid;
-		$parameters['email_response'] = $email_response;
+		$parameters['email_response'] = $email_settings."\n".$email_response;
 		if (isset($transcribe_message)) {
 			$parameters['email_transcription'] = $transcribe_message;
 		}
