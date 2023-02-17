@@ -220,6 +220,12 @@
 	else {
 		echo "			<option value='sent'>".$text['label-sent']."</option>\n";
 	}
+	if (isset($_GET["email_status"]) && $_GET["email_status"] == "trying") {
+		echo "			<option value='trying' selected='selected'>".$text['label-trying']."</option>\n";
+	}
+	else {
+		echo "			<option value='trying'>".$text['label-trying']."</option>\n";
+	}
 	echo "		</select>\n";
 	//if (permission_exists('email_queue_all')) {
 	//	if ($_GET['show'] == 'all') {
