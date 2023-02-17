@@ -247,7 +247,7 @@
 	}
 
 //set the defaults
-	if (strlen($default_setting_enabled) == 0) { $default_setting_enabled = 'true'; }
+	if (strlen($default_setting_enabled) == 0) { $default_setting_enabled = true; }
 
 //create token
 	$object = new token;
@@ -790,7 +790,7 @@
 	echo "<td width='70%' class='vtable' align='left'>\n";
 	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
 		echo "	<label class='switch'>\n";
-		echo "		<input type='checkbox' id='default_setting_enabled' name='default_setting_enabled' value='true' ".($default_setting_enabled == 'true' ? "checked='checked'" : null).">\n";
+		echo "		<input type='checkbox' id='default_setting_enabled' name='default_setting_enabled' value='true' ".($default_setting_enabled == true ? "checked='checked'" : null).">\n";
 		echo "		<span class='slider'></span>\n";
 		echo "	</label>\n";
 	}
