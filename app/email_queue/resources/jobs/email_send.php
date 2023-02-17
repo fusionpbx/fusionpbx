@@ -285,9 +285,6 @@
 		unset($parameters);
 	}
 
-//save output to a buffer
-//	ob_start();
-
 //send the email
 	$email = new email;
 	$email->domain_uuid = $domain_uuid;
@@ -302,9 +299,6 @@
 	$email_status = $email->send();
 	$email_error = $email->error;
 	$email_response = $email->response;
-
-//get the output buffer
-//	//$email_response = ob_get_clean();
 
 //send the email
 	if ($email_status) {
