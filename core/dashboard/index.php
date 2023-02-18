@@ -176,7 +176,7 @@
 	if (is_array($dashboard) && @sizeof($dashboard) != 0) {
 		$expanded_all = true;
 		foreach ($dashboard as $row) {
-			if ($row['dashboard_details_state'] == 'contracted') { $expanded_all = false; }
+			if ($row['dashboard_details_state'] == 'contracted' || $row['dashboard_details_state'] == 'hidden') { $expanded_all = false; }
 		}
 	}
 
