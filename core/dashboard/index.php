@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2022
+	Portions created by the Initial Developer are Copyright (C) 2022-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -181,7 +181,7 @@
 	}
 
 //show the content
-	echo "<form id='dashboard' method='POST' onsubmit='setFormSubmitting()'>\n";
+	echo "<form id='dashboard' method='post' _onsubmit='setFormSubmitting()'>\n";
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-dashboard']."</b></div>\n";
 	echo "	<div class='actions'>\n";
@@ -401,6 +401,15 @@
 						document.getElementById('widget_order').value = widget_ids_list;
 					},
 				});
+
+				// set initial widget order
+				let widget_ids = document.querySelectorAll("#widgets > div[id]");
+				let widget_ids_list = [];
+				for (let i = 0; i < widget_ids.length; i++) {
+					widget_ids_list.push(widget_ids[i].id);
+				}
+				document.getElementById('widget_order').value = widget_ids_list;
+
 			}
 			else { // off
 
