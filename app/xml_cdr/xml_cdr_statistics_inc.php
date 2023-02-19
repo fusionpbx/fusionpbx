@@ -408,8 +408,8 @@
 	$sql .= "	from v_xml_cdr as c, \n";
 	$sql .= "	( \n";
 	$sql .= "		select h.s_id, h.s_start, h.s_end, h.s_hour, \n";
-	$sql .= "			('today'::timestamptz + (interval '1 hour') - (h.s_start * (interval '1 hour'))) as start_date, \n";
-	$sql .= "			('today'::timestamptz + (interval '1 hour') - (h.s_end * (interval '1 hour'))) as end_date  \n";
+	$sql .= "			(date_trunc('hour', now()) + (interval '1 hour') - (h.s_start * (interval '1 hour'))) as start_date, \n";
+	$sql .= "			(date_trunc('hour', now()) + (interval '1 hour') - (h.s_end * (interval '1 hour'))) as end_date  \n";
 	$sql .= "		from ( \n";
 	$sql .= "				select generate_series(0, 23) as s_id, generate_series(1, 24) as s_start, generate_series(0, 23) as s_end, 1 s_hour \n";
 	$sql .= "				union \n";
