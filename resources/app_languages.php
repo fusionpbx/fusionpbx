@@ -2731,6 +2731,27 @@ $text['label-type']['sv-se'] = "Typ";
 $text['label-type']['uk-ua'] = "Тип";
 $text['label-type']['tr-tr'] = "Tür";
 
+$text['label-remaining']['en-us'] = "Remaining";
+$text['label-remaining']['en-gb'] = "Remaining";
+$text['label-remaining']['ar-eg'] = "Remaining";
+$text['label-remaining']['de-at'] = "Remaining";
+$text['label-remaining']['de-ch'] = "Remaining";
+$text['label-remaining']['de-de'] = "Remaining";
+$text['label-remaining']['es-cl'] = "Remaining";
+$text['label-remaining']['es-mx'] = "Remaining";
+$text['label-remaining']['fr-ca'] = "Remaining";
+$text['label-remaining']['fr-fr'] = "Remaining";
+$text['label-remaining']['he-il'] = "Remaining";
+$text['label-remaining']['it-it'] = "Remaining";
+$text['label-remaining']['nl-nl'] = "Remaining";
+$text['label-remaining']['pl-pl'] = "Remaining";
+$text['label-remaining']['pt-br'] = "Remaining";
+$text['label-remaining']['pt-pt'] = "Remaining";
+$text['label-remaining']['ro-ro'] = "Remaining";
+$text['label-remaining']['ru-ru'] = "Remaining";
+$text['label-remaining']['sv-se'] = "Remaining";
+$text['label-remaining']['uk-ua'] = "Remaining";
+
 $text['label-category']['en-us'] = "Category";
 $text['label-category']['en-gb'] = "Category";
 $text['label-category']['ar-eg'] = "";
