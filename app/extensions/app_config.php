@@ -315,6 +315,38 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Default value to set whether to record inbound, outbound, or all calls.";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "40aac087-c335-44fa-9302-aaddb4bcca00";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "dashboard";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "caller_id_chart_color_undefined";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "#ea4c46";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "103a5aaa-00f8-4cbe-9988-0469a9b9e65d";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "dashboard";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "caller_id_chart_color_defined";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "#d4d4d4";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "71b2a34c-86df-4ada-b7fc-70e4048dd202";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "dashboard";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "caller_id_chart_border_color";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "rgba(0,0,0,0)";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "7a96f83b-c408-418b-99b5-077fa11b7cf5";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "dashboard";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "caller_id_chart_border_width";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 
 	//cache details
 		$apps[$x]['cache']['key'] = "directory.\${extension}@\${domain_name}";
