@@ -41,41 +41,45 @@
 		exit;
 	}
 
-/*//show all call detail records to admin and superadmin. for everyone else show only the call details for extensions assigned to them
-	if (!if_group("admin") && !if_group("superadmin")) {
+//show all call detail records to admin and superadmin. for everyone else show only the call details for extensions assigned to them
+	if (permission_exists('xml_cdr_domain')) {
 		// select caller_id_number, destination_number from v_xml_cdr where domain_uuid = ''
 		// and (caller_id_number = '1001' or destination_number = '1001' or destination_number = '*991001')
 
-		$sql_where = "where domain_uuid = '".$_SESSION["domain_uuid"]."' and ( ";
+		$sql_where = "c.domain_uuid = '".$_SESSION["domain_uuid"]."' and ( ";
 		if (count($_SESSION['user']['extension']) > 0) {
 			$x = 0;
 			foreach($_SESSION['user']['extension'] as $row) {
 				if ($x==0) {
-					if ($row['user'] > 0) { $sql_where .= "caller_id_number = '".$row['user']."' \n"; } //source
+					if ($row['user'] > 0) { $sql_where .= "c.caller_id_number = '".$row['user']."' \n"; } //source
 				}
 				else {
-					if ($row['user'] > 0) { $sql_where .= "or caller_id_number = '".$row['user']."' \n"; } //source
+					if ($row['user'] > 0) { $sql_where .= "or c.caller_id_number = '".$row['user']."' \n"; } //source
 				}
-				if ($row['user'] > 0) { $sql_where .= "or destination_number = '".$row['user']."' \n"; } //destination
-				if ($row['user'] > 0) { $sql_where .= "or destination_number = '*99".$row['user']."' \n"; } //destination
+				if ($row['user'] > 0) { $sql_where .= "or c.destination_number = '".$row['user']."' \n"; } //destination
+				if ($row['user'] > 0) { $sql_where .= "or c.destination_number = '*99".$row['user']."' \n"; } //destination
 				$x++;
 			}
 		}
 		$sql_where .= ") ";
+
 	}
 	else {
 		//superadmin or admin
 		if ($_GET['showall'] && permission_exists('xml_cdr_all')) {
-			$sql_where = "";
+			$sql_where = '';
 		} else {
-			$sql_where = "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+			$sql_where = "c.domain_uuid = '".$_SESSION['domain_uuid']."' ";
 		}
+	}
+	if (isset($sql_where) && $sql_where != '') {
+		$sql_where_ands[] = $sql_where;
+		unset($sql_where);
 	}
 
 //create the sql query to get the xml cdr records
 	if (strlen($order_by) == 0) { $order_by  = "start_epoch"; }
 	if (strlen($order) == 0) { $order  = "desc"; }
-*/
 
 //get post or get variables from http
 	if (isset($_REQUEST)) {
@@ -348,12 +352,6 @@
 		}
 	}
 
-	//$sql_where = ' where ';
-	// concatenate the 'ands's array, add to where clause
-	if (is_array($sql_where_ands) && @sizeof($sql_where_ands) > 0) {
-		$sql_where .= "and ".implode(" and ", $sql_where_ands)." ";
-	}
-
 //calculate the seconds in different time frames
 	$seconds_hour = 3600;
 	$seconds_day = $seconds_hour * 24;
@@ -425,9 +423,9 @@
 	$sql .= "	) as s \n";
 	$sql .= "where true \n";
 
-	//add the sql where string
-	if (isset($sql_where)) {
-		$sql .= $sql_where."\n";
+//concatenate the 'ands's array, add to where clause
+	if (is_array($sql_where_ands) && @sizeof($sql_where_ands) > 0) {
+		$sql .= "and ".implode(" and ", $sql_where_ands)." ";
 	}
 
 	/*
