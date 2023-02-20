@@ -42,7 +42,7 @@
 	}
 
 //show all call detail records to admin and superadmin. for everyone else show only the call details for extensions assigned to them
-	if (permission_exists('xml_cdr_domain')) {
+	if (!permission_exists('xml_cdr_domain')) {
 		// select caller_id_number, destination_number from v_xml_cdr where domain_uuid = ''
 		// and (caller_id_number = '1001' or destination_number = '1001' or destination_number = '*991001')
 
@@ -62,7 +62,6 @@
 			}
 		}
 		$sql_where .= ") ";
-
 	}
 	else {
 		//superadmin or admin
