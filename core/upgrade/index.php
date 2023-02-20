@@ -69,7 +69,7 @@
 			if (sizeof($response_source_update) > 0) {
 				$_SESSION["response"]["upgrade_source"] = $response_source_update;
 				foreach ($response_source_update as $response_line) {
-					if (substr_count($response_line, "Updating ") > 0 || substr_count($response_line, "Already up-to-date.") > 0) {
+					if (substr_count($response_line, "Updating ") > 0 || substr_count($response_line, "Already up-to-date.") > 0 || substr_count($response_line, "Already up to date.") > 0) {
 						$update_failed = false;
 					}
 					
