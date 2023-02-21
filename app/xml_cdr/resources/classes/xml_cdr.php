@@ -94,7 +94,7 @@ if (!class_exists('xml_cdr')) {
 		 * cdr process logging
 		 */
 		public function log($message) {
-			
+
 			//save the log if enabled is true
 			if ($_SESSION['log']['enabled']['boolean'] == 'true') {
 
@@ -237,7 +237,7 @@ if (!class_exists('xml_cdr')) {
 					$database->domain_uuid = $domain_uuid;
 					$database->save($array, false);
 
-					//debug results	
+					//debug results
 					$this->log(print_r($database->message, true));
 
 					//remove the temporary permission
@@ -334,15 +334,15 @@ if (!class_exists('xml_cdr')) {
 						if (isset($xml->variables->effective_caller_id_name)) {
 							$caller_id_name = urldecode($xml->variables->effective_caller_id_name);
 						}
-					
+
 						if (isset($xml->variables->origination_caller_id_name)) {
 							$caller_id_name = urldecode($xml->variables->origination_caller_id_name);
 						}
-						
+
 						if (isset($xml->variables->origination_caller_id_number)) {
 							$caller_id_number = urldecode($xml->variables->origination_caller_id_number);
 						}
-					
+
 						if (urldecode($xml->variables->call_direction) == 'outbound' && isset($xml->variables->effective_caller_id_number)) {
 							$caller_id_number = urldecode($xml->variables->effective_caller_id_number);
 						}
@@ -350,7 +350,7 @@ if (!class_exists('xml_cdr')) {
 					//if the sip_from_domain and domain_name are not the same then original call direction was inbound
 						//when an inbound call is forward the call_direction is set to inbound and then updated to outbound
 						//use sip_from_display and sip_from_user to get the original caller ID instead of the updated caller ID info from the forward
-						if (isset($xml->variables->sip_from_domain) && urldecode($xml->variables->sip_from_domain) != urldecode($xml->variables->domain_name)) { 
+						if (isset($xml->variables->sip_from_domain) && urldecode($xml->variables->sip_from_domain) != urldecode($xml->variables->domain_name)) {
 							if (isset($xml->variables->sip_from_display)) {
 								$caller_id_name = urldecode($xml->variables->sip_from_display);
 							}
@@ -483,7 +483,7 @@ if (!class_exists('xml_cdr')) {
 
 					//store the call direction
 						$this->array[$key]['direction'] = urldecode($xml->variables->call_direction);
-						  
+
 					//call center
 						$this->array[$key]['cc_side'] = urldecode($xml->variables->cc_side);
 						$this->array[$key]['cc_member_uuid'] = urldecode($xml->variables->cc_member_uuid);
@@ -572,7 +572,7 @@ if (!class_exists('xml_cdr')) {
 								$fields = explode(",", $field);
 								$field_name = end($fields);
 								$this->fields[] = $field_name;
-								if (!isset($this->array[$key][$field_name])){
+								if (!isset($this->array[$key][$field_name])) {
 									if (count($fields) == 1) {
 										$this->array[$key][$field_name] = urldecode($xml->variables->{$fields[0]});
 									}
@@ -849,7 +849,6 @@ if (!class_exists('xml_cdr')) {
 							$tmp_dir = $_SESSION['switch']['log']['dir'].'/xml_cdr/failed/';
 							if(!file_exists($tmp_dir)) {
 								mkdir($tmp_dir, 0770, true);
-								
 							}
 							if ($_SESSION['cdr']['format']['text'] == "xml") {
 								$tmp_file = $uuid.'.xml';
@@ -1081,12 +1080,12 @@ if (!class_exists('xml_cdr')) {
 						$parameters['start_stamp_end'] = $this->start_stamp_end.':59.999 '.$time_zone;
 					}
 					else {
-						if (strlen($this->start_stamp_begin) > 0) { 
-							$sql_date_range = "and start_stamp >= :start_stamp_begin::timestamptz \n"; 
+						if (strlen($this->start_stamp_begin) > 0) {
+							$sql_date_range = "and start_stamp >= :start_stamp_begin::timestamptz \n";
 							$parameters['start_stamp_begin'] = $this->start_stamp_begin.':00.000 '.$time_zone;
 						}
-						if (strlen($this->start_stamp_end) > 0) { 
-							$sql_date_range .= "and start_stamp <= :start_stamp_end::timestamptz \n"; 
+						if (strlen($this->start_stamp_end) > 0) {
+							$sql_date_range .= "and start_stamp <= :start_stamp_end::timestamptz \n";
 							$parameters['start_stamp_end'] = $this->start_stamp_end.':59.999 '.$time_zone;
 						}
 					}
@@ -1149,7 +1148,7 @@ if (!class_exists('xml_cdr')) {
  				if ($this->include_internal) {
 					$sql .= " and (direction = 'inbound' or direction = 'local') \n";
 				}
-				else { 
+				else {
 					$sql .= "and direction = 'inbound' \n";
 				}
 				$sql .= ") \n";
@@ -1439,73 +1438,75 @@ if (!class_exists('xml_cdr')) {
 		public function delete($records) {
 			if (permission_exists($this->permission_prefix.'delete')) {
 
-				//add multi-lingual support
-					$language = new text;
-					$text = $language->get();
+			//add multi-lingual support
+			$language = new text;
+			$text = $language->get();
 
-				//validate the token
-					$token = new token;
-					if (!$token->validate($_SERVER['PHP_SELF'])) {
-						message::add($text['message-invalid_token'],'negative');
-						header('Location: '.$this->list_page);
-						exit;
-					}
-
-				//delete multiple records
-					if (is_array($records) && @sizeof($records) != 0) {
-						$records_deleted = 0;
-
-						//loop through records
-							foreach($records as $x => $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
-
-									//get the call recordings
-										$sql = "select * from view_call_recordings ";
-										$sql .= "where call_recording_uuid = :xml_cdr_uuid ";
-										$parameters['xml_cdr_uuid'] = $record['uuid'];
-										$database = new database;
-										$row = $database->select($sql, $parameters, 'row');
-										unset($sql, $parameters);
-
-									//delete the call recording (file)
-										$call_recording_path = realpath($row['call_recording_path']);
-										$call_recording_name = $row['call_recording_name'];
-										if (file_exists($call_recording_path.'/'.$call_recording_name)) {
-											@unlink($call_recording_path.'/'.$call_recording_name);
-										}
-
-									//build the delete array
-										$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
-										$array['call_recordings'][$x]['call_recording_uuid'] = $record['uuid'];
-
-									//increment counter
-										$records_deleted++;
-								}
-							}
-
-						//delete the checked rows
-							if (is_array($array) && @sizeof($array) != 0) {
-
-								//grant temporary permissions
-									$p = new permissions;
-									$p->add('call_recording_delete', 'temp');
-
-								//execute delete
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->delete($array);
-									unset($array);
-
-								//revoke temporary permissions
-									$p->delete('call_recording_delete', 'temp');
-
-								//set message
-									message::add($text['message-delete'].": ".$records_deleted);
-							}
-							unset($records);
-					}
+			//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: '.$this->list_page);
+				exit;
 			}
+
+			//delete multiple records
+			if (!is_array($records) || @sizeof($records) == 0) {
+				return;
+			}
+			$records_deleted = 0;
+
+			//loop through records
+			foreach($records as $x => $record) {
+				if ($record['checked'] != 'true' || !is_uuid($record['uuid'])) {
+					continue;
+				}
+
+				//get the call recordings
+				$sql = "select xml_cdr_uuid, record_name, record_path from v_xml_cdr ";
+				$sql .= "where xml_cdr_uuid = :xml_cdr_uuid ";
+				$sql .= "and record_name is not null";
+				$parameters['xml_cdr_uuid'] = $record['uuid'];
+				$database = new database;
+				$row = $database->select($sql, $parameters, 'row');
+				unset($sql, $parameters);
+
+				//delete the call recording (file)
+				$call_recording_path = realpath($row['record_path']);
+				$call_recording_name = $row['record_name'];
+				if (file_exists($call_recording_path.'/'.$call_recording_name)) {
+					@unlink($call_recording_path.'/'.$call_recording_name);
+				}
+
+				//build the delete array
+				$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
+
+				//increment counter
+				$records_deleted++;
+			}
+
+			if (!is_array($array) || @sizeof($array) == 0) {
+				return;
+			}
+
+			//grant temporary permissions
+			$p = new permissions;
+			$p->add('call_recording_delete', 'temp');
+
+			//execute delete
+			$database = new database;
+			$database->app_name = $this->app_name;
+			$database->app_uuid = $this->app_uuid;
+			$database->delete($array);
+			unset($array);
+
+			//revoke temporary permissions
+			$p->delete('call_recording_delete', 'temp');
+
+			//set message
+			message::add($text['message-delete'].": ".$records_deleted);
+
+			unset($records);
 		} //method
 
 	} //class
