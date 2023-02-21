@@ -235,7 +235,6 @@
 
 				//echo "email_body before: ".$email_body."\n";
 				$email_body = str_replace('${message_text}', $transcribe_message, $email_body);
-				//$email_debug = $field['message'];
 				//echo "email_body after: ".$email_body."\n";
 				//unset($field);
 			}
@@ -286,11 +285,15 @@
 		unset($parameters);
 	}
 
-//send email
-	//ob_start();
-	//$sent = !send_email($email_to, $email_subject, $email_body, $email_error, null, null, null, null, $email_attachments) ? false : true;
-	//$response = ob_get_clean();
-	//echo $response;
+//add email settings
+	ksort($_SESSION['email']);
+	foreach ($_SESSION['email'] as $name => $setting) {
+		foreach ($setting as $type => $value) {
+			if ($type == 'uuid') { $uuid = $value; continue; }
+			if ($name == 'smtp_password') { $value = '[REDACTED]'; }
+			$email_settings .= $name.': '.$value."\n";
+		}
+	}
 
 //send the email
 	$email = new email;
@@ -301,12 +304,14 @@
 	$email->subject = $email_subject;
 	$email->body = $email_body;
 	$email->attachments = $email_attachments;
+	$email->debug_level = 3;
 	$email->method = 'direct';
-	$sent = $email->send();
-	//$response = $email->email_error;
+	$email_status = $email->send();
+	$email_error = $email->error;
+	$email_response = $email->response;
 
 //send the email
-	if ($sent) {
+	if ($email_status) {
 
 		//set the email status to sent
 		$sql = "update v_email_queue ";
@@ -315,9 +320,11 @@
 		if (isset($transcribe_message)) {
 			$sql .= "email_transcription = :email_transcription, ";
 		}
+		$sql .= "email_response = :email_response, ";
 		$sql .= "update_date = now() ";
 		$sql .= "where email_queue_uuid = :email_queue_uuid; ";
 		$parameters['email_queue_uuid'] = $email_queue_uuid;
+		$parameters['email_response'] = $email_settings."\n".$email_response;
 		if (isset($transcribe_message)) {
 			$parameters['email_transcription'] = $transcribe_message;
 		}
@@ -437,15 +444,13 @@
 		else {
 			$sql .= "set email_status = 'trying', ";
 		}
+		$sql .= "email_response = :email_response, ";
 		$sql .= "email_retry_count = :email_retry_count, ";
 		$sql .= "update_date = now() ";
-		//$sql .= ", email_debug = :email_debug ";
 		$sql .= "where email_queue_uuid = :email_queue_uuid; ";
 		$parameters['email_queue_uuid'] = $email_queue_uuid;
-		//$parameters['email_debug'] = $mailer_error;
+		$parameters['email_response'] = $email_settings."\n".$email_response;
 		$parameters['email_retry_count'] = $email_retry_count;
-		//echo $sql."\n";
-		//print_r($parameters);
 		$database = new database;
 		$database->execute($sql, $parameters);
 		unset($parameters);

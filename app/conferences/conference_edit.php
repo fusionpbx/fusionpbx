@@ -66,7 +66,7 @@
 		$conference_account_code = $_POST["conference_account_code"];
 		$conference_order = $_POST["conference_order"];
 		$conference_description = $_POST["conference_description"];
-		$conference_enabled = $_POST["conference_enabled"];
+		$conference_enabled = $_POST["conference_enabled"] ?: 'false';
 
 		//sanitize the conference name
 		$conference_name = preg_replace("/[^A-Za-z0-9\- ]/", "", $conference_name);
@@ -296,6 +296,9 @@
 		unset($sql, $parameters, $row);
 	}
 
+//set the defaults
+	if (strlen($conference_enabled) == 0) { $conference_enabled = 'true'; }
+
 //get the conference profiles
 	$sql = "select * ";
 	$sql .= "from v_conference_profiles ";
@@ -351,8 +354,11 @@
 		if (permission_exists('conference_cdr_view')) {
 			echo button::create(['type'=>'button','label'=>$text['button-cdr'],'icon'=>'list','link'=>PROJECT_PATH.'/app/conference_cdr/conference_cdr.php?id='.urlencode($conference_uuid)]);
 		}
-		if (permission_exists('conference_active_view')) {
-			echo button::create(['type'=>'button','label'=>$text['button-view'],'icon'=>$_SESSION['theme']['button_icon_view'],'style'=>'','link'=>'../conferences_active/conferences_active.php?c='.urlencode(str_replace(' ', '-', $conference_name))]);
+		if (permission_exists('conference_interactive_view')) {
+			echo button::create(['type'=>'button','label'=>$text['button-view'],'icon'=>$_SESSION['theme']['button_icon_view'],'style'=>'','link'=>'../conferences_active/conference_interactive.php?c='.urlencode($conference_extension)]);
+		}
+		else if (permission_exists('conference_active_view')) {
+			echo button::create(['type'=>'button','label'=>$text['button-view'],'icon'=>$_SESSION['theme']['button_icon_view'],'style'=>'','link'=>'../conferences_active/conferences_active.php']);
 		}
 	}
 	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save']);
@@ -518,10 +524,18 @@
 	echo "	".$text['table-enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='conference_enabled'>\n";
-	echo "		<option value='true'>".$text['label-true']."</option>\n";
-	echo "		<option value='false' ".($conference_enabled == 'false' ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
-	echo "	</select>\n";
+	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
+		echo "	<label class='switch'>\n";
+		echo "		<input type='checkbox' id='conference_enabled' name='conference_enabled' value='true' ".($conference_enabled == 'true' ? "checked='checked'" : null).">\n";
+		echo "		<span class='slider'></span>\n";
+		echo "	</label>\n";
+	}
+	else {
+		echo "	<select class='formfld' id='conference_enabled' name='conference_enabled'>\n";
+		echo "		<option value='true' ".($conference_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($conference_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "	</select>\n";
+	}
 	echo "<br />\n";
 	echo "".$text['description-conference-enable']."\n";
 	echo "</td>\n";

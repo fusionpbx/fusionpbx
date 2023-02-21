@@ -82,7 +82,7 @@
 
 //add doughnut chart
 	?>
-	<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 20px;'>
+	<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 20px;' onclick="$('#hud_missed_calls_details').slideToggle('fast');">
 		<canvas id='missed_calls_chart' width='175px' height='175px'></canvas>
 	</div>
 

@@ -29,6 +29,39 @@
 		$apps[$x]['description']['sv-se'] = "";
 		$apps[$x]['description']['uk-ua'] = "";
 
+	//destination details
+		$languages = glob($_SESSION["switch"]['sounds']['dir']."/*/*/*");
+		foreach ($languages as $key => $path) {
+			$path = str_replace($_SESSION["switch"]['sounds']['dir'].'/', "", $path);
+			$path_array = explode('/', $path);
+			if (count($path_array) <> 3 || strlen($path_array[0]) <> 2 || strlen($path_array[1]) <> 2) {
+				unset($languages[$key]);
+			}
+			$languages[$key] = str_replace($_SESSION["switch"]['sounds']['dir']."/","",$languages[$key]);
+			if (strlen($languages[$key]) == 0) {
+				unset($languages[$key]);
+			}
+		}
+		$y=0;
+		$apps[$x]['destinations'][$y]['type'] = 'array';
+		$apps[$x]['destinations'][$y]['label'] = 'languages';
+		$apps[$x]['destinations'][$y]['name'] = 'languages';
+		$apps[$x]['destinations'][$y]['field']['name']  = 'name';
+		$apps[$x]['destinations'][$y]['field']['language'] = 'language';
+		$apps[$x]['destinations'][$y]['field']['dialect'] = 'dialect';
+		$apps[$x]['destinations'][$y]['field']['voice'] = 'voice';
+		$apps[$x]['destinations'][$y]['select_value']['dialplan'] = "multiset:^^,default_language=\${language},default_dialect=\${dialect},default_voice=\${voice}";
+		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "menu-exec-app:multiset ^^,default_language=\${language},default_dialect=\${dialect},default_voice=\${voice}";
+		$apps[$x]['destinations'][$y]['select_label'] = "\${name}";
+		$z=0;
+		foreach ($languages as $language) {
+			$apps[$x]['destinations'][$y]['result']['data'][$z]['name'] = str_replace('/', '-', $language);
+			$apps[$x]['destinations'][$y]['result']['data'][$z]['language'] = explode('/', $language)[0];
+			$apps[$x]['destinations'][$y]['result']['data'][$z]['dialect'] = explode('/', $language)[1];
+			$apps[$x]['destinations'][$y]['result']['data'][$z]['voice'] = explode('/', $language)[2];
+			$z++;
+		}
+
 	//permission details
 		$y=0;
 		$apps[$x]['permissions'][$y]['name'] = "switch_version";
@@ -41,6 +74,10 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "switch_registrations";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "language_destinations";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 

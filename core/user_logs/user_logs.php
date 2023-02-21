@@ -102,7 +102,7 @@
 		$sql .= "where true ";
 	}
 	else {
-		$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+		$sql .= "where domain_uuid = :domain_uuid ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	}
 	if (isset($search)) {
@@ -154,7 +154,7 @@
 		$sql .= "where true ";
 	}
 	else {
-		$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+		$sql .= "where domain_uuid = :domain_uuid ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	}
 	if (isset($search)) {

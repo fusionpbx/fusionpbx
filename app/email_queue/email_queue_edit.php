@@ -165,6 +165,7 @@
 			$email_status = $row["email_status"];
 			$email_retry_count = $row["email_retry_count"];
 			//$email_action_before = $row["email_action_before"];
+			$email_response = $row["email_response"];
 			$email_action_after = $row["email_action_after"];
 		}
 		unset($sql, $parameters, $row);
@@ -309,6 +310,17 @@
 	echo "	<input class='formfld' type='text' name='email_action_after' maxlength='255' value='".escape($email_action_after)."'>\n";
 	echo "<br />\n";
 	echo $text['description-email_action_after']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-email_response']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' style='position: relative;' align='left'>\n";
+	echo "	<textarea class='formfld' style='width: 450px; height: 100px;' name='email_response'>".$email_response."</textarea>\n";
+	echo "<br />\n";
+	echo $text['description-email_response']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 

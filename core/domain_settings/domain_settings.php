@@ -279,7 +279,8 @@
 				echo escape($row['domain_setting_subcategory']);
 			}
 			echo "	</td>\n";
-			echo "	<td class='hide-sm-dn'>".escape($row['domain_setting_name'])."</td>\n";
+			$setting_types = ['Array','Boolean','Code','Dir','Name','Numeric','Text','UUID'];
+			echo "	<td class='hide-sm-dn'>".$setting_types[array_search(strtolower($row['domain_setting_name']), array_map('strtolower',$setting_types))]."</td>\n";
 			echo "	<td class='overflow no-wrap'>\n";
 			$category = $row['domain_setting_category'];
 			$subcategory = $row['domain_setting_subcategory'];
@@ -335,6 +336,9 @@
 			else if ($category == 'theme' && $subcategory == 'menu_side_item_main_sub_close' && $name == 'text') {
 				echo "		".$text['option-'.$row['domain_setting_value']]."\n";
 			}
+			else if ($category == 'theme' && $subcategory == 'input_toggle_style' && $name == 'text') {
+				echo "		".$text['option-'.$row['domain_setting_value']]."\n";
+			}
 			else if ($category == "theme" && substr_count($subcategory, "_color") > 0 && ($name == "text" || $name == 'array')) {
 				echo "		".(img_spacer('15px', '15px', 'background: '.escape($row['domain_setting_value']).'; margin-right: 4px; vertical-align: middle; border: 1px solid '.(color_adjust($row['domain_setting_value'], -0.18)).'; padding: -1px;'));
 				echo "<span style=\"font-family: 'Courier New'; line-height: 6pt;\">".escape($row['domain_setting_value'])."</span>\n";
@@ -349,6 +353,12 @@
 				echo "		".$text['label-'.$row['domain_setting_value']]."\n";
 			}
 			else if ($category == 'destinations' && $subcategory == 'select_mode' && $name == 'text') {
+				echo "		".$text['label-'.$row['domain_setting_value']]."\n";
+			}
+			else if ($category == 'voicemail' && ($subcategory == 'message_caller_id_number' || $subcategory == 'message_date_time') && $name == 'text') {
+				echo "		".$text['label-'.$row['domain_setting_value']]."\n";
+			}
+			else if ($row['domain_setting_value'] == 'true' || $row['domain_setting_value'] == 'false') {
 				echo "		".$text['label-'.$row['domain_setting_value']]."\n";
 			}
 			else {

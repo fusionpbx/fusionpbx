@@ -38,7 +38,6 @@ function is_numeric(text)
 end
 
 --set the default values for the variables
-pin_number = "";
 max_tries = 3;
 digit_timeout = 3000;
 

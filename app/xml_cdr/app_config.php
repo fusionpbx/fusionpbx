@@ -97,7 +97,6 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "xml_cdr_search_hangup_cause";
-		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "xml_cdr_search_recording";
@@ -184,8 +183,11 @@
 		$apps[$x]['permissions'][$y]['name'] = "xml_cdr_mos";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
-		$apps[$x]['permissions'][$y]['name'] = "xml_cdr_hangup_cause";
+		$apps[$x]['permissions'][$y]['name'] = "xml_cdr_status";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "xml_cdr_hangup_cause";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "xml_cdr_details";
@@ -356,7 +358,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "dashboard";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "missed_calls_chart_main_background_color";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "#ff595a";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "#ea4c46";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;

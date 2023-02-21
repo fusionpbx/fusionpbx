@@ -59,7 +59,7 @@
 	$destination = new destinations;
 
 //get http post variables and set them to php variables
-	if (is_array($_POST)) {
+	if (count($_POST) > 0) {
 
 		//set the variables from the http values
 			$call_flow_uuid = $_POST["call_flow_uuid"];
@@ -76,7 +76,7 @@
 			$call_flow_alternate_sound = $_POST["call_flow_alternate_sound"];
 			$call_flow_alternate_destination = $_POST["call_flow_alternate_destination"];
 			$call_flow_context = $_POST["call_flow_context"];
-			$call_flow_enabled = $_POST["call_flow_enabled"];
+			$call_flow_enabled = $_POST["call_flow_enabled"] ?: 'false';
 			$call_flow_description = $_POST["call_flow_description"];
 
 		//seperate the action and the param
@@ -355,6 +355,9 @@
 	if (strlen($call_flow_context) == 0) {
 		$call_flow_context = $_SESSION['domain_name'];
 	}
+
+//set the defaults
+	if (strlen($call_flow_enabled) == 0) { $call_flow_enabled = 'true'; }
 
 //get the recordings
 	$sql = "select recording_name, recording_filename from v_recordings ";
@@ -717,21 +720,18 @@
 	echo "	".$text['label-enabled']."\n";
 	echo "</td>\n";
 	echo "<td width=\"70%\" class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='call_flow_enabled'>\n";
-	if ($call_flow_enabled == "true") {
-		echo "	<option value='true' selected='selected'>".$text['option-true']."</option>\n";
+	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
+		echo "	<label class='switch'>\n";
+		echo "		<input type='checkbox' id='call_flow_enabled' name='call_flow_enabled' value='true' ".($call_flow_enabled == 'true' ? "checked='checked'" : null).">\n";
+		echo "		<span class='slider'></span>\n";
+		echo "	</label>\n";
 	}
 	else {
-		echo "	<option value='true'>".$text['option-true']."</option>\n";
+		echo "	<select class='formfld' id='call_flow_enabled' name='call_flow_enabled'>\n";
+		echo "		<option value='true' ".($call_flow_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($call_flow_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "	</select>\n";
 	}
-	if ($call_flow_enabled == "false") {
-		echo "	<option value='false' selected='selected'>".$text['option-false']."</option>\n";
-	}
-	else {
-		echo "	<option value='false'>".$text['option-false']."</option>\n";
-	}
-	echo "	</select>\n";
-
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-call_flow_description']."\n";

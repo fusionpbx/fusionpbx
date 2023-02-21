@@ -60,7 +60,7 @@
 		$call_block_name = $_POST["call_block_name"];
 		$call_block_country_code = $_POST["call_block_country_code"];
 		$call_block_number = $_POST["call_block_number"];
-		$call_block_enabled = $_POST["call_block_enabled"];
+		$call_block_enabled = $_POST["call_block_enabled"] ?: 'false';
 		$call_block_description = $_POST["call_block_description"];
 		
 		$action_array = explode(':', $_POST["call_block_action"]);
@@ -263,6 +263,9 @@
 		}
 		unset($sql, $parameters, $row);
 	}
+
+//set the defaults
+	if (strlen($call_block_enabled) == 0) { $call_block_enabled = 'true'; }
 
 //get the extensions
 	if (permission_exists('call_block_all') || permission_exists('call_block_extension')) {
@@ -496,10 +499,18 @@ if (permission_exists('call_block_all') || permission_exists('call_block_ring_gr
 	echo "	".$text['label-enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='call_block_enabled'>\n";
-	echo "		<option value='true' ".(($call_block_enabled == "true") ? "selected" : null).">".$text['label-true']."</option>\n";
-	echo "		<option value='false' ".(($call_block_enabled == "false") ? "selected" : null).">".$text['label-false']."</option>\n";
-	echo "	</select>\n";
+	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
+		echo "	<label class='switch'>\n";
+		echo "		<input type='checkbox' id='call_block_enabled' name='call_block_enabled' value='true' ".($call_block_enabled == 'true' ? "checked='checked'" : null).">\n";
+		echo "		<span class='slider'></span>\n";
+		echo "	</label>\n";
+	}
+	else {
+		echo "	<select class='formfld' id='call_block_enabled' name='call_block_enabled'>\n";
+		echo "		<option value='true' ".($call_block_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($call_block_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "	</select>\n";
+	}
 	echo "<br />\n";
 	echo $text['description-enable']."\n";
 	echo "\n";

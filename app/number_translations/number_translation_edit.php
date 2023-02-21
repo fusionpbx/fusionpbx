@@ -56,7 +56,7 @@
 	if (is_array($_POST) && @sizeof($_POST) != 0) {
 		$number_translation_name = $_POST["number_translation_name"];
 		$number_translation_details = $_POST["number_translation_details"];
-		$number_translation_enabled = $_POST["number_translation_enabled"];
+		$number_translation_enabled = $_POST["number_translation_enabled"] ?: 'false';
 		$number_translation_description = $_POST["number_translation_description"];
 	}
 
@@ -344,20 +344,18 @@
 	echo "	".$text['label-number_translation_enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<select class='formfld' name='number_translation_enabled'>\n";
-	if ($number_translation_enabled == "true") {
-		echo "		<option value='true' selected='selected'>".$text['label-true']."</option>\n";
+	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
+		echo "	<label class='switch'>\n";
+		echo "		<input type='checkbox' id='number_translation_enabled' name='number_translation_enabled' value='true' ".($number_translation_enabled == 'true' ? "checked='checked'" : null).">\n";
+		echo "		<span class='slider'></span>\n";
+		echo "	</label>\n";
 	}
 	else {
-		echo "		<option value='true'>".$text['label-true']."</option>\n";
+		echo "	<select class='formfld' id='number_translation_enabled' name='number_translation_enabled'>\n";
+		echo "		<option value='true' ".($number_translation_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($number_translation_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "	</select>\n";
 	}
-	if ($number_translation_enabled == "false") {
-		echo "		<option value='false' selected='selected'>".$text['label-false']."</option>\n";
-	}
-	else {
-		echo "		<option value='false'>".$text['label-false']."</option>\n";
-	}
-	echo "	</select>\n";
 	echo "<br />\n";
 	echo $text['description-number_translation_enabled']."\n";
 	echo "</td>\n";

@@ -461,6 +461,26 @@
 		$text['description-email_action_after']['sv-se'] = '';
 		$text['description-email_action_after']['uk-ua'] = '';
 
+		$text['label-email_response']['en-us'] = 'Response';
+		$text['label-email_response']['ar-eg'] = '';
+		$text['label-email_response']['de-at'] = '';
+		$text['label-email_response']['de-ch'] = '';
+		$text['label-email_response']['de-de'] = '';
+		$text['label-email_response']['es-cl'] = '';
+		$text['label-email_response']['es-mx'] = '';
+		$text['label-email_response']['fr-ca'] = '';
+		$text['label-email_response']['fr-fr'] = '';
+		$text['label-email_response']['he-il'] = '';
+		$text['label-email_response']['it-it'] = '';
+		$text['label-email_response']['nl-nl'] = '';
+		$text['label-email_response']['pl-pl'] = '';
+		$text['label-email_response']['pt-br'] = '';
+		$text['label-email_response']['pt-pt'] = '';
+		$text['label-email_response']['ro-ro'] = '';
+		$text['label-email_response']['ru-ru'] = '';
+		$text['label-email_response']['sv-se'] = '';
+		$text['label-email_response']['uk-ua'] = '';
+
 		$text['label-email_retry_count']['en-us'] = 'Retry';
 		$text['label-email_retry_count']['ar-eg'] = '';
 		$text['label-email_retry_count']['de-at'] = '';
@@ -561,4 +581,23 @@
 		$text['label-sent']['sv-se'] = '';
 		$text['label-sent']['uk-ua'] = '';
 
+		$text['label-trying']['en-us'] = 'trying';
+		$text['label-trying']['ar-eg'] = '';
+		$text['label-trying']['de-at'] = '';
+		$text['label-trying']['de-ch'] = '';
+		$text['label-trying']['de-de'] = '';
+		$text['label-trying']['es-cl'] = '';
+		$text['label-trying']['es-mx'] = '';
+		$text['label-trying']['fr-ca'] = '';
+		$text['label-trying']['fr-fr'] = '';
+		$text['label-trying']['he-il'] = '';
+		$text['label-trying']['it-it'] = '';
+		$text['label-trying']['nl-nl'] = '';
+		$text['label-trying']['pl-pl'] = '';
+		$text['label-trying']['pt-br'] = '';
+		$text['label-trying']['pt-pt'] = '';
+		$text['label-trying']['ro-ro'] = '';
+		$text['label-trying']['ru-ru'] = '';
+		$text['label-trying']['sv-se'] = '';
+		$text['label-trying']['uk-ua'] = '';
 ?>

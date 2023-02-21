@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -250,15 +250,15 @@
 	if (!isset($_SESSION['login']['domain_name_visible']['boolean'])) { $_SESSION['login']['domain_name_visible']['boolean'] = null; }
 
 //santize the login destination url and set a default value
-	if (isset($_SESSION['login']['destination']['url'])) {
-		$destination_path = parse_url($_SESSION['login']['destination']['url'])['path'];
-		$destination_query = parse_url($_SESSION['login']['destination']['url'])['query'];
+	if (isset($_SESSION['login']['destination']['text'])) {
+		$destination_path = parse_url($_SESSION['login']['destination']['text'])['path'];
+		$destination_query = parse_url($_SESSION['login']['destination']['text'])['query'];
 		$destination_path = preg_replace('#[^a-zA-Z0-9_\-\./]#', '', $destination_path);
 		$destination_query = preg_replace('#[^a-zA-Z0-9_\-\./&=]#', '', $destination_query);
-		$_SESSION['login']['destination']['url'] = (strlen($destination_query) > 0) ? $destination_path.'?'.$destination_query : $destination_path;
+		$_SESSION['login']['destination']['text'] = (strlen($destination_query) > 0) ? $destination_path.'?'.$destination_query : $destination_path;
 	}
 	else {
-		$_SESSION['login']['destination']['url'] = PROJECT_PATH."/core/dashboard/";
+		$_SESSION['login']['destination']['text'] = PROJECT_PATH."/core/dashboard/";
 	}
 
 	if (strlen($_REQUEST['path']) > 0) {
@@ -293,7 +293,7 @@
 			$token = $object->create('login');
 
 		echo "<div id='login_form'>\n";
-		echo "<form name='login' method='post' action='".$_SESSION['login']['destination']['url']."'>\n";
+		echo "<form name='login' method='post' action='".$_SESSION['login']['destination']['text']."'>\n";
 		echo "<input type='text' class='txt login' style='text-align: center; min-width: 200px; width: 200px; margin-bottom: 8px;' name='username' id='username' placeholder=\"".$text['label-username']."\"><br />\n";
 		echo "<input type='password' class='txt login' style='text-align: center; min-width: 200px; width: 200px; margin-bottom: 8px;' name='password' placeholder=\"".$text['label-password']."\"><br />\n";
 		if ($_SESSION['login']['domain_name_visible']['boolean'] == "true") {

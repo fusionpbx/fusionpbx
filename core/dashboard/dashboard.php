@@ -89,100 +89,100 @@
 
 
 //action add or update
-	if (isset($_REQUEST["export"])) {
-		$export = $_REQUEST["export"];
-	}
-
-//expore provider settings
-	if (isset($export) && $export == 'true') {
-
-		//get the dashboard
-			$sql = "select ";
-			$sql .= "dashboard_uuid, ";
-			$sql .= "dashboard_name, ";
-			$sql .= "dashboard_path, ";
-			$sql .= "dashboard_order, ";
-			$sql .= "cast(dashboard_enabled as text), ";
-			$sql .= "dashboard_description ";
-			$sql .= "from v_dashboard ";
-			$database = new database;
-			$dashboard_widgets = $database->select($sql, $parameters, 'all');
-			unset($sql, $parameters);
-
-		//prepare the array
-			if (is_array($dashboard_widgets)) {
-				$x = 0;
-				$y = 0;
-				foreach ($dashboard_widgets as $row) {
-					//add to the array
-					$array['dashboard'][$x]['dashboard_uuid'] = $row["dashboard_uuid"];
-					$array['dashboard'][$x]['dashboard_name'] = $row["dashboard_name"];
-					$array['dashboard'][$x]['dashboard_path'] = $row["dashboard_path"];
-					$array['dashboard'][$x]['dashboard_order'] = $row["dashboard_order"];
-					$array['dashboard'][$x]['dashboard_enabled'] = $row["dashboard_enabled"];
-					$array['dashboard'][$x]['dashboard_description'] = $row["dashboard_description"];
-
-					//get the dashboard groups
-					$sql = "select ";
-					$sql .= "dashboard_group_uuid, ";
-					$sql .= "dashboard_uuid, ";
-					$sql .= "group_uuid, ";
-					$sql .= "(select group_name from v_groups where v_dashboard_groups.group_uuid = group_uuid) as group_name ";
-					$sql .= "from v_dashboard_groups ";
-					$sql .= "where dashboard_uuid = :dashboard_uuid ";
-					$parameters['dashboard_uuid'] = $row["dashboard_uuid"];
-					$database = new database;
-					$dashboard_groups = $database->select($sql, $parameters, 'all');
-					unset($sql, $parameters);
-					if (is_array($dashboard_groups)) {
-						$y = 0;
-						foreach ($dashboard_groups as $row) {
-							$array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_group_uuid'] = $row["dashboard_group_uuid"];
-							$array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_uuid'] = $row["dashboard_uuid"];
-							//$array['dashboard'][$x]['dashboard_groups'][$y]['group_uuid'] = $row["group_uuid"];
-							$array['dashboard'][$x]['dashboard_groups'][$y]['group_name'] = $row["group_name"];
-							$y++;
-						}
-					}
-					
-					$x++;
-				}
-			}
-
-		//write the code
-			echo "<textarea style=\"width: 100%; max-width: 100%; height: 100%; max-height: 100%;\">\n";
-			if (is_array($array['dashboard'])) {
-				echo "\n\n\n";
-				//echo "\$x = 0;\n";
-				foreach ($array['dashboard'] as $row) {
-					foreach ($row as $key => $value) {
-						if (is_array($value)) {
-							echo "\$y = 0;\n";
-							$count = count($value);
-							$i = 1;
-							foreach ($value as $row) {
-								foreach ($row as $key => $value) {
-									echo "\$array['dashboard'][\$x]['dashboard_groups'][\$y]['{$key}'] = '{$value}';\n";
-								}
-								if ($i < $count) {
-									echo "\$y++;\n";
-								}
-								else {
-									echo "\n\n---------------------------\n\n\n";
-								}
-								$i++;
-							}
-						}
-						else {
-							echo "\$array['dashboard'][\$x]['{$key}'] = '{$value}';\n";
-						}
-					}
-				}
-			}
-
-			echo "</textarea>\n";
-			exit;
-	}
+// 	if (isset($_REQUEST["export"])) {
+// 		$export = $_REQUEST["export"];
+// 	}
+//
+//expore settings
+// 	if (isset($export) && $export == 'true') {
+//
+// 		//get the dashboard
+// 			$sql = "select ";
+// 			$sql .= "dashboard_uuid, ";
+// 			$sql .= "dashboard_name, ";
+// 			$sql .= "dashboard_path, ";
+// 			$sql .= "dashboard_order, ";
+// 			$sql .= "cast(dashboard_enabled as text), ";
+// 			$sql .= "dashboard_description ";
+// 			$sql .= "from v_dashboard ";
+// 			$database = new database;
+// 			$dashboard_widgets = $database->select($sql, $parameters, 'all');
+// 			unset($sql, $parameters);
+//
+// 		//prepare the array
+// 			if (is_array($dashboard_widgets)) {
+// 				$x = 0;
+// 				$y = 0;
+// 				foreach ($dashboard_widgets as $row) {
+// 					//add to the array
+// 					$array['dashboard'][$x]['dashboard_uuid'] = $row["dashboard_uuid"];
+// 					$array['dashboard'][$x]['dashboard_name'] = $row["dashboard_name"];
+// 					$array['dashboard'][$x]['dashboard_path'] = $row["dashboard_path"];
+// 					$array['dashboard'][$x]['dashboard_order'] = $row["dashboard_order"];
+// 					$array['dashboard'][$x]['dashboard_enabled'] = $row["dashboard_enabled"] ?: 'false';
+// 					$array['dashboard'][$x]['dashboard_description'] = $row["dashboard_description"];
+//
+// 					//get the dashboard groups
+// 					$sql = "select ";
+// 					$sql .= "dashboard_group_uuid, ";
+// 					$sql .= "dashboard_uuid, ";
+// 					$sql .= "group_uuid, ";
+// 					$sql .= "(select group_name from v_groups where v_dashboard_groups.group_uuid = group_uuid) as group_name ";
+// 					$sql .= "from v_dashboard_groups ";
+// 					$sql .= "where dashboard_uuid = :dashboard_uuid ";
+// 					$parameters['dashboard_uuid'] = $row["dashboard_uuid"];
+// 					$database = new database;
+// 					$dashboard_groups = $database->select($sql, $parameters, 'all');
+// 					unset($sql, $parameters);
+// 					if (is_array($dashboard_groups)) {
+// 						$y = 0;
+// 						foreach ($dashboard_groups as $row) {
+// 							$array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_group_uuid'] = $row["dashboard_group_uuid"];
+// 							$array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_uuid'] = $row["dashboard_uuid"];
+// 							//$array['dashboard'][$x]['dashboard_groups'][$y]['group_uuid'] = $row["group_uuid"];
+// 							$array['dashboard'][$x]['dashboard_groups'][$y]['group_name'] = $row["group_name"];
+// 							$y++;
+// 						}
+// 					}
+//
+// 					$x++;
+// 				}
+// 			}
+//
+// 		//write the code
+// 			echo "<textarea style=\"width: 100%; max-width: 100%; height: 100%; max-height: 100%;\">\n";
+// 			if (is_array($array['dashboard'])) {
+// 				echo "\n\n\n";
+// 				//echo "\$x = 0;\n";
+// 				foreach ($array['dashboard'] as $row) {
+// 					foreach ($row as $key => $value) {
+// 						if (is_array($value)) {
+// 							echo "\$y = 0;\n";
+// 							$count = count($value);
+// 							$i = 1;
+// 							foreach ($value as $row) {
+// 								foreach ($row as $key => $value) {
+// 									echo "\$array['dashboard'][\$x]['dashboard_groups'][\$y]['{$key}'] = '{$value}';\n";
+// 								}
+// 								if ($i < $count) {
+// 									echo "\$y++;\n";
+// 								}
+// 								else {
+// 									echo "\n\n---------------------------\n\n\n";
+// 								}
+// 								$i++;
+// 							}
+// 						}
+// 						else {
+// 							echo "\$array['dashboard'][\$x]['{$key}'] = '{$value}';\n";
+// 						}
+// 					}
+// 				}
+// 			}
+//
+// 			echo "</textarea>\n";
+// 			exit;
+// 	}
 
 //get the count
 	$sql = "select count(dashboard_uuid) ";
@@ -241,6 +241,7 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-dashboard']." (".$num_rows.")</b></div>\n";
 	echo "	<div class='actions'>\n";
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','name'=>'btn_back','style'=>'margin-right: 15px;','link'=>'index.php']);
 	if (permission_exists('dashboard_add')) {
 		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'id'=>'btn_add','name'=>'btn_add','link'=>'dashboard_edit.php']);
 	}
@@ -323,11 +324,11 @@
 			if (permission_exists('dashboard_edit')) {
 				echo "	<td class='no-link center'>\n";
 				echo "		<input type='hidden' name='number_translations[$x][dashboard_enabled]' value='".escape($row['dashboard_enabled'])."' />\n";
-				echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-'.$row['dashboard_enabled']],'title'=>$text['button-toggle'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('toggle'); list_form_submit('form_list')"]);
+				echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-'.($row['dashboard_enabled']?:'false')],'title'=>$text['button-toggle'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('toggle'); list_form_submit('form_list')"]);
 			}
 			else {
 				echo "	<td class='center'>\n";
-				echo $text['label-'.$row['dashboard_enabled']];
+				echo $text['label-'.($row['dashboard_enabled']?:'false')];
 			}
 			echo "	</td>\n";
 			echo "	<td class='description overflow hide-sm-dn'>".escape($row['dashboard_description'])."</td>\n";

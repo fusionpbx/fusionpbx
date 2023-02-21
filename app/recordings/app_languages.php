@@ -442,4 +442,25 @@ $text['description']['ru-ru'] = "Наберите *732 для создания �
 $text['description']['sv-se'] = "För att göra en inspelning ring * 732 eller så kan du göra en 16bit 8kHz/16kHz Mono WAV-fil och kopiera den till följande katalog uppdatera sedan sidan för att spela upp den.";
 $text['description']['uk-ua'] = "Редагування інформації облікового запису";
 
+$text['description-with_password']['en-us'] = "Dial *732 and enter the password ||RECORDING_PASSWORD||, followed by a number for the recording to create. Or, for best results, upload a 16bit 8khz/16khz mono WAV file.";
+$text['description-with_password']['en-gb'] = "Dial *732 and enter the password ||RECORDING_PASSWORD||, followed by a number for the recording to create. Or, for best results, upload a 16bit 8khz/16khz mono WAV file.";
+$text['description-with_password']['ar-eg'] = "";
+$text['description-with_password']['de-at'] = "Wählen Sie *732 um eine Aufnahme direkt vom Telefon zu starten oder laden Sie eine 16bit 8/16kHz mono WAV-Datei hoch."; //copied from de-de
+$text['description-with_password']['de-ch'] = "Wählen Sie *732 um eine Aufnahme direkt vom Telefon zu starten oder laden Sie eine 16bit 8/16kHz mono WAV-Datei hoch."; //copied from de-de
+$text['description-with_password']['de-de'] = "Wählen Sie *732 um eine Aufnahme direkt vom Telefon zu starten oder laden Sie eine 16bit 8/16kHz mono WAV-Datei hoch.";
+$text['description-with_password']['es-cl'] = "Para realizar una grabación marque *732 o puede crear un archivo en formato WAV a 16 bit 8khz/16khz Mono y luego copiarlo en el siguiente directorio y refrezcar la página para reproducirlo.";
+$text['description-with_password']['es-mx'] = "Para realizar una grabación marque *732 o puede crear un archivo en formato WAV a 16 bit 8khz/16khz Mono y luego copiarlo en el siguiente directorio y refrezcar la página para reproducirlo."; //copied from es-cl
+$text['description-with_password']['fr-ca'] = "Pour créer un guide vocal, composer le *732 ou créer un fichier audio WAV 16bit 8khz/16khz Mono et ensuite le copier dans le répertoire qui suit. Rafraîchir ensuite cette page pour le voir apparaitre."; //copied from fr-fr
+$text['description-with_password']['fr-fr'] = "Pour créer un guide vocal, composer le *732 ou créer un fichier audio WAV 16bit 8khz/16khz Mono et ensuite le copier dans le répertoire qui suit. Rafraîchir ensuite cette page pour le voir apparaitre.";
+$text['description-with_password']['he-il'] = "חייג * 732 ליצירת הקלטה, או (לקבלת התוצאות הטובות ביותר) העלה קובץ WAV מונו בגודל 16bit 8khz / 16khz";
+$text['description-with_password']['it-it'] = "Chiamare *732 per creare una registrazione, o (per un risultato migliore) caricare file WAV a 16bit 8khz/16khz mono.";
+$text['description-with_password']['nl-nl'] = "Kies *732 om een opname te make, of voor betere resultaten, stuur een 16bit 8kHz/16kHz  mono WAV bestand. op";
+$text['description-with_password']['pl-pl'] = "Aby stworzyć własne nagranie wybierz *732 z klawiatury telefonu lub stwórz plik audio w formacie  WAV o następujących parametrach: 16bit 8khz/16khz Mono, a następnie skopiuj go do odpowiedniego katalogu i odśwież, aby go odsłuchać.";
+$text['description-with_password']['pt-br'] = "Editar informações da conta.";
+$text['description-with_password']['pt-pt'] = "Para fazer uma gravação marque *732 ou crie um ficheiro WAV de 16bit 8khz/16khz e copie-o para a seguinte directoria e actualize a página para o ouvir.";
+$text['description-with_password']['ro-ro'] = "";
+$text['description-with_password']['ru-ru'] = "Наберите *732 для создания записи, или (для получения наилучших результатов) загрузите 16bit 8khz/16khz mono WAV файл.";
+$text['description-with_password']['sv-se'] = "För att göra en inspelning ring * 732 eller så kan du göra en 16bit 8kHz/16kHz Mono WAV-fil och kopiera den till följande katalog uppdatera sedan sidan för att spela upp den.";
+$text['description-with_password']['uk-ua'] = "Редагування інформації облікового запису";
+
 ?>

@@ -177,6 +177,38 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "3";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "79aec8c7-c9ae-48d6-b343-4359f4f867c9";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "dashboard";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "ring_group_forward_chart_color_forwarding";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "#ea4c46";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "3b23cd36-b1c1-45fd-a533-8d9604dcb46a";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "dashboard";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "ring_group_forward_chart_color_active";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "#d4d4d4";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "abc10faf-7277-40cd-a7b3-0df4ea6c6c2b";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "dashboard";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "ring_group_forward_chart_border_color";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "rgba(0,0,0,0)";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "506d4482-dee8-4047-9e1c-4375c9a521bb";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "dashboard";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "ring_group_forward_chart_border_width";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 
 	//schema details
 		$y=0;
@@ -368,8 +400,15 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "numeric";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_enabled";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "boolean";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['toggle'] = ['true','false'];
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_prompt";
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = "numeric"; //confirm,announce
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "numeric";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "insert_date";

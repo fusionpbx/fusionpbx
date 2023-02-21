@@ -216,9 +216,9 @@
 					echo "<td ".$list_row_onclick." ".$list_row_title." class='hide-sm-dn'>".$text['label-'.(($hand_raised == "true") ? 'yes' : 'no')]." ".$hand_raise_icon."</td>\n";
 					echo "<td ".$list_row_onclick." ".$list_row_title." class='center'>";
 					echo 	($flag_can_speak == "true") ? "<i class='fas fa-microphone fa-fw' title=\"".$text['label-speak']."\"></i>" : "<i class='fas fa-microphone-slash fa-fw' title=\"".$text['label-speak']."\"></i>";
-					echo 	($flag_can_hear == "true") ? "<i class='fas fa-headphones fa-fw' title=\"".$text['label-speak']."\" style='margin-left: 10px;'></i>" : "<i class='fas fa-deaf fa-fw' title=\"".$text['label-hear']."\" style='margin-left: 10px;'></i>";
+					echo 	($flag_can_hear == "true") ? "<i class='fas fa-headphones fa-fw' title=\"".$text['label-hear']."\" style='margin-left: 10px;'></i>" : "<i class='fas fa-deaf fa-fw' title=\"".$text['label-hear']."\" style='margin-left: 10px;'></i>";
 					if (permission_exists('conference_interactive_video')) {
-						echo ($flag_has_video == "true") ? "<i class='fas fa-video fa-fw' title=\"".$text['label-video']."\"></i>" : null;
+						echo ($flag_has_video == "true") ? "<i class='fas fa-video fa-fw' title=\"".$text['label-video']."\" style='margin-left: 10px;'></i>" : null;
 					}
 					echo "</td>\n";
 					//energy

@@ -122,7 +122,7 @@
 			$device_uuid_alternate = $_POST["device_uuid_alternate"];
 			$device_model = $_POST["device_model"];
 			$device_firmware_version = $_POST["device_firmware_version"];
-			$device_enabled = $_POST["device_enabled"];
+			$device_enabled = $_POST["device_enabled"] ?: 'false';
 			$device_template = $_POST["device_template"];
 			$device_description = $_POST["device_description"];
 		//lines
@@ -526,6 +526,9 @@
 		}
 		unset($sql, $parameters, $row);
 	}
+
+//set the defaults
+	if (strlen($device_enabled) == 0) { $device_enabled = 'true'; }
 
 //use the mac address to get the vendor
 	if (strlen($device_vendor) == 0) {
@@ -1862,20 +1865,18 @@
 		echo "	".$text['label-device_enabled']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "  <select class='formfld' name='device_enabled'>\n";
-		if ($device_enabled == "true" || strlen($device_enabled) == 0) {
-			echo "  <option value='true' selected='selected'>".$text['label-true']."</option>\n";
+		if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
+			echo "	<label class='switch'>\n";
+			echo "		<input type='checkbox' id='device_enabled' name='device_enabled' value='true' ".($device_enabled == 'true' ? "checked='checked'" : null).">\n";
+			echo "		<span class='slider'></span>\n";
+			echo "	</label>\n";
 		}
 		else {
-			echo "  <option value='true'>".$text['label-true']."</option>\n";
+			echo "	<select class='formfld' id='device_enabled' name='device_enabled'>\n";
+			echo "		<option value='true' ".($device_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+			echo "		<option value='false' ".($device_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+			echo "	</select>\n";
 		}
-		if ($device_enabled == "false") {
-			echo "  <option value='false' selected='selected'>".$text['label-false']."</option>\n";
-		}
-		else {
-			echo "  <option value='false'>".$text['label-false']."</option>\n";
-		}
-		echo "  </select>\n";
 		echo "<br />\n";
 		echo $text['description-device_enabled']."\n";
 		echo "</td>\n";

@@ -77,7 +77,7 @@
 			$conference_center_extension = $_POST["conference_center_extension"];
 			$conference_center_greeting = $_POST["conference_center_greeting"];
 			$conference_center_pin_length = $_POST["conference_center_pin_length"];
-			$conference_center_enabled = $_POST["conference_center_enabled"];
+			$conference_center_enabled = $_POST["conference_center_enabled"] ?: 'false';
 			$conference_center_description = $_POST["conference_center_description"];
 
 		//validate the token
@@ -435,10 +435,18 @@
 	echo "	".$text['label-conference_center_enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='conference_center_enabled'>\n";
-	echo "		<option value='true'>".$text['label-true']."</option>\n";
-	echo "		<option value='false' ".($conference_center_enabled == "false" ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
-	echo "	</select>\n";
+	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
+		echo "	<label class='switch'>\n";
+		echo "		<input type='checkbox' id='conference_center_enabled' name='conference_center_enabled' value='true' ".($conference_center_enabled == 'true' ? "checked='checked'" : null).">\n";
+		echo "		<span class='slider'></span>\n";
+		echo "	</label>\n";
+	}
+	else {
+		echo "	<select class='formfld' id='conference_center_enabled' name='conference_center_enabled'>\n";
+		echo "		<option value='true' ".($conference_center_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($conference_center_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "	</select>\n";
+	}
 	echo "<br />\n";
 	echo $text['description-conference_center_enabled']."\n";
 	echo "</td>\n";

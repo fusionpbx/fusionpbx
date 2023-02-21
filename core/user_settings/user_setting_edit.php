@@ -424,7 +424,14 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-type']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld lowercase' type='text' name='user_setting_name' id='user_setting_name' maxlength='255' value=\"".escape($user_setting_name)."\">\n";
+	$setting_types = ['Array','Boolean','Code','Dir','Name','Numeric','Text','UUID'];
+	echo "	<select class='formfld' id='user_setting_name' name='user_setting_name' required='required'>\n";
+	echo "		<option value=''></option>\n";
+	foreach ($setting_types as $setting_type) {
+		echo "	<option value='".strtolower($setting_type)."' ".($user_setting_name == strtolower($setting_type) ? "selected='selected'" : null).">".$setting_type."</option>\n";
+	}
+	echo "	</select>\n";
+	unset($setting_types, $setting_type);
 	echo "<br />\n";
 	echo $text['description-type']."\n";
 	echo "</td>\n";
@@ -666,6 +673,13 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "    	<option value='none' ".(($user_setting_value == "none") ? "selected='selected'" : null).">".$text['label-none']."</option>\n";
 		echo "    </select>\n";
 	}
+	elseif ($user_setting_category == "theme" && $user_setting_subcategory == "input_toggle_style" && $user_setting_name == "text" ) {
+		echo "	<select class='formfld' id='user_setting_value' name='user_setting_value'>\n";
+		echo "    	<option value='select'>".$text['option-select']."</option>\n";
+		echo "    	<option value='switch_round' ".(($user_setting_value == "switch_round") ? "selected='selected'" : null).">".$text['option-switch_round']."</option>\n";
+		echo "    	<option value='switch_square' ".(($user_setting_value == "switch_square") ? "selected='selected'" : null).">".$text['option-switch_square']."</option>\n";
+		echo "	</select>\n";
+	}
 	elseif ($user_setting_category == "users" && $user_setting_subcategory == "username_format" && $user_setting_name == "text" ) {
 		echo "	<select class='formfld' id='user_setting_value' name='user_setting_value'>\n";
 		echo "    	<option value='any' ".($user_setting_value == 'any' ? "selected='selected'" : null).">".$text['option-username_format_any']."</option>\n";
@@ -745,20 +759,18 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "    ".$text['label-enabled']."\n";
 	echo "</td>\n";
 	echo "<td width='70%' class='vtable' align='left'>\n";
-	echo "    <select class='formfld' name='user_setting_enabled'>\n";
-	if ($user_setting_enabled == "true") {
-		echo "    <option value='true' selected='selected'>".$text['label-true']."</option>\n";
+	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
+		echo "	<label class='switch'>\n";
+		echo "		<input type='checkbox' id='user_setting_enabled' name='user_setting_enabled' value='true' ".($user_setting_enabled == 'true' ? "checked='checked'" : null).">\n";
+		echo "		<span class='slider'></span>\n";
+		echo "	</label>\n";
 	}
 	else {
-		echo "    <option value='true'>".$text['label-true']."</option>\n";
+		echo "	<select class='formfld' id='user_setting_enabled' name='user_setting_enabled'>\n";
+		echo "		<option value='true' ".($user_setting_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($user_setting_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "	</select>\n";
 	}
-	if ($user_setting_enabled == "false") {
-		echo "    <option value='false' selected='selected'>".$text['label-false']."</option>\n";
-	}
-	else {
-		echo "    <option value='false'>".$text['label-false']."</option>\n";
-	}
-	echo "    </select>\n";
 	echo "<br />\n";
 	echo $text['description-setting_enabled']."\n";
 	echo "</td>\n";

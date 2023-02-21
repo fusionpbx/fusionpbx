@@ -61,7 +61,7 @@
 		$var_value = trim($_POST["var_value"]);
 		$var_command = trim($_POST["var_command"]);
 		$var_hostname = trim($_POST["var_hostname"]);
-		$var_enabled = trim($_POST["var_enabled"]);
+		$var_enabled = trim($_POST["var_enabled"] ?: 'false');
 		$var_order = trim($_POST["var_order"]);
 		$var_description = trim($_POST["var_description"]);
 		$var_description = str_replace("''", "'", $var_description);
@@ -178,6 +178,9 @@
 		unset($sql, $parameters);
 	}
 
+//set the defaults
+	if (strlen($var_enabled) == 0) { $var_enabled = 'true'; }
+
 //create token
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);
@@ -276,20 +279,18 @@
 	echo "    ".$text['label-enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <select class='formfld' name='var_enabled'>\n";
-	if ($var_enabled == "true") {
-		echo "    <option value='true' selected='selected'>".$text['option-true']."</option>\n";
+	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
+		echo "	<label class='switch'>\n";
+		echo "		<input type='checkbox' id='var_enabled' name='var_enabled' value='true' ".($var_enabled == 'true' ? "checked='checked'" : null).">\n";
+		echo "		<span class='slider'></span>\n";
+		echo "	</label>\n";
 	}
 	else {
-		echo "    <option value='true'>".$text['option-true']."</option>\n";
+		echo "	<select class='formfld' id='var_enabled' name='var_enabled'>\n";
+		echo "		<option value='true' ".($var_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($var_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "	</select>\n";
 	}
-	if ($var_enabled == "false") {
-		echo "    <option value='false' selected='selected'>".$text['option-false']."</option>\n";
-	}
-	else {
-		echo "    <option value='false'>".$text['option-false']."</option>\n";
-	}
-	echo "    </select>\n";
 	echo "<br />\n";
 	echo $text['description-enabled']."\n";
 	echo "</td>\n";

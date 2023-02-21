@@ -312,7 +312,7 @@
 				echo "<br /><br />";
 			}
 		}
-		
+
 		//Windows
 		if (stristr(PHP_OS, 'WIN')) {
 			echo "<!--\n";
@@ -470,6 +470,68 @@
 			echo "		$disk_percent_available% \n";
 			echo "	</td>\n";
 			echo "</tr>\n";
+			echo "</table>\n";
+		}
+		echo "<br /><br />";
+	}
+
+//database information
+	if (permission_exists('system_view_database')) {
+		if ($db_type == 'pgsql') {
+
+			//database version
+			$sql = "select version(); ";
+			$database = new database;
+			$database_version = $database->select($sql, null, 'column');
+
+			//database connections
+			$sql = "select count(*) from pg_stat_activity; ";
+			$database = new database;
+			$database_connections = $database->select($sql, null, 'column');
+
+			//database size
+			$sql = "SELECT pg_database.datname,\n";
+			$sql .= "pg_size_pretty(pg_database_size(pg_database.datname)) AS size \n";
+			$sql .= "FROM pg_database;\n";
+			$database = new database;
+			$database_size = $database->select($sql, null, 'all');
+
+			echo "<table width=\"100%\" border=\"0\" cellpadding=\"7\" cellspacing=\"0\">\n";
+			echo "<tr>\n";
+			echo "	<th class='th' colspan='2' align='left'>".$text['title-database']."</th>\n";
+			echo "</tr>\n";
+			echo "<tr>\n";
+			echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
+			echo "		".$text['label-version']." \n";
+			echo "	</td>\n";
+			echo "	<td class=\"row_style1\">\n";
+			echo "		".$database_version."<br>\n";
+			echo "	</td>\n";
+			echo "</tr>\n";
+
+			echo "<tr>\n";
+			echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
+			echo "		".$text['label-database_connections']." \n";
+			echo "	</td>\n";
+			echo "	<td class=\"row_style1\">\n";
+			echo "		".$database_connections."<br>\n";
+			echo "	</td>\n";
+			echo "</tr>\n";
+
+			echo "<tr>\n";
+			echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
+			echo "		".$text['label-databases']." \n";
+			echo "	</td>\n";
+			echo "	<td class=\"row_style1\">\n";
+			echo "		<table border='0' cellpadding='3' cellspacing='0'>\n";
+			echo "			<tr><td>". $text['label-name'] ."</td><td>&nbsp;</td><td style='text-align: left;'>". $text['label-size'] ."</td></tr>\n";
+			foreach ($database_size as $row) {
+				echo "			<tr><td>".$row['datname'] ."</td><td>&nbsp;</td><td style='text-align: left;'>". $row['size'] ."</td></tr>\n";
+			}
+			echo "		</table>\n";
+			echo "	</td>\n";
+			echo "</tr>\n";
+
 			echo "</table>\n";
 		}
 		echo "<br /><br />";

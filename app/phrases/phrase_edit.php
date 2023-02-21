@@ -80,7 +80,7 @@
 		}
 		$phrase_name = $_POST["phrase_name"];
 		$phrase_language = $_POST["phrase_language"];
-		$phrase_enabled = $_POST["phrase_enabled"];
+		$phrase_enabled = $_POST["phrase_enabled"] ?: 'false';
 		$phrase_description = $_POST["phrase_description"];
 		$phrase_details_delete = $_POST["phrase_details_delete"];
 
@@ -285,6 +285,9 @@
 		}
 		unset($sql, $parameters, $row);
 	}
+
+//set the defaults
+	if (strlen($phrase_enabled) == 0) { $phrase_enabled = 'true'; }
 
 //get the phrase details
 	if (is_uuid($phrase_uuid)) {
@@ -606,10 +609,18 @@
 	echo "	".$text['label-enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='phrase_enabled'>\n";
-	echo "		<option value='true'>".$text['label-true']."</option>\n";
-	echo "		<option value='false' ".(($phrase_enabled == "false") ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
-	echo "	</select>\n";
+	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
+		echo "	<label class='switch'>\n";
+		echo "		<input type='checkbox' id='phrase_enabled' name='phrase_enabled' value='true' ".($phrase_enabled == 'true' ? "checked='checked'" : null).">\n";
+		echo "		<span class='slider'></span>\n";
+		echo "	</label>\n";
+	}
+	else {
+		echo "	<select class='formfld' id='phrase_enabled' name='phrase_enabled'>\n";
+		echo "		<option value='true' ".($phrase_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($phrase_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "	</select>\n";
+	}
 	echo "	<br />\n";
 	echo $text['description-enabled']."\n";
 	echo "</td>\n";

@@ -62,7 +62,7 @@
 		$default_setting_name = strtolower($_POST["default_setting_name"]);
 		$default_setting_value = $_POST["default_setting_value"];
 		$default_setting_order = $_POST["default_setting_order"];
-		$default_setting_enabled = $_POST["default_setting_enabled"];
+		$default_setting_enabled = $_POST["default_setting_enabled"] ?: 'false';
 		$default_setting_description = $_POST["default_setting_description"];
 	}
 
@@ -246,6 +246,9 @@
 		unset($sql, $parameters);
 	}
 
+//set the defaults
+	if (strlen($default_setting_enabled) == 0) { $default_setting_enabled = 'true'; }
+
 //create token
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);
@@ -315,7 +318,14 @@
 	echo "	".$text['label-type']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld lowercase' type='text' name='default_setting_name' id='default_setting_name' maxlength='255' value=\"".escape($default_setting_name)."\">\n";
+	$setting_types = ['Array','Boolean','Code','Dir','Name','Numeric','Text','UUID'];
+	echo "	<select class='formfld' id='default_setting_name' name='default_setting_name' required='required'>\n";
+	echo "		<option value=''></option>\n";
+	foreach ($setting_types as $setting_type) {
+		echo "	<option value='".strtolower($setting_type)."' ".($default_setting_name == strtolower($setting_type) ? "selected='selected'" : null).">".$setting_type."</option>\n";
+	}
+	echo "	</select>\n";
+	unset($setting_types, $setting_type);
 	echo "<br />\n";
 	echo $text['description-type']."\n";
 	echo "</td>\n";
@@ -665,6 +675,13 @@
 		echo "    	<option value='none' ".(($default_setting_value == "none") ? "selected='selected'" : null).">".$text['label-none']."</option>\n";
 		echo "    </select>\n";
 	}
+	elseif ($category == "theme" && $subcategory == "input_toggle_style" && $name == "text" ) {
+		echo "	<select class='formfld' id='default_setting_value' name='default_setting_value'>\n";
+		echo "    	<option value='select'>".$text['option-select']."</option>\n";
+		echo "    	<option value='switch_round' ".(($default_setting_value == "switch_round") ? "selected='selected'" : null).">".$text['option-switch_round']."</option>\n";
+		echo "    	<option value='switch_square' ".(($default_setting_value == "switch_square") ? "selected='selected'" : null).">".$text['option-switch_square']."</option>\n";
+		echo "	</select>\n";
+	}
 	elseif ($category == "users" && $subcategory == "username_format" && $name == "text" ) {
 		echo "	<select class='formfld' id='default_setting_value' name='default_setting_value'>\n";
 		echo "    	<option value='any' ".($default_setting_value == 'any' ? "selected='selected'" : null).">".$text['option-username_format_any']."</option>\n";
@@ -682,6 +699,13 @@
 	elseif ($category == "voicemail" && $subcategory == "keep_local" && $name == "boolean" ) {
 		echo "	<select class='formfld' id='default_setting_value' name='default_setting_value'>\n";
 		echo "    	<option value='true' ".(($default_setting_value == "true") ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
+		echo "    	<option value='false' ".(($default_setting_value == "false") ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
+		echo "	</select>\n";
+	}
+	elseif ($category == "voicemail" && ($subcategory == "message_caller_id_number" || $subcategory == "message_date_time") && $name == "text" ) {
+		echo "	<select class='formfld' id='default_setting_value' name='default_setting_value'>\n";
+		echo "    	<option value='before'>".$text['label-before']."</option>\n";
+		echo "    	<option value='after' ".(($default_setting_value == "after") ? "selected='selected'" : null).">".$text['label-after']."</option>\n";
 		echo "    	<option value='false' ".(($default_setting_value == "false") ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
 		echo "	</select>\n";
 	}
@@ -764,20 +788,18 @@
 	echo "    ".$text['label-enabled']."\n";
 	echo "</td>\n";
 	echo "<td width='70%' class='vtable' align='left'>\n";
-	echo "    <select class='formfld' name='default_setting_enabled'>\n";
-	if ($default_setting_enabled == "true") {
-		echo "    <option value='true' selected='selected'>".$text['label-true']."</option>\n";
+	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
+		echo "	<label class='switch'>\n";
+		echo "		<input type='checkbox' id='default_setting_enabled' name='default_setting_enabled' value='true' ".($default_setting_enabled == 'true' ? "checked='checked'" : null).">\n";
+		echo "		<span class='slider'></span>\n";
+		echo "	</label>\n";
 	}
 	else {
-		echo "    <option value='true'>".$text['label-true']."</option>\n";
+		echo "	<select class='formfld' id='default_setting_enabled' name='default_setting_enabled'>\n";
+		echo "		<option value='true' ".($default_setting_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($default_setting_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "	</select>\n";
 	}
-	if ($default_setting_enabled == "false") {
-		echo "    <option value='false' selected='selected'>".$text['label-false']."</option>\n";
-	}
-	else {
-		echo "    <option value='false'>".$text['label-false']."</option>\n";
-	}
-	echo "    </select>\n";
 	echo "<br />\n";
 	echo $text['description-enabled']."\n";
 	echo "</td>\n";

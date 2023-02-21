@@ -335,6 +335,35 @@
 	$recordings = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
+//get current recordings password
+	if (permission_exists('recording_password')) {
+		if (is_numeric($_SESSION['recordings']['recording_password']['numeric'])) {
+			$recording_password = $_SESSION['recordings']['recording_password']['numeric'];
+		}
+		else {
+			$sql = "
+				select
+					split_part(dd.dialplan_detail_data,'=',2)
+				from
+					v_dialplans as d,
+					v_dialplan_details as dd
+				where
+					d.dialplan_uuid = dd.dialplan_uuid and
+					d.domain_uuid = :domain_uuid and
+					d.app_uuid = '430737df-5385-42d1-b933-22600d3fb79e' and
+					d.dialplan_name = 'recordings' and
+					d.dialplan_enabled = 'true' and
+					dd.dialplan_detail_tag = 'action' and
+					dd.dialplan_detail_type = 'set' and
+					dd.dialplan_detail_data like 'pin_number=%' and
+					dd.dialplan_detail_enabled = 'true' ";
+			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+			$database = new database;
+			$recording_password = $database->select($sql, $parameters, 'column');
+			unset($sql, $parameters);
+		}
+	}
+
 //create token
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);
@@ -398,7 +427,12 @@
 		echo modal::create(['id'=>'modal-delete','type'=>'delete','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_delete','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('delete'); list_form_submit('form_list');"])]);
 	}
 
-	echo $text['description']."\n";
+	if (permission_exists('recording_password') && is_numeric($recording_password)) {
+		echo str_replace('||RECORDING_PASSWORD||', "<nobr style='font-weight: 600;'>".$recording_password."</nobr>", $text['description-with_password']."\n");
+	}
+	else {
+		echo $text['description']."\n";
+	}
 	echo "<br /><br />\n";
 
 	echo "<form id='form_list' method='post'>\n";

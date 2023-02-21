@@ -1672,6 +1672,125 @@ header('Expires: '.gmdate('D, d M Y H:i:s',time()+3600).' GMT');
 		border-color: <?php echo ($_SESSION['theme']['login_input_border_color']['text'] != '') ? $_SESSION['theme']['login_input_border_color']['text'] : (($_SESSION['theme']['input_border_color']['text'] != '') ? $_SESSION['theme']['input_border_color']['text'] : '#c0c0c0'); ?>;
 		}
 
+/* TOGGLE SWITCH *******************************************************/
+
+	.switch { /* container */
+		position: relative;
+		display: inline-block;
+		width: 50px;
+		<?php if ($_SESSION['theme']['input_toggle_style']['text'] == 'switch_square') { ?>
+			height: 28px;
+		<?php } ?>
+		<?php if ($_SESSION['theme']['input_toggle_style']['text'] == 'switch_round') { ?>
+			height: 26px;
+		<?php } ?>
+		margin: 1px;
+		<?php $br = format_border_radius($_SESSION['theme']['input_border_radius']['text'], '3px'); ?>
+		-moz-border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
+		-webkit-border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
+		-khtml-border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
+		border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
+		<?php unset($br); ?>
+		}
+
+	.switch > input {
+		display: none;
+		}
+
+	.slider {
+		position: absolute;
+		cursor: pointer;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background: <?php echo $_SESSION['theme']['input_toggle_switch_background_color_false']['text'] ?: ($_SESSION['theme']['input_border_color']['text'] ?: '#c0c0c0'); ?>;
+		<?php if ($_SESSION['theme']['input_toggle_style']['text'] == 'switch_square') { ?>
+			<?php $br = format_border_radius($_SESSION['theme']['input_border_radius']['text'], '3px'); ?>
+			-moz-border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
+			-webkit-border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
+			-khtml-border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
+			border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
+			<?php unset($br); ?>
+		<?php } ?>
+		<?php if ($_SESSION['theme']['input_toggle_style']['text'] == 'switch_round') { ?>
+			border-radius: 22px;
+		<?php } ?>
+		-webkit-transition: .2s;
+		transition: .2s;
+		}
+
+	.slider:before { /* when disabled */
+		position: absolute;
+		<?php if ($_SESSION['theme']['input_toggle_switch_handle_symbol']['boolean'] === 'true') { ?>
+			text-align: center;
+			<?php if ($_SESSION['theme']['input_toggle_style']['text'] == 'switch_square') { ?>
+				padding-top: 3px;
+			<?php } else if ($_SESSION['theme']['input_toggle_style']['text'] == 'switch_round') { ?>
+				padding-top: 2px;
+			<?php } ?>
+			content: 'O';
+			color: <?php echo $_SESSION['theme']['input_toggle_switch_background_color_false']['text'] ?: ($_SESSION['theme']['input_border_color']['text'] ?: '#c0c0c0'); ?>;
+		<?php } else { ?>
+			content: '';
+		<?php } ?>
+		<?php if ($_SESSION['theme']['input_toggle_style']['text'] == 'switch_square') { ?>
+			height: 24px;
+			width: 24px;
+		<?php } ?>
+		<?php if ($_SESSION['theme']['input_toggle_style']['text'] == 'switch_round') { ?>
+			height: 22px;
+			width: 22px;
+		<?php } ?>
+		top: 2px;
+		left: 2px;
+		bottom: 2px;
+		background: <?php echo $_SESSION['theme']['input_toggle_switch_handle_color']['text'] ?: ($_SESSION['theme']['input_background_color']['text'] ?: '#ffffff'); ?>;
+		<?php if ($_SESSION['theme']['input_toggle_style']['text'] == 'switch_square') { ?>
+			<?php $br = format_border_radius($_SESSION['theme']['input_border_radius']['text'], '3px'); ?>
+			-moz-border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
+			-webkit-border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
+			-khtml-border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
+			border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
+			<?php unset($br); ?>
+		<?php } ?>
+		<?php if ($_SESSION['theme']['input_toggle_style']['text'] == 'switch_round') { ?>
+			border-radius: 50%;
+		<?php } ?>
+		-webkit-transition: .2s;
+		transition: .2s;
+		}
+
+	input:checked + .slider { /* when enabled */
+		background: <?php echo $_SESSION['theme']['input_toggle_switch_background_color_true']['text'] ?: '#2e82d0'; ?>;
+		}
+
+	input:focus + .slider { /* when focused, required for switch movement */
+		}
+
+	input:checked + .slider:before { /* distance switch moves horizontally */
+		<?php if ($_SESSION['theme']['input_toggle_switch_handle_symbol']['boolean'] === 'true') { ?>
+			text-align: center;
+			<?php if ($_SESSION['theme']['input_toggle_style']['text'] == 'switch_square') { ?>
+				padding-top: 2px;
+			<?php } else if ($_SESSION['theme']['input_toggle_style']['text'] == 'switch_round') { ?>
+				padding-top: 1px;
+			<?php } ?>
+			content: '|';
+			color: <?php echo $_SESSION['theme']['input_toggle_switch_background_color_true']['text'] ?: '#2e82d0'; ?>;
+		<?php } ?>
+		<?php if ($_SESSION['theme']['input_toggle_style']['text'] == 'switch_square') { ?>
+			-webkit-transform: translateX(22px);
+			-ms-transform: translateX(22px);
+			transform: translateX(22px);
+		<?php } ?>
+		<?php if ($_SESSION['theme']['input_toggle_style']['text'] == 'switch_round') { ?>
+			-webkit-transform: translateX(24px);
+			-ms-transform: translateX(24px);
+			transform: translateX(24px);
+		<?php } ?>
+		}
+
 /* TABLES *****************************************************************/
 
 	table {
@@ -2312,7 +2431,6 @@ header('Expires: '.gmdate('D, d M Y H:i:s',time()+3600).' GMT');
 		-webkit-box-shadow: inset 0 7px 7px -7px <?php echo ($_SESSION['theme']['dashboard_detail_shadow_color']['text'] != '') ? $_SESSION['theme']['dashboard_detail_shadow_color']['text'] : '#737983'; ?>, inset 0 -8px 12px -10px <?php echo ($_SESSION['theme']['dashboard_detail_shadow_color']['text'] != '') ? $_SESSION['theme']['dashboard_detail_shadow_color']['text'] : '#737983'; ?>;
 		box-shadow: inset 0 7px 7px -7px <?php echo ($_SESSION['theme']['dashboard_detail_shadow_color']['text'] != '') ? $_SESSION['theme']['dashboard_detail_shadow_color']['text'] : '#737983'; ?>, inset 0 -8px 12px -10px <?php echo ($_SESSION['theme']['dashboard_detail_shadow_color']['text'] != '') ? $_SESSION['theme']['dashboard_detail_shadow_color']['text'] : '#737983'; ?>;
 		*/
-		padding-top: 3px;
 		padding-bottom: 15px;
 		overflow-y: auto;
 		}
@@ -2336,6 +2454,35 @@ header('Expires: '.gmdate('D, d M Y H:i:s',time()+3600).' GMT');
 		font-size: <?php echo ($_SESSION['theme']['dashboard_detail_heading_text_size']['text'] != '') ? $_SESSION['theme']['dashboard_detail_heading_text_size']['text'] : '11px'; ?>;
 		font-family: <?php echo ($_SESSION['theme']['table_heading_text_font']['text'] != '') ? $_SESSION['theme']['table_heading_text_font']['text'] : 'arial'; ?>
 		color: <?php echo ($_SESSION['theme']['table_heading_text_color']['text'] != '') ? $_SESSION['theme']['table_heading_text_color']['text'] : '#3164ad'; ?>;
+		padding-top: 3px;
+		<?php
+		$color_edge = ($_SESSION['theme']['dashboard_detail_background_color_edge']['text'] != '') ? $_SESSION['theme']['dashboard_detail_background_color_edge']['text'] : '#edf1f7';
+		$color_center = ($_SESSION['theme']['dashboard_detail_background_color_center']['text'] != '') ? $_SESSION['theme']['dashboard_detail_background_color_center']['text'] : '#f9fbfe';
+		?>
+		background: <?php echo $color_center; ?>;
+		background-image: -ms-linear-gradient(left, <?php echo $color_edge; ?> 0%, <?php echo $color_center; ?> 30%, <?php echo $color_center; ?> 70%, <?php echo $color_edge; ?> 100%);
+		background-image: -moz-linear-gradient(left, <?php echo $color_edge; ?> 0%, <?php echo $color_center; ?> 30%, <?php echo $color_center; ?> 70%, <?php echo $color_edge; ?> 100%);
+		background-image: -o-linear-gradient(left, <?php echo $color_edge; ?> 0%, <?php echo $color_center; ?> 30%, <?php echo $color_center; ?> 70%, <?php echo $color_edge; ?> 100%);
+		background-image: -webkit-gradient(linear, left, right, color-stop(0, <?php echo $color_edge; ?>), color-stop(0.30, <?php echo $color_center; ?>), color-stop(0.70, <?php echo $color_center; ?>), color-stop(1, <?php echo $color_edge; ?>));
+		background-image: -webkit-linear-gradient(left, <?php echo $color_edge; ?> 0%, <?php echo $color_center; ?> 30%, <?php echo $color_center; ?> 70%, <?php echo $color_edge; ?> 100%);
+		background-image: linear-gradient(to right, <?php echo $color_edge; ?> 0%, <?php echo $color_center; ?> 30%, <?php echo $color_center; ?> 70%, <?php echo $color_edge; ?> 100%);
+		<?php unset($color_edge, $color_center); ?>
+		}
+
+	th.hud_heading:first-of-type {
+		<?php $br = format_border_radius($_SESSION['theme']['dashboard_border_radius']['text'], '5px'); ?>
+		-webkit-border-top-left-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?>;
+		-moz-border-top-left-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?>;
+		border-top-left-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?>;
+		<?php unset($br); ?>
+		}
+
+	th.hud_heading:first-of-type {
+		<?php $br = format_border_radius($_SESSION['theme']['dashboard_border_radius']['text'], '5px'); ?>
+		-webkit-border-top-left-radius: <?php echo $br['tr']['n'].$br['tr']['u']; ?>;
+		-moz-border-top-left-radius: <?php echo $br['tr']['n'].$br['tr']['u']; ?>;
+		border-top-left-radius: <?php echo $br['tr']['n'].$br['tr']['u']; ?>;
+		<?php unset($br); ?>
 		}
 
 	td.hud_text {
@@ -2343,6 +2490,13 @@ header('Expires: '.gmdate('D, d M Y H:i:s',time()+3600).' GMT');
 		color: <?php echo ($_SESSION['theme']['table_row_text_color']['text'] != '') ? $_SESSION['theme']['table_row_text_color']['text'] : '#000'; ?>;
 		text-align: left;
 		vertical-align: middle;
+		}
+
+	td.hud_text.input {
+		margin: 0;
+		padding-top: 0;
+		padding-bottom: 0;
+		white-space: nowrap;
 		}
 
 	span.hud_expander {

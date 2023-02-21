@@ -5,7 +5,7 @@
 		$apps[$x]['uuid'] = '5befdf60-a242-445f-91b3-2e9ee3e0ddf7';
 		$apps[$x]['category'] = 'system';
 		$apps[$x]['subcategory'] = 'email';
-		$apps[$x]['version'] = '2.10';
+		$apps[$x]['version'] = '2.11';
 		$apps[$x]['license'] = 'Member';
 		$apps[$x]['url'] = 'http://www.fusionpbx.com';
 		$apps[$x]['description']['en-us'] = '';
@@ -163,8 +163,8 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['search_by'] = 'true';
 		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = 'email_debug';
-		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = 'email_substatus';
+		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = 'email_response';
+		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = 'email_debug';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		//$apps[$x]['db'][$y]['fields'][$z]['search_by'] = 'true';
 		$z++;

@@ -85,7 +85,7 @@
 		$domain_setting_name = strtolower($_POST["domain_setting_name"]);
 		$domain_setting_value = $_POST["domain_setting_value"];
 		$domain_setting_order = $_POST["domain_setting_order"];
-		$domain_setting_enabled = strtolower($_POST["domain_setting_enabled"]);
+		$domain_setting_enabled = strtolower($_POST["domain_setting_enabled"] ?: 'false');
 		$domain_setting_description = $_POST["domain_setting_description"];
 	}
 
@@ -348,6 +348,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		unset($sql, $parameters);
 	}
 
+//set the defaults
+	if (strlen($domain_setting_enabled) == 0) { $domain_setting_enabled = 'true'; }
+
 //create token
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);
@@ -433,7 +436,14 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-type']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld lowercase' type='text' name='domain_setting_name' id='domain_setting_name' maxlength='255' value=\"".escape($domain_setting_name)."\">\n";
+	$setting_types = ['Array','Boolean','Code','Dir','Name','Numeric','Text','UUID'];
+	echo "	<select class='formfld' id='domain_setting_name' name='domain_setting_name' required='required'>\n";
+	echo "		<option value=''></option>\n";
+	foreach ($setting_types as $setting_type) {
+		echo "	<option value='".strtolower($setting_type)."' ".($domain_setting_name == strtolower($setting_type) ? "selected='selected'" : null).">".$setting_type."</option>\n";
+	}
+	echo "	</select>\n";
+	unset($setting_types, $setting_type);
 	echo "<br />\n";
 	echo $text['description-type']."\n";
 	echo "</td>\n";
@@ -704,6 +714,13 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "    	<option value='none' ".(($row['domain_setting_value'] == "none") ? "selected='selected'" : null).">".$text['label-none']."</option>\n";
 		echo "    </select>\n";
 	}
+	elseif ($category == "theme" && $subcategory == "input_toggle_style" && $name == "text" ) {
+		echo "	<select class='formfld' id='domain_setting_value' name='domain_setting_value'>\n";
+		echo "    	<option value='select'>".$text['option-select']."</option>\n";
+		echo "    	<option value='switch_round' ".(($row['domain_setting_value'] == "switch_round") ? "selected='selected'" : null).">".$text['option-switch_round']."</option>\n";
+		echo "    	<option value='switch_square' ".(($row['domain_setting_value'] == "switch_square") ? "selected='selected'" : null).">".$text['option-switch_square']."</option>\n";
+		echo "	</select>\n";
+	}
 	elseif ($category == "users" && $subcategory == "username_format" && $name == "text" ) {
 		echo "	<select class='formfld' id='domain_setting_value' name='domain_setting_value'>\n";
 		echo "    	<option value='any' ".($row['domain_setting_value'] == 'any' ? "selected='selected'" : null).">".$text['option-username_format_any']."</option>\n";
@@ -721,6 +738,13 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	elseif ($category == "voicemail" && $subcategory == "keep_local" && $name == "boolean" ) {
 		echo "	<select class='formfld' id='domain_setting_value' name='domain_setting_value'>\n";
 		echo "    	<option value='true' ".(($row['domain_setting_value'] == "true") ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
+		echo "    	<option value='false' ".(($row['domain_setting_value'] == "false") ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
+		echo "	</select>\n";
+	}
+	elseif ($category == "voicemail" && ($subcategory == "message_caller_id_number" || $subcategory == "message_date_time") && $name == "text" ) {
+		echo "	<select class='formfld' id='domain_setting_value' name='domain_setting_value'>\n";
+		echo "    	<option value='before'>".$text['label-before']."</option>\n";
+		echo "    	<option value='after' ".(($row['domain_setting_value'] == "after") ? "selected='selected'" : null).">".$text['label-after']."</option>\n";
 		echo "    	<option value='false' ".(($row['domain_setting_value'] == "false") ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
 		echo "	</select>\n";
 	}
@@ -805,20 +829,18 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "    ".$text['label-enabled']."\n";
 	echo "</td>\n";
 	echo "<td width='70%' class='vtable' align='left'>\n";
-	echo "    <select class='formfld' name='domain_setting_enabled'>\n";
-	if ($domain_setting_enabled == "true") {
-		echo "    <option value='true' selected='selected'>".$text['label-true']."</option>\n";
+	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
+		echo "	<label class='switch'>\n";
+		echo "		<input type='checkbox' id='domain_setting_enabled' name='domain_setting_enabled' value='true' ".($domain_setting_enabled == 'true' ? "checked='checked'" : null).">\n";
+		echo "		<span class='slider'></span>\n";
+		echo "	</label>\n";
 	}
 	else {
-		echo "    <option value='true'>".$text['label-true']."</option>\n";
+		echo "	<select class='formfld' id='domain_setting_enabled' name='domain_setting_enabled'>\n";
+		echo "		<option value='true' ".($domain_setting_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($domain_setting_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "	</select>\n";
 	}
-	if ($domain_setting_enabled == "false") {
-		echo "    <option value='false' selected='selected'>".$text['label-false']."</option>\n";
-	}
-	else {
-		echo "    <option value='false'>".$text['label-false']."</option>\n";
-	}
-	echo "    </select>\n";
 	echo "<br />\n";
 	echo $text['description-setting_enabled']."\n";
 	echo "</td>\n";

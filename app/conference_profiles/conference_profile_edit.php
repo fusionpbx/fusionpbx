@@ -33,7 +33,7 @@
 //get http post variables and set them to php variables
 	if (count($_POST) > 0) {
 		$profile_name = $_POST["profile_name"];
-		$profile_enabled = $_POST["profile_enabled"];
+		$profile_enabled = $_POST["profile_enabled"] ?: 'false';
 		$profile_description = $_POST["profile_description"];
 	}
 //check to see if the http post exists
@@ -120,6 +120,9 @@
 		unset($sql, $parameters);
 	}
 
+//set the defaults
+	if (strlen($profile_enabled) == 0) { $profile_enabled = 'true'; }
+
 //create token
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);
@@ -158,10 +161,18 @@
 	echo "	".$text['label-profile_enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='profile_enabled'>\n";
-	echo "		<option value='true'>".$text['label-true']."</option>\n";
-	echo "		<option value='false' ".($profile_enabled == "false" ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
-	echo "	</select>\n";
+	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
+		echo "	<label class='switch'>\n";
+		echo "		<input type='checkbox' id='profile_enabled' name='profile_enabled' value='true' ".($profile_enabled == 'true' ? "checked='checked'" : null).">\n";
+		echo "		<span class='slider'></span>\n";
+		echo "	</label>\n";
+	}
+	else {
+		echo "	<select class='formfld' name='profile_enabled'>\n";
+		echo "		<option value='true' ".($profile_enabled == "true" ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
+		echo "		<option value='false' ".($profile_enabled == "false" ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
+		echo "	</select>\n";
+	}
 	echo "<br />\n";
 	echo $text['description-profile_enabled']."\n";
 	echo "</td>\n";

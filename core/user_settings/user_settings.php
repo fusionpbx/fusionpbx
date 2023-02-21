@@ -243,7 +243,8 @@
 				echo escape($row['user_setting_subcategory']);
 			}
 			echo "	</td>\n";
-			echo "	<td class='hide-sm-dn'>".$row['user_setting_name']."&nbsp;</td>\n";
+			$setting_types = ['Array','Boolean','Code','Dir','Name','Numeric','Text','UUID'];
+			echo "	<td class='hide-sm-dn'>".$setting_types[array_search(strtolower($row['user_setting_name']), array_map('strtolower',$setting_types))]."</td>\n";
 			echo "	<td class='overflow no-wrap'>\n";
 			$category = $row['user_setting_category'];
 			$subcategory = $row['user_setting_subcategory'];
@@ -296,6 +297,9 @@
 			else if ($category == 'theme' && $subcategory == 'menu_side_toggle_body_width' && $name == 'text') {
 				echo "		".$text['option-'.$row['user_setting_value']]."\n";
 			}
+			else if ($category == 'theme' && $subcategory == 'input_toggle_style' && $name == 'text') {
+				echo "		".$text['option-'.$row['user_setting_value']]."\n";
+			}
 			else if ($category == "theme" && substr_count($subcategory, "_color") > 0 && ($name == "text" || $name == 'array')) {
 				echo "		".(img_spacer('15px', '15px', 'background: '.escape($row['user_setting_value']).'; margin-right: 4px; vertical-align: middle; border: 1px solid '.(color_adjust($row['user_setting_value'], -0.18)).'; padding: -1px;'));
 				echo "<span style=\"font-family: 'Courier New'; line-height: 6pt;\">".escape($row['user_setting_value'])."</span>\n";
@@ -310,6 +314,9 @@
 				echo "		".$text['label-'.$row['user_setting_value']]."\n";
 			}
 			else if ($category == 'destinations' && $subcategory == 'select_mode' && $name == 'text') {
+				echo "		".$text['label-'.$row['user_setting_value']]."\n";
+			}
+			else if ($row['user_setting_value'] == 'true' || $row['user_setting_value'] == 'false') {
 				echo "		".$text['label-'.$row['user_setting_value']]."\n";
 			}
 			else {

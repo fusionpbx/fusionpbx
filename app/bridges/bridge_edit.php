@@ -50,11 +50,11 @@
 	}
 
 //get http post variables and set them to php variables
-	if (is_array($_POST)) {
+	if (count($_POST) > 0) {
 		$bridge_uuid = $_POST["bridge_uuid"];
 		$bridge_name = $_POST["bridge_name"];
 		$bridge_destination = $_POST["bridge_destination"];
-		$bridge_enabled = $_POST["bridge_enabled"];
+		$bridge_enabled = $_POST["bridge_enabled"] ?: 'false';
 		$bridge_description = $_POST["bridge_description"];
 	}
 
@@ -162,6 +162,9 @@
 		unset($sql, $parameters, $row);
 	}
 
+//set the defaults
+	if (strlen($bridge_enabled) == 0) { $bridge_enabled = 'true'; }
+
 //create token
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);
@@ -218,20 +221,18 @@
 	echo "	".$text['label-bridge_enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<select class='formfld' name='bridge_enabled'>\n";
-	if ($bridge_enabled == "true") {
-		echo "		<option value='true' selected='selected'>".$text['label-true']."</option>\n";
+	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
+		echo "	<label class='switch'>\n";
+		echo "		<input type='checkbox' id='bridge_enabled' name='bridge_enabled' value='true' ".($bridge_enabled == 'true' ? "checked='checked'" : null).">\n";
+		echo "		<span class='slider'></span>\n";
+		echo "	</label>\n";
 	}
 	else {
-		echo "		<option value='true'>".$text['label-true']."</option>\n";
+		echo "	<select class='formfld' id='bridge_enabled' name='bridge_enabled'>\n";
+		echo "		<option value='true' ".($bridge_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($bridge_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "	</select>\n";
 	}
-	if ($bridge_enabled == "false") {
-		echo "		<option value='false' selected='selected'>".$text['label-false']."</option>\n";
-	}
-	else {
-		echo "		<option value='false'>".$text['label-false']."</option>\n";
-	}
-	echo "	</select>\n";
 	echo "<br />\n";
 	echo $text['description-bridge_enabled']."\n";
 	echo "</td>\n";

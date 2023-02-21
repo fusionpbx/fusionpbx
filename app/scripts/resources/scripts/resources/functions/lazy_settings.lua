@@ -49,12 +49,13 @@ local function append_setting(array, category, subcategory, name, value)
 	end
 end
 
-function Settings.new(db, domain_name, domain_uuid)
+function Settings.new(db, domain_name, domain_uuid, user_uuid)
 	local self = setmetatable({}, Settings)
 	self._array = {}
 	self._db = db
 	self._domain_name = domain_name
 	self._domain_uuid = domain_uuid
+	self._user_uuid = user_uuid
 	self._use_cache	 = not cache.settings
 
 	return self
@@ -93,6 +94,7 @@ function Settings:get(category, subcategory, name)
 end
 
 function Settings:_load(category, subcategory, name)
+	local user_uuid = self._user_uuid
 	local domain_uuid = self._domain_uuid
 	local db = self._db
 	if type(self._db) == 'string' then
@@ -101,8 +103,37 @@ function Settings:_load(category, subcategory, name)
 
 	local found = false
 
+	--get the user settings
+	if user_uuid then
+		local sql = "SELECT user_setting_uuid,user_setting_category,user_setting_subcategory,user_setting_name,user_setting_value "
+		sql = sql .. "FROM v_user_settings ";
+		sql = sql .. "WHERE user_uuid = :user_uuid ";
+		sql = sql .. "AND user_setting_enabled = 'true' ";
+		sql = sql .. "AND user_setting_category = :category ";
+		sql = sql .. "AND user_setting_subcategory = :subcategory ";
+		sql = sql .. "AND user_setting_name = :name ";
+		sql = sql .. "AND user_setting_value is not null ";
+		sql = sql .. "ORDER BY user_setting_category, user_setting_subcategory ASC ";
+		local params = {
+			user_uuid = user_uuid,
+			category = category,
+			subcategory = subcategory,
+			name = name,
+		};
+
+		db:query(sql, params, function(row)
+			found = true;
+			self:set(
+				row.user_setting_category,
+				row.user_setting_subcategory,
+				row.user_setting_name,
+				row.user_setting_value
+			)
+		end)
+	end
+
 	--get the domain settings
-	if domain_uuid then
+	if not found and domain_uuid then
 		local sql = "SELECT domain_setting_uuid,domain_setting_category,domain_setting_subcategory,domain_setting_name,domain_setting_value "
 		sql = sql .. "FROM v_domain_settings ";
 		sql = sql .. "WHERE domain_uuid = :domain_uuid ";

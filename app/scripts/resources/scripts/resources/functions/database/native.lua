@@ -9,6 +9,7 @@ assert(freeswitch, "Require FreeSWITCH environment")
 -----------------------------------------------------------
 local FsDatabase = {} do
 
+require "resources.functions.trim"
 require "resources.functions.file_exists"
 require "resources.functions.database_handle"
 
@@ -17,9 +18,16 @@ FsDatabase._backend_name = 'native'
 
 function FsDatabase.new(name)
   local dbh = assert(name)
-  if type(name) == 'string' then
-    if name == 'switch' and file_exists(database_dir.."/core.db") then
-      dbh = freeswitch.Dbh("sqlite://"..database_dir.."/core.db")
+  if (type(name) == 'string') then
+    --debug information
+  	--freeswitch.consoleLog("notice","name " .. name .. "\n");
+  	--freeswitch.consoleLog("notice","database.type " .. database.type .. "\n");
+  	--freeswitch.consoleLog("notice","database.name " .. database.name .. "\n");
+  	--freeswitch.consoleLog("notice","database.path " .. database.path .. "\n");
+
+  	--handle switch sqlite
+    if (name == 'switch' and database.type == 'sqlite' and database.path ~= nil and database.name ~= nil) then
+      dbh = freeswitch.Dbh("sqlite://"..trim(database.path).."/"..trim(database.name))
     else
       dbh = database_handle(name)
     end

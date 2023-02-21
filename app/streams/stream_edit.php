@@ -53,12 +53,12 @@
 	}
 
 //get http post variables and set them to php variables
-	if (is_array($_POST)) {
+	if (count($_POST) > 0) {
 		$domain_uuid = $_POST['domain_uuid'];
 		$stream_uuid = $_POST["stream_uuid"];
 		$stream_name = $_POST["stream_name"];
 		$stream_location = $_POST["stream_location"];
-		$stream_enabled = $_POST["stream_enabled"];
+		$stream_enabled = $_POST["stream_enabled"] ?: 'false';
 		$stream_description = $_POST["stream_description"];
 	}
 
@@ -154,6 +154,9 @@
 		unset($sql, $parameters, $row);
 	}
 
+//set the defaults
+	if (strlen($stream_enabled) == 0) { $stream_enabled = 'true'; }
+
 //need stream_all permission to edit a global stream
 	if (!permission_exists('stream_all') && $domain_uuid == null) {
 		header('Location: streams.php');
@@ -209,20 +212,18 @@
 	echo "	".$text['label-stream_enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<select class='formfld' name='stream_enabled'>\n";
-	if ($stream_enabled == "true") {
-		echo "		<option value='true' selected='selected'>".$text['label-true']."</option>\n";
+	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
+		echo "	<label class='switch'>\n";
+		echo "		<input type='checkbox' id='stream_enabled' name='stream_enabled' value='true' ".($stream_enabled == 'true' ? "checked='checked'" : null).">\n";
+		echo "		<span class='slider'></span>\n";
+		echo "	</label>\n";
 	}
 	else {
-		echo "		<option value='true'>".$text['label-true']."</option>\n";
+		echo "	<select class='formfld' id='stream_enabled' name='stream_enabled'>\n";
+		echo "		<option value='true' ".($stream_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($stream_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "	</select>\n";
 	}
-	if ($stream_enabled == "false") {
-		echo "		<option value='false' selected='selected'>".$text['label-false']."</option>\n";
-	}
-	else {
-		echo "		<option value='false'>".$text['label-false']."</option>\n";
-	}
-	echo "	</select>\n";
 	echo "<br />\n";
 	echo $text['description-stream_enabled']."\n";
 	echo "</td>\n";

@@ -137,7 +137,7 @@
 				$contact_name_family = $_POST["contact_name_family"];
 			}
 			$group_uuid_name = $_POST["group_uuid_name"];
-			$user_enabled = $_POST["user_enabled"];
+			$user_enabled = $_POST["user_enabled"] ?: 'false';
 			if (permission_exists('api_key')) {
 				$api_key = $_POST["api_key"];
 			}
@@ -638,6 +638,9 @@
 			}
 	}
 
+//set the defaults
+	if (strlen($user_enabled) == 0) { $user_enabled = "true"; }
+
 //create token
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);
@@ -1054,10 +1057,18 @@
 	echo "	".$text['label-enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='user_enabled'>\n";
-	echo "		<option value='true' ".(($user_enabled == "true") ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-	echo "		<option value='false' ".(($user_enabled == "false") ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-	echo "	</select>\n";
+	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
+		echo "	<label class='switch'>\n";
+		echo "		<input type='checkbox' id='user_enabled' name='user_enabled' value='true' ".($user_enabled == 'true' ? "checked='checked'" : null).">\n";
+		echo "		<span class='slider'></span>\n";
+		echo "	</label>\n";
+	}
+	else {
+		echo "	<select class='formfld' id='user_enabled' name='user_enabled'>\n";
+		echo "		<option value='true' ".($user_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($user_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "	</select>\n";
+	}
 	echo "<br />\n";
 	echo $text['description-enabled']."\n";
 	echo "</td>\n";

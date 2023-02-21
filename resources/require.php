@@ -55,12 +55,12 @@
 	//$db_password = $settings['database']['password'];
 
 //get the database connection settings
-    $db_type = $conf['database.0.type'];
-    $db_host = $conf['database.0.host'];
-    $db_port = $conf['database.0.port'];
-    $db_name = $conf['database.0.name'];
-    $db_username = $conf['database.0.username'];
-    $db_password = $conf['database.0.password'];
+	$db_type = $conf['database.0.type'];
+	$db_host = $conf['database.0.host'];
+	$db_port = $conf['database.0.port'];
+	$db_name = $conf['database.0.name'];
+	$db_username = $conf['database.0.username'];
+	$db_password = $conf['database.0.password'];
 
 //debug info
 	//echo "Include Path: ".get_include_path()."\n";

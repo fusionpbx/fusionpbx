@@ -61,12 +61,12 @@
 	}
 
 //get http post variables and set them to php variables
-	if (is_array($_POST)) {
+	if (count($_POST) > 0) {
 		$domain_uuid = $_POST["domain_uuid"];
 		$extension_setting_type = $_POST["extension_setting_type"];
 		$extension_setting_name = $_POST["extension_setting_name"];
 		$extension_setting_value = $_POST["extension_setting_value"];
-		$extension_setting_enabled = $_POST["extension_setting_enabled"];
+		$extension_setting_enabled = $_POST["extension_setting_enabled"] ?: 'false';
 		$extension_setting_description = $_POST["extension_setting_description"];
 	}
 
@@ -213,6 +213,9 @@
 		unset($sql, $parameters, $row);
 	}
 
+//set the defaults
+	if (strlen($extension_setting_enabled) == 0) { $extension_setting_enabled = 'true'; }
+
 //create token
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);
@@ -334,20 +337,18 @@
 	echo "	".$text['label-extension_setting_enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<select class='formfld' name='extension_setting_enabled'>\n";
-	if ($extension_setting_enabled == "true") {
-		echo "		<option value='true' selected='selected'>".$text['label-true']."</option>\n";
+	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
+		echo "	<label class='switch'>\n";
+		echo "		<input type='checkbox' id='extension_setting_enabled' name='extension_setting_enabled' value='true' ".($extension_setting_enabled == 'true' ? "checked='checked'" : null).">\n";
+		echo "		<span class='slider'></span>\n";
+		echo "	</label>\n";
 	}
 	else {
-		echo "		<option value='true'>".$text['label-true']."</option>\n";
+		echo "	<select class='formfld' id='extension_setting_enabled' name='extension_setting_enabled'>\n";
+		echo "		<option value='true' ".($extension_setting_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($extension_setting_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "	</select>\n";
 	}
-	if ($extension_setting_enabled == "false") {
-		echo "		<option value='false' selected='selected'>".$text['label-false']."</option>\n";
-	}
-	else {
-		echo "		<option value='false'>".$text['label-false']."</option>\n";
-	}
-	echo "	</select>\n";
 	echo "<br />\n";
 	echo $text['description-extension_setting_enabled']."\n";
 	echo "</td>\n";
