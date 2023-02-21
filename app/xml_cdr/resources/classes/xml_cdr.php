@@ -94,7 +94,7 @@ if (!class_exists('xml_cdr')) {
 		 * cdr process logging
 		 */
 		public function log($message) {
-			
+
 			//save the log if enabled is true
 			if ($_SESSION['log']['enabled']['boolean'] == 'true') {
 
@@ -202,6 +202,7 @@ if (!class_exists('xml_cdr')) {
 					$this->fields[] = $field_name;
 				}
 			}
+			$this->fields = array_unique($this->fields);
 		}
 
 		/**
@@ -236,7 +237,7 @@ if (!class_exists('xml_cdr')) {
 					$database->domain_uuid = $domain_uuid;
 					$database->save($array, false);
 
-					//debug results	
+					//debug results
 					$this->log(print_r($database->message, true));
 
 					//remove the temporary permission
@@ -333,15 +334,15 @@ if (!class_exists('xml_cdr')) {
 						if (isset($xml->variables->effective_caller_id_name)) {
 							$caller_id_name = urldecode($xml->variables->effective_caller_id_name);
 						}
-					
+
 						if (isset($xml->variables->origination_caller_id_name)) {
 							$caller_id_name = urldecode($xml->variables->origination_caller_id_name);
 						}
-						
+
 						if (isset($xml->variables->origination_caller_id_number)) {
 							$caller_id_number = urldecode($xml->variables->origination_caller_id_number);
 						}
-					
+
 						if (urldecode($xml->variables->call_direction) == 'outbound' && isset($xml->variables->effective_caller_id_number)) {
 							$caller_id_number = urldecode($xml->variables->effective_caller_id_number);
 						}
@@ -349,7 +350,7 @@ if (!class_exists('xml_cdr')) {
 					//if the sip_from_domain and domain_name are not the same then original call direction was inbound
 						//when an inbound call is forward the call_direction is set to inbound and then updated to outbound
 						//use sip_from_display and sip_from_user to get the original caller ID instead of the updated caller ID info from the forward
-						if (isset($xml->variables->sip_from_domain) && urldecode($xml->variables->sip_from_domain) != urldecode($xml->variables->domain_name)) { 
+						if (isset($xml->variables->sip_from_domain) && urldecode($xml->variables->sip_from_domain) != urldecode($xml->variables->domain_name)) {
 							if (isset($xml->variables->sip_from_display)) {
 								$caller_id_name = urldecode($xml->variables->sip_from_display);
 							}
@@ -423,9 +424,18 @@ if (!class_exists('xml_cdr')) {
 							//answered call
 							$missed_call = 'false';
 						}
+						elseif (isset($xml->variables->cc_side) && $xml->variables->cc_side == 'agent') {
+							//call center
+							$missed_call = 'false';
+						}
 						else {
 							//missed call
 							$missed_call = 'true';
+						}
+
+					//get the last bridge_uuid from the call to preserve previous behavior
+						foreach ($xml->variables->bridge_uuids as $bridge) {
+							$last_bridge = urldecode($bridge);
 						}
 
 					//misc
@@ -442,7 +452,7 @@ if (!class_exists('xml_cdr')) {
 						$this->array[$key]['caller_destination'] = $caller_destination;
 						$this->array[$key]['accountcode'] = urldecode($xml->variables->accountcode);
 						$this->array[$key]['default_language'] = urldecode($xml->variables->default_language);
-						$this->array[$key]['bridge_uuid'] = urldecode($xml->variables->bridge_uuid);
+						$this->array[$key]['bridge_uuid'] = urldecode($xml->variables->bridge_uuid) ?: $last_bridge;
 						//$this->array[$key]['digits_dialed'] = urldecode($xml->variables->digits_dialed);
 						$this->array[$key]['sip_hangup_disposition'] = urldecode($xml->variables->sip_hangup_disposition);
 						$this->array[$key]['pin_number'] = urldecode($xml->variables->pin_number);
@@ -473,7 +483,7 @@ if (!class_exists('xml_cdr')) {
 
 					//store the call direction
 						$this->array[$key]['direction'] = urldecode($xml->variables->call_direction);
-						  
+
 					//call center
 						$this->array[$key]['cc_side'] = urldecode($xml->variables->cc_side);
 						$this->array[$key]['cc_member_uuid'] = urldecode($xml->variables->cc_member_uuid);
@@ -562,20 +572,22 @@ if (!class_exists('xml_cdr')) {
 								$fields = explode(",", $field);
 								$field_name = end($fields);
 								$this->fields[] = $field_name;
-								if (count($fields) == 1) {
-									$this->array[$key][$field_name] = urldecode($xml->variables->{$fields[0]});
-								}
-								if (count($fields) == 2) {
-									$this->array[$key][$field_name] = urldecode($xml->{$fields[0]}->{$fields[1]});
-								}
-								if (count($fields) == 3) {
-									$this->array[$key][$field_name] = urldecode($xml->{$fields[0]}->{$fields[1]}->{$fields[2]});
-								}
-								if (count($fields) == 4) {
-									$this->array[$key][$field_name] = urldecode($xml->{$fields[0]}->{$fields[1]}->{$fields[2]}->{$fields[3]});
-								}
-								if (count($fields) == 5) {
-									$this->array[$key][$field_name] = urldecode($xml->{$fields[0]}->{$fields[1]}->{$fields[2]}->{$fields[3]}->{$fields[4]});
+								if (!isset($this->array[$key][$field_name])) {
+									if (count($fields) == 1) {
+										$this->array[$key][$field_name] = urldecode($xml->variables->{$fields[0]});
+									}
+									if (count($fields) == 2) {
+										$this->array[$key][$field_name] = urldecode($xml->{$fields[0]}->{$fields[1]});
+									}
+									if (count($fields) == 3) {
+										$this->array[$key][$field_name] = urldecode($xml->{$fields[0]}->{$fields[1]}->{$fields[2]});
+									}
+									if (count($fields) == 4) {
+										$this->array[$key][$field_name] = urldecode($xml->{$fields[0]}->{$fields[1]}->{$fields[2]}->{$fields[3]});
+									}
+									if (count($fields) == 5) {
+										$this->array[$key][$field_name] = urldecode($xml->{$fields[0]}->{$fields[1]}->{$fields[2]}->{$fields[3]}->{$fields[4]});
+									}
 								}
 							}
 						}
@@ -678,7 +690,7 @@ if (!class_exists('xml_cdr')) {
 							}
 						}
 						if (!isset($record_name)) {
-							$bridge_uuid = urldecode($xml->variables->bridge_uuid);
+							$bridge_uuid = urldecode($xml->variables->bridge_uuid) ?: $last_bridge;
 							$path = $_SESSION['switch']['recordings']['dir'].'/'.$domain_name.'/archive/'.$start_year.'/'.$start_month.'/'.$start_day;
 							if (file_exists($path.'/'.$bridge_uuid.'.wav')) {
 								$record_path = $path;
@@ -705,7 +717,7 @@ if (!class_exists('xml_cdr')) {
 
 					//last check
 						 if (!isset($record_name) || is_null ($record_name) || (strlen($record_name) == 0)) {
-							$bridge_uuid = urldecode($xml->variables->bridge_uuid);
+							$bridge_uuid = urldecode($xml->variables->bridge_uuid) ?: $last_bridge ;
 							$path = $_SESSION['switch']['recordings']['dir'].'/'.$domain_name.'/archive/'.$start_year.'/'.$start_month.'/'.$start_day;
 							if (file_exists($path.'/'.$bridge_uuid.'.wav')) {
 								$record_path = $path;
@@ -837,7 +849,6 @@ if (!class_exists('xml_cdr')) {
 							$tmp_dir = $_SESSION['switch']['log']['dir'].'/xml_cdr/failed/';
 							if(!file_exists($tmp_dir)) {
 								mkdir($tmp_dir, 0770, true);
-								
 							}
 							if ($_SESSION['cdr']['format']['text'] == "xml") {
 								$tmp_file = $uuid.'.xml';
@@ -1069,12 +1080,12 @@ if (!class_exists('xml_cdr')) {
 						$parameters['start_stamp_end'] = $this->start_stamp_end.':59.999 '.$time_zone;
 					}
 					else {
-						if (strlen($this->start_stamp_begin) > 0) { 
-							$sql_date_range = "and start_stamp >= :start_stamp_begin::timestamptz \n"; 
+						if (strlen($this->start_stamp_begin) > 0) {
+							$sql_date_range = "and start_stamp >= :start_stamp_begin::timestamptz \n";
 							$parameters['start_stamp_begin'] = $this->start_stamp_begin.':00.000 '.$time_zone;
 						}
-						if (strlen($this->start_stamp_end) > 0) { 
-							$sql_date_range .= "and start_stamp <= :start_stamp_end::timestamptz \n"; 
+						if (strlen($this->start_stamp_end) > 0) {
+							$sql_date_range .= "and start_stamp <= :start_stamp_end::timestamptz \n";
 							$parameters['start_stamp_end'] = $this->start_stamp_end.':59.999 '.$time_zone;
 						}
 					}
@@ -1137,7 +1148,7 @@ if (!class_exists('xml_cdr')) {
  				if ($this->include_internal) {
 					$sql .= " and (direction = 'inbound' or direction = 'local') \n";
 				}
-				else { 
+				else {
 					$sql .= "and direction = 'inbound' \n";
 				}
 				$sql .= ") \n";
@@ -1425,9 +1436,7 @@ if (!class_exists('xml_cdr')) {
 		 * delete records
 		 */
 		public function delete($records) {
-			if (!permission_exists($this->permission_prefix.'delete')) {
-				return;
-			}
+			if (permission_exists($this->permission_prefix.'delete')) {
 
 			//add multi-lingual support
 			$language = new text;
