@@ -353,7 +353,7 @@
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "3d847335-be0a-4130-9c38-0f1d906f3eea";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "devices";
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "profile_add_rows";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "profile_key_add_rows";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "10";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
@@ -361,7 +361,7 @@
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "53ccbe30-0a40-46af-a31e-12899d6c8e05";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "devices";
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "profile_edit_rows";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "profile_key_edit_rows";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "3";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
