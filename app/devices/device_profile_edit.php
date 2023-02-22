@@ -308,20 +308,30 @@
 	}
 
 //add an empty row
-	$x = is_array($device_profile_keys) ? count($device_profile_keys) : 0;
-	$device_profile_keys[$x]['domain_uuid'] = $domain_uuid;
-	$device_profile_keys[$x]['device_profile_uuid'] = $device_profile_uuid;
-	$device_profile_keys[$x]['device_profile_key_uuid'] = '';
-	$device_profile_keys[$x]['profile_key_category'] = '';
-	$device_profile_keys[$x]['profile_key_id'] = '';
-	$device_profile_keys[$x]['profile_key_vendor'] = '';
-	$device_profile_keys[$x]['profile_key_type'] = '';
-	$device_profile_keys[$x]['profile_key_line'] = '';
-	$device_profile_keys[$x]['profile_key_value'] = '';
-	$device_profile_keys[$x]['profile_key_extension'] = '';
-	$device_profile_keys[$x]['profile_key_protected'] = '';
-	$device_profile_keys[$x]['profile_key_label'] = '';
-	$device_profile_keys[$x]['profile_key_icon'] = '';
+	if (!is_array($device_profile_keys) || count($device_profile_keys) == 0) {
+		$rows = $_SESSION['devices']['profile_add_rows']['numeric'];
+		$id = 0;
+	}
+	if (is_array($device_profile_keys) && count($device_profile_keys) > 0) {
+		$rows = $_SESSION['devices']['profile_edit_rows']['numeric'];
+		$id = count($device_profile_keys)+1;
+	}
+	for ($x = 0; $x < $rows; $x++) {
+		$device_profile_keys[$id]['domain_uuid'] = $domain_uuid;
+		$device_profile_keys[$id]['device_profile_uuid'] = $device_profile_uuid;
+		$device_profile_keys[$id]['device_profile_key_uuid'] = '';
+		$device_profile_keys[$id]['profile_key_category'] = '';
+		$device_profile_keys[$id]['profile_key_id'] = '';
+		$device_profile_keys[$id]['profile_key_vendor'] = '';
+		$device_profile_keys[$id]['profile_key_type'] = '';
+		$device_profile_keys[$id]['profile_key_line'] = '';
+		$device_profile_keys[$id]['profile_key_value'] = '';
+		$device_profile_keys[$id]['profile_key_extension'] = '';
+		$device_profile_keys[$id]['profile_key_protected'] = '';
+		$device_profile_keys[$id]['profile_key_label'] = '';
+		$device_profile_keys[$id]['profile_key_icon'] = '';
+		$id++;
+	}
 
 //get the child data
 	if (strlen($device_profile_uuid) > 0) {
