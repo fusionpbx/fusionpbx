@@ -1437,6 +1437,8 @@ if (!class_exists('xml_cdr')) {
 		 */
 		public function delete($records) {
 			if (permission_exists($this->permission_prefix.'delete')) {
+				return false;
+			}
 
 			//add multi-lingual support
 			$language = new text;
