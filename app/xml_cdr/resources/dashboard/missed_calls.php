@@ -6,9 +6,9 @@
 
 //includes files
 	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
 
 //check permisions
-	require_once "resources/check_auth.php";
 	if (permission_exists('xml_cdr_view')) {
 		//access granted
 	}
@@ -21,8 +21,7 @@
 	$language = new text;
 	$text = $language->get($_SESSION['domain']['language']['code'], 'core/user_settings');
 
-//missed calls
-	echo "<div class='hud_box'>\n";
+//create assigned extensions array
 	if (is_array($_SESSION['user']['extension'])) {
 		foreach ($_SESSION['user']['extension'] as $assigned_extension) {
 			$assigned_extensions[$assigned_extension['extension_uuid']] = $assigned_extension['user'];
@@ -33,6 +32,7 @@
 //if also viewing system status, show more recent calls (more room avaialble)
 	$missed_limit = (is_array($selected_blocks) && in_array('counts', $selected_blocks)) ? 10 : 5;
 
+//get the missed calls from call detail records
 	$sql =	"select \n";
 	$sql .=	"	direction, \n";
 	$sql .=	"	start_stamp, \n";
@@ -68,17 +68,17 @@
 	$sql .=	"order by \n";
 	$sql .=	"start_epoch desc \n";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	//echo $sql;
-	//view_array($parameters);
 	if (!isset($database)) { $database = new database; }
 	$result = $database->select($sql, $parameters, 'all');
-
 	$num_rows = is_array($result) ? sizeof($result) : 0;
 
+//define row styles
 	$c = 0;
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
 
+//missed calls
+	echo "<div class='hud_box'>\n";
 
 //add doughnut chart
 	?>
@@ -99,7 +99,7 @@
 							'<?php echo $_SESSION['dashboard']['missed_calls_chart_sub_background_color']['text']; ?>'
 						],
 						borderColor: '<?php echo $_SESSION['dashboard']['missed_calls_chart_border_color']['text']; ?>',
-						borderWidth: '<?php echo $_SESSION['dashboard']['missed_calls_chart_border_Width']['text']; ?>',
+						borderWidth: '<?php echo $_SESSION['dashboard']['missed_calls_chart_border_width']['text']; ?>',
 						cutout: chart_cutout
 					}]
 				},
@@ -143,7 +143,7 @@
 			file_exists($theme_image_path."icon_cdr_local_cancelled.png")
 			) ? true : false;
 
-		foreach($result as $index => $row) {
+		foreach ($result as $index => $row) {
 			if ($index + 1 > $missed_limit) { break; } //only show limit
 			$tmp_year = date("Y", strtotime($row['start_stamp']));
 			$tmp_month = date("M", strtotime($row['start_stamp']));
