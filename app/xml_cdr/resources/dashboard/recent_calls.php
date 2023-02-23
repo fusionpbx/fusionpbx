@@ -6,9 +6,9 @@
 
 //includes files
 	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
 
 //check permisions
-	require_once "resources/check_auth.php";
 	if (permission_exists('xml_cdr_view')) {
 		//access granted
 	}
@@ -27,6 +27,7 @@
 			$assigned_extensions[$assigned_extension['extension_uuid']] = $assigned_extension['user'];
 		}
 	}
+	unset($assigned_extension);
 
 //if also viewing system status, show more recent calls (more room avaialble)
 	$recent_limit = (is_array($selected_blocks) && in_array('counts', $selected_blocks)) ? 10 : 5;
@@ -96,8 +97,10 @@
 				data: {
 					datasets: [{
 						data: ['<?php echo $num_rows; ?>', 0.00001],
-						backgroundColor: ['<?php echo $_SESSION['dashboard']['recent_calls_chart_main_background_color']['text']; ?>',
-						'<?php echo $_SESSION['dashboard']['missed_calls_chart_sub_background_color']['text']; ?>'],
+						backgroundColor: [
+							'<?php echo $_SESSION['dashboard']['recent_calls_chart_main_background_color']['text']; ?>',
+							'<?php echo $_SESSION['dashboard']['recent_calls_chart_sub_background_color']['text']; ?>'
+						],
 						borderColor: '<?php echo $_SESSION['dashboard']['recent_calls_chart_border_color']['text']; ?>',
 						borderWidth: '<?php echo $_SESSION['dashboard']['recent_calls_chart_border_width']['text']; ?>',
 						cutout: chart_cutout
@@ -150,7 +153,7 @@
 			file_exists($theme_image_path."icon_cdr_local_failed.png")
 			) ? true : false;
 
-		foreach($result as $index => $row) {
+		foreach ($result as $index => $row) {
 			if ($index + 1 > $recent_limit) { break; } //only show limit
 			$tmp_year = date("Y", strtotime($row['start_stamp']));
 			$tmp_month = date("M", strtotime($row['start_stamp']));
