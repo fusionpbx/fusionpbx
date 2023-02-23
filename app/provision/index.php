@@ -173,6 +173,11 @@
 			$database = new database;
 			$domain_uuid = $database->select($sql, $parameters, 'column');
 			unset($sql, $parameters);
+
+			// if the session domain doesn't match the host domain, don't allow provisioning to continue
+			if ($_SESSION['domain_uuid'] != $domain_uuid) {
+				http_error('404');
+			}
 	}
 
 //get the default settings
