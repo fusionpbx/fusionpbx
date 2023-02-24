@@ -341,7 +341,11 @@
 	}
 
 	if (strlen($extension_uuid) > 0 && is_uuid($extension_uuid)) {
-		$sql .= "and e.extension_uuid = :extension_uuid \n";
+		$sql .= "and (e.extension_uuid = :extension_uuid \n";
+		$sql .= "or caller_id_number = \n";
+		$sql .= " (SELECT COALESCE(effective_caller_id_number,number_alias,extension) \n";
+		$sql .= "  FROM v_extensions WHERE extension_uuid = :extension_uuid) \n";
+		$sql .= ") \n";
 		$parameters['extension_uuid'] = $extension_uuid;
 	}
 	if (strlen($caller_destination) > 0) {
