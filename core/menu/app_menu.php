@@ -35,7 +35,7 @@
 	$apps[$x]['menu'][$y]['title']['el-gr'] = "Αρχική";
 	$apps[$x]['menu'][$y]['title']['es-cl'] = "Inicio";
 	$apps[$x]['menu'][$y]['title']['es-mx'] = "Inicio";
-	$apps[$x]['menu'][$y]['title']['fr-ca'] = "Acceuil";
+	$apps[$x]['menu'][$y]['title']['fr-ca'] = "Accueil";
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Maison";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Home";

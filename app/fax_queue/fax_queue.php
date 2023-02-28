@@ -53,6 +53,11 @@
 		$search = strtolower($_REQUEST["search"]);
 	}
 
+//get the fax_queue item checked
+	if (isset($_REQUEST['fax_queue'])) {
+		$fax_queue = $_REQUEST['fax_queue'];
+	}
+
 //process the http post data by action
 	if ($action != '' && is_array($fax_queue) && @sizeof($fax_queue) != 0) {
 
