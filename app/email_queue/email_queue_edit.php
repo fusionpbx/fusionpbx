@@ -263,7 +263,7 @@
 	echo "	".$text['label-email_body']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='email_body' maxlength='255' value='".escape($email_body)."'>\n";
+	echo "	<textarea class='formfld' style='width: 450px; height: 100px;' name='email_body'>".$email_body."</textarea>\n";
 	echo "<br />\n";
 	echo $text['description-email_body']."\n";
 	echo "</td>\n";
