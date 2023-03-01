@@ -382,7 +382,7 @@
 							}
 
 						//update call center queue record templates
-							if (file_exists($_SERVER["PROJECT_ROOT"]."/app/call_center/app_config.php")) {
+							if (file_exists($_SERVER["PROJECT_ROOT"]."/app/call_centers/app_config.php")) {
 								$sql = "update v_call_center_queues set ";
 								$sql .= "queue_record_template = replace(queue_record_template, :domain_name_old, :domain_name_new) ";
 								$sql .= "where domain_uuid = :domain_uuid ";
@@ -395,7 +395,7 @@
 							}
 
 						//update call center agent contacts
-							if (file_exists($_SERVER["PROJECT_ROOT"]."/app/call_center/app_config.php")) {
+							if (file_exists($_SERVER["PROJECT_ROOT"]."/app/call_centers/app_config.php")) {
 								$sql = "update v_call_center_agents set ";
 								$sql .= "agent_contact = replace(agent_contact, :domain_name_old, :domain_name_new) ";
 								$sql .= "where domain_uuid = :domain_uuid ";
