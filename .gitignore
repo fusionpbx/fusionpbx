@@ -19,3 +19,4 @@ app/device_logs/
 app/replication/
 app/applications/
 app/call_center_notify/
+app/dialplan_tools/
