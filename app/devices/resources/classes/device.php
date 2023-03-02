@@ -126,11 +126,11 @@ include "root.php";
 					if (preg_replace('/^.*?(aastra).*$/i', '$1', $agent) == "aastra") {
 						return "aastra";
 					}
-					if (preg_replace('/^.*?(cisco).*$/i', '$1', $agent) == "cisco") {
-						return "cisco";
-					}
 					if (preg_replace('/^.*?(cisco\/spa).*$/i', '$1', $agent) == "cisco/spa") {
 						return "cisco-spa";
+					}
+					if (preg_replace('/^.*?(cisco).*$/i', '$1', $agent) == "cisco") {
+						return "cisco";
 					}
 					if (preg_replace('/^.*?(grandstream).*$/i', '$1', $agent) == "grandstream") {
 						return "grandstream";
