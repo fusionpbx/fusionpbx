@@ -30,7 +30,7 @@
 	outbound_caller_id_number = session:getVariable("outbound_caller_id_number");
 
 --includes
-	local cache = require"resources.functions.cache"
+	local cache = require "resources.functions.cache"
 
 --include json library
 	local json
