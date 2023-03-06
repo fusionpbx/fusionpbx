@@ -153,6 +153,9 @@
 			if ($key == 'database_password') {
 				$_SESSION['install'][$key] = $value;
 			}
+			if ($key == 'database_type') {
+			    $_SESSION['install'][$key] = $value;
+			}
 		}
 		if ($_REQUEST["step"] == "install") {
 			//show debug information
@@ -184,7 +187,7 @@
 			set_include_path($conf['document.root']);
 
 			//add the database schema
-			$output = shell_exec('cd '.$_SERVER["DOCUMENT_ROOT"].' && php /var/www/fusionpbx/core/upgrade/upgrade_schema.php');
+			$output = shell_exec('cd '.$_SERVER["DOCUMENT_ROOT"].' && php core/upgrade/upgrade_schema.php');
 
 			//includes - this includes the config.php
 			require_once "resources/require.php";
@@ -238,7 +241,7 @@
 			$_SESSION['domain_name'] = $domain_name;
 
 			//app defaults
-			$output = shell_exec('cd '.$_SERVER["DOCUMENT_ROOT"].' && php /var/www/fusionpbx/core/upgrade/upgrade_domains.php');
+			$output = shell_exec('cd '.$_SERVER["DOCUMENT_ROOT"].' && php core/upgrade/upgrade_domains.php');
 
 			//prepare the user settings
 			$admin_username = $_SESSION['install']['admin_username'];
@@ -336,7 +339,7 @@
 			}
 
 			#app defaults
-			$output = shell_exec('cd '.$_SERVER["DOCUMENT_ROOT"].' && php /var/www/fusionpbx/core/upgrade/upgrade_domains.php');
+			$output = shell_exec('cd '.$_SERVER["DOCUMENT_ROOT"].' && php core/upgrade/upgrade_domains.php');
 
 			//install completed - prompt the user to login
 			header("Location: /logout.php");
@@ -378,6 +381,7 @@
 	$view->assign("database_port", "5432");
 	$view->assign("database_name", "fusionpbx");
 	$view->assign("database_username", "fusionpbx");
+	$view->assign("database_password", "fusionpbx");
 
 //add translations
 	foreach($text as $key => $value) {
