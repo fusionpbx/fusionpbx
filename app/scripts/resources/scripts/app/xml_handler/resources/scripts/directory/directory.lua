@@ -404,7 +404,7 @@
 												if (profile == 'user_not_registered') then
 													profile = 'internal';
 												end
-												dial_string = "{sip_invite_domain=" .. domain_name .. ",presence_id=" .. presence_id .."}sofia/" .. profile .. "/" .. destination .. ";fs_path=sip:" .. proxy;
+												dial_string = "{sip_h_X-context=" .. domain_name .. ",sip_invite_domain=" .. domain_name .. ",presence_id=" .. presence_id .."}sofia/" .. profile .. "/" .. destination .. ";fs_path=sip:" .. proxy;
 												--freeswitch.consoleLog("notice", "[xml_handler][directory] dial_string " .. dial_string .. "\n");
 											end
 										else
