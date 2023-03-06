@@ -579,8 +579,8 @@
 		}
 		else {
 			$sql .= " limit :limit offset :offset \n";
-			$parameters['limit'] = $rows_per_page;
-			$parameters['offset'] = $offset;
+			$parameters['limit'] = intval($rows_per_page);
+			$parameters['offset'] = intval($offset);
 		}
 	}
 	$sql = str_replace("  ", " ", $sql);
