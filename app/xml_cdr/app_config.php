@@ -659,7 +659,9 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "call_center_queue_uuid";
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = "uuid";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "char(36)";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Queue uuid";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "cc_side";
