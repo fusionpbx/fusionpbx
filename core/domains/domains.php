@@ -22,6 +22,7 @@
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
+	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 
 //set the include path
@@ -169,12 +170,26 @@
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = "select domain_uuid, domain_name, cast(domain_enabled as text), domain_description ";
-	$sql .= "from v_domains ";
+	$sql = "WITH RECURSIVE children AS (
+	SELECT d.domain_uuid, d.domain_parent_uuid, d.domain_name, ".($db_type == 'pgsql'?"cast(d.domain_enabled as text)":"d.domain_enabled").", d.domain_description, '' as parent_domain_name, 1 as depth, domain_name as path, (select count(*) from v_domains d1 where d1.domain_parent_uuid = d.domain_uuid) as kids
+		FROM v_domains d ";
+	$sql .= "WHERE ";
+	if (!if_group("superadmin")){
+		$sql .= "domain_uuid = :domain_uuid ";
+		$parameters['domain_uuid'] = $_SESSION['user']['domain_uuid'];
+	}
+	else {
+		$sql .= "d.domain_parent_uuid IS null OR NOT exists (select 1 from v_domains t1 where d.domain_parent_uuid = t1.domain_uuid) ";
+	}
+
+	$sql .= "UNION
+	SELECT tp.domain_uuid, tp.domain_parent_uuid, tp.domain_name, ".($db_type == 'pgsql'?"cast(tp.domain_enabled as text)":"tp.domain_enabled").", tp.domain_description, c.domain_name as parent_domain_name, depth + 1, CONCAT(path,';',tp.domain_name), (select count(*) from v_domains d1 where d1.domain_parent_uuid = tp.domain_uuid) as kids FROM v_domains tp
+		JOIN children c ON tp.domain_parent_uuid = c.domain_uuid ) SELECT * FROM children ";
+
 	if (isset($sql_search)) {
 		$sql .= "where ".$sql_search;
 	}
-	$sql .= order_by($order_by, $order, 'domain_name', 'asc');
+	$sql .= 'order by path asc, domain_name asc ';
 	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;
 	$domains = $database->select($sql, $parameters, 'all');
@@ -190,7 +205,7 @@
 
 //show the content
 	echo "<div class='action_bar' id='action_bar'>\n";
-	echo "	<div class='heading'><b>".$text['title-domains']." (".$num_rows.")</b></div>\n";
+	echo "	<div class='heading'><b>".$text['title-domains']."</b></div>\n";
 	echo "	<div class='actions'>\n";
 	if (permission_exists('domain_add')) {
 		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'id'=>'btn_add','link'=>'domain_edit.php']);
@@ -254,20 +269,32 @@
 			}
 			echo "<tr class='list-row' href='".$list_row_url."'>\n";
 			if (permission_exists('domain_edit') || permission_exists('domain_delete')) {
+				if ($row['kids'] > 0){
+					$check_disabled = "disabled='true' ";
+				}
+				else{
+					$check_disabled = '';
+				}
 				echo "	<td class='checkbox'>\n";
-				echo "		<input type='checkbox' name='domains[$x][checked]' id='checkbox_".$x."' value='true' onclick=\"checkbox_on_change(this); if (!this.checked) { document.getElementById('checkbox_all').checked = false; }\">\n";
+				echo " 		<input type='checkbox' name='domains[$x][checked]' id='checkbox_".$x."' value='true' onclick=\"checkbox_on_change(this); if (!this.checked) { document.getElementById('checkbox_all').checked = false; }\" $check_disabled>\n";
 				echo "		<input type='hidden' name='domains[$x][uuid]' value='".escape($row['domain_uuid'])."' />\n";
+				echo "		<input type='hidden' name='domains[$x][kids]' value='".escape($row['kids'])."' />\n";
 				echo "	</td>\n";
 			}
 			if ($_GET['show'] == 'all' && permission_exists('domain_all')) {
 				echo "	<td>".escape($_SESSION['domains'][$row['domain_uuid']]['domain_name'])."</td>\n";
 			}
 			echo "	<td>\n";
+			$ident = str_repeat('-',$row['depth'] - 1);
 			if (permission_exists('domain_edit')) {
-				echo "	<a href='".$list_row_url."' title=\"".$text['button-edit']."\">".escape($row['domain_name'])."</a>\n";
+				echo "  <a href='".$list_row_url."' title=\"".$text['button-edit']."\">".$ident.escape($row['domain_name'])."</a>\n";
 			}
 			else {
-				echo "	".escape($row['domain_name']);
+				echo "  ".$ident.escape($row['domain_name']);
+			}
+			
+			if ($row['parent_uuid']){
+				echo ' <em>'.$text['description-child-of'].' '.$domain['parent_name'].'</em>';
 			}
 			echo "	</td>\n";
 			echo "	<td class='no-link center'>\n";
