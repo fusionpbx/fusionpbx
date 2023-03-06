@@ -1,0 +1,11 @@
+<context name="public">
+        <extension name="cluster" continue="false" app_uuid="23d198e5-7a8e-4af7-b573-2d166c1c24ff" global="true" order="998">
+                <condition field="context" expression="public"/>
+                <condition field="${acl(${network_addr} domains)}" expression="true"/>
+                <condition field="destination_number" expression="(^[\w\d]{2,7}$)">
+                        <action application="export" data="call_direction=inbound" inline="true"/>
+                        <action application="set" data="domain_name=${sip_h_X-context}" inline="true"/>
+                        <action application="transfer" data="$1 XML ${sip_h_X-context}"/>
+                </condition>
+        </extension>  
+</context>
