@@ -158,7 +158,7 @@
 		$sql .= " 	or lower(dialplan_enabled) like :search ";
 		$sql .= " 	or lower(dialplan_description) like :search ";
 		if (is_numeric($search)) {
-			$sql_search .= " 	or dialplan_order = :search_numeric ";
+			$sql .= " 	or dialplan_order = :search_numeric ";
 			$parameters['search_numeric'] = $search;
 		}
 		$sql .= ") ";
@@ -218,7 +218,7 @@
 		$sql .= " 	or lower(dialplan_enabled) like :search ";
 		$sql .= " 	or lower(dialplan_description) like :search ";
 		if (is_numeric($search)) {
-			$sql_search .= " 	or dialplan_order = :search_numeric ";
+			$sql .= " 	or dialplan_order = :search_numeric ";
 			$parameters['search_numeric'] = $search;
 		}
 		$sql .= ") ";
