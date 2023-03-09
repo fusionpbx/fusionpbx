@@ -77,7 +77,9 @@
 	require_once "resources/php.php";
 	require_once "resources/functions.php";
 	if (is_array($conf) && count($conf) > 0) {
-		require "resources/pdo.php";
+		if(!defined('STDIN')) {
+			require "resources/pdo.php";
+		}
 		require_once "resources/cidr.php";
 		if (file_exists($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/resources/switch.php")) {
 			require_once "resources/switch.php";
