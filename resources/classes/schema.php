@@ -577,27 +577,32 @@ if (!class_exists('schema')) {
 									}
 								//check if the column exists
 									foreach ($row['fields'] as $z => $field) {
-										if ($field['deprecated'] == "true") {
-											//skip this field
+										if ($apps[$x]['db'][$y]['exists'] == 'false'){
+											$apps[$x]['db'][$y]['fields'][$z]['exists'] = 'false';
 										}
-										else {
-											if (is_array($field['name'])) {
-												$field_name = $field['name']['text'];
+										else{
+											if ($field['deprecated'] == "true") {
+												//skip this field
 											}
 											else {
-												$field_name = $field['name'];
-											}
-											if (strlen($field_name) > 0) {
-												if ($this->db_column_exists ($db_type, $db_name, $table_name, $field_name)) {
-													//found
-													$apps[$x]['db'][$y]['fields'][$z]['exists'] = 'true';
+												if (is_array($field['name'])) {
+													$field_name = $field['name']['text'];
 												}
 												else {
-													//not found
-													$apps[$x]['db'][$y]['fields'][$z]['exists'] = 'false';
+													$field_name = $field['name'];
 												}
+												if (strlen($field_name) > 0) {
+													if ($this->db_column_exists ($db_type, $db_name, $table_name, $field_name)) {
+														//found
+														$apps[$x]['db'][$y]['fields'][$z]['exists'] = 'true';
+													}
+													else {
+														//not found
+														$apps[$x]['db'][$y]['fields'][$z]['exists'] = 'false';
+													}
+												}
+												unset($field_name);
 											}
-											unset($field_name);
 										}
 									}
 								unset($table_name);
