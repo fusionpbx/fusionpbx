@@ -60,11 +60,11 @@
 		//set the title and format
 		$document['title'] = $text['title-upgrade_schema'];
 		$format = 'html'; //html, text
-	}
 
-//add multi-lingual support
-	$language = new text;
-	$text = $language->get();
+	//add multi-lingual support
+		$language = new text;
+		$text = $language->get();
+	}
 
 //get the database schema put it into an array then compare and update the database as needed.
 	require_once "resources/classes/schema.php";
