@@ -74,7 +74,7 @@ if (!class_exists('install')) {
 				$php_dir = dirname(PHP_BINARY);
 				$phpcache_location = '/var/cache/fusionpbx';
 			}
-				if (stristr(PHP_OS, 'WIN')) {
+			if (stristr(PHP_OS, 'WIN')) {
 				$config_path = $_SERVER['DOCUMENT_ROOT'].'\resources';
 				$config_file = $config_path.'\config.conf';
 				$document_root = $_SERVER['DOCUMENT_ROOT'];
