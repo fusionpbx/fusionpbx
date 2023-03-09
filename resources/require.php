@@ -43,7 +43,7 @@
 //set the error reporting
 	if (isset($conf['error.reporting'])) {
 		ini_set('display_errors', '1');
-		error_reporting($conf['error.reporting']);
+		error_reporting(eval($conf['error.reporting']));
 	}
 
 //get the database connection settings
