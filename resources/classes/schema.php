@@ -578,9 +578,9 @@ if (!class_exists('schema')) {
 								//check if the column exists
 									foreach ($row['fields'] as $z => $field) {
 										if ($apps[$x]['db'][$y]['exists'] == 'false'){
-+                                                                                        $apps[$x]['db'][$y]['fields'][$z]['exists'] = 'false';
-+                                                                                }
-+                                                                                else{
+											$apps[$x]['db'][$y]['fields'][$z]['exists'] = 'false';
+											}
+										else{
 											if ($field['deprecated'] == "true") {
 												//skip this field
 											}
