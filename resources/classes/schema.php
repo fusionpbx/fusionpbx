@@ -230,7 +230,7 @@ if (!class_exists('schema')) {
 			}
 
 		//database table exists
-			private function db_table_exists ($db_type, $db_name, $table_name) {
+			public function db_table_exists ($db_type, $db_name, $table_name) {
 				$sql = "";
 				if ($db_type == "sqlite") {
 					$sql .= "SELECT * FROM sqlite_master WHERE type='table' and name='$table_name' ";
