@@ -89,6 +89,7 @@ if (!class_exists('install')) {
 				$php_dir = dirname(PHP_BINARY);
 				$cache_location = dirname($_SERVER['DOCUMENT_ROOT']).'\cache\fusionpbx';
 			}
+
 			//end the script if the config path is not set
 			if (!isset($config_path)) {
 				$this->message = "Config file path not found\n";
