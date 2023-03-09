@@ -57,7 +57,7 @@ if (!class_exists('install')) {
 				$voicemail_dir = '/var/lib/freeswitch/storage/voicemail';
 				$scripts_dir = '/usr/share/freeswitch/scripts';
 				$php_dir = dirname(PHP_BINARY);
-				$phpcache_location = '/var/cache/fusionpbx';
+				$cache_location = '/var/cache/fusionpbx';
 			}
 			if (stristr(PHP_OS, 'Linux')) {
 				$config_path = '/etc/fusionpbx/';
