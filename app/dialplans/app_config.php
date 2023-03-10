@@ -266,7 +266,9 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "dialplan_detail_enabled";
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = "boolean";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'boolean';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'boolean';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "insert_date";
