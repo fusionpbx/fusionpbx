@@ -173,7 +173,7 @@
 		<!-- Can be 'true' or 'contact' -->
 		<param name="multiple-registrations" value="contact" enabled="false"/>
 		<!--set to 'greedy' if you want your codec list to take precedence -->
-		<param name="inbound-codec-negotiation" value="generous"/>
+		<param name="inbound-codec-negotiation" value="greedy"/>
 		<!-- if you want to send any special bind params of your own -->
 		<param name="bind-params" value="transport=udp" enabled="false"/>
 		<param name="unregister-on-options-fail" value="true" enabled="false"/>
@@ -229,7 +229,7 @@
 		<param name="rtp-rewrite-timestamps" value="true" enabled="false"/>
 		<param name="pass-rfc2833" value="true" enabled="false"/>
 		<!--If you have ODBC support and a working dsn you can use it instead of SQLite-->
-		<param name="odbc-dsn" value="$${dsn}" enabled="false"/>
+		<param name="odbc-dsn" value="$${dsn}" enabled="true"/>
 
 		<!--Uncomment to set all inbound calls to no media mode-->
 		<param name="inbound-bypass-media" value="true" enabled="false"/>
