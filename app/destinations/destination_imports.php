@@ -709,7 +709,7 @@
 			//loop through user columns
 			$x = 0;
 			foreach ($line_fields as $line_field) {
-				$line_field = trim(escape(trim($line_field)), $enclosure);
+				$line_field = trim(trim($line_field), $enclosure);
 				echo "<tr>\n";
 				echo "	<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 				echo $line_field;
