@@ -54,12 +54,7 @@
 				$string = str_replace("'","''",$string);
 			}
 			if ($db_type == "mysql") {
-				if(function_exists('mysql_real_escape_string')){
-					$tmp_str = mysql_real_escape_string($string);
-				}
-				else {
-					$tmp_str = mysqli_real_escape_string($db, $string);
-				}
+				$tmp_str = mb_escape($string);
 				if (strlen($tmp_str)) {
 					$string = $tmp_str;
 				}
@@ -2189,4 +2184,16 @@ function number_pad($number,$n) {
 		}
 	}
 
+	if (!function_exists('mb_escape')) {
+                if (function_exists('mb_ereg_replace')) {
+                        function mb_escape($string) {
+                                return mb_ereg_replace('[\x00\x0A\x0D\x1A\x22\x25\x27\x5C\x5F]', '\\\0', $string);
+                        }
+                } 
+                else {
+                        function mb_escape($string) {
+                                return preg_replace('~[\x00\x0A\x0D\x1A\x22\x25\x27\x5C\x5F]~u', '\\\$0', $string);
+                        }
+                }
+        }
 ?>
