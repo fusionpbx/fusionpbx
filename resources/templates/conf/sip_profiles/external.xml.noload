@@ -109,7 +109,7 @@
 		<param name="minimum-session-expires" value="0" enabled="false"/>
 
 		<!--If you have ODBC support and a working dsn you can use it instead of SQLite-->
-		<param name="odbc-dsn" value="$${dsn}" enabled="false"/>
+		<param name="odbc-dsn" value="$${dsn}" enabled="true"/>
 
 		<param name="dtmf-type" value="rfc2833"/>
 		<param name="zrtp-passthru" value="true"/>
