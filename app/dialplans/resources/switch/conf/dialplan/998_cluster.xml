@@ -1,5 +1,5 @@
 <context name="public">
-        <extension name="cluster" continue="false" app_uuid="b1cd7509-5576-469a-892d-d0cfb66a4197" global="true" order="998">
+        <extension name="cluster" continue="false" app_uuid="c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4" global="true" order="998">
                 <condition field="context" expression="public"/>
                 <condition field="${acl(${network_addr} domains)}" expression="true"/>
                 <condition field="destination_number" expression="(^[\w\d]{2,7}$)">
