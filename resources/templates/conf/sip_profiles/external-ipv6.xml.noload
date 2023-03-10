@@ -110,7 +110,7 @@
 		<param name="minimum-session-expires" value="0" enabled="false"/>
 
 		<!--If you have ODBC support and a working dsn you can use it instead of SQLite-->
-		<param name="odbc-dsn" value="$${dsn}" enabled="false"/>
+		<param name="odbc-dsn" value="$${dsn}"/>
 
 		<!-- save session in the database for option to restore SIP UDP calls -->
 		<param name="track-calls" value="false"/>
