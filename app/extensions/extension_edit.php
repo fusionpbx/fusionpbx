@@ -565,6 +565,7 @@
 													$line_label = $_SESSION['provision']['line_label']['text'];
 													$line_label = str_replace("\${name}", $name, $line_label);
 													$line_label = str_replace("\${effective_caller_id_name}", $effective_caller_id_name, $line_label);
+													$line_label = str_replace("\${caller_id_name}", $effective_caller_id_name, $line_label);
 													$line_label = str_replace("\${first_name}", $directory_first_name, $line_label);
 													$line_label = str_replace("\${last_name}", $directory_last_name, $line_label);
 													$line_label = str_replace("\${user_id}", $extension, $line_label);
@@ -581,6 +582,7 @@
 													$line_display_name = $_SESSION['provision']['line_display_name']['text'];
 													$line_display_name = str_replace("\${name}", $name, $line_display_name);
 													$line_display_name = str_replace("\${effective_caller_id_name}", $effective_caller_id_name, $line_display_name);
+													$line_display_name = str_replace("\${caller_id_name}", $effective_caller_id_name, $line_display_name);
 													$line_display_name = str_replace("\${first_name}", $directory_first_name, $line_display_name);
 													$line_display_name = str_replace("\${last_name}", $directory_last_name, $line_display_name);
 													$line_display_name = str_replace("\${user_id}", $extension, $line_display_name);
