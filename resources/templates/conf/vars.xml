@@ -38,8 +38,8 @@
 
    <!-- Codecs -->
    <!-- G7221@32000h,G7221@16000h,G722,PCMU,PCMA,iLBC,GSM,H263,H264 -->
-   <X-PRE-PROCESS cmd="set" data="global_codec_prefs=G7221@32000h,G7221@16000h,G722,PCMU,PCMA" category="Codecs" enabled="true" uuid="38271682-cf61-40d3-a769-63617d933902"/>
-   <X-PRE-PROCESS cmd="set" data="outbound_codec_prefs=PCMU,PCMA" category="Codecs" enabled="true"  uuid="522f710e-66ff-4e4d-8164-0ee1ef31c600"/>
+   <X-PRE-PROCESS cmd="set" data="global_codec_prefs=G7221@32000h,G7221@16000h,G722,PCMU,PCMA,G729" category="Codecs" enabled="true" uuid="38271682-cf61-40d3-a769-63617d933902"/>
+   <X-PRE-PROCESS cmd="set" data="outbound_codec_prefs=G729,PCMU,PCMA" category="Codecs" enabled="true"  uuid="522f710e-66ff-4e4d-8164-0ee1ef31c600"/>
    <X-PRE-PROCESS cmd="set" data="media_mix_inbound_outbound_codecs=true" category="Codecs" enabled="true" uuid="76646fce-3ff0-4582-a377-0986ed330782"/>
 
    <!-- Defaults -->
