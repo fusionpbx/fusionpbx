@@ -53,7 +53,7 @@ if ($domains_processed == 1) {
 				$x = 0;
 				foreach ($variables['X-PRE-PROCESS'] as $variable) {
 					$var_category = $variable['@attributes']['category'];
-					$data = explode('=', $variable['@attributes']['data']);
+					$data = explode('=', $variable['@attributes']['data'], 2);
 					$var_name = $data[0];
 					$var_value = $data[1];
 					$var_command = $variable['@attributes']['cmd'];
