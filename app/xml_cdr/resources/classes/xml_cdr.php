@@ -620,7 +620,7 @@ if (!class_exists('xml_cdr')) {
 						}
 
 					//get the recording details
-						if (strlen($xml->variables->record_session) > 0) {
+						if (isset($xml->variables->record_path)) {
 							$record_path = urldecode($xml->variables->record_path);
 							$record_name = urldecode($xml->variables->record_name);
 							if (isset($xml->variables->record_seconds)) {
@@ -635,7 +635,7 @@ if (!class_exists('xml_cdr')) {
 							$record_name = basename(urldecode($xml->variables->last_arg));
 							$record_length = urldecode($xml->variables->record_seconds);
 						}
-						elseif (strlen($xml->variables->record_name) > 0) {
+						elseif (isset($xml->variables->record_name)) {
 							if (isset($xml->variables->record_path)) {
 								$record_path = urldecode($xml->variables->record_path);
 							}
@@ -671,7 +671,6 @@ if (!class_exists('xml_cdr')) {
 							$record_name = basename($conference_recording);
 							$record_length = urldecode($xml->variables->duration);
 						}
-
 						elseif (strlen($xml->variables->current_application_data) > 0) {
 							$commands = explode(",", urldecode($xml->variables->current_application_data));
 							foreach ($commands as $command) {
@@ -745,12 +744,16 @@ if (!class_exists('xml_cdr')) {
 						//echo "record_length: ".$record_length."\n";
 						//exit;
 
-					//add the call recording path name and length
-						if (isset($record_path) && isset($record_name) && file_exists($record_path.'/'.$record_name) && $record_length > 0) {
-							//add to the xml cdr table
+					//add the call record path, name and length to the database
+						if (isset($record_path) && isset($record_name) && file_exists($record_path.'/'.$record_name)) {
 							$this->array[$key]['record_path'] = $record_path;
 							$this->array[$key]['record_name'] = $record_name;
-							$this->array[$key]['record_length'] = $record_length;
+							if (isset($record_length)) {
+								$this->array[$key]['record_length'] = $record_length;
+							}
+							else {
+								$this->array[$key]['record_length'] = urldecode($xml->variables->duration);
+							}
 						}
 
 					//add to the call recordings table
