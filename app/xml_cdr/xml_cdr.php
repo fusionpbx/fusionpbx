@@ -686,6 +686,7 @@
 							}
 							else if ($row['direction'] == 'outbound') {
 								if ($row['answer_stamp'] != '' && $row['bridge_uuid'] != '') { $call_result = 'answered'; }
+								else if ($row['hangup_cause'] == 'NORMAL_CLEARING') { $call_result = 'answered'; }
 								else if ($row['answer_stamp'] == '' && $row['bridge_uuid'] != '') { $call_result = 'cancelled'; }
 								else { $call_result = 'failed'; }
 							}
