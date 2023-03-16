@@ -105,12 +105,12 @@
 					end);
 
 				--default/domain setting time zone
-					if (time_zone == nil) then
+					if (time_zone == nil or time_zone == '') then
 						time_zone = settings:get('domain', 'time_zone', 'name');
 					end
 
 				--default time zone
-					if (time_zone == nil) then
+					if (time_zone == nil or time_zone == '') then
 						time_zone = 'UTC';
 					end
 
