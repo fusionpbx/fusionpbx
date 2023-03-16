@@ -1562,20 +1562,5 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Options: 0-Name+Number, 1-Number+Name, 2-Name, 3-Number, 4-Full Contact, 5-Null";	
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "2a624b73-de8a-46e3-a73f-e7dc75054b87";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_label_content_concat";
-		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Causes Yealink Line 'Label' to concatenate with the 'Display Name' (Used to get both items to display on phone); 0=No Concatenate (Default), 1=Concatenate";	
-		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "099afcce-0239-4555-9ea8-a5cdfc4ef11d";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_blf_active_backlight";
-		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enables or disables the IP phone to turn on the backlight or stop the screen saver when the BLF/BLF list status changes; 0-Disabled, 1-Enabled (Default)";	
-		$y++;
+
 ?>
