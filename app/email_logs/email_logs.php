@@ -131,7 +131,7 @@
 			$sql = "select caller_id_name, caller_id_number, destination_number ";
 			$sql .= "from v_xml_cdr ";
 			$sql .= "where domain_uuid = :domain_uuid ";
-			$sql .= "and uuid = :uuid ";
+			$sql .= "and xml_cdr_uuid = :uuid ";
 			$parameters['domain_uuid'] = $domain_uuid;
 			$parameters['uuid'] = $row['call_uuid'];
 			$database = new database;
