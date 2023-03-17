@@ -4,5 +4,8 @@
 			<action application="export" data="origination_callee_id_name=${destination_number}" enabled="true"/>
 			<action application="set" data="operator=1000" inline="true" enabled="true"/>
 		</condition>
+		<condition field="${user_data ${destination_number}@${domain_name} var effective_caller_id_name}" expression="^.+$">
+			<action application="export" data="origination_callee_id_name=${user_data ${destination_number}@${domain_name} var effective_caller_id_name}"/>
+		</condition>
 	</extension>
 </context>
