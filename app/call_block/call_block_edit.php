@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -55,6 +55,7 @@
 
 //get http post variables and set them to php variables
 	if (count($_POST) > 0) {
+		//get the variables from the http post
 		$call_block_direction = $_POST["call_block_direction"];
 		$extension_uuid = $_POST["extension_uuid"];
 		$call_block_name = $_POST["call_block_name"];
@@ -62,10 +63,16 @@
 		$call_block_number = $_POST["call_block_number"];
 		$call_block_enabled = $_POST["call_block_enabled"] ?: 'false';
 		$call_block_description = $_POST["call_block_description"];
-		
+
+		//get the call block app and data
 		$action_array = explode(':', $_POST["call_block_action"]);
 		$call_block_app = $action_array[0];
 		$call_block_data = $action_array[1];
+		
+		//sanitize the data
+		$extension_uuid = preg_replace("#[^a-fA-F0-9./]#", "", $extension_uuid);
+		$call_block_country_code = preg_replace('#[^0-9./]#', '', $call_block_country_code);
+		$call_block_number = preg_replace('#[^0-9./]#', '', $call_block_number);
 	}
 
 //handle the http post
