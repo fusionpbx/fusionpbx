@@ -174,7 +174,8 @@
 		//check for all required data
 			$msg = '';
 			if (strlen($destination_type) == 0) { $msg .= $text['message-required']." ".$text['label-destination_type']."<br>\n"; }
-			if (strlen($destination_number) == 0 && $action == 'add') { $msg .= $text['message-required']." ".$text['label-destination_number']."<br>\n"; }
+			if (strlen($destination_prefix) == 0 && permission_exists('destination_prefix')) { $msg .= $text['message-required']." ".$text['label-destination_country_code']."<br>\n"; }
+			if (strlen($destination_number) == 0) { $msg .= $text['message-required']." ".$text['label-destination_number']."<br>\n"; }
 			if (strlen($destination_context) == 0) { $msg .= $text['message-required']." ".$text['label-destination_context']."<br>\n"; }
 			if (strlen($destination_enabled) == 0) { $msg .= $text['message-required']." ".$text['label-destination_enabled']."<br>\n"; }
 
@@ -1310,7 +1311,7 @@
 	//destination number
 	if (permission_exists('destination_prefix')) {
 		echo "<tr>\n";
-		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-destination_country_code']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
