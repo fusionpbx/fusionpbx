@@ -56,7 +56,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "fax_queue";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "retry_limit";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "3";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "5";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Number of tries to send before giving up.";
 		$y++;
