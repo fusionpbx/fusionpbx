@@ -19,19 +19,11 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//includes
-	include "root.php";
+//set the include path
+        $conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+        set_include_path(parse_ini_file($conf[0])['document.root']);
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
-
-//check permissions
-	if (permission_exists('var_add') || permission_exists('var_edit')) {
-		//access granted
-	}
-	else {
-		echo "access denied";
-		exit;
-	}
 
 	//synchronize the configuration
 		save_var_xml();
