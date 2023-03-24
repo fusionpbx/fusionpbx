@@ -254,7 +254,6 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "USA";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Sets the tone scheme on snom-phones. See https://service.snom.com/display/wiki/tone_scheme";
-========================================================
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "2f2e9958-ca83-11ed-afa1-0242ac120002";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
