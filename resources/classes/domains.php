@@ -430,7 +430,7 @@ if (!class_exists('domains')) {
 		 */
 		public function set() {
 
-			//get previous domains settings
+			//get previous domain settings
 				if (is_uuid($_SESSION["previous_domain_uuid"])) {
 					$sql = "select * from v_domain_settings ";
 					$sql .= "where domain_uuid = :previous_domain_uuid ";
@@ -441,9 +441,11 @@ if (!class_exists('domains')) {
 					$result = $database->select($sql, $parameters, 'all');
 					unset($sql, $parameters);
 
-				//unset previous domain settings
+					//unset previous domain settings
 					foreach ($result as $row) {
-						unset($_SESSION[$row['domain_setting_category']]);
+						if ($row['domain_setting_category'] != 'user') { //skip off-limit categories
+							unset($_SESSION[$row['domain_setting_category']][$row['domain_setting_subcategory']]);
+						}
 					}
 					unset($_SESSION["previous_domain_uuid"]);
 				}
@@ -454,12 +456,14 @@ if (!class_exists('domains')) {
 				$database = new database;
 				$result = $database->select($sql, null, 'all');
 				unset($sql, $parameters);
+
 				//unset all settings
 				foreach ($result as $row) {
 					if ($row['default_setting_category'] != 'user') { //skip off-limit categories
-						unset($_SESSION[$row['default_setting_category']]);
+						unset($_SESSION[$row['default_setting_category']][$row['default_setting_subcategory']]);
 					}
 				}
+
 				//set the enabled settings as a session
 				foreach ($result as $row) {
 					if ($row['default_setting_enabled'] == 'true') {
