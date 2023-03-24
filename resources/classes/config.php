@@ -106,6 +106,53 @@ class config {
 			return false;
 		}
 	}
+	
+       public function dsn($index = 0, $odbc = false){
+                $this->get();
+                $conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+                $data = parse_ini_file($conf[0]);
+                $string = '';
+                if ($odbc == false){
+                        switch ($data['database.'.$index.'.type']){
+                                case 'pgsql':
+                                        $string = 'pgsql://';
+                                        if (array_key_exists('database.'.$index.'.host', $data)){
+                                                $string .= 'host='.$data['database.'.$index.'.host'].' ';
+                                        }
+                                        if (array_key_exists('database.'.$index.'.hostaddr', $data)){
+                                                $string .= 'hostaddr='.$data['database.'.$index.'.hostaddr'].' ';
+                                        }
+                                        $string .= 'port='.$data['database.'.$index.'.port'].' ';
+                                        if (array_key_exists('database.'.$index.'.sslmode', $data)){
+                                                $string .= 'sslmode='.$data['database.'.$index.'.sslmode'].' ';
+                                        }
+                                        $string .= 'dbname='.$data['database.'.$index.'.name'].' ';
+                                        $string .= 'user='.$data['database.'.$index.'.username'].' ';
+                                        $string .= 'password='.$data['database.'.$index.'.password'].' ';
+                                        break;
+                                case 'mysql':
+                                        $string = 'mariadb://';
+                                        if (array_key_exists('database.'.$index.'.host', $data)){
+                                                $string .= 'Server='.$data['database.'.$index.'.host'].';';
+                                        }
+                                        if (array_key_exists('database.'.$index.'.hostaddr', $data)){
+                                                $string .= 'Server='.$data['database.'.$index.'.hostaddr'].';';
+                                        }
+                                        $string .= 'Port='.$data['database.'.$index.'.port'].';';
+                                        $string .= 'Database='.$data['database.'.$index.'.name'].';';
+                                        $string .= 'Uid='.$data['database.'.$index.'.username'].';';
+                                        $string .= 'Pwd='.$data['database.'.$index.'.password'];
+                                        break;
+                                case 'sqlite':
+                                        $string = 'sqlite://'.$data['database.'.$index.'.path'].'/'.$data['database.'.$index.'.name'].' ';
+                                        brea;
+                        }
+                }
+                else{
+                        $string = $data['database.'.$index.'.name'].':'.$data['database.'.$index.'.username'].':'.$data['database.'.$index.'.password'];
+                }
+                return $string;
+        }
 }
 /*
 $config = new config;
