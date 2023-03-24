@@ -364,6 +364,10 @@ function save_gateway_xml() {
 function save_var_xml() {
 	if (is_array($_SESSION['switch']['conf'])) {
 		global $config, $domain_uuid;
+		
+		$config = new config;
+                $dsn = $config->dsn(1, false);
+                $odbc_dsn = $config->dsn(1, true);
 
 		//open the vars.xml file
 		$fout = fopen($_SESSION['switch']['conf']['dir']."/vars.xml","w");
@@ -396,6 +400,8 @@ function save_var_xml() {
 					}
 					if (strlen($row['var_command']) == 0) { $row['var_command'] = 'set'; }
 					if ($row['var_category'] == 'Exec-Set') { $row['var_command'] = 'exec-set'; }
+					$row['var_value'] = preg_replace('/{dsn}/', $dsn, $row['var_value']);
+                                        $row['var_value'] = preg_replace('/{odbc-dsn}/', $odbc_dsn, $row['var_value']);
 					if (strlen($row['var_hostname']) == 0) {
 						$xml .= "<X-PRE-PROCESS cmd=\"".$row['var_command']."\" data=\"".$row['var_name']."=".$row['var_value']."\" />\n";
 					} elseif ($row['var_hostname'] == $hostname) {
