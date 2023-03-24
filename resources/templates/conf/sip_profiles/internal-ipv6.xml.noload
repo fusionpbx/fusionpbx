@@ -1,4 +1,4 @@
-<profile name="internal-ipv6">
+<profile name="internal-ipv6" enabled="false">
 	<!--
 		This is an example of a sofia profile setup to listen on IPv6.
 	-->
