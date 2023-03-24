@@ -29,7 +29,7 @@ if (!class_exists('schema')) {
 	class schema {
 
 		//define variables
-			public $db;
+			private $db;
 			public $apps;
 			public $db_type;
 			public $result;
@@ -37,13 +37,11 @@ if (!class_exists('schema')) {
 
 		//class constructor
 			public function __construct() {
-				//connect to the database if not connected
-				if (!$this->db) {
-					require_once "resources/classes/database.php";
-					$database = new database;
-					$database->connect();
-					$this->db = $database->db;
-				}
+				//connect to the database
+				require_once "resources/classes/database.php";
+				$database = new database;
+				$database->connect();
+				$this->db = $database->db;
 
 				//set the include path
 				$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
