@@ -37,6 +37,7 @@ if (!class_exists('schema')) {
 
 		//class constructor
 			public function __construct() {
+				//connect to the database
 				require_once "resources/classes/database.php";
 				$database = new database;
 				$database->connect();
