@@ -53,7 +53,7 @@
 		if (stristr(PHP_OS, 'Linux')) {
 			$config_path = '/etc/fusionpbx/';
 			$config_file = $config_path.'/config.conf';
-			$document_root = '/var/www/fusionpbx';
+			$document_root = '/var/www/CoolPBX';
 
 			$conf_dir = '/etc/freeswitch';
 			$sounds_dir = '/usr/share/freeswitch/sounds';
