@@ -1,4 +1,4 @@
-<profile name="external-ipv6">
+<profile name="external-ipv6" enabled="true">
 	<!-- http://wiki.freeswitch.org/wiki/Sofia_Configuration_Files -->
 	<!-- This profile is only for outbound registrations to providers -->
 
