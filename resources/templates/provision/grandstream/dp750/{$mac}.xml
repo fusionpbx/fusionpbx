@@ -12,6 +12,15 @@
 <!-- #  Profile 1  ## -->
 <!-- ################ -->
 
+<!-- # Enable DND Feature. 0 - No, 1 - Yes. Default is 1 -->
+<!-- # Number: 0, 1 -->
+<!-- # Mandatory -->
+{if isset($dnd)}
+<P8446>{$dnd}</P8446>
+{else}
+<P8446>1</P8446>
+{/if}
+
 <!-- ################################# -->
 <!-- #  Profile 1/General Settings  ## -->
 <!-- ################################# -->
@@ -2887,7 +2896,7 @@
 {if isset($grandstream_firmware_path) && isset($firmware_version)}
 <P192>{$grandstream_firmware_path}/dp750/{$firmware_version}</P192>
 {elseif isset($grandstream_firmware_path)}
-<P192>{$grandstream_firmware_path}/dp750</P192>
+{if isset($grandstream_dp750_use_standard_firmware_path)}<P192>{$grandstream_firmware_path}</P192>{else}<P192>{$grandstream_firmware_path}/dp750</P192>{/if}
 {else}
 <P192>{$domain_name}{$project_path}/app/provision</P192>
 {/if}
