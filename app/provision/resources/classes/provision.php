@@ -600,7 +600,8 @@
 										$device_firmware_version = $row["device_firmware_version"];
 										$device_user_uuid = $row["device_user_uuid"];
 										$device_location = strtolower($row["device_location"]);
-										$device_vendor = strtolower($row["device_vendor"]);
+										//Do not override vendor when hotdesking (alternate uuid)
+										//$device_vendor = strtolower($row["device_vendor"]);
 										$device_enabled = $row["device_enabled"];
 										//keep the original template
 										$device_description = $row["device_description"];
