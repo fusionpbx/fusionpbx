@@ -1,0 +1,437 @@
+<?xml version="1.0" encoding="utf-8"?>
+<settings>
+<call_settings>
+    <account>
+        {foreach $lines as $row}
+        <idx id="{$row.line_number}">
+            <block_anonymous_enable>0</block_anonymous_enable>
+            <outgoing_anonymous_enable>0</outgoing_anonymous_enable>
+            <dnd_enable>0</dnd_enable>
+            <call_fwd_always_enable>0</call_fwd_always_enable>
+            <call_fwd_always_target></call_fwd_always_target>
+            <call_fwd_busy_enable>0</call_fwd_busy_enable>
+            <call_fwd_busy_target></call_fwd_busy_target>
+            <cfna_enable>0</cfna_enable>
+            <cfna_target></cfna_target>
+            <cfna_delay>6</cfna_delay>
+        </idx>
+        {if $row@index eq 48}{break}{/if}
+        {/foreach}
+
+    </account>
+    <early_media_preferred>1</early_media_preferred>
+</call_settings>
+
+<cordless>
+    <autoreg_enable>0</autoreg_enable>
+    {foreach $lines as $row}
+    <idx id="1">
+        <ipei></ipei>
+        <pfk>
+            <idx id="1">
+                <feature>keyline</feature>
+                <account>1</account>
+                <value>1</value>
+            </idx>
+            <idx id="2">
+                <feature>keyline</feature>
+                <account>1</account>
+                <value>2</value>
+            </idx>
+            <idx id="3">
+                <feature>keyline</feature>
+                <account>1</account>
+                <value>3</value>
+            </idx>
+            <idx id="4">
+                <feature>keyline</feature>
+                <account>1</account>
+                <value>4</value>
+            </idx>
+            <up>
+                <feature>unassigned</feature>
+                <account>1</account>
+            </up>
+            <down>
+                <feature>unassigned</feature>
+                <account>1</account>
+            </down>
+            <left>
+                <feature>unassigned</feature>
+                <account>1</account>
+            </left>
+            <right>
+                <feature>unassigned</feature>
+                <account>1</account>
+            </right>
+            <softkey>
+                <idle>
+                    <idx id="1">
+                        <feature>unassigned</feature>
+                        <account>1</account>
+                    </idx>
+                    <idx id="2">
+                        <feature>unassigned</feature>
+                        <account>1</account>
+                    </idx>
+                    <idx id="3">
+                        <feature>unassigned</feature>
+                        <account>1</account>
+                    </idx>
+                    <idx id="4">
+                        <feature>unassigned</feature>
+                        <account>1</account>
+                    </idx>
+                </idle>
+            </softkey>
+        </pfk>
+        <default_account>1</default_account>
+        <device_name>Handset {$row@index}</device_name>
+    </idx>
+    {if $row@index eq 48}{break}{/if}
+    {/foreach}
+    <pin_code>0000</pin_code>
+    <statistics_enable>0</statistics_enable>
+    <statistics_timer>900</statistics_timer>
+    <statistics_post_url></statistics_post_url>
+    <statistics_post_timer>3600</statistics_post_timer>
+    <statistics_post_authentication_name></statistics_post_authentication_name>
+    <statistics_post_authentication_password></statistics_post_authentication_password>
+</cordless>
+<log>
+    <syslog_enable>0</syslog_enable>
+    <syslog_level>2</syslog_level>
+    <syslog_server_address></syslog_server_address>
+    <syslog_server_port>514</syslog_server_port>
+</log>
+
+<page_zone>
+    <group>
+        <idx id="1">
+            <name>Group 1</name>
+            <members></members>
+        </idx>
+        <idx id="2">
+            <name>Group 2</name>
+            <members></members>
+        </idx>
+        <idx id="3">
+            <name>Group 3</name>
+            <members></members>
+        </idx>
+        <idx id="4">
+            <name>Group 4</name>
+            <members></members>
+        </idx>
+        <idx id="5">
+            <name>Group 5</name>
+            <members></members>
+        </idx>
+        <idx id="6">
+            <name>Group 6</name>
+            <members></members>
+        </idx>
+    </group>
+</page_zone>
+
+<provisioning>
+    <bootup_check_enable>1</bootup_check_enable>
+    <crypto_enable>0</crypto_enable>
+    <crypto_passphrase></crypto_passphrase>
+    <dhcp_option_enable>1</dhcp_option_enable>
+    <dhcp_option_priority_1>66</dhcp_option_priority_1>
+    <dhcp_option_priority_2>159</dhcp_option_priority_2>
+    <dhcp_option_priority_3>160</dhcp_option_priority_3>
+    <firmware_url>{$snom_firmware_m500pro_base}</firmware_url>
+    <handset_firmware_url>{$snom_firmware_m500pro_handset}</handset_firmware_url>
+    <cordless_deskset_firmware_url>{$snom_firmware_m500pro_deskset}</cordless_deskset_firmware_url>
+    <fw_server_username></fw_server_username>
+    <fw_server_access_password></fw_server_access_password>
+    <resync_mode>config_and_firmware</resync_mode>
+    <resync_time>0</resync_time>
+    <server_address>{if isset($snom_provision_url)}{$snom_provision_url}{else}https://{$domain_name}{$project_path}/app/provision/index.php?mac={$mac}{/if}</server_address>
+    <server_username></server_username>
+    <server_access_password></server_access_password>
+    <check_trusted_certificate>0</check_trusted_certificate>
+    <remote_check_sync_enable>1</remote_check_sync_enable>
+    <pnp_enable>1</pnp_enable>
+    <pnp_response_timeout>10</pnp_response_timeout>
+    <schedule_mode>disable</schedule_mode>
+    <weekdays></weekdays>
+    <weekdays_start_hr>0</weekdays_start_hr>
+    <weekdays_end_hr>0</weekdays_end_hr>
+</provisioning>
+
+
+<remoteDir>
+    <ldap_directory_name></ldap_directory_name>
+    <ldap_number_filter></ldap_number_filter>
+    <ldap_firstname_filter></ldap_firstname_filter>
+    <ldap_lastname_filter></ldap_lastname_filter>
+    <ldap_server_address></ldap_server_address>
+    <ldap_port>389</ldap_port>
+    <ldap_authentication_type>simple</ldap_authentication_type>
+    <ldap_base></ldap_base>
+    <ldap_user_name></ldap_user_name>
+    <ldap_access_password></ldap_access_password>
+    <ldap_max_hits>200</ldap_max_hits>
+    <ldap_work_number_attributes></ldap_work_number_attributes>
+    <ldap_mobile_number_attributes></ldap_mobile_number_attributes>
+    <ldap_other_number_attributes></ldap_other_number_attributes>
+    <ldap_protocol_version>version_3</ldap_protocol_version>
+    <ldap_search_delay>0</ldap_search_delay>
+    <ldap_incall_lookup_enable>0</ldap_incall_lookup_enable>
+    <ldap_outcall_lookup_enable>0</ldap_outcall_lookup_enable>
+    <ldap_enable>0</ldap_enable>
+    <ldap_firstname_attribute></ldap_firstname_attribute>
+    <ldap_lastname_attribute></ldap_lastname_attribute>
+    <ldap_check_certificate>0</ldap_check_certificate>
+    <xml>
+        {foreach $contacts as $row}
+        <idx id="{$row@index}">
+            <name></name>
+            <uri></uri>
+            <call_lookup_enable>0</call_lookup_enable>
+            <contact_entry_tag>{$row.contact_name_given} {$row.contact_name_family}</contact_entry_tag>
+            <first_name_tag>{$row.contact_name_given}</first_name_tag>
+            <last_name_tag>{$row.contact_name_family}</last_name_tag>
+            <work_number_tag>{if $row.category == "extensions"}{$row.phone_extension}{else}{$row.phone_number}{/if}</work_number_tag>
+            <mobile_number_tag></mobile_number_tag>
+            <other_number_tag></other_number_tag>
+        </idx>
+        {/foreach}
+    </xml>
+</remoteDir>
+
+
+<sip_account>
+    {foreach $lines as $row}
+    <idx id="{$row.line_number}">
+        <sip_account_enable>{if $row.enabled}1{else}0{/if}</sip_account_enable>
+        <label>{$row.display_name}</label>
+        <display_name>{$row.user_id}</display_name>
+        <user_id>{$row.user_id}</user_id>
+        <authentication_name>{$row.user_id}</authentication_name>
+        <authentication_access_password>{$row.password}</authentication_access_password>
+        <dial_plan>x+P</dial_plan>
+        <inter_digit_timeout>3</inter_digit_timeout>
+        <maximum_call_number>2</maximum_call_number>
+        <feature_sync_enable>0</feature_sync_enable>
+        <music_on_hold_enable>0</music_on_hold_enable>
+        <mwi_enable>1</mwi_enable>
+        <mwi_ignore_unsolicited>0</mwi_ignore_unsolicited>
+        <mwi_uri></mwi_uri>
+        <mwi_subscription_expires>3600</mwi_subscription_expires>
+        <voice_encryption_enable>0</voice_encryption_enable>
+        <primary_sip_server_port>{$row.sip_port}</primary_sip_server_port>
+        <primary_sip_server_address>{$row.server_address}</primary_sip_server_address>
+        <primary_outbound_proxy_server_port>1</primary_outbound_proxy_server_port>
+        <primary_outbound_proxy_server_address></primary_outbound_proxy_server_address>
+        <primary_registration_server_port>{$row.sip_port}</primary_registration_server_port>
+        <primary_registration_server_address>{$row.server_address}</primary_registration_server_address>
+        <primary_registration_expires>120</primary_registration_expires>
+        <access_code_retrieve_voicemail></access_code_retrieve_voicemail>
+        <access_code_dnd_on></access_code_dnd_on>
+        <access_code_dnd_off></access_code_dnd_off>
+        <access_code_cfa_on></access_code_cfa_on>
+        <access_code_cfa_off></access_code_cfa_off>
+        <access_code_cfna_on></access_code_cfna_on>
+        <access_code_cfna_off></access_code_cfna_off>
+        <access_code_cfb_on></access_code_cfb_on>
+        <access_code_cfb_off></access_code_cfb_off>
+        <access_code_anonymous_call_block_on></access_code_anonymous_call_block_on>
+        <access_code_anonymous_call_block_off></access_code_anonymous_call_block_off>
+        <access_code_outgoing_call_anonymous_on></access_code_outgoing_call_anonymous_on>
+        <access_code_outgoing_call_anonymous_off></access_code_outgoing_call_anonymous_off>
+        <nat_traversal_stun_enable>0</nat_traversal_stun_enable>
+        <nat_traversal_stun_server_port>3478</nat_traversal_stun_server_port>
+        <nat_traversal_stun_server_address></nat_traversal_stun_server_address>
+        <nat_traversal_stun_keep_alive_enable>1</nat_traversal_stun_keep_alive_enable>
+        <nat_traversal_stun_keep_alive_interval>30</nat_traversal_stun_keep_alive_interval>
+        <network_conference_enable>0</network_conference_enable>
+        <network_bridge_uri></network_bridge_uri>
+        <sip_session_timer_enable>0</sip_session_timer_enable>
+        <sip_session_timer_min>90</sip_session_timer_min>
+        <sip_session_timer_max>300</sip_session_timer_max>
+        <dtmf_transport_method>auto</dtmf_transport_method>
+        <codec_priority>
+            <idx id="1">g711u</idx>
+            <idx id="2">none</idx>
+            <idx id="3">none</idx>
+            <idx id="4">none</idx>
+            <idx id="5">none</idx>
+            <idx id="6">none</idx>
+            <idx id="7">none</idx>
+        </codec_priority>
+        <unregister_after_reboot_enable>0</unregister_after_reboot_enable>
+        <transport_mode>{$row.sip_transport}</transport_mode>
+        <backup_outbound_proxy_server_port>1</backup_outbound_proxy_server_port>
+        <backup_outbound_proxy_server_address></backup_outbound_proxy_server_address>
+        <registration_retry_time>10</registration_retry_time>
+        <local_sip_port>{$row.sip_port}</local_sip_port>
+        <dscp>46</dscp>
+        <sip_dscp>26</sip_dscp>
+        <check_trusted_certificate>1</check_trusted_certificate>
+        <g729_annexb_enable>0</g729_annexb_enable>
+        <preferred_ptime>20</preferred_ptime>
+        <cid_src_priority>
+            <idx id="1">pai</idx>
+            <idx id="2">rpid</idx>
+            <idx id="3">from</idx>
+        </cid_src_priority>
+        <keep_alive_enable>0</keep_alive_enable>
+        <keep_alive_interval>15</keep_alive_interval>
+        <keep_alive_ignore_failure>1</keep_alive_ignore_failure>
+        <dtmf_payload_type>101</dtmf_payload_type>
+        <ilbc_payload_type>98</ilbc_payload_type>
+        <call_restrict_dial_plan></call_restrict_dial_plan>
+        <call_rejection_response_code>486</call_rejection_response_code>
+        <use_register_route_header>1</use_register_route_header>
+        <reliable_provisional_response_option>0</reliable_provisional_response_option>
+        <type>standard</type>
+    </idx>
+    {if $row@index eq 48}{break}{/if}
+    {/foreach}
+    <service_unavailable_handling_option>1</service_unavailable_handling_option>
+    <dns_query_option>1</dns_query_option>
+    <shared_local_sip_port_enable>0</shared_local_sip_port_enable>
+    <shared_local_sip_port>5060</shared_local_sip_port>
+    <sips_uri_enable>1</sips_uri_enable>
+    <dirty_host_ttl>0</dirty_host_ttl>
+    <mac_info_in_every_sip_message>0</mac_info_in_every_sip_message>
+    <pnp_local_sip_port>5170</pnp_local_sip_port>
+</sip_account>
+
+<time_date>
+    <date_format>DD/MM/YY</date_format>
+    <hr24_clock>0</hr24_clock>
+    <ntp_dhcp_option>0</ntp_dhcp_option>
+    <ntp_server>1</ntp_server>
+    <ntp_server_addr>{if isset($snom_ntp_server)}{$snom_ntp_server}{else}0.pool.ntp.org{/if}</ntp_server_addr>
+    <ntp_server_update_interval>1000</ntp_server_update_interval>
+    <timezone_dhcp_option>0</timezone_dhcp_option>
+    <selected_timezone>{if isset($snom_time_zone)}{$snom_time_zone}{else}America/New_York{/if}</selected_timezone>
+    <daylight_saving_auto_adjust>1</daylight_saving_auto_adjust>
+    <daylight_saving_user_defined>0</daylight_saving_user_defined>
+    <daylight_saving_start_month>March</daylight_saving_start_month>
+    <daylight_saving_start_week>2</daylight_saving_start_week>
+    <daylight_saving_start_day>Sunday</daylight_saving_start_day>
+    <daylight_saving_start_hour>2</daylight_saving_start_hour>
+    <daylight_saving_end_month>November</daylight_saving_end_month>
+    <daylight_saving_end_week>1</daylight_saving_end_week>
+    <daylight_saving_end_day>Sunday</daylight_saving_end_day>
+    <daylight_saving_end_hour>2</daylight_saving_end_hour>
+    <daylight_saving_amount>60</daylight_saving_amount>
+</time_date>
+
+<web>
+    <http_port>80</http_port>
+    <https_port>443</https_port>
+    <server_enable>1</server_enable>
+    <https_enable>0</https_enable>
+</web>
+<audio>
+    {foreach $lines as $row}
+    <idx id="{$row.line_number}">
+        <jitter_mode>adaptive</jitter_mode>
+        <adaptive_jitter>
+            <min_delay>60</min_delay>
+            <max_delay>240</max_delay>
+            <target_delay>80</target_delay>
+        </adaptive_jitter>
+        <fixed_jitter>
+            <delay>70</delay>
+        </fixed_jitter>
+        <rtp>
+            <port_start>18000</port_start>
+            <port_end>19000</port_end>
+        </rtp>
+    </idx>
+    {if $row@index eq 9}{break}{/if}
+    {/foreach}
+    <rtcp_xr>
+    <enable>0</enable>
+    </rtcp_xr>
+</audio>
+<xml_app>
+    <http_push_enable>0</http_push_enable>
+    <push_during_call_enable>0</push_during_call_enable>
+</xml_app>
+<trusted_ip>
+    <only_accept_allowed_ip>0</only_accept_allowed_ip>
+    <idx id="1">
+    <allow_ip></allow_ip>
+    </idx>
+    <idx id="2">
+    <allow_ip></allow_ip>
+    </idx>
+    <idx id="3">
+    <allow_ip></allow_ip>
+    </idx>
+    <idx id="4">
+    <allow_ip></allow_ip>
+    </idx>
+    <idx id="5">
+    <allow_ip></allow_ip>
+    </idx>
+    <idx id="6">
+    <allow_ip></allow_ip>
+    </idx>
+    <idx id="7">
+    <allow_ip></allow_ip>
+    </idx>
+    <idx id="8">
+    <allow_ip></allow_ip>
+    </idx>
+    <idx id="9">
+    <allow_ip></allow_ip>
+    </idx>
+    <idx id="10">
+    <allow_ip></allow_ip>
+    </idx>
+</trusted_ip>
+<trusted_servers>
+    <only_accept_sip_account_servers>0</only_accept_sip_account_servers>
+</trusted_servers>
+<ppversion>
+    <version_vec></version_vec>
+</ppversion>
+<multicell>
+    <role>single</role>
+    <site_id></site_id>
+    <device>
+        <idx id="1">
+            <mac></mac>
+            <ip></ip>
+            <rfpi></rfpi>
+        </idx>
+        <idx id="2">
+            <mac></mac>
+            <ip></ip>
+            <rfpi></rfpi>
+        </idx>
+        <idx id="3">
+            <mac></mac>
+            <ip></ip>
+            <rfpi></rfpi>
+        </idx>
+        <idx id="4">
+            <mac></mac>
+            <ip></ip>
+            <rfpi></rfpi>
+        </idx>
+        <idx id="5">
+            <mac></mac>
+            <ip></ip>
+            <rfpi></rfpi>
+        </idx>
+        <idx id="6">
+            <mac></mac>
+            <ip></ip>
+            <rfpi></rfpi>
+        </idx>
+    </device>
+    <multicast_address>239.225.225.225</multicast_address>
+    <maximum_pp_per_base>8</maximum_pp_per_base>
+</multicell>
+</settings>

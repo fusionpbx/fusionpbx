@@ -34,6 +34,7 @@
     <mwi_dialtone perm="">stutter</mwi_dialtone>
     <enable_rport_rfc3581 perm="RW">on</enable_rport_rfc3581>
     <privacy_in perm="">off</privacy_in>
+    <privacy_out perm="">off</privacy_out>
     <quick_transfer perm="">blind</quick_transfer>
     <call_screen_fkeys_on_connected perm="">F_HOLD F_TRANSFER F_CONFERENCE</call_screen_fkeys_on_connected>
     <!-- Updates -->
