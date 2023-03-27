@@ -122,6 +122,29 @@
 				return;
 			}
 
+		//check for duplicate profile name
+			$sql = "select sip_profile_name from v_sip_profiles".($action == 'update' ? "where sip_profile_name <> :sip_profile_name" : null);
+			if ($action == 'update') {
+				$parameters['sip_profile_name'] = $sip_profile_name;
+			}
+			$database = new database;
+			$rows = $database->select($sql, $parameters, 'all');
+			if (is_array($rows) && @sizeof($rows) != 0) {
+				foreach ($rows as $array) {
+					$sip_profile_names[] = $array['sip_profile_name'];
+				}
+			}
+			unset($sql);
+			if (is_array($sip_profile_names) && @sizeof($sip_profile_names) != 0 && in_array($sip_profile_name, $sip_profile_names)) {
+
+				//set message
+					message::add($text['message-sip_profile_unique'], 'negative', 5000);
+
+				//redirect
+					header("Location: sip_profiles.php");
+					exit;
+			}
+
 		//add the sip_profile_uuid
 			if (!is_uuid($_POST["sip_profile_uuid"])) {
 				$sip_profile_uuid = uuid();
@@ -300,6 +323,28 @@
 		$sip_profile_domains[$x]['sip_profile_domain_parse'] = '';
 	}
 
+//create js array of existing sip profile names to prevent duplicates
+	$sql = "select sip_profile_name from v_sip_profiles";
+	$database = new database;
+	$rows = $database->select($sql, $parameters, 'all');
+	if (is_array($rows) && @sizeof($rows) != 0) {
+		foreach ($rows as $array) {
+			$sip_profile_names[] = $array['sip_profile_name'];
+		}
+		if (is_array($sip_profile_names) && @sizeof($sip_profile_names) != 0) {
+			//all profile names
+			$js_sip_profile_names['all'] = "const sip_profile_names_all = ['".implode("','", $sip_profile_names)."'];";
+			//other profile names
+			foreach ($sip_profile_names as $n => $name) {
+				if ($sip_profile_name == $name) { unset($sip_profile_names[$n]); }
+			}
+			if (is_array($sip_profile_names) && @sizeof($sip_profile_names) != 0) {
+				$js_sip_profile_names['other'] = "const sip_profile_names_other = ['".implode("','", $sip_profile_names)."'];";
+			}
+		}
+	}
+	unset($sql);
+
 //create token
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);
@@ -308,15 +353,23 @@
 	$document['title'] = $text['title-sip_profile'];
 	require_once "resources/header.php";
 	
-//label to form input
+//helper scripts
 	echo "<script language='javascript'>\n";
-	echo "	function label_to_form(label_id, form_id) {\n";
-	echo "		if (document.getElementById(label_id) != null) {\n";
-	echo "			label = document.getElementById(label_id);\n";
-	echo "			label.parentNode.removeChild(label);\n";
-	echo "		}\n";
-	echo "		document.getElementById(form_id).style.display='';\n";
-	echo "	}\n";
+
+	//label to form input
+		echo "	function label_to_form(label_id, form_id) {\n";
+		echo "		if (document.getElementById(label_id) != null) {\n";
+		echo "			label = document.getElementById(label_id);\n";
+		echo "			label.parentNode.removeChild(label);\n";
+		echo "		}\n";
+		echo "		document.getElementById(form_id).style.display='';\n";
+		echo "	}\n";
+
+	//output js arrays to prevent duplicate profile names
+		echo $js_sip_profile_names['all']."\n";
+		echo $js_sip_profile_names['other']."\n";
+		unset($js_sip_profile_names);
+
 	echo "</script>\n";
 	
 //show the content
@@ -346,7 +399,7 @@
 			unset($button_margin);
 		}
 	}
-	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save','style'=>'margin-left: 15px;']);
+	echo button::create(['type'=>'button','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save','style'=>'margin-left: 15px;','onclick'=>"if (document.getElementById('sip_profile_name').value != '' && !sip_profile_names_other.includes(document.getElementById('sip_profile_name').value)) { $('#frm').submit(); } else { display_message('".$text['message-sip_profile_unique']."', 'negative', 5000); }"]);
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
@@ -361,7 +414,9 @@
 			echo modal::create([
 				'id'=>'modal-copy',
 				'type'=>'general',
-				'message'=>$text['label-new_sip_profile_name']."...<br /><br /><input class='formfld modal-input' data-continue='btn_copy' type='text' id='new_profile_name' maxlength='255'>",
+				'message'=>
+					$text['label-new_sip_profile_name']."...<br /><br />\n
+					<input class='formfld modal-input' data-continue='btn_copy' type='text' id='new_profile_name' maxlength='255'>\n",
 				'actions'=>button::create([
 					'type'=>'button',
 					'label'=>$text['button-continue'],
@@ -369,7 +424,7 @@
 					'id'=>'btn_copy',
 					'style'=>'float: right; margin-left: 15px;',
 					'collapse'=>'never',
-					'onclick'=>"modal_close(); if (document.getElementById('new_profile_name').value != '') { window.location='sip_profile_copy.php?id=".urlencode($sip_profile_uuid)."&name=' + document.getElementById('new_profile_name').value; }"
+					'onclick'=>"modal_close(); if (document.getElementById('new_profile_name').value != '' && !sip_profile_names_all.includes(document.getElementById('new_profile_name').value)) { window.location='sip_profile_copy.php?id=".urlencode($sip_profile_uuid)."&name=' + document.getElementById('new_profile_name').value; } else { display_message('".$text['message-sip_profile_unique']."', 'negative', 5000); }",
 					]),
 				'onclose'=>"document.getElementById('new_profile_name').value = '';",
 				]);
@@ -390,7 +445,7 @@
 	echo "	".$text['label-sip_profile_name']."\n";
 	echo "</td>\n";
 	echo "<td width='70%' class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='sip_profile_name' maxlength='255' value=\"".escape($sip_profile_name)."\">\n";
+	echo "	<input class='formfld' type='text' id='sip_profile_name' name='sip_profile_name' maxlength='255' value=\"".escape($sip_profile_name)."\">\n";
 	echo "<br />\n";
 	echo $text['description-sip_profile_name']."\n";
 	echo "</td>\n";
