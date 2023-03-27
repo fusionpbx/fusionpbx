@@ -58,11 +58,11 @@
 	$database = new database;
 	$rows = $database->select($sql, $parameters, 'all');
 	if (is_array($rows) && @sizeof($rows) != 0) {
-		foreach ($rows as $array) {
-			$sip_profile_names[] = $array['sip_profile_name'];
+		foreach ($rows as $row) {
+			$sip_profile_names[] = $row['sip_profile_name'];
 		}
 	}
-	unset($sql);
+	unset($sql, $rows, $row);
 
 if (is_uuid($sip_profile_uuid) && $sip_profile_name != '') {
 
