@@ -1,4 +1,3 @@
-
 <extension name="agent_status" number="*22" context="${domain_name}" continue="false" app_uuid="2eb032c5-c79d-4096-ac90-8a47fe40f411" order="200">
 	<condition field="destination_number" expression="^\*22$" break="on-true">
 		<action application="set" data="agent_id=${sip_from_user}" enabled="true"/>

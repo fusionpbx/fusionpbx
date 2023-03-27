@@ -1,4 +1,3 @@
-
 <extension name="bind_digit_action" number="" context="${domain_name}" continue="true" app_uuid="7e007a4d-886b-4cdf-81f4-da9eb4689f1c" enabled="false" order="85">
 	<condition field="${from_user_exists}" expression="true" break="never">
 		<action application="set" data="bind_target=self" inline="true"/>

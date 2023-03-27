@@ -1,4 +1,3 @@
-
 <extension name="user_hold_music" number="" context="${domain_name}" continue="true" app_uuid="3ace0990-ef23-45b2-a81d-a5857a671e74" order="80">
 	<condition field="${user_exists}" expression="true"/>
 	<condition field="${hold_music}" expression="^$"/>
