@@ -153,7 +153,7 @@
 			$sql .= "where hostname = :hostname ";
 			$sql .= "and ( ";
 			$sql .= "	( ";
-			$sql .= "		(fax_status = 'waiting' or fax_status = 'trying') ";
+			$sql .= "		(fax_status = 'waiting' or fax_status = 'trying' or fax_status = 'busy') ";
 			$sql .= "		and (fax_retry_date is null or floor(extract(epoch from now()) - extract(epoch from fax_retry_date)) > :retry_interval) ";
 			$sql .= "	)  ";
 			$sql .= "	or ( ";
