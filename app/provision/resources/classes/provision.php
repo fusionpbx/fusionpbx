@@ -600,9 +600,9 @@
 										$device_firmware_version = $row["device_firmware_version"];
 										$device_user_uuid = $row["device_user_uuid"];
 										$device_location = strtolower($row["device_location"]);
-										$device_vendor = strtolower($row["device_vendor"]);
+										//keep the original device_vendor
 										$device_enabled = $row["device_enabled"];
-										//keep the original template
+										//keep the original device_template
 										$device_description = $row["device_description"];
 									}
 								}
