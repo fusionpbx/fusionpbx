@@ -16,7 +16,7 @@
 --
 --	The Initial Developer of the Original Code is
 --	Mark J Crane <markjcrane@fusionpbx.com>
---	Copyright (C) 2015-2022
+--	Copyright (C) 2015-2023
 --	the Initial Developer. All Rights Reserved.
 --
 --	Contributor(s):
@@ -164,11 +164,9 @@
 --set default values
 	if (not fax_success) then
 		fax_success = "0";
-		fax_result_code = 2;
 	end
 	if (hangup_cause_q850 == "17") then
 		fax_success = "0";
-		fax_result_code = 2;
 		fax_result_text = "USER_BUSY";
 	end
 	if (not fax_result_text) then
@@ -183,7 +181,7 @@
 	end
 
 --fax busy
-	if (fax_result_code == "2"  or fax_result_code == "3" or hangup_cause_q850 == 17) then
+	if (fax_result_code == "2" or fax_result_code == "3" or hangup_cause_q850 == 17) then
 		--do nothing. don't want to increment
 		freeswitch.consoleLog("INFO","[FAX] Last Fax was probably Busy, don't increment retry_attempts. \n");
 		fax_status = 'busy';
