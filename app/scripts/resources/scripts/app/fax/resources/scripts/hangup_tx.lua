@@ -339,13 +339,11 @@
 	dbh:query(sql, params);
 
 --update the email queue status
-	if (fax_success == '1') then
-		sql = "update v_fax_queue ";
-		sql = sql .. "set fax_status = :fax_status, fax_log_uuid = :fax_log_uuid ";
-		sql = sql .. "where fax_queue_uuid = :fax_queue_uuid ";
-		local params = {fax_queue_uuid = fax_queue_uuid, fax_status = 'sent', fax_log_uuid = uuid}
-		dbh:query(sql, params);
-	end
+	sql = "update v_fax_queue ";
+	sql = sql .. "set fax_status = :fax_status, fax_log_uuid = :fax_log_uuid ";
+	sql = sql .. "where fax_queue_uuid = :fax_queue_uuid ";
+	local params = {fax_queue_uuid = fax_queue_uuid, fax_status = fax_status, fax_log_uuid = uuid}
+	dbh:query(sql, params);
 
 --prepare base64
 	if (storage_type == "base64") then
