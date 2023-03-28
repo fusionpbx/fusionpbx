@@ -13,7 +13,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Dialplan";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Piano Numerazioni";
-	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Kiesplan";
+	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Belplan";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Dialplan";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Dialplan";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Dialplan";
@@ -42,7 +42,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Gestion du Plan de Numérotation";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "";
-	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Kiesplan beheer";
+	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Belplan beheer";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Menadżer dialplanu";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Gerenciador de Dialplan";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Gestor de Dialplan";

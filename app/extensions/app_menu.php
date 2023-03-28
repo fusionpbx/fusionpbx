@@ -13,7 +13,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Extensions";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "שלוחות";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Interni";
-	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Toestellen";
+	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Extensies";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Numery wewnętrzne";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Ramais";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Extensões";

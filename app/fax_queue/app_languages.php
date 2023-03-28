@@ -12,7 +12,7 @@
 		$text['title-fax_queue']['fr-fr'] = '';
 		$text['title-fax_queue']['he-il'] = '';
 		$text['title-fax_queue']['it-it'] = '';
-		$text['title-fax_queue']['nl-nl'] = '';
+		$text['title-fax_queue']['nl-nl'] = 'Fax wachtrij';
 		$text['title-fax_queue']['pl-pl'] = '';
 		$text['title-fax_queue']['pt-br'] = '';
 		$text['title-fax_queue']['pt-pt'] = '';
@@ -72,7 +72,7 @@
 		$text['label-fax_uuid']['fr-fr'] = '';
 		$text['label-fax_uuid']['he-il'] = '';
 		$text['label-fax_uuid']['it-it'] = '';
-		$text['label-fax_uuid']['nl-nl'] = '';
+		$text['label-fax_uuid']['nl-nl'] = 'Fax ID';
 		$text['label-fax_uuid']['pl-pl'] = '';
 		$text['label-fax_uuid']['pt-br'] = '';
 		$text['label-fax_uuid']['pt-pt'] = '';
@@ -112,7 +112,7 @@
 		$text['label-fax_date']['fr-fr'] = '';
 		$text['label-fax_date']['he-il'] = '';
 		$text['label-fax_date']['it-it'] = '';
-		$text['label-fax_date']['nl-nl'] = '';
+		$text['label-fax_date']['nl-nl'] = 'Datum';
 		$text['label-fax_date']['pl-pl'] = '';
 		$text['label-fax_date']['pt-br'] = '';
 		$text['label-fax_date']['pt-pt'] = '';
@@ -152,7 +152,7 @@
 		$text['label-hostname']['fr-fr'] = '';
 		$text['label-hostname']['he-il'] = '';
 		$text['label-hostname']['it-it'] = '';
-		$text['label-hostname']['nl-nl'] = '';
+		$text['label-hostname']['nl-nl'] = 'Hostnaam';
 		$text['label-hostname']['pl-pl'] = '';
 		$text['label-hostname']['pt-br'] = '';
 		$text['label-hostname']['pt-pt'] = '';
@@ -172,7 +172,7 @@
 		$text['description-hostname']['fr-fr'] = '';
 		$text['description-hostname']['he-il'] = '';
 		$text['description-hostname']['it-it'] = '';
-		$text['description-hostname']['nl-nl'] = '';
+		$text['description-hostname']['nl-nl'] = 'Hostnaam van de server.';
 		$text['description-hostname']['pl-pl'] = '';
 		$text['description-hostname']['pt-br'] = '';
 		$text['description-hostname']['pt-pt'] = '';
@@ -192,7 +192,7 @@
 		$text['label-fax_caller_id_name']['fr-fr'] = '';
 		$text['label-fax_caller_id_name']['he-il'] = '';
 		$text['label-fax_caller_id_name']['it-it'] = '';
-		$text['label-fax_caller_id_name']['nl-nl'] = '';
+		$text['label-fax_caller_id_name']['nl-nl'] = 'Nummerweergave naam';
 		$text['label-fax_caller_id_name']['pl-pl'] = '';
 		$text['label-fax_caller_id_name']['pt-br'] = '';
 		$text['label-fax_caller_id_name']['pt-pt'] = '';
@@ -212,7 +212,7 @@
 		$text['description-fax_caller_id_name']['fr-fr'] = '';
 		$text['description-fax_caller_id_name']['he-il'] = '';
 		$text['description-fax_caller_id_name']['it-it'] = '';
-		$text['description-fax_caller_id_name']['nl-nl'] = '';
+		$text['description-fax_caller_id_name']['nl-nl'] = 'Voer de nummerweergave naam in.';
 		$text['description-fax_caller_id_name']['pl-pl'] = '';
 		$text['description-fax_caller_id_name']['pt-br'] = '';
 		$text['description-fax_caller_id_name']['pt-pt'] = '';
@@ -232,7 +232,7 @@
 		$text['label-fax_caller_id_number']['fr-fr'] = '';
 		$text['label-fax_caller_id_number']['he-il'] = '';
 		$text['label-fax_caller_id_number']['it-it'] = '';
-		$text['label-fax_caller_id_number']['nl-nl'] = '';
+		$text['label-fax_caller_id_number']['nl-nl'] = 'Nummerweergave nummer';
 		$text['label-fax_caller_id_number']['pl-pl'] = '';
 		$text['label-fax_caller_id_number']['pt-br'] = '';
 		$text['label-fax_caller_id_number']['pt-pt'] = '';
@@ -252,7 +252,7 @@
 		$text['description-fax_caller_id_number']['fr-fr'] = '';
 		$text['description-fax_caller_id_number']['he-il'] = '';
 		$text['description-fax_caller_id_number']['it-it'] = '';
-		$text['description-fax_caller_id_number']['nl-nl'] = '';
+		$text['description-fax_caller_id_number']['nl-nl'] = 'Voer het nummerweergave nummer in.';
 		$text['description-fax_caller_id_number']['pl-pl'] = '';
 		$text['description-fax_caller_id_number']['pt-br'] = '';
 		$text['description-fax_caller_id_number']['pt-pt'] = '';
@@ -272,7 +272,7 @@
 		$text['label-fax_number']['fr-fr'] = '';
 		$text['label-fax_number']['he-il'] = '';
 		$text['label-fax_number']['it-it'] = '';
-		$text['label-fax_number']['nl-nl'] = '';
+		$text['label-fax_number']['nl-nl'] = 'Nummer';
 		$text['label-fax_number']['pl-pl'] = '';
 		$text['label-fax_number']['pt-br'] = '';
 		$text['label-fax_number']['pt-pt'] = '';
@@ -292,7 +292,7 @@
 		$text['description-fax_number']['fr-fr'] = '';
 		$text['description-fax_number']['he-il'] = '';
 		$text['description-fax_number']['it-it'] = '';
-		$text['description-fax_number']['nl-nl'] = '';
+		$text['description-fax_number']['nl-nl'] = 'Voer het faxnummer in.';
 		$text['description-fax_number']['pl-pl'] = '';
 		$text['description-fax_number']['pt-br'] = '';
 		$text['description-fax_number']['pt-pt'] = '';
@@ -332,7 +332,7 @@
 		$text['description-fax_prefix']['fr-fr'] = '';
 		$text['description-fax_prefix']['he-il'] = '';
 		$text['description-fax_prefix']['it-it'] = '';
-		$text['description-fax_prefix']['nl-nl'] = '';
+		$text['description-fax_prefix']['nl-nl'] = 'Voer de fax prefix in.';
 		$text['description-fax_prefix']['pl-pl'] = '';
 		$text['description-fax_prefix']['pt-br'] = '';
 		$text['description-fax_prefix']['pt-pt'] = '';
@@ -672,7 +672,7 @@
 		$text['label-waiting']['fr-fr'] = '';
 		$text['label-waiting']['he-il'] = '';
 		$text['label-waiting']['it-it'] = '';
-		$text['label-waiting']['nl-nl'] = '';
+		$text['label-waiting']['nl-nl'] = 'wachten';
 		$text['label-waiting']['pl-pl'] = '';
 		$text['label-waiting']['pt-br'] = '';
 		$text['label-waiting']['pt-pt'] = '';
@@ -692,7 +692,7 @@
 		$text['label-failed']['fr-fr'] = '';
 		$text['label-failed']['he-il'] = '';
 		$text['label-failed']['it-it'] = '';
-		$text['label-failed']['nl-nl'] = '';
+		$text['label-failed']['nl-nl'] = 'mislukt';
 		$text['label-failed']['pl-pl'] = '';
 		$text['label-failed']['pt-br'] = '';
 		$text['label-failed']['pt-pt'] = '';
@@ -712,7 +712,7 @@
 		$text['label-sent']['fr-fr'] = '';
 		$text['label-sent']['he-il'] = '';
 		$text['label-sent']['it-it'] = '';
-		$text['label-sent']['nl-nl'] = '';
+		$text['label-sent']['nl-nl'] = 'verzonden';
 		$text['label-sent']['pl-pl'] = '';
 		$text['label-sent']['pt-br'] = '';
 		$text['label-sent']['pt-pt'] = '';

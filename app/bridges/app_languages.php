@@ -13,7 +13,7 @@
 		$text['title-bridges']['fr-fr'] = 'Ponts';
 		$text['title-bridges']['he-il'] = '';
 		$text['title-bridges']['it-it'] = '';
-		$text['title-bridges']['nl-nl'] = 'Bruggen';
+		$text['title-bridges']['nl-nl'] = '';
 		$text['title-bridges']['pl-pl'] = 'Mostki';
 		$text['title-bridges']['pt-br'] = '';
 		$text['title-bridges']['pt-pt'] = '';
@@ -34,7 +34,7 @@
 		$text['title-bridge']['fr-fr'] = 'Pont';
 		$text['title-bridge']['he-il'] = '';
 		$text['title-bridge']['it-it'] = '';
-		$text['title-bridge']['nl-nl'] = 'Brug';
+		$text['title-bridge']['nl-nl'] = '';
 		$text['title-bridge']['pl-pl'] = 'Mostek';
 		$text['title-bridge']['pt-br'] = '';
 		$text['title-bridge']['pt-pt'] = '';
@@ -55,7 +55,7 @@
 		$text['title_description-bridge']['fr-fr'] = 'Ajouter des déclarations de pont à la liste de sélection';
 		$text['title_description-bridge']['he-il'] = '';
 		$text['title_description-bridge']['it-it'] = '';
-		$text['title_description-bridge']['nl-nl'] = 'Voeg brug opdrachten toe aan bestemmings lijst.';
+		$text['title_description-bridge']['nl-nl'] = 'Voeg bridge opdrachten toe aan bestemmings lijst.';
 		$text['title_description-bridge']['pl-pl'] = 'Dodaj wyrażenia mostkowania do listy wyboru destynacji.';
 		$text['title_description-bridge']['pt-br'] = '';
 		$text['title_description-bridge']['pt-pt'] = '';
