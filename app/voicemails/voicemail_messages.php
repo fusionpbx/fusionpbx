@@ -45,7 +45,9 @@
 		$voicemail->voicemail_id = $_REQUEST['id'];
 		$voicemail->voicemail_uuid = $_REQUEST['voicemail_uuid'];
 		$voicemail->voicemail_message_uuid = $_REQUEST['uuid'];
-		$result = $voicemail->message_download();
+		if(!$voicemail->message_download()) {
+			echo "unable to download voicemail";
+		}
 		unset($voicemail);
 		exit;
 	}
