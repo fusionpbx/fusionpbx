@@ -229,7 +229,7 @@
         <primary_outbound_proxy_server_address></primary_outbound_proxy_server_address>
         <primary_registration_server_port>{$row.sip_port}</primary_registration_server_port>
         <primary_registration_server_address>{$row.server_address}</primary_registration_server_address>
-        <primary_registration_expires>120</primary_registration_expires>
+        <primary_registration_expires>{$row.register_expires}</primary_registration_expires>
         <access_code_retrieve_voicemail></access_code_retrieve_voicemail>
         <access_code_dnd_on></access_code_dnd_on>
         <access_code_dnd_off></access_code_dnd_off>
