@@ -36,7 +36,7 @@ if success then
     -- Command succeeded, handle the output
     freeswitch.consoleLog("notice", "[STIR SHAKEN] Curl response: " .. response .. "\n");
     
-    if string.len(response) ~= 0 then
+    if string.len(response) ~= 0 and string.find(response, "shaken") and string.find(response, "alg=ES256") then
     	-- Set the header variable using the session variable API
 		session:setVariable("sip_h_Identity", response)
 	end
