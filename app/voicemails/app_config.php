@@ -165,6 +165,11 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "user";
 		$apps[$x]['permissions'][$y]['groups'][] = "agent";
 		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "voicemail_destinations";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$apps[$x]['permissions'][$y]['groups'][] = "user";
+		$apps[$x]['permissions'][$y]['groups'][] = "agent";
 
 	//default settings
 		$y=0;
