@@ -128,7 +128,7 @@ if ($domains_processed == 1) {
 					if (strlen($row['queue_cc_exit_keys']) > 0) {
 						$dialplan_xml .= "		<action application=\"set\" data=\"cc_exit_keys=".xml::sanitize($row['queue_cc_exit_keys'])."\"/>\n";
 					}
-					$dialplan_xml .= "		<action application=\"callcenter\" data=\"".xml::sanitize($row['queue_extension'])."@".$row['domain_name']."\"/>\n";
+					$dialplan_xml .= "		<action application=\"callcenter\" data=\"".xml::sanitize($row['queue_extension'])."@".xml::sanitize($row['domain_name'])."\"/>\n";
 					//if ($destination->valid($queue_timeout_app.':'.$queue_timeout_data)) {
 						$dialplan_xml .= "		<action application=\"".xml::sanitize($queue_timeout_app)."\" data=\"".xml::sanitize($queue_timeout_data)."\"/>\n";
 					//}
