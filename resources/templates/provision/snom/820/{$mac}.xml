@@ -24,7 +24,7 @@
 <admin_mode_password_confirm>0000</admin_mode_password_confirm>
 {/if}
 <language>English</language>
-<ntp_server>{$server_address_1}</ntp_server>
+<ntp_server>{$ntp_server_primary}</ntp_server>
 <timezone>AUS+10</timezone>
 <dst>3600 25.09 02:00:00 04.05 03:00:00</dst>
 <tone_scheme>US</tone_scheme>
