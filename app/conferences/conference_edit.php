@@ -201,13 +201,13 @@
 					$pin_number = (strlen($conference_pin_number) > 0) ? '+'.$conference_pin_number : '';
 
 				//build the xml
-					$dialplan_xml = "<extension name=\"".$conference_name."\" continue=\"\" uuid=\"".$dialplan_uuid."\">\n";
-					$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".$conference_extension."$\">\n";
+					$dialplan_xml = "<extension name=\"".xml::sanitize($conference_name)."\" continue=\"\" uuid=\"".xml::sanitize($dialplan_uuid)."\">\n";
+					$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".xml::sanitize($conference_extension)."$\">\n";
 					$dialplan_xml .= "		<action application=\"answer\" data=\"\"/>\n";
-					$dialplan_xml .= "		<action application=\"set\" data=\"conference_uuid=".$conference_uuid."\" inline=\"true\"/>\n";
-					//$dialplan_xml .= "		<action application=\"set\" data=\"conference_name=".$conference_name."\" inline=\"true\"/>\n";
-					$dialplan_xml .= "		<action application=\"set\" data=\"conference_extension=".$conference_extension."\" inline=\"true\"/>\n";
-					$dialplan_xml .= "		<action application=\"conference\" data=\"".$conference_extension."@".$_SESSION['domain_name']."@".$conference_profile.$pin_number."+flags{'".$conference_flags."'}\"/>\n";
+					$dialplan_xml .= "		<action application=\"set\" data=\"conference_uuid=".xml::sanitize($conference_uuid)."\" inline=\"true\"/>\n";
+					//$dialplan_xml .= "		<action application=\"set\" data=\"conference_name=".xml::sanitize($conference_name)."\" inline=\"true\"/>\n";
+					$dialplan_xml .= "		<action application=\"set\" data=\"conference_extension=".xml::sanitize($conference_extension)."\" inline=\"true\"/>\n";
+					$dialplan_xml .= "		<action application=\"conference\" data=\"".xml::sanitize($conference_extension)."@".$_SESSION['domain_name']."@".xml::sanitize($conference_profile.$pin_number)."+flags{'".xml::sanitize($conference_flags)."'}\"/>\n";
 					$dialplan_xml .= "	</condition>\n";
 					$dialplan_xml .= "</extension>\n";
 

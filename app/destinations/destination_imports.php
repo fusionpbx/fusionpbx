@@ -277,13 +277,13 @@
 										}
 
 									//build the xml dialplan
-										$array["dialplans"][$row_id]["dialplan_xml"] = "<extension name=\"".$dialplan_name."\" continue=\"false\" uuid=\"".$dialplan_uuid."\">\n";
-										$array["dialplans"][$row_id]["dialplan_xml"] .= "	<condition field=\"".$dialplan_detail_type."\" expression=\"".$destination_number_regex."\">\n";
+										$array["dialplans"][$row_id]["dialplan_xml"] = "<extension name=\"".xml::sanitize($dialplan_name)."\" continue=\"false\" uuid=\"".xml::sanitize($dialplan_uuid)."\">\n";
+										$array["dialplans"][$row_id]["dialplan_xml"] .= "	<condition field=\"".xml::sanitize($dialplan_detail_type)."\" expression=\"".xml::sanitize($destination_number_regex)."\">\n";
 										$array["dialplans"][$row_id]["dialplan_xml"] .= "		<action application=\"export\" data=\"call_direction=inbound\" inline=\"true\"/>\n";
 										$array["dialplans"][$row_id]["dialplan_xml"] .= "		<action application=\"set\" data=\"domain_uuid=".$_SESSION['domain_uuid']."\" inline=\"true\"/>\n";
 										$array["dialplans"][$row_id]["dialplan_xml"] .= "		<action application=\"set\" data=\"domain_name=".$_SESSION['domain_name']."\" inline=\"true\"/>\n";
 										if (strlen($destination_cid_name_prefix) > 0) {
-											$array["dialplans"][$row_id]["dialplan_xml"] .= "		<action application=\"set\" data=\"effective_caller_id_name=".$destination_cid_name_prefix."#\${caller_id_name}\" inline=\"true\"/>\n";
+											$array["dialplans"][$row_id]["dialplan_xml"] .= "		<action application=\"set\" data=\"effective_caller_id_name=".xml::sanitize($destination_cid_name_prefix)."#\${caller_id_name}\" inline=\"true\"/>\n";
 										}
 										if (strlen($destination_record) > 0) {
 											$array["dialplans"][$row_id]["dialplan_xml"] .= "		<action application=\"set\" data=\"record_path=\${recordings_dir}/\${domain_name}/archive/\${strftime(%Y)}/\${strftime(%b)}/\${strftime(%d)}\" inline=\"true\"/>\n";
@@ -294,18 +294,18 @@
 											$array["dialplans"][$row_id]["dialplan_xml"] .= "		<action application=\"record_session\" data=\"\${record_path}/\${record_name}\" inline=\"false\"/>\n";
 										}
 										if (strlen($destination_accountcode) > 0) {
-											$array["dialplans"][$row_id]["dialplan_xml"] .= "		<action application=\"set\" data=\"accountcode=".$destination_accountcode."\" inline=\"true\"/>\n";
+											$array["dialplans"][$row_id]["dialplan_xml"] .= "		<action application=\"set\" data=\"accountcode=".xml::sanitize($destination_accountcode)."\" inline=\"true\"/>\n";
 										}
 										if (strlen($destination_carrier) > 0) {
-											$array["dialplans"][$row_id]["dialplan_xml"] .= "		<action application=\"set\" data=\"carrier=".$destination_carrier."\" inline=\"true\"/>\n";
+											$array["dialplans"][$row_id]["dialplan_xml"] .= "		<action application=\"set\" data=\"carrier=".xml::sanitize($destination_carrier)."\" inline=\"true\"/>\n";
 										}
 										if (strlen($fax_uuid) > 0) {
 											$array["dialplans"][$row_id]["dialplan_xml"] .= "		<action application=\"set\" data=\"tone_detect_hits=1\" inline=\"true\"/>\n";
-											$array["dialplans"][$row_id]["dialplan_xml"] .= "		<action application=\"set\" data=\"execute_on_tone_detect=transfer ".$fax_extension." XML \${domain_name}\" inline=\"true\"/>\n";
+											$array["dialplans"][$row_id]["dialplan_xml"] .= "		<action application=\"set\" data=\"execute_on_tone_detect=transfer ".xml::sanitize($fax_extension)." XML \${domain_name}\" inline=\"true\"/>\n";
 											$array["dialplans"][$row_id]["dialplan_xml"] .= "		<action application=\"tone_detect\" data=\"fax 1100 r +5000\"/>\n";
 											$array["dialplans"][$row_id]["dialplan_xml"] .= "		<action application=\"sleep\" data=\"3000\"/>\n";
 										}
-										$array["dialplans"][$row_id]["dialplan_xml"] .= "		<action application=\"".$destination_app."\" data=\"".$destination_data."\"/>\n";
+										$array["dialplans"][$row_id]["dialplan_xml"] .= "		<action application=\"".xml::sanitize($destination_app)."\" data=\"".xml::sanitize($destination_data)."\"/>\n";
 										$array["dialplans"][$row_id]["dialplan_xml"] .= "	</condition>\n";
 										$array["dialplans"][$row_id]["dialplan_xml"] .= "</extension>\n";
 

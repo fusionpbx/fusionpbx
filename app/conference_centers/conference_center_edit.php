@@ -132,15 +132,15 @@
 		    $array['conference_centers'][0]['conference_center_description'] = $conference_center_description;
 
 		//build the xml dialplan
-			$dialplan_xml = "<extension name=\"".$conference_center_name."\" continue=\"\" uuid=\"".$dialplan_uuid."\">\n";
+			$dialplan_xml = "<extension name=\"".xml::sanitize($conference_center_name)."\" continue=\"\" uuid=\"".xml::sanitize($dialplan_uuid)."\">\n";
 			if ($conference_center_pin_length > 1 && $conference_center_pin_length < 4) {
-				$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^(".$conference_center_extension.")(\d{".$conference_center_pin_length."})$\" break=\"on-true\">\n";
+				$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^(".xml::sanitize($conference_center_extension).")(\d{".xml::sanitize($conference_center_pin_length)."})$\" break=\"on-true\">\n";
 				$dialplan_xml .= "		<action application=\"set\" data=\"destination_number=$1\"/>\n";
 				$dialplan_xml .= "		<action application=\"set\" data=\"pin_number=$2\"/>\n";
 				$dialplan_xml .= "		<action application=\"lua\" data=\"app.lua conference_center\"/>\n";
 				$dialplan_xml .= "	</condition>\n";
 			}
-			$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".$conference_center_extension."$\">\n";
+			$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".xml::sanitize($conference_center_extension)."$\">\n";
 			$dialplan_xml .= "		<action application=\"lua\" data=\"app.lua conference_center\"/>\n";
 			$dialplan_xml .= "	</condition>\n";
 			$dialplan_xml .= "</extension>\n";

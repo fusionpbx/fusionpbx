@@ -162,7 +162,7 @@
 				$agent_contact = str_replace("@", "/", $agent_contact);
 			}
 
-		//freeswitch expands the the contact string, so we need to sanitize it.
+		//freeswitch expands the contact string, so we need to sanitize it.
 			$agent_contact = str_replace('$', '', $agent_contact);
 
 		//prepare the array
