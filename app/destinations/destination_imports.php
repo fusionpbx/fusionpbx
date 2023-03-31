@@ -276,9 +276,21 @@
 											$dialplan_detail_type = "destination_number";
 										}
 
+									//authorized specific dialplan_detail_type that are safe, sanitize all other values
+										switch ($dialplan_detail_type) {
+										case 'destination_number':
+											break;
+										case '${sip_to_user}':
+											break;
+										case '${sip_req_user}':
+											break;
+										default:
+											$dialplan_detail_type = xml::sanitize($dialplan_detail_type);
+										}
+
 									//build the xml dialplan
 										$array["dialplans"][$row_id]["dialplan_xml"] = "<extension name=\"".xml::sanitize($dialplan_name)."\" continue=\"false\" uuid=\"".xml::sanitize($dialplan_uuid)."\">\n";
-										$array["dialplans"][$row_id]["dialplan_xml"] .= "	<condition field=\"".xml::sanitize($dialplan_detail_type)."\" expression=\"".xml::sanitize($destination_number_regex)."\">\n";
+										$array["dialplans"][$row_id]["dialplan_xml"] .= "	<condition field=\"".$dialplan_detail_type."\" expression=\"".xml::sanitize($destination_number_regex)."\">\n";
 										$array["dialplans"][$row_id]["dialplan_xml"] .= "		<action application=\"export\" data=\"call_direction=inbound\" inline=\"true\"/>\n";
 										$array["dialplans"][$row_id]["dialplan_xml"] .= "		<action application=\"set\" data=\"domain_uuid=".$_SESSION['domain_uuid']."\" inline=\"true\"/>\n";
 										$array["dialplans"][$row_id]["dialplan_xml"] .= "		<action application=\"set\" data=\"domain_name=".$_SESSION['domain_name']."\" inline=\"true\"/>\n";
