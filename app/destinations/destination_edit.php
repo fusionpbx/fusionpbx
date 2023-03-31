@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2022
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -433,6 +433,19 @@
 								$dialplan_detail_type = "destination_number";
 							}
 
+						//authorized specific dialplan_detail_type that are safe, sanitize all other values
+							$dialplan_detail_type = $_SESSION['dialplan']['destination']['text'];
+							switch ($dialplan_detail_type) {
+							case 'destination_number':
+								break;
+							case '${sip_to_user}':
+								break;
+							case '${sip_req_user}':
+								break;
+							default:
+								$dialplan_detail_type = xml::sanitize($dialplan_detail_type);
+							}
+
 						//set the last destination_app and destination_data variables
 							foreach($destination_actions as $destination_action) {
 								$action_array = explode(":", $destination_action, 2);
@@ -458,7 +471,7 @@
 								}
 							}
 
-							$dialplan["dialplan_xml"] .= "	<condition field=\"".xml::sanitize($dialplan_detail_type)."\" expression=\"".xml::sanitize($destination_number_regex)."\">\n";
+							$dialplan["dialplan_xml"] .= "	<condition field=\"".$dialplan_detail_type."\" expression=\"".xml::sanitize($destination_number_regex)."\">\n";
 							$dialplan["dialplan_xml"] .= "		<action application=\"export\" data=\"call_direction=inbound\" inline=\"true\"/>\n";
 							$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"domain_uuid=".$_SESSION['domain_uuid']."\" inline=\"true\"/>\n";
 							$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"domain_name=".$_SESSION['domain_name']."\" inline=\"true\"/>\n";
