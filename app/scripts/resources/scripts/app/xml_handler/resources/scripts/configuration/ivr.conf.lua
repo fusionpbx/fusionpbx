@@ -30,6 +30,9 @@
 
 	local log = require "resources.functions.log".ivr_menu
 
+--include xml library
+	local Xml = require "resources.functions.xml";
+
 --get the cache
 	local cache = require "resources.functions.cache"
 	local ivr_menu_cache_key = "configuration:ivr.conf:" .. ivr_menu_uuid
@@ -51,12 +54,12 @@
 			end
 
 		--start the xml array
-			local xml = {}
-			table.insert(xml, [[<?xml version="1.0" encoding="UTF-8" standalone="no"?>]]);
-			table.insert(xml, [[<document type="freeswitch/xml">]]);
-			table.insert(xml, [[	<section name="configuration">]]);
-			table.insert(xml, [[		<configuration name="ivr.conf" description="IVR Menus">]]);
-			table.insert(xml, [[			<menus>]]);
+			local xml = Xml:new();
+			xml:append([[<?xml version="1.0" encoding="UTF-8" standalone="no"?>]]);
+			xml:append([[<document type="freeswitch/xml">]]);
+			xml:append([[	<section name="configuration">]]);
+			xml:append([[		<configuration name="ivr.conf" description="IVR Menus">]]);
+			xml:append([[			<menus>]]);
 
 		--set the sound prefix
 			sound_prefix = sounds_dir.."/${default_language}/${default_dialect}/${default_voice}/";
@@ -245,25 +248,25 @@
 					end
 
 				--add xml to the array
-					table.insert(xml, [[				<menu name="]]..ivr_menu_uuid..[[" description="]]..ivr_menu_name..[[" ]]);
-					table.insert(xml, [[				greet-long="]]..ivr_menu_greet_long..[[" ]]);
-					table.insert(xml, [[				greet-short="]]..ivr_menu_greet_short..[[" ]]);
-					table.insert(xml, [[				invalid-sound="]]..ivr_menu_invalid_sound..[[" ]]);
-					table.insert(xml, [[				exit-sound="]]..ivr_menu_exit_sound..[[" ]]);
-					table.insert(xml, [[				pin="]]..ivr_menu_pin_number..[[" ]]);
-					table.insert(xml, [[				confirm-macro="]]..ivr_menu_confirm_macro..[[" ]]);
-					table.insert(xml, [[				confirm-key="]]..ivr_menu_confirm_key..[[" ]]);
-					table.insert(xml, [[				tts-engine="]]..ivr_menu_tts_engine..[[" ]]);
-					table.insert(xml, [[				tts-voice="]]..ivr_menu_tts_voice..[[" ]]);
-					table.insert(xml, [[				confirm-attempts="]]..ivr_menu_confirm_attempts..[[" ]]);
-					table.insert(xml, [[				timeout="]]..ivr_menu_timeout..[[" ]]);
-					table.insert(xml, [[				inter-digit-timeout="]]..ivr_menu_inter_digit_timeout..[[" ]]);
-					table.insert(xml, [[				max-failures="]]..ivr_menu_max_failures..[[" ]]);
-					table.insert(xml, [[				max-timeouts="]]..ivr_menu_max_timeouts..[[" ]]);
-					table.insert(xml, [[				digit-len="]]..ivr_menu_digit_len..[[" ]]);
-					table.insert(xml, [[				ivr_menu_exit_app="]]..ivr_menu_exit_app..[[" ]]);
-					table.insert(xml, [[				ivr_menu_exit_data="]]..ivr_menu_exit_data..[[" ]]);
-					table.insert(xml, [[				>]]);
+					xml:append([[				<menu name="]] .. xml.sanitize(ivr_menu_uuid) .. [[" description="]] .. xml.sanitize(ivr_menu_name) .. [[" ]]);
+					xml:append([[				greet-long="]] .. xml.sanitize(ivr_menu_greet_long) .. [[" ]]);
+					xml:append([[				greet-short="]] .. xml.sanitize(ivr_menu_greet_short) .. [[" ]]);
+					xml:append([[				invalid-sound="]] .. xml.sanitize(ivr_menu_invalid_sound) .. [[" ]]);
+					xml:append([[				exit-sound="]] .. xml.sanitize(ivr_menu_exit_sound) .. [[" ]]);
+					xml:append([[				pin="]] .. xml.sanitize(ivr_menu_pin_number) .. [[" ]]);
+					xml:append([[				confirm-macro="]] .. xml.sanitize(ivr_menu_confirm_macro) .. [[" ]]);
+					xml:append([[				confirm-key="]] .. xml.sanitize(ivr_menu_confirm_key) .. [[" ]]);
+					xml:append([[				tts-engine="]] .. xml.sanitize(ivr_menu_tts_engine) .. [[" ]]);
+					xml:append([[				tts-voice="]] .. xml.sanitize(ivr_menu_tts_voice) .. [[" ]]);
+					xml:append([[				confirm-attempts="]] .. xml.sanitize(ivr_menu_confirm_attempts) .. [[" ]]);
+					xml:append([[				timeout="]] .. xml.sanitize(ivr_menu_timeout) .. [[" ]]);
+					xml:append([[				inter-digit-timeout="]] .. xml.sanitize(ivr_menu_inter_digit_timeout) .. [[" ]]);
+					xml:append([[				max-failures="]] .. xml.sanitize(ivr_menu_max_failures) .. [[" ]]);
+					xml:append([[				max-timeouts="]] .. xml.sanitize(ivr_menu_max_timeouts) .. [[" ]]);
+					xml:append([[				digit-len="]] .. xml.sanitize(ivr_menu_digit_len) .. [[" ]]);
+					xml:append([[				ivr_menu_exit_app="]] .. xml.sanitize(ivr_menu_exit_app) .. [[" ]]);
+					xml:append([[				ivr_menu_exit_data="]] .. xml.sanitize(ivr_menu_exit_data) .. [[" ]]);
+					xml:append([[				>]]);
 
 				--get the ivr menu options
 					local sql = [[ SELECT * FROM v_ivr_menu_options WHERE ivr_menu_uuid = :ivr_menu_uuid AND ivr_menu_option_enabled = 'true' ORDER BY ivr_menu_option_order asc ]];
@@ -278,7 +281,7 @@
 						ivr_menu_option_param = r.ivr_menu_option_param
 						ivr_menu_option_description = r.ivr_menu_option_description
 						if (#ivr_menu_option_action > 0) then
-							table.insert(xml, [[					<entry action="]]..ivr_menu_option_action..[[" digits="]]..ivr_menu_option_digits..[[" param="]]..ivr_menu_option_param..[[" description="]]..ivr_menu_option_description..[["/>]]);
+							xml:append([[					<entry action="]] .. xml.sanitize(ivr_menu_option_action) .. [[" digits="]] .. xml.sanitize(ivr_menu_option_digits) .. [[" param="]] .. xml.sanitize(ivr_menu_option_param) .. [[" description="]] .. xml.sanitize(ivr_menu_option_description) .. [["/>]]);
 							if (tonumber(ivr_menu_option_digits) and #ivr_menu_option_digits >= tonumber(direct_dial_digits_min)) then
 								table.insert(direct_dial_exclude, ivr_menu_option_digits);
 							end
@@ -292,26 +295,26 @@
 							negative_lookahead = "(?!^("..table.concat(direct_dial_exclude, "|")..")$)";
 						end
 						local direct_dial_regex = string.format("/^(%s\\d{%s,%s})$/", negative_lookahead, direct_dial_digits_min, direct_dial_digits_max);
-						table.insert(xml, [[					<entry action="menu-exec-app" digits="]]..direct_dial_regex..[[" param="set ${cond(${user_exists id $1 ]]..domain_name..[[} == true ? user_exists=true : user_exists=false)}" description="direct dial"/>\n]]);
-						--table.insert(xml, [[					<entry action="menu-exec-app" digits="]]..direct_dial_regex..[[" param="set ${cond(${user_exists} == true ? user_exists=true : ivr_max_failures=${system(expr ${ivr_max_failures} + 1)})}" description="increment max failures"/>\n]]);
-						table.insert(xml, [[					<entry action="menu-exec-app" digits="]]..direct_dial_regex..[[" param="playback ${cond(${user_exists} == true ? ]]..sound_prefix..[[ivr/ivr-call_being_transferred.wav : ]]..sound_prefix..[[ivr/ivr-that_was_an_invalid_entry.wav)}" description="play sound"/>\n]]);
-						--table.insert(xml, [[					<entry action="menu-exec-app" digits="]]..direct_dial_regex..[[" param="transfer ${cond(${ivr_max_failures} == ]]..ivr_menu_max_failures..[[ ? ]]..ivr_menu_exit_data..[[)}" description="max fail transfer"/>\n]]);
-						table.insert(xml, [[					<entry action="menu-exec-app" digits="]]..direct_dial_regex..[[" param="transfer ${cond(${user_exists} == true ? $1 XML ]]..domain_name..[[)}" description="direct dial transfer"/>\n]]);
+						xml:append([[					<entry action="menu-exec-app" digits="]] .. xml.sanitize(direct_dial_regex) .. [[" param="set ${cond(${user_exists id $1 ]] .. xml.sanitize(domain_name) .. [[} == true ? user_exists=true : user_exists=false)}" description="direct dial"/>\n]]);
+						--xml:append([[					<entry action="menu-exec-app" digits="]] .. xml.sanitize(direct_dial_regex) .. [[" param="set ${cond(${user_exists} == true ? user_exists=true : ivr_max_failures=${system(expr ${ivr_max_failures} + 1)})}" description="increment max failures"/>\n]]);
+						xml:append([[					<entry action="menu-exec-app" digits="]] .. xml.sanitize(direct_dial_regex) .. [[" param="playback ${cond(${user_exists} == true ? ]] .. xml.sanitize(sound_prefix) .. [[ivr/ivr-call_being_transferred.wav : ]] .. xml.sanitize(sound_prefix) .. [[ivr/ivr-that_was_an_invalid_entry.wav)}" description="play sound"/>\n]]);
+						--xml:append([[					<entry action="menu-exec-app" digits="]] .. xml.sanitize(direct_dial_regex) .. [[" param="transfer ${cond(${ivr_max_failures} == ]] .. xml.sanitize(ivr_menu_max_failures) .. [[ ? ]] .. xml.sanitize(ivr_menu_exit_data) .. [[)}" description="max fail transfer"/>\n]]);
+						xml:append([[					<entry action="menu-exec-app" digits="]] .. xml.sanitize(direct_dial_regex) .. [[" param="transfer ${cond(${user_exists} == true ? $1 XML ]] .. xml.sanitize(domain_name) .. [[)}" description="direct dial transfer"/>\n]]);
 					end
 
 				--close the extension tag if it was left open
-					table.insert(xml, [[				</menu>]]);
+					xml:append([[				</menu>]]);
 
 			end);
 
 		--add the xml closing tags
-			table.insert(xml, [[			</menus>]]);
-			table.insert(xml, [[		</configuration>]]);
-			table.insert(xml, [[	</section>]]);
-			table.insert(xml, [[</document>]]);
+			xml:append([[			</menus>]]);
+			xml:append([[		</configuration>]]);
+			xml:append([[	</section>]]);
+			xml:append([[</document>]]);
 
-		--save the xml table into a string
-			XML_STRING = table.concat(xml, "\n");
+		--save the xml into a string
+			XML_STRING = xml:build();
 
 		--optinonal debug message
 			if (debug["xml_string"]) then
