@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008 - 2019
+ Portions created by the Initial Developer are Copyright (C) 2008 - 2023
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -125,7 +125,7 @@ if (!class_exists('fax')) {
 
 			//set the  last fax
 				if (strlen($_SESSION['fax']['last_fax']['text']) > 0) {
-					$last_fax = "last_fax=".$_SESSION['fax']['last_fax']['text'];
+					$last_fax = "last_fax=".xml::sanitize($_SESSION['fax']['last_fax']['text']);
 				}
 				else {
 					$last_fax = "last_fax=\${caller_id_number}-\${strftime(%Y-%m-%d-%H-%M-%S)}";
@@ -149,7 +149,7 @@ if (!class_exists('fax')) {
 						$dialplan_xml .= "		<action application=\"set\" data=\"".xml::sanitize($data)."\"/>\n";
 					}
 				}
-				$dialplan_xml .= "		<action application=\"set\" data=\"".xml::sanitize($last_fax)."\"/>\n";
+				$dialplan_xml .= "		<action application=\"set\" data=\"".$last_fax."\"/>\n";
 				$dialplan_xml .= "		<action application=\"rxfax\" data=\"$rxfax_data\"/>\n";
 				$dialplan_xml .= "		<action application=\"hangup\" data=\"\"/>\n";
 				$dialplan_xml .= "	</condition>\n";
