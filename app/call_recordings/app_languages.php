@@ -147,6 +147,8 @@ $text['label-caller_destination']['ru-ru'] = "";
 $text['label-caller_destination']['sv-se'] = "";
 $text['label-caller_destination']['uk-ua'] = "";
 
+$text['label-destination_number']['en-us'] = "Destination";
+
 $text['description-call_recording_name']['en-us'] = "";
 $text['description-call_recording_name']['en-gb'] = "";
 $text['description-call_recording_name']['ar-eg'] = "";

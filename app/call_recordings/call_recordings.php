@@ -114,7 +114,7 @@
 //get the list
 	$sql = "select r.domain_uuid, d.domain_name, r.call_recording_uuid, r.call_direction, ";
 	$sql .= "r.call_recording_name, r.call_recording_path, r.call_recording_length, ";
-	$sql .= "r.caller_id_name, r.caller_id_number, r.caller_destination, ";
+	$sql .= "r.caller_id_name, r.caller_id_number, r.caller_destination, r.destination_number, ";
 	$sql .= "to_char(timezone(:time_zone, r.call_recording_date), 'DD Mon YYYY') as call_recording_date_formatted, \n";
 	$sql .= "to_char(timezone(:time_zone, r.call_recording_date), 'HH12:MI:SS am') as call_recording_time_formatted \n";
 	$sql .= "from view_call_recordings as r, v_domains as d ";
@@ -131,6 +131,7 @@
 		$sql .= "	or lower(r.caller_id_name) like :search ";
 		$sql .= "	or lower(r.caller_id_number) like :search ";
 		$sql .= "	or lower(r.caller_destination) like :search ";
+		$sql .= "	or lower(r.destination_number) like :search ";
 		$sql .= "	or lower(r.call_recording_name) like :search ";
 		$sql .= "	or lower(r.call_recording_path) like :search ";
 		$sql .= ") ";
@@ -225,6 +226,7 @@
 	echo th_order_by('caller_id_name', $text['label-caller_id_name'], $order_by, $order, null, "class='hide-sm-dn shrink'");
 	echo th_order_by('caller_id_number', $text['label-caller_id_number'], $order_by, $order, null, "class='pct-10'");
 	echo th_order_by('caller_destination', $text['label-caller_destination'], $order_by, $order, null, "class='hide-sm-dn shrink'");
+	echo th_order_by('destination_number', $text['label-destination_number'], $order_by, $order, null, "class='hide-sm-dn shrink'");
 	echo th_order_by('call_recording_name', $text['label-call_recording_name'], $order_by, $order, null, "class='pct-40 hide-sm-dn'");
 	if (permission_exists('call_recording_play') || permission_exists('call_recording_download')) {
 		echo "<th class='shrink center'>".$text['label-recording']."</th>\n";
@@ -262,6 +264,7 @@
 			echo "	<td class='hide-sm-dn shrink'>".escape($row['caller_id_name'])."</td>\n";
 			echo "	<td class='overflow'>".escape($row['caller_id_number'])."</td>\n";
 			echo "	<td class='overflow hide-sm-dn shrink'>".escape($row['caller_destination'])."</td>\n";
+			echo "	<td class='overflow hide-sm-dn shrink'>".escape($row['destination_number'])."</td>\n";
 			echo "	<td class='hide-sm-dn nowrap'>".escape($row['call_recording_name'])."</td>\n";
 			if (permission_exists('call_recording_play') || permission_exists('call_recording_download')) {
 				echo "	<td class='middle button center no-link no-wrap'>";
