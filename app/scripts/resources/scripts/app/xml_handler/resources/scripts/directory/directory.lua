@@ -52,6 +52,7 @@ continue = true;
 		json = require "resources.functions.lunajson"
 	end
 
+--include xml library
 	local Xml = require "resources.functions.xml";
 
 --include cache library

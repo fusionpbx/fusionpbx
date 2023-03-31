@@ -1,3 +1,5 @@
+--include xml library
+	local Xml = require "resources.functions.xml";
 
 --get the cache
 	local cache = require "resources.functions.cache"
@@ -31,11 +33,11 @@
 			assert(dbh:connected());
 
 		--start the xml array
-			local xml = {}
-			table.insert(xml, [[<?xml version="1.0" encoding="UTF-8" standalone="no"?>]]);
-			table.insert(xml, [[<document type="freeswitch/xml">]]);
-			table.insert(xml, [[	<section name="configuration">]]);
-			table.insert(xml, [[		<configuration name="local_stream.conf" description="stream files from local dir">]]);
+			local xml = Xml:new();
+			xml:append([[<?xml version="1.0" encoding="UTF-8" standalone="no"?>]]);
+			xml:append([[<document type="freeswitch/xml">]]);
+			xml:append([[	<section name="configuration">]]);
+			xml:append([[		<configuration name="local_stream.conf" description="stream files from local dir">]]);
 
 		--run the query
 			sql = "select d.domain_name, s.* "
@@ -90,30 +92,30 @@
 				end
 
 				--build the xml ]]..row.music_on_hold_name..[["
-				table.insert(xml, [[	<directory name="]]..name..[[" uuid="]]..row.music_on_hold_uuid..[[" path="]]..music_on_hold_path..[[">]]);
-				table.insert(xml, [[			<param name="rate" value="]]..rate..[["/>]]);
-				table.insert(xml, [[			<param name="shuffle" value="]]..row.music_on_hold_shuffle..[["/>]]);
-				table.insert(xml, [[			<param name="channels" value="1"/>]]);
-				table.insert(xml, [[			<param name="interval" value="20"/>]]);
-				table.insert(xml, [[			<param name="timer-name" value="]]..timer_name..[["/>]]);
+				xml:append([[	<directory name="]] .. xml.sanitize(name) .. [[" uuid="]] .. xml.sanitize(row.music_on_hold_uuid) .. [[" path="]] .. xml.sanitize(music_on_hold_path) .. [[">]]);
+				xml:append([[			<param name="rate" value="]] .. xml.sanitize(rate) .. [["/>]]);
+				xml:append([[			<param name="shuffle" value="]] .. xml.sanitize(row.music_on_hold_shuffle) .. [["/>]]);
+				xml:append([[			<param name="channels" value="1"/>]]);
+				xml:append([[			<param name="interval" value="20"/>]]);
+				xml:append([[			<param name="timer-name" value="]] .. xml.sanitize(timer_name) ..[["/>]]);
 				if (chime_list ~= nil) then
-					table.insert(xml, [[			<param name="chime-list" value="]]..chime_list..[["/>]]);
+					xml:append([[			<param name="chime-list" value="]] .. xml.sanitize(chime_list) .. [["/>]]);
 				end
 				if (row.music_on_hold_chime_freq ~= nil) then
-					table.insert(xml, [[			<param name="chime-freq" value="]]..row.music_on_hold_chime_freq..[["/>]]);
+					xml:append([[			<param name="chime-freq" value="]] .. xml.sanitize(row.music_on_hold_chime_freq) .. [["/>]]);
 				end
 				if (row.music_on_hold_chime_max ~= nil) then
-					table.insert(xml, [[			<param name="chime-max" value="]]..row.music_on_hold_chime_max..[["/>]]);
+					xml:append([[			<param name="chime-max" value="]] .. xml.sanitize(row.music_on_hold_chime_max) .. [["/>]]);
 				end
-				table.insert(xml, [[		</directory>]]);
+				xml:append([[		</directory>]]);
 
 			end)
 
 		--close the extension tag if it was left open
-			table.insert(xml, [[		</configuration>]]);
-			table.insert(xml, [[	</section>]]);
-			table.insert(xml, [[</document>]]);
-			XML_STRING = table.concat(xml, "\n");
+			xml:append([[		</configuration>]]);
+			xml:append([[	</section>]]);
+			xml:append([[</document>]]);
+			XML_STRING = xml:build();
 			if (debug["xml_string"]) then
 				freeswitch.consoleLog("notice", "[xml_handler] XML_STRING: " .. XML_STRING .. "\n");
 			end
