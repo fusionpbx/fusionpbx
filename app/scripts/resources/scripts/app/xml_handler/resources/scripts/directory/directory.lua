@@ -42,8 +42,6 @@ continue = true;
 	--event_calling_function = params:getHeader("Event-Calling-Function");
 
 --set the variables as a string
-	number_alias = "";
-	number_alias_string = "";
 	vm_mailto = "";
 
 --include json library
@@ -305,11 +303,11 @@ continue = true;
 								extension = row.extension;
 								cidr = "";
 								if (string.len(row.cidr) > 0) then
-									cidr = [[ cidr="]] .. row.cidr .. [["]];
+									cidr = row.cidr;
 								end
+								number_alias = ""
 								if (string.len(row.number_alias) > 0) then
 									number_alias = row.number_alias;
-									number_alias_string = [[ number-alias="]] .. row.number_alias .. [["]];
 								end
 
 							--get the user_uuid
@@ -507,13 +505,13 @@ continue = true;
 							xml:append([[					<users>]]);
 							if (number_alias) then
 								if (cidr) then
-									xml:append([[						<user id="]] ..  xml.sanitize(extension) .. [["]] ..  xml.sanitize(cidr) ..  xml.sanitize(number_alias_string) .. [[ type=>]]);
+									xml:append([[						<user id="]] ..  xml.sanitize(extension) .. [[" cidr="]] ..  xml.sanitize(cidr) .. [[" number-alias="]] ..  xml.sanitize(number_alias) .. [[" type="">]]);
 								else
-									xml:append([[						<user id="]] ..  xml.sanitize(extension) .. [["]] ..  xml.sanitize(number_alias_string) .. [[>]]);
+									xml:append([[						<user id="]] ..  xml.sanitize(extension) .. [[" number-alias="]] ..  xml.sanitize(number_alias) .. [[">]]);
 								end
 							else
 								if (cidr) then
-									xml:append([[						<user id="]] ..  xml.sanitize(extension) .. [["]] .. cidr .. [[>]]);
+									xml:append([[						<user id="]] ..  xml.sanitize(extension) .. [[" cidr="]] .. cidr .. [[">]]);
 								else
 									xml:append([[						<user id="]] ..  xml.sanitize(extension) .. [[">]]);
 								end
