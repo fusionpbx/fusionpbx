@@ -202,6 +202,22 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Options: default, dynamic";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "5d62c711-5305-4578-b4c1-5f233e46c791";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "destinations";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "destination_country_code";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "84e89e78-5d60-4e08-bd4c-28e3fdb6395d";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "destinations";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "destination_trunk_prefix";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
+		$y++;
 
 	//cache details
 		$apps[$x]['cache']['key'] = "dialplan.\${destination_context}";
@@ -279,7 +295,8 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the area code.";
 		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_prefix";
+		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "destination_country_code";
+		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "destination_prefix";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the prefix.";
 		$z++;
