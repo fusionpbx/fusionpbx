@@ -950,14 +950,6 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enable Incoming Call Popup. 0 - No, 1 - Yes. Default is 1";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "54e1135d-ceb0-454a-adee-40721779afee";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_stun_server";
-		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "stun.counterpath.com";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Stun server for Grandstream";
-		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "b0487a11-f601-47fd-91d6-801800eb4d7b";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_weather_enabled";
