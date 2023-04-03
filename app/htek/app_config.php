@@ -61,5 +61,29 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "1=12hr 0=24hr";
-
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "58cb27b9-558d-42dd-a3c6-1f4c12690ba6";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "htek_account1_ring_tone";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Select ring tone number for account 1";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "e79dddf6-86ce-495b-a0f9-b6a8a3cae648";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "htek_screentimeout";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Select timeout for phone screen";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "7b6d11d4-675d-46e2-9dc1-27043478d33a";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "htek_pcport_mode";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Mode of the PC network port on back of phone  Bridge=1 Router=0 ExpansionModule=2";
+		$y++;
 ?>

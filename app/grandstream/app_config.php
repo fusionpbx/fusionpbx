@@ -4,7 +4,7 @@
 		$apps[$x]['uuid'] = "24ab69bf-c78b-4ab3-9911-cf30247e3e46";
 		$apps[$x]['category'] = "Vendor";
 		$apps[$x]['subcategory'] = "";
-		$apps[$x]['version'] = "1.0";
+		$apps[$x]['version'] = "1.1";
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "";
@@ -38,7 +38,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Call Waiting 0-default, 1-enabled, 2-disable.";
 		$y++;
-        	$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "3efa97d6-a35a-4371-b3db-efca7ef9b9b5";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "3efa97d6-a35a-4371-b3db-efca7ef9b9b5";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_call_waiting_ring";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
@@ -1030,4 +1030,36 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "notification tone volume 0-7";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "d84e7561-d76d-4232-9bec-fff56bacb09c";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_dial_timeout";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "4";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "No Key Entry Timeout (in seconds). Default is 4";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "7d9bb6de-c5e6-42f2-9661-347b615a9814";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_lock_volume";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Lock Volumne. 0 - No, 1 - Yes. Default is 0";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "9f4e1c98-c1cc-4800-a754-819608d81d08";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_call_popup_enable";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enable Incoming Call Popup. 0 - No, 1 - Yes. Default is 1";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "b0487a11-f601-47fd-91d6-801800eb4d7b";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_weather_enabled";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enable weather update. 0 - No, 1 - Yes. Default is 1";
+
 ?>

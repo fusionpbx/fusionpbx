@@ -759,4 +759,12 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enable or Disable App Icon on the phone display. enabled 1,1,1,1 ( Default), disable 0,0,0,0 (call log, messages, voicemail, DND)";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "3072b712-ad37-46c1-8f69-8c943647f02c";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "fanvil_pickup_num";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "**";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set Fanvil BLF call pickup code";
+		$y++;
 ?>
