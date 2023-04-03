@@ -27,6 +27,9 @@
 --include functions
 	require "resources.functions.format_ringback"
 
+--include xml library
+	local Xml = require "resources.functions.xml";
+
 --get the cache
 	local cache = require "resources.functions.cache"
 	hostname = trim(api:execute("switchname", ""));
@@ -52,23 +55,23 @@
 			dsn_callcenter = freeswitch.getGlobalVariable("dsn_callcenter") or ''
 
 		--start the xml array
-			local xml = {}
-			table.insert(xml, [[<?xml version="1.0" encoding="UTF-8" standalone="no"?>]]);
-			table.insert(xml, [[<document type="freeswitch/xml">]]);
-			table.insert(xml, [[    <section name="configuration">]]);
-			table.insert(xml, [[            <configuration name="callcenter.conf" description="Call Center">]]);
-			table.insert(xml, [[                    <settings>]]);
+			local xml = Xml:new();
+			xml:append([[<?xml version="1.0" encoding="UTF-8" standalone="no"?>]]);
+			xml:append([[<document type="freeswitch/xml">]]);
+			xml:append([[    <section name="configuration">]]);
+			xml:append([[            <configuration name="callcenter.conf" description="Call Center">]]);
+			xml:append([[                    <settings>]]);
 			if #dsn_callcenter > 0 then
-				table.insert(xml, [[                            <param name="odbc-dsn" value="]]..dsn_callcenter..[["/>]]);
+				xml:append([[                            <param name="odbc-dsn" value="]] .. xml.sanitize(dsn_callcenter) .. [["/>]]);
 			elseif #dsn > 0 then
-				table.insert(xml, [[                            <param name="odbc-dsn" value="]]..database["switch"]..[["/>]]);
+				xml:append([[                            <param name="odbc-dsn" value="]] .. xml.sanitize(database["switch"]) .. [["/>]]);
 			end
-			table.insert(xml, [[                          <param name="cc-instance-id" value="]]..hostname..[["/>]]);
-			-- table.insert(xml, [[                          <param name="dbname" value="]]..database_dir..[[/call_center.db"/>]]);
-			table.insert(xml, [[                    </settings>]]);
+			xml:append([[                          <param name="cc-instance-id" value="]] .. xml.sanitize(hostname) .. [["/>]]);
+			-- xml:append([[                          <param name="dbname" value="]] .. xml.sanitize(database_dir) .. [[/call_center.db"/>]]);
+			xml:append([[                    </settings>]]);
 
 		--write the queues
-			table.insert(xml, [[                    <queues>]]);
+			xml:append([[                    <queues>]]);
 			sql = "select * from v_call_center_queues as q, v_domains as d ";
 			sql = sql .. "where d.domain_uuid = q.domain_uuid; ";
 			if (debug["sql"]) then
@@ -103,59 +106,59 @@
 					queue_name = queue_name:gsub(" ", "-");
 
 				--start the xml
-					table.insert(xml, [[                            <queue name="]]..queue_extension..[[@]]..domain_name..[[" label="]]..queue_name..[[@]]..domain_name..[[">]]);
-					table.insert(xml, [[                                    <param name="strategy" value="]]..queue_strategy..[["/>]]);
+					xml:append([[                            <queue name="]] .. xml.sanitize(queue_extension) .. [[@]] .. xml.sanitize(domain_name) .. [[" label="]] .. xml.sanitize(queue_name) .. [[@]] .. xml.sanitize(domain_name) .. [[">]]);
+					xml:append([[                                    <param name="strategy" value="]] .. xml.sanitize(queue_strategy) .. [["/>]]);
 				--set ringback
 					queue_ringback = format_ringback(queue_moh_sound);
-					table.insert(xml, [[                                    <param name="moh-sound" value="]]..queue_ringback..[["/>]]);
+					xml:append([[                                    <param name="moh-sound" value="]] .. xml.sanitize(queue_ringback) .. [["/>]]);
 					if (queue_record_template ~= nil) then
-						table.insert(xml, [[                                    <param name="record-template" value="]]..queue_record_template..[["/>]]);
+						xml:append([[                                    <param name="record-template" value="]] .. xml.sanitize(queue_record_template) .. [["/>]]);
 					end
 					if (queue_time_base_score ~= nil) then
-						table.insert(xml, [[                                    <param name="time-base-score" value="]]..queue_time_base_score..[["/>]]);
+						xml:append([[                                    <param name="time-base-score" value="]] .. xml.sanitize(queue_time_base_score) .. [["/>]]);
 					end
 					if (queue_max_wait_time_with_no_agent ~= nil) then
-						table.insert(xml, [[                                    <param name="max-wait-time" value="]]..queue_max_wait_time..[["/>]]);
+						xml:append([[                                    <param name="max-wait-time" value="]] .. xml.sanitize(queue_max_wait_time) .. [["/>]]);
 					end
 					if (queue_max_wait_time_with_no_agent ~= nil) then
-						table.insert(xml, [[                                    <param name="max-wait-time-with-no-agent" value="]]..queue_max_wait_time_with_no_agent..[["/>]]);
+						xml:append([[                                    <param name="max-wait-time-with-no-agent" value="]] .. xml.sanitize(queue_max_wait_time_with_no_agent) .. [["/>]]);
 					end
 					if (queue_max_wait_time_with_no_agent_time_reached ~= nil) then
-						table.insert(xml, [[                                    <param name="max-wait-time-with-no-agent-time-reached" value="]]..queue_max_wait_time_with_no_agent_time_reached..[["/>]]);
+						xml:append([[                                    <param name="max-wait-time-with-no-agent-time-reached" value="]] .. xml.sanitize(queue_max_wait_time_with_no_agent_time_reached) .. [["/>]]);
 					end
 					if (queue_tier_rules_apply ~= nil) then
-						table.insert(xml, [[                                    <param name="tier-rules-apply" value="]]..queue_tier_rules_apply..[["/>]]);
+						xml:append([[                                    <param name="tier-rules-apply" value="]] .. xml.sanitize(queue_tier_rules_apply) .. [["/>]]);
 					end
 					if (queue_tier_rule_wait_second ~= nil) then
-						table.insert(xml, [[                                    <param name="tier-rule-wait-second" value="]]..queue_tier_rule_wait_second..[["/>]]);
+						xml:append([[                                    <param name="tier-rule-wait-second" value="]] .. xml.sanitize(queue_tier_rule_wait_second) .. [["/>]]);
 					end
 					if (queue_tier_rule_wait_multiply_level ~= nil) then
-						table.insert(xml, [[                                    <param name="tier-rule-wait-multiply-level" value="]]..queue_tier_rule_wait_multiply_level..[["/>]]);
+						xml:append([[                                    <param name="tier-rule-wait-multiply-level" value="]] .. xml.sanitize(queue_tier_rule_wait_multiply_level) .. [["/>]]);
 					end
 					if (queue_tier_rule_no_agent_no_wait ~= nil) then
-						table.insert(xml, [[                                    <param name="tier-rule-no-agent-no-wait" value="]]..queue_tier_rule_no_agent_no_wait..[["/>]]);
+						xml:append([[                                    <param name="tier-rule-no-agent-no-wait" value="]] .. xml.sanitize(queue_tier_rule_no_agent_no_wait) .. [["/>]]);
 					end
 					if (queue_discard_abandoned_after ~= nil) then
-						table.insert(xml, [[                                    <param name="discard-abandoned-after" value="]]..queue_discard_abandoned_after..[["/>]]);
+						xml:append([[                                    <param name="discard-abandoned-after" value="]] .. xml.sanitize(queue_discard_abandoned_after) .. [["/>]]);
 					end
 					if (queue_abandoned_resume_allowed ~= nil) then
-						table.insert(xml, [[                                    <param name="abandoned-resume-allowed" value="]]..queue_abandoned_resume_allowed..[["/>]]);
+						xml:append([[                                    <param name="abandoned-resume-allowed" value="]] .. xml.sanitize(queue_abandoned_resume_allowed) .. [["/>]]);
 					end
 					if (queue_announce_sound ~= nil) then
-						table.insert(xml, [[                                    <param name="announce-sound" value="]]..queue_announce_sound..[["/>]]);
+						xml:append([[                                    <param name="announce-sound" value="]] .. xml.sanitize(queue_announce_sound) .. [["/>]]);
 					end
 					if (queue_announce_frequency ~= nil) then
-						table.insert(xml, [[                                    <param name="announce-frequency" value="]]..queue_announce_frequency..[["/>]]);
+						xml:append([[                                    <param name="announce-frequency" value="]] .. xml.sanitize(queue_announce_frequency) .. [["/>]]);
 					end
-					table.insert(xml, [[                            </queue>]]);
+					xml:append([[                            </queue>]]);
 
 				--increment the value of x
 					x = x + 1;
 			end)
-			table.insert(xml, [[                    </queues>]]);
+			xml:append([[                    </queues>]]);
 
 		--get the agents
-			table.insert(xml, [[                    <agents>]]);
+			xml:append([[                    <agents>]]);
 			sql = "select SPLIT_PART(SPLIT_PART(a.agent_contact, '/', 2), '@', 1) as extension,  ";
 			sql = sql .. "(select extension_uuid from v_extensions where domain_uuid = a.domain_uuid ";
 			sql = sql .. "and extension = SPLIT_PART(SPLIT_PART(a.agent_contact, '/', 2), '@', 1) limit 1) as extension_uuid, ";
@@ -236,30 +239,30 @@
 						end
 
 				--build the xml string
-					table.insert(xml, [[                            <agent ]]);
-					table.insert(xml, [[                            	name="]]..agent_uuid..[[" ]]);
-					table.insert(xml, [[                            	label="]]..agent_name..[[@]]..domain_name..[[" ]]);
-					table.insert(xml, [[                            	type="]]..agent_type..[[" ]]);
-					table.insert(xml, [[                            	contact="]]..agent_contact..[[" ]]);
-					table.insert(xml, [[                            	status="]]..agent_status..[[" ]]);
+					xml:append([[                            <agent ]]);
+					xml:append([[                            	name="]] .. xml.sanitize(agent_uuid) .. [[" ]]);
+					xml:append([[                            	label="]] .. xml.sanitize(agent_name) .. [[@]] .. xml.sanitize(domain_name) .. [[" ]]);
+					xml:append([[                            	type="]] .. xml.sanitize(agent_type) .. [[" ]]);
+					xml:append([[                            	contact="]] .. xml.sanitize(agent_contact) .. [[" ]]);
+					xml:append([[                            	status="]] .. xml.sanitize(agent_status) .. [[" ]]);
 					if (agent_no_answer_delay_time ~= nil) then
-						table.insert(xml, [[                            	no-answer-delay-time="]]..agent_no_answer_delay_time..[[" ]]);
+						xml:append([[                            	no-answer-delay-time="]] .. xml.sanitize(agent_no_answer_delay_time) .. [[" ]]);
 					end
 					if (agent_max_no_answer ~= nil) then
-						table.insert(xml, [[                            	max-no-answer="]]..agent_max_no_answer..[[" ]]);
+						xml:append([[                            	max-no-answer="]] .. xml.sanitize(agent_max_no_answer) .. [[" ]]);
 					end
 					if (agent_wrap_up_time ~= nil) then
-						table.insert(xml, [[                            	wrap-up-time="]]..agent_wrap_up_time..[[" ]]);
+						xml:append([[                            	wrap-up-time="]] .. xml.sanitize(agent_wrap_up_time) .. [[" ]]);
 					end
 					if (agent_reject_delay_time ~= nil) then
-						table.insert(xml, [[                            	reject-delay-time="]]..agent_reject_delay_time..[[" ]]);
+						xml:append([[                            	reject-delay-time="]] .. xml.sanitize(agent_reject_delay_time) .. [[" ]]);
 					end
 					if (agent_busy_delay_time ~= nil) then
-						table.insert(xml, [[                            	busy-delay-time="]]..agent_busy_delay_time..[[" ]]);
+						xml:append([[                            	busy-delay-time="]] .. xml.sanitize(agent_busy_delay_time) .. [[" ]]);
 					end
-					table.insert(xml, [[                            	/>]]);
+					xml:append([[                            	/>]]);
 			end)
-			table.insert(xml, [[                    </agents>]]);
+			xml:append([[                    </agents>]]);
 
 		--get the tiers
 			sql = "select t.domain_uuid, d.domain_name, t.call_center_agent_uuid, t.call_center_queue_uuid, q.queue_extension, t.tier_level, t.tier_position ";
@@ -269,7 +272,7 @@
 			if (debug["sql"]) then
 				freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");
 			end
-			table.insert(xml, [[                    <tiers>]]);
+			xml:append([[                    <tiers>]]);
 			dbh:query(sql, function(row)
 				--get the values from the database and set as variables
 					domain_uuid = row.domain_uuid;
@@ -280,25 +283,25 @@
 					tier_level = row.tier_level;
 					tier_position = row.tier_position;
 				--build the xml
-					table.insert(xml, [[                            <tier ]]);
-					table.insert(xml, [[                            	agent="]]..agent_uuid..[[" ]]);
-					table.insert(xml, [[                            	queue="]]..queue_extension..[[@]]..domain_name..[[" ]]);
-					table.insert(xml, [[                            	domain_name="]]..domain_name..[[" ]]);
-					--table.insert(xml, [[                            	agent_name="]]..agent_name..[[" ]]);
-					--table.insert(xml, [[                            	queue_name="]]..queue_name..[[" ]]);
-					table.insert(xml, [[                            	level="]]..tier_level..[[" ]]);
-					table.insert(xml, [[                            	position="]]..tier_position..[[" ]]);
-					table.insert(xml, [[                            />]]);
+					xml:append([[                            <tier ]]);
+					xml:append([[                            	agent="]] .. xml.sanitize(agent_uuid) .. [[" ]]);
+					xml:append([[                            	queue="]] .. xml.sanitize(queue_extension) .. [[@]] .. xml.sanitize(domain_name) .. [[" ]]);
+					xml:append([[                            	domain_name="]] .. xml.sanitize(domain_name) .. [[" ]]);
+					--xml:append([[                            	agent_name="]] .. xml.sanitize(agent_name) .. [[" ]]);
+					--xml:append([[                            	queue_name="]] .. xml.sanitize(queue_name) .. [[" ]]);
+					xml:append([[                            	level="]] .. xml.sanitize(tier_level) .. [[" ]]);
+					xml:append([[                            	position="]] .. xml.sanitize(tier_position) .. [[" ]]);
+					xml:append([[                            />]]);
 			end)
-			table.insert(xml, [[                    </tiers>]]);
+			xml:append([[                    </tiers>]]);
 
 		--close the extension tag if it was left open
-			table.insert(xml, [[            </configuration>]]);
-			table.insert(xml, [[    </section>]]);
-			table.insert(xml, [[</document>]]);
-			XML_STRING = table.concat(xml, "\n");
+			xml:append([[            </configuration>]]);
+			xml:append([[    </section>]]);
+			xml:append([[</document>]]);
+			XML_STRING = xml:build();
 			if (debug["xml_string"]) then
-					freeswitch.consoleLog("notice", "[xml_handler] XML_STRING: " .. XML_STRING .. "\n");
+				freeswitch.consoleLog("notice", "[xml_handler] XML_STRING: " .. XML_STRING .. "\n");
 			end
 
 		--close the database connection

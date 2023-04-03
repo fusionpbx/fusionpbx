@@ -101,12 +101,12 @@
 			--end
 
 		--build the xml array
-			local xml = {}
-			table.insert(xml, [[<?xml version="1.0" encoding="UTF-8" standalone="no"?>]]);
-			table.insert(xml, [[<document type="freeswitch/xml">]]);
-			table.insert(xml, [[	<section name="directory">]]);
-			table.insert(xml, [[		<domain name="]] .. domain_name .. [[">]]);
-			table.insert(xml, [[		<groups>]]);
+			local xml = Xml:new();
+			xml:append([[<?xml version="1.0" encoding="UTF-8" standalone="no"?>]]);
+			xml:append([[<document type="freeswitch/xml">]]);
+			xml:append([[	<section name="directory">]]);
+			xml:append([[		<domain name="]] .. xml.sanitize(domain_name) .. [[">]]);
+			xml:append([[		<groups>]]);
 			previous_call_group = "";
 			for key, value in pairs(call_group_array) do
 				call_group = trim(key);
@@ -115,23 +115,23 @@
 					freeswitch.consoleLog("notice", "[directory] call_group: " .. call_group .. "\n");
 					freeswitch.consoleLog("notice", "[directory] extension_list: " .. extension_list .. "\n");
 					if (previous_call_group ~= call_group) then
-						table.insert(xml, [[			<group name="]]..call_group..[[">]]);
-						table.insert(xml, [[				<users>]]);
+						xml:append([[			<group name="]] .. xml.sanitize(call_group) .. [[">]]);
+						xml:append([[				<users>]]);
 						extension_array = explode(",", extension_list);
 						for index,tmp_extension in pairs(extension_array) do
-								table.insert(xml, [[					<user id="]]..tmp_extension..[[" type="pointer"/>]]);
+							xml:append([[					<user id="]] .. xml.sanitize(tmp_extension) .. [[" type="pointer"/>]]);
 						end
-						table.insert(xml, [[				</users>]]);
-						table.insert(xml, [[			</group>]]);
+						xml:append([[				</users>]]);
+						xml:append([[			</group>]]);
 					end
 					previous_call_group = call_group;
 				end
 			end
-			table.insert(xml, [[		</groups>]]);
-			table.insert(xml, [[		</domain>]]);
-			table.insert(xml, [[	</section>]]);
-			table.insert(xml, [[</document>]]);
-			XML_STRING = table.concat(xml, "\n");
+			xml:append([[		</groups>]]);
+			xml:append([[		</domain>]]);
+			xml:append([[	</section>]]);
+			xml:append([[</document>]]);
+			XML_STRING = xml:build();
 
 		--close the database connection
 			dbh:release();

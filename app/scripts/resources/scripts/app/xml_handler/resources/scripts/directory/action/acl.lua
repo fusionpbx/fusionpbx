@@ -10,10 +10,10 @@
 	end
 
 --build the xml
-	local xml = {}
-	table.insert(xml, [[<?xml version="1.0" encoding="UTF-8" standalone="no"?>]])
-	table.insert(xml, [[<document type="freeswitch/xml">]])
-	table.insert(xml, [[	<section name="directory">]])
+	local xml = Xml:new();
+	xml:append([[<?xml version="1.0" encoding="UTF-8" standalone="no"?>]])
+	xml:append([[<document type="freeswitch/xml">]])
+	xml:append([[	<section name="directory">]])
 
 --process when the sip profile is rescanned, sofia is reloaded, or sip redirect
 	local sql = "SELECT * FROM v_domains as d, v_extensions as e "
@@ -34,33 +34,33 @@
 	dbh:query(sql, params, function(row)
 		if prev_domain_name ~= row.domain_name then
 			if prev_domain_name then
-				table.insert(xml, [[					</users>]])
-				table.insert(xml, [[				</group>]])
-				table.insert(xml, [[			</groups>]])
-				table.insert(xml, [[		</domain>]])
+				xml:append([[					</users>]])
+				xml:append([[				</group>]])
+				xml:append([[			</groups>]])
+				xml:append([[		</domain>]])
 			end
 			prev_domain_name = row.domain_name
-			table.insert(xml, [[		<domain name="]] .. row.domain_name .. [[" alias="true">]])
-			table.insert(xml, [[			<groups>]])
-			table.insert(xml, [[				<group name="default">]])
-			table.insert(xml, [[					<users>]])
+			xml:append([[		<domain name="]] .. xml.sanitize(row.domain_name) .. [[" alias="true">]])
+			xml:append([[			<groups>]])
+			xml:append([[				<group name="default">]])
+			xml:append([[					<users>]])
 		end
 
-		local cidr = (#row.cidr > 0) and (' cidr="' .. row.cidr .. '"') or ''
-		table.insert(xml, [[						<user id="]] .. row.extension .. [["]] .. cidr .. [[/>]])
+		local cidr = (#row.cidr > 0) and (' cidr="' .. xml.sanitize(row.cidr) .. '"') or ''
+		xml:append([[						<user id="]] .. xml.sanitize(row.extension) .. [["]] .. cidr .. [[/>]])
 	end)
 
 	if prev_domain_name then
-		table.insert(xml, [[					</users>]])
-		table.insert(xml, [[				</group>]])
-		table.insert(xml, [[			</groups>]])
-		table.insert(xml, [[		</domain>]])
+		xml:append([[					</users>]])
+		xml:append([[				</group>]])
+		xml:append([[			</groups>]])
+		xml:append([[		</domain>]])
 	end
 
-	table.insert(xml, [[	</section>]])
-	table.insert(xml, [[</document>]])
+	xml:append([[	</section>]])
+	xml:append([[</document>]])
+	XML_STRING = xml:build();
 
-	XML_STRING = table.concat(xml, "\n")
 	if (debug["xml_string"]) then
 		log.notice("XML_STRING "..XML_STRING)
 	end

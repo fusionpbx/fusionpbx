@@ -32,6 +32,9 @@
 		loopback.auto - ACL for your local lan.
 	]]
 
+--include xml library
+	local Xml = require "resources.functions.xml";
+
 --get the cache
 	local cache = require "resources.functions.cache"
 	local acl_cache_key = "configuration:acl.conf"
@@ -64,12 +67,12 @@
 			assert(dbh:connected());
 
 		--start the xml array
-			local xml = {}
-			table.insert(xml, [[<?xml version="1.0" encoding="UTF-8" standalone="no"?>]]);
-			table.insert(xml, [[<document type="freeswitch/xml">]]);
-			table.insert(xml, [[	<section name="configuration">]]);
-			table.insert(xml, [[		<configuration name="acl.conf" description="Network Lists">]]);
-			table.insert(xml, [[			<network-lists>]]);
+			local xml = Xml:new();
+			xml:append([[<?xml version="1.0" encoding="UTF-8" standalone="no"?>]]);
+			xml:append([[<document type="freeswitch/xml">]]);
+			xml:append([[	<section name="configuration">]]);
+			xml:append([[		<configuration name="acl.conf" description="Network Lists">]]);
+			xml:append([[			<network-lists>]]);
 
 		--run the query
 			sql = "select * from v_access_controls ";
@@ -81,7 +84,7 @@
 			dbh:query(sql, function(row)
 
 				--list open tag
-					table.insert(xml, [[				<list name="]]..row.access_control_name..[[" default="]]..row.access_control_default..[[">]]);
+					xml:append([[				<list name="]] .. xml.sanitize(row.access_control_name) .. [[" default="]] .. xml.sanitize(row.access_control_default) .. [[">]]);
 
 				--get the nodes
 					sql = "select * from v_access_control_nodes ";
@@ -93,23 +96,23 @@
 					x = 0;
 					dbh:query(sql, params, function(field)
 						if (string.len(field.node_domain) > 0) then
-							table.insert(xml, [[					<node type="]] .. field.node_type .. [[" domain="]] .. field.node_domain .. [[" description="]] .. field.node_description .. [["/>]]);
+							xml:append([[					<node type="]] .. xml.sanitize(field.node_type) .. [[" domain="]] .. xml.sanitize(field.node_domain) .. [[" description="]] .. xml.sanitize(field.node_description) .. [["/>]]);
 						else
-							table.insert(xml, [[					<node type="]] .. field.node_type .. [[" cidr="]] .. field.node_cidr .. [[" description="]] .. field.node_description .. [["/>]]);
+							xml:append([[					<node type="]] .. xml.sanitize(field.node_type) .. [[" cidr="]] .. xml.sanitize(field.node_cidr) .. [[" description="]] .. xml.sanitize(field.node_description) .. [["/>]]);
 						end
 					end)
 
 				--list close tag
-					table.insert(xml, [[				</list>]]);
+					xml:append([[				</list>]]);
 
 			end)
 
 		--close the extension tag if it was left open
-			table.insert(xml, [[			</network-lists>]]);
-			table.insert(xml, [[		</configuration>]]);
-			table.insert(xml, [[	</section>]]);
-			table.insert(xml, [[</document>]]);
-			XML_STRING = table.concat(xml, "\n");
+			xml:append([[			</network-lists>]]);
+			xml:append([[		</configuration>]]);
+			xml:append([[	</section>]]);
+			xml:append([[</document>]]);
+			XML_STRING = xml:build();
 			if (debug["xml_string"]) then
 				freeswitch.consoleLog("notice", "[xml_handler] XML_STRING: " .. XML_STRING .. "\n");
 			end

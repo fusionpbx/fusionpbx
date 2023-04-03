@@ -162,6 +162,9 @@
 				$agent_contact = str_replace("@", "/", $agent_contact);
 			}
 
+		//freeswitch expands the contact string, so we need to sanitize it.
+			$agent_contact = str_replace('$', '', $agent_contact);
+
 		//prepare the array
 			$array['call_center_agents'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
 			$array['call_center_agents'][0]['call_center_agent_uuid'] = $call_center_agent_uuid;

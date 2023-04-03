@@ -113,26 +113,26 @@
 			}
 
 		//build the xml dialplan
-			$dialplan_xml = "<extension name=\"".$ivr_menu_name."\" continue=\"\" uuid=\"".$dialplan_uuid."\">\n";
-			$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".$ivr_menu_extension."\">\n";
+			$dialplan_xml = "<extension name=\"".xml::sanitize($ivr_menu_name)."\" continue=\"\" uuid=\"".xml::sanitize($dialplan_uuid)."\">\n";
+			$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".xml::sanitize($ivr_menu_extension)."\">\n";
 			$dialplan_xml .= "		<action application=\"ring_ready\" data=\"\"/>\n";
 			$dialplan_xml .= "		<action application=\"answer\" data=\"\"/>\n";
 			$dialplan_xml .= "		<action application=\"sleep\" data=\"1000\"/>\n";
 			$dialplan_xml .= "		<action application=\"set\" data=\"hangup_after_bridge=true\"/>\n";
-			$dialplan_xml .= "		<action application=\"set\" data=\"ringback=".$ivr_menu_ringback."\"/>\n";
-			$dialplan_xml .= "		<action application=\"set\" data=\"transfer_ringback=".$ivr_menu_ringback."\"/>\n";
-			$dialplan_xml .= "		<action application=\"set\" data=\"presence_id=".$ivr_menu_extension."@".$_SESSION['domain_name']."\"/>\n";
+			$dialplan_xml .= "		<action application=\"set\" data=\"ringback=".xml::sanitize($ivr_menu_ringback)."\"/>\n";
+			$dialplan_xml .= "		<action application=\"set\" data=\"transfer_ringback=".xml::sanitize($ivr_menu_ringback)."\"/>\n";
+			$dialplan_xml .= "		<action application=\"set\" data=\"presence_id=".xml::sanitize($ivr_menu_extension)."@".$_SESSION['domain_name']."\"/>\n";
 			if (strlen($ivr_menu_language) > 0) {
-				$dialplan_xml .= "		<action application=\"set\" data=\"default_language=".$ivr_menu_language."\" inline=\"true\"/>\n";
-				$dialplan_xml .= "		<action application=\"set\" data=\"default_dialect=".$ivr_menu_dialect."\" inline=\"true\"/>\n";
-				$dialplan_xml .= "		<action application=\"set\" data=\"default_voice=".$ivr_menu_voice ."\" inline=\"true\"/>\n";
+				$dialplan_xml .= "		<action application=\"set\" data=\"default_language=".xml::sanitize($ivr_menu_language)."\" inline=\"true\"/>\n";
+				$dialplan_xml .= "		<action application=\"set\" data=\"default_dialect=".xml::sanitize($ivr_menu_dialect)."\" inline=\"true\"/>\n";
+				$dialplan_xml .= "		<action application=\"set\" data=\"default_voice=".xml::sanitize($ivr_menu_voice)."\" inline=\"true\"/>\n";
 			}
-			$dialplan_xml .= "		<action application=\"set\" data=\"ivr_menu_uuid=".$ivr_menu_uuid."\"/>\n";
+			$dialplan_xml .= "		<action application=\"set\" data=\"ivr_menu_uuid=".xml::sanitize($ivr_menu_uuid)."\"/>\n";
 			if (strlen($ivr_menu_cid_prefix) > 0) {
-				$dialplan_xml .= "		<action application=\"set\" data=\"caller_id_name=".$ivr_menu_cid_prefix."#\${caller_id_name}\"/>\n";
+				$dialplan_xml .= "		<action application=\"set\" data=\"caller_id_name=".xml::sanitize($ivr_menu_cid_prefix)."#\${caller_id_name}\"/>\n";
 				$dialplan_xml .= "		<action application=\"set\" data=\"effective_caller_id_name=\${caller_id_name}\"/>\n";
 			}
-			$dialplan_xml .= "		<action application=\"ivr\" data=\"".$ivr_menu_uuid."\"/>\n";
+			$dialplan_xml .= "		<action application=\"ivr\" data=\"".xml::sanitize($ivr_menu_uuid)."\"/>\n";
 			$dialplan_xml .= "		<action application=\"hangup\" data=\"\"/>\n";
 			$dialplan_xml .= "	</condition>\n";
 			$dialplan_xml .= "</extension>\n";

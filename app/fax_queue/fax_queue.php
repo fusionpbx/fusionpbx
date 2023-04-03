@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2022
+	Portions created by the Initial Developer are Copyright (C) 2023
 	the Initial Developer. All Rights Reserved.
 */
 
@@ -269,6 +269,18 @@
 	}
 	else {
 		echo "			<option value='sent'>".$text['label-sent']."</option>\n";
+	}
+	if (isset($_GET["fax_status"]) && $_GET["fax_status"] == "trying") {
+		echo "			<option value='trying' selected='selected'>".$text['label-trying']."</option>\n";
+	}
+	else {
+		echo "			<option value='trying'>".$text['label-trying']."</option>\n";
+	}
+	if (isset($_GET["fax_status"]) && $_GET["fax_status"] == "busy") {
+		echo "			<option value='busy' selected='selected'>".$text['label-busy']."</option>\n";
+	}
+	else {
+		echo "			<option value='busy'>".$text['label-busy']."</option>\n";
 	}
 	echo "		</select>\n";
 	if (permission_exists('fax_queue_all')) {

@@ -172,16 +172,16 @@
 			$destination_feature = str_replace("+", "\+", $destination_feature);
 
 		//build the xml dialplan
-			$dialplan_xml = "<extension name=\"".$call_flow_name."\" continue=\"\" uuid=\"".$dialplan_uuid."\">\n";
-			$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".$destination_feature."$\" break=\"on-true\">\n";
+			$dialplan_xml = "<extension name=\"".xml::sanitize($call_flow_name)."\" continue=\"\" uuid=\"".xml::sanitize($dialplan_uuid)."\">\n";
+			$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".xml::sanitize($destination_feature)."$\" break=\"on-true\">\n";
 			$dialplan_xml .= "		<action application=\"answer\" data=\"\"/>\n";
 			$dialplan_xml .= "		<action application=\"sleep\" data=\"200\"/>\n";
 			$dialplan_xml .= "		<action application=\"set\" data=\"feature_code=true\"/>\n";
-			$dialplan_xml .= "		<action application=\"set\" data=\"call_flow_uuid=".$call_flow_uuid."\"/>\n";
+			$dialplan_xml .= "		<action application=\"set\" data=\"call_flow_uuid=".xml::sanitize($call_flow_uuid)."\"/>\n";
 			$dialplan_xml .= "		<action application=\"lua\" data=\"call_flow.lua\"/>\n";
 			$dialplan_xml .= "	</condition>\n";
-			$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".$destination_extension."$\">\n";
-			$dialplan_xml .= "		<action application=\"set\" data=\"call_flow_uuid=".$call_flow_uuid."\"/>\n";
+			$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".xml::sanitize($destination_extension)."$\">\n";
+			$dialplan_xml .= "		<action application=\"set\" data=\"call_flow_uuid=".xml::sanitize($call_flow_uuid)."\"/>\n";
 			$dialplan_xml .= "		<action application=\"lua\" data=\"call_flow.lua\"/>\n";
 			$dialplan_xml .= "	</condition>\n";
 			$dialplan_xml .= "</extension>\n";
