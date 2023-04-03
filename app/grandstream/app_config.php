@@ -918,7 +918,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Offhook Auto-Dial (User ID/extension to dial automatically when offhook)";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "51df9860-8767-43a8-9bf9-857dc50c5f3f";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "8174d01b-0281-43ab-ba39-81f4f070ffcd";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_auto_dial_delay";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
@@ -926,7 +926,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Offhook Auto-Dial Delay (0-60 seconds, default is 0)";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "51df9860-8767-43a8-9bf9-857dc50c5f3f";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "e7dd2fb0-e4f0-4678-b886-d53bcd8cf6e1";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_dp750_use_standard_firmware_path";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
@@ -934,7 +934,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "look for Grandstream DP750 firmware in the same location as other grandstream firmwares (if false /dp750 will be suffixed to the path)";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "51df9860-8767-43a8-9bf9-857dc50c5f3f";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "3fa4345b-f04d-475e-a85a-b341440dd677";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_automatic_provisioning";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
@@ -942,7 +942,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "if grandstream devices should automatically upgrade and reprovision themselves. 0 - no, 1 - every interval specified in minutes 2 - every day 3 - every week";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "51df9860-8767-43a8-9bf9-857dc50c5f3f";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "cd742ad6-e03c-4a8d-98b1-a8f888a986c5";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_automatic_provisioning_minutes";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
@@ -950,7 +950,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "when grandstream_automatic_provisioning is set to 1, when do upgrade (specify number of minutes between update checks, 60-86400)";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "51df9860-8767-43a8-9bf9-857dc50c5f3f";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "1698812f-b8a7-47b8-84ac-bbcd49cf84c8";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_automatic_provisioning_hour";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
@@ -958,7 +958,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "when grandstream_automatic_provisioning is set to 2, when do upgrade (which hour of the day, 0-23)";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "51df9860-8767-43a8-9bf9-857dc50c5f3f";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "3a7398dc-6b87-4cb1-b975-e0f316f0f648";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_automatic_provisioning_day";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
@@ -966,7 +966,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "when grandstream_automatic_provisioning is set to 3, when do upgrade (which day of the week, 0-6)";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "51df9860-8767-43a8-9bf9-857dc50c5f3f";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "0e775328-c4de-4907-8cc2-7dbd8f668bb2";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_key_mode";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
@@ -974,7 +974,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Grandstream call screening key mode. 1 - line mode 2 - account mode";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "51df9860-8767-43a8-9bf9-857dc50c5f3f";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "54773af9-e06b-49ed-93bd-8ce4095d77aa";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_auto_answer";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
@@ -982,7 +982,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "auto answer calls";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "51df9860-8767-43a8-9bf9-857dc50c5f3f";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "9e595090-8b81-469b-9fb8-c21435f2bf42";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_auto_answer_numbers";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
@@ -990,7 +990,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "when grandstream_auto_answer is enabled, only automatically answer calls from numbers matching this template (for example, specify XXX to auto-answer calls from 3 digit numbers)";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "51df9860-8767-43a8-9bf9-857dc50c5f3f";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "3ebdbdd6-69ff-4a23-b075-867559c1acd5";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_call_log";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
@@ -998,7 +998,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "0 - Log All Calls, 1 - Log Incoming/Outgoing only (missed calls NOT recorded), 2 - Disable Call Log. Default is 0";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "51df9860-8767-43a8-9bf9-857dc50c5f3f";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "92c1ed11-b487-48b3-bfb8-b0f035f4f505";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_handset_tx_gain";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
@@ -1006,7 +1006,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "handset TX gain";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "51df9860-8767-43a8-9bf9-857dc50c5f3f";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "e17bc983-cc7c-440d-a572-5c86b6bef7ad";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_24hr_time_display";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
@@ -1014,7 +1014,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "whether or not to use 24 hour time";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "51df9860-8767-43a8-9bf9-857dc50c5f3f";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "71ea0f47-be10-4db3-ac25-d225369d9a12";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_system_ring";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
@@ -1022,7 +1022,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "the system ringtone";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "51df9860-8767-43a8-9bf9-857dc50c5f3f";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "de422ef9-feed-4c13-ab2a-0b68e86e3dee";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_notification_tone_volume";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
