@@ -266,7 +266,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_stun_server";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "mydomain.com";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "stun.counterpath.com";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Bug in Grandstream where null stun_server defaults to sip server/port";
 		$y++;
