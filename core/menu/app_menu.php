@@ -98,7 +98,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Apps";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "";
-	$apps[$x]['menu'][$y]['title']['nl-nl'] = "";
+	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Applicaties";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Aplikacje";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Aplicações";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Aplicações";
@@ -214,7 +214,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = 'Déconnexion';
 	$apps[$x]['menu'][$y]['title']['he-il'] = "";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Logout";
-	$apps[$x]['menu'][$y]['title']['nl-nl'] = "";
+	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Uitloggen";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = 'Wyloguj';
 	$apps[$x]['menu'][$y]['title']['pt-br'] = 'Sair';
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "";

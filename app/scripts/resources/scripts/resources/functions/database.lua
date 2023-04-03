@@ -41,6 +41,7 @@ local function apply_params(db, sql, params)
 
   local str = string.gsub(sql, param_pattern, function(param)
     local v, t = params[param], type(params[param])
+    if "NULL"    == v then return 'NULL'           end
     if "string"  == t then return db:quote(v)      end
     if "number"  == t then return tostring(v)      end
     if "boolean" == t then return v and '1' or '0' end

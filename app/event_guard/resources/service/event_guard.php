@@ -587,6 +587,7 @@
 		$sql .= "from v_user_logs ";
 		$sql .= "where remote_address = :remote_address ";
 		$sql .= "and result = 'success' ";
+		$sql .= "and timestamp > NOW() - INTERVAL '8 days' ";
 		$parameters['remote_address'] = $ip_address;  
 		$database = new database;
 		$user_log_count = $database->select($sql, $parameters, 'column');

@@ -24,6 +24,9 @@
 --	ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 --	POSSIBILITY OF SUCH DAMAGE.
 
+--include xml library
+	local Xml = require "resources.functions.xml";
+
 --connect to the database
 	local Database = require "resources.functions.database";
 	dbh = Database.new('system');
@@ -32,17 +35,17 @@
 	assert(dbh:connected());
 
 --process when the sip profile is rescanned, sofia is reloaded, or sip redirect
-	local xml = {}
-	table.insert(xml, [[<?xml version="1.0" encoding="UTF-8" standalone="no"?>]]);
-	table.insert(xml, [[<document type="freeswitch/xml">]]);
-	table.insert(xml, [[	<section name="directory">]]);
+	local xml = Xml:new();
+	xml:append([[<?xml version="1.0" encoding="UTF-8" standalone="no"?>]]);
+	xml:append([[<document type="freeswitch/xml">]]);
+	xml:append([[	<section name="directory">]]);
 	local sql = "SELECT domain_name FROM v_domains ";
 	dbh:query(sql, function(row)
-		table.insert(xml, [[		<domain name="]]..row.domain_name..[[" />]]);
+		xml:append([[		<domain name="]] .. xml.sanitize(row.domain_name) .. [[" />]]);
 	end);
-	table.insert(xml, [[	</section>]]);
-	table.insert(xml, [[</document>]]);
-	XML_STRING = table.concat(xml, "\n");
+	xml:append([[	</section>]]);
+	xml:append([[</document>]]);
+	XML_STRING = xml:build();
 
 --close the database connection
 	dbh:release();

@@ -12,7 +12,7 @@
 		$text['title-user_logs']['fr-fr'] = '';
 		$text['title-user_logs']['he-il'] = '';
 		$text['title-user_logs']['it-it'] = '';
-		$text['title-user_logs']['nl-nl'] = '';
+		$text['title-user_logs']['nl-nl'] = 'Gebruiker logs';
 		$text['title-user_logs']['pl-pl'] = 'Logi Użytkownika';
 		$text['title-user_logs']['pt-br'] = '';
 		$text['title-user_logs']['pt-pt'] = '';
@@ -32,7 +32,7 @@
 		$text['title-user_log']['fr-fr'] = '';
 		$text['title-user_log']['he-il'] = '';
 		$text['title-user_log']['it-it'] = '';
-		$text['title-user_log']['nl-nl'] = '';
+		$text['title-user_log']['nl-nl'] = 'Gebruiker log';
 		$text['title-user_log']['pl-pl'] = 'Log Użytkownika';
 		$text['title-user_log']['pt-br'] = '';
 		$text['title-user_log']['pt-pt'] = '';
@@ -72,7 +72,7 @@
 		$text['label-timestamp']['fr-fr'] = '';
 		$text['label-timestamp']['he-il'] = '';
 		$text['label-timestamp']['it-it'] = '';
-		$text['label-timestamp']['nl-nl'] = '';
+		$text['label-timestamp']['nl-nl'] = 'Tijdstip';
 		$text['label-timestamp']['pl-pl'] = 'Znacznik czasu';
 		$text['label-timestamp']['pt-br'] = '';
 		$text['label-timestamp']['pt-pt'] = '';
@@ -92,7 +92,7 @@
 		$text['description-timestamp']['fr-fr'] = '';
 		$text['description-timestamp']['he-il'] = '';
 		$text['description-timestamp']['it-it'] = '';
-		$text['description-timestamp']['nl-nl'] = '';
+		$text['description-timestamp']['nl-nl'] = 'Stel de datum/tijd in.';
 		$text['description-timestamp']['pl-pl'] = 'Ustaw datę.';
 		$text['description-timestamp']['pt-br'] = '';
 		$text['description-timestamp']['pt-pt'] = '';
@@ -112,7 +112,7 @@
 		$text['label-user_uuid']['fr-fr'] = '';
 		$text['label-user_uuid']['he-il'] = '';
 		$text['label-user_uuid']['it-it'] = '';
-		$text['label-user_uuid']['nl-nl'] = '';
+		$text['label-user_uuid']['nl-nl'] = 'Gebruiker';
 		$text['label-user_uuid']['pl-pl'] = 'Użytkownik';
 		$text['label-user_uuid']['pt-br'] = '';
 		$text['label-user_uuid']['pt-pt'] = '';
@@ -132,7 +132,7 @@
 		$text['description-user_uuid']['fr-fr'] = '';
 		$text['description-user_uuid']['he-il'] = '';
 		$text['description-user_uuid']['it-it'] = '';
-		$text['description-user_uuid']['nl-nl'] = '';
+		$text['description-user_uuid']['nl-nl'] = 'Selecteer de gebruiker.';
 		$text['description-user_uuid']['pl-pl'] = 'Wybierz użytkownika.';
 		$text['description-user_uuid']['pt-br'] = '';
 		$text['description-user_uuid']['pt-pt'] = '';
@@ -152,7 +152,7 @@
 		$text['label-username']['fr-fr'] = '';
 		$text['label-username']['he-il'] = '';
 		$text['label-username']['it-it'] = '';
-		$text['label-username']['nl-nl'] = '';
+		$text['label-username']['nl-nl'] = 'Gebruikersnaam';
 		$text['label-username']['pl-pl'] = 'Użytkownik';
 		$text['label-username']['pt-br'] = '';
 		$text['label-username']['pt-pt'] = '';
@@ -172,7 +172,7 @@
 		$text['description-username']['fr-fr'] = '';
 		$text['description-username']['he-il'] = '';
 		$text['description-username']['it-it'] = '';
-		$text['description-username']['nl-nl'] = '';
+		$text['description-username']['nl-nl'] = 'Voer de gebruikersnaam in.';
 		$text['description-username']['pl-pl'] = 'Wprowadź użytkownika.';
 		$text['description-username']['pt-br'] = '';
 		$text['description-username']['pt-pt'] = '';
@@ -212,7 +212,7 @@
 		$text['description-type']['fr-fr'] = '';
 		$text['description-type']['he-il'] = '';
 		$text['description-type']['it-it'] = '';
-		$text['description-type']['nl-nl'] = '';
+		$text['description-type']['nl-nl'] = 'Voer het type in.';
 		$text['description-type']['pl-pl'] = 'Wprowadź typ.';
 		$text['description-type']['pt-br'] = '';
 		$text['description-type']['pt-pt'] = '';
@@ -232,7 +232,7 @@
 		$text['label-result']['fr-fr'] = '';
 		$text['label-result']['he-il'] = '';
 		$text['label-result']['it-it'] = '';
-		$text['label-result']['nl-nl'] = '';
+		$text['label-result']['nl-nl'] = 'Resultaat';
 		$text['label-result']['pl-pl'] = 'Rezultat';
 		$text['label-result']['pt-br'] = '';
 		$text['label-result']['pt-pt'] = '';
@@ -252,7 +252,7 @@
 		$text['description-result']['fr-fr'] = '';
 		$text['description-result']['he-il'] = '';
 		$text['description-result']['it-it'] = '';
-		$text['description-result']['nl-nl'] = '';
+		$text['description-result']['nl-nl'] = 'Voer het resultaat in.';
 		$text['description-result']['pl-pl'] = 'Wyprowadź rezultat.';
 		$text['description-result']['pt-br'] = '';
 		$text['description-result']['pt-pt'] = '';
@@ -271,7 +271,7 @@
 		$text['label-success']['fr-fr'] = '';
 		$text['label-success']['he-il'] = '';
 		$text['label-success']['it-it'] = '';
-		$text['label-success']['nl-nl'] = '';
+		$text['label-success']['nl-nl'] = 'succes';
 		$text['label-success']['pl-pl'] = 'sukces';
 		$text['label-success']['pt-br'] = '';
 		$text['label-success']['pt-pt'] = '';
@@ -290,7 +290,7 @@
 		$text['label-failure']['fr-fr'] = '';
 		$text['label-failure']['he-il'] = '';
 		$text['label-failure']['it-it'] = '';
-		$text['label-failure']['nl-nl'] = '';
+		$text['label-failure']['nl-nl'] = 'mislukt';
 		$text['label-failure']['pl-pl'] = 'niepowodzenie';
 		$text['label-failure']['pt-br'] = '';
 		$text['label-failure']['pt-pt'] = '';
@@ -310,7 +310,7 @@
 		$text['label-remote_address']['fr-fr'] = '';
 		$text['label-remote_address']['he-il'] = '';
 		$text['label-remote_address']['it-it'] = '';
-		$text['label-remote_address']['nl-nl'] = '';
+		$text['label-remote_address']['nl-nl'] = 'IP adres';
 		$text['label-remote_address']['pl-pl'] = 'Adres Zdalny';
 		$text['label-remote_address']['pt-br'] = '';
 		$text['label-remote_address']['pt-pt'] = '';
@@ -330,7 +330,7 @@
 		$text['description-remote_address']['fr-fr'] = '';
 		$text['description-remote_address']['he-il'] = '';
 		$text['description-remote_address']['it-it'] = '';
-		$text['description-remote_address']['nl-nl'] = '';
+		$text['description-remote_address']['nl-nl'] = 'Voer het IP adres in.';
 		$text['description-remote_address']['pl-pl'] = 'Wprowadź adres IP.';
 		$text['description-remote_address']['pt-br'] = '';
 		$text['description-remote_address']['pt-pt'] = '';
@@ -370,8 +370,8 @@
 		$text['description-user_agent']['fr-fr'] = '';
 		$text['description-user_agent']['he-il'] = '';
 		$text['description-user_agent']['it-it'] = '';
-		$text['description-user_agent']['nl-nl'] = '';
-		$text['description-user_agent']['pl-pl'] = 'Wprowadź User Agent';
+		$text['description-user_agent']['nl-nl'] = 'Voer de user agent in.';
+		$text['description-user_agent']['pl-pl'] = 'Wprowadź User Agent.';
 		$text['description-user_agent']['pt-br'] = '';
 		$text['description-user_agent']['pt-pt'] = '';
 		$text['description-user_agent']['ro-ro'] = '';
@@ -390,7 +390,7 @@
 		$text['label-location']['fr-fr'] = '';
 		$text['label-location']['he-il'] = '';
 		$text['label-location']['it-it'] = '';
-		$text['label-location']['nl-nl'] = '';
+		$text['label-location']['nl-nl'] = 'Lokatie';
 		$text['label-location']['pl-pl'] = 'Lokalizacja';
 		$text['label-location']['pt-br'] = '';
 		$text['label-location']['pt-pt'] = '';
@@ -410,7 +410,7 @@
 		$text['description-location']['fr-fr'] = '';
 		$text['description-location']['he-il'] = '';
 		$text['description-location']['it-it'] = '';
-		$text['description-location']['nl-nl'] = '';
+		$text['description-location']['nl-nl'] = 'Voer de lokatie in.';
 		$text['description-location']['pl-pl'] = 'Wprowadź lokalizację';
 		$text['description-location']['pt-br'] = '';
 		$text['description-location']['pt-pt'] = '';

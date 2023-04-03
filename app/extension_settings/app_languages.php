@@ -12,7 +12,7 @@
 		$text['title-extension_settings']['fr-fr'] = '';
 		$text['title-extension_settings']['he-il'] = '';
 		$text['title-extension_settings']['it-it'] = '';
-		$text['title-extension_settings']['nl-nl'] = '';
+		$text['title-extension_settings']['nl-nl'] = 'Extensie instellingen';
 		$text['title-extension_settings']['pl-pl'] = '';
 		$text['title-extension_settings']['pt-br'] = '';
 		$text['title-extension_settings']['pt-pt'] = '';
@@ -32,7 +32,7 @@
 		$text['title-extension_setting']['fr-fr'] = '';
 		$text['title-extension_setting']['he-il'] = '';
 		$text['title-extension_setting']['it-it'] = '';
-		$text['title-extension_setting']['nl-nl'] = '';
+		$text['title-extension_setting']['nl-nl'] = 'Extensie instelling';
 		$text['title-extension_setting']['pl-pl'] = '';
 		$text['title-extension_setting']['pt-br'] = '';
 		$text['title-extension_setting']['pt-pt'] = '';
@@ -52,7 +52,7 @@
 		$text['title_description-extension_settings']['fr-fr'] = '';
 		$text['title_description-extension_settings']['he-il'] = '';
 		$text['title_description-extension_settings']['it-it'] = '';
-		$text['title_description-extension_settings']['nl-nl'] = '';
+		$text['title_description-extension_settings']['nl-nl'] = 'Wijs variabelen en parameters aan deze extensie toe.';
 		$text['title_description-extension_settings']['pl-pl'] = '';
 		$text['title_description-extension_settings']['pt-br'] = '';
 		$text['title_description-extension_settings']['pt-pt'] = '';
@@ -92,7 +92,7 @@
 		$text['description-extension_setting_type']['fr-fr'] = '';
 		$text['description-extension_setting_type']['he-il'] = '';
 		$text['description-extension_setting_type']['it-it'] = '';
-		$text['description-extension_setting_type']['nl-nl'] = '';
+		$text['description-extension_setting_type']['nl-nl'] = 'Voer de subcategorie van deze extensie in.';
 		$text['description-extension_setting_type']['pl-pl'] = '';
 		$text['description-extension_setting_type']['pt-br'] = '';
 		$text['description-extension_setting_type']['pt-pt'] = '';
@@ -130,7 +130,7 @@
 		$text['label-variable']['fr-fr'] = '';
 		$text['label-variable']['he-il'] = '';
 		$text['label-variable']['it-it'] = '';
-		$text['label-variable']['nl-nl'] = '';
+		$text['label-variable']['nl-nl'] = 'variabele';
 		$text['label-variable']['pl-pl'] = '';
 		$text['label-variable']['pt-br'] = '';
 		$text['label-variable']['pt-pt'] = '';
@@ -150,7 +150,7 @@
 		$text['label-extension_setting_name']['fr-fr'] = '';
 		$text['label-extension_setting_name']['he-il'] = '';
 		$text['label-extension_setting_name']['it-it'] = '';
-		$text['label-extension_setting_name']['nl-nl'] = '';
+		$text['label-extension_setting_name']['nl-nl'] = 'Naam';
 		$text['label-extension_setting_name']['pl-pl'] = '';
 		$text['label-extension_setting_name']['pt-br'] = '';
 		$text['label-extension_setting_name']['pt-pt'] = '';
@@ -170,7 +170,7 @@
 		$text['description-extension_setting_name']['fr-fr'] = '';
 		$text['description-extension_setting_name']['he-il'] = '';
 		$text['description-extension_setting_name']['it-it'] = '';
-		$text['description-extension_setting_name']['nl-nl'] = '';
+		$text['description-extension_setting_name']['nl-nl'] = 'Voer de extensienaam in.';
 		$text['description-extension_setting_name']['pl-pl'] = '';
 		$text['description-extension_setting_name']['pt-br'] = '';
 		$text['description-extension_setting_name']['pt-pt'] = '';
@@ -190,7 +190,7 @@
 		$text['label-extension_setting_value']['fr-fr'] = '';
 		$text['label-extension_setting_value']['he-il'] = '';
 		$text['label-extension_setting_value']['it-it'] = '';
-		$text['label-extension_setting_value']['nl-nl'] = '';
+		$text['label-extension_setting_value']['nl-nl'] = 'Waarde';
 		$text['label-extension_setting_value']['pl-pl'] = '';
 		$text['label-extension_setting_value']['pt-br'] = '';
 		$text['label-extension_setting_value']['pt-pt'] = '';
@@ -210,7 +210,7 @@
 		$text['description-extension_setting_value']['fr-fr'] = '';
 		$text['description-extension_setting_value']['he-il'] = '';
 		$text['description-extension_setting_value']['it-it'] = '';
-		$text['description-extension_setting_value']['nl-nl'] = '';
+		$text['description-extension_setting_value']['nl-nl'] = 'Voer de extensie waarde in.';
 		$text['description-extension_setting_value']['pl-pl'] = '';
 		$text['description-extension_setting_value']['pt-br'] = '';
 		$text['description-extension_setting_value']['pt-pt'] = '';
@@ -230,7 +230,7 @@
 		$text['label-extension_setting_enabled']['fr-fr'] = '';
 		$text['label-extension_setting_enabled']['he-il'] = '';
 		$text['label-extension_setting_enabled']['it-it'] = '';
-		$text['label-extension_setting_enabled']['nl-nl'] = '';
+		$text['label-extension_setting_enabled']['nl-nl'] = 'Ingeschakeld';
 		$text['label-extension_setting_enabled']['pl-pl'] = '';
 		$text['label-extension_setting_enabled']['pt-br'] = '';
 		$text['label-extension_setting_enabled']['pt-pt'] = '';
@@ -250,7 +250,7 @@
 		$text['description-extension_setting_enabled']['fr-fr'] = '';
 		$text['description-extension_setting_enabled']['he-il'] = '';
 		$text['description-extension_setting_enabled']['it-it'] = '';
-		$text['description-extension_setting_enabled']['nl-nl'] = '';
+		$text['description-extension_setting_enabled']['nl-nl'] = 'Schakel de extensie aan of uit.';
 		$text['description-extension_setting_enabled']['pl-pl'] = '';
 		$text['description-extension_setting_enabled']['pt-br'] = '';
 		$text['description-extension_setting_enabled']['pt-pt'] = '';
@@ -270,7 +270,7 @@
 		$text['label-extension_setting_description']['fr-fr'] = '';
 		$text['label-extension_setting_description']['he-il'] = '';
 		$text['label-extension_setting_description']['it-it'] = '';
-		$text['label-extension_setting_description']['nl-nl'] = '';
+		$text['label-extension_setting_description']['nl-nl'] = 'Omschrijving';
 		$text['label-extension_setting_description']['pl-pl'] = '';
 		$text['label-extension_setting_description']['pt-br'] = '';
 		$text['label-extension_setting_description']['pt-pt'] = '';
@@ -290,7 +290,7 @@
 		$text['description-extension_setting_description']['fr-fr'] = '';
 		$text['description-extension_setting_description']['he-il'] = '';
 		$text['description-extension_setting_description']['it-it'] = '';
-		$text['description-extension_setting_description']['nl-nl'] = '';
+		$text['description-extension_setting_description']['nl-nl'] = 'Voer de extensie omschrijving in.';
 		$text['description-extension_setting_description']['pl-pl'] = '';
 		$text['description-extension_setting_description']['pt-br'] = '';
 		$text['description-extension_setting_description']['pt-pt'] = '';
