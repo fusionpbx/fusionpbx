@@ -200,6 +200,7 @@ if ($domains_processed == 1) {
 							$array['device_vendors'][$x]['device_vendor_uuid'] = $device_vendor_uuid;
 							$array['device_vendors'][$x]['name'] = $vendor['name'];
 							$array['device_vendors'][$x]['enabled'] = 'true';
+							$array['device_vendors'][$x]['description'] = $vendor['description'];
 
 						//add the vendor functions
 							if (is_array($vendor['functions']) && @sizeof($vendor['functions'])) {
@@ -209,7 +210,8 @@ if ($domains_processed == 1) {
 										$device_vendor_function_uuid = uuid();
 										$array['device_vendor_functions'][$y]['device_vendor_uuid'] = $device_vendor_uuid;
 										$array['device_vendor_functions'][$y]['device_vendor_function_uuid'] = $device_vendor_function_uuid;
-										$array['device_vendor_functions'][$y]['name'] = $function['name'];
+										$array['device_vendor_functions'][$y]['type'] = $function['type'];
+										$array['device_vendor_functions'][$y]['subtype'] = $function['subtype'];
 										$array['device_vendor_functions'][$y]['value'] = $function['value'];
 										$array['device_vendor_functions'][$y]['enabled'] = 'true';
 										$array['device_vendor_functions'][$y]['description'] = $function['description'];
