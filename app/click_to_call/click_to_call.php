@@ -30,8 +30,11 @@
 	James Rose <james.o.rose@gmail.com>
 */
 
-//includes
-	include "root.php";
+//set the include path
+	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+	set_include_path(parse_ini_file($conf[0])['document.root']);
+
+//includes files
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
@@ -69,7 +72,7 @@
 			$context = $_SESSION['domain_name'];
 
 		//clean up variable values
-			$src = str_replace(array('.','(',')','-',' '), '', $src);
+			$src = str_replace(array('(',')',' '), '', $src);
 			$dest = (strpbrk($dest, '@') != FALSE) ? str_replace(array('(',')',' '), '', $dest) : str_replace(array('.','(',')','-',' '), '', $dest); //don't strip periods or dashes in sip-uri calls, only phone numbers
 
 		//adjust variable values

@@ -1,0 +1,16 @@
+<extension name="agent-status-break" number="*24" context="${domain_name}" continue="false" app_uuid="17a937f4-82f1-4a0f-b3a8-213db15127cf" order="215">
+	<condition field="destination_number" expression="^\*24$" break="on-true">
+		<action application="set" data="agent_id=${sip_from_user}" enabled="true"/>
+		<action application="set" data="agent_authorized=true" enabled="false"/>
+		<action application="set" data="agent_action=break" enabled="true"/>
+		<action application="lua" data="app.lua agent_status" enabled="true"/>
+	</condition>
+	<condition field="destination_number" expression="^(?:agent\+|\*24)(.+)$">
+		<action application="set" data="agent_id=$1" enabled="true"/>
+		<action application="set" data="agent_name=$1" enabled="false"/>
+		<action application="set" data="agent_authorized=true" enabled="false"/>
+		<action application="set" data="agent_action=break" enabled="true"/>
+		<action application="lua" data="app.lua agent_status" enabled="true"/>
+	</condition>
+</extension>
+

@@ -801,7 +801,11 @@
 
     <!-- # Matching Incoming Caller ID. Matching Rule 1 -->
     <!-- # String -->
+{if isset($grandstream_distinctive_ringtone_name_1)}
+    <P1488>{$grandstream_distinctive_ringtone_name_1}</P1488>
+{else}
     <P1488>ring1</P1488>
+{/if}
 
     <!-- # Matching Rule 1 Distinctive Ringtone -->
     <!-- # -1 - No Ringtone, 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3, 4 - silent, 5 - Default Ringtone. Default is 5. -->
@@ -811,7 +815,11 @@
 
     <!-- # Matching Incoming Caller ID. Matching Rule 2 -->
     <!-- # String -->
+{if isset($grandstream_distinctive_ringtone_name_2)}
+    <P1490>{$grandstream_distinctive_ringtone_name_2}</P1490>
+{else}
     <P1490>ring2</P1490>
+{/if}
 
     <!-- # Matching Rule 2 Distinctive Ringtone -->
     <!-- # -1 - No Ringtone, 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3, 4 - silent, 5 - Default Ringtone. Default is 5. -->
@@ -3261,37 +3269,49 @@
     <!-- # Mandatory -->
     <P1414>0</P1414>
 
-    <!-- # Automatic Upgrade.  -->
-    <!-- # 0 - No,  -->
-    <!-- # 1 - Yes, check for upgrade based on minute(s) setting, -->
-    <!-- # 2 - Yes, check for upgrade based on Hour of Day setting, -->
-    <!-- # 3 - Yes, check for upgrade based on Day of Week setting, -->
-    <!-- # Default is No -->
-    <!-- # Number: 0, 1, 2, 3 -->
-    <!-- # Mandatory -->
+    <!-- Automatic Provisioning.  -->
+    <!-- 0 - No,  -->
+    <!-- 1 - Yes, check for provisioning based on minute(s) setting, -->
+    <!-- 2 - Yes, check for provisioning based on Hour of Day setting, -->
+    <!-- 3 - Yes, check for provisioning based on Day of Week setting, -->
+    <!-- Default is No. -->
+    <!-- Number: 0, 1, 2, 3 -->
+    <!-- Mandatory -->
+    {if isset($grandstream_automatic_provisioning) }
+    <P194>{$grandstream_automatic_provisioning}</P194>
+    {else}
     <P194>0</P194>
+    {/if}
 
-    <!-- # Check for new firmware every () minutes. Default is 7 days. -->
-    <!-- # Number: 60-86400 -->
-    <!-- # Mandatory -->
+    <!-- Automatic Provisioning. Check for new config file every () minutes. Default is 7 days. -->
+    <!-- Number: 60-86400 -->
+    <!-- Mandatory -->
+    {if isset($grandstream_automatic_provisioning_minutes)}
+    <P193>{$grandstream_automatic_provisioning_minutes}</P193>
+    {else}
     <P193>10080</P193>
+    {/if}
+
+    <!-- Automatic Provisioning. Hour of the Day (0-23). Defines the hour of the day to check the HTTP/TFTP server for configuration file changes. Default is 1.  -->
+    <!-- Number: 0 - 23 -->
+    {if isset($grandstream_automatic_provisioning_hour)}
+    <P285>{$grandstream_automatic_provisioning_hour}</P285>
+    {else}
+    <P285>1</P285>
+    {/if}
+
+    <!-- Automatic Provisioning. Day of the Week (0-6). Defines the day of the week to check HTTP/TFTP server for configuration file changes. Default is 1. -->
+    <!-- Number: 0-6 -->
+    {if isset($grandstream_automatic_provisioning_day)}
+    <P286>{$grandstream_automatic_provisioning_day}</P286>
+    {else}
+    <P286>1</P286>
+    {/if}
 
     <!-- # Radomized Automitic Upgrade. 0 - No, 1 - Yes. Default is No -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P8458>1</P8458>
-
-    <!-- # Hour of the Day ~~ Start (0-23). Default is 1 -->
-    <!-- # Number: 0 - 23 -->
-    <P285>0</P285>
-
-    <!-- # Hour of the Day ~~ End (-1, 0-23). Default is 0 -->
-    <!-- # Number: -1, 0 - 23 -->
-    <P8459>0</P8459>
-
-    <!-- # Day of the Week (0-6). Default is 1 -->
-    <!-- # Number: 0-6 -->
-    <P286>0</P286>
+    <P8458>0</P8458>
 
     <!-- # Disable SIP NOTIFY Authentication. 0 - No, 1 - Yes. Default is 0 -->
     <!-- # Number: 0,1 -->
@@ -3358,7 +3378,11 @@
     <!-- # Firmware Upgrade Via. 0 - TFTP,  1 - HTTP, 2 - HTTPS, 3 - FTP, 4 - FTPS. Default is 1.  -->
     <!-- # Number: 0, 1, 2, 3, 4 -->
     <!-- # Mandatory -->
+    {if isset($grandstream_firmware_upgrade_protocol) }
+    <P6767>{$grandstream_firmware_upgrade_protocol}</P6767>
+    {else}
     <P6767>1</P6767>
+    {/if}
 
     <!-- # Firmware Server Path -->
     <!-- # String -->
@@ -3484,11 +3508,11 @@
 
     <!-- # Connection Request Username	 -->
     <!-- # String: a-z, A-Z, 0-9 -->
-    <P4511>{$mac|replace:'-':''}</P4511>
+	<P4511>{$mac|replace:'-':''|upper}</P4511>
 
     <!-- # Connection Request Password	 -->
     <!-- # String: a-z, A-Z, 0-9 -->
-    <P4512></P4512>
+	<P4512>{$mac|replace:'-':''|upper}</P4512>
 
     <!-- # Connection Request Port. Default is 7547. -->
     <!-- # Number -->
@@ -3971,7 +3995,11 @@
     <!-- # Disabled/Enabled. 0 - Disabled, 1 - Enabled. -->
     <!-- # Number: 0, 1. Default is 0 -->
     <!-- # Mandatory -->
+    {if isset($grandstream_missed_call_log) }
+    <P2981>{$grandstream_missed_call_log}</P2981>
+    {else}
     <P2981>0</P2981>
+    {/if}
 
     <!-- # Name.  -->
     <!-- # String -->
@@ -4282,7 +4310,11 @@
     <!-- # Onhook Dial Barging. 0 - Disabled, 1 - Enabled. Default is 1 -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P8397>1</P8397>
+    {if isset($grandstream_onhook_dial_barging)}	
+    <P8397>{$grandstream_onhook_dial_barging}</P8397>
+    {else}	
+    <P8397>1</P8397>	
+    {/if}	
 
     <!-- # Off-hook Auto Dial -->
     <!-- # String -->
@@ -4536,7 +4568,11 @@
     <!-- # Enable Missed Call Notification. 0 - No, 1 - Yes. Default is 0 -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
+    {if isset($grandstream_missed_call_notification) }
+    <P8393>{$grandstream_missed_call_notification}</P8393>
+    {else}
     <P8393>0</P8393>
+    {/if}
 
     <!-- # Enable Call Completion Service. 0 - No, 1 - Yes. Default is 0 -->
     <!-- # Number: 0, 1 -->
@@ -4955,7 +4991,11 @@
     <!-- # When set to Yes(1), it will override the configured Time Zone setting if available  -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    {if isset($grandstream_dhcp_time_zone)}<P143>{$grandstream_dhcp_time_zone}</P143>{else}<P143>0</P143>{/if}
+    {if isset($grandstream_dhcp_time_zone)}
+    <P143>{$grandstream_dhcp_time_zone}</P143>
+    {else}
+    <P143>1</P143>
+    {/if}
 
     <!-- # Self Defined Time zone. Max length allowed is 64 characters -->
     <!-- # String -->
@@ -5004,7 +5044,11 @@
     <!-- # Disable Missed Call Backlight. 0 - No, 1 - Yes, 2 - Yes, but flash MWI LED. Default is 0 -->
     <!-- # Number: 0, 1, 2 -->
     <!-- # Mandatory -->
-    <P351>1</P351>
+    {if isset($grandstream_missed_call_backlight) }
+    <P351>{$grandstream_missed_call_backlight}</P351>
+    {else}
+    <P351>0</P351>
+    {/if}
 
     <!-- # Wallpaper Settings -->
     <!-- # Wallpaper Source. 0 - Default, 1 - Download, 2-USB, 3 - Uploaded, 4 - Color Background -->
@@ -5014,10 +5058,9 @@
 
     <!-- # Wallpaper Server Path -->
     <!-- # String  -->
-{if isset($grandstream2135_wallpaper_url)}
+{if isset($grandstream_wallpaper_url)}
     <P2916>1</P2916>
-    <P2917>{$grandstream2135_wallpaper_url}</P2917>
-
+    <P2917>{$grandstream_wallpaper_url}</P2917>
 {/if}
 
     <!-- # Color Background. Default is #000000. -->
@@ -5156,7 +5199,11 @@
     <!-- # Lock Volumne. 0 - No, 1 - Yes. Default is 0 -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
+{if isset($grandstream_lock_volume)}
+    <P8392>{$grandstream_lock_volume}</P8392>
+{else}
     <P8392>0</P8392>
+{/if}
 
     <!-- # Default Ringtone. 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3, 4 - silent. Default is 0 -->
     <!-- # Number: 0, 1, 2, 3, 4 -->
@@ -5211,12 +5258,18 @@
     <!-- # Key Mode. 1 - Line Mode, 2 - Account Mode. Default is 1 -->
     <!-- # Number: 1, 2 -->
     <!-- # Mandatory -->
-    <P8369>1</P8369>
+    {if isset($grandstream_key_mode)}
+    <P8369>{$grandstream_key_mode}</P8369> <!-- Call Screen Settings # Key Mode. 1 - Line Mode, 2 - Account Mode. Default is 1 -->
+    {/if}
 
     <!-- # Transfer Mode via VPK. 0 - Blind Transfer, 1 - Attended Transfer, 2 - New Call. Default is 0 -->
     <!-- # Number: 0, 1, 2 -->
     <!-- # Mandatory -->
+    {if isset($grandstream_transfer_mode_via_vpk)}
+    <P8390>{$grandstream_transfer_mode_via_vpk}</P8390>
+    {else}
     <P8390>0</P8390>
+    {/if}
 
     <!-- # Enable transfer via non-Transfer MPK. 0 - No, 1 - Yes. Default is 0 -->
     <!-- # Number: 0, 1 -->
@@ -5231,7 +5284,11 @@
     <!-- # Show Keys Label. 1 - Show, 2 - Hide, 0 - Toggle. Default is 0 -->
     <!-- # Number: 0, 1, 2 -->
     <!-- # Mandatory -->
-    <P8386>0</P8386>
+    {if isset($grandstream_show_key_labels)}
+        <P8386>{$grandstream_show_key_labels}</P8386>
+    {else}
+        <P8386>1</P8386>
+    {/if}
 
     <!-- # Show VPK shared line display description (This only can be done with provisioning) -->
     <!-- # Number: 0, 1. 0 - No, 1 - Yes. Default is 1 -->

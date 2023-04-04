@@ -27,14 +27,11 @@
 		<param name="enable-rfc-5626" value="true" enabled="false"/>
 		<param name="sip-port" value="5080"/>
 		<param name="dialplan" value="XML"/>
-		<param name="track-calls" value="false"/>
 		<param name="context" value="public"/>
-		<param name="dtmf-type" value="rfc2833"/>
 		<param name="dtmf-duration" value="2000"/>
 		<param name="inbound-codec-prefs" value="$${global_codec_prefs}"/>
 		<param name="outbound-codec-prefs" value="$${outbound_codec_prefs}"/>
 		<param name="hold-music" value="$${hold_music}"/>
-		<param name="zrtp-passthru" value="true"/>
 		<param name="rtp-timer-name" value="soft"/>
 		<param name="enable-100rel" value="true" enabled="false"/>
 		<param name="disable-srv503" value="true" enabled="false"/>
@@ -42,8 +39,8 @@
 		<!-- This could be set to "passive" -->
 		<param name="local-network-acl" value="localnet.auto"/>
 		<param name="apply-nat-acl" value="nat.auto"/>
-		<param name="apply-inbound-acl" value="domains"/>
-		<param name="apply-register-acl" value="domains" enabled="false"/>
+		<param name="apply-inbound-acl" value="providers"/>
+		<param name="apply-register-acl" value="providers" enabled="false"/>
 		<!-- used to share presence info across sofia profiles
 		 manage-presence needs to be set to passive on this profile
 		 if you want it to behave as if it were the internal profile
@@ -57,14 +54,13 @@
 		<param name="force-register-db-domain" value="$${domain}" enabled="false"/>
 		<!-- ************************************************* -->
 
-		<!-- suppress CNG on this profile or per call with the 'suppress_cng' variable -->
-		<param name="suppress-cng" value="true" enabled="true"/>
-
 		<!--<param name="aggressive-nat-detection" value="true"/>-->
 		<param name="inbound-codec-negotiation" value="generous"/>
 		<param name="nonce-ttl" value="60"/>
 		<param name="auth-calls" value="true"/>
 		<param name="auth-subscriptions" value="true"/>
+		<param name="inbound-late-negotiation" value="true"/>
+		<param name="inbound-zrtp-passthru" value="true"/> <!-- (also enables late negotiation) -->
 		<!--
 		DO NOT USE HOSTNAMES, ONLY IP ADDRESSES IN THESE SETTINGS!
 		-->
@@ -72,14 +68,11 @@
 		<param name="sip-ip" value="$${local_ip_v4}"/>
 		<param name="ext-rtp-ip" value="$${external_rtp_ip}"/>
 		<param name="ext-sip-ip" value="$${external_sip_ip}"/>
-		<param name="rtp-timeout-sec" value="300"/>
-		<param name="rtp-hold-timeout-sec" value="1800"/>
-		<!--<param name="enable-3pcc" value="true"/>-->
-
-		<!--session timers -->
-		<param name="session-timeout" value="0" enabled="true"/>
-		<param name="enable-timer" value="false" enabled="true"/>
-		<param name="minimum-session-expires" value="0" enabled="false"/>
+		<param name="rtp-timeout-sec" value="300" description="deprecated" enabled="false"/>
+		<param name="rtp-hold-timeout-sec" value="1800" description="deprecated" enabled="false"/>
+		<param name="media_timeout" value="300" enabled="true"/>
+		<param name="media_hold_timeout" value="1800" enabled="true"/>
+		<param name="enable-3pcc" value="true" enabled="false"/>
 
 		<!-- TLS: disabled by default, set to "true" to enable -->
 		<param name="tls" value="$${external_ssl_enable}"/>
@@ -96,16 +89,32 @@
 		<!-- Verify the date on TLS certificates -->
 		<param name="tls-verify-date" value="false"/>
 		<!-- TLS verify policy, when registering/inviting gateways with other servers (outbound) or handling inbound registration/invite requests how should we verify their certificate -->
-		<!-- set to 'in' to only verify incoming connections, 'out' to only verify outgoing connections, 'all' to verify all connections, also 'in_subjects', 'out_subjects' and 'all_subjects' for subject validation. Multiple policies can be split with a '|' pipe -->
-		<param name="tls-verify-policy" value="all|subjects_all" enabled="false"/>
+		<!-- set to 'in' to only verify incoming connections, 'out' to only verify outgoing connections, 'all' to verify all connections, also 'subjects_in', 'subjects_out' and 'subjects_all' for subject validation. Multiple policies can be split with a '|' pipe -->
+		<param name="tls-verify-policy" value="none"/>
 		<!-- Certificate max verify depth to use for validating peer TLS certificates when the verify policy is not none -->
 		<param name="tls-verify-depth" value="2"/>
 		<!-- If the tls-verify-policy is set to subjects_all or subjects_in this sets which subjects are allowed, multiple subjects can be split with a '|' pipe -->
 		<param name="tls-verify-in-subjects" value=""/>
 		<!-- TLS version ("sslv23" (default), "tlsv1"). NOTE: Phones may not work with TLSv1 -->
 		<param name="tls-version" value="$${sip_tls_version}"/>
+		<!-- TLS ciphers default: ALL:!ADH:!LOW:!EXP:!MD5:@STRENGTH -->
+		<param name="tls-ciphers" value="$${sip_tls_ciphers}" enabled="false"/>
+
+		<!-- suppress CNG on this profile or per call with the 'suppress_cng' variable -->
+		<param name="suppress-cng" value="true" enabled="true"/>
+
+		<!--session timers -->
+		<param name="session-timeout" value="0" enabled="true"/>
+		<param name="enable-timer" value="false" enabled="true"/>
+		<param name="minimum-session-expires" value="0" enabled="false"/>
 
 		<!--If you have ODBC support and a working dsn you can use it instead of SQLite-->
 		<param name="odbc-dsn" value="$${dsn}" enabled="false"/>
+
+		<param name="dtmf-type" value="rfc2833"/>
+		<param name="zrtp-passthru" value="true"/>
+		
+		<!-- save session in the database for option to restore SIP UDP calls -->
+		<param name="track-calls" value="false"/>
 	</settings>
 </profile>

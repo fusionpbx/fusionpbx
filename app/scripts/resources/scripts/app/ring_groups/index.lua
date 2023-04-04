@@ -1,5 +1,5 @@
 --	Part of FusionPBX
---	Copyright (C) 2010-2020 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2010-2022 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -184,7 +184,6 @@
 	end
 
 --define additional variables
-	uuids = "";
 	external = "false";
 
 --set the sounds path for the language, dialect and voice
@@ -213,7 +212,7 @@
 	--end
 
 --get current switchname
-	hostname = trim(api:execute("switchname", ""))
+	hostname = trim(api:execute("hostname", ""))
 
 --get the ring group
 	ring_group_forward_enabled = '';
@@ -302,6 +301,10 @@
 
 --check the missed calls
 	function missed()
+		--add missed call channel variable
+			if (session) then
+				session:setVariable("missed_call", 'true');
+			end
 
 		--send missed call email
 		if (missed_call_app ~= nil and missed_call_data ~= nil) then
@@ -486,6 +489,7 @@
 					AND d.ring_group_uuid = :ring_group_uuid
 					AND r.domain_uuid = :domain_uuid
 					AND r.ring_group_enabled = 'true'
+					AND d.destination_enabled = 'true'
 				ORDER BY
 					]]..sql_order..[[
 			]];
@@ -745,15 +749,6 @@
 						else
 							delay_name = "leg_delay_start";
 						end
-
-					--create a new uuid and add it to the uuid list
-						new_uuid = api:executeString("create_uuid");
-						if (string.len(uuids) == 0) then
-							uuids = new_uuid;
-						else
-							uuids = uuids ..",".. new_uuid;
-						end
-						session:execute("set", "uuids="..uuids);
 
 					--export the ringback
 						if (ring_group_distinctive_ring and #ring_group_distinctive_ring > 0) then

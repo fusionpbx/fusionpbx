@@ -26,8 +26,11 @@
 	Riccardo Granchi <riccardo.granchi@nems.it>
 */
 
-//includes
-	require_once "root.php";
+//set the include path
+	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+	set_include_path(parse_ini_file($conf[0])['document.root']);
+
+//includes files";
 	require_once "resources/require.php";
 
 //get the event socket information
@@ -305,11 +308,14 @@ function save_gateway_xml() {
 									break;
 								case "tls":
 									$xml .= "      <param name=\"register-transport\" value=\"tls\"/>\n";
-									$xml .= "      <param name=\"contact-params\" value=\"transport=tls\"/>\n";
 									break;
 								default:
 									$xml .= "      <param name=\"register-transport\" value=\"" . $row['register_transport'] . "\"/>\n";
 								}
+							}
+
+							if (strlen($row['contact_params']) > 0) {
+								$xml .= "      <param name=\"contact-params\" value=\"" . $row['contact_params'] . "\"/>\n";
 							}
 
 							if (strlen($row['retry_seconds']) > 0) {

@@ -16,7 +16,7 @@
 --
 --	The Initial Developer of the Original Code is
 --	Mark J Crane <markjcrane@fusionpbx.com>
---	Copyright (C) 2015-2022
+--	Copyright (C) 2015-2023
 --	the Initial Developer. All Rights Reserved.
 --
 --	Contributor(s):
@@ -122,6 +122,8 @@
 	fax_success = env:getHeader("fax_success");
 	fax_result_text = env:getHeader("fax_result_text");
 	fax_local_station_id = env:getHeader("fax_local_station_id");
+	fax_image_resolution = env:getHeader("fax_image_resolution");
+	fax_image_size = env:getHeader("fax_image_size");
 	fax_ecm_used = env:getHeader("fax_ecm_used");
 	fax_uri = env:getHeader("fax_uri");
 	fax_extension_number = env:getHeader("fax_extension_number");
@@ -133,9 +135,11 @@
 	bridge_hangup_cause = env:getHeader("bridge_hangup_cause");
 	fax_result_code = env:getHeader("fax_result_code");
 	fax_remote_station_id = env:getHeader("fax_remote_station_id");
+	fax_document_transferred_pages = env:getHeader("fax_document_transferred_pages");
 	fax_document_total_pages = env:getHeader("fax_document_total_pages");
 	hangup_cause_q850 = tonumber(env:getHeader("hangup_cause_q850"));
 	fax_file = env:getHeader("fax_file");
+	fax_duration = env:getHeader("billsec");
 
 --prevent nil errors
 	if (fax_file == nil) then
@@ -160,11 +164,10 @@
 --set default values
 	if (not fax_success) then
 		fax_success = "0";
-		fax_result_code = 2;
 	end
 	if (hangup_cause_q850 == "17") then
 		fax_success = "0";
-		fax_result_code = 2;
+		fax_result_text = "USER_BUSY";
 	end
 	if (not fax_result_text) then
 		fax_result_text = "FS_NOT_SET";
@@ -178,7 +181,7 @@
 	end
 
 --fax busy
-	if (fax_result_code == "2"  or fax_result_code == "3" or hangup_cause_q850 == 17) then
+	if (fax_result_code == "2" or fax_result_code == "3" or hangup_cause_q850 == 17) then
 		--do nothing. don't want to increment
 		freeswitch.consoleLog("INFO","[FAX] Last Fax was probably Busy, don't increment retry_attempts. \n");
 		fax_status = 'busy';
@@ -223,15 +226,6 @@
 		fax_file_name = array[count(array)];
 	end
 
---update the email queue status
-	if (fax_success == '1') then
-		sql = "update v_fax_queue ";
-		sql = sql .. "set fax_status = :fax_status ";
-		sql = sql .. "where fax_queue_uuid = :fax_queue_uuid ";
-		local params = {fax_queue_uuid = fax_queue_uuid, fax_status = fax_status}
-		dbh:query(sql, params);
-	end
-
 --add to fax logs
 	sql = "insert into v_fax_logs ";
 	sql = sql .. "(";
@@ -266,6 +260,9 @@
 	end
 	if (fax_uri ~= nil) then
 		sql = sql .. "fax_uri, ";
+	end
+	if (fax_duration ~= nil) then
+		sql = sql .. "fax_duration, ";
 	end
 	sql = sql .. "fax_date, ";
 	sql = sql .. "fax_epoch ";
@@ -304,6 +301,9 @@
 	if (fax_uri ~= nil) then
 		sql = sql .. ":fax_uri, ";
 	end
+	if (fax_duration ~= nil) then
+		sql = sql .. ":fax_duration, ";
+	end
 	if (database["type"] == "sqlite") then
 		sql = sql .. ":fax_date, ";
 	else
@@ -328,12 +328,21 @@
 		fax_bad_rows = fax_bad_rows;
 		fax_transfer_rate = fax_transfer_rate;
 		fax_uri = fax_uri;
+		fax_duration = fax_duration;
 		fax_date = os.date("%Y-%m-%d %X");
 		fax_time = os.time();
 	};
+
 	if (debug["sql"]) then
 		freeswitch.consoleLog("notice", "[fax] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 	end
+	dbh:query(sql, params);
+
+--update the email queue status
+	sql = "update v_fax_queue ";
+	sql = sql .. "set fax_status = :fax_status, fax_log_uuid = :fax_log_uuid ";
+	sql = sql .. "where fax_queue_uuid = :fax_queue_uuid ";
+	local params = {fax_queue_uuid = fax_queue_uuid, fax_status = fax_status, fax_log_uuid = uuid}
 	dbh:query(sql, params);
 
 --prepare base64

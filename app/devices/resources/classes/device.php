@@ -23,7 +23,6 @@
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-include "root.php";
 
 //define the device class
 	class device {
@@ -175,11 +174,11 @@ include "root.php";
 					if (preg_replace('/^.*?(aastra).*$/i', '$1', $agent) == "aastra") {
 						return "aastra";
 					}
-					if (preg_replace('/^.*?(cisco).*$/i', '$1', $agent) == "cisco") {
-						return "cisco";
-					}
 					if (preg_replace('/^.*?(cisco\/spa).*$/i', '$1', $agent) == "cisco/spa") {
 						return "cisco-spa";
+					}
+					if (preg_replace('/^.*?(cisco).*$/i', '$1', $agent) == "cisco") {
+						return "cisco";
 					}
 					if (preg_replace('/^.*?(digium).*$/i', '$1', $agent) == "digium") {
                                                 return "digium";
@@ -234,7 +233,10 @@ include "root.php";
 				if (PHP_OS == "Linux") {
 					//set the default template dir
 						if (strlen($this->template_dir) == 0) {
-							if (file_exists('/etc/fusionpbx/resources/templates/provision')) {
+							if (file_exists('/usr/share/fusionpbx/templates/provision')) {
+								$this->template_dir = '/usr/share/fusionpbx/templates/provision';
+							}
+							elseif (file_exists('/etc/fusionpbx/resources/templates/provision')) {
 								$this->template_dir = '/etc/fusionpbx/resources/templates/provision';
 							}
 							else {
@@ -244,17 +246,12 @@ include "root.php";
 				}
 				elseif (PHP_OS == "FreeBSD") {
 					//if the FreeBSD port is installed use the following paths by default.
-						if (file_exists('/usr/local/etc/fusionpbx/resources/templates/provision')) {
-							if (strlen($this->template_dir) == 0) {
+						if (strlen($this->template_dir) == 0) {
+							if (file_exists('/usr/local/share/fusionpbx/templates/provision')) {
+								$this->template_dir = '/usr/local/share/fusionpbx/templates/provision';
+							}
+							elseif (file_exists('/usr/local/etc/fusionpbx/resources/templates/provision')) {
 								$this->template_dir = '/usr/local/etc/fusionpbx/resources/templates/provision';
-							}
-							else {
-								$this->template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/provision';
-							}
-						}
-						else {
-							if (strlen($this->template_dir) == 0) {
-								$this->template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/provision';
 							}
 							else {
 								$this->template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/provision';

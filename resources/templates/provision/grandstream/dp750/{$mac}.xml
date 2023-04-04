@@ -12,6 +12,15 @@
 <!-- #  Profile 1  ## -->
 <!-- ################ -->
 
+<!-- # Enable DND Feature. 0 - No, 1 - Yes. Default is 1 -->
+<!-- # Number: 0, 1 -->
+<!-- # Mandatory -->
+{if isset($dnd)}
+<P8446>{$dnd}</P8446>
+{else}
+<P8446>1</P8446>
+{/if}
+
 <!-- ################################# -->
 <!-- #  Profile 1/General Settings  ## -->
 <!-- ################################# -->
@@ -2290,18 +2299,68 @@
 <P27087>{$grandstream_hanging_group_mode}</P27087>
 <P27088>{$grandstream_hanging_group_mode}</P27088>
 <P27089>{$grandstream_hanging_group_mode}</P27089>
+{/if}
+
+{if isset($grandstream_line_1_hanging_group_mode) }
+<P27080>{$grandstream_line_1_hanging_group_mode}</P27080>
 {else}
 <P27080>101</P27080>
+{/if}
+
+{if isset($grandstream_line_2_hanging_group_mode) }
+<P27081>{$grandstream_line_2_hanging_group_mode}</P27081>
+{else}
 <P27081>101</P27081>
+{/if}
+
+{if isset($grandstream_line_3_hanging_group_mode) }
+<P27082>{$grandstream_line_3_hanging_group_mode	}</P27082>
+{else}
 <P27082>101</P27082>
+{/if}
+
+{if isset($grandstream_line_4_hanging_group_mode) }
+<P27083>{$grandstream_line_4_hanging_group_mode}</P27083>
+{else}
 <P27083>101</P27083>
+{/if}
+
+{if isset($grandstream_line_5_hanging_group_mode) }
+<P27084>{$grandstream_line_5_hanging_group_mode}</P27084>
+{else}
 <P27084>101</P27084>
+{/if}
+
+{if isset($grandstream_line_6_hanging_group_mode) }
+<P27085>{$grandstream_line_6_hanging_group_mode}</P27085>
+{else}
 <P27085>101</P27085>
+{/if}
+
+{if isset($grandstream_line_7_hanging_group_mode) }
+<P27086>{$grandstream_line_7_hanging_group_mode}</P27086>
+{else}
 <P27086>101</P27086>
+{/if}
+
+{if isset($grandstream_line_8_hanging_group_mode) }
+<P27087>{$grandstream_line_8_hanging_group_mode}</P27087>
+{else}
 <P27087>101</P27087>
+{/if}
+
+{if isset($grandstream_line_9_hanging_group_mode) }
+<P27088>{$grandstream_line_9_hanging_group_mode}</P27088>
+{else}
 <P27088>101</P27088>
+{/if}
+
+{if isset($grandstream_line_10_hanging_group_mode) }
+<P27089>{$grandstream_line_10_hanging_group_mode}</P27089>
+{else}
 <P27089>101</P27089>
 {/if}
+
 
 <!-- Active. Configure if the account is active or disabled. 0 - Disabled, 1 - Active. -->
 <!-- Number: 0, 1. Default is 1. -->
@@ -2826,14 +2885,18 @@
 <!-- Upgrade via. 0 - TFTP Upgrade, 1 - HTTP Upgrade, 2 - HTTPS Upgrade. -->
 <!-- Number: 0 to 2 -->
 <!-- Mandatory -->
+{if isset($grandstream_firmware_upgrade_protocol) }
+<P6767>{$grandstream_firmware_upgrade_protocol}</P6767>
+{else}
 <P6767>1</P6767>
+{/if}
 
 <!-- Firmware Server Path -->
 <!-- String: serveraddress  -->
 {if isset($grandstream_firmware_path) && isset($firmware_version)}
 <P192>{$grandstream_firmware_path}/dp750/{$firmware_version}</P192>
 {elseif isset($grandstream_firmware_path)}
-<P192>{$grandstream_firmware_path}/dp750</P192>
+{if isset($grandstream_dp750_use_standard_firmware_path)}<P192>{$grandstream_firmware_path}</P192>{else}<P192>{$grandstream_firmware_path}/dp750</P192>{/if}
 {else}
 <P192>{$domain_name}{$project_path}/app/provision</P192>
 {/if}
@@ -3037,11 +3100,11 @@
 
 <!-- Connection Request Username	 -->
 <!-- String: a-z, A-Z, 0-9 -->
-<P4511></P4511>
+<P4511>{$mac|replace:'-':''|upper}</P4511>
 
 <!-- Connection Request Password	 -->
 <!-- String: a-z, A-Z, 0-9 -->
-<P4512></P4512>
+<P4512>{$mac|replace:'-':''|upper}</P4512>
 
 <!-- ##################################################### -->
 <!-- #  Maintenance/Security Settings/Web/SSH Settings  ## -->

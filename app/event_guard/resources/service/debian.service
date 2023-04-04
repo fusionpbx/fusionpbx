@@ -1,0 +1,33 @@
+
+; Author: Mark J Crane <markjcrane@fusionpbx.com>
+; cp /var/www/fusionpbx/app/event_guard/resources/service/debian.service /etc/systemd/system/event_guard.service
+; systemctl enable event_guard
+; systemctl start event_guard
+; systemctl daemon-reload
+
+[Unit]
+Description=FusionPBX Event Guard
+Wants=network-online.target
+Requires=network.target local-fs.target
+;Requires=network.target local-fs.target postgresql.service
+After=network.target network-online.target local-fs.target
+;After=network.target network-online.target local-fs.target postgresql.service
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+;Type=forking
+PIDFile=/var/run/fusionpbx/event_guard.pid
+WorkingDirectory=/var/www/fusionpbx
+;Environment="USER=www-data"
+;Environment="GROUP=www-data"
+;EnvironmentFile=-/etc/default/fusionpbx
+ExecStartPre=/bin/mkdir -p /var/run/fusionpbx
+;ExecStartPre=/bin/chown -R ${USER}:${GROUP} /var/www/fusionpbx
+ExecStart=/usr/bin/php /var/www/fusionpbx/app/event_guard/resources/service/event_guard.php
+TimeoutSec=55s
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+Also=

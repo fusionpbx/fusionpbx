@@ -2,19 +2,18 @@
 
 //check the permission
 	if (defined('STDIN')) {
-		$document_root = str_replace("\\", "/", $_SERVER["PHP_SELF"]);
-		preg_match("/^(.*)\/app\/.*$/", $document_root, $matches);
-		$document_root = $matches[1];
-		set_include_path($document_root);
-		$_SERVER["DOCUMENT_ROOT"] = $document_root;
-		require_once "resources/require.php";
+		//set the include path
+		$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+		set_include_path(parse_ini_file($conf[0])['document.root']);
 	}
 	else {
 		exit;
-		include "root.php";
-		require_once "resources/require.php";
-		require_once "resources/pdo.php";
 	}
+
+//include files
+	require_once "resources/require.php";
+	include "resources/classes/permissions.php";
+	require $_SERVER['DOCUMENT_ROOT']."/app/email_queue/resources/functions/transcribe.php";
 
 //increase limits
 	set_time_limit(0);
@@ -103,12 +102,6 @@
 	if (isset($sleep_seconds)) {
 		sleep($sleep_seconds);
 	}
-
-//includes
-	if (!defined('STDIN')) { include_once "root.php"; }
-	require_once "resources/require.php";
-	include "resources/classes/permissions.php";
-	require $document_root."/app/email_queue/resources/functions/transcribe.php";
 
 //define a function to remove html tags
 	if (!function_exists('remove_tags')) {
@@ -242,7 +235,6 @@
 
 				//echo "email_body before: ".$email_body."\n";
 				$email_body = str_replace('${message_text}', $transcribe_message, $email_body);
-				//$email_debug = $field['message'];
 				//echo "email_body after: ".$email_body."\n";
 				//unset($field);
 			}
@@ -293,11 +285,15 @@
 		unset($parameters);
 	}
 
-//send email
-	//ob_start();
-	//$sent = !send_email($email_to, $email_subject, $email_body, $email_error, null, null, null, null, $email_attachments) ? false : true;
-	//$response = ob_get_clean();
-	//echo $response;
+//add email settings
+	ksort($_SESSION['email']);
+	foreach ($_SESSION['email'] as $name => $setting) {
+		foreach ($setting as $type => $value) {
+			if ($type == 'uuid') { $uuid = $value; continue; }
+			if ($name == 'smtp_password') { $value = '[REDACTED]'; }
+			$email_settings .= $name.': '.$value."\n";
+		}
+	}
 
 //send the email
 	$email = new email;
@@ -308,22 +304,27 @@
 	$email->subject = $email_subject;
 	$email->body = $email_body;
 	$email->attachments = $email_attachments;
+	$email->debug_level = 3;
 	$email->method = 'direct';
-	$sent = $email->send();
-	//$response = $email->email_error;
+	$email_status = $email->send();
+	$email_error = $email->error;
+	$email_response = $email->response;
 
 //send the email
-	if ($sent) {
+	if ($email_status) {
 
 		//set the email status to sent
 		$sql = "update v_email_queue ";
-		$sql .= "set email_status = 'sent' ";
+		$sql .= "set email_status = 'sent', ";
 		//$sql .= "set email_status = 'waiting' "; //debug
 		if (isset($transcribe_message)) {
-			$sql .= ", email_transcription = :email_transcription ";
+			$sql .= "email_transcription = :email_transcription, ";
 		}
+		$sql .= "email_response = :email_response, ";
+		$sql .= "update_date = now() ";
 		$sql .= "where email_queue_uuid = :email_queue_uuid; ";
 		$parameters['email_queue_uuid'] = $email_queue_uuid;
+		$parameters['email_response'] = $email_settings."\n".$email_response;
 		if (isset($transcribe_message)) {
 			$parameters['email_transcription'] = $transcribe_message;
 		}
@@ -335,6 +336,9 @@
 
 		//delete the email after it is sent
 		if ($email_action_after == 'delete') {
+			//delay the delete by a few seconds
+			sleep(3);
+
 			//remove the email file after it has been sent
 			if (is_array($email_queue_attachments) && @sizeof($email_queue_attachments) != 0) {
 				foreach($email_queue_attachments as $field) {
@@ -440,14 +444,13 @@
 		else {
 			$sql .= "set email_status = 'trying', ";
 		}
-		$sql .= "email_retry_count = :email_retry_count ";
-		//$sql .= ", email_debug = :email_debug ";
+		$sql .= "email_response = :email_response, ";
+		$sql .= "email_retry_count = :email_retry_count, ";
+		$sql .= "update_date = now() ";
 		$sql .= "where email_queue_uuid = :email_queue_uuid; ";
 		$parameters['email_queue_uuid'] = $email_queue_uuid;
-		//$parameters['email_debug'] = $mailer_error;
+		$parameters['email_response'] = $email_settings."\n".$email_response;
 		$parameters['email_retry_count'] = $email_retry_count;
-		//echo $sql."\n";
-		//print_r($parameters);
 		$database = new database;
 		$database->execute($sql, $parameters);
 		unset($parameters);

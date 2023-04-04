@@ -7703,7 +7703,11 @@
     <!-- # Lock Speaker Volume. 0 - No, 1 - Ring, 2 - Talk, 3 - Both. Default is 0 -->
     <!-- # Number: 0, 1, 2, 3 -->
     <!-- # Mandatory -->
+{if isset($grandstream_lock_volume)}
+    <P8392>{$grandstream_lock_volume}</P8392>
+{else}
     <P8392>0</P8392>
+{/if}
 
     <!-- # Default Ringtone. 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3, 4 - silent. Default is 0 -->
     <!-- # Number: 0, 1, 2, 3, 4 -->
@@ -7816,7 +7820,11 @@
     <!-- # Show Keys Label. 1 - Show, 2 - Hide, 0 - Toggle. Default is 0 -->
     <!-- # Number: 0, 1, 2 -->
     <!-- # Mandatory -->
-    <P8386>1</P8386>
+    {if isset($grandstream_show_key_labels)}
+        <P8386>{$grandstream_show_key_labels}</P8386>
+    {else}
+        <P8386>1</P8386>
+    {/if}
 
     <!-- ############################################################################## -->
     <!-- ##  Settings/Programmable Keys/Virtual Multi-Purpose Keys -->

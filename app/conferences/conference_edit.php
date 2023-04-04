@@ -24,8 +24,11 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//includes
-	require_once "root.php";
+//set the include path
+	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+	set_include_path(parse_ini_file($conf[0])['document.root']);
+
+//includes files
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
@@ -63,7 +66,7 @@
 		$conference_account_code = $_POST["conference_account_code"];
 		$conference_order = $_POST["conference_order"];
 		$conference_description = $_POST["conference_description"];
-		$conference_enabled = $_POST["conference_enabled"];
+		$conference_enabled = $_POST["conference_enabled"] ?: 'false';
 
 		//sanitize the conference name
 		$conference_name = preg_replace("/[^A-Za-z0-9\- ]/", "", $conference_name);
@@ -198,13 +201,13 @@
 					$pin_number = (strlen($conference_pin_number) > 0) ? '+'.$conference_pin_number : '';
 
 				//build the xml
-					$dialplan_xml = "<extension name=\"".$conference_name."\" continue=\"\" uuid=\"".$dialplan_uuid."\">\n";
-					$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".$conference_extension."$\">\n";
+					$dialplan_xml = "<extension name=\"".xml::sanitize($conference_name)."\" continue=\"\" uuid=\"".xml::sanitize($dialplan_uuid)."\">\n";
+					$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".xml::sanitize($conference_extension)."$\">\n";
 					$dialplan_xml .= "		<action application=\"answer\" data=\"\"/>\n";
-					$dialplan_xml .= "		<action application=\"set\" data=\"conference_uuid=".$conference_uuid."\" inline=\"true\"/>\n";
-					//$dialplan_xml .= "		<action application=\"set\" data=\"conference_name=".$conference_name."\" inline=\"true\"/>\n";
-					$dialplan_xml .= "		<action application=\"set\" data=\"conference_extension=".$conference_extension."\" inline=\"true\"/>\n";
-					$dialplan_xml .= "		<action application=\"conference\" data=\"".$conference_extension."@".$_SESSION['domain_name']."@".$conference_profile.$pin_number."+flags{'".$conference_flags."'}\"/>\n";
+					$dialplan_xml .= "		<action application=\"set\" data=\"conference_uuid=".xml::sanitize($conference_uuid)."\" inline=\"true\"/>\n";
+					//$dialplan_xml .= "		<action application=\"set\" data=\"conference_name=".xml::sanitize($conference_name)."\" inline=\"true\"/>\n";
+					$dialplan_xml .= "		<action application=\"set\" data=\"conference_extension=".xml::sanitize($conference_extension)."\" inline=\"true\"/>\n";
+					$dialplan_xml .= "		<action application=\"conference\" data=\"".xml::sanitize($conference_extension)."@".$_SESSION['domain_name']."@".xml::sanitize($conference_profile.$pin_number)."+flags{'".xml::sanitize($conference_flags)."'}\"/>\n";
 					$dialplan_xml .= "	</condition>\n";
 					$dialplan_xml .= "</extension>\n";
 
@@ -293,6 +296,9 @@
 		unset($sql, $parameters, $row);
 	}
 
+//set the defaults
+	if (strlen($conference_enabled) == 0) { $conference_enabled = 'true'; }
+
 //get the conference profiles
 	$sql = "select * ";
 	$sql .= "from v_conference_profiles ";
@@ -348,8 +354,11 @@
 		if (permission_exists('conference_cdr_view')) {
 			echo button::create(['type'=>'button','label'=>$text['button-cdr'],'icon'=>'list','link'=>PROJECT_PATH.'/app/conference_cdr/conference_cdr.php?id='.urlencode($conference_uuid)]);
 		}
-		if (permission_exists('conference_active_view')) {
-			echo button::create(['type'=>'button','label'=>$text['button-view'],'icon'=>$_SESSION['theme']['button_icon_view'],'style'=>'','link'=>'../conferences_active/conferences_active.php?c='.urlencode(str_replace(' ', '-', $conference_name))]);
+		if (permission_exists('conference_interactive_view')) {
+			echo button::create(['type'=>'button','label'=>$text['button-view'],'icon'=>$_SESSION['theme']['button_icon_view'],'style'=>'','link'=>'../conferences_active/conference_interactive.php?c='.urlencode($conference_extension)]);
+		}
+		else if (permission_exists('conference_active_view')) {
+			echo button::create(['type'=>'button','label'=>$text['button-view'],'icon'=>$_SESSION['theme']['button_icon_view'],'style'=>'','link'=>'../conferences_active/conferences_active.php']);
 		}
 	}
 	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save']);
@@ -515,10 +524,18 @@
 	echo "	".$text['table-enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='conference_enabled'>\n";
-	echo "		<option value='true'>".$text['label-true']."</option>\n";
-	echo "		<option value='false' ".($conference_enabled == 'false' ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
-	echo "	</select>\n";
+	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
+		echo "	<label class='switch'>\n";
+		echo "		<input type='checkbox' id='conference_enabled' name='conference_enabled' value='true' ".($conference_enabled == 'true' ? "checked='checked'" : null).">\n";
+		echo "		<span class='slider'></span>\n";
+		echo "	</label>\n";
+	}
+	else {
+		echo "	<select class='formfld' id='conference_enabled' name='conference_enabled'>\n";
+		echo "		<option value='true' ".($conference_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($conference_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "	</select>\n";
+	}
 	echo "<br />\n";
 	echo "".$text['description-conference-enable']."\n";
 	echo "</td>\n";

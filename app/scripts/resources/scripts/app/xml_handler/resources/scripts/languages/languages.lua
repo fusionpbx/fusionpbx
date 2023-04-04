@@ -30,6 +30,9 @@
 --general functions
 	require "resources.functions.is_uuid";
 
+--include xml library
+	local Xml = require "resources.functions.xml";
+
 --set the default
 	continue = true;
 
@@ -96,15 +99,15 @@
 				-- if macro_name is a uuid get from the phrase details
 					if (is_uuid(macro_name)) then
 						--define the xml table
-							local xml = {}
+							local xml = Xml:new();
 
 						--get the xml
-							table.insert(xml, [[<?xml version="1.0" encoding="UTF-8" standalone="no"?>]]);
-							table.insert(xml, [[<document type="freeswitch/xml">]]);
-							table.insert(xml, [[	<section name="languages">]]);
-							table.insert(xml, [[		<language name="]]..language..[[" say-module="]]..language..[[" sound-prefix="]]..sounds_dir..[[/]]..language..[[/us/callie" tts-engine="cepstral" tts-voice="callie">]]);
-							table.insert(xml, [[			<phrases>]]);
-							table.insert(xml, [[				<macros>]]);
+							xml:append([[<?xml version="1.0" encoding="UTF-8" standalone="no"?>]]);
+							xml:append([[<document type="freeswitch/xml">]]);
+							xml:append([[	<section name="languages">]]);
+							xml:append([[		<language name="]] .. xml.sanitize(language) .. [[" say-module="]] .. xml.sanitize(language) .. [[" sound-prefix="]] .. xml.sanitize(sounds_dir) .. [[/]] .. xml.sanitize(language) .. [[/us/callie" tts-engine="cepstral" tts-voice="callie">]]);
+							xml:append([[			<phrases>]]);
+							xml:append([[				<macros>]]);
 
 							local sql = "SELECT * FROM v_phrases as p, v_phrase_details as d ";
 							sql = sql .. "WHERE d.domain_uuid = :domain_uuid ";
@@ -128,32 +131,32 @@
 								--phrase_detail_type,phrase_detail_order
 								if (previous_phrase_uuid ~= row.phrase_uuid) then
 									if (x > 0) then
-										table.insert(xml, [[							</match>]]);
-										table.insert(xml, [[						</input>]]);
-										table.insert(xml, [[					</macro>]]);
+										xml:append([[							</match>]]);
+										xml:append([[						</input>]]);
+										xml:append([[					</macro>]]);
 									end
-									table.insert(xml, [[					<macro name="]]..row.phrase_uuid..[[">]]);
-									table.insert(xml, [[						<input pattern=\"(.*)\">]]);
-									table.insert(xml, [[							<match>]]);
+									xml:append([[					<macro name="]] .. xml.sanitize(row.phrase_uuid) .. [[">]]);
+									xml:append([[						<input pattern=\"(.*)\">]]);
+									xml:append([[							<match>]]);
 									match_open_tag = true
 								end
-								table.insert(xml, [[								<action function="]]..row.phrase_detail_function..[[" data="]]..row.phrase_detail_data..[["/>]]);
+								xml:append([[								<action function="]] .. xml.sanitize(row.phrase_detail_function) .. [[" data="]] .. xml.sanitize(row.phrase_detail_data) .. [["/>]]);
 								previous_phrase_uuid = row.phrase_uuid;
 								x = x + 1;
 							end);
 							if (x > 0) then
-								table.insert(xml, [[							</match>]]);
-								table.insert(xml, [[						</input>]]);
-								table.insert(xml, [[					</macro>]]);
+								xml:append([[							</match>]]);
+								xml:append([[						</input>]]);
+								xml:append([[					</macro>]]);
 							end
-							table.insert(xml, [[				</macros>]]);
+							xml:append([[				</macros>]]);
 
 						--output xml & close previous file
-							table.insert(xml, [[			</phrases>]]);
-							table.insert(xml, [[		</language>]]);
-							table.insert(xml, [[	</section>]]);
-							table.insert(xml, [[</document>]]);
-							XML_STRING = table.concat(xml, "\n");
+							xml:append([[			</phrases>]]);
+							xml:append([[		</language>]]);
+							xml:append([[	</section>]]);
+							xml:append([[</document>]]);
+							XML_STRING = xml:build();
 					end
 
 				--log to the console

@@ -24,8 +24,11 @@
  Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//includes
-	require_once "root.php";
+//set the include path
+	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+	set_include_path(parse_ini_file($conf[0])['document.root']);
+
+//includes files
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
@@ -421,7 +424,14 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-type']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld lowercase' type='text' name='user_setting_name' id='user_setting_name' maxlength='255' value=\"".escape($user_setting_name)."\">\n";
+	$setting_types = ['Array','Boolean','Code','Dir','Name','Numeric','Text','UUID'];
+	echo "	<select class='formfld' id='user_setting_name' name='user_setting_name' required='required'>\n";
+	echo "		<option value=''></option>\n";
+	foreach ($setting_types as $setting_type) {
+		echo "	<option value='".strtolower($setting_type)."' ".($user_setting_name == strtolower($setting_type) ? "selected='selected'" : null).">".$setting_type."</option>\n";
+	}
+	echo "	</select>\n";
+	unset($setting_types, $setting_type);
 	echo "<br />\n";
 	echo $text['description-type']."\n";
 	echo "</td>\n";
@@ -587,21 +597,6 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "    	<option value='true' ".(($user_setting_value == "true") ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
 		echo "    </select>\n";
 	}
-	else if ($user_setting_category == "theme" && $user_setting_subcategory == "cache" && $user_setting_name == "boolean" ) {
-		echo "    <select class='formfld' id='user_setting_value' name='user_setting_value'>\n";
-		echo "    	<option value='true' ".(($user_setting_value == "true") ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
-		echo "    	<option value='false' ".(($user_setting_value == "false") ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
-		echo "    </select>\n";
-	}
-	else if (
-		($user_setting_category == "theme" && $user_setting_subcategory == "menu_main_icons" && $user_setting_name == "boolean") ||
-		($user_setting_category == "theme" && $user_setting_subcategory == "menu_sub_icons" && $user_setting_name == "boolean")
-		) {
-		echo "	<select class='formfld' id='user_setting_value' name='user_setting_value'>\n";
-		echo "    	<option value='true' ".(($user_setting_value == "true") ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
-		echo "    	<option value='false' ".(($user_setting_value == "false") ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
-		echo "	</select>\n";
-	}
 	else if ($user_setting_category == "theme" && $user_setting_subcategory == "menu_brand_type" && $user_setting_name == "text" ) {
 		echo "    <select class='formfld' id='user_setting_value' name='user_setting_value'>\n";
 		echo "    	<option value='image' ".(($user_setting_value == "image") ? "selected='selected'" : null).">".$text['label-image']."</option>\n";
@@ -663,17 +658,18 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "    	<option value='none' ".(($user_setting_value == "none") ? "selected='selected'" : null).">".$text['label-none']."</option>\n";
 		echo "    </select>\n";
 	}
+	elseif ($user_setting_category == "theme" && $user_setting_subcategory == "input_toggle_style" && $user_setting_name == "text" ) {
+		echo "	<select class='formfld' id='user_setting_value' name='user_setting_value'>\n";
+		echo "    	<option value='select'>".$text['option-select']."</option>\n";
+		echo "    	<option value='switch_round' ".(($user_setting_value == "switch_round") ? "selected='selected'" : null).">".$text['option-switch_round']."</option>\n";
+		echo "    	<option value='switch_square' ".(($user_setting_value == "switch_square") ? "selected='selected'" : null).">".$text['option-switch_square']."</option>\n";
+		echo "	</select>\n";
+	}
 	elseif ($user_setting_category == "users" && $user_setting_subcategory == "username_format" && $user_setting_name == "text" ) {
 		echo "	<select class='formfld' id='user_setting_value' name='user_setting_value'>\n";
 		echo "    	<option value='any' ".($user_setting_value == 'any' ? "selected='selected'" : null).">".$text['option-username_format_any']."</option>\n";
 		echo "    	<option value='email' ".($user_setting_value == 'email' ? "selected='selected'" : null).">".$text['option-username_format_email']."</option>\n";
 		echo "    	<option value='no_email' ".($user_setting_value == 'no_email' ? "selected='selected'" : null).">".$text['option-username_format_no_email']."</option>\n";
-		echo "	</select>\n";
-	}
-	elseif ($user_setting_category == "destinations" && $user_setting_subcategory == "dialplan_details" && $user_setting_name == "boolean" ) {
-		echo "	<select class='formfld' id='user_setting_value' name='user_setting_value'>\n";
-		echo "    	<option value='true'>".$text['label-true']."</option>\n";
-		echo "    	<option value='false' ".(($user_setting_value == "false") ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
 		echo "	</select>\n";
 	}
 	elseif ($user_setting_category == "destinations" && $user_setting_subcategory == "dialplan_mode" && $user_setting_name == "text" ) {
@@ -688,10 +684,19 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "    	<option value='dynamic' ".(($user_setting_value == "dynamic") ? "selected='selected'" : null).">".$text['label-dynamic']."</option>\n";
 		echo "	</select>\n";
 	}
-	elseif ($user_setting_category == "destinations" && $user_setting_subcategory == "unique" && $user_setting_name == "boolean" ) {
+	elseif (is_json($user_setting_value)) {
+		echo "	<textarea class='formfld' style='width: 100%; height: 80px; font-family: courier, monospace; overflow: auto;' id='user_setting_value' name='user_setting_value' wrap='off'>".$user_setting_value."</textarea>\n";
+	}
+	elseif ($user_setting_name == "boolean") {
 		echo "	<select class='formfld' id='user_setting_value' name='user_setting_value'>\n";
-		echo "    	<option value='true'>".$text['label-true']."</option>\n";
-		echo "    	<option value='false' ".(($user_setting_value == "false") ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
+		if ($user_setting_category == "provision" && is_numeric($user_setting_value)) {
+			echo "	<option value='0'>".$text['label-false']."</option>\n";
+			echo "	<option value='1' ".(($user_setting_value == 1) ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
+		}
+		else {
+			echo "	<option value='false'>".$text['label-false']."</option>\n";
+			echo "	<option value='true' ".((strtolower($user_setting_value) == "true") ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
+		}
 		echo "	</select>\n";
 	}
 	else {
@@ -742,20 +747,18 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "    ".$text['label-enabled']."\n";
 	echo "</td>\n";
 	echo "<td width='70%' class='vtable' align='left'>\n";
-	echo "    <select class='formfld' name='user_setting_enabled'>\n";
-	if ($user_setting_enabled == "true") {
-		echo "    <option value='true' selected='selected'>".$text['label-true']."</option>\n";
+	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
+		echo "	<label class='switch'>\n";
+		echo "		<input type='checkbox' id='user_setting_enabled' name='user_setting_enabled' value='true' ".($user_setting_enabled == 'true' ? "checked='checked'" : null).">\n";
+		echo "		<span class='slider'></span>\n";
+		echo "	</label>\n";
 	}
 	else {
-		echo "    <option value='true'>".$text['label-true']."</option>\n";
+		echo "	<select class='formfld' id='user_setting_enabled' name='user_setting_enabled'>\n";
+		echo "		<option value='true' ".($user_setting_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($user_setting_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "	</select>\n";
 	}
-	if ($user_setting_enabled == "false") {
-		echo "    <option value='false' selected='selected'>".$text['label-false']."</option>\n";
-	}
-	else {
-		echo "    <option value='false'>".$text['label-false']."</option>\n";
-	}
-	echo "    </select>\n";
 	echo "<br />\n";
 	echo $text['description-setting_enabled']."\n";
 	echo "</td>\n";

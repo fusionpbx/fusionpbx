@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2010-2019
+	Copyright (C) 2010-2023
 	All Rights Reserved.
 
 	Contributor(s):
@@ -255,36 +255,35 @@
 
 								//ensure the condition array is uniform
 									if (is_array($dialplan)) {
-										if (!is_array($dialplan['extension']['condition'][0])) {
-											$tmp = $dialplan['extension']['condition'];
-											unset($dialplan['extension']['condition']);
-											$dialplan['extension']['condition'][0] = $tmp;
+										if (!is_array($dialplan['condition'][0])) {
+											$tmp = $dialplan['condition'];
+											unset($dialplan['condition']);
+											$dialplan['condition'][0] = $tmp;
 										}
 									}
 
 								//determine if the dialplan already exists
 									$app_uuid_exists = false;
 									foreach($app_uuids as $row) {
-										if ($dialplan['extension']['@attributes']['app_uuid'] == $row['app_uuid']) {
+										if ($dialplan['@attributes']['app_uuid'] == $row['app_uuid']) {
 											$app_uuid_exists = true;
 										}
 									}
 
 								//check if the dialplan exists
 									if (!$app_uuid_exists) {
-										
-										//debug info
-											//echo "	dialplan name ".$dialplan['extension']['@attributes']['name']." not found\n";
 
 										//dialplan global
-											if (isset($dialplan['extension']['@attributes']['global']) && $dialplan['extension']['@attributes']['global'] == "true") {
+											if (isset($dialplan['@attributes']['global']) && $dialplan['@attributes']['global'] == "true") {
 												$dialplan_global = true;
-												$dialplan_context = 'global';
 											}
 											else {
 												$dialplan_global = false;
-												$dialplan_context = $dialplan['@attributes']['name'];
 											}
+
+										//get the dialplan context
+											$dialplan_context = $dialplan['@attributes']['context'];
+											$dialplan_context = str_replace("\${domain_name}", $domain['domain_name'], $dialplan_context);
 
 										//set the domain_uuid
 											if ($dialplan_global) {
@@ -299,31 +298,31 @@
 
 											$array['dialplans'][$x]['dialplan_uuid'] = $dialplan_uuid;
 											$array['dialplans'][$x]['domain_uuid'] = $domain_uuid;
-											$array['dialplans'][$x]['app_uuid'] = $dialplan['extension']['@attributes']['app_uuid'];
-											$array['dialplans'][$x]['dialplan_name'] = $dialplan['extension']['@attributes']['name'];
-											$array['dialplans'][$x]['dialplan_number'] = $dialplan['extension']['@attributes']['number'];
+											$array['dialplans'][$x]['app_uuid'] = $dialplan['@attributes']['app_uuid'];
+											$array['dialplans'][$x]['dialplan_name'] = $dialplan['@attributes']['name'];
+											$array['dialplans'][$x]['dialplan_number'] = $dialplan['@attributes']['number'];
 											$array['dialplans'][$x]['dialplan_context'] = $dialplan_context;
-											if (strlen($dialplan['extension']['@attributes']['destination']) > 0) {
-												$array['dialplans'][$x]['dialplan_destination'] = $dialplan['extension']['@attributes']['destination'];
+											if (strlen($dialplan['@attributes']['destination']) > 0) {
+												$array['dialplans'][$x]['dialplan_destination'] = $dialplan['@attributes']['destination'];
 											}
-											if (strlen($dialplan['extension']['@attributes']['continue']) > 0) {
-												$array['dialplans'][$x]['dialplan_continue'] = $dialplan['extension']['@attributes']['continue'];
+											if (strlen($dialplan['@attributes']['continue']) > 0) {
+												$array['dialplans'][$x]['dialplan_continue'] = $dialplan['@attributes']['continue'];
 											}
-											$array['dialplans'][$x]['dialplan_order'] = $dialplan['extension']['@attributes']['order'];
-											if (strlen($dialplan['extension']['@attributes']['enabled']) > 0) {
-												$array['dialplans'][$x]['dialplan_enabled'] = $dialplan['extension']['@attributes']['enabled'];
+											$array['dialplans'][$x]['dialplan_order'] = $dialplan['@attributes']['order'];
+											if (strlen($dialplan['@attributes']['enabled']) > 0) {
+												$array['dialplans'][$x]['dialplan_enabled'] = $dialplan['@attributes']['enabled'];
 											}
 											else {
 												$array['dialplans'][$x]['dialplan_enabled'] = "true";
 											}
-											$array['dialplans'][$x]['dialplan_description'] = $dialplan['extension']['@attributes']['description'];
+											$array['dialplans'][$x]['dialplan_description'] = $dialplan['@attributes']['description'];
 
 										//loop through the condition array
 											$y = 0;
 											$group = 0;
 											$order = 5;
-											if (isset($dialplan['extension']['condition'])) {
-												foreach ($dialplan['extension']['condition'] as &$row) {
+											if (isset($dialplan['condition'])) {
+												foreach ($dialplan['condition'] as &$row) {
 
 													$array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = $domain_uuid;
 													$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $dialplan_uuid;
@@ -335,6 +334,12 @@
 														$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_break'] = $row['@attributes']['break'];
 													}
 													$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = $group;
+													if (isset($row['@attributes']['enabled'])) {
+														$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_enabled'] = $row['@attributes']['enabled'];
+													}
+													else {
+														$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_enabled'] = 'true';
+													}
 													$y++;
 
 													if (is_array($row['action']) || is_array($row['anti-action'])) {
@@ -656,7 +661,6 @@
 							}
 							if (is_uuid($this->uuid)) {
 								$sql .= "and p.dialplan_uuid = :dialplan_uuid \n";
-								$sql .= "and s.dialplan_uuid = :dialplan_uuid \n";
 								$parameters['dialplan_uuid'] = $this->uuid;
 							}
 							$sql .= "and (s.dialplan_detail_enabled = 'true' or s.dialplan_detail_enabled is null) \n";

@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -27,8 +27,11 @@
 	Original version of Call Block was written by Gerrit Visser <gerrit308@gmail.com>
 */
 
-//includes
-	require_once "root.php";
+//set the include path
+	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+	set_include_path(parse_ini_file($conf[0])['document.root']);
+
+//includes files
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
@@ -52,17 +55,24 @@
 
 //get http post variables and set them to php variables
 	if (count($_POST) > 0) {
+		//get the variables from the http post
 		$call_block_direction = $_POST["call_block_direction"];
 		$extension_uuid = $_POST["extension_uuid"];
 		$call_block_name = $_POST["call_block_name"];
 		$call_block_country_code = $_POST["call_block_country_code"];
 		$call_block_number = $_POST["call_block_number"];
-		$call_block_enabled = $_POST["call_block_enabled"];
+		$call_block_enabled = $_POST["call_block_enabled"] ?: 'false';
 		$call_block_description = $_POST["call_block_description"];
-		
+
+		//get the call block app and data
 		$action_array = explode(':', $_POST["call_block_action"]);
 		$call_block_app = $action_array[0];
 		$call_block_data = $action_array[1];
+		
+		//sanitize the data
+		$extension_uuid = preg_replace("#[^a-fA-F0-9./]#", "", $extension_uuid);
+		$call_block_country_code = preg_replace('#[^0-9./]#', '', $call_block_country_code);
+		$call_block_number = preg_replace('#[^0-9./]#', '', $call_block_number);
 	}
 
 //handle the http post
@@ -260,6 +270,9 @@
 		}
 		unset($sql, $parameters, $row);
 	}
+
+//set the defaults
+	if (strlen($call_block_enabled) == 0) { $call_block_enabled = 'true'; }
 
 //get the extensions
 	if (permission_exists('call_block_all') || permission_exists('call_block_extension')) {
@@ -493,10 +506,18 @@ if (permission_exists('call_block_all') || permission_exists('call_block_ring_gr
 	echo "	".$text['label-enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='call_block_enabled'>\n";
-	echo "		<option value='true' ".(($call_block_enabled == "true") ? "selected" : null).">".$text['label-true']."</option>\n";
-	echo "		<option value='false' ".(($call_block_enabled == "false") ? "selected" : null).">".$text['label-false']."</option>\n";
-	echo "	</select>\n";
+	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
+		echo "	<label class='switch'>\n";
+		echo "		<input type='checkbox' id='call_block_enabled' name='call_block_enabled' value='true' ".($call_block_enabled == 'true' ? "checked='checked'" : null).">\n";
+		echo "		<span class='slider'></span>\n";
+		echo "	</label>\n";
+	}
+	else {
+		echo "	<select class='formfld' id='call_block_enabled' name='call_block_enabled'>\n";
+		echo "		<option value='true' ".($call_block_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($call_block_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "	</select>\n";
+	}
 	echo "<br />\n";
 	echo $text['description-enable']."\n";
 	echo "\n";

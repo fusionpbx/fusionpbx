@@ -1,5 +1,4 @@
-<context name="${domain_name}">
-  <extension name="is_loopback" number="" continue="true" app_uuid="1dcf888f-c367-46b7-b809-f2de918c266c" global="true" order="30">
+<extension name="is_loopback" number="" context="global" continue="true" app_uuid="1dcf888f-c367-46b7-b809-f2de918c266c" global="true" order="30">
 	<condition field="${is_follow_me_loopback}" expression="true">
 		<action application="set" data="from_orig_user_exists=${user_exists id ${username} ${domain_name}}" inline="true"/>
 	</condition>
@@ -7,5 +6,4 @@
 		<action application="set" data="outbound_caller_id_number=${user_data ${username}@${domain} var outbound_caller_id_number}" inline="true"/>
 		<action application="set" data="outbound_caller_id_name=${user_data ${username}@${domain} var outbound_caller_id_name}" inline="true"/>
 	</condition>
-  </extension>
-</context>
+</extension>

@@ -28,6 +28,9 @@
 	local cache = require"resources.functions.cache"
 	local log = require"resources.functions.log"["xml_handler"]
 
+--include xml library
+	local Xml = require "resources.functions.xml";
+
 --connect to the database
 	local Database = require "resources.functions.database";
 	dbh = Database.new('system');
@@ -110,7 +113,16 @@
 	if (call_context == "public" or string.sub(call_context, 0, 7) == "public@" or string.sub(call_context, -7) == ".public") then
 		context_name = 'public';
 	end
-	--freeswitch.consoleLog("notice", "[xml_handler] ".. dialplan_mode .. " key:" .. dialplan_cache_key .. "\n");
+
+--use alternative sip_to_user instead of the default
+	if (dialplan_destination == '${sip_to_user}' or dialplan_destination == 'sip_to_user') then
+		destination_number = api:execute("url_decode", sip_to_user);
+	end
+
+--use alternative sip_req_user instead of the default
+	if (dialplan_destination == '${sip_req_user}' or dialplan_destination == 'sip_req_user') then
+		destination_number = api:execute("url_decode", sip_req_user);
+	end
 
 --set the dialplan cache key
 	local dialplan_cache_key = "dialplan:" .. call_context;
@@ -118,10 +130,8 @@
 		dialplan_cache_key = "dialplan:" .. call_context .. ":" .. destination_number;
 	end
 
---use alternative sip_to_user instead of the default
-	if (dialplan_destination == '${sip_to_user}') then
-		destination_number = api:execute("url_decode", sip_to_user);
-	end
+--log the dialplan mode and dialplan cache key
+	freeswitch.consoleLog("notice", "[xml_handler] ".. dialplan_mode .. " key:" .. dialplan_cache_key .. "\n");
 
 --get the cache
 	XML_STRING, err = cache.get(dialplan_cache_key);
@@ -146,14 +156,14 @@
 			assert(dbh:connected());
 
 		--get the hostname
-			hostname = trim(api:execute("switchname", ""));
+			hostname = trim(api:execute("hostname", ""));
 
 		--set the xml array and then concatenate the array to a string
-			local xml = {}
-			table.insert(xml, [[<?xml version="1.0" encoding="UTF-8" standalone="no"?>]]);
-			table.insert(xml, [[<document type="freeswitch/xml">]]);
-			table.insert(xml, [[	<section name="dialplan" description="">]]);
-			table.insert(xml, [[		<context name="]] .. call_context .. [[">]]);
+			local xml = Xml:new();
+			xml:append([[<?xml version="1.0" encoding="UTF-8" standalone="no"?>]]);
+			xml:append([[<document type="freeswitch/xml">]]);
+			xml:append([[	<section name="dialplan" description="">]]);
+			xml:append([[		<context name="]] .. xml.sanitize(call_context) .. [[" destination_number="]] .. xml.sanitize(destination_number) .. [[" hostname="]] .. xml.sanitize(hostname) .. [[">]]);
 
 		--get the dialplan xml
 			if (context_name == 'public' and dialplan_mode == 'single') then
@@ -186,19 +196,19 @@
 					if (row.domain_uuid ~= nil) then
 						domain_name = row.domain_name;
 					else
-						table.insert(xml, row.dialplan_xml);
+						xml:append(row.dialplan_xml);
 					end
 					if (row.domain_enabled == true) then
-						table.insert(xml, row.dialplan_xml);
+						xml:append(row.dialplan_xml);
 					end
 				end);
 				if (xml == nil) then
-					table.insert(xml, [[		<extension name="not-found" continue="false" uuid="9913df49-0757-414b-8cf9-bcae2fd81ae7">]]);
-					table.insert(xml, [[			<condition field="" expression="">]]);
-					table.insert(xml, [[				<action application="set" data="call_direction=inbound" inline="true"/>]]);
-					table.insert(xml, [[				<action application="log" data="WARNING [inbound routes] 404 not found ${sip_network_ip}" inline="true"/>]]);
-					table.insert(xml, [[			</condition>]]);
-					table.insert(xml, [[		</extension>]]);
+					xml:append([[		<extension name="not-found" continue="false" uuid="9913df49-0757-414b-8cf9-bcae2fd81ae7">]]);
+					xml:append([[			<condition field="" expression="">]]);
+					xml:append([[				<action application="set" data="call_direction=inbound" inline="true"/>]]);
+					xml:append([[				<action application="log" data="WARNING [inbound routes] 404 not found ${sip_network_ip}" inline="true"/>]]);
+					xml:append([[			</condition>]]);
+					xml:append([[		</extension>]]);
 				end
 			else
 				sql = "select dialplan_xml from v_dialplans as p ";
@@ -215,15 +225,15 @@
 					freeswitch.consoleLog("notice", "[dialplan] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 				end
 				dbh:query(sql, params, function(row)
-					table.insert(xml, row.dialplan_xml);
+					xml:append(row.dialplan_xml);
 				end);
 			end
 
 		--set the xml array and then concatenate the array to a string
-			table.insert(xml, [[		</context>]]);
-			table.insert(xml, [[	</section>]]);
-			table.insert(xml, [[</document>]]);
-			XML_STRING = table.concat(xml, "\n");
+			xml:append([[		</context>]]);
+			xml:append([[	</section>]]);
+			xml:append([[</document>]]);
+			XML_STRING = xml:build();
 
 		--close the database connection
 			dbh:release();

@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -25,8 +25,11 @@
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 
-//includes
-	require_once "root.php";
+//set the include path
+	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+	set_include_path(parse_ini_file($conf[0])['document.root']);
+
+//includes files
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
@@ -594,12 +597,12 @@
 		echo "<th class='center hide-md-dn' title=\"".$text['description-mos']."\">".$text['label-mos']."</th>\n";
 		$col_count++;
 	}
-	if (permission_exists('xml_cdr_hangup_cause')) {
-		echo "<th class='hide-sm-dn shrink'>".$text['label-hangup_cause']."</th>\n";
+	if (permission_exists('xml_cdr_status')) {
+		echo "<th class='hide-sm-dn shrink'>".$text['label-status']."</th>\n";
 		$col_count++;
 	}
-	else {
-		echo "<th>".$text['label-status']."</th>\n";
+	if (permission_exists('xml_cdr_hangup_cause')) {
+		echo "<th class='hide-sm-dn shrink'>".$text['label-hangup_cause']."</th>\n";
 		$col_count++;
 	}
 	if (permission_exists('xml_cdr_details')) {
@@ -683,6 +686,7 @@
 							}
 							else if ($row['direction'] == 'outbound') {
 								if ($row['answer_stamp'] != '' && $row['bridge_uuid'] != '') { $call_result = 'answered'; }
+								else if ($row['hangup_cause'] == 'NORMAL_CLEARING') { $call_result = 'answered'; }
 								else if ($row['answer_stamp'] == '' && $row['bridge_uuid'] != '') { $call_result = 'cancelled'; }
 								else { $call_result = 'failed'; }
 							}
@@ -803,14 +807,14 @@
 						}
 						$content .= "	<td class='middle center hide-md-dn' ".$title.">".$value."</td>\n";
 					}
-				//hangup cause/call result
+				//call result/status
+					if (permission_exists("xml_cdr_status")) {
+						$content .= "	<td class='middle no-wrap hide-sm-dn'>".ucwords(escape($call_result))."</td>\n";
+					}	
+				//hangup cause
 					if (permission_exists('xml_cdr_hangup_cause')) {
 						$content .= "	<td class='middle no-wrap hide-sm-dn'><a href='".$list_row_url."'>".escape($hangup_cause)."</a></td>\n";
 					}
-					else {
-						$content .= "	<td class='middle no-wrap hide-sm-dn'>".ucwords(escape($call_result))."</td>\n";
-					}
-
 					$content .= "</tr>\n";
 				//show the leg b only to those with the permission
 					if ($row['leg'] == 'a') {

@@ -338,7 +338,7 @@ if (!class_exists('call_block')) {
 												}
 												//build the array
 												$array['call_block'][$x]['call_block_country_code'] = trim($_SESSION['domain']['country_code']['numeric']);
-												$array['call_block'][$x]['call_block_name'] = trim($row["caller_id_name"]);
+												$array['call_block'][$x]['call_block_name'] = '';
 												$array['call_block'][$x]['call_block_number'] = $call_block_number;
 												$array['call_block'][$x]['call_block_description'] = trim($row["caller_id_name"]);
 											}
@@ -365,7 +365,7 @@ if (!class_exists('call_block')) {
 															$call_block_number = str_replace("+".trim($_SESSION['domain']['country_code']['numeric']), "", trim($row["caller_id_number"]));
 
 															//build the array
-															$array['call_block'][$x]['call_block_name'] = trim($row["caller_id_name"]);
+															$array['call_block'][$x]['call_block_name'] = '';
 															$array['call_block'][$x]['call_block_number'] = $call_block_number;
 															$array['call_block'][$x]['call_block_description'] = trim($row["caller_id_name"]);
 														}

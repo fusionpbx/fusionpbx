@@ -17,15 +17,18 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2022
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//includes
-	require_once "root.php";
+//set the include path
+	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+	set_include_path(parse_ini_file($conf[0])['document.root']);
+
+//includes files
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
@@ -246,7 +249,9 @@
 		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, $param);
 	}
 	echo th_order_by('gateway', $text['label-gateway'], $order_by, $order);
+	echo "<th class='hide-sm-dn'>".$text['label-proxy']."</th>\n";
 	echo th_order_by('context', $text['label-context'], $order_by, $order);
+	echo th_order_by('register', $text['label-register'], $order_by, $order);
 	if ($fp) {
 		echo "<th class='hide-sm-dn'>".$text['label-status']."</th>\n";
 		if (permission_exists('gateway_edit')) {
@@ -293,7 +298,9 @@
 				echo escape($row['gateway']);
 			}
 			echo "	</td>\n";
+			echo "	<td>".escape($row["proxy"])."</td>\n";
 			echo "	<td>".escape($row["context"])."</td>\n";
+			echo "	<td>".ucwords(escape($row["register"]))."</td>\n";
 			if ($fp) {
 				if ($row["enabled"] == "true") {
 					$response = switch_gateway_status($row["gateway_uuid"]);

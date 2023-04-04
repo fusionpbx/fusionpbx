@@ -24,7 +24,6 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
-include "root.php";
 
 //define the provision class
 	class provision {
@@ -39,7 +38,10 @@ include "root.php";
 				if (PHP_OS == "Linux") {
 					//set the default template dir
 						if (strlen($this->template_dir) == 0) {
-							if (file_exists('/etc/fusionpbx/resources/templates/provision')) {
+							if (file_exists('/usr/share/fusionpbx/templates/provision')) {
+								$this->template_dir = '/usr/share/fusionpbx/templates/provision';
+							}
+							elseif (file_exists('/etc/fusionpbx/resources/templates/provision')) {
 								$this->template_dir = '/etc/fusionpbx/resources/templates/provision';
 							}
 							else {
@@ -47,19 +49,14 @@ include "root.php";
 							}
 						}
 				}
-				else if (PHP_OS == "FreeBSD") {
+				elseif (PHP_OS == "FreeBSD") {
 					//if the FreeBSD port is installed use the following paths by default.
-						if (file_exists('/usr/local/etc/fusionpbx/resources/templates/provision')) {
-							if (strlen($this->template_dir) == 0) {
+						if (strlen($this->template_dir) == 0) {
+							if (file_exists('/usr/local/share/fusionpbx/templates/provision')) {
+								$this->template_dir = '/usr/local/share/fusionpbx/templates/provision';
+							}
+							elseif (file_exists('/usr/local/etc/fusionpbx/resources/templates/provision')) {
 								$this->template_dir = '/usr/local/etc/fusionpbx/resources/templates/provision';
-							}
-							else {
-								$this->template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/provision';
-							}
-						}
-						else {
-							if (strlen($this->template_dir) == 0) {
-								$this->template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/provision';
 							}
 							else {
 								$this->template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/provision';
@@ -603,9 +600,9 @@ include "root.php";
 										$device_firmware_version = $row["device_firmware_version"];
 										$device_user_uuid = $row["device_user_uuid"];
 										$device_location = strtolower($row["device_location"]);
-										$device_vendor = strtolower($row["device_vendor"]);
+										//keep the original device_vendor
 										$device_enabled = $row["device_enabled"];
-										//keep the original template
+										//keep the original device_template
 										$device_description = $row["device_description"];
 									}
 								}
