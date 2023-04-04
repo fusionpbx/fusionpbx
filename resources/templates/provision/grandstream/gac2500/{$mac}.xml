@@ -22,7 +22,7 @@
 
     <!--  SIP Server -->
     <!--  String -->
-    <P47>{$account.1.server_address}</P47>
+    <P47>{$account.1.server_address}:{$account.1.sip_port}</P47>
 
     <!-- # SIP User ID -->
     <P35>{$account.1.user_id}</P35>
@@ -3954,7 +3954,7 @@
     <!-- # DHCP Option 2 to Override Time Zone setting. 0 - No, 1 - Yes. Default value is 0 -->
     <!-- # When set to Yes (1), it will override the configured Time Zone setting if available -->
     <!-- # Number: 0, 1 -->
-    <P143>0</P143>
+    {if isset($grandstream_dhcp_time_zone)}<P143>{$grandstream_dhcp_time_zone}</P143>{else}<P143>0</P143>{/if}
 
     <!-- # Time Zone -->
     <!-- # Web GUI Option       			   							    P Value              							 -->

@@ -65,11 +65,12 @@ if ($domains_processed == 1) {
 		unset($sql);
 
 	//update all callcenter dialplans to have the @domain in the queue name
-		$sql = "select q.domain_uuid, d.domain_name, q.call_center_queue_uuid, q.dialplan_uuid, ";
+		$sql = "select q.domain_uuid, d.domain_name, q.call_center_queue_uuid, q.dialplan_uuid, dp.dialplan_xml, ";
 		$sql .= "q.queue_name, q.queue_extension, q.queue_timeout_action, q.queue_cid_prefix, q.queue_cc_exit_keys, ";
 		$sql .= "q.queue_description, q.queue_time_base_score_sec, q.queue_greeting ";
-		$sql .= "from v_call_center_queues as q, v_domains as d ";
+		$sql .= "from v_call_center_queues as q, v_dialplans as dp, v_domains as d ";
 		$sql .= "where q.domain_uuid = d.domain_uuid ";
+		$sql .= "and (q.dialplan_uuid = dp.dialplan_uuid or q.dialplan_uuid is null) ";
 		$database = new database;
 		$call_center_queues = $database->select($sql, null, 'all');
 		$id = 0;
@@ -85,7 +86,7 @@ if ($domains_processed == 1) {
 				//add the recording path if needed
 					if ($row['queue_greeting'] != '') {
 						if (file_exists($_SESSION['switch']['recordings']['dir'].'/'.$row['domain_name'].'/'.$row['queue_greeting'])) {
-							$queue_greeting_path = $_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/'.$row['queue_greeting'];
+							$queue_greeting_path = $_SESSION['switch']['recordings']['dir'].'/'.$row['domain_name'].'/'.$row['queue_greeting'];
 						}
 						else {
 							$queue_greeting_path = trim($row['queue_greeting']);
@@ -93,59 +94,61 @@ if ($domains_processed == 1) {
 					}
 
 				//build the xml dialplan
-					$dialplan_xml = "<extension name=\"".$row["queue_name"]."\" continue=\"\" uuid=\"".$row["dialplan_uuid"]."\">\n";
+					$dialplan_xml = "<extension name=\"".xml::sanitize($row["queue_name"])."\" continue=\"\" uuid=\"".xml::sanitize($row["dialplan_uuid"])."\">\n";
 					$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^([^#]+#)(.*)\$\" break=\"never\">\n";
 					$dialplan_xml .= "		<action application=\"set\" data=\"caller_id_name=\$2\"/>\n";
 					$dialplan_xml .= "	</condition>\n";
-					$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^(callcenter\+)?".$row["queue_extension"]."$\">\n";
+					$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^(callcenter\+)?".xml::sanitize($row["queue_extension"])."$\">\n";
 					$dialplan_xml .= "		<action application=\"answer\" data=\"\"/>\n";
 					if (is_uuid($row['call_center_queue_uuid'])) {
-						$dialplan_xml .= "		<action application=\"set\" data=\"call_center_queue_uuid=".$row['call_center_queue_uuid']."\"/>\n";
+						$dialplan_xml .= "		<action application=\"set\" data=\"call_center_queue_uuid=".xml::sanitize($row['call_center_queue_uuid'])."\"/>\n";
 					}
 					if (is_numeric($row['queue_extension'])) {
-						$dialplan_xml .= "		<action application=\"set\" data=\"queue_extension=".$row['queue_extension']."\"/>\n";
+						$dialplan_xml .= "		<action application=\"set\" data=\"queue_extension=".xml::sanitize($row['queue_extension'])."\"/>\n";
 					}
-					$dialplan_xml .= "		<action application=\"set\" data=\"cc_export_vars=call_center_queue_uuid,sip_h_Alert-Info\"/>\n";
+					$dialplan_xml .= "		<action application=\"set\" data=\"cc_export_vars=\${cc_export_vars},call_center_queue_uuid,sip_h_Alert-Info\"/>\n";
 					$dialplan_xml .= "		<action application=\"set\" data=\"hangup_after_bridge=true\"/>\n";
 					if ($row['queue_time_base_score_sec'] != '') {
-						$dialplan_xml .= "		<action application=\"set\" data=\"cc_base_score=".$row['queue_time_base_score_sec']."\"/>\n";
+						$dialplan_xml .= "		<action application=\"set\" data=\"cc_base_score=".xml::sanitize($row['queue_time_base_score_sec'])."\"/>\n";
 					}
 					if ($row['queue_greeting'] != '') {
 						$greeting_array = explode(':', $row['queue_greeting']);
 						if (count($greeting_array) == 1) {
-							$dialplan_xml .= "		<action application=\"playback\" data=\"".$queue_greeting_path."\"/>\n";
+							$dialplan_xml .= "		<action application=\"playback\" data=\"".xml::sanitize($queue_greeting_path)."\"/>\n";
 						}
 						else {
 							if ($greeting_array[0] == 'say' || $greeting_array[0] == 'tone_stream' || $greeting_array[0] == 'phrase') {
-								$dialplan_xml .= "		<action application=\"".$greeting_array[0]."\" data=\"".$greeting_array[1]."\"/>\n";
+								$dialplan_xml .= "		<action application=\"".xml::sanitize($greeting_array[0])."\" data=\"".xml::sanitize($greeting_array[1])."\"/>\n";
 							}
 						}
 					}
 					if (strlen($row['queue_cid_prefix']) > 0) {
-						$dialplan_xml .= "		<action application=\"set\" data=\"effective_caller_id_name=".$row['queue_cid_prefix']."#\${caller_id_name}\"/>\n";
+						$dialplan_xml .= "		<action application=\"set\" data=\"effective_caller_id_name=".xml::sanitize($row['queue_cid_prefix'])."#\${caller_id_name}\"/>\n";
 					}
 					if (strlen($row['queue_cc_exit_keys']) > 0) {
-						$dialplan_xml .= "		<action application=\"set\" data=\"cc_exit_keys=".$row['queue_cc_exit_keys']."\"/>\n";
+						$dialplan_xml .= "		<action application=\"set\" data=\"cc_exit_keys=".xml::sanitize($row['queue_cc_exit_keys'])."\"/>\n";
 					}
-					$dialplan_xml .= "		<action application=\"callcenter\" data=\"".$row['queue_extension']."@".$row['domain_name']."\"/>\n";
+					$dialplan_xml .= "		<action application=\"callcenter\" data=\"".xml::sanitize($row['queue_extension'])."@".xml::sanitize($row['domain_name'])."\"/>\n";
 					//if ($destination->valid($queue_timeout_app.':'.$queue_timeout_data)) {
-						$dialplan_xml .= "		<action application=\"".$queue_timeout_app."\" data=\"".$queue_timeout_data."\"/>\n";
+						$dialplan_xml .= "		<action application=\"".xml::sanitize($queue_timeout_app)."\" data=\"".xml::sanitize($queue_timeout_data)."\"/>\n";
 					//}
 					$dialplan_xml .= "	</condition>\n";
-					$dialplan_xml .= "</extension>\n";
+					$dialplan_xml .= "</extension>";
 
 				//build the dialplan array
-					$array['dialplans'][$id]["domain_uuid"] = $row["domain_uuid"];
-					$array['dialplans'][$id]["dialplan_uuid"] = $row["dialplan_uuid"];
-					$array['dialplans'][$id]["dialplan_name"] = $row["queue_name"];
-					$array['dialplans'][$id]["dialplan_number"] = $row["queue_extension"];
-					$array['dialplans'][$id]["dialplan_context"] = $row['domain_name'];
-					$array['dialplans'][$id]["dialplan_continue"] = "false";
-					$array['dialplans'][$id]["dialplan_xml"] = $dialplan_xml;
-					$array['dialplans'][$id]["dialplan_order"] = "230";
-					$array['dialplans'][$id]["dialplan_enabled"] = "true";
-					$array['dialplans'][$id]["dialplan_description"] = $row["queue_description"];
-					$array['dialplans'][$id]["app_uuid"] = "95788e50-9500-079e-2807-fd530b0ea370";
+					if (md5($row["dialplan_xml"]) != md5($dialplan_xml)) {
+						$array['dialplans'][$id]["domain_uuid"] = $row["domain_uuid"];
+						$array['dialplans'][$id]["dialplan_uuid"] = $row["dialplan_uuid"];
+						$array['dialplans'][$id]["dialplan_name"] = $row["queue_name"];
+						$array['dialplans'][$id]["dialplan_number"] = $row["queue_extension"];
+						$array['dialplans'][$id]["dialplan_context"] = $row['domain_name'];
+						$array['dialplans'][$id]["dialplan_continue"] = "false";
+						$array['dialplans'][$id]["dialplan_xml"] = $dialplan_xml;
+						$array['dialplans'][$id]["dialplan_order"] = "230";
+						$array['dialplans'][$id]["dialplan_enabled"] = "true";
+						$array['dialplans'][$id]["dialplan_description"] = $row["queue_description"];
+						$array['dialplans'][$id]["app_uuid"] = "95788e50-9500-079e-2807-fd530b0ea370";
+					}
 
 				//increment the array id
 					$id++;

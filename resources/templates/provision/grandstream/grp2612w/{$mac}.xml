@@ -759,7 +759,11 @@
     <!-- # No Key Entry Timeout (in seconds). Default is 4 -->
     <!-- # Number: 1 - 15 -->
     <!-- # Mandatory -->
-    <P85>4</P85>
+{if isset($grandstream_dial_timeout)}
+<P85>{$grandstream_dial_timeout}</P85>
+{else}
+<P85>4</P85>
+{/if}
 
     <!-- # Key as Send. 0 - Disabled, 1 - Pound (#), 2 - Star (*). Default is 1 -->
     <!-- # Number: 0, 1, 2 -->
@@ -2744,7 +2748,7 @@
     <!-- # Configuration Via Keypad Menu. 0 - Unrestricted, 1 - Basic settings only, 2 - Constraint mode, 3 - Locked Mode. Default is 0 -->
     <!-- # Number: 0, 1, 2, 3 -->
     <!-- # Mandatory -->
-    <P1357>2</P1357>
+    {if isset($grandstream_configuration_via_keypad)}<P1357>{$grandstream_configuration_via_keypad}</P1357>{else}<P1357>0</P1357>{/if}
 
     <!-- # Validate Server Certificates. 0 - No, 1 - Yes. Default is 0 -->
     <!-- # Number: 0, 1 -->
@@ -3668,7 +3672,11 @@
     <!-- # Mute Key Functions While Idle. 0 - DND, 1 - Idle Mute, 2 - Disabled. Default is 0 -->
     <!-- # Number: 0,1,2 -->
     <!-- # Mandatory -->
-    <P1565>2</P1565>
+{if isset($grandstream_idle_mute_function)}
+    <P1565>{$grandstream_idle_mute_function}</P1565>
+{else}
+    <P1565>0</P1565>
+{/if}
 
     <!-- # # Enable Auto Unmute. 0 - No, 1 - Yes. Default is 1 -->
     <P8488>0</P8488>
@@ -4198,7 +4206,7 @@
     <!-- # When set to Yes(1), it will override the configured Time Zone setting if available  -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P143>1</P143>
+    {if isset($grandstream_dhcp_time_zone)}<P143>{$grandstream_dhcp_time_zone}</P143>{else}<P143>0</P143>{/if}
 
     <!-- # Self Defined Time zone. Max length allowed is 64 characters -->
     <!-- # String -->
@@ -4424,7 +4432,11 @@
     <!-- # Lock Volumne. 0 - No, 1 - Yes. Default is 0 -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
+{if isset($grandstream_lock_volume)}
+    <P8392>{$grandstream_lock_volume}</P8392>
+{else}
     <P8392>0</P8392>
+{/if}
 
     <!-- # Default Ringtone. 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3, 4 - silent. Default is 0 -->
     <!-- # Number: 0, 1, 2, 3, 4 -->
@@ -4495,7 +4507,11 @@
     <!-- # Show Keys Label. 1 - Show, 2 - Hide, 0 - Toggle. Default is 0 -->
     <!-- # Number: 0, 1, 2 -->
     <!-- # Mandatory -->
-    <P8386>1</P8386>
+    {if isset($grandstream_show_key_labels)}
+        <P8386>{$grandstream_show_key_labels}</P8386>
+    {else}
+        <P8386>1</P8386>
+    {/if}
 
 
     <!-- ############################################################################## -->

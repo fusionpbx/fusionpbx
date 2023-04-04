@@ -10,6 +10,10 @@ end
 require "resources.functions.config"
 require "resources.functions.split"
 require "resources.functions.trim";
+require "resources.functions.mkdir";
+
+--make sure the scripts/run dir exists
+mkdir(scripts_dir .. "/run");
 
 local log = require "resources.functions.log"[service_name]
 local presence_in = require "resources.functions.presence_in"
@@ -22,7 +26,9 @@ local find_voicemail do
 	from v_voicemail_messages t1
 	inner join v_domains t2 on t1.domain_uuid = t2.domain_uuid
 	inner join v_voicemails t3 on t1.voicemail_uuid = t3.voicemail_uuid
-	where t2.domain_name = :domain_name and t3.voicemail_id = :extension and t1.message_status != 'saved']]
+	where t2.domain_name = :domain_name 
+	and t3.voicemail_id = :extension 
+	and (t1.message_status is null or message_status = '')]]
 	
 	function find_voicemail(user)
 		local ext, domain_name = split_first(user, '@', true)

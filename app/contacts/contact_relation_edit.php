@@ -25,8 +25,11 @@
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 
-//includes
-	require_once "root.php";
+//set the include path
+	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+	set_include_path(parse_ini_file($conf[0])['document.root']);
+
+//includes files
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
@@ -184,6 +187,30 @@
 		unset($sql, $parameters, $row);
 	}
 
+//get contact details and contact_name
+	$sql = "select contact_uuid, contact_organization, contact_name_given, contact_name_family, contact_nickname ";
+	$sql .= "from v_contacts ";
+	$sql .= "where domain_uuid = :domain_uuid ";
+	$sql .= "and contact_uuid <> :contact_uuid ";
+	$sql .= "order by contact_organization desc, contact_name_given asc, contact_name_family asc ";
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$parameters['contact_uuid'] = $contact_relation_uuid;
+	$database = new database;
+	$contacts = $database->select($sql, $parameters, 'all');
+	if (is_array($contacts) && is_uuid($row['relation_contact_uuid'])) {
+		foreach($contacts as $field) {
+			if ($field['contact_uuid'] == $row['relation_contact_uuid']) {
+				$name = array();
+				if ($field['contact_organization'] != '') { $name[] = $field['contact_organization']; }
+				if ($field['contact_name_family'] != '') { $name[] = $field['contact_name_family']; }
+				if ($field['contact_name_given'] != '') { $name[] = $field['contact_name_given']; }
+				if ($field['contact_name_family'] == '' && $field['contact_name_given'] == '' && $field['contact_nickname'] != '') { $name[] = $field['contact_nickname']; }
+				$contact_name = implode(', ', $name);
+				break;
+			}
+		}
+	}
+
 //create token
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);
@@ -191,6 +218,43 @@
 //show the header
 	$document['title'] = $text['title-contact_relation'];
 	require_once "resources/header.php";
+
+?>
+
+<script type="text/javascript">
+	function get_contacts(element_id, id, search) {
+		var xhttp = new XMLHttpRequest();
+		xhttp.onreadystatechange = function() {
+			if (this.readyState == 4 && this.status == 200) {
+				//create a handle for the contact select object
+				select = document.getElementById(element_id);
+
+				//remove current options
+				while (select.options.length > 0) {
+					select.remove(0);
+				}
+
+				//add an empty row
+				//select.add(new Option('', ''));
+
+				//add new options from the json results
+				obj = JSON.parse(this.responseText);
+				for (var i=0; i < obj.length; i++) {
+					select.add(new Option(obj[i].name, obj[i].id));
+				}
+			}
+		};
+		if (search) {
+			xhttp.open("GET", "/app/contacts/contact_json.php?search="+search, true);
+		}
+		else {
+			xhttp.open("GET", "/app/contacts/contact_json.php", true);
+		}
+		xhttp.send();
+	}
+</script>
+
+<?php
 
 //javascript to toggle input/select boxes
 	echo "<script type='text/javascript'>";
@@ -258,32 +322,10 @@
 	echo "	".$text['label-contact_relation_contact']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	$sql = "select contact_uuid, contact_organization, contact_name_given, contact_name_family from v_contacts ";
-	$sql .= "where domain_uuid = :domain_uuid ";
-	$sql .= "and contact_uuid <> :contact_uuid ";
-	$sql .= "order by contact_organization desc, contact_name_given asc, contact_name_family asc ";
-	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$parameters['contact_uuid'] = $contact_uuid;
-	$database = new database;
-	$result = $database->select($sql, $parameters, 'all');
-	echo "<select class='formfld' name='relation_contact_uuid' id='relation_contact_uuid'>\n";
-	echo "<option value=''></option>\n";
-	if (is_array($result) && @sizeof($result) != 0) {
-		foreach($result as $row) {
-			$contact_name = $row['contact_name_given'].(($row['contact_name_given'] != '' && $row['contact_name_family'] != '') ? ' ' : null).$row['contact_name_family'];
-			if ($row['contact_organization'] != '') {
-				if ($contact_name != '') {
-					$contact_name = $row['contact_organization'].', '.$contact_name;
-				}
-				else {
-					$contact_name = $row['contact_organization'];
-				}
-			}
-			echo "<option value='".escape($row['contact_uuid'])."' ".(($row['contact_uuid'] == $relation_contact_uuid) ? "selected='selected'" : null).">".escape($contact_name)."</option>\n";
-		}
-	}
-	unset($sql, $parameters, $result, $row);
-	echo "</select>\n";
+	echo "	<input class=\"formfld\" type=\"text\" name=\"contact_search\" placeholder=\"search\" style=\"width: 80px;\" onkeyup=\"get_contacts('contact_select', 'contact_uuid', this.value);\" maxlength=\"255\" value=\"\">\n";
+	echo "	<select class='formfld' style=\"width: 150px;\" id=\"contact_select\" name=\"relation_contact_uuid\" >\n";
+	echo "		<option value='".escape($relation_contact_uuid)."'>".escape($contact_name)."</option>\n";
+	echo "	</select>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 

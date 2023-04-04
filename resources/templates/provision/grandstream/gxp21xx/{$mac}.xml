@@ -3029,7 +3029,11 @@ Outgoing calls. 0 - No, 1 - Yes. Default is 0 -->
     <!-- Enable Idle Mute. 0 - No, 1 - Yes. Default is 0 -->
     <!-- Number: 0, 1 -->
     <!-- Mandatory -->
+{if isset($grandstream_idle_mute_function)}
+    <P1565>{$grandstream_idle_mute_function}</P1565>
+{else}
     <P1565>0</P1565>
+{/if}
     <!-- Disable Transfer. 0 - No, 1 - Yes. Defauls is 0 -->
     <!-- Number: 0, 1 -->
     <!-- Mandatory -->

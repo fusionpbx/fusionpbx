@@ -24,8 +24,11 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//includes
-	include "root.php";
+//set the include path
+	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+	set_include_path(parse_ini_file($conf[0])['document.root']);
+
+//includes files
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
@@ -81,7 +84,7 @@
 		if (permission_exists('time_condition_context')) {
 			$dialplan_context = $_POST["dialplan_context"];
 		}
-		$dialplan_enabled = $_POST["dialplan_enabled"];
+		$dialplan_enabled = $_POST["dialplan_enabled"] ?: 'false';
 		$dialplan_description = $_POST["dialplan_description"];
 
 		if (!permission_exists('time_condition_domain')) {
@@ -176,7 +179,7 @@
 
 				//build update array
 					$array['dialplans'][0]['dialplan_uuid'] = $dialplan_uuid;
-					$array['dialplans'][0]['dialplan_continue'] = 'true';
+					$array['dialplans'][0]['dialplan_continue'] = 'false';
 					if (strlen($dialplan_context) > 0) {
 						$array['dialplans'][0]['dialplan_context'] = $dialplan_context;
 					}
@@ -661,6 +664,7 @@
 
 //set the defaults
 	if (strlen($dialplan_context) == 0) { $dialplan_context = $_SESSION['domain_name']; }
+	if (strlen($dialplan_enabled) == 0) { $dialplan_enabled = 'true'; }
 
 //create token
 	$object = new token;
@@ -766,7 +770,7 @@
 				switch (condition_var) {
 
 					case 'year': //years
-						for (y = <?php echo date('Y')?>; y <= <?php echo (date('Y') + 10)?>; y++) {
+						for (y = <?php echo (date('Y') - 5) ?>; y <= <?php echo (date('Y') + 10)?>; y++) {
 							sel_start.options[sel_start.options.length] = new Option(y, y);
 							sel_stop.options[sel_stop.options.length] = new Option(y, y);
 						}
@@ -1268,10 +1272,18 @@ if ($action == 'update') {
 	echo "    ".$text['label-enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "<select class='formfld' name='dialplan_enabled'>\n";
-	echo "	<option value='true' ".(($dialplan_enabled == "true") ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
-	echo "	<option value='false' ".(($dialplan_enabled == "false") ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
-	echo "</select>\n";
+	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
+		echo "	<label class='switch'>\n";
+		echo "		<input type='checkbox' id='dialplan_enabled' name='dialplan_enabled' value='true' ".($dialplan_enabled == 'true' ? "checked='checked'" : null).">\n";
+		echo "		<span class='slider'></span>\n";
+		echo "	</label>\n";
+	}
+	else {
+		echo "	<select class='formfld' id='dialplan_enabled' name='dialplan_enabled'>\n";
+		echo "		<option value='true' ".($dialplan_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($dialplan_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "	</select>\n";
+	}
 	echo "<br />\n";
 	echo "</td>\n";
 	echo "</tr>\n";

@@ -739,10 +739,9 @@
     <!-- # Mandatory -->
     <P129>0</P129>
 
-    <!-- # Auto Answer. 0 - No, 1 - Yes. Default is 0 -->
+    <!-- # Start Video Automatically. 0 - Disable, 1 - Enable. Default is 1. -->
     <!-- # Number: 0, 1 -->
-    <!-- # Mandatory -->
-    <P90>0</P90>
+    <P2314>0</P2314>
 
     <!-- # Refer-To Use Target Contact. 0 - No, 1 - Yes. Default is 0 -->
     <!-- # Number: 0, 1 -->
@@ -809,7 +808,11 @@
 
     <!-- # Matching Incoming Caller ID. Matching Rule 1 -->
     <!-- # String -->
+{if isset($grandstream_distinctive_ringtone_name_1)}
     <P1488>{$grandstream_distinctive_ringtone_name_1}</P1488>
+{else}
+    <P1488>ring1</P1488>
+{/if}
 
     <!-- # Matching Rule 1 Distinctive Ringtone -->
     <!-- # -1 - No Ringtone, 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3, 4 - silent, 5 - Default Ringtone. Default is 5. -->
@@ -819,7 +822,11 @@
 
     <!-- # Matching Incoming Caller ID. Matching Rule 2 -->
     <!-- # String -->
+{if isset($grandstream_distinctive_ringtone_name_2)}
     <P1490>{$grandstream_distinctive_ringtone_name_2}</P1490>
+{else}
+    <P1490>ring2</P1490>
+{/if}
 
     <!-- # Matching Rule 2 Distinctive Ringtone -->
     <!-- # -1 - No Ringtone, 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3, 4 - silent, 5 - Default Ringtone. Default is 5. -->
@@ -945,7 +952,7 @@
     <!-- #Enable Call Features.  0 - No, 1 - Yes. Default is 1 -->
     <!-- #Number: 0, 1  -->
     <!-- #Mandatory -->
-    <P191>0</P191>
+    <P191>{$grandstream_enable_call_features}</P191>
 
     <!-- #Do Not Disturb (DND) - On -->
     <!-- # String -->
@@ -6445,8 +6452,12 @@
     <!-- # Firmware Upgrade Via. 0 - TFTP,  1 - HTTP, 2 - HTTPS, 3 - FTP, 4 - FTPS. Default is 1.  -->
     <!-- # Number: 0, 1, 2, 3, 4 -->
     <!-- # Mandatory -->
-    <P6767>2</P6767>
-
+    {if isset($grandstream_firmware_upgrade_protocol) }
+    <P6767>{$grandstream_firmware_upgrade_protocol}</P6767>
+    {else}
+    <P6767>1</P6767>
+    {/if}
+    
     <!-- # Firmware Server Path -->
     <!-- # String -->
 {if isset($grandstream_firmware_path) && isset($firmware_version)}
@@ -6577,11 +6588,11 @@
 
     <!-- # Connection Request Username	 -->
     <!-- # String: a-z, A-Z, 0-9 -->
-    <P4511></P4511>
+    <P4511>{$mac|replace:'-':''|upper}</P4511>
 
     <!-- # Connection Request Password	 -->
     <!-- # String: a-z, A-Z, 0-9 -->
-    <P4512></P4512>
+    <P4512>{$mac|replace:'-':''|upper}</P4512>
 
     <!-- # Connection Request Port. Default is 7547. -->
     <!-- # Number -->
@@ -7087,7 +7098,11 @@
     <!-- # Disabled/Enabled. 0 - Disabled, 1 - Enabled. -->
     <!-- # Number: 0, 1. Default is 0 -->
     <!-- # Mandatory -->
+    {if isset($grandstream_missed_call_log) }
+    <P2981>{$grandstream_missed_call_log}</P2981>
+    {else}
     <P2981>0</P2981>
+    {/if}
 
     <!-- # Name.  -->
     <!-- # String -->
@@ -7439,9 +7454,11 @@
     <!-- # Onhook Dial Barging. 0 - Disabled, 1 - Enabled. Default is 1 -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    {if isset($grandstream_onhook_dial_barging)}
-      <P8397>{$grandstream_onhook_dial_barging}</P8397>
-    {/if}
+    {if isset($grandstream_onhook_dial_barging)}	
+    <P8397>{$grandstream_onhook_dial_barging}</P8397>
+    {else}	
+    <P8397>1</P8397>	
+    {/if}	
 
     <!-- # Off-hook Auto Dial -->
     <!-- # String -->
@@ -7573,7 +7590,11 @@
     <!-- # Mute Key Functions While Idle. 0 - DND, 1 - Idle Mute, 2 - Disabled. Default is 0 -->
     <!-- # Number: 0,1,2 -->
     <!-- # Mandatory -->
+{if isset($grandstream_idle_mute_function)}
+    <P1565>{$grandstream_idle_mute_function}</P1565>
+{else}
     <P1565>0</P1565>
+{/if}
 
     <!-- # DND Override. 0 - Off, 1 - Allow All, 2 - Allow Only Contacts, 3 - Allow Only Favourites. Default is 0 -->
     <!-- # Number: 0,1,2,3 -->
@@ -7704,7 +7725,11 @@
     <!-- # Enable Missed Call Notification. 0 - No, 1 - Yes. Default is 0 -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
+    {if isset($grandstream_missed_call_notification) }
+    <P8393>{$grandstream_missed_call_notification}</P8393>
+    {else}
     <P8393>0</P8393>
+    {/if}
 
     <!-- # Enable Call Completion Service. 0 - No, 1 - Yes. Default is 0 -->
     <!-- # Number: 0, 1 -->
@@ -8179,7 +8204,11 @@
     <!-- # When set to Yes(1), it will override the configured Time Zone setting if available  -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
+    {if isset($grandstream_dhcp_time_zone)}
+    <P143>{$grandstream_dhcp_time_zone}</P143>
+    {else}
     <P143>1</P143>
+    {/if}
 
     <!-- # Self Defined Time zone. Max length allowed is 64 characters -->
     <!-- # String -->
@@ -8228,7 +8257,11 @@
     <!-- # Disable Missed Call Backlight. 0 - No, 1 - Yes, 2 - Yes, but flash MWI LED. Default is 0 -->
     <!-- # Number: 0, 1, 2 -->
     <!-- # Mandatory -->
-    <P351>1</P351>
+    {if isset($grandstream_missed_call_backlight) }
+    <P351>{$grandstream_missed_call_backlight}</P351>
+    {else}
+    <P351>0</P351>
+    {/if}
 
     <!-- # Wallpaper Settings -->
     <!-- # Wallpaper Source. 0 - Default, 1 - Download, 2-USB(for GXP2140/2160/2170 only), 3 - Uploaded, 4 - Color Background -->
@@ -8484,7 +8517,11 @@
     <!-- # Transfer Mode via VPK. 0 - Blind Transfer, 1 - Attended Transfer, 2 - New Call. Default is 0 -->
     <!-- # Number: 0, 1, 2 -->
     <!-- # Mandatory -->
+    {if isset($grandstream_transfer_mode_via_vpk)}
+    <P8390>{$grandstream_transfer_mode_via_vpk}</P8390>
+    {else}
     <P8390>0</P8390>
+    {/if}
 
     <!-- # Enable transfer via non-Transfer MPK. 0 - No, 1 - Yes. Default is 0 -->
     <!-- # Number: 0, 1 -->
@@ -8499,7 +8536,11 @@
     <!-- # Show Keys Label. 1 - Show, 2 - Hide, 0 - Toggle. Default is 0 -->
     <!-- # Number: 0, 1, 2 -->
     <!-- # Mandatory -->
-    <P8386>0</P8386>
+    {if isset($grandstream_show_key_labels)}
+        <P8386>{$grandstream_show_key_labels}</P8386>
+    {else}
+        <P8386>1</P8386>
+    {/if}
 
     <!-- # Show VPK shared line display description (This only can be done with provisioning) -->
     <!-- # Number: 0, 1. 0 - No, 1 - Yes. Default is 1 -->

@@ -24,7 +24,7 @@
 <admin_mode_password_confirm>0000</admin_mode_password_confirm>
 {/if}
 <language>English</language>
-<ntp_server>{$server_address_1}</ntp_server>
+<ntp_server>{$ntp_server_primary}</ntp_server>
 <timezone>AUS+10</timezone>
 <dst>3600 25.09 02:00:00 04.05 03:00:00</dst>
 <tone_scheme>US</tone_scheme>
@@ -38,6 +38,7 @@
 <user_password idx="1">{$user.1.password}</user_password>
 <user_ringer idx="1">Ringer9</user_ringer>
 <user_mailbox idx="1">4000</user_mailbox>
+<user_expiry idx="1" perm="">{$user.1.register_expires}</user_expiry>
 <user_srtp idx="1" perm="">off</user_srtp>
 </phone-settings>
 <function-keys>

@@ -17,12 +17,15 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2022
+	Portions created by the Initial Developer are Copyright (C) 2023
 	the Initial Developer. All Rights Reserved.
 */
 
-//includes
-	require_once "root.php";
+//set the include path
+	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+	set_include_path(parse_ini_file($conf[0])['document.root']);
+
+//includes files
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
@@ -41,10 +44,18 @@
 	$text = $language->get();
 
 //get the http post data
-	if (is_array($_POST['fax_queue'])) {
-		$action = $_POST['action'];
-		$search = $_POST['search'];
-		$fax_queue = $_POST['fax_queue'];
+	if (isset($_REQUEST['action'])) {
+		$action = $_REQUEST['action'];
+	}
+
+//add the search
+	if (isset($_REQUEST["search"])) {
+		$search = strtolower($_REQUEST["search"]);
+	}
+
+//get the fax_queue item checked
+	if (isset($_REQUEST['fax_queue'])) {
+		$fax_queue = $_REQUEST['fax_queue'];
 	}
 
 //process the http post data by action
@@ -88,33 +99,46 @@
 	$order_by = $_GET["order_by"];
 	$order = $_GET["order"];
 
-//add the search
-	if (isset($_GET["search"])) {
-		$search = strtolower($_GET["search"]);
-	}
+
 
 //get the count
 	$sql = "select count(fax_queue_uuid) ";
-	$sql .= "from v_fax_queue ";
+	$sql .= "from v_fax_queue as q ";
 	if ($_GET['show'] == "all" && permission_exists('fax_queue_all')) {
+		//show faxes for all domains
 		$sql .= "where true ";
 	}
-	else {
-		$sql .= "where domain_uuid = :domain_uuid ";
+	elseif (permission_exists('fax_queue_domain')) {
+		//show faxes for one domain
+		$sql .= "where q.domain_uuid = :domain_uuid ";
 		$parameters['domain_uuid'] = $domain_uuid;
 	}
+	else {
+		//show only assigned fax extensions
+		$sql = trim($sql);
+		$sql .= ", v_fax as f, v_fax_users as u \n";
+		$sql .= "where f.fax_uuid = u.fax_uuid \n";
+		$sql .= "and q.domain_uuid = :domain_uuid \n";
+		$sql .= "and u.user_uuid = :user_uuid \n";
+		$parameters['domain_uuid'] = $domain_uuid;
+		$parameters['user_uuid'] = $_SESSION['user_uuid'];
+	}
 	if (isset($search)) {
-		$sql .= "and (";
-		$sql .= "	lower(hostname) like :search ";
-		$sql .= "	or lower(fax_caller_id_name) like :search ";
-		$sql .= "	or lower(fax_caller_id_number) like :search ";
-		$sql .= "	or lower(fax_number) like :search ";
-		$sql .= "	or lower(fax_email_address) like :search ";
-		$sql .= "	or lower(fax_file) like :search ";
-		$sql .= "	or lower(fax_status) like :search ";
-		$sql .= "	or lower(fax_accountcode) like :search ";
+		$sql .= "and (\n";
+		$sql .= "	lower(q.hostname) like :search \n";
+		$sql .= "	or lower(q.fax_caller_id_name) like :search \n";
+		$sql .= "	or lower(q.fax_caller_id_number) like :search \n";
+		$sql .= "	or lower(q.fax_number) like :search \n";
+		$sql .= "	or lower(q.fax_email_address) like :search \n";
+		$sql .= "	or lower(q.fax_file) like :search \n";
+		$sql .= "	or lower(q.fax_status) like :search \n";
+		$sql .= "	or lower(q.fax_accountcode) like :search \n";
 		$sql .= ") ";
 		$parameters['search'] = '%'.$search.'%';
+	}
+	if (isset($_GET["fax_status"]) && $_GET["fax_status"] != '') {
+		$sql .= "and q.fax_status = :fax_status \n";
+		$parameters['fax_status'] = $_GET["fax_status"];
 	}
 	$database = new database;
 	$num_rows = $database->select($sql, $parameters, 'column');
@@ -130,51 +154,68 @@
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = "select ";
-	$sql .= "d.domain_name, ";
-	$sql .= "q.fax_queue_uuid, ";
-	$sql .= "q.fax_uuid, ";
-	$sql .= "q.fax_date, ";
+	$sql = "select \n";
+	$sql .= "d.domain_name, \n";
+	$sql .= "q.domain_uuid, \n";
+	$sql .= "q.fax_queue_uuid, \n";
+	$sql .= "q.fax_uuid, \n";
+	$sql .= "q.fax_date, \n";
 	$sql .= "to_char(timezone(:time_zone, q.fax_date), 'DD Mon YYYY') as fax_date_formatted, \n";
 	$sql .= "to_char(timezone(:time_zone, q.fax_date), 'HH12:MI:SS am') as fax_time_formatted, \n";	
-	$sql .= "q.hostname, ";
-	$sql .= "q.fax_caller_id_name, ";
-	$sql .= "q.fax_caller_id_number, ";
-	$sql .= "q.fax_number, ";
-	$sql .= "q.fax_prefix, ";
-	$sql .= "q.fax_email_address, ";
-	$sql .= "q.fax_file, ";
-	$sql .= "q.fax_status, ";
-	$sql .= "q.fax_retry_date, ";
+	$sql .= "q.hostname, \n";
+	$sql .= "q.fax_caller_id_name, \n";
+	$sql .= "q.fax_caller_id_number, \n";
+	$sql .= "q.fax_number, \n";
+	$sql .= "q.fax_prefix, \n";
+	$sql .= "q.fax_email_address, \n";
+	$sql .= "q.fax_file, \n";
+	$sql .= "q.fax_status, \n";
+	$sql .= "q.fax_retry_date, \n";
 	$sql .= "to_char(timezone(:time_zone, q.fax_retry_date), 'DD Mon YYYY') as fax_retry_date_formatted, \n";
 	$sql .= "to_char(timezone(:time_zone, q.fax_retry_date), 'HH12:MI:SS am') as fax_retry_time_formatted, \n";	
-	$sql .= "q.fax_notify_date, ";
+	$sql .= "q.fax_notify_date, \n";
 	$sql .= "to_char(timezone(:time_zone, q.fax_notify_date), 'DD Mon YYYY') as fax_notify_date_formatted, \n";
 	$sql .= "to_char(timezone(:time_zone, q.fax_notify_date), 'HH12:MI:SS am') as fax_notify_time_formatted, \n";	
-	$sql .= "q.fax_retry_count, ";
-	$sql .= "q.fax_accountcode, ";
-	$sql .= "q.fax_command ";
-	$sql .= "from v_fax_queue as q, v_domains as d ";
+	$sql .= "q.fax_retry_count, \n";
+	$sql .= "q.fax_accountcode, \n";
+	$sql .= "q.fax_command \n";
+	$sql .= "from v_fax_queue as q, v_domains as d \n";
 	if ($_GET['show'] == "all" && permission_exists('fax_queue_all')) {
-		$sql .= "where true ";
+		//show faxes for all domains
+		$sql .= "where true \n";
+	}
+	elseif (permission_exists('fax_queue_domain')) {
+		//show faxes for one domain
+		$sql .= "where q.domain_uuid = :domain_uuid \n";
+		$parameters['domain_uuid'] = $domain_uuid;
 	}
 	else {
-		$sql .= "where q.domain_uuid = :domain_uuid ";
+		//show only assigned fax extensions
+		$sql = trim($sql);
+		$sql .= ", v_fax as f, v_fax_users as u \n";
+		$sql .= "where f.fax_uuid = u.fax_uuid \n";
+		$sql .= "and q.domain_uuid = :domain_uuid \n";
+		$sql .= "and u.user_uuid = :user_uuid \n";
 		$parameters['domain_uuid'] = $domain_uuid;
+		$parameters['user_uuid'] = $_SESSION['user_uuid'];
 	}
 	$sql .= "and q.domain_uuid = d.domain_uuid ";
 	if (isset($_GET["search"])) {
-		$sql .= "and (";
-		$sql .= "	lower(hostname) like :search ";
-		$sql .= "	or lower(fax_caller_id_name) like :search ";
-		$sql .= "	or lower(fax_caller_id_number) like :search ";
-		$sql .= "	or lower(fax_number) like :search ";
-		$sql .= "	or lower(fax_email_address) like :search ";
-		$sql .= "	or lower(fax_file) like :search ";
-		$sql .= "	or lower(fax_status) like :search ";
-		$sql .= "	or lower(fax_accountcode) like :search ";
+		$sql .= "and ( \n";
+		$sql .= "	lower(q.hostname) like :search \n";
+		$sql .= "	or lower(q.fax_caller_id_name) like :search \n";
+		$sql .= "	or lower(q.fax_caller_id_number) like :search \n";
+		$sql .= "	or lower(q.fax_number) like :search \n";
+		$sql .= "	or lower(q.fax_email_address) like :search \n";
+		$sql .= "	or lower(q.fax_file) like :search \n";
+		$sql .= "	or lower(q.fax_status) like :search \n";
+		$sql .= "	or lower(q.fax_accountcode) like :search \n";
 		$sql .= ") ";
 		$parameters['search'] = '%'.$search.'%';
+	}
+	if (isset($_GET["fax_status"]) && $_GET["fax_status"] != '') {
+		$sql .= "and q.fax_status = :fax_status \n";
+		$parameters['fax_status'] = $_GET["fax_status"];
 	}
 	$sql .= order_by($order_by, $order, 'fax_date', 'desc');
 	$sql .= limit_offset($rows_per_page, $offset);
@@ -208,6 +249,40 @@
 		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','name'=>'btn_delete','style'=>'display:none;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
 	echo 		"<form id='form_search' class='inline' method='get'>\n";
+	echo "		<select class='formfld' name='fax_status'>\n";
+    echo "			<option value='' selected='selected' disabled hidden>".$text['label-fax_status']."...</option>";
+	echo "			<option value=''></option>\n";
+	if (isset($_GET["fax_status"]) && $_GET["fax_status"] == "waiting") {
+		echo "			<option value='waiting' selected='selected'>".$text['label-waiting']."</option>\n";
+	}
+	else {
+		echo "			<option value='waiting'>".$text['label-waiting']."</option>\n";
+	}
+	if (isset($_GET["fax_status"]) && $_GET["fax_status"] == "failed") {
+		echo "			<option value='failed' selected='selected'>".$text['label-failed']."</option>\n";
+	}
+	else {
+		echo "			<option value='failed'>".$text['label-failed']."</option>\n";
+	}
+	if (isset($_GET["fax_status"]) && $_GET["fax_status"] == "sent") {
+		echo "			<option value='sent' selected='selected'>".$text['label-sent']."</option>\n";
+	}
+	else {
+		echo "			<option value='sent'>".$text['label-sent']."</option>\n";
+	}
+	if (isset($_GET["fax_status"]) && $_GET["fax_status"] == "trying") {
+		echo "			<option value='trying' selected='selected'>".$text['label-trying']."</option>\n";
+	}
+	else {
+		echo "			<option value='trying'>".$text['label-trying']."</option>\n";
+	}
+	if (isset($_GET["fax_status"]) && $_GET["fax_status"] == "busy") {
+		echo "			<option value='busy' selected='selected'>".$text['label-busy']."</option>\n";
+	}
+	else {
+		echo "			<option value='busy'>".$text['label-busy']."</option>\n";
+	}
+	echo "		</select>\n";
 	if (permission_exists('fax_queue_all')) {
 		if ($_GET['show'] == 'all') {
 			echo "		<input type='hidden' name='show' value='all'>\n";
@@ -291,7 +366,7 @@
 			echo "	<td>".escape($row['fax_caller_id_name'])."</td>\n";
 			echo "	<td>".escape($row['fax_caller_id_number'])."</td>\n";
 			echo "	<td>".escape($row['fax_number'])."</td>\n";
-			echo "	<td>".escape($row['fax_email_address'])."</td>\n";
+			echo "	<td>".escape(str_replace(',', ' ', $row['fax_email_address']))."</td>\n";
 			echo "	<td>".escape($row['fax_file'])."</td>\n";
 			echo "	<td>".escape($row['fax_status'])."</td>\n";
 			echo "	<td>".escape($row['fax_retry_date_formatted'])." ".escape($row['fax_retry_time_formatted'])."</td>\n";

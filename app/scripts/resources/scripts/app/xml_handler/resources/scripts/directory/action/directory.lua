@@ -11,10 +11,10 @@
 	end
 
 --build the xml
-	local xml = {}
-	table.insert(xml, [[<?xml version="1.0" encoding="UTF-8" standalone="no"?>]])
-	table.insert(xml, [[<document type="freeswitch/xml">]])
-	table.insert(xml, [[	<section name="directory">]])
+	local xml = Xml:new();
+	xml:append([[<?xml version="1.0" encoding="UTF-8" standalone="no"?>]])
+	xml:append([[<document type="freeswitch/xml">]])
+	xml:append([[	<section name="directory">]])
 
 --process when the sip profile is rescanned, sofia is reloaded, or sip redirect
 	local sql = "SELECT * FROM v_domains as d, v_extensions as e "
@@ -48,54 +48,54 @@
 	dbh:query(sql, sql_params, function(row)
 		if prev_domain_name ~= row.domain_name then
 			if prev_domain_name then
-				table.insert(xml, [[					</users>]])
-				table.insert(xml, [[				</group>]])
-				table.insert(xml, [[			</groups>]])
-				table.insert(xml, [[		</domain>]])
+				xml:append([[					</users>]])
+				xml:append([[				</group>]])
+				xml:append([[			</groups>]])
+				xml:append([[		</domain>]])
 			end
 			prev_domain_name = row.domain_name
-			table.insert(xml, [[		<domain name="]] .. row.domain_name .. [[" alias="true">]])
-			table.insert(xml, [[			<groups>]])
-			table.insert(xml, [[				<group name="default">]])
-			table.insert(xml, [[					<users>]])
+			xml:append([[		<domain name="]] .. xml.sanitize(row.domain_name) .. [[" alias="true">]])
+			xml:append([[			<groups>]])
+			xml:append([[				<group name="default">]])
+			xml:append([[					<users>]])
 		end
 
 		row.sip_from_user   = row.extension
 		row.sip_from_number = (#number_alias > 0) and number_alias or row.extension
 		local number_alias_string = ''
 		if #row.number_alias > 0 then
-			number_alias_string = ' number-alias="' .. row.number_alias .. '"'
+			number_alias_string = ' number-alias="' .. xml.sanitize(row.number_alias) .. '"'
 		end
 
-		table.insert(xml, [[						<user id="]] .. row.extension .. [["]] .. number_alias_string .. [[>]]);
-		table.insert(xml, [[							<params>]])
+		xml:append([[						<user id="]] .. xml.sanitize(row.extension) .. [["]] .. number_alias_string .. [[>]]);
+		xml:append([[							<params>]])
 		for name, param in pairs(params) do
 			if row[name] and #row[name] > 0 then
-				table.insert(xml, [[								<param name="]] .. param .. [[" value="]] .. row[name] .. [["/>]])
+				xml:append([[								<param name="]] .. xml.sanitize(param) .. [[" value="]] .. xml.sanitize(row[name]) .. [["/>]])
 			end
 		end
-		table.insert(xml, [[							</params>]])
-		table.insert(xml, [[							<variables>]])
+		xml:append([[							</params>]])
+		xml:append([[							<variables>]])
 		for name, param in pairs(variables) do
 			if row[name] and #row[name] > 0 then
-				table.insert(xml, [[								<variable name="]] .. param .. [[" value="]] .. row[name] .. [["/>]])
+				xml:append([[								<variable name="]] .. xml.sanitize(param) .. [[" value="]] .. xml.sanitize(row[name]) .. [["/>]])
 			end
 		end
-		table.insert(xml, [[							</variables>]])
-		table.insert(xml, [[						</user>]])
+		xml:append([[							</variables>]])
+		xml:append([[						</user>]])
 	end)
 
 	if prev_domain_name then
-		table.insert(xml, [[					</users>]])
-		table.insert(xml, [[				</group>]])
-		table.insert(xml, [[			</groups>]])
-		table.insert(xml, [[		</domain>]])
+		xml:append([[					</users>]])
+		xml:append([[				</group>]])
+		xml:append([[			</groups>]])
+		xml:append([[		</domain>]])
 	end
 
-	table.insert(xml, [[	</section>]])
-	table.insert(xml, [[</document>]])
+	xml:append([[	</section>]])
+	xml:append([[</document>]])
+	XML_STRING = xml:build();
 
-	XML_STRING = table.concat(xml, "\n")
 	if (debug["xml_string"]) then
 		log.notice("XML_STRING "..XML_STRING)
 	end

@@ -1,6 +1,6 @@
 --	xml_handler.lua
 --	Part of FusionPBX
---	Copyright (C) 2013 - 2018 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2013 - 2022 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -23,6 +23,9 @@
 --	CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 --	ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 --	POSSIBILITY OF SUCH DAMAGE.
+
+--include xml library
+	local Xml = require "resources.functions.xml";
 
 --get the cache
 	local cache = require "resources.functions.cache"
@@ -59,11 +62,11 @@
 			vars = trim(api:execute("global_getvar", ""));
 
 		--start the xml array
-			local xml = {}
-			table.insert(xml, [[<?xml version="1.0" encoding="UTF-8" standalone="no"?>]]);
-			table.insert(xml, [[<document type="freeswitch/xml">]]);
-			table.insert(xml, [[	<section name="configuration">]]);
-			table.insert(xml, [[		<configuration name="sofia.conf" description="sofia Endpoint">]]);
+			local xml = Xml:new();
+			xml:append([[<?xml version="1.0" encoding="UTF-8" standalone="no"?>]]);
+			xml:append([[<document type="freeswitch/xml">]]);
+			xml:append([[	<section name="configuration">]]);
+			xml:append([[		<configuration name="sofia.conf" description="sofia Endpoint">]]);
 
 		--gt the global settings
 			sql = "select * from v_sofia_global_settings ";
@@ -71,11 +74,11 @@
 			sql = sql .. "order by global_setting_name asc ";
 			local params = {};
 			x = 0;
-			table.insert(xml, [[			<global_settings>]]);
+			xml:append([[			<global_settings>]]);
 			dbh:query(sql, params, function(row)
-					table.insert(xml, [[				<param name="]]..row.global_setting_name..[[" value="]]..row.global_setting_value..[["/>]]);
+					xml:append([[				<param name="]] .. xml.sanitize(row.global_setting_name) .. [[" value="]] .. xml.sanitize(row.global_setting_value) .. [["/>]]);
 			end)
-			table.insert(xml, [[			</global_settings>]]);
+			xml:append([[			</global_settings>]]);
 
 		--set defaults
 			previous_sip_profile_name = "";
@@ -94,7 +97,7 @@
 				freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "; params: " .. json.encode(params) .. "\n");
 			end
 			x = 0;
-			table.insert(xml, [[			<profiles>]]);
+			xml:append([[			<profiles>]]);
 			dbh:query(sql, params, function(row)
 				--set as variables
 					sip_profile_uuid = row.sip_profile_uuid;
@@ -106,14 +109,14 @@
 				--open xml tag
 					if (sip_profile_name ~= previous_sip_profile_name) then
 						if (x > 1) then
-							table.insert(xml, [[					</settings>]]);
-							table.insert(xml, [[				</profile>]]);
+							xml:append([[					</settings>]]);
+							xml:append([[				</profile>]]);
 						end
-						table.insert(xml, [[				<profile name="]]..sip_profile_name..[[">]]);
-						table.insert(xml, [[					<aliases>]]);
-						table.insert(xml, [[					</aliases>]]);
-						table.insert(xml, [[					<gateways>]]);
-						--table.insert(xml, [[						<X-PRE-PROCESS cmd="include" data="]]..sip_profile_name..[[/*.xml"/>]]);
+						xml:append([[				<profile name="]] .. xml.sanitize(sip_profile_name) .. [[">]]);
+						xml:append([[					<aliases>]]);
+						xml:append([[					</aliases>]]);
+						xml:append([[					<gateways>]]);
+						--xml:append([[						<X-PRE-PROCESS cmd="include" data="]] .. xml.sanitize(sip_profile_name) .. [[/*.xml"/>]]);
 
 						--get the gateways
 							sql = "select * from v_gateways ";
@@ -126,101 +129,108 @@
 							end
 							x = 0;
 							dbh:query(sql, params, function(field)
-								table.insert(xml, [[						<gateway name="]] .. string.lower(field.gateway_uuid) .. [[">]]);
+								xml:append([[						<gateway name="]] .. xml.sanitize(string.lower(field.gateway_uuid)) .. [[">]]);
 
 								if (string.len(field.username) > 0) then
-									table.insert(xml, [[							<param name="username" value="]] .. field.username .. [["/>]]);
+									xml:append([[							<param name="username" value="]] .. xml.sanitize(field.username) .. [["/>]]);
 								end
 								if (string.len(field.distinct_to) > 0) then
-									table.insert(xml, [[							<param name="distinct-to" value="]] .. field.distinct_to .. [["/>]]);
+									xml:append([[							<param name="distinct-to" value="]] .. xml.sanitize(field.distinct_to) .. [["/>]]);
 								end
 								if (string.len(field.auth_username) > 0) then
-									table.insert(xml, [[							<param name="auth-username" value="]] .. field.auth_username .. [["/>]]);
+									xml:append([[							<param name="auth-username" value="]] .. xml.sanitize(field.auth_username) .. [["/>]]);
 								end
 								if (string.len(field.password) > 0) then
-									table.insert(xml, [[							<param name="password" value="]] .. field.password .. [["/>]]);
+									xml:append([[							<param name="password" value="]] .. xml.sanitize(field.password) .. [["/>]]);
 								end
 								if (string.len(field.realm) > 0) then
-									table.insert(xml, [[							<param name="realm" value="]] .. field.realm .. [["/>]]);
+									xml:append([[							<param name="realm" value="]] .. xml.sanitize(field.realm) .. [["/>]]);
 								end
 								if (string.len(field.from_user) > 0) then
-									table.insert(xml, [[							<param name="from-user" value="]] .. field.from_user .. [["/>]]);
+									xml:append([[							<param name="from-user" value="]] .. xml.sanitize(field.from_user) .. [["/>]]);
 								end
 								if (string.len(field.from_domain) > 0) then
-									table.insert(xml, [[							<param name="from-domain" value="]] .. field.from_domain .. [["/>]]);
+									xml:append([[							<param name="from-domain" value="]] .. xml.sanitize(field.from_domain) .. [["/>]]);
 								end
 								if (string.len(field.proxy) > 0) then
-									table.insert(xml, [[							<param name="proxy" value="]] .. field.proxy .. [["/>]]);
+									xml:append([[							<param name="proxy" value="]] .. xml.sanitize(field.proxy) .. [["/>]]);
 								end
 								if (string.len(field.register_proxy) > 0) then
-									table.insert(xml, [[							<param name="register-proxy" value="]] .. field.register_proxy .. [["/>]]);
+									xml:append([[							<param name="register-proxy" value="]] .. xml.sanitize(field.register_proxy) .. [["/>]]);
 								end
 								if (string.len(field.outbound_proxy) > 0) then
-									table.insert(xml, [[							<param name="outbound-proxy" value="]] .. field.outbound_proxy .. [["/>]]);
+									xml:append([[							<param name="outbound-proxy" value="]] .. xml.sanitize(field.outbound_proxy) .. [["/>]]);
 								end
 								if (string.len(field.expire_seconds) > 0) then
-									table.insert(xml, [[							<param name="expire-seconds" value="]] .. field.expire_seconds .. [["/>]]);
+									xml:append([[							<param name="expire-seconds" value="]] .. xml.sanitize(field.expire_seconds) .. [["/>]]);
 								end
 								if (string.len(field.register) > 0) then
-									table.insert(xml, [[							<param name="register" value="]] .. field.register .. [["/>]]);
+									xml:append([[							<param name="register" value="]] .. xml.sanitize(field.register) .. [["/>]]);
 								end
 
 								if (field.register_transport) then
 									if (field.register_transport == "udp") then
-										table.insert(xml, [[							<param name="register-transport" value="udp"/>]]);
+										xml:append([[							<param name="register-transport" value="udp"/>]]);
 									elseif (field.register_transport ==  "tcp") then
-										table.insert(xml, [[							<param name="register-transport" value="tcp"/>]]);
+										xml:append([[							<param name="register-transport" value="tcp"/>]]);
 									elseif (field.register_transport == "tls") then
-										table.insert(xml, [[							<param name="register-transport" value="tls"/>]]);
-										table.insert(xml, [[							<param name="contact-params" value="transport=tls"/>]]);
+										xml:append([[							<param name="register-transport" value="tls"/>]]);
+										
 									else
-										table.insert(xml, [[							<param name="register-transport" value="udp"/>]]);
+										xml:append([[							<param name="register-transport" value="udp"/>]]);
 									end
 								end
 
+								if (field.contact_params) then
+									xml:append([[							<param name="contact-params" value="]] .. xml.sanitize(field.contact_params) .. [["/>]]);
+								end
+
 								if (string.len(field.retry_seconds) > 0) then
-									table.insert(xml, [[							<param name="retry-seconds" value="]] .. field.retry_seconds .. [["/>]]);
+									xml:append([[							<param name="retry-seconds" value="]] .. xml.sanitize(field.retry_seconds) .. [["/>]]);
 								end
 								if (string.len(field.extension) > 0) then
-									table.insert(xml, [[							<param name="extension" value="]] .. field.extension .. [["/>]]);
+									xml:append([[							<param name="extension" value="]] .. xml.sanitize(field.extension) .. [["/>]]);
 								end
 								if (string.len(field.ping) > 0) then
-									table.insert(xml, [[							<param name="ping" value="]] .. field.ping .. [["/>]]);
+									xml:append([[							<param name="ping" value="]] .. xml.sanitize(field.ping) .. [["/>]]);
 								end
 								if (string.len(field.ping_min) > 0) then
-									table.insert(xml, [[							<param name="ping-min" value="]] .. field.ping_min .. [["/>]]);
+									xml:append([[							<param name="ping-min" value="]] .. xml.sanitize(field.ping_min) .. [["/>]]);
 								end
 								if (string.len(field.ping_max) > 0) then
-									table.insert(xml, [[							<param name="ping-max" value="]] .. field.ping_max .. [["/>]]);
+									xml:append([[							<param name="ping-max" value="]] .. xml.sanitize(field.ping_max) .. [["/>]]);
+								end
+								if (string.len(field.contact_in_ping) > 0) then
+									xml:append([[							<param name="contact-in-ping" value="]] .. xml.sanitize(field.contact_in_ping) .. [["/>]]);
 								end
 								if (string.len(field.context) > 0) then
-									table.insert(xml, [[							<param name="context" value="]] .. field.context .. [["/>]]);
+									xml:append([[							<param name="context" value="]] .. xml.sanitize(field.context) .. [["/>]]);
 								end
 								if (string.len(field.caller_id_in_from) > 0) then
-									table.insert(xml, [[							<param name="caller-id-in-from" value="]] .. field.caller_id_in_from .. [["/>]]);
+									xml:append([[							<param name="caller-id-in-from" value="]] .. xml.sanitize(field.caller_id_in_from) .. [["/>]]);
 								end
 								if (string.len(field.supress_cng) > 0) then
-									table.insert(xml, [[							<param name="supress-cng" value="]] .. field.supress_cng .. [["/>]]);
+									xml:append([[							<param name="supress-cng" value="]] .. xml.sanitize(field.supress_cng) .. [["/>]]);
 								end
 								if (string.len(field.extension_in_contact) > 0) then
-									table.insert(xml, [[							<param name="extension-in-contact" value="]] .. field.extension_in_contact .. [["/>]]);
+									xml:append([[							<param name="extension-in-contact" value="]] .. xml.sanitize(field.extension_in_contact) .. [["/>]]);
 								end
-								table.insert(xml, [[							<variables>]]);
+								xml:append([[							<variables>]]);
 								if (string.len(field.sip_cid_type) > 0) then
-									table.insert(xml, [[								<variable name="sip_cid_type" value="]] .. field.sip_cid_type .. [["/>]]);
+									xml:append([[								<variable name="sip_cid_type" value="]] .. xml.sanitize(field.sip_cid_type) .. [["/>]]);
 								end
-								table.insert(xml, [[							</variables>]]);
-								table.insert(xml, [[						</gateway>]]);
+								xml:append([[							</variables>]]);
+								xml:append([[						</gateway>]]);
 							end)
 
-						table.insert(xml, [[					</gateways>]]);
-						table.insert(xml, [[					<domains>]]);
+						xml:append([[					</gateways>]]);
+						xml:append([[					<domains>]]);
 
 						--add sip profile domain: name, alias, and parse
-						table.insert(xml, [[						<!-- indicator to parse the directory for domains with parse="true" to get gateways-->]]);
-						table.insert(xml, [[						<!--<domain name="$${domain}" parse="true"/>-->]]);
-						table.insert(xml, [[						<!-- indicator to parse the directory for domains with parse="true" to get gateways and alias every domain to this profile -->]]);
-						table.insert(xml, [[						<!--<domain name="all" alias="true" parse="true"/>-->]]);
+						xml:append([[						<!-- indicator to parse the directory for domains with parse="true" to get gateways-->]]);
+						xml:append([[						<!--<domain name="$${domain}" parse="true"/>-->]]);
+						xml:append([[						<!-- indicator to parse the directory for domains with parse="true" to get gateways and alias every domain to this profile -->]]);
+						xml:append([[						<!--<domain name="all" alias="true" parse="true"/>-->]]);
 						sql = "SELECT sip_profile_domain_name, sip_profile_domain_alias, sip_profile_domain_parse FROM v_sip_profile_domains ";
 						sql = sql .. "WHERE sip_profile_uuid = :sip_profile_uuid";
 						local params = {sip_profile_uuid = sip_profile_uuid};
@@ -234,11 +244,11 @@
 							if (name == nil or name == '') then name = 'false'; end
 							if (alias == nil or alias == '') then alias = 'false'; end
 							if (parse == nil or parse == '') then parse = 'false'; end
-							table.insert(xml, [[						<domain name="]] .. name .. [[" alias="]] .. alias .. [[" parse="]] .. parse .. [["/>]]);
+							xml:append([[						<domain name="]] .. xml.sanitize(name) .. [[" alias="]] .. xml.sanitize(alias) .. [[" parse="]] .. xml.sanitize(parse) .. [["/>]]);
 						end);
 						
-						table.insert(xml, [[					</domains>]]);
-						table.insert(xml, [[					<settings>]]);
+						xml:append([[					</domains>]]);
+						xml:append([[					<settings>]]);
 						profile_tag_status = "open";
 					end
 
@@ -259,7 +269,7 @@
 
 				--set the parameters
 					if (sip_profile_setting_name) then
-						table.insert(xml, [[						<param name="]]..sip_profile_setting_name..[[" value="]]..sip_profile_setting_value..[["/>]]);
+						xml:append([[						<param name="]] .. xml.sanitize(sip_profile_setting_name) .. [[" value="]] .. xml.sanitize(sip_profile_setting_value) .. [["/>]]);
 					end
 
 				--set the previous value
@@ -271,15 +281,15 @@
 
 		--close the extension tag if it was left open
 			if (profile_tag_status == "open") then
-				table.insert(xml, [[					</settings>]]);
-				table.insert(xml, [[				</profile>]]);
+				xml:append([[					</settings>]]);
+				xml:append([[				</profile>]]);
 				profile_tag_status = "close";
 			end
-			table.insert(xml, [[			</profiles>]]);
-			table.insert(xml, [[		</configuration>]]);
-			table.insert(xml, [[	</section>]]);
-			table.insert(xml, [[</document>]]);
-			XML_STRING = table.concat(xml, "\n");
+			xml:append([[			</profiles>]]);
+			xml:append([[		</configuration>]]);
+			xml:append([[	</section>]]);
+			xml:append([[</document>]]);
+			XML_STRING = xml:build();
 			if (debug["xml_string"]) then
 				freeswitch.consoleLog("notice", "[xml_handler] XML_STRING: " .. XML_STRING .. "\n");
 			end

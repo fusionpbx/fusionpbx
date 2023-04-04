@@ -24,8 +24,11 @@
  * SUCH DAMAGE.
  */
 
-//includes
-	require_once "root.php";
+//set the include path
+	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+	set_include_path(parse_ini_file($conf[0])['document.root']);
+
+//includes files
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
@@ -89,7 +92,6 @@
 	$email_from_name = $_SESSION['email']['smtp_from_name']['text'];
 
 //send email
-	//ob_start();
 	//$sent = !send_email($email_recipient, 'Test Message', $email_body, $email_error, null, null, 3, 3, $email_attachments) ? false : true;
 	//$email_response = ob_get_clean();
 
@@ -104,7 +106,11 @@
 	$email->debug_level = 3;
 	$email->method = 'direct';
 	$sent = $email->send();
+	$email_response = $email->response;
 	//$email_error = $email->email_error;
+
+//show the response
+	echo $email_response;
 
 //show additional information
 	echo "<br><br>\n";

@@ -17,15 +17,18 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2021
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//includes
-	include "root.php";
+//set the include path
+	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+	set_include_path(parse_ini_file($conf[0])['document.root']);
+
+//includes files
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
@@ -45,14 +48,31 @@
 //set the variables
 	$cmd = $_GET['cmd'];
 	$user = $_GET['user'];
-	$domain = $_GET['domain'];
 	$vendor = device::get_vendor_by_agent($_GET['agent']);
+
+//get the count
+	$sql = "select d.domain_name ";
+	$sql .= "from v_extensions as e, v_domains as d ";
+	$sql .= "where e.domain_uuid = :domain_uuid ";
+	$sql .= "and e.domain_uuid = d.domain_uuid ";
+	$sql .= "and extension = :extension ";
+	$parameters['extension'] = $user;
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$database = new database;
+	$row = $database->select($sql, $parameters, 'row');
+	if (is_array($row)) {
+		$domain_name = $row['domain_name'];
+	}
+	else {
+		echo "invalid user\n";
+		exit;
+	}
 
 //create the event socket connection
 	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 	if ($fp) {
 		// Get the SIP profiles for the user
-		$command = "sofia_contact */{$user}";
+		$command = "sofia_contact */{$user}@{$domain_name}";
 		$contact_string = event_socket_request($fp, "api ".$command);
 
 		// The first value in the array will be full matching text, the second one will be the array of profile matches
@@ -67,12 +87,12 @@
 		foreach ($profiles as $profile) {
 			//prepare the command
 			if ($cmd == "unregister") {
-				$command = "sofia profile {$profile} flush_inbound_reg {$user} reboot";
+				$command = "sofia profile {$profile} flush_inbound_reg {$user}@{$domain_name} reboot";
 			}
 			elseif ($cmd == "check_sync") {
-				$command = "lua app.lua event_notify {$profile} {$cmd} {$user} {$vendor}";
+				$command = "lua app.lua event_notify {$profile} {$cmd} {$user}@{$domain_name} {$vendor}";
 				//if ($cmd == "check_sync") {
-				//	$command = "sofia profile ".$profile." check_sync ".$user;
+				//	$command = "sofia profile ".$profile." check_sync ".$user."@".$domain_name;
 				//}
 			}
 

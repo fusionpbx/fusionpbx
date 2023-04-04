@@ -484,6 +484,8 @@ if (!class_exists('email')) {
 					if (is_numeric($this->debug_level) && $this->debug_level > 0) {
 						$mail->SMTPDebug = $this->debug_level;
 					}
+					$mail->Timeout       =   20; //set the timeout (seconds)
+    					$mail->SMTPKeepAlive = true; //don't close the connection between messages
 
 					//add the email recipients
 					$address_found = false;
@@ -559,8 +561,17 @@ if (!class_exists('email')) {
 						}
 					}
 
+					//save output to a buffer
+					ob_start();
+
 					//send the email
-					if (!$mail->Send()) {
+					$mail_status = $mail->Send();
+
+					//get the output buffer
+					$this->response = ob_get_clean();
+
+					//send the email
+					if (!$mail_status) {
 						if (isset($mail->ErrorInfo) && strlen($mail->ErrorInfo) > 0) {
 							$this->error = $mail->ErrorInfo;
 						}

@@ -23,10 +23,14 @@
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-require_once "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (!permission_exists('contact_time_add')) { echo "access denied"; exit; }
+//set the include path
+	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+	set_include_path(parse_ini_file($conf[0])['document.root']);
+
+//includes files
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+	if (!permission_exists('contact_time_add')) { echo "access denied"; exit; }
 
 //add multi-lingual support
 	$language = new text;
@@ -296,7 +300,7 @@ if (!permission_exists('contact_time_add')) { echo "access denied"; exit; }
 
 	</style>
 
-	<script language='JavaScript' type='text/javascript' src='<?php echo PROJECT_PATH; ?>/resources/jquery/jquery-3.4.1.min.js'></script>
+	<script language='JavaScript' type='text/javascript' src='<?php echo PROJECT_PATH; ?>/resources/jquery/jquery-3.6.1.min.js'></script>
 	<script src='https://code.jquery.com/jquery-migrate-3.1.0.js'></script>
 	<script type="text/javascript">
 		$(document).ready(function(){

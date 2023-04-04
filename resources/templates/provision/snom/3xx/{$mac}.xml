@@ -40,6 +40,7 @@
 <user_pass idx="1" perm="">{$user.1.user_password}</user_pass>
 <user_host idx="1" perm="">{$user.1.server_address}:{$user.1.sip_port};transport={$user.1.sip_transport}</user_host>
 <user_server_type idx="1" perm="">Default</user_server_type>
+<user_expiry idx="1" perm="">{$user.1.register_expires}</user_expiry>
 <user_srtp idx="1" perm="">off</user_srtp>
 <user_mailbox idx="1" perm="">{$voicemail_number}</user_mailbox>
 <user_realname idx="2" perm="">{$user.2.display_name}:{$user.2.sip_port};transport={$user.2.sip_transport}</user_realname>
@@ -47,6 +48,7 @@
 <user_pass idx="2" perm="">{$user.2.user_password}</user_pass>
 <user_host idx="2" perm="">{$user.2.server_address}</user_host>
 <user_server_type idx="2" perm="">Default</user_server_type>
+<user_expiry idx="1" perm="">{$user.1.register_expires}</user_expiry>
 <user_srtp idx="2" perm="">off</user_srtp>
 <user_mailbox idx="2" perm="">{$voicemail_number}</user_mailbox>
 <user_realname idx="3" perm="">{$user.3.display_name}:{$user.3.sip_port};transport={$user.3.sip_transport}</user_realname>
@@ -54,6 +56,7 @@
 <user_pass idx="3" perm="">{$user.3.user_password}</user_pass>
 <user_host idx="3" perm="">{$user.3.server_address}</user_host>
 <user_server_type idx="3" perm="">Default</user_server_type>
+<user_expiry idx="3" perm="">{$user.3.register_expires}</user_expiry>
 <user_srtp idx="3" perm="">off</user_srtp>
 <user_mailbox idx="3" perm="">{$voicemail_number}</user_mailbox>
 <user_realname idx="4" perm="">{$user.4.display_name}:{$user.4.sip_port};transport={$user.4.sip_transport}</user_realname>
@@ -61,6 +64,7 @@
 <user_pass idx="4" perm="">{$user.4.user_password}</user_pass>
 <user_host idx="4" perm="">{$user.4.server_address}</user_host>
 <user_server_type idx="4" perm="">Default</user_server_type>
+<user_expiry idx="4" perm="">{$user.4.register_expires}</user_expiry>	
 <user_srtp idx="4" perm="">off</user_srtp>
 <user_mailbox idx="4" perm="">{$voicemail_number}</user_mailbox>
 <user_realname idx="5" perm="">{$user.5.display_name}</user_realname>
@@ -68,6 +72,7 @@
 <user_pass idx="5" perm="">{$user.5.user_password}</user_pass>
 <user_host idx="5" perm="">{$user.5.server_address}</user_host>
 <user_server_type idx="5" perm="">Default</user_server_type>
+<user_expiry idx="5" perm="">{$user.5.register_expires}</user_expiry>
 <user_srtp idx="5" perm="">off</user_srtp>
 <user_mailbox idx="5" perm="">{$voicemail_number}</user_mailbox>
 <user_symmetrical_rtp idx="1" perm="">on</user_symmetrical_rtp>

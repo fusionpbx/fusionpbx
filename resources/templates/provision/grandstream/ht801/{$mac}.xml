@@ -882,11 +882,11 @@
     <!-- # Offhook Auto-Dial (User ID/extension to dial automatically when offhook) -->
     <!-- # String: 0-9, #, * -->
     <!-- # Mandatory -->
-    <P71></P71>
+    <P71>{$grandstream_auto_dial_number}</P71>
 
     <!-- # Offhook Auto-Dial Delay (0-60 seconds, default is 0) -->
     <!-- # Number: 0 to 60 -->
-    <P4045>0</P4045>
+    <P4045>{$grandstream_auto_dial_delay}</P4045>
 
     <!-- # Proxy-Require  -->
     <!-- # IP Address -->
@@ -2004,7 +2004,7 @@
     <!-- # Allow DHCP server to set Time Zone. 0 - No, 1 - Yes -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P143>1</P143>
+    {if isset($grandstream_dhcp_time_zone)}<P143>{$grandstream_dhcp_time_zone}</P143>{else}<P143>0</P143>{/if}
 
     <!-- # Language. 0 - English, 4 - Chinese, 6 - Russian, 10 - Spanish IVR -->
     <!-- # Number: 0, 4, 6, 10 -->

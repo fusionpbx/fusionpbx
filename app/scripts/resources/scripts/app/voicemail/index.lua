@@ -99,7 +99,7 @@
 			if (effective_caller_id_name ~= nil) then
 				caller_id_name = effective_caller_id_name;
 			end
-	
+
 		--set default values
 			if (string.sub(caller_id_number, 1, 1) == "/") then
 				caller_id_number = string.sub(caller_id_number, 2, -1);
@@ -113,12 +113,6 @@
 			if (not vm_message_ext) then
 				vm_message_ext = 'wav';
 			end
-			if (not vm_say_caller_id_number) then
-				vm_say_caller_id_number = "true";
-			end
-			if (not vm_say_date_time) then
-				vm_say_date_time = "true";
-			end
 
 		--set the sounds path for the language, dialect and voice
 			default_language = session:getVariable("default_language");
@@ -130,20 +124,17 @@
 
 		--get the domain_uuid
 			domain_uuid = session:getVariable("domain_uuid");
-			if (domain_count > 1) then
-				if (domain_uuid == nil) then
-					--get the domain_uuid using the domain name required for multi-tenant
-						if (domain_name ~= nil) then
-							local sql = "SELECT domain_uuid FROM v_domains ";
-							sql = sql .. "WHERE domain_name = :domain_name ";
-							local params = {domain_name = domain_name};
-							if (debug["sql"]) then
-								freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
-							end
-							dbh:query(sql, params, function(rows)
-								domain_uuid = rows["domain_uuid"];
-							end);
-						end
+			if (domain_uuid == nil) then
+				if (domain_name ~= nil) then
+					local sql = "SELECT domain_uuid FROM v_domains ";
+					sql = sql .. "WHERE domain_name = :domain_name ";
+					local params = {domain_name = domain_name};
+					if (debug["sql"]) then
+						freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
+					end
+					dbh:query(sql, params, function(rows)
+						domain_uuid = rows["domain_uuid"];
+					end);
 				end
 			end
 			if (domain_uuid ~= nil) then
@@ -189,6 +180,26 @@
 					if (settings['voicemail']['message_order']['text'] ~= nil) then
 						message_order = settings['voicemail']['message_order']['text'];
 					end
+				end
+
+				if (settings['voicemail']['message_caller_id_number'] ~= nil) then
+					if (settings['voicemail']['message_caller_id_number']['text'] ~= nil) then
+						vm_say_caller_id_number = settings['voicemail']['message_caller_id_number']['text'];
+					end
+				end;
+
+				if (settings['voicemail']['message_date_time'] ~= nil) then
+					if (settings['voicemail']['message_date_time']['text'] ~= nil) then
+						vm_say_date_time = settings['voicemail']['message_date_time']['text'];
+					end
+				end
+
+				if (not vm_say_caller_id_number) then
+					vm_say_caller_id_number = "before";
+				end
+
+				if (not vm_say_date_time) then
+					vm_say_date_time = "before";
 				end
 
 				remote_access = '';
@@ -403,7 +414,7 @@
 
 			--send to the main menu
 				timeouts = 0;
-				if (voicemail_tutorial == "true") then 
+				if (voicemail_tutorial == "true") then
 					tutorial("intro");
 				else
 					main_menu();
@@ -482,7 +493,7 @@
 					--freeswitch.consoleLog("notice", "[voicemail][destinations] SQL:" .. sql .. "; params:" .. json.encode(params) .. "\n");
 					destinations = {};
 					x = 1;
-					
+
 					dbh:query(sql, params, function(row)
 						destinations[x] = row;
 						x = x + 1;
@@ -490,12 +501,12 @@
 					table.insert(destinations, {domain_uuid=domain_uuid,voicemail_destination_uuid=voicemail_uuid,voicemail_uuid=voicemail_uuid,voicemail_uuid_copy=voicemail_uuid});
 				--show the storage type
 					freeswitch.consoleLog("notice", "[voicemail] ".. storage_type .. "\n");
-					
+
 					count = 0
 					for k,v in pairs(destinations) do
 						count = count + 1
 					end
-					
+
 				--loop through the voicemail destinations
 					y = 1;
 					for key,row in pairs(destinations) do

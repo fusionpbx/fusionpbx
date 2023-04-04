@@ -24,8 +24,11 @@
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 
-//includes
-	include "root.php";
+//set the include path
+	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+	set_include_path(parse_ini_file($conf[0])['document.root']);
+
+//includes files
 	require_once "resources/require.php";
 	require_once "resources/functions/device_by.php";
 
@@ -415,7 +418,6 @@
 	if (strlen($provision['password']) > 0) {
 		//deny access if the password doesn't match
 		if ($provision['password'] != check_str($_REQUEST['password'])) {
-			syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempt bad password for ".check_str($_REQUEST['mac']));
 			//log the failed auth attempt to the system, to be available for fail2ban.
 			openlog('FusionPBX', LOG_NDELAY, LOG_AUTH);
 			syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempt bad password for ".check_str($_REQUEST['mac']));
@@ -468,7 +470,7 @@
 		}
 		else {
 			$result = simplexml_load_string ($file_contents, 'SimpleXmlElement', LIBXML_NOERROR+LIBXML_ERR_FATAL+LIBXML_ERR_NONE);
-			if (false == $result){
+			if (false == $result) {
 				header("Content-Type: text/plain");
 				header("Content-Length: ".strval(strlen($file_contents)));
 			}

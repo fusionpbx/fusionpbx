@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008 - 2019
+ Portions created by the Initial Developer are Copyright (C) 2008 - 2023
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -125,32 +125,31 @@ if (!class_exists('fax')) {
 
 			//set the  last fax
 				if (strlen($_SESSION['fax']['last_fax']['text']) > 0) {
-					$last_fax = "last_fax=".$_SESSION['fax']['last_fax']['text'];
+					$last_fax = "last_fax=".xml::sanitize($_SESSION['fax']['last_fax']['text']);
 				}
 				else {
 					$last_fax = "last_fax=\${caller_id_number}-\${strftime(%Y-%m-%d-%H-%M-%S)}";
 				}
 
 			//set the rx_fax
-				$rxfax_data = $_SESSION['switch']['storage']['dir'].'/fax/'.$_SESSION['domain_name'].'/'.$this->fax_extension.'/inbox/'.$this->forward_prefix.'${last_fax}.tif';
+				$rxfax_data = $_SESSION['switch']['storage']['dir'].'/fax/'.$_SESSION['domain_name'].'/'.xml::sanitize($this->fax_extension).'/inbox/'.xml::sanitize($this->forward_prefix).'${last_fax}.tif';
 
 			//build the xml dialplan
-				$dialplan_xml = "<extension name=\"".$fax_name ."\" continue=\"false\" uuid=\"".$this->dialplan_uuid."\">\n";
-				$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".$this->destination_number."$\">\n";
+				$dialplan_xml = "<extension name=\"".xml::sanitize($fax_name)."\" continue=\"false\" uuid=\"".xml::sanitize($this->dialplan_uuid)."\">\n";
+				$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".xml::sanitize($this->destination_number)."$\">\n";
 				$dialplan_xml .= "		<action application=\"answer\" data=\"\"/>\n";
-				$dialplan_xml .= "		<action application=\"set\" data=\"fax_uuid=".$this->fax_uuid."\"/>\n";
+				$dialplan_xml .= "		<action application=\"set\" data=\"fax_uuid=".xml::sanitize($this->fax_uuid)."\"/>\n";
 				$dialplan_xml .= "		<action application=\"set\" data=\"api_hangup_hook=lua app/fax/resources/scripts/hangup_rx.lua\"/>\n";
 				foreach($_SESSION['fax']['variable'] as $data) {
 					if (substr($data,0,8) == "inbound:") {
-						$dialplan_xml .= "		<action application=\"set\" data=\"".substr($data,8,strlen($data))."\"/>\n";
+						$dialplan_xml .= "		<action application=\"set\" data=\"".xml::sanitize(substr($data,8,strlen($data)))."\"/>\n";
 					}
 					elseif (substr($data,0,9) == "outbound:") {}
 					else {
-						$dialplan_xml .= "		<action application=\"set\" data=\"".$data."\"/>\n";
+						$dialplan_xml .= "		<action application=\"set\" data=\"".xml::sanitize($data)."\"/>\n";
 					}
 				}
 				$dialplan_xml .= "		<action application=\"set\" data=\"".$last_fax."\"/>\n";
-				$dialplan_xml .= "		<action application=\"playback\" data=\"silence_stream://2000\"/>\n";
 				$dialplan_xml .= "		<action application=\"rxfax\" data=\"$rxfax_data\"/>\n";
 				$dialplan_xml .= "		<action application=\"hangup\" data=\"\"/>\n";
 				$dialplan_xml .= "	</condition>\n";

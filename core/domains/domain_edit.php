@@ -25,8 +25,11 @@
  Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 
-//includes
-	require_once "root.php";
+//set the include path
+	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+	set_include_path(parse_ini_file($conf[0])['document.root']);
+
+//includes files
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
@@ -62,7 +65,7 @@
 //get http post variables and set them to php variables
 	if (count($_POST) > 0) {
 		$domain_name = strtolower($_POST["domain_name"]);
-		$domain_enabled = $_POST["domain_enabled"];
+		$domain_enabled = $_POST["domain_enabled"] ?: 'false';
 		$domain_description = $_POST["domain_description"];
 	}
 
@@ -129,10 +132,17 @@
 						//add the domain name
 							$domain_enabled = 'true';
 							$domain_uuid = uuid();
+
+						//build the domain array
 							$array['domains'][0]['domain_uuid'] = $domain_uuid;
 							$array['domains'][0]['domain_name'] = $domain_name;
 							$array['domains'][0]['domain_enabled'] = $domain_enabled;
 							$array['domains'][0]['domain_description'] = $domain_description;
+
+						//create a copy of the domain array as the database save method empties the array that we still need.
+							$domain_array = $array;
+
+						//add the new domain
 							$database = new database;
 							$database->app_name = 'domains';
 							$database->app_uuid = '8b91605b-f6d2-42e6-a56d-5d1ded01bb44';
@@ -142,7 +152,7 @@
 							if (file_exists($_SERVER["PROJECT_ROOT"]."/app/dialplans/app_config.php")) {
 								//import the dialplans
 								$dialplan = new dialplan;
-								$dialplan->import($array['domains']);
+								$dialplan->import($domain_array['domains']);
 								unset($array);
 
 								//add xml for each dialplan where the dialplan xml is empty
@@ -372,7 +382,7 @@
 							}
 
 						//update call center queue record templates
-							if (file_exists($_SERVER["PROJECT_ROOT"]."/app/call_center/app_config.php")) {
+							if (file_exists($_SERVER["PROJECT_ROOT"]."/app/call_centers/app_config.php")) {
 								$sql = "update v_call_center_queues set ";
 								$sql .= "queue_record_template = replace(queue_record_template, :domain_name_old, :domain_name_new) ";
 								$sql .= "where domain_uuid = :domain_uuid ";
@@ -385,7 +395,7 @@
 							}
 
 						//update call center agent contacts
-							if (file_exists($_SERVER["PROJECT_ROOT"]."/app/call_center/app_config.php")) {
+							if (file_exists($_SERVER["PROJECT_ROOT"]."/app/call_centers/app_config.php")) {
 								$sql = "update v_call_center_agents set ";
 								$sql .= "agent_contact = replace(agent_contact, :domain_name_old, :domain_name_new) ";
 								$sql .= "where domain_uuid = :domain_uuid ";
@@ -560,6 +570,9 @@
 		unset($sql, $parameters, $row);
 	}
 
+//set the defaults
+	if (strlen($domain_enabled) == 0) { $domain_enabled = 'true'; }
+
 //create token
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);
@@ -683,10 +696,18 @@
 	echo "	".$text['label-enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='domain_enabled'>\n";
-	echo "		<option value='true' ".(($domain_enabled == "true") ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
-	echo "		<option value='false' ".(($domain_enabled == "false") ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
-	echo "	</select>\n";
+	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
+		echo "	<label class='switch'>\n";
+		echo "		<input type='checkbox' id='domain_enabled' name='domain_enabled' value='true' ".($domain_enabled == 'true' ? "checked='checked'" : null).">\n";
+		echo "		<span class='slider'></span>\n";
+		echo "	</label>\n";
+	}
+	else {
+		echo "	<select class='formfld' id='domain_enabled' name='domain_enabled'>\n";
+		echo "		<option value='true' ".($domain_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($domain_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "	</select>\n";
+	}
 	echo "<br />\n";
 	echo $text['description-domain_enabled']."\n";
 	echo "</td>\n";

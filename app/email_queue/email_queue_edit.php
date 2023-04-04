@@ -1,7 +1,10 @@
 <?php
 
-//includes
-	require_once "root.php";
+//set the include path
+	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+	set_include_path(parse_ini_file($conf[0])['document.root']);
+
+//includes files
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
@@ -162,6 +165,7 @@
 			$email_status = $row["email_status"];
 			$email_retry_count = $row["email_retry_count"];
 			//$email_action_before = $row["email_action_before"];
+			$email_response = $row["email_response"];
 			$email_action_after = $row["email_action_after"];
 		}
 		unset($sql, $parameters, $row);
@@ -259,7 +263,7 @@
 	echo "	".$text['label-email_body']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='email_body' maxlength='255' value='".escape($email_body)."'>\n";
+	echo "	<textarea class='formfld' style='width: 450px; height: 100px;' name='email_body'>".$email_body."</textarea>\n";
 	echo "<br />\n";
 	echo $text['description-email_body']."\n";
 	echo "</td>\n";
@@ -306,6 +310,17 @@
 	echo "	<input class='formfld' type='text' name='email_action_after' maxlength='255' value='".escape($email_action_after)."'>\n";
 	echo "<br />\n";
 	echo $text['description-email_action_after']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-email_response']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' style='position: relative;' align='left'>\n";
+	echo "	<textarea class='formfld' style='width: 450px; height: 100px;' name='email_response'>".$email_response."</textarea>\n";
+	echo "<br />\n";
+	echo $text['description-email_response']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 

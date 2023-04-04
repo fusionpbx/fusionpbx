@@ -1,0 +1,9 @@
+<extension name="follow-me-destinations" context="global" continue="false" app_uuid="846bbc43-683b-49e9-b697-c4714b17c528" global="true" order="520">
+	<condition field="${user_exists}" expression="^true$"/>
+	<condition field="${follow_me_enabled}" expression="^true$">
+		<action application="set" data="outbound_caller_id_name=${user_data ${destination_number}@${domain_name} var outbound_caller_id_name}" inline="true" enabled="false"/>
+		<action application="set" data="outbound_caller_id_number=${user_data ${destination_number}@${domain_name} var outbound_caller_id_number}" inline="true" enabled="false"/>
+		<action application="unset" data="call_timeout" inline="true"/>
+		<action application="lua" data="app.lua follow_me"/>
+	</condition>
+</extension>

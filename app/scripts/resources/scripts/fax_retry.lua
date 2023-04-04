@@ -110,11 +110,10 @@
 	--we got a busy signal.... may want to check the sip_term_cause
 	if (not fax_success) then
 		fax_success = "0";
-		fax_result_code = 2;
 	end
 	if (hangup_cause_q850 == "17") then
 		fax_success = "0";
-		fax_result_code = 2;
+		fax_result_text = "USER_BUSY";
 	end
 	if (not fax_result_text) then
 		fax_result_text = "FS_NOT_SET";
