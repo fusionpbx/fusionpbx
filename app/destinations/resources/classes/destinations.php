@@ -80,30 +80,30 @@ if (!class_exists('destinations')) {
 
 		/**
 		* Convert destination number to a regular expression
-		* @var string $array destination_prefix, destination_trunk_prefix, destination_area_code, destination_number
+		* @var string $array destination_country_code, destination_trunk_prefix, destination_area_code, destination_number
 		*/
 		public function to_regex($array) {
 
-				if (isset($array['destination_prefix']) && isset($array['destination_trunk_prefix']) && isset($array['destination_area_code']) && isset($array['destination_number'])) {
-					$destination_regex = "(\+?".$array['destination_prefix'].$array['destination_area_code'].$array['destination_number']."\$|";
+				if (isset($array['destination_country_code']) && isset($array['destination_trunk_prefix']) && isset($array['destination_area_code']) && isset($array['destination_number'])) {
+					$destination_regex = "(\+?".$array['destination_country_code'].$array['destination_area_code'].$array['destination_number']."\$|";
 					$destination_regex .= "^".$array['destination_trunk_prefix'].$array['destination_area_code'].$array['destination_number']."\$|";
 					$destination_regex .= "^".$array['destination_area_code'].$array['destination_number']."\$|";
 					$destination_regex .= "^".$array['destination_number']."\$)";
 				}
-				elseif (isset($array['destination_prefix']) && isset($array['destination_trunk_prefix']) && isset($array['destination_number'])) {
-					$destination_regex = "(\+?".$array['destination_prefix'].$array['destination_number']."\$|";
+				elseif (isset($array['destination_country_code']) && isset($array['destination_trunk_prefix']) && isset($array['destination_number'])) {
+					$destination_regex = "(\+?".$array['destination_country_code'].$array['destination_number']."\$|";
 					$destination_regex .= "^".$array['destination_trunk_prefix'].$array['destination_number']."\$|";
 					$destination_regex .= "^".$array['destination_number']."\$)";
 				}
-				elseif (isset($array['destination_prefix']) && isset($array['destination_area_code']) && isset($array['destination_number'])) {
-					$destination_regex = "(\+?".$array['destination_prefix'].$array['destination_area_code'].$array['destination_number']."\$|";
+				elseif (isset($array['destination_country_code']) && isset($array['destination_area_code']) && isset($array['destination_number'])) {
+					$destination_regex = "(\+?".$array['destination_country_code'].$array['destination_area_code'].$array['destination_number']."\$|";
 					$destination_regex .= "^".$array['destination_area_code'].$array['destination_number']."\$|";
 					$destination_regex .= "^".$array['destination_number']."\$)";
 				}
-				elseif ((isset($array['destination_prefix']) && isset($array['destination_number'])) || isset($array['destination_number'])) {
+				elseif ((isset($array['destination_country_code']) && isset($array['destination_number'])) || isset($array['destination_number'])) {
 
 					//set the variables
-						$destination_prefix = $array['destination_prefix'];
+						$destination_country_code = $array['destination_country_code'];
 						$destination_number = $array['destination_number'];
 						$destination_regex = $array['destination_number'];
 
@@ -113,14 +113,14 @@ if (!class_exists('destinations')) {
 						}
 
 					//add prefix
-						if (strlen($destination_prefix) > 0) {
-							$destination_prefix = str_replace("+", "", $destination_prefix);
+						if (strlen($destination_country_code) > 0) {
+							$destination_country_code = str_replace("+", "", $destination_country_code);
 							$plus = '\+?';
-							if (strlen($destination_prefix) == 1) {
-								$destination_prefix = $plus.$destination_prefix.'?';
+							if (strlen($destination_country_code) == 1) {
+								$destination_country_code = $plus.$destination_country_code.'?';
 							}
 							else {
-								$destination_prefix = $plus.'(?:'.$destination_prefix.')?';
+								$destination_country_code = $plus.'(?:'.$destination_country_code.')?';
 							}
 						}
 
@@ -142,7 +142,7 @@ if (!class_exists('destinations')) {
 					//add the round brackets
 						if (!strstr($destination_regex, '(')) {
 							if (strstr($destination_regex, '^')) {
-								$destination_regex = str_replace("^", "^".$destination_prefix."(", $destination_regex);
+								$destination_regex = str_replace("^", "^".$destination_country_code."(", $destination_regex);
 							}
 							else {
 								$destination_regex = '^('.$destination_regex;
