@@ -254,7 +254,7 @@
 		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, $param, "class='shrink'");
 	}
 	echo th_order_by('destination_type', $text['label-destination_type'], $order_by, $order, $param, "class='shrink'");
-	echo th_order_by('destination_prefix', $text['label-destination_prefix'], $order_by, $order, $param, "class='shrink'");
+	echo th_order_by('destination_country_code', $text['label-destination_country_code'], $order_by, $order, $param, "class='shrink'");
 	if (permission_exists('destination_trunk_prefix')) {
 		echo th_order_by('destination_trunk_prefix', '', $order_by, $order, $param, "class='shrink'");
 	}
@@ -316,7 +316,7 @@
 			}
 			echo "	<td>".escape($row['destination_type'])."&nbsp;</td>\n";
 
-			echo "	<td>".escape($row['destination_prefix'])."&nbsp;</td>\n";
+			echo "	<td>".escape($row['destination_country_code'])."&nbsp;</td>\n";
 			if (permission_exists('destination_trunk_prefix')) {
 				echo "	<td>".escape($row['destination_trunk_prefix'])."&nbsp;</td>\n";
 			}
