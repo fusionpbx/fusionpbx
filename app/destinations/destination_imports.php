@@ -229,14 +229,17 @@
 										$destination_number = $row['destination_number'];
 										$destination_app = $row['destination_app'];
 										$destination_data = $row['destination_data'];
-										$destination_prefix = $row['destination_prefix'];
+										$destination_country_code = $row['destination_country_code'];
 										$destination_accountcode = $row['destination_accountcode'];
 										$destination_cid_name_prefix = $row['destination_cid_name_prefix'];
 										$destination_description = $row['destination_description'];
+										if (isset($row['destination_prefix'])) {
+											$destination_country_code = $row['destination_prefix'];
+										}
 
 									//convert the number to a regular expression
-										if (isset($destination_prefix) && strlen($destination_prefix) > 0) {
-											$destination_number_regex = string_to_regex($destination_number, $destination_prefix);
+										if (isset($destination_country_code) && strlen($destination_country_code) > 0) {
+											$destination_number_regex = string_to_regex($destination_number, $destination_country_code);
 										}
 										else {
 											$destination_number_regex = string_to_regex($destination_number);
