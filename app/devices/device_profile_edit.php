@@ -310,7 +310,7 @@
 	$sql .= "where v.device_vendor_uuid = f.device_vendor_uuid ";
 	$sql .= "and v.enabled = 'true' ";
 	$sql .= "and f.enabled = 'true' ";
-	$sql .= "order by v.name asc, f.name asc ";
+	$sql .= "order by v.name asc, f.type asc ";
 	$database = new database;
 	$vendor_functions = $database->select($sql, null, 'all');
 	unset($sql);
@@ -337,7 +337,7 @@
 		$device_profile_keys[$id]['profile_key_id'] = '';
 		$device_profile_keys[$id]['profile_key_vendor'] = '';
 		$device_profile_keys[$id]['profile_key_type'] = '';
-    $device_profile_keys[$id]['profile_key_subtype'] = '';
+		$device_profile_keys[$id]['profile_key_subtype'] = '';
 		$device_profile_keys[$id]['profile_key_line'] = '';
 		$device_profile_keys[$id]['profile_key_value'] = '';
 		$device_profile_keys[$id]['profile_key_extension'] = '';
