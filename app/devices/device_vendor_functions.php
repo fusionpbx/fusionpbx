@@ -85,11 +85,11 @@
 	$sql .= "where device_vendor_uuid = :device_vendor_uuid ";
 	if (isset($_GET["search"])) {
 		$sql .= "and (";
-		$sql .= "label like :search ";
-		$sql .= "or name like :search ";
-		$sql .= "or value like :search ";
-		$sql .= "or enabled like :search ";
-		$sql .= "or description like :search ";
+		$sql .= "	label like :search ";
+		$sql .= "	or type like :search ";
+		$sql .= "	or subtype like :search ";
+		$sql .= "	or enabled like :search ";
+		$sql .= "	or description like :search ";
 		$sql .= ")";
 		$parameters['search'] = '%'.$_GET["search"].'%';
 	}
@@ -115,7 +115,8 @@
 	if (isset($_GET["search"])) {
 		$sql .= "and (";
 		$sql .= "	label like :search ";
-		$sql .= "	or name like :search ";
+		$sql .= "	or type like :search ";
+		$sql .= "	or subtype like :search ";
 		$sql .= "	or value like :search ";
 		$sql .= "	or enabled like :search ";
 		$sql .= "	or description like :search ";
@@ -123,7 +124,7 @@
 		$parameters['search'] = '%'.$_GET["search"].'%';
 	}
 	$parameters['device_vendor_uuid'] = $device_vendor_uuid;
-	$sql .= order_by($order_by, $order, 'name', 'asc');
+	$sql .= order_by($order_by, $order, 'type', 'asc');
 	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;
 	$vendor_functions = $database->select($sql, $parameters, 'all');
