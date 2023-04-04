@@ -55,7 +55,7 @@
 	$available_columns[] = 'destination_number';
 	$available_columns[] = 'destination_trunk_prefix';
 	$available_columns[] = 'destination_area_code';
-	$available_columns[] = 'destination_prefix';
+	$available_columns[] = 'destination_country_code';
 	$available_columns[] = 'destination_condition_field';
 	$available_columns[] = 'destination_number_regex';
 	$available_columns[] = 'destination_caller_id_name';
