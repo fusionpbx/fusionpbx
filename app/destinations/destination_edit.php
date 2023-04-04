@@ -94,7 +94,7 @@
 			$destination_type = $_POST["destination_type"];
 			$destination_condition_field = $_POST["destination_condition_field"];
 			$destination_number = $_POST["destination_number"];
-			$destination_prefix = $_POST["destination_prefix"];
+			$destination_country_code = $_POST["destination_country_code"];
 			$destination_trunk_prefix = $_POST["destination_trunk_prefix"];
 			$destination_area_code = $_POST["destination_area_code"];
 			$db_destination_number = $_POST["db_destination_number"];
@@ -174,7 +174,7 @@
 		//check for all required data
 			$msg = '';
 			if (strlen($destination_type) == 0) { $msg .= $text['message-required']." ".$text['label-destination_type']."<br>\n"; }
-			if (strlen($destination_prefix) == 0 && permission_exists('destination_prefix')) { $msg .= $text['message-required']." ".$text['label-destination_country_code']."<br>\n"; }
+			//if (strlen($destination_country_code) == 0 && permission_exists('destination_country_code')) { $msg .= $text['message-required']." ".$text['label-destination_country_code']."<br>\n"; }
 			if (strlen($destination_number) == 0) { $msg .= $text['message-required']." ".$text['label-destination_number']."<br>\n"; }
 			if (strlen($destination_context) == 0) { $msg .= $text['message-required']." ".$text['label-destination_context']."<br>\n"; }
 			if (strlen($destination_enabled) == 0) { $msg .= $text['message-required']." ".$text['label-destination_enabled']."<br>\n"; }
@@ -182,7 +182,7 @@
 		//check for duplicates
 			if ($destination_type == 'inbound' && $destination_number != $db_destination_number && $_SESSION['destinations']['unique']['boolean'] == 'true') {
 				$sql = "select count(*) from v_destinations ";
-				$sql .= "where (destination_number = :destination_number or destination_prefix || destination_number = :destination_number) ";
+				$sql .= "where (destination_number = :destination_number or destination_country_code || destination_number = :destination_number) ";
 				$sql .= "and destination_type = 'inbound' ";
 				$parameters['destination_number'] = $destination_number;
 				$database = new database;
@@ -229,7 +229,7 @@
 
 				//if the destination_number is not set then get it from the database
 				if (!isset($destination_number)) {
-					$destination_prefix = $row["destination_prefix"];
+					$destination_country_code = $row["destination_country_code"];
 					$destination_number = $row["destination_number"];
 				}
 			}
@@ -237,8 +237,8 @@
 		//if the user doesn't have the correct permission then
 		//override variables using information from the database
 			if (is_array($row) && @sizeof($row) != 0) {
-				if (!permission_exists('destination_prefix')) {
-					$destination_prefix = $row["destination_prefix"];
+				if (!permission_exists('destination_country_code')) {
+					$destination_country_code = $row["destination_country_code"];
 				}
 				if (!permission_exists('destination_trunk_prefix')) {
 					$destination_trunk_prefix = $row["destination_trunk_prefix"];
@@ -247,7 +247,7 @@
 					$destination_area_code = $row["destination_area_code"];
 				}
 				if (!permission_exists('destination_number')) {
-					$destination_prefix = $row["destination_prefix"];
+					$destination_country_code = $row["destination_country_code"];
 					$destination_number = $row["destination_number"];
 				}
 				if (!permission_exists('destination_condition_field')) {
@@ -371,8 +371,8 @@
 					foreach($destination_numbers as $destination_number) {
 
 						//convert the number to a regular expression
-							if (isset($destination_prefix) && strlen($destination_prefix) > 0) {
-								$destination_numbers['destination_prefix'] = $destination_prefix;
+							if (isset($destination_country_code) && strlen($destination_country_code) > 0) {
+								$destination_numbers['destination_country_code'] = $destination_country_code;
 							}
 							if (isset($destination_trunk_prefix) && strlen($destination_trunk_prefix) > 0) {
 								$destination_numbers['destination_trunk_prefix'] = $destination_trunk_prefix;
@@ -461,8 +461,8 @@
 							//add the dialplan xml destination conditions
 							if (is_array($conditions)) {
 								foreach($conditions as $row) {
-									if (is_numeric($row['condition_expression']) && strlen($destination_number) == strlen($row['condition_expression']) && strlen($destination_prefix) > 0) {
-										$condition_expression = '\+?'.$destination_prefix.'?'.$row['condition_expression'];
+									if (is_numeric($row['condition_expression']) && strlen($destination_number) == strlen($row['condition_expression']) && strlen($destination_country_code) > 0) {
+										$condition_expression = '\+?'.$destination_country_code.'?'.$row['condition_expression'];
 									}
 									else {
 										$condition_expression = str_replace("+", "\+", $row['condition_expression']);
@@ -537,8 +537,8 @@
 									if (is_array($conditions)) {
 										foreach($conditions as $row) {
 											//prepare the expression
-											if (is_numeric($row['condition_expression']) && strlen($destination_number) == strlen($row['condition_expression']) && strlen($destination_prefix) > 0) {
-												$condition_expression = '\+?'.$destination_prefix.'?'.$row['condition_expression'];
+											if (is_numeric($row['condition_expression']) && strlen($destination_number) == strlen($row['condition_expression']) && strlen($destination_country_code) > 0) {
+												$condition_expression = '\+?'.$destination_country_code.'?'.$row['condition_expression'];
 											}
 											else {
 												$condition_expression = str_replace("+", "\+", $row['condition_expression']);
@@ -864,7 +864,7 @@
 							if (permission_exists('destination_number')) {
 								$array['destinations'][$x]["destination_number"] = $destination_number;
 								$array['destinations'][$x]["destination_number_regex"] = $destination_number_regex;
-								$array['destinations'][$x]["destination_prefix"] = $destination_prefix;
+								$array['destinations'][$x]["destination_country_code"] = $destination_country_code;
 							}
 							if (permission_exists('destination_trunk_prefix')) {
 								$array['destinations'][$x]["destination_trunk_prefix"] = $destination_trunk_prefix;
@@ -951,9 +951,9 @@
 						$cache->delete("dialplan:".$destination_context);
 					}
 					if ($_SESSION['destinations']['dialplan_mode']['text'] == 'single') {
-						if (isset($destination_prefix) && is_numeric($destination_prefix) && isset($destination_number) && is_numeric($destination_number)) {
-							$cache->delete("dialplan:".$destination_context.":".$destination_prefix.$destination_number);
-							$cache->delete("dialplan:".$destination_context.":+".$destination_prefix.$destination_number);
+						if (isset($destination_country_code) && is_numeric($destination_country_code) && isset($destination_number) && is_numeric($destination_number)) {
+							$cache->delete("dialplan:".$destination_context.":".$destination_country_code.$destination_number);
+							$cache->delete("dialplan:".$destination_context.":+".$destination_country_code.$destination_number);
 						}
 						if (isset($destination_number) && substr($destination_number, 0, 1) == '+' && is_numeric(str_replace('+', '', $destination_number))) {
 							$cache->delete("dialplan:".$destination_context.":".$destination_number);
@@ -989,7 +989,7 @@
 							$array['destinations'][$x]["domain_uuid"] = $domain_uuid;
 							$array['destinations'][$x]["destination_type"] = $destination_type;
 							$array['destinations'][$x]["destination_number"] = $destination_number;
-							$array['destinations'][$x]["destination_prefix"] = $destination_prefix;
+							$array['destinations'][$x]["destination_country_code"] = $destination_country_code;
 							$array['destinations'][$x]["destination_context"] = $destination_context;
 							$array['destinations'][$x]["destination_enabled"] = $destination_enabled;
 							$array['destinations'][$x]["destination_description"] = $destination_description;
@@ -1038,7 +1038,7 @@
 				$destination_type = $row["destination_type"];
 				$destination_number = $row["destination_number"];
 				$destination_condition_field = $row["destination_condition_field"];
-				$destination_prefix = $row["destination_prefix"];
+				$destination_country_code = $row["destination_country_code"];
 				$destination_trunk_prefix = $row["destination_trunk_prefix"];
 				$destination_area_code = $row["destination_area_code"];
 				$destination_caller_id_name = $row["destination_caller_id_name"];
@@ -1322,13 +1322,13 @@
 	echo "</tr>\n";
 
 	//destination number
-	if (permission_exists('destination_prefix')) {
+	if (permission_exists('destination_country_code')) {
 		echo "<tr>\n";
-		echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-destination_country_code']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<input class='formfld' type='text' name='destination_prefix' maxlength='32' value=\"".escape($destination_prefix)."\">\n";
+		echo "	<input class='formfld' type='text' name='destination_country_code' maxlength='32' value=\"".escape($destination_country_code)."\">\n";
 		echo "<br />\n";
 		echo $text['description-destination_country_code']."\n";
 		echo "</td>\n";
