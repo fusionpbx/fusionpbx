@@ -143,10 +143,10 @@
 	}
 
 //get the fax queue details to send
-	$sql = "select q.*, d.domain_name ";
-	$sql .= "from v_fax_queue as q, v_domains as d ";
+	$sql = "select q.*, d.domain_name, f.fax_toll_allow ";
+	$sql .= "from v_fax_queue as q, v_domains as d, v_fax as f ";
 	$sql .= "where fax_queue_uuid = :fax_queue_uuid ";
-	$sql .= "and q.domain_uuid = d.domain_uuid ";
+	$sql .= "and q.domain_uuid = d.domain_uuid and f.fax_uuid = q.fax_uuid";
 	$parameters['fax_queue_uuid'] = $fax_queue_uuid;
 	$database = new database;
 	$row = $database->select($sql, $parameters, 'row');
@@ -170,6 +170,7 @@
 		$fax_retry_count = $row["fax_retry_count"];
 		$fax_accountcode = $row["fax_accountcode"];
 		$fax_command = $row["fax_command"];
+		$fax_toll_allow = $row["fax_toll_allow"];
 	}
 	unset($parameters);
 
