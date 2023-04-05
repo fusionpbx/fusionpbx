@@ -78,6 +78,7 @@ if (!class_exists('switch_music_on_hold')) {
 				$music_list = $this->get();
 				if (count($music_list) > 0) {
 					$select .= "	<option value=''>\n";
+					$select .= "	<option value='silence' ".($selected == "silence" ? 'selected="selected"' : null).">".$text['label-none']."</option>\n";
 					$select .= "	<optgroup label='".$text['label-music_on_hold']."'>\n";
 					$previous_name = '';
 					foreach($music_list as $row) {
