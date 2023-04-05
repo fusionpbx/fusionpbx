@@ -43,27 +43,6 @@ $text['title-music_on_hold']['ru-ru'] = "Музыка на удержании";
 $text['title-music_on_hold']['sv-se'] = "Väntmusik";
 $text['title-music_on_hold']['uk-ua'] = "Музика на утриманні";
 
-$text['label-others']['en-us'] = "Others";
-$text['label-others']['en-gb'] = "Others";
-$text['label-others']['ar-eg'] = "آخرون";
-$text['label-others']['de-at'] = "Andere"; //copied from de-de
-$text['label-others']['de-ch'] = "Andere"; //copied from de-de
-$text['label-others']['de-de'] = "Andere";
-$text['label-others']['es-cl'] = "";
-$text['label-others']['es-mx'] = "";
-$text['label-others']['fr-ca'] = "Autres"; //copied from fr-fr
-$text['label-others']['fr-fr'] = "Autres";
-$text['label-others']['he-il'] = "אחרים";
-$text['label-others']['it-it'] = "Altri";
-$text['label-others']['nl-nl'] = "Andere";
-$text['label-others']['pl-pl'] = "Pozostałe";
-$text['label-others']['pt-br'] = "Outras"; //copied from pt-pt
-$text['label-others']['pt-pt'] = "Outras";
-$text['label-others']['ro-ro'] = "";
-$text['label-others']['ru-ru'] = "другие";
-$text['label-others']['sv-se'] = "Andra";
-$text['label-others']['uk-ua'] = "інші";
-
 $text['option-local']['en-us'] = "Local";
 $text['option-local']['en-gb'] = "Local";
 $text['option-local']['ar-eg'] = "";

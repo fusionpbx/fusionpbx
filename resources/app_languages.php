@@ -4566,6 +4566,27 @@ $text['label-path']['ru-ru'] = "Путь к проекту";
 $text['label-path']['sv-se'] = "Projekt Path";
 $text['label-path']['uk-ua'] = "шлях проекту";
 
+$text['label-others']['en-us'] = "Others";
+$text['label-others']['en-gb'] = "Others";
+$text['label-others']['ar-eg'] = "آخرون";
+$text['label-others']['de-at'] = "Andere"; //copied from de-de
+$text['label-others']['de-ch'] = "Andere"; //copied from de-de
+$text['label-others']['de-de'] = "Andere";
+$text['label-others']['es-cl'] = "";
+$text['label-others']['es-mx'] = "";
+$text['label-others']['fr-ca'] = "Autres"; //copied from fr-fr
+$text['label-others']['fr-fr'] = "Autres";
+$text['label-others']['he-il'] = "אחרים";
+$text['label-others']['it-it'] = "Altri";
+$text['label-others']['nl-nl'] = "Andere";
+$text['label-others']['pl-pl'] = "Pozostałe";
+$text['label-others']['pt-br'] = "Outras"; //copied from pt-pt
+$text['label-others']['pt-pt'] = "Outras";
+$text['label-others']['ro-ro'] = "";
+$text['label-others']['ru-ru'] = "другие";
+$text['label-others']['sv-se'] = "Andra";
+$text['label-others']['uk-ua'] = "інші";
+
 $text['button-tickets']['en-us'] = "Tickets";
 $text['button-tickets']['en-gb'] = "Tickets";
 $text['button-tickets']['ar-eg'] = "";
