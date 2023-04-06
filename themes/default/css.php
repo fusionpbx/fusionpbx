@@ -2759,6 +2759,17 @@ header('Expires: '.gmdate('D, d M Y H:i:s',time()+3600).' GMT');
 		font-size: 100%;
 		}
 
+	.warning_bar {
+		width: 100%;
+		text-align: center;
+		border: 2px dashed #c00;
+		padding: 10px 20px;
+		margin-bottom: 16px;
+		color: #e00;
+		background: #fafafa;
+		font-size: 1.4em;
+	}
+
 /* LIST ************************************************************************/
 
 	.list {
