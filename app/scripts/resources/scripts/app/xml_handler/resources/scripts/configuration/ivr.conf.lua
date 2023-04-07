@@ -295,11 +295,11 @@
 							negative_lookahead = "(?!^("..table.concat(direct_dial_exclude, "|")..")$)";
 						end
 						local direct_dial_regex = string.format("/^(%s\\d{%s,%s})$/", negative_lookahead, direct_dial_digits_min, direct_dial_digits_max);
-						xml:append([[					<entry action="menu-exec-app" digits="]] .. xml.sanitize(direct_dial_regex) .. [[" param="set ${cond(${user_exists id $1 ]] .. xml.sanitize(domain_name) .. [[} == true ? user_exists=true : user_exists=false)}" description="direct dial"/>\n]]);
+						xml:append([[					<entry action="menu-exec-app" digits="]] .. direct_dial_regex .. [[" param="set ${cond(${user_exists id $1 ]] .. xml.sanitize(domain_name) .. [[} == true ? user_exists=true : user_exists=false)}" description="direct dial"/>\n]]);
 						--xml:append([[					<entry action="menu-exec-app" digits="]] .. xml.sanitize(direct_dial_regex) .. [[" param="set ${cond(${user_exists} == true ? user_exists=true : ivr_max_failures=${system(expr ${ivr_max_failures} + 1)})}" description="increment max failures"/>\n]]);
-						xml:append([[					<entry action="menu-exec-app" digits="]] .. xml.sanitize(direct_dial_regex) .. [[" param="playback ${cond(${user_exists} == true ? ]] .. xml.sanitize(sound_prefix) .. [[ivr/ivr-call_being_transferred.wav : ]] .. xml.sanitize(sound_prefix) .. [[ivr/ivr-that_was_an_invalid_entry.wav)}" description="play sound"/>\n]]);
+						xml:append([[					<entry action="menu-exec-app" digits="]] .. direct_dial_regex .. [[" param="playback ${cond(${user_exists} == true ? ]] .. xml.sanitize(sound_prefix) .. [[ivr/ivr-call_being_transferred.wav : ]] .. xml.sanitize(sound_prefix) .. [[ivr/ivr-that_was_an_invalid_entry.wav)}" description="play sound"/>\n]]);
 						--xml:append([[					<entry action="menu-exec-app" digits="]] .. xml.sanitize(direct_dial_regex) .. [[" param="transfer ${cond(${ivr_max_failures} == ]] .. xml.sanitize(ivr_menu_max_failures) .. [[ ? ]] .. xml.sanitize(ivr_menu_exit_data) .. [[)}" description="max fail transfer"/>\n]]);
-						xml:append([[					<entry action="menu-exec-app" digits="]] .. xml.sanitize(direct_dial_regex) .. [[" param="transfer ${cond(${user_exists} == true ? $1 XML ]] .. xml.sanitize(domain_name) .. [[)}" description="direct dial transfer"/>\n]]);
+						xml:append([[					<entry action="menu-exec-app" digits="]] .. direct_dial_regex .. [[" param="transfer ${cond(${user_exists} == true ? $1 XML ]] .. xml.sanitize(domain_name) .. [[)}" description="direct dial transfer"/>\n]]);
 					end
 
 				--close the extension tag if it was left open
