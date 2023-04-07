@@ -106,6 +106,7 @@ if (!class_exists('ringbacks')) {
 
 			//start the select
 				$select = "<select class='formfld' name='".$name."' id='".$name."' style='width: auto;'>\n";
+				$select .= "		<option value=''></option>\n";
 
 			//music list
 				if (count($this->music_list) > 0) {
