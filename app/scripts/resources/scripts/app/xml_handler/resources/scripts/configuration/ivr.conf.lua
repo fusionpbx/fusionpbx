@@ -281,7 +281,7 @@
 						ivr_menu_option_param = r.ivr_menu_option_param
 						ivr_menu_option_description = r.ivr_menu_option_description
 						if (#ivr_menu_option_action > 0) then
-							xml:append([[					<entry action="]] .. xml.sanitize(ivr_menu_option_action) .. [[" digits="]] .. xml.sanitize(ivr_menu_option_digits) .. [[" param="]] .. xml.sanitize(ivr_menu_option_param) .. [[" description="]] .. xml.sanitize(ivr_menu_option_description) .. [["/>]]);
+							xml:append([[					<entry action="]] .. xml.sanitize(ivr_menu_option_action) .. [[" digits="]] .. ivr_menu_option_digits .. [[" param="]] .. xml.sanitize(ivr_menu_option_param) .. [[" description="]] .. xml.sanitize(ivr_menu_option_description) .. [["/>]]);
 							if (tonumber(ivr_menu_option_digits) and #ivr_menu_option_digits >= tonumber(direct_dial_digits_min)) then
 								table.insert(direct_dial_exclude, ivr_menu_option_digits);
 							end
