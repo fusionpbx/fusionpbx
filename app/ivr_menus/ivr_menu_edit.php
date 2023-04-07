@@ -32,8 +32,6 @@
 //includes files
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
-	require_once "resources/classes/logging.php";
-	require_once "resources/classes/ringbacks.php";
 
 //check permissions
 	if (permission_exists('ivr_menu_add') || permission_exists('ivr_menu_edit')) {
@@ -340,13 +338,17 @@
 					}
 					$dialplan_xml .= "		<action application=\"sleep\" data=\"1000\"/>\n";
 					$dialplan_xml .= "		<action application=\"set\" data=\"hangup_after_bridge=true\"/>\n";
-					$dialplan_xml .= "		<action application=\"set\" data=\"ringback=".xml::sanitize($ivr_menu_ringback)."\"/>\n";
+					if (strlen($ivr_menu_ringback) > 0) {
+						$dialplan_xml .= "		<action application=\"set\" data=\"ringback=".$ivr_menu_ringback."\"/>\n";
+					}
 					if (strlen($ivr_menu_language) > 0) {
 						$dialplan_xml .= "		<action application=\"set\" data=\"default_language=".xml::sanitize($ivr_menu_language)."\" inline=\"true\"/>\n";
 						$dialplan_xml .= "		<action application=\"set\" data=\"default_dialect=".xml::sanitize($ivr_menu_dialect)."\" inline=\"true\"/>\n";
 						$dialplan_xml .= "		<action application=\"set\" data=\"default_voice=".xml::sanitize($ivr_menu_voice)."\" inline=\"true\"/>\n";
 					}
-					$dialplan_xml .= "		<action application=\"set\" data=\"transfer_ringback=".xml::sanitize($ivr_menu_ringback)."\"/>\n";
+					if (strlen($ivr_menu_ringback) > 0) {
+						$dialplan_xml .= "		<action application=\"set\" data=\"transfer_ringback=".$ivr_menu_ringback."\"/>\n";
+					}
 					$dialplan_xml .= "		<action application=\"set\" data=\"ivr_menu_uuid=".xml::sanitize($ivr_menu_uuid)."\"/>\n";
 
 					if ($_SESSION['ivr_menu']['application']['text'] == "lua") {
