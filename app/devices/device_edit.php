@@ -1608,9 +1608,11 @@
 				echo "</select>\n";
 				echo "</td>\n";
 
-				echo "<td align='left'>\n";
-				echo "	<input class='formfld' type='text' name='device_keys[".$x."][device_key_subtype]' style='width: 120px;' maxlength='255' value=\"".escape($row['device_key_subtype'])."\"/>\n";
-				echo "</td>\n";
+				if($show_key_subtype) {
+					echo "<td align='left'>\n";
+					echo "	<input class='formfld' type='text' name='device_keys[".$x."][device_key_subtype]' style='width: 120px;' maxlength='255' value=\"".escape($row['device_key_subtype'])."\"/>\n";
+					echo "</td>\n";
+				}
 
 				if (permission_exists('device_key_line')) {
 					echo "<td valign='top' align='left' nowrap='nowrap'>\n";
