@@ -171,6 +171,16 @@
 				$destination_number = trim($destination_number);
 			}
 
+		//if the user doesn't have permission to set the destination_number then get it from the database
+			if (is_uuid($destination_uuid) && !permission_exists('destination_number')) {
+				$sql = "select destination_number from v_destinations ";
+				$sql .= "where destination_uuid = :destination_uuid ";
+				$parameters['destination_uuid'] = $destination_uuid;
+				$database = new database;
+				$destination_number = $database->select($sql, $parameters, 'column');
+				unset($sql, $parameters, $num_rows);
+			}
+
 		//check for all required data
 			$msg = '';
 			if (strlen($destination_type) == 0) { $msg .= $text['message-required']." ".$text['label-destination_type']."<br>\n"; }
