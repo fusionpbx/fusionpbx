@@ -3571,6 +3571,27 @@ $text['description-2']['ru-ru'] = "Чтобы послать факс, загр�
 $text['description-2']['sv-se'] = "Om du vill skicka ett fax, ladda upp en PDF eller TIF -fil. För att generera ett försättsblad, ange ett Ämne och / eller meddelande nedan.";
 $text['description-2']['uk-ua'] = "";
 
+$text['notice-sending-disabled']['en-us'] = "<strong>Notice</strong>: Sending Disabled";
+$text['notice-sending-disabled']['en-gb'] = "<strong>Notice</strong>: Sending Disabled";
+$text['notice-sending-disabled']['ar-eg'] = "إشعار: إرسال معطل";
+$text['notice-sending-disabled']['de-at'] = "<strong>Hinweis</strong>: Senden deaktiviert";
+$text['notice-sending-disabled']['de-ch'] = "<strong>Hinweis</strong>: Senden deaktiviert";
+$text['notice-sending-disabled']['de-de'] = "<strong>Hinweis</strong>: Senden deaktiviert";
+$text['notice-sending-disabled']['es-cl'] = "<strong>Aviso</strong>: Envío deshabilitado";
+$text['notice-sending-disabled']['es-mx'] = "<strong>Aviso</strong>: Envío deshabilitado";
+$text['notice-sending-disabled']['fr-ca'] = "<strong>Avis</strong> : Envoi désactivé";
+$text['notice-sending-disabled']['fr-fr'] = "<strong>Avis</strong> : Envoi désactivé";
+$text['notice-sending-disabled']['he-il'] = "שים לב: השליחה מושבתת";
+$text['notice-sending-disabled']['it-it'] = "<strong>Avviso</strong>: invio disabilitato";
+$text['notice-sending-disabled']['nl-nl'] = "<strong>Let op</strong>: Verzenden uitgeschakeld";
+$text['notice-sending-disabled']['pl-pl'] = "<strong>Uwaga</strong>: Wysyłanie wyłączone";
+$text['notice-sending-disabled']['pt-br'] = "<strong>Aviso</strong>: Envio desativado";
+$text['notice-sending-disabled']['pt-pt'] = "<strong>Aviso</strong>: Envio desativado";
+$text['notice-sending-disabled']['ro-ro'] = "<strong>Notă</strong>: Trimiterea este dezactivată";
+$text['notice-sending-disabled']['ru-ru'] = "<strong>Уведомление</strong>: отправка отключена";
+$text['notice-sending-disabled']['sv-se'] = "<strong>Observera</strong>: Sändning avaktiverad";
+$text['notice-sending-disabled']['uk-ua'] = "<strong>Примітка</strong>: надсилання вимкнено";
+
 $text['description']['en-us'] = "To receive a FAX setup a fax extension and then direct the incoming to it.";
 $text['description']['en-gb'] = "To receive a FAX setup a fax extension and then direct the incoming to it.";
 $text['description']['ar-eg'] = "";
