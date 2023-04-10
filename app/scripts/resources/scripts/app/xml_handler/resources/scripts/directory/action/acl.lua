@@ -1,3 +1,5 @@
+	local Xml = require "resources.functions.xml";
+
 --connect to the database
 	local Database = require "resources.functions.database"
 	local log      = require "resources.functions.log"["directory_acl"]
