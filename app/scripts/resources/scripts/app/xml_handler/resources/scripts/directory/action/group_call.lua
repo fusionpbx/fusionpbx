@@ -24,6 +24,8 @@
 --	ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 --	POSSIBILITY OF SUCH DAMAGE.
 
+	local Xml = require "resources.functions.xml";
+
 --get the cache
 	if (trim(api:execute("module_exists", "mod_memcache")) == "true") then
 		XML_STRING = trim(api:execute("memcache", "get directory:groups:"..domain_name));
