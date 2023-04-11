@@ -125,11 +125,12 @@ if (!class_exists('switch_music_on_hold')) {
 					unset($sql, $parameters, $streams, $row);
 				}
 			//add additional options
+				$select .= "	<optgroup label='".$text['label-others']."'>";
+				$select .= "		<option value='silence' ".($selected == "silence" ? 'selected="selected"' : null).">".$text['label-none']."</option>\n";
 				if (is_array($options) && sizeof($options) > 0) {
-					$select .= "	<optgroup label='".$text['label-others']."'>";
 					$select .= $options;
-					$select .= "	</optgroup>\n";
 				}
+				$select .= "	</optgroup>\n";
 			//end the select and return it
 				$select .= "</select>\n";
 				return $select;

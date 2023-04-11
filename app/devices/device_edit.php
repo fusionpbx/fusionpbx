@@ -145,6 +145,7 @@
 			//$device_key_category = $_POST["device_key_category"];
 			//$device_key_id = $_POST["device_key_id"];
 			//$device_key_type = $_POST["device_key_type"];
+			//$device_key_subtype = $_POST["device_key_subtype"];
 			//$device_key_line = $_POST["device_key_line"];
 			//$device_key_value = $_POST["device_key_value"];
 			//$device_key_extension = $_POST["device_key_extension"];
@@ -389,6 +390,9 @@
 									$array['devices'][0]['device_keys'][$y]['device_key_id'] = $row["device_key_id"];
 								}
 								$array['devices'][0]['device_keys'][$y]['device_key_type'] = $row["device_key_type"];
+								if (isset($row["device_key_subtype"])) {
+									$array['devices'][0]['device_keys'][$y]['device_key_subtype'] = $row["device_key_subtype"];
+								}
 								if (permission_exists('device_key_line')) {
 									$array['devices'][0]['device_keys'][$y]['device_key_line'] = $row["device_key_line"];
 								}
@@ -609,6 +613,7 @@
 	$device_keys[$x]['device_key_category'] = '';
 	$device_keys[$x]['device_key_id'] = '';
 	$device_keys[$x]['device_key_type'] = '';
+	$device_kesy[$x]['device_key_subtype'] = '';
 	$device_keys[$x]['device_key_line'] = '';
 	$device_keys[$x]['device_key_value'] = '';
 	$device_keys[$x]['device_key_extension'] = '';
@@ -625,12 +630,12 @@
 	unset($sql);
 
 //get the vendor functions
-	$sql = "select v.name as vendor_name, f.name, f.value ";
+	$sql = "select v.name as vendor_name, f.type, f.subtype, f.value ";
 	$sql .= "from v_device_vendors as v, v_device_vendor_functions as f ";
 	$sql .= "where v.device_vendor_uuid = f.device_vendor_uuid ";
 	$sql .= "and v.enabled = 'true' ";
 	$sql .= "and f.enabled = 'true' ";
-	$sql .= "order by v.name asc, f.name asc ";
+	$sql .= "order by v.name asc, f.type asc ";
 	$database = new database;
 	$vendor_functions = $database->select($sql, null, 'all');
 	unset($sql);
@@ -1332,6 +1337,14 @@
 	}
 
 	if (permission_exists('device_key_edit')) {
+
+		//determine whether to show the key_subtype
+		$show_key_subtype = false;
+		if ($device_vendor == 'fanvil') {
+			$show_key_subtype = true;
+		}
+
+		//set the previous_vendor and vendor_count
 		$vendor_count = 0;
 		foreach($device_keys as $row) {
 			if ($previous_vendor != $row['device_key_vendor']) {
@@ -1340,6 +1353,7 @@
 			}
 		}
 
+		//show the device keys html form
 		echo "	<tr>";
 		echo "		<td class='vncell' valign='top'>".$text['label-keys']."</td>";
 		echo "		<td class='vtable' align='left'>";
@@ -1351,6 +1365,9 @@
 				echo "				<td class='vtable'>".$text['label-device_key_id']."</td>\n";
 			}
 			echo "				<td class='vtable'>".$text['label-device_key_type']."</td>\n";
+			if ($show_key_subtype) {
+				echo "				<td class='vtable'>".$text['label-device_key_subtype']."</td>\n";
+			}
 			if (permission_exists('device_key_line')) {
 				echo "				<td class='vtable'>".$text['label-device_key_line']."</td>\n";
 			}
@@ -1382,8 +1399,15 @@
 					}
 					if ($vendor_count > 1 && strlen($row['device_key_vendor']) > 0) {
 						echo "				<td class='vtable'>".ucwords($row['device_key_vendor'])."</td>\n";
-					} else {
+						if ($show_key_subtype) {
+							echo "				<td class='vtable'>".$text['label-device_key_subtype']."</td>\n";
+						}
+					}
+					else {
 						echo "				<td class='vtable'>".$text['label-device_key_type']."</td>\n";
+						if ($show_key_subtype) {
+							echo "				<td class='vtable'>".$text['label-device_key_subtype']."</td>\n";
+						}
 					}
 					if (permission_exists('device_key_line')) {
 						echo "				<td class='vtable'>".$text['label-device_key_line']."</td>\n";
@@ -1570,10 +1594,10 @@
 						$selected = "selected='selected'";
 					}
 					if (strlen($row['device_key_vendor']) == 0) {
-						echo "		<option value='".$function['value']."' vendor='".$function['vendor_name']."' $selected >".$text['label-'.$function['name']]."</option>\n";
+						echo "		<option value='".$function['value']."' vendor='".$function['vendor_name']."' $selected >".$text['label-'.$function['type']]."</option>\n";
 					}
 					if (strlen($row['device_key_vendor']) > 0 && strtolower($row['device_key_vendor']) == $function['vendor_name']) {
-						echo "		<option value='".$function['value']."' vendor='".$function['vendor_name']."' $selected >".$text['label-'.$function['name']]."</option>\n";
+						echo "		<option value='".$function['value']."' vendor='".$function['vendor_name']."' $selected >".$text['label-'.$function['type']]."</option>\n";
 					}
 					$previous_vendor = $function['vendor_name'];
 					$i++;
@@ -1583,6 +1607,13 @@
 				}
 				echo "</select>\n";
 				echo "</td>\n";
+
+				if($show_key_subtype) {
+					echo "<td align='left'>\n";
+					echo "	<input class='formfld' type='text' name='device_keys[".$x."][device_key_subtype]' style='width: 120px;' maxlength='255' value=\"".escape($row['device_key_subtype'])."\"/>\n";
+					echo "</td>\n";
+				}
+
 				if (permission_exists('device_key_line')) {
 					echo "<td valign='top' align='left' nowrap='nowrap'>\n";
 					echo "	<select class='formfld' name='device_keys[".$x."][device_key_line]'>\n";

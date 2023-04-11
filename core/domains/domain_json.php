@@ -76,7 +76,6 @@
 			$parameters['search'] = '%'.$search.'%';
 		}
 		$sql .= "order by domain_name asc ";
-		$sql .= "limit 300 ";
 		$database = new database;
 		$domains = $database->select($sql, $parameters, 'all');
 		unset($sql, $parameters);
