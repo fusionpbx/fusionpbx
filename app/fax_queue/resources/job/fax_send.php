@@ -290,18 +290,6 @@
 				exit;	
 			}
 
-		//check if the uuid exists if it does then end the script
-			if (trim(event_socket_request($fp, "api uuid_exists ".$origination_uuid)) == 'true') {
-				echo "FAX job in progress.\n";
-				exit;
-			}
-
-		//check if the uuid exists if it does then end the script
-			if (trim(event_socket_request($fp, "api uuid_exists ".$origination_uuid)) == 'true') {
-				echo "FAX job in progress.\n";
-				exit;
-			}
-
 		//fax options, first attempt use the fax variables from settings
 			if ($fax_retry_count == 0) {
 				$fax_options = '';
@@ -363,7 +351,7 @@
 				$fax_instance_id = pathinfo($fax_file, PATHINFO_FILENAME);
 
 				//set the fax status
-				$fax_status = 'trying';
+				$fax_status = 'sending';
 
 				//update the database to say status to trying and set the command
 				$array['fax_queue'][0]['fax_queue_uuid'] = $fax_queue_uuid;
