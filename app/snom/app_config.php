@@ -302,5 +302,13 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "https://downloads.snom.com/M100/M10KLE-1.4.5.10-0.img";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Provide the full URL to the M10 .img file. Latest firmware files can be found here: https://service.snom.com/display/wiki/DECT+M-KLE-Series+Firmware";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "4c02c034-bd50-45a8-9205-15c9fcb0704d";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "snom_dialtone_on_hold";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "New dialtone when the hold is pressed.";
 
 ?>
