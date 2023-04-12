@@ -1,10 +1,10 @@
 <?php
 
-//check the permission
+//add the document root to the include path
 	if (defined('STDIN')) {
-		//set the include path
-		$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-		set_include_path(parse_ini_file($conf[0])['document.root']);
+		$config_glob = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+		$conf = parse_ini_file($config_glob[0]);
+		set_include_path($conf['document.root']);
 	}
 	else {
 		exit;
@@ -153,7 +153,7 @@
 			$sql .= "where hostname = :hostname ";
 			$sql .= "and ( ";
 			$sql .= "	( ";
-			$sql .= "		(fax_status = 'waiting' or fax_status = 'trying') ";
+			$sql .= "		(fax_status = 'waiting' or fax_status = 'trying' or fax_status = 'busy') ";
 			$sql .= "		and (fax_retry_date is null or floor(extract(epoch from now()) - extract(epoch from fax_retry_date)) > :retry_interval) ";
 			$sql .= "	)  ";
 			$sql .= "	or ( ";
