@@ -381,7 +381,14 @@
 	echo "	".$text['label-fax_status']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='fax_status' maxlength='255' value='".escape($fax_status)."'>\n";
+	echo "	<select class='formfld' name='fax_status'>\n";
+	echo "		<option value='waiting' ".($fax_status == 'waiting' ? "selected='selected'" : null).">".ucwords($text['label-waiting'])."</option>\n";
+	echo "		<option value='trying' ".($fax_status == 'trying' ? "selected='selected'" : null).">".ucwords($text['label-trying'])."</option>\n";
+	echo "		<option value='sending' ".($fax_status == 'sending' ? "selected='selected'" : null).">".ucwords($text['label-sending'])."</option>\n";
+	echo "		<option value='sent' ".($fax_status == 'sent' ? "selected='selected'" : null).">".ucwords($text['label-sent'])."</option>\n";
+	echo "		<option value='busy' ".($fax_status == 'busy' ? "selected='selected'" : null).">".ucwords($text['label-busy'])."</option>\n";
+	echo "		<option value='failed' ".($fax_status == 'failed' ? "selected='selected'" : null).">".ucwords($text['label-failed'])."</option>\n";
+	echo "	</select>\n";
 	echo "<br />\n";
 	echo $text['description-fax_status']."\n";
 	echo "</td>\n";
