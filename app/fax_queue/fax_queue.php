@@ -344,7 +344,7 @@
 			echo "	<td>".escape($row['fax_number'])."</td>\n";
 			echo "	<td>".escape(str_replace(',', ' ', $row['fax_email_address']))."</td>\n";
 			echo "	<td>".escape($row['fax_file'])."</td>\n";
-			echo "	<td>".escape($row['fax_status'])."</td>\n";
+			echo "	<td>".ucwords($text['label-'.$row['fax_status']])."</td>\n";
 			echo "	<td>".escape($row['fax_retry_date_formatted'])." ".escape($row['fax_retry_time_formatted'])."</td>\n";
 			echo "	<td>".escape($row['fax_notify_date_formatted'])." ".escape($row['fax_notify_time_formatted'])."</td>\n";
 			echo "	<td>".escape($row['fax_retry_count'])."</td>\n";
