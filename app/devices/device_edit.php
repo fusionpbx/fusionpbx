@@ -1709,7 +1709,7 @@
 				echo "<tr>\n";
 
 				echo "<td align='left'>\n";
-				echo "	<input class='formfld' type='text' name='device_settings[".$x."][device_setting_subcategory]' style='width: 120px;' maxlength='255' value=\"".escape($row['device_setting_subcategory'])."\"/>\n";
+				echo "	<input class='formfld' type='text' name='device_settings[".$x."][device_setting_subcategory]' style='width: 300px;' maxlength='255' value=\"".escape($row['device_setting_subcategory'])."\"/>\n";
 				echo "</td>\n";
 
 				echo "<td align='left'>\n";
