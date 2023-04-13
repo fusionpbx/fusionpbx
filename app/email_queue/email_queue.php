@@ -202,30 +202,10 @@
 	echo "		<select class='formfld' name='email_status'>\n";
     echo "			<option value='' selected='selected' disabled hidden>".$text['label-email_status']."...</option>";
 	echo "			<option value=''></option>\n";
-	if (isset($_GET["email_status"]) && $_GET["email_status"] == "waiting") {
-		echo "			<option value='waiting' selected='selected'>".$text['label-waiting']."</option>\n";
-	}
-	else {
-		echo "			<option value='waiting'>".$text['label-waiting']."</option>\n";
-	}
-	if (isset($_GET["email_status"]) && $_GET["email_status"] == "failed") {
-		echo "			<option value='failed' selected='selected'>".$text['label-failed']."</option>\n";
-	}
-	else {
-		echo "			<option value='failed'>".$text['label-failed']."</option>\n";
-	}
-	if (isset($_GET["email_status"]) && $_GET["email_status"] == "sent") {
-		echo "			<option value='sent' selected='selected'>".$text['label-sent']."</option>\n";
-	}
-	else {
-		echo "			<option value='sent'>".$text['label-sent']."</option>\n";
-	}
-	if (isset($_GET["email_status"]) && $_GET["email_status"] == "trying") {
-		echo "			<option value='trying' selected='selected'>".$text['label-trying']."</option>\n";
-	}
-	else {
-		echo "			<option value='trying'>".$text['label-trying']."</option>\n";
-	}
+	echo "			<option value='waiting' ".($_GET["email_status"] == "waiting" ? "selected='selected'" : null).">".ucwords($text['label-waiting'])."</option>\n";
+	echo "			<option value='trying' ".($_GET["email_status"] == "trying" ? "selected='selected'" : null).">".ucwords($text['label-trying'])."</option>\n";
+	echo "			<option value='sent' ".($_GET["email_status"] == "sent" ? "selected='selected'" : null).">".ucwords($text['label-sent'])."</option>\n";
+	echo "			<option value='failed' ".($_GET["email_status"] == "failed" ? "selected='selected'" : null).">".ucwords($text['label-failed'])."</option>\n";
 	echo "		</select>\n";
 	//if (permission_exists('email_queue_all')) {
 	//	if ($_GET['show'] == 'all') {
