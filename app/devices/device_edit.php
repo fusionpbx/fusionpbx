@@ -1196,7 +1196,7 @@
 						echo "				</select>\n";
 					}
 					else {
-						echo "				<input class='formfld' style='width: 65px;' type='text' name='device_lines[".$x."][outbound_proxy_primary]' placeholder=\"".escape($text['label-primary'])."\" maxlength='255' value=\"".escape($row['outbound_proxy_primary'])."\"/>\n";
+						echo "				<input class='formfld' style='width: 100px;' type='text' name='device_lines[".$x."][outbound_proxy_primary]' placeholder=\"".escape($text['label-primary'])."\" maxlength='255' value=\"".escape($row['outbound_proxy_primary'])."\"/>\n";
 					}
 					echo "			</td>\n";
 				}
@@ -1212,7 +1212,7 @@
 						echo "				</select>\n";
 					}
 					else {
-						echo "				<input class='formfld' style='width: 65px;' type='text' name='device_lines[".$x."][outbound_proxy_secondary]' placeholder=\"".escape($text['label-secondary'])."\" maxlength='255' value=\"".escape($row['outbound_proxy_secondary'])."\"/>\n";
+						echo "				<input class='formfld' style='width: 100px;' type='text' name='device_lines[".$x."][outbound_proxy_secondary]' placeholder=\"".escape($text['label-secondary'])."\" maxlength='255' value=\"".escape($row['outbound_proxy_secondary'])."\"/>\n";
 					}
 					echo "			</td>\n";
 				}
