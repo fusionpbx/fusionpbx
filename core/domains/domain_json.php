@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2022
+	Portions created by the Initial Developer are Copyright (C) 2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -63,7 +63,7 @@
 	//echo "<link rel='stylesheet' type='text/css' href='/resources/fontawesome/css/all.min.css.php'>\n";
 
 //get the list of domains
-	if (permission_exists('domain_all')) {
+	if (permission_exists('domain_all') || permission_exists('domain_select')) {
 		$sql = "select * ";
 		$sql .= "from v_domains ";
 		$sql .= "where true ";
