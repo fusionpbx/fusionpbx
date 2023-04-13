@@ -248,17 +248,6 @@
 	if (permission_exists('fax_queue_delete') && $fax_queue) {
 		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','name'=>'btn_delete','style'=>'display:none;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
-	echo 		"<form id='form_search' class='inline' method='get'>\n";
-	echo "		<select class='formfld' name='fax_status'>\n";
-    echo "			<option value='' selected='selected' disabled hidden>".$text['label-fax_status']."...</option>";
-	echo "			<option value=''></option>\n";
-	echo "			<option value='waiting' ".(isset($_GET["fax_status"]) && $_GET["fax_status"] == "waiting" ? "selected='selected'" : null).">".$text['label-waiting']."</option>\n";
-	echo "			<option value='sending' ".(isset($_GET["fax_status"]) && $_GET["fax_status"] == "sending" ? "selected='selected'" : null).">".$text['label-sending']."</option>\n";
-	echo "			<option value='trying' ".(isset($_GET["fax_status"]) && $_GET["fax_status"] == "trying" ? "selected='selected'" : null).">".$text['label-trying']."</option>\n";
-	echo "			<option value='sent' ".(isset($_GET["fax_status"]) && $_GET["fax_status"] == "sent" ? "selected='selected'" : null).">".$text['label-sent']."</option>\n";
-	echo "			<option value='busy' ".(isset($_GET["fax_status"]) && $_GET["fax_status"] == "busy" ? "selected='selected'" : null).">".$text['label-busy']."</option>\n";
-	echo "			<option value='failed' ".(isset($_GET["fax_status"]) && $_GET["fax_status"] == "failed" ? "selected='selected'" : null).">".$text['label-failed']."</option>\n";
-	echo "		</select>\n";
 	if (permission_exists('fax_queue_all')) {
 		if ($_GET['show'] == 'all') {
 			echo "		<input type='hidden' name='show' value='all'>\n";
@@ -267,6 +256,17 @@
 			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$_SESSION['theme']['button_icon_all'],'link'=>'?show=all']);
 		}
 	}
+	echo 		"<form id='form_search' class='inline' method='get'>\n";
+	echo "		<select class='formfld' name='fax_status' style='margin-left: 15px;'>\n";
+    echo "			<option value='' selected='selected' disabled hidden>".$text['label-fax_status']."...</option>";
+	echo "			<option value=''></option>\n";
+	echo "			<option value='waiting' ".($_GET["fax_status"] == "waiting" ? "selected='selected'" : null).">".ucwords($text['label-waiting'])."</option>\n";
+	echo "			<option value='sending' ".($_GET["fax_status"] == "sending" ? "selected='selected'" : null).">".ucwords($text['label-sending'])."</option>\n";
+	echo "			<option value='trying' ".($_GET["fax_status"] == "trying" ? "selected='selected'" : null).">".ucwords($text['label-trying'])."</option>\n";
+	echo "			<option value='sent' ".($_GET["fax_status"] == "sent" ? "selected='selected'" : null).">".ucwords($text['label-sent'])."</option>\n";
+	echo "			<option value='busy' ".($_GET["fax_status"] == "busy" ? "selected='selected'" : null).">".ucwords($text['label-busy'])."</option>\n";
+	echo "			<option value='failed' ".($_GET["fax_status"] == "failed" ? "selected='selected'" : null).">".ucwords($text['label-failed'])."</option>\n";
+	echo "		</select>\n";
 	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" />";
 	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search']);
 	if ($paging_controls_mini != '') {
