@@ -318,7 +318,7 @@
 			echo "	<td class='overflow' style='max-width: 250px;'>".escape($row['email_to'])."</td>\n";
 			echo "	<td>".iconv_mime_decode($row['email_subject'])."</td>\n";
 			echo "	<td class='hide-md-dn'>".escape($row['email_body'])."</td>\n";
-			echo "	<td>".escape($row['email_status'])."</td>\n";
+			echo "	<td>".ucwords($text['label-'.$row['email_status']])."</td>\n";
 			echo "	<td>".escape($row['email_retry_count'])."</td>\n";
 			//echo "	<td>".escape($row['email_action_before'])."</td>\n";
 			echo "	<td class='hide-md-dn'>".escape($row['email_action_after'])."</td>\n";
