@@ -741,6 +741,26 @@
 		$text['label-trying']['sv-se'] = '';
 		$text['label-trying']['uk-ua'] = '';
 
+		$text['label-sending']['en-us'] = 'sending';
+		$text['label-sending']['ar-eg'] = '';
+		$text['label-sending']['de-at'] = '';
+		$text['label-sending']['de-ch'] = '';
+		$text['label-sending']['de-de'] = '';
+		$text['label-sending']['es-cl'] = '';
+		$text['label-sending']['es-mx'] = '';
+		$text['label-sending']['fr-ca'] = '';
+		$text['label-sending']['fr-fr'] = '';
+		$text['label-sending']['he-il'] = '';
+		$text['label-sending']['it-it'] = '';
+		$text['label-sending']['nl-nl'] = '';
+		$text['label-sending']['pl-pl'] = '';
+		$text['label-sending']['pt-br'] = '';
+		$text['label-sending']['pt-pt'] = '';
+		$text['label-sending']['ro-ro'] = '';
+		$text['label-sending']['ru-ru'] = '';
+		$text['label-sending']['sv-se'] = '';
+		$text['label-sending']['uk-ua'] = '';
+
 		$text['label-busy']['en-us'] = 'busy';
 		$text['label-busy']['ar-eg'] = '';
 		$text['label-busy']['de-at'] = '';

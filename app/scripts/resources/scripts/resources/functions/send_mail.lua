@@ -103,6 +103,29 @@ if (email_queue_enabled == 'true') then
 			email_attachment_name = '';
 			email_attachment_base64 = '';
 
+			--set the mime type
+			if (email_attachment_type == 'jpg' or email_attachment_type == 'peg') then --jpeg
+				email_attachment_mime_type = 'image/jpeg';
+			elseif (email_attachment_type == 'gif') then
+				email_attachment_mime_type = 'image/gif';
+			elseif (email_attachment_type == 'png') then
+				email_attachment_mime_type = 'image/png';
+			elseif (email_attachment_type == 'pdf') then
+				email_attachment_mime_type = 'application/pdf';
+			elseif (email_attachment_type == 'tif' or email_attachment_type == 'iff') then --tiff
+				email_attachment_mime_type = 'image/tiff';
+			elseif (email_attachment_type == 'mp3') then
+				email_attachment_mime_type = 'audio/mpeg';
+			elseif (email_attachment_type == 'wav') then
+				email_attachment_mime_type = 'audio/x-wav';
+			elseif (email_attachment_type == 'pus') then --opus
+				email_attachment_mime_type = 'audio/opus';
+			elseif (email_attachment_type == 'ogg') then
+				email_attachment_mime_type = 'audio/ogg';
+			else
+				email_attachment_mime_type = 'binary/octet-stream';
+			end
+
 			require "resources.functions.split"
 			local email_table = split(email_file, '/', true)
 			email_attachment_name = email_table[#email_table]
@@ -120,6 +143,7 @@ if (email_queue_enabled == 'true') then
 			sql = sql .. "	email_queue_attachment_uuid, ";
 			sql = sql .. "	email_queue_uuid, ";
 			sql = sql .. "	domain_uuid, ";
+			sql = sql .. "	email_attachment_mime_type, ";
 			sql = sql .. "	email_attachment_type, ";
 			sql = sql .. "	email_attachment_path, ";
 			sql = sql .. "	email_attachment_name, ";
@@ -129,19 +153,21 @@ if (email_queue_enabled == 'true') then
 			sql = sql .. "	:email_queue_attachment_uuid, ";
 			sql = sql .. "	:email_queue_uuid, ";
 			sql = sql .. "	:domain_uuid, ";
+			sql = sql .. "	:email_attachment_mime_type, ";
 			sql = sql .. "	:email_attachment_type, ";
 			sql = sql .. "	:email_attachment_path, ";
 			sql = sql .. "	:email_attachment_name, ";
 			sql = sql .. "	:email_attachment_base64 ";
 			sql = sql .. ") ";
 			local params = {
-				email_queue_attachment_uuid  = email_queue_attachment_uuid;
-				email_queue_uuid  = email_queue_uuid;
+				email_queue_attachment_uuid = email_queue_attachment_uuid;
+				email_queue_uuid = email_queue_uuid;
 				domain_uuid = domain_uuid;
-				email_attachment_type  = email_attachment_type;
-				email_attachment_path  = email_attachment_path;
-				email_attachment_name  = email_attachment_name;
-				email_attachment_base64  = email_attachment_base64;
+				email_attachment_mime_type = email_attachment_mime_type;
+				email_attachment_type = email_attachment_type;
+				email_attachment_path = email_attachment_path;
+				email_attachment_name = email_attachment_name;
+				email_attachment_base64 = email_attachment_base64;
 			}
 			if (debug["sql"]) then
 				freeswitch.consoleLog("notice", "[send_email] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");

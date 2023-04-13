@@ -220,6 +220,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['table'] = 'v_email_queue';
 		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['field'] = 'email_queue_uuid';
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'email_attachment_mime_type';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['search_by'] = '';
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'email_attachment_type';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['search_by'] = '';
@@ -233,6 +237,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['search_by'] = '';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'email_attachment_base64';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['search_by'] = '';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'email_attachment_cid';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['search_by'] = '';
 		$z++;

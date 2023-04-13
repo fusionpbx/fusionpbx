@@ -252,36 +252,12 @@
 	echo "		<select class='formfld' name='fax_status'>\n";
     echo "			<option value='' selected='selected' disabled hidden>".$text['label-fax_status']."...</option>";
 	echo "			<option value=''></option>\n";
-	if (isset($_GET["fax_status"]) && $_GET["fax_status"] == "waiting") {
-		echo "			<option value='waiting' selected='selected'>".$text['label-waiting']."</option>\n";
-	}
-	else {
-		echo "			<option value='waiting'>".$text['label-waiting']."</option>\n";
-	}
-	if (isset($_GET["fax_status"]) && $_GET["fax_status"] == "failed") {
-		echo "			<option value='failed' selected='selected'>".$text['label-failed']."</option>\n";
-	}
-	else {
-		echo "			<option value='failed'>".$text['label-failed']."</option>\n";
-	}
-	if (isset($_GET["fax_status"]) && $_GET["fax_status"] == "sent") {
-		echo "			<option value='sent' selected='selected'>".$text['label-sent']."</option>\n";
-	}
-	else {
-		echo "			<option value='sent'>".$text['label-sent']."</option>\n";
-	}
-	if (isset($_GET["fax_status"]) && $_GET["fax_status"] == "trying") {
-		echo "			<option value='trying' selected='selected'>".$text['label-trying']."</option>\n";
-	}
-	else {
-		echo "			<option value='trying'>".$text['label-trying']."</option>\n";
-	}
-	if (isset($_GET["fax_status"]) && $_GET["fax_status"] == "busy") {
-		echo "			<option value='busy' selected='selected'>".$text['label-busy']."</option>\n";
-	}
-	else {
-		echo "			<option value='busy'>".$text['label-busy']."</option>\n";
-	}
+	echo "			<option value='waiting' ".(isset($_GET["fax_status"]) && $_GET["fax_status"] == "waiting" ? "selected='selected'" : null).">".$text['label-waiting']."</option>\n";
+	echo "			<option value='sending' ".(isset($_GET["fax_status"]) && $_GET["fax_status"] == "sending" ? "selected='selected'" : null).">".$text['label-sending']."</option>\n";
+	echo "			<option value='trying' ".(isset($_GET["fax_status"]) && $_GET["fax_status"] == "trying" ? "selected='selected'" : null).">".$text['label-trying']."</option>\n";
+	echo "			<option value='sent' ".(isset($_GET["fax_status"]) && $_GET["fax_status"] == "sent" ? "selected='selected'" : null).">".$text['label-sent']."</option>\n";
+	echo "			<option value='busy' ".(isset($_GET["fax_status"]) && $_GET["fax_status"] == "busy" ? "selected='selected'" : null).">".$text['label-busy']."</option>\n";
+	echo "			<option value='failed' ".(isset($_GET["fax_status"]) && $_GET["fax_status"] == "failed" ? "selected='selected'" : null).">".$text['label-failed']."</option>\n";
 	echo "		</select>\n";
 	if (permission_exists('fax_queue_all')) {
 		if ($_GET['show'] == 'all') {

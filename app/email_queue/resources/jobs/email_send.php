@@ -52,7 +52,7 @@
 		//check to see if the process is running
 		if (file_exists($file)) {
 			$pid = file_get_contents($file);
-			if (posix_getsid($pid) === false) { 
+			if (posix_getsid($pid) === false) {
 				//process is not running
 				$exists = false;
 			}
@@ -191,34 +191,34 @@
 	$database = new database;
 	$email_queue_attachments = $database->select($sql, $parameters, 'all');
 	if (is_array($email_queue_attachments) && @sizeof($email_queue_attachments) != 0) {
-		foreach($email_queue_attachments as $field) {
+		foreach($email_queue_attachments as $i => $field) {
 
 			$email_queue_attachment_uuid = $field['email_queue_attachment_uuid'];
 			$domain_uuid = $field['domain_uuid'];
 			$email_attachment_type = $field['email_attachment_type'];
 			$email_attachment_path = $field['email_attachment_path'];
 			$email_attachment_name = $field['email_attachment_name'];
-			//$email_attachment_base64= $field['email_attachment_base64'];
+			$email_attachment_mime_type = $field['email_attachment_mime_type'];
 
-			switch ($email_attachment_type) {
-				case "wav":
-					$mime_type = "audio/x-wav";
-					break;
-				case "mp3":
-					$mime_type = "audio/x-mp3";
-					break;
-				case "pdf":
-					$mime_type = "application/pdf";
-					break;
-				case "tif":
-					$mime_type = "image/tiff";
-					break;
-				case "tiff":
-					$mime_type = "image/tiff";
-					break;
-				default:
-					$mime_type = "binary/octet-stream";
-					break;
+			if (!$email_attachment_mime_type) {
+				switch ($email_attachment_type) {
+					case "wav":
+						$email_attachment_mime_type = "audio/x-wav";
+						break;
+					case "mp3":
+						$email_attachment_mime_type = "audio/x-mp3";
+						break;
+					case "pdf":
+						$email_attachment_mime_type = "application/pdf";
+						break;
+					case "tif":
+					case "tiff":
+						$email_attachment_mime_type = "image/tiff";
+						break;
+					default:
+						$email_attachment_mime_type = "binary/octet-stream";
+						break;
+				}
 			}
 
 			if (isset($voicemail_transcription_enabled) && $voicemail_transcription_enabled == 'true') {
@@ -235,8 +235,6 @@
 
 				//echo "email_body before: ".$email_body."\n";
 				$email_body = str_replace('${message_text}', $transcribe_message, $email_body);
-				//echo "email_body after: ".$email_body."\n";
-				//unset($field);
 			}
 			else {
 				$email_body = str_replace('${message_text}', '', $email_body);
@@ -255,9 +253,11 @@
 			//$email_attachments[0]['value'] = base64_encode(file_get_contents($email_attachment_path.'/'.$email_attachment_name));
 
 			//add email attachment as a file for the send_email function
-			$email_attachments[0]['type'] = 'file';
-			$email_attachments[0]['name'] = $email_attachment_name;
-			$email_attachments[0]['value'] = $email_attachment_path.'/'.$email_attachment_name;
+			$email_attachments[$i]['cid'] = $field['email_attachment_cid'];
+			$email_attachments[$i]['mime_type'] = $email_attachment_mime_type;
+			$email_attachments[$i]['name'] = $email_attachment_name;
+			$email_attachments[$i]['path'] = $email_attachment_path;
+			$email_attachments[$i]['base64'] = $field['email_attachment_base64'];
 		}
 	}
 	unset($parameters);

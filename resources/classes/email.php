@@ -256,24 +256,65 @@ if (!class_exists('email')) {
 				if (is_array($this->attachments) && sizeof($this->attachments) > 0) {
 					$y = 0;
 					foreach ($this->attachments as $attachment) {
-						//set the name of the file
-						if (strlen($attachment['value']) < 255 && file_exists($attachment['value'])) {
-							$attachment['name'] = $attachment['name'] != '' ? $attachment['name'] : basename($attachment['value']);
-							$attachment['type'] = strtolower(pathinfo($attachment['value'], PATHINFO_EXTENSION));
+						//set the name of the file, determine extension
+						if ($attachment['path'] && $attachment['name']) {
+							if (file_exists($attachment['path'] && $attachment['name'])) {
+								$attachment['type'] = strtolower(pathinfo($attachment['name'], PATHINFO_EXTENSION));
+							}
+						}
+						else if ($attachment['value']) {
+							//old method
+							if (strlen($attachment['value']) < 255 && file_exists($attachment['value'])) {
+								$attachment['name'] = $attachment['name'] != '' ? $attachment['name'] : basename($attachment['value']);
+								$attachment['path'] = pathinfo($attachment['value'], PATHINFO_DIRNAME);
+								$attachment['type'] = strtolower(pathinfo($attachment['value'], PATHINFO_EXTENSION));
+							}
+						}
+
+						//set the mime type
+						switch ($attachment['type']) {
+							case "jpg":
+							case "jpeg":
+								$attachment['mime_type'] = 'image/jpeg';
+								break;
+							case "gif":
+								$attachment['mime_type'] = 'image/gif';
+								break;
+							case "png":
+								$attachment['mime_type'] = 'image/png';
+								break;
+							case "pdf":
+								$attachment['mime_type'] = 'application/pdf';
+								break;
+							case "tif":
+							case "tiff":
+								$attachment['mime_type'] = 'image/tiff';
+								break;
+							case "mp3":
+								$attachment['mime_type'] = 'audio/mpeg';
+								break;
+							case "wav":
+								$attachment['mime_type'] = 'audio/x-wav';
+								break;
+							case "opus":
+								$attachment['mime_type'] = 'audio/opus';
+								break;
+							case "ogg":
+								$attachment['mime_type'] = 'audio/ogg';
+								break;
+							default:
+								$attachment['mime_type'] = 'binary/octet-stream';
 						}
 
 						//add the attachments to the array
 						$array['email_queue_attachments'][$y]['email_queue_attachment_uuid'] = uuid();
 						$array['email_queue_attachments'][$y]['email_queue_uuid'] = $email_queue_uuid;
 						$array['email_queue_attachments'][$y]['domain_uuid'] = $this->domain_uuid;
+						$array['email_queue_attachments'][$y]['email_attachment_mime_type'] = $attachment['mime_type'];
 						$array['email_queue_attachments'][$y]['email_attachment_type'] = $attachment['type'];
 						$array['email_queue_attachments'][$y]['email_attachment_name'] = $attachment['name'];
-						if (strlen($attachment['value']) < 255 && file_exists($attachment['value'])) {
-							$array['email_queue_attachments'][$y]['email_attachment_path'] = pathinfo($attachment['value'], PATHINFO_DIRNAME);
-						}
-						else {
-							$array['email_queue_attachments'][$y]['email_attachment_base64'] = base64_decode($attachment['value']);
-						}
+						$array['email_queue_attachments'][$y]['email_attachment_path'] = $attachment['path'];
+						$array['email_queue_attachments'][$y]['email_attachment_base64'] = $attachment['base64'];
 						$y++;
 					}
 				}
@@ -345,14 +386,14 @@ if (!class_exists('email')) {
 
 						Array (
 							[0] => Array (
-								[type] => file (or 'path')
+								[mime_type] => image/jpeg (will be determined by file extension, if empty)
 								[name] => filename.ext
-								[value] => /folder/filename.ext
+								[path] => /source/folder/ (not used if base64 content)
+								[base64] => file content as base64 (not used if name and path set)
+								[cid] => content id of file attachment (only used if referencing attached files in body content)
 								)
 							[1] => Array (
-								[type] => string
-								[name] => filename.ext
-								[value] => (string of file contents - if base64, will be decoded automatically)
+								...
 								)
 						)
 
@@ -521,41 +562,18 @@ if (!class_exists('email')) {
 					if (is_array($this->attachments) && sizeof($this->attachments) > 0) {
 						foreach ($this->attachments as $attachment) {
 
-							//set the name of the file
-							$attachment['name'] = $attachment['name'] != '' ? $attachment['name'] : basename($attachment['value']);
-
-							//set the mime type
-							switch (substr($attachment['name'], -4)) {
-								case ".png":
-									$attachment['mime_type'] = 'image/png';
-									break;
-								case ".pdf":
-									$attachment['mime_type'] = 'application/pdf';
-									break;
-								case ".mp3":
-									$attachment['mime_type'] = 'audio/mpeg';
-									break;
-								case ".wav":
-									$attachment['mime_type'] = 'audio/x-wav';
-									break;
-								case "opus":
-									$attachment['mime_type'] = 'audio/opus';
-									break;
-								case ".ogg":
-									$attachment['mime_type'] = 'audio/ogg';
-									break;
-							}
-
 							//add the attachments
-							if (strlen($attachment['value']) < 255 && file_exists($attachment['value'])) {
-								$mail->AddAttachment($attachment['value'], $attachment['name'], 'base64', $attachment['mime_type']);
+							if (file_exists($attachment['path'].'/'.$attachment['name'])) {
+								$mail->AddAttachment($attachment['path'].'/'.$attachment['name'], $attachment['name'], 'base64', $attachment['mime_type']);
 							}
 							else {
-								if (base64_encode(base64_decode($attachment['value'], true)) === $attachment['value']) {
-									$mail->AddStringAttachment(base64_decode($attachment['value']), $attachment['name'], 'base64', $attachment['mime_type']);
-								}
-								else {
-									$mail->AddStringAttachment($attachment['value'], $attachment['name'], 'base64', $attachment['mime_type']);
+								if ($attachment['base64']) {
+									if ($attachment['cid']) {
+										$email->addStringEmbeddedImage(base64_decode($attachment['base64']), $attachment['cid'], $attachment['name'], 'base64', $attachment['mime_type']);
+									}
+									else {
+										$mail->AddStringAttachment(base64_decode($attachment['base64']), $attachment['name'], 'base64', $attachment['mime_type']);
+									}
 								}
 							}
 						}
