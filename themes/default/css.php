@@ -1400,7 +1400,6 @@ header('Expires: '.gmdate('D, d M Y H:i:s',time()+3600).' GMT');
 		transition: width 0.25s;
 		-moz-transition: width 0.25s;
 		-webkit-transition: width 0.25s;
-		max-width: 500px;
 		}
 
 	select.txt,
