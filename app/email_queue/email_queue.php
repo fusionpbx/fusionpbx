@@ -276,7 +276,7 @@
 	echo "<th class='shrink hide-md-dn'>".$text['label-email_from']."</th>\n";
 	echo th_order_by('email_to', $text['label-email_to'], $order_by, $order);
 	echo th_order_by('email_subject', $text['label-email_subject'], $order_by, $order);
-	echo "<th class='hide-md-dn'>".$text['label-email_body']."</th>\n";
+// 	echo "<th class='hide-md-dn'>".$text['label-email_body']."</th>\n";
 	echo th_order_by('email_status', $text['label-email_status'], $order_by, $order);
 	echo th_order_by('email_retry_count', $text['label-email_retry_count'], $order_by, $order);
 	
@@ -315,9 +315,9 @@
 			}
 			echo "	<td class='hide-md-dn'>".escape($row['hostname'])."</td>\n";
 			echo "	<td class='shrink hide-md-dn'>".escape($row['email_from'])."</td>\n";
-			echo "	<td class='overflow' style='max-width: 250px;'>".escape($row['email_to'])."</td>\n";
-			echo "	<td>".iconv_mime_decode($row['email_subject'])."</td>\n";
-			echo "	<td class='hide-md-dn'>".escape($row['email_body'])."</td>\n";
+			echo "	<td class='overflow' style='width: 20%; max-width: 200px;'>".escape($row['email_to'])."</td>\n";
+			echo "	<td class='overflow' style='width: 30%; max-width: 200px;'>".iconv_mime_decode($row['email_subject'])."</td>\n";
+// 			echo "	<td class='hide-md-dn'>".escape($row['email_body'])."</td>\n";
 			echo "	<td>".ucwords($text['label-'.$row['email_status']])."</td>\n";
 			echo "	<td>".escape($row['email_retry_count'])."</td>\n";
 			//echo "	<td>".escape($row['email_action_before'])."</td>\n";
