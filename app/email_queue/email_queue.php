@@ -315,7 +315,7 @@
 			}
 			echo "	<td class='hide-md-dn'>".escape($row['hostname'])."</td>\n";
 			echo "	<td class='shrink hide-md-dn'>".escape($row['email_from'])."</td>\n";
-			echo "	<td>".escape($row['email_to'])."</td>\n";
+			echo "	<td style='white-space: nowrap; overflow: hidden; max-width: 300px;'>".escape($row['email_to'])."</td>\n";
 			echo "	<td>".iconv_mime_decode($row['email_subject'])."</td>\n";
 			echo "	<td class='hide-md-dn'>".escape($row['email_body'])."</td>\n";
 			echo "	<td>".escape($row['email_status'])."</td>\n";
