@@ -65,6 +65,21 @@
 		exit;
 	}
 
+//shutdown call back function
+	function shutdown() {
+		//when the fax status is still sending
+		//then set the fax status to trying
+		$sql = "update v_fax_queue ";
+		$sql .= "set fax_status = 'trying' ";
+		$sql .= "where fax_queue_uuid = :fax_queue_uuid ";
+		$sql .= "and fax_status = 'sending' ";
+		$database = new database;
+		$parameters['fax_queue_uuid'] = $fax_queue_uuid;
+		$database->execute($sql, $parameters);
+		unset($sql);
+	}
+	register_shutdown_function('shutdown');
+
 //define the process id file
 	$pid_file = "/var/run/fusionpbx/fax_send".".".$fax_queue_uuid.".pid";
 	//echo "pid_file: ".$pid_file."\n";
@@ -637,13 +652,13 @@
 			//}
 	}
 
+//wait for a few seconds
+	sleep(1);
+
 //remove the old pid file
 	if (file_exists($pid_file)) {
 		unlink($pid_file);
 	}
-
-//wait for a few seconds
-	//sleep(1);
 
 //move the generated tif (and pdf) files to the sent directory
 	//if (file_exists($dir_fax_temp.'/'.$fax_instance_id.".tif")) {
