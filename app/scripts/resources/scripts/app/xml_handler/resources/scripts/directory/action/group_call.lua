@@ -24,6 +24,7 @@
 --	ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 --	POSSIBILITY OF SUCH DAMAGE.
 
+--include xml library
 	local Xml = require "resources.functions.xml";
 
 --get the cache
