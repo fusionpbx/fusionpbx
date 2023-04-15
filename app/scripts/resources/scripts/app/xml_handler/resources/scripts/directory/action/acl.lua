@@ -1,9 +1,11 @@
-	local Xml = require "resources.functions.xml";
 
 --connect to the database
 	local Database = require "resources.functions.database"
 	local log      = require "resources.functions.log"["directory_acl"]
 	local dbh = Database.new('system')
+
+--include xml library
+	local Xml = require "resources.functions.xml";
 
 --include json library
 	local json
