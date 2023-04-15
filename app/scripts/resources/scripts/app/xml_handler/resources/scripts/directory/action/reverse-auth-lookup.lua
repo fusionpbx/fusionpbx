@@ -24,8 +24,6 @@
 --	ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 --	POSSIBILITY OF SUCH DAMAGE.
 
-	local Xml = require "resources.functions.xml";
-
 --get the action
 	action = params:getHeader("action");
 	purpose = params:getHeader("purpose");
@@ -39,6 +37,9 @@
 --connect to the database
 	local Database = require "resources.functions.database";
 	dbh = Database.new('system');
+
+--include xml library
+	local Xml = require "resources.functions.xml";
 
 --include json library
 	local json
