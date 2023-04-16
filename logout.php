@@ -101,7 +101,7 @@
 	}
 
 //redirect the user to the index page
-	header("Location: ".PROJECT_PATH."/login.php");
+	header("Location: ".PROJECT_PATH."/");
 	exit;
 
 ?>

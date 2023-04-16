@@ -140,15 +140,15 @@ class plugin_ldap {
 			}
 
 		//result array
-			$result["plugin"] = "ldap";
-			$result["domain_name"] = $this->domain_name;
-			$result["username"] = $this->username;
+			$result["ldap"]["plugin"] = "ldap";
+			$result["ldap"]["domain_name"] = $this->domain_name;
+			$result["ldap"]["username"] = $this->username;
 			if ($this->debug) {
-				$result["password"] = $this->password;
+				$result["ldap"]["password"] = $this->password;
 			}
-			$result["user_uuid"] = $this->user_uuid;
-			$result["domain_uuid"] = $this->domain_uuid;
-			$result["authorized"] = $user_authorized ? 'true' : 'false';
+			$result["ldap"]["user_uuid"] = $this->user_uuid;
+			$result["ldap"]["domain_uuid"] = $this->domain_uuid;
+			$result["ldap"]["authorized"] = $user_authorized ? true : false;
 			return $result;
 	}
 }

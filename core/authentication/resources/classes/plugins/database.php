@@ -1,7 +1,7 @@
 <?php
 
 /**
- * plugin_database 
+ * plugin_database
  *
  * @method validate uses authentication plugins to check if a user is authorized to login
  * @method get_domain used to get the domain name from the URL or username and then sets both domain_name and domain_uuid
@@ -11,7 +11,6 @@ class plugin_database {
 	/**
 	 * Define variables and their scope
 	 */
-	public $debug;
 	public $domain_name;
 	public $domain_uuid;
 	public $user_uuid;
@@ -26,11 +25,122 @@ class plugin_database {
 	 */
 	function database() {
 
+		//already authorized
+			if (isset($_SESSION['authentication']['plugin']['database']) && $_SESSION['authentication']['plugin']['database']["authorized"]) {
+				//echo __line__;
+				return;
+			}
+			else {
+				if (isset($_SESSION['authentication']['plugin']['database']) && !$_SESSION['authentication']['plugin']['database']["authorized"]) {
+					//authorized false
+					session_unset();
+					session_destroy();
+				}
+			}
+
+		//show the authentication code view
+			if ($_REQUEST["username"] == '' && $_REQUEST["key"] == '') {
+
+				//set a default template
+					$_SESSION['domain']['template']['name'] = 'default';
+					$_SESSION['theme']['menu_brand_image']['text'] = PROJECT_PATH.'/themes/default/images/logo.png';
+					$_SESSION['theme']['menu_brand_type']['text'] = 'image';
+
+				//login logo source
+					if (isset($_SESSION['theme']['logo_login']['text']) && $_SESSION['theme']['logo_login']['text'] != '') {
+						$login_logo_source = $_SESSION['theme']['logo_login']['text'];
+					}
+					else if (isset($_SESSION['theme']['logo']['text']) && $_SESSION['theme']['logo']['text'] != '') {
+						$login_logo_source = $_SESSION['theme']['logo']['text'];
+					}
+					else {
+						$login_logo_source = PROJECT_PATH.'/themes/default/images/logo_login.png';
+					}
+
+				//login logo dimensions
+					if (isset($_SESSION['theme']['login_logo_width']['text']) && $_SESSION['theme']['login_logo_width']['text'] != '') {
+						$login_logo_width = $_SESSION['theme']['login_logo_width']['text'];
+					}
+					else {
+						$login_logo_width = 'auto; max-width: 300px';
+					}
+					if (isset($_SESSION['theme']['login_logo_height']['text']) && $_SESSION['theme']['login_logo_height']['text'] != '') {
+						$login_logo_height = $_SESSION['theme']['login_logo_height']['text'];
+					}
+					else {
+						$login_logo_height = 'auto; max-height: 300px';
+					}
+
+				//login destination url
+					$login_destination_url = $_SESSION['login']['destination']['url'];
+
+				//get the domain
+					$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
+					$domain_name = $domain_array[0];
+
+				//temp directory
+					$_SESSION['server']['temp']['dir'] = '/tmp';
+
+				//create token
+					//$object = new token;
+					//$token = $object->create('login');
+
+				//add multi-lingual support
+					$language = new text;
+					$text = $language->get(null, '/core/authentication');
+
+				//initialize a template object
+					$view = new template();
+					$view->engine = 'smarty';
+					$view->template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/core/authentication/resources/views/';
+					$view->cache_dir = $_SESSION['server']['temp']['dir'];
+					$view->init();
+
+				//add translations
+					$view->assign("login_title", $text['button-login']);
+					$view->assign("label_username", $text['label-username']);
+					$view->assign("label_password", $text['label-password']);
+					$view->assign("button_login", $text['button-login']);
+
+				//assign default values to the template
+					$view->assign("login_destination_url", $login_destination_url);
+					$view->assign("login_logo_width", $login_logo_width);
+					$view->assign("login_logo_height", $login_logo_height);
+					$view->assign("login_logo_source", $login_logo_source);
+
+				//add the token name and hash to the view
+					//$view->assign("token_name", $token['name']);
+					//$view->assign("token_hash", $token['hash']);
+
+				//show the views
+					$content = $view->render('login.htm');
+					echo $content;
+					exit;
+			}
+
+		//validate the token
+			//$token = new token;
+			//if (!$token->validate($_SERVER['PHP_SELF'])) {
+			//	message::add($text['message-invalid_token'],'negative');
+			//	header('Location: domains.php');
+			//	exit;
+			//}
+
+		//add the authentication details
+			if (isset($_REQUEST["username"]) && isset($_REQUEST["password"])) {
+				$this->username = $_REQUEST["username"];
+				$this->password = $_REQUEST["password"];
+			}
+			if (isset($_REQUEST["key"])) {
+				$this->key = $_REQUEST["key"];
+			}
+
 		//set the default status
 			$user_authorized = false;
 
 		//check the username and password if they don't match then redirect to the login
-			$sql = "select u.user_uuid, u.contact_uuid, u.username, u.password, u.salt, u.api_key, u.domain_uuid, d.domain_name ";
+			$sql = "select u.user_uuid, u.contact_uuid, u.username, u.password, ";
+			$sql .= "u.user_email, u.salt, u.api_key, u.domain_uuid, d.domain_name ";
 			$sql .= "from v_users as u, v_domains as d ";
 			$sql .= "where u.domain_uuid = d.domain_uuid ";
 			if (strlen($this->key) > 30) {
@@ -52,7 +162,11 @@ class plugin_database {
 			$sql .= "and (user_enabled = 'true' or user_enabled is null) ";
 			$database = new database;
 			$row = $database->select($sql, $parameters, 'row');
-			if (is_array($row) && @sizeof($row) !== 0) {
+			if (is_array($row)) {
+
+				//set the domain details
+					$this->domain_uuid = $_SESSION['domain_uuid'];
+					$this->domain_name = $_SESSION['domain_name'];
 
 				//get the domain uuid when users are unique globally
 					if ($_SESSION["users"]["unique"]["text"] === "global" && $row["domain_uuid"] !== $this->domain_uuid) {
@@ -70,9 +184,21 @@ class plugin_database {
 							$domain->set();
 					}
 
-				//set the user_uuid
+				//set the variables
 					$this->user_uuid = $row['user_uuid'];
+					$this->username = $row['username'];
 					$this->contact_uuid = $row['contact_uuid'];
+
+				//debug info
+					//echo "user_uuid ".$this->user_uuid."<br />\n";
+					//echo "username ".$this->username."<br />\n";
+					//echo "contact_uuid ".$this->contact_uuid."<br />\n";
+
+				//set a few session variables
+					$_SESSION["user_uuid"] = $row['user_uuid'];
+					$_SESSION["contact_uuid"] = $row["contact_uuid"];
+					$_SESSION["username"] = $row['username'];
+					$_SESSION["user_email"] = $row['user_email'];
 
 				//validate the password
 					$valid_password = false;
@@ -82,7 +208,7 @@ class plugin_database {
 					else if (substr($row["password"], 0, 1) === '$') {
 						if (isset($this->password) && strlen($this->password) > 0) {
 							if (password_verify($this->password, $row["password"])) {
-								$valid_password = true; 
+								$valid_password = true;
 							}
 						}
 					}
@@ -137,20 +263,15 @@ class plugin_database {
 			$result["plugin"] = "database";
 			$result["domain_name"] = $this->domain_name;
 			$result["username"] = $this->username;
-			if ($this->debug) {
-				$result["password"] = $this->password;
-			}
 			$result["user_uuid"] = $this->user_uuid;
-			$result["domain_uuid"] = $this->domain_uuid;
+			$result["domain_uuid"] = $_SESSION['domain_uuid'];
 			$result["contact_uuid"] = $this->contact_uuid;
 			$result["sql"] = $sql;
-			if ($valid_password) {
-				$result["authorized"] = "true";
-			}
-			else {
-				$result["authorized"] = "false";
-			}
+			$result["authorized"] = $valid_password;
+
+		//return the results
 			return $result;
+
 	}
 }
 
