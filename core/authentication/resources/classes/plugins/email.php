@@ -64,6 +64,12 @@ class plugin_email {
 			//temp directory
 			$_SESSION['server']['temp']['dir'] = '/tmp';
 
+			//use the session username
+			if (isset($_SESSION['username'])) {
+				$_POST['username'] = $_SESSION['username'];
+				$_REQUEST['username'] = $_SESSION['username'];
+			}
+
 		//request the username
 			if (!isset($_POST['username']) && !isset($_POST['authentication_code'])) {
 
