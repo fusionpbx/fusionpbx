@@ -70,7 +70,7 @@ class authentication {
 			$sql .= "and username = :username \n";
 			$parameters['remote_address'] = $_SERVER['REMOTE_ADDR'];
 			$parameters['find_time'] = $_SESSION['users']['find_time']['numeric'];
-			$parameters['username'] = $this->username;
+			$parameters['username'] = $_SESSION['username'];
 			$database = new database;
 			$auth_tries = $database->select($sql, $parameters, 'column');
 			if ($_SESSION['users']['max_retry']['numeric'] <= $auth_tries) {
@@ -444,6 +444,7 @@ class authentication {
 						if ($domain_exists) {
 							$this->domain_name = $domain_name;
 							$this->username = substr($_REQUEST["username"], 0, -(strlen($domain_name)+1));
+							$_SESSION['username'] = $this->username;
 							$_SESSION['domain_uuid'] = $this->domain_uuid;
 						}
 
