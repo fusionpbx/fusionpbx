@@ -31,7 +31,7 @@
 
 	//default settings
 		$y=0;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "309c4b74-711a-4a73-9408-412e5d089b59&";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "309c4b74-711a-4a73-9408-412e5d089b59";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "authentication";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "methods";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "array";
@@ -40,7 +40,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "bc31a3f4-671b-44ca-8724-64ec077eed0b&";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "bc31a3f4-671b-44ca-8724-64ec077eed0b";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "authentication";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "methods";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "array";
