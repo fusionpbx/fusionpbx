@@ -23,6 +23,78 @@ class plugin_ldap {
 	 */
 	function ldap() {
 
+		//show the authentication code view
+			if ($_REQUEST["username"]) {
+
+				//login logo source
+					if (isset($_SESSION['theme']['logo_login']['text']) && $_SESSION['theme']['logo_login']['text'] != '') {
+						$login_logo_source = $_SESSION['theme']['logo_login']['text'];
+					}
+					else if (isset($_SESSION['theme']['logo']['text']) && $_SESSION['theme']['logo']['text'] != '') {
+						$login_logo_source = $_SESSION['theme']['logo']['text'];
+					}
+					else {
+						$login_logo_source = PROJECT_PATH.'/themes/default/images/logo_login.png';
+					}
+
+				//login logo dimensions
+					if (isset($_SESSION['theme']['login_logo_width']['text']) && $_SESSION['theme']['login_logo_width']['text'] != '') {
+						$login_logo_width = $_SESSION['theme']['login_logo_width']['text'];
+					}
+					else {
+						$login_logo_width = 'auto; max-width: 300px';
+					}
+					if (isset($_SESSION['theme']['login_logo_height']['text']) && $_SESSION['theme']['login_logo_height']['text'] != '') {
+						$login_logo_height = $_SESSION['theme']['login_logo_height']['text'];
+					}
+					else {
+						$login_logo_height = 'auto; max-height: 300px';
+					}
+
+				//get the domain
+					$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
+					$domain_name = $domain_array[0];
+
+				//temp directory
+					$_SESSION['server']['temp']['dir'] = '/tmp';
+
+				//create token
+					//$object = new token;
+					//$token = $object->create('login');
+
+				//add multi-lingual support
+					$language = new text;
+					$text = $language->get(null, '/core/authentication');
+
+				//initialize a template object
+					$view = new template();
+					$view->engine = 'smarty';
+					$view->template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/core/authentication/resources/views/';
+					$view->cache_dir = $_SESSION['server']['temp']['dir'];
+					$view->init();
+
+				//add translations
+					$view->assign("login_title", $text['button-login']);
+					$view->assign("label_username", $text['label-username']);
+					$view->assign("label_password", $text['label-password']);
+					$view->assign("button_login", $text['button-login']);
+
+				//assign default values to the template
+					$view->assign("login_destination_url", $login_destination_url);
+					$view->assign("login_logo_width", $login_logo_width);
+					$view->assign("login_logo_height", $login_logo_height);
+					$view->assign("login_logo_source", $login_logo_source);
+
+				//add the token name and hash to the view
+					//$view->assign("token_name", $token['name']);
+					//$view->assign("token_hash", $token['hash']);
+
+				//show the views
+					$content = $view->render('login.htm');
+					echo $content;
+					exit;
+			}
+
 		//use ldap to validate the user credentials
 			if (isset($_SESSION["ldap"]["certpath"])) {
 				$s = "LDAPTLS_CERT=" . $_SESSION["ldap"]["certpath"]["text"];
