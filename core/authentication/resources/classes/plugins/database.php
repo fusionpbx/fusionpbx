@@ -127,9 +127,14 @@ class plugin_database {
 			//}
 
 		//add the authentication details
-			if (isset($_REQUEST["username"]) && isset($_REQUEST["password"])) {
+			if (isset($_REQUEST["username"])) {
 				$this->username = $_REQUEST["username"];
+			}
+			if (isset($_REQUEST["password"])) {
 				$this->password = $_REQUEST["password"];
+			}
+			if (isset($_SESSION['username'])) {
+				$this->username = $_SESSION['username'];
 			}
 			if (isset($_REQUEST["key"])) {
 				$this->key = $_REQUEST["key"];
