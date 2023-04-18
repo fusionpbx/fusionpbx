@@ -166,10 +166,21 @@
 		$qr_mode = '4';
 		$qr_size = '0.2';
 	}
-	else if ($_SESSION['theme']['qr_brand_type']['text'] == 'text' && $_SESSION['theme']['qr_brand_text']['text'] != '') {
+	if ($_SESSION['theme']['qr_brand_type']['text'] == 'image' && $_SESSION['theme']['qr_brand_image']['text'] == '') {
+		echo "<img id='img-buffer' style='display: none;' src='".$_SESSION["theme"]["qr_brand_image"]["text"]."'>";
+		$qr_option = "image: $('#img-buffer')[0],";
+		$qr_mode = '4';
+		$qr_size = '0.2';
+	}
+	elseif ($_SESSION['theme']['qr_brand_type']['text'] == 'text' && $_SESSION['theme']['qr_brand_text']['text'] != '') {
 		$qr_option = 'label: "'.$_SESSION['theme']['qr_brand_text']['text'].'"';
 		$qr_mode = '2';
 		$qr_size = '0.05';
+	}
+	elseif ($_SESSION['theme']['qr_brand_type']['text'] == 'none') {
+		$qr_option = '';
+		$qr_mode = '3';
+		$qr_size = '0';
 	}
 	else {
 		echo "<img id='img-buffer' style='display: none;' src='".PROJECT_PATH."/themes/".$_SESSION["domain"]["template"]["name"]."/images/qr_code.png'>";
