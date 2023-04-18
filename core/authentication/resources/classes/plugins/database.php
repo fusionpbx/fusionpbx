@@ -41,11 +41,6 @@ class plugin_database {
 		//show the authentication code view
 			if ($_REQUEST["username"] == '' && $_REQUEST["key"] == '') {
 
-				//set a default template
-					$_SESSION['domain']['template']['name'] = 'default';
-					$_SESSION['theme']['menu_brand_image']['text'] = PROJECT_PATH.'/themes/default/images/logo.png';
-					$_SESSION['theme']['menu_brand_type']['text'] = 'image';
-
 				//login logo source
 					if (isset($_SESSION['theme']['logo_login']['text']) && $_SESSION['theme']['logo_login']['text'] != '') {
 						$login_logo_source = $_SESSION['theme']['logo_login']['text'];
@@ -70,9 +65,6 @@ class plugin_database {
 					else {
 						$login_logo_height = 'auto; max-height: 300px';
 					}
-
-				//login destination url
-					$login_destination_url = $_SESSION['login']['destination']['url'];
 
 				//get the domain
 					$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
@@ -103,7 +95,6 @@ class plugin_database {
 					$view->assign("button_login", $text['button-login']);
 
 				//assign default values to the template
-					$view->assign("login_destination_url", $login_destination_url);
 					$view->assign("login_logo_width", $login_logo_width);
 					$view->assign("login_logo_height", $login_logo_height);
 					$view->assign("login_logo_source", $login_logo_source);
