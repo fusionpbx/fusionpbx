@@ -2314,7 +2314,7 @@
 {/if}
 
 {if isset($grandstream_line_3_hanging_group_mode) }
-<P27082>{$grandstream_line_3_hanging_group_mode	}</P27082>
+<P27082>{$grandstream_line_3_hanging_group_mode}</P27082>
 {else}
 <P27082>101</P27082>
 {/if}
