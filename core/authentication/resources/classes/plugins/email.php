@@ -54,9 +54,6 @@ class plugin_email {
 				$login_logo_height = 'auto; max-height: 300px';
 			}
 
-			//login destination url
-			$login_destination_url = $_SESSION['login']['destination']['url'];
-
 			//get the domain
 			$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
 			$domain_name = $domain_array[0];
@@ -91,7 +88,7 @@ class plugin_email {
 				$view->assign("login_logo_height", $login_logo_height);
 				$view->assign("login_logo_source", $login_logo_source);
 				$view->assign("button_login", $text['button-login']);
-					
+
 				//show the views
 				$content = $view->render('username.htm');
 				echo $content;
