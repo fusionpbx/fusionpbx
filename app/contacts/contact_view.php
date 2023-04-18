@@ -166,7 +166,7 @@
 		$qr_mode = '4';
 		$qr_size = '0.2';
 	}
-	if ($_SESSION['theme']['qr_brand_type']['text'] == 'image' && $_SESSION['theme']['qr_brand_image']['text'] == '') {
+	elseif ($_SESSION['theme']['qr_brand_type']['text'] == 'image' && $_SESSION['theme']['qr_brand_image']['text'] == '') {
 		$qr_option = '';
 		$qr_mode = '3';
 		$qr_size = '0';
