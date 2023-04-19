@@ -1,4 +1,4 @@
-<extension name="distinctive-ring-local" number="" context="global" continue="true" uuid="d7aa6bac-afc9-4c96-8da8-ee9849d88021" global="true" enabled="false" order="200">
+<extension name="distinctive-ring-local" context="global" continue="true" uuid="7564fed9-1345-4022-a355-f1ddd2ad4b5c" global="true" enabled="false" order="130">
 	<condition field="${call_direction}" expression="^local$">
 		<action application="set" data="sip_h_Alert-Info=3" inline="true"/>
 	</condition>
