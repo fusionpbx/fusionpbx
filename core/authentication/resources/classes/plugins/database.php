@@ -27,14 +27,11 @@ class plugin_database {
 
 		//already authorized
 			if (isset($_SESSION['authentication']['plugin']['database']) && $_SESSION['authentication']['plugin']['database']["authorized"]) {
-				//echo __line__;
 				return;
 			}
 			else {
 				if (isset($_SESSION['authentication']['plugin']['database']) && !$_SESSION['authentication']['plugin']['database']["authorized"]) {
 					//authorized false
-					session_unset();
-					session_destroy();
 				}
 			}
 
