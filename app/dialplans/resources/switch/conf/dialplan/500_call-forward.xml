@@ -1,4 +1,4 @@
-<extension name="call-forward" number="*72,*73,*74" context="${domain_name}" continue="false" app_uuid="b4b32fb4-0181-4876-9bec-b9dff1299d60" enabled="true" order="500">
+<extension name="call-forward" number="*72,*73,*74" context="global" continue="false" app_uuid="b4b32fb4-0181-4876-9bec-b9dff1299d60" global="true" enabled="true" order="500">
 	<condition field="destination_number" expression="^\*72(\d{2,20})$" break="on-true">
 		<action application="set" data="request_id=false"/>
 		<action application="set" data="enabled=true"/>
