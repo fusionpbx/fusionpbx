@@ -569,7 +569,7 @@ if (!class_exists('email')) {
 							else {
 								if ($attachment['base64']) {
 									if ($attachment['cid']) {
-										$email->addStringEmbeddedImage(base64_decode($attachment['base64']), $attachment['cid'], $attachment['name'], 'base64', $attachment['mime_type']);
+										$mail->addStringEmbeddedImage(base64_decode($attachment['base64']), $attachment['cid'], $attachment['name'], 'base64', $attachment['mime_type']);
 									}
 									else {
 										$mail->AddStringAttachment(base64_decode($attachment['base64']), $attachment['name'], 'base64', $attachment['mime_type']);
