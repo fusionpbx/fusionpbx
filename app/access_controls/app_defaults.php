@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2016 - 2022
+	Portions created by the Initial Developer are Copyright (C) 2016 - 2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -130,6 +130,57 @@
 				}
 		}
 		unset($sql, $num_rows);
+
+		//rename domains access control to providers
+		$sql = "select count(*) from v_access_controls ";
+		$sql .= "where access_control_name = 'domains' ";
+		$database = new database;
+		$num_rows = $database->select($sql, null, 'column');
+		if ($num_rows > 0) {
+			//update the access control name
+			$sql = "update v_access_controls set access_control_name = 'providers' ";
+			$sql .= "where access_control_name = 'domains' ";
+			$database = new database;
+			$database->execute($sql, null);
+			unset($sql);
+
+			//update the sip profile settings
+			$sql = "update v_sip_profile_settings set sip_profile_setting_value = 'providers' ";
+			$sql .= "where (sip_profile_setting_name = 'apply-inbound-acl' or sip_profile_setting_name = 'apply-register-acl') ";
+			$sql .= "and sip_profile_setting_value = 'domains'; ";
+			$database = new database;
+			$database->execute($sql, null);
+			unset($sql);
+
+			//clear the cache
+			$cache = new cache;
+			$cache->delete("configuration:acl.conf");
+			$cache->delete("configuration:sofia.conf:".gethostname());
+
+			//create the event socket connection
+			if (!$fp) {
+				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+			}
+
+			//reload the acl
+			event_socket_request($fp, "api reloadacl");
+
+			//rescan each sip profile
+			$sql = "select sip_profile_name from v_sip_profiles ";
+			$sql .= "where sip_profile_enabled = 'true'; ";
+			$database = new database;
+			$sip_profiles = $database->select($sql, null, 'all');
+			if (is_array($sip_profiles)) {
+				foreach ($sip_profiles as $row) {
+					if ($fp) {
+						$command = "sofia profile '".$row['sip_profile_name']."' rescan";
+						//echo $command."\n";
+						$result = event_socket_request($fp, "api ".$command);
+						//echo $result."\n";
+					}
+				}
+			}
+		}
 
 		//remove orphaned access control nodes
 		$sql = "delete from v_access_control_nodes ";
