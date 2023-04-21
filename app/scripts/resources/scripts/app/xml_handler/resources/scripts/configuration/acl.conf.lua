@@ -88,19 +88,30 @@
 
 				--get the nodes
 					sql = "select * from v_access_control_nodes ";
-					sql = sql .. "where access_control_uuid = :access_control_uuid";
+					sql = sql .. "where access_control_uuid = :access_control_uuid ";
+					sql = sql .. "and length(node_cidr) > 0 ";
 					local params = {access_control_uuid = row.access_control_uuid}
 					if (debug["sql"]) then
 						freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 					end
 					x = 0;
 					dbh:query(sql, params, function(field)
-						if (string.len(field.node_domain) > 0) then
-							xml:append([[					<node type="]] .. xml.sanitize(field.node_type) .. [[" domain="]] .. xml.sanitize(field.node_domain) .. [[" description="]] .. xml.sanitize(field.node_description) .. [["/>]]);
-						else
-							xml:append([[					<node type="]] .. xml.sanitize(field.node_type) .. [[" cidr="]] .. xml.sanitize(field.node_cidr) .. [[" description="]] .. xml.sanitize(field.node_description) .. [["/>]]);
-						end
+						xml:append([[					<node type="]] .. xml.sanitize(field.node_type) .. [[" cidr="]] .. xml.sanitize(field.node_cidr) .. [[" description="]] .. xml.sanitize(field.node_description) .. [["/>]]);
 					end)
+
+				--add the domains
+					if (row.access_control_name == 'providers' or row.access_control_name == 'domains') then
+						sql = "select domain_name, domain_description from v_domains ";
+						sql = sql .. "where domain_uuid in (select distinct(domain_uuid) from v_extensions where domain_enabled = 'true') ";
+						local params = {}
+						if (debug["sql"]) then
+							freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. ";\n");
+						end
+						x = 0;
+						dbh:query(sql, params, function(field)
+							xml:append([[					<node type="allow" domain="]] .. xml.sanitize(field.domain_name) .. [[" description="]] .. xml.sanitize(field.domain_description) .. [["/>]]);
+						end)
+					end
 
 				--list close tag
 					xml:append([[				</list>]]);
