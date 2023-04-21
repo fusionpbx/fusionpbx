@@ -184,16 +184,12 @@
 							//valid IPv6 address
 							$node_cidr = $row["node_cidr"];
 						}
-
-						//if the cidr is provided ignore the domain.
-						$row["node_domain"] = '';
 					}
 
 					//build the sub array
 					$array['access_controls'][0]['access_control_nodes'][$y]['access_control_node_uuid'] = $row["access_control_node_uuid"];
 					$array['access_controls'][0]['access_control_nodes'][$y]['node_type'] = $row["node_type"];
 					$array['access_controls'][0]['access_control_nodes'][$y]['node_cidr'] = $node_cidr;
-					$array['access_controls'][0]['access_control_nodes'][$y]['node_domain'] = $row["node_domain"];
 					$array['access_controls'][0]['access_control_nodes'][$y]['node_description'] = $row["node_description"];
 					$y++;
 
@@ -278,7 +274,6 @@
 	$access_control_nodes[$x]['access_control_node_uuid'] = uuid();
 	$access_control_nodes[$x]['node_type'] = '';
 	$access_control_nodes[$x]['node_cidr'] = '';
-	$access_control_nodes[$x]['node_domain'] = '';
 	$access_control_nodes[$x]['node_description'] = '';
 
 //create token
@@ -381,7 +376,6 @@
 	echo "		<tr>\n";
 	echo "			<th class='vtablereq'>".$text['label-node_type']."</th>\n";
 	echo "			<td class='vtable'>".$text['label-node_cidr']."</td>\n";
-	echo "			<td class='vtable'>".$text['label-node_domain']."</td>\n";
 	echo "			<td class='vtable'>".$text['label-node_description']."</td>\n";
 	if (is_array($access_control_nodes) && @sizeof($access_control_nodes) > 1 && permission_exists('access_control_node_delete')) {
 		echo "			<td class='vtable edit_delete_checkbox_all' onmouseover=\"swap_display('delete_label_details', 'delete_toggle_details');\" onmouseout=\"swap_display('delete_label_details', 'delete_toggle_details');\">\n";
@@ -414,9 +408,6 @@
 		echo "			</td>\n";
 		echo "			<td class='formfld'>\n";
 		echo "				<input class='formfld' type='text' name='access_control_nodes[$x][node_cidr]' maxlength='255' value=\"".escape($row["node_cidr"])."\">\n";
-		echo "			</td>\n";
-		echo "			<td class='formfld'>\n";
-		echo "				<input class='formfld' type='text' name='access_control_nodes[$x][node_domain]' maxlength='255' value=\"".escape($row["node_domain"])."\">\n";
 		echo "			</td>\n";
 		echo "			<td class='formfld'>\n";
 		echo "				<input class='formfld' type='text' name='access_control_nodes[$x][node_description]' maxlength='255' value=\"".escape($row["node_description"])."\">\n";
