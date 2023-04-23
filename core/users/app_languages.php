@@ -1,5 +1,4 @@
 <?php
-#This file was last reorganized on 19th of September 2017 08:54:24 AM UTC
 
 $text['title-users']['en-us'] = "Users";
 $text['title-users']['en-gb'] = "Users";
@@ -2041,6 +2040,90 @@ $text['description-message_key']['ro-ro'] = "";
 $text['description-message_key']['ru-ru'] = "Введите ключ API (обычно UUID). Ключ API должен быть 128 бит или больше.";
 $text['description-message_key']['sv-se'] = "Ange API nyckel (ofta UUID). API nyckeln borde vara 128 bit eller mer.";
 $text['description-message_key']['uk-ua'] = "Введіть ключ API, зазвичай UUID. Ключ API повинен бути 128 біт або більше.";
+
+$text['label-user_totp_secret']['en-us'] = "TOTP";
+$text['label-user_totp_secret']['en-gb'] = "TOTP";
+$text['label-user_totp_secret']['ar-eg'] = "";
+$text['label-user_totp_secret']['de-at'] = "";
+$text['label-user_totp_secret']['de-ch'] = "";
+$text['label-user_totp_secret']['de-de'] = "";
+$text['label-user_totp_secret']['es-cl'] = "";
+$text['label-user_totp_secret']['es-mx'] = "";
+$text['label-user_totp_secret']['fr-ca'] = "";
+$text['label-user_totp_secret']['fr-fr'] = "";
+$text['label-user_totp_secret']['he-il'] = "";
+$text['label-user_totp_secret']['it-it'] = "";
+$text['label-user_totp_secret']['nl-nl'] = "";
+$text['label-user_totp_secret']['pl-pl'] = "";
+$text['label-user_totp_secret']['pt-br'] = "";
+$text['label-user_totp_secret']['pt-pt'] = "";
+$text['label-user_totp_secret']['ro-ro'] = "";
+$text['label-user_totp_secret']['ru-ru'] = "";
+$text['label-user_totp_secret']['sv-se'] = "";
+$text['label-user_totp_secret']['uk-ua'] = "";
+
+$text['description-user_totp_secret']['en-us'] = "Press the Setup button to generate the Time based One Time password.";
+$text['description-user_totp_secret']['en-gb'] = "Press the Setup button to generate the Time based One Time password.";
+$text['description-user_totp_secret']['ar-eg'] = "";
+$text['description-user_totp_secret']['de-at'] = "";
+$text['description-user_totp_secret']['de-ch'] = "";
+$text['description-user_totp_secret']['de-de'] = "";
+$text['description-user_totp_secret']['es-cl'] = "";
+$text['description-user_totp_secret']['es-mx'] = "";
+$text['description-user_totp_secret']['fr-ca'] = "";
+$text['description-user_totp_secret']['fr-fr'] = "";
+$text['description-user_totp_secret']['he-il'] = "";
+$text['description-user_totp_secret']['it-it'] = "";
+$text['description-user_totp_secret']['nl-nl'] = "";
+$text['description-user_totp_secret']['pl-pl'] = "";
+$text['description-user_totp_secret']['pt-br'] = "";
+$text['description-user_totp_secret']['pt-pt'] = "";
+$text['description-user_totp_secret']['ro-ro'] = "";
+$text['description-user_totp_secret']['ru-ru'] = "";
+$text['description-user_totp_secret']['sv-se'] = "";
+$text['description-user_totp_secret']['uk-ua'] = "";
+
+$text['description-user_totp_qr_code']['en-us'] = "Scan the QR code with an Authenticator App.";
+$text['description-user_totp_qr_code']['en-gb'] = "Scan the QR code with an Authenticator App.";
+$text['description-user_totp_qr_code']['ar-eg'] = "";
+$text['description-user_totp_qr_code']['de-at'] = "";
+$text['description-user_totp_qr_code']['de-ch'] = "";
+$text['description-user_totp_qr_code']['de-de'] = "";
+$text['description-user_totp_qr_code']['es-cl'] = "";
+$text['description-user_totp_qr_code']['es-mx'] = "";
+$text['description-user_totp_qr_code']['fr-ca'] = "";
+$text['description-user_totp_qr_code']['fr-fr'] = "";
+$text['description-user_totp_qr_code']['he-il'] = "";
+$text['description-user_totp_qr_code']['it-it'] = "";
+$text['description-user_totp_qr_code']['nl-nl'] = "";
+$text['description-user_totp_qr_code']['pl-pl'] = "";
+$text['description-user_totp_qr_code']['pt-br'] = "";
+$text['description-user_totp_qr_code']['pt-pt'] = "";
+$text['description-user_totp_qr_code']['ro-ro'] = "";
+$text['description-user_totp_qr_code']['ru-ru'] = "";
+$text['description-user_totp_qr_code']['sv-se'] = "";
+$text['description-user_totp_qr_code']['uk-ua'] = "";
+
+$text['description-user_totp_view']['en-us'] = "Show, hide or disable the QR code.";
+$text['description-user_totp_view']['en-gb'] = "Show, hide or disable the QR code.";
+$text['description-user_totp_view']['ar-eg'] = "";
+$text['description-user_totp_view']['de-at'] = "";
+$text['description-user_totp_view']['de-ch'] = "";
+$text['description-user_totp_view']['de-de'] = "";
+$text['description-user_totp_view']['es-cl'] = "";
+$text['description-user_totp_view']['es-mx'] = "";
+$text['description-user_totp_view']['fr-ca'] = "";
+$text['description-user_totp_view']['fr-fr'] = "";
+$text['description-user_totp_view']['he-il'] = "";
+$text['description-user_totp_view']['it-it'] = "";
+$text['description-user_totp_view']['nl-nl'] = "";
+$text['description-user_totp_view']['pl-pl'] = "";
+$text['description-user_totp_view']['pt-br'] = "";
+$text['description-user_totp_view']['pt-pt'] = "";
+$text['description-user_totp_view']['ro-ro'] = "";
+$text['description-user_totp_view']['ru-ru'] = "";
+$text['description-user_totp_view']['sv-se'] = "";
+$text['description-user_totp_view']['uk-ua'] = "";
 
 $text['confirm-delete']['en-us'] = "Do you really want to delete this?";
 $text['confirm-delete']['en-gb'] = "Do you really want to delete this?";
