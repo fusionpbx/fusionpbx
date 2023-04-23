@@ -41,7 +41,7 @@ class google_authenticator {
 			$time = floor(time() / 30);
 		}
 
-		$base32 = new FixedBitNotation(5, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567', TRUE, TRUE);
+		$base32 = new base2n(5, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567', TRUE, TRUE);
 		$secret = $base32->decode($secret);
 
 		$time = pack("N", $time);
@@ -76,7 +76,7 @@ class google_authenticator {
 			$secret .= pack("c",$c);
 		}
 
-		$base32 = new FixedBitNotation(5, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567', TRUE, TRUE);
+		$base32 = new base2n(5, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567', TRUE, TRUE);
 		return  $base32->encode($secret);
 	}
 
