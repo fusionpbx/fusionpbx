@@ -164,7 +164,7 @@ if (!class_exists('fax')) {
 				$dialplan["dialplan_context"] = $_SESSION['domain_name'];
 				$dialplan["dialplan_continue"] = "false";
 				$dialplan["dialplan_xml"] = $dialplan_xml;
-				$dialplan["dialplan_order"] = "310";
+				$dialplan["dialplan_order"] = "40";
 				$dialplan["dialplan_enabled"] = "true";
 				$dialplan["dialplan_description"] = $this->fax_description;
 				$dialplan_detail_order = 10;
