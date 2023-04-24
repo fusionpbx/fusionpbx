@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -50,6 +50,7 @@
 	if (is_array($_POST['dialplans'])) {
 		$action = $_POST['action'];
 		$dialplans = $_POST['dialplans'];
+		$context = $_POST['context'];
 		$search = $_POST['search'];
 		$order_by = $_POST['order_by'];
 		$order = $_POST['order'];
@@ -65,6 +66,7 @@
 
 		//define redirect parameters and url
 			if (is_uuid($app_uuid)) { $params[] = "app_uuid=".urlencode($app_uuid); }
+			if ($context) { $params[] = "context=".urlencode($context); }
 			if ($search) { $params[] = "search=".urlencode($search); }
 			if ($order_by) { $params[] = "order_by=".urlencode($order_by); }
 			if ($order) { $params[] = "order=".urlencode($order); }
@@ -119,7 +121,10 @@
 		unset($sql);
 	}
 
-//add the search term
+//add the search form elements
+	if (isset($_GET["context"])) {
+		$context = strtolower($_GET["context"]);
+	}
 	if (isset($_GET["search"])) {
 		$search = strtolower($_GET["search"]);
 	}
@@ -149,7 +154,11 @@
 		}
 		$parameters['app_uuid'] = $app_uuid;
 	}
-	if (isset($search)) {
+	if ($context) {
+		$sql .= "and dialplan_context = :dialplan_context ";
+		$parameters['dialplan_context'] = $context;
+	}
+	if ($search) {
 		$sql .= "and (";
 		$sql .= " 	lower(dialplan_context) like :search ";
 		$sql .= " 	or lower(dialplan_name) like :search ";
@@ -169,12 +178,13 @@
 
 //prepare the paging
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
-	$params[] = "app_uuid=".$app_uuid;
-	if ($search) { $params[] = "search=".$search; }
-	if ($order_by) { $params[] = "order_by=".$order_by; }
-	if ($order) { $params[] = "order=".$order; }
+	$params[] = "app_uuid=".urlencode($app_uuid);
+	if ($context) { $params[] = "context=".urlencode($context); }
+	if ($search) { $params[] = "search=".urlencode($search); }
+	if ($order_by) { $params[] = "order_by=".urlencode($order_by); }
+	if ($order) { $params[] = "order=".urlencode($order); }
 	if ($_GET['show'] == "all" && permission_exists('dialplan_all')) {
-		$params[] .= "show=all";
+		$params[] = "show=all";
 	}
 	$param = $params ? implode('&', $params) : null;
 	unset($params);
@@ -209,7 +219,11 @@
 		}
 		$parameters['app_uuid'] = $app_uuid;
 	}
-	if (isset($search)) {
+	if ($context) {
+		$sql .= "and dialplan_context = :dialplan_context ";
+		$parameters['dialplan_context'] = $context;
+	}
+	if ($search) {
 		$sql .= "and (";
 		$sql .= " 	lower(dialplan_context) like :search ";
 		$sql .= " 	or lower(dialplan_name) like :search ";
@@ -239,6 +253,63 @@
 	$database = new database;
 	$dialplans = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
+
+//get the list of all dialplan contexts
+	$sql = "select dc.* from ( ";
+	$sql .= "select distinct dialplan_context from v_dialplans ";
+	if ($_GET['show'] == "all" && permission_exists('dialplan_all')) {
+		$sql .= "where true ";
+	}
+	else {
+		$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+		$parameters['domain_uuid'] = $domain_uuid;
+	}
+	if (!is_uuid($app_uuid)) {
+		//hide inbound routes
+		$sql .= "and app_uuid <> 'c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4' ";
+		$sql .= "and dialplan_context <> 'public' ";
+	}
+	else {
+		$sql .= "and (app_uuid = :app_uuid ".($app_uuid == 'c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4' ? "or dialplan_context = 'public'" : null).") ";
+		$parameters['app_uuid'] = $app_uuid;
+	}
+	$sql .= ") as dc ";
+	$database = new database;
+	$rows = $database->select($sql, $parameters, 'all');
+	if (is_array($rows) && @sizeof($rows) != 0) {
+		foreach ($rows as $row) {
+			//reverse the array's (string) values in preparation to sort
+			$dialplan_contexts[] = strrev($row['dialplan_context']);
+		}
+		//sort the reversed context values, now grouping them by the domain
+		sort($dialplan_contexts, SORT_NATURAL);
+		//create new array
+		foreach ($dialplan_contexts as $dialplan_context) {
+			//if no subcontext (doesn't contain '@'), create new key in array with a null value
+			if (!substr_count($dialplan_context, '@') || strrev($dialplan_context) == 'global' || strrev($dialplan_context) == 'public') {
+				$array[strrev($dialplan_context)] = null;
+			}
+			//subcontext (contains '@'), create new key in array, and place subcontext in subarray
+			else {
+				$dialplan_context_parts = explode('@', $dialplan_context);
+				$array[strrev($dialplan_context_parts[0])][] = strrev($dialplan_context_parts[1]);
+			}
+		}
+		// sort array by key (domain)
+		ksort($array, SORT_NATURAL);
+		// move global and public to beginning of array
+		if (array_key_exists('global', $array)) {
+			unset($array['global']);
+			$array = array_merge(['global'=>null], $array);
+		}
+		if (array_key_exists('public', $array)) {
+			unset($array['public']);
+			$array = array_merge(['public'=>null], $array);
+		}
+		$dialplan_contexts = $array;
+		unset($dialplan_context, $array, $dialplan_context_parts);
+	}
+	unset($sql, $parameters, $rows, $row);
 
 //create token
 	$object = new token;
@@ -311,6 +382,7 @@
 		}
 		else {
 			if (is_uuid($app_uuid)) { $params[] = "app_uuid=".urlencode($app_uuid); }
+			if ($context) { $params[] = "context=".urlencode($context); }
 			if ($search) { $params[] = "search=".urlencode($search); }
 			if ($order_by) { $params[] = "order_by=".urlencode($order_by); }
 			if ($order) { $params[] = "order=".urlencode($order); }
@@ -326,6 +398,26 @@
 	}
 	if ($order) {
 		echo 	"<input type='hidden' name='order' value='".escape($order)."'>";
+	}
+	if (permission_exists('dialplan_context')) {
+		echo 	"<select name='context' id='context' class='formfld' style='max-width: ".(!$context || $context == 'global' ? '80px' : '140px')."; margin-left: 18px;' onchange=\"$('#form_search').submit();\">\n";
+		echo 		"<option value='' ".(!$context ? "selected='selected'" : null)." disabled='disabled'>".$text['label-context']."...</option>\n";
+		echo 		"<option value=''></option>\n";
+		if (is_array($dialplan_contexts) && @sizeof($dialplan_contexts) != 0) {
+			foreach ($dialplan_contexts as $dialplan_context => $dialplan_subcontexts) {
+				if (is_array($dialplan_subcontexts) && @sizeof($dialplan_subcontexts) != 0) {
+					echo "<option value='".$dialplan_context."' ".($context == $dialplan_context ? "selected='selected'" : null).">".escape($dialplan_context)."</option>\n";
+					foreach ($dialplan_subcontexts as $dialplan_subcontext) {
+						echo "<option value='".$dialplan_subcontext."@".$dialplan_context."' ".($context == $dialplan_subcontext."@".$dialplan_context ? "selected='selected'" : null).">&nbsp;&nbsp;&nbsp;".escape($dialplan_subcontext)."@</option>\n";
+					}
+				}
+				else {
+					$dialplan_context_label = in_array($dialplan_context, ['global','public']) ? ucwords($dialplan_context) : $dialplan_context;
+					echo "<option value='".$dialplan_context."' ".($context == $dialplan_context ? "selected='selected'" : null).">".escape($dialplan_context_label)."</option>\n";
+				}
+			}
+		}
+		echo 	"</select>\n";
 	}
 	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=''>";
 	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search']);
@@ -385,6 +477,7 @@
 	echo "<form id='form_list' method='post'>\n";
 	echo "<input type='hidden' id='app_uuid' name='app_uuid' value='".escape($app_uuid)."'>\n";
 	echo "<input type='hidden' id='action' name='action' value=''>\n";
+	echo "<input type='hidden' name='context' value=\"".escape($context)."\">\n";
 	echo "<input type='hidden' name='search' value=\"".escape($search)."\">\n";
 	echo "<input type='hidden' name='order_by' value=\"".escape($order_by)."\">\n";
 	echo "<input type='hidden' name='order' value=\"".escape($order)."\">\n";
@@ -405,6 +498,7 @@
 	if ($_GET['show'] == "all" && permission_exists('dialplan_all')) {
 		echo "<th>".$text['label-domain']."</th>\n";
 	}
+	if ($context) { $params[] = "context=".urlencode($context); }
 	if ($search) { $params[] = "search=".urlencode($search); }
 	if ($_GET['show'] == 'all' && permission_exists('dialplan_all')) { $params[] = "show=all"; }
 	echo th_order_by('dialplan_name', $text['label-name'], $order_by, $order, $app_uuid, null, ($params ? implode('&', $params) : null));

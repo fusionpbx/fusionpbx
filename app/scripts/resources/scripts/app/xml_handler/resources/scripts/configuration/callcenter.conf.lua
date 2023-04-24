@@ -105,6 +105,12 @@
 				--replace the space with a dash
 					queue_name = queue_name:gsub(" ", "-");
 
+				--sanitize the queue_record_template and allow specific variables
+					queue_record_template = xml.sanitize(queue_record_template);
+					queue_record_template = string.gsub(queue_record_template, "{strftime", "${strftime");
+					queue_record_template = string.gsub(queue_record_template, "{uuid}", "${uuid}");
+					queue_record_template = string.gsub(queue_record_template, "{record_ext}", "${record_ext}");
+
 				--start the xml
 					xml:append([[                            <queue name="]] .. xml.sanitize(queue_extension) .. [[@]] .. xml.sanitize(domain_name) .. [[" label="]] .. xml.sanitize(queue_name) .. [[@]] .. xml.sanitize(domain_name) .. [[">]]);
 					xml:append([[                                    <param name="strategy" value="]] .. xml.sanitize(queue_strategy) .. [["/>]]);
@@ -112,7 +118,7 @@
 					queue_ringback = format_ringback(queue_moh_sound);
 					xml:append([[                                    <param name="moh-sound" value="]] .. xml.sanitize(queue_ringback) .. [["/>]]);
 					if (queue_record_template ~= nil) then
-						xml:append([[                                    <param name="record-template" value="]] .. xml.sanitize(queue_record_template) .. [["/>]]);
+						xml:append([[                                    <param name="record-template" value="]] .. queue_record_template .. [["/>]]);
 					end
 					if (queue_time_base_score ~= nil) then
 						xml:append([[                                    <param name="time-base-score" value="]] .. xml.sanitize(queue_time_base_score) .. [["/>]]);
@@ -238,12 +244,16 @@
 							end
 						end
 
+				--sanitize the agent_contact and allow specific variables
+					agent_contact = xml.sanitize(agent_contact);
+					agent_contact = string.gsub(agent_contact, "{caller_destination}", "${caller_destination}");
+
 				--build the xml string
 					xml:append([[                            <agent ]]);
 					xml:append([[                            	name="]] .. xml.sanitize(agent_uuid) .. [[" ]]);
 					xml:append([[                            	label="]] .. xml.sanitize(agent_name) .. [[@]] .. xml.sanitize(domain_name) .. [[" ]]);
 					xml:append([[                            	type="]] .. xml.sanitize(agent_type) .. [[" ]]);
-					xml:append([[                            	contact="]] .. xml.sanitize(agent_contact) .. [[" ]]);
+					xml:append([[                            	contact="]] .. agent_contact .. [[" ]]);
 					xml:append([[                            	status="]] .. xml.sanitize(agent_status) .. [[" ]]);
 					if (agent_no_answer_delay_time ~= nil) then
 						xml:append([[                            	no-answer-delay-time="]] .. xml.sanitize(agent_no_answer_delay_time) .. [[" ]]);

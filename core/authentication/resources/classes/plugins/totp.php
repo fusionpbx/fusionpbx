@@ -25,33 +25,13 @@ class plugin_totp {
 	 */
 	function totp() {
 
-		//login logo source
-			if (isset($_SESSION['theme']['logo_login']['text']) && $_SESSION['theme']['logo_login']['text'] != '') {
-				$login_logo_source = $_SESSION['theme']['logo_login']['text'];
-			}
-			else if (isset($_SESSION['theme']['logo']['text']) && $_SESSION['theme']['logo']['text'] != '') {
-				$login_logo_source = $_SESSION['theme']['logo']['text'];
-			}
-			else {
-				$login_logo_source = PROJECT_PATH.'/themes/default/images/logo_login.png';
-			}
-
-		//login logo dimensions
-			if (isset($_SESSION['theme']['login_logo_width']['text']) && $_SESSION['theme']['login_logo_width']['text'] != '') {
-				$login_logo_width = $_SESSION['theme']['login_logo_width']['text'];
-			}
-			else {
-				$login_logo_width = 'auto; max-width: 300px';
-			}
-			if (isset($_SESSION['theme']['login_logo_height']['text']) && $_SESSION['theme']['login_logo_height']['text'] != '') {
-				$login_logo_height = $_SESSION['theme']['login_logo_height']['text'];
-			}
-			else {
-				$login_logo_height = 'auto; max-height: 300px';
-			}
-		
 		//request the username
 			if (!isset($_POST['username']) && !isset($_POST['authentication_code'])) {
+
+				//set a default template
+				$_SESSION['domain']['template']['name'] = 'default';
+				$_SESSION['theme']['menu_brand_image']['text'] = PROJECT_PATH.'/themes/default/images/logo.png';
+				$_SESSION['theme']['menu_brand_type']['text'] = 'image';
 
 				//get the domain
 				$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
@@ -185,13 +165,8 @@ class plugin_totp {
 				$this->user_totp_secret = $row['user_totp_secret'];
 				unset($parameters);
 
-				//include the google authenticator
-				include_once "resources/google_authenticator/GoogleAuthenticatorInterface.php";
-				include_once "resources/google_authenticator/FixedBitNotation.php";
-				include_once "resources/google_authenticator/GoogleAuthenticator.php";
-
 				//create the authenticator object
-				$totp = new \Sonata\GoogleAuthenticator\GoogleAuthenticator();
+				$totp = new google_authenticator;
 
 				//validate the code
 				if ($totp->checkCode($this->user_totp_secret, $_POST['authentication_code'])) {
