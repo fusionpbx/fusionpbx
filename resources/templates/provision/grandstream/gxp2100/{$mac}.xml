@@ -158,7 +158,11 @@
 <!--# SIP Transport. 0 - UDP, 1 - TCP, 2 - TLS/TCP. Default is 0-->
 <!--# Number: 0, 1, 2-->
 <!--# Mandatory-->
-    <P130>0</P130>
+    <!--# P130 = 0-->
+{if $account.1.sip_transport == 'udp'}P130 = 0{/if}
+{if $account.1.sip_transport == 'tcp'}P130 = 1{/if}
+{if $account.1.sip_transport == 'tls'}P130 = 2{/if}
+{if $account.1.sip_transport == 'dns srv'}P130 = 1{/if}
 
 <!--# SIP URI Scheme when using TLS. 0 - sip, 1 - sips. Default is 1-->
 <!--# Number: 0, 1-->
@@ -789,10 +793,10 @@
 <!--# Number: 0, 1, 2-->
 <!--# Mandatory-->
 <!--# P448 = 0-->
-{if $account.1.sip_transport == 'udp'}P448 = 0{/if}
-{if $account.1.sip_transport == 'tcp'}P448 = 1{/if}
-{if $account.1.sip_transport == 'tls'}P448 = 2{/if}
-{if $account.1.sip_transport == 'dns srv'}P448 = 1{/if}
+{if $account.2.sip_transport == 'udp'}P448 = 0{/if}
+{if $account.2.sip_transport == 'tcp'}P448 = 1{/if}
+{if $account.2.sip_transport == 'tls'}P448 = 2{/if}
+{if $account.2.sip_transport == 'dns srv'}P448 = 1{/if}
 
 <!--# SIP URI Scheme when using TLS. 0 - sip, 1 - sips. Default is 1-->
 <!--# Number: 0, 1-->
@@ -1418,7 +1422,11 @@
 <!--# SIP Transport. 0 - UDP, 1 - TCP. 2- TCP/TLS. Default is 0-->
 <!--# Number: 0, 1, 2-->
 <!--# Mandatory-->
-    <P548>0</P548>
+    <!--# P548 = 0-->
+{if $account.3.sip_transport == 'udp'}P548 = 0{/if}
+{if $account.3.sip_transport == 'tcp'}P548 = 1{/if}
+{if $account.3.sip_transport == 'tls'}P548 = 2{/if}
+{if $account.3.sip_transport == 'dns srv'}P548 = 1{/if}
 
 <!--# SIP URI Scheme when using TLS. 0 - sip, 1 - sips. Default is 1-->
 <!--# Number: 0, 1-->
@@ -2044,7 +2052,11 @@
 <!--# SIP Transport. 0 - UDP, 1 - TCP. 2 - TCP/TLS. Default is 0-->
 <!--# Number: 0, 1, 2-->
 <!--# Mandatory-->
-    <P648>0</P648>
+    <!--# P648 = 0-->
+{if $account.4.sip_transport == 'udp'}P648 = 0{/if}
+{if $account.4.sip_transport == 'tcp'}P648 = 1{/if}
+{if $account.4.sip_transport == 'tls'}P648 = 2{/if}
+{if $account.4.sip_transport == 'dns srv'}P648 = 1{/if}
 
 <!--# SIP URI Scheme When Using TLS. 0 - sip, 1 - sips. Default is 1-->
 <!--# Number: 0, 1-->
@@ -3265,7 +3277,11 @@
 <!--# Enable Idle Mute. 0 - No, 1 - Yes. Default is 0-->
 <!--# Number: 0, 1-->
 <!--# Mandatory-->
+{if isset($grandstream_idle_mute_function_old)}
+    <P1565>{$grandstream_idle_mute_function_old}</P1565>
+{else}
     <P1565>0</P1565>
+{/if}
 
 <!--# Disable Transfer. 0 - No, 1 - Yes. Defauls is 0-->
 <!--# Number: 0, 1-->
@@ -3623,7 +3639,7 @@
 <!--# When set to Yes(1), it will override the configured Time Zone setting if available -->
 <!--# Number: 0, 1-->
 <!--# Mandatory-->
-    <P143>1</P143>
+    {if isset($grandstream_dhcp_time_zone)}<P143>{$grandstream_dhcp_time_zone}</P143>{else}<P143>0</P143>{/if}
 
 <!--# Self Defined Time zone. Max length allowed is 64 characters-->
 <!--# String-->
@@ -3703,12 +3719,12 @@
 <!--# 0 - No, 1 - YES, HTTP, 2 - YES, TFTP, 3 - YES, HTTPS. Default is 0-->
 <!--# Number: 0, 1, 2, 3-->
 <!--# Mandatory-->
-    <P340>0</P340>
+    <P340>{$grandstream_enable_idle_screen_download}</P340>
 
 <!--# Download Screen XML At Boot-up. 0 - No, 1 - Yes. Default is 0-->
 <!--# Number: 0, 1-->
 <!--# Mandatory-->
-    <P1349>0</P1349>
+    <P1349>{$grandstream_download_idle_at_boot}</P1349>
 
 <!--# Use Custom File Name. 0 - No, 1 - Yes. Default is 0-->
 <!--# Number: 0, 1-->

@@ -17,12 +17,15 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018 - 2020
+	Portions created by the Initial Developer are Copyright (C) 2018 - 2022
 	the Initial Developer. All Rights Reserved.
 */
 
-//includes
-	require_once "root.php";
+//set the include path
+	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+	set_include_path(parse_ini_file($conf[0])['document.root']);
+
+//includes files
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
@@ -59,6 +62,14 @@
 
 //process the user data and save it to the database
 	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+
+		//enforce valid data
+			if ($access_control_name == 'providers' || $access_control_name == 'domains') {
+				$access_control_default = 'deny';
+			}
+			if ($access_control_default != 'allow' && $access_control_default != 'deny') {
+				$access_control_default = 'deny';
+			}
 
 		//validate the token
 			$token = new token;
@@ -153,22 +164,48 @@
 			$y = 0;
 			if (is_array($access_control_nodes)) {
 				foreach ($access_control_nodes as $row) {
-					if (strlen($row['node_type']) > 0) {
-						$array['access_controls'][0]['access_control_nodes'][$y]['access_control_node_uuid'] = $row["access_control_node_uuid"];
-						$array['access_controls'][0]['access_control_nodes'][$y]['node_type'] = $row["node_type"];
-						$array['access_controls'][0]['access_control_nodes'][$y]['node_cidr'] = $row["node_cidr"];
-						$array['access_controls'][0]['access_control_nodes'][$y]['node_domain'] = $row["node_domain"];
-						$array['access_controls'][0]['access_control_nodes'][$y]['node_description'] = $row["node_description"];
-						$y++;
+
+					//validate the data
+					if (!is_uuid($row["access_control_node_uuid"])) { continue; }
+					if ($row["node_type"] != 'allow' && $row["node_type"] != 'deny') { continue; }
+					if (isset($row["node_cidr"]) && $row["node_cidr"] != '') {
+						$cidr_array = explode("/", str_replace("\\", "/", $row["node_cidr"]));
+						if (filter_var($cidr_array[0], FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
+							if (isset($cidr_array[1]) && is_numeric($cidr_array[1])) {
+								//valid IPv4 address and cidr notation
+								$node_cidr = $row["node_cidr"];
+							}
+							else {
+								//valid IPv4 address add the missing cidr notation
+								$node_cidr = $row["node_cidr"].'/32';
+							}
+						}
+						elseif(filter_var($cidr_array[0], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
+							//valid IPv6 address
+							$node_cidr = $row["node_cidr"];
+						}
 					}
+
+					//build the sub array
+					$array['access_controls'][0]['access_control_nodes'][$y]['access_control_node_uuid'] = $row["access_control_node_uuid"];
+					$array['access_controls'][0]['access_control_nodes'][$y]['node_type'] = $row["node_type"];
+					$array['access_controls'][0]['access_control_nodes'][$y]['node_cidr'] = $node_cidr;
+					$array['access_controls'][0]['access_control_nodes'][$y]['node_description'] = $row["node_description"];
+					$y++;
+
+					//unset values
+					unset($cidr_array, $node_cidr);
+
 				}
 			}
 
 		//save the data
-			$database = new database;
-			$database->app_name = 'access controls';
-			$database->app_uuid = '1416a250-f6e1-4edc-91a6-5c9b883638fd';
-			$database->save($array);
+			if (is_array($array)) {
+				$database = new database;
+				$database->app_name = 'access controls';
+				$database->app_uuid = '1416a250-f6e1-4edc-91a6-5c9b883638fd';
+				$database->save($array);
+			}
 
 		//clear the cache
 			$cache = new cache;
@@ -237,7 +274,6 @@
 	$access_control_nodes[$x]['access_control_node_uuid'] = uuid();
 	$access_control_nodes[$x]['node_type'] = '';
 	$access_control_nodes[$x]['node_cidr'] = '';
-	$access_control_nodes[$x]['node_domain'] = '';
 	$access_control_nodes[$x]['node_description'] = '';
 
 //create token
@@ -257,6 +293,9 @@
 	echo "	<div class='actions'>\n";
 	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','collapse'=>'hide-xs','style'=>'margin-right: 15px;','link'=>'access_controls.php']);
 	if ($action == 'update') {
+		if (permission_exists('access_control_node_add')) {
+			echo button::create(['type'=>'button','label'=>$text['button-import'],'icon'=>$_SESSION['theme']['button_icon_import'],'style'=>'margin-right: 3px;','link'=>'access_control_import.php?id='.escape($access_control_uuid)]);
+		}
 		if (permission_exists('access_control_node_add')) {
 			echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'id'=>'btn_copy','name'=>'btn_copy','style'=>'display: none;','onclick'=>"modal_open('modal-copy','btn_copy');"]);
 		}
@@ -337,7 +376,6 @@
 	echo "		<tr>\n";
 	echo "			<th class='vtablereq'>".$text['label-node_type']."</th>\n";
 	echo "			<td class='vtable'>".$text['label-node_cidr']."</td>\n";
-	echo "			<td class='vtable'>".$text['label-node_domain']."</td>\n";
 	echo "			<td class='vtable'>".$text['label-node_description']."</td>\n";
 	if (is_array($access_control_nodes) && @sizeof($access_control_nodes) > 1 && permission_exists('access_control_node_delete')) {
 		echo "			<td class='vtable edit_delete_checkbox_all' onmouseover=\"swap_display('delete_label_details', 'delete_toggle_details');\" onmouseout=\"swap_display('delete_label_details', 'delete_toggle_details');\">\n";
@@ -370,9 +408,6 @@
 		echo "			</td>\n";
 		echo "			<td class='formfld'>\n";
 		echo "				<input class='formfld' type='text' name='access_control_nodes[$x][node_cidr]' maxlength='255' value=\"".escape($row["node_cidr"])."\">\n";
-		echo "			</td>\n";
-		echo "			<td class='formfld'>\n";
-		echo "				<input class='formfld' type='text' name='access_control_nodes[$x][node_domain]' maxlength='255' value=\"".escape($row["node_domain"])."\">\n";
 		echo "			</td>\n";
 		echo "			<td class='formfld'>\n";
 		echo "				<input class='formfld' type='text' name='access_control_nodes[$x][node_description]' maxlength='255' value=\"".escape($row["node_description"])."\">\n";

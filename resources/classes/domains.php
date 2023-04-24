@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2021
+	Portions created by the Initial Developer are Copyright (C) 2008-2022
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -430,7 +430,7 @@ if (!class_exists('domains')) {
 		 */
 		public function set() {
 
-			//get previous domains settings
+			//get previous domain settings
 				if (is_uuid($_SESSION["previous_domain_uuid"])) {
 					$sql = "select * from v_domain_settings ";
 					$sql .= "where domain_uuid = :previous_domain_uuid ";
@@ -441,9 +441,11 @@ if (!class_exists('domains')) {
 					$result = $database->select($sql, $parameters, 'all');
 					unset($sql, $parameters);
 
-				//unset previous domain settings
+					//unset previous domain settings
 					foreach ($result as $row) {
-						unset($_SESSION[$row['domain_setting_category']]);
+						if ($row['domain_setting_category'] != 'user') { //skip off-limit categories
+							unset($_SESSION[$row['domain_setting_category']][$row['domain_setting_subcategory']]);
+						}
 					}
 					unset($_SESSION["previous_domain_uuid"]);
 				}
@@ -454,12 +456,14 @@ if (!class_exists('domains')) {
 				$database = new database;
 				$result = $database->select($sql, null, 'all');
 				unset($sql, $parameters);
+
 				//unset all settings
 				foreach ($result as $row) {
 					if ($row['default_setting_category'] != 'user') { //skip off-limit categories
-						unset($_SESSION[$row['default_setting_category']]);
+						unset($_SESSION[$row['default_setting_category']][$row['default_setting_subcategory']]);
 					}
 				}
+
 				//set the enabled settings as a session
 				foreach ($result as $row) {
 					if ($row['default_setting_enabled'] == 'true') {
@@ -621,8 +625,12 @@ if (!class_exists('domains')) {
 				$db_path = $config->db_path;
 				$db_port = $config->db_port;
 
-			//get the PROJECT PATH
-				include "root.php";
+			//set the include path
+				$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+				set_include_path(parse_ini_file($conf[0])['document.root']);
+
+			//includes files
+				include "resources/require.php";
 
 			//check for default settings
 				$this->settings();
@@ -741,12 +749,6 @@ if (!class_exists('domains')) {
 						$domains_processed++;
 				}
 
-			//update config.lua
-				if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/scripts/resources/classes/scripts.php')) {
-					$obj = new scripts;
-					$obj->write_config();
-				}
-
 			//clear the session variables
 				unset($_SESSION['domain']);
 				unset($_SESSION['switch']);
@@ -758,6 +760,9 @@ if (!class_exists('domains')) {
 		 * update the uuid for older default settings that were added before the uuids was predefined.
 		 */
 		public function settings() {
+
+			//includes files
+				include "resources/require.php";
 
 			//get an array of the default settings UUIDs
 				$sql = "select * from v_default_settings ";

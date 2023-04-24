@@ -42,7 +42,7 @@ if (defined('STDIN')) {
 $IS_WINDOWS = stristr(PHP_OS, 'WIN') ? true : false;
 
 if (!function_exists('exec_in_dir')) {
-	function exec_in_dir($dir, $cmd, &$ok){
+	function exec_in_dir($dir, $cmd, &$ok) {
 		$args = func_get_args();
 		$cwd = getcwd();
 		chdir($dir);
@@ -52,7 +52,7 @@ if (!function_exists('exec_in_dir')) {
 		if ($cwd)
 			chdir($cwd);
 		$ok = ($ret == 0);
-		return join($output, "\n");
+		return implode("\n", $output);
 	}
 }
 
@@ -83,23 +83,23 @@ if (!function_exists('path_join')) {
 			$path = trim( $path, '/' );
 		}
 
-		if ($prefix === null){
+		if ($prefix === null) {
 			return '';
 		}
 
 		$paths = array_filter($paths);
-		return $prefix . join('/', $paths);
+		return $prefix . implode('/', $paths);
 	}
 }
 
 if (!function_exists('tiff2pdf')) {
-	function tiff2pdf($tiff_file_name){
+	function tiff2pdf($tiff_file_name) {
 		//convert the tif to a pdf
 		//Ubuntu: apt-get install libtiff-tools
 
 		global $IS_WINDOWS;
 
-		if (!file_exists($tiff_file_name)){
+		if (!file_exists($tiff_file_name)) {
 			echo "tiff file does not exists";
 			return false; // "tiff file does not exists";
 		}
@@ -108,18 +108,18 @@ if (!function_exists('tiff2pdf')) {
 		$tiff_file = pathinfo($tiff_file_name);
 		$dir_fax = $tiff_file['dirname'];
 		$fax_file_name = $tiff_file['filename'];
-		$pdf_file_name = path_join( $dir_fax, $fax_file_name . '.pdf' );
+		$pdf_file_name = path_join($dir_fax, $fax_file_name . '.pdf');
 
 		if (file_exists($pdf_file_name)) {
 			return $pdf_file_name;
 		}
 
 		$dir_fax_temp = $_SESSION['server']['temp']['dir'];
-		if (!$dir_fax_temp){
+		if (!$dir_fax_temp) {
 			$dir_fax_temp = path_join(dirname($dir_fax), 'temp');
 		}
 
-		if (!file_exists($dir_fax_temp)){
+		if (!file_exists($dir_fax_temp)) {
 			echo "can not create temporary directory";
 			return false; //
 		}
@@ -127,7 +127,7 @@ if (!function_exists('tiff2pdf')) {
 		$cmd  = "tiffinfo " . correct_path($tiff_file_name) . ' | grep "Resolution:"';
 		$ok   = false;
 		$resp = exec_in_dir($dir_fax, $cmd, $ok);
-		if (!$ok){
+		if (!$ok) {
 			echo "can not find fax resoulution";
 			return false; // "can not find fax resoulution"
 		}
@@ -135,14 +135,14 @@ if (!function_exists('tiff2pdf')) {
 		$ppi_w = 0;
 		$ppi_h = 0;
 		$tmp = array();
-		if (preg_match('/Resolution.*?(\d+).*?(\d+)/', $resp, $tmp)){
+		if (preg_match('/Resolution.*?(\d+).*?(\d+)/', $resp, $tmp)) {
 			$ppi_w = $tmp[1];
 			$ppi_h = $tmp[2];
 		}
 
 		$cmd = "tiffinfo " . $tiff_file_name . ' | grep "Image Width:"';
 		$resp = exec_in_dir($dir_fax, $cmd, $ok);
-		if (!$ok){
+		if (!$ok) {
 			echo "can not find fax size";
 			return false; // "can not find fax size"
 		}
@@ -150,7 +150,7 @@ if (!function_exists('tiff2pdf')) {
 		$pix_w = 0;
 		$pix_h = 0;
 		$tmp = array();
-		if (preg_match('/Width.*?(\d+).*?Length.*?(\d+)/', $resp, $tmp)){
+		if (preg_match('/Width.*?(\d+).*?Length.*?(\d+)/', $resp, $tmp)) {
 			$pix_w = $tmp[1];
 			$pix_h = $tmp[2];
 		}
@@ -177,14 +177,14 @@ if (!function_exists('tiff2pdf')) {
 		$page_width  = sprintf('%.4f', $page_width);
 		$page_height = sprintf('%.4f', $page_height);
 
-		$cmd = join(array('tiff2pdf', 
+		$cmd = implode(' ', array('tiff2pdf', 
 			'-o', correct_path($pdf_file_name),
 			correct_path($tiff_file_name),
-		), ' ');
+		));
 
 		$resp = exec_in_dir($dir_fax, $cmd, $ok);
 
-		if (!file_exists($pdf_file_name)){
+		if (!file_exists($pdf_file_name)) {
 			echo "can not create pdf: $resp";
 			return false;
 		}
@@ -194,18 +194,21 @@ if (!function_exists('tiff2pdf')) {
 }
 
 if (!function_exists('fax_split_dtmf')) {
-	function fax_split_dtmf(&$fax_number, &$fax_dtmf){
+	function fax_split_dtmf(&$fax_number, &$fax_dtmf) {
 		$tmp = array();
 		$fax_dtmf = '';
-		if (preg_match('/^\s*(.*?)\s*\((.*)\)\s*$/', $fax_number, $tmp)){
+		if (preg_match('/^\s*(.*?)\s*\((.*)\)\s*$/', $fax_number, $tmp)) {
 			$fax_number = $tmp[1];
 			$fax_dtmf = $tmp[2];
 		}
 	}
 }
 
-//includes
-	if (!defined('STDIN')) { include "root.php"; }
+//set the include path
+	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+	set_include_path(parse_ini_file($conf[0])['document.root']);
+
+//includes files
 	require_once "resources/require.php";
 	include "resources/classes/event_socket.php";
 	include "resources/phpmailer/class.phpmailer.php";
@@ -273,7 +276,7 @@ if (!function_exists('fax_split_dtmf')) {
 		$tmp_array = explode("=", $_SERVER["argv"][9]);
 		$fax_prefix = $tmp_array[1];
 		unset($tmp_array);
-	
+
 		$tmp_array = explode("=", $_SERVER["argv"][10]);
 		$mail_from_address = $tmp_array[1];
 		unset($tmp_array);
@@ -362,7 +365,7 @@ if (!function_exists('fax_split_dtmf')) {
 
 	$pdf_file = tiff2pdf($fax_file);
 	echo "file: $pdf_file \n";
-	if (!$pdf_file){
+	if (!$pdf_file) {
 		$fax_file_warning = 'warning: Fax image not available on server.';
 	}
 	else{
@@ -381,7 +384,7 @@ if (!function_exists('fax_split_dtmf')) {
 		if (isset($fax_forward_number) && strlen($fax_forward_number) > 0) {
 			//show info
 				echo "fax_forward_number: $fax_forward_number\n";
-		
+
 			//add fax to the fax queue or send it directly
 			if ($_SESSION['fax_queue']['enabled']['boolean'] == 'true') {
 				//build an array to add the fax to the queue
@@ -420,14 +423,14 @@ if (!function_exists('fax_split_dtmf')) {
 				fax_split_dtmf($fax_forward_number, $fax_dtmf);
 
 				$fax_send_mode = $_SESSION['fax']['send_mode']['text'];
-				if (strlen($fax_send_mode) == 0){
+				if (strlen($fax_send_mode) == 0) {
 					$fax_send_mode = 'direct';
 				}
 
 				$route_array = outbound_route_to_bridge($domain_uuid, $fax_forward_number);
 				if (count($route_array) == 0) {
 					//send the internal call to the registered extension
-						$fax_uri = "user/".$fax_forward_number."@".$domain_name;
+						$fax_uri = "user/".escapeshellarg($fax_forward_number)."@".escapeshellarg($domain_name);
 						$fax_variables = "";
 				}
 				else {
@@ -435,35 +438,35 @@ if (!function_exists('fax_split_dtmf')) {
 						$fax_uri = $route_array[0];
 						$fax_variables = "";
 						foreach($_SESSION['fax']['variable'] as $variable) {
-							$fax_variables .= $variable.",";
+							$fax_variables .= escapeshellarg($variable).",";
 						}
 				}
 
 				//build the dial string
 				$dial_string = "absolute_codec_string='PCMU,PCMA',";
-				$dial_string .= "accountcode='"                  . $fax_accountcode         . "',";
-				$dial_string .= "sip_h_X-accountcode='"          . $fax_accountcode         . "',";
-				$dial_string .= "domain_uuid="                   . $domain_uuid . ",";
-				$dial_string .= "domain_name="                   . $domain_name . ",";
-				$dial_string .= "origination_caller_id_name='"   . $fax_caller_id_name      . "',";
-				$dial_string .= "origination_caller_id_number='" . $fax_caller_id_number    . "',";
-				$dial_string .= "fax_ident='"                    . $fax_caller_id_number    . "',";
-				$dial_string .= "fax_header='"                   . $fax_caller_id_name      . "',";
-				$dial_string .= "fax_file='"                     . $fax_file                . "',";
+				$dial_string .= "accountcode='"                  . escapeshellarg($fax_accountcode)         . "',";
+				$dial_string .= "sip_h_X-accountcode='"          . escapeshellarg($fax_accountcode)         . "',";
+				$dial_string .= "domain_uuid="                   . escapeshellarg($domain_uuid)             . ",";
+				$dial_string .= "domain_name="                   . escapeshellarg($domain_name)             . ",";
+				$dial_string .= "origination_caller_id_name='"   . escapeshellarg($fax_caller_id_name)      . "',";
+				$dial_string .= "origination_caller_id_number='" . escapeshellarg($fax_caller_id_number)    . "',";
+				$dial_string .= "fax_ident='"                    . escapeshellarg($fax_caller_id_number)    . "',";
+				$dial_string .= "fax_header='"                   . escapeshellarg($fax_caller_id_name)      . "',";
+				$dial_string .= "fax_file='"                     . escapeshellarg($fax_file)                . "',";
 
 				if ($fax_send_mode != 'queue') {
 					//add more ot the dial string
 						$dial_string .= $fax_variables;
-						$dial_string .= "mailto_address='"     . $mail_to_address   . "',";
-						$dial_string .= "mailfrom_address='"   . $mail_from_address . "',";
-						$dial_string .= "fax_uri=" . $fax_uri  . ",";
+						$dial_string .= "mailto_address='"     . escapeshellarg($mail_to_address)   . "',";
+						$dial_string .= "mailfrom_address='"   . escapeshellarg($mail_from_address) . "',";
+						$dial_string .= "fax_uri="             . escapeshellarg($fax_uri)  . ",";
 						$dial_string .= "fax_retry_attempts=1" . ",";
 						$dial_string .= "fax_retry_limit=20"   . ",";
 						$dial_string .= "fax_retry_sleep=180"  . ",";
 						$dial_string .= "fax_verbose=true"     . ",";
 						$dial_string .= "fax_use_ecm=off"      . ",";
 						$dial_string .= "api_hangup_hook='lua fax_retry.lua'";
-						$dial_string = "{" . $dial_string . "}" . $fax_uri." &txfax('".$fax_file."')";
+						$dial_string = "{" . $dial_string . "}" . escapeshellarg($fax_uri)." &txfax('".escapeshellarg($fax_file)."')";
 
 					//get the event socket information
 						$sql = "select * from v_settings ";
@@ -628,23 +631,6 @@ if (!function_exists('fax_split_dtmf')) {
 					$fp = fopen($fax_to_email_queue_dir."/emailed_faxes.log", "a");
 					fwrite($fp, $fax_file_name." received on ".$fax_extension." emailed to ".$fax_email." ".$fax_messages."\n");
 					fclose($fp);
-			}
-			else {
-				//create an instruction log to email messages once the connection to the mail server has been restored
-					$fp = fopen($fax_to_email_queue_dir."/failed_fax_emails.log", "a");
-					fwrite($fp, PHP_BINDIR."/php ".$_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/secure/fax_to_email.php email='".$fax_email."' extension=".$fax_extension." name='".$fax_file."' messages='".$fax_messages."' domain=".$domain_name." caller_id_name='".$caller_id_name."' caller_id_number=".$caller_id_number." retry=true\n");
-					fclose($fp);
-				//create a script to do the delayed mailing
-					$fp = fopen($_SESSION['server']['temp']['dir']."/failed_fax_emails.sh", "w");
-					fwrite($fp, "rm ".$_SESSION['server']['temp']['dir']."/fax_email_retry.sh\n");
-					fwrite($fp, "mv ".$fax_to_email_queue_dir."/failed_fax_emails.log ".$_SESSION['server']['temp']['dir']."/fax_email_retry.sh\n");
-					fwrite($fp, "chmod 777 ".$_SESSION['server']['temp']['dir']."/fax_email_retry.sh\n");
-					fwrite($fp, $_SESSION['server']['temp']['dir']."/fax_email_retry.sh\n");
-					fclose($fp);
-					$tmp_response = exec("chmod 777 ".$_SESSION['server']['temp']['dir']."/failed_fax_emails.sh");
-				//note we use batch in order to execute when system load is low.  Alternatively this could be replaced with AT.
-					$tmp_response = exec("at -f ".$_SESSION['server']['temp']['dir']."/failed_fax_emails.sh now + 3 minutes");
-				
 			}
 		}
 	}

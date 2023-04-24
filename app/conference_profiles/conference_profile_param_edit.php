@@ -1,7 +1,10 @@
 <?php
 
-//includes
-	require_once "root.php";
+//set the include path
+	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+	set_include_path(parse_ini_file($conf[0])['document.root']);
+
+//includes files
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
@@ -36,7 +39,7 @@
 	if (count($_POST)>0) {
 		$profile_param_name = $_POST["profile_param_name"];
 		$profile_param_value = $_POST["profile_param_value"];
-		$profile_param_enabled = $_POST["profile_param_enabled"];
+		$profile_param_enabled = $_POST["profile_param_enabled"] ?: 'false';
 		$profile_param_description = $_POST["profile_param_description"];
 	}
 
@@ -125,6 +128,9 @@
 		unset($sql, $parameters);
 	}
 
+//set the defaults
+	if (strlen($profile_param_enabled) == 0) { $profile_param_enabled = 'true'; }
+
 //create token
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);
@@ -174,10 +180,18 @@
 	echo "	".$text['label-profile_param_enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='profile_param_enabled'>\n";
-	echo "		<option value='true'>".$text['label-true']."</option>\n";
-	echo "		<option value='false' ".($profile_param_enabled == "false" ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
-	echo "	</select>\n";
+	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
+		echo "	<label class='switch'>\n";
+		echo "		<input type='checkbox' id='profile_param_enabled' name='profile_param_enabled' value='true' ".($profile_param_enabled == 'true' ? "checked='checked'" : null).">\n";
+		echo "		<span class='slider'></span>\n";
+		echo "	</label>\n";
+	}
+	else {
+		echo "	<select class='formfld' id='profile_param_enabled' name='profile_param_enabled'>\n";
+		echo "		<option value='true' ".($profile_param_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($profile_param_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "	</select>\n";
+	}
 	echo "<br />\n";
 	echo $text['description-profile_param_enabled']."\n";
 	echo "</td>\n";

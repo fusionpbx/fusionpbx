@@ -17,15 +17,18 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018-2020
+	Portions created by the Initial Developer are Copyright (C) 2018-2022
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//includes
-	require_once "root.php";
+//set the include path
+	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+	set_include_path(parse_ini_file($conf[0])['document.root']);
+
+//includes files
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
@@ -76,6 +79,7 @@
 		$file = $_SESSION['server']['temp']['dir']."/destinations-".$_SESSION['domain_name'].".csv";
 		file_put_contents($file, $_POST['data']);
 		$_SESSION['file'] = $file;
+		$_SESSION['file_name'] = $_FILES['ulfile']['name'];
 	}
 
 //copy the csv file
@@ -216,6 +220,11 @@
 							//add the actions
 								foreach ($array['destinations'] as $row) {
 
+									//build the array
+										$actions[0]['destination_app'] = $row['destination_app'];
+										$actions[0]['destination_data'] =  $row['destination_data'];
+										$destination_actions = json_encode($actions);
+
 									//get the values
 										$destination_number = $row['destination_number'];
 										$destination_app = $row['destination_app'];
@@ -235,6 +244,7 @@
 
 									//add the additional fields
 										$dialplan_uuid = uuid();
+										$array["destinations"][$row_id]['destination_actions'] = $destination_actions;
 										$array["destinations"][$row_id]['destination_type'] = $destination_type;
 										$array["destinations"][$row_id]['destination_record'] = $destination_record;
 										$array["destinations"][$row_id]['destination_context'] = $destination_context;
@@ -266,14 +276,26 @@
 											$dialplan_detail_type = "destination_number";
 										}
 
+									//authorized specific dialplan_detail_type that are safe, sanitize all other values
+										switch ($dialplan_detail_type) {
+										case 'destination_number':
+											break;
+										case '${sip_to_user}':
+											break;
+										case '${sip_req_user}':
+											break;
+										default:
+											$dialplan_detail_type = xml::sanitize($dialplan_detail_type);
+										}
+
 									//build the xml dialplan
-										$array["dialplans"][$row_id]["dialplan_xml"] = "<extension name=\"".$dialplan_name."\" continue=\"false\" uuid=\"".$dialplan_uuid."\">\n";
-										$array["dialplans"][$row_id]["dialplan_xml"] .= "	<condition field=\"".$dialplan_detail_type."\" expression=\"".$destination_number_regex."\">\n";
+										$array["dialplans"][$row_id]["dialplan_xml"] = "<extension name=\"".xml::sanitize($dialplan_name)."\" continue=\"false\" uuid=\"".xml::sanitize($dialplan_uuid)."\">\n";
+										$array["dialplans"][$row_id]["dialplan_xml"] .= "	<condition field=\"".$dialplan_detail_type."\" expression=\"".xml::sanitize($destination_number_regex)."\">\n";
 										$array["dialplans"][$row_id]["dialplan_xml"] .= "		<action application=\"export\" data=\"call_direction=inbound\" inline=\"true\"/>\n";
 										$array["dialplans"][$row_id]["dialplan_xml"] .= "		<action application=\"set\" data=\"domain_uuid=".$_SESSION['domain_uuid']."\" inline=\"true\"/>\n";
 										$array["dialplans"][$row_id]["dialplan_xml"] .= "		<action application=\"set\" data=\"domain_name=".$_SESSION['domain_name']."\" inline=\"true\"/>\n";
 										if (strlen($destination_cid_name_prefix) > 0) {
-											$array["dialplans"][$row_id]["dialplan_xml"] .= "		<action application=\"set\" data=\"effective_caller_id_name=".$destination_cid_name_prefix."#\${caller_id_name}\" inline=\"true\"/>\n";
+											$array["dialplans"][$row_id]["dialplan_xml"] .= "		<action application=\"set\" data=\"effective_caller_id_name=".xml::sanitize($destination_cid_name_prefix)."#\${caller_id_name}\" inline=\"true\"/>\n";
 										}
 										if (strlen($destination_record) > 0) {
 											$array["dialplans"][$row_id]["dialplan_xml"] .= "		<action application=\"set\" data=\"record_path=\${recordings_dir}/\${domain_name}/archive/\${strftime(%Y)}/\${strftime(%b)}/\${strftime(%d)}\" inline=\"true\"/>\n";
@@ -284,18 +306,18 @@
 											$array["dialplans"][$row_id]["dialplan_xml"] .= "		<action application=\"record_session\" data=\"\${record_path}/\${record_name}\" inline=\"false\"/>\n";
 										}
 										if (strlen($destination_accountcode) > 0) {
-											$array["dialplans"][$row_id]["dialplan_xml"] .= "		<action application=\"set\" data=\"accountcode=".$destination_accountcode."\" inline=\"true\"/>\n";
+											$array["dialplans"][$row_id]["dialplan_xml"] .= "		<action application=\"set\" data=\"accountcode=".xml::sanitize($destination_accountcode)."\" inline=\"true\"/>\n";
 										}
 										if (strlen($destination_carrier) > 0) {
-											$array["dialplans"][$row_id]["dialplan_xml"] .= "		<action application=\"set\" data=\"carrier=".$destination_carrier."\" inline=\"true\"/>\n";
+											$array["dialplans"][$row_id]["dialplan_xml"] .= "		<action application=\"set\" data=\"carrier=".xml::sanitize($destination_carrier)."\" inline=\"true\"/>\n";
 										}
 										if (strlen($fax_uuid) > 0) {
 											$array["dialplans"][$row_id]["dialplan_xml"] .= "		<action application=\"set\" data=\"tone_detect_hits=1\" inline=\"true\"/>\n";
-											$array["dialplans"][$row_id]["dialplan_xml"] .= "		<action application=\"set\" data=\"execute_on_tone_detect=transfer ".$fax_extension." XML \${domain_name}\" inline=\"true\"/>\n";
+											$array["dialplans"][$row_id]["dialplan_xml"] .= "		<action application=\"set\" data=\"execute_on_tone_detect=transfer ".xml::sanitize($fax_extension)." XML \${domain_name}\" inline=\"true\"/>\n";
 											$array["dialplans"][$row_id]["dialplan_xml"] .= "		<action application=\"tone_detect\" data=\"fax 1100 r +5000\"/>\n";
 											$array["dialplans"][$row_id]["dialplan_xml"] .= "		<action application=\"sleep\" data=\"3000\"/>\n";
 										}
-										$array["dialplans"][$row_id]["dialplan_xml"] .= "		<action application=\"".$destination_app."\" data=\"".$destination_data."\"/>\n";
+										$array["dialplans"][$row_id]["dialplan_xml"] .= "		<action application=\"".xml::sanitize($destination_app)."\" data=\"".xml::sanitize($destination_data)."\"/>\n";
 										$array["dialplans"][$row_id]["dialplan_xml"] .= "	</condition>\n";
 										$array["dialplans"][$row_id]["dialplan_xml"] .= "</extension>\n";
 
@@ -404,7 +426,7 @@
 													$dialplan_detail_order = $dialplan_detail_order + 10;
 												}
 
-											//set the call accountcode
+											//set the destination app and data
 												if (strlen($destination_app) > 0 && strlen($destination_data) > 0) {
 													$array["dialplans"][$row_id]["dialplan_details"][$y]["domain_uuid"] = $domain_uuid;
 													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
@@ -412,6 +434,11 @@
 													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_data"] = $destination_data;
 													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
 													$y++;
+
+													//set inline to true
+													if ($action_app == 'set' || $action_app == 'export') {
+														$dialplan["dialplan_details"][$y]["dialplan_detail_inline"] = 'true';
+													}
 
 													//increment the dialplan detail order
 													$dialplan_detail_order = $dialplan_detail_order + 10;
@@ -678,13 +705,25 @@
 
 			echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
+			if (isset($_SESSION['file_name']) && strlen($_SESSION['file_name']) > 0) {
+				echo "<tr>\n";
+				echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+				echo "		".$text['label-file_name']."\n";
+				echo "</td>\n";
+				echo "<td class='vtable' align='left'>\n";
+				echo "		<b>".$_SESSION['file_name']."</b>\n";
+				echo "<br />\n";
+				//echo $text['description-file_name']."\n";
+				echo "</td>\n";
+				echo "</tr>\n";
+			}
+
 			//loop through user columns
 			$x = 0;
 			foreach ($line_fields as $line_field) {
-				$line_field = trim(trim($line_field), $enclosure);
+				$line_field = preg_replace('#[^a-zA-Z0-9_]#', '', $line_field);
 				echo "<tr>\n";
 				echo "	<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-				//echo "    ".$text['label-zzz']."\n";
 				echo $line_field;
 				echo "	</td>\n";
 				echo "	<td class='vtable' align='left'>\n";
@@ -731,7 +770,7 @@
 			echo $text['description-destination_type']."\n";
 			echo "</td>\n";
 			echo "</tr>\n";
-			
+
 			echo "<tr>\n";
 			echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 			echo "	".$text['label-destination_record']."\n";

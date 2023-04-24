@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2021
+	Portions created by the Initial Developer are Copyright (C) 2008-2022
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -25,8 +25,11 @@
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 
-//includes
-	require_once "root.php";
+//set the include path
+	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+	set_include_path(parse_ini_file($conf[0])['document.root']);
+
+//includes files
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
@@ -104,6 +107,7 @@
 			$queue_announce_sound = $_POST["queue_announce_sound"];
 			$queue_announce_frequency = $_POST["queue_announce_frequency"];
 			$queue_cc_exit_keys = $_POST["queue_cc_exit_keys"];
+			$queue_email_address = $_POST["queue_email_address"];
 			$queue_description = $_POST["queue_description"];
 
 		//remove invalid characters
@@ -298,9 +302,14 @@
 				$array['call_center_queues'][0]['queue_outbound_caller_id_number'] = $queue_outbound_caller_id_number;
 			}
 			$array['call_center_queues'][0]['queue_announce_position'] = $queue_announce_position;
-			$array['call_center_queues'][0]['queue_announce_sound'] = $queue_announce_sound;
+			if (permission_exists('call_center_announce_sound')) {
+				$array['call_center_queues'][0]['queue_announce_sound'] = $queue_announce_sound;
+			}
 			$array['call_center_queues'][0]['queue_announce_frequency'] = $queue_announce_frequency;
 			$array['call_center_queues'][0]['queue_cc_exit_keys'] = $queue_cc_exit_keys;
+			if (permission_exists('call_center_email_address')) {
+				$array['call_center_queues'][0]['queue_email_address'] = $queue_email_address;
+			}
 			$array['call_center_queues'][0]['queue_description'] = $queue_description;
 			$array['call_center_queues'][0]['call_center_queue_uuid'] = $call_center_queue_uuid;
 			$array['call_center_queues'][0]['dialplan_uuid'] = $dialplan_uuid;
@@ -327,43 +336,44 @@
 			}
 
 		//build the xml dialplan
-			$dialplan_xml = "<extension name=\"".$queue_name."\" continue=\"\" uuid=\"".$dialplan_uuid."\">\n";
+			$dialplan_xml = "<extension name=\"".xml::sanitize($queue_name)."\" continue=\"\" uuid=\"".xml::sanitize($dialplan_uuid)."\">\n";
 			$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^([^#]+#)(.*)\$\" break=\"never\">\n";
 			$dialplan_xml .= "		<action application=\"set\" data=\"caller_id_name=\$2\"/>\n";
 			$dialplan_xml .= "	</condition>\n";
-			$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^(callcenter\+)?".$queue_extension."$\">\n";
+			$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^(callcenter\+)?".xml::sanitize($queue_extension)."$\">\n";
 			$dialplan_xml .= "		<action application=\"answer\" data=\"\"/>\n";
 			if (is_uuid($call_center_queue_uuid)) {
-				$dialplan_xml .= "		<action application=\"set\" data=\"call_center_queue_uuid=".$call_center_queue_uuid."\"/>\n";
+				$dialplan_xml .= "		<action application=\"set\" data=\"call_center_queue_uuid=".xml::sanitize($call_center_queue_uuid)."\"/>\n";
 			}
 			if (is_numeric($queue_extension)) {
-				$dialplan_xml .= "		<action application=\"set\" data=\"queue_extension=".$queue_extension."\"/>\n";
+				$dialplan_xml .= "		<action application=\"set\" data=\"queue_extension=".xml::sanitize($queue_extension)."\"/>\n";
 			}
-			$dialplan_xml .= "		<action application=\"set\" data=\"cc_export_vars=call_center_queue_uuid\"/>\n";
+			$dialplan_xml .= "		<action application=\"set\" data=\"cc_export_vars=\${cc_export_vars},call_center_queue_uuid,sip_h_Alert-Info\"/>\n";
 			$dialplan_xml .= "		<action application=\"set\" data=\"hangup_after_bridge=true\"/>\n";
 			if ($queue_time_base_score_sec != '') {
-				$dialplan_xml .= "		<action application=\"set\" data=\"cc_base_score=".$queue_time_base_score_sec."\"/>\n";
+				$dialplan_xml .= "		<action application=\"set\" data=\"cc_base_score=".xml::sanitize($queue_time_base_score_sec)."\"/>\n";
 			}
 			if ($queue_greeting_path != '') {
+				$dialplan_xml .= "		<action application=\"sleep\" data=\"1000\"/>\n";
 				$greeting_array = explode(':', $queue_greeting_path);
 				if (count($greeting_array) == 1) {
-					$dialplan_xml .= "		<action application=\"playback\" data=\"".$queue_greeting_path."\"/>\n";
+					$dialplan_xml .= "		<action application=\"playback\" data=\"".xml::sanitize($queue_greeting_path)."\"/>\n";
 				}
 				else {
 					if ($greeting_array[0] == 'say' || $greeting_array[0] == 'tone_stream' || $greeting_array[0] == 'phrase') {
-						$dialplan_xml .= "		<action application=\"".$greeting_array[0]."\" data=\"".$greeting_array[1]."\"/>\n";
+						$dialplan_xml .= "		<action application=\"".xml::sanitize($greeting_array[0])."\" data=\"".xml::sanitize($greeting_array[1])."\"/>\n";
 					}
 				}
 			}
 			if (strlen($queue_cid_prefix) > 0) {
-				$dialplan_xml .= "		<action application=\"set\" data=\"effective_caller_id_name=".$queue_cid_prefix."#\${caller_id_name}\"/>\n";
+				$dialplan_xml .= "		<action application=\"set\" data=\"effective_caller_id_name=".xml::sanitize($queue_cid_prefix)."#\${caller_id_name}\"/>\n";
 			}
 			if (strlen($queue_cc_exit_keys) > 0) {
-				$dialplan_xml .= "		<action application=\"set\" data=\"cc_exit_keys=".$queue_cc_exit_keys."\"/>\n";
+				$dialplan_xml .= "		<action application=\"set\" data=\"cc_exit_keys=".xml::sanitize($queue_cc_exit_keys)."\"/>\n";
 			}
-			$dialplan_xml .= "		<action application=\"callcenter\" data=\"".$queue_extension."@".$_SESSION["domain_name"]."\"/>\n";
+			$dialplan_xml .= "		<action application=\"callcenter\" data=\"".xml::sanitize($queue_extension)."@".$_SESSION["domain_name"]."\"/>\n";
 			if ($destination->valid($queue_timeout_app.':'.$queue_timeout_data)) {
-				$dialplan_xml .= "		<action application=\"".$queue_timeout_app."\" data=\"".$queue_timeout_data."\"/>\n";
+				$dialplan_xml .= "		<action application=\"".xml::sanitize($queue_timeout_app)."\" data=\"".xml::sanitize($queue_timeout_data)."\"/>\n";
 			}
 			$dialplan_xml .= "	</condition>\n";
 			$dialplan_xml .= "</extension>\n";
@@ -519,6 +529,7 @@
 				$queue_announce_sound = $row["queue_announce_sound"];
 				$queue_announce_frequency = $row["queue_announce_frequency"];
 				$queue_cc_exit_keys = $row["queue_cc_exit_keys"];
+				$queue_email_address = $row["queue_email_address"];
 				$queue_description = $row["queue_description"];
 			}
 		}
@@ -1286,13 +1297,26 @@
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
 	echo "  ".$text['label-exit_keys']."\n";
-   	echo "</td>\n";
-   	echo "<td class='vtable' align='left'>\n";
-   	echo "  <input class='formfld' type='text' name='queue_cc_exit_keys' value='".escape($queue_cc_exit_keys)."'>\n";
-   	echo "<br />\n";
-   	echo $text['description-exit_keys']."\n";
-   	echo "</td>\n";
-   	echo "</tr>\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "  <input class='formfld' type='text' name='queue_cc_exit_keys' value='".escape($queue_cc_exit_keys)."'>\n";
+	echo "<br />\n";
+	echo $text['description-exit_keys']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	if (permission_exists('call_center_email_address')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+		echo "	".$text['label-queue_email_address']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "  <input class='formfld' type='text' name='queue_email_address' maxlength='255' value='".escape($queue_email_address)."'>\n";
+		echo "<br />\n";
+		echo $text['description-queue_email_address']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";

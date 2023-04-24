@@ -64,6 +64,9 @@
 			:gsub('\'', '\\\''))
 	end
 
+--create the api object
+	api = freeswitch.API();
+
 --set channel variables to lua variables
 	domain_uuid = env:getHeader("domain_uuid");
 	domain_name = env:getHeader("domain_name");
@@ -160,11 +163,10 @@
 --set default values
 	if (not fax_success) then
 		fax_success = "0";
-		fax_result_code = 2;
 	end
 	if (hangup_cause_q850 == "17") then
 		fax_success = "0";
-		fax_result_code = 2;
+		fax_result_text = "USER_BUSY";
 	end
 	if (not fax_result_text) then
 		fax_result_text = "FS_NOT_SET";
@@ -230,9 +232,8 @@
 		cmd = cmd .. "fax_prefix=false ";
 	end
 	freeswitch.consoleLog("notice", "[fax] command: " .. cmd .. "\n");
-	local handle = io.popen(cmd);
-	result = handle:read("*a");
-	handle:close();
+	os.execute(cmd);
+	
 
 --add to fax logs
 	sql = "insert into v_fax_logs ";

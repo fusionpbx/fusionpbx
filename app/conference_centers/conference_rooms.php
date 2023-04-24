@@ -24,8 +24,11 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//includes
-	require_once "root.php";
+//set the include path
+	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+	set_include_path(parse_ini_file($conf[0])['document.root']);
+
+//includes files
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
@@ -288,7 +291,7 @@
 	echo th_order_by('mute', $text['label-mute'], $order_by, $order, null, "class='center'");
 	echo th_order_by('sounds', $text['label-sounds'], $order_by, $order, null, "class='center'");
 	echo "<th class='center'>".$text['label-members']."</th>\n";
-	echo "<th>".$text['label-tools']."</th>\n";
+	echo "<th class='center'>".$text['label-tools']."</th>\n";
 	if (permission_exists('conference_room_enabled')) {
 		echo th_order_by('enabled', $text['label-enabled'], $order_by, $order, null, "class='center'");
 	}
@@ -443,9 +446,12 @@
 			else {
 				echo "	<td class='center'>0</td>\n";
 			}
-			echo "	<td class='no-link no-wrap'>\n";
+			echo "	<td class='no-link no-wrap center'>\n";
 			if (permission_exists('conference_interactive_view')) {
-				echo "		<a href='".PROJECT_PATH."/app/conferences_active/conference_interactive.php?c=".urlencode($row['conference_room_uuid'])."'>".$text['label-view']."</a>&nbsp;\n";
+				echo "		<a href='".PROJECT_PATH."/app/conferences_active/conference_interactive.php?c=".urlencode($row['conference_room_uuid'])."'>".$text['label-view']."</a>\n";
+			}
+			else if (permission_exists('conference_active_view')) {
+				echo "		<a href='".PROJECT_PATH."/app/conferences_active/conferences_active.php'>".$text['label-view']."</a>\n";
 			}
 			if (permission_exists('conference_cdr_view')) {	
 				echo "		<a href='/app/conference_cdr/conference_cdr.php?id=".urlencode($row['conference_room_uuid'])."'>".$text['button-cdr']."</a>\n";

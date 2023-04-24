@@ -15,8 +15,11 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//includes
-	require_once "root.php";
+//set the include path
+	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+	set_include_path(parse_ini_file($conf[0])['document.root']);
+
+//includes files
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
@@ -128,7 +131,7 @@
 			$sql = "select caller_id_name, caller_id_number, destination_number ";
 			$sql .= "from v_xml_cdr ";
 			$sql .= "where domain_uuid = :domain_uuid ";
-			$sql .= "and uuid = :uuid ";
+			$sql .= "and xml_cdr_uuid = :uuid ";
 			$parameters['domain_uuid'] = $domain_uuid;
 			$parameters['uuid'] = $row['call_uuid'];
 			$database = new database;

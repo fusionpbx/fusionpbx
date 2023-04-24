@@ -85,7 +85,6 @@ $text['title_description-conference_rooms']['ru-ru'] = "Conference Rooms are ind
 $text['title_description-conference_rooms']['sv-se'] = "Conference Rooms are individual meeting places within a Conference Center.";
 $text['title_description-conference_rooms']['uk-ua'] = "Conference Rooms are individual meeting places within a Conference Center.";
 
-
 $text['label-conference_center_name']['en-us'] = "Name";
 $text['label-conference_center_name']['en-gb'] = "Name";
 $text['label-conference_center_name']['ar-eg'] = "";

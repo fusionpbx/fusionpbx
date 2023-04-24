@@ -25,8 +25,11 @@
 	Lewis Hallam <lewishallam80@gmail.com>
 */
 
-//includes
-	require_once "root.php";
+//set the include path
+	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+	set_include_path(parse_ini_file($conf[0])['document.root']);
+
+//includes files
 	require_once "resources/require.php";
 
 //check permissions
@@ -56,7 +59,7 @@
 	$destination = new destinations;
 
 //get http post variables and set them to php variables
-	if (is_array($_POST)) {
+	if (count($_POST) > 0) {
 
 		//set the variables from the http values
 			$call_flow_uuid = $_POST["call_flow_uuid"];
@@ -73,7 +76,7 @@
 			$call_flow_alternate_sound = $_POST["call_flow_alternate_sound"];
 			$call_flow_alternate_destination = $_POST["call_flow_alternate_destination"];
 			$call_flow_context = $_POST["call_flow_context"];
-			$call_flow_enabled = $_POST["call_flow_enabled"];
+			$call_flow_enabled = $_POST["call_flow_enabled"] ?: 'false';
 			$call_flow_description = $_POST["call_flow_description"];
 
 		//seperate the action and the param
@@ -169,16 +172,16 @@
 			$destination_feature = str_replace("+", "\+", $destination_feature);
 
 		//build the xml dialplan
-			$dialplan_xml = "<extension name=\"".$call_flow_name."\" continue=\"\" uuid=\"".$dialplan_uuid."\">\n";
-			$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".$destination_feature."$\" break=\"on-true\">\n";
+			$dialplan_xml = "<extension name=\"".xml::sanitize($call_flow_name)."\" continue=\"\" uuid=\"".xml::sanitize($dialplan_uuid)."\">\n";
+			$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".xml::sanitize($destination_feature)."$\" break=\"on-true\">\n";
 			$dialplan_xml .= "		<action application=\"answer\" data=\"\"/>\n";
 			$dialplan_xml .= "		<action application=\"sleep\" data=\"200\"/>\n";
 			$dialplan_xml .= "		<action application=\"set\" data=\"feature_code=true\"/>\n";
-			$dialplan_xml .= "		<action application=\"set\" data=\"call_flow_uuid=".$call_flow_uuid."\"/>\n";
+			$dialplan_xml .= "		<action application=\"set\" data=\"call_flow_uuid=".xml::sanitize($call_flow_uuid)."\"/>\n";
 			$dialplan_xml .= "		<action application=\"lua\" data=\"call_flow.lua\"/>\n";
 			$dialplan_xml .= "	</condition>\n";
-			$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".$destination_extension."$\">\n";
-			$dialplan_xml .= "		<action application=\"set\" data=\"call_flow_uuid=".$call_flow_uuid."\"/>\n";
+			$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".xml::sanitize($destination_extension)."$\">\n";
+			$dialplan_xml .= "		<action application=\"set\" data=\"call_flow_uuid=".xml::sanitize($call_flow_uuid)."\"/>\n";
 			$dialplan_xml .= "		<action application=\"lua\" data=\"call_flow.lua\"/>\n";
 			$dialplan_xml .= "	</condition>\n";
 			$dialplan_xml .= "</extension>\n";
@@ -241,6 +244,31 @@
 		//remove the temporary permission
 			$p->delete("dialplan_add", "temp");
 			$p->delete("dialplan_edit", "temp");
+
+		// Update subscribed endpoints
+		$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+		if ($fp) {
+			//send the event
+				$event = "sendevent PRESENCE_IN\n";
+				$event .= "proto: flow\n";
+				$event .= "event_type: presence\n";
+				$event .= "alt_event_type: dialog\n";
+				$event .= "Presence-Call-Direction: outbound\n";
+				$event .= "state: Active (1 waiting)\n";
+				$event .= "from: flow+".$call_flow_feature_code."@".$_SESSION['domain_name']."\n";
+				$event .= "login: flow+".$call_flow_feature_code."@".$_SESSION['domain_name']."\n";
+				$event .= "unique-id: ".$call_flow_uuid."\n";
+				if ($call_flow_status == "true") {
+					$event .= "answer-state: confirmed\n";
+				} else {
+					$event .= "answer-state: terminated\n";
+				}
+
+				event_socket_request($fp, $event);
+				//echo $event."<br />";
+			fclose($fp);
+
+		}
 
 		//debug info
 			//echo "<pre>";
@@ -327,6 +355,9 @@
 	if (strlen($call_flow_context) == 0) {
 		$call_flow_context = $_SESSION['domain_name'];
 	}
+
+//set the defaults
+	if (strlen($call_flow_enabled) == 0) { $call_flow_enabled = 'true'; }
 
 //get the recordings
 	$sql = "select recording_name, recording_filename from v_recordings ";
@@ -689,21 +720,18 @@
 	echo "	".$text['label-enabled']."\n";
 	echo "</td>\n";
 	echo "<td width=\"70%\" class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='call_flow_enabled'>\n";
-	if ($call_flow_enabled == "true") {
-		echo "	<option value='true' selected='selected'>".$text['option-true']."</option>\n";
+	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
+		echo "	<label class='switch'>\n";
+		echo "		<input type='checkbox' id='call_flow_enabled' name='call_flow_enabled' value='true' ".($call_flow_enabled == 'true' ? "checked='checked'" : null).">\n";
+		echo "		<span class='slider'></span>\n";
+		echo "	</label>\n";
 	}
 	else {
-		echo "	<option value='true'>".$text['option-true']."</option>\n";
+		echo "	<select class='formfld' id='call_flow_enabled' name='call_flow_enabled'>\n";
+		echo "		<option value='true' ".($call_flow_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($call_flow_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "	</select>\n";
 	}
-	if ($call_flow_enabled == "false") {
-		echo "	<option value='false' selected='selected'>".$text['option-false']."</option>\n";
-	}
-	else {
-		echo "	<option value='false'>".$text['option-false']."</option>\n";
-	}
-	echo "	</select>\n";
-
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-call_flow_description']."\n";

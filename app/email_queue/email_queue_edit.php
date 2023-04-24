@@ -1,7 +1,10 @@
 <?php
 
-//includes
-	require_once "root.php";
+//set the include path
+	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+	set_include_path(parse_ini_file($conf[0])['document.root']);
+
+//includes files
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
@@ -106,6 +109,46 @@
 				return;
 			}
 
+		//parse email addresses to single string csv string
+			if (substr_count($email_to, "\n") != 0) {
+				$email_to_lines = explode("\n", $email_to);
+				if (is_array($email_to_lines) && @sizeof($email_to_lines) != 0) {
+					foreach ($email_to_lines as $email_to_line) {
+						if (substr_count($email_to_line, ',') != 0) {
+							$email_to_array = explode(',', $email_to_line);
+							if (is_array($email_to_array) && @sizeof($email_to_array) != 0) {
+								foreach ($email_to_array as $email_to_address) {
+									if (valid_email(trim($email_to_address))) {
+										$email_to_addresses[] = strtolower(trim($email_to_address));
+									}
+								}
+							}
+						}
+						else {
+							if (valid_email(trim($email_to_line))) {
+								$email_to_addresses[] = strtolower(trim($email_to_line));
+							}
+						}
+					}
+				}
+			}
+			else {
+				if (substr_count($email_to, ',') != 0) {
+					$email_to_array = explode(',', $email_to);
+					if (is_array($email_to_array) && @sizeof($email_to_array) != 0) {
+						foreach ($email_to_array as $email_to_address) {
+							if (valid_email(trim($email_to_address))) {
+								$email_to_addresses[] = strtolower(trim($email_to_address));
+							}
+						}
+					}
+				}
+			}
+			if (is_array($email_to_addresses) && @sizeof($email_to_addresses) != 0) {
+				$email_to = implode(',', $email_to_addresses);
+				unset($email_to_array, $email_to_addresses);
+			}
+
 		//add the email_queue_uuid
 			if (!is_uuid($_POST["email_queue_uuid"])) {
 				$email_queue_uuid = uuid();
@@ -162,6 +205,7 @@
 			$email_status = $row["email_status"];
 			$email_retry_count = $row["email_retry_count"];
 			//$email_action_before = $row["email_action_before"];
+			$email_response = $row["email_response"];
 			$email_action_after = $row["email_action_after"];
 		}
 		unset($sql, $parameters, $row);
@@ -237,7 +281,19 @@
 	echo "	".$text['label-email_to']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='email_to' maxlength='255' value='".escape($email_to)."'>\n";
+	if (substr_count($email_to, ',') != 0) {
+		echo "	<textarea class='formfld' style='width: 450px; height: 100px;' name='email_to'>";
+		$email_to_array = explode(',', $email_to);
+		if (is_array($email_to_array) && @sizeof($email_to_array) != 0) {
+			foreach ($email_to_array as $email_to_address) {
+				echo escape($email_to_address)."\n";
+			}
+		}
+		echo "</textarea>\n";
+	}
+	else {
+		echo "	<input class='formfld' type='text' name='email_to' maxlength='255' value='".escape($email_to)."'>\n";
+	}
 	echo "<br />\n";
 	echo $text['description-email_to']."\n";
 	echo "</td>\n";
@@ -259,7 +315,7 @@
 	echo "	".$text['label-email_body']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='email_body' maxlength='255' value='".escape($email_body)."'>\n";
+	echo "	<textarea class='formfld' style='width: 450px; height: 100px;' name='email_body'>".$email_body."</textarea>\n";
 	echo "<br />\n";
 	echo $text['description-email_body']."\n";
 	echo "</td>\n";
@@ -270,7 +326,12 @@
 	echo "	".$text['label-email_status']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='email_status' maxlength='255' value='".escape($email_status)."'>\n";
+	echo "	<select class='formfld' name='email_status'>\n";
+	echo "		<option value='waiting' ".($email_status == 'waiting' ? "selected='selected'" : null).">".ucwords($text['label-waiting'])."</option>\n";
+	echo "		<option value='trying' ".($email_status == 'trying' ? "selected='selected'" : null).">".ucwords($text['label-trying'])."</option>\n";
+	echo "		<option value='sent' ".($email_status == 'sent' ? "selected='selected'" : null).">".ucwords($text['label-sent'])."</option>\n";
+	echo "		<option value='failed' ".($email_status == 'failed' ? "selected='selected'" : null).">".ucwords($text['label-failed'])."</option>\n";
+	echo "	</select>\n";
 	echo "<br />\n";
 	echo $text['description-email_status']."\n";
 	echo "</td>\n";
@@ -306,6 +367,17 @@
 	echo "	<input class='formfld' type='text' name='email_action_after' maxlength='255' value='".escape($email_action_after)."'>\n";
 	echo "<br />\n";
 	echo $text['description-email_action_after']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-email_response']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' style='position: relative;' align='left'>\n";
+	echo "	<textarea class='formfld' style='width: 450px; height: 100px;' name='email_response'>".$email_response."</textarea>\n";
+	echo "<br />\n";
+	echo $text['description-email_response']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 

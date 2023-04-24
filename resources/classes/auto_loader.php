@@ -38,8 +38,8 @@ class auto_loader {
 			$class_name = preg_replace('[^a-zA-Z0-9_]', '', $class_name);
 
 		//save the log to the syslog server
-			if ($_REQUEST['debug'] == 'true') {
-				openlog("XML CDR", LOG_PID | LOG_PERROR, LOG_LOCAL0);
+			if (isset($_REQUEST['debug']) && $_REQUEST['debug'] == 'true') {
+				openlog("PHP", LOG_PID | LOG_PERROR, LOG_LOCAL0);
 			}
 
 		//find the most relevant class name
@@ -92,7 +92,7 @@ class auto_loader {
 			}
 
 		//save the log to the syslog server
-			if ($_REQUEST['debug'] == 'true') {
+			if (isset($_REQUEST['debug']) && $_REQUEST['debug'] == 'true') {
 				closelog();
 			}
 	}

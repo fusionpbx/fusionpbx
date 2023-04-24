@@ -17,15 +17,18 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2022
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//includes
-	require_once "root.php";
+//set the include path
+	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+	set_include_path(parse_ini_file($conf[0])['document.root']);
+
+//includes files
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
@@ -91,11 +94,13 @@
 		$expire_seconds = $_POST["expire_seconds"];
 		$register = $_POST["register"];
 		$register_transport = $_POST["register_transport"];
+		$contact_params = $_POST["contact_params"];
 		$retry_seconds = $_POST["retry_seconds"];
 		$extension = $_POST["extension"];
 		$ping = $_POST["ping"];
 		$ping_min = $_POST["ping_min"];
 		$ping_max = $_POST["ping_max"];
+		$contact_in_ping = $_POST["contact_in_ping"];
 		$channels = $_POST["channels"];
 		$caller_id_in_from = $_POST["caller_id_in_from"];
 		$supress_cng = $_POST["supress_cng"];
@@ -105,7 +110,7 @@
 		$context = $_POST["context"];
 		$profile = $_POST["profile"];
 		$hostname = $_POST["hostname"];
-		$enabled = $_POST["enabled"];
+		$enabled = $_POST["enabled"] ?: 'false';
 		$description = $_POST["description"];
 	}
 
@@ -177,11 +182,13 @@
 					$array['gateways'][$x]["expire_seconds"] = $expire_seconds;
 					$array['gateways'][$x]["register"] = $register;
 					$array['gateways'][$x]["register_transport"] = $register_transport;
+					$array['gateways'][$x]["contact_params"] = $contact_params;
 					$array['gateways'][$x]["retry_seconds"] = $retry_seconds;
 					$array['gateways'][$x]["extension"] = $extension;
 					$array['gateways'][$x]["ping"] = $ping;
 					$array['gateways'][$x]["ping_min"] = $ping_min;
 					$array['gateways'][$x]["ping_max"] = $ping_max;
+					$array['gateways'][$x]["contact_in_ping"] = $contact_in_ping;
 					$array['gateways'][$x]["channels"] = $channels;
 					$array['gateways'][$x]["caller_id_in_from"] = $caller_id_in_from;
 					$array['gateways'][$x]["supress_cng"] = $supress_cng;
@@ -280,11 +287,13 @@
 			$expire_seconds = $row["expire_seconds"];
 			$register = $row["register"];
 			$register_transport = $row["register_transport"];
+			$contact_params = $row["contact_params"];
 			$retry_seconds = $row["retry_seconds"];
 			$extension = $row["extension"];
 			$ping = $row["ping"];
 			$ping_min = $row["ping_min"];
 			$ping_max = $row["ping_max"];
+			$contact_in_ping = $row["contact_in_ping"];
 			$channels = $row["channels"];
 			$caller_id_in_from = $row["caller_id_in_from"];
 			$supress_cng = $row["supress_cng"];
@@ -584,6 +593,17 @@
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+	echo "    ".$text['label-contact_params']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "    <input class='formfld' type='text' name='contact_params' maxlength='255' value=\"".escape($contact_params)."\">\n";
+	echo "<br />\n";
+	echo $text['description-contact_params']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
 	echo "    ".$text['label-register_proxy']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
@@ -734,6 +754,31 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+	echo "    ".$text['label-contact_in_ping']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "    <select class='formfld' name='contact_in_ping'>\n";
+	echo "    <option value=''></option>\n";
+	if ($contact_in_ping == "true") {
+		echo "    <option value='true' selected='selected'>".$text['label-true']."</option>\n";
+	}
+	else {
+		echo "    <option value='true'>".$text['label-true']."</option>\n";
+	}
+	if ($contact_in_ping == "false") {
+		echo "    <option value='false' selected='selected'>".$text['label-false']."</option>\n";
+	}
+	else {
+		echo "    <option value='false'>".$text['label-false']."</option>\n";
+	}
+	echo "    </select>\n";
+	echo "<br />\n";
+	echo $text['description-contact_in_ping']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
 	if (permission_exists('gateway_channels')) {
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
@@ -831,20 +876,18 @@
 	echo "	".$text['label-enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='enabled'>\n";
-	if ($enabled == "true") {
-		echo "	<option value='true' selected='selected'>".$text['label-true']."</option>\n";
+	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
+		echo "	<label class='switch'>\n";
+		echo "		<input type='checkbox' id='enabled' name='enabled' value='true' ".($enabled == 'true' ? "checked='checked'" : null).">\n";
+		echo "		<span class='slider'></span>\n";
+		echo "	</label>\n";
 	}
 	else {
-		echo "	<option value='true'>".$text['label-true']."</option>\n";
+		echo "	<select class='formfld' id='enabled' name='enabled'>\n";
+		echo "		<option value='true' ".($enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "	</select>\n";
 	}
-	if ($enabled == "false") {
-		echo "	<option value='false' selected='selected'>".$text['label-false']."</option>\n";
-	}
-	else {
-		echo "	<option value='false'>".$text['label-false']."</option>\n";
-	}
-	echo "	</select>\n";
 	echo "<br />\n";
 	echo $text['description-enabled']."\n";
 	echo "</td>\n";

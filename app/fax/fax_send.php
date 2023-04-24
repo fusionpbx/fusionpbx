@@ -37,8 +37,11 @@
 //send email through browser
 if (!$included) {
 
-	//includes
-		include "root.php";
+	//set the include path
+		$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+		set_include_path(parse_ini_file($conf[0])['document.root']);
+
+	//includes files
 		require_once "resources/require.php";
 		require_once "resources/check_auth.php";
 
@@ -181,13 +184,21 @@ if (!function_exists('fax_split_dtmf')) {
 			}
 	}
 
+//check if the domain is enabled
+if($_SESSION['domains'][$_SESSION['domain_uuid']]['domain_enabled'] == "1" || $_SESSION['domains'][$_SESSION['domain_uuid']]['domain_enabled'] == "true") {
+	$domain_enabled = true;
+}
+else {
+	$domain_enabled = false;
+}
+
 //clear file status cache
 	clearstatcache();
 
 //send the fax
 	$continue = false;
 	if (!$included) {
-		if (($_POST['action'] == "send")) {
+		if (($_POST['action'] == "send") && $domain_enabled == true) {
 			//get the values from the HTTP POST
 				$fax_numbers = $_POST['fax_numbers'];
 				$fax_uuid = $_POST["id"];
@@ -312,7 +323,7 @@ if (!function_exists('fax_split_dtmf')) {
 				if ($fax_file_extension != "pdf" && $fax_file_extension != "tif") {
 					chdir($dir_fax_temp);
 					$command = $IS_WINDOWS ? '' : 'export HOME=/tmp && ';
-					$command .= 'libreoffice --headless --convert-to pdf --outdir '.$dir_fax_temp.' '.$dir_fax_temp.'/'.$fax_name.'.'.$fax_file_extension;
+					$command .= 'libreoffice --headless --convert-to pdf --outdir '.$dir_fax_temp.' '.$dir_fax_temp.'/'.escapeshellarg($fax_name).'.'.escapeshellarg($fax_file_extension);
 					exec($command);
 					@unlink($dir_fax_temp.'/'.$fax_name.'.'.$fax_file_extension);
 				}
@@ -322,7 +333,7 @@ if (!function_exists('fax_split_dtmf')) {
 					chdir($dir_fax_temp);
 
 					//convert pdf to tif
-					$cmd = exec('which gs')." -q -r".$gs_r." -g".$gs_g." -dBATCH -dPDFFitPage -dNOSAFER -dNOPAUSE -dBATCH -sOutputFile=".correct_path($fax_name).".tif -sDEVICE=tiffg4 -Ilib stocht.ps -c \"{ .75 gt { 1 } { 0 } ifelse} settransfer\" -- ".correct_path($fax_name).".pdf -c quit";
+					$cmd = exec('which gs')." -q -r".$gs_r." -g".$gs_g." -dBATCH -dPDFFitPage -dNOSAFER -dNOPAUSE -dBATCH -sOutputFile=".escapeshellarg($fax_name).".tif -sDEVICE=tiffg4 -Ilib stocht.ps -c \"{ .75 gt { 1 } { 0 } ifelse} settransfer\" -- ".escapeshellarg($fax_name).".pdf -c quit";
 					// echo($cmd . "<br/>\n");
 					exec($cmd);
 					@unlink($dir_fax_temp.'/'.$fax_name.'.pdf');
@@ -672,17 +683,16 @@ if (!function_exists('fax_split_dtmf')) {
 
 		//send the fax
 		$fax_file = $dir_fax_sent."/".$fax_instance_uuid.".tif";
-		$common_variables .= "fax_queue_uuid='"               . $fax_queue_uuid          . "',";
-		$common_variables  = "for_fax=1,";
+		$common_variables .= "fax_queue_uuid="               . $fax_queue_uuid          . ",";
 		$common_variables .= "accountcode='"                  . $fax_accountcode         . "',";
-		$common_variables .= "sip_h_X-accountcode='"          . $fax_accountcode         . "',";
+		$common_variables .= "sip_h_accountcode='"          . $fax_accountcode         . "',";
 		$common_variables .= "domain_uuid="                   . $_SESSION["domain_uuid"] . ",";
 		$common_variables .= "domain_name="                   . $_SESSION["domain_name"] . ",";
 		$common_variables .= "origination_caller_id_name='"   . $fax_caller_id_name      . "',";
 		$common_variables .= "origination_caller_id_number='" . $fax_caller_id_number    . "',";
 		$common_variables .= "fax_ident='"                    . $fax_caller_id_number    . "',";
 		$common_variables .= "fax_header='"                   . $fax_caller_id_name      . "',";
-		$common_variables .= "fax_file='"                     . $fax_file                . "',";
+		$common_variables .= "fax_file='"                     . $fax_file               . "',";
 
 		foreach ($fax_numbers as $fax_number) {
 
@@ -713,11 +723,11 @@ if (!function_exists('fax_split_dtmf')) {
 			$dial_string .= $fax_variables;
 			$dial_string .= "mailto_address='"     . $mail_to_address   . "',";
 			$dial_string .= "mailfrom_address='"   . $mail_from_address . "',";
-			$dial_string .= "fax_uri=" . $fax_uri  . ",";
+			$dial_string .= "fax_uri="             . $fax_uri           . ",";
 			$dial_string .= "fax_retry_attempts=1" . ",";
 			$dial_string .= "fax_retry_limit=20"   . ",";
 			$dial_string .= "fax_retry_sleep=180"  . ",";
-			$dial_string .= "fax_verbose=true"     . ",";
+			//$dial_string .= "fax_verbose=true"     . ",";
 			$dial_string .= "fax_use_ecm=off"      . ",";
 			if ($_SESSION['fax_queue']['enabled']['boolean']) {
 				$dial_string .= "api_hangup_hook='lua app/fax/resources/scripts/hangup_tx.lua'";
@@ -938,14 +948,20 @@ if (!$included) {
 		echo "	<div class='heading'><b>".$text['header-new_fax']."</b></div>\n";
 		echo "	<div class='actions'>\n";
 		echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'fax.php']);
+		if ($domain_enabled == true) {
 		echo button::create(['type'=>'submit','label'=>$text['button-preview'],'icon'=>'eye','name'=>'submit','value'=>'preview']);
 		echo button::create(['type'=>'submit','label'=>$text['button-send'],'icon'=>'paper-plane','id'=>'btn_save','name'=>'submit','value'=>'send','style'=>'margin-left: 15px;']);
+		}
 		echo "	</div>\n";
 		echo "	<div style='clear: both;'></div>\n";
 		echo "</div>\n";
 		echo $text['description-2']." ".(permission_exists('fax_extension_view_domain') ? $text['description-3'] : null)."\n";
 		echo "<br /><br />\n";
-
+		
+		if ($domain_enabled == false) {
+		echo "<div class='warning_bar'>".$text['notice-sending-disabled']."</div>\n";
+		}
+		
 		echo "<table width='100%' border='0' cellspacing='0' cellpadding='0'>\n";
 
 		echo "<tr>\n";

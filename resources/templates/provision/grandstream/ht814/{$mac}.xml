@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8" ?>
 <!-- Grandstream XML Provisioning Configuration -->
 <gs_provision version="1">
 <mac>{$mac|replace:'-':''}</mac>
@@ -16,7 +15,7 @@
     <!-- # Admin password for web interface -->
     <!-- # String; between ascii values 33 and 126 -->
     <!-- # Mandatory -->
-    <P2>{$admin_password}</P2>
+    <P2>{$admin_password|escape: 'html'}</P2>
 
 
     <!-- # Layer 2 QoS.  -->
@@ -73,10 +72,14 @@
     <!-- # 0 - No, 1 - Yes (default is No) -->
     <P22030>0</P22030>
 
-    <!-- # Firmware Upgrade and Privisioning. 0 - TFTP Upgrade, 1 - HTTP Upgrade, 2 - HTTPS Upgrade, 3 - FTP Upgrade, 4 - FTPS Upgrade. -->
+    <!-- # Firmware Upgrade and Provisioning. 0 - TFTP Upgrade, 1 - HTTP Upgrade, 2 - HTTPS Upgrade, 3 - FTP Upgrade, 4 - FTPS Upgrade. -->
     <!-- # Number: 0, 1, 2, 3, 4 -->
     <!-- # Mandatory -->
-    <P212>2</P212>
+    {if isset($grandstream_firmware_upgrade_protocol) }
+    <P212>{$grandstream_firmware_upgrade_protocol}</P212>
+    {else}
+    <P212>1</P212>
+    {/if}
 
     <!-- # Firmware Server Path -->
     <!-- # Server address -->
@@ -109,7 +112,7 @@
 
     <!-- # HTTP/HTTPS Password -->
     <!-- # String; between ascii values 33 and 126 -->
-    <P1361>{$http_auth_password}</P1361>
+    <P1361>{$http_auth_password|escape: 'html'}</P1361>
 
     <!-- # Firmware File Prefix -->
     <!-- # String; between ascii values 33 and 126 -->
@@ -234,11 +237,11 @@
 
     <!-- # Connection Request Username -->
     <!-- # String -->
-    <P4511></P4511>
+    <P4511>{$mac|replace:'-':''|upper}</P4511>
 
     <!-- # Connection Request Password -->
     <!-- # String -->
-    <P4512></P4512>
+    <P4512>{$mac|replace:'-':''|upper}</P4512>
 
     <!-- # CPE SSL Certificate -->
     <P8220></P8220>
@@ -503,8 +506,11 @@
 
     <!-- # Primary SIP Server -->
     <!-- # Server address -->
+    {if $account.1.sip_transport != 'dns srv'}
+    <P47>{$account.1.server_address}:{$account.1.sip_port}</P47>
+    {else}
     <P47>{$account.1.server_address}</P47>
-
+    {/if}
 
     <!-- # Failover SIP Server -->
     <!-- # Server address -->
@@ -961,7 +967,7 @@
     <!-- # Dial Plan -->
     <!-- # String -->
     {if isset($grandstream_dial_plan) }
-    <P4200>{$grandstream_dial_plan}</P4200>
+    <P4200>{$grandstream_dial_plan|escape: 'html'}</P4200>
     {else}
     <P4200>{literal}{ x+ | *x+ | *xx*x+ }{/literal}</P4200>
     {/if}
@@ -1744,7 +1750,7 @@
     <P28161>0</P28161>
 
     <!-- # Management Access. 0- Management Interface Only, 1 - Both Services and Management Interfaces -->
-    <!-- # Number： 0， 1 -->
+    <!-- # Number:  0, 1 -->
     <!-- # Mandatory -->
     <P28162>0</P28162>
 
@@ -1861,7 +1867,7 @@
     <!-- # Allow DHCP server to set Time Zone. 0 - No, 1 - Yes -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P143>1</P143>
+    {if isset($grandstream_dhcp_time_zone)}<P143>{$grandstream_dhcp_time_zone}</P143>{else}<P143>0</P143>{/if}
 
     <!-- # Language. 0 - English, 4 - Chinese, 10 - Spanish -->
     <!-- # Number: 0, 4, 10 -->

@@ -74,7 +74,7 @@
 	end
 
 --include before
-	result = assert (io.popen ("dir " ..scripts_dir.."/app/dialplan/resources/before /b -1"));
+	result = assert (api:executeString("dir " ..scripts_dir.."/app/dialplan/resources/before /b -1"));
 	for file in result:lines() do
 		if (string.sub(file, -4) == ".lua") then
 			if file_exists(scripts_dir.."/app/dialplan/resources/before/"..file) then
@@ -85,7 +85,7 @@
 	end
 
 --include the dialplans
-	result = assert (io.popen ("dir " ..scripts_dir.."/app/dialplan/resources/"..dialplan_dir.." /b -1"));
+	result = assert (api:executeString("dir " ..scripts_dir.."/app/dialplan/resources/"..dialplan_dir.." /b -1"));
 	for file in result:lines() do
 		if (string.sub(file, -4) == ".lua") then
 			if file_exists(scripts_dir.."/app/dialplan/resources/"..dialplan_dir.."/"..file) then
@@ -96,7 +96,7 @@
 	end
 
 --include after
-	result = assert (io.popen ("dir " ..scripts_dir.."/app/dialplan/resources/after /b -1"));
+	result = assert (api:executeString("dir " ..scripts_dir.."/app/dialplan/resources/after /b -1"));
 	for file in result:lines() do
 		if (string.sub(file, -4) == ".lua") then
 			if file_exists(scripts_dir.."/app/dialplan/resources/after/"..file) then

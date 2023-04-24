@@ -7,7 +7,7 @@ if (!function_exists('transcribe')) {
 			$transcribe_provider = $_SESSION['voicemail']['transcribe_provider']['text'];
 			$transcribe_language = $_SESSION['voicemail']['transcribe_language']['text'];
 
-		//transribe - watson
+		//transcribe - watson
 			if ($transcribe_provider == 'watson') {
 				$api_key = $_SESSION['voicemail']['watson_key']['text'];
 				$api_url = $_SESSION['voicemail']['watson_url']['text'];
@@ -115,7 +115,7 @@ if (!function_exists('transcribe')) {
 				}
 			}
 
-		//transribe - google
+		//transcribe - google
 			if ($transcribe_provider == 'google') {
 				$api_key = $_SESSION['voicemail']['google_key']['text'];
 				$api_url = $_SESSION['voicemail']['google_url']['text'];
@@ -178,7 +178,7 @@ if (!function_exists('transcribe')) {
 				}
 			}
 
-		//transribe - azure
+		//transcribe - azure
 			if ($transcribe_provider == 'azure') {
 				$api_key = $_SESSION['voicemail']['azure_key']['text'];
 				$api_url = $_SESSION['voicemail']['azure_server_region']['text'];
@@ -221,6 +221,84 @@ if (!function_exists('transcribe')) {
 					return $array;
 				}
 
+			}
+
+			// transcribe - custom
+			// Works with self-hostable transcription service at https://github.com/AccelerateNetworks/an-transcriptions
+			if ($transcribe_provider == 'custom') {
+				$api_key = $_SESSION['voicemail']['api_key']['text'];
+				$api_url = $_SESSION['voicemail']['transcription_server']['text'];
+
+				if (strlen($transcribe_language) == 0) {
+					$transcribe_language = 'en-US';
+				}
+
+				if ($file_extension == "mp3") {
+					$content_type = 'audio/mp3';
+				}
+				if ($file_extension == "wav") {
+					$content_type = 'audio/wav';
+				}
+
+				$message = null;
+				for($retries = 5; $retries > 0; $retries--) {
+					echo "sending voicemail recording to ".$api_url." for transcription";
+
+					// submit the file for transcribing
+					$file_path = $file_path.'/'.$file_name;
+					$command = "curl -sX POST ".$api_url."/enqueue -H 'Authorization: Bearer ".$api_key."' -F file=@".$file_path;
+					$stdout = shell_exec($command);
+					$resp = json_decode($stdout, true);
+					if ($resp === null) {
+						echo "unexpected error: ".$stdout;
+						// json not parsable, try again
+						continue;
+					}
+
+					$transcription_id = $resp['id'];
+
+					// wait for transcription to complete
+					sleep(1);
+
+					while(true) {
+						echo "checking ".$api_url." for completion of job ".$transcription_id;
+						$command = "curl -s ".$api_url."/j/".$transcription_id." -H 'Authorization: Bearer ".$api_key."'";
+						$resp = json_decode(shell_exec($command), true);
+						if ($resp === null) {
+							// json not parsable, try again
+							continue;
+						}
+
+						if($resp['status'] == "failed") {
+							echo "transcription failed, retrying";
+							break;
+						}
+
+						if($resp['status'] == "finished") {
+							echo "transcription succeeded";
+							$message = $resp['result'];
+							break;
+						}
+
+						// transcription is queued or in progress, check again in 1 second
+						sleep(1);
+					}
+
+					if($message !== null) {
+						break;
+					}
+				}
+
+				if($message == null) {
+					return false;
+				}
+
+				$array['provider'] = $transcribe_provider;
+				$array['language'] = $transcribe_language;
+				$array['api_key'] = $api_key;
+				// $array['command'] = $command
+				$array['message'] = $message;
+				return $array;
 			}
 
 	}

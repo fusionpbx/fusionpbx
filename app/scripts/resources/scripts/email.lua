@@ -60,16 +60,18 @@
 	body = body:gsub("&#34;", [["]]);
 
 --get sessions info
-	if (session:ready()) then
+	if (session and session:ready()) then
 		domain_uuid = session:getVariable("domain_uuid");
 		domain_name = session:getVariable("domain_name");
 		call_uuid = session:getVariable("uuid");
 		headers = {
 			["X-FusionPBX-Domain-UUID"] = domain_uuid;
 			["X-FusionPBX-Domain-Name"] = domain_name;
-			["X-FusionPBX-Email-Type"]	= 'voicemail';
+			["X-FusionPBX-Email-Type"]	= 'app';
 			["X-FusionPBX-Call-UUID"]	= call_uuid;
 		}
+	else
+		headers = {}
 	end
 
 --send the email

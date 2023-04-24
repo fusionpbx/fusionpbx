@@ -2216,7 +2216,11 @@
     <!-- Enable Idle Mute. 0 - No, 1 - Yes. Default is 0 -->
     <!-- Number: 0, 1 -->
     <!-- Mandatory -->
+{if isset($grandstream_idle_mute_function_old)}
+    <P1565>{$grandstream_idle_mute_function_old}</P1565>
+{else}
     <P1565>0</P1565>
+{/if}
     <!-- Disable Transfer. 0 - No, 1 - Yes. Defauls is 0 -->
     <!-- Number: 0, 1 -->
     <!-- Mandatory -->
@@ -2420,7 +2424,7 @@
     <!-- When set to Yes(1), it will override the configured Time Zone setting if available -->
     <!-- Number: 0, 1-->
     <!-- Mandatory-->
-    <P143>1</P143>
+    {if isset($grandstream_dhcp_time_zone)}<P143>{$grandstream_dhcp_time_zone}</P143>{else}<P143>0</P143>{/if}
     <!-- Self Defined Time zone. Max length allowed is 64 characters -->
     <!-- String -->
     <!-- Mandatory -->

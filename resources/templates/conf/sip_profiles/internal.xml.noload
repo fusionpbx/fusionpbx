@@ -1,9 +1,9 @@
 <profile name="internal">
 	<!--
-		  This is a sofia sip profile/user agent.  This will service exactly one ip and port.
-		  In FreeSWITCH you can run multiple sip user agents on their own ip and port.
+		This is a sofia sip profile/user agent.  This will service exactly one ip and port.
+		In FreeSWITCH you can run multiple sip user agents on their own ip and port.
 
-		  When you hear someone say "sofia profile" this is what they are talking about.
+		When you hear someone say "sofia profile" this is what they are talking about.
 	-->
 
 	<!-- http://wiki.freeswitch.org/wiki/Sofia_Configuration_Files -->
@@ -27,17 +27,24 @@
 	</domains>
 
 	<settings>
+		<!-- inject delay between dtmf digits on send to help some slow interpreters (also per channel with rtp_digit_delay var -->
+		<param name="rtp-digit-delay" value="40" enabled="false"/>
+
 		<!--
-		When calls are in no media this will bring them back to media
-		when you press the hold button.
+			When calls are in no media this will bring them back to media
+			when you press the hold button.
 		-->
 		<param name="media-option" value="resume-media-on-hold" enabled="false"/>
+
 		<!--
-		This will allow a call after an attended transfer go back to
-		 bypass media after an attended transfer.
+			This will allow a call after an attended transfer go back to
+			bypass media after an attended transfer.
 		-->
 		<param name="media-option" value="bypass-media-after-att-xfer" enabled="false"/>
+
+		<!-- Can be set to "_undef_" to remove the User-Agent header -->
 		<param name="user-agent-string" value="FreeSWITCH" enabled="true"/>
+
 		<param name="debug" value="0"/>
 		<!-- If you want FreeSWITCH to shutdown if this profile fails to load, uncomment the next line. -->
 		<param name="shutdown-on-fail" value="true" enabled="false"/>
@@ -71,16 +78,14 @@
 		<param name="watchdog-step-timeout" value="30000"/>
 		<param name="watchdog-event-timeout" value="30000"/>
 
-		<param name="log-auth-failures" value="true"/>
+		<param name="log-auth-failures" value="false"/>
 		<param name="forward-unsolicited-mwi-notify" value="false"/>
 
-		<param name="track-calls" value="false"/>
 		<param name="context" value="public"/>
 		<param name="rfc2833-pt" value="101"/>
 		<!-- port to bind to for sip traffic -->
 		<param name="sip-port" value="5060"/>
 		<param name="dialplan" value="XML"/>
-		<param name="dtmf-type" value="rfc2833"/>
 		<param name="dtmf-duration" value="2000"/>
 		<param name="inbound-codec-prefs" value="$${global_codec_prefs}"/>
 		<param name="outbound-codec-prefs" value="$${global_codec_prefs}"/>
@@ -111,20 +116,21 @@
 
 		<!-- Enable Compact SIP headers. -->
 		<param name="enable-compact-headers" value="true" enabled="false"/>
-
-		<!--session timers -->
-		<param name="session-timeout" value="0" enabled="true"/>
+		<!--
+		enable/disable session timers
+		-->
 		<param name="enable-timer" value="false" enabled="true"/>
 		<param name="minimum-session-expires" value="0" enabled="false"/>
-		
+
 		<!-- apply inbound acl -->
-		<param name="apply-inbound-acl" value="domains"/>
+		<param name="apply-inbound-acl" value="providers"/>
 		<!--
 		This defines your local network, by default we detect your local network
 		and create this localnet.auto ACL for this.
 		-->
 		<param name="local-network-acl" value="localnet.auto"/>
-		<param name="apply-register-acl" value="domains" enabled="false"/>
+		<param name="apply-register-acl" value="providers" enabled="false"/>
+		<param name="dtmf-type" value="rfc2833"/>
 
 		<!-- 'true' means every time 'first-only' means on the first register -->
 		<param name="send-message-query-on-register" value="true" enabled="false"/>
@@ -152,7 +158,7 @@
 		<!-- used to share presence info across sofia profiles -->
 		<!-- Name of the db to use for this profile -->
 		<param name="dbname" value="share_presence" enabled="false"/>
-		<param name="presence-hosts" value="$${domain},$${local_ip_v4}" enabled="false"/>
+		<param name="presence-hosts" value="$${domain},$${local_ip_v4}"/>
 		<param name="presence-privacy" value="$${presence_privacy}"/>
 		<!-- ************************************************* -->
 
@@ -160,6 +166,8 @@
 		<param name="bitpacking" value="aal2" enabled="false"/>
 		<!--max number of open dialogs in proceeding -->
 		<param name="max-proceeding" value="1000" enabled="false"/>
+		<!--max number of receiving requests per second (Default: 1000, 0 - unlimited) -->
+		<param name="max-recv-requests-per-second" value="0" enabled="false"/>
 		<!--session timers for all call to expire after the specified seconds -->
 		<param name="session-timeout" value="1800" enabled="false"/>
 		<!-- Can be 'true' or 'contact' -->
@@ -169,6 +177,14 @@
 		<!-- if you want to send any special bind params of your own -->
 		<param name="bind-params" value="transport=udp" enabled="false"/>
 		<param name="unregister-on-options-fail" value="true" enabled="false"/>
+
+		<!-- Send an OPTIONS packet to all registered endpoints -->
+		<!--<param name="all-reg-options-ping" value="true"/>-->
+		<!-- Send an OPTIONS packet to NATed registered endpoints. Can be 'true' or 'udp-only'. -->
+		<!--<param name="nat-options-ping" value="true"/>-->
+		<!--<param name="sip-options-respond-503-on-busy" value="true"/>-->
+		<!--<param name="sip-messages-respond-200-ok" value="true"/>-->
+		<!--<param name="sip-subscribe-respond-200-ok" value="true"/>-->
 
 		<!-- TLS: disabled by default, set to "true" to enable -->
 		<param name="tls" value="$${internal_ssl_enable}"/>
@@ -185,17 +201,28 @@
 		<!-- Verify the date on TLS certificates -->
 		<param name="tls-verify-date" value="false"/>
 		<!-- TLS verify policy, when registering/inviting gateways with other servers (outbound) or handling inbound registration/invite requests how should we verify their certificate -->
-		<!-- set to 'in' to only verify incoming connections, 'out' to only verify outgoing connections, 'all' to verify all connections, also 'in_subjects', 'out_subjects' and 'all_subjects' for subject validation. Multiple policies can be split with a '|' pipe -->
-		<param name="tls-verify-policy" value="all|subjects_all" enabled="false"/>
+		<!-- set to 'in' to only verify incoming connections, 'out' to only verify outgoing connections, 'all' to verify all connections, also 'subjects_in', 'subjects_out' and 'subjects_all' for subject validation. Multiple policies can be split with a '|' pipe -->
+		<param name="tls-verify-policy" value="none"/>
 		<!-- Certificate max verify depth to use for validating peer TLS certificates when the verify policy is not none -->
 		<param name="tls-verify-depth" value="2"/>
 		<!-- If the tls-verify-policy is set to subjects_all or subjects_in this sets which subjects are allowed, multiple subjects can be split with a '|' pipe -->
 		<param name="tls-verify-in-subjects" value=""/>
-		<!-- TLS version ("sslv23" (default), "tlsv1"). NOTE: Phones may not work with TLSv1 -->
+		<!-- TLS version default: tlsv1,tlsv1.1,tlsv1.2 -->
 		<param name="tls-version" value="$${sip_tls_version}"/>
 
+		<!-- TLS ciphers default: ALL:!ADH:!LOW:!EXP:!MD5:@STRENGTH  -->
+		<param name="tls-ciphers" value="$${sip_tls_ciphers}" enabled="false"/>
+
+		<!--
+		Connect timeout for outgoing requests using TLS (in milliseconds).
+		Set the timeout and SIP engine will try again sending an outgoing request
+		and when possible - using an alternative address (DNS failover).
+		Default - 0 (disabled)
+		-->
+		<param name="tls-orq-connect-timeout" value="3000" enabled="false"/>
+
 		<!-- turn on auto-flush during bridge (skip timer sleep when the socket already has data)
-		 (reduces delay on latent connections default true, must be disabled explicitly)-->
+		(reduces delay on latent connections default true, must be disabled explicitly)-->
 		<param name="rtp-autoflush-during-bridge" value="false" enabled="false"/>
 
 		<!--If you don't want to pass through timestamps from 1 RTP call to another (on a per call basis with rtp_rewrite_timestamps chanvar)-->
@@ -210,8 +237,11 @@
 		<!--Uncomment to set all inbound calls to proxy media mode-->
 		<param name="inbound-proxy-media" value="true" enabled="false"/>
 
-		<!--Uncomment to let calls hit the dialplan *before* you decide if the codec is ok-->
-		<param name="inbound-late-negotiation" value="true" enabled="false"/>
+		<!-- Let calls hit the dialplan before selecting codec for the a-leg -->
+		<param name="inbound-late-negotiation" value="true"/>
+
+		<!-- Allow ZRTP clients to negotiate end-to-end security associations (also enables late negotiation) -->
+		<param name="inbound-zrtp-passthru" value="true"/>
 
 		<!-- this lets anything register -->
 		<!--  comment the next line and uncomment one or both of the other 2 lines for call authentication -->
@@ -239,6 +269,7 @@
 		<!-- add a ;received="<ip>:<port>" to the contact when replying to register for nat handling -->
 		<param name="NDLB-received-in-nat-reg-contact" value="true" enabled="false"/>
 		<param name="auth-calls" value="true"/>
+		<!-- Force subscription requests to require authentication -->
 		<param name="auth-subscriptions" value="true"/>
 		<!-- Force the user and auth-user to match. -->
 		<param name="inbound-reg-force-matching-username" value="true"/>
@@ -246,30 +277,27 @@
 		<param name="auth-all-packets" value="false"/>
 
 		<!-- external_sip_ip
-			Used as the public IP address for SDP.
-			Can be an one of:
-				ip address            - "12.34.56.78"
-				a stun server lookup  - "stun:stun.freeswitch.org"
-				a DNS name            - "host:host.server.com"
-				auto                  - Use guessed ip.
-				auto-nat              - Use ip learned from NAT-PMP or UPNP
+		Used as the public IP address for SDP.
+		Can be an one of:
+		 ip address            - "12.34.56.78"
+		 a stun server lookup  - "stun:stun.server.com"
+		 a DNS name            - "host:host.server.com"
+		 auto                  - Use guessed ip.
+		 auto-nat              - Use ip learned from NAT-PMP or UPNP
 		-->
 		<param name="ext-rtp-ip" value="$${external_rtp_ip}"/>
 		<param name="ext-sip-ip" value="$${external_sip_ip}"/>
 
 		<!-- rtp inactivity timeout -->
-		<param name="rtp-timeout-sec" value="300"/>
-		<param name="rtp-hold-timeout-sec" value="1800"/>
+		<param name="rtp-timeout-sec" value="300" description="deprecated" enabled="false"/>
+		<param name="rtp-hold-timeout-sec" value="1800" description="deprecated" enabled="false"/>
+		<param name="media_timeout" value="300" enabled="true"/>
+		<param name="media_hold_timeout" value="1800" enabled="true"/>
 		<!-- VAD choose one (out is a good choice); -->
-		<!-- <param name="vad" value="in" enabled="false"/> -->
+		<!--<param name="vad" value="in"/>-->
 		<param name="vad" value="out" enabled="false"/>
-		<!-- <param name="vad" value="both" enabled="false"/> -->
+		<!--<param name="vad" value="both"/>-->
 		<param name="alias" value="sip:10.0.1.251:5555" enabled="false"/>
-
-		<!-- sip expire settings -->
-		<param name="sip-expires-max-deviation" value="600" enabled="false"/>
-		<param name="sip-force-expires" value="1800" enabled="false"/>
-
 		<!--
 		These are enabled to make the default config work better out of the box.
 		If you need more than ONE domain you'll need to not use these options.
@@ -281,7 +309,17 @@
 		<!--all inbound reg will stored in the db using this domain -->
 		<param name="force-register-db-domain" value="$${domain}" enabled="false"/>
 
+		<!-- for sip over websocket support -->
+		<param name="ws-binding"  value=":5066"/>
+
+		<!-- for sip over secure websocket support -->
+		<!-- You need wss.pem in $${certs_dir} for wss or one will be created for you -->
+		<param name="wss-binding" value=":7443"/>
+
 		<param name="delete-subs-on-register" value="false" enabled="false"/>
+
+		<!-- launch a new thread to process each new inbound register when using heavier backends -->
+		<param name="inbound-reg-in-new-thread" value="true" enabled="false"/>
 
 		<!-- enable rtcp on every channel also can be done per leg basis with rtcp_audio_interval_msec variable set to passthru to pass it across a call-->
 		<param name="rtcp-audio-interval-msec" value="5000" enabled="false"/>
@@ -289,6 +327,10 @@
 
 		<!--force suscription expires to a lower value than requested-->
 		<param name="force-subscription-expires" value="60" enabled="false"/>
+
+		<!-- add a random deviation to the expires value of the 202 Accepted -->
+		<param name="sip-subscription-max-deviation" value="120" enabled="false"/>
+
 		<!-- disable register and transfer which may be undesirable in a public switch -->
 		<param name="disable-transfer" value="true" enabled="false"/>
 		<param name="disable-register" value="true" enabled="false"/>
@@ -301,6 +343,7 @@
 
 		<!-- use at your own risk or if you know what this does.-->
 		<param name="NDLB-force-rport" value="safe" enabled="true"/>
+
 		<!--
 		Choose the realm challenge key. Default is auto_to if not set.
 
@@ -310,28 +353,30 @@
 
 		If you want URL dialing to work you'll want to set this to auto_from.
 
-		If you use any other value besides auto_to or auto_from you'll loose
-		the ability to do multiple domains.
+		If you use any other value besides auto_to or auto_from you'll
+		loose the ability to do multiple domains.
 
 		Note: comment out to restore the behavior before 2008-09-29
 		-->
 		<param name="challenge-realm" value="auto_to"/>
 		<param name="disable-rtp-auto-adjust" value="true" enabled="false"/>
 		<!-- on inbound calls make the uuid of the session equal to the sip call id of that call -->
-		<!-- <param name="inbound-use-callid-as-uuid" value="false" enabled="false"/> -->
+		<param name="inbound-use-callid-as-uuid" value="false" enabled="false"/>
 		<!-- on outbound calls set the callid to match the uuid of the session -->
-		<!-- <param name="outbound-use-uuid-as-callid" value="false" enabled="false"/> -->
+		<param name="outbound-use-uuid-as-callid" value="false" enabled="false"/>
 		<!-- set to false disable this feature -->
 		<param name="rtp-autofix-timing" value="false" enabled="false"/>
 
 		<!-- set this param to false if your gateway for some reason hates X- headers that it is supposed to ignore-->
 		<param name="pass-callee-id" value="false" enabled="false"/>
 
-		<!-- clear clears them all or supply the name to add or the name prefixed with ~ to remove
-		 valid values:
-		 clear
-		 CISCO_SKIP_MARK_BIT_2833
-		 SONUS_SEND_INVALID_TIMESTAMP_2833
+		<!-- clear clears them all or supply the name to add or the name 
+		prefixed with ~ to remove valid values:
+
+			clear
+			CISCO_SKIP_MARK_BIT_2833
+			SONUS_SEND_INVALID_TIMESTAMP_2833
+
 		-->
 		<param name="auto-rtp-bugs" data="clear" enabled="false"/>
 
@@ -340,47 +385,58 @@
 		<param name="disable-naptr" value="false" enabled="false"/>
 
 		<!-- The following can be used to fine-tune timers within sofia's transport layer
-			 Those settings are for advanced users and can safely be left as-is -->
+		Those settings are for advanced users and can safely be left as-is -->
 
 		<!-- Initial retransmission interval (in milliseconds).
-			Set the T1 retransmission interval used by the SIP transaction engine.
-			The T1 is the initial duration used by request retransmission timers A and E (UDP) as well as response retransmission timer G. 	 -->
+		Set the T1 retransmission interval used by the SIP transaction engine.
+		The T1 is the initial duration used by request retransmission timers A and E (UDP) as well as response retransmission timer G. 	 -->
 		<param name="timer-T1" value="500" enabled="false"/>
 
 		<!--  Transaction timeout (defaults to T1 * 64).
-			Set the T1x64 timeout value used by the SIP transaction engine.
-			The T1x64 is duration used for timers B, F, H, and J (UDP) by the SIP transaction engine.
-			The timeout value T1x64 can be adjusted separately from the initial retransmission interval T1. -->
+		Set the T1x64 timeout value used by the SIP transaction engine.
+		The T1x64 is duration used for timers B, F, H, and J (UDP) by the SIP transaction engine.
+		The timeout value T1x64 can be adjusted separately from the initial retransmission interval T1. -->
 		<param name="timer-T1X64" value="32000" enabled="false"/>
 
 		<!-- Maximum retransmission interval (in milliseconds).
-			Set the maximum retransmission interval used by the SIP transaction engine.
-			The T2 is the maximum duration used for the timers E (UDP) and G by the SIP transaction engine.
-			Note that the timer A is not capped by T2. Retransmission interval of INVITE requests grows exponentially
-			until the timer B fires.  -->
+		Set the maximum retransmission interval used by the SIP transaction engine.
+		The T2 is the maximum duration used for the timers E (UDP) and G by the SIP transaction engine.
+		Note that the timer A is not capped by T2. Retransmission interval of INVITE requests grows exponentially
+		until the timer B fires.  -->
 		<param name="timer-T2" value="4000" enabled="false"/>
 
 		<!--
-			Transaction lifetime (in milliseconds).
-			Set the lifetime for completed transactions used by the SIP transaction engine.
-			A completed transaction is kept around for the duration of T4 in order to catch late responses.
-			The T4 is the maximum duration for the messages to stay in the network and the duration of SIP timer K. -->
-		<param name="timer-T4" value="4000" enabled="false"/>
+		Transaction lifetime (in milliseconds).
+		Set the lifetime for completed transactions used by the SIP transaction engine.
+		A completed transaction is kept around for the duration of T4 in order to catch late responses.
+		The T4 is the maximum duration for the messages to stay in the network and the duration of SIP timer K. -->
+		<!-- <param name="timer-T4" value="4000" /> -->
 
 		<!-- Turn on a jitterbuffer for every call -->
 		<param name="auto-jitterbuffer-msec" value="60" enabled="false"/>
 
 		<!-- By default mod_sofia will ignore the codecs in the sdp for hold/unhold operations
-			Set this to true if you want to actually parse the sdp and re-negotiate the codec during hold/unhold.
-			It's probably not what you want so stick with the default unless you really need to change this.
+		Set this to true if you want to actually parse the sdp and re-negotiate the codec during hold/unhold.
+		It's probably not what you want so stick with the default unless you really need to change this.
 		-->
 		<param name="renegotiate-codec-on-hold" value="true" enabled="false"/>
 
-		<!-- Periodically send an packet to all registered endpoints that are behind NAT -->
-		<param name="registration-thread-frequency" value="30"  enabled="false"/>
-		<param name="nat-options-ping" value="true" enabled="false"/>
+		<!-- By default mod_sofia will send "100 Trying" in response to a SIP INVITE. Set this to false if
+		 you want to turn off this behavior and manually send the "100 Trying" via the acknowledge_call application.
+		-->
+		<!--<param name="auto-invite-100" value="false"/>-->
 
-		<!-- Secure Web Sockets -->
-		<param name="wss-binding" value=":7443" enabled="false"/>
+		<!-- sip expire settings -->
+		<param name="sip-expires-max-deviation" value="600" enabled="false"/>
+		<param name="sip-force-expires" value="1800" enabled="false"/>
+
+		<!-- save session in the database for option to restore SIP UDP calls -->
+		<param name="track-calls" value="false"/>
+
+		<!--number default IREG_SECONDS 30-->
+		<param name="registration-thread-frequency" value="30"  enabled="false"/>
+
+		<!-- Periodically send an packet to all registered endpoints that are behind NAT -->
+		<param name="nat-options-ping" value="true" enabled="false"/>
 	</settings>
 </profile>

@@ -22,8 +22,11 @@
 	the Initial Developer. All Rights Reserved.
 */
 
-//includes
-	require_once "root.php";
+//set the include path
+	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+	set_include_path(parse_ini_file($conf[0])['document.root']);
+
+//includes files
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
@@ -378,7 +381,14 @@
 	echo "	".$text['label-fax_status']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='fax_status' maxlength='255' value='".escape($fax_status)."'>\n";
+	echo "	<select class='formfld' name='fax_status'>\n";
+	echo "		<option value='waiting' ".($fax_status == 'waiting' ? "selected='selected'" : null).">".ucwords($text['label-waiting'])."</option>\n";
+	echo "		<option value='trying' ".($fax_status == 'trying' ? "selected='selected'" : null).">".ucwords($text['label-trying'])."</option>\n";
+	echo "		<option value='sending' ".($fax_status == 'sending' ? "selected='selected'" : null).">".ucwords($text['label-sending'])."</option>\n";
+	echo "		<option value='sent' ".($fax_status == 'sent' ? "selected='selected'" : null).">".ucwords($text['label-sent'])."</option>\n";
+	echo "		<option value='busy' ".($fax_status == 'busy' ? "selected='selected'" : null).">".ucwords($text['label-busy'])."</option>\n";
+	echo "		<option value='failed' ".($fax_status == 'failed' ? "selected='selected'" : null).">".ucwords($text['label-failed'])."</option>\n";
+	echo "	</select>\n";
 	echo "<br />\n";
 	echo $text['description-fax_status']."\n";
 	echo "</td>\n";

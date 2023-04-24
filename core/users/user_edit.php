@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -25,8 +25,11 @@
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 
-//includes
-	require_once "root.php";
+//set the include path
+	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+	set_include_path(parse_ini_file($conf[0])['document.root']);
+
+//includes files
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
@@ -125,6 +128,7 @@
 			$user_status = $_POST["user_status"];
 			$user_language = $_POST["user_language"];
 			$user_time_zone = $_POST["user_time_zone"];
+			
 			if (permission_exists('contact_edit') && $action == 'edit') {
 				$contact_uuid = $_POST["contact_uuid"];
 			}
@@ -134,12 +138,15 @@
 				$contact_name_family = $_POST["contact_name_family"];
 			}
 			$group_uuid_name = $_POST["group_uuid_name"];
-			$user_enabled = $_POST["user_enabled"];
+			$user_enabled = $_POST["user_enabled"] ?: 'false';
 			if (permission_exists('api_key')) {
 				$api_key = $_POST["api_key"];
 			}
 			if (permission_exists('message_key')) {
 				$message_key = $_POST["message_key"];
+			}
+			if (in_array('totp', $_SESSION['authentication']['methods'])) {
+				$user_totp_secret = strtoupper($_POST["user_totp_secret"]);
 			}
 
 		//validate the token
@@ -503,6 +510,9 @@
 				if (permission_exists('api_key')) {
 					$array['users'][$x]['api_key'] = ($api_key != '') ? $api_key : null;
 				}
+				if (in_array('totp', $_SESSION['authentication']['methods'])) {
+					$array['users'][$x]['user_totp_secret'] = $user_totp_secret;
+				}
 				$array['users'][$x]['user_enabled'] = $user_enabled;
 				if (permission_exists('contact_add')) {
 					$array['users'][$x]['contact_uuid'] = ($contact_uuid != '') ? $contact_uuid : null;
@@ -581,7 +591,8 @@
 	else {
 		//populate the form with values from db
 			if ($action == 'edit') {
-				$sql = "select domain_uuid, user_uuid, username, user_email, api_key, user_enabled, contact_uuid, cast(user_enabled as text), user_status ";
+				$sql = "select domain_uuid, user_uuid, username, user_email, api_key, user_totp_secret, ";
+				$sql .= "user_enabled, contact_uuid, cast(user_enabled as text), user_status ";
 				$sql .= "from v_users ";
 				$sql .= "where user_uuid = :user_uuid ";
 				if (!permission_exists('user_all')) {
@@ -597,6 +608,7 @@
 					$username = $row["username"];
 					$user_email = $row["user_email"];
 					$api_key = $row["api_key"];
+					$user_totp_secret = $row["user_totp_secret"];
 					$user_enabled = $row["user_enabled"];
 					if (permission_exists('contact_view')) {
 						$contact_uuid = $row["contact_uuid"];
@@ -634,6 +646,9 @@
 				unset($sql, $parameters, $result, $row);
 			}
 	}
+
+//set the defaults
+	if (strlen($user_enabled) == 0) { $user_enabled = "true"; }
 
 //create token
 	$object = new token;
@@ -1024,8 +1039,36 @@
 		echo "	<tr>";
 		echo "		<td class='vncell' valign='top'>".$text['label-api_key']."</td>";
 		echo "		<td class='vtable'>\n";
-		echo "			<input type='text' class='formfld' style='width: 250px;' name='api_key' id='api_key' value=\"".escape($api_key)."\" >";
-		echo button::create(['type'=>'button','label'=>$text['button-generate'],'icon'=>'key','onclick'=>"document.getElementById('api_key').value = '".generate_password(32,3)."';"]);
+		echo "			<input type='text' class='formfld' style='width: 250px; display: none;' name='api_key' id='api_key' value=\"".escape($api_key)."\" >";
+		if (strlen($api_key) == 0) {
+			//generate api key
+			echo button::create(['type'=>'button',
+				'label'=>$text['button-generate'],
+				'icon'=>'key',
+				'onclick'=>"document.getElementById('api_key').value = '".generate_password(32,3)."';
+					document.getElementById('frm').submit();"]);
+		}
+		else {
+			//view the api key
+			echo button::create(['type'=>'button',
+				'label'=>$text['button-view'],
+				'id'=>'button-api_key_view',
+				'icon'=>'key',
+				'onclick'=>"document.getElementById ('button-api_key_view').style.display = 'none';
+					document.getElementById('api_key').style.display = 'inline';
+					document.getElementById('button-api_key_hide').style.display = 'inline';
+					document.getElementById('button-api_key_view').style.display = 'none';"]);
+				
+			echo button::create(['type'=>'button',
+				'label'=>$text['button-hide'],
+				'id'=>'button-api_key_hide',
+				'icon'=>'key',
+				'style'=>'display: none;',
+				'onclick'=>"document.getElementById('api_key').style.display = 'none';
+					document.getElementById('button-api_key_hide').style.display = 'none';
+					document.getElementById('button-api_key_view').style.display = 'inline';"]);
+
+		}
 		if (strlen($text['description-api_key']) > 0) {
 			echo "			<br />".$text['description-api_key']."<br />\n";
 		}
@@ -1033,17 +1076,82 @@
 		echo "	</tr>";
 	}
 
-	if (permission_exists('message_key')) {
-		echo "	<tr>";
-		echo "		<td class='vncell' valign='top'>".$text['label-message_key']."</td>";
-		echo "		<td class='vtable'>\n";
-		echo "			<input type='text' class='formfld' style='width: 250px;' name='message_key' id='message_key' value=\"".($message_key ? escape($message_key) : escape($user_settings["message"]["key"]["text"]))."\" >";
-		echo button::create(['type'=>'button','label'=>$text['button-generate'],'icon'=>'key','onclick'=>"document.getElementById('message_key').value = '".generate_password(32,3)."';"]);
-		if (strlen($text['description-message_key']) > 0) {
-			echo "			<br />".$text['description-message_key']."<br />\n";
+	//user time based one time password secret
+	if (in_array('totp', $_SESSION['authentication']['methods'])) {
+		if ($user_totp_secret != '' && $username != '') {
+			$otpauth = "otpauth://totp/".$username."?secret=".$user_totp_secret."&issuer=".$_SESSION['domain_name'];
+
+			require_once 'resources/qr_code/QRErrorCorrectLevel.php';
+			require_once 'resources/qr_code/QRCode.php';
+			require_once 'resources/qr_code/QRCodeImage.php';
+
+			try {
+				$code = new QRCode (- 1, QRErrorCorrectLevel::H);
+				$code->addData($otpauth);
+				$code->make();
+				$img = new QRCodeImage ($code, $width=210, $height=210, $quality=50);
+				$img->draw();
+				$image = $img->getImage();
+				$img->finish();
+			}
+			catch (Exception $error) {
+				echo $error;
+			}
 		}
-		echo "		</td>";
-		echo "	</tr>";
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-user_totp_secret']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left' valign='top'>\n";
+		echo "	<input type='hidden' class='formfld' style='width: 250px;' name='user_totp_secret' id='user_totp_secret' value=\"".escape($user_totp_secret)."\" >";
+		if (strlen($user_totp_secret) == 0) {
+			echo button::create(['type'=>'button',
+			'label'=>$text['button-setup'],
+			'icon'=>'key',
+			'onclick'=>"document.getElementById('user_totp_secret').value = '".strtoupper(generate_password(32,3))."';
+			document.getElementById('frm').submit();"]);
+		}
+		else {
+			echo "	<div id='totp_qr' style='display:none;'>\n";
+			echo "		".$user_totp_secret."<br />\n";
+			echo "		<img src=\"data:image/jpeg;base64,".base64_encode($image)."\" style='margin-top: 0px; padding: 5px; background: white; max-width: 100%;'><br />\n";
+			echo "		".$text['description-user_totp_qr_code']."<br /><br />\n";
+			echo "	</div>\n";
+			echo button::create(['type'=>'button',
+			'label'=>$text['button-view'],
+			'id'=>'button-totp_view',
+			'icon'=>'key',
+			'onclick'=>"document.getElementById ('totp_qr').style.display = 'inline';
+				document.getElementById ('button-totp_hide').style.display = 'inline';
+				document.getElementById ('button-totp_disable').style.display = 'inline';
+				document.getElementById ('button-totp_view').style.display = 'none';"]);
+
+			echo button::create(['type'=>'button',
+			'label'=>$text['button-hide'],
+			'id'=>'button-totp_hide',
+			'icon'=>'key',
+			'style'=>'display: none;',
+			'onclick'=>"document.getElementById ('totp_qr').style.display = 'none';
+				document.getElementById ('button-totp_hide').style.display = 'none';
+				document.getElementById ('button-totp_disable').style.display = 'none';
+				document.getElementById ('button-totp_view').style.display = 'inline';"]);
+
+			echo button::create(['type'=>'button',
+				'label'=>$text['button-disable'],
+				'id'=>'button-totp_disable',
+				'icon'=>'trash',
+				'style'=>'display: none;',
+				'onclick'=>"document.getElementById('user_totp_secret').value = '';
+				document.getElementById('frm').submit();"]);
+		}
+		if (strlen($user_totp_secret) == 0) {
+			echo "	<br />".$text['description-user_totp_secret']."<br />\n";
+		}
+		else {
+			echo "	<br />".$text['description-user_totp_view']."<br />\n";
+		}
+		echo "</td>\n";
+		echo "</tr>\n";
 	}
 
 	echo "<tr ".($user_uuid == $_SESSION['user_uuid'] ? "style='display: none;'" : null).">\n";
@@ -1051,10 +1159,18 @@
 	echo "	".$text['label-enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='user_enabled'>\n";
-	echo "		<option value='true' ".(($user_enabled == "true") ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-	echo "		<option value='false' ".(($user_enabled == "false") ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-	echo "	</select>\n";
+	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
+		echo "	<label class='switch'>\n";
+		echo "		<input type='checkbox' id='user_enabled' name='user_enabled' value='true' ".($user_enabled == 'true' ? "checked='checked'" : null).">\n";
+		echo "		<span class='slider'></span>\n";
+		echo "	</label>\n";
+	}
+	else {
+		echo "	<select class='formfld' id='user_enabled' name='user_enabled'>\n";
+		echo "		<option value='true' ".($user_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($user_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "	</select>\n";
+	}
 	echo "<br />\n";
 	echo $text['description-enabled']."\n";
 	echo "</td>\n";

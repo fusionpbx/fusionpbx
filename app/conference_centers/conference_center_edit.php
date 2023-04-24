@@ -24,8 +24,11 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//includes
-	require_once "root.php";
+//set the include path
+	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+	set_include_path(parse_ini_file($conf[0])['document.root']);
+
+//includes files
 	require_once "resources/require.php";
 
 //check permissions
@@ -74,7 +77,7 @@
 			$conference_center_extension = $_POST["conference_center_extension"];
 			$conference_center_greeting = $_POST["conference_center_greeting"];
 			$conference_center_pin_length = $_POST["conference_center_pin_length"];
-			$conference_center_enabled = $_POST["conference_center_enabled"];
+			$conference_center_enabled = $_POST["conference_center_enabled"] ?: 'false';
 			$conference_center_description = $_POST["conference_center_description"];
 
 		//validate the token
@@ -129,15 +132,15 @@
 		    $array['conference_centers'][0]['conference_center_description'] = $conference_center_description;
 
 		//build the xml dialplan
-			$dialplan_xml = "<extension name=\"".$conference_center_name."\" continue=\"\" uuid=\"".$dialplan_uuid."\">\n";
+			$dialplan_xml = "<extension name=\"".xml::sanitize($conference_center_name)."\" continue=\"\" uuid=\"".xml::sanitize($dialplan_uuid)."\">\n";
 			if ($conference_center_pin_length > 1 && $conference_center_pin_length < 4) {
-				$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^(".$conference_center_extension.")(\d{".$conference_center_pin_length."})$\" break=\"on-true\">\n";
+				$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^(".xml::sanitize($conference_center_extension).")(\d{".xml::sanitize($conference_center_pin_length)."})$\" break=\"on-true\">\n";
 				$dialplan_xml .= "		<action application=\"set\" data=\"destination_number=$1\"/>\n";
 				$dialplan_xml .= "		<action application=\"set\" data=\"pin_number=$2\"/>\n";
 				$dialplan_xml .= "		<action application=\"lua\" data=\"app.lua conference_center\"/>\n";
 				$dialplan_xml .= "	</condition>\n";
 			}
-			$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".$conference_center_extension."$\">\n";
+			$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".xml::sanitize($conference_center_extension)."$\">\n";
 			$dialplan_xml .= "		<action application=\"lua\" data=\"app.lua conference_center\"/>\n";
 			$dialplan_xml .= "	</condition>\n";
 			$dialplan_xml .= "</extension>\n";
@@ -432,10 +435,18 @@
 	echo "	".$text['label-conference_center_enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='conference_center_enabled'>\n";
-	echo "		<option value='true'>".$text['label-true']."</option>\n";
-	echo "		<option value='false' ".($conference_center_enabled == "false" ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
-	echo "	</select>\n";
+	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
+		echo "	<label class='switch'>\n";
+		echo "		<input type='checkbox' id='conference_center_enabled' name='conference_center_enabled' value='true' ".($conference_center_enabled == 'true' ? "checked='checked'" : null).">\n";
+		echo "		<span class='slider'></span>\n";
+		echo "	</label>\n";
+	}
+	else {
+		echo "	<select class='formfld' id='conference_center_enabled' name='conference_center_enabled'>\n";
+		echo "		<option value='true' ".($conference_center_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($conference_center_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "	</select>\n";
+	}
 	echo "<br />\n";
 	echo $text['description-conference_center_enabled']."\n";
 	echo "</td>\n";

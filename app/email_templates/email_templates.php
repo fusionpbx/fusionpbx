@@ -21,8 +21,11 @@
  the Initial Developer. All Rights Reserved.
 */
 
-//includes
-	require_once "root.php";
+//set the include path
+	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+	set_include_path(parse_ini_file($conf[0])['document.root']);
+
+//includes files
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
@@ -43,6 +46,7 @@
 //get posted data
 	if (is_array($_POST['email_templates'])) {
 		$action = $_POST['action'];
+		$category = $_POST['category'];
 		$search = $_POST['search'];
 		$email_templates = $_POST['email_templates'];
 	}
@@ -70,7 +74,7 @@
 				break;
 		}
 
-		header('Location: email_templates.php'.($search != '' ? '?search='.urlencode($search) : null));
+		header('Location: email_templates.php?'.($search != '' ? '&search='.urlencode($search) : null).($category != '' ? '&category='.urlencode($category) : null));
 		exit;
 	}
 
@@ -78,12 +82,21 @@
 	$order_by = $_GET["order_by"];
 	$order = $_GET["order"];
 
+//add the category
+	$category = strtolower($_GET["category"]);
+	if ($category) {
+		$sql_category = "and (";
+		$sql_category .= " lower(template_category) = :category";
+		$sql_category .= ") ";
+		$parameters['category'] = $category;
+	}
+
 //add the search term
 	$search = strtolower($_GET["search"]);
 	if (strlen($search) > 0) {
 		$sql_search = " (";
 		$sql_search .= " lower(template_language) like :search ";
-		$sql_search .= " or lower(template_category) like :search ";
+		//$sql_search .= " or lower(template_category) like :search ";
 		$sql_search .= " or lower(template_subcategory) like :search ";
 		$sql_search .= " or lower(template_subject) like :search ";
 		$sql_search .= " or lower(template_body) like :search ";
@@ -95,19 +108,20 @@
 	}
 
 //prepare to page the results
-	$sql = "select count(*) from v_email_templates ";
+	$sql = "select count(*) from v_email_templates where true ";
 	if ($_GET['show'] == "all" && permission_exists('email_template_all')) {
 		if ($sql_search != '') {
-			$sql .= "where ".$sql_search;
+			$sql .= "and ".$sql_search;
 		}
 	}
 	else {
-		$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
 		if ($sql_search != '') {
 			$sql .= "and ".$sql_search;
 		}
 		$parameters['domain_uuid'] = $domain_uuid;
 	}
+	$sql .= $sql_category;
 	$database = new database;
 	$num_rows = $database->select($sql, $parameters, 'column');
 
@@ -133,6 +147,18 @@
 	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;
 	$result = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
+
+//get email template categories
+	$sql = "select distinct template_category from v_email_templates ";
+	$sql .= "order by template_category asc ";
+	$database = new database;
+	$rows = $database->select($sql, $parameters, 'all');
+	if (is_array($rows) && @sizeof($rows) != 0) {
+		foreach ($rows as $row) {
+			$template_categories[$row['template_category']] = ucwords(str_replace('_',' ',$row['template_category']));
+		}
+	}
 	unset($sql, $parameters);
 
 //create token
@@ -168,6 +194,15 @@
 			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$_SESSION['theme']['button_icon_all'],'link'=>'?show=all']);
 		}
 	}
+	echo 		"<select name='category' id='category' class='formfld' style='margin-left: 18px;' onchange=\"$('#form_search').submit();\">\n";
+	echo 			"<option value='' ".(!$category ? "selected='selected'" : null)." disabled='disabled'>".$text['label-category']."...</option>\n";
+	echo 			"<option value=''></option>\n";
+	if (is_array($template_categories) && @sizeof($template_categories) != 0) {
+		foreach ($template_categories as $template_category_value => $template_category_label) {
+			echo "<option value='".$template_category_value."' ".($category == $template_category_value ? "selected='selected'" : null).">".escape($template_category_label)."</option>\n";
+		}
+	}
+	echo 		"</select>\n";
 	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=''>";
 	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search']);
 	//echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','link'=>'email_templates.php','style'=>($search == '' ? 'display: none;' : null)]);

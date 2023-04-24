@@ -36,7 +36,7 @@
 		$text['description-dashboard']['fr-fr'] = "Accéder rapidement aux informations et outils liés à votre compte.";
 		$text['description-dashboard']['he-il'] = "מידע מהיר וגישה לכלים הקשורים לחשבון שלך ";
 		$text['description-dashboard']['it-it'] = "Accedi velocemente alle informazioni e agli strumenti relativi al tuo account.";
-		$text['description-dashboard']['nl-nl'] = "";
+		$text['description-dashboard']['nl-nl'] = "Snelle toegang tot informatie binnen uw account.";
 		$text['description-dashboard']['pl-pl'] = "Szybki dostęp do informacji i narzędzi związanych z twoim kontem";
 		$text['description-dashboard']['pt-br'] = "Acesse rapidamente informações e ferramentas relacionadas à sua conta.";
 		$text['description-dashboard']['pt-pt'] = "Acessar rapidamente as informações e ferramentas relacionadas à sua conta.";
@@ -96,7 +96,7 @@
 		$text['label-dashboard_name']['fr-fr'] = 'Nom';
 		$text['label-dashboard_name']['he-il'] = '';
 		$text['label-dashboard_name']['it-it'] = '';
-		$text['label-dashboard_name']['nl-nl'] = '';
+		$text['label-dashboard_name']['nl-nl'] = 'Naam';
 		$text['label-dashboard_name']['pl-pl'] = 'Nazwa';
 		$text['label-dashboard_name']['pt-br'] = '';
 		$text['label-dashboard_name']['pt-pt'] = '';
@@ -116,7 +116,7 @@
 		$text['description-dashboard_name']['fr-fr'] = 'Saisissez le nom du widget du tableau de bord.';
 		$text['description-dashboard_name']['he-il'] = '';
 		$text['description-dashboard_name']['it-it'] = '';
-		$text['description-dashboard_name']['nl-nl'] = '';
+		$text['description-dashboard_name']['nl-nl'] = 'Voer de naam van de dashboard widget in.';
 		$text['description-dashboard_name']['pl-pl'] = 'Wprowadź nazwę widżetu panelu nawigacyjnego.';
 		$text['description-dashboard_name']['pt-br'] = '';
 		$text['description-dashboard_name']['pt-pt'] = '';
@@ -136,7 +136,7 @@
 		$text['label-dashboard_path']['fr-fr'] = 'Chemin';
 		$text['label-dashboard_path']['he-il'] = '';
 		$text['label-dashboard_path']['it-it'] = '';
-		$text['label-dashboard_path']['nl-nl'] = '';
+		$text['label-dashboard_path']['nl-nl'] = 'Pad';
 		$text['label-dashboard_path']['pl-pl'] = 'Ścieżka';
 		$text['label-dashboard_path']['pt-br'] = '';
 		$text['label-dashboard_path']['pt-pt'] = '';
@@ -156,7 +156,7 @@
 		$text['description-dashboard_path']['fr-fr'] = 'Entrez le chemin du widget du tableau de bord.';
 		$text['description-dashboard_path']['he-il'] = '';
 		$text['description-dashboard_path']['it-it'] = '';
-		$text['description-dashboard_path']['nl-nl'] = '';
+		$text['description-dashboard_path']['nl-nl'] = 'Voer het pad van de dashboard widget in.';
 		$text['description-dashboard_path']['pl-pl'] = 'Wprowadź ścieżkę widżetu panelu nawigacyjnego.';
 		$text['description-dashboard_path']['pt-br'] = '';
 		$text['description-dashboard_path']['pt-pt'] = '';
@@ -176,7 +176,7 @@
 		$text['label-dashboard_groups']['fr-fr'] = 'Groupes';
 		$text['label-dashboard_groups']['he-il'] = '';
 		$text['label-dashboard_groups']['it-it'] = '';
-		$text['label-dashboard_groups']['nl-nl'] = '';
+		$text['label-dashboard_groups']['nl-nl'] = 'Groepen';
 		$text['label-dashboard_groups']['pl-pl'] = 'Grupy';
 		$text['label-dashboard_groups']['pt-br'] = '';
 		$text['label-dashboard_groups']['pt-pt'] = '';
@@ -196,7 +196,7 @@
 		$text['description-dashboard_groups']['fr-fr'] = 'Ajoutez les groupes autorisés à accéder à ce widget.';
 		$text['description-dashboard_groups']['he-il'] = '';
 		$text['description-dashboard_groups']['it-it'] = '';
-		$text['description-dashboard_groups']['nl-nl'] = '';
+		$text['description-dashboard_groups']['nl-nl'] = 'Voeg de groepen die toegang tot deze widget toe.';
 		$text['description-dashboard_groups']['pl-pl'] = 'Dodaj grupy, które mają uprawnienia do tego widżetu.';
 		$text['description-dashboard_groups']['pt-br'] = '';
 		$text['description-dashboard_groups']['pt-pt'] = '';
@@ -216,7 +216,7 @@
 		$text['label-dashboard_column_span']['fr-fr'] = "L'étendue de la colonne";
 		$text['label-dashboard_column_span']['he-il'] = '';
 		$text['label-dashboard_column_span']['it-it'] = '';
-		$text['label-dashboard_column_span']['nl-nl'] = '';
+		$text['label-dashboard_column_span']['nl-nl'] = 'Aantal kolommen';
 		$text['label-dashboard_column_span']['pl-pl'] = 'Szerokość kolumn';
 		$text['label-dashboard_column_span']['pt-br'] = '';
 		$text['label-dashboard_column_span']['pt-pt'] = '';
@@ -236,7 +236,7 @@
 		$text['description-dashboard_column_span']['fr-fr'] = "Entrez l'étendue de la colonne du widget du tableau de bord";
 		$text['description-dashboard_column_span']['he-il'] = '';
 		$text['description-dashboard_column_span']['it-it'] = '';
-		$text['description-dashboard_column_span']['nl-nl'] = '';
+		$text['description-dashboard_column_span']['nl-nl'] = 'Voer het aantal kolommen van de dashboard widget in.';
 		$text['description-dashboard_column_span']['pl-pl'] = 'Wprowadź szerokość kolumn widżetu panelu nawigacyjnego';
 		$text['description-dashboard_column_span']['pt-br'] = '';
 		$text['description-dashboard_column_span']['pt-pt'] = '';
@@ -244,6 +244,46 @@
 		$text['description-dashboard_column_span']['ru-ru'] = '';
 		$text['description-dashboard_column_span']['sv-se'] = '';
 		$text['description-dashboard_column_span']['uk-ua'] = '';
+
+		$text['label-dashboard_details_state']['en-us'] = 'Details State';
+		$text['label-dashboard_details_state']['ar-eg'] = '';
+		$text['label-dashboard_details_state']['de-at'] = '';
+		$text['label-dashboard_details_state']['de-ch'] = '';
+		$text['label-dashboard_details_state']['de-de'] = '';
+		$text['label-dashboard_details_state']['es-cl'] = '';
+		$text['label-dashboard_details_state']['es-mx'] = '';
+		$text['label-dashboard_details_state']['fr-ca'] = "";
+		$text['label-dashboard_details_state']['fr-fr'] = "";
+		$text['label-dashboard_details_state']['he-il'] = '';
+		$text['label-dashboard_details_state']['it-it'] = '';
+		$text['label-dashboard_details_state']['nl-nl'] = '';
+		$text['label-dashboard_details_state']['pl-pl'] = '';
+		$text['label-dashboard_details_state']['pt-br'] = '';
+		$text['label-dashboard_details_state']['pt-pt'] = '';
+		$text['label-dashboard_details_state']['ro-ro'] = '';
+		$text['label-dashboard_details_state']['ru-ru'] = '';
+		$text['label-dashboard_details_state']['sv-se'] = '';
+		$text['label-dashboard_details_state']['uk-ua'] = '';
+
+		$text['description-dashboard_details_state']['en-us'] = 'Set the default state of the widget details.';
+		$text['description-dashboard_details_state']['ar-eg'] = '';
+		$text['description-dashboard_details_state']['de-at'] = '';
+		$text['description-dashboard_details_state']['de-ch'] = '';
+		$text['description-dashboard_details_state']['de-de'] = '';
+		$text['description-dashboard_details_state']['es-cl'] = '';
+		$text['description-dashboard_details_state']['es-mx'] = '';
+		$text['description-dashboard_details_state']['fr-ca'] = "";
+		$text['description-dashboard_details_state']['fr-fr'] = "";
+		$text['description-dashboard_details_state']['he-il'] = '';
+		$text['description-dashboard_details_state']['it-it'] = '';
+		$text['description-dashboard_details_state']['nl-nl'] = '';
+		$text['description-dashboard_details_state']['pl-pl'] = '';
+		$text['description-dashboard_details_state']['pt-br'] = '';
+		$text['description-dashboard_details_state']['pt-pt'] = '';
+		$text['description-dashboard_details_state']['ro-ro'] = '';
+		$text['description-dashboard_details_state']['ru-ru'] = '';
+		$text['description-dashboard_details_state']['sv-se'] = '';
+		$text['description-dashboard_details_state']['uk-ua'] = '';
 
 		$text['label-dashboard_order']['en-us'] = 'Order';
 		$text['label-dashboard_order']['ar-eg'] = '';
@@ -256,7 +296,7 @@
 		$text['label-dashboard_order']['fr-fr'] = 'Ordre';
 		$text['label-dashboard_order']['he-il'] = '';
 		$text['label-dashboard_order']['it-it'] = '';
-		$text['label-dashboard_order']['nl-nl'] = '';
+		$text['label-dashboard_order']['nl-nl'] = 'Volgorde';
 		$text['label-dashboard_order']['pl-pl'] = 'Kolejność';
 		$text['label-dashboard_order']['pt-br'] = '';
 		$text['label-dashboard_order']['pt-pt'] = '';
@@ -276,7 +316,7 @@
 		$text['description-dashboard_order']['fr-fr'] = 'Saisissez l ordre du widget du tableau de bord.';
 		$text['description-dashboard_order']['he-il'] = '';
 		$text['description-dashboard_order']['it-it'] = '';
-		$text['description-dashboard_order']['nl-nl'] = '';
+		$text['description-dashboard_order']['nl-nl'] = 'Voer de kleur van de dashboard widget in.';
 		$text['description-dashboard_order']['pl-pl'] = 'Wprowadź kolejność widżetu panelu nawigacyjnego.';
 		$text['description-dashboard_order']['pt-br'] = '';
 		$text['description-dashboard_order']['pt-pt'] = '';
@@ -296,7 +336,7 @@
 		$text['label-dashboard_enabled']['fr-fr'] = 'Activé';
 		$text['label-dashboard_enabled']['he-il'] = '';
 		$text['label-dashboard_enabled']['it-it'] = '';
-		$text['label-dashboard_enabled']['nl-nl'] = '';
+		$text['label-dashboard_enabled']['nl-nl'] = 'Ingeschakeld';
 		$text['label-dashboard_enabled']['pl-pl'] = 'Włączony';
 		$text['label-dashboard_enabled']['pt-br'] = '';
 		$text['label-dashboard_enabled']['pt-pt'] = '';
@@ -336,7 +376,7 @@
 		$text['label-dashboard_description']['fr-fr'] = 'Description';
 		$text['label-dashboard_description']['he-il'] = '';
 		$text['label-dashboard_description']['it-it'] = '';
-		$text['label-dashboard_description']['nl-nl'] = '';
+		$text['label-dashboard_description']['nl-nl'] = 'Omschrijving';
 		$text['label-dashboard_description']['pl-pl'] = 'Opis';
 		$text['label-dashboard_description']['pt-br'] = '';
 		$text['label-dashboard_description']['pt-pt'] = '';
@@ -356,7 +396,7 @@
 		$text['description-dashboard_description']['fr-fr'] = 'Saisissez la description du widget du tableau de bord.';
 		$text['description-dashboard_description']['he-il'] = '';
 		$text['description-dashboard_description']['it-it'] = '';
-		$text['description-dashboard_description']['nl-nl'] = '';
+		$text['description-dashboard_description']['nl-nl'] = 'Voer de beschrijving van de dashboard widget in.';
 		$text['description-dashboard_description']['pl-pl'] = 'Wprowadź opis widżetu panelu nawigacyjnego.';
 		$text['description-dashboard_description']['pt-br'] = '';
 		$text['description-dashboard_description']['pt-pt'] = '';
@@ -378,7 +418,7 @@
 		$text['label-welcome']['fr-fr'] = "Bienvenue:";
 		$text['label-welcome']['he-il'] = "ברוך הבא:";
 		$text['label-welcome']['it-it'] = "Benvenuto:";
-		$text['label-welcome']['nl-nl'] = "";
+		$text['label-welcome']['nl-nl'] = "Welkom:";
 		$text['label-welcome']['pl-pl'] = "Witamy:";
 		$text['label-welcome']['pt-br'] = "Bem-vindo:";
 		$text['label-welcome']['pt-pt'] = "Witamy:";
@@ -386,4 +426,50 @@
 		$text['label-welcome']['ru-ru'] = "Добро пожаловать:";
 		$text['label-welcome']['sv-se'] = "Välkommen:";
 		$text['label-welcome']['uk-ua'] = "Ласкаво просимо:";
+
+		$text['button-collapse_all']['en-us'] = "Collapse All";
+		$text['button-collapse_all']['en-gb'] = "Collapse All";
+		$text['button-collapse_all']['ar-eg'] = "Collapse All";
+		$text['button-collapse_all']['de-at'] = "Collapse All";
+		$text['button-collapse_all']['de-ch'] = "Collapse All";
+		$text['button-collapse_all']['de-de'] = "Collapse All";
+		$text['button-collapse_all']['el-gr'] = "Collapse All";
+		$text['button-collapse_all']['es-cl'] = "Collapse All";
+		$text['button-collapse_all']['es-mx'] = "Collapse All";
+		$text['button-collapse_all']['fr-ca'] = "Collapse All";
+		$text['button-collapse_all']['fr-fr'] = "Collapse All";
+		$text['button-collapse_all']['he-il'] = "Collapse All";
+		$text['button-collapse_all']['it-it'] = "Collapse All";
+		$text['button-collapse_all']['nl-nl'] = "Collapse All";
+		$text['button-collapse_all']['pl-pl'] = "Collapse All";
+		$text['button-collapse_all']['pt-br'] = "Collapse All";
+		$text['button-collapse_all']['pt-pt'] = "Collapse All";
+		$text['button-collapse_all']['ro-ro'] = "Collapse All";
+		$text['button-collapse_all']['ru-ru'] = "Collapse All";
+		$text['button-collapse_all']['sv-se'] = "Collapse All";
+		$text['button-collapse_all']['uk-ua'] = "Collapse All";
+		$text['button-collapse_all']['tr-tr'] = "Collapse All";
+
+		$text['button-expand_all']['en-us'] = "Expand All";
+		$text['button-expand_all']['en-gb'] = "Expand All";
+		$text['button-expand_all']['ar-eg'] = "Expand All";
+		$text['button-expand_all']['de-at'] = "Expand All";
+		$text['button-expand_all']['de-ch'] = "Expand All";
+		$text['button-expand_all']['de-de'] = "Expand All";
+		$text['button-expand_all']['el-gr'] = "Expand All";
+		$text['button-expand_all']['es-cl'] = "Expand All";
+		$text['button-expand_all']['es-mx'] = "Expand All";
+		$text['button-expand_all']['fr-ca'] = "Expand All";
+		$text['button-expand_all']['fr-fr'] = "Expand All";
+		$text['button-expand_all']['he-il'] = "Expand All";
+		$text['button-expand_all']['it-it'] = "Expand All";
+		$text['button-expand_all']['nl-nl'] = "Expand All";
+		$text['button-expand_all']['pl-pl'] = "Expand All";
+		$text['button-expand_all']['pt-br'] = "Expand All";
+		$text['button-expand_all']['pt-pt'] = "Expand All";
+		$text['button-expand_all']['ro-ro'] = "Expand All";
+		$text['button-expand_all']['ru-ru'] = "Expand All";
+		$text['button-expand_all']['sv-se'] = "Expand All";
+		$text['button-expand_all']['uk-ua'] = "Expand All";
+		$text['button-expand_all']['tr-tr'] = "Expand All";
 ?>

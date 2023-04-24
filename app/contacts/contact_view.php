@@ -24,8 +24,11 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//includes
-	require_once "root.php";
+//set the include path
+	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+	set_include_path(parse_ini_file($conf[0])['document.root']);
+
+//includes files
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
@@ -163,10 +166,20 @@
 		$qr_mode = '4';
 		$qr_size = '0.2';
 	}
-	else if ($_SESSION['theme']['qr_brand_type']['text'] == 'text' && $_SESSION['theme']['qr_brand_text']['text'] != '') {
+	elseif ($_SESSION['theme']['qr_brand_type']['text'] == 'image' && $_SESSION['theme']['qr_brand_image']['text'] == '') {
+		$qr_option = '';
+		$qr_mode = '3';
+		$qr_size = '0';
+	}
+	elseif ($_SESSION['theme']['qr_brand_type']['text'] == 'text' && $_SESSION['theme']['qr_brand_text']['text'] != '') {
 		$qr_option = 'label: "'.$_SESSION['theme']['qr_brand_text']['text'].'"';
 		$qr_mode = '2';
 		$qr_size = '0.05';
+	}
+	elseif ($_SESSION['theme']['qr_brand_type']['text'] == 'none') {
+		$qr_option = '';
+		$qr_mode = '3';
+		$qr_size = '0';
 	}
 	else {
 		echo "<img id='img-buffer' style='display: none;' src='".PROJECT_PATH."/themes/".$_SESSION["domain"]["template"]["name"]."/images/qr_code.png'>";

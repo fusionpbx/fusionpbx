@@ -25,8 +25,11 @@
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 
-//includes
-	require_once "root.php";
+//set the include path
+	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+	set_include_path(parse_ini_file($conf[0])['document.root']);
+
+//includes files
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
@@ -192,7 +195,9 @@
 		echo "		<th>".$text['label-domain']."</th>\n";
 	}
 	echo "		<th>".$text['label-extension']."</th>\n";
-	echo "		<th>".$text['label-number_alias']."</th>\n";
+	if (permission_exists('number_alias')) {
+		echo "		<th>".$text['label-number_alias']."</th>\n";
+	}
 	echo "		<th class='center'>".$text['label-answered']."</th>\n";
 	echo "		<th class='center'>".$text['label-missed']."</th>\n";
 	echo "		<th class='center'>".$text['label-no_answer']."</th>\n";
@@ -212,7 +217,9 @@
 				echo "	<td>".escape($row['domain_name'])."</td>\n";
 			}
 			echo "	<td>".escape($row['extension'])."</td>\n";
-			echo "	<td>".escape($row['number_alias'])."&nbsp;</td>\n";
+			if (permission_exists('number_alias')) {
+				echo "	<td>".escape($row['number_alias'])."&nbsp;</td>\n";
+			}
 			echo "	<td class='center'>".escape($row['answered'])."&nbsp;</td>\n";
 			echo "	<td class='center'>".escape($row['missed'])."&nbsp;</td>\n";
 			echo "	<td class='center'>".escape($row['no_answer'])."&nbsp;</td>\n";

@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2016
+	Portions created by the Initial Developer are Copyright (C) 2016 - 2022
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -25,8 +25,11 @@
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 
-//includes
-	require_once "root.php";
+//set the include path
+	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+	set_include_path(parse_ini_file($conf[0])['document.root']);
+
+//includes files
 	require_once "resources/require.php";
 
 //check permissions
@@ -100,7 +103,8 @@
 							$array['device_vendors'][$x]['device_vendor_functions'][$y]['device_vendor_uuid'] = $device_vendor_uuid;
 							$array['device_vendors'][$x]['device_vendor_functions'][$y]['device_vendor_function_uuid'] = $device_vendor_function_uuid;
 							//$array['device_vendors'][$x]['device_vendor_functions'][$y]['label'] = $function['label'];
-							$array['device_vendors'][$x]['device_vendor_functions'][$y]['name'] = $function['name'];
+							$array['device_vendors'][$x]['device_vendor_functions'][$y]['type'] = $function['type'];
+							$array['device_vendors'][$x]['device_vendor_functions'][$y]['subtype'] = $function['subtype'];
 							$array['device_vendors'][$x]['device_vendor_functions'][$y]['value'] = $function['value'];
 							$array['device_vendors'][$x]['device_vendor_functions'][$y]['enabled'] = 'true';
 							$array['device_vendors'][$x]['device_vendor_functions'][$y]['description'] = $function['description'];

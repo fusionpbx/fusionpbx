@@ -17,20 +17,27 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2019
+	Portions created by the Initial Developer are Copyright (C) 2022
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//includes
-	include "root.php";
+//set the include path
+	$document_root = substr(getcwd(), 0, strlen(getcwd()) - strlen('/core/install'));
+	set_include_path($document_root);
+	$_SERVER["DOCUMENT_ROOT"] = $document_root;
+	$_SERVER["PROJECT_ROOT"] = $document_root;
+	define("PROJECT_PATH", '');
+
+//includes files
 	require_once "resources/functions.php";
 
 //include required classes
 	require_once "resources/classes/text.php";
 	require_once "resources/classes/template.php";
+	require_once "core/install/resources/classes/install.php";
 
 //add multi-lingual support
 	$language = new text;
@@ -65,12 +72,12 @@
 
 //if the config file exists then disable the install page
 	$config_exists = false;
-	if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/resources/config.php")) {
+	if (file_exists("/usr/local/etc/fusionpbx/config.conf")) {
+		//bsd
 		$config_exists = true;
-	} elseif (file_exists("/etc/fusionpbx/config.php")) {
+	}
+	elseif (file_exists("/etc/fusionpbx/config.conf")) {
 		//linux
-		$config_exists = true;
-	} elseif (file_exists("/usr/local/etc/fusionpbx/config.php")) {
 		$config_exists = true;
 	}
 	if ($config_exists) {
@@ -79,11 +86,49 @@
 		exit;
 	}
 
+//if the config.php exists create the config.conf file
+	if (!$config_exists) {
+		if (file_exists("/usr/local/etc/fusionpbx/config.php")) {
+			//bsd
+			$config_path = "/usr/local/etc/fusionpbx";
+		}
+		elseif (file_exists("/etc/fusionpbx/config.php")) {
+			//linux
+			$config_path = "/etc/fusionpbx";
+		}
+		if (isset($config_path)) {
+			if (is_writable($config_path)) {
+				//include the config.php file
+				include $config_path.'/config.php';
+
+				//build the config file
+				$install = new install;
+				$install->database_host = $db_host;
+				$install->database_port = $db_port;
+				$install->database_name = $db_name;
+				$install->database_username = $db_username;
+				$install->database_password = $db_password;
+				$install->config();
+
+				//redirect the user
+				header("Location: /");
+				exit;
+			}
+			else {
+				//config directory is not writable run commands as root
+				echo "Please run the following commands as root.<br /><br />\n";
+				echo "cd ".$document_root."<br />\n";
+				echo "php ".$document_root."/core/upgrade/upgrade.php<br />\n";
+				unset($config_path);
+				exit;
+			}
+		}
+	}
+
 //process and save the data
 	if (count($_POST) > 0) {
 		foreach($_POST as $key => $value) {
 			//$_SESSION['install'][$key] = $value;
-
 			if ($key == 'admin_username') {
 				$_SESSION['install'][$key] = $value;
 			}
@@ -108,9 +153,6 @@
 			if ($key == 'database_password') {
 				$_SESSION['install'][$key] = $value;
 			}
-			//echo "if (\$key == '$key') {\n";
-			//echo "	\$_SESSION['install'][\$key] = \$value;\n";
-			//echo "}\n";
 		}
 		if ($_REQUEST["step"] == "install") {
 			//show debug information
@@ -121,65 +163,25 @@
 				exit;
 			}
 
-			//add the config.php
-			$config = "<?php\n";
-			$config .= "\n";
-			$config .= "/*\n";
-			$config .= "FusionPBX\n";
-			$config .= "Version: MPL 1.1\n";
-			$config .= "\n";
-			$config .= "The contents of this file are subject to the Mozilla Public License Version\n";
-			$config .= "1.1 (the \"License\"); you may not use this file except in compliance with\n";
-			$config .= "the License. You may obtain a copy of the License at\n";
-			$config .= "http://www.mozilla.org/MPL/\n";
-			$config .= "\n";
-			$config .= "Software distributed under the License is distributed on an \"AS IS\" basis,\n";
-			$config .= "WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License\n";
-			$config .= "for the specific language governing rights and limitations under the\n";
-			$config .= "License.\n";
-			$config .= "\n";
-			$config .= "The Original Code is FusionPBX\n";
-			$config .= "	Copyright (C) 2008 - 2019\n";
-			$config .= "	Mark J Crane <markjcrane@fusionpbx.com>\n";
-			$config .= "	All rights reserved.\n";
-			$config .= "*/\n";
-			$config .= "\n";
-			$config .= "//-----------------------------------------------------\n";
-			$config .= "// settings:\n";
-			$config .= "//-----------------------------------------------------\n";
-			$config .= "\n";
-			$config .= "	//set the database type\n";
-			$config .= "		\$db_type = 'pgsql'; //sqlite, mysql, pgsql, others with a manually created PDO connection\n";
-			$config .= "\n";
-			$config .= "//database connection information\n";
-			$config .= "		\$db_host = '".$_SESSION['install']['database_host']."'; //set the host only if the database is not local\n";
-			$config .= "		\$db_port = '".$_SESSION['install']['database_port']."';\n";
-			$config .= "		\$db_name = '".$_SESSION['install']['database_name']."';\n";
-			$config .= "		\$db_username = '".$_SESSION['install']['database_username']."';\n";
-			$config .= "		\$db_password = '".$_SESSION['install']['database_password']."';\n";
-			$config .= "\n";
-			$config .= "	//show errors\n";
-			$config .= "		ini_set('display_errors', '1');\n";
-			$config .= "		//error_reporting (E_ALL); // Report everything\n";
-			$config .= "		//error_reporting (E_ALL ^ E_NOTICE); // Report everything\n";
-			$config .= "		error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING ); //hide notices and warnings";
-			$config .= "\n";
-			$config .= "?>";
-			if (is_dir("/etc/fusionpbx")){
-				$config_path = "/etc/fusionpbx/config.php";
-			} elseif (is_dir("/usr/local/etc/fusionpbx")){
-				$config_path = "/usr/local/etc/fusionpbx/config.php";
+			//build the config file
+			$install = new install;
+			$install->database_host = $_SESSION['install']['database_host'];
+			$install->database_port = $_SESSION['install']['database_port'];
+			$install->database_name = $_SESSION['install']['database_name'];
+			$install->database_username = $_SESSION['install']['database_username'];
+			$install->database_password = $_SESSION['install']['database_password'];
+			$result = $install->config();
+
+			//end the script if the config path is not set
+			if (!$result) {
+				echo $install->message;
+				exit;
 			}
-			elseif (is_dir($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/resources")) {
-				$config_path = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/config.php";
-			}
-			else {
-				$config_path = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/config.php";
-			}
-			$fout = fopen($config_path,"w");
-			fwrite($fout, $config);
-			unset($config);
-			fclose($fout);
+
+			//set the include path
+			$config_glob = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+			$conf = parse_ini_file($config_glob[0]);
+			set_include_path($conf['document.root']);
 
 			//add the database schema
 			$output = shell_exec('cd '.$_SERVER["DOCUMENT_ROOT"].' && php /var/www/fusionpbx/core/upgrade/upgrade_schema.php');

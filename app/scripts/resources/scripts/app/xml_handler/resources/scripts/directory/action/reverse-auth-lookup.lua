@@ -38,6 +38,9 @@
 	local Database = require "resources.functions.database";
 	dbh = Database.new('system');
 
+--include xml library
+	local Xml = require "resources.functions.xml";
+
 --include json library
 	local json
 	if (debug["sql"]) then
@@ -46,6 +49,7 @@
 
 --exits the script if we didn't connect properly
 	assert(dbh:connected());
+
 --get the domain_uuid
 	if (domain_uuid == nil) then
 		if (domain_name ~= nil) then
@@ -90,21 +94,21 @@
 
 --build the xml
 	if (domain_name ~= nil and extension ~= nil and password ~= nil) then
-		local xml = {}
-		--table.insert(xml, [[<?xml version="1.0" encoding="UTF-8" standalone="no"?>]]);
-		table.insert(xml, [[<document type="freeswitch/xml">]]);
-		table.insert(xml, [[	<section name="directory">]]);
-		table.insert(xml, [[		<domain name="]] .. domain_name .. [[" alias="true">]]);
-		table.insert(xml, [[			<user id="]] .. extension .. [["]] .. number_alias .. [[>]]);
-		table.insert(xml, [[				<params>]]);
-		table.insert(xml, [[					<param name="reverse-auth-user" value="]] .. extension .. [["/>]]);
-		table.insert(xml, [[					<param name="reverse-auth-pass" value="]] .. password .. [["/>]]);
-		table.insert(xml, [[				</params>]]);
-		table.insert(xml, [[			</user>]]);
-		table.insert(xml, [[		</domain>]]);
-		table.insert(xml, [[	</section>]]);
-		table.insert(xml, [[</document>]]);
-		XML_STRING = table.concat(xml, "\n");
+		local xml = Xml:new();
+		--xml:append([[<?xml version="1.0" encoding="UTF-8" standalone="no"?>]]);
+		xml:append([[<document type="freeswitch/xml">]]);
+		xml:append([[	<section name="directory">]]);
+		xml:append([[		<domain name="]] .. xml.sanitize(domain_name) .. [[" alias="true">]]);
+		xml:append([[			<user id="]] .. xml.sanitize(extension) .. [["]] .. xml.sanitize(number_alias) .. [[>]]);
+		xml:append([[				<params>]]);
+		xml:append([[					<param name="reverse-auth-user" value="]] .. xml.sanitize(extension) .. [["/>]]);
+		xml:append([[					<param name="reverse-auth-pass" value="]] .. xml.sanitize(password) .. [["/>]]);
+		xml:append([[				</params>]]);
+		xml:append([[			</user>]]);
+		xml:append([[		</domain>]]);
+		xml:append([[	</section>]]);
+		xml:append([[</document>]]);
+		XML_STRING = xml:build();
 	end
 
 --close the database connection
