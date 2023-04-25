@@ -42,7 +42,6 @@ if (!class_exists('databases')) {
 		 * called when the object is created
 		 */
 		public function __construct() {
-
 			//assign private variables
 				$this->app_name = 'databases';
 				$this->app_uuid = '8d229b6d-1383-fcec-74c6-4ce1682479e2';
@@ -50,7 +49,6 @@ if (!class_exists('databases')) {
 				$this->list_page = 'databases.php';
 				$this->table = 'databases';
 				$this->uuid_prefix = 'database_';
-
 		}
 
 		/**
