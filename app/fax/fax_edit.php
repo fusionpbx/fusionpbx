@@ -283,7 +283,7 @@
 			if ($_POST["persistformvar"] != "true") {
 
 				//prep authorized senders
-					if (sizeof($fax_email_outbound_authorized_senders) > 0) {
+					if (is_array($fax_email_outbound_authorized_senders) && (sizeof($fax_email_outbound_authorized_senders) > 0)) {
 						foreach ($fax_email_outbound_authorized_senders as $sender_num => $sender) {
 							if ($sender == '' || (substr_count($sender, '@') == 1 && !valid_email($sender)) || substr_count($sender, '.') == 0) {
 								unset($fax_email_outbound_authorized_senders[$sender_num]);
