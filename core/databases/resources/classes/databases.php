@@ -142,7 +142,7 @@ if (!class_exists('databases')) {
 								$sql = "select * from v_".$this->table." ";
 								$sql .= "where ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
 								$database = new database;
-								$rows = $database->select($sql, $parameters, 'all');
+								$rows = $database->select($sql, '', 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $x => $row) {
 
@@ -155,7 +155,7 @@ if (!class_exists('databases')) {
 
 									}
 								}
-								unset($sql, $parameters, $rows, $row);
+								unset($sql, $rows, $row);
 							}
 
 						//save the changes and set the message
