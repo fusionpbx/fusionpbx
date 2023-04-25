@@ -28,34 +28,35 @@
 if (!class_exists('databases')) {
 	class databases {
 
-		/**
-		 * declare private variables
-		 */
-		private $app_name;
-		private $app_uuid;
-		private $permission_prefix;
-		private $list_page;
-		private $table;
-		private $uuid_prefix;
-
-		/**
-		 * called when the object is created
-		 */
-		public function __construct() {
-			//assign private variables
-				$this->app_name = 'databases';
-				$this->app_uuid = '8d229b6d-1383-fcec-74c6-4ce1682479e2';
-				$this->permission_prefix = 'database_';
-				$this->list_page = 'databases.php';
-				$this->table = 'databases';
-				$this->uuid_prefix = 'database_';
+		const NAME = 'databases';
+		const UUID = '8d229b6d-1383-fcec-74c6-4ce1682479e2';
+		const PERMISSION_PREFIX = 'database_';
+		const LIST_PAGE = 'databases.php';
+		const TABLE = 'databases';
+		const UUID_PREFIX = 'database_';
+		
+		public function __get($name) {
+			switch($name) {
+				case 'app_name':
+					return self::NAME;
+				case 'app_uuid':
+					return self::UUID;
+				case 'permission_prefix':
+					return self::PERMISSION_PREFIX;
+				case 'list_page':
+					return self::LIST_PAGE;
+				case 'table':
+					return self::TABLE;
+				case 'uuid_prefix':
+					return self::UUID_PREFIX;
+			}
 		}
-
+		
 		/**
 		 * delete records
 		 */
 		public function delete($records) {
-			if (permission_exists($this->permission_prefix.'delete')) {
+			if (permission_exists(self::PERMISSION_PREFIX.'delete')) {
 
 				//add multi-lingual support
 					$language = new text;
@@ -65,7 +66,7 @@ if (!class_exists('databases')) {
 					$token = new token;
 					if (!$token->validate($_SERVER['PHP_SELF'])) {
 						message::add($text['message-invalid_token'],'negative');
-						header('Location: '.$this->list_page);
+						header('Location: '.self::LIST_PAGE);
 						exit;
 					}
 
@@ -75,7 +76,7 @@ if (!class_exists('databases')) {
 						//build the delete array
 							foreach ($records as $x => $record) {
 								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
-									$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
+									$array[self::TABLE][$x][self::UUID_PREFIX.'uuid'] = $record['uuid'];
 								}
 							}
 
@@ -84,8 +85,8 @@ if (!class_exists('databases')) {
 
 								//execute delete
 									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
+									$database->app_name = self::NAME;
+									$database->app_uuid = self::UUID;
 									$database->delete($array);
 									unset($array);
 
@@ -101,7 +102,7 @@ if (!class_exists('databases')) {
 		 * copy records
 		 */
 		public function copy($records) {
-			if (permission_exists($this->permission_prefix.'add')) {
+			if (permission_exists(self::PERMISSION_PREFIX.'add')) {
 
 				//add multi-lingual support
 					$language = new text;
@@ -111,7 +112,7 @@ if (!class_exists('databases')) {
 					$token = new token;
 					if (!$token->validate($_SERVER['PHP_SELF'])) {
 						message::add($text['message-invalid_token'],'negative');
-						header('Location: '.$this->list_page);
+						header('Location: '.self::LIST_PAGE);
 						exit;
 					}
 
@@ -127,19 +128,19 @@ if (!class_exists('databases')) {
 
 						//create insert array from existing data
 							if (is_array($uuids) && @sizeof($uuids) != 0) {
-								$sql = "select * from v_".$this->table." ";
-								$sql .= "where ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
+								$sql = "select * from v_".self::TABLE." ";
+								$sql .= "where ".self::UUID_PREFIX."uuid in (".implode(', ', $uuids).") ";
 								$database = new database;
 								$rows = $database->select($sql, '', 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $x => $row) {
 
 										//copy data
-											$array[$this->table][$x] = $row;
+											$array[self::TABLE][$x] = $row;
 
 										//overwrite
-											$array[$this->table][$x][$this->uuid_prefix.'uuid'] = uuid();
-											$array[$this->table][$x]['database_description'] = trim($row['database_description'].' ('.$text['label-copy'].')');
+											$array[self::TABLE][$x][self::UUID_PREFIX.'uuid'] = uuid();
+											$array[self::TABLE][$x]['database_description'] = trim($row['database_description'].' ('.$text['label-copy'].')');
 
 									}
 								}
@@ -151,8 +152,8 @@ if (!class_exists('databases')) {
 
 								//save the array
 									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
+									$database->app_name = self::NAME;
+									$database->app_uuid = self::UUID;
 									$database->save($array);
 									unset($array);
 
@@ -168,5 +169,3 @@ if (!class_exists('databases')) {
 
 	}
 }
-
-?>
