@@ -177,7 +177,7 @@ class plugin_email {
 
 				//get the language code
 				$language_code = $_SESSION['domain']['language']['code'];
-			
+
 				//get the email template from the database
 				$sql = "select template_subject, template_body ";
 				$sql .= "from v_email_templates ";
@@ -209,17 +209,72 @@ class plugin_email {
 				$email_from_address = $_SESSION['email']['smtp_from']['text'];
 				$email_from_name = $_SESSION['email']['smtp_from_name']['text'];
 
-				//send email - direct
-				$email = new email;
-				$email->recipients = $_SESSION["user_email"];
-				$email->subject = $email_subject;
-				$email->body = $email_body;
-				$email->from_address = $email_from_address;
-				$email->from_name = $email_from_name;
-				//$email->attachments = $email_attachments;
-				$email->debug_level = 0;
-				$email->method = 'direct';
-				$sent = $email->send();
+				// Direct or email_queue
+				$sql = "select * ";
+				$sql .= "from v_default_settings ";
+				$sql .= "where default_setting_category = :authentication ";
+				$sql .= "and default_setting_subcategory = :email_queue";
+				$parameters['authentication'] = 'authentication';
+				$parameters['email_queue'] = 'email_queue';
+				$database = new database;
+				$row = $database->select($sql, $parameters, 'row');
+				unset($sql, $parameters);
+				if (is_array($row) && @sizeof($row) != 0) {
+					foreach ($row as $record => $value) {
+						if ($row['default_setting_subcategory'] == 'email_queue' && $row['default_setting_value'] == "true" && $row['default_setting_enabled'] == "1" ) {
+							$email_queue = $row['default_setting_value'];
+						}
+					}
+				}
+
+				if ( $email_queue == 'true' ) {
+					// Array vars
+					$email_queue_uuid = uuid();
+					$email_uuid = uuid();
+					$hostname = gethostname();
+
+					//add the temporary permissions
+					$p = new permissions;
+					$p->add("email_queue_add", 'temp');
+					$p->add("email_queue_edit", 'temp');
+
+					$array['email_queue'][0]["email_queue_uuid"] = $email_queue_uuid;
+					$array['email_queue'][0]["domain_uuid"] = $_SESSION["domain_uuid"];
+					$array['email_queue'][0]["hostname"] = $hostname;
+					$array['email_queue'][0]["email_date"] = 'now()';
+					$array['email_queue'][0]["email_from"] = $email_from_address;
+					$array['email_queue'][0]["email_to"] = $_SESSION["user_email"];
+					$array['email_queue'][0]["email_subject"] = $email_subject;
+					$array['email_queue'][0]["email_body"] = $email_body;
+					$array['email_queue'][0]["email_status"] = 'waiting';
+					$array['email_queue'][0]["email_retry_count"] = 3;
+					$array['email_queue'][0]["email_uuid"] = $email_uuid;
+					$array['email_queue'][0]["email_action_before"] = null;
+					$array['email_queue'][0]["email_action_after"] = null;
+					$database = new database;
+					$database->app_name = 'email queue';
+					$database->app_uuid = '5befdf60-a242-445f-91b3-2e9ee3e0ddf7';
+					$database->save($array);
+					$err = $database->message;
+					unset($array);
+
+					//remove the temporary permission
+					$p->delete("email_queue_add", 'temp');
+					$p->delete("email_queue_edit", 'temp');
+				} else
+				     {
+					//send email - direct
+					$email = new email;
+					$email->recipients = $_SESSION["user_email"];
+					$email->subject = $email_subject;
+					$email->body = $email_body;
+					$email->from_address = $email_from_address;
+					$email->from_name = $email_from_name;
+					//$email->attachments = $email_attachments;
+					$email->debug_level = 0;
+					$email->method = 'direct';
+					$sent = $email->send();
+				}
 
 				//debug informations
 				//$email_response = $email->response;
