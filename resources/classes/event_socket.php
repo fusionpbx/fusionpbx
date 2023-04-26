@@ -51,6 +51,10 @@ class event_socket {
 		$this->fp = $fp;
 	}
 
+	public function __destruct() {
+		$this->close();
+	}
+
 	public function __destructor() {
 		$this->close();
 	}
@@ -183,8 +187,13 @@ class event_socket {
 
 	public function close() {
 		if ($this->fp) {
-			fclose($this->fp);
-			$this->fp = false;
+			try {
+				fclose($this->fp);
+			} catch (\Exception) {
+
+			} finally {
+				$this->fp = false;
+			}
 		}
 	}
 }
