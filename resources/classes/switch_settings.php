@@ -20,16 +20,6 @@ if (!class_exists('switch_settings')) {
 		}
 
 		/**
-		 * Called when there are no references to a particular object
-		 * unset the variables used in the class
-		 */
-		public function __destruct() {
-			foreach ($this as $key => $value) {
-				unset($this->$key);
-			}
-		}
-
-		/**
 		 * settings Set switch directories in default settings
 		 */
 		public function settings() {
@@ -260,7 +250,7 @@ if (!class_exists('switch_settings')) {
 			//set the default settings
 				if (is_array($array)) {
 					foreach ($array as $row) {
-						if (!isset($_SESSION['switch'][$row['default_setting_subcategory']])) {
+						if (is_array($row) && !isset($_SESSION['switch'][$row['default_setting_subcategory']])) {
 							if ($row['default_setting_enabled'] != "false") {
 								$_SESSION['switch'][$row['default_setting_subcategory']] = $row['default_setting_value'];
 							}
