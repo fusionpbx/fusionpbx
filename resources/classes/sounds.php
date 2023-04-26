@@ -3,7 +3,6 @@
 /**
  * sounds class
  *
- * @method string get
  */
 class sounds {
 
