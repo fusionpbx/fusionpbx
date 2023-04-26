@@ -62,16 +62,6 @@ if (!class_exists('domains')) {
 		}
 
 		/**
-		 * called when there are no references to a particular object
-		 * unset the variables used in the class
-		 */
-		public function __destruct() {
-			foreach ($this as $key => $value) {
-				unset($this->$key);
-			}
-		}
-
-		/**
 		 * delete rows from the database
 		 */
 		public function delete($records) {
@@ -431,7 +421,7 @@ if (!class_exists('domains')) {
 		public function set() {
 
 			//get previous domain settings
-				if (is_uuid($_SESSION["previous_domain_uuid"])) {
+				if (is_uuid($_SESSION["previous_domain_uuid"] ?? '')) {
 					$sql = "select * from v_domain_settings ";
 					$sql .= "where domain_uuid = :previous_domain_uuid ";
 					$sql .= "and domain_setting_enabled = 'true' ";
