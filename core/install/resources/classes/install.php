@@ -131,7 +131,7 @@ if (!class_exists('install')) {
 			$conf .= "xml_handler.number_as_presence_id = true\n";
 			$conf .= "\n";
 			$conf .= "#error reporting options: user,dev,all\n";
-			$conf .= "error.reporting = 'user'\n";
+			$conf .= "error.reporting = user\n";
 
 			//write the config file
 			$file_handle = fopen($config_file,"w");
