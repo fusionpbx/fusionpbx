@@ -114,7 +114,7 @@ class authentication {
 						$object->username = $this->username;
 						$object->password = $this->password;
 					}
-					$array = $object->$name();
+					$array = $object->{$name}();
 
 					$id = $array["plugin"];
 					$result['plugin'] = $array["plugin"];
