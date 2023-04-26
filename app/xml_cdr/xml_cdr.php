@@ -704,6 +704,9 @@
 								else if ($row['answer_stamp'] == '' && $row['bridge_uuid'] != '') { $call_result = 'cancelled'; }
 								else { $call_result = 'failed'; }
 							}
+							if ($row['record_type'] == "text"){
+								$call_result = 'answered';
+							}
 							if (strlen($row['direction']) > 0) {
 								$image_name = "icon_cdr_" . $row['direction'] . "_" . $call_result;
 								if ($row['leg'] == 'b') {
