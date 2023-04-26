@@ -24,7 +24,7 @@ class plugin_totp {
 	 * @return array [authorized] => true or false
 	 */
 	function totp() {
-
+		
 		//request the username
 			if (!isset($_POST['username']) && !isset($_POST['authentication_code'])) {
 
@@ -32,6 +32,10 @@ class plugin_totp {
 				$_SESSION['domain']['template']['name'] = 'default';
 				$_SESSION['theme']['menu_brand_image']['text'] = PROJECT_PATH.'/themes/default/images/logo.png';
 				$_SESSION['theme']['menu_brand_type']['text'] = 'image';
+
+				$login_logo_width = $_SESSION['theme']['login_logo_width']['text'] ?? '';
+				$login_logo_height = $_SESSION['theme']['login_logo_height']['text'] ?? '';
+				$login_logo_source = $_SESSION['theme']['login_logo_source']['text'] ?? '';
 
 				//get the domain
 				$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
@@ -58,6 +62,7 @@ class plugin_totp {
 				//assign default values to the template
 				$view->assign("login_title", $text['label-username']);
 				$view->assign("login_username", $text['label-username']);
+				/** @internal I can't find any reference to these variables nor where they are created. So I have created them above using a session theme setting. */
 				$view->assign("login_logo_width", $login_logo_width);
 				$view->assign("login_logo_height", $login_logo_height);
 				$view->assign("login_logo_source", $login_logo_source);
