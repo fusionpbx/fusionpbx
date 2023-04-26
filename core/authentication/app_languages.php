@@ -1,0 +1,72 @@
+<?php
+
+$text['label-authentication_code']['en-us'] = "Authentication Code";
+$text['label-authentication_code']['en-gb'] = "Authentication Code";
+$text['label-authentication_code']['ar-eg'] = "";
+$text['label-authentication_code']['de-at'] = ""; //copied from de-de
+$text['label-authentication_code']['de-ch'] = ""; //copied from de-de
+$text['label-authentication_code']['de-de'] = "";
+$text['label-authentication_code']['el-gr'] = "";
+$text['label-authentication_code']['es-cl'] = "";
+$text['label-authentication_code']['es-mx'] = ""; //copied from es-cl
+$text['label-authentication_code']['fr-ca'] = ""; //copied from fr-fr
+$text['label-authentication_code']['fr-fr'] = "";
+$text['label-authentication_code']['he-il'] = "";
+$text['label-authentication_code']['it-it'] = "";
+$text['label-authentication_code']['nl-nl'] = "";
+$text['label-authentication_code']['pl-pl'] = "";
+$text['label-authentication_code']['pt-br'] = ""; //copied from pt-pt
+$text['label-authentication_code']['pt-pt'] = "";
+$text['label-authentication_code']['ro-ro'] = "";
+$text['label-authentication_code']['ru-ru'] = "";
+$text['label-authentication_code']['sv-se'] = "";
+$text['label-authentication_code']['uk-ua'] = "";
+$text['label-authentication_code']['tr-tr'] = "";
+
+$text['label-verify']['en-us'] = "Verify";
+$text['label-verify']['en-gb'] = "Verify";
+$text['label-verify']['ar-eg'] = "";
+$text['label-verify']['de-at'] = ""; //copied from de-de
+$text['label-verify']['de-ch'] = ""; //copied from de-de
+$text['label-verify']['de-de'] = "";
+$text['label-verify']['el-gr'] = "";
+$text['label-verify']['es-cl'] = "";
+$text['label-verify']['es-mx'] = ""; //copied from es-cl
+$text['label-verify']['fr-ca'] = ""; //copied from fr-fr
+$text['label-verify']['fr-fr'] = "";
+$text['label-verify']['he-il'] = "";
+$text['label-verify']['it-it'] = "";
+$text['label-verify']['nl-nl'] = "";
+$text['label-verify']['pl-pl'] = "";
+$text['label-verify']['pt-br'] = ""; //copied from pt-pt
+$text['label-verify']['pt-pt'] = "";
+$text['label-verify']['ro-ro'] = "";
+$text['label-verify']['ru-ru'] = "";
+$text['label-verify']['sv-se'] = "";
+$text['label-verify']['uk-ua'] = "";
+$text['label-verify']['tr-tr'] = "";
+
+$text['label-email_description']['en-us'] = "Check your email for the verification code.";
+$text['label-email_description']['en-gb'] = "Check your email for the verification code.";
+$text['label-email_description']['ar-eg'] = "";
+$text['label-email_description']['de-at'] = ""; //copied from de-de
+$text['label-email_description']['de-ch'] = ""; //copied from de-de
+$text['label-email_description']['de-de'] = "";
+$text['label-email_description']['el-gr'] = "";
+$text['label-email_description']['es-cl'] = "";
+$text['label-email_description']['es-mx'] = ""; //copied from es-cl
+$text['label-email_description']['fr-ca'] = ""; //copied from fr-fr
+$text['label-email_description']['fr-fr'] = "";
+$text['label-email_description']['he-il'] = "";
+$text['label-email_description']['it-it'] = "";
+$text['label-email_description']['nl-nl'] = "";
+$text['label-email_description']['pl-pl'] = "";
+$text['label-email_description']['pt-br'] = ""; //copied from pt-pt
+$text['label-email_description']['pt-pt'] = "";
+$text['label-email_description']['ro-ro'] = "";
+$text['label-email_description']['ru-ru'] = "";
+$text['label-email_description']['sv-se'] = "";
+$text['label-email_description']['uk-ua'] = "";
+$text['label-email_description']['tr-tr'] = "";
+
+?>

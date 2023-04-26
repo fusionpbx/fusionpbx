@@ -1,0 +1,5 @@
+<extension name="distinctive-ring-local" context="global" continue="true" app_uuid="7564fed9-1345-4022-a355-f1ddd2ad4b5c" global="true" enabled="false" order="130">
+	<condition field="${call_direction}" expression="^local$">
+		<action application="set" data="sip_h_Alert-Info=3" inline="true"/>
+	</condition>
+</extension>

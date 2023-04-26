@@ -130,8 +130,8 @@ if (!class_exists('install')) {
 			$conf .= "xml_handler.reg_as_number_alias = false\n";
 			$conf .= "xml_handler.number_as_presence_id = true\n";
 			$conf .= "\n";
-			$conf .= "#error reporting hide show all errors except notices and warnings\n";
-			$conf .= "error.reporting = 'E_ALL ^ E_NOTICE ^ E_WARNING'\n";
+			$conf .= "#error reporting options: user,dev,all\n";
+			$conf .= "error.reporting = user\n";
 
 			//write the config file
 			$file_handle = fopen($config_file,"w");
