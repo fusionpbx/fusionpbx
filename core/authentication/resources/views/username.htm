@@ -1,16 +1,17 @@
 <!DOCTYPE html>
 <html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en' lang='en'>
 <head>
-<meta charset='utf-8'>
-<meta http-equiv='Content-Type' content='text/html; charset=UTF-8'>
-<meta http-equiv='X-UA-Compatible' content='IE=edge'>
-<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no' />
-<link rel='stylesheet' type='text/css' href='{$project_path}/themes/default/css.php'>
-<title>{$login_title}</title>
+	<meta charset='utf-8' />
+	<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
+	<meta http-equiv='X-UA-Compatible' content='IE=edge' />
+	<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no' />
+	<link rel='stylesheet' type='text/css' href='{$project_path}/themes/default/css.php' />
+	<title>{$login_title}</title>
+</head>
 <body>
 	<div id='page' align='center'>
 		<div id='default_login'>
-			<a href='{$project_path}/'><img id='login_logo' style='width: {$login_logo_width}; height: {$login_logo_height};' src='{$login_logo_source}'></a><br />
+			<a href='{$project_path}/'><img alt='login logo' id='login_logo' style='width: {$login_logo_width}; height: {$login_logo_height};' src='{$login_logo_source}' /></a><br />
 			<form method='post' name='frm' action='{$login_destination_url}'>
 				<div>
 					<input type='text' class='txt login' style='text-align: center; min-width: 200px; width: 200px; margin-bottom: 8px;' name='username' id='username' placeholder="{$login_username}"><br />
