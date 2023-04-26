@@ -57,5 +57,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_order'] = "30";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
+                $y++;
+                $apps[$x]['default_settings'][$y]['default_setting_uuid'] = "11bed598-e461-11ed-9417-005056a27559";
+                $apps[$x]['default_settings'][$y]['default_setting_category'] = "authentication";
+                $apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "email_queue";
+                $apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
+                $apps[$x]['default_settings'][$y]['default_setting_value'] = "false";
+                $apps[$x]['default_settings'][$y]['default_setting_order'] = "40";
+                $apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+                $apps[$x]['default_settings'][$y]['default_setting_description'] = "send direct email or email queue";
 
 ?>
