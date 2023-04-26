@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en' lang='en'>
 <head>
-<meta charset='utf-8'>
-<meta http-equiv='Content-Type' content='text/html; charset=UTF-8'>
-<meta http-equiv='X-UA-Compatible' content='IE=edge'>
+<meta charset='utf-8' />
+<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
+<meta http-equiv='X-UA-Compatible' content='IE=edge' />
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no' />
-<link rel='stylesheet' type='text/css' href='{$project_path}/themes/default/css.php'>
+<link rel='stylesheet' type='text/css' href='{$project_path}/themes/default/css.php' />
 <title>{$login_title}</title>
+</head>
 <body>
 	<div id='page' align='center'>
 		<div id='default_login'>
@@ -17,12 +18,12 @@
 				<div>
 					{$login_email_description}
 					<br /><br />
-					<input class='formfld' type='text' name='authentication_code' maxlength='255' placeholder="{$login_authentication_code}" value="{$authentication_code}">
+					<input class='formfld' type='text' name='authentication_code' maxlength='255' placeholder="{$login_authentication_code}" value="{$authentication_code}" />
 					<br /><br />
 				</div>
 				<div>
-					<input type='hidden' name='{$token_name}' value='{$token_hash}'>
-					<input type='submit' name='' class='btn' value='{$button_verify}'>
+					<input type='hidden' name='{$token_name}' value='{$token_hash}' />
+					<input type='submit' name='' class='btn' value='{$button_verify}' />
 				</div>
 			</form>
 		</div>
