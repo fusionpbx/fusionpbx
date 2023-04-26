@@ -87,7 +87,7 @@ class captcha {
 		//exit;
 
 		// Randomize the fonts
-		srand(uuid());
+		srand();
 		$random = (rand()%count($fonts));
 		//$font = $font_path.'/'.$fonts[$random];
 		$font = $fonts[$random];
