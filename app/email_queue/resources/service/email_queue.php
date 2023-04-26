@@ -12,7 +12,7 @@
 
 //include files
 	require_once "resources/require.php";
-	include "resources/classes/permissions.php";
+include "resources/classes/permissions.php";
 	require "app/email_queue/resources/functions/transcribe.php";
 
 //increase limits
@@ -39,83 +39,40 @@
 	if (!isset($hostname)) {
 		$hostname = gethostname();
 	}
-
-//define the process id file
-	$pid_file = "/var/run/fusionpbx/".basename( $argv[0], ".php") .".pid";
-	//echo "pid_file: ".$pid_file."\n";
-
-//function to check if the process exists
-	function process_exists($file = false) {
-
-		//set the default exists to false
-		$exists = false;
-
-		//check to see if the process is running
-		if (file_exists($file)) {
-			$pid = file_get_contents($file);
-			if (function_exists('posix_getsid')) {
-				if (posix_getsid($pid) === false) { 
-					//process is not running
-					$exists = false;
-				}
-				else {
-					//process is running
-					$exists = true;
-				}
-			}
-			else {
-				if (file_exists('/proc/'.$pid)) {
-					//process is running
-					$exists = true;
-				}
-				else {
-					//process is not running
-					$exists = false;
-				}
-			}
-		}
-
-		//return the result
-		return $exists;
-	}
-
-//check to see if the process exists
-	$pid_exists = process_exists($pid_file);
-
-//prevent the process running more than once
-	if ($pid_exists) {
-		echo "Cannot lock pid file {$pid_file}\n";
-		exit;
-	}
-
+$mypid = getmypid();
+define('LOCK_FILE', "/var/run/" . basename($argv[0], ".php") . ".lock");
+$pid = file_get_contents(LOCK_FILE);
 //email queue enabled
 	if ($_SESSION['email_queue']['enabled']['boolean'] != 'true') {
 		echo "Email Queue is disabled in Default Settings\n";
 		exit;
 	}
 
-//make sure the /var/run/fusionpbx directory exists
-    if (!file_exists('/var/run/fusionpbx')) {
-        $result = mkdir('/var/run/fusionpbx', 0777, true);
-        if (!$result) {
-            die('Failed to create /var/run/fusionpbx');
-        }
+if (!tryLock())
+    die("Already running.\n");
+
+# remove the lock on exit (Control+C doesn't count as 'exit'?)
+register_shutdown_function('unlink', LOCK_FILE);
+
+
+function tryLock() {
+    # If lock file exists, check if stale.  If exists and is not stale, return TRUE
+    # Else, create lock file and return FALSE.
+
+    if (@symlink("/proc/" . getmypid(), LOCK_FILE) !== FALSE) # the @ in front of 'symlink' is to suppress the NOTICE you get if the LOCK_FILE exists
+        return true;
+
+    # link already exists
+    # check if it's stale
+    if (is_link(LOCK_FILE) && !is_dir(LOCK_FILE))
+    {
+        unlink(LOCK_FILE);
+        # try to lock again
+        return tryLock();
     }
 
-//create the process id file if the process doesn't exist
-	if (!$pid_exists) {
-		//remove the old pid file
-		if (file_exists($file)) {
-			unlink($pid_file);
-		}
-
-		//show the details to the user
-		//echo "The process id is ".getmypid()."\n";
-		//echo "pid_file: ".$pid_file."\n";
-
-		//save the pid file
-		file_put_contents($pid_file, getmypid());
-	}
+    return false;
+}
 
 //get the call center settings
 	$interval = $_SESSION['email_queue']['interval']['numeric'];
@@ -155,14 +112,29 @@
 				$command = exec('which php')." ".$_SERVER['DOCUMENT_ROOT']."/app/email_queue/resources/jobs/email_send.php ";
 				$command .= "'action=send&email_queue_uuid=".$row["email_queue_uuid"]."&hostname=".$hostname."'";
 				if (isset($debug)) {
-					//run process inline to see debug info
-					echo $command."\n";
-					$result = system($command);
-					echo $result."\n";
-				}
-				else {
+                                        exec($command, $output);
+					$tz = ini_get('date.timezone');
+					date_default_timezone_set($tz);
+					$date = date('D M j G:i:s T Y');
+                                        $prefix = '['. $date. '] ';
+                                        $line = "\n";
+                                        $log = preg_filter('/^/', $prefix, $output);
+                                        $line = preg_filter('/$/', $line, $log);
+					$prf = 'email_queue-'. $mypid;
+					$temp_file = sys_get_temp_dir(). '/'. $prf.'-'.date('m-d-Y').'.log';
+					if (file_exists($temp_file)) {
+						file_put_contents($temp_file, $line, FILE_APPEND);
+					} else {
+						file_put_contents($temp_file, $line);
+					}
+					var_dump($line);
+					//if (file_exists($temp_file)) {
+						// write some text to the file
+					//	fputs($temp_file, '['. strftime('%c'). '] '. $output);
+					//}
+				} else {
 					//starts process rapidly doesn't wait for previous process to finish (used for production)
-					$handle = popen($command." > /dev/null &", 'r'); 
+					$handle = popen($command." > /dev/null &", 'r');
 					echo "'$handle'; " . gettype($handle) . "\n";
 					$read = fread($handle, 2096);
 					echo $read;
@@ -176,9 +148,9 @@
 	}
 
 //remove the old pid file
-	if (file_exists($pid_file)) {
-		unlink($pid_file);
-	}
+//	if (file_exists($pid_file)) {
+//		unlink($pid_file);
+//	}
 
 //save output to
 	//$fp = fopen(sys_get_temp_dir()."/mailer-app.log", "a");
