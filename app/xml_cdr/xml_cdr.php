@@ -218,9 +218,6 @@
 	}
 
 	echo $text['description']." \n";
-	echo $text['description2']." \n";
-	echo $text['description-3']." \n";
-	echo $text['description-4']." \n";
 	echo "<br /><br />\n";
 
 //basic search of call detail records
