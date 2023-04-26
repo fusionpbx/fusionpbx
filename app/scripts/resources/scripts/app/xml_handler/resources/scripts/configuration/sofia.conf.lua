@@ -276,7 +276,7 @@
 
 				--set the parameters
 					if (sip_profile_setting_name) then
-						xml:append([[						<param name="]] .. xml.sanitize(sip_profile_setting_name) .. [[" value="]] .. xml.sanitize(sip_profile_setting_value) .. [["/>]]);
+						xml:append([[						<param name="]] .. xml.sanitize(sip_profile_setting_name) .. [[" value="]] .. sip_profile_setting_value .. [["/>]]);
 					end
 
 				--set the previous value
