@@ -490,7 +490,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 
-		echo "	<textarea class='formfld' style='width: 300px; height: 200px;' type='text' name='broadcast_phone_numbers' placeholder=\"".$text['label-list_example']."\">".str_replace('\n', "\n", $broadcast_phone_numbers)."</textarea>";
+		echo "	<textarea class='formfld' style='width: 300px; height: 200px;' type='text' name='broadcast_phone_numbers' placeholder=\"".$text['label-list_example']."\">".str_replace('\n', "\n", $broadcast_phone_numbers ?? '')."</textarea>";
 		echo "<br><br>";
 		echo " <input type='file' name='broadcast_phone_numbers_file' accept='.csv,.txt' style=\"display:inline-block;\"><a href='sample.csv' download><i class='fas fa-cloud-download-alt' style='margin-right: 5px;'></i>".$text['label-sample_file']."</a>";
 		echo "<br /><br />";
