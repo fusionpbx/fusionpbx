@@ -120,7 +120,7 @@
 	}
 
 //process the HTTP POST
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
 		//validate the token
 			$token = new token;
@@ -132,23 +132,23 @@
 
 		//check for all required data
 			$msg = '';
-			if (strlen($gateway) == 0) { $msg .= $text['message-required']." ".$text['label-gateway']."<br>\n"; }
+			if (empty($gateway)) { $msg .= $text['message-required']." ".$text['label-gateway']."<br>\n"; }
 			if ($register == "true") {
-				if (strlen($username) == 0) { $msg .= $text['message-required']." ".$text['label-username']."<br>\n"; }
-				if (strlen($password) == 0) { $msg .= $text['message-required']." ".$text['label-password']."<br>\n"; }
+				if (empty($username)) { $msg .= $text['message-required']." ".$text['label-username']."<br>\n"; }
+				if (empty($password)) { $msg .= $text['message-required']." ".$text['label-password']."<br>\n"; }
 			}
-			if (strlen($proxy) == 0) { $msg .= $text['message-required']." ".$text['label-proxy']."<br>\n"; }
-			if (strlen($expire_seconds) == 0) { $msg .= $text['message-required']." ".$text['label-expire_seconds']."<br>\n"; }
-			if (strlen($register) == 0) { $msg .= $text['message-required']." ".$text['label-register']."<br>\n"; }
-			if (strlen($retry_seconds) == 0) { $msg .= $text['message-required']." ".$text['label-retry_seconds']."<br>\n"; }
-			if (strlen($channels) == 0) {
+			if (empty($proxy)) { $msg .= $text['message-required']." ".$text['label-proxy']."<br>\n"; }
+			if (empty($expire_seconds)) { $msg .= $text['message-required']." ".$text['label-expire_seconds']."<br>\n"; }
+			if (empty($register)) { $msg .= $text['message-required']." ".$text['label-register']."<br>\n"; }
+			if (empty($retry_seconds)) { $msg .= $text['message-required']." ".$text['label-retry_seconds']."<br>\n"; }
+			if (empty($channels)) {
 				//$msg .= $text['message-required']." ".$text['label-channels']."<br>\n";
 				$channels = 0;
 			}
-			if (strlen($context) == 0) { $msg .= $text['message-required']." ".$text['label-context']."<br>\n"; }
-			if (strlen($profile) == 0) { $msg .= $text['message-required']." ".$text['label-profile']."<br>\n"; }
-			if (strlen($enabled) == 0) { $msg .= $text['message-required']." ".$text['label-enabled']."<br>\n"; }
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+			if (empty($context)) { $msg .= $text['message-required']." ".$text['label-context']."<br>\n"; }
+			if (empty($profile)) { $msg .= $text['message-required']." ".$text['label-profile']."<br>\n"; }
+			if (empty($enabled)) { $msg .= $text['message-required']." ".$text['label-enabled']."<br>\n"; }
+			if (empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -197,7 +197,7 @@
 					$array['gateways'][$x]["extension_in_contact"] = $extension_in_contact;
 					$array['gateways'][$x]["context"] = $context;
 					$array['gateways'][$x]["profile"] = $profile;
-					$array['gateways'][$x]["hostname"] = strlen($hostname) != 0 ? $hostname : null;
+					$array['gateways'][$x]["hostname"] = empty($hostname) ? null : $hostname;
 					$array['gateways'][$x]["enabled"] = $enabled;
 					$array['gateways'][$x]["description"] = $description;
 
@@ -318,9 +318,9 @@
 	unset($sql);
 
 //set defaults
-	if (strlen($enabled) == 0) { $enabled = "true"; }
-	if (strlen($register) == 0) { $register = "true"; }
-	if (strlen($retry_seconds) == 0) { $retry_seconds = "30"; }
+	if (empty($enabled)) { $enabled = "true"; }
+	if (empty($register)) { $register = "true"; }
+	if (empty($retry_seconds)) { $retry_seconds = "30"; }
 
 //create token
 	$object = new token;
@@ -453,7 +453,7 @@
 	echo "    ".$text['label-expire_seconds']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	if (strlen($expire_seconds) == 0) { $expire_seconds = "800"; }
+	if (empty($expire_seconds)) { $expire_seconds = "800"; }
 	echo "  <input class='formfld' type='number' name='expire_seconds' maxlength='255' value='".escape($expire_seconds)."' min='1' max='65535' step='1' required='required'>\n";
 	echo "<br />\n";
 	echo $text['description-expire_seconds']."\n";
@@ -810,7 +810,7 @@
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "    <select class='formfld' name='domain_uuid'>\n";
-		if (strlen($domain_uuid) == 0) {
+		if (empty($domain_uuid)) {
 			echo "    <option value='' selected='selected'>".$text['select-global']."</option>\n";
 		}
 		else {
@@ -843,7 +843,7 @@
 	echo "	".$text['label-context']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	if (strlen($context) == 0) { $context = "public"; }
+	if (empty($context)) { $context = "public"; }
 	echo "	<input class='formfld' type='text' name='context' maxlength='255' value=\"".escape($context)."\">\n";
 	echo "<br />\n";
 	echo $text['description-context']."\n";
