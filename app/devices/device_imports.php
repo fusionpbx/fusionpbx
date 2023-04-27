@@ -86,7 +86,7 @@
 	}
 
 //get the schema
-	if (strlen($delimiter) > 0 && file_exists($_SESSION['file'])) {
+	if (!empty($delimiter) && file_exists($_SESSION['file'] ?? '')) {
 		//get the first line
 			$line = fgets(fopen($_SESSION['file'], 'r'));
 			$line_fields = explode($delimiter, $line);
@@ -135,7 +135,7 @@
 	}
 
 //match the column names to the field names
-	if (strlen($delimiter) > 0 && file_exists($_SESSION['file']) && $action != 'import') {
+	if (!empty($delimiter) && file_exists($_SESSION['file'] ?? '') && $action != 'import') {
 
 		//validate the token
 			$token = new token;
@@ -239,7 +239,7 @@
 	}
 
 //upload the csv
-	if (file_exists($_SESSION['file']) && $action == 'import') {
+	if (file_exists($_SESSION['file'] ?? '') && $action == 'import') {
 
 		//validate the token
 			$token = new token;
