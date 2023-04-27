@@ -315,13 +315,13 @@
 	}
 
 //set default values
-	if (strlen($agent_type) == 0) { $agent_type = "callback"; }
-	if (strlen($agent_call_timeout) == 0) { $agent_call_timeout = "20"; }
-	if (strlen($agent_max_no_answer) == 0) { $agent_max_no_answer = "0"; }
-	if (strlen($agent_wrap_up_time) == 0) { $agent_wrap_up_time = "10"; }
-	if (strlen($agent_no_answer_delay_time) == 0) { $agent_no_answer_delay_time = "30"; }
-	if (strlen($agent_reject_delay_time) == 0) { $agent_reject_delay_time = "90"; }
-	if (strlen($agent_busy_delay_time) == 0) { $agent_busy_delay_time = "90"; }
+	if (empty($agent_type)) { $agent_type = "callback"; }
+	if (empty($agent_call_timeout)) { $agent_call_timeout = "20"; }
+	if (empty($agent_max_no_answer)) { $agent_max_no_answer = "0"; }
+	if (empty($agent_wrap_up_time)) { $agent_wrap_up_time = "10"; }
+	if (empty($agent_no_answer_delay_time)) { $agent_no_answer_delay_time = "30"; }
+	if (empty($agent_reject_delay_time)) { $agent_reject_delay_time = "90"; }
+	if (empty($agent_busy_delay_time)) { $agent_busy_delay_time = "90"; }
 
 //create token
 	$object = new token;
