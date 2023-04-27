@@ -51,7 +51,7 @@
 	$text = $language->get();
 
 //get the http post values and set theme as php variables
-	if (is_array($_POST) > 0) {
+	if (!empty($_POST)) {
 		//set the variables
 			$dialplan_name = $_POST["dialplan_name"];
 			$dialplan_order = $_POST["dialplan_order"];
