@@ -98,7 +98,7 @@ if (!class_exists('user_logs')) {
 				$database = new database;
 				$database->app_name = 'authentication';
 				$database->app_uuid = 'a8a12918-69a4-4ece-a1ae-3932be0e41f1';
-				if (strlen($user_log_uuid)>0)
+				if (strlen($user_log_uuid ?? '')>0)
 					$database->uuid($user_log_uuid);
 				$database->save($array, false);
 				$message = $database->message;
