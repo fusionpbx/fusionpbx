@@ -429,7 +429,7 @@
 			if (is_uuid($app_uuid) > 0) { $app_uuid = "&app_uuid=".urlencode($app_uuid); }	// accomodate need to pass app_uuid where necessary (inbound/outbound routes lists)
 
 			$field_name = preg_replace("#[^a-zA-Z0-9_]#", "", $field_name);
-			$field_value = preg_replace("#[^a-zA-Z0-9_]#", "", $field_value);
+			$field_value = preg_replace("#[^a-zA-Z0-9_]#", "", $field_value ?? '');
 
 			$sanitized_parameters = '';
 			if (isset($http_get_params) && strlen($http_get_params) > 0) {
@@ -468,7 +468,7 @@
 
 			$html = "<th ".$css." nowrap='nowrap'>";
 			$description = (strlen($description) > 0) ? $description . ', ': '';
-			if (strlen($order_by) == 0) {
+			if (empty($order_by)) {
 				$order = 'asc';
 			}
 			if ($order_by == $field_name) {
@@ -2010,8 +2010,9 @@ function number_pad($number,$n) {
 	if (!function_exists('order_by')) {
 		function order_by($col, $dir, $col_default = '', $dir_default = 'asc') {
 			$order_by = ' order by ';
-			$col = preg_replace('#[^a-zA-Z0-9-_.]#', '', $col);
-			$dir = strtolower($dir) == 'desc' ? 'desc' : 'asc';
+			$col = preg_replace('#[^a-zA-Z0-9-_.]#', '', $col ?? '');
+			if(!empty($dir))
+				$dir = strtolower($dir) == 'desc' ? 'desc' : 'asc';
 			if ($col != '') {
 				return $order_by.$col.' '.$dir.' ';
 			}
