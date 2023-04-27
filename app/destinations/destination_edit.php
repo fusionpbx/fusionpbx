@@ -1084,7 +1084,7 @@
 
 //decode the json to an array
 	$destination_conditions = json_decode($destination_conditions, true);
-	$destination_actions = json_decode($destination_actions, true);
+	$destination_actions = json_decode($destination_actions ?? '', true);
 
 //prepare the conditions array, add an empty row
 	if (is_array($destination_conditions)) {
@@ -1131,7 +1131,7 @@
  		if ($row['dialplan_detail_type'] == "tone_detect") {
 			unset($dialplan_details[$x]);
 		}
-		if (substr($dialplan_detail_data,0,22) == "execute_on_tone_detect") {
+		if (substr($dialplan_detail_data ?? '',0,22) == "execute_on_tone_detect") {
 			unset($dialplan_details[$x]);
 		}
  		if ($row['dialplan_detail_type'] == "answer") {
