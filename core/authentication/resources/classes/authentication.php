@@ -454,7 +454,7 @@ class authentication {
 			}
 
 		//get the domain name from the http value
-			if (strlen($_REQUEST["domain_name"]) > 0) {
+			if (strlen($_REQUEST["domain_name"] ?? '') > 0) {
 				$this->domain_name = $_REQUEST["domain_name"];
 			}
 
