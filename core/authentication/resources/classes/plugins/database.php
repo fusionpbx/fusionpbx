@@ -18,6 +18,7 @@ class plugin_database {
 	public $username;
 	public $password;
 	public $key;
+	public $debug;
 
 	/**
 	 * database checks the local database to authenticate the user or key
