@@ -38,6 +38,7 @@
 		public $order_by;
 		public $order;
 		public $type;
+		public $db;
 
 		/**
 		 * declare private variables
