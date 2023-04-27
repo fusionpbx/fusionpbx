@@ -2511,7 +2511,7 @@
 															else {
 																$retval = false;
 																$message["name"] = $child_name;
-																$message["message"] = "Forbidden, does not have '${child_name}_edit'";
+																$message["message"] = "Forbidden, does not have '{$child_name}_edit'";
 																$message["code"] = "403";
 																$message["line"] = __line__;
 																$this->message = $message;
@@ -2665,7 +2665,7 @@
 														else {
 															$retval = false;
 															$message["name"] = $child_name;
-															$message["message"] = "Forbidden, does not have '${child_name}_add'";
+															$message["message"] = "Forbidden, does not have '{$child_name}_add'";
 															$message["code"] = "403";
 															$message["line"] = __line__;
 															$this->message = $message;
