@@ -379,8 +379,8 @@
 				echo "	<optgroup label='".$text['option-global']."'>\n";
 				if (is_array($streams) && @sizeof($streams) != 0) {
 					foreach ($streams as $row) {
-						if (strlen($row['domain_uuid']) == 0) {
-							if (strlen($row['music_on_hold_rate']) == 0) { $option_name = $row['music_on_hold_name']; }
+						if (empty($row['domain_uuid'])) {
+							if (empty($row['music_on_hold_rate'])) { $option_name = $row['music_on_hold_name']; }
 							if (strlen($row['music_on_hold_rate']) > 0) { $option_name = $row['music_on_hold_name'] .'/'.$row['music_on_hold_rate']; }
 							echo "	<option value='".escape($row['music_on_hold_uuid'])."'>".escape($option_name)."</option>\n";
 						}
@@ -404,7 +404,7 @@
 				if (is_array($streams) && @sizeof($streams) != 0) {
 					foreach ($streams as $row) {
 						if (strlen($row['domain_uuid']) > 0) {
-							if (strlen($row['music_on_hold_rate']) == 0) { $option_name = $row['music_on_hold_name']; }
+							if (empty($row['music_on_hold_rate'])) { $option_name = $row['music_on_hold_name']; }
 							if (strlen($row['music_on_hold_rate']) > 0) { $option_name = $row['music_on_hold_name'] .'/'.$row['music_on_hold_rate']; }
 							echo "	<option value='".escape($row['music_on_hold_uuid'])."'>".escape($option_name)."</option>\n";
 						}
@@ -478,7 +478,7 @@
 					}
 
 				//determine if rate was set to auto or not
-					$auto_rate = strlen($music_on_hold_rate) == 0 ? true : false;
+					$auto_rate = empty($music_on_hold_rate) ? true : false;
 
 				//determine icons to show
 					$stream_icons = array();
