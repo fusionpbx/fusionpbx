@@ -386,9 +386,9 @@ if (!class_exists('destinations')) {
 										}
 									}
 									else {
-										$select_value = str_replace("\${".$key."}", $data[$key], $select_value ?? '');
+										$select_value = str_replace("\${".$key."}", $data[$key] ?? '', $select_value ?? '');
 										if (empty($data['label'])) {
-											$select_label = str_replace("\${".$key."}", $data[$key], $select_label);
+											$select_label = str_replace("\${".$key."}", $data[$key] ?? '', $select_label ?? '');
 										}
 										else {
 											$label = $data['label'];
