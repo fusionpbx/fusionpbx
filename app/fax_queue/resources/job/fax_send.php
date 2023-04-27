@@ -276,7 +276,7 @@
 	//$retry_interval = $_SESSION['fax_queue']['retry_interval']['numeric'];
 
 //prepare the fax retry count
-	if (strlen($fax_retry_count) == 0) {
+	if (empty($fax_retry_count)) {
 		$fax_retry_count = 0;
 	}
 	elseif ($fax_status != 'busy') {
