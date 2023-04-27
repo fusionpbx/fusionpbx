@@ -997,17 +997,17 @@
 	$toll_allow = str_replace(':',',', $toll_allow);
 
 //set the defaults
-	if (strlen($user_context) == 0) { $user_context = $_SESSION['domain_name']; }
-	if (strlen($max_registrations) == 0) { $max_registrations = $_SESSION['extension']['max_registrations']['numeric']; }
-	if (strlen($accountcode) == 0) { $accountcode = get_accountcode(); }
-	if (strlen($limit_max) == 0) { $limit_max = '5'; }
-	if (strlen($limit_destination) == 0) { $limit_destination = '!USER_BUSY'; }
-	if (strlen($call_timeout) == 0) { $call_timeout = '30'; }
-	if (strlen($call_screen_enabled) == 0) { $call_screen_enabled = 'false'; }
-	if (strlen($user_record) == 0) { $user_record = $_SESSION['extension']['user_record_default']['text']; }
-	if (strlen($voicemail_transcription_enabled) == 0) { $voicemail_transcription_enabled = $_SESSION['voicemail']['transcription_enabled_default']['boolean']; }
-	if (strlen($voicemail_enabled) == 0) { $voicemail_enabled = $_SESSION['voicemail']['enabled_default']['boolean']; }
-	if (strlen($enabled) == 0) { $enabled = 'true'; }
+	if (empty($user_context)) { $user_context = $_SESSION['domain_name']; }
+	if (empty($max_registrations)) { $max_registrations = $_SESSION['extension']['max_registrations']['numeric']; }
+	if (empty($accountcode)) { $accountcode = get_accountcode(); }
+	if (empty($limit_max)) { $limit_max = '5'; }
+	if (empty($limit_destination)) { $limit_destination = '!USER_BUSY'; }
+	if (empty($call_timeout)) { $call_timeout = '30'; }
+	if (empty($call_screen_enabled)) { $call_screen_enabled = 'false'; }
+	if (empty($user_record)) { $user_record = $_SESSION['extension']['user_record_default']['text']; }
+	if (empty($voicemail_transcription_enabled)) { $voicemail_transcription_enabled = $_SESSION['voicemail']['transcription_enabled_default']['boolean']; }
+	if (empty($voicemail_enabled)) { $voicemail_enabled = $_SESSION['voicemail']['enabled_default']['boolean']; }
+	if (empty($enabled)) { $enabled = 'true'; }
 
 //create token
 	$object = new token;
