@@ -227,7 +227,7 @@ if (!class_exists('extension')) {
 							foreach ($tmp_array as &$tmp_call_group) {
 								$tmp_call_group = trim($tmp_call_group);
 								if (strlen($tmp_call_group) > 0) {
-									if (strlen($call_group_array[$tmp_call_group]) == 0) {
+									if (empty($call_group_array[$tmp_call_group])) {
 										$call_group_array[$tmp_call_group] = $row['extension'];
 									}
 									else {
@@ -249,7 +249,7 @@ if (!class_exists('extension')) {
 								$extension = str_replace(" ", "_", $extension);
 								$extension = preg_replace("/[\*\:\\/\<\>\|\'\"\?]/", "", $extension);
 								$dial_string = $row['dial_string'];
-								if (strlen($dial_string) == 0) {
+								if (empty($dial_string)) {
 									if (strlen($_SESSION['domain']['dial_string']['text']) > 0) {
 										$dial_string = $_SESSION['domain']['dial_string']['text'];
 									}
