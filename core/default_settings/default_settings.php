@@ -46,12 +46,16 @@
 	$text = $language->get();
 
 //get the http post data
-	$search = $_REQUEST['search'];
-	$default_setting_category = $_REQUEST['default_setting_category'];
+	$search = $_REQUEST['search'] ?? '';
+	$default_setting_category = $_REQUEST['default_setting_category'] ?? '';
 	if (is_array($_POST['default_settings'])) {
 		$action = $_POST['action'];
 		$domain_uuid = $_POST['domain_uuid'];
 		$default_settings = $_POST['default_settings'];
+	} else {
+		$action = '';
+		$domain_uuid = '';
+		$default_settings = '';
 	}
 
 //sanitize the variables
@@ -140,7 +144,7 @@
 		$parameters['default_setting_category'] = strtolower($default_setting_category);
 	}
 	$sql .= order_by($order_by, $order, 'default_setting_category, default_setting_subcategory, default_setting_order', 'asc');
-	$sql .= limit_offset($rows_per_page, $offset);
+	//$sql .= limit_offset($rows_per_page, $offset ?? '');  //$offset is always null
 	$database = new database;
 	$default_settings = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
@@ -153,7 +157,7 @@
 	$sql .= "	count(d2.default_setting_category) ";
 	$sql .= "	from v_default_settings as d2 ";
 	$sql .= "	where d2.default_setting_category = d1.default_setting_category ";
-	if (isset($search) && strlen($search) > 0) {
+	if (!empty($search)) {
 		$sql .= "	and (";
 		$sql .= "		lower(d2.default_setting_category) like :search ";
 		$sql .= "		or lower(d2.default_setting_subcategory) like :search ";
@@ -345,7 +349,7 @@
 				if ($row['default_setting_value'] !== $field['default_setting_value']) {
 					$setting_bold = 'font-weight:bold;';
 				}
-				if (strlen($field['default_setting_value']) > 0) {
+				if (!empty($field['default_setting_value'])) {
 					$default_value = 'Default: '.$field['default_setting_value'];
 				}
 				else {
@@ -465,7 +469,7 @@
 				echo "		[...]\n";
 			}
 			else if ($subcategory == 'password' || substr_count($subcategory, '_password') > 0 || $category == "login" && $subcategory == "password_reset_key" && $name == "text" || substr_count($subcategory, '_secret') > 0) {
-				echo "		".str_repeat('*', strlen($row['default_setting_value']));
+				echo "		".str_repeat('*', strlen($row['default_setting_value'] ?? ''));
 			}
 			else if ($category == 'theme' && $subcategory == 'button_icons' && $name == 'text') {
 				echo "		".$text['option-button_icons_'.$row['default_setting_value']]."\n";
