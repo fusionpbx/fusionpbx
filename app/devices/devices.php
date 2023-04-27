@@ -53,8 +53,8 @@
 	}
 
 //get the search
-	$search = strtolower($_REQUEST["search"]);
-	$fields = strtolower($_REQUEST["fields"]);
+	$search = strtolower($_REQUEST["search"] ?? '');
+	$fields = strtolower($_REQUEST["fields"] ?? '');
 
 //process the http post data by action
 	if ($action != '' && is_array($devices) && @sizeof($devices) != 0) {
@@ -178,7 +178,7 @@
 		$param .= "&show=all";
 	}
 	$page = $_GET['page'];
-	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
+	if (empty($page)) { $page = 0; $_GET['page'] = 0; }
 	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
 	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
@@ -250,7 +250,7 @@
 		$sql .= ") ";
 		$parameters['search'] = '%'.strtolower($search).'%';
 	}
-	if (strlen($order_by) == 0) {
+	if (empty($order_by)) {
 		$sql .= "order by d.device_label, d.device_description asc ";
 	}
 	else {
