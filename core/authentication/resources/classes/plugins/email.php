@@ -17,6 +17,7 @@ class plugin_email {
 	public $user_uuid;
 	public $user_email;
 	public $contact_uuid;
+	public $debug;
 
 	/**
 	 * time based one time password with email
