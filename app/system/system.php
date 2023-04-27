@@ -384,7 +384,7 @@
 		//freebsd
 		if (stristr(PHP_OS, 'FreeBSD')) {
 			echo "<!--\n";
-			$shell_cmd = 'top';
+			$shell_cmd = 'top -d1 0';
 			$shell_result = shell_exec($shell_cmd);
 			echo "-->\n";
 			if (strlen($shell_result) > 0) {
@@ -411,7 +411,7 @@
 
 //drive space
 	if (permission_exists('system_view_hdd')) {
-		if (stristr(PHP_OS, 'Linux') || stristr(PHP_OS, 'FreeBSD')) {
+		if (stristr(PHP_OS, 'Linux')) {
 			echo "<!--\n";
 			$shell_cmd = 'df -hP --total';
 			$shell_result = shell_exec($shell_cmd);
@@ -431,7 +431,27 @@
 			echo "	</td>\n";
 			echo "</tr>\n";
 			echo "</table>\n";
-		} else if (stristr(PHP_OS, 'WIN')) {
+		} elseif (stristr(PHP_OS, 'FreeBSD')) {
+                        echo "<!--\n";
+                        $shell_cmd = 'df -hP';
+                        $shell_result = shell_exec($shell_cmd);
+                        echo "-->\n";
+                        echo "<table width=\"100%\" border=\"0\" cellpadding=\"7\" cellspacing=\"0\">\n";
+                        echo "<tr>\n";
+                        echo "  <th class='th' colspan='2' align='left'>".$text['title-drive']."</th>\n";
+                        echo "</tr>\n";
+                        echo "<tr>\n";
+                        echo "  <td width='20%' class=\"vncell\" style='text-align: left;'>\n";
+                        echo "          ".$text['label-drive']." \n";
+                        echo "  </td>\n";
+                        echo "  <td class=\"row_style1\">\n";
+                        echo "<pre>\n";
+                        echo "$shell_result<br>";
+                        echo "</pre>\n";
+                        echo "  </td>\n";
+                        echo "</tr>\n";
+                        echo "</table>\n";
+                } else if (stristr(PHP_OS, 'WIN')) {
 			//disk_free_space returns the number of bytes available on the drive;
 			//1 kilobyte = 1024 byte
 			//1 megabyte = 1024 kilobyte
