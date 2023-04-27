@@ -66,7 +66,7 @@
 	}
 
 //process the data
-	if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST)>0 && empty($_POST["persistformvar"])) {
 
 		//get the uuid
 			if ($action == "update") {
@@ -83,13 +83,13 @@
 
 		//check for all required data
 			$msg = '';
-			if (strlen($module_label) == 0) { $msg .= $text['message-required'].$text['label-label']."<br>\n"; }
-			if (strlen($module_name) == 0) { $msg .= $text['message-required'].$text['label-module_name']."<br>\n"; }
-			//if (strlen($module_description) == 0) { $msg .= $text['message-required'].$text['label-description']."<br>\n"; }
-			if (strlen($module_category) == 0) { $msg .= $text['message-required'].$text['label-module_category']."<br>\n"; }
-			if (strlen($module_enabled) == 0) { $msg .= $text['message-required'].$text['label-enabled']."<br>\n"; }
-			if (strlen($module_default_enabled) == 0) { $msg .= $text['message-required'].$text['label-default_enabled']."<br>\n"; }
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+			if (empty($module_label)) { $msg .= $text['message-required'].$text['label-label']."<br>\n"; }
+			if (empty($module_name)) { $msg .= $text['message-required'].$text['label-module_name']."<br>\n"; }
+			//if (empty($module_description)) { $msg .= $text['message-required'].$text['label-description']."<br>\n"; }
+			if (empty($module_category)) { $msg .= $text['message-required'].$text['label-module_category']."<br>\n"; }
+			if (empty($module_enabled)) { $msg .= $text['message-required'].$text['label-enabled']."<br>\n"; }
+			if (empty($module_default_enabled)) { $msg .= $text['message-required'].$text['label-default_enabled']."<br>\n"; }
+			if (strlen($msg) > 0 && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -164,8 +164,8 @@
 	}
 
 //set the defaults
-	if (strlen($module_enabled) == 0) { $module_enabled = 'true'; }
-	if (strlen($module_default_enabled) == 0) { $module_default_enabled = 'true'; }
+	if (empty($module_enabled)) { $module_enabled = 'true'; }
+	if (empty($module_default_enabled)) { $module_default_enabled = 'true'; }
 
 //create token
 	$object = new token;
