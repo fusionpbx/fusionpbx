@@ -3,7 +3,6 @@
 /**
  * Get the text for the correct translation
  *
- * @method array get
  */
 class text {
 	public $languages;
@@ -82,9 +81,9 @@ class text {
 			else {
 				$lang_path = getcwd();
 			}
-			if (file_exists("${lang_path}/app_languages.php")) {
+			if (file_exists("{$lang_path}/app_languages.php")) {
 				if ($lang_path != 'resources' or $exclude_global) {
-					include "${lang_path}/app_languages.php";
+					include "{$lang_path}/app_languages.php";
 				}
 			}
 			//else {
