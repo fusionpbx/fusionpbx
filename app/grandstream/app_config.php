@@ -1061,5 +1061,20 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enable weather update. 0 - No, 1 - Yes. Default is 1";
-
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "f2ad92e0-669c-4553-9c99-5386f93e75df";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstreaml_xmlapp_url";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "URL for the XML application. XML Application disabled if blank";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "dfd1e86a-d864-4947-89af-6ba51380e47c";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_xmlapp_label";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "XMLApp";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "label to display for XML application softkey";
 ?>

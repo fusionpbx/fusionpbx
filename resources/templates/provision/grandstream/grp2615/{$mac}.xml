@@ -7591,11 +7591,11 @@
     <!-- ############################################################################## -->
     <!-- # Server Path -->
     <!-- # String -->
-    <P337></P337>
+    <P337>{$grandstreaml_xmlapp_url}</P337>
 
     <!-- # Softkey Label -->
     <!-- # String -->
-    <P352>XMLApp</P352>
+    <P352>{$grandstream_xmlapp_label}</P352>
 
     <!-- # Default Background Color -->
     <!-- # String -->
