@@ -189,7 +189,7 @@ class event_socket {
 		if ($this->fp) {
 			try {
 				fclose($this->fp);
-			} catch (\Exception) {
+			} catch (\Exception $e) {
 
 			} finally {
 				$this->fp = false;
