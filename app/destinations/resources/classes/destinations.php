@@ -386,8 +386,8 @@ if (!class_exists('destinations')) {
 										}
 									}
 									else {
-										$select_value = str_replace("\${".$key."}", $data[$key], $select_value);
-										if (strlen($data['label']) == 0) {
+										$select_value = str_replace("\${".$key."}", $data[$key], $select_value ?? '');
+										if (empty($data['label'])) {
 											$select_label = str_replace("\${".$key."}", $data[$key], $select_label);
 										}
 										else {
@@ -396,7 +396,7 @@ if (!class_exists('destinations')) {
 										}
 									}
 									//application: hangup
-									if (strlen($data['application']) > 0) {
+									if (!empty($data['application'])) {
 										$select_value = str_replace("transfer", $data['application'], $select_value);
 									}
 								}
