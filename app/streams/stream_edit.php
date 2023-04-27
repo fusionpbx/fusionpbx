@@ -85,7 +85,7 @@
 			if (empty($stream_enabled)) { $msg .= $text['message-required']." ".$text['label-stream_enabled']."<br>\n"; }
 			//if (empty($domain_uuid)) { $msg .= $text['message-required']." ".$text['label-domain_uuid']."<br>\n"; }
 			//if (empty($stream_description)) { $msg .= $text['message-required']." ".$text['label-stream_description']."<br>\n"; }
-			if (strlen($msg) > 0 && empty($_POST["persistformvar"])) {
+			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";

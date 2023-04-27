@@ -52,7 +52,7 @@ if (!class_exists('message')) {
 		static function html($clear_messages = true, $spacer = "") {
 			$html = "${spacer}//render the messages\n";
 			$spacer .="\t";
-			if (is_string($_SESSION['message']) && strlen(trim($_SESSION['message'])) > 0) {
+			if (is_string($_SESSION['message']) && !empty(trim($_SESSION['message']))) {
 				self::add($_SESSION['message'], $_SESSION['message_mood'], $_SESSION['message_delay']);
 				unset($_SESSION['message'], $_SESSION['message_mood'], $_SESSION['message_delay']);
 			}

@@ -103,7 +103,7 @@ if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 		$msg = '';
 		if (empty($recording_filename)) { $msg .= $text['label-edit-file']."<br>\n"; }
 		if (empty($recording_name)) { $msg .= $text['label-edit-recording']."<br>\n"; }
-		if (strlen($msg) > 0 && empty($_POST["persistformvar"])) {
+		if (!empty($msg) && empty($_POST["persistformvar"])) {
 			require_once "resources/header.php";
 			require_once "resources/persist_form_var.php";
 			echo "<div align='center'>\n";

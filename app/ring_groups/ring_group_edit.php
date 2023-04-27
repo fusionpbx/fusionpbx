@@ -256,7 +256,7 @@
 			//if (empty($ring_group_cid_number_prefix)) { $msg .= "Please provide: Caller ID Number Prefix<br>\n"; }
 			//if (empty($ring_group_ringback)) { $msg .= "Please provide: Ringback<br>\n"; }
 			//if (empty($ring_group_description)) { $msg .= "Please provide: Description<br>\n"; }
-			if (strlen($msg) > 0 && empty($_POST["persistformvar"])) {
+			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -371,7 +371,7 @@
 				else {
 					$ring_group_destination_uuid = uuid();
 				}
-				if (strlen($row['destination_number']) > 0) {
+				if (!empty($row['destination_number'])) {
 					$array["ring_groups"][0]["ring_group_destinations"][$y]["ring_group_uuid"] = $ring_group_uuid;
 					$array['ring_groups'][0]["ring_group_destinations"][$y]["ring_group_destination_uuid"] = $ring_group_destination_uuid;
 					$array['ring_groups'][0]["ring_group_destinations"][$y]["destination_number"] = $row['destination_number'];
@@ -498,7 +498,7 @@
 			$dialplan_uuid = $row["dialplan_uuid"];
 		}
 		unset($sql, $parameters, $row);
-		if (strlen($ring_group_timeout_app) > 0) {
+		if (!empty($ring_group_timeout_app)) {
 			$ring_group_timeout_action = $ring_group_timeout_app.":".$ring_group_timeout_data;
 		}
 	}
@@ -714,7 +714,7 @@
 		echo "</optgroup>\n";
 	}
 	if (if_group("superadmin")) {
-		if (!$selected && strlen($ring_group_greeting) > 0) {
+		if (!$selected && !empty($ring_group_greeting)) {
 			echo "	<option value='".escape($ring_group_greeting)."' selected='selected'>".escape($ring_group_greeting)."</option>\n";
 		}
 		unset($selected);
@@ -769,7 +769,7 @@
 		if (empty($row['destination_delay'])) { $row['destination_delay'] = "0"; }
 		if (empty($row['destination_timeout'])) { $row['destination_timeout'] = "30"; }
 
-		if (strlen($row['ring_group_destination_uuid']) > 0) {
+		if (!empty($row['ring_group_destination_uuid'])) {
 			echo "		<input name='ring_group_destinations[".$x."][ring_group_destination_uuid]' type='hidden' value=\"".escape($row['ring_group_destination_uuid'])."\">\n";
 		}
 

@@ -64,7 +64,7 @@
 			if (empty($profile_param_name)) { $msg .= $text['message-required']." ".$text['label-profile_param_name']."<br>\n"; }
 			if (empty($profile_param_value)) { $msg .= $text['message-required']." ".$text['label-profile_param_value']."<br>\n"; }
 			if (empty($profile_param_enabled)) { $msg .= $text['message-required']." ".$text['label-profile_param_enabled']."<br>\n"; }
-			if (strlen($msg) > 0 && empty($_POST["persistformvar"])) {
+			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				$document['title'] = $text['title-conference_profile_param'];
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";

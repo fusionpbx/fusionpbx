@@ -420,7 +420,7 @@ class mime_parser_class
 			{
 				$value = substr($remaining, 1, $quote - 1);
 				$p = trim(substr($remaining, $quote + 1));
-				if(strlen($p) > 0
+				if(!empty($p)
 				&& !strcmp($p[0], ';'))
 					$p = substr($p, 1);
 			}

@@ -33,7 +33,7 @@
 
 //if reloadxml then run the command
 	if (permission_exists('dialplan_edit') && isset($_SESSION["reload_xml"])) {
-		if (strlen($_SESSION["reload_xml"]) > 0) {
+		if (!empty($_SESSION["reload_xml"])) {
 			if ($_SESSION['apply_settings'] == "true") {
 				//show the apply settings prompt
 			}
@@ -104,14 +104,14 @@
 				if (empty($content_row['rss_group'])) {
 					//content is public
 					$content_from_db = &$content_row['rss_description'];
-					if (strlen($content_row['rss_title']) > 0) {
+					if (!empty($content_row['rss_title'])) {
 						$page["title"] = $content_row['rss_title'];
 					}
 				}
 				else {
 					if (if_group($content_row[rss_group])) { //viewable only to designated group
 						$content_from_db = &$content_row[rss_description];
-						if (strlen($content_row['rss_title']) > 0) {
+						if (!empty($content_row['rss_title'])) {
 							$page["title"] = $content_row['rss_title'];
 						}
 					}

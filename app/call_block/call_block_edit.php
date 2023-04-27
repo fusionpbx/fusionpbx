@@ -121,7 +121,7 @@
 			//if (empty($call_block_name)) { $msg .= $text['label-provide-name']."<br>\n"; }
 			//if (empty($call_block_number)) { $msg .= $text['label-provide-number']."<br>\n"; }
 			if (empty($call_block_enabled)) { $msg .= $text['label-provide-enabled']."<br>\n"; }
-			if (strlen($msg) > 0 && empty($_POST["persistformvar"])) {
+			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";

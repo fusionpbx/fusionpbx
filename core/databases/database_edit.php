@@ -118,7 +118,7 @@ if (count($_POST)>0 && empty($_POST["persistformvar"])) {
 		//if (empty($database_password)) { $msg .= $text['message-required'].$text['label-password']."<br>\n"; }
 		//if (empty($database_path)) { $msg .= $text['message-required'].$text['label-path']."<br>\n"; }
 		//if (empty($database_description)) { $msg .= $text['message-required'].$text['label-description']."<br>\n"; }
-		if (strlen($msg) > 0 && empty($_POST["persistformvar"])) {
+		if (!empty($msg) && empty($_POST["persistformvar"])) {
 			require_once "resources/header.php";
 			require_once "resources/persist_form_var.php";
 			echo "<div align='center'>\n";

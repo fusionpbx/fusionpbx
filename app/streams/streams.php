@@ -274,7 +274,7 @@
 			}
 			echo "	</td>\n";
 			echo "	<td class='no-wrap button'>\n";
-			if (strlen($row['stream_location']) > 0) {
+			if (!empty($row['stream_location'])) {
 				$location_parts = explode('://',$row['stream_location']);
 				$http_protocol = ($location_parts[0] == "shout") ? 'http' : 'https';
 				echo "<audio src='".$http_protocol."://".$location_parts[1]."' controls='controls' />\n";

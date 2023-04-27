@@ -71,7 +71,7 @@
 				$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 				$sql .= "and permission_assigned = 'true' ";
 				foreach ($_SESSION["groups"] as $field) {
-					if (strlen($field['group_name']) > 0) {
+					if (!empty($field['group_name'])) {
 						$sql_where_or[] = "group_name = :group_name_".$x;
 						$parameters['group_name_'.$x] = $field['group_name'];
 						$x++;
@@ -213,7 +213,7 @@
 							if (empty($group_permission_uuid)) {
 								$group_permission_uuid = uuid();
 							}
-							if (isset($row['permission_name']) && strlen($row['permission_name']) > 0) {
+							if (isset($row['permission_name']) && !empty($row['permission_name'])) {
 								$array['save']['group_permissions'][$x]['group_permission_uuid'] = $group_permission_uuid;
 								$array['save']['group_permissions'][$x]['permission_name'] = $row['permission_name'];
 								$array['save']['group_permissions'][$x]['permission_protected'] = $row['permission_protected'] == 'true' ? "true" : 'false';
@@ -225,7 +225,7 @@
 						}
 
 						if ($action == "delete") {
-							if (isset($row['permission_name']) && strlen($row['permission_name']) > 0) {
+							if (isset($row['permission_name']) && !empty($row['permission_name'])) {
 								$array['delete']['group_permissions'][$x]['permission_name'] = $row['permission_name'];
 								$array['delete']['group_permissions'][$x]['group_uuid'] = $group_uuid;
 								$array['delete']['group_permissions'][$x]['group_name'] = $group_name;

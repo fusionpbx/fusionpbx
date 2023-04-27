@@ -212,7 +212,7 @@ if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 		}
 
 	//check for a unique pin number and length
-		if (strlen($moderator_pin) > 0 || strlen($participant_pin) > 0) {
+		if (strlen($moderator_pin) > 0 || !empty($participant_pin)) {
 			//make sure the moderator pin number is unique
 				$sql = "select count(*) from v_conference_rooms ";
 				$sql .= "where domain_uuid = :domain_uuid ";
@@ -272,7 +272,7 @@ if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 		//if (empty($created_by)) { $msg .= "Please provide: Created By<br>\n"; }
 		//if (empty($enabled)) { $msg .= "Please provide: Enabled<br>\n"; }
 		//if (empty($description)) { $msg .= "Please provide: Description<br>\n"; }
-		if (strlen($msg) > 0 && empty($_POST["persistformvar"])) {
+		if (!empty($msg) && empty($_POST["persistformvar"])) {
 			$document['title'] = $text['title-conference_room'];
 			require_once "resources/header.php";
 			require_once "resources/persist_form_var.php";
@@ -371,35 +371,35 @@ if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 					$array['conference_rooms'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
 					$array['conference_rooms'][0]['conference_center_uuid'] = $conference_center_uuid;
 					$array['conference_rooms'][0]['conference_room_name'] = $conference_room_name;
-					if (strlen($profile) > 0) {
+					if (!empty($profile)) {
 						$array['conference_rooms'][0]['profile'] = $profile;
 					}
-					if (strlen($record) > 0) {
+					if (!empty($record)) {
 						$array['conference_rooms'][0]['record'] = $record;
 					}
 					$array['conference_rooms'][0]['moderator_pin'] = $moderator_pin;
 					$array['conference_rooms'][0]['participant_pin'] = $participant_pin;
-					if (strlen($max_members) > 0) {
+					if (!empty($max_members)) {
 						$array['conference_rooms'][0]['max_members'] = $max_members;
 					}
 					$array['conference_rooms'][0]['start_datetime'] = $start_datetime;
 					$array['conference_rooms'][0]['stop_datetime'] = $stop_datetime;
-					if (strlen($wait_mod) > 0) {
+					if (!empty($wait_mod)) {
 						$array['conference_rooms'][0]['wait_mod'] = $wait_mod;
 					}
-					if (strlen($moderator_endconf) > 0) {
+					if (!empty($moderator_endconf)) {
 						$array['conference_rooms'][0]['moderator_endconf'] = $moderator_endconf;
 					}
-					if (strlen($announce_name) > 0) {
+					if (!empty($announce_name)) {
 						$array['conference_rooms'][0]['announce_name'] = $announce_name;
 					}
-					if (strlen($announce_name) > 0) {
+					if (!empty($announce_name)) {
 						$array['conference_rooms'][0]['announce_recording'] = $announce_recording;
 					}
-					if (strlen($announce_name) > 0) {
+					if (!empty($announce_name)) {
 						$array['conference_rooms'][0]['announce_count'] = $announce_count;
 					}
-					if (strlen($mute) > 0) {
+					if (!empty($mute)) {
 						$array['conference_rooms'][0]['mute'] = $mute;
 					}
 					$array['conference_rooms'][0]['sounds'] = $sounds;
@@ -409,7 +409,7 @@ if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 					if (permission_exists('conference_room_account_code')) {
 						$array['conference_rooms'][0]['account_code'] = $account_code;
 					}
-					if (strlen($enabled) > 0) {
+					if (!empty($enabled)) {
 						$array['conference_rooms'][0]['enabled'] = $enabled;
 					}
 					$array['conference_rooms'][0]['description'] = $description;

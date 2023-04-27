@@ -129,7 +129,7 @@
 			if (empty($agent_reject_delay_time)) { $msg .= $text['message-required']." ".$text['label-agent_reject_delay_time']."<br>\n"; }
 			if (empty($agent_busy_delay_time)) { $msg .= $text['message-required']." ".$text['label-agent_busy_delay_time']."<br>\n"; }
 			//if (empty($agent_logout)) { $msg .= $text['message-required']." ".$text['label-agent_logout']."<br>\n"; }
-			if (strlen($msg) > 0 && empty($_POST["persistformvar"])) {
+			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";

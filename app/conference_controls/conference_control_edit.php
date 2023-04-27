@@ -58,7 +58,7 @@
 			if (empty($control_name)) { $msg .= $text['message-required']." ".$text['label-control_name']."<br>\n"; }
 			if (empty($control_enabled)) { $msg .= $text['message-required']." ".$text['label-control_enabled']."<br>\n"; }
 			//if (empty($control_description)) { $msg .= $text['message-required']." ".$text['label-control_description']."<br>\n"; }
-			if (strlen($msg) > 0 && empty($_POST["persistformvar"])) {
+			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				$document['title'] = $text['title-conference_control'];
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
@@ -87,7 +87,7 @@
 			$database = new database;
 			$database->app_name = 'conference_controls';
 			$database->app_uuid = 'e1ad84a2-79e1-450c-a5b1-7507a043e048';
-			if (strlen($conference_control_uuid) > 0) {
+			if (!empty($conference_control_uuid)) {
 				$database->uuid($conference_control_uuid);
 			}
 			$database->save($array);

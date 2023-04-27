@@ -161,7 +161,7 @@
 			echo "</tr>\n";
 			preg_match("/\(git\s*(.*?)\s*\d+\w+\s*\)/", $switch_version, $matches);
 			$switch_git_info = $matches[1];
-			if(strlen($switch_git_info) > 0){
+			if(!empty($switch_git_info)){
 				echo "<tr>\n";
 				echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
 				echo "		".$text['label-switch']." ".$text['label-git_info']."\n";
@@ -199,7 +199,7 @@
 			echo "-->\n";
 		}
 		
-		if (strlen($os_name) > 0) {
+		if (!empty($os_name)) {
 			echo "<tr>\n";
 			echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
 			echo "		".$text['label-os']." \n";
@@ -209,7 +209,7 @@
 			echo "	</td>\n";
 			echo "</tr>\n";
 		}
-		if (strlen($os_version) > 0) {
+		if (!empty($os_version)) {
 			echo "<tr>\n";
 			echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
 			echo "		".$text['label-version']." \n";
@@ -219,7 +219,7 @@
 			echo "	</td>\n";
 			echo "</tr>\n";
 		}
-		if (strlen($os_kernel) > 0) {
+		if (!empty($os_kernel)) {
 			echo "<tr>\n";
 			echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
 			echo "		".$text['label-kernel']." \n";
@@ -234,7 +234,7 @@
 		echo "<!--\n";
 		$tmp_result = shell_exec('uptime');
 		echo "-->\n";
-		if (strlen($tmp_result) > 0) {
+		if (!empty($tmp_result)) {
 			echo "<tr>\n";
 			echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
 			echo "		Uptime\n";
@@ -265,7 +265,7 @@
 			$shell_cmd = 'free -hw';
 			$shell_result = shell_exec($shell_cmd);
 			echo "-->\n";
-			if (strlen($shell_result) > 0) {
+			if (!empty($shell_result)) {
 				echo "<table width=\"100%\" border=\"0\" cellpadding=\"7\" cellspacing=\"0\">\n";
 				echo "<tr>\n";
 				echo "	<th colspan='2' align='left' valign='top'>".$text['title-mem']."</th>\n";
@@ -292,7 +292,7 @@
 			$shell_cmd = 'sysctl vm.vmtotal';
 			$shell_result = shell_exec($shell_cmd);
 			echo "-->\n";
-			if (strlen($shell_result) > 0) {
+			if (!empty($shell_result)) {
 				echo "<table width=\"100%\" border=\"0\" cellpadding=\"7\" cellspacing=\"0\">\n";
 				echo "<tr>\n";
 				echo "	<th colspan='2' align='left' valign='top'>".$text['title-mem']."</th>\n";
@@ -324,7 +324,7 @@
 			$system = $res->ItemIndex(0);
 			$shell_result = round($system->TotalPhysicalMemory / 1024 /1024, 0);
 			echo "-->\n";
-			if (strlen($shell_result) > 0) {
+			if (!empty($shell_result)) {
 				echo "<table width=\"100%\" border=\"0\" cellpadding=\"7\" cellspacing=\"0\">\n";
 				echo "<tr>\n";
 				echo "	<th class='th' colspan='2' align='left'>".$text['Physical Memory']."</th>\n";
@@ -352,7 +352,7 @@
 			$shell_cmd = "ps -e -o pcpu,cpu,nice,state,cputime,args --sort pcpu | sed '/^ 0.0 /d'";
 			$shell_result = shell_exec($shell_cmd);
 			echo "-->\n";
-			if (strlen($shell_result) > 0) {
+			if (!empty($shell_result)) {
 				echo "<table width=\"100%\" border=\"0\" cellpadding=\"7\" cellspacing=\"0\">\n";
 				echo "<tr>\n";
 				echo "	<th class='th' colspan='2' align='left' valign='top'>".$text['title-cpu']."</th>\n";
@@ -387,7 +387,7 @@
 			$shell_cmd = 'top';
 			$shell_result = shell_exec($shell_cmd);
 			echo "-->\n";
-			if (strlen($shell_result) > 0) {
+			if (!empty($shell_result)) {
 				echo "<table width=\"100%\" border=\"0\" cellpadding=\"7\" cellspacing=\"0\">\n";
 				echo "<tr>\n";
 				echo "	<th class='th' colspan='2' align='left' valign='top'>".$text['title-cpu']."</th>\n";
@@ -553,7 +553,7 @@
 				$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
 				$memcache_lines = preg_split('/\n/', $switch_result);
 				foreach($memcache_lines as $memcache_line) {
-					if (strlen(trim($memcache_line)) > 0 && substr_count($memcache_line, ': ') > 0) {
+					if (!empty(trim($memcache_line)) > 0 && substr_count($memcache_line, ': ')) {
 						$memcache_temp = explode(': ', $memcache_line);
 						$memcache_status[$memcache_temp[0]] = $memcache_temp[1];
 					}

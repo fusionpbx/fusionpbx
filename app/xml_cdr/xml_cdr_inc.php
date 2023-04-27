@@ -90,7 +90,7 @@
 				}
 			}
 		}
-		if (strlen($_REQUEST["mos_comparison"]) > 0) {
+		if (!empty($_REQUEST["mos_comparison"])) {
 			switch($_REQUEST["mos_comparison"]) {
 				case 'less': $mos_comparison = "<"; break;
 				case 'greater': $mos_comparison = ">"; break;
@@ -378,7 +378,7 @@
 			$field_name = end($array);
 			if (isset($$field_name)) {
 				$$field_name = $_REQUEST[$field_name];
-				if (strlen($$field_name) > 0) {
+				if (!empty($$field_name)) {
 					if (strstr($$field_name, '%')) {
 						$sql .= "and $field_name like :".$field_name." \n";
 						$parameters[$field_name] = $$field_name;
@@ -539,7 +539,7 @@
 		$sql .= "and network_addr like :network_addr \n";
 		$parameters['network_addr'] = '%'.$network_addr.'%';
 	}
-	//if (strlen($mos_comparison) > 0 && strlen($mos_score) > 0 ) {
+	//if (strlen($mos_comparison) > 0 && !empty($mos_score) ) {
 	//	$sql .= "and rtp_audio_in_mos = :mos_comparison :mos_score ";
 	//	$parameters['mos_comparison'] = $mos_comparison;
 	//	$parameters['mos_score'] = $mos_score;
@@ -569,7 +569,7 @@
 		$sql .= "and (cc_side is null or cc_side != 'agent') \n";
 	}
 	//end where
-	if (strlen($order_by) > 0) {
+	if (!empty($order_by)) {
 		$sql .= order_by($order_by, $order);
 	}
 	if ($_REQUEST['export_format'] !== "csv" && $_REQUEST['export_format'] !== "pdf") {

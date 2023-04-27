@@ -200,7 +200,7 @@ class plugin_database {
 						$valid_password = true;
 					}
 					else if (substr($row["password"], 0, 1) === '$') {
-						if (isset($this->password) && strlen($this->password) > 0) {
+						if (isset($this->password) && !empty($this->password)) {
 							if (password_verify($this->password, $row["password"])) {
 								$valid_password = true;
 							}

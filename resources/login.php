@@ -255,7 +255,7 @@
 		$destination_query = parse_url($_SESSION['login']['destination']['text'])['query'] ?? '';
 		$destination_path = preg_replace('#[^a-zA-Z0-9_\-\./]#', '', $destination_path);
 		$destination_query = preg_replace('#[^a-zA-Z0-9_\-\./&=]#', '', $destination_query);
-		$_SESSION['login']['destination']['text'] = (strlen($destination_query) > 0) ? $destination_path.'?'.$destination_query : $destination_path;
+		$_SESSION['login']['destination']['text'] = (!empty($destination_query)) ? $destination_path.'?'.$destination_query : $destination_path;
 	}
 	else {
 		$_SESSION['login']['destination']['text'] = PROJECT_PATH."/core/dashboard/";

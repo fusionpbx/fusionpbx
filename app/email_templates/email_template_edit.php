@@ -91,7 +91,7 @@
 			//if (empty($template_type)) { $msg .= $text['message-required']." ".$text['label-template_type']."<br>\n"; }
 			if (empty($template_enabled)) { $msg .= $text['message-required']." ".$text['label-template_enabled']."<br>\n"; }
 			//if (empty($template_description)) { $msg .= $text['message-required']." ".$text['label-template_description']."<br>\n"; }
-			if (strlen($msg) > 0 && empty($_POST["persistformvar"])) {
+			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -125,7 +125,7 @@
 			$database = new database;
 			$database->app_name = 'email_templates';
 			$database->app_uuid = '8173e738-2523-46d5-8943-13883befd2fd';
-			if (strlen($email_template_uuid) > 0) {
+			if (!empty($email_template_uuid)) {
 				$database->uuid($email_template_uuid);
 			}
 			$database->save($array);

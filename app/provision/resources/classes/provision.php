@@ -270,7 +270,7 @@
 				$mac = strtolower($mac);
 
 			//get the device template
-				//if (strlen($_REQUEST['template']) > 0) {
+				//if (!empty($_REQUEST['template'])) {
 				//	$device_template = $_REQUEST['template'];
 				//	$search = array('..', '/./');
 				//	$device_template = str_replace($search, "", $device_template);
@@ -365,7 +365,7 @@
 									$device_user_uuid = $row["device_user_uuid"];
 									$device_model = $row["device_model"];
 									$device_firmware_version = $row["device_firmware_version"];
-									if (strlen($row["device_vendor"]) > 0) {
+									if (!empty($row["device_vendor"])) {
 										$device_vendor = strtolower($row["device_vendor"]);
 									}
 									$device_location = $row["device_location"];
@@ -552,7 +552,7 @@
 								$database = new database;
 								$database->app_name = 'devices';
 								$database->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
-								if (strlen($device_uuid) > 0) {
+								if (!empty($device_uuid)) {
 									$database->uuid($device_uuid);
 								}
 								$database->save($array);
@@ -648,7 +648,7 @@
 				}
 
 			//set the template directory
-				if (strlen($provision["template_dir"]) > 0) {
+				if (!empty($provision["template_dir"])) {
 					$template_dir = $provision["template_dir"];
 				}
 
@@ -659,7 +659,7 @@
 
 			//initialize a template object
 				$view = new template();
-				if (strlen($_SESSION['provision']['template_engine']['text']) > 0) {
+				if (!empty($_SESSION['provision']['template_engine']['text'])) {
 					$view->engine = $_SESSION['provision']['template_engine']['text']; //raintpl, smarty, twig
 				}
 				else {
@@ -927,7 +927,7 @@
 									//get the contact_uuid
 										$uuid = $row['contact_uuid'];
 									//get the names
-										if (strlen($row['directory_first_name']) > 0) {
+										if (!empty($row['directory_first_name'])) {
 											$contact_name_given = $row['directory_first_name'];
 											$contact_name_family = $row['directory_last_name'];
 										} else {
@@ -992,7 +992,7 @@
 					foreach($variables as $name => $value) {
 						if (is_array($device_keys)) {
 							foreach($device_keys as $k => $field) {
-								if (strlen($field['device_key_uuid']) > 0) {
+								if (!empty($field['device_key_uuid'])) {
 										if (isset($field['device_key_value'])) {
 											$device_keys[$k]['device_key_value'] = str_replace("\${".$name."}", $value, $field['device_key_value']);
 										}
@@ -1120,7 +1120,7 @@
 					$mac = $this->format_mac($mac, $device_vendor);
 				
 				// set date/time for versioning provisioning templates
-					if (strlen($_SESSION['provision']['version_format']['text']) > 0) {
+					if (!empty($_SESSION['provision']['version_format']['text'])) {
 						$time = date($_SESSION['provision']['version_format']['text']);
 					}
 					else {
@@ -1158,7 +1158,7 @@
 
 				//get the time zone
 					$time_zone_name = $_SESSION['domain']['time_zone']['name'];
-					if (strlen($time_zone_name) > 0) {
+					if (!empty($time_zone_name)) {
 						$time_zone_offset_raw = get_time_zone_offset($time_zone_name)/3600;
 						$time_zone_offset_hours = floor($time_zone_offset_raw);
 						$time_zone_offset_minutes = ($time_zone_offset_raw - $time_zone_offset_hours) * 60;
@@ -1289,7 +1289,7 @@
 
 						//loop through the provision template directory
 							$dir_array = array();
-							if (strlen($device_template) > 0) {
+							if (!empty($device_template)) {
 								$template_path = path_join($this->template_dir, $device_template);
 								$dir_list = opendir($template_path);
 								if ($dir_list) {

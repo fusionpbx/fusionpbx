@@ -172,7 +172,7 @@ if (!class_exists('email')) {
 					$body_part = $parts_array["BodyPart"];
 					$body_length = $parts_array["BodyLength"];
 
-					if (strlen($file) > 0) {
+					if (!empty($file)) {
 						//get the file information
 							$file_ext = pathinfo($file, PATHINFO_EXTENSION);
 							$file_name = substr($file, 0, (strlen($file) - strlen($file_ext))-1 );
@@ -427,10 +427,10 @@ if (!class_exists('email')) {
 					$smtp['validate_certificate'] = $_SESSION['email']['smtp_validate_certificate']['boolean'];
 					$smtp['crypto_method'] = $_SESSION['email']['smtp_crypto_method']['text'];
 
-					if (isset($_SESSION['voicemail']['smtp_from']) && strlen($_SESSION['voicemail']['smtp_from']['text']) > 0) {
+					if (isset($_SESSION['voicemail']['smtp_from']) && !empty($_SESSION['voicemail']['smtp_from']['text'])) {
 						$smtp['from'] = $_SESSION['voicemail']['smtp_from']['text'];
 					}
-					if (isset($_SESSION['voicemail']['smtp_from_name']) && strlen($_SESSION['voicemail']['smtp_from_name']['text']) > 0) {
+					if (isset($_SESSION['voicemail']['smtp_from_name']) && !empty($_SESSION['voicemail']['smtp_from_name']['text'])) {
 						$smtp['from_name'] = $_SESSION['voicemail']['smtp_from_name']['text'];
 					}
 
@@ -590,7 +590,7 @@ if (!class_exists('email')) {
 
 					//send the email
 					if (!$mail_status) {
-						if (isset($mail->ErrorInfo) && strlen($mail->ErrorInfo) > 0) {
+						if (isset($mail->ErrorInfo) && !empty($mail->ErrorInfo)) {
 							$this->error = $mail->ErrorInfo;
 						}
 						return false;

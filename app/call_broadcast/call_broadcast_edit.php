@@ -170,7 +170,7 @@ if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 		//if (empty($broadcast_phone_numbers)) { $msg .= "Please provide: Phone Number List<br>\n"; }
 		//if (empty($broadcast_avmd)) { $msg .= "Please provide: Voicemail Detection<br>\n"; }
 		//if (empty($broadcast_destination_data)) { $msg .= "Please provide: Destination<br>\n"; }
-		if (strlen($msg) > 0 && empty($_POST["persistformvar"])) {
+		if (!empty($msg) && empty($_POST["persistformvar"])) {
 			require_once "resources/header.php";
 			require_once "resources/persist_form_var.php";
 			echo "<div align='center'>\n";

@@ -245,7 +245,7 @@
 		//check for all required data
 			if (empty($fax_extension)) { $msg .= "".$text['confirm-ext']."<br>\n"; }
 			if (empty($fax_name)) { $msg .= "".$text['confirm-fax']."<br>\n"; }
-			if (strlen($msg) > 0 && empty($_POST["persistformvar"])) {
+			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -343,11 +343,11 @@
 						$array['fax'][0]['fax_caller_id_name'] = $fax_caller_id_name;
 						$array['fax'][0]['fax_caller_id_number'] = $fax_caller_id_number;
 						$array['fax'][0]['fax_toll_allow'] = $fax_toll_allow;
-						if ($action == "add" && strlen($fax_forward_number) > 0) {
+						if ($action == "add" && !empty($fax_forward_number)) {
 							$array['fax'][0]['fax_forward_number'] = $fax_forward_number;
 						}
 						if ($action == "update") {
-							$array['fax'][0]['fax_forward_number'] = strlen($fax_forward_number) > 0 ? $fax_forward_number : null;
+							$array['fax'][0]['fax_forward_number'] = !empty($fax_forward_number) ? $fax_forward_number : null;
 						}
 						if (permission_exists('fax_send_greeting')) {
 							$array['fax'][0]['fax_send_greeting'] = strlen($fax_send_greeting) != 0 ? $fax_send_greeting : null;
@@ -775,7 +775,7 @@
 					while ($file = readdir($dh)) {
 						if ($file != "." && $file != ".." && $file[0] != '.') {
 							if (!is_dir($_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$file)) {
-								$selected = ($fax_send_greeting == $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$file && strlen($fax_send_greeting) > 0) ? true : false;
+								$selected = ($fax_send_greeting == $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$file && !empty($fax_send_greeting)) ? true : false;
 								echo "	<option value='".escape($_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$file)."' ".(($selected) ? "selected='selected'" : null).">".escape($file)."</option>\n";
 								if ($selected) { $tmp_selected = true; }
 							}
@@ -805,7 +805,7 @@
 				if (is_array($sound_files)) {
 					echo "<optgroup label='Sounds'>\n";
 					foreach ($sound_files as $value) {
-						if (strlen($value) > 0) {
+						if (!empty($value)) {
 							if (substr($fax_send_greeting, 0, 71) == "\$\${sounds_dir}/\${default_language}/\${default_dialect}/\${default_voice}/") {
 								$fax_send_greeting = substr($fax_send_greeting, 71);
 							}
@@ -817,7 +817,7 @@
 					echo "</optgroup>\n";
 				}
 			//select
-				if (strlen($fax_send_greeting) > 0) {
+				if (!empty($fax_send_greeting)) {
 					if (permission_exists('conference_center_add') || permission_exists('conference_center_edit')) {
 						if (!$tmp_selected) {
 							echo "<optgroup label='selected'>\n";

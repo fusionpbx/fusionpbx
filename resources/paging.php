@@ -41,7 +41,7 @@ function paging($num_rows, $param, $rows_per_page, $mini = false, $result_count 
 
 	//sanitize the parameters
 	$sanitized_parameters = '';
-	if (isset($param) && strlen($param) > 0) {
+	if (isset($param) && !empty($param)) {
 		$param_array = explode("&", $param);
 		if (is_array($param_array)) {
 			foreach($param_array as $row) {

@@ -155,7 +155,7 @@
 			}
 
 		//check for all required data
-			if (strlen($msg) > 0 && empty($_POST["persistformvar"])) {
+			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				$document['title'] = $text['title-call_forward'];
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
@@ -444,7 +444,7 @@
 		//clear the cache
 			$cache = new cache;
 			$cache->delete("directory:".$extension."@".$_SESSION['domain_name']);
-			if (strlen($number_alias) > 0) {
+			if (!empty($number_alias)) {
 				$cache->delete("directory:".$number_alias."@".$_SESSION['domain_name']);
 			}
 

@@ -157,7 +157,7 @@
 			}
 
 		//delete the tier from the database
-			if (strlen($call_center_tier_uuid) > 0) {
+			if (!empty($call_center_tier_uuid)) {
 				$array['call_center_tiers'][0]['call_center_tier_uuid'] = $call_center_tier_uuid;
 				$array['call_center_tiers'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
 
@@ -212,7 +212,7 @@
 			//if (empty($queue_abandoned_resume_allowed)) { $msg .= $text['message-required'].$text['label-abandoned_resume_allowed']."<br>\n"; }
 			//if (empty($queue_cid_prefix)) { $msg .= $text['message-required'].$text['label-caller_id_name_prefix']."<br>\n"; }
 			//if (empty($queue_description)) { $msg .= $text['message-required'].$text['label-description']."<br>\n"; }
-			if (strlen($msg) > 0 && empty($_POST["persistformvar"])) {
+			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -324,7 +324,7 @@
 					else {
 						$call_center_tier_uuid = uuid();
 					}
-					if (strlen($row['call_center_agent_uuid']) > 0) {
+					if (!empty($row['call_center_agent_uuid'])) {
 						$array["call_center_queues"][0]["call_center_tiers"][$y]["call_center_tier_uuid"] = $call_center_tier_uuid;
 						$array['call_center_queues'][0]["call_center_tiers"][$y]["call_center_agent_uuid"] = $row['call_center_agent_uuid'];
 						$array['call_center_queues'][0]["call_center_tiers"][$y]["tier_level"] = $row['tier_level'];
@@ -365,10 +365,10 @@
 					}
 				}
 			}
-			if (strlen($queue_cid_prefix) > 0) {
+			if (!empty($queue_cid_prefix)) {
 				$dialplan_xml .= "		<action application=\"set\" data=\"effective_caller_id_name=".xml::sanitize($queue_cid_prefix)."#\${caller_id_name}\"/>\n";
 			}
-			if (strlen($queue_cc_exit_keys) > 0) {
+			if (!empty($queue_cc_exit_keys)) {
 				$dialplan_xml .= "		<action application=\"set\" data=\"cc_exit_keys=".xml::sanitize($queue_cc_exit_keys)."\"/>\n";
 			}
 			$dialplan_xml .= "		<action application=\"callcenter\" data=\"".xml::sanitize($queue_extension)."@".$_SESSION["domain_name"]."\"/>\n";
@@ -825,7 +825,7 @@
 			foreach($tiers as $field) {
 				echo "	<tr>\n";
 				echo "		<td class=''>";
-				if (strlen($field['call_center_tier_uuid']) > 0) {
+				if (!empty($field['call_center_tier_uuid'])) {
 					echo "				<input name='call_center_tiers[".$x."][call_center_tier_uuid]' type='hidden' value=\"".escape($field['call_center_tier_uuid'])."\">\n";
 				}
 				echo "				<select name=\"call_center_tiers[$x][call_center_agent_uuid]\" class=\"formfld\" style=\"width: 200px\">\n";
@@ -901,7 +901,7 @@
 	echo "<td class='vtable' align='left'>\n";
 	$record_template = $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/archive/\${strftime(%Y)}/\${strftime(%b)}/\${strftime(%d)}/\${uuid}.\${record_ext}";
 	echo "	<select class='formfld' name='queue_record_template'>\n";
-	if (strlen($queue_record_template) > 0) {
+	if (!empty($queue_record_template)) {
 		echo "	<option value='".escape($queue_record_template)."' selected='selected' >".$text['option-true']."</option>\n";
 	}
 	else {
@@ -1239,11 +1239,11 @@
 			foreach ($recordings as &$row) {
 				$recording_name = $row["recording_name"];
 				$recording_filename = $row["recording_filename"];
-				if ($queue_announce_sound == $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$recording_filename && strlen($queue_announce_sound) > 0) {
+				if ($queue_announce_sound == $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$recording_filename && !empty($queue_announce_sound)) {
 					$tmp_selected = true;
 					echo "	<option value='".escape($_SESSION['switch']['recordings']['dir'])."/".escape($_SESSION['domain_name'])."/".escape($recording_filename)."' selected='selected'>".escape($recording_name)."</option>\n";
 				}
-				else if ($queue_announce_sound == $recording_filename && strlen($queue_announce_sound) > 0) {
+				else if ($queue_announce_sound == $recording_filename && !empty($queue_announce_sound)) {
 					$tmp_selected = true;
 					echo "	<option value='".escape($_SESSION['switch']['recordings']['dir'])."/".escape($_SESSION['domain_name'])."/".escape($recording_filename)."' selected='selected'>".escape($recording_name)."</option>\n";
 				}
@@ -1254,7 +1254,7 @@
 			echo "</optgroup>\n";
 		}
 
-		if (!$tmp_selected && strlen($queue_announce_sound) > 0) {
+		if (!$tmp_selected && !empty($queue_announce_sound)) {
 			echo "<optgroup label='Selected'>\n";
 			if (file_exists($_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$queue_announce_sound)) {
 				echo "	<option value='".escape($_SESSION['switch']['recordings']['dir'])."/".escape($_SESSION['domain_name'])."/".escape($queue_announce_sound)."' selected='selected'>".escape($queue_announce_sound)."</option>\n";

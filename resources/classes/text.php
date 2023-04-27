@@ -110,7 +110,7 @@ class text {
 			if ($language_code != 'all') {
 				if (is_array($text)) {
 					foreach ($text as $key => $value) {
-						if (isset($value[$language_code]) && strlen($value[$language_code]) > 0) {
+						if (isset($value[$language_code]) && !empty($value[$language_code])) {
 							$text[$key] = $value[$language_code];
 						}
 						else {
@@ -237,7 +237,7 @@ class text {
 										$value = $text[$lang_label][$this->legacy_map[$target_lang]];
 									}
 									$base_code = substr($target_lang, 0, 2);
-									if (strlen($value) > 0
+									if (!empty($value)
 										and array_key_exists($base_code, $this->legacy_map )
 										and $this->legacy_map[$base_code] != $target_lang
 										and $value == $text[$lang_label][$this->legacy_map[$base_code]]
@@ -246,7 +246,7 @@ class text {
 									}
 									if (empty($value)) {
 										foreach($this->languages as $lang_code) {
-											if (substr($lang_code, 0, 2) == $base_code and strlen($text[$lang_label][$lang_code]) > 0) {
+											if (substr($lang_code, 0, 2) == $base_code and !empty($text[$lang_label][$lang_code])) {
 												$value = $text[$lang_label][$lang_code];
 												$append = " //copied from $lang_code";
 												continue;
@@ -329,7 +329,7 @@ class text {
 			foreach($text as $label_name => $values) {
 				$language_totals['languages']['total']++;
 				foreach ($this->languages as $language_code) {
-					if (strlen($values[$language_code]) > 0)
+					if (!empty($values[$language_code]))
 						$language_totals['languages'][$language_code]++;
 				}
 			}
@@ -352,12 +352,12 @@ class text {
 				foreach($app['menu'] as $menu_item) {
 					$language_totals['menu_items']['total']++;
 					foreach ($this->languages as $language_code) {
-						if (strlen($menu_item['title'][$language_code]) > 0)
+						if (!empty($menu_item['title'][$language_code]))
 							$language_totals['menu_items'][$language_code]++;
 					}
 				}
 				foreach ($this->languages as $language_code) {
-					if (strlen($app['description'][$language_code]) > 0) {
+					if (!empty($app['description'][$language_code])) {
 						$language_totals['app_descriptions'][$language_code]++;
 					}
 				}

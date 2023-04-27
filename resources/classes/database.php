@@ -506,7 +506,7 @@
 				if ($this->driver == "pgsql") {
 					//database connection
 					try {
-						if (strlen($this->host) > 0) {
+						if (!empty($this->host)) {
 							if (empty($this->port)) { $this->port = "5432"; }
 							if ($this->db_secure === true) {
 								$this->db = new PDO("pgsql:host=$this->host port=$this->port dbname=$this->db_name user=$this->username password=$this->password sslmode=verify-ca sslrootcert=$this->db_cert_authority");
@@ -937,7 +937,7 @@
 						foreach($this->fields as $name => $value) {
 							$name = self::sanitize($name);
 							if ($field_count == $i) {
-								if (strlen($value) > 0) {
+								if (!empty($value)) {
 									//$sql .= "'".$value."' ";
 									$sql .= ":".$name." \n";
 									$params[$name] = trim($value);
@@ -947,7 +947,7 @@
 								}
 							}
 							else {
-								if (strlen($value) > 0) {
+								if (!empty($value)) {
 									//$sql .= "'".$value."', ";
 									$sql .= ":".$name.", \n";
 									$params[$name] = trim($value);
@@ -1005,7 +1005,7 @@
 						foreach($this->fields as $name => $value) {
 							$name = self::sanitize($name);
 							if (count($this->fields) == $i) {
-								if (strlen($name) > 0 && $value == null) {
+								if (!empty($name) && $value == null) {
 									$sql .= $name." = null ";
 								}
 								else {
@@ -1015,7 +1015,7 @@
 								}
 							}
 							else {
-								if (strlen($name) > 0 && $value == null) {
+								if (!empty($name) && $value == null) {
 									$sql .= $name." = null, ";
 								}
 								else {
@@ -1198,7 +1198,7 @@
 									}
 								}
 							}
-							if (strlen($field_value) > 0) {
+							if (!empty($field_value)) {
 								$results = $this->execute($sql, $parameters, 'all');
 								unset($parameters);
 								if (is_array($results)) {
@@ -1240,7 +1240,7 @@
 											}
 
 											//delete the child data
-											if (isset($row[$relation['field']]) && strlen($row[$relation['field']]) > 0) {
+											if (isset($row[$relation['field']]) && !empty($row[$relation['field']])) {
 												$sql = "delete from ".self::TABLE_PREFIX.$child_table." ";
 												$sql .= "where ".$relation['field']." = :".$relation['field'];
 												$parameters[$relation['field']] = $row[$relation['field']];
@@ -1330,7 +1330,7 @@
 						if (isset($this->app_uuid) && is_uuid($this->app_uuid)) {
 							$sql .= "app_uuid, ";
 						}
-						if (isset($this->app_name) && strlen($this->app_name) > 0) {
+						if (isset($this->app_name) && !empty($this->app_name)) {
 							$sql .= "app_name, ";
 						}
 						$sql .= "transaction_code, ";
@@ -1353,7 +1353,7 @@
 						if (isset($this->app_uuid) && is_uuid($this->app_uuid)) {
 							$sql .= ":app_uuid, ";
 						}
-						if (isset($this->app_name) && strlen($this->app_name) > 0) {
+						if (isset($this->app_name) && !empty($this->app_name)) {
 							$sql .= ":app_name, ";
 						}
 						$sql .= "'".$message["code"]."', ";
@@ -1381,7 +1381,7 @@
 						if (isset($this->app_uuid) && is_uuid($this->app_uuid)) {
 							$statement->bindParam(':app_uuid', $this->app_uuid);
 						}
-						if (isset($this->app_name) && strlen($this->app_name) > 0) {
+						if (isset($this->app_name) && !empty($this->app_name)) {
 							$statement->bindParam(':app_name', $this->app_name);
 						}
 						$statement->bindParam(':remote_address', $_SERVER['REMOTE_ADDR']);
@@ -2356,7 +2356,7 @@
 														$uuid_exists = false;
 														if (is_array($row)) foreach ($row as $k => $v) {
 															if ($child_key_name == $k) {
-																if (strlen($v) > 0) {
+																if (!empty($v)) {
 																	$child_key_value = trim($v);
 																	$uuid_exists = true;
 																	break;
@@ -2718,7 +2718,7 @@
 							if (isset($this->app_uuid) && is_uuid($this->app_uuid)) {
 								$sql .= "app_uuid, ";
 							}
-							if (isset($this->app_name) && strlen($this->app_name) > 0) {
+							if (isset($this->app_name) && !empty($this->app_name)) {
 								$sql .= "app_name, ";
 							}
 							$sql .= "transaction_code, ";
@@ -2744,7 +2744,7 @@
 							if (isset($this->app_uuid) && is_uuid($this->app_uuid)) {
 								$sql .= ":app_uuid, ";
 							}
-							if (isset($this->app_name) && strlen($this->app_name) > 0) {
+							if (isset($this->app_name) && !empty($this->app_name)) {
 								$sql .= ":app_name, ";
 							}
 							$sql .= "'".$message["code"]."', ";
@@ -2772,7 +2772,7 @@
 							if (isset($this->app_uuid) && is_uuid($this->app_uuid)) {
 								$statement->bindParam(':app_uuid', $this->app_uuid);
 							}
-							if (isset($this->app_name) && strlen($this->app_name) > 0) {
+							if (isset($this->app_name) && !empty($this->app_name)) {
 								$statement->bindParam(':app_name', $this->app_name);
 							}
 							$statement->bindParam(':remote_address', $_SERVER['REMOTE_ADDR']);

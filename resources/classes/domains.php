@@ -179,7 +179,7 @@ if (!class_exists('domains')) {
 											}
 
 										//delete the directories
-											if (strlen($domain_name) > 0) {
+											if (!empty($domain_name)) {
 												//set the needle
 												if (count($_SESSION["domains"]) > 1) {
 													$v_needle = 'v_'.$domain_name.'_';
@@ -190,24 +190,24 @@ if (!class_exists('domains')) {
 
 												//delete the dialplan
 												@unlink($_SESSION['switch']['dialplan']['dir'].'/'.$domain_name.'.xml');
-												if (strlen($_SESSION['switch']['dialplan']['dir']) > 0) {
+												if (!empty($_SESSION['switch']['dialplan']['dir'])) {
 													system('rm -rf '.$_SESSION['switch']['dialplan']['dir'].'/'.$domain_name);
 												}
 
 												//delete the dialplan public
 												@unlink($_SESSION['switch']['dialplan']['dir'].'/public/'.$domain_name.'.xml');
-												if (strlen($_SESSION['switch']['dialplan']['dir']) > 0) {
+												if (!empty($_SESSION['switch']['dialplan']['dir'])) {
 													system('rm -rf '.$_SESSION['switch']['dialplan']['dir'].'/public/'.$domain_name);
 												}
 
 												//delete the extension
 												@unlink($_SESSION['switch']['extensions']['dir'].'/'.$domain_name.'.xml');
-												if (strlen($_SESSION['switch']['extensions']['dir']) > 0) {
+												if (!empty($_SESSION['switch']['extensions']['dir'])) {
 													system('rm -rf '.$_SESSION['switch']['extensions']['dir'].'/'.$domain_name);
 												}
 
 												//delete fax
-												if (strlen($_SESSION['switch']['storage']['dir']) > 0) {
+												if (!empty($_SESSION['switch']['storage']['dir'])) {
 													system('rm -rf '.$_SESSION['switch']['storage']['dir'].'/fax/'.$domain_name);
 												}
 
@@ -247,12 +247,12 @@ if (!class_exists('domains')) {
 												}
 
 												//delete the recordings
-												if (strlen($_SESSION['switch']['recordings']['dir']) > 0) {
+												if (!empty($_SESSION['switch']['recordings']['dir'])) {
 													system('rm -rf '.$_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/'.$domain_name);
 												}
 
 												//delete voicemail
-												if (strlen($_SESSION['switch']['voicemail']['dir']) > 0) {
+												if (!empty($_SESSION['switch']['voicemail']['dir'])) {
 													system('rm -rf '.$_SESSION['switch']['voicemail']['dir'].'/'.$domain_name);
 												}
 											}
@@ -559,7 +559,7 @@ if (!class_exists('domains')) {
 								$name = $row['user_setting_name'];
 								$category = $row['user_setting_category'];
 								$subcategory = $row['user_setting_subcategory'];
-								if (strlen($row['user_setting_value']) > 0) {
+								if (!empty($row['user_setting_value'])) {
 									if (empty($subcategory)) {
 										//$$category[$name] = $row['domain_setting_value'];
 										if ($name == "array") {
@@ -585,7 +585,7 @@ if (!class_exists('domains')) {
 				}
 
 			//set the values from the session variables
-				if (strlen($_SESSION['domain']['time_zone']['name']) > 0) {
+				if (!empty($_SESSION['domain']['time_zone']['name'])) {
 					//server time zone
 					$_SESSION['time_zone']['system'] = date_default_timezone_get();
 					//domain time zone set in system settings

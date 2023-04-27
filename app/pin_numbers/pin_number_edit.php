@@ -82,7 +82,7 @@ if (count($_POST)>0 && empty($_POST["persistformvar"])) {
 		//if (empty($accountcode)) { $msg .= $text['message-required']." ".$text['label-accountcode']."<br>\n"; }
 		if (empty($enabled)) { $msg .= $text['message-required']." ".$text['label-enabled']."<br>\n"; }
 		//if (empty($description)) { $msg .= $text['message-required']." ".$text['label-description']."<br>\n"; }
-		if (strlen($msg) > 0 && empty($_POST["persistformvar"])) {
+		if (!empty($msg) && empty($_POST["persistformvar"])) {
 			require_once "resources/header.php";
 			require_once "resources/persist_form_var.php";
 			echo "<div align='center'>\n";

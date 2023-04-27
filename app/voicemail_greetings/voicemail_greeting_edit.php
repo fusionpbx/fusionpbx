@@ -91,7 +91,7 @@ if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 	//check for all required data
 		$msg = '';
 		if (empty($greeting_name)) { $msg .= "".$text['confirm-name']."<br>\n"; }
-		if (strlen($msg) > 0 && empty($_POST["persistformvar"])) {
+		if (!empty($msg) && empty($_POST["persistformvar"])) {
 			require_once "resources/header.php";
 			require_once "resources/persist_form_var.php";
 			echo "<div align='center'>\n";

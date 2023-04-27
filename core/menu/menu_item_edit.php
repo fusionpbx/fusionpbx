@@ -113,7 +113,7 @@
 			if (empty($menu_item_title)) { $msg .= $text['message-required'].$text['label-title']."<br>\n"; }
 			if (empty($menu_item_category)) { $msg .= $text['message-required'].$text['label-category']."<br>\n"; }
 			//if (empty($menu_item_link)) { $msg .= $text['message-required'].$text['label-link']."<br>\n"; }
-			if (strlen($msg) > 0 && empty($_POST["persistformvar"])) {
+			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -213,7 +213,7 @@
 				unset($parameters);
 
 			//add a group to the menu
-				if ($_REQUEST["a"] != "delete" && strlen($group_uuid_name) > 0 && permission_exists('menu_add')) {
+				if ($_REQUEST["a"] != "delete" && !empty($group_uuid_name) && permission_exists('menu_add')) {
 					$group_data = explode('|', $group_uuid_name);
 					$group_uuid = $group_data[0];
 					$group_name = $group_data[1];
@@ -234,7 +234,7 @@
 				}
 
 			//add the menu item label
-				if ($_REQUEST["a"] != "delete" && strlen($menu_item_title) > 0 && permission_exists('menu_add')) {
+				if ($_REQUEST["a"] != "delete" && !empty($menu_item_title) && permission_exists('menu_add')) {
 					$sql = "select count(*) from v_menu_languages ";
 					$sql .= "where menu_item_uuid = :menu_item_uuid ";
 					$sql .= "and menu_language = :menu_language ";
@@ -351,7 +351,7 @@
 	if (is_array($menu_item_groups) && sizeof($menu_item_groups) != 0) {
 		$assigned_groups = array();
 		foreach ($menu_item_groups as $field) {
-			if (strlen($field['group_name']) > 0) {
+			if (!empty($field['group_name'])) {
 				if (is_uuid($field['group_uuid'])) {
 					$assigned_groups[] = $field['group_uuid'];
 				}
@@ -480,7 +480,7 @@
 	if (is_array($menu_item_groups) && sizeof($menu_item_groups) != 0) {
 		echo "<table cellpadding='0' cellspacing='0' border='0'>\n";
 		foreach($menu_item_groups as $field) {
-			if (strlen($field['group_name']) > 0) {
+			if (!empty($field['group_name'])) {
 				echo "<tr>\n";
 				echo "	<td class='vtable' style='white-space: nowrap; padding-right: 30px;' nowrap='nowrap'>";
 				echo $field['group_name'].(($field['group_domain_uuid'] != '') ? "@".$_SESSION['domains'][$field['group_domain_uuid']]['domain_name'] : null);

@@ -252,7 +252,7 @@ if ($db_type == "pgsql") {
 		if (!isset($db_secure)) {
 			$db_secure = false;
 		}
-		if (strlen($db_host) > 0) {
+		if (!empty($db_host)) {
 			if (empty($db_port)) { $db_port = "5432"; }
 			if ($db_secure == true) {
 				$db = new PDO("pgsql:host=$db_host port=$db_port dbname=$db_name user=$db_username password=$db_password sslmode=verify-ca sslrootcert=$db_cert_authority");
@@ -354,7 +354,7 @@ if ($db_type == "odbc") {
 	}
 
 //set the domain_uuid variable from the session
-	if (strlen($_SESSION["domain_uuid"]) > 0) {
+	if (!empty($_SESSION["domain_uuid"])) {
 		$domain_uuid = $_SESSION["domain_uuid"];
 	}
 	else {

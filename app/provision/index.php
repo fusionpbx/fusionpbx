@@ -45,7 +45,7 @@
 	$mac = $_REQUEST['mac'];
 	$file = $_REQUEST['file'];
 	$ext = $_REQUEST['ext'];
-	//if (strlen($_REQUEST['template']) > 0) {
+	//if (!empty($_REQUEST['template'])) {
 	//	$device_template = $_REQUEST['template'];
 	//}
 
@@ -260,11 +260,11 @@
 
 //build the provision array
 	foreach($_SESSION['provision'] as $key=>$val) {
-		if (strlen($val['var']) > 0) { $value = $val['var']; }
-		if (strlen($val['text']) > 0) { $value = $val['text']; }
-		if (strlen($val['boolean']) > 0) { $value = $val['boolean']; }
-		if (strlen($val['numeric']) > 0) { $value = $val['numeric']; }
-		if (strlen($value) > 0) { $provision[$key] = $value; }
+		if (!empty($val['var'])) { $value = $val['var']; }
+		if (!empty($val['text'])) { $value = $val['text']; }
+		if (!empty($val['boolean'])) { $value = $val['boolean']; }
+		if (!empty($val['numeric'])) { $value = $val['numeric']; }
+		if (!empty($value)) { $provision[$key] = $value; }
 		unset($value);
 	}
 
@@ -275,7 +275,7 @@
 	}
 
 //send a request to a remote server to validate the MAC address and secret
-	if (strlen($_SERVER['auth_server']) > 0) {
+	if (!empty($_SERVER['auth_server'])) {
 		$result = send_http_request($_SERVER['auth_server'], 'mac='.check_str($_REQUEST['mac']).'&secret='.check_str($_REQUEST['secret']));
 		if ($result == "false") {
 			syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempt but the remote auth server said no for ".check_str($_REQUEST['mac']));
@@ -287,7 +287,7 @@
 	$device_vendor = device::get_vendor($mac);
 
 //keep backwards compatibility
-	if (strlen($_SESSION['provision']["cidr"]["text"]) > 0) {
+	if (!empty($_SESSION['provision']["cidr"]["text"])) {
 		$_SESSION['provision']["cidr"][] = $_SESSION['provision']["cidr"]["text"];
 	}
 
@@ -307,8 +307,8 @@
 	}
 
 //http authentication - digest
-	if (strlen($provision["http_auth_username"]) > 0 && empty($provision["http_auth_type"])) { $provision["http_auth_type"] = "digest"; }
-	if (strlen($provision["http_auth_username"]) > 0 && $provision["http_auth_type"] === "digest" && $provision["http_auth_enabled"] === "true") {
+	if (!empty($provision["http_auth_username"]) && empty($provision["http_auth_type"])) { $provision["http_auth_type"] = "digest"; }
+	if (!empty($provision["http_auth_username"]) && $provision["http_auth_type"] === "digest" && $provision["http_auth_enabled"] === "true") {
 		//function to parse the http auth header
 			function http_digest_parse($txt) {
 				//protect against missing data
@@ -379,7 +379,7 @@
 	}
 
 //http authentication - basic
-	if (strlen($provision["http_auth_username"]) > 0 && $provision["http_auth_type"] === "basic" && $provision["http_auth_enabled"] === "true") {
+	if (!empty($provision["http_auth_username"]) && $provision["http_auth_type"] === "basic" && $provision["http_auth_enabled"] === "true") {
 		if (!isset($_SERVER['PHP_AUTH_USER'])) {
 			header('WWW-Authenticate: Basic realm="'.$_SESSION['domain_name'].'"');
 			header('HTTP/1.0 401 Authorization Required');
@@ -415,7 +415,7 @@
 	}
 
 //if password was defined in the system -> variables page then require the password.
-	if (strlen($provision['password']) > 0) {
+	if (!empty($provision['password'])) {
 		//deny access if the password doesn't match
 		if ($provision['password'] != check_str($_REQUEST['password'])) {
 			//log the failed auth attempt to the system, to be available for fail2ban.

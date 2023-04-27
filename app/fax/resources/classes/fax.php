@@ -124,7 +124,7 @@ if (!class_exists('fax')) {
 				$fax_name = ($this->fax_name != '') ? $this->fax_name : format_phone($this->destination_number);
 
 			//set the  last fax
-				if (strlen($_SESSION['fax']['last_fax']['text']) > 0) {
+				if (!empty($_SESSION['fax']['last_fax']['text'])) {
 					$last_fax = "last_fax=".xml::sanitize($_SESSION['fax']['last_fax']['text']);
 				}
 				else {

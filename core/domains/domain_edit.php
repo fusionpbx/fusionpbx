@@ -104,7 +104,7 @@
 			$msg = '';
 			if (empty($domain_name)) { $msg .= $text['message-required'].$text['label-name']."<br>\n"; }
 			//if (empty($domain_description)) { $msg .= $text['message-required'].$text['label-description']."<br>\n"; }
-			if (strlen($msg) > 0 && empty($_POST["persistformvar"])) {
+			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -165,14 +165,14 @@
 							}
 
 						//create the recordings directory for the new domain.
-							if (isset($_SESSION['switch']['recordings']['dir']) && strlen($_SESSION['switch']['recordings']['dir']) > 0) {
+							if (isset($_SESSION['switch']['recordings']['dir']) && !empty($_SESSION['switch']['recordings']['dir'])) {
 								if (!file_exists($_SESSION['switch']['recordings']['dir']."/".$domain_name)) {
 									mkdir($_SESSION['switch']['recordings']['dir']."/".$domain_name, 0770);
 								}
 							}
 
 						//create the voicemail directory for the new domain.
-							if (isset($_SESSION['switch']['voicemail']['dir']) && strlen($_SESSION['switch']['voicemail']['dir']) > 0) {
+							if (isset($_SESSION['switch']['voicemail']['dir']) && !empty($_SESSION['switch']['voicemail']['dir'])) {
 								if (!file_exists($_SESSION['switch']['voicemail']['dir']."/default/".$domain_name)) {
 									mkdir($_SESSION['switch']['voicemail']['dir']."/default/".$domain_name, 0770);
 								}

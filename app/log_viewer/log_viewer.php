@@ -219,7 +219,7 @@
 			else {
 				$user_file_size = $_POST['size'] * 1024;
 			}
-			if (strlen($_REQUEST['filter']) > 0) {
+			if (!empty($_REQUEST['filter'])) {
 				$filter = $_REQUEST['filter'];
 			}
 		}

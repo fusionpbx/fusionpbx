@@ -287,7 +287,7 @@ class authentication {
 						$sql = "select distinct(permission_name) from v_group_permissions ";
 						$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 						foreach ($_SESSION["groups"] as $field) {
-							if (strlen($field['group_name']) > 0) {
+							if (!empty($field['group_name'])) {
 								$sql_where_or[] = "group_name = :group_name_".$x;
 								$parameters['group_name_'.$x] = $field['group_name'];
 								$x++;
@@ -320,7 +320,7 @@ class authentication {
 							$name = $row['user_setting_name'];
 							$category = $row['user_setting_category'];
 							$subcategory = $row['user_setting_subcategory'];
-							if (strlen($row['user_setting_value']) > 0) {
+							if (!empty($row['user_setting_value'])) {
 								if (empty($subcategory)) {
 									//$$category[$name] = $row['domain_setting_value'];
 									if ($name == "array") {
@@ -375,7 +375,7 @@ class authentication {
 									foreach($result as $x => $row) {
 										//set the destination
 										$destination = $row['extension'];
-										if (strlen($row['number_alias']) > 0) {
+										if (!empty($row['number_alias'])) {
 											$destination = $row['number_alias'];
 										}
 
@@ -454,7 +454,7 @@ class authentication {
 			}
 
 		//get the domain name from the http value
-			if (strlen($_REQUEST["domain_name"] ?? '') > 0) {
+			if (!empty($_REQUEST["domain_name"] ?? '')) {
 				$this->domain_name = $_REQUEST["domain_name"];
 			}
 

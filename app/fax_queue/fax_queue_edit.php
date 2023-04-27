@@ -84,7 +84,7 @@
 			}
 
 		//process the http post data by submitted action
-			if ($_POST['action'] != '' && strlen($_POST['action']) > 0) {
+			if ($_POST['action'] != '' && !empty($_POST['action'])) {
 
 				//prepare the array(s)
 				//send the array to the database class
@@ -132,7 +132,7 @@
 			//if (empty($fax_retry_count)) { $msg .= $text['message-required']." ".$text['label-fax_retry_count']."<br>\n"; }
 			//if (empty($fax_accountcode)) { $msg .= $text['message-required']." ".$text['label-fax_accountcode']."<br>\n"; }
 			//if (empty($fax_command)) { $msg .= $text['message-required']." ".$text['label-fax_command']."<br>\n"; }
-			if (strlen($msg) > 0 && empty($_POST["persistformvar"])) {
+			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";

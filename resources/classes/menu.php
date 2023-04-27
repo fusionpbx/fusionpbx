@@ -405,7 +405,7 @@ if (!class_exists('menu')) {
 						if (is_array($row['menu'])) {
 							foreach ($row['menu'] as $menu) {
 								//set the variables
-									if (strlen($menu['title'][$this->menu_language]) > 0) {
+									if (!empty($menu['title'][$this->menu_language])) {
 										$menu_item_title = $menu['title'][$this->menu_language];
 									}
 									else {
@@ -459,7 +459,7 @@ if (!class_exists('menu')) {
 												$array['menu_items'][$x]['menu_item_link'] = $menu_item_path;
 												$array['menu_items'][$x]['menu_item_category'] = $menu_item_category;
 												$array['menu_items'][$x]['menu_item_icon'] = $menu_item_icon;
-												if (strlen($menu_item_order) > 0) {
+												if (!empty($menu_item_order)) {
 													$array['menu_items'][$x]['menu_item_order'] = $menu_item_order;
 												}
 												if (is_uuid($menu_item_parent_uuid)) {
@@ -777,7 +777,7 @@ if (!class_exists('menu')) {
 
 						//add the sub menus to the array
 							$menu_item_level = 0;
-							if (strlen($row['menu_item_uuid']) > 0) {
+							if (!empty($row['menu_item_uuid'])) {
 								$a[$x]['menu_items'] = $this->menu_child_array($menu_item_level, $row['menu_item_uuid']);
 							}
 
@@ -861,7 +861,7 @@ if (!class_exists('menu')) {
 							}
 
 						//get sub menu for children
-							if (strlen($menu_item_uuid) > 0) {
+							if (!empty($menu_item_uuid)) {
 								$a[$x]['menu_items'] = $this->menu_child_array($menu_item_level, $menu_item_uuid);
 							}
 

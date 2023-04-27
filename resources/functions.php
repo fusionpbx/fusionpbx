@@ -1671,7 +1671,7 @@ function number_pad($number,$n) {
 				}
 			//add prefix
 				if (!empty($prefix)) {
-					if (strlen($prefix) > 0 && strlen($prefix) < 4) {
+					if (!empty($prefix) && strlen($prefix) < 4) {
 						$plus = (substr($string, 0, 1) == "+") ? '' : '\+?';
 						$prefix = $plus.$prefix.'?';
 					}
@@ -2150,7 +2150,7 @@ function number_pad($number,$n) {
 //get accountcode
 	if (!function_exists('get_accountcode')) {
 		function get_accountcode() {
-			if (strlen($accountcode = $_SESSION['domain']['accountcode']['text'] ?? '') > 0) {
+			if (!empty($accountcode = $_SESSION['domain']['accountcode']['text'] ?? '')) {
 				if ($accountcode == "none") {
 					return;
 				}

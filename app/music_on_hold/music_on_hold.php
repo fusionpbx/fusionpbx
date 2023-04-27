@@ -381,7 +381,7 @@
 					foreach ($streams as $row) {
 						if (empty($row['domain_uuid'])) {
 							if (empty($row['music_on_hold_rate'])) { $option_name = $row['music_on_hold_name']; }
-							if (strlen($row['music_on_hold_rate']) > 0) { $option_name = $row['music_on_hold_name'] .'/'.$row['music_on_hold_rate']; }
+							if (!empty($row['music_on_hold_rate'])) { $option_name = $row['music_on_hold_name'] .'/'.$row['music_on_hold_rate']; }
 							echo "	<option value='".escape($row['music_on_hold_uuid'])."'>".escape($option_name)."</option>\n";
 						}
 					}
@@ -403,9 +403,9 @@
 				}
 				if (is_array($streams) && @sizeof($streams) != 0) {
 					foreach ($streams as $row) {
-						if (strlen($row['domain_uuid']) > 0) {
+						if (!empty($row['domain_uuid'])) {
 							if (empty($row['music_on_hold_rate'])) { $option_name = $row['music_on_hold_name']; }
-							if (strlen($row['music_on_hold_rate']) > 0) { $option_name = $row['music_on_hold_name'] .'/'.$row['music_on_hold_rate']; }
+							if (!empty($row['music_on_hold_rate'])) { $option_name = $row['music_on_hold_name'] .'/'.$row['music_on_hold_rate']; }
 							echo "	<option value='".escape($row['music_on_hold_uuid'])."'>".escape($option_name)."</option>\n";
 						}
 					}
@@ -569,7 +569,7 @@
 								echo "	</td>\n";
 							}
 							if ($_GET['show'] == "all" && permission_exists('music_on_hold_all')) {
-								if (strlen($_SESSION['domains'][$row['domain_uuid']]['domain_name']) > 0) {
+								if (!empty($_SESSION['domains'][$row['domain_uuid']]['domain_name'])) {
 									$domain = $_SESSION['domains'][$row['domain_uuid']]['domain_name'];
 								}
 								else {

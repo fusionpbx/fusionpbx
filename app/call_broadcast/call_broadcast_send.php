@@ -157,7 +157,7 @@
 			require_once "resources/header.php";
 
 		//send the call broadcast
-			if (strlen($broadcast_phone_numbers) > 0) {
+			if (!empty($broadcast_phone_numbers)) {
 				$broadcast_phone_number_array = explode ("\n", $broadcast_phone_numbers);
 				$count = 1;
 				foreach ($broadcast_phone_number_array as $tmp_value) {
@@ -210,7 +210,7 @@
 							//cmd_async($_SESSION['switch']['bin']['dir']."/fs_cli -x \"".$cmd."\";");
 
 						//spread the calls out so that they are scheduled with different times
-							if (strlen($broadcast_concurrent_limit) > 0 && strlen($broadcast_timeout) > 0) {
+							if (strlen($broadcast_concurrent_limit) > 0 && !empty($broadcast_timeout)) {
 								if ($broadcast_concurrent_limit == $count) {
 									$sched_seconds = $sched_seconds + $broadcast_timeout;
 									$count=0;

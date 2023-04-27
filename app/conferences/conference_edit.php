@@ -161,7 +161,7 @@
 			//if (empty($conference_order)) { $msg .= "Please provide: Order<br>\n"; }
 			//if (empty($conference_description)) { $msg .= "Please provide: Description<br>\n"; }
 			if (empty($conference_enabled)) { $msg .= "".$text['confirm-enabled']."<br>\n"; }
-			if (strlen($msg) > 0 && empty($_POST["persistformvar"])) {
+			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				$document['title'] = $text['title-conference'];
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
@@ -198,7 +198,7 @@
 					$array['conferences'][0]['conference_enabled'] = $conference_enabled;
 
 				//conference pin number
-					$pin_number = (strlen($conference_pin_number) > 0) ? '+'.$conference_pin_number : '';
+					$pin_number = (!empty($conference_pin_number)) ? '+'.$conference_pin_number : '';
 
 				//build the xml
 					$dialplan_xml = "<extension name=\"".xml::sanitize($conference_name)."\" continue=\"\" uuid=\"".xml::sanitize($dialplan_uuid)."\">\n";

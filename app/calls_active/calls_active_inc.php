@@ -69,7 +69,7 @@
 	if (isset($results["rows"])) {
 		foreach ($results["rows"] as &$row) {
 			//get the domain
-				if (strlen($row['context']) > 0 && $row['context'] != "public" && $row['context'] != "default") {
+				if (!empty($row['context']) && $row['context'] != "public" && $row['context'] != "default") {
 					if (substr_count($row['context'], '@') > 0) {
 						$context_array = explode('@', $row['context']);
 						$row['domain_name'] = $context_array[1];
@@ -227,7 +227,7 @@
 						echo "	<td>".escape($cid_name)."&nbsp;</td>\n";
 						echo "	<td>".escape($cid_num)."&nbsp;</td>\n";
 						echo "	<td>".escape($dest)."&nbsp;</td>\n";
-						echo "	<td>".(strlen($application) > 0 ? escape($application).":".escape($application_data) : null)."&nbsp;</td>\n";
+						echo "	<td>".(!empty($application) ? escape($application).":".escape($application_data) : null)."&nbsp;</td>\n";
 						echo "	<td>".escape($read_codec).":".escape($read_rate)." / ".escape($write_codec).":".escape($write_rate)."&nbsp;</td>\n";
 						echo "	<td>".escape($secure)."&nbsp;</td>\n";
 						if (permission_exists('call_active_hangup')) {

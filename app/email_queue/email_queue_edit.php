@@ -56,7 +56,7 @@
 			}
 
 		//process the http post data by submitted action
-			if ($_POST['action'] != '' && strlen($_POST['action']) > 0) {
+			if ($_POST['action'] != '' && !empty($_POST['action'])) {
 
 				//prepare the array(s)
 				//send the array to the database class
@@ -96,7 +96,7 @@
 			//if (empty($email_subject)) { $msg .= $text['message-required']." ".$text['label-email_subject']."<br>\n"; }
 			//if (empty($email_body)) { $msg .= $text['message-required']." ".$text['label-email_body']."<br>\n"; }
 			//if (empty($email_status)) { $msg .= $text['message-required']." ".$text['label-email_status']."<br>\n"; }
-			if (strlen($msg) > 0 && empty($_POST["persistformvar"])) {
+			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";

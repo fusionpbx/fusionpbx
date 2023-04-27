@@ -97,7 +97,7 @@
 			//if (empty($conference_center_order)) { $msg .= "Please provide: Order<br>\n"; }
 			//if (empty($conference_center_description)) { $msg .= "Please provide: Description<br>\n"; }
 			if (empty($conference_center_enabled)) { $msg .= "Please provide: Enabled<br>\n"; }
-			if (strlen($msg) > 0 && empty($_POST["persistformvar"])) {
+			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -383,7 +383,7 @@
 		if (is_array($sound_files)) {
 			echo "<optgroup label='".$text['label-sounds']."'>\n";
 			foreach ($sound_files as $key => $value) {
-				if (strlen($value) > 0) {
+				if (!empty($value)) {
 					if (substr($conference_center_greeting, 0, 71) == "\$\${sounds_dir}/\${default_language}/\${default_dialect}/\${default_voice}/") {
 						$conference_center_greeting = substr($conference_center_greeting, 71);
 					}
@@ -395,7 +395,7 @@
 			echo "</optgroup>\n";
 		}
 	//select
-		if (strlen($conference_center_greeting) > 0) {
+		if (!empty($conference_center_greeting)) {
 			if (permission_exists('conference_center_add') || permission_exists('conference_center_edit')) {
 				if (!$tmp_selected) {
 					echo "<optgroup label='selected'>\n";

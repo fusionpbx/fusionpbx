@@ -65,7 +65,7 @@
 			if (empty($control_action)) { $msg .= $text['message-required']." ".$text['label-control_action']."<br>\n"; }
 			//if (empty($control_data)) { $msg .= $text['message-required']." ".$text['label-control_data']."<br>\n"; }
 			if (empty($control_enabled)) { $msg .= $text['message-required']." ".$text['label-control_enabled']."<br>\n"; }
-			if (strlen($msg) > 0 && empty($_POST["persistformvar"])) {
+			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";

@@ -112,7 +112,7 @@ if (!empty($_POST["persistformvar"])) {
 		if (empty($user_setting_order)) { $msg .= $text['message-required'].$text['label-order']."<br>\n"; }
 		if (empty($user_setting_enabled)) { $msg .= $text['message-required'].$text['label-enabled']."<br>\n"; }
 		//if (empty($user_setting_description)) { $msg .= $text['message-required'].$text['label-description']."<br>\n"; }
-		if (strlen($msg) > 0 && empty($_POST["persistformvar"])) {
+		if (!empty($msg) && empty($_POST["persistformvar"])) {
 			require_once "resources/header.php";
 			require_once "resources/persist_form_var.php";
 			echo "<div align='center'>\n";
@@ -220,7 +220,7 @@ if (!empty($_POST["persistformvar"])) {
 				}
 
 			//update time zone
-				if ($user_setting_category == "domain" && $user_setting_subcategory == "time_zone" && $user_setting_name == "name" && strlen($user_setting_value) > 0 ) {
+				if ($user_setting_category == "domain" && $user_setting_subcategory == "time_zone" && $user_setting_name == "name" && !empty($user_setting_value) ) {
 					$sql = "select * from v_dialplans ";
 					$sql .= "where app_uuid = '34dd307b-fffe-4ead-990c-3d070e288126' ";
 					$sql .= "and domain_uuid = :domain_uuid ";
@@ -270,7 +270,7 @@ if (!empty($_POST["persistformvar"])) {
 									$array['dialplan_details'][0]['dialplan_detail_tag'] = 'action';
 									$array['dialplan_details'][0]['dialplan_detail_type'] = 'set';
 									$array['dialplan_details'][0]['dialplan_detail_data'] = 'timezone='.$user_setting_value;
-									$array['dialplan_details'][0]['dialplan_detail_group'] = strlen($dialplan_detail_group) > 0 ? $dialplan_detail_group : 'null';
+									$array['dialplan_details'][0]['dialplan_detail_group'] = !empty($dialplan_detail_group) ? $dialplan_detail_group : 'null';
 									$array['dialplan_details'][0]['dialplan_detail_order'] = '15';
 
 									$p = new permissions;
@@ -513,7 +513,7 @@ if (!empty($_POST["persistformvar"])) {
 				}
 				echo "		<optgroup label='".$category."'>\n";
 			}
-			if (strlen($val) > 0) {
+			if (!empty($val)) {
 				$time_zone_offset = get_time_zone_offset($val)/3600;
 				$time_zone_offset_hours = floor($time_zone_offset);
 				$time_zone_offset_minutes = ($time_zone_offset - $time_zone_offset_hours) * 60;

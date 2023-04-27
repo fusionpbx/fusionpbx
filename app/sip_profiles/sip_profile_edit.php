@@ -109,7 +109,7 @@
 			//if (empty($sip_profile_hostname)) { $msg .= $text['message-required']." ".$text['label-sip_profile_hostname']."<br>\n"; }
 			if (empty($sip_profile_enabled)) { $msg .= $text['message-required']." ".$text['label-sip_profile_enabled']."<br>\n"; }
 			if (empty($sip_profile_description)) { $msg .= $text['message-required']." ".$text['label-sip_profile_description']."<br>\n"; }
-			if (strlen($msg) > 0 && empty($_POST["persistformvar"])) {
+			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -158,14 +158,14 @@
 			$array['sip_profiles'][0]['sip_profile_description'] = $sip_profile_description;
 			$y = 0;
 			foreach ($sip_profile_domains as $row) {
-				if (strlen($row['sip_profile_domain_uuid']) > 0) {
+				if (!empty($row['sip_profile_domain_uuid'])) {
 					if (is_uuid($row['sip_profile_domain_uuid'])) {
 						$sip_profile_domain_uuid = $row['sip_profile_domain_uuid'];
 					}
 					else {
 						$sip_profile_domain_uuid = uuid();
 					}
-					if (strlen($row["sip_profile_domain_alias"]) > 0) {
+					if (!empty($row["sip_profile_domain_alias"])) {
 						$array['sip_profiles'][0]['sip_profile_domains'][$y]["sip_profile_uuid"] = $sip_profile_uuid;
 						$array['sip_profiles'][0]['sip_profile_domains'][$y]["sip_profile_domain_uuid"] = $sip_profile_domain_uuid;
 						$array['sip_profiles'][0]['sip_profile_domains'][$y]["sip_profile_domain_name"] = $row["sip_profile_domain_name"];
@@ -177,14 +177,14 @@
 			}
 			$y = 0;
 			foreach ($sip_profile_settings as $row) {
-				if (strlen($row['sip_profile_setting_uuid']) > 0) {
+				if (!empty($row['sip_profile_setting_uuid'])) {
 					if (is_uuid($row['sip_profile_setting_uuid'])) {
 						$sip_profile_setting_uuid = $row['sip_profile_setting_uuid'];
 					}
 					else {
 						$sip_profile_setting_uuid = uuid();
 					}
-					if (strlen($row["sip_profile_setting_name"]) > 0) {
+					if (!empty($row["sip_profile_setting_name"])) {
 						$array['sip_profiles'][0]['sip_profile_settings'][$y]["sip_profile_uuid"] = $sip_profile_uuid;
 						$array['sip_profiles'][0]['sip_profile_settings'][$y]["sip_profile_setting_uuid"] = $sip_profile_setting_uuid;
 						$array['sip_profiles'][0]['sip_profile_settings'][$y]["sip_profile_setting_name"] = $row["sip_profile_setting_name"];

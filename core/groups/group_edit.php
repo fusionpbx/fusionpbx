@@ -108,7 +108,7 @@
 			if (empty($group_level)) { $msg .= $text['message-required']." ".$text['label-group_level']."<br>\n"; }
 			//if (empty($group_protected)) { $msg .= $text['message-required']." ".$text['label-group_protected']."<br>\n"; }
 			//if (empty($group_description)) { $msg .= $text['message-required']." ".$text['label-group_description']."<br>\n"; }
-			if (strlen($msg) > 0 && empty($_POST["persistformvar"])) {
+			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";

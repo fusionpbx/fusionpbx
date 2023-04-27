@@ -126,7 +126,7 @@
 			//if (empty($call_flow_alternate_app)) { $msg .= $text['message-required']." ".$text['label-call_flow_alternate_app']."<br>\n"; }
 			//if (empty($call_flow_alternate_data)) { $msg .= $text['message-required']." ".$text['label-call_flow_alternate_data']."<br>\n"; }
 			//if (empty($call_flow_description)) { $msg .= $text['message-required']." ".$text['label-call_flow_description']."<br>\n"; }
-			if (strlen($msg) > 0 && empty($_POST["persistformvar"])) {
+			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -235,7 +235,7 @@
 			$database = new database;
 			$database->app_name = 'call_flows';
 			$database->app_uuid = 'b1b70f85-6b42-429b-8c5a-60c8b02b7d14';
-			if (strlen($call_flow_uuid) > 0) {
+			if (!empty($call_flow_uuid)) {
 				$database->uuid($call_flow_uuid);
 			}
 			$database->save($array);
@@ -425,11 +425,11 @@
 				foreach ($recordings as &$row) {
 					$recording_name = $row["recording_name"];
 					$recording_filename = $row["recording_filename"];
-					if ($var == $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$recording_filename && strlen($var) > 0) {
+					if ($var == $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$recording_filename && !empty($var)) {
 						$tmp_selected = true;
 						echo "	<option value='".$_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".escape($recording_filename)."' selected='selected'>".escape($recording_name)."</option>\n";
 					}
-					else if ($var == $recording_filename && strlen($var) > 0) {
+					else if ($var == $recording_filename && !empty($var)) {
 						$tmp_selected = true;
 						echo "	<option value='".escape($recording_filename)."' selected='selected'>".escape($recording_name)."</option>\n";
 					}
@@ -465,7 +465,7 @@
 				if (is_array($sound_files)) {
 					echo "<optgroup label=".$text["sounds"].">\n";
 					foreach ($sound_files as $value) {
-						if (strlen($value) > 0) {
+						if (!empty($value)) {
 							if (substr($var, 0, 71) == "\$\${sounds_dir}/\${default_language}/\${default_dialect}/\${default_voice}/") {
 								$var = substr($var, 71);
 							}
@@ -483,7 +483,7 @@
 			}
 		//select
 			if (if_group("superadmin")) {
-				if (!$tmp_selected && strlen($var) > 0) {
+				if (!$tmp_selected && !empty($var)) {
 					echo "<optgroup label='Selected'>\n";
 					if (file_exists($_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$var)) {
 						echo "	<option value='".$_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".escape($var)."' selected='selected'>".escape($var)."</option>\n";
@@ -568,7 +568,7 @@
 	echo "	<select class='formfld' name='call_flow_status'>\n";
 	echo "	<option value=''></option>\n";
 	if ($call_flow_status == "true") {
-		if (strlen($call_flow_label) > 0) {
+		if (!empty($call_flow_label)) {
 			echo "	<option value='true' selected='selected'>".escape($call_flow_label)."</option>\n";
 		}
 		else {
@@ -576,7 +576,7 @@
 		}
 	}
 	else {
-		if (strlen($call_flow_label) > 0) {
+		if (!empty($call_flow_label)) {
 			echo "	<option value='true'>".escape($call_flow_label)."</option>\n";
 		}
 		else {
@@ -584,7 +584,7 @@
 		}
 	}
 	if ($call_flow_status == "false") {
-		if (strlen($call_flow_alternate_label) > 0) {
+		if (!empty($call_flow_alternate_label)) {
 			echo "	<option value='false' selected='selected'>".escape($call_flow_alternate_label)."</option>\n";
 		}
 		else {
@@ -592,7 +592,7 @@
 		}
 	}
 	else {
-		if (strlen($call_flow_alternate_label) > 0) {
+		if (!empty($call_flow_alternate_label)) {
 			echo "	<option value='false'>".escape($call_flow_alternate_label)."</option>\n";
 		}
 		else {
@@ -649,7 +649,7 @@
 	echo "<td class='vtable' align='left'>\n";
 	$select_value = '';
 	//set the selected value
-	if (strlen($call_flow_app.$call_flow_data) > 0) {
+	if (!empty($call_flow_app.$call_flow_data)) {
 		$select_value = $call_flow_app.':'.$call_flow_data;
 	}
 	//show the destination list
@@ -692,7 +692,7 @@
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	$select_value = '';
-	if (strlen($call_flow_alternate_app.$call_flow_alternate_data) > 0) {
+	if (!empty($call_flow_alternate_app.$call_flow_alternate_data)) {
 		$select_value = $call_flow_alternate_app.':'.$call_flow_alternate_data;
 	}
 	echo $destination->select('dialplan', 'call_flow_alternate_destination', $select_value);

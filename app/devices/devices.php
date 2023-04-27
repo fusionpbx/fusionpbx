@@ -112,7 +112,7 @@
 //prepare to page the results
 	$sql = "select count(*) from v_devices as d ";
 	if (isset($_GET['show']) && $_GET['show'] == "all" && permission_exists('device_all')) {
-		if (strlen($search) > 0) {
+		if (!empty($search)) {
 			$sql .= "where ";
 		}
 	}
@@ -123,12 +123,12 @@
 			$sql .= "	or d.domain_uuid is null ";
 		}
 		$sql .= ") ";
-		if (strlen($search) > 0) {
+		if (!empty($search)) {
 			$sql .= "and ";
 		}
 		$parameters['domain_uuid'] = $domain_uuid;
 	}
-	if (strlen($search) > 0) {
+	if (!empty($search)) {
 		$sql .= "(";
 		$sql .= "	lower(d.device_mac_address) like :search ";
 		$sql .= "	or lower(d.device_label) like :search ";
@@ -214,7 +214,7 @@
 		$sql .= "and d.device_user_uuid = :user_uuid ";
 		$parameters['user_uuid'] = $_SESSION['user_uuid'];
 	}
-	if (strlen($search) > 0) {
+	if (!empty($search)) {
 		$sql .= "and (";
 		$sql .= "	lower(d.device_mac_address) like :search ";
 		$sql .= "	or lower(d.device_label) like :search ";
@@ -421,7 +421,7 @@
 			echo "	</td>\n";
 			echo "	<td>".escape($row['device_label'])."&nbsp;</td>\n";
 			if ($device_alternate) {
-				if (strlen($row['device_uuid_alternate']) > 0) {
+				if (!empty($row['device_uuid_alternate'])) {
 					echo "	<td class='no-link'>\n";
 					echo "		<a href='device_edit.php?id=".urlencode($row['device_uuid_alternate'])."'>".escape($row['alternate_label'])."</a>\n";
 					echo "	</td>\n";

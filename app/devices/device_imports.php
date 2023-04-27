@@ -316,7 +316,7 @@
 									}
 
 									//build the data array
-									if (strlen($table_name) > 0) {
+									if (!empty($table_name)) {
 										if (empty($parent)) {
 											if ($field_name != "username") {
 												$array[$table_name][$row_id]['domain_uuid'] = $domain_uuid;
@@ -450,7 +450,7 @@
 						//view_array($message);
 					}
 				
-					if (strlen($_SESSION['provision']['path']['text']) > 0) {
+					if (!empty($_SESSION['provision']['path']['text'])) {
 						$prov = new provision;
 						$prov->domain_uuid = $domain_uuid;
 						$response = $prov->write();

@@ -115,7 +115,7 @@
 				}
 				if (isset($_SESSION['user']['voicemail'])) {
 					foreach ($_SESSION['user']['voicemail'] as $row) {
-						if (strlen($row['voicemail_uuid']) > 0) {
+						if (!empty($row['voicemail_uuid'])) {
 							$voicemail_uuids[]['voicemail_uuid'] = $row['voicemail_uuid'];
 						}
 					}
@@ -954,7 +954,7 @@ Array
 )
 
 foreach ($_SESSION['user']['extension'] as $value) {
-	if (strlen($value['user']) > 0) {
+	if (!empty($value['user'])) {
 
 	}
 }

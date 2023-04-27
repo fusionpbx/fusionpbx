@@ -99,7 +99,7 @@ class config {
 	 */
 	public function exists() {
 		$this->find();
-		if (strlen($this->config_path) > 0) {
+		if (!empty($this->config_path)) {
 			return true;
 		}
 		else {

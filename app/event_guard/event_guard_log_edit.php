@@ -74,7 +74,7 @@
 			}
 
 		//process the http post data by submitted action
-			if ($_POST['action'] != '' && strlen($_POST['action']) > 0) {
+			if ($_POST['action'] != '' && !empty($_POST['action'])) {
 
 				//prepare the array(s)
 				//send the array to the database class
@@ -115,7 +115,7 @@
 			if (empty($extension)) { $msg .= $text['message-required']." ".$text['label-extension']."<br>\n"; }
 			//if (empty($user_agent)) { $msg .= $text['message-required']." ".$text['label-user_agent']."<br>\n"; }
 			if (empty($log_status)) { $msg .= $text['message-required']." ".$text['label-log_status']."<br>\n"; }
-			if (strlen($msg) > 0 && empty($_POST["persistformvar"])) {
+			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";

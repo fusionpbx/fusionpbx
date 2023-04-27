@@ -120,7 +120,7 @@ class plugin_email {
 				unset($parameters);
 
 				//set class variables
-				//if (strlen($row["user_email"]) > 0) {
+				//if (!empty($row["user_email"])) {
 				//	$this->user_uuid = $row['user_uuid'];
 				//	$this->user_email = $row['user_email'];
 				//	$this->contact_uuid = $row['contact_uuid'];

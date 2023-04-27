@@ -125,7 +125,7 @@
 				$gateway_2_type = 'xmpp';
 			}
 		//set the gateway_2_id and gateway_2_name
-			if ($gateway_2_type == "gateway" && strlen($_POST["gateway_2"]) > 0) {
+			if ($gateway_2_type == "gateway" && !empty($_POST["gateway_2"])) {
 				$gateway_2_array = explode(":",$gateway_2);
 				$gateway_2_id = $gateway_2_array[0];
 				$gateway_2_name = $gateway_2_array[1];
@@ -158,7 +158,7 @@
 				$gateway_type = 'transfer';
 			}
 		//set the gateway_3_id and gateway_3_name
-			if ($gateway_3_type == "gateway" && strlen($_POST["gateway_3"]) > 0) {
+			if ($gateway_3_type == "gateway" && !empty($_POST["gateway_3"])) {
 				$gateway_3_array = explode(":",$gateway_3);
 				$gateway_3_id = $gateway_3_array[0];
 				$gateway_3_name = $gateway_3_array[1];
@@ -196,7 +196,7 @@
 			//if (empty($limit)) { $msg .= "Please provide: Limit<br>\n"; }
 			//if (empty($dialplan_enabled)) { $msg .= "Please provide: Enabled True or False<br>\n"; }
 			//if (empty($description)) { $msg .= "Please provide: Description<br>\n"; }
-			if (strlen($msg) > 0 && empty($_POST["persistformvar"])) {
+			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -210,13 +210,13 @@
 			}
 
 		//prepare to build the array
-			if (strlen(trim($_POST['dialplan_expression'])) > 0) {
+			if (!empty(trim($_POST['dialplan_expression']))) {
 
 				$tmp_array = explode("\n", $_POST['dialplan_expression']);
 				$x = 0;
 				foreach($tmp_array as $dialplan_expression) {
 					$dialplan_expression = trim($dialplan_expression);
-					if (strlen($dialplan_expression) > 0) {
+					if (!empty($dialplan_expression)) {
 						switch ($dialplan_expression) {
 						case "^(\d{7})$":
 							$label = $text['label-7d'];
@@ -325,7 +325,7 @@
 								$bridge_data = "sofia/gateway/".$gateway_uuid."/".$prefix_number."\$1";
 							}
 						}
-						if (strlen($gateway_2_name) > 0 && $gateway_2_type == "gateway") {
+						if (!empty($gateway_2_name) && $gateway_2_type == "gateway") {
 							$extension_2_name = $gateway_2_id.".".$abbrv;
 							if ($abbrv == "988") {
 								$bridge_2_data = "sofia/gateway/".$gateway_2_id."/".$prefix_number."18002738255";
@@ -333,7 +333,7 @@
 								$bridge_2_data = "sofia/gateway/".$gateway_2_id."/".$prefix_number."\$1";
 							}
 						}
-						if (strlen($gateway_3_name) > 0 && $gateway_3_type == "gateway") {
+						if (!empty($gateway_3_name) && $gateway_3_type == "gateway") {
 							$extension_3_name = $gateway_3_id.".".$abbrv;
 							if ($abbrv == "988") {
 								$bridge_3_data = "sofia/gateway/".$gateway_3_id."/".$prefix_number."18002738255";
@@ -492,7 +492,7 @@
 						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_enabled'] = 'true';
 						$y++;
 
-						if (strlen($toll_allow) > 0) {
+						if (!empty($toll_allow)) {
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_uuid'] = uuid();
 							$array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = $_SESSION['domain_uuid'];
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $dialplan_uuid;
@@ -516,7 +516,7 @@
 						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_enabled'] = 'true';
 
 						if ($gateway_type != "transfer") {
-							if (strlen($accountcode) > 0) {
+							if (!empty($accountcode)) {
 								$y++;
 								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_uuid'] = uuid();
 								$array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = $_SESSION['domain_uuid'];
@@ -680,7 +680,7 @@
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_enabled'] = 'true';
 						}
 
-						if (strlen($limit) > 0) {
+						if (!empty($limit)) {
 							$y++;
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_uuid'] = uuid();
 							$array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = $_SESSION['domain_uuid'];
@@ -693,7 +693,7 @@
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_enabled'] = 'true';
 						}
 
-						if (strlen($outbound_prefix) > 0) {
+						if (!empty($outbound_prefix)) {
 							$y++;
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_uuid'] = uuid();
 							$array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = $_SESSION['domain_uuid'];
@@ -755,7 +755,7 @@
 						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
 						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_enabled'] = 'true';
 
-						if (strlen($bridge_2_data) > 0) {
+						if (!empty($bridge_2_data)) {
 							$y++;
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_uuid'] = uuid();
 							$array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = $_SESSION['domain_uuid'];
@@ -768,7 +768,7 @@
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_enabled'] = 'true';
 						}
 
-						if (strlen($bridge_3_data) > 0) {
+						if (!empty($bridge_3_data)) {
 							$y++;
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_uuid'] = uuid();
 							$array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = $_SESSION['domain_uuid'];

@@ -143,7 +143,7 @@
 			//if (empty($limit)) { $msg .= "Please provide: Limit<br>\n"; }
 			//if (empty($dialplan_enabled)) { $msg .= "Please provide: Enabled True or False<br>\n"; }
 			//if (empty($dialplan_description)) { $msg .= "Please provide: Description<br>\n"; }
-			if (strlen($msg) > 0 && empty($_POST["persistformvar"])) {
+			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -192,7 +192,7 @@
 			$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
 
 		//add condition 2
-			if (strlen($condition_field_2) > 0) {
+			if (!empty($condition_field_2)) {
 				$y++;
 				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_uuid'] = uuid();
 				$array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = $domain_uuid;
@@ -205,7 +205,7 @@
 			}
 
 		//set accountcode
-			if (strlen($destination_accountcode) > 0) {
+			if (!empty($destination_accountcode)) {
 				$y++;
 				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_uuid'] = uuid();
 				$array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = $domain_uuid;
@@ -218,7 +218,7 @@
 			}
 
 		//set carrier
-			if (strlen($destination_carrier) > 0) {
+			if (!empty($destination_carrier)) {
 				$y++;
 				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_uuid'] = uuid();
 				$array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = $domain_uuid;
@@ -231,7 +231,7 @@
 			}
 
 		//set limit
-			if (strlen($limit) > 0) {
+			if (!empty($limit)) {
 				$y++;
 				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_uuid'] = uuid();
 				$array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = $domain_uuid;
@@ -244,7 +244,7 @@
 			}
 
 		//set redial outbound prefix
-			if (strlen($caller_id_outbound_prefix) > 0) {
+			if (!empty($caller_id_outbound_prefix)) {
 				$y++;
 				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_uuid'] = uuid();
 				$array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = $domain_uuid;
@@ -380,7 +380,7 @@
 			$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
 
 		//add action 2
-			if (strlen($action_application_2) > 0) {
+			if (!empty($action_application_2)) {
 				$y++;
 				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_uuid'] = uuid();
 				$array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = $domain_uuid;
@@ -556,7 +556,7 @@
 
 		echo "    <select class='formfld' name='condition_field_1' id='condition_field_1' onchange='changeToInput_condition_field_1(this);this.style.visibility = \"hidden\";'>\n";
 		echo "    <option value=''></option>\n";
-		if (strlen($condition_field_1) > 0) {
+		if (!empty($condition_field_1)) {
 			echo "    <option value='".escape($condition_field_1)."' selected>".escape($condition_field_1)."</option>\n";
 		}
 		echo "    <option value='context'>".$text['option-context']."</option>\n";
@@ -631,7 +631,7 @@
 		<?php
 		echo "    <select class='formfld' name='condition_field_2' id='condition_field_2' onchange='changeToInput_condition_field_2(this);this.style.visibility = \"hidden\";'>\n";
 		echo "    <option value=''></option>\n";
-		if (strlen($condition_field_2) > 0) {
+		if (!empty($condition_field_2)) {
 			echo "    <option value='".escape($condition_field_2)."' selected>".escape($condition_field_2)."</option>\n";
 		}
 		echo "    <option value='context'>".$text['option-context']."</option>\n";

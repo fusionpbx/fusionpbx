@@ -89,7 +89,7 @@ if (count($_POST)>0 && empty($_POST["persistformvar"])) {
 		//if (empty($admin_pin)) { $msg .= "Please provide: Admin PIN Number<br>\n"; }
 		//if (empty($mod_shout_decoder)) { $msg .= "Please provide: Mod Shout Decoder<br>\n"; }
 		//if (empty($mod_shout_volume)) { $msg .= "Please provide: Mod Shout Volume<br>\n"; }
-		if (strlen($msg) > 0 && empty($_POST["persistformvar"])) {
+		if (!empty($msg) && empty($_POST["persistformvar"])) {
 			require_once "resources/header.php";
 			require_once "resources/persist_form_var.php";
 			echo "<div align='center'>\n";

@@ -189,7 +189,7 @@
 								$device_key_vendor = $row["device_key_vendor"];
 
 							//process the profile keys
-								if (strlen($row["device_profile_uuid"]) > 0) {
+								if (!empty($row["device_profile_uuid"])) {
 									//get the profile key settings from the array
 										foreach ($device_profile_keys as &$field) {
 											if ($device_key_uuid == $field["device_key_uuid"]) {
@@ -213,7 +213,7 @@
 
 							//sql add or update
 								if (!is_uuid($device_key_uuid)) {
-									if (permission_exists('device_key_add') && strlen($device_key_type) > 0 && strlen($device_key_value) > 0) {
+									if (permission_exists('device_key_add') && strlen($device_key_type) > 0 && !empty($device_key_value)) {
 
 										//if the device_uuid is not in the array then get the device_uuid from the database
 											if (empty($device_uuid)) {
@@ -281,7 +281,7 @@
 					}
 
 				//write the provision files
-					if (strlen($_SESSION['provision']['path']['text']) > 0) {
+					if (!empty($_SESSION['provision']['path']['text'])) {
 						$prov = new provision;
 						$prov->domain_uuid = $domain_uuid;
 						$response = $prov->write();
@@ -465,7 +465,7 @@
 				if ($previous_device_key_vendor != $row['device_key_vendor'] || $row['device_key_vendor'] == '') {
 					echo "	<tr class='list-header'>\n";
 					echo "		<th class='shrink'>".$text['label-device_key_id']."</th>\n";
-					if (strlen($row['device_key_vendor']) > 0) {
+					if (!empty($row['device_key_vendor'])) {
 						echo "		<th>".ucwords($row['device_key_vendor'])."</th>\n";
 					}
 					else {
@@ -490,7 +490,7 @@
 				}
 
 			//add the primary key uuid
-				if (strlen($row['device_key_uuid']) > 0) {
+				if (!empty($row['device_key_uuid'])) {
 					echo "	<input name='device_keys[".$x."][device_key_uuid]' type='hidden' value=\"".$row['device_key_uuid']."\">\n";
 				}
 
@@ -598,7 +598,7 @@
 						if (empty($row['device_key_vendor'])) {
 							echo "					<option value='".$function['value']."' $selected >".$text['label-'.$function['name']]."</option>\n";
 						}
-						if (strlen($row['device_key_vendor']) > 0 && $row['device_key_vendor'] == $function['vendor_name']) {
+						if (!empty($row['device_key_vendor']) && $row['device_key_vendor'] == $function['vendor_name']) {
 							echo "					<option value='".$function['value']."' $selected >".$text['label-'.$function['name']]."</option>\n";
 						}
 						$previous_vendor = $function['vendor_name'];

@@ -100,13 +100,13 @@ class vcard {
 		$this->card .= "N:";
 		$this->card .= $this->data['last_name'].";";
 		$this->card .= $this->data['first_name'];
-		if (strlen($this->data['additional_name']) > 0) {
+		if (!empty($this->data['additional_name'])) {
 			$this->card .= ";".$this->data['additional_name'];
 		}
-		if (strlen($this->data['name_prefix']) > 0) {
+		if (!empty($this->data['name_prefix'])) {
 			$this->card .= ";".$this->data['name_prefix'];
 		}
-		if (strlen($this->data['name_suffix']) > 0) {
+		if (!empty($this->data['name_suffix'])) {
 			$this->card .= ";".$this->data['name_suffix'];
 		}
 		$this->card .= "\r\n";
@@ -126,25 +126,25 @@ class vcard {
 			|| $this->data[$vcard_address_type_value.'_postal_code']
 			|| $this->data[$vcard_address_type_value.'_country']) {
 				$this->card .= "ADR;TYPE=".$vcard_address_type_value.":";
-				if (strlen($this->data[$vcard_address_type_value.'_po_box']) > 0) {
+				if (!empty($this->data[$vcard_address_type_value.'_po_box'])) {
 					$this->card .= $this->data[$vcard_address_type_value.'_po_box'].";";
 				}
-				if (strlen($this->data[$vcard_address_type_value.'_extended_address']) > 0) {
+				if (!empty($this->data[$vcard_address_type_value.'_extended_address'])) {
 					$this->card .= $this->data[$vcard_address_type_value.'_extended_address'].";";
 				}
-				if (strlen($this->data[$vcard_address_type_value.'_address']) > 0) {
+				if (!empty($this->data[$vcard_address_type_value.'_address'])) {
 					$this->card .= $this->data[$vcard_address_type_value.'_address'].";";
 				}
-				if (strlen($this->data[$vcard_address_type_value.'_city']) > 0) {
+				if (!empty($this->data[$vcard_address_type_value.'_city'])) {
 					$this->card .= $this->data[$vcard_address_type_value.'_city'].";";
 				}
-				if (strlen($this->data[$vcard_address_type_value.'_state']) > 0) {
+				if (!empty($this->data[$vcard_address_type_value.'_state'])) {
 					$this->card .= $this->data[$vcard_address_type_value.'_state'].";";
 				}
-				if (strlen($this->data[$vcard_address_type_value.'_postal_code']) > 0) {
+				if (!empty($this->data[$vcard_address_type_value.'_postal_code'])) {
 					$this->card .= $this->data[$vcard_address_type_value.'_postal_code'].";";
 				}
-				if (strlen($this->data[$vcard_address_type_value.'_country']) > 0) {
+				if (!empty($this->data[$vcard_address_type_value.'_country'])) {
 					$this->card .= $this->data[$vcard_address_type_value.'_country']."";
 				}
 				$this->card .= "\r\n";

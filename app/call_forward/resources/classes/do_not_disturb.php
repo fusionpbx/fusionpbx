@@ -111,7 +111,7 @@
 			//delete extension from the cache
 				$cache = new cache;
 				$cache->delete("directory:".$this->extension."@".$this->domain_name);
-				if(strlen($this->number_alias) > 0){
+				if(!empty($this->number_alias)){
 					$cache->delete("directory:".$this->number_alias."@".$this->domain_name);
 				}
 

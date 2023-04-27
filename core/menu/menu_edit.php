@@ -78,7 +78,7 @@
 			//if (empty($menu_name)) { $msg .= $text['message-required'].$text['label-name']."<br>\n"; }
 			//if (empty($menu_language)) { $msg .= $text['message-required'].$text['label-language']."<br>\n"; }
 			//if (empty($menu_description)) { $msg .= $text['message-required'].$text['label-description']."<br>\n"; }
-			if (strlen($msg) > 0 && empty($_POST["persistformvar"])) {
+			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";

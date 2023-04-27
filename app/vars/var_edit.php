@@ -66,7 +66,7 @@
 		$var_description = trim($_POST["var_description"]);
 		$var_description = str_replace("''", "'", $var_description);
 
-		if (strlen($_POST["var_category_other"]) > 0) {
+		if (!empty($_POST["var_category_other"])) {
 			$var_category = trim($_POST["var_category_other"]);
 		}
 	}
@@ -95,7 +95,7 @@
 			//if (empty($var_command)) { $msg .= $text['message-required'].$text['label-command']."<br>\n"; }
 			if (empty($var_enabled)) { $msg .= $text['message-required'].$text['label-enabled']."<br>\n"; }
 			if (empty($var_order)) { $msg .= $text['message-required'].$text['label-order']."<br>\n"; }
-			if (strlen($msg) > 0 && empty($_POST["persistformvar"])) {
+			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";

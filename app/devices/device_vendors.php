@@ -80,7 +80,7 @@
 
 //add the search term
 	$search = strtolower($_GET["search"]);
-	if (strlen($search) > 0) {
+	if (!empty($search)) {
 		$sql_where = "where (";
 		$sql_where .= "lower(name) like :search ";
 		$sql_where .= "or lower(enabled) like :search ";

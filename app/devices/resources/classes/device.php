@@ -354,7 +354,7 @@
 									$p->delete('device_key_delete', 'temp');
 
 								//write the provision files
-									if (strlen($_SESSION['provision']['path']['text']) > 0) {
+									if (!empty($_SESSION['provision']['path']['text'])) {
 										$prov = new provision;
 										$prov->domain_uuid = $_SESSION['domain_uuid'];
 										$response = $prov->write();
@@ -861,7 +861,7 @@
 									unset($array);
 
 								//write the provision files
-									if (strlen($_SESSION['provision']['path']['text']) > 0) {
+									if (!empty($_SESSION['provision']['path']['text'])) {
 										$prov = new provision;
 										$prov->domain_uuid = $_SESSION['domain_uuid'];
 										$response = $prov->write();
