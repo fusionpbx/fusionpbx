@@ -285,7 +285,7 @@
 	}
 
 //process the user data and save it to the database
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 
 		//set the domain_uuid
 			if (permission_exists('extension_domain') && is_uuid($_POST["domain_uuid"])) {
@@ -305,11 +305,11 @@
 
 		//check for all required data
 			$msg = '';
-			if (strlen($extension) == 0) { $msg .= $text['message-required'].$text['label-extension']."<br>\n"; }
+			if (empty($extension)) { $msg .= $text['message-required'].$text['label-extension']."<br>\n"; }
 			if (permission_exists('extension_enabled')) {
-				if (strlen($enabled) == 0) { $msg .= $text['message-required'].$text['label-enabled']."<br>\n"; }
+				if (empty($enabled)) { $msg .= $text['message-required'].$text['label-enabled']."<br>\n"; }
 			}
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+			if (strlen($msg) > 0 && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -399,10 +399,10 @@
 										}
 
 								//generate a password
-									if ($action == "add" && strlen($password) == 0) {
+									if ($action == "add" && empty($password)) {
 										$password = generate_password($password_length, $password_strength);
 									}
-									if ($action == "update" && permission_exists('extension_password') && strlen($password) == 0) {
+									if ($action == "update" && permission_exists('extension_password') && empty($password)) {
 										$password = generate_password($password_length, $password_strength);
 									}
 
@@ -639,7 +639,7 @@
 						//add or update voicemail
 							if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/voicemails')) {
 								//set the voicemail password
-									if (strlen($voicemail_password) == 0) {
+									if (empty($voicemail_password)) {
 										$voicemail_password = generate_password($_SESSION['voicemail']['password_length']['numeric'], 1);
 									}
 
@@ -1425,7 +1425,7 @@
 				echo "	<option value=''></option>\n";
 				foreach ($destinations as &$row) {
 					$tmp = $row["destination_caller_id_name"];
-					if(strlen($tmp) == 0){
+					if(empty($tmp)){
 						// $tmp = $row["destination_description"];
 					}
 					if(strlen($tmp) > 0 && !in_array($tmp, $in_list)){
@@ -1467,7 +1467,7 @@
 				echo "	<option value=''></option>\n";
 				foreach ($destinations as &$row) {
 					$tmp = $row["destination_caller_id_number"];
-					if(strlen($tmp) == 0){
+					if(empty($tmp)){
 						$tmp = $row["destination_number"];
 					}
 					if(strlen($tmp) > 0){
@@ -1508,7 +1508,7 @@
 				echo "		<option value=''></option>\n";
 				foreach ($emergency_destinations as &$row) {
 					$tmp = $row["destination_caller_id_name"];
-					if(strlen($tmp) == 0){
+					if(empty($tmp)){
 						$tmp = $row["destination_description"];
 					}
 					if(strlen($tmp) > 0){
@@ -1554,7 +1554,7 @@
 				}
 				foreach ($emergency_destinations as &$row) {
 					$tmp = $row["destination_caller_id_number"];
-					if(strlen($tmp) == 0){
+					if(empty($tmp)){
 						$tmp = $row["destination_number"];
 					}
 					if(strlen($tmp) > 0){
