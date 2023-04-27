@@ -53,19 +53,19 @@
 //get the http post values and set theme as php variables
 	if (!empty($_POST)) {
 		//set the variables
-			$dialplan_name = $_POST["dialplan_name"];
-			$dialplan_order = $_POST["dialplan_order"];
-			$dialplan_expression = $_POST["dialplan_expression"];
-			$prefix_number = $_POST["prefix_number"];
-			$condition_field_1 = $_POST["condition_field_1"];
-			$condition_expression_1 = $_POST["condition_expression_1"];
-			$condition_field_2 = $_POST["condition_field_2"];
-			$condition_expression_2 = $_POST["condition_expression_2"];
-			$gateway = $_POST["gateway"];
-			$limit = $_POST["limit"];
-			$accountcode = $_POST["accountcode"];
-			$toll_allow = $_POST["toll_allow"];
-			$pin_numbers_enable = $_POST["pin_numbers_enabled"];
+			$dialplan_name = $_POST["dialplan_name"] ?? '';
+			$dialplan_order = $_POST["dialplan_order"] ?? '';
+			$dialplan_expression = $_POST["dialplan_expression"] ?? '';
+			$prefix_number = $_POST["prefix_number"] ?? '';
+			$condition_field_1 = $_POST["condition_field_1"] ?? '';
+			$condition_expression_1 = $_POST["condition_expression_1"] ?? '';
+			$condition_field_2 = $_POST["condition_field_2"] ?? '';
+			$condition_expression_2 = $_POST["condition_expression_2"] ?? '';
+			$gateway = $_POST["gateway"] ?? '';
+			$limit = $_POST["limit"] ?? '';
+			$accountcode = $_POST["accountcode"] ?? '';
+			$toll_allow = $_POST["toll_allow"] ?? '';
+			$pin_numbers_enable = $_POST["pin_numbers_enabled"] ?? null;
 			if (empty($pin_numbers_enable)) { $pin_numbers_enable = "false"; }
 		//set the default type
 			$gateway_type = 'gateway';
