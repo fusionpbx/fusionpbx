@@ -83,7 +83,7 @@ if (!class_exists('switch_music_on_hold')) {
 					foreach($music_list as $row) {
 						if ($previous_name != $row['music_on_hold_name']) {
 							$name = '';
-							if (strlen($row['domain_uuid']) > 0) {
+							if (!empty($row['domain_uuid'])) {
 								$name = $row['domain_name'].'/';	
 							}
 							$name .= $row['music_on_hold_name'];
