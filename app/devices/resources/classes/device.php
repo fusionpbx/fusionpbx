@@ -232,7 +232,7 @@
 			//set the default template directory
 				if (PHP_OS == "Linux") {
 					//set the default template dir
-						if (strlen($this->template_dir) == 0) {
+						if (empty($this->template_dir)) {
 							if (file_exists('/usr/share/fusionpbx/templates/provision')) {
 								$this->template_dir = '/usr/share/fusionpbx/templates/provision';
 							}
