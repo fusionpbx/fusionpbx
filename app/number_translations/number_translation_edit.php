@@ -61,7 +61,7 @@
 	}
 
 //process the user data and save it to the database
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 
 		//validate the token
 			$token = new token;
@@ -115,11 +115,11 @@
 
 		//check for all required data
 			$msg = '';
-			if (strlen($number_translation_name) == 0) { $msg .= $text['message-required']." ".$text['label-number_translation_name']."<br>\n"; }
-			//if (strlen($number_translation_details) == 0) { $msg .= $text['message-required']." ".$text['label-number_translation_details']."<br>\n"; }
-			if (strlen($number_translation_enabled) == 0) { $msg .= $text['message-required']." ".$text['label-number_translation_enabled']."<br>\n"; }
-			//if (strlen($number_translation_description) == 0) { $msg .= $text['message-required']." ".$text['label-number_translation_description']."<br>\n"; }
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+			if (empty($number_translation_name)) { $msg .= $text['message-required']." ".$text['label-number_translation_name']."<br>\n"; }
+			//if (empty($number_translation_details)) { $msg .= $text['message-required']." ".$text['label-number_translation_details']."<br>\n"; }
+			if (empty($number_translation_enabled)) { $msg .= $text['message-required']." ".$text['label-number_translation_enabled']."<br>\n"; }
+			//if (empty($number_translation_description)) { $msg .= $text['message-required']." ".$text['label-number_translation_description']."<br>\n"; }
+			if (strlen($msg) > 0 && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
