@@ -148,7 +148,7 @@
 	}
 
 //upload the destination csv
-	if (file_exists($_SESSION['file']) && $action == 'add') {
+	if (file_exists($_SESSION['file'] ?? '') && $action == 'add') {
 
 		//validate the token
 			$token = new token;
@@ -491,7 +491,7 @@
 	}
 
 //upload the destination csv
-	if (file_exists($_SESSION['file']) && $action == 'delete') {
+	if (file_exists($_SESSION['file'] ?? '') && $action == 'delete') {
 
 		//validate the token
 			$token = new token;
