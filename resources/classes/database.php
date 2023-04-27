@@ -2690,7 +2690,7 @@
 					$this->db->commit();
 
 				//set the action if not set
-					if (strlen($action) == 0) {
+					if (strlen($action ?? '') === 0) {
 						if (is_array($old_array)) {
 							$transaction_type = 'update';
 						}
