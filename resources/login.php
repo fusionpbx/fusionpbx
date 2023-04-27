@@ -251,8 +251,8 @@
 
 //santize the login destination url and set a default value
 	if (isset($_SESSION['login']['destination']['text'])) {
-		$destination_path = parse_url($_SESSION['login']['destination']['text'])['path'];
-		$destination_query = parse_url($_SESSION['login']['destination']['text'])['query'];
+		$destination_path = parse_url($_SESSION['login']['destination']['text'])['path'] ?? '';
+		$destination_query = parse_url($_SESSION['login']['destination']['text'])['query'] ?? '';
 		$destination_path = preg_replace('#[^a-zA-Z0-9_\-\./]#', '', $destination_path);
 		$destination_query = preg_replace('#[^a-zA-Z0-9_\-\./&=]#', '', $destination_query);
 		$_SESSION['login']['destination']['text'] = (strlen($destination_query) > 0) ? $destination_path.'?'.$destination_query : $destination_path;
@@ -261,7 +261,7 @@
 		$_SESSION['login']['destination']['text'] = PROJECT_PATH."/core/dashboard/";
 	}
 
-	if (strlen($_REQUEST['path']) > 0) {
+	if (!empty($_REQUEST['path'])) {
 		$_SESSION['redirect_path'] = $_REQUEST['path'];
 	}
 
