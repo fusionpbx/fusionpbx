@@ -64,7 +64,7 @@
 				$this->toggle_values = ['true','false'];
 
 			//set the domain_uuid if not provided
-				if (strlen($this->domain_uuid) == 0) {
+				if (strlen($this->domain_uuid ?? '') === 0) {
 					$this->domain_uuid = $_SESSION['domain_uuid'];
 				}
 
