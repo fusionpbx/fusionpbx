@@ -38,7 +38,7 @@
 				unset($languages[$key]);
 			}
 			$languages[$key] = str_replace($_SESSION["switch"]['sounds']['dir']."/","",$languages[$key] ?? '');
-			if (strlen($languages[$key]) == 0) {
+			if (empty($languages[$key])) {
 				unset($languages[$key]);
 			}
 		}
