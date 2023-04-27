@@ -2035,7 +2035,7 @@ function number_pad($number,$n) {
 		function limit_offset($limit, $offset = 0) {
 			$regex = '#[^0-9]#';
 			$limit = preg_replace($regex, '', $limit);
-			$offset = preg_replace($regex, '', $offset);
+			$offset = preg_replace($regex, '', $offset ?? '');
 			if (is_numeric($limit) && $limit > 0) {
 				$clause = ' limit '.$limit;
 				$offset = is_numeric($offset) ? $offset : 0;
