@@ -601,7 +601,7 @@
 		if (count($path_array) <> 3 || strlen($path_array[0]) <> 2 || strlen($path_array[1]) <> 2) {
 			unset($language_paths[$key]);
 		}
-		$language_paths[$key] = str_replace($_SESSION["switch"]['sounds']['dir']."/","",$language_paths[$key]);
+		$language_paths[$key] = str_replace($_SESSION["switch"]['sounds']['dir']."/","",$language_paths[$key] ?? '');
 		if (empty($language_paths[$key])) {
 			unset($language_paths[$key]);
 		}
