@@ -138,7 +138,7 @@
 		$fax_caller_id_number = $_POST["fax_caller_id_number"];
 		$fax_toll_allow = $_POST["fax_toll_allow"];
 		$fax_forward_number = $_POST["fax_forward_number"];
-		if (strlen($fax_destination_number) == 0) {
+		if (empty($fax_destination_number)) {
 			$fax_destination_number = $fax_extension;
 		}
 		if (strlen($fax_forward_number) > 3) {
@@ -227,7 +227,7 @@
 	clearstatcache();
 
 //process the data
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 
 		$msg = '';
 		if ($action == "update" && is_uuid($_POST["fax_uuid"]) && permission_exists('fax_extension_edit')) {
@@ -243,9 +243,9 @@
 			}
 
 		//check for all required data
-			if (strlen($fax_extension) == 0) { $msg .= "".$text['confirm-ext']."<br>\n"; }
-			if (strlen($fax_name) == 0) { $msg .= "".$text['confirm-fax']."<br>\n"; }
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+			if (empty($fax_extension)) { $msg .= "".$text['confirm-ext']."<br>\n"; }
+			if (empty($fax_name)) { $msg .= "".$text['confirm-fax']."<br>\n"; }
+			if (strlen($msg) > 0 && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
