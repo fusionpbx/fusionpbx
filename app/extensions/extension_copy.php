@@ -167,7 +167,7 @@
 			unset($sql, $parameters, $row);
 
 		//set the new voicemail password
-			if (strlen($voicemail_password) == 0) {
+			if (empty($voicemail_password)) {
 				$voicemail_password = generate_password(9, 1);
 			}
 
