@@ -60,7 +60,7 @@
 				else {
 					$tmp_str = mysqli_real_escape_string($db, $string);
 				}
-				if (strlen($tmp_str)) {
+				if (!empty($tmp_str)) {
 					$string = $tmp_str;
 				}
 				else {
@@ -688,8 +688,8 @@
 	if (!function_exists('user_add')) {
 		function user_add($username, $password, $user_email = '') {
 			global $domain_uuid;
-			if (strlen($username) == 0) { return false; }
-			if (strlen($password) == 0) { return false; }
+			if (empty($username)) { return false; }
+			if (empty($password)) { return false; }
 			if (!username_exists($username)) {
 				//build user insert array
 					$user_uuid = uuid();
@@ -758,6 +758,10 @@ function switch_module_is_running($fp, $mod) {
 
 //format a number (n) replace with a number (r) remove the number
 function format_string($format, $data) {
+	//nothing to do so return
+	if(empty($format))
+		return $data;
+	
 	//preset values
 	$x=0;
 	$tmp = '';
@@ -783,7 +787,7 @@ function format_string($format, $data) {
 			}
 		}
 	}
-	if (strlen($tmp) == 0) {
+	if (empty($tmp)) {
 		return $data;
 	}
 	else {
@@ -1666,7 +1670,7 @@ function number_pad($number,$n) {
 					$string = "^\\+(".substr($string, 1).")$";
 				}
 			//add prefix
-				if (strlen($prefix) > 0) {
+				if (!empty($prefix)) {
 					if (strlen($prefix) > 0 && strlen($prefix) < 4) {
 						$plus = (substr($string, 0, 1) == "+") ? '' : '\+?';
 						$prefix = $plus.$prefix.'?';
@@ -1888,16 +1892,9 @@ function number_pad($number,$n) {
 
 //escape user data
 	function escape($string) {
-		if (is_array($string)) {
-			return false;
-		}
-		elseif (isset($string) && strlen($string)) {
+		if (is_string($string))
 			return htmlentities($string, ENT_QUOTES | ENT_HTML5, 'UTF-8');
-		}
-		else {
-			return false;
-		}
-		//return htmlspecialchars($string, ENT_QUOTES, 'UTF-8');
+		return false;
 	}
 
 //output pre-formatted array keys and values
