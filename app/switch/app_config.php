@@ -37,7 +37,7 @@
 			if (count($path_array) <> 3 || strlen($path_array[0]) <> 2 || strlen($path_array[1]) <> 2) {
 				unset($languages[$key]);
 			}
-			$languages[$key] = str_replace($_SESSION["switch"]['sounds']['dir']."/","",$languages[$key]);
+			$languages[$key] = str_replace($_SESSION["switch"]['sounds']['dir']."/","",$languages[$key] ?? '');
 			if (strlen($languages[$key]) == 0) {
 				unset($languages[$key]);
 			}
