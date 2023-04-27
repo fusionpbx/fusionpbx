@@ -37,7 +37,7 @@
 			//set the default template directory
 				if (PHP_OS == "Linux") {
 					//set the default template dir
-						if (strlen($this->template_dir) == 0) {
+						if (empty($this->template_dir)) {
 							if (file_exists('/usr/share/fusionpbx/templates/provision')) {
 								$this->template_dir = '/usr/share/fusionpbx/templates/provision';
 							}
@@ -51,7 +51,7 @@
 				}
 				elseif (PHP_OS == "FreeBSD") {
 					//if the FreeBSD port is installed use the following paths by default.
-						if (strlen($this->template_dir) == 0) {
+						if (empty($this->template_dir)) {
 							if (file_exists('/usr/local/share/fusionpbx/templates/provision')) {
 								$this->template_dir = '/usr/local/share/fusionpbx/templates/provision';
 							}
@@ -65,19 +65,19 @@
 				}
 				else if (PHP_OS == "NetBSD") {
 					//set the default template_dir
-						if (strlen($this->template_dir) == 0) {
+						if (empty($this->template_dir)) {
 							$this->template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/provision';
 						}
 				}
 				else if (PHP_OS == "OpenBSD") {
 					//set the default template_dir
-						if (strlen($this->template_dir) == 0) {
+						if (empty($this->template_dir)) {
 							$this->template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/provision';
 						}
 				}
 				else {
 					//set the default template_dir
-						if (strlen($this->template_dir) == 0) {
+						if (empty($this->template_dir)) {
 							$this->template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/provision';
 						}
 				}
@@ -282,7 +282,7 @@
 				$file = str_replace($search, "", $file);
 
 			//get the domain_name
-				if (strlen($domain_name) == 0) {
+				if (empty($domain_name)) {
 					$sql = "select domain_name from v_domains ";
 					$sql .= "where domain_uuid = :domain_uuid ";
 					$parameters['domain_uuid'] = $domain_uuid;
@@ -315,7 +315,7 @@
 				}
 
 			//check to see if the mac_address exists in devices
-				//if (strlen($_REQUEST['user_id']) == 0 || strlen($_REQUEST['userid']) == 0) {
+				//if (empty($_REQUEST['user_id']) || empty($_REQUEST['userid'])) {
 					if ($this->mac_exists($mac)) {
 
 						//get the device_template
@@ -375,7 +375,7 @@
 							unset($row);
 
 						//find a template that was defined on another phone and use that as the default.
-							if (strlen($device_template) == 0) {
+							if (empty($device_template)) {
 								$sql = "select * from v_devices ";
 								$sql .= "where domain_uuid = :domain_uuid ";
 								$sql .= "and device_enabled = 'true' ";
@@ -818,9 +818,9 @@
 										$sip_port = $row['sip_port'];
 
 									//set defaults
-										if (strlen($register_expires) == 0) { $register_expires = "120"; }
-										if (strlen($sip_transport) == 0) { $sip_transport = "tcp"; }
-										if (strlen($sip_port) == 0) {
+										if (empty($register_expires)) { $register_expires = "120"; }
+										if (empty($sip_transport)) { $sip_transport = "tcp"; }
+										if (empty($sip_port)) {
 											if ($line_number == "" || $line_number == "1") {
 												$sip_port = "5060";
 											}
@@ -1094,7 +1094,7 @@
 									}
 
 								//assign the variables
-									if (strlen($device_key_category) == 0) {
+									if (empty($device_key_category)) {
 										$view->assign("key_id_".$device_key_id, $device_key_id);
 										$view->assign("key_type_".$device_key_id, $device_key_type);
 										$view->assign("key_line_".$device_key_id, $device_key_line);
@@ -1193,7 +1193,7 @@
 					}
 
 				//if $file is not provided then look for a default file that exists
-					if (strlen($file) == 0) {
+					if (empty($file)) {
 						if (file_exists($template_dir."/".$device_template ."/{\$mac}")) {
 							$file = "{\$mac}";
 						}
@@ -1256,7 +1256,7 @@
 				}
 
 			//check either we have destination path to write files
-				if (strlen($provision["path"]) == 0) {
+				if (empty($provision["path"])) {
 					return;
 				}
 
