@@ -418,7 +418,7 @@ if (!class_exists('destinations')) {
 					}
 				}
 				if (!$select_found) {
-					$destination_label = str_replace(":", " ", $destination_value);
+					$destination_label = str_replace(":", " ", $destination_value ?? '');
 					$destination_label = str_replace("menu-exec-app", "", $destination_label);
 					$destination_label = str_replace("transfer", "", $destination_label);
 					$destination_label = str_replace("XML ".$this->domain_name, "", $destination_label);
