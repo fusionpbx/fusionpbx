@@ -62,7 +62,7 @@
 		$description = $_POST["description"];
 	}
 
-if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
+if (count($_POST)>0 && empty($_POST["persistformvar"])) {
 
 	$msg = '';
 	if ($action == "update") {
@@ -78,11 +78,11 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		}
 
 	//check for all required data
-		if (strlen($pin_number) == 0) { $msg .= $text['message-required']." ".$text['label-pin_number']."<br>\n"; }
-		//if (strlen($accountcode) == 0) { $msg .= $text['message-required']." ".$text['label-accountcode']."<br>\n"; }
-		if (strlen($enabled) == 0) { $msg .= $text['message-required']." ".$text['label-enabled']."<br>\n"; }
-		//if (strlen($description) == 0) { $msg .= $text['message-required']." ".$text['label-description']."<br>\n"; }
-		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+		if (empty($pin_number)) { $msg .= $text['message-required']." ".$text['label-pin_number']."<br>\n"; }
+		//if (empty($accountcode)) { $msg .= $text['message-required']." ".$text['label-accountcode']."<br>\n"; }
+		if (empty($enabled)) { $msg .= $text['message-required']." ".$text['label-enabled']."<br>\n"; }
+		//if (empty($description)) { $msg .= $text['message-required']." ".$text['label-description']."<br>\n"; }
+		if (strlen($msg) > 0 && empty($_POST["persistformvar"])) {
 			require_once "resources/header.php";
 			require_once "resources/persist_form_var.php";
 			echo "<div align='center'>\n";
