@@ -1104,11 +1104,13 @@
 		echo "</td>\n";
 		echo "<td class='vtable' align='left' valign='top'>\n";
 		echo "	<input type='hidden' class='formfld' style='width: 250px;' name='user_totp_secret' id='user_totp_secret' value=\"".escape($user_totp_secret)."\" >";
-		if (strlen($user_totp_secret) == 0) {
+		if (empty($user_totp_secret)) {
+			$base32 = new base2n(5, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567', FALSE, TRUE, TRUE);
+			$user_totp_secret = $base32->encode(generate_password(20,3));
 			echo button::create(['type'=>'button',
 			'label'=>$text['button-setup'],
 			'icon'=>'key',
-			'onclick'=>"document.getElementById('user_totp_secret').value = '".strtoupper(generate_password(32,3))."';
+			'onclick'=>"document.getElementById('user_totp_secret').value = '".$user_totp_secret."';
 			document.getElementById('frm').submit();"]);
 		}
 		else {
