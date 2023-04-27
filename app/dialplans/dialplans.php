@@ -421,7 +421,7 @@
 	}
 	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=''>";
 	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search']);
-	$params[] = "app_uuid=".urlencode($app_uuid);
+	$params[] = "app_uuid=".urlencode($app_uuid ?? '');
 	if ($order_by) { $params[] = "order_by=".urlencode($order_by); }
 	if ($order) { $params[] = "order=".urlencode($order); }
 	if ($_GET['show'] && permission_exists('dialplan_all')) { $params[] = "show=".urlencode($_GET['show']); }
