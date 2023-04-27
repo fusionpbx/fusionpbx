@@ -261,8 +261,8 @@ class plugin_email {
 					//remove the temporary permission
 					$p->delete("email_queue_add", 'temp');
 					$p->delete("email_queue_edit", 'temp');
-				} else
-				     {
+				}
+				else {
 					//send email - direct
 					$email = new email;
 					$email->recipients = $_SESSION["user_email"];
