@@ -119,7 +119,8 @@
 				rtrim($git_origin);
 				$git_origin = preg_replace('/\.git$/','',$git_origin);
 				$git_status = shell_exec($git_exe.' --git-dir='.$git_path.' status | grep "Your branch"');
-				rtrim($git_status);
+				if(!empty($git_status))
+					rtrim($git_status);
 				$git_age = shell_exec($git_exe.' --git-dir='.$git_path.' log --pretty=format:%at "HEAD^!"');
 				rtrim($git_age);
 				$git_date = DateTime::createFromFormat('U', $git_age);
