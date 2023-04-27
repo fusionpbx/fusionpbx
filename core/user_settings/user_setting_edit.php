@@ -79,17 +79,17 @@
 	}
 
 //get http post variables and set them to php variables
-	if (count($_REQUEST) > 0) {
-		$user_setting_category = strtolower($_REQUEST["user_setting_category"]);
-		$user_setting_subcategory = strtolower($_POST["user_setting_subcategory"]);
+	if (!empty($_REQUEST)) {
+		$user_setting_category = strtolower($_REQUEST["user_setting_category"] ?? '');
+		$user_setting_subcategory = strtolower($_POST["user_setting_subcategory"] ?? '');
 		$user_setting_name = strtolower($_POST["user_setting_name"]);
 		$user_setting_value = $_POST["user_setting_value"];
 		$user_setting_order = $_POST["user_setting_order"];
-		$user_setting_enabled = strtolower($_POST["user_setting_enabled"]);
+		$user_setting_enabled = strtolower($_POST["user_setting_enabled"] ?? '');
 		$user_setting_description = $_POST["user_setting_description"];
 	}
 
-if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+if (!empty($_POST["persistformvar"])) {
 
 	$msg = '';
 	if ($action == "update") {
