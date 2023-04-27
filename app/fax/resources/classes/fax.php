@@ -97,7 +97,7 @@ if (!class_exists('fax')) {
 				}
 
 			//set the dialplan_uuid
-				if (strlen($this->dialplan_uuid) == 0) {
+				if (empty($this->dialplan_uuid)) {
 					$this->dialplan_uuid = uuid();
 				}
 				else {
