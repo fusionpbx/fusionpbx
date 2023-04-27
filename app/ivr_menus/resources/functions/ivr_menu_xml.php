@@ -149,7 +149,7 @@
 								$ivr_menu_option_description = $sub_row["ivr_menu_option_description"];
 
 								$tmp .= "		<entry action=\"$ivr_menu_option_action\" digits=\"$ivr_menu_option_digits\" param=\"$ivr_menu_option_param\"/>";
-								if (strlen($ivr_menu_option_description) == 0) {
+								if (empty($ivr_menu_option_description)) {
 									$tmp .= "\n";
 								}
 								else {
