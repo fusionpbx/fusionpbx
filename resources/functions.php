@@ -82,7 +82,7 @@
 
 	if (!function_exists('check_cidr')) {
 		function check_cidr($cidr, $ip_address) {
-			if (isset($cidr) && strlen($cidr) > 0) {
+			if (isset($cidr) && !empty($cidr)) {
 				list ($subnet, $mask) = explode ('/', $cidr);
 				return ( ip2long ($ip_address) & ~((1 << (32 - $mask)) - 1) ) == ip2long ($subnet);
 			}
@@ -362,7 +362,7 @@
 			$result = $database->select($sql, null, 'all');
 			if (is_array($result) && @sizeof($result) != 0) {
 				foreach($result as $field) {
-					if (strlen($field[$field_name]) > 0) {
+					if (!empty($field[$field_name])) {
 						$html .= "<option value=\"".escape($field[$field_name])."\" ".($field_current_value == $field[$field_name] ? "selected='selected'" : null).">".escape($field[$field_name])."</option>\n";
 					}
 				}
@@ -391,7 +391,7 @@
 			$field_name = preg_replace("#[^a-zA-Z0-9_]#", "", $field_name);
 			$field_value = preg_replace("#[^a-zA-Z0-9_]#", "", $field_value);
 		
-			if (strlen($field_value) > 0) {
+			if (!empty($field_value)) {
 				$html .= "<select id=\"".$field_value."\" name=\"".$field_value."\" class='formfld' style='".$style."' ".($on_change != '' ? "onchange=\"".$on_change."\"" : null).">\n";
 				$html .= "	<option value=\"\"></option>\n";
 
@@ -408,9 +408,9 @@
 			$result = $database->select($sql, null, 'all');
 			if (is_array($result) && @sizeof($result) != 0) {
 				foreach($result as $field) {
-					if (strlen($field[$field_name]) > 0) {
+					if (!empty($field[$field_name])) {
 						$selected = $field_current_value == $field[$field_name] ? "selected='selected'" : null;
-						$array_key = strlen($field_value) > 0 ? $field_value : $field_name;
+						$array_key = empty($field_value) ? $field_name : $field_value;
 						$html .= "<option value=\"".urlencode($field[$array_key])."\" ".$selected.">".urlencode($field[$field_name])."</option>\n";
 					}
 				}
@@ -432,7 +432,7 @@
 			$field_value = preg_replace("#[^a-zA-Z0-9_]#", "", $field_value ?? '');
 
 			$sanitized_parameters = '';
-			if (isset($http_get_params) && strlen($http_get_params) > 0) {
+			if (isset($http_get_params) && !empty($http_get_params)) {
 				$parameters = explode('&', $http_get_params);
 				if (is_array($parameters)) {
 					foreach ($parameters as $parameter) {
@@ -440,11 +440,11 @@
 							$array = explode('=', $parameter);
 							$key = preg_replace('#[^a-zA-Z0-9_\-]#', '', $array['0']);
 							$value = urldecode($array['1']);
-							if ($key == 'order_by' && strlen($value) > 0) {
+							if ($key == 'order_by' && !empty($value)) {
 								//validate order by
 								$sanitized_parameters .= "&order_by=". preg_replace('#[^a-zA-Z0-9_\-]#', '', $value);
 							}
-							else if ($key == 'order' && strlen($value) > 0) {
+							else if ($key == 'order' && !empty($value)) {
 								//validate order
 								switch ($value) {
 									case 'asc':
@@ -455,7 +455,7 @@
 										break;
 								}
 							}
-							else if (strlen($value) > 0 && is_numeric($value)) {
+							else if (!empty($value) && is_numeric($value)) {
 								$sanitized_parameters .= "&".$key."=".$value;
 							}
 							else {
@@ -467,7 +467,7 @@
 			}
 
 			$html = "<th ".$css." nowrap='nowrap'>";
-			$description = (strlen($description) > 0) ? $description . ', ': '';
+			$description = empty($description) ? '' : $description . ', ';
 			if (empty($order_by)) {
 				$order = 'asc';
 			}
@@ -563,7 +563,7 @@
 			//find unique filename: check if file exists if it does then increment the filename
 				$i = 1;
 				while( file_exists($dest_dir.'/'.$file_name)) {
-					if (strlen($file_ext)> 0) {
+					if (!empty($file_ext)) {
 						$file_name = $file_name_base . $i .'.'. $file_ext;
 					}
 					else {
