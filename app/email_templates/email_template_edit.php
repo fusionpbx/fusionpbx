@@ -65,7 +65,7 @@
 	}
 
 //process the user data and save it to the database
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 
 		//get the uuid from the POST
 			if ($action == "update") {
@@ -82,16 +82,16 @@
 
 		//check for all required data
 			$msg = '';
-			if (strlen($template_language) == 0) { $msg .= $text['message-required']." ".$text['label-template_language']."<br>\n"; }
-			if (strlen($template_category) == 0) { $msg .= $text['message-required']." ".$text['label-template_category']."<br>\n"; }
-			//if (strlen($template_subcategory) == 0) { $msg .= $text['message-required']." ".$text['label-template_subcategory']."<br>\n"; }
-			if (strlen($template_subject) == 0) { $msg .= $text['message-required']." ".$text['label-template_subject']."<br>\n"; }
-			if (strlen($template_body) == 0) { $msg .= $text['message-required']." ".$text['label-template_body']."<br>\n"; }
-			//if (strlen($domain_uuid) == 0) { $msg .= $text['message-required']." ".$text['label-domain_uuid']."<br>\n"; }
-			//if (strlen($template_type) == 0) { $msg .= $text['message-required']." ".$text['label-template_type']."<br>\n"; }
-			if (strlen($template_enabled) == 0) { $msg .= $text['message-required']." ".$text['label-template_enabled']."<br>\n"; }
-			//if (strlen($template_description) == 0) { $msg .= $text['message-required']." ".$text['label-template_description']."<br>\n"; }
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+			if (empty($template_language)) { $msg .= $text['message-required']." ".$text['label-template_language']."<br>\n"; }
+			if (empty($template_category)) { $msg .= $text['message-required']." ".$text['label-template_category']."<br>\n"; }
+			//if (empty($template_subcategory)) { $msg .= $text['message-required']." ".$text['label-template_subcategory']."<br>\n"; }
+			if (empty($template_subject)) { $msg .= $text['message-required']." ".$text['label-template_subject']."<br>\n"; }
+			if (empty($template_body)) { $msg .= $text['message-required']." ".$text['label-template_body']."<br>\n"; }
+			//if (empty($domain_uuid)) { $msg .= $text['message-required']." ".$text['label-domain_uuid']."<br>\n"; }
+			//if (empty($template_type)) { $msg .= $text['message-required']." ".$text['label-template_type']."<br>\n"; }
+			if (empty($template_enabled)) { $msg .= $text['message-required']." ".$text['label-template_enabled']."<br>\n"; }
+			//if (empty($template_description)) { $msg .= $text['message-required']." ".$text['label-template_description']."<br>\n"; }
+			if (strlen($msg) > 0 && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -169,7 +169,7 @@
 	}
 
 //set the defaults
-	if (strlen($template_enabled) == 0) { $template_enabled = 'true'; }
+	if (empty($template_enabled)) { $template_enabled = 'true'; }
 
 //load editor preferences/defaults
 	$setting_size = $_SESSION["editor"]["font_size"]["text"] != '' ? $_SESSION["editor"]["font_size"]["text"] : '12px';
