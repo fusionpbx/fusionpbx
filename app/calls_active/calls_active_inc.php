@@ -46,7 +46,7 @@
 	$text = $language->get();
 
 //get the HTTP values and set as variables
-	$show = trim($_REQUEST["show"]);
+	$show = trim($_REQUEST["show"] ?? '');
 	if ($show != "all") { $show = ''; }
 
 //include theme config for button images
