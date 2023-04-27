@@ -2153,7 +2153,7 @@ function number_pad($number,$n) {
 //get accountcode
 	if (!function_exists('get_accountcode')) {
 		function get_accountcode() {
-			if (strlen($accountcode = $_SESSION['domain']['accountcode']['text']) > 0) {
+			if (strlen($accountcode = $_SESSION['domain']['accountcode']['text'] ?? '') > 0) {
 				if ($accountcode == "none") {
 					return;
 				}
