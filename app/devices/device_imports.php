@@ -51,7 +51,7 @@
 			$fp = fopen("php://memory", 'r+');
 			fputs($fp, $input);
 			rewind($fp);
-			$data = fgetcsv($fp, null, $delimiter, $enclosure); // $escape only got added in 5.3.0
+			$data = fgetcsv($fp, null, $delimiter, $enclosure, $escape);
 			fclose($fp);
 			return $data;
 		}
