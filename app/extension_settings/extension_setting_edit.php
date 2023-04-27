@@ -71,7 +71,7 @@
 	}
 
 //process the user data and save it to the database
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 
 		//validate the token
 			$token = new token;
@@ -116,13 +116,13 @@
 
 		//check for all required data
 			$msg = '';
-			//if (strlen($domain_uuid) == 0) { $msg .= $text['message-required']." ".$text['label-domain_uuid']."<br>\n"; }
-			if (strlen($extension_setting_type) == 0) { $msg .= $text['message-required']." ".$text['label-extension_setting_type']."<br>\n"; }
-			if (strlen($extension_setting_name) == 0) { $msg .= $text['message-required']." ".$text['label-extension_setting_name']."<br>\n"; }
-			//if (strlen($extension_setting_value) == 0) { $msg .= $text['message-required']." ".$text['label-extension_setting_value']."<br>\n"; }
-			if (strlen($extension_setting_enabled) == 0) { $msg .= $text['message-required']." ".$text['label-extension_setting_enabled']."<br>\n"; }
-			//if (strlen($extension_setting_description) == 0) { $msg .= $text['message-required']." ".$text['label-extension_setting_description']."<br>\n"; }
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+			//if (empty($domain_uuid)) { $msg .= $text['message-required']." ".$text['label-domain_uuid']."<br>\n"; }
+			if (empty($extension_setting_type)) { $msg .= $text['message-required']." ".$text['label-extension_setting_type']."<br>\n"; }
+			if (empty($extension_setting_name)) { $msg .= $text['message-required']." ".$text['label-extension_setting_name']."<br>\n"; }
+			//if (empty($extension_setting_value)) { $msg .= $text['message-required']." ".$text['label-extension_setting_value']."<br>\n"; }
+			if (empty($extension_setting_enabled)) { $msg .= $text['message-required']." ".$text['label-extension_setting_enabled']."<br>\n"; }
+			//if (empty($extension_setting_description)) { $msg .= $text['message-required']." ".$text['label-extension_setting_description']."<br>\n"; }
+			if (strlen($msg) > 0 && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -214,7 +214,7 @@
 	}
 
 //set the defaults
-	if (strlen($extension_setting_enabled) == 0) { $extension_setting_enabled = 'true'; }
+	if (empty($extension_setting_enabled)) { $extension_setting_enabled = 'true'; }
 
 //create token
 	$object = new token;
@@ -265,7 +265,7 @@
 	//echo "</td>\n";
 	//echo "<td class='vtable' style='position: relative;' align='left'>\n";
 	//echo "	<select class='formfld' name='domain_uuid'>\n";
-	//if (strlen($domain_uuid) == 0) {
+	//if (empty($domain_uuid)) {
 	//	echo "		<option value='' selected='selected'>".$text['select-global']."</option>\n";
 	//}
 	//else {
