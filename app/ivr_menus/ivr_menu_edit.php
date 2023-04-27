@@ -148,13 +148,13 @@
 			$ivr_menu_exit_data = join(':', $timeout_action_array);
 
 		//set the default ivr_menu_option_action
-			if (strlen($ivr_menu_option_action) == 0) {
+			if (empty($ivr_menu_option_action)) {
 				$ivr_menu_option_action = "menu-exec-app";
 			}
 	}
 
 //process the http data
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 
 		//set the domain_uuid
 			if (permission_exists('ivr_menu_domain')) {
@@ -194,28 +194,28 @@
 
 		//check for all required data
 			$msg = '';
-			if (strlen($ivr_menu_name) == 0) { $msg .= $text['message-required'].$text['label-name']."<br>\n"; }
-			if (strlen($ivr_menu_extension) == 0) { $msg .= $text['message-required'].$text['label-extension']."<br>\n"; }
-			if (strlen($ivr_menu_greet_long) == 0) { $msg .= $text['message-required'].$text['label-greet_long']."<br>\n"; }
-			//if (strlen($ivr_menu_greet_short) == 0) { $msg .= $text['message-required'].$text['label-greet_short']."<br>\n"; }
-			//if (strlen($ivr_menu_invalid_sound) == 0) { $msg .= $text['message-required'].$text['label-invalid_sound']."<br>\n"; }
-			//if (strlen($ivr_menu_exit_sound) == 0) { $msg .= $text['message-required'].$text['label-exit_sound']."<br>\n"; }
-			//if (strlen($ivr_menu_confirm_macro) == 0) { $msg .= $text['message-required'].$text['label-comfirm_macro']."<br>\n"; }
-			//if (strlen($ivr_menu_confirm_key) == 0) { $msg .= $text['message-required'].$text['label-comfirm_key']."<br>\n"; }
-			//if (strlen($ivr_menu_tts_engine) == 0) { $msg .= $text['message-required'].$text['label-tts_engine']."<br>\n"; }
-			//if (strlen($ivr_menu_tts_voice) == 0) { $msg .= $text['message-required'].$text['label-tts_voice']."<br>\n"; }
-			if (strlen($ivr_menu_confirm_attempts) == 0) { $msg .= $text['message-required'].$text['label-comfirm_attempts']."<br>\n"; }
-			if (strlen($ivr_menu_timeout) == 0) { $msg .= $text['message-required'].$text['label-timeout']."<br>\n"; }
-			//if (strlen($ivr_menu_exit_app) == 0) { $msg .= $text['message-required'].$text['label-exit_action']."<br>\n"; }
-			if (strlen($ivr_menu_inter_digit_timeout) == 0) { $msg .= $text['message-required'].$text['label-inter_digit_timeout']."<br>\n"; }
-			if (strlen($ivr_menu_max_failures) == 0) { $msg .= $text['message-required'].$text['label-max_failures']."<br>\n"; }
-			if (strlen($ivr_menu_max_timeouts) == 0) { $msg .= $text['message-required'].$text['label-max_timeouts']."<br>\n"; }
-			if (strlen($ivr_menu_digit_len) == 0) { $msg .= $text['message-required'].$text['label-digit_length']."<br>\n"; }
-			if (strlen($ivr_menu_direct_dial) == 0) { $msg .= $text['message-required'].$text['label-direct_dial']."<br>\n"; }
-			//if (strlen($ivr_menu_ringback) == 0) { $msg .= $text['message-required'].$text['label-ring_back']."<br>\n"; }
+			if (empty($ivr_menu_name)) { $msg .= $text['message-required'].$text['label-name']."<br>\n"; }
+			if (empty($ivr_menu_extension)) { $msg .= $text['message-required'].$text['label-extension']."<br>\n"; }
+			if (empty($ivr_menu_greet_long)) { $msg .= $text['message-required'].$text['label-greet_long']."<br>\n"; }
+			//if (empty($ivr_menu_greet_short)) { $msg .= $text['message-required'].$text['label-greet_short']."<br>\n"; }
+			//if (empty($ivr_menu_invalid_sound)) { $msg .= $text['message-required'].$text['label-invalid_sound']."<br>\n"; }
+			//if (empty($ivr_menu_exit_sound)) { $msg .= $text['message-required'].$text['label-exit_sound']."<br>\n"; }
+			//if (empty($ivr_menu_confirm_macro)) { $msg .= $text['message-required'].$text['label-comfirm_macro']."<br>\n"; }
+			//if (empty($ivr_menu_confirm_key)) { $msg .= $text['message-required'].$text['label-comfirm_key']."<br>\n"; }
+			//if (empty($ivr_menu_tts_engine)) { $msg .= $text['message-required'].$text['label-tts_engine']."<br>\n"; }
+			//if (empty($ivr_menu_tts_voice)) { $msg .= $text['message-required'].$text['label-tts_voice']."<br>\n"; }
+			if (empty($ivr_menu_confirm_attempts)) { $msg .= $text['message-required'].$text['label-comfirm_attempts']."<br>\n"; }
+			if (empty($ivr_menu_timeout)) { $msg .= $text['message-required'].$text['label-timeout']."<br>\n"; }
+			//if (empty($ivr_menu_exit_app)) { $msg .= $text['message-required'].$text['label-exit_action']."<br>\n"; }
+			if (empty($ivr_menu_inter_digit_timeout)) { $msg .= $text['message-required'].$text['label-inter_digit_timeout']."<br>\n"; }
+			if (empty($ivr_menu_max_failures)) { $msg .= $text['message-required'].$text['label-max_failures']."<br>\n"; }
+			if (empty($ivr_menu_max_timeouts)) { $msg .= $text['message-required'].$text['label-max_timeouts']."<br>\n"; }
+			if (empty($ivr_menu_digit_len)) { $msg .= $text['message-required'].$text['label-digit_length']."<br>\n"; }
+			if (empty($ivr_menu_direct_dial)) { $msg .= $text['message-required'].$text['label-direct_dial']."<br>\n"; }
+			//if (empty($ivr_menu_ringback)) { $msg .= $text['message-required'].$text['label-ring_back']."<br>\n"; }
 			
-			//if (strlen($ivr_menu_description) == 0) { $msg .= $text['message-required'].$text['label-description']."<br>\n"; }
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+			//if (empty($ivr_menu_description)) { $msg .= $text['message-required'].$text['label-description']."<br>\n"; }
+			if (strlen($msg) > 0 && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -549,13 +549,13 @@
 	}
 
 //set the defaults
-	if (strlen($ivr_menu_timeout) == 0) { $ivr_menu_timeout = '3000'; }
-	if (strlen($ivr_menu_ringback) == 0) { $ivr_menu_ringback = 'local_stream://default'; }
-	if (strlen($ivr_menu_invalid_sound) == 0) { $ivr_menu_invalid_sound = 'ivr/ivr-that_was_an_invalid_entry.wav'; }
-	//if (strlen($ivr_menu_confirm_key) == 0) { $ivr_menu_confirm_key = '#'; }
-	if (strlen($ivr_menu_tts_engine) == 0) { $ivr_menu_tts_engine = 'flite'; }
-	if (strlen($ivr_menu_tts_voice) == 0) { $ivr_menu_tts_voice = 'rms'; }
-	if (strlen($ivr_menu_confirm_attempts) == 0) { 
+	if (empty($ivr_menu_timeout)) { $ivr_menu_timeout = '3000'; }
+	if (empty($ivr_menu_ringback)) { $ivr_menu_ringback = 'local_stream://default'; }
+	if (empty($ivr_menu_invalid_sound)) { $ivr_menu_invalid_sound = 'ivr/ivr-that_was_an_invalid_entry.wav'; }
+	//if (empty($ivr_menu_confirm_key)) { $ivr_menu_confirm_key = '#'; }
+	if (empty($ivr_menu_tts_engine)) { $ivr_menu_tts_engine = 'flite'; }
+	if (empty($ivr_menu_tts_voice)) { $ivr_menu_tts_voice = 'rms'; }
+	if (empty($ivr_menu_confirm_attempts)) {
 		if (strlen($_SESSION['ivr_menu']['confirm_attempts']['numeric']) > 0) {
 			$ivr_menu_confirm_attempts = $_SESSION['ivr_menu']['confirm_attempts']['numeric'];
 		}
@@ -563,7 +563,7 @@
 			$ivr_menu_confirm_attempts = '1';
 		}
 	}
-	if (strlen($ivr_menu_inter_digit_timeout) == 0) { 
+	if (empty($ivr_menu_inter_digit_timeout)) {
 		if (strlen($_SESSION['ivr_menu']['inter_digit_timeout']['numeric']) > 0) {
 			$ivr_menu_inter_digit_timeout = $_SESSION['ivr_menu']['inter_digit_timeout']['numeric'];
 		}
@@ -571,7 +571,7 @@
 			$ivr_menu_inter_digit_timeout = '2000'; 
 		}
 	}
-	if (strlen($ivr_menu_max_failures) == 0) { 
+	if (empty($ivr_menu_max_failures)) {
 		if (strlen($_SESSION['ivr_menu']['max_failures']['numeric']) > 0) {
 			$ivr_menu_max_failures = $_SESSION['ivr_menu']['max_failures']['numeric'];
 		}
@@ -579,7 +579,7 @@
 			$ivr_menu_max_failures = '1'; 
 		}
 	}
-	if (strlen($ivr_menu_max_timeouts) == 0) { 
+	if (empty($ivr_menu_max_timeouts)) {
 		if (strlen($_SESSION['ivr_menu']['max_timeouts']['numeric']) > 0) {
 			$ivr_menu_max_timeouts = $_SESSION['ivr_menu']['max_timeouts']['numeric'];
 		}
@@ -587,10 +587,10 @@
 			$ivr_menu_max_timeouts = '1'; 
 		}
 	}
-	if (strlen($ivr_menu_digit_len) == 0) { $ivr_menu_digit_len = '5'; }
-	if (strlen($ivr_menu_direct_dial) == 0) { $ivr_menu_direct_dial = 'false'; }
+	if (empty($ivr_menu_digit_len)) { $ivr_menu_digit_len = '5'; }
+	if (empty($ivr_menu_direct_dial)) { $ivr_menu_direct_dial = 'false'; }
 	if (!isset($ivr_menu_context)) { $ivr_menu_context = $_SESSION['domain_name']; }
-	if (strlen($ivr_menu_enabled) == 0) { $ivr_menu_enabled = 'true'; }
+	if (empty($ivr_menu_enabled)) { $ivr_menu_enabled = 'true'; }
 	if (!isset($ivr_menu_exit_action)) { $ivr_menu_exit_action = ''; }
 
 //get installed languages
@@ -602,7 +602,7 @@
 			unset($language_paths[$key]);
 		}
 		$language_paths[$key] = str_replace($_SESSION["switch"]['sounds']['dir']."/","",$language_paths[$key]);
-		if (strlen($language_paths[$key]) == 0) {
+		if (empty($language_paths[$key])) {
 			unset($language_paths[$key]);
 		}
 	}
