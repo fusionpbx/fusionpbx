@@ -100,7 +100,7 @@
 		var url = 'registrations.php?reload&show=<?php echo escape($show); ?>';
 		new loadXmlHttp(url, 'ajax_response');
 		<?php
-		if (strlen($_SESSION["ajax_refresh_rate"]) == 0) { $_SESSION["ajax_refresh_rate"] = "1800"; }
+		if (empty($_SESSION["ajax_refresh_rate"])) { $_SESSION["ajax_refresh_rate"] = "1800"; }
 		echo "setInterval(function(){new loadXmlHttp(url, 'ajax_reponse');}, ".escape($_SESSION["ajax_refresh_rate"]).");";
 		?>
 	}
