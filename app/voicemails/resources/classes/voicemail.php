@@ -228,7 +228,7 @@
 					$sql .= "and v.voicemail_id = :voicemail_id ";
 					$parameters['voicemail_id'] = $this->voicemail_id;
 				}
-				if (strlen($this->order_by) == 0) {
+				if (empty($this->order_by)) {
 					$sql .= "order by v.voicemail_id, m.created_epoch desc ";
 				}
 				else {
