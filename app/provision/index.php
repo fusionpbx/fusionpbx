@@ -191,7 +191,7 @@
 			$name = $row['default_setting_name'];
 			$category = $row['default_setting_category'];
 			$subcategory = $row['default_setting_subcategory'];
-			if (strlen($subcategory) == 0) {
+			if (empty($subcategory)) {
 				if ($name == "array") {
 					$_SESSION[$category][] = $row['default_setting_value'];
 				}
@@ -236,7 +236,7 @@
 				$name = $row['domain_setting_name'];
 				$category = $row['domain_setting_category'];
 				$subcategory = $row['domain_setting_subcategory'];
-				if (strlen($subcategory) == 0) {
+				if (empty($subcategory)) {
 					//$$category[$name] = $row['domain_setting_value'];
 					if ($name == "array") {
 						$_SESSION[$category][] = $row['domain_setting_value'];
@@ -307,7 +307,7 @@
 	}
 
 //http authentication - digest
-	if (strlen($provision["http_auth_username"]) > 0 && strlen($provision["http_auth_type"]) == 0) { $provision["http_auth_type"] = "digest"; }
+	if (strlen($provision["http_auth_username"]) > 0 && empty($provision["http_auth_type"])) { $provision["http_auth_type"] = "digest"; }
 	if (strlen($provision["http_auth_username"]) > 0 && $provision["http_auth_type"] === "digest" && $provision["http_auth_enabled"] === "true") {
 		//function to parse the http auth header
 			function http_digest_parse($txt) {
