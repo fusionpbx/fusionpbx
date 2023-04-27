@@ -175,7 +175,7 @@
 	}
 
 //process the user data and save it to the database
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 
 		//get the uuid from the POST
 			if ($action == "update") {
@@ -192,27 +192,27 @@
 
 		//check for all required data
 			$msg = '';
-			//if (strlen($domain_uuid) == 0) { $msg .= $text['message-required']."domain_uuid<br>\n"; }
-			if (strlen($queue_name) == 0) { $msg .= $text['message-required'].$text['label-queue_name']."<br>\n"; }
-			if (strlen($queue_extension) == 0) { $msg .= $text['message-required'].$text['label-extension']."<br>\n"; }
-			if (strlen($queue_strategy) == 0) { $msg .= $text['message-required'].$text['label-strategy']."<br>\n"; }
-			//if (strlen($queue_moh_sound) == 0) { $msg .= $text['message-required'].$text['label-music_on_hold']."<br>\n"; }
-			//if (strlen($queue_record_template) == 0) { $msg .= $text['message-required'].$text['label-record_template']."<br>\n"; }
-			//if (strlen($queue_time_base_score) == 0) { $msg .= $text['message-required'].$text['label-time_base_score']."<br>\n"; }
-			//if (strlen($queue_time_base_score_sec) == 0) { $msg .= $text['message-required'].$text['label-time_base_score_sec']."<br>\n"; }
-			//if (strlen($queue_max_wait_time) == 0) { $msg .= $text['message-required'].$text['label-max_wait_time']."<br>\n"; }
-			//if (strlen($queue_max_wait_time_with_no_agent) == 0) { $msg .= $text['message-required'].$text['label-max_wait_time_with_no_agent']."<br>\n"; }
-			//if (strlen($queue_max_wait_time_with_no_agent_time_reached) == 0) { $msg .= $text['message-required'].$text['label-max_wait_time_with_no_agent_time_reached']."<br>\n"; }
-			//if (strlen($queue_tier_rules_apply) == 0) { $msg .= $text['message-required'].$text['label-tier_rules_apply']."<br>\n"; }
-			//if (strlen($queue_tier_rule_wait_second) == 0) { $msg .= $text['message-required'].$text['label-tier_rule_wait_second']."<br>\n"; }
-			//if (strlen($queue_tier_rule_wait_multiply_level) == 0) { $msg .= $text['message-required'].$text['label-tier_rule_wait_multiply_level']."<br>\n"; }
-			//if (strlen($queue_tier_rule_no_agent_no_wait) == 0) { $msg .= $text['message-required'].$text['label-tier_rule_no_agent_no_wait']."<br>\n"; }
-			//if (strlen($queue_timeout_action) == 0) { $msg .= $text['message-required'].$text['label-timeout_action']."<br>\n"; }
-			//if (strlen($queue_discard_abandoned_after) == 0) { $msg .= $text['message-required'].$text['label-discard_abandoned_after']."<br>\n"; }
-			//if (strlen($queue_abandoned_resume_allowed) == 0) { $msg .= $text['message-required'].$text['label-abandoned_resume_allowed']."<br>\n"; }
-			//if (strlen($queue_cid_prefix) == 0) { $msg .= $text['message-required'].$text['label-caller_id_name_prefix']."<br>\n"; }
-			//if (strlen($queue_description) == 0) { $msg .= $text['message-required'].$text['label-description']."<br>\n"; }
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+			//if (empty($domain_uuid)) { $msg .= $text['message-required']."domain_uuid<br>\n"; }
+			if (empty($queue_name)) { $msg .= $text['message-required'].$text['label-queue_name']."<br>\n"; }
+			if (empty($queue_extension)) { $msg .= $text['message-required'].$text['label-extension']."<br>\n"; }
+			if (empty($queue_strategy)) { $msg .= $text['message-required'].$text['label-strategy']."<br>\n"; }
+			//if (empty($queue_moh_sound)) { $msg .= $text['message-required'].$text['label-music_on_hold']."<br>\n"; }
+			//if (empty($queue_record_template)) { $msg .= $text['message-required'].$text['label-record_template']."<br>\n"; }
+			//if (empty($queue_time_base_score)) { $msg .= $text['message-required'].$text['label-time_base_score']."<br>\n"; }
+			//if (empty($queue_time_base_score_sec)) { $msg .= $text['message-required'].$text['label-time_base_score_sec']."<br>\n"; }
+			//if (empty($queue_max_wait_time)) { $msg .= $text['message-required'].$text['label-max_wait_time']."<br>\n"; }
+			//if (empty($queue_max_wait_time_with_no_agent)) { $msg .= $text['message-required'].$text['label-max_wait_time_with_no_agent']."<br>\n"; }
+			//if (empty($queue_max_wait_time_with_no_agent_time_reached)) { $msg .= $text['message-required'].$text['label-max_wait_time_with_no_agent_time_reached']."<br>\n"; }
+			//if (empty($queue_tier_rules_apply)) { $msg .= $text['message-required'].$text['label-tier_rules_apply']."<br>\n"; }
+			//if (empty($queue_tier_rule_wait_second)) { $msg .= $text['message-required'].$text['label-tier_rule_wait_second']."<br>\n"; }
+			//if (empty($queue_tier_rule_wait_multiply_level)) { $msg .= $text['message-required'].$text['label-tier_rule_wait_multiply_level']."<br>\n"; }
+			//if (empty($queue_tier_rule_no_agent_no_wait)) { $msg .= $text['message-required'].$text['label-tier_rule_no_agent_no_wait']."<br>\n"; }
+			//if (empty($queue_timeout_action)) { $msg .= $text['message-required'].$text['label-timeout_action']."<br>\n"; }
+			//if (empty($queue_discard_abandoned_after)) { $msg .= $text['message-required'].$text['label-discard_abandoned_after']."<br>\n"; }
+			//if (empty($queue_abandoned_resume_allowed)) { $msg .= $text['message-required'].$text['label-abandoned_resume_allowed']."<br>\n"; }
+			//if (empty($queue_cid_prefix)) { $msg .= $text['message-required'].$text['label-caller_id_name_prefix']."<br>\n"; }
+			//if (empty($queue_description)) { $msg .= $text['message-required'].$text['label-description']."<br>\n"; }
+			if (strlen($msg) > 0 && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -229,13 +229,13 @@
 			$_POST["domain_uuid"] = $_SESSION["domain_uuid"];
 
 		//add the call_center_queue_uuid
-			if (strlen($_POST["call_center_queue_uuid"]) == 0) {
+			if (empty($_POST["call_center_queue_uuid"])) {
 				$call_center_queue_uuid = uuid();
 				$_POST["call_center_queue_uuid"] = $call_center_queue_uuid;
 			}
 
 		//add the dialplan_uuid
-			if (strlen($_POST["dialplan_uuid"]) == 0) {
+			if (empty($_POST["dialplan_uuid"])) {
 				$dialplan_uuid = uuid();
 				$_POST["dialplan_uuid"] = $dialplan_uuid;
 			}
@@ -245,11 +245,11 @@
 			if (is_array($_POST["call_center_tiers"]) && @sizeof($_POST["call_center_tiers"]) != 0) {
 				foreach ($_POST["call_center_tiers"] as $row) {
 					//add the domain_uuid
-						if (strlen($row["domain_uuid"]) == 0) {
+						if (empty($row["domain_uuid"])) {
 							$_POST["call_center_tiers"][$x]["domain_uuid"] = $_SESSION['domain_uuid'];
 						}
 					//unset ring_group_destination_uuid if the field has no value
-						if (strlen($row["call_center_agent_uuid"]) == 0) {
+						if (empty($row["call_center_agent_uuid"])) {
 							unset($_POST["call_center_tiers"][$x]);
 						}
 					//increment the row
@@ -486,7 +486,7 @@
 			}
 			return;
 
-	} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
+	} //(count($_POST)>0 && empty($_POST["persistformvar"]))
 
 //pre-populate the form
 	if (is_array($_GET) && is_uuid($_GET["id"]) && $_POST["persistformvar"] != "true") {
@@ -581,19 +581,19 @@
 	$sounds = $sounds->get();
 
 //set default values
-	if (strlen($queue_strategy) == 0) { $queue_strategy = "longest-idle-agent"; }
-	if (strlen($queue_moh_sound) == 0) { $queue_moh_sound = "\$\${hold_music}"; }
-	if (strlen($queue_time_base_score) == 0) { $queue_time_base_score = "system"; }
-	if (strlen($queue_time_base_score) == 0) { $queue_time_base_score = ""; }
-	if (strlen($queue_max_wait_time) == 0) { $queue_max_wait_time = "0"; }
-	if (strlen($queue_max_wait_time_with_no_agent) == 0) { $queue_max_wait_time_with_no_agent = "90"; }
-	if (strlen($queue_max_wait_time_with_no_agent_time_reached) == 0) { $queue_max_wait_time_with_no_agent_time_reached = "30"; }
-	if (strlen($queue_tier_rules_apply) == 0) { $queue_tier_rules_apply = "false"; }
-	if (strlen($queue_tier_rule_wait_second) == 0) { $queue_tier_rule_wait_second = "30"; }
-	if (strlen($queue_tier_rule_wait_multiply_level) == 0) { $queue_tier_rule_wait_multiply_level = "true"; }
-	if (strlen($queue_tier_rule_no_agent_no_wait) == 0) { $queue_tier_rule_no_agent_no_wait = "true"; }
-	if (strlen($queue_discard_abandoned_after) == 0) { $queue_discard_abandoned_after = "900"; }
-	if (strlen($queue_abandoned_resume_allowed) == 0) { $queue_abandoned_resume_allowed = "false"; }
+	if (empty($queue_strategy)) { $queue_strategy = "longest-idle-agent"; }
+	if (empty($queue_moh_sound)) { $queue_moh_sound = "\$\${hold_music}"; }
+	if (empty($queue_time_base_score)) { $queue_time_base_score = "system"; }
+	if (empty($queue_time_base_score)) { $queue_time_base_score = ""; }
+	if (empty($queue_max_wait_time)) { $queue_max_wait_time = "0"; }
+	if (empty($queue_max_wait_time_with_no_agent)) { $queue_max_wait_time_with_no_agent = "90"; }
+	if (empty($queue_max_wait_time_with_no_agent_time_reached)) { $queue_max_wait_time_with_no_agent_time_reached = "30"; }
+	if (empty($queue_tier_rules_apply)) { $queue_tier_rules_apply = "false"; }
+	if (empty($queue_tier_rule_wait_second)) { $queue_tier_rule_wait_second = "30"; }
+	if (empty($queue_tier_rule_wait_multiply_level)) { $queue_tier_rule_wait_multiply_level = "true"; }
+	if (empty($queue_tier_rule_no_agent_no_wait)) { $queue_tier_rule_no_agent_no_wait = "true"; }
+	if (empty($queue_discard_abandoned_after)) { $queue_discard_abandoned_after = "900"; }
+	if (empty($queue_abandoned_resume_allowed)) { $queue_abandoned_resume_allowed = "false"; }
 
 //create token
 	$object = new token;
@@ -907,7 +907,7 @@
 	else {
 		echo "	<option value='".escape($record_template)."'>".$text['option-true']."</option>\n";
 	}
-	if (strlen($queue_record_template) == 0) {
+	if (empty($queue_record_template)) {
 		echo "	<option value='' selected='selected' >".$text['option-false']."</option>\n";
 	}
 	else {

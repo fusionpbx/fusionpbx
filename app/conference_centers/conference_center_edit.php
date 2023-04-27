@@ -55,7 +55,7 @@
 	}
 
 //process the user data and save it to the database
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 
 		//delete the conference center
 			if ($_POST['action'] == 'delete' && permission_exists('conference_center_delete') && is_uuid($conference_center_uuid)) {
@@ -90,14 +90,14 @@
 
 		//check for all required data
 			$msg = '';
-			//if (strlen($dialplan_uuid) == 0) { $msg .= "Please provide: Dialplan UUID<br>\n"; }
-			if (strlen($conference_center_name) == 0) { $msg .= "Please provide: Name<br>\n"; }
-			if (strlen($conference_center_extension) == 0) { $msg .= "Please provide: Extension<br>\n"; }
-			if (strlen($conference_center_pin_length) == 0) { $msg .= "Please provide: PIN Length<br>\n"; }
-			//if (strlen($conference_center_order) == 0) { $msg .= "Please provide: Order<br>\n"; }
-			//if (strlen($conference_center_description) == 0) { $msg .= "Please provide: Description<br>\n"; }
-			if (strlen($conference_center_enabled) == 0) { $msg .= "Please provide: Enabled<br>\n"; }
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+			//if (empty($dialplan_uuid)) { $msg .= "Please provide: Dialplan UUID<br>\n"; }
+			if (empty($conference_center_name)) { $msg .= "Please provide: Name<br>\n"; }
+			if (empty($conference_center_extension)) { $msg .= "Please provide: Extension<br>\n"; }
+			if (empty($conference_center_pin_length)) { $msg .= "Please provide: PIN Length<br>\n"; }
+			//if (empty($conference_center_order)) { $msg .= "Please provide: Order<br>\n"; }
+			//if (empty($conference_center_description)) { $msg .= "Please provide: Description<br>\n"; }
+			if (empty($conference_center_enabled)) { $msg .= "Please provide: Enabled<br>\n"; }
+			if (strlen($msg) > 0 && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -204,7 +204,7 @@
 				header("Location: conference_centers.php");
 				return;
 			}
-	} //(is_array($_POST) && strlen($_POST["persistformvar"]) == 0)
+	} //(is_array($_POST) && empty($_POST["persistformvar"]))
 
 //pre-populate the form
 	if (is_array($_GET) && $_POST["persistformvar"] != "true") {
@@ -230,8 +230,8 @@
 	}
 
 //set defaults
-	if (strlen($conference_center_enabled) == 0) { $conference_center_enabled = "true"; }
-	if (strlen($conference_center_pin_length) == 0) { $conference_center_pin_length = 9; }
+	if (empty($conference_center_enabled)) { $conference_center_enabled = "true"; }
+	if (empty($conference_center_pin_length)) { $conference_center_pin_length = 9; }
 
 //get the recordings
 	$sql = "select recording_name, recording_filename from v_recordings ";

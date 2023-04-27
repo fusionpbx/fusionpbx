@@ -84,7 +84,7 @@
 	}
 
 //process the user data and save it to the database
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 		//validate the token
 			$token = new token;
 			if (!$token->validate($_SERVER['PHP_SELF'])) {
@@ -128,13 +128,13 @@
 
 		//check for all required data
 			$msg = '';
-			//if (strlen($dashboard_name) == 0) { $msg .= $text['message-required']." ".$text['label-dashboard_name']."<br>\n"; }
-			//if (strlen($dashboard_path) == 0) { $msg .= $text['message-required']." ".$text['label-dashboard_path']."<br>\n"; }
-			//if (strlen($dashboard_groups) == 0) { $msg .= $text['message-required']." ".$text['label-dashboard_groups']."<br>\n"; }
-			//if (strlen($dashboard_order) == 0) { $msg .= $text['message-required']." ".$text['label-dashboard_order']."<br>\n"; }
-			//if (strlen($dashboard_enabled) == 0) { $msg .= $text['message-required']." ".$text['label-dashboard_enabled']."<br>\n"; }
-			//if (strlen($dashboard_description) == 0) { $msg .= $text['message-required']." ".$text['label-dashboard_description']."<br>\n"; }
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+			//if (empty($dashboard_name)) { $msg .= $text['message-required']." ".$text['label-dashboard_name']."<br>\n"; }
+			//if (empty($dashboard_path)) { $msg .= $text['message-required']." ".$text['label-dashboard_path']."<br>\n"; }
+			//if (empty($dashboard_groups)) { $msg .= $text['message-required']." ".$text['label-dashboard_groups']."<br>\n"; }
+			//if (empty($dashboard_order)) { $msg .= $text['message-required']." ".$text['label-dashboard_order']."<br>\n"; }
+			//if (empty($dashboard_enabled)) { $msg .= $text['message-required']." ".$text['label-dashboard_enabled']."<br>\n"; }
+			//if (empty($dashboard_description)) { $msg .= $text['message-required']." ".$text['label-dashboard_description']."<br>\n"; }
+			if (strlen($msg) > 0 && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";

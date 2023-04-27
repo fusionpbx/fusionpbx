@@ -967,7 +967,7 @@ class mime_parser_class
 								$decoded=base64_decode(substr($value, $start, $end - $start));
 								if($end <= $start
 								|| GetType($decoded) != 'string'
-								|| strlen($decoded) == 0)
+								|| empty($decoded))
 								{
 									$warning = 'the header specified an invalid base64 encoded text';
 									$warning_position = $part['Position'] + $start;

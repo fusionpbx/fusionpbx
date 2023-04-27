@@ -67,7 +67,7 @@
 			//build extension update array
 				$array['extensions'][0]['extension_uuid'] = $this->extension_uuid;
 				$array['extensions'][0]['forward_all_destination'] = strlen($this->forward_all_destination) != 0 ? $this->forward_all_destination : null;
-				if (strlen($this->forward_all_destination) == 0 || $this->forward_all_enabled == "false") {
+				if (empty($this->forward_all_destination) || $this->forward_all_enabled == "false") {
 					$array['extensions'][0]['forward_all_enabled'] = 'false';
 				}
 				else {

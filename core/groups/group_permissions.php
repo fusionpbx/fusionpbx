@@ -139,7 +139,7 @@
 	$group_permissions = $database->select($sql, $parameters, 'all');
 
 //process the user data and save it to the database
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 			$x = 0;
 			if (is_array($_POST['group_permissions'])) {
 				foreach($_POST['group_permissions'] as $row) {
@@ -210,7 +210,7 @@
 					
 					//build the array;
 						if ($action == "save") {
-							if (strlen($group_permission_uuid) == 0) {
+							if (empty($group_permission_uuid)) {
 								$group_permission_uuid = uuid();
 							}
 							if (isset($row['permission_name']) && strlen($row['permission_name']) > 0) {

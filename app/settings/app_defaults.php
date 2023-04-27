@@ -31,7 +31,7 @@ if ($domains_processed == 1) {
 		$event_socket_ip_address = $database->select($sql, null, 'column');
 
 	//check the row count
-		if (strlen($event_socket_ip_address) == 0) {
+		if (empty($event_socket_ip_address)) {
 			//add default settings
 				$event_socket_ip_address = "127.0.0.1";
 				$event_socket_port = "8021";

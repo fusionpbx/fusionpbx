@@ -94,7 +94,7 @@
 	$menu_item_link = preg_replace('#[^a-zA-Z0-9_:\-\.\&\=\?\/]#', '', $menu_item_link);
 
 //when a HTTP POST is available then process it
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 
 		if ($action == "update") {
 			$menu_item_uuid = $_POST["menu_item_uuid"];
@@ -110,10 +110,10 @@
 
 		//check for all required data
 			$msg = '';
-			if (strlen($menu_item_title) == 0) { $msg .= $text['message-required'].$text['label-title']."<br>\n"; }
-			if (strlen($menu_item_category) == 0) { $msg .= $text['message-required'].$text['label-category']."<br>\n"; }
-			//if (strlen($menu_item_link) == 0) { $msg .= $text['message-required'].$text['label-link']."<br>\n"; }
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+			if (empty($menu_item_title)) { $msg .= $text['message-required'].$text['label-title']."<br>\n"; }
+			if (empty($menu_item_category)) { $msg .= $text['message-required'].$text['label-category']."<br>\n"; }
+			//if (empty($menu_item_link)) { $msg .= $text['message-required'].$text['label-link']."<br>\n"; }
+			if (strlen($msg) > 0 && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";

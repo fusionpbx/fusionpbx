@@ -35,7 +35,7 @@
 
 //get the event socket information
 	if (file_exists($_SERVER["PROJECT_ROOT"]."/app/settings/app_config.php")) {
-		if ((! isset($_SESSION['event_socket_ip_address'])) or strlen($_SESSION['event_socket_ip_address']) == 0) {
+		if ((! isset($_SESSION['event_socket_ip_address'])) or empty($_SESSION['event_socket_ip_address'])) {
 			$sql = "select * from v_settings ";
 			$database = new database;
 			$row = $database->select($sql, null, 'row');
@@ -145,7 +145,7 @@ function save_setting_xml() {
 		fclose($fout);
 
 		$event_socket_ip_address = $row['event_socket_ip_address'];
-		if (strlen($event_socket_ip_address) == 0) { $event_socket_ip_address = '127.0.0.1'; }
+		if (empty($event_socket_ip_address)) { $event_socket_ip_address = '127.0.0.1'; }
 
 		$fout = fopen($_SESSION['switch']['conf']['dir']."/autoload_configs/event_socket.conf.xml","w");
 		$xml = "<configuration name=\"event_socket.conf\" description=\"Socket Client\">\n";
@@ -223,7 +223,7 @@ function filename_safe($filename) {
 function save_gateway_xml() {
 
 	//skip saving the gateway xml if the directory is not set
-		if (strlen($_SESSION['switch']['sip_profiles']['dir']) == 0) {
+		if (empty($_SESSION['switch']['sip_profiles']['dir'])) {
 			return;
 		}
 
@@ -253,7 +253,7 @@ function save_gateway_xml() {
 				if ($row['enabled'] != "false") {
 						//set the default profile as external
 							$profile = $row['profile'];
-							if (strlen($profile) == 0) {
+							if (empty($profile)) {
 								$profile = "external";
 							}
 						//open the xml file
@@ -370,10 +370,10 @@ function save_var_xml() {
 
 		//get the hostname
 		$hostname = trim(event_socket_request_cmd('api switchname'));
-		if (strlen($hostname) == 0){
+		if (empty($hostname)){
 			$hostname = trim(gethostname());
 		}
-		if (strlen($hostname) == 0){
+		if (empty($hostname)){
 			return;
 		}
 
@@ -394,9 +394,9 @@ function save_var_xml() {
 							$xml .= "<!-- ".base64_decode($row['var_description'])." -->\n";
 						}
 					}
-					if (strlen($row['var_command']) == 0) { $row['var_command'] = 'set'; }
+					if (empty($row['var_command'])) { $row['var_command'] = 'set'; }
 					if ($row['var_category'] == 'Exec-Set') { $row['var_command'] = 'exec-set'; }
-					if (strlen($row['var_hostname']) == 0) {
+					if (empty($row['var_hostname'])) {
 						$xml .= "<X-PRE-PROCESS cmd=\"".$row['var_command']."\" data=\"".$row['var_name']."=".$row['var_value']."\" />\n";
 					} elseif ($row['var_hostname'] == $hostname) {
 						$xml .= "<X-PRE-PROCESS cmd=\"".$row['var_command']."\" data=\"".$row['var_name']."=".$row['var_value']."\" />\n";
@@ -434,7 +434,7 @@ function outbound_route_to_bridge($domain_uuid, $destination_number, array $chan
 
 	//get the hostname
 	$hostname = trim(event_socket_request_cmd('api switchname'));
-	if (strlen($hostname) == 0) {
+	if (empty($hostname)) {
 		$hostname = 'unknown';
 	}
 
@@ -688,7 +688,7 @@ if (!function_exists('save_call_center_xml')) {
 						}
 						$v_queues .= "		<queue name=\"$queue_name@".$_SESSION['domains'][$row["domain_uuid"]]['domain_name']."\">\n";
 						$v_queues .= "			<param name=\"strategy\" value=\"$queue_strategy\"/>\n";
-						if (strlen($queue_moh_sound) == 0) {
+						if (empty($queue_moh_sound)) {
 							$v_queues .= "			<param name=\"moh-sound\" value=\"local_stream://default\"/>\n";
 						}
 						else {
@@ -964,7 +964,7 @@ if (!function_exists('xml_cdr_conf_xml')) {
 if (!function_exists('save_sip_profile_xml')) {
 	function save_sip_profile_xml() {
 		//skip saving the sip profile xml if the directory is not set
-			if (strlen($_SESSION['switch']['sip_profiles']['dir']) == 0) {
+			if (empty($_SESSION['switch']['sip_profiles']['dir'])) {
 				return;
 			}
 

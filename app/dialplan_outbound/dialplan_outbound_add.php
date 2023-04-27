@@ -66,7 +66,7 @@
 			$accountcode = $_POST["accountcode"];
 			$toll_allow = $_POST["toll_allow"];
 			$pin_numbers_enable = $_POST["pin_numbers_enabled"];
-			if (strlen($pin_numbers_enable) == 0) { $pin_numbers_enable = "false"; }
+			if (empty($pin_numbers_enable)) { $pin_numbers_enable = "false"; }
 		//set the default type
 			$gateway_type = 'gateway';
 			$gateway_2_type = 'gateway';
@@ -171,11 +171,11 @@
 			$dialplan_enabled = $_POST["dialplan_enabled"];
 			$dialplan_description = $_POST["dialplan_description"];
 		//set default to enabled
-			if (strlen($dialplan_enabled) == 0) { $dialplan_enabled = "true"; }
+			if (empty($dialplan_enabled)) { $dialplan_enabled = "true"; }
 	}
 
 //process the http form values
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 
 		//validate the token
 			$token = new token;
@@ -186,17 +186,17 @@
 			}
 
 		//check for all required data
-			if (strlen($gateway) == 0) { $msg .= $text['message-provide'].": ".$text['label-gateway-name']."<br>\n"; }
-			//if (strlen($gateway_2) == 0) { $msg .= "Please provide: Alternat 1<br>\n"; }
-			//if (strlen($gateway_3) == 0) { $msg .= "Please provide: Alternat 2<br>\n"; }
-			if (strlen($dialplan_expression) == 0) { $msg .= $text['message-provide'].": ".$text['label-dialplan-expression']."<br>\n"; }
-			//if (strlen($dialplan_name) == 0) { $msg .= "Please provide: Extension Name<br>\n"; }
-			//if (strlen($condition_field_1) == 0) { $msg .= "Please provide: Condition Field<br>\n"; }
-			//if (strlen($condition_expression_1) == 0) { $msg .= "Please provide: Condition Expression<br>\n"; }
-			//if (strlen($limit) == 0) { $msg .= "Please provide: Limit<br>\n"; }
-			//if (strlen($dialplan_enabled) == 0) { $msg .= "Please provide: Enabled True or False<br>\n"; }
-			//if (strlen($description) == 0) { $msg .= "Please provide: Description<br>\n"; }
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+			if (empty($gateway)) { $msg .= $text['message-provide'].": ".$text['label-gateway-name']."<br>\n"; }
+			//if (empty($gateway_2)) { $msg .= "Please provide: Alternat 1<br>\n"; }
+			//if (empty($gateway_3)) { $msg .= "Please provide: Alternat 2<br>\n"; }
+			if (empty($dialplan_expression)) { $msg .= $text['message-provide'].": ".$text['label-dialplan-expression']."<br>\n"; }
+			//if (empty($dialplan_name)) { $msg .= "Please provide: Extension Name<br>\n"; }
+			//if (empty($condition_field_1)) { $msg .= "Please provide: Condition Field<br>\n"; }
+			//if (empty($condition_expression_1)) { $msg .= "Please provide: Condition Expression<br>\n"; }
+			//if (empty($limit)) { $msg .= "Please provide: Limit<br>\n"; }
+			//if (empty($dialplan_enabled)) { $msg .= "Please provide: Enabled True or False<br>\n"; }
+			//if (empty($description)) { $msg .= "Please provide: Description<br>\n"; }
+			if (strlen($msg) > 0 && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -383,7 +383,7 @@
 						}
 
 						if ($gateway_type == "enum") {
-							if (strlen($bridge_2_data) == 0) {
+							if (empty($bridge_2_data)) {
 								$dialplan_name = "enum.".$abbrv;
 							}
 							else {
@@ -412,7 +412,7 @@
 							$bridge_3_data = $gateway_array[1];
 						}
 
-						if (strlen($dialplan_order) == 0) {
+						if (empty($dialplan_order)) {
 							$dialplan_order ='333';
 						}
 						$dialplan_context = $_SESSION['domain_name'];
@@ -986,7 +986,7 @@ function type_onchange(dialplan_detail_type) {
 						break;
 					}
 				}
-				if (strlen($domain_name) == 0) { $domain_name = $text['label-global']; }
+				if (empty($domain_name)) { $domain_name = $text['label-global']; }
 				echo "</optgroup>";
 				echo "<optgroup label='&nbsp; &nbsp;".$domain_name."'>\n";
 			}
@@ -1046,7 +1046,7 @@ function type_onchange(dialplan_detail_type) {
 						break;
 					}
 				}
-				if (strlen($domain_name) == 0) { $domain_name = $text['label-global']; }
+				if (empty($domain_name)) { $domain_name = $text['label-global']; }
 				echo "	</optgroup>\n";
 				echo "	<optgroup label='&nbsp; &nbsp;".$domain_name."'>\n";
 			}
@@ -1106,7 +1106,7 @@ function type_onchange(dialplan_detail_type) {
 						break;
 					}
 				}
-				if (strlen($domain_name) == 0) { $domain_name = $text['label-global']; }
+				if (empty($domain_name)) { $domain_name = $text['label-global']; }
 				echo "	</optgroup>\n";
 				echo "	<optgroup label='&nbsp; &nbsp;".$domain_name."'>\n";
 			}

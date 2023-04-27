@@ -187,7 +187,7 @@ class text {
 				if ($app_path == 'resources') {
 					foreach($this->languages as $language) {
 						$label = array_shift($text["language-$language"]);
-						if (strlen($label) == 0)
+						if (empty($label))
 							$label = $language;
 						$text["language-$language"]['en-us'] = $label;
 					}
@@ -210,7 +210,7 @@ class text {
 						if (strlen($target_lang) == 11)
 							$spacer = "   ";
 						$language_name = $this->escape_str(array_shift($text[$lang_label]));
-						if (strlen($language_name) == 0)
+						if (empty($language_name))
 							$language_name = $this->escape_str($target_lang);
 						fwrite($lang_file, "\$text['language-$target_lang'$spacer]['en-us'] = \"$language_name\";\n");
 					}
@@ -233,7 +233,7 @@ class text {
 										$spacer = "   ";
 									if (array_key_exists($lang_code, $text[$lang_label]))
 										$value = $text[$lang_label][$lang_code];
-									if (strlen($value) == 0 and array_key_exists($target_lang, $this->legacy_map)) {
+									if (empty($value) and array_key_exists($target_lang, $this->legacy_map)) {
 										$value = $text[$lang_label][$this->legacy_map[$target_lang]];
 									}
 									$base_code = substr($target_lang, 0, 2);
@@ -244,7 +244,7 @@ class text {
 									) {
 										$append = " //copied from ".$this->legacy_map[$base_code];
 									}
-									if (strlen($value) == 0) {
+									if (empty($value)) {
 										foreach($this->languages as $lang_code) {
 											if (substr($lang_code, 0, 2) == $base_code and strlen($text[$lang_label][$lang_code]) > 0) {
 												$value = $text[$lang_label][$lang_code];
@@ -253,7 +253,7 @@ class text {
 											}
 										}
 									}
-									if(strlen($append) == 0 && array_key_exists($comment, $lang_label) && array_key_exists($comment[$lang_label], $lang_code)) {
+									if(empty($append) && array_key_exists($comment, $lang_label) && array_key_exists($comment[$lang_label], $lang_code)) {
 										$append = " //$comment[$lang_label][$lang_code]";
 									}
 									fwrite($lang_file, "\$text['$lang_label']['$target_lang'$spacer] = \"".$this->escape_str($value)."\";$append\n");

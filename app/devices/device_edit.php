@@ -187,15 +187,15 @@
 		//check for all required data
 			$msg = '';
 			if (empty($device_mac_address)) { $msg .= $text['message-required'].$text['label-device_mac_address']."<br>\n"; }
-			//if (strlen($device_label) == 0) { $msg .= "Please provide: Label<br>\n"; }
-			//if (strlen($device_vendor) == 0) { $msg .= "Please provide: Vendor<br>\n"; }
-			//if (strlen($device_model) == 0) { $msg .= "Please provide: Model<br>\n"; }
-			//if (strlen($device_firmware_version) == 0) { $msg .= "Please provide: Firmware Version<br>\n"; }
-			//if (strlen($device_enabled) == 0) { $msg .= "Please provide: Enabled<br>\n"; }
-			//if (strlen($device_template) == 0) { $msg .= "Please provide: Template<br>\n"; }
-			//if (strlen($device_username) == 0) { $msg .= "Please provide: Username<br>\n"; }
-			//if (strlen($device_password) == 0) { $msg .= "Please provide: Password<br>\n"; }
-			//if (strlen($device_description) == 0) { $msg .= "Please provide: Description<br>\n"; }
+			//if (empty($device_label)) { $msg .= "Please provide: Label<br>\n"; }
+			//if (empty($device_vendor)) { $msg .= "Please provide: Vendor<br>\n"; }
+			//if (empty($device_model)) { $msg .= "Please provide: Model<br>\n"; }
+			//if (empty($device_firmware_version)) { $msg .= "Please provide: Firmware Version<br>\n"; }
+			//if (empty($device_enabled)) { $msg .= "Please provide: Enabled<br>\n"; }
+			//if (empty($device_template)) { $msg .= "Please provide: Template<br>\n"; }
+			//if (empty($device_username)) { $msg .= "Please provide: Username<br>\n"; }
+			//if (empty($device_password)) { $msg .= "Please provide: Password<br>\n"; }
+			//if (empty($device_description)) { $msg .= "Please provide: Description<br>\n"; }
 			if (!empty($msg)) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";

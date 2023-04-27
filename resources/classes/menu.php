@@ -476,7 +476,7 @@ if (!class_exists('menu')) {
 										foreach ($language->languages as $menu_language) {
 											//set the menu item title
 												$menu_item_title = $menu["title"][$menu_language];
-												if (strlen($menu_item_title) == 0) {
+												if (empty($menu_item_title)) {
 													$menu_item_title = $menu["title"]['en-us'];
 												}
 
@@ -623,7 +623,7 @@ if (!class_exists('menu')) {
 						if (!isset($_SESSION["username"])) {
 							$_SESSION["username"] = '';
 						}
-						if (strlen($_SESSION["username"]) == 0) {
+						if (empty($_SESSION["username"])) {
 							$menu_html .= "<a $menu_tags style='padding: 0px 0px; border-style: none; background: none;'><h2 align='center' style=''>".$menu_item_title."</h2></a>\n";
 						}
 						else {
@@ -631,7 +631,7 @@ if (!class_exists('menu')) {
 								//hide login and sign-up when the user is logged in
 							}
 							else {
-								if (strlen($submenu_item_link) == 0) {
+								if (empty($submenu_item_link)) {
 									$menu_html .= "<h2 align='center' style=''>".$menu_item_title."</h2>\n";
 								}
 								else {

@@ -92,7 +92,7 @@
 		}
 	}
 
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 
 		//validate the token
 			$token = new token;
@@ -103,11 +103,11 @@
 			}
 
 		//check for all required data
-			//if (strlen($domain_uuid) == 0) { $msg .= $text['label-required-domain_uuid']."<br>\n"; }
-	 		if (strlen($dialplan_name) == 0) { $msg .= $text['label-required-dialplan_name']."<br>\n"; }
-	 		if (strlen($dialplan_number) == 0) { $msg .= $text['label-required-dialplan_number']."<br>\n"; }
-	 		//if (strlen($dialplan_action) == 0) { $msg .= $text['label-required-action']."<br>\n"; }
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+			//if (empty($domain_uuid)) { $msg .= $text['label-required-domain_uuid']."<br>\n"; }
+	 		if (empty($dialplan_name)) { $msg .= $text['label-required-dialplan_name']."<br>\n"; }
+	 		if (empty($dialplan_number)) { $msg .= $text['label-required-dialplan_number']."<br>\n"; }
+	 		//if (empty($dialplan_action)) { $msg .= $text['label-required-action']."<br>\n"; }
+			if (strlen($msg) > 0 && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -663,8 +663,8 @@
 	}
 
 //set the defaults
-	if (strlen($dialplan_context) == 0) { $dialplan_context = $_SESSION['domain_name']; }
-	if (strlen($dialplan_enabled) == 0) { $dialplan_enabled = 'true'; }
+	if (empty($dialplan_context)) { $dialplan_context = $_SESSION['domain_name']; }
+	if (empty($dialplan_enabled)) { $dialplan_enabled = 'true'; }
 
 //create token
 	$object = new token;
@@ -1233,7 +1233,7 @@ if ($action == 'update') {
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "    <select class='formfld' name='domain_uuid'>\n";
-		if (strlen($domain_uuid) == 0) {
+		if (empty($domain_uuid)) {
 			echo "    <option value='' selected='selected'>".$text['label-global']."</option>\n";
 		}
 		else {

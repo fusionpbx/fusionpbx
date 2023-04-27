@@ -240,7 +240,7 @@
 			//}
 			//unset($tmp_user);
 
-			if (strlen($password) == 0) {
+			if (empty($password)) {
 				$password = generate_password();
 			}
 
@@ -509,7 +509,7 @@
 					$tmp_array = explode(",", $call_group);
 					foreach ($tmp_array as &$tmp_call_group) {
 						if (strlen($tmp_call_group) > 0) {
-							if (strlen($call_group_array[$tmp_call_group]) == 0) {
+							if (empty($call_group_array[$tmp_call_group])) {
 								$call_group_array[$tmp_call_group] = $row['extension'];
 							}
 							else {

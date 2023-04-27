@@ -118,7 +118,7 @@
 	$param = "&search=".$search;
 	$param = ($_GET['show'] == 'all' && permission_exists('stream_all')) ? "&show=all" : null;
 	$page = is_numeric($_GET['page']) ? $_GET['page'] : 0;
-	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
+	if (empty($page)) { $page = 0; $_GET['page'] = 0; }
 	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
 	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
 	$offset = $rows_per_page * $page;

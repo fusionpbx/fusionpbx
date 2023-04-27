@@ -78,7 +78,7 @@
 
 /*
 //if the $_GET array exists then process it
-	if (count($_GET) > 0 && strlen($_GET["search"]) == 0) {
+	if (count($_GET) > 0 && empty($_GET["search"])) {
 		//get http GET variables and set them as php variables
 			$conference_room_uuid = $_GET["conference_room_uuid"];
 			$record = $_GET["record"];

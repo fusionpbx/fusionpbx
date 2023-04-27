@@ -87,7 +87,7 @@
 	}
 
 //process the user data and save it to the database
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 
 		//get the uuid from the POST
 			if ($action == "update") {
@@ -104,12 +104,12 @@
 
 		//check for all required data
 			$msg = '';
-			//if (strlen($sip_profile_uuid) == 0) { $msg .= $text['message-required']." ".$text['label-sip_profile_uuid']."<br>\n"; }
-			if (strlen($sip_profile_name) == 0) { $msg .= $text['message-required']." ".$text['label-sip_profile_name']."<br>\n"; }
-			//if (strlen($sip_profile_hostname) == 0) { $msg .= $text['message-required']." ".$text['label-sip_profile_hostname']."<br>\n"; }
-			if (strlen($sip_profile_enabled) == 0) { $msg .= $text['message-required']." ".$text['label-sip_profile_enabled']."<br>\n"; }
-			if (strlen($sip_profile_description) == 0) { $msg .= $text['message-required']." ".$text['label-sip_profile_description']."<br>\n"; }
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+			//if (empty($sip_profile_uuid)) { $msg .= $text['message-required']." ".$text['label-sip_profile_uuid']."<br>\n"; }
+			if (empty($sip_profile_name)) { $msg .= $text['message-required']." ".$text['label-sip_profile_name']."<br>\n"; }
+			//if (empty($sip_profile_hostname)) { $msg .= $text['message-required']." ".$text['label-sip_profile_hostname']."<br>\n"; }
+			if (empty($sip_profile_enabled)) { $msg .= $text['message-required']." ".$text['label-sip_profile_enabled']."<br>\n"; }
+			if (empty($sip_profile_description)) { $msg .= $text['message-required']." ".$text['label-sip_profile_description']."<br>\n"; }
+			if (strlen($msg) > 0 && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -283,7 +283,7 @@
 	}
 
 //set the defaults
-	if (strlen($sip_profile_enabled) == 0) { $sip_profile_enabled = 'true'; }
+	if (empty($sip_profile_enabled)) { $sip_profile_enabled = 'true'; }
 
 //get the child data
 	$sql = "select * from v_sip_profile_settings ";

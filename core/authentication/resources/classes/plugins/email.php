@@ -133,7 +133,7 @@ class plugin_email {
 				$_SESSION["contact_uuid"] = $row["contact_uuid"];
 
 				//user email not found
-				if (strlen($row["user_email"]) == 0) {
+				if (empty($row["user_email"])) {
 					//build the result array
 					$result["plugin"] = "email";
 					$result["domain_name"] = $_SESSION["domain_name"];

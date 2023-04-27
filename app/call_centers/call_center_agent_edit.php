@@ -101,7 +101,7 @@
 	}
 
 //process the user data and save it to the database
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 
 		//validate the token
 			$token = new token;
@@ -113,23 +113,23 @@
 
 		//check for all required data
 			$msg = '';
-			//if (strlen($call_center_agent_uuid) == 0) { $msg .= $text['message-required']." ".$text['label-call_center_agent_uuid']."<br>\n"; }
-			//if (strlen($domain_uuid) == 0) { $msg .= $text['message-required']." ".$text['label-domain_uuid']."<br>\n"; }
-			//if (strlen($user_uuid) == 0) { $msg .= $text['message-required']." ".$text['label-user_uuid']."<br>\n"; }
-			if (strlen($agent_name) == 0) { $msg .= $text['message-required']." ".$text['label-agent_name']."<br>\n"; }
-			if (strlen($agent_type) == 0) { $msg .= $text['message-required']." ".$text['label-agent_type']."<br>\n"; }
-			if (strlen($agent_call_timeout) == 0) { $msg .= $text['message-required']." ".$text['label-agent_call_timeout']."<br>\n"; }
-			//if (strlen($agent_id) == 0) { $msg .= $text['message-required']." ".$text['label-agent_id']."<br>\n"; }
-			//if (strlen($agent_password) == 0) { $msg .= $text['message-required']." ".$text['label-agent_password']."<br>\n"; }
-			//if (strlen($agent_status) == 0) { $msg .= $text['message-required']." ".$text['label-agent_status']."<br>\n"; }
-			if (strlen($agent_contact) == 0) { $msg .= $text['message-required']." ".$text['label-agent_contact']."<br>\n"; }
-			if (strlen($agent_no_answer_delay_time) == 0) { $msg .= $text['message-required']." ".$text['label-agent_no_answer_delay_time']."<br>\n"; }
-			if (strlen($agent_max_no_answer) == 0) { $msg .= $text['message-required']." ".$text['label-agent_max_no_answer']."<br>\n"; }
-			if (strlen($agent_wrap_up_time) == 0) { $msg .= $text['message-required']." ".$text['label-agent_wrap_up_time']."<br>\n"; }
-			if (strlen($agent_reject_delay_time) == 0) { $msg .= $text['message-required']." ".$text['label-agent_reject_delay_time']."<br>\n"; }
-			if (strlen($agent_busy_delay_time) == 0) { $msg .= $text['message-required']." ".$text['label-agent_busy_delay_time']."<br>\n"; }
-			//if (strlen($agent_logout) == 0) { $msg .= $text['message-required']." ".$text['label-agent_logout']."<br>\n"; }
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+			//if (empty($call_center_agent_uuid)) { $msg .= $text['message-required']." ".$text['label-call_center_agent_uuid']."<br>\n"; }
+			//if (empty($domain_uuid)) { $msg .= $text['message-required']." ".$text['label-domain_uuid']."<br>\n"; }
+			//if (empty($user_uuid)) { $msg .= $text['message-required']." ".$text['label-user_uuid']."<br>\n"; }
+			if (empty($agent_name)) { $msg .= $text['message-required']." ".$text['label-agent_name']."<br>\n"; }
+			if (empty($agent_type)) { $msg .= $text['message-required']." ".$text['label-agent_type']."<br>\n"; }
+			if (empty($agent_call_timeout)) { $msg .= $text['message-required']." ".$text['label-agent_call_timeout']."<br>\n"; }
+			//if (empty($agent_id)) { $msg .= $text['message-required']." ".$text['label-agent_id']."<br>\n"; }
+			//if (empty($agent_password)) { $msg .= $text['message-required']." ".$text['label-agent_password']."<br>\n"; }
+			//if (empty($agent_status)) { $msg .= $text['message-required']." ".$text['label-agent_status']."<br>\n"; }
+			if (empty($agent_contact)) { $msg .= $text['message-required']." ".$text['label-agent_contact']."<br>\n"; }
+			if (empty($agent_no_answer_delay_time)) { $msg .= $text['message-required']." ".$text['label-agent_no_answer_delay_time']."<br>\n"; }
+			if (empty($agent_max_no_answer)) { $msg .= $text['message-required']." ".$text['label-agent_max_no_answer']."<br>\n"; }
+			if (empty($agent_wrap_up_time)) { $msg .= $text['message-required']." ".$text['label-agent_wrap_up_time']."<br>\n"; }
+			if (empty($agent_reject_delay_time)) { $msg .= $text['message-required']." ".$text['label-agent_reject_delay_time']."<br>\n"; }
+			if (empty($agent_busy_delay_time)) { $msg .= $text['message-required']." ".$text['label-agent_busy_delay_time']."<br>\n"; }
+			//if (empty($agent_logout)) { $msg .= $text['message-required']." ".$text['label-agent_logout']."<br>\n"; }
+			if (strlen($msg) > 0 && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -143,7 +143,7 @@
 			}
 
 		//add the call_center_agent_uuid
-			if (strlen($call_center_agent_uuid) == 0) {
+			if (empty($call_center_agent_uuid)) {
 				$call_center_agent_uuid = uuid();
 			}
 
@@ -278,7 +278,7 @@
 				header("Location: call_center_agents.php");
 				return;
 			}
-	} //(is_array($_POST) && strlen($_POST["persistformvar"]) == 0)
+	} //(is_array($_POST) && empty($_POST["persistformvar"]))
 
 //initialize the destinations object
 	$destination = new destinations;

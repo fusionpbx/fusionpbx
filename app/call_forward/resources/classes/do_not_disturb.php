@@ -79,8 +79,8 @@
 					if (is_uuid($this->extension_uuid)) {
 						$this->extension_uuid = $row["extension_uuid"];
 					}
-					if (strlen($this->extension) == 0) {
-						if (strlen($row["number_alias"]) == 0) {
+					if (empty($this->extension)) {
+						if (empty($row["number_alias"])) {
 							$this->extension = $row["extension"];
 						}
 						else {

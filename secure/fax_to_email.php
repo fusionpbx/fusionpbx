@@ -423,7 +423,7 @@ if (!function_exists('fax_split_dtmf')) {
 				fax_split_dtmf($fax_forward_number, $fax_dtmf);
 
 				$fax_send_mode = $_SESSION['fax']['send_mode']['text'];
-				if (strlen($fax_send_mode) == 0) {
+				if (empty($fax_send_mode)) {
 					$fax_send_mode = 'direct';
 				}
 

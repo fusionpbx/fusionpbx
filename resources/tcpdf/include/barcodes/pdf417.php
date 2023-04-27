@@ -839,7 +839,7 @@ class PDF417 {
 							// add BYTE sequence
 							if ((strlen($prevtxtseq) == 1) AND ((count($sequence_array) > 0) AND ($sequence_array[(count($sequence_array) - 1)][0] == 900))) {
 								$sequence_array[] = array(913, $prevtxtseq);
-							} elseif ((strlen($prevtxtseq) % 6) == 0) {
+							} elseif ((empty($prevtxtseq) % 6)) {
 								$sequence_array[] = array(924, $prevtxtseq);
 							} else {
 								$sequence_array[] = array(901, $prevtxtseq);

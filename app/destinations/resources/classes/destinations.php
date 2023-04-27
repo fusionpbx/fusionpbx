@@ -375,7 +375,7 @@ if (!class_exists('destinations')) {
 										foreach ($keys as $k) {
 											if (strlen($data[$k]) > 0) {
 												$select_value = str_replace("\${".$key."}", $data[$k], $select_value);
-												if (strlen($data['label']) == 0) {
+												if (empty($data['label'])) {
 													$select_label = str_replace("\${".$key."}", $data[$k], $select_label);
 												}
 												else {
@@ -690,7 +690,7 @@ if (!class_exists('destinations')) {
 									foreach ($keys as $k) {
 										if (strlen($data[$k]) > 0) {
 											$select_value = str_replace("\${".$key."}", $data[$k], $select_value);
-											if (strlen($data['label']) == 0) {
+											if (empty($data['label'])) {
 												$select_label = str_replace("\${".$key."}", $data[$k], $select_label);
 											}
 											else {
@@ -702,7 +702,7 @@ if (!class_exists('destinations')) {
 								}
 								else {
 									$select_value = str_replace("\${".$key."}", $data[$key], $select_value);
-									if (strlen($data['label']) == 0) {
+									if (empty($data['label'])) {
 										$select_label = str_replace("\${".$key."}", $data[$key], $select_label);
 									}
 									else {
@@ -904,7 +904,7 @@ if (!class_exists('destinations')) {
 									foreach ($keys as $k) {
 										if (strlen($data[$k]) > 0) {
 											$select_value = str_replace("\${".$key."}", $data[$k], $select_value);
-											if (strlen($data['label']) == 0) {
+											if (empty($data['label'])) {
 												$select_label = str_replace("\${".$key."}", $data[$k], $select_label);
 											}
 											else {
@@ -916,7 +916,7 @@ if (!class_exists('destinations')) {
 								}
 								else {
 									$select_value = str_replace("\${".$key."}", $data[$key], $select_value);
-									if (strlen($data['label']) == 0) {
+									if (empty($data['label'])) {
 										$select_label = str_replace("\${".$key."}", $data[$key], $select_label);
 									}
 									else {

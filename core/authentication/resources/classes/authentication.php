@@ -321,7 +321,7 @@ class authentication {
 							$category = $row['user_setting_category'];
 							$subcategory = $row['user_setting_subcategory'];
 							if (strlen($row['user_setting_value']) > 0) {
-								if (strlen($subcategory) == 0) {
+								if (empty($subcategory)) {
 									//$$category[$name] = $row['domain_setting_value'];
 									if ($name == "array") {
 										$_SESSION[$category][] = $row['user_setting_value'];

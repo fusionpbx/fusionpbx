@@ -142,7 +142,7 @@
 	}
 
 //process the http post
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 
 		//initialize the destinations object
 			$destination = new destinations;
@@ -151,10 +151,10 @@
 			}
 
 		//set the default context
-			if ($destination_type =="inbound" && strlen($destination_context) == 0) {
+			if ($destination_type =="inbound" && empty($destination_context)) {
 				$destination_context = 'public';
 			}
-			if ($destination_type =="outbound" && strlen($destination_context) == 0) {
+			if ($destination_type =="outbound" && empty($destination_context)) {
 				$destination_context = $_SESSION['domain_name'];
 			}
 
@@ -183,11 +183,11 @@
 
 		//check for all required data
 			$msg = '';
-			if (strlen($destination_type) == 0) { $msg .= $text['message-required']." ".$text['label-destination_type']."<br>\n"; }
-			//if (strlen($destination_prefix) == 0 && permission_exists('destination_prefix')) { $msg .= $text['message-required']." ".$text['label-destination_country_code']."<br>\n"; }
-			if (strlen($destination_number) == 0) { $msg .= $text['message-required']." ".$text['label-destination_number']."<br>\n"; }
-			if (strlen($destination_context) == 0) { $msg .= $text['message-required']." ".$text['label-destination_context']."<br>\n"; }
-			if (strlen($destination_enabled) == 0) { $msg .= $text['message-required']." ".$text['label-destination_enabled']."<br>\n"; }
+			if (empty($destination_type)) { $msg .= $text['message-required']." ".$text['label-destination_type']."<br>\n"; }
+			//if (empty($destination_prefix) && permission_exists('destination_prefix')) { $msg .= $text['message-required']." ".$text['label-destination_country_code']."<br>\n"; }
+			if (empty($destination_number)) { $msg .= $text['message-required']." ".$text['label-destination_number']."<br>\n"; }
+			if (empty($destination_context)) { $msg .= $text['message-required']." ".$text['label-destination_context']."<br>\n"; }
+			if (empty($destination_enabled)) { $msg .= $text['message-required']." ".$text['label-destination_enabled']."<br>\n"; }
 
 		//check for duplicates
 			if ($destination_type == 'inbound' && $destination_number != $db_destination_number && $_SESSION['destinations']['unique']['boolean'] == 'true') {
@@ -204,7 +204,7 @@
 			}
 
 		//show the message
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+			if (strlen($msg) > 0 && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -345,7 +345,7 @@
 					if (is_array($dialplan_details)) {
 						foreach ($dialplan_details as $index => $row) {
 							//unset the empty row
-							if (strlen($row["dialplan_detail_data"]) == 0) {
+							if (empty($row["dialplan_detail_data"])) {
 								unset($dialplan_details[$index]);
 							}
 						}
@@ -1148,10 +1148,10 @@
 	}
 
 //set the defaults
-	if (strlen($destination_order) == 0) { $destination_order = '100'; }
-	if (strlen($destination_type) == 0) { $destination_type = 'inbound'; }
-	if (strlen($destination_context) == 0) { $destination_context = 'public'; }
-	if (strlen($destination_enabled) == 0) { $destination_enabled = 'true'; }
+	if (empty($destination_order)) { $destination_order = '100'; }
+	if (empty($destination_type)) { $destination_type = 'inbound'; }
+	if (empty($destination_context)) { $destination_context = 'public'; }
+	if (empty($destination_enabled)) { $destination_enabled = 'true'; }
 	if ($destination_type =="outbound") { $destination_context = $_SESSION['domain_name']; }
 	if ($destination_type =="local") { $destination_context = $_SESSION['domain_name']; }
 
@@ -1703,7 +1703,7 @@
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "    <select class='formfld' name='domain_uuid' id='destination_domain' onchange='context_control();'>\n";
-		if (strlen($domain_uuid) == 0) {
+		if (empty($domain_uuid)) {
 			echo "    <option value='' selected='selected'>".$text['select-global']."</option>\n";
 		}
 		else {

@@ -470,7 +470,7 @@ if (!class_exists('domains')) {
 						$name = $row['default_setting_name'];
 						$category = $row['default_setting_category'];
 						$subcategory = $row['default_setting_subcategory'];
-						if (strlen($subcategory) == 0) {
+						if (empty($subcategory)) {
 							if ($name == "array") {
 								$_SESSION[$category][] = $row['default_setting_value'];
 							}
@@ -522,7 +522,7 @@ if (!class_exists('domains')) {
 						$name = $row['domain_setting_name'];
 						$category = $row['domain_setting_category'];
 						$subcategory = $row['domain_setting_subcategory'];
-						if (strlen($subcategory) == 0) {
+						if (empty($subcategory)) {
 							//$$category[$name] = $row['domain_setting_value'];
 							if ($name == "array") {
 								$_SESSION[$category][] = $row['domain_setting_value'];
@@ -560,7 +560,7 @@ if (!class_exists('domains')) {
 								$category = $row['user_setting_category'];
 								$subcategory = $row['user_setting_subcategory'];
 								if (strlen($row['user_setting_value']) > 0) {
-									if (strlen($subcategory) == 0) {
+									if (empty($subcategory)) {
 										//$$category[$name] = $row['domain_setting_value'];
 										if ($name == "array") {
 											$_SESSION[$category][] = $row['user_setting_value'];
@@ -703,7 +703,7 @@ if (!class_exists('domains')) {
 							$name = $row['default_setting_name'];
 							$category = $row['default_setting_category'];
 							$subcategory = $row['default_setting_subcategory'];
-							if (strlen($subcategory) == 0) {
+							if (empty($subcategory)) {
 								if ($name == "array") {
 									$_SESSION[$category][] = $row['default_setting_value'];
 								}
@@ -728,7 +728,7 @@ if (!class_exists('domains')) {
 								$name = $row['domain_setting_name'];
 								$category = $row['domain_setting_category'];
 								$subcategory = $row['domain_setting_subcategory'];
-								if (strlen($subcategory) == 0) {
+								if (empty($subcategory)) {
 									//$$category[$name] = $row['domain_setting_value'];
 									$_SESSION[$category][$name] = $row['domain_setting_value'];
 								}

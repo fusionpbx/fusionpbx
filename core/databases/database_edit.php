@@ -78,7 +78,7 @@
 		$database_description = $_POST["database_description"];
 	}
 
-if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
+if (count($_POST)>0 && empty($_POST["persistformvar"])) {
 
 	$msg = '';
 	if ($action == "update") {
@@ -109,16 +109,16 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		}
 
 	//check for all required data
-		//if (strlen($database_driver) == 0) { $msg .= $text['message-required'].$text['label-driver']."<br>\n"; }
-		//if (strlen($database_type) == 0) { $msg .= $text['message-required'].$text['label-type']."<br>\n"; }
-		//if (strlen($database_host) == 0) { $msg .= $text['message-required'].$text['label-host']."<br>\n"; }
-		//if (strlen($database_port) == 0) { $msg .= $text['message-required'].$text['label-port']."<br>\n"; }
-		//if (strlen($database_name) == 0) { $msg .= $text['message-required'].$text['label-name']."<br>\n"; }
-		//if (strlen($database_username) == 0) { $msg .= $text['message-required'].$text['label-username']."<br>\n"; }
-		//if (strlen($database_password) == 0) { $msg .= $text['message-required'].$text['label-password']."<br>\n"; }
-		//if (strlen($database_path) == 0) { $msg .= $text['message-required'].$text['label-path']."<br>\n"; }
-		//if (strlen($database_description) == 0) { $msg .= $text['message-required'].$text['label-description']."<br>\n"; }
-		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+		//if (empty($database_driver)) { $msg .= $text['message-required'].$text['label-driver']."<br>\n"; }
+		//if (empty($database_type)) { $msg .= $text['message-required'].$text['label-type']."<br>\n"; }
+		//if (empty($database_host)) { $msg .= $text['message-required'].$text['label-host']."<br>\n"; }
+		//if (empty($database_port)) { $msg .= $text['message-required'].$text['label-port']."<br>\n"; }
+		//if (empty($database_name)) { $msg .= $text['message-required'].$text['label-name']."<br>\n"; }
+		//if (empty($database_username)) { $msg .= $text['message-required'].$text['label-username']."<br>\n"; }
+		//if (empty($database_password)) { $msg .= $text['message-required'].$text['label-password']."<br>\n"; }
+		//if (empty($database_path)) { $msg .= $text['message-required'].$text['label-path']."<br>\n"; }
+		//if (empty($database_description)) { $msg .= $text['message-required'].$text['label-description']."<br>\n"; }
+		if (strlen($msg) > 0 && empty($_POST["persistformvar"])) {
 			require_once "resources/header.php";
 			require_once "resources/persist_form_var.php";
 			echo "<div align='center'>\n";

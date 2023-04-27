@@ -91,7 +91,7 @@
 	}
 
 //process the user data and save it to the database
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 
 		//get the uuid from the POST
 			if ($action == "update") {
@@ -108,25 +108,25 @@
 
 		//check for all required data
 			$msg = '';
-			//if (strlen($domain_uuid) == 0) { $msg .= $text['message-required']." ".$text['label-domain_uuid']."<br>\n"; }
-			//if (strlen($call_flow_uuid) == 0) { $msg .= $text['message-required']." ".$text['label-call_flow_uuid']."<br>\n"; }
-			//if (strlen($dialplan_uuid) == 0) { $msg .= $text['message-required']." ".$text['label-dialplan_uuid']."<br>\n"; }
-			//if (strlen($call_flow_name) == 0) { $msg .= $text['message-required']." ".$text['label-call_flow_name']."<br>\n"; }
-			if (strlen($call_flow_extension) == 0) { $msg .= $text['message-required']." ".$text['label-call_flow_extension']."<br>\n"; }
-			if (strlen($call_flow_feature_code) == 0) { $msg .= $text['message-required']." ".$text['label-call_flow_feature_code']."<br>\n"; }
-			//if (strlen($call_flow_context) == 0) { $msg .= $text['message-required']." ".$text['label-call_flow_context']."<br>\n"; }
-			//if (strlen($call_flow_status) == 0) { $msg .= $text['message-required']." ".$text['label-call_flow_status']."<br>\n"; }
-			//if (strlen($call_flow_pin_number) == 0) { $msg .= $text['message-required']." ".$text['label-call_flow_pin_number']."<br>\n"; }
-			//if (strlen($call_flow_label) == 0) { $msg .= $text['message-required']." ".$text['label-call_flow_label']."<br>\n"; }
-			//if (strlen($call_flow_sound) == 0) { $msg .= $text['message-required']." ".$text['label-call_flow_sound']."<br>\n"; }
-			if (strlen($call_flow_app) == 0) { $msg .= $text['message-required']." ".$text['label-call_flow_app']."<br>\n"; }
-			if (strlen($call_flow_data) == 0) { $msg .= $text['message-required']." ".$text['label-call_flow_data']."<br>\n"; }
-			//if (strlen($call_flow_alternate_label) == 0) { $msg .= $text['message-required']." ".$text['label-call_flow_alternate_label']."<br>\n"; }
-			//if (strlen($call_flow_alternate_sound) == 0) { $msg .= $text['message-required']." ".$text['label-call_flow_alternate_sound']."<br>\n"; }
-			//if (strlen($call_flow_alternate_app) == 0) { $msg .= $text['message-required']." ".$text['label-call_flow_alternate_app']."<br>\n"; }
-			//if (strlen($call_flow_alternate_data) == 0) { $msg .= $text['message-required']." ".$text['label-call_flow_alternate_data']."<br>\n"; }
-			//if (strlen($call_flow_description) == 0) { $msg .= $text['message-required']." ".$text['label-call_flow_description']."<br>\n"; }
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+			//if (empty($domain_uuid)) { $msg .= $text['message-required']." ".$text['label-domain_uuid']."<br>\n"; }
+			//if (empty($call_flow_uuid)) { $msg .= $text['message-required']." ".$text['label-call_flow_uuid']."<br>\n"; }
+			//if (empty($dialplan_uuid)) { $msg .= $text['message-required']." ".$text['label-dialplan_uuid']."<br>\n"; }
+			//if (empty($call_flow_name)) { $msg .= $text['message-required']." ".$text['label-call_flow_name']."<br>\n"; }
+			if (empty($call_flow_extension)) { $msg .= $text['message-required']." ".$text['label-call_flow_extension']."<br>\n"; }
+			if (empty($call_flow_feature_code)) { $msg .= $text['message-required']." ".$text['label-call_flow_feature_code']."<br>\n"; }
+			//if (empty($call_flow_context)) { $msg .= $text['message-required']." ".$text['label-call_flow_context']."<br>\n"; }
+			//if (empty($call_flow_status)) { $msg .= $text['message-required']." ".$text['label-call_flow_status']."<br>\n"; }
+			//if (empty($call_flow_pin_number)) { $msg .= $text['message-required']." ".$text['label-call_flow_pin_number']."<br>\n"; }
+			//if (empty($call_flow_label)) { $msg .= $text['message-required']." ".$text['label-call_flow_label']."<br>\n"; }
+			//if (empty($call_flow_sound)) { $msg .= $text['message-required']." ".$text['label-call_flow_sound']."<br>\n"; }
+			if (empty($call_flow_app)) { $msg .= $text['message-required']." ".$text['label-call_flow_app']."<br>\n"; }
+			if (empty($call_flow_data)) { $msg .= $text['message-required']." ".$text['label-call_flow_data']."<br>\n"; }
+			//if (empty($call_flow_alternate_label)) { $msg .= $text['message-required']." ".$text['label-call_flow_alternate_label']."<br>\n"; }
+			//if (empty($call_flow_alternate_sound)) { $msg .= $text['message-required']." ".$text['label-call_flow_alternate_sound']."<br>\n"; }
+			//if (empty($call_flow_alternate_app)) { $msg .= $text['message-required']." ".$text['label-call_flow_alternate_app']."<br>\n"; }
+			//if (empty($call_flow_alternate_data)) { $msg .= $text['message-required']." ".$text['label-call_flow_alternate_data']."<br>\n"; }
+			//if (empty($call_flow_description)) { $msg .= $text['message-required']." ".$text['label-call_flow_description']."<br>\n"; }
+			if (strlen($msg) > 0 && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -299,7 +299,7 @@
 				header("Location: call_flows.php");
 				return;
 			}
-	} //(is_array($_POST) && strlen($_POST["persistformvar"]) == 0)
+	} //(is_array($_POST) && empty($_POST["persistformvar"]))
 
 //pre-populate the form
 	if (is_array($_GET) && $_POST["persistformvar"] != "true") {
@@ -352,12 +352,12 @@
 	}
 
 //set the context for users that are not in the superadmin group
-	if (strlen($call_flow_context) == 0) {
+	if (empty($call_flow_context)) {
 		$call_flow_context = $_SESSION['domain_name'];
 	}
 
 //set the defaults
-	if (strlen($call_flow_enabled) == 0) { $call_flow_enabled = 'true'; }
+	if (empty($call_flow_enabled)) { $call_flow_enabled = 'true'; }
 
 //get the recordings
 	$sql = "select recording_name, recording_filename from v_recordings ";

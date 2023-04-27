@@ -549,16 +549,16 @@ if (!class_exists('xml_cdr')) {
 						$domain_uuid = urldecode($xml->variables->domain_uuid);
 
 					//get the domain name
-						if (strlen($domain_name) == 0) {
+						if (empty($domain_name)) {
 							$domain_name = urldecode($xml->variables->dialed_domain);
 						}
-						if (strlen($domain_name) == 0) {
+						if (empty($domain_name)) {
 							$domain_name = urldecode($xml->variables->sip_invite_domain);
 						}
-						if (strlen($domain_name) == 0) {
+						if (empty($domain_name)) {
 							$domain_name = urldecode($xml->variables->sip_req_host);
 						}
-						if (strlen($domain_name) == 0) {
+						if (empty($domain_name)) {
 							$presence_id = urldecode($xml->variables->presence_id);
 							if (strlen($presence_id) > 0) {
 								$presence_array = explode($presence_id, '%40');
@@ -596,9 +596,9 @@ if (!class_exists('xml_cdr')) {
 						//$this->log("\ndomain_name is `$domain_name`;\ndomain_uuid is '$domain_uuid'\n");
 
 					//get the domain_uuid with the domain_name
-						if (strlen($domain_uuid) == 0) {
+						if (empty($domain_uuid)) {
 							$sql = "select domain_uuid from v_domains ";
-							if (strlen($domain_name) == 0 && $context != 'public' && $context != 'default') {
+							if (empty($domain_name) && $context != 'public' && $context != 'default') {
 								$sql .= "where domain_name = :context ";
 								$parameters['context'] = $context;
 							}
@@ -715,7 +715,7 @@ if (!class_exists('xml_cdr')) {
 						}
 
 					//last check
-						 if (!isset($record_name) || is_null ($record_name) || (strlen($record_name) == 0)) {
+						 if (!isset($record_name) || is_null ($record_name) || (empty($record_name))) {
 							$bridge_uuid = urldecode($xml->variables->bridge_uuid) ?: $last_bridge ;
 							$path = $_SESSION['switch']['recordings']['dir'].'/'.$domain_name.'/archive/'.$start_year.'/'.$start_month.'/'.$start_day;
 							if (file_exists($path.'/'.$bridge_uuid.'.wav')) {
@@ -983,7 +983,7 @@ if (!class_exists('xml_cdr')) {
 
 				//authentication for xml cdr http post
 					if (!defined('STDIN')) {
-						if ($_SESSION["cdr"]["http_enabled"]["boolean"] == "true" && strlen($_SESSION["xml_cdr"]["username"]) == 0) {
+						if ($_SESSION["cdr"]["http_enabled"]["boolean"] == "true" && empty($_SESSION["xml_cdr"]["username"])) {
 							//get the contents of xml_cdr.conf.xml
 								$conf_xml_string = file_get_contents($_SESSION['switch']['conf']['dir'].'/autoload_configs/xml_cdr.conf.xml');
 

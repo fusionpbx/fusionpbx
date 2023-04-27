@@ -55,7 +55,7 @@
 	}
 
 //process the user data and save it to the database
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 
 		//process the http post data by submitted action
 			if ($_POST['action'] != '' && is_uuid($_POST['device_profile_uuid'])) {
@@ -115,13 +115,13 @@
 
 		//check for all required data
 			$msg = '';
-			if (strlen($device_profile_name) == 0) { $msg .= $text['message-required']." ".$text['label-device_profile_name']."<br>\n"; }
-			//if (strlen($device_profile_keys) == 0) { $msg .= $text['message-required']." ".$text['label-device_profile_keys']."<br>\n"; }
-			//if (strlen($device_profile_settings) == 0) { $msg .= $text['message-required']." ".$text['label-device_profile_settings']."<br>\n"; }
-			//if (strlen($domain_uuid) == 0) { $msg .= $text['message-required']." ".$text['label-domain_uuid']."<br>\n"; }
-			if (strlen($device_profile_enabled) == 0) { $msg .= $text['message-required']." ".$text['label-device_profile_enabled']."<br>\n"; }
-			//if (strlen($device_profile_description) == 0) { $msg .= $text['message-required']." ".$text['label-device_profile_description']."<br>\n"; }
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+			if (empty($device_profile_name)) { $msg .= $text['message-required']." ".$text['label-device_profile_name']."<br>\n"; }
+			//if (empty($device_profile_keys)) { $msg .= $text['message-required']." ".$text['label-device_profile_keys']."<br>\n"; }
+			//if (empty($device_profile_settings)) { $msg .= $text['message-required']." ".$text['label-device_profile_settings']."<br>\n"; }
+			//if (empty($domain_uuid)) { $msg .= $text['message-required']." ".$text['label-domain_uuid']."<br>\n"; }
+			if (empty($device_profile_enabled)) { $msg .= $text['message-required']." ".$text['label-device_profile_enabled']."<br>\n"; }
+			//if (empty($device_profile_description)) { $msg .= $text['message-required']." ".$text['label-device_profile_description']."<br>\n"; }
+			if (strlen($msg) > 0 && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -135,7 +135,7 @@
 			}
 
 		//add the device_profile_uuid
-			if (strlen($_POST["device_profile_uuid"]) == 0) {
+			if (empty($_POST["device_profile_uuid"])) {
 				$device_profile_uuid = uuid();
 			}
 
@@ -246,7 +246,7 @@
 	}
 
 //set the defaults
-	if (strlen($device_profile_enabled) == 0) { $device_profile_enabled = 'true'; }
+	if (empty($device_profile_enabled)) { $device_profile_enabled = 'true'; }
 
 //get the child data
 	if (strlen($device_profile_uuid) > 0) {
@@ -316,7 +316,7 @@
 	unset($sql);
 
 //add the $device_profile_key_uuid
-	if (strlen($device_profile_key_uuid) == 0) {
+	if (empty($device_profile_key_uuid)) {
 		$device_profile_key_uuid = uuid();
 	}
 
@@ -361,7 +361,7 @@
 	}
 
 //add the $device_profile_setting_uuid
-	if (strlen($device_profile_setting_uuid) == 0) {
+	if (empty($device_profile_setting_uuid)) {
 		$device_profile_setting_uuid = uuid();
 	}
 
@@ -536,7 +536,7 @@
 		}
 		echo "					<option value='programmable' ".($row['profile_key_category'] == "programmable" ? "selected='selected'" : null).">".$text['label-programmable']."</option>\n";
 		if ($row['profile_key_vendor'] !== "polycom") { 
-			if (strlen($row['profile_key_vendor']) == 0) {
+			if (empty($row['profile_key_vendor'])) {
 				echo "					<option value='expansion' ".($row['profile_key_category'] == "expansion" ? "selected='selected'" : null).">".$text['label-expansion']."</option>\n";
 				echo "					<option value='expansion-1' ".($row['profile_key_category'] == "expansion-1" ? "selected='selected'" : null).">".$text['label-expansion']." 1</option>\n";
 				echo "					<option value='expansion-2' ".($row['profile_key_category'] == "expansion-2" ? "selected='selected'" : null).">".$text['label-expansion']." 2</option>\n";
@@ -591,7 +591,7 @@
 		$previous_vendor = '';
 		$i = 0;
 		foreach ($vendor_functions as $function) {
-			if (strlen($row['profile_key_vendor']) == 0 && $function['vendor_name'] != $previous_vendor) {
+			if (empty($row['profile_key_vendor']) && $function['vendor_name'] != $previous_vendor) {
 				if ($i > 0) { echo "	</optgroup>\n"; }
 				echo "					<optgroup label='".escape(ucwords($function['vendor_name']))."'>\n";
 			}
@@ -599,7 +599,7 @@
 			if ($row['profile_key_vendor'] == $function['vendor_name'] && $row['profile_key_type'] == $function['value']) {
 				$selected = "selected='selected'";
 			}
-			if (strlen($row['profile_key_vendor']) == 0) {
+			if (empty($row['profile_key_vendor'])) {
 				echo "					<option value='".escape($function['value'])."' vendor='".escape($function['vendor_name'])."' $selected >".$text['label-'.$function['type']]."</option>\n";
 			}
 			if (strlen($row['profile_key_vendor']) > 0 && $row['profile_key_vendor'] == $function['vendor_name']) {
@@ -608,7 +608,7 @@
 			$previous_vendor = $function['vendor_name'];
 			$i++;
 		}
-		if (strlen($row['profile_key_vendor']) == 0) {
+		if (empty($row['profile_key_vendor'])) {
 			echo "					</optgroup>\n";
 		}
 		echo "				</select>\n";

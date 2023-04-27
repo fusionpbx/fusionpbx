@@ -190,7 +190,7 @@ if (!class_exists('schema')) {
 
 		//get the table information
 			public function table_info($db_name, $table_name) {
-				if (strlen($table_name) == 0) { return false; }
+				if (empty($table_name)) { return false; }
 				if ($this->db_type == "sqlite") {
 					$sql = "PRAGMA table_info(".$table_name.");";
 				}
@@ -252,7 +252,7 @@ if (!class_exists('schema')) {
 
 		//database table information
 			private function db_table_info($db_name, $db_type, $table_name) {
-				if (strlen($table_name) == 0) { return false; }
+				if (empty($table_name)) { return false; }
 				if ($db_type == "sqlite") {
 					$sql = "PRAGMA table_info(".$table_name.");";
 				}
@@ -887,7 +887,7 @@ if (!class_exists('schema')) {
 
 					//loop line by line through all the lines of sql code
 						$x = 0;
-						if (strlen($sql_update) == 0 && $format == "text") {
+						if (empty($sql_update) && $format == "text") {
 							$response .= "	".$text['label-schema'].":			".$text['label-no_change']."\n";
 						}
 						else {

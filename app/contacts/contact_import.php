@@ -342,7 +342,7 @@
 
 									//build the data array
 									if (strlen($table_name) > 0) {
-										if (strlen($parent) == 0) {
+										if (empty($parent)) {
 											$array[$table_name][$row_id]['domain_uuid'] = $domain_uuid;
 											$array[$table_name][$row_id][$field_name] = $result[$key];
 										}

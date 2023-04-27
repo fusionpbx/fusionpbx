@@ -128,7 +128,7 @@
 		}
 	}
 
-if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 
 	//delete the call broadcast
 		if (permission_exists('call_broadcast_delete')) {
@@ -159,18 +159,18 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		}
 
 	//check for all required data
-		if (strlen($broadcast_name) == 0) { $msg .= "".$text['confirm-name']."<br>\n"; }
-		//if (strlen($broadcast_description) == 0) { $msg .= "Please provide: Description<br>\n"; }
-		//if (strlen($broadcast_timeout) == 0) { $msg .= "Please provide: Timeout<br>\n"; }
-		//if (strlen($broadcast_concurrent_limit) == 0) { $msg .= "Please provide: Concurrent Limit<br>\n"; }
-		//if (strlen($recording_uuid) == 0) { $msg .= "Please provide: Recording<br>\n"; }
-		//if (strlen($broadcast_caller_id_name) == 0) { $msg .= "Please provide: Caller ID Name<br>\n"; }
-		//if (strlen($broadcast_caller_id_number) == 0) { $msg .= "Please provide: Caller ID Number<br>\n"; }
-		//if (strlen($broadcast_destination_type) == 0) { $msg .= "Please provide: Type<br>\n"; }
-		//if (strlen($broadcast_phone_numbers) == 0) { $msg .= "Please provide: Phone Number List<br>\n"; }
-		//if (strlen($broadcast_avmd) == 0) { $msg .= "Please provide: Voicemail Detection<br>\n"; }
-		//if (strlen($broadcast_destination_data) == 0) { $msg .= "Please provide: Destination<br>\n"; }
-		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+		if (empty($broadcast_name)) { $msg .= "".$text['confirm-name']."<br>\n"; }
+		//if (empty($broadcast_description)) { $msg .= "Please provide: Description<br>\n"; }
+		//if (empty($broadcast_timeout)) { $msg .= "Please provide: Timeout<br>\n"; }
+		//if (empty($broadcast_concurrent_limit)) { $msg .= "Please provide: Concurrent Limit<br>\n"; }
+		//if (empty($recording_uuid)) { $msg .= "Please provide: Recording<br>\n"; }
+		//if (empty($broadcast_caller_id_name)) { $msg .= "Please provide: Caller ID Name<br>\n"; }
+		//if (empty($broadcast_caller_id_number)) { $msg .= "Please provide: Caller ID Number<br>\n"; }
+		//if (empty($broadcast_destination_type)) { $msg .= "Please provide: Type<br>\n"; }
+		//if (empty($broadcast_phone_numbers)) { $msg .= "Please provide: Phone Number List<br>\n"; }
+		//if (empty($broadcast_avmd)) { $msg .= "Please provide: Voicemail Detection<br>\n"; }
+		//if (empty($broadcast_destination_data)) { $msg .= "Please provide: Destination<br>\n"; }
+		if (strlen($msg) > 0 && empty($_POST["persistformvar"])) {
 			require_once "resources/header.php";
 			require_once "resources/persist_form_var.php";
 			echo "<div align='center'>\n";

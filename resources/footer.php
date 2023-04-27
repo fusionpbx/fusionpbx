@@ -48,7 +48,7 @@
 	//}
 
 //set a default template
-	if (strlen($_SESSION["template_full_path"]) == 0) { //build template if session template has no length
+	if (empty($_SESSION["template_full_path"])) { //build template if session template has no length
 		$template_base_path = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/themes';
 		if (!empty($template_rss_sub_category)) {
 			//this template was assigned by the content manager

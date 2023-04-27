@@ -68,11 +68,11 @@
 	$destination_record = $_POST["destination_record"];
 
 //set the defaults
-	if (strlen($destination_type) == 0) { $destination_type = 'inbound'; }
-	if (strlen($destination_context) == 0) { $destination_context = 'public'; }
+	if (empty($destination_type)) { $destination_type = 'inbound'; }
+	if (empty($destination_context)) { $destination_context = 'public'; }
 	if ($destination_type =="outbound" && $destination_context == "public") { $destination_context = $_SESSION['domain_name']; }
-	if ($destination_type =="outbound" && strlen($destination_context) == 0) { $destination_context = $_SESSION['domain_name']; }
-	if (strlen($from_row) == 0) { $from_row = '2'; }
+	if ($destination_type =="outbound" && empty($destination_context)) { $destination_context = $_SESSION['domain_name']; }
+	if (empty($from_row)) { $from_row = '2'; }
 
 //save the data to the csv file
 	if (isset($_POST['data'])) {
@@ -200,7 +200,7 @@
 
 									//build the data array
 									if (strlen($table_name) > 0) {
-										if (strlen($parent) == 0) {
+										if (empty($parent)) {
 											$array[$table_name][$row_id]['domain_uuid'] = $domain_uuid;
 											$array[$table_name][$row_id][$field_name] = $result[$key];
 										}
@@ -544,7 +544,7 @@
 
 									//build the data array
 									if (strlen($table_name) > 0) {
-										if (strlen($parent) == 0) {
+										if (empty($parent)) {
 											$array[$table_name][$row_id]['domain_uuid'] = $domain_uuid;
 											$array[$table_name][$row_id][$field_name] = $result[$key];
 										}
@@ -567,7 +567,7 @@
 										$destination_number = $row['destination_number'];
 
 									//get the dialplan uuid
-										if (strlen($row['destination_number']) == 0 || !is_uuid($row['dialplan_uuid'])) {
+										if (empty($row['destination_number']) || !is_uuid($row['dialplan_uuid'])) {
 											$sql = "select * from v_destinations ";
 											$sql .= "where domain_uuid = :domain_uuid ";
 											$sql .= "and destination_number = :destination_number; ";
@@ -825,7 +825,7 @@
 				echo "</td>\n";
 				echo "<td class='vtable' align='left'>\n";
 				echo "    <select class='formfld' name='domain_uuid' id='destination_domain' onchange='context_control();'>\n";
-				if (strlen($domain_uuid) == 0) {
+				if (empty($domain_uuid)) {
 					echo "    <option value='' selected='selected'>".$text['select-global']."</option>\n";
 				}
 				else {

@@ -164,7 +164,7 @@ if (!class_exists('conference_centers')) {
 					$sql .= "and r.created_by = :created_by ";
 					$parameters['created_by'] = $this->created_by;
 				}
-				if (strlen($this->order_by) == 0) {
+				if (empty($this->order_by)) {
 					$sql .= "order by r.description, r.conference_room_uuid asc ";
 				}
 				else {

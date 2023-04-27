@@ -97,7 +97,7 @@
 		$broadcast_avmd = $row["broadcast_avmd"];
 		$broadcast_accountcode = $row["broadcast_accountcode"];
 		$broadcast_description = $row["broadcast_description"];
-		//if (strlen($row["broadcast_destination_data"]) == 0) {
+		//if (empty($row["broadcast_destination_data"])) {
 		//	$broadcast_destination_application = '';
 		//	$broadcast_destination_data = '';
 		//}
@@ -110,13 +110,13 @@
 	unset($sql, $parameters, $row);
 
 //set the defaults
-	if (strlen($broadcast_caller_id_name) == 0) {
+	if (empty($broadcast_caller_id_name)) {
 		$broadcast_caller_id_name = "anonymous";
 	}
-	if (strlen($broadcast_caller_id_number) == 0) {
+	if (empty($broadcast_caller_id_number)) {
 		$broadcast_caller_id_number = "0000000000";
 	}
-	if (strlen($broadcast_accountcode) == 0) {
+	if (empty($broadcast_accountcode)) {
 		$broadcast_accountcode = $_SESSION['domain_name'];;
 	}
 	if (isset($broadcast_start_time) && is_numeric($broadcast_start_time)) {

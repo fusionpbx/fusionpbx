@@ -81,7 +81,7 @@
 	}
 
 //process the http post
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 
 		//set the default_setting_uuid
 			if ($action == "update") {
@@ -101,14 +101,14 @@
 
 		//check for all required data
 			$msg = '';
-			if (strlen($default_setting_category) == 0) { $msg .= $text['message-required'].$text['label-category']."<br>\n"; }
-			if (strlen($default_setting_subcategory) == 0) { $msg .= $text['message-required'].$text['label-subcategory']."<br>\n"; }
-			if (strlen($default_setting_name) == 0) { $msg .= $text['message-required'].$text['label-type']."<br>\n"; }
-			//if (strlen($default_setting_value) == 0) { $msg .= $text['message-required'].$text['label-value']."<br>\n"; }
-			if (strlen($default_setting_order) == 0) { $msg .= $text['message-required'].$text['label-order']."<br>\n"; }
-			if (strlen($default_setting_enabled) == 0) { $msg .= $text['message-required'].$text['label-enabled']."<br>\n"; }
-			//if (strlen($default_setting_description) == 0) { $msg .= $text['message-required'].$text['label-description']."<br>\n"; }
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+			if (empty($default_setting_category)) { $msg .= $text['message-required'].$text['label-category']."<br>\n"; }
+			if (empty($default_setting_subcategory)) { $msg .= $text['message-required'].$text['label-subcategory']."<br>\n"; }
+			if (empty($default_setting_name)) { $msg .= $text['message-required'].$text['label-type']."<br>\n"; }
+			//if (empty($default_setting_value)) { $msg .= $text['message-required'].$text['label-value']."<br>\n"; }
+			if (empty($default_setting_order)) { $msg .= $text['message-required'].$text['label-order']."<br>\n"; }
+			if (empty($default_setting_enabled)) { $msg .= $text['message-required'].$text['label-enabled']."<br>\n"; }
+			//if (empty($default_setting_description)) { $msg .= $text['message-required'].$text['label-description']."<br>\n"; }
+			if (strlen($msg) > 0 && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -223,7 +223,7 @@
 					return;
 				}
 			} //if ($_POST["persistformvar"] != "true")
-	} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
+	} //(count($_POST)>0 && empty($_POST["persistformvar"]))
 
 //pre-populate the form
 	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
@@ -247,7 +247,7 @@
 	}
 
 //set the defaults
-	if (strlen($default_setting_enabled) == 0) { $default_setting_enabled = 'true'; }
+	if (empty($default_setting_enabled)) { $default_setting_enabled = 'true'; }
 
 //create token
 	$object = new token;

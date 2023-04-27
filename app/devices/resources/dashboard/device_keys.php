@@ -66,7 +66,7 @@
 	unset($sql, $sql_where_or, $parameters);
 
 //add or update the database
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 
 		//add or update the database
 			if ($_POST["persistformvar"] != "true") {
@@ -216,7 +216,7 @@
 									if (permission_exists('device_key_add') && strlen($device_key_type) > 0 && strlen($device_key_value) > 0) {
 
 										//if the device_uuid is not in the array then get the device_uuid from the database
-											if (strlen($device_uuid) == 0) {
+											if (empty($device_uuid)) {
 												$sql = "select device_uuid from v_devices ";
 												$sql .= "where device_user_uuid = :device_user_uuid ";
 												$parameters['device_user_uuid'] = $_SESSION['user_uuid'];
@@ -480,7 +480,7 @@
 				}
 
 			//determine whether to hide the element
-				if (strlen($device_key_uuid) == 0) {
+				if (empty($device_key_uuid)) {
 					$element['hidden'] = false;
 					$element['visibility'] = "visibility:visible;";
 				}
@@ -518,7 +518,7 @@
 				else {
 					echo "	<option value='programmable'>".$text['label-programmable']."</option>\n";
 				}
-				if (strlen($device_vendor) == 0) {
+				if (empty($device_vendor)) {
 					if ($row['device_key_category'] == "expansion") {
 						echo "	<option value='expansion' selected='selected'>".$text['label-expansion']."</option>\n";
 					}
@@ -585,7 +585,7 @@
 				$i = 0;
 				if (is_array($vendor_functions)) {
 					foreach ($vendor_functions as $function) {
-						if (strlen($row['device_key_vendor']) == 0 && $function['vendor_name'] != $previous_vendor) {
+						if (empty($row['device_key_vendor']) && $function['vendor_name'] != $previous_vendor) {
 							if ($i > 0) {
 								echo "				</optgroup>\n";
 							}
@@ -595,7 +595,7 @@
 						if ($row['device_key_vendor'] == $function['vendor_name'] && $row['device_key_type'] == $function['value']) {
 							$selected = "selected='selected'";
 						}
-						if (strlen($row['device_key_vendor']) == 0) {
+						if (empty($row['device_key_vendor'])) {
 							echo "					<option value='".$function['value']."' $selected >".$text['label-'.$function['name']]."</option>\n";
 						}
 						if (strlen($row['device_key_vendor']) > 0 && $row['device_key_vendor'] == $function['vendor_name']) {
@@ -605,7 +605,7 @@
 						$i++;
 					}
 				}
-				if (strlen($row['device_key_vendor']) == 0) {
+				if (empty($row['device_key_vendor'])) {
 					echo "				</optgroup>\n";
 				}
 				echo "			</select>\n";

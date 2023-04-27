@@ -76,7 +76,7 @@
 	}
 
 //handle the http post
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 
 		//handle action
 			if ($_POST['action'] != '') {
@@ -118,10 +118,10 @@
 
 		//check for all required data
 			$msg = '';
-			//if (strlen($call_block_name) == 0) { $msg .= $text['label-provide-name']."<br>\n"; }
-			//if (strlen($call_block_number) == 0) { $msg .= $text['label-provide-number']."<br>\n"; }
-			if (strlen($call_block_enabled) == 0) { $msg .= $text['label-provide-enabled']."<br>\n"; }
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+			//if (empty($call_block_name)) { $msg .= $text['label-provide-name']."<br>\n"; }
+			//if (empty($call_block_number)) { $msg .= $text['label-provide-number']."<br>\n"; }
+			if (empty($call_block_enabled)) { $msg .= $text['label-provide-enabled']."<br>\n"; }
+			if (strlen($msg) > 0 && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -272,7 +272,7 @@
 	}
 
 //set the defaults
-	if (strlen($call_block_enabled) == 0) { $call_block_enabled = 'true'; }
+	if (empty($call_block_enabled)) { $call_block_enabled = 'true'; }
 
 //get the extensions
 	if (permission_exists('call_block_all') || permission_exists('call_block_extension')) {

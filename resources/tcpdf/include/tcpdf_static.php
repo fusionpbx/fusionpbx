@@ -281,7 +281,7 @@ class TCPDF_STATIC {
 	 * @public static
 	 */
 	public static function empty_string($str) {
-		return (is_null($str) OR (is_string($str) AND (strlen($str) == 0)));
+		return (is_null($str) OR (is_string($str) AND (empty($str))));
 	}
 
 	/**

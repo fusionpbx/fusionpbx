@@ -89,7 +89,7 @@
 	}
 
 //process the user data and save it to the database
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 
 		//debug info
 			//view_array($_POST, true);
@@ -236,29 +236,29 @@
 
 		//check for all required data
 			$msg = '';
-			//if (strlen($contact_type) == 0) { $msg .= $text['message-required']." ".$text['label-contact_type']."<br>\n"; }
-			//if (strlen($contact_title) == 0) { $msg .= $text['message-required']." ".$text['label-contact_title']."<br>\n"; }
-			//if (strlen($contact_role) == 0) { $msg .= $text['message-required']." ".$text['label-contact_role']."<br>\n"; }
-			//if (strlen($contact_category) == 0) { $msg .= $text['message-required']." ".$text['label-contact_category']."<br>\n"; }
-			//if (strlen($contact_organization) == 0) { $msg .= $text['message-required']." ".$text['label-contact_organization']."<br>\n"; }
-			//if (strlen($contact_name_prefix) == 0) { $msg .= $text['message-required']." ".$text['label-contact_name_prefix']."<br>\n"; }
-			//if (strlen($contact_name_given) == 0) { $msg .= $text['message-required']." ".$text['label-contact_name_given']."<br>\n"; }
-			//if (strlen($contact_name_middle) == 0) { $msg .= $text['message-required']." ".$text['label-contact_name_middle']."<br>\n"; }
-			//if (strlen($contact_name_family) == 0) { $msg .= $text['message-required']." ".$text['label-contact_name_family']."<br>\n"; }
-			//if (strlen($contact_name_suffix) == 0) { $msg .= $text['message-required']." ".$text['label-contact_name_suffix']."<br>\n"; }
-			//if (strlen($contact_nickname) == 0) { $msg .= $text['message-required']." ".$text['label-contact_nickname']."<br>\n"; }
-			//if (strlen($contact_time_zone) == 0) { $msg .= $text['message-required']." ".$text['label-contact_time_zone']."<br>\n"; }
-			//if (strlen($last_mod_date) == 0) { $msg .= $text['message-required']." ".$text['label-last_mod_date']."<br>\n"; }
-			//if (strlen($last_mod_user) == 0) { $msg .= $text['message-required']." ".$text['label-last_mod_user']."<br>\n"; }
-			//if (strlen($contact_phones) == 0) { $msg .= $text['message-required']." ".$text['label-contact_phones']."<br>\n"; }
-			//if (strlen($contact_addresses) == 0) { $msg .= $text['message-required']." ".$text['label-contact_addresses']."<br>\n"; }
-			//if (strlen($contact_emails) == 0) { $msg .= $text['message-required']." ".$text['label-contact_emails']."<br>\n"; }
-			//if (strlen($contact_urls) == 0) { $msg .= $text['message-required']." ".$text['label-contact_urls']."<br>\n"; }
-			//if (strlen($contact_settings) == 0) { $msg .= $text['message-required']." ".$text['label-contact_settings']."<br>\n"; }
-			//if (strlen($contact_user_uuid) == 0) { $msg .= $text['message-required']." ".$text['label-contact_user_uuid']."<br>\n"; }
-			//if (strlen($contact_group_uuid) == 0) { $msg .= $text['message-required']." ".$text['label-contact_group_uuid']."<br>\n"; }
-			//if (strlen($contact_note) == 0) { $msg .= $text['message-required']." ".$text['label-contact_note']."<br>\n"; }
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+			//if (empty($contact_type)) { $msg .= $text['message-required']." ".$text['label-contact_type']."<br>\n"; }
+			//if (empty($contact_title)) { $msg .= $text['message-required']." ".$text['label-contact_title']."<br>\n"; }
+			//if (empty($contact_role)) { $msg .= $text['message-required']." ".$text['label-contact_role']."<br>\n"; }
+			//if (empty($contact_category)) { $msg .= $text['message-required']." ".$text['label-contact_category']."<br>\n"; }
+			//if (empty($contact_organization)) { $msg .= $text['message-required']." ".$text['label-contact_organization']."<br>\n"; }
+			//if (empty($contact_name_prefix)) { $msg .= $text['message-required']." ".$text['label-contact_name_prefix']."<br>\n"; }
+			//if (empty($contact_name_given)) { $msg .= $text['message-required']." ".$text['label-contact_name_given']."<br>\n"; }
+			//if (empty($contact_name_middle)) { $msg .= $text['message-required']." ".$text['label-contact_name_middle']."<br>\n"; }
+			//if (empty($contact_name_family)) { $msg .= $text['message-required']." ".$text['label-contact_name_family']."<br>\n"; }
+			//if (empty($contact_name_suffix)) { $msg .= $text['message-required']." ".$text['label-contact_name_suffix']."<br>\n"; }
+			//if (empty($contact_nickname)) { $msg .= $text['message-required']." ".$text['label-contact_nickname']."<br>\n"; }
+			//if (empty($contact_time_zone)) { $msg .= $text['message-required']." ".$text['label-contact_time_zone']."<br>\n"; }
+			//if (empty($last_mod_date)) { $msg .= $text['message-required']." ".$text['label-last_mod_date']."<br>\n"; }
+			//if (empty($last_mod_user)) { $msg .= $text['message-required']." ".$text['label-last_mod_user']."<br>\n"; }
+			//if (empty($contact_phones)) { $msg .= $text['message-required']." ".$text['label-contact_phones']."<br>\n"; }
+			//if (empty($contact_addresses)) { $msg .= $text['message-required']." ".$text['label-contact_addresses']."<br>\n"; }
+			//if (empty($contact_emails)) { $msg .= $text['message-required']." ".$text['label-contact_emails']."<br>\n"; }
+			//if (empty($contact_urls)) { $msg .= $text['message-required']." ".$text['label-contact_urls']."<br>\n"; }
+			//if (empty($contact_settings)) { $msg .= $text['message-required']." ".$text['label-contact_settings']."<br>\n"; }
+			//if (empty($contact_user_uuid)) { $msg .= $text['message-required']." ".$text['label-contact_user_uuid']."<br>\n"; }
+			//if (empty($contact_group_uuid)) { $msg .= $text['message-required']." ".$text['label-contact_group_uuid']."<br>\n"; }
+			//if (empty($contact_note)) { $msg .= $text['message-required']." ".$text['label-contact_note']."<br>\n"; }
+			if (strlen($msg) > 0 && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";

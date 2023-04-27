@@ -97,7 +97,7 @@
 	}
 
 //process the http variables
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 
 		//get the uuid
 			if ($action == "update") {
@@ -114,12 +114,12 @@
 
 		//check for all required data
 			$msg = '';
-			//if (strlen($label) == 0) { $msg .= $text['message-required']." ".$text['label-label']."<br>\n"; }
-			if (strlen($type) == 0) { $msg .= $text['message-required']." ".$text['label-type']."<br>\n"; }
-			if (strlen($value) == 0) { $msg .= $text['message-required']." ".$text['label-value']."<br>\n"; }
-			if (strlen($enabled) == 0) { $msg .= $text['message-required']." ".$text['label-enabled']."<br>\n"; }
-			//if (strlen($description) == 0) { $msg .= $text['message-required']." ".$text['label-description']."<br>\n"; }
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+			//if (empty($label)) { $msg .= $text['message-required']." ".$text['label-label']."<br>\n"; }
+			if (empty($type)) { $msg .= $text['message-required']." ".$text['label-type']."<br>\n"; }
+			if (empty($value)) { $msg .= $text['message-required']." ".$text['label-value']."<br>\n"; }
+			if (empty($enabled)) { $msg .= $text['message-required']." ".$text['label-enabled']."<br>\n"; }
+			//if (empty($description)) { $msg .= $text['message-required']." ".$text['label-description']."<br>\n"; }
+			if (strlen($msg) > 0 && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";

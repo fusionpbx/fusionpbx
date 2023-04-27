@@ -105,14 +105,14 @@ if (!empty($_POST["persistformvar"])) {
 		}
 
 	//check for all required/authorized data
-		if (strlen($user_setting_category) == 0 || (is_array($allowed_categories) && sizeof($allowed_categories) > 0 && !in_array(strtolower($user_setting_category), $allowed_categories))) { $msg .= $text['message-required'].$text['label-category']."<br>\n"; }
-		if (strlen($user_setting_subcategory) == 0) { $msg .= $text['message-required'].$text['label-subcategory']."<br>\n"; }
-		if (strlen($user_setting_name) == 0) { $msg .= $text['message-required'].$text['label-type']."<br>\n"; }
-		//if (strlen($user_setting_value) == 0) { $msg .= $text['message-required'].$text['label-value']."<br>\n"; }
-		if (strlen($user_setting_order) == 0) { $msg .= $text['message-required'].$text['label-order']."<br>\n"; }
-		if (strlen($user_setting_enabled) == 0) { $msg .= $text['message-required'].$text['label-enabled']."<br>\n"; }
-		//if (strlen($user_setting_description) == 0) { $msg .= $text['message-required'].$text['label-description']."<br>\n"; }
-		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+		if (empty($user_setting_category) || (is_array($allowed_categories) && sizeof($allowed_categories) > 0 && !in_array(strtolower($user_setting_category), $allowed_categories))) { $msg .= $text['message-required'].$text['label-category']."<br>\n"; }
+		if (empty($user_setting_subcategory)) { $msg .= $text['message-required'].$text['label-subcategory']."<br>\n"; }
+		if (empty($user_setting_name)) { $msg .= $text['message-required'].$text['label-type']."<br>\n"; }
+		//if (empty($user_setting_value)) { $msg .= $text['message-required'].$text['label-value']."<br>\n"; }
+		if (empty($user_setting_order)) { $msg .= $text['message-required'].$text['label-order']."<br>\n"; }
+		if (empty($user_setting_enabled)) { $msg .= $text['message-required'].$text['label-enabled']."<br>\n"; }
+		//if (empty($user_setting_description)) { $msg .= $text['message-required'].$text['label-description']."<br>\n"; }
+		if (strlen($msg) > 0 && empty($_POST["persistformvar"])) {
 			require_once "resources/header.php";
 			require_once "resources/persist_form_var.php";
 			echo "<div align='center'>\n";

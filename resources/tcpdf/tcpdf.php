@@ -6309,7 +6309,7 @@ class TCPDF {
 	public function Write($h, $txt, $link='', $fill=false, $align='', $ln=false, $stretch=0, $firstline=false, $firstblock=false, $maxh=0, $wadj=0, $margin='') {
 		// check page for no-write regions and adapt page margins if necessary
 		list($this->x, $this->y) = $this->checkPageRegions($h, $this->x, $this->y);
-		if (strlen($txt) == 0) {
+		if (empty($txt)) {
 			// fix empty text
 			$txt = ' ';
 		}
@@ -13476,10 +13476,10 @@ class TCPDF {
 		$this->sig_obj_id = $this->n; // signature widget
 		++$this->n; // signature object ($this->sig_obj_id + 1)
 		$this->signature_data = array();
-		if (strlen($signing_cert) == 0) {
+		if (empty($signing_cert)) {
 			$this->Error('Please provide a certificate file and password!');
 		}
-		if (strlen($private_key) == 0) {
+		if (empty($private_key)) {
 			$private_key = $signing_cert;
 		}
 		$this->signature_data['signcert'] = $signing_cert;
@@ -13574,7 +13574,7 @@ class TCPDF {
 		if (!function_exists('curl_init')) {
 			$this->Error('Please enable cURL PHP extension!');
 		}
-		if (strlen($tsa_host) == 0) {
+		if (empty($tsa_host)) {
 			$this->Error('Please specify the host of Time Stamping Authority (TSA)!');
 		}
 		$this->tsa_data['tsa_host'] = $tsa_host;

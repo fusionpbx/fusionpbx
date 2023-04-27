@@ -77,8 +77,8 @@
 	}
 
 //create the sql query to get the xml cdr records
-	if (strlen($order_by) == 0) { $order_by  = "start_epoch"; }
-	if (strlen($order) == 0) { $order  = "desc"; }
+	if (empty($order_by)) { $order_by  = "start_epoch"; }
+	if (empty($order)) { $order  = "desc"; }
 
 //get post or get variables from http
 	if (isset($_REQUEST)) {
@@ -445,7 +445,7 @@
 		$parameters['start_date'] = $start_date;
 		$parameters['stop_date'] = $stop_date;
 	}
-	//if (strlen($start_stamp) == 0 && strlen($end_stamp) == 0) {
+	//if (strlen($start_stamp) == 0 && empty($end_stamp)) {
 	//	$sql .= "and c.start_stamp between NOW() - INTERVAL '24 HOURS' AND NOW() \n";
 	//}
 	if (strlen($cdr_id) > 0) {

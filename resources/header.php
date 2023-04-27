@@ -95,13 +95,13 @@
 		$sql .= ") ";
 		$sql .= "order by rss_order asc ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-		$parameters['content'] = strlen($content) == 0 ? $_SERVER["PHP_SELF"] : $content;
+		$parameters['content'] = empty($content) ? $_SERVER["PHP_SELF"] : $content;
 		$database = new database;
 		$content_result = $database->select($sql, $parameters, 'all');
 		if (is_array($content_result) && @sizeof($content_result) != 0) {
 			foreach($content_result as $content_row) {
 				$template_rss_sub_category = $content_row['rss_sub_category'];
-				if (strlen($content_row['rss_group']) == 0) {
+				if (empty($content_row['rss_group'])) {
 					//content is public
 					$content_from_db = &$content_row['rss_description'];
 					if (strlen($content_row['rss_title']) > 0) {

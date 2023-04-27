@@ -444,7 +444,7 @@
 					if (!isset($this->path) && isset($db_path)) { $this->path = $db_path; }
 
 				if ($this->driver == "sqlite") {
-					if (strlen($this->db_name) == 0) {
+					if (empty($this->db_name)) {
 						$server_name = $_SERVER["SERVER_NAME"];
 						$server_name = str_replace ("www.", "", $server_name);
 						$db_name_short = $server_name;
@@ -477,12 +477,12 @@
 				if ($this->driver == "mysql") {
 					try {
 						//mysql pdo connection
-							if (strlen($this->host) == 0 && strlen($this->port) == 0) {
+							if (strlen($this->host) == 0 && empty($this->port)) {
 								//if both host and port are empty use the unix socket
 								$this->db = new PDO("mysql:host=$this->host;unix_socket=/var/run/mysqld/mysqld.sock;dbname=$this->db_name", $this->username, $this->password);
 							}
 							else {
-								if (strlen($this->port) == 0) {
+								if (empty($this->port)) {
 									//leave out port if it is empty
 									$this->db = new PDO("mysql:host=$this->host;dbname=$this->db_name;", $this->username, $this->password, array(
 									PDO::ATTR_ERRMODE,
@@ -507,7 +507,7 @@
 					//database connection
 					try {
 						if (strlen($this->host) > 0) {
-							if (strlen($this->port) == 0) { $this->port = "5432"; }
+							if (empty($this->port)) { $this->port = "5432"; }
 							if ($this->db_secure === true) {
 								$this->db = new PDO("pgsql:host=$this->host port=$this->port dbname=$this->db_name user=$this->username password=$this->password sslmode=verify-ca sslrootcert=$this->db_cert_authority");
 							}
@@ -603,7 +603,7 @@
 					}
 
 				//get the table info
-					if (strlen($this->table) == 0) { return false; }
+					if (empty($this->table)) { return false; }
 					if ($this->type == "sqlite") {
 						$sql = "PRAGMA table_info(".$this->table.");";
 					}
@@ -2136,7 +2136,7 @@
 															$array_key != 'insert_date' &&
 															$array_key != 'update_user' && 
 															$array_key != 'update_date') {
-															if (strlen($array_value) == 0) {
+															if (empty($array_value)) {
 																$sql .= "null, ";
 															}
 															elseif ($array_value === "now()") {
@@ -2238,7 +2238,7 @@
 												foreach ($array as $array_key => $array_value) {
 													if (!is_array($array_value) && $array_key != $parent_key_name) {
 														$array_key = self::sanitize($array_key);
-														if (strlen($array_value) == 0) {
+														if (empty($array_value)) {
 															$sql .= $array_key." = null, ";
 														}
 														elseif ($array_value === "now()") {
@@ -2428,7 +2428,7 @@
 																	foreach ($row as $k => $v) {
 																		if (!is_array($v) && ($k != $parent_key_name || $k != $child_key_name)) {
 																			$k = self::sanitize($k);
-																			if (strlen($v) == 0) {
+																			if (empty($v)) {
 																				$sql .= $k." = null, ";
 																			}
 																			elseif ($v === "now()") {
@@ -2580,7 +2580,7 @@
 																			$k != 'insert_date' &&
 																			$k != 'update_user' && 
 																			$k != 'update_date') {
-																			if (strlen($v) == 0) {
+																			if (empty($v)) {
 																				$sql .= "null, ";
 																			}
 																			elseif ($v === "now()") {

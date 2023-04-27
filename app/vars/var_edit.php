@@ -72,7 +72,7 @@
 	}
 
 //process the post
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 
 		//get the uuid
 			if ($action == "update") {
@@ -89,13 +89,13 @@
 
 		//check for all required data
 			$msg = '';
-			//if (strlen($var_category) == 0) { $msg .= $text['message-required'].$text['label-category']."<br>\n"; }
-			if (strlen($var_name) == 0) { $msg .= $text['message-required'].$text['label-name']."<br>\n"; }
-			//if (strlen($var_value) == 0) { $msg .= $text['message-required'].$text['label-value']."<br>\n"; }
-			//if (strlen($var_command) == 0) { $msg .= $text['message-required'].$text['label-command']."<br>\n"; }
-			if (strlen($var_enabled) == 0) { $msg .= $text['message-required'].$text['label-enabled']."<br>\n"; }
-			if (strlen($var_order) == 0) { $msg .= $text['message-required'].$text['label-order']."<br>\n"; }
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+			//if (empty($var_category)) { $msg .= $text['message-required'].$text['label-category']."<br>\n"; }
+			if (empty($var_name)) { $msg .= $text['message-required'].$text['label-name']."<br>\n"; }
+			//if (empty($var_value)) { $msg .= $text['message-required'].$text['label-value']."<br>\n"; }
+			//if (empty($var_command)) { $msg .= $text['message-required'].$text['label-command']."<br>\n"; }
+			if (empty($var_enabled)) { $msg .= $text['message-required'].$text['label-enabled']."<br>\n"; }
+			if (empty($var_order)) { $msg .= $text['message-required'].$text['label-order']."<br>\n"; }
+			if (strlen($msg) > 0 && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -179,7 +179,7 @@
 	}
 
 //set the defaults
-	if (strlen($var_enabled) == 0) { $var_enabled = 'true'; }
+	if (empty($var_enabled)) { $var_enabled = 'true'; }
 
 //create token
 	$object = new token;
