@@ -520,7 +520,7 @@
 					}
 
 				//get the music on hold path and files
-					$stream_path = str_replace("\$\${sounds_dir}",$_SESSION['switch']['sounds']['dir'], $row['music_on_hold_path']);
+					$stream_path = str_replace("\$\${sounds_dir}",$_SESSION['switch']['sounds']['dir'] ?? '', $row['music_on_hold_path']);
 					if (file_exists($stream_path)) {
 						$stream_files = array_merge(glob($stream_path.'/*.wav'), glob($stream_path.'/*.mp3'), glob($stream_path.'/*.ogg'));
 					}
