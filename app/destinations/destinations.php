@@ -112,7 +112,7 @@
 	$order = $_GET["order"];
 
 //add the search term
-	$search = strtolower($_GET["search"]);
+	$search = strtolower($_GET["search"] ?? '');
 
 //prepare to page the results
 	$sql = "select count(*) from v_destinations ";
