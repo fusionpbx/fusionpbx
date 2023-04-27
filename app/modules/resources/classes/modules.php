@@ -715,7 +715,7 @@ if (!class_exists('modules')) {
 
 		//add missing modules for more module info see http://wiki.freeswitch.com/wiki/Modules
 			public function synch() {
-				if ($handle = opendir($this->dir)) {
+				if (false !== ($handle = opendir($this->dir ?? ''))) {
 					$modules_new = '';
 					$module_found = false;
 					$x = 0;
