@@ -933,7 +933,7 @@
 	echo "</td>\n";
 	echo "<td class='vtable' width='70%' align='left'>\n";
 	if (permission_exists('device_mac_address')) {
-		echo "	<input class='formfld' type='text' name='device_mac_address' id='device_mac_address' maxlength='255' value=\"".escape($device_mac_address)."\"/>\n";
+		echo "	<input class='formfld' type='text' name='device_mac_address' id='device_mac_address' maxlength='255' value=\"".escape($device_mac_address ?? '')."\"/>\n";
 		echo "<br />\n";
 		echo $text['description-device_mac_address']."\n";
 	}
@@ -941,7 +941,7 @@
 		echo escape($device_mac_address);
 	}
 	echo "	<div style='display: none;' id='duplicate_mac_response'></div>\n";
-	echo " ".escape($device_provisioned_ip)."(<a href='http://".escape($device_provisioned_ip)."' target='_blank'>http</a>|<a href='https://".escape($device_provisioned_ip)."' target='_blank'>https</a>)\n";
+	echo " ".escape($device_provisioned_ip)."(<a href='http://".escape($device_provisioned_ip ?? '')."' target='_blank'>http</a>|<a href='https://".escape($device_provisioned_ip ?? '')."' target='_blank'>https</a>)\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
