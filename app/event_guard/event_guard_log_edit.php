@@ -63,7 +63,7 @@
 	}
 
 //process the user data and save it to the database
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 
 		//validate the token
 			$token = new token;
@@ -108,14 +108,14 @@
 
 		//check for all required data
 			$msg = '';
-			if (strlen($hostname) == 0) { $msg .= $text['message-required']." ".$text['label-hostname']."<br>\n"; }
-			if (strlen($log_date) == 0) { $msg .= $text['message-required']." ".$text['label-log_date']."<br>\n"; }
-			if (strlen($filter) == 0) { $msg .= $text['message-required']." ".$text['label-filter']."<br>\n"; }
-			if (strlen($ip_address) == 0) { $msg .= $text['message-required']." ".$text['label-ip_address']."<br>\n"; }
-			if (strlen($extension) == 0) { $msg .= $text['message-required']." ".$text['label-extension']."<br>\n"; }
-			//if (strlen($user_agent) == 0) { $msg .= $text['message-required']." ".$text['label-user_agent']."<br>\n"; }
-			if (strlen($log_status) == 0) { $msg .= $text['message-required']." ".$text['label-log_status']."<br>\n"; }
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+			if (empty($hostname)) { $msg .= $text['message-required']." ".$text['label-hostname']."<br>\n"; }
+			if (empty($log_date)) { $msg .= $text['message-required']." ".$text['label-log_date']."<br>\n"; }
+			if (empty($filter)) { $msg .= $text['message-required']." ".$text['label-filter']."<br>\n"; }
+			if (empty($ip_address)) { $msg .= $text['message-required']." ".$text['label-ip_address']."<br>\n"; }
+			if (empty($extension)) { $msg .= $text['message-required']." ".$text['label-extension']."<br>\n"; }
+			//if (empty($user_agent)) { $msg .= $text['message-required']." ".$text['label-user_agent']."<br>\n"; }
+			if (empty($log_status)) { $msg .= $text['message-required']." ".$text['label-log_status']."<br>\n"; }
+			if (strlen($msg) > 0 && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
