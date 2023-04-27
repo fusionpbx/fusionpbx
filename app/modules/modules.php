@@ -99,7 +99,6 @@
 
 //use the module class to get the list of modules from the db and add any missing modules
 	$module = new modules;
-	$module->db = $db;
 	$module->dir = $_SESSION['switch']['mod']['dir'];
 	$module->get_modules();
 	$modules = $module->modules;
