@@ -560,7 +560,7 @@
 		echo "					<input id='sip_profile_setting_name_$x' class='formfld' style='display: none;' type='text' name='sip_profile_settings[$x][sip_profile_setting_name]' maxlength='255' value=\"".escape($row["sip_profile_setting_name"])."\">\n";
 		echo "				</td>\n";
 		echo "				<td class='vtablerow' style='".$bottom_border."' ".(permission_exists('sip_profile_setting_edit') ? "onclick=\"label_to_form('label_sip_profile_setting_value_$x','sip_profile_setting_value_$x');\"" : null)." nowrap='nowrap'>\n";
-		echo "					<label id='label_sip_profile_setting_value_$x'>".escape(substr($row["sip_profile_setting_value"],0,22))." &nbsp;</label>\n";
+		echo "					<label id='label_sip_profile_setting_value_$x'>".escape(substr($row["sip_profile_setting_value"] ?? '',0,22))." &nbsp;</label>\n";
 		echo "					<input id='sip_profile_setting_value_$x' class='formfld' style='display: none;' type='text' name='sip_profile_settings[$x][sip_profile_setting_value]' maxlength='255' value=\"".escape($row["sip_profile_setting_value"])."\">\n";
 		echo "				</td>\n";
 		echo "				<td class='vtablerow' style='".$bottom_border." text-align: center;' ".(permission_exists('sip_profile_setting_edit') ? "onclick=\"label_to_form('label_sip_profile_setting_enabled_$x','sip_profile_setting_enabled_$x');\"" : null)." nowrap='nowrap'>\n";
