@@ -455,7 +455,7 @@ if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	$category = $row['domain_setting_category'];
-	$subcategory = $row['domain_setting_subcategory'];
+	$subcategory = $row['domain_setting_subcategory'] ?? '';
 	$name = $row['domain_setting_name'];
 	if ($category == "domain" && $subcategory == "menu" && $name == "uuid" ) {
 		echo "		<select class='formfld' id='domain_setting_value' name='domain_setting_value' style=''>\n";
