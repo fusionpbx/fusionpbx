@@ -137,7 +137,7 @@
 		if (stristr(PHP_OS, 'Linux')) {
 			$free = shell_exec("/usr/bin/which free");
 			$awk = shell_exec("/usr/bin/which awk");
-			$percent_memory = round(shell_exec(escapeshellcmd($free." | ".$awk." 'FNR == 3 {print $3/($3+$4)*100}'")), 1);
+			$percent_memory = round((float)shell_exec(escapeshellcmd($free." | ".$awk." 'FNR == 3 {print $3/($3+$4)*100}'")), 1);
 			if ($percent_memory != '') {
 				echo "<tr class='tr_link_void'>\n";
 				echo "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-memory_usage']."</td>\n";
