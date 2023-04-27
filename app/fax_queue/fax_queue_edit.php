@@ -73,7 +73,7 @@
 	}
 
 //process the user data and save it to the database
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 
 		//validate the token
 			$token = new token;
@@ -118,21 +118,21 @@
 
 		//check for all required data
 			$msg = '';
-			//if (strlen($fax_uuid) == 0) { $msg .= $text['message-required']." ".$text['label-fax_uuid']."<br>\n"; }
-			if (strlen($fax_date) == 0) { $msg .= $text['message-required']." ".$text['label-fax_date']."<br>\n"; }
-			if (strlen($hostname) == 0) { $msg .= $text['message-required']." ".$text['label-hostname']."<br>\n"; }
-			//if (strlen($fax_caller_id_name) == 0) { $msg .= $text['message-required']." ".$text['label-fax_caller_id_name']."<br>\n"; }
-			//if (strlen($fax_caller_id_number) == 0) { $msg .= $text['message-required']." ".$text['label-fax_caller_id_number']."<br>\n"; }
-			if (strlen($fax_number) == 0) { $msg .= $text['message-required']." ".$text['label-fax_number']."<br>\n"; }
-			//if (strlen($fax_prefix) == 0) { $msg .= $text['message-required']." ".$text['label-fax_prefix']."<br>\n"; }
-			//if (strlen($fax_email_address) == 0) { $msg .= $text['message-required']." ".$text['label-fax_email_address']."<br>\n"; }
-			if (strlen($fax_file) == 0) { $msg .= $text['message-required']." ".$text['label-fax_file']."<br>\n"; }
-			if (strlen($fax_status) == 0) { $msg .= $text['message-required']." ".$text['label-fax_status']."<br>\n"; }
-			//if (strlen($fax_retry_date) == 0) { $msg .= $text['message-required']." ".$text['label-fax_retry_date']."<br>\n"; }
-			//if (strlen($fax_retry_count) == 0) { $msg .= $text['message-required']." ".$text['label-fax_retry_count']."<br>\n"; }
-			//if (strlen($fax_accountcode) == 0) { $msg .= $text['message-required']." ".$text['label-fax_accountcode']."<br>\n"; }
-			//if (strlen($fax_command) == 0) { $msg .= $text['message-required']." ".$text['label-fax_command']."<br>\n"; }
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+			//if (empty($fax_uuid)) { $msg .= $text['message-required']." ".$text['label-fax_uuid']."<br>\n"; }
+			if (empty($fax_date)) { $msg .= $text['message-required']." ".$text['label-fax_date']."<br>\n"; }
+			if (empty($hostname)) { $msg .= $text['message-required']." ".$text['label-hostname']."<br>\n"; }
+			//if (empty($fax_caller_id_name)) { $msg .= $text['message-required']." ".$text['label-fax_caller_id_name']."<br>\n"; }
+			//if (empty($fax_caller_id_number)) { $msg .= $text['message-required']." ".$text['label-fax_caller_id_number']."<br>\n"; }
+			if (empty($fax_number)) { $msg .= $text['message-required']." ".$text['label-fax_number']."<br>\n"; }
+			//if (empty($fax_prefix)) { $msg .= $text['message-required']." ".$text['label-fax_prefix']."<br>\n"; }
+			//if (empty($fax_email_address)) { $msg .= $text['message-required']." ".$text['label-fax_email_address']."<br>\n"; }
+			if (empty($fax_file)) { $msg .= $text['message-required']." ".$text['label-fax_file']."<br>\n"; }
+			if (empty($fax_status)) { $msg .= $text['message-required']." ".$text['label-fax_status']."<br>\n"; }
+			//if (empty($fax_retry_date)) { $msg .= $text['message-required']." ".$text['label-fax_retry_date']."<br>\n"; }
+			//if (empty($fax_retry_count)) { $msg .= $text['message-required']." ".$text['label-fax_retry_count']."<br>\n"; }
+			//if (empty($fax_accountcode)) { $msg .= $text['message-required']." ".$text['label-fax_accountcode']."<br>\n"; }
+			//if (empty($fax_command)) { $msg .= $text['message-required']." ".$text['label-fax_command']."<br>\n"; }
+			if (strlen($msg) > 0 && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
