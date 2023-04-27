@@ -80,7 +80,7 @@
 
 //add the search term
 	$search = strtolower($_GET["search"]);
-	if (strlen($search) > 0) {
+	if (!empty($search)) {
 		$sql_search = " (";
 		$sql_search .= "lower(queue_name) like :search ";
 		$sql_search .= "or lower(queue_description) like :search ";
@@ -108,13 +108,13 @@
 		$param .= "&show=all";
 	}
 	$page = $_GET['page'];
-	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
+	if (empty($page)) { $page = 0; $_GET['page'] = 0; }
 	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
 	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = str_replace('count(*)', '*', $sql);
+	$sql = str_replace('count(*)', '*', $sql ?? '');
 	$sql .= order_by($order_by, $order, 'queue_name', 'asc');
 	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;
