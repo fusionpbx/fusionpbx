@@ -163,7 +163,7 @@
 		$sql_where_ands[] = "c.missed_call = true ";
 		$sql_where_ands[] = "c.and hangup_cause <> 'LOSE_RACE' ";
 	}
-	if (strlen($start_epoch) > 0 && !empty($stop_epoch)) {
+	if (!empty($start_epoch) && !empty($stop_epoch)) {
 		$sql_where_ands[] = "c.start_epoch between :start_epoch and :stop_epoch";
 		$parameters['start_epoch'] = $start_epoch;
 		$parameters['stop_epoch'] = $stop_epoch;
@@ -204,7 +204,7 @@
 		$parameters['context'] = '%'.$context.'%';
 	}
 	/*
-	if (strlen($start_stamp_begin) > 0 && !empty($start_stamp_end)) {
+	if (!empty($start_stamp_begin) && !empty($start_stamp_end)) {
 		$sql_where_ands[] = "start_stamp between :start_stamp_begin and :start_stamp_end";
 		$parameters['start_stamp_begin'] = $start_stamp_begin.':00.000';
 		$parameters['start_stamp_end'] = $start_stamp_end.':59.999';
@@ -218,7 +218,7 @@
 		$parameters['start_stamp_end'] = $start_stamp_end.':59.999';
 	}
 	*/
-	if (strlen($answer_stamp_begin) > 0 && !empty($answer_stamp_end)) {
+	if (!empty($answer_stamp_begin) && !empty($answer_stamp_end)) {
 		$sql_where_ands[] = "c.answer_stamp between :answer_stamp_begin and :answer_stamp_end";
 		$parameters['answer_stamp_begin'] = $answer_stamp_begin.':00.000';
 		$parameters['answer_stamp_end'] = $answer_stamp_end.':59.999';
@@ -231,7 +231,7 @@
 		$sql_where_ands[] = "c.answer_stamp <= :answer_stamp_end";
 		$parameters['answer_stamp_end'] = $answer_stamp_end.':59.999';
 	}
-	if (strlen($end_stamp_begin) > 0 && !empty($end_stamp_end)) {
+	if (!empty($end_stamp_begin) && !empty($end_stamp_end)) {
 		$sql_where_ands[] = "c.end_stamp between :end_stamp_begin and :end_stamp_end";
 		$parameters['end_stamp_begin'] = $end_stamp_begin.':00.000';
 		$parameters['end_stamp_end'] = $end_stamp_end.':59.999';
@@ -284,7 +284,7 @@
 		$sql_where_ands[] = "c.network_addr like :network_addr";
 		$parameters['network_addr'] = '%'.$network_addr.'%';
 	}
-	if (strlen($mos_comparison) > 0 && !empty($mos_score) ) {
+	if (!empty($mos_comparison) && !empty($mos_score) ) {
 		$sql_where_ands[] = "c.rtp_audio_in_mos ".$mos_comparison." :mos_score";
 		$parameters['mos_score'] = $mos_score;
 	}
@@ -435,12 +435,12 @@
 	if ($missed == true) {
 		$sql .= "and c.missed_call = true ";
 	}
-	if (strlen($start_epoch) > 0 && !empty($stop_epoch)) {
+	if (!empty($start_epoch) && !empty($stop_epoch)) {
 		$sql .= "and c.start_epoch between :start_epoch and :stop_epoch \n";
 		$parameters['start_epoch'] = $start_epoch;
 		$parameters['stop_epoch'] = $stop_epoch;
 	}
-	if (strlen($start_date) > 0 && !empty($stop_date)) {
+	if (!empty($start_date) && !empty($stop_date)) {
 		$sql .= "and c.start_stamp between :start_date and :stop_date \n";
 		$parameters['start_date'] = $start_date;
 		$parameters['stop_date'] = $stop_date;
@@ -483,7 +483,7 @@
 		$sql .= "and c.context like :context \n";
 		$parameters['context'] = '%'.$context.'%';
 	}
-	if (strlen($start_stamp_begin) > 0 && !empty($start_stamp_end)) {
+	if (!empty($start_stamp_begin) && !empty($start_stamp_end)) {
 		$sql .= "and c.start_stamp between :start_stamp_begin and :start_stamp_end \n";
 		$parameters['start_stamp_begin'] = $start_stamp_begin.':00.000';
 		$parameters['start_stamp_end'] = $start_stamp_end.':59.999';
@@ -496,7 +496,7 @@
 		$sql .= "and c.start_stamp <= :start_stamp_end \n";
 		$parameters['start_stamp_end'] = $start_stamp_end.':59.999';
 	}
-	if (strlen($answer_stamp_begin) > 0 && !empty($answer_stamp_end)) {
+	if (!empty($answer_stamp_begin) && !empty($answer_stamp_end)) {
 		$sql .= "and c.answer_stamp between :answer_stamp_begin and :answer_stamp_end \n";
 		$parameters['answer_stamp_begin'] = $answer_stamp_begin.':00.000';
 		$parameters['answer_stamp_end'] = $answer_stamp_end.':59.999';
@@ -509,7 +509,7 @@
 		$sql .= "and c.answer_stamp <= :answer_stamp_end \n";
 		$parameters['answer_stamp_end'] = $answer_stamp_end.':59.999';
 	}
-	if (strlen($end_stamp_begin) > 0 && !empty($end_stamp_end)) {
+	if (!empty($end_stamp_begin) && !empty($end_stamp_end)) {
 		$sql .= "and c.end_stamp between :end_stamp_begin and :end_stamp_end \n";
 		$parameters['end_stamp_begin'] = $end_stamp_begin.':00.000';
 		$parameters['end_stamp_end'] = $end_stamp_end.':59.999';
@@ -562,7 +562,7 @@
 		$sql .= "and c.network_addr like :network_addr \n";
 		$parameters['network_addr'] = '%'.$network_addr.'%';
 	}
-	if (strlen($mos_comparison) > 0 && !empty($mos_score) ) {
+	if (!empty($mos_comparison) && !empty($mos_score) ) {
 		$sql .= "and c.rtp_audio_in_mos ".$mos_comparison." :mos_score \n";
 		$parameters['mos_score'] = $mos_score;
 	}
