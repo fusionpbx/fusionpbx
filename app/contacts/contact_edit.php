@@ -529,7 +529,7 @@
 					$_SESSION["message"] = $text['message-update'];
 				}
 				//header('Location: contacts.php');
-				header('Location: contact_edit.php?id='.urlencode($contact_uuid));
+				header('Location: contact_edit.php?id='.urlencode($contact_uuid ?? ''));
 				return;
 			}
 	}
@@ -1057,7 +1057,7 @@
 		}
 
 		echo button::create(['type'=>'button','label'=>$text['button-qr_code'],'icon'=>'qrcode','collapse'=>'hide-sm-dn','onclick'=>"$('#qr_code_container').fadeIn(400);"]);
-		echo button::create(['type'=>'button','label'=>$text['button-vcard'],'icon'=>'address-card','collapse'=>'hide-sm-dn','link'=>'contacts_vcard.php?id='.urlencode($contact_uuid).'&type=download']);
+		echo button::create(['type'=>'button','label'=>$text['button-vcard'],'icon'=>'address-card','collapse'=>'hide-sm-dn','link'=>'contacts_vcard.php?id='.urlencode($contact_uuid ?? '').'&type=download']);
 	}
 	//add edit
 	//if (isset($id)) {
@@ -1066,7 +1066,7 @@
 
 	//add user
 	if (isset($id) && permission_exists('user_edit')) {
-		echo button::create(['type'=>'button','label'=>$text['button-user'],'icon'=>'user','collapse'=>'hide-sm-dn','link'=>'../../core/users/user_edit.php?id='.urlencode($contact_user_uuid)]);
+		echo button::create(['type'=>'button','label'=>$text['button-user'],'icon'=>'user','collapse'=>'hide-sm-dn','link'=>'../../core/users/user_edit.php?id='.urlencode($contact_user_uuid ?? '')]);
 	}
 	if (
 		$action == "update" && (
@@ -1080,7 +1080,7 @@
 		permission_exists('contact_setting_add') ||
 		permission_exists('contact_attachment_add')
 		)) {
-		echo 		"<select class='formfld' style='width: auto; margin-left: 15px;' id='select_add' onchange=\"document.location.href='contact_' + (this.options[this.selectedIndex].value) + '_edit.php?contact_uuid=".urlencode($contact_uuid)."';\">\n";
+		echo 		"<select class='formfld' style='width: auto; margin-left: 15px;' id='select_add' onchange=\"document.location.href='contact_' + (this.options[this.selectedIndex].value) + '_edit.php?contact_uuid=".urlencode($contact_uuid ?? '')."';\">\n";
 		echo "			<option value=''>".$text['button-add']."...</option>\n";
 		if (permission_exists('contact_phone_add')) { echo "<option value='phone'>".$text['label-phone_number']."</option>\n"; }
 		if (permission_exists('contact_address_add')) { echo "<option value='address'>".$text['label-address_address']."</option>\n"; }
@@ -1596,18 +1596,18 @@ if (permission_exists('contact_phone_view')) {
 
 		$call = "send_cmd('";
 		$call .= PROJECT_PATH."/app/click_to_call/click_to_call.php";
-		$call .= "?src_cid_name=".urlencode($row['phone_number']);
-		$call .= "&src_cid_number=".urlencode($row['phone_number']);
-		$call .= "&dest_cid_name=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_name']);
-		$call .= "&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number']);
-		$call .= "&src=".urlencode($_SESSION['user']['extension'][0]['user']);
-		$call .= "&dest=".urlencode($row['phone_number']);
+		$call .= "?src_cid_name=".urlencode($row['phone_number'] ?? '');
+		$call .= "&src_cid_number=".urlencode($row['phone_number'] ?? '');
+		$call .= "&dest_cid_name=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_name'] ?? '');
+		$call .= "&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number'] ?? '');
+		$call .= "&src=".urlencode($_SESSION['user']['extension'][0]['user'] ?? '');
+		$call .= "&dest=".urlencode($row['phone_number'] ?? '');
 		$call .= "&rec=false";
 		$call .= "&ringback=us-ring";
 		$call .= "&auto_answer=true";
 		$call .= "');";
 		echo "				<a href='' onclick=\"".$call."\">\n";
-		echo "					<i class='fas fa-phone fa-fw' style='color: ".$_SESSION['theme']['body_text_color']."; float: left; margin-top: 7px; margin-left: 7px;' title=\"".urlencode($row['phone_number'])."\"></i>\n";
+		echo "					<i class='fas fa-phone fa-fw' style='color: ".$_SESSION['theme']['body_text_color']."; float: left; margin-top: 7px; margin-left: 7px;' title=\"".urlencode($row['phone_number'] ?? '')."\"></i>\n";
 		echo "				</a>\n";
 
 		echo "			</div>\n";
@@ -2180,7 +2180,7 @@ if (permission_exists('contact_url_view')) {
 
 		echo 					(is_array($url_label_options)) ? implode("\n", $url_label_options) : null;
 		echo "				</select>\n";
-		echo "				<input type='text' class='formfld' ".(($url_label_found || $url_label == '') ? "style='display: none;'" : null)." name='url_label_custom' id='url_label_custom' value=\"".((!$url_label_found) ? htmlentities($url_label) : null)."\">\n";
+		echo "				<input type='text' class='formfld' ".(($url_label_found || $url_label == '') ? "style='display: none;'" : null)." name='url_label_custom' id='url_label_custom' value=\"".((!$url_label_found) ? htmlentities($url_label ?? '') : null)."\">\n";
 		//echo "				<input type='button' id='btn_toggle_label' class='btn' alt='".$text['button-back']."' value='&#9665;' onclick=\"toggle_custom('url_label');\">\n";
 		echo "			</div>\n";
 
