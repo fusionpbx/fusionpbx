@@ -55,16 +55,6 @@ class events {
 	}
 
 	/**
-	 * Called when there are no references to a particular object
-	 * unset the variables used in the class
-	 */
-	public function __destruct() {
-		foreach ($this as $key => $value) {
-			unset($this->$key);
-		}
-	}
-
-	/**
 	 * This function will load all available plugins into the memory
 	 * Rules:
 	 * 		plugins are stored in ./plugins

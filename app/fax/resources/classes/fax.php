@@ -66,16 +66,6 @@ if (!class_exists('fax')) {
 		}
 
 		/**
-		* Called when there are no references to a particular object
-		* unset the variables used in the class
-		*/
-		public function __destruct() {
-			foreach ($this as $key => $value) {
-				unset($this->$key);
-			}
-		}
-
-		/**
 		* Add a dialplan for call center
 		* @var string $domain_uuid		the multi-tenant id
 		* @var string $value	string to be cached

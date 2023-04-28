@@ -24,16 +24,6 @@ class authentication {
 	}
 
 	/**
-	 * Called when there are no references to a particular object
-	 * unset the variables used in the class
-	 */
-	public function __destruct() {
-		foreach ($this as $key => $value) {
-			unset($this->$key);
-		}
-	}
-
-	/**
 	 * validate uses authentication plugins to check if a user is authorized to login
 	 * @return array [plugin] => last plugin used to authenticate the user [authorized] => true or false
 	 */

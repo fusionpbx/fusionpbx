@@ -31,16 +31,6 @@ class config {
 	}
 
 	/**
-	 * Called when there are no references to a particular object
-	 * unset the variables used in the class
-	 */
-	public function __destruct() {
-		foreach ($this as $key => $value) {
-			unset($this->$key);
-		}
-	}
-
-	/**
 	 * Determine whether the config.php exists
 	 * @var string $db_type - type of database
 	 * @var string $db_name - name of the database

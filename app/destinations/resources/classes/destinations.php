@@ -69,16 +69,6 @@ if (!class_exists('destinations')) {
 		}
 
 		/**
-		* Called when there are no references to a particular object
-		* unset the variables used in the class
-		*/
-		public function __destruct() {
-			foreach ($this as $key => $value) {
-				unset($this->$key);
-			}
-		}
-
-		/**
 		* Convert destination number to a regular expression
 		* @var string $array destination_prefix, destination_trunk_prefix, destination_area_code, destination_number
 		*/

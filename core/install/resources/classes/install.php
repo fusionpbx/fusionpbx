@@ -25,16 +25,6 @@ if (!class_exists('install')) {
 		}
 
 		/**
-		 * called when there are no references to a particular object
-		 * unset the variables used in the class
-		 */
-		public function __destruct() {
-			foreach ($this as $key => $value) {
-				unset($this->$key);
-			}
-		}
-
-		/**
 		 * <p>Used to create the config.conf file.</p>
 		 * <p>BSD /usr/local/etc/fusionpbx</p>
 		 * <p>Linux /etc/fusionpbx</p>

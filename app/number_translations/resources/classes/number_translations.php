@@ -63,16 +63,6 @@ if (!class_exists('number_translations')) {
 		}
 
 		/**
-		 * called when there are no references to a particular object
-		 * unset the variables used in the class
-		 */
-		public function __destruct() {
-			foreach ($this as $key => $value) {
-				unset($this->$key);
-			}
-		}
-
-		/**
 		 * Check to see if the number translation already exists
 		 */
 		public function number_translation_exists($name) {
