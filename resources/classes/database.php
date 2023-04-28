@@ -384,16 +384,6 @@
 			}
 
 			/**
-			 * Called when there are no references to a particular object
-			 * unset the variables used in the class
-			 */
-			public function __destruct() {
-				foreach ($this as $key => $value) {
-					unset($this->$key);
-				}
-			}
-
-			/**
 			 * <p>Connect to the database.</p>
 			 * <p>Database driver must be set before calling connect.</p>
 			 * <p>For types other than sqlite. Execution will stop on failure.</p>

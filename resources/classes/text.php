@@ -51,16 +51,6 @@ class text {
 	}
 
 	/**
-	 * Called when there are no references to a particular object
-	 * unset the variables used in the class
-	 */
-	public function __destruct() {
-		if (is_array($this)) foreach ($this as $key => $value) {
-			unset($this->$key);
-		}
-	}
-
-	/**
 	 * Get a specific item from the cache
 	 * @var string $language_code	examples: en-us, es-cl, fr-fr, pt-pt
 	 * @var string $app_path		examples: app/exec or core/domains
