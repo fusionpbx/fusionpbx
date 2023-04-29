@@ -5,11 +5,11 @@
 	$apps[$x]['menu'][$y]['title']['en-gb'] = "Access Controls";
 	$apps[$x]['menu'][$y]['title']['ar-eg'] = "عناصر التحكم في الوصول";
 	$apps[$x]['menu'][$y]['title']['de-at'] = " Zugriffskontrolle";
-	$apps[$x]['menu'][$y]['title']['de-ch'] = "";
+	$apps[$x]['menu'][$y]['title']['de-ch'] = "Zugriffskontrollen";
 	$apps[$x]['menu'][$y]['title']['de-de'] = " Zugriffskontrolle";
 	$apps[$x]['menu'][$y]['title']['es-cl'] = "Controles de acceso";
-	$apps[$x]['menu'][$y]['title']['es-mx'] = "";
-	$apps[$x]['menu'][$y]['title']['fr-ca'] = "";
+	$apps[$x]['menu'][$y]['title']['es-mx'] = "Controles de acceso";
+	$apps[$x]['menu'][$y]['title']['fr-ca'] = "Contrôles d'accès";
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Contrôles d'accès";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "בקרת גישה";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Controlli Accesso";
