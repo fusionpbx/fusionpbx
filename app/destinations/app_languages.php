@@ -249,7 +249,7 @@ $text['button-local']['pl-pl'] = "Miejsc";
 $text['button-local']['pt-br'] = "Local";
 $text['button-local']['pt-pt'] = "local local";
 $text['button-local']['ro-ro'] = "";
-$text['button-local']['ru-ru'] = "Местные";
+$text['button-local']['ru-ru'] = "Местные";1647
 $text['button-local']['sv-se'] = "Lokalt";
 $text['button-local']['uk-ua'] = "Головна";
 
@@ -1644,7 +1644,7 @@ $text['description-carrier']['uk-ua'] = "Введіть назву операт�
 
 $text['description-destination_hold_music']['en-us'] = "Select the MOH Category here.";
 $text['description-destination_hold_music']['en-gb'] = "Select the MOH Category here.";
-$text['description-destination_hold_music']['ar-eg'] = ""إختاروا "الموه الفئة هنا";
+$text['description-destination_hold_music']['ar-eg'] = '"إختاروا "الموه الفئة هنا';
 $text['description-destination_hold_music']['de-at'] = "Wählen Sie die Wartemusik Kategorie.";
 $text['description-destination_hold_music']['de-ch'] = "Wählen Sie die Wartemusik Kategorie.";
 $text['description-destination_hold_music']['de-de'] = "Wählen Sie die Wartemusik Kategorie.";
