@@ -2543,6 +2543,10 @@ $text['label-device_location']['ru-ru'] = "Местоположение";
 $text['label-device_location']['sv-se'] = "Ange enhetens plats.";
 $text['label-device_location']['uk-ua'] = "Введіть розташування пристрою.";
 
+$text['label-device_emergency_cid']['en-us'] = 'Emergency Caller ID';
+
+$text['description-device_emergency_cid']['en-us'] = 'The Emergency Caller ID to send when calling from a hotdesk device';
+
 $text['label-device_key_vendor']['en-us'] = "Vendor";
 $text['label-device_key_vendor']['en-gb'] = "Vendor";
 $text['label-device_key_vendor']['ar-eg'] = "البائع";

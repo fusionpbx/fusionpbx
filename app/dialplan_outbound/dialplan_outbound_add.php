@@ -616,6 +616,17 @@
 								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $dialplan_uuid;
 								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = 'action';
 								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = 'lua';
+								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = "emergency_cid.lua'";
+								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $y * 10;
+								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
+								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_enabled'] = 'true';
+
+								$y++;
+								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_uuid'] = uuid();
+								$array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = $_SESSION['domain_uuid'];
+								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $dialplan_uuid;
+								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = 'action';
+								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = 'lua';
 								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = "email.lua \${email_to} \${email_from} '' 'Emergency Call' '\${sip_from_user}@\${domain_name} has called 911 emergency'";
 								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $y * 10;
 								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
