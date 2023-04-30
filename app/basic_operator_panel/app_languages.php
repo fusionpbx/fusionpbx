@@ -20,7 +20,7 @@ $text['title-operator_panel']['pt-pt'] = "Painel do Operador";
 $text['title-operator_panel']['ro-ro'] = "Panoul operator";
 $text['title-operator_panel']['ru-ru'] = "Панель Оператора";
 $text['title-operator_panel']['sv-se'] = "Telefonist Panel";
-$text['title-operator_panel']['uk-ua'] = "ÐŸÐ°Ð½ÐµÐ»ÑŒ Ð¾Ð¿ÐµÑ€Ð°Ñ‚Ð¾Ñ€Ð°";
+$text['title-operator_panel']['uk-ua'] = "";
 
 $text['label-status_on_demand']['en-us'] = "On Demand";
 $text['label-status_on_demand']['en-gb'] = "On Demand";
@@ -41,7 +41,7 @@ $text['label-status_on_demand']['pt-pt'] = "A Pedido";
 $text['label-status_on_demand']['ro-ro'] = "La cerere";
 $text['label-status_on_demand']['ru-ru'] = "По требованию";
 $text['label-status_on_demand']['sv-se'] = "På Begäran";
-$text['label-status_on_demand']['uk-ua'] = "ÐÐ° Ð²Ð¸Ð¼Ð¾Ð³Ñƒ";
+$text['label-status_on_demand']['uk-ua'] = "";
 
 $text['label-status_on_break']['en-us'] = "On Break";
 $text['label-status_on_break']['en-gb'] = "On Break";
@@ -62,7 +62,7 @@ $text['label-status_on_break']['pt-pt'] = "Em Pausa";
 $text['label-status_on_break']['ro-ro'] = "In pauza";
 $text['label-status_on_break']['ru-ru'] = "Пауза";
 $text['label-status_on_break']['sv-se'] = "På Rast";
-$text['label-status_on_break']['uk-ua'] = "ÐÐ° Ð¿ÐµÑ€ÐµÑ€Ð²Ñ–";
+$text['label-status_on_break']['uk-ua'] = "";
 
 $text['label-status_logged_out_or_unknown']['en-us'] = "Logged Out / Unknown";
 $text['label-status_logged_out_or_unknown']['en-gb'] = "Logged Out / Unknown";
@@ -83,7 +83,7 @@ $text['label-status_logged_out_or_unknown']['pt-pt'] = "Desligado / Unknown";
 $text['label-status_logged_out_or_unknown']['ro-ro'] = "Deconectat/Necunoscut";
 $text['label-status_logged_out_or_unknown']['ru-ru'] = "Вышел из системы / Неизвестен";
 $text['label-status_logged_out_or_unknown']['sv-se'] = "Utloggad / Okänd";
-$text['label-status_logged_out_or_unknown']['uk-ua'] = "Ð’Ð¸Ð¹ÑˆÐ¾Ð²/Ð½ÐµÐ²Ñ–Ð´Ð¾Ð¼Ð¾";
+$text['label-status_logged_out_or_unknown']['uk-ua'] = "";
 
 $text['label-status_logged_out']['en-us'] = "Logged Out";
 $text['label-status_logged_out']['en-gb'] = "Logged Out";
@@ -104,7 +104,7 @@ $text['label-status_logged_out']['pt-pt'] = "Desligado";
 $text['label-status_logged_out']['ro-ro'] = "Delogat";
 $text['label-status_logged_out']['ru-ru'] = "Вышел из системы";
 $text['label-status_logged_out']['sv-se'] = "Utloggad";
-$text['label-status_logged_out']['uk-ua'] = "Ð’Ð¸Ð¹ÑˆÐ¾Ð²";
+$text['label-status_logged_out']['uk-ua'] = "";
 
 $text['label-status_do_not_disturb']['en-us'] = "Do Not Disturb";
 $text['label-status_do_not_disturb']['en-gb'] = "Do Not Disturb";
@@ -125,7 +125,7 @@ $text['label-status_do_not_disturb']['pt-pt'] = "Não perturbe (DND)";
 $text['label-status_do_not_disturb']['ro-ro'] = "Nu deranjați";
 $text['label-status_do_not_disturb']['ru-ru'] = "Просьба не беспокоить";
 $text['label-status_do_not_disturb']['sv-se'] = "Stör Ej";
-$text['label-status_do_not_disturb']['uk-ua'] = "ÐÐµ Ñ‚ÑƒÑ€Ð±ÑƒÐ²Ð°Ñ‚Ð¸";
+$text['label-status_do_not_disturb']['uk-ua'] = "";
 
 $text['label-status_available_on_demand']['en-us'] = "Available (On Demand)";
 $text['label-status_available_on_demand']['en-gb'] = "Available (On Demand)";
@@ -146,7 +146,7 @@ $text['label-status_available_on_demand']['pt-pt'] = "Disponível (A Pedido)";
 $text['label-status_available_on_demand']['ro-ro'] = "Disponibil (la cerere)";
 $text['label-status_available_on_demand']['ru-ru'] = "Доступен (по требованию)";
 $text['label-status_available_on_demand']['sv-se'] = "Tillgänglig (På Begäran)";
-$text['label-status_available_on_demand']['uk-ua'] = "Ð”Ð¾ÑÑ‚ÑƒÐ¿Ð½Ð¸Ð¹ (Ð½Ð° Ð²Ð¸Ð¼Ð¾Ð³Ñƒ)";
+$text['label-status_available_on_demand']['uk-ua'] = "";
 
 $text['label-status_available']['en-us'] = "Available";
 $text['label-status_available']['en-gb'] = "Available";
@@ -162,12 +162,12 @@ $text['label-status_available']['he-il'] = "זמין";
 $text['label-status_available']['it-it'] = "Disponibile";
 $text['label-status_available']['nl-nl'] = "Beschikbaar";
 $text['label-status_available']['pl-pl'] = "Dostępny";
-$text['label-status_available']['pt-br'] = "DisponÃ­vel";
+$text['label-status_available']['pt-br'] = "Disponível";
 $text['label-status_available']['pt-pt'] = "Disponível";
 $text['label-status_available']['ro-ro'] = "Disponibil";
 $text['label-status_available']['ru-ru'] = "Доступен";
 $text['label-status_available']['sv-se'] = "Tillgänglig";
-$text['label-status_available']['uk-ua'] = "Ð”Ð¾ÑÑ‚ÑƒÐ¿Ð½Ð¸Ð¹";
+$text['label-status_available']['uk-ua'] = "";
 
 $text['label-refresh_pause']['en-us'] = "Pause Refresh";
 $text['label-refresh_pause']['en-gb'] = "Pause Refresh";
@@ -188,7 +188,7 @@ $text['label-refresh_pause']['pt-pt'] = "Pausa Atualizar";
 $text['label-refresh_pause']['ro-ro'] = "Întrerupeți reîmprospătarea";
 $text['label-refresh_pause']['ru-ru'] = "Приостановить обновление";
 $text['label-refresh_pause']['sv-se'] = "Paus Uppdatera";
-$text['label-refresh_pause']['uk-ua'] = "ÐŸÑ€Ð¸Ð¿Ð¸Ð½Ð¸Ñ‚Ð¸ Ð¾Ð½Ð¾Ð²Ð»ÐµÐ½Ð½Ñ";
+$text['label-refresh_pause']['uk-ua'] = "";
 
 $text['label-refresh_enable']['en-us'] = "Enable Refresh";
 $text['label-refresh_enable']['en-gb'] = "Enable Refresh";
@@ -209,7 +209,7 @@ $text['label-refresh_enable']['pt-pt'] = "Habilitar Atualização";
 $text['label-refresh_enable']['ro-ro'] = "Activați Reîmprospătare";
 $text['label-refresh_enable']['ru-ru'] = "Включить обновление";
 $text['label-refresh_enable']['sv-se'] = "Aktivera Uppdatering";
-$text['label-refresh_enable']['uk-ua'] = "Ð’ÐºÐ»ÑŽÑ‡Ð¸Ñ‚Ð¸ Ð¾Ð½Ð¾Ð²Ð»ÐµÐ½Ð½Ñ";
+$text['label-refresh_enable']['uk-ua'] = "";
 
 $text['label-recording']['en-us'] = "Recording";
 $text['label-recording']['en-gb'] = "Recording";
@@ -230,7 +230,7 @@ $text['label-recording']['pt-pt'] = "Gravação de Chamadas";
 $text['label-recording']['ro-ro'] = "Înregistrare";
 $text['label-recording']['ru-ru'] = "Запись";
 $text['label-recording']['sv-se'] = "Inspelning";
-$text['label-recording']['uk-ua'] = "Ð—Ð°Ð¿Ð¸Ñ";
+$text['label-recording']['uk-ua'] = "";
 
 $text['label-record']['en-us'] = "Record";
 $text['label-record']['en-gb'] = "Record";
@@ -251,7 +251,7 @@ $text['label-record']['pt-pt'] = "Registro";
 $text['label-record']['ro-ro'] = "Record";
 $text['label-record']['ru-ru'] = "Воспроизведение";
 $text['label-record']['sv-se'] = "Spela In";
-$text['label-record']['uk-ua'] = "Ð—Ð°Ð¿Ð¸Ñ";
+$text['label-record']['uk-ua'] = "";
 
 $text['label-other_extensions']['en-us'] = "Other Extensions";
 $text['label-other_extensions']['en-gb'] = "Other Extensions";
@@ -272,7 +272,7 @@ $text['label-other_extensions']['pt-pt'] = "Outros Extensions";
 $text['label-other_extensions']['ro-ro'] = "Alte extensii";
 $text['label-other_extensions']['ru-ru'] = "Другие внутренние номера";
 $text['label-other_extensions']['sv-se'] = "Annan Anknytning";
-$text['label-other_extensions']['uk-ua'] = "Ð†Ð½ÑˆÑ– Ñ€Ð¾Ð·ÑˆÐ¸Ñ€ÐµÐ½Ð½Ñ";
+$text['label-other_extensions']['uk-ua'] = "";
 
 $text['label-no_extensions_found']['en-us'] = "No extensions found.";
 $text['label-no_extensions_found']['en-gb'] = "No extensions found.";
@@ -293,7 +293,7 @@ $text['label-no_extensions_found']['pt-pt'] = "Sem extensões encontrado.";
 $text['label-no_extensions_found']['ro-ro'] = "Nu s-au găsit extensii.";
 $text['label-no_extensions_found']['ru-ru'] = "Внутренних номеров не найдено.";
 $text['label-no_extensions_found']['sv-se'] = "Ingen anknytning funnen.";
-$text['label-no_extensions_found']['uk-ua'] = "ÐÐµ Ð·Ð½Ð°Ð¹Ð´ÐµÐ½Ð¾ Ñ€Ð¾Ð·ÑˆÐ¸Ñ€ÐµÐ½ÑŒ";
+$text['label-no_extensions_found']['uk-ua'] = "";
 
 $text['label-hangup']['en-us'] = "Hangup";
 $text['label-hangup']['en-gb'] = "Hangup";
@@ -419,6 +419,6 @@ $text['button-all']['pt-pt'] = "Tudo";
 $text['button-all']['ro-ro'] = "Toate";
 $text['button-all']['ru-ru'] = "Все";
 $text['button-all']['sv-se'] = "Alla";
-$text['button-all']['uk-ua'] = "Ð’ÑÑ–";
+$text['button-all']['uk-ua'] = "";
 
 ?>
