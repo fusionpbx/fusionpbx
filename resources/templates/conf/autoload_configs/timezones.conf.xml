@@ -273,7 +273,7 @@
 	<zone name="Asia/Istanbul" value="EET-2EEST,M3.5.0/3,M10.5.0/4" />
 	<zone name="Asia/Jakarta" value="WIB-7" />
 	<zone name="Asia/Jayapura" value="WIT-9" />
-	<zone name="Asia/Jerusalem" value="IDDT" />
+	<zone name="Asia/Jerusalem" value="IDT" />
 	<zone name="Asia/Kabul" value="AFT-4:30" />
 	<zone name="Asia/Kamchatka" value="PETT-12" />
 	<zone name="Asia/Karachi" value="PKT-5" />
