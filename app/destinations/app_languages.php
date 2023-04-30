@@ -249,7 +249,7 @@ $text['button-local']['pl-pl'] = "Miejsc";
 $text['button-local']['pt-br'] = "Local";
 $text['button-local']['pt-pt'] = "local local";
 $text['button-local']['ro-ro'] = "";
-$text['button-local']['ru-ru'] = "Местные";1647
+$text['button-local']['ru-ru'] = "Местные";
 $text['button-local']['sv-se'] = "Lokalt";
 $text['button-local']['uk-ua'] = "Головна";
 
