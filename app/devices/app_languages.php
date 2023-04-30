@@ -3224,6 +3224,10 @@ $text['label-device_serial_number']['zh-cn'] = "序列号";
 $text['label-device_serial_number']['ja-jp'] = "シリアル番号";
 $text['label-device_serial_number']['ko-kr'] = "시리얼 번호";
 
+$text['label-device_emergency_cid']['en-us'] = 'Emergency Caller ID';
+
+$text['description-device_emergency_cid']['en-us'] = 'The Emergency Caller ID to send when calling from a hotdesk device';
+
 $text['label-device_key_vendor']['en-us'] = "Vendor";
 $text['label-device_key_vendor']['en-gb'] = "Vendor";
 $text['label-device_key_vendor']['ar-eg'] = "البائع";
