@@ -14,6 +14,7 @@
 		$apps[$x]['description']['de-at'] = "Stellt ein Authentifizierungs-Framework mit Plugins bereit, um zu prüfen, ob ein Benutzer zur Anmeldung berechtigt ist.";
 		$apps[$x]['description']['de-ch'] = "Stellt ein Authentifizierungs-Framework mit Plugins bereit, um zu prüfen, ob ein Benutzer zur Anmeldung berechtigt ist.";
 		$apps[$x]['description']['de-at'] = "Stellt ein Authentifizierungs-Framework mit Plugins bereit, um zu prüfen, obsich ein Benutzer anmelden darf.";
+		$apps[$x]['description']['el-gr'] = "Παρέχει ένα πλαίσιο ελέγχου ταυτότητας με προσθήκες για να ελέγχει εάν ένας χρήστης είναι εξουσιοδοτημένος να συνδεθεί.";		
 		$apps[$x]['description']['es-cl'] = "Proporciona un marco de autenticación con complementos para verificar si un usuario está autorizado para iniciar sesión.";
 		$apps[$x]['description']['es-mx'] = "Proporciona un marco de autenticación con complementos para verificar si un usuario está autorizado para iniciar sesión.";
 		$apps[$x]['description']['fr-ca'] = "Fournit un cadre d'authentification avec des plugins pour vérifier si un utilisateur est autorisé à se connecter.";
@@ -28,6 +29,7 @@
 		$apps[$x]['description']['ru-ru'] = "Предоставляет платформу проверки подлинности с плагинами для проверки авторизации пользователя.";
 		$apps[$x]['description']['sv-se'] = "Tillhandahåller ett autentiseringsramverk med plugins för att kontrollera om en användare är behörig att logga in.";
 		$apps[$x]['description']['uk-ua'] = "Надає структуру автентифікації з плагінами, щоб перевірити, чи користувач авторизований для входу.";
+		$apps[$x]['description']['tr-tr'] = "Bir kullanıcının oturum açmaya yetkili olup olmadığını kontrol etmek için eklentilerle bir kimlik doğrulama çerçevesi sağlar.";
 
 	//default settings
 		$y=0;
