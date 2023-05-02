@@ -1,17 +1,17 @@
 <?php
-
+	
 	$y=0;
 	$apps[$x]['menu'][$y]['title']['en-us'] = "Conference Centers";
 	$apps[$x]['menu'][$y]['title']['en-gb'] = "Conference Centers";
-	$apps[$x]['menu'][$y]['title']['ar-eg'] = "";
+	$apps[$x]['menu'][$y]['title']['ar-eg'] = "مراكز المؤتمرات";
 	$apps[$x]['menu'][$y]['title']['de-at'] = "Konferenz Zentrale";
-	$apps[$x]['menu'][$y]['title']['de-ch'] = "";
+	$apps[$x]['menu'][$y]['title']['de-ch'] = "Konferenzzentren";
 	$apps[$x]['menu'][$y]['title']['de-de'] = "Konferenz Zentrale";
 	$apps[$x]['menu'][$y]['title']['es-cl'] = "Cent. de Conferencias";
-	$apps[$x]['menu'][$y]['title']['es-mx'] = "";
-	$apps[$x]['menu'][$y]['title']['fr-ca'] = "";
+	$apps[$x]['menu'][$y]['title']['es-mx'] = "Conference Centers";
+	$apps[$x]['menu'][$y]['title']['fr-ca'] = "Centres de conférences";
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Centre de Conférences";
-	$apps[$x]['menu'][$y]['title']['he-il'] = "";
+	$apps[$x]['menu'][$y]['title']['he-il'] = "מרכזים";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Centro Conferenze";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Conferentie centra";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Centrum Konferencyjne";
@@ -29,15 +29,15 @@
 	$apps[$x]['menu'][$y]['groups'][] = "admin";
 	$y++;
 	$apps[$x]['menu'][$y]['title']['en-us'] = "Conference Centers";
-	$apps[$x]['menu'][$y]['title']['ar-eg'] = "";
+	$apps[$x]['menu'][$y]['title']['ar-eg'] = "مراكز المؤتمرات";
 	$apps[$x]['menu'][$y]['title']['de-at'] = "Konferenz Zentrale";
-	$apps[$x]['menu'][$y]['title']['de-ch'] = "";
+	$apps[$x]['menu'][$y]['title']['de-ch'] = "Konferenzzentren";
 	$apps[$x]['menu'][$y]['title']['de-de'] = "Konferenz Zentrale";
 	$apps[$x]['menu'][$y]['title']['es-cl'] = "Cent. de Conferencias";
-	$apps[$x]['menu'][$y]['title']['es-mx'] = "";
-	$apps[$x]['menu'][$y]['title']['fr-ca'] = "";
+	$apps[$x]['menu'][$y]['title']['es-mx'] = "Conference Centers";
+	$apps[$x]['menu'][$y]['title']['fr-ca'] = "Centres de conférences";
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Centre de Conférences";
-	$apps[$x]['menu'][$y]['title']['he-il'] = "";
+	$apps[$x]['menu'][$y]['title']['he-il'] = "מרכזים";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Centro Conferenze";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Conferentie centra";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Centrum Konferencyjne";
@@ -52,5 +52,6 @@
 	$apps[$x]['menu'][$y]['category'] = "internal";
 	$apps[$x]['menu'][$y]['path'] = "/app/conference_centers/conference_rooms.php";
 	$apps[$x]['menu'][$y]['groups'][] = "user";
+	$y++;
 
 ?>
