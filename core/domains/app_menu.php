@@ -3,16 +3,16 @@
 	$y=0;
 	$apps[$x]['menu'][$y]['title']['en-us'] = "Domains";
 	$apps[$x]['menu'][$y]['title']['en-gb'] = "Domains";
-	$apps[$x]['menu'][$y]['title']['ar-eg'] = "";
+	$apps[$x]['menu'][$y]['title']['ar-eg'] = "Domains";
 	$apps[$x]['menu'][$y]['title']['de-at'] = "Domänen";
 	$apps[$x]['menu'][$y]['title']['de-de'] = "Domänen";
 	$apps[$x]['menu'][$y]['title']['es-cl'] = "Dominios";
-	$apps[$x]['menu'][$y]['title']['es-mx'] = "";
-	$apps[$x]['menu'][$y]['title']['fr-ca'] = "";
+	$apps[$x]['menu'][$y]['title']['es-mx'] = "Dominios";
+	$apps[$x]['menu'][$y]['title']['fr-ca'] = "Domaines";
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "domaines";
-	$apps[$x]['menu'][$y]['title']['he-il'] = "";
+	$apps[$x]['menu'][$y]['title']['he-il'] = "דומיינים";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Domini";
-	$apps[$x]['menu'][$y]['title']['nl-nl'] = "";
+	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Domains";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Domeny";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Domínios";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Domínios";
@@ -25,5 +25,6 @@
 	$apps[$x]['menu'][$y]['category'] = "internal";
 	$apps[$x]['menu'][$y]['path'] = "/core/domains/domains.php";
 	$apps[$x]['menu'][$y]['groups'][] = "superadmin";
+	$y++;
 
 ?>
