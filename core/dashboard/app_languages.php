@@ -22,6 +22,7 @@
 		$text['title-dashboard']['ru-ru'] = "Панель пользователя";
 		$text['title-dashboard']['sv-se'] = "Användarpanel";
 		$text['title-dashboard']['uk-ua'] = "Панель користувача";
+		$text['title-dashboard']['tr-tr'] = "Gösterge Paneli";
 
 		$text['description-dashboard']['en-us'] = "Quickly access information and tools related to your account.";
 		$text['description-dashboard']['en-gb'] = "Quickly access information and tools related to your account.";
@@ -44,12 +45,15 @@
 		$text['description-dashboard']['ru-ru'] = "Быстрый доступ к информации и инструментам, связанным с вашей учетной записью.";
 		$text['description-dashboard']['sv-se'] = "Snabb tillgång till kontoinformation och funktioner.";
 		$text['description-dashboard']['uk-ua'] = "Швидкий доступ до інформації та інструментів  вашого облікового запису.";
+		$text['description-dashboard']['tr-tr'] = "Hesabınızla ilgili bilgilere ve araçlara hızla erişin.";
 
 		$text['label-group_uuid']['en-us'] = 'Group UUID';
+		$text['label-group_uuid']['en-gb'] = 'Group UUID';
 		$text['label-group_uuid']['ar-eg'] = 'UUID المجموعة';
 		$text['label-group_uuid']['de-at'] = 'Gruppen-UUID';
 		$text['label-group_uuid']['de-ch'] = 'Gruppen-UUID';
 		$text['label-group_uuid']['de-de'] = 'Gruppen-UUID';
+		$text['label-group_uuid']['el-gr'] = 'Ομάδα UUID';
 		$text['label-group_uuid']['es-cl'] = 'UUID de grupo';
 		$text['label-group_uuid']['es-mx'] = 'UUID de grupo';
 		$text['label-group_uuid']['fr-ca'] = 'UUID De Groupe';
@@ -64,12 +68,15 @@
 		$text['label-group_uuid']['ru-ru'] = 'UUID группы';
 		$text['label-group_uuid']['sv-se'] = 'Grupp UUID';
 		$text['label-group_uuid']['uk-ua'] = 'UUID групи';
+		$text['label-group_uuid']['tr-tr'] = "Grup UUID'si";
 
 		$text['description-group_uuid']['en-us'] = 'Enter the group uuid.';
+		$text['description-group_uuid']['en-gb'] = 'Enter the group uuid.';
 		$text['description-group_uuid']['ar-eg'] = 'أدخل uuid للمجموعة.';
 		$text['description-group_uuid']['de-at'] = 'Geben Sie die Gruppen-UUID ein.';
 		$text['description-group_uuid']['de-ch'] = 'Geben Sie die Gruppen-UUID ein.';
 		$text['description-group_uuid']['de-de'] = 'Geben Sie die Gruppen-UUID ein.';
+		$text['description-group_uuid']['el-gr'] = 'Εισαγάγετε την ομάδα uuid.';
 		$text['description-group_uuid']['es-cl'] = 'Introduzca el uuid del grupo.';
 		$text['description-group_uuid']['es-mx'] = 'Introduzca el uuid del grupo.';
 		$text['description-group_uuid']['fr-ca'] = "Saisissez l'UUID De Groupe";
@@ -84,12 +91,15 @@
 		$text['description-group_uuid']['ru-ru'] = 'Введите UUID группы.';
 		$text['description-group_uuid']['sv-se'] = 'Ange gruppens uuid.';
 		$text['description-group_uuid']['uk-ua'] = 'Введіть uuid групи.';
+		$text['description-group_uuid']['uk-ua'] = "Grup uuid'sini girin.";
 
 		$text['label-dashboard_name']['en-us'] = 'Name';
+		$text['label-dashboard_name']['en-gb'] = 'Name';
 		$text['label-dashboard_name']['ar-eg'] = 'اسم';
 		$text['label-dashboard_name']['de-at'] = 'Name';
 		$text['label-dashboard_name']['de-ch'] = 'Name';
 		$text['label-dashboard_name']['de-de'] = 'Name';
+		$text['label-dashboard_name']['el-gr'] = 'Ονομα';
 		$text['label-dashboard_name']['es-cl'] = 'Nombre';
 		$text['label-dashboard_name']['es-mx'] = 'Nombre';
 		$text['label-dashboard_name']['fr-ca'] = 'Nom';
@@ -104,12 +114,15 @@
 		$text['label-dashboard_name']['ru-ru'] = 'Имя';
 		$text['label-dashboard_name']['sv-se'] = 'namn';
 		$text['label-dashboard_name']['uk-ua'] = "Ім'я";
+		$text['label-dashboard_name']['tr-tr'] = 'İsim';
 
 		$text['description-dashboard_name']['en-us'] = 'Enter the dashboard widget name.';
+		$text['description-dashboard_name']['en-gb'] = 'Enter the dashboard widget name.';
 		$text['description-dashboard_name']['ar-eg'] = 'أدخل اسم أداة لوحة القيادة.';
 		$text['description-dashboard_name']['de-at'] = 'Geben Sie den Namen des Dashboard-Widgets ein.';
 		$text['description-dashboard_name']['de-ch'] = 'Geben Sie den Namen des Dashboard-Widgets ein.';
 		$text['description-dashboard_name']['de-de'] = 'Geben Sie den Namen des Dashboard-Widgets ein.';
+		$text['description-dashboard_name']['el-gr'] = 'Εισαγάγετε το όνομα του γραφικού στοιχείου του πίνακα ελέγχου.';
 		$text['description-dashboard_name']['es-cl'] = 'Introduzca el nombre del widget del panel.';
 		$text['description-dashboard_name']['es-mx'] = 'Introduzca el nombre del widget del panel.';
 		$text['description-dashboard_name']['fr-ca'] = 'Saisissez le nom du widget du tableau de bord.';
@@ -124,12 +137,15 @@
 		$text['description-dashboard_name']['ru-ru'] = 'Введите имя виджета панели мониторинга.';
 		$text['description-dashboard_name']['sv-se'] = 'Introduceți numele widget-ului tabloului de bord.';
 		$text['description-dashboard_name']['uk-ua'] = 'Введіть назву віджета інформаційної панелі.';
+		$text['description-dashboard_name']['tr-tr'] = 'Pano widget adını girin.';
 
 		$text['label-dashboard_path']['en-us'] = 'Path';
+		$text['label-dashboard_path']['en-gb'] = 'Path';
 		$text['label-dashboard_path']['ar-eg'] = 'طريق';
 		$text['label-dashboard_path']['de-at'] = 'Weg';
 		$text['label-dashboard_path']['de-ch'] = 'Weg';
 		$text['label-dashboard_path']['de-de'] = 'Weg';
+		$text['label-dashboard_path']['el-gr'] = 'Μονοπάτι';
 		$text['label-dashboard_path']['es-cl'] = 'Camino';
 		$text['label-dashboard_path']['es-mx'] = 'Camino';
 		$text['label-dashboard_path']['fr-ca'] = 'Chemin';
@@ -144,12 +160,15 @@
 		$text['label-dashboard_path']['ru-ru'] = 'Путь';
 		$text['label-dashboard_path']['sv-se'] = 'Väg';
 		$text['label-dashboard_path']['uk-ua'] = 'шлях';
+		$text['label-dashboard_path']['tr-tr'] = 'Yol';
 
 		$text['description-dashboard_path']['en-us'] = 'Enter the dashboard widget path.';
+		$text['description-dashboard_path']['en-gb'] = 'Enter the dashboard widget path.';
 		$text['description-dashboard_path']['ar-eg'] = 'أدخل مسار أداة لوحة القيادة.';
 		$text['description-dashboard_path']['de-at'] = 'Geben Sie den Dashboard-Widget-Pfad ein.';
 		$text['description-dashboard_path']['de-ch'] = 'Geben Sie den Dashboard-Widget-Pfad ein.';
 		$text['description-dashboard_path']['de-de'] = 'Geben Sie den Dashboard-Widget-Pfad ein.';
+		$text['description-dashboard_path']['el-gr'] = 'Εισαγάγετε τη διαδρομή του γραφικού στοιχείου του πίνακα εργαλείων.';
 		$text['description-dashboard_path']['es-cl'] = 'Introduzca la ruta del widget del panel.';
 		$text['description-dashboard_path']['es-mx'] = 'Introduzca la ruta del widget del panel.';
 		$text['description-dashboard_path']['fr-ca'] = 'Entrez le chemin du widget du tableau de bord.';
@@ -164,12 +183,15 @@
 		$text['description-dashboard_path']['ru-ru'] = 'Введите путь к виджету панели инструментов.';
 		$text['description-dashboard_path']['sv-se'] = 'Ange sökvägen för instrumentpanelens widget.';
 		$text['description-dashboard_path']['uk-ua'] = 'Введіть шлях до віджета інформаційної панелі.';
+		$text['description-dashboard_path']['tr-tr'] = 'Pano widget yolunu girin.';
 
 		$text['label-dashboard_groups']['en-us'] = 'Groups';
+		$text['label-dashboard_groups']['en-gb'] = 'Groups';
 		$text['label-dashboard_groups']['ar-eg'] = 'مجموعات';
 		$text['label-dashboard_groups']['de-at'] = 'Gruppen';
 		$text['label-dashboard_groups']['de-ch'] = 'Gruppen';
 		$text['label-dashboard_groups']['de-de'] = 'Gruppen';
+		$text['label-dashboard_groups']['el-gr'] = 'Ομάδες';
 		$text['label-dashboard_groups']['es-cl'] = 'Grupos';
 		$text['label-dashboard_groups']['es-mx'] = 'Grupos';
 		$text['label-dashboard_groups']['fr-ca'] = 'Groupes';
@@ -184,12 +206,15 @@
 		$text['label-dashboard_groups']['ru-ru'] = 'Группы';
 		$text['label-dashboard_groups']['sv-se'] = 'Grupper';
 		$text['label-dashboard_groups']['uk-ua'] = 'Групи';
+		$text['label-dashboard_groups']['tr-tr'] = 'Gruplar';
 
 		$text['description-dashboard_groups']['en-us'] = 'Add the groups that have permission to this widget.';
+		$text['description-dashboard_groups']['en-gb'] = 'Add the groups that have permission to this widget.';
 		$text['description-dashboard_groups']['ar-eg'] = 'أضف المجموعات التي لديها إذن إلى هذه الأداة.';
 		$text['description-dashboard_groups']['de-at'] = 'Fügen Sie die Gruppen hinzu, die die Berechtigung für dieses Widget haben.';
 		$text['description-dashboard_groups']['de-ch'] = 'Fügen Sie die Gruppen hinzu, die die Berechtigung für dieses Widget haben.';
 		$text['description-dashboard_groups']['de-de'] = 'Fügen Sie die Gruppen hinzu, die die Berechtigung für dieses Widget haben.';
+		$text['description-dashboard_groups']['el-gr'] = 'Προσθέστε τις ομάδες που έχουν άδεια σε αυτό το γραφικό στοιχείο.';
 		$text['description-dashboard_groups']['es-cl'] = 'Agregue los grupos que tienen permiso para este widget.';
 		$text['description-dashboard_groups']['es-mx'] = 'Agregue los grupos que tienen permiso para este widget.';
 		$text['description-dashboard_groups']['fr-ca'] = 'Ajoutez les groupes autorisés à accéder à ce widget.';
@@ -204,12 +229,15 @@
 		$text['description-dashboard_groups']['ru-ru'] = 'Добавьте группы, у которых есть разрешение на этот виджет.';
 		$text['description-dashboard_groups']['sv-se'] = 'Lägg till grupperna som har behörighet till den här widgeten.';
 		$text['description-dashboard_groups']['uk-ua'] = 'Додайте групи, які мають дозвіл на цей віджет.';
+		$text['description-dashboard_groups']['tr-tr'] = "Bu widget'a izni olan grupları ekleyin.";
 
 		$text['label-dashboard_column_span']['en-us'] = 'Column Span';
+		$text['label-dashboard_column_span']['en-gb'] = 'Column Span';
 		$text['label-dashboard_column_span']['ar-eg'] = 'العمود سبان';
 		$text['label-dashboard_column_span']['de-at'] = 'Spaltenspanne';
 		$text['label-dashboard_column_span']['de-ch'] = 'Spaltenspanne';
 		$text['label-dashboard_column_span']['de-de'] = 'Spaltenspanne';
+		$text['label-dashboard_column_span']['el-gr'] = 'Άνοιγμα στηλών';
 		$text['label-dashboard_column_span']['es-cl'] = 'Intervalo de columna';
 		$text['label-dashboard_column_span']['es-mx'] = 'Intervalo de columna';
 		$text['label-dashboard_column_span']['fr-ca'] = "L'étendue de la colonne";
@@ -224,12 +252,15 @@
 		$text['label-dashboard_column_span']['ru-ru'] = 'Размах столбца';
 		$text['label-dashboard_column_span']['sv-se'] = 'Kolumn Span';
 		$text['label-dashboard_column_span']['uk-ua'] = 'Розмах стовпців';
+		$text['label-dashboard_column_span']['tr-tr'] = 'Sütun Açıklığı';
 
 		$text['description-dashboard_column_span']['en-us'] = 'Enter the dashboard widget column span.';
+		$text['description-dashboard_column_span']['en-gb'] = 'Enter the dashboard widget column span.';
 		$text['description-dashboard_column_span']['ar-eg'] = 'أدخل امتداد عمود أداة لوحة المعلومات.';
 		$text['description-dashboard_column_span']['de-at'] = 'Geben Sie die Spaltenspanne des Dashboard-Widgets ein.';
 		$text['description-dashboard_column_span']['de-ch'] = 'Geben Sie die Spaltenspanne des Dashboard-Widgets ein.';
 		$text['description-dashboard_column_span']['de-de'] = 'Geben Sie die Spaltenspanne des Dashboard-Widgets ein.';
+		$text['description-dashboard_column_span']['el-gr'] = 'Εισαγάγετε το εύρος της στήλης του γραφικού στοιχείου του πίνακα εργαλείων.';
 		$text['description-dashboard_column_span']['es-cl'] = 'Ingrese la extensión de la columna del widget del tablero.';
 		$text['description-dashboard_column_span']['es-mx'] = 'Ingrese la extensión de la columna del widget del tablero.';
 		$text['description-dashboard_column_span']['fr-ca'] = "Entrez l'étendue de la colonne du widget du tableau de bord";
@@ -244,12 +275,15 @@
 		$text['description-dashboard_column_span']['ru-ru'] = 'Введите диапазон столбца виджета панели мониторинга.';
 		$text['description-dashboard_column_span']['sv-se'] = 'Ange kolumnspann för instrumentpanelens widget.';
 		$text['description-dashboard_column_span']['uk-ua'] = 'Введіть діапазон стовпців віджета інформаційної панелі.';
+		$text['description-dashboard_column_span']['tr-tr'] = 'Pano gereci sütun aralığını girin.';
 
 		$text['label-dashboard_details_state']['en-us'] = 'Details State';
+		$text['label-dashboard_details_state']['en-gb'] = 'Details State';
 		$text['label-dashboard_details_state']['ar-eg'] = 'تفاصيل الدولة';
 		$text['label-dashboard_details_state']['de-at'] = 'Details Zustand';
 		$text['label-dashboard_details_state']['de-ch'] = 'Details Zustand';
 		$text['label-dashboard_details_state']['de-de'] = 'Details Zustand';
+		$text['label-dashboard_details_state']['el-gr'] = 'Λεπτομέρειες Πολιτεία';
 		$text['label-dashboard_details_state']['es-cl'] = 'Detalles Estado';
 		$text['label-dashboard_details_state']['es-mx'] = 'Detalles Estado';
 		$text['label-dashboard_details_state']['fr-ca'] = "État des détails";
@@ -264,12 +298,15 @@
 		$text['label-dashboard_details_state']['ru-ru'] = 'Детали Состояние';
 		$text['label-dashboard_details_state']['sv-se'] = 'Detaljer Stat';
 		$text['label-dashboard_details_state']['uk-ua'] = 'Деталі Держ';
+		$text['label-dashboard_details_state']['tr-tr'] = 'Ayrıntılar Durumu';
 
 		$text['description-dashboard_details_state']['en-us'] = 'Set the default state of the widget details.';
+		$text['description-dashboard_details_state']['en-gb'] = 'Set the default state of the widget details.';
 		$text['description-dashboard_details_state']['ar-eg'] = 'تعيين الحالة الافتراضية لتفاصيل القطعة.';
 		$text['description-dashboard_details_state']['de-at'] = 'Legen Sie den Standardstatus der Widget-Details fest.';
 		$text['description-dashboard_details_state']['de-ch'] = 'Legen Sie den Standardstatus der Widget-Details fest.';
 		$text['description-dashboard_details_state']['de-de'] = 'Legen Sie den Standardstatus der Widget-Details fest.';
+		$text['description-dashboard_details_state']['el-gr'] = 'Ορίστε την προεπιλεγμένη κατάσταση των λεπτομερειών του γραφικού στοιχείου.';
 		$text['description-dashboard_details_state']['es-cl'] = 'Establezca el estado predeterminado de los detalles del widget.';
 		$text['description-dashboard_details_state']['es-mx'] = 'Establezca el estado predeterminado de los detalles del widget.';
 		$text['description-dashboard_details_state']['fr-ca'] = "Définissez l'état par défaut des détails du widget.";
@@ -284,12 +321,15 @@
 		$text['description-dashboard_details_state']['ru-ru'] = 'Установите состояние деталей виджета по умолчанию.';
 		$text['description-dashboard_details_state']['sv-se'] = 'Ställ in standardstatus för widgetdetaljerna.';
 		$text['description-dashboard_details_state']['uk-ua'] = 'Встановити стандартний стан деталей віджета.';
+		$text['description-dashboard_details_state']['tr-tr'] = 'Widget ayrıntılarının varsayılan durumunu ayarlayın.';
 
 		$text['label-dashboard_order']['en-us'] = 'Order';
+		$text['label-dashboard_order']['en-gb'] = 'Order';
 		$text['label-dashboard_order']['ar-eg'] = 'طلب';
 		$text['label-dashboard_order']['de-at'] = 'Befehl';
 		$text['label-dashboard_order']['de-ch'] = 'Befehl';
 		$text['label-dashboard_order']['de-de'] = 'Befehl';
+		$text['label-dashboard_order']['el-gr'] = 'Σειρά';
 		$text['label-dashboard_order']['es-cl'] = 'Orden';
 		$text['label-dashboard_order']['es-mx'] = 'Orden';
 		$text['label-dashboard_order']['fr-ca'] = 'Ordre';
@@ -304,12 +344,15 @@
 		$text['label-dashboard_order']['ru-ru'] = 'Заказ';
 		$text['label-dashboard_order']['sv-se'] = 'Beställa';
 		$text['label-dashboard_order']['uk-ua'] = 'порядок';
+		$text['label-dashboard_order']['tr-tr'] = 'Emir';
 
 		$text['description-dashboard_order']['en-us'] = 'Enter the dashboard widget order.';
+		$text['description-dashboard_order']['en-gb'] = 'Enter the dashboard widget order.';
 		$text['description-dashboard_order']['ar-eg'] = 'أدخل ترتيب أداة لوحة القيادة.';
 		$text['description-dashboard_order']['de-at'] = 'Geben Sie die Dashboard-Widget-Reihenfolge ein.';
 		$text['description-dashboard_order']['de-ch'] = 'Geben Sie die Dashboard-Widget-Reihenfolge ein.';
 		$text['description-dashboard_order']['de-de'] = 'Geben Sie die Dashboard-Widget-Reihenfolge ein.';
+		$text['description-dashboard_order']['el-gr'] = 'Εισαγάγετε τη σειρά γραφικών στοιχείων του πίνακα εργαλείων.';
 		$text['description-dashboard_order']['es-cl'] = 'Ingrese el orden del widget del tablero.';
 		$text['description-dashboard_order']['es-mx'] = 'Ingrese el orden del widget del tablero.';
 		$text['description-dashboard_order']['fr-ca'] = 'Saisissez l ordre du widget du tableau de bord.';
@@ -324,12 +367,15 @@
 		$text['description-dashboard_order']['ru-ru'] = 'Введите порядок виджетов панели инструментов.';
 		$text['description-dashboard_order']['sv-se'] = 'Ange instrumentpanelens widgetordning.';
 		$text['description-dashboard_order']['uk-ua'] = 'Введіть порядок віджетів інформаційної панелі.';
+		$text['description-dashboard_order']['tr-tr'] = 'Pano widget sırasını girin.';
 
 		$text['label-dashboard_enabled']['en-us'] = 'Enabled';
+		$text['label-dashboard_enabled']['en-gb'] = 'Enabled';
 		$text['label-dashboard_enabled']['ar-eg'] = 'ممكن';
 		$text['label-dashboard_enabled']['de-at'] = 'Ermöglicht';
 		$text['label-dashboard_enabled']['de-ch'] = 'Ermöglicht';
 		$text['label-dashboard_enabled']['de-de'] = 'Ermöglicht';
+		$text['label-dashboard_enabled']['el-gr'] = 'Ενεργοποιημένο';
 		$text['label-dashboard_enabled']['es-cl'] = 'Habilitada';
 		$text['label-dashboard_enabled']['es-mx'] = 'Habilitada';
 		$text['label-dashboard_enabled']['fr-ca'] = 'Activé';
@@ -344,12 +390,15 @@
 		$text['label-dashboard_enabled']['ru-ru'] = 'Включено';
 		$text['label-dashboard_enabled']['sv-se'] = 'Aktiverad';
 		$text['label-dashboard_enabled']['uk-ua'] = 'Увімкнено';
+		$text['label-dashboard_enabled']['tr-tr'] = 'Etkinleştirilmiş';
 
 		$text['description-dashboard_enabled']['en-us'] = 'Enter the dashboard widget enabled.';
+		$text['description-dashboard_enabled']['en-gb'] = 'Enter the dashboard widget enabled.';
 		$text['description-dashboard_enabled']['ar-eg'] = 'أدخل أداة لوحة القيادة الممكنة.';
 		$text['description-dashboard_enabled']['de-at'] = 'Geben Sie das aktivierte Dashboard-Widget ein.';
 		$text['description-dashboard_enabled']['de-ch'] = 'Geben Sie das aktivierte Dashboard-Widget ein.';
 		$text['description-dashboard_enabled']['de-de'] = 'Geben Sie das aktivierte Dashboard-Widget ein.';
+		$text['description-dashboard_enabled']['el-gr'] = 'Εισαγάγετε το γραφικό στοιχείο του πίνακα ελέγχου ενεργοποιημένο.';
 		$text['description-dashboard_enabled']['es-cl'] = 'Ingrese al widget del tablero habilitado.';
 		$text['description-dashboard_enabled']['es-mx'] = 'Ingrese al widget del tablero habilitado.';
 		$text['description-dashboard_enabled']['fr-ca'] = 'Entrez le widget de tableau de bord activé.';
@@ -364,12 +413,15 @@
 		$text['description-dashboard_enabled']['ru-ru'] = 'Введите включенный виджет панели инструментов.';
 		$text['description-dashboard_enabled']['sv-se'] = 'Ange den aktiverade instrumentpanelswidgeten.';
 		$text['description-dashboard_enabled']['uk-ua'] = 'Введіть увімкнений віджет інформаційної панелі.';
+		$text['description-dashboard_enabled']['tr-tr'] = "Pano widget'ını etkinleştirin.";
 
 		$text['label-dashboard_description']['en-us'] = 'Description';
+		$text['label-dashboard_description']['en-gb'] = 'Description';
 		$text['label-dashboard_description']['ar-eg'] = 'وصف';
 		$text['label-dashboard_description']['de-at'] = 'Beschreibung';
 		$text['label-dashboard_description']['de-ch'] = 'Beschreibung';
 		$text['label-dashboard_description']['de-de'] = 'Beschreibung';
+		$text['label-dashboard_description']['el-gr'] = 'Περιγραφή';
 		$text['label-dashboard_description']['es-cl'] = 'Descripción';
 		$text['label-dashboard_description']['es-mx'] = 'Descripción';
 		$text['label-dashboard_description']['fr-ca'] = 'Description';
@@ -384,12 +436,15 @@
 		$text['label-dashboard_description']['ru-ru'] = 'Описание';
 		$text['label-dashboard_description']['sv-se'] = 'Beskrivning';
 		$text['label-dashboard_description']['uk-ua'] = 'опис';
+		$text['label-dashboard_description']['tr-tr'] = 'Tanım';
 
 		$text['description-dashboard_description']['en-us'] = 'Enter the dashboard widget description.';
+		$text['description-dashboard_description']['en-gb'] = 'Enter the dashboard widget description.';
 		$text['description-dashboard_description']['ar-eg'] = 'أدخل وصف أداة لوحة القيادة.';
 		$text['description-dashboard_description']['de-at'] = 'Geben Sie die Beschreibung des Dashboard-Widgets ein.';
 		$text['description-dashboard_description']['de-ch'] = 'Geben Sie die Beschreibung des Dashboard-Widgets ein.';
 		$text['description-dashboard_description']['de-de'] = 'Geben Sie die Beschreibung des Dashboard-Widgets ein.';
+		$text['description-dashboard_description']['el-gr'] = 'Εισαγάγετε την περιγραφή του γραφικού στοιχείου του πίνακα ελέγχου.';
 		$text['description-dashboard_description']['es-cl'] = 'Introduzca la descripción del widget del panel.';
 		$text['description-dashboard_description']['es-mx'] = 'Introduzca la descripción del widget del panel.';
 		$text['description-dashboard_description']['fr-ca'] = 'Saisissez la description du widget du tableau de bord.';
@@ -404,6 +459,7 @@
 		$text['description-dashboard_description']['ru-ru'] = 'Введите описание виджета панели инструментов.';
 		$text['description-dashboard_description']['sv-se'] = 'Ange beskrivningen av instrumentpanelens widget.';
 		$text['description-dashboard_description']['uk-ua'] = 'Введіть опис віджета інформаційної панелі.';
+		$text['description-dashboard_description']['tr-tr'] = 'Pano gereci açıklamasını girin.';
 
 		$text['label-welcome']['en-us'] = "Welcome:";
 		$text['label-welcome']['en-gb'] = "Welcome:";
@@ -426,6 +482,7 @@
 		$text['label-welcome']['ru-ru'] = "Добро пожаловать:";
 		$text['label-welcome']['sv-se'] = "Välkommen:";
 		$text['label-welcome']['uk-ua'] = "Ласкаво просимо:";
+		$text['label-welcome']['tr-tr'] = "Hoş geldin:";
 
 		$text['button-collapse_all']['en-us'] = "Collapse All";
 		$text['button-collapse_all']['en-gb'] = "Collapse All";
