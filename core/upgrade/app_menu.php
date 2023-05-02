@@ -3,16 +3,16 @@
 	$y = 0;
 	$apps[$x]['menu'][$y]['title']['en-us'] = "Upgrade";
 	$apps[$x]['menu'][$y]['title']['en-gb'] = "Upgrade";
-	$apps[$x]['menu'][$y]['title']['ar-eg'] = "";
+	$apps[$x]['menu'][$y]['title']['ar-eg'] = "أعلى";
 	$apps[$x]['menu'][$y]['title']['de-at'] = "Aktualisierung";
 	$apps[$x]['menu'][$y]['title']['de-de'] = "Aktualisierung";
 	$apps[$x]['menu'][$y]['title']['es-cl'] = "Actualizar";
-	$apps[$x]['menu'][$y]['title']['es-mx'] = "";
-	$apps[$x]['menu'][$y]['title']['fr-ca'] = "";
+	$apps[$x]['menu'][$y]['title']['es-mx'] = "Actualización";
+	$apps[$x]['menu'][$y]['title']['fr-ca'] = "Mise à niveau";
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Mise à jour";
-	$apps[$x]['menu'][$y]['title']['he-il'] = "";
+	$apps[$x]['menu'][$y]['title']['he-il'] = "שדרוג";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Aggiorna";
-	$apps[$x]['menu'][$y]['title']['nl-nl'] = "";
+	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Upgrade";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Aktualizacja";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Atualização";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Actualizar BD";
@@ -25,5 +25,6 @@
 	$apps[$x]['menu'][$y]['category'] = "internal";
 	$apps[$x]['menu'][$y]['path'] = "/core/upgrade/index.php";
 	$apps[$x]['menu'][$y]['groups'][] = "superadmin";
+	$y++;
 
 ?>
