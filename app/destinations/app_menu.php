@@ -5,7 +5,7 @@
 	$apps[$x]['menu'][$y]['title']['en-gb'] = "Destinations";
 	$apps[$x]['menu'][$y]['title']['ar-eg'] = "جهات الأتصال";
 	$apps[$x]['menu'][$y]['title']['de-at'] = "Ziele";
-	$apps[$x]['menu'][$y]['title']['de-ch'] = "";
+	$apps[$x]['menu'][$y]['title']['de-ch'] = "Reiseziele";
 	$apps[$x]['menu'][$y]['title']['de-de'] = "Ziele";
 	$apps[$x]['menu'][$y]['title']['es-cl'] = "Destinos";
 	$apps[$x]['menu'][$y]['title']['es-mx'] = "Destinos";
@@ -27,5 +27,6 @@
 	$apps[$x]['menu'][$y]['path'] = "/app/destinations/destinations.php";
 	$apps[$x]['menu'][$y]['groups'][] = "superadmin";
 	$apps[$x]['menu'][$y]['groups'][] = "admin";
+	$y++;
 
 ?>
