@@ -3,15 +3,15 @@
 	$y=0;
 	$apps[$x]['menu'][$y]['title']['en-us'] = "Call Centers";
 	$apps[$x]['menu'][$y]['title']['en-gb'] = "Call Centers";
-	$apps[$x]['menu'][$y]['title']['ar-eg'] = "";
+	$apps[$x]['menu'][$y]['title']['ar-eg'] = "مراكز الاتصال";
 	$apps[$x]['menu'][$y]['title']['de-at'] = "Callcenter";
-	$apps[$x]['menu'][$y]['title']['de-ch'] = "";
+	$apps[$x]['menu'][$y]['title']['de-ch'] = "Call Centers";
 	$apps[$x]['menu'][$y]['title']['de-de'] = "Callcenter";
 	$apps[$x]['menu'][$y]['title']['es-cl'] = "Centro de Llamadas";
-	$apps[$x]['menu'][$y]['title']['es-mx'] = "";
+	$apps[$x]['menu'][$y]['title']['es-mx'] = "Call Centers";
 	$apps[$x]['menu'][$y]['title']['fr-ca'] = "Centre d' appels";
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Centre d'appel";
-	$apps[$x]['menu'][$y]['title']['he-il'] = "";
+	$apps[$x]['menu'][$y]['title']['he-il'] = "Call Centers";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Stato Agenti";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Call-Centers";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Call Center ";
@@ -30,16 +30,16 @@
 	$y++;
 	$apps[$x]['menu'][$y]['title']['en-us'] = "Agent Status";
 	$apps[$x]['menu'][$y]['title']['en-gb'] = "Agent Status";
-	$apps[$x]['menu'][$y]['title']['ar-eg'] = "";
+	$apps[$x]['menu'][$y]['title']['ar-eg'] = "الوكيل";
 	$apps[$x]['menu'][$y]['title']['de-at'] = "Agenten Status";
-	$apps[$x]['menu'][$y]['title']['de-ch'] = "";
+	$apps[$x]['menu'][$y]['title']['de-ch'] = "Status";
 	$apps[$x]['menu'][$y]['title']['de-de'] = "Agenten Status";
 	$apps[$x]['menu'][$y]['title']['es-cl'] = "Estado de Agente";
-	$apps[$x]['menu'][$y]['title']['es-mx'] = "";
-	$apps[$x]['menu'][$y]['title']['fr-ca'] = "";
+	$apps[$x]['menu'][$y]['title']['es-mx'] = "Agente Status";
+	$apps[$x]['menu'][$y]['title']['fr-ca'] = "Agent Status";
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "État de l'agent";
-	$apps[$x]['menu'][$y]['title']['he-il'] = "";
-	$apps[$x]['menu'][$y]['title']['it-it'] = "";
+	$apps[$x]['menu'][$y]['title']['he-il'] = "מצב הסוכן";
+	$apps[$x]['menu'][$y]['title']['it-it'] = "Stato dell'agente";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Agent status";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Status agenta";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Estado do agente";
@@ -54,5 +54,6 @@
 	$apps[$x]['menu'][$y]['path'] = "/app/call_centers/call_center_agent_status.php";
 	$apps[$x]['menu'][$y]['groups'][] = "admin";
 	$apps[$x]['menu'][$y]['groups'][] = "superadmin";
+	$y++;
 
 ?>
