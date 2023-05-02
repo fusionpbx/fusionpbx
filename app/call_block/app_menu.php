@@ -5,12 +5,12 @@
 	$apps[$x]['menu'][$y]['title']['en-gb'] = "Call Block";
 	$apps[$x]['menu'][$y]['title']['ar-eg'] = "حظر المكالمات";
 	$apps[$x]['menu'][$y]['title']['de-at'] = "Sperrlisten";
-	$apps[$x]['menu'][$y]['title']['de-ch'] = "";
+	$apps[$x]['menu'][$y]['title']['de-ch'] = "Einloggen";
 	$apps[$x]['menu'][$y]['title']['de-de'] = "Sperrlisten";
 	$apps[$x]['menu'][$y]['title']['el-gr'] = "Λίστα απορρίψεων";
 	$apps[$x]['menu'][$y]['title']['es-cl'] = "Bloqueo de llamadas";
-	$apps[$x]['menu'][$y]['title']['es-mx'] = "";
-	$apps[$x]['menu'][$y]['title']['fr-ca'] = "";
+	$apps[$x]['menu'][$y]['title']['es-mx'] = "Call Block";
+	$apps[$x]['menu'][$y]['title']['fr-ca'] = "Call Block";
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Liste Noire";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "חסימת מספר";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Blocco Chiamate";
@@ -29,5 +29,6 @@
 	$apps[$x]['menu'][$y]['groups'][] = "superadmin";
 	$apps[$x]['menu'][$y]['groups'][] = "admin";
 	$apps[$x]['menu'][$y]['groups'][] = "user";
+	$y++;
 
 ?>

@@ -3,13 +3,13 @@
 	$y=0;
 	$apps[$x]['menu'][$y]['title']['en-us'] = "Contacts";
 	$apps[$x]['menu'][$y]['title']['en-gb'] = "Contacts";
-	$apps[$x]['menu'][$y]['title']['ar-eg'] = "";
+	$apps[$x]['menu'][$y]['title']['ar-eg'] = "الاتصالات";
 	$apps[$x]['menu'][$y]['title']['de-at'] = "Kontakte";
-	$apps[$x]['menu'][$y]['title']['de-ch'] = "";
+	$apps[$x]['menu'][$y]['title']['de-ch'] = "Ansprechpartner";
 	$apps[$x]['menu'][$y]['title']['de-de'] = "Kontakte";
 	$apps[$x]['menu'][$y]['title']['es-cl'] = "Contactos";
-	$apps[$x]['menu'][$y]['title']['es-mx'] = "";
-	$apps[$x]['menu'][$y]['title']['fr-ca'] = "";
+	$apps[$x]['menu'][$y]['title']['es-mx'] = "Contactos";
+	$apps[$x]['menu'][$y]['title']['fr-ca'] = "Contacts";
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Contacts";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "אנשי קשר";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Contatti";
@@ -27,5 +27,6 @@
 	$apps[$x]['menu'][$y]['path'] = "/app/contacts/contacts.php";
 	$apps[$x]['menu'][$y]['groups'][] = "admin";
 	$apps[$x]['menu'][$y]['groups'][] = "superadmin";
+	$y++;
 
 ?>

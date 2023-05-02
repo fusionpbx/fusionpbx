@@ -3,13 +3,13 @@
 	$y=0;
 	$apps[$x]['menu'][$y]['title']['en-us'] = "Active Calls";
 	$apps[$x]['menu'][$y]['title']['en-gb'] = "Active Calls";
-	$apps[$x]['menu'][$y]['title']['ar-eg'] = "";
+	$apps[$x]['menu'][$y]['title']['ar-eg'] = "الدعوات النشطة";
 	$apps[$x]['menu'][$y]['title']['de-at'] = "Aktive Gespräche";
-	$apps[$x]['menu'][$y]['title']['de-ch'] = "";
+	$apps[$x]['menu'][$y]['title']['de-ch'] = "Aktive Anrufe";
 	$apps[$x]['menu'][$y]['title']['de-de'] = "Aktive Gespräche";
 	$apps[$x]['menu'][$y]['title']['es-cl'] = "Llamadas Activas";
-	$apps[$x]['menu'][$y]['title']['es-mx'] = "";
-	$apps[$x]['menu'][$y]['title']['fr-ca'] = "";
+	$apps[$x]['menu'][$y]['title']['es-mx'] = "Llamadas activas";
+	$apps[$x]['menu'][$y]['title']['fr-ca'] = "Appels actifs";
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Appels en cours";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "שיחות פעילות";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Chiamate Attive";
@@ -27,5 +27,6 @@
 	$apps[$x]['menu'][$y]['path'] = "/app/calls_active/calls_active.php";
 	$apps[$x]['menu'][$y]['groups'][] = "superadmin";
 	$apps[$x]['menu'][$y]['groups'][] = "admin";
+	$y++;
 
 ?>

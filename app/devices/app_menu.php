@@ -3,9 +3,9 @@
 	$y=0;
 	$apps[$x]['menu'][$y]['title']['en-us'] = "Devices";
 	$apps[$x]['menu'][$y]['title']['en-gb'] = "Devices";
-	$apps[$x]['menu'][$y]['title']['ar-eg'] = "";
+	$apps[$x]['menu'][$y]['title']['ar-eg'] = "الأجهزة";
 	$apps[$x]['menu'][$y]['title']['de-at'] = "Geräte";
-	$apps[$x]['menu'][$y]['title']['de-ch'] = "";
+	$apps[$x]['menu'][$y]['title']['de-ch'] = "Geräte";
 	$apps[$x]['menu'][$y]['title']['de-de'] = "Geräte";
 	$apps[$x]['menu'][$y]['title']['es-cl'] = "Dispositivos";
 	$apps[$x]['menu'][$y]['title']['es-mx'] = "Dispositivos";
@@ -27,5 +27,6 @@
 	$apps[$x]['menu'][$y]['path'] = "/app/devices/devices.php";
 	$apps[$x]['menu'][$y]['groups'][] = "admin";
 	$apps[$x]['menu'][$y]['groups'][] = "superadmin";
+	$y++;
 
 ?>
