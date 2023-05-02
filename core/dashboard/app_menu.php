@@ -7,12 +7,12 @@
 	$apps[$x]['menu'][$y]['title']['de-at'] = "Benutzerübersicht";
 	$apps[$x]['menu'][$y]['title']['de-de'] = "Benutzerübersicht";
 	$apps[$x]['menu'][$y]['title']['es-cl'] = "Dashboard Usuario";
-	$apps[$x]['menu'][$y]['title']['es-mx'] = "";
-	$apps[$x]['menu'][$y]['title']['fr-ca'] = "";
+	$apps[$x]['menu'][$y]['title']['es-mx'] = "Dashboard";
+	$apps[$x]['menu'][$y]['title']['fr-ca'] = "Tableau de bord";
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Tableau de bord de l'utilisateur";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "ממשק משתמש";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Pannello di Controllo";
-	$apps[$x]['menu'][$y]['title']['nl-nl'] = "";
+	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Dashboard";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Panel użytkowników";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Painel de Controle";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Painel de Controle do Usuário";
@@ -28,5 +28,6 @@
 	$apps[$x]['menu'][$y]['groups'][] = "admin";
 	$apps[$x]['menu'][$y]['groups'][] = "user";
 	$apps[$x]['menu'][$y]['groups'][] = "agent";
+	$y++;
 
 ?>
