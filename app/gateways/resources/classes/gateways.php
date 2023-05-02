@@ -60,6 +60,74 @@ if (!class_exists('gateways')) {
 		/**
 		 * start gateways
 		 */
+		public function rescan($records) {
+			if (permission_exists($this->permission_prefix.'edit')) {
+
+				//add multi-lingual support
+					$language = new text;
+					$text = $language->get();
+
+				//validate the token
+					$token = new token;
+					if (!$token->validate($_SERVER['PHP_SELF'])) {
+						message::add($text['message-invalid_token'],'negative');
+						header('Location: '.$this->list_page);
+						exit;
+					}
+
+				//start the checked gateways
+					if (is_array($records) && @sizeof($records) != 0) {
+
+						//filter out unchecked gateways, build where clause for below
+							foreach($records as $record) {
+								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+									$uuids[] = "'".$record['uuid']."'";
+								}
+							}
+
+						//get necessary gateway details
+							$profiles = array();
+							if (is_array($uuids) && @sizeof($uuids) != 0) {
+								$sql = "select ".$this->uuid_prefix."uuid as uuid, gateway, profile, enabled from v_".$this->table." ";
+								if (permission_exists('gateway_all')) {
+									$sql .= "where ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
+								}
+								else {
+									$sql .= "where (domain_uuid = :domain_uuid) ";
+									$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
+									$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+								}
+								$database = new database;
+								$rows = $database->select($sql, $parameters, 'all');
+								if (is_array($rows) && @sizeof($rows) != 0) {
+									foreach ($rows as $row) {
+										if (!in_array($row['profile'], $profiles)) {
+											$profiles[] = $row['profile'];
+										}
+									}
+								}
+								unset($sql, $parameters, $rows, $row);
+							}
+
+						if (is_array($profiles) && @sizeof($profiles) != 0) {
+							//create the event socket connection
+							$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+							if ($fp) {
+								//start gateways
+									foreach ($profiles as $profile_id) {
+										$cmd = 'api sofia profile '.$profile_id.' rescan';
+										event_socket_request($fp, $cmd);
+									}
+							}
+						}
+					}
+
+			}
+		}
+
+		/**
+		 * start gateways
+		 */
 		public function start($records) {
 			if (permission_exists($this->permission_prefix.'edit')) {
 

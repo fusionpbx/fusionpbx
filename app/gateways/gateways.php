@@ -80,6 +80,15 @@
 					$obj->start($gateways);
 				}
 				break;
+			case 'restart':
+				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+				if ($fp && permission_exists('gateway_edit')) {
+					$obj = new gateways;
+					$obj->stop($gateways);
+					usleep(1000);
+					$obj->start($gateways);
+				}
+				break;
 			case 'stop':
 				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 				if ($fp && permission_exists('gateway_edit')) {
@@ -182,6 +191,7 @@
 	echo "	<div class='actions'>\n";
 	if (permission_exists('gateway_edit') && $gateways) {
 		echo button::create(['type'=>'button','label'=>$text['button-stop'],'icon'=>$_SESSION['theme']['button_icon_stop'],'onclick'=>"modal_open('modal-stop','btn_stop');"]);
+		echo button::create(['type'=>'button','label'=>$text['button-restart'],'icon'=>$_SESSION['theme']['button_icon_redo'],'onclick'=>"modal_open('modal-restart','btn_restart');"]);
 		echo button::create(['type'=>'button','label'=>$text['button-start'],'icon'=>$_SESSION['theme']['button_icon_start'],'onclick'=>"modal_open('modal-start','btn_start');"]);
 	}
 	echo button::create(['type'=>'button','label'=>$text['button-refresh'],'icon'=>$_SESSION['theme']['button_icon_refresh'],'style'=>'margin-right: 15px;','link'=>'gateways.php']);
@@ -219,6 +229,7 @@
 
 	if (permission_exists('gateway_edit') && $gateways) {
 		echo modal::create(['id'=>'modal-stop','type'=>'general','message'=>$text['confirm-stop_gateways'],'actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_stop','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('stop'); list_form_submit('form_list');"])]);
+		echo modal::create(['id'=>'modal-restart','type'=>'general','message'=>$text['confirm-restart_gateways'],'actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_restart','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('restart'); list_form_submit('form_list');"])]);
 		echo modal::create(['id'=>'modal-start','type'=>'general','message'=>$text['confirm-start_gateways'],'actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_start','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('start'); list_form_submit('form_list');"])]);
 	}
 	if (permission_exists('gateway_add') && $gateways) {

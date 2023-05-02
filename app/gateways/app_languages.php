@@ -147,6 +147,27 @@ $text['confirm-start_gateways']['ru-ru'] = "Are you sure you wish to START these
 $text['confirm-start_gateways']['sv-se'] = "Are you sure you wish to START these gateways?";
 $text['confirm-start_gateways']['uk-ua'] = "Are you sure you wish to START these gateways?";
 
+$text['confirm-restart_gateways']['en-us'] = "Are you sure you wish to RESTART these gateways?";
+$text['confirm-restart_gateways']['en-gb'] = "Are you sure you wish to RESTART these gateways?";
+$text['confirm-restart_gateways']['ar-eg'] = "هل أنت متأكد أنك تريد إعادة تشغيل هذه البوابات؟";
+$text['confirm-restart_gateways']['de-at'] = "Sind Sie sicher, dass Sie diese Gateways neu starten möchten?";
+$text['confirm-restart_gateways']['de-ch'] = "Sind Sie sicher, dass Sie diese Gateways neu starten möchten?";
+$text['confirm-restart_gateways']['de-de'] = "Sind Sie sicher, dass Sie diese Gateways neu starten möchten?";
+$text['confirm-restart_gateways']['es-cl'] = "¿Está seguro de que desea REINICIAR estas pasarelas?";
+$text['confirm-restart_gateways']['es-mx'] = "¿Está seguro de que desea REINICIAR estas pasarelas?";
+$text['confirm-restart_gateways']['fr-ca'] = "Êtes-vous sûr de vouloir REDÉMARRER ces passerelles ?";
+$text['confirm-restart_gateways']['fr-fr'] = "Êtes-vous sûr de vouloir REDÉMARRER ces passerelles ?";
+$text['confirm-restart_gateways']['he-il'] = "האם אתה בטוח שברצונך לאתחל את השערים הללו?";
+$text['confirm-restart_gateways']['it-it'] = "Sei sicuro di voler RIATTIVARE questi gateway?";
+$text['confirm-restart_gateways']['nl-nl'] = "Weet u zeker dat u deze gateways opnieuw wilt starten?";
+$text['confirm-restart_gateways']['pl-pl'] = "Czy na pewno chcesz PRZEŁADOWAĆ te bramki?";
+$text['confirm-restart_gateways']['pt-br'] = "Tem certeza que deseja REINICIAR este(s) tronco(s)?";
+$text['confirm-restart_gateways']['pt-pt'] = "Tem certeza de que deseja REINICIAR estas passarelas?";
+$text['confirm-restart_gateways']['ro-ro'] = "Sunteți sigur că doriți să REÎNCEPEȚI aceste gateway-uri?";
+$text['confirm-restart_gateways']['ru-ru'] = "Вы уверены, что хотите перезапустить эти шлюзы?";
+$text['confirm-restart_gateways']['sv-se'] = "Är du säker på att du vill starta om dessa gateways?";
+$text['confirm-restart_gateways']['uk-ua'] = "Ви впевнені, що хочете перезапустити ці шлюзи?";
+
 $text['confirm-stop_gateways']['en-us'] = "Are you sure you wish to STOP these gateways?";
 $text['confirm-stop_gateways']['en-gb'] = "Are you sure you wish to STOP these gateways?";
 $text['confirm-stop_gateways']['ar-eg'] = "Are you sure you wish to STOP these gateways?";

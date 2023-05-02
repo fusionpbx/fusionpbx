@@ -236,13 +236,20 @@
 					$cache = new cache;
 					$cache->delete("configuration:sofia.conf:".$hostname);
 
-				//rescan the external profile to look for new or stopped gateways
-					//create the event socket connection
-						$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-						$tmp_cmd = 'api sofia profile external rescan';
-						$response = event_socket_request($fp, $tmp_cmd);
-						unset($tmp_cmd);
+					//force restart the gateway (includes scanning of gateways with non-hardcoded profile)
+					//if you rescan and have changed credentials, it does not re-register, so we just force it to be 100% sure
+					//if you disable it, we also make sure the gateway is un-registered
+						$obj = new gateways;
+						$gateways[0]['checked'] = 'true';
+						$gateways[0]['uuid'] = $gateway_uuid;
+						$obj->rescan($gateways);
 						usleep(1000);
+						$obj->stop($gateways);
+						if ($enabled == 'true') {
+							usleep(1000);
+							$obj->start($gateways);
+						}
+
 					//close the connection
 						fclose($fp);
 					//clear the apply settings reminder
