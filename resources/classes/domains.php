@@ -664,7 +664,6 @@ if (!class_exists('domains')) {
 				foreach ($domains as $domain) {
 					//get the values from database and set them as php variables
 						$domain_uuid = $domain["domain_uuid"];
-						$domain_name = $domain["domain_name"];
 
 					//get the default settings - this needs to be done to reset the session values back to the defaults for each domain in the loop
 						foreach($database_default_settings as $row) {
