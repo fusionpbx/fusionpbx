@@ -20,6 +20,9 @@ $text['title-destinations']['ro-ro'] = "Destinații";
 $text['title-destinations']['ru-ru'] = "Направления";
 $text['title-destinations']['sv-se'] = "Destinationer";
 $text['title-destinations']['uk-ua'] = "Номери";
+$text['title-destinations']['zh-cn'] = "目的地";
+$text['title-destinations']['ja-jp'] = "デザート";
+$text['title-destinations']['ko-kr'] = "오시는 길";
 
 $text['title-destination-edit']['en-us'] = "Destination";
 $text['title-destination-edit']['en-gb'] = "Destination";
@@ -41,6 +44,9 @@ $text['title-destination-edit']['ro-ro'] = "Destinație";
 $text['title-destination-edit']['ru-ru'] = "Направление";
 $text['title-destination-edit']['sv-se'] = "Destination";
 $text['title-destination-edit']['uk-ua'] = "Номер";
+$text['title-destination-edit']['zh-cn'] = "目的地";
+$text['title-destination-edit']['ja-jp'] = "目的地";
+$text['title-destination-edit']['ko-kr'] = "여행 정보";
 
 $text['title-destination-add']['en-us'] = "Destination";
 $text['title-destination-add']['en-gb'] = "Destination";
@@ -62,6 +68,9 @@ $text['title-destination-add']['ro-ro'] = "Destinație";
 $text['title-destination-add']['ru-ru'] = "Направление";
 $text['title-destination-add']['sv-se'] = "Destination";
 $text['title-destination-add']['uk-ua'] = "Номер";
+$text['title-destination-add']['zh-cn'] = "目的地";
+$text['title-destination-add']['ja-jp'] = "目的地";
+$text['title-destination-add']['ko-kr'] = "여행 정보";
 
 $text['title-destination_import']['en-us'] = "Destination Import";
 $text['title-destination_import']['en-gb'] = "Destination Import";
@@ -83,6 +92,9 @@ $text['title-destination_import']['ro-ro'] = "";
 $text['title-destination_import']['ru-ru'] = "Импорт";
 $text['title-destination_import']['sv-se'] = "Importera";
 $text['title-destination_import']['uk-ua'] = "Імпортувати";
+$text['title-destination_import']['zh-cn'] = "目的地进口";
+$text['title-destination_import']['ja-jp'] = "目的地のインポート";
+$text['title-destination_import']['ko-kr'] = "오시는 길";
 
 $text['title-destination_export']['en-us'] = "Destination Export";
 $text['title-destination_export']['en-gb'] = "Destination Export";
@@ -105,6 +117,9 @@ $text['title-destination_export']['ro-ro'] = "";
 $text['title-destination_export']['ru-ru'] = "Экспорт";
 $text['title-destination_export']['sv-se'] = "Export";
 $text['title-destination_export']['uk-ua'] = "Експортувати";
+$text['title-destination_export']['zh-cn'] = "目的地出口";
+$text['title-destination_export']['ja-jp'] = "目的地のエクスポート";
+$text['title-destination_export']['ko-kr'] = "대상 수출";
 
 $text['button-outbound']['en-us'] = "Outbound";
 $text['button-outbound']['en-gb'] = "Outbound";
@@ -126,6 +141,9 @@ $text['button-outbound']['ro-ro'] = "";
 $text['button-outbound']['ru-ru'] = "Исходящий";
 $text['button-outbound']['sv-se'] = "Utgående";
 $text['button-outbound']['uk-ua'] = "Вихідний";
+$text['button-outbound']['zh-cn'] = "进口";
+$text['button-outbound']['ja-jp'] = "アウトバウンド";
+$text['button-outbound']['ko-kr'] = "아웃바운드";
 
 $text['button-inbound']['en-us'] = "Inbound";
 $text['button-inbound']['en-gb'] = "Inbound";
@@ -147,6 +165,9 @@ $text['button-inbound']['ro-ro'] = "";
 $text['button-inbound']['ru-ru'] = "Входящий";
 $text['button-inbound']['sv-se'] = "Inkommande";
 $text['button-inbound']['uk-ua'] = "Вхідний";
+$text['button-inbound']['zh-cn'] = "1. 限制";
+$text['button-inbound']['ja-jp'] = "インバウンド";
+$text['button-inbound']['ko-kr'] = "인바운드";
 
 $text['select-global']['en-us'] = "Global";
 $text['select-global']['en-gb'] = "Global";
@@ -168,6 +189,9 @@ $text['select-global']['ro-ro'] = "Global";
 $text['select-global']['ru-ru'] = "Глобальный";
 $text['select-global']['sv-se'] = "Global";
 $text['select-global']['uk-ua'] = "Глобальний";
+$text['select-global']['zh-cn'] = "全球";
+$text['select-global']['ja-jp'] = "グローバル";
+$text['select-global']['ko-kr'] = "주요사업";
 
 $text['option-inbound']['en-us'] = "Inbound";
 $text['option-inbound']['en-gb'] = "Inbound";
@@ -189,6 +213,9 @@ $text['option-inbound']['ro-ro'] = "";
 $text['option-inbound']['ru-ru'] = "Входящий";
 $text['option-inbound']['sv-se'] = "Inkommande";
 $text['option-inbound']['uk-ua'] = "Вхідний";
+$text['option-inbound']['zh-cn'] = "1. 限制";
+$text['option-inbound']['ja-jp'] = "インバウンド";
+$text['option-inbound']['ko-kr'] = "인바운드";
 
 $text['option-outbound']['en-us'] = "Outbound";
 $text['option-outbound']['en-gb'] = "Outbound";
@@ -210,6 +237,9 @@ $text['option-outbound']['ro-ro'] = "";
 $text['option-outbound']['ru-ru'] = "Исходящий";
 $text['option-outbound']['sv-se'] = "Utgående";
 $text['option-outbound']['uk-ua'] = "Вихідний";
+$text['option-outbound']['zh-cn'] = "进口";
+$text['option-outbound']['ja-jp'] = "アウトバウンド";
+$text['option-outbound']['ko-kr'] = "아웃바운드";
 
 $text['option-local']['en-us'] = "Local";
 $text['option-local']['en-gb'] = "Local";
@@ -231,6 +261,9 @@ $text['option-local']['ro-ro'] = "";
 $text['option-local']['ru-ru'] = "Местные";
 $text['option-local']['sv-se'] = "Lokalt";
 $text['option-local']['uk-ua'] = "Головна";
+$text['option-local']['zh-cn'] = "地方";
+$text['option-local']['ja-jp'] = "ローカル";
+$text['option-local']['ko-kr'] = "- 한국어";
 
 $text['button-local']['en-us'] = "Local";
 $text['button-local']['en-gb'] = "Local";
@@ -252,6 +285,9 @@ $text['button-local']['ro-ro'] = "";
 $text['button-local']['ru-ru'] = "Местные";
 $text['button-local']['sv-se'] = "Lokalt";
 $text['button-local']['uk-ua'] = "Головна";
+$text['button-local']['zh-cn'] = "地方";
+$text['button-local']['ja-jp'] = "ローカル";
+$text['button-local']['ko-kr'] = "- 한국어";
 
 $text['message-maximum_destinations']['en-us'] = "Maximum Destinations:";
 $text['message-maximum_destinations']['en-gb'] = "Maximum Destinations:";
@@ -273,6 +309,9 @@ $text['message-maximum_destinations']['ro-ro'] = "";
 $text['message-maximum_destinations']['ru-ru'] = "Максимальное количество направлений:";
 $text['message-maximum_destinations']['sv-se'] = "Max Antal Destinationer";
 $text['message-maximum_destinations']['uk-ua'] = "Максимум номерів:";
+$text['message-maximum_destinations']['zh-cn'] = "最大目的地:";
+$text['message-maximum_destinations']['ja-jp'] = "最高の目的地:";
+$text['message-maximum_destinations']['ko-kr'] = "최대 목적지:";
 
 $text['message-duplicate']['en-us'] = "Duplicate detected";
 $text['message-duplicate']['en-gb'] = "Duplicate detected";
@@ -294,6 +333,9 @@ $text['message-duplicate']['ro-ro'] = "";
 $text['message-duplicate']['ru-ru'] = "Обнаружено дублирование";
 $text['message-duplicate']['sv-se'] = "Dubblett Upptäckt";
 $text['message-duplicate']['uk-ua'] = "Знайдено дублікат";
+$text['message-duplicate']['zh-cn'] = "检测到的重复";
+$text['message-duplicate']['ja-jp'] = "重複検出";
+$text['message-duplicate']['ko-kr'] = "중복 검출";
 
 $text['label-file_name']['en-us'] = "File Name";
 $text['label-file_name']['en-gb'] = "File Name";
@@ -315,6 +357,9 @@ $text['label-file_name']['ro-ro'] = "";
 $text['label-file_name']['ru-ru'] = "Имя файла";
 $text['label-file_name']['sv-se'] = "Filnamn";
 $text['label-file_name']['uk-ua'] = "Ім'я файла";
+$text['label-file_name']['zh-cn'] = "文件名称";
+$text['label-file_name']['ja-jp'] = "ファイル名";
+$text['label-file_name']['ko-kr'] = "파일 이름";
 
 $text['label-monthly_price_buy']['en-us'] = "Monthly buy price";
 $text['label-monthly_price_buy']['en-gb'] = "Monthly buy price";
@@ -336,6 +381,9 @@ $text['label-monthly_price_buy']['ro-ro'] = "";
 $text['label-monthly_price_buy']['ru-ru'] = "Месячный тариф покупки";
 $text['label-monthly_price_buy']['sv-se'] = "Inköpspris / Månad";
 $text['label-monthly_price_buy']['uk-ua'] = "Щомісячна ціна купівлі";
+$text['label-monthly_price_buy']['zh-cn'] = "月价";
+$text['label-monthly_price_buy']['ja-jp'] = "月間購入価格";
+$text['label-monthly_price_buy']['ko-kr'] = "월간 구매 가격";
 
 $text['label-monthly_price']['en-us'] = "Monthly selling price";
 $text['label-monthly_price']['en-gb'] = "Monthly selling price";
@@ -357,6 +405,9 @@ $text['label-monthly_price']['ro-ro'] = "";
 $text['label-monthly_price']['ru-ru'] = "Месячный тариф продажи";
 $text['label-monthly_price']['sv-se'] = "Säljpris / Månad";
 $text['label-monthly_price']['uk-ua'] = "Щомісячна ціна продажу";
+$text['label-monthly_price']['zh-cn'] = "月销售价格";
+$text['label-monthly_price']['ja-jp'] = "月次販売価格";
+$text['label-monthly_price']['ko-kr'] = "월간 판매 가격";
 
 $text['label-fax_uuid']['en-us'] = "Fax Detection";
 $text['label-fax_uuid']['en-gb'] = "Fax Detection";
@@ -378,6 +429,9 @@ $text['label-fax_uuid']['ro-ro'] = "";
 $text['label-fax_uuid']['ru-ru'] = "Обнаружение факсов";
 $text['label-fax_uuid']['sv-se'] = "Fax Detektering";
 $text['label-fax_uuid']['uk-ua'] = "Виявлення факсу";
+$text['label-fax_uuid']['zh-cn'] = "传真探测";
+$text['label-fax_uuid']['ja-jp'] = "ファックス検出";
+$text['label-fax_uuid']['ko-kr'] = "팩스 탐지";
 
 $text['label-destinations']['en-us'] = "Destinations";
 $text['label-destinations']['en-gb'] = "Destinations";
@@ -399,6 +453,9 @@ $text['label-destinations']['ro-ro'] = "Destinații";
 $text['label-destinations']['ru-ru'] = "Направления";
 $text['label-destinations']['sv-se'] = "Destinationer";
 $text['label-destinations']['uk-ua'] = "Номери";
+$text['label-destinations']['zh-cn'] = "目的地";
+$text['label-destinations']['ja-jp'] = "デザート";
+$text['label-destinations']['ko-kr'] = "오시는 길";
 
 $text['label-alternate_destination']['en-us'] = "Alternate Destination";
 $text['label-alternate_destination']['en-gb'] = "Alternate Destination";
@@ -420,6 +477,9 @@ $text['label-alternate_destination']['ro-ro'] = "";
 $text['label-alternate_destination']['ru-ru'] = "Альтернативное направление";
 $text['label-alternate_destination']['sv-se'] = "Alternativ Destination";
 $text['label-alternate_destination']['uk-ua'] = "альтернативні варіанти призначення";
+$text['label-alternate_destination']['zh-cn'] = "候补目的地";
+$text['label-alternate_destination']['ja-jp'] = "代替目的地";
+$text['label-alternate_destination']['ko-kr'] = "편의 용품";
 
 $text['label-domain-name']['en-us'] = "Domain Name";
 $text['label-domain-name']['en-gb'] = "Domain Name";
@@ -441,6 +501,9 @@ $text['label-domain-name']['ro-ro'] = "";
 $text['label-domain-name']['ru-ru'] = "Имя Домена";
 $text['label-domain-name']['sv-se'] = "Domän Namn";
 $text['label-domain-name']['uk-ua'] = "Назва домену";
+$text['label-domain-name']['zh-cn'] = "域名";
+$text['label-domain-name']['ja-jp'] = "ドメインネーム";
+$text['label-domain-name']['ko-kr'] = "도메인 이름";
 
 $text['label-domain']['en-us'] = "Domain";
 $text['label-domain']['en-gb'] = "Domain";
@@ -462,6 +525,9 @@ $text['label-domain']['ro-ro'] = "Domeniu";
 $text['label-domain']['ru-ru'] = "Домен";
 $text['label-domain']['sv-se'] = "Domän";
 $text['label-domain']['uk-ua'] = "Домен";
+$text['label-domain']['zh-cn'] = "领域";
+$text['label-domain']['ja-jp'] = "ドメイン";
+$text['label-domain']['ko-kr'] = "이름 *";
 
 $text['label-destination_type']['en-us'] = "Type";
 $text['label-destination_type']['en-gb'] = "Type";
@@ -483,6 +549,9 @@ $text['label-destination_type']['ro-ro'] = "";
 $text['label-destination_type']['ru-ru'] = "Тип";
 $text['label-destination_type']['sv-se'] = "Typ";
 $text['label-destination_type']['uk-ua'] = "Тип";
+$text['label-destination_type']['zh-cn'] = "类型";
+$text['label-destination_type']['ja-jp'] = "タイプ:";
+$text['label-destination_type']['ko-kr'] = "제품정보";
 
 $text['label-destination_country_code']['en-us'] = "Country Code";
 $text['label-destination_country_code']['en-gb'] = "Country Code";
@@ -504,6 +573,9 @@ $text['label-destination_country_code']['ro-ro'] = "";
 $text['label-destination_country_code']['ru-ru'] = "Код страны";
 $text['label-destination_country_code']['sv-se'] = "landskod";
 $text['label-destination_country_code']['uk-ua'] = "Код країни";
+$text['label-destination_country_code']['zh-cn'] = "国家法典";
+$text['label-destination_country_code']['ja-jp'] = "国コード";
+$text['label-destination_country_code']['ko-kr'] = "국가 코드";
 
 $text['label-destination_prefix']['en-us'] = "Prefix";
 $text['label-destination_prefix']['en-gb'] = "Prefix";
@@ -525,6 +597,9 @@ $text['label-destination_prefix']['ro-ro'] = "";
 $text['label-destination_prefix']['ru-ru'] = "Префикс";
 $text['label-destination_prefix']['sv-se'] = "Prefix";
 $text['label-destination_prefix']['uk-ua'] = "Префікс";
+$text['label-destination_prefix']['zh-cn'] = "预设";
+$text['label-destination_prefix']['ja-jp'] = "プレフィックス";
+$text['label-destination_prefix']['ko-kr'] = "연락처";
 
 $text['label-destination_trunk_prefix']['en-us'] = "Trunk Prefix";
 $text['label-destination_trunk_prefix']['en-gb'] = "Trunk Prefix";
@@ -546,6 +621,9 @@ $text['label-destination_trunk_prefix']['ro-ro'] = "";
 $text['label-destination_trunk_prefix']['ru-ru'] = "Приставка";
 $text['label-destination_trunk_prefix']['sv-se'] = "Trunk Prefix";
 $text['label-destination_trunk_prefix']['uk-ua'] = "Префікс";
+$text['label-destination_trunk_prefix']['zh-cn'] = "顶楼";
+$text['label-destination_trunk_prefix']['ja-jp'] = "トランクプレフィックス";
+$text['label-destination_trunk_prefix']['ko-kr'] = "연락처";
 
 $text['label-destination_area_code']['en-us'] = "Area Code";
 $text['label-destination_area_code']['en-gb'] = "Area Code";
@@ -567,6 +645,9 @@ $text['label-destination_area_code']['ro-ro'] = "";
 $text['label-destination_area_code']['ru-ru'] = "Код района";
 $text['label-destination_area_code']['sv-se'] = "områdeskod";
 $text['label-destination_area_code']['uk-ua'] = "Код ЄДРПОУ";
+$text['label-destination_area_code']['zh-cn'] = "地区法典";
+$text['label-destination_area_code']['ja-jp'] = "エリアコード";
+$text['label-destination_area_code']['ko-kr'] = "지역 코드";
 
 $text['label-destination_number']['en-us'] = "Destination";
 $text['label-destination_number']['en-gb'] = "Destination";
@@ -588,6 +669,9 @@ $text['label-destination_number']['ro-ro'] = "";
 $text['label-destination_number']['ru-ru'] = "Направление";
 $text['label-destination_number']['sv-se'] = "Destination";
 $text['label-destination_number']['uk-ua'] = "Номер";
+$text['label-destination_number']['zh-cn'] = "目的地";
+$text['label-destination_number']['ja-jp'] = "目的地";
+$text['label-destination_number']['ko-kr'] = "여행 정보";
 
 $text['label-destination_condition_field']['en-us'] = "Condition";
 $text['label-destination_condition_field']['en-gb'] = "Condition";
@@ -609,6 +693,9 @@ $text['label-destination_condition_field']['ro-ro'] = "";
 $text['label-destination_condition_field']['ru-ru'] = "Состояние";
 $text['label-destination_condition_field']['sv-se'] = "Villkor";
 $text['label-destination_condition_field']['uk-ua'] = "Стан";
+$text['label-destination_condition_field']['zh-cn'] = "条件";
+$text['label-destination_condition_field']['ja-jp'] = "インフォメーション";
+$text['label-destination_condition_field']['ko-kr'] = "(주)";
 
 $text['label-destination_enabled']['en-us'] = "Enabled";
 $text['label-destination_enabled']['en-gb'] = "Enabled";
@@ -630,6 +717,9 @@ $text['label-destination_enabled']['ro-ro'] = "";
 $text['label-destination_enabled']['ru-ru'] = "Включено";
 $text['label-destination_enabled']['sv-se'] = "Aktiverad";
 $text['label-destination_enabled']['uk-ua'] = "Включено";
+$text['label-destination_enabled']['zh-cn'] = "授权";
+$text['label-destination_enabled']['ja-jp'] = "有効化";
+$text['label-destination_enabled']['ko-kr'] = "이름 *";
 
 $text['label-destination_description']['en-us'] = "Description";
 $text['label-destination_description']['en-gb'] = "Description";
@@ -651,6 +741,9 @@ $text['label-destination_description']['ro-ro'] = "";
 $text['label-destination_description']['ru-ru'] = "Описание";
 $text['label-destination_description']['sv-se'] = "Beskrivning";
 $text['label-destination_description']['uk-ua'] = "Опис";
+$text['label-destination_description']['zh-cn'] = "说明";
+$text['label-destination_description']['ja-jp'] = "コンテンツ";
+$text['label-destination_description']['ko-kr'] = "제품 설명";
 
 $text['label-destination_context']['en-us'] = "Context";
 $text['label-destination_context']['en-gb'] = "Context";
@@ -672,6 +765,9 @@ $text['label-destination_context']['ro-ro'] = "";
 $text['label-destination_context']['ru-ru'] = "Контекст";
 $text['label-destination_context']['sv-se'] = "Context";
 $text['label-destination_context']['uk-ua'] = "Контекст";
+$text['label-destination_context']['zh-cn'] = "背景";
+$text['label-destination_context']['ja-jp'] = "コンテンツ";
+$text['label-destination_context']['ko-kr'] = "설정하기";
 
 $text['label-destination_cid_name_prefix']['en-us'] = "Caller ID Name Prefix";
 $text['label-destination_cid_name_prefix']['en-gb'] = "Caller ID Name Prefix";
@@ -693,6 +789,9 @@ $text['label-destination_cid_name_prefix']['ro-ro'] = "";
 $text['label-destination_cid_name_prefix']['ru-ru'] = "Префикс имени (Caller ID) вызывающего абонента";
 $text['label-destination_cid_name_prefix']['sv-se'] = "Caller ID Namn Prefix ";
 $text['label-destination_cid_name_prefix']['uk-ua'] = "Caller ID Префікс імені";
+$text['label-destination_cid_name_prefix']['zh-cn'] = "Caller ID name";
+$text['label-destination_cid_name_prefix']['ja-jp'] = "Caller ID 名前 プレフィックス";
+$text['label-destination_cid_name_prefix']['ko-kr'] = "Caller ID 이름 접두사";
 
 $text['label-destination_caller_id_name']['en-us'] = "Caller ID Name";
 $text['label-destination_caller_id_name']['en-gb'] = "Caller ID Name";
@@ -714,6 +813,9 @@ $text['label-destination_caller_id_name']['ro-ro'] = "";
 $text['label-destination_caller_id_name']['ru-ru'] = "Имя идентификатора (Caller ID) вызывающего абонента";
 $text['label-destination_caller_id_name']['sv-se'] = "Caller ID Namn";
 $text['label-destination_caller_id_name']['uk-ua'] = "Caller ID Ім’я";
+$text['label-destination_caller_id_name']['zh-cn'] = "Caller ID name";
+$text['label-destination_caller_id_name']['ja-jp'] = "呼び出し者 ID 名";
+$text['label-destination_caller_id_name']['ko-kr'] = "ID 이름";
 
 $text['label-destination_caller_id_number']['en-us'] = "Caller ID Number";
 $text['label-destination_caller_id_number']['en-gb'] = "Caller ID Number";
@@ -735,6 +837,9 @@ $text['label-destination_caller_id_number']['ro-ro'] = "";
 $text['label-destination_caller_id_number']['ru-ru'] = "Префикс номера (Caller ID) вызывающего абонента";
 $text['label-destination_caller_id_number']['sv-se'] = "Caller ID Nummer";
 $text['label-destination_caller_id_number']['uk-ua'] = "Caller ID Номер";
+$text['label-destination_caller_id_number']['zh-cn'] = "Caller ID号码";
+$text['label-destination_caller_id_number']['ja-jp'] = "発信者ID番号";
+$text['label-destination_caller_id_number']['ko-kr'] = "전화 번호";
 
 $text['label-carrier']['en-us'] = "Carrier name";
 $text['label-carrier']['en-gb'] = "Carrier name";
@@ -756,6 +861,9 @@ $text['label-carrier']['ro-ro'] = "";
 $text['label-carrier']['ru-ru'] = "Название оператора";
 $text['label-carrier']['sv-se'] = "Operatör";
 $text['label-carrier']['uk-ua'] = "Назва оператора";
+$text['label-carrier']['zh-cn'] = "承运人名称";
+$text['label-carrier']['ja-jp'] = "キャリア名";
+$text['label-carrier']['ko-kr'] = "Carrier 이름";
 
 $text['label-destination_hold_music']['en-us'] = "Hold Music";
 $text['label-destination_hold_music']['en-gb'] = "Hold Music";
@@ -777,6 +885,9 @@ $text['label-destination_hold_music']['ro-ro'] = "";
 $text['label-destination_hold_music']['ru-ru'] = "Музыка на Удержании";
 $text['label-destination_hold_music']['sv-se'] = "Vänt-musik";
 $text['label-destination_hold_music']['uk-ua'] = "Гуртожиток";
+$text['label-destination_hold_music']['zh-cn'] = "Hold 音乐";
+$text['label-destination_hold_music']['ja-jp'] = "ホールド・ミュージック";
+$text['label-destination_hold_music']['ko-kr'] = "공지사항";
 
 $text['label-destination_distinctive_ring']['en-us'] = "Distinctive Ring";
 $text['label-destination_distinctive_ring']['en-gb'] = "Distinctive Ring";
@@ -798,6 +909,9 @@ $text['label-destination_distinctive_ring']['ro-ro'] = "";
 $text['label-destination_distinctive_ring']['ru-ru'] = "Отличительный вызов";
 $text['label-destination_distinctive_ring']['sv-se'] = "Distinkt Ringning";
 $text['label-destination_distinctive_ring']['uk-ua'] = "Дитинктивне кільце";
+$text['label-destination_distinctive_ring']['zh-cn'] = "区分";
+$text['label-destination_distinctive_ring']['ja-jp'] = "特殊リング";
+$text['label-destination_distinctive_ring']['ko-kr'] = "분산 링";
 
 $text['label-destination_record']['en-us'] = "Record";
 $text['label-destination_record']['en-gb'] = "Record";
@@ -819,6 +933,9 @@ $text['label-destination_record']['ro-ro'] = "";
 $text['label-destination_record']['ru-ru'] = "Запись";
 $text['label-destination_record']['sv-se'] = "Spela In";
 $text['label-destination_record']['uk-ua'] = "Запис";
+$text['label-destination_record']['zh-cn'] = "记录";
+$text['label-destination_record']['ja-jp'] = "レコード";
+$text['label-destination_record']['ko-kr'] = "이름 *";
 
 $text['label-account_code']['en-us'] = "Account Code";
 $text['label-account_code']['en-gb'] = "Account Code";
@@ -840,6 +957,9 @@ $text['label-account_code']['ro-ro'] = "";
 $text['label-account_code']['ru-ru'] = "Код Учетной Записи";
 $text['label-account_code']['sv-se'] = "Account Code";
 $text['label-account_code']['uk-ua'] = "Код облікового запису";
+$text['label-account_code']['zh-cn'] = "账户法";
+$text['label-account_code']['ja-jp'] = "アカウントコード";
+$text['label-account_code']['ko-kr'] = "계정 코드";
 
 $text['label-destination_conditions']['en-us'] = "Conditions";
 $text['label-destination_conditions']['en-gb'] = "Conditions";
@@ -861,6 +981,9 @@ $text['label-destination_conditions']['ro-ro'] = "Conditions";
 $text['label-destination_conditions']['ru-ru'] = "Conditions";
 $text['label-destination_conditions']['sv-se'] = "Conditions";
 $text['label-destination_conditions']['uk-ua'] = "Conditions";
+$text['label-destination_conditions']['zh-cn'] = "条件";
+$text['label-destination_conditions']['ja-jp'] = "ご利用条件";
+$text['label-destination_conditions']['ko-kr'] = "* 이름";
 
 $text['option-caller_id_number']['en-us'] = "Caller ID Number";
 $text['option-caller_id_number']['en-gb'] = "Caller ID Number";
@@ -882,6 +1005,9 @@ $text['option-caller_id_number']['ro-ro'] = "";
 $text['option-caller_id_number']['ru-ru'] = "Идентификационный номер (Caller ID) вызывающего абонента";
 $text['option-caller_id_number']['sv-se'] = "Caller ID Nummer";
 $text['option-caller_id_number']['uk-ua'] = "Caller ID Номер";
+$text['option-caller_id_number']['zh-cn'] = "Caller ID号码";
+$text['option-caller_id_number']['ja-jp'] = "発信者ID番号";
+$text['option-caller_id_number']['ko-kr'] = "전화 번호";
 
 $text['label-destination_actions']['en-us'] = "Actions";
 $text['label-destination_actions']['en-gb'] = "Actions";
@@ -903,6 +1029,9 @@ $text['label-destination_actions']['ro-ro'] = "";
 $text['label-destination_actions']['ru-ru'] = "Действия";
 $text['label-destination_actions']['sv-se'] = "Åtgärder";
 $text['label-destination_actions']['uk-ua'] = "Дії";
+$text['label-destination_actions']['zh-cn'] = "行动";
+$text['label-destination_actions']['ja-jp'] = "アクション";
+$text['label-destination_actions']['ko-kr'] = "기타";
 
 $text['label-usage']['en-us'] = "Usage";
 $text['label-usage']['en-gb'] = "Usage";
@@ -924,6 +1053,9 @@ $text['label-usage']['ro-ro'] = "";
 $text['label-usage']['ru-ru'] = "Использование";
 $text['label-usage']['sv-se'] = "Användning";
 $text['label-usage']['uk-ua'] = "Проживання";
+$text['label-usage']['zh-cn'] = "使用";
+$text['label-usage']['ja-jp'] = "使用方法";
+$text['label-usage']['ko-kr'] = "제품 정보";
 
 $text['label-voice']['en-us'] = "Voice";
 $text['label-voice']['en-gb'] = "Voice";
@@ -945,6 +1077,9 @@ $text['label-voice']['ro-ro'] = "";
 $text['label-voice']['ru-ru'] = "Голос";
 $text['label-voice']['sv-se'] = "Röst";
 $text['label-voice']['uk-ua'] = "Голос";
+$text['label-voice']['zh-cn'] = "声音";
+$text['label-voice']['ja-jp'] = "インタビュー";
+$text['label-voice']['ko-kr'] = "이름 *";
 
 $text['label-fax']['en-us'] = "Fax";
 $text['label-fax']['en-gb'] = "Fax";
@@ -966,6 +1101,9 @@ $text['label-fax']['ro-ro'] = "";
 $text['label-fax']['ru-ru'] = "Факс";
 $text['label-fax']['sv-se'] = "Fax";
 $text['label-fax']['uk-ua'] = "Факс";
+$text['label-fax']['zh-cn'] = "传真";
+$text['label-fax']['ja-jp'] = "ファックス";
+$text['label-fax']['ko-kr'] = "* 이름";
 
 $text['label-text']['en-us'] = "Text";
 $text['label-text']['en-gb'] = "Text";
@@ -987,6 +1125,9 @@ $text['label-text']['ro-ro'] = "";
 $text['label-text']['ru-ru'] = "Текст";
 $text['label-text']['sv-se'] = "Text";
 $text['label-text']['uk-ua'] = "Текст";
+$text['label-text']['zh-cn'] = "案文";
+$text['label-text']['ja-jp'] = "テキスト";
+$text['label-text']['ko-kr'] = "이름 *";
 
 $text['label-emergency']['en-us'] = "Emergency";
 $text['label-emergency']['en-gb'] = "Emergency";
@@ -1008,6 +1149,9 @@ $text['label-emergency']['ro-ro'] = "";
 $text['label-emergency']['ru-ru'] = "Идентификатор (Caller ID) имени экстренного вызова";
 $text['label-emergency']['sv-se'] = "Nöd Namnpresentation";
 $text['label-emergency']['uk-ua'] = "Аварійна";
+$text['label-emergency']['zh-cn'] = "紧急情况";
+$text['label-emergency']['ja-jp'] = "緊急事態";
+$text['label-emergency']['ko-kr'] = "- 연혁";
 
 $text['header-destinations']['en-us'] = "Destinations";
 $text['header-destinations']['en-gb'] = "Destinations";
@@ -1029,6 +1173,9 @@ $text['header-destinations']['ro-ro'] = "";
 $text['header-destinations']['ru-ru'] = "Направления";
 $text['header-destinations']['sv-se'] = "Destinationer";
 $text['header-destinations']['uk-ua'] = "Номери";
+$text['header-destinations']['zh-cn'] = "目的地";
+$text['header-destinations']['ja-jp'] = "デザート";
+$text['header-destinations']['ko-kr'] = "오시는 길";
 
 $text['header-destination-edit']['en-us'] = "Destination";
 $text['header-destination-edit']['en-gb'] = "Destination";
@@ -1050,6 +1197,9 @@ $text['header-destination-edit']['ro-ro'] = "";
 $text['header-destination-edit']['ru-ru'] = "Направление";
 $text['header-destination-edit']['sv-se'] = "Destination";
 $text['header-destination-edit']['uk-ua'] = "Номер";
+$text['header-destination-edit']['zh-cn'] = "目的地";
+$text['header-destination-edit']['ja-jp'] = "目的地";
+$text['header-destination-edit']['ko-kr'] = "여행 정보";
 
 $text['header-destination-add']['en-us'] = "Destination";
 $text['header-destination-add']['en-gb'] = "Destination";
@@ -1071,6 +1221,9 @@ $text['header-destination-add']['ro-ro'] = "";
 $text['header-destination-add']['ru-ru'] = "Направление";
 $text['header-destination-add']['sv-se'] = "Destination";
 $text['header-destination-add']['uk-ua'] = "Номер";
+$text['header-destination-add']['zh-cn'] = "目的地";
+$text['header-destination-add']['ja-jp'] = "目的地";
+$text['header-destination-add']['ko-kr'] = "여행 정보";
 
 $text['header-destination_import']['en-us'] = "Destination Import";
 $text['header-destination_import']['en-gb'] = "Destination Import";
@@ -1092,6 +1245,9 @@ $text['header-destination_import']['ro-ro'] = "";
 $text['header-destination_import']['ru-ru'] = "Импорт";
 $text['header-destination_import']['sv-se'] = "Importera";
 $text['header-destination_import']['uk-ua'] = "Імпортувати";
+$text['header-destination_import']['zh-cn'] = "目的地进口";
+$text['header-destination_import']['ja-jp'] = "目的地のインポート";
+$text['header-destination_import']['ko-kr'] = "오시는 길";
 
 $text['header-destination_export']['en-us'] = "Destination Export";
 $text['header-destination_export']['en-gb'] = "Destination Export";
@@ -1114,6 +1270,9 @@ $text['header-destination_export']['ro-ro'] = "";
 $text['header-destination_export']['ru-ru'] = "Экспорт";
 $text['header-destination_export']['sv-se'] = "Export";
 $text['header-destination_export']['uk-ua'] = "Експортувати";
+$text['header-destination_export']['zh-cn'] = "目的地出口";
+$text['header-destination_export']['ja-jp'] = "目的地のエクスポート";
+$text['header-destination_export']['ko-kr'] = "대상 수출";
 
 $text['description-destination_import']['en-us'] = "Upload delimitted data to add multiple destinations.";
 $text['description-destination_import']['en-gb'] = "Upload delimitted data to add multiple destinations.";
@@ -1135,6 +1294,9 @@ $text['description-destination_import']['ro-ro'] = "";
 $text['description-destination_import']['ru-ru'] = "Загрузка выключенных данных для добавления нескольких направлений.";
 $text['description-destination_import']['sv-se'] = "Ladda upp delimiterade data för att lägga till flera destinationer.";
 $text['description-destination_import']['uk-ua'] = "Завантажуйте видалені дані, щоб додати кілька місць.";
+$text['description-destination_import']['zh-cn'] = "卸载数据以添加多个目的地。";
+$text['description-destination_import']['ja-jp'] = "重複したデータをアップロードして複数の宛先を追加します。";
+$text['description-destination_import']['ko-kr'] = "여러 목적지를 추가하기 위해 delimitted 데이터를 업로드합니다.";
 
 $text['description-destination_export']['en-us'] = "Select the fields you wish to include in the export.";
 $text['description-destination_export']['en-gb'] = "Select the fields you wish to include in the export.";
@@ -1158,6 +1320,9 @@ $text['description-destination_export']['ru-ru'] = "Select the fields you wish t
 $text['description-destination_export']['sv-se'] = "Select the fields you wish to include in the export.";
 $text['description-destination_export']['uk-ua'] = "Select the fields you wish to include in the export.";
 $text['description-destination_export']['tr-tr'] = "Select the fields you wish to include in the export.";
+$text['description-destination_export']['zh-cn'] = "选择希望列入出口的领域。";
+$text['description-destination_export']['ja-jp'] = "エクスポートに含めたいフィールドを選択します。";
+$text['description-destination_export']['ko-kr'] = "수출에 포함하려는 필드를 선택하십시오.";
 
 $text['description-monthly_price_buy']['en-us'] = "Enter monthly price you pay for this destination (only when inbound)";
 $text['description-monthly_price_buy']['en-gb'] = "Enter monthly price you pay for this destination (only when inbound)";
@@ -1179,6 +1344,9 @@ $text['description-monthly_price_buy']['ro-ro'] = "";
 $text['description-monthly_price_buy']['ru-ru'] = "Введите ежемесячную цену, которую вы платите за это направление (только за входящие)";
 $text['description-monthly_price_buy']['sv-se'] = "Ange pris per månad som du betalar för denna destination (endast vid inkommande)";
 $text['description-monthly_price_buy']['uk-ua'] = "Введіть щомісячний тариф, який оплачуєте за цей номер (тільки для вхідних)";
+$text['description-monthly_price_buy']['zh-cn'] = "每月向这个目的地支付价款(只当有价)";
+$text['description-monthly_price_buy']['ja-jp'] = "この宛先に支払う月間価格を入力してください(インバウンド時のみ)";
+$text['description-monthly_price_buy']['ko-kr'] = "이 목적지에 대해 지불 한 월간 가격을 입력하십시오 (상행일 때만)";
 
 $text['description-monthly_price']['en-us'] = "Enter monthly price to bill for this destination (only when inbound)";
 $text['description-monthly_price']['en-gb'] = "Enter monthly price to bill for this destination (only when inbound)";
@@ -1200,6 +1368,9 @@ $text['description-monthly_price']['ro-ro'] = "";
 $text['description-monthly_price']['ru-ru'] = "Введите месячную цену для выставления счета для этого пункта назначения (только за входящие)";
 $text['description-monthly_price']['sv-se'] = "Ange pris per månad till kund för denna destination (endast vid inkommande)";
 $text['description-monthly_price']['uk-ua'] = "Введіть щомісячний тариф для абонентів за цей номер (тільки для вхідних)";
+$text['description-monthly_price']['zh-cn'] = "每月为这一目的地开具账单(只当有价时)";
+$text['description-monthly_price']['ja-jp'] = "この目的地の請求書に月額料金を入力します(インバウンド時のみ)";
+$text['description-monthly_price']['ko-kr'] = "이 목적지에 대한 청구서에 월별 가격을 입력하십시오 (상행일 때만)";
 
 $text['description-fax_uuid']['en-us'] = "Select the fax destination to enable fax detection. ";
 $text['description-fax_uuid']['en-gb'] = "Select the fax destination to enable fax detection. ";
@@ -1221,6 +1392,9 @@ $text['description-fax_uuid']['ro-ro'] = "";
 $text['description-fax_uuid']['ru-ru'] = "Выберите адресат факса, чтобы включить его обнаружение.";
 $text['description-fax_uuid']['sv-se'] = "Ange fax destination för att aktivera fax deteketering.";
 $text['description-fax_uuid']['uk-ua'] = "Виберіть  номер для факсу, щоб дозволити його виявлення";
+$text['description-fax_uuid']['zh-cn'] = "选择传真目的地,以便进行传真探测。";
+$text['description-fax_uuid']['ja-jp'] = "FAX の送信先を選択し、FAX の検出を有効にします。";
+$text['description-fax_uuid']['ko-kr'] = "팩스 탐지를 가능하게 하는 팩스 목적지를 선택하십시오.";
 
 $text['description-providers']['en-us'] = "Assign this destination to a provider.";
 $text['description-providers']['en-gb'] = "Assign this destination to a provider.";
@@ -1242,6 +1416,9 @@ $text['description-providers']['ro-ro'] = "";
 $text['description-providers']['ru-ru'] = "Назначьте это место провайдеру.";
 $text['description-providers']['sv-se'] = "Tilldela denna destination till en leverantör.";
 $text['description-providers']['uk-ua'] = "Призначте цей пункт для провайдера.";
+$text['description-providers']['zh-cn'] = "将该目的地转让给供应商。";
+$text['description-providers']['ja-jp'] = "この宛先をプロバイダに割り当てます。";
+$text['description-providers']['ko-kr'] = "이 목적지를 공급자에게 할당하십시오.";
 
 $text['description-user']['en-us'] = "Assign this destination to a user.";
 $text['description-user']['en-gb'] = "Assign this destination to a user.";
@@ -1263,6 +1440,9 @@ $text['description-user']['ro-ro'] = "";
 $text['description-user']['ru-ru'] = "Назначьте это место пользователю.";
 $text['description-user']['sv-se'] = "Tilldela denna destination till en användare.";
 $text['description-user']['uk-ua'] = "Призначте призначення користувача.";
+$text['description-user']['zh-cn'] = "将该目的地转让给用户。";
+$text['description-user']['ja-jp'] = "この宛先をユーザに割り当てます。";
+$text['description-user']['ko-kr'] = "이 목적지를 사용자에게 할당합니다.";
 
 $text['description-destinations']['en-us'] = "Inbound destinations are the DID/DDI, DNIS or Alias for inbound calls.";
 $text['description-destinations']['en-gb'] = "Inbound destinations are the DID/DDI, DNIS or Alias for inbound calls.";
@@ -1284,6 +1464,9 @@ $text['description-destinations']['ro-ro'] = "";
 $text['description-destinations']['ru-ru'] = "Входящие адресаты - это DID / DDI, DNIS или Псевдоним для входящих вызовов.";
 $text['description-destinations']['sv-se'] = "Inkommande destinationer är DID / DDI , DNIS eller Alias ​​för inkommande samtal.";
 $text['description-destinations']['uk-ua'] = "Вхідні номери можуть бути таких типів: DID/DDI, DNIS або Alias  для вхідних дзвінків";
+$text['description-destinations']['zh-cn'] = "有限制的目的地是DID/DDI、DNIS或Alias。";
+$text['description-destinations']['ja-jp'] = "インバウンド先物は、DID/DDI、DNIS、またはAliasのインバウンドコールです。";
+$text['description-destinations']['ko-kr'] = "인바운드 대상은 DID/DDI, DNIS 또는 별명입니다.";
 
 $text['description-destination_type']['en-us'] = "Select the type.";
 $text['description-destination_type']['en-gb'] = "Select the type.";
@@ -1305,6 +1488,9 @@ $text['description-destination_type']['ro-ro'] = "";
 $text['description-destination_type']['ru-ru'] = "Выберите Тип.";
 $text['description-destination_type']['sv-se'] = "Välj typ";
 $text['description-destination_type']['uk-ua'] = "Виберіть тип";
+$text['description-destination_type']['zh-cn'] = "选择类型。";
+$text['description-destination_type']['ja-jp'] = "タイプを選択します。";
+$text['description-destination_type']['ko-kr'] = "유형 선택.";
 
 $text['description-destination_number']['en-us'] = "Enter the destination.";
 $text['description-destination_number']['en-gb'] = "Enter the destination.";
@@ -1326,6 +1512,9 @@ $text['description-destination_number']['ro-ro'] = "";
 $text['description-destination_number']['ru-ru'] = "Введите номер назначения.";
 $text['description-destination_number']['sv-se'] = "Ange destinationen.";
 $text['description-destination_number']['uk-ua'] = "Введіть номер";
+$text['description-destination_number']['zh-cn'] = "进入目的地。";
+$text['description-destination_number']['ja-jp'] = "目的地を入力してください。";
+$text['description-destination_number']['ko-kr'] = "자주 묻는 질문";
 
 $text['description-destination_condition_field']['en-us'] = "Enter the destination condition.";
 $text['description-destination_condition_field']['en-gb'] = "Enter the destination condition.";
@@ -1347,6 +1536,9 @@ $text['description-destination_condition_field']['ro-ro'] = "";
 $text['description-destination_condition_field']['ru-ru'] = "Введите условие назначения.";
 $text['description-destination_condition_field']['sv-se'] = "Ange destinationsförhållandet.";
 $text['description-destination_condition_field']['uk-ua'] = "Введіть стан призначення.";
+$text['description-destination_condition_field']['zh-cn'] = "进入目的地。";
+$text['description-destination_condition_field']['ja-jp'] = "宛先条件を入力してください。";
+$text['description-destination_condition_field']['ko-kr'] = "대상 조건을 입력하십시오.";
 
 $text['description-destination_country_code']['en-us'] = "Enter the country code.";
 $text['description-destination_country_code']['en-gb'] = "Enter the country code.";
@@ -1368,6 +1560,9 @@ $text['description-destination_country_code']['ro-ro'] = "";
 $text['description-destination_country_code']['ru-ru'] = "Введите код страны.";
 $text['description-destination_country_code']['sv-se'] = "Ange landskoden.";
 $text['description-destination_country_code']['uk-ua'] = "Введіть код країни.";
+$text['description-destination_country_code']['zh-cn'] = "加入国家法典。";
+$text['description-destination_country_code']['ja-jp'] = "国のコードを入力してください。";
+$text['description-destination_country_code']['ko-kr'] = "국가 코드를 입력하십시오.";
 
 $text['description-destination_trunk_prefix']['en-us'] = "Enter the trunk prefix.";
 $text['description-destination_trunk_prefix']['en-gb'] = "Enter the trunk prefix.";
@@ -1389,6 +1584,9 @@ $text['description-destination_trunk_prefix']['ro-ro'] = "";
 $text['description-destination_trunk_prefix']['ru-ru'] = "Введите префикс ствола.";
 $text['description-destination_trunk_prefix']['sv-se'] = "Ange trunk prefixet.";
 $text['description-destination_trunk_prefix']['uk-ua'] = "Введіть префікс багажника.";
+$text['description-destination_trunk_prefix']['zh-cn'] = "穿透镜头。";
+$text['description-destination_trunk_prefix']['ja-jp'] = "トランクプレフィックスを入力してください。";
+$text['description-destination_trunk_prefix']['ko-kr'] = "트렁크 prefix를 입력하십시오.";
 
 $text['description-destination_area_code']['en-us'] = "Enter the area code.";
 $text['description-destination_area_code']['en-gb'] = "Enter the area code.";
@@ -1410,6 +1608,9 @@ $text['description-destination_area_code']['ro-ro'] = "";
 $text['description-destination_area_code']['ru-ru'] = "Введите код области.";
 $text['description-destination_area_code']['sv-se'] = "Ange områdeskoden.";
 $text['description-destination_area_code']['uk-ua'] = "Введіть код зони.";
+$text['description-destination_area_code']['zh-cn'] = "加入地区法。";
+$text['description-destination_area_code']['ja-jp'] = "エリアコードを入力してください。";
+$text['description-destination_area_code']['ko-kr'] = "지역 코드를 입력하십시오.";
 
 $text['description-destination_enabled']['en-us'] = "Set the current status of this destination.";
 $text['description-destination_enabled']['en-gb'] = "Set the current status of this destination.";
@@ -1431,6 +1632,9 @@ $text['description-destination_enabled']['ro-ro'] = "";
 $text['description-destination_enabled']['ru-ru'] = "Установите текущий статус этого пункта назначения.";
 $text['description-destination_enabled']['sv-se'] = "Ange den nuvarande statusen för denna destination.";
 $text['description-destination_enabled']['uk-ua'] = "Виберіть поточний статус для номера";
+$text['description-destination_enabled']['zh-cn'] = "确定这一目的地的现状。";
+$text['description-destination_enabled']['ja-jp'] = "この宛先の現在のステータスを設定します。";
+$text['description-destination_enabled']['ko-kr'] = "이 목적지의 현재 상태를 설정합니다.";
 
 $text['description-destination_description']['en-us'] = "Enter a description for this destination (optional).";
 $text['description-destination_description']['en-gb'] = "Enter a description for this destination (optional).";
@@ -1452,6 +1656,9 @@ $text['description-destination_description']['ro-ro'] = "";
 $text['description-destination_description']['ru-ru'] = "Введите описание для этого места назначения (опционально).";
 $text['description-destination_description']['sv-se'] = "Ange en beskrivning för denna destination (frivillig).";
 $text['description-destination_description']['uk-ua'] = "Введіть опис для номера (не обов’язково)";
+$text['description-destination_description']['zh-cn'] = "对该目的地(选择)进行说明。";
+$text['description-destination_description']['ja-jp'] = "この宛先の説明を入力してください(オプション)。";
+$text['description-destination_description']['ko-kr'] = "이 목적지에 대한 설명을 입력 (옵션).";
 
 $text['description-destination_context']['en-us'] = "Enter the context.";
 $text['description-destination_context']['en-gb'] = "Enter the context.";
@@ -1473,6 +1680,9 @@ $text['description-destination_context']['ro-ro'] = "";
 $text['description-destination_context']['ru-ru'] = "Введите контекст.";
 $text['description-destination_context']['sv-se'] = "Ange Context.";
 $text['description-destination_context']['uk-ua'] = "Контекст";
+$text['description-destination_context']['zh-cn'] = "进入环境。";
+$text['description-destination_context']['ja-jp'] = "コンテキストを入力します。";
+$text['description-destination_context']['ko-kr'] = "자주 묻는 질문";
 
 $text['description-destination_cid_name_prefix']['en-us'] = "Set a prefix on the caller ID name.";
 $text['description-destination_cid_name_prefix']['en-gb'] = "Set a prefix on the caller ID name.";
@@ -1494,6 +1704,9 @@ $text['description-destination_cid_name_prefix']['ro-ro'] = "";
 $text['description-destination_cid_name_prefix']['ru-ru'] = "Задайте префикс имени (caller ID) идентификатора вызывающего абонента.";
 $text['description-destination_cid_name_prefix']['sv-se'] = "Ange ett prefix för Caller ID Namn.";
 $text['description-destination_cid_name_prefix']['uk-ua'] = "Введіть префікс для імені Caller ID";
+$text['description-destination_cid_name_prefix']['zh-cn'] = "预先确定打电话者身份。";
+$text['description-destination_cid_name_prefix']['ja-jp'] = "呼び出し元 ID 名にプレフィックスを設定します。";
+$text['description-destination_cid_name_prefix']['ko-kr'] = "콜러 ID 이름에 접두사를 설정합니다.";
 
 $text['description-destination_caller_id_number']['en-us'] = "Enter the caller ID number.";
 $text['description-destination_caller_id_number']['en-gb'] = "Enter the caller ID number.";
@@ -1515,6 +1728,9 @@ $text['description-destination_caller_id_number']['ro-ro'] = "";
 $text['description-destination_caller_id_number']['ru-ru'] = "Введите идентификационный номер (caller ID) вызывающего абонента.";
 $text['description-destination_caller_id_number']['sv-se'] = "Ange Caller ID Nummer.";
 $text['description-destination_caller_id_number']['uk-ua'] = "Введіть номер Caller ID";
+$text['description-destination_caller_id_number']['zh-cn'] = "进入电话号码。";
+$text['description-destination_caller_id_number']['ja-jp'] = "呼び出し元 ID 番号を入力します。";
+$text['description-destination_caller_id_number']['ko-kr'] = "통화 ID 번호를 입력하십시오.";
 
 $text['description-destination_caller_id_name']['en-us'] = "Enter the caller ID name.";
 $text['description-destination_caller_id_name']['en-gb'] = "Enter the caller ID name.";
@@ -1536,6 +1752,9 @@ $text['description-destination_caller_id_name']['ro-ro'] = "";
 $text['description-destination_caller_id_name']['ru-ru'] = "Введите имя (caller ID) вызывающего абонента.";
 $text['description-destination_caller_id_name']['sv-se'] = "Ange Caller ID Namn.";
 $text['description-destination_caller_id_name']['uk-ua'] = "Введіть ім’я  Caller ID";
+$text['description-destination_caller_id_name']['zh-cn'] = "填写打电话者身份证。";
+$text['description-destination_caller_id_name']['ja-jp'] = "呼び出し元 ID 名を入力します。";
+$text['description-destination_caller_id_name']['ko-kr'] = "통화 ID 이름을 입력하십시오.";
 
 $text['description-destination_conditions']['en-us'] = "Add additional conditions.";
 $text['description-destination_conditions']['en-gb'] = "Add additional conditions.";
@@ -1557,6 +1776,9 @@ $text['description-destination_conditions']['ro-ro'] = "";
 $text['description-destination_conditions']['ru-ru'] = "Добавить дополнительные условия.";
 $text['description-destination_conditions']['sv-se'] = "Lägg till ytterligare villkor.";
 $text['description-destination_conditions']['uk-ua'] = "Додати додаткові умови.";
+$text['description-destination_conditions']['zh-cn'] = "增加额外条件。";
+$text['description-destination_conditions']['ja-jp'] = "追加条件を追加します。";
+$text['description-destination_conditions']['ko-kr'] = "추가 조건.";
 
 $text['description-destination_actions']['en-us'] = "Add additional actions.";
 $text['description-destination_actions']['en-gb'] = "Add additional actions.";
@@ -1578,6 +1800,9 @@ $text['description-destination_actions']['ro-ro'] = "";
 $text['description-destination_actions']['ru-ru'] = "Добавить дополнительные действия.";
 $text['description-destination_actions']['sv-se'] = "Lägg till ytterligare åtgärder.";
 $text['description-destination_actions']['uk-ua'] = "Додати додаткові дії.";
+$text['description-destination_actions']['zh-cn'] = "增加行动。";
+$text['description-destination_actions']['ja-jp'] = "追加アクションを追加します。";
+$text['description-destination_actions']['ko-kr'] = "추가 작업.";
 
 $text['description-group']['en-us'] = "Assign the destination to a group.";
 $text['description-group']['en-gb'] = "Assign the destination to a group.";
@@ -1599,6 +1824,9 @@ $text['description-group']['ro-ro'] = "";
 $text['description-group']['ru-ru'] = "Назначьте пункт назначения в группу.";
 $text['description-group']['sv-se'] = "Tilldela destinationen till en grupp.";
 $text['description-group']['uk-ua'] = "Призначте призначення до групи.";
+$text['description-group']['zh-cn'] = "将目的地转让给一个群体。";
+$text['description-group']['ja-jp'] = "目的地をグループに割り当てます。";
+$text['description-group']['ko-kr'] = "그룹에 목적지를 할당합니다.";
 
 $text['description-destination_order']['en-us'] = "Select the order.";
 $text['description-destination_order']['en-gb'] = "Select the order.";
@@ -1620,6 +1848,9 @@ $text['description-destination_order']['ro-ro'] = "";
 $text['description-destination_order']['ru-ru'] = "Выберите заказ.";
 $text['description-destination_order']['sv-se'] = "Välj beställningen.";
 $text['description-destination_order']['uk-ua'] = "Оберіть порядок.";
+$text['description-destination_order']['zh-cn'] = "选择命令。";
+$text['description-destination_order']['ja-jp'] = "注文を選択します。";
+$text['description-destination_order']['ko-kr'] = "주문 선택";
 
 $text['description-carrier']['en-us'] = "Enter the carrier name. This is use to keep track incase billing";
 $text['description-carrier']['en-gb'] = "Enter the carrier name. This is use to keep track incase billing";
@@ -1641,6 +1872,9 @@ $text['description-carrier']['ro-ro'] = "";
 $text['description-carrier']['ru-ru'] = "Введите имя оператора. Это используется для тарификации";
 $text['description-carrier']['sv-se'] = "Ange operatörens namn. Detta används för att hålla reda på debitering.";
 $text['description-carrier']['uk-ua'] = "Введіть назву оператора. Використовується для тарифікації";
+$text['description-carrier']['zh-cn'] = "填写承运人名称。 这样做是为了跟踪账单记录。";
+$text['description-carrier']['ja-jp'] = "キャリア名を入力してください。 これは、請求書を追跡するために使用します";
+$text['description-carrier']['ko-kr'] = "캐리어 이름을 입력하십시오. 이것은 incase 청구를 추적하는 데 사용";
 
 $text['description-destination_hold_music']['en-us'] = "Select the MOH Category here.";
 $text['description-destination_hold_music']['en-gb'] = "Select the MOH Category here.";
@@ -1662,6 +1896,9 @@ $text['description-destination_hold_music']['ro-ro'] = "";
 $text['description-destination_hold_music']['ru-ru'] = "Выберите мелодию Музыки на Ожидании (MOH).";
 $text['description-destination_hold_music']['sv-se'] = "Välj MOH Kategori här.";
 $text['description-destination_hold_music']['uk-ua'] = "Виберіть MOH Категорія тут.";
+$text['description-destination_hold_music']['zh-cn'] = "选择卫生部 此处的类别。";
+$text['description-destination_hold_music']['ja-jp'] = "MOHを選ぶ カテゴリーはこちら";
+$text['description-destination_hold_music']['ko-kr'] = "MOH 선택 현재 위치";
 
 $text['description-destination_distinctive_ring']['en-us'] = "Select a sound for a distinctive ring.";
 $text['description-destination_distinctive_ring']['en-gb'] = "Select a sound for a distinctive ring.";
@@ -1683,6 +1920,9 @@ $text['description-destination_distinctive_ring']['ro-ro'] = "";
 $text['description-destination_distinctive_ring']['ru-ru'] = "Выберите параметры звука для отличительного вызова";
 $text['description-destination_distinctive_ring']['sv-se'] = "Välj ett ljud för den distinkta ringningen.";
 $text['description-destination_distinctive_ring']['uk-ua'] = "Виберіть звук для відмінного кільця.";
+$text['description-destination_distinctive_ring']['zh-cn'] = "选择一条声音,供独一无二的环。";
+$text['description-destination_distinctive_ring']['ja-jp'] = "独特のリングのための音を選択します。";
+$text['description-destination_distinctive_ring']['ko-kr'] = "독특한 링에 대한 소리를 선택하십시오.";
 
 $text['description-destination_record']['en-us'] = "Save the recording.";
 $text['description-destination_record']['en-gb'] = "Save the recording.";
@@ -1704,6 +1944,9 @@ $text['description-destination_record']['ro-ro'] = "";
 $text['description-destination_record']['ru-ru'] = "Сохранить запись.";
 $text['description-destination_record']['sv-se'] = "Spara inspelningen.";
 $text['description-destination_record']['uk-ua'] = "Збережіть запис.";
+$text['description-destination_record']['zh-cn'] = "节省记录。";
+$text['description-destination_record']['ja-jp'] = "録画を保存します。";
+$text['description-destination_record']['ko-kr'] = "기록 저장.";
 
 $text['description-account_code']['en-us'] = "Enter account code.";
 $text['description-account_code']['en-gb'] = "Enter account code.";
@@ -1725,6 +1968,9 @@ $text['description-account_code']['ro-ro'] = "";
 $text['description-account_code']['ru-ru'] = "Введите код учетной записи.";
 $text['description-account_code']['sv-se'] = "Ange 'account code'.";
 $text['description-account_code']['uk-ua'] = "Введіть код облікового запису";
+$text['description-account_code']['zh-cn'] = "输入代码。";
+$text['description-account_code']['ja-jp'] = "アカウントコードを入力してください。";
+$text['description-account_code']['ko-kr'] = "계정 코드를 입력하십시오.";
 
 $text['description-usage']['en-us'] = "Set how the Destination will be used.";
 $text['description-usage']['en-gb'] = "Set how the Destination will be used.";
@@ -1746,6 +1992,9 @@ $text['description-usage']['ro-ro'] = "";
 $text['description-usage']['ru-ru'] = "Установите, как будет использоваться Судьба.";
 $text['description-usage']['sv-se'] = "Ange hur destinationen kommer att användas.";
 $text['description-usage']['uk-ua'] = "Встановити, як буде використовуватися пункт призначення.";
+$text['description-usage']['zh-cn'] = "如何使用目的地。";
+$text['description-usage']['ja-jp'] = "Destination の使い方を設定します。";
+$text['description-usage']['ko-kr'] = "목적지가 어떻게 사용될지 설정하십시오.";
 
 $text['billing-warning']['en-us'] = "If you are using fusionpbx billing application, make sure to add accountcode and carrier variables.";
 $text['billing-warning']['en-gb'] = "If you are using fusionpbx billing application, make sure to add accountcode and carrier variables.";
@@ -1767,6 +2016,9 @@ $text['billing-warning']['ro-ro'] = "";
 $text['billing-warning']['ru-ru'] = "Если вы используете приложение биллинга FusionPBX, обязательно добавьте код учетной записи и переменные-несущие.";
 $text['billing-warning']['sv-se'] = "Om du använder fusionpbx fakturering program, se till att lägga till 'account code' och operatör variabler";
 $text['billing-warning']['uk-ua'] = "Якщо ви користуєтеся додатком для тарифікації в fusionpbx, то переконайтеся, щоб додано змінні код облікового запису і оператора. ";
+$text['billing-warning']['zh-cn'] = "如果您正在使用聚氯乙烯账单,确保添加账户代码和承运人变量。";
+$text['billing-warning']['ja-jp'] = "fusionpbx 課金アプリケーションを使用している場合は、必ずアカウントコードとキャリア変数を追加してください。";
+$text['billing-warning']['ko-kr'] = "fusionpbx 청구 응용 프로그램을 사용하는 경우 accountcode 및 캐리어 변수를 추가해야합니다.";
 
 $text['label-column_name']['en-us'] = "Column Name";
 $text['label-column_name']['en-gb'] = "Column Name";
@@ -1788,5 +2040,8 @@ $text['label-column_name']['ro-ro'] = "";
 $text['label-column_name']['ru-ru'] = "Название столбца";
 $text['label-column_name']['sv-se'] = "Kolumnnamn";
 $text['label-column_name']['uk-ua'] = "Назва стовпа";
+$text['label-column_name']['zh-cn'] = "姓名";
+$text['label-column_name']['ja-jp'] = "コラム名";
+$text['label-column_name']['ko-kr'] = "열 이름";
 
 ?>
