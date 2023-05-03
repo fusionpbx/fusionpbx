@@ -1,4 +1,4 @@
- <?php
+<?php
 
 
 //add fax email templates
