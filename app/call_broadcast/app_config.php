@@ -5,7 +5,7 @@
 		$apps[$x]['uuid'] = "efc11f6b-ed73-9955-4d4d-3a1bed75a056";
 		$apps[$x]['category'] = "Switch";;
 		$apps[$x]['subcategory'] = "";
-		$apps[$x]['version'] = "1.0";
+		$apps[$x]['version'] = "1.1";
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Schedule to immediately make multiple calls to the extension, an IVR Menu, Conference Room, or any other number.";
