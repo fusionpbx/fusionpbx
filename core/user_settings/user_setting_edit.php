@@ -89,7 +89,7 @@
 		$user_setting_description = $_POST["user_setting_description"];
 	}
 
-if (!empty($_POST["persistformvar"])) {
+if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
 	$msg = '';
 	if ($action == "update") {
