@@ -20,6 +20,9 @@ $text['title-option_edit']['ro-ro'] = "";
 $text['title-option_edit']['ru-ru'] = "Редактор параметров Голосового Меню (IVR)";
 $text['title-option_edit']['sv-se'] = "Ändra IVR Meny Val";
 $text['title-option_edit']['uk-ua'] = "Відео Параметри меню Редагування";
+$text['title-option_edit']['zh-cn'] = "页: 1 Menu Alternative Edit";
+$text['title-option_edit']['ja-jp'] = "IVRについて メニューオプション編集";
+$text['title-option_edit']['ko-kr'] = "아이VR 메뉴 옵션 편집";
 
 $text['title-option_add']['en-us'] = "IVR Menu Option Add";
 $text['title-option_add']['en-gb'] = "IVR Menu Option Add";
@@ -41,6 +44,9 @@ $text['title-option_add']['ro-ro'] = "";
 $text['title-option_add']['ru-ru'] = "Добавить опции Голосового Меню (IVR)";
 $text['title-option_add']['sv-se'] = "Lägg Till IVR Meny Val";
 $text['title-option_add']['uk-ua'] = "Параметри меню IVR Додати";
+$text['title-option_add']['zh-cn'] = "四R 男性选择";
+$text['title-option_add']['ja-jp'] = "IVRメニューオプション追加";
+$text['title-option_add']['ko-kr'] = "IVR 메뉴 옵션 추가";
 
 $text['title-ivr_menus']['en-us'] = "IVR Menus";
 $text['title-ivr_menus']['en-gb'] = "IVR Menus";
@@ -62,6 +68,9 @@ $text['title-ivr_menus']['ro-ro'] = "";
 $text['title-ivr_menus']['ru-ru'] = "Голосовые Меню (IVR)";
 $text['title-ivr_menus']['sv-se'] = "IVR Menyer";
 $text['title-ivr_menus']['uk-ua'] = "Відео Кошик";
+$text['title-ivr_menus']['zh-cn'] = "页: 1 男性";
+$text['title-ivr_menus']['ja-jp'] = "IVRについて メニュー";
+$text['title-ivr_menus']['ko-kr'] = "아이VR 메뉴보기";
 
 $text['title-ivr_menu']['en-us'] = "IVR Menu";
 $text['title-ivr_menu']['en-gb'] = "IVR Menu";
@@ -83,6 +92,9 @@ $text['title-ivr_menu']['ro-ro'] = "";
 $text['title-ivr_menu']['ru-ru'] = "Голосовое Меню (IVR)";
 $text['title-ivr_menu']['sv-se'] = "IVR Meny";
 $text['title-ivr_menu']['uk-ua'] = "IVR меню";
+$text['title-ivr_menu']['zh-cn'] = "ivr menu";
+$text['title-ivr_menu']['ja-jp'] = "IVRメニュー";
+$text['title-ivr_menu']['ko-kr'] = "IVR 메뉴";
 
 $text['title-ivr_menus_sub']['en-us'] = "IVR Menus - Sub";
 $text['title-ivr_menus_sub']['en-gb'] = "IVR Menus - Sub";
@@ -104,6 +116,9 @@ $text['title-ivr_menus_sub']['ro-ro'] = "";
 $text['title-ivr_menus_sub']['ru-ru'] = "Суб-опции Голосового Меню (IVR)";
 $text['title-ivr_menus_sub']['sv-se'] = "IVR Menyer - Sub";
 $text['title-ivr_menus_sub']['uk-ua'] = "IVR меню - суб";
+$text['title-ivr_menus_sub']['zh-cn'] = "IVR Menus - Sub-";
+$text['title-ivr_menus_sub']['ja-jp'] = "IVRメニュー - サブ";
+$text['title-ivr_menus_sub']['ko-kr'] = "IVR 메뉴 - 서브";
 
 $text['title-ivr_menus_other']['en-us'] = "IVR Menus - Other";
 $text['title-ivr_menus_other']['en-gb'] = "IVR Menus - Other";
@@ -125,6 +140,9 @@ $text['title-ivr_menus_other']['ro-ro'] = "";
 $text['title-ivr_menus_other']['ru-ru'] = "Суб-опции Голосового Меню (IVR)";
 $text['title-ivr_menus_other']['sv-se'] = "IVR Menyer - Other";
 $text['title-ivr_menus_other']['uk-ua'] = "Відео Кошик Інше";
+$text['title-ivr_menus_other']['zh-cn'] = "页: 1 男性: 其他";
+$text['title-ivr_menus_other']['ja-jp'] = "IVRについて メニュー その他";
+$text['title-ivr_menus_other']['ko-kr'] = "아이VR 메뉴 - 기타";
 
 $text['option-exit']['en-us'] = "Exit";
 $text['option-exit']['en-gb'] = "exit";
@@ -146,6 +164,9 @@ $text['option-exit']['ro-ro'] = "";
 $text['option-exit']['ru-ru'] = "Выход";
 $text['option-exit']['sv-se'] = "exit";
 $text['option-exit']['uk-ua'] = "Вступ";
+$text['option-exit']['zh-cn'] = "收益";
+$text['option-exit']['ja-jp'] = "アクセス";
+$text['option-exit']['ko-kr'] = "오시는길";
 
 $text['option-top']['en-us'] = "Top";
 $text['option-top']['en-gb'] = "top";
@@ -167,6 +188,9 @@ $text['option-top']['ro-ro'] = "";
 $text['option-top']['ru-ru'] = "топ";
 $text['option-top']['sv-se'] = "Topp";
 $text['option-top']['uk-ua'] = "Топ";
+$text['option-top']['zh-cn'] = "专题";
+$text['option-top']['ja-jp'] = "トップページ";
+$text['option-top']['ko-kr'] = "이름 *";
 
 $text['option-back']['en-us'] = "Back";
 $text['option-back']['en-gb'] = "Back";
@@ -188,6 +212,9 @@ $text['option-back']['ro-ro'] = "";
 $text['option-back']['ru-ru'] = "Назад";
 $text['option-back']['sv-se'] = "Tillbaka";
 $text['option-back']['uk-ua'] = "Зареєструватися";
+$text['option-back']['zh-cn'] = "背 景";
+$text['option-back']['ja-jp'] = "バックナンバー";
+$text['option-back']['ko-kr'] = "이름 *";
 
 $text['message-maximum_ivr_menus']['en-us'] = "Maximum IVR Menus:";
 $text['message-maximum_ivr_menus']['en-gb'] = "Maximum IVR Menus:";
@@ -209,6 +236,9 @@ $text['message-maximum_ivr_menus']['ro-ro'] = "";
 $text['message-maximum_ivr_menus']['ru-ru'] = "Максимальное Голосовое Меню (IVR):";
 $text['message-maximum_ivr_menus']['sv-se'] = "Max Antal IVR Menyer: ";
 $text['message-maximum_ivr_menus']['uk-ua'] = "Максимальний IVR Меню:";
+$text['message-maximum_ivr_menus']['zh-cn'] = "页: 1 男性:";
+$text['message-maximum_ivr_menus']['ja-jp'] = "最高の IVR メニュー:";
+$text['message-maximum_ivr_menus']['ko-kr'] = "최대 IVR 메뉴:";
 
 $text['label-language']['en-us'] = "Language";
 $text['label-language']['en-gb'] = "Language";
@@ -230,6 +260,9 @@ $text['label-language']['ro-ro'] = "";
 $text['label-language']['ru-ru'] = "Язык";
 $text['label-language']['sv-se'] = "Språk";
 $text['label-language']['uk-ua'] = "Українська";
+$text['label-language']['zh-cn'] = "语言";
+$text['label-language']['ja-jp'] = "用語集";
+$text['label-language']['ko-kr'] = "* 이름";
 
 $text['label-tts_voice']['en-us'] = "TTS Voice";
 $text['label-tts_voice']['en-gb'] = "TTS Voice";
@@ -251,6 +284,9 @@ $text['label-tts_voice']['ro-ro'] = "";
 $text['label-tts_voice']['ru-ru'] = "TTS Голосового Синтезатора";
 $text['label-tts_voice']['sv-se'] = "TTS Voice";
 $text['label-tts_voice']['uk-ua'] = "ТТС Голосування";
+$text['label-tts_voice']['zh-cn'] = "TTS 声音";
+$text['label-tts_voice']['ja-jp'] = "ツイート インタビュー";
+$text['label-tts_voice']['ko-kr'] = "사이트맵 이름 *";
 
 $text['label-tts_engine']['en-us'] = "TTS Engine";
 $text['label-tts_engine']['en-gb'] = "TTS Engine";
@@ -272,6 +308,9 @@ $text['label-tts_engine']['ro-ro'] = "";
 $text['label-tts_engine']['ru-ru'] = "TTS Движок Сиснтезатора";
 $text['label-tts_engine']['sv-se'] = "TTS Engine";
 $text['label-tts_engine']['uk-ua'] = "Двигун ТТС";
+$text['label-tts_engine']['zh-cn'] = "TTS 发动机";
+$text['label-tts_engine']['ja-jp'] = "TTSエンジン";
+$text['label-tts_engine']['ko-kr'] = "TTS 엔진";
 
 $text['label-timeout']['en-us'] = "Timeout";
 $text['label-timeout']['en-gb'] = "Timeout";
@@ -293,6 +332,9 @@ $text['label-timeout']['ro-ro'] = "";
 $text['label-timeout']['ru-ru'] = "Тайм-аут";
 $text['label-timeout']['sv-se'] = "Tidsgräns";
 $text['label-timeout']['uk-ua'] = "Розклад";
+$text['label-timeout']['zh-cn'] = "时间表";
+$text['label-timeout']['ja-jp'] = "タイムアウト";
+$text['label-timeout']['ko-kr'] = "기타";
 
 $text['label-ring_back']['en-us'] = "Ring Back";
 $text['label-ring_back']['en-gb'] = "Ring Back";
@@ -314,6 +356,9 @@ $text['label-ring_back']['ro-ro'] = "";
 $text['label-ring_back']['ru-ru'] = "Контроль посылки вызова (КПВ)";
 $text['label-ring_back']['sv-se'] = "Ring Tillbaka";
 $text['label-ring_back']['uk-ua'] = "Кільце назад";
+$text['label-ring_back']['zh-cn'] = "背 景";
+$text['label-ring_back']['ja-jp'] = "リングバック";
+$text['label-ring_back']['ko-kr'] = "연락처";
 
 $text['label-options']['en-us'] = "Options";
 $text['label-options']['en-gb'] = "Options";
@@ -335,6 +380,9 @@ $text['label-options']['ro-ro'] = "";
 $text['label-options']['ru-ru'] = "Опции";
 $text['label-options']['sv-se'] = "Val";
 $text['label-options']['uk-ua'] = "Варіанти";
+$text['label-options']['zh-cn'] = "备选办法";
+$text['label-options']['ja-jp'] = "オプション";
+$text['label-options']['ko-kr'] = "제품 설명";
 
 $text['label-option']['en-us'] = "Option";
 $text['label-option']['en-gb'] = "Option";
@@ -356,6 +404,9 @@ $text['label-option']['ro-ro'] = "";
 $text['label-option']['ru-ru'] = "Опция";
 $text['label-option']['sv-se'] = "Val";
 $text['label-option']['uk-ua'] = "Додатково";
+$text['label-option']['zh-cn'] = "备选案文";
+$text['label-option']['ja-jp'] = "オプション";
+$text['label-option']['ko-kr'] = "옵션 정보";
 
 $text['label-max_timeouts']['en-us'] = "Max Timeouts";
 $text['label-max_timeouts']['en-gb'] = "Max Timeouts";
@@ -377,6 +428,9 @@ $text['label-max_timeouts']['ro-ro'] = "";
 $text['label-max_timeouts']['ru-ru'] = "Максимальное время ожидания";
 $text['label-max_timeouts']['sv-se'] = "Max Tidsgräns";
 $text['label-max_timeouts']['uk-ua'] = "Макс Часу";
+$text['label-max_timeouts']['zh-cn'] = "Max Timeout";
+$text['label-max_timeouts']['ja-jp'] = "最高のタイムアウト";
+$text['label-max_timeouts']['ko-kr'] = "최대 Timeouts";
 
 $text['label-max_failures']['en-us'] = "Max Failures";
 $text['label-max_failures']['en-gb'] = "Max Failures";
@@ -398,6 +452,9 @@ $text['label-max_failures']['ro-ro'] = "";
 $text['label-max_failures']['ru-ru'] = "Максимальное количество неудач";
 $text['label-max_failures']['sv-se'] = "Max Fel";
 $text['label-max_failures']['uk-ua'] = "Макс Неспроможність";
+$text['label-max_failures']['zh-cn'] = "Maxail";
+$text['label-max_failures']['ja-jp'] = "最高の失敗";
+$text['label-max_failures']['ko-kr'] = "최대 실패";
 
 $text['label-invalid_sound']['en-us'] = "Invalid Sound";
 $text['label-invalid_sound']['en-gb'] = "Invalid Sound";
@@ -419,6 +476,9 @@ $text['label-invalid_sound']['ro-ro'] = "";
 $text['label-invalid_sound']['ru-ru'] = "Недопустимые параметы звука";
 $text['label-invalid_sound']['sv-se'] = "Fel Ljud";
 $text['label-invalid_sound']['uk-ua'] = "Інвалідний звук";
+$text['label-invalid_sound']['zh-cn'] = "无效";
+$text['label-invalid_sound']['ja-jp'] = "無効な音";
+$text['label-invalid_sound']['ko-kr'] = "잘못된 소리";
 
 $text['label-inter-digit_timeout']['en-us'] = "Inter-Digit Timeout";
 $text['label-inter-digit_timeout']['en-gb'] = "Inter-Digit Timeout";
@@ -440,6 +500,9 @@ $text['label-inter-digit_timeout']['ro-ro'] = "";
 $text['label-inter-digit_timeout']['ru-ru'] = "Тайм-аут между набом цифр";
 $text['label-inter-digit_timeout']['sv-se'] = "Inter-Digit Tidsgräns";
 $text['label-inter-digit_timeout']['uk-ua'] = "Інтер-Digit";
+$text['label-inter-digit_timeout']['zh-cn'] = "两位数之间的时间外差";
+$text['label-inter-digit_timeout']['ja-jp'] = "インターディジットタイムアウト";
+$text['label-inter-digit_timeout']['ko-kr'] = "Inter-Digit 타임아웃";
 
 $text['label-greet_short']['en-us'] = "Greet Short";
 $text['label-greet_short']['en-gb'] = "Greet Short";
@@ -461,6 +524,9 @@ $text['label-greet_short']['ro-ro'] = "";
 $text['label-greet_short']['ru-ru'] = "Короткое Приветствие";
 $text['label-greet_short']['sv-se'] = "Kort Hälsning";
 $text['label-greet_short']['uk-ua'] = "Сірий";
+$text['label-greet_short']['zh-cn'] = "问 题";
+$text['label-greet_short']['ja-jp'] = "グレットショート";
+$text['label-greet_short']['ko-kr'] = "Greet 반바지";
 
 $text['label-greet_long']['en-us'] = "Greet Long";
 $text['label-greet_long']['en-gb'] = "Greet Long";
@@ -482,6 +548,9 @@ $text['label-greet_long']['ro-ro'] = "";
 $text['label-greet_long']['ru-ru'] = "Полное Приветствие";
 $text['label-greet_long']['sv-se'] = "Lång Hälsning";
 $text['label-greet_long']['uk-ua'] = "Грейт Довгий";
+$text['label-greet_long']['zh-cn'] = "问 题";
+$text['label-greet_long']['ja-jp'] = "グレートロング";
+$text['label-greet_long']['ko-kr'] = "Greet 긴";
 
 $text['label-extension']['en-us'] = "Extension";
 $text['label-extension']['en-gb'] = "Extension";
@@ -503,6 +572,9 @@ $text['label-extension']['ro-ro'] = "";
 $text['label-extension']['ru-ru'] = "Внутренний Номер";
 $text['label-extension']['sv-se'] = "Anknytning";
 $text['label-extension']['uk-ua'] = "Продовжити";
+$text['label-extension']['zh-cn'] = "延期";
+$text['label-extension']['ja-jp'] = "エクステンション";
+$text['label-extension']['ko-kr'] = "제품 정보";
 
 $text['label-ivr_menu_parent_uuid']['en-us'] = "Parent Menu";
 $text['label-ivr_menu_parent_uuid']['en-gb'] = "Parent Menu";
@@ -524,6 +596,9 @@ $text['label-ivr_menu_parent_uuid']['ro-ro'] = "";
 $text['label-ivr_menu_parent_uuid']['ru-ru'] = "Родительское меню";
 $text['label-ivr_menu_parent_uuid']['sv-se'] = "Överordnad Meny";
 $text['label-ivr_menu_parent_uuid']['uk-ua'] = "Батьківське меню";
+$text['label-ivr_menu_parent_uuid']['zh-cn'] = "父母男性";
+$text['label-ivr_menu_parent_uuid']['ja-jp'] = "親子メニュー";
+$text['label-ivr_menu_parent_uuid']['ko-kr'] = "부모 메뉴";
 
 $text['label-exit_sound']['en-us'] = "Exit Sound";
 $text['label-exit_sound']['en-gb'] = "Exit Sound";
@@ -545,6 +620,9 @@ $text['label-exit_sound']['ro-ro'] = "";
 $text['label-exit_sound']['ru-ru'] = "Выход звука";
 $text['label-exit_sound']['sv-se'] = "Avslutningsljud";
 $text['label-exit_sound']['uk-ua'] = "Звуковий";
+$text['label-exit_sound']['zh-cn'] = "货物正确";
+$text['label-exit_sound']['ja-jp'] = "出口の音";
+$text['label-exit_sound']['ko-kr'] = "출구 소리";
 
 $text['label-exit_action']['en-us'] = "Exit Action";
 $text['label-exit_action']['en-gb'] = "Exit Action";
@@ -566,6 +644,9 @@ $text['label-exit_action']['ro-ro'] = "";
 $text['label-exit_action']['ru-ru'] = "Активизация Выхода";
 $text['label-exit_action']['sv-se'] = "Avslutningsaktion";
 $text['label-exit_action']['uk-ua'] = "Дію";
+$text['label-exit_action']['zh-cn'] = "紧急行动";
+$text['label-exit_action']['ja-jp'] = "出口の行為";
+$text['label-exit_action']['ko-kr'] = "출구 활동";
 
 $text['label-direct_dial']['en-us'] = "Direct Dial";
 $text['label-direct_dial']['en-gb'] = "Direct Dial";
@@ -587,6 +668,9 @@ $text['label-direct_dial']['ro-ro'] = "";
 $text['label-direct_dial']['ru-ru'] = "Прямой набор";
 $text['label-direct_dial']['sv-se'] = "Direkt Ringning";
 $text['label-direct_dial']['uk-ua'] = "Прямий сигнал";
+$text['label-direct_dial']['zh-cn'] = "直接D类";
+$text['label-direct_dial']['ja-jp'] = "直接ダイヤル";
+$text['label-direct_dial']['ko-kr'] = "연락처";
 
 $text['label-digit_length']['en-us'] = "Digit Length";
 $text['label-digit_length']['en-gb'] = "Digit Length";
@@ -608,6 +692,9 @@ $text['label-digit_length']['ro-ro'] = "";
 $text['label-digit_length']['ru-ru'] = "Количество цифр номера";
 $text['label-digit_length']['sv-se'] = "Nummerlängd";
 $text['label-digit_length']['uk-ua'] = "Довжина цифр";
+$text['label-digit_length']['zh-cn'] = "数度";
+$text['label-digit_length']['ja-jp'] = "ディジットの長さ";
+$text['label-digit_length']['ko-kr'] = "손가락 길이";
 
 $text['label-destination']['en-us'] = "Destination";
 $text['label-destination']['en-gb'] = "Destination";
@@ -629,6 +716,9 @@ $text['label-destination']['ro-ro'] = "";
 $text['label-destination']['ru-ru'] = "Место назначения";
 $text['label-destination']['sv-se'] = "Destination";
 $text['label-destination']['uk-ua'] = "Навігація";
+$text['label-destination']['zh-cn'] = "目的地";
+$text['label-destination']['ja-jp'] = "目的地";
+$text['label-destination']['ko-kr'] = "여행 정보";
 
 $text['label-pin_number']['en-us'] = "Pin Number";
 $text['label-pin_number']['en-gb'] = "Pin Number";
@@ -650,6 +740,9 @@ $text['label-pin_number']['ro-ro'] = "";
 $text['label-pin_number']['ru-ru'] = "PIN Номер";
 $text['label-pin_number']['sv-se'] = "Pin Nummer";
 $text['label-pin_number']['uk-ua'] = "Номер контактний";
+$text['label-pin_number']['zh-cn'] = "缩略语";
+$text['label-pin_number']['ja-jp'] = "ピン番号";
+$text['label-pin_number']['ko-kr'] = "핀 번호";
 
 $text['label-comfirm_macro']['en-us'] = "Confirm Macro";
 $text['label-comfirm_macro']['en-gb'] = "Confirm Macro";
@@ -671,6 +764,9 @@ $text['label-comfirm_macro']['ro-ro'] = "";
 $text['label-comfirm_macro']['ru-ru'] = "Подтвердить макрос";
 $text['label-comfirm_macro']['sv-se'] = "Konfirmera Macro";
 $text['label-comfirm_macro']['uk-ua'] = "Підтвердити Macro";
+$text['label-comfirm_macro']['zh-cn'] = "宏观";
+$text['label-comfirm_macro']['ja-jp'] = "マクロの確認";
+$text['label-comfirm_macro']['ko-kr'] = "매크로 확인";
 
 $text['label-comfirm_key']['en-us'] = "Confirm Key";
 $text['label-comfirm_key']['en-gb'] = "Confirm Key";
@@ -692,6 +788,9 @@ $text['label-comfirm_key']['ro-ro'] = "";
 $text['label-comfirm_key']['ru-ru'] = "Подтвердить ключ";
 $text['label-comfirm_key']['sv-se'] = "Konfirmera Knapp";
 $text['label-comfirm_key']['uk-ua'] = "Підтвердити ключ";
+$text['label-comfirm_key']['zh-cn'] = "关键";
+$text['label-comfirm_key']['ja-jp'] = "確認キー";
+$text['label-comfirm_key']['ko-kr'] = "확인 키";
 
 $text['label-comfirm_attempts']['en-us'] = "Confirm Attempts";
 $text['label-comfirm_attempts']['en-gb'] = "Confirm Attempts";
@@ -713,6 +812,9 @@ $text['label-comfirm_attempts']['ro-ro'] = "";
 $text['label-comfirm_attempts']['ru-ru'] = "Подтвердить попытки";
 $text['label-comfirm_attempts']['sv-se'] = "Konfirmera Försök";
 $text['label-comfirm_attempts']['uk-ua'] = "Підтвердити Attempts";
+$text['label-comfirm_attempts']['zh-cn'] = "2. 肯定企图";
+$text['label-comfirm_attempts']['ja-jp'] = "確認する";
+$text['label-comfirm_attempts']['ko-kr'] = "확인하기";
 
 $text['label-caller_id_name_prefix']['en-us'] = "Caller ID Name Prefix";
 $text['label-caller_id_name_prefix']['en-gb'] = "Caller ID Name Prefix";
@@ -734,6 +836,9 @@ $text['label-caller_id_name_prefix']['ro-ro'] = "";
 $text['label-caller_id_name_prefix']['ru-ru'] = "Префикс имени (Caller ID) вызывающего абонента";
 $text['label-caller_id_name_prefix']['sv-se'] = "Caller ID Namn Prefix";
 $text['label-caller_id_name_prefix']['uk-ua'] = "Ім'я користувача";
+$text['label-caller_id_name_prefix']['zh-cn'] = "Caller ID name";
+$text['label-caller_id_name_prefix']['ja-jp'] = "Caller ID 名前 プレフィックス";
+$text['label-caller_id_name_prefix']['ko-kr'] = "Caller ID 이름 접두사";
 
 $text['label-copy']['en-us'] = "Copy";
 $text['label-copy']['en-gb'] = "Copy";
@@ -755,6 +860,9 @@ $text['label-copy']['ro-ro'] = "Copy";
 $text['label-copy']['ru-ru'] = "Copy";
 $text['label-copy']['sv-se'] = "Copy";
 $text['label-copy']['uk-ua'] = "Copy";
+$text['label-copy']['zh-cn'] = "页: 1";
+$text['label-copy']['ja-jp'] = "コピー";
+$text['label-copy']['ko-kr'] = "관련 기사";
 
 $text['header-option_list']['en-us'] = "Option List";
 $text['header-option_list']['en-gb'] = "Option List";
@@ -776,6 +884,9 @@ $text['header-option_list']['ro-ro'] = "";
 $text['header-option_list']['ru-ru'] = "Список Опций";
 $text['header-option_list']['sv-se'] = "Val Lista";
 $text['header-option_list']['uk-ua'] = "Список параметрів";
+$text['header-option_list']['zh-cn'] = "备选案文清单";
+$text['header-option_list']['ja-jp'] = "オプションリスト";
+$text['header-option_list']['ko-kr'] = "옵션 목록";
 
 $text['header-option_edit']['en-us'] = "IVR Menu Option Edit";
 $text['header-option_edit']['en-gb'] = "IVR Menu Option Edit";
@@ -797,6 +908,9 @@ $text['header-option_edit']['ro-ro'] = "";
 $text['header-option_edit']['ru-ru'] = "Редактирование Опций Голосового Меню (IVR)";
 $text['header-option_edit']['sv-se'] = "Ändra IVR Meny Val";
 $text['header-option_edit']['uk-ua'] = "Відео Параметри меню Редагування";
+$text['header-option_edit']['zh-cn'] = "页: 1 Menu Alternative Edit";
+$text['header-option_edit']['ja-jp'] = "IVRについて メニューオプション編集";
+$text['header-option_edit']['ko-kr'] = "아이VR 메뉴 옵션 편집";
 
 $text['header-option_add']['en-us'] = "IVR Menu Option Add";
 $text['header-option_add']['en-gb'] = "IVR Menu Option Add";
@@ -818,6 +932,9 @@ $text['header-option_add']['ro-ro'] = "";
 $text['header-option_add']['ru-ru'] = "Добавление Опций Голосового меню (IVR)";
 $text['header-option_add']['sv-se'] = "Lägg Till IVR Meny Val";
 $text['header-option_add']['uk-ua'] = "Параметри меню IVR Додати";
+$text['header-option_add']['zh-cn'] = "四R 男性选择";
+$text['header-option_add']['ja-jp'] = "IVRメニューオプション追加";
+$text['header-option_add']['ko-kr'] = "IVR 메뉴 옵션 추가";
 
 $text['header-ivr_menus']['en-us'] = "IVR Menus";
 $text['header-ivr_menus']['en-gb'] = "IVR Menus";
@@ -839,6 +956,9 @@ $text['header-ivr_menus']['ro-ro'] = "";
 $text['header-ivr_menus']['ru-ru'] = "Голосовых Меню (IVR)";
 $text['header-ivr_menus']['sv-se'] = "IVR Menyer";
 $text['header-ivr_menus']['uk-ua'] = "Відео Кошик";
+$text['header-ivr_menus']['zh-cn'] = "页: 1 男性";
+$text['header-ivr_menus']['ja-jp'] = "IVRについて メニュー";
+$text['header-ivr_menus']['ko-kr'] = "아이VR 메뉴보기";
 
 $text['header-ivr_menu']['en-us'] = "IVR Menu";
 $text['header-ivr_menu']['en-gb'] = "IVR Menu";
@@ -860,6 +980,9 @@ $text['header-ivr_menu']['ro-ro'] = "";
 $text['header-ivr_menu']['ru-ru'] = "Голосового Меню (IVR)";
 $text['header-ivr_menu']['sv-se'] = "IVR Meny";
 $text['header-ivr_menu']['uk-ua'] = "IVR меню";
+$text['header-ivr_menu']['zh-cn'] = "ivr menu";
+$text['header-ivr_menu']['ja-jp'] = "IVRメニュー";
+$text['header-ivr_menu']['ko-kr'] = "IVR 메뉴";
 
 $text['description-tts_voice']['en-us'] = "Text to speech voice.";
 $text['description-tts_voice']['en-gb'] = "Text to speech voice.";
@@ -881,6 +1004,9 @@ $text['description-tts_voice']['ro-ro'] = "";
 $text['description-tts_voice']['ru-ru'] = "Текст для речи голосом.";
 $text['description-tts_voice']['sv-se'] = "Text till tal röst.";
 $text['description-tts_voice']['uk-ua'] = "Текст до мовного голосу.";
+$text['description-tts_voice']['zh-cn'] = "发言文本。";
+$text['description-tts_voice']['ja-jp'] = "テキストからスピーチの声まで。";
+$text['description-tts_voice']['ko-kr'] = "목소리에 텍스트.";
 
 $text['description-tts_engine']['en-us'] = "Text to speech engine.";
 $text['description-tts_engine']['en-gb'] = "Text to speech engine.";
@@ -902,6 +1028,9 @@ $text['description-tts_engine']['ro-ro'] = "";
 $text['description-tts_engine']['ru-ru'] = "Текст для синтезатора речи.";
 $text['description-tts_engine']['sv-se'] = "Text till tal 'engine'.";
 $text['description-tts_engine']['uk-ua'] = "Текст до мовного двигуна.";
+$text['description-tts_engine']['zh-cn'] = "语言引擎文本。";
+$text['description-tts_engine']['ja-jp'] = "スピーチエンジンへのテキスト。";
+$text['description-tts_engine']['ko-kr'] = "연설 엔진에 텍스트.";
 
 $text['description-timeout']['en-us'] = "The number of milliseconds to wait after playing the greeting or the confirm macro.";
 $text['description-timeout']['en-gb'] = "The number of milliseconds to wait after playing the greeting or the confirm macro.";
@@ -923,6 +1052,9 @@ $text['description-timeout']['ro-ro'] = "";
 $text['description-timeout']['ru-ru'] = "Количество миллисекунд ожидания после воспроизведения приветствия или максимальное время для подтверждения.";
 $text['description-timeout']['sv-se'] = "Antal millisekunder att vänta efter hälsning eller konfirmera macro.";
 $text['description-timeout']['uk-ua'] = "Кількість мілісекундів, які чекають після відтворення привітання або підтвердження макросу.";
+$text['description-timeout']['zh-cn'] = "坐在问候或确认宏观之后的摩擦数量。";
+$text['description-timeout']['ja-jp'] = "挨拶や確認マクロを再生した後待つミリ秒数。";
+$text['description-timeout']['ko-kr'] = "인사를 하거나 매크로를 확인한 후 기다립니다.";
 
 $text['description-ring_back']['en-us'] = "Defines what the caller will hear while the destination is being called.";
 $text['description-ring_back']['en-gb'] = "Defines what the caller will hear while the destination is being called.";
@@ -944,6 +1076,9 @@ $text['description-ring_back']['ro-ro'] = "";
 $text['description-ring_back']['ru-ru'] = "Определяет, что будет слышать собеседник во время вызова адресата.";
 $text['description-ring_back']['sv-se'] = "Definierar vad inringande kommer att höra under tiden som destinationen rings upp.";
 $text['description-ring_back']['uk-ua'] = "Захищаючи те, що дзвоник почнеться в той час як називається пункт призначення.";
+$text['description-ring_back']['zh-cn'] = "界定打电话者在被点名时会听到什么。";
+$text['description-ring_back']['ja-jp'] = "宛先が呼ばれている間、発信者が聴くものを定義します。";
+$text['description-ring_back']['ko-kr'] = "콜러가 목적지가 호출되는 동안 듣는 것.";
 
 $text['description-order']['en-us'] = "Select the order.";
 $text['description-order']['en-gb'] = "Select the order.";
@@ -965,6 +1100,9 @@ $text['description-order']['ro-ro'] = "";
 $text['description-order']['ru-ru'] = "Выбрать порядок.";
 $text['description-order']['sv-se'] = "Välj ordning.";
 $text['description-order']['uk-ua'] = "Оберіть порядок.";
+$text['description-order']['zh-cn'] = "选择命令。";
+$text['description-order']['ja-jp'] = "注文を選択します。";
+$text['description-order']['ko-kr'] = "주문 선택";
 
 $text['description-options']['en-us'] = "Define caller options for the IVR menu.";
 $text['description-options']['en-gb'] = "Define caller options for the IVR menu.";
@@ -986,6 +1124,9 @@ $text['description-options']['ro-ro'] = "";
 $text['description-options']['ru-ru'] = "Определите параметры вызывающего абонента для Голосового Меню (IVR).";
 $text['description-options']['sv-se'] = "Definiera inringandes val i IVR Meny.";
 $text['description-options']['uk-ua'] = "Варіанти запобіжника для меню IVR.";
+$text['description-options']['zh-cn'] = "• 为IVR菜单确定打电话选择。";
+$text['description-options']['ja-jp'] = "IVRメニューの呼び出し元オプションを定義します。";
+$text['description-options']['ko-kr'] = "IVR 메뉴의 콜러 옵션을 정의합니다.";
 
 $text['description-option_list']['en-us'] = "The recording presents options to the caller. Options match key presses (DTMF digits) from the caller which directs the call to the destinations.";
 $text['description-option_list']['en-gb'] = "The recording presents options to the caller. Options match key presses (DTMF digits) from the caller which directs the call to the destinations.";
@@ -1007,6 +1148,9 @@ $text['description-option_list']['ro-ro'] = "";
 $text['description-option_list']['ru-ru'] = "Запись предоставляет параметры вызывающему абоненту. Опции сопоставляют нажатия клавиш (цифры DTMF) у вызывающего абонента, который направляет вызов адресатам.";
 $text['description-option_list']['sv-se'] = "Inspelningen presenterar val för inringande. Valen matchar knapptryckningar (DTMF) från inringande som sedan kopplar inringande till olika destinationer.";
 $text['description-option_list']['uk-ua'] = "Запис подає параметри абонента. Варіанти матчу ключових пресів (DTMF цифр) від абонента, який передає дзвінок в напрямки.";
+$text['description-option_list']['zh-cn'] = "记录向打电话者提供选择。 各种方案使电话发送到目的地的主要新闻(DTMF数字)相对应。";
+$text['description-option_list']['ja-jp'] = "録音は、発信者にオプションを提示します。 オプションは、コールを宛先に指示する呼び出し元からキープレス(DTMF digits)と一致します。";
+$text['description-option_list']['ko-kr'] = "녹음은 콜러에 대한 옵션을 제공합니다. Options match key presses (DTMF digits)는 콜러에서 호출을 목적지로 지시합니다.";
 
 $text['description-option_add_edit']['en-us'] = "The recording presents options to the caller. Options match key presses (DTMF digits) from the caller which directs the call to the destinations. ";
 $text['description-option_add_edit']['en-gb'] = "The recording presents options to the caller. Options match key presses (DTMF digits) from the caller which directs the call to the destinations. ";
@@ -1028,6 +1172,9 @@ $text['description-option_add_edit']['ro-ro'] = "";
 $text['description-option_add_edit']['ru-ru'] = "Запись предоставляет параметры вызывающему абоненту. Опции сопоставляют нажатия клавиш (цифры DTMF) у вызывающего абонента, который направляет вызов адресатам.";
 $text['description-option_add_edit']['sv-se'] = "Inspelningen presenterar val för inringande. Valen matchar knapptryckningar (DTMF) från inringande som sedan kopplar inringande till olika destinationer.";
 $text['description-option_add_edit']['uk-ua'] = "Запис подає параметри абонента. Варіанти матчу ключових пресів (DTMF цифр) від абонента, який передає дзвінок в напрямки.";
+$text['description-option_add_edit']['zh-cn'] = "记录向打电话者提供选择。 各种方案使电话发送到目的地的主要新闻(DTMF数字)相对应。";
+$text['description-option_add_edit']['ja-jp'] = "録音は、発信者にオプションを提示します。 オプションは、コールを宛先に指示する呼び出し元からキープレス(DTMF digits)と一致します。";
+$text['description-option_add_edit']['ko-kr'] = "녹음은 콜러에 대한 옵션을 제공합니다. Options match key presses (DTMF digits)는 콜러에서 호출을 목적지로 지시합니다.";
 
 $text['description-option']['en-us'] = "Any number between 1-5 digits or regular expressions.";
 $text['description-option']['en-gb'] = "Any number between 1-5 digits or regular expressions.";
@@ -1049,6 +1196,9 @@ $text['description-option']['ro-ro'] = "";
 $text['description-option']['ru-ru'] = "Любое число от 1 до 5 цифр или регулярные выражения.";
 $text['description-option']['sv-se'] = "Ett nummer mellan 1-5 siffror eller ett reguljärt uttryck.";
 $text['description-option']['uk-ua'] = "Будь-який номер між цифрами 1-5 або регулярними виразами.";
+$text['description-option']['zh-cn'] = "1至5位数或经常表示数。";
+$text['description-option']['ja-jp'] = "1-5桁または正規表現の間の任意の数。";
+$text['description-option']['ko-kr'] = "1-5 자리 또는 일반 표현 사이의 모든 수.";
 
 $text['description-name']['en-us'] = "Enter a name for the IVR menu.";
 $text['description-name']['en-gb'] = "Enter a name for the IVR menu.";
@@ -1070,6 +1220,9 @@ $text['description-name']['ro-ro'] = "";
 $text['description-name']['ru-ru'] = "Введите имя для Голосового Меню (IVR).";
 $text['description-name']['sv-se'] = "Skriv in namnet på IVR Menyn.";
 $text['description-name']['uk-ua'] = "Введіть ім'я для меню IVR.";
+$text['description-name']['zh-cn'] = "姓名为IVR菜单。";
+$text['description-name']['ja-jp'] = "IVRメニューの名前を入力してください。";
+$text['description-name']['ko-kr'] = "IVR 메뉴의 이름을 입력합니다.";
 
 $text['description-max_timeouts']['en-us'] = "Maximum number of timeouts before exit.";
 $text['description-max_timeouts']['en-gb'] = "Maximum number of timeouts before exit.";
@@ -1091,6 +1244,9 @@ $text['description-max_timeouts']['ro-ro'] = "";
 $text['description-max_timeouts']['ru-ru'] = "Максимальное количество тайм-аутов перед выходом.";
 $text['description-max_timeouts']['sv-se'] = "Max antal timeout innan slut.";
 $text['description-max_timeouts']['uk-ua'] = "Максимальна кількість маршрутів до виходу.";
+$text['description-max_timeouts']['zh-cn'] = "离开前最多有时间。";
+$text['description-max_timeouts']['ja-jp'] = "出口前のタイムアウトの最大数。";
+$text['description-max_timeouts']['ko-kr'] = "출구의 앞에 timeouts의 최대 수.";
 
 $text['description-max_failures']['en-us'] = "Maximum number of retries before exit.";
 $text['description-max_failures']['en-gb'] = "Maximum number of retries before exit.";
@@ -1112,6 +1268,9 @@ $text['description-max_failures']['ro-ro'] = "";
 $text['description-max_failures']['ru-ru'] = "Максимальное количество попыток до выхода.";
 $text['description-max_failures']['sv-se'] = "Max antal försök innan slut.";
 $text['description-max_failures']['uk-ua'] = "Максимальна кількість витримок до виходу.";
+$text['description-max_failures']['zh-cn'] = "退出前最多进行重整。";
+$text['description-max_failures']['ja-jp'] = "出口の前のレトリーの最大数。";
+$text['description-max_failures']['ko-kr'] = "출구의 앞에 retries의 최대 수.";
 
 $text['description-ivr_menus']['en-us'] = "The IVR Menu plays a recording or a pre-defined phrase that presents the caller with options to choose from. Each option has a corresponding destination. The destinations can be extensions, voicemail, other IVR menus, call groups, FAX extensions, and more.";
 $text['description-ivr_menus']['en-gb'] = "The IVR Menu plays a recording or a pre-defined phrase that presents the caller with options to choose from. Each option has a corresponding destination. The destinations can be extensions, voicemail, other IVR menus, call groups, FAX extensions, and more.";
@@ -1133,6 +1292,9 @@ $text['description-ivr_menus']['ro-ro'] = "";
 $text['description-ivr_menus']['ru-ru'] = "Голосовые Меню (IVR) воспроизводит запись или предопределенную фразу, предоставляющую абоненту варианты выбора. Каждая опция имеет соответствующий пункт назначения. Направления могут быть расширениями, Голосовой Почтой, другими Голосовыми Меню (IVR), Группами Вызовов, Сервером FAX и т.д.";
 $text['description-ivr_menus']['sv-se'] = "IVR Menyn spelar upp en inspelning eller en fördefinierad fras som ger uppringaren alternativ att välja mellan. Varje val har en motsvarande destination. Destinationerna kan vara anknytningar, röstbrevlåda, andra IVR menyer , samtalsgrupper, FAX anknytningar mm.";
 $text['description-ivr_menus']['uk-ua'] = "Відео Меню грає запис або задану фразу, яка представляє абонент з варіантами, щоб вибрати з. Кожен варіант має відповідне призначення. Напрямки можуть бути розширення, голосова пошта, інші меню IVR, групи дзвінків, розширення FAX і багато іншого.";
+$text['description-ivr_menus']['zh-cn'] = "IVR Menu语有录音或预先界定的短语,向打电话者提供选择的选择。 每个方案都有相应的目的地。 目的地可以是推广、语音邮件、其他IVR菜单、电话团体、FAX延伸等。";
+$text['description-ivr_menus']['ja-jp'] = "IVRについて メニューは、録音または定義済みのフレーズを再生し、選択するオプションで発信者を提示します。 各オプションには対応する宛先があります。 目的地は、拡張機能、ボイスメール、その他の IVR メニュー、コールグループ、FAX 拡張機能などです。";
+$text['description-ivr_menus']['ko-kr'] = "IVR 소개 메뉴는 선택할 수있는 옵션으로 콜러를 제시하는 사전 정의 된 구문을 재생합니다. 각 옵션에는 해당 목적지가 있습니다. 대상은 확장, 음성 메일, 기타 IVR 메뉴, 통화 그룹, FAX 확장 및 더 많은 수 있습니다.";
 
 $text['description-ivr_menu']['en-us'] = "The IVR Menu plays a recording or a pre-defined phrase that presents the caller with options to choose from. Each option has a corresponding destination. The destinations can be extensions, voicemail, other IVR menus, call groups, FAX extensions, and more.";
 $text['description-ivr_menu']['en-gb'] = "The IVR Menu plays a recording or a pre-defined phrase that presents the caller with options to choose from. Each option has a corresponding destination. The destinations can be extensions, voicemail, other IVR menus, call groups, FAX extensions, and more.";
@@ -1154,6 +1316,9 @@ $text['description-ivr_menu']['ro-ro'] = "";
 $text['description-ivr_menu']['ru-ru'] = "Голосовое Меню (IVR) воспроизводит запись или предопределенную фразу, предоставляющую абоненту варианты выбора. Каждая опция имеет соответствующий пункт назначения. Направления могут быть расширениями, Голосовой Почтой, другими Голосовыми Меню (IVR), Группами Вызовов, Сервером FAX и т.д.";
 $text['description-ivr_menu']['sv-se'] = "IVR Menyn spelar upp en inspelning eller en fördefinierad fras som ger uppringaren alternativ att välja mellan. Varje val har en motsvarande destination. Destinationerna kan vara anknytningar, röstbrevlåda, andra IVR menyer , samtalsgrupper, FAX anknytningar mm.";
 $text['description-ivr_menu']['uk-ua'] = "Відео Меню грає запис або задану фразу, яка представляє абонент з варіантами, щоб вибрати з. Кожен варіант має відповідне призначення. Напрямки можуть бути розширення, голосова пошта, інші меню IVR, групи дзвінків, розширення FAX і багато іншого.";
+$text['description-ivr_menu']['zh-cn'] = "IVR Menu语有录音或预先界定的短语,向打电话者提供选择的选择。 每个方案都有相应的目的地。 目的地可以是推广、语音邮件、其他IVR菜单、电话团体、FAX延伸等。";
+$text['description-ivr_menu']['ja-jp'] = "IVRについて メニューは、録音または定義済みのフレーズを再生し、選択するオプションで発信者を提示します。 各オプションには対応する宛先があります。 目的地は、拡張機能、ボイスメール、その他の IVR メニュー、コールグループ、FAX 拡張機能などです。";
+$text['description-ivr_menu']['ko-kr'] = "IVR 소개 메뉴는 선택할 수있는 옵션으로 콜러를 제시하는 사전 정의 된 구문을 재생합니다. 각 옵션에는 해당 목적지가 있습니다. 대상은 확장, 음성 메일, 기타 IVR 메뉴, 통화 그룹, FAX 확장 및 더 많은 수 있습니다.";
 
 $text['description-invalid_sound']['en-us'] = "Played when and invalid option is chosen.";
 $text['description-invalid_sound']['en-gb'] = "Played when and invalid option is chosen.";
@@ -1175,6 +1340,9 @@ $text['description-invalid_sound']['ro-ro'] = "";
 $text['description-invalid_sound']['ru-ru'] = "Проиграется, когда выбрана несуществующая опция.";
 $text['description-invalid_sound']['sv-se'] = "Spelas upp när ett ogiltigt val använts.";
 $text['description-invalid_sound']['uk-ua'] = "Зіграно при виборі недійсним варіантом.";
+$text['description-invalid_sound']['zh-cn'] = "在选择无效选择时玩弄。";
+$text['description-invalid_sound']['ja-jp'] = "無効なオプションを選択したときに再生します。";
+$text['description-invalid_sound']['ko-kr'] = "종료 할 때 및 잘못된 옵션이 선택됩니다.";
 
 $text['description-inter-digit_timeout']['en-us'] = "The number of milliseconds to wait between digits.";
 $text['description-inter-digit_timeout']['en-gb'] = "The number of milliseconds to wait between digits.";
@@ -1196,6 +1364,9 @@ $text['description-inter-digit_timeout']['ro-ro'] = "";
 $text['description-inter-digit_timeout']['ru-ru'] = "Число миллисекунд ожидания набора между цифрами.";
 $text['description-inter-digit_timeout']['sv-se'] = "Antal millisekunder att vänta mellan siffror.";
 $text['description-inter-digit_timeout']['uk-ua'] = "Кількість мілісекундів для очікування між цифрами.";
+$text['description-inter-digit_timeout']['zh-cn'] = "等待数位数的中位数。";
+$text['description-inter-digit_timeout']['ja-jp'] = "数字の間に待機するミリ秒数。";
+$text['description-inter-digit_timeout']['ko-kr'] = "숫자 사이에 기다리는 밀리 초 수.";
 
 $text['description-greet_short']['en-us'] = "The short greeting is played when returning to the menu.";
 $text['description-greet_short']['en-gb'] = "The short greeting is played when returning to the menu.";
@@ -1217,6 +1388,9 @@ $text['description-greet_short']['ro-ro'] = "";
 $text['description-greet_short']['ru-ru'] = "Кратковременное приветствие воспроизводимое при возврате в меню.";
 $text['description-greet_short']['sv-se'] = "Den korta hälsningen spelas upp när man kommer tillbaka till IVR Menyn.";
 $text['description-greet_short']['uk-ua'] = "При поверненні в меню коротке привітання.";
+$text['description-greet_short']['zh-cn'] = "在返回菜单时,打着简短的问候。";
+$text['description-greet_short']['ja-jp'] = "メニューに戻ると短い挨拶が再生されます。";
+$text['description-greet_short']['ko-kr'] = "짧은 인사는 메뉴에 반환 할 때 재생됩니다.";
 
 $text['description-greet_long']['en-us'] = "The long greeting is played when entering the menu.";
 $text['description-greet_long']['en-gb'] = "The long greeting is played when entering the menu.";
@@ -1238,6 +1412,9 @@ $text['description-greet_long']['ro-ro'] = "";
 $text['description-greet_long']['ru-ru'] = "Длительное приветствие воспроизводимое при входе в меню.";
 $text['description-greet_long']['sv-se'] = "Den långa hälsningen spelas upp när man kommer till IVR Menyn.";
 $text['description-greet_long']['uk-ua'] = "При вході в меню відігралось довгого привітання.";
+$text['description-greet_long']['zh-cn'] = "进入菜单时,会带来长时间的问候。";
+$text['description-greet_long']['ja-jp'] = "メニューを入力すると、長い挨拶が再生されます。";
+$text['description-greet_long']['ko-kr'] = "메뉴에 들어가면 긴 인사가 진행됩니다.";
 
 $text['description-extension']['en-us'] = "Enter the extension number.";
 $text['description-extension']['en-gb'] = "Enter the extension number.";
@@ -1259,6 +1436,9 @@ $text['description-extension']['ro-ro'] = "";
 $text['description-extension']['ru-ru'] = "Введите внутреннего номера.";
 $text['description-extension']['sv-se'] = "Ange anknytningsnumret.";
 $text['description-extension']['uk-ua'] = "Введіть номер мобільного, який Ви вказали при укладаннi договору з банком - для ідентифікації.";
+$text['description-extension']['zh-cn'] = "进入延长期。";
+$text['description-extension']['ja-jp'] = "拡張子番号を入力してください。";
+$text['description-extension']['ko-kr'] = "확장 번호를 입력합니다.";
 
 $text['description-exit_sound']['en-us'] = "Played when leaving the menu.";
 $text['description-exit_sound']['en-gb'] = "Played when leaving the menu.";
@@ -1280,6 +1460,9 @@ $text['description-exit_sound']['ro-ro'] = "";
 $text['description-exit_sound']['ru-ru'] = "Проиграется при выходе из меню.";
 $text['description-exit_sound']['sv-se'] = "Spelas när man lämnar IVR Menyn.";
 $text['description-exit_sound']['uk-ua'] = "Зіграно при виході з меню.";
+$text['description-exit_sound']['zh-cn'] = "在离开时玩笑。";
+$text['description-exit_sound']['ja-jp'] = "メニューを離れると再生。";
+$text['description-exit_sound']['ko-kr'] = "메뉴를 떠날 때 종료.";
 
 $text['description-exit_action']['en-us'] = "Select the exit action to be performed if the IVR exits.";
 $text['description-exit_action']['en-gb'] = "Select the exit action to be performed if the IVR exits.";
@@ -1301,6 +1484,9 @@ $text['description-exit_action']['ro-ro'] = "";
 $text['description-exit_action']['ru-ru'] = "Выберите действие выхода, которое необходимо выполнить, если Голосовое Меню (IVR) завершает работу.";
 $text['description-exit_action']['sv-se'] = "Välj en aktion som skall utföras när IVR Menyn är 'slut'";
 $text['description-exit_action']['uk-ua'] = "Виберіть вихідну дію для виконання, якщо виходи IVR.";
+$text['description-exit_action']['zh-cn'] = "如果IVR离开,选择将要采取的撤离行动。";
+$text['description-exit_action']['ja-jp'] = "IVR終了時に実行する出口アクションを選択します。";
+$text['description-exit_action']['ko-kr'] = "IVR 출구가 종료되면 출구 동작을 선택합니다.";
 
 $text['description-enabled']['en-us'] = "Set the status of this IVR Menu.";
 $text['description-enabled']['en-gb'] = "Set the status of this IVR Menu.";
@@ -1322,6 +1508,9 @@ $text['description-enabled']['ro-ro'] = "";
 $text['description-enabled']['ru-ru'] = "Установите статус этого Голосового Меню (IVR).";
 $text['description-enabled']['sv-se'] = "Välj status på denna IVR Meny.";
 $text['description-enabled']['uk-ua'] = "Встановіть статус цього меню IVR.";
+$text['description-enabled']['zh-cn'] = "确立这个IVR Menu的地位。";
+$text['description-enabled']['ja-jp'] = "このIVRメニューのステータスを設定します。";
+$text['description-enabled']['ko-kr'] = "이 IVR 메뉴의 상태를 설정합니다.";
 
 $text['description-direct_dial']['en-us'] = "Define whether callers can dial directly to registered extensions.";
 $text['description-direct_dial']['en-gb'] = "Define whether callers can dial directly to registered extensions.";
@@ -1343,6 +1532,9 @@ $text['description-direct_dial']['ro-ro'] = "";
 $text['description-direct_dial']['ru-ru'] = "Определите, могут ли вызывающие абоненты напрямую набирать номера для зарегистрированных внутренних номеров.";
 $text['description-direct_dial']['sv-se'] = "Välj om inringande skall kunna ringa direkt till registrerade anknytningar.";
 $text['description-direct_dial']['uk-ua'] = "Визначте, чи можна використовувати безпосередньо для зареєстрованих розширень.";
+$text['description-direct_dial']['zh-cn'] = "界定打电话者是否可以直接与登记的延期分开。";
+$text['description-direct_dial']['ja-jp'] = "発信者が登録した拡張子に直接ダイヤルできるかどうかを定義します。";
+$text['description-direct_dial']['ko-kr'] = "콜러가 등록한 확장자를 직접 다이얼할 수 있는지 정의합니다.";
 
 $text['description-digit_length']['en-us'] = "Maximum number of digits allowed.";
 $text['description-digit_length']['en-gb'] = "Maximum number of digits allowed.";
@@ -1364,6 +1556,9 @@ $text['description-digit_length']['ro-ro'] = "";
 $text['description-digit_length']['ru-ru'] = "Максимальное количество цифр.";
 $text['description-digit_length']['sv-se'] = "Max antal siffror som tillåts.";
 $text['description-digit_length']['uk-ua'] = "Допускається максимальна кількість цифр.";
+$text['description-digit_length']['zh-cn'] = "最多允许数位数。";
+$text['description-digit_length']['ja-jp'] = "許可される数字の最大数。";
+$text['description-digit_length']['ko-kr'] = "허용되는 최대 숫자.";
 
 $text['description-destination']['en-us'] = "Select the destination.";
 $text['description-destination']['en-gb'] = "Select the destination.";
@@ -1385,6 +1580,9 @@ $text['description-destination']['ro-ro'] = "";
 $text['description-destination']['ru-ru'] = "Выберите пункт назначения.";
 $text['description-destination']['sv-se'] = "Välj destination.";
 $text['description-destination']['uk-ua'] = "Виберіть пункт призначення.";
+$text['description-destination']['zh-cn'] = "选择目的地。";
+$text['description-destination']['ja-jp'] = "目的地を選択します。";
+$text['description-destination']['ko-kr'] = "자주 묻는 질문";
 
 $text['description-pin_number']['en-us'] = "Optional pin number to secure access to the menu.";
 $text['description-pin_number']['en-gb'] = "Optional pin number to secure access to the menu.";
@@ -1406,6 +1604,9 @@ $text['description-pin_number']['ro-ro'] = "";
 $text['description-pin_number']['ru-ru'] = "Дополнительный номер значка для обеспечения доступа к меню.";
 $text['description-pin_number']['sv-se'] = "Valfritt stiftnummer för att säkerställa åtkomst till menyn.";
 $text['description-pin_number']['uk-ua'] = "Додатковий контактний номер для забезпечення доступу до меню.";
+$text['description-pin_number']['zh-cn'] = "确保接触菜单的选号。";
+$text['description-pin_number']['ja-jp'] = "メニューへのアクセスを保護するオプションのピン番号。";
+$text['description-pin_number']['ko-kr'] = "메뉴에 안전한 접근을 위한 선택적인 핀 수.";
 
 $text['description-comfirm_macro']['en-us'] = "Enter the confirm macro.";
 $text['description-comfirm_macro']['en-gb'] = "Enter the confirm macro.";
@@ -1427,6 +1628,9 @@ $text['description-comfirm_macro']['ro-ro'] = "";
 $text['description-comfirm_macro']['ru-ru'] = "Введите макрос подтверждения.";
 $text['description-comfirm_macro']['sv-se'] = "Ange bekräftelse makro.";
 $text['description-comfirm_macro']['uk-ua'] = "Введіть підтвердження макросу.";
+$text['description-comfirm_macro']['zh-cn'] = "进入确认宏观。";
+$text['description-comfirm_macro']['ja-jp'] = "確認マクロを入力してください。";
+$text['description-comfirm_macro']['ko-kr'] = "매크로를 입력합니다.";
 
 $text['description-comfirm_key']['en-us'] = "Enter the confirm key.";
 $text['description-comfirm_key']['en-gb'] = "Enter the confirm key.";
@@ -1448,6 +1652,9 @@ $text['description-comfirm_key']['ro-ro'] = "";
 $text['description-comfirm_key']['ru-ru'] = "Введите ключ подтверждения.";
 $text['description-comfirm_key']['sv-se'] = "Ange bekräftelse knappen.";
 $text['description-comfirm_key']['uk-ua'] = "Введіть ключ підтвердження.";
+$text['description-comfirm_key']['zh-cn'] = "进入确认钥匙。";
+$text['description-comfirm_key']['ja-jp'] = "確認キーを入力してください。";
+$text['description-comfirm_key']['ko-kr'] = "확인 키를 입력하십시오.";
 
 $text['description-comfirm_attempts']['en-us'] = "The maximum number of confirm attempts allowed.";
 $text['description-comfirm_attempts']['en-gb'] = "The maximum number of confirm attempts allowed.";
@@ -1469,6 +1676,9 @@ $text['description-comfirm_attempts']['ro-ro'] = "";
 $text['description-comfirm_attempts']['ru-ru'] = "Разрешенное максимальное количество попыток подтверждения.";
 $text['description-comfirm_attempts']['sv-se'] = "Max antal bekräftelse försök som tillåts.";
 $text['description-comfirm_attempts']['uk-ua'] = "Допускається максимальна кількість перевірок.";
+$text['description-comfirm_attempts']['zh-cn'] = "允许的确认企图最多。";
+$text['description-comfirm_attempts']['ja-jp'] = "許可された試行の最大数。";
+$text['description-comfirm_attempts']['ko-kr'] = "최대 수의 시도 허용.";
 
 $text['description-caller_id_name_prefix']['en-us'] = "Set a prefix on the caller ID name.";
 $text['description-caller_id_name_prefix']['en-gb'] = "Set a prefix on the caller ID name.";
@@ -1490,5 +1700,8 @@ $text['description-caller_id_name_prefix']['ro-ro'] = "";
 $text['description-caller_id_name_prefix']['ru-ru'] = "Задайте префикс имени (ID) идентификатора вызывающего абонента.";
 $text['description-caller_id_name_prefix']['sv-se'] = "Ange ett prefix för Caller ID namn.";
 $text['description-caller_id_name_prefix']['uk-ua'] = "Встановіть префікс на ім'я ідентифікатора абонента.";
+$text['description-caller_id_name_prefix']['zh-cn'] = "预先确定打电话者身份。";
+$text['description-caller_id_name_prefix']['ja-jp'] = "呼び出し元 ID 名にプレフィックスを設定します。";
+$text['description-caller_id_name_prefix']['ko-kr'] = "콜러 ID 이름에 접두사를 설정합니다.";
 
 ?>

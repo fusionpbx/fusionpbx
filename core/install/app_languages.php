@@ -20,6 +20,9 @@ $text['title-install']['ro-ro'] = "";
 $text['title-install']['ru-ru'] = "Установка";
 $text['title-install']['sv-se'] = "Installera";
 $text['title-install']['uk-ua'] = "Перший раз Встановіть";
+$text['title-install']['zh-cn'] = "安装";
+$text['title-install']['ja-jp'] = "インストール";
+$text['title-install']['ko-kr'] = "설치하기";
 
 $text['title-detected_configuration']['en-us'] = "Detected Configuration";
 $text['title-detected_configuration']['en-gb'] = "Detected Configuration";
@@ -41,6 +44,9 @@ $text['title-detected_configuration']['ro-ro'] = "";
 $text['title-detected_configuration']['ru-ru'] = "Обнаруженная конфигурация";
 $text['title-detected_configuration']['sv-se'] = "Detekterad Konfiguration";
 $text['title-detected_configuration']['uk-ua'] = "виявлено Конфігурація";
+$text['title-detected_configuration']['zh-cn'] = "探测孔";
+$text['title-detected_configuration']['ja-jp'] = "検出された構成";
+$text['title-detected_configuration']['ko-kr'] = "검출된 구성";
 
 $text['title-assumed_configuration']['en-us'] = "Assumed Configuration";
 $text['title-assumed_configuration']['en-gb'] = "Assumed Configuration";
@@ -62,6 +68,9 @@ $text['title-assumed_configuration']['ro-ro'] = "";
 $text['title-assumed_configuration']['ru-ru'] = "Предполагаемая конфигурация";
 $text['title-assumed_configuration']['sv-se'] = "Antagen Konfiguration";
 $text['title-assumed_configuration']['uk-ua'] = "передбачуваний Конфігурація";
+$text['title-assumed_configuration']['zh-cn'] = "概述";
+$text['title-assumed_configuration']['ja-jp'] = "想定された構成";
+$text['title-assumed_configuration']['ko-kr'] = "Assumed 구성";
 
 $text['label-ft-install']['en-us'] = "First Time Install";
 $text['label-ft-install']['en-gb'] = "First Time Install";
@@ -83,6 +92,9 @@ $text['label-ft-install']['ro-ro'] = "";
 $text['label-ft-install']['ru-ru'] = "Первая установка";
 $text['label-ft-install']['sv-se'] = "Första gången Installera";
 $text['label-ft-install']['uk-ua'] = "Перший раз Встановіть";
+$text['label-ft-install']['zh-cn'] = "第一次安装";
+$text['label-ft-install']['ja-jp'] = "初回インストール";
+$text['label-ft-install']['ko-kr'] = "처음 설치";
 
 $text['description-ft-install']['en-us'] = "Perform all actions for a First Time Install";
 $text['description-ft-install']['en-gb'] = "Perform all actions for a First Time Install";
@@ -104,6 +116,9 @@ $text['description-ft-install']['ro-ro'] = "";
 $text['description-ft-install']['ru-ru'] = "Выполнять все действия для первой установки";
 $text['description-ft-install']['sv-se'] = "Utföra alla åtgärder för första gången Installera";
 $text['description-ft-install']['uk-ua'] = "Виконайте всі дії для першого разу Встановіть";
+$text['description-ft-install']['zh-cn'] = "1. 采取所有行动";
+$text['description-ft-install']['ja-jp'] = "初回インストールのすべてのアクションを実行";
+$text['description-ft-install']['ko-kr'] = "첫 번째 시간 설치에 대한 모든 작업을 수행";
 
 $text['label-add-switch']['en-us'] = "Add a new switch";
 $text['label-add-switch']['en-gb'] = "Add a new switch";
@@ -125,6 +140,9 @@ $text['label-add-switch']['ro-ro'] = "";
 $text['label-add-switch']['ru-ru'] = "Добавить новый коммутатор";
 $text['label-add-switch']['sv-se'] = "Lägg till en ny switch";
 $text['label-add-switch']['uk-ua'] = "Додати новий перемикач";
+$text['label-add-switch']['zh-cn'] = "增加新的开关";
+$text['label-add-switch']['ja-jp'] = "新しいスイッチを追加する";
+$text['label-add-switch']['ko-kr'] = "새 스위치 추가";
 
 $text['label-select_language']['en-us'] = "Language";
 $text['label-select_language']['en-gb'] = "Language";
@@ -146,6 +164,9 @@ $text['label-select_language']['ro-ro'] = "";
 $text['label-select_language']['ru-ru'] = "Язык";
 $text['label-select_language']['sv-se'] = "Språk";
 $text['label-select_language']['uk-ua'] = "Мова";
+$text['label-select_language']['zh-cn'] = "语言";
+$text['label-select_language']['ja-jp'] = "用語集";
+$text['label-select_language']['ko-kr'] = "* 이름";
 
 $text['label-event_host']['en-us'] = "Host address";
 $text['label-event_host']['en-gb'] = "Host address";
@@ -167,6 +188,9 @@ $text['label-event_host']['ro-ro'] = "";
 $text['label-event_host']['ru-ru'] = "Адрес хоста";
 $text['label-event_host']['sv-se'] = "Host adress";
 $text['label-event_host']['uk-ua'] = "адреса хоста";
+$text['label-event_host']['zh-cn'] = "东道地址";
+$text['label-event_host']['ja-jp'] = "ホストアドレス";
+$text['label-event_host']['ko-kr'] = "호스트 주소";
 
 $text['label-event_port']['en-us'] = "Port";
 $text['label-event_port']['en-gb'] = "Port";
@@ -188,6 +212,9 @@ $text['label-event_port']['ro-ro'] = "";
 $text['label-event_port']['ru-ru'] = "Порт";
 $text['label-event_port']['sv-se'] = "Port";
 $text['label-event_port']['uk-ua'] = "Порт";
+$text['label-event_port']['zh-cn'] = "港口";
+$text['label-event_port']['ja-jp'] = "ポートレート";
+$text['label-event_port']['ko-kr'] = "항구 항구";
 
 $text['label-event_password']['en-us'] = "Password";
 $text['label-event_password']['en-gb'] = "Password";
@@ -209,6 +236,9 @@ $text['label-event_password']['ro-ro'] = "";
 $text['label-event_password']['ru-ru'] = "Пароль";
 $text['label-event_password']['sv-se'] = "Lösenord";
 $text['label-event_password']['uk-ua'] = "Пароль";
+$text['label-event_password']['zh-cn'] = "密码";
+$text['label-event_password']['ja-jp'] = "パスワード";
+$text['label-event_password']['ko-kr'] = "비밀번호";
 
 $text['label-username']['en-us'] = "Username";
 $text['label-username']['en-gb'] = "Username";
@@ -230,6 +260,9 @@ $text['label-username']['ro-ro'] = "";
 $text['label-username']['ru-ru'] = "Имя пользователя";
 $text['label-username']['sv-se'] = "Användarnamn";
 $text['label-username']['uk-ua'] = "Ім’я користувача";
+$text['label-username']['zh-cn'] = "用户名";
+$text['label-username']['ja-jp'] = "ユーザ名";
+$text['label-username']['ko-kr'] = "사용자 이름";
 
 $text['label-port']['en-us'] = "Port";
 $text['label-port']['en-gb'] = "Port";
@@ -251,6 +284,9 @@ $text['label-port']['ro-ro'] = "";
 $text['label-port']['ru-ru'] = "Порт";
 $text['label-port']['sv-se'] = "Port";
 $text['label-port']['uk-ua'] = "Порт";
+$text['label-port']['zh-cn'] = "港口";
+$text['label-port']['ja-jp'] = "ポートレート";
+$text['label-port']['ko-kr'] = "항구 항구";
 
 $text['label-path']['en-us'] = "Path";
 $text['label-path']['en-gb'] = "Path";
@@ -272,6 +308,9 @@ $text['label-path']['ro-ro'] = "";
 $text['label-path']['ru-ru'] = "Путь";
 $text['label-path']['sv-se'] = "Sökväg";
 $text['label-path']['uk-ua'] = "Шлях";
+$text['label-path']['zh-cn'] = "途径";
+$text['label-path']['ja-jp'] = "パス";
+$text['label-path']['ko-kr'] = "오시는 길";
 
 $text['label-host']['en-us'] = "Host";
 $text['label-host']['en-gb'] = "Host";
@@ -293,6 +332,9 @@ $text['label-host']['ro-ro'] = "";
 $text['label-host']['ru-ru'] = "Хост";
 $text['label-host']['sv-se'] = "Värd";
 $text['label-host']['uk-ua'] = "Хост";
+$text['label-host']['zh-cn'] = "敌对行动";
+$text['label-host']['ja-jp'] = "ホスト";
+$text['label-host']['ko-kr'] = "이름 *";
 
 $text['label-domain_name']['en-us'] = "Domain Name";
 $text['label-domain_name']['en-gb'] = "Domain Name";
@@ -316,6 +358,9 @@ $text['label-domain_name']['ru-ru'] = "Домен";
 $text['label-domain_name']['sv-se'] = "Domän";
 $text['label-domain_name']['uk-ua'] = "Домен";
 $text['label-domain_name']['tr-tr'] = "Alan Adı";
+$text['label-domain_name']['zh-cn'] = "域名";
+$text['label-domain_name']['ja-jp'] = "ドメインネーム";
+$text['label-domain_name']['ko-kr'] = "도메인 이름";
 
 $text['label-driver']['en-us'] = "Driver";
 $text['label-driver']['en-gb'] = "Driver";
@@ -337,6 +382,9 @@ $text['label-driver']['ro-ro'] = "";
 $text['label-driver']['ru-ru'] = "Драйвер";
 $text['label-driver']['sv-se'] = "Drivrutin";
 $text['label-driver']['uk-ua'] = "Драйвер";
+$text['label-driver']['zh-cn'] = "司机";
+$text['label-driver']['ja-jp'] = "ドライバー";
+$text['label-driver']['ko-kr'] = "관련 기사";
 
 $text['header-install']['en-us'] = "Install";
 $text['header-install']['en-gb'] = "Install";
@@ -358,6 +406,9 @@ $text['header-install']['ro-ro'] = "";
 $text['header-install']['ru-ru'] = "Установка";
 $text['header-install']['sv-se'] = "Installera";
 $text['header-install']['uk-ua'] = "встановлювати";
+$text['header-install']['zh-cn'] = "安装";
+$text['header-install']['ja-jp'] = "インストール";
+$text['header-install']['ko-kr'] = "설치하기";
 
 $text['header-select_language']['en-us'] = "Select Language";
 $text['header-select_language']['en-gb'] = "Select Language";
@@ -379,6 +430,9 @@ $text['header-select_language']['ro-ro'] = "";
 $text['header-select_language']['ru-ru'] = "Выберите язык";
 $text['header-select_language']['sv-se'] = "Välj språk";
 $text['header-select_language']['uk-ua'] = "вибір мови";
+$text['header-select_language']['zh-cn'] = "选 举";
+$text['header-select_language']['ja-jp'] = "言語を選択";
+$text['header-select_language']['ko-kr'] = "한국어";
 
 $text['header-event_socket']['en-us'] = "Event Socket Configuration";
 $text['header-event_socket']['en-gb'] = "Event Socket Configuration";
@@ -400,6 +454,9 @@ $text['header-event_socket']['ro-ro'] = "";
 $text['header-event_socket']['ru-ru'] = "Конфигурация сокета событий";
 $text['header-event_socket']['sv-se'] = "Händelse Socket Konfiguration";
 $text['header-event_socket']['uk-ua'] = "Конфігурація гніздо Подія";
+$text['header-event_socket']['zh-cn'] = "活动 S Configuocket";
+$text['header-event_socket']['ja-jp'] = "イベントソケット構成";
+$text['header-event_socket']['ko-kr'] = "이벤트 소켓 구성";
 
 $text['header-config_detail']['en-us'] = "Admin Configuration";
 $text['header-config_detail']['en-gb'] = "Admin Configuration";
@@ -421,6 +478,9 @@ $text['header-config_detail']['ro-ro'] = "";
 $text['header-config_detail']['ru-ru'] = "Конфигурация администратора";
 $text['header-config_detail']['sv-se'] = "Admin Konfiguration";
 $text['header-config_detail']['uk-ua'] = "конфігурація Адмін";
+$text['header-config_detail']['zh-cn'] = "污染物配置";
+$text['header-config_detail']['ja-jp'] = "管理者構成";
+$text['header-config_detail']['ko-kr'] = "관리 설정";
 
 $text['header-config_database']['en-us'] = "Database Configuration";
 $text['header-config_database']['en-gb'] = "Database Configuration";
@@ -442,6 +502,9 @@ $text['header-config_database']['ro-ro'] = "";
 $text['header-config_database']['ru-ru'] = "Конфигурация базы данных";
 $text['header-config_database']['sv-se'] = "Databaskonfiguration ";
 $text['header-config_database']['uk-ua'] = "конфігурація бази даних";
+$text['header-config_database']['zh-cn'] = "数据库配置";
+$text['header-config_database']['ja-jp'] = "データベースの構成";
+$text['header-config_database']['ko-kr'] = "Database 구성";
 
 $text['header-installing']['en-us'] = "Executing Install";
 $text['header-installing']['en-gb'] = "Executing Install";
@@ -463,6 +526,9 @@ $text['header-installing']['ro-ro'] = "";
 $text['header-installing']['ru-ru'] = "Выполнение установки";
 $text['header-installing']['sv-se'] = "Exekvera Installera";
 $text['header-installing']['uk-ua'] = "виконання Встановіть";
+$text['header-installing']['zh-cn'] = "起诉 Install";
+$text['header-installing']['ja-jp'] = "インストールを実行する";
+$text['header-installing']['ko-kr'] = "설치하기";
 
 $text['description-event_host']['en-us'] = "Enter the event socket host name or IP address.";
 $text['description-event_host']['en-gb'] = "Enter the event socket host name or IP address.";
@@ -484,6 +550,9 @@ $text['description-event_host']['ro-ro'] = "";
 $text['description-event_host']['ru-ru'] = "Введите имя хоста сокета события или IP-адрес.";
 $text['description-event_host']['sv-se'] = "Ange händelsen uttag värdnamn eller IP-adress.";
 $text['description-event_host']['uk-ua'] = "Введіть проведення сокета ім'я хоста або IP-адресу.";
+$text['description-event_host']['zh-cn'] = "进入活动地点名称或IP地址。";
+$text['description-event_host']['ja-jp'] = "イベントソケットホスト名またはIPアドレスを入力します。";
+$text['description-event_host']['ko-kr'] = "이벤트 소켓 호스트 이름 또는 IP 주소를 입력하십시오.";
 
 $text['description-event_port']['en-us'] = "Enter the event socket port number.";
 $text['description-event_port']['en-gb'] = "Enter the event socket port number.";
@@ -505,6 +574,9 @@ $text['description-event_port']['ro-ro'] = "";
 $text['description-event_port']['ru-ru'] = "Введите номер порта сокета события.";
 $text['description-event_port']['sv-se'] = "Ange händelsen socket portnummer.";
 $text['description-event_port']['uk-ua'] = "Введіть номер подія гніздо порту.";
+$text['description-event_port']['zh-cn'] = "进入该活动港号。";
+$text['description-event_port']['ja-jp'] = "イベントソケットポート番号を入力してください。";
+$text['description-event_port']['ko-kr'] = "이벤트 소켓 포트 번호를 입력합니다.";
 
 $text['description-event_password']['en-us'] = "Enter the event socket password.";
 $text['description-event_password']['en-gb'] = "Enter the event socket password.";
@@ -526,6 +598,9 @@ $text['description-event_password']['ro-ro'] = "";
 $text['description-event_password']['ru-ru'] = "Введите пароль сокета события.";
 $text['description-event_password']['sv-se'] = "Ange händelsen uttag lösenord.";
 $text['description-event_password']['uk-ua'] = "Введіть гніздо пароль подією.";
+$text['description-event_password']['zh-cn'] = "进入活动序号。";
+$text['description-event_password']['ja-jp'] = "イベントソケットパスワードを入力してください。";
+$text['description-event_password']['ko-kr'] = "이벤트 소켓 암호를 입력하십시오.";
 
 $text['description-username']['en-us'] = "Enter the database username.";
 $text['description-username']['en-gb'] = "Enter the database username.";
@@ -547,6 +622,9 @@ $text['description-username']['ro-ro'] = "";
 $text['description-username']['ru-ru'] = "Введите имя пользователя базы данных.";
 $text['description-username']['sv-se'] = "Ange databasen användarnamn här.";
 $text['description-username']['uk-ua'] = "Введіть ім’я користувача бази даних";
+$text['description-username']['zh-cn'] = "输入数据库用户名称。";
+$text['description-username']['ja-jp'] = "データベースのユーザー名を入力してください。";
+$text['description-username']['ko-kr'] = "데이터베이스 이름 입력";
 
 $text['description-type']['en-us'] = "Select the database type.";
 $text['description-type']['en-gb'] = "Select the database type.";
@@ -568,6 +646,9 @@ $text['description-type']['ro-ro'] = "";
 $text['description-type']['ru-ru'] = "Выберите тип базы данных.";
 $text['description-type']['sv-se'] = "Välj databastyp";
 $text['description-type']['uk-ua'] = "Виберіть тип бази даних";
+$text['description-type']['zh-cn'] = "选择数据库类型。";
+$text['description-type']['ja-jp'] = "データベースの種類を選択します。";
+$text['description-type']['ko-kr'] = "데이터베이스 유형을 선택하십시오.";
 
 $text['description-port']['en-us'] = "Enter the port number.";
 $text['description-port']['en-gb'] = "Enter the port number.";
@@ -589,6 +670,9 @@ $text['description-port']['ro-ro'] = "";
 $text['description-port']['ru-ru'] = "Введите номер порта.";
 $text['description-port']['sv-se'] = "Ange portnummer";
 $text['description-port']['uk-ua'] = "Введіть номер порта";
+$text['description-port']['zh-cn'] = "进入港口号。";
+$text['description-port']['ja-jp'] = "ポート番号を入力してください。";
+$text['description-port']['ko-kr'] = "항구 번호를 입력하십시오.";
 
 $text['description-path']['en-us'] = "Enter the database file path (SQLite only).";
 $text['description-path']['en-gb'] = "Enter the database file path (SQLite only).";
@@ -610,6 +694,9 @@ $text['description-path']['ro-ro'] = "";
 $text['description-path']['ru-ru'] = "Введите путь к файлу базы данных (только для SQLite).";
 $text['description-path']['sv-se'] = "Ange databasens sökväg (gäller endast SQLite).";
 $text['description-path']['uk-ua'] = "Вкажіть шлях до файлу бази даних (тільки SQLite).";
+$text['description-path']['zh-cn'] = "进入数据库档案路径(SQLite 仅限)。";
+$text['description-path']['ja-jp'] = "データベースファイルパス(SQLiteのみ)を入力します。";
+$text['description-path']['ko-kr'] = "데이터베이스 파일 경로 (SQLite only)를 입력합니다.";
 
 $text['description-password']['en-us'] = "Enter the database password.";
 $text['description-password']['en-gb'] = "Enter the database password.";
@@ -631,6 +718,9 @@ $text['description-password']['ro-ro'] = "";
 $text['description-password']['ru-ru'] = "Введите пароль базы данных.";
 $text['description-password']['sv-se'] = "Ange databasens lösenord.";
 $text['description-password']['uk-ua'] = "Введіть пароль бази даних.";
+$text['description-password']['zh-cn'] = "输入数据库密码。";
+$text['description-password']['ja-jp'] = "データベースのパスワードを入力してください。";
+$text['description-password']['ko-kr'] = "데이터베이스 암호를 입력합니다.";
 
 $text['description-name']['en-us'] = "Enter the database name.";
 $text['description-name']['en-gb'] = "Enter the database name.";
@@ -652,6 +742,9 @@ $text['description-name']['ro-ro'] = "";
 $text['description-name']['ru-ru'] = "Введите имя базы данных.";
 $text['description-name']['sv-se'] = "Ange databasens namn.";
 $text['description-name']['uk-ua'] = "Введіть ім'я бази даних.";
+$text['description-name']['zh-cn'] = "输入数据库名称。";
+$text['description-name']['ja-jp'] = "データベース名を入力してください。";
+$text['description-name']['ko-kr'] = "데이터베이스 이름을 입력합니다.";
 
 $text['description-host']['en-us'] = "Enter the host name.";
 $text['description-host']['en-gb'] = "Enter the host name.";
@@ -673,6 +766,9 @@ $text['description-host']['ro-ro'] = "";
 $text['description-host']['ru-ru'] = "Введите имя хоста.";
 $text['description-host']['sv-se'] = "Ange värdnamnet";
 $text['description-host']['uk-ua'] = "Введіть ім'я хоста.";
+$text['description-host']['zh-cn'] = "填写主名。";
+$text['description-host']['ja-jp'] = "ホスト名を入力してください。";
+$text['description-host']['ko-kr'] = "호스트 이름을 입력하십시오.";
 
 $text['description-driver']['en-us'] = "Select the database driver.";
 $text['description-driver']['en-gb'] = "Select the database driver.";
@@ -694,6 +790,9 @@ $text['description-driver']['ro-ro'] = "";
 $text['description-driver']['ru-ru'] = "Выберите драйвер базы данных.";
 $text['description-driver']['sv-se'] = "Välj databas drivrutin.";
 $text['description-driver']['uk-ua'] = "Виберіть драйвер бази даних.";
+$text['description-driver']['zh-cn'] = "选择数据库司机。";
+$text['description-driver']['ja-jp'] = "データベースドライバを選択します。";
+$text['description-driver']['ko-kr'] = "데이터베이스 드라이버를 선택하십시오.";
 
 $text['description-install']['en-us'] = "Select the action below you wish to perform.";
 $text['description-install']['en-gb'] = "Select the action below you wish to perform.";
@@ -715,6 +814,9 @@ $text['description-install']['ro-ro'] = "";
 $text['description-install']['ru-ru'] = "Выберите действие ниже, которое вы хотите выполнить.";
 $text['description-install']['sv-se'] = "Välj de åtgärder nedan som du vill utföra.";
 $text['description-install']['uk-ua'] = "Виберіть об’єкти для оновлення";
+$text['description-install']['zh-cn'] = "选择你希望采取的行动。";
+$text['description-install']['ja-jp'] = "実行したいアクションを選択します。";
+$text['description-install']['ko-kr'] = "수행하려는 아래의 작업을 선택하십시오.";
 
 $text['description-database-edit']['en-us'] = "Database connection information.";
 $text['description-database-edit']['en-gb'] = "Database connection information.";
@@ -736,6 +838,9 @@ $text['description-database-edit']['ro-ro'] = "";
 $text['description-database-edit']['ru-ru'] = "Информация о соединении с базой данных.";
 $text['description-database-edit']['sv-se'] = "Information om Databasanslutning";
 $text['description-database-edit']['uk-ua'] = "інформація про підключення до бази даних.";
+$text['description-database-edit']['zh-cn'] = "数据库链接信息。";
+$text['description-database-edit']['ja-jp'] = "データベース接続情報";
+$text['description-database-edit']['ko-kr'] = "Database 연결 정보.";
 
 $text['description-database-add']['en-us'] = "Database connection information.";
 $text['description-database-add']['en-gb'] = "Database connection information.";
@@ -757,6 +862,9 @@ $text['description-database-add']['ro-ro'] = "";
 $text['description-database-add']['ru-ru'] = "Информация о соединении с базой данных.";
 $text['description-database-add']['sv-se'] = "Information om Databasanslutning";
 $text['description-database-add']['uk-ua'] = "інформація про підключення до бази даних.";
+$text['description-database-add']['zh-cn'] = "数据库链接信息。";
+$text['description-database-add']['ja-jp'] = "データベース接続情報";
+$text['description-database-add']['ko-kr'] = "Database 연결 정보.";
 
 $text['description-select_language']['en-us'] = "Please select the language you want to use";
 $text['description-select_language']['en-gb'] = "Please select the language you want to use";
@@ -778,6 +886,9 @@ $text['description-select_language']['ro-ro'] = "";
 $text['description-select_language']['ru-ru'] = "Выберите язык, который вы хотите использовать";
 $text['description-select_language']['sv-se'] = "Välj det språk du vill använda";
 $text['description-select_language']['uk-ua'] = "Виберіть мову, який ви хочете використовувати";
+$text['description-select_language']['zh-cn'] = "请选择你想要使用的语言";
+$text['description-select_language']['ja-jp'] = "ご希望の言語を選択してください";
+$text['description-select_language']['ko-kr'] = "자주 묻는 질문";
 
 $text['button-detect']['en-us'] = "Detect Configuration";
 $text['button-detect']['en-gb'] = "Detect Configuration";
@@ -799,6 +910,9 @@ $text['button-detect']['ro-ro'] = "";
 $text['button-detect']['ru-ru'] = "Определить конфигурацию";
 $text['button-detect']['sv-se'] = "Detektera Konfiguration";
 $text['button-detect']['uk-ua'] = "виявлення Конфігурація";
+$text['button-detect']['zh-cn'] = "侦察组";
+$text['button-detect']['ja-jp'] = "構成を検出して下さい";
+$text['button-detect']['ko-kr'] = "설정 감지";
 
 $text['button-select']['en-us'] = "Select";
 $text['button-select']['en-gb'] = "Select";
@@ -820,5 +934,8 @@ $text['button-select']['ro-ro'] = "";
 $text['button-select']['ru-ru'] = "Выбрать";
 $text['button-select']['sv-se'] = "Välj";
 $text['button-select']['uk-ua'] = "вибрати";
+$text['button-select']['zh-cn'] = "选 举";
+$text['button-select']['ja-jp'] = "詳しくはこちら";
+$text['button-select']['ko-kr'] = "제품정보";
 
 ?>

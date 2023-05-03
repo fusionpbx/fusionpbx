@@ -20,6 +20,9 @@ $text['label-user']['ro-ro'] = "";
 $text['label-user']['ru-ru'] = "Пользователь";
 $text['label-user']['sv-se'] = "Användare";
 $text['label-user']['uk-ua'] = "Користувач";
+$text['label-user']['zh-cn'] = "用户";
+$text['label-user']['ja-jp'] = "ユーザー";
+$text['label-user']['ko-kr'] = "사용자 이름";
 
 $text['label-status']['en-us'] = "Status";
 $text['label-status']['en-gb'] = "Status";
@@ -41,6 +44,9 @@ $text['label-status']['ro-ro'] = "";
 $text['label-status']['ru-ru'] = "Статус";
 $text['label-status']['sv-se'] = "Status";
 $text['label-status']['uk-ua'] = "Статус";
+$text['label-status']['zh-cn'] = "现况";
+$text['label-status']['ja-jp'] = "ステータス";
+$text['label-status']['ko-kr'] = "주요연혁";
 
 $text['label-response']['en-us'] = "Response:";
 $text['label-response']['en-gb'] = "Response:";
@@ -62,6 +68,9 @@ $text['label-response']['ro-ro'] = "";
 $text['label-response']['ru-ru'] = "Отклик:";
 $text['label-response']['sv-se'] = "Respons:";
 $text['label-response']['uk-ua'] = "Відповідь:";
+$text['label-response']['zh-cn'] = "答复:";
+$text['label-response']['ja-jp'] = "応答:";
+$text['label-response']['ko-kr'] = "응답:";
 
 $text['label-refresh_pause']['en-us'] = "Pause Refresh";
 $text['label-refresh_pause']['en-gb'] = "Pause Refresh";
@@ -83,6 +92,9 @@ $text['label-refresh_pause']['ro-ro'] = "";
 $text['label-refresh_pause']['ru-ru'] = "Приостановить обновление";
 $text['label-refresh_pause']['sv-se'] = "Paus Uppdatera";
 $text['label-refresh_pause']['uk-ua'] = "пауза Оновити";
+$text['label-refresh_pause']['zh-cn'] = "产后复健";
+$text['label-refresh_pause']['ja-jp'] = "ポーズはリフレッシュします";
+$text['label-refresh_pause']['ko-kr'] = "일시 새로 고침";
 
 $text['label-refresh_enable']['en-us'] = "Enable Refresh";
 $text['label-refresh_enable']['en-gb'] = "Enable Refresh";
@@ -104,6 +116,9 @@ $text['label-refresh_enable']['ro-ro'] = "";
 $text['label-refresh_enable']['ru-ru'] = "Включить обновление";
 $text['label-refresh_enable']['sv-se'] = "Aktivera Uppdatera";
 $text['label-refresh_enable']['uk-ua'] = "включити Оновити";
+$text['label-refresh_enable']['zh-cn'] = "复读";
+$text['label-refresh_enable']['ja-jp'] = "リフレッシュ";
+$text['label-refresh_enable']['ko-kr'] = "새로 고침";
 
 $text['label-port']['en-us'] = "Port";
 $text['label-port']['en-gb'] = "Port";
@@ -125,6 +140,9 @@ $text['label-port']['ro-ro'] = "";
 $text['label-port']['ru-ru'] = "Порт";
 $text['label-port']['sv-se'] = "Port";
 $text['label-port']['uk-ua'] = "Порт";
+$text['label-port']['zh-cn'] = "港口";
+$text['label-port']['ja-jp'] = "ポートレート";
+$text['label-port']['ko-kr'] = "항구 항구";
 
 $text['label-ping']['en-us'] = "Ping";
 $text['label-ping']['en-gb'] = "Ping";
@@ -146,6 +164,9 @@ $text['label-ping']['ro-ro'] = "";
 $text['label-ping']['ru-ru'] = "Ping";
 $text['label-ping']['sv-se'] = "Ping";
 $text['label-ping']['uk-ua'] = "пінг";
+$text['label-ping']['zh-cn'] = "管道";
+$text['label-ping']['ja-jp'] = "ピン";
+$text['label-ping']['ko-kr'] = "핑거";
 
 $text['label-message']['en-us'] = "Invalid Profile!";
 $text['label-message']['en-gb'] = "Invalid Profile!";
@@ -167,6 +188,9 @@ $text['label-message']['ro-ro'] = "";
 $text['label-message']['ru-ru'] = "Недопустимый профиль!";
 $text['label-message']['sv-se'] = "Ogiltig Profil!";
 $text['label-message']['uk-ua'] = "Хибний профіль!";
+$text['label-message']['zh-cn'] = "无效形象";
+$text['label-message']['ja-jp'] = "無効なプロフィール!";
+$text['label-message']['ko-kr'] = "잘못된 프로필!";
 
 $text['label-lan_ip']['en-us'] = "LAN IP";
 $text['label-lan_ip']['en-gb'] = "LAN IP";
@@ -188,6 +212,9 @@ $text['label-lan_ip']['ro-ro'] = "";
 $text['label-lan_ip']['ru-ru'] = "LAN IP";
 $text['label-lan_ip']['sv-se'] = "LAN IP";
 $text['label-lan_ip']['uk-ua'] = "LAN IP";
+$text['label-lan_ip']['zh-cn'] = "lan ip";
+$text['label-lan_ip']['ja-jp'] = "LAN の IP";
+$text['label-lan_ip']['ko-kr'] = "랜 IP";
 
 $text['label-ip']['en-us'] = "IP";
 $text['label-ip']['en-gb'] = "IP";
@@ -209,6 +236,9 @@ $text['label-ip']['ro-ro'] = "";
 $text['label-ip']['ru-ru'] = "IP-адрес";
 $text['label-ip']['sv-se'] = "IP";
 $text['label-ip']['uk-ua'] = "IP";
+$text['label-ip']['zh-cn'] = "iii";
+$text['label-ip']['ja-jp'] = "IPアドレス";
+$text['label-ip']['ko-kr'] = "IP 정보";
 
 $text['label-interval']['en-us'] = "Interval (Sec)";
 $text['label-interval']['en-gb'] = "Interval (Sec)";
@@ -230,6 +260,9 @@ $text['label-interval']['ro-ro'] = "";
 $text['label-interval']['ru-ru'] = "Интервал (сек)";
 $text['label-interval']['sv-se'] = "Intervall (Sek)";
 $text['label-interval']['uk-ua'] = "Інтервал (с.)";
+$text['label-interval']['zh-cn'] = "间隔(间隔)";
+$text['label-interval']['ja-jp'] = "インターバル(Sec)";
+$text['label-interval']['ko-kr'] = "간격 (Sec)";
 
 $text['label-hostname']['en-us'] = "Hostname";
 $text['label-hostname']['en-gb'] = "Hostname";
@@ -251,6 +284,9 @@ $text['label-hostname']['ro-ro'] = "";
 $text['label-hostname']['ru-ru'] = "Имя хоста";
 $text['label-hostname']['sv-se'] = "Hostname";
 $text['label-hostname']['uk-ua'] = "Назва хоста";
+$text['label-hostname']['zh-cn'] = "东道国";
+$text['label-hostname']['ja-jp'] = "ホスト名";
+$text['label-hostname']['ko-kr'] = "이름 *";
 
 $text['label-event']['en-us'] = "Event:";
 $text['label-event']['en-gb'] = "Event:";
@@ -272,6 +308,9 @@ $text['label-event']['ro-ro'] = "";
 $text['label-event']['ru-ru'] = "Событие:";
 $text['label-event']['sv-se'] = "Event:";
 $text['label-event']['uk-ua'] = "Подія:";
+$text['label-event']['zh-cn'] = "活动:";
+$text['label-event']['ja-jp'] = "イベント:";
+$text['label-event']['ko-kr'] = "이벤트:";
 
 $text['label-domain']['en-us'] = "Domain";
 $text['label-domain']['en-gb'] = "Domain";
@@ -293,6 +332,9 @@ $text['label-domain']['ro-ro'] = "";
 $text['label-domain']['ru-ru'] = "Домен";
 $text['label-domain']['sv-se'] = "Domän";
 $text['label-domain']['uk-ua'] = "Домен";
+$text['label-domain']['zh-cn'] = "领域";
+$text['label-domain']['ja-jp'] = "ドメイン";
+$text['label-domain']['ko-kr'] = "이름 *";
 
 $text['label-agent']['en-us'] = "Agent";
 $text['label-agent']['en-gb'] = "Agent";
@@ -314,6 +356,9 @@ $text['label-agent']['ro-ro'] = "";
 $text['label-agent']['ru-ru'] = "Оператор";
 $text['label-agent']['sv-se'] = "Agent";
 $text['label-agent']['uk-ua'] = "Оператор";
+$text['label-agent']['zh-cn'] = "代理人";
+$text['label-agent']['ja-jp'] = "エージェント";
+$text['label-agent']['ko-kr'] = "이름 *";
 
 $text['label-contact']['en-us'] = "Contact";
 $text['label-contact']['en-gb'] = "Contact";
@@ -335,6 +380,9 @@ $text['label-contact']['ro-ro'] = "";
 $text['label-contact']['ru-ru'] = "Контакт";
 $text['label-contact']['sv-se'] = "Kontakta";
 $text['label-contact']['uk-ua'] = "Контакт";
+$text['label-contact']['zh-cn'] = "联系";
+$text['label-contact']['ja-jp'] = "お問い合わせ";
+$text['label-contact']['ko-kr'] = "제품정보";
 
 $text['label-sip_profile_name']['en-us'] = "Profile";
 $text['label-sip_profile_name']['en-gb'] = "Profile";
@@ -356,6 +404,9 @@ $text['label-sip_profile_name']['ro-ro'] = "";
 $text['label-sip_profile_name']['ru-ru'] = "Профили";
 $text['label-sip_profile_name']['sv-se'] = "Profiler";
 $text['label-sip_profile_name']['uk-ua'] = "профілі";
+$text['label-sip_profile_name']['zh-cn'] = "概况";
+$text['label-sip_profile_name']['ja-jp'] = "プロフィール";
+$text['label-sip_profile_name']['ko-kr'] = "제품정보";
 
 $text['header-registrations']['en-us'] = "Registrations";
 $text['header-registrations']['en-gb'] = "Registrations";
@@ -377,6 +428,9 @@ $text['header-registrations']['ro-ro'] = "";
 $text['header-registrations']['ru-ru'] = "Регистрация";
 $text['header-registrations']['sv-se'] = "Registreringar";
 $text['header-registrations']['uk-ua'] = "Реєстрації";
+$text['header-registrations']['zh-cn'] = "登记";
+$text['header-registrations']['ja-jp'] = "参加登録";
+$text['header-registrations']['ko-kr'] = "이름 *";
 
 $text['description-registrations']['en-us'] = "Manage current extensions registered to the system.";
 $text['description-registrations']['en-gb'] = "Manage current extensions registered to the system.";
@@ -398,6 +452,9 @@ $text['description-registrations']['ro-ro'] = "Manage current extensions registe
 $text['description-registrations']['ru-ru'] = "Manage current extensions registered to the system.";
 $text['description-registrations']['sv-se'] = "Manage current extensions registered to the system.";
 $text['description-registrations']['uk-ua'] = "Manage current extensions registered to the system.";
+$text['description-registrations']['zh-cn'] = "管理现行制度展期。";
+$text['description-registrations']['ja-jp'] = "システムに登録された現在の拡張子を管理します。";
+$text['description-registrations']['ko-kr'] = "시스템에 등록 된 현재 확장을 관리합니다.";
 
 $text['error-event-socket']['en-us'] = "Connection to Event Socket failed.";
 $text['error-event-socket']['en-gb'] = "Connection to Event Socket failed.";
@@ -419,6 +476,9 @@ $text['error-event-socket']['ro-ro'] = "";
 $text['error-event-socket']['ru-ru'] = "Подключение к сокету событий не удалось.";
 $text['error-event-socket']['sv-se'] = "Kontakten till 'Event Socket' misslyckades.";
 $text['error-event-socket']['uk-ua'] = "Помилка підключення до Event Socket";
+$text['error-event-socket']['zh-cn'] = "与事件Socket的连接失败。";
+$text['error-event-socket']['ja-jp'] = "イベントソケットへの接続が失敗しました。";
+$text['error-event-socket']['ko-kr'] = "이벤트 소켓에 연결 실패.";
 
 $text['button-unregister']['en-us'] = "Unregister";
 $text['button-unregister']['en-gb'] = "Unregister";
@@ -440,6 +500,9 @@ $text['button-unregister']['ro-ro'] = "";
 $text['button-unregister']['ru-ru'] = "Отменить регистрацию";
 $text['button-unregister']['sv-se'] = "Avregistrera";
 $text['button-unregister']['uk-ua'] = "Розреєструвати";
+$text['button-unregister']['zh-cn'] = "未登记";
+$text['button-unregister']['ja-jp'] = "会員登録";
+$text['button-unregister']['ko-kr'] = "계정 관리";
 
 $text['button-reboot']['en-us'] = "Reboot";
 $text['button-reboot']['en-gb'] = "Reboot";
@@ -461,6 +524,9 @@ $text['button-reboot']['ro-ro'] = "";
 $text['button-reboot']['ru-ru'] = "Перезагрузить";
 $text['button-reboot']['sv-se'] = "Starta Om";
 $text['button-reboot']['uk-ua'] = "Перезавантажити";
+$text['button-reboot']['zh-cn'] = "新员额";
+$text['button-reboot']['ja-jp'] = "リブート";
+$text['button-reboot']['ko-kr'] = "재부팅";
 
 $text['button-provision']['en-us'] = "Provision";
 $text['button-provision']['en-gb'] = "Provision";
@@ -482,6 +548,9 @@ $text['button-provision']['ro-ro'] = "";
 $text['button-provision']['ru-ru'] = "Обеспечение";
 $text['button-provision']['sv-se'] = "Provisionera";
 $text['button-provision']['uk-ua'] = "Provision ";
+$text['button-provision']['zh-cn'] = "经费";
+$text['button-provision']['ja-jp'] = "導入事例";
+$text['button-provision']['ko-kr'] = "회사연혁";
 
 $text['button-all_profiles']['en-us'] = "All Profiles";
 $text['button-all_profiles']['en-gb'] = "All Profiles";
@@ -503,6 +572,9 @@ $text['button-all_profiles']['ro-ro'] = "All Profiles";
 $text['button-all_profiles']['ru-ru'] = "All Profiles";
 $text['button-all_profiles']['sv-se'] = "All Profiles";
 $text['button-all_profiles']['uk-ua'] = "All Profiles";
+$text['button-all_profiles']['zh-cn'] = "所有概况";
+$text['button-all_profiles']['ja-jp'] = "すべてのプロフィール";
+$text['button-all_profiles']['ko-kr'] = "모든 프로필";
 
 $text['button-single_profile']['en-us'] = "Single Profile";
 $text['button-single_profile']['en-gb'] = "Single Profile";
@@ -524,6 +596,9 @@ $text['button-single_profile']['ro-ro'] = "Single Profile";
 $text['button-single_profile']['ru-ru'] = "Single Profile";
 $text['button-single_profile']['sv-se'] = "Single Profile";
 $text['button-single_profile']['uk-ua'] = "Single Profile";
+$text['button-single_profile']['zh-cn'] = "单一概况";
+$text['button-single_profile']['ja-jp'] = "単一プロフィール";
+$text['button-single_profile']['ko-kr'] = "단일 프로필";
 
 $text['message-registrations_unregistered']['en-us'] = "Unregister Command Sent";
 $text['message-registrations_unregistered']['en-gb'] = "Unregister Command Sent";
@@ -545,6 +620,9 @@ $text['message-registrations_unregistered']['ro-ro'] = "Unregister Command Sent"
 $text['message-registrations_unregistered']['ru-ru'] = "Unregister Command Sent";
 $text['message-registrations_unregistered']['sv-se'] = "Unregister Command Sent";
 $text['message-registrations_unregistered']['uk-ua'] = "Unregister Command Sent";
+$text['message-registrations_unregistered']['zh-cn'] = "公报";
+$text['message-registrations_unregistered']['ja-jp'] = "コマンド送信を未登録";
+$text['message-registrations_unregistered']['ko-kr'] = "Unregister 명령 전송";
 
 $text['message-registrations_provisioned']['en-us'] = "Provision Command Sent";
 $text['message-registrations_provisioned']['en-gb'] = "Provision Command Sent";
@@ -566,6 +644,9 @@ $text['message-registrations_provisioned']['ro-ro'] = "Provision Command Sent";
 $text['message-registrations_provisioned']['ru-ru'] = "Provision Command Sent";
 $text['message-registrations_provisioned']['sv-se'] = "Provision Command Sent";
 $text['message-registrations_provisioned']['uk-ua'] = "Provision Command Sent";
+$text['message-registrations_provisioned']['zh-cn'] = "授权";
+$text['message-registrations_provisioned']['ja-jp'] = "コマンド送信";
+$text['message-registrations_provisioned']['ko-kr'] = "Provision 명령 전송";
 
 $text['message-registrations_rebooted']['en-us'] = "Registration Command Sent";
 $text['message-registrations_rebooted']['en-gb'] = "Registration Command Sent";
@@ -587,6 +668,9 @@ $text['message-registrations_rebooted']['ro-ro'] = "Registration Command Sent";
 $text['message-registrations_rebooted']['ru-ru'] = "Registration Command Sent";
 $text['message-registrations_rebooted']['sv-se'] = "Registration Command Sent";
 $text['message-registrations_rebooted']['uk-ua'] = "Registration Command Sent";
+$text['message-registrations_rebooted']['zh-cn'] = "注册指挥部";
+$text['message-registrations_rebooted']['ja-jp'] = "登録コマンド Sent";
+$text['message-registrations_rebooted']['ko-kr'] = "등록 명령";
 
 $text['confirm-unregister']['en-us'] = "Do you really want to UNREGISTER these?";
 $text['confirm-unregister']['en-gb'] = "Do you really want to UNREGISTER these?";
@@ -608,6 +692,9 @@ $text['confirm-unregister']['ro-ro'] = "Do you really want to UNREGISTER these?"
 $text['confirm-unregister']['ru-ru'] = "Do you really want to UNREGISTER these?";
 $text['confirm-unregister']['sv-se'] = "Do you really want to UNREGISTER these?";
 $text['confirm-unregister']['uk-ua'] = "Do you really want to UNREGISTER these?";
+$text['confirm-unregister']['zh-cn'] = "你们是否真的想要联合国研究小组?";
+$text['confirm-unregister']['ja-jp'] = "あなたは本当にこれらの登録をしたいですか?";
+$text['confirm-unregister']['ko-kr'] = "UNREGISTER에게 정말 원합니까?";
 
 $text['confirm-provision']['en-us'] = "Do you really want to PROVISION these?";
 $text['confirm-provision']['en-gb'] = "Do you really want to PROVISION these?";
@@ -629,6 +716,9 @@ $text['confirm-provision']['ro-ro'] = "Do you really want to PROVISION these?";
 $text['confirm-provision']['ru-ru'] = "Do you really want to PROVISION these?";
 $text['confirm-provision']['sv-se'] = "Do you really want to PROVISION these?";
 $text['confirm-provision']['uk-ua'] = "Do you really want to PROVISION these?";
+$text['confirm-provision']['zh-cn'] = "你们是否真的想要作出这些规定?";
+$text['confirm-provision']['ja-jp'] = "これをプロビジョンしたいですか?";
+$text['confirm-provision']['ko-kr'] = "PROVISION을 정말 원하십니까?";
 
 $text['confirm-reboot']['en-us'] = "Do you really want to REBOOT these?";
 $text['confirm-reboot']['en-gb'] = "Do you really want to REBOOT these?";
@@ -650,5 +740,8 @@ $text['confirm-reboot']['ro-ro'] = "Do you really want to REBOOT these?";
 $text['confirm-reboot']['ru-ru'] = "Do you really want to REBOOT these?";
 $text['confirm-reboot']['sv-se'] = "Do you really want to REBOOT these?";
 $text['confirm-reboot']['uk-ua'] = "Do you really want to REBOOT these?";
+$text['confirm-reboot']['zh-cn'] = "你们是否真的希望批准这些?";
+$text['confirm-reboot']['ja-jp'] = "これらをリボットしたいですか?";
+$text['confirm-reboot']['ko-kr'] = "당신은 정말이 REBOOT을 원합니까?";
 
 ?>

@@ -20,6 +20,9 @@ $text['title-edit']['ro-ro'] = "";
 $text['title-edit']['ru-ru'] = "Запись";
 $text['title-edit']['sv-se'] = "Inspelning";
 $text['title-edit']['uk-ua'] = "Запис";
+$text['title-edit']['zh-cn'] = "记录";
+$text['title-edit']['ja-jp'] = "レコーディング";
+$text['title-edit']['ko-kr'] = "관련 기사";
 
 $text['title-add']['en-us'] = "Add Recording";
 $text['title-add']['en-gb'] = "Add Recording";
@@ -41,6 +44,9 @@ $text['title-add']['ro-ro'] = "";
 $text['title-add']['ru-ru'] = "Добавить запись";
 $text['title-add']['sv-se'] = "Lägg Till Inspelning";
 $text['title-add']['uk-ua'] = "Додати запис";
+$text['title-add']['zh-cn'] = "添加记录";
+$text['title-add']['ja-jp'] = "レコードの追加";
+$text['title-add']['ko-kr'] = "자주 묻는 질문";
 
 $text['title-recordings']['en-us'] = "Recordings";
 $text['title-recordings']['en-gb'] = "Recordings";
@@ -62,6 +68,9 @@ $text['title-recordings']['ro-ro'] = "";
 $text['title-recordings']['ru-ru'] = "Записи";
 $text['title-recordings']['sv-se'] = "Inspelningar";
 $text['title-recordings']['uk-ua'] = "Записи";
+$text['title-recordings']['zh-cn'] = "记录";
+$text['title-recordings']['ja-jp'] = "レコーディング";
+$text['title-recordings']['ko-kr'] = "관련 기사";
 
 $text['message-uploaded']['en-us'] = "File Uploaded";
 $text['message-uploaded']['en-gb'] = "File Uploaded";
@@ -83,6 +92,9 @@ $text['message-uploaded']['ro-ro'] = "";
 $text['message-uploaded']['ru-ru'] = "Файл загружен";
 $text['message-uploaded']['sv-se'] = "File Uppladdade";
 $text['message-uploaded']['uk-ua'] = "файл Завантажено";
+$text['message-uploaded']['zh-cn'] = "文件";
+$text['message-uploaded']['ja-jp'] = "ファイル アップロード";
+$text['message-uploaded']['ko-kr'] = "파일 업로드";
 
 $text['label-uploaded']['en-us'] = "Uploaded";
 $text['label-uploaded']['en-gb'] = "Uploaded";
@@ -104,6 +116,9 @@ $text['label-uploaded']['ro-ro'] = "";
 $text['label-uploaded']['ru-ru'] = "Загружено";
 $text['label-uploaded']['sv-se'] = "Uppladdad";
 $text['label-uploaded']['uk-ua'] = "Завантажено";
+$text['label-uploaded']['zh-cn'] = "装载";
+$text['label-uploaded']['ja-jp'] = "アップロード";
+$text['label-uploaded']['ko-kr'] = "다운로드";
 
 $text['label-upload']['en-us'] = "File Path";
 $text['label-upload']['en-gb'] = "File Path";
@@ -125,6 +140,9 @@ $text['label-upload']['ro-ro'] = "";
 $text['label-upload']['ru-ru'] = "Путь к файлу";
 $text['label-upload']['sv-se'] = "Sökväg";
 $text['label-upload']['uk-ua'] = "Шлях до файла";
+$text['label-upload']['zh-cn'] = "档案";
+$text['label-upload']['ja-jp'] = "ファイルパス";
+$text['label-upload']['ko-kr'] = "파일 경로";
 
 $text['label-tools']['en-us'] = "Tools";
 $text['label-tools']['en-gb'] = "Tools";
@@ -146,6 +164,9 @@ $text['label-tools']['ro-ro'] = "";
 $text['label-tools']['ru-ru'] = "Инструменты";
 $text['label-tools']['sv-se'] = "Verktyg";
 $text['label-tools']['uk-ua'] = "Параметри";
+$text['label-tools']['zh-cn'] = "工具";
+$text['label-tools']['ja-jp'] = "ツール";
+$text['label-tools']['ko-kr'] = "제품정보";
 
 $text['label-recording_name']['en-us'] = "Recording Name";
 $text['label-recording_name']['en-gb'] = "Recording Name";
@@ -167,6 +188,9 @@ $text['label-recording_name']['ro-ro'] = "";
 $text['label-recording_name']['ru-ru'] = "Название записи";
 $text['label-recording_name']['sv-se'] = "Namn på inspelning";
 $text['label-recording_name']['uk-ua'] = "Назва запису";
+$text['label-recording_name']['zh-cn'] = "记录姓名";
+$text['label-recording_name']['ja-jp'] = "記録名";
+$text['label-recording_name']['ko-kr'] = "기록 이름";
 
 $text['label-play']['en-us'] = "Play";
 $text['label-play']['en-gb'] = "Play";
@@ -188,6 +212,9 @@ $text['label-play']['ro-ro'] = "";
 $text['label-play']['ru-ru'] = "Проиграть";
 $text['label-play']['sv-se'] = "Spela Upp";
 $text['label-play']['uk-ua'] = "Відтворити";
+$text['label-play']['zh-cn'] = "游乐";
+$text['label-play']['ja-jp'] = "プレイ";
+$text['label-play']['ko-kr'] = "뚱 베어";
 
 $text['label-pause']['en-us'] = "Pause";
 $text['label-pause']['en-gb'] = "Pause";
@@ -209,6 +236,9 @@ $text['label-pause']['ro-ro'] = "";
 $text['label-pause']['ru-ru'] = "Пайза";
 $text['label-pause']['sv-se'] = "Paus";
 $text['label-pause']['uk-ua'] = "Призупинити";
+$text['label-pause']['zh-cn'] = "分娩";
+$text['label-pause']['ja-jp'] = "パデュース";
+$text['label-pause']['ko-kr'] = "팟캐스트";
 
 $text['label-file_name']['en-us'] = "File Name";
 $text['label-file_name']['en-gb'] = "File Name";
@@ -230,6 +260,9 @@ $text['label-file_name']['ro-ro'] = "";
 $text['label-file_name']['ru-ru'] = "Имя файла";
 $text['label-file_name']['sv-se'] = "Fil-namn";
 $text['label-file_name']['uk-ua'] = "Назва файлу";
+$text['label-file_name']['zh-cn'] = "文件名称";
+$text['label-file_name']['ja-jp'] = "ファイル名";
+$text['label-file_name']['ko-kr'] = "파일 이름";
 
 $text['label-file_size']['en-us'] = "File Size";
 $text['label-file_size']['en-gb'] = "File Size";
@@ -251,6 +284,9 @@ $text['label-file_size']['ro-ro'] = "";
 $text['label-file_size']['ru-ru'] = "Размер файла";
 $text['label-file_size']['sv-se'] = "Filstorlek";
 $text['label-file_size']['uk-ua'] = "Розмір файлу";
+$text['label-file_size']['zh-cn'] = "档案";
+$text['label-file_size']['ja-jp'] = "ファイル サイズ";
+$text['label-file_size']['ko-kr'] = "파일 크기";
 
 $text['label-size']['en-us'] = "Size";
 $text['label-size']['en-gb'] = "Size";
@@ -272,6 +308,9 @@ $text['label-size']['ro-ro'] = "";
 $text['label-size']['ru-ru'] = "Размер файла";
 $text['label-size']['sv-se'] = "Filstorlek";
 $text['label-size']['uk-ua'] = "Розмір файлу";
+$text['label-size']['zh-cn'] = "规模";
+$text['label-size']['ja-jp'] = "サイズ:";
+$text['label-size']['ko-kr'] = "크기 (mm)";
 
 $text['label-file']['en-us'] = "Filename (Download)";
 $text['label-file']['en-gb'] = "Filename (Download)";
@@ -293,6 +332,9 @@ $text['label-file']['ro-ro'] = "";
 $text['label-file']['ru-ru'] = "Имя файла (для загрузки)";
 $text['label-file']['sv-se'] = "Fil Ej Funnen";
 $text['label-file']['uk-ua'] = "Ім'я файла (Завантажити)";
+$text['label-file']['zh-cn'] = "文件名称(Download)";
+$text['label-file']['ja-jp'] = "ファイル名(ダウンロード)";
+$text['label-file']['ko-kr'] = "파일명 (Download)";
 
 $text['label-edit-recording']['en-us'] = "Please provide: Recording Name (play)";
 $text['label-edit-recording']['en-gb'] = "Please provide: Recording Name (play)";
@@ -314,6 +356,9 @@ $text['label-edit-recording']['ro-ro'] = "";
 $text['label-edit-recording']['ru-ru'] = "Укажите: название записи (для воспроизведения)";
 $text['label-edit-recording']['sv-se'] = "Ange: Namn på inspelning (spela upp)";
 $text['label-edit-recording']['uk-ua'] = "Будь ласка, заповніть: Ім'я запису (play)";
+$text['label-edit-recording']['zh-cn'] = "请提供: 记录姓名(角色)";
+$text['label-edit-recording']['ja-jp'] = "お問い合わせ 記録名(再生)";
+$text['label-edit-recording']['ko-kr'] = "참고 : 기록 이름 (놀이)";
 
 $text['label-edit-file']['en-us'] = "Please provide: Filename (download)";
 $text['label-edit-file']['en-gb'] = "Please provide: Filename (download)";
@@ -335,6 +380,9 @@ $text['label-edit-file']['ro-ro'] = "";
 $text['label-edit-file']['ru-ru'] = "Укажите: имя файла (для загрузки)";
 $text['label-edit-file']['sv-se'] = "Ange: Filnamn (ladda ned)";
 $text['label-edit-file']['uk-ua'] = "Будь ласка, надайте: ім'я файлу (завантажити)";
+$text['label-edit-file']['zh-cn'] = "请提供:档案名称(下载)";
+$text['label-edit-file']['ja-jp'] = "提供して下さい:ファイル名(ダウンロード)";
+$text['label-edit-file']['ko-kr'] = "파일명(download)";
 
 $text['label-download']['en-us'] = "Download";
 $text['label-download']['en-gb'] = "Download";
@@ -356,6 +404,9 @@ $text['label-download']['ro-ro'] = "";
 $text['label-download']['ru-ru'] = "Загрузить";
 $text['label-download']['sv-se'] = "Ladda Ned";
 $text['label-download']['uk-ua'] = "Завантажини";
+$text['label-download']['zh-cn'] = "下载";
+$text['label-download']['ja-jp'] = "ダウンロード";
+$text['label-download']['ko-kr'] = "다운로드";
 
 $text['header']['en-us'] = "Upload Recording";
 $text['header']['en-gb'] = "Upload Recording";
@@ -377,6 +428,9 @@ $text['header']['ro-ro'] = "";
 $text['header']['ru-ru'] = "Загрузить запись";
 $text['header']['sv-se'] = "Ladda Upp Inspelning";
 $text['header']['uk-ua'] = "Вивантажити запис";
+$text['header']['zh-cn'] = "装载记录";
+$text['header']['ja-jp'] = "アップロードレコーディング";
+$text['header']['ko-kr'] = "관련 기사";
 
 $text['description-recording']['en-us'] = "A name for the recording (not parsed).";
 $text['description-recording']['en-gb'] = "A name for the recording (not parsed).";
@@ -398,6 +452,9 @@ $text['description-recording']['ro-ro'] = "";
 $text['description-recording']['ru-ru'] = "Имя для записи (не анализируется).";
 $text['description-recording']['sv-se'] = "Namn på Inspelning.";
 $text['description-recording']['uk-ua'] = "Ім'я для запису (не розбирається).";
+$text['description-recording']['zh-cn'] = "记录名称(未加标)。";
+$text['description-recording']['ja-jp'] = "録音の名前(解析されていない)。";
+$text['description-recording']['ko-kr'] = "기록의 이름 (파란되지 않음).";
 
 $text['description-file']['en-us'] = "Name of the file. example.wav";
 $text['description-file']['en-gb'] = "Name of the file. example.wav";
@@ -419,6 +476,9 @@ $text['description-file']['ro-ro'] = "";
 $text['description-file']['ru-ru'] = "Имя файла. example.wav";
 $text['description-file']['sv-se'] = "Namn på filen. exempel: inspelning.wav";
 $text['description-file']['uk-ua'] = "Назва файлу. Приклад.wav";
+$text['description-file']['zh-cn'] = "档案名称。 例如:wav";
+$text['description-file']['ja-jp'] = "ファイル名 例.wav";
+$text['description-file']['ko-kr'] = "파일 이름. 예제.wav";
 
 $text['description']['en-us'] = "Dial *732 to create a recording, or (for best results) upload a 16bit 8khz/16khz mono WAV file.";
 $text['description']['en-gb'] = "Dial *732 to create a recording, or (for best results) upload a 16bit 8khz/16khz mono WAV file.";
@@ -440,6 +500,9 @@ $text['description']['ro-ro'] = "";
 $text['description']['ru-ru'] = "Наберите *732 для создания записи, или (для получения наилучших результатов) загрузите 16bit 8khz/16khz mono WAV файл.";
 $text['description']['sv-se'] = "För att göra en inspelning ring * 732 eller så kan du göra en 16bit 8kHz/16kHz Mono WAV-fil och kopiera den till följande katalog uppdatera sedan sidan för att spela upp den.";
 $text['description']['uk-ua'] = "Редагування інформації облікового запису";
+$text['description']['zh-cn'] = "Dial *732用于制作录音,或(为了取得最佳结果)上载16bit 8khz/16khz 单号WAV文件。";
+$text['description']['ja-jp'] = "記録を作成するために*732をダイヤルして下さい、または(最もよい結果のために)16bit 8khz/16khzモノラルWAVファイルをアップロードして下さい。";
+$text['description']['ko-kr'] = "Dial *732는 녹음을 만들거나 (최고의 결과를 위해) 16bit 8khz/16khz mono WAV 파일을 업로드합니다.";
 
 $text['description-with_password']['en-us'] = "Dial *732 and enter the password ||RECORDING_PASSWORD||, followed by a number for the recording to create. Or, for best results, upload a 16bit 8khz/16khz mono WAV file.";
 $text['description-with_password']['en-gb'] = "Dial *732 and enter the password ||RECORDING_PASSWORD||, followed by a number for the recording to create. Or, for best results, upload a 16bit 8khz/16khz mono WAV file.";
@@ -461,5 +524,8 @@ $text['description-with_password']['ro-ro'] = "";
 $text['description-with_password']['ru-ru'] = "Наберите *732 для создания записи, или (для получения наилучших результатов) загрузите 16bit 8khz/16khz mono WAV файл.";
 $text['description-with_password']['sv-se'] = "För att göra en inspelning ring * 732 eller så kan du göra en 16bit 8kHz/16kHz Mono WAV-fil och kopiera den till följande katalog uppdatera sedan sidan för att spela upp den.";
 $text['description-with_password']['uk-ua'] = "Редагування інформації облікового запису";
+$text['description-with_password']['zh-cn'] = "Dial *732 and the Password RECORDING_PASSWORD , subsequently a number for the行文制作。 或者,为了取得最佳结果,上载了16比8khz/16khz 单号WAV文件。";
+$text['description-with_password']['ja-jp'] = "※732 をダイヤルし、パスワードを入力してください||RECORDING_PASSWORD|||、レコード作成のナンバーに従います。 または、最良の結果を得るために、16bit 8khz/16khzモノWAVファイルをアップロードします。";
+$text['description-with_password']['ko-kr'] = "Dial *732 및 비밀번호 입력|RECORDING_PASSWORD||, 녹음에 대한 수를 따를 수 있습니다. 또는, 제일 결과를 위해, 16bit 8khz/16khz mono WAV 파일을 업로드하십시오.";
 
 ?>

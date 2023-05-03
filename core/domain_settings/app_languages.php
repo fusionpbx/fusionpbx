@@ -20,6 +20,9 @@ $text['title-domains']['ro-ro'] = "Domenii";
 $text['title-domains']['ru-ru'] = "Домены";
 $text['title-domains']['sv-se'] = "Domäner";
 $text['title-domains']['uk-ua'] = "Домени";
+$text['title-domains']['zh-cn'] = "领域";
+$text['title-domains']['ja-jp'] = "ドメイン";
+$text['title-domains']['ko-kr'] = "이름 *";
 
 $text['title-domain_settings']['en-us'] = "Domain Setting";
 $text['title-domain_settings']['en-gb'] = "Domain Setting";
@@ -41,6 +44,9 @@ $text['title-domain_settings']['ro-ro'] = "Setarea domeniului";
 $text['title-domain_settings']['ru-ru'] = "Настройки домена";
 $text['title-domain_settings']['sv-se'] = "Domän Inställning";
 $text['title-domain_settings']['uk-ua'] = "Налаштування доменів";
+$text['title-domain_settings']['zh-cn'] = "A. 设定";
+$text['title-domain_settings']['ja-jp'] = "ドメイン設定";
+$text['title-domain_settings']['ko-kr'] = "도메인 설정";
 
 $text['title-domain_setting-edit']['en-us'] = "Domain Setting";
 $text['title-domain_setting-edit']['en-gb'] = "Domain Setting";
@@ -62,6 +68,9 @@ $text['title-domain_setting-edit']['ro-ro'] = "Setarea domeniului";
 $text['title-domain_setting-edit']['ru-ru'] = "Настройки домена";
 $text['title-domain_setting-edit']['sv-se'] = "Domän Inställning";
 $text['title-domain_setting-edit']['uk-ua'] = "Налаштування доменів";
+$text['title-domain_setting-edit']['zh-cn'] = "A. 设定";
+$text['title-domain_setting-edit']['ja-jp'] = "ドメイン設定";
+$text['title-domain_setting-edit']['ko-kr'] = "도메인 설정";
 
 $text['title-domain_setting-add']['en-us'] = "Domain Setting Add";
 $text['title-domain_setting-add']['en-gb'] = "Domain Setting Add";
@@ -83,6 +92,9 @@ $text['title-domain_setting-add']['ro-ro'] = "Adăugați setări de domeniu";
 $text['title-domain_setting-add']['ru-ru'] = "Добавить настройку домена";
 $text['title-domain_setting-add']['sv-se'] = "Lägg Till Domän Inställning";
 $text['title-domain_setting-add']['uk-ua'] = "Додавання домену";
+$text['title-domain_setting-add']['zh-cn'] = "A. 组建机构";
+$text['title-domain_setting-add']['ja-jp'] = "ドメイン設定の追加";
+$text['title-domain_setting-add']['ko-kr'] = "도메인 설정 Add";
 
 $text['title-domain-edit']['en-us'] = "Domain";
 $text['title-domain-edit']['en-gb'] = "Domain";
@@ -104,6 +116,9 @@ $text['title-domain-edit']['ro-ro'] = "Domeniu";
 $text['title-domain-edit']['ru-ru'] = "Домен";
 $text['title-domain-edit']['sv-se'] = "Domän";
 $text['title-domain-edit']['uk-ua'] = "Домен";
+$text['title-domain-edit']['zh-cn'] = "领域";
+$text['title-domain-edit']['ja-jp'] = "ドメイン";
+$text['title-domain-edit']['ko-kr'] = "이름 *";
 
 $text['title-domain-add']['en-us'] = "Domain Add";
 $text['title-domain-add']['en-gb'] = "Domain Add";
@@ -125,6 +140,9 @@ $text['title-domain-add']['ro-ro'] = "Adăugarea domeniului";
 $text['title-domain-add']['ru-ru'] = "Добавить домен";
 $text['title-domain-add']['sv-se'] = "Lägg Till Domän";
 $text['title-domain-add']['uk-ua'] = "Новий домен";
+$text['title-domain-add']['zh-cn'] = "增 编";
+$text['title-domain-add']['ja-jp'] = "ドメイン追加";
+$text['title-domain-add']['ko-kr'] = "도메인 추가";
 
 $text['header_description-domain_settings']['en-us'] = "Settings for this domain override those defined in Default Settings.";
 $text['header_description-domain_settings']['en-gb'] = "Settings for this domain override those defined in Default Settings.";
@@ -146,6 +164,9 @@ $text['header_description-domain_settings']['ro-ro'] = "Setările pentru acest d
 $text['header_description-domain_settings']['ru-ru'] = "Настройки для этого домена переопределяют настройки, заданные в настройках по умолчанию.";
 $text['header_description-domain_settings']['sv-se'] = "Inställningarna för den här domänen åsidosätter de som definierats i Standardinställningar..";
 $text['header_description-domain_settings']['uk-ua'] = "Налаштування для цього домену перекривають параметри, визначені в налаштуваннях за замовчуванням.";
+$text['header_description-domain_settings']['zh-cn'] = "该领域的设置超越了在违约情况下的定义。";
+$text['header_description-domain_settings']['ja-jp'] = "このドメインの設定は、デフォルト設定で定義されているものを上書きします。";
+$text['header_description-domain_settings']['ko-kr'] = "이 도메인에 대한 설정은 기본 설정에서 정의 된 것을 무시합니다.";
 
 $text['message-delete_failed']['en-us'] = "No Settings Checked";
 $text['message-delete_failed']['en-gb'] = "No Settings Checked";
@@ -167,6 +188,9 @@ $text['message-delete_failed']['ro-ro'] = "";
 $text['message-delete_failed']['ru-ru'] = "Не выбрана настройка";
 $text['message-delete_failed']['sv-se'] = "Ingen Inställning Markerad";
 $text['message-delete_failed']['uk-ua'] = "Налаштування не вказано";
+$text['message-delete_failed']['zh-cn'] = "没有检查的环境";
+$text['message-delete_failed']['ja-jp'] = "いいえ 設定 チェック";
+$text['message-delete_failed']['ko-kr'] = "설정 확인 없음";
 
 $text['option-select']['en-us'] = "Select";
 $text['option-select']['en-gb'] = "Select";
@@ -190,6 +214,9 @@ $text['option-select']['ru-ru'] = "Выбрать";
 $text['option-select']['sv-se'] = "Välj";
 $text['option-select']['uk-ua'] = "Виберіть";
 $text['option-select']['tr-tr'] = "Seç";
+$text['option-select']['zh-cn'] = "选 举";
+$text['option-select']['ja-jp'] = "詳しくはこちら";
+$text['option-select']['ko-kr'] = "제품정보";
 
 $text['option-switch_round']['en-us'] = "Round Switch";
 $text['option-switch_round']['en-gb'] = "Round Switch";
@@ -213,6 +240,9 @@ $text['option-switch_round']['ru-ru'] = "Круглый переключател
 $text['option-switch_round']['sv-se'] = "Rund Switch";
 $text['option-switch_round']['uk-ua'] = "Круглий перемикач";
 $text['option-switch_round']['tr-tr'] = "Yuvarlak Anahtar";
+$text['option-switch_round']['zh-cn'] = "圆桌会议";
+$text['option-switch_round']['ja-jp'] = "ラウンドスイッチ";
+$text['option-switch_round']['ko-kr'] = "둥근 스위치";
 
 $text['option-switch_square']['en-us'] = "Square Switch";
 $text['option-switch_square']['en-gb'] = "Square Switch";
@@ -236,6 +266,9 @@ $text['option-switch_square']['ru-ru'] = "Квадратный переключ�
 $text['option-switch_square']['sv-se'] = "Fyrkantig strömbrytare";
 $text['option-switch_square']['uk-ua'] = "Квадратний перемикач";
 $text['option-switch_square']['tr-tr'] = "Kare Anahtar";
+$text['option-switch_square']['zh-cn'] = "广场接线";
+$text['option-switch_square']['ja-jp'] = "正方形スイッチ";
+$text['option-switch_square']['ko-kr'] = "스퀘어 스위치";
 
 $text['label-web_fonts']['en-us'] = "Web Fonts";
 $text['label-web_fonts']['en-gb'] = "Web Fonts";
@@ -257,6 +290,9 @@ $text['label-web_fonts']['ro-ro'] = "Fonturi web";
 $text['label-web_fonts']['ru-ru'] = "Шрифты Web";
 $text['label-web_fonts']['sv-se'] = "web teckensnitt";
 $text['label-web_fonts']['uk-ua'] = "веб-шрифти";
+$text['label-web_fonts']['zh-cn'] = "网址";
+$text['label-web_fonts']['ja-jp'] = "Webフォント";
+$text['label-web_fonts']['ko-kr'] = "웹 글꼴";
 
 $text['label-top']['en-us'] = "Top";
 $text['label-top']['en-gb'] = "Top";
@@ -278,6 +314,9 @@ $text['label-top']['ro-ro'] = "Top";
 $text['label-top']['ru-ru'] = "Верхний";
 $text['label-top']['sv-se'] = "Topp";
 $text['label-top']['uk-ua'] = "топ";
+$text['label-top']['zh-cn'] = "专题";
+$text['label-top']['ja-jp'] = "トップページ";
+$text['label-top']['ko-kr'] = "이름 *";
 
 $text['label-tools']['en-us'] = "Tools";
 $text['label-tools']['en-gb'] = "Tools";
@@ -299,6 +338,9 @@ $text['label-tools']['ro-ro'] = "Instrumente";
 $text['label-tools']['ru-ru'] = "Инструменты";
 $text['label-tools']['sv-se'] = "Verktyg";
 $text['label-tools']['uk-ua'] = "Параметри";
+$text['label-tools']['zh-cn'] = "工具";
+$text['label-tools']['ja-jp'] = "ツール";
+$text['label-tools']['ko-kr'] = "제품정보";
 
 $text['label-text']['en-us'] = "Text";
 $text['label-text']['en-gb'] = "Text";
@@ -320,6 +362,9 @@ $text['label-text']['ro-ro'] = "Text";
 $text['label-text']['ru-ru'] = "Текст";
 $text['label-text']['sv-se'] = "Text";
 $text['label-text']['uk-ua'] = "текст";
+$text['label-text']['zh-cn'] = "案文";
+$text['label-text']['ja-jp'] = "テキスト";
+$text['label-text']['ko-kr'] = "이름 *";
 
 $text['label-static']['en-us'] = "Static";
 $text['label-static']['en-gb'] = "Static";
@@ -341,6 +386,9 @@ $text['label-static']['ro-ro'] = "Static";
 $text['label-static']['ru-ru'] = "Статичный";
 $text['label-static']['sv-se'] = "Statisk";
 $text['label-static']['uk-ua'] = "статичний";
+$text['label-static']['zh-cn'] = "统计";
+$text['label-static']['ja-jp'] = "スタティック";
+$text['label-static']['ko-kr'] = "제품정보";
 
 $text['label-right']['en-us'] = "Right";
 $text['label-right']['en-gb'] = "Right";
@@ -362,6 +410,9 @@ $text['label-right']['ro-ro'] = "Dreapta";
 $text['label-right']['ru-ru'] = "Правый";
 $text['label-right']['sv-se'] = "Höger";
 $text['label-right']['uk-ua'] = "правий";
+$text['label-right']['zh-cn'] = "权利";
+$text['label-right']['ja-jp'] = "アクセス";
+$text['label-right']['ko-kr'] = "지원하다";
 
 $text['label-reference']['en-us'] = "See";
 $text['label-reference']['en-gb'] = "See";
@@ -383,6 +434,9 @@ $text['label-reference']['ro-ro'] = "Referinţă";
 $text['label-reference']['ru-ru'] = "Вид";
 $text['label-reference']['sv-se'] = "Referens";
 $text['label-reference']['uk-ua'] = "посилання";
+$text['label-reference']['zh-cn'] = "See See See";
+$text['label-reference']['ja-jp'] = "お問い合わせ";
+$text['label-reference']['ko-kr'] = "이름 *";
 
 $text['label-parent_domain']['en-us'] = "Parent Domain";
 $text['label-parent_domain']['en-gb'] = "Parent Domain";
@@ -404,6 +458,9 @@ $text['label-parent_domain']['ro-ro'] = "Domeniul părinte";
 $text['label-parent_domain']['ru-ru'] = "Родительский домен";
 $text['label-parent_domain']['sv-se'] = "Överordnad Domän";
 $text['label-parent_domain']['uk-ua'] = "Батьківський домен";
+$text['label-parent_domain']['zh-cn'] = "父母财产";
+$text['label-parent_domain']['ja-jp'] = "親ドメイン";
+$text['label-parent_domain']['ko-kr'] = "학부모 도메인";
 
 $text['label-other']['en-us'] = "Other";
 $text['label-other']['en-gb'] = "Other";
@@ -425,6 +482,9 @@ $text['label-other']['ro-ro'] = "Alte";
 $text['label-other']['ru-ru'] = "Другие";
 $text['label-other']['sv-se'] = "Annat";
 $text['label-other']['uk-ua'] = "Інший";
+$text['label-other']['zh-cn'] = "其他";
+$text['label-other']['ja-jp'] = "その他";
+$text['label-other']['ko-kr'] = "기타";
 
 $text['label-none']['en-us'] = "None";
 $text['label-none']['en-gb'] = "None";
@@ -446,6 +506,9 @@ $text['label-none']['ro-ro'] = "Nici unul";
 $text['label-none']['ru-ru'] = "Никто";
 $text['label-none']['sv-se'] = "Ingen";
 $text['label-none']['uk-ua'] = "жоден";
+$text['label-none']['zh-cn'] = "无";
+$text['label-none']['ja-jp'] = "なし";
+$text['label-none']['ko-kr'] = "이름 *";
 
 $text['label-manage']['en-us'] = "Manage";
 $text['label-manage']['en-gb'] = "Manage";
@@ -467,6 +530,9 @@ $text['label-manage']['ro-ro'] = "Administra";
 $text['label-manage']['ru-ru'] = "Управлять";
 $text['label-manage']['sv-se'] = "Hantera";
 $text['label-manage']['uk-ua'] = "Керувати";
+$text['label-manage']['zh-cn'] = "管理";
+$text['label-manage']['ja-jp'] = "マネージング";
+$text['label-manage']['ko-kr'] = "계정 관리";
 
 $text['label-left']['en-us'] = "Left";
 $text['label-left']['en-gb'] = "Left";
@@ -488,6 +554,9 @@ $text['label-left']['ro-ro'] = "Stânga";
 $text['label-left']['ru-ru'] = "Слева";
 $text['label-left']['sv-se'] = "Vänster";
 $text['label-left']['uk-ua'] = "лівий";
+$text['label-left']['zh-cn'] = "任 务";
+$text['label-left']['ja-jp'] = "ふりがな";
+$text['label-left']['ko-kr'] = "왼쪽";
 
 $text['label-inline']['en-us'] = "Inline";
 $text['label-inline']['en-gb'] = "Inline";
@@ -509,6 +578,9 @@ $text['label-inline']['ro-ro'] = "In linie";
 $text['label-inline']['ru-ru'] = "inline";
 $text['label-inline']['sv-se'] = "I kö";
 $text['label-inline']['uk-ua'] = "В лінію";
+$text['label-inline']['zh-cn'] = "在线";
+$text['label-inline']['ja-jp'] = "インライン";
+$text['label-inline']['ko-kr'] = "제품정보";
 
 $text['label-image']['en-us'] = "Image";
 $text['label-image']['en-gb'] = "Image";
@@ -530,6 +602,9 @@ $text['label-image']['ro-ro'] = "Imagine";
 $text['label-image']['ru-ru'] = "Изображение";
 $text['label-image']['sv-se'] = "Bild";
 $text['label-image']['uk-ua'] = "зображення";
+$text['label-image']['zh-cn'] = "图像";
+$text['label-image']['ja-jp'] = "サイトマップ";
+$text['label-image']['ko-kr'] = "* 이름";
 
 $text['label-fixed']['en-us'] = "Fixed";
 $text['label-fixed']['en-gb'] = "Fixed";
@@ -551,6 +626,9 @@ $text['label-fixed']['ro-ro'] = "Fix";
 $text['label-fixed']['ru-ru'] = "Фиксированный";
 $text['label-fixed']['sv-se'] = "Fast";
 $text['label-fixed']['uk-ua'] = "фіксований";
+$text['label-fixed']['zh-cn'] = "固定";
+$text['label-fixed']['ja-jp'] = "固定式";
+$text['label-fixed']['ko-kr'] = "기타 제품";
 
 $text['label-side']['en-us'] = "Side";
 $text['label-side']['en-gb'] = "Side";
@@ -572,6 +650,9 @@ $text['label-side']['ro-ro'] = "Latură";
 $text['label-side']['ru-ru'] = "Сторона";
 $text['label-side']['sv-se'] = "Sida";
 $text['label-side']['uk-ua'] = "сторона";
+$text['label-side']['zh-cn'] = "段 次 页 次";
+$text['label-side']['ja-jp'] = "サイド";
+$text['label-side']['ko-kr'] = "이름 *";
 
 $text['label-domain']['en-us'] = "Domain";
 $text['label-domain']['en-gb'] = "Domain";
@@ -593,6 +674,9 @@ $text['label-domain']['ro-ro'] = "Domeniu";
 $text['label-domain']['ru-ru'] = "Домен";
 $text['label-domain']['sv-se'] = "Domän";
 $text['label-domain']['uk-ua'] = "Домен";
+$text['label-domain']['zh-cn'] = "领域";
+$text['label-domain']['ja-jp'] = "ドメイン";
+$text['label-domain']['ko-kr'] = "이름 *";
 
 $text['label-center']['en-us'] = "Center";
 $text['label-center']['en-gb'] = "Center";
@@ -614,6 +698,9 @@ $text['label-center']['ro-ro'] = "Centru";
 $text['label-center']['ru-ru'] = "Центр";
 $text['label-center']['sv-se'] = "Centrum";
 $text['label-center']['uk-ua'] = "центр";
+$text['label-center']['zh-cn'] = "Centre";
+$text['label-center']['ja-jp'] = "センター";
+$text['label-center']['ko-kr'] = "- 연혁";
 
 $text['label-bottom']['en-us'] = "Bottom";
 $text['label-bottom']['en-gb'] = "Bottom";
@@ -635,6 +722,9 @@ $text['label-bottom']['ro-ro'] = "Fund";
 $text['label-bottom']['ru-ru'] = "Низ";
 $text['label-bottom']['sv-se'] = "Botten";
 $text['label-bottom']['uk-ua'] = "дно";
+$text['label-bottom']['zh-cn'] = "底层";
+$text['label-bottom']['ja-jp'] = "ボトム";
+$text['label-bottom']['ko-kr'] = "제품정보";
 
 $text['label-24-hour']['en-us'] = "24-Hour";
 $text['label-24-hour']['en-gb'] = "24-Hour";
@@ -656,6 +746,9 @@ $text['label-24-hour']['ro-ro'] = "24 de ore";
 $text['label-24-hour']['ru-ru'] = "24-часовой";
 $text['label-24-hour']['sv-se'] = "24-timmars";
 $text['label-24-hour']['uk-ua'] = "24-годинний";
+$text['label-24-hour']['zh-cn'] = "24小时";
+$text['label-24-hour']['ja-jp'] = "24時間";
+$text['label-24-hour']['ko-kr'] = "24시간";
 
 $text['label-12-hour']['en-us'] = "12-Hour";
 $text['label-12-hour']['en-gb'] = "12-Hour";
@@ -677,6 +770,9 @@ $text['label-12-hour']['ro-ro'] = "12 de ore";
 $text['label-12-hour']['ru-ru'] = "12-часовой";
 $text['label-12-hour']['sv-se'] = "12-timmars";
 $text['label-12-hour']['uk-ua'] = "12-годинний";
+$text['label-12-hour']['zh-cn'] = "12小时";
+$text['label-12-hour']['ja-jp'] = "12時間";
+$text['label-12-hour']['ko-kr'] = "12시간";
 
 $text['label-dynamic']['en-us'] = "Dynamic";
 $text['label-dynamic']['en-gb'] = "Dynamic";
@@ -695,6 +791,9 @@ $text['label-dynamic']['pl-pl'] = "Dynamiczny";
 $text['label-dynamic']['pt-br'] = "Dinâmica";
 $text['label-dynamic']['pt-pt'] = "Dinâmica";
 $text['label-dynamic']['ro-ro'] = "Dinamic";
+$text['label-dynamic']['zh-cn'] = "动态";
+$text['label-dynamic']['ja-jp'] = "ダイナミック";
+$text['label-dynamic']['ko-kr'] = "·";
 
 $text['label-single']['en-us'] = "Single";
 $text['label-single']['en-gb'] = "Single";
@@ -713,6 +812,9 @@ $text['label-single']['pl-pl'] = "Pojedynczy";
 $text['label-single']['pt-br'] = "Solteira";
 $text['label-single']['pt-pt'] = "Solteira";
 $text['label-single']['ro-ro'] = "Singur";
+$text['label-single']['zh-cn'] = "单一";
+$text['label-single']['ja-jp'] = "シングル";
+$text['label-single']['ko-kr'] = "제품정보";
 
 $text['label-multiple']['en-us'] = "Multiple";
 $text['label-multiple']['en-gb'] = "Multiple";
@@ -731,6 +833,9 @@ $text['label-multiple']['pl-pl'] = "Wiele";
 $text['label-multiple']['pt-br'] = "Múltipla";
 $text['label-multiple']['pt-pt'] = "Múltipla";
 $text['label-multiple']['ro-ro'] = "Multiplu";
+$text['label-multiple']['zh-cn'] = "多重";
+$text['label-multiple']['ja-jp'] = "複数の";
+$text['label-multiple']['ko-kr'] = "기타";
 
 $text['select-global']['en-us'] = "Global";
 $text['select-global']['en-gb'] = "Global";
@@ -752,6 +857,9 @@ $text['select-global']['ro-ro'] = "Global";
 $text['select-global']['ru-ru'] = "Глобальный";
 $text['select-global']['sv-se'] = "Global";
 $text['select-global']['uk-ua'] = "Global";
+$text['select-global']['zh-cn'] = "全球";
+$text['select-global']['ja-jp'] = "グローバル";
+$text['select-global']['ko-kr'] = "주요사업";
 
 $text['header-settings']['en-us'] = "Settings";
 $text['header-settings']['en-gb'] = "Settings";
@@ -773,6 +881,9 @@ $text['header-settings']['ro-ro'] = "Setări";
 $text['header-settings']['ru-ru'] = "Настройки";
 $text['header-settings']['sv-se'] = "Inställning";
 $text['header-settings']['uk-ua'] = "Налаштування";
+$text['header-settings']['zh-cn'] = "背景";
+$text['header-settings']['ja-jp'] = "コンテンツ";
+$text['header-settings']['ko-kr'] = "계정 설정";
 
 $text['header-domains']['en-us'] = "Domains";
 $text['header-domains']['en-gb'] = "Domains";
@@ -794,6 +905,9 @@ $text['header-domains']['ro-ro'] = "Domenii";
 $text['header-domains']['ru-ru'] = "Домены";
 $text['header-domains']['sv-se'] = "Domäner";
 $text['header-domains']['uk-ua'] = "Домени";
+$text['header-domains']['zh-cn'] = "领域";
+$text['header-domains']['ja-jp'] = "ドメイン";
+$text['header-domains']['ko-kr'] = "이름 *";
 
 $text['header-domain_setting-edit']['en-us'] = "Domain Setting";
 $text['header-domain_setting-edit']['en-gb'] = "Domain Setting";
@@ -815,6 +929,9 @@ $text['header-domain_setting-edit']['ro-ro'] = "Setarea domeniului";
 $text['header-domain_setting-edit']['ru-ru'] = "Настройки домена";
 $text['header-domain_setting-edit']['sv-se'] = "Domän Inställning";
 $text['header-domain_setting-edit']['uk-ua'] = "Налаштування домену";
+$text['header-domain_setting-edit']['zh-cn'] = "A. 设定";
+$text['header-domain_setting-edit']['ja-jp'] = "ドメイン設定";
+$text['header-domain_setting-edit']['ko-kr'] = "도메인 설정";
 
 $text['header-domain_setting-add']['en-us'] = "Domain Setting Add";
 $text['header-domain_setting-add']['en-gb'] = "Domain Setting Add";
@@ -836,6 +953,9 @@ $text['header-domain_setting-add']['ro-ro'] = "Adăugați setări de domeniu";
 $text['header-domain_setting-add']['ru-ru'] = "Добавить настройки домена";
 $text['header-domain_setting-add']['sv-se'] = "Lägg Till Domän Inställning";
 $text['header-domain_setting-add']['uk-ua'] = "Параметри домену";
+$text['header-domain_setting-add']['zh-cn'] = "A. 组建机构";
+$text['header-domain_setting-add']['ja-jp'] = "ドメイン設定の追加";
+$text['header-domain_setting-add']['ko-kr'] = "도메인 설정 Add";
 
 $text['description-setting_enabled']['en-us'] = "Set the status of this default setting.";
 $text['description-setting_enabled']['en-gb'] = "Set the status of this default setting.";
@@ -857,6 +977,9 @@ $text['description-setting_enabled']['ro-ro'] = "Setați starea acestei setări 
 $text['description-setting_enabled']['ru-ru'] = "Установить этот параметр в значение по умолчанию.";
 $text['description-setting_enabled']['sv-se'] = "Ange status på denna standard inställning.";
 $text['description-setting_enabled']['uk-ua'] = "Встановіть стан цього параметра за замовчуванням.";
+$text['description-setting_enabled']['zh-cn'] = "确定这一缺省情况。";
+$text['description-setting_enabled']['ja-jp'] = "このデフォルト設定のステータスを設定します。";
+$text['description-setting_enabled']['ko-kr'] = "이 기본 설정의 상태를 설정합니다.";
 
 $text['description-parent_domain']['en-us'] = "Set the parent domain.";
 $text['description-parent_domain']['en-gb'] = "Set the parent domain.";
@@ -878,6 +1001,9 @@ $text['description-parent_domain']['ro-ro'] = "Setați domeniul părinte.";
 $text['description-parent_domain']['ru-ru'] = "Установить родительский домен.";
 $text['description-parent_domain']['sv-se'] = "Ange Överordan Domän.";
 $text['description-parent_domain']['uk-ua'] = "Вкажіть батьківський домен";
+$text['description-parent_domain']['zh-cn'] = "确立母系。";
+$text['description-parent_domain']['ja-jp'] = "親ドメインを設定します。";
+$text['description-parent_domain']['ko-kr'] = "부모 도메인 설정.";
 
 $text['description-order']['en-us'] = "Set the order for this array element.";
 $text['description-order']['en-gb'] = "Set the order for this array element.";
@@ -899,6 +1025,9 @@ $text['description-order']['ro-ro'] = "Setați ordinea pentru acest element de m
 $text['description-order']['ru-ru'] = "Установите порядок для этого элемента массива.";
 $text['description-order']['sv-se'] = "Ställ in ordningen för detta element.";
 $text['description-order']['uk-ua'] = "Вкажіть порядок для масиву елементів";
+$text['description-order']['zh-cn'] = "确定这一阵列要素的顺序。";
+$text['description-order']['ja-jp'] = "この配列要素の順番を設定します。";
+$text['description-order']['ko-kr'] = "이 배열 요소의 순서를 설정합니다.";
 
 $text['description-name']['en-us'] = "Enter the name of the domain.";
 $text['description-name']['en-gb'] = "Enter the name of the domain.";
@@ -920,6 +1049,9 @@ $text['description-name']['ro-ro'] = "Introduceți numele domeniului.";
 $text['description-name']['ru-ru'] = "Введите имя домена.";
 $text['description-name']['sv-se'] = "Ange namn på Domänen.";
 $text['description-name']['uk-ua'] = "Вкажіть назву домену";
+$text['description-name']['zh-cn'] = "填写域名。";
+$text['description-name']['ja-jp'] = "ドメインの名前を入力します。";
+$text['description-name']['ko-kr'] = "도메인 이름을 입력하십시오.";
 
 $text['description-domains']['en-us'] = "Control the list of domains to manage.";
 $text['description-domains']['en-gb'] = "Control the list of domains to manage.";
@@ -941,6 +1073,9 @@ $text['description-domains']['ro-ro'] = "Controlați lista de domenii de gestion
 $text['description-domains']['ru-ru'] = "Списк доменов для управления.";
 $text['description-domains']['sv-se'] = "Kontrollera lista med Domäner att hantera.";
 $text['description-domains']['uk-ua'] = "Список доменів для керування";
+$text['description-domains']['zh-cn'] = "控制管理领域清单。";
+$text['description-domains']['ja-jp'] = "管理するドメインのリストを制御します。";
+$text['description-domains']['ko-kr'] = "도메인의 목록을 관리합니다.";
 
 $text['description-domain_setting-edit']['en-us'] = "Edit a setting for this domain.";
 $text['description-domain_setting-edit']['en-gb'] = "Edit a setting for this domain.";
@@ -962,6 +1097,9 @@ $text['description-domain_setting-edit']['ro-ro'] = "Editați o setare pentru ac
 $text['description-domain_setting-edit']['ru-ru'] = "Изменить настройки для домена.";
 $text['description-domain_setting-edit']['sv-se'] = "Ändra en inställning för denna Domän.";
 $text['description-domain_setting-edit']['uk-ua'] = "Редагування параметрів для домену";
+$text['description-domain_setting-edit']['zh-cn'] = "成为这方面的一个环境。";
+$text['description-domain_setting-edit']['ja-jp'] = "このドメインの設定を編集します。";
+$text['description-domain_setting-edit']['ko-kr'] = "이 도메인의 설정을 편집합니다.";
 
 $text['description-domain_setting-add']['en-us'] = "Add a setting for this domain.";
 $text['description-domain_setting-add']['en-gb'] = "Add a setting for this domain.";
@@ -983,6 +1121,9 @@ $text['description-domain_setting-add']['ro-ro'] = "Adăugați o setare pentru a
 $text['description-domain_setting-add']['ru-ru'] = "Добавить настройку для домена.";
 $text['description-domain_setting-add']['sv-se'] = "Lägg Till en inställning för denna Domän.";
 $text['description-domain_setting-add']['uk-ua'] = "Додавання параметра для домену";
+$text['description-domain_setting-add']['zh-cn'] = "添加这方面的环境。";
+$text['description-domain_setting-add']['ja-jp'] = "このドメインの設定を追加します。";
+$text['description-domain_setting-add']['ko-kr'] = "이 도메인에 대한 설정 추가.";
 
 $text['description-domain_enabled']['en-us'] = "Set the status of the domain.";
 $text['description-domain_enabled']['en-gb'] = "Set the status of the domain.";
@@ -1004,6 +1145,9 @@ $text['description-domain_enabled']['ro-ro'] = "Setați starea domeniului.";
 $text['description-domain_enabled']['ru-ru'] = "Установить статус домена.";
 $text['description-domain_enabled']['sv-se'] = "Ange status för Domänen.";
 $text['description-domain_enabled']['uk-ua'] = "Вкажіть стан домену";
+$text['description-domain_enabled']['zh-cn'] = "确立该领域的地位。";
+$text['description-domain_enabled']['ja-jp'] = "ドメインのステータスを設定します。";
+$text['description-domain_enabled']['ko-kr'] = "도메인의 상태를 설정합니다.";
 
 $text['description-domain-edit']['en-us'] = "Edit the details of this domain.";
 $text['description-domain-edit']['en-gb'] = "Edit the details of this domain.";
@@ -1025,6 +1169,9 @@ $text['description-domain-edit']['ro-ro'] = "Editați detaliile acestui domeniu.
 $text['description-domain-edit']['ru-ru'] = "Редактирование сведений о домене.";
 $text['description-domain-edit']['sv-se'] = "Ändra detaljer för denna Domän.";
 $text['description-domain-edit']['uk-ua'] = "Редагування деталей домену";
+$text['description-domain-edit']['zh-cn'] = "了解该领域的细节。";
+$text['description-domain-edit']['ja-jp'] = "このドメインの詳細を編集します。";
+$text['description-domain-edit']['ko-kr'] = "이 도메인의 세부 사항을 편집합니다.";
 
 $text['description-domain-add']['en-us'] = "Enter the domain details below.";
 $text['description-domain-add']['en-gb'] = "Enter the domain details below.";
@@ -1046,5 +1193,8 @@ $text['description-domain-add']['ro-ro'] = "Introduceți detaliile domeniului ma
 $text['description-domain-add']['ru-ru'] = "Введите данные домена ниже.";
 $text['description-domain-add']['sv-se'] = "Ange domändetaljer nedan.";
 $text['description-domain-add']['uk-ua'] = "Введіть дані домену нижче.";
+$text['description-domain-add']['zh-cn'] = "查阅以下领域细节。";
+$text['description-domain-add']['ja-jp'] = "ドメインの詳細を入力してください。";
+$text['description-domain-add']['ko-kr'] = "아래 도메인 세부 사항을 입력하십시오.";
 
 ?>

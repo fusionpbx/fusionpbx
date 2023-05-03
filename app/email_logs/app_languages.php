@@ -20,6 +20,9 @@ $text['title-view_email']['ro-ro'] = "";
 $text['title-view_email']['ru-ru'] = "Просмотр Электронной Почты";
 $text['title-view_email']['sv-se'] = "Visa E-post";
 $text['title-view_email']['uk-ua'] = "Перегляд електронної пошти";
+$text['title-view_email']['zh-cn'] = "电子邮件";
+$text['title-view_email']['ja-jp'] = "メールを見る";
+$text['title-view_email']['ko-kr'] = "이메일 *";
 
 $text['title-emails']['en-us'] = "Email Logs";
 $text['title-emails']['en-gb'] = "Email Logs";
@@ -41,6 +44,9 @@ $text['title-emails']['ro-ro'] = "";
 $text['title-emails']['ru-ru'] = "Электронная Почта";
 $text['title-emails']['sv-se'] = "E-post";
 $text['title-emails']['uk-ua'] = "Журнали електронної пошти";
+$text['title-emails']['zh-cn'] = "电子邮箱:logs";
+$text['title-emails']['ja-jp'] = "メールログ";
+$text['title-emails']['ko-kr'] = "이메일 로그";
 
 $text['message-resend_failed']['en-us'] = "Resend Failed";
 $text['message-resend_failed']['en-gb'] = "Resend Failed";
@@ -62,6 +68,9 @@ $text['message-resend_failed']['ro-ro'] = "";
 $text['message-resend_failed']['ru-ru'] = "Повторная отправка не удалась";
 $text['message-resend_failed']['sv-se'] = "Skicka Misslyckade Igen";
 $text['message-resend_failed']['uk-ua'] = "Рекомендація";
+$text['message-resend_failed']['zh-cn'] = "2. 复审失败";
+$text['message-resend_failed']['ja-jp'] = "失敗したまま";
+$text['message-resend_failed']['ko-kr'] = "실패한 것";
 
 $text['message-message_resent']['en-us'] = "Message(s) Resent";
 $text['message-message_resent']['en-gb'] = "Message(s) Resent";
@@ -83,6 +92,9 @@ $text['message-message_resent']['ro-ro'] = "";
 $text['message-message_resent']['ru-ru'] = "Это сообщение было отправлено повторно";
 $text['message-message_resent']['sv-se'] = "Meddelande Skickades";
 $text['message-message_resent']['uk-ua'] = "Повідомлення(и) Резент";
+$text['message-message_resent']['zh-cn'] = "背 景";
+$text['message-message_resent']['ja-jp'] = "メッセージ";
+$text['message-message_resent']['ko-kr'] = "성명(영문)";
 
 $text['message-invalid_email']['en-us'] = "Invalid Email";
 $text['message-invalid_email']['en-gb'] = "Invalid Email";
@@ -104,6 +116,9 @@ $text['message-invalid_email']['ro-ro'] = "";
 $text['message-invalid_email']['ru-ru'] = "Несуществующий адрес электронной почты";
 $text['message-invalid_email']['sv-se'] = "Ogiltig E-postadress";
 $text['message-invalid_email']['uk-ua'] = "Веб-сайт";
+$text['message-invalid_email']['zh-cn'] = "电子邮件";
+$text['message-invalid_email']['ja-jp'] = "無効なメール";
+$text['message-invalid_email']['ko-kr'] = "잘못된 이메일";
 
 $text['message-decoding_error']['en-us'] = "MIME Message Decoding Error";
 $text['message-decoding_error']['en-gb'] = "MIME Message Decoding Error";
@@ -125,6 +140,9 @@ $text['message-decoding_error']['ro-ro'] = "";
 $text['message-decoding_error']['ru-ru'] = "Ошибка декодирования MIME сообщения";
 $text['message-decoding_error']['sv-se'] = "MIME Message Decoding Erro";
 $text['message-decoding_error']['uk-ua'] = "МАЙМ Помилка декодування повідомлення";
+$text['message-decoding_error']['zh-cn'] = "M. 监 测  Message";
+$text['message-decoding_error']['ja-jp'] = "マイム メッセージの解読の間違い";
+$text['message-decoding_error']['ko-kr'] = "기본 정보 메시지 디코딩 오류";
 
 $text['message-download_failed']['en-us'] = "Download Failed";
 $text['message-download_failed']['en-gb'] = "Download Failed";
@@ -146,6 +164,9 @@ $text['message-download_failed']['ro-ro'] = "Download Failed";
 $text['message-download_failed']['ru-ru'] = "Download Failed";
 $text['message-download_failed']['sv-se'] = "Download Failed";
 $text['message-download_failed']['uk-ua'] = "Download Failed";
+$text['message-download_failed']['zh-cn'] = "下载";
+$text['message-download_failed']['ja-jp'] = "ダウンロード失敗";
+$text['message-download_failed']['ko-kr'] = "다운로드 Failed";
 
 $text['label-type_voicemail']['en-us'] = "Voicemail";
 $text['label-type_voicemail']['en-gb'] = "Voicemail";
@@ -167,6 +188,9 @@ $text['label-type_voicemail']['ro-ro'] = "";
 $text['label-type_voicemail']['ru-ru'] = "Голосовая Почта";
 $text['label-type_voicemail']['sv-se'] = "Röstbrevlåda";
 $text['label-type_voicemail']['uk-ua'] = "Голосування";
+$text['label-type_voicemail']['zh-cn'] = "电话";
+$text['label-type_voicemail']['ja-jp'] = "ボイスメール";
+$text['label-type_voicemail']['ko-kr'] = "연락처";
 
 $text['label-type_missed']['en-us'] = "Missed Call";
 $text['label-type_missed']['en-gb'] = "Missed Call";
@@ -188,6 +212,9 @@ $text['label-type_missed']['ro-ro'] = "";
 $text['label-type_missed']['ru-ru'] = "Пропущенный вызов";
 $text['label-type_missed']['sv-se'] = "Missat Samtal";
 $text['label-type_missed']['uk-ua'] = "пропущений Дзвінок";
+$text['label-type_missed']['zh-cn'] = "女士";
+$text['label-type_missed']['ja-jp'] = "ミス・コール";
+$text['label-type_missed']['ko-kr'] = "연락처";
 
 $text['label-type_email2fax']['en-us'] = "Email to fax report";
 $text['label-type_email2fax']['en-gb'] = "Email to fax report";
@@ -209,6 +236,9 @@ $text['label-type_email2fax']['ro-ro'] = "";
 $text['label-type_email2fax']['ru-ru'] = "Отчет Электронной Почты на факс";
 $text['label-type_email2fax']['sv-se'] = "E-post till fax rapport";
 $text['label-type_email2fax']['uk-ua'] = "Список електронної пошти до факсу";
+$text['label-type_email2fax']['zh-cn'] = "传真报告";
+$text['label-type_email2fax']['ja-jp'] = "FAXレポートへのメール";
+$text['label-type_email2fax']['ko-kr'] = "이메일 주소";
 
 $text['label-type']['en-us'] = "Type";
 $text['label-type']['en-gb'] = "Type";
@@ -230,6 +260,9 @@ $text['label-type']['ro-ro'] = "";
 $text['label-type']['ru-ru'] = "Тип";
 $text['label-type']['sv-se'] = "Typ";
 $text['label-type']['uk-ua'] = "Тип";
+$text['label-type']['zh-cn'] = "类型";
+$text['label-type']['ja-jp'] = "タイプ:";
+$text['label-type']['ko-kr'] = "제품정보";
 
 $text['label-to']['en-us'] = "To";
 $text['label-to']['en-gb'] = "To";
@@ -251,6 +284,9 @@ $text['label-to']['ro-ro'] = "";
 $text['label-to']['ru-ru'] = "To";
 $text['label-to']['sv-se'] = "Till";
 $text['label-to']['uk-ua'] = "до";
+$text['label-to']['zh-cn'] = "页: 1";
+$text['label-to']['ja-jp'] = "お問い合わせ";
+$text['label-to']['ko-kr'] = "으로";
 
 $text['label-subject']['en-us'] = "Subject";
 $text['label-subject']['en-gb'] = "Subject";
@@ -272,6 +308,9 @@ $text['label-subject']['ro-ro'] = "";
 $text['label-subject']['ru-ru'] = "Предмет";
 $text['label-subject']['sv-se'] = "Ämne";
 $text['label-subject']['uk-ua'] = "Головна";
+$text['label-subject']['zh-cn'] = "议题";
+$text['label-subject']['ja-jp'] = "コンテンツ";
+$text['label-subject']['ko-kr'] = "이름 *";
 
 $text['label-status_failed']['en-us'] = "Failed";
 $text['label-status_failed']['en-gb'] = "Failed";
@@ -293,6 +332,9 @@ $text['label-status_failed']['ro-ro'] = "";
 $text['label-status_failed']['ru-ru'] = "Не удалось";
 $text['label-status_failed']['sv-se'] = "Misslyckades";
 $text['label-status_failed']['uk-ua'] = "Неприємний";
+$text['label-status_failed']['zh-cn'] = "失败";
+$text['label-status_failed']['ja-jp'] = "失敗した";
+$text['label-status_failed']['ko-kr'] = "뚱 베어";
 
 $text['label-status']['en-us'] = "Status";
 $text['label-status']['en-gb'] = "Status";
@@ -314,6 +356,9 @@ $text['label-status']['ro-ro'] = "";
 $text['label-status']['ru-ru'] = "Статус";
 $text['label-status']['sv-se'] = "Status";
 $text['label-status']['uk-ua'] = "Статус на сервери";
+$text['label-status']['zh-cn'] = "现况";
+$text['label-status']['ja-jp'] = "ステータス";
+$text['label-status']['ko-kr'] = "주요연혁";
 
 $text['label-sent']['en-us'] = "Sent";
 $text['label-sent']['en-gb'] = "Sent";
@@ -335,6 +380,9 @@ $text['label-sent']['ro-ro'] = "";
 $text['label-sent']['ru-ru'] = "Отправленный";
 $text['label-sent']['sv-se'] = "Skickat";
 $text['label-sent']['uk-ua'] = "Сент";
+$text['label-sent']['zh-cn'] = "日期";
+$text['label-sent']['ja-jp'] = "ログイン";
+$text['label-sent']['ko-kr'] = "이름 *";
 
 $text['label-resend']['en-us'] = "Resend";
 $text['label-resend']['en-gb'] = "Resend";
@@ -356,6 +404,9 @@ $text['label-resend']['ro-ro'] = "";
 $text['label-resend']['ru-ru'] = "Отправить";
 $text['label-resend']['sv-se'] = "Skicka Igen";
 $text['label-resend']['uk-ua'] = "Реквізити";
+$text['label-resend']['zh-cn'] = "修正";
+$text['label-resend']['ja-jp'] = "リリース";
+$text['label-resend']['ko-kr'] = "이름 *";
 
 $text['label-reference_cdr']['en-us'] = "CDR";
 $text['label-reference_cdr']['en-gb'] = "CDR";
@@ -377,6 +428,9 @@ $text['label-reference_cdr']['ro-ro'] = "";
 $text['label-reference_cdr']['ru-ru'] = "CDR - История Вызовов";
 $text['label-reference_cdr']['sv-se'] = "CDR";
 $text['label-reference_cdr']['uk-ua'] = "КДР";
+$text['label-reference_cdr']['zh-cn'] = "dr";
+$text['label-reference_cdr']['ja-jp'] = "ログイン";
+$text['label-reference_cdr']['ko-kr'] = "사이트맵";
 
 $text['label-reference']['en-us'] = "Reference";
 $text['label-reference']['en-gb'] = "Reference";
@@ -398,6 +452,9 @@ $text['label-reference']['ro-ro'] = "";
 $text['label-reference']['ru-ru'] = "Справка";
 $text['label-reference']['sv-se'] = "Referens";
 $text['label-reference']['uk-ua'] = "Посилання";
+$text['label-reference']['zh-cn'] = "参考";
+$text['label-reference']['ja-jp'] = "参考文献";
+$text['label-reference']['ko-kr'] = "이름 *";
 
 $text['label-message_view']['en-us'] = "View";
 $text['label-message_view']['en-gb'] = "View";
@@ -419,6 +476,9 @@ $text['label-message_view']['ro-ro'] = "";
 $text['label-message_view']['ru-ru'] = "Посмотреть";
 $text['label-message_view']['sv-se'] = "Visa";
 $text['label-message_view']['uk-ua'] = "Переглянути";
+$text['label-message_view']['zh-cn'] = "观点";
+$text['label-message_view']['ja-jp'] = "ニュース";
+$text['label-message_view']['ko-kr'] = "- 연혁";
 
 $text['label-message']['en-us'] = "Message";
 $text['label-message']['en-gb'] = "Message";
@@ -440,6 +500,9 @@ $text['label-message']['ro-ro'] = "";
 $text['label-message']['ru-ru'] = "Сообщение";
 $text['label-message']['sv-se'] = "Meddelande";
 $text['label-message']['uk-ua'] = "Новини";
+$text['label-message']['zh-cn'] = "宣传";
+$text['label-message']['ja-jp'] = "メッセージ";
+$text['label-message']['ko-kr'] = "이름 *";
 
 $text['label-from']['en-us'] = "From";
 $text['label-from']['en-gb'] = "From";
@@ -461,6 +524,9 @@ $text['label-from']['ro-ro'] = "";
 $text['label-from']['ru-ru'] = "Из";
 $text['label-from']['sv-se'] = "Från";
 $text['label-from']['uk-ua'] = "З";
+$text['label-from']['zh-cn'] = "收入";
+$text['label-from']['ja-jp'] = "詳しくはこちら";
+$text['label-from']['ko-kr'] = "내 계정";
 
 $text['label-download']['en-us'] = "Download";
 $text['label-download']['en-gb'] = "Download";
@@ -482,6 +548,9 @@ $text['label-download']['ro-ro'] = "";
 $text['label-download']['ru-ru'] = "Загрузить";
 $text['label-download']['sv-se'] = "Ladda Ned";
 $text['label-download']['uk-ua'] = "Завантажити";
+$text['label-download']['zh-cn'] = "下载";
+$text['label-download']['ja-jp'] = "ダウンロード";
+$text['label-download']['ko-kr'] = "다운로드";
 
 $text['label-attachment']['en-us'] = "Attachment";
 $text['label-attachment']['en-gb'] = "Attachment";
@@ -503,6 +572,9 @@ $text['label-attachment']['ro-ro'] = "";
 $text['label-attachment']['ru-ru'] = "Приложение";
 $text['label-attachment']['sv-se'] = "Bifogat";
 $text['label-attachment']['uk-ua'] = "Пристрої";
+$text['label-attachment']['zh-cn'] = "附文";
+$text['label-attachment']['ja-jp'] = "添付ファイル";
+$text['label-attachment']['ko-kr'] = "관련 기사";
 
 $text['header-view_email']['en-us'] = "View Email";
 $text['header-view_email']['en-gb'] = "View Email";
@@ -524,6 +596,9 @@ $text['header-view_email']['ro-ro'] = "";
 $text['header-view_email']['ru-ru'] = "Просмотр Электронной Почты";
 $text['header-view_email']['sv-se'] = "Visa E-post";
 $text['header-view_email']['uk-ua'] = "Перегляд електронної пошти";
+$text['header-view_email']['zh-cn'] = "电子邮件";
+$text['header-view_email']['ja-jp'] = "メールを見る";
+$text['header-view_email']['ko-kr'] = "이메일 *";
 
 $text['header-emails']['en-us'] = "Emails";
 $text['header-emails']['en-gb'] = "Emails";
@@ -545,6 +620,9 @@ $text['header-emails']['ro-ro'] = "";
 $text['header-emails']['ru-ru'] = "Сообщения Электронной Почты";
 $text['header-emails']['sv-se'] = "E-post";
 $text['header-emails']['uk-ua'] = "Контакти";
+$text['header-emails']['zh-cn'] = "电子邮件";
+$text['header-emails']['ja-jp'] = "メール";
+$text['header-emails']['ko-kr'] = "이름 *";
 
 $text['header-settings']['en-us'] = "Settings";
 $text['header-settings']['en-gb'] = "Settings";
@@ -566,6 +644,9 @@ $text['header-settings']['ro-ro'] = "";
 $text['header-settings']['ru-ru'] = "Настройка";
 $text['header-settings']['sv-se'] = "Inställningar";
 $text['header-settings']['uk-ua'] = "Налаштування";
+$text['header-settings']['zh-cn'] = "背景";
+$text['header-settings']['ja-jp'] = "コンテンツ";
+$text['header-settings']['ko-kr'] = "계정 설정";
 
 $text['header-connection']['en-us'] = "Connection";
 $text['header-connection']['en-gb'] = "Connection";
@@ -587,6 +668,9 @@ $text['header-connection']['ro-ro'] = "";
 $text['header-connection']['ru-ru'] = "Подключение";
 $text['header-connection']['sv-se'] = "Anslutning";
 $text['header-connection']['uk-ua'] = "Підключення";
+$text['header-connection']['zh-cn'] = "连接";
+$text['header-connection']['ja-jp'] = "コネクション";
+$text['header-connection']['ko-kr'] = "관련 기사";
 
 $text['header-result']['en-us'] = "Result";
 $text['header-result']['en-gb'] = "Result";
@@ -608,6 +692,9 @@ $text['header-result']['ro-ro'] = "";
 $text['header-result']['ru-ru'] = "Результат";
 $text['header-result']['sv-se'] = "Resultat";
 $text['header-result']['uk-ua'] = "Почати";
+$text['header-result']['zh-cn'] = "结果";
+$text['header-result']['ja-jp'] = "結果発表";
+$text['header-result']['ko-kr'] = "제품정보";
 
 $text['description-emails']['en-us'] = "Manage failed email messages.";
 $text['description-emails']['en-gb'] = "Manage failed email messages.";
@@ -629,6 +716,9 @@ $text['description-emails']['ro-ro'] = "";
 $text['description-emails']['ru-ru'] = "Управление ошибочными сообщениями электронной почты.";
 $text['description-emails']['sv-se'] = "Hantera misslyckade e-post meddelanden.";
 $text['description-emails']['uk-ua'] = "Управління повідомленнями електронної пошти.";
+$text['description-emails']['zh-cn'] = "未能使用电子邮件。";
+$text['description-emails']['ja-jp'] = "失敗したメールメッセージを管理します。";
+$text['description-emails']['ko-kr'] = "실패한 이메일 메시지 관리.";
 
 $text['button-test']['en-us'] = "Test";
 $text['button-test']['en-gb'] = "Test";
@@ -650,6 +740,9 @@ $text['button-test']['ro-ro'] = "";
 $text['button-test']['ru-ru'] = "Испытания";
 $text['button-test']['sv-se'] = "Testa test";
 $text['button-test']['uk-ua'] = "Тести";
+$text['button-test']['zh-cn'] = "试验";
+$text['button-test']['ja-jp'] = "テスト";
+$text['button-test']['ko-kr'] = "제품정보";
 
 $text['button-send']['en-us'] = "Send";
 $text['button-send']['en-gb'] = "Send";
@@ -671,6 +764,9 @@ $text['button-send']['ro-ro'] = "";
 $text['button-send']['ru-ru'] = "Отправить";
 $text['button-send']['sv-se'] = "Skicka";
 $text['button-send']['uk-ua'] = "Відправити";
+$text['button-send']['zh-cn'] = "附录";
+$text['button-send']['ja-jp'] = "お問い合わせ";
+$text['button-send']['ko-kr'] = "지원하다";
 
 $text['button-close']['en-us'] = "Close";
 $text['button-close']['en-gb'] = "Close";
@@ -692,6 +788,9 @@ $text['button-close']['ro-ro'] = "";
 $text['button-close']['ru-ru'] = "Закрыть";
 $text['button-close']['sv-se'] = "Nära";
 $text['button-close']['uk-ua'] = "Головна";
+$text['button-close']['zh-cn'] = "近距离";
+$text['button-close']['ja-jp'] = "おすすめ";
+$text['button-close']['ko-kr'] = "기타";
 
 $text['button-resend']['en-us'] = "Resend";
 $text['button-resend']['en-gb'] = "Resend";
@@ -713,6 +812,9 @@ $text['button-resend']['ro-ro'] = "";
 $text['button-resend']['ru-ru'] = "Повторно Отправить";
 $text['button-resend']['sv-se'] = "Skicka Igen";
 $text['button-resend']['uk-ua'] = "Реквізити";
+$text['button-resend']['zh-cn'] = "修正";
+$text['button-resend']['ja-jp'] = "リリース";
+$text['button-resend']['ko-kr'] = "이름 *";
 
 $text['confirm-resend']['en-us'] = "Do you really want to resend this?";
 $text['confirm-resend']['en-gb'] = "Do you really want to resend this?";
@@ -735,5 +837,8 @@ $text['confirm-resend']['ru-ru'] = "Do you really want to resend this?";
 $text['confirm-resend']['sv-se'] = "Do you really want to resend this?";
 $text['confirm-resend']['uk-ua'] = "Do you really want to resend this?";
 $text['confirm-resend']['tr-tr'] = "Do you really want to resend this?";
+$text['confirm-resend']['zh-cn'] = "你们是否真的想要推翻这一点?";
+$text['confirm-resend']['ja-jp'] = "あなたは本当にこれを返したいですか?";
+$text['confirm-resend']['ko-kr'] = "당신은 정말로 이것을 재판매하고 싶습니까?";
 
 ?>

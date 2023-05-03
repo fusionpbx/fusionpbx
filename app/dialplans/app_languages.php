@@ -20,6 +20,9 @@ $text['title-dialplan_manager']['ro-ro'] = "";
 $text['title-dialplan_manager']['ru-ru'] = "Управление Планом Нумерации";
 $text['title-dialplan_manager']['sv-se'] = "Nummerplan Inställningar";
 $text['title-dialplan_manager']['uk-ua'] = "Керування маршрутизацією";
+$text['title-dialplan_manager']['zh-cn'] = "飞机管理员";
+$text['title-dialplan_manager']['ja-jp'] = "ダイアルプランマネージャー";
+$text['title-dialplan_manager']['ko-kr'] = "Dialplan 관리자";
 
 $text['title-dialplan_edit']['en-us'] = "Dialplan";
 $text['title-dialplan_edit']['en-gb'] = "Dialplan";
@@ -41,6 +44,9 @@ $text['title-dialplan_edit']['ro-ro'] = "";
 $text['title-dialplan_edit']['ru-ru'] = "План Нумерации";
 $text['title-dialplan_edit']['sv-se'] = "Nummerplan";
 $text['title-dialplan_edit']['uk-ua'] = "Маршрутизація";
+$text['title-dialplan_edit']['zh-cn'] = "理由陈述";
+$text['title-dialplan_edit']['ja-jp'] = "ダイアルプラン";
+$text['title-dialplan_edit']['ko-kr'] = "디알플랜";
 
 $text['title-dialplan_detail']['en-us'] = "Dialplan Detail";
 $text['title-dialplan_detail']['en-gb'] = "Dialplan Detail";
@@ -62,6 +68,9 @@ $text['title-dialplan_detail']['ro-ro'] = "";
 $text['title-dialplan_detail']['ru-ru'] = "Подробная информация о Плане Нумерации";
 $text['title-dialplan_detail']['sv-se'] = "Nummerplan Detaljer";
 $text['title-dialplan_detail']['uk-ua'] = "Деталі маршрутизації";
+$text['title-dialplan_detail']['zh-cn'] = "2. 平面图";
+$text['title-dialplan_detail']['ja-jp'] = "ダイヤルプラン詳細";
+$text['title-dialplan_detail']['ko-kr'] = "Dialplan 세부사항";
 
 $text['title-dialplan_add']['en-us'] = "Dialplan";
 $text['title-dialplan_add']['en-gb'] = "Dialplan";
@@ -83,6 +92,9 @@ $text['title-dialplan_add']['ro-ro'] = "";
 $text['title-dialplan_add']['ru-ru'] = "План Нумерации";
 $text['title-dialplan_add']['sv-se'] = "Nummerplan";
 $text['title-dialplan_add']['uk-ua'] = "Маршрутизація";
+$text['title-dialplan_add']['zh-cn'] = "理由陈述";
+$text['title-dialplan_add']['ja-jp'] = "ダイアルプラン";
+$text['title-dialplan_add']['ko-kr'] = "디알플랜";
 
 $text['title-dialplans']['en-us'] = "Dialplans";
 $text['title-dialplans']['en-gb'] = "Dialplans";
@@ -104,6 +116,9 @@ $text['title-dialplans']['ro-ro'] = "";
 $text['title-dialplans']['ru-ru'] = "План Нумерации";
 $text['title-dialplans']['sv-se'] = "Nummerplan";
 $text['title-dialplans']['uk-ua'] = "Маршрутизація";
+$text['title-dialplans']['zh-cn'] = "飞机";
+$text['title-dialplans']['ja-jp'] = "ダイアルプラン";
+$text['title-dialplans']['ko-kr'] = "디알플랜";
 
 $text['title-default_dialplan']['en-us'] = "Default Dialplan";
 $text['title-default_dialplan']['en-gb'] = "Default Dialplan";
@@ -125,6 +140,9 @@ $text['title-default_dialplan']['ro-ro'] = "";
 $text['title-default_dialplan']['ru-ru'] = "План Нумерации по умолчанию";
 $text['title-default_dialplan']['sv-se'] = "Standard Nummerplan";
 $text['title-default_dialplan']['uk-ua'] = "Маршрутизація за замовчуванням";
+$text['title-default_dialplan']['zh-cn'] = "D. 违约的解释";
+$text['title-default_dialplan']['ja-jp'] = "デフォルトダイヤルプラン";
+$text['title-default_dialplan']['ko-kr'] = "기본 Dialplan";
 
 $text['title-time_conditions']['en-us'] = "Time Conditions";
 $text['title-time_conditions']['en-gb'] = "Time Conditions";
@@ -146,6 +164,9 @@ $text['title-time_conditions']['ro-ro'] = "";
 $text['title-time_conditions']['ru-ru'] = "Временные условия";
 $text['title-time_conditions']['sv-se'] = "Tids Förhållande";
 $text['title-time_conditions']['uk-ua'] = "Часові умови";
+$text['title-time_conditions']['zh-cn'] = "时间条件";
+$text['title-time_conditions']['ja-jp'] = "時間条件";
+$text['title-time_conditions']['ko-kr'] = "시간 조건";
 
 $text['title-outbound_routes']['en-us'] = "Outbound Routes";
 $text['title-outbound_routes']['en-gb'] = "Outbound Routes";
@@ -167,6 +188,9 @@ $text['title-outbound_routes']['ro-ro'] = "";
 $text['title-outbound_routes']['ru-ru'] = "Исходящие маршруты";
 $text['title-outbound_routes']['sv-se'] = "Utgående Router";
 $text['title-outbound_routes']['uk-ua'] = "Маршрути вихідних дзвінків";
+$text['title-outbound_routes']['zh-cn'] = "外围路线";
+$text['title-outbound_routes']['ja-jp'] = "アウトバウンドルート";
+$text['title-outbound_routes']['ko-kr'] = "아웃바운드 루트";
 
 $text['title-inbound_routes']['en-us'] = "Inbound Routes";
 $text['title-inbound_routes']['en-gb'] = "Inbound Routes";
@@ -188,6 +212,9 @@ $text['title-inbound_routes']['ro-ro'] = "";
 $text['title-inbound_routes']['ru-ru'] = "Входящие маршруты";
 $text['title-inbound_routes']['sv-se'] = "Inkommande Router";
 $text['title-inbound_routes']['uk-ua'] = "Маршрути вхідних дзвінків";
+$text['title-inbound_routes']['zh-cn'] = "A. 限制路线";
+$text['title-inbound_routes']['ja-jp'] = "インバウンドルート";
+$text['title-inbound_routes']['ko-kr'] = "Inbound 노선";
 
 $text['title-queues']['en-us'] = "Queues";
 $text['title-queues']['en-gb'] = "Queues";
@@ -209,6 +236,9 @@ $text['title-queues']['ro-ro'] = "";
 $text['title-queues']['ru-ru'] = "Очереди";
 $text['title-queues']['sv-se'] = "Kö:er";
 $text['title-queues']['uk-ua'] = "Черги";
+$text['title-queues']['zh-cn'] = "询问";
+$text['title-queues']['ja-jp'] = "キュー";
+$text['title-queues']['ko-kr'] = "한국어";
 
 $text['title-other']['en-us'] = "Other";
 $text['title-other']['en-gb'] = "Other";
@@ -230,6 +260,9 @@ $text['title-other']['ro-ro'] = "";
 $text['title-other']['ru-ru'] = "Другие";
 $text['title-other']['sv-se'] = "Annat";
 $text['title-other']['uk-ua'] = "Інший";
+$text['title-other']['zh-cn'] = "其他";
+$text['title-other']['ja-jp'] = "その他";
+$text['title-other']['ko-kr'] = "기타";
 
 $text['option-check_voicemail']['en-us'] = "Check Voicemail";
 $text['option-check_voicemail']['en-gb'] = "Check Voicemail";
@@ -251,6 +284,9 @@ $text['option-check_voicemail']['ro-ro'] = "";
 $text['option-check_voicemail']['ru-ru'] = "Проверить Голосовую Почту";
 $text['option-check_voicemail']['sv-se'] = "Kontrollera röstbrevlådan";
 $text['option-check_voicemail']['uk-ua'] = "Перевірте голосову пошту";
+$text['option-check_voicemail']['zh-cn'] = "电子邮件";
+$text['option-check_voicemail']['ja-jp'] = "ボイスメールの確認";
+$text['option-check_voicemail']['ko-kr'] = "연락처";
 
 $text['option-company_directory']['en-us'] = "Company Directory";
 $text['option-company_directory']['en-gb'] = "Company Directory";
@@ -272,6 +308,9 @@ $text['option-company_directory']['ro-ro'] = "";
 $text['option-company_directory']['ru-ru'] = "Каталог компаний";
 $text['option-company_directory']['sv-se'] = "Företagskatalog";
 $text['option-company_directory']['uk-ua'] = "Каталог компаній";
+$text['option-company_directory']['zh-cn'] = "公司经理";
+$text['option-company_directory']['ja-jp'] = "会社概要";
+$text['option-company_directory']['ko-kr'] = "회사 소개";
 
 $text['option-hangup']['en-us'] = "Hangup";
 $text['option-hangup']['en-gb'] = "Hangup";
@@ -293,6 +332,9 @@ $text['option-hangup']['ro-ro'] = "";
 $text['option-hangup']['ru-ru'] = "Отбой";
 $text['option-hangup']['sv-se'] = "Lägg på";
 $text['option-hangup']['uk-ua'] = "роз'єднання";
+$text['option-hangup']['zh-cn'] = "Hang";
+$text['option-hangup']['ja-jp'] = "ハングアップ";
+$text['option-hangup']['ko-kr'] = "맨 위로";
 
 $text['option-record']['en-us'] = "Record";
 $text['option-record']['en-gb'] = "Record";
@@ -314,6 +356,9 @@ $text['option-record']['ro-ro'] = "";
 $text['option-record']['ru-ru'] = "Запись";
 $text['option-record']['sv-se'] = "Spela";
 $text['option-record']['uk-ua'] = "Запис";
+$text['option-record']['zh-cn'] = "记录";
+$text['option-record']['ja-jp'] = "レコード";
+$text['option-record']['ko-kr'] = "이름 *";
 
 $text['select-global']['en-us'] = "Global";
 $text['select-global']['en-gb'] = "Global";
@@ -335,6 +380,9 @@ $text['select-global']['ro-ro'] = "";
 $text['select-global']['ru-ru'] = "Глобальный";
 $text['select-global']['sv-se'] = "Global";
 $text['select-global']['uk-ua'] = "Глобальний";
+$text['select-global']['zh-cn'] = "全球";
+$text['select-global']['ja-jp'] = "グローバル";
+$text['select-global']['ko-kr'] = "주요사업";
 
 $text['option-year']['en-us'] = "Year";
 $text['option-year']['en-gb'] = "Year";
@@ -356,6 +404,9 @@ $text['option-year']['ro-ro'] = "";
 $text['option-year']['ru-ru'] = "Год";
 $text['option-year']['sv-se'] = "År";
 $text['option-year']['uk-ua'] = "Рік";
+$text['option-year']['zh-cn'] = "年份";
+$text['option-year']['ja-jp'] = "カレンダー";
+$text['option-year']['ko-kr'] = "1 년";
 
 $text['option-week_of_month']['en-us'] = "Week of Month";
 $text['option-week_of_month']['en-gb'] = "Week of Month";
@@ -377,6 +428,9 @@ $text['option-week_of_month']['ro-ro'] = "";
 $text['option-week_of_month']['ru-ru'] = "Неделя месяца";
 $text['option-week_of_month']['sv-se'] = "Vecka i Månad";
 $text['option-week_of_month']['uk-ua'] = "Тиждень місяця";
+$text['option-week_of_month']['zh-cn'] = "月周";
+$text['option-week_of_month']['ja-jp'] = "毎月の週";
+$text['option-week_of_month']['ko-kr'] = "달의 주";
 
 $text['option-week']['en-us'] = "Week";
 $text['option-week']['en-gb'] = "Week";
@@ -398,6 +452,9 @@ $text['option-week']['ro-ro'] = "";
 $text['option-week']['ru-ru'] = "Неделя";
 $text['option-week']['sv-se'] = "Vecka";
 $text['option-week']['uk-ua'] = "Тиждень";
+$text['option-week']['zh-cn'] = "一周";
+$text['option-week']['ja-jp'] = "週刊";
+$text['option-week']['ko-kr'] = "주 메뉴";
 
 $text['option-uuid']['en-us'] = "UUID";
 $text['option-uuid']['en-gb'] = "UUID";
@@ -419,6 +476,9 @@ $text['option-uuid']['ro-ro'] = "";
 $text['option-uuid']['ru-ru'] = "UUID";
 $text['option-uuid']['sv-se'] = "UUID";
 $text['option-uuid']['uk-ua'] = "UUID";
+$text['option-uuid']['zh-cn'] = "uuis";
+$text['option-uuid']['ja-jp'] = "ログイン";
+$text['option-uuid']['ko-kr'] = "·";
 
 $text['option-username']['en-us'] = "Username";
 $text['option-username']['en-gb'] = "Username";
@@ -440,6 +500,9 @@ $text['option-username']['ro-ro'] = "";
 $text['option-username']['ru-ru'] = "Имя Пользователя";
 $text['option-username']['sv-se'] = "Användarnamn";
 $text['option-username']['uk-ua'] = "Користувач";
+$text['option-username']['zh-cn'] = "用户名";
+$text['option-username']['ja-jp'] = "ユーザ名";
+$text['option-username']['ko-kr'] = "사용자 이름";
 
 $text['option-true']['en-us'] = "True";
 $text['option-true']['en-gb'] = "True";
@@ -461,6 +524,9 @@ $text['option-true']['ro-ro'] = "";
 $text['option-true']['ru-ru'] = "Да";
 $text['option-true']['sv-se'] = "Sann";
 $text['option-true']['uk-ua'] = "Так";
+$text['option-true']['zh-cn'] = "真";
+$text['option-true']['ja-jp'] = "ログイン";
+$text['option-true']['ko-kr'] = "이란";
 
 $text['option-source']['en-us'] = "Source";
 $text['option-source']['en-gb'] = "Source";
@@ -482,6 +548,9 @@ $text['option-source']['ro-ro'] = "";
 $text['option-source']['ru-ru'] = "Исходный";
 $text['option-source']['sv-se'] = "Källa";
 $text['option-source']['uk-ua'] = "Джерело";
+$text['option-source']['zh-cn'] = "来源";
+$text['option-source']['ja-jp'] = "ソース";
+$text['option-source']['ko-kr'] = "이름 *";
 
 $text['option-regex']['en-us'] = "Regular Expression";
 $text['option-regex']['en-gb'] = "Regular Expression";
@@ -503,6 +572,9 @@ $text['option-regex']['ro-ro'] = "";
 $text['option-regex']['ru-ru'] = "Регулярное выражение";
 $text['option-regex']['sv-se'] = "Reguljärt Uttryck";
 $text['option-regex']['uk-ua'] = "Регулярний вираз";
+$text['option-regex']['zh-cn'] = "定期发言";
+$text['option-regex']['ja-jp'] = "正規表現";
+$text['option-regex']['ko-kr'] = "일반 표현";
 
 $text['option-rdnis']['en-us'] = "RDNIS";
 $text['option-rdnis']['en-gb'] = "RDNIS";
@@ -524,6 +596,9 @@ $text['option-rdnis']['ro-ro'] = "";
 $text['option-rdnis']['ru-ru'] = "RDNIS";
 $text['option-rdnis']['sv-se'] = "RDNIS";
 $text['option-rdnis']['uk-ua'] = "RDNIS";
+$text['option-rdnis']['zh-cn'] = "rd";
+$text['option-rdnis']['ja-jp'] = "ドニス";
+$text['option-rdnis']['ko-kr'] = "사이트맵";
 
 $text['option-public']['en-us'] = "Public";
 $text['option-public']['en-gb'] = "Public";
@@ -545,6 +620,9 @@ $text['option-public']['ro-ro'] = "";
 $text['option-public']['ru-ru'] = "Публичный";
 $text['option-public']['sv-se'] = "Publik";
 $text['option-public']['uk-ua'] = "Публічний";
+$text['option-public']['zh-cn'] = "公众";
+$text['option-public']['ja-jp'] = "パブリック";
+$text['option-public']['ko-kr'] = "한국어";
 
 $text['option-on_true']['en-us'] = "On True";
 $text['option-on_true']['en-gb'] = "On True";
@@ -566,6 +644,9 @@ $text['option-on_true']['ro-ro'] = "";
 $text['option-on_true']['ru-ru'] = "Если Да";
 $text['option-on_true']['sv-se'] = "Om Sann";
 $text['option-on_true']['uk-ua'] = "Якщо так";
+$text['option-on_true']['zh-cn'] = "真";
+$text['option-on_true']['ja-jp'] = "真の";
+$text['option-on_true']['ko-kr'] = "진정한";
 
 $text['option-on_false']['en-us'] = "On False";
 $text['option-on_false']['en-gb'] = "On False";
@@ -587,6 +668,9 @@ $text['option-on_false']['ro-ro'] = "";
 $text['option-on_false']['ru-ru'] = "Если Нет";
 $text['option-on_false']['sv-se'] = "Om Falsk";
 $text['option-on_false']['uk-ua'] = "Якщо ні";
+$text['option-on_false']['zh-cn'] = "伪造";
+$text['option-on_false']['ja-jp'] = "偽物について";
+$text['option-on_false']['ko-kr'] = "에 False";
 
 $text['option-never']['en-us'] = "Never";
 $text['option-never']['en-gb'] = "Never";
@@ -608,6 +692,9 @@ $text['option-never']['ro-ro'] = "";
 $text['option-never']['ru-ru'] = "Никогда";
 $text['option-never']['sv-se'] = "Aldrig";
 $text['option-never']['uk-ua'] = "Ніколи";
+$text['option-never']['zh-cn'] = "永远";
+$text['option-never']['ja-jp'] = "決して";
+$text['option-never']['ko-kr'] = "이름 *";
 
 $text['option-network_addr']['en-us'] = "Network Address";
 $text['option-network_addr']['en-gb'] = "Network Address";
@@ -629,6 +716,9 @@ $text['option-network_addr']['ro-ro'] = "";
 $text['option-network_addr']['ru-ru'] = "Сетевые Адреса";
 $text['option-network_addr']['sv-se'] = "Nätverks-adress";
 $text['option-network_addr']['uk-ua'] = "Адреси мережі";
+$text['option-network_addr']['zh-cn'] = "网络地址";
+$text['option-network_addr']['ja-jp'] = "ネットワークアドレス";
+$text['option-network_addr']['ko-kr'] = "네트워크 주소";
 
 $text['option-month']['en-us'] = "Month";
 $text['option-month']['en-gb'] = "Month";
@@ -650,6 +740,9 @@ $text['option-month']['ro-ro'] = "";
 $text['option-month']['ru-ru'] = "Месяц";
 $text['option-month']['sv-se'] = "Månad";
 $text['option-month']['uk-ua'] = "Місяць";
+$text['option-month']['zh-cn'] = "月份";
+$text['option-month']['ja-jp'] = "カレンダー";
+$text['option-month']['ko-kr'] = "월~금";
 
 $text['option-minute_of_day']['en-us'] = "Minute of Day";
 $text['option-minute_of_day']['en-gb'] = "Minute of Day";
@@ -671,6 +764,9 @@ $text['option-minute_of_day']['ro-ro'] = "";
 $text['option-minute_of_day']['ru-ru'] = "Минута Дня";
 $text['option-minute_of_day']['sv-se'] = "Minut på Dagen";
 $text['option-minute_of_day']['uk-ua'] = "Хвилина дня";
+$text['option-minute_of_day']['zh-cn'] = "每天一分钟";
+$text['option-minute_of_day']['ja-jp'] = "一日の分";
+$text['option-minute_of_day']['ko-kr'] = "일의 분";
 
 $text['option-minute']['en-us'] = "Minute";
 $text['option-minute']['en-gb'] = "Minute";
@@ -692,6 +788,9 @@ $text['option-minute']['ro-ro'] = "";
 $text['option-minute']['ru-ru'] = "Минута";
 $text['option-minute']['sv-se'] = "Minut";
 $text['option-minute']['uk-ua'] = "Хвилина";
+$text['option-minute']['zh-cn'] = "1. 议事情况";
+$text['option-minute']['ja-jp'] = "ツイート";
+$text['option-minute']['ko-kr'] = "이름 *";
 
 $text['option-hour']['en-us'] = "Hour";
 $text['option-hour']['en-gb'] = "Hour";
@@ -713,6 +812,9 @@ $text['option-hour']['ro-ro'] = "";
 $text['option-hour']['ru-ru'] = "Час";
 $text['option-hour']['sv-se'] = "Timma";
 $text['option-hour']['uk-ua'] = "Година";
+$text['option-hour']['zh-cn'] = "小时";
+$text['option-hour']['ja-jp'] = "営業時間";
+$text['option-hour']['ko-kr'] = "시간 :";
 
 $text['option-false']['en-us'] = "False";
 $text['option-false']['en-gb'] = "False";
@@ -734,6 +836,9 @@ $text['option-false']['ro-ro'] = "";
 $text['option-false']['ru-ru'] = "Нет";
 $text['option-false']['sv-se'] = "Falsk";
 $text['option-false']['uk-ua'] = "Ні";
+$text['option-false']['zh-cn'] = "抢劫";
+$text['option-false']['ja-jp'] = "ファルス";
+$text['option-false']['ko-kr'] = "팟캐스트";
 
 $text['option-dialplan']['en-us'] = "Dialplan";
 $text['option-dialplan']['en-gb'] = "Dialplan";
@@ -755,6 +860,9 @@ $text['option-dialplan']['ro-ro'] = "";
 $text['option-dialplan']['ru-ru'] = "План Нумерации";
 $text['option-dialplan']['sv-se'] = "Nummerplan";
 $text['option-dialplan']['uk-ua'] = "Маршрутизація";
+$text['option-dialplan']['zh-cn'] = "理由陈述";
+$text['option-dialplan']['ja-jp'] = "ダイアルプラン";
+$text['option-dialplan']['ko-kr'] = "디알플랜";
 
 $text['option-destination_number']['en-us'] = "Destination Number";
 $text['option-destination_number']['en-gb'] = "Destination Number";
@@ -776,6 +884,9 @@ $text['option-destination_number']['ro-ro'] = "";
 $text['option-destination_number']['ru-ru'] = "Целевой номер";
 $text['option-destination_number']['sv-se'] = "Detsinations Nummer";
 $text['option-destination_number']['uk-ua'] = "Номер";
+$text['option-destination_number']['zh-cn'] = "数量";
+$text['option-destination_number']['ja-jp'] = "宛先番号";
+$text['option-destination_number']['ko-kr'] = "대상 번호";
 
 $text['option-day_of_year']['en-us'] = "Day of Year";
 $text['option-day_of_year']['en-gb'] = "Day of Year";
@@ -797,6 +908,9 @@ $text['option-day_of_year']['ro-ro'] = "";
 $text['option-day_of_year']['ru-ru'] = "День Года";
 $text['option-day_of_year']['sv-se'] = "Dag på Året";
 $text['option-day_of_year']['uk-ua'] = "День року";
+$text['option-day_of_year']['zh-cn'] = "年 日";
+$text['option-day_of_year']['ja-jp'] = "年末年始";
+$text['option-day_of_year']['ko-kr'] = "올해의 날";
 
 $text['option-day_of_week']['en-us'] = "Day of Week";
 $text['option-day_of_week']['en-gb'] = "Day of Week";
@@ -818,6 +932,9 @@ $text['option-day_of_week']['ro-ro'] = "";
 $text['option-day_of_week']['ru-ru'] = "День Недели";
 $text['option-day_of_week']['sv-se'] = "Dag i Vecka";
 $text['option-day_of_week']['uk-ua'] = "День тижня";
+$text['option-day_of_week']['zh-cn'] = "周日";
+$text['option-day_of_week']['ja-jp'] = "週の日";
+$text['option-day_of_week']['ko-kr'] = "주간의 날";
 
 $text['option-day_of_month']['en-us'] = "Day of Month";
 $text['option-day_of_month']['en-gb'] = "Day of Month";
@@ -839,6 +956,9 @@ $text['option-day_of_month']['ro-ro'] = "";
 $text['option-day_of_month']['ru-ru'] = "День Месяца";
 $text['option-day_of_month']['sv-se'] = "Dag i Månad";
 $text['option-day_of_month']['uk-ua'] = "День місяця";
+$text['option-day_of_month']['zh-cn'] = "月 日";
+$text['option-day_of_month']['ja-jp'] = "月の日";
+$text['option-day_of_month']['ko-kr'] = "달의 날";
 
 $text['option-context']['en-us'] = "Context";
 $text['option-context']['en-gb'] = "Context";
@@ -860,6 +980,9 @@ $text['option-context']['ro-ro'] = "";
 $text['option-context']['ru-ru'] = "Контекст";
 $text['option-context']['sv-se'] = "Context";
 $text['option-context']['uk-ua'] = "Контекст";
+$text['option-context']['zh-cn'] = "背景";
+$text['option-context']['ja-jp'] = "コンテンツ";
+$text['option-context']['ko-kr'] = "설정하기";
 
 $text['option-condition']['en-us'] = "Condition";
 $text['option-condition']['en-gb'] = "Condition";
@@ -881,6 +1004,9 @@ $text['option-condition']['ro-ro'] = "";
 $text['option-condition']['ru-ru'] = "Состояние";
 $text['option-condition']['sv-se'] = "Tillstånd";
 $text['option-condition']['uk-ua'] = "Умова";
+$text['option-condition']['zh-cn'] = "条件";
+$text['option-condition']['ja-jp'] = "インフォメーション";
+$text['option-condition']['ko-kr'] = "(주)";
 
 $text['option-chan_name']['en-us'] = "Channel Name";
 $text['option-chan_name']['en-gb'] = "Channel Name";
@@ -902,6 +1028,9 @@ $text['option-chan_name']['ro-ro'] = "";
 $text['option-chan_name']['ru-ru'] = "Имя Канала";
 $text['option-chan_name']['sv-se'] = "Namn på Kanal";
 $text['option-chan_name']['uk-ua'] = "Назва каналу";
+$text['option-chan_name']['zh-cn'] = "频道名称";
+$text['option-chan_name']['ja-jp'] = "チャネルの名前";
+$text['option-chan_name']['ko-kr'] = "채널 이름";
 
 $text['option-caller_id_number']['en-us'] = "Caller ID Number";
 $text['option-caller_id_number']['en-gb'] = "Caller ID Number";
@@ -923,6 +1052,9 @@ $text['option-caller_id_number']['ro-ro'] = "";
 $text['option-caller_id_number']['ru-ru'] = "Идентификационный номер (Caller ID) вызывающего абонента";
 $text['option-caller_id_number']['sv-se'] = "Caller ID Nummer";
 $text['option-caller_id_number']['uk-ua'] = "Caller ID Номер";
+$text['option-caller_id_number']['zh-cn'] = "Caller ID号码";
+$text['option-caller_id_number']['ja-jp'] = "発信者ID番号";
+$text['option-caller_id_number']['ko-kr'] = "전화 번호";
 
 $text['option-caller_id_name']['en-us'] = "Caller ID Name";
 $text['option-caller_id_name']['en-gb'] = "Caller ID Name";
@@ -944,6 +1076,9 @@ $text['option-caller_id_name']['ro-ro'] = "";
 $text['option-caller_id_name']['ru-ru'] = "Идентификационное имя (Caller ID) вызывающего абонента";
 $text['option-caller_id_name']['sv-se'] = "Caller ID Namn";
 $text['option-caller_id_name']['uk-ua'] = "Caller ID Ім’я";
+$text['option-caller_id_name']['zh-cn'] = "Caller ID name";
+$text['option-caller_id_name']['ja-jp'] = "呼び出し者 ID 名";
+$text['option-caller_id_name']['ko-kr'] = "ID 이름";
 
 $text['option-anti-action']['en-us'] = "Anti-Action";
 $text['option-anti-action']['en-gb'] = "Anti-Action";
@@ -965,6 +1100,9 @@ $text['option-anti-action']['ro-ro'] = "";
 $text['option-anti-action']['ru-ru'] = "Противодействие";
 $text['option-anti-action']['sv-se'] = "Anti-Aktion";
 $text['option-anti-action']['uk-ua'] = "Анти-дія";
+$text['option-anti-action']['zh-cn'] = "反行动";
+$text['option-anti-action']['ja-jp'] = "アンチアクション";
+$text['option-anti-action']['ko-kr'] = "안티-Action";
 
 $text['option-ani2']['en-us'] = "ANI2";
 $text['option-ani2']['en-gb'] = "ANI2";
@@ -986,6 +1124,9 @@ $text['option-ani2']['ro-ro'] = "";
 $text['option-ani2']['ru-ru'] = "ANI2";
 $text['option-ani2']['sv-se'] = "ANI2";
 $text['option-ani2']['uk-ua'] = "ANI2";
+$text['option-ani2']['zh-cn'] = "a";
+$text['option-ani2']['ja-jp'] = "アニー2";
+$text['option-ani2']['ko-kr'] = "아이다2";
 
 $text['option-ani']['en-us'] = "ANI";
 $text['option-ani']['en-gb'] = "ANI";
@@ -1007,6 +1148,9 @@ $text['option-ani']['ro-ro'] = "";
 $text['option-ani']['ru-ru'] = "ANI";
 $text['option-ani']['sv-se'] = "ANI";
 $text['option-ani']['uk-ua'] = "ANI";
+$text['option-ani']['zh-cn'] = "a)";
+$text['option-ani']['ja-jp'] = "アニー";
+$text['option-ani']['ko-kr'] = "이름 *";
 
 $text['option-always']['en-us'] = "Always";
 $text['option-always']['en-gb'] = "Always";
@@ -1028,6 +1172,9 @@ $text['option-always']['ro-ro'] = "";
 $text['option-always']['ru-ru'] = "Всегда";
 $text['option-always']['sv-se'] = "Alltid";
 $text['option-always']['uk-ua'] = "Завжди";
+$text['option-always']['zh-cn'] = "航道";
+$text['option-always']['ja-jp'] = "常に";
+$text['option-always']['ko-kr'] = "(주)";
 
 $text['option-action']['en-us'] = "Action";
 $text['option-action']['en-gb'] = "Action";
@@ -1049,6 +1196,9 @@ $text['option-action']['ro-ro'] = "";
 $text['option-action']['ru-ru'] = "Действие";
 $text['option-action']['sv-se'] = "Aktion";
 $text['option-action']['uk-ua'] = "Дія";
+$text['option-action']['zh-cn'] = "行动";
+$text['option-action']['ja-jp'] = "アクション";
+$text['option-action']['ko-kr'] = "(주)";
 
 $text['optgroup-condition_or_regex']['en-us'] = "Condition or Regex";
 $text['optgroup-condition_or_regex']['en-gb'] = "Condition or Regex";
@@ -1070,6 +1220,9 @@ $text['optgroup-condition_or_regex']['ro-ro'] = "";
 $text['optgroup-condition_or_regex']['ru-ru'] = "Условие или регулярное выражение";
 $text['optgroup-condition_or_regex']['sv-se'] = "Tillstånd eller Regex";
 $text['optgroup-condition_or_regex']['uk-ua'] = "Умова або регулярний вираз";
+$text['optgroup-condition_or_regex']['zh-cn'] = "条件或许可";
+$text['optgroup-condition_or_regex']['ja-jp'] = "条件またはRegex";
+$text['optgroup-condition_or_regex']['ko-kr'] = "조건 또는 Regex";
 
 $text['optgroup-applications']['en-us'] = "Applications";
 $text['optgroup-applications']['en-gb'] = "Applications";
@@ -1091,6 +1244,9 @@ $text['optgroup-applications']['ro-ro'] = "";
 $text['optgroup-applications']['ru-ru'] = "Приложения";
 $text['optgroup-applications']['sv-se'] = "Applikationer";
 $text['optgroup-applications']['uk-ua'] = "Додаток";
+$text['optgroup-applications']['zh-cn'] = "申请";
+$text['optgroup-applications']['ja-jp'] = "アプリケーション";
+$text['optgroup-applications']['ko-kr'] = "제품정보";
 
 $text['label-destination']['en-us'] = "Destination";
 $text['label-destination']['en-gb'] = "Destination";
@@ -1112,6 +1268,9 @@ $text['label-destination']['ro-ro'] = "Destinație";
 $text['label-destination']['ru-ru'] = "Направление";
 $text['label-destination']['sv-se'] = "Destination";
 $text['label-destination']['uk-ua'] = "Номер";
+$text['label-destination']['zh-cn'] = "目的地";
+$text['label-destination']['ja-jp'] = "目的地";
+$text['label-destination']['ko-kr'] = "여행 정보";
 
 $text['label-tag']['en-us'] = "Tag";
 $text['label-tag']['en-gb'] = "Tag";
@@ -1133,6 +1292,9 @@ $text['label-tag']['ro-ro'] = "";
 $text['label-tag']['ru-ru'] = "Тег";
 $text['label-tag']['sv-se'] = "Tag";
 $text['label-tag']['uk-ua'] = "Тег";
+$text['label-tag']['zh-cn'] = "租户";
+$text['label-tag']['ja-jp'] = "タグ";
+$text['label-tag']['ko-kr'] = "주요 특징";
 
 $text['label-number']['en-us'] = "Number";
 $text['label-number']['en-gb'] = "Number";
@@ -1154,6 +1316,9 @@ $text['label-number']['ro-ro'] = "";
 $text['label-number']['ru-ru'] = "Номер";
 $text['label-number']['sv-se'] = "Nummer";
 $text['label-number']['uk-ua'] = "Номер";
+$text['label-number']['zh-cn'] = "人数";
+$text['label-number']['ja-jp'] = "電話番号";
+$text['label-number']['ko-kr'] = "이름 *";
 
 $text['label-inline']['en-us'] = "Inline";
 $text['label-inline']['en-gb'] = "Inline";
@@ -1175,6 +1340,9 @@ $text['label-inline']['ro-ro'] = "";
 $text['label-inline']['ru-ru'] = "inline";
 $text['label-inline']['sv-se'] = "Inline";
 $text['label-inline']['uk-ua'] = "Inline";
+$text['label-inline']['zh-cn'] = "在线";
+$text['label-inline']['ja-jp'] = "インライン";
+$text['label-inline']['ko-kr'] = "제품정보";
 
 $text['label-group']['en-us'] = "Group";
 $text['label-group']['en-gb'] = "Group";
@@ -1196,6 +1364,9 @@ $text['label-group']['ro-ro'] = "";
 $text['label-group']['ru-ru'] = "Группа";
 $text['label-group']['sv-se'] = "Grupp";
 $text['label-group']['uk-ua'] = "Група";
+$text['label-group']['zh-cn'] = "专家组";
+$text['label-group']['ja-jp'] = "グループ";
+$text['label-group']['ko-kr'] = "그룹";
 
 $text['label-field']['en-us'] = "Field";
 $text['label-field']['en-gb'] = "Field";
@@ -1217,6 +1388,9 @@ $text['label-field']['ro-ro'] = "";
 $text['label-field']['ru-ru'] = "Поле";
 $text['label-field']['sv-se'] = "Fält";
 $text['label-field']['uk-ua'] = "Поле";
+$text['label-field']['zh-cn'] = "外地";
+$text['label-field']['ja-jp'] = "フィールド";
+$text['label-field']['ko-kr'] = "제품정보";
 
 $text['label-expression']['en-us'] = "Expression";
 $text['label-expression']['en-gb'] = "Expression";
@@ -1238,6 +1412,9 @@ $text['label-expression']['ro-ro'] = "";
 $text['label-expression']['ru-ru'] = "Выражение";
 $text['label-expression']['sv-se'] = "Uttryck";
 $text['label-expression']['uk-ua'] = "Вираз";
+$text['label-expression']['zh-cn'] = "宣 言";
+$text['label-expression']['ja-jp'] = "エクスプレス";
+$text['label-expression']['ko-kr'] = "회사 소개";
 
 $text['label-domain']['en-us'] = "Domain";
 $text['label-domain']['en-gb'] = "Domain";
@@ -1259,6 +1436,9 @@ $text['label-domain']['ro-ro'] = "";
 $text['label-domain']['ru-ru'] = "Домен";
 $text['label-domain']['sv-se'] = "Domän";
 $text['label-domain']['uk-ua'] = "Домен";
+$text['label-domain']['zh-cn'] = "领域";
+$text['label-domain']['ja-jp'] = "ドメイン";
+$text['label-domain']['ko-kr'] = "이름 *";
 
 $text['label-dialplan_detail']['en-us'] = "Dialplan Details";
 $text['label-dialplan_detail']['en-gb'] = "Dialplan Details";
@@ -1280,6 +1460,9 @@ $text['label-dialplan_detail']['ro-ro'] = "";
 $text['label-dialplan_detail']['ru-ru'] = "Подробная информация о Плане Нумерации";
 $text['label-dialplan_detail']['sv-se'] = "Nummerplan Detaljer";
 $text['label-dialplan_detail']['uk-ua'] = "Деталі маршрутизації";
+$text['label-dialplan_detail']['zh-cn'] = "详细情况";
+$text['label-dialplan_detail']['ja-jp'] = "ダイアルプラン詳細";
+$text['label-dialplan_detail']['ko-kr'] = "Dialplan 세부사항";
 
 $text['label-data']['en-us'] = "Data";
 $text['label-data']['en-gb'] = "Data";
@@ -1301,6 +1484,9 @@ $text['label-data']['ro-ro'] = "";
 $text['label-data']['ru-ru'] = "Аргумент";
 $text['label-data']['sv-se'] = "Data";
 $text['label-data']['uk-ua'] = "Дані";
+$text['label-data']['zh-cn'] = "数据";
+$text['label-data']['ja-jp'] = "データデータ";
+$text['label-data']['ko-kr'] = "자료실";
 
 $text['label-hostname']['en-us'] = "Hostname";
 $text['label-hostname']['en-gb'] = "Hostname";
@@ -1322,6 +1508,9 @@ $text['label-hostname']['ro-ro'] = "Hostname";
 $text['label-hostname']['ru-ru'] = "Имя Хоста";
 $text['label-hostname']['sv-se'] = "Hostname";
 $text['label-hostname']['uk-ua'] = "Назва хоста";
+$text['label-hostname']['zh-cn'] = "东道国";
+$text['label-hostname']['ja-jp'] = "ホスト名";
+$text['label-hostname']['ko-kr'] = "이름 *";
 
 $text['label-continue']['en-us'] = "Continue";
 $text['label-continue']['en-gb'] = "Continue";
@@ -1343,6 +1532,9 @@ $text['label-continue']['ro-ro'] = "";
 $text['label-continue']['ru-ru'] = "Продолжить";
 $text['label-continue']['sv-se'] = "Fortsätt";
 $text['label-continue']['uk-ua'] = "Продовжити";
+$text['label-continue']['zh-cn'] = "继续";
+$text['label-continue']['ja-jp'] = "お問い合わせ";
+$text['label-continue']['ko-kr'] = "계속하기";
 
 $text['label-context']['en-us'] = "Context";
 $text['label-context']['en-gb'] = "Context";
@@ -1364,6 +1556,9 @@ $text['label-context']['ro-ro'] = "";
 $text['label-context']['ru-ru'] = "Контекст";
 $text['label-context']['sv-se'] = "Context";
 $text['label-context']['uk-ua'] = "Контекст";
+$text['label-context']['zh-cn'] = "背景";
+$text['label-context']['ja-jp'] = "コンテンツ";
+$text['label-context']['ko-kr'] = "설정하기";
 
 $text['label-condition_2']['en-us'] = "Condition 2";
 $text['label-condition_2']['en-gb'] = "Condition 2";
@@ -1385,6 +1580,9 @@ $text['label-condition_2']['ro-ro'] = "";
 $text['label-condition_2']['ru-ru'] = "Условие 2";
 $text['label-condition_2']['sv-se'] = "Tillstånd 2";
 $text['label-condition_2']['uk-ua'] = "Умова 2";
+$text['label-condition_2']['zh-cn'] = "条件2";
+$text['label-condition_2']['ja-jp'] = "条件 2";
+$text['label-condition_2']['ko-kr'] = "조건 2";
 
 $text['label-condition_1']['en-us'] = "Condition 1";
 $text['label-condition_1']['en-gb'] = "Condition 1";
@@ -1406,6 +1604,9 @@ $text['label-condition_1']['ro-ro'] = "";
 $text['label-condition_1']['ru-ru'] = "Условие 1";
 $text['label-condition_1']['sv-se'] = "Tillstånd 1";
 $text['label-condition_1']['uk-ua'] = "Умова 1";
+$text['label-condition_1']['zh-cn'] = "条件1";
+$text['label-condition_1']['ja-jp'] = "条件 1";
+$text['label-condition_1']['ko-kr'] = "조건 1";
 
 $text['label-break']['en-us'] = "Break";
 $text['label-break']['en-gb'] = "Break";
@@ -1427,6 +1628,9 @@ $text['label-break']['ro-ro'] = "";
 $text['label-break']['ru-ru'] = "break";
 $text['label-break']['sv-se'] = "Paus";
 $text['label-break']['uk-ua'] = "Перервати";
+$text['label-break']['zh-cn'] = "页: 1";
+$text['label-break']['ja-jp'] = "ブレイクアウト";
+$text['label-break']['ko-kr'] = "기타";
 
 $text['label-application']['en-us'] = "Application";
 $text['label-application']['en-gb'] = "Application";
@@ -1448,6 +1652,9 @@ $text['label-application']['ro-ro'] = "";
 $text['label-application']['ru-ru'] = "Приложение";
 $text['label-application']['sv-se'] = "Applikation";
 $text['label-application']['uk-ua'] = "Додаток";
+$text['label-application']['zh-cn'] = "申请";
+$text['label-application']['ja-jp'] = "アプリケーション";
+$text['label-application']['ko-kr'] = "제품 설명";
 
 $text['label-action_2']['en-us'] = "Action 2";
 $text['label-action_2']['en-gb'] = "Action 2";
@@ -1469,6 +1676,9 @@ $text['label-action_2']['ro-ro'] = "";
 $text['label-action_2']['ru-ru'] = "Действие 2";
 $text['label-action_2']['sv-se'] = "Aktion 2";
 $text['label-action_2']['uk-ua'] = "Дія 2";
+$text['label-action_2']['zh-cn'] = "行动2";
+$text['label-action_2']['ja-jp'] = "アクション2";
+$text['label-action_2']['ko-kr'] = "활동 2";
 
 $text['label-action_1']['en-us'] = "Action 1";
 $text['label-action_1']['en-gb'] = "Action 1";
@@ -1490,6 +1700,9 @@ $text['label-action_1']['ro-ro'] = "";
 $text['label-action_1']['ru-ru'] = "Действие 1";
 $text['label-action_1']['sv-se'] = "Aktion 1";
 $text['label-action_1']['uk-ua'] = "Дія 1";
+$text['label-action_1']['zh-cn'] = "行动1";
+$text['label-action_1']['ja-jp'] = "アクション1";
+$text['label-action_1']['ko-kr'] = "활동 1";
 
 $text['header-time_conditions']['en-us'] = "Time Conditions";
 $text['header-time_conditions']['en-gb'] = "Time Conditions";
@@ -1511,6 +1724,9 @@ $text['header-time_conditions']['ro-ro'] = "";
 $text['header-time_conditions']['ru-ru'] = "Временные Условия";
 $text['header-time_conditions']['sv-se'] = "Tids Förhållande";
 $text['header-time_conditions']['uk-ua'] = "Часові умови";
+$text['header-time_conditions']['zh-cn'] = "时间条件";
+$text['header-time_conditions']['ja-jp'] = "時間条件";
+$text['header-time_conditions']['ko-kr'] = "시간 조건";
 
 $text['header-queues']['en-us'] = "Queues";
 $text['header-queues']['en-gb'] = "Queues";
@@ -1532,6 +1748,9 @@ $text['header-queues']['ro-ro'] = "";
 $text['header-queues']['ru-ru'] = "Очереди";
 $text['header-queues']['sv-se'] = "Kö:er";
 $text['header-queues']['uk-ua'] = "Черги";
+$text['header-queues']['zh-cn'] = "询问";
+$text['header-queues']['ja-jp'] = "キュー";
+$text['header-queues']['ko-kr'] = "한국어";
 
 $text['header-outbound_routes']['en-us'] = "Outbound Routes";
 $text['header-outbound_routes']['en-gb'] = "Outbound Routes";
@@ -1553,6 +1772,9 @@ $text['header-outbound_routes']['ro-ro'] = "";
 $text['header-outbound_routes']['ru-ru'] = "Исходящий Маршрут";
 $text['header-outbound_routes']['sv-se'] = "Utgående Router";
 $text['header-outbound_routes']['uk-ua'] = "Маршрути вихідних дзвінків";
+$text['header-outbound_routes']['zh-cn'] = "外围路线";
+$text['header-outbound_routes']['ja-jp'] = "アウトバウンドルート";
+$text['header-outbound_routes']['ko-kr'] = "아웃바운드 루트";
 
 $text['header-inbound_routes']['en-us'] = "Inbound Routes";
 $text['header-inbound_routes']['en-gb'] = "Inbound Routes";
@@ -1574,6 +1796,9 @@ $text['header-inbound_routes']['ro-ro'] = "";
 $text['header-inbound_routes']['ru-ru'] = "Входящий Маршрут";
 $text['header-inbound_routes']['sv-se'] = "Inkommande Router";
 $text['header-inbound_routes']['uk-ua'] = "Маршрути вхідних дзвінків";
+$text['header-inbound_routes']['zh-cn'] = "A. 限制路线";
+$text['header-inbound_routes']['ja-jp'] = "インバウンドルート";
+$text['header-inbound_routes']['ko-kr'] = "Inbound 노선";
 
 $text['header-dialplan_manager']['en-us'] = "Dialplan Manager";
 $text['header-dialplan_manager']['en-gb'] = "Dialplan Manager";
@@ -1595,6 +1820,9 @@ $text['header-dialplan_manager']['ro-ro'] = "";
 $text['header-dialplan_manager']['ru-ru'] = "Управление Планом Нумерации";
 $text['header-dialplan_manager']['sv-se'] = "Nummerplan Inställningar";
 $text['header-dialplan_manager']['uk-ua'] = "Керування маршрутизацією";
+$text['header-dialplan_manager']['zh-cn'] = "飞机管理员";
+$text['header-dialplan_manager']['ja-jp'] = "ダイアルプランマネージャー";
+$text['header-dialplan_manager']['ko-kr'] = "Dialplan 관리자";
 
 $text['header-dialplan_detail']['en-us'] = "Dialplan Detail";
 $text['header-dialplan_detail']['en-gb'] = "Dialplan Detail";
@@ -1616,6 +1844,9 @@ $text['header-dialplan_detail']['ro-ro'] = "";
 $text['header-dialplan_detail']['ru-ru'] = "Подробная информация о Плане Нумерации";
 $text['header-dialplan_detail']['sv-se'] = "Nummerplan Detaljer";
 $text['header-dialplan_detail']['uk-ua'] = "Деталі маршрутизації";
+$text['header-dialplan_detail']['zh-cn'] = "2. 平面图";
+$text['header-dialplan_detail']['ja-jp'] = "ダイヤルプラン詳細";
+$text['header-dialplan_detail']['ko-kr'] = "Dialplan 세부사항";
 
 $text['header-dialplan-edit']['en-us'] = "Dialplan";
 $text['header-dialplan-edit']['en-gb'] = "Dialplan";
@@ -1637,6 +1868,9 @@ $text['header-dialplan-edit']['ro-ro'] = "";
 $text['header-dialplan-edit']['ru-ru'] = "План Нумерации";
 $text['header-dialplan-edit']['sv-se'] = "Nummerplan";
 $text['header-dialplan-edit']['uk-ua'] = "Маршрутизація";
+$text['header-dialplan-edit']['zh-cn'] = "理由陈述";
+$text['header-dialplan-edit']['ja-jp'] = "ダイアルプラン";
+$text['header-dialplan-edit']['ko-kr'] = "디알플랜";
 
 $text['header-dialplan-add']['en-us'] = "Dialplan";
 $text['header-dialplan-add']['en-gb'] = "Dialplan";
@@ -1658,6 +1892,9 @@ $text['header-dialplan-add']['ro-ro'] = "";
 $text['header-dialplan-add']['ru-ru'] = "План Нумерации";
 $text['header-dialplan-add']['sv-se'] = "Nummerplan";
 $text['header-dialplan-add']['uk-ua'] = "Маршрутизація";
+$text['header-dialplan-add']['zh-cn'] = "理由陈述";
+$text['header-dialplan-add']['ja-jp'] = "ダイアルプラン";
+$text['header-dialplan-add']['ko-kr'] = "디알플랜";
 
 $text['header-default_dialplan']['en-us'] = "Default Dialplan";
 $text['header-default_dialplan']['en-gb'] = "Default Dialplan";
@@ -1679,6 +1916,9 @@ $text['header-default_dialplan']['ro-ro'] = "";
 $text['header-default_dialplan']['ru-ru'] = "Стандартный План Нумерации";
 $text['header-default_dialplan']['sv-se'] = "Standard Nummerplan";
 $text['header-default_dialplan']['uk-ua'] = "Маршрутизація за замовчуванням";
+$text['header-default_dialplan']['zh-cn'] = "D. 违约的解释";
+$text['header-default_dialplan']['ja-jp'] = "デフォルトダイヤルプラン";
+$text['header-default_dialplan']['ko-kr'] = "기본 Dialplan";
 
 $text['header-conditions_and_actions']['en-us'] = "Conditions and Actions";
 $text['header-conditions_and_actions']['en-gb'] = "Conditions and Actions";
@@ -1700,6 +1940,9 @@ $text['header-conditions_and_actions']['ro-ro'] = "";
 $text['header-conditions_and_actions']['ru-ru'] = "Условия и действия";
 $text['header-conditions_and_actions']['sv-se'] = "Tillstånd och Aktioner";
 $text['header-conditions_and_actions']['uk-ua'] = "Умови та дії";
+$text['header-conditions_and_actions']['zh-cn'] = "条件和行动";
+$text['header-conditions_and_actions']['ja-jp'] = "条件と行動";
+$text['header-conditions_and_actions']['ko-kr'] = "조건 및 행동";
 
 $text['description-time_conditions']['en-us'] = "Time conditions route calls based on time conditions. You can use time conditions to send calls to an IVR Menu, External numbers, Scripts, or other destinations.";
 $text['description-time_conditions']['en-gb'] = "Time conditions route calls based on time conditions. You can use time conditions to send calls to an IVR Menu, External numbers, Scripts, or other destinations.";
@@ -1721,6 +1964,9 @@ $text['description-time_conditions']['ro-ro'] = "";
 $text['description-time_conditions']['ru-ru'] = "Временные условия маршрутизации вызовов. Вы можете использовать временные условия для отправки вызовов в меню IVR, на внешние номера, сценарии или на другие адресаты.";
 $text['description-time_conditions']['sv-se'] = "Tidsvillkor styr samtal baserat på tidsvillkor. Du kan använda Tidsvillkor för att skicka samtal till IVR Meny, Externa nummer, Script eller andra destinationer.";
 $text['description-time_conditions']['uk-ua'] = "Маршрут дзвінків буде залежати від часу. Можна використовувати для переадресації на голосове меню (IVR), на зовнішні номери, сценарії, або інші напрямки.";
+$text['description-time_conditions']['zh-cn'] = "时间条件取决于时间条件。 您可以利用时间条件向IVR Menu、外部号码、文字或其他目的地发出电话。";
+$text['description-time_conditions']['ja-jp'] = "時間条件の経路は時間条件に基づいて呼び出します。 IVRメニュー、外部番号、スクリプト、またはその他の宛先への呼び出しを送信する時間条件を使用できます。";
+$text['description-time_conditions']['ko-kr'] = "시간 상태 경로 호출 시간 상태. IVR 메뉴, 외부 번호, 스크립트, 기타 목적지로 전화를 보낼 시간 조건을 사용할 수 있습니다.";
 
 $text['description-queues']['en-us'] = "Queues are used to setup waiting lines for callers. Also known as FIFO Queues.";
 $text['description-queues']['en-gb'] = "Queues are used to setup waiting lines for callers. Also known as FIFO Queues.";
@@ -1742,6 +1988,9 @@ $text['description-queues']['ro-ro'] = "";
 $text['description-queues']['ru-ru'] = "Очереди используются для установки ожидающих линий для вызывающих абонентов. Также известны как очереди FIFO.";
 $text['description-queues']['sv-se'] = "Kö används för att kö:a inkommande samtal. Även känd som FIFO (Firts In First Out) Kö.";
 $text['description-queues']['uk-ua'] = "Черги використовуються для встановлення очікування на лінії для тих, хто дзвонить. Також відомо як черги FIFO. ";
+$text['description-queues']['zh-cn'] = "询问被用来为打电话者设立等候线。 还称为FFO Queues。";
+$text['description-queues']['ja-jp'] = "Queues は、発信者のための待ち行を設定するために使われます。 FIFO Queuesとしても知られています。";
+$text['description-queues']['ko-kr'] = "Queues는 콜러에 대한 대기 라인을 설정하는 데 사용됩니다. 또한 FIFO Queues로 알려져 있습니다.";
 
 $text['description-outbound_routes']['en-us'] = "Route outbound calls to gateways, tdm, enum and more. When a call matches the conditions the call to outbound routes.";
 $text['description-outbound_routes']['en-gb'] = "Route outbound calls to gateways, tdm, enum and more. When a call matches the conditions the call to outbound routes.";
@@ -1763,6 +2012,9 @@ $text['description-outbound_routes']['ro-ro'] = "";
 $text['description-outbound_routes']['ru-ru'] = "Маршрутизация исходящих вызовов на шлюзы, сети общего пользования. Когда вызов соответствует условиям вызова исходящих маршрутов.";
 $text['description-outbound_routes']['sv-se'] = "Styr utgående samtal till Gateways, tdm, enum mm. När ett samtal matchar villkoren så styrs samtalet till utgående route.";
 $text['description-outbound_routes']['uk-ua'] = "Спрямовує вихідні дзвінки на шлюзи, TDM, ENUM на інше, якщо дзвінок відповідає умовам вихідної маршрутизації.";
+$text['description-outbound_routes']['zh-cn'] = "这条路向门道、高潮、高潮和更多。 当电话符合通航路线的条件时。";
+$text['description-outbound_routes']['ja-jp'] = "ゲートウェイ、tdm、列などへのアウトバウンド呼び出しをルートします。 呼び出しが条件に一致するとき、呼び出しはアウトバウンド ルートにマッチします。";
+$text['description-outbound_routes']['ko-kr'] = "Gateway, tdm, enum 등과 같은 아웃바운드 호출. 호출이 조건을 일치시킬 때 아웃바운드 경로.";
 
 $text['description-inbound_routes']['en-us'] = "Route incoming calls to destinations based on one or more conditions. It can send incoming calls to an IVR Menu, Call Group, Extension, External Number, Script. Order is important when an anti-action is used or when there are multiple conditions that match.";
 $text['description-inbound_routes']['en-gb'] = "Route incoming calls to destinations based on one or more conditions. It can send incoming calls to an IVR Menu, Call Group, Extension, External Number, Script. Order is important when an anti-action is used or when there are multiple conditions that match.";
@@ -1784,6 +2036,9 @@ $text['description-inbound_routes']['ro-ro'] = "";
 $text['description-inbound_routes']['ru-ru'] = "Маршрутизация входящих вызовы в пункты назначения на основе одного или нескольких условий. Он может отправлять входящие вызовы в Голосовое Меню (IVR), Группу Вызовов, внутренний или внешний номер, скрипт. Порядок важен, когда используется противодействие или когда есть несколько условий, которые соответствуют.";
 $text['description-inbound_routes']['sv-se'] = "Styr inkommande samtal till destinationer baserat på ett eller fler villkor. Den kan styra samtal till IVR Meny, Ring Grupp, Anknytning, Externt Nummer, Script. Ordningen är viktig när en anti-aktion används eller när flera villkor matchar.";
 $text['description-inbound_routes']['uk-ua'] = "Направляє вхідні дзвінки відповідно до умов. Можна спрямувати вхідні дзвінки на голосове меню (IVR), групу, розширення, зовнішній номер, сценарій. Порядок важливий якщо використовується анти-дія або за наявності декількох умов, які співпадають.";
+$text['description-inbound_routes']['zh-cn'] = "一条或多条条件向目的地发出路线。 它可以向一个名为IVR Menu的传票小组、推广小组、外部号码、文字。 当使用反行动或存在多种条件时,命令十分重要。";
+$text['description-inbound_routes']['ja-jp'] = "1つ以上の条件に基づいて目的地への着信コールをルートします。 IVRメニュー、コールグループ、エクステンション、外部番号、スクリプトに着信コールを送信できます。 反作用が使用されるとき、または一致する複数の条件がある場合、注文は重要です。";
+$text['description-inbound_routes']['ko-kr'] = "한 개 이상의 조건을 바탕으로 목적지로 가는 경로. IVR 메뉴, Call Group, Extension, External Number, Script로 수신 통화를 보낼 수 있습니다. 반대로 반응이 사용될 때 순서는 중요합니다 또는 일치하는 다수 조건이 있을 때.";
 
 $text['description-dialplan_manager-superadmin']['en-us'] = "The dialplan is used to setup call destinations based on conditions and context. You can use the dialplan to send calls to gateways, auto attendants, external numbers, to scripts, or any destination.";
 $text['description-dialplan_manager-superadmin']['en-gb'] = "The dialplan is used to setup call destinations based on conditions and context. You can use the dialplan to send calls to gateways, auto attendants, external numbers, to scripts, or any destination.";
@@ -1805,6 +2060,9 @@ $text['description-dialplan_manager-superadmin']['ro-ro'] = "";
 $text['description-dialplan_manager-superadmin']['ru-ru'] = "План Нумерации используется для настройки целевых вызовов на основе условий и контекста. Вы можете использовать диалплан для отправки вызовов шлюзам, автосекретарям, внешним номерам, сценариям или любому месту назначения.";
 $text['description-dialplan_manager-superadmin']['sv-se'] = "Nummerplanen används för att koppla samtal baserat på villkor och Context. Du kan använda nummerplanen för att skicka samtal till Gateways, IVR, Externa Nummer, Script eller andra destinationer.";
 $text['description-dialplan_manager-superadmin']['uk-ua'] = "Маршрутизація використовується для визначення напрямку дзвінка відповідно до умов і контексту. Можна спрямувати виклики на шлюзи, автоматичне обслуговування, зовнішні номери, сценарії або інші напрямки. ";
+$text['description-dialplan_manager-superadmin']['zh-cn'] = "平面图用于根据条件和背景确定点名。 你们可以利用平面向网关、汽车接机、外部号码、文字或目的地发出电话。";
+$text['description-dialplan_manager-superadmin']['ja-jp'] = "ダイヤルプランは条件やコンテキストに基づいてコール先を設定するために使われます。 ダイヤルプランを使用して、ゲートウェイ、自動出席者、外部番号、スクリプト、または任意の宛先への呼び出しを送信できます。";
+$text['description-dialplan_manager-superadmin']['ko-kr'] = "다이얼플랜은 조건과 상황에 따라 설정 통화 대상에 사용됩니다. 다이얼 플랜을 사용하여 게이트웨이, 자동 출석자, 외부 번호, 스크립트 또는 모든 목적지로 전화를 보낼 수 있습니다.";
 
 $text['description-dialplan_manager']['en-us'] = "The dialplan provides a view of some of the feature codes, as well as the IVR Menu, Conferences, Queues and other destinations.";
 $text['description-dialplan_manager']['en-gb'] = "The dialplan provides a view of some of the feature codes, as well as the IVR Menu, Conferences, Queues and other destinations.";
@@ -1826,6 +2084,9 @@ $text['description-dialplan_manager']['ro-ro'] = "";
 $text['description-dialplan_manager']['ru-ru'] = "В Плане Нумерации представлены некоторые коды функций, а также Голосовые Меню (IVR), Конференции, Очереди и другие пункты назначения.";
 $text['description-dialplan_manager']['sv-se'] = "Nummerplanen ger en vy över några av funktionskoderna samt IVR Meny, Konferenser, Kö:er och andra destinationer.";
 $text['description-dialplan_manager']['uk-ua'] = "В маршрутизації можна побачити деякі особливості, такі як голосові меню (IVR), конференції, черги і інші напрямки.";
+$text['description-dialplan_manager']['zh-cn'] = "平面图对一些特点代码以及IVR Menu、会议、Quues和其他目的地提供了看法。";
+$text['description-dialplan_manager']['ja-jp'] = "ダイヤルプランは、IVRメニュー、会議、キューイングなどの機能コードをご覧いただけます。";
+$text['description-dialplan_manager']['ko-kr'] = "다이얼플랜은 일부 기능 코드뿐만 아니라 IVR 메뉴, 컨퍼런스, 큐 및 기타 목적지를 볼 수 있습니다.";
 
 $text['description-dialplan-edit']['en-us'] = "Dialplan include general settings.";
 $text['description-dialplan-edit']['en-gb'] = "Dialplan include general settings.";
@@ -1847,6 +2108,9 @@ $text['description-dialplan-edit']['ro-ro'] = "";
 $text['description-dialplan-edit']['ru-ru'] = "В План Нумерации входят общие конфигурации.";
 $text['description-dialplan-edit']['sv-se'] = "Nummerplan inkluderar allmänna inställningar.";
 $text['description-dialplan-edit']['uk-ua'] = "Маршрутизація має загальні налаштування";
+$text['description-dialplan-edit']['zh-cn'] = "行动计划包括一般环境。";
+$text['description-dialplan-edit']['ja-jp'] = "Dialplanには一般的な設定が含まれています。";
+$text['description-dialplan-edit']['ko-kr'] = "Dialplan은 일반 설정이 포함되어 있습니다.";
 
 $text['description-default_dialplan']['en-us'] = "The default dialplan is used to setup call destinations based on conditions and context. You can use the dialplan to send calls to gateways, auto attendants, external numbers, to scripts, or any destination.";
 $text['description-default_dialplan']['en-gb'] = "The default dialplan is used to setup call destinations based on conditions and context. You can use the dialplan to send calls to gateways, auto attendants, external numbers, to scripts, or any destination.";
@@ -1868,6 +2132,9 @@ $text['description-default_dialplan']['ro-ro'] = "";
 $text['description-default_dialplan']['ru-ru'] = "Стандартный План Нумерации используется для настройки целевых вызовов на основе условий и контекста. Вы можете использовать План Нумерации для отправки вызовов шлюзам, автосекретарям, внешним номерам, сценариям или любому месту назначения.";
 $text['description-default_dialplan']['sv-se'] = "Standard Nummerplanen används för att koppla samtal baserat på villkor och Context. Du kan använda nummerplanen för att skicka samtal till Gateways, IVR, Externa Nummer, Script eller andra destinationer.";
 $text['description-default_dialplan']['uk-ua'] = "Маршрутизація за замовчуванням використовується для визначення напрямку дзвінка відповідно до умов і контексту. Можна спрямувати виклики на шлюзи, автоматичне обслуговування, зовнішні номери, сценарії або інші напрямки. ";
+$text['description-default_dialplan']['zh-cn'] = "缺省计划用于根据条件和情况确定点名。 你们可以利用平面向网关、汽车接机、外部号码、文字或目的地发出电话。";
+$text['description-default_dialplan']['ja-jp'] = "デフォルトのダイヤルプランは、条件とコンテキストに基づいてコール先を設定するために使用されます。 ダイヤルプランを使用して、ゲートウェイ、自動出席者、外部番号、スクリプト、または任意の宛先への呼び出しを送信できます。";
+$text['description-default_dialplan']['ko-kr'] = "디폴트 다이얼플랜은 조건과 상황에 따라 설정된 통화 대상에 사용됩니다. 다이얼 플랜을 사용하여 게이트웨이, 자동 출석자, 외부 번호, 스크립트 또는 모든 목적지로 전화를 보낼 수 있습니다.";
 
 $text['description-conditions_and_actions']['en-us'] = "The following conditions, actions and anti-actions are used in the dialplan to direct call flow. Each is processed in order that it is given. Use as many conditions, actions or anti-actions as needed.";
 $text['description-conditions_and_actions']['en-gb'] = "The following conditions, actions and anti-actions are used in the dialplan to direct call flow. Each is processed in order that it is given. Use as many conditions, actions or anti-actions as needed.";
@@ -1889,6 +2156,9 @@ $text['description-conditions_and_actions']['ro-ro'] = "";
 $text['description-conditions_and_actions']['ru-ru'] = "Следующие условия, действия и противодействия используются в Плане Нумерации для направления потока вызовов. Используйте столько условий, действий или противодействий, сколько необходимо.";
 $text['description-conditions_and_actions']['sv-se'] = "Följande villkor, aktioner och anti-aktioner används i nummerplanen för samtalsflöden. Varje utförs i ordning. Använd så många villkor, aktioner eller anti-aktioner som behövs.";
 $text['description-conditions_and_actions']['uk-ua'] = "Наступні умови, дії і анти-дії в маршрутизації направляють потік дзвінка. Вони обробляються в заданому порядку. Використовуйте їх як завгодно.";
+$text['description-conditions_and_actions']['zh-cn'] = "The following conditions, actions and anti-actions are used in the dialplan to direct calls flow. 每一条都经过处理,以便予以处理。 视需要使用尽可能多的条件、行动或反行动。";
+$text['description-conditions_and_actions']['ja-jp'] = "以下の条件、アクション、アクションはダイヤルプランで直接コールフローに使用されます。 それぞれが処理されます。 必要に応じて、多くの条件、行動または反作用として使用してください。";
+$text['description-conditions_and_actions']['ko-kr'] = "다음과 같은 조건, 행동 및 행동은 다이얼 플랜에서 직접 통화 흐름에 사용됩니다. 각각은 주어진 순서에서 가공됩니다. 많은 조건, 행동 또는 안티 액션으로 사용.";
 
 $text['billing-warning']['en-us'] = "If you are using fusionpbx billing application, make sure to add accountcode and carrier variables.";
 $text['billing-warning']['en-gb'] = "If you are using fusionpbx billing application, make sure to add accountcode and carrier variables.";
@@ -1910,5 +2180,8 @@ $text['billing-warning']['ro-ro'] = "";
 $text['billing-warning']['ru-ru'] = "Если вы используете приложение биллинга FusionPBX, обязательно добавьте код Учетной Записи и переменные-несущие.";
 $text['billing-warning']['sv-se'] = "Om du använder fusionpbx fakturering program, se till att lägga till 'account code' och operatör variabler";
 $text['billing-warning']['uk-ua'] = "Якщо ви користуєтеся додатком для тарифікації в fusionpbx, то переконайтеся, щоб додано змінні код облікового запису і оператора. ";
+$text['billing-warning']['zh-cn'] = "如果您正在使用聚氯乙烯账单,确保添加账户代码和承运人变量。";
+$text['billing-warning']['ja-jp'] = "fusionpbx 課金アプリケーションを使用している場合は、必ずアカウントコードとキャリア変数を追加してください。";
+$text['billing-warning']['ko-kr'] = "fusionpbx 청구 응용 프로그램을 사용하는 경우 accountcode 및 캐리어 변수를 추가해야합니다.";
 
 ?>

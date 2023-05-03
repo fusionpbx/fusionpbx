@@ -20,6 +20,9 @@ $text['title-gateways']['ro-ro'] = "portal";
 $text['title-gateways']['ru-ru'] = "Шлюзы";
 $text['title-gateways']['sv-se'] = "Gateways";
 $text['title-gateways']['uk-ua'] = "Шлюзи";
+$text['title-gateways']['zh-cn'] = "门户";
+$text['title-gateways']['ja-jp'] = "ゲートウェイ";
+$text['title-gateways']['ko-kr'] = "오시는 길";
 
 $text['title-gateway']['en-us'] = "Gateway";
 $text['title-gateway']['en-gb'] = "Gateway";
@@ -41,6 +44,9 @@ $text['title-gateway']['ro-ro'] = "portal";
 $text['title-gateway']['ru-ru'] = "Шлюз";
 $text['title-gateway']['sv-se'] = "Gateway";
 $text['title-gateway']['uk-ua'] = "Шлюз";
+$text['title-gateway']['zh-cn'] = "网关";
+$text['title-gateway']['ja-jp'] = "ゲートウェイ";
+$text['title-gateway']['ko-kr'] = "오시는 길";
 
 $text['select-global']['en-us'] = "Global";
 $text['select-global']['en-gb'] = "Global";
@@ -62,6 +68,9 @@ $text['select-global']['ro-ro'] = "Global";
 $text['select-global']['ru-ru'] = "Глобальный";
 $text['select-global']['sv-se'] = "Global";
 $text['select-global']['uk-ua'] = "Global";
+$text['select-global']['zh-cn'] = "全球";
+$text['select-global']['ja-jp'] = "グローバル";
+$text['select-global']['ko-kr'] = "주요사업";
 
 $text['message-maximum_gateways']['en-us'] = "Maximum Gateways:";
 $text['message-maximum_gateways']['en-gb'] = "Maximum Gateways:";
@@ -83,6 +92,9 @@ $text['message-maximum_gateways']['ro-ro'] = "Gateways maxime:";
 $text['message-maximum_gateways']['ru-ru'] = "Максимум Шлюзов:";
 $text['message-maximum_gateways']['sv-se'] = "Max antal Gateways:";
 $text['message-maximum_gateways']['uk-ua'] = "Максимальна кількість шлюзів";
+$text['message-maximum_gateways']['zh-cn'] = "最大通道:";
+$text['message-maximum_gateways']['ja-jp'] = "最大ゲートウェイ:";
+$text['message-maximum_gateways']['ko-kr'] = "최대 게이트웨이:";
 
 $text['message-gateway_started']['en-us'] = "Gateway(s) Started";
 $text['message-gateway_started']['en-gb'] = "Gateway(s) Started";
@@ -104,6 +116,9 @@ $text['message-gateway_started']['ro-ro'] = "Gateway(s) Started";
 $text['message-gateway_started']['ru-ru'] = "Gateway(s) Started";
 $text['message-gateway_started']['sv-se'] = "Gateway(s) Started";
 $text['message-gateway_started']['uk-ua'] = "Gateway(s) Started";
+$text['message-gateway_started']['zh-cn'] = "门户开通";
+$text['message-gateway_started']['ja-jp'] = "ゲートウェイ開始";
+$text['message-gateway_started']['ko-kr'] = "Gateway(s) 시작";
 
 $text['message-gateway_stopped']['en-us'] = "Gateway(s) Stopped";
 $text['message-gateway_stopped']['en-gb'] = "Gateway(s) Stopped";
@@ -125,6 +140,9 @@ $text['message-gateway_stopped']['ro-ro'] = "Gateway(s) Stopped";
 $text['message-gateway_stopped']['ru-ru'] = "Gateway(s) Stopped";
 $text['message-gateway_stopped']['sv-se'] = "Gateway(s) Stopped";
 $text['message-gateway_stopped']['uk-ua'] = "Gateway(s) Stopped";
+$text['message-gateway_stopped']['zh-cn'] = "关门";
+$text['message-gateway_stopped']['ja-jp'] = "ゲートウェイ停止";
+$text['message-gateway_stopped']['ko-kr'] = "게이트웨이";
 
 $text['confirm-start_gateways']['en-us'] = "Are you sure you wish to START these gateways?";
 $text['confirm-start_gateways']['en-gb'] = "Are you sure you wish to START these gateways?";
@@ -146,6 +164,9 @@ $text['confirm-start_gateways']['ro-ro'] = "Are you sure you wish to START these
 $text['confirm-start_gateways']['ru-ru'] = "Are you sure you wish to START these gateways?";
 $text['confirm-start_gateways']['sv-se'] = "Are you sure you wish to START these gateways?";
 $text['confirm-start_gateways']['uk-ua'] = "Are you sure you wish to START these gateways?";
+$text['confirm-start_gateways']['zh-cn'] = "你们是否希望《裁武条约》的这些门户?";
+$text['confirm-start_gateways']['ja-jp'] = "これらのゲートウェイを起動しますか?";
+$text['confirm-start_gateways']['ko-kr'] = "이 게이트웨이를 시작하시겠습니까?";
 
 $text['confirm-stop_gateways']['en-us'] = "Are you sure you wish to STOP these gateways?";
 $text['confirm-stop_gateways']['en-gb'] = "Are you sure you wish to STOP these gateways?";
@@ -167,6 +188,9 @@ $text['confirm-stop_gateways']['ro-ro'] = "Are you sure you wish to STOP these g
 $text['confirm-stop_gateways']['ru-ru'] = "Are you sure you wish to STOP these gateways?";
 $text['confirm-stop_gateways']['sv-se'] = "Are you sure you wish to STOP these gateways?";
 $text['confirm-stop_gateways']['uk-ua'] = "Are you sure you wish to STOP these gateways?";
+$text['confirm-stop_gateways']['zh-cn'] = "你们是否希望STOP这些通道?";
+$text['confirm-stop_gateways']['ja-jp'] = "これらのゲートウェイを STOP したいですか?";
+$text['confirm-stop_gateways']['ko-kr'] = "이러한 게이트웨이를 STOP를 원하십니까?";
 
 $text['label-username']['en-us'] = "Username";
 $text['label-username']['en-gb'] = "Username";
@@ -188,6 +212,9 @@ $text['label-username']['ro-ro'] = "Utilizator";
 $text['label-username']['ru-ru'] = "Имя пользователя";
 $text['label-username']['sv-se'] = "Användarnamn";
 $text['label-username']['uk-ua'] = "Ім’я користувача";
+$text['label-username']['zh-cn'] = "用户名";
+$text['label-username']['ja-jp'] = "ユーザ名";
+$text['label-username']['ko-kr'] = "사용자 이름";
 
 $text['label-supress_cng']['en-us'] = "Supress CNG";
 $text['label-supress_cng']['en-gb'] = "Supress CNG";
@@ -209,6 +236,9 @@ $text['label-supress_cng']['ro-ro'] = "";
 $text['label-supress_cng']['ru-ru'] = "Подавление CNG";
 $text['label-supress_cng']['sv-se'] = "Göm CNG";
 $text['label-supress_cng']['uk-ua'] = "Supress CNG";
+$text['label-supress_cng']['zh-cn'] = "press";
+$text['label-supress_cng']['ja-jp'] = "サプレス CNG";
+$text['label-supress_cng']['ko-kr'] = "수압 CNG";
 
 $text['label-status-stopped']['en-us'] = "Stopped";
 $text['label-status-stopped']['en-gb'] = "Stopped";
@@ -230,6 +260,9 @@ $text['label-status-stopped']['ro-ro'] = "Oprit";
 $text['label-status-stopped']['ru-ru'] = "Остановлен";
 $text['label-status-stopped']['sv-se'] = "Stoppad";
 $text['label-status-stopped']['uk-ua'] = "Зупинено";
+$text['label-status-stopped']['zh-cn'] = "停止";
+$text['label-status-stopped']['ja-jp'] = "停止";
+$text['label-status-stopped']['ko-kr'] = "뚱 베어";
 
 $text['label-status-running']['en-us'] = "Running";
 $text['label-status-running']['en-gb'] = "Running";
@@ -251,6 +284,9 @@ $text['label-status-running']['ro-ro'] = "Alergare";
 $text['label-status-running']['ru-ru'] = "Запущено";
 $text['label-status-running']['sv-se'] = "I drift";
 $text['label-status-running']['uk-ua'] = "Запущено";
+$text['label-status-running']['zh-cn'] = "驾驶";
+$text['label-status-running']['ja-jp'] = "ランニング";
+$text['label-status-running']['ko-kr'] = "지원하다";
 
 $text['label-status']['en-us'] = "Status";
 $text['label-status']['en-gb'] = "Status";
@@ -272,6 +308,9 @@ $text['label-status']['ro-ro'] = "Stare";
 $text['label-status']['ru-ru'] = "Статус";
 $text['label-status']['sv-se'] = "Status";
 $text['label-status']['uk-ua'] = "Статус";
+$text['label-status']['zh-cn'] = "现况";
+$text['label-status']['ja-jp'] = "ステータス";
+$text['label-status']['ko-kr'] = "주요연혁";
 
 $text['label-state']['en-us'] = "State";
 $text['label-state']['en-gb'] = "State";
@@ -293,6 +332,9 @@ $text['label-state']['ro-ro'] = "Stat";
 $text['label-state']['ru-ru'] = "Cостояние";
 $text['label-state']['sv-se'] = "Status";
 $text['label-state']['uk-ua'] = "Стан";
+$text['label-state']['zh-cn'] = "国家";
+$text['label-state']['ja-jp'] = "ステータス";
+$text['label-state']['ko-kr'] = "주요 특징";
 
 $text['label-sip_cid_type']['en-us'] = "Sip CID Type";
 $text['label-sip_cid_type']['en-gb'] = "Sip CID Type";
@@ -314,6 +356,9 @@ $text['label-sip_cid_type']['ro-ro'] = "";
 $text['label-sip_cid_type']['ru-ru'] = "Введите SIP идентификатор (CID) вызывающего абонента";
 $text['label-sip_cid_type']['sv-se'] = "Sip CID Typ";
 $text['label-sip_cid_type']['uk-ua'] = "Sip CID Type";
+$text['label-sip_cid_type']['zh-cn'] = "Sip CID 类型";
+$text['label-sip_cid_type']['ja-jp'] = "シップCID タイプ:";
+$text['label-sip_cid_type']['ko-kr'] = "RSS 피드 제품정보";
 
 $text['label-retry_seconds']['en-us'] = "Retry Seconds";
 $text['label-retry_seconds']['en-gb'] = "Retry Seconds";
@@ -335,6 +380,9 @@ $text['label-retry_seconds']['ro-ro'] = "reîncerca secunde";
 $text['label-retry_seconds']['ru-ru'] = "Повтор попытки регистрации";
 $text['label-retry_seconds']['sv-se'] = "Retry sekunder";
 $text['label-retry_seconds']['uk-ua'] = "Retry Seconds ";
+$text['label-retry_seconds']['zh-cn'] = "第二次";
+$text['label-retry_seconds']['ja-jp'] = "再試行秒";
+$text['label-retry_seconds']['ko-kr'] = "Retry 초";
 
 $text['label-register_transport']['en-us'] = "Register Transport";
 $text['label-register_transport']['en-gb'] = "Register Transport";
@@ -356,6 +404,9 @@ $text['label-register_transport']['ro-ro'] = "Inregistrati- Transport";
 $text['label-register_transport']['ru-ru'] = "Регистрация Транспорта";
 $text['label-register_transport']['sv-se'] = "Register Transport";
 $text['label-register_transport']['uk-ua'] = "Транспорт для реєстрації";
+$text['label-register_transport']['zh-cn'] = "登记册运输";
+$text['label-register_transport']['ja-jp'] = "交通登録";
+$text['label-register_transport']['ko-kr'] = "회사연혁";
 
 $text['label-contact_params']['en-us'] = "Contact Params";
 $text['label-contact_params']['en-gb'] = "Contact Params";
@@ -377,6 +428,9 @@ $text['label-contact_params']['ro-ro'] = "";
 $text['label-contact_params']['ru-ru'] = "Парамы контактов";
 $text['label-contact_params']['sv-se'] = "Kontakta Params";
 $text['label-contact_params']['uk-ua'] = "Контакти";
+$text['label-contact_params']['zh-cn'] = "联系人";
+$text['label-contact_params']['ja-jp'] = "コンタクトパラメータ";
+$text['label-contact_params']['ko-kr'] = "연락처 Params";
 
 $text['label-register_proxy']['en-us'] = "Register Proxy";
 $text['label-register_proxy']['en-gb'] = "Register Proxy";
@@ -398,6 +452,9 @@ $text['label-register_proxy']['ro-ro'] = "Proxy înregistrare în";
 $text['label-register_proxy']['ru-ru'] = "Прокси-сервер регистрации";
 $text['label-register_proxy']['sv-se'] = "Register Proxy";
 $text['label-register_proxy']['uk-ua'] = "Проксі для реєстрації";
+$text['label-register_proxy']['zh-cn'] = "注册";
+$text['label-register_proxy']['ja-jp'] = "プロキシ登録";
+$text['label-register_proxy']['ko-kr'] = "Proxy 등록";
 
 $text['label-register']['en-us'] = "Register";
 $text['label-register']['en-gb'] = "Register";
@@ -419,6 +476,9 @@ $text['label-register']['ro-ro'] = "Inregistreaza-te";
 $text['label-register']['ru-ru'] = "Регистрация";
 $text['label-register']['sv-se'] = "Register";
 $text['label-register']['uk-ua'] = "Реєстрація";
+$text['label-register']['zh-cn'] = "登记册";
+$text['label-register']['ja-jp'] = "会員登録";
+$text['label-register']['ko-kr'] = "이름 *";
 
 $text['label-realm']['en-us'] = "Realm";
 $text['label-realm']['en-gb'] = "Realm";
@@ -440,6 +500,9 @@ $text['label-realm']['ro-ro'] = "domeniu";
 $text['label-realm']['ru-ru'] = "Область";
 $text['label-realm']['sv-se'] = "Realm";
 $text['label-realm']['uk-ua'] = "Realm";
+$text['label-realm']['zh-cn'] = "实际";
+$text['label-realm']['ja-jp'] = "レアルム";
+$text['label-realm']['ko-kr'] = "뚱 베어";
 
 $text['label-proxy']['en-us'] = "Proxy";
 $text['label-proxy']['en-gb'] = "Proxy";
@@ -461,6 +524,9 @@ $text['label-proxy']['ro-ro'] = "împuternicire";
 $text['label-proxy']['ru-ru'] = "Прокси";
 $text['label-proxy']['sv-se'] = "Proxy";
 $text['label-proxy']['uk-ua'] = "Проксі";
+$text['label-proxy']['zh-cn'] = "oxy";
+$text['label-proxy']['ja-jp'] = "プロキシ";
+$text['label-proxy']['ko-kr'] = "다운로드";
 
 $text['label-profile']['en-us'] = "Profile";
 $text['label-profile']['en-gb'] = "Profile";
@@ -482,6 +548,9 @@ $text['label-profile']['ro-ro'] = "Profil";
 $text['label-profile']['ru-ru'] = "Профиль";
 $text['label-profile']['sv-se'] = "Profil";
 $text['label-profile']['uk-ua'] = "Профіль";
+$text['label-profile']['zh-cn'] = "概况";
+$text['label-profile']['ja-jp'] = "プロフィール";
+$text['label-profile']['ko-kr'] = "제품정보";
 
 $text['label-ping']['en-us'] = "Ping";
 $text['label-ping']['en-gb'] = "Ping";
@@ -503,6 +572,9 @@ $text['label-ping']['ro-ro'] = "Ping";
 $text['label-ping']['ru-ru'] = "Пинг";
 $text['label-ping']['sv-se'] = "Ping";
 $text['label-ping']['uk-ua'] = "Пінг";
+$text['label-ping']['zh-cn'] = "管道";
+$text['label-ping']['ja-jp'] = "ピン";
+$text['label-ping']['ko-kr'] = "핑거";
 
 $text['label-ping_min']['en-us'] = "Ping Min";
 $text['label-ping_min']['en-gb'] = "Ping Min";
@@ -524,6 +596,9 @@ $text['label-ping_min']['ro-ro'] = "";
 $text['label-ping_min']['ru-ru'] = "ping min";
 $text['label-ping_min']['sv-se'] = "Ping min";
 $text['label-ping_min']['uk-ua'] = "Пінг Мін";
+$text['label-ping_min']['zh-cn'] = "ping min";
+$text['label-ping_min']['ja-jp'] = "ピンミン";
+$text['label-ping_min']['ko-kr'] = "Ping 분";
 
 $text['label-ping_max']['en-us'] = "Ping Max";
 $text['label-ping_max']['en-gb'] = "Ping Max";
@@ -545,6 +620,9 @@ $text['label-ping_max']['ro-ro'] = "";
 $text['label-ping_max']['ru-ru'] = "ping max";
 $text['label-ping_max']['sv-se'] = "Ping max";
 $text['label-ping_max']['uk-ua'] = "Пінг Макс";
+$text['label-ping_max']['zh-cn'] = "ping max";
+$text['label-ping_max']['ja-jp'] = "Ping 最高";
+$text['label-ping_max']['ko-kr'] = "최대 Ping";
 
 $text['label-contact_in_ping']['en-us'] = "Contact in Ping";
 $text['label-contact_in_ping']['en-gb'] = "contact in ping";
@@ -566,6 +644,9 @@ $text['label-contact_in_ping']['ro-ro'] = "";
 $text['label-contact_in_ping']['ru-ru'] = "Контакты в Пинг";
 $text['label-contact_in_ping']['sv-se'] = "Kontakt i Ping";
 $text['label-contact_in_ping']['uk-ua'] = "Контакти";
+$text['label-contact_in_ping']['zh-cn'] = "联系安排";
+$text['label-contact_in_ping']['ja-jp'] = "Pingのお問い合わせ";
+$text['label-contact_in_ping']['ko-kr'] = "연락하기";
 
 $text['label-password']['en-us'] = "Password";
 $text['label-password']['en-gb'] = "Password";
@@ -587,6 +668,9 @@ $text['label-password']['ro-ro'] = "Parolă";
 $text['label-password']['ru-ru'] = "Пароль";
 $text['label-password']['sv-se'] = "Lösenord";
 $text['label-password']['uk-ua'] = "Пароль";
+$text['label-password']['zh-cn'] = "密码";
+$text['label-password']['ja-jp'] = "パスワード";
+$text['label-password']['ko-kr'] = "비밀번호";
 
 $text['label-outbound_proxy']['en-us'] = "Outbound Proxy";
 $text['label-outbound_proxy']['en-gb'] = "Outbound Proxy";
@@ -608,6 +692,9 @@ $text['label-outbound_proxy']['ro-ro'] = "Proxy de ieșire";
 $text['label-outbound_proxy']['ru-ru'] = "Исходящий прокси-сервер";
 $text['label-outbound_proxy']['sv-se'] = "Utgående Proxy";
 $text['label-outbound_proxy']['uk-ua'] = "Вихідний проксі";
+$text['label-outbound_proxy']['zh-cn'] = "外部附价";
+$text['label-outbound_proxy']['ja-jp'] = "Outbound プロキシ";
+$text['label-outbound_proxy']['ko-kr'] = "아웃바운드 프록시";
 
 $text['label-gateway']['en-us'] = "Gateway";
 $text['label-gateway']['en-gb'] = "Gateway";
@@ -629,6 +716,9 @@ $text['label-gateway']['ro-ro'] = "Portal";
 $text['label-gateway']['ru-ru'] = "Шлюз";
 $text['label-gateway']['sv-se'] = "Gateway";
 $text['label-gateway']['uk-ua'] = "Шлюз";
+$text['label-gateway']['zh-cn'] = "网关";
+$text['label-gateway']['ja-jp'] = "ゲートウェイ";
+$text['label-gateway']['ko-kr'] = "오시는 길";
 
 $text['label-from_user']['en-us'] = "From User";
 $text['label-from_user']['en-gb'] = "From User";
@@ -650,6 +740,9 @@ $text['label-from_user']['ro-ro'] = "de la utilizator";
 $text['label-from_user']['ru-ru'] = "От пользователя";
 $text['label-from_user']['sv-se'] = "From User";
 $text['label-from_user']['uk-ua'] = "Від користувача";
+$text['label-from_user']['zh-cn'] = "用户";
+$text['label-from_user']['ja-jp'] = "ユーザーから";
+$text['label-from_user']['ko-kr'] = "사용자 이름";
 
 $text['label-from_domain']['en-us'] = "From Domain";
 $text['label-from_domain']['en-gb'] = "From Domain";
@@ -671,6 +764,9 @@ $text['label-from_domain']['ro-ro'] = "de la domeniu";
 $text['label-from_domain']['ru-ru'] = "Из домена";
 $text['label-from_domain']['sv-se'] = "From Domain";
 $text['label-from_domain']['uk-ua'] = "From Domain";
+$text['label-from_domain']['zh-cn'] = "来源";
+$text['label-from_domain']['ja-jp'] = "ドメインから";
+$text['label-from_domain']['ko-kr'] = "도메인에서";
 
 $text['label-extension_in_contact']['en-us'] = "Extension In Contact";
 $text['label-extension_in_contact']['en-gb'] = "Extension In Contact";
@@ -692,6 +788,9 @@ $text['label-extension_in_contact']['ro-ro'] = "Extensie Contact";
 $text['label-extension_in_contact']['ru-ru'] = "Внутренний нмер для Контакта";
 $text['label-extension_in_contact']['sv-se'] = "Anknytning In Contact";
 $text['label-extension_in_contact']['uk-ua'] = "Розширення у контакта";
+$text['label-extension_in_contact']['zh-cn'] = "外联";
+$text['label-extension_in_contact']['ja-jp'] = "接触の延長";
+$text['label-extension_in_contact']['ko-kr'] = "연락처";
 
 $text['label-extension']['en-us'] = "Extension";
 $text['label-extension']['en-gb'] = "Extension";
@@ -713,6 +812,9 @@ $text['label-extension']['ro-ro'] = "Extensie";
 $text['label-extension']['ru-ru'] = "Внутренний Номер";
 $text['label-extension']['sv-se'] = "Anknytning";
 $text['label-extension']['uk-ua'] = "Розширення";
+$text['label-extension']['zh-cn'] = "延期";
+$text['label-extension']['ja-jp'] = "エクステンション";
+$text['label-extension']['ko-kr'] = "제품 정보";
 
 $text['label-expire_seconds']['en-us'] = "Expire Seconds";
 $text['label-expire_seconds']['en-gb'] = "Expire Seconds";
@@ -734,6 +836,9 @@ $text['label-expire_seconds']['ro-ro'] = "";
 $text['label-expire_seconds']['ru-ru'] = "Время жизни регистрации";
 $text['label-expire_seconds']['sv-se'] = "Utgår Sekunder";
 $text['label-expire_seconds']['uk-ua'] = "Expire Seconds";
+$text['label-expire_seconds']['zh-cn'] = "过期";
+$text['label-expire_seconds']['ja-jp'] = "エクスプレアーセカンド";
+$text['label-expire_seconds']['ko-kr'] = "Expire 초";
 
 $text['label-hostname']['en-us'] = "Hostname";
 $text['label-hostname']['en-gb'] = "Hostname";
@@ -755,6 +860,9 @@ $text['label-hostname']['ro-ro'] = "Hostname";
 $text['label-hostname']['ru-ru'] = "Имя Хоста";
 $text['label-hostname']['sv-se'] = "Hostname";
 $text['label-hostname']['uk-ua'] = "Назва хоста";
+$text['label-hostname']['zh-cn'] = "东道国";
+$text['label-hostname']['ja-jp'] = "ホスト名";
+$text['label-hostname']['ko-kr'] = "이름 *";
 
 $text['label-domain']['en-us'] = "Domain";
 $text['label-domain']['en-gb'] = "Domain";
@@ -776,6 +884,9 @@ $text['label-domain']['ro-ro'] = "Domeniu";
 $text['label-domain']['ru-ru'] = "Домен";
 $text['label-domain']['sv-se'] = "Domän";
 $text['label-domain']['uk-ua'] = "Домен";
+$text['label-domain']['zh-cn'] = "领域";
+$text['label-domain']['ja-jp'] = "ドメイン";
+$text['label-domain']['ko-kr'] = "이름 *";
 
 $text['label-distinct_to']['en-us'] = "Distinct To";
 $text['label-distinct_to']['en-gb'] = "Distinct To";
@@ -797,6 +908,9 @@ $text['label-distinct_to']['ro-ro'] = "";
 $text['label-distinct_to']['ru-ru'] = "Отличный";
 $text['label-distinct_to']['sv-se'] = "Distinct To";
 $text['label-distinct_to']['uk-ua'] = "Distinct To";
+$text['label-distinct_to']['zh-cn'] = "荣誉";
+$text['label-distinct_to']['ja-jp'] = "専門分野";
+$text['label-distinct_to']['ko-kr'] = "Distinct에";
 
 $text['label-context']['en-us'] = "Context";
 $text['label-context']['en-gb'] = "Context";
@@ -818,6 +932,9 @@ $text['label-context']['ro-ro'] = "Context";
 $text['label-context']['ru-ru'] = "Контекст";
 $text['label-context']['sv-se'] = "Context";
 $text['label-context']['uk-ua'] = "Контекст";
+$text['label-context']['zh-cn'] = "背景";
+$text['label-context']['ja-jp'] = "コンテンツ";
+$text['label-context']['ko-kr'] = "설정하기";
 
 $text['label-codec_prefs']['en-us'] = "Codec Preferences";
 $text['label-codec_prefs']['en-gb'] = "Codec Preferences";
@@ -839,6 +956,9 @@ $text['label-codec_prefs']['ro-ro'] = "Preferințe codec";
 $text['label-codec_prefs']['ru-ru'] = "Параметры Кодека";
 $text['label-codec_prefs']['sv-se'] = "Codec Preferences";
 $text['label-codec_prefs']['uk-ua'] = "Codec Preferences";
+$text['label-codec_prefs']['zh-cn'] = "缩略语";
+$text['label-codec_prefs']['ja-jp'] = "Codec 環境設定";
+$text['label-codec_prefs']['ko-kr'] = "Codec 설정";
 
 $text['label-channels']['en-us'] = "Channels";
 $text['label-channels']['en-gb'] = "Channels";
@@ -860,6 +980,9 @@ $text['label-channels']['ro-ro'] = "Canale";
 $text['label-channels']['ru-ru'] = "Каналы";
 $text['label-channels']['sv-se'] = "Kanaler";
 $text['label-channels']['uk-ua'] = "Канали";
+$text['label-channels']['zh-cn'] = "渠道";
+$text['label-channels']['ja-jp'] = "チャンネル";
+$text['label-channels']['ko-kr'] = "채널 :";
 
 $text['label-caller_id_in_from']['en-us'] = "Caller ID In From";
 $text['label-caller_id_in_from']['en-gb'] = "Caller ID In From";
@@ -881,6 +1004,9 @@ $text['label-caller_id_in_from']['ro-ro'] = "";
 $text['label-caller_id_in_from']['ru-ru'] = "Идентификтор (Caller ID) вызывающего абонента";
 $text['label-caller_id_in_from']['sv-se'] = "Caller ID In From";
 $text['label-caller_id_in_from']['uk-ua'] = "Caller ID In From ";
+$text['label-caller_id_in_from']['zh-cn'] = "助手";
+$text['label-caller_id_in_from']['ja-jp'] = "発信者 ID から";
+$text['label-caller_id_in_from']['ko-kr'] = "통화 ID 에서";
 
 $text['label-auth_username']['en-us'] = "Auth Username";
 $text['label-auth_username']['en-gb'] = "Auth Username";
@@ -902,6 +1028,9 @@ $text['label-auth_username']['ro-ro'] = "autentificare Nume utilizator";
 $text['label-auth_username']['ru-ru'] = "Имя Пользователя для авторизации";
 $text['label-auth_username']['sv-se'] = "Auth Username";
 $text['label-auth_username']['uk-ua'] = "Auth Username ";
+$text['label-auth_username']['zh-cn'] = "用户名";
+$text['label-auth_username']['ja-jp'] = "Auth ユーザー名";
+$text['label-auth_username']['ko-kr'] = "Auth 사용자 이름";
 
 $text['label-action-stop']['en-us'] = "Stop";
 $text['label-action-stop']['en-gb'] = "Stop";
@@ -923,6 +1052,9 @@ $text['label-action-stop']['ro-ro'] = "Stop";
 $text['label-action-stop']['ru-ru'] = "Стоп";
 $text['label-action-stop']['sv-se'] = "Stopp";
 $text['label-action-stop']['uk-ua'] = "Зупинити";
+$text['label-action-stop']['zh-cn'] = "停止";
+$text['label-action-stop']['ja-jp'] = "ストップ";
+$text['label-action-stop']['ko-kr'] = "기타";
 
 $text['label-action-start']['en-us'] = "Start";
 $text['label-action-start']['en-gb'] = "Start";
@@ -944,6 +1076,9 @@ $text['label-action-start']['ro-ro'] = "Start";
 $text['label-action-start']['ru-ru'] = "Старт";
 $text['label-action-start']['sv-se'] = "Start";
 $text['label-action-start']['uk-ua'] = "Запустити";
+$text['label-action-start']['zh-cn'] = "开始";
+$text['label-action-start']['ja-jp'] = "スタート";
+$text['label-action-start']['ko-kr'] = "지원하다";
 
 $text['label-action']['en-us'] = "Action";
 $text['label-action']['en-gb'] = "Action";
@@ -965,6 +1100,9 @@ $text['label-action']['ro-ro'] = "Acțiune";
 $text['label-action']['ru-ru'] = "Действие";
 $text['label-action']['sv-se'] = "Åtgärd";
 $text['label-action']['uk-ua'] = "Дія";
+$text['label-action']['zh-cn'] = "行动";
+$text['label-action']['ja-jp'] = "アクション";
+$text['label-action']['ko-kr'] = "(주)";
 
 $text['label-copy']['en-us'] = "Copy";
 $text['label-copy']['en-gb'] = "Copy";
@@ -986,6 +1124,9 @@ $text['label-copy']['ro-ro'] = "Copy";
 $text['label-copy']['ru-ru'] = "Copy";
 $text['label-copy']['sv-se'] = "Copy";
 $text['label-copy']['uk-ua'] = "Copy";
+$text['label-copy']['zh-cn'] = "页: 1";
+$text['label-copy']['ja-jp'] = "コピー";
+$text['label-copy']['ko-kr'] = "관련 기사";
 
 $text['description-username']['en-us'] = "Enter the username here.";
 $text['description-username']['en-gb'] = "Enter the username here.";
@@ -1007,6 +1148,9 @@ $text['description-username']['ro-ro'] = "Introduceți numele de utilizator aici
 $text['description-username']['ru-ru'] = "Введите здесь имя пользователя.";
 $text['description-username']['sv-se'] = "Ange användarnamn här.";
 $text['description-username']['uk-ua'] = "Введіть ім’я користувача";
+$text['description-username']['zh-cn'] = "此处填入用户名。";
+$text['description-username']['ja-jp'] = "ユーザー名を入力してください。";
+$text['description-username']['ko-kr'] = "자주 묻는 질문";
 
 $text['description-supress_cng']['en-us'] = "Enter the supress-cng";
 $text['description-supress_cng']['en-gb'] = "Enter the supress-cng";
@@ -1028,6 +1172,9 @@ $text['description-supress_cng']['ro-ro'] = "";
 $text['description-supress_cng']['ru-ru'] = "Чтобы сохранить пропускную способность, используемую RTP, не отправляет RTP-пакеты во время молчания.";
 $text['description-supress_cng']['sv-se'] = "Ange 'supress-cng'";
 $text['description-supress_cng']['uk-ua'] = "Enter the supress-cng";
+$text['description-supress_cng']['zh-cn'] = "进入报警部门";
+$text['description-supress_cng']['ja-jp'] = "supress-cng を入力してください";
+$text['description-supress_cng']['ko-kr'] = "supress-cng를 입력하십시오.";
 
 $text['description-sip_cid_type']['en-us'] = "Enter the sip cid type: none, pid, and rpid.";
 $text['description-sip_cid_type']['en-gb'] = "Enter the sip cid type: none, pid, and rpid.";
@@ -1049,6 +1196,9 @@ $text['description-sip_cid_type']['ro-ro'] = "";
 $text['description-sip_cid_type']['ru-ru'] = "Введите тип sip cid: none, pid и rpid.";
 $text['description-sip_cid_type']['sv-se'] = "Ange sip cid type: none, pid, and rpid";
 $text['description-sip_cid_type']['uk-ua'] = "Введіть sip cid тип: ні, pid і rpid.";
+$text['description-sip_cid_type']['zh-cn'] = "进入ip酸类型:无、id和rp。";
+$text['description-sip_cid_type']['ja-jp'] = "sip cid 型を入力します。: どれも、 pid と rpid です。";
+$text['description-sip_cid_type']['ko-kr'] = "sip cid 타입: none, pid 및 rpid.";
 
 $text['description-retry_seconds']['en-us'] = "Enter the retry-seconds here.";
 $text['description-retry_seconds']['en-gb'] = "Enter the retry-seconds here.";
@@ -1070,6 +1220,9 @@ $text['description-retry_seconds']['ro-ro'] = "Introduceți secunde Reîncercare
 $text['description-retry_seconds']['ru-ru'] = "Укажите время в секундах, прежде чем пытаться перерегистрировать после превышения времени ожидания ответа или сбоя.";
 $text['description-retry_seconds']['sv-se'] = "Ange 'retry-sekunder' här.";
 $text['description-retry_seconds']['uk-ua'] = "Enter the retry-seconds here.";
+$text['description-retry_seconds']['zh-cn'] = "进入这里的回历。";
+$text['description-retry_seconds']['ja-jp'] = "再試行秒を入力してください。";
+$text['description-retry_seconds']['ko-kr'] = "여기에서 재량 초를 입력하십시오.";
 
 $text['description-register_transport']['en-us'] = "Choose whether to register-transport.";
 $text['description-register_transport']['en-gb'] = "Choose whether to register-transport.";
@@ -1091,6 +1244,9 @@ $text['description-register_transport']['ro-ro'] = "Alegeți dacă doriți să s
 $text['description-register_transport']['ru-ru'] = "Выберите предпочтительный транспорт для регистраций.";
 $text['description-register_transport']['sv-se'] = "Välj om registrera transport eller ej.";
 $text['description-register_transport']['uk-ua'] = "Choose whether to register-transport.";
+$text['description-register_transport']['zh-cn'] = "选择登记-运输。";
+$text['description-register_transport']['ja-jp'] = "登録するかどうかを選択します。";
+$text['description-register_transport']['ko-kr'] = "등록-transport 여부를 선택하십시오.";
 
 $text['description-contact_params']['en-us'] = "Enter the contact params here.";
 $text['description-contact_params']['en-gb'] = "Enter the contact params here.";
@@ -1112,6 +1268,9 @@ $text['description-contact_params']['ro-ro'] = "";
 $text['description-contact_params']['ru-ru'] = "Введите контактные пункты здесь.";
 $text['description-contact_params']['sv-se'] = "Ange kontaktparam här.";
 $text['description-contact_params']['uk-ua'] = "Введіть контактні дані тут.";
+$text['description-contact_params']['zh-cn'] = "此处插入联系栏目。";
+$text['description-contact_params']['ja-jp'] = "コンタクトパラメータを入力してください。";
+$text['description-contact_params']['ko-kr'] = "연락처를 입력하세요.";
 
 $text['description-register_proxy']['en-us'] = "Enter the hostname or IP address of the register proxy. host[:port]";
 $text['description-register_proxy']['en-gb'] = "Enter the hostname or IP address of the register proxy. host[:port]";
@@ -1133,6 +1292,9 @@ $text['description-register_proxy']['ro-ro'] = "Introduceți numele gazdei sau a
 $text['description-register_proxy']['ru-ru'] = "Введите IP-адрес или название хоста прокси-сервера для регистрации. (Возможно указать номер порта в формате host:port)";
 $text['description-register_proxy']['sv-se'] = "Ange värdprofilens värdnamn eller IP-adress. (Detta kan ta formatet för värd:port)";
 $text['description-register_proxy']['uk-ua'] = "Введіть ім'я хоста або IP-адресу зареєстрованого проксі. (Це може мати формат host:port)";
+$text['description-register_proxy']['zh-cn'] = "填写注册代理人的地址或IP地址。 东道国[:港口]";
+$text['description-register_proxy']['ja-jp'] = "レジスタプロキシのホスト名またはIPアドレスを入力します。 ホスト[:port]";
+$text['description-register_proxy']['ko-kr'] = "등록 프록시의 호스트 이름 또는 IP 주소를 입력하십시오. 호스트[:port]";
 
 $text['description-register']['en-us'] = "Choose whether to register.";
 $text['description-register']['en-gb'] = "Choose whether to register.";
@@ -1154,6 +1316,9 @@ $text['description-register']['ro-ro'] = "Alegeți dacă doriți să se înregis
 $text['description-register']['ru-ru'] = "Выберите, нужно ли регистрироваться.";
 $text['description-register']['sv-se'] = "Välj om du vill registrera.";
 $text['description-register']['uk-ua'] = "Choose whether to register.";
+$text['description-register']['zh-cn'] = "选择登记。";
+$text['description-register']['ja-jp'] = "登録するかどうかを選択します。";
+$text['description-register']['ko-kr'] = "자주 묻는 질문";
 
 $text['description-realm']['en-us'] = "Enter the realm here.";
 $text['description-realm']['en-gb'] = "Enter the realm here.";
@@ -1175,6 +1340,9 @@ $text['description-realm']['ro-ro'] = "Introduceți domeniul aici.";
 $text['description-realm']['ru-ru'] = "Вставьте поле, используемое для аутентификации";
 $text['description-realm']['sv-se'] = "Ange 'realm' här.";
 $text['description-realm']['uk-ua'] = "Enter the realm here.";
+$text['description-realm']['zh-cn'] = "进入现场。";
+$text['description-realm']['ja-jp'] = "詳細はこちら";
+$text['description-realm']['ko-kr'] = "여기 진정한 입력.";
 
 $text['description-proxy']['en-us'] = "Enter the hostname or IP address of the proxy. host[:port]";
 $text['description-proxy']['en-gb'] = "Enter the hostname or IP address of the proxy. host[:port]";
@@ -1196,6 +1364,9 @@ $text['description-proxy']['ro-ro'] = "Introduceți numele gazdei sau adresa IP 
 $text['description-proxy']['ru-ru'] = "Введите IP-адрес или название хоста прокси-сервера. (Возможно указать номер порта в формате host:port)";
 $text['description-proxy']['sv-se'] = "Ange värdnamn eller IP-adress för proxyn. (Detta kan ta formatet för värd:port)";
 $text['description-proxy']['uk-ua'] = "Введіть ім'я хоста або IP-адресу проксі-сервера. (Це може мати формат host:port)";
+$text['description-proxy']['zh-cn'] = "进入代理人的地址或IP地址。 东道国[:港口]";
+$text['description-proxy']['ja-jp'] = "プロキシのホスト名またはIPアドレスを入力します。 ホスト[:port]";
+$text['description-proxy']['ko-kr'] = "프록시의 hostname 또는 IP 주소를 입력하십시오. 호스트[:port]";
 
 $text['description-profile']['en-us'] = "Enter the profile here.";
 $text['description-profile']['en-gb'] = "Enter the profile here.";
@@ -1217,6 +1388,9 @@ $text['description-profile']['ro-ro'] = "Introduceți profilul aici.";
 $text['description-profile']['ru-ru'] = "Выберите профиль, используемый для этого шлюза.";
 $text['description-profile']['sv-se'] = "Definiera inställningar för denna profil.";
 $text['description-profile']['uk-ua'] = "Введіть профіль";
+$text['description-profile']['zh-cn'] = "此处插入简介。";
+$text['description-profile']['ja-jp'] = "プロフィールを入力してください。";
+$text['description-profile']['ko-kr'] = "자주 묻는 질문";
 
 $text['description-ping']['en-us'] = "Enter the ping interval here in seconds.";
 $text['description-ping']['en-gb'] = "Enter the ping interval here in seconds.";
@@ -1238,6 +1412,9 @@ $text['description-ping']['ro-ro'] = "Introduceți intervalul de ping aici în c
 $text['description-ping']['ru-ru'] = "Введите интервал ping здесь, в секундах.";
 $text['description-ping']['sv-se'] = "Ange interval för ping i sekunder.";
 $text['description-ping']['uk-ua'] = "Введіть інтервал пінгування в секундах.";
+$text['description-ping']['zh-cn'] = "second  Enter";
+$text['description-ping']['ja-jp'] = "ping間隔を秒単位で入力します。";
+$text['description-ping']['ko-kr'] = "몇 초 안에 핑 간격을 입력하십시오.";
 
 $text['description-ping_min']['en-us'] = "Enter the ping minimum range in seconds.";
 $text['description-ping_min']['en-gb'] = "Enter the ping minimum range in seconds.";
@@ -1259,6 +1436,9 @@ $text['description-ping_min']['ro-ro'] = "";
 $text['description-ping_min']['ru-ru'] = "Введите минимальный диапазон пинга за считанные секунды.";
 $text['description-ping_min']['sv-se'] = "Ange ping minimum intervall i sekunder.";
 $text['description-ping_min']['uk-ua'] = "Введіть номер мобільного, який Ви вказали при укладаннi договору з банком - для ідентифікації.";
+$text['description-ping_min']['zh-cn'] = "进入最低范围。";
+$text['description-ping_min']['ja-jp'] = "ping 最小範囲を秒単位で入力します。";
+$text['description-ping_min']['ko-kr'] = "초의 최소 범위를 입력합니다.";
 
 $text['description-ping_max']['en-us'] = "Enter the ping maximum range in seconds.";
 $text['description-ping_max']['en-gb'] = "Enter the ping maximum range in seconds.";
@@ -1280,6 +1460,9 @@ $text['description-ping_max']['ro-ro'] = "";
 $text['description-ping_max']['ru-ru'] = "Введите максимальный диапазон ping за считанные секунды.";
 $text['description-ping_max']['sv-se'] = "Ange ping maximalt intervall på sekunder.";
 $text['description-ping_max']['uk-ua'] = "Введіть максимальний діапазон ping за секундами.";
+$text['description-ping_max']['zh-cn'] = "进入最大范围。";
+$text['description-ping_max']['ja-jp'] = "pingの最大範囲を秒単位で入力します。";
+$text['description-ping_max']['ko-kr'] = "초당 최대 범위를 입력합니다.";
 
 $text['description-password']['en-us'] = "Enter the password here.";
 $text['description-password']['en-gb'] = "Enter the password here.";
@@ -1301,6 +1484,9 @@ $text['description-password']['ro-ro'] = "Aici parola.";
 $text['description-password']['ru-ru'] = "Введите здесь пароль.";
 $text['description-password']['sv-se'] = "Fyll i lösenord.";
 $text['description-password']['uk-ua'] = "Введіть пароль";
+$text['description-password']['zh-cn'] = "加入前言。";
+$text['description-password']['ja-jp'] = "パスワードを入力してください。";
+$text['description-password']['ko-kr'] = "비밀번호 입력";
 
 $text['description-outbound_proxy']['en-us'] = "Enter the hostname or IP address of the outbound proxy. host[:port]";
 $text['description-outbound_proxy']['en-gb'] = "Enter the hostname or IP address of the outbound proxy. host[:port]";
@@ -1322,6 +1508,9 @@ $text['description-outbound_proxy']['ro-ro'] = "Introduceți numele gazdei sau a
 $text['description-outbound_proxy']['ru-ru'] = "Введите IP-адрес или название хоста исходящего прокси-сервера. (Возможно указать номер порта в формате host:port)";
 $text['description-outbound_proxy']['sv-se'] = "Ange värdnamn eller IP-adress för utgående proxy. (Detta kan ta formatet för värd:port)";
 $text['description-outbound_proxy']['uk-ua'] = "Введіть ім'я хоста або IP-адресу вихідного проксі. (Це може мати формат host:port)";
+$text['description-outbound_proxy']['zh-cn'] = "进入外包代理的签名或IP地址。 东道国[:港口]";
+$text['description-outbound_proxy']['ja-jp'] = "アウトバウンドプロキシのホスト名またはIPアドレスを入力します。 ホスト[:port]";
+$text['description-outbound_proxy']['ko-kr'] = "아웃바운드 프록시의 호스트 이름 또는 IP 주소를 입력하십시오. 호스트[:port]";
 
 $text['description-gateway-name']['en-us'] = "Enter the gateway name here.";
 $text['description-gateway-name']['en-gb'] = "Enter the gateway name here.";
@@ -1343,6 +1532,9 @@ $text['description-gateway-name']['ro-ro'] = "Introduceți numele de gateway aic
 $text['description-gateway-name']['ru-ru'] = "Введите здесь имя шлюза.";
 $text['description-gateway-name']['sv-se'] = "Ange gateway namn här.";
 $text['description-gateway-name']['uk-ua'] = "Введіть назву шлюзу";
+$text['description-gateway-name']['zh-cn'] = "此处填入门口号。";
+$text['description-gateway-name']['ja-jp'] = "ゲートウェイ名を入力してください。";
+$text['description-gateway-name']['ko-kr'] = "여기에서 게이트웨이 이름을 입력하십시오.";
 
 $text['description-gateway-edit']['en-us'] = "Defines a connections to a SIP Provider or another SIP server.";
 $text['description-gateway-edit']['en-gb'] = "Defines a connections to a SIP Provider or another SIP server.";
@@ -1364,6 +1556,9 @@ $text['description-gateway-edit']['ro-ro'] = "Definește o conexiune la un furni
 $text['description-gateway-edit']['ru-ru'] = "Определяет подключения к поставщику SIP или другому SIP-серверу.";
 $text['description-gateway-edit']['sv-se'] = "Definierar anslutning till en SIP Provider eller annan SIP -server.";
 $text['description-gateway-edit']['uk-ua'] = "Визначає підключення до провайдера SIP або іншого SIP-сервера.";
+$text['description-gateway-edit']['zh-cn'] = "界定与SIP供应商或其他SIP服务器的联系。";
+$text['description-gateway-edit']['ja-jp'] = "SIPプロバイダまたは別のSIPサーバーへの接続を定義します。";
+$text['description-gateway-edit']['ko-kr'] = "SIP 공급자 또는 다른 SIP 서버에 연결하십시오.";
 
 $text['description-gateway']['en-us'] = "Gateways provide access into other voice networks. These can be voice providers or other systems that require SIP registration.";
 $text['description-gateway']['en-gb'] = "Gateways provide access into other voice networks. These can be voice providers or other systems that require SIP registration.";
@@ -1385,6 +1580,9 @@ $text['description-gateway']['ro-ro'] = "Gateways asigura accesul în alte rețe
 $text['description-gateway']['ru-ru'] = "Шлюзы обеспечивают доступ в другие голосовые сети. Это могут быть голосовые провайдеры или другие системы, которые требуют регистрации SIP.";
 $text['description-gateway']['sv-se'] = "Gateways ger tillgång till andra röstnätverk. Dessa kan vara telefoni leverantörer eller andra system som kräver SIP registrering.";
 $text['description-gateway']['uk-ua'] = "Gateways provide access into other voice networks. These can be voice providers or other systems that require SIP registration.";
+$text['description-gateway']['zh-cn'] = "通道可进入其他语音网络。 这些系统可以是声音提供者,也可以是需要SIP注册的其他系统。";
+$text['description-gateway']['ja-jp'] = "ゲートウェイは、他の音声ネットワークへのアクセスを提供します。 これらは、SIP登録を必要とするボイスプロバイダーまたは他のシステムです。";
+$text['description-gateway']['ko-kr'] = "Gateway는 다른 목소리 네트워크에 액세스합니다. 이들은 SIP 등록을 요구하는 음성 공급자 또는 다른 체계일 수 있습니다.";
 
 $text['description-from_user']['en-us'] = "Enter the from-user here.";
 $text['description-from_user']['en-gb'] = "Enter the from-user here.";
@@ -1406,6 +1604,9 @@ $text['description-from_user']['ro-ro'] = "Introdu o dată de la utilizatorul ai
 $text['description-from_user']['ru-ru'] = "Введите  Имя пользователя отправителя.";
 $text['description-from_user']['sv-se'] = "Ange 'from-user' här.";
 $text['description-from_user']['uk-ua'] = "Enter the from-user here.";
+$text['description-from_user']['zh-cn'] = "进入用户。";
+$text['description-from_user']['ja-jp'] = "ここからユーザーを入力してください。";
+$text['description-from_user']['ko-kr'] = "사용자를 입력하세요.";
 
 $text['description-from_domain']['en-us'] = "Enter the from-domain here.";
 $text['description-from_domain']['en-gb'] = "Enter the from-domain here.";
@@ -1427,6 +1628,9 @@ $text['description-from_domain']['ro-ro'] = "Introduceți domeniul de la - aici.
 $text['description-from_domain']['ru-ru'] = "Введите Домен отправителя.";
 $text['description-from_domain']['sv-se'] = "Ange 'from-domain' här.";
 $text['description-from_domain']['uk-ua'] = "Enter the from-domain here.";
+$text['description-from_domain']['zh-cn'] = "此处从原主进入。";
+$text['description-from_domain']['ja-jp'] = "ここからドメインを入力してください。";
+$text['description-from_domain']['ko-kr'] = "여기에서 입력하세요.";
 
 $text['description-extension_in_contact']['en-us'] = "Enter the Extension In Contact";
 $text['description-extension_in_contact']['en-gb'] = "Enter the Extension In Contact";
@@ -1448,6 +1652,9 @@ $text['description-extension_in_contact']['ro-ro'] = "Introdu o extensie de cont
 $text['description-extension_in_contact']['ru-ru'] = "Введите контактный номер внутреннего абонента";
 $text['description-extension_in_contact']['sv-se'] = "Ange 'Extension In Contact'";
 $text['description-extension_in_contact']['uk-ua'] = "Enter the Extension In Contact";
+$text['description-extension_in_contact']['zh-cn'] = "加入推广协会";
+$text['description-extension_in_contact']['ja-jp'] = "コンタクトの延長を入力してください";
+$text['description-extension_in_contact']['ko-kr'] = "연락처";
 
 $text['description-extension']['en-us'] = "Enter the extension here.";
 $text['description-extension']['en-gb'] = "Enter the extension here.";
@@ -1469,6 +1676,9 @@ $text['description-extension']['ro-ro'] = "Introduceți extensia aici.";
 $text['description-extension']['ru-ru'] = "Введите внутренний номер";
 $text['description-extension']['sv-se'] = "Ange anknytningen här.";
 $text['description-extension']['uk-ua'] = "Введіть розширення";
+$text['description-extension']['zh-cn'] = "此处延展。";
+$text['description-extension']['ja-jp'] = "詳細はこちらをご覧ください。";
+$text['description-extension']['ko-kr'] = "여기에 확장을 입력하십시오.";
 
 $text['description-expire_seconds']['en-us'] = "Enter the expire-seconds here.";
 $text['description-expire_seconds']['en-gb'] = "Enter the expire-seconds here.";
@@ -1490,6 +1700,9 @@ $text['description-expire_seconds']['ro-ro'] = "Introduceți - secunde aici expi
 $text['description-expire_seconds']['ru-ru'] = "Время в секундах. Это время, по истечению которого необходимо обновить регистрацию.";
 $text['description-expire_seconds']['sv-se'] = "Ange 'expire-seconds' här.";
 $text['description-expire_seconds']['uk-ua'] = "Enter the expire-seconds here.";
+$text['description-expire_seconds']['zh-cn'] = "此处填满两秒。";
+$text['description-expire_seconds']['ja-jp'] = "期限切れの秒を入力してください。";
+$text['description-expire_seconds']['ko-kr'] = "만료된 초를 입력하십시오.";
 
 $text['description-hostname']['en-us'] = "Enter the hostname / switchname.";
 $text['description-hostname']['en-gb'] = "Enter the hostname / switchname.";
@@ -1511,6 +1724,9 @@ $text['description-hostname']['ro-ro'] = "";
 $text['description-hostname']['ru-ru'] = "Введите Имя хоста / коммутатора.";
 $text['description-hostname']['sv-se'] = "Fyll i hostname / switchname.";
 $text['description-hostname']['uk-ua'] = "Введіть назву хоста / switchname.";
+$text['description-hostname']['zh-cn'] = "进入接收国名/交换国名。";
+$text['description-hostname']['ja-jp'] = "ホスト名/スイッチ名を入力します。";
+$text['description-hostname']['ko-kr'] = "hostname/switchname을 입력하십시오.";
 
 $text['description-enabled']['en-us'] = "Enable or Disable the Gateway";
 $text['description-enabled']['en-gb'] = "Enable or Disable the Gateway";
@@ -1532,6 +1748,9 @@ $text['description-enabled']['ro-ro'] = "Activați sau dezactivați Gateway";
 $text['description-enabled']['ru-ru'] = "Включение и выключение данного Шлюза";
 $text['description-enabled']['sv-se'] = "Aktivera eller In-aktivera Gateway";
 $text['description-enabled']['uk-ua'] = "Enable or Disable the Gateway";
+$text['description-enabled']['zh-cn'] = "出入通道";
+$text['description-enabled']['ja-jp'] = "ゲートウェイの有効または無効化";
+$text['description-enabled']['ko-kr'] = "게이트웨이 활성화";
 
 $text['description-distinct_to']['en-us'] = "Enter the distinct_to here.";
 $text['description-distinct_to']['en-gb'] = "Enter the distinct_to here.";
@@ -1553,6 +1772,9 @@ $text['description-distinct_to']['ro-ro'] = "Introdu o distinct_to aici.";
 $text['description-distinct_to']['ru-ru'] = "Enter the distinct_to here.";
 $text['description-distinct_to']['sv-se'] = "Ange 'distinct_to' här. ";
 $text['description-distinct_to']['uk-ua'] = "Enter the distinct_to here.";
+$text['description-distinct_to']['zh-cn'] = "在这里读。";
+$text['description-distinct_to']['ja-jp'] = "ここにあるclear_toを入力してください。";
+$text['description-distinct_to']['ko-kr'] = "을 입력합니다.";
 
 $text['description-context']['en-us'] = "Enter the context here.";
 $text['description-context']['en-gb'] = "Enter the context here.";
@@ -1574,6 +1796,9 @@ $text['description-context']['ro-ro'] = "Introduceți contextul aici.";
 $text['description-context']['ru-ru'] = "Введите здесь контекст.";
 $text['description-context']['sv-se'] = "Ange 'context' här.";
 $text['description-context']['uk-ua'] = "Enter the context here.";
+$text['description-context']['zh-cn'] = "此处行文。";
+$text['description-context']['ja-jp'] = "コンテキストを入力してください。";
+$text['description-context']['ko-kr'] = "여기에 context를 입력하십시오.";
 
 $text['description-codec_prefs']['en-us'] = "Enter the codec preferences as a list. Ex: PCMA,PCMU,G722";
 $text['description-codec_prefs']['en-gb'] = "Enter the codec preferences as a list. Ex: PCMA,PCMU,G722";
@@ -1595,6 +1820,9 @@ $text['description-codec_prefs']['ro-ro'] = "";
 $text['description-codec_prefs']['ru-ru'] = "Задайте список кодеков в порядке предпочтения: PCMA,PCMU,G722";
 $text['description-codec_prefs']['sv-se'] = "Ange codec preferenser som en lista . Ex : PCMA , PCMU , G722";
 $text['description-codec_prefs']['uk-ua'] = "Введіть параметри кодека як список. Ex: PCMA, PCMU,G722";
+$text['description-codec_prefs']['zh-cn'] = "将代码偏好列入清单。 Ex: PCMA,PCMU,G722";
+$text['description-codec_prefs']['ja-jp'] = "リストとしてコーデックの設定を入力します。 例:PCMA、PCMU、G722";
+$text['description-codec_prefs']['ko-kr'] = "codec preferences를 목록으로 입력하십시오. 전: PCMA, PCMU, G722";
 
 $text['description-contact_in_ping']['en-us'] = "Select whether to add contact in the ping. ";
 $text['description-contact_in_ping']['en-gb'] = "Select whether to add contact in the ping.";
@@ -1616,6 +1844,9 @@ $text['description-contact_in_ping']['ro-ro'] = "";
 $text['description-contact_in_ping']['ru-ru'] = "Выберите, добавить ли контакт в пинг.";
 $text['description-contact_in_ping']['sv-se'] = "Välj om du vill lägga till kontakt i pingen.";
 $text['description-contact_in_ping']['uk-ua'] = "Виберіть, чи можна додати контакт в пінг.";
+$text['description-contact_in_ping']['zh-cn'] = "选择在绘画上添加联系。";
+$text['description-contact_in_ping']['ja-jp'] = "pingで連絡先を追加するかどうかを選択します。";
+$text['description-contact_in_ping']['ko-kr'] = "ping에 접촉을 추가하는지 여부를 선택하십시오.";
 
 $text['description-channels']['en-us'] = "Maximum number of simultaneous channels available in the gateway.";
 $text['description-channels']['en-gb'] = "Maximum number of simultaneous channels available in the gateway.";
@@ -1637,6 +1868,9 @@ $text['description-channels']['ro-ro'] = "Numărul maxim de canale simultane dis
 $text['description-channels']['ru-ru'] = "Максимальное количество одновременных каналов, доступных в шлюзе.";
 $text['description-channels']['sv-se'] = "Max antal samtidiga kanaler för gateway.";
 $text['description-channels']['uk-ua'] = "Maximum number of simultaneous channels available in the gateway.";
+$text['description-channels']['zh-cn'] = "在关口可同时使用的渠道最多。";
+$text['description-channels']['ja-jp'] = "ゲートウェイで利用可能な同時チャネルの最大数。";
+$text['description-channels']['ko-kr'] = "게이트웨이에서 사용할 수있는 동시 채널의 최대 수.";
 
 $text['description-caller_id_in_from']['en-us'] = "Enter the caller-id-in-from.";
 $text['description-caller_id_in_from']['en-gb'] = "Enter the caller-id-in-from.";
@@ -1658,6 +1892,9 @@ $text['description-caller_id_in_from']['ro-ro'] = "";
 $text['description-caller_id_in_from']['ru-ru'] = "Введите идентификатор вызывающего абонента (Caller ID) в заголовке SIP.";
 $text['description-caller_id_in_from']['sv-se'] = "Ange 'caller-id-in-from'.";
 $text['description-caller_id_in_from']['uk-ua'] = "Введіть номер мобільного, який Ви вказали при укладаннi договору з банком - для ідентифікації.";
+$text['description-caller_id_in_from']['zh-cn'] = "进入打电话者。";
+$text['description-caller_id_in_from']['ja-jp'] = "caller-id-in-from を入力してください。";
+$text['description-caller_id_in_from']['ko-kr'] = "본문내용 바로가기";
 
 $text['description-auth_username']['en-us'] = "Enter the auth-username here.";
 $text['description-auth_username']['en-gb'] = "Enter the auth-username here.";
@@ -1679,5 +1916,8 @@ $text['description-auth_username']['ro-ro'] = "Introduceți numele de utilizator
 $text['description-auth_username']['ru-ru'] = "Введите имя пользователя для авторизации.";
 $text['description-auth_username']['sv-se'] = "Ange 'uth-username' här.";
 $text['description-auth_username']['uk-ua'] = "Enter the auth-username here.";
+$text['description-auth_username']['zh-cn'] = "进入这里的用户名。";
+$text['description-auth_username']['ja-jp'] = "ユーザ名を入力してください。";
+$text['description-auth_username']['ko-kr'] = "여기에서 auth-username을 입력하십시오.";
 
 ?>

@@ -20,6 +20,9 @@ $text['title-menus']['ro-ro'] = "";
 $text['title-menus']['ru-ru'] = "Управление меню";
 $text['title-menus']['sv-se'] = "Meny Inställningar";
 $text['title-menus']['uk-ua'] = "Менеджер меню";
+$text['title-menus']['zh-cn'] = "Menu公司";
+$text['title-menus']['ja-jp'] = "メニューマネージャー";
+$text['title-menus']['ko-kr'] = "메뉴 관리자";
 
 $text['title-menu']['en-us'] = "Menu";
 $text['title-menu']['en-gb'] = "Menu";
@@ -41,6 +44,9 @@ $text['title-menu']['ro-ro'] = "";
 $text['title-menu']['ru-ru'] = "Меню";
 $text['title-menu']['sv-se'] = "Meny";
 $text['title-menu']['uk-ua'] = "Меню";
+$text['title-menu']['zh-cn'] = "男性";
+$text['title-menu']['ja-jp'] = "メニュー";
+$text['title-menu']['ko-kr'] = "메뉴보기";
 
 $text['title-menu_item']['en-us'] = "Menu Item";
 $text['title-menu_item']['en-gb'] = "Menu Item";
@@ -62,6 +68,9 @@ $text['title-menu_item']['ro-ro'] = "";
 $text['title-menu_item']['ru-ru'] = "Пункт меню";
 $text['title-menu_item']['sv-se'] = "Meny Post";
 $text['title-menu_item']['uk-ua'] = "Пункт меню";
+$text['title-menu_item']['zh-cn'] = "Menu 项目";
+$text['title-menu_item']['ja-jp'] = "メニュー項目";
+$text['title-menu_item']['ko-kr'] = "메뉴 항목";
 
 $text['label-menu_name']['en-us'] = "Name";
 $text['label-menu_name']['en-gb'] = "Name";
@@ -83,6 +92,9 @@ $text['label-menu_name']['ro-ro'] = "";
 $text['label-menu_name']['ru-ru'] = "Название";
 $text['label-menu_name']['sv-se'] = "Namn";
 $text['label-menu_name']['uk-ua'] = "Назва";
+$text['label-menu_name']['zh-cn'] = "姓名";
+$text['label-menu_name']['ja-jp'] = "お名前 (必須)";
+$text['label-menu_name']['ko-kr'] = "이름 *";
 
 $text['label-menu_language']['en-us'] = "Language";
 $text['label-menu_language']['en-gb'] = "Language";
@@ -104,6 +116,9 @@ $text['label-menu_language']['ro-ro'] = "";
 $text['label-menu_language']['ru-ru'] = "Язык";
 $text['label-menu_language']['sv-se'] = "Språk";
 $text['label-menu_language']['uk-ua'] = "Мова";
+$text['label-menu_language']['zh-cn'] = "语言";
+$text['label-menu_language']['ja-jp'] = "用語集";
+$text['label-menu_language']['ko-kr'] = "* 이름";
 
 $text['label-menu_description']['en-us'] = "Description";
 $text['label-menu_description']['en-gb'] = "Description";
@@ -125,6 +140,9 @@ $text['label-menu_description']['ro-ro'] = "";
 $text['label-menu_description']['ru-ru'] = "Описание";
 $text['label-menu_description']['sv-se'] = "Beskrivning";
 $text['label-menu_description']['uk-ua'] = "Опис";
+$text['label-menu_description']['zh-cn'] = "说明";
+$text['label-menu_description']['ja-jp'] = "コンテンツ";
+$text['label-menu_description']['ko-kr'] = "제품 설명";
 
 $text['option-internal']['en-us'] = "Internal";
 $text['option-internal']['en-gb'] = "Internal";
@@ -146,6 +164,9 @@ $text['option-internal']['ro-ro'] = "";
 $text['option-internal']['ru-ru'] = "Внутренний";
 $text['option-internal']['sv-se'] = "Intern";
 $text['option-internal']['uk-ua'] = "Внутрішній (Internal)";
+$text['option-internal']['zh-cn'] = "内部";
+$text['option-internal']['ja-jp'] = "インテリア";
+$text['option-internal']['ko-kr'] = "내 계정";
 
 $text['option-external']['en-us'] = "External";
 $text['option-external']['en-gb'] = "External";
@@ -167,6 +188,9 @@ $text['option-external']['ro-ro'] = "";
 $text['option-external']['ru-ru'] = "Внешний";
 $text['option-external']['sv-se'] = "Extern";
 $text['option-external']['uk-ua'] = "Зовнішній (External)";
+$text['option-external']['zh-cn'] = "外部";
+$text['option-external']['ja-jp'] = "外部リンク";
+$text['option-external']['ko-kr'] = "기타 제품";
 
 $text['option-email']['en-us'] = "E-mail";
 $text['option-email']['en-gb'] = "E-mail";
@@ -188,6 +212,9 @@ $text['option-email']['ro-ro'] = "";
 $text['option-email']['ru-ru'] = "Email";
 $text['option-email']['sv-se'] = "E-post";
 $text['option-email']['uk-ua'] = "Електронна пошта";
+$text['option-email']['zh-cn'] = "电子邮件";
+$text['option-email']['ja-jp'] = "メールアドレス";
+$text['option-email']['ko-kr'] = "E-메일";
 
 $text['message-update']['en-us'] = "Update Completed";
 $text['message-update']['en-gb'] = "Update Completed";
@@ -209,6 +236,9 @@ $text['message-update']['ro-ro'] = "";
 $text['message-update']['ru-ru'] = "Обновление завершено";
 $text['message-update']['sv-se'] = "Uppdatering Klar";
 $text['message-update']['uk-ua'] = "Оновлення завершено";
+$text['message-update']['zh-cn'] = "已完成";
+$text['message-update']['ja-jp'] = "更新完了";
+$text['message-update']['ko-kr'] = "업데이트 완료";
 
 $text['message-moved_up']['en-us'] = "Item Moved Up";
 $text['message-moved_up']['en-gb'] = "Item Moved Up";
@@ -230,6 +260,9 @@ $text['message-moved_up']['ro-ro'] = "";
 $text['message-moved_up']['ru-ru'] = "Элемент перемещен вверх";
 $text['message-moved_up']['sv-se'] = "Posten Flyttades Uppåt";
 $text['message-moved_up']['uk-ua'] = "Елемент переміщено вгору";
+$text['message-moved_up']['zh-cn'] = "项目Moved";
+$text['message-moved_up']['ja-jp'] = "アイテムの移動";
+$text['message-moved_up']['ko-kr'] = "상품 이동";
 
 $text['message-moved_down']['en-us'] = "Item Moved Down";
 $text['message-moved_down']['en-gb'] = "Item Moved Down";
@@ -251,6 +284,9 @@ $text['message-moved_down']['ro-ro'] = "";
 $text['message-moved_down']['ru-ru'] = "Элемент перемещен вниз";
 $text['message-moved_down']['sv-se'] = "Posten Flyttades Nedåt";
 $text['message-moved_down']['uk-ua'] = "Елемент переміщено вниз";
+$text['message-moved_down']['zh-cn'] = "项目Moved Down";
+$text['message-moved_down']['ja-jp'] = "項目 下に動かされる";
+$text['message-moved_down']['ko-kr'] = "아이템 아래로 이동";
 
 $text['label-title']['en-us'] = "Title";
 $text['label-title']['en-gb'] = "Title";
@@ -272,6 +308,9 @@ $text['label-title']['ro-ro'] = "";
 $text['label-title']['ru-ru'] = "Название";
 $text['label-title']['sv-se'] = "Titel";
 $text['label-title']['uk-ua'] = "Назва";
+$text['label-title']['zh-cn'] = "标题";
+$text['label-title']['ja-jp'] = "タイトル";
+$text['label-title']['ko-kr'] = "이름 *";
 
 $text['label-protected']['en-us'] = "Protected";
 $text['label-protected']['en-gb'] = "Protected";
@@ -293,6 +332,9 @@ $text['label-protected']['ro-ro'] = "";
 $text['label-protected']['ru-ru'] = "Защищено";
 $text['label-protected']['sv-se'] = "Skyddad";
 $text['label-protected']['uk-ua'] = "Захищено";
+$text['label-protected']['zh-cn'] = "保护";
+$text['label-protected']['ja-jp'] = "保護された保護";
+$text['label-protected']['ko-kr'] = "관련 상품";
 
 $text['label-parent_menu']['en-us'] = "Parent Menu";
 $text['label-parent_menu']['en-gb'] = "Parent Menu";
@@ -314,6 +356,9 @@ $text['label-parent_menu']['ro-ro'] = "";
 $text['label-parent_menu']['ru-ru'] = "Родительское меню";
 $text['label-parent_menu']['sv-se'] = "Överordnad Meny";
 $text['label-parent_menu']['uk-ua'] = "Батьківське меню";
+$text['label-parent_menu']['zh-cn'] = "父母男性";
+$text['label-parent_menu']['ja-jp'] = "親子メニュー";
+$text['label-parent_menu']['ko-kr'] = "부모 메뉴";
 
 $text['label-name']['en-us'] = "Name";
 $text['label-name']['en-gb'] = "Name";
@@ -335,6 +380,9 @@ $text['label-name']['ro-ro'] = "";
 $text['label-name']['ru-ru'] = "Название";
 $text['label-name']['sv-se'] = "Namn";
 $text['label-name']['uk-ua'] = "Назва";
+$text['label-name']['zh-cn'] = "姓名";
+$text['label-name']['ja-jp'] = "お名前 (必須)";
+$text['label-name']['ko-kr'] = "이름 *";
 
 $text['label-menu_order']['en-us'] = "Order";
 $text['label-menu_order']['en-gb'] = "Order";
@@ -356,6 +404,9 @@ $text['label-menu_order']['ro-ro'] = "";
 $text['label-menu_order']['ru-ru'] = "Приоритет";
 $text['label-menu_order']['sv-se'] = "Ordning";
 $text['label-menu_order']['uk-ua'] = "Інше";
+$text['label-menu_order']['zh-cn'] = "命令";
+$text['label-menu_order']['ja-jp'] = "オーダー";
+$text['label-menu_order']['ko-kr'] = "이름 *";
 
 $text['label-link']['en-us'] = "Link";
 $text['label-link']['en-gb'] = "Link";
@@ -377,6 +428,9 @@ $text['label-link']['ro-ro'] = "";
 $text['label-link']['ru-ru'] = "Ссылка";
 $text['label-link']['sv-se'] = "Länk";
 $text['label-link']['uk-ua'] = "Посилання";
+$text['label-link']['zh-cn'] = "链接";
+$text['label-link']['ja-jp'] = "サイトマップ";
+$text['label-link']['ko-kr'] = "팟캐스트";
 
 $text['label-language']['en-us'] = "Language";
 $text['label-language']['en-gb'] = "Language";
@@ -398,6 +452,9 @@ $text['label-language']['ro-ro'] = "";
 $text['label-language']['ru-ru'] = "Язык";
 $text['label-language']['sv-se'] = "Språk";
 $text['label-language']['uk-ua'] = "Мова";
+$text['label-language']['zh-cn'] = "语言";
+$text['label-language']['ja-jp'] = "用語集";
+$text['label-language']['ko-kr'] = "* 이름";
 
 $text['label-icon']['en-us'] = "Icon";
 $text['label-icon']['en-gb'] = "Icon";
@@ -419,6 +476,9 @@ $text['label-icon']['ro-ro'] = "";
 $text['label-icon']['ru-ru'] = "Иконка";
 $text['label-icon']['sv-se'] = "Ikon";
 $text['label-icon']['uk-ua'] = "іконка";
+$text['label-icon']['zh-cn'] = "icon";
+$text['label-icon']['ja-jp'] = "アイコン";
+$text['label-icon']['ko-kr'] = "아이콘";
 
 $text['label-groups']['en-us'] = "Groups";
 $text['label-groups']['en-gb'] = "Groups";
@@ -440,6 +500,9 @@ $text['label-groups']['ro-ro'] = "";
 $text['label-groups']['ru-ru'] = "Группы";
 $text['label-groups']['sv-se'] = "Grupper";
 $text['label-groups']['uk-ua'] = "Групи";
+$text['label-groups']['zh-cn'] = "团体";
+$text['label-groups']['ja-jp'] = "グループ";
+$text['label-groups']['ko-kr'] = "그룹";
 
 $text['label-category']['en-us'] = "Target";
 $text['label-category']['en-gb'] = "Target";
@@ -461,6 +524,9 @@ $text['label-category']['ro-ro'] = "";
 $text['label-category']['ru-ru'] = "Цель";
 $text['label-category']['sv-se'] = "KMäl";
 $text['label-category']['uk-ua'] = "Категорія";
+$text['label-category']['zh-cn'] = "具体目标";
+$text['label-category']['ja-jp'] = "ターゲット";
+$text['label-category']['ko-kr'] = "제품정보";
 
 $text['header-menus']['en-us'] = "Menu Manager";
 $text['header-menus']['en-gb'] = "Menu Manager";
@@ -482,6 +548,9 @@ $text['header-menus']['ro-ro'] = "";
 $text['header-menus']['ru-ru'] = "Управление меню";
 $text['header-menus']['sv-se'] = "Meny Inställningar";
 $text['header-menus']['uk-ua'] = "Менеджер меню";
+$text['header-menus']['zh-cn'] = "Menu公司";
+$text['header-menus']['ja-jp'] = "メニューマネージャー";
+$text['header-menus']['ko-kr'] = "메뉴 관리자";
 
 $text['header-menu_item']['en-us'] = "Menu Item";
 $text['header-menu_item']['en-gb'] = "Menu Item";
@@ -503,6 +572,9 @@ $text['header-menu_item']['ro-ro'] = "";
 $text['header-menu_item']['ru-ru'] = "Пункт меню";
 $text['header-menu_item']['sv-se'] = "Meny Post";
 $text['header-menu_item']['uk-ua'] = "Пункт меню";
+$text['header-menu_item']['zh-cn'] = "Menu 项目";
+$text['header-menu_item']['ja-jp'] = "メニュー項目";
+$text['header-menu_item']['ko-kr'] = "메뉴 항목";
 
 $text['header-menu_items']['en-us'] = "Menu Items";
 $text['header-menu_items']['en-gb'] = "Menu Items";
@@ -524,6 +596,9 @@ $text['header-menu_items']['ro-ro'] = "";
 $text['header-menu_items']['ru-ru'] = "Пункт меню";
 $text['header-menu_items']['sv-se'] = "Meny Post";
 $text['header-menu_items']['uk-ua'] = "Пункт меню";
+$text['header-menu_items']['zh-cn'] = "Menu项目";
+$text['header-menu_items']['ja-jp'] = "メニュー項目";
+$text['header-menu_items']['ko-kr'] = "메뉴 항목";
 
 $text['header-menu']['en-us'] = "Menu";
 $text['header-menu']['en-gb'] = "Menu";
@@ -545,6 +620,9 @@ $text['header-menu']['ro-ro'] = "";
 $text['header-menu']['ru-ru'] = "Меню";
 $text['header-menu']['sv-se'] = "Meny";
 $text['header-menu']['uk-ua'] = "Меню";
+$text['header-menu']['zh-cn'] = "男性";
+$text['header-menu']['ja-jp'] = "メニュー";
+$text['header-menu']['ko-kr'] = "메뉴보기";
 
 $text['description-title']['en-us'] = "Description";
 $text['description-title']['en-gb'] = "Description";
@@ -566,6 +644,9 @@ $text['description-title']['ro-ro'] = "";
 $text['description-title']['ru-ru'] = "Описание";
 $text['description-title']['sv-se'] = "Beskrivning";
 $text['description-title']['uk-ua'] = "Опис";
+$text['description-title']['zh-cn'] = "说明";
+$text['description-title']['ja-jp'] = "コンテンツ";
+$text['description-title']['ko-kr'] = "제품 설명";
 
 $text['description-protected']['en-us'] = "Enable this to protect the menu item from being removed by 'Restore Default'.";
 $text['description-protected']['en-gb'] = "Enable this to protect the menu item from being removed by 'Restore Default'.";
@@ -587,6 +668,9 @@ $text['description-protected']['ro-ro'] = "";
 $text['description-protected']['ru-ru'] = "Включите это, чтобы защитить пункт меню от удаления с помощью 'Восстановить значение по умолчанию'.";
 $text['description-protected']['sv-se'] = "Aktivera för att skydda menyalternativet från att tas bort med 'Återställ Standard'.";
 $text['description-protected']['uk-ua'] = "Цей параметр використовується для захисту пункту меню від видалення після  'Відновити значення за замовчуванням».";
+$text['description-protected']['zh-cn'] = "这样做是为了保护菜单物品不被“Restore Default”拆除。";
+$text['description-protected']['ja-jp'] = "'Restore Default' によって削除されるメニュー項目を保護するためにこれを有効にします。";
+$text['description-protected']['ko-kr'] = "'Restore Default'에 의해 제거된 메뉴 항목을 보호할 수 있습니다.";
 
 $text['description-parent_menu']['en-us'] = "Description";
 $text['description-parent_menu']['en-gb'] = "Description";
@@ -608,6 +692,9 @@ $text['description-parent_menu']['ro-ro'] = "";
 $text['description-parent_menu']['ru-ru'] = "Описание";
 $text['description-parent_menu']['sv-se'] = "Beskrivning";
 $text['description-parent_menu']['uk-ua'] = "Опис";
+$text['description-parent_menu']['zh-cn'] = "说明";
+$text['description-parent_menu']['ja-jp'] = "コンテンツ";
+$text['description-parent_menu']['ko-kr'] = "제품 설명";
 
 $text['description-name']['en-us'] = "Enter the name of the menu.";
 $text['description-name']['en-gb'] = "Enter the name of the menu.";
@@ -629,6 +716,9 @@ $text['description-name']['ro-ro'] = "";
 $text['description-name']['ru-ru'] = "Введите название меню.";
 $text['description-name']['sv-se'] = "Skriv in namnet på menyn.";
 $text['description-name']['uk-ua'] = "Введіть назву меню";
+$text['description-name']['zh-cn'] = "填写姓名。";
+$text['description-name']['ja-jp'] = "メニューの名前を入力します。";
+$text['description-name']['ko-kr'] = "메뉴의 이름을 입력합니다.";
 
 $text['description-menus']['en-us'] = "Used to customize one or more menus.";
 $text['description-menus']['en-gb'] = "Used to customize one or more menus.";
@@ -650,6 +740,9 @@ $text['description-menus']['ro-ro'] = "";
 $text['description-menus']['ru-ru'] = "Используется для настройки одного или нескольких меню.";
 $text['description-menus']['sv-se'] = "Används för att anpassa en eller flera menyer.";
 $text['description-menus']['uk-ua'] = "Використовується для налаштування одного або декількох меню.";
+$text['description-menus']['zh-cn'] = "用于定制一个或多个男子。";
+$text['description-menus']['ja-jp'] = "1つ以上のメニューをカスタマイズするために使用されます。";
+$text['description-menus']['ko-kr'] = "하나 이상의 메뉴를 사용자 정의하는 데 사용됩니다.";
 
 $text['description-menu_order']['en-us'] = "Description";
 $text['description-menu_order']['en-gb'] = "Description";
@@ -671,6 +764,9 @@ $text['description-menu_order']['ro-ro'] = "";
 $text['description-menu_order']['ru-ru'] = "Описание";
 $text['description-menu_order']['sv-se'] = "Beskrivning";
 $text['description-menu_order']['uk-ua'] = "Опис";
+$text['description-menu_order']['zh-cn'] = "说明";
+$text['description-menu_order']['ja-jp'] = "コンテンツ";
+$text['description-menu_order']['ko-kr'] = "제품 설명";
 
 $text['description-menu_item-edit']['en-us'] = "Description";
 $text['description-menu_item-edit']['en-gb'] = "Description";
@@ -692,6 +788,9 @@ $text['description-menu_item-edit']['ro-ro'] = "";
 $text['description-menu_item-edit']['ru-ru'] = "Описание";
 $text['description-menu_item-edit']['sv-se'] = "Beskrivning";
 $text['description-menu_item-edit']['uk-ua'] = "Опис";
+$text['description-menu_item-edit']['zh-cn'] = "说明";
+$text['description-menu_item-edit']['ja-jp'] = "コンテンツ";
+$text['description-menu_item-edit']['ko-kr'] = "제품 설명";
 
 $text['description-menu_item-add']['en-us'] = "Description";
 $text['description-menu_item-add']['en-gb'] = "Description";
@@ -713,6 +812,9 @@ $text['description-menu_item-add']['ro-ro'] = "";
 $text['description-menu_item-add']['ru-ru'] = "Описание";
 $text['description-menu_item-add']['sv-se'] = "Beskrivning";
 $text['description-menu_item-add']['uk-ua'] = "Опис";
+$text['description-menu_item-add']['zh-cn'] = "说明";
+$text['description-menu_item-add']['ja-jp'] = "コンテンツ";
+$text['description-menu_item-add']['ko-kr'] = "제품 설명";
 
 $text['description-menu']['en-us'] = "Used to customize one or more menus.";
 $text['description-menu']['en-gb'] = "Used to customize one or more menus.";
@@ -734,6 +836,9 @@ $text['description-menu']['ro-ro'] = "";
 $text['description-menu']['ru-ru'] = "Используется для настройки одного или нескольких меню.";
 $text['description-menu']['sv-se'] = "Används för att anpassa en eller flera menyer.";
 $text['description-menu']['uk-ua'] = "Використовується для налаштування одного або декількох меню.";
+$text['description-menu']['zh-cn'] = "用于定制一个或多个男子。";
+$text['description-menu']['ja-jp'] = "1つ以上のメニューをカスタマイズするために使用されます。";
+$text['description-menu']['ko-kr'] = "하나 이상의 메뉴를 사용자 정의하는 데 사용됩니다.";
 
 $text['description-link']['en-us'] = "Description";
 $text['description-link']['en-gb'] = "Description";
@@ -755,6 +860,9 @@ $text['description-link']['ro-ro'] = "";
 $text['description-link']['ru-ru'] = "Описание";
 $text['description-link']['sv-se'] = "Beskrivning";
 $text['description-link']['uk-ua'] = "Опис";
+$text['description-link']['zh-cn'] = "说明";
+$text['description-link']['ja-jp'] = "コンテンツ";
+$text['description-link']['ko-kr'] = "제품 설명";
 
 $text['description-language']['en-us'] = "Enter the language.";
 $text['description-language']['en-gb'] = "Enter the language.";
@@ -776,6 +884,9 @@ $text['description-language']['ro-ro'] = "";
 $text['description-language']['ru-ru'] = "Введите язык.";
 $text['description-language']['sv-se'] = "Väl språk";
 $text['description-language']['uk-ua'] = "Введіть мову.";
+$text['description-language']['zh-cn'] = "进入语言。";
+$text['description-language']['ja-jp'] = "言語を入力してください。";
+$text['description-language']['ko-kr'] = "한국어";
 
 $text['description-groups']['en-us'] = "Description";
 $text['description-groups']['en-gb'] = "Description";
@@ -797,6 +908,9 @@ $text['description-groups']['ro-ro'] = "";
 $text['description-groups']['ru-ru'] = "Описание";
 $text['description-groups']['sv-se'] = "Beskrivning";
 $text['description-groups']['uk-ua'] = "Опис";
+$text['description-groups']['zh-cn'] = "说明";
+$text['description-groups']['ja-jp'] = "コンテンツ";
+$text['description-groups']['ko-kr'] = "제품 설명";
 
 $text['description-description']['en-us'] = "Enter a description, if desired.";
 $text['description-description']['en-gb'] = "Enter a description, if desired.";
@@ -818,6 +932,9 @@ $text['description-description']['ro-ro'] = "";
 $text['description-description']['ru-ru'] = "Введите описание, если хотите.";
 $text['description-description']['sv-se'] = "Fyll i en beskrivning, om nödvändigt.";
 $text['description-description']['uk-ua'] = "Введіть опис, якщо це необхідно.";
+$text['description-description']['zh-cn'] = "必要时作说明。";
+$text['description-description']['ja-jp'] = "必要に応じて、説明を入力してください。";
+$text['description-description']['ko-kr'] = "설명을 입력하면 원하는 경우.";
 
 $text['description-category']['en-us'] = "Description";
 $text['description-category']['en-gb'] = "Description";
@@ -839,6 +956,9 @@ $text['description-category']['ro-ro'] = "";
 $text['description-category']['ru-ru'] = "Описание";
 $text['description-category']['sv-se'] = "Beskrivning";
 $text['description-category']['uk-ua'] = "Опис";
+$text['description-category']['zh-cn'] = "说明";
+$text['description-category']['ja-jp'] = "コンテンツ";
+$text['description-category']['ko-kr'] = "제품 설명";
 
 $text['button-restore_default']['en-us'] = "Restore Default";
 $text['button-restore_default']['en-gb'] = "Restore Default";
@@ -860,6 +980,9 @@ $text['button-restore_default']['ro-ro'] = "";
 $text['button-restore_default']['ru-ru'] = "Восстановить значения по умолчанию";
 $text['button-restore_default']['sv-se'] = "Återställ Standard";
 $text['button-restore_default']['uk-ua'] = "Відновити значення за замовчуванням";
+$text['button-restore_default']['zh-cn'] = "恢复过失";
+$text['button-restore_default']['ja-jp'] = "デフォルトを復元する";
+$text['button-restore_default']['ko-kr'] = "기본 설정";
 
 $text['button-restore_all']['en-us'] = "Restore All";
 $text['button-restore_all']['en-gb'] = "Restore All";
@@ -881,6 +1004,9 @@ $text['button-restore_all']['ro-ro'] = "";
 $text['button-restore_all']['ru-ru'] = "Восстановить все";
 $text['button-restore_all']['sv-se'] = "Återställ Allt";
 $text['button-restore_all']['uk-ua'] = "Відновити все";
+$text['button-restore_all']['zh-cn'] = "恢复";
+$text['button-restore_all']['ja-jp'] = "すべての復元";
+$text['button-restore_all']['ko-kr'] = "모든 상점";
 
 $text['button-move_up']['en-us'] = "Move Up";
 $text['button-move_up']['en-gb'] = "Move Up";
@@ -902,6 +1028,9 @@ $text['button-move_up']['ro-ro'] = "";
 $text['button-move_up']['ru-ru'] = "Переместить вверх";
 $text['button-move_up']['sv-se'] = "Flytta Upp";
 $text['button-move_up']['uk-ua'] = "Перемістити вгору";
+$text['button-move_up']['zh-cn'] = "流动";
+$text['button-move_up']['ja-jp'] = "移動する";
+$text['button-move_up']['ko-kr'] = "맨 위로";
 
 $text['button-move_down']['en-us'] = "Move Down";
 $text['button-move_down']['en-gb'] = "Move Down";
@@ -923,6 +1052,9 @@ $text['button-move_down']['ro-ro'] = "";
 $text['button-move_down']['ru-ru'] = "Переместить вниз";
 $text['button-move_down']['sv-se'] = "Flytta Ned";
 $text['button-move_down']['uk-ua'] = "Перемістити вниз";
+$text['button-move_down']['zh-cn'] = "缩编";
+$text['button-move_down']['ja-jp'] = "移動ダウン";
+$text['button-move_down']['ko-kr'] = "맨 위로";
 
 $text['confirm-restore']['en-us'] = "You are about to restore all <i>unprotected</i> items on this menu.";
 $text['confirm-restore']['en-gb'] = "You are about to restore all <i>unprotected</i> items on this menu.";
@@ -944,5 +1076,8 @@ $text['confirm-restore']['ro-ro'] = "You are about to restore all <i>unprotected
 $text['confirm-restore']['ru-ru'] = "You are about to restore all <i>unprotected</i> items on this menu.";
 $text['confirm-restore']['sv-se'] = "You are about to restore all <i>unprotected</i> items on this menu.";
 $text['confirm-restore']['uk-ua'] = "You are about to restore all <i>unprotected</i> items on this menu.";
+$text['confirm-restore']['zh-cn'] = "页: 1 本表上的项目。";
+$text['confirm-restore']['ja-jp'] = "<i>unprotected</i> をすべて復元するには このメニューの項目。";
+$text['confirm-restore']['ko-kr'] = "모든 <i>unprotected</i>를 복원하는 것에 대해 이 메뉴의 항목.";
 
 ?>

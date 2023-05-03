@@ -19,6 +19,9 @@ $text['title-event_guard_logs']['ro-ro'] = "";
 $text['title-event_guard_logs']['ru-ru'] = "Защитник событий";
 $text['title-event_guard_logs']['sv-se'] = "Event guard";
 $text['title-event_guard_logs']['uk-ua'] = "Охорона подій";
+$text['title-event_guard_logs']['zh-cn'] = "警卫";
+$text['title-event_guard_logs']['ja-jp'] = "イベントガード";
+$text['title-event_guard_logs']['ko-kr'] = "이벤트 Guard";
 
 $text['title-event_guard_log']['en-us'] = "Event Guard";
 $text['title-event_guard_log']['ar-eg'] = "حراس الأحداث";
@@ -39,6 +42,9 @@ $text['title-event_guard_log']['ro-ro'] = "";
 $text['title-event_guard_log']['ru-ru'] = "Защитник событий";
 $text['title-event_guard_log']['sv-se'] = "Event guard";
 $text['title-event_guard_log']['uk-ua'] = "Охорона подій";
+$text['title-event_guard_log']['zh-cn'] = "警卫";
+$text['title-event_guard_log']['ja-jp'] = "イベントガード";
+$text['title-event_guard_log']['ko-kr'] = "이벤트 Guard";
 
 $text['title_description-event_guard_logs']['en-us'] = "Log of registration attempts that have been blocked.";
 $text['title_description-event_guard_logs']['ar-eg'] = "الكثير من محاولات التسجيل التي تم تجميدها";
@@ -59,6 +65,9 @@ $text['title_description-event_guard_logs']['ro-ro'] = "";
 $text['title_description-event_guard_logs']['ru-ru'] = "Журнал попыток регистрации, которые были заблокированы.";
 $text['title_description-event_guard_logs']['sv-se'] = "Registreringsförsök som har blockerats.";
 $text['title_description-event_guard_logs']['uk-ua'] = "Заблоковано реєстрацію.";
+$text['title_description-event_guard_logs']['zh-cn'] = "冻结的登记图案。";
+$text['title_description-event_guard_logs']['ja-jp'] = "ブロックされた登録試みのログ。";
+$text['title_description-event_guard_logs']['ko-kr'] = "차단 된 등록 시도의 로그.";
 
 $text['label-hostname']['en-us'] = "Hostname";
 $text['label-hostname']['ar-eg'] = "الاسم المضيف";
@@ -79,6 +88,9 @@ $text['label-hostname']['ro-ro'] = "";
 $text['label-hostname']['ru-ru'] = "Имя хоста";
 $text['label-hostname']['sv-se'] = "värdnamn";
 $text['label-hostname']['uk-ua'] = "Логін";
+$text['label-hostname']['zh-cn'] = "东道国";
+$text['label-hostname']['ja-jp'] = "ホスト名";
+$text['label-hostname']['ko-kr'] = "이름 *";
 
 $text['description-hostname']['en-us'] = "Enter the hostname.";
 $text['description-hostname']['ar-eg'] = "أدخلي اسم المضيف";
@@ -99,6 +111,9 @@ $text['description-hostname']['ro-ro'] = "";
 $text['description-hostname']['ru-ru'] = "Введите имя хоста.";
 $text['description-hostname']['sv-se'] = "Ange värdnamnet.";
 $text['description-hostname']['uk-ua'] = "Введіть ім'я користувача.";
+$text['description-hostname']['zh-cn'] = "进入东道国名。";
+$text['description-hostname']['ja-jp'] = "ホスト名を入力してください。";
+$text['description-hostname']['ko-kr'] = "호스트명을 입력합니다.";
 
 $text['label-log_date']['en-us'] = "Log Date";
 $text['label-log_date']['ar-eg'] = "التاريخ";
@@ -119,6 +134,9 @@ $text['label-log_date']['ro-ro'] = "";
 $text['label-log_date']['ru-ru'] = "Дата";
 $text['label-log_date']['sv-se'] = "Log date";
 $text['label-log_date']['uk-ua'] = "Дата завантаження";
+$text['label-log_date']['zh-cn'] = "伐木日期";
+$text['label-log_date']['ja-jp'] = "ログ日付";
+$text['label-log_date']['ko-kr'] = "로그인 날짜";
 
 $text['description-log_date']['en-us'] = "Enter the log date.";
 $text['description-log_date']['ar-eg'] = "أدخل تاريخ التسجيل";
@@ -139,6 +157,9 @@ $text['description-log_date']['ro-ro'] = "";
 $text['description-log_date']['ru-ru'] = "Введите дату журнала.";
 $text['description-log_date']['sv-se'] = "Ange loggdatumet.";
 $text['description-log_date']['uk-ua'] = "Введіть дату входу.";
+$text['description-log_date']['zh-cn'] = "登录日期。";
+$text['description-log_date']['ja-jp'] = "ログの日付を入力してください。";
+$text['description-log_date']['ko-kr'] = "로그인 날짜를 입력하십시오.";
 
 $text['label-filter']['en-us'] = "Filter";
 $text['label-filter']['ar-eg'] = "فيلم";
@@ -159,6 +180,9 @@ $text['label-filter']['ro-ro'] = "";
 $text['label-filter']['ru-ru'] = "Фильтр";
 $text['label-filter']['sv-se'] = "filterfilter";
 $text['label-filter']['uk-ua'] = "Фільтри";
+$text['label-filter']['zh-cn'] = "过滤器";
+$text['label-filter']['ja-jp'] = "フィルター";
+$text['label-filter']['ko-kr'] = "제품정보";
 
 $text['description-filter']['en-us'] = "Enter the filter.";
 $text['description-filter']['ar-eg'] = "أدخل المرشّح";
@@ -179,6 +203,9 @@ $text['description-filter']['ro-ro'] = "";
 $text['description-filter']['ru-ru'] = "Введите фильтр.";
 $text['description-filter']['sv-se'] = "Ange filtret.";
 $text['description-filter']['uk-ua'] = "Введіть фільтр.";
+$text['description-filter']['zh-cn'] = "进入过滤器。";
+$text['description-filter']['ja-jp'] = "フィルターを入力してください。";
+$text['description-filter']['ko-kr'] = "필터를 입력합니다.";
 
 $text['label-ip_address']['en-us'] = "Address";
 $text['label-ip_address']['ar-eg'] = "العنوان";
@@ -199,6 +226,9 @@ $text['label-ip_address']['ro-ro'] = "";
 $text['label-ip_address']['ru-ru'] = "Адрес";
 $text['label-ip_address']['sv-se'] = "Adress";
 $text['label-ip_address']['uk-ua'] = "Контакти";
+$text['label-ip_address']['zh-cn'] = "地址";
+$text['label-ip_address']['ja-jp'] = "メールアドレス";
+$text['label-ip_address']['ko-kr'] = "이름 *";
 
 $text['description-ip_address']['en-us'] = "Enter the address.";
 $text['description-ip_address']['ar-eg'] = "أدخل العنوان";
@@ -219,6 +249,9 @@ $text['description-ip_address']['ro-ro'] = "";
 $text['description-ip_address']['ru-ru'] = "Введите адрес.";
 $text['description-ip_address']['sv-se'] = "Ange adressen.";
 $text['description-ip_address']['uk-ua'] = "Введіть адресу.";
+$text['description-ip_address']['zh-cn'] = "填写地址。";
+$text['description-ip_address']['ja-jp'] = "アドレスを入力してください。";
+$text['description-ip_address']['ko-kr'] = "자주 묻는 질문";
 
 $text['label-extension']['en-us'] = "Extension";
 $text['label-extension']['ar-eg'] = "التمديد";
@@ -239,6 +272,9 @@ $text['label-extension']['ro-ro'] = "";
 $text['label-extension']['ru-ru'] = "Расширение";
 $text['label-extension']['sv-se'] = "Förlängning";
 $text['label-extension']['uk-ua'] = "Продовжити";
+$text['label-extension']['zh-cn'] = "延期";
+$text['label-extension']['ja-jp'] = "エクステンション";
+$text['label-extension']['ko-kr'] = "제품 정보";
 
 $text['description-extension']['en-us'] = "Enter the extension.";
 $text['description-extension']['ar-eg'] = "أدخلي التمديد";
@@ -259,6 +295,9 @@ $text['description-extension']['ro-ro'] = "";
 $text['description-extension']['ru-ru'] = "Введите расширение.";
 $text['description-extension']['sv-se'] = "Ange förlängningen.";
 $text['description-extension']['uk-ua'] = "Введіть розширення.";
+$text['description-extension']['zh-cn'] = "延长。";
+$text['description-extension']['ja-jp'] = "拡張子を入力します。";
+$text['description-extension']['ko-kr'] = "연결하기";
 
 $text['label-user_agent']['en-us'] = "User Agent";
 $text['label-user_agent']['ar-eg'] = "وكيل مستعمل";
@@ -279,6 +318,9 @@ $text['label-user_agent']['ro-ro'] = "";
 $text['label-user_agent']['ru-ru'] = "Агент пользователя";
 $text['label-user_agent']['sv-se'] = "Användaragent";
 $text['label-user_agent']['uk-ua'] = "агент користувача";
+$text['label-user_agent']['zh-cn'] = "用户";
+$text['label-user_agent']['ja-jp'] = "ユーザーエージェント";
+$text['label-user_agent']['ko-kr'] = "사용자 에이전트";
 
 $text['description-user_agent']['en-us'] = "Enter the User Agent.";
 $text['description-user_agent']['ar-eg'] = "أدخل العميل";
@@ -299,6 +341,9 @@ $text['description-user_agent']['ro-ro'] = "";
 $text['description-user_agent']['ru-ru'] = "Введите агента пользователя.";
 $text['description-user_agent']['sv-se'] = "Ange användaragenten.";
 $text['description-user_agent']['uk-ua'] = "Введіть агента користувача.";
+$text['description-user_agent']['zh-cn'] = "进入用户代理人。";
+$text['description-user_agent']['ja-jp'] = "ユーザーエージェントを入力してください。";
+$text['description-user_agent']['ko-kr'] = "사용자 에이전트를 입력하십시오.";
 
 $text['label-log_status']['en-us'] = "Status";
 $text['label-log_status']['ar-eg'] = "الحالة";
@@ -319,6 +364,9 @@ $text['label-log_status']['ro-ro'] = "";
 $text['label-log_status']['ru-ru'] = "Статус";
 $text['label-log_status']['sv-se'] = "status status status status";
 $text['label-log_status']['uk-ua'] = "Статус на сервери";
+$text['label-log_status']['zh-cn'] = "现况";
+$text['label-log_status']['ja-jp'] = "ステータス";
+$text['label-log_status']['ko-kr'] = "주요연혁";
 
 $text['description-log_status']['en-us'] = "Enter the status.";
 $text['description-log_status']['ar-eg'] = "أدخل المركز";
@@ -339,6 +387,9 @@ $text['description-log_status']['ro-ro'] = "";
 $text['description-log_status']['ru-ru'] = "Введите статус.";
 $text['description-log_status']['sv-se'] = "Ange status.";
 $text['description-log_status']['uk-ua'] = "Введіть статус.";
+$text['description-log_status']['zh-cn'] = "取得地位。";
+$text['description-log_status']['ja-jp'] = "ステータスを入力してください。";
+$text['description-log_status']['ko-kr'] = "상태 입력";
 
 $text['button-unblock']['en-us'] = "Unblock";
 $text['button-unblock']['ar-eg'] = "القفل";
@@ -359,6 +410,9 @@ $text['button-unblock']['ro-ro'] = "";
 $text['button-unblock']['ru-ru'] = "Разблокировка";
 $text['button-unblock']['sv-se'] = "Unblock";
 $text['button-unblock']['uk-ua'] = "Розблокувати";
+$text['button-unblock']['zh-cn'] = "锁定";
+$text['button-unblock']['ja-jp'] = "ブロック解除";
+$text['button-unblock']['ko-kr'] = "차단 해제";
 
 $text['label-unblocked']['en-us'] = "Unblocked";
 $text['label-unblocked']['ar-eg'] = "غير مقفل";
@@ -379,6 +433,9 @@ $text['label-unblocked']['ro-ro'] = "";
 $text['label-unblocked']['ru-ru'] = "Разблокированы";
 $text['label-unblocked']['sv-se'] = "Unblocked";
 $text['label-unblocked']['uk-ua'] = "Розблокування";
+$text['label-unblocked']['zh-cn'] = "出口";
+$text['label-unblocked']['ja-jp'] = "ブロック解除";
+$text['label-unblocked']['ko-kr'] = "차단 해제";
 
 $text['label-pending']['en-us'] = "Pending";
 $text['label-pending']['ar-eg'] = "معلقة";
@@ -399,5 +456,8 @@ $text['label-pending']['ro-ro'] = "";
 $text['label-pending']['ru-ru'] = "Завершение";
 $text['label-pending']['sv-se'] = "I väntan";
 $text['label-pending']['uk-ua'] = "Закінчення";
+$text['label-pending']['zh-cn'] = "待决";
+$text['label-pending']['ja-jp'] = "ペンディング";
+$text['label-pending']['ko-kr'] = "관련 기사";
 
 ?>

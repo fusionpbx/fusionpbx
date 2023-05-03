@@ -20,6 +20,9 @@ $text['title-pin_numbers']['ro-ro'] = "";
 $text['title-pin_numbers']['ru-ru'] = "PIN Номеров";
 $text['title-pin_numbers']['sv-se'] = "PIN Nummer";
 $text['title-pin_numbers']['uk-ua'] = "PIN Кількість";
+$text['title-pin_numbers']['zh-cn'] = "PIN 人数";
+$text['title-pin_numbers']['ja-jp'] = "PIN番号";
+$text['title-pin_numbers']['ko-kr'] = "PIN 번호";
 
 $text['title-pin_number']['en-us'] = "PIN Number";
 $text['title-pin_number']['en-gb'] = "PIN Number";
@@ -41,6 +44,9 @@ $text['title-pin_number']['ro-ro'] = "";
 $text['title-pin_number']['ru-ru'] = "PIN Номер";
 $text['title-pin_number']['sv-se'] = "PIN Nummer";
 $text['title-pin_number']['uk-ua'] = "Номер ПІН";
+$text['title-pin_number']['zh-cn'] = "PIN 人数";
+$text['title-pin_number']['ja-jp'] = "PIN番号";
+$text['title-pin_number']['ko-kr'] = "PIN 번호";
 
 $text['title_description-pin_number']['en-us'] = "List of PIN Numbers and account codes.";
 $text['title_description-pin_number']['en-gb'] = "List of PIN Numbers and account codes.";
@@ -62,6 +68,9 @@ $text['title_description-pin_number']['ro-ro'] = "";
 $text['title_description-pin_number']['ru-ru'] = "Список PIN Номеров и Аккаунт кодов.";
 $text['title_description-pin_number']['sv-se'] = "Lista med PIN Nummer och account codes.";
 $text['title_description-pin_number']['uk-ua'] = "Перелік PIN-кодів та кодів рахунків.";
+$text['title_description-pin_number']['zh-cn'] = "PIN 编号和账户代码清单。";
+$text['title_description-pin_number']['ja-jp'] = "PIN番号とアカウントコードのリスト。";
+$text['title_description-pin_number']['ko-kr'] = "PIN 번호 및 계정 코드 목록.";
 
 $text['label-pin_number']['en-us'] = "PIN Number";
 $text['label-pin_number']['en-gb'] = "PIN Number";
@@ -83,6 +92,9 @@ $text['label-pin_number']['ro-ro'] = "";
 $text['label-pin_number']['ru-ru'] = "PIN Номер";
 $text['label-pin_number']['sv-se'] = "PIN Nummer";
 $text['label-pin_number']['uk-ua'] = "Номер ПІН";
+$text['label-pin_number']['zh-cn'] = "PIN 人数";
+$text['label-pin_number']['ja-jp'] = "PIN番号";
+$text['label-pin_number']['ko-kr'] = "PIN 번호";
 
 $text['description-pin_number']['en-us'] = "Enter the PIN number.";
 $text['description-pin_number']['en-gb'] = "Enter the PIN number.";
@@ -104,6 +116,9 @@ $text['description-pin_number']['ro-ro'] = "";
 $text['description-pin_number']['ru-ru'] = "Введите PIN номер.";
 $text['description-pin_number']['sv-se'] = "Ange PIN NUmret.";
 $text['description-pin_number']['uk-ua'] = "Введіть номер мобільного, який Ви вказали при укладаннi договору з банком - для ідентифікації.";
+$text['description-pin_number']['zh-cn'] = "进入PIN号。";
+$text['description-pin_number']['ja-jp'] = "PIN番号を入力してください。";
+$text['description-pin_number']['ko-kr'] = "PIN 번호를 입력하십시오.";
 
 $text['label-accountcode']['en-us'] = "Accountcode";
 $text['label-accountcode']['en-gb'] = "Accountcode";
@@ -125,6 +140,9 @@ $text['label-accountcode']['ro-ro'] = "";
 $text['label-accountcode']['ru-ru'] = "Код Аккаунта";
 $text['label-accountcode']['sv-se'] = "Accountcode";
 $text['label-accountcode']['uk-ua'] = "Коди";
+$text['label-accountcode']['zh-cn'] = "账户代码";
+$text['label-accountcode']['ja-jp'] = "アカウントコード";
+$text['label-accountcode']['ko-kr'] = "계정 코드";
 
 $text['description-accountcode']['en-us'] = "Enter the accountcode.";
 $text['description-accountcode']['en-gb'] = "Enter the accountcode.";
@@ -146,6 +164,9 @@ $text['description-accountcode']['ro-ro'] = "";
 $text['description-accountcode']['ru-ru'] = "Введите код Аккаунта.";
 $text['description-accountcode']['sv-se'] = "Ange Accountcode";
 $text['description-accountcode']['uk-ua'] = "Введіть номер мобільного, який Ви вказали при укладаннi договору з банком - для ідентифікації.";
+$text['description-accountcode']['zh-cn'] = "输入账户代码。";
+$text['description-accountcode']['ja-jp'] = "アカウントコードを入力してください。";
+$text['description-accountcode']['ko-kr'] = "accountcode를 입력하십시오.";
 
 $text['label-enabled']['en-us'] = "Enabled";
 $text['label-enabled']['en-gb'] = "Enabled";
@@ -167,6 +188,9 @@ $text['label-enabled']['ro-ro'] = "";
 $text['label-enabled']['ru-ru'] = "Включено";
 $text['label-enabled']['sv-se'] = "Aktiverad";
 $text['label-enabled']['uk-ua'] = "Увімкнути";
+$text['label-enabled']['zh-cn'] = "授权";
+$text['label-enabled']['ja-jp'] = "有効化";
+$text['label-enabled']['ko-kr'] = "이름 *";
 
 $text['description-enabled']['en-us'] = "Enable or Disable the PIN Number.";
 $text['description-enabled']['en-gb'] = "Enable or Disable the PIN Number.";
@@ -188,6 +212,9 @@ $text['description-enabled']['ro-ro'] = "";
 $text['description-enabled']['ru-ru'] = "Включение и отключение PIN Номера.";
 $text['description-enabled']['sv-se'] = "Aktivera eller inaktivera PIN Nummer.";
 $text['description-enabled']['uk-ua'] = "Увімкнути або вимкнути номер PIN.";
+$text['description-enabled']['zh-cn'] = "PIN号码。";
+$text['description-enabled']['ja-jp'] = "PIN番号を有効にまたは無効にします。";
+$text['description-enabled']['ko-kr'] = "PIN 번호 활성화 또는 비활성화.";
 
 $text['label-description']['en-us'] = "Description";
 $text['label-description']['en-gb'] = "Description";
@@ -209,6 +236,9 @@ $text['label-description']['ro-ro'] = "";
 $text['label-description']['ru-ru'] = "Описание";
 $text['label-description']['sv-se'] = "Beskrivning";
 $text['label-description']['uk-ua'] = "Опис";
+$text['label-description']['zh-cn'] = "说明";
+$text['label-description']['ja-jp'] = "コンテンツ";
+$text['label-description']['ko-kr'] = "제품 설명";
 
 $text['description-description']['en-us'] = "Enter the description.";
 $text['description-description']['en-gb'] = "Enter the description.";
@@ -230,6 +260,9 @@ $text['description-description']['ro-ro'] = "";
 $text['description-description']['ru-ru'] = "Введите описание.";
 $text['description-description']['sv-se'] = "Ange beskrivningen.";
 $text['description-description']['uk-ua'] = "Введіть опис.";
+$text['description-description']['zh-cn'] = "说明。";
+$text['description-description']['ja-jp'] = "説明を入力してください。";
+$text['description-description']['ko-kr'] = "자주 묻는 질문";
 
 $text['label-column_name']['en-us'] = "Column Name";
 $text['label-column_name']['en-gb'] = "Column Name";
@@ -251,6 +284,9 @@ $text['label-column_name']['ro-ro'] = "";
 $text['label-column_name']['ru-ru'] = "Название столбца";
 $text['label-column_name']['sv-se'] = "Kolumnnamn";
 $text['label-column_name']['uk-ua'] = "Назва стовпа";
+$text['label-column_name']['zh-cn'] = "姓名";
+$text['label-column_name']['ja-jp'] = "コラム名";
+$text['label-column_name']['ko-kr'] = "열 이름";
 
 $text['button-add']['en-us'] = "Add";
 $text['button-add']['en-gb'] = "Add";
@@ -272,6 +308,9 @@ $text['button-add']['ro-ro'] = "";
 $text['button-add']['ru-ru'] = "Добавить";
 $text['button-add']['sv-se'] = "Lägg Till";
 $text['button-add']['uk-ua'] = "Додати";
+$text['button-add']['zh-cn'] = "增 编";
+$text['button-add']['ja-jp'] = "追加する";
+$text['button-add']['ko-kr'] = "기타";
 
 $text['button-edit']['en-us'] = "Edit";
 $text['button-edit']['en-gb'] = "Edit";
@@ -293,6 +332,9 @@ $text['button-edit']['ro-ro'] = "";
 $text['button-edit']['ru-ru'] = "Редактировать";
 $text['button-edit']['sv-se'] = "Ändra";
 $text['button-edit']['uk-ua'] = "Редагування";
+$text['button-edit']['zh-cn'] = "编辑";
+$text['button-edit']['ja-jp'] = "編集";
+$text['button-edit']['ko-kr'] = "제품정보";
 
 $text['button-delete']['en-us'] = "Delete";
 $text['button-delete']['en-gb'] = "Delete";
@@ -314,6 +356,9 @@ $text['button-delete']['ro-ro'] = "";
 $text['button-delete']['ru-ru'] = "Удалить";
 $text['button-delete']['sv-se'] = "Ta Bort";
 $text['button-delete']['uk-ua'] = "Делет";
+$text['button-delete']['zh-cn'] = "删除";
+$text['button-delete']['ja-jp'] = "削除";
+$text['button-delete']['ko-kr'] = "기타 제품";
 
 $text['button-save']['en-us'] = "Save";
 $text['button-save']['en-gb'] = "Save";
@@ -335,6 +380,9 @@ $text['button-save']['ro-ro'] = "";
 $text['button-save']['ru-ru'] = "Сохранить";
 $text['button-save']['sv-se'] = "Spara";
 $text['button-save']['uk-ua'] = "Зберегти";
+$text['button-save']['zh-cn'] = "储蓄";
+$text['button-save']['ja-jp'] = "保存する";
+$text['button-save']['ko-kr'] = "제품 정보";
 
 $text['button-view']['en-us'] = "View";
 $text['button-view']['en-gb'] = "View";
@@ -356,6 +404,9 @@ $text['button-view']['ro-ro'] = "";
 $text['button-view']['ru-ru'] = "Вид";
 $text['button-view']['sv-se'] = "Visa";
 $text['button-view']['uk-ua'] = "Переглянути";
+$text['button-view']['zh-cn'] = "观点";
+$text['button-view']['ja-jp'] = "ニュース";
+$text['button-view']['ko-kr'] = "- 연혁";
 
 $text['button-back']['en-us'] = "Back";
 $text['button-back']['en-gb'] = "Back";
@@ -377,6 +428,9 @@ $text['button-back']['ro-ro'] = "";
 $text['button-back']['ru-ru'] = "Назад";
 $text['button-back']['sv-se'] = "Tillbaka";
 $text['button-back']['uk-ua'] = "Зареєструватися";
+$text['button-back']['zh-cn'] = "背 景";
+$text['button-back']['ja-jp'] = "バックナンバー";
+$text['button-back']['ko-kr'] = "이름 *";
 
 $text['confirm-delete']['en-us'] = "Do you really want to delete this?";
 $text['confirm-delete']['en-gb'] = "Do you really want to delete this?";
@@ -398,6 +452,9 @@ $text['confirm-delete']['ro-ro'] = "";
 $text['confirm-delete']['ru-ru'] = "Вы действительно хотите удалить это?";
 $text['confirm-delete']['sv-se'] = "Vill du verkligen ta bort detta?";
 $text['confirm-delete']['uk-ua'] = "Ви дійсно хочете видалити це?";
+$text['confirm-delete']['zh-cn'] = "你们真的想要删除吗?";
+$text['confirm-delete']['ja-jp'] = "これを削除したいですか?";
+$text['confirm-delete']['ko-kr'] = "당신은 정말로 이것을 삭제하고 싶습니까?";
 
 $text['message-add']['en-us'] = "Add Completed";
 $text['message-add']['en-gb'] = "Add Completed";
@@ -419,6 +476,9 @@ $text['message-add']['ro-ro'] = "";
 $text['message-add']['ru-ru'] = "Добавление выполнено";
 $text['message-add']['sv-se'] = "Tillagd";
 $text['message-add']['uk-ua'] = "Додати завершено";
+$text['message-add']['zh-cn'] = "增 编";
+$text['message-add']['ja-jp'] = "完了を追加";
+$text['message-add']['ko-kr'] = "추가 완료";
 
 $text['message-update']['en-us'] = "Update Completed";
 $text['message-update']['en-gb'] = "Update Completed";
@@ -440,6 +500,9 @@ $text['message-update']['ro-ro'] = "";
 $text['message-update']['ru-ru'] = "Обновление завершено";
 $text['message-update']['sv-se'] = "Ändring Utförd";
 $text['message-update']['uk-ua'] = "Оновлення завершено";
+$text['message-update']['zh-cn'] = "已完成";
+$text['message-update']['ja-jp'] = "更新完了";
+$text['message-update']['ko-kr'] = "업데이트 완료";
 
 $text['message-delete']['en-us'] = "Delete Completed";
 $text['message-delete']['en-gb'] = "Delete Completed";
@@ -461,6 +524,9 @@ $text['message-delete']['ro-ro'] = "";
 $text['message-delete']['ru-ru'] = "Удаление завершено";
 $text['message-delete']['sv-se'] = "Borttagen";
 $text['message-delete']['uk-ua'] = "Видалити завершено";
+$text['message-delete']['zh-cn'] = "删除";
+$text['message-delete']['ja-jp'] = "完了した削除";
+$text['message-delete']['ko-kr'] = "삭제 완료";
 
 $text['message-required']['en-us'] = "Please provide: ";
 $text['message-required']['en-gb'] = "Please provide: ";
@@ -482,5 +548,8 @@ $text['message-required']['ro-ro'] = "";
 $text['message-required']['ru-ru'] = "Пожалуйста предоставьте: ";
 $text['message-required']['sv-se'] = "Var god ange: ";
 $text['message-required']['uk-ua'] = "Будь ласка, заповніть:";
+$text['message-required']['zh-cn'] = "请提供:";
+$text['message-required']['ja-jp'] = "お問い合わせ";
+$text['message-required']['ko-kr'] = "참고 :";
 
 ?>

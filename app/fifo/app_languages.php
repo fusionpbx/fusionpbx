@@ -20,6 +20,9 @@ $text['title-queues']['ro-ro'] = "";
 $text['title-queues']['ru-ru'] = "Очереди";
 $text['title-queues']['sv-se'] = "Kö:er";
 $text['title-queues']['uk-ua'] = "Клей";
+$text['title-queues']['zh-cn'] = "询问";
+$text['title-queues']['ja-jp'] = "キュー";
+$text['title-queues']['ko-kr'] = "한국어";
 
 $text['title-queue_edit']['en-us'] = "Queue Edit";
 $text['title-queue_edit']['en-gb'] = "Queue Edit";
@@ -41,6 +44,9 @@ $text['title-queue_edit']['ro-ro'] = "";
 $text['title-queue_edit']['ru-ru'] = "Редактирование очереди";
 $text['title-queue_edit']['sv-se'] = "Editera Kö";
 $text['title-queue_edit']['uk-ua'] = "Посилання";
+$text['title-queue_edit']['zh-cn'] = "que";
+$text['title-queue_edit']['ja-jp'] = "キュー編集";
+$text['title-queue_edit']['ko-kr'] = "Queue 편집";
 
 $text['title-queue_detail_edit']['en-us'] = "Queue Detail Edit";
 $text['title-queue_detail_edit']['en-gb'] = "Queue Detail Edit";
@@ -62,6 +68,9 @@ $text['title-queue_detail_edit']['ro-ro'] = "";
 $text['title-queue_detail_edit']['ru-ru'] = "Редактирование очереди";
 $text['title-queue_detail_edit']['sv-se'] = "Editera Kö Detaljer";
 $text['title-queue_detail_edit']['uk-ua'] = "Посилання";
+$text['title-queue_detail_edit']['zh-cn'] = "详细情况";
+$text['title-queue_detail_edit']['ja-jp'] = "キューディテール詳細編集";
+$text['title-queue_detail_edit']['ko-kr'] = "Queue 세부사항 편집";
 
 $text['title-queue_detail_add']['en-us'] = "Queue Detail Add";
 $text['title-queue_detail_add']['en-gb'] = "Queue Detail Add";
@@ -83,6 +92,9 @@ $text['title-queue_detail_add']['ro-ro'] = "";
 $text['title-queue_detail_add']['ru-ru'] = "Добавление детали в очередь";
 $text['title-queue_detail_add']['sv-se'] = "Lägg Till Kö Detaljer";
 $text['title-queue_detail_add']['uk-ua'] = "Queue Detail Додати";
+$text['title-queue_detail_add']['zh-cn'] = "详细情况";
+$text['title-queue_detail_add']['ja-jp'] = "Queueの細部 加えて下さい";
+$text['title-queue_detail_add']['ko-kr'] = "Queue 세부사항 추가";
 
 $text['title-queue_add']['en-us'] = "Queue Add";
 $text['title-queue_add']['en-gb'] = "Queue Add";
@@ -104,6 +116,9 @@ $text['title-queue_add']['ro-ro'] = "";
 $text['title-queue_add']['ru-ru'] = "Добавить Очередь";
 $text['title-queue_add']['sv-se'] = "Lägg Till Kö";
 $text['title-queue_add']['uk-ua'] = "Додати";
+$text['title-queue_add']['zh-cn'] = "增 编";
+$text['title-queue_add']['ja-jp'] = "キューの追加";
+$text['title-queue_add']['ko-kr'] = "Queue 추가";
 
 $text['option-true']['en-us'] = "True";
 $text['option-true']['en-gb'] = "True";
@@ -125,6 +140,9 @@ $text['option-true']['ro-ro'] = "";
 $text['option-true']['ru-ru'] = "Да";
 $text['option-true']['sv-se'] = "Sann";
 $text['option-true']['uk-ua'] = "Про нас";
+$text['option-true']['zh-cn'] = "真";
+$text['option-true']['ja-jp'] = "ログイン";
+$text['option-true']['ko-kr'] = "이란";
 
 $text['option-parameter']['en-us'] = "Parameter";
 $text['option-parameter']['en-gb'] = "Parameter";
@@ -146,6 +164,9 @@ $text['option-parameter']['ro-ro'] = "";
 $text['option-parameter']['ru-ru'] = "Параметр";
 $text['option-parameter']['sv-se'] = "Parameter";
 $text['option-parameter']['uk-ua'] = "Параметр";
+$text['option-parameter']['zh-cn'] = "参数";
+$text['option-parameter']['ja-jp'] = "パラメータ";
+$text['option-parameter']['ko-kr'] = "제품 설명";
 
 $text['option-false']['en-us'] = "False";
 $text['option-false']['en-gb'] = "False";
@@ -167,6 +188,9 @@ $text['option-false']['ro-ro'] = "";
 $text['option-false']['ru-ru'] = "Нет";
 $text['option-false']['sv-se'] = "Falsk";
 $text['option-false']['uk-ua'] = "Фальзе";
+$text['option-false']['zh-cn'] = "抢劫";
+$text['option-false']['ja-jp'] = "ファルス";
+$text['option-false']['ko-kr'] = "팟캐스트";
 
 $text['option-condition']['en-us'] = "Condition";
 $text['option-condition']['en-gb'] = "Condition";
@@ -188,6 +212,9 @@ $text['option-condition']['ro-ro'] = "";
 $text['option-condition']['ru-ru'] = "Состояние";
 $text['option-condition']['sv-se'] = "Skick";
 $text['option-condition']['uk-ua'] = "Стан";
+$text['option-condition']['zh-cn'] = "条件";
+$text['option-condition']['ja-jp'] = "インフォメーション";
+$text['option-condition']['ko-kr'] = "(주)";
 
 $text['option-anti-action']['en-us'] = "Anti-Action";
 $text['option-anti-action']['en-gb'] = "Anti-Action";
@@ -209,6 +236,9 @@ $text['option-anti-action']['ro-ro'] = "";
 $text['option-anti-action']['ru-ru'] = "Anti-Action";
 $text['option-anti-action']['sv-se'] = "Anti-Action";
 $text['option-anti-action']['uk-ua'] = "Антиакція";
+$text['option-anti-action']['zh-cn'] = "反行动";
+$text['option-anti-action']['ja-jp'] = "アンチアクション";
+$text['option-anti-action']['ko-kr'] = "안티-Action";
 
 $text['option-action']['en-us'] = "Action";
 $text['option-action']['en-gb'] = "Action";
@@ -230,6 +260,9 @@ $text['option-action']['ro-ro'] = "";
 $text['option-action']['ru-ru'] = "Действие";
 $text['option-action']['sv-se'] = "Action";
 $text['option-action']['uk-ua'] = "Дія";
+$text['option-action']['zh-cn'] = "行动";
+$text['option-action']['ja-jp'] = "アクション";
+$text['option-action']['ko-kr'] = "(주)";
 
 $text['label-tag']['en-us'] = "Tag";
 $text['label-tag']['en-gb'] = "Tag";
@@ -251,6 +284,9 @@ $text['label-tag']['ro-ro'] = "";
 $text['label-tag']['ru-ru'] = "Тег";
 $text['label-tag']['sv-se'] = "Tag";
 $text['label-tag']['uk-ua'] = "Навігація";
+$text['label-tag']['zh-cn'] = "租户";
+$text['label-tag']['ja-jp'] = "タグ";
+$text['label-tag']['ko-kr'] = "주요 특징";
 
 $text['label-field']['en-us'] = "Field";
 $text['label-field']['en-gb'] = "Field";
@@ -272,6 +308,9 @@ $text['label-field']['ro-ro'] = "";
 $text['label-field']['ru-ru'] = "Поле";
 $text['label-field']['sv-se'] = "Fält";
 $text['label-field']['uk-ua'] = "Сфера";
+$text['label-field']['zh-cn'] = "外地";
+$text['label-field']['ja-jp'] = "フィールド";
+$text['label-field']['ko-kr'] = "제품정보";
 
 $text['label-extension']['en-us'] = "Extension";
 $text['label-extension']['en-gb'] = "Extension";
@@ -293,6 +332,9 @@ $text['label-extension']['ro-ro'] = "";
 $text['label-extension']['ru-ru'] = "Внутренний Номер";
 $text['label-extension']['sv-se'] = "Anknytning";
 $text['label-extension']['uk-ua'] = "Продовжити";
+$text['label-extension']['zh-cn'] = "延期";
+$text['label-extension']['ja-jp'] = "エクステンション";
+$text['label-extension']['ko-kr'] = "제품 정보";
 
 $text['label-expression']['en-us'] = "Expression";
 $text['label-expression']['en-gb'] = "Expression";
@@ -314,6 +356,9 @@ $text['label-expression']['ro-ro'] = "";
 $text['label-expression']['ru-ru'] = "Выражение";
 $text['label-expression']['sv-se'] = "Uttryck";
 $text['label-expression']['uk-ua'] = "Експресія";
+$text['label-expression']['zh-cn'] = "宣 言";
+$text['label-expression']['ja-jp'] = "エクスプレス";
+$text['label-expression']['ko-kr'] = "회사 소개";
 
 $text['label-data']['en-us'] = "Data";
 $text['label-data']['en-gb'] = "Data";
@@ -335,6 +380,9 @@ $text['label-data']['ro-ro'] = "";
 $text['label-data']['ru-ru'] = "Дата";
 $text['label-data']['sv-se'] = "Data";
 $text['label-data']['uk-ua'] = "Дані";
+$text['label-data']['zh-cn'] = "数据";
+$text['label-data']['ja-jp'] = "データデータ";
+$text['label-data']['ko-kr'] = "자료실";
 
 $text['label-continue']['en-us'] = "Continue";
 $text['label-continue']['en-gb'] = "Continue";
@@ -356,6 +404,9 @@ $text['label-continue']['ro-ro'] = "";
 $text['label-continue']['ru-ru'] = "Продолжить";
 $text['label-continue']['sv-se'] = "Fortsätt";
 $text['label-continue']['uk-ua'] = "Продовжити";
+$text['label-continue']['zh-cn'] = "继续";
+$text['label-continue']['ja-jp'] = "お問い合わせ";
+$text['label-continue']['ko-kr'] = "계속하기";
 
 $text['label-application']['en-us'] = "Application";
 $text['label-application']['en-gb'] = "Application";
@@ -377,6 +428,9 @@ $text['label-application']['ro-ro'] = "";
 $text['label-application']['ru-ru'] = "Заявка";
 $text['label-application']['sv-se'] = "Applikation";
 $text['label-application']['uk-ua'] = "Додаток";
+$text['label-application']['zh-cn'] = "申请";
+$text['label-application']['ja-jp'] = "アプリケーション";
+$text['label-application']['ko-kr'] = "제품 설명";
 
 $text['label-agent_queue_extension']['en-us'] = "Queue Extension Number";
 $text['label-agent_queue_extension']['en-gb'] = "Queue Extension Number";
@@ -398,6 +452,9 @@ $text['label-agent_queue_extension']['ro-ro'] = "";
 $text['label-agent_queue_extension']['ru-ru'] = "Очередь Внутренних Номеров";
 $text['label-agent_queue_extension']['sv-se'] = "Kö Anknytningsnummer";
 $text['label-agent_queue_extension']['uk-ua'] = "Номер розширення Queue";
+$text['label-agent_queue_extension']['zh-cn'] = "延期人数";
+$text['label-agent_queue_extension']['ja-jp'] = "キューエクステンション番号";
+$text['label-agent_queue_extension']['ko-kr'] = "Queue 연장 수";
 
 $text['label-agent_loginout_extension']['en-us'] = "Login/Logout Extension Number";
 $text['label-agent_loginout_extension']['en-gb'] = "Login/Logout Extension Number";
@@ -419,6 +476,9 @@ $text['label-agent_loginout_extension']['ro-ro'] = "";
 $text['label-agent_loginout_extension']['ru-ru'] = "Внутренний номер вход / выход";
 $text['label-agent_loginout_extension']['sv-se'] = "Logga In/Logga Ut Anknytningsnummer";
 $text['label-agent_loginout_extension']['uk-ua'] = "Увійти / Зареєструватися";
+$text['label-agent_loginout_extension']['zh-cn'] = "后勤/后勤支助司";
+$text['label-agent_loginout_extension']['ja-jp'] = "ログイン/ログアウト延長番号";
+$text['label-agent_loginout_extension']['ko-kr'] = "로그인/로그아웃 확장 번호";
 
 $text['header-queues']['en-us'] = "Queues";
 $text['header-queues']['en-gb'] = "Queues";
@@ -440,6 +500,9 @@ $text['header-queues']['ro-ro'] = "";
 $text['header-queues']['ru-ru'] = "Очереди";
 $text['header-queues']['sv-se'] = "Kö:er";
 $text['header-queues']['uk-ua'] = "Клей";
+$text['header-queues']['zh-cn'] = "询问";
+$text['header-queues']['ja-jp'] = "キュー";
+$text['header-queues']['ko-kr'] = "한국어";
 
 $text['header-queue_edit']['en-us'] = "Queue Edit";
 $text['header-queue_edit']['en-gb'] = "Queue Edit";
@@ -461,6 +524,9 @@ $text['header-queue_edit']['ro-ro'] = "";
 $text['header-queue_edit']['ru-ru'] = "редиктирование Очереди";
 $text['header-queue_edit']['sv-se'] = "Editera Kö";
 $text['header-queue_edit']['uk-ua'] = "Посилання";
+$text['header-queue_edit']['zh-cn'] = "que";
+$text['header-queue_edit']['ja-jp'] = "キュー編集";
+$text['header-queue_edit']['ko-kr'] = "Queue 편집";
 
 $text['header-queue_detail_edit']['en-us'] = "Queue Detail Edit";
 $text['header-queue_detail_edit']['en-gb'] = "Queue Detail Edit";
@@ -482,6 +548,9 @@ $text['header-queue_detail_edit']['ro-ro'] = "";
 $text['header-queue_detail_edit']['ru-ru'] = "Редактирование деталей Очереди";
 $text['header-queue_detail_edit']['sv-se'] = "Editera Kö Detaljer";
 $text['header-queue_detail_edit']['uk-ua'] = "Посилання";
+$text['header-queue_detail_edit']['zh-cn'] = "详细情况";
+$text['header-queue_detail_edit']['ja-jp'] = "キューディテール詳細編集";
+$text['header-queue_detail_edit']['ko-kr'] = "Queue 세부사항 편집";
 
 $text['header-queue_detail_add']['en-us'] = "Queue Detail Add";
 $text['header-queue_detail_add']['en-gb'] = "Queue Detail Add";
@@ -503,6 +572,9 @@ $text['header-queue_detail_add']['ro-ro'] = "";
 $text['header-queue_detail_add']['ru-ru'] = "Добавление деталей в Очередь";
 $text['header-queue_detail_add']['sv-se'] = "Lägg Till Kö Detalj";
 $text['header-queue_detail_add']['uk-ua'] = "Queue Detail Додати";
+$text['header-queue_detail_add']['zh-cn'] = "详细情况";
+$text['header-queue_detail_add']['ja-jp'] = "Queueの細部 加えて下さい";
+$text['header-queue_detail_add']['ko-kr'] = "Queue 세부사항 추가";
 
 $text['header-queue_add']['en-us'] = "Queue Add";
 $text['header-queue_add']['en-gb'] = "Queue Add";
@@ -524,6 +596,9 @@ $text['header-queue_add']['ro-ro'] = "";
 $text['header-queue_add']['ru-ru'] = "Добавить Очередь";
 $text['header-queue_add']['sv-se'] = "Lägg Till Kö";
 $text['header-queue_add']['uk-ua'] = "Додати";
+$text['header-queue_add']['zh-cn'] = "增 编";
+$text['header-queue_add']['ja-jp'] = "キューの追加";
+$text['header-queue_add']['ko-kr'] = "Queue 추가";
 
 $text['header-conditions_and_actions']['en-us'] = "Conditions and Actions";
 $text['header-conditions_and_actions']['en-gb'] = "Conditions and Actions";
@@ -545,6 +620,9 @@ $text['header-conditions_and_actions']['ro-ro'] = "";
 $text['header-conditions_and_actions']['ru-ru'] = "Условия и действия";
 $text['header-conditions_and_actions']['sv-se'] = "Tillstånd och Actions";
 $text['header-conditions_and_actions']['uk-ua'] = "Умови та акції";
+$text['header-conditions_and_actions']['zh-cn'] = "条件和行动";
+$text['header-conditions_and_actions']['ja-jp'] = "条件と行動";
+$text['header-conditions_and_actions']['ko-kr'] = "조건 및 행동";
 
 $text['header-agent_details']['en-us'] = "Agent Details";
 $text['header-agent_details']['en-gb'] = "Agent Details";
@@ -566,6 +644,9 @@ $text['header-agent_details']['ro-ro'] = "";
 $text['header-agent_details']['ru-ru'] = "Сведения об агенте";
 $text['header-agent_details']['sv-se'] = "Agent Detaljer";
 $text['header-agent_details']['uk-ua'] = "Деталі агента";
+$text['header-agent_details']['zh-cn'] = "紧急细节";
+$text['header-agent_details']['ja-jp'] = "エージェントの詳細";
+$text['header-agent_details']['ko-kr'] = "회사 소개";
 
 $text['header-additional_information']['en-us'] = "Additional Information";
 $text['header-additional_information']['en-gb'] = "Additional Information";
@@ -587,6 +668,9 @@ $text['header-additional_information']['ro-ro'] = "";
 $text['header-additional_information']['ru-ru'] = "Дополнительная информация";
 $text['header-additional_information']['sv-se'] = "Ytterligare Information";
 $text['header-additional_information']['uk-ua'] = "Додаткова інформація";
+$text['header-additional_information']['zh-cn'] = "补充资料";
+$text['header-additional_information']['ja-jp'] = "追加情報";
+$text['header-additional_information']['ko-kr'] = "추가 정보";
 
 $text['description-queues']['en-us'] = "Queues are used to setup waiting lines for callers. Also known as FIFO Queues.";
 $text['description-queues']['en-gb'] = "Queues are used to setup waiting lines for callers. Also known as FIFO Queues.";
@@ -608,6 +692,9 @@ $text['description-queues']['ro-ro'] = "";
 $text['description-queues']['ru-ru'] = "Очереди используются для установки ожидающих линий для вызывающих абонентов. Также известны как очереди FIFO.";
 $text['description-queues']['sv-se'] = "Köer används för att konfigurera väntelinjer för uppringare. Även känd som FIFO Kö:er.";
 $text['description-queues']['uk-ua'] = "Використовуються для налаштування ліній очікування абонентів. Також відомий як FIFO Queues.";
+$text['description-queues']['zh-cn'] = "询问被用来为打电话者设立等候线。 还称为FFO Queues。";
+$text['description-queues']['ja-jp'] = "Queues は、発信者のための待ち行を設定するために使われます。 FIFO Queuesとしても知られています。";
+$text['description-queues']['ko-kr'] = "Queues는 콜러에 대한 대기 라인을 설정하는 데 사용됩니다. 또한 FIFO Queues로 알려져 있습니다.";
 
 $text['description-queue_edit']['en-us'] = "Queues are used to setup waiting lines for callers. Also known as FIFO Queues.";
 $text['description-queue_edit']['en-gb'] = "Queues are used to setup waiting lines for callers. Also known as FIFO Queues.";
@@ -629,6 +716,9 @@ $text['description-queue_edit']['ro-ro'] = "";
 $text['description-queue_edit']['ru-ru'] = "Очереди используются для установки ожидающих линий для вызывающих абонентов. Также известны как очереди FIFO.";
 $text['description-queue_edit']['sv-se'] = "Köer används för att konfigurera väntelinjer för uppringare. Även känd som FIFO Kö:er.";
 $text['description-queue_edit']['uk-ua'] = "Використовуються для налаштування ліній очікування абонентів. Також відомий як FIFO Queues.";
+$text['description-queue_edit']['zh-cn'] = "询问被用来为打电话者设立等候线。 还称为FFO Queues。";
+$text['description-queue_edit']['ja-jp'] = "Queues は、発信者のための待ち行を設定するために使われます。 FIFO Queuesとしても知られています。";
+$text['description-queue_edit']['ko-kr'] = "Queues는 콜러에 대한 대기 라인을 설정하는 데 사용됩니다. 또한 FIFO Queues로 알려져 있습니다.";
 
 $text['description-queue_add']['en-us'] = "In simple terms queues are holding patterns for callers to wait until someone is available to take the call. Also known as FIFO Queues.";
 $text['description-queue_add']['en-gb'] = "In simple terms queues are holding patterns for callers to wait until someone is available to take the call. Also known as FIFO Queues.";
@@ -650,6 +740,9 @@ $text['description-queue_add']['ro-ro'] = "";
 $text['description-queue_add']['ru-ru'] = "Говоря простыми словами, очереди удерживают звонящих на линии, пока кто-то не сможет принять вызов. Также известны как очереди FIFO.";
 $text['description-queue_add']['sv-se'] = "Enkelt förklarat så är kö:er en vänt plats för inkommande samtal fram tills någon kan ta samtalet. Även känt som FIFO Kö:er.";
 $text['description-queue_add']['uk-ua'] = "У простих умовах черги проводяться візерунки для абонентів, щоб дочекатися, поки хтось може прийняти виклик. Також відомий як FIFO Queues.";
+$text['description-queue_add']['zh-cn'] = "简言之,在有人能够接听电话之前,要让打电话的人等待。 还称为FFO Queues。";
+$text['description-queue_add']['ja-jp'] = "簡単なルールのキューでは、呼び出し側が電話を取るために利用できるまで待つためのパターンを保持しています。 FIFO Queuesとしても知られています。";
+$text['description-queue_add']['ko-kr'] = "간단한 용어 큐는 호출자에 대한 패턴을 보유하여 누군가가 전화를 취할 수있을 때까지 기다립니다. 또한 FIFO Queues로 알려져 있습니다.";
 
 $text['description-name']['en-us'] = "The name the queue will be assigned.";
 $text['description-name']['en-gb'] = "The name the queue will be assigned.";
@@ -671,6 +764,9 @@ $text['description-name']['ro-ro'] = "";
 $text['description-name']['ru-ru'] = "Имя очереди будет присвоено.";
 $text['description-name']['sv-se'] = "Namnet som kommer att kopplas till kö:n.";
 $text['description-name']['uk-ua'] = "Ім'я черги буде присвоєно.";
+$text['description-name']['zh-cn'] = "将指定小组的名称。";
+$text['description-name']['ja-jp'] = "キューの名前が割り当てられます。";
+$text['description-name']['ko-kr'] = "queue 이름을 지정합니다.";
 
 $text['description-extension']['en-us'] = "The number that will be assigned to the queue.";
 $text['description-extension']['en-gb'] = "The number that will be assigned to the queue.";
@@ -692,6 +788,9 @@ $text['description-extension']['ro-ro'] = "";
 $text['description-extension']['ru-ru'] = "Номер, который будет назначен очереди.";
 $text['description-extension']['sv-se'] = "Numret som kommer att kopplas till kö:n.";
 $text['description-extension']['uk-ua'] = "Номер, який буде присвоєно в чергу.";
+$text['description-extension']['zh-cn'] = "将分配给小组的人数。";
+$text['description-extension']['ja-jp'] = "キューに割り当てられた番号。";
+$text['description-extension']['ko-kr'] = "큐에 할당 될 수 있습니다.";
 
 $text['description-continue']['en-us'] = "Continue in most cases should be set to false.";
 $text['description-continue']['en-gb'] = "Continue in most cases should be set to false.";
@@ -713,6 +812,9 @@ $text['description-continue']['ro-ro'] = "";
 $text['description-continue']['ru-ru'] = "Для продолжения в большинстве случаев должно быть установлено значение Нет.";
 $text['description-continue']['sv-se'] = "Fortsätt i de flesta fall bör detta vara inställd på falsk.";
 $text['description-continue']['uk-ua'] = "Продовжувати в більшості випадків слід встановити помилково.";
+$text['description-continue']['zh-cn'] = "在大多数情况下,继续施行是假的。";
+$text['description-continue']['ja-jp'] = "ほとんどの場合、false に設定する必要があります。";
+$text['description-continue']['ko-kr'] = "대부분의 경우 계속 false로 설정해야합니다.";
 
 $text['description-conditions_and_actions']['en-us'] = "The following conditions, actions and anti-actions are used in the dialplan to direct call flow. Each is processed in order until you reach the action dialplan_detail_tag which tells what action to perform. You are not limited to only one condition or action dialplan_detail_tag for a given extension.";
 $text['description-conditions_and_actions']['en-gb'] = "The following conditions, actions and anti-actions are used in the dialplan to direct call flow. Each is processed in order until you reach the action dialplan_detail_tag which tells what action to perform. You are not limited to only one condition or action dialplan_detail_tag for a given extension.";
@@ -734,6 +836,9 @@ $text['description-conditions_and_actions']['ro-ro'] = "";
 $text['description-conditions_and_actions']['ru-ru'] = "Следующие условия, действия и антидействия используются в диалплане для направления потока вызовов. Каждый обрабатывается по порядку, пока не будет достигнуто действие dialplan_detail_tag, которое сообщает, какое действие выполнить. Вы не ограничены только одним условием или действием dialplan_detail_tag для данного расширения.";
 $text['description-conditions_and_actions']['sv-se'] = "Följande villkor, åtgärder och anti-handlingar används i nummerplanen för att styra ett samtals flöde. Varje steg bearbetas i ordning tills du når steget dialplan_detail_tag som berättar vilken åtgärd som ska utföras. Du är inte begränsad till endast ett villkor eller åtgärd dialplan_detail_tag för en viss anknytning.";
 $text['description-conditions_and_actions']['uk-ua'] = "У діалплані використовуються наступні умови, дії та протидіяльні дії. Кожен обробляється, щоб доки ви досягнете дії dialplan_detail_tag, який говорить про те, що дія для виконання. Ви не обмежуєтесь тільки одним станом або дією dialplan_detail_tag для даного розширення.";
+$text['description-conditions_and_actions']['zh-cn'] = "The following conditions, actions and anti-actions are used in the dialplan to direct calls flow. 每一件事都经过处理,直到你达成行动,明确哪些行动要做。 你们并不限于一种条件或行动,即分计划——详细内容——特定延长的期限。";
+$text['description-conditions_and_actions']['ja-jp'] = "以下の条件、アクション、アクションはダイヤルプランで直接コールフローに使用されます。 アクションのダイヤルプラン_detail_tagに到達するまで、それぞれが処理されます。 特定の拡張子に対して1つの条件またはアクションダイヤルプラン_detail_tagだけに限定されません。";
+$text['description-conditions_and_actions']['ko-kr'] = "다음과 같은 조건, 행동 및 행동은 다이얼 플랜에서 직접 통화 흐름에 사용됩니다. 각 작업을 수행 할 수있는 작업에 대해 알려 주는 action 다이얼plan_detail_tag에 도달 할 때까지 처리됩니다. 주어진 확장을 위한 하나의 상태 또는 행동 다이얼plan_detail_tag에만 제한되지 않습니다.";
 
 $text['description-agent_queue_extension']['en-us'] = "The extension number for agents to dial to either wait for a call to enter the queue, or pick up a call that is in queue. The agent will hear hold music until a caller enters the queue and the call is connected.";
 $text['description-agent_queue_extension']['en-gb'] = "The extension number for agents to dial to either wait for a call to enter the queue, or pick up a call that is in queue. The agent will hear hold music until a caller enters the queue and the call is connected.";
@@ -755,6 +860,9 @@ $text['description-agent_queue_extension']['ro-ro'] = "";
 $text['description-agent_queue_extension']['ru-ru'] = "Внутренний номер очереди агента FIFO. Это шаблон ожидания для операторов, ожидающих обслуживания вызовов в очереди FIFO вызывающего абонента.";
 $text['description-agent_queue_extension']['sv-se'] = "Anknytningsnumret för Agent FIFO Queue. Detta är väntplatsen för agenter som väntar på att betjäna samtal i den uppringande FIFO-köen.";
 $text['description-agent_queue_extension']['uk-ua'] = "Введіть номер мобільного, який Ви вказали при укладаннi договору з банком - для ідентифікації. Засіб послухає музику до моменту виходу черги і підключеного дзвінка.";
+$text['description-agent_queue_extension']['zh-cn'] = "代理人的延长时间,要么等到要求进入点,要么接手。 该代理人在打电话者进入点和打电话之前将听到音乐。";
+$text['description-agent_queue_extension']['ja-jp'] = "エージェントのエクステンション番号は、コールがキューに入るのを待ちます。またはキューにあるコールをピックアップします。 呼び出し側がキューに入り、コールが接続されるまで、エージェントは音楽を保持します。";
+$text['description-agent_queue_extension']['ko-kr'] = "에이전트의 확장 번호는 전화에 대 한 대기를 다이얼에 대 한, 또는 queue에 있는 호출을 선택. 이 에이전트는 콜러가 큐와 통화를 입력 할 때까지 음악을 듣게됩니다.";
 
 $text['description-agent_loginout_extension']['en-us'] = "Agents use this extension number to login or logout of the Queue. At the prompt, dial 1 to login and 2 to logout. After logging into the agent will be ready to receive calls from the Queue.";
 $text['description-agent_loginout_extension']['en-gb'] = "Agents use this extension number to login or logout of the Queue. At the prompt, dial 1 to login and 2 to logout. After logging into the agent will be ready to receive calls from the Queue.";
@@ -777,5 +885,8 @@ $text['description-agent_loginout_extension']['ru-ru'] = "Агенты испо�
 $text['description-agent_loginout_extension']['sv-se'] = "
 Agenter använder det här anknytningsnumret för att logga in eller logga ut från köen. Efter att du loggat in i agenten kommer du att vara redo att ta emot samtal från köen.";
 $text['description-agent_loginout_extension']['uk-ua'] = "Агенти використовують цей номер розширення для входу або логотипу Queue. На підказці, набрати 1 логін і 2 на логат. Після входу в агент буде готово отримувати дзвінки з Queue.";
+$text['description-agent_loginout_extension']['zh-cn'] = "代理人利用这一延伸号码对Quue的标志或标志。 迅速,第1至2段为 log。 进入该代理人后,将准备接受Quue的电话。";
+$text['description-agent_loginout_extension']['ja-jp'] = "エージェントは、キューのログインまたはログアウトにこの拡張番号を使用します。 プロンプトで 1 をログインし、2 をログアウトするためにダイヤルします。 エージェントにログインした後、キューからコールを受信する準備が整います。";
+$text['description-agent_loginout_extension']['ko-kr'] = "에이전트는 이 확장 번호를 사용하여 로그인 또는 Queue의 로그아웃. 프롬프트에서 1번으로 로그인하고 2번으로 로그인합니다. 에이전트로 로그인하면 Queue에서 통화를 받을 수 있습니다.";
 
 ?>

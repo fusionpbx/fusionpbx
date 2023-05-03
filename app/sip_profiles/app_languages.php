@@ -20,6 +20,9 @@ $text['title-sip_profiles']['ro-ro'] = "";
 $text['title-sip_profiles']['ru-ru'] = "Профили SIP";
 $text['title-sip_profiles']['sv-se'] = "SIP Profiler";
 $text['title-sip_profiles']['uk-ua'] = "SIP профілі";
+$text['title-sip_profiles']['zh-cn'] = "内容提要";
+$text['title-sip_profiles']['ja-jp'] = "SIPプロフィール";
+$text['title-sip_profiles']['ko-kr'] = "SIP 프로필";
 
 $text['title-sip_profile']['en-us'] = "SIP Profile";
 $text['title-sip_profile']['en-gb'] = "SIP Profile";
@@ -41,6 +44,9 @@ $text['title-sip_profile']['ro-ro'] = "";
 $text['title-sip_profile']['ru-ru'] = "Профиль SIP";
 $text['title-sip_profile']['sv-se'] = "SIP Profil";
 $text['title-sip_profile']['uk-ua'] = "SIP профіль";
+$text['title-sip_profile']['zh-cn'] = "SIP 概况";
+$text['title-sip_profile']['ja-jp'] = "ログイン プロフィール";
+$text['title-sip_profile']['ko-kr'] = "사이트맵 제품정보";
 
 $text['title-sip_profile_domains']['en-us'] = "Domains";
 $text['title-sip_profile_domains']['en-gb'] = "Domains";
@@ -62,6 +68,9 @@ $text['title-sip_profile_domains']['ro-ro'] = "";
 $text['title-sip_profile_domains']['ru-ru'] = "Домены";
 $text['title-sip_profile_domains']['sv-se'] = "Domäner";
 $text['title-sip_profile_domains']['uk-ua'] = "Домени";
+$text['title-sip_profile_domains']['zh-cn'] = "领域";
+$text['title-sip_profile_domains']['ja-jp'] = "ドメイン";
+$text['title-sip_profile_domains']['ko-kr'] = "이름 *";
 
 $text['title-sip_profile_domain']['en-us'] = "Domain";
 $text['title-sip_profile_domain']['en-gb'] = "Domain";
@@ -83,6 +92,9 @@ $text['title-sip_profile_domain']['ro-ro'] = "";
 $text['title-sip_profile_domain']['ru-ru'] = "Домен";
 $text['title-sip_profile_domain']['sv-se'] = "Domän";
 $text['title-sip_profile_domain']['uk-ua'] = "Головна";
+$text['title-sip_profile_domain']['zh-cn'] = "领域";
+$text['title-sip_profile_domain']['ja-jp'] = "ドメイン";
+$text['title-sip_profile_domain']['ko-kr'] = "이름 *";
 
 $text['title-sip_profile_setting']['en-us'] = "Profile Setting";
 $text['title-sip_profile_setting']['en-gb'] = "Profile Setting";
@@ -104,6 +116,9 @@ $text['title-sip_profile_setting']['ro-ro'] = "";
 $text['title-sip_profile_setting']['ru-ru'] = "Настройки профиля";
 $text['title-sip_profile_setting']['sv-se'] = "Profilinställning";
 $text['title-sip_profile_setting']['uk-ua'] = "Налаштування профілю";
+$text['title-sip_profile_setting']['zh-cn'] = "A. 概况";
+$text['title-sip_profile_setting']['ja-jp'] = "プロフィールの設定";
+$text['title-sip_profile_setting']['ko-kr'] = "Profile 설정";
 
 $text['label-sip_profile_name']['en-us'] = "Name";
 $text['label-sip_profile_name']['en-gb'] = "Name";
@@ -125,6 +140,9 @@ $text['label-sip_profile_name']['ro-ro'] = "";
 $text['label-sip_profile_name']['ru-ru'] = "Название";
 $text['label-sip_profile_name']['sv-se'] = "Namn";
 $text['label-sip_profile_name']['uk-ua'] = "Назва";
+$text['label-sip_profile_name']['zh-cn'] = "姓名";
+$text['label-sip_profile_name']['ja-jp'] = "お名前 (必須)";
+$text['label-sip_profile_name']['ko-kr'] = "이름 *";
 
 $text['label-sip_profile_value']['en-us'] = "Value";
 $text['label-sip_profile_value']['en-gb'] = "Value";
@@ -146,6 +164,9 @@ $text['label-sip_profile_value']['ro-ro'] = "";
 $text['label-sip_profile_value']['ru-ru'] = "Значение";
 $text['label-sip_profile_value']['sv-se'] = "Värde";
 $text['label-sip_profile_value']['uk-ua'] = "Значення";
+$text['label-sip_profile_value']['zh-cn'] = "价值";
+$text['label-sip_profile_value']['ja-jp'] = "バリュー";
+$text['label-sip_profile_value']['ko-kr'] = "주요 특징";
 
 $text['label-sip_profile_enabled']['en-us'] = "Enabled";
 $text['label-sip_profile_enabled']['en-gb'] = "Enabled";
@@ -167,6 +188,9 @@ $text['label-sip_profile_enabled']['ro-ro'] = "";
 $text['label-sip_profile_enabled']['ru-ru'] = "Включено";
 $text['label-sip_profile_enabled']['sv-se'] = "Aktiverad";
 $text['label-sip_profile_enabled']['uk-ua'] = "Включено";
+$text['label-sip_profile_enabled']['zh-cn'] = "授权";
+$text['label-sip_profile_enabled']['ja-jp'] = "有効化";
+$text['label-sip_profile_enabled']['ko-kr'] = "이름 *";
 
 $text['label-sip_profile_description']['en-us'] = "Description";
 $text['label-sip_profile_description']['en-gb'] = "Description";
@@ -188,6 +212,9 @@ $text['label-sip_profile_description']['ro-ro'] = "";
 $text['label-sip_profile_description']['ru-ru'] = "Описание";
 $text['label-sip_profile_description']['sv-se'] = "Beskrivning";
 $text['label-sip_profile_description']['uk-ua'] = "Опис";
+$text['label-sip_profile_description']['zh-cn'] = "说明";
+$text['label-sip_profile_description']['ja-jp'] = "コンテンツ";
+$text['label-sip_profile_description']['ko-kr'] = "제품 설명";
 
 $text['label-sip_profile_domain_name']['en-us'] = "Name";
 $text['label-sip_profile_domain_name']['en-gb'] = "Name";
@@ -209,6 +236,9 @@ $text['label-sip_profile_domain_name']['ro-ro'] = "";
 $text['label-sip_profile_domain_name']['ru-ru'] = "Название";
 $text['label-sip_profile_domain_name']['sv-se'] = "Namn";
 $text['label-sip_profile_domain_name']['uk-ua'] = "Назва";
+$text['label-sip_profile_domain_name']['zh-cn'] = "姓名";
+$text['label-sip_profile_domain_name']['ja-jp'] = "お名前 (必須)";
+$text['label-sip_profile_domain_name']['ko-kr'] = "이름 *";
 
 $text['label-sip_profile_domain_alias']['en-us'] = "Alias";
 $text['label-sip_profile_domain_alias']['en-gb'] = "Alias";
@@ -230,6 +260,9 @@ $text['label-sip_profile_domain_alias']['ro-ro'] = "";
 $text['label-sip_profile_domain_alias']['ru-ru'] = "Псевдоним";
 $text['label-sip_profile_domain_alias']['sv-se'] = "Alias";
 $text['label-sip_profile_domain_alias']['uk-ua'] = "Альтанка";
+$text['label-sip_profile_domain_alias']['zh-cn'] = "目 录";
+$text['label-sip_profile_domain_alias']['ja-jp'] = "アリアス";
+$text['label-sip_profile_domain_alias']['ko-kr'] = "이름 *";
 
 $text['label-sip_profile_domain_parse']['en-us'] = "Parse";
 $text['label-sip_profile_domain_parse']['en-gb'] = "Parse";
@@ -251,6 +284,9 @@ $text['label-sip_profile_domain_parse']['ro-ro'] = "";
 $text['label-sip_profile_domain_parse']['ru-ru'] = "Parse";
 $text['label-sip_profile_domain_parse']['sv-se'] = "Parse";
 $text['label-sip_profile_domain_parse']['uk-ua'] = "Батьки";
+$text['label-sip_profile_domain_parse']['zh-cn'] = "par";
+$text['label-sip_profile_domain_parse']['ja-jp'] = "メニュー";
+$text['label-sip_profile_domain_parse']['ko-kr'] = "팟캐스트";
 
 $text['label-sip_profile_setting_name']['en-us'] = "Name";
 $text['label-sip_profile_setting_name']['en-gb'] = "Name";
@@ -272,6 +308,9 @@ $text['label-sip_profile_setting_name']['ro-ro'] = "";
 $text['label-sip_profile_setting_name']['ru-ru'] = "Название";
 $text['label-sip_profile_setting_name']['sv-se'] = "Namn";
 $text['label-sip_profile_setting_name']['uk-ua'] = "Назва";
+$text['label-sip_profile_setting_name']['zh-cn'] = "姓名";
+$text['label-sip_profile_setting_name']['ja-jp'] = "お名前 (必須)";
+$text['label-sip_profile_setting_name']['ko-kr'] = "이름 *";
 
 $text['label-sip_profile_setting_value']['en-us'] = "Value";
 $text['label-sip_profile_setting_value']['en-gb'] = "Value";
@@ -293,6 +332,9 @@ $text['label-sip_profile_setting_value']['ro-ro'] = "";
 $text['label-sip_profile_setting_value']['ru-ru'] = "Значение";
 $text['label-sip_profile_setting_value']['sv-se'] = "Värde";
 $text['label-sip_profile_setting_value']['uk-ua'] = "Значення";
+$text['label-sip_profile_setting_value']['zh-cn'] = "价值";
+$text['label-sip_profile_setting_value']['ja-jp'] = "バリュー";
+$text['label-sip_profile_setting_value']['ko-kr'] = "주요 특징";
 
 $text['label-sip_profile_setting_enabled']['en-us'] = "Enabled";
 $text['label-sip_profile_setting_enabled']['en-gb'] = "Enabled";
@@ -314,6 +356,9 @@ $text['label-sip_profile_setting_enabled']['ro-ro'] = "";
 $text['label-sip_profile_setting_enabled']['ru-ru'] = "Включено";
 $text['label-sip_profile_setting_enabled']['sv-se'] = "Aktiverad";
 $text['label-sip_profile_setting_enabled']['uk-ua'] = "Включено";
+$text['label-sip_profile_setting_enabled']['zh-cn'] = "授权";
+$text['label-sip_profile_setting_enabled']['ja-jp'] = "有効化";
+$text['label-sip_profile_setting_enabled']['ko-kr'] = "이름 *";
 
 $text['label-sip_profile_setting_description']['en-us'] = "Description";
 $text['label-sip_profile_setting_description']['en-gb'] = "Description";
@@ -335,6 +380,9 @@ $text['label-sip_profile_setting_description']['ro-ro'] = "";
 $text['label-sip_profile_setting_description']['ru-ru'] = "Описание";
 $text['label-sip_profile_setting_description']['sv-se'] = "Beskrivning";
 $text['label-sip_profile_setting_description']['uk-ua'] = "Опис";
+$text['label-sip_profile_setting_description']['zh-cn'] = "说明";
+$text['label-sip_profile_setting_description']['ja-jp'] = "コンテンツ";
+$text['label-sip_profile_setting_description']['ko-kr'] = "제품 설명";
 
 $text['label-sip_profile_hostname']['en-us'] = "Hostname";
 $text['label-sip_profile_hostname']['en-gb'] = "Hostname";
@@ -356,6 +404,9 @@ $text['label-sip_profile_hostname']['ro-ro'] = "";
 $text['label-sip_profile_hostname']['ru-ru'] = "Имя хоста";
 $text['label-sip_profile_hostname']['sv-se'] = "Hostname";
 $text['label-sip_profile_hostname']['uk-ua'] = "Назва хоста";
+$text['label-sip_profile_hostname']['zh-cn'] = "东道国";
+$text['label-sip_profile_hostname']['ja-jp'] = "ホスト名";
+$text['label-sip_profile_hostname']['ko-kr'] = "이름 *";
 
 $text['label-sip_profile_settings']['en-us'] = "Settings";
 $text['label-sip_profile_settings']['en-gb'] = "Settings";
@@ -377,6 +428,9 @@ $text['label-sip_profile_settings']['ro-ro'] = "";
 $text['label-sip_profile_settings']['ru-ru'] = "Настройки";
 $text['label-sip_profile_settings']['sv-se'] = "Inställningar";
 $text['label-sip_profile_settings']['uk-ua'] = "Параметри";
+$text['label-sip_profile_settings']['zh-cn'] = "背景";
+$text['label-sip_profile_settings']['ja-jp'] = "コンテンツ";
+$text['label-sip_profile_settings']['ko-kr'] = "계정 설정";
 
 $text['label-new_sip_profile_name']['en-us'] = "Enter a new, unique SIP Profile Name";
 $text['label-new_sip_profile_name']['en-gb'] = "Enter a new, unique SIP Profile Name";
@@ -398,6 +452,9 @@ $text['label-new_sip_profile_name']['ro-ro'] = "Enter a new, unique SIP Profile 
 $text['label-new_sip_profile_name']['ru-ru'] = "Enter a new, unique SIP Profile Name";
 $text['label-new_sip_profile_name']['sv-se'] = "Enter a new, unique SIP Profile Name";
 $text['label-new_sip_profile_name']['uk-ua'] = "Enter a new, unique SIP Profile Name";
+$text['label-new_sip_profile_name']['zh-cn'] = "加入新的、独特的SIP 姓名";
+$text['label-new_sip_profile_name']['ja-jp'] = "新しいユニークなSIPを入力してください プロフィール名";
+$text['label-new_sip_profile_name']['ko-kr'] = "새로운 독특한 SIP 입력 프로필 이름";
 
 $text['header-sip_profiles']['en-us'] = "SIP Profiles";
 $text['header-sip_profiles']['en-gb'] = "SIP Profiles";
@@ -419,6 +476,9 @@ $text['header-sip_profiles']['ro-ro'] = "";
 $text['header-sip_profiles']['ru-ru'] = "Профили SIP";
 $text['header-sip_profiles']['sv-se'] = "SIP Profiler";
 $text['header-sip_profiles']['uk-ua'] = "SIP профілі";
+$text['header-sip_profiles']['zh-cn'] = "内容提要";
+$text['header-sip_profiles']['ja-jp'] = "SIPプロフィール";
+$text['header-sip_profiles']['ko-kr'] = "SIP 프로필";
 
 $text['header-sip_profile']['en-us'] = "SIP Profile";
 $text['header-sip_profile']['en-gb'] = "SIP Profile";
@@ -440,6 +500,9 @@ $text['header-sip_profile']['ro-ro'] = "";
 $text['header-sip_profile']['ru-ru'] = "Профиль SIP";
 $text['header-sip_profile']['sv-se'] = "SIP Profil";
 $text['header-sip_profile']['uk-ua'] = "SIP профіль";
+$text['header-sip_profile']['zh-cn'] = "SIP 概况";
+$text['header-sip_profile']['ja-jp'] = "ログイン プロフィール";
+$text['header-sip_profile']['ko-kr'] = "사이트맵 제품정보";
 
 $text['header-sip_profile_setting']['en-us'] = "Profile Setting";
 $text['header-sip_profile_setting']['en-gb'] = "Profile Setting";
@@ -461,6 +524,9 @@ $text['header-sip_profile_setting']['ro-ro'] = "";
 $text['header-sip_profile_setting']['ru-ru'] = "Настройки профиля";
 $text['header-sip_profile_setting']['sv-se'] = "Profilinställning";
 $text['header-sip_profile_setting']['uk-ua'] = "Налаштування профілю";
+$text['header-sip_profile_setting']['zh-cn'] = "A. 概况";
+$text['header-sip_profile_setting']['ja-jp'] = "プロフィールの設定";
+$text['header-sip_profile_setting']['ko-kr'] = "Profile 설정";
 
 $text['header-sip_profile_hostname']['en-us'] = "Hostname";
 $text['header-sip_profile_hostname']['en-gb'] = "Hostname";
@@ -482,6 +548,9 @@ $text['header-sip_profile_hostname']['ro-ro'] = "";
 $text['header-sip_profile_hostname']['ru-ru'] = "Имя хоста";
 $text['header-sip_profile_hostname']['sv-se'] = "Hostname";
 $text['header-sip_profile_hostname']['uk-ua'] = "Назва хоста";
+$text['header-sip_profile_hostname']['zh-cn'] = "东道国";
+$text['header-sip_profile_hostname']['ja-jp'] = "ホスト名";
+$text['header-sip_profile_hostname']['ko-kr'] = "이름 *";
 
 $text['description-sip_profiles']['en-us'] = "Manage settings for SIP profiles.";
 $text['description-sip_profiles']['en-gb'] = "Manage settings for SIP profiles.";
@@ -503,6 +572,9 @@ $text['description-sip_profiles']['ro-ro'] = "";
 $text['description-sip_profiles']['ru-ru'] = "Управление настройками профилей SIP.";
 $text['description-sip_profiles']['sv-se'] = "Hantera inställningar för SIP profiler.";
 $text['description-sip_profiles']['uk-ua'] = "Налаштування профілю";
+$text['description-sip_profiles']['zh-cn'] = "管理SIP简介的环境。";
+$text['description-sip_profiles']['ja-jp'] = "SIPプロファイルの設定を管理します。";
+$text['description-sip_profiles']['ko-kr'] = "SIP 프로파일 설정 관리.";
 
 $text['description-sip_profile']['en-us'] = "Manage settings for the SIP profile.";
 $text['description-sip_profile']['en-gb'] = "Manage settings for the SIP profile.";
@@ -524,6 +596,9 @@ $text['description-sip_profile']['ro-ro'] = "";
 $text['description-sip_profile']['ru-ru'] = "Управление настройками профиля SIP.";
 $text['description-sip_profile']['sv-se'] = "Hantera inställningar för SIP profil.";
 $text['description-sip_profile']['uk-ua'] = "Налаштування SIP профілю";
+$text['description-sip_profile']['zh-cn'] = "管理SIP简介的环境。";
+$text['description-sip_profile']['ja-jp'] = "SIPプロファイルの設定を管理します。";
+$text['description-sip_profile']['ko-kr'] = "SIP 프로파일 설정 관리.";
 
 $text['description-sip_profile_setting_value']['en-us'] = "Enter the value.";
 $text['description-sip_profile_setting_value']['en-gb'] = "Enter the value.";
@@ -545,6 +620,9 @@ $text['description-sip_profile_setting_value']['ro-ro'] = "";
 $text['description-sip_profile_setting_value']['ru-ru'] = "Введите значение.";
 $text['description-sip_profile_setting_value']['sv-se'] = "Ange värde.";
 $text['description-sip_profile_setting_value']['uk-ua'] = "Вкажіть значення";
+$text['description-sip_profile_setting_value']['zh-cn'] = "输入价值。";
+$text['description-sip_profile_setting_value']['ja-jp'] = "値を入力してください。";
+$text['description-sip_profile_setting_value']['ko-kr'] = "이름 *";
 
 $text['description-sip_profile_setting_name']['en-us'] = "Enter the name.";
 $text['description-sip_profile_setting_name']['en-gb'] = "Enter the name.";
@@ -566,6 +644,9 @@ $text['description-sip_profile_setting_name']['ro-ro'] = "";
 $text['description-sip_profile_setting_name']['ru-ru'] = "Введите название.";
 $text['description-sip_profile_setting_name']['sv-se'] = "Ange Namnet.";
 $text['description-sip_profile_setting_name']['uk-ua'] = "Вкажіть назву";
+$text['description-sip_profile_setting_name']['zh-cn'] = "填写姓名。";
+$text['description-sip_profile_setting_name']['ja-jp'] = "お名前を入力してください。";
+$text['description-sip_profile_setting_name']['ko-kr'] = "이름 입력";
 
 $text['description-sip_profile_setting_enabled']['en-us'] = "Choose to enable or disable this.";
 $text['description-sip_profile_setting_enabled']['en-gb'] = "Choose to enable or disable this.";
@@ -587,6 +668,9 @@ $text['description-sip_profile_setting_enabled']['ro-ro'] = "";
 $text['description-sip_profile_setting_enabled']['ru-ru'] = "Выберите для включенья или отключения функции.";
 $text['description-sip_profile_setting_enabled']['sv-se'] = "Välj att Aktivera eller Inaktivare detta.";
 $text['description-sip_profile_setting_enabled']['uk-ua'] = "Ви";
+$text['description-sip_profile_setting_enabled']['zh-cn'] = "选择能够或消除这种情况。";
+$text['description-sip_profile_setting_enabled']['ja-jp'] = "有効または無効にするを選択します。";
+$text['description-sip_profile_setting_enabled']['ko-kr'] = "이를 활성화하거나 비활성화하십시오.";
 
 $text['description-sip_profile_setting_description']['en-us'] = "Enter the description.";
 $text['description-sip_profile_setting_description']['en-gb'] = "Enter the description.";
@@ -608,6 +692,9 @@ $text['description-sip_profile_setting_description']['ro-ro'] = "";
 $text['description-sip_profile_setting_description']['ru-ru'] = "Введите описание.";
 $text['description-sip_profile_setting_description']['sv-se'] = "Ange en Beskrivning.";
 $text['description-sip_profile_setting_description']['uk-ua'] = "Введіть опис";
+$text['description-sip_profile_setting_description']['zh-cn'] = "说明。";
+$text['description-sip_profile_setting_description']['ja-jp'] = "説明を入力してください。";
+$text['description-sip_profile_setting_description']['ko-kr'] = "자주 묻는 질문";
 
 $text['description-sip_profile_name']['en-us'] = "Enter the SIP Profile name.";
 $text['description-sip_profile_name']['en-gb'] = "Enter the SIP Profile name.";
@@ -629,6 +716,9 @@ $text['description-sip_profile_name']['ro-ro'] = "";
 $text['description-sip_profile_name']['ru-ru'] = "Введите имя профиля SIP.";
 $text['description-sip_profile_name']['sv-se'] = "Skriv in namnet på SIP Profilen.";
 $text['description-sip_profile_name']['uk-ua'] = "Введіть назву профілю";
+$text['description-sip_profile_name']['zh-cn'] = "进入SIP简介名称。";
+$text['description-sip_profile_name']['ja-jp'] = "SIP プロファイル名を入力してください。";
+$text['description-sip_profile_name']['ko-kr'] = "SIP 프로필 이름을 입력하십시오.";
 
 $text['description-sip_profile_hostname']['en-us'] = "Enter the hostname / switchname.";
 $text['description-sip_profile_hostname']['en-gb'] = "Enter the hostname / switchname.";
@@ -650,6 +740,9 @@ $text['description-sip_profile_hostname']['ro-ro'] = "";
 $text['description-sip_profile_hostname']['ru-ru'] = "Введите имя хоста / имя PBX.";
 $text['description-sip_profile_hostname']['sv-se'] = "Fyll i hostname / switchname.";
 $text['description-sip_profile_hostname']['uk-ua'] = "Введіть назву хоста / switchname.";
+$text['description-sip_profile_hostname']['zh-cn'] = "进入接收国名/交换国名。";
+$text['description-sip_profile_hostname']['ja-jp'] = "ホスト名/スイッチ名を入力します。";
+$text['description-sip_profile_hostname']['ko-kr'] = "hostname/switchname을 입력하십시오.";
 
 $text['description-sip_profile_enabled']['en-us'] = "Control the state of the profile.";
 $text['description-sip_profile_enabled']['en-gb'] = "Control the state of the profile.";
@@ -671,6 +764,9 @@ $text['description-sip_profile_enabled']['ro-ro'] = "";
 $text['description-sip_profile_enabled']['ru-ru'] = "Управление состоянием профиля.";
 $text['description-sip_profile_enabled']['sv-se'] = "Styr tillståndet i profilen.";
 $text['description-sip_profile_enabled']['uk-ua'] = "Керування станом профілю";
+$text['description-sip_profile_enabled']['zh-cn'] = "控制情况。";
+$text['description-sip_profile_enabled']['ja-jp'] = "プロファイルの状態を制御します。";
+$text['description-sip_profile_enabled']['ko-kr'] = "프로필의 상태를 제어합니다.";
 
 $text['message-sip_profile_unique']['en-us'] = "Invalid SIP Profile Name - Must be Unique";
 $text['message-sip_profile_unique']['en-gb'] = "Invalid SIP Profile Name - Must be Unique";
@@ -692,5 +788,8 @@ $text['message-sip_profile_unique']['ro-ro'] = "Invalid SIP Profile Name - Must 
 $text['message-sip_profile_unique']['ru-ru'] = "Invalid SIP Profile Name - Must be Unique";
 $text['message-sip_profile_unique']['sv-se'] = "Invalid SIP Profile Name - Must be Unique";
 $text['message-sip_profile_unique']['uk-ua'] = "Invalid SIP Profile Name - Must be Unique";
+$text['message-sip_profile_unique']['zh-cn'] = "Invalid SIP 姓名: 必须是独一无二的。";
+$text['message-sip_profile_unique']['ja-jp'] = "無効なSIP プロフィール名 - ユニークでなければなりません";
+$text['message-sip_profile_unique']['ko-kr'] = "잘못된 SIP 프로필 이름 - 자주 묻는 질문";
 
 ?>
