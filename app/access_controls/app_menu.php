@@ -21,10 +21,16 @@
 	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Контроль доступа";
 	$apps[$x]['menu'][$y]['title']['uk-ua'] = "контроль доступу";
 	$apps[$x]['menu'][$y]['title']['sv-se'] = "Åtkomstkontroll";
+	$apps[$x]['menu'][$y]['title']['zh-cn'] = "出入控制";
+	$apps[$x]['menu'][$y]['title']['ja-jp'] = "アクセス制御";
+	$apps[$x]['menu'][$y]['title']['ko-kr'] = "오시는 길";
 	$apps[$x]['menu'][$y]['uuid'] = "bd47c972-5498-4541-b44a-d4bbfac69496";
 	$apps[$x]['menu'][$y]['parent_uuid'] = "594d99c5-6128-9c88-ca35-4b33392cec0f";
 	$apps[$x]['menu'][$y]['category'] = "internal";
+	$apps[$x]['menu'][$y]['icon'] = "";
 	$apps[$x]['menu'][$y]['path'] = "/app/access_controls/access_controls.php";
+	$apps[$x]['menu'][$y]['order'] = "";
 	$apps[$x]['menu'][$y]['groups'][] = "superadmin";
+	$y++;
 
 ?>

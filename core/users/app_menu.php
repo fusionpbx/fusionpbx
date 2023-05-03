@@ -1,6 +1,6 @@
 <?php
 
-	$y = 0;
+$y=0;
 	$apps[$x]['menu'][$y]['title']['en-us'] = "Users";
 	$apps[$x]['menu'][$y]['title']['en-gb'] = "Users";
 	$apps[$x]['menu'][$y]['title']['ar-eg'] = "المستخدمون";
@@ -20,10 +20,15 @@
 	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Пользователи";
 	$apps[$x]['menu'][$y]['title']['sv-se'] = "Användar Inställningar";
 	$apps[$x]['menu'][$y]['title']['uk-ua'] = "Користувачі";
+	$apps[$x]['menu'][$y]['title']['zh-cn'] = "用户";
+	$apps[$x]['menu'][$y]['title']['ja-jp'] = "ユーザ名";
+	$apps[$x]['menu'][$y]['title']['ko-kr'] = "이름 *";
 	$apps[$x]['menu'][$y]['uuid'] = "0d57cc1e-1874-47b9-7ddd-fe1f57cec99b";
 	$apps[$x]['menu'][$y]['parent_uuid'] = "bc96d773-ee57-0cdd-c3ac-2d91aba61b55";
 	$apps[$x]['menu'][$y]['category'] = "internal";
+	$apps[$x]['menu'][$y]['icon'] = "";
 	$apps[$x]['menu'][$y]['path'] = "/core/users/users.php";
+	$apps[$x]['menu'][$y]['order'] = "";
 	$apps[$x]['menu'][$y]['groups'][] = "admin";
 	$apps[$x]['menu'][$y]['groups'][] = "superadmin";
 	$y++;
@@ -45,14 +50,19 @@
 	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Настройка учетной записи";
 	$apps[$x]['menu'][$y]['title']['sv-se'] = "Kontoinställningar";
 	$apps[$x]['menu'][$y]['title']['uk-ua'] = "Обліковий запис";
+	$apps[$x]['menu'][$y]['title']['zh-cn'] = "账户设置";
+	$apps[$x]['menu'][$y]['title']['ja-jp'] = "アカウント設定";
+	$apps[$x]['menu'][$y]['title']['ko-kr'] = "계정 설정";
 	$apps[$x]['menu'][$y]['uuid'] = "4d532f0b-c206-c39d-ff33-fc67d668fb69";
 	$apps[$x]['menu'][$y]['parent_uuid'] = "02194288-6d56-6d3e-0b1a-d53a2bc10788";
 	$apps[$x]['menu'][$y]['category'] = "internal";
+	$apps[$x]['menu'][$y]['icon'] = "";
 	$apps[$x]['menu'][$y]['path'] = "/core/users/user_edit.php?id=user";
+	$apps[$x]['menu'][$y]['order'] = "";
 	$apps[$x]['menu'][$y]['groups'][] = "superadmin";
 	$apps[$x]['menu'][$y]['groups'][] = "admin";
 	$apps[$x]['menu'][$y]['groups'][] = "user";
 	$apps[$x]['menu'][$y]['groups'][] = "agent";
 	$y++;
-	
+
 ?>

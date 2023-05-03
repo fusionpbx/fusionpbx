@@ -21,10 +21,15 @@
 	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Маршрутизация входящих";
 	$apps[$x]['menu'][$y]['title']['sv-se'] = "Inbound Routes";
 	$apps[$x]['menu'][$y]['title']['uk-ua'] = "Вхідні маршрути";
+	$apps[$x]['menu'][$y]['title']['zh-cn'] = "A. 限制路线";
+	$apps[$x]['menu'][$y]['title']['ja-jp'] = "インバウンドルート";
+	$apps[$x]['menu'][$y]['title']['ko-kr'] = "Inbound 노선";
 	$apps[$x]['menu'][$y]['uuid'] = "b64b2bbf-f99b-b568-13dc-32170515a687";
 	$apps[$x]['menu'][$y]['parent_uuid'] = "b94e8bd9-9eb5-e427-9c26-ff7a6c21552a";
 	$apps[$x]['menu'][$y]['category'] = "internal";
+	$apps[$x]['menu'][$y]['icon'] = "";
 	$apps[$x]['menu'][$y]['path'] = "/app/dialplans/dialplans.php?app_uuid=c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4";
+	$apps[$x]['menu'][$y]['order'] = "";
 	$apps[$x]['menu'][$y]['groups'][] = "superadmin";
 	$y++;
 
