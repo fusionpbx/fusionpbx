@@ -22,6 +22,9 @@ $text['title-dashboard']['ru-ru'] = "Панель пользователя";
 $text['title-dashboard']['sv-se'] = "Användarpanel";
 $text['title-dashboard']['uk-ua'] = "Панель користувача";
 $text['title-dashboard']['tr-tr'] = "Gösterge Paneli";
+$text['title-dashboard']['zh-cn'] = "Dash Service";
+$text['title-dashboard']['ja-jp'] = "ダッシュボード";
+$text['title-dashboard']['ko-kr'] = "대시보드";
 
 $text['description-dashboard']['en-us'] = "Quickly access information and tools related to your account.";
 $text['description-dashboard']['en-gb'] = "Quickly access information and tools related to your account.";
@@ -45,6 +48,9 @@ $text['description-dashboard']['ru-ru'] = "Быстрый доступ к инф
 $text['description-dashboard']['sv-se'] = "Snabb tillgång till kontoinformation och funktioner.";
 $text['description-dashboard']['uk-ua'] = "Швидкий доступ до інформації та інструментів  вашого облікового запису.";
 $text['description-dashboard']['tr-tr'] = "Hesabınızla ilgili bilgilere ve araçlara hızla erişin.";
+$text['description-dashboard']['zh-cn'] = "迅速获取与你的账户有关的信息和工具。";
+$text['description-dashboard']['ja-jp'] = "アカウントに関連する情報やツールをすばやくアクセスできます。";
+$text['description-dashboard']['ko-kr'] = "귀하의 계정과 관련된 빠른 액세스 정보 및 도구.";
 
 $text['label-group_uuid']['en-us'] = "Group UUID";
 $text['label-group_uuid']['en-gb'] = "Group UUID";
@@ -68,6 +74,9 @@ $text['label-group_uuid']['ru-ru'] = "UUID группы";
 $text['label-group_uuid']['sv-se'] = "Grupp UUID";
 $text['label-group_uuid']['uk-ua'] = "UUID групи";
 $text['label-group_uuid']['tr-tr'] = "Grup UUID'si";
+$text['label-group_uuid']['zh-cn'] = "uuid";
+$text['label-group_uuid']['ja-jp'] = "グループUUID";
+$text['label-group_uuid']['ko-kr'] = "그룹 UUID";
 
 $text['description-group_uuid']['en-us'] = "Enter the group uuid.";
 $text['description-group_uuid']['en-gb'] = "Enter the group uuid.";
@@ -89,8 +98,10 @@ $text['description-group_uuid']['pt-pt'] = "Digite o uuid do grupo.";
 $text['description-group_uuid']['ro-ro'] = "Introduceți grupul uuid.";
 $text['description-group_uuid']['ru-ru'] = "Введите UUID группы.";
 $text['description-group_uuid']['sv-se'] = "Ange gruppens uuid.";
-$text['description-group_uuid']['uk-ua'] = "Введіть uuid групи.";
 $text['description-group_uuid']['uk-ua'] = "Grup uuid'sini girin.";
+$text['description-group_uuid']['zh-cn'] = "进入该团体。";
+$text['description-group_uuid']['ja-jp'] = "グループ uuid を入力してください。";
+$text['description-group_uuid']['ko-kr'] = "그룹 uuid를 입력하십시오.";
 
 $text['label-dashboard_name']['en-us'] = "Name";
 $text['label-dashboard_name']['en-gb'] = "Name";
@@ -114,6 +125,9 @@ $text['label-dashboard_name']['ru-ru'] = "Имя";
 $text['label-dashboard_name']['sv-se'] = "namn";
 $text['label-dashboard_name']['uk-ua'] = "Ім'я";
 $text['label-dashboard_name']['tr-tr'] = "İsim";
+$text['label-dashboard_name']['zh-cn'] = "姓名";
+$text['label-dashboard_name']['ja-jp'] = "お名前 (必須)";
+$text['label-dashboard_name']['ko-kr'] = "이름 *";
 
 $text['description-dashboard_name']['en-us'] = "Enter the dashboard widget name.";
 $text['description-dashboard_name']['en-gb'] = "Enter the dashboard widget name.";
@@ -137,6 +151,9 @@ $text['description-dashboard_name']['ru-ru'] = "Введите имя видже
 $text['description-dashboard_name']['sv-se'] = "Introduceți numele widget-ului tabloului de bord.";
 $text['description-dashboard_name']['uk-ua'] = "Введіть назву віджета інформаційної панелі.";
 $text['description-dashboard_name']['tr-tr'] = "Pano widget adını girin.";
+$text['description-dashboard_name']['zh-cn'] = "进入“仪表板”植被名称。";
+$text['description-dashboard_name']['ja-jp'] = "ダッシュボードウィジェット名を入力します。";
+$text['description-dashboard_name']['ko-kr'] = "대시보드 위젯 이름을 입력하십시오.";
 
 $text['label-dashboard_path']['en-us'] = "Path";
 $text['label-dashboard_path']['en-gb'] = "Path";
@@ -160,6 +177,9 @@ $text['label-dashboard_path']['ru-ru'] = "Путь";
 $text['label-dashboard_path']['sv-se'] = "Väg";
 $text['label-dashboard_path']['uk-ua'] = "шлях";
 $text['label-dashboard_path']['tr-tr'] = "Yol";
+$text['label-dashboard_path']['zh-cn'] = "途径";
+$text['label-dashboard_path']['ja-jp'] = "パス";
+$text['label-dashboard_path']['ko-kr'] = "오시는 길";
 
 $text['description-dashboard_path']['en-us'] = "Enter the dashboard widget path.";
 $text['description-dashboard_path']['en-gb'] = "Enter the dashboard widget path.";
@@ -183,6 +203,9 @@ $text['description-dashboard_path']['ru-ru'] = "Введите путь к ви�
 $text['description-dashboard_path']['sv-se'] = "Ange sökvägen för instrumentpanelens widget.";
 $text['description-dashboard_path']['uk-ua'] = "Введіть шлях до віджета інформаційної панелі.";
 $text['description-dashboard_path']['tr-tr'] = "Pano widget yolunu girin.";
+$text['description-dashboard_path']['zh-cn'] = "进入冲绳植被。";
+$text['description-dashboard_path']['ja-jp'] = "ダッシュボードウィジェットパスを入力します。";
+$text['description-dashboard_path']['ko-kr'] = "대시보드 위젯 경로 입력.";
 
 $text['label-dashboard_groups']['en-us'] = "Groups";
 $text['label-dashboard_groups']['en-gb'] = "Groups";
@@ -206,6 +229,9 @@ $text['label-dashboard_groups']['ru-ru'] = "Группы";
 $text['label-dashboard_groups']['sv-se'] = "Grupper";
 $text['label-dashboard_groups']['uk-ua'] = "Групи";
 $text['label-dashboard_groups']['tr-tr'] = "Gruplar";
+$text['label-dashboard_groups']['zh-cn'] = "团体";
+$text['label-dashboard_groups']['ja-jp'] = "グループ";
+$text['label-dashboard_groups']['ko-kr'] = "그룹";
 
 $text['description-dashboard_groups']['en-us'] = "Add the groups that have permission to this widget.";
 $text['description-dashboard_groups']['en-gb'] = "Add the groups that have permission to this widget.";
@@ -229,6 +255,9 @@ $text['description-dashboard_groups']['ru-ru'] = "Добавьте группы,
 $text['description-dashboard_groups']['sv-se'] = "Lägg till grupperna som har behörighet till den här widgeten.";
 $text['description-dashboard_groups']['uk-ua'] = "Додайте групи, які мають дозвіл на цей віджет.";
 $text['description-dashboard_groups']['tr-tr'] = "Bu widget'a izni olan grupları ekleyin.";
+$text['description-dashboard_groups']['zh-cn'] = "添加获准种植这种植被的群体。";
+$text['description-dashboard_groups']['ja-jp'] = "このウィジェットに許可されているグループを追加します。";
+$text['description-dashboard_groups']['ko-kr'] = "이 위젯에 권한이 있는 그룹을 추가합니다.";
 
 $text['label-dashboard_column_span']['en-us'] = "Column Span";
 $text['label-dashboard_column_span']['en-gb'] = "Column Span";
@@ -252,6 +281,9 @@ $text['label-dashboard_column_span']['ru-ru'] = "Размах столбца";
 $text['label-dashboard_column_span']['sv-se'] = "Kolumn Span";
 $text['label-dashboard_column_span']['uk-ua'] = "Розмах стовпців";
 $text['label-dashboard_column_span']['tr-tr'] = "Sütun Açıklığı";
+$text['label-dashboard_column_span']['zh-cn'] = "页 次";
+$text['label-dashboard_column_span']['ja-jp'] = "コラムのスパン";
+$text['label-dashboard_column_span']['ko-kr'] = "열 경간";
 
 $text['description-dashboard_column_span']['en-us'] = "Enter the dashboard widget column span.";
 $text['description-dashboard_column_span']['en-gb'] = "Enter the dashboard widget column span.";
@@ -275,6 +307,9 @@ $text['description-dashboard_column_span']['ru-ru'] = "Введите диапа
 $text['description-dashboard_column_span']['sv-se'] = "Ange kolumnspann för instrumentpanelens widget.";
 $text['description-dashboard_column_span']['uk-ua'] = "Введіть діапазон стовпців віджета інформаційної панелі.";
 $text['description-dashboard_column_span']['tr-tr'] = "Pano gereci sütun aralığını girin.";
+$text['description-dashboard_column_span']['zh-cn'] = "进入沥滤板的植被。";
+$text['description-dashboard_column_span']['ja-jp'] = "ダッシュボードウィジェットの列スパンを入力します。";
+$text['description-dashboard_column_span']['ko-kr'] = "대시보드 위젯 컬럼을 입력합니다.";
 
 $text['label-dashboard_details_state']['en-us'] = "Details State";
 $text['label-dashboard_details_state']['en-gb'] = "Details State";
@@ -298,6 +333,9 @@ $text['label-dashboard_details_state']['ru-ru'] = "Детали Состояни
 $text['label-dashboard_details_state']['sv-se'] = "Detaljer Stat";
 $text['label-dashboard_details_state']['uk-ua'] = "Деталі Держ";
 $text['label-dashboard_details_state']['tr-tr'] = "Ayrıntılar Durumu";
+$text['label-dashboard_details_state']['zh-cn'] = "详细情况";
+$text['label-dashboard_details_state']['ja-jp'] = "詳細情報の状態";
+$text['label-dashboard_details_state']['ko-kr'] = "상세 정보";
 
 $text['description-dashboard_details_state']['en-us'] = "Set the default state of the widget details.";
 $text['description-dashboard_details_state']['en-gb'] = "Set the default state of the widget details.";
@@ -321,6 +359,9 @@ $text['description-dashboard_details_state']['ru-ru'] = "Установите с
 $text['description-dashboard_details_state']['sv-se'] = "Ställ in standardstatus för widgetdetaljerna.";
 $text['description-dashboard_details_state']['uk-ua'] = "Встановити стандартний стан деталей віджета.";
 $text['description-dashboard_details_state']['tr-tr'] = "Widget ayrıntılarının varsayılan durumunu ayarlayın.";
+$text['description-dashboard_details_state']['zh-cn'] = "设定植被细节的违约状态。";
+$text['description-dashboard_details_state']['ja-jp'] = "ウィジェットのデフォルト状態を設定します。";
+$text['description-dashboard_details_state']['ko-kr'] = "위젯 세부의 기본 상태를 설정합니다.";
 
 $text['label-dashboard_order']['en-us'] = "Order";
 $text['label-dashboard_order']['en-gb'] = "Order";
@@ -344,6 +385,9 @@ $text['label-dashboard_order']['ru-ru'] = "Заказ";
 $text['label-dashboard_order']['sv-se'] = "Beställa";
 $text['label-dashboard_order']['uk-ua'] = "порядок";
 $text['label-dashboard_order']['tr-tr'] = "Emir";
+$text['label-dashboard_order']['zh-cn'] = "命令";
+$text['label-dashboard_order']['ja-jp'] = "オーダー";
+$text['label-dashboard_order']['ko-kr'] = "이름 *";
 
 $text['description-dashboard_order']['en-us'] = "Enter the dashboard widget order.";
 $text['description-dashboard_order']['en-gb'] = "Enter the dashboard widget order.";
@@ -367,6 +411,9 @@ $text['description-dashboard_order']['ru-ru'] = "Введите порядок �
 $text['description-dashboard_order']['sv-se'] = "Ange instrumentpanelens widgetordning.";
 $text['description-dashboard_order']['uk-ua'] = "Введіть порядок віджетів інформаційної панелі.";
 $text['description-dashboard_order']['tr-tr'] = "Pano widget sırasını girin.";
+$text['description-dashboard_order']['zh-cn'] = "进入“仪表板”植被。";
+$text['description-dashboard_order']['ja-jp'] = "ダッシュボードウィジェットの注文を入力します。";
+$text['description-dashboard_order']['ko-kr'] = "대시보드 위젯 순서를 입력하십시오.";
 
 $text['label-dashboard_enabled']['en-us'] = "Enabled";
 $text['label-dashboard_enabled']['en-gb'] = "Enabled";
@@ -390,6 +437,9 @@ $text['label-dashboard_enabled']['ru-ru'] = "Включено";
 $text['label-dashboard_enabled']['sv-se'] = "Aktiverad";
 $text['label-dashboard_enabled']['uk-ua'] = "Увімкнено";
 $text['label-dashboard_enabled']['tr-tr'] = "Etkinleştirilmiş";
+$text['label-dashboard_enabled']['zh-cn'] = "授权";
+$text['label-dashboard_enabled']['ja-jp'] = "有効化";
+$text['label-dashboard_enabled']['ko-kr'] = "이름 *";
 
 $text['description-dashboard_enabled']['en-us'] = "Enter the dashboard widget enabled.";
 $text['description-dashboard_enabled']['en-gb'] = "Enter the dashboard widget enabled.";
@@ -413,6 +463,9 @@ $text['description-dashboard_enabled']['ru-ru'] = "Введите включен
 $text['description-dashboard_enabled']['sv-se'] = "Ange den aktiverade instrumentpanelswidgeten.";
 $text['description-dashboard_enabled']['uk-ua'] = "Введіть увімкнений віджет інформаційної панелі.";
 $text['description-dashboard_enabled']['tr-tr'] = "Pano widget'ını etkinleştirin.";
+$text['description-dashboard_enabled']['zh-cn'] = "能够进入沙板植被。";
+$text['description-dashboard_enabled']['ja-jp'] = "ダッシュボードウィジェットを有効にします。";
+$text['description-dashboard_enabled']['ko-kr'] = "대시보드 위젯을 입력합니다.";
 
 $text['label-dashboard_description']['en-us'] = "Description";
 $text['label-dashboard_description']['en-gb'] = "Description";
@@ -436,6 +489,9 @@ $text['label-dashboard_description']['ru-ru'] = "Описание";
 $text['label-dashboard_description']['sv-se'] = "Beskrivning";
 $text['label-dashboard_description']['uk-ua'] = "опис";
 $text['label-dashboard_description']['tr-tr'] = "Tanım";
+$text['label-dashboard_description']['zh-cn'] = "说明";
+$text['label-dashboard_description']['ja-jp'] = "コンテンツ";
+$text['label-dashboard_description']['ko-kr'] = "제품 설명";
 
 $text['description-dashboard_description']['en-us'] = "Enter the dashboard widget description.";
 $text['description-dashboard_description']['en-gb'] = "Enter the dashboard widget description.";
@@ -459,6 +515,9 @@ $text['description-dashboard_description']['ru-ru'] = "Введите описа
 $text['description-dashboard_description']['sv-se'] = "Ange beskrivningen av instrumentpanelens widget.";
 $text['description-dashboard_description']['uk-ua'] = "Введіть опис віджета інформаційної панелі.";
 $text['description-dashboard_description']['tr-tr'] = "Pano gereci açıklamasını girin.";
+$text['description-dashboard_description']['zh-cn'] = "采用干板植被描述。";
+$text['description-dashboard_description']['ja-jp'] = "ダッシュボードウィジェットの説明を入力します。";
+$text['description-dashboard_description']['ko-kr'] = "대시보드 위젯 설명을 입력합니다.";
 
 $text['label-welcome']['en-us'] = "Welcome:";
 $text['label-welcome']['en-gb'] = "Welcome:";
@@ -482,6 +541,9 @@ $text['label-welcome']['ru-ru'] = "Добро пожаловать:";
 $text['label-welcome']['sv-se'] = "Välkommen:";
 $text['label-welcome']['uk-ua'] = "Ласкаво просимо:";
 $text['label-welcome']['tr-tr'] = "Hoş geldin:";
+$text['label-welcome']['zh-cn'] = "欢迎:";
+$text['label-welcome']['ja-jp'] = "歓迎:";
+$text['label-welcome']['ko-kr'] = "환영:";
 
 $text['button-collapse_all']['en-us'] = "Collapse All";
 $text['button-collapse_all']['en-gb'] = "Collapse All";
