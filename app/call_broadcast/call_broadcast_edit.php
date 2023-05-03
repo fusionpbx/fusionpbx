@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -101,7 +101,7 @@
 		$broadcast_concurrent_limit = $_POST["broadcast_concurrent_limit"];
 		$broadcast_caller_id_name = $_POST["broadcast_caller_id_name"];
 		$broadcast_caller_id_number = $_POST["broadcast_caller_id_number"];
-		$broadcast_destination_type = $_POST["broadcast_destination_type"];
+		//$broadcast_destination_type = $_POST["broadcast_destination_type"];
 		$broadcast_phone_numbers = $_POST["broadcast_phone_numbers"];
 		$broadcast_avmd = $_POST["broadcast_avmd"];
 		$broadcast_destination_data = $_POST["broadcast_destination_data"];
@@ -224,21 +224,39 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					}
 					$broadcast_phone_numbers = $file_res['sql'];
 
-				//common array items
+				//build the database array
 					$array['call_broadcasts'][0]['domain_uuid'] = $domain_uuid;
 					$array['call_broadcasts'][0]['broadcast_name'] = $broadcast_name;
-					$array['call_broadcasts'][0]['broadcast_start_time'] = strtotime($broadcast_start_time) - strtotime('now') >= 0 ? strtotime($broadcast_start_time) - strtotime('now') : null;
-					$array['call_broadcasts'][0]['broadcast_timeout'] = strlen($broadcast_timeout) != 0 ? $broadcast_timeout : null;
-					$array['call_broadcasts'][0]['broadcast_concurrent_limit'] = strlen($broadcast_concurrent_limit) != 0 ? $broadcast_concurrent_limit : null;
-					$array['call_broadcasts'][0]['broadcast_caller_id_name'] = $broadcast_caller_id_name;
-					$array['call_broadcasts'][0]['broadcast_caller_id_number'] = $broadcast_caller_id_number;
-					$array['call_broadcasts'][0]['broadcast_destination_type'] = $broadcast_destination_type;
-					$array['call_broadcasts'][0]['broadcast_phone_numbers'] = $broadcast_phone_numbers;
-					$array['call_broadcasts'][0]['broadcast_avmd'] = $broadcast_avmd;
-					$array['call_broadcasts'][0]['broadcast_destination_data'] = $broadcast_destination_data;
-					$array['call_broadcasts'][0]['broadcast_accountcode'] = $broadcast_accountcode;
+					if (permission_exists('call_broadcast_start_time')) {
+						$array['call_broadcasts'][0]['broadcast_start_time'] = strtotime($broadcast_start_time) - strtotime('now') >= 0 ? strtotime($broadcast_start_time) - strtotime('now') : null;
+					}
+					if (permission_exists('call_broadcast_accountcode')) {
+						$array['call_broadcasts'][0]['broadcast_accountcode'] = $broadcast_accountcode;
+					}
+					if (permission_exists('call_broadcast_timeout')) {
+						$array['call_broadcasts'][0]['broadcast_timeout'] = strlen($broadcast_timeout) != 0 ? $broadcast_timeout : null;
+					}
+					if (permission_exists('call_broadcast_concurrent_limit')) {
+						$array['call_broadcasts'][0]['broadcast_concurrent_limit'] = strlen($broadcast_concurrent_limit) != 0 ? $broadcast_concurrent_limit : null;
+					}
+					if (permission_exists("call_broadcast_caller_id")) {
+						$array['call_broadcasts'][0]['broadcast_caller_id_name'] = $broadcast_caller_id_name;
+						$array['call_broadcasts'][0]['broadcast_caller_id_number'] = $broadcast_caller_id_number;
+					}
+					if (permission_exists('call_broadcast_destination_data')) { //broadcast_destination_number
+						$array['call_broadcasts'][0]['broadcast_destination_data'] = $broadcast_destination_data;
+					}
+					//$array['call_broadcasts'][0]['broadcast_destination_type'] = $broadcast_destination_type;
+					if (permission_exists('call_broadcast_phone_numbers')) {
+						$array['call_broadcasts'][0]['broadcast_phone_numbers'] = $broadcast_phone_numbers;
+					}
+					if (permission_exists('call_broadcast_voicemail_detection')) { //broadcast_avmd
+						$array['call_broadcasts'][0]['broadcast_avmd'] = $broadcast_avmd;
+					}
+					if (permission_exists('call_broadcast_toll_allow')) {
+						$array['call_broadcasts'][0]['broadcast_toll_allow'] = $broadcast_toll_allow;
+					}
 					$array['call_broadcasts'][0]['broadcast_description'] = $broadcast_description;
-					$array['call_broadcasts'][0]['broadcast_toll_allow'] = $broadcast_toll_allow;
 
 				//execute
 					$database = new database;
@@ -273,7 +291,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			$broadcast_concurrent_limit = $row["broadcast_concurrent_limit"];
 			$broadcast_caller_id_name = $row["broadcast_caller_id_name"];
 			$broadcast_caller_id_number = $row["broadcast_caller_id_number"];
-			$broadcast_destination_type = $row["broadcast_destination_type"];
+			//$broadcast_destination_type = $row["broadcast_destination_type"];
 			$broadcast_phone_numbers = $row["broadcast_phone_numbers"];
 			$broadcast_avmd = $row["broadcast_avmd"];
 			$broadcast_destination_data = $row["broadcast_destination_data"];
@@ -350,7 +368,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "</tr>\n";
 	}
 
-	if (if_group("superadmin")){
+	if (permission_exists('call_broadcast_accountcode')) {
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "    ".$text['label-accountcode']."\n";
@@ -376,6 +394,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "</td>\n";
 		echo "</tr>\n";
 	}
+
 	if (permission_exists('call_broadcast_concurrent_limit')) {
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
@@ -443,7 +462,8 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "</td>\n";
 		echo "</tr>\n";
 	}
-/*
+
+	/*
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
 	echo "	Type\n";
@@ -469,7 +489,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "transfer (external number): 12081231234 XML default <br />\n";
 	echo "</td>\n";
 	echo "</tr>\n";
-*/
+	*/
 
 	if (permission_exists('call_broadcast_destination_number')) {
 		echo "<tr>\n";
@@ -483,7 +503,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "</td>\n";
 		echo "</tr>\n";
 	}
-	if (permission_exists('call_broadcast_phone_number_list')) {
+	if (permission_exists('call_broadcast_phone_numbers')) {
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
 		echo "	".$text['label-phone']."\n";
@@ -515,7 +535,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "</td>\n";
 		echo "</tr>\n";
 	}
-	if (permission_exists('broadcast_toll_allow')) {
+	if (permission_exists('call_broadcast_toll_allow')) {
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-broadcast_toll_allow']."\n";
@@ -527,7 +547,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "</td>\n";
 		echo "</tr>\n";
 	}
-		
+
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
 	echo "	".$text['label-description']."\n";
@@ -548,163 +568,6 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 
 	echo "</form>";
-
-	/*
-	if ($action == "update") {
-
-		echo "<table width='100%' border='0'>\n";
-		echo "<tr>\n";
-		echo "<td width='50%' nowrap><b>Call Broadcast</b></td>\n";
-		echo "<td width='50%' align='right'>&nbsp;</td>\n";
-		echo "</tr>\n";
-		echo "</table>\n";
-
-		echo "<form method='get' name='frm' action='call_broadcast_send.php'>\n";
-
-		echo "<div align='center'>\n";
-		echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
-
-		echo "<tr>\n";
-		echo "<td width='30%' class='vncell' valign='top' align='left' nowrap>\n";
-		echo "	Category\n";
-		echo "</td>\n";
-		echo "<td width='70%' class='vtable' align='left'>\n";
-		echo "		<select name='user_category' class='formfld'>\n";
-		echo "		<option></option>\n";
-		$sql = "";
-		$sql .= "select distinct user_category as user_category from v_users ";
-		//$sql .= "where domain_uuid = :domain_uuid ";
-		//$parameters['domain_uuid'] = $domain_uuid;
-		$database = new database;
-		$rows = $database->select($sql, null, 'all');
-		if (is_array($rows) && @sizeof($rows) != 0) {
-			foreach ($rows as $row) {
-				if ($user_category   == $row['user_category']) {
-					echo "		<option value='".escape($row['user_category'])."' selected='yes'>".escape($row['user_category'])."</option>\n";
-				}
-				else {
-					echo "		<option value='".escape($row['user_category'])."'>".escape($row['user_category'])."</option>\n";
-				}
-			}
-		}
-		unset($sql, $parameters, $rows, $row);
-		echo "		</select>\n";
-		echo "<br />\n";
-		echo "\n";
-		echo "</td>\n";
-		echo "</tr>\n";
-
-		echo "<tr>\n";
-		echo "<td width='30%' class='vncell' valign='top' align='left' nowrap>\n";
-		echo "	Group\n";
-		echo "</td>\n";
-		echo "<td width='70%' class='vtable' align='left'>\n";
-		echo "		<select name='group_name' class='formfld'>\n";
-		echo "		<option></option>\n";
-		$sql = "";
-		$sql .= "select * from v_groups ";
-		//$sql .= "where domain_uuid = :domain_uuid ";
-		//$parameters['domain_uuid'] = $domain_uuid;
-		$database = new database;
-		$rows = $database->select($sql, null, 'all');
-		if (is_array($rows) && @sizeof($rows) != 0) {
-			foreach ($rows as $row) {
-				if ($recording_uuid == $row['group_name']) {
-					echo "		<option value='".escape($row['group_name'])."' selected='yes'>".escape($row['group_name'])."</option>\n";
-				}
-				else {
-					echo "		<option value='".escape($row['group_name'])."'>".escape($row['group_name'])."</option>\n";
-				}
-			}
-		}
-		unset($sql, $parameters, $rows, $row);
-		echo "		</select>\n";
-		echo "<br />\n";
-		echo "\n";
-		echo "</td>\n";
-		echo "</tr>\n";
-
-
-		echo "<tr>\n";
-		echo "<td width='30%' class='vncell' valign='top' align='left' nowrap>\n";
-		echo "	Gateway\n";
-		echo "</td>\n";
-		echo "<td width='70%' class='vtable' align='left'>\n";
-		echo "		<select name='gateway' class='formfld'>\n";
-		echo "		<option></option>\n";
-		$sql = "";
-		$sql .= "select * from v_gateways ";
-		//$sql .= "where domain_uuid = :domain_uuid ";
-		//$parameters['domain_uuid'] = $domain_uuid;
-		$database = new database;
-		$rows = $database->select($sql, null, 'all');
-		if (is_array($rows) && @sizeof($rows) != 0) {
-			foreach ($rows as $row) {
-				if ($gateway == $row['gateway']) {
-					echo "		<option value='".escape($row['gateway'])."' selected='yes'>".escape($row['gateway'])."</option>\n";
-				}
-				else {
-					echo "		<option value='".escape($row['gateway'])."'>".escape($row['gateway'])."</option>\n";
-				}
-			}
-		}
-		unset($sql, $parameters, $rows, $row);
-		echo "		<option value='loopback'>loopback</option>\n";
-		echo "		</select>\n";
-		echo "<br />\n";
-		//echo "zzz.<br />\n";
-		echo "\n";
-		echo "</td>\n";
-		echo "</tr>\n";
-
-
-		echo "<tr>\n";
-		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-		echo "	Phone Type\n";
-		echo "</td>\n";
-		echo "<td class='vtable' align='left'>\n";
-		echo "		<select name='phonetype1' class='formfld'>\n";
-		echo "		<option></option>\n";
-		echo "		<option value='phone1'>phone1</option>\n";
-		echo "		<option value='phone2'>phone2</option>\n";
-		echo "		<option value='cell'>cell</option>\n";
-		//echo "		<option value='zzz'>cell</option>\n";
-		echo "		</select>\n";
-		echo "<br />\n";
-		echo "\n";
-		echo "</td>\n";
-		echo "</tr>\n";
-
-
-		echo "<tr>\n";
-		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-		echo "	Phone Type\n";
-		echo "</td>\n";
-		echo "<td class='vtable' align='left'>\n";
-		echo "		<select name='phonetype2' class='formfld'>\n";
-		echo "		<option></option>\n";
-		echo "		<option value='phone1'>phone1</option>\n";
-		echo "		<option value='phone2'>phone2</option>\n";
-		echo "		<option value='cell'>cell</option>\n";
-		//echo "		<option value='zzz'>cell</option>\n";
-		echo "		</select>\n";
-		echo "<br />\n";
-		echo "\n";
-		echo "</td>\n";
-		echo "</tr>\n";
-
-
-		echo "	<tr>\n";
-		echo "		<td colspan='2' align='right'>\n";
-		echo "				<input type='hidden' name='call_broadcast_uuid' value='".escape($call_broadcast_uuid)."'>\n";
-		echo "				<input type='submit' name='submit' class='btn' value='Send Broadcast'>\n";
-		echo "		</td>\n";
-		echo "	</tr>";
-
-		echo "</table>";
-		echo "</form>";
-	}
-	*/
 
 //include the footer
 	require_once "resources/footer.php";
