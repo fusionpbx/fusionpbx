@@ -5,10 +5,11 @@
 	$apps[$x]['menu'][$y]['title']['en-gb'] = "Databases";
 	$apps[$x]['menu'][$y]['title']['ar-eg'] = "قواعد البيانات";
 	$apps[$x]['menu'][$y]['title']['de-at'] = "Datenbanken";
+	$apps[$x]['menu'][$y]['title']['de-ch'] = "Datenbanken";
 	$apps[$x]['menu'][$y]['title']['de-de'] = "Datenbanken";
+	$apps[$x]['menu'][$y]['title']['el-gr'] = "Βάσεις δεδομένων";
 	$apps[$x]['menu'][$y]['title']['es-cl'] = "Bases de datos";
 	$apps[$x]['menu'][$y]['title']['es-mx'] = "bases de datos";
-	$apps[$x]['menu'][$y]['title']['el-gr'] = "Βάσεις δεδομένων";
 	$apps[$x]['menu'][$y]['title']['fr-ca'] = "Bases de données";
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "BDD";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "מאגרי מידע";
@@ -21,6 +22,7 @@
 	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Базы данных";
 	$apps[$x]['menu'][$y]['title']['sv-se'] = "Databaser";
 	$apps[$x]['menu'][$y]['title']['uk-ua'] = "Бази даних";
+	$apps[$x]['menu'][$y]['title']['tr-tr'] = "veritabanları";
 	$apps[$x]['menu'][$y]['title']['zh-cn'] = "数据库";
 	$apps[$x]['menu'][$y]['title']['ja-jp'] = "データベース";
 	$apps[$x]['menu'][$y]['title']['ko-kr'] = "관련 기사";
