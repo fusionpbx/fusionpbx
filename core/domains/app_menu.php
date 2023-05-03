@@ -20,10 +20,15 @@
 	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Домены";
 	$apps[$x]['menu'][$y]['title']['sv-se'] = "Domäner";
 	$apps[$x]['menu'][$y]['title']['uk-ua'] = "Домени";
+	$apps[$x]['menu'][$y]['title']['zh-cn'] = "领域";
+	$apps[$x]['menu'][$y]['title']['ja-jp'] = "ドメイン";
+	$apps[$x]['menu'][$y]['title']['ko-kr'] = "이름 *";
 	$apps[$x]['menu'][$y]['uuid'] = "4fa7e90b-6d6c-12d4-712f-62857402b801";
 	$apps[$x]['menu'][$y]['parent_uuid'] = "594d99c5-6128-9c88-ca35-4b33392cec0f";
 	$apps[$x]['menu'][$y]['category'] = "internal";
+	$apps[$x]['menu'][$y]['icon'] = "";
 	$apps[$x]['menu'][$y]['path'] = "/core/domains/domains.php";
+	$apps[$x]['menu'][$y]['order'] = "";
 	$apps[$x]['menu'][$y]['groups'][] = "superadmin";
 	$y++;
 

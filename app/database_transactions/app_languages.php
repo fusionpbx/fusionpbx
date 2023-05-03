@@ -20,6 +20,9 @@ $text['title-database_transactions']['ro-ro'] = "";
 $text['title-database_transactions']['ru-ru'] = "Изменения в базе данных";
 $text['title-database_transactions']['sv-se'] = "Databas Transaktioner";
 $text['title-database_transactions']['uk-ua'] = "Трансакції бази даних";
+$text['title-database_transactions']['zh-cn'] = "数据库交易";
+$text['title-database_transactions']['ja-jp'] = "データベース取引";
+$text['title-database_transactions']['ko-kr'] = "Database 거래";
 
 $text['title-database_transaction']['en-us'] = "Database Transaction";
 $text['title-database_transaction']['en-gb'] = "Database Transaction";
@@ -41,6 +44,9 @@ $text['title-database_transaction']['ro-ro'] = "";
 $text['title-database_transaction']['ru-ru'] = "Изменение в базе данных";
 $text['title-database_transaction']['sv-se'] = "Transaktionsdatabas";
 $text['title-database_transaction']['uk-ua'] = "Трансакція бази даних";
+$text['title-database_transaction']['zh-cn'] = "数据库交易";
+$text['title-database_transaction']['ja-jp'] = "データベース取引";
+$text['title-database_transaction']['ko-kr'] = "Database 거래";
 
 $text['description-database_transactions']['en-us'] = "Track changes to the database. Track when the changes were made, the user and address of the user that made the changes. Provide an option to undo delete and update transactions.";
 $text['description-database_transactions']['en-gb'] = "Track changes to the database. Track when the changes were made, the user and address of the user that made the changes. Provide an option to undo delete and update transactions.";
@@ -62,6 +68,9 @@ $text['description-database_transactions']['ro-ro'] = "";
 $text['description-database_transactions']['ru-ru'] = "Изменения в базе данных";
 $text['description-database_transactions']['sv-se'] = "Databas Transaktioner";
 $text['description-database_transactions']['uk-ua'] = "Відстежуйте зміни до бази даних. Відстежуйте, коли внесені зміни, користувач та адреса користувача, який вніс зміни. Забезпечити варіант видалення та оновлення транзакцій.";
+$text['description-database_transactions']['zh-cn'] = "跟踪数据库的变化。 改动发生时,用户和用户地址做了改动。 提供不删除和更新交易的办法。";
+$text['description-database_transactions']['ja-jp'] = "データベースの変更を追跡します。 変更が行われた場合、変更を行ったユーザーのユーザーとアドレスを追跡します。 トランザクションを削除および更新するオプションを提供します。";
+$text['description-database_transactions']['ko-kr'] = "데이터베이스의 변화. 변경이 이루어질 때 추적, 사용자가 변경된 사용자의 주소. undo delete 및 update Transaction에 대한 옵션을 제공합니다.";
 
 $text['label-user']['en-us'] = "User";
 $text['label-user']['en-gb'] = "User";
@@ -83,6 +92,9 @@ $text['label-user']['ro-ro'] = "";
 $text['label-user']['ru-ru'] = "Пользователь";
 $text['label-user']['sv-se'] = "Användare";
 $text['label-user']['uk-ua'] = "Користувач";
+$text['label-user']['zh-cn'] = "用户";
+$text['label-user']['ja-jp'] = "ユーザー";
+$text['label-user']['ko-kr'] = "사용자 이름";
 
 $text['label-user_uuid']['en-us'] = "User";
 $text['label-user_uuid']['en-gb'] = "User";
@@ -104,6 +116,9 @@ $text['label-user_uuid']['ro-ro'] = "";
 $text['label-user_uuid']['ru-ru'] = "Пользователь";
 $text['label-user_uuid']['sv-se'] = "Användare";
 $text['label-user_uuid']['uk-ua'] = "Користувач";
+$text['label-user_uuid']['zh-cn'] = "用户";
+$text['label-user_uuid']['ja-jp'] = "ユーザー";
+$text['label-user_uuid']['ko-kr'] = "사용자 이름";
 
 $text['description-user_uuid']['en-us'] = "User transaction.";
 $text['description-user_uuid']['en-gb'] = "User transaction.";
@@ -125,6 +140,9 @@ $text['description-user_uuid']['ro-ro'] = "";
 $text['description-user_uuid']['ru-ru'] = "Транзакции пользователя.";
 $text['description-user_uuid']['sv-se'] = "Användar transaktion";
 $text['description-user_uuid']['uk-ua'] = "Операція користувача.";
+$text['description-user_uuid']['zh-cn'] = "用户交易。";
+$text['description-user_uuid']['ja-jp'] = "ユーザートランザクション。";
+$text['description-user_uuid']['ko-kr'] = "사용자 거래.";
 
 $text['label-app_name']['en-us'] = "Application";
 $text['label-app_name']['en-gb'] = "Application";
@@ -146,6 +164,9 @@ $text['label-app_name']['ro-ro'] = "";
 $text['label-app_name']['ru-ru'] = "Приложение";
 $text['label-app_name']['sv-se'] = "Applikation";
 $text['label-app_name']['uk-ua'] = "Додаток";
+$text['label-app_name']['zh-cn'] = "申请";
+$text['label-app_name']['ja-jp'] = "アプリケーション";
+$text['label-app_name']['ko-kr'] = "제품 설명";
 
 $text['description-app_name']['en-us'] = "Application name.";
 $text['description-app_name']['en-gb'] = "Application name.";
@@ -167,6 +188,9 @@ $text['description-app_name']['ro-ro'] = "";
 $text['description-app_name']['ru-ru'] = "Имя приложения.";
 $text['description-app_name']['sv-se'] = "Applikation namn";
 $text['description-app_name']['uk-ua'] = "Назва заявки.";
+$text['description-app_name']['zh-cn'] = "申请名称。";
+$text['description-app_name']['ja-jp'] = "アプリケーション名。";
+$text['description-app_name']['ko-kr'] = "신청 이름.";
 
 $text['label-app_uuid']['en-us'] = "Application Id";
 $text['label-app_uuid']['en-gb'] = "Application Id";
@@ -188,6 +212,9 @@ $text['label-app_uuid']['ro-ro'] = "";
 $text['label-app_uuid']['ru-ru'] = "Id приложения";
 $text['label-app_uuid']['sv-se'] = "Applikation Id.";
 $text['label-app_uuid']['uk-ua'] = "Додаток Id";
+$text['label-app_uuid']['zh-cn'] = "申请Id";
+$text['label-app_uuid']['ja-jp'] = "アプリケーションID";
+$text['label-app_uuid']['ko-kr'] = "신청 Id";
 
 $text['description-app_uuid']['en-us'] = "Application name.";
 $text['description-app_uuid']['en-gb'] = "Application name.";
@@ -209,6 +236,9 @@ $text['description-app_uuid']['ro-ro'] = "";
 $text['description-app_uuid']['ru-ru'] = "Имя приложения.";
 $text['description-app_uuid']['sv-se'] = "Applikation namn.";
 $text['description-app_uuid']['uk-ua'] = "Назва заявки.";
+$text['description-app_uuid']['zh-cn'] = "申请名称。";
+$text['description-app_uuid']['ja-jp'] = "アプリケーション名。";
+$text['description-app_uuid']['ko-kr'] = "신청 이름.";
 
 $text['label-transaction_code']['en-us'] = "Code";
 $text['label-transaction_code']['en-gb'] = "Code";
@@ -230,6 +260,9 @@ $text['label-transaction_code']['ro-ro'] = "";
 $text['label-transaction_code']['ru-ru'] = "Код";
 $text['label-transaction_code']['sv-se'] = "Kod";
 $text['label-transaction_code']['uk-ua'] = "Коди";
+$text['label-transaction_code']['zh-cn'] = "法典";
+$text['label-transaction_code']['ja-jp'] = "コードコード";
+$text['label-transaction_code']['ko-kr'] = "* 이름";
 
 $text['description-transaction_code']['en-us'] = "Transaction code.";
 $text['description-transaction_code']['en-gb'] = "Transaction code.";
@@ -251,6 +284,9 @@ $text['description-transaction_code']['ro-ro'] = "";
 $text['description-transaction_code']['ru-ru'] = "Код транзакции.";
 $text['description-transaction_code']['sv-se'] = "Transaktion kod.";
 $text['description-transaction_code']['uk-ua'] = "Код транзакції.";
+$text['description-transaction_code']['zh-cn'] = "交易法。";
+$text['description-transaction_code']['ja-jp'] = "トランザクションコード。";
+$text['description-transaction_code']['ko-kr'] = "거래 코드.";
 
 $text['label-transaction_address']['en-us'] = "IP Address";
 $text['label-transaction_address']['en-gb'] = "IP Address";
@@ -272,6 +308,9 @@ $text['label-transaction_address']['ro-ro'] = "";
 $text['label-transaction_address']['ru-ru'] = "IP Адреса";
 $text['label-transaction_address']['sv-se'] = "IP Address";
 $text['label-transaction_address']['uk-ua'] = "IP-адреса";
+$text['label-transaction_address']['zh-cn'] = "ip Address";
+$text['label-transaction_address']['ja-jp'] = "IPアドレス";
+$text['label-transaction_address']['ko-kr'] = "IP 주소";
 
 $text['description-transaction_address']['en-us'] = "IP address of the user.";
 $text['description-transaction_address']['en-gb'] = "IP address of the user.";
@@ -293,6 +332,9 @@ $text['description-transaction_address']['ro-ro'] = "";
 $text['description-transaction_address']['ru-ru'] = "IP адреса пользователя.";
 $text['description-transaction_address']['sv-se'] = "Användarens IP Address";
 $text['description-transaction_address']['uk-ua'] = "IP-адреса користувача.";
+$text['description-transaction_address']['zh-cn'] = "用户的IP地址。";
+$text['description-transaction_address']['ja-jp'] = "ユーザーのIPアドレス。";
+$text['description-transaction_address']['ko-kr'] = "사용자의 IP 주소.";
 
 $text['label-transaction_type']['en-us'] = "Type";
 $text['label-transaction_type']['en-gb'] = "Type";
@@ -314,6 +356,9 @@ $text['label-transaction_type']['ro-ro'] = "";
 $text['label-transaction_type']['ru-ru'] = "Тип";
 $text['label-transaction_type']['sv-se'] = "Typ";
 $text['label-transaction_type']['uk-ua'] = "Тип";
+$text['label-transaction_type']['zh-cn'] = "类型";
+$text['label-transaction_type']['ja-jp'] = "タイプ:";
+$text['label-transaction_type']['ko-kr'] = "제품정보";
 
 $text['description-transaction_type']['en-us'] = "Type: add, update, delete";
 $text['description-transaction_type']['en-gb'] = "Type: add, update, delete";
@@ -335,6 +380,9 @@ $text['description-transaction_type']['ro-ro'] = "";
 $text['description-transaction_type']['ru-ru'] = "Тип: добавить, обновить, удалить";
 $text['description-transaction_type']['sv-se'] = "Typ: lägg till, ändra, ta bort, välj";
 $text['description-transaction_type']['uk-ua'] = "Тип: додати, оновити, видалити";
+$text['description-transaction_type']['zh-cn'] = "类型:增加、更新、删除";
+$text['description-transaction_type']['ja-jp'] = "タイプ: 追加、更新、削除";
+$text['description-transaction_type']['ko-kr'] = "유형: 추가, 업데이트, 삭제";
 
 $text['label-transaction_date']['en-us'] = "Date";
 $text['label-transaction_date']['en-gb'] = "Date";
@@ -356,6 +404,9 @@ $text['label-transaction_date']['ro-ro'] = "";
 $text['label-transaction_date']['ru-ru'] = "Дата";
 $text['label-transaction_date']['sv-se'] = "Datum";
 $text['label-transaction_date']['uk-ua'] = "Дата";
+$text['label-transaction_date']['zh-cn'] = "日期";
+$text['label-transaction_date']['ja-jp'] = "日程表";
+$text['label-transaction_date']['ko-kr'] = "(주)";
 
 $text['description-transaction_date']['en-us'] = "Transaction date.";
 $text['description-transaction_date']['en-gb'] = "Transaction date.";
@@ -377,6 +428,9 @@ $text['description-transaction_date']['ro-ro'] = "";
 $text['description-transaction_date']['ru-ru'] = "Дата транзакции.";
 $text['description-transaction_date']['sv-se'] = "Transaktions datum.";
 $text['description-transaction_date']['uk-ua'] = "Дата операції.";
+$text['description-transaction_date']['zh-cn'] = "交易日期。";
+$text['description-transaction_date']['ja-jp'] = "取引日。";
+$text['description-transaction_date']['ko-kr'] = "거래 날짜.";
 
 $text['label-transaction_old']['en-us'] = "Before";
 $text['label-transaction_old']['en-gb'] = "Before";
@@ -398,6 +452,9 @@ $text['label-transaction_old']['ro-ro'] = "";
 $text['label-transaction_old']['ru-ru'] = "До";
 $text['label-transaction_old']['sv-se'] = "Före";
 $text['label-transaction_old']['uk-ua'] = "До";
+$text['label-transaction_old']['zh-cn'] = "以前";
+$text['label-transaction_old']['ja-jp'] = "新着情報";
+$text['label-transaction_old']['ko-kr'] = "이전 다음";
 
 $text['description-transaction_old']['en-us'] = "Array before the transaction.";
 $text['description-transaction_old']['en-gb'] = "Array before the transaction.";
@@ -419,6 +476,9 @@ $text['description-transaction_old']['ro-ro'] = "";
 $text['description-transaction_old']['ru-ru'] = "Массив перед транзакцией.";
 $text['description-transaction_old']['sv-se'] = "Array före transaktionen.";
 $text['description-transaction_old']['uk-ua'] = "Проти операції.";
+$text['description-transaction_old']['zh-cn'] = "交易前线。";
+$text['description-transaction_old']['ja-jp'] = "トランザクションの前に配列します。";
+$text['description-transaction_old']['ko-kr'] = "거래 전에 배열.";
 
 $text['label-transaction_new']['en-us'] = "After";
 $text['label-transaction_new']['en-gb'] = "After";
@@ -440,6 +500,9 @@ $text['label-transaction_new']['ro-ro'] = "";
 $text['label-transaction_new']['ru-ru'] = "После";
 $text['label-transaction_new']['sv-se'] = "Efter";
 $text['label-transaction_new']['uk-ua'] = "Після";
+$text['label-transaction_new']['zh-cn'] = "之后";
+$text['label-transaction_new']['ja-jp'] = "アフター";
+$text['label-transaction_new']['ko-kr'] = "이름 *";
 
 $text['description-transaction_new']['en-us'] = "Array after the transaction.";
 $text['description-transaction_new']['en-gb'] = "Array after the transaction.";
@@ -461,6 +524,9 @@ $text['description-transaction_new']['ro-ro'] = "";
 $text['description-transaction_new']['ru-ru'] = "Массив после транзакции.";
 $text['description-transaction_new']['sv-se'] = "Array efter transaktionen.";
 $text['description-transaction_new']['uk-ua'] = "Проводити після операції.";
+$text['description-transaction_new']['zh-cn'] = "交易后进行。";
+$text['description-transaction_new']['ja-jp'] = "トランザクションの後の配列。";
+$text['description-transaction_new']['ko-kr'] = "거래 후 배열.";
 
 $text['label-transaction_result']['en-us'] = "Result";
 $text['label-transaction_result']['en-gb'] = "Result";
@@ -482,6 +548,9 @@ $text['label-transaction_result']['ro-ro'] = "";
 $text['label-transaction_result']['ru-ru'] = "Результат.";
 $text['label-transaction_result']['sv-se'] = "Resultat";
 $text['label-transaction_result']['uk-ua'] = "Почати";
+$text['label-transaction_result']['zh-cn'] = "结果";
+$text['label-transaction_result']['ja-jp'] = "結果発表";
+$text['label-transaction_result']['ko-kr'] = "제품정보";
 
 $text['description-transaction_result']['en-us'] = "Result of the transaction.";
 $text['description-transaction_result']['en-gb'] = "Result of the transaction.";
@@ -503,6 +572,9 @@ $text['description-transaction_result']['ro-ro'] = "";
 $text['description-transaction_result']['ru-ru'] = "Результат транзакции.";
 $text['description-transaction_result']['sv-se'] = "Resultat av transaktionen.";
 $text['description-transaction_result']['uk-ua'] = "Результат операції.";
+$text['description-transaction_result']['zh-cn'] = "交易的结果。";
+$text['description-transaction_result']['ja-jp'] = "トランザクションの結果。";
+$text['description-transaction_result']['ko-kr'] = "거래 결과.";
 
 $text['label-true']['en-us'] = "true";
 $text['label-true']['en-gb'] = "true";
@@ -524,6 +596,9 @@ $text['label-true']['ro-ro'] = "";
 $text['label-true']['ru-ru'] = "Да";
 $text['label-true']['sv-se'] = "sann";
 $text['label-true']['uk-ua'] = "Справді";
+$text['label-true']['zh-cn'] = "真实情况";
+$text['label-true']['ja-jp'] = "ログイン";
+$text['label-true']['ko-kr'] = "뚱 베어";
 
 $text['label-false']['en-us'] = "false";
 $text['label-false']['en-gb'] = "false";
@@ -545,6 +620,9 @@ $text['label-false']['ro-ro'] = "";
 $text['label-false']['ru-ru'] = "Нет";
 $text['label-false']['sv-se'] = "falsk";
 $text['label-false']['uk-ua'] = "Логін";
+$text['label-false']['zh-cn'] = "伪造";
+$text['label-false']['ja-jp'] = "ログイン";
+$text['label-false']['ko-kr'] = "이름 *";
 
 $text['button-add']['en-us'] = "Add";
 $text['button-add']['en-gb'] = "Add";
@@ -566,6 +644,9 @@ $text['button-add']['ro-ro'] = "";
 $text['button-add']['ru-ru'] = "Добавить";
 $text['button-add']['sv-se'] = "Lägg Till";
 $text['button-add']['uk-ua'] = "Додати";
+$text['button-add']['zh-cn'] = "增 编";
+$text['button-add']['ja-jp'] = "追加する";
+$text['button-add']['ko-kr'] = "기타";
 
 $text['button-edit']['en-us'] = "Edit";
 $text['button-edit']['en-gb'] = "Edit";
@@ -587,6 +668,9 @@ $text['button-edit']['ro-ro'] = "";
 $text['button-edit']['ru-ru'] = "Редактировать";
 $text['button-edit']['sv-se'] = "Ändra";
 $text['button-edit']['uk-ua'] = "Редагування";
+$text['button-edit']['zh-cn'] = "编辑";
+$text['button-edit']['ja-jp'] = "編集";
+$text['button-edit']['ko-kr'] = "제품정보";
 
 $text['button-delete']['en-us'] = "Delete";
 $text['button-delete']['en-gb'] = "Delete";
@@ -608,6 +692,9 @@ $text['button-delete']['ro-ro'] = "";
 $text['button-delete']['ru-ru'] = "Удалить";
 $text['button-delete']['sv-se'] = "Ta Bort";
 $text['button-delete']['uk-ua'] = "Делет";
+$text['button-delete']['zh-cn'] = "删除";
+$text['button-delete']['ja-jp'] = "削除";
+$text['button-delete']['ko-kr'] = "기타 제품";
 
 $text['button-save']['en-us'] = "Save";
 $text['button-save']['en-gb'] = "Save";
@@ -629,6 +716,9 @@ $text['button-save']['ro-ro'] = "";
 $text['button-save']['ru-ru'] = "Сохранить";
 $text['button-save']['sv-se'] = "Spara";
 $text['button-save']['uk-ua'] = "Зберегти";
+$text['button-save']['zh-cn'] = "储蓄";
+$text['button-save']['ja-jp'] = "保存する";
+$text['button-save']['ko-kr'] = "제품 정보";
 
 $text['button-view']['en-us'] = "View";
 $text['button-view']['en-gb'] = "View";
@@ -650,6 +740,9 @@ $text['button-view']['ro-ro'] = "";
 $text['button-view']['ru-ru'] = "Просмотрт";
 $text['button-view']['sv-se'] = "Visa";
 $text['button-view']['uk-ua'] = "Переглянути";
+$text['button-view']['zh-cn'] = "观点";
+$text['button-view']['ja-jp'] = "ニュース";
+$text['button-view']['ko-kr'] = "- 연혁";
 
 $text['button-back']['en-us'] = "Back";
 $text['button-back']['en-gb'] = "Back";
@@ -671,6 +764,9 @@ $text['button-back']['ro-ro'] = "";
 $text['button-back']['ru-ru'] = "Назад";
 $text['button-back']['sv-se'] = "Tillbaka";
 $text['button-back']['uk-ua'] = "Зареєструватися";
+$text['button-back']['zh-cn'] = "背 景";
+$text['button-back']['ja-jp'] = "バックナンバー";
+$text['button-back']['ko-kr'] = "이름 *";
 
 $text['confirm-delete']['en-us'] = "Do you really want to delete this?";
 $text['confirm-delete']['en-gb'] = "Do you really want to delete this?";
@@ -692,6 +788,9 @@ $text['confirm-delete']['ro-ro'] = "";
 $text['confirm-delete']['ru-ru'] = "Вы действительно хотите удалить это?";
 $text['confirm-delete']['sv-se'] = "Vill du verkligen ta bort detta?";
 $text['confirm-delete']['uk-ua'] = "Ви дійсно хочете видалити це?";
+$text['confirm-delete']['zh-cn'] = "你们真的想要删除吗?";
+$text['confirm-delete']['ja-jp'] = "これを削除したいですか?";
+$text['confirm-delete']['ko-kr'] = "당신은 정말로 이것을 삭제하고 싶습니까?";
 
 $text['message-add']['en-us'] = "Add Completed";
 $text['message-add']['en-gb'] = "Add Completed";
@@ -713,6 +812,9 @@ $text['message-add']['ro-ro'] = "";
 $text['message-add']['ru-ru'] = "Добавление выполнено";
 $text['message-add']['sv-se'] = "Tillagd";
 $text['message-add']['uk-ua'] = "Додати завершено";
+$text['message-add']['zh-cn'] = "增 编";
+$text['message-add']['ja-jp'] = "完了を追加";
+$text['message-add']['ko-kr'] = "추가 완료";
 
 $text['message-update']['en-us'] = "Update Completed";
 $text['message-update']['en-gb'] = "Update Completed";
@@ -734,6 +836,9 @@ $text['message-update']['ro-ro'] = "";
 $text['message-update']['ru-ru'] = "Обновление выполнено";
 $text['message-update']['sv-se'] = "Ändring utförd";
 $text['message-update']['uk-ua'] = "Оновлення завершено";
+$text['message-update']['zh-cn'] = "已完成";
+$text['message-update']['ja-jp'] = "更新完了";
+$text['message-update']['ko-kr'] = "업데이트 완료";
 
 $text['message-delete']['en-us'] = "Delete Completed";
 $text['message-delete']['en-gb'] = "Delete Completed";
@@ -755,6 +860,9 @@ $text['message-delete']['ro-ro'] = "";
 $text['message-delete']['ru-ru'] = "Удаление выполнено";
 $text['message-delete']['sv-se'] = "Borttagning utförd";
 $text['message-delete']['uk-ua'] = "Видалити завершено";
+$text['message-delete']['zh-cn'] = "删除";
+$text['message-delete']['ja-jp'] = "完了した削除";
+$text['message-delete']['ko-kr'] = "삭제 완료";
 
 $text['message-required']['en-us'] = "Please provide: ";
 $text['message-required']['en-gb'] = "Please provide: ";
@@ -776,5 +884,8 @@ $text['message-required']['ro-ro'] = "";
 $text['message-required']['ru-ru'] = "Пожалуйста предоставьте:";
 $text['message-required']['sv-se'] = "Var god ange: ";
 $text['message-required']['uk-ua'] = "Будь ласка, заповніть:";
+$text['message-required']['zh-cn'] = "请提供:";
+$text['message-required']['ja-jp'] = "お問い合わせ";
+$text['message-required']['ko-kr'] = "참고 :";
 
 ?>
