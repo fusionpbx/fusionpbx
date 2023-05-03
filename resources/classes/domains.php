@@ -604,7 +604,6 @@ if (!class_exists('domains')) {
 				$config = new config;
 				$config_path = $config->find();
 				$config->get();
-				$db_type = $config->db_type;
 				$db_name = $config->db_name;
 				$db_username = $config->db_username;
 				$db_password = $config->db_password;
