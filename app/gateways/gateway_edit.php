@@ -148,7 +148,7 @@
 			if (empty($context)) { $msg .= $text['message-required']." ".$text['label-context']."<br>\n"; }
 			if (empty($profile)) { $msg .= $text['message-required']." ".$text['label-profile']."<br>\n"; }
 			if (empty($enabled)) { $msg .= $text['message-required']." ".$text['label-enabled']."<br>\n"; }
-			if (empty($msg) && empty($_POST["persistformvar"])) {
+			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
