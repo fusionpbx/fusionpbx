@@ -3,7 +3,7 @@
 	$y=0;
 	$apps[$x]['menu'][$y]['title']['en-us'] = "Email Queue";
 	$apps[$x]['menu'][$y]['title']['en-gb'] = "Email Queue";
-	$apps[$x]['menu'][$y]['title']['ar-eg'] = "Email Queue";
+	$apps[$x]['menu'][$y]['title']['ar-eg'] = "قائمة انتظار البريد الإلكتروني";
 	$apps[$x]['menu'][$y]['title']['de-at'] = "Zurück zur Übersicht";
 	$apps[$x]['menu'][$y]['title']['de-ch'] = "Zurück zur Übersicht";
 	$apps[$x]['menu'][$y]['title']['de-de'] = "Zurück zur Übersicht";
