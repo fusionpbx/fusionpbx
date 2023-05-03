@@ -222,6 +222,9 @@
 
 //restore the default permissions
 	if ($upgrade_type == 'permissions') {
+		//default the groups in case they are missing
+		(new groups())->defaults();
+
 		//default the permissions
 		$included = true;
 		require_once("core/groups/permissions_default.php");
