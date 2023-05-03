@@ -243,7 +243,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 						$array['call_broadcasts'][0]['broadcast_caller_id_name'] = $broadcast_caller_id_name;
 						$array['call_broadcasts'][0]['broadcast_caller_id_number'] = $broadcast_caller_id_number;
 					}
-					if (permission_exists('call_broadcast_destination_data')) { //broadcast_destination_number
+					if (permission_exists('call_broadcast_destination_number')) {
 						$array['call_broadcasts'][0]['broadcast_destination_data'] = $broadcast_destination_data;
 					}
 					//$array['call_broadcasts'][0]['broadcast_destination_type'] = $broadcast_destination_type;
