@@ -5,6 +5,7 @@
 	$apps[$x]['menu'][$y]['title']['en-gb'] = "Dashboard";
 	$apps[$x]['menu'][$y]['title']['ar-eg'] = "الصفحه الرئيسيه للمستخدم";
 	$apps[$x]['menu'][$y]['title']['de-at'] = "Benutzerübersicht";
+	$apps[$x]['menu'][$y]['title']['de-ch'] = "Benutzerübersicht";
 	$apps[$x]['menu'][$y]['title']['de-de'] = "Benutzerübersicht";
 	$apps[$x]['menu'][$y]['title']['es-cl'] = "Dashboard Usuario";
 	$apps[$x]['menu'][$y]['title']['es-mx'] = "Dashboard";
@@ -20,6 +21,7 @@
 	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Панель пользователя";
 	$apps[$x]['menu'][$y]['title']['sv-se'] = "Användarpanel";
 	$apps[$x]['menu'][$y]['title']['uk-ua'] = "Панель користувача";
+	$apps[$x]['menu'][$y]['title']['tr-tr'] = "Gösterge Paneli";
 	$apps[$x]['menu'][$y]['title']['zh-cn'] = "仪表板";
 	$apps[$x]['menu'][$y]['title']['ja-jp'] = "ダッシュボード";
 	$apps[$x]['menu'][$y]['title']['ko-kr'] = "대시보드";
