@@ -593,13 +593,6 @@ if (!class_exists('domains')) {
 		 */
 		public function upgrade() {
 
-			//connect to the database if not connected
-				if (!$this->db) {
-					$database = new database;
-					$database->connect();
-					$this->db = $database->db;
-				}
-
 			//get the variables
 				$config = new config;
 				$config_path = $config->find();
@@ -620,7 +613,6 @@ if (!class_exists('domains')) {
 				$config_list_2 = glob($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/*/*/app_menu.php");
 				$config_list = array_merge((array)$config_list_1, (array)$config_list_2);
 				unset($config_list_1,$config_list_2);
-				$db = $this->db;
 				$x=0;
 				foreach ($config_list as &$config_path) {
 					$app_path = dirname($config_path);
