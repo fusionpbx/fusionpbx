@@ -625,21 +625,21 @@ if (!class_exists('domains')) {
 				$sql = "select * from v_domains ";
 				$database = new database;
 				$domains = $database->select($sql, null, 'all');
-				unset($sql, $parameters);
+				unset($sql);
 
 			//get the domain_settings
 				$sql = "select * from v_domain_settings ";
 				$sql .= "where domain_setting_enabled = 'true' ";
 				$database = new database;
 				$domain_settings = $database->select($sql, null, 'all');
-				unset($sql, $parameters);
+				unset($sql);
 
 			//get the default settings
 				$sql = "select * from v_default_settings ";
 				$sql .= "where default_setting_enabled = 'true' ";
 				$database = new database;
 				$database_default_settings = $database->select($sql, null, 'all');
-				unset($sql, $parameters);
+				unset($sql);
 
 			//get the domain_uuid
 				if (is_array($domains)) {
