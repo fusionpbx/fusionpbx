@@ -649,7 +649,7 @@ if (!class_exists('domains')) {
 							$_SESSION["domain_name"] = $row['domain_name'];
 						}
 						else {
-							if (lower_case($row['domain_name']) == lower_case($domain_array[0]) || lower_case($row['domain_name']) == lower_case('www.'.$domain_array[0])) {
+							if (lower_case($row['domain_name']) == lower_case($domain_array[0] ?? '') || lower_case($row['domain_name']) == lower_case('www.'.$domain_array[0] ?? '')) {
 								$_SESSION["domain_uuid"] = $row["domain_uuid"];
 								$_SESSION["domain_name"] = $row['domain_name'];
 							}
