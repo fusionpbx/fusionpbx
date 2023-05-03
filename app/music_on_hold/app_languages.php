@@ -20,6 +20,9 @@ $text['title-music_on_hold_settings']['ro-ro'] = "";
 $text['title-music_on_hold_settings']['ru-ru'] = "Музыка на удержание параметры";
 $text['title-music_on_hold_settings']['sv-se'] = "Väntmusik inställningar";
 $text['title-music_on_hold_settings']['uk-ua'] = "Музика на утриманні настройки";
+$text['title-music_on_hold_settings']['zh-cn'] = "音乐家";
+$text['title-music_on_hold_settings']['ja-jp'] = "ホールド設定の音楽";
+$text['title-music_on_hold_settings']['ko-kr'] = "Run 설정에 음악";
 
 $text['title-music_on_hold']['en-us'] = "Music on Hold";
 $text['title-music_on_hold']['en-gb'] = "Music on Hold";
@@ -41,6 +44,9 @@ $text['title-music_on_hold']['ro-ro'] = "";
 $text['title-music_on_hold']['ru-ru'] = "Музыка на удержании";
 $text['title-music_on_hold']['sv-se'] = "Väntmusik";
 $text['title-music_on_hold']['uk-ua'] = "Музика на утриманні";
+$text['title-music_on_hold']['zh-cn'] = "音乐家";
+$text['title-music_on_hold']['ja-jp'] = "ホールドでの音楽";
+$text['title-music_on_hold']['ko-kr'] = "공지사항";
 
 $text['option-local']['en-us'] = "Local";
 $text['option-local']['en-gb'] = "Local";
@@ -62,6 +68,9 @@ $text['option-local']['ro-ro'] = "";
 $text['option-local']['ru-ru'] = "Местный";
 $text['option-local']['sv-se'] = "Lokal";
 $text['option-local']['uk-ua'] = "місцевий";
+$text['option-local']['zh-cn'] = "地方";
+$text['option-local']['ja-jp'] = "ローカル";
+$text['option-local']['ko-kr'] = "- 한국어";
 
 $text['option-global']['en-us'] = "Global";
 $text['option-global']['en-gb'] = "Global";
@@ -83,6 +92,9 @@ $text['option-global']['ro-ro'] = "";
 $text['option-global']['ru-ru'] = "Глобальный";
 $text['option-global']['sv-se'] = "Global";
 $text['option-global']['uk-ua'] = "Глобальний";
+$text['option-global']['zh-cn'] = "全球";
+$text['option-global']['ja-jp'] = "グローバル";
+$text['option-global']['ko-kr'] = "주요사업";
 
 $text['option-default']['en-us'] = "Default";
 $text['option-default']['en-gb'] = "Default";
@@ -104,6 +116,9 @@ $text['option-default']['ro-ro'] = "";
 $text['option-default']['ru-ru'] = "По умолчанию";
 $text['option-default']['sv-se'] = "Standard";
 $text['option-default']['uk-ua'] = "Типово";
+$text['option-default']['zh-cn'] = "违约";
+$text['option-default']['ja-jp'] = "デフォルト";
+$text['option-default']['ko-kr'] = "기본 정보";
 
 $text['message-upload_completed']['en-us'] = "Upload Completed";
 $text['message-upload_completed']['en-gb'] = "Upload Completed";
@@ -125,6 +140,9 @@ $text['message-upload_completed']['ro-ro'] = "";
 $text['message-upload_completed']['ru-ru'] = "Загрузка завершена";
 $text['message-upload_completed']['sv-se'] = "Ladda Avslutat";
 $text['message-upload_completed']['uk-ua'] = "Завантажено";
+$text['message-upload_completed']['zh-cn'] = "填满";
+$text['message-upload_completed']['ja-jp'] = "アップロード完了";
+$text['message-upload_completed']['ko-kr'] = "다운로드";
 
 $text['message-nofiles']['en-us'] = "No files found.";
 $text['message-nofiles']['en-gb'] = "No files found.";
@@ -146,6 +164,9 @@ $text['message-nofiles']['ro-ro'] = "";
 $text['message-nofiles']['ru-ru'] = "Файлы не найдены";
 $text['message-nofiles']['sv-se'] = "Ingen ljudfil.";
 $text['message-nofiles']['uk-ua'] = "Файлів не знайдено";
+$text['message-nofiles']['zh-cn'] = "没有发现档案。";
+$text['message-nofiles']['ja-jp'] = "ファイルが見つかりません。";
+$text['message-nofiles']['ko-kr'] = "파일이 없습니다.";
 
 $text['message-missing_required_fields']['en-us'] = "Missing Required Fields";
 $text['message-missing_required_fields']['en-gb'] = "Missing Required Fields";
@@ -167,6 +188,9 @@ $text['message-missing_required_fields']['ro-ro'] = "";
 $text['message-missing_required_fields']['ru-ru'] = "Отсутствуют обязательные поля";
 $text['message-missing_required_fields']['sv-se'] = "Saknas Obligatoriska fält";
 $text['message-missing_required_fields']['uk-ua'] = "Відсутні поля обов'язкові для заповнення";
+$text['message-missing_required_fields']['zh-cn'] = "B. 缺乏所需田地";
+$text['message-missing_required_fields']['ja-jp'] = "必須フィールドの欠如";
+$text['message-missing_required_fields']['ko-kr'] = "필수 필드";
 
 $text['message-event-socket']['en-us'] = "Connection to Event Socket failed.";
 $text['message-event-socket']['en-gb'] = "Connection to Event Socket failed.";
@@ -188,6 +212,9 @@ $text['message-event-socket']['ro-ro'] = "";
 $text['message-event-socket']['ru-ru'] = "Подключение к сокету событий не удалось.";
 $text['message-event-socket']['sv-se'] = "Kontakt till 'Event Socket' misslyckades.";
 $text['message-event-socket']['uk-ua'] = "Помилка підключення до сокета подій";
+$text['message-event-socket']['zh-cn'] = "与事件Socket的连接失败。";
+$text['message-event-socket']['ja-jp'] = "イベントソケットへの接続が失敗しました。";
+$text['message-event-socket']['ko-kr'] = "이벤트 소켓에 연결 실패.";
 
 $text['message-click-select']['en-us'] = "Double-Click to Select an Existing Category";
 $text['message-click-select']['en-gb'] = "Double-Click to Select an Existing Category";
@@ -209,6 +236,9 @@ $text['message-click-select']['ro-ro'] = "";
 $text['message-click-select']['ru-ru'] = "Дважды щелкните, чтобы выбрать существующую категорию";
 $text['message-click-select']['sv-se'] = "Dubbelklicka för att välja en existerande kategori.";
 $text['message-click-select']['uk-ua'] = "Двічі клацніть, щоб вибрати існуючу категорію";
+$text['message-click-select']['zh-cn'] = "选择现有类别";
+$text['message-click-select']['ja-jp'] = "既存のカテゴリを選択するためにダブルクリック";
+$text['message-click-select']['ko-kr'] = "Double-Click 을 선택 Existing 카테고리";
 
 $text['label-upload-music_on_hold']['en-us'] = "Upload Music";
 $text['label-upload-music_on_hold']['en-gb'] = "Upload Music";
@@ -230,6 +260,9 @@ $text['label-upload-music_on_hold']['ro-ro'] = "";
 $text['label-upload-music_on_hold']['ru-ru'] = "Загрузить музыку";
 $text['label-upload-music_on_hold']['sv-se'] = "Ladda Upp Musik";
 $text['label-upload-music_on_hold']['uk-ua'] = "Завантажити мелодію";
+$text['label-upload-music_on_hold']['zh-cn'] = "午餐";
+$text['label-upload-music_on_hold']['ja-jp'] = "アップロード音楽";
+$text['label-upload-music_on_hold']['ko-kr'] = "음악 재생";
 
 $text['label-tools']['en-us'] = "Tools";
 $text['label-tools']['en-gb'] = "Tools";
@@ -251,6 +284,9 @@ $text['label-tools']['ro-ro'] = "";
 $text['label-tools']['ru-ru'] = "Инструменты";
 $text['label-tools']['sv-se'] = "Verktyg";
 $text['label-tools']['uk-ua'] = "Інструменти";
+$text['label-tools']['zh-cn'] = "工具";
+$text['label-tools']['ja-jp'] = "ツール";
+$text['label-tools']['ko-kr'] = "제품정보";
 
 $text['label-stop']['en-us'] = "Stop";
 $text['label-stop']['en-gb'] = "Stop";
@@ -272,6 +308,9 @@ $text['label-stop']['ro-ro'] = "";
 $text['label-stop']['ru-ru'] = "Стоп";
 $text['label-stop']['sv-se'] = "Sluta";
 $text['label-stop']['uk-ua'] = "СТОП";
+$text['label-stop']['zh-cn'] = "停止";
+$text['label-stop']['ja-jp'] = "ストップ";
+$text['label-stop']['ko-kr'] = "기타";
 
 $text['label-stereo']['en-us'] = "Stereo";
 $text['label-stereo']['en-gb'] = "Stereo";
@@ -293,6 +332,9 @@ $text['label-stereo']['ro-ro'] = "";
 $text['label-stereo']['ru-ru'] = "Стерео";
 $text['label-stereo']['sv-se'] = "Stereo";
 $text['label-stereo']['uk-ua'] = "стерео";
+$text['label-stereo']['zh-cn'] = "定型观念";
+$text['label-stereo']['ja-jp'] = "ステレオ";
+$text['label-stereo']['ko-kr'] = "기본 정보";
 
 $text['label-shuffle']['en-us'] = "Shuffle";
 $text['label-shuffle']['en-gb'] = "Shuffle";
@@ -314,6 +356,9 @@ $text['label-shuffle']['ro-ro'] = "";
 $text['label-shuffle']['ru-ru'] = "Перемешать";
 $text['label-shuffle']['sv-se'] = "Blanda";
 $text['label-shuffle']['uk-ua'] = "тасування";
+$text['label-shuffle']['zh-cn'] = "shuffle";
+$text['label-shuffle']['ja-jp'] = "シャッフル";
+$text['label-shuffle']['ko-kr'] = "기타 제품";
 
 $text['label-select_a_file']['en-us'] = "Select a file...";
 $text['label-select_a_file']['en-gb'] = "Select a file...";
@@ -335,6 +380,9 @@ $text['label-select_a_file']['ro-ro'] = "";
 $text['label-select_a_file']['ru-ru'] = "Виберите файл ...";
 $text['label-select_a_file']['sv-se'] = "Välj en fil ...";
 $text['label-select_a_file']['uk-ua'] = "Виберіть файл ...";
+$text['label-select_a_file']['zh-cn'] = "选择档案......";
+$text['label-select_a_file']['ja-jp'] = "ファイルを選択します。...";
+$text['label-select_a_file']['ko-kr'] = "파일 선택...";
 
 $text['label-rate']['en-us'] = "Sampling";
 $text['label-rate']['en-gb'] = "Sampling";
@@ -356,6 +404,9 @@ $text['label-rate']['ro-ro'] = "";
 $text['label-rate']['ru-ru'] = "Частота семплирования";
 $text['label-rate']['sv-se'] = "Sampling";
 $text['label-rate']['uk-ua'] = "Якість";
+$text['label-rate']['zh-cn'] = "取样";
+$text['label-rate']['ja-jp'] = "サンプリング";
+$text['label-rate']['ko-kr'] = "샘플링";
 
 $text['label-play']['en-us'] = "Play";
 $text['label-play']['en-gb'] = "Play";
@@ -377,6 +428,9 @@ $text['label-play']['ro-ro'] = "";
 $text['label-play']['ru-ru'] = "Проиграть";
 $text['label-play']['sv-se'] = "Spela Upp";
 $text['label-play']['uk-ua'] = "Відтворити";
+$text['label-play']['zh-cn'] = "游乐";
+$text['label-play']['ja-jp'] = "プレイ";
+$text['label-play']['ko-kr'] = "뚱 베어";
 
 $text['label-path']['en-us'] = "Path";
 $text['label-path']['en-gb'] = "Path";
@@ -398,6 +452,9 @@ $text['label-path']['ro-ro'] = "";
 $text['label-path']['ru-ru'] = "Путь";
 $text['label-path']['sv-se'] = "Väg";
 $text['label-path']['uk-ua'] = "Path";
+$text['label-path']['zh-cn'] = "途径";
+$text['label-path']['ja-jp'] = "パス";
+$text['label-path']['ko-kr'] = "오시는 길";
 
 $text['label-pause']['en-us'] = "Pause";
 $text['label-pause']['en-gb'] = "Pause";
@@ -419,6 +476,9 @@ $text['label-pause']['ro-ro'] = "";
 $text['label-pause']['ru-ru'] = "Пауза";
 $text['label-pause']['sv-se'] = "Paus";
 $text['label-pause']['uk-ua'] = "Призупинити";
+$text['label-pause']['zh-cn'] = "分娩";
+$text['label-pause']['ja-jp'] = "パデュース";
+$text['label-pause']['ko-kr'] = "팟캐스트";
 
 $text['label-mono']['en-us'] = "Mono";
 $text['label-mono']['en-gb'] = "Mono";
@@ -440,6 +500,9 @@ $text['label-mono']['ro-ro'] = "";
 $text['label-mono']['ru-ru'] = "Моно";
 $text['label-mono']['sv-se'] = "sak";
 $text['label-mono']['uk-ua'] = "річ";
+$text['label-mono']['zh-cn'] = "单";
+$text['label-mono']['ja-jp'] = "モノクロ";
+$text['label-mono']['ko-kr'] = "팟캐스트";
 
 $text['label-music_on_hold']['en-us'] = "Music on Hold";
 $text['label-music_on_hold']['en-gb'] = "Music on Hold";
@@ -461,6 +524,9 @@ $text['label-music_on_hold']['ro-ro'] = "";
 $text['label-music_on_hold']['ru-ru'] = "Музыка на удержании";
 $text['label-music_on_hold']['sv-se'] = "Väntmusik";
 $text['label-music_on_hold']['uk-ua'] = "Музика на утриманні";
+$text['label-music_on_hold']['zh-cn'] = "音乐家";
+$text['label-music_on_hold']['ja-jp'] = "ホールドでの音楽";
+$text['label-music_on_hold']['ko-kr'] = "공지사항";
 
 $text['label-location']['en-us'] = "Location";
 $text['label-location']['en-gb'] = "Location";
@@ -482,6 +548,9 @@ $text['label-location']['ro-ro'] = "";
 $text['label-location']['ru-ru'] = "Место нахождения";
 $text['label-location']['sv-se'] = "Plats";
 $text['label-location']['uk-ua'] = "Розміщення";
+$text['label-location']['zh-cn'] = "地点";
+$text['label-location']['ja-jp'] = "アクセス";
+$text['label-location']['ko-kr'] = "- 연혁";
 
 $text['label-interval']['en-us'] = "Interval";
 $text['label-interval']['en-gb'] = "Interval";
@@ -503,6 +572,9 @@ $text['label-interval']['ro-ro'] = "";
 $text['label-interval']['ru-ru'] = "Интервал";
 $text['label-interval']['sv-se'] = "Intervall";
 $text['label-interval']['uk-ua'] = "Інтервал";
+$text['label-interval']['zh-cn'] = "间隔";
+$text['label-interval']['ja-jp'] = "インターバル";
+$text['label-interval']['ko-kr'] = "회사연혁";
 
 $text['label-timer_name']['en-us'] = "Timer Name";
 $text['label-timer_name']['en-gb'] = "Timer Name";
@@ -524,6 +596,9 @@ $text['label-timer_name']['ro-ro'] = "";
 $text['label-timer_name']['ru-ru'] = "Имя Таймера";
 $text['label-timer_name']['sv-se'] = "Timer Namn";
 $text['label-timer_name']['uk-ua'] = "Ім'я користувача";
+$text['label-timer_name']['zh-cn'] = "时间名称";
+$text['label-timer_name']['ja-jp'] = "タイマーの名前";
+$text['label-timer_name']['ko-kr'] = "타이머 이름";
 
 $text['label-global']['en-us'] = "Global";
 $text['label-global']['en-gb'] = "Global";
@@ -545,6 +620,9 @@ $text['label-global']['ro-ro'] = "";
 $text['label-global']['ru-ru'] = "Глобальный";
 $text['label-global']['sv-se'] = "Global";
 $text['label-global']['uk-ua'] = "Глобальний";
+$text['label-global']['zh-cn'] = "全球";
+$text['label-global']['ja-jp'] = "グローバル";
+$text['label-global']['ko-kr'] = "주요사업";
 
 $text['label-file_name']['en-us'] = "File Name";
 $text['label-file_name']['en-gb'] = "File Name";
@@ -566,6 +644,9 @@ $text['label-file_name']['ro-ro'] = "";
 $text['label-file_name']['ru-ru'] = "Имя Файла";
 $text['label-file_name']['sv-se'] = "Fil-namn";
 $text['label-file_name']['uk-ua'] = "Назва файлу";
+$text['label-file_name']['zh-cn'] = "文件名称";
+$text['label-file_name']['ja-jp'] = "ファイル名";
+$text['label-file_name']['ko-kr'] = "파일 이름";
 
 $text['label-file-size']['en-us'] = "File Size";
 $text['label-file-size']['en-gb'] = "File Size";
@@ -587,6 +668,9 @@ $text['label-file-size']['ro-ro'] = "";
 $text['label-file-size']['ru-ru'] = "Размер Файла";
 $text['label-file-size']['sv-se'] = "Filstorlek";
 $text['label-file-size']['uk-ua'] = "Розмір файлу";
+$text['label-file-size']['zh-cn'] = "档案";
+$text['label-file-size']['ja-jp'] = "ファイル サイズ";
+$text['label-file-size']['ko-kr'] = "파일 크기";
 
 $text['label-file-path']['en-us'] = "File Path";
 $text['label-file-path']['en-gb'] = "File Path";
@@ -608,6 +692,9 @@ $text['label-file-path']['ro-ro'] = "";
 $text['label-file-path']['ru-ru'] = "Путь к Файлу";
 $text['label-file-path']['sv-se'] = "Sökväg till fil";
 $text['label-file-path']['uk-ua'] = "Шлях";
+$text['label-file-path']['zh-cn'] = "档案";
+$text['label-file-path']['ja-jp'] = "ファイルパス";
+$text['label-file-path']['ko-kr'] = "파일 경로";
 
 $text['label-download']['en-us'] = "Download";
 $text['label-download']['en-gb'] = "Download";
@@ -629,6 +716,9 @@ $text['label-download']['ro-ro'] = "";
 $text['label-download']['ru-ru'] = "Загрузить";
 $text['label-download']['sv-se'] = "Ladda Ned";
 $text['label-download']['uk-ua'] = "Скачати";
+$text['label-download']['zh-cn'] = "下载";
+$text['label-download']['ja-jp'] = "ダウンロード";
+$text['label-download']['ko-kr'] = "다운로드";
 
 $text['label-domain']['en-us'] = "Domain";
 $text['label-domain']['en-gb'] = "Domain";
@@ -650,6 +740,9 @@ $text['label-domain']['ro-ro'] = "Domeniu";
 $text['label-domain']['ru-ru'] = "Домен";
 $text['label-domain']['sv-se'] = "Domän";
 $text['label-domain']['uk-ua'] = "Домен";
+$text['label-domain']['zh-cn'] = "领域";
+$text['label-domain']['ja-jp'] = "ドメイン";
+$text['label-domain']['ko-kr'] = "이름 *";
 
 $text['label-delete-category']['en-us'] = "Delete Category";
 $text['label-delete-category']['en-gb'] = "Delete Category";
@@ -671,6 +764,9 @@ $text['label-delete-category']['ro-ro'] = "";
 $text['label-delete-category']['ru-ru'] = "Удалить категорию";
 $text['label-delete-category']['sv-se'] = "Ta Bort Kategori";
 $text['label-delete-category']['uk-ua'] = "Видалити категорію";
+$text['label-delete-category']['zh-cn'] = "删除";
+$text['label-delete-category']['ja-jp'] = "カテゴリを削除";
+$text['label-delete-category']['ko-kr'] = "관련 분류";
 
 $text['label-default']['en-us'] = "Default";
 $text['label-default']['en-gb'] = "Default";
@@ -692,6 +788,9 @@ $text['label-default']['ro-ro'] = "";
 $text['label-default']['ru-ru'] = "По умолчанию";
 $text['label-default']['sv-se'] = "Standard";
 $text['label-default']['uk-ua'] = "Типово";
+$text['label-default']['zh-cn'] = "违约";
+$text['label-default']['ja-jp'] = "デフォルト";
+$text['label-default']['ko-kr'] = "기본 정보";
 
 $text['label-chime_maximum']['en-us'] = "Chime Maximum";
 $text['label-chime_maximum']['en-gb'] = "Chime Maximum";
@@ -713,6 +812,9 @@ $text['label-chime_maximum']['ro-ro'] = "maxime Chimes";
 $text['label-chime_maximum']['ru-ru'] = "Максимальный перезвон";
 $text['label-chime_maximum']['sv-se'] = "maximala Chimes";
 $text['label-chime_maximum']['uk-ua'] = "максимум куранти";
+$text['label-chime_maximum']['zh-cn'] = "奇梅·马克";
+$text['label-chime_maximum']['ja-jp'] = "キシム最大";
+$text['label-chime_maximum']['ko-kr'] = "Chime 최대";
 
 $text['label-chime_list']['en-us'] = "Chime File";
 $text['label-chime_list']['en-gb'] = "Chime File";
@@ -734,6 +836,9 @@ $text['label-chime_list']['ro-ro'] = "Fișier chime";
 $text['label-chime_list']['ru-ru'] = "Файл перезвона";
 $text['label-chime_list']['sv-se'] = "chime File";
 $text['label-chime_list']['uk-ua'] = "передзвін файлу";
+$text['label-chime_list']['zh-cn'] = "Chime 文件";
+$text['label-chime_list']['ja-jp'] = "Chimeファイル";
+$text['label-chime_list']['ko-kr'] = "Chime 파일";
 
 $text['label-chime_frequency']['en-us'] = "Chime Frequency";
 $text['label-chime_frequency']['en-gb'] = "Chime Frequency";
@@ -755,6 +860,9 @@ $text['label-chime_frequency']['ro-ro'] = "Frecventa chime";
 $text['label-chime_frequency']['ru-ru'] = "Частота перезвона";
 $text['label-chime_frequency']['sv-se'] = "chime Frekvens";
 $text['label-chime_frequency']['uk-ua'] = "передзвін Частота";
+$text['label-chime_frequency']['zh-cn'] = "奇梅频率";
+$text['label-chime_frequency']['ja-jp'] = "煙の頻度";
+$text['label-chime_frequency']['ko-kr'] = "Chime 빈도";
 
 $text['label-channels']['en-us'] = "Channels";
 $text['label-channels']['en-gb'] = "Channels";
@@ -776,6 +884,9 @@ $text['label-channels']['ro-ro'] = "Canale";
 $text['label-channels']['ru-ru'] = "Каналы";
 $text['label-channels']['sv-se'] = "Kanaler";
 $text['label-channels']['uk-ua'] = "Канали";
+$text['label-channels']['zh-cn'] = "渠道";
+$text['label-channels']['ja-jp'] = "チャンネル";
+$text['label-channels']['ko-kr'] = "채널 :";
 
 $text['header-music_on_hold_settings']['en-us'] = "Music on Hold Settings";
 $text['header-music_on_hold_settings']['en-gb'] = "Music on Hold Settings";
@@ -797,6 +908,9 @@ $text['header-music_on_hold_settings']['ro-ro'] = "";
 $text['header-music_on_hold_settings']['ru-ru'] = "Музыка на удержании параметы";
 $text['header-music_on_hold_settings']['sv-se'] = "Väntmusik inställningar";
 $text['header-music_on_hold_settings']['uk-ua'] = "Музика на утриманні настройки";
+$text['header-music_on_hold_settings']['zh-cn'] = "音乐家";
+$text['header-music_on_hold_settings']['ja-jp'] = "ホールド設定の音楽";
+$text['header-music_on_hold_settings']['ko-kr'] = "Run 설정에 음악";
 
 $text['title_description-music_on_hold']['en-us'] = "Music on hold can be in WAV or MP3 format. For best performance upload 16 bit, 8/16/32/48 kHz <i>mono</i> WAV files.";
 $text['title_description-music_on_hold']['en-gb'] = "Music on hold can be in WAV or MP3 format. For best performance upload 16 bit, 8/16/32/48 kHz <i>mono</i> WAV files.";
@@ -818,6 +932,9 @@ $text['title_description-music_on_hold']['ro-ro'] = "";
 $text['title_description-music_on_hold']['ru-ru'] = "Музыка на удержании может быть в формате WAV или MP3. Для лучшей производительности загружайте 16-битные, 8/16/32/48 кГц <i> моно </ i> файлы WAV.";
 $text['title_description-music_on_hold']['sv-se'] = "Väntmusik kan vara i formaten WAV eller MP3. För bästa prestanda, ladda upp 16 bit, 8/16/32/48 kHz mono WAV filer.";
 $text['title_description-music_on_hold']['uk-ua'] = "Музика на утриманні може бути в WAV або MP3 формат. Для кращої продуктивності завантаження 16 біт, моно 8/16/32/48 кГц WAV файлів.";
+$text['title_description-music_on_hold']['zh-cn'] = "坐牢的音乐可以采用WAV或MP3格式。 最佳性能上载16比值 页: 1 西非经货联盟档案。";
+$text['title_description-music_on_hold']['ja-jp'] = "ホールドの音楽はWAVかMP3のフォーマットである場合もあります。 最高の性能のアップロード16ビットのために、 8/16/32/48 kHz <i>モノ</i> WAVファイル。";
+$text['title_description-music_on_hold']['ko-kr'] = "파악에 음악은 WAV 또는 MP3 체재에서 일 수 있습니다. 최고의 성능 업로드 16 비트, 8/16/32/48 kHz <i>mono</i> WAV 파일.";
 
 $text['button-upload']['en-us'] = "Upload";
 $text['button-upload']['en-gb'] = "Upload";
@@ -839,6 +956,9 @@ $text['button-upload']['ro-ro'] = "";
 $text['button-upload']['ru-ru'] = "Загрузить";
 $text['button-upload']['sv-se'] = "Ladda Upp";
 $text['button-upload']['uk-ua'] = "Завантажити";
+$text['button-upload']['zh-cn'] = "装载";
+$text['button-upload']['ja-jp'] = "アップロード";
+$text['button-upload']['ko-kr'] = "제품정보";
 
 $text['button-clear']['en-us'] = "Clear";
 $text['button-clear']['en-gb'] = "Clear";
@@ -860,5 +980,8 @@ $text['button-clear']['ro-ro'] = "";
 $text['button-clear']['ru-ru'] = "Очистить";
 $text['button-clear']['sv-se'] = "Rensa";
 $text['button-clear']['uk-ua'] = "Очистити";
+$text['button-clear']['zh-cn'] = "明确";
+$text['button-clear']['ja-jp'] = "クリア";
+$text['button-clear']['ko-kr'] = "기타";
 
 ?>

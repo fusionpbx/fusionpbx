@@ -20,6 +20,9 @@ $text['title-fax']['ro-ro'] = "";
 $text['title-fax']['ru-ru'] = "Fax Сервер";
 $text['title-fax']['sv-se'] = "Fax Server";
 $text['title-fax']['uk-ua'] = "Статус на сервери";
+$text['title-fax']['zh-cn'] = "传真服务器";
+$text['title-fax']['ja-jp'] = "ファックスサーバー";
+$text['title-fax']['ko-kr'] = "팩스 서버";
 
 $text['title-fax_server_settings']['en-us'] = "Fax Server Settings";
 $text['title-fax_server_settings']['en-gb'] = "Fax Server Settings";
@@ -41,6 +44,9 @@ $text['title-fax_server_settings']['ro-ro'] = "";
 $text['title-fax_server_settings']['ru-ru'] = "Настройки Fax Сервера";
 $text['title-fax_server_settings']['sv-se'] = "Fax Server Inställningar";
 $text['title-fax_server_settings']['uk-ua'] = "Налаштування сервера Fax";
+$text['title-fax_server_settings']['zh-cn'] = "传真服务器设置";
+$text['title-fax_server_settings']['ja-jp'] = "ファックスサーバーの設定";
+$text['title-fax_server_settings']['ko-kr'] = "팩스 서버 설정";
 
 $text['title-new_fax']['en-us'] = "New Fax";
 $text['title-new_fax']['en-gb'] = "New Fax";
@@ -62,6 +68,9 @@ $text['title-new_fax']['ro-ro'] = "";
 $text['title-new_fax']['ru-ru'] = "Новый Fax";
 $text['title-new_fax']['sv-se'] = "Nytt Fax";
 $text['title-new_fax']['uk-ua'] = "Новий факс";
+$text['title-new_fax']['zh-cn'] = "纽约总部";
+$text['title-new_fax']['ja-jp'] = "メールアドレス";
+$text['title-new_fax']['ko-kr'] = "새 팩스";
 
 $text['title-inbox']['en-us'] = "Inbox";
 $text['title-inbox']['en-gb'] = "Inbox";
@@ -83,6 +92,9 @@ $text['title-inbox']['ro-ro'] = "";
 $text['title-inbox']['ru-ru'] = "Входящий";
 $text['title-inbox']['sv-se'] = "Inbox";
 $text['title-inbox']['uk-ua'] = "Кошик";
+$text['title-inbox']['zh-cn'] = "方框";
+$text['title-inbox']['ja-jp'] = "インボックス";
+$text['title-inbox']['ko-kr'] = "회사 소개";
 
 $text['title-sent_faxes']['en-us'] = "Sent";
 $text['title-sent_faxes']['en-gb'] = "Sent";
@@ -104,6 +116,9 @@ $text['title-sent_faxes']['ro-ro'] = "";
 $text['title-sent_faxes']['ru-ru'] = "Передача Fax";
 $text['title-sent_faxes']['sv-se'] = "Skickade Fax";
 $text['title-sent_faxes']['uk-ua'] = "Сент";
+$text['title-sent_faxes']['zh-cn'] = "日期";
+$text['title-sent_faxes']['ja-jp'] = "ログイン";
+$text['title-sent_faxes']['ko-kr'] = "이름 *";
 
 $text['title-fax_logs']['en-us'] = "Fax Logs";
 $text['title-fax_logs']['en-gb'] = "Fax Logs";
@@ -125,6 +140,9 @@ $text['title-fax_logs']['ro-ro'] = "";
 $text['title-fax_logs']['ru-ru'] = "Fax Логи";
 $text['title-fax_logs']['sv-se'] = "Fax Loggar";
 $text['title-fax_logs']['uk-ua'] = "Журнали факсу";
+$text['title-fax_logs']['zh-cn'] = "传真记录";
+$text['title-fax_logs']['ja-jp'] = "ファックスログ";
+$text['title-fax_logs']['ko-kr'] = "팩스 로그";
 
 $text['title-fax_log']['en-us'] = "Fax Log";
 $text['title-fax_log']['en-gb'] = "Fax Log";
@@ -146,6 +164,9 @@ $text['title-fax_log']['ro-ro'] = "";
 $text['title-fax_log']['ru-ru'] = "Fax Лог";
 $text['title-fax_log']['sv-se'] = "Fax Log";
 $text['title-fax_log']['uk-ua'] = "Логін";
+$text['title-fax_log']['zh-cn'] = "传真:";
+$text['title-fax_log']['ja-jp'] = "ファックスログ";
+$text['title-fax_log']['ko-kr'] = "팩스번호";
 
 $text['title-fax_files']['en-us'] = "Fax Files";
 $text['title-fax_files']['en-gb'] = "Fax Files";
@@ -167,6 +188,9 @@ $text['title-fax_files']['ro-ro'] = "";
 $text['title-fax_files']['ru-ru'] = "FAX Файлы";
 $text['title-fax_files']['sv-se'] = "Faxfiler";
 $text['title-fax_files']['uk-ua'] = "Файли факсу";
+$text['title-fax_files']['zh-cn'] = "传真文件";
+$text['title-fax_files']['ja-jp'] = "ファックスファイル";
+$text['title-fax_files']['ko-kr'] = "팩스 파일";
 
 $text['title-fax_file']['en-us'] = "Fax File";
 $text['title-fax_file']['en-gb'] = "Fax File";
@@ -188,6 +212,9 @@ $text['title-fax_file']['ro-ro'] = "";
 $text['title-fax_file']['ru-ru'] = "Fax Файл";
 $text['title-fax_file']['sv-se'] = "Faxfilen";
 $text['title-fax_file']['uk-ua'] = "Файл факсу";
+$text['title-fax_file']['zh-cn'] = "传真:";
+$text['title-fax_file']['ja-jp'] = "ファックスファイル";
+$text['title-fax_file']['ko-kr'] = "FAX 파일";
 
 $text['table-view']['en-us'] = "View";
 $text['table-view']['en-gb'] = "View";
@@ -209,6 +236,9 @@ $text['table-view']['ro-ro'] = "";
 $text['table-view']['ru-ru'] = "Просмотр";
 $text['table-view']['sv-se'] = "Granska";
 $text['table-view']['uk-ua'] = "Переглянути";
+$text['table-view']['zh-cn'] = "观点";
+$text['table-view']['ja-jp'] = "ニュース";
+$text['table-view']['ko-kr'] = "- 연혁";
 
 $text['table-size']['en-us'] = "Size";
 $text['table-size']['en-gb'] = "Size";
@@ -230,6 +260,9 @@ $text['table-size']['ro-ro'] = "";
 $text['table-size']['ru-ru'] = "Размер";
 $text['table-size']['sv-se'] = "Storlek";
 $text['table-size']['uk-ua'] = "Розмір";
+$text['table-size']['zh-cn'] = "规模";
+$text['table-size']['ja-jp'] = "サイズ:";
+$text['table-size']['ko-kr'] = "크기 (mm)";
 
 $text['table-modified']['en-us'] = "Last Modified";
 $text['table-modified']['en-gb'] = "Last Modified";
@@ -251,6 +284,9 @@ $text['table-modified']['ro-ro'] = "";
 $text['table-modified']['ru-ru'] = "Последние изменения";
 $text['table-modified']['sv-se'] = "Senast Modifierad";
 $text['table-modified']['uk-ua'] = "Останнє оновлення";
+$text['table-modified']['zh-cn'] = "上次修改";
+$text['table-modified']['ja-jp'] = "最終変更";
+$text['table-modified']['ko-kr'] = "최근 수정";
 
 $text['table-file']['en-us'] = "File Name (Download)";
 $text['table-file']['en-gb'] = "File Name (Download)";
@@ -272,6 +308,9 @@ $text['table-file']['ro-ro'] = "";
 $text['table-file']['ru-ru'] = "Имена файлов (Загрузить)";
 $text['table-file']['sv-se'] = "Fil Namn (Nedladdning)";
 $text['table-file']['uk-ua'] = "Ім'я файла (Завантажити)";
+$text['table-file']['zh-cn'] = "文件名称(Download)";
+$text['table-file']['ja-jp'] = "ファイル名(ダウンロード)";
+$text['table-file']['ko-kr'] = "파일 이름 (Download)";
 
 $text['option-true']['en-us'] = "True";
 $text['option-true']['en-gb'] = "True";
@@ -293,6 +332,9 @@ $text['option-true']['ro-ro'] = "";
 $text['option-true']['ru-ru'] = "Активно";
 $text['option-true']['sv-se'] = "Sann";
 $text['option-true']['uk-ua'] = "Про нас";
+$text['option-true']['zh-cn'] = "真";
+$text['option-true']['ja-jp'] = "ログイン";
+$text['option-true']['ko-kr'] = "이란";
 
 $text['option-fax-resolution-superfine']['en-us'] = "Superfine";
 $text['option-fax-resolution-superfine']['en-gb'] = "Superfine";
@@ -314,6 +356,9 @@ $text['option-fax-resolution-superfine']['ro-ro'] = "";
 $text['option-fax-resolution-superfine']['ru-ru'] = "Наилучшее";
 $text['option-fax-resolution-superfine']['sv-se'] = "Superfin";
 $text['option-fax-resolution-superfine']['uk-ua'] = "Суперфін";
+$text['option-fax-resolution-superfine']['zh-cn'] = "2. 表面";
+$text['option-fax-resolution-superfine']['ja-jp'] = "スーパーファイン";
+$text['option-fax-resolution-superfine']['ko-kr'] = "제품정보";
 
 $text['option-fax-resolution-normal']['en-us'] = "Normal";
 $text['option-fax-resolution-normal']['en-gb'] = "Normal";
@@ -335,6 +380,9 @@ $text['option-fax-resolution-normal']['ro-ro'] = "";
 $text['option-fax-resolution-normal']['ru-ru'] = "Нормальное";
 $text['option-fax-resolution-normal']['sv-se'] = "Normal";
 $text['option-fax-resolution-normal']['uk-ua'] = "Нормативно";
+$text['option-fax-resolution-normal']['zh-cn'] = "正常";
+$text['option-fax-resolution-normal']['ja-jp'] = "ノーマル";
+$text['option-fax-resolution-normal']['ko-kr'] = "·";
 
 $text['option-fax-resolution-fine']['en-us'] = "Fine";
 $text['option-fax-resolution-fine']['en-gb'] = "Fine";
@@ -356,6 +404,9 @@ $text['option-fax-resolution-fine']['ro-ro'] = "";
 $text['option-fax-resolution-fine']['ru-ru'] = "Исходное";
 $text['option-fax-resolution-fine']['sv-se'] = "Fin";
 $text['option-fax-resolution-fine']['uk-ua'] = "Кошик";
+$text['option-fax-resolution-fine']['zh-cn'] = "罚款";
+$text['option-fax-resolution-fine']['ja-jp'] = "メニュー";
+$text['option-fax-resolution-fine']['ko-kr'] = "제품 정보";
 
 $text['option-false']['en-us'] = "False";
 $text['option-false']['en-gb'] = "False";
@@ -377,6 +428,9 @@ $text['option-false']['ro-ro'] = "";
 $text['option-false']['ru-ru'] = "Ошибка";
 $text['option-false']['sv-se'] = "Falsk";
 $text['option-false']['uk-ua'] = "Фальзе";
+$text['option-false']['zh-cn'] = "抢劫";
+$text['option-false']['ja-jp'] = "ファルス";
+$text['option-false']['ko-kr'] = "팟캐스트";
 
 $text['message-no_faxes_found']['en-us'] = "No Faxes Found";
 $text['message-no_faxes_found']['en-gb'] = "No Faxes Found";
@@ -398,6 +452,9 @@ $text['message-no_faxes_found']['ro-ro'] = "";
 $text['message-no_faxes_found']['ru-ru'] = "Факсы отсутствуют";
 $text['message-no_faxes_found']['sv-se'] = "Inga Fax Funna";
 $text['message-no_faxes_found']['uk-ua'] = "Не знайдено";
+$text['message-no_faxes_found']['zh-cn'] = "传真:";
+$text['message-no_faxes_found']['ja-jp'] = "FAXが見つかりません";
+$text['message-no_faxes_found']['ko-kr'] = "자주 묻는 질문";
 
 $text['message-invalid-fax']['en-us'] = "Invalid Fax - Please enter a message or select a file to send.";
 $text['message-invalid-fax']['en-gb'] = "Invalid Fax - Please enter a message or select a file to send.";
@@ -419,6 +476,9 @@ $text['message-invalid-fax']['ro-ro'] = "";
 $text['message-invalid-fax']['ru-ru'] = "Неверный FAX: введите сообщение или выберите файл для отправки.";
 $text['message-invalid-fax']['sv-se'] = "Ogiltigt Fax - Fyll i ett meddelande eller välj en fil att skicka iväg.";
 $text['message-invalid-fax']['uk-ua'] = "Інвалідний факс - Будь ласка, введіть повідомлення або виберіть файл для відправки.";
+$text['message-invalid-fax']['zh-cn'] = "Invalid Fax - 请输入电文或选择文件发送。";
+$text['message-invalid-fax']['ja-jp'] = "無効なファックス - 送信するファイルを入力してください。";
+$text['message-invalid-fax']['ko-kr'] = "잘못된 팩스 - 메시지를 입력하거나 보내기 위해 파일을 선택하십시오.";
 
 $text['message-cannot_connect']['en-us'] = "Connection Failed";
 $text['message-cannot_connect']['en-gb'] = "Connection Failed";
@@ -440,6 +500,9 @@ $text['message-cannot_connect']['ro-ro'] = "";
 $text['message-cannot_connect']['ru-ru'] = "Ошибка соединения";
 $text['message-cannot_connect']['sv-se'] = "Connection Misslyckades";
 $text['message-cannot_connect']['uk-ua'] = "З'єднувач";
+$text['message-cannot_connect']['zh-cn'] = "未能抵达";
+$text['message-cannot_connect']['ja-jp'] = "接続失敗";
+$text['message-cannot_connect']['ko-kr'] = "연결 실패";
 
 $text['label-user-list']['en-us'] = "User List";
 $text['label-user-list']['en-gb'] = "User List";
@@ -461,6 +524,9 @@ $text['label-user-list']['ro-ro'] = "";
 $text['label-user-list']['ru-ru'] = "Список пользователей";
 $text['label-user-list']['sv-se'] = "Användarlista";
 $text['label-user-list']['uk-ua'] = "Список користувачів";
+$text['label-user-list']['zh-cn'] = "用户名单";
+$text['label-user-list']['ja-jp'] = "ユーザーリスト";
+$text['label-user-list']['ko-kr'] = "사용자 목록";
 
 $text['label-tools']['en-us'] = "Tools";
 $text['label-tools']['en-gb'] = "Tools";
@@ -482,6 +548,9 @@ $text['label-tools']['ro-ro'] = "";
 $text['label-tools']['ru-ru'] = "Инструменты";
 $text['label-tools']['sv-se'] = "Verktyg";
 $text['label-tools']['uk-ua'] = "Інструменти";
+$text['label-tools']['zh-cn'] = "工具";
+$text['label-tools']['ja-jp'] = "ツール";
+$text['label-tools']['ko-kr'] = "제품정보";
 
 $text['label-sent']['en-us'] = "Sent";
 $text['label-sent']['en-gb'] = "Sent";
@@ -503,6 +572,9 @@ $text['label-sent']['ro-ro'] = "";
 $text['label-sent']['ru-ru'] = "Переданные";
 $text['label-sent']['sv-se'] = "Skickat";
 $text['label-sent']['uk-ua'] = "Сент";
+$text['label-sent']['zh-cn'] = "日期";
+$text['label-sent']['ja-jp'] = "ログイン";
+$text['label-sent']['ko-kr'] = "이름 *";
 
 $text['label-selected']['en-us'] = "Selected";
 $text['label-selected']['en-gb'] = "Selected";
@@ -524,6 +596,9 @@ $text['label-selected']['ro-ro'] = "";
 $text['label-selected']['ru-ru'] = "Выбор";
 $text['label-selected']['sv-se'] = "Valt";
 $text['label-selected']['uk-ua'] = "Вибрані";
+$text['label-selected']['zh-cn'] = "选 选";
+$text['label-selected']['ja-jp'] = "選択する";
+$text['label-selected']['ko-kr'] = "제품정보";
 
 $text['label-pin']['en-us'] = "PIN Number";
 $text['label-pin']['en-gb'] = "PIN Number";
@@ -545,6 +620,9 @@ $text['label-pin']['ro-ro'] = "";
 $text['label-pin']['ru-ru'] = "PIN-код";
 $text['label-pin']['sv-se'] = "PIN Kod";
 $text['label-pin']['uk-ua'] = "Номер ПІН";
+$text['label-pin']['zh-cn'] = "PIN 人数";
+$text['label-pin']['ja-jp'] = "PIN番号";
+$text['label-pin']['ko-kr'] = "PIN 번호";
 
 $text['label-new']['en-us'] = "New";
 $text['label-new']['en-gb'] = "New";
@@ -566,6 +644,9 @@ $text['label-new']['ro-ro'] = "";
 $text['label-new']['ru-ru'] = "Новый";
 $text['label-new']['sv-se'] = "Nytt";
 $text['label-new']['uk-ua'] = "Нові";
+$text['label-new']['zh-cn'] = "新";
+$text['label-new']['ja-jp'] = "ニュース";
+$text['label-new']['ko-kr'] = "으로";
 
 $text['label-log']['en-us'] = "Log";
 $text['label-log']['en-gb'] = "Log";
@@ -587,6 +668,9 @@ $text['label-log']['ro-ro'] = "";
 $text['label-log']['ru-ru'] = "Лог";
 $text['label-log']['sv-se'] = "Log";
 $text['label-log']['uk-ua'] = "Увійти";
+$text['label-log']['zh-cn'] = "后勤";
+$text['label-log']['ja-jp'] = "ログイン";
+$text['label-log']['ko-kr'] = "로그인";
 
 $text['label-active']['en-us'] = "Active";
 $text['label-active']['en-gb'] = "Active";
@@ -608,6 +692,9 @@ $text['label-active']['ro-ro'] = "";
 $text['label-active']['ru-ru'] = "Активные";
 $text['label-active']['sv-se'] = "Aktiv";
 $text['label-active']['uk-ua'] = "Активний";
+$text['label-active']['zh-cn'] = "活跃";
+$text['label-active']['ja-jp'] = "アクティブ";
+$text['label-active']['ko-kr'] = "지원하다";
 
 $text['label-location']['en-us'] = "Location";
 $text['label-location']['en-gb'] = "Location";
@@ -629,6 +716,9 @@ $text['label-location']['ro-ro'] = "";
 $text['label-location']['ru-ru'] = "Расположение";
 $text['label-location']['sv-se'] = "Plats";
 $text['label-location']['uk-ua'] = "Місцезнаходження";
+$text['label-location']['zh-cn'] = "地点";
+$text['label-location']['ja-jp'] = "アクセス";
+$text['label-location']['ko-kr'] = "- 연혁";
 
 $text['label-inbox']['en-us'] = "Inbox";
 $text['label-inbox']['en-gb'] = "Inbox";
@@ -650,6 +740,9 @@ $text['label-inbox']['ro-ro'] = "";
 $text['label-inbox']['ru-ru'] = "Входящие";
 $text['label-inbox']['sv-se'] = "Inbox";
 $text['label-inbox']['uk-ua'] = "Кошик";
+$text['label-inbox']['zh-cn'] = "方框";
+$text['label-inbox']['ja-jp'] = "インボックス";
+$text['label-inbox']['ko-kr'] = "회사 소개";
 
 $text['label-forward']['en-us'] = "Forward Number";
 $text['label-forward']['en-gb'] = "Forward Number";
@@ -671,6 +764,9 @@ $text['label-forward']['ro-ro'] = "";
 $text['label-forward']['ru-ru'] = "Набираемый Номер";
 $text['label-forward']['sv-se'] = "Vidarekoppla";
 $text['label-forward']['uk-ua'] = "Номер переадресації";
+$text['label-forward']['zh-cn'] = "序号";
+$text['label-forward']['ja-jp'] = "フォワード番号";
+$text['label-forward']['ko-kr'] = "앞으로 수";
 
 $text['label-file']['en-us'] = "File not found.";
 $text['label-file']['en-gb'] = "File not found.";
@@ -692,6 +788,9 @@ $text['label-file']['ro-ro'] = "";
 $text['label-file']['ru-ru'] = "Файл отсутствует.";
 $text['label-file']['sv-se'] = "Fil Ej Funnen";
 $text['label-file']['uk-ua'] = "Файл не знайдено.";
+$text['label-file']['zh-cn'] = "文件没有找到。";
+$text['label-file']['ja-jp'] = "ファイルが見つかりません。";
+$text['label-file']['ko-kr'] = "파일이 없습니다.";
 
 $text['label-fax_uuid']['en-us'] = "FAX UUID";
 $text['label-fax_uuid']['en-gb'] = "FAX UUID";
@@ -713,6 +812,9 @@ $text['label-fax_uuid']['ro-ro'] = "";
 $text['label-fax_uuid']['ru-ru'] = "FAX UUID";
 $text['label-fax_uuid']['sv-se'] = "Fax Detektering";
 $text['label-fax_uuid']['uk-ua'] = "ФАХ УЕЙД";
+$text['label-fax_uuid']['zh-cn'] = "传真:uuid";
+$text['label-fax_uuid']['ja-jp'] = "ファックス UUID";
+$text['label-fax_uuid']['ko-kr'] = "팩스 UUID";
 
 $text['label-fax_uri']['en-us'] = "URI";
 $text['label-fax_uri']['en-gb'] = "URI";
@@ -734,6 +836,9 @@ $text['label-fax_uri']['ro-ro'] = "";
 $text['label-fax_uri']['ru-ru'] = "URI";
 $text['label-fax_uri']['sv-se'] = "URI";
 $text['label-fax_uri']['uk-ua'] = "УРИ";
+$text['label-fax_uri']['zh-cn'] = "uri";
+$text['label-fax_uri']['ja-jp'] = "ログイン";
+$text['label-fax_uri']['ko-kr'] = "·";
 
 $text['label-fax_transfer_rate']['en-us'] = "Transfer Rate";
 $text['label-fax_transfer_rate']['en-gb'] = "Transfer Rate";
@@ -755,6 +860,9 @@ $text['label-fax_transfer_rate']['ro-ro'] = "";
 $text['label-fax_transfer_rate']['ru-ru'] = "Скорость передачи";
 $text['label-fax_transfer_rate']['sv-se'] = "Transfer Rate";
 $text['label-fax_transfer_rate']['uk-ua'] = "Тарифи";
+$text['label-fax_transfer_rate']['zh-cn'] = "转账率";
+$text['label-fax_transfer_rate']['ja-jp'] = "転送速度";
+$text['label-fax_transfer_rate']['ko-kr'] = "전송률";
 
 $text['label-fax_success']['en-us'] = "Success";
 $text['label-fax_success']['en-gb'] = "Success";
@@ -776,6 +884,9 @@ $text['label-fax_success']['ro-ro'] = "";
 $text['label-fax_success']['ru-ru'] = "Успешно";
 $text['label-fax_success']['sv-se'] = "Lyckades";
 $text['label-fax_success']['uk-ua'] = "Про нас";
+$text['label-fax_success']['zh-cn'] = "成功";
+$text['label-fax_success']['ja-jp'] = "成功事例";
+$text['label-fax_success']['ko-kr'] = "지원하다";
 
 $text['label-fax_retry_sleep']['en-us'] = "Retry Sleep";
 $text['label-fax_retry_sleep']['en-gb'] = "Retry Sleep";
@@ -797,6 +908,9 @@ $text['label-fax_retry_sleep']['ro-ro'] = "";
 $text['label-fax_retry_sleep']['ru-ru'] = "Повтор после паузы";
 $text['label-fax_retry_sleep']['sv-se'] = "Retry Sleep";
 $text['label-fax_retry_sleep']['uk-ua'] = "Теплий сон";
+$text['label-fax_retry_sleep']['zh-cn'] = "午餐";
+$text['label-fax_retry_sleep']['ja-jp'] = "Retry 睡眠";
+$text['label-fax_retry_sleep']['ko-kr'] = "호흡 수면";
 
 $text['label-fax_retry_limit']['en-us'] = "Retry Limit";
 $text['label-fax_retry_limit']['en-gb'] = "Retry Limit";
@@ -818,6 +932,9 @@ $text['label-fax_retry_limit']['ro-ro'] = "";
 $text['label-fax_retry_limit']['ru-ru'] = "Количество повторов";
 $text['label-fax_retry_limit']['sv-se'] = "Retry Limit";
 $text['label-fax_retry_limit']['uk-ua'] = "Ліміт птиця";
+$text['label-fax_retry_limit']['zh-cn'] = "出口";
+$text['label-fax_retry_limit']['ja-jp'] = "再試行制限";
+$text['label-fax_retry_limit']['ko-kr'] = "Retry 제한";
 
 $text['label-fax_retry_attempts']['en-us'] = "Retry";
 $text['label-fax_retry_attempts']['en-gb'] = "Retry";
@@ -839,6 +956,9 @@ $text['label-fax_retry_attempts']['ro-ro'] = "";
 $text['label-fax_retry_attempts']['ru-ru'] = "Повторить";
 $text['label-fax_retry_attempts']['sv-se'] = "Retry";
 $text['label-fax_retry_attempts']['uk-ua'] = "Ретри";
+$text['label-fax_retry_attempts']['zh-cn'] = "学历";
+$text['label-fax_retry_attempts']['ja-jp'] = "リトリート";
+$text['label-fax_retry_attempts']['ko-kr'] = "관련 기사";
 
 $text['label-fax_result_text']['en-us'] = "Result";
 $text['label-fax_result_text']['en-gb'] = "Result";
@@ -860,6 +980,9 @@ $text['label-fax_result_text']['ro-ro'] = "";
 $text['label-fax_result_text']['ru-ru'] = "Результат";
 $text['label-fax_result_text']['sv-se'] = "Resultat";
 $text['label-fax_result_text']['uk-ua'] = "Почати";
+$text['label-fax_result_text']['zh-cn'] = "结果";
+$text['label-fax_result_text']['ja-jp'] = "結果発表";
+$text['label-fax_result_text']['ko-kr'] = "제품정보";
 
 $text['label-fax_result_code']['en-us'] = "Code";
 $text['label-fax_result_code']['en-gb'] = "Code";
@@ -881,6 +1004,9 @@ $text['label-fax_result_code']['ro-ro'] = "";
 $text['label-fax_result_code']['ru-ru'] = "Код";
 $text['label-fax_result_code']['sv-se'] = "Code";
 $text['label-fax_result_code']['uk-ua'] = "Коди";
+$text['label-fax_result_code']['zh-cn'] = "法典";
+$text['label-fax_result_code']['ja-jp'] = "コードコード";
+$text['label-fax_result_code']['ko-kr'] = "* 이름";
 
 $text['label-fax_prefix']['en-us'] = "Prefix";
 $text['label-fax_prefix']['en-gb'] = "Prefix";
@@ -902,6 +1028,9 @@ $text['label-fax_prefix']['ro-ro'] = "";
 $text['label-fax_prefix']['ru-ru'] = "Префикс";
 $text['label-fax_prefix']['sv-se'] = "Prefix";
 $text['label-fax_prefix']['uk-ua'] = "Префікс";
+$text['label-fax_prefix']['zh-cn'] = "预设";
+$text['label-fax_prefix']['ja-jp'] = "プレフィックス";
+$text['label-fax_prefix']['ko-kr'] = "연락처";
 
 $text['label-fax_number']['en-us'] = "Fax Number";
 $text['label-fax_number']['en-gb'] = "Fax Number";
@@ -923,6 +1052,9 @@ $text['label-fax_number']['ro-ro'] = "";
 $text['label-fax_number']['ru-ru'] = "FAX Номер";
 $text['label-fax_number']['sv-se'] = "Faxnummer";
 $text['label-fax_number']['uk-ua'] = "Номер факсу";
+$text['label-fax_number']['zh-cn'] = "传真号码";
+$text['label-fax_number']['ja-jp'] = "FAX番号";
+$text['label-fax_number']['ko-kr'] = "팩스번호";
 
 $text['label-fax_mode']['en-us'] = "Mode";
 $text['label-fax_mode']['en-gb'] = "Mode";
@@ -944,6 +1076,9 @@ $text['label-fax_mode']['ro-ro'] = "";
 $text['label-fax_mode']['ru-ru'] = "Режим";
 $text['label-fax_mode']['sv-se'] = "Läge";
 $text['label-fax_mode']['uk-ua'] = "Режим";
+$text['label-fax_mode']['zh-cn'] = "模式";
+$text['label-fax_mode']['ja-jp'] = "モード";
+$text['label-fax_mode']['ko-kr'] = "주요 특징";
 
 $text['label-fax_local_station_id']['en-us'] = "Local Station ID";
 $text['label-fax_local_station_id']['en-gb'] = "Local Station ID";
@@ -965,6 +1100,9 @@ $text['label-fax_local_station_id']['ro-ro'] = "";
 $text['label-fax_local_station_id']['ru-ru'] = "ID локальной станции";
 $text['label-fax_local_station_id']['sv-se'] = "Local Station ID ";
 $text['label-fax_local_station_id']['uk-ua'] = "Ідентифікатор місцевих станцій";
+$text['label-fax_local_station_id']['zh-cn'] = "当地雇员";
+$text['label-fax_local_station_id']['ja-jp'] = "ローカルステーションID";
+$text['label-fax_local_station_id']['ko-kr'] = "지역 역 ID";
 
 $text['label-fax_image_size']['en-us'] = "Image Size";
 $text['label-fax_image_size']['en-gb'] = "Image Size";
@@ -986,6 +1124,9 @@ $text['label-fax_image_size']['ro-ro'] = "";
 $text['label-fax_image_size']['ru-ru'] = "Размер изображения";
 $text['label-fax_image_size']['sv-se'] = "Bild Storlek";
 $text['label-fax_image_size']['uk-ua'] = "Розмір зображення";
+$text['label-fax_image_size']['zh-cn'] = "图像";
+$text['label-fax_image_size']['ja-jp'] = "画像サイズ";
+$text['label-fax_image_size']['ko-kr'] = "이미지 크기";
 
 $text['label-fax_image_resolution']['en-us'] = "Image Resolution";
 $text['label-fax_image_resolution']['en-gb'] = "Image Resolution";
@@ -1007,6 +1148,9 @@ $text['label-fax_image_resolution']['ro-ro'] = "";
 $text['label-fax_image_resolution']['ru-ru'] = "Разрешение изображения";
 $text['label-fax_image_resolution']['sv-se'] = "Upplösning På Bild";
 $text['label-fax_image_resolution']['uk-ua'] = "Розширення зображення";
+$text['label-fax_image_resolution']['zh-cn'] = "图像传播";
+$text['label-fax_image_resolution']['ja-jp'] = "イメージの決断";
+$text['label-fax_image_resolution']['ko-kr'] = "이미지 해결책";
 
 $text['label-fax_files']['en-us'] = "Fax File(s)";
 $text['label-fax_files']['en-gb'] = "Fax File(s)";
@@ -1028,6 +1172,9 @@ $text['label-fax_files']['ro-ro'] = "";
 $text['label-fax_files']['ru-ru'] = "Fax Файл(ы)";
 $text['label-fax_files']['sv-se'] = "Fax fil(er)";
 $text['label-fax_files']['uk-ua'] = "Файл факсу (s)";
+$text['label-fax_files']['zh-cn'] = "传真文件";
+$text['label-fax_files']['ja-jp'] = "ファックスファイル";
+$text['label-fax_files']['ko-kr'] = "팩스 파일(s)";
 
 $text['label-fax_file_type']['en-us'] = "File Type";
 $text['label-fax_file_type']['en-gb'] = "File Type";
@@ -1049,6 +1196,9 @@ $text['label-fax_file_type']['ro-ro'] = "";
 $text['label-fax_file_type']['ru-ru'] = "Типы Файлов";
 $text['label-fax_file_type']['sv-se'] = "Filtyp";
 $text['label-fax_file_type']['uk-ua'] = "Тип файлу";
+$text['label-fax_file_type']['zh-cn'] = "文件类型";
+$text['label-fax_file_type']['ja-jp'] = "ファイルの種類";
+$text['label-fax_file_type']['ko-kr'] = "파일 형식";
 
 $text['label-fax_file_path']['en-us'] = "File Path";
 $text['label-fax_file_path']['en-gb'] = "File Path";
@@ -1070,6 +1220,9 @@ $text['label-fax_file_path']['ro-ro'] = "";
 $text['label-fax_file_path']['ru-ru'] = "Путь к Файлу";
 $text['label-fax_file_path']['sv-se'] = "Fil";
 $text['label-fax_file_path']['uk-ua'] = "Файл шлях";
+$text['label-fax_file_path']['zh-cn'] = "档案";
+$text['label-fax_file_path']['ja-jp'] = "ファイルパス";
+$text['label-fax_file_path']['ko-kr'] = "파일 경로";
 
 $text['label-fax_file']['en-us'] = "File";
 $text['label-fax_file']['en-gb'] = "File";
@@ -1091,6 +1244,9 @@ $text['label-fax_file']['ro-ro'] = "";
 $text['label-fax_file']['ru-ru'] = "Файл";
 $text['label-fax_file']['sv-se'] = "Fil Bana";
 $text['label-fax_file']['uk-ua'] = "Головна";
+$text['label-fax_file']['zh-cn'] = "文件";
+$text['label-fax_file']['ja-jp'] = "ファイル";
+$text['label-fax_file']['ko-kr'] = "파일 형식";
 
 $text['label-fax_epoch']['en-us'] = "Epoch";
 $text['label-fax_epoch']['en-gb'] = "Epoch";
@@ -1112,6 +1268,9 @@ $text['label-fax_epoch']['ro-ro'] = "";
 $text['label-fax_epoch']['ru-ru'] = "Эпоха";
 $text['label-fax_epoch']['sv-se'] = "Epoch";
 $text['label-fax_epoch']['uk-ua'] = "Епоха";
+$text['label-fax_epoch']['zh-cn'] = "ep";
+$text['label-fax_epoch']['ja-jp'] = "エポック";
+$text['label-fax_epoch']['ko-kr'] = "에포크";
 
 $text['label-fax_ecm_used']['en-us'] = "ECM";
 $text['label-fax_ecm_used']['en-gb'] = "ECM";
@@ -1133,6 +1292,9 @@ $text['label-fax_ecm_used']['ro-ro'] = "";
 $text['label-fax_ecm_used']['ru-ru'] = "ECM";
 $text['label-fax_ecm_used']['sv-se'] = "ECM";
 $text['label-fax_ecm_used']['uk-ua'] = "ЕКОМ";
+$text['label-fax_ecm_used']['zh-cn'] = "ec";
+$text['label-fax_ecm_used']['ja-jp'] = "ECMについて";
+$text['label-fax_ecm_used']['ko-kr'] = "사이트맵";
 
 $text['label-fax_document_transferred_pages']['en-us'] = "Document Transferred Pages";
 $text['label-fax_document_transferred_pages']['en-gb'] = "Document Transferred Pages";
@@ -1154,6 +1316,9 @@ $text['label-fax_document_transferred_pages']['ro-ro'] = "";
 $text['label-fax_document_transferred_pages']['ru-ru'] = "Страниц документа отправлено";
 $text['label-fax_document_transferred_pages']['sv-se'] = "Dokument Skickade Sidor";
 $text['label-fax_document_transferred_pages']['uk-ua'] = "Документ Передача сторінок";
+$text['label-fax_document_transferred_pages']['zh-cn'] = "文件传输页";
+$text['label-fax_document_transferred_pages']['ja-jp'] = "文書転送ページ";
+$text['label-fax_document_transferred_pages']['ko-kr'] = "문서 전송 페이지";
 
 $text['label-fax_document_total_pages']['en-us'] = "Document Total Pages";
 $text['label-fax_document_total_pages']['en-gb'] = "Document Total Pages";
@@ -1175,6 +1340,9 @@ $text['label-fax_document_total_pages']['ro-ro'] = "";
 $text['label-fax_document_total_pages']['ru-ru'] = "Всего страниц в документе";
 $text['label-fax_document_total_pages']['sv-se'] = "Dokument Totalt Sidor";
 $text['label-fax_document_total_pages']['uk-ua'] = "Документ Всього сторінок";
+$text['label-fax_document_total_pages']['zh-cn'] = "文件总数";
+$text['label-fax_document_total_pages']['ja-jp'] = "ドキュメント総ページ";
+$text['label-fax_document_total_pages']['ko-kr'] = "문서 총 페이지";
 
 $text['label-fax_destination']['en-us'] = "Destination";
 $text['label-fax_destination']['en-gb'] = "Destination";
@@ -1196,6 +1364,9 @@ $text['label-fax_destination']['ro-ro'] = "";
 $text['label-fax_destination']['ru-ru'] = "Отправитель";
 $text['label-fax_destination']['sv-se'] = "Destination";
 $text['label-fax_destination']['uk-ua'] = "Навігація";
+$text['label-fax_destination']['zh-cn'] = "目的地";
+$text['label-fax_destination']['ja-jp'] = "目的地";
+$text['label-fax_destination']['ko-kr'] = "여행 정보";
 
 $text['label-fax_date']['en-us'] = "Date";
 $text['label-fax_date']['en-gb'] = "Date";
@@ -1217,6 +1388,9 @@ $text['label-fax_date']['ro-ro'] = "";
 $text['label-fax_date']['ru-ru'] = "Дата";
 $text['label-fax_date']['sv-se'] = "Datum";
 $text['label-fax_date']['uk-ua'] = "Дата";
+$text['label-fax_date']['zh-cn'] = "日期";
+$text['label-fax_date']['ja-jp'] = "日程表";
+$text['label-fax_date']['ko-kr'] = "(주)";
 
 $text['label-fax_caller_id_number']['en-us'] = "Caller ID Number";
 $text['label-fax_caller_id_number']['en-gb'] = "Caller ID Number";
@@ -1238,6 +1412,9 @@ $text['label-fax_caller_id_number']['ro-ro'] = "";
 $text['label-fax_caller_id_number']['ru-ru'] = "Caller ID Номер";
 $text['label-fax_caller_id_number']['sv-se'] = "Nummerpresentation";
 $text['label-fax_caller_id_number']['uk-ua'] = "Номер ідентифікатора абонента";
+$text['label-fax_caller_id_number']['zh-cn'] = "Caller ID号码";
+$text['label-fax_caller_id_number']['ja-jp'] = "発信者ID番号";
+$text['label-fax_caller_id_number']['ko-kr'] = "전화 번호";
 
 $text['label-fax_caller_id_name']['en-us'] = "Caller ID Name";
 $text['label-fax_caller_id_name']['en-gb'] = "Caller ID Name";
@@ -1259,6 +1436,9 @@ $text['label-fax_caller_id_name']['ro-ro'] = "";
 $text['label-fax_caller_id_name']['ru-ru'] = "Caller ID Имя";
 $text['label-fax_caller_id_name']['sv-se'] = "Namnpresentation";
 $text['label-fax_caller_id_name']['uk-ua'] = "Ім'я платника";
+$text['label-fax_caller_id_name']['zh-cn'] = "Caller ID name";
+$text['label-fax_caller_id_name']['ja-jp'] = "呼び出し者 ID 名";
+$text['label-fax_caller_id_name']['ko-kr'] = "ID 이름";
 
 $text['label-toll_allow']['en-us'] = "Toll Allow";
 $text['label-toll_allow']['en-gb'] = "Toll Allow";
@@ -1280,6 +1460,9 @@ $text['label-toll_allow']['ro-ro'] = "";
 $text['label-toll_allow']['ru-ru'] = "Разрешить Платное Соединение";
 $text['label-toll_allow']['sv-se'] = "Toll Allow";
 $text['label-toll_allow']['uk-ua'] = "Толстячки";
+$text['label-toll_allow']['zh-cn'] = "谨请准予我就西撒哈拉问题向第四委员会发言。";
+$text['label-toll_allow']['ja-jp'] = "有料可";
+$text['label-toll_allow']['ko-kr'] = "Toll 허용";
 
 $text['label-fax_base64']['en-us'] = "Base64";
 $text['label-fax_base64']['en-gb'] = "Base64";
@@ -1301,6 +1484,9 @@ $text['label-fax_base64']['ro-ro'] = "";
 $text['label-fax_base64']['ru-ru'] = "Base64";
 $text['label-fax_base64']['sv-se'] = "Base64";
 $text['label-fax_base64']['uk-ua'] = "бази64";
+$text['label-fax_base64']['zh-cn'] = "基地";
+$text['label-fax_base64']['ja-jp'] = "ベース64";
+$text['label-fax_base64']['ko-kr'] = "자료64";
 
 $text['label-fax_bad_rows']['en-us'] = "Bad Rows";
 $text['label-fax_bad_rows']['en-gb'] = "Bad Rows";
@@ -1322,6 +1508,9 @@ $text['label-fax_bad_rows']['ro-ro'] = "";
 $text['label-fax_bad_rows']['ru-ru'] = "Ошибочных строк";
 $text['label-fax_bad_rows']['sv-se'] = "Dåliga Rader";
 $text['label-fax_bad_rows']['uk-ua'] = "Бад Роу";
+$text['label-fax_bad_rows']['zh-cn'] = "坏账";
+$text['label-fax_bad_rows']['ja-jp'] = "悪い列";
+$text['label-fax_bad_rows']['ko-kr'] = "배 줄";
 
 $text['label-fax-subject']['en-us'] = "Subject";
 $text['label-fax-subject']['en-gb'] = "Subject";
@@ -1343,6 +1532,9 @@ $text['label-fax-subject']['ro-ro'] = "";
 $text['label-fax-subject']['ru-ru'] = "Тема";
 $text['label-fax-subject']['sv-se'] = "Ämne";
 $text['label-fax-subject']['uk-ua'] = "Головна";
+$text['label-fax-subject']['zh-cn'] = "议题";
+$text['label-fax-subject']['ja-jp'] = "コンテンツ";
+$text['label-fax-subject']['ko-kr'] = "이름 *";
 
 $text['label-fax-sender']['en-us'] = "From";
 $text['label-fax-sender']['en-gb'] = "From";
@@ -1364,6 +1556,9 @@ $text['label-fax-sender']['ro-ro'] = "";
 $text['label-fax-sender']['ru-ru'] = "От";
 $text['label-fax-sender']['sv-se'] = "Från";
 $text['label-fax-sender']['uk-ua'] = "З";
+$text['label-fax-sender']['zh-cn'] = "收入";
+$text['label-fax-sender']['ja-jp'] = "詳しくはこちら";
+$text['label-fax-sender']['ko-kr'] = "내 계정";
 
 $text['label-fax-resolution']['en-us'] = "Resolution";
 $text['label-fax-resolution']['en-gb'] = "Resolution";
@@ -1385,6 +1580,9 @@ $text['label-fax-resolution']['ro-ro'] = "";
 $text['label-fax-resolution']['ru-ru'] = "Разрешение";
 $text['label-fax-resolution']['sv-se'] = "Upplösning";
 $text['label-fax-resolution']['uk-ua'] = "Рішення";
+$text['label-fax-resolution']['zh-cn'] = "决议";
+$text['label-fax-resolution']['ja-jp'] = "ソリューション";
+$text['label-fax-resolution']['ko-kr'] = "제품 설명";
 
 $text['label-fax-recipient']['en-us'] = "To";
 $text['label-fax-recipient']['en-gb'] = "To";
@@ -1406,6 +1604,9 @@ $text['label-fax-recipient']['ro-ro'] = "";
 $text['label-fax-recipient']['ru-ru'] = "Кому";
 $text['label-fax-recipient']['sv-se'] = "Till";
 $text['label-fax-recipient']['uk-ua'] = "до";
+$text['label-fax-recipient']['zh-cn'] = "页: 1";
+$text['label-fax-recipient']['ja-jp'] = "お問い合わせ";
+$text['label-fax-recipient']['ko-kr'] = "으로";
 
 $text['label-fax-pages']['en-us'] = "Pages";
 $text['label-fax-pages']['en-gb'] = "Pages";
@@ -1427,6 +1628,9 @@ $text['label-fax-pages']['ro-ro'] = "";
 $text['label-fax-pages']['ru-ru'] = "Страниц";
 $text['label-fax-pages']['sv-se'] = "Sidor";
 $text['label-fax-pages']['uk-ua'] = "Список";
+$text['label-fax-pages']['zh-cn'] = "页 次";
+$text['label-fax-pages']['ja-jp'] = "サイトマップ";
+$text['label-fax-pages']['ko-kr'] = "제품정보";
 
 $text['label-fax-page-size']['en-us'] = "Page Size";
 $text['label-fax-page-size']['en-gb'] = "Page Size";
@@ -1448,6 +1652,9 @@ $text['label-fax-page-size']['ro-ro'] = "";
 $text['label-fax-page-size']['ru-ru'] = "Размер Страницы";
 $text['label-fax-page-size']['sv-se'] = "Storlek På Sida";
 $text['label-fax-page-size']['uk-ua'] = "Розмір сторінки";
+$text['label-fax-page-size']['zh-cn'] = "页: 1";
+$text['label-fax-page-size']['ja-jp'] = "ページサイズ";
+$text['label-fax-page-size']['ko-kr'] = "페이지 크기";
 
 $text['label-fax-page']['en-us'] = "Page";
 $text['label-fax-page']['en-gb'] = "Page";
@@ -1469,6 +1676,9 @@ $text['label-fax-page']['ro-ro'] = "";
 $text['label-fax-page']['ru-ru'] = "Страница";
 $text['label-fax-page']['sv-se'] = "Sida";
 $text['label-fax-page']['uk-ua'] = "На головну";
+$text['label-fax-page']['zh-cn'] = "页 次";
+$text['label-fax-page']['ja-jp'] = "サイトマップ";
+$text['label-fax-page']['ko-kr'] = "- 연혁";
 
 $text['label-fax-number']['en-us'] = "Fax Number";
 $text['label-fax-number']['en-gb'] = "Fax Number";
@@ -1490,6 +1700,9 @@ $text['label-fax-number']['ro-ro'] = "";
 $text['label-fax-number']['ru-ru'] = "Fax Номер";
 $text['label-fax-number']['sv-se'] = "Fax Nummer";
 $text['label-fax-number']['uk-ua'] = "Номер факсу";
+$text['label-fax-number']['zh-cn'] = "传真号码";
+$text['label-fax-number']['ja-jp'] = "FAX番号";
+$text['label-fax-number']['ko-kr'] = "팩스번호";
 
 $text['label-fax-message']['en-us'] = "Message";
 $text['label-fax-message']['en-gb'] = "Message";
@@ -1511,6 +1724,9 @@ $text['label-fax-message']['ro-ro'] = "";
 $text['label-fax-message']['ru-ru'] = "Сообщение";
 $text['label-fax-message']['sv-se'] = "Meddelande";
 $text['label-fax-message']['uk-ua'] = "Новини";
+$text['label-fax-message']['zh-cn'] = "宣传";
+$text['label-fax-message']['ja-jp'] = "メッセージ";
+$text['label-fax-message']['ko-kr'] = "이름 *";
 
 $text['label-fax-header']['en-us'] = "Header";
 $text['label-fax-header']['en-gb'] = "Header";
@@ -1532,6 +1748,9 @@ $text['label-fax-header']['ro-ro'] = "";
 $text['label-fax-header']['ru-ru'] = "Заголовок";
 $text['label-fax-header']['sv-se'] = "Huvud";
 $text['label-fax-header']['uk-ua'] = "Заголовок";
+$text['label-fax-header']['zh-cn'] = "标题";
+$text['label-fax-header']['ja-jp'] = "ヘッダー";
+$text['label-fax-header']['ko-kr'] = "기타 제품";
 
 $text['label-fax-footer']['en-us'] = "Footer";
 $text['label-fax-footer']['en-gb'] = "Footer";
@@ -1553,6 +1772,9 @@ $text['label-fax-footer']['ro-ro'] = "";
 $text['label-fax-footer']['ru-ru'] = "Нижняя сноска";
 $text['label-fax-footer']['sv-se'] = "Fot";
 $text['label-fax-footer']['uk-ua'] = "Підшипник";
+$text['label-fax-footer']['zh-cn'] = "脚注";
+$text['label-fax-footer']['ja-jp'] = "フッター";
+$text['label-fax-footer']['ko-kr'] = "팟캐스트";
 
 $text['label-fax-fax']['en-us'] = "Fax";
 $text['label-fax-fax']['en-gb'] = "Fax";
@@ -1574,6 +1796,9 @@ $text['label-fax-fax']['ro-ro'] = "";
 $text['label-fax-fax']['ru-ru'] = "FAX";
 $text['label-fax-fax']['sv-se'] = "FAX";
 $text['label-fax-fax']['uk-ua'] = "Факс";
+$text['label-fax-fax']['zh-cn'] = "传真";
+$text['label-fax-fax']['ja-jp'] = "ファックス";
+$text['label-fax-fax']['ko-kr'] = "* 이름";
 
 $text['label-fax-cover-sheet']['en-us'] = "COVER SHEET";
 $text['label-fax-cover-sheet']['en-gb'] = "COVER SHEET";
@@ -1595,6 +1820,9 @@ $text['label-fax-cover-sheet']['ro-ro'] = "";
 $text['label-fax-cover-sheet']['ru-ru'] = "Титульный Лист";
 $text['label-fax-cover-sheet']['sv-se'] = "Försättsblad";
 $text['label-fax-cover-sheet']['uk-ua'] = "СКЛАД";
+$text['label-fax-cover-sheet']['zh-cn'] = "C. 概况";
+$text['label-fax-cover-sheet']['ja-jp'] = "カバーシート";
+$text['label-fax-cover-sheet']['ko-kr'] = "커버 시트";
 
 $text['label-fax-attached']['en-us'] = "Attached";
 $text['label-fax-attached']['en-gb'] = "Attached";
@@ -1616,6 +1844,9 @@ $text['label-fax-attached']['ro-ro'] = "";
 $text['label-fax-attached']['ru-ru'] = "Прикрепить";
 $text['label-fax-attached']['sv-se'] = "Bifogat";
 $text['label-fax-attached']['uk-ua'] = "Прикріплений";
+$text['label-fax-attached']['zh-cn'] = "附件";
+$text['label-fax-attached']['ja-jp'] = "ツイート";
+$text['label-fax-attached']['ko-kr'] = "관련 기사";
 
 $text['label-extension']['en-us'] = "Extension";
 $text['label-extension']['en-gb'] = "Extension";
@@ -1637,6 +1868,9 @@ $text['label-extension']['ro-ro'] = "";
 $text['label-extension']['ru-ru'] = "Внутренний номер";
 $text['label-extension']['sv-se'] = "Anknytning";
 $text['label-extension']['uk-ua'] = "Продовжити";
+$text['label-extension']['zh-cn'] = "延期";
+$text['label-extension']['ja-jp'] = "エクステンション";
+$text['label-extension']['ko-kr'] = "제품 정보";
 
 $text['label-email_size']['en-us'] = "Size";
 $text['label-email_size']['en-gb'] = "Size";
@@ -1658,6 +1892,9 @@ $text['label-email_size']['ro-ro'] = "";
 $text['label-email_size']['ru-ru'] = "Размер";
 $text['label-email_size']['sv-se'] = "Strolek";
 $text['label-email_size']['uk-ua'] = "Розмір";
+$text['label-email_size']['zh-cn'] = "规模";
+$text['label-email_size']['ja-jp'] = "サイズ:";
+$text['label-email_size']['ko-kr'] = "크기 (mm)";
 
 $text['label-email_remote_inbox']['en-us'] = "Remote Inbox";
 $text['label-email_remote_inbox']['en-gb'] = "Remote Inbox";
@@ -1679,6 +1916,9 @@ $text['label-email_remote_inbox']['ro-ro'] = "";
 $text['label-email_remote_inbox']['ru-ru'] = "Почтовый ящик назначения";
 $text['label-email_remote_inbox']['sv-se'] = "Mottagar Inbox";
 $text['label-email_remote_inbox']['uk-ua'] = "Вхід";
+$text['label-email_remote_inbox']['zh-cn'] = "遥控箱";
+$text['label-email_remote_inbox']['ja-jp'] = "遠隔受信トレイ";
+$text['label-email_remote_inbox']['ko-kr'] = "먼 Inbox";
 
 $text['label-email_received']['en-us'] = "Received";
 $text['label-email_received']['en-gb'] = "Received";
@@ -1700,6 +1940,9 @@ $text['label-email_received']['ro-ro'] = "";
 $text['label-email_received']['ru-ru'] = "Принято";
 $text['label-email_received']['sv-se'] = "Mottagen";
 $text['label-email_received']['uk-ua'] = "Отримувати";
+$text['label-email_received']['zh-cn'] = "收到";
+$text['label-email_received']['ja-jp'] = "受付開始";
+$text['label-email_received']['ko-kr'] = "이름 *";
 
 $text['label-email_outbound_subject_tag']['en-us'] = "Subject Tag";
 $text['label-email_outbound_subject_tag']['en-gb'] = "Subject Tag";
@@ -1721,6 +1964,9 @@ $text['label-email_outbound_subject_tag']['ro-ro'] = "";
 $text['label-email_outbound_subject_tag']['ru-ru'] = "Тема";
 $text['label-email_outbound_subject_tag']['sv-se'] = "Ämnes 'Tag'";
 $text['label-email_outbound_subject_tag']['uk-ua'] = "Тема тегу";
+$text['label-email_outbound_subject_tag']['zh-cn'] = "议题";
+$text['label-email_outbound_subject_tag']['ja-jp'] = "対象タグ";
+$text['label-email_outbound_subject_tag']['ko-kr'] = "제목 태그";
 
 $text['label-email_outbound_authorized_senders']['en-us'] = "Authorized Senders";
 $text['label-email_outbound_authorized_senders']['en-gb'] = "Authorized Senders";
@@ -1742,6 +1988,9 @@ $text['label-email_outbound_authorized_senders']['ro-ro'] = "";
 $text['label-email_outbound_authorized_senders']['ru-ru'] = "Авторизованные отправители";
 $text['label-email_outbound_authorized_senders']['sv-se'] = "Godkända Sändare";
 $text['label-email_outbound_authorized_senders']['uk-ua'] = "Авторизовані відправники";
+$text['label-email_outbound_authorized_senders']['zh-cn'] = "获授权的参议员";
+$text['label-email_outbound_authorized_senders']['ja-jp'] = "認可された送信者";
+$text['label-email_outbound_authorized_senders']['ko-kr'] = "회사 소개";
 
 $text['label-email_inbound_subject_tag']['en-us'] = "Subject Tag";
 $text['label-email_inbound_subject_tag']['en-gb'] = "Subject Tag";
@@ -1763,6 +2012,9 @@ $text['label-email_inbound_subject_tag']['ro-ro'] = "";
 $text['label-email_inbound_subject_tag']['ru-ru'] = "Тема";
 $text['label-email_inbound_subject_tag']['sv-se'] = "Ämnes 'Tag'";
 $text['label-email_inbound_subject_tag']['uk-ua'] = "Тема тегу";
+$text['label-email_inbound_subject_tag']['zh-cn'] = "议题";
+$text['label-email_inbound_subject_tag']['ja-jp'] = "対象タグ";
+$text['label-email_inbound_subject_tag']['ko-kr'] = "제목 태그";
 
 $text['label-email_email-to-fax']['en-us'] = "Email-to-Fax";
 $text['label-email_email-to-fax']['en-gb'] = "Email-to-Fax";
@@ -1784,6 +2036,9 @@ $text['label-email_email-to-fax']['ro-ro'] = "";
 $text['label-email_email-to-fax']['ru-ru'] = "Email-на-Fax";
 $text['label-email_email-to-fax']['sv-se'] = "E-post-Till-Fax";
 $text['label-email_email-to-fax']['uk-ua'] = "Електронна пошта";
+$text['label-email_email-to-fax']['zh-cn'] = "email-to-fax";
+$text['label-email_email-to-fax']['ja-jp'] = "メール・ツー・ファックス";
+$text['label-email_email-to-fax']['ko-kr'] = "이메일-to-Fax";
 
 $text['label-email_connection_validate']['en-us'] = "Validate Certificate";
 $text['label-email_connection_validate']['en-gb'] = "Validate Certificate";
@@ -1805,6 +2060,9 @@ $text['label-email_connection_validate']['ro-ro'] = "";
 $text['label-email_connection_validate']['ru-ru'] = "Подтвердить сертификат";
 $text['label-email_connection_validate']['sv-se'] = "Validera Certifikat";
 $text['label-email_connection_validate']['uk-ua'] = "Сертифікати";
+$text['label-email_connection_validate']['zh-cn'] = "有效证书";
+$text['label-email_connection_validate']['ja-jp'] = "有効な証明書";
+$text['label-email_connection_validate']['ko-kr'] = "유효 인증서";
 
 $text['label-email_connection_username']['en-us'] = "Username";
 $text['label-email_connection_username']['en-gb'] = "Username";
@@ -1826,6 +2084,9 @@ $text['label-email_connection_username']['ro-ro'] = "";
 $text['label-email_connection_username']['ru-ru'] = "Имя пользователя";
 $text['label-email_connection_username']['sv-se'] = "Användarnamn";
 $text['label-email_connection_username']['uk-ua'] = "Ім'я користувача";
+$text['label-email_connection_username']['zh-cn'] = "用户名";
+$text['label-email_connection_username']['ja-jp'] = "ユーザ名";
+$text['label-email_connection_username']['ko-kr'] = "사용자 이름";
 
 $text['label-email_connection_type']['en-us'] = "Type";
 $text['label-email_connection_type']['en-gb'] = "Type";
@@ -1847,6 +2108,9 @@ $text['label-email_connection_type']['ro-ro'] = "";
 $text['label-email_connection_type']['ru-ru'] = "Тип";
 $text['label-email_connection_type']['sv-se'] = "Typ";
 $text['label-email_connection_type']['uk-ua'] = "Тип";
+$text['label-email_connection_type']['zh-cn'] = "类型";
+$text['label-email_connection_type']['ja-jp'] = "タイプ:";
+$text['label-email_connection_type']['ko-kr'] = "제품정보";
 
 $text['label-email_connection_server']['en-us'] = "Server";
 $text['label-email_connection_server']['en-gb'] = "Server";
@@ -1868,6 +2132,9 @@ $text['label-email_connection_server']['ro-ro'] = "";
 $text['label-email_connection_server']['ru-ru'] = "Сервер";
 $text['label-email_connection_server']['sv-se'] = "Server";
 $text['label-email_connection_server']['uk-ua'] = "Статус на сервери";
+$text['label-email_connection_server']['zh-cn'] = "服务器";
+$text['label-email_connection_server']['ja-jp'] = "サーバー";
+$text['label-email_connection_server']['ko-kr'] = "계정 관리";
 
 $text['label-email_connection_security']['en-us'] = "Security";
 $text['label-email_connection_security']['en-gb'] = "Security";
@@ -1889,6 +2156,9 @@ $text['label-email_connection_security']['ro-ro'] = "";
 $text['label-email_connection_security']['ru-ru'] = "Безопасность";
 $text['label-email_connection_security']['sv-se'] = "Säkerhet";
 $text['label-email_connection_security']['uk-ua'] = "Безпека";
+$text['label-email_connection_security']['zh-cn'] = "安全";
+$text['label-email_connection_security']['ja-jp'] = "セキュリティ";
+$text['label-email_connection_security']['ko-kr'] = "보안 보안";
 
 $text['label-email_connection_password']['en-us'] = "Password";
 $text['label-email_connection_password']['en-gb'] = "Password";
@@ -1910,6 +2180,9 @@ $text['label-email_connection_password']['ro-ro'] = "";
 $text['label-email_connection_password']['ru-ru'] = "Пароль";
 $text['label-email_connection_password']['sv-se'] = "Lösenord";
 $text['label-email_connection_password']['uk-ua'] = "Логін";
+$text['label-email_connection_password']['zh-cn'] = "密码";
+$text['label-email_connection_password']['ja-jp'] = "パスワード";
+$text['label-email_connection_password']['ko-kr'] = "비밀번호";
 
 $text['label-email_connection_mailbox']['en-us'] = "Mailbox Folder";
 $text['label-email_connection_mailbox']['en-gb'] = "Mailbox Folder";
@@ -1931,6 +2204,9 @@ $text['label-email_connection_mailbox']['ro-ro'] = "";
 $text['label-email_connection_mailbox']['ru-ru'] = "Папка почтового ящика";
 $text['label-email_connection_mailbox']['sv-se'] = "Brevlåde Mapp";
 $text['label-email_connection_mailbox']['uk-ua'] = "поштова скринька";
+$text['label-email_connection_mailbox']['zh-cn'] = "邮箱Folder";
+$text['label-email_connection_mailbox']['ja-jp'] = "メールボックスフォルダ";
+$text['label-email_connection_mailbox']['ko-kr'] = "Mailbox 폴더";
 
 $text['label-email_account_connection']['en-us'] = "Account Connection";
 $text['label-email_account_connection']['en-gb'] = "Account Connection";
@@ -1952,6 +2228,9 @@ $text['label-email_account_connection']['ro-ro'] = "";
 $text['label-email_account_connection']['ru-ru'] = "Подключение к Учетной Записи";
 $text['label-email_account_connection']['sv-se'] = "Account Connection ";
 $text['label-email_account_connection']['uk-ua'] = "Підключення облікового запису";
+$text['label-email_account_connection']['zh-cn'] = "账户链接";
+$text['label-email_account_connection']['ja-jp'] = "アカウント接続";
+$text['label-email_account_connection']['ko-kr'] = "계정 연결";
 
 $text['label-email-fax']['en-us'] = "Fax";
 $text['label-email-fax']['en-gb'] = "Fax";
@@ -1973,6 +2252,9 @@ $text['label-email-fax']['ro-ro'] = "";
 $text['label-email-fax']['ru-ru'] = "Fax";
 $text['label-email-fax']['sv-se'] = "Fax";
 $text['label-email-fax']['uk-ua'] = "Факс";
+$text['label-email-fax']['zh-cn'] = "传真";
+$text['label-email-fax']['ja-jp'] = "ファックス";
+$text['label-email-fax']['ko-kr'] = "* 이름";
 
 $text['label-email']['en-us'] = "Email";
 $text['label-email']['en-gb'] = "Email";
@@ -1994,6 +2276,9 @@ $text['label-email']['ro-ro'] = "";
 $text['label-email']['ru-ru'] = "Email";
 $text['label-email']['sv-se'] = "E-post";
 $text['label-email']['uk-ua'] = "Електронна пошта";
+$text['label-email']['zh-cn'] = "电子邮件";
+$text['label-email']['ja-jp'] = "メールアドレス";
+$text['label-email']['ko-kr'] = "이름 *";
 
 $text['label-destination-number']['en-us'] = "Destination Number";
 $text['label-destination-number']['en-gb'] = "Destination Number";
@@ -2015,6 +2300,9 @@ $text['label-destination-number']['ro-ro'] = "";
 $text['label-destination-number']['ru-ru'] = "Номер Адресата";
 $text['label-destination-number']['sv-se'] = "Destination Nummer";
 $text['label-destination-number']['uk-ua'] = "Кількість місць";
+$text['label-destination-number']['zh-cn'] = "数量";
+$text['label-destination-number']['ja-jp'] = "宛先番号";
+$text['label-destination-number']['ko-kr'] = "대상 번호";
 
 $text['label-caller-id-number']['en-us'] = "Caller ID Number";
 $text['label-caller-id-number']['en-gb'] = "Caller ID Number";
@@ -2036,6 +2324,9 @@ $text['label-caller-id-number']['ro-ro'] = "";
 $text['label-caller-id-number']['ru-ru'] = "Caller ID Номер";
 $text['label-caller-id-number']['sv-se'] = "Nummerpresentation";
 $text['label-caller-id-number']['uk-ua'] = "Номер ідентифікатора абонента";
+$text['label-caller-id-number']['zh-cn'] = "Caller ID号码";
+$text['label-caller-id-number']['ja-jp'] = "発信者ID番号";
+$text['label-caller-id-number']['ko-kr'] = "전화 번호";
 
 $text['label-caller-id-name']['en-us'] = "Caller ID Name";
 $text['label-caller-id-name']['en-gb'] = "Caller ID Name";
@@ -2057,6 +2348,9 @@ $text['label-caller-id-name']['ro-ro'] = "";
 $text['label-caller-id-name']['ru-ru'] = "Caller ID Имя";
 $text['label-caller-id-name']['sv-se'] = "Namnpresentation";
 $text['label-caller-id-name']['uk-ua'] = "Ім'я платника";
+$text['label-caller-id-name']['zh-cn'] = "Caller ID name";
+$text['label-caller-id-name']['ja-jp'] = "呼び出し者 ID 名";
+$text['label-caller-id-name']['ko-kr'] = "ID 이름";
 
 $text['label-advanced_settings']['en-us'] = "Advanced Settings";
 $text['label-advanced_settings']['en-gb'] = "Advanced Settings";
@@ -2078,6 +2372,9 @@ $text['label-advanced_settings']['ro-ro'] = "";
 $text['label-advanced_settings']['ru-ru'] = "Раширенные Настройки";
 $text['label-advanced_settings']['sv-se'] = "Avancerade Inställningar";
 $text['label-advanced_settings']['uk-ua'] = "Розширені налаштування";
+$text['label-advanced_settings']['zh-cn'] = "先进环境";
+$text['label-advanced_settings']['ja-jp'] = "高度な設定";
+$text['label-advanced_settings']['ko-kr'] = "고급 설정";
 
 $text['label-accountcode']['en-us'] = "Account Code";
 $text['label-accountcode']['en-gb'] = "Account Code";
@@ -2099,6 +2396,9 @@ $text['label-accountcode']['ro-ro'] = "";
 $text['label-accountcode']['ru-ru'] = "Код Учетной Записи";
 $text['label-accountcode']['sv-se'] = "Kontokod";
 $text['label-accountcode']['uk-ua'] = "Код рахунку";
+$text['label-accountcode']['zh-cn'] = "账户法";
+$text['label-accountcode']['ja-jp'] = "アカウントコード";
+$text['label-accountcode']['ko-kr'] = "계정 코드";
 
 $text['label-fax_send_greeting']['en-us'] = "Greeting";
 $text['label-fax_send_greeting']['en-gb'] = "Greeting";
@@ -2120,6 +2420,9 @@ $text['label-fax_send_greeting']['ro-ro'] = "";
 $text['label-fax_send_greeting']['ru-ru'] = "Приветствие";
 $text['label-fax_send_greeting']['sv-se'] = "Hälsning";
 $text['label-fax_send_greeting']['uk-ua'] = "Вітання";
+$text['label-fax_send_greeting']['zh-cn'] = "招标";
+$text['label-fax_send_greeting']['ja-jp'] = "お問い合わせ";
+$text['label-fax_send_greeting']['ko-kr'] = "주요연혁";
 
 $text['label-fax_send_channels']['en-us'] = "Number of channels";
 $text['label-fax_send_channels']['en-gb'] = "Number of channels";
@@ -2141,6 +2444,9 @@ $text['label-fax_send_channels']['ro-ro'] = "";
 $text['label-fax_send_channels']['ru-ru'] = "Количество каналов";
 $text['label-fax_send_channels']['sv-se'] = "Antal kanaler";
 $text['label-fax_send_channels']['uk-ua'] = "Кількість каналів";
+$text['label-fax_send_channels']['zh-cn'] = "渠道数量";
+$text['label-fax_send_channels']['ja-jp'] = "チャンネル数";
+$text['label-fax_send_channels']['ko-kr'] = "채널 수";
 
 $text['label-copy']['en-us'] = "Copy";
 $text['label-copy']['en-gb'] = "Copy";
@@ -2162,6 +2468,9 @@ $text['label-copy']['ro-ro'] = "Copy";
 $text['label-copy']['ru-ru'] = "Copy";
 $text['label-copy']['sv-se'] = "Copy";
 $text['label-copy']['uk-ua'] = "Copy";
+$text['label-copy']['zh-cn'] = "页: 1";
+$text['label-copy']['ja-jp'] = "コピー";
+$text['label-copy']['ko-kr'] = "관련 기사";
 
 $text['label-outbox']['en-us'] = "Outbox";
 $text['label-outbox']['en-gb'] = "Outbox";
@@ -2183,6 +2492,9 @@ $text['label-outbox']['ro-ro'] = "Outbox";
 $text['label-outbox']['ru-ru'] = "Outbox";
 $text['label-outbox']['sv-se'] = "Outbox";
 $text['label-outbox']['uk-ua'] = "Outbox";
+$text['label-outbox']['zh-cn'] = "A. 背 景";
+$text['label-outbox']['ja-jp'] = "アウトボックス";
+$text['label-outbox']['ko-kr'] = "아웃박스";
 
 $text['header-sent_faxes']['en-us'] = "Sent";
 $text['header-sent_faxes']['en-gb'] = "Sent";
@@ -2204,6 +2516,9 @@ $text['header-sent_faxes']['ro-ro'] = "";
 $text['header-sent_faxes']['ru-ru'] = "Передача Fax";
 $text['header-sent_faxes']['sv-se'] = "Skickade Fax";
 $text['header-sent_faxes']['uk-ua'] = "Сент";
+$text['header-sent_faxes']['zh-cn'] = "日期";
+$text['header-sent_faxes']['ja-jp'] = "ログイン";
+$text['header-sent_faxes']['ko-kr'] = "이름 *";
 
 $text['header-new_fax']['en-us'] = "New Fax";
 $text['header-new_fax']['en-gb'] = "New Fax";
@@ -2225,6 +2540,9 @@ $text['header-new_fax']['ro-ro'] = "";
 $text['header-new_fax']['ru-ru'] = "Новый Fax";
 $text['header-new_fax']['sv-se'] = "Nytt Fax";
 $text['header-new_fax']['uk-ua'] = "Новий факс";
+$text['header-new_fax']['zh-cn'] = "纽约总部";
+$text['header-new_fax']['ja-jp'] = "メールアドレス";
+$text['header-new_fax']['ko-kr'] = "새 팩스";
 
 $text['header-inbox']['en-us'] = "Inbox";
 $text['header-inbox']['en-gb'] = "Inbox";
@@ -2246,6 +2564,9 @@ $text['header-inbox']['ro-ro'] = "";
 $text['header-inbox']['ru-ru'] = "Входящий";
 $text['header-inbox']['sv-se'] = "Inbox";
 $text['header-inbox']['uk-ua'] = "Кошик";
+$text['header-inbox']['zh-cn'] = "方框";
+$text['header-inbox']['ja-jp'] = "インボックス";
+$text['header-inbox']['ko-kr'] = "회사 소개";
 
 $text['header-fax_server_settings']['en-us'] = "Fax Server Settings";
 $text['header-fax_server_settings']['en-gb'] = "Fax Server Settings";
@@ -2267,6 +2588,9 @@ $text['header-fax_server_settings']['ro-ro'] = "";
 $text['header-fax_server_settings']['ru-ru'] = "Настройки Fax Сервера";
 $text['header-fax_server_settings']['sv-se'] = "Fax Server Inställningar";
 $text['header-fax_server_settings']['uk-ua'] = "Налаштування сервера Fax";
+$text['header-fax_server_settings']['zh-cn'] = "传真服务器设置";
+$text['header-fax_server_settings']['ja-jp'] = "ファックスサーバーの設定";
+$text['header-fax_server_settings']['ko-kr'] = "팩스 서버 설정";
 
 $text['description-user-add']['en-us'] = "Assign the users that can manage this fax extension.";
 $text['description-user-add']['en-gb'] = "Assign the users that can manage this fax extension.";
@@ -2288,6 +2612,9 @@ $text['description-user-add']['ro-ro'] = "";
 $text['description-user-add']['ru-ru'] = "Назначьте пользователей, которые могут управлять этим номером факса.";
 $text['description-user-add']['sv-se'] = "Tilldela de användare som kan managera denna fax anknytning.";
 $text['description-user-add']['uk-ua'] = "Призначте користувачів, які можуть керувати цим розширенням факсу.";
+$text['description-user-add']['zh-cn'] = "指定能够管理这一传真延期的用户。";
+$text['description-user-add']['ja-jp'] = "このFAX拡張機能を管理できるユーザを割り当てます。";
+$text['description-user-add']['ko-kr'] = "이 팩스 확장을 관리 할 수있는 사용자를 할당합니다.";
 
 $text['description-pin']['en-us'] = "Enter the PIN number here.";
 $text['description-pin']['en-gb'] = "Enter the PIN number here.";
@@ -2309,6 +2636,9 @@ $text['description-pin']['ro-ro'] = "";
 $text['description-pin']['ru-ru'] = "Введите здесь PIN-код.";
 $text['description-pin']['sv-se'] = "Ange PIN kod här.";
 $text['description-pin']['uk-ua'] = "Введіть номер мобільного, який Ви вказали при укладаннi договору з банком - для ідентифікації.";
+$text['description-pin']['zh-cn'] = "此处填入PIN号。";
+$text['description-pin']['ja-jp'] = "PIN番号を入力してください。";
+$text['description-pin']['ko-kr'] = "PIN 번호를 입력하세요.";
 
 $text['description-name']['en-us'] = "Enter the name here.";
 $text['description-name']['en-gb'] = "Enter the name here.";
@@ -2330,6 +2660,9 @@ $text['description-name']['ro-ro'] = "";
 $text['description-name']['ru-ru'] = "Введите здесь название.";
 $text['description-name']['sv-se'] = "Ange Namn här.";
 $text['description-name']['uk-ua'] = "Введіть ім'я тут.";
+$text['description-name']['zh-cn'] = "此处填上名字。";
+$text['description-name']['ja-jp'] = "お名前を入力してください。";
+$text['description-name']['ko-kr'] = "이름 입력";
 
 $text['description-info']['en-us'] = "Enter the description here.";
 $text['description-info']['en-gb'] = "Enter the description here.";
@@ -2351,6 +2684,9 @@ $text['description-info']['ro-ro'] = "";
 $text['description-info']['ru-ru'] = "Введите описание здесь.";
 $text['description-info']['sv-se'] = "Ange beskrivning här.";
 $text['description-info']['uk-ua'] = "Введіть опис тут.";
+$text['description-info']['zh-cn'] = "此处作说明。";
+$text['description-info']['ja-jp'] = "説明を入力してください。";
+$text['description-info']['ko-kr'] = "자주 묻는 질문";
 
 $text['description-forward-number']['en-us'] = "Enter the forward number here. Used to forward the fax to a registered extension or external number.";
 $text['description-forward-number']['en-gb'] = "Enter the forward number here. Used to forward the fax to a registered extension or external number.";
@@ -2372,6 +2708,9 @@ $text['description-forward-number']['ro-ro'] = "";
 $text['description-forward-number']['ru-ru'] = "Введите здесь номер пересылки. Используется для пересылки факса на зарегистрированный внутренний или внешний номер.";
 $text['description-forward-number']['sv-se'] = "Ange vidarekopplingsnumret här. Används för att vidarebefordra fax till en registrerad anknytning eller externt nummer.";
 $text['description-forward-number']['uk-ua'] = "Введіть номер мобільного, який Ви вказали при укладаннi договору з банком - для ідентифікації. Використовується для переадресації факсу до зареєстрованого розширення або зовнішнього числа.";
+$text['description-forward-number']['zh-cn'] = "加入前面的编号。 将传真发送到已登记的延期或外部号码。";
+$text['description-forward-number']['ja-jp'] = "転送番号を入力してください。 ファクシミリを登録された拡張子または外部番号に転送するために使用されます。";
+$text['description-forward-number']['ko-kr'] = "앞으로 번호를 입력하세요. 등록된 연장 또는 외부 번호로 팩스를 전달하는 데 사용됩니다.";
 
 $text['description-fax_uuid']['en-us'] = "Fax server primary key";
 $text['description-fax_uuid']['en-gb'] = "Fax server primary key";
@@ -2393,6 +2732,9 @@ $text['description-fax_uuid']['ro-ro'] = "";
 $text['description-fax_uuid']['ru-ru'] = "Первичный код FAX Сервера.";
 $text['description-fax_uuid']['sv-se'] = "Ange fax destination för att aktivera fax deteketering.";
 $text['description-fax_uuid']['uk-ua'] = "Факс сервер основний ключ";
+$text['description-fax_uuid']['zh-cn'] = "传真服务器";
+$text['description-fax_uuid']['ja-jp'] = "ファックスサーバ主キー";
+$text['description-fax_uuid']['ko-kr'] = "팩스 서버 기본 키";
 
 $text['description-fax_uri']['en-us'] = "Fax URI.";
 $text['description-fax_uri']['en-gb'] = "Fax URI.";
@@ -2414,6 +2756,9 @@ $text['description-fax_uri']['ro-ro'] = "";
 $text['description-fax_uri']['ru-ru'] = "Факс ури.";
 $text['description-fax_uri']['sv-se'] = "Fax uri.";
 $text['description-fax_uri']['uk-ua'] = "Факс УРТ.";
+$text['description-fax_uri']['zh-cn'] = "Fax uri.";
+$text['description-fax_uri']['ja-jp'] = "ファックス URI";
+$text['description-fax_uri']['ko-kr'] = "팩스 URI.";
 
 $text['description-fax_transfer_rate']['en-us'] = "Transfer rate for communication.";
 $text['description-fax_transfer_rate']['en-gb'] = "Transfer rate for communication.";
@@ -2435,6 +2780,9 @@ $text['description-fax_transfer_rate']['ro-ro'] = "";
 $text['description-fax_transfer_rate']['ru-ru'] = "Скорость передачи для связи.";
 $text['description-fax_transfer_rate']['sv-se'] = "Överföringshastighet för kommunikation.";
 $text['description-fax_transfer_rate']['uk-ua'] = "Швидкість передачі для спілкування.";
+$text['description-fax_transfer_rate']['zh-cn'] = "来文的转账率。";
+$text['description-fax_transfer_rate']['ja-jp'] = "コミュニケーションのための転送速度。";
+$text['description-fax_transfer_rate']['ko-kr'] = "통신의 전송률.";
 
 $text['description-fax_success']['en-us'] = "Fax sent/received successfully.";
 $text['description-fax_success']['en-gb'] = "Fax sent/received successfully.";
@@ -2456,6 +2804,9 @@ $text['description-fax_success']['ro-ro'] = "";
 $text['description-fax_success']['ru-ru'] = "fax sent/received successfully.";
 $text['description-fax_success']['sv-se'] = "Fax skickas / tas emot framgångsrikt.";
 $text['description-fax_success']['uk-ua'] = "Факс успішно відправлений/відновлений.";
+$text['description-fax_success']['zh-cn'] = "传真成功发送/接收。";
+$text['description-fax_success']['ja-jp'] = "ファックス送信/受領成功";
+$text['description-fax_success']['ko-kr'] = "팩스 발송/갱신";
 
 $text['description-fax_retry_sleep']['en-us'] = "Pause between retries.";
 $text['description-fax_retry_sleep']['en-gb'] = "Pause between retries.";
@@ -2477,6 +2828,9 @@ $text['description-fax_retry_sleep']['ro-ro'] = "";
 $text['description-fax_retry_sleep']['ru-ru'] = "Пауза между ответами.";
 $text['description-fax_retry_sleep']['sv-se'] = "Pausa mellan retries.";
 $text['description-fax_retry_sleep']['uk-ua'] = "Пауза між реченнями.";
+$text['description-fax_retry_sleep']['zh-cn'] = "两条。";
+$text['description-fax_retry_sleep']['ja-jp'] = "リトリーズ間のポーズ。";
+$text['description-fax_retry_sleep']['ko-kr'] = "retries 사이 일시.";
 
 $text['description-fax_retry_limit']['en-us'] = "Limit for the number of retries.";
 $text['description-fax_retry_limit']['en-gb'] = "Limit for the number of retries.";
@@ -2498,6 +2852,9 @@ $text['description-fax_retry_limit']['ro-ro'] = "";
 $text['description-fax_retry_limit']['ru-ru'] = "Ограничение количества платежей.";
 $text['description-fax_retry_limit']['sv-se'] = "Begränsning för antalet retries.";
 $text['description-fax_retry_limit']['uk-ua'] = "Ліміт на кількість витримок.";
+$text['description-fax_retry_limit']['zh-cn'] = "试卷数量。";
+$text['description-fax_retry_limit']['ja-jp'] = "リトリート数の制限";
+$text['description-fax_retry_limit']['ko-kr'] = "retries의 수에 대한 제한.";
 
 $text['description-fax_retry_attempts']['en-us'] = "Retry attempts";
 $text['description-fax_retry_attempts']['en-gb'] = "Retry attempts";
@@ -2519,6 +2876,9 @@ $text['description-fax_retry_attempts']['ro-ro'] = "";
 $text['description-fax_retry_attempts']['ru-ru'] = "Попытки";
 $text['description-fax_retry_attempts']['sv-se'] = "Retry försök";
 $text['description-fax_retry_attempts']['uk-ua'] = "Змагання";
+$text['description-fax_retry_attempts']['zh-cn'] = "B. 尝试";
+$text['description-fax_retry_attempts']['ja-jp'] = "再試行の試み";
+$text['description-fax_retry_attempts']['ko-kr'] = "Retry 시도";
 
 $text['description-fax_result_text']['en-us'] = "Fax result text.";
 $text['description-fax_result_text']['en-gb'] = "Fax result text.";
@@ -2540,6 +2900,9 @@ $text['description-fax_result_text']['ro-ro'] = "";
 $text['description-fax_result_text']['ru-ru'] = "fax result text.";
 $text['description-fax_result_text']['sv-se'] = "Fax resultat text.";
 $text['description-fax_result_text']['uk-ua'] = "Текст результату факсу.";
+$text['description-fax_result_text']['zh-cn'] = "传真结果文本。";
+$text['description-fax_result_text']['ja-jp'] = "ファックス結果のテキスト。";
+$text['description-fax_result_text']['ko-kr'] = "팩스 결과 텍스트.";
 
 $text['description-fax_result_code']['en-us'] = "Fax result code.";
 $text['description-fax_result_code']['en-gb'] = "Fax result code.";
@@ -2561,6 +2924,9 @@ $text['description-fax_result_code']['ro-ro'] = "";
 $text['description-fax_result_code']['ru-ru'] = "Код результата факса.";
 $text['description-fax_result_code']['sv-se'] = "Fax resultatkod.";
 $text['description-fax_result_code']['uk-ua'] = "Код результату факсу.";
+$text['description-fax_result_code']['zh-cn'] = "传真结果代码。";
+$text['description-fax_result_code']['ja-jp'] = "ファックス結果コード。";
+$text['description-fax_result_code']['ko-kr'] = "팩스 결과 코드.";
 
 $text['description-fax_prefix']['en-us'] = "Enter a prefix to be used when sending a fax.";
 $text['description-fax_prefix']['en-gb'] = "Enter a prefix to be used when sending a fax.";
@@ -2582,6 +2948,9 @@ $text['description-fax_prefix']['ro-ro'] = "";
 $text['description-fax_prefix']['ru-ru'] = "Введите префикс, который будет использоваться при отправке факса.";
 $text['description-fax_prefix']['sv-se'] = "Ange ett prefix som ska användas när du skickar ett fax.";
 $text['description-fax_prefix']['uk-ua'] = "Введіть префікс для використання при надсиланні факсу.";
+$text['description-fax_prefix']['zh-cn'] = "进入发送传真时使用的预设装置。";
+$text['description-fax_prefix']['ja-jp'] = "ファクシミリを送信する際に使用するプレフィックスを入力してください。";
+$text['description-fax_prefix']['ko-kr'] = "팩스를 보낼 때 접두사를 입력하십시오.";
 
 $text['description-fax_number']['en-us'] = "Fax destination number";
 $text['description-fax_number']['en-gb'] = "Fax destination number";
@@ -2603,6 +2972,9 @@ $text['description-fax_number']['ro-ro'] = "";
 $text['description-fax_number']['ru-ru'] = "FAX номер адресата";
 $text['description-fax_number']['sv-se'] = "Fax destinationsnummer";
 $text['description-fax_number']['uk-ua'] = "Номер призначення факсу";
+$text['description-fax_number']['zh-cn'] = "传真目的地";
+$text['description-fax_number']['ja-jp'] = "ファックス番号";
+$text['description-fax_number']['ko-kr'] = "팩스 대상 번호";
 
 $text['description-fax_mode']['en-us'] = "RX means receive and TX means transmit.";
 $text['description-fax_mode']['en-gb'] = "RX means receive and TX means transmit.";
@@ -2624,6 +2996,9 @@ $text['description-fax_mode']['ro-ro'] = "";
 $text['description-fax_mode']['ru-ru'] = "RX означает прием, а TX означает передачу.";
 $text['description-fax_mode']['sv-se'] = "RX betyder mottagning och TX betyder sändning.";
 $text['description-fax_mode']['uk-ua'] = "RX означає отримання та передачу TX.";
+$text['description-fax_mode']['zh-cn'] = "RX意味着接收和用高射线传输。";
+$text['description-fax_mode']['ja-jp'] = "RXは、受信およびTXは送信を意味します。";
+$text['description-fax_mode']['ko-kr'] = "RX는 수신 및 TX는 전송을 의미합니다.";
 
 $text['description-fax_log']['en-us'] = "The details for sending and receiving a fax included are whether fax was successful, ECM (Error Correction Mode), number of retries, destination number, date, etc.";
 $text['description-fax_log']['en-gb'] = "The details for sending and receiving a fax included are whether fax was successful, ECM (Error Correction Mode), number of retries, destination number, date, etc.";
@@ -2645,6 +3020,9 @@ $text['description-fax_log']['ro-ro'] = "";
 $text['description-fax_log']['ru-ru'] = "Детали отправки и получения включенного факса: успешность факсимильного сообщения, ECM (режим коррекции ошибок), количество повторных попыток, номер пункта назначения, дата и т.д.";
 $text['description-fax_log']['sv-se'] = "Detaljerna för att skicka och ta emot ett fax ingår huruvida fax lyckades, ECM ( Error Correction Mode ), antal försök, destinationsnummer, datum, etc.";
 $text['description-fax_log']['uk-ua'] = "Деталі відправки та отримання факсу, які включені, є факсом успішним, ECM (Error Correction Mode), кількість рети, номер призначення, дата та ін.";
+$text['description-fax_log']['zh-cn'] = "发送和接收传真的详情包括传真是否成功、电离层电离层电离层电离层电离层电离层、试射次数、目的地号码、日期等。";
+$text['description-fax_log']['ja-jp'] = "付属のFAX送信と受信の詳細は、FAXが成功しているかどうか、ECM(エラー修正モード)、レトリー数、宛先番号、日付などです。";
+$text['description-fax_log']['ko-kr'] = "팩스를 전송하고 수신하기위한 세부 사항은 팩스가 성공했는지 여부, ECM (Error Correction Mode), 반송 수, 대상 번호, 날짜 등.";
 
 $text['description-fax_local_station_id']['en-us'] = "Local station ID.";
 $text['description-fax_local_station_id']['en-gb'] = "Local station ID.";
@@ -2666,6 +3044,9 @@ $text['description-fax_local_station_id']['ro-ro'] = "";
 $text['description-fax_local_station_id']['ru-ru'] = "Местный номер.";
 $text['description-fax_local_station_id']['sv-se'] = "Lokalt station ID.";
 $text['description-fax_local_station_id']['uk-ua'] = "Ідентифікатор місцевих станцій";
+$text['description-fax_local_station_id']['zh-cn'] = "当地站信息。";
+$text['description-fax_local_station_id']['ja-jp'] = "ローカルステーションID。";
+$text['description-fax_local_station_id']['ko-kr'] = "지역 역 ID.";
 
 $text['description-fax_image_size']['en-us'] = "Fax page size.";
 $text['description-fax_image_size']['en-gb'] = "Fax page size.";
@@ -2687,6 +3068,9 @@ $text['description-fax_image_size']['ro-ro'] = "";
 $text['description-fax_image_size']['ru-ru'] = "Размер страницы факса.";
 $text['description-fax_image_size']['sv-se'] = "Fax sida storlek.";
 $text['description-fax_image_size']['uk-ua'] = "Розмір сторінки факсу.";
+$text['description-fax_image_size']['zh-cn'] = "传真页数。";
+$text['description-fax_image_size']['ja-jp'] = "ファックスページサイズ";
+$text['description-fax_image_size']['ko-kr'] = "팩스 페이지 크기.";
 
 $text['description-fax_image_resolution']['en-us'] = "Fax image resolution.";
 $text['description-fax_image_resolution']['en-gb'] = "Fax image resolution.";
@@ -2708,6 +3092,9 @@ $text['description-fax_image_resolution']['ro-ro'] = "";
 $text['description-fax_image_resolution']['ru-ru'] = "Разрешение факса.";
 $text['description-fax_image_resolution']['sv-se'] = "Fax bildupplösning.";
 $text['description-fax_image_resolution']['uk-ua'] = "Розділення зображення факсу.";
+$text['description-fax_image_resolution']['zh-cn'] = "传真图像解决。";
+$text['description-fax_image_resolution']['ja-jp'] = "ファックス画像の解像度。";
+$text['description-fax_image_resolution']['ko-kr'] = "팩스 이미지 해상도.";
 
 $text['description-fax_files']['en-us'] = "Select the file(s) to upload and send.";
 $text['description-fax_files']['en-gb'] = "Select the file(s) to upload and send.";
@@ -2729,6 +3116,9 @@ $text['description-fax_files']['ro-ro'] = "";
 $text['description-fax_files']['ru-ru'] = "Выберите файл (файлы) для загрузки и отправки.";
 $text['description-fax_files']['sv-se'] = "Välj filerna som skall laddas upp och sedan faxas iväg.";
 $text['description-fax_files']['uk-ua'] = "Виберіть файл (s) для завантаження та відправлення.";
+$text['description-fax_files']['zh-cn'] = "选择文件上载和发送。";
+$text['description-fax_files']['ja-jp'] = "アップロードして送信するファイルを選択します。";
+$text['description-fax_files']['ko-kr'] = "파일 선택(s) 업로드 및 전송.";
 
 $text['description-fax_file_type']['en-us'] = "TIF / PDF";
 $text['description-fax_file_type']['en-gb'] = "TIF / PDF";
@@ -2750,6 +3140,9 @@ $text['description-fax_file_type']['ro-ro'] = "";
 $text['description-fax_file_type']['ru-ru'] = "TIF / PDF";
 $text['description-fax_file_type']['sv-se'] = "TIF / PDF";
 $text['description-fax_file_type']['uk-ua'] = "JavaScript licenses API Веб-сайт Go1.13.8";
+$text['description-fax_file_type']['zh-cn'] = "TIF /PDF";
+$text['description-fax_file_type']['ja-jp'] = "PDFファイル";
+$text['description-fax_file_type']['ko-kr'] = "PDF 파일";
 
 $text['description-fax_file_path']['en-us'] = "File path for fax directory.";
 $text['description-fax_file_path']['en-gb'] = "File path for fax directory.";
@@ -2771,6 +3164,9 @@ $text['description-fax_file_path']['ro-ro'] = "";
 $text['description-fax_file_path']['ru-ru'] = "Путь к папке факса.";
 $text['description-fax_file_path']['sv-se'] = "Filväg för fax katalog.";
 $text['description-fax_file_path']['uk-ua'] = "Файловий шлях для каталогу факсу.";
+$text['description-fax_file_path']['zh-cn'] = "传真名录存档。";
+$text['description-fax_file_path']['ja-jp'] = "ファックスディレクトリのファイルパス。";
+$text['description-fax_file_path']['ko-kr'] = "팩스 디렉토리의 파일 경로.";
 
 $text['description-fax_file']['en-us'] = "Fax Files";
 $text['description-fax_file']['en-gb'] = "Fax Files";
@@ -2792,6 +3188,9 @@ $text['description-fax_file']['ro-ro'] = "";
 $text['description-fax_file']['ru-ru'] = "FAX Файлы";
 $text['description-fax_file']['sv-se'] = "Faxfiler";
 $text['description-fax_file']['uk-ua'] = "Файли факсу";
+$text['description-fax_file']['zh-cn'] = "传真文件";
+$text['description-fax_file']['ja-jp'] = "ファックスファイル";
+$text['description-fax_file']['ko-kr'] = "팩스 파일";
 
 $text['description-fax_epoch']['en-us'] = "Epoch.";
 $text['description-fax_epoch']['en-gb'] = "Epoch.";
@@ -2813,6 +3212,9 @@ $text['description-fax_epoch']['ro-ro'] = "";
 $text['description-fax_epoch']['ru-ru'] = "Эпоха.";
 $text['description-fax_epoch']['sv-se'] = "epok.";
 $text['description-fax_epoch']['uk-ua'] = "Епоха.";
+$text['description-fax_epoch']['zh-cn'] = "Epoch。";
+$text['description-fax_epoch']['ja-jp'] = "エポック。";
+$text['description-fax_epoch']['ko-kr'] = "에포크.";
 
 $text['description-fax_ecm_used']['en-us'] = "Error correction mode (ECM) used.";
 $text['description-fax_ecm_used']['en-gb'] = "Error correction mode (ECM) used.";
@@ -2834,6 +3236,9 @@ $text['description-fax_ecm_used']['ro-ro'] = "";
 $text['description-fax_ecm_used']['ru-ru'] = "Используется режим исправления ошибок (ECM).";
 $text['description-fax_ecm_used']['sv-se'] = "Felkorrigeringsläge (ECM) används.";
 $text['description-fax_ecm_used']['uk-ua'] = "Режим корекції помилок (ECM) використовується.";
+$text['description-fax_ecm_used']['zh-cn'] = "采用了校正方式。";
+$text['description-fax_ecm_used']['ja-jp'] = "エラー補正モード(ECM)を使用。";
+$text['description-fax_ecm_used']['ko-kr'] = "오류 수정 모드 (ECM) 사용.";
 
 $text['description-fax_document_transferred_pages']['en-us'] = "Number of pages transferred.";
 $text['description-fax_document_transferred_pages']['en-gb'] = "Number of pages transferred.";
@@ -2855,6 +3260,9 @@ $text['description-fax_document_transferred_pages']['ro-ro'] = "";
 $text['description-fax_document_transferred_pages']['ru-ru'] = "Количество переданных страниц.";
 $text['description-fax_document_transferred_pages']['sv-se'] = "Antal sidor som överförts.";
 $text['description-fax_document_transferred_pages']['uk-ua'] = "Кількість сторінок передається.";
+$text['description-fax_document_transferred_pages']['zh-cn'] = "转页数。";
+$text['description-fax_document_transferred_pages']['ja-jp'] = "転送されるページ数。";
+$text['description-fax_document_transferred_pages']['ko-kr'] = "이전 페이지의 수.";
 
 $text['description-fax_document_total_pages']['en-us'] = "Total number of pages.";
 $text['description-fax_document_total_pages']['en-gb'] = "Total number of pages.";
@@ -2876,6 +3284,9 @@ $text['description-fax_document_total_pages']['ro-ro'] = "";
 $text['description-fax_document_total_pages']['ru-ru'] = "Общее количество страниц.";
 $text['description-fax_document_total_pages']['sv-se'] = "Totalt antal sidor.";
 $text['description-fax_document_total_pages']['uk-ua'] = "Кількість сторінок.";
+$text['description-fax_document_total_pages']['zh-cn'] = "网页总数。";
+$text['description-fax_document_total_pages']['ja-jp'] = "ページの総数";
+$text['description-fax_document_total_pages']['ko-kr'] = "총 페이지 수.";
 
 $text['description-fax_date']['en-us'] = "Fax date.";
 $text['description-fax_date']['en-gb'] = "Fax date.";
@@ -2897,6 +3308,9 @@ $text['description-fax_date']['ro-ro'] = "";
 $text['description-fax_date']['ru-ru'] = "Дата факса.";
 $text['description-fax_date']['sv-se'] = "Fax datum.";
 $text['description-fax_date']['uk-ua'] = "Дата факсу.";
+$text['description-fax_date']['zh-cn'] = "传真日期。";
+$text['description-fax_date']['ja-jp'] = "郵便番号";
+$text['description-fax_date']['ko-kr'] = "팩스번호";
 
 $text['description-fax_caller_id_number']['en-us'] = "Caller ID number.";
 $text['description-fax_caller_id_number']['en-gb'] = "Caller ID number.";
@@ -2918,6 +3332,9 @@ $text['description-fax_caller_id_number']['ro-ro'] = "";
 $text['description-fax_caller_id_number']['ru-ru'] = "Номер звонка.";
 $text['description-fax_caller_id_number']['sv-se'] = "Caller ID-nummer.";
 $text['description-fax_caller_id_number']['uk-ua'] = "Номер ідентифікатора абонента.";
+$text['description-fax_caller_id_number']['zh-cn'] = "电话号码。";
+$text['description-fax_caller_id_number']['ja-jp'] = "ケーラーID番号。";
+$text['description-fax_caller_id_number']['ko-kr'] = "통화 ID 번호.";
 
 $text['description-fax_caller_id_name']['en-us'] = "Caller ID name.";
 $text['description-fax_caller_id_name']['en-gb'] = "Caller ID name.";
@@ -2939,6 +3356,9 @@ $text['description-fax_caller_id_name']['ro-ro'] = "";
 $text['description-fax_caller_id_name']['ru-ru'] = "Имя звонка.";
 $text['description-fax_caller_id_name']['sv-se'] = "Caller ID-namn.";
 $text['description-fax_caller_id_name']['uk-ua'] = "Ім'я ідентифікатора абонента.";
+$text['description-fax_caller_id_name']['zh-cn'] = "打电话者姓名。";
+$text['description-fax_caller_id_name']['ja-jp'] = "ケーラーID名";
+$text['description-fax_caller_id_name']['ko-kr'] = "Caller ID 이름.";
 
 $text['description-toll_allow']['en-us'] = "Enter the toll allow value here.";
 $text['description-toll_allow']['en-gb'] = "Enter the toll allow value here.";
@@ -2960,6 +3380,9 @@ $text['description-toll_allow']['ro-ro'] = "";
 $text['description-toll_allow']['ru-ru'] = "Введите стоимость.";
 $text['description-toll_allow']['sv-se'] = "Ange vägtullen tillåta värde här.";
 $text['description-toll_allow']['uk-ua'] = "Введіть значення тут.";
+$text['description-toll_allow']['zh-cn'] = "进入军械库可在此获得价值。";
+$text['description-toll_allow']['ja-jp'] = "ここに値を許容する toll を入力します。";
+$text['description-toll_allow']['ko-kr'] = "toll을 입력하면 여기에 값을 허용합니다.";
 
 $text['description-fax_base64']['en-us'] = "Base64 encoding.";
 $text['description-fax_base64']['en-gb'] = "Base64 encoding.";
@@ -2981,6 +3404,9 @@ $text['description-fax_base64']['ro-ro'] = "";
 $text['description-fax_base64']['ru-ru'] = "База64 кодирует.";
 $text['description-fax_base64']['sv-se'] = "Base64 kodning.";
 $text['description-fax_base64']['uk-ua'] = "кодування Base64.";
+$text['description-fax_base64']['zh-cn'] = "基地64编码。";
+$text['description-fax_base64']['ja-jp'] = "Base64 エンコーディング。";
+$text['description-fax_base64']['ko-kr'] = "Base64 인코딩.";
 
 $text['description-fax_bad_rows']['en-us'] = "Number of bad rows.";
 $text['description-fax_bad_rows']['en-gb'] = "Number of bad rows.";
@@ -3002,6 +3428,9 @@ $text['description-fax_bad_rows']['ro-ro'] = "";
 $text['description-fax_bad_rows']['ru-ru'] = "Количество плохих рядов.";
 $text['description-fax_bad_rows']['sv-se'] = "Antal dåliga rader.";
 $text['description-fax_bad_rows']['uk-ua'] = "Кількість поганих рядків.";
+$text['description-fax_bad_rows']['zh-cn'] = "坏人数。";
+$text['description-fax_bad_rows']['ja-jp'] = "悪い行の数。";
+$text['description-fax_bad_rows']['ko-kr'] = "나쁜 행의 수.";
 
 $text['description-fax-subject']['en-us'] = "Enter a subject for the cover sheet (optional).";
 $text['description-fax-subject']['en-gb'] = "Enter a subject for the cover sheet (optional).";
@@ -3023,6 +3452,9 @@ $text['description-fax-subject']['ro-ro'] = "";
 $text['description-fax-subject']['ru-ru'] = "Введите тему титульного листа (опционально).";
 $text['description-fax-subject']['sv-se'] = "Ange ett ämne för försättsbladet (frivilligt).";
 $text['description-fax-subject']['uk-ua'] = "Введіть тему для обкладинки листа (за бажанням).";
+$text['description-fax-subject']['zh-cn'] = "进入盖面表(选择)。";
+$text['description-fax-subject']['ja-jp'] = "カバーシート(オプション)の対象を入力してください。";
+$text['description-fax-subject']['ko-kr'] = "커버 시트 (선택 사항)의 주제를 입력하십시오.";
 
 $text['description-fax-sender']['en-us'] = "Enter the sender's name for the cover sheet (optional).";
 $text['description-fax-sender']['en-gb'] = "Enter the sender's name for the cover sheet (optional).";
@@ -3044,6 +3476,9 @@ $text['description-fax-sender']['ro-ro'] = "";
 $text['description-fax-sender']['ru-ru'] = "Введите имя отправителя для титульного листа (опционально).";
 $text['description-fax-sender']['sv-se'] = "Ange sändarens namn för försättsbladet (frivilligt).";
 $text['description-fax-sender']['uk-ua'] = "Введіть ім'я відправника для листа кришки (за бажанням).";
+$text['description-fax-sender']['zh-cn'] = "填表(选择)上标语。";
+$text['description-fax-sender']['ja-jp'] = "カバーシート(オプション)の送信者の名前を入力します。";
+$text['description-fax-sender']['ko-kr'] = "표지판(옵션)의 sender's name을 입력합니다.";
 
 $text['description-fax-resolution']['en-us'] = "Select the transmission quality.";
 $text['description-fax-resolution']['en-gb'] = "Select the transmission quality.";
@@ -3065,6 +3500,9 @@ $text['description-fax-resolution']['ro-ro'] = "";
 $text['description-fax-resolution']['ru-ru'] = "Выберите качество передачи.";
 $text['description-fax-resolution']['sv-se'] = "Välj transmission quality.";
 $text['description-fax-resolution']['uk-ua'] = "Виберіть якість передачі.";
+$text['description-fax-resolution']['zh-cn'] = "选择传播质量。";
+$text['description-fax-resolution']['ja-jp'] = "送信品質を選択します。";
+$text['description-fax-resolution']['ko-kr'] = "전송 품질을 선택하십시오.";
 
 $text['description-fax-recipient']['en-us'] = "Enter the recipient's name for the cover sheet (optional).";
 $text['description-fax-recipient']['en-gb'] = "Enter the recipient's name for the cover sheet (optional).";
@@ -3086,6 +3524,9 @@ $text['description-fax-recipient']['ro-ro'] = "";
 $text['description-fax-recipient']['ru-ru'] = "Введите имя получателя для титульного листа (опционально).";
 $text['description-fax-recipient']['sv-se'] = "Ange mottagarens namn för försättsbladet (frivilligt).";
 $text['description-fax-recipient']['uk-ua'] = "Введіть ім'я одержувача для листа кришки (за бажанням).";
+$text['description-fax-recipient']['zh-cn'] = "填写收款人的姓名(选择)。";
+$text['description-fax-recipient']['ja-jp'] = "カバーシート(オプション)の受信者の名を入力します。";
+$text['description-fax-recipient']['ko-kr'] = "표지판(옵션)의 수신자의 이름을 입력합니다.";
 
 $text['description-fax-page-size']['en-us'] = "Select the page size to transmit.";
 $text['description-fax-page-size']['en-gb'] = "Select the page size to transmit.";
@@ -3107,6 +3548,9 @@ $text['description-fax-page-size']['ro-ro'] = "";
 $text['description-fax-page-size']['ru-ru'] = "Выберите размер страницы для передачи.";
 $text['description-fax-page-size']['sv-se'] = "Välj sidornas storlek att skicka.";
 $text['description-fax-page-size']['uk-ua'] = "Виберіть розмір сторінки для передачі.";
+$text['description-fax-page-size']['zh-cn'] = "选择页数传送。";
+$text['description-fax-page-size']['ja-jp'] = "送信するページサイズを選択します。";
+$text['description-fax-page-size']['ko-kr'] = "페이지 크기를 선택하여 전달합니다.";
 
 $text['description-fax-number']['en-us'] = "Enter the recipient fax number(s).";
 $text['description-fax-number']['en-gb'] = "Enter the recipient fax number(s).";
@@ -3128,6 +3572,9 @@ $text['description-fax-number']['ro-ro'] = "";
 $text['description-fax-number']['ru-ru'] = "Введите номер (номера) получателя факса.";
 $text['description-fax-number']['sv-se'] = "Ange mottagarens fax nummer.";
 $text['description-fax-number']['uk-ua'] = "Введіть номер мобільного, який Ви вказали при укладаннi договору з банком - для ідентифікації.";
+$text['description-fax-number']['zh-cn'] = "进入接收者传真号码。";
+$text['description-fax-number']['ja-jp'] = "受信者のFAX番号を入力してください。";
+$text['description-fax-number']['ko-kr'] = "수신자 팩스 번호를 입력하십시오.";
 
 $text['description-fax-message']['en-us'] = "Enter a message for the cover sheet (optional).";
 $text['description-fax-message']['en-gb'] = "Enter a message for the cover sheet (optional).";
@@ -3149,6 +3596,9 @@ $text['description-fax-message']['ro-ro'] = "";
 $text['description-fax-message']['ru-ru'] = "Введите сообщение для титульного листа (опционально).";
 $text['description-fax-message']['sv-se'] = "Ange ett meddelande för för försättsbladet (frivilligt).";
 $text['description-fax-message']['uk-ua'] = "Введіть повідомлення для листа кришки (необов'язково).";
+$text['description-fax-message']['zh-cn'] = "填写表(选项)。";
+$text['description-fax-message']['ja-jp'] = "カバーシート(オプション)のメッセージを入力します。";
+$text['description-fax-message']['ko-kr'] = "커버 시트에 대한 메시지를 입력 (옵션).";
 
 $text['description-fax-header']['en-us'] = "Displayed beneath the logo in the header of the cover sheet (optional).";
 $text['description-fax-header']['en-gb'] = "Displayed beneath the logo in the header of the cover sheet (optional).";
@@ -3170,6 +3620,9 @@ $text['description-fax-header']['ro-ro'] = "";
 $text['description-fax-header']['ru-ru'] = "Отображается под логотипом в заголовке титульного листа (опционально).";
 $text['description-fax-header']['sv-se'] = "Visas under loggan i Huvudet på försättsbladet (frivilligt).";
 $text['description-fax-header']['uk-ua'] = "Переглянуто beneath логотип в заголовку покривного листа (за бажанням).";
+$text['description-fax-header']['zh-cn'] = "显示仪表面表(选择)的头部的显示灯塔。";
+$text['description-fax-header']['ja-jp'] = "カバーシート(オプション)のヘッダーにロゴの下に表示します。";
+$text['description-fax-header']['ko-kr'] = "커버 시트의 헤더에 로고 아래에 표시 (옵션).";
 
 $text['description-fax-footer']['en-us'] = "Displayed in the footer of the cover sheet (optional).";
 $text['description-fax-footer']['en-gb'] = "Displayed in the footer of the cover sheet (optional).";
@@ -3191,6 +3644,9 @@ $text['description-fax-footer']['ro-ro'] = "";
 $text['description-fax-footer']['ru-ru'] = "Отображается в нижнем колонтитуле титульного листа (опционально).";
 $text['description-fax-footer']['sv-se'] = "Visas i foten av försättsbladet (frivilligt).";
 $text['description-fax-footer']['uk-ua'] = "Переглянуто в нижній частині листа кришки (за бажанням).";
+$text['description-fax-footer']['zh-cn'] = "显示在纸面(选择)上。";
+$text['description-fax-footer']['ja-jp'] = "カバーシートのフッターに表示(オプション)。";
+$text['description-fax-footer']['ko-kr'] = "커버 시트 (옵션)의 바닥에 표시.";
 
 $text['description-extension']['en-us'] = "Enter the fax extension here.";
 $text['description-extension']['en-gb'] = "Enter the fax extension here.";
@@ -3212,6 +3668,9 @@ $text['description-extension']['ro-ro'] = "";
 $text['description-extension']['ru-ru'] = "Введите здесь номер факса.";
 $text['description-extension']['sv-se'] = "Ange fax-anknytningen här.";
 $text['description-extension']['uk-ua'] = "Введіть розширення факсу тут.";
+$text['description-extension']['zh-cn'] = "加入传真。";
+$text['description-extension']['ja-jp'] = "FAXの拡張子を入力してください。";
+$text['description-extension']['ko-kr'] = "여기에 팩스 확장을 입력하십시오.";
 
 $text['description-email_outbound_subject_tag']['en-us'] = "Set the email subject tag for outbound faxes.";
 $text['description-email_outbound_subject_tag']['en-gb'] = "Set the email subject tag for outbound faxes.";
@@ -3233,6 +3692,9 @@ $text['description-email_outbound_subject_tag']['ro-ro'] = "";
 $text['description-email_outbound_subject_tag']['ru-ru'] = "Установите email темы сообщения для исходящих факсов.";
 $text['description-email_outbound_subject_tag']['sv-se'] = "Ange E-post ämne för utgående fax.";
 $text['description-email_outbound_subject_tag']['uk-ua'] = "Встановити тег суб'єкта електронної пошти для вихідних факсів.";
+$text['description-email_outbound_subject_tag']['zh-cn'] = "• 设置电子邮件标号,供作户外传真。";
+$text['description-email_outbound_subject_tag']['ja-jp'] = "アウトバウンドファクシミリ用のメールの件名タグを設定します。";
+$text['description-email_outbound_subject_tag']['ko-kr'] = "아웃바운드 팩스의 이메일 제목 태그를 설정합니다.";
 
 $text['description-email_outbound_authorized_senders']['en-us'] = "Define the email address(es) allowed to send faxes through this server.";
 $text['description-email_outbound_authorized_senders']['en-gb'] = "Define the email address(es) allowed to send faxes through this server.";
@@ -3254,6 +3716,9 @@ $text['description-email_outbound_authorized_senders']['ro-ro'] = "";
 $text['description-email_outbound_authorized_senders']['ru-ru'] = "Укажите адрес электронной почты, с помощью которого можно отправлять факсы через этот сервер.";
 $text['description-email_outbound_authorized_senders']['sv-se'] = "Definiera E-postadresser som får sända fax genom denna server.";
 $text['description-email_outbound_authorized_senders']['uk-ua'] = "Визначте адресу електронної пошти (es) дозволено надсилати факси через цей сервер.";
+$text['description-email_outbound_authorized_senders']['zh-cn'] = "界定允许通过该服务器发送传真的电子邮件地址。";
+$text['description-email_outbound_authorized_senders']['ja-jp'] = "このサーバーを通じてFAXを送信できるメールアドレスを定義します。";
+$text['description-email_outbound_authorized_senders']['ko-kr'] = "이 서버를 통해 팩스를 보낼 수 있는 이메일 주소를 정의합니다.";
 
 $text['description-email_inbound_subject_tag']['en-us'] = "Set the email subject tag for inbound faxes.";
 $text['description-email_inbound_subject_tag']['en-gb'] = "Set the email subject tag for inbound faxes.";
@@ -3275,6 +3740,9 @@ $text['description-email_inbound_subject_tag']['ro-ro'] = "";
 $text['description-email_inbound_subject_tag']['ru-ru'] = "Установите email сообщения для входящих факсов.";
 $text['description-email_inbound_subject_tag']['sv-se'] = "Välj E-post ämne för inkommande fax.";
 $text['description-email_inbound_subject_tag']['uk-ua'] = "Встановити тег суб'єкта електронної пошти для вхідних факсів.";
+$text['description-email_inbound_subject_tag']['zh-cn'] = "设置电子邮件标号以备有传真。";
+$text['description-email_inbound_subject_tag']['ja-jp'] = "インバウンドファクシミリ用のメールの件名タグを設定します。";
+$text['description-email_inbound_subject_tag']['ko-kr'] = "인바운드 팩스에 대한 이메일 제목 태그를 설정합니다.";
 
 $text['description-email_connection_validate']['en-us'] = "Enable server certificate validation.<br>(Select 'False' for self-signed certificates.)";
 $text['description-email_connection_validate']['en-gb'] = "Enable server certificate validation.<br>(Select 'False' for self-signed certificates.)";
@@ -3296,6 +3764,9 @@ $text['description-email_connection_validate']['ro-ro'] = "";
 $text['description-email_connection_validate']['ru-ru'] = "Включить проверку сертификата сервера.<br>(Выберете 'False' для самоподписанных сертифткатов.)";
 $text['description-email_connection_validate']['sv-se'] = "Aktivera server certifikat validering (Select 'False' for self-signed certificates.) ";
 $text['description-email_connection_validate']['uk-ua'] = "Увімкнути перевірку сертифіката сервера.<br>(Виберіть 'False' для самостійних сертифікатів.)";
+$text['description-email_connection_validate']['zh-cn'] = "供自签证书使用的服务器证书。";
+$text['description-email_connection_validate']['ja-jp'] = "サーバ証明書の検証を有効にします。<br>(自己署名証明書の「偽」を選択します。)";
+$text['description-email_connection_validate']['ko-kr'] = "서버 인증서 유효성 검사.<br>(자본 인증서의 'False'를 선택하십시오.)";
 
 $text['description-email_connection_username']['en-us'] = "Enter the authentication username.";
 $text['description-email_connection_username']['en-gb'] = "Enter the authentication username.";
@@ -3317,6 +3788,9 @@ $text['description-email_connection_username']['ro-ro'] = "";
 $text['description-email_connection_username']['ru-ru'] = "Введите имя пользователя для аутентификации.";
 $text['description-email_connection_username']['sv-se'] = "Ange autentiserings användarnamn.";
 $text['description-email_connection_username']['uk-ua'] = "Введіть ім'я користувача автентифікації.";
+$text['description-email_connection_username']['zh-cn'] = "填写认证用户名称。";
+$text['description-email_connection_username']['ja-jp'] = "認証ユーザー名を入力してください。";
+$text['description-email_connection_username']['ko-kr'] = "인증명을 입력하세요.";
 
 $text['description-email_connection_type']['en-us'] = "Select the type of connection.";
 $text['description-email_connection_type']['en-gb'] = "Select the type of connection.";
@@ -3338,6 +3812,9 @@ $text['description-email_connection_type']['ro-ro'] = "";
 $text['description-email_connection_type']['ru-ru'] = "Выберите тип соединения.";
 $text['description-email_connection_type']['sv-se'] = "Välj typen av förbindelse.";
 $text['description-email_connection_type']['uk-ua'] = "Виберіть тип підключення.";
+$text['description-email_connection_type']['zh-cn'] = "选择连接类型。";
+$text['description-email_connection_type']['ja-jp'] = "接続の種類を選択します。";
+$text['description-email_connection_type']['ko-kr'] = "연결 유형 선택.";
 
 $text['description-email_connection_server']['en-us'] = "Enter the host address and port.";
 $text['description-email_connection_server']['en-gb'] = "Enter the host address and port.";
@@ -3359,6 +3836,9 @@ $text['description-email_connection_server']['ro-ro'] = "";
 $text['description-email_connection_server']['ru-ru'] = "Введите адрес и порт хоста.";
 $text['description-email_connection_server']['sv-se'] = "Ange host adress och port";
 $text['description-email_connection_server']['uk-ua'] = "Введіть номер мобільного, який Ви вказали при укладаннi договору з банком - для ідентифікації.";
+$text['description-email_connection_server']['zh-cn'] = "进入东道地址和港口。";
+$text['description-email_connection_server']['ja-jp'] = "ホストアドレスとポートを入力します。";
+$text['description-email_connection_server']['ko-kr'] = "호스트 주소와 포트를 입력합니다.";
 
 $text['description-email_connection_security']['en-us'] = "Select the required security.";
 $text['description-email_connection_security']['en-gb'] = "Select the required security.";
@@ -3380,6 +3860,9 @@ $text['description-email_connection_security']['ro-ro'] = "";
 $text['description-email_connection_security']['ru-ru'] = "Выберите требуемую безопасность.";
 $text['description-email_connection_security']['sv-se'] = "Välj önskad säkerhet.";
 $text['description-email_connection_security']['uk-ua'] = "Виберіть необхідну безпеку.";
+$text['description-email_connection_security']['zh-cn'] = "选择必要的安全。";
+$text['description-email_connection_security']['ja-jp'] = "必要なセキュリティを選択します。";
+$text['description-email_connection_security']['ko-kr'] = "필수 보안을 선택하십시오.";
 
 $text['description-email_connection_password']['en-us'] = "Enter the authentication password.";
 $text['description-email_connection_password']['en-gb'] = "Enter the authentication password.";
@@ -3401,6 +3884,9 @@ $text['description-email_connection_password']['ro-ro'] = "";
 $text['description-email_connection_password']['ru-ru'] = "Введите пароль для аутентификации.";
 $text['description-email_connection_password']['sv-se'] = "Ange autentiserings-lösenordet.";
 $text['description-email_connection_password']['uk-ua'] = "Введіть пароль ідентифікації.";
+$text['description-email_connection_password']['zh-cn'] = "进入认证密码。";
+$text['description-email_connection_password']['ja-jp'] = "認証パスワードを入力してください。";
+$text['description-email_connection_password']['ko-kr'] = "인증 비밀번호 입력";
 
 $text['description-email_connection_mailbox']['en-us'] = "Enter the remote folder name to monitor.";
 $text['description-email_connection_mailbox']['en-gb'] = "Enter the remote folder name to monitor.";
@@ -3422,6 +3908,9 @@ $text['description-email_connection_mailbox']['ro-ro'] = "";
 $text['description-email_connection_mailbox']['ru-ru'] = "Введите имя удаленной папки для контроля.";
 $text['description-email_connection_mailbox']['sv-se'] = "Ange fjärrmapp-namnet för att övervaka.";
 $text['description-email_connection_mailbox']['uk-ua'] = "Введіть назву віддаленої папки для моніторингу.";
+$text['description-email_connection_mailbox']['zh-cn'] = "进入边远的夹号监测。";
+$text['description-email_connection_mailbox']['ja-jp'] = "リモートフォルダ名を入力して監視します。";
+$text['description-email_connection_mailbox']['ko-kr'] = "원격 폴더 이름을 입력하여 모니터합니다.";
 
 $text['description-email']['en-us'] = "Enter a delivery address for fax notifications.";
 $text['description-email']['en-gb'] = "Enter a delivery address for fax notifications.";
@@ -3443,6 +3932,9 @@ $text['description-email']['ro-ro'] = "";
 $text['description-email']['ru-ru'] = "Введите адрес доставки факсимильных уведомлений.";
 $text['description-email']['sv-se'] = "Ange en leveransadress för faxmeddelanden.";
 $text['description-email']['uk-ua'] = "Введіть адресу доставки для повідомлень факсу.";
+$text['description-email']['zh-cn'] = "填写传真通知发送地址。";
+$text['description-email']['ja-jp'] = "FAX通知の配送先住所を入力してください。";
+$text['description-email']['ko-kr'] = "팩스 알림의 배달 주소를 입력하십시오.";
 
 $text['description-destination-number']['en-us'] = "Enter the fax destination number.";
 $text['description-destination-number']['en-gb'] = "Enter the fax destination number.";
@@ -3464,6 +3956,9 @@ $text['description-destination-number']['ro-ro'] = "";
 $text['description-destination-number']['ru-ru'] = "Введите номер получателя факса.";
 $text['description-destination-number']['sv-se'] = "Ange fax destinations-nummer.";
 $text['description-destination-number']['uk-ua'] = "Введіть номер мобільного, який Ви вказали при укладаннi договору з банком - для ідентифікації.";
+$text['description-destination-number']['zh-cn'] = "进入传真目的地号码。";
+$text['description-destination-number']['ja-jp'] = "FAX番号を入力してください。";
+$text['description-destination-number']['ko-kr'] = "팩스 대상 번호를 입력하십시오.";
 
 $text['description-caller-id-number']['en-us'] = "Enter the Caller ID number here.";
 $text['description-caller-id-number']['en-gb'] = "Enter the Caller ID number here.";
@@ -3485,6 +3980,9 @@ $text['description-caller-id-number']['ro-ro'] = "";
 $text['description-caller-id-number']['ru-ru'] = "Введите номер вызывающего абонента здесь.";
 $text['description-caller-id-number']['sv-se'] = "Ange nummerpresentationen här.";
 $text['description-caller-id-number']['uk-ua'] = "Введіть номер мобільного, який Ви вказали при укладаннi договору з банком - для ідентифікації.";
+$text['description-caller-id-number']['zh-cn'] = "此处填入Caler ID号。";
+$text['description-caller-id-number']['ja-jp'] = "コールアー ID 番号を入力してください。";
+$text['description-caller-id-number']['ko-kr'] = "Caller ID 번호를 입력하세요.";
 
 $text['description-caller-id-name']['en-us'] = "Enter the Caller ID name here.";
 $text['description-caller-id-name']['en-gb'] = "Enter the Caller ID name here.";
@@ -3506,6 +4004,9 @@ $text['description-caller-id-name']['ro-ro'] = "";
 $text['description-caller-id-name']['ru-ru'] = "Введите здесь имя вызывающего абонента.";
 $text['description-caller-id-name']['sv-se'] = "Ange namnpresentationen här.";
 $text['description-caller-id-name']['uk-ua'] = "Введіть ім'я ідентифікатора абонента тут.";
+$text['description-caller-id-name']['zh-cn'] = "此处填入Caler ID名称。";
+$text['description-caller-id-name']['ja-jp'] = "コールアー ID 名を入力してください。";
+$text['description-caller-id-name']['ko-kr'] = "여기에서 Caller ID 이름을 입력하십시오.";
 
 $text['description-advanced_settings']['en-us'] = "Configure the settings below to enable Remote Inbox and Email-to-Fax functionality.";
 $text['description-advanced_settings']['en-gb'] = "Configure the settings below to enable Remote Inbox and Email-to-Fax functionality.";
@@ -3527,6 +4028,9 @@ $text['description-advanced_settings']['ro-ro'] = "";
 $text['description-advanced_settings']['ru-ru'] = "Настройте параметры ниже, чтобы включить функцию Email-на-Fax.";
 $text['description-advanced_settings']['sv-se'] = "Konfigurera inställningarna nedan för att aktivera Remote Inbox och E-post-Till-Fax funktionalitet.";
 $text['description-advanced_settings']['uk-ua'] = "Налаштуйте налаштування нижче, щоб увімкнути функцію Remote Inbox та електронною поштою.";
+$text['description-advanced_settings']['zh-cn'] = "• 没收以下环境,使边远信箱和电子邮件到轴心功能成为可能。";
+$text['description-advanced_settings']['ja-jp'] = "リモート・インボックスとメール・ツー・ファックス機能を有効にするには、以下の設定を設定します。";
+$text['description-advanced_settings']['ko-kr'] = "Remote Inbox 및 Email-to-Fax 기능을 활성화하려면 아래 설정을 구성하십시오.";
 
 $text['description-3']['en-us'] = "Install LibreOffice for additional file format support (DOC, DOCX, XLS, XLSX, ODT, OTT, RTF, etc).  View the status of a fax transmission on the Active Calls page, in the Log Viewer, or by watching the results in the switch console.";
 $text['description-3']['en-gb'] = "Install LibreOffice for additional file format support (DOC, DOCX, XLS, XLSX, ODT, OTT, RTF, etc).  View the status of a fax transmission on the Active Calls page, in the Log Viewer, or by watching the results in the switch console.";
@@ -3548,6 +4052,9 @@ $text['description-3']['ro-ro'] = "";
 $text['description-3']['ru-ru'] = "Установите LibreOffice для дополнительной поддержки форматов файлов (DOC, DOCX, XLS, XLSX, ODT, OTT, RTF, и т.д.). Вы можете посмотреть результаты во вкладке Логи.";
 $text['description-3']['sv-se'] = "Installera Libreoffice för ytterligare supporterade filformat (doc, docx, xls, xlsx, ODT, OTT, RTF, etc.). Visa status för en faxöverföring på sidan Aktiva samtal, i Log Viewer, eller genom att titta på resultaten i switch console.";
 $text['description-3']['uk-ua'] = "Встановіть LibreOffice для додаткової підтримки формату файлів (DOCX, XLS, XLSX, ODT, OTT, RTF тощо). Перегляд статусу передачі факсу на сторінці Активних дзвінків, в програмі Log Viewer або шляхом перегляду результатів в консолі перемикання.";
+$text['description-3']['zh-cn'] = "Install LibreOffice for Additional file Format support (DOC, DOCX, XLS, XLSX, ODT, OTT, RTF,等)。 观察在Los Viewer的“积极呼吁”网页上发送传真的情况,或看转子的结果。";
+$text['description-3']['ja-jp'] = "追加のファイル形式のサポート(DOC、DOCX、XLS、XLSX、ODT、OTT、RTFなど)のためのLibreOfficeをインストールします。 アクティブコールページ、ログビューア、またはスイッチコンソールで結果を見て、FAX送信のステータスを表示します。";
+$text['description-3']['ko-kr'] = "추가 파일 형식 지원을위한 LibreOffice 설치 (DOC, DOCX, XLS, XLSX, ODT, OTT, RTF 등). Active Calls 페이지의 팩스 전송 상태를 확인, Log Viewer에서, 또는 스위치 콘솔에서 결과를보고.";
 
 $text['description-2']['en-us'] = "To send a fax, upload a <strong>PDF</strong> or <strong>TIF</strong> file.  To generate a cover sheet, enter a Subject and/or Message below.";
 $text['description-2']['en-gb'] = "To send a fax, upload a <strong>PDF</strong> or <strong>TIF</strong> file.  To generate a cover sheet, enter a Subject and/or Message below.";
@@ -3569,6 +4076,9 @@ $text['description-2']['ro-ro'] = "";
 $text['description-2']['ru-ru'] = "Чтобы послать факс, загрузите <strong>PDF</strong> или <strong>TIF</strong> файл. Чтобы изготовить титульный лист, введите тему и/или сообщение ниже.";
 $text['description-2']['sv-se'] = "Om du vill skicka ett fax, ladda upp en PDF eller TIF -fil. För att generera ett försättsblad, ange ett Ämne och / eller meddelande nedan.";
 $text['description-2']['uk-ua'] = "Щоб надіслати факс, завантажте файл <strong>PDF</strong> або <strong>TIF</strong>. Для створення листа кришки введіть тему та/або повідомлення нижче.";
+$text['description-2']['zh-cn'] = "发送传真,上载<strong>PDF</strong>或<strong>TIF</strong>文档。 a. 制作一张面表,输入下文的主题和/或信息。";
+$text['description-2']['ja-jp'] = "ファクシミリを送信するには、<strong>PDF</strong> または <strong> ファイルをアップロードします。 カバーシートを生成するには、以下にサブジェクトとメッセージを入力します。";
+$text['description-2']['ko-kr'] = "팩스를 보내려면 <strong>PDF</strong> 또는 <strong>TIF</strong> 파일을 업로드하십시오. 커버 시트를 생성하려면 아래 주제 및 / 또는 메시지를 입력하십시오.";
 
 $text['notice-sending-disabled']['en-us'] = "<strong>Notice</strong>: Sending Disabled";
 $text['notice-sending-disabled']['en-gb'] = "<strong>Notice</strong>: Sending Disabled";
@@ -3590,6 +4100,9 @@ $text['notice-sending-disabled']['ro-ro'] = "<strong>Notă</strong>: Trimiterea 
 $text['notice-sending-disabled']['ru-ru'] = "<strong>Уведомление</strong>: отправка отключена";
 $text['notice-sending-disabled']['sv-se'] = "<strong>Observera</strong>: Sändning avaktiverad";
 $text['notice-sending-disabled']['uk-ua'] = "<strong>Примітка</strong>: надсилання вимкнено";
+$text['notice-sending-disabled']['zh-cn'] = "<>Nostrong>Notice</strong>:Sending Disability";
+$text['notice-sending-disabled']['ja-jp'] = "<strong>Notice</strong>: 障害者の送信";
+$text['notice-sending-disabled']['ko-kr'] = "<strong>공지</strong>: Disabled 전송";
 
 $text['description']['en-us'] = "To receive a FAX setup a fax extension and then direct the incoming to it.";
 $text['description']['en-gb'] = "To receive a FAX setup a fax extension and then direct the incoming to it.";
@@ -3611,6 +4124,9 @@ $text['description']['ro-ro'] = "";
 $text['description']['ru-ru'] = "Чтобы получить факс, настройте номер факса и затем направьте входящие на него.";
 $text['description']['sv-se'] = "För att ta emot fax, gör en fax anknytning och vidarebefordra sedan inkommande till den.";
 $text['description']['uk-ua'] = "Щоб отримати налаштування FAX розширення факсу, а потім запустіть вхід до нього.";
+$text['description']['zh-cn'] = "收到美国食品安全局的传真,然后将发送到。";
+$text['description']['ja-jp'] = "FAX設定をFAXで受信し、FAXの拡張子を指示する。";
+$text['description']['ko-kr'] = "FAX 설정은 팩스 확장을 수신하고 그 다음 수신을 지시합니다.";
 
 $text['description-accountcode']['en-us'] = "Enter the accountcode.";
 $text['description-accountcode']['en-gb'] = "Enter the accountcode.";
@@ -3632,6 +4148,9 @@ $text['description-accountcode']['ro-ro'] = "";
 $text['description-accountcode']['ru-ru'] = "Введите код Аккаунта.";
 $text['description-accountcode']['sv-se'] = "Ange Accountcode";
 $text['description-accountcode']['uk-ua'] = "Введіть номер мобільного, який Ви вказали при укладаннi договору з банком - для ідентифікації.";
+$text['description-accountcode']['zh-cn'] = "输入账户代码。";
+$text['description-accountcode']['ja-jp'] = "アカウントコードを入力してください。";
+$text['description-accountcode']['ko-kr'] = "accountcode를 입력하십시오.";
 
 $text['description-fax_send_channels']['en-us'] = "Enter the maximum number of channels to use.";
 $text['description-fax_send_channels']['en-gb'] = "Enter the maximum number of channels to use.";
@@ -3653,6 +4172,9 @@ $text['description-fax_send_channels']['ro-ro'] = "";
 $text['description-fax_send_channels']['ru-ru'] = "Введите максимальное количество каналов для использования.";
 $text['description-fax_send_channels']['sv-se'] = "Ange det maximala antalet kanaler att använda.";
 $text['description-fax_send_channels']['uk-ua'] = "Введіть максимальну кількість каналів для використання.";
+$text['description-fax_send_channels']['zh-cn'] = "进入使用渠道的最大数量。";
+$text['description-fax_send_channels']['ja-jp'] = "使用するチャネルの最大数を入力します。";
+$text['description-fax_send_channels']['ko-kr'] = "채널의 최대 수를 입력하여 사용할 수 있습니다.";
 
 $text['confirm-update']['en-us'] = "Update Complete";
 $text['confirm-update']['en-gb'] = "Update Complete";
@@ -3674,6 +4196,9 @@ $text['confirm-update']['ro-ro'] = "";
 $text['confirm-update']['ru-ru'] = "Обновление завершено";
 $text['confirm-update']['sv-se'] = "Uppdatering Klar";
 $text['confirm-update']['uk-ua'] = "Оновлення";
+$text['confirm-update']['zh-cn'] = "内容提要";
+$text['confirm-update']['ja-jp'] = "更新完了";
+$text['confirm-update']['ko-kr'] = "업데이트 완료";
 
 $text['confirm-fax']['en-us'] = "Please provide: A file to Fax";
 $text['confirm-fax']['en-gb'] = "Please provide: A file to Fax";
@@ -3695,6 +4220,9 @@ $text['confirm-fax']['ro-ro'] = "";
 $text['confirm-fax']['ru-ru'] = "Предоставьте: файл для факса";
 $text['confirm-fax']['sv-se'] = "Ange: En fil att fax:a";
 $text['confirm-fax']['uk-ua'] = "Будь ласка, заповніть: Файл до Fax";
+$text['confirm-fax']['zh-cn'] = "请提供: 传真文件";
+$text['confirm-fax']['ja-jp'] = "お問い合わせ ファックスへのファイル";
+$text['confirm-fax']['ko-kr'] = "참고 : 팩스 번호";
 
 $text['confirm-ext']['en-us'] = "Please provide: An extension number";
 $text['confirm-ext']['en-gb'] = "Please provide: An extension number";
@@ -3716,6 +4244,9 @@ $text['confirm-ext']['ro-ro'] = "";
 $text['confirm-ext']['ru-ru'] = "Пожалуйста, укажите: Номер";
 $text['confirm-ext']['sv-se'] = "Por favor indique: Extensión ";
 $text['confirm-ext']['uk-ua'] = "Будь ласка, заповніть: Номер розширення";
+$text['confirm-ext']['zh-cn'] = "请提供: 延长日期";
+$text['confirm-ext']['ja-jp'] = "お問い合わせ 延長番号";
+$text['confirm-ext']['ko-kr'] = "참고 : 확장 번호";
 
 $text['confirm-add']['en-us'] = "Add complete";
 $text['confirm-add']['en-gb'] = "Add complete";
@@ -3737,6 +4268,9 @@ $text['confirm-add']['ro-ro'] = "";
 $text['confirm-add']['ru-ru'] = "Добавление выполнено";
 $text['confirm-add']['sv-se'] = "Tillagd";
 $text['confirm-add']['uk-ua'] = "Додати повну";
+$text['confirm-add']['zh-cn'] = "增 编";
+$text['confirm-add']['ja-jp'] = "完全追加";
+$text['confirm-add']['ko-kr'] = "더 보기";
 
 $text['confirm-queued']['en-us'] = "FAX Queued";
 $text['confirm-queued']['en-gb'] = "FAX Queued";
@@ -3758,6 +4292,9 @@ $text['confirm-queued']['ro-ro'] = "";
 $text['confirm-queued']['ru-ru'] = "Передача Fax";
 $text['confirm-queued']['sv-se'] = "Skickade Fax";
 $text['confirm-queued']['uk-ua'] = "ФАС Закінчення";
+$text['confirm-queued']['zh-cn'] = "几内亚 Queued";
+$text['confirm-queued']['ja-jp'] = "郵便番号 キューイング";
+$text['confirm-queued']['ko-kr'] = "· 채용 정보";
 
 $text['confirm-sent']['en-us'] = "FAX Sent";
 $text['confirm-sent']['en-gb'] = "FAX Sent";
@@ -3779,6 +4316,9 @@ $text['confirm-sent']['ro-ro'] = "";
 $text['confirm-sent']['ru-ru'] = "Передача Fax";
 $text['confirm-sent']['sv-se'] = "Skickade Fax";
 $text['confirm-sent']['uk-ua'] = "ФАС Сент";
+$text['confirm-sent']['zh-cn'] = "几内亚 日期";
+$text['confirm-sent']['ja-jp'] = "郵便番号 ログイン";
+$text['confirm-sent']['ko-kr'] = "· 이름 *";
 
 $text['button-settings']['en-us'] = "Settings";
 $text['button-settings']['en-gb'] = "Settings";
@@ -3800,6 +4340,9 @@ $text['button-settings']['ro-ro'] = "";
 $text['button-settings']['ru-ru'] = "Настройка";
 $text['button-settings']['sv-se'] = "Inställningar";
 $text['button-settings']['uk-ua'] = "Налаштування";
+$text['button-settings']['zh-cn'] = "背景";
+$text['button-settings']['ja-jp'] = "コンテンツ";
+$text['button-settings']['ko-kr'] = "계정 설정";
 
 $text['button-send']['en-us'] = "Send";
 $text['button-send']['en-gb'] = "Send";
@@ -3821,6 +4364,9 @@ $text['button-send']['ro-ro'] = "";
 $text['button-send']['ru-ru'] = "Передача";
 $text['button-send']['sv-se'] = "Skicka Samtalsdistribution";
 $text['button-send']['uk-ua'] = "Відправити";
+$text['button-send']['zh-cn'] = "附录";
+$text['button-send']['ja-jp'] = "お問い合わせ";
+$text['button-send']['ko-kr'] = "지원하다";
 
 $text['button-preview']['en-us'] = "Preview";
 $text['button-preview']['en-gb'] = "Preview";
@@ -3842,6 +4388,9 @@ $text['button-preview']['ro-ro'] = "";
 $text['button-preview']['ru-ru'] = "Предпросмотр";
 $text['button-preview']['sv-se'] = "Förhandsgranska";
 $text['button-preview']['uk-ua'] = "Огляд";
+$text['button-preview']['zh-cn'] = "预 案";
+$text['button-preview']['ja-jp'] = "プレビュー";
+$text['button-preview']['ko-kr'] = "다운로드";
 
 $text['button-show_all']['en-us'] = "Show all";
 $text['button-show_all']['en-gb'] = "Show all";
@@ -3863,6 +4412,9 @@ $text['button-show_all']['ro-ro'] = "";
 $text['button-show_all']['ru-ru'] = "Посмотреть все";
 $text['button-show_all']['sv-se'] = "Visa alla";
 $text['button-show_all']['uk-ua'] = "Показати всі";
+$text['button-show_all']['zh-cn'] = "显示";
+$text['button-show_all']['ja-jp'] = "すべて表示";
+$text['button-show_all']['ko-kr'] = "모두보기";
 
 $text['label-queue']['en-us'] = "Queue";
 $text['label-queue']['en-gb'] = "Queue";
@@ -3884,6 +4436,9 @@ $text['label-queue']['ro-ro'] = "";
 $text['label-queue']['ru-ru'] = "очередь";
 $text['label-queue']['sv-se'] = "kö";
 $text['label-queue']['uk-ua'] = "Клей";
+$text['label-queue']['zh-cn'] = "问题";
+$text['label-queue']['ja-jp'] = "キュー";
+$text['label-queue']['ko-kr'] = "이름 *";
 
 $text['fax-active_title']['en-us'] = "Fax Queue";
 $text['fax-active_title']['en-gb'] = "Fax Queue";
@@ -3905,6 +4460,9 @@ $text['fax-active_title']['ro-ro'] = "";
 $text['fax-active_title']['ru-ru'] = "Fax очередь";
 $text['fax-active_title']['sv-se'] = "Fax kö";
 $text['fax-active_title']['uk-ua'] = "Факс Queue";
+$text['fax-active_title']['zh-cn'] = "传真查询";
+$text['fax-active_title']['ja-jp'] = "ファックス";
+$text['fax-active_title']['ko-kr'] = "팩스 큐";
 
 $text['fax-active_description']['en-us'] = "Current status of fax queue";
 $text['fax-active_description']['en-gb'] = "Current status of fax queue";
@@ -3926,6 +4484,9 @@ $text['fax-active_description']['ro-ro'] = "";
 $text['fax-active_description']['ru-ru'] = "Текущий статус fax очереди";
 $text['fax-active_description']['sv-se'] = "Nuvarande status för fax kö:n";
 $text['fax-active_description']['uk-ua'] = "Статус на сервери";
+$text['fax-active_description']['zh-cn'] = "传真地址现状";
+$text['fax-active_description']['ja-jp'] = "FAXキューの現在のステータス";
+$text['fax-active_description']['ko-kr'] = "팩스 queue의 현재 상태";
 
 $text['fax-active_title_fax_server']['en-us'] = "Fax";
 $text['fax-active_title_fax_server']['en-gb'] = "Fax";
@@ -3947,6 +4508,9 @@ $text['fax-active_title_fax_server']['ro-ro'] = "";
 $text['fax-active_title_fax_server']['ru-ru'] = "Fax";
 $text['fax-active_title_fax_server']['sv-se'] = "Fax";
 $text['fax-active_title_fax_server']['uk-ua'] = "Факс";
+$text['fax-active_title_fax_server']['zh-cn'] = "传真";
+$text['fax-active_title_fax_server']['ja-jp'] = "ファックス";
+$text['fax-active_title_fax_server']['ko-kr'] = "* 이름";
 
 $text['fax-active_title_enabled']['en-us'] = "Enabled";
 $text['fax-active_title_enabled']['en-gb'] = "Enabled";
@@ -3968,6 +4532,9 @@ $text['fax-active_title_enabled']['ro-ro'] = "";
 $text['fax-active_title_enabled']['ru-ru'] = "Включено";
 $text['fax-active_title_enabled']['sv-se'] = "Aktiverad";
 $text['fax-active_title_enabled']['uk-ua'] = "Увімкнути";
+$text['fax-active_title_enabled']['zh-cn'] = "授权";
+$text['fax-active_title_enabled']['ja-jp'] = "有効化";
+$text['fax-active_title_enabled']['ko-kr'] = "이름 *";
 
 $text['fax-active_title_status']['en-us'] = "Status";
 $text['fax-active_title_status']['en-gb'] = "Status";
@@ -3989,6 +4556,9 @@ $text['fax-active_title_status']['ro-ro'] = "";
 $text['fax-active_title_status']['ru-ru'] = "Статус";
 $text['fax-active_title_status']['sv-se'] = "status status status status";
 $text['fax-active_title_status']['uk-ua'] = "Статус на сервери";
+$text['fax-active_title_status']['zh-cn'] = "现况";
+$text['fax-active_title_status']['ja-jp'] = "ステータス";
+$text['fax-active_title_status']['ko-kr'] = "주요연혁";
 
 $text['fax-active_title_next_time']['en-us'] = "Next time";
 $text['fax-active_title_next_time']['en-gb'] = "Next time";
@@ -4010,6 +4580,9 @@ $text['fax-active_title_next_time']['ro-ro'] = "";
 $text['fax-active_title_next_time']['ru-ru'] = "Следующее время";
 $text['fax-active_title_next_time']['sv-se'] = "Nästa gång";
 $text['fax-active_title_next_time']['uk-ua'] = "Час";
+$text['fax-active_title_next_time']['zh-cn'] = "下次时间";
+$text['fax-active_title_next_time']['ja-jp'] = "次の時間";
+$text['fax-active_title_next_time']['ko-kr'] = "다음 시간";
 
 $text['fax-active_title_files']['en-us'] = "Files";
 $text['fax-active_title_files']['en-gb'] = "Files";
@@ -4031,6 +4604,9 @@ $text['fax-active_title_files']['ro-ro'] = "";
 $text['fax-active_title_files']['ru-ru'] = "Файлы";
 $text['fax-active_title_files']['sv-se'] = "Filer";
 $text['fax-active_title_files']['uk-ua'] = "Файли";
+$text['fax-active_title_files']['zh-cn'] = "文件";
+$text['fax-active_title_files']['ja-jp'] = "ファイル";
+$text['fax-active_title_files']['ko-kr'] = "파일 형식";
 
 $text['fax-active_title_uri']['en-us'] = "URI";
 $text['fax-active_title_uri']['en-gb'] = "URI";
@@ -4052,6 +4628,9 @@ $text['fax-active_title_uri']['ro-ro'] = "";
 $text['fax-active_title_uri']['ru-ru'] = "URI";
 $text['fax-active_title_uri']['sv-se'] = "URI";
 $text['fax-active_title_uri']['uk-ua'] = "УРИ";
+$text['fax-active_title_uri']['zh-cn'] = "uri";
+$text['fax-active_title_uri']['ja-jp'] = "ログイン";
+$text['fax-active_title_uri']['ko-kr'] = "·";
 
 $text['fax-active_status_wait']['en-us'] = "Wait";
 $text['fax-active_status_wait']['en-gb'] = "Wait";
@@ -4073,6 +4652,9 @@ $text['fax-active_status_wait']['ro-ro'] = "";
 $text['fax-active_status_wait']['ru-ru'] = "Ожидайте";
 $text['fax-active_status_wait']['sv-se'] = "Vänta";
 $text['fax-active_status_wait']['uk-ua'] = "Зареєструватися";
+$text['fax-active_status_wait']['zh-cn'] = "等待";
+$text['fax-active_status_wait']['ja-jp'] = "ウエディング";
+$text['fax-active_status_wait']['ko-kr'] = "(주)";
 
 $text['fax-active_status_execute']['en-us'] = "Execute";
 $text['fax-active_status_execute']['en-gb'] = "Execute";
@@ -4094,6 +4676,9 @@ $text['fax-active_status_execute']['ro-ro'] = "";
 $text['fax-active_status_execute']['ru-ru'] = "Выполнить";
 $text['fax-active_status_execute']['sv-se'] = "Utför";
 $text['fax-active_status_execute']['uk-ua'] = "Виконувати";
+$text['fax-active_status_execute']['zh-cn'] = "概述";
+$text['fax-active_status_execute']['ja-jp'] = "実行する";
+$text['fax-active_status_execute']['ko-kr'] = "지원하다";
 
 $text['fax-active_status_success']['en-us'] = "Success";
 $text['fax-active_status_success']['en-gb'] = "Success";
@@ -4115,6 +4700,9 @@ $text['fax-active_status_success']['ro-ro'] = "";
 $text['fax-active_status_success']['ru-ru'] = "Успешно";
 $text['fax-active_status_success']['sv-se'] = "Lyckat";
 $text['fax-active_status_success']['uk-ua'] = "Про нас";
+$text['fax-active_status_success']['zh-cn'] = "成功";
+$text['fax-active_status_success']['ja-jp'] = "成功事例";
+$text['fax-active_status_success']['ko-kr'] = "지원하다";
 
 $text['fax-active_status_fail']['en-us'] = "Fail";
 $text['fax-active_status_fail']['en-gb'] = "Fail";
@@ -4136,5 +4724,8 @@ $text['fax-active_status_fail']['ro-ro'] = "";
 $text['fax-active_status_fail']['ru-ru'] = "Ошибка";
 $text['fax-active_status_fail']['sv-se'] = "Misslyckad";
 $text['fax-active_status_fail']['uk-ua'] = "В'язниця";
+$text['fax-active_status_fail']['zh-cn'] = "失败";
+$text['fax-active_status_fail']['ja-jp'] = "失敗";
+$text['fax-active_status_fail']['ko-kr'] = "뚱 베어";
 
 ?>

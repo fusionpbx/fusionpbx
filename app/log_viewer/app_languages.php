@@ -20,6 +20,9 @@ $text['title-log_viewer']['ro-ro'] = "";
 $text['title-log_viewer']['ru-ru'] = "Просмотр Логов";
 $text['title-log_viewer']['sv-se'] = "Log Viewer";
 $text['title-log_viewer']['uk-ua'] = "Логи";
+$text['title-log_viewer']['zh-cn'] = "记录仪表";
+$text['title-log_viewer']['ja-jp'] = "ログビューア";
+$text['title-log_viewer']['ko-kr'] = "로그 뷰어";
 
 $text['label-syntax']['en-us'] = "Syntax Highlighted";
 $text['label-syntax']['en-gb'] = "Syntax Highlighted";
@@ -41,6 +44,9 @@ $text['label-syntax']['ro-ro'] = "";
 $text['label-syntax']['ru-ru'] = "Выделение Синтаксиса";
 $text['label-syntax']['sv-se'] = "Syntax Markerad";
 $text['label-syntax']['uk-ua'] = "Підсвічування синтаксису";
+$text['label-syntax']['zh-cn'] = "辛迪加";
+$text['label-syntax']['ja-jp'] = "シンタックスハイライト";
+$text['label-syntax']['ko-kr'] = "Syntax 하이라이트";
 
 $text['label-sort']['en-us'] = "Sort Descending";
 $text['label-sort']['en-gb'] = "Sort Descending";
@@ -62,6 +68,9 @@ $text['label-sort']['ro-ro'] = "";
 $text['label-sort']['ru-ru'] = "Сортировка по убыванию";
 $text['label-sort']['sv-se'] = "Sortera Fallande";
 $text['label-sort']['uk-ua'] = "Сортувати за спаданням";
+$text['label-sort']['zh-cn'] = "ending";
+$text['label-sort']['ja-jp'] = "並べ替え";
+$text['label-sort']['ko-kr'] = "종류 Descending";
 
 $text['label-open_file']['en-us'] = "opening entire file";
 $text['label-open_file']['en-gb'] = "opening entire file";
@@ -83,6 +92,9 @@ $text['label-open_file']['ro-ro'] = "";
 $text['label-open_file']['ru-ru'] = "Открытие всего файла";
 $text['label-open_file']['sv-se'] = "Öppnar hela filen";
 $text['label-open_file']['uk-ua'] = "відкрито весь файл";
+$text['label-open_file']['zh-cn'] = "A. 打开整个档案";
+$text['label-open_file']['ja-jp'] = "ファイル全体を開く";
+$text['label-open_file']['ko-kr'] = "전체 파일 열기";
 
 $text['label-open_at']['en-us'] = "opening at";
 $text['label-open_at']['en-gb'] = "opening at";
@@ -104,6 +116,9 @@ $text['label-open_at']['ro-ro'] = "";
 $text['label-open_at']['ru-ru'] = "Открытие на";
 $text['label-open_at']['sv-se'] = "Öppnar vid";
 $text['label-open_at']['uk-ua'] = "відкрито о";
+$text['label-open_at']['zh-cn'] = "开幕";
+$text['label-open_at']['ja-jp'] = "オープニング";
+$text['label-open_at']['ko-kr'] = "관련 기사";
 
 $text['label-line_number']['en-us'] = "Show Line Numbers";
 $text['label-line_number']['en-gb'] = "Show Line Numbers";
@@ -125,6 +140,9 @@ $text['label-line_number']['ro-ro'] = "";
 $text['label-line_number']['ru-ru'] = "Показывать номера строк";
 $text['label-line_number']['sv-se'] = "Visa Linje Nummer";
 $text['label-line_number']['uk-ua'] = "Нумерація рядків";
+$text['label-line_number']['zh-cn'] = "显示线数";
+$text['label-line_number']['ja-jp'] = "ライン番号を表示";
+$text['label-line_number']['ko-kr'] = "쇼 라인 번호";
 
 $text['label-size']['en-us'] = "KB";
 $text['label-size']['en-gb'] = "KB";
@@ -146,6 +164,9 @@ $text['label-size']['ro-ro'] = "";
 $text['label-size']['ru-ru'] = "KB";
 $text['label-size']['sv-se'] = "KB";
 $text['label-size']['uk-ua'] = "КБ";
+$text['label-size']['zh-cn'] = "a)";
+$text['label-size']['ja-jp'] = "ツイート";
+$text['label-size']['ko-kr'] = "지원하다";
 
 $text['label-log_file']['en-us'] = "Log file";
 $text['label-log_file']['ar-eg'] = "Log file";
@@ -166,6 +187,9 @@ $text['label-log_file']['ro-ro'] = "Log file";
 $text['label-log_file']['ru-ru'] = "Log file";
 $text['label-log_file']['sv-se'] = "Log file";
 $text['label-log_file']['uk-ua'] = "Log file";
+$text['label-log_file']['zh-cn'] = "后勤档案";
+$text['label-log_file']['ja-jp'] = "ログファイル";
+$text['label-log_file']['ko-kr'] = "로그 파일";
 
 $text['label-filter']['en-us'] = "Filter";
 $text['label-filter']['en-gb'] = "Filter";
@@ -187,6 +211,9 @@ $text['label-filter']['ro-ro'] = "";
 $text['label-filter']['ru-ru'] = "Фильтр";
 $text['label-filter']['sv-se'] = "Filter";
 $text['label-filter']['uk-ua'] = "Фільтр";
+$text['label-filter']['zh-cn'] = "过滤器";
+$text['label-filter']['ja-jp'] = "フィルター";
+$text['label-filter']['ko-kr'] = "제품정보";
 
 $text['label-displaying']['en-us'] = "Displaying the last";
 $text['label-displaying']['en-gb'] = "Displaying the last";
@@ -208,6 +235,9 @@ $text['label-displaying']['ro-ro'] = "";
 $text['label-displaying']['ru-ru'] = "Отображение последнего";
 $text['label-displaying']['sv-se'] = "Visar den sista";
 $text['label-displaying']['uk-ua'] = "Показувати останні";
+$text['label-displaying']['zh-cn'] = "显示最后一位";
+$text['label-displaying']['ja-jp'] = "最後の表示";
+$text['label-displaying']['ko-kr'] = "마지막 표시";
 
 $text['label-bytes']['en-us'] = "bytes";
 $text['label-bytes']['en-gb'] = "bytes";
@@ -229,6 +259,9 @@ $text['label-bytes']['ro-ro'] = "";
 $text['label-bytes']['ru-ru'] = "байты";
 $text['label-bytes']['sv-se'] = "bytes";
 $text['label-bytes']['uk-ua'] = "байти";
+$text['label-bytes']['zh-cn'] = "by";
+$text['label-bytes']['ja-jp'] = "ログイン";
+$text['label-bytes']['ko-kr'] = "제품정보";
 
 $text['error-open_file']['en-us'] = "Unable to open file!";
 $text['error-open_file']['en-gb'] = "Unable to open file!";
@@ -250,6 +283,9 @@ $text['error-open_file']['ro-ro'] = "";
 $text['error-open_file']['ru-ru'] = "Невозможно открыть файл!";
 $text['error-open_file']['sv-se'] = "Kan inte öppna fil!";
 $text['error-open_file']['uk-ua'] = "Неможливо відкрити файл!";
+$text['error-open_file']['zh-cn'] = "页: 1";
+$text['error-open_file']['ja-jp'] = "ファイルを開くことができない!";
+$text['error-open_file']['ko-kr'] = "파일을 열 수 없습니다!";
 
 $text['description-filter']['en-us'] = "Filtering the log with the text:";
 $text['description-filter']['en-gb'] = "Filtering the log with the text:";
@@ -271,6 +307,9 @@ $text['description-filter']['ro-ro'] = "";
 $text['description-filter']['ru-ru'] = "Фильтрация журнала с текстом:";
 $text['description-filter']['sv-se'] = "Filtrerar loggen med texten:";
 $text['description-filter']['uk-ua'] = "Фільтрування логів по тексту";
+$text['description-filter']['zh-cn'] = "将该记录与案文相匹配:";
+$text['description-filter']['ja-jp'] = "テキストでログをフィルタリングする:";
+$text['description-filter']['ko-kr'] = "텍스트로 로그 필터링:";
 
 $text['label-display']['en-us'] = "Display";
 $text['label-display']['en-gb'] = "Display";
@@ -292,5 +331,8 @@ $text['label-display']['ro-ro'] = "Display";
 $text['label-display']['ru-ru'] = "Display";
 $text['label-display']['sv-se'] = "Display";
 $text['label-display']['uk-ua'] = "Display";
+$text['label-display']['zh-cn'] = "显示";
+$text['label-display']['ja-jp'] = "ディスプレイ";
+$text['label-display']['ko-kr'] = "제품정보";
 
 ?>

@@ -20,6 +20,9 @@ $text['title-number_translations']['ro-ro'] = "";
 $text['title-number_translations']['ru-ru'] = "Преобразование номеров";
 $text['title-number_translations']['sv-se'] = "Nummeröversättningar";
 $text['title-number_translations']['uk-ua'] = "Переклади";
+$text['title-number_translations']['zh-cn'] = "翻译";
+$text['title-number_translations']['ja-jp'] = "数値翻訳";
+$text['title-number_translations']['ko-kr'] = "번호 번역";
 
 $text['title-number_translation']['en-us'] = "Number Translation";
 $text['title-number_translation']['en-gb'] = "Number Translation";
@@ -41,6 +44,9 @@ $text['title-number_translation']['ro-ro'] = "";
 $text['title-number_translation']['ru-ru'] = "Преобразование номера";
 $text['title-number_translation']['sv-se'] = "Nummeröversättning";
 $text['title-number_translation']['uk-ua'] = "Переклад документів";
+$text['title-number_translation']['zh-cn'] = "翻译";
+$text['title-number_translation']['ja-jp'] = "数値翻訳";
+$text['title-number_translation']['ko-kr'] = "번호 번역";
 
 $text['title_description-number_translations']['en-us'] = "Use this to translate numbers from the original number to a new number using regular expressions.";
 $text['title_description-number_translations']['en-gb'] = "Use this to translate numbers from the original number to a new number using regular expressions.";
@@ -62,6 +68,9 @@ $text['title_description-number_translations']['ro-ro'] = "";
 $text['title_description-number_translations']['ru-ru'] = "Используйте для преобразования номера из одного вида в другой используя регулярные выражения";
 $text['title_description-number_translations']['sv-se'] = "Använd detta för att översätta siffror från det ursprungliga numret till ett nytt nummer med vanliga uttryck.";
 $text['title_description-number_translations']['uk-ua'] = "Використовуйте це для перекладу чисел з початкового числа до нового числа, використовуючи регулярні вирази.";
+$text['title_description-number_translations']['zh-cn'] = "采用定期表述方式将数字从原来的数字变为新数字。";
+$text['title_description-number_translations']['ja-jp'] = "正規表現を使用して、元の番号から新しい番号に数字を変換するためにこれを使用します。";
+$text['title_description-number_translations']['ko-kr'] = "원본 번호에서 정규 표현식을 사용하여 새로운 숫자로 변환하는 것을 사용합니다.";
 
 $text['label-number_translation_detail_regex']['en-us'] = "Regular Expression";
 $text['label-number_translation_detail_regex']['en-gb'] = "Regular Expression";
@@ -83,6 +92,9 @@ $text['label-number_translation_detail_regex']['ro-ro'] = "Expresie uzuala";
 $text['label-number_translation_detail_regex']['ru-ru'] = "Регулярное выражение";
 $text['label-number_translation_detail_regex']['sv-se'] = "Vanligt uttryck";
 $text['label-number_translation_detail_regex']['uk-ua'] = "Регулярний вираз";
+$text['label-number_translation_detail_regex']['zh-cn'] = "定期发言";
+$text['label-number_translation_detail_regex']['ja-jp'] = "正規表現";
+$text['label-number_translation_detail_regex']['ko-kr'] = "일반 표현";
 
 $text['description-number_translation_detail_regex']['en-us'] = "Enter the regular expression that identifies the number to replace.";
 $text['description-number_translation_detail_regex']['en-gb'] = "Enter the regular expression that identifies the number to replace.";
@@ -104,6 +116,9 @@ $text['description-number_translation_detail_regex']['ro-ro'] = "";
 $text['description-number_translation_detail_regex']['ru-ru'] = "Задайте регулярное выражение для преобразования номера";
 $text['description-number_translation_detail_regex']['sv-se'] = "Ange det vanliga uttrycket som identifierar numret för att ersätta.";
 $text['description-number_translation_detail_regex']['uk-ua'] = "Введіть формальний вираз, який визначає номер для заміни.";
+$text['description-number_translation_detail_regex']['zh-cn'] = "加入确定替换人数的定期表述。";
+$text['description-number_translation_detail_regex']['ja-jp'] = "置換する番号を識別する正規表現を入力します。";
+$text['description-number_translation_detail_regex']['ko-kr'] = "대체할 수 있는 숫자를 식별하는 정규 표현식을 입력합니다.";
 
 $text['label-number_translation_detail_replace']['en-us'] = "Replace";
 $text['label-number_translation_detail_replace']['en-gb'] = "Replace";
@@ -125,6 +140,9 @@ $text['label-number_translation_detail_replace']['ro-ro'] = "A inlocui";
 $text['label-number_translation_detail_replace']['ru-ru'] = "Замена";
 $text['label-number_translation_detail_replace']['sv-se'] = "Byta ut";
 $text['label-number_translation_detail_replace']['uk-ua'] = "заміщати";
+$text['label-number_translation_detail_replace']['zh-cn'] = "替换";
+$text['label-number_translation_detail_replace']['ja-jp'] = "リプレース";
+$text['label-number_translation_detail_replace']['ko-kr'] = "기타 제품";
 
 $text['description-number_translation_detail_replace']['en-us'] = "Enter the number translation detail replace.";
 $text['description-number_translation_detail_replace']['en-gb'] = "Enter the number translation detail replace.";
@@ -146,6 +164,9 @@ $text['description-number_translation_detail_replace']['ro-ro'] = "";
 $text['description-number_translation_detail_replace']['ru-ru'] = "Введите детализация перевода номера.";
 $text['description-number_translation_detail_replace']['sv-se'] = "Ange nummeröversättningsdetaljen ersätta.";
 $text['description-number_translation_detail_replace']['uk-ua'] = "Введіть номер мобільного, який Ви вказали при укладаннi договору з банком - для ідентифікації.";
+$text['description-number_translation_detail_replace']['zh-cn'] = "填写翻译序号替换。";
+$text['description-number_translation_detail_replace']['ja-jp'] = "数値の翻訳詳細を置き換えます。";
+$text['description-number_translation_detail_replace']['ko-kr'] = "번호 번역 세부 사항 교체를 입력합니다.";
 
 $text['label-number_translation_detail_order']['en-us'] = "Order";
 $text['label-number_translation_detail_order']['en-gb'] = "Order";
@@ -167,6 +188,9 @@ $text['label-number_translation_detail_order']['ro-ro'] = "";
 $text['label-number_translation_detail_order']['ru-ru'] = "Приоритет";
 $text['label-number_translation_detail_order']['sv-se'] = "order";
 $text['label-number_translation_detail_order']['uk-ua'] = "Замовити";
+$text['label-number_translation_detail_order']['zh-cn'] = "命令";
+$text['label-number_translation_detail_order']['ja-jp'] = "オーダー";
+$text['label-number_translation_detail_order']['ko-kr'] = "이름 *";
 
 $text['description-number_translation_detail_order']['en-us'] = "Select the rule order.";
 $text['description-number_translation_detail_order']['en-gb'] = "Select the rule order.";
@@ -188,6 +212,9 @@ $text['description-number_translation_detail_order']['ro-ro'] = "";
 $text['description-number_translation_detail_order']['ru-ru'] = "Задайте порядок обработки регулярных выражений в поле приоритета";
 $text['description-number_translation_detail_order']['sv-se'] = "Välj regelordningen.";
 $text['description-number_translation_detail_order']['uk-ua'] = "Оберіть порядок правила.";
+$text['description-number_translation_detail_order']['zh-cn'] = "选择规则令。";
+$text['description-number_translation_detail_order']['ja-jp'] = "ルール順を選択します。";
+$text['description-number_translation_detail_order']['ko-kr'] = "규칙 순서를 선택하십시오.";
 
 $text['label-number_translation_name']['en-us'] = "Name";
 $text['label-number_translation_name']['en-gb'] = "Name";
@@ -209,6 +236,9 @@ $text['label-number_translation_name']['ro-ro'] = "";
 $text['label-number_translation_name']['ru-ru'] = "Имя";
 $text['label-number_translation_name']['sv-se'] = "Namnnamn";
 $text['label-number_translation_name']['uk-ua'] = "Ім'я";
+$text['label-number_translation_name']['zh-cn'] = "姓名";
+$text['label-number_translation_name']['ja-jp'] = "お名前 (必須)";
+$text['label-number_translation_name']['ko-kr'] = "이름 *";
 
 $text['description-number_translation_name']['en-us'] = "Enter the number translation name.";
 $text['description-number_translation_name']['en-gb'] = "Enter the number translation name.";
@@ -230,6 +260,9 @@ $text['description-number_translation_name']['ro-ro'] = "";
 $text['description-number_translation_name']['ru-ru'] = "Задайте имя для правила преобразования номера";
 $text['description-number_translation_name']['sv-se'] = "Ange nummeröversättningsnamnet.";
 $text['description-number_translation_name']['uk-ua'] = "Введіть ім'я перекладу номеру.";
+$text['description-number_translation_name']['zh-cn'] = "填写翻译号。";
+$text['description-number_translation_name']['ja-jp'] = "番号の翻訳名を入力してください。";
+$text['description-number_translation_name']['ko-kr'] = "번호 번역 이름을 입력하십시오.";
 
 $text['label-number_translation_details']['en-us'] = "Details";
 $text['label-number_translation_details']['en-gb'] = "Details";
@@ -251,6 +284,9 @@ $text['label-number_translation_details']['ro-ro'] = "";
 $text['label-number_translation_details']['ru-ru'] = "Действия по преобразованию номера";
 $text['label-number_translation_details']['sv-se'] = "Detaljer";
 $text['label-number_translation_details']['uk-ua'] = "Детальніше";
+$text['label-number_translation_details']['zh-cn'] = "详细情况";
+$text['label-number_translation_details']['ja-jp'] = "インフォメーション";
+$text['label-number_translation_details']['ko-kr'] = "제품 정보";
 
 $text['description-number_translation_details']['en-us'] = "";
 $text['description-number_translation_details']['en-gb'] = "";
@@ -272,6 +308,9 @@ $text['description-number_translation_details']['ro-ro'] = "";
 $text['description-number_translation_details']['ru-ru'] = "";
 $text['description-number_translation_details']['sv-se'] = "";
 $text['description-number_translation_details']['uk-ua'] = "";
+$text['description-number_translation_details']['zh-cn'] = "";
+$text['description-number_translation_details']['ja-jp'] = "";
+$text['description-number_translation_details']['ko-kr'] = "";
 
 $text['label-number_translation_enabled']['en-us'] = "Enabled";
 $text['label-number_translation_enabled']['en-gb'] = "Enabled";
@@ -293,6 +332,9 @@ $text['label-number_translation_enabled']['ro-ro'] = "";
 $text['label-number_translation_enabled']['ru-ru'] = "Включено";
 $text['label-number_translation_enabled']['sv-se'] = "aktiverad";
 $text['label-number_translation_enabled']['uk-ua'] = "Увімкнути";
+$text['label-number_translation_enabled']['zh-cn'] = "授权";
+$text['label-number_translation_enabled']['ja-jp'] = "有効化";
+$text['label-number_translation_enabled']['ko-kr'] = "이름 *";
 
 $text['description-number_translation_enabled']['en-us'] = "Enter the number translation enabled.";
 $text['description-number_translation_enabled']['en-gb'] = "Enter the number translation enabled.";
@@ -314,6 +356,9 @@ $text['description-number_translation_enabled']['ro-ro'] = "";
 $text['description-number_translation_enabled']['ru-ru'] = "Включить/выключить обработку";
 $text['description-number_translation_enabled']['sv-se'] = "Ange nummeröversättningen aktiverad.";
 $text['description-number_translation_enabled']['uk-ua'] = "Введіть номер мобільного, який Ви вказали при укладаннi договору з банком - для ідентифікації.";
+$text['description-number_translation_enabled']['zh-cn'] = "能够输入翻译号。";
+$text['description-number_translation_enabled']['ja-jp'] = "数値変換を有効にします。";
+$text['description-number_translation_enabled']['ko-kr'] = "번역을 입력하세요.";
 
 $text['label-number_translation_description']['en-us'] = "Description";
 $text['label-number_translation_description']['en-gb'] = "Description";
@@ -335,6 +380,9 @@ $text['label-number_translation_description']['ro-ro'] = "";
 $text['label-number_translation_description']['ru-ru'] = "Описание";
 $text['label-number_translation_description']['sv-se'] = "Beskrivning";
 $text['label-number_translation_description']['uk-ua'] = "Опис";
+$text['label-number_translation_description']['zh-cn'] = "说明";
+$text['label-number_translation_description']['ja-jp'] = "コンテンツ";
+$text['label-number_translation_description']['ko-kr'] = "제품 설명";
 
 $text['description-number_translation_description']['en-us'] = "Enter the number translation description.";
 $text['description-number_translation_description']['en-gb'] = "Enter the number translation description.";
@@ -356,5 +404,8 @@ $text['description-number_translation_description']['ro-ro'] = "";
 $text['description-number_translation_description']['ru-ru'] = "Введите описание для создаваемого правила";
 $text['description-number_translation_description']['sv-se'] = "Ange nummeröversättningsbeskrivningen.";
 $text['description-number_translation_description']['uk-ua'] = "Введіть опис перекладу номеру.";
+$text['description-number_translation_description']['zh-cn'] = "填写翻译号说明。";
+$text['description-number_translation_description']['ja-jp'] = "数値の翻訳説明を入力します。";
+$text['description-number_translation_description']['ko-kr'] = "번호 번역 설명을 입력합니다.";
 
 ?>

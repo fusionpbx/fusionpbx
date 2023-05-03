@@ -20,6 +20,9 @@ $text['title-streams']['ro-ro'] = "Fluxuri";
 $text['title-streams']['ru-ru'] = "Потоки";
 $text['title-streams']['sv-se'] = "Strömmar";
 $text['title-streams']['uk-ua'] = "Потоки";
+$text['title-streams']['zh-cn'] = "精简";
+$text['title-streams']['ja-jp'] = "ストリーム";
+$text['title-streams']['ko-kr'] = "스트림";
 
 $text['title-stream']['en-us'] = "Stream";
 $text['title-stream']['en-gb'] = "Stream";
@@ -41,6 +44,9 @@ $text['title-stream']['ro-ro'] = "Curent";
 $text['title-stream']['ru-ru'] = "Транслировать";
 $text['title-stream']['sv-se'] = "Ström";
 $text['title-stream']['uk-ua'] = "Потік";
+$text['title-stream']['zh-cn'] = "精简";
+$text['title-stream']['ja-jp'] = "ストリーム";
+$text['title-stream']['ko-kr'] = "스트레이트";
 
 $text['title_description-stream']['en-us'] = "Define details for streaming audio.";
 $text['title_description-stream']['en-gb'] = "Define details for streaming audio.";
@@ -62,6 +68,9 @@ $text['title_description-stream']['ro-ro'] = "Definiți detaliile pentru streami
 $text['title_description-stream']['ru-ru'] = "Определите детали для потокового аудио.";
 $text['title_description-stream']['sv-se'] = "Definiera detaljer för strömmande ljud.";
 $text['title_description-stream']['uk-ua'] = "Визначте деталі потокового аудіо.";
+$text['title_description-stream']['zh-cn'] = "2. 界定播音的详细内容。";
+$text['title_description-stream']['ja-jp'] = "ストリーミングオーディオの詳細を定義します。";
+$text['title_description-stream']['ko-kr'] = "스트리밍 오디오에 대한 세부 사항 정의.";
 
 $text['label-stream_name']['en-us'] = "Name";
 $text['label-stream_name']['en-gb'] = "Name";
@@ -83,6 +92,9 @@ $text['label-stream_name']['ro-ro'] = "Nume";
 $text['label-stream_name']['ru-ru'] = "Имя";
 $text['label-stream_name']['sv-se'] = "namn";
 $text['label-stream_name']['uk-ua'] = "Ім'я";
+$text['label-stream_name']['zh-cn'] = "姓名";
+$text['label-stream_name']['ja-jp'] = "お名前 (必須)";
+$text['label-stream_name']['ko-kr'] = "이름 *";
 
 $text['description-stream_name']['en-us'] = "Enter the name.";
 $text['description-stream_name']['en-gb'] = "Enter the name.";
@@ -104,6 +116,9 @@ $text['description-stream_name']['ro-ro'] = "Introduceți numele.";
 $text['description-stream_name']['ru-ru'] = "Введите имя.";
 $text['description-stream_name']['sv-se'] = "Ange namnet.";
 $text['description-stream_name']['uk-ua'] = "Введіть назву.";
+$text['description-stream_name']['zh-cn'] = "填写姓名。";
+$text['description-stream_name']['ja-jp'] = "お名前を入力してください。";
+$text['description-stream_name']['ko-kr'] = "이름 입력";
 
 $text['label-stream_location']['en-us'] = "Location";
 $text['label-stream_location']['en-gb'] = "Location";
@@ -125,6 +140,9 @@ $text['label-stream_location']['ro-ro'] = "Locație";
 $text['label-stream_location']['ru-ru'] = "Расположение";
 $text['label-stream_location']['sv-se'] = "Plats";
 $text['label-stream_location']['uk-ua'] = "Місцезнаходження";
+$text['label-stream_location']['zh-cn'] = "地点";
+$text['label-stream_location']['ja-jp'] = "アクセス";
+$text['label-stream_location']['ko-kr'] = "- 연혁";
 
 $text['description-stream_location']['en-us'] = "Enter the location.";
 $text['description-stream_location']['en-gb'] = "Enter the location.";
@@ -146,6 +164,9 @@ $text['description-stream_location']['ro-ro'] = "Introduceți locația.";
 $text['description-stream_location']['ru-ru'] = "Введите местоположение.";
 $text['description-stream_location']['sv-se'] = "Ange platsen.";
 $text['description-stream_location']['uk-ua'] = "Введіть місце розташування.";
+$text['description-stream_location']['zh-cn'] = "进入地点。";
+$text['description-stream_location']['ja-jp'] = "所在地を入力してください。";
+$text['description-stream_location']['ko-kr'] = "자주 묻는 질문";
 
 $text['label-stream_enabled']['en-us'] = "Enabled";
 $text['label-stream_enabled']['en-gb'] = "Enabled";
@@ -167,6 +188,9 @@ $text['label-stream_enabled']['ro-ro'] = "Activat";
 $text['label-stream_enabled']['ru-ru'] = "Включено";
 $text['label-stream_enabled']['sv-se'] = "Aktiverad";
 $text['label-stream_enabled']['uk-ua'] = "Увімкнено";
+$text['label-stream_enabled']['zh-cn'] = "授权";
+$text['label-stream_enabled']['ja-jp'] = "有効化";
+$text['label-stream_enabled']['ko-kr'] = "이름 *";
 
 $text['description-stream_enabled']['en-us'] = "Enable or disable this stream.";
 $text['description-stream_enabled']['en-gb'] = "Enable or disable this stream.";
@@ -188,6 +212,9 @@ $text['description-stream_enabled']['ro-ro'] = "Activează sau dezactivează ace
 $text['description-stream_enabled']['ru-ru'] = "Включите или отключите этот поток.";
 $text['description-stream_enabled']['sv-se'] = "Aktivera eller inaktivera denna stream.";
 $text['description-stream_enabled']['uk-ua'] = "Увімкніть або вимкніть цей потік.";
+$text['description-stream_enabled']['zh-cn'] = "实现或消除这一流。";
+$text['description-stream_enabled']['ja-jp'] = "このストリームを有効にまたは無効にします。";
+$text['description-stream_enabled']['ko-kr'] = "이 스트림을 활성화하거나 비활성화합니다.";
 
 $text['label-stream_description']['en-us'] = "Description";
 $text['label-stream_description']['en-gb'] = "Description";
@@ -209,6 +236,9 @@ $text['label-stream_description']['ro-ro'] = "Descriere";
 $text['label-stream_description']['ru-ru'] = "Описание";
 $text['label-stream_description']['sv-se'] = "Beskrivning";
 $text['label-stream_description']['uk-ua'] = "опис";
+$text['label-stream_description']['zh-cn'] = "说明";
+$text['label-stream_description']['ja-jp'] = "コンテンツ";
+$text['label-stream_description']['ko-kr'] = "제품 설명";
 
 $text['description-stream_description']['en-us'] = "Enter the description.";
 $text['description-stream_description']['en-gb'] = "Enter the description.";
@@ -230,5 +260,8 @@ $text['description-stream_description']['ro-ro'] = "Introduceți descrierea.";
 $text['description-stream_description']['ru-ru'] = "Введите описание.";
 $text['description-stream_description']['sv-se'] = "Ange beskrivningen.";
 $text['description-stream_description']['uk-ua'] = "Введіть опис.";
+$text['description-stream_description']['zh-cn'] = "说明。";
+$text['description-stream_description']['ja-jp'] = "説明を入力してください。";
+$text['description-stream_description']['ko-kr'] = "자주 묻는 질문";
 
 ?>

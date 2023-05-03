@@ -20,6 +20,9 @@ $text['title-status']['ro-ro'] = "";
 $text['title-status']['ru-ru'] = "Статус";
 $text['title-status']['sv-se'] = "Status";
 $text['title-status']['uk-ua'] = "Стан";
+$text['title-status']['zh-cn'] = "现况";
+$text['title-status']['ja-jp'] = "ステータス";
+$text['title-status']['ko-kr'] = "주요연혁";
 
 $text['title-sofia-status-profile']['en-us'] = "sofia status profile";
 $text['title-sofia-status-profile']['en-gb'] = "sofia status profile";
@@ -41,6 +44,9 @@ $text['title-sofia-status-profile']['ro-ro'] = "";
 $text['title-sofia-status-profile']['ru-ru'] = "Профиль статуса sofia";
 $text['title-sofia-status-profile']['sv-se'] = "sofia status profil";
 $text['title-sofia-status-profile']['uk-ua'] = "sofia status profile ";
+$text['title-sofia-status-profile']['zh-cn'] = "身份证明";
+$text['title-sofia-status-profile']['ja-jp'] = "sofiaステータスプロファイル";
+$text['title-sofia-status-profile']['ko-kr'] = "sofia 상태 프로파일";
 
 $text['title-sofia-status']['en-us'] = "sofia status";
 $text['title-sofia-status']['en-gb'] = "sofia status";
@@ -62,6 +68,9 @@ $text['title-sofia-status']['ro-ro'] = "";
 $text['title-sofia-status']['ru-ru'] = "sofia статус";
 $text['title-sofia-status']['sv-se'] = "sofia status";
 $text['title-sofia-status']['uk-ua'] = "sofia status ";
+$text['title-sofia-status']['zh-cn'] = "身份";
+$text['title-sofia-status']['ja-jp'] = "sofiaステータス";
+$text['title-sofia-status']['ko-kr'] = "sofia 상태";
 
 $text['title-sip_status']['en-us'] = "SIP Status";
 $text['title-sip_status']['en-gb'] = "SIP Status";
@@ -83,6 +92,9 @@ $text['title-sip_status']['ro-ro'] = "";
 $text['title-sip_status']['ru-ru'] = "SIP Статус";
 $text['title-sip_status']['sv-se'] = "SIP Status";
 $text['title-sip_status']['uk-ua'] = "Стан SIP";
+$text['title-sip_status']['zh-cn'] = "SIP 现况";
+$text['title-sip_status']['ja-jp'] = "ログイン ステータス";
+$text['title-sip_status']['ko-kr'] = "사이트맵 주요연혁";
 
 $text['label-action']['en-us'] = "Action";
 $text['label-action']['en-gb'] = "Action";
@@ -104,6 +116,9 @@ $text['label-action']['ro-ro'] = "";
 $text['label-action']['ru-ru'] = "Действие";
 $text['label-action']['sv-se'] = "Åtgärd";
 $text['label-action']['uk-ua'] = "Дія";
+$text['label-action']['zh-cn'] = "行动";
+$text['label-action']['ja-jp'] = "アクション";
+$text['label-action']['ko-kr'] = "(주)";
 
 $text['label-state']['en-us'] = "State";
 $text['label-state']['en-gb'] = "State";
@@ -125,6 +140,9 @@ $text['label-state']['ro-ro'] = "";
 $text['label-state']['ru-ru'] = "Состояние";
 $text['label-state']['sv-se'] = "Status";
 $text['label-state']['uk-ua'] = "Стан";
+$text['label-state']['zh-cn'] = "国家";
+$text['label-state']['ja-jp'] = "ステータス";
+$text['label-state']['ko-kr'] = "주요 특징";
 
 $text['label-message']['en-us'] = "Message";
 $text['label-message']['en-gb'] = "Message";
@@ -146,6 +164,9 @@ $text['label-message']['ro-ro'] = "";
 $text['label-message']['ru-ru'] = "Сообщение";
 $text['label-message']['sv-se'] = "Meddelande";
 $text['label-message']['uk-ua'] = "Повідомлення";
+$text['label-message']['zh-cn'] = "宣传";
+$text['label-message']['ja-jp'] = "メッセージ";
+$text['label-message']['ko-kr'] = "이름 *";
 
 $text['label-data']['en-us'] = "Data";
 $text['label-data']['en-gb'] = "Data";
@@ -167,6 +188,9 @@ $text['label-data']['ro-ro'] = "";
 $text['label-data']['ru-ru'] = "Дата";
 $text['label-data']['sv-se'] = "Data";
 $text['label-data']['uk-ua'] = "Дані";
+$text['label-data']['zh-cn'] = "数据";
+$text['label-data']['ja-jp'] = "データデータ";
+$text['label-data']['ko-kr'] = "자료실";
 
 $text['label-profile']['en-us'] = "Profile";
 $text['label-profile']['en-gb'] = "Profile";
@@ -188,6 +212,9 @@ $text['label-profile']['ro-ro'] = "";
 $text['label-profile']['ru-ru'] = "Профили";
 $text['label-profile']['sv-se'] = "Profiler";
 $text['label-profile']['uk-ua'] = "Профілі";
+$text['label-profile']['zh-cn'] = "概况";
+$text['label-profile']['ja-jp'] = "プロフィール";
+$text['label-profile']['ko-kr'] = "제품정보";
 
 $text['label-gateway']['en-us'] = "Gateway";
 $text['label-gateway']['en-gb'] = "Gateway";
@@ -209,6 +236,9 @@ $text['label-gateway']['ro-ro'] = "Portal";
 $text['label-gateway']['ru-ru'] = "Шлюз";
 $text['label-gateway']['sv-se'] = "Gateway";
 $text['label-gateway']['uk-ua'] = "Шлюз";
+$text['label-gateway']['zh-cn'] = "网关";
+$text['label-gateway']['ja-jp'] = "ゲートウェイ";
+$text['label-gateway']['ko-kr'] = "오시는 길";
 
 $text['description-sip_status']['en-us'] = "View and manage the status of system profiles and gateways.";
 $text['description-sip_status']['en-gb'] = "View and manage the status of system profiles and gateways.";
@@ -230,6 +260,9 @@ $text['description-sip_status']['ro-ro'] = "View and manage the status of system
 $text['description-sip_status']['ru-ru'] = "View and manage the status of system profiles and gateways.";
 $text['description-sip_status']['sv-se'] = "View and manage the status of system profiles and gateways.";
 $text['description-sip_status']['uk-ua'] = "View and manage the status of system profiles and gateways.";
+$text['description-sip_status']['zh-cn'] = "观察和管理系统概况和网关状况。";
+$text['description-sip_status']['ja-jp'] = "システムプロファイルとゲートウェイの状態を表示および管理します。";
+$text['description-sip_status']['ko-kr'] = "시스템 프로파일 및 게이트웨이의 상태를 확인하고 관리합니다.";
 
 $text['error-event-socket']['en-us'] = "Connection to Event Socket failed.";
 $text['error-event-socket']['en-gb'] = "Connection to Event Socket failed.";
@@ -251,6 +284,9 @@ $text['error-event-socket']['ro-ro'] = "";
 $text['error-event-socket']['ru-ru'] = "Не удалось подключиться к сокету событий.";
 $text['error-event-socket']['sv-se'] = "Kontakten till 'Event Socket' misslyckades.";
 $text['error-event-socket']['uk-ua'] = "Помилка підключення до сокета подій";
+$text['error-event-socket']['zh-cn'] = "与事件Socket的连接失败。";
+$text['error-event-socket']['ja-jp'] = "イベントソケットへの接続が失敗しました。";
+$text['error-event-socket']['ko-kr'] = "이벤트 소켓에 연결 실패.";
 
 $text['button-rescan']['en-us'] = "Rescan";
 $text['button-rescan']['en-gb'] = "Rescan";
@@ -272,6 +308,9 @@ $text['button-rescan']['ro-ro'] = "";
 $text['button-rescan']['ru-ru'] = "Пересканировать";
 $text['button-rescan']['sv-se'] = "Sök Igen";
 $text['button-rescan']['uk-ua'] = "Пересканувати";
+$text['button-rescan']['zh-cn'] = "回收";
+$text['button-rescan']['ja-jp'] = "リスカ";
+$text['button-rescan']['ko-kr'] = "사이트맵";
 
 $text['button-reload_xml']['en-us'] = "Reload XML";
 $text['button-reload_xml']['en-gb'] = "Reload XML";
@@ -293,6 +332,9 @@ $text['button-reload_xml']['ro-ro'] = "";
 $text['button-reload_xml']['ru-ru'] = "перезагрузить XML";
 $text['button-reload_xml']['sv-se'] = "Ladda Om XML";
 $text['button-reload_xml']['uk-ua'] = "Перезагрузити XML";
+$text['button-reload_xml']['zh-cn'] = "卸载XML";
+$text['button-reload_xml']['ja-jp'] = "XML のリロード";
+$text['button-reload_xml']['ko-kr'] = "XML로드";
 
 $text['button-reload_acl']['en-us'] = "Reload ACL";
 $text['button-reload_acl']['en-gb'] = "Reload ACL";
@@ -314,6 +356,9 @@ $text['button-reload_acl']['ro-ro'] = "";
 $text['button-reload_acl']['ru-ru'] = "Перезагрузить ACL ";
 $text['button-reload_acl']['sv-se'] = "Ladda Om ACL";
 $text['button-reload_acl']['uk-ua'] = "Перезагрузити ACL ";
+$text['button-reload_acl']['zh-cn'] = "重载";
+$text['button-reload_acl']['ja-jp'] = "再積載 ACL";
+$text['button-reload_acl']['ko-kr'] = "반송 ACL";
 
 $text['button-registrations']['en-us'] = "Registrations";
 $text['button-registrations']['en-gb'] = "Registrations";
@@ -335,6 +380,9 @@ $text['button-registrations']['ro-ro'] = "";
 $text['button-registrations']['ru-ru'] = "Регистрация";
 $text['button-registrations']['sv-se'] = "Registreringar";
 $text['button-registrations']['uk-ua'] = "Реєстрації";
+$text['button-registrations']['zh-cn'] = "登记";
+$text['button-registrations']['ja-jp'] = "参加登録";
+$text['button-registrations']['ko-kr'] = "이름 *";
 
 $text['button-flush_registrations']['en-us'] = "Flush Registrations";
 $text['button-flush_registrations']['en-gb'] = "Flush Registrations";
@@ -356,6 +404,9 @@ $text['button-flush_registrations']['ro-ro'] = "";
 $text['button-flush_registrations']['ru-ru'] = "Сбросить регистрацию";
 $text['button-flush_registrations']['sv-se'] = "'Flush' Registreringar";
 $text['button-flush_registrations']['uk-ua'] = "Скинути реєстрації";
+$text['button-flush_registrations']['zh-cn'] = "液态登记";
+$text['button-flush_registrations']['ja-jp'] = "フラッシュ登録";
+$text['button-flush_registrations']['ko-kr'] = "Flush 등록";
 
 $text['button-flush_cache']['en-us'] = "Flush Cache";
 $text['button-flush_cache']['en-gb'] = "Flush Cache";
@@ -377,5 +428,8 @@ $text['button-flush_cache']['ro-ro'] = "";
 $text['button-flush_cache']['ru-ru'] = "Сбросить кеш память";
 $text['button-flush_cache']['sv-se'] = "Flush Cache ";
 $text['button-flush_cache']['uk-ua'] = "Скинути кеш";
+$text['button-flush_cache']['zh-cn'] = "液晶体";
+$text['button-flush_cache']['ja-jp'] = "フラッシュキャッシュ";
+$text['button-flush_cache']['ko-kr'] = "플러시 캐시";
 
 ?>

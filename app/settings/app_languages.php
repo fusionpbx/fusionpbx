@@ -20,6 +20,9 @@ $text['title-settings_update']['ro-ro'] = "";
 $text['title-settings_update']['ru-ru'] = "Обновление Параметров";
 $text['title-settings_update']['sv-se'] = "Ändra Inställningar";
 $text['title-settings_update']['uk-ua'] = "Оновлення налаштувань";
+$text['title-settings_update']['zh-cn'] = "A. 安排情况";
+$text['title-settings_update']['ja-jp'] = "アップデートの設定";
+$text['title-settings_update']['ko-kr'] = "설정 업데이트";
 
 $text['title-settings_add']['en-us'] = "Setting Add";
 $text['title-settings_add']['en-gb'] = "Setting Add";
@@ -41,6 +44,9 @@ $text['title-settings_add']['ro-ro'] = "";
 $text['title-settings_add']['ru-ru'] = "Параметры добавлены";
 $text['title-settings_add']['sv-se'] = "Lägg Till Inställning";
 $text['title-settings_add']['uk-ua'] = "Додавання налаштувань";
+$text['title-settings_add']['zh-cn'] = "增 编";
+$text['title-settings_add']['ja-jp'] = "設定の追加";
+$text['title-settings_add']['ko-kr'] = "설정 추가";
 
 $text['label-xml_rpc_auth_user']['en-us'] = "XML RPC Auth User";
 $text['label-xml_rpc_auth_user']['en-gb'] = "XML RPC Auth User";
@@ -62,6 +68,9 @@ $text['label-xml_rpc_auth_user']['ro-ro'] = "";
 $text['label-xml_rpc_auth_user']['ru-ru'] = "Использовать XML RPC для подлинности Пользователя";
 $text['label-xml_rpc_auth_user']['sv-se'] = "XML RPC Auth User";
 $text['label-xml_rpc_auth_user']['uk-ua'] = "XML RPC Auth User ";
+$text['label-xml_rpc_auth_user']['zh-cn'] = "XML RPC Authuser";
+$text['label-xml_rpc_auth_user']['ja-jp'] = "XML RPC Auth ユーザー";
+$text['label-xml_rpc_auth_user']['ko-kr'] = "XML RPC Auth 사용자";
 
 $text['label-xml_rpc_auth_realm']['en-us'] = "XML RPC Auth Realm";
 $text['label-xml_rpc_auth_realm']['en-gb'] = "XML RPC Auth Realm";
@@ -83,6 +92,9 @@ $text['label-xml_rpc_auth_realm']['ro-ro'] = "";
 $text['label-xml_rpc_auth_realm']['ru-ru'] = "Область проверки подлинности XML RPC";
 $text['label-xml_rpc_auth_realm']['sv-se'] = "XML RPC Auth Realm";
 $text['label-xml_rpc_auth_realm']['uk-ua'] = "XML RPC Auth Realm ";
+$text['label-xml_rpc_auth_realm']['zh-cn'] = "xml rpc auth realm";
+$text['label-xml_rpc_auth_realm']['ja-jp'] = "XML RPC Auth リファレンス";
+$text['label-xml_rpc_auth_realm']['ko-kr'] = "XML RPC Auth 영역";
 
 $text['label-xml_rpc_auth_pass']['en-us'] = "XML RPC Auth Password";
 $text['label-xml_rpc_auth_pass']['en-gb'] = "XML RPC Auth Password";
@@ -104,6 +116,9 @@ $text['label-xml_rpc_auth_pass']['ro-ro'] = "";
 $text['label-xml_rpc_auth_pass']['ru-ru'] = "XML RPC Пароль проверки подлинности";
 $text['label-xml_rpc_auth_pass']['sv-se'] = "XML RPC Auth Password";
 $text['label-xml_rpc_auth_pass']['uk-ua'] = "XML RPC Auth Password ";
+$text['label-xml_rpc_auth_pass']['zh-cn'] = "页: 1";
+$text['label-xml_rpc_auth_pass']['ja-jp'] = "XML RPC Auth パスワード";
+$text['label-xml_rpc_auth_pass']['ko-kr'] = "XML RPC Auth 암호";
 
 $text['label-xml_rpc_http_port']['en-us'] = "XML RPC HTTP Port";
 $text['label-xml_rpc_http_port']['en-gb'] = "XML RPC HTTP Port";
@@ -125,6 +140,9 @@ $text['label-xml_rpc_http_port']['ro-ro'] = "";
 $text['label-xml_rpc_http_port']['ru-ru'] = "XML RPC HTTP Порт";
 $text['label-xml_rpc_http_port']['sv-se'] = "XML RPC HTTP Port";
 $text['label-xml_rpc_http_port']['uk-ua'] = "XML RPC HTTP Port ";
+$text['label-xml_rpc_http_port']['zh-cn'] = "xml rpc 港口";
+$text['label-xml_rpc_http_port']['ja-jp'] = "XML RPC HTTPポート";
+$text['label-xml_rpc_http_port']['ko-kr'] = "XML RPC HTTP 포트";
 
 $text['label-mod_shout_volume']['en-us'] = "Mod Shout Volume";
 $text['label-mod_shout_volume']['en-gb'] = "Mod Shout Volume";
@@ -146,6 +164,9 @@ $text['label-mod_shout_volume']['ro-ro'] = "";
 $text['label-mod_shout_volume']['ru-ru'] = "Mod Shout Volume";
 $text['label-mod_shout_volume']['sv-se'] = "Mod Shout Volume";
 $text['label-mod_shout_volume']['uk-ua'] = "Mod Shout Volume ";
+$text['label-mod_shout_volume']['zh-cn'] = "2. 粗d";
+$text['label-mod_shout_volume']['ja-jp'] = "Mod のシュートの容積";
+$text['label-mod_shout_volume']['ko-kr'] = "Mod Shout 볼륨";
 
 $text['label-mod_shout_decoder']['en-us'] = "Mod Shout Decoder";
 $text['label-mod_shout_decoder']['en-gb'] = "Mod Shout Decoder";
@@ -167,6 +188,9 @@ $text['label-mod_shout_decoder']['ro-ro'] = "";
 $text['label-mod_shout_decoder']['ru-ru'] = "Mod Shout Decoder";
 $text['label-mod_shout_decoder']['sv-se'] = "Mod Shout Decoder";
 $text['label-mod_shout_decoder']['uk-ua'] = "Mod Shout Decoder ";
+$text['label-mod_shout_decoder']['zh-cn'] = "mo hout";
+$text['label-mod_shout_decoder']['ja-jp'] = "Mod のシュートのデコーダー";
+$text['label-mod_shout_decoder']['ko-kr'] = "모델 번호";
 
 $text['label-event_socket_password']['en-us'] = "Event Socket Password";
 $text['label-event_socket_password']['en-gb'] = "Event Socket Password";
@@ -188,6 +212,9 @@ $text['label-event_socket_password']['ro-ro'] = "";
 $text['label-event_socket_password']['ru-ru'] = "Пароль сокета событий";
 $text['label-event_socket_password']['sv-se'] = "Event Socket Password";
 $text['label-event_socket_password']['uk-ua'] = "Event Socket Password ";
+$text['label-event_socket_password']['zh-cn'] = "页: 1";
+$text['label-event_socket_password']['ja-jp'] = "でき事のソケットのパスワード";
+$text['label-event_socket_password']['ko-kr'] = "이벤트 소켓 비밀번호";
 
 $text['label-event_socket_port']['en-us'] = "Event Socket Port";
 $text['label-event_socket_port']['en-gb'] = "Event Socket Port";
@@ -209,6 +236,9 @@ $text['label-event_socket_port']['ro-ro'] = "";
 $text['label-event_socket_port']['ru-ru'] = "Порт сокета событий";
 $text['label-event_socket_port']['sv-se'] = "Event Socket Port ";
 $text['label-event_socket_port']['uk-ua'] = "Event Socket Port ";
+$text['label-event_socket_port']['zh-cn'] = "活动:港口";
+$text['label-event_socket_port']['ja-jp'] = "でき事のソケットの港";
+$text['label-event_socket_port']['ko-kr'] = "이벤트 소켓 포트";
 
 $text['label-event_socket_ip']['en-us'] = "Event Socket IP Address";
 $text['label-event_socket_ip']['en-gb'] = "Event Socket IP Address";
@@ -230,6 +260,9 @@ $text['label-event_socket_ip']['ro-ro'] = "";
 $text['label-event_socket_ip']['ru-ru'] = "IP Address сокета событий";
 $text['label-event_socket_ip']['sv-se'] = "Event Socket IP Address";
 $text['label-event_socket_ip']['uk-ua'] = "Event Socket IP Address";
+$text['label-event_socket_ip']['zh-cn'] = "内容提要";
+$text['label-event_socket_ip']['ja-jp'] = "イベントソケットIPアドレス";
+$text['label-event_socket_ip']['ko-kr'] = "이벤트 소켓 IP 주소";
 
 $text['label-event_socket_acl']['en-us'] = "Event Socket ACL";
 $text['label-event_socket_acl']['en-gb'] = "Event Socket ACL";
@@ -251,6 +284,9 @@ $text['label-event_socket_acl']['ro-ro'] = "";
 $text['label-event_socket_acl']['ru-ru'] = "ACL сокета событий";
 $text['label-event_socket_acl']['sv-se'] = "Event Socket ACL";
 $text['label-event_socket_acl']['uk-ua'] = "Event Socket ACL";
+$text['label-event_socket_acl']['zh-cn'] = "A. 结 论";
+$text['label-event_socket_acl']['ja-jp'] = "イベントソケット ACL";
+$text['label-event_socket_acl']['ko-kr'] = "이벤트 소켓 ACL";
 
 $text['description-xml_rpc_auth_user']['en-us'] = "Enter the XML RPC Auth User. default: xmlrpc";
 $text['description-xml_rpc_auth_user']['en-gb'] = "Enter the XML RPC Auth User. default: xmlrpc";
@@ -272,6 +308,9 @@ $text['description-xml_rpc_auth_user']['ro-ro'] = "";
 $text['description-xml_rpc_auth_user']['ru-ru'] = "Введите XML RPC для авторизации пользователя. По умолчанию: xmlrpc";
 $text['description-xml_rpc_auth_user']['sv-se'] = "Fyll i XML RPC Auth User. default: xmlrpc";
 $text['description-xml_rpc_auth_user']['uk-ua'] = "Enter the XML RPC Auth User. default: xmlrpc ";
+$text['description-xml_rpc_auth_user']['zh-cn'] = "加入XML RPC Auth用户。 违约:xmlrpc";
+$text['description-xml_rpc_auth_user']['ja-jp'] = "XML RPC Auth ユーザーを入力してください。 デフォルト: xmlrpc";
+$text['description-xml_rpc_auth_user']['ko-kr'] = "XML RPC Auth 사용자를 입력하십시오. 기본: xmlrpc";
 
 $text['description-xml_rpc_auth_realm']['en-us'] = "Enter the XML RPC Auth Realm. default: freeswitch";
 $text['description-xml_rpc_auth_realm']['en-gb'] = "Enter the XML RPC Auth Realm. default: freeswitch";
@@ -293,6 +332,9 @@ $text['description-xml_rpc_auth_realm']['ro-ro'] = "";
 $text['description-xml_rpc_auth_realm']['ru-ru'] = "Введите XML RPC области аутентификации. По умолчанию: freeswitch";
 $text['description-xml_rpc_auth_realm']['sv-se'] = "Fyll i XML RPC Auth Realm. default: freeswitch ";
 $text['description-xml_rpc_auth_realm']['uk-ua'] = "Enter the XML RPC Auth Realm. default: freeswitch ";
+$text['description-xml_rpc_auth_realm']['zh-cn'] = "进入XML RPC Auth Realm。 违约:无礼";
+$text['description-xml_rpc_auth_realm']['ja-jp'] = "XML RPC Auth Realm を入力してください。 デフォルト: freeswitch";
+$text['description-xml_rpc_auth_realm']['ko-kr'] = "XML RPC Auth Realm을 입력합니다. 기본값: freeswitch";
 
 $text['description-xml_rpc_auth_pass']['en-us'] = "Enter the XML RPC Auth Password.";
 $text['description-xml_rpc_auth_pass']['en-gb'] = "Enter the XML RPC Auth Password.";
@@ -314,6 +356,9 @@ $text['description-xml_rpc_auth_pass']['ro-ro'] = "";
 $text['description-xml_rpc_auth_pass']['ru-ru'] = "Введите XML RPC Пароль для авторизации.";
 $text['description-xml_rpc_auth_pass']['sv-se'] = "Fyll i XML RPC Auth Password.";
 $text['description-xml_rpc_auth_pass']['uk-ua'] = "Enter the XML RPC Auth Password. ";
+$text['description-xml_rpc_auth_pass']['zh-cn'] = "加入XML RPC Auth Password。";
+$text['description-xml_rpc_auth_pass']['ja-jp'] = "XML RPC Auth パスワードを入力してください。";
+$text['description-xml_rpc_auth_pass']['ko-kr'] = "XML RPC Auth 암호를 입력하십시오.";
 
 $text['description-xml_rpc_http_port']['en-us'] = "Enter the XML RPC HTTP Port. default: 8080";
 $text['description-xml_rpc_http_port']['en-gb'] = "Enter the XML RPC HTTP Port. default: 8080";
@@ -335,6 +380,9 @@ $text['description-xml_rpc_http_port']['ro-ro'] = "";
 $text['description-xml_rpc_http_port']['ru-ru'] = "Введите XML RPC HTTP Порт. По умолчанию: 8080";
 $text['description-xml_rpc_http_port']['sv-se'] = "Fyll i XML RPC HTTP Port. default: 8080";
 $text['description-xml_rpc_http_port']['uk-ua'] = "Enter the XML RPC HTTP Port. default: 8080 ";
+$text['description-xml_rpc_http_port']['zh-cn'] = "进入XML RPC HTTP港: 8080";
+$text['description-xml_rpc_http_port']['ja-jp'] = "XML RPC HTTP ポートを入力します。デフォルト: 8080";
+$text['description-xml_rpc_http_port']['ko-kr'] = "XML RPC HTTP 포트를 입력하십시오. 기본값: 8080";
 
 $text['description-mod_shout_volume']['en-us'] = "Enter Mod Shout Volume.";
 $text['description-mod_shout_volume']['en-gb'] = "Enter Mod Shout Volume.";
@@ -356,6 +404,9 @@ $text['description-mod_shout_volume']['ro-ro'] = "";
 $text['description-mod_shout_volume']['ru-ru'] = "Введите Mod Shout Volume.";
 $text['description-mod_shout_volume']['sv-se'] = "Fyll i Mod Shout Volume.";
 $text['description-mod_shout_volume']['uk-ua'] = "Enter Mod Shout Volume. ";
+$text['description-mod_shout_volume']['zh-cn'] = "进入Mod Shout卷。";
+$text['description-mod_shout_volume']['ja-jp'] = "Mod Shout ボリュームを入力します。";
+$text['description-mod_shout_volume']['ko-kr'] = "Mod Shout 볼륨을 입력하십시오.";
 
 $text['description-mod_shout_decoder']['en-us'] = "Enter the Decoder. default: i386";
 $text['description-mod_shout_decoder']['en-gb'] = "Enter the Decoder. default: i386";
@@ -377,6 +428,9 @@ $text['description-mod_shout_decoder']['ro-ro'] = "";
 $text['description-mod_shout_decoder']['ru-ru'] = "Введите Decoder. По умолчанию: i386";
 $text['description-mod_shout_decoder']['sv-se'] = "Fyll i Decoder. default: i386";
 $text['description-mod_shout_decoder']['uk-ua'] = "Enter the Decoder. default: i386 ";
+$text['description-mod_shout_decoder']['zh-cn'] = "进入Decoder。 违约: i386";
+$text['description-mod_shout_decoder']['ja-jp'] = "デコーダを入力してください。 デフォルト: i386";
+$text['description-mod_shout_decoder']['ko-kr'] = "Decoder를 입력합니다. 기본값: i386";
 
 $text['description-event_socket_password']['en-us'] = "Enter the event socket password.";
 $text['description-event_socket_password']['en-gb'] = "Enter the event socket password.";
@@ -398,6 +452,9 @@ $text['description-event_socket_password']['ro-ro'] = "";
 $text['description-event_socket_password']['ru-ru'] = "Введите пароль сокета событий.";
 $text['description-event_socket_password']['sv-se'] = "Fyll i event socket password.";
 $text['description-event_socket_password']['uk-ua'] = "Enter the event socket password. ";
+$text['description-event_socket_password']['zh-cn'] = "进入活动序号。";
+$text['description-event_socket_password']['ja-jp'] = "イベントソケットパスワードを入力してください。";
+$text['description-event_socket_password']['ko-kr'] = "이벤트 소켓 암호를 입력하십시오.";
 
 $text['description-event_socket_port']['en-us'] = "Enter the event socket port. default: 8021";
 $text['description-event_socket_port']['en-gb'] = "Enter the event socket port. default: 8021";
@@ -419,6 +476,9 @@ $text['description-event_socket_port']['ro-ro'] = "";
 $text['description-event_socket_port']['ru-ru'] = "Введите порт сокета событий. По умолчанию: 8021";
 $text['description-event_socket_port']['sv-se'] = "Fyll i event socket port. default: 8021";
 $text['description-event_socket_port']['uk-ua'] = "Enter the event socket port. default: 8021 ";
+$text['description-event_socket_port']['zh-cn'] = "进入活动停泊港。 违约:8021";
+$text['description-event_socket_port']['ja-jp'] = "イベントソケットポートを入力してください。 デフォルト: 8021";
+$text['description-event_socket_port']['ko-kr'] = "이벤트 소켓 포트를 입력하십시오. 기본값: 8021";
 
 $text['description-event_socket_ip']['en-us'] = "Enter the event socket IP address. default: 127.0.0.1";
 $text['description-event_socket_ip']['en-gb'] = "Enter the event socket IP address. default: 127.0.0.1";
@@ -440,5 +500,8 @@ $text['description-event_socket_ip']['ro-ro'] = "";
 $text['description-event_socket_ip']['ru-ru'] = "Введите IP адрес сокета событий. по умолчанию: 127.0.0.1";
 $text['description-event_socket_ip']['sv-se'] = "Fyll i event socket IP address. default: 127.0.0.1";
 $text['description-event_socket_ip']['uk-ua'] = "Enter the event socket IP address. default: 127.0.0.1 ";
+$text['description-event_socket_ip']['zh-cn'] = "进入活动电话IP地址。 违约:127.0.0.1";
+$text['description-event_socket_ip']['ja-jp'] = "イベントソケットIPアドレスを入力してください。 デフォルト: 127.0.0.1";
+$text['description-event_socket_ip']['ko-kr'] = "이벤트 소켓 IP 주소를 입력하십시오. 기본값: 127.0.0.1";
 
 ?>

@@ -20,6 +20,9 @@ $text['title-upgrade_schema']['ro-ro'] = "";
 $text['title-upgrade_schema']['ru-ru'] = "Обновление структуры БД";
 $text['title-upgrade_schema']['sv-se'] = "Uppgraderingsschema";
 $text['title-upgrade_schema']['uk-ua'] = "Схема оновлення";
+$text['title-upgrade_schema']['zh-cn'] = "升级";
+$text['title-upgrade_schema']['ja-jp'] = "アップグレードスキーマ";
+$text['title-upgrade_schema']['ko-kr'] = "업그레이드 Schema";
 
 $text['title-upgrade']['en-us'] = "Upgrade";
 $text['title-upgrade']['en-gb'] = "Upgrade";
@@ -41,6 +44,9 @@ $text['title-upgrade']['ro-ro'] = "";
 $text['title-upgrade']['ru-ru'] = "Обновление";
 $text['title-upgrade']['sv-se'] = "Uppgradera";
 $text['title-upgrade']['uk-ua'] = "Оновлення";
+$text['title-upgrade']['zh-cn'] = "升级";
+$text['title-upgrade']['ja-jp'] = "アップグレード";
+$text['title-upgrade']['ko-kr'] = "지원하다";
 
 $text['option-true']['en-us'] = "True";
 $text['option-true']['en-gb'] = "True";
@@ -62,6 +68,9 @@ $text['option-true']['ro-ro'] = "";
 $text['option-true']['ru-ru'] = "Да";
 $text['option-true']['sv-se'] = "Sann";
 $text['option-true']['uk-ua'] = "Так";
+$text['option-true']['zh-cn'] = "真";
+$text['option-true']['ja-jp'] = "ログイン";
+$text['option-true']['ko-kr'] = "이란";
 
 $text['option-false']['en-us'] = "False";
 $text['option-false']['en-gb'] = "False";
@@ -83,6 +92,9 @@ $text['option-false']['ro-ro'] = "";
 $text['option-false']['ru-ru'] = "Нет";
 $text['option-false']['sv-se'] = "Falsk";
 $text['option-false']['uk-ua'] = "Ні";
+$text['option-false']['zh-cn'] = "抢劫";
+$text['option-false']['ja-jp'] = "ファルス";
+$text['option-false']['ko-kr'] = "팟캐스트";
 
 $text['message-upgrade_permissions']['en-us'] = "Permission Defaults Restored";
 $text['message-upgrade_permissions']['en-gb'] = "Permission Defaults Restored";
@@ -104,6 +116,9 @@ $text['message-upgrade_permissions']['ro-ro'] = "";
 $text['message-upgrade_permissions']['ru-ru'] = "По умолчанию";
 $text['message-upgrade_permissions']['sv-se'] = "Tillståndsstandarder återställda";
 $text['message-upgrade_permissions']['uk-ua'] = "Передача за замовчуванням";
+$text['message-upgrade_permissions']['zh-cn'] = "回收利用";
+$text['message-upgrade_permissions']['ja-jp'] = "パーミッション デフォルト 復元";
+$text['message-upgrade_permissions']['ko-kr'] = "Permission 기본 복원";
 
 $text['message-upgrade_source_scripts']['en-us'] = "Source Files and Scripts Updated";
 $text['message-upgrade_source_scripts']['en-gb'] = "Source Files and Scripts Updated";
@@ -125,6 +140,9 @@ $text['message-upgrade_source_scripts']['ro-ro'] = "";
 $text['message-upgrade_source_scripts']['ru-ru'] = "Исходные файлы и скрипты обновлены";
 $text['message-upgrade_source_scripts']['sv-se'] = "Källfiler Uppdaterade";
 $text['message-upgrade_source_scripts']['uk-ua'] = "Вихідні файли і сценарії оновлено";
+$text['message-upgrade_source_scripts']['zh-cn'] = "资料来源:档案和最新版本。";
+$text['message-upgrade_source_scripts']['ja-jp'] = "ソースファイルとスクリプトの更新";
+$text['message-upgrade_source_scripts']['ko-kr'] = "소스 파일 및 스크립트 업데이트";
 
 $text['message-upgrade_source_failed']['en-us'] = "Source Files Update Failed";
 $text['message-upgrade_source_failed']['en-gb'] = "Source Files Update Failed";
@@ -146,6 +164,9 @@ $text['message-upgrade_source_failed']['ro-ro'] = "";
 $text['message-upgrade_source_failed']['ru-ru'] = "Обновление исходных файлов не удалось";
 $text['message-upgrade_source_failed']['sv-se'] = "Källfiler Uppdatering misslyckades";
 $text['message-upgrade_source_failed']['uk-ua'] = "Помилка оновлення вихідних файлів";
+$text['message-upgrade_source_failed']['zh-cn'] = "资料来源:Failed。";
+$text['message-upgrade_source_failed']['ja-jp'] = "ソースファイル更新失敗";
+$text['message-upgrade_source_failed']['ko-kr'] = "Source Files 업데이트 실패";
 
 $text['message-upgrade_source']['en-us'] = "Source Files Updated";
 $text['message-upgrade_source']['en-gb'] = "Source Files Updated";
@@ -167,6 +188,9 @@ $text['message-upgrade_source']['ro-ro'] = "";
 $text['message-upgrade_source']['ru-ru'] = "Исходные файлы обновлены";
 $text['message-upgrade_source']['sv-se'] = "Källfiler Uppdaterade";
 $text['message-upgrade_source']['uk-ua'] = "Вихідні файли оновлено";
+$text['message-upgrade_source']['zh-cn'] = "资料来源:更新。";
+$text['message-upgrade_source']['ja-jp'] = "ソースファイル更新";
+$text['message-upgrade_source']['ko-kr'] = "Source Files 업데이트";
 
 $text['message-upgrade_schema']['en-us'] = "Schema Verified";
 $text['message-upgrade_schema']['en-gb'] = "Schema Verified";
@@ -188,6 +212,9 @@ $text['message-upgrade_schema']['ro-ro'] = "";
 $text['message-upgrade_schema']['ru-ru'] = "Структура БД проверена";
 $text['message-upgrade_schema']['sv-se'] = "Schema Verifierat";
 $text['message-upgrade_schema']['uk-ua'] = "Схеми перевірено";
+$text['message-upgrade_schema']['zh-cn'] = "Schema Verification";
+$text['message-upgrade_schema']['ja-jp'] = "シェマ 検証済み";
+$text['message-upgrade_schema']['ko-kr'] = "Schema 인증";
 
 $text['message-upgrade_menu']['en-us'] = "Menu Defaults Restored";
 $text['message-upgrade_menu']['en-gb'] = "Menu Defaults Restored";
@@ -209,6 +236,9 @@ $text['message-upgrade_menu']['ro-ro'] = "";
 $text['message-upgrade_menu']['ru-ru'] = "Меню по умолчанию восстановлено";
 $text['message-upgrade_menu']['sv-se'] = "Standard Meny Återställd";
 $text['message-upgrade_menu']['uk-ua'] = "Відновлено типові елементи меню";
+$text['message-upgrade_menu']['zh-cn'] = "Menu Default 恢复";
+$text['message-upgrade_menu']['ja-jp'] = "メニュー デフォルト 復元";
+$text['message-upgrade_menu']['ko-kr'] = "메뉴 기본 복원";
 
 $text['message-upgrade_apps']['en-us'] = "App Defaults Executed";
 $text['message-upgrade_apps']['en-gb'] = "App Defaults Executed";
@@ -230,6 +260,9 @@ $text['message-upgrade_apps']['ro-ro'] = "";
 $text['message-upgrade_apps']['ru-ru'] = "Выполнение настроек по умолчанию выполнено";
 $text['message-upgrade_apps']['sv-se'] = "App Standardinställningar Utförd";
 $text['message-upgrade_apps']['uk-ua'] = "Встановлено типові налаштування додатків";
+$text['message-upgrade_apps']['zh-cn'] = "驳回";
+$text['message-upgrade_apps']['ja-jp'] = "App デフォルト実行";
+$text['message-upgrade_apps']['ko-kr'] = "앱 기본 실행";
 
 $text['message-upgrade']['en-us'] = "Upgrade Completed";
 $text['message-upgrade']['en-gb'] = "Upgrade Completed";
@@ -251,6 +284,9 @@ $text['message-upgrade']['ro-ro'] = "";
 $text['message-upgrade']['ru-ru'] = "Обновление завершено";
 $text['message-upgrade']['sv-se'] = "Uppgradering Klar";
 $text['message-upgrade']['uk-ua'] = "Оновлено";
+$text['message-upgrade']['zh-cn'] = "升级";
+$text['message-upgrade']['ja-jp'] = "アップグレード完了";
+$text['message-upgrade']['ko-kr'] = "업그레이드 완료";
 
 $text['login-message_text']['en-us'] = "Keep up with the FusionPBX project by configuring your preferences in the newly added <a href=''/core/notifications/notification_edit.php''>Notifications</a> section, under the System menu!";
 $text['login-message_text']['en-gb'] = "Keep up with the FusionPBX project by configuring your preferences in the newly added <a href=''/core/notifications/notification_edit.php''>Notifications</a> section, under the System menu!";
@@ -272,6 +308,9 @@ $text['login-message_text']['ro-ro'] = "";
 $text['login-message_text']['ru-ru'] = "Следите за проектом FusionPBX, настроив свои настройки в недавно добавленном разделе <a href=''/core/notifications/notification_edit.php''>Уведомления</a> в меню 'Система'!";
 $text['login-message_text']['sv-se'] = "Håll dig uppdaterad med de FusionPBX projektet genom att konfigurera dina inställningar i nytillkomna Notifications avsnitt , under Systemmenyn !";
 $text['login-message_text']['uk-ua'] = "Keep up with the FusionPBX project by configuring your preferences in the newly added Notifications section, under the System menu! ";
+$text['login-message_text']['zh-cn'] = "在新增加的<a href='/core/notifications/notification_edit.php'一节中,根据系统菜单,对您的偏好进行组合PBX项目。";
+$text['login-message_text']['ja-jp'] = '新しく追加された <a href=""/core/notifications/notifications_edit.php">Notifications</a> セクションで設定することで FusionPBX プロジェクトを続けてください。';
+$text['login-message_text']['ko-kr'] = "새로 추가된 <a href='/core/notifications/notification_edit.php'>Notifications</a> 섹션을 구성하여 FusionPBX 프로젝트로 유지하십시오!";
 
 $text['label-upgrade_source']['en-us'] = "Source Code";
 $text['label-upgrade_source']['en-gb'] = "Source Code";
@@ -293,6 +332,9 @@ $text['label-upgrade_source']['ro-ro'] = "";
 $text['label-upgrade_source']['ru-ru'] = "Исходный код";
 $text['label-upgrade_source']['sv-se'] = "Källkod";
 $text['label-upgrade_source']['uk-ua'] = "Вихідний код";
+$text['label-upgrade_source']['zh-cn'] = "资料来源:《刑法》。";
+$text['label-upgrade_source']['ja-jp'] = "ソースコード";
+$text['label-upgrade_source']['ko-kr'] = "소스 코드";
 
 $text['label-upgrade_schema']['en-us'] = "Schema";
 $text['label-upgrade_schema']['en-gb'] = "Schema";
@@ -314,6 +356,9 @@ $text['label-upgrade_schema']['ro-ro'] = "";
 $text['label-upgrade_schema']['ru-ru'] = "Структура БД";
 $text['label-upgrade_schema']['sv-se'] = "Schema";
 $text['label-upgrade_schema']['uk-ua'] = "Схеми";
+$text['label-upgrade_schema']['zh-cn'] = "图表";
+$text['label-upgrade_schema']['ja-jp'] = "スキーマ";
+$text['label-upgrade_schema']['ko-kr'] = "사이트맵";
 
 $text['label-upgrade_permissions']['en-us'] = "Permission Defaults";
 $text['label-upgrade_permissions']['en-gb'] = "Permission Defaults";
@@ -335,6 +380,9 @@ $text['label-upgrade_permissions']['ro-ro'] = "";
 $text['label-upgrade_permissions']['ru-ru'] = "Права по умолчанию";
 $text['label-upgrade_permissions']['sv-se'] = "Standard Rättigheter";
 $text['label-upgrade_permissions']['uk-ua'] = "Типові привілеї";
+$text['label-upgrade_permissions']['zh-cn'] = "排放缺陷";
+$text['label-upgrade_permissions']['ja-jp'] = "パーミッションデフォルト";
+$text['label-upgrade_permissions']['ko-kr'] = "Permission 기본";
 
 $text['label-upgrade_menu']['en-us'] = "Menu Defaults";
 $text['label-upgrade_menu']['en-gb'] = "Menu Defaults";
@@ -356,6 +404,9 @@ $text['label-upgrade_menu']['ro-ro'] = "";
 $text['label-upgrade_menu']['ru-ru'] = "Элементы меню по умолчанию";
 $text['label-upgrade_menu']['sv-se'] = "Standard Menyer";
 $text['label-upgrade_menu']['uk-ua'] = "Типові елементи меню";
+$text['label-upgrade_menu']['zh-cn'] = "Menu Default";
+$text['label-upgrade_menu']['ja-jp'] = "メニュー デフォルト";
+$text['label-upgrade_menu']['ko-kr'] = "메뉴 기본값";
 
 $text['label-upgrade_data_types']['en-us'] = "Data Types";
 $text['label-upgrade_data_types']['en-gb'] = "Data Types";
@@ -377,6 +428,9 @@ $text['label-upgrade_data_types']['ro-ro'] = "";
 $text['label-upgrade_data_types']['ru-ru'] = "Типы данных";
 $text['label-upgrade_data_types']['sv-se'] = "Datatyper";
 $text['label-upgrade_data_types']['uk-ua'] = "Типи даних";
+$text['label-upgrade_data_types']['zh-cn'] = "数据类型";
+$text['label-upgrade_data_types']['ja-jp'] = "データの種類";
+$text['label-upgrade_data_types']['ko-kr'] = "데이터 유형";
 
 $text['label-upgrade_apps']['en-us'] = "App Defaults";
 $text['label-upgrade_apps']['en-gb'] = "App Defaults";
@@ -398,6 +452,9 @@ $text['label-upgrade_apps']['ro-ro'] = "";
 $text['label-upgrade_apps']['ru-ru'] = "Настройки по умолчанию";
 $text['label-upgrade_apps']['sv-se'] = "App Standard";
 $text['label-upgrade_apps']['uk-ua'] = "Типові значення додатків";
+$text['label-upgrade_apps']['zh-cn'] = "违约";
+$text['label-upgrade_apps']['ja-jp'] = "アプリのデフォルト";
+$text['label-upgrade_apps']['ko-kr'] = "앱 기본값";
 
 $text['label-upgrade_switch']['en-us'] = "Switch Upgrade";
 $text['label-upgrade_switch']['en-gb'] = "Switch Upgrade";
@@ -419,6 +476,9 @@ $text['label-upgrade_switch']['ro-ro'] = "";
 $text['label-upgrade_switch']['ru-ru'] = "Обновление коммутатора";
 $text['label-upgrade_switch']['sv-se'] = "Uppgradera Switch";
 $text['label-upgrade_switch']['uk-ua'] = "Перемикач оновлення";
+$text['label-upgrade_switch']['zh-cn'] = "更换";
+$text['label-upgrade_switch']['ja-jp'] = "スイッチアップグレード";
+$text['label-upgrade_switch']['ko-kr'] = "스위치 업그레이드";
 
 $text['label-upgrade']['en-us'] = "Upgrade";
 $text['label-upgrade']['en-gb'] = "Upgrade";
@@ -440,6 +500,9 @@ $text['label-upgrade']['ro-ro'] = "";
 $text['label-upgrade']['ru-ru'] = "Обновление";
 $text['label-upgrade']['sv-se'] = "Uppgradera";
 $text['label-upgrade']['uk-ua'] = "Оновлення";
+$text['label-upgrade']['zh-cn'] = "升级";
+$text['label-upgrade']['ja-jp'] = "アップグレード";
+$text['label-upgrade']['ko-kr'] = "지원하다";
 
 $text['label-type']['en-us'] = "Type";
 $text['label-type']['en-gb'] = "Type";
@@ -461,6 +524,9 @@ $text['label-type']['ro-ro'] = "";
 $text['label-type']['ru-ru'] = "Тип";
 $text['label-type']['sv-se'] = "Typ";
 $text['label-type']['uk-ua'] = "Тип";
+$text['label-type']['zh-cn'] = "类型";
+$text['label-type']['ja-jp'] = "タイプ:";
+$text['label-type']['ko-kr'] = "제품정보";
 
 $text['label-table']['en-us'] = "Table";
 $text['label-table']['en-gb'] = "Table";
@@ -482,6 +548,9 @@ $text['label-table']['ro-ro'] = "";
 $text['label-table']['ru-ru'] = "Таблица";
 $text['label-table']['sv-se'] = "Tabell";
 $text['label-table']['uk-ua'] = "Таблиця";
+$text['label-table']['zh-cn'] = "表1";
+$text['label-table']['ja-jp'] = "テーブル";
+$text['label-table']['ko-kr'] = "제품정보";
 
 $text['label-sql_changes']['en-us'] = "SQL Changes";
 $text['label-sql_changes']['en-gb'] = "SQL Changes";
@@ -503,6 +572,9 @@ $text['label-sql_changes']['ro-ro'] = "";
 $text['label-sql_changes']['ru-ru'] = "Изменения SQL";
 $text['label-sql_changes']['sv-se'] = "SQL Ändringar";
 $text['label-sql_changes']['uk-ua'] = "Зміни SQL";
+$text['label-sql_changes']['zh-cn'] = "结构变化";
+$text['label-sql_changes']['ja-jp'] = "SQL変更";
+$text['label-sql_changes']['ko-kr'] = "SQL 변경";
 
 $text['label-schema']['en-us'] = "Schema";
 $text['label-schema']['en-gb'] = "Schema";
@@ -524,6 +596,9 @@ $text['label-schema']['ro-ro'] = "";
 $text['label-schema']['ru-ru'] = "Структура БД";
 $text['label-schema']['sv-se'] = "Schema";
 $text['label-schema']['uk-ua'] = "Схеми";
+$text['label-schema']['zh-cn'] = "图表";
+$text['label-schema']['ja-jp'] = "スキーマ";
+$text['label-schema']['ko-kr'] = "사이트맵";
 
 $text['label-no_change']['en-us'] = "No Change";
 $text['label-no_change']['en-gb'] = "No Change";
@@ -545,6 +620,9 @@ $text['label-no_change']['ro-ro'] = "";
 $text['label-no_change']['ru-ru'] = "Без изменений";
 $text['label-no_change']['sv-se'] = "Ingen Ändring";
 $text['label-no_change']['uk-ua'] = "Без змін";
+$text['label-no_change']['zh-cn'] = "无";
+$text['label-no_change']['ja-jp'] = "変更なし";
+$text['label-no_change']['ko-kr'] = "없음 변경";
 
 $text['label-name']['en-us'] = "Name";
 $text['label-name']['en-gb'] = "Name";
@@ -566,6 +644,9 @@ $text['label-name']['ro-ro'] = "";
 $text['label-name']['ru-ru'] = "Имя";
 $text['label-name']['sv-se'] = "Namn";
 $text['label-name']['uk-ua'] = "Назва";
+$text['label-name']['zh-cn'] = "姓名";
+$text['label-name']['ja-jp'] = "お名前 (必須)";
+$text['label-name']['ko-kr'] = "이름 *";
 
 $text['label-exists']['en-us'] = "Exists";
 $text['label-exists']['en-gb'] = "Exists";
@@ -587,6 +668,9 @@ $text['label-exists']['ro-ro'] = "";
 $text['label-exists']['ru-ru'] = "Существует";
 $text['label-exists']['sv-se'] = "Existerar";
 $text['label-exists']['uk-ua'] = "Існує";
+$text['label-exists']['zh-cn'] = "外部专家";
+$text['label-exists']['ja-jp'] = "プレゼンツ";
+$text['label-exists']['ko-kr'] = "인기 있는";
 
 $text['label-details']['en-us'] = "Details";
 $text['label-details']['en-gb'] = "Details";
@@ -608,6 +692,9 @@ $text['label-details']['ro-ro'] = "";
 $text['label-details']['ru-ru'] = "Детали";
 $text['label-details']['sv-se'] = "Detaljer";
 $text['label-details']['uk-ua'] = "Деталі";
+$text['label-details']['zh-cn'] = "详细情况";
+$text['label-details']['ja-jp'] = "インフォメーション";
+$text['label-details']['ko-kr'] = "제품 정보";
 
 $text['label-database']['en-us'] = "Database";
 $text['label-database']['en-gb'] = "Database";
@@ -629,6 +716,9 @@ $text['label-database']['ro-ro'] = "";
 $text['label-database']['ru-ru'] = "База данных";
 $text['label-database']['sv-se'] = "Databas";
 $text['label-database']['uk-ua'] = "База даних";
+$text['label-database']['zh-cn'] = "数据库";
+$text['label-database']['ja-jp'] = "データベース";
+$text['label-database']['ko-kr'] = "관련 기사";
 
 $text['label-results']['en-us'] = "Results";
 $text['label-results']['en-gb'] = "Results";
@@ -650,6 +740,9 @@ $text['label-results']['ro-ro'] = "Rezultate";
 $text['label-results']['ru-ru'] = "Результаты";
 $text['label-results']['sv-se'] = "Resultat";
 $text['label-results']['uk-ua'] = "результати";
+$text['label-results']['zh-cn'] = "成果";
+$text['label-results']['ja-jp'] = "レポート";
+$text['label-results']['ko-kr'] = "이름 *";
 
 $text['header-upgrade']['en-us'] = "Upgrade";
 $text['header-upgrade']['en-gb'] = "Upgrade";
@@ -671,6 +764,9 @@ $text['header-upgrade']['ro-ro'] = "";
 $text['header-upgrade']['ru-ru'] = "Обновление";
 $text['header-upgrade']['sv-se'] = "Uppgradera";
 $text['header-upgrade']['uk-ua'] = "Оновлення";
+$text['header-upgrade']['zh-cn'] = "升级";
+$text['header-upgrade']['ja-jp'] = "アップグレード";
+$text['header-upgrade']['ko-kr'] = "지원하다";
 
 $text['header-database_type']['en-us'] = "Database Type";
 $text['header-database_type']['en-gb'] = "Database Type";
@@ -692,6 +788,9 @@ $text['header-database_type']['ro-ro'] = "";
 $text['header-database_type']['ru-ru'] = "Тип базы данных";
 $text['header-database_type']['sv-se'] = "Databas Typ";
 $text['header-database_type']['uk-ua'] = "Тип бази даних";
+$text['header-database_type']['zh-cn'] = "数据库类型";
+$text['header-database_type']['ja-jp'] = "データベースの種類";
+$text['header-database_type']['ko-kr'] = "데이터베이스 유형";
 
 $text['description-upgrade_source']['en-us'] = "Updates FusionPBX source files from the respository.";
 $text['description-upgrade_source']['en-gb'] = "Updates FusionPBX source files from the respository.";
@@ -713,6 +812,9 @@ $text['description-upgrade_source']['ro-ro'] = "";
 $text['description-upgrade_source']['ru-ru'] = "Обновляет исходные файлы FusionPBX из репозитория.";
 $text['description-upgrade_source']['sv-se'] = "Uppdaterar FusionPBX källfiler från respository.";
 $text['description-upgrade_source']['uk-ua'] = "Оновлення вихідних файлів  FusionPBX з репозиторію Subversion .";
+$text['description-upgrade_source']['zh-cn'] = "更新资料库BX来源档案。";
+$text['description-upgrade_source']['ja-jp'] = "FusionPBX ソースファイルをリポジトリから更新します。";
+$text['description-upgrade_source']['ko-kr'] = "respository의 FusionPBX 소스 파일 업데이트.";
 
 $text['description-upgrade_schema']['en-us'] = "Checks to ensure table and field integrity in the database.";
 $text['description-upgrade_schema']['en-gb'] = "Checks to ensure table and field integrity in the database.";
@@ -734,6 +836,9 @@ $text['description-upgrade_schema']['ro-ro'] = "";
 $text['description-upgrade_schema']['ru-ru'] = "Проверка целостности таблиц и полей в базе данных.";
 $text['description-upgrade_schema']['sv-se'] = "Kontroller för att säkerställa tabell och fält integritet i databasen.";
 $text['description-upgrade_schema']['uk-ua'] = "Перевіряє цілісність таблиць і полів в базі даних.";
+$text['description-upgrade_schema']['zh-cn'] = "确保数据库表和外地完整性的检查。";
+$text['description-upgrade_schema']['ja-jp'] = "データベース内のテーブルとフィールドの整合性を確保するためにチェックします。";
+$text['description-upgrade_schema']['ko-kr'] = "데이터베이스의 테이블 및 필드 무결성을 보장 할 수 있습니다.";
 
 $text['description-upgrade_permissions']['en-us'] = "Restores default group permissions.";
 $text['description-upgrade_permissions']['en-gb'] = "Restores default group permissions.";
@@ -755,6 +860,9 @@ $text['description-upgrade_permissions']['ro-ro'] = "";
 $text['description-upgrade_permissions']['ru-ru'] = "Восстанавливает права по умолчанию для групп.";
 $text['description-upgrade_permissions']['sv-se'] = "Återställ standardrättigheter för grupper.";
 $text['description-upgrade_permissions']['uk-ua'] = "Відновлює дозволи групи за замовчуванням.";
+$text['description-upgrade_permissions']['zh-cn'] = "恢复违约团体的许可。";
+$text['description-upgrade_permissions']['ja-jp'] = "デフォルトのグループ権限を復元します。";
+$text['description-upgrade_permissions']['ko-kr'] = "기본 그룹 권한 복원.";
 
 $text['description-upgrade_menu']['en-us'] = "Restores the default items in the selected menu.";
 $text['description-upgrade_menu']['en-gb'] = "Restores the default items in the selected menu.";
@@ -776,6 +884,9 @@ $text['description-upgrade_menu']['ro-ro'] = "";
 $text['description-upgrade_menu']['ru-ru'] = "Восстанавливает элементы по умолчанию в выбранном меню.";
 $text['description-upgrade_menu']['sv-se'] = "Återställer standard objekt i den valda menyn.";
 $text['description-upgrade_menu']['uk-ua'] = "Відновлює типові елементи в обраному меню.";
+$text['description-upgrade_menu']['zh-cn'] = "恢复选定菜单中的缺省项目。";
+$text['description-upgrade_menu']['ja-jp'] = "選択したメニューのデフォルト項目を復元します。";
+$text['description-upgrade_menu']['ko-kr'] = "선택된 메뉴의 기본 항목을 복원합니다.";
 
 $text['description-upgrade_data_types']['en-us'] = "Detects and updates incorrect field data types.";
 $text['description-upgrade_data_types']['en-gb'] = "Detects and updates incorrect field data types.";
@@ -797,6 +908,9 @@ $text['description-upgrade_data_types']['ro-ro'] = "";
 $text['description-upgrade_data_types']['ru-ru'] = "Обнаруживает и обновляет некорректные типы данных полей.";
 $text['description-upgrade_data_types']['sv-se'] = "Detekterar och uppdaterar inkorrekta fält datatyper.";
 $text['description-upgrade_data_types']['uk-ua'] = "Виявляє  і оновлює невірні типи даних полів.";
+$text['description-upgrade_data_types']['zh-cn'] = "查明和更新错误的实地数据类型。";
+$text['description-upgrade_data_types']['ja-jp'] = "フィールドのデータ型を正しく検出し、更新します。";
+$text['description-upgrade_data_types']['ko-kr'] = "incorrect 필드 데이터 유형의 탐지 및 업데이트.";
 
 $text['description-upgrade_apps']['en-us'] = "Executes the default settings for each application.";
 $text['description-upgrade_apps']['en-gb'] = "Executes the default settings for each application.";
@@ -818,6 +932,9 @@ $text['description-upgrade_apps']['ro-ro'] = "";
 $text['description-upgrade_apps']['ru-ru'] = "Выполняет настройки по умолчанию для каждого приложения.";
 $text['description-upgrade_apps']['sv-se'] = "Återställer standardinställningar för alla applikationer.";
 $text['description-upgrade_apps']['uk-ua'] = "Встановлює типові значення для додатків";
+$text['description-upgrade_apps']['zh-cn'] = "说明每项申请的缺省环境。";
+$text['description-upgrade_apps']['ja-jp'] = "各アプリケーションのデフォルト設定を実行します。";
+$text['description-upgrade_apps']['ko-kr'] = "각 응용 프로그램에 대한 기본 설정을 실행합니다.";
 
 $text['description-upgrade_switch']['en-us'] = "Runs the upgrade switch routine.";
 $text['description-upgrade_switch']['en-gb'] = "Runs the upgrade switch routine.";
@@ -839,6 +956,9 @@ $text['description-upgrade_switch']['ro-ro'] = "";
 $text['description-upgrade_switch']['ru-ru'] = "Выполняет процедуру обновления коммутатора.";
 $text['description-upgrade_switch']['sv-se'] = "Kör rutinen för att uppgradera switchen";
 $text['description-upgrade_switch']['uk-ua'] = "Виконується регулярний вимикач.";
+$text['description-upgrade_switch']['zh-cn'] = "日常操作升级转换。";
+$text['description-upgrade_switch']['ja-jp'] = "アップグレードスイッチルーチンを実行します。";
+$text['description-upgrade_switch']['ko-kr'] = "업그레이드 스위치 루틴을 실행합니다.";
 
 $text['description-upgrade']['en-us'] = "Select the actions below you wish to perform.";
 $text['description-upgrade']['en-gb'] = "Select the actions below you wish to perform.";
@@ -860,6 +980,9 @@ $text['description-upgrade']['ro-ro'] = "";
 $text['description-upgrade']['ru-ru'] = "Выберите действия ниже, которые вы хотите выполнить.";
 $text['description-upgrade']['sv-se'] = "Välj de åtgärder nedan som du vill utföra.";
 $text['description-upgrade']['uk-ua'] = "Виберіть об’єкти для оновлення";
+$text['description-upgrade']['zh-cn'] = "选择你希望采取的行动。";
+$text['description-upgrade']['ja-jp'] = "実行したいアクションを選択します。";
+$text['description-upgrade']['ko-kr'] = "수행하려는 아래의 작업을 선택하십시오.";
 
 $text['button-upgrade_execute']['en-us'] = "Execute";
 $text['button-upgrade_execute']['en-gb'] = "Execute";
@@ -881,5 +1004,8 @@ $text['button-upgrade_execute']['ro-ro'] = "";
 $text['button-upgrade_execute']['ru-ru'] = "Выполнить";
 $text['button-upgrade_execute']['sv-se'] = "Kör";
 $text['button-upgrade_execute']['uk-ua'] = "Виконати";
+$text['button-upgrade_execute']['zh-cn'] = "概述";
+$text['button-upgrade_execute']['ja-jp'] = "実行する";
+$text['button-upgrade_execute']['ko-kr'] = "지원하다";
 
 ?>

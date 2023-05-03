@@ -19,6 +19,9 @@ $text['title-email_queue']['ro-ro'] = "";
 $text['title-email_queue']['ru-ru'] = "Email Queueue";
 $text['title-email_queue']['sv-se'] = "e-post kö";
 $text['title-email_queue']['uk-ua'] = "Електронна пошта";
+$text['title-email_queue']['zh-cn'] = "email queue";
+$text['title-email_queue']['ja-jp'] = "メールキュー";
+$text['title-email_queue']['ko-kr'] = "이메일:";
 
 $text['title_description-email_queue']['en-us'] = "";
 $text['title_description-email_queue']['ar-eg'] = "";
@@ -39,6 +42,9 @@ $text['title_description-email_queue']['ro-ro'] = "";
 $text['title_description-email_queue']['ru-ru'] = "";
 $text['title_description-email_queue']['sv-se'] = "";
 $text['title_description-email_queue']['uk-ua'] = "";
+$text['title_description-email_queue']['zh-cn'] = "";
+$text['title_description-email_queue']['ja-jp'] = "";
+$text['title_description-email_queue']['ko-kr'] = "";
 
 $text['label-email_date']['en-us'] = "Date";
 $text['label-email_date']['ar-eg'] = "التاريخ";
@@ -59,6 +65,9 @@ $text['label-email_date']['ro-ro'] = "";
 $text['label-email_date']['ru-ru'] = "Дата";
 $text['label-email_date']['sv-se'] = "Datum";
 $text['label-email_date']['uk-ua'] = "Дата";
+$text['label-email_date']['zh-cn'] = "日期";
+$text['label-email_date']['ja-jp'] = "日程表";
+$text['label-email_date']['ko-kr'] = "(주)";
 
 $text['description-email_date']['en-us'] = "Enter the email date.";
 $text['description-email_date']['ar-eg'] = "أدخل تاريخ البريد الإلكتروني";
@@ -79,6 +88,9 @@ $text['description-email_date']['ro-ro'] = "";
 $text['description-email_date']['ru-ru'] = "Введите дату электронной почты.";
 $text['description-email_date']['sv-se'] = "Ange e-postdatumet.";
 $text['description-email_date']['uk-ua'] = "Введіть дату електронної пошти.";
+$text['description-email_date']['zh-cn'] = "进入电子邮件日期。";
+$text['description-email_date']['ja-jp'] = "メールアドレスを入力してください。";
+$text['description-email_date']['ko-kr'] = "자주 묻는 질문";
 
 $text['label-email_from']['en-us'] = "From";
 $text['label-email_from']['ar-eg'] = "من";
@@ -99,6 +111,9 @@ $text['label-email_from']['ro-ro'] = "";
 $text['label-email_from']['ru-ru'] = "Из";
 $text['label-email_from']['sv-se'] = "Från";
 $text['label-email_from']['uk-ua'] = "З";
+$text['label-email_from']['zh-cn'] = "收入";
+$text['label-email_from']['ja-jp'] = "詳しくはこちら";
+$text['label-email_from']['ko-kr'] = "내 계정";
 
 $text['description-email_from']['en-us'] = "Enter the email from.";
 $text['description-email_from']['ar-eg'] = "أدخل الرسالة من";
@@ -119,6 +134,9 @@ $text['description-email_from']['ro-ro'] = "";
 $text['description-email_from']['ru-ru'] = "Введите письмо.";
 $text['description-email_from']['sv-se'] = "Ange e-post från.";
 $text['description-email_from']['uk-ua'] = "Введіть електронну пошту.";
+$text['description-email_from']['zh-cn'] = "进入电子邮件。";
+$text['description-email_from']['ja-jp'] = "メールアドレスを入力してください。";
+$text['description-email_from']['ko-kr'] = "자주 묻는 질문";
 
 $text['label-email_to']['en-us'] = "To";
 $text['label-email_to']['ar-eg'] = "إلى";
@@ -139,6 +157,9 @@ $text['label-email_to']['ro-ro'] = "";
 $text['label-email_to']['ru-ru'] = "в";
 $text['label-email_to']['sv-se'] = "för att";
 $text['label-email_to']['uk-ua'] = "до";
+$text['label-email_to']['zh-cn'] = "页: 1";
+$text['label-email_to']['ja-jp'] = "お問い合わせ";
+$text['label-email_to']['ko-kr'] = "으로";
 
 $text['description-email_to']['en-us'] = "Enter the email to.";
 $text['description-email_to']['ar-eg'] = "أدخل البريد الإلكتروني إلى.";
@@ -159,6 +180,9 @@ $text['description-email_to']['ro-ro'] = "";
 $text['description-email_to']['ru-ru'] = "Введите письмо.";
 $text['description-email_to']['sv-se'] = "Ange e-post till.";
 $text['description-email_to']['uk-ua'] = "Введіть адресу електронної пошти.";
+$text['description-email_to']['zh-cn'] = "进入电子邮件。";
+$text['description-email_to']['ja-jp'] = "メールアドレスを入力してください。";
+$text['description-email_to']['ko-kr'] = "자주 묻는 질문";
 
 $text['label-email_cc']['en-us'] = "CC";
 $text['label-email_cc']['ar-eg'] = "cc";
@@ -179,6 +203,9 @@ $text['label-email_cc']['ro-ro'] = "";
 $text['label-email_cc']['ru-ru'] = "cc";
 $text['label-email_cc']['sv-se'] = "cc";
 $text['label-email_cc']['uk-ua'] = "Відеоспостереження";
+$text['label-email_cc']['zh-cn'] = "CCC";
+$text['label-email_cc']['ja-jp'] = "ログイン";
+$text['label-email_cc']['ko-kr'] = "·";
 
 $text['description-email_cc']['en-us'] = "Enter the email cc.";
 $text['description-email_cc']['ar-eg'] = "أدخلي البريد الإلكتروني";
@@ -199,6 +226,9 @@ $text['description-email_cc']['ro-ro'] = "";
 $text['description-email_cc']['ru-ru'] = "Введите адрес электронной почты.";
 $text['description-email_cc']['sv-se'] = "Ange e-post cc.";
 $text['description-email_cc']['uk-ua'] = "Введіть електронну пошту cc.";
+$text['description-email_cc']['zh-cn'] = "进入电子邮件。";
+$text['description-email_cc']['ja-jp'] = "メール cc を入力してください。";
+$text['description-email_cc']['ko-kr'] = "이메일 cc를 입력하십시오.";
 
 $text['label-email_bcc']['en-us'] = "BCC";
 $text['label-email_bcc']['ar-eg'] = "bcc";
@@ -219,6 +249,9 @@ $text['label-email_bcc']['ro-ro'] = "";
 $text['label-email_bcc']['ru-ru'] = "bcc";
 $text['label-email_bcc']['sv-se'] = "bcc";
 $text['label-email_bcc']['uk-ua'] = "БКК";
+$text['label-email_bcc']['zh-cn'] = "b)";
+$text['label-email_bcc']['ja-jp'] = "BCCについて";
+$text['label-email_bcc']['ko-kr'] = "BCC 소개";
 
 $text['description-email_bcc']['en-us'] = "Enter the email bcc.";
 $text['description-email_bcc']['ar-eg'] = "أدخلي كاميرا البريد الإلكتروني";
@@ -239,6 +272,9 @@ $text['description-email_bcc']['ro-ro'] = "";
 $text['description-email_bcc']['ru-ru'] = "Введите e-mail bcc.";
 $text['description-email_bcc']['sv-se'] = "Ange e-post bcc.";
 $text['description-email_bcc']['uk-ua'] = "Введіть електронну пошту bcc.";
+$text['description-email_bcc']['zh-cn'] = "进入电子邮件bcc。";
+$text['description-email_bcc']['ja-jp'] = "電子メールbccを入力してください。";
+$text['description-email_bcc']['ko-kr'] = "이메일 bcc를 입력하십시오.";
 
 $text['label-email_subject']['en-us'] = "Subject";
 $text['label-email_subject']['ar-eg'] = "الموضوع";
@@ -259,6 +295,9 @@ $text['label-email_subject']['ro-ro'] = "";
 $text['label-email_subject']['ru-ru'] = "Тема";
 $text['label-email_subject']['sv-se'] = "Subjekt";
 $text['label-email_subject']['uk-ua'] = "Головна";
+$text['label-email_subject']['zh-cn'] = "议题";
+$text['label-email_subject']['ja-jp'] = "コンテンツ";
+$text['label-email_subject']['ko-kr'] = "이름 *";
 
 $text['description-email_subject']['en-us'] = "Enter the email subject.";
 $text['description-email_subject']['ar-eg'] = "أدخل موضوع البريد الإلكتروني";
@@ -279,6 +318,9 @@ $text['description-email_subject']['ro-ro'] = "";
 $text['description-email_subject']['ru-ru'] = "Введите тему электронной почты.";
 $text['description-email_subject']['sv-se'] = "Ange e-postämnet.";
 $text['description-email_subject']['uk-ua'] = "Введіть тему електронної пошти.";
+$text['description-email_subject']['zh-cn'] = "进入电子邮件主题。";
+$text['description-email_subject']['ja-jp'] = "メールの件名を入力してください。";
+$text['description-email_subject']['ko-kr'] = "자주 묻는 질문";
 
 $text['label-email_body']['en-us'] = "Body";
 $text['label-email_body']['ar-eg'] = "الهيئة";
@@ -299,6 +341,9 @@ $text['label-email_body']['ro-ro'] = "";
 $text['label-email_body']['ru-ru'] = "Тело";
 $text['label-email_body']['sv-se'] = "Kropp";
 $text['label-email_body']['uk-ua'] = "Тіло";
+$text['label-email_body']['zh-cn'] = "机构";
+$text['label-email_body']['ja-jp'] = "ボディ";
+$text['label-email_body']['ko-kr'] = "이름 *";
 
 $text['description-email_body']['en-us'] = "Enter the email body.";
 $text['description-email_body']['ar-eg'] = "أدخلي الجثة";
@@ -319,6 +364,9 @@ $text['description-email_body']['ro-ro'] = "";
 $text['description-email_body']['ru-ru'] = "Введите тело электронной почты.";
 $text['description-email_body']['sv-se'] = "Ange e-postkroppen.";
 $text['description-email_body']['uk-ua'] = "Введіть тіло електронної пошти.";
+$text['description-email_body']['zh-cn'] = "进入电子邮件机构。";
+$text['description-email_body']['ja-jp'] = "メール本文を入力してください。";
+$text['description-email_body']['ko-kr'] = "이메일 입력";
 
 $text['label-email_status']['en-us'] = "Status";
 $text['label-email_status']['ar-eg'] = "الحالة";
@@ -339,6 +387,9 @@ $text['label-email_status']['ro-ro'] = "";
 $text['label-email_status']['ru-ru'] = "Статус";
 $text['label-email_status']['sv-se'] = "status status status status";
 $text['label-email_status']['uk-ua'] = "Статус на сервери";
+$text['label-email_status']['zh-cn'] = "现况";
+$text['label-email_status']['ja-jp'] = "ステータス";
+$text['label-email_status']['ko-kr'] = "주요연혁";
 
 $text['description-email_status']['en-us'] = "Enter the email status.";
 $text['description-email_status']['ar-eg'] = "أدخلي مركز البريد الإلكتروني";
@@ -359,6 +410,9 @@ $text['description-email_status']['ro-ro'] = "";
 $text['description-email_status']['ru-ru'] = "Введите статус электронной почты.";
 $text['description-email_status']['sv-se'] = "Ange e-poststatus.";
 $text['description-email_status']['uk-ua'] = "Введіть статус електронної пошти.";
+$text['description-email_status']['zh-cn'] = "进入电子邮件地址。";
+$text['description-email_status']['ja-jp'] = "メールのステータスを入力してください。";
+$text['description-email_status']['ko-kr'] = "이메일 상태를 입력하십시오.";
 
 $text['label-email_action_before']['en-us'] = "Before Email";
 $text['label-email_action_before']['ar-eg'] = "قبل البريد الإلكتروني";
@@ -379,6 +433,9 @@ $text['label-email_action_before']['ro-ro'] = "";
 $text['label-email_action_before']['ru-ru'] = "До Email";
 $text['label-email_action_before']['sv-se'] = "Innan e-post";
 $text['label-email_action_before']['uk-ua'] = "До електронної пошти";
+$text['label-email_action_before']['zh-cn'] = "电子邮件";
+$text['label-email_action_before']['ja-jp'] = "メールの前に";
+$text['label-email_action_before']['ko-kr'] = "이메일";
 
 $text['description-email_action_before']['en-us'] = "Enter the action before sending the email.";
 $text['description-email_action_before']['ar-eg'] = "أدخل العمل قبل إرسال البريد الإلكتروني";
@@ -399,6 +456,9 @@ $text['description-email_action_before']['ro-ro'] = "";
 $text['description-email_action_before']['ru-ru'] = "Введите действие перед отправкой электронной почты.";
 $text['description-email_action_before']['sv-se'] = "Ange åtgärden innan du skickar e-post.";
 $text['description-email_action_before']['uk-ua'] = "Введіть дію перед відправкою електронної пошти.";
+$text['description-email_action_before']['zh-cn'] = "在发送电子邮件之前采取行动。";
+$text['description-email_action_before']['ja-jp'] = "メール送信前にアクションを入力してください。";
+$text['description-email_action_before']['ko-kr'] = "이메일 보내기 전에 행동을 입력하십시오.";
 
 $text['label-email_action_after']['en-us'] = "After Email";
 $text['label-email_action_after']['ar-eg'] = "بعد البريد الإلكتروني";
@@ -419,6 +479,9 @@ $text['label-email_action_after']['ro-ro'] = "";
 $text['label-email_action_after']['ru-ru'] = "После Email";
 $text['label-email_action_after']['sv-se'] = "Efter e-post";
 $text['label-email_action_after']['uk-ua'] = "Після електронної пошти";
+$text['label-email_action_after']['zh-cn'] = "电子邮件";
+$text['label-email_action_after']['ja-jp'] = "メールでのお問い合わせ";
+$text['label-email_action_after']['ko-kr'] = "이메일";
 
 $text['description-email_action_after']['en-us'] = "Enter the action after sending the email.";
 $text['description-email_action_after']['ar-eg'] = "أدخل العمل بعد إرسال البريد الإلكتروني";
@@ -439,6 +502,9 @@ $text['description-email_action_after']['ro-ro'] = "";
 $text['description-email_action_after']['ru-ru'] = "Введите действие после отправки электронной почты.";
 $text['description-email_action_after']['sv-se'] = "Ange åtgärden efter att ha skickat e-postmeddelandet.";
 $text['description-email_action_after']['uk-ua'] = "Введіть дію після відправлення електронної пошти.";
+$text['description-email_action_after']['zh-cn'] = "在发送电子邮件后采取行动。";
+$text['description-email_action_after']['ja-jp'] = "メール送信後にアクションを入力してください。";
+$text['description-email_action_after']['ko-kr'] = "이메일 보내기 후 작업을 입력합니다.";
 
 $text['label-email_response']['en-us'] = "Response";
 $text['label-email_response']['ar-eg'] = "الرد";
@@ -459,6 +525,9 @@ $text['label-email_response']['ro-ro'] = "";
 $text['label-email_response']['ru-ru'] = "Ответ";
 $text['label-email_response']['sv-se'] = "Svar";
 $text['label-email_response']['uk-ua'] = "Відправити";
+$text['label-email_response']['zh-cn'] = "答复";
+$text['label-email_response']['ja-jp'] = "ソリューション";
+$text['label-email_response']['ko-kr'] = "관련 기사";
 
 $text['label-email_retry_count']['en-us'] = "Retry";
 $text['label-email_retry_count']['ar-eg'] = "إعادة الفحص";
@@ -479,6 +548,9 @@ $text['label-email_retry_count']['ro-ro'] = "";
 $text['label-email_retry_count']['ru-ru'] = "Rery";
 $text['label-email_retry_count']['sv-se'] = "Retry";
 $text['label-email_retry_count']['uk-ua'] = "Ретри";
+$text['label-email_retry_count']['zh-cn'] = "学历";
+$text['label-email_retry_count']['ja-jp'] = "リトリート";
+$text['label-email_retry_count']['ko-kr'] = "관련 기사";
 
 $text['description-email_retry_count']['en-us'] = "Enter the email retry.";
 $text['description-email_retry_count']['ar-eg'] = "أدخلي إعادة البريد الإلكتروني";
@@ -499,6 +571,9 @@ $text['description-email_retry_count']['ro-ro'] = "";
 $text['description-email_retry_count']['ru-ru'] = "Введите электронный ответ.";
 $text['description-email_retry_count']['sv-se'] = "Ange e-post retry.";
 $text['description-email_retry_count']['uk-ua'] = "Введіть адресу електронної пошти.";
+$text['description-email_retry_count']['zh-cn'] = "填写电子邮件。";
+$text['description-email_retry_count']['ja-jp'] = "メールでのお問い合わせ";
+$text['description-email_retry_count']['ko-kr'] = "이메일 retry를 입력하십시오.";
 
 $text['label-waiting']['en-us'] = "waiting";
 $text['label-waiting']['ar-eg'] = "الانتظار";
@@ -519,6 +594,9 @@ $text['label-waiting']['ro-ro'] = "";
 $text['label-waiting']['ru-ru'] = "ждать";
 $text['label-waiting']['sv-se'] = "väntar";
 $text['label-waiting']['uk-ua'] = "Зареєструватися";
+$text['label-waiting']['zh-cn'] = "等候";
+$text['label-waiting']['ja-jp'] = "リクエスト";
+$text['label-waiting']['ko-kr'] = "지원하다";
 
 $text['label-failed']['en-us'] = "failed";
 $text['label-failed']['ar-eg'] = "فشل";
@@ -539,6 +617,9 @@ $text['label-failed']['ro-ro'] = "";
 $text['label-failed']['ru-ru'] = "неудача";
 $text['label-failed']['sv-se'] = "Misslyckades";
 $text['label-failed']['uk-ua'] = "не вдалося";
+$text['label-failed']['zh-cn'] = "失败";
+$text['label-failed']['ja-jp'] = "失敗";
+$text['label-failed']['ko-kr'] = "실패한";
 
 $text['label-sent']['en-us'] = "sent";
 $text['label-sent']['ar-eg'] = "أرسلت";
@@ -559,6 +640,9 @@ $text['label-sent']['ro-ro'] = "";
 $text['label-sent']['ru-ru'] = "отправление";
 $text['label-sent']['sv-se'] = "skickas";
 $text['label-sent']['uk-ua'] = "Увійти";
+$text['label-sent']['zh-cn'] = "发出";
+$text['label-sent']['ja-jp'] = "メール";
+$text['label-sent']['ko-kr'] = "이름 *";
 
 $text['label-trying']['en-us'] = "trying";
 $text['label-trying']['ar-eg'] = "محاولة";
@@ -579,5 +663,8 @@ $text['label-trying']['ro-ro'] = "";
 $text['label-trying']['ru-ru'] = "попробовать";
 $text['label-trying']['sv-se'] = "försöker försöka";
 $text['label-trying']['uk-ua'] = "Навігація";
+$text['label-trying']['zh-cn'] = "审判";
+$text['label-trying']['ja-jp'] = "チャレンジ";
+$text['label-trying']['ko-kr'] = "·";
 
 ?>

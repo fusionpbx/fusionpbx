@@ -20,6 +20,9 @@ $text['title-operator_panel']['ro-ro'] = "Panoul operator";
 $text['title-operator_panel']['ru-ru'] = "Панель Оператора";
 $text['title-operator_panel']['sv-se'] = "Telefonist Panel";
 $text['title-operator_panel']['uk-ua'] = "Оператори";
+$text['title-operator_panel']['zh-cn'] = "操作员小组";
+$text['title-operator_panel']['ja-jp'] = "オペレータ パネル";
+$text['title-operator_panel']['ko-kr'] = "회사연혁";
 
 $text['label-status_on_demand']['en-us'] = "On Demand";
 $text['label-status_on_demand']['en-gb'] = "On Demand";
@@ -41,6 +44,9 @@ $text['label-status_on_demand']['ro-ro'] = "La cerere";
 $text['label-status_on_demand']['ru-ru'] = "По требованию";
 $text['label-status_on_demand']['sv-se'] = "På Begäran";
 $text['label-status_on_demand']['uk-ua'] = "На Демі";
+$text['label-status_on_demand']['zh-cn'] = "需求";
+$text['label-status_on_demand']['ja-jp'] = "オンデマンド";
+$text['label-status_on_demand']['ko-kr'] = "주문하기";
 
 $text['label-status_on_break']['en-us'] = "On Break";
 $text['label-status_on_break']['en-gb'] = "On Break";
@@ -62,6 +68,9 @@ $text['label-status_on_break']['ro-ro'] = "In pauza";
 $text['label-status_on_break']['ru-ru'] = "Пауза";
 $text['label-status_on_break']['sv-se'] = "På Rast";
 $text['label-status_on_break']['uk-ua'] = "Прорив";
+$text['label-status_on_break']['zh-cn'] = "页: 1";
+$text['label-status_on_break']['ja-jp'] = "ブレイクアウト";
+$text['label-status_on_break']['ko-kr'] = "에 틈";
 
 $text['label-status_logged_out_or_unknown']['en-us'] = "Logged Out / Unknown";
 $text['label-status_logged_out_or_unknown']['en-gb'] = "Logged Out / Unknown";
@@ -83,6 +92,9 @@ $text['label-status_logged_out_or_unknown']['ro-ro'] = "Deconectat/Necunoscut";
 $text['label-status_logged_out_or_unknown']['ru-ru'] = "Вышел из системы / Неизвестен";
 $text['label-status_logged_out_or_unknown']['sv-se'] = "Utloggad / Okänd";
 $text['label-status_logged_out_or_unknown']['uk-ua'] = "Увійти / Невідомо";
+$text['label-status_logged_out_or_unknown']['zh-cn'] = "脱光/不明";
+$text['label-status_logged_out_or_unknown']['ja-jp'] = "ログアウト / 不明";
+$text['label-status_logged_out_or_unknown']['ko-kr'] = "로그아웃 / 알 수없는";
 
 $text['label-status_logged_out']['en-us'] = "Logged Out";
 $text['label-status_logged_out']['en-gb'] = "Logged Out";
@@ -104,6 +116,9 @@ $text['label-status_logged_out']['ro-ro'] = "Delogat";
 $text['label-status_logged_out']['ru-ru'] = "Вышел из системы";
 $text['label-status_logged_out']['sv-se'] = "Utloggad";
 $text['label-status_logged_out']['uk-ua'] = "Увійти";
+$text['label-status_logged_out']['zh-cn'] = "挂图";
+$text['label-status_logged_out']['ja-jp'] = "ログアウト";
+$text['label-status_logged_out']['ko-kr'] = "로그아웃";
 
 $text['label-status_do_not_disturb']['en-us'] = "Do Not Disturb";
 $text['label-status_do_not_disturb']['en-gb'] = "Do Not Disturb";
@@ -125,6 +140,9 @@ $text['label-status_do_not_disturb']['ro-ro'] = "Nu deranjați";
 $text['label-status_do_not_disturb']['ru-ru'] = "Просьба не беспокоить";
 $text['label-status_do_not_disturb']['sv-se'] = "Stör Ej";
 $text['label-status_do_not_disturb']['uk-ua'] = "Не турбувати";
+$text['label-status_do_not_disturb']['zh-cn'] = "不扰动";
+$text['label-status_do_not_disturb']['ja-jp'] = "蒸留しない";
+$text['label-status_do_not_disturb']['ko-kr'] = "뚱 베어";
 
 $text['label-status_available_on_demand']['en-us'] = "Available (On Demand)";
 $text['label-status_available_on_demand']['en-gb'] = "Available (On Demand)";
@@ -146,6 +164,9 @@ $text['label-status_available_on_demand']['ro-ro'] = "Disponibil (la cerere)";
 $text['label-status_available_on_demand']['ru-ru'] = "Доступен (по требованию)";
 $text['label-status_available_on_demand']['sv-se'] = "Tillgänglig (På Begäran)";
 $text['label-status_available_on_demand']['uk-ua'] = "Доступний (на вимогу)";
+$text['label-status_available_on_demand']['zh-cn'] = "(根据需要)";
+$text['label-status_available_on_demand']['ja-jp'] = "利用可能な(オンデマンド)";
+$text['label-status_available_on_demand']['ko-kr'] = "있음(요약)";
 
 $text['label-status_available']['en-us'] = "Available";
 $text['label-status_available']['en-gb'] = "Available";
@@ -167,6 +188,9 @@ $text['label-status_available']['ro-ro'] = "Disponibil";
 $text['label-status_available']['ru-ru'] = "Доступен";
 $text['label-status_available']['sv-se'] = "Tillgänglig";
 $text['label-status_available']['uk-ua'] = "В наявності";
+$text['label-status_available']['zh-cn'] = "现有";
+$text['label-status_available']['ja-jp'] = "利用できる";
+$text['label-status_available']['ko-kr'] = "지원하다";
 
 $text['label-refresh_pause']['en-us'] = "Pause Refresh";
 $text['label-refresh_pause']['en-gb'] = "Pause Refresh";
@@ -188,6 +212,9 @@ $text['label-refresh_pause']['ro-ro'] = "Întrerupeți reîmprospătarea";
 $text['label-refresh_pause']['ru-ru'] = "Приостановить обновление";
 $text['label-refresh_pause']['sv-se'] = "Paus Uppdatera";
 $text['label-refresh_pause']['uk-ua'] = "Пауза Refresh";
+$text['label-refresh_pause']['zh-cn'] = "产后复健";
+$text['label-refresh_pause']['ja-jp'] = "ポーズはリフレッシュします";
+$text['label-refresh_pause']['ko-kr'] = "일시 새로 고침";
 
 $text['label-refresh_enable']['en-us'] = "Enable Refresh";
 $text['label-refresh_enable']['en-gb'] = "Enable Refresh";
@@ -209,6 +236,9 @@ $text['label-refresh_enable']['ro-ro'] = "Activați Reîmprospătare";
 $text['label-refresh_enable']['ru-ru'] = "Включить обновление";
 $text['label-refresh_enable']['sv-se'] = "Aktivera Uppdatering";
 $text['label-refresh_enable']['uk-ua'] = "Увімкнути Refresh";
+$text['label-refresh_enable']['zh-cn'] = "复读";
+$text['label-refresh_enable']['ja-jp'] = "リフレッシュ";
+$text['label-refresh_enable']['ko-kr'] = "새로 고침";
 
 $text['label-recording']['en-us'] = "Recording";
 $text['label-recording']['en-gb'] = "Recording";
@@ -230,6 +260,9 @@ $text['label-recording']['ro-ro'] = "Înregistrare";
 $text['label-recording']['ru-ru'] = "Запись";
 $text['label-recording']['sv-se'] = "Inspelning";
 $text['label-recording']['uk-ua'] = "Запис";
+$text['label-recording']['zh-cn'] = "记录";
+$text['label-recording']['ja-jp'] = "レコーディング";
+$text['label-recording']['ko-kr'] = "관련 기사";
 
 $text['label-record']['en-us'] = "Record";
 $text['label-record']['en-gb'] = "Record";
@@ -251,6 +284,9 @@ $text['label-record']['ro-ro'] = "Record";
 $text['label-record']['ru-ru'] = "Воспроизведение";
 $text['label-record']['sv-se'] = "Spela In";
 $text['label-record']['uk-ua'] = "Запис";
+$text['label-record']['zh-cn'] = "记录";
+$text['label-record']['ja-jp'] = "レコード";
+$text['label-record']['ko-kr'] = "이름 *";
 
 $text['label-other_extensions']['en-us'] = "Other Extensions";
 $text['label-other_extensions']['en-gb'] = "Other Extensions";
@@ -272,6 +308,9 @@ $text['label-other_extensions']['ro-ro'] = "Alte extensii";
 $text['label-other_extensions']['ru-ru'] = "Другие внутренние номера";
 $text['label-other_extensions']['sv-se'] = "Annan Anknytning";
 $text['label-other_extensions']['uk-ua'] = "Інші розширення";
+$text['label-other_extensions']['zh-cn'] = "其他延期";
+$text['label-other_extensions']['ja-jp'] = "その他の拡張子";
+$text['label-other_extensions']['ko-kr'] = "기타 확장";
 
 $text['label-no_extensions_found']['en-us'] = "No extensions found.";
 $text['label-no_extensions_found']['en-gb'] = "No extensions found.";
@@ -293,6 +332,9 @@ $text['label-no_extensions_found']['ro-ro'] = "Nu s-au găsit extensii.";
 $text['label-no_extensions_found']['ru-ru'] = "Внутренних номеров не найдено.";
 $text['label-no_extensions_found']['sv-se'] = "Ingen anknytning funnen.";
 $text['label-no_extensions_found']['uk-ua'] = "Не знайдено розширення.";
+$text['label-no_extensions_found']['zh-cn'] = "没有发现延期。";
+$text['label-no_extensions_found']['ja-jp'] = "拡張子が見つかりません。";
+$text['label-no_extensions_found']['ko-kr'] = "찾을 수 없습니다.";
 
 $text['label-hangup']['en-us'] = "Hangup";
 $text['label-hangup']['en-gb'] = "Hangup";
@@ -314,6 +356,9 @@ $text['label-hangup']['ro-ro'] = "Rezistă";
 $text['label-hangup']['ru-ru'] = "Убить";
 $text['label-hangup']['sv-se'] = "Lägg På";
 $text['label-hangup']['uk-ua'] = "вбити";
+$text['label-hangup']['zh-cn'] = "Hang";
+$text['label-hangup']['ja-jp'] = "ハングアップ";
+$text['label-hangup']['ko-kr'] = "맨 위로";
 
 $text['label-eavesdrop']['en-us'] = "Eavesdrop";
 $text['label-eavesdrop']['en-gb'] = "Eavesdrop";
@@ -335,6 +380,9 @@ $text['label-eavesdrop']['ro-ro'] = "Trage cu urechea";
 $text['label-eavesdrop']['ru-ru'] = "Подслушивать";
 $text['label-eavesdrop']['sv-se'] = "Medlyssning";
 $text['label-eavesdrop']['uk-ua'] = "підслуховувати";
+$text['label-eavesdrop']['zh-cn'] = "eavesdrop";
+$text['label-eavesdrop']['ja-jp'] = "イーブスドロップ";
+$text['label-eavesdrop']['ko-kr'] = "옵션 정보";
 
 $text['label-call_group']['en-us'] = "Call Group";
 $text['label-call_group']['en-gb'] = "Call Group";
@@ -356,6 +404,9 @@ $text['label-call_group']['ro-ro'] = "Grup de apeluri";
 $text['label-call_group']['ru-ru'] = "Группы вызова";
 $text['label-call_group']['sv-se'] = "Ring Grupp";
 $text['label-call_group']['uk-ua'] = "груповий виклик";
+$text['label-call_group']['zh-cn'] = "电话小组";
+$text['label-call_group']['ja-jp'] = "コールグループ";
+$text['label-call_group']['ko-kr'] = "통화 그룹";
 
 $text['label-call_direction']['en-us'] = "Call Direction";
 $text['label-call_direction']['en-gb'] = "Call Direction";
@@ -377,6 +428,9 @@ $text['label-call_direction']['ro-ro'] = "Direcția de apel";
 $text['label-call_direction']['ru-ru'] = "Направление вызова";
 $text['label-call_direction']['sv-se'] = "Samtals Riktning";
 $text['label-call_direction']['uk-ua'] = "напрямок виклику";
+$text['label-call_direction']['zh-cn'] = "电话指示";
+$text['label-call_direction']['ja-jp'] = "コール・ディレクション";
+$text['label-call_direction']['ko-kr'] = "연락처";
 
 $text['description-eavesdrop_destination']['en-us'] = "Select the Eavesdrop Destination";
 $text['description-eavesdrop_destination']['en-gb'] = "Select the Eavesdrop Destination";
@@ -398,6 +452,9 @@ $text['description-eavesdrop_destination']['ro-ro'] = "Selectați Destinația Ea
 $text['description-eavesdrop_destination']['ru-ru'] = "Выберите подслушивание пункта назначения";
 $text['description-eavesdrop_destination']['sv-se'] = "Välj Medlyssning Destination";
 $text['description-eavesdrop_destination']['uk-ua'] = "Виберіть пункт призначення підслуховувати";
+$text['description-eavesdrop_destination']['zh-cn'] = "选择Eavesdrop Destination";
+$text['description-eavesdrop_destination']['ja-jp'] = "Eavesdrop Destination を選択します。";
+$text['description-eavesdrop_destination']['ko-kr'] = "Eavesdrop 목적지 선택";
 
 $text['button-all']['en-us'] = "All";
 $text['button-all']['en-gb'] = "All";
@@ -419,5 +476,8 @@ $text['button-all']['ro-ro'] = "Toate";
 $text['button-all']['ru-ru'] = "Все";
 $text['button-all']['sv-se'] = "Alla";
 $text['button-all']['uk-ua'] = "Всі";
+$text['button-all']['zh-cn'] = "所有人";
+$text['button-all']['ja-jp'] = "すべて";
+$text['button-all']['ko-kr'] = "모든 것";
 
 ?>

@@ -20,6 +20,9 @@ $text['title-call_centers']['ro-ro'] = "Call Center";
 $text['title-call_centers']['ru-ru'] = "Колл-центр";
 $text['title-call_centers']['sv-se'] = "Call Center";
 $text['title-call_centers']['uk-ua'] = "Кол-центр";
+$text['title-call_centers']['zh-cn'] = "电话中心";
+$text['title-call_centers']['ja-jp'] = "コールセンター";
+$text['title-call_centers']['ko-kr'] = "고객센터";
 
 $text['title-call_center_tier_edit']['en-us'] = "Call Center Tier";
 $text['title-call_center_tier_edit']['en-gb'] = "Call Center Tier";
@@ -41,6 +44,9 @@ $text['title-call_center_tier_edit']['ro-ro'] = "Nivelul Call Center";
 $text['title-call_center_tier_edit']['ru-ru'] = "Компетенция Колл-центра";
 $text['title-call_center_tier_edit']['sv-se'] = "Call Center Kunskap";
 $text['title-call_center_tier_edit']['uk-ua'] = "Рівень кол-центра";
+$text['title-call_center_tier_edit']['zh-cn'] = "电话中心";
+$text['title-call_center_tier_edit']['ja-jp'] = "コールセンターティア";
+$text['title-call_center_tier_edit']['ko-kr'] = "연락처";
 
 $text['title-call_center_queues_edit']['en-us'] = "Edit Call Center Queue";
 $text['title-call_center_queues_edit']['en-gb'] = "Edit Call Center Queue";
@@ -62,6 +68,9 @@ $text['title-call_center_queues_edit']['ro-ro'] = "Editați coada centrului de a
 $text['title-call_center_queues_edit']['ru-ru'] = "Редактировать очередь Колл-центра";
 $text['title-call_center_queues_edit']['sv-se'] = "Ändra Call Center Kö";
 $text['title-call_center_queues_edit']['uk-ua'] = "Редагувати чергу кол-центру";
+$text['title-call_center_queues_edit']['zh-cn'] = "电话中心";
+$text['title-call_center_queues_edit']['ja-jp'] = "コールセンターキューの編集";
+$text['title-call_center_queues_edit']['ko-kr'] = "콜 센터 Queue";
 
 $text['title-call_center_queues_add']['en-us'] = "Add Call Center Queue";
 $text['title-call_center_queues_add']['en-gb'] = "Add Call Center Queue";
@@ -83,6 +92,9 @@ $text['title-call_center_queues_add']['ro-ro'] = "Adăugați o coadă la centrul
 $text['title-call_center_queues_add']['ru-ru'] = "Добавить очередь Колл-центра";
 $text['title-call_center_queues_add']['sv-se'] = "Lägg till Call Center Kö";
 $text['title-call_center_queues_add']['uk-ua'] = "Додати чергу кол-центру";
+$text['title-call_center_queues_add']['zh-cn'] = "增加电话中心";
+$text['title-call_center_queues_add']['ja-jp'] = "コールセンターキューを追加";
+$text['title-call_center_queues_add']['ko-kr'] = "추가 통화 센터 Queue";
 
 $text['title-call_center_queues']['en-us'] = "Call Center Queues";
 $text['title-call_center_queues']['en-gb'] = "Call Center Queues";
@@ -104,6 +116,9 @@ $text['title-call_center_queues']['ro-ro'] = "Cozi la Call Center";
 $text['title-call_center_queues']['ru-ru'] = "Очереди Колл-центра";
 $text['title-call_center_queues']['sv-se'] = "Call Center Kö:er";
 $text['title-call_center_queues']['uk-ua'] = "Черги кол-центра";
+$text['title-call_center_queues']['zh-cn'] = "电话中心";
+$text['title-call_center_queues']['ja-jp'] = "コールセンターキュー";
+$text['title-call_center_queues']['ko-kr'] = "고객센터";
 
 $text['title-call_center_queue_edit']['en-us'] = "Call Center Queue";
 $text['title-call_center_queue_edit']['en-gb'] = "Call Center Queue";
@@ -125,6 +140,9 @@ $text['title-call_center_queue_edit']['ro-ro'] = "Coada centrului de apeluri";
 $text['title-call_center_queue_edit']['ru-ru'] = "Очередь Колл-центра";
 $text['title-call_center_queue_edit']['sv-se'] = "Call Center Kö";
 $text['title-call_center_queue_edit']['uk-ua'] = "Черга кол-центра";
+$text['title-call_center_queue_edit']['zh-cn'] = "电话中心";
+$text['title-call_center_queue_edit']['ja-jp'] = "コールセンターキュー";
+$text['title-call_center_queue_edit']['ko-kr'] = "고객센터";
 
 $text['title-call_center_queue_add']['en-us'] = "Call Center Queue";
 $text['title-call_center_queue_add']['en-gb'] = "Call Center Queue";
@@ -146,6 +164,9 @@ $text['title-call_center_queue_add']['ro-ro'] = "Coada centrului de apeluri";
 $text['title-call_center_queue_add']['ru-ru'] = "Очередь Колл-центра";
 $text['title-call_center_queue_add']['sv-se'] = "Call Center Kö";
 $text['title-call_center_queue_add']['uk-ua'] = "Черга кол-центра";
+$text['title-call_center_queue_add']['zh-cn'] = "电话中心";
+$text['title-call_center_queue_add']['ja-jp'] = "コールセンターキュー";
+$text['title-call_center_queue_add']['ko-kr'] = "고객센터";
 
 $text['title-call_center_agents']['en-us'] = "Call Center Agents";
 $text['title-call_center_agents']['en-gb'] = "Call Center Agents";
@@ -167,6 +188,9 @@ $text['title-call_center_agents']['ro-ro'] = "Agenți call center";
 $text['title-call_center_agents']['ru-ru'] = "Операторы Колл-центра";
 $text['title-call_center_agents']['sv-se'] = "Call Center Agenter";
 $text['title-call_center_agents']['uk-ua'] = "Оператори кол-центра";
+$text['title-call_center_agents']['zh-cn'] = "电话中心";
+$text['title-call_center_agents']['ja-jp'] = "コールセンターエージェント";
+$text['title-call_center_agents']['ko-kr'] = "고객센터";
 
 $text['title-call_center_agent_status']['en-us'] = "Call Center Agent Status";
 $text['title-call_center_agent_status']['en-gb'] = "Call Center Agent Status";
@@ -188,6 +212,9 @@ $text['title-call_center_agent_status']['ro-ro'] = "Starea agentului Call Center
 $text['title-call_center_agent_status']['ru-ru'] = "Статус оператора Колл-центра";
 $text['title-call_center_agent_status']['sv-se'] = "Call Center Agent Status";
 $text['title-call_center_agent_status']['uk-ua'] = "Статус оператора кол-центра";
+$text['title-call_center_agent_status']['zh-cn'] = "电话中心";
+$text['title-call_center_agent_status']['ja-jp'] = "コールセンターエージェントのステータス";
+$text['title-call_center_agent_status']['ko-kr'] = "고객센터 에이전트 상태";
 
 $text['title-call_center_agent_edit']['en-us'] = "Call Center Agent";
 $text['title-call_center_agent_edit']['en-gb'] = "Call Center Agent";
@@ -209,6 +236,9 @@ $text['title-call_center_agent_edit']['ro-ro'] = "Agent call center";
 $text['title-call_center_agent_edit']['ru-ru'] = "Оператор Колл-центра";
 $text['title-call_center_agent_edit']['sv-se'] = "Call Center Agent";
 $text['title-call_center_agent_edit']['uk-ua'] = "Оператор кол-центра";
+$text['title-call_center_agent_edit']['zh-cn'] = "电话中心";
+$text['title-call_center_agent_edit']['ja-jp'] = "コールセンターエージェント";
+$text['title-call_center_agent_edit']['ko-kr'] = "고객센터";
 
 $text['title-call_center_agent_add']['en-us'] = "Call Center Agent";
 $text['title-call_center_agent_add']['en-gb'] = "Call Center Agent";
@@ -230,6 +260,9 @@ $text['title-call_center_agent_add']['ro-ro'] = "Agent call center";
 $text['title-call_center_agent_add']['ru-ru'] = "Оператор Колл-центра";
 $text['title-call_center_agent_add']['sv-se'] = "Call Center Agent";
 $text['title-call_center_agent_add']['uk-ua'] = "Оператор кол-центра";
+$text['title-call_center_agent_add']['zh-cn'] = "电话中心";
+$text['title-call_center_agent_add']['ja-jp'] = "コールセンターエージェント";
+$text['title-call_center_agent_add']['ko-kr'] = "고객센터";
 
 $text['title-call_center']['en-us'] = "Call Center";
 $text['title-call_center']['en-gb'] = "Call Center";
@@ -251,6 +284,9 @@ $text['title-call_center']['ro-ro'] = "Call Center";
 $text['title-call_center']['ru-ru'] = "Колл-центр";
 $text['title-call_center']['sv-se'] = "Call Center";
 $text['title-call_center']['uk-ua'] = "Кол-центр";
+$text['title-call_center']['zh-cn'] = "电话中心";
+$text['title-call_center']['ja-jp'] = "コールセンター";
+$text['title-call_center']['ko-kr'] = "고객센터";
 
 $text['option-usring']['en-us'] = "us-ring";
 $text['option-usring']['en-gb'] = "us-ring";
@@ -272,6 +308,9 @@ $text['option-usring']['ro-ro'] = "us-ring";
 $text['option-usring']['ru-ru'] = "us-ring";
 $text['option-usring']['sv-se'] = "us-ring";
 $text['option-usring']['uk-ua'] = "us-ring";
+$text['option-usring']['zh-cn'] = "环绕";
+$text['option-usring']['ja-jp'] = "お問い合わせ";
+$text['option-usring']['ko-kr'] = "회사 소개";
 
 $text['option-ukring']['en-us'] = "uk-ring";
 $text['option-ukring']['en-gb'] = "uk-ring";
@@ -293,6 +332,9 @@ $text['option-ukring']['ro-ro'] = "uk-ring";
 $text['option-ukring']['ru-ru'] = "uk-ring";
 $text['option-ukring']['sv-se'] = "uk-ring";
 $text['option-ukring']['uk-ua'] = "uk-ring";
+$text['option-ukring']['zh-cn'] = "uk-环";
+$text['option-ukring']['ja-jp'] = "英国リング";
+$text['option-ukring']['ko-kr'] = "한국어";
 
 $text['option-true']['en-us'] = "True";
 $text['option-true']['en-gb'] = "True";
@@ -314,6 +356,9 @@ $text['option-true']['ro-ro'] = "Adevărat";
 $text['option-true']['ru-ru'] = "Да";
 $text['option-true']['sv-se'] = "Sann";
 $text['option-true']['uk-ua'] = "Так";
+$text['option-true']['zh-cn'] = "真";
+$text['option-true']['ja-jp'] = "ログイン";
+$text['option-true']['ko-kr'] = "이란";
 
 $text['option-top_down']['en-us'] = "Top Down";
 $text['option-top_down']['en-gb'] = "Top Down";
@@ -335,6 +380,9 @@ $text['option-top_down']['ro-ro'] = "De sus în jos";
 $text['option-top_down']['ru-ru'] = "Выпадающий";
 $text['option-top_down']['sv-se'] = "Uppifrån Ned";
 $text['option-top_down']['uk-ua'] = "З верху до низу";
+$text['option-top_down']['zh-cn'] = "专题";
+$text['option-top_down']['ja-jp'] = "トップダウン";
+$text['option-top_down']['ko-kr'] = "맨 위로";
 
 $text['option-system']['en-us'] = "System";
 $text['option-system']['en-gb'] = "System";
@@ -356,6 +404,9 @@ $text['option-system']['ro-ro'] = "Sistem";
 $text['option-system']['ru-ru'] = "Система";
 $text['option-system']['sv-se'] = "System";
 $text['option-system']['uk-ua'] = "Система";
+$text['option-system']['zh-cn'] = "系统";
+$text['option-system']['ja-jp'] = "システム";
+$text['option-system']['ko-kr'] = "시스템";
 
 $text['option-sequentially_by_next_agent_order']['en-us'] = "Sequentially By Next Agent Order";
 $text['option-sequentially_by_next_agent_order']['en-gb'] = "Sequentially By Next Agent Order";
@@ -377,6 +428,9 @@ $text['option-sequentially_by_next_agent_order']['ro-ro'] = "Secvențial După u
 $text['option-sequentially_by_next_agent_order']['ru-ru'] = "Последовательно, к следующему оператору по порядку";
 $text['option-sequentially_by_next_agent_order']['sv-se'] = "Sekventiellt genom nästa Agent ordning";
 $text['option-sequentially_by_next_agent_order']['uk-ua'] = "Послідовно до наступного оператора за порядком";
+$text['option-sequentially_by_next_agent_order']['zh-cn'] = "依次强制令";
+$text['option-sequentially_by_next_agent_order']['ja-jp'] = "次のエージェント注文で順次";
+$text['option-sequentially_by_next_agent_order']['ko-kr'] = "다음 에이전트 주문에 의해 순차적으로";
 
 $text['option-sequentially_by_agent_order']['en-us'] = "Sequentially By Agent Order";
 $text['option-sequentially_by_agent_order']['en-gb'] = "Sequentially By Agent Order";
@@ -398,6 +452,9 @@ $text['option-sequentially_by_agent_order']['ro-ro'] = "Secvenţial Prin Ordinul
 $text['option-sequentially_by_agent_order']['ru-ru'] = "Последовательно, к следующему оператору";
 $text['option-sequentially_by_agent_order']['sv-se'] = "Sekventiellt genom Agent ordning";
 $text['option-sequentially_by_agent_order']['uk-ua'] = "Послідовно за замовленням агента";
+$text['option-sequentially_by_agent_order']['zh-cn'] = "依次通过紧急命令";
+$text['option-sequentially_by_agent_order']['ja-jp'] = "エージェント注文で順次";
+$text['option-sequentially_by_agent_order']['ko-kr'] = "에이전트 주문에 의해 순차적으로";
 
 $text['option-rsring']['en-us'] = "rs-ring";
 $text['option-rsring']['en-gb'] = "rs-ring";
@@ -419,6 +476,9 @@ $text['option-rsring']['ro-ro'] = "rs-ring";
 $text['option-rsring']['ru-ru'] = "rs-ring";
 $text['option-rsring']['sv-se'] = "rs-ring";
 $text['option-rsring']['uk-ua'] = "rs-ring";
+$text['option-rsring']['zh-cn'] = "rs";
+$text['option-rsring']['ja-jp'] = "rsリング";
+$text['option-rsring']['ko-kr'] = "rs 링";
 
 $text['option-round_robin']['en-us'] = "Round Robin";
 $text['option-round_robin']['en-gb'] = "Round Robin";
@@ -440,6 +500,9 @@ $text['option-round_robin']['ro-ro'] = "Round Robin";
 $text['option-round_robin']['ru-ru'] = "Круговая";
 $text['option-round_robin']['sv-se'] = "Round Robin (Cirkulär)";
 $text['option-round_robin']['uk-ua'] = "Кругової";
+$text['option-round_robin']['zh-cn'] = "圆桌会议";
+$text['option-round_robin']['ja-jp'] = "ラウンドロビン";
+$text['option-round_robin']['ko-kr'] = "둥근 Robin";
 
 $text['option-ring_all']['en-us'] = "Ring All";
 $text['option-ring_all']['en-gb'] = "Ring All";
@@ -461,6 +524,9 @@ $text['option-ring_all']['ro-ro'] = "Sunați pe toate";
 $text['option-ring_all']['ru-ru'] = "Звонят все";
 $text['option-ring_all']['sv-se'] = "Ring på Alla";
 $text['option-ring_all']['uk-ua'] = "Дзвонити всім";
+$text['option-ring_all']['zh-cn'] = "附录";
+$text['option-ring_all']['ja-jp'] = "リング すべて";
+$text['option-ring_all']['ko-kr'] = "반지 모두";
 
 $text['option-random']['en-us'] = "Random";
 $text['option-random']['en-gb'] = "Random";
@@ -482,6 +548,9 @@ $text['option-random']['ro-ro'] = "Aleatoriu";
 $text['option-random']['ru-ru'] = "Случайно";
 $text['option-random']['sv-se'] = "Slumpvis";
 $text['option-random']['uk-ua'] = "Випадково";
+$text['option-random']['zh-cn'] = "随机";
+$text['option-random']['ja-jp'] = "ランダム";
+$text['option-random']['ko-kr'] = "한국어";
 
 $text['option-queue']['en-us'] = "Queue";
 $text['option-queue']['en-gb'] = "Queue";
@@ -503,6 +572,9 @@ $text['option-queue']['ro-ro'] = "Coadă";
 $text['option-queue']['ru-ru'] = "Очередь";
 $text['option-queue']['sv-se'] = "Kö";
 $text['option-queue']['uk-ua'] = "Черга";
+$text['option-queue']['zh-cn'] = "问题";
+$text['option-queue']['ja-jp'] = "キュー";
+$text['option-queue']['ko-kr'] = "이름 *";
 
 $text['option-ptring']['en-us'] = "pt-ring";
 $text['option-ptring']['en-gb'] = "pt-ring";
@@ -524,6 +596,9 @@ $text['option-ptring']['ro-ro'] = "pt-ring";
 $text['option-ptring']['ru-ru'] = "pt-ring";
 $text['option-ptring']['sv-se'] = "pt-ring";
 $text['option-ptring']['uk-ua'] = "pt-ring";
+$text['option-ptring']['zh-cn'] = "吸收";
+$text['option-ptring']['ja-jp'] = "PTリング";
+$text['option-ptring']['ko-kr'] = "pt 링";
 
 $text['option-on_break']['en-us'] = "On Break";
 $text['option-on_break']['en-gb'] = "On Break";
@@ -545,6 +620,9 @@ $text['option-on_break']['ro-ro'] = "In pauza";
 $text['option-on_break']['ru-ru'] = "Перерыв";
 $text['option-on_break']['sv-se'] = "På Rast";
 $text['option-on_break']['uk-ua'] = "На перерві";
+$text['option-on_break']['zh-cn'] = "页: 1";
+$text['option-on_break']['ja-jp'] = "ブレイクアウト";
+$text['option-on_break']['ko-kr'] = "에 틈";
 
 $text['option-no_change']['en-us'] = "No Change";
 $text['option-no_change']['en-gb'] = "No Change";
@@ -566,6 +644,9 @@ $text['option-no_change']['ro-ro'] = "Nicio schimbare";
 $text['option-no_change']['ru-ru'] = "Без изменения";
 $text['option-no_change']['sv-se'] = "Ingen Förändring";
 $text['option-no_change']['uk-ua'] = "Без змін";
+$text['option-no_change']['zh-cn'] = "无";
+$text['option-no_change']['ja-jp'] = "変更なし";
+$text['option-no_change']['ko-kr'] = "없음 변경";
 
 $text['option-longest_idle_agent']['en-us'] = "Longest Idle Agent";
 $text['option-longest_idle_agent']['en-gb'] = "Longest Idle Agent";
@@ -587,6 +668,9 @@ $text['option-longest_idle_agent']['ro-ro'] = "Cel mai lung agent inactiv";
 $text['option-longest_idle_agent']['ru-ru'] = "Максимально незанятый оператор";
 $text['option-longest_idle_agent']['sv-se'] = "Agent Längst Ledig";
 $text['option-longest_idle_agent']['uk-ua'] = "Найдовше бездіяльний агент";
+$text['option-longest_idle_agent']['zh-cn'] = "A. 长期无能为力";
+$text['option-longest_idle_agent']['ja-jp'] = "最長アイドルエージェント";
+$text['option-longest_idle_agent']['ko-kr'] = "가장 긴 이들 에이전트";
 
 $text['option-logged_out']['en-us'] = "Logged Out";
 $text['option-logged_out']['en-gb'] = "Logged Out";
@@ -608,6 +692,9 @@ $text['option-logged_out']['ro-ro'] = "Delogat";
 $text['option-logged_out']['ru-ru'] = "Выйти";
 $text['option-logged_out']['sv-se'] = "Utloggad";
 $text['option-logged_out']['uk-ua'] = "Вийшов";
+$text['option-logged_out']['zh-cn'] = "挂图";
+$text['option-logged_out']['ja-jp'] = "ログアウト";
+$text['option-logged_out']['ko-kr'] = "로그아웃";
 
 $text['option-itring']['en-us'] = "it-ring";
 $text['option-itring']['en-gb'] = "it-ring";
@@ -629,6 +716,9 @@ $text['option-itring']['ro-ro'] = "it-ring";
 $text['option-itring']['ru-ru'] = "it-ring";
 $text['option-itring']['sv-se'] = "it-ring";
 $text['option-itring']['uk-ua'] = "it-ring";
+$text['option-itring']['zh-cn'] = "环绕";
+$text['option-itring']['ja-jp'] = "ITリング";
+$text['option-itring']['ko-kr'] = "그것 반지";
 
 $text['option-frring']['en-us'] = "fr-ring";
 $text['option-frring']['en-gb'] = "fr-ring";
@@ -650,6 +740,9 @@ $text['option-frring']['ro-ro'] = "fr-ring";
 $text['option-frring']['ru-ru'] = "fr-ring";
 $text['option-frring']['sv-se'] = "fr-ring";
 $text['option-frring']['uk-ua'] = "fr-ring";
+$text['option-frring']['zh-cn'] = "fr";
+$text['option-frring']['ja-jp'] = "frリング";
+$text['option-frring']['ko-kr'] = "홍보센터";
 
 $text['option-dering']['en-us'] = "de-ring";
 $text['option-dering']['en-gb'] = "de-ring";
@@ -671,6 +764,9 @@ $text['option-dering']['ro-ro'] = "de-ring";
 $text['option-dering']['ru-ru'] = "de-ring";
 $text['option-dering']['sv-se'] = "de-ring";
 $text['option-dering']['uk-ua'] = "de-ring";
+$text['option-dering']['zh-cn'] = "倾角";
+$text['option-dering']['ja-jp'] = "デリング";
+$text['option-dering']['ko-kr'] = "디 링";
 
 $text['option-false']['en-us'] = "False";
 $text['option-false']['en-gb'] = "False";
@@ -692,6 +788,9 @@ $text['option-false']['ro-ro'] = "Fals";
 $text['option-false']['ru-ru'] = "Нет";
 $text['option-false']['sv-se'] = "Falsk";
 $text['option-false']['uk-ua'] = "Ні";
+$text['option-false']['zh-cn'] = "抢劫";
+$text['option-false']['ja-jp'] = "ファルス";
+$text['option-false']['ko-kr'] = "팟캐스트";
 
 $text['option-do_not_disturb']['en-us'] = "Do Not Disturb";
 $text['option-do_not_disturb']['en-gb'] = "Do Not Disturb";
@@ -713,6 +812,9 @@ $text['option-do_not_disturb']['ro-ro'] = "Nu deranjați";
 $text['option-do_not_disturb']['ru-ru'] = "Не беспокоить";
 $text['option-do_not_disturb']['sv-se'] = "Stör Ej";
 $text['option-do_not_disturb']['uk-ua'] = "Не турбувати";
+$text['option-do_not_disturb']['zh-cn'] = "不扰动";
+$text['option-do_not_disturb']['ja-jp'] = "蒸留しない";
+$text['option-do_not_disturb']['ko-kr'] = "뚱 베어";
 
 $text['option-available_on_demand']['en-us'] = "Available (On Demand)";
 $text['option-available_on_demand']['en-gb'] = "Available (On Demand)";
@@ -734,6 +836,9 @@ $text['option-available_on_demand']['ro-ro'] = "Disponibil (la cerere)";
 $text['option-available_on_demand']['ru-ru'] = "Доступен (по требованию)";
 $text['option-available_on_demand']['sv-se'] = "Tillgänglig (På Begäran)";
 $text['option-available_on_demand']['uk-ua'] = "Доступний (на вимогу)";
+$text['option-available_on_demand']['zh-cn'] = "(根据需要)";
+$text['option-available_on_demand']['ja-jp'] = "利用可能な(オンデマンド)";
+$text['option-available_on_demand']['ko-kr'] = "있음(요약)";
 
 $text['option-available']['en-us'] = "Available";
 $text['option-available']['en-gb'] = "Available";
@@ -755,6 +860,9 @@ $text['option-available']['ro-ro'] = "Disponibil";
 $text['option-available']['ru-ru'] = "Доступен";
 $text['option-available']['sv-se'] = "Tillgänglig";
 $text['option-available']['uk-ua'] = "Доступний";
+$text['option-available']['zh-cn'] = "现有";
+$text['option-available']['ja-jp'] = "利用できる";
+$text['option-available']['ko-kr'] = "지원하다";
 
 $text['option-agent_with_least_talk_time']['en-us'] = "Agent With Least Talk Time";
 $text['option-agent_with_least_talk_time']['en-gb'] = "Agent With Least Talk Time";
@@ -776,6 +884,9 @@ $text['option-agent_with_least_talk_time']['ro-ro'] = "Agent cu cel mai mic timp
 $text['option-agent_with_least_talk_time']['ru-ru'] = "Оператор с наименьшим временем разговора";
 $text['option-agent_with_least_talk_time']['sv-se'] = "Agent med minst taltid";
 $text['option-agent_with_least_talk_time']['uk-ua'] = "Оператор з найменшим часом розмови";
+$text['option-agent_with_least_talk_time']['zh-cn'] = "Agent With Least成衣";
+$text['option-agent_with_least_talk_time']['ja-jp'] = "イースト・トークの時間が付いている代理店";
+$text['option-agent_with_least_talk_time']['ko-kr'] = "Least Talk Time을 가진 대리인";
 
 $text['option-agent_with_fewest_calls']['en-us'] = "Agent With Fewest Calls";
 $text['option-agent_with_fewest_calls']['en-gb'] = "Agent With Fewest Calls";
@@ -797,6 +908,9 @@ $text['option-agent_with_fewest_calls']['ro-ro'] = "Agent cu cele mai puține ap
 $text['option-agent_with_fewest_calls']['ru-ru'] = "Оператор c наименьшим количеством вызовов";
 $text['option-agent_with_fewest_calls']['sv-se'] = "Agent med minst antal samtal";
 $text['option-agent_with_fewest_calls']['uk-ua'] = "Оператор з найменшою кількістю дзвінків";
+$text['option-agent_with_fewest_calls']['zh-cn'] = "最低要求";
+$text['option-agent_with_fewest_calls']['ja-jp'] = "Fewest コールのエージェント";
+$text['option-agent_with_fewest_calls']['ko-kr'] = "Fewest 통화와 대리인";
 
 $text['message-maximum_queues']['en-us'] = "Maximum Queues:";
 $text['message-maximum_queues']['en-gb'] = "Maximum Queues:";
@@ -818,6 +932,9 @@ $text['message-maximum_queues']['ro-ro'] = "Cozi maxime:";
 $text['message-maximum_queues']['ru-ru'] = "Максимальное количество очередей:";
 $text['message-maximum_queues']['sv-se'] = "Max Antal Kö:er:";
 $text['message-maximum_queues']['uk-ua'] = "Максимальна кількість черг:";
+$text['message-maximum_queues']['zh-cn'] = "上限:";
+$text['message-maximum_queues']['ja-jp'] = "最高のキュー:";
+$text['message-maximum_queues']['ko-kr'] = "최대 Queues:";
 
 $text['message-duplicate_agent_id']['en-us'] = "Duplicate Agent ID Detected";
 $text['message-duplicate_agent_id']['en-gb'] = "Duplicate Agent ID Detected";
@@ -839,6 +956,9 @@ $text['message-duplicate_agent_id']['ro-ro'] = "ID-ul agent duplicat detectat";
 $text['message-duplicate_agent_id']['ru-ru'] = "Выявлен дубликат идентификатора оператора";
 $text['message-duplicate_agent_id']['sv-se'] = "Duplicate Agent-ID Funnet";
 $text['message-duplicate_agent_id']['uk-ua'] = "Повторювані Ідентифікатор агента Виявлено";
+$text['message-duplicate_agent_id']['zh-cn'] = "识别剂";
+$text['message-duplicate_agent_id']['ja-jp'] = "重複エージェント ID の検出";
+$text['message-duplicate_agent_id']['ko-kr'] = "중복 에이전트 ID 감지";
 
 $text['label-wrap_up_time']['en-us'] = "Wrap Up Time";
 $text['label-wrap_up_time']['en-gb'] = "Wrap Up Time";
@@ -860,6 +980,9 @@ $text['label-wrap_up_time']['ro-ro'] = "Timp de finalizare";
 $text['label-wrap_up_time']['ru-ru'] = "Время паузы между вызовами";
 $text['label-wrap_up_time']['sv-se'] = "'Wrap Up' Tid";
 $text['label-wrap_up_time']['uk-ua'] = "Час завершення";
+$text['label-wrap_up_time']['zh-cn'] = "总结时间";
+$text['label-wrap_up_time']['ja-jp'] = "ラップアップタイム";
+$text['label-wrap_up_time']['ko-kr'] = "작업 시간";
 
 $text['label-type']['en-us'] = "Type";
 $text['label-type']['en-gb'] = "Type";
@@ -881,6 +1004,9 @@ $text['label-type']['ro-ro'] = "Tip";
 $text['label-type']['ru-ru'] = "Тип";
 $text['label-type']['sv-se'] = "Typ";
 $text['label-type']['uk-ua'] = "Тип";
+$text['label-type']['zh-cn'] = "类型";
+$text['label-type']['ja-jp'] = "タイプ:";
+$text['label-type']['ko-kr'] = "제품정보";
 
 $text['label-timeout_action']['en-us'] = "Timeout Action";
 $text['label-timeout_action']['en-gb'] = "Timeout Action";
@@ -902,6 +1028,9 @@ $text['label-timeout_action']['ro-ro'] = "Acțiune de expirare";
 $text['label-timeout_action']['ru-ru'] = "Действие по тайм-ауту";
 $text['label-timeout_action']['sv-se'] = "Timeout Åtgärd";
 $text['label-timeout_action']['uk-ua'] = "Дія тайм-ауту";
+$text['label-timeout_action']['zh-cn'] = "及时行动";
+$text['label-timeout_action']['ja-jp'] = "タイムアウトアクション";
+$text['label-timeout_action']['ko-kr'] = "Timeout 활동";
 
 $text['label-time_base_score']['en-us'] = "Time Base Score";
 $text['label-time_base_score']['en-gb'] = "Time Base Score";
@@ -923,6 +1052,9 @@ $text['label-time_base_score']['ro-ro'] = "Scorul de bază de timp";
 $text['label-time_base_score']['ru-ru'] = "Оценка по времени";
 $text['label-time_base_score']['sv-se'] = "Tidsbaserat Resultat";
 $text['label-time_base_score']['uk-ua'] = "Оцінка бази часу";
+$text['label-time_base_score']['zh-cn'] = "时间基数";
+$text['label-time_base_score']['ja-jp'] = "タイムベーススコア";
+$text['label-time_base_score']['ko-kr'] = "시간 기본 점수";
 
 $text['label-time_base_score_sec']['en-us'] = "Time Base Score Seconds";
 $text['label-time_base_score_sec']['en-gb'] = "Time Base Score Seconds";
@@ -944,6 +1076,9 @@ $text['label-time_base_score_sec']['ro-ro'] = "Scor de bază de timp Secunde";
 $text['label-time_base_score_sec']['ru-ru'] = "Оценка по времени секунды";
 $text['label-time_base_score_sec']['sv-se'] = "Tidsbaserat Resultat Sekunder";
 $text['label-time_base_score_sec']['uk-ua'] = "Базовий час Оцінка секунд";
+$text['label-time_base_score_sec']['zh-cn'] = "时间基数";
+$text['label-time_base_score_sec']['ja-jp'] = "タイムベーススコア秒";
+$text['label-time_base_score_sec']['ko-kr'] = "시간 기본 점수 초";
 
 $text['label-tiers']['en-us'] = "Tiers";
 $text['label-tiers']['en-gb'] = "Tiers";
@@ -965,6 +1100,9 @@ $text['label-tiers']['ro-ro'] = "Niveluri";
 $text['label-tiers']['ru-ru'] = "Компетенции";
 $text['label-tiers']['sv-se'] = "Kunskap";
 $text['label-tiers']['uk-ua'] = "Яруси";
+$text['label-tiers']['zh-cn'] = "等级";
+$text['label-tiers']['ja-jp'] = "ティアーズ";
+$text['label-tiers']['ko-kr'] = "사이트맵";
 
 $text['label-tier_rules_apply']['en-us'] = "Tier Rules Apply";
 $text['label-tier_rules_apply']['en-gb'] = "Tier Rules Apply";
@@ -986,6 +1124,9 @@ $text['label-tier_rules_apply']['ro-ro'] = "Se aplică regulile nivelului";
 $text['label-tier_rules_apply']['ru-ru'] = "Применять правила компетенции";
 $text['label-tier_rules_apply']['sv-se'] = "Kunskap Regler Gäller";
 $text['label-tier_rules_apply']['uk-ua'] = "Застосовуються правила рівня";
+$text['label-tier_rules_apply']['zh-cn'] = "等级规则";
+$text['label-tier_rules_apply']['ja-jp'] = "層のルールが適用されます";
+$text['label-tier_rules_apply']['ko-kr'] = "Tier 규칙 적용";
 
 $text['label-tier_rule_wait_second']['en-us'] = "Tier Rule Wait Second";
 $text['label-tier_rule_wait_second']['en-gb'] = "Tier Rule Wait Second";
@@ -1007,6 +1148,9 @@ $text['label-tier_rule_wait_second']['ro-ro'] = "Regula de nivel Așteptați al 
 $text['label-tier_rule_wait_second']['ru-ru'] = "Правило компетенции: Ждать секунд";
 $text['label-tier_rule_wait_second']['sv-se'] = "Kunskap Regel Väntetid i Sekunder";
 $text['label-tier_rule_wait_second']['uk-ua'] = "Правило рівня Зачекайте секунду";
+$text['label-tier_rule_wait_second']['zh-cn'] = "二级";
+$text['label-tier_rule_wait_second']['ja-jp'] = "Tier Rule 待つ秒";
+$text['label-tier_rule_wait_second']['ko-kr'] = "계층 규칙은 두 번째를 기다립니다";
 
 $text['label-tier_rule_wait_multiply_level']['en-us'] = "Tier Rule Wait Multiply Level";
 $text['label-tier_rule_wait_multiply_level']['en-gb'] = "Tier Rule Wait Multiply Level";
@@ -1028,6 +1172,9 @@ $text['label-tier_rule_wait_multiply_level']['ro-ro'] = "Nivelul Regulă Aștept
 $text['label-tier_rule_wait_multiply_level']['ru-ru'] = "Правило компетенции: Множитель ожидания";
 $text['label-tier_rule_wait_multiply_level']['sv-se'] = "Kunskap Regel Väntetid Multipla Värden";
 $text['label-tier_rule_wait_multiply_level']['uk-ua'] = "Рівень Правило Очікування Множення Рівень";
+$text['label-tier_rule_wait_multiply_level']['zh-cn'] = "三级:";
+$text['label-tier_rule_wait_multiply_level']['ja-jp'] = "層のルールの待ち合わせレベル";
+$text['label-tier_rule_wait_multiply_level']['ko-kr'] = "계층 규칙은 Multiply 수준을 기다립니다";
 
 $text['label-tier_rule_no_agent_no_wait']['en-us'] = "Tier Rule No Agent No Wait";
 $text['label-tier_rule_no_agent_no_wait']['en-gb'] = "Tier Rule No Agent No Wait";
@@ -1049,6 +1196,9 @@ $text['label-tier_rule_no_agent_no_wait']['ro-ro'] = "Regulă de nivel Fără ag
 $text['label-tier_rule_no_agent_no_wait']['ru-ru'] = "Правило компетенции: Нет оператора, нет ожидания";
 $text['label-tier_rule_no_agent_no_wait']['sv-se'] = "Kunskap Regel Ingen Agent Ingen Väntan";
 $text['label-tier_rule_no_agent_no_wait']['uk-ua'] = "Правило рівня Немає агентів Не чекайте";
+$text['label-tier_rule_no_agent_no_wait']['zh-cn'] = "3. 第1条. 代理人";
+$text['label-tier_rule_no_agent_no_wait']['ja-jp'] = "Tier Rule いいえ エージェント いいえ 待つ";
+$text['label-tier_rule_no_agent_no_wait']['ko-kr'] = "계층 규칙 아니 에이전트 no wait";
 
 $text['label-tier_position']['en-us'] = "Tier Position";
 $text['label-tier_position']['en-gb'] = "Tier Position";
@@ -1070,6 +1220,9 @@ $text['label-tier_position']['ro-ro'] = "Poziția nivelului";
 $text['label-tier_position']['ru-ru'] = "Позиция компетенции";
 $text['label-tier_position']['sv-se'] = "Kunskap Position";
 $text['label-tier_position']['uk-ua'] = "Позиція рівня";
+$text['label-tier_position']['zh-cn'] = "三级职位";
+$text['label-tier_position']['ja-jp'] = "層の位置";
+$text['label-tier_position']['ko-kr'] = "연락처";
 
 $text['label-tier_level']['en-us'] = "Tier Level";
 $text['label-tier_level']['en-gb'] = "Tier Level";
@@ -1091,6 +1244,9 @@ $text['label-tier_level']['ro-ro'] = "Nivelul de nivel";
 $text['label-tier_level']['ru-ru'] = "Уровень компетенции";
 $text['label-tier_level']['sv-se'] = "Kunskap Nivå";
 $text['label-tier_level']['uk-ua'] = "Рівень рівня";
+$text['label-tier_level']['zh-cn'] = "三级";
+$text['label-tier_level']['ja-jp'] = "層レベル";
+$text['label-tier_level']['ko-kr'] = "층 수준";
 
 $text['label-strategy']['en-us'] = "Strategy";
 $text['label-strategy']['en-gb'] = "Strategy";
@@ -1112,6 +1268,9 @@ $text['label-strategy']['ro-ro'] = "Strategie";
 $text['label-strategy']['ru-ru'] = "Стратегия";
 $text['label-strategy']['sv-se'] = "Strategi";
 $text['label-strategy']['uk-ua'] = "Стратегія";
+$text['label-strategy']['zh-cn'] = "战略";
+$text['label-strategy']['ja-jp'] = "戦略";
+$text['label-strategy']['ko-kr'] = "회사연혁";
 
 $text['label-status']['en-us'] = "Status";
 $text['label-status']['en-gb'] = "Status";
@@ -1133,6 +1292,9 @@ $text['label-status']['ro-ro'] = "stare";
 $text['label-status']['ru-ru'] = "Статус";
 $text['label-status']['sv-se'] = "Status";
 $text['label-status']['uk-ua'] = "Статус";
+$text['label-status']['zh-cn'] = "现况";
+$text['label-status']['ja-jp'] = "ステータス";
+$text['label-status']['ko-kr'] = "주요연혁";
 
 $text['label-reject_delay_time']['en-us'] = "Reject Delay Time";
 $text['label-reject_delay_time']['en-gb'] = "Reject Delay Time";
@@ -1154,6 +1316,9 @@ $text['label-reject_delay_time']['ro-ro'] = "Timp de întârziere de respingere"
 $text['label-reject_delay_time']['ru-ru'] = "Время задержки по отказу";
 $text['label-reject_delay_time']['sv-se'] = "Fördröjning vid Neka";
 $text['label-reject_delay_time']['uk-ua'] = "Час затримки відхилення";
+$text['label-reject_delay_time']['zh-cn'] = "驳回拖延时间";
+$text['label-reject_delay_time']['ja-jp'] = "遅れの時間を注入して下さい";
+$text['label-reject_delay_time']['ko-kr'] = "Reject 지연 시간";
 
 $text['label-record_template']['en-us'] = "Record";
 $text['label-record_template']['en-gb'] = "Record";
@@ -1175,6 +1340,9 @@ $text['label-record_template']['ro-ro'] = "Record";
 $text['label-record_template']['ru-ru'] = "Запись";
 $text['label-record_template']['sv-se'] = "Spela In";
 $text['label-record_template']['uk-ua'] = "Запис";
+$text['label-record_template']['zh-cn'] = "记录";
+$text['label-record_template']['ja-jp'] = "レコード";
+$text['label-record_template']['ko-kr'] = "이름 *";
 
 $text['label-queue']['en-us'] = "Queue";
 $text['label-queue']['en-gb'] = "Queue";
@@ -1196,6 +1364,9 @@ $text['label-queue']['ro-ro'] = "Coadă";
 $text['label-queue']['ru-ru'] = "Очередь";
 $text['label-queue']['sv-se'] = "Grupp";
 $text['label-queue']['uk-ua'] = "Черга";
+$text['label-queue']['zh-cn'] = "问题";
+$text['label-queue']['ja-jp'] = "キュー";
+$text['label-queue']['ko-kr'] = "이름 *";
 
 $text['label-queues']['en-us'] = "Queues";
 $text['label-queues']['en-gb'] = "Queues";
@@ -1217,6 +1388,9 @@ $text['label-queues']['ro-ro'] = "Cozi";
 $text['label-queues']['ru-ru'] = "Очереди";
 $text['label-queues']['sv-se'] = "Kö:er";
 $text['label-queues']['uk-ua'] = "Хвости";
+$text['label-queues']['zh-cn'] = "询问";
+$text['label-queues']['ja-jp'] = "キュー";
+$text['label-queues']['ko-kr'] = "한국어";
 
 $text['label-queue_name']['en-us'] = "Queue Name";
 $text['label-queue_name']['en-gb'] = "Queue Name";
@@ -1238,6 +1412,9 @@ $text['label-queue_name']['ro-ro'] = "Nume coadă";
 $text['label-queue_name']['ru-ru'] = "Имя очереди";
 $text['label-queue_name']['sv-se'] = "Kö Namn";
 $text['label-queue_name']['uk-ua'] = "Назва черги";
+$text['label-queue_name']['zh-cn'] = "姓名";
+$text['label-queue_name']['ja-jp'] = "キューの名前";
+$text['label-queue_name']['ko-kr'] = "큐 이름";
 
 $text['label-options']['en-us'] = "Options";
 $text['label-options']['en-gb'] = "Options";
@@ -1259,6 +1436,9 @@ $text['label-options']['ro-ro'] = "Opțiuni";
 $text['label-options']['ru-ru'] = "Параметры";
 $text['label-options']['sv-se'] = "Val";
 $text['label-options']['uk-ua'] = "Параметри";
+$text['label-options']['zh-cn'] = "备选办法";
+$text['label-options']['ja-jp'] = "オプション";
+$text['label-options']['ko-kr'] = "제품 설명";
 
 $text['label-no_answer_delay_time']['en-us'] = "No Answer Delay Time";
 $text['label-no_answer_delay_time']['en-gb'] = "No Answer Delay Time";
@@ -1280,6 +1460,9 @@ $text['label-no_answer_delay_time']['ro-ro'] = "Timp de întârziere fără răs
 $text['label-no_answer_delay_time']['ru-ru'] = "Время задержи по неответу";
 $text['label-no_answer_delay_time']['sv-se'] = "Fördröjning vid ej svar";
 $text['label-no_answer_delay_time']['uk-ua'] = "Час затримки відсутності відповіді";
+$text['label-no_answer_delay_time']['zh-cn'] = "答复";
+$text['label-no_answer_delay_time']['ja-jp'] = "応答遅延時間なし";
+$text['label-no_answer_delay_time']['ko-kr'] = "답변 지연 시간 없음";
 
 $text['label-music_on_hold']['en-us'] = "Music on Hold";
 $text['label-music_on_hold']['en-gb'] = "Music on Hold";
@@ -1301,6 +1484,9 @@ $text['label-music_on_hold']['ro-ro'] = "Muzică în așteptare";
 $text['label-music_on_hold']['ru-ru'] = "Музыка на удержании";
 $text['label-music_on_hold']['sv-se'] = "Väntmusik";
 $text['label-music_on_hold']['uk-ua'] = "Мелодія на утримуванні";
+$text['label-music_on_hold']['zh-cn'] = "音乐家";
+$text['label-music_on_hold']['ja-jp'] = "ホールドでの音楽";
+$text['label-music_on_hold']['ko-kr'] = "공지사항";
 
 $text['label-max_wait_time_with_no_agent_time_reached']['en-us'] = "Max Wait Time with No Agent Time Reached";
 $text['label-max_wait_time_with_no_agent_time_reached']['en-gb'] = "Max Wait Time with No Agent Time Reached";
@@ -1322,6 +1508,9 @@ $text['label-max_wait_time_with_no_agent_time_reached']['ro-ro'] = "Timp maxim d
 $text['label-max_wait_time_with_no_agent_time_reached']['ru-ru'] = "Достигнуто максимальное время ожидания при отсутствии операторов";
 $text['label-max_wait_time_with_no_agent_time_reached']['sv-se'] = "Tidsgräns för 'Max Vänt Tid utan Agent' är nådd";
 $text['label-max_wait_time_with_no_agent_time_reached']['uk-ua'] = "Максимальний час очікування без досягнення часу агента";
+$text['label-max_wait_time_with_no_agent_time_reached']['zh-cn'] = "Max Wait Time with No Agent Time Reach";
+$text['label-max_wait_time_with_no_agent_time_reached']['ja-jp'] = "エージェントタイムが到達しない最大待ち時間";
+$text['label-max_wait_time_with_no_agent_time_reached']['ko-kr'] = "Max 대기 시간 없이 에이전트 시간 도달";
 
 $text['label-max_wait_time_with_no_agent']['en-us'] = "Max Wait Time with No Agent";
 $text['label-max_wait_time_with_no_agent']['en-gb'] = "Max Wait Time with No Agent";
@@ -1343,6 +1532,9 @@ $text['label-max_wait_time_with_no_agent']['ro-ro'] = "Timp maxim de așteptare 
 $text['label-max_wait_time_with_no_agent']['ru-ru'] = "Максимальное время ожидания при отсутствии операторов";
 $text['label-max_wait_time_with_no_agent']['sv-se'] = "Max Vänt Tid utan Agent";
 $text['label-max_wait_time_with_no_agent']['uk-ua'] = "Максимальний час очікування без оператора";
+$text['label-max_wait_time_with_no_agent']['zh-cn'] = "无代理人的等候时间";
+$text['label-max_wait_time_with_no_agent']['ja-jp'] = "代理店無しの最高の待ち時間";
+$text['label-max_wait_time_with_no_agent']['ko-kr'] = "Max 대기 시간 와 아니 Agent";
 
 $text['label-max_wait_time']['en-us'] = "Max Wait Time";
 $text['label-max_wait_time']['en-gb'] = "Max Wait Time";
@@ -1364,6 +1556,9 @@ $text['label-max_wait_time']['ro-ro'] = "Timp maxim de așteptare";
 $text['label-max_wait_time']['ru-ru'] = "Максимальное время ожидания";
 $text['label-max_wait_time']['sv-se'] = "Max Vänt Tid";
 $text['label-max_wait_time']['uk-ua'] = "Максимальний час очікування";
+$text['label-max_wait_time']['zh-cn'] = "等候时间";
+$text['label-max_wait_time']['ja-jp'] = "最高の待ち時間";
+$text['label-max_wait_time']['ko-kr'] = "최대 대기 시간";
 
 $text['label-max_no_answer']['en-us'] = "Max No Answer";
 $text['label-max_no_answer']['en-gb'] = "Max No Answer";
@@ -1385,6 +1580,9 @@ $text['label-max_no_answer']['ro-ro'] = "Max fără răspuns";
 $text['label-max_no_answer']['ru-ru'] = "Максимальное время без ответа";
 $text['label-max_no_answer']['sv-se'] = "Max Inget Svar";
 $text['label-max_no_answer']['uk-ua'] = "Максимальний час без відповіді";
+$text['label-max_no_answer']['zh-cn'] = "Max No.";
+$text['label-max_no_answer']['ja-jp'] = "最高の答え無し";
+$text['label-max_no_answer']['ko-kr'] = "최대 답변 없음";
 
 $text['label-extension']['en-us'] = "Extension";
 $text['label-extension']['en-gb'] = "Extension";
@@ -1406,6 +1604,9 @@ $text['label-extension']['ro-ro'] = "Extensie";
 $text['label-extension']['ru-ru'] = "Внутренний номер";
 $text['label-extension']['sv-se'] = "Anknytning";
 $text['label-extension']['uk-ua'] = "Розширення (Extention)";
+$text['label-extension']['zh-cn'] = "延期";
+$text['label-extension']['ja-jp'] = "エクステンション";
+$text['label-extension']['ko-kr'] = "제품 정보";
 
 $text['label-discard_abandoned_after']['en-us'] = "Discard Abandoned After";
 $text['label-discard_abandoned_after']['en-gb'] = "Discard Abandoned After";
@@ -1427,6 +1628,9 @@ $text['label-discard_abandoned_after']['ro-ro'] = "Aruncă abandonat după";
 $text['label-discard_abandoned_after']['ru-ru'] = "Сбросить вызов после покидания очереди";
 $text['label-discard_abandoned_after']['sv-se'] = "Uteslut Ej Besvarat Efter";
 $text['label-discard_abandoned_after']['uk-ua'] = "Відкинути покинуте після";
+$text['label-discard_abandoned_after']['zh-cn'] = "抛弃物 之后";
+$text['label-discard_abandoned_after']['ja-jp'] = "捨てられた放棄 アフター";
+$text['label-discard_abandoned_after']['ko-kr'] = "삭제 된 이름 *";
 
 $text['label-default_status']['en-us'] = "Default Status";
 $text['label-default_status']['en-gb'] = "Default Status";
@@ -1448,6 +1652,9 @@ $text['label-default_status']['ro-ro'] = "Stare implicită";
 $text['label-default_status']['ru-ru'] = "Статус по умолчанию";
 $text['label-default_status']['sv-se'] = "i förväg fastställda status";
 $text['label-default_status']['uk-ua'] = "Статус за замовчуванням";
+$text['label-default_status']['zh-cn'] = "违约情况";
+$text['label-default_status']['ja-jp'] = "デフォルトステータス";
+$text['label-default_status']['ko-kr'] = "기본 상태";
 
 $text['label-contact']['en-us'] = "Contact";
 $text['label-contact']['en-gb'] = "Contact";
@@ -1469,6 +1676,9 @@ $text['label-contact']['ro-ro'] = "a lua legatura";
 $text['label-contact']['ru-ru'] = "Контакт";
 $text['label-contact']['sv-se'] = "Kontakt";
 $text['label-contact']['uk-ua'] = "Контакт";
+$text['label-contact']['zh-cn'] = "联系";
+$text['label-contact']['ja-jp'] = "お問い合わせ";
+$text['label-contact']['ko-kr'] = "제품정보";
 
 $text['label-caller_id_name_prefix']['en-us'] = "Caller ID Name Prefix";
 $text['label-caller_id_name_prefix']['en-gb'] = "Caller ID Name Prefix";
@@ -1490,6 +1700,9 @@ $text['label-caller_id_name_prefix']['ro-ro'] = "Prefixul numelui apelantului";
 $text['label-caller_id_name_prefix']['ru-ru'] = "Префикс СallerID/Имя";
 $text['label-caller_id_name_prefix']['sv-se'] = "Caller ID Namn Prefix";
 $text['label-caller_id_name_prefix']['uk-ua'] = "Префікс імені абонента";
+$text['label-caller_id_name_prefix']['zh-cn'] = "Caller ID name";
+$text['label-caller_id_name_prefix']['ja-jp'] = "Caller ID 名前 プレフィックス";
+$text['label-caller_id_name_prefix']['ko-kr'] = "Caller ID 이름 접두사";
 
 $text['label-outbound_caller_id_name']['en-us'] = "Outbound Caller ID Name";
 $text['label-outbound_caller_id_name']['en-gb'] = "Outbound Caller ID Name";
@@ -1511,6 +1724,9 @@ $text['label-outbound_caller_id_name']['ro-ro'] = "Nume ID apelant de ieșire";
 $text['label-outbound_caller_id_name']['ru-ru'] = "Идентификатор (Caller ID) имени вызывающего абонента";
 $text['label-outbound_caller_id_name']['sv-se'] = "Utgående Namnpresentation";
 $text['label-outbound_caller_id_name']['uk-ua'] = "Ім'я ідентифікатора абонента вихідної пошти";
+$text['label-outbound_caller_id_name']['zh-cn'] = "姓名";
+$text['label-outbound_caller_id_name']['ja-jp'] = "発信者 ID 名";
+$text['label-outbound_caller_id_name']['ko-kr'] = "아웃바운드 Caller ID 이름";
 
 $text['label-outbound_caller_id_number']['en-us'] = "Outbound Caller ID Number";
 $text['label-outbound_caller_id_number']['en-gb'] = "Outbound Caller ID Number";
@@ -1532,6 +1748,9 @@ $text['label-outbound_caller_id_number']['ro-ro'] = "Număr ID apelant de ieșir
 $text['label-outbound_caller_id_number']['ru-ru'] = "Идентификатор (Caller ID) номера вызывающего абонента";
 $text['label-outbound_caller_id_number']['sv-se'] = "Utgående Nummerpresentation";
 $text['label-outbound_caller_id_number']['uk-ua'] = "Ідентифікаційний номер абонента вихідної пошти";
+$text['label-outbound_caller_id_number']['zh-cn'] = "外来电话号码";
+$text['label-outbound_caller_id_number']['ja-jp'] = "発信者 ID 番号";
+$text['label-outbound_caller_id_number']['ko-kr'] = "아웃바운드 콜러 ID 번호";
 
 $text['label-queue_announce_position']['en-us'] = "Announce Position";
 $text['label-queue_announce_position']['en-gb'] = "Announce Position";
@@ -1553,6 +1772,9 @@ $text['label-queue_announce_position']['ro-ro'] = "Anunțați Poziția";
 $text['label-queue_announce_position']['ru-ru'] = "Объявить позицию";
 $text['label-queue_announce_position']['sv-se'] = "Tillkännage position";
 $text['label-queue_announce_position']['uk-ua'] = "Оголосити позицію";
+$text['label-queue_announce_position']['zh-cn'] = "Announce职位";
+$text['label-queue_announce_position']['ja-jp'] = "開催場所";
+$text['label-queue_announce_position']['ko-kr'] = "공지사항";
 
 $text['label-caller_announce_sound']['en-us'] = "Announce Sound";
 $text['label-caller_announce_sound']['en-gb'] = "Announce Sound";
@@ -1574,6 +1796,9 @@ $text['label-caller_announce_sound']['ro-ro'] = "Anunțați sunet";
 $text['label-caller_announce_sound']['ru-ru'] = "Звук объявления";
 $text['label-caller_announce_sound']['sv-se'] = "Meddelande Ljud";
 $text['label-caller_announce_sound']['uk-ua'] = "Оголосити звук";
+$text['label-caller_announce_sound']['zh-cn'] = "1. 宣布无罪";
+$text['label-caller_announce_sound']['ja-jp'] = "サウンドを発表";
+$text['label-caller_announce_sound']['ko-kr'] = "사운드 발표";
 
 $text['label-caller_announce_frequency']['en-us'] = "Announce Frequency";
 $text['label-caller_announce_frequency']['en-gb'] = "Announce Frequency";
@@ -1595,6 +1820,9 @@ $text['label-caller_announce_frequency']['ro-ro'] = "Anunțați frecvența";
 $text['label-caller_announce_frequency']['ru-ru'] = "Частота объявления";
 $text['label-caller_announce_frequency']['sv-se'] = "Meddelande Frekvens";
 $text['label-caller_announce_frequency']['uk-ua'] = "Частота оголошень";
+$text['label-caller_announce_frequency']['zh-cn'] = "Announce频率";
+$text['label-caller_announce_frequency']['ja-jp'] = "頻度の発表";
+$text['label-caller_announce_frequency']['ko-kr'] = "공지사항";
 
 $text['label-exit_keys']['en-us'] = "Exit Key";
 $text['label-exit_keys']['en-gb'] = "Exit Key";
@@ -1616,6 +1844,9 @@ $text['label-exit_keys']['ro-ro'] = "Tasta de ieșire";
 $text['label-exit_keys']['ru-ru'] = "Выходной ключ";
 $text['label-exit_keys']['sv-se'] = "Knapp för att lämna";
 $text['label-exit_keys']['uk-ua'] = "Клавіша виходу";
+$text['label-exit_keys']['zh-cn'] = "重要事项";
+$text['label-exit_keys']['ja-jp'] = "出口のキー";
+$text['label-exit_keys']['ko-kr'] = "출구 열쇠";
 
 $text['description-exit_keys']['en-us'] = "Keys to quit the current queue waiting.";
 $text['description-exit_keys']['en-gb'] = "Keys to quit the current queue waiting.";
@@ -1637,6 +1868,9 @@ $text['description-exit_keys']['ro-ro'] = "Chei pentru a părăsi coada curentă
 $text['description-exit_keys']['ru-ru'] = "Клавиши выхода из текущей очереди ожидания.";
 $text['description-exit_keys']['sv-se'] = "Knapp för att lämna den nuvarande kö:n";
 $text['description-exit_keys']['uk-ua'] = "Клавіші для виходу з поточної черги очікування.";
+$text['description-exit_keys']['zh-cn'] = "结束目前等待的关键。";
+$text['description-exit_keys']['ja-jp'] = "現在のキューを待機させるキー。";
+$text['description-exit_keys']['ko-kr'] = "현재 대기를 종료하는 열쇠.";
 
 $text['label-queue_email_address']['en-us'] = "Email Address";
 $text['label-queue_email_address']['en-gb'] = "Email Address";
@@ -1658,6 +1892,9 @@ $text['label-queue_email_address']['ro-ro'] = "Adresa de e-mail";
 $text['label-queue_email_address']['ru-ru'] = "Адрес электронной почты";
 $text['label-queue_email_address']['sv-se'] = "E-postadress";
 $text['label-queue_email_address']['uk-ua'] = "Адреса електронної пошти";
+$text['label-queue_email_address']['zh-cn'] = "电子邮件地址";
+$text['label-queue_email_address']['ja-jp'] = "メールアドレス";
+$text['label-queue_email_address']['ko-kr'] = "이메일 주소";
 
 $text['description-queue_email_address']['en-us'] = "Notification Email address.";
 $text['description-queue_email_address']['en-gb'] = "Notification Email address.";
@@ -1679,6 +1916,9 @@ $text['description-queue_email_address']['ro-ro'] = "Adresă de e-mail de notifi
 $text['description-queue_email_address']['ru-ru'] = "Адрес электронной почты для уведомлений.";
 $text['description-queue_email_address']['sv-se'] = "E-postadress för meddelande.";
 $text['description-queue_email_address']['uk-ua'] = "Адреса електронної пошти для сповіщень.";
+$text['description-queue_email_address']['zh-cn'] = "电子邮件地址。";
+$text['description-queue_email_address']['ja-jp'] = "通知メールアドレス。";
+$text['description-queue_email_address']['ko-kr'] = "공지사항";
 
 $text['label-call_timeout']['en-us'] = "Call Timeout";
 $text['label-call_timeout']['en-gb'] = "Call Timeout";
@@ -1700,6 +1940,9 @@ $text['label-call_timeout']['ro-ro'] = "Timeout apel";
 $text['label-call_timeout']['ru-ru'] = "Тайм-аут вызова";
 $text['label-call_timeout']['sv-se'] = "Ring Tidsgräns";
 $text['label-call_timeout']['uk-ua'] = "Тайм-аут дзвінка";
+$text['label-call_timeout']['zh-cn'] = "B. 要求时间";
+$text['label-call_timeout']['ja-jp'] = "コールタイムアウト";
+$text['label-call_timeout']['ko-kr'] = "연락처";
 
 $text['label-busy_delay_time']['en-us'] = "Busy Delay Time";
 $text['label-busy_delay_time']['en-gb'] = "Busy Delay Time";
@@ -1721,6 +1964,9 @@ $text['label-busy_delay_time']['ro-ro'] = "Timp de întârziere ocupat";
 $text['label-busy_delay_time']['ru-ru'] = "Время задержки занятости";
 $text['label-busy_delay_time']['sv-se'] = "Fördröjning vid Upptaget";
 $text['label-busy_delay_time']['uk-ua'] = "Час затримки зайнятості";
+$text['label-busy_delay_time']['zh-cn'] = "B. 日常拖延时间";
+$text['label-busy_delay_time']['ja-jp'] = "busy 遅延 時間";
+$text['label-busy_delay_time']['ko-kr'] = "Busy 지연 시간";
 
 $text['label-agent_password']['en-us'] = "Agent Password";
 $text['label-agent_password']['en-gb'] = "Agent Password";
@@ -1742,6 +1988,9 @@ $text['label-agent_password']['ro-ro'] = "Parola agentului";
 $text['label-agent_password']['ru-ru'] = "Пароль оператора";
 $text['label-agent_password']['sv-se'] = "Agent Lösen";
 $text['label-agent_password']['uk-ua'] = "Пароль агента";
+$text['label-agent_password']['zh-cn'] = "页 次";
+$text['label-agent_password']['ja-jp'] = "エージェントパスワード";
+$text['label-agent_password']['ko-kr'] = "에이전트 암호";
 
 $text['label-agent_name']['en-us'] = "Agent Name";
 $text['label-agent_name']['en-gb'] = "Agent Name";
@@ -1763,6 +2012,9 @@ $text['label-agent_name']['ro-ro'] = "Numele agentului";
 $text['label-agent_name']['ru-ru'] = "Имя оператора";
 $text['label-agent_name']['sv-se'] = "Agent Namn";
 $text['label-agent_name']['uk-ua'] = "Ім’я оператора";
+$text['label-agent_name']['zh-cn'] = "代理人名称";
+$text['label-agent_name']['ja-jp'] = "エージェント名";
+$text['label-agent_name']['ko-kr'] = "에이전트 이름";
 
 $text['label-agent_logout']['en-us'] = "Agent Logout";
 $text['label-agent_logout']['en-gb'] = "Agent Logout";
@@ -1784,6 +2036,9 @@ $text['label-agent_logout']['ro-ro'] = "Deconectare agent";
 $text['label-agent_logout']['ru-ru'] = "Выход оператора";
 $text['label-agent_logout']['sv-se'] = "Agent Logga Ut";
 $text['label-agent_logout']['uk-ua'] = "Вихід агента";
+$text['label-agent_logout']['zh-cn'] = "后勤";
+$text['label-agent_logout']['ja-jp'] = "エージェントのログアウト";
+$text['label-agent_logout']['ko-kr'] = "에이전트 Logout";
 
 $text['label-agent_id']['en-us'] = "Agent ID";
 $text['label-agent_id']['en-gb'] = "Agent ID";
@@ -1805,6 +2060,9 @@ $text['label-agent_id']['ro-ro'] = "ID agent";
 $text['label-agent_id']['ru-ru'] = "Идентификатор оператора";
 $text['label-agent_id']['sv-se'] = "Agent Identitet";
 $text['label-agent_id']['uk-ua'] = "ID агента";
+$text['label-agent_id']['zh-cn'] = "代理";
+$text['label-agent_id']['ja-jp'] = "エージェントID";
+$text['label-agent_id']['ko-kr'] = "에이전트 ID";
 
 $text['label-agent']['en-us'] = "Agent";
 $text['label-agent']['en-gb'] = "Agent";
@@ -1826,6 +2084,9 @@ $text['label-agent']['ro-ro'] = "Agent";
 $text['label-agent']['ru-ru'] = "Оператор";
 $text['label-agent']['sv-se'] = "Agent";
 $text['label-agent']['uk-ua'] = "Оператор";
+$text['label-agent']['zh-cn'] = "代理人";
+$text['label-agent']['ja-jp'] = "エージェント";
+$text['label-agent']['ko-kr'] = "이름 *";
 
 $text['label-agents']['en-us'] = "Agents";
 $text['label-agents']['en-gb'] = "Agents";
@@ -1847,6 +2108,9 @@ $text['label-agents']['ro-ro'] = "Agenți";
 $text['label-agents']['ru-ru'] = "Операторы";
 $text['label-agents']['sv-se'] = "Agenter";
 $text['label-agents']['uk-ua'] = "Оператори";
+$text['label-agents']['zh-cn'] = "代理人";
+$text['label-agents']['ja-jp'] = "エージェント";
+$text['label-agents']['ko-kr'] = "이름 *";
 
 $text['label-abandoned_resume_allowed']['en-us'] = "Abandoned Resume Allowed";
 $text['label-abandoned_resume_allowed']['en-gb'] = "Abandoned Resume Allowed";
@@ -1868,6 +2132,9 @@ $text['label-abandoned_resume_allowed']['ro-ro'] = "CV-ul abandonat este permis"
 $text['label-abandoned_resume_allowed']['ru-ru'] = "Разрешить восстанавливать покинутый вызов";
 $text['label-abandoned_resume_allowed']['sv-se'] = "Återuppta Ej Besvarade Tillåtet";
 $text['label-abandoned_resume_allowed']['uk-ua'] = "Залишене резюме дозволено";
+$text['label-abandoned_resume_allowed']['zh-cn'] = "放弃后恢复";
+$text['label-abandoned_resume_allowed']['ja-jp'] = "放棄された履歴書の許可";
+$text['label-abandoned_resume_allowed']['ko-kr'] = "허용 된 이력서";
 
 $text['header-call_center_tier_edit']['en-us'] = "Call Center Tier";
 $text['header-call_center_tier_edit']['en-gb'] = "Call Center Tier";
@@ -1889,6 +2156,9 @@ $text['header-call_center_tier_edit']['ro-ro'] = "Nivelul Call Center";
 $text['header-call_center_tier_edit']['ru-ru'] = "Компетенция Колл-центра";
 $text['header-call_center_tier_edit']['sv-se'] = "Call Center Kunskap";
 $text['header-call_center_tier_edit']['uk-ua'] = "Рівень кол-центру";
+$text['header-call_center_tier_edit']['zh-cn'] = "电话中心";
+$text['header-call_center_tier_edit']['ja-jp'] = "コールセンターティア";
+$text['header-call_center_tier_edit']['ko-kr'] = "연락처";
 
 $text['header-call_center_queues']['en-us'] = "Call Center Queues";
 $text['header-call_center_queues']['en-gb'] = "Call Center Queues";
@@ -1910,6 +2180,9 @@ $text['header-call_center_queues']['ro-ro'] = "Cozi la Call Center";
 $text['header-call_center_queues']['ru-ru'] = "Очереди Колл-центра";
 $text['header-call_center_queues']['sv-se'] = "Call Center Kö:er";
 $text['header-call_center_queues']['uk-ua'] = "Черги кол-центру";
+$text['header-call_center_queues']['zh-cn'] = "电话中心";
+$text['header-call_center_queues']['ja-jp'] = "コールセンターキュー";
+$text['header-call_center_queues']['ko-kr'] = "고객센터";
 
 $text['header-call_center_queue_edit']['en-us'] = "Call Center Queue";
 $text['header-call_center_queue_edit']['en-gb'] = "Call Center Queue";
@@ -1931,6 +2204,9 @@ $text['header-call_center_queue_edit']['ro-ro'] = "Coada centrului de apeluri";
 $text['header-call_center_queue_edit']['ru-ru'] = "Очередь Колл-центра";
 $text['header-call_center_queue_edit']['sv-se'] = "Call Center Kö";
 $text['header-call_center_queue_edit']['uk-ua'] = "Черга кол-центру";
+$text['header-call_center_queue_edit']['zh-cn'] = "电话中心";
+$text['header-call_center_queue_edit']['ja-jp'] = "コールセンターキュー";
+$text['header-call_center_queue_edit']['ko-kr'] = "고객센터";
 
 $text['header-call_center_queue_add']['en-us'] = "Call Center Queue";
 $text['header-call_center_queue_add']['en-gb'] = "Call Center Queue";
@@ -1952,6 +2228,9 @@ $text['header-call_center_queue_add']['ro-ro'] = "Coada centrului de apeluri";
 $text['header-call_center_queue_add']['ru-ru'] = "Очередь Колл-центра";
 $text['header-call_center_queue_add']['sv-se'] = "Call Center Kö";
 $text['header-call_center_queue_add']['uk-ua'] = "Черга кол-центру";
+$text['header-call_center_queue_add']['zh-cn'] = "电话中心";
+$text['header-call_center_queue_add']['ja-jp'] = "コールセンターキュー";
+$text['header-call_center_queue_add']['ko-kr'] = "고객센터";
 
 $text['header-call_center_agents']['en-us'] = "Call Center Agents";
 $text['header-call_center_agents']['en-gb'] = "Call Center Agents";
@@ -1973,6 +2252,9 @@ $text['header-call_center_agents']['ro-ro'] = "Agenti call center";
 $text['header-call_center_agents']['ru-ru'] = "Операторы Колл-центра";
 $text['header-call_center_agents']['sv-se'] = "Call Center Agenter";
 $text['header-call_center_agents']['uk-ua'] = "Агенти кол-центру";
+$text['header-call_center_agents']['zh-cn'] = "电话中心";
+$text['header-call_center_agents']['ja-jp'] = "コールセンターエージェント";
+$text['header-call_center_agents']['ko-kr'] = "고객센터";
 
 $text['header-call_center_agent_status']['en-us'] = "Call Center Agent Status";
 $text['header-call_center_agent_status']['en-gb'] = "Call Center Agent Status";
@@ -1994,6 +2276,9 @@ $text['header-call_center_agent_status']['ro-ro'] = "Starea agentului Call Cente
 $text['header-call_center_agent_status']['ru-ru'] = "Статус оператора Колл-центра";
 $text['header-call_center_agent_status']['sv-se'] = "Call Center Agent Status";
 $text['header-call_center_agent_status']['uk-ua'] = "Статус агента кол-центру";
+$text['header-call_center_agent_status']['zh-cn'] = "电话中心";
+$text['header-call_center_agent_status']['ja-jp'] = "コールセンターエージェントのステータス";
+$text['header-call_center_agent_status']['ko-kr'] = "고객센터 에이전트 상태";
 
 $text['header-call_center_agent_edit']['en-us'] = "Call Center Agent";
 $text['header-call_center_agent_edit']['en-gb'] = "Call Center Agent";
@@ -2015,6 +2300,9 @@ $text['header-call_center_agent_edit']['ro-ro'] = "Agent call center";
 $text['header-call_center_agent_edit']['ru-ru'] = "Оператор Колл-центра";
 $text['header-call_center_agent_edit']['sv-se'] = "Call Center Agent";
 $text['header-call_center_agent_edit']['uk-ua'] = "Агент кол-центру";
+$text['header-call_center_agent_edit']['zh-cn'] = "电话中心";
+$text['header-call_center_agent_edit']['ja-jp'] = "コールセンターエージェント";
+$text['header-call_center_agent_edit']['ko-kr'] = "고객센터";
 
 $text['header-call_center_agent_add']['en-us'] = "Call Center Agents";
 $text['header-call_center_agent_add']['en-gb'] = "Call Center Agents";
@@ -2036,6 +2324,9 @@ $text['header-call_center_agent_add']['ro-ro'] = "Agenti call center";
 $text['header-call_center_agent_add']['ru-ru'] = "Операторы Колл-центра";
 $text['header-call_center_agent_add']['sv-se'] = "Call Center Agenter";
 $text['header-call_center_agent_add']['uk-ua'] = "Агенти кол-центру";
+$text['header-call_center_agent_add']['zh-cn'] = "电话中心";
+$text['header-call_center_agent_add']['ja-jp'] = "コールセンターエージェント";
+$text['header-call_center_agent_add']['ko-kr'] = "고객센터";
 
 $text['description-wrap_up_time']['en-us'] = "Enter the wrap up time.";
 $text['description-wrap_up_time']['en-gb'] = "Enter the wrap up time.";
@@ -2057,6 +2348,9 @@ $text['description-wrap_up_time']['ro-ro'] = "Introduceți timpul de încheiere.
 $text['description-wrap_up_time']['ru-ru'] = "Введите время паузы между вызовами";
 $text['description-wrap_up_time']['sv-se'] = "Ange 'Wrap Up' tid.";
 $text['description-wrap_up_time']['uk-ua'] = "Введіть час завершення.";
+$text['description-wrap_up_time']['zh-cn'] = "总结时间。";
+$text['description-wrap_up_time']['ja-jp'] = "ラップアップ時間を入力してください。";
+$text['description-wrap_up_time']['ko-kr'] = "시간을 위로 감싸십시오.";
 
 $text['description-type']['en-us'] = "Enter the agent type.";
 $text['description-type']['en-gb'] = "Enter the agent type.";
@@ -2078,6 +2372,9 @@ $text['description-type']['ro-ro'] = "Introduceți tipul de agent.";
 $text['description-type']['ru-ru'] = "Выберите тип оператора";
 $text['description-type']['sv-se'] = "Ange agent typen.";
 $text['description-type']['uk-ua'] = "Введіть тип агента.";
+$text['description-type']['zh-cn'] = "进入代理类型。";
+$text['description-type']['ja-jp'] = "エージェントの種類を入力してください。";
+$text['description-type']['ko-kr'] = "에이전트 유형 입력.";
 
 $text['description-timeout_action']['en-us'] = "Set the action to perform when the max wait time is reached.";
 $text['description-timeout_action']['en-gb'] = "Set the action to perform when the max wait time is reached.";
@@ -2099,6 +2396,9 @@ $text['description-timeout_action']['ro-ro'] = "Setați acțiunea să se efectue
 $text['description-timeout_action']['ru-ru'] = "Установите действие при достижении максимального времени ожидания";
 $text['description-timeout_action']['sv-se'] = "Ange vad som skall utföras när max vänttid är nådd.";
 $text['description-timeout_action']['uk-ua'] = "Встановіть дію, яку потрібно виконати, коли досягнуто максимального часу очікування.";
+$text['description-timeout_action']['zh-cn'] = "规定在达到最高等待时间时采取行动。";
+$text['description-timeout_action']['ja-jp'] = "最大待ち時間に達すると実行するアクションを設定します。";
+$text['description-timeout_action']['ko-kr'] = "최대 대기 시간이 도달 할 때 수행 작업을 설정합니다.";
 
 $text['description-time_base_score']['en-us'] = "Select the time base score.";
 $text['description-time_base_score']['en-gb'] = "Select the time base score.";
@@ -2120,6 +2420,9 @@ $text['description-time_base_score']['ro-ro'] = "Selectați scorul de bază de t
 $text['description-time_base_score']['ru-ru'] = "Выберие оценку по времени";
 $text['description-time_base_score']['sv-se'] = "Ange tids-baserad poäng.";
 $text['description-time_base_score']['uk-ua'] = "Виберіть базову оцінку часу.";
+$text['description-time_base_score']['zh-cn'] = "选择时间基分。";
+$text['description-time_base_score']['ja-jp'] = "タイムベーススコアを選択します。";
+$text['description-time_base_score']['ko-kr'] = "시간 기본 점수를 선택합니다.";
 
 $text['description-time_base_score_sec']['en-us'] = "Set the time base score in seconds. Higher numbers mean higher priority over other call centers.";
 $text['description-time_base_score_sec']['en-gb'] = "Set the time base score in seconds. Higher numbers mean higher priority over other call centers.";
@@ -2141,6 +2444,9 @@ $text['description-time_base_score_sec']['ro-ro'] = "Setați scorul de bază de 
 $text['description-time_base_score_sec']['ru-ru'] = "Установите базовую оценку времени в секундах. Более высокие числа означают более высокий приоритет по сравнению с другими колл-центрами.";
 $text['description-time_base_score_sec']['sv-se'] = "Ställ in tidsbaspoängen i sekunder. Högre nummer innebär högre prioritet framför andra callcenter.";
 $text['description-time_base_score_sec']['uk-ua'] = "Встановіть базову оцінку часу в секундах. Вищі цифри означають вищий пріоритет над іншими кол-центрами.";
+$text['description-time_base_score_sec']['zh-cn'] = "确定时间基数分数。 人数较多意味着高于其他服务中心。";
+$text['description-time_base_score_sec']['ja-jp'] = "秒単位でタイムベーススコアを設定します。 他のコールセンターでは、より高い番号が優先されます。";
+$text['description-time_base_score_sec']['ko-kr'] = "몇 초에 시간 기본 점수를 설정합니다. 높은 숫자는 다른 통화 센터에 더 높은 우선 순위를 의미합니다.";
 
 $text['description-tiers']['en-us'] = "Tiers assign agents to queues.";
 $text['description-tiers']['en-gb'] = "Tiers assign agents to queues.";
@@ -2162,6 +2468,9 @@ $text['description-tiers']['ro-ro'] = "Nivelurile atribuie agenți la cozi.";
 $text['description-tiers']['ru-ru'] = "Привязка компетенции операторов к очередям";
 $text['description-tiers']['sv-se'] = "Kunskap tilldelar agenter till kö:er.";
 $text['description-tiers']['uk-ua'] = "Nivelurile atribuie agenți la cozi.";
+$text['description-tiers']['zh-cn'] = "三级指派代理人到处。";
+$text['description-tiers']['ja-jp'] = "エージェントをキューに割り当てます。";
+$text['description-tiers']['ko-kr'] = "계층은 큐에 에이전트를 할당.";
 
 $text['description-tier_rules_apply']['en-us'] = "Set the tier rule rules apply to true or false.";
 $text['description-tier_rules_apply']['en-gb'] = "Set the tier rule rules apply to true or false.";
@@ -2183,6 +2492,9 @@ $text['description-tier_rules_apply']['ro-ro'] = "Setați regulile de nivel care
 $text['description-tier_rules_apply']['ru-ru'] = "Выберите, применять ли правила компетенций";
 $text['description-tier_rules_apply']['sv-se'] = "Välj om Kunskap Regler Gäller skall vara sann/falsk.";
 $text['description-tier_rules_apply']['uk-ua'] = "Установіть значення true або false для правил рівня рівня.";
+$text['description-tier_rules_apply']['zh-cn'] = "等级规则适用于真实或虚假。";
+$text['description-tier_rules_apply']['ja-jp'] = "階層ルールのルールは、true または false に適用されます。";
+$text['description-tier_rules_apply']['ko-kr'] = "계층 규칙은 true 또는 false에 적용됩니다.";
 
 $text['description-tier_rule_wait_second']['en-us'] = "Enter the tier rule wait seconds.";
 $text['description-tier_rule_wait_second']['en-gb'] = "Enter the tier rule wait seconds.";
@@ -2204,6 +2516,9 @@ $text['description-tier_rule_wait_second']['ro-ro'] = "Introduceți regula nivel
 $text['description-tier_rule_wait_second']['ru-ru'] = "Введите время правила компетенции ожидания";
 $text['description-tier_rule_wait_second']['sv-se'] = "Ange kunskaps-regel vänt-tid (sekunder)";
 $text['description-tier_rule_wait_second']['uk-ua'] = "Введіть правило рівня очікування в секундах.";
+$text['description-tier_rule_wait_second']['zh-cn'] = "采用分级规则后再接二。";
+$text['description-tier_rule_wait_second']['ja-jp'] = "ティアルールの待機秒を入力します。";
+$text['description-tier_rule_wait_second']['ko-kr'] = "tier 규칙을 입력하십시오.";
 
 $text['description-tier_rule_wait_multiply_level']['en-us'] = "Set the tier rule wait multiply level to true or false.";
 $text['description-tier_rule_wait_multiply_level']['en-gb'] = "Set the tier rule wait multiply level to true or false.";
@@ -2225,6 +2540,9 @@ $text['description-tier_rule_wait_multiply_level']['ro-ro'] = "Setați regula ni
 $text['description-tier_rule_wait_multiply_level']['ru-ru'] = "Выберите, применять ли правило множителя ожидания для компетенции";
 $text['description-tier_rule_wait_multiply_level']['sv-se'] = "Välj om 'kunskaps-regel vänt-tid' multiply nivå skall vara sann eller ej.";
 $text['description-tier_rule_wait_multiply_level']['uk-ua'] = "Встановіть для рівня очікування рівня множення правила рівня на true або false.";
+$text['description-tier_rule_wait_multiply_level']['zh-cn'] = "规定分级规则后,再达到真实或虚假的程度。";
+$text['description-tier_rule_wait_multiply_level']['ja-jp'] = "tier ルールの待ち合わせレベルを true または false に設定します。";
+$text['description-tier_rule_wait_multiply_level']['ko-kr'] = "tier 규칙을 설정하면 true 또는 false로 곱합니다.";
 
 $text['description-tier_rule_no_agent_no_wait']['en-us'] = "Enter the tier rule no agent no wait.";
 $text['description-tier_rule_no_agent_no_wait']['en-gb'] = "Enter the tier rule no agent no wait.";
@@ -2246,6 +2564,9 @@ $text['description-tier_rule_no_agent_no_wait']['ro-ro'] = "Introduceți regula 
 $text['description-tier_rule_no_agent_no_wait']['ru-ru'] = "Введите правило для компетенции: нет оператора, нет ожидания";
 $text['description-tier_rule_no_agent_no_wait']['sv-se'] = "Välj kunskaps-regel Ingen Agent Vänta Ej.";
 $text['description-tier_rule_no_agent_no_wait']['uk-ua'] = "Введіть правило рівня без агента без очікування.";
+$text['description-tier_rule_no_agent_no_wait']['zh-cn'] = "进入分级规则,没有代理人等待。";
+$text['description-tier_rule_no_agent_no_wait']['ja-jp'] = "ティアルールを入力 エージェントなし 待機しません。";
+$text['description-tier_rule_no_agent_no_wait']['ko-kr'] = "계층 규칙을 입력하지 않습니다.";
 
 $text['description-tier_position']['en-us'] = "Select the tier position.";
 $text['description-tier_position']['en-gb'] = "Select the tier position.";
@@ -2267,6 +2588,9 @@ $text['description-tier_position']['ro-ro'] = "Selectați poziția nivelului.";
 $text['description-tier_position']['ru-ru'] = "Выберите позицию компетенции.";
 $text['description-tier_position']['sv-se'] = "Välj Kunskaps position.";
 $text['description-tier_position']['uk-ua'] = "Виберіть позицію рівня.";
+$text['description-tier_position']['zh-cn'] = "选择等级立场。";
+$text['description-tier_position']['ja-jp'] = "ティアの位置を選択します。";
+$text['description-tier_position']['ko-kr'] = "tier 위치를 선택하십시오.";
 
 $text['description-tier_level']['en-us'] = "Select the tier level.";
 $text['description-tier_level']['en-gb'] = "Select the tier level.";
@@ -2288,6 +2612,9 @@ $text['description-tier_level']['ro-ro'] = "Selectați nivelul de nivel.";
 $text['description-tier_level']['ru-ru'] = "Выберите уровень компетенции";
 $text['description-tier_level']['sv-se'] = "Välj Kunskaps-nivå";
 $text['description-tier_level']['uk-ua'] = "Виберіть рівень рівня.";
+$text['description-tier_level']['zh-cn'] = "选择层次。";
+$text['description-tier_level']['ja-jp'] = "層レベルを選択します。";
+$text['description-tier_level']['ko-kr'] = "tier 레벨을 선택하십시오.";
 
 $text['description-strategy']['en-us'] = "Select the queue ring strategy.";
 $text['description-strategy']['en-gb'] = "Select the queue ring strategy.";
@@ -2309,6 +2636,9 @@ $text['description-strategy']['ro-ro'] = "Selectați strategia de apel pentru co
 $text['description-strategy']['ru-ru'] = "Выберите стратегию обзвона очереди";
 $text['description-strategy']['sv-se'] = "Välj strategi för ringflöde i kö:n.";
 $text['description-strategy']['uk-ua'] = "Виберіть стратегію кільця черги.";
+$text['description-strategy']['zh-cn'] = "选择环绕战略。";
+$text['description-strategy']['ja-jp'] = "キューリング戦略を選択します。";
+$text['description-strategy']['ko-kr'] = "큐 링 전략을 선택하십시오.";
 
 $text['description-status']['en-us'] = "Select the default agent status.";
 $text['description-status']['en-gb'] = "Select the default agent status.";
@@ -2330,6 +2660,9 @@ $text['description-status']['ro-ro'] = "Selectați starea implicită a agentului
 $text['description-status']['ru-ru'] = "Выберите статус оператора по умолчанию";
 $text['description-status']['sv-se'] = "Välj agentens status";
 $text['description-status']['uk-ua'] = "Виберіть статус користувача";
+$text['description-status']['zh-cn'] = "选择违约代理地位。";
+$text['description-status']['ja-jp'] = "デフォルトのエージェントステータスを選択します。";
+$text['description-status']['ko-kr'] = "기본 에이전트 상태를 선택하십시오.";
 
 $text['description-reject_delay_time']['en-us'] = "Enter the reject delay time.";
 $text['description-reject_delay_time']['en-gb'] = "Enter the reject delay time.";
@@ -2351,6 +2684,9 @@ $text['description-reject_delay_time']['ro-ro'] = "Introduceți timpul de întâ
 $text['description-reject_delay_time']['ru-ru'] = "Введите время задержки отбоя";
 $text['description-reject_delay_time']['sv-se'] = "Ange 'neka' tids-fördröjning.";
 $text['description-reject_delay_time']['uk-ua'] = "Введіть час затримки відхилення.";
+$text['description-reject_delay_time']['zh-cn'] = "进入拒绝的延迟时间。";
+$text['description-reject_delay_time']['ja-jp'] = "拒否遅延時間を入力してください。";
+$text['description-reject_delay_time']['ko-kr'] = "거부 지연 시간을 입력하십시오.";
 
 $text['description-record_template']['en-us'] = "Save the recording.";
 $text['description-record_template']['en-gb'] = "Save the recording.";
@@ -2372,6 +2708,9 @@ $text['description-record_template']['ro-ro'] = "Salvați înregistrarea.";
 $text['description-record_template']['ru-ru'] = "Сохранить запись.";
 $text['description-record_template']['sv-se'] = "Spara inspelningen.";
 $text['description-record_template']['uk-ua'] = "Збережіть запис.";
+$text['description-record_template']['zh-cn'] = "节省记录。";
+$text['description-record_template']['ja-jp'] = "録画を保存します。";
+$text['description-record_template']['ko-kr'] = "기록 저장.";
 
 $text['description-queue_name']['en-us'] = "Enter the queue name.";
 $text['description-queue_name']['en-gb'] = "Enter the queue name.";
@@ -2393,6 +2732,9 @@ $text['description-queue_name']['ro-ro'] = "Introduceți numele cozii.";
 $text['description-queue_name']['ru-ru'] = "Введите имя очереди";
 $text['description-queue_name']['sv-se'] = "Ange kö namn.";
 $text['description-queue_name']['uk-ua'] = "Введіть назву черги.";
+$text['description-queue_name']['zh-cn'] = "填写姓名。";
+$text['description-queue_name']['ja-jp'] = "キュー名を入力してください。";
+$text['description-queue_name']['ko-kr'] = "queue 이름을 입력하십시오.";
 
 $text['description-options']['en-us'] = "Select the queue name.";
 $text['description-options']['en-gb'] = "Select the queue name.";
@@ -2414,6 +2756,9 @@ $text['description-options']['ro-ro'] = "Selectați numele cozii.";
 $text['description-options']['ru-ru'] = "Выберите имя очереди.";
 $text['description-options']['sv-se'] = "Välj kö namn.";
 $text['description-options']['uk-ua'] = "Виберіть назву черги.";
+$text['description-options']['zh-cn'] = "选择名称。";
+$text['description-options']['ja-jp'] = "キュー名を選択します。";
+$text['description-options']['ko-kr'] = "queue 이름을 선택하십시오.";
 
 $text['description-no_answer_delay_time']['en-us'] = "Enter the agent no answer delay time in seconds.";
 $text['description-no_answer_delay_time']['en-gb'] = "Enter the agent no answer delay time in seconds.";
@@ -2435,6 +2780,9 @@ $text['description-no_answer_delay_time']['ro-ro'] = "Introduceți timpul de în
 $text['description-no_answer_delay_time']['ru-ru'] = "Введите время задержки ответа оператора в секундах.";
 $text['description-no_answer_delay_time']['sv-se'] = "Ange 'Inget svar Agent fördröjning' i sekunder.";
 $text['description-no_answer_delay_time']['uk-ua'] = "Введіть час затримки відсутності відповіді агента в секундах.";
+$text['description-no_answer_delay_time']['zh-cn'] = "进入代理机构时,没有答复时间。";
+$text['description-no_answer_delay_time']['ja-jp'] = "エージェントに応答遅延時間を秒単位で入力しません。";
+$text['description-no_answer_delay_time']['ko-kr'] = "에이전트를 입력하지 응답 지연 시간 초.";
 
 $text['description-music_on_hold']['en-us'] = "Select the desired hold music.";
 $text['description-music_on_hold']['en-gb'] = "Select the desired hold music.";
@@ -2456,6 +2804,9 @@ $text['description-music_on_hold']['ro-ro'] = "Selectați muzica de așteptare d
 $text['description-music_on_hold']['ru-ru'] = "Выберите желаемую музыку на удержании";
 $text['description-music_on_hold']['sv-se'] = "Välj önskad vänt-musik.";
 $text['description-music_on_hold']['uk-ua'] = "Select the desired hold music.";
+$text['description-music_on_hold']['zh-cn'] = "选择理想的音乐。";
+$text['description-music_on_hold']['ja-jp'] = "希望するホールド音楽を選択します。";
+$text['description-music_on_hold']['ko-kr'] = "원하는 음악을 선택합니다.";
 
 $text['description-max_wait_time_with_no_agent_time_reached']['en-us'] = "Enter the max wait time with no agent time reached.";
 $text['description-max_wait_time_with_no_agent_time_reached']['en-gb'] = "Enter the max wait time with no agent time reached.";
@@ -2477,6 +2828,9 @@ $text['description-max_wait_time_with_no_agent_time_reached']['ro-ro'] = "Introd
 $text['description-max_wait_time_with_no_agent_time_reached']['ru-ru'] = "Введите максимальное время ожидания при достижении времени отсутствия операторов.";
 $text['description-max_wait_time_with_no_agent_time_reached']['sv-se'] = "Ange max vänt-tid när 'Utan Agent Tids-gräns' är nådd. ";
 $text['description-max_wait_time_with_no_agent_time_reached']['uk-ua'] = "Введіть максимальний час очікування без досягнення агента.";
+$text['description-max_wait_time_with_no_agent_time_reached']['zh-cn'] = "进入最高等候时间,没有达到代理时间。";
+$text['description-max_wait_time_with_no_agent_time_reached']['ja-jp'] = "エージェントタイムに達していない最大待機時間を入力してください。";
+$text['description-max_wait_time_with_no_agent_time_reached']['ko-kr'] = "에이전트 시간 없이 최대 대기 시간을 입력하십시오.";
 
 $text['description-max_wait_time_with_no_agent']['en-us'] = "Enter the max wait time with no agent.";
 $text['description-max_wait_time_with_no_agent']['en-gb'] = "Enter the max wait time with no agent.";
@@ -2498,6 +2852,9 @@ $text['description-max_wait_time_with_no_agent']['ro-ro'] = "Introduceți timpul
 $text['description-max_wait_time_with_no_agent']['ru-ru'] = "Введите максимальное время ожидания при отсутствии операторов.";
 $text['description-max_wait_time_with_no_agent']['sv-se'] = "Ange max vänt-tid utan agent.";
 $text['description-max_wait_time_with_no_agent']['uk-ua'] = "Введіть максимальний час очікування без агента.";
+$text['description-max_wait_time_with_no_agent']['zh-cn'] = "进入最高等候时间,没有代理人。";
+$text['description-max_wait_time_with_no_agent']['ja-jp'] = "エージェントなしで最大待ち時間を入力してください。";
+$text['description-max_wait_time_with_no_agent']['ko-kr'] = "에이전트 없이 최대 대기 시간을 입력하십시오.";
 
 $text['description-max_wait_time']['en-us'] = "Enter the max wait time.";
 $text['description-max_wait_time']['en-gb'] = "Enter the max wait time.";
@@ -2519,6 +2876,9 @@ $text['description-max_wait_time']['ro-ro'] = "Introduceți timpul maxim de așt
 $text['description-max_wait_time']['ru-ru'] = "Введите максимальное время ожидания";
 $text['description-max_wait_time']['sv-se'] = "Ange max vänt-tid.";
 $text['description-max_wait_time']['uk-ua'] = "Введіть максимальний час очікування.";
+$text['description-max_wait_time']['zh-cn'] = "进入最高等待时间。";
+$text['description-max_wait_time']['ja-jp'] = "最大待ち時間を入力してください。";
+$text['description-max_wait_time']['ko-kr'] = "최대 대기 시간을 입력하십시오.";
 
 $text['description-max_no_answer']['en-us'] = "At max no answer, the agent's status will change to 'On Break'.";
 $text['description-max_no_answer']['en-gb'] = "At max no answer, the agent's status will change to 'On Break'.";
@@ -2540,6 +2900,9 @@ $text['description-max_no_answer']['ro-ro'] = "La maxim nici un răspuns, starea
 $text['description-max_no_answer']['ru-ru'] = "Введите максимальное количество отсутствия ответа";
 $text['description-max_no_answer']['sv-se'] = "Ange max inget svar.";
 $text['description-max_no_answer']['uk-ua'] = "У разі максимальної відсутності відповіді статус агента зміниться на «На перерві».";
+$text['description-max_no_answer']['zh-cn'] = "至多不回答,代理人的地位将改为“突破”。";
+$text['description-max_no_answer']['ja-jp'] = "回答がない場合、エージェントのステータスが「On Break」に変更されます。";
+$text['description-max_no_answer']['ko-kr'] = "최대 답변에서 에이전트의 상태는 '잠금'으로 변경됩니다.";
 
 $text['description-extension']['en-us'] = "Enter the extension number.";
 $text['description-extension']['en-gb'] = "Enter the extension number.";
@@ -2561,6 +2924,9 @@ $text['description-extension']['ro-ro'] = "Introduceți numărul de extensie.";
 $text['description-extension']['ru-ru'] = "Введите внутренний номер";
 $text['description-extension']['sv-se'] = "Ange anknytningsnumret.";
 $text['description-extension']['uk-ua'] = "Введіть внутрішній номер.";
+$text['description-extension']['zh-cn'] = "进入延长期。";
+$text['description-extension']['ja-jp'] = "拡張子番号を入力してください。";
+$text['description-extension']['ko-kr'] = "확장 번호를 입력합니다.";
 
 $text['description-discard_abandoned_after']['en-us'] = "Set the discard abandoned after seconds.";
 $text['description-discard_abandoned_after']['en-gb'] = "Set the discard abandoned after seconds.";
@@ -2582,6 +2948,9 @@ $text['description-discard_abandoned_after']['ro-ro'] = "Setați aruncarea aband
 $text['description-discard_abandoned_after']['ru-ru'] = "Введите время отбоя покинутого вызова.";
 $text['description-discard_abandoned_after']['sv-se'] = "Ange uteslut Ej Besvarade efter sekunder.";
 $text['description-discard_abandoned_after']['uk-ua'] = "Встановіть скасування, покинуте через кілька секунд.";
+$text['description-discard_abandoned_after']['zh-cn'] = "排出后弃置的抛弃物。";
+$text['description-discard_abandoned_after']['ja-jp'] = "秒後に捨てられた捨て物をセットします。";
+$text['description-discard_abandoned_after']['ko-kr'] = "초 후에 버려진 discard를 설정합니다.";
 
 $text['description-contact']['en-us'] = "Select the contact number.";
 $text['description-contact']['en-gb'] = "Select the contact number.";
@@ -2603,6 +2972,9 @@ $text['description-contact']['ro-ro'] = "Selectați numărul de contact.";
 $text['description-contact']['ru-ru'] = "Выберите номер контакта";
 $text['description-contact']['sv-se'] = "Välj kontakt numret.";
 $text['description-contact']['uk-ua'] = "Призначити контакт в цей обліковий запис користувача.";
+$text['description-contact']['zh-cn'] = "选择联系号码。";
+$text['description-contact']['ja-jp'] = "連絡先番号を選択します。";
+$text['description-contact']['ko-kr'] = "연락처를 선택하십시오.";
 
 $text['description-outbound_caller_id_number-select']['en-us'] = "Select the external (public) caller ID number.";
 $text['description-outbound_caller_id_number-select']['en-gb'] = "Select the external (public) caller ID number.";
@@ -2624,6 +2996,9 @@ $text['description-outbound_caller_id_number-select']['ro-ro'] = "Selectați num
 $text['description-outbound_caller_id_number-select']['ru-ru'] = "Выберите внешний (публичный) caller ID номер.";
 $text['description-outbound_caller_id_number-select']['sv-se'] = "Välj det externa (publikt) nummervisningen här.";
 $text['description-outbound_caller_id_number-select']['uk-ua'] = "Виберіть зовнішній (публічний) ідентифікаційний номер абонента.";
+$text['description-outbound_caller_id_number-select']['zh-cn'] = "选择外部(公共)电线号码。";
+$text['description-outbound_caller_id_number-select']['ja-jp'] = "外部(public)の発信者ID番号を選択します。";
+$text['description-outbound_caller_id_number-select']['ko-kr'] = "외부(public) 콜러 ID 번호를 선택하십시오.";
 
 $text['description-outbound_caller_id_number']['en-us'] = "Enter the external (public) caller ID number here.";
 $text['description-outbound_caller_id_number']['en-gb'] = "Enter the external (public) caller ID number here.";
@@ -2645,6 +3020,9 @@ $text['description-outbound_caller_id_number']['ro-ro'] = "Introduceți aici num
 $text['description-outbound_caller_id_number']['ru-ru'] = "Введите внешний (публичный) caller ID номер.";
 $text['description-outbound_caller_id_number']['sv-se'] = "Ange det externa (publikt) nummervisningen här.";
 $text['description-outbound_caller_id_number']['uk-ua'] = "Введіть тут зовнішній (публічний) ідентифікаційний номер абонента.";
+$text['description-outbound_caller_id_number']['zh-cn'] = "进入外部(公共)电话号码。";
+$text['description-outbound_caller_id_number']['ja-jp'] = "外部(public)の発信者番号を入力してください。";
+$text['description-outbound_caller_id_number']['ko-kr'] = "외부(public) 호출기 ID 번호를 입력합니다.";
 
 $text['description-outbound_caller_id_name-select']['en-us'] = "Select the external (public) caller ID name.";
 $text['description-outbound_caller_id_name-select']['en-gb'] = "Select the external (public) caller ID name.";
@@ -2666,6 +3044,9 @@ $text['description-outbound_caller_id_name-select']['ro-ro'] = "Selectați numel
 $text['description-outbound_caller_id_name-select']['ru-ru'] = "Выберите внешнее (публичное) caller ID Имя.";
 $text['description-outbound_caller_id_name-select']['sv-se'] = "Välj det externa (publikt) namnvisningen här.";
 $text['description-outbound_caller_id_name-select']['uk-ua'] = "Виберіть ім’я зовнішнього (загальнодоступного) ідентифікатора абонента.";
+$text['description-outbound_caller_id_name-select']['zh-cn'] = "选择外部(公共)电离识别号。";
+$text['description-outbound_caller_id_name-select']['ja-jp'] = "外部(public)の発信者 ID 名を選択します。";
+$text['description-outbound_caller_id_name-select']['ko-kr'] = "외부(public) 콜러 ID 이름을 선택하십시오.";
 
 $text['description-outbound_caller_id_name']['en-us'] = "Enter the external (public) caller ID name here.";
 $text['description-outbound_caller_id_name']['en-gb'] = "Enter the external (public) caller ID name here.";
@@ -2687,6 +3068,9 @@ $text['description-outbound_caller_id_name']['ro-ro'] = "Introduceți aici numel
 $text['description-outbound_caller_id_name']['ru-ru'] = "Введите внешнее (публичное) caller ID Имя.";
 $text['description-outbound_caller_id_name']['sv-se'] = "Ange det externa (publikt) namnvisningen här.";
 $text['description-outbound_caller_id_name']['uk-ua'] = "Введіть тут ім’я зовнішнього (загальнодоступного) ідентифікатора абонента.";
+$text['description-outbound_caller_id_name']['zh-cn'] = "此处填入外部(公共)称呼器。";
+$text['description-outbound_caller_id_name']['ja-jp'] = "外部(public)の発信者 ID 名を入力してください。";
+$text['description-outbound_caller_id_name']['ko-kr'] = "외부 입력 (public) caller ID 이름 여기.";
 
 $text['description-caller_id_name_prefix']['en-us'] = "Set a prefix on the caller ID name.";
 $text['description-caller_id_name_prefix']['en-gb'] = "Set a prefix on the caller ID name.";
@@ -2708,6 +3092,9 @@ $text['description-caller_id_name_prefix']['ro-ro'] = "Setați un prefix pe nume
 $text['description-caller_id_name_prefix']['ru-ru'] = "Установите префикс для поля Имя CallerID";
 $text['description-caller_id_name_prefix']['sv-se'] = "Ange ett prefix för Caller ID namn.";
 $text['description-caller_id_name_prefix']['uk-ua'] = "Встановіть префікс до імені абонента.";
+$text['description-caller_id_name_prefix']['zh-cn'] = "预先确定打电话者身份。";
+$text['description-caller_id_name_prefix']['ja-jp'] = "呼び出し元 ID 名にプレフィックスを設定します。";
+$text['description-caller_id_name_prefix']['ko-kr'] = "콜러 ID 이름에 접두사를 설정합니다.";
 
 $text['description-caller_announce_sound']['en-us'] = "A sound to play for a caller at specific intervals, as defined (in seconds) by the Announce Frequency. Needs the full path to the wav file.";
 $text['description-caller_announce_sound']['en-gb'] = "A sound to play for a caller at specific intervals, as defined (in seconds) by the Announce Frequency. Needs the full path to the wav file.";
@@ -2729,6 +3116,9 @@ $text['description-caller_announce_sound']['ro-ro'] = "Un sunet de redat pentru 
 $text['description-caller_announce_sound']['ru-ru'] = "Сообщение, которое будет проигрыввться звонящему через установленные промежутки. Требует полного пути к wav файлу";
 $text['description-caller_announce_sound']['sv-se'] = "Ett ljud som spelas upp efter varje 'meddelande ljud sekunder'. Behöver hela sökvägen till WAV filen.";
 $text['description-caller_announce_sound']['uk-ua'] = "Звук, який відтворюється для абонента через певні проміжки часу, визначені (у секундах) частотою оголошення. Потрібен повний шлях до wav-файлу.";
+$text['description-caller_announce_sound']['zh-cn'] = "安妮特频率定义的(二秒)在特定间隔中为电线器开脱。 需要一条通往编织物的完全道路。";
+$text['description-caller_announce_sound']['ja-jp'] = "発表頻度で定義された(秒単位)として、特定の間隔で発信者のために再生する音。 wavファイルへのフルパスが必要です。";
+$text['description-caller_announce_sound']['ko-kr'] = "특정 간격에서 호출기를 재생하는 소리, 정의 된 (초에서) 발표 빈도. wav 파일에 전체 경로가 필요합니다.";
 
 $text['description-caller_announce_frequency']['en-us'] = "How often should we play the announce sound. Enter a number in seconds";
 $text['description-caller_announce_frequency']['en-gb'] = "How often should we play the announce sound. Enter a number in seconds";
@@ -2750,6 +3140,9 @@ $text['description-caller_announce_frequency']['ro-ro'] = "Cât de des ar trebui
 $text['description-caller_announce_frequency']['ru-ru'] = "Как часто играть сообщение. Введите в секундах";
 $text['description-caller_announce_frequency']['sv-se'] = "Hur ofta skall meddelandet spelas upp. Ange ett värde i sekunder.";
 $text['description-caller_announce_frequency']['uk-ua'] = "Як часто ми повинні відтворювати звук оголошення. Введіть число за секунди";
+$text['description-caller_announce_frequency']['zh-cn'] = "我们应经常发挥宣布的声望。 进入第二版";
+$text['description-caller_announce_frequency']['ja-jp'] = "アナウンス・サウンドを再生する頻度 秒数を入力する";
+$text['description-caller_announce_frequency']['ko-kr'] = "자주 우리는 발표 소리를 연주해야합니다. 몇 초 만에 입력";
 
 $text['description-call_timeout']['en-us'] = "Enter the call timeout.";
 $text['description-call_timeout']['en-gb'] = "Enter the call timeout.";
@@ -2771,6 +3164,9 @@ $text['description-call_timeout']['ro-ro'] = "Introduceți timpul de expirare a 
 $text['description-call_timeout']['ru-ru'] = "Введите тайм-аут вызова";
 $text['description-call_timeout']['sv-se'] = "Ange 'call timeout'";
 $text['description-call_timeout']['uk-ua'] = "Введіть тайм-аут виклику.";
+$text['description-call_timeout']['zh-cn'] = "进入停电时间。";
+$text['description-call_timeout']['ja-jp'] = "コールタイムアウトを入力します。";
+$text['description-call_timeout']['ko-kr'] = "호출 타임아웃을 입력하십시오.";
 
 $text['description-call_center_queues']['en-us'] = "List of queues for the call center.";
 $text['description-call_center_queues']['en-gb'] = "List of queues for the call center.";
@@ -2792,6 +3188,9 @@ $text['description-call_center_queues']['ro-ro'] = "Lista de cozi pentru call ce
 $text['description-call_center_queues']['ru-ru'] = "Список очередей в Колл-центре";
 $text['description-call_center_queues']['sv-se'] = "Lista med kö:er för Call Center";
 $text['description-call_center_queues']['uk-ua'] = "Список черг до кол-центру.";
+$text['description-call_center_queues']['zh-cn'] = "电话中心名单。";
+$text['description-call_center_queues']['ja-jp'] = "コールセンターのキューのリスト。";
+$text['description-call_center_queues']['ko-kr'] = "콜 센터의 큐리스트.";
 
 $text['description-call_center_agents']['en-us'] = "List of call center agents.";
 $text['description-call_center_agents']['en-gb'] = "List of call center agents.";
@@ -2813,6 +3212,9 @@ $text['description-call_center_agents']['ro-ro'] = "Lista agenților de call cen
 $text['description-call_center_agents']['ru-ru'] = "Список операторов Колл-центра";
 $text['description-call_center_agents']['sv-se'] = "Lista med Call Center Agenter";
 $text['description-call_center_agents']['uk-ua'] = "Список операторів кол-центру.";
+$text['description-call_center_agents']['zh-cn'] = "电话中心代理人名单。";
+$text['description-call_center_agents']['ja-jp'] = "コールセンターエージェントのリスト。";
+$text['description-call_center_agents']['ko-kr'] = "전화 센터 에이전트 목록.";
 
 $text['description-call_center_agent_status']['en-us'] = "List all the call center agents with the option to change the status of one or more agents.";
 $text['description-call_center_agent_status']['en-gb'] = "List all the call center agents with the option to change the status of one or more agents.";
@@ -2834,6 +3236,9 @@ $text['description-call_center_agent_status']['ro-ro'] = "Listați toți agenți
 $text['description-call_center_agent_status']['ru-ru'] = "Полный список операторов Колл-центра с возможностью изменить статус одного или нескольких операторов.";
 $text['description-call_center_agent_status']['sv-se'] = "Lista med alla Call Center Agenter med möjlighet att ändra status på en eller flera agenter.";
 $text['description-call_center_agent_status']['uk-ua'] = "Перелічіть усіх агентів кол-центру з можливістю змінити статус одного чи кількох агентів.";
+$text['description-call_center_agent_status']['zh-cn'] = "列出所有可选择改变一个或多个代理人身份的呼叫中心代理人。";
+$text['description-call_center_agent_status']['ja-jp'] = "すべてのコールセンターエージェントを 1 つ以上のエージェントの状態を変更するオプションでリストします。";
+$text['description-call_center_agent_status']['ko-kr'] = "한 개 이상의 에이전트의 상태를 변경할 수있는 옵션으로 모든 통화 센터 에이전트를 나열합니다.";
 
 $text['description-busy_delay_time']['en-us'] = "Enter the agent busy delay time.";
 $text['description-busy_delay_time']['en-gb'] = "Enter the agent busy delay time.";
@@ -2855,6 +3260,9 @@ $text['description-busy_delay_time']['ro-ro'] = "Introduceți timpul de întârz
 $text['description-busy_delay_time']['ru-ru'] = "Введите время задержки занятости оператора.";
 $text['description-busy_delay_time']['sv-se'] = "Ange Agent Upptagen Fördröjnings-tid.";
 $text['description-busy_delay_time']['uk-ua'] = "Введіть час затримки зайнятості агента.";
+$text['description-busy_delay_time']['zh-cn'] = "进入代理人的延迟时间。";
+$text['description-busy_delay_time']['ja-jp'] = "エージェントの忙しい遅延時間を入力してください。";
+$text['description-busy_delay_time']['ko-kr'] = "자주 묻는 질문";
 
 $text['description-agent_password']['en-us'] = "Enter the agent password.";
 $text['description-agent_password']['en-gb'] = "Enter the agent password.";
@@ -2876,6 +3284,9 @@ $text['description-agent_password']['ro-ro'] = "Introduceți parola agentului.";
 $text['description-agent_password']['ru-ru'] = "Введите пароль оператора.";
 $text['description-agent_password']['sv-se'] = "Ange agenten lösenord.";
 $text['description-agent_password']['uk-ua'] = "Введіть пароль агента.";
+$text['description-agent_password']['zh-cn'] = "进入代理密码。";
+$text['description-agent_password']['ja-jp'] = "エージェントのパスワードを入力してください。";
+$text['description-agent_password']['ko-kr'] = "대리인 암호를 입력하십시오.";
 
 $text['description-agent_name']['en-us'] = "Select the agent name.";
 $text['description-agent_name']['en-gb'] = "Select the agent name.";
@@ -2897,6 +3308,9 @@ $text['description-agent_name']['ro-ro'] = "Selectați numele agentului.";
 $text['description-agent_name']['ru-ru'] = "Выберите имя оператора.";
 $text['description-agent_name']['sv-se'] = "Välj Agent namn.";
 $text['description-agent_name']['uk-ua'] = "Виберіть ім’я оператора";
+$text['description-agent_name']['zh-cn'] = "选择代理人名称。";
+$text['description-agent_name']['ja-jp'] = "エージェント名を選択します。";
+$text['description-agent_name']['ko-kr'] = "에이전트 이름을 선택하십시오.";
 
 $text['description-agent_logout']['en-us'] = "Enter the auto agent logout time in 00:00 format. Requires a service to enforce the logout time.";
 $text['description-agent_logout']['en-gb'] = "Enter the auto agent logout time in 00:00 format. Requires a service to enforce the logout time.";
@@ -2918,6 +3332,9 @@ $text['description-agent_logout']['ro-ro'] = "Introduceți ora de deconectare au
 $text['description-agent_logout']['ru-ru'] = "Введите время автоматического выхода оператора в формате 00:00. Требует сервиса для автоматического выхода.";
 $text['description-agent_logout']['sv-se'] = "Ange Automatisk utläggning av Agent i 00:00 format. Kräver en tjänst för att genomföra utloggningen.";
 $text['description-agent_logout']['uk-ua'] = "Enter the auto agent logout time in 00:00 format. Requires a service to enforce the logout time.";
+$text['description-agent_logout']['zh-cn'] = "以00:00格式输入汽车代理日志。 要求提供一项服务,以强制规定清点时间。";
+$text['description-agent_logout']['ja-jp'] = "自動エージェントのログアウト時間を 00:00 形式で入力します。 ログアウト時間を強制するサービスが必要です。";
+$text['description-agent_logout']['ko-kr'] = "00:00 형식으로 자동 에이전트 로그 아웃 시간을 입력하십시오. 로그아웃 시간을 시행하기 위한 서비스 필요.";
 
 $text['description-agent_id']['en-us'] = "Enter the agent ID.";
 $text['description-agent_id']['en-gb'] = "Enter the agent ID.";
@@ -2939,6 +3356,9 @@ $text['description-agent_id']['ro-ro'] = "Introduceți ID-ul agentului.";
 $text['description-agent_id']['ru-ru'] = "Введите идентификатор оператора.";
 $text['description-agent_id']['sv-se'] = "Ange agent-ID.";
 $text['description-agent_id']['uk-ua'] = "Введіть ідентифікатор агента.";
+$text['description-agent_id']['zh-cn'] = "进入代理身份证。";
+$text['description-agent_id']['ja-jp'] = "エージェント ID を入力してください。";
+$text['description-agent_id']['ko-kr'] = "에이전트 ID를 입력하십시오.";
 
 $text['description-agent']['en-us'] = "Select the agent name.";
 $text['description-agent']['en-gb'] = "Select the agent name.";
@@ -2960,6 +3380,9 @@ $text['description-agent']['ro-ro'] = "Selectați numele agentului.";
 $text['description-agent']['ru-ru'] = "Выберите имя оператора.";
 $text['description-agent']['sv-se'] = "Välj Agent namnet.";
 $text['description-agent']['uk-ua'] = "Виберіть ім’я оператора";
+$text['description-agent']['zh-cn'] = "选择代理人名称。";
+$text['description-agent']['ja-jp'] = "エージェント名を選択します。";
+$text['description-agent']['ko-kr'] = "에이전트 이름을 선택하십시오.";
 
 $text['description-abandoned_resume_allowed']['en-us'] = "Set the abandoned resume allowed to true or false.";
 $text['description-abandoned_resume_allowed']['en-gb'] = "Set the abandoned resume allowed to true or false.";
@@ -2981,6 +3404,9 @@ $text['description-abandoned_resume_allowed']['ro-ro'] = "Setați CV-ul abandona
 $text['description-abandoned_resume_allowed']['ru-ru'] = "Установите возможность восстанавливать вызов, покинувший очередь.";
 $text['description-abandoned_resume_allowed']['sv-se'] = "Välj 'Ej Besvarat Återtagning' till sann/falsk.";
 $text['description-abandoned_resume_allowed']['uk-ua'] = "Встановіть для дозволеного покинутого резюме значення true або false.";
+$text['description-abandoned_resume_allowed']['zh-cn'] = "认为被遗弃的恢复是真实的或虚假的。";
+$text['description-abandoned_resume_allowed']['ja-jp'] = "放棄された履歴書を true または false に設定します。";
+$text['description-abandoned_resume_allowed']['ko-kr'] = "버려진 이력서를 true 또는 false로 설정하십시오.";
 
 $text['confirm-copy']['en-us'] = "Do you really want to copy this?";
 $text['confirm-copy']['en-gb'] = "Do you really want to copy this?";
@@ -3002,6 +3428,9 @@ $text['confirm-copy']['ro-ro'] = "Chiar vrei să copiezi asta?";
 $text['confirm-copy']['ru-ru'] = "Вы действительно хотите это скопировать?";
 $text['confirm-copy']['sv-se'] = "Vill du verkligen kopiera detta?";
 $text['confirm-copy']['uk-ua'] = "Ви дійсно бажаєте це скопіювати?";
+$text['confirm-copy']['zh-cn'] = "你们是否真的希望照此办理?";
+$text['confirm-copy']['ja-jp'] = "コピーしたいですか?";
+$text['confirm-copy']['ko-kr'] = "당신은 정말로 이것을 복사하고 싶습니까?";
 
 $text['button-update_status']['en-us'] = "Update Status";
 $text['button-update_status']['en-gb'] = "Update Status";
@@ -3023,6 +3452,9 @@ $text['button-update_status']['ro-ro'] = "Starea de actualizare";
 $text['button-update_status']['ru-ru'] = "Обновить статус";
 $text['button-update_status']['sv-se'] = "Uppdatera Status";
 $text['button-update_status']['uk-ua'] = "Оновити статус";
+$text['button-update_status']['zh-cn'] = "A. 最新情况";
+$text['button-update_status']['ja-jp'] = "更新状況";
+$text['button-update_status']['ko-kr'] = "업데이트 상태";
 
 $text['button-tiers']['en-us'] = "Tiers";
 $text['button-tiers']['en-gb'] = "Tiers";
@@ -3044,6 +3476,9 @@ $text['button-tiers']['ro-ro'] = "Niveluri";
 $text['button-tiers']['ru-ru'] = "Компетенции";
 $text['button-tiers']['sv-se'] = "Kunskap";
 $text['button-tiers']['uk-ua'] = "Рівні";
+$text['button-tiers']['zh-cn'] = "等级";
+$text['button-tiers']['ja-jp'] = "ティアーズ";
+$text['button-tiers']['ko-kr'] = "사이트맵";
 
 $text['button-agents']['en-us'] = "Agents";
 $text['button-agents']['en-gb'] = "Agents";
@@ -3065,6 +3500,9 @@ $text['button-agents']['ro-ro'] = "Agenți";
 $text['button-agents']['ru-ru'] = "Операторы";
 $text['button-agents']['sv-se'] = "Agenter";
 $text['button-agents']['uk-ua'] = "Оператори";
+$text['button-agents']['zh-cn'] = "代理人";
+$text['button-agents']['ja-jp'] = "エージェント";
+$text['button-agents']['ko-kr'] = "이름 *";
 
 $text['button-wallboard']['en-us'] = "Wallboard";
 $text['button-wallboard']['en-gb'] = "Wallboard";
@@ -3086,5 +3524,8 @@ $text['button-wallboard']['ro-ro'] = "Placa de perete";
 $text['button-wallboard']['ru-ru'] = "Стеновая панель";
 $text['button-wallboard']['sv-se'] = "Väggskiva";
 $text['button-wallboard']['uk-ua'] = "Настінна дошка";
+$text['button-wallboard']['zh-cn'] = "挂图";
+$text['button-wallboard']['ja-jp'] = "ウォールボード";
+$text['button-wallboard']['ko-kr'] = "회사 소개";
 
 ?>

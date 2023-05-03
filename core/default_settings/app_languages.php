@@ -20,6 +20,9 @@ $text['title-default_settings']['ro-ro'] = "";
 $text['title-default_settings']['ru-ru'] = "Настройки по умолчанию";
 $text['title-default_settings']['sv-se'] = "Standard Inställningar";
 $text['title-default_settings']['uk-ua'] = "Налаштування за замовчуванням";
+$text['title-default_settings']['zh-cn'] = "违约情况";
+$text['title-default_settings']['ja-jp'] = "デフォルト設定";
+$text['title-default_settings']['ko-kr'] = "기본 설정";
 
 $text['title-default_setting-edit']['en-us'] = "Default Setting";
 $text['title-default_setting-edit']['en-gb'] = "Default Setting";
@@ -41,6 +44,9 @@ $text['title-default_setting-edit']['ro-ro'] = "";
 $text['title-default_setting-edit']['ru-ru'] = "Настройки по умолчанию";
 $text['title-default_setting-edit']['sv-se'] = "Standard Inställning";
 $text['title-default_setting-edit']['uk-ua'] = "Налаштування за замовчуванням";
+$text['title-default_setting-edit']['zh-cn'] = "违约情况";
+$text['title-default_setting-edit']['ja-jp'] = "デフォルト設定";
+$text['title-default_setting-edit']['ko-kr'] = "기본 설정";
 
 $text['title-default_setting-add']['en-us'] = "Default Setting Add";
 $text['title-default_setting-add']['en-gb'] = "Default Setting Add";
@@ -62,6 +68,9 @@ $text['title-default_setting-add']['ro-ro'] = "";
 $text['title-default_setting-add']['ru-ru'] = "Добавить настройку по умолчанию";
 $text['title-default_setting-add']['sv-se'] = "Lägg Till Standard Inställning";
 $text['title-default_setting-add']['uk-ua'] = "Налаштування за замовчуванням";
+$text['title-default_setting-add']['zh-cn'] = "违约情况";
+$text['title-default_setting-add']['ja-jp'] = "デフォルト設定の追加";
+$text['title-default_setting-add']['ko-kr'] = "기본 설정 추가";
 
 $text['option-voicemail_file_listen']['en-us'] = "Listen Link (Login Required)";
 $text['option-voicemail_file_listen']['en-gb'] = "Listen Link (Login Required)";
@@ -83,6 +92,9 @@ $text['option-voicemail_file_listen']['ro-ro'] = "";
 $text['option-voicemail_file_listen']['ru-ru'] = "Ссылка для прослушивания (требуется вход в систему)";
 $text['option-voicemail_file_listen']['sv-se'] = "Lyssna-länk (Måste Logga In)";
 $text['option-voicemail_file_listen']['uk-ua'] = "Посилання на прослуховування (Входити обов’язково)";
+$text['option-voicemail_file_listen']['zh-cn'] = "名单链接(视需要而定)";
+$text['option-voicemail_file_listen']['ja-jp'] = "リスニングリンク(ログイン必須)";
+$text['option-voicemail_file_listen']['ko-kr'] = "Listen Link (로고 필수)";
 
 $text['option-voicemail_file_link']['en-us'] = "Download Link (No Login Required)";
 $text['option-voicemail_file_link']['en-gb'] = "Download Link (No Login Required)";
@@ -104,6 +116,9 @@ $text['option-voicemail_file_link']['ro-ro'] = "";
 $text['option-voicemail_file_link']['ru-ru'] = "Ссылка для скачивания (не требуется вход в систему)";
 $text['option-voicemail_file_link']['sv-se'] = "Nedladdnings-länk (Ingen Inloggning Krävs)";
 $text['option-voicemail_file_link']['uk-ua'] = "Посилання на завантаження (Входити не обов’язково)";
+$text['option-voicemail_file_link']['zh-cn'] = "下载链接(不需要)";
+$text['option-voicemail_file_link']['ja-jp'] = "リンクのダウンロード(ログイン不要)";
+$text['option-voicemail_file_link']['ko-kr'] = "링크 다운로드 (등록 없음)";
 
 $text['option-voicemail_file_attach']['en-us'] = "Audio File Attachment";
 $text['option-voicemail_file_attach']['en-gb'] = "Audio File Attachment";
@@ -125,6 +140,9 @@ $text['option-voicemail_file_attach']['ro-ro'] = "";
 $text['option-voicemail_file_attach']['ru-ru'] = "Прикрепление аудиофайлов";
 $text['option-voicemail_file_attach']['sv-se'] = "Ljudfil Bifogad";
 $text['option-voicemail_file_attach']['uk-ua'] = "Приєднати аудіофайл";
+$text['option-voicemail_file_attach']['zh-cn'] = "音频文件 Attachment";
+$text['option-voicemail_file_attach']['ja-jp'] = "オーディオファイル添付ファイル";
+$text['option-voicemail_file_attach']['ko-kr'] = "Audio 파일 첨부";
 
 $text['option-button_icons_auto']['en-us'] = "Automatic";
 $text['option-button_icons_auto']['en-gb'] = "Automatic";
@@ -146,6 +164,9 @@ $text['option-button_icons_auto']['ro-ro'] = "Automatic";
 $text['option-button_icons_auto']['ru-ru'] = "Automatic";
 $text['option-button_icons_auto']['sv-se'] = "Automatic";
 $text['option-button_icons_auto']['uk-ua'] = "Automatic";
+$text['option-button_icons_auto']['zh-cn'] = "自动";
+$text['option-button_icons_auto']['ja-jp'] = "オートマチック";
+$text['option-button_icons_auto']['ko-kr'] = "제품정보";
 
 $text['option-button_icons_only']['en-us'] = "Only";
 $text['option-button_icons_only']['en-gb'] = "Only";
@@ -167,6 +188,9 @@ $text['option-button_icons_only']['ro-ro'] = "Only";
 $text['option-button_icons_only']['ru-ru'] = "Only";
 $text['option-button_icons_only']['sv-se'] = "Only";
 $text['option-button_icons_only']['uk-ua'] = "Only";
+$text['option-button_icons_only']['zh-cn'] = "只有";
+$text['option-button_icons_only']['ja-jp'] = "メニュー";
+$text['option-button_icons_only']['ko-kr'] = "지원하다";
 
 $text['option-button_icons_always']['en-us'] = "Always";
 $text['option-button_icons_always']['en-gb'] = "Always";
@@ -188,6 +212,9 @@ $text['option-button_icons_always']['ro-ro'] = "Always";
 $text['option-button_icons_always']['ru-ru'] = "Always";
 $text['option-button_icons_always']['sv-se'] = "Always";
 $text['option-button_icons_always']['uk-ua'] = "Always";
+$text['option-button_icons_always']['zh-cn'] = "航道";
+$text['option-button_icons_always']['ja-jp'] = "常に";
+$text['option-button_icons_always']['ko-kr'] = "(주)";
 
 $text['option-button_icons_never']['en-us'] = "Never";
 $text['option-button_icons_never']['en-gb'] = "Never";
@@ -209,6 +236,9 @@ $text['option-button_icons_never']['ro-ro'] = "Never";
 $text['option-button_icons_never']['ru-ru'] = "Never";
 $text['option-button_icons_never']['sv-se'] = "Never";
 $text['option-button_icons_never']['uk-ua'] = "Never";
+$text['option-button_icons_never']['zh-cn'] = "永远";
+$text['option-button_icons_never']['ja-jp'] = "決して";
+$text['option-button_icons_never']['ko-kr'] = "이름 *";
 
 $text['option-select']['en-us'] = "Select";
 $text['option-select']['en-gb'] = "Select";
@@ -232,6 +262,9 @@ $text['option-select']['ru-ru'] = "Выбрать";
 $text['option-select']['sv-se'] = "Välj";
 $text['option-select']['uk-ua'] = "Зареєструватися";
 $text['option-select']['tr-tr'] = "Seç";
+$text['option-select']['zh-cn'] = "选 举";
+$text['option-select']['ja-jp'] = "詳しくはこちら";
+$text['option-select']['ko-kr'] = "제품정보";
 
 $text['option-switch_round']['en-us'] = "Round Switch";
 $text['option-switch_round']['en-gb'] = "Round Switch";
@@ -255,6 +288,9 @@ $text['option-switch_round']['ru-ru'] = "Round Switch";
 $text['option-switch_round']['sv-se'] = "Round Switch";
 $text['option-switch_round']['uk-ua'] = "Round Switch";
 $text['option-switch_round']['tr-tr'] = "Round Switch";
+$text['option-switch_round']['zh-cn'] = "圆桌会议";
+$text['option-switch_round']['ja-jp'] = "ラウンドスイッチ";
+$text['option-switch_round']['ko-kr'] = "둥근 스위치";
 
 $text['option-switch_square']['en-us'] = "Square Switch";
 $text['option-switch_square']['en-gb'] = "Square Switch";
@@ -278,6 +314,9 @@ $text['option-switch_square']['ru-ru'] = "Square Switch";
 $text['option-switch_square']['sv-se'] = "Square Switch";
 $text['option-switch_square']['uk-ua'] = "Square Switch";
 $text['option-switch_square']['tr-tr'] = "Square Switch";
+$text['option-switch_square']['zh-cn'] = "广场接线";
+$text['option-switch_square']['ja-jp'] = "正方形スイッチ";
+$text['option-switch_square']['ko-kr'] = "스퀘어 스위치";
 
 $text['message-toggled']['en-us'] = "Toggle Completed";
 $text['message-toggled']['en-gb'] = "Toggle Completed";
@@ -299,6 +338,9 @@ $text['message-toggled']['ro-ro'] = "Completat toggle";
 $text['message-toggled']['ru-ru'] = "Переключить выполнено";
 $text['message-toggled']['sv-se'] = "Växla Avslutade";
 $text['message-toggled']['uk-ua'] = "переключити Завершений";
+$text['message-toggled']['zh-cn'] = "Toggle Fulld";
+$text['message-toggled']['ja-jp'] = "完全なトグル";
+$text['message-toggled']['ko-kr'] = "다운로드";
 
 $text['message-settings_reloaded']['en-us'] = "Settings Reloaded";
 $text['message-settings_reloaded']['en-gb'] = "Settings Reloaded";
@@ -320,6 +362,9 @@ $text['message-settings_reloaded']['ro-ro'] = "";
 $text['message-settings_reloaded']['ru-ru'] = "Настройки перезагружены";
 $text['message-settings_reloaded']['sv-se'] = "Inställningar Reloaded";
 $text['message-settings_reloaded']['uk-ua'] = "налаштування Reloaded";
+$text['message-settings_reloaded']['zh-cn'] = "重载装置";
+$text['message-settings_reloaded']['ja-jp'] = "設定 リロード";
+$text['message-settings_reloaded']['ko-kr'] = "설정 Reloaded";
 
 $text['message-delete_failed']['en-us'] = "No Settings Checked";
 $text['message-delete_failed']['en-gb'] = "No Settings Checked";
@@ -341,6 +386,9 @@ $text['message-delete_failed']['ro-ro'] = "";
 $text['message-delete_failed']['ru-ru'] = "Нет выбраных настроек";
 $text['message-delete_failed']['sv-se'] = "Borttagning Misslyckades";
 $text['message-delete_failed']['uk-ua'] = "Налаштування не вказано";
+$text['message-delete_failed']['zh-cn'] = "没有检查的环境";
+$text['message-delete_failed']['ja-jp'] = "いいえ 設定 チェック";
+$text['message-delete_failed']['ko-kr'] = "설정 확인 없음";
 
 $text['message-copy_failed']['en-us'] = "No Settings Checked or Invalid Domain";
 $text['message-copy_failed']['en-gb'] = "No Settings Checked or Invalid Domain";
@@ -362,6 +410,9 @@ $text['message-copy_failed']['ro-ro'] = "";
 $text['message-copy_failed']['ru-ru'] = "Не выбрано или настройка домена неверна";
 $text['message-copy_failed']['sv-se'] = "Ingen inställning markerad eller ogiltig domän.";
 $text['message-copy_failed']['uk-ua'] = "Немає Налаштування перевірених або ненадійних доменів";
+$text['message-copy_failed']['zh-cn'] = "1. 不存在被检查或无效的财产";
+$text['message-copy_failed']['ja-jp'] = "いいえ 設定 チェックまたは無効ドメイン";
+$text['message-copy_failed']['ko-kr'] = "설정 확인 또는 잘못된 도메인 없음";
 
 $text['label-web_fonts']['en-us'] = "Web Fonts";
 $text['label-web_fonts']['en-gb'] = "Web Fonts";
@@ -383,6 +434,9 @@ $text['label-web_fonts']['ro-ro'] = "Fonturi web";
 $text['label-web_fonts']['ru-ru'] = "Шрифты Web";
 $text['label-web_fonts']['sv-se'] = "web teckensnitt";
 $text['label-web_fonts']['uk-ua'] = "веб-шрифти";
+$text['label-web_fonts']['zh-cn'] = "网址";
+$text['label-web_fonts']['ja-jp'] = "Webフォント";
+$text['label-web_fonts']['ko-kr'] = "웹 글꼴";
 
 $text['label-top']['en-us'] = "Top";
 $text['label-top']['en-gb'] = "Top";
@@ -404,6 +458,9 @@ $text['label-top']['ro-ro'] = "Top";
 $text['label-top']['ru-ru'] = "Верхний";
 $text['label-top']['sv-se'] = "Topp";
 $text['label-top']['uk-ua'] = "топ";
+$text['label-top']['zh-cn'] = "专题";
+$text['label-top']['ja-jp'] = "トップページ";
+$text['label-top']['ko-kr'] = "이름 *";
 
 $text['label-text']['en-us'] = "Text";
 $text['label-text']['en-gb'] = "Text";
@@ -425,6 +482,9 @@ $text['label-text']['ro-ro'] = "Text";
 $text['label-text']['ru-ru'] = "Текст";
 $text['label-text']['sv-se'] = "Text";
 $text['label-text']['uk-ua'] = "текст";
+$text['label-text']['zh-cn'] = "案文";
+$text['label-text']['ja-jp'] = "テキスト";
+$text['label-text']['ko-kr'] = "이름 *";
 
 $text['label-superfine']['en-us'] = "Superfine";
 $text['label-superfine']['en-gb'] = "Superfine";
@@ -446,6 +506,9 @@ $text['label-superfine']['ro-ro'] = "";
 $text['label-superfine']['ru-ru'] = "Первоклассный";
 $text['label-superfine']['sv-se'] = "Superfin";
 $text['label-superfine']['uk-ua'] = "Суперфін";
+$text['label-superfine']['zh-cn'] = "2. 表面";
+$text['label-superfine']['ja-jp'] = "スーパーファイン";
+$text['label-superfine']['ko-kr'] = "제품정보";
 
 $text['label-static']['en-us'] = "Static";
 $text['label-static']['en-gb'] = "Static";
@@ -467,6 +530,9 @@ $text['label-static']['ro-ro'] = "Static";
 $text['label-static']['ru-ru'] = "Статичный";
 $text['label-static']['sv-se'] = "Statisk";
 $text['label-static']['uk-ua'] = "статичний";
+$text['label-static']['zh-cn'] = "统计";
+$text['label-static']['ja-jp'] = "スタティック";
+$text['label-static']['ko-kr'] = "제품정보";
 
 $text['label-reference']['en-us'] = "See";
 $text['label-reference']['en-gb'] = "See";
@@ -488,6 +554,9 @@ $text['label-reference']['ro-ro'] = "Referinţă";
 $text['label-reference']['ru-ru'] = "Вид";
 $text['label-reference']['sv-se'] = "Referens";
 $text['label-reference']['uk-ua'] = "посилання";
+$text['label-reference']['zh-cn'] = "See See See";
+$text['label-reference']['ja-jp'] = "お問い合わせ";
+$text['label-reference']['ko-kr'] = "이름 *";
 
 $text['label-right']['en-us'] = "Right";
 $text['label-right']['en-gb'] = "Right";
@@ -509,6 +578,9 @@ $text['label-right']['ro-ro'] = "Dreapta";
 $text['label-right']['ru-ru'] = "Правый";
 $text['label-right']['sv-se'] = "Höger";
 $text['label-right']['uk-ua'] = "правий";
+$text['label-right']['zh-cn'] = "权利";
+$text['label-right']['ja-jp'] = "アクセス";
+$text['label-right']['ko-kr'] = "지원하다";
 
 $text['label-other']['en-us'] = "Other";
 $text['label-other']['en-gb'] = "Other";
@@ -530,6 +602,9 @@ $text['label-other']['ro-ro'] = "";
 $text['label-other']['ru-ru'] = "Другие";
 $text['label-other']['sv-se'] = "Annat";
 $text['label-other']['uk-ua'] = "Інше";
+$text['label-other']['zh-cn'] = "其他";
+$text['label-other']['ja-jp'] = "その他";
+$text['label-other']['ko-kr'] = "기타";
 
 $text['label-normal']['en-us'] = "Normal";
 $text['label-normal']['en-gb'] = "Normal";
@@ -551,6 +626,9 @@ $text['label-normal']['ro-ro'] = "";
 $text['label-normal']['ru-ru'] = "Нормальный";
 $text['label-normal']['sv-se'] = "Normal";
 $text['label-normal']['uk-ua'] = "звичайно";
+$text['label-normal']['zh-cn'] = "正常";
+$text['label-normal']['ja-jp'] = "ノーマル";
+$text['label-normal']['ko-kr'] = "·";
 
 $text['label-none']['en-us'] = "None";
 $text['label-none']['en-gb'] = "None";
@@ -572,6 +650,9 @@ $text['label-none']['ro-ro'] = "Nici unul";
 $text['label-none']['ru-ru'] = "Никто";
 $text['label-none']['sv-se'] = "Ingen";
 $text['label-none']['uk-ua'] = "жоден";
+$text['label-none']['zh-cn'] = "无";
+$text['label-none']['ja-jp'] = "なし";
+$text['label-none']['ko-kr'] = "이름 *";
 
 $text['label-left']['en-us'] = "Left";
 $text['label-left']['en-gb'] = "Left";
@@ -593,6 +674,9 @@ $text['label-left']['ro-ro'] = "Stânga";
 $text['label-left']['ru-ru'] = "Слева";
 $text['label-left']['sv-se'] = "Vänster";
 $text['label-left']['uk-ua'] = "лівий";
+$text['label-left']['zh-cn'] = "任 务";
+$text['label-left']['ja-jp'] = "ふりがな";
+$text['label-left']['ko-kr'] = "왼쪽";
 
 $text['label-inline']['en-us'] = "Inline";
 $text['label-inline']['en-gb'] = "Inline";
@@ -614,6 +698,9 @@ $text['label-inline']['ro-ro'] = "In linie";
 $text['label-inline']['ru-ru'] = "inline";
 $text['label-inline']['sv-se'] = "Inline";
 $text['label-inline']['uk-ua'] = "В лінію";
+$text['label-inline']['zh-cn'] = "在线";
+$text['label-inline']['ja-jp'] = "インライン";
+$text['label-inline']['ko-kr'] = "제품정보";
 
 $text['label-image']['en-us'] = "Image";
 $text['label-image']['en-gb'] = "Image";
@@ -635,6 +722,9 @@ $text['label-image']['ro-ro'] = "Imagine";
 $text['label-image']['ru-ru'] = "Изображение";
 $text['label-image']['sv-se'] = "Bild";
 $text['label-image']['uk-ua'] = "зображення";
+$text['label-image']['zh-cn'] = "图像";
+$text['label-image']['ja-jp'] = "サイトマップ";
+$text['label-image']['ko-kr'] = "* 이름";
 
 $text['label-fixed']['en-us'] = "Fixed";
 $text['label-fixed']['en-gb'] = "Fixed";
@@ -656,6 +746,9 @@ $text['label-fixed']['ro-ro'] = "Fix";
 $text['label-fixed']['ru-ru'] = "Фиксированный";
 $text['label-fixed']['sv-se'] = "Fast";
 $text['label-fixed']['uk-ua'] = "фіксований";
+$text['label-fixed']['zh-cn'] = "固定";
+$text['label-fixed']['ja-jp'] = "固定式";
+$text['label-fixed']['ko-kr'] = "기타 제품";
 
 $text['label-side']['en-us'] = "Side";
 $text['label-side']['en-gb'] = "Side";
@@ -677,6 +770,9 @@ $text['label-side']['ro-ro'] = "";
 $text['label-side']['ru-ru'] = "Боковый";
 $text['label-side']['sv-se'] = "sida";
 $text['label-side']['uk-ua'] = "Почати";
+$text['label-side']['zh-cn'] = "段 次 页 次";
+$text['label-side']['ja-jp'] = "サイド";
+$text['label-side']['ko-kr'] = "이름 *";
 
 $text['label-fine']['en-us'] = "Fine";
 $text['label-fine']['en-gb'] = "Fine";
@@ -698,6 +794,9 @@ $text['label-fine']['ro-ro'] = "";
 $text['label-fine']['ru-ru'] = "Хорошо";
 $text['label-fine']['sv-se'] = "Fin";
 $text['label-fine']['uk-ua'] = "Кошик";
+$text['label-fine']['zh-cn'] = "罚款";
+$text['label-fine']['ja-jp'] = "メニュー";
+$text['label-fine']['ko-kr'] = "제품 정보";
 
 $text['label-center']['en-us'] = "Center";
 $text['label-center']['en-gb'] = "Center";
@@ -719,6 +818,9 @@ $text['label-center']['ro-ro'] = "Centru";
 $text['label-center']['ru-ru'] = "Центр";
 $text['label-center']['sv-se'] = "Centrum";
 $text['label-center']['uk-ua'] = "центр";
+$text['label-center']['zh-cn'] = "Centre";
+$text['label-center']['ja-jp'] = "センター";
+$text['label-center']['ko-kr'] = "- 연혁";
 
 $text['label-bottom']['en-us'] = "Bottom";
 $text['label-bottom']['en-gb'] = "Bottom";
@@ -740,6 +842,9 @@ $text['label-bottom']['ro-ro'] = "Fund";
 $text['label-bottom']['ru-ru'] = "Низ";
 $text['label-bottom']['sv-se'] = "Botten";
 $text['label-bottom']['uk-ua'] = "дно";
+$text['label-bottom']['zh-cn'] = "底层";
+$text['label-bottom']['ja-jp'] = "ボトム";
+$text['label-bottom']['ko-kr'] = "제품정보";
 
 $text['label-24-hour']['en-us'] = "24-Hour";
 $text['label-24-hour']['en-gb'] = "24-Hour";
@@ -761,6 +866,9 @@ $text['label-24-hour']['ro-ro'] = "24 de ore";
 $text['label-24-hour']['ru-ru'] = "24-часовой";
 $text['label-24-hour']['sv-se'] = "24-timmars";
 $text['label-24-hour']['uk-ua'] = "24-годинний";
+$text['label-24-hour']['zh-cn'] = "24小时";
+$text['label-24-hour']['ja-jp'] = "24時間";
+$text['label-24-hour']['ko-kr'] = "24시간";
 
 $text['label-12-hour']['en-us'] = "12-Hour";
 $text['label-12-hour']['en-gb'] = "12-Hour";
@@ -782,6 +890,9 @@ $text['label-12-hour']['ro-ro'] = "12 de ore";
 $text['label-12-hour']['ru-ru'] = "12-часовой";
 $text['label-12-hour']['sv-se'] = "12-timmars";
 $text['label-12-hour']['uk-ua'] = "12-годинний";
+$text['label-12-hour']['zh-cn'] = "12小时";
+$text['label-12-hour']['ja-jp'] = "12時間";
+$text['label-12-hour']['ko-kr'] = "12시간";
 
 $text['label-hours']['en-us'] = "Hour(s)";
 $text['label-hours']['en-gb'] = "Hour(s)";
@@ -803,6 +914,9 @@ $text['label-hours']['ro-ro'] = "";
 $text['label-hours']['ru-ru'] = "Час(ы)";
 $text['label-hours']['sv-se'] = "Timme (er)";
 $text['label-hours']['uk-ua'] = "Час(и)";
+$text['label-hours']['zh-cn'] = "小时";
+$text['label-hours']['ja-jp'] = "時間(秒)";
+$text['label-hours']['ko-kr'] = "시간(s)";
 
 $text['label-days']['en-us'] = "Day(s)";
 $text['label-days']['en-gb'] = "Day(s)";
@@ -824,6 +938,9 @@ $text['label-days']['ro-ro'] = "";
 $text['label-days']['ru-ru'] = "День(ы)";
 $text['label-days']['sv-se'] = "Dag(er)";
 $text['label-days']['uk-ua'] = "День(и)";
+$text['label-days']['zh-cn'] = "日";
+$text['label-days']['ja-jp'] = "日(日)";
+$text['label-days']['ko-kr'] = "일()";
 
 $text['label-messages']['en-us'] = "Message(s)";
 $text['label-messages']['en-gb'] = "Message(s)";
@@ -845,6 +962,9 @@ $text['label-messages']['ro-ro'] = "";
 $text['label-messages']['ru-ru'] = "Сообщение(и)";
 $text['label-messages']['sv-se'] = "Meddelande(s)";
 $text['label-messages']['uk-ua'] = "Повідомлення(и)";
+$text['label-messages']['zh-cn'] = "信息";
+$text['label-messages']['ja-jp'] = "メッセージ";
+$text['label-messages']['ko-kr'] = "메시지()";
 
 $text['label-image_text']['en-us'] = "Image & Text";
 $text['label-image_text']['en-gb'] = "Image & Text";
@@ -866,6 +986,9 @@ $text['label-image_text']['ro-ro'] = "";
 $text['label-image_text']['ru-ru'] = "Изображение";
 $text['label-image_text']['sv-se'] = "Bild och text";
 $text['label-image_text']['uk-ua'] = "Зображення та текст";
+$text['label-image_text']['zh-cn'] = "图表";
+$text['label-image_text']['ja-jp'] = "画像とテキスト";
+$text['label-image_text']['ko-kr'] = "이미지 및 텍스트";
 
 $text['label-file']['en-us'] = "File";
 $text['label-file']['en-gb'] = "File";
@@ -884,6 +1007,9 @@ $text['label-file']['pl-pl'] = "plik";
 $text['label-file']['pt-br'] = "Arquivo";
 $text['label-file']['pt-pt'] = "Ficheiro";
 $text['label-file']['ro-ro'] = "";
+$text['label-file']['zh-cn'] = "文件";
+$text['label-file']['ja-jp'] = "ファイル";
+$text['label-file']['ko-kr'] = "파일 형식";
 
 $text['label-base64']['en-us'] = "Base64";
 $text['label-base64']['en-gb'] = "Base64";
@@ -902,6 +1028,9 @@ $text['label-base64']['pl-pl'] = "Base64";
 $text['label-base64']['pt-br'] = "Base64";
 $text['label-base64']['pt-pt'] = "Base64";
 $text['label-base64']['ro-ro'] = "Base64";
+$text['label-base64']['zh-cn'] = "基地";
+$text['label-base64']['ja-jp'] = "ベース64";
+$text['label-base64']['ko-kr'] = "자료64";
 
 $text['label-dynamic']['en-us'] = "Dynamic";
 $text['label-dynamic']['en-gb'] = "Dynamic";
@@ -920,6 +1049,9 @@ $text['label-dynamic']['pl-pl'] = "Dynamic";
 $text['label-dynamic']['pt-br'] = "Dynamic";
 $text['label-dynamic']['pt-pt'] = "Dynamic";
 $text['label-dynamic']['ro-ro'] = "Dynamic";
+$text['label-dynamic']['zh-cn'] = "动态";
+$text['label-dynamic']['ja-jp'] = "ダイナミック";
+$text['label-dynamic']['ko-kr'] = "·";
 
 $text['label-single']['en-us'] = "Single";
 $text['label-single']['en-gb'] = "Single";
@@ -938,6 +1070,9 @@ $text['label-single']['pl-pl'] = "Single";
 $text['label-single']['pt-br'] = "Single";
 $text['label-single']['pt-pt'] = "Single";
 $text['label-single']['ro-ro'] = "Single";
+$text['label-single']['zh-cn'] = "单一";
+$text['label-single']['ja-jp'] = "シングル";
+$text['label-single']['ko-kr'] = "제품정보";
 
 $text['label-multiple']['en-us'] = "Multiple";
 $text['label-multiple']['en-gb'] = "Multiple";
@@ -956,6 +1091,9 @@ $text['label-multiple']['pl-pl'] = "Multiple";
 $text['label-multiple']['pt-br'] = "Multiple";
 $text['label-multiple']['pt-pt'] = "Multiple";
 $text['label-multiple']['ro-ro'] = "Multiple";
+$text['label-multiple']['zh-cn'] = "多重";
+$text['label-multiple']['ja-jp'] = "複数の";
+$text['label-multiple']['ko-kr'] = "기타";
 
 $text['header-default_settings']['en-us'] = "Default Settings";
 $text['header-default_settings']['en-gb'] = "Default Settings";
@@ -977,6 +1115,9 @@ $text['header-default_settings']['ro-ro'] = "";
 $text['header-default_settings']['ru-ru'] = "Настройки по умолчанию";
 $text['header-default_settings']['sv-se'] = "Standard Inställningar";
 $text['header-default_settings']['uk-ua'] = "Налаштування за замовчуванням";
+$text['header-default_settings']['zh-cn'] = "违约情况";
+$text['header-default_settings']['ja-jp'] = "デフォルト設定";
+$text['header-default_settings']['ko-kr'] = "기본 설정";
 
 $text['header-default_setting-edit']['en-us'] = "Default Setting";
 $text['header-default_setting-edit']['en-gb'] = "Default Setting";
@@ -998,6 +1139,9 @@ $text['header-default_setting-edit']['ro-ro'] = "";
 $text['header-default_setting-edit']['ru-ru'] = "Настройки по умолчанию";
 $text['header-default_setting-edit']['sv-se'] = "Standard Inställning";
 $text['header-default_setting-edit']['uk-ua'] = "Налаштування за замовчуванням";
+$text['header-default_setting-edit']['zh-cn'] = "违约情况";
+$text['header-default_setting-edit']['ja-jp'] = "デフォルト設定";
+$text['header-default_setting-edit']['ko-kr'] = "기본 설정";
 
 $text['header-default_setting-add']['en-us'] = "Default Setting Add";
 $text['header-default_setting-add']['en-gb'] = "Default Setting Add";
@@ -1019,6 +1163,9 @@ $text['header-default_setting-add']['ro-ro'] = "";
 $text['header-default_setting-add']['ru-ru'] = "Добавить настройку по умолчанию";
 $text['header-default_setting-add']['sv-se'] = "Lägg Till Standard Inställning";
 $text['header-default_setting-add']['uk-ua'] = "Налаштування за замовчуванням";
+$text['header-default_setting-add']['zh-cn'] = "违约情况";
+$text['header-default_setting-add']['ja-jp'] = "デフォルト設定の追加";
+$text['header-default_setting-add']['ko-kr'] = "기본 설정 추가";
 
 $text['description-order']['en-us'] = "Set the order (index) for this array element.";
 $text['description-order']['en-gb'] = "Set the order (index) for this array element.";
@@ -1040,6 +1187,9 @@ $text['description-order']['ro-ro'] = "";
 $text['description-order']['ru-ru'] = "Установите порядок (индекс) для этого элемента массива.";
 $text['description-order']['sv-se'] = "Ställ in ordningen (index) för detta element.";
 $text['description-order']['uk-ua'] = "Настроювання замовлення (index) для даного елемента масиву.";
+$text['description-order']['zh-cn'] = "确定这一阵列要素的顺序(指数)。";
+$text['description-order']['ja-jp'] = "この配列要素のorder(index)を設定します。";
+$text['description-order']['ko-kr'] = "이 배열 요소에 대한 주문 (index)를 설정합니다.";
 
 $text['description-enabled']['en-us'] = "Set the status of this default setting.";
 $text['description-enabled']['en-gb'] = "Set the status of this default setting.";
@@ -1061,6 +1211,9 @@ $text['description-enabled']['ro-ro'] = "";
 $text['description-enabled']['ru-ru'] = "Установите статус этого значения по умолчанию.";
 $text['description-enabled']['sv-se'] = "Välj status på denna standardinställning.";
 $text['description-enabled']['uk-ua'] = "Встановити статус цього параметра за замовчуванням.";
+$text['description-enabled']['zh-cn'] = "确定这一缺省情况。";
+$text['description-enabled']['ja-jp'] = "このデフォルト設定のステータスを設定します。";
+$text['description-enabled']['ko-kr'] = "이 기본 설정의 상태를 설정합니다.";
 
 $text['description-default_settings']['en-us'] = "Settings used for all domains.";
 $text['description-default_settings']['en-gb'] = "Settings used for all domains.";
@@ -1082,6 +1235,9 @@ $text['description-default_settings']['ro-ro'] = "";
 $text['description-default_settings']['ru-ru'] = "Настройки для всех доменов.";
 $text['description-default_settings']['sv-se'] = "Inställning används för alla domäner.";
 $text['description-default_settings']['uk-ua'] = "Налаштування використовується для всіх доменів";
+$text['description-default_settings']['zh-cn'] = "适用于所有领域的情况。";
+$text['description-default_settings']['ja-jp'] = "すべてのドメインで使用される設定。";
+$text['description-default_settings']['ko-kr'] = "모든 도메인에 사용되는 설정.";
 
 $text['description-default_setting-edit']['en-us'] = "Settings used for all domains.";
 $text['description-default_setting-edit']['en-gb'] = "Settings used for all domains.";
@@ -1103,6 +1259,9 @@ $text['description-default_setting-edit']['ro-ro'] = "";
 $text['description-default_setting-edit']['ru-ru'] = "Настройки для всех доменов.";
 $text['description-default_setting-edit']['sv-se'] = "Inställning används för alla domäner.";
 $text['description-default_setting-edit']['uk-ua'] = "Налаштування використовується для всіх доменів";
+$text['description-default_setting-edit']['zh-cn'] = "适用于所有领域的情况。";
+$text['description-default_setting-edit']['ja-jp'] = "すべてのドメインで使用される設定。";
+$text['description-default_setting-edit']['ko-kr'] = "모든 도메인에 사용되는 설정.";
 
 $text['description-default_setting-add']['en-us'] = "Settings used for all domains.";
 $text['description-default_setting-add']['en-gb'] = "Settings used for all domains.";
@@ -1124,6 +1283,9 @@ $text['description-default_setting-add']['ro-ro'] = "";
 $text['description-default_setting-add']['ru-ru'] = "Настройки для всех доменов.";
 $text['description-default_setting-add']['sv-se'] = "Inställning används för alla domäner.";
 $text['description-default_setting-add']['uk-ua'] = "Налаштування використовується для всіх доменів";
+$text['description-default_setting-add']['zh-cn'] = "适用于所有领域的情况。";
+$text['description-default_setting-add']['ja-jp'] = "すべてのドメインで使用される設定。";
+$text['description-default_setting-add']['ko-kr'] = "모든 도메인에 사용되는 설정.";
 
 $text['button-toggle']['en-us'] = "Toggle";
 $text['button-toggle']['en-gb'] = "Toggle";
@@ -1145,5 +1307,8 @@ $text['button-toggle']['ro-ro'] = "Comutare";
 $text['button-toggle']['ru-ru'] = "Переключатель";
 $text['button-toggle']['sv-se'] = "toggle";
 $text['button-toggle']['uk-ua'] = "тумблер";
+$text['button-toggle']['zh-cn'] = "方 法";
+$text['button-toggle']['ja-jp'] = "トピックス";
+$text['button-toggle']['ko-kr'] = "제품정보";
 
 ?>

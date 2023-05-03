@@ -19,6 +19,9 @@ $text['title-sofia_global_settings']['ro-ro'] = "";
 $text['title-sofia_global_settings']['ru-ru'] = "Мировые настройки Софии";
 $text['title-sofia_global_settings']['sv-se'] = "Sofia Global Inställningar";
 $text['title-sofia_global_settings']['uk-ua'] = "Софія Global Settings";
+$text['title-sofia_global_settings']['zh-cn'] = "索非亚全球环境";
+$text['title-sofia_global_settings']['ja-jp'] = "ソフィアグローバル設定";
+$text['title-sofia_global_settings']['ko-kr'] = "Sofia 글로벌 설정";
 
 $text['title-sofia_global_setting']['en-us'] = "Sofia Global Setting";
 $text['title-sofia_global_setting']['ar-eg'] = "تهيئة بيئة عالمية";
@@ -39,6 +42,9 @@ $text['title-sofia_global_setting']['ro-ro'] = "";
 $text['title-sofia_global_setting']['ru-ru'] = "София Глобальная";
 $text['title-sofia_global_setting']['sv-se'] = "Sofia global miljö";
 $text['title-sofia_global_setting']['uk-ua'] = "Софія глобальне налаштування";
+$text['title-sofia_global_setting']['zh-cn'] = "索非亚全球环境";
+$text['title-sofia_global_setting']['ja-jp'] = "ソフィアグローバル設定";
+$text['title-sofia_global_setting']['ko-kr'] = "Sofia 글로벌 설정";
 
 $text['title_description-sofia_global_settings']['en-us'] = "Used to define sofia global settings.";
 $text['title_description-sofia_global_settings']['ar-eg'] = "اعتاد على تعريف البيئات العالمية للصوفيا.";
@@ -59,6 +65,9 @@ $text['title_description-sofia_global_settings']['ro-ro'] = "";
 $text['title_description-sofia_global_settings']['ru-ru'] = "Используется для определения глобальных настроек софии.";
 $text['title_description-sofia_global_settings']['sv-se'] = "Används för att definiera sofia globala inställningar.";
 $text['title_description-sofia_global_settings']['uk-ua'] = "Використовується для визначення глобальних налаштувань софії.";
+$text['title_description-sofia_global_settings']['zh-cn'] = "用于确定全球环境。";
+$text['title_description-sofia_global_settings']['ja-jp'] = "sofiaグローバル設定を定義するために使用されます。";
+$text['title_description-sofia_global_settings']['ko-kr'] = "sofia 글로벌 설정을 정의하는 데 사용됩니다.";
 
 $text['label-global_setting_name']['en-us'] = "Name";
 $text['label-global_setting_name']['ar-eg'] = "الاسم";
@@ -79,6 +88,9 @@ $text['label-global_setting_name']['ro-ro'] = "";
 $text['label-global_setting_name']['ru-ru'] = "Имя";
 $text['label-global_setting_name']['sv-se'] = "Namnnamn";
 $text['label-global_setting_name']['uk-ua'] = "Ім'я";
+$text['label-global_setting_name']['zh-cn'] = "姓名";
+$text['label-global_setting_name']['ja-jp'] = "お名前 (必須)";
+$text['label-global_setting_name']['ko-kr'] = "이름 *";
 
 $text['description-global_setting_name']['en-us'] = "Enter the global setting name.";
 $text['description-global_setting_name']['ar-eg'] = "أدخلي اسم الموقع العالمي";
@@ -99,6 +111,9 @@ $text['description-global_setting_name']['ro-ro'] = "";
 $text['description-global_setting_name']['ru-ru'] = "Введите название глобальной настройки.";
 $text['description-global_setting_name']['sv-se'] = "Ange det globala inställningsnamnet.";
 $text['description-global_setting_name']['uk-ua'] = "Введіть назву глобального налаштування.";
+$text['description-global_setting_name']['zh-cn'] = "加入全球名称。";
+$text['description-global_setting_name']['ja-jp'] = "グローバル設定名を入力してください。";
+$text['description-global_setting_name']['ko-kr'] = "글로벌 설정 이름을 입력하십시오.";
 
 $text['label-global_setting_value']['en-us'] = "Value";
 $text['label-global_setting_value']['ar-eg'] = "القيمة";
@@ -119,6 +134,9 @@ $text['label-global_setting_value']['ro-ro'] = "";
 $text['label-global_setting_value']['ru-ru'] = "Стоимость";
 $text['label-global_setting_value']['sv-se'] = "Värde";
 $text['label-global_setting_value']['uk-ua'] = "Ціна";
+$text['label-global_setting_value']['zh-cn'] = "价值";
+$text['label-global_setting_value']['ja-jp'] = "バリュー";
+$text['label-global_setting_value']['ko-kr'] = "주요 특징";
 
 $text['description-global_setting_value']['en-us'] = "Enter the global setting value.";
 $text['description-global_setting_value']['ar-eg'] = "أدخل قيمة السياق العالمي.";
@@ -139,6 +157,9 @@ $text['description-global_setting_value']['ro-ro'] = "";
 $text['description-global_setting_value']['ru-ru'] = "Введите значение глобальной настройки.";
 $text['description-global_setting_value']['sv-se'] = "Ange det globala inställningsvärdet.";
 $text['description-global_setting_value']['uk-ua'] = "Введіть значення глобального налаштування.";
+$text['description-global_setting_value']['zh-cn'] = "达到全球环境值。";
+$text['description-global_setting_value']['ja-jp'] = "グローバル設定値を入力します。";
+$text['description-global_setting_value']['ko-kr'] = "글로벌 설정값을 입력하십시오.";
 
 $text['label-global_setting_enabled']['en-us'] = "Enabled";
 $text['label-global_setting_enabled']['ar-eg'] = "مُتاح";
@@ -159,6 +180,9 @@ $text['label-global_setting_enabled']['ro-ro'] = "";
 $text['label-global_setting_enabled']['ru-ru'] = "Включить";
 $text['label-global_setting_enabled']['sv-se'] = "aktiverad";
 $text['label-global_setting_enabled']['uk-ua'] = "Увімкнути";
+$text['label-global_setting_enabled']['zh-cn'] = "授权";
+$text['label-global_setting_enabled']['ja-jp'] = "有効化";
+$text['label-global_setting_enabled']['ko-kr'] = "이름 *";
 
 $text['description-global_setting_enabled']['en-us'] = "Enter the global setting enabled.";
 $text['description-global_setting_enabled']['ar-eg'] = "وتمكنت من دخول الإطار العالمي.";
@@ -179,6 +203,9 @@ $text['description-global_setting_enabled']['ro-ro'] = "";
 $text['description-global_setting_enabled']['ru-ru'] = "Введите глобальную настройку.";
 $text['description-global_setting_enabled']['sv-se'] = "Ange den globala inställningen aktiverad.";
 $text['description-global_setting_enabled']['uk-ua'] = "Увімкніть глобальне налаштування.";
+$text['description-global_setting_enabled']['zh-cn'] = "进入全球环境成为可能。";
+$text['description-global_setting_enabled']['ja-jp'] = "グローバル設定を有効にします。";
+$text['description-global_setting_enabled']['ko-kr'] = "글로벌 설정 입력";
 
 $text['label-global_setting_description']['en-us'] = "Description";
 $text['label-global_setting_description']['ar-eg'] = "الوصف";
@@ -199,6 +226,9 @@ $text['label-global_setting_description']['ro-ro'] = "";
 $text['label-global_setting_description']['ru-ru'] = "Описание";
 $text['label-global_setting_description']['sv-se'] = "Beskrivning";
 $text['label-global_setting_description']['uk-ua'] = "Опис";
+$text['label-global_setting_description']['zh-cn'] = "说明";
+$text['label-global_setting_description']['ja-jp'] = "コンテンツ";
+$text['label-global_setting_description']['ko-kr'] = "제품 설명";
 
 $text['description-global_setting_description']['en-us'] = "Enter the global setting description.";
 $text['description-global_setting_description']['ar-eg'] = "أدخل الوصف العالمي";
@@ -219,5 +249,8 @@ $text['description-global_setting_description']['ro-ro'] = "";
 $text['description-global_setting_description']['ru-ru'] = "Введите описание глобальной настройки.";
 $text['description-global_setting_description']['sv-se'] = "Ange den globala inställningsbeskrivningen.";
 $text['description-global_setting_description']['uk-ua'] = "Введіть опис глобального налаштування.";
+$text['description-global_setting_description']['zh-cn'] = "采用全球环境描述。";
+$text['description-global_setting_description']['ja-jp'] = "グローバル設定の説明を入力します。";
+$text['description-global_setting_description']['ko-kr'] = "글로벌 설정 설명 입력.";
 
 ?>

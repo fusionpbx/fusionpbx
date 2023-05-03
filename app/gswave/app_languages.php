@@ -20,6 +20,9 @@ $text['title-gswave']['ro-ro'] = "";
 $text['title-gswave']['ru-ru'] = "волна";
 $text['title-gswave']['sv-se'] = "Grandstream våg";
 $text['title-gswave']['uk-ua'] = "Grandstream Хвиля";
+$text['title-gswave']['zh-cn'] = "大湖区";
+$text['title-gswave']['ja-jp'] = "グランドストリーム波";
+$text['title-gswave']['ko-kr'] = "Grandstream 파";
 
 $text['title_description-gswave']['en-us'] = "Grandstream Wave is a soft phone for smart phones or tablets. It can be configured easily with a QR code provided here. To use it download and install Grandstream Wave for your device. Start the application and then go to Account Settings press the + to add a new account. Press on UCM Account (Scan QR Code) and then select the extension and scan the QR code.";
 $text['title_description-gswave']['en-gb'] = "Grandstream Wave is a soft phone for smart phones or tablets. It can be configured easily with a QR code provided here. To use it download and install Grandstream Wave for your device. Start the application and then go to Account Settings press the + to add a new account. Press on UCM Account (Scan QR Code) and then select the extension and scan the QR code.";
@@ -41,6 +44,9 @@ $text['title_description-gswave']['ro-ro'] = "";
 $text['title_description-gswave']['ru-ru'] = "Grandstream Wave - это мягкий телефон для смартфонов или планшетов. Его можно легко настроить с помощью QR-кода, предоставленного здесь. Чтобы использовать его скачать и установить Grandstream Wave для вашего устройства. Начните приложение, а затем переходите к Настройкам Пользователя, нажмите +, чтобы добавить новую учетную запись. Нажмите на учетную запись UCM (Scan QR Code), а затем выберите расширение и сканирование QR-кода.";
 $text['title_description-gswave']['sv-se'] = "Grandstream Wave är en mjuk telefon för smarta telefoner eller surfplattor. Det kan enkelt konfigureras med en QR-kod som tillhandahålls här. För att använda den ladda ner och installera Grandstream Wave för din enhet. Starta ansökan och sedan gå till Kontoinställningar tryck på + för att lägga till ett nytt konto. Tryck på UCM-konto (Scan QR-kod) och välj sedan förlängningen och skanna QR-koden.";
 $text['title_description-gswave']['uk-ua'] = "Грандстрім Хвиля - це м'який телефон для смартфонів або планшетів. Ви можете легко налаштувати QR-код. Щоб використовувати його для завантаження та встановлення Grandstream Wave для вашого пристрою. Почати програму, а потім перейти на налаштування облікового запису натисніть кнопку +, щоб додати новий обліковий запис. Натисніть на обліковий запис UCM, а потім виберіть розширення та сканування QR коду.";
+$text['title_description-gswave']['zh-cn'] = "上游 浪是智能手机或桌子的软电话。 可以很容易地根据此处提供的QR代码进行配置。 用该软件下载并安装大波波。 开始申请,然后到账户中,再加一新账户。 Press on UCM account (Scan QR Code) and subsequently selected the extension and scan the QR Code.";
+$text['title_description-gswave']['ja-jp'] = "グランドストリーム スマートフォンやタブレット用のソフトフォンです。 QRコードで簡単に設定できます。 お使いのデバイス用のGrandstream Waveをダウンロードしてインストールします。 アプリケーションを起動し、[アカウント設定] を押して + を押して新しいアカウントを追加します。 UCMアカウント(スキャンQRコード)を押し、QRコードの拡張子を選択し、スキャンします。";
+$text['title_description-gswave']['ko-kr'] = "그랜드스트림 Wave는 스마트폰이나 태블릿용 소프트폰입니다. 여기에 제공되는 QR 코드로 쉽게 구성할 수 있습니다. 그것은 당신의 장치를 위한 Grandstream Wave를 다운로드하고 설치하기 위하여. 응용 프로그램을 시작하고 계정 설정으로 이동 + 새로운 계정을 추가합니다. UCM 계정(Scan QR Code)를 눌러 확장을 선택하고 QR 코드를 스캔합니다.";
 
 $text['label-extension']['en-us'] = "Extension";
 $text['label-extension']['en-gb'] = "Extension";
@@ -62,5 +68,8 @@ $text['label-extension']['ro-ro'] = "";
 $text['label-extension']['ru-ru'] = "Внутренний Номер";
 $text['label-extension']['sv-se'] = "Anknytning";
 $text['label-extension']['uk-ua'] = "Розширення";
+$text['label-extension']['zh-cn'] = "延期";
+$text['label-extension']['ja-jp'] = "エクステンション";
+$text['label-extension']['ko-kr'] = "제품 정보";
 
 ?>

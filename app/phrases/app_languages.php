@@ -20,6 +20,9 @@ $text['title-phrases']['ro-ro'] = "";
 $text['title-phrases']['ru-ru'] = "Фразы";
 $text['title-phrases']['sv-se'] = "Fraser";
 $text['title-phrases']['uk-ua'] = "Фрази";
+$text['title-phrases']['zh-cn'] = "文学";
+$text['title-phrases']['ja-jp'] = "フレーズ";
+$text['title-phrases']['ko-kr'] = "한국어";
 
 $text['title-edit_phrase']['en-us'] = "Edit Phrase";
 $text['title-edit_phrase']['en-gb'] = "Edit Phrase";
@@ -41,6 +44,9 @@ $text['title-edit_phrase']['ro-ro'] = "";
 $text['title-edit_phrase']['ru-ru'] = "Редактор Фраз";
 $text['title-edit_phrase']['sv-se'] = "Ändra Fras";
 $text['title-edit_phrase']['uk-ua'] = "Редагувати фразу";
+$text['title-edit_phrase']['zh-cn'] = "字句";
+$text['title-edit_phrase']['ja-jp'] = "フレーズの編集";
+$text['title-edit_phrase']['ko-kr'] = "Phrase 편집";
 
 $text['title-add_phrase']['en-us'] = "Add Phrase";
 $text['title-add_phrase']['en-gb'] = "Add Phrase";
@@ -62,6 +68,9 @@ $text['title-add_phrase']['ro-ro'] = "";
 $text['title-add_phrase']['ru-ru'] = "Добавить Фразы";
 $text['title-add_phrase']['sv-se'] = "Lägg Till Fras";
 $text['title-add_phrase']['uk-ua'] = "Додати фразу";
+$text['title-add_phrase']['zh-cn'] = "添加短语";
+$text['title-add_phrase']['ja-jp'] = "フレーズを追加";
+$text['title-add_phrase']['ko-kr'] = "Phrase 추가";
 
 $text['label-tools']['en-us'] = "Tools";
 $text['label-tools']['en-gb'] = "Tools";
@@ -83,6 +92,9 @@ $text['label-tools']['ro-ro'] = "";
 $text['label-tools']['ru-ru'] = "Инструменты";
 $text['label-tools']['sv-se'] = "Verktyg";
 $text['label-tools']['uk-ua'] = "Параметри";
+$text['label-tools']['zh-cn'] = "工具";
+$text['label-tools']['ja-jp'] = "ツール";
+$text['label-tools']['ko-kr'] = "제품정보";
 
 $text['label-structure']['en-us'] = "Structure";
 $text['label-structure']['en-gb'] = "Structure";
@@ -104,6 +116,9 @@ $text['label-structure']['ro-ro'] = "";
 $text['label-structure']['ru-ru'] = "Структура";
 $text['label-structure']['sv-se'] = "Struktur";
 $text['label-structure']['uk-ua'] = "Структура";
+$text['label-structure']['zh-cn'] = "结构";
+$text['label-structure']['ja-jp'] = "コンテンツ";
+$text['label-structure']['ko-kr'] = "제품 설명";
 
 $text['label-sounds']['en-us'] = "Sounds";
 $text['label-sounds']['en-gb'] = "Sounds";
@@ -125,6 +140,9 @@ $text['label-sounds']['ro-ro'] = "";
 $text['label-sounds']['ru-ru'] = "Звуки";
 $text['label-sounds']['sv-se'] = "Ljud";
 $text['label-sounds']['uk-ua'] = "звуки";
+$text['label-sounds']['zh-cn'] = "固体";
+$text['label-sounds']['ja-jp'] = "サウンド";
+$text['label-sounds']['ko-kr'] = "언어 선택";
 
 $text['label-say']['en-us'] = "Say";
 $text['label-say']['en-gb'] = "Say";
@@ -146,6 +164,9 @@ $text['label-say']['ro-ro'] = "";
 $text['label-say']['ru-ru'] = "Скажите";
 $text['label-say']['sv-se'] = "Säg";
 $text['label-say']['uk-ua'] = "Вимовити";
+$text['label-say']['zh-cn'] = "Saye";
+$text['label-say']['ja-jp'] = "お問い合わせ";
+$text['label-say']['ko-kr'] = "이름 *";
 
 $text['label-recordings']['en-us'] = "Recordings";
 $text['label-recordings']['en-gb'] = "Recordings";
@@ -167,6 +188,9 @@ $text['label-recordings']['ro-ro'] = "";
 $text['label-recordings']['ru-ru'] = "Записи";
 $text['label-recordings']['sv-se'] = "Inspelningar";
 $text['label-recordings']['uk-ua'] = "записи";
+$text['label-recordings']['zh-cn'] = "记录";
+$text['label-recordings']['ja-jp'] = "レコーディング";
+$text['label-recordings']['ko-kr'] = "관련 기사";
 
 $text['label-play']['en-us'] = "Play";
 $text['label-play']['en-gb'] = "Play";
@@ -188,6 +212,9 @@ $text['label-play']['ro-ro'] = "";
 $text['label-play']['ru-ru'] = "Проиграть";
 $text['label-play']['sv-se'] = "Spela Upp";
 $text['label-play']['uk-ua'] = "Відтворити";
+$text['label-play']['zh-cn'] = "游乐";
+$text['label-play']['ja-jp'] = "プレイ";
+$text['label-play']['ko-kr'] = "뚱 베어";
 
 $text['label-pause']['en-us'] = "Pause";
 $text['label-pause']['en-gb'] = "Pause";
@@ -209,6 +236,9 @@ $text['label-pause']['ro-ro'] = "";
 $text['label-pause']['ru-ru'] = "Пауза";
 $text['label-pause']['sv-se'] = "Paus";
 $text['label-pause']['uk-ua'] = "Призупинити";
+$text['label-pause']['zh-cn'] = "分娩";
+$text['label-pause']['ja-jp'] = "パデュース";
+$text['label-pause']['ko-kr'] = "팟캐스트";
 
 $text['label-language']['en-us'] = "Language";
 $text['label-language']['en-gb'] = "Language";
@@ -230,6 +260,9 @@ $text['label-language']['ro-ro'] = "";
 $text['label-language']['ru-ru'] = "Язык";
 $text['label-language']['sv-se'] = "Språk";
 $text['label-language']['uk-ua'] = "Мова";
+$text['label-language']['zh-cn'] = "语言";
+$text['label-language']['ja-jp'] = "用語集";
+$text['label-language']['ko-kr'] = "* 이름";
 
 $text['label-function']['en-us'] = "Function";
 $text['label-function']['en-gb'] = "Function";
@@ -251,6 +284,9 @@ $text['label-function']['ro-ro'] = "";
 $text['label-function']['ru-ru'] = "Функционал";
 $text['label-function']['sv-se'] = "Funktion";
 $text['label-function']['uk-ua'] = "Функція";
+$text['label-function']['zh-cn'] = "职能";
+$text['label-function']['ja-jp'] = "関数";
+$text['label-function']['ko-kr'] = "제품정보";
 
 $text['label-execute']['en-us'] = "Execute";
 $text['label-execute']['en-gb'] = "Execute";
@@ -272,6 +308,9 @@ $text['label-execute']['ro-ro'] = "";
 $text['label-execute']['ru-ru'] = "Выполнить";
 $text['label-execute']['sv-se'] = "Utför";
 $text['label-execute']['uk-ua'] = "Виконати";
+$text['label-execute']['zh-cn'] = "概述";
+$text['label-execute']['ja-jp'] = "実行する";
+$text['label-execute']['ko-kr'] = "지원하다";
 
 $text['label-action']['en-us'] = "Action";
 $text['label-action']['en-gb'] = "Action";
@@ -293,6 +332,9 @@ $text['label-action']['ro-ro'] = "";
 $text['label-action']['ru-ru'] = "Действие";
 $text['label-action']['sv-se'] = "Åtgärd";
 $text['label-action']['uk-ua'] = "Дія";
+$text['label-action']['zh-cn'] = "行动";
+$text['label-action']['ja-jp'] = "アクション";
+$text['label-action']['ko-kr'] = "(주)";
 
 $text['header_phrases']['en-us'] = "Phrases";
 $text['header_phrases']['en-gb'] = "Phrases";
@@ -314,6 +356,9 @@ $text['header_phrases']['ro-ro'] = "";
 $text['header_phrases']['ru-ru'] = "Фразы";
 $text['header_phrases']['sv-se'] = "Fraser";
 $text['header_phrases']['uk-ua'] = "Фрази";
+$text['header_phrases']['zh-cn'] = "文学";
+$text['header_phrases']['ja-jp'] = "フレーズ";
+$text['header_phrases']['ko-kr'] = "한국어";
 
 $text['header-edit_phrase']['en-us'] = "Edit Phrase";
 $text['header-edit_phrase']['en-gb'] = "Edit Phrase";
@@ -335,6 +380,9 @@ $text['header-edit_phrase']['ro-ro'] = "";
 $text['header-edit_phrase']['ru-ru'] = "Редактировать Фразу";
 $text['header-edit_phrase']['sv-se'] = "Ändra Fras";
 $text['header-edit_phrase']['uk-ua'] = "Редагувати фразу";
+$text['header-edit_phrase']['zh-cn'] = "字句";
+$text['header-edit_phrase']['ja-jp'] = "フレーズの編集";
+$text['header-edit_phrase']['ko-kr'] = "Phrase 편집";
 
 $text['header-add_phrase']['en-us'] = "Add Phrase";
 $text['header-add_phrase']['en-gb'] = "Add Phrase";
@@ -356,6 +404,9 @@ $text['header-add_phrase']['ro-ro'] = "";
 $text['header-add_phrase']['ru-ru'] = "Добавить Фразу";
 $text['header-add_phrase']['sv-se'] = "Lägg Till Fras";
 $text['header-add_phrase']['uk-ua'] = "Додати фразу";
+$text['header-add_phrase']['zh-cn'] = "添加短语";
+$text['header-add_phrase']['ja-jp'] = "フレーズを追加";
+$text['header-add_phrase']['ko-kr'] = "Phrase 추가";
 
 $text['description-structure']['en-us'] = "Define the various components that make up the phrase.";
 $text['description-structure']['en-gb'] = "Define the various components that make up the phrase.";
@@ -377,6 +428,9 @@ $text['description-structure']['ro-ro'] = "";
 $text['description-structure']['ru-ru'] = "Определите различные компоненты, составляющие фразу.";
 $text['description-structure']['sv-se'] = "Definera de olika komponenterna som utgör frasen.";
 $text['description-structure']['uk-ua'] = "Вкажіть компоненти з яких складається фраза";
+$text['description-structure']['zh-cn'] = "界定构成该短语的各个组成部分。";
+$text['description-structure']['ja-jp'] = "フレーズを構成するさまざまなコンポーネントを定義します。";
+$text['description-structure']['ko-kr'] = "문구를 만들 수있는 다양한 구성 요소를 정의합니다.";
 
 $text['description-phrases']['en-us'] = "Create phrases of audio files to be played in sequence.";
 $text['description-phrases']['en-gb'] = "Create phrases of audio files to be played in sequence.";
@@ -398,6 +452,9 @@ $text['description-phrases']['ro-ro'] = "";
 $text['description-phrases']['ru-ru'] = "Создание фраз аудиофайлов, которые будут воспроизводиться последовательно.";
 $text['description-phrases']['sv-se'] = "Skapa fraser med ljudfiler som skall spelas upp i ordning.";
 $text['description-phrases']['uk-ua'] = "Створення фраз з аудіофайлів, які будуть відтворені у послідовності.";
+$text['description-phrases']['zh-cn'] = "制作录音文档的短语,按顺序进行。";
+$text['description-phrases']['ja-jp'] = "シーケンスで再生されるオーディオファイルのフレーズを作成します。";
+$text['description-phrases']['ko-kr'] = "오디오 파일의 구문을 작성하여 순서대로 재생합니다.";
 
 $text['description-name']['en-us'] = "Name for the phrase (Example: 'xyz_audio')";
 $text['description-name']['en-gb'] = "Name for the phrase (Example: 'xyz_audio')";
@@ -419,6 +476,9 @@ $text['description-name']['ro-ro'] = "";
 $text['description-name']['ru-ru'] = "Название фразы (например: 'xyz_audio')";
 $text['description-name']['sv-se'] = "Namn på frasen (Exempel: 'xyz_audio')";
 $text['description-name']['uk-ua'] = "Назва фрази";
+$text['description-name']['zh-cn'] = "短语名称(实例:`xyz_audio')";
+$text['description-name']['ja-jp'] = "フレーズの名前(例:'xyz_audio')";
+$text['description-name']['ko-kr'] = "구문 이름 (예 : 'xyz_audio')";
 
 $text['description-language']['en-us'] = "Language used in the phrase.";
 $text['description-language']['en-gb'] = "Language used in the phrase.";
@@ -440,6 +500,9 @@ $text['description-language']['ro-ro'] = "";
 $text['description-language']['ru-ru'] = "Язык, используемый во фразе.";
 $text['description-language']['sv-se'] = "Språk som används i frasen.";
 $text['description-language']['uk-ua'] = "Мова фрази";
+$text['description-language']['zh-cn'] = "用语。";
+$text['description-language']['ja-jp'] = "フレーズで使用される言語。";
+$text['description-language']['ko-kr'] = "구문에 사용되는 언어.";
 
 $text['description-enabled']['en-us'] = "Set the status of the phrase.";
 $text['description-enabled']['en-gb'] = "Set the status of the phrase.";
@@ -461,5 +524,8 @@ $text['description-enabled']['ro-ro'] = "";
 $text['description-enabled']['ru-ru'] = "Установите статус фразы.";
 $text['description-enabled']['sv-se'] = "Välj status på frasen.";
 $text['description-enabled']['uk-ua'] = "Вкажіть статус для фрази";
+$text['description-enabled']['zh-cn'] = "2. 确定该短语的地位。";
+$text['description-enabled']['ja-jp'] = "フレーズの状態を設定します。";
+$text['description-enabled']['ko-kr'] = "구문의 상태를 설정합니다.";
 
 ?>
