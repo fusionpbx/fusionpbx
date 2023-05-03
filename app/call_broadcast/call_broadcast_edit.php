@@ -72,7 +72,7 @@
 					$separator = $getData[0];
 					$separator .= (isset($getData[1]) && $getData[1] != '')? '|'.$getData[1] : '';
 					$separator .= (isset($getData[2]) && $getData[2] != '')? ','.$getData[2] : '';
-					$separator .= '\n';
+					$separator .= PHP_EOL;
 					$upload_csv .= $separator;
 				}
 				 fclose($file);
