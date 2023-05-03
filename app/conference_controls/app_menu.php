@@ -21,10 +21,15 @@
 	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Конференции Управление";
 	$apps[$x]['menu'][$y]['title']['sv-se'] = "Konferenskontroller";
 	$apps[$x]['menu'][$y]['title']['uk-ua'] = "Контроль конференції";
+	$apps[$x]['menu'][$y]['title']['zh-cn'] = "会议控制";
+	$apps[$x]['menu'][$y]['title']['ja-jp'] = "会議の制御";
+	$apps[$x]['menu'][$y]['title']['ko-kr'] = "컨퍼런스";
 	$apps[$x]['menu'][$y]['uuid'] = "9896d4b5-507f-4d0e-8db7-caa7f4655202";
 	$apps[$x]['menu'][$y]['parent_uuid'] = "fd29e39c-c936-f5fc-8e2b-611681b266b5";
 	$apps[$x]['menu'][$y]['category'] = "internal";
+	$apps[$x]['menu'][$y]['icon'] = "";
 	$apps[$x]['menu'][$y]['path'] = "/app/conference_controls/conference_controls.php";
+	$apps[$x]['menu'][$y]['order'] = "";
 	$apps[$x]['menu'][$y]['groups'][] = "superadmin";
 	$y++;
 

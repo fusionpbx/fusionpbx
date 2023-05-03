@@ -21,10 +21,15 @@
 	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Вызов по клику";
 	$apps[$x]['menu'][$y]['title']['sv-se'] = "Klicka för att ringa";
 	$apps[$x]['menu'][$y]['title']['uk-ua'] = "Натисніть, щоб викликати";
+	$apps[$x]['menu'][$y]['title']['zh-cn'] = "点击通话";
+	$apps[$x]['menu'][$y]['title']['ja-jp'] = "コールをクリック";
+	$apps[$x]['menu'][$y]['title']['ko-kr'] = "자주 묻는 질문";
 	$apps[$x]['menu'][$y]['uuid'] = "f862556f-9ddd-2697-fdf4-bed08ec63aa5";
 	$apps[$x]['menu'][$y]['parent_uuid'] = "fd29e39c-c936-f5fc-8e2b-611681b266b5";
 	$apps[$x]['menu'][$y]['category'] = "internal";
+	$apps[$x]['menu'][$y]['icon'] = "";
 	$apps[$x]['menu'][$y]['path'] = "/app/click_to_call/click_to_call.php";
+	$apps[$x]['menu'][$y]['order'] = "";
 	$y++;
 
 ?>
