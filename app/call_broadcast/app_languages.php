@@ -192,8 +192,8 @@ $text['label-timeout']['zh-cn'] = "时间表";
 $text['label-timeout']['ja-jp'] = "タイムアウト";
 $text['label-timeout']['ko-kr'] = "기타";
 
-$text['label-phone']['en-us'] = "Phone Number List";
-$text['label-phone']['en-gb'] = "Phone Number List";
+$text['label-phone']['en-us'] = "Phone Numbers";
+$text['label-phone']['en-gb'] = "Phone Numbers";
 $text['label-phone']['ar-eg'] = "قائمة رقم الهاتف";
 $text['label-phone']['de-at'] = "Liste der Telefonnummern";
 $text['label-phone']['de-ch'] = "Liste der Telefonnummern";
