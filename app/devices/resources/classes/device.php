@@ -63,9 +63,12 @@
 			return $this->domain_uuid;
 		}
 
-		public static function get_vendor($mac){
-			if(empty($mac))
-				return '';
+		public static function get_vendor($mac) {
+			//return if the mac address is empty
+				if(empty($mac)) {
+					return '';
+				}
+
 			//use the mac address to find the vendor
 				$mac = preg_replace('#[^a-fA-F0-9./]#', '', $mac);
 				$mac = strtolower($mac);
