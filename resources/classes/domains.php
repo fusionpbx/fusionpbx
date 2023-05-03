@@ -604,7 +604,6 @@ if (!class_exists('domains')) {
 				$config = new config;
 				$config_path = $config->find();
 				$config->get();
-				$db_host = $config->db_host;
 				$db_path = $config->db_path;
 				$db_port = $config->db_port;
 
