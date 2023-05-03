@@ -666,9 +666,6 @@ if (!class_exists('domains')) {
 						$domain_uuid = $row["domain_uuid"];
 						$domain_name = $row["domain_name"];
 
-					//get the context
-						$context = $domain_name;
-
 					//get the default settings - this needs to be done to reset the session values back to the defaults for each domain in the loop
 						foreach($database_default_settings as $row) {
 							$name = $row['default_setting_name'];
