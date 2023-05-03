@@ -660,7 +660,6 @@ if (!class_exists('domains')) {
 				}
 
 			//loop through all domains
-				$domain_count = count($domains);
 				$domains_processed = 1;
 				foreach ($domains as &$row) {
 					//get the values from database and set them as php variables
