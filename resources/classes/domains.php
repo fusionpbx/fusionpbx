@@ -664,7 +664,7 @@ if (!class_exists('domains')) {
 				foreach ($domains as $domain) {
 					//get the values from database and set them as php variables
 						$domain_uuid = $domain["domain_uuid"];
-						$domain_name = $row["domain_name"];
+						$domain_name = $domain["domain_name"];
 
 					//get the context
 						$context = $domain_name;
