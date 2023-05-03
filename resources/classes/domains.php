@@ -604,7 +604,6 @@ if (!class_exists('domains')) {
 				$config = new config;
 				$config_path = $config->find();
 				$config->get();
-				$db_port = $config->db_port;
 
 			//set the include path
 				$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
