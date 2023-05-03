@@ -1,6 +1,6 @@
 <?php
 
-	$y = 0;
+	$y=0;
 	$apps[$x]['menu'][$y]['title']['en-us'] = "Dashboard";
 	$apps[$x]['menu'][$y]['title']['en-gb'] = "Dashboard";
 	$apps[$x]['menu'][$y]['title']['ar-eg'] = "الصفحه الرئيسيه للمستخدم";
@@ -22,10 +22,15 @@
 	$apps[$x]['menu'][$y]['title']['sv-se'] = "Användarpanel";
 	$apps[$x]['menu'][$y]['title']['uk-ua'] = "Панель користувача";
 	$apps[$x]['menu'][$y]['title']['tr-tr'] = "Gösterge Paneli";
+	$apps[$x]['menu'][$y]['title']['zh-cn'] = "仪表板";
+	$apps[$x]['menu'][$y]['title']['ja-jp'] = "ダッシュボード";
+	$apps[$x]['menu'][$y]['title']['ko-kr'] = "대시보드";
 	$apps[$x]['menu'][$y]['uuid'] = "92c8ffdb-3c82-4f08-aec0-82421ec41bb5";
 	$apps[$x]['menu'][$y]['parent_uuid'] = "02194288-6d56-6d3e-0b1a-d53a2bc10788";
 	$apps[$x]['menu'][$y]['category'] = "internal";
+	$apps[$x]['menu'][$y]['icon'] = "";
 	$apps[$x]['menu'][$y]['path'] = "/core/dashboard/";
+	$apps[$x]['menu'][$y]['order'] = "";
 	$apps[$x]['menu'][$y]['groups'][] = "superadmin";
 	$apps[$x]['menu'][$y]['groups'][] = "admin";
 	$apps[$x]['menu'][$y]['groups'][] = "user";
