@@ -1892,7 +1892,7 @@ function number_pad($number,$n) {
 
 //escape user data
 	function escape($string) {
-		if (is_string($string)) {
+		if (is_string($string) || is_numeric($string)) {
 			return htmlentities($string, ENT_QUOTES | ENT_HTML5, 'UTF-8');
 		}
 		else {
