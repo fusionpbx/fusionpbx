@@ -103,7 +103,7 @@
 	}
 
 //process the data
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 
 		$msg = '';
 		if ($action == "update") {
@@ -122,7 +122,7 @@
 			$msg = '';
 			if (!is_numeric($voicemail_id)) { $msg .= $text['message-required']." ".$text['label-voicemail_id']."<br>\n"; }
 			if (trim($voicemail_password) == '') { $msg .= $text['message-required']." ".$text['label-voicemail_password']."<br>\n"; }
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -320,10 +320,10 @@
 	$voicemail_mail_to = str_replace(" ", "", $voicemail_mail_to);
 
 //set the defaults
-	if (strlen($voicemail_local_after_email) == 0) { $voicemail_local_after_email = 'true'; }
-	if (strlen($voicemail_enabled) == 0) { $voicemail_enabled = 'true'; }
-	if (strlen($voicemail_transcription_enabled) == 0) { $voicemail_transcription_enabled = $_SESSION['voicemail']['transcription_enabled_default']['boolean']; }	
-	if (strlen($voicemail_tutorial) == 0) { $voicemail_tutorial = 'false'; }
+	if (empty($voicemail_local_after_email)) { $voicemail_local_after_email = 'true'; }
+	if (empty($voicemail_enabled)) { $voicemail_enabled = 'true'; }
+	if (empty($voicemail_transcription_enabled)) { $voicemail_transcription_enabled = $_SESSION['voicemail']['transcription_enabled_default']['boolean']; }	
+	if (empty($voicemail_tutorial)) { $voicemail_tutorial = 'false'; }
 
 //get the greetings list
 	$sql = "select * from v_voicemail_greetings ";
@@ -352,7 +352,7 @@
 		if (is_array($voicemail_options) && @sizeof($voicemail_options) != 0) {
 			foreach ($voicemail_options as $x => $field) {
 				$voicemail_option_param = $field['voicemail_option_param'];
-				if (strlen(trim($voicemail_option_param)) == 0) {
+				if (empty(trim($voicemail_option_param))) {
 					$voicemail_option_param = $field['voicemail_option_action'];
 				}
 				$voicemail_option_param = str_replace("menu-", "", $voicemail_option_param);

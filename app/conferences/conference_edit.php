@@ -131,7 +131,7 @@
 	}
 
 //process http post variables
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 
 		//get the conference id
 			if ($action == "add") {
@@ -152,16 +152,16 @@
 
 		//check for all required data
 			$msg = '';
-			//if (strlen($dialplan_uuid) == 0) { $msg .= "Please provide: Dialplan UUID<br>\n"; }
-			if (strlen($conference_name) == 0) { $msg .= "".$text['confirm-name']."<br>\n"; }
-			if (strlen($conference_extension) == 0) { $msg .= "".$text['confirm-extension']."<br>\n"; }
-			//if (strlen($conference_pin_number) == 0) { $msg .= "Please provide: Pin Number<br>\n"; }
-			if (strlen($conference_profile) == 0) { $msg .= "".$text['confirm-profile']."<br>\n"; }
-			//if (strlen($conference_flags) == 0) { $msg .= "Please provide: Flags<br>\n"; }
-			//if (strlen($conference_order) == 0) { $msg .= "Please provide: Order<br>\n"; }
-			//if (strlen($conference_description) == 0) { $msg .= "Please provide: Description<br>\n"; }
-			if (strlen($conference_enabled) == 0) { $msg .= "".$text['confirm-enabled']."<br>\n"; }
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+			//if (empty($dialplan_uuid)) { $msg .= "Please provide: Dialplan UUID<br>\n"; }
+			if (empty($conference_name)) { $msg .= "".$text['confirm-name']."<br>\n"; }
+			if (empty($conference_extension)) { $msg .= "".$text['confirm-extension']."<br>\n"; }
+			//if (empty($conference_pin_number)) { $msg .= "Please provide: Pin Number<br>\n"; }
+			if (empty($conference_profile)) { $msg .= "".$text['confirm-profile']."<br>\n"; }
+			//if (empty($conference_flags)) { $msg .= "Please provide: Flags<br>\n"; }
+			//if (empty($conference_order)) { $msg .= "Please provide: Order<br>\n"; }
+			//if (empty($conference_description)) { $msg .= "Please provide: Description<br>\n"; }
+			if (empty($conference_enabled)) { $msg .= "".$text['confirm-enabled']."<br>\n"; }
+			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				$document['title'] = $text['title-conference'];
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
@@ -198,7 +198,7 @@
 					$array['conferences'][0]['conference_enabled'] = $conference_enabled;
 
 				//conference pin number
-					$pin_number = (strlen($conference_pin_number) > 0) ? '+'.$conference_pin_number : '';
+					$pin_number = (!empty($conference_pin_number)) ? '+'.$conference_pin_number : '';
 
 				//build the xml
 					$dialplan_xml = "<extension name=\"".xml::sanitize($conference_name)."\" continue=\"\" uuid=\"".xml::sanitize($dialplan_uuid)."\">\n";
@@ -297,7 +297,7 @@
 	}
 
 //set the defaults
-	if (strlen($conference_enabled) == 0) { $conference_enabled = 'true'; }
+	if (empty($conference_enabled)) { $conference_enabled = 'true'; }
 
 //get the conference profiles
 	$sql = "select * ";

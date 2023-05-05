@@ -82,7 +82,7 @@
 
 //add the search term
 	$search = $_GET["search"];
-	if (strlen($search) > 0) {
+	if (!empty($search)) {
 		$sql_search = "and (";
 		$sql_search .= "control_digits like :search";
 		$sql_search .= "or control_action like :search";

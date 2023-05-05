@@ -210,7 +210,7 @@
 				$data_body[$p] .= '<td align="center">';
 				if (permission_exists("xml_cdr_mos")) {
 					$total['rtp_audio_in_mos'] += $fields['rtp_audio_in_mos'];
-					$data_body[$p] .= (strlen($total['rtp_audio_in_mos']) > 0) ? $fields['rtp_audio_in_mos'] : null;
+					$data_body[$p] .= (!empty($total['rtp_audio_in_mos'])) ? $fields['rtp_audio_in_mos'] : null;
 				}
 				$data_body[$p] .= '</td>';
 

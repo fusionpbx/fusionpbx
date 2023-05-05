@@ -79,8 +79,8 @@
 					if (is_uuid($this->extension_uuid)) {
 						$this->extension_uuid = $row["extension_uuid"];
 					}
-					if (strlen($this->extension) == 0) {
-						if (strlen($row["number_alias"]) == 0) {
+					if (empty($this->extension)) {
+						if (empty($row["number_alias"])) {
 							$this->extension = $row["extension"];
 						}
 						else {
@@ -111,7 +111,7 @@
 			//delete extension from the cache
 				$cache = new cache;
 				$cache->delete("directory:".$this->extension."@".$this->domain_name);
-				if(strlen($this->number_alias) > 0){
+				if(!empty($this->number_alias)){
 					$cache->delete("directory:".$this->number_alias."@".$this->domain_name);
 				}
 

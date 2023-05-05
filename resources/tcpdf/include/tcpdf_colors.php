@@ -314,7 +314,7 @@ class TCPDF_COLORS {
 				return array();
 			}
 		}
-		if (strlen($color) == 0) {
+		if (empty($color)) {
 			return $defcol;
 		}
 		// RGB ARRAY

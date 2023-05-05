@@ -121,7 +121,7 @@
 	elseif (file_exists($tmp_dir.'/'.$row['conference_session_uuid'].'.wav')) {
 		$tmp_name = $row['conference_session_uuid'].".wav";
 	}
-	if (strlen($tmp_name) > 0 && file_exists($tmp_dir.'/'.$tmp_name)) {
+	if (!empty($tmp_name) && file_exists($tmp_dir.'/'.$tmp_name)) {
 		echo button::create(['type'=>'button','label'=>$text['button-download'],'icon'=>$_SESSION['theme']['button_icon_download'],'style'=>'margin-left: 15px;','link'=>'../recordings/recordings.php?a=download&type=rec&t=bin&filename='.base64_encode('archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$tmp_name)]);
 		if (permission_exists('conference_session_play')) {
 			echo button::create(['type'=>'button','label'=>$text['button-play'],'icon'=>$_SESSION['theme']['button_icon_play'],'onclick'=>"window.open('".PROJECT_PATH."/app/recordings/recording_play.php?a=download&type=moh&filename=".urlencode('archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$tmp_name)."', 'play',' width=420,height=150,menubar=no,status=no,toolbar=no');"]);
@@ -165,7 +165,7 @@
 				$end_date = date("j M Y h:i:sa", $row['end_epoch']);
 			}
 			$time_difference = '';
-			if (strlen($row['end_epoch']) > 0) {
+			if (!empty($row['end_epoch'])) {
 				$time_difference = $row['end_epoch'] - $row['start_epoch'];
 				$time_difference = gmdate("G:i:s", $time_difference);
 			}

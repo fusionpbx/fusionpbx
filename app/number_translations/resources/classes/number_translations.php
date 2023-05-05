@@ -79,7 +79,7 @@ if (!class_exists('number_translations')) {
 		 */
 		public function import() {
 			//get the xml from the number templates
-				if (strlen($this->xml) > 0) {
+				if (!empty($this->xml)) {
 					//convert the xml string to an xml object
 						$xml = simplexml_load_string($this->xml);
 					//convert to json
@@ -87,7 +87,7 @@ if (!class_exists('number_translations')) {
 					//convert to an array
 						$number_translation = json_decode($json, true);
 				}
-				else if (strlen($this->json) > 0) {
+				else if (!empty($this->json)) {
 					//convert to an array
 						$number_translation = json_decode($this->json, true);
 				}
@@ -100,7 +100,7 @@ if (!class_exists('number_translations')) {
 						$x = 0;
 						$array['number_translations'][$x]['number_translation_name'] = $number_translation['@attributes']['name'];
 						$array['number_translations'][$x]['number_translation_enabled'] = "true";
-						if (strlen($number_translation['@attributes']['enabled']) > 0) {
+						if (!empty($number_translation['@attributes']['enabled'])) {
 							$array['number_translations'][$x]['number_translation_enabled'] = $number_translation['@attributes']['enabled'];
 						}
 						$array['number_translations'][$x]['number_translation_description'] = $number_translation['@attributes']['description'];

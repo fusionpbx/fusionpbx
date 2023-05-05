@@ -103,7 +103,7 @@ if (!class_exists('destinations')) {
 						}
 
 					//add prefix
-						if (strlen($destination_prefix) > 0) {
+						if (!empty($destination_prefix)) {
 							$destination_prefix = str_replace("+", "", $destination_prefix);
 							$plus = '\+?';
 							if (strlen($destination_prefix) == 1) {
@@ -345,7 +345,7 @@ if (!class_exists('destinations')) {
 						$text2 = $language2->get($_SESSION['domain']['language']['code'], 'app/'.$name);
 					}
 
-					if (is_array($row['result']['data']) && count($row['result']['data']) > 0 and strlen($row['select_value'][$destination_type]) > 0) {
+					if (is_array($row['result']['data']) && count($row['result']['data']) > 0 and !empty($row['select_value'][$destination_type])) {
 						$response .= "		<optgroup label='".$text2['title-'.$label]."'>\n";
 						$label2 = $label;
 						foreach ($row['result']['data'] as $data) {
@@ -363,9 +363,9 @@ if (!class_exists('destinations')) {
 									if (strpos($value,',') !== false) {
 										$keys = explode(",", $value);
 										foreach ($keys as $k) {
-											if (strlen($data[$k]) > 0) {
+											if (!empty($data[$k])) {
 												$select_value = str_replace("\${".$key."}", $data[$k], $select_value);
-												if (strlen($data['label']) == 0) {
+												if (empty($data['label'])) {
 													$select_label = str_replace("\${".$key."}", $data[$k], $select_label);
 												}
 												else {
@@ -376,9 +376,9 @@ if (!class_exists('destinations')) {
 										}
 									}
 									else {
-										$select_value = str_replace("\${".$key."}", $data[$key], $select_value);
-										if (strlen($data['label']) == 0) {
-											$select_label = str_replace("\${".$key."}", $data[$key], $select_label);
+										$select_value = str_replace("\${".$key."}", $data[$key] ?? '', $select_value ?? '');
+										if (empty($data['label'])) {
+											$select_label = str_replace("\${".$key."}", $data[$key] ?? '', $select_label ?? '');
 										}
 										else {
 											$label = $data['label'];
@@ -386,7 +386,7 @@ if (!class_exists('destinations')) {
 										}
 									}
 									//application: hangup
-									if (strlen($data['application']) > 0) {
+									if (!empty($data['application'])) {
 										$select_value = str_replace("transfer", $data['application'], $select_value);
 									}
 								}
@@ -408,7 +408,7 @@ if (!class_exists('destinations')) {
 					}
 				}
 				if (!$select_found) {
-					$destination_label = str_replace(":", " ", $destination_value);
+					$destination_label = str_replace(":", " ", $destination_value ?? '');
 					$destination_label = str_replace("menu-exec-app", "", $destination_label);
 					$destination_label = str_replace("transfer", "", $destination_label);
 					$destination_label = str_replace("XML ".$this->domain_name, "", $destination_label);
@@ -661,7 +661,7 @@ if (!class_exists('destinations')) {
 					$text2 = $language2->get($_SESSION['domain']['language']['code'], 'app/'.$name);
 				}
 
-				if (is_array($row['result']['data']) && strlen($row['select_value'][$destination_type]) > 0) {
+				if (is_array($row['result']['data']) && !empty($row['select_value'][$destination_type])) {
 					$label2 = $label;
 					foreach ($row['result']['data'] as $data) {
 						$select_value = $row['select_value'][$destination_type];
@@ -678,9 +678,9 @@ if (!class_exists('destinations')) {
 								if (strpos($value,',') !== false) {
 									$keys = explode(",", $value);
 									foreach ($keys as $k) {
-										if (strlen($data[$k]) > 0) {
+										if (!empty($data[$k])) {
 											$select_value = str_replace("\${".$key."}", $data[$k], $select_value);
-											if (strlen($data['label']) == 0) {
+											if (empty($data['label'])) {
 												$select_label = str_replace("\${".$key."}", $data[$k], $select_label);
 											}
 											else {
@@ -691,9 +691,9 @@ if (!class_exists('destinations')) {
 									}
 								}
 								else {
-									$select_value = str_replace("\${".$key."}", $data[$key], $select_value);
-									if (strlen($data['label']) == 0) {
-										$select_label = str_replace("\${".$key."}", $data[$key], $select_label);
+									$select_value = str_replace("\${".$key."}", $data[$key] ?? '', $select_value);
+									if (empty($data['label'])) {
+										$select_label = str_replace("\${".$key."}", $data[$key] ?? '', $select_label);
 									}
 									else {
 										$label = $data['label'];
@@ -701,7 +701,7 @@ if (!class_exists('destinations')) {
 									}
 								}
 								//application: hangup
-								if (strlen($data['application']) > 0) {
+								if (!empty($data['application'])) {
 									$select_value = str_replace("transfer", $data['application'], $select_value);
 								}
 							}
@@ -722,8 +722,9 @@ if (!class_exists('destinations')) {
 				}
 			}
 			if (!$select_found) {
-				$destination_label = str_replace(":", " ", $destination_value);
-				$destination_label = str_replace("menu-exec-app", "", $destination_label);
+				if(!empty($destination_value))
+					$destination_label = str_replace(":", " ", $destination_value);
+				$destination_label = str_replace("menu-exec-app", "", $destination_label ?? '');
 				$destination_label = str_replace("transfer", "", $destination_label);
 				$destination_label = str_replace("XML ".$this->domain_name, "", $destination_label);
 				$array[$label][$destination_label] = $destination_value;
@@ -874,7 +875,7 @@ if (!class_exists('destinations')) {
 					$text2 = $language2->get($_SESSION['domain']['language']['code'], 'app/'.$name);
 				}
 
-				if (is_array($row['result']['data']) && strlen($row['select_value'][$destination_type]) > 0) {
+				if (is_array($row['result']['data']) && !empty($row['select_value'][$destination_type])) {
 					$label2 = $label;
 					foreach ($row['result']['data'] as $data) {
 						$select_value = $row['select_value'][$destination_type];
@@ -892,9 +893,9 @@ if (!class_exists('destinations')) {
 								if (strpos($value,',') !== false) {
 									$keys = explode(",", $value);
 									foreach ($keys as $k) {
-										if (strlen($data[$k]) > 0) {
+										if (!empty($data[$k])) {
 											$select_value = str_replace("\${".$key."}", $data[$k], $select_value);
-											if (strlen($data['label']) == 0) {
+											if (empty($data['label'])) {
 												$select_label = str_replace("\${".$key."}", $data[$k], $select_label);
 											}
 											else {
@@ -906,7 +907,7 @@ if (!class_exists('destinations')) {
 								}
 								else {
 									$select_value = str_replace("\${".$key."}", $data[$key], $select_value);
-									if (strlen($data['label']) == 0) {
+									if (empty($data['label'])) {
 										$select_label = str_replace("\${".$key."}", $data[$key], $select_label);
 									}
 									else {
@@ -915,7 +916,7 @@ if (!class_exists('destinations')) {
 									}
 								}
 								//application: hangup
-								if (strlen($data['application']) > 0) {
+								if (!empty($data['application'])) {
 									$select_value = str_replace("transfer", $data['application'], $select_value);
 								}
 							}

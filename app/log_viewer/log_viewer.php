@@ -57,7 +57,7 @@
 	}
 
 //set a default file size
-	if (!isset($_POST['size']) || strlen($_POST['size']) == 0) {
+	if (!isset($_POST['size']) || empty($_POST['size'])) {
 		$_POST['size'] = "32";
 	}
 
@@ -205,7 +205,7 @@
 		/*
 		// removed: duplicate of above
 		if (isset($_POST['submit'])) {
-			if (strlen($_POST['size']) == 0) { $_POST['size'] = "32"; }
+			if (empty($_POST['size'])) { $_POST['size'] = "32"; }
 		}
 		*/
 
@@ -219,7 +219,7 @@
 			else {
 				$user_file_size = $_POST['size'] * 1024;
 			}
-			if (strlen($_REQUEST['filter']) > 0) {
+			if (!empty($_REQUEST['filter'])) {
 				$filter = $_REQUEST['filter'];
 			}
 		}

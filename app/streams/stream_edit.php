@@ -63,7 +63,7 @@
 	}
 
 //process the user data and save it to the database
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 
 		//get the uuid from the POST
 			if ($action == "update") {
@@ -80,12 +80,12 @@
 
 		//check for all required data
 			$msg = '';
-			if (strlen($stream_name) == 0) { $msg .= $text['message-required']." ".$text['label-stream_name']."<br>\n"; }
-			if (strlen($stream_location) == 0) { $msg .= $text['message-required']." ".$text['label-stream_location']."<br>\n"; }
-			if (strlen($stream_enabled) == 0) { $msg .= $text['message-required']." ".$text['label-stream_enabled']."<br>\n"; }
-			//if (strlen($domain_uuid) == 0) { $msg .= $text['message-required']." ".$text['label-domain_uuid']."<br>\n"; }
-			//if (strlen($stream_description) == 0) { $msg .= $text['message-required']." ".$text['label-stream_description']."<br>\n"; }
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+			if (empty($stream_name)) { $msg .= $text['message-required']." ".$text['label-stream_name']."<br>\n"; }
+			if (empty($stream_location)) { $msg .= $text['message-required']." ".$text['label-stream_location']."<br>\n"; }
+			if (empty($stream_enabled)) { $msg .= $text['message-required']." ".$text['label-stream_enabled']."<br>\n"; }
+			//if (empty($domain_uuid)) { $msg .= $text['message-required']." ".$text['label-domain_uuid']."<br>\n"; }
+			//if (empty($stream_description)) { $msg .= $text['message-required']." ".$text['label-stream_description']."<br>\n"; }
+			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -99,7 +99,7 @@
 			}
 
 		//add the stream_uuid
-			if (strlen($_POST["stream_uuid"]) == 0) {
+			if (empty($_POST["stream_uuid"])) {
 				$stream_uuid = uuid();
 			}
 
@@ -155,7 +155,7 @@
 	}
 
 //set the defaults
-	if (strlen($stream_enabled) == 0) { $stream_enabled = 'true'; }
+	if (empty($stream_enabled)) { $stream_enabled = 'true'; }
 
 //need stream_all permission to edit a global stream
 	if (!permission_exists('stream_all') && $domain_uuid == null) {
@@ -236,7 +236,7 @@
 		echo "</td>\n";
 		echo "<td class='vtable' style='position: relative;' align='left'>\n";
 		echo "	<select class='formfld' name='domain_uuid'>\n";
-		if (strlen($domain_uuid) == 0) {
+		if (empty($domain_uuid)) {
 			echo "		<option value='' selected='selected'>".$text['label-global']."</option>\n";
 		}
 		else {

@@ -277,7 +277,7 @@ class authentication {
 						$sql = "select distinct(permission_name) from v_group_permissions ";
 						$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 						foreach ($_SESSION["groups"] as $field) {
-							if (strlen($field['group_name']) > 0) {
+							if (!empty($field['group_name'])) {
 								$sql_where_or[] = "group_name = :group_name_".$x;
 								$parameters['group_name_'.$x] = $field['group_name'];
 								$x++;
@@ -310,8 +310,8 @@ class authentication {
 							$name = $row['user_setting_name'];
 							$category = $row['user_setting_category'];
 							$subcategory = $row['user_setting_subcategory'];
-							if (strlen($row['user_setting_value']) > 0) {
-								if (strlen($subcategory) == 0) {
+							if (!empty($row['user_setting_value'])) {
+								if (empty($subcategory)) {
 									//$$category[$name] = $row['domain_setting_value'];
 									if ($name == "array") {
 										$_SESSION[$category][] = $row['user_setting_value'];
@@ -365,7 +365,7 @@ class authentication {
 									foreach($result as $x => $row) {
 										//set the destination
 										$destination = $row['extension'];
-										if (strlen($row['number_alias']) > 0) {
+										if (!empty($row['number_alias'])) {
 											$destination = $row['number_alias'];
 										}
 
@@ -390,7 +390,7 @@ class authentication {
 
 				//set the time zone
 					if (!isset($_SESSION["time_zone"]["user"])) { $_SESSION["time_zone"]["user"] = null; }
-					if (strlen($_SESSION["time_zone"]["user"]) == 0) {
+					if (strlen($_SESSION["time_zone"]["user"] ?? '') === 0) {
 						//set the domain time zone as the default time zone
 						date_default_timezone_set($_SESSION['domain']['time_zone']['name']);
 					}
@@ -415,7 +415,7 @@ class authentication {
 
 		//get the domain name from the username
 			if ($_SESSION["users"]["unique"]["text"] != "global") {
-				$username_array = explode("@", $_REQUEST["username"]);
+				$username_array = explode("@", $_REQUEST["username"] ?? '');
 				if (count($username_array) > 1) {
 					//get the domain name
 						$domain_name =  $username_array[count($username_array) -1];
@@ -444,7 +444,7 @@ class authentication {
 			}
 
 		//get the domain name from the http value
-			if (strlen($_REQUEST["domain_name"]) > 0) {
+			if (!empty($_REQUEST["domain_name"] ?? '')) {
 				$this->domain_name = $_REQUEST["domain_name"];
 			}
 

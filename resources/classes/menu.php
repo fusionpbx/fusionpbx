@@ -395,7 +395,7 @@ if (!class_exists('menu')) {
 						if (is_array($row['menu'])) {
 							foreach ($row['menu'] as $menu) {
 								//set the variables
-									if (strlen($menu['title'][$this->menu_language]) > 0) {
+									if (!empty($menu['title'][$this->menu_language])) {
 										$menu_item_title = $menu['title'][$this->menu_language];
 									}
 									else {
@@ -449,7 +449,7 @@ if (!class_exists('menu')) {
 												$array['menu_items'][$x]['menu_item_link'] = $menu_item_path;
 												$array['menu_items'][$x]['menu_item_category'] = $menu_item_category;
 												$array['menu_items'][$x]['menu_item_icon'] = $menu_item_icon;
-												if (strlen($menu_item_order) > 0) {
+												if (!empty($menu_item_order)) {
 													$array['menu_items'][$x]['menu_item_order'] = $menu_item_order;
 												}
 												if (is_uuid($menu_item_parent_uuid)) {
@@ -466,7 +466,7 @@ if (!class_exists('menu')) {
 										foreach ($language->languages as $menu_language) {
 											//set the menu item title
 												$menu_item_title = $menu["title"][$menu_language];
-												if (strlen($menu_item_title) == 0) {
+												if (empty($menu_item_title)) {
 													$menu_item_title = $menu["title"]['en-us'];
 												}
 
@@ -613,7 +613,7 @@ if (!class_exists('menu')) {
 						if (!isset($_SESSION["username"])) {
 							$_SESSION["username"] = '';
 						}
-						if (strlen($_SESSION["username"]) == 0) {
+						if (empty($_SESSION["username"])) {
 							$menu_html .= "<a $menu_tags style='padding: 0px 0px; border-style: none; background: none;'><h2 align='center' style=''>".$menu_item_title."</h2></a>\n";
 						}
 						else {
@@ -621,7 +621,7 @@ if (!class_exists('menu')) {
 								//hide login and sign-up when the user is logged in
 							}
 							else {
-								if (strlen($submenu_item_link) == 0) {
+								if (empty($submenu_item_link)) {
 									$menu_html .= "<h2 align='center' style=''>".$menu_item_title."</h2>\n";
 								}
 								else {
@@ -767,7 +767,7 @@ if (!class_exists('menu')) {
 
 						//add the sub menus to the array
 							$menu_item_level = 0;
-							if (strlen($row['menu_item_uuid']) > 0) {
+							if (!empty($row['menu_item_uuid'])) {
 								$a[$x]['menu_items'] = $this->menu_child_array($menu_item_level, $row['menu_item_uuid']);
 							}
 
@@ -851,7 +851,7 @@ if (!class_exists('menu')) {
 							}
 
 						//get sub menu for children
-							if (strlen($menu_item_uuid) > 0) {
+							if (!empty($menu_item_uuid)) {
 								$a[$x]['menu_items'] = $this->menu_child_array($menu_item_level, $menu_item_uuid);
 							}
 

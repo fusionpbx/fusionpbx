@@ -115,9 +115,9 @@
 			$cut = shell_exec("/usr/bin/which cut");
 			$uptime = trim(shell_exec(escapeshellcmd($cut." -d. -f1 /proc/uptime")));
 			$tmp['y'] = floor($uptime/60/60/24/365);
-			$tmp['d'] = $uptime/60/60/24%365;
-			$tmp['h'] = $uptime/60/60%24;
-			$tmp['m'] = $uptime/60%60;
+			$tmp['d'] = intdiv(intdiv(intdiv($uptime,60),60),24)%365;
+			$tmp['h'] = intdiv(intdiv($uptime,60),60)%24;
+			$tmp['m'] = intdiv($uptime,60)%60;
 			$tmp['s'] = $uptime%60;
 			$uptime = (($tmp['y'] != 0 && $tmp['y'] != '') ? $tmp['y'].'y ' : null);
 			$uptime .= (($tmp['d'] != 0 && $tmp['d'] != '') ? $tmp['d'].'d ' : null);
