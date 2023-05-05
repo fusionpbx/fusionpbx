@@ -318,14 +318,14 @@
 						//running
 						try {
 							$xml = new SimpleXMLElement($response);
-							$state = (array) $xml->state;
+							$state = $xml->state;
 							echo "	<td class='hide-sm-dn'>".$text['label-status-running']."</td>\n";
 							if (permission_exists('gateway_edit')) {
 								echo "	<td class='no-link center'>";
 								echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-action-stop'],'title'=>$text['button-stop'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('stop'); list_form_submit('form_list')"]);
 								echo "	</td>\n";
 							}
-							echo "	<td>".escape($state[0])."</td>\n"; //REGED, NOREG, UNREGED
+							echo "	<td>".escape($state)."</td>\n"; //REGED, NOREG, UNREGED
 						}
 						catch (Exception $e) {
 								//echo $e->getMessage();
