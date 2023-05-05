@@ -71,12 +71,6 @@
 
 		}
 
-		public function __destruct() {
-			foreach ($this as $key => $value) {
-				unset($this->$key);
-			}
-		}
-		
 		public function get_voicemail_id() {
 
 			//check if for valid input

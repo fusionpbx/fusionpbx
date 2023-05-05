@@ -61,16 +61,6 @@ if (!class_exists('default_settings')) {
 		}
 
 		/**
-		 * called when there are no references to a particular object
-		 * unset the variables used in the class
-		 */
-		public function __destruct() {
-			foreach ($this as $key => $value) {
-				unset($this->$key);
-			}
-		}
-
-		/**
 		 * delete rows from the database
 		 */
 		public function delete($records) {
@@ -305,6 +295,7 @@ if (!class_exists('default_settings')) {
 										//populate and adjust array
 										$array['default_settings'][$x] = $default_setting;
 										$array['default_settings'][$x]['default_setting_uuid'] = uuid();
+										$array['default_settings'][$x]['default_setting_enabled'] = $default_setting_enabled ?: 0;
 										$array['default_settings'][$x]['default_setting_description'] .= ' (Copy)';
 										unset($array['default_settings'][$x]['insert_date']);
 										unset($array['default_settings'][$x]['insert_user']);

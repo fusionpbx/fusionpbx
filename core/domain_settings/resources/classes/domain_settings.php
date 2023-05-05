@@ -64,16 +64,6 @@ if (!class_exists('domain_settings')) {
 		}
 
 		/**
-		 * called when there are no references to a particular object
-		 * unset the variables used in the class
-		 */
-		public function __destruct() {
-			foreach ($this as $key => $value) {
-				unset($this->$key);
-			}
-		}
-
-		/**
 		 * delete records
 		 */
 		public function delete($records) {
@@ -249,22 +239,28 @@ if (!class_exists('domain_settings')) {
 												$domain_setting_value = generate_password();
 											}
 
-											// check if exists
-											$sql = "select domain_setting_uuid from v_domain_settings ";
-											$sql .= "where domain_uuid = :domain_uuid ";
-											$sql .= "and domain_setting_category = :domain_setting_category ";
-											$sql .= "and domain_setting_subcategory = :domain_setting_subcategory ";
-											$sql .= "and domain_setting_name = :domain_setting_name ";
-											$sql .= "and domain_setting_name <> 'array' ";
-											$parameters['domain_uuid'] = $this->domain_uuid_target;
-											$parameters['domain_setting_category'] = $domain_setting_category;
-											$parameters['domain_setting_subcategory'] = $domain_setting_subcategory;
-											$parameters['domain_setting_name'] = $domain_setting_name;
-											$database = new database;
-											$target_domain_setting_uuid = $database->select($sql, $parameters, 'column');
+											//target is different domain, check if exists
+											if ($this->domain_uuid_target != $this->domain_uuid) {
+												$sql = "select domain_setting_uuid from v_domain_settings ";
+												$sql .= "where domain_uuid = :domain_uuid ";
+												$sql .= "and domain_setting_category = :domain_setting_category ";
+												$sql .= "and domain_setting_subcategory = :domain_setting_subcategory ";
+												$sql .= "and domain_setting_name = :domain_setting_name ";
+												$sql .= "and domain_setting_name <> 'array' ";
+												$parameters['domain_uuid'] = $this->domain_uuid_target;
+												$parameters['domain_setting_category'] = $domain_setting_category;
+												$parameters['domain_setting_subcategory'] = $domain_setting_subcategory;
+												$parameters['domain_setting_name'] = $domain_setting_name;
+												$database = new database;
+												$target_domain_setting_uuid = $database->select($sql, $parameters, 'column');
 
-											$action = is_uuid($target_domain_setting_uuid) ? 'update' : 'add';
-											unset($sql, $parameters);
+												$action = is_uuid($target_domain_setting_uuid) ? 'update' : 'add';
+												unset($sql, $parameters);
+											}
+											//target is same domain, duplicate
+											else {
+												$action = 'add';
+											}
 
 											// fix null
 											$domain_setting_order = $domain_setting_order != '' ? $domain_setting_order : null;

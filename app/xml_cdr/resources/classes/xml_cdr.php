@@ -81,16 +81,6 @@ if (!class_exists('xml_cdr')) {
 		}
 
 		/**
-		 * Called when there are no references to a particular object
-		 * unset the variables used in the class
-		 */
-		public function __destruct() {
-			if (isset($this)) foreach ($this as $key => $value) {
-				unset($this->$key);
-			}
-		}
-
-		/**
 		 * cdr process logging
 		 */
 		public function log($message) {

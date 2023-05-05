@@ -280,7 +280,7 @@
 			echo button::create(['type'=>'button','label'=>$text['button-cancel'],'id'=>'btn_copy_cancel','icon'=>$_SESSION['theme']['button_icon_cancel'],'style'=>'display: none;','onclick'=>'hide_domains();']);
 			echo 		"<select name='domain_uuid' class='formfld' style='display: none; width: auto;' id='target_domain_uuid' onchange=\"document.getElementById('domain_uuid').value = this.options[this.selectedIndex].value;\">\n";
 			echo "			<option value=''>(".$text['label-duplicate'].")</option>\n";
-			echo "			<option value='' disabled='disabled'>".$text['label-domain']."...</option>\n";
+			echo "			<option value='' selected='selected' disabled='disabled'>".$text['label-domain']."...</option>\n";
 			foreach ($_SESSION['domains'] as $domain) {
 				echo "		<option value='".escape($domain["domain_uuid"])."'>".escape($domain["domain_name"])."</option>\n";
 			}

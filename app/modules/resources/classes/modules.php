@@ -65,16 +65,6 @@ if (!class_exists('modules')) {
 
 		}
 
-		/**
-		 * called when there are no references to a particular object
-		 * unset the variables used in the class
-		 */
-		public function __destruct() {
-			foreach ($this as $key => $value) {
-				unset($this->$key);
-			}
-		}
-
 		//get the additional information about a specific module
 			public function info($name) {
 				$module_label = substr($name, 4);
