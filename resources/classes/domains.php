@@ -62,16 +62,6 @@ if (!class_exists('domains')) {
 		}
 
 		/**
-		 * called when there are no references to a particular object
-		 * unset the variables used in the class
-		 */
-		public function __destruct() {
-			foreach ($this as $key => $value) {
-				unset($this->$key);
-			}
-		}
-
-		/**
 		 * delete rows from the database
 		 */
 		public function delete($records) {
@@ -603,27 +593,10 @@ if (!class_exists('domains')) {
 		 */
 		public function upgrade() {
 
-			//connect to the database if not connected
-				if (!$this->db) {
-					$database = new database;
-					$database->connect();
-					$this->db = $database->db;
-				}
-
 			//get the variables
 				$config = new config;
-				$config_exists = $config->exists();
 				$config_path = $config->find();
 				$config->get();
-				$db_type = $config->db_type;
-				$db_name = $config->db_name;
-				$db_username = $config->db_username;
-				$db_password = $config->db_password;
-				$db_secure = $config->db_secure;
-				$db_cert_authority = $config->db_cert_authority;
-				$db_host = $config->db_host;
-				$db_path = $config->db_path;
-				$db_port = $config->db_port;
 
 			//set the include path
 				$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
@@ -640,7 +613,6 @@ if (!class_exists('domains')) {
 				$config_list_2 = glob($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/*/*/app_menu.php");
 				$config_list = array_merge((array)$config_list_1, (array)$config_list_2);
 				unset($config_list_1,$config_list_2);
-				$db = $this->db;
 				$x=0;
 				foreach ($config_list as &$config_path) {
 					$app_path = dirname($config_path);
@@ -653,21 +625,21 @@ if (!class_exists('domains')) {
 				$sql = "select * from v_domains ";
 				$database = new database;
 				$domains = $database->select($sql, null, 'all');
-				unset($sql, $parameters);
+				unset($sql);
 
 			//get the domain_settings
 				$sql = "select * from v_domain_settings ";
 				$sql .= "where domain_setting_enabled = 'true' ";
 				$database = new database;
 				$domain_settings = $database->select($sql, null, 'all');
-				unset($sql, $parameters);
+				unset($sql);
 
 			//get the default settings
 				$sql = "select * from v_default_settings ";
 				$sql .= "where default_setting_enabled = 'true' ";
 				$database = new database;
 				$database_default_settings = $database->select($sql, null, 'all');
-				unset($sql, $parameters);
+				unset($sql);
 
 			//get the domain_uuid
 				if (is_array($domains)) {
@@ -677,7 +649,7 @@ if (!class_exists('domains')) {
 							$_SESSION["domain_name"] = $row['domain_name'];
 						}
 						else {
-							if (lower_case($row['domain_name']) == lower_case($domain_array[0]) || lower_case($row['domain_name']) == lower_case('www.'.$domain_array[0])) {
+							if (lower_case($row['domain_name']) == lower_case($domain_array[0] ?? '') || lower_case($row['domain_name']) == lower_case('www.'.$domain_array[0] ?? '')) {
 								$_SESSION["domain_uuid"] = $row["domain_uuid"];
 								$_SESSION["domain_name"] = $row['domain_name'];
 							}
@@ -688,12 +660,11 @@ if (!class_exists('domains')) {
 				}
 
 			//loop through all domains
-				$domain_count = count($domains);
 				$domains_processed = 1;
-				foreach ($domains as &$row) {
+				foreach ($domains as $domain) {
 					//get the values from database and set them as php variables
-						$domain_uuid = $row["domain_uuid"];
-						$domain_name = $row["domain_name"];
+						$domain_uuid = $domain["domain_uuid"];
+						$domain_name = $domain["domain_name"];
 
 					//get the context
 						$context = $domain_name;

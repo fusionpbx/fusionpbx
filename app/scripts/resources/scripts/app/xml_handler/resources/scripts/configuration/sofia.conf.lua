@@ -267,9 +267,16 @@
 					--	sip_profile_setting_value = sip_profile_setting_value:gsub("%$", "");
 					--end
 
+				--sanitize the sip profile setting value, allow specific safe variables
+					sip_profile_setting_value = xml.sanitize(sip_profile_setting_value);
+					sip_profile_setting_value = string.gsub(sip_profile_setting_value, "{domain_name}", "${domain_name}"); 
+					sip_profile_setting_value = string.gsub(sip_profile_setting_value, "{strftime", "${strftime");
+					sip_profile_setting_value = string.gsub(sip_profile_setting_value, "{uuid}", "${uuid}");
+					sip_profile_setting_value = string.gsub(sip_profile_setting_value, "{record_ext}", "${record_ext}");
+
 				--set the parameters
 					if (sip_profile_setting_name) then
-						xml:append([[						<param name="]] .. xml.sanitize(sip_profile_setting_name) .. [[" value="]] .. xml.sanitize(sip_profile_setting_value) .. [["/>]]);
+						xml:append([[						<param name="]] .. xml.sanitize(sip_profile_setting_name) .. [[" value="]] .. sip_profile_setting_value .. [["/>]]);
 					end
 
 				--set the previous value

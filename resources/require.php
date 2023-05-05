@@ -41,9 +41,25 @@
 	define("PROJECT_PATH", $conf['project.path']);
 
 //set the error reporting
+	ini_set('display_errors', '1');
 	if (isset($conf['error.reporting'])) {
-		ini_set('display_errors', '1');
-		error_reporting($conf['error.reporting']);
+		$error_reporting_scope = $conf['error.reporting'];
+	}
+	else {
+		$error_reporting_scope = 'user';
+	}
+	switch ($error_reporting_scope) {
+	case 'user':
+		error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
+		break;
+	case 'dev':
+		error_reporting(E_ALL ^ E_NOTICE);
+		break;
+	case 'all':
+		error_reporting(E_ALL);
+		break;
+	default:
+		error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
 	}
 
 //get the database connection settings

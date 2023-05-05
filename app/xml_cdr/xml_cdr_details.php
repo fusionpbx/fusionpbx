@@ -125,9 +125,7 @@
 	echo "</tr>\n";
 	echo "<tr>\n";
 	echo "<td align='left' colspan='2'>\n";
-	echo "".$text['description-5']." \n";
-	echo "".$text['description-6']." \n";
-	echo "".$text['description-7']." \n";
+	echo "".$text['description-details']." \n";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "</table>\n";

@@ -53,12 +53,6 @@
 
 		}
 
-		public function __destruct() {
-			foreach ($this as $key => $value) {
-				unset($this->$key);
-			}
-		}
-
 		public function get_domain_uuid() {
 			return $this->domain_uuid;
 		}
