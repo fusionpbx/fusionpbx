@@ -1892,8 +1892,15 @@ function number_pad($number,$n) {
 
 //escape user data
 	function escape($string) {
-		if (is_string($string))
+		if (is_string($string)) {
 			return htmlentities($string, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+		}
+		else {
+			$string = (array) $string;
+			if (is_string($string[0])) {
+				return htmlentities($string[0], ENT_QUOTES | ENT_HTML5, 'UTF-8');
+			}
+		}
 		return false;
 	}
 
