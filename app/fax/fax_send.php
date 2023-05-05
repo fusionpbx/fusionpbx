@@ -369,7 +369,7 @@ else {
 			$pdf->setPrintFooter(false);
 			$pdf->SetMargins(0, 0, 0, true);
 
-			if (strlen($fax_cover_font) > 0) {
+			if (!empty($fax_cover_font)) {
 				if (substr($fax_cover_font, -4) == '.ttf') {
 					$pdf_font = TCPDF_FONTS::addTTFfont($fax_cover_font);
 				}
@@ -700,7 +700,7 @@ else {
 			fax_split_dtmf($fax_number, $fax_dtmf);
 
 			//prepare the fax command
-			if (strlen($fax_toll_allow) > 0) {
+			if (!empty($fax_toll_allow)) {
 				$channel_variables["toll_allow"] = $fax_toll_allow;
 			}
 			$route_array = outbound_route_to_bridge($_SESSION['domain_uuid'], $fax_prefix . $fax_number, $channel_variables);

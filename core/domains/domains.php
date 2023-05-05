@@ -76,7 +76,6 @@
 
 			//set the setting arrays
 				$domain = new domains();
-				$domain->db = $db;
 				$domain->set();
 
 			//redirect the user

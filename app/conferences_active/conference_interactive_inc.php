@@ -96,7 +96,7 @@
 			$member_count = $xml->conference['member-count'];
 			$locked = $xml->conference['locked'];
 			$recording = $xml->conference['recording'];
-			if (strlen($member_count) == 0) {
+			if (empty($member_count)) {
 				$member_count = 0;
 			}
 	
@@ -191,7 +191,7 @@
 				$join_time_formatted = sprintf('%02d:%02d:%02d', ($join_time/3600), ($join_time/60%60), $join_time%60);
 				$last_talking_formatted = sprintf('%02d:%02d:%02d', ($last_talking/3600), ($last_talking/60%60), $last_talking%60);
 
-				if (strlen($record_path) == 0) {
+				if (empty($record_path)) {
 					if (permission_exists('conference_interactive_mute')) {
 						$action_mute = ($flag_can_speak == "true") ? 'mute' : 'unmute';
 						$list_row_onclick = "onclick=\"send_cmd('conference_exec.php?cmd=conference&name=".urlencode($conference_name)."&data=".$action_mute."&id=".urlencode($id)."');\"";

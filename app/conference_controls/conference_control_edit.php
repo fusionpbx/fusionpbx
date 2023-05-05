@@ -38,7 +38,7 @@
 	}
 
 //process the user data and save it to the database
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 
 		//get the uuid from the POST
 			if ($action == "update") {
@@ -55,10 +55,10 @@
 
 		//check for all required data
 			$msg = '';
-			if (strlen($control_name) == 0) { $msg .= $text['message-required']." ".$text['label-control_name']."<br>\n"; }
-			if (strlen($control_enabled) == 0) { $msg .= $text['message-required']." ".$text['label-control_enabled']."<br>\n"; }
-			//if (strlen($control_description) == 0) { $msg .= $text['message-required']." ".$text['label-control_description']."<br>\n"; }
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+			if (empty($control_name)) { $msg .= $text['message-required']." ".$text['label-control_name']."<br>\n"; }
+			if (empty($control_enabled)) { $msg .= $text['message-required']." ".$text['label-control_enabled']."<br>\n"; }
+			//if (empty($control_description)) { $msg .= $text['message-required']." ".$text['label-control_description']."<br>\n"; }
+			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				$document['title'] = $text['title-conference_control'];
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
@@ -87,7 +87,7 @@
 			$database = new database;
 			$database->app_name = 'conference_controls';
 			$database->app_uuid = 'e1ad84a2-79e1-450c-a5b1-7507a043e048';
-			if (strlen($conference_control_uuid) > 0) {
+			if (!empty($conference_control_uuid)) {
 				$database->uuid($conference_control_uuid);
 			}
 			$database->save($array);
@@ -104,7 +104,7 @@
 				header("Location: conference_controls.php");
 				return;
 			}
-	} //(is_array($_POST) && strlen($_POST["persistformvar"]) == 0)
+	} //(is_array($_POST) && empty($_POST["persistformvar"]))
 
 //pre-populate the form
 	if (is_array($_GET) && $_POST["persistformvar"] != "true") {
@@ -124,7 +124,7 @@
 	}
 
 //set the defaults
-	if (strlen($control_enabled) == 0) { $control_enabled = 'true'; }
+	if (empty($control_enabled)) { $control_enabled = 'true'; }
 
 //create token
 	$object = new token;

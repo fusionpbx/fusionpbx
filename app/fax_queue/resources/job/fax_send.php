@@ -263,10 +263,10 @@
 //prepare the smtp from and from name variables
 	$email_from = $_SESSION['email']['smtp_from']['text'];
 	$email_from_name = $_SESSION['email']['smtp_from_name']['text'];
-	if (isset($_SESSION['fax']['smtp_from']['text']) && strlen($_SESSION['fax']['smtp_from']['text']) > 0) {
+	if (isset($_SESSION['fax']['smtp_from']['text']) && !empty($_SESSION['fax']['smtp_from']['text'])) {
 		$email_from = $_SESSION['fax']['smtp_from']['text'];
 	}
-	if (isset($_SESSION['fax']['smtp_from_name']['text']) && strlen($_SESSION['fax']['smtp_from_name']['text']) > 0) {
+	if (isset($_SESSION['fax']['smtp_from_name']['text']) && !empty($_SESSION['fax']['smtp_from_name']['text'])) {
 		$email_from_name = $_SESSION['fax']['smtp_from_name']['text'];
 	}
 
@@ -276,7 +276,7 @@
 	//$retry_interval = $_SESSION['fax_queue']['retry_interval']['numeric'];
 
 //prepare the fax retry count
-	if (strlen($fax_retry_count) == 0) {
+	if (empty($fax_retry_count)) {
 		$fax_retry_count = 0;
 	}
 	elseif ($fax_status != 'busy') {
@@ -347,7 +347,7 @@
 			fax_split_dtmf($fax_number, $fax_dtmf);
 
 		//prepare the fax command
-			if (strlen($fax_toll_allow) > 0) {
+			if (!empty($fax_toll_allow)) {
 				$channel_variables["toll_allow"] = $fax_toll_allow;
 			}
 			$route_array = outbound_route_to_bridge($domain_uuid, $fax_prefix . $fax_number, $channel_variables);
@@ -434,7 +434,7 @@
 	if (in_array($fax_status, array('sent', 'failed'))) {
 
 		//send the email
-			if (strlen($fax_email_address) > 0 && file_exists($fax_file)) {
+			if (!empty($fax_email_address) && file_exists($fax_file)) {
 				//get the language code
 				$language_code = $_SESSION['domain']['language']['code'];
 
@@ -447,7 +447,7 @@
 				}
 
 				//get the email template from the database
-				if (isset($fax_email_address) && strlen($fax_email_address) > 0) {
+				if (isset($fax_email_address) && !empty($fax_email_address)) {
 					$sql = "select template_subcategory, template_subject, template_body from v_email_templates ";
 					$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 					$sql .= "and template_language = :template_language ";
@@ -505,7 +505,7 @@
 				}
 
 				//get fax log data for email variables
-				if (isset($fax_email_address) && strlen($fax_email_address) > 0 && isset($fax_log_uuid)) {
+				if (isset($fax_email_address) && !empty($fax_email_address) && isset($fax_log_uuid)) {
 					$sql = "select * ";
 					$sql .= "from v_fax_logs ";
 					$sql .= "where fax_log_uuid = :fax_log_uuid ";
@@ -580,9 +580,9 @@
 				$email_body = str_replace('${fax_duration_formatted}', $fax_duration_formatted, $email_body);
 
 				//send the email
-				if (isset($fax_email_address) && strlen($fax_email_address) > 0) {
+				if (isset($fax_email_address) && !empty($fax_email_address)) {
 					//add the attachment
-					if (strlen($fax_file_name) > 0) {
+					if (!empty($fax_file_name)) {
 						$email_attachments[0]['type'] = 'file';
 						$email_attachments[0]['name'] = $fax_file_name;
 						$email_attachments[0]['value'] = path_join($fax_file_dirname, '.', $fax_file_name);

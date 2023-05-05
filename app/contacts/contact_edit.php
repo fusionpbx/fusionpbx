@@ -89,7 +89,7 @@
 	}
 
 //process the user data and save it to the database
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 
 		//debug info
 			//view_array($_POST, true);
@@ -103,7 +103,7 @@
 			}
 
 		//process the http post data by submitted action
-			if ($_POST['action'] != '' && strlen($_POST['action']) > 0) {
+			if ($_POST['action'] != '' && !empty($_POST['action'])) {
 
 				//prepare the array(s)
 				$x = 0;
@@ -236,29 +236,29 @@
 
 		//check for all required data
 			$msg = '';
-			//if (strlen($contact_type) == 0) { $msg .= $text['message-required']." ".$text['label-contact_type']."<br>\n"; }
-			//if (strlen($contact_title) == 0) { $msg .= $text['message-required']." ".$text['label-contact_title']."<br>\n"; }
-			//if (strlen($contact_role) == 0) { $msg .= $text['message-required']." ".$text['label-contact_role']."<br>\n"; }
-			//if (strlen($contact_category) == 0) { $msg .= $text['message-required']." ".$text['label-contact_category']."<br>\n"; }
-			//if (strlen($contact_organization) == 0) { $msg .= $text['message-required']." ".$text['label-contact_organization']."<br>\n"; }
-			//if (strlen($contact_name_prefix) == 0) { $msg .= $text['message-required']." ".$text['label-contact_name_prefix']."<br>\n"; }
-			//if (strlen($contact_name_given) == 0) { $msg .= $text['message-required']." ".$text['label-contact_name_given']."<br>\n"; }
-			//if (strlen($contact_name_middle) == 0) { $msg .= $text['message-required']." ".$text['label-contact_name_middle']."<br>\n"; }
-			//if (strlen($contact_name_family) == 0) { $msg .= $text['message-required']." ".$text['label-contact_name_family']."<br>\n"; }
-			//if (strlen($contact_name_suffix) == 0) { $msg .= $text['message-required']." ".$text['label-contact_name_suffix']."<br>\n"; }
-			//if (strlen($contact_nickname) == 0) { $msg .= $text['message-required']." ".$text['label-contact_nickname']."<br>\n"; }
-			//if (strlen($contact_time_zone) == 0) { $msg .= $text['message-required']." ".$text['label-contact_time_zone']."<br>\n"; }
-			//if (strlen($last_mod_date) == 0) { $msg .= $text['message-required']." ".$text['label-last_mod_date']."<br>\n"; }
-			//if (strlen($last_mod_user) == 0) { $msg .= $text['message-required']." ".$text['label-last_mod_user']."<br>\n"; }
-			//if (strlen($contact_phones) == 0) { $msg .= $text['message-required']." ".$text['label-contact_phones']."<br>\n"; }
-			//if (strlen($contact_addresses) == 0) { $msg .= $text['message-required']." ".$text['label-contact_addresses']."<br>\n"; }
-			//if (strlen($contact_emails) == 0) { $msg .= $text['message-required']." ".$text['label-contact_emails']."<br>\n"; }
-			//if (strlen($contact_urls) == 0) { $msg .= $text['message-required']." ".$text['label-contact_urls']."<br>\n"; }
-			//if (strlen($contact_settings) == 0) { $msg .= $text['message-required']." ".$text['label-contact_settings']."<br>\n"; }
-			//if (strlen($contact_user_uuid) == 0) { $msg .= $text['message-required']." ".$text['label-contact_user_uuid']."<br>\n"; }
-			//if (strlen($contact_group_uuid) == 0) { $msg .= $text['message-required']." ".$text['label-contact_group_uuid']."<br>\n"; }
-			//if (strlen($contact_note) == 0) { $msg .= $text['message-required']." ".$text['label-contact_note']."<br>\n"; }
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+			//if (empty($contact_type)) { $msg .= $text['message-required']." ".$text['label-contact_type']."<br>\n"; }
+			//if (empty($contact_title)) { $msg .= $text['message-required']." ".$text['label-contact_title']."<br>\n"; }
+			//if (empty($contact_role)) { $msg .= $text['message-required']." ".$text['label-contact_role']."<br>\n"; }
+			//if (empty($contact_category)) { $msg .= $text['message-required']." ".$text['label-contact_category']."<br>\n"; }
+			//if (empty($contact_organization)) { $msg .= $text['message-required']." ".$text['label-contact_organization']."<br>\n"; }
+			//if (empty($contact_name_prefix)) { $msg .= $text['message-required']." ".$text['label-contact_name_prefix']."<br>\n"; }
+			//if (empty($contact_name_given)) { $msg .= $text['message-required']." ".$text['label-contact_name_given']."<br>\n"; }
+			//if (empty($contact_name_middle)) { $msg .= $text['message-required']." ".$text['label-contact_name_middle']."<br>\n"; }
+			//if (empty($contact_name_family)) { $msg .= $text['message-required']." ".$text['label-contact_name_family']."<br>\n"; }
+			//if (empty($contact_name_suffix)) { $msg .= $text['message-required']." ".$text['label-contact_name_suffix']."<br>\n"; }
+			//if (empty($contact_nickname)) { $msg .= $text['message-required']." ".$text['label-contact_nickname']."<br>\n"; }
+			//if (empty($contact_time_zone)) { $msg .= $text['message-required']." ".$text['label-contact_time_zone']."<br>\n"; }
+			//if (empty($last_mod_date)) { $msg .= $text['message-required']." ".$text['label-last_mod_date']."<br>\n"; }
+			//if (empty($last_mod_user)) { $msg .= $text['message-required']." ".$text['label-last_mod_user']."<br>\n"; }
+			//if (empty($contact_phones)) { $msg .= $text['message-required']." ".$text['label-contact_phones']."<br>\n"; }
+			//if (empty($contact_addresses)) { $msg .= $text['message-required']." ".$text['label-contact_addresses']."<br>\n"; }
+			//if (empty($contact_emails)) { $msg .= $text['message-required']." ".$text['label-contact_emails']."<br>\n"; }
+			//if (empty($contact_urls)) { $msg .= $text['message-required']." ".$text['label-contact_urls']."<br>\n"; }
+			//if (empty($contact_settings)) { $msg .= $text['message-required']." ".$text['label-contact_settings']."<br>\n"; }
+			//if (empty($contact_user_uuid)) { $msg .= $text['message-required']." ".$text['label-contact_user_uuid']."<br>\n"; }
+			//if (empty($contact_group_uuid)) { $msg .= $text['message-required']." ".$text['label-contact_group_uuid']."<br>\n"; }
+			//if (empty($contact_note)) { $msg .= $text['message-required']." ".$text['label-contact_note']."<br>\n"; }
+			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -316,7 +316,7 @@
 			$y = 0;
 			if (is_array($contact_phones)) {
 				foreach ($contact_phones as $row) {
-					if (strlen($row['phone_number']) > 0) {
+					if (!empty($row['phone_number'])) {
 						//add the speed dial
 						$array['contacts'][0]['contact_phones'][$y]['domain_uuid'] = $_SESSION['domain_uuid'];
 						$array['contacts'][0]['contact_phones'][$y]['contact_uuid'] = $contact_uuid;
@@ -348,7 +348,7 @@
 			$y = 0;
 			if (is_array($contact_addresses)) {
 				foreach ($contact_addresses as $row) {
-					if (strlen($row['address_street']) > 0) {
+					if (!empty($row['address_street'])) {
 						$array['contacts'][0]['contact_addresses'][$y]['domain_uuid'] = $_SESSION['domain_uuid'];
 						$array['contacts'][0]['contact_addresses'][$y]['contact_uuid'] = $contact_uuid;
 						$array['contacts'][0]['contact_addresses'][$y]['contact_address_uuid'] = $row["contact_address_uuid"];
@@ -379,7 +379,7 @@
 			$y = 0;
 			if (is_array($contact_emails)) {
 				foreach ($contact_emails as $row) {
-					if (strlen($row['email_address']) > 0) {
+					if (!empty($row['email_address'])) {
 						$array['contacts'][0]['contact_emails'][$y]['domain_uuid'] = $_SESSION['domain_uuid'];
 						$array['contacts'][0]['contact_emails'][$y]['contact_uuid'] = $contact_uuid;
 						$array['contacts'][0]['contact_emails'][$y]['contact_email_uuid'] = $row["contact_email_uuid"];
@@ -396,7 +396,7 @@
 			$y = 0;
 			if (is_array($contact_urls)) {
 				foreach ($contact_urls as $row) {
-					if (strlen($row['url_address']) > 0) {
+					if (!empty($row['url_address'])) {
 						$array['contacts'][0]['contact_urls'][$y]['domain_uuid'] = $_SESSION['domain_uuid'];
 						$array['contacts'][0]['contact_urls'][$y]['contact_uuid'] = $contact_uuid;
 						$array['contacts'][0]['contact_urls'][$y]['contact_url_uuid'] = $row["contact_url_uuid"];
@@ -413,7 +413,7 @@
 			$y = 0;
 			if (is_array($contact_relations)) {
 				foreach ($contact_relations as $row) {
-					if (strlen($row['contact_relation_uuid']) > 0) {
+					if (!empty($row['contact_relation_uuid'])) {
 						$array['contacts'][0]['contact_relations'][$y]['domain_uuid'] = $_SESSION['domain_uuid'];
 						$array['contacts'][0]['contact_relations'][$y]['contact_uuid'] = $contact_uuid;
 						$array['contacts'][0]['contact_relations'][$y]['contact_relation_uuid'] = $row["contact_relation_uuid"];
@@ -427,7 +427,7 @@
 			$y = 0;
 			if (is_array($contact_settings)) {
 				foreach ($contact_settings as $row) {
-					if (strlen($row['contact_setting_category']) > 0 && strlen($row['contact_setting_subcategory']) > 0 && strlen($row['contact_setting_name']) > 0) {
+					if (strlen($row['contact_setting_category']) > 0 && strlen($row['contact_setting_subcategory']) > 0 && !empty($row['contact_setting_name'])) {
 						$array['contacts'][0]['contact_settings'][$y]['domain_uuid'] = $_SESSION['domain_uuid'];
 						$array['contacts'][0]['contact_settings'][$y]['contact_uuid'] = $contact_uuid;
 						$array['contacts'][0]['contact_settings'][$y]['contact_setting_uuid'] = $row["contact_setting_uuid"];
@@ -446,7 +446,7 @@
 			$y = 0;
 			if (is_array($contact_attachments)) {
 				foreach ($contact_attachments as $row) {
-					if (strlen($row['attachment_description']) > 0) {
+					if (!empty($row['attachment_description'])) {
 						$array['contacts'][0]['contact_attachments'][$y]['contact_attachment_uuid'] = $row["contact_attachment_uuid"];
 						$array['contacts'][0]['contact_attachments'][$y]['domain_uuid'] = $row["domain_uuid"];
 						$array['contacts'][0]['contact_attachments'][$y]['contact_uuid'] = $row["contact_uuid"];
@@ -465,7 +465,7 @@
 			$y = 0;
 			if (is_array($contact_times)) {
 				foreach ($contact_times as $row) {
-					if (strlen($row['time_start']) > 0) {
+					if (!empty($row['time_start'])) {
 						$array['contacts'][0]['contact_times'][$y]['contact_time_uuid'] = $row["contact_time_uuid"];
 						$array['contacts'][0]['contact_times'][$y]['domain_uuid'] = $row["domain_uuid"];
 						$array['contacts'][0]['contact_times'][$y]['contact_uuid'] = $row["contact_uuid"];
@@ -480,7 +480,7 @@
 			$y = 0;
 			if (is_array($contact_notes)) {
 				foreach ($contact_notes as $row) {
-					if (strlen($row['contact_note']) > 0) {
+					if (!empty($row['contact_note'])) {
 						$array['contacts'][0]['contact_notes'][$y]['contact_note_uuid'] = $row["contact_note_uuid"];
 						$array['contacts'][0]['contact_notes'][$y]['domain_uuid'] = $row["domain_uuid"];
 						$array['contacts'][0]['contact_notes'][$y]['contact_uuid'] = $row["contact_uuid"];
@@ -529,7 +529,7 @@
 					$_SESSION["message"] = $text['message-update'];
 				}
 				//header('Location: contacts.php');
-				header('Location: contact_edit.php?id='.urlencode($contact_uuid));
+				header('Location: contact_edit.php?id='.urlencode($contact_uuid ?? ''));
 				return;
 			}
 	}
@@ -1057,7 +1057,7 @@
 		}
 
 		echo button::create(['type'=>'button','label'=>$text['button-qr_code'],'icon'=>'qrcode','collapse'=>'hide-sm-dn','onclick'=>"$('#qr_code_container').fadeIn(400);"]);
-		echo button::create(['type'=>'button','label'=>$text['button-vcard'],'icon'=>'address-card','collapse'=>'hide-sm-dn','link'=>'contacts_vcard.php?id='.urlencode($contact_uuid).'&type=download']);
+		echo button::create(['type'=>'button','label'=>$text['button-vcard'],'icon'=>'address-card','collapse'=>'hide-sm-dn','link'=>'contacts_vcard.php?id='.urlencode($contact_uuid ?? '').'&type=download']);
 	}
 	//add edit
 	//if (isset($id)) {
@@ -1066,7 +1066,7 @@
 
 	//add user
 	if (isset($id) && permission_exists('user_edit')) {
-		echo button::create(['type'=>'button','label'=>$text['button-user'],'icon'=>'user','collapse'=>'hide-sm-dn','link'=>'../../core/users/user_edit.php?id='.urlencode($contact_user_uuid)]);
+		echo button::create(['type'=>'button','label'=>$text['button-user'],'icon'=>'user','collapse'=>'hide-sm-dn','link'=>'../../core/users/user_edit.php?id='.urlencode($contact_user_uuid ?? '')]);
 	}
 	if (
 		$action == "update" && (
@@ -1080,7 +1080,7 @@
 		permission_exists('contact_setting_add') ||
 		permission_exists('contact_attachment_add')
 		)) {
-		echo 		"<select class='formfld' style='width: auto; margin-left: 15px;' id='select_add' onchange=\"document.location.href='contact_' + (this.options[this.selectedIndex].value) + '_edit.php?contact_uuid=".urlencode($contact_uuid)."';\">\n";
+		echo 		"<select class='formfld' style='width: auto; margin-left: 15px;' id='select_add' onchange=\"document.location.href='contact_' + (this.options[this.selectedIndex].value) + '_edit.php?contact_uuid=".urlencode($contact_uuid ?? '')."';\">\n";
 		echo "			<option value=''>".$text['button-add']."...</option>\n";
 		if (permission_exists('contact_phone_add')) { echo "<option value='phone'>".$text['label-phone_number']."</option>\n"; }
 		if (permission_exists('contact_address_add')) { echo "<option value='address'>".$text['label-address_address']."</option>\n"; }
@@ -1386,7 +1386,7 @@ foreach ($time_zone_identifiers as $key => $val) {
 		}
 		echo "			<optgroup label='".$category."'>\n";
 	}
-	if (strlen($val) > 0) {
+	if (!empty($val)) {
 		$time_zone_offset = get_time_zone_offset($val)/3600;
 		$time_zone_offset_hours = floor($time_zone_offset);
 		$time_zone_offset_minutes = ($time_zone_offset - $time_zone_offset_hours) * 60;
@@ -1505,7 +1505,7 @@ if ($_SESSION['contact']['permissions']['boolean'] == "true") {
 				}
 				echo "		</div>\n";
 				foreach ($contact_groups_assigned as $x => $field) {
-					if (strlen($field['group_name']) > 0) {
+					if (!empty($field['group_name'])) {
 						echo "		<div class='vtable'>".escape($field['group_name'])."\n";
 						if (permission_exists('contact_group_delete')) {
 							if (is_uuid($field['contact_group_uuid'])) {
@@ -1596,18 +1596,18 @@ if (permission_exists('contact_phone_view')) {
 
 		$call = "send_cmd('";
 		$call .= PROJECT_PATH."/app/click_to_call/click_to_call.php";
-		$call .= "?src_cid_name=".urlencode($row['phone_number']);
-		$call .= "&src_cid_number=".urlencode($row['phone_number']);
-		$call .= "&dest_cid_name=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_name']);
-		$call .= "&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number']);
-		$call .= "&src=".urlencode($_SESSION['user']['extension'][0]['user']);
-		$call .= "&dest=".urlencode($row['phone_number']);
+		$call .= "?src_cid_name=".urlencode($row['phone_number'] ?? '');
+		$call .= "&src_cid_number=".urlencode($row['phone_number'] ?? '');
+		$call .= "&dest_cid_name=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_name'] ?? '');
+		$call .= "&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number'] ?? '');
+		$call .= "&src=".urlencode($_SESSION['user']['extension'][0]['user'] ?? '');
+		$call .= "&dest=".urlencode($row['phone_number'] ?? '');
 		$call .= "&rec=false";
 		$call .= "&ringback=us-ring";
 		$call .= "&auto_answer=true";
 		$call .= "');";
 		echo "				<a href='' onclick=\"".$call."\">\n";
-		echo "					<i class='fas fa-phone fa-fw' style='color: ".$_SESSION['theme']['body_text_color']."; float: left; margin-top: 7px; margin-left: 7px;' title=\"".urlencode($row['phone_number'])."\"></i>\n";
+		echo "					<i class='fas fa-phone fa-fw' style='color: ".$_SESSION['theme']['body_text_color']."; float: left; margin-top: 7px; margin-left: 7px;' title=\"".urlencode($row['phone_number'] ?? '')."\"></i>\n";
 		echo "				</a>\n";
 
 		echo "			</div>\n";
@@ -2180,7 +2180,7 @@ if (permission_exists('contact_url_view')) {
 
 		echo 					(is_array($url_label_options)) ? implode("\n", $url_label_options) : null;
 		echo "				</select>\n";
-		echo "				<input type='text' class='formfld' ".(($url_label_found || $url_label == '') ? "style='display: none;'" : null)." name='url_label_custom' id='url_label_custom' value=\"".((!$url_label_found) ? htmlentities($url_label) : null)."\">\n";
+		echo "				<input type='text' class='formfld' ".(($url_label_found || $url_label == '') ? "style='display: none;'" : null)." name='url_label_custom' id='url_label_custom' value=\"".((!$url_label_found) ? htmlentities($url_label ?? '') : null)."\">\n";
 		//echo "				<input type='button' id='btn_toggle_label' class='btn' alt='".$text['button-back']."' value='&#9665;' onclick=\"toggle_custom('url_label');\">\n";
 		echo "			</div>\n";
 

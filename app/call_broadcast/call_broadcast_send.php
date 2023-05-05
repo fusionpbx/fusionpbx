@@ -97,7 +97,7 @@
 		$broadcast_avmd = $row["broadcast_avmd"];
 		$broadcast_accountcode = $row["broadcast_accountcode"];
 		$broadcast_description = $row["broadcast_description"];
-		//if (strlen($row["broadcast_destination_data"]) == 0) {
+		//if (empty($row["broadcast_destination_data"])) {
 		//	$broadcast_destination_application = '';
 		//	$broadcast_destination_data = '';
 		//}
@@ -110,13 +110,13 @@
 	unset($sql, $parameters, $row);
 
 //set the defaults
-	if (strlen($broadcast_caller_id_name) == 0) {
+	if (empty($broadcast_caller_id_name)) {
 		$broadcast_caller_id_name = "anonymous";
 	}
-	if (strlen($broadcast_caller_id_number) == 0) {
+	if (empty($broadcast_caller_id_number)) {
 		$broadcast_caller_id_number = "0000000000";
 	}
-	if (strlen($broadcast_accountcode) == 0) {
+	if (empty($broadcast_accountcode)) {
 		$broadcast_accountcode = $_SESSION['domain_name'];;
 	}
 	if (isset($broadcast_start_time) && is_numeric($broadcast_start_time)) {
@@ -157,7 +157,7 @@
 			require_once "resources/header.php";
 
 		//send the call broadcast
-			if (strlen($broadcast_phone_numbers) > 0) {
+			if (!empty($broadcast_phone_numbers)) {
 				$broadcast_phone_number_array = explode ("\n", $broadcast_phone_numbers);
 				$count = 1;
 				foreach ($broadcast_phone_number_array as $tmp_value) {
@@ -210,7 +210,7 @@
 							//cmd_async($_SESSION['switch']['bin']['dir']."/fs_cli -x \"".$cmd."\";");
 
 						//spread the calls out so that they are scheduled with different times
-							if (strlen($broadcast_concurrent_limit) > 0 && strlen($broadcast_timeout) > 0) {
+							if (strlen($broadcast_concurrent_limit) > 0 && !empty($broadcast_timeout)) {
 								if ($broadcast_concurrent_limit == $count) {
 									$sched_seconds = $sched_seconds + $broadcast_timeout;
 									$count=0;

@@ -60,7 +60,7 @@
 //get the http post values and set them as php variables
 	if (count($_POST) > 0) {
 		foreach ($_POST['agents'] as $row) {
-			if (strlen($row['agent_status']) > 0) {
+			if (!empty($row['agent_status'])) {
 				//agent set status
 					if ($fp) {
 						// update the database

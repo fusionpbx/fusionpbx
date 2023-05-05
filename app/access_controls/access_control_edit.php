@@ -61,7 +61,7 @@
 	}
 
 //process the user data and save it to the database
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 
 		//enforce valid data
 			if ($access_control_name == 'providers' || $access_control_name == 'domains') {
@@ -80,7 +80,7 @@
 			}
 
 		//process the http post data by submitted action
-			if ($_POST['action'] != '' && strlen($_POST['action']) > 0) {
+			if (!empty($_POST['action'])) {
 
 				//prepare the array(s)
 				$x = 0;
@@ -134,11 +134,11 @@
 
 		//check for all required data
 			$msg = '';
-			if (strlen($access_control_name) == 0) { $msg .= $text['message-required']." ".$text['label-access_control_name']."<br>\n"; }
-			if (strlen($access_control_default) == 0) { $msg .= $text['message-required']." ".$text['label-access_control_default']."<br>\n"; }
-			//if (strlen($access_control_nodes) == 0) { $msg .= $text['message-required']." ".$text['label-access_control_nodes']."<br>\n"; }
-			//if (strlen($access_control_description) == 0) { $msg .= $text['message-required']." ".$text['label-access_control_description']."<br>\n"; }
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+			if (empty($access_control_name)) { $msg .= $text['message-required']." ".$text['label-access_control_name']."<br>\n"; }
+			if (empty($access_control_default)) { $msg .= $text['message-required']." ".$text['label-access_control_default']."<br>\n"; }
+			//if (empty($access_control_nodes)) { $msg .= $text['message-required']." ".$text['label-access_control_nodes']."<br>\n"; }
+			//if (empty($access_control_description)) { $msg .= $text['message-required']." ".$text['label-access_control_description']."<br>\n"; }
+			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";

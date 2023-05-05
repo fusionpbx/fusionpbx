@@ -112,7 +112,7 @@
 	$order = $_GET["order"];
 
 //add the search term
-	$search = strtolower($_GET["search"]);
+	$search = strtolower($_GET["search"] ?? '');
 
 //prepare to page the results
 	$sql = "select count(*) from v_destinations ";
@@ -121,7 +121,7 @@
 		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
 		$parameters['domain_uuid'] = $domain_uuid;
 	}
-	if (strlen($search) > 0) {
+	if (!empty($search)) {
 		$sql .= "and (";
 		$sql .= "lower(destination_type) like :search ";
 		$sql .= "or lower(destination_number) like :search ";
@@ -149,7 +149,7 @@
 		$param .= "&show=all";
 	}
 	$page = $_GET['page'];
-	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
+	if (empty($page)) { $page = 0; $_GET['page'] = 0; }
 	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
 	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
@@ -161,7 +161,7 @@
 		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
 		$parameters['domain_uuid'] = $domain_uuid;
 	}
-	if (strlen($search) > 0) {
+	if (!empty($search)) {
 		$sql .= "and (";
 		$sql .= "lower(destination_type) like :search ";
 		$sql .= "or lower(destination_number) like :search ";
@@ -306,7 +306,7 @@
 				echo "	</td>\n";
 			}
 			if ($_GET['show'] == "all" && permission_exists('destination_all')) {
-				if (strlen($_SESSION['domains'][$row['domain_uuid']]['domain_name']) > 0) {
+				if (!empty($_SESSION['domains'][$row['domain_uuid']]['domain_name'])) {
 					$domain = $_SESSION['domains'][$row['domain_uuid']]['domain_name'];
 				}
 				else {

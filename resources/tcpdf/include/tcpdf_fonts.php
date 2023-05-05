@@ -1793,10 +1793,10 @@ class TCPDF_FONTS {
 	 * @public static
 	 */
 	public static function UTF8ArrSubString($strarr, $start='', $end='', $unicode=true) {
-		if (strlen($start) == 0) {
+		if (empty($start)) {
 			$start = 0;
 		}
-		if (strlen($end) == 0) {
+		if (empty($end)) {
 			$end = count($strarr);
 		}
 		$string = '';
@@ -1816,10 +1816,10 @@ class TCPDF_FONTS {
 	 * @public static
 	 */
 	public static function UniArrSubString($uniarr, $start='', $end='') {
-		if (strlen($start) == 0) {
+		if (empty($start)) {
 			$start = 0;
 		}
-		if (strlen($end) == 0) {
+		if (empty($end)) {
 			$end = count($uniarr);
 		}
 		$string = '';

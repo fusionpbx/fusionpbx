@@ -89,7 +89,7 @@
 		$domain_setting_description = $_POST["domain_setting_description"];
 	}
 
-if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 
 	$msg = '';
 	if ($action == "update") {
@@ -105,14 +105,14 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		}
 
 	//check for all required/authorized data
-		if (strlen($domain_setting_category) == 0 || (is_array($allowed_categories) && sizeof($allowed_categories) > 0 && !in_array(strtolower($domain_setting_category), $allowed_categories))) { $msg .= $text['message-required'].$text['label-category']."<br>\n"; }
-		if (strlen($domain_setting_subcategory) == 0) { $msg .= $text['message-required'].$text['label-subcategory']."<br>\n"; }
-		if (strlen($domain_setting_name) == 0) { $msg .= $text['message-required'].$text['label-type']."<br>\n"; }
-		//if (strlen($domain_setting_value) == 0) { $msg .= $text['message-required'].$text['label-value']."<br>\n"; }
-		if (strlen($domain_setting_order) == 0) { $msg .= $text['message-required'].$text['label-order']."<br>\n"; }
-		if (strlen($domain_setting_enabled) == 0) { $msg .= $text['message-required'].$text['label-enabled']."<br>\n"; }
-		//if (strlen($domain_setting_description) == 0) { $msg .= $text['message-required'].$text['label-description']."<br>\n"; }
-		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+		if (empty($domain_setting_category) || (is_array($allowed_categories) && sizeof($allowed_categories) > 0 && !in_array(strtolower($domain_setting_category), $allowed_categories))) { $msg .= $text['message-required'].$text['label-category']."<br>\n"; }
+		if (empty($domain_setting_subcategory)) { $msg .= $text['message-required'].$text['label-subcategory']."<br>\n"; }
+		if (empty($domain_setting_name)) { $msg .= $text['message-required'].$text['label-type']."<br>\n"; }
+		//if (empty($domain_setting_value)) { $msg .= $text['message-required'].$text['label-value']."<br>\n"; }
+		if (empty($domain_setting_order)) { $msg .= $text['message-required'].$text['label-order']."<br>\n"; }
+		if (empty($domain_setting_enabled)) { $msg .= $text['message-required'].$text['label-enabled']."<br>\n"; }
+		//if (empty($domain_setting_description)) { $msg .= $text['message-required'].$text['label-description']."<br>\n"; }
+		if (!empty($msg) && empty($_POST["persistformvar"])) {
 			require_once "resources/header.php";
 			require_once "resources/persist_form_var.php";
 			echo "<div align='center'>\n";
@@ -232,7 +232,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				}
 
 			//update time zone
-				if ($domain_setting_category == "domain" && $domain_setting_subcategory == "time_zone" && $domain_setting_name == "name" && strlen($domain_setting_value) > 0 ) {
+				if ($domain_setting_category == "domain" && $domain_setting_subcategory == "time_zone" && $domain_setting_name == "name" && !empty($domain_setting_value) ) {
 					$sql = "select * from v_dialplans ";
 					$sql .= "where app_uuid = '34dd307b-fffe-4ead-990c-3d070e288126' ";
 					$sql .= "and domain_uuid = :domain_uuid ";
@@ -349,7 +349,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 
 //set the defaults
-	if (strlen($domain_setting_enabled) == 0) { $domain_setting_enabled = 'true'; }
+	if (empty($domain_setting_enabled)) { $domain_setting_enabled = 'true'; }
 
 //create token
 	$object = new token;
@@ -455,7 +455,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	$category = $row['domain_setting_category'];
-	$subcategory = $row['domain_setting_subcategory'];
+	$subcategory = $row['domain_setting_subcategory'] ?? '';
 	$name = $row['domain_setting_name'];
 	if ($category == "domain" && $subcategory == "menu" && $name == "uuid" ) {
 		echo "		<select class='formfld' id='domain_setting_value' name='domain_setting_value' style=''>\n";
@@ -524,7 +524,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				}
 				echo "		<optgroup label='".escape($category)."'>\n";
 			}
-			if (strlen($val) > 0) {
+			if (!empty($val)) {
 				$time_zone_offset = get_time_zone_offset($val)/3600;
 				$time_zone_offset_hours = floor($time_zone_offset);
 				$time_zone_offset_minutes = ($time_zone_offset - $time_zone_offset_hours) * 60;

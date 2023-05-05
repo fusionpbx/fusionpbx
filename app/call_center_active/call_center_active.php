@@ -117,7 +117,7 @@
 		var url = 'call_center_active_inc.php?queue_name=<?php echo escape($queue_name); ?>&name=<?php echo urlencode(escape($name)); ?>';
 		new loadXmlHttp(url, 'ajax_response');
 		<?php
-		if (strlen($_SESSION["ajax_refresh_rate"]) == 0) { $_SESSION["ajax_refresh_rate"] = "1777"; }
+		if (empty($_SESSION["ajax_refresh_rate"])) { $_SESSION["ajax_refresh_rate"] = "1777"; }
 		echo "setInterval(function(){new loadXmlHttp(url, 'ajax_reponse');}, ".$_SESSION["ajax_refresh_rate"].");";
 		?>
 	}

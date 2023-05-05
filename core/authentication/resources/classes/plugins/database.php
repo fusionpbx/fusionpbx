@@ -18,6 +18,7 @@ class plugin_database {
 	public $username;
 	public $password;
 	public $key;
+	public $debug;
 
 	/**
 	 * database checks the local database to authenticate the user or key
@@ -136,7 +137,7 @@ class plugin_database {
 			$sql .= "u.user_email, u.salt, u.api_key, u.domain_uuid, d.domain_name ";
 			$sql .= "from v_users as u, v_domains as d ";
 			$sql .= "where u.domain_uuid = d.domain_uuid ";
-			if (strlen($this->key) > 30) {
+			if (strlen($this->key ?? '') > 30) {
 				$sql .= "and u.api_key = :api_key ";
 				$parameters['api_key'] = $this->key;
 			}
@@ -199,7 +200,7 @@ class plugin_database {
 						$valid_password = true;
 					}
 					else if (substr($row["password"], 0, 1) === '$') {
-						if (isset($this->password) && strlen($this->password) > 0) {
+						if (isset($this->password) && !empty($this->password)) {
 							if (password_verify($this->password, $row["password"])) {
 								$valid_password = true;
 							}

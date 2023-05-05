@@ -51,7 +51,7 @@
 //GET to PHP variables
 	if (is_array($_GET)) {
 		//fs cmd
-		if (strlen($switch_cmd) > 0) {
+		if (!empty($switch_cmd)) {
 			/*
 			if ($action == "energy") {
 				//conference 3001-example.dyndns.org energy 103

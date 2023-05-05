@@ -62,7 +62,7 @@
 	}
 
 //add the user to the group
-	if (is_uuid($user_uuid) && is_uuid($group_uuid) && strlen($group_name) > 0) {
+	if (is_uuid($user_uuid) && is_uuid($group_uuid) && !empty($group_name)) {
 		$array['user_groups'][0]['user_group_uuid'] = uuid();
 		$array['user_groups'][0]['domain_uuid'] = $domain_uuid;
 		$array['user_groups'][0]['group_uuid'] = $group_uuid;

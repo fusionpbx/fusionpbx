@@ -76,7 +76,7 @@ if (!function_exists('path_join')) {
 
 		$prefix = null;
 		foreach($paths as &$path) {
-			if ($prefix === null && strlen($path) > 0) {
+			if ($prefix === null && !empty($path)) {
 				if (substr($path, 0, 1) == '/') $prefix = '/';
 				else $prefix = '';
 			}
@@ -315,10 +315,10 @@ if (!function_exists('fax_split_dtmf')) {
 //prepare smtp server settings
 	$email_from_address = $_SESSION['email']['smtp_from']['text'];
 	$email_from_name = $_SESSION['email']['smtp_from_name']['text'];
-	if (isset($_SESSION['fax']['smtp_from']['text']) && strlen($_SESSION['fax']['smtp_from']['text']) > 0) {
+	if (isset($_SESSION['fax']['smtp_from']['text']) && !empty($_SESSION['fax']['smtp_from']['text'])) {
 		$email_from_address = $_SESSION['fax']['smtp_from']['text'];
 	}
-	if (isset($_SESSION['fax']['smtp_from_name']['text']) && strlen($_SESSION['fax']['smtp_from_name']['text']) > 0) {
+	if (isset($_SESSION['fax']['smtp_from_name']['text']) && !empty($_SESSION['fax']['smtp_from_name']['text'])) {
 		$email_from_name = $_SESSION['fax']['smtp_from_name']['text'];
 	}
 
@@ -381,7 +381,7 @@ if (!function_exists('fax_split_dtmf')) {
 			$fax_forward_number = $fax_prefix.$tmp[0];
 		}
 
-		if (isset($fax_forward_number) && strlen($fax_forward_number) > 0) {
+		if (isset($fax_forward_number) && !empty($fax_forward_number)) {
 			//show info
 				echo "fax_forward_number: $fax_forward_number\n";
 
@@ -423,7 +423,7 @@ if (!function_exists('fax_split_dtmf')) {
 				fax_split_dtmf($fax_forward_number, $fax_dtmf);
 
 				$fax_send_mode = $_SESSION['fax']['send_mode']['text'];
-				if (strlen($fax_send_mode) == 0) {
+				if (empty($fax_send_mode)) {
 					$fax_send_mode = 'direct';
 				}
 
@@ -505,7 +505,7 @@ if (!function_exists('fax_split_dtmf')) {
 	}
 
 //send the email
-	if (strlen($fax_email) > 0 && file_exists($fax_file)) {
+	if (!empty($fax_email) && file_exists($fax_file)) {
 
 		//get the language code
 			$language_code = $_SESSION['domain']['language']['code'];
@@ -519,7 +519,7 @@ if (!function_exists('fax_split_dtmf')) {
 			}
 
 		//get the email template from the database
-			if (isset($fax_email) && strlen($fax_email) > 0) {
+			if (isset($fax_email) && !empty($fax_email)) {
 				$sql = "select template_subject, template_body from v_email_templates ";
 				$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 				$sql .= "and template_language = :template_language ";
@@ -565,9 +565,9 @@ if (!function_exists('fax_split_dtmf')) {
 			//echo "<hr />\n";
 
 		//send the email
-			if (isset($fax_email) && strlen($fax_email) > 0) {
+			if (isset($fax_email) && !empty($fax_email)) {
 				//add the attachment
-				if (strlen($fax_file_name) > 0) {
+				if (!empty($fax_file_name)) {
 					$email_attachments[0]['type'] = 'file';
 					if ($pdf_file && file_exists($pdf_file)) {
 						$email_attachments[0]['name'] = $fax_file_name.'.pdf';
@@ -620,7 +620,7 @@ if (!function_exists('fax_split_dtmf')) {
 	//        failed_fax_emails.sh - this is created when we have a email we need to re-send.  At the time it is created, an at job is created to execute it in 3 minutes time,
 	//            this allows us to try sending the email again at that time.  If the file exists but there is no at job this is because there are no longer any emails queued
 	//            as we have successfully sent them all.
-	if ($_SESSION['fax_queue']['enabled']['boolean'] != 'true' && strlen($fax_email) > 0 && file_exists($fax_file)) {
+	if ($_SESSION['fax_queue']['enabled']['boolean'] != 'true' && !empty($fax_email) && file_exists($fax_file)) {
 		if (stristr(PHP_OS, 'WIN')) {
 			//not compatible with windows
 		}

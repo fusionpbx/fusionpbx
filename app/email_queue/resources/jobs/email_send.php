@@ -150,7 +150,7 @@
 	//$retry_interval = $_SESSION['email_queue']['retry_interval']['numeric'];
 
 //set defaults
-	if (strlen($email_retry_count) == 0) {
+	if (empty($email_retry_count)) {
 		$email_retry_count = 0;
 	}
 

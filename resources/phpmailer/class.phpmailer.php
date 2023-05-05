@@ -1924,7 +1924,7 @@ class PHPMailer
                         }
                         $buf = '';
                     }
-                    while (strlen($word) > 0) {
+                    while (!empty($word)) {
                         if ($length <= 0) {
                             break;
                         }
@@ -1939,7 +1939,7 @@ class PHPMailer
                         $part = substr($word, 0, $len);
                         $word = substr($word, $len);
 
-                        if (strlen($word) > 0) {
+                        if (!empty($word)) {
                             $message .= $part . sprintf('=%s', self::CRLF);
                         } else {
                             $buf = $part;

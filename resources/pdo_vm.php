@@ -60,7 +60,7 @@
 //database connection
 	try {
 		unset($db);
-		if (strlen($odbc_dsn) == 0) {
+		if (empty($odbc_dsn)) {
 			$db = new PDO('sqlite:'.$_SESSION['switch']['db']['dir'].'/voicemail_default.db'); //sqlite 3
 		}
 		else {

@@ -46,13 +46,12 @@ $language = new text;
 $text = $language->get();
 
 //set the variables
-$search = $_REQUEST['search'];
+$search = $_REQUEST['search'] ?? '';
 $domain_uuid = $_GET['id'];
 
 //reload default settings
 require "resources/classes/domains.php";
 $domain = new domains();
-$domain->db = $db;
 $domain->set();
 
 //add a message

@@ -93,10 +93,10 @@
 			unset($sql, $parameters, $row);
 
 		//set defaults
-			if (strlen($expire_seconds) == 0) {
+			if (empty($expire_seconds)) {
 				$expire_seconds = '800';
 			}
-			if (strlen($retry_seconds) == 0) {
+			if (empty($retry_seconds)) {
 				$retry_seconds = '30';
 			}
 

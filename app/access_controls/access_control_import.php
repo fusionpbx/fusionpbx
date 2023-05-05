@@ -51,7 +51,7 @@
 			$fp = fopen("php://memory", 'r+');
 			fputs($fp, $input);
 			rewind($fp);
-			$data = fgetcsv($fp, null, $delimiter, $enclosure); // $escape only got added in 5.3.0
+			$data = fgetcsv($fp, null, $delimiter, $enclosure, $escape);
 			fclose($fp);
 			return $data;
 		}
@@ -86,7 +86,7 @@
 	}
 
 //get the schema
-	if (strlen($delimiter) > 0) {
+	if (!empty($delimiter)) {
 		//get the first line
 			$line = fgets(fopen($_SESSION['file'], 'r'));
 			$line_fields = explode($delimiter, $line);
@@ -128,7 +128,7 @@
 	}
 
 //match the column names to the field names
-	if (strlen($delimiter) > 0 && file_exists($_SESSION['file']) && $action != 'import') {
+	if (!empty($delimiter) && file_exists($_SESSION['file']) && $action != 'import') {
 
 		//validate the token
 			$token = new token;
@@ -294,7 +294,7 @@
 									}
 
 									//build the data array
-									if (strlen($table_name) > 0) {
+									if (!empty($table_name)) {
 										$array[$table_name][$row_id]['access_control_node_uuid'] = uuid();
 										$array[$table_name][$row_id]['access_control_uuid'] = $_GET['id'];
 										$array[$table_name][$row_id][$field_name] = $result[$key];

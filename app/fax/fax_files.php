@@ -136,7 +136,7 @@
 		}
 
 		//add the headers and stream the file
-		if (strlen($download_filename) > 0) {
+		if (!empty($download_filename)) {
 			$fd = fopen($download_filename, "rb");
 			if ($_GET['t'] == "bin") {
 				header("Content-Type: application/force-download");
@@ -172,7 +172,7 @@
 	}
 
 //get the fax extension
-	if (strlen($fax_extension) > 0) {
+	if (!empty($fax_extension)) {
 		//set the fax directories. example /usr/local/freeswitch/storage/fax/329/inbox
 			$dir_fax_inbox = $fax_dir.'/'.$fax_extension.'/inbox';
 			$dir_fax_sent = $fax_dir.'/'.$fax_extension.'/sent';
@@ -339,7 +339,7 @@
 			$file_ext = $row['fax_file_type'];
 
 			//decode the base64
-			if (strlen($row['fax_base64']) > 0) {
+			if (!empty($row['fax_base64'])) {
 				if ($_REQUEST['box'] == 'inbox' && permission_exists('fax_inbox_view')) {
 					if (!file_exists($dir_fax_inbox.'/'.$file)) {
 						file_put_contents($dir_fax_inbox.'/'.$file, base64_decode($row['fax_base64']));

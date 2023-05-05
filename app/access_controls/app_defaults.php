@@ -88,7 +88,7 @@
 						$p->delete('access_control_add', 'temp');
 
 					//normalize the array - needed because the array is inconsistent when there is only one row vs multiple
-					if (strlen($list['node']['@attributes']['type']) > 0) {
+					if (!empty($list['node']['@attributes']['type'])) {
 						$list['node'][]['@attributes'] = $list['node']['@attributes'];
 						unset($list['node']['@attributes']);
 					}

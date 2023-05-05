@@ -126,9 +126,12 @@
 	$param = "";
 	if (isset($_GET['page'])) {
 		$page = $_GET['page'];
-		if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
+		if (empty($page)) { $page = 0; $_GET['page'] = 0; }
 		list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
 		$offset = $rows_per_page * $page;
+	}
+	else {
+		$offset = 0;
 	}
 
 //get the list

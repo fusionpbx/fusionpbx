@@ -97,7 +97,7 @@
 	}
 
 //process the http variables
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 
 		//get the uuid
 			if ($action == "update") {
@@ -114,12 +114,12 @@
 
 		//check for all required data
 			$msg = '';
-			//if (strlen($label) == 0) { $msg .= $text['message-required']." ".$text['label-label']."<br>\n"; }
-			if (strlen($type) == 0) { $msg .= $text['message-required']." ".$text['label-type']."<br>\n"; }
-			if (strlen($value) == 0) { $msg .= $text['message-required']." ".$text['label-value']."<br>\n"; }
-			if (strlen($enabled) == 0) { $msg .= $text['message-required']." ".$text['label-enabled']."<br>\n"; }
-			//if (strlen($description) == 0) { $msg .= $text['message-required']." ".$text['label-description']."<br>\n"; }
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+			//if (empty($label)) { $msg .= $text['message-required']." ".$text['label-label']."<br>\n"; }
+			if (empty($type)) { $msg .= $text['message-required']." ".$text['label-type']."<br>\n"; }
+			if (empty($value)) { $msg .= $text['message-required']." ".$text['label-value']."<br>\n"; }
+			if (empty($enabled)) { $msg .= $text['message-required']." ".$text['label-enabled']."<br>\n"; }
+			//if (empty($description)) { $msg .= $text['message-required']." ".$text['label-description']."<br>\n"; }
+			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -241,7 +241,7 @@
 //set the assigned_groups array
 	if (is_array($function_groups) && @sizeof($function_groups) != 0) {
 		foreach($function_groups as $field) {
-			if (strlen($field['group_name']) > 0) {
+			if (!empty($field['group_name'])) {
 				$assigned_groups[] = $field['group_uuid'];
 			}
 		}
@@ -325,7 +325,7 @@
 	if (is_array($function_groups) && @sizeof($function_groups) != 0) {
 		echo "<table cellpadding='0' cellspacing='0' border='0'>\n";
 		foreach ($function_groups as $field) {
-			if (strlen($field['group_name']) > 0) {
+			if (!empty($field['group_name'])) {
 				echo "<tr>\n";
 				echo "	<td class='vtable' style='white-space: nowrap; padding-right: 30px;' nowrap='nowrap'>";
 				echo $field['group_name'].(($field['group_domain_uuid'] != '') ? "@".$_SESSION['domains'][$field['group_domain_uuid']]['domain_name'] : null);

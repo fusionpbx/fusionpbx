@@ -122,10 +122,10 @@ if (!function_exists('transcribe')) {
 				$transcribe_language = $_SESSION['voicemail']['transcribe_language']['text'];
 				$transcribe_alternate_language = $_SESSION['voicemail']['transcribe_alternate_language']['text'];
 
-				if (!isset($transcribe_language) && strlen($transcribe_language) == 0) {
+				if (!isset($transcribe_language) && empty($transcribe_language)) {
 					$transcribe_language = 'en-Us';
 				}
-				if (!isset($transcribe_alternate_language) && strlen($transcribe_alternate_language) == 0) {
+				if (!isset($transcribe_alternate_language) && empty($transcribe_alternate_language)) {
 					$transcribe_alternate_language = 'es-Us';
 				}
 				if ($file_extension == "mp3") {
@@ -183,7 +183,7 @@ if (!function_exists('transcribe')) {
 				$api_key = $_SESSION['voicemail']['azure_key']['text'];
 				$api_url = $_SESSION['voicemail']['azure_server_region']['text'];
 
-				if (strlen($transcribe_language) == 0) {
+				if (empty($transcribe_language)) {
 					$transcribe_language = 'en-US';
 				}
 
@@ -197,7 +197,7 @@ if (!function_exists('transcribe')) {
 				if (isset($api_key) && $api_key != '') {
 					$command = "curl -X POST \"https://".$api_url.".api.cognitive.microsoft.com/sts/v1.0/issueToken\" -H \"Content-type: application/x-www-form-urlencoded\" -H \"Content-Length: 0\" -H \"Ocp-Apim-Subscription-Key: ".$api_key."\"";
 					$access_token_result = shell_exec($command);
-					if (strlen($access_token_result) == 0) {
+					if (empty($access_token_result)) {
 						return false;
 					}
 					else {
@@ -229,7 +229,7 @@ if (!function_exists('transcribe')) {
 				$api_key = $_SESSION['voicemail']['api_key']['text'];
 				$api_url = $_SESSION['voicemail']['transcription_server']['text'];
 
-				if (strlen($transcribe_language) == 0) {
+				if (empty($transcribe_language)) {
 					$transcribe_language = 'en-US';
 				}
 

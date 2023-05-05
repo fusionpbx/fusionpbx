@@ -103,7 +103,7 @@
 	} 
 
 //get the type if not provided
-	if (strlen($transaction_type) == 0) {
+	if (empty($transaction_type)) {
 		if ($transaction_old == null || $transaction_old == "null") {
 			$transaction_type = 'add';
 		}

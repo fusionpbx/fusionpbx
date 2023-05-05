@@ -289,7 +289,7 @@
 
 //add the search term
 	$search = strtolower($_GET["search"]);
-	if (strlen($search) > 0) {
+	if (!empty($search)) {
 		$sql_search = "and (";
 		$sql_search .= "lower(recording_name) like :search ";
 		$sql_search .= "or lower(recording_filename) like :search ";
@@ -492,7 +492,7 @@
 				echo "	</td>\n";
 			}
 			if ($_GET['show'] == "all" && permission_exists('recording_all')) {
-				if (strlen($_SESSION['domains'][$row['domain_uuid']]['domain_name']) > 0) {
+				if (!empty($_SESSION['domains'][$row['domain_uuid']]['domain_name'])) {
 					$domain = $_SESSION['domains'][$row['domain_uuid']]['domain_name'];
 				}
 				else {

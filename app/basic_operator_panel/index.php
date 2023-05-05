@@ -124,7 +124,7 @@
 							//delete extension from the cache
 							$cache = new cache;
 							$cache->delete("directory:".$row['extension']."@".$_SESSION['user']['domain_name']);
-							if(strlen($number_alias) > 0){
+							if(!empty($number_alias)){
 								$cache->delete("directory:".$row['number_alias']."@".$_SESSION['user']['domain_name']);
 							}
 
@@ -143,7 +143,7 @@
 							//delete extension from the cache
 							$cache = new cache;
 							$cache->delete("directory:".$row['extension']."@".$_SESSION['user']['domain_name']);
-							if(strlen($number_alias) > 0){
+							if(!empty($number_alias)){
 								$cache->delete("directory:".$row['number_alias']."@".$_SESSION['user']['domain_name']);
 							}
 
@@ -169,7 +169,7 @@
 				//delete extension from the cache
 					$cache = new cache;
 					$cache->delete("directory:".$extension."@".$this->domain_name);
-					if(strlen($number_alias) > 0){
+					if(!empty($number_alias)){
 						$cache->delete("directory:".$number_alias."@".$this->domain_name);
 					}
 			}

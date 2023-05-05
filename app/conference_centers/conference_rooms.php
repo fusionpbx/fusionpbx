@@ -78,7 +78,7 @@
 
 /*
 //if the $_GET array exists then process it
-	if (count($_GET) > 0 && strlen($_GET["search"]) == 0) {
+	if (count($_GET) > 0 && empty($_GET["search"])) {
 		//get http GET variables and set them as php variables
 			$conference_room_uuid = $_GET["conference_room_uuid"];
 			$record = $_GET["record"];
@@ -104,22 +104,22 @@
 
 		//build the array
 			$array['conference_rooms'][0]['conference_room_uuid'] = $conference_room_uuid;
-			if (strlen($record) > 0) {
+			if (!empty($record)) {
 				$array['conference_rooms'][0]['record'] = $record;
 			}
-			if (strlen($wait_mod) > 0) {
+			if (!empty($wait_mod)) {
 				$array['conference_rooms'][0]['wait_mod'] = $wait_mod;
 			}
-			if (strlen($announce) > 0) {
+			if (!empty($announce)) {
 				$array['conference_rooms'][0]['announce'] = $announce;
 			}
-			if (strlen($mute) > 0) {
+			if (!empty($mute)) {
 				$array['conference_rooms'][0]['mute'] = $mute;
 			}
-			if (strlen($sounds) > 0) {
+			if (!empty($sounds)) {
 				$array['conference_rooms'][0]['sounds'] = $sounds;
 			}
-			if (strlen($enabled) > 0) {
+			if (!empty($enabled)) {
 				$array['conference_rooms'][0]['enabled'] = $enabled;
 			}
 
@@ -174,7 +174,7 @@
 	$conference_center = new conference_centers;
 	$conference_center->db = $db;
 	$conference_center->domain_uuid = $_SESSION['domain_uuid'];
-	if (strlen($search) > 0) {
+	if (!empty($search)) {
 		$conference_center->search = $search;
 	}
 	$num_rows = $conference_center->room_count();
@@ -194,7 +194,7 @@
 	$conference_center->offset = $offset;
 	$conference_center->order_by = $order_by;
 	$conference_center->order = $order;
-	if (strlen($search) > 0) {
+	if (!empty($search)) {
 		$conference_center->search = $search;
 	}
 	$result = $conference_center->rooms();

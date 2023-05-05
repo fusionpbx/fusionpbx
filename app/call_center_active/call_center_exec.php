@@ -136,7 +136,7 @@
 		}
 
 		//fs cmd
-		if (strlen($switch_cmd) > 0) {
+		if (!empty($switch_cmd)) {
 			//setup the event socket connection
 				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 			//ensure the connection exists

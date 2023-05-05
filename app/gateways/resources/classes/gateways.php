@@ -548,10 +548,10 @@ if (!class_exists('gateways')) {
 											unset($array[$this->table][$x]['channels']);
 
 										//defaults
-											if (strlen($row['expire_seconds']) == 0) {
+											if (empty($row['expire_seconds'])) {
 												$array[$this->table][$x]['expire_seconds'] = '800';
 											}
-											if (strlen($row['retry_seconds']) == 0) {
+											if (empty($row['retry_seconds'])) {
 												$array[$this->table][$x]['retry_seconds'] = '30';
 											}
 

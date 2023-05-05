@@ -93,7 +93,7 @@
 								$array['conference_control_details'][0]['conference_control_detail_uuid'] = $conference_control_detail_uuid;
 								$array['conference_control_details'][0]['control_digits'] = $control_digits;
 								$array['conference_control_details'][0]['control_action'] = $control_action;
-								if (strlen($control_data) > 0) {
+								if (!empty($control_data)) {
 									$array['conference_control_details'][0]['control_data'] = $control_data;
 								}
 								$array['conference_control_details'][0]['control_enabled'] = $control_enabled;

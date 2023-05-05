@@ -86,7 +86,7 @@
 
 //add the search string
 	$search = strtolower($_GET["search"]);
-	if (strlen($search) > 0) {
+	if (!empty($search)) {
 		$sql_search = "where (";
 		$sql_search .= "	lower(control_name) like :search ";
 		$sql_search .= "	or lower(control_description) like :search ";

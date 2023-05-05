@@ -78,14 +78,14 @@
 		$dialplan_order = $_POST["dialplan_order"];
 		$dialplan_enabled = $_POST["dialplan_enabled"];
 		$dialplan_description = $_POST["dialplan_description"];
-		if (strlen($dialplan_enabled) == 0) { $dialplan_enabled = "true"; } //set default to enabled
+		if (empty($dialplan_enabled)) { $dialplan_enabled = "true"; } //set default to enabled
 	}
 
 //set the default
-	if (strlen($dialplan_context) == 0) { $dialplan_context = $_SESSION['domain_name']; }
+	if (empty($dialplan_context)) { $dialplan_context = $_SESSION['domain_name']; }
 
 //add or update data from http post
-	if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST)>0 && empty($_POST["persistformvar"])) {
 
 		//validate the token
 			$token = new token;
@@ -96,14 +96,14 @@
 			}
 
 		//check for all required data
-			if (strlen($domain_uuid) == 0) { $msg .= $text['message-required']."domain_uuid<br>\n"; }
-			if (strlen($dialplan_name) == 0) { $msg .= $text['message-required'].$text['label-name']."<br>\n"; }
-			if (strlen($condition_field_1) == 0) { $msg .= $text['message-required'].$text['label-condition_1']." ".$text['label-field']."<br>\n"; }
-			if (strlen($condition_expression_1) == 0) { $msg .= $text['message-required'].$text['label-condition_1']." ".$text['label-expression']."<br>\n"; }
-			if (strlen($action_application_1) == 0) { $msg .= $text['message-required'].$text['label-action_1']."<br>\n"; }
-			//if (strlen($dialplan_enabled) == 0) { $msg .= $text['message-required'].$text['label-enabled']."<br>\n"; }
-			//if (strlen($dialplan_description) == 0) { $msg .= $text['message-required'].$text['label-description']."<br>\n"; }
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+			if (empty($domain_uuid)) { $msg .= $text['message-required']."domain_uuid<br>\n"; }
+			if (empty($dialplan_name)) { $msg .= $text['message-required'].$text['label-name']."<br>\n"; }
+			if (empty($condition_field_1)) { $msg .= $text['message-required'].$text['label-condition_1']." ".$text['label-field']."<br>\n"; }
+			if (empty($condition_expression_1)) { $msg .= $text['message-required'].$text['label-condition_1']." ".$text['label-expression']."<br>\n"; }
+			if (empty($action_application_1)) { $msg .= $text['message-required'].$text['label-action_1']."<br>\n"; }
+			//if (empty($dialplan_enabled)) { $msg .= $text['message-required'].$text['label-enabled']."<br>\n"; }
+			//if (empty($dialplan_description)) { $msg .= $text['message-required'].$text['label-description']."<br>\n"; }
+			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -143,7 +143,7 @@
 			$array['dialplan_details'][0]['dialplan_detail_order'] = '1';
 
 		//add condition 2
-			if (strlen($condition_field_2) > 0) {
+			if (!empty($condition_field_2)) {
 				$dialplan_detail_uuid = uuid();
 				$array['dialplan_details'][1]['domain_uuid'] = $domain_uuid;
 				$array['dialplan_details'][1]['dialplan_uuid'] = $dialplan_uuid;
@@ -167,7 +167,7 @@
 			$array['dialplan_details'][2]['dialplan_detail_order'] = '3';
 	
 		//add action 2
-			if (strlen($action_application_2) > 0) {
+			if (!empty($action_application_2)) {
 				$dialplan_detail_uuid = uuid();
 				$array['dialplan_details'][3]['domain_uuid'] = $domain_uuid;
 				$array['dialplan_details'][3]['dialplan_uuid'] = $dialplan_uuid;
@@ -335,7 +335,7 @@
 	echo "	<td nowrap='nowrap'>\n";
 	echo "    <select class='formfld' name='condition_field_1' id='condition_field_1' onchange='changeToInput_condition_field_1(this);this.style.visibility = \"hidden\";'>\n";
 	echo "    <option value=''></option>\n";
-	if (strlen($condition_field_1) > 0) {
+	if (!empty($condition_field_1)) {
 		echo "    <option value='".escape($condition_field_1)."' selected='selected'>".escape($condition_field_1)."</option>\n";
 	}
 	echo "	<optgroup label='Field'>\n";
@@ -424,7 +424,7 @@
 	<?php
 	echo "    <select class='formfld' name='condition_field_2' id='condition_field_2' onchange='changeToInput_condition_field_2(this);this.style.visibility = \"hidden\";'>\n";
 	echo "    <option value=''></option>\n";
-	if (strlen($condition_field_2) > 0) {
+	if (!empty($condition_field_2)) {
 		echo "    <option value='".escape($condition_field_2)."' selected>".escape($condition_field_2)."</option>\n";
 	}
 	echo "	<optgroup label='Field'>\n";
@@ -506,7 +506,7 @@
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select name='dialplan_order' class='formfld'>\n";
 	//echo "		<option></option>\n";
-	if (strlen($dialplan_order) > 0) {
+	if (!empty($dialplan_order)) {
 		echo "		 <option selected='selected' value='".escape($dialplan_order)."'>".escape($dialplan_order)."</option>\n";
 	}
 	$i = 200;

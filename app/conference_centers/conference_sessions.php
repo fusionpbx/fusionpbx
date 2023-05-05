@@ -192,12 +192,12 @@
 				$end_date = date("j M Y h:i:sa", $row['end_epoch']);
 			}
 			$time_difference = '';
-			if (strlen($row['end_epoch']) > 0) {
+			if (!empty($row['end_epoch'])) {
 				$time_difference = $row['end_epoch'] - $row['start_epoch'];
 				$time_difference = gmdate("G:i:s", $time_difference);
 			}
 
-			if (strlen($row['start_epoch']) > 0) {
+			if (!empty($row['start_epoch'])) {
 				$list_row_url = "conference_session_details.php?uuid=".urlencode($row['conference_session_uuid']);
 				echo "<tr class='list-row' href='".$list_row_url."'>\n";
 				if (permission_exists('conference_session_delete')) {
@@ -212,7 +212,7 @@
 				echo "	<td>".escape($row['profile'])."&nbsp;</td>\n";
 				$recording_name = $row['recording'];
 				echo "	<td class='button no-link'>\n";
-				if (strlen($recording_name) > 0 && file_exists($recording_name)) {
+				if (!empty($recording_name) && file_exists($recording_name)) {
 					echo "<table border='0' cellpadding='0' cellspacing='0'>\n";
 					echo "<tr>\n";
 					echo "<td>\n";

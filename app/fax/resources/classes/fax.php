@@ -87,7 +87,7 @@ if (!class_exists('fax')) {
 				}
 
 			//set the dialplan_uuid
-				if (strlen($this->dialplan_uuid) == 0) {
+				if (empty($this->dialplan_uuid)) {
 					$this->dialplan_uuid = uuid();
 				}
 				else {
@@ -114,7 +114,7 @@ if (!class_exists('fax')) {
 				$fax_name = ($this->fax_name != '') ? $this->fax_name : format_phone($this->destination_number);
 
 			//set the  last fax
-				if (strlen($_SESSION['fax']['last_fax']['text']) > 0) {
+				if (!empty($_SESSION['fax']['last_fax']['text'])) {
 					$last_fax = "last_fax=".xml::sanitize($_SESSION['fax']['last_fax']['text']);
 				}
 				else {

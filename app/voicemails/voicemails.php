@@ -77,7 +77,7 @@
 //set the voicemail uuid array
 	if (isset($_SESSION['user']['voicemail'])) {
 		foreach ($_SESSION['user']['voicemail'] as $row) {
-			if (strlen($row['voicemail_uuid']) > 0) {
+			if (!empty($row['voicemail_uuid'])) {
 				$voicemail_uuids[]['voicemail_uuid'] = $row['voicemail_uuid'];
 			}
 		}
@@ -99,7 +99,7 @@
 
 //add the search string
 	$search = strtolower($_GET["search"]);
-	if (strlen($search) > 0) {
+	if (!empty($search)) {
 		$sql_search = "and (";
 		$sql_search .= "	lower(cast(voicemail_id as text)) like :search ";
 		$sql_search .= " 	or lower(voicemail_mail_to) like :search ";
@@ -271,7 +271,7 @@
 				echo "	</td>\n";
 			}
 			if ($_GET['show'] == "all" && permission_exists('voicemail_all')) {
-				if (strlen($_SESSION['domains'][$row['domain_uuid']]['domain_name']) > 0) {
+				if (!empty($_SESSION['domains'][$row['domain_uuid']]['domain_name'])) {
 					$domain = $_SESSION['domains'][$row['domain_uuid']]['domain_name'];
 				}
 				else {

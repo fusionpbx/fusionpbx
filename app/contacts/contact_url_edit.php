@@ -73,7 +73,7 @@
 	}
 
 //process the form data
-	if (is_array($_POST) && @sizeof($_POST) != 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (is_array($_POST) && @sizeof($_POST) != 0 && empty($_POST["persistformvar"])) {
 
 		//set the uuid
 			if ($action == "update") {
@@ -90,7 +90,7 @@
 
 		//check for all required data
 			$msg = '';
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";

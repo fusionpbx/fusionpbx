@@ -90,7 +90,7 @@
 	}
 
 //process the changes from the http post
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 	
 		//get the uuid
 			if ($action == "update") {
@@ -107,9 +107,9 @@
 
 		//check for all required data
 			$msg = '';
-			if (strlen($phrase_name) == 0) { $msg .= $text['message-required']." ".$text['label-name']."<br>\n"; }
-			if (strlen($phrase_language) == 0) { $msg .= $text['message-required']." ".$text['label-language']."<br>\n"; }
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+			if (empty($phrase_name)) { $msg .= $text['message-required']." ".$text['label-name']."<br>\n"; }
+			if (empty($phrase_language)) { $msg .= $text['message-required']." ".$text['label-language']."<br>\n"; }
+			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -287,7 +287,7 @@
 	}
 
 //set the defaults
-	if (strlen($phrase_enabled) == 0) { $phrase_enabled = 'true'; }
+	if (empty($phrase_enabled)) { $phrase_enabled = 'true'; }
 
 //get the phrase details
 	if (is_uuid($phrase_uuid)) {
@@ -366,7 +366,7 @@
 			echo "var opt_group = document.createElement('optgroup');\n";
 			echo "opt_group.label = \"".$text['label-sounds']."\";\n";
 			foreach ($sound_files as $value) {
-				if (strlen($value) > 0) {
+				if (!empty($value)) {
 					echo "opt_group.appendChild(new Option(\"".$value."\", \"".$value."\"));\n";
 				}
 			}
@@ -585,7 +585,7 @@
 		echo "</td>\n";
 		echo "<td class='vtable'>\n";
 		echo "	<select name='domain_uuid' class='formfld'>\n";
-		if (strlen($domain_uuid) == 0) {
+		if (empty($domain_uuid)) {
 			echo "		<option value='' selected='selected'>".$text['label-global']."</option>\n";
 		}
 		else {

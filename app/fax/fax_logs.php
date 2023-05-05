@@ -77,7 +77,7 @@
 
 //add the search string
 	$search = strtolower($_GET["search"]);
-	if (strlen($search) > 0) {
+	if (!empty($search)) {
 		$sql_search = " and (";
 		$sql_search .= "	lower(fax_result_text) like :search ";
 		$sql_search .= "	or lower(fax_file) like :search ";

@@ -67,7 +67,7 @@
 	}
 
 //process the user data and save it to the database
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 
 		//process the http post data by submitted action
 			if ($_POST['action'] != '' && is_uuid($group_uuid)) {
@@ -103,12 +103,12 @@
 
 		//check for all required data
 			$msg = '';
-			if (strlen($group_name) == 0) { $msg .= $text['message-required']." ".$text['label-group_name']."<br>\n"; }
-			//if (strlen($domain_uuid) == 0) { $msg .= $text['message-required']." ".$text['label-domain_uuid']."<br>\n"; }
-			if (strlen($group_level) == 0) { $msg .= $text['message-required']." ".$text['label-group_level']."<br>\n"; }
-			//if (strlen($group_protected) == 0) { $msg .= $text['message-required']." ".$text['label-group_protected']."<br>\n"; }
-			//if (strlen($group_description) == 0) { $msg .= $text['message-required']." ".$text['label-group_description']."<br>\n"; }
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+			if (empty($group_name)) { $msg .= $text['message-required']." ".$text['label-group_name']."<br>\n"; }
+			//if (empty($domain_uuid)) { $msg .= $text['message-required']." ".$text['label-domain_uuid']."<br>\n"; }
+			if (empty($group_level)) { $msg .= $text['message-required']." ".$text['label-group_level']."<br>\n"; }
+			//if (empty($group_protected)) { $msg .= $text['message-required']." ".$text['label-group_protected']."<br>\n"; }
+			//if (empty($group_description)) { $msg .= $text['message-required']." ".$text['label-group_description']."<br>\n"; }
+			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -259,7 +259,7 @@
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
 	echo "	<select class='formfld' name='domain_uuid'>\n";
-	if (strlen($domain_uuid) == 0) {
+	if (empty($domain_uuid)) {
 		echo "		<option value='' selected='selected'>".$text['label-global']."</option>\n";
 	}
 	else {

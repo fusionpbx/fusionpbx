@@ -25,7 +25,7 @@
 */
 
 //if the recordings directory doesn't exist then create it
-	if (is_array($_SESSION['switch']['recordings']) && strlen($_SESSION['switch']['recordings']['dir']."/".$domain_name) > 0) {
+	if (is_array($_SESSION['switch']['recordings']) && !empty($_SESSION['switch']['recordings']['dir']."/".$domain_name)) {
 		if (!is_readable($_SESSION['switch']['recordings']['dir']."/".$domain_name)) {
 			mkdir($_SESSION['switch']['recordings']['dir']."/".$domain_name, 0770, true);
 		}

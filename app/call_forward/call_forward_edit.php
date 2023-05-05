@@ -48,7 +48,7 @@
 
 //define the destination_select function
 	function destination_select($select_name, $select_value, $select_default) {
-		if (strlen($select_value) == 0) { $select_value = $select_default; }
+		if (empty($select_value)) { $select_value = $select_default; }
 		echo "	<select class='formfld' style='width: 55px;' name='$select_name'>\n";
 		$i = 0;
 		while($i <= 100) {
@@ -112,7 +112,7 @@
 	unset($sql, $parameters, $row);
 
 //process post vars
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 
 		//get http post variables and set them to php variables
 			if (count($_POST) > 0) {
@@ -155,7 +155,7 @@
 			}
 
 		//check for all required data
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				$document['title'] = $text['title-call_forward'];
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
@@ -444,7 +444,7 @@
 		//clear the cache
 			$cache = new cache;
 			$cache->delete("directory:".$extension."@".$_SESSION['domain_name']);
-			if (strlen($number_alias) > 0) {
+			if (!empty($number_alias)) {
 				$cache->delete("directory:".$number_alias."@".$_SESSION['domain_name']);
 			}
 
@@ -517,7 +517,7 @@
 	echo "\$(function() {\n";
 	echo "	var extensions = [\n";
 	foreach ($extensions as &$row) {
-		if (strlen($number_alias) == 0) {
+		if (empty($number_alias)) {
 			echo "		\"".escape($row["extension"])."\",\n";
 		}
 		else {

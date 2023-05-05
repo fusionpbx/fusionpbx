@@ -45,7 +45,7 @@
 	}
 
 //process the user data and save it to the database
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 
 		//validate the token
 			$token = new token;
@@ -56,7 +56,7 @@
 			}
 
 		//process the http post data by submitted action
-			if ($_POST['action'] != '' && strlen($_POST['action']) > 0) {
+			if ($_POST['action'] != '' && !empty($_POST['action'])) {
 
 				//prepare the array(s)
 				//send the array to the database class
@@ -90,13 +90,13 @@
 
 		//check for all required data
 			$msg = '';
-			//if (strlen($email_date) == 0) { $msg .= $text['message-required']." ".$text['label-email_date']."<br>\n"; }
-			//if (strlen($email_from) == 0) { $msg .= $text['message-required']." ".$text['label-email_from']."<br>\n"; }
-			//if (strlen($email_to) == 0) { $msg .= $text['message-required']." ".$text['label-email_to']."<br>\n"; }
-			//if (strlen($email_subject) == 0) { $msg .= $text['message-required']." ".$text['label-email_subject']."<br>\n"; }
-			//if (strlen($email_body) == 0) { $msg .= $text['message-required']." ".$text['label-email_body']."<br>\n"; }
-			//if (strlen($email_status) == 0) { $msg .= $text['message-required']." ".$text['label-email_status']."<br>\n"; }
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+			//if (empty($email_date)) { $msg .= $text['message-required']." ".$text['label-email_date']."<br>\n"; }
+			//if (empty($email_from)) { $msg .= $text['message-required']." ".$text['label-email_from']."<br>\n"; }
+			//if (empty($email_to)) { $msg .= $text['message-required']." ".$text['label-email_to']."<br>\n"; }
+			//if (empty($email_subject)) { $msg .= $text['message-required']." ".$text['label-email_subject']."<br>\n"; }
+			//if (empty($email_body)) { $msg .= $text['message-required']." ".$text['label-email_body']."<br>\n"; }
+			//if (empty($email_status)) { $msg .= $text['message-required']." ".$text['label-email_status']."<br>\n"; }
+			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
