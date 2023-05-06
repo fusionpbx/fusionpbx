@@ -118,6 +118,7 @@ class plugin_database {
 		//add the authentication details
 			if (isset($_REQUEST["username"])) {
 				$this->username = $_REQUEST["username"];
+				$_SESSION['username'] = $this->username;
 			}
 			if (isset($_REQUEST["password"])) {
 				$this->password = $_REQUEST["password"];
@@ -137,12 +138,15 @@ class plugin_database {
 			$sql .= "u.user_email, u.salt, u.api_key, u.domain_uuid, d.domain_name ";
 			$sql .= "from v_users as u, v_domains as d ";
 			$sql .= "where u.domain_uuid = d.domain_uuid ";
-			if (strlen($this->key ?? '') > 30) {
+			if (isset($this->key) && strlen($this->key) > 30) {
 				$sql .= "and u.api_key = :api_key ";
 				$parameters['api_key'] = $this->key;
 			}
 			else {
-				$sql .= "and lower(u.username) = lower(:username) ";
+				$sql .= "and (\n";
+				$sql .= "	lower(u.username) = lower(:username)\n";
+				$sql .= "	or lower(u.user_email) = lower(:username)\n";
+				$sql .= ")\n";
 				$parameters['username'] = $this->username;
 			}
 			if ($_SESSION["users"]["unique"]["text"] === "global") {
@@ -181,6 +185,7 @@ class plugin_database {
 				//set the variables
 					$this->user_uuid = $row['user_uuid'];
 					$this->username = $row['username'];
+					$this->user_email = $row['user_email'];
 					$this->contact_uuid = $row['contact_uuid'];
 
 				//debug info
@@ -225,6 +230,7 @@ class plugin_database {
 							//build user insert array
 								$array['users'][0]['user_uuid'] = $this->user_uuid;
 								$array['users'][0]['domain_uuid'] = $this->domain_uuid;
+								$array['users'][0]['user_email'] = $this->user_email;
 								$array['users'][0]['password'] = password_hash($this->password, PASSWORD_DEFAULT, $options);
 								$array['users'][0]['salt'] = null;
 
@@ -260,6 +266,7 @@ class plugin_database {
 			$result["user_uuid"] = $this->user_uuid;
 			$result["domain_uuid"] = $_SESSION['domain_uuid'];
 			$result["contact_uuid"] = $this->contact_uuid;
+			$result["user_email"] = $this->user_email;
 			$result["sql"] = $sql;
 			$result["authorized"] = $valid_password;
 
