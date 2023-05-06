@@ -78,4 +78,30 @@ $text['label-email_description']['zh-cn'] = "查阅您的核查文件。";
 $text['label-email_description']['ja-jp'] = "認証コードのメールをご確認ください。";
 $text['label-email_description']['ko-kr'] = "인증 코드의 이메일 확인.";
 
+$text['description-totp']['en-us'] = "Scan the code with an authentication application or password manager. Then use it to generate the token for the login.";
+$text['description-totp']['en-gb'] = "Scan the code with an authentication application or password manager. Then use it to generate the token for the login.";
+$text['description-totp']['ar-eg'] = "مسح الرمز مع تطبيق التوثيق أو مدير كلمة السر ثم استخدامه لتوليد الضباب لقطع الخشب.";
+$text['description-totp']['de-at'] = "Scannen Sie den Code mit einer Authentifizierungs-Anwendung oder einem Passwort-Manager. Dann verwenden Sie es, um das Token für den Login zu generieren.";
+$text['description-totp']['de-ch'] = "Scannen Sie den Code mit einer Authentifizierungs-Anwendung oder einem Passwort-Manager. Dann verwenden Sie es, um das Token für den Login zu generieren.";
+$text['description-totp']['de-de'] = "Scannen Sie den Code mit einer Authentifizierungs-Anwendung oder einem Passwort-Manager. Dann verwenden Sie es, um das Token für den Login zu generieren.";
+$text['description-totp']['el-gr'] = "Βάλτε τον κωδικό με μια εφαρμογή πιστοποίησης ή password manager. Στη συνέχεια χρησιμοποιήστε το για να δημιουργήσετε το token για τη σύνδεση.";
+$text['description-totp']['es-cl'] = "Analice el código con una aplicación de autenticación o gestor de contraseñas. A continuación, utilizarlo para generar la ficha para el login.";
+$text['description-totp']['es-mx'] = "Analice el código con una aplicación de autenticación o gestor de contraseñas. A continuación, utilizarlo para generar la ficha para el login.";
+$text['description-totp']['fr-ca'] = "Scannez le code avec une application d'authentification ou un gestionnaire de mot de passe. Ensuite, utilisez-le pour générer le jeton pour le login.";
+$text['description-totp']['fr-fr'] = "Scannez le code avec une application d'authentification ou un gestionnaire de mot de passe. Ensuite, utilisez-le pour générer le jeton pour le login.";
+$text['description-totp']['he-il'] = "לסרוק את הקוד עם יישום אימות או מנהל סיסמאות. לאחר מכן השתמש בו כדי ליצור את האסימון עבור הכניסה.";
+$text['description-totp']['it-it'] = "Scansiona il codice con un'applicazione di autenticazione o un gestore di password. Quindi utilizzare per generare il token per il login.";
+$text['description-totp']['nl-nl'] = "Scan de code met een authenticatie aanvraag of wachtwoordmanager. Gebruik het dan om het teken voor het login te genereren.";
+$text['description-totp']['pl-pl'] = "Skanowanie kodu z zastosowaniem uwierzytelnia lub menedżerem haseł. Zastosowanie go do generowania tokenu dla loginu.";
+$text['description-totp']['pt-br'] = "Digitalize o código com um aplicativo de autenticação ou gerenciador de senha. Em seguida, use-o para gerar o token para o login.";
+$text['description-totp']['pt-pt'] = "Digitalize o código com um aplicativo de autenticação ou gerenciador de senha. Em seguida, use-o para gerar o token para o login.";
+$text['description-totp']['ro-ro'] = "Scanați codul cu o aplicație de autentificare sau un manager de parole. Apoi utilizați-l pentru a genera simbolul pentru autentificare.";
+$text['description-totp']['ru-ru'] = "Сканировать код с приложением аутентификации или менеджером паролей. Затем используйте его для создания токена для входа.";
+$text['description-totp']['sv-se'] = "Skanna koden med en autentiseringsapplikation eller lösenordshanterare. Använd sedan den för att generera token för inloggningen.";
+$text['description-totp']['uk-ua'] = "Сканування коду за допомогою програми автентифікації або пароля. Потім використовуйте його для створення токени для входу.";
+$text['description-totp']['tr-tr'] = "Kodu bir doğrulama uygulama veya şifre yöneticisi ile tarayın. Sonra giriş için token oluşturmak için kullanın.";
+$text['description-totp']['zh-cn'] = "载有认证申请或密码管理员的编码。 然后使用该标识生成标识。";
+$text['description-totp']['ja-jp'] = "認証アプリケーションまたはパスワードマネージャでコードをスキャンします。 ログイン時にトークンを生成します。";
+$text['description-totp']['ko-kr'] = "인증 신청서 또는 비밀번호 관리자로 코드를 스캔합니다. 그런 다음 로그인 토큰을 생성합니다.";
+
 ?>
