@@ -128,6 +128,7 @@ class authentication {
 					$_SESSION['authentication']['plugin'][$name]['domain_uuid'] = $_SESSION['domain_uuid'];
 					$_SESSION['authentication']['plugin'][$name]['username'] = $_SESSION['username'];
 					$_SESSION['authentication']['plugin'][$name]['user_uuid'] = $_SESSION['user_uuid'];
+					$_SESSION['authentication']['plugin'][$name]['user_email'] = $_SESSION['user_email'];
 					$_SESSION['authentication']['plugin'][$name]['authorized'] = 0;
 				}
 			}
@@ -165,17 +166,17 @@ class authentication {
 			$result["authorized"] = $authorized;
 
 		//add user logs
-			if ($result["authorized"]) {
-				user_logs::add($result);
-			}
+			user_logs::add($result);
 
 		//debug information
-			//if ($row["authorized"]) {
-			//	echo "authorized: true\n";
-			//}
-			//else {
-			//	echo "authorized: false\n";
-			//}
+			if ($debug) {
+				if ($row["authorized"]) {
+					echo "authorized: true\n";
+				}
+				else {
+					echo "authorized: false\n";
+				}
+			}
 
 		//user is authorized - get user settings, check user cidr
 			if ($authorized) {
