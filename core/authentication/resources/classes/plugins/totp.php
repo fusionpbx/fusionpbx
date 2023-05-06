@@ -88,7 +88,10 @@ class plugin_totp {
 				//get the user details
 				$sql = "select user_uuid, username, user_email, contact_uuid, user_totp_secret\n";
 				$sql .= "from v_users\n";
-				$sql .= "where username = :username\n";
+				$sql .= "where (\n";
+				$sql .= "	username = :username\n";
+				$sql .= "	or user_email = :username\n";
+				$sql .= ")\n";
 				if ($_SESSION["users"]["unique"]["text"] != "global") {
 					//unique username per domain (not globally unique across system - example: email address)
 					$sql .= "and domain_uuid = :domain_uuid ";
@@ -222,7 +225,10 @@ class plugin_totp {
 				//get the user details
 				$sql = "select user_uuid, user_email, contact_uuid, user_totp_secret\n";
 				$sql .= "from v_users\n";
-				$sql .= "where username = :username\n";
+				$sql .= "where (\n";
+				$sql .= "	username = :username\n";
+				$sql .= "	or user_email = :username\n";
+				$sql .= ")\n";
 				if ($_SESSION["users"]["unique"]["text"] != "global") {
 					//unique username per domain (not globally unique across system - example: email address)
 					$sql .= "and domain_uuid = :domain_uuid ";
@@ -251,7 +257,8 @@ class plugin_totp {
 				//get the user details
 				if ($auth_valid) {
 					//get user data from the database
-					$sql = "select user_uuid, username, user_email, contact_uuid from v_users ";
+					$sql = "select user_uuid, username, user_email, contact_uuid ";
+					$sql .= "from v_users ";
 					$sql .= "where user_uuid = :user_uuid ";
 					if ($_SESSION["users"]["unique"]["text"] != "global") {
 						//unique username per domain (not globally unique across system - example: email address)
