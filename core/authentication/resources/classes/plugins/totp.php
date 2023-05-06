@@ -25,8 +25,16 @@ class plugin_totp {
 	 */
 	function totp() {
 
+		//get the username
+			if (isset($_SESSION["username"])) {
+				$this->username = $_SESSION["username"];
+			}
+			if (isset($_POST['username'])) {
+				$this->username = $_POST['username'];
+			}
+
 		//request the username
-			if (!isset($_POST['username']) && !isset($_POST['authentication_code'])) {
+			if (!$this->username && !isset($_POST['authentication_code'])) {
 
 				//set a default template
 				$_SESSION['domain']['template']['name'] = 'default';
@@ -62,7 +70,7 @@ class plugin_totp {
 				$view->assign("login_logo_height", $login_logo_height);
 				$view->assign("login_logo_source", $login_logo_source);
 				$view->assign("button_login", $text['button-login']);
-					
+
 				//show the views
 				$content = $view->render('username.htm');
 				echo $content;
@@ -130,16 +138,80 @@ class plugin_totp {
 				$view->cache_dir = $_SESSION['server']['temp']['dir'];
 				$view->init();
 
-				//assign default values to the template
+				//assign values to the template
 				$view->assign("login_title", $text['label-verify']);
 				$view->assign("login_authentication_code", $text['label-authentication_code']);
 				$view->assign("login_logo_width", $login_logo_width);
 				$view->assign("login_logo_height", $login_logo_height);
 				$view->assign("login_logo_source", $login_logo_source);
-				$view->assign("button_verify", $text['label-verify']);
 
 				//show the views
-				$content = $view->render('totp.htm');
+				if ($_SESSION['authentication']['plugin']['database']['authorized'] && empty($this->user_totp_secret)) {
+
+					//create the totp secret
+					$base32 = new base2n(5, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567', FALSE, TRUE, TRUE);
+					$user_totp_secret = $base32->encode(generate_password(20,3));
+					$this->user_totp_secret = $user_totp_secret;
+
+					//add user setting to array for update
+					$x = 0;
+					$array['users'][$x]['user_uuid'] = $this->user_uuid;
+					$array['users'][$x]['domain_uuid'] = $this->domain_uuid;
+					$array['users'][$x]['user_totp_secret'] = $this->user_totp_secret;
+
+					//add the user_edit permission
+					$p = new permissions;
+					$p->add("user_edit", "temp");
+
+					//save the data
+					$database = new database;
+					$database->app_name = 'users';
+					$database->app_uuid = '112124b3-95c2-5352-7e9d-d14c0b88f207';
+					$database->save($array);
+
+					//remove the temporary permission
+					$p->delete("user_edit", "temp");
+
+					//qr code includes
+					require_once 'resources/qr_code/QRErrorCorrectLevel.php';
+					require_once 'resources/qr_code/QRCode.php';
+					require_once 'resources/qr_code/QRCodeImage.php';
+
+					//build the otp authentication url
+					$otpauth = "otpauth://totp/".$this->username;
+					$otpauth .= "?secret=".$this->user_totp_secret;
+					$otpauth .= "&issuer=".$_SESSION['domain_name'];
+
+					//build the qr code image
+					try {
+						$code = new QRCode (- 1, QRErrorCorrectLevel::H);
+						$code->addData($otpauth);
+						$code->make();
+						$img = new QRCodeImage ($code, $width=210, $height=210, $quality=50);
+						$img->draw();
+						$image = $img->getImage();
+						$img->finish();
+					}
+					catch (Exception $error) {
+						echo $error;
+					}
+
+					//assign values to the template
+					$view->assign("totp_secret", $this->user_totp_secret);
+					$view->assign("totp_image", base64_encode($image));
+					$view->assign("totp_description", $text['description-totp']);
+					$view->assign("button_next", $text['button-next']);
+
+					//render the template
+					$content = $view->render('totp_secret.htm');
+				}
+				else {
+					//assign values to the template
+					$view->assign("button_verify", $text['label-verify']);
+
+					//render the template
+					$content = $view->render('totp.htm');
+				}
 				echo $content;
 				exit;
 			}
@@ -244,7 +316,6 @@ class plugin_totp {
 
 				//retun the array
 				return $result;
-
 
 				//$_SESSION['authentication']['plugin']['totp']['plugin'] = "totp";
 				//$_SESSION['authentication']['plugin']['totp']['domain_name'] = $_SESSION["domain_name"];
