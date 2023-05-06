@@ -108,7 +108,10 @@ class plugin_email {
 				//get the user details
 				$sql = "select user_uuid, username, user_email, contact_uuid \n";
 				$sql .= "from v_users\n";
-				$sql .= "where username = :username\n";
+				$sql .= "where (\n";
+				$sql .= "	username = :username\n";
+				$sql .= "	or user_email = :username\n";
+				$sql .= ")\n";
 				if ($_SESSION["users"]["unique"]["text"] != "global") {
 					//unique username per domain (not globally unique across system - example: email address)
 					$sql .= "and domain_uuid = :domain_uuid ";
@@ -294,7 +297,10 @@ class plugin_email {
 				//get the user details
 				$sql = "select user_uuid, user_email, contact_uuid, user_email_secret\n";
 				$sql .= "from v_users\n";
-				$sql .= "where username = :username\n";
+				$sql .= "where (\n";
+				$sql .= "	username = :username\n";
+				$sql .= "	or user_email = :username\n";
+				$sql .= ")\n";
 				if ($_SESSION["users"]["unique"]["text"] != "global") {
 					//unique username per domain (not globally unique across system - example: email address)
 					$sql .= "and domain_uuid = :domain_uuid ";
