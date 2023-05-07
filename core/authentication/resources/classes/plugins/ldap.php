@@ -26,6 +26,9 @@ class plugin_ldap {
 		//show the authentication code view
 			if ($_REQUEST["username"]) {
 
+				//pre-process some settings
+					$settings['theme']['favicon'] = !empty($settings['theme']['favicon']) ? $settings['theme']['favicon'] : PROJECT_PATH.'/themes/default/favicon.ico';
+
 				//login logo source
 					if (isset($_SESSION['theme']['logo_login']['text']) && $_SESSION['theme']['logo_login']['text'] != '') {
 						$login_logo_source = $_SESSION['theme']['logo_login']['text'];
@@ -84,6 +87,7 @@ class plugin_ldap {
 					$view->assign("login_logo_width", $login_logo_width);
 					$view->assign("login_logo_height", $login_logo_height);
 					$view->assign("login_logo_source", $login_logo_source);
+					$view->assign("favicon", $settings['theme']['favicon']);
 
 				//add the token name and hash to the view
 					//$view->assign("token_name", $token['name']);

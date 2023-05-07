@@ -25,6 +25,9 @@ class plugin_totp {
 	 */
 	function totp() {
 
+		//pre-process some settings
+			$settings['theme']['favicon'] = !empty($settings['theme']['favicon']) ? $settings['theme']['favicon'] : PROJECT_PATH.'/themes/default/favicon.ico';
+
 		//get the username
 			if (isset($_SESSION["username"])) {
 				$this->username = $_SESSION["username"];
@@ -70,6 +73,7 @@ class plugin_totp {
 				$view->assign("login_logo_height", $login_logo_height);
 				$view->assign("login_logo_source", $login_logo_source);
 				$view->assign("button_login", $text['button-login']);
+				$view->assign("favicon", $settings['theme']['favicon']);
 
 				//show the views
 				$content = $view->render('username.htm');
@@ -147,6 +151,7 @@ class plugin_totp {
 				$view->assign("login_logo_width", $login_logo_width);
 				$view->assign("login_logo_height", $login_logo_height);
 				$view->assign("login_logo_source", $login_logo_source);
+				$view->assign("favicon", $settings['theme']['favicon']);
 
 				//show the views
 				if ($_SESSION['authentication']['plugin']['database']['authorized'] && empty($this->user_totp_secret)) {
@@ -204,6 +209,7 @@ class plugin_totp {
 					$view->assign("totp_image", base64_encode($image));
 					$view->assign("totp_description", $text['description-totp']);
 					$view->assign("button_next", $text['button-next']);
+					$view->assign("favicon", $settings['theme']['favicon']);
 
 					//render the template
 					$content = $view->render('totp_secret.htm');

@@ -26,6 +26,9 @@ class plugin_database {
 	 */
 	function database() {
 
+		//pre-process some settings
+			$settings['theme']['favicon'] = !empty($settings['theme']['favicon']) ? $settings['theme']['favicon'] : PROJECT_PATH.'/themes/default/favicon.ico';
+
 		//already authorized
 			if (isset($_SESSION['authentication']['plugin']['database']) && $_SESSION['authentication']['plugin']['database']["authorized"]) {
 				return;
@@ -96,6 +99,7 @@ class plugin_database {
 					$view->assign("login_logo_width", $login_logo_width);
 					$view->assign("login_logo_height", $login_logo_height);
 					$view->assign("login_logo_source", $login_logo_source);
+					$view->assign("favicon", $settings['theme']['favicon']);
 
 				//add the token name and hash to the view
 					//$view->assign("token_name", $token['name']);
