@@ -25,6 +25,9 @@ class plugin_email {
 	 */
 	function email() {
 
+			//pre-process some settings
+			$settings['theme']['favicon'] = !empty($settings['theme']['favicon']) ? $settings['theme']['favicon'] : PROJECT_PATH.'/themes/default/favicon.ico';
+
 			//set a default template
 			$_SESSION['domain']['template']['name'] = 'default';
 			$_SESSION['theme']['menu_brand_image']['text'] = PROJECT_PATH.'/themes/default/images/logo.png';
@@ -89,6 +92,7 @@ class plugin_email {
 				$view->assign("login_logo_height", $login_logo_height);
 				$view->assign("login_logo_source", $login_logo_source);
 				$view->assign("button_login", $text['button-login']);
+				$view->assign("favicon", $settings['theme']['favicon']);
 
 				//show the views
 				$content = $view->render('username.htm');
@@ -266,6 +270,7 @@ class plugin_email {
 				$view->assign("login_logo_height", $login_logo_height);
 				$view->assign("login_logo_source", $login_logo_source);
 				$view->assign("button_verify", $text['label-verify']);
+				$view->assign("favicon", $settings['theme']['favicon']);
 
 				//debug information
 				//echo "<pre>\n";
