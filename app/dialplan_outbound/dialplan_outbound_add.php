@@ -433,7 +433,7 @@
 						$array['dialplans'][$x]['dialplan_context'] = $dialplan_context;
 						$array['dialplans'][$x]['dialplan_enabled'] = $dialplan_enabled;
 						$array['dialplans'][$x]['dialplan_description'] = $dialplan_description;
-						$y = 0;
+						$y = 1;
 						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_uuid'] = uuid();
 						$array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = $_SESSION['domain_uuid'];
 						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $dialplan_uuid;
@@ -490,7 +490,7 @@
 						$array['dialplans'][$x]['dialplan_context'] = $dialplan_context;
 						$array['dialplans'][$x]['dialplan_enabled'] = $dialplan_enabled;
 						$array['dialplans'][$x]['dialplan_description'] = $dialplan_description;
-						$y = 0;
+						$y = 1;
 						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_uuid'] = uuid();
 						$array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = $_SESSION['domain_uuid'];
 						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $dialplan_uuid;
