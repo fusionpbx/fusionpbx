@@ -317,6 +317,10 @@
 											$array["dialplans"][$row_id]["dialplan_xml"] .= "		<action application=\"tone_detect\" data=\"fax 1100 r +5000\"/>\n";
 											$array["dialplans"][$row_id]["dialplan_xml"] .= "		<action application=\"sleep\" data=\"3000\"/>\n";
 										}
+										if (!empty($destination_data) && $destination_app == 'bridge') {
+											$array["dialplans"][$row_id]["dialplan_xml"] .= "		<action application=\"set\" data=\"hangup_after_bridge=true\"/>\n";
+											$array["dialplans"][$row_id]["dialplan_xml"] .= "		<action application=\"set\" data=\"continue_on_fail=true\"/>\n";
+										}
 										$array["dialplans"][$row_id]["dialplan_xml"] .= "		<action application=\"".xml::sanitize($destination_app)."\" data=\"".xml::sanitize($destination_data)."\"/>\n";
 										$array["dialplans"][$row_id]["dialplan_xml"] .= "	</condition>\n";
 										$array["dialplans"][$row_id]["dialplan_xml"] .= "</extension>\n";
@@ -419,6 +423,29 @@
 													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
 													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_type"] = "set";
 													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_data"] = "accountcode=".$destination_accountcode;
+													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
+													$y++;
+
+													//increment the dialplan detail order
+													$dialplan_detail_order = $dialplan_detail_order + 10;
+												}
+
+											//add hangup_after_bridge and continue_on_fail
+												if (!empty($destination_data) && $destination_app == 'bridge') {
+													$array["dialplans"][$row_id]["dialplan_details"][$y]["domain_uuid"] = $domain_uuid;
+													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
+													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_type"] = "set";
+													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_data"] = "hangup_after_bridge=true";
+													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
+													$y++;
+
+													//increment the dialplan detail order
+													$dialplan_detail_order = $dialplan_detail_order + 10;
+
+													$array["dialplans"][$row_id]["dialplan_details"][$y]["domain_uuid"] = $domain_uuid;
+													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
+													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_type"] = "set";
+													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_data"] = "continue_on_fail=true";
 													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
 													$y++;
 
