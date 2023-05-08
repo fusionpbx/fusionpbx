@@ -218,6 +218,7 @@
 					$array['dialplans'][0]['dialplan_number'] = $conference_extension;
 					$array['dialplans'][0]['app_uuid'] = 'b81412e8-7253-91f4-e48e-42fc2c9a38d9';
 					$array['dialplans'][0]['dialplan_xml'] = $dialplan_xml;
+					$array['dialplans'][0]['dialplan_continue'] = 'false';
 					$array['dialplans'][0]['dialplan_order'] = '333';
 					$array['dialplans'][0]['dialplan_context'] = $_SESSION['domain_name'];
 					$array['dialplans'][0]['dialplan_enabled'] = $conference_enabled;
