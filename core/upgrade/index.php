@@ -28,7 +28,7 @@
 	set_time_limit(15*60); //15 minutes
 
 //set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+	$conf = array_merge(glob("/etc/fusionpbx/config.conf"), glob("/usr/localetc/fusionpbx/config.conf"));
 	set_include_path(parse_ini_file($conf[0])['document.root']);
 
 //includes files

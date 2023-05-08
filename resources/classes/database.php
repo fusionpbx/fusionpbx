@@ -393,7 +393,7 @@
 			public function connect() {
 
 				//set the include path
-					$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+					$conf = array_merge(glob("/etc/fusionpbx/config.conf"), glob("/usr/localetc/fusionpbx/config.conf"));
 					set_include_path(parse_ini_file($conf[0])['document.root']);
 
 				//parset the config.conf file
@@ -2927,7 +2927,12 @@
 					$schema = self::sanitize($schema);
 
 				//get the apps array
-					$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/{core,app}/{".$schema.",".self::singular($schema)."}/app_config.php", GLOB_BRACE);
+					$config_list = array_merge(
+						glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/core/$schema/app_config.php")
+						,glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/app/$schema/app_config.php")
+						,glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/core/".self::singular($schema)."/app_config.php")
+						,glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/app/".self::singular($schema)."/app_config.php")
+						);
 					foreach ($config_list as &$config_path) {
 						include($config_path);
 					}

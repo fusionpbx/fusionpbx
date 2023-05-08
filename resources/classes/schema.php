@@ -44,7 +44,7 @@ if (!class_exists('schema')) {
 				$this->db = $database->db;
 
 				//set the include path
-				$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+				$conf = array_merge(glob("/etc/fusionpbx/config.conf"), glob("/usr/localetc/fusionpbx/config.conf"));
 				set_include_path(parse_ini_file($conf[0])['document.root']);
 
 				//includes files
@@ -492,7 +492,7 @@ if (!class_exists('schema')) {
 					$db_port = $config->db_port;
 
 				//set the include path
-					$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+					$conf = array_merge(glob("/etc/fusionpbx/config.conf"), glob("/usr/localetc/fusionpbx/config.conf"));
 					set_include_path(parse_ini_file($conf[0])['document.root']);
 
 				//includes files
