@@ -78,7 +78,7 @@ if ($domains_processed == 1) {
 			foreach ($call_center_queues as $row) {
 
 				//get the application and data
-					$action_array = explode(":",$row['queue_timeout_action']);
+					$action_array = explode(":",$row['queue_timeout_action'] ?? '');
 					$queue_timeout_app = $action_array[0];
 					unset($action_array[0]);
 					$queue_timeout_data = implode($action_array);
