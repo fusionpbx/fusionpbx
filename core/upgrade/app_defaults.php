@@ -80,7 +80,7 @@ if ($domains_processed == 1) {
 				}
 
 				// compare to message in language file, update and enable if different
-				$new_default_setting_value = str_replace("''", "'", $text['login-message_text']);
+				$new_default_setting_value = str_replace("''", "'", $text['login-message_text'] ?? '');
 				if ($current_default_setting_value != $new_default_setting_value) {
 					$sql = "update v_default_settings set ";
 					$sql .= "default_setting_value = :default_setting_value, ";
