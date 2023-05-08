@@ -17,11 +17,11 @@
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Trasy wyjściowe";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Rotas de saída";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Rotas de Saída";
-	$apps[$x]['menu'][$y]['title']['ro-ro'] = "";
+	$apps[$x]['menu'][$y]['title']['ro-ro'] = "Rute de ieșire";
 	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Маршрутизация исходящих";
 	$apps[$x]['menu'][$y]['title']['sv-se'] = "Outbound Routes";
 	$apps[$x]['menu'][$y]['title']['uk-ua'] = "Вихідні маршрути";
-	$apps[$x]['menu'][$y]['title']['zh-cn'] = "外围路线";
+	$apps[$x]['menu'][$y]['title']['zh-cn'] = "出境航线";
 	$apps[$x]['menu'][$y]['title']['ja-jp'] = "アウトバウンドルート";
 	$apps[$x]['menu'][$y]['title']['ko-kr'] = "아웃바운드 루트";
 	$apps[$x]['menu'][$y]['uuid'] = "17e14094-1d57-1106-db2a-a787d34015e9";
