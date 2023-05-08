@@ -286,7 +286,7 @@ if ($db_type == "odbc") {
 	if (!is_array($_SESSION['domains']) or !isset($_SESSION["domain_uuid"])) {
 
 		//get the domain
-			$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
+			$domain_array = explode(":", $_SERVER["HTTP_HOST"] ?? '');
 
 		//get the domains from the database
 			$sql = "select * from v_domains";
