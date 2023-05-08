@@ -79,16 +79,8 @@
 	$order = $_GET["order"];
 
 //add the search term
-	$search = strtolower($_GET["search"]);
-	if (!empty($search)) {
-		$sql_search = " (";
-		$sql_search .= "	lower(broadcast_name) like :search ";
-		$sql_search .= "	or lower(broadcast_description) like :search ";
-		$sql_search .= "	or lower(broadcast_caller_id_name) like :search ";
-		$sql_search .= "	or lower(broadcast_caller_id_number) like :search ";
-		$sql_search .= "	or lower(broadcast_phone_numbers) like :search ";
-		$sql_search .= ") ";
-		$parameters['search'] = '%'.$search.'%';
+	if (!empty($_GET["search"])) {
+		$search = strtolower($_GET["search"]);
 	}
 
 //get the count
@@ -98,15 +90,24 @@
 		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	}
-	if (isset($sql_search)) {
-		$sql .= "and ".$sql_search;
+	if (isset($search)) {
+		$sql .= "and (";
+		$sql .= "	lower(broadcast_name) like :search ";
+		$sql .= "	or lower(broadcast_description) like :search ";
+		$sql .= "	or lower(broadcast_caller_id_name) like :search ";
+		$sql .= "	or lower(broadcast_caller_id_number) like :search ";
+		$sql .= "	or lower(broadcast_phone_numbers) like :search ";
+		$sql .= ") ";
+		$parameters['search'] = '%'.$search.'%';
 	}
 	$database = new database;
 	$num_rows = $database->select($sql, $parameters, 'column');
 
 //prepare the paging
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
-	$param = "&search=".urlencode($search);
+	if (isset($search)) {
+		$param = "&search=".urlencode($search);
+	}
 	if ($_GET['show'] == "all" && permission_exists('call_broadcast_all')) {
 		$param .= "&show=all";
 	}
@@ -117,7 +118,27 @@
 	$offset = $rows_per_page * $page;
 
 //get the call broadcasts
-	$sql = str_replace('count(*)','*', $sql);
+	$sql = "select call_broadcast_uuid, domain_uuid, broadcast_name ";
+	$sql .= "broadcast_description, broadcast_start_time, broadcast_timeout, ";
+	$sql .= "broadcast_concurrent_limit, recording_uuid, broadcast_caller_id_name, ";
+	$sql .= "broadcast_caller_id_number, broadcast_destination_type, broadcast_phone_numbers, ";
+	$sql .= "broadcast_avmd, broadcast_destination_data, broadcast_accountcode, broadcast_toll_allow ";
+	$sql .= "from v_call_broadcasts ";
+	$sql .= "where true ";
+	if ($_GET['show'] != "all" || !permission_exists('call_broadcast_all')) {
+		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	}
+	if (!empty($_GET["search"])) {
+		$sql .= "and (";
+		$sql .= "	lower(broadcast_name) like :search ";
+		$sql .= "	or lower(broadcast_description) like :search ";
+		$sql .= "	or lower(broadcast_caller_id_name) like :search ";
+		$sql .= "	or lower(broadcast_caller_id_number) like :search ";
+		$sql .= "	or lower(broadcast_phone_numbers) like :search ";
+		$sql .= ") ";
+		$parameters['search'] = '%'.$search.'%';
+	}
 	$sql .= order_by($order_by, $order, 'broadcast_name', 'asc');
 	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;
