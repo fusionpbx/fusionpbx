@@ -47,7 +47,7 @@ class auto_loader {
 				//first priority
 				$path = $_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/resources/classes/".$class_name.".php";
 				$class_found = true;
-				if ($_REQUEST['debug'] == 'true') {
+				if (!empty($_REQUEST['debug']) && $_REQUEST['debug'] == 'true') {
 					syslog(LOG_WARNING, "[php][autoloader] name: ".$class_name.", path: ".$path.", line: ".__line__);
 				}
 				include $path;
