@@ -1,7 +1,7 @@
 <?php
 
 	$y=0;
-	$apps[$x]['menu'][$y]['title']['en-us'] = "c";
+	$apps[$x]['menu'][$y]['title']['en-us'] = "Phrases";
 	$apps[$x]['menu'][$y]['title']['en-gb'] = "Phrases";
 	$apps[$x]['menu'][$y]['title']['ar-eg'] = "الصيغة";
 	$apps[$x]['menu'][$y]['title']['de-at'] = "Phrasen";
