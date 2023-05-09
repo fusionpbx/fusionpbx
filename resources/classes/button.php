@@ -31,9 +31,9 @@ if (!class_exists('button')) {
 		public static $collapse = 'hide-md-dn';
 
 		static function create($array) {
-			$button_icons = $_SESSION['theme']['button_icons']['text'] != '' ? $_SESSION['theme']['button_icons']['text'] : 'auto';
+			$button_icons = !empty($_SESSION['theme']['button_icons']['text']) ? $_SESSION['theme']['button_icons']['text'] : 'auto';
 			//parse styles into array
-				if ($array['style']) {
+				if (!empty($array['style'])) {
 					$tmp = explode(';',$array['style']);
 					foreach ($tmp as $style) {
 						if ($style) {
@@ -47,18 +47,18 @@ if (!class_exists('button')) {
 			//button: open
 				$button = "<button ";
 				$button .= "type='".($array['type'] ? $array['type'] : 'button')."' ";
-				$button .= $array['name'] ? "name=".self::quote($array['name'])." " : null;
-				$button .= $array['value'] ? "value=".self::quote($array['value'])." " : null;
-				$button .= $array['id'] ? "id='".$array['id']."' " : null;
-				$button .= $array['label'] ? "alt=".self::quote($array['label'])." " : ($array['title'] ? "alt=".self::quote($array['title'])." " : null);
+				$button .= !empty($array['name']) ? "name=".self::quote($array['name'])." " : null;
+				$button .= !empty($array['value']) ? "value=".self::quote($array['value'])." " : null;
+				$button .= !empty($array['id']) ? "id='".$array['id']."' " : null;
+				$button .= !empty($array['label']) ? "alt=".self::quote($array['label'])." " : ($array['title'] ? "alt=".self::quote($array['title'])." " : null);
 				if ($button_icons == 'only' || $button_icons == 'auto' || $array['title']) {
 					if ($array['title'] || $array['label']) {
 						$button .= "title=".($array['title'] ? self::quote($array['title']) : self::quote($array['label']))." ";
 					}
 				}
-				$button .= $array['onclick'] ? "onclick=".self::quote($array['onclick'])." " : null;
-				$button .= $array['onmouseover'] ? "onmouseenter=".self::quote($array['onmouseover'])." " : null;
- 				$button .= $array['onmouseout'] ? "onmouseleave=".self::quote($array['onmouseout'])." " : null;
+				$button .= !empty($array['onclick']) ? "onclick=".self::quote($array['onclick'])." " : null;
+				$button .= !empty($array['onmouseover']) ? "onmouseenter=".self::quote($array['onmouseover'])." " : null;
+ 				$button .= !empty($array['onmouseout']) ? "onmouseleave=".self::quote($array['onmouseout'])." " : null;
 				//detect class addition (using + prefix)
 				$button_class = $array['class'] && $array['class'][0] == '+' ? 'default '.substr($array['class'], 1) : $array['class'];
 				$button .= "class='btn btn-".($button_class ? $button_class : 'default')." ".($array['disabled'] ? 'disabled' : null)."' ";
