@@ -164,7 +164,7 @@ $text['label-say']['ro-ro'] = "Spune";
 $text['label-say']['ru-ru'] = "Скажите";
 $text['label-say']['sv-se'] = "Säg";
 $text['label-say']['uk-ua'] = "Вимовити";
-$text['label-say']['zh-cn'] = "Saye";
+$text['label-say']['zh-cn'] = "说";
 $text['label-say']['ja-jp'] = "お問い合わせ";
 $text['label-say']['ko-kr'] = "이름 *";
 
@@ -262,7 +262,7 @@ $text['label-language']['sv-se'] = "Språk";
 $text['label-language']['uk-ua'] = "Мова";
 $text['label-language']['zh-cn'] = "语言";
 $text['label-language']['ja-jp'] = "用語集";
-$text['label-language']['ko-kr'] = "* 이름";
+$text['label-language']['ko-kr'] = "이름";
 
 $text['label-function']['en-us'] = "Function";
 $text['label-function']['en-gb'] = "Function";
