@@ -34,7 +34,7 @@
 //if reloadxml then run the command
 	if (permission_exists('dialplan_edit') && isset($_SESSION["reload_xml"])) {
 		if (!empty($_SESSION["reload_xml"])) {
-			if ($_SESSION['apply_settings'] == "true") {
+			if (isset($_SESSION['apply_settings']) && $_SESSION['apply_settings'] == "true") {
 				//show the apply settings prompt
 			}
 			else {
@@ -126,7 +126,7 @@
 	$button_icon_style = 'padding: 3px;';
 	$button_label_class = 'button-label';
 	$button_label_style = 'padding-left: 5px; padding-right: 3px;';
-	$button_icons = $_SESSION['theme']['button_icons']['text'];
+	$button_icons = (!empty($_SESSION['theme']['button_icons']['text'])) ? $button_icons = $_SESSION['theme']['button_icons']['text'] : '';
 	switch ($button_icons) {
 		case 'auto':
 			$button_label_class .= ' hide-md-dn';
