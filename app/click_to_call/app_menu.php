@@ -3,7 +3,7 @@
 	$y=0;
 	$apps[$x]['menu'][$y]['title']['en-us'] = "Click to Call";
 	$apps[$x]['menu'][$y]['title']['en-gb'] = "Click to Call";
-	$apps[$x]['menu'][$y]['title']['ar-eg'] = "اتصل";
+	$apps[$x]['menu'][$y]['title']['ar-eg'] = "اضغط للاتصال";
 	$apps[$x]['menu'][$y]['title']['de-at'] = "Click to Call";
 	$apps[$x]['menu'][$y]['title']['de-ch'] = "Klicken Sie auf Anruf";
 	$apps[$x]['menu'][$y]['title']['de-de'] = "Click to Call";
@@ -17,13 +17,13 @@
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Click to Call";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Clique para ligar";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Clicar para Chamadas";
-	$apps[$x]['menu'][$y]['title']['ro-ro'] = "";
+	$apps[$x]['menu'][$y]['title']['ro-ro'] = "Fă clic pentru a apela";
 	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Вызов по клику";
 	$apps[$x]['menu'][$y]['title']['sv-se'] = "Klicka för att ringa";
 	$apps[$x]['menu'][$y]['title']['uk-ua'] = "Натисніть, щоб викликати";
 	$apps[$x]['menu'][$y]['title']['zh-cn'] = "点击通话";
-	$apps[$x]['menu'][$y]['title']['ja-jp'] = "コールをクリック";
-	$apps[$x]['menu'][$y]['title']['ko-kr'] = "자주 묻는 질문";
+	$apps[$x]['menu'][$y]['title']['ja-jp'] = "電話するにはクリック";
+	$apps[$x]['menu'][$y]['title']['ko-kr'] = "클릭 투 콜";
 	$apps[$x]['menu'][$y]['uuid'] = "f862556f-9ddd-2697-fdf4-bed08ec63aa5";
 	$apps[$x]['menu'][$y]['parent_uuid'] = "fd29e39c-c936-f5fc-8e2b-611681b266b5";
 	$apps[$x]['menu'][$y]['category'] = "internal";

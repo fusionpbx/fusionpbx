@@ -9,8 +9,8 @@
 	$apps[$x]['menu'][$y]['title']['de-de'] = "Nummer Übersetzung";
 	$apps[$x]['menu'][$y]['title']['es-cl'] = "Traducción de números";
 	$apps[$x]['menu'][$y]['title']['es-mx'] = "Traducción de números";
-	$apps[$x]['menu'][$y]['title']['fr-ca'] = "Traduction de numéros";
-	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Traduction de numéros";
+	$apps[$x]['menu'][$y]['title']['fr-ca'] = "Traductions de nombres";
+	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Traductions de nombres";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "תרגום מספר";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Traduzione numero";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Nummer Vertaling";
@@ -21,8 +21,8 @@
 	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Преобразование номера";
 	$apps[$x]['menu'][$y]['title']['sv-se'] = "Antal översättning";
 	$apps[$x]['menu'][$y]['title']['uk-ua'] = "кількість перекладів";
-	$apps[$x]['menu'][$y]['title']['zh-cn'] = "翻译";
-	$apps[$x]['menu'][$y]['title']['ja-jp'] = "数値翻訳";
+	$apps[$x]['menu'][$y]['title']['zh-cn'] = "数字翻译";
+	$apps[$x]['menu'][$y]['title']['ja-jp'] = "数の翻訳";
 	$apps[$x]['menu'][$y]['title']['ko-kr'] = "번호 번역";
 	$apps[$x]['menu'][$y]['uuid'] = "6ad5505c-4909-11e7-a919-92ebcb67fe33";
 	$apps[$x]['menu'][$y]['parent_uuid'] = "594d99c5-6128-9c88-ca35-4b33392cec0f";

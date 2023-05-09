@@ -16,13 +16,13 @@
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Muzyka na czekanie";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Música de espera";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Musica em Espera";
-	$apps[$x]['menu'][$y]['title']['ro-ro'] = "";
+	$apps[$x]['menu'][$y]['title']['ro-ro'] = "Muzică în așteptare";
 	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Музыка на удержании";
 	$apps[$x]['menu'][$y]['title']['sv-se'] = "Väntmusik";
 	$apps[$x]['menu'][$y]['title']['uk-ua'] = "Музика на утриманні";
-	$apps[$x]['menu'][$y]['title']['zh-cn'] = "音乐家";
-	$apps[$x]['menu'][$y]['title']['ja-jp'] = "ホールドでの音楽";
-	$apps[$x]['menu'][$y]['title']['ko-kr'] = "공지사항";
+	$apps[$x]['menu'][$y]['title']['zh-cn'] = "保留音乐";
+	$apps[$x]['menu'][$y]['title']['ja-jp'] = "保留音";
+	$apps[$x]['menu'][$y]['title']['ko-kr'] = "음악 보류";
 	$apps[$x]['menu'][$y]['uuid'] = "1cd1d6cb-912d-db32-56c3-e0d5699feb9d";
 	$apps[$x]['menu'][$y]['parent_uuid'] = "fd29e39c-c936-f5fc-8e2b-611681b266b5";
 	$apps[$x]['menu'][$y]['category'] = "internal";

@@ -117,8 +117,8 @@ $text['label-conference_center_name']['ru-ru'] = "Имя";
 $text['label-conference_center_name']['sv-se'] = "Namn";
 $text['label-conference_center_name']['uk-ua'] = "Назва";
 $text['label-conference_center_name']['zh-cn'] = "姓名";
-$text['label-conference_center_name']['ja-jp'] = "お名前 (必須)";
-$text['label-conference_center_name']['ko-kr'] = "이름 *";
+$text['label-conference_center_name']['ja-jp'] = "お名前";
+$text['label-conference_center_name']['ko-kr'] = "이름";
 
 $text['description-conference_center_name']['en-us'] = "Enter the conference center name.";
 $text['description-conference_center_name']['en-gb'] = "Enter the conference center name.";
@@ -406,7 +406,7 @@ $text['label-conference_center_enabled']['sv-se'] = "Aktiverad";
 $text['label-conference_center_enabled']['uk-ua'] = "Включено";
 $text['label-conference_center_enabled']['zh-cn'] = "授权";
 $text['label-conference_center_enabled']['ja-jp'] = "有効化";
-$text['label-conference_center_enabled']['ko-kr'] = "이름 *";
+$text['label-conference_center_enabled']['ko-kr'] = "이름";
 
 $text['description-conference_center_enabled']['en-us'] = "Select whether to enable or disable the conference center.";
 $text['description-conference_center_enabled']['en-gb'] = "Select whether to enable or disable the conference center.";
@@ -742,7 +742,7 @@ $text['label-view']['sv-se'] = "Visa";
 $text['label-view']['uk-ua'] = "Перегляд";
 $text['label-view']['zh-cn'] = "观点";
 $text['label-view']['ja-jp'] = "ニュース";
-$text['label-view']['ko-kr'] = "- 연혁";
+$text['label-view']['ko-kr'] = "연혁";
 
 $text['label-uuid']['en-us'] = "UUID";
 $text['label-uuid']['en-gb'] = "UUID";
@@ -764,9 +764,9 @@ $text['label-uuid']['ro-ro'] = "UUID";
 $text['label-uuid']['ru-ru'] = "UUID";
 $text['label-uuid']['sv-se'] = "UUID";
 $text['label-uuid']['uk-ua'] = "UUID";
-$text['label-uuid']['zh-cn'] = "uuis";
-$text['label-uuid']['ja-jp'] = "ログイン";
-$text['label-uuid']['ko-kr'] = "·";
+$text['label-uuid']['zh-cn'] = "UUID";
+$text['label-uuid']['ja-jp'] = "UUID";
+$text['label-uuid']['ko-kr'] = "UUID";
 
 $text['label-users']['en-us'] = "Users";
 $text['label-users']['en-gb'] = "Users";
@@ -790,7 +790,7 @@ $text['label-users']['sv-se'] = "Användare";
 $text['label-users']['uk-ua'] = "Користувачі";
 $text['label-users']['zh-cn'] = "用户";
 $text['label-users']['ja-jp'] = "ユーザ名";
-$text['label-users']['ko-kr'] = "이름 *";
+$text['label-users']['ko-kr'] = "이름";
 
 $text['label-username']['en-us'] = "Username";
 $text['label-username']['en-gb'] = "Username";
@@ -860,7 +860,7 @@ $text['label-to']['ro-ro'] = "La";
 $text['label-to']['ru-ru'] = "До";
 $text['label-to']['sv-se'] = "Till";
 $text['label-to']['uk-ua'] = "До";
-$text['label-to']['zh-cn'] = "页: 1";
+$text['label-to']['zh-cn'] = "页";
 $text['label-to']['ja-jp'] = "お問い合わせ";
 $text['label-to']['ko-kr'] = "으로";
 
@@ -982,7 +982,7 @@ $text['label-schedule']['sv-se'] = "Schema";
 $text['label-schedule']['uk-ua'] = "Розклад";
 $text['label-schedule']['zh-cn'] = "表格";
 $text['label-schedule']['ja-jp'] = "スケジュール";
-$text['label-schedule']['ko-kr'] = "- 연혁";
+$text['label-schedule']['ko-kr'] = "연혁";
 
 $text['label-room-name']['en-us'] = "Room Name";
 $text['label-room-name']['en-gb'] = "Room Name";
@@ -1054,7 +1054,7 @@ $text['label-record']['sv-se'] = "Spela In";
 $text['label-record']['uk-ua'] = "Запис";
 $text['label-record']['zh-cn'] = "记录";
 $text['label-record']['ja-jp'] = "レコード";
-$text['label-record']['ko-kr'] = "이름 *";
+$text['label-record']['ko-kr'] = "이름";
 
 $text['label-profile']['en-us'] = "Profile";
 $text['label-profile']['en-gb'] = "Profile";
@@ -1172,9 +1172,9 @@ $text['label-mute']['ro-ro'] = "Mut";
 $text['label-mute']['ru-ru'] = "Отключить микрофон";
 $text['label-mute']['sv-se'] = "Mikrofon Av";
 $text['label-mute']['uk-ua'] = "Приглушити";
-$text['label-mute']['zh-cn'] = "te";
+$text['label-mute']['zh-cn'] = "沉默的";
 $text['label-mute']['ja-jp'] = "ミュート";
-$text['label-mute']['ko-kr'] = "이름 *";
+$text['label-mute']['ko-kr'] = "이름";
 
 $text['label-moderator-pin']['en-us'] = "Moderator";
 $text['label-moderator-pin']['en-gb'] = "Moderator";
@@ -1270,7 +1270,7 @@ $text['label-member-type-participant']['sv-se'] = "deltagare";
 $text['label-member-type-participant']['uk-ua'] = "учасник";
 $text['label-member-type-participant']['zh-cn'] = "参加者";
 $text['label-member-type-participant']['ja-jp'] = "参加人数";
-$text['label-member-type-participant']['ko-kr'] = "이름 *";
+$text['label-member-type-participant']['ko-kr'] = "이름";
 
 $text['label-member-type-moderator']['en-us'] = "moderator";
 $text['label-member-type-moderator']['en-gb'] = "moderator";
@@ -1365,8 +1365,8 @@ $text['label-from']['ru-ru'] = "От";
 $text['label-from']['sv-se'] = "Från";
 $text['label-from']['uk-ua'] = "Від";
 $text['label-from']['zh-cn'] = "收入";
-$text['label-from']['ja-jp'] = "詳しくはこちら";
-$text['label-from']['ko-kr'] = "내 계정";
+$text['label-from']['ja-jp'] = "から";
+$text['label-from']['ko-kr'] = "에서";
 
 $text['label-exit-sound']['en-us'] = "Exit Sound";
 $text['label-exit-sound']['en-gb'] = "Exit Sound";
@@ -1436,9 +1436,9 @@ $text['label-end']['ro-ro'] = "Sfârşit";
 $text['label-end']['ru-ru'] = "Конец";
 $text['label-end']['sv-se'] = "Slut";
 $text['label-end']['uk-ua'] = "Кінець";
-$text['label-end']['zh-cn'] = "结束";
-$text['label-end']['ja-jp'] = "リリース";
-$text['label-end']['ko-kr'] = "이름 *";
+$text['label-end']['zh-cn'] = "结尾";
+$text['label-end']['ja-jp'] = "終わり";
+$text['label-end']['ko-kr'] = "끝";
 
 $text['label-edit']['en-us'] = "Edit";
 $text['label-edit']['en-gb'] = "Edit";
@@ -1556,9 +1556,9 @@ $text['label-cdr']['ro-ro'] = "CDR";
 $text['label-cdr']['ru-ru'] = "CDR";
 $text['label-cdr']['sv-se'] = "CDR";
 $text['label-cdr']['uk-ua'] = "CDR ";
-$text['label-cdr']['zh-cn'] = "dr";
-$text['label-cdr']['ja-jp'] = "ログイン";
-$text['label-cdr']['ko-kr'] = "사이트맵";
+$text['label-cdr']['zh-cn'] = "CDR";
+$text['label-cdr']['ja-jp'] = "CDR";
+$text['label-cdr']['ko-kr'] = "CDR";
 
 $text['label-caller-id-number']['en-us'] = "Caller ID Number";
 $text['label-caller-id-number']['en-gb'] = "Caller ID Number";
@@ -1630,7 +1630,7 @@ $text['label-announce_name']['sv-se'] = "Meddela";
 $text['label-announce_name']['uk-ua'] = "Анонс";
 $text['label-announce_name']['zh-cn'] = "姓名";
 $text['label-announce_name']['ja-jp'] = "発表者名";
-$text['label-announce_name']['ko-kr'] = "이름 *";
+$text['label-announce_name']['ko-kr'] = "이름";
 
 $text['label-announce_count']['en-us'] = "Announce Count";
 $text['label-announce_count']['en-gb'] = "Announce Count";

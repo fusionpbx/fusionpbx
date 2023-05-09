@@ -17,7 +17,7 @@
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Konferencja";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Conferências";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Conferencias";
-	$apps[$x]['menu'][$y]['title']['ro-ro'] = "";
+	$apps[$x]['menu'][$y]['title']['ro-ro'] = "Conferințe";
 	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Конференции";
 	$apps[$x]['menu'][$y]['title']['sv-se'] = "Konferenser";
 	$apps[$x]['menu'][$y]['title']['uk-ua'] = "Конференції";

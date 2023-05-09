@@ -16,7 +16,7 @@
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Warunki czasowe";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Condições temporarias";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Condições Temporais";
-	$apps[$x]['menu'][$y]['title']['ro-ro'] = "";
+	$apps[$x]['menu'][$y]['title']['ro-ro'] = "Condiții de timp";
 	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Условия по времени";
 	$apps[$x]['menu'][$y]['title']['sv-se'] = "Tidsstyrning";
 	$apps[$x]['menu'][$y]['title']['uk-ua'] = "Часові умови";

@@ -23,7 +23,7 @@
 	$apps[$x]['menu'][$y]['title']['uk-ua'] = "Пристрої";
 	$apps[$x]['menu'][$y]['title']['zh-cn'] = "装置";
 	$apps[$x]['menu'][$y]['title']['ja-jp'] = "デバイス";
-	$apps[$x]['menu'][$y]['title']['ko-kr'] = "제품정보";
+	$apps[$x]['menu'][$y]['title']['ko-kr'] = "장치";
 	$apps[$x]['menu'][$y]['uuid'] = "f9dce498-b7f9-740f-e592-9e8ff3dac2a0";
 	$apps[$x]['menu'][$y]['parent_uuid'] = "bc96d773-ee57-0cdd-c3ac-2d91aba61b55";
 	$apps[$x]['menu'][$y]['category'] = "internal";

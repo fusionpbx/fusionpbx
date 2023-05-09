@@ -17,11 +17,11 @@
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Przepływ rozmów";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Fluxo de chamadas";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Fluxos de chamadas";
-	$apps[$x]['menu'][$y]['title']['ro-ro'] = "";
+	$apps[$x]['menu'][$y]['title']['ro-ro'] = "Fluxuri de apeluri";
 	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Переключатель вызовов";
 	$apps[$x]['menu'][$y]['title']['sv-se'] = "Samtalsflöden";
 	$apps[$x]['menu'][$y]['title']['uk-ua'] = "Потоки дзвінків";
-	$apps[$x]['menu'][$y]['title']['zh-cn'] = "流动";
+	$apps[$x]['menu'][$y]['title']['zh-cn'] = "通话流程";
 	$apps[$x]['menu'][$y]['title']['ja-jp'] = "コールフロー";
 	$apps[$x]['menu'][$y]['title']['ko-kr'] = "통화 흐름";
 	$apps[$x]['menu'][$y]['uuid'] = "b0939384-7055-44e8-8b4c-9f72293e1878";

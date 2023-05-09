@@ -21,9 +21,9 @@
 	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Внутренние номера";
 	$apps[$x]['menu'][$y]['title']['sv-se'] = "Anknytningar";
 	$apps[$x]['menu'][$y]['title']['uk-ua'] = "Розширення";
-	$apps[$x]['menu'][$y]['title']['zh-cn'] = "延期";
+	$apps[$x]['menu'][$y]['title']['zh-cn'] = "扩展";
 	$apps[$x]['menu'][$y]['title']['ja-jp'] = "エクステンション";
-	$apps[$x]['menu'][$y]['title']['ko-kr'] = "제품정보";
+	$apps[$x]['menu'][$y]['title']['ko-kr'] = "확장 프로그램";
 	$apps[$x]['menu'][$y]['uuid'] = "d3036a99-9a9f-2ad6-a82a-1fe7bebbe2d3";
 	$apps[$x]['menu'][$y]['parent_uuid'] = "bc96d773-ee57-0cdd-c3ac-2d91aba61b55";
 	$apps[$x]['menu'][$y]['category'] = "internal";

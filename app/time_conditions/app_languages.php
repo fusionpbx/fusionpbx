@@ -118,7 +118,7 @@ $text['label-year']['sv-se'] = "År";
 $text['label-year']['uk-ua'] = "Рік";
 $text['label-year']['zh-cn'] = "年份";
 $text['label-year']['ja-jp'] = "カレンダー";
-$text['label-year']['ko-kr'] = "1 년";
+$text['label-year']['ko-kr'] = "년";
 
 $text['label-week-of-year']['en-us'] = "Week of Year";
 $text['label-week-of-year']['en-gb'] = "Week of Year";
@@ -188,7 +188,7 @@ $text['label-time-of-day_minute']['ro-ro'] = "Minut";
 $text['label-time-of-day_minute']['ru-ru'] = "Минута";
 $text['label-time-of-day_minute']['sv-se'] = "Minut";
 $text['label-time-of-day_minute']['uk-ua'] = "Хвилина";
-$text['label-time-of-day_minute']['zh-cn'] = "1. 议事情况";
+$text['label-time-of-day_minute']['zh-cn'] = "议事情况";
 $text['label-time-of-day_minute']['ja-jp'] = "ツイート";
 $text['label-time-of-day_minute']['ko-kr'] = "이름 *";
 
@@ -214,7 +214,7 @@ $text['label-time-of-day_hour']['sv-se'] = "Timma";
 $text['label-time-of-day_hour']['uk-ua'] = "Година";
 $text['label-time-of-day_hour']['zh-cn'] = "小时";
 $text['label-time-of-day_hour']['ja-jp'] = "営業時間";
-$text['label-time-of-day_hour']['ko-kr'] = "시간 :";
+$text['label-time-of-day_hour']['ko-kr'] = "시간";
 
 $text['label-time-of-day']['en-us'] = "Time of Day";
 $text['label-time-of-day']['en-gb'] = "Time of Day";
@@ -262,7 +262,7 @@ $text['label-template']['sv-se'] = "Mall";
 $text['label-template']['uk-ua'] = "Шаблон";
 $text['label-template']['zh-cn'] = "模板";
 $text['label-template']['ja-jp'] = "テンプレート";
-$text['label-template']['ko-kr'] = "(주)";
+$text['label-template']['ko-kr'] = "주형";
 
 $text['label-settings']['en-us'] = "Settings";
 $text['label-settings']['en-gb'] = "Settings";
@@ -572,7 +572,7 @@ $text['label-preset_martin_luther_king_jr_day']['ro-ro'] = "Ziua lui Martin Luth
 $text['label-preset_martin_luther_king_jr_day']['ru-ru'] = "День Мартина Лютера Кинга";
 $text['label-preset_martin_luther_king_jr_day']['sv-se'] = "Martin Luther King Jr. dagen";
 $text['label-preset_martin_luther_king_jr_day']['uk-ua'] = "День Мартіна Лютера Кінга";
-$text['label-preset_martin_luther_king_jr_day']['zh-cn'] = "martin luther King jr.day";
+$text['label-preset_martin_luther_king_jr_day']['zh-cn'] = "马丁路德金纪念日";
 $text['label-preset_martin_luther_king_jr_day']['ja-jp'] = "マーティン・ルーザー・キング・ジュニア・デイ";
 $text['label-preset_martin_luther_king_jr_day']['ko-kr'] = "마틴 루터 킹 주니어. 일";
 
@@ -1078,7 +1078,7 @@ $text['label-condition']['sv-se'] = "Villkor";
 $text['label-condition']['uk-ua'] = "Умова";
 $text['label-condition']['zh-cn'] = "条件";
 $text['label-condition']['ja-jp'] = "インフォメーション";
-$text['label-condition']['ko-kr'] = "(주)";
+$text['label-condition']['ko-kr'] = "상태";
 
 $text['label-alternate-destination']['en-us'] = "Alternate Destination";
 $text['label-alternate-destination']['en-gb'] = "Alternate Destination";
@@ -1106,7 +1106,7 @@ $text['label-alternate-destination']['ko-kr'] = "편의 용품";
 
 $text['label-group']['en-us'] = "Group";
 $text['label-group']['en-gb'] = "Group";
-$text['label-group']['ar-eg'] = "Groep";
+$text['label-group']['ar-eg'] = "مجموعة";
 $text['label-group']['de-at'] = "Gruppe";
 $text['label-group']['de-ch'] = "Gruppe";
 $text['label-group']['de-de'] = "Gruppe";

@@ -16,13 +16,13 @@
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Nagrywanie rozmów";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Gravações";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Gravações";
-	$apps[$x]['menu'][$y]['title']['ro-ro'] = "";
+	$apps[$x]['menu'][$y]['title']['ro-ro'] = "Înregistrări";
 	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Записи";
 	$apps[$x]['menu'][$y]['title']['sv-se'] = "Inspelningar";
 	$apps[$x]['menu'][$y]['title']['uk-ua'] = "Записи";
-	$apps[$x]['menu'][$y]['title']['zh-cn'] = "记录";
-	$apps[$x]['menu'][$y]['title']['ja-jp'] = "レコーディング";
-	$apps[$x]['menu'][$y]['title']['ko-kr'] = "관련 기사";
+	$apps[$x]['menu'][$y]['title']['zh-cn'] = "录音";
+	$apps[$x]['menu'][$y]['title']['ja-jp'] = "録音";
+	$apps[$x]['menu'][$y]['title']['ko-kr'] = "녹음";
 	$apps[$x]['menu'][$y]['uuid'] = "e4290fd2-3ccc-a758-1714-660d38453104";
 	$apps[$x]['menu'][$y]['parent_uuid'] = "fd29e39c-c936-f5fc-8e2b-611681b266b5";
 	$apps[$x]['menu'][$y]['category'] = "internal";
