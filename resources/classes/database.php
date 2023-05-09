@@ -36,7 +36,7 @@
 			 * @access private
 			 * @var PDO object
 			 */
-			private $db;
+			public $db;
 
 			/**
 			 * Driver to use.
