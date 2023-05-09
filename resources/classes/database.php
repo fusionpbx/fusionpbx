@@ -375,7 +375,6 @@
 					case 'username':
 					case 'where':
 					case 'debug':
-						return $this->$name;
 					case 'count':
 						return $this->count();
 					default:
@@ -880,9 +879,7 @@
 						$message["message"] = "Bad Request";
 						$message["code"] = "400";
 						$message["error"]["message"] = $e->getMessage();
-						if ($this->debug["sql"]) {
-							$message["sql"] = $sql;
-						}
+						$message["sql"] = $sql;
 						if (is_array($parameters)) {
 							$message["parameters"] = $parameters;
 						}
@@ -1271,9 +1268,8 @@
 									$message["details"][$m]["message"] = "OK";
 									$message["details"][$m]["code"] = "200";
 									//$message["details"][$m]["uuid"] = $parent_key_value;
-									if ($this->debug["sql"]) {
-										$message["details"][$m]["sql"] = $sql;
-									}
+									$message["details"][$m]["sql"] = $sql;
+
 									$this->message = $message;
 									$m++;
 									unset($sql);
@@ -1286,9 +1282,8 @@
 									$message["details"][$m]["name"] = $this->name;
 									$message["details"][$m]["message"] = $e->getMessage();
 									$message["details"][$m]["code"] = "400";
-									if ($this->debug["sql"]) {
-										$message["details"][$m]["sql"] = $sql;
-									}
+									$message["details"][$m]["sql"] = $sql;
+
 									$this->message = $message;
 									$m++;
 								}
@@ -1402,51 +1397,56 @@
 						$this->connect();
 					}
 
+				//return if the table name is not set
+					if (empty($this->table)) {
+						return;
+					}
+
 				//sanitize the table name
 					//$this->table = self::sanitize($this->table); // no longer needed
 
 				//get the number of rows
 					$sql = "select count(*) as num_rows from ".$this->table." ";
-					if ($this->where) {
-						$i = 0;
-						if (is_array($this->where)) {
-							foreach($this->where as $row) {
-								//sanitize the name
-								$row['name'] = self::sanitize($row['name']);
+					$i = 0;
+					if (is_array($this->where)) {
+						foreach($this->where as $row) {
+							//sanitize the name
+							$row['name'] = self::sanitize($row['name']);
 
-								//validate the operator
-								switch ($row['operator']) {
-									case "<": break;
-									case ">": break;
-									case "<=": break;
-									case ">=": break;
-									case "=": break;
-									case "<>": break;
-									case "!=": break;
-									default:
-										//invalid operator
-										return -1;
-								}
-
-								//build the sql
-								if ($i == 0) {
-									$sql .= "where ".$row['name']." ".$row['operator']." :".$row['name']." ";
-								}
-								else {
-									$sql .= "and ".$row['name']." ".$row['operator']." :".$row['name']." ";
-								}
-
-								//add the name and value to the params array
-								$params[$row['name']] = $row['value'];
-
-								//increment $i
-								$i++;
+							//validate the operator
+							switch ($row['operator']) {
+								case "<": break;
+								case ">": break;
+								case "<=": break;
+								case ">=": break;
+								case "=": break;
+								case "<>": break;
+								case "!=": break;
+								default:
+									//invalid operator
+									return -1;
 							}
+
+							//build the sql
+							if ($i == 0) {
+								$sql .= "where ".$row['name']." ".$row['operator']." :".$row['name']." ";
+							}
+							else {
+								$sql .= "and ".$row['name']." ".$row['operator']." :".$row['name']." ";
+							}
+
+							//add the name and value to the params array
+							$params[$row['name']] = $row['value'];
+
+							//increment $i
+							$i++;
 						}
 					}
+
 					//unset($this->where); //should not be objects resposibility
 					$prep_statement = $this->db->prepare($sql);
 					if ($prep_statement) {
+						if (!isset($params)) { $params = null; }
 						$prep_statement->execute($params);
 						$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
 						if ($row['num_rows'] > 0) {
@@ -1515,9 +1515,8 @@
 						$message["message"] = "Bad Request";
 						$message["code"] = "400";
 						$message["error"]["message"] = $e->getMessage();
-						if ($this->debug["sql"]) {
-							$message["sql"] = $sql;
-						}
+						$message["sql"] = $sql;
+
 						if (is_array($parameters)) {
 							$message["parameters"] = $parameters;
 						}
@@ -1610,9 +1609,8 @@
 					$message["details"][$m]["name"] = $this->name;
 					$message["details"][$m]["message"] = "OK";
 					$message["details"][$m]["code"] = "200";
-					if ($this->debug["sql"]) {
-						$message["details"][$m]["sql"] = $sql;
-					}
+					$message["details"][$m]["sql"] = $sql;
+
 					$this->message = $message;
 					$this->result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 					unset($prep_statement);
@@ -1623,9 +1621,8 @@
 					$message["details"][$m]["name"] = $this->name;
 					$message["details"][$m]["message"] = $e->getMessage();
 					$message["details"][$m]["code"] = "400";
-					if ($this->debug["sql"]) {
-						$message["details"][$m]["sql"] = $sql;
-					}
+					$message["details"][$m]["sql"] = $sql;
+
 					$this->message = $message;
 					$this->result = '';
 					$m++;
@@ -2176,11 +2173,9 @@
 												$message["details"][$m]["message"] = "OK";
 												$message["details"][$m]["code"] = "200";
 												$message["details"][$m]["uuid"] = $parent_key_value;
-												if ($this->debug["sql"]) {
-													$message["details"][$m]["sql"] = $sql;
-													if (is_array($params)) {
-														$message["details"][$m]["params"] = $params;
-													}
+												$message["details"][$m]["sql"] = $sql;
+												if (is_array($params)) {
+													$message["details"][$m]["params"] = $params;
 												}
 												unset($params);
 												$this->message = $message;
@@ -2194,11 +2189,9 @@
 												$message["details"][$m]["message"] = $e->getMessage();
 												$message["details"][$m]["code"] = "400";
 												$message["details"][$m]["array"] = $array;
-												if ($this->debug["sql"]) {
-													$message["details"][$m]["sql"] = $sql;
-													if (is_array($params)) {
-														$message["details"][$m]["params"] = $params;
-													}
+												$message["details"][$m]["sql"] = $sql;
+												if (is_array($params)) {
+													$message["details"][$m]["params"] = $params;
 												}
 												unset($params);
 												$this->message = $message;
@@ -2282,11 +2275,9 @@
 												$message["details"][$m]["message"] = "OK";
 												$message["details"][$m]["code"] = "200";
 												$message["details"][$m]["uuid"] = $parent_key_value;
-												if ($this->debug["sql"]) {
-													$message["details"][$m]["sql"] = $sql;
-													if (is_array($params)) {
-														$message["details"][$m]["params"] = $params;
-													}
+												$message["details"][$m]["sql"] = $sql;
+												if (is_array($params)) {
+													$message["details"][$m]["params"] = $params;
 												}
 												unset($params);
 												$this->message = $message;
@@ -2300,11 +2291,9 @@
 												$message["details"][$m]["name"] = $this->name;
 												$message["details"][$m]["message"] = $e->getMessage();
 												$message["details"][$m]["code"] = "400";
-												if ($this->debug["sql"]) {
-													$message["details"][$m]["sql"] = $sql;
-													if (is_array($params)) {
-														$message["details"][$m]["params"] = $params;
-													}
+												$message["details"][$m]["sql"] = $sql;
+												if (is_array($params)) {
+													$message["details"][$m]["params"] = $params;
 												}
 												unset($params);
 												$this->message = $message;
@@ -2468,11 +2457,9 @@
 																	$message["details"][$m]["message"] = "OK";
 																	$message["details"][$m]["code"] = "200";
 																	$message["details"][$m]["uuid"] = $child_key_value;
-																	if ($this->debug["sql"]) {
-																		$message["details"][$m]["sql"] = $sql;
-																		if (is_array($params)) {
-																			$message["details"][$m]["params"] = $params;
-																		}
+																	$message["details"][$m]["sql"] = $sql;
+																	if (is_array($params)) {
+																		$message["details"][$m]["params"] = $params;
 																	}
 																	unset($params);
 																	$this->message = $message;
@@ -2487,11 +2474,9 @@
 																	$message["details"][$m]["name"] = $key;
 																	$message["details"][$m]["message"] = $e->getMessage();
 																	$message["details"][$m]["code"] = "400";
-																	if ($this->debug["sql"]) {
-																		$message["details"][$m]["sql"] = $sql;
-																		if (is_array($params)) {
-																			$message["details"][$m]["params"] = $params;
-																		}
+																	$message["details"][$m]["sql"] = $sql;
+																	if (is_array($params)) {
+																		$message["details"][$m]["params"] = $params;
 																	}
 																	unset($params);
 																	$this->message = $message;
@@ -2622,11 +2607,9 @@
 																$message["details"][$m]["message"] = "OK";
 																$message["details"][$m]["code"] = "200";
 																$message["details"][$m]["uuid"] = $child_key_value;
-																if ($this->debug["sql"]) {
-																	$message["details"][$m]["sql"] = $sql;
-																	if (is_array($params)) {
-																		$message["details"][$m]["params"] = $params;
-																	}
+																$message["details"][$m]["sql"] = $sql;
+																if (is_array($params)) {
+																	$message["details"][$m]["params"] = $params;
 																}
 																unset($params);
 																$this->message = $message;
@@ -2641,11 +2624,9 @@
 																$message["details"][$m]["name"] = $key;
 																$message["details"][$m]["message"] = $e->getMessage();
 																$message["details"][$m]["code"] = "400";
-																if ($this->debug["sql"]) {
-																	$message["details"][$m]["sql"] = $sql;
-																	if (is_array($params)) {
-																		$message["details"][$m]["params"] = $params;
-																	}
+																$message["details"][$m]["sql"] = $sql;
+																if (is_array($params)) {
+																	$message["details"][$m]["params"] = $params;
 																}
 																unset($params);
 																$this->message = $message;
