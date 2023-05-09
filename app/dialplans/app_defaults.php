@@ -24,6 +24,15 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
+//update dialplan details when group is null set to 0
+	if ($domains_processed == 1) {
+		//change dialplan context ${domain_name} to global
+		$sql = "update v_dialplan_details set dialplan_detail_group = '0' ";
+		$sql .= "where dialplan_detail_group is null;\n";
+		$database->execute($sql);
+		unset($sql);
+	}
+
 //get the $apps array from the installed apps from the core and mod directories
 	if ($domains_processed == 1) {
 
