@@ -675,7 +675,7 @@
 				//public $type;
 				//public $table;
 				//public $name;
-				
+
 				//initialize the array
 					$result = [];
 
@@ -924,7 +924,7 @@
 						foreach($this->fields as $name => $value) {
 							$name = self::sanitize($name);
 							if ($field_count == $i) {
-								if (!empty($value)) {
+								if (strlen($value) > 0) {
 									//$sql .= "'".$value."' ";
 									$sql .= ":".$name." \n";
 									$params[$name] = trim($value);
@@ -934,7 +934,7 @@
 								}
 							}
 							else {
-								if (!empty($value)) {
+								if (strlen($value) > 0) {
 									//$sql .= "'".$value."', ";
 									$sql .= ":".$name.", \n";
 									$params[$name] = trim($value);
@@ -992,7 +992,7 @@
 						foreach($this->fields as $name => $value) {
 							$name = self::sanitize($name);
 							if (count($this->fields) == $i) {
-								if (!empty($name) && $value == null) {
+								if (strlen($name) > 0 && $value == null) {
 									$sql .= $name." = null ";
 								}
 								else {
@@ -1002,7 +1002,7 @@
 								}
 							}
 							else {
-								if (!empty($name) && $value == null) {
+								if (strlen($name) > 0 && $value == null) {
 									$sql .= $name." = null, ";
 								}
 								else {
@@ -1185,7 +1185,7 @@
 									}
 								}
 							}
-							if (!empty($field_value)) {
+							if (strlen($field_value) > 0) {
 								$results = $this->execute($sql, $parameters, 'all');
 								unset($parameters);
 								if (is_array($results)) {
@@ -2021,7 +2021,7 @@
 								$parent_key_name = self::singular($this->name)."_uuid";
 								$parent_key_name = self::sanitize($parent_key_name);
 
-							//if the uuid is set then set parent key exists and value 
+							//if the uuid is set then set parent key exists and value
 								//determine if the parent_key_exists
 								$parent_key_exists = false;
 								if (isset($array[$parent_key_name])) {
@@ -2101,7 +2101,7 @@
 														$array_key = self::sanitize($array_key);
 														if ($array_key != 'insert_user' &&
 															$array_key != 'insert_date' &&
-															$array_key != 'update_user' && 
+															$array_key != 'update_user' &&
 															$array_key != 'update_date') {
 															$sql .= $array_key.", ";
 														}
@@ -2121,9 +2121,9 @@
 													if (!is_array($array_value)) {
 														if ($array_key != 'insert_user' &&
 															$array_key != 'insert_date' &&
-															$array_key != 'update_user' && 
+															$array_key != 'update_user' &&
 															$array_key != 'update_date') {
-															if (empty($array_value)) {
+															if (strlen($array_value) == 0) {
 																$sql .= "null, ";
 															}
 															elseif ($array_value === "now()") {
@@ -2221,7 +2221,7 @@
 												foreach ($array as $array_key => $array_value) {
 													if (!is_array($array_value) && $array_key != $parent_key_name) {
 														$array_key = self::sanitize($array_key);
-														if (empty($array_value)) {
+														if (strlen($array_value) == 0) {
 															$sql .= $array_key." = null, ";
 														}
 														elseif ($array_value === "now()") {
@@ -2335,7 +2335,7 @@
 														$uuid_exists = false;
 														if (is_array($row)) foreach ($row as $k => $v) {
 															if ($child_key_name == $k) {
-																if (!empty($v)) {
+																if (strlen($v) > 0) {
 																	$child_key_value = trim($v);
 																	$uuid_exists = true;
 																	break;
@@ -2407,7 +2407,7 @@
 																	foreach ($row as $k => $v) {
 																		if (!is_array($v) && ($k != $parent_key_name || $k != $child_key_name)) {
 																			$k = self::sanitize($k);
-																			if (empty($v)) {
+																			if (strlen($v) == 0) {
 																				$sql .= $k." = null, ";
 																			}
 																			elseif ($v === "now()") {
@@ -2486,7 +2486,7 @@
 															else {
 																$retval = false;
 																$message["name"] = $child_name;
-																$message["message"] = "Forbidden, does not have '{$child_name}_edit'";
+																$message["message"] = "Forbidden, does not have '".$child_name."_edit'";
 																$message["code"] = "403";
 																$message["line"] = __line__;
 																$this->message = $message;
@@ -2504,7 +2504,7 @@
 															if (is_array($row)) {
 																foreach ($row as $k => $v) {
 																	if ($k == $parent_key_name) {
-																		$parent_key_exists = true; 
+																		$parent_key_exists = true;
 																	}
 																	if ($k == $child_key_name) {
 																		$child_key_exists = true;
@@ -2530,7 +2530,7 @@
 																		$k = self::sanitize($k);
 																		if ($k != 'insert_user' &&
 																		$k != 'insert_date' &&
-																		$k != 'update_user' && 
+																		$k != 'update_user' &&
 																		$k != 'update_date') {
 																			$sql .= $k.", ";
 																		}
@@ -2553,9 +2553,9 @@
 																	if (!is_array($v)) {
 																		if ($k != 'insert_user' &&
 																			$k != 'insert_date' &&
-																			$k != 'update_user' && 
+																			$k != 'update_user' &&
 																			$k != 'update_date') {
-																			if (empty($v)) {
+																			if (strlen($v) == 0) {
 																				$sql .= "null, ";
 																			}
 																			elseif ($v === "now()") {
@@ -2573,7 +2573,7 @@
 																				$k = self::sanitize($k);
 																				if ($k != 'insert_user' &&
 																				$k != 'insert_date' &&
-																				$k != 'update_user' && 
+																				$k != 'update_user' &&
 																				$k != 'update_date') {
 																					$sql .= ':'.$k.", ";
 																					$params[$k] = trim($v);
@@ -2636,7 +2636,7 @@
 														else {
 															$retval = false;
 															$message["name"] = $child_name;
-															$message["message"] = "Forbidden, does not have '{$child_name}_add'";
+															$message["message"] = "Forbidden, does not have '".$child_name."_add'";
 															$message["code"] = "403";
 															$message["line"] = __line__;
 															$this->message = $message;
