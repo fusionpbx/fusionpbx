@@ -88,6 +88,9 @@
 	$object = new token;
 	$domain_json_token = $object->create('/core/domains/domain_json.php');
 
+//set the variable
+	$logo = '';
+
 //set template variables
 
 	//add translations
@@ -143,15 +146,15 @@
 				}
 
 			//pre-process some settings
-				$settings['theme']['favicon'] = $settings['theme']['favicon'] != '' ? $settings['theme']['favicon'] : PROJECT_PATH.'/themes/default/favicon.ico';
-				$settings['theme']['font_loader_version'] = $settings['theme']['font_loader_version'] != '' ? urlencode($settings['theme']['font_loader_version']) : '1';
-				$settings['theme']['message_delay'] = is_numeric($settings['theme']['message_delay']) ? 1000 * (float) $settings['theme']['message_delay'] : 3000;
-				$settings['theme']['menu_side_width_contracted'] = is_numeric($settings['theme']['menu_side_width_contracted']) ? $settings['theme']['menu_side_width_contracted'] : '60';
-				$settings['theme']['menu_side_width_expanded'] = is_numeric($settings['theme']['menu_side_width_expanded']) ? $settings['theme']['menu_side_width_expanded'] : '225';
-				$settings['theme']['menu_side_toggle_hover_delay_expand'] = is_numeric($settings['theme']['menu_side_toggle_hover_delay_expand']) ? $settings['theme']['menu_side_toggle_hover_delay_expand'] : '300';
-				$settings['theme']['menu_side_toggle_hover_delay_contract'] = is_numeric($settings['theme']['menu_side_toggle_hover_delay_contract']) ? $settings['theme']['menu_side_toggle_hover_delay_contract'] : '1000';
-				$settings['theme']['menu_style'] = $settings['theme']['menu_style'] != '' ? $settings['theme']['menu_style'] : 'fixed';
-				$settings['theme']['menu_position'] = $settings['theme']['menu_position'] != '' ? $settings['theme']['menu_position'] : 'top';
+				$settings['theme']['favicon'] = !empty($settings['theme']['favicon']) ? $settings['theme']['favicon'] : PROJECT_PATH.'/themes/default/favicon.ico';
+				$settings['theme']['font_loader_version'] = !empty($settings['theme']['font_loader_version']) ? urlencode($settings['theme']['font_loader_version']) : '1';
+				$settings['theme']['message_delay'] = isset($settings['theme']['message_delay']) ? 1000 * (float) $settings['theme']['message_delay'] : 3000;
+				$settings['theme']['menu_side_width_contracted'] = isset($settings['theme']['menu_side_width_contracted']) ? $settings['theme']['menu_side_width_contracted'] : '60';
+				$settings['theme']['menu_side_width_expanded'] = isset($settings['theme']['menu_side_width_expanded']) ? $settings['theme']['menu_side_width_expanded'] : '225';
+				$settings['theme']['menu_side_toggle_hover_delay_expand'] = isset($settings['theme']['menu_side_toggle_hover_delay_expand']) ? $settings['theme']['menu_side_toggle_hover_delay_expand'] : '300';
+				$settings['theme']['menu_side_toggle_hover_delay_contract'] = isset($settings['theme']['menu_side_toggle_hover_delay_contract']) ? $settings['theme']['menu_side_toggle_hover_delay_contract'] : '1000';
+				$settings['theme']['menu_style'] = !empty($settings['theme']['menu_style']) ? $settings['theme']['menu_style'] : 'fixed';
+				$settings['theme']['menu_position'] = isset($settings['theme']['menu_position']) ? $settings['theme']['menu_position'] : 'top';
 				$settings['theme']['footer'] = isset($settings['theme']['footer']) ? $settings['theme']['footer'] : '&copy; '.$text['theme-label-copyright'].' 2008 - '.date('Y')." <a href='http://www.fusionpbx.com' class='footer' target='_blank'>fusionpbx.com</a> ".$text['theme-label-all_rights_reserved'];
 
 			//assign the setings
@@ -182,9 +185,9 @@
 	//domain count
 		$view->assign('domain_count', is_array($_SESSION['domains']) ? sizeof($_SESSION['domains']) : 0);
 	//domain selector row background colors
-		$view->assign('domain_selector_background_color_1', $_SESSION['theme']['domain_inactive_background_color'][0] != '' ? $_SESSION['theme']['domain_inactive_background_color'][0] : '#eaedf2');
-		$view->assign('domain_selector_background_color_2', $_SESSION['theme']['domain_inactive_background_color'][1] != '' ? $_SESSION['theme']['domain_inactive_background_color'][1] : '#ffffff');
-		$view->assign('domain_active_background_color', $_SESSION['theme']['domain_active_background_color']['text'] != '' ? $_SESSION['theme']['domain_active_background_color']['text'] : '#eeffee');
+		$view->assign('domain_selector_background_color_1', !empty($_SESSION['theme']['domain_inactive_background_color'][0]) != '' ? $_SESSION['theme']['domain_inactive_background_color'][0] : '#eaedf2');
+		$view->assign('domain_selector_background_color_2', !empty($_SESSION['theme']['domain_inactive_background_color'][1]) != '' ? $_SESSION['theme']['domain_inactive_background_color'][1] : '#ffffff');
+		$view->assign('domain_active_background_color', !empty($_SESSION['theme']['domain_active_background_color']['text']) ? $_SESSION['theme']['domain_active_background_color']['text'] : '#eeffee');
 	//domain list
 		$view->assign('domains', $_SESSION['domains']);
 	//domain uuid
@@ -269,8 +272,8 @@
 		$view->assign('login_logo_source', $login_logo_source);
 		$view->assign('login_logo_width', $login_logo_width);
 		$view->assign('login_logo_height', $login_logo_height);
-	//login page
-		$view->assign('login_page', $login_page);
+//login page
+	//$view->assign('login_page', $login_page);
 	//messages
 		$view->assign('messages', message::html(true, '		'));
 	//session timer
