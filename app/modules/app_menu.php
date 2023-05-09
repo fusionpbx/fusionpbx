@@ -3,7 +3,7 @@
 	$y=0;
 	$apps[$x]['menu'][$y]['title']['en-us'] = "Modules";
 	$apps[$x]['menu'][$y]['title']['en-gb'] = "Modules";
-	$apps[$x]['menu'][$y]['title']['ar-eg'] = "Modules";
+	$apps[$x]['menu'][$y]['title']['ar-eg'] = "الوحدات";
 	$apps[$x]['menu'][$y]['title']['de-at'] = "Module";
 	$apps[$x]['menu'][$y]['title']['de-de'] = "Module";
 	$apps[$x]['menu'][$y]['title']['el-gr'] = "Πρόσθετα";
@@ -17,7 +17,7 @@
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Moduły";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Módulos";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Modulos";
-	$apps[$x]['menu'][$y]['title']['ro-ro'] = "";
+	$apps[$x]['menu'][$y]['title']['ro-ro'] = "Module";
 	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Модули";
 	$apps[$x]['menu'][$y]['title']['sv-se'] = "Moduler";
 	$apps[$x]['menu'][$y]['title']['uk-ua'] = "Модулі";

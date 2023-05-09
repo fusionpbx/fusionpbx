@@ -20,9 +20,9 @@ $text['title-tones']['ro-ro'] = "Tonuri";
 $text['title-tones']['ru-ru'] = "Тон";
 $text['title-tones']['sv-se'] = "Toner";
 $text['title-tones']['uk-ua'] = "Тон";
-$text['title-tones']['zh-cn'] = "厕所";
+$text['title-tones']['zh-cn'] = "音调";
 $text['title-tones']['ja-jp'] = "トーン";
-$text['title-tones']['ko-kr'] = "토네스";
+$text['title-tones']['ko-kr'] = "톤";
 
 $text['label-tone']['en-us'] = "Tone";
 $text['label-tone']['en-gb'] = "Tone";
@@ -44,9 +44,9 @@ $text['label-tone']['ro-ro'] = "Ton";
 $text['label-tone']['ru-ru'] = "Тон";
 $text['label-tone']['sv-se'] = "Ton";
 $text['label-tone']['uk-ua'] = "Тон";
-$text['label-tone']['zh-cn'] = "页: 1";
-$text['label-tone']['ja-jp'] = "トーン";
-$text['label-tone']['ko-kr'] = "이름 *";
+$text['label-tone']['zh-cn'] = "语气";
+$text['label-tone']['ja-jp'] = "調子";
+$text['label-tone']['ko-kr'] = "음정";
 
 $text['label-tones']['en-us'] = "Tones";
 $text['label-tones']['en-gb'] = "Tones";
@@ -68,8 +68,8 @@ $text['label-tones']['ro-ro'] = "Tonuri";
 $text['label-tones']['ru-ru'] = "Тон";
 $text['label-tones']['sv-se'] = "Toner";
 $text['label-tones']['uk-ua'] = "Тон";
-$text['label-tones']['zh-cn'] = "厕所";
+$text['label-tones']['zh-cn'] = "音调";
 $text['label-tones']['ja-jp'] = "トーン";
-$text['label-tones']['ko-kr'] = "토네스";
+$text['label-tones']['ko-kr'] = "톤";
 
 ?>

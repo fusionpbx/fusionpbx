@@ -3,7 +3,7 @@
 	$y=0;
 	$apps[$x]['menu'][$y]['title']['en-us'] = "Call Detail Records";
 	$apps[$x]['menu'][$y]['title']['en-gb'] = "Call Detail Records";
-	$apps[$x]['menu'][$y]['title']['ar-eg'] = "Call Detail Records";
+	$apps[$x]['menu'][$y]['title']['ar-eg'] = "سجلات تفاصيل المكالمات";
 	$apps[$x]['menu'][$y]['title']['de-at'] = "Meine Gespräche";
 	$apps[$x]['menu'][$y]['title']['de-de'] = "Meine Gespräche";
 	$apps[$x]['menu'][$y]['title']['es-cl'] = "Registro de detalle de llamada";
@@ -16,13 +16,13 @@
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Wykaz rozmów";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Detalhes das gravações de voz";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Detalhes das Gravações de Voz";
-	$apps[$x]['menu'][$y]['title']['ro-ro'] = "";
+	$apps[$x]['menu'][$y]['title']['ro-ro'] = "Înregistrări de detalii apel";
 	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Детализация вызовов";
 	$apps[$x]['menu'][$y]['title']['sv-se'] = "Detaljerad Samtalsinformation";
 	$apps[$x]['menu'][$y]['title']['uk-ua'] = "Деталізація дзвінків";
 	$apps[$x]['menu'][$y]['title']['zh-cn'] = "通话详情记录";
 	$apps[$x]['menu'][$y]['title']['ja-jp'] = "コール詳細レコード";
-	$apps[$x]['menu'][$y]['title']['ko-kr'] = "연락처";
+	$apps[$x]['menu'][$y]['title']['ko-kr'] = "통화 내역 기록";
 	$apps[$x]['menu'][$y]['uuid'] = "8f80e71a-31a5-6432-47a0-7f5a7b271f05";
 	$apps[$x]['menu'][$y]['parent_uuid'] = "fd29e39c-c936-f5fc-8e2b-611681b266b5";
 	$apps[$x]['menu'][$y]['category'] = "internal";

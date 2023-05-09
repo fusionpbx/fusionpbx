@@ -17,7 +17,7 @@
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Centrum Konferencyjne";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Centro de Conferência";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Conferencias";
-	$apps[$x]['menu'][$y]['title']['ro-ro'] = "";
+	$apps[$x]['menu'][$y]['title']['ro-ro'] = "Centre de conferințe";
 	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Конференц-центр";
 	$apps[$x]['menu'][$y]['title']['sv-se'] = "Konferenscenter";
 	$apps[$x]['menu'][$y]['title']['uk-ua'] = "Конференц-центр";
@@ -48,7 +48,7 @@
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Centrum Konferencyjne";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Centro de Conferência";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Conferencias";
-	$apps[$x]['menu'][$y]['title']['ro-ro'] = "";
+	$apps[$x]['menu'][$y]['title']['ro-ro'] = "Centre de conferințe";
 	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Конференц-центр";
 	$apps[$x]['menu'][$y]['title']['sv-se'] = "Konferenscenter";
 	$apps[$x]['menu'][$y]['title']['uk-ua'] = "Конференц-центр";

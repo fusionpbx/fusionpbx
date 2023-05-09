@@ -16,13 +16,13 @@
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Ustawienia";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Definições";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Definições";
-	$apps[$x]['menu'][$y]['title']['ro-ro'] = "";
+	$apps[$x]['menu'][$y]['title']['ro-ro'] = "Setări";
 	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Конфигурация";
 	$apps[$x]['menu'][$y]['title']['sv-se'] = "Inställningar";
 	$apps[$x]['menu'][$y]['title']['uk-ua'] = "Налаштування";
-	$apps[$x]['menu'][$y]['title']['zh-cn'] = "背景";
-	$apps[$x]['menu'][$y]['title']['ja-jp'] = "コンテンツ";
-	$apps[$x]['menu'][$y]['title']['ko-kr'] = "계정 설정";
+	$apps[$x]['menu'][$y]['title']['zh-cn'] = "设置";
+	$apps[$x]['menu'][$y]['title']['ja-jp'] = "設定";
+	$apps[$x]['menu'][$y]['title']['ko-kr'] = "설정";
 	$apps[$x]['menu'][$y]['uuid'] = "148ea42a-3711-3d64-181b-07a6a3c3ed60";
 	$apps[$x]['menu'][$y]['parent_uuid'] = "594d99c5-6128-9c88-ca35-4b33392cec0f";
 	$apps[$x]['menu'][$y]['category'] = "internal";
