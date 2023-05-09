@@ -30,15 +30,17 @@
 	set_include_path($conf['document.root']);
 
 //set the server variables and define project path constant
-	$_SERVER["DOCUMENT_ROOT"] = $conf['document.root'];
-	$_SERVER["PROJECT_PATH"]  = $conf['project.path'];
-	if (isset($conf['project.path'])) {
-		$_SERVER["PROJECT_ROOT"] = $conf['document.root'].$conf['project.path'];
-	}
-	else {
-		$_SERVER["PROJECT_ROOT"] = $conf['document.root'];
-	}
-	define("PROJECT_PATH", $conf['project.path']);
+        $_SERVER["DOCUMENT_ROOT"] = $conf['document.root'];
+        $_SERVER["PROJECT_ROOT"] = $conf['document.root'];
+        if (isset($conf['project.path'])) {
+                $_SERVER["PROJECT_ROOT"] = $conf['document.root'].'/'.$conf['project.path'];
+                define("PROJECT_ROOT", $conf['document.root'].'/'.$conf['project.path']);
+                define("PROJECT_PATH", $conf['project.path']);
+        }
+        else {
+                define("PROJECT_ROOT", $conf['document.root']);
+                define("PROJECT_PATH", $conf['document.root']);
+        }
 
 //set the error reporting
 	ini_set('display_errors', '1');
