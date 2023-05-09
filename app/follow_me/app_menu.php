@@ -14,7 +14,7 @@
 	$apps[$x]['menu'][$y]['title']['he-il'] = "עקבו אחרי me";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Seguimi";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Volg me";
-	$apps[$x]['menu'][$y]['title']['pl-pl'] = "mi się mi mi mi mi mi mi mi mi";
+	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Chodź za mną";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Siga-me";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Siga-me";
 	$apps[$x]['menu'][$y]['title']['ro-ro'] = "Urmați-mă";
