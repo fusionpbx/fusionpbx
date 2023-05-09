@@ -26,6 +26,9 @@
 
 if ($domains_processed == 1) {
 
+	//remove smarty cache
+		system('rm '.sys_get_temp_dir().'/*.php');
+
 	//ensure the login message is set, if new message exists
 		$sql = "select count(*) as num_rows from v_default_settings ";
 		$sql .= "where default_setting_category = 'login' ";
