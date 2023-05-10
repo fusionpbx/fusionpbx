@@ -244,7 +244,7 @@
 		foreach($dashboard as $row) {
 			$dashboard_name = strtolower($row['dashboard_name']);
 			$dashboard_name = str_replace(" ", "_", $dashboard_name);
-			if (is_numeric($dashboard_column_span)) {
+			if (isset($dashboard_column_span) && is_numeric($dashboard_column_span)) {
 				echo "#".$dashboard_name." {\n";
 				echo "	grid-column: span 1;\n";
 				echo "}\n";
