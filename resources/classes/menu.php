@@ -942,7 +942,7 @@ https://www.fusionpbx.com/app/pages/page.php?id=f48cceb2-5e31-47c2-a84a-8f45d805
 				if ($menu_brand) {
 					//define menu brand mark
 						$menu_brand_text = (!empty($_SESSION['theme']['menu_brand_text']['text'])) ? escape($_SESSION['theme']['menu_brand_text']['text']) : "FusionPBX";
-						switch ($_SESSION['theme']['menu_brand_type']['text']) {
+						switch ($_SESSION['theme']['menu_brand_type']['text'] ?? null) {
 							case 'text':
 								$html .= "			<a class='navbar-brand-text' href='".PROJECT_PATH."/'>".$menu_brand_text."</a>\n";
 								break;
@@ -960,7 +960,7 @@ https://www.fusionpbx.com/app/pages/page.php?id=f48cceb2-5e31-47c2-a84a-8f45d805
 								break;
 							case 'image':
 							default:
-								$menu_brand_image = ($_SESSION['theme']['menu_brand_image']['text'] != '') ? escape($_SESSION['theme']['menu_brand_image']['text']) : PROJECT_PATH."/themes/default/images/logo.png";
+								$menu_brand_image = !empty($_SESSION['theme']['menu_brand_image']['text']) ? escape($_SESSION['theme']['menu_brand_image']['text']) : PROJECT_PATH."/themes/default/images/logo.png";
 								$html .= "			<a href='".PROJECT_PATH."/'>";
 								$html .= "				<img id='menu_brand_image' class='navbar-logo' src='".$menu_brand_image."' title=\"".escape($menu_brand_text)."\">";
 								if (isset($_SESSION['theme']['menu_brand_image_hover']['text']) && $_SESSION['theme']['menu_brand_image_hover']['text'] != '') {
@@ -1048,7 +1048,7 @@ https://www.fusionpbx.com/app/pages/page.php?id=f48cceb2-5e31-47c2-a84a-8f45d805
 						$html .= "		</li>\n";
 					}
 				//logout icon
-					if (isset($_SESSION['username']) && $_SESSION['username'] != '' && $_SESSION['theme']['logout_icon_visible']['text'] == "true") {
+					if (isset($_SESSION['username']) && $_SESSION['username'] != '' && isset($_SESSION['theme']['logout_icon_visible']) && $_SESSION['theme']['logout_icon_visible']['text'] == "true") {
 						$username_full = $_SESSION['username'].((count($_SESSION['domains']) > 1) ? "@".$_SESSION["user_context"] : null);
 						$html .= "		<li class='nav-item'>\n";
 						$html .= "			<a class='logout_icon' href='#' title=\"".$this->text['theme-label-logout']."\" onclick=\"modal_open('modal-logout','btn_logout');\"><span class='fas fa-sign-out-alt'></span></a>";
@@ -1062,7 +1062,7 @@ https://www.fusionpbx.com/app/pages/page.php?id=f48cceb2-5e31-47c2-a84a-8f45d805
 				$html .= "</nav>\n";
 
 				//modal for logout icon (above)
-					if (isset($_SESSION['username']) && $_SESSION['username'] != '' && $_SESSION['theme']['logout_icon_visible']['text'] == "true") {
+					if (isset($_SESSION['username']) && $_SESSION['username'] != '' && isset($_SESSION['theme']['logout_icon_visible']) && $_SESSION['theme']['logout_icon_visible']['text'] == "true") {
 						$html .= modal::create(['id'=>'modal-logout','type'=>'general','message'=>$this->text['theme-confirm-logout'],'actions'=>button::create(['type'=>'button','label'=>$this->text['theme-label-logout'],'icon'=>'sign-out-alt','id'=>'btn_logout','style'=>'float: right; margin-left: 15px;','collapse'=>'never','link'=>PROJECT_PATH.'/logout.php','onclick'=>"modal_close();"])]);
 					}
 
