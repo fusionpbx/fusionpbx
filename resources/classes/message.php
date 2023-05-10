@@ -46,21 +46,23 @@ if (!class_exists('message')) {
 		}
 
 		static function count() {
-			return is_array($_SESSION["messages"]) ? sizeof($_SESSION["messages"]) : 0;
+			return isset($_SESSION["messages"]) && is_array($_SESSION["messages"]) ? sizeof($_SESSION["messages"]) : 0;
 		}
 
 		static function html($clear_messages = true, $spacer = "") {
 			$html = "{$spacer}//render the messages\n";
 			$spacer .="\t";
-			if (is_string($_SESSION['message']) && !empty(trim($_SESSION['message']))) {
-				self::add($_SESSION['message'], $_SESSION['message_mood'], $_SESSION['message_delay']);
-				unset($_SESSION['message'], $_SESSION['message_mood'], $_SESSION['message_delay']);
-			}
-			if (is_array($_SESSION['messages']) && count($_SESSION['messages']) > 0 ) {
-				foreach ($_SESSION['messages'] as $message_mood => $message) {
-					$message_text = str_replace(array("\r\n", "\n", "\r"),'\\n',addslashes(join('<br/>', $message['message'])));
-					$message_delay = array_sum($message['delay'])/count($message['delay']);
-					$html .= "{$spacer}display_message('$message_text', '$message_mood', '$message_delay');\n";
+			if (isset($_SESSION['message'])) {
+				if (is_string($_SESSION['message']) && !empty(trim($_SESSION['message']))) {
+					self::add($_SESSION['message'], $_SESSION['message_mood'], $_SESSION['message_delay']);
+					unset($_SESSION['message'], $_SESSION['message_mood'], $_SESSION['message_delay']);
+				}
+				if (is_array($_SESSION['messages']) && count($_SESSION['messages']) > 0 ) {
+					foreach ($_SESSION['messages'] as $message_mood => $message) {
+						$message_text = str_replace(array("\r\n", "\n", "\r"),'\\n',addslashes(join('<br/>', $message['message'])));
+						$message_delay = array_sum($message['delay'])/count($message['delay']);
+						$html .= "{$spacer}display_message('$message_text', '$message_mood', '$message_delay');\n";
+					}
 				}
 			}
 			if ($clear_messages) {
