@@ -152,6 +152,7 @@
 						}
 						else {
 							$x = 0;
+							$sql_where = '';
 							foreach($voicemail_ids as $voicemail_id) {
 								$sql_where_or[] = "voicemail_id = :voicemail_id_".$x;
 								$parameters['voicemail_id_'.$x] = $voicemail_id;
