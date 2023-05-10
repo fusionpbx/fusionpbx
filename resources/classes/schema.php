@@ -190,7 +190,7 @@ if (!class_exists('schema')) {
 
 		//get the table information
 			public function table_info($db_name, $table_name) {
-				if (strlen($table_name) == 0) { return false; }
+				if (empty($table_name)) { return false; }
 				if ($this->db_type == "sqlite") {
 					$sql = "PRAGMA table_info(".$table_name.");";
 				}
@@ -252,7 +252,7 @@ if (!class_exists('schema')) {
 
 		//database table information
 			private function db_table_info($db_name, $db_type, $table_name) {
-				if (strlen($table_name) == 0) { return false; }
+				if (empty($table_name)) { return false; }
 				if ($db_type == "sqlite") {
 					$sql = "PRAGMA table_info(".$table_name.");";
 				}
@@ -564,7 +564,7 @@ if (!class_exists('schema')) {
 									$table_name = $row['table'];
 								}
 							}
-							if (strlen($table_name) > 0) {
+							if (!empty($table_name)) {
 
 								//check if the table exists
 									if ($this->db_table_exists($db_type, $db_name, $table_name)) {
@@ -585,7 +585,7 @@ if (!class_exists('schema')) {
 											else {
 												$field_name = $field['name'];
 											}
-											if (strlen($field_name) > 0) {
+											if (!empty($field_name)) {
 												if ($this->db_column_exists ($db_type, $db_name, $table_name, $field_name)) {
 													//found
 													$apps[$x]['db'][$y]['fields'][$z]['exists'] = 'true';
@@ -690,7 +690,7 @@ if (!class_exists('schema')) {
 														$db_field_type = $this->db_column_data_type ($db_type, $db_name, $table_name, $field_name);
 														$field_type_array = explode("(", $field_type);
 														$field_type = $field_type_array[0];
-														if (trim($db_field_type) != trim($field_type) && strlen($db_field_type) > 0) {
+														if (trim($db_field_type) != trim($field_type) && !empty($db_field_type)) {
 															if ($db_type == "pgsql") {
 																if (strtolower($field_type) == "uuid") {
 																	$sql_update .= "ALTER TABLE ".$table_name." ALTER COLUMN ".$field_name." TYPE uuid USING\n";
@@ -790,7 +790,7 @@ if (!class_exists('schema')) {
 						//start the table
 							$response .= "<table width='100%' border='0' cellpadding='20' cellspacing='0'>\n";
 						//show the changes
-							if (strlen($sql_update) > 0) {
+							if (!empty($sql_update)) {
 								$response .= "<tr>\n";
 								$response .= "<td class='row_style1' colspan='3'>\n";
 								$response .= "<br />\n";
@@ -887,7 +887,7 @@ if (!class_exists('schema')) {
 
 					//loop line by line through all the lines of sql code
 						$x = 0;
-						if (strlen($sql_update) == 0 && $format == "text") {
+						if (empty($sql_update) && $format == "text") {
 							$response .= "	".$text['label-schema'].":			".$text['label-no_change']."\n";
 						}
 						else {

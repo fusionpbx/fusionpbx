@@ -84,7 +84,7 @@
 	}
 
 //process the user data and save it to the database
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 		//validate the token
 			$token = new token;
 			if (!$token->validate($_SERVER['PHP_SELF'])) {
@@ -94,7 +94,7 @@
 			}
 
 		//process the http post data by submitted action
-			if ($_POST['action'] != '' && strlen($_POST['action']) > 0) {
+			if ($_POST['action'] != '' && !empty($_POST['action'])) {
 
 				//prepare the array(s)
 				//send the array to the database class
@@ -128,13 +128,13 @@
 
 		//check for all required data
 			$msg = '';
-			//if (strlen($dashboard_name) == 0) { $msg .= $text['message-required']." ".$text['label-dashboard_name']."<br>\n"; }
-			//if (strlen($dashboard_path) == 0) { $msg .= $text['message-required']." ".$text['label-dashboard_path']."<br>\n"; }
-			//if (strlen($dashboard_groups) == 0) { $msg .= $text['message-required']." ".$text['label-dashboard_groups']."<br>\n"; }
-			//if (strlen($dashboard_order) == 0) { $msg .= $text['message-required']." ".$text['label-dashboard_order']."<br>\n"; }
-			//if (strlen($dashboard_enabled) == 0) { $msg .= $text['message-required']." ".$text['label-dashboard_enabled']."<br>\n"; }
-			//if (strlen($dashboard_description) == 0) { $msg .= $text['message-required']." ".$text['label-dashboard_description']."<br>\n"; }
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+			//if (empty($dashboard_name)) { $msg .= $text['message-required']." ".$text['label-dashboard_name']."<br>\n"; }
+			//if (empty($dashboard_path)) { $msg .= $text['message-required']." ".$text['label-dashboard_path']."<br>\n"; }
+			//if (empty($dashboard_groups)) { $msg .= $text['message-required']." ".$text['label-dashboard_groups']."<br>\n"; }
+			//if (empty($dashboard_order)) { $msg .= $text['message-required']." ".$text['label-dashboard_order']."<br>\n"; }
+			//if (empty($dashboard_enabled)) { $msg .= $text['message-required']." ".$text['label-dashboard_enabled']."<br>\n"; }
+			//if (empty($dashboard_description)) { $msg .= $text['message-required']." ".$text['label-dashboard_description']."<br>\n"; }
+			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -283,7 +283,7 @@
 	if (is_array($dashboard_groups) && sizeof($dashboard_groups) != 0) {
 		$assigned_groups = array();
 		foreach ($dashboard_groups as $field) {
-			if (strlen($field['group_name']) > 0) {
+			if (!empty($field['group_name'])) {
 				if (is_uuid($field['group_uuid'])) {
 					$assigned_groups[] = $field['group_uuid'];
 				}
@@ -356,7 +356,7 @@
 	if (is_array($dashboard_groups) && sizeof($dashboard_groups) != 0) {
 		echo "<table cellpadding='0' cellspacing='0' border='0'>\n";
 		foreach($dashboard_groups as $field) {
-			if (strlen($field['group_name']) > 0) {
+			if (!empty($field['group_name'])) {
 				echo "<tr>\n";
 				echo "	<td class='vtable' style='white-space: nowrap; padding-right: 30px;' nowrap='nowrap'>\n";
 				echo $field['group_name'].(($field['group_domain_uuid'] != '') ? "@".$_SESSION['domains'][$field['group_domain_uuid']]['domain_name'] : null);

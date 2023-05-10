@@ -79,16 +79,8 @@
 	$order = $_GET["order"];
 
 //add the search term
-	$search = strtolower($_GET["search"]);
-	if (strlen($search) > 0) {
-		$sql_search = " (";
-		$sql_search .= "	lower(broadcast_name) like :search ";
-		$sql_search .= "	or lower(broadcast_description) like :search ";
-		$sql_search .= "	or lower(broadcast_caller_id_name) like :search ";
-		$sql_search .= "	or lower(broadcast_caller_id_number) like :search ";
-		$sql_search .= "	or lower(broadcast_phone_numbers) like :search ";
-		$sql_search .= ") ";
-		$parameters['search'] = '%'.$search.'%';
+	if (!empty($_GET["search"])) {
+		$search = strtolower($_GET["search"]);
 	}
 
 //get the count
@@ -98,27 +90,56 @@
 		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	}
-	if (isset($sql_search)) {
-		$sql .= "and ".$sql_search;
+	if (isset($search)) {
+		$sql .= "and (";
+		$sql .= "	lower(broadcast_name) like :search ";
+		$sql .= "	or lower(broadcast_description) like :search ";
+		$sql .= "	or lower(broadcast_caller_id_name) like :search ";
+		$sql .= "	or lower(broadcast_caller_id_number) like :search ";
+		$sql .= "	or lower(broadcast_phone_numbers) like :search ";
+		$sql .= ") ";
+		$parameters['search'] = '%'.$search.'%';
 	}
 	$database = new database;
 	$num_rows = $database->select($sql, $parameters, 'column');
 
 //prepare the paging
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
-	$param = "&search=".urlencode($search);
+	if (isset($search)) {
+		$param = "&search=".urlencode($search);
+	}
 	if ($_GET['show'] == "all" && permission_exists('call_broadcast_all')) {
 		$param .= "&show=all";
 	}
 	$page = $_GET['page'];
-	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
+	if (empty($page)) { $page = 0; $_GET['page'] = 0; }
 	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
 	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
 
 //get the call broadcasts
-	$sql = str_replace('count(*)','*', $sql);
-	$sql .= order_by($order_by, $order);
+	$sql = "select call_broadcast_uuid, domain_uuid, broadcast_name ";
+	$sql .= "broadcast_description, broadcast_start_time, broadcast_timeout, ";
+	$sql .= "broadcast_concurrent_limit, recording_uuid, broadcast_caller_id_name, ";
+	$sql .= "broadcast_caller_id_number, broadcast_destination_type, broadcast_phone_numbers, ";
+	$sql .= "broadcast_avmd, broadcast_destination_data, broadcast_accountcode, broadcast_toll_allow ";
+	$sql .= "from v_call_broadcasts ";
+	$sql .= "where true ";
+	if ($_GET['show'] != "all" || !permission_exists('call_broadcast_all')) {
+		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	}
+	if (!empty($_GET["search"])) {
+		$sql .= "and (";
+		$sql .= "	lower(broadcast_name) like :search ";
+		$sql .= "	or lower(broadcast_description) like :search ";
+		$sql .= "	or lower(broadcast_caller_id_name) like :search ";
+		$sql .= "	or lower(broadcast_caller_id_number) like :search ";
+		$sql .= "	or lower(broadcast_phone_numbers) like :search ";
+		$sql .= ") ";
+		$parameters['search'] = '%'.$search.'%';
+	}
+	$sql .= order_by($order_by, $order, 'broadcast_name', 'asc');
 	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;
 	$result = $database->select($sql, $parameters, 'all');
@@ -151,7 +172,7 @@
 			echo "		<input type='hidden' name='show' value='all'>";
 		}
 		else {
-			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$_SESSION['theme']['button_icon_all'],'link'=>'?type='.urlencode($destination_type).'&show=all'.($search != '' ? "&search=".urlencode($search) : null)]);
+			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$_SESSION['theme']['button_icon_all'],'link'=>'?type='.urlencode($destination_type ?? '').'&show=all'.($search != '' ? "&search=".urlencode($search ?? '') : null)]);
 		}
 	}
 	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=''>";
@@ -212,7 +233,7 @@
 				echo "	</td>\n";
 			}
 			if ($_GET['show'] == "all" && permission_exists('call_broadcast_all')) {
-				if (strlen($_SESSION['domains'][$row['domain_uuid']]['domain_name']) > 0) {
+				if (!empty($_SESSION['domains'][$row['domain_uuid']]['domain_name'])) {
 					$domain = $_SESSION['domains'][$row['domain_uuid']]['domain_name'];
 				}
 				else {

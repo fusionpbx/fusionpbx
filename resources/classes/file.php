@@ -21,16 +21,6 @@ class file {
 	}
 
 	/**
-	 * Called when there are no references to a particular object
-	 * unset the variables used in the class
-	 */
-	public function __destruct() {
-		foreach ($this as $key => $value) {
-			unset($this->$key);
-		}
-	}
-
-	/**
 	 * Glob search for a list of files
 	 * @var string $dir			this is the directory to scan
 	 * @var boolean $recursive	get the sub directories

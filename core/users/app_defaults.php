@@ -91,7 +91,7 @@ if ($domains_processed == 1) {
 		$result = $database->select($sql, null, 'all');
 		if (is_array($result)) {
 			foreach($result as $row) {
-				if (strlen($row['group_name']) > 0) {
+				if (!empty($row['group_name'])) {
 					//get the group_uuid
 						$sql = "select group_uuid from v_groups ";
 						$sql .= "where group_name = :group_name ";

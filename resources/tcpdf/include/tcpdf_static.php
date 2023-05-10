@@ -230,7 +230,7 @@ class TCPDF_STATIC {
 					if (strpos($border, 'B') !== false) {
 						// remove bottom line
 						$newkey = str_replace('B', '', $border);
-						if (strlen($newkey) > 0) {
+						if (!empty($newkey)) {
 							$brd[$newkey] = $style;
 						}
 						unset($brd[$border]);
@@ -241,7 +241,7 @@ class TCPDF_STATIC {
 					if (strpos($border, 'B') !== false) {
 						// remove bottom line
 						$newkey = str_replace('B', '', $border);
-						if (strlen($newkey) > 0) {
+						if (!empty($newkey)) {
 							$brd[$newkey] = $style;
 						}
 						unset($brd[$border]);
@@ -250,7 +250,7 @@ class TCPDF_STATIC {
 					if (strpos($border, 'T') !== false) {
 						// remove bottom line
 						$newkey = str_replace('T', '', $border);
-						if (strlen($newkey) > 0) {
+						if (!empty($newkey)) {
 							$brd[$newkey] = $style;
 						}
 						unset($brd[$border]);
@@ -261,7 +261,7 @@ class TCPDF_STATIC {
 					if (strpos($border, 'T') !== false) {
 						// remove bottom line
 						$newkey = str_replace('T', '', $border);
-						if (strlen($newkey) > 0) {
+						if (!empty($newkey)) {
 							$brd[$newkey] = $style;
 						}
 						unset($brd[$border]);
@@ -281,7 +281,7 @@ class TCPDF_STATIC {
 	 * @public static
 	 */
 	public static function empty_string($str) {
-		return (is_null($str) OR (is_string($str) AND (strlen($str) == 0)));
+		return (is_null($str) OR (is_string($str) AND (empty($str))));
 	}
 
 	/**
@@ -1799,7 +1799,7 @@ class TCPDF_STATIC {
 			$ret[] = "\n";
 			$subject = substr($subject, ($nl + 1));
 		}
-		if (strlen($subject) > 0) {
+		if (!empty($subject)) {
 			$ret = array_merge($ret, preg_split($pattern.$modifiers, $subject, $limit, $flags));
 		}
 		return $ret;

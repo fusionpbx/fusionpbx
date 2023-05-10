@@ -58,16 +58,6 @@ if (!class_exists('gateways')) {
 		}
 
 		/**
-		 * called when there are no references to a particular object
-		 * unset the variables used in the class
-		 */
-		public function __destruct() {
-			foreach ($this as $key => $value) {
-				unset($this->$key);
-			}
-		}
-
-		/**
 		 * start gateways
 		 */
 		public function start($records) {
@@ -558,10 +548,10 @@ if (!class_exists('gateways')) {
 											unset($array[$this->table][$x]['channels']);
 
 										//defaults
-											if (strlen($row['expire_seconds']) == 0) {
+											if (empty($row['expire_seconds'])) {
 												$array[$this->table][$x]['expire_seconds'] = '800';
 											}
-											if (strlen($row['retry_seconds']) == 0) {
+											if (empty($row['retry_seconds'])) {
 												$array[$this->table][$x]['retry_seconds'] = '30';
 											}
 

@@ -162,19 +162,19 @@
 			//$device_setting_description = $_POST["device_setting_description"];
 
 		//normalize the mac address
-			if (isset($device_mac_address) && strlen($device_mac_address) > 0) {
+			if (!empty($device_mac_address)) {
 				$device_mac_address = strtolower($device_mac_address);
 				$device_mac_address = preg_replace('#[^a-fA-F0-9./]#', '', $device_mac_address);
 			}
 	}
 
 //use the mac address to get the vendor
-	if (strlen($device_vendor) == 0) {
+	if (empty($device_vendor)) {
 		$device_vendor = device::get_vendor($device_mac_address);
 	}
 
 //add or update the database
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
 		//validate the token
 			$token = new token;
@@ -186,17 +186,17 @@
 
 		//check for all required data
 			$msg = '';
-			if (strlen($device_mac_address) == 0) { $msg .= $text['message-required'].$text['label-device_mac_address']."<br>\n"; }
-			//if (strlen($device_label) == 0) { $msg .= "Please provide: Label<br>\n"; }
-			//if (strlen($device_vendor) == 0) { $msg .= "Please provide: Vendor<br>\n"; }
-			//if (strlen($device_model) == 0) { $msg .= "Please provide: Model<br>\n"; }
-			//if (strlen($device_firmware_version) == 0) { $msg .= "Please provide: Firmware Version<br>\n"; }
-			//if (strlen($device_enabled) == 0) { $msg .= "Please provide: Enabled<br>\n"; }
-			//if (strlen($device_template) == 0) { $msg .= "Please provide: Template<br>\n"; }
-			//if (strlen($device_username) == 0) { $msg .= "Please provide: Username<br>\n"; }
-			//if (strlen($device_password) == 0) { $msg .= "Please provide: Password<br>\n"; }
-			//if (strlen($device_description) == 0) { $msg .= "Please provide: Description<br>\n"; }
-			if (strlen($msg) > 0) {
+			if (empty($device_mac_address)) { $msg .= $text['message-required'].$text['label-device_mac_address']."<br>\n"; }
+			//if (empty($device_label)) { $msg .= "Please provide: Label<br>\n"; }
+			//if (empty($device_vendor)) { $msg .= "Please provide: Vendor<br>\n"; }
+			//if (empty($device_model)) { $msg .= "Please provide: Model<br>\n"; }
+			//if (empty($device_firmware_version)) { $msg .= "Please provide: Firmware Version<br>\n"; }
+			//if (empty($device_enabled)) { $msg .= "Please provide: Enabled<br>\n"; }
+			//if (empty($device_template)) { $msg .= "Please provide: Template<br>\n"; }
+			//if (empty($device_username)) { $msg .= "Please provide: Username<br>\n"; }
+			//if (empty($device_password)) { $msg .= "Please provide: Password<br>\n"; }
+			//if (empty($device_description)) { $msg .= "Please provide: Description<br>\n"; }
+			if (!empty($msg)) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -291,7 +291,7 @@
 					if (permission_exists('device_line_edit')) {
 						$y = 0;
 						foreach ($device_lines as $row) {
-							if (strlen($row['line_number']) > 0) {
+							if (!empty($row['line_number'])) {
 								$new_line = false;
 								if (is_uuid($row["device_line_uuid"])) {
 									$device_line_uuid = $row["device_line_uuid"];
@@ -374,7 +374,7 @@
 					if (permission_exists('device_key_edit')) {
 						$y = 0;
 						foreach ($device_keys as $row) {
-							if (strlen($row['device_key_category']) > 0) {
+							if (!empty($row['device_key_category'])) {
 								if (is_uuid($row["device_key_uuid"])) {
 									$device_key_uuid = $row["device_key_uuid"];
 								}
@@ -413,7 +413,7 @@
 					if (permission_exists('device_setting_edit')) {
 						$y = 0;
 						foreach ($device_settings as $row) {
-							if (strlen($row['device_setting_subcategory']) > 0) {
+							if (!empty($row['device_setting_subcategory'])) {
 								if (is_uuid($row["device_setting_uuid"])) {
 									$device_setting_uuid = $row["device_setting_uuid"];
 								}
@@ -477,7 +477,7 @@
 					}
 
 				//write the provision files
-					if (strlen($_SESSION['provision']['path']['text']) > 0) {
+					if (!empty($_SESSION['provision']['path']['text'])) {
 						$prov = new provision;
 						$prov->domain_uuid = $domain_uuid;
 						$response = $prov->write();
@@ -502,7 +502,7 @@
 	}
 
 //pre-populate the form
-	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
+	if (!empty($_GET) && $_POST["persistformvar"] != "true") {
 		$sql = "select * from v_devices ";
 		$sql .= "where device_uuid = :device_uuid ";
 		$parameters['device_uuid'] = $device_uuid;
@@ -532,17 +532,17 @@
 	}
 
 //set the defaults
-	if (strlen($device_enabled) == 0) { $device_enabled = 'true'; }
+	if (empty($device_enabled)) { $device_enabled = 'true'; }
 
 //use the mac address to get the vendor
-	if (strlen($device_vendor) == 0) {
+	if (empty($device_vendor)) {
 		//get the device vendor using the mac address
 		$device_vendor = device::get_vendor($device_mac_address);
 		
 		//if the vendor was not found using the mac address use an alternative method
-		if (strlen($device_vendor) == 0) {
-			$template_array = explode("/", $device_template);
-			$device_vendor = $template_array[0];
+		if (empty($device_vendor)) {
+			$template_array = explode("/", $device_template ?? '');
+			$device_vendor = $template_array[0] ?? '';
 		}
 	}
 
@@ -665,16 +665,16 @@
 	unset($sql, $parameters);
 
 //use the mac address to get the vendor
-	if (strlen($device_vendor) == 0) {
+	if (empty($device_vendor)) {
 		$device_vendor = device::get_vendor($device_mac_address);
 	}
 
 //get the device line info for provision button
 	foreach($device_lines as $row) {
-		if (strlen($row['user_id']) > 0) {
+		if (!empty($row['user_id'])) {
 			$user_id = $row['user_id'];
 		}
-		if (strlen($row['server_address']) > 0) {
+		if (!empty($row['server_address'])) {
 			$server_address = $row['server_address'];
 		}
 	}
@@ -747,7 +747,7 @@
 	if (permission_exists("device_line_password") && $device_template == "grandstream/wave") {
 		//set the mode
 		if (isset($_SESSION['theme']['qr_image'])) {
-			if (strlen($_SESSION['theme']['qr_image']) > 0) {
+			if (!empty($_SESSION['theme']['qr_image'])) {
 				$mode = '4';
 			}
 			else {
@@ -762,7 +762,7 @@
 		$row = $device_lines[0];
 
 		//set the outbound proxy settings
-		if (strlen($row['outbound_proxy_primary']) == 0) {
+		if (empty($row['outbound_proxy_primary'])) {
 			$outbound_proxy_primary = $row['server_address'];
 		}
 		else {
@@ -908,7 +908,7 @@
 				'id'=>'btn_copy',
 				'style'=>'float: right; margin-left: 15px;',
 				'collapse'=>'never',
-				'onclick'=>"modal_close(); if (document.getElementById('new_mac_address').value != '') { window.location='device_copy.php?id=".urlencode($device_uuid)."&mac=' + document.getElementById('new_mac_address').value; }"
+				'onclick'=>"modal_close(); if (document.getElementById('new_mac_address').value != '') { window.location='device_copy.php?id=".urlencode($device_uuid ?? '')."&mac=' + document.getElementById('new_mac_address').value; }"
 				]),
 			'onclose'=>"document.getElementById('new_mac_address').value = '';",
 			]);
@@ -933,15 +933,15 @@
 	echo "</td>\n";
 	echo "<td class='vtable' width='70%' align='left'>\n";
 	if (permission_exists('device_mac_address')) {
-		echo "	<input class='formfld' type='text' name='device_mac_address' id='device_mac_address' maxlength='255' value=\"".escape($device_mac_address)."\"/>\n";
+		echo "	<input class='formfld' type='text' name='device_mac_address' id='device_mac_address' maxlength='255' value=\"".escape($device_mac_address ?? '')."\"/>\n";
 		echo "<br />\n";
 		echo $text['description-device_mac_address']."\n";
 	}
 	else {
-		echo escape($device_mac_address);
+		echo escape($device_mac_address ?? '');
 	}
 	echo "	<div style='display: none;' id='duplicate_mac_response'></div>\n";
-	echo " ".escape($device_provisioned_ip)."(<a href='http://".escape($device_provisioned_ip)."' target='_blank'>http</a>|<a href='https://".escape($device_provisioned_ip)."' target='_blank'>https</a>)\n";
+	echo " ".escape($device_provisioned_ip ?? '')."(<a href='http://".escape($device_provisioned_ip ?? '')."' target='_blank'>http</a>|<a href='https://".escape($device_provisioned_ip ?? '')."' target='_blank'>https</a>)\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -1111,11 +1111,11 @@
 
 			//set the defaults
 				if (!permission_exists('device_line_server_address')) {
-					if (strlen($row['server_address']) == 0) { $row['server_address'] = $_SESSION['domain_name']; }
+					if (empty($row['server_address'])) { $row['server_address'] = $_SESSION['domain_name']; }
 				}
-				if (strlen($row['sip_transport']) == 0) { $row['sip_transport'] = $_SESSION['provision']['line_sip_transport']['text']; }
-				if (strlen($row['sip_port']) == 0) { $row['sip_port'] = $_SESSION['provision']['line_sip_port']['numeric']; }
-				if (strlen($row['register_expires']) == 0) { $row['register_expires'] = $_SESSION['provision']['line_register_expires']['numeric']; }
+				if (empty($row['sip_transport'])) { $row['sip_transport'] = $_SESSION['provision']['line_sip_transport']['text']; }
+				if (empty($row['sip_port'])) { $row['sip_port'] = $_SESSION['provision']['line_sip_port']['numeric']; }
+				if (empty($row['register_expires'])) { $row['register_expires'] = $_SESSION['provision']['line_register_expires']['numeric']; }
 
 			//determine whether to hide the element
 				if (!is_uuid($device_line_uuid)) {
@@ -1302,7 +1302,7 @@
 				$x++;
 		}
 		echo "			</table>\n";
-		if (strlen($text['description-lines']) > 0) {
+		if (!empty($text['description-lines'])) {
 			echo "			<br>".$text['description-lines']."\n";
 		}
 		echo "		</td>";
@@ -1397,7 +1397,7 @@
 					if (permission_exists('device_key_id')) {
 						echo "				<td class='vtable'>".$text['label-device_key_id']."</td>\n";
 					}
-					if ($vendor_count > 1 && strlen($row['device_key_vendor']) > 0) {
+					if ($vendor_count > 1 && !empty($row['device_key_vendor'])) {
 						echo "				<td class='vtable'>".ucwords($row['device_key_vendor'])."</td>\n";
 						if ($show_key_subtype) {
 							echo "				<td class='vtable'>".$text['label-device_key_subtype']."</td>\n";
@@ -1467,7 +1467,7 @@
 					echo "	<option value='programmable'>".$text['label-programmable']."</option>\n";
 				}
 				if ($row['device_key_vendor'] !== "polycom") {
-					if (strlen($device_vendor) == 0) {
+					if (empty($device_vendor)) {
 						if ($row['device_key_category'] == "expansion") {
 							echo "	<option value='expansion' selected='selected'>".$text['label-expansion']." 1</option>\n";
 						}
@@ -1571,7 +1571,7 @@
 
 				echo "<td align='left' nowrap='nowrap'>\n";
 				//echo "	<input class='formfld' type='text' name='device_keys[".$x."][device_key_type]' style='width: 120px;' maxlength='255' value=\"$row['device_key_type']\">\n";
-				if (strlen($row['device_key_vendor']) > 0) {
+				if (!empty($row['device_key_vendor'])) {
 					$device_key_vendor = $row['device_key_vendor'];
 				}
 				else {
@@ -1585,7 +1585,7 @@
 				$previous_vendor = '';
 				$i=0;
 				foreach ($vendor_functions as $function) {
-					if (strlen($row['device_key_vendor']) == 0 && $function['vendor_name'] != $previous_vendor) {
+					if (empty($row['device_key_vendor']) && $function['vendor_name'] != $previous_vendor) {
 						if ($i > 0) { echo "	</optgroup>\n"; }
 						echo "	<optgroup label='".ucwords($function['vendor_name'])."'>\n";
 					}
@@ -1593,16 +1593,16 @@
 					if (strtolower($row['device_key_vendor']) == $function['vendor_name'] && $row['device_key_type'] == $function['value']) {
 						$selected = "selected='selected'";
 					}
-					if (strlen($row['device_key_vendor']) == 0) {
+					if (empty($row['device_key_vendor'])) {
 						echo "		<option value='".$function['value']."' vendor='".$function['vendor_name']."' $selected >".$text['label-'.$function['type']]."</option>\n";
 					}
-					if (strlen($row['device_key_vendor']) > 0 && strtolower($row['device_key_vendor']) == $function['vendor_name']) {
+					if (!empty($row['device_key_vendor']) && strtolower($row['device_key_vendor']) == $function['vendor_name']) {
 						echo "		<option value='".$function['value']."' vendor='".$function['vendor_name']."' $selected >".$text['label-'.$function['type']]."</option>\n";
 					}
 					$previous_vendor = $function['vendor_name'];
 					$i++;
 				}
-				if (strlen($row['device_key_vendor']) == 0) {
+				if (empty($row['device_key_vendor'])) {
 					echo "	</optgroup>\n";
 				}
 				echo "</select>\n";
@@ -1663,7 +1663,7 @@
 				$x++;
 		}
 		echo "			</table>\n";
-		if (strlen($text['description-keys']) > 0) {
+		if (!empty($text['description-keys'])) {
 			echo "			<br>".$text['description-keys']."\n";
 		}
 		echo "		</td>";
@@ -1745,7 +1745,7 @@
 
 			echo "</table>\n";
 
-			if (strlen($text['description-settings']) > 0) {
+			if (!empty($text['description-settings'])) {
 				echo "<br>".$text['description-settings']."\n";
 			}
 
@@ -1793,8 +1793,8 @@
 		echo "</td>\n";
 		echo "<td class='vtable' align='left' nowrap='nowrap'>\n";
 		$label = $device_alternate[0]['device_label'];
-		if (strlen($label) == 0) { $label = $device_alternate[0]['device_description']; }
-		if (strlen($label) == 0) { $label = $device_alternate[0]['device_mac_address']; }
+		if (empty($label)) { $label = $device_alternate[0]['device_description']; }
+		if (empty($label)) { $label = $device_alternate[0]['device_mac_address']; }
 		echo "	<table>\n";
 		echo "	<tr>\n";
 		echo "		<td><a href='?id=".escape($device_uuid_alternate)."' id='device_uuid_alternate_link'>".escape($label)."</a><input class='formfld' type='hidden' name='device_uuid_alternate' id='device_uuid_alternate' maxlength='255' value=\"".escape($device_uuid_alternate)."\" />&nbsp;</td>";

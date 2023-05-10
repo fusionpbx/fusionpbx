@@ -81,7 +81,7 @@ header('Expires: '.gmdate('D, d M Y H:i:s',time()+3600).' GMT');
 
 		if (count($background_images) > 0) {
 
-			if ((!isset($_SESSION['background_image'])) or strlen($_SESSION['background_image']) == 0) {
+			if ((!isset($_SESSION['background_image'])) or empty($_SESSION['background_image'])) {
 				$_SESSION['background_image'] = $background_images[array_rand($background_images)];
 				$background_image = $_SESSION['background_image'];
 			}

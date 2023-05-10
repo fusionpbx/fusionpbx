@@ -199,7 +199,7 @@
 				$invalid[] = $text['label-email'];
 			}
 
-			if (strlen($password) > 0) {
+			if (!empty($password)) {
 				if (is_numeric($required['length']) && $required['length'] != 0) {
 					if (strlen($password) < $required['length']) {
 						$invalid[] = $text['label-characters'];
@@ -634,7 +634,7 @@
 						$name = $row['user_setting_name'];
 						$category = $row['user_setting_category'];
 						$subcategory = $row['user_setting_subcategory'];
-						if (strlen($subcategory) == 0) {
+						if (empty($subcategory)) {
 							//$$category[$name] = $row['domain_setting_value'];
 							$user_settings[$category][$name] = $row['user_setting_value'];
 						}
@@ -648,7 +648,7 @@
 	}
 
 //set the defaults
-	if (strlen($user_enabled) == 0) { $user_enabled = "true"; }
+	if (empty($user_enabled)) { $user_enabled = "true"; }
 
 //create token
 	$object = new token;
@@ -914,7 +914,7 @@
 		echo "</select>\n";
 		echo "<br />\n";
 		echo $text['description-contact']."\n";
-		if (strlen($contact_uuid) > 0) {
+		if (!empty($contact_uuid)) {
 			echo "			<a href=\"".PROJECT_PATH."/app/contacts/contact_edit.php?id=".urlencode($contact_uuid)."\">".$text['description-contact_view']."</a>\n";
 		}
 		echo "		</td>";
@@ -963,7 +963,7 @@
 		if (is_array($user_groups)) {
 			echo "<table cellpadding='0' cellspacing='0' border='0'>\n";
 			foreach($user_groups as $field) {
-				if (strlen($field['group_name']) > 0) {
+				if (!empty($field['group_name'])) {
 					echo "<tr>\n";
 					echo "	<td class='vtable' style='white-space: nowrap; padding-right: 30px;' nowrap='nowrap'>";
 					echo escape($field['group_name']).(($field['group_domain_uuid'] != '') ? "@".$_SESSION['domains'][$field['group_domain_uuid']]['domain_name'] : null);
@@ -1040,7 +1040,7 @@
 		echo "		<td class='vncell' valign='top'>".$text['label-api_key']."</td>";
 		echo "		<td class='vtable'>\n";
 		echo "			<input type='text' class='formfld' style='width: 250px; display: none;' name='api_key' id='api_key' value=\"".escape($api_key)."\" >";
-		if (strlen($api_key) == 0) {
+		if (empty($api_key)) {
 			//generate api key
 			echo button::create(['type'=>'button',
 				'label'=>$text['button-generate'],
@@ -1069,7 +1069,7 @@
 					document.getElementById('button-api_key_view').style.display = 'inline';"]);
 
 		}
-		if (strlen($text['description-api_key']) > 0) {
+		if (!empty($text['description-api_key'])) {
 			echo "			<br />".$text['description-api_key']."<br />\n";
 		}
 		echo "		</td>";
@@ -1104,11 +1104,13 @@
 		echo "</td>\n";
 		echo "<td class='vtable' align='left' valign='top'>\n";
 		echo "	<input type='hidden' class='formfld' style='width: 250px;' name='user_totp_secret' id='user_totp_secret' value=\"".escape($user_totp_secret)."\" >";
-		if (strlen($user_totp_secret) == 0) {
+		if (empty($user_totp_secret)) {
+			$base32 = new base2n(5, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567', FALSE, TRUE, TRUE);
+			$user_totp_secret = $base32->encode(generate_password(20,3));
 			echo button::create(['type'=>'button',
 			'label'=>$text['button-setup'],
 			'icon'=>'key',
-			'onclick'=>"document.getElementById('user_totp_secret').value = '".strtoupper(generate_password(32,3))."';
+			'onclick'=>"document.getElementById('user_totp_secret').value = '".$user_totp_secret."';
 			document.getElementById('frm').submit();"]);
 		}
 		else {
@@ -1144,7 +1146,7 @@
 				'onclick'=>"document.getElementById('user_totp_secret').value = '';
 				document.getElementById('frm').submit();"]);
 		}
-		if (strlen($user_totp_secret) == 0) {
+		if (empty($user_totp_secret)) {
 			echo "	<br />".$text['description-user_totp_secret']."<br />\n";
 		}
 		else {

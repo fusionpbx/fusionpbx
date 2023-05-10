@@ -115,9 +115,9 @@
 			$cut = shell_exec("/usr/bin/which cut");
 			$uptime = trim(shell_exec(escapeshellcmd($cut." -d. -f1 /proc/uptime")));
 			$tmp['y'] = floor($uptime/60/60/24/365);
-			$tmp['d'] = $uptime/60/60/24%365;
-			$tmp['h'] = $uptime/60/60%24;
-			$tmp['m'] = $uptime/60%60;
+			$tmp['d'] = intdiv(intdiv(intdiv($uptime,60),60),24)%365;
+			$tmp['h'] = intdiv(intdiv($uptime,60),60)%24;
+			$tmp['m'] = intdiv($uptime,60)%60;
 			$tmp['s'] = $uptime%60;
 			$uptime = (($tmp['y'] != 0 && $tmp['y'] != '') ? $tmp['y'].'y ' : null);
 			$uptime .= (($tmp['d'] != 0 && $tmp['d'] != '') ? $tmp['d'].'d ' : null);
@@ -137,7 +137,7 @@
 		if (stristr(PHP_OS, 'Linux')) {
 			$free = shell_exec("/usr/bin/which free");
 			$awk = shell_exec("/usr/bin/which awk");
-			$percent_memory = round(shell_exec(escapeshellcmd($free." | ".$awk." 'FNR == 3 {print $3/($3+$4)*100}'")), 1);
+			$percent_memory = round((float)shell_exec(escapeshellcmd($free." | ".$awk." 'FNR == 3 {print $3/($3+$4)*100}'")), 1);
 			if ($percent_memory != '') {
 				echo "<tr class='tr_link_void'>\n";
 				echo "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-memory_usage']."</td>\n";

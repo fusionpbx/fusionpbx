@@ -49,7 +49,7 @@
 			unset($_SESSION["menu"]);
 
 		//clear the template only if the template has not been assigned by the superadmin
-			if (strlen($_SESSION['domain']['template']['name']) == 0) {
+			if (empty($_SESSION['domain']['template']['name'])) {
 				$_SESSION["template_content"] = '';
 			}
 

@@ -26,6 +26,9 @@ class plugin_ldap {
 		//show the authentication code view
 			if ($_REQUEST["username"]) {
 
+				//pre-process some settings
+					$settings['theme']['favicon'] = !empty($settings['theme']['favicon']) ? $settings['theme']['favicon'] : PROJECT_PATH.'/themes/default/favicon.ico';
+
 				//login logo source
 					if (isset($_SESSION['theme']['logo_login']['text']) && $_SESSION['theme']['logo_login']['text'] != '') {
 						$login_logo_source = $_SESSION['theme']['logo_login']['text'];
@@ -84,6 +87,7 @@ class plugin_ldap {
 					$view->assign("login_logo_width", $login_logo_width);
 					$view->assign("login_logo_height", $login_logo_height);
 					$view->assign("login_logo_source", $login_logo_source);
+					$view->assign("favicon", $settings['theme']['favicon']);
 
 				//add the token name and hash to the view
 					//$view->assign("token_name", $token['name']);
@@ -116,7 +120,7 @@ class plugin_ldap {
 			$user_authorized = false;
 
 		//provide backwards compatability
-			if (strlen($_SESSION["ldap"]["user_dn"]["text"]) > 0) {
+			if (!empty($_SESSION["ldap"]["user_dn"]["text"])) {
 				$_SESSION["ldap"]["user_dn"][] = $_SESSION["ldap"]["user_dn"]["text"];
 			}
 
@@ -127,7 +131,7 @@ class plugin_ldap {
 				//Note: As of 4/16, the call below will fail randomly. PHP debug reports ldap_bind
 				//called below with all arguments '*uninitialized*'. However, the debugger
 				//single-stepping just before the failing call correctly displays all the values.
-				if (strlen($bind_pw) > 0) {
+				if (!empty($bind_pw)) {
 					$bind = ldap_bind($connect, $bind_dn, $bind_pw);
 					if ($bind) {
 						//connected and authorized

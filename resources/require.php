@@ -31,14 +31,17 @@
 
 //set the server variables and define project path constant
 	$_SERVER["DOCUMENT_ROOT"] = $conf['document.root'];
+	$_SERVER["PROJECT_ROOT"] = $conf['document.root'];
 	$_SERVER["PROJECT_PATH"]  = $conf['project.path'];
 	if (isset($conf['project.path'])) {
-		$_SERVER["PROJECT_ROOT"] = $conf['document.root'].$conf['project.path'];
+		$_SERVER["PROJECT_ROOT"] = $conf['document.root'].'/'.$conf['project.path'];
+		define("PROJECT_ROOT", $conf['document.root'].'/'.$conf['project.path']);
+		define("PROJECT_PATH", $conf['project.path']);
 	}
 	else {
-		$_SERVER["PROJECT_ROOT"] = $conf['document.root'];
+		define("PROJECT_ROOT", $conf['document.root']);
+		define("PROJECT_PATH", '');
 	}
-	define("PROJECT_PATH", $conf['project.path']);
 
 //set the error reporting
 	ini_set('display_errors', '1');
@@ -50,7 +53,7 @@
 	}
 	switch ($error_reporting_scope) {
 	case 'user':
-		error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
+		error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING ^ E_DEPRECATED);
 		break;
 	case 'dev':
 		error_reporting(E_ALL ^ E_NOTICE);
@@ -59,7 +62,7 @@
 		error_reporting(E_ALL);
 		break;
 	default:
-		error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
+		error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING ^ E_DEPRECATED);
 	}
 
 //get the database connection settings

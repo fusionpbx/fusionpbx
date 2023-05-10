@@ -218,9 +218,6 @@
 	}
 
 	echo $text['description']." \n";
-	echo $text['description2']." \n";
-	echo $text['description-3']." \n";
-	echo $text['description-4']." \n";
 	echo "<br /><br />\n";
 
 //basic search of call detail records
@@ -690,7 +687,7 @@
 								else if ($row['answer_stamp'] == '' && $row['bridge_uuid'] != '') { $call_result = 'cancelled'; }
 								else { $call_result = 'failed'; }
 							}
-							if (strlen($row['direction']) > 0) {
+							if (!empty($row['direction'])) {
 								$image_name = "icon_cdr_" . $row['direction'] . "_" . $call_result;
 								if ($row['leg'] == 'b') {
 									$image_name .= '_b';
@@ -801,7 +798,7 @@
 					}
 				//mos (mean opinion score)
 					if (permission_exists("xml_cdr_mos")) {
-						if(strlen($row['rtp_audio_in_mos']) > 0){
+						if(!empty($row['rtp_audio_in_mos'])){
 							$title = " title='".$text['label-mos_score-'.round($row['rtp_audio_in_mos'])]."'";
 							$value = $row['rtp_audio_in_mos'];
 						}

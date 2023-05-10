@@ -97,7 +97,7 @@
 
 			$previous_application = null;
 			foreach($raw_applications as $row) {
-				if (strlen($row) > 0) {
+				if (!empty($row)) {
 					$application_array = explode(",", $row);
 					$application = $application_array[0];
 
@@ -124,7 +124,7 @@
 	}
 
 //process and save the data
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 
 		//get the dialplan uuid
 			if ($action == "update") {
@@ -183,13 +183,13 @@
 
 		//check for all required data
 			$msg = '';
-			if (strlen($dialplan_name) == 0) { $msg .= $text['message-required'].$text['label-name']."<br>\n"; }
-			if (strlen($dialplan_order) == 0) { $msg .= $text['message-required'].$text['label-order']."<br>\n"; }
-			if (strlen($dialplan_continue) == 0) { $msg .= $text['message-required'].$text['label-continue']."<br>\n"; }
-			if (strlen($dialplan_context) == 0) { $msg .= $text['message-required'].$text['label-context']."<br>\n"; }
-			if (strlen($dialplan_enabled) == 0) { $msg .= $text['message-required'].$text['label-enabled']."<br>\n"; }
-			//if (strlen($dialplan_description) == 0) { $msg .= $text['message-required'].$text['label-description']."<br>\n"; }
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+			if (empty($dialplan_name)) { $msg .= $text['message-required'].$text['label-name']."<br>\n"; }
+			if (empty($dialplan_order)) { $msg .= $text['message-required'].$text['label-order']."<br>\n"; }
+			if (empty($dialplan_continue)) { $msg .= $text['message-required'].$text['label-continue']."<br>\n"; }
+			if (empty($dialplan_context)) { $msg .= $text['message-required'].$text['label-context']."<br>\n"; }
+			if (empty($dialplan_enabled)) { $msg .= $text['message-required'].$text['label-enabled']."<br>\n"; }
+			//if (empty($dialplan_description)) { $msg .= $text['message-required'].$text['label-description']."<br>\n"; }
+			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -242,8 +242,8 @@
 			$y = 0;
 			if (is_array($_POST["dialplan_details"])) {
 				foreach ($_POST["dialplan_details"] as $row) {
-					if (strlen($row["dialplan_detail_tag"]) > 0) {
-						if (strlen($row["dialplan_detail_uuid"]) > 0) {
+					if (!empty($row["dialplan_detail_tag"])) {
+						if (!empty($row["dialplan_detail_uuid"])) {
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_uuid'] = $row["dialplan_detail_uuid"];
 						}
 						if (!preg_match("/system/i", $row["dialplan_detail_type"])) {
@@ -323,7 +323,7 @@
 			header("Location: ?id=".escape($dialplan_uuid).(is_uuid($app_uuid) ? "&app_uuid=".$app_uuid : null));
 			exit;
 
-	} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
+	} //(count($_POST)>0 && empty($_POST["persistformvar"]))
 
 //pre-populate the form
 	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
@@ -348,13 +348,13 @@
 	}
 
 //set the defaults
-	if (strlen($dialplan_context) == 0) {
+	if (empty($dialplan_context)) {
 		$dialplan_context = $_SESSION['domain_name'];
 	}
-	if (strlen($dialplan_order) == 0) {
+	if (empty($dialplan_order)) {
 		$dialplan_order = '200';
 	}
-	if (strlen($dialplan_destination) == 0) {
+	if (empty($dialplan_destination)) {
 		$dialplan_destination = 'false';
 	}
 
@@ -813,7 +813,7 @@
 								$dialplan_detail_enabled = $row['dialplan_detail_enabled'];
 
 							//default to enabled true
-								if (strlen($dialplan_detail_enabled) == 0) {
+								if (empty($dialplan_detail_enabled)) {
 									$dialplan_detail_enabled = 'true';
 								}
 
@@ -823,7 +823,7 @@
 							//begin the row
 								echo "<tr>\n";
 							//determine whether to hide the element
-								if (strlen($dialplan_detail_tag) == 0) {
+								if (empty($dialplan_detail_tag)) {
 									$element['hidden'] = false;
 									$element['visibility'] = "";
 								}
@@ -855,7 +855,7 @@
 									echo "	<label id=\"label_dialplan_detail_type_".$x."\">".escape($dialplan_detail_type)."</label>\n";
 								}
 								echo "	<select id='dialplan_detail_type_".$x."' name='dialplan_details[".$x."][dialplan_detail_type]' class='formfld' style='width: auto; ".$element['visibility']."' onchange='change_to_input(this);'>\n";
-								if (strlen($dialplan_detail_type) > 0) {
+								if (!empty($dialplan_detail_type)) {
 									echo "	<optgroup label='selected'>\n";
 									echo "		<option value=\"".escape($dialplan_detail_type)."\">".escape($dialplan_detail_type)."</option>\n";
 									echo "	</optgroup>\n";
@@ -863,7 +863,7 @@
 								else {
 									echo "	<option value=''></option>\n";
 								}
-								//if (strlen($dialplan_detail_tag) == 0 || $dialplan_detail_tag == "condition" || $dialplan_detail_tag == "regex") {
+								//if (empty($dialplan_detail_tag) || $dialplan_detail_tag == "condition" || $dialplan_detail_tag == "regex") {
 									echo "	<optgroup label='".$text['optgroup-condition_or_regex']."'>\n";
 									echo "		<option value='ani'>".$text['option-ani']."</option>\n";
 									echo "		<option value='ani2'>".$text['option-ani2']."</option>\n";
@@ -892,7 +892,7 @@
 									echo "		<option value='\${toll_allow}'>\${toll_allow}</option>\n";
 									echo "	</optgroup>\n";
 								//}
-								//if (strlen($dialplan_detail_tag) == 0 || $dialplan_detail_tag == "action" || $dialplan_detail_tag == "anti-action") {
+								//if (empty($dialplan_detail_tag) || $dialplan_detail_tag == "action" || $dialplan_detail_tag == "anti-action") {
 									echo "	<optgroup label='".$text['optgroup-applications']."'>\n";
 									if (is_array($_SESSION['switch']['applications'])) {
 										foreach ($_SESSION['switch']['applications'] as $application) {
