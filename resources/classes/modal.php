@@ -53,7 +53,7 @@ if (!class_exists('modal')) {
 							$array['message'] = $text['confirm-delete'];
 							break;
 						default: //general
-							$array['title'] = $array['title'] ? $array['title'] : $text['modal_title-confirmation'];
+							$array['title'] = !empty($array['title']) ? $array['title'] : $text['modal_title-confirmation'];
 					}
 				//prefix cancel button to action
 					$array['actions'] = button::create(['type'=>'button','label'=>$text['button-cancel'],'icon'=>$_SESSION['theme']['button_icon_cancel'],'collapse'=>'never','onclick'=>'modal_close(); '.($array['onclose'] ?? '')]).$array['actions'];
