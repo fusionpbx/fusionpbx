@@ -31,9 +31,11 @@
 //if config.conf file does not exist then redirect to the install page
 	if (file_exists("/usr/local/etc/fusionpbx/config.conf")){
 		//BSD
-	} elseif (file_exists("/etc/fusionpbx/config.conf")){
+	}
+	elseif (file_exists("/etc/fusionpbx/config.conf")){
 		//Linux
-	} else {
+	}
+	else {
 		header("Location: /core/install/install.php");
 		exit;
 	}
@@ -85,7 +87,7 @@
 	$sql .= ")\n";
 	$sql .= "order by dashboard_order asc \n";
 	$database = new database;
-	$dashboard = $database->select($sql, $parameters, 'all');
+	$dashboard = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 
 //get http post variables and set them to php variables
