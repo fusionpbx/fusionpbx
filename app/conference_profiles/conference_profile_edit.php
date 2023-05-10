@@ -37,7 +37,7 @@
 		$profile_description = $_POST["profile_description"];
 	}
 //check to see if the http post exists
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 	
 		//get the uuid
 			if ($action == "update") {
@@ -54,10 +54,10 @@
 
 		//check for all required data
 			$msg = '';
-			if (strlen($profile_name) == 0) { $msg .= $text['message-required']." ".$text['label-profile_name']."<br>\n"; }
-			if (strlen($profile_enabled) == 0) { $msg .= $text['message-required']." ".$text['label-profile_enabled']."<br>\n"; }
-			//if (strlen($profile_description) == 0) { $msg .= $text['message-required']." ".$text['label-profile_description']."<br>\n"; }
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+			if (empty($profile_name)) { $msg .= $text['message-required']." ".$text['label-profile_name']."<br>\n"; }
+			if (empty($profile_enabled)) { $msg .= $text['message-required']." ".$text['label-profile_enabled']."<br>\n"; }
+			//if (empty($profile_description)) { $msg .= $text['message-required']." ".$text['label-profile_description']."<br>\n"; }
+			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				$document['title'] = $text['title-conference_profile'];
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
@@ -121,7 +121,7 @@
 	}
 
 //set the defaults
-	if (strlen($profile_enabled) == 0) { $profile_enabled = 'true'; }
+	if (empty($profile_enabled)) { $profile_enabled = 'true'; }
 
 //create token
 	$object = new token;

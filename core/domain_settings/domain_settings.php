@@ -177,6 +177,7 @@
 		echo button::create(['type'=>'button','label'=>$text['button-copy'],'id'=>'btn_copy','icon'=>$_SESSION['theme']['button_icon_copy'],'id'=>'btn_copy','onclick'=>'show_domains();']);
 		echo button::create(['type'=>'button','label'=>$text['button-cancel'],'id'=>'btn_copy_cancel','icon'=>$_SESSION['theme']['button_icon_cancel'],'style'=>'display: none;','onclick'=>'hide_domains();']);
 		echo 	"<select class='formfld' style='display: none; width: auto;' id='target_domain' onchange=\"document.getElementById('domain_uuid_target').value = this.options[this.selectedIndex].value;\">\n";
+		echo "		<option value='".$domain_uuid."'>(".$text['label-duplicate'].")</option>\n";
 		echo "		<option value='' selected='selected' disabled='disabled'>".$text['label-domain']."...</option>\n";
 		foreach ($_SESSION['domains'] as $domain) {
 			if ($domain['domain_uuid'] == $domain_uuid) { continue; }

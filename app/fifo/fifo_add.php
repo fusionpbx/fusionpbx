@@ -61,11 +61,11 @@
 		$flags = $_POST["flags"];
 		$dialplan_enabled = $_POST["dialplan_enabled"];
 		$dialplan_description = $_POST["dialplan_description"];
-		if (strlen($dialplan_enabled) == 0) { $dialplan_enabled = "true"; } //set default to enabled
+		if (empty($dialplan_enabled)) { $dialplan_enabled = "true"; } //set default to enabled
 	}
 
 //process the HTTP POST
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 
 		//validate the token
 		$token = new token;
@@ -76,10 +76,10 @@
 		}
 
 		//check for all required data
-		if (strlen($domain_uuid) == 0) { $msg .= $text['message-required']."domain_uuid<br>\n"; }
-		if (strlen($extension_name) == 0) { $msg .= $text['message-required'].$text['label-name']."<br>\n"; }
-		if (strlen($queue_extension_number) == 0) { $msg .= $text['message-required'].$text['label-extension']."<br>\n"; }
-		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+		if (empty($domain_uuid)) { $msg .= $text['message-required']."domain_uuid<br>\n"; }
+		if (empty($extension_name)) { $msg .= $text['message-required'].$text['label-name']."<br>\n"; }
+		if (empty($queue_extension_number)) { $msg .= $text['message-required'].$text['label-extension']."<br>\n"; }
+		if (!empty($msg) && empty($_POST["persistformvar"])) {
 			require_once "resources/header.php";
 			require_once "resources/persist_form_var.php";
 			echo "<div align='center'>\n";
@@ -92,7 +92,7 @@
 			return;
 		}
 
-		if (strlen($queue_extension_number) > 0) {
+		if (!empty($queue_extension_number)) {
 			//--------------------------------------------------------
 			//Caller Queue [FIFO in]
 			//<extension name="Queue_Call_In">
@@ -132,7 +132,7 @@
 				$array["dialplan_details"][$y]["dialplan_detail_data"] = '^'.$queue_extension_number.'$';
 				$array["dialplan_details"][$y]["dialplan_detail_inline"] = "";
 				$array["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
-				if ((strlen($agent_queue_extension_number) > 0) || (strlen($agent_login_logout_extension_number) > 0)) {
+				if ((strlen($agent_queue_extension_number) > 0) || (!empty($agent_login_logout_extension_number))) {
 					$array["dialplan_details"][$y]["dialplan_detail_break"] = 'on-true';
 				}
 				$array["dialplan_details"][$y]["dialplan_detail_group"] = '1';
@@ -184,7 +184,7 @@
 		}
 
 		// Caller Queue / Agent Queue
-		if (strlen($agent_queue_extension_number) > 0) {
+		if (!empty($agent_queue_extension_number)) {
 			//--------------------------------------------------------
 			// Agent Queue [FIFO out]
 			//<extension name="Agent_Wait">
@@ -208,7 +208,7 @@
 				$array["dialplan_details"][$y]["dialplan_detail_type"] = "destination_number";
 				$array["dialplan_details"][$y]["dialplan_detail_data"] = '^'.$agent_queue_extension_number.'$';
 				$array["dialplan_details"][$y]["dialplan_detail_inline"] = "";
-				if (strlen($agent_login_logout_extension_number) > 0) {
+				if (!empty($agent_login_logout_extension_number)) {
 					$array["dialplan_details"][$y]["dialplan_detail_break"] = 'on-true';
 				}
 				$array["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
@@ -261,7 +261,7 @@
 		}
 
 		// agent or member login / logout
-		if (strlen($agent_login_logout_extension_number) > 0) {
+		if (!empty($agent_login_logout_extension_number)) {
 			//--------------------------------------------------------
 			// Agent Queue [FIFO login logout]
 			//<extension name="Agent_login_logout">

@@ -119,7 +119,7 @@
 
 //add the search term
 	$search = strtolower($_GET["search"]);
-	if (strlen($search) > 0) {
+	if (!empty($search)) {
 		$sql_search = "and (";
 		$sql_search .= "lower(gateway) like :search ";
 		$sql_search .= "or lower(username) like :search ";

@@ -60,16 +60,6 @@ if (!class_exists('menu')) {
 		}
 
 		/**
-		 * called when there are no references to a particular object
-		 * unset the variables used in the class
-		 */
-		public function __destruct() {
-			foreach ($this as $key => $value) {
-				unset($this->$key);
-			}
-		}
-
-		/**
 		 * delete rows from the database
 		 */
 		public function delete($records) {
@@ -250,7 +240,7 @@ if (!class_exists('menu')) {
 						header('Location: '.$this->location);
 						exit;
 					}
-
+https://www.fusionpbx.com/app/pages/page.php?id=f48cceb2-5e31-47c2-a84a-8f45d805e327
 				//toggle the checked records
 					if (is_array($records) && @sizeof($records) != 0) {
 						//get current toggle state
@@ -405,7 +395,7 @@ if (!class_exists('menu')) {
 						if (is_array($row['menu'])) {
 							foreach ($row['menu'] as $menu) {
 								//set the variables
-									if (strlen($menu['title'][$this->menu_language]) > 0) {
+									if (!empty($menu['title'][$this->menu_language])) {
 										$menu_item_title = $menu['title'][$this->menu_language];
 									}
 									else {
@@ -459,7 +449,7 @@ if (!class_exists('menu')) {
 												$array['menu_items'][$x]['menu_item_link'] = $menu_item_path;
 												$array['menu_items'][$x]['menu_item_category'] = $menu_item_category;
 												$array['menu_items'][$x]['menu_item_icon'] = $menu_item_icon;
-												if (strlen($menu_item_order) > 0) {
+												if (!empty($menu_item_order)) {
 													$array['menu_items'][$x]['menu_item_order'] = $menu_item_order;
 												}
 												if (is_uuid($menu_item_parent_uuid)) {
@@ -476,7 +466,7 @@ if (!class_exists('menu')) {
 										foreach ($language->languages as $menu_language) {
 											//set the menu item title
 												$menu_item_title = $menu["title"][$menu_language];
-												if (strlen($menu_item_title) == 0) {
+												if (empty($menu_item_title)) {
 													$menu_item_title = $menu["title"]['en-us'];
 												}
 
@@ -623,7 +613,7 @@ if (!class_exists('menu')) {
 						if (!isset($_SESSION["username"])) {
 							$_SESSION["username"] = '';
 						}
-						if (strlen($_SESSION["username"]) == 0) {
+						if (empty($_SESSION["username"])) {
 							$menu_html .= "<a $menu_tags style='padding: 0px 0px; border-style: none; background: none;'><h2 align='center' style=''>".$menu_item_title."</h2></a>\n";
 						}
 						else {
@@ -631,7 +621,7 @@ if (!class_exists('menu')) {
 								//hide login and sign-up when the user is logged in
 							}
 							else {
-								if (strlen($submenu_item_link) == 0) {
+								if (empty($submenu_item_link)) {
 									$menu_html .= "<h2 align='center' style=''>".$menu_item_title."</h2>\n";
 								}
 								else {
@@ -777,7 +767,7 @@ if (!class_exists('menu')) {
 
 						//add the sub menus to the array
 							$menu_item_level = 0;
-							if (strlen($row['menu_item_uuid']) > 0) {
+							if (!empty($row['menu_item_uuid'])) {
 								$a[$x]['menu_items'] = $this->menu_child_array($menu_item_level, $row['menu_item_uuid']);
 							}
 
@@ -861,7 +851,7 @@ if (!class_exists('menu')) {
 							}
 
 						//get sub menu for children
-							if (strlen($menu_item_uuid) > 0) {
+							if (!empty($menu_item_uuid)) {
 								$a[$x]['menu_items'] = $this->menu_child_array($menu_item_level, $menu_item_uuid);
 							}
 
@@ -936,9 +926,9 @@ if (!class_exists('menu')) {
 						break;
 					case 'fixed':
 					default:
-						$menu_type = 'fixed-'.($_SESSION['theme']['menu_position']['text'] != '' ? $_SESSION['theme']['menu_position']['text'] : 'top');
+						$menu_type = 'fixed-'.(!empty($_SESSION['theme']['menu_position']['text']) ? $_SESSION['theme']['menu_position']['text'] : 'top');
 						if (!http_user_agent('mobile')) {
-							$menu_width = $_SESSION['theme']['menu_width_fixed']['text'] != '' ? $_SESSION['theme']['menu_width_fixed']['text'] : 'calc(90% - 20px)';
+							$menu_width = !empty($_SESSION['theme']['menu_width_fixed']['text']) ? $_SESSION['theme']['menu_width_fixed']['text'] : 'calc(90% - 20px)';
 						}
 						$menu_brand = true;
 						$menu_corners = null;
@@ -951,7 +941,7 @@ if (!class_exists('menu')) {
 
 				if ($menu_brand) {
 					//define menu brand mark
-						$menu_brand_text = ($_SESSION['theme']['menu_brand_text']['text'] != '') ? escape($_SESSION['theme']['menu_brand_text']['text']) : "FusionPBX";
+						$menu_brand_text = (!empty($_SESSION['theme']['menu_brand_text']['text'])) ? escape($_SESSION['theme']['menu_brand_text']['text']) : "FusionPBX";
 						switch ($_SESSION['theme']['menu_brand_type']['text']) {
 							case 'text':
 								$html .= "			<a class='navbar-brand-text' href='".PROJECT_PATH."/'>".$menu_brand_text."</a>\n";
@@ -1046,7 +1036,7 @@ if (!class_exists('menu')) {
 
 				$html .= "			<ul class='navbar-nav ml-auto'>\n";
 				//current user
-					if ($_SESSION['theme']['user_visible']['text'] == 'true') {
+					if (isset($_SESSION['theme']['user_visible']['text']) && $_SESSION['theme']['user_visible']['text'] == 'true') {
 						$html .= "		<li class='nav-item'>\n";
 						$html .= "			<a class='header_user' href='".PROJECT_PATH."/core/users/user_edit.php?id=user' title=\"".$this->text['theme-label-user']."\"><i class='fas fa-".($_SESSION['theme']['body_header_icon_user']['text'] != '' ? $_SESSION['theme']['body_header_icon_user']['text'] : 'user-circle')." fa-lg fa-fw' style='margin-top: 6px; margin-right: 5px;'></i>".$_SESSION['username']."</a>";
 						$html .= "		</li>\n";

@@ -28,7 +28,7 @@
 	if ($domains_processed == 1) {
 
 		//create the directory
-			if (strlen($_SESSION['switch']['extensions']['dir']) > 0) {
+			if (!empty($_SESSION['switch']['extensions']['dir'])) {
 				if (!is_dir($_SESSION['switch']['extensions']['dir'])) {
 					mkdir($_SESSION['switch']['extensions']['dir'], 0770, false);
 				}
@@ -44,7 +44,7 @@
 			if (is_array($extensions) && @sizeof($extensions) != 0) {
 				foreach($extensions as $index => $row) {
 					$name = explode(' ', $row['directory_first_name']);
-					if (strlen($name[1]) > 0) {
+					if (!empty($name[1])) {
 						$array['extensions'][$index]['extension_uuid'] = $row['extension_uuid'];
 						$array['extensions'][$index]['directory_first_name'] = $name[0];
 						$array['extensions'][$index]['directory_last_name'] = $name[1];

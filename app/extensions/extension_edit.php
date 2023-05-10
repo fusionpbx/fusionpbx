@@ -140,12 +140,12 @@
 			$description = $_POST["description"];
 
 			//outbound caller id number - only allow numeric and +
-			if (strlen($outbound_caller_id_number) > 0) {
+			if (!empty($outbound_caller_id_number)) {
 				$outbound_caller_id_number = preg_replace('#[^\+0-9]#', '', $outbound_caller_id_number);
 			}
 
 			$voicemail_id = $extension;
-			if (permission_exists('number_alias') && strlen($number_alias) > 0) {
+			if (permission_exists('number_alias') && !empty($number_alias)) {
 				$voicemail_id = $number_alias;
 			}
 
@@ -285,7 +285,7 @@
 	}
 
 //process the user data and save it to the database
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 
 		//set the domain_uuid
 			if (permission_exists('extension_domain') && is_uuid($_POST["domain_uuid"])) {
@@ -305,11 +305,11 @@
 
 		//check for all required data
 			$msg = '';
-			if (strlen($extension) == 0) { $msg .= $text['message-required'].$text['label-extension']."<br>\n"; }
+			if (empty($extension)) { $msg .= $text['message-required'].$text['label-extension']."<br>\n"; }
 			if (permission_exists('extension_enabled')) {
-				if (strlen($enabled) == 0) { $msg .= $text['message-required'].$text['label-enabled']."<br>\n"; }
+				if (empty($enabled)) { $msg .= $text['message-required'].$text['label-enabled']."<br>\n"; }
 			}
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -392,17 +392,17 @@
 									}
 
 								//prepare the values for mwi account
-										if (strlen($mwi_account) > 0) {
+										if (!empty($mwi_account)) {
 											if (strpos($mwi_account, '@') === false) {
 													$mwi_account .= "@".$_SESSION['domain_name'];
 											}
 										}
 
 								//generate a password
-									if ($action == "add" && strlen($password) == 0) {
+									if ($action == "add" && empty($password)) {
 										$password = generate_password($password_length, $password_strength);
 									}
-									if ($action == "update" && permission_exists('extension_password') && strlen($password) == 0) {
+									if ($action == "update" && permission_exists('extension_password') && empty($password)) {
 										$password = generate_password($password_length, $password_strength);
 									}
 
@@ -413,7 +413,7 @@
 									if (permission_exists('number_alias')) {
 										$array["extensions"][$i]["number_alias"] = $number_alias;
 									}
-									if (strlen($password) > 0) {
+									if (!empty($password)) {
 										$array["extensions"][$i]["password"] = $password;
 									}
 									if (permission_exists('extension_accountcode')) {
@@ -475,7 +475,7 @@
 									if (permission_exists('extension_toll')) {
 										$array["extensions"][$i]["toll_allow"] = $toll_allow;
 									}
-									if (strlen($call_timeout) > 0) {
+									if (!empty($call_timeout)) {
 										$array["extensions"][$i]["call_timeout"] = $call_timeout;
 									}
 									if (permission_exists("extension_call_group")) {
@@ -496,7 +496,7 @@
 										$array["extensions"][$i]["sip_force_contact"] = $sip_force_contact;
 										$array["extensions"][$i]["sip_force_expires"] = $sip_force_expires;
 										if (permission_exists('extension_nibble_account')) {
-											if (strlen($nibble_account) > 0) {
+											if (!empty($nibble_account)) {
 												$array["extensions"][$i]["nibble_account"] = $nibble_account;
 											}
 										}
@@ -541,16 +541,16 @@
 												}
 
 												//determine the name
-												if (strlen($effective_caller_id_name) > 0) {
+												if (!empty($effective_caller_id_name)) {
 													$name = $effective_caller_id_name;
 												}
-												elseif (strlen($directory_first_name) > 0 && strlen($directory_last_name) > 0) {
+												elseif (strlen($directory_first_name) > 0 && !empty($directory_last_name)) {
 													$name = $directory_first_name.' '.$directory_last_name;
 												}
-												elseif (strlen($directory_first_name) > 0) {
+												elseif (!empty($directory_first_name)) {
 													$name = $directory_first_name;
 												}
-												elseif (strlen($directory_first_name) > 0) {
+												elseif (!empty($directory_first_name)) {
 													$name = $directory_first_name.' '.$directory_last_name;
 												}
 												else {
@@ -604,7 +604,7 @@
 													$array["devices"][$j]["device_mac_address"] = $device_mac_address;
 													$array["devices"][$j]["device_label"] = $extension;
 													$array["devices"][$j]["device_vendor"] = $device_vendor;
-													if (strlen($device_templates[$d]) > 0) {
+													if (!empty($device_templates[$d])) {
 														$array["devices"][$j]["device_template"] = $device_templates[$d];
 													}
 													$array["devices"][$j]["device_enabled"] = "true";
@@ -639,7 +639,7 @@
 						//add or update voicemail
 							if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/voicemails')) {
 								//set the voicemail password
-									if (strlen($voicemail_password) == 0) {
+									if (empty($voicemail_password)) {
 										$voicemail_password = generate_password($_SESSION['voicemail']['password_length']['numeric'], 1);
 									}
 
@@ -702,12 +702,12 @@
 								$extension++;
 								$voicemail_id = $extension;
 
-								if (strlen($number_alias) > 0) {
+								if (!empty($number_alias)) {
 									$number_alias++;
 									$voicemail_id = $number_alias;
 								}
 
-								if (strlen($mwi_account) > 0) {
+								if (!empty($mwi_account)) {
 									$mwi_account_array = explode('@', $mwi_account);
 									$mwi_account_array[0]++;
 									$mwi_account = implode('@', $mwi_account_array);
@@ -733,7 +733,7 @@
 					}
 
 				//update device key label
-					if (strlen($effective_caller_id_name) > 0) {
+					if (!empty($effective_caller_id_name)) {
 						$sql = "update v_device_keys set ";
 						$sql .= "device_key_label = :device_key_label ";
 						$sql .= "where domain_uuid = :domain_uuid ";
@@ -772,7 +772,7 @@
 							}
 
 						//write the provision files
-							if (strlen($_SESSION['provision']['path']['text']) > 0) {
+							if (!empty($_SESSION['provision']['path']['text'])) {
 								if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/provision')) {
 									$prov = new provision;
 									$prov->domain_uuid = $domain_uuid;
@@ -790,7 +790,7 @@
 							}
 							$cache = new cache;
 							$cache->delete("directory:".$extension."@".$user_context);
-							if (permission_exists('number_alias') && strlen($number_alias) > 0) {
+							if (permission_exists('number_alias') && !empty($number_alias)) {
 								$cache->delete("directory:".$number_alias."@".$user_context);
 							}
 
@@ -870,7 +870,7 @@
 		unset($sql, $parameters, $row);
 
 	//outbound caller id number - only allow numeric and +
-		if (strlen($outbound_caller_id_number) > 0) {
+		if (!empty($outbound_caller_id_number)) {
 			$outbound_caller_id_number = preg_replace('#[^\+0-9]#', '', $outbound_caller_id_number);
 		}
 
@@ -997,17 +997,17 @@
 	$toll_allow = str_replace(':',',', $toll_allow);
 
 //set the defaults
-	if (strlen($user_context) == 0) { $user_context = $_SESSION['domain_name']; }
-	if (strlen($max_registrations) == 0) { $max_registrations = $_SESSION['extension']['max_registrations']['numeric']; }
-	if (strlen($accountcode) == 0) { $accountcode = get_accountcode(); }
-	if (strlen($limit_max) == 0) { $limit_max = '5'; }
-	if (strlen($limit_destination) == 0) { $limit_destination = '!USER_BUSY'; }
-	if (strlen($call_timeout) == 0) { $call_timeout = '30'; }
-	if (strlen($call_screen_enabled) == 0) { $call_screen_enabled = 'false'; }
-	if (strlen($user_record) == 0) { $user_record = $_SESSION['extension']['user_record_default']['text']; }
-	if (strlen($voicemail_transcription_enabled) == 0) { $voicemail_transcription_enabled = $_SESSION['voicemail']['transcription_enabled_default']['boolean']; }
-	if (strlen($voicemail_enabled) == 0) { $voicemail_enabled = $_SESSION['voicemail']['enabled_default']['boolean']; }
-	if (strlen($enabled) == 0) { $enabled = 'true'; }
+	if (empty($user_context)) { $user_context = $_SESSION['domain_name']; }
+	if (empty($max_registrations)) { $max_registrations = $_SESSION['extension']['max_registrations']['numeric']; }
+	if (empty($accountcode)) { $accountcode = get_accountcode(); }
+	if (empty($limit_max)) { $limit_max = '5'; }
+	if (empty($limit_destination)) { $limit_destination = '!USER_BUSY'; }
+	if (empty($call_timeout)) { $call_timeout = '30'; }
+	if (empty($call_screen_enabled)) { $call_screen_enabled = 'false'; }
+	if (empty($user_record)) { $user_record = $_SESSION['extension']['user_record_default']['text']; }
+	if (empty($voicemail_transcription_enabled)) { $voicemail_transcription_enabled = $_SESSION['voicemail']['transcription_enabled_default']['boolean']; }
+	if (empty($voicemail_enabled)) { $voicemail_enabled = $_SESSION['voicemail']['enabled_default']['boolean']; }
+	if (empty($enabled)) { $enabled = 'true'; }
 
 //create token
 	$object = new token;
@@ -1334,7 +1334,7 @@
 				echo "							<option value=''></option>\n";
 				if (is_array($devices) && @sizeof($devices) != 0) {
 					foreach ($devices as $field) {
-						if (strlen($field["device_mac_address"]) > 0) {
+						if (!empty($field["device_mac_address"])) {
 							$selected = $field_current_value == $field["device_mac_address"] ? "selected='selected'" : null;
 							echo "							<option value='".escape($field["device_mac_address"])."' ".$selected.">".escape($field["device_mac_address"])." - ".escape($field['device_model'])." ".escape($field['device_description'])."</option>\n";
 						}
@@ -1425,10 +1425,10 @@
 				echo "	<option value=''></option>\n";
 				foreach ($destinations as &$row) {
 					$tmp = $row["destination_caller_id_name"];
-					if(strlen($tmp) == 0){
+					if(empty($tmp)){
 						// $tmp = $row["destination_description"];
 					}
-					if(strlen($tmp) > 0 && !in_array($tmp, $in_list)){
+					if(!empty($tmp) && !in_array($tmp, $in_list)){
 						$in_list[] = $tmp;
 						if ($outbound_caller_id_name == $tmp) {
 							echo "		<option value='".escape($tmp)."' selected='selected'>".escape($tmp)."</option>\n";
@@ -1467,10 +1467,10 @@
 				echo "	<option value=''></option>\n";
 				foreach ($destinations as &$row) {
 					$tmp = $row["destination_caller_id_number"];
-					if(strlen($tmp) == 0){
+					if(empty($tmp)){
 						$tmp = $row["destination_number"];
 					}
-					if(strlen($tmp) > 0){
+					if(!empty($tmp)){
 						if ($outbound_caller_id_number == $tmp) {
 							echo "		<option value='".escape($tmp)."' selected='selected'>".escape($tmp)."</option>\n";
 						}
@@ -1508,10 +1508,10 @@
 				echo "		<option value=''></option>\n";
 				foreach ($emergency_destinations as &$row) {
 					$tmp = $row["destination_caller_id_name"];
-					if(strlen($tmp) == 0){
+					if(empty($tmp)){
 						$tmp = $row["destination_description"];
 					}
-					if(strlen($tmp) > 0){
+					if(!empty($tmp)){
 						if ($emergency_caller_id_name == $tmp) {
 							echo "		<option value='".escape($tmp)."' selected='selected'>".escape($tmp)."</option>\n";
 						}
@@ -1554,10 +1554,10 @@
 				}
 				foreach ($emergency_destinations as &$row) {
 					$tmp = $row["destination_caller_id_number"];
-					if(strlen($tmp) == 0){
+					if(empty($tmp)){
 						$tmp = $row["destination_number"];
 					}
-					if(strlen($tmp) > 0){
+					if(!empty($tmp)){
 						if ($emergency_caller_id_number == $tmp) {
 							echo "		<option value='".escape($tmp)."' selected='selected'>".escape($tmp)."</option>\n";
 						}

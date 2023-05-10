@@ -52,16 +52,6 @@ if (!class_exists('registrations')) {
 		}
 
 		/**
-		 * called when there are no references to a particular object
-		 * unset the variables used in the class
-		 */
-		public function __destruct() {
-			foreach ($this as $key => $value) {
-				unset($this->$key);
-			}
-		}
-
-		/**
 		 * get the registrations
 		 */
 		public function get($profile = 'all') {
@@ -203,7 +193,7 @@ if (!class_exists('registrations')) {
 				$registrations = $this->get($profile);
 
 			//set the count
-				$count = @sizeof($registrations);
+				$count = !empty($registrations) ? @sizeof($registrations) : 0;
 
 			//return the registrations count
 				return $count;

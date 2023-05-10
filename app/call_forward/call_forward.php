@@ -96,7 +96,7 @@
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	}
-	if (strlen($search) > 0) {
+	if (!empty($search)) {
 		$sql .= "and ( ";
 		$sql .= "extension like :search ";
 		$sql .= "or lower(description) like :search ";
@@ -142,7 +142,7 @@
 	$param = $params ? implode('&', $params) : null;
 	unset($params);
 	$page = $_GET['page'];
-	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
+	if (empty($page)) { $page = 0; $_GET['page'] = 0; }
 	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
 	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
@@ -156,7 +156,7 @@
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	}
-	if (strlen($search) > 0) {
+	if (!empty($search)) {
 		$sql .= "and ( ";
 		$sql .= "extension like :search ";
 		$sql .= "or lower(description) like :search ";
@@ -296,7 +296,7 @@
 				echo "	</td>\n";
 
 				if ($_GET['show'] == "all" && permission_exists('call_forward_all')) {
-					if (strlen($_SESSION['domains'][$row['domain_uuid']]['domain_name']) > 0) {
+					if (!empty($_SESSION['domains'][$row['domain_uuid']]['domain_name'])) {
 						$domain = $_SESSION['domains'][$row['domain_uuid']]['domain_name'];
 					}
 					else {

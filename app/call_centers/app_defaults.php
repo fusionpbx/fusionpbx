@@ -78,7 +78,7 @@ if ($domains_processed == 1) {
 			foreach ($call_center_queues as $row) {
 
 				//get the application and data
-					$action_array = explode(":",$row['queue_timeout_action']);
+					$action_array = explode(":",$row['queue_timeout_action'] ?? '');
 					$queue_timeout_app = $action_array[0];
 					unset($action_array[0]);
 					$queue_timeout_data = implode($action_array);
@@ -122,10 +122,10 @@ if ($domains_processed == 1) {
 							}
 						}
 					}
-					if (strlen($row['queue_cid_prefix']) > 0) {
+					if (!empty($row['queue_cid_prefix'])) {
 						$dialplan_xml .= "		<action application=\"set\" data=\"effective_caller_id_name=".xml::sanitize($row['queue_cid_prefix'])."#\${caller_id_name}\"/>\n";
 					}
-					if (strlen($row['queue_cc_exit_keys']) > 0) {
+					if (!empty($row['queue_cc_exit_keys'])) {
 						$dialplan_xml .= "		<action application=\"set\" data=\"cc_exit_keys=".xml::sanitize($row['queue_cc_exit_keys'])."\"/>\n";
 					}
 					$dialplan_xml .= "		<action application=\"callcenter\" data=\"".xml::sanitize($row['queue_extension'])."@".xml::sanitize($row['domain_name'])."\"/>\n";

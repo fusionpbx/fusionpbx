@@ -92,8 +92,8 @@
 	}
 
 //add the search term
-	$search = strtolower($_GET["search"]);
-	if (strlen($search) > 0) {
+	$search = strtolower($_GET["search"] ?? '');
+	if (!empty($search)) {
 		$sql_search = " (";
 		$sql_search .= " lower(template_language) like :search ";
 		//$sql_search .= " or lower(template_category) like :search ";

@@ -17,12 +17,16 @@ class plugin_email {
 	public $user_uuid;
 	public $user_email;
 	public $contact_uuid;
+	public $debug;
 
 	/**
 	 * time based one time password with email
 	 * @return array [authorized] => true or false
 	 */
 	function email() {
+
+			//pre-process some settings
+			$settings['theme']['favicon'] = !empty($settings['theme']['favicon']) ? $settings['theme']['favicon'] : PROJECT_PATH.'/themes/default/favicon.ico';
 
 			//set a default template
 			$_SESSION['domain']['template']['name'] = 'default';
@@ -88,6 +92,7 @@ class plugin_email {
 				$view->assign("login_logo_height", $login_logo_height);
 				$view->assign("login_logo_source", $login_logo_source);
 				$view->assign("button_login", $text['button-login']);
+				$view->assign("favicon", $settings['theme']['favicon']);
 
 				//show the views
 				$content = $view->render('username.htm');
@@ -107,7 +112,10 @@ class plugin_email {
 				//get the user details
 				$sql = "select user_uuid, username, user_email, contact_uuid \n";
 				$sql .= "from v_users\n";
-				$sql .= "where username = :username\n";
+				$sql .= "where (\n";
+				$sql .= "	username = :username\n";
+				$sql .= "	or user_email = :username\n";
+				$sql .= ")\n";
 				if ($_SESSION["users"]["unique"]["text"] != "global") {
 					//unique username per domain (not globally unique across system - example: email address)
 					$sql .= "and domain_uuid = :domain_uuid ";
@@ -119,7 +127,7 @@ class plugin_email {
 				unset($parameters);
 
 				//set class variables
-				//if (strlen($row["user_email"]) > 0) {
+				//if (!empty($row["user_email"])) {
 				//	$this->user_uuid = $row['user_uuid'];
 				//	$this->user_email = $row['user_email'];
 				//	$this->contact_uuid = $row['contact_uuid'];
@@ -132,7 +140,7 @@ class plugin_email {
 				$_SESSION["contact_uuid"] = $row["contact_uuid"];
 
 				//user email not found
-				if (strlen($row["user_email"]) == 0) {
+				if (empty($row["user_email"])) {
 					//build the result array
 					$result["plugin"] = "email";
 					$result["domain_name"] = $_SESSION["domain_name"];
@@ -262,6 +270,7 @@ class plugin_email {
 				$view->assign("login_logo_height", $login_logo_height);
 				$view->assign("login_logo_source", $login_logo_source);
 				$view->assign("button_verify", $text['label-verify']);
+				$view->assign("favicon", $settings['theme']['favicon']);
 
 				//debug information
 				//echo "<pre>\n";
@@ -293,7 +302,10 @@ class plugin_email {
 				//get the user details
 				$sql = "select user_uuid, user_email, contact_uuid, user_email_secret\n";
 				$sql .= "from v_users\n";
-				$sql .= "where username = :username\n";
+				$sql .= "where (\n";
+				$sql .= "	username = :username\n";
+				$sql .= "	or user_email = :username\n";
+				$sql .= ")\n";
 				if ($_SESSION["users"]["unique"]["text"] != "global") {
 					//unique username per domain (not globally unique across system - example: email address)
 					$sql .= "and domain_uuid = :domain_uuid ";

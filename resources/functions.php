@@ -60,7 +60,7 @@
 				else {
 					$tmp_str = mysqli_real_escape_string($db, $string);
 				}
-				if (strlen($tmp_str)) {
+				if (!empty($tmp_str)) {
 					$string = $tmp_str;
 				}
 				else {
@@ -82,7 +82,7 @@
 
 	if (!function_exists('check_cidr')) {
 		function check_cidr($cidr, $ip_address) {
-			if (isset($cidr) && strlen($cidr) > 0) {
+			if (isset($cidr) && !empty($cidr)) {
 				list ($subnet, $mask) = explode ('/', $cidr);
 				return ( ip2long ($ip_address) & ~((1 << (32 - $mask)) - 1) ) == ip2long ($subnet);
 			}
@@ -266,7 +266,7 @@
 				$result = false;
 			//permissions exist
 				if (is_array($_SESSION["permissions"]) && @sizeof($_SESSION['permissions']) != 0) {
-				//array
+					//array
 					if (is_array($permission) && @sizeof($permission) != 0) {
 						if ($operator == 'and') {
 							$exists_all = true;
@@ -281,7 +281,7 @@
 						else {
 							$exists_one = false;
 							foreach ($permission as $perm) {
-								if ($_SESSION["permissions"][$permission] != true) {
+								if (isset($_SESSION["permissions"][$perm]) && $_SESSION["permissions"][$perm] != true) {
 									$exists_one = true;
 									break;
 								}
@@ -289,9 +289,9 @@
 							$result = $exists_one;
 						}
 					}
-				//single
+					//single
 					else {
-						if ($_SESSION["permissions"][$permission] == true) {
+						if (isset($_SESSION["permissions"][$permission]) && $_SESSION["permissions"][$permission] == true) {
 							$result = true;
 						}
 					}
@@ -362,7 +362,7 @@
 			$result = $database->select($sql, null, 'all');
 			if (is_array($result) && @sizeof($result) != 0) {
 				foreach($result as $field) {
-					if (strlen($field[$field_name]) > 0) {
+					if (!empty($field[$field_name])) {
 						$html .= "<option value=\"".escape($field[$field_name])."\" ".($field_current_value == $field[$field_name] ? "selected='selected'" : null).">".escape($field[$field_name])."</option>\n";
 					}
 				}
@@ -391,7 +391,7 @@
 			$field_name = preg_replace("#[^a-zA-Z0-9_]#", "", $field_name);
 			$field_value = preg_replace("#[^a-zA-Z0-9_]#", "", $field_value);
 		
-			if (strlen($field_value) > 0) {
+			if (!empty($field_value)) {
 				$html .= "<select id=\"".$field_value."\" name=\"".$field_value."\" class='formfld' style='".$style."' ".($on_change != '' ? "onchange=\"".$on_change."\"" : null).">\n";
 				$html .= "	<option value=\"\"></option>\n";
 
@@ -408,9 +408,9 @@
 			$result = $database->select($sql, null, 'all');
 			if (is_array($result) && @sizeof($result) != 0) {
 				foreach($result as $field) {
-					if (strlen($field[$field_name]) > 0) {
+					if (!empty($field[$field_name])) {
 						$selected = $field_current_value == $field[$field_name] ? "selected='selected'" : null;
-						$array_key = strlen($field_value) > 0 ? $field_value : $field_name;
+						$array_key = empty($field_value) ? $field_name : $field_value;
 						$html .= "<option value=\"".urlencode($field[$array_key])."\" ".$selected.">".urlencode($field[$field_name])."</option>\n";
 					}
 				}
@@ -429,10 +429,10 @@
 			if (is_uuid($app_uuid) > 0) { $app_uuid = "&app_uuid=".urlencode($app_uuid); }	// accomodate need to pass app_uuid where necessary (inbound/outbound routes lists)
 
 			$field_name = preg_replace("#[^a-zA-Z0-9_]#", "", $field_name);
-			$field_value = preg_replace("#[^a-zA-Z0-9_]#", "", $field_value);
+			$field_value = preg_replace("#[^a-zA-Z0-9_]#", "", $field_value ?? '');
 
 			$sanitized_parameters = '';
-			if (isset($http_get_params) && strlen($http_get_params) > 0) {
+			if (isset($http_get_params) && !empty($http_get_params)) {
 				$parameters = explode('&', $http_get_params);
 				if (is_array($parameters)) {
 					foreach ($parameters as $parameter) {
@@ -440,11 +440,11 @@
 							$array = explode('=', $parameter);
 							$key = preg_replace('#[^a-zA-Z0-9_\-]#', '', $array['0']);
 							$value = urldecode($array['1']);
-							if ($key == 'order_by' && strlen($value) > 0) {
+							if ($key == 'order_by' && !empty($value)) {
 								//validate order by
 								$sanitized_parameters .= "&order_by=". preg_replace('#[^a-zA-Z0-9_\-]#', '', $value);
 							}
-							else if ($key == 'order' && strlen($value) > 0) {
+							else if ($key == 'order' && !empty($value)) {
 								//validate order
 								switch ($value) {
 									case 'asc':
@@ -455,7 +455,7 @@
 										break;
 								}
 							}
-							else if (strlen($value) > 0 && is_numeric($value)) {
+							else if (!empty($value) && is_numeric($value)) {
 								$sanitized_parameters .= "&".$key."=".$value;
 							}
 							else {
@@ -467,8 +467,8 @@
 			}
 
 			$html = "<th ".$css." nowrap='nowrap'>";
-			$description = (strlen($description) > 0) ? $description . ', ': '';
-			if (strlen($order_by) == 0) {
+			$description = empty($description) ? '' : $description . ', ';
+			if (empty($order_by)) {
 				$order = 'asc';
 			}
 			if ($order_by == $field_name) {
@@ -563,7 +563,7 @@
 			//find unique filename: check if file exists if it does then increment the filename
 				$i = 1;
 				while( file_exists($dest_dir.'/'.$file_name)) {
-					if (strlen($file_ext)> 0) {
+					if (!empty($file_ext)) {
 						$file_name = $file_name_base . $i .'.'. $file_ext;
 					}
 					else {
@@ -688,8 +688,8 @@
 	if (!function_exists('user_add')) {
 		function user_add($username, $password, $user_email = '') {
 			global $domain_uuid;
-			if (strlen($username) == 0) { return false; }
-			if (strlen($password) == 0) { return false; }
+			if (empty($username)) { return false; }
+			if (empty($password)) { return false; }
 			if (!username_exists($username)) {
 				//build user insert array
 					$user_uuid = uuid();
@@ -758,6 +758,10 @@ function switch_module_is_running($fp, $mod) {
 
 //format a number (n) replace with a number (r) remove the number
 function format_string($format, $data) {
+	//nothing to do so return
+	if(empty($format))
+		return $data;
+	
 	//preset values
 	$x=0;
 	$tmp = '';
@@ -783,7 +787,7 @@ function format_string($format, $data) {
 			}
 		}
 	}
-	if (strlen($tmp) == 0) {
+	if (empty($tmp)) {
 		return $data;
 	}
 	else {
@@ -1666,8 +1670,8 @@ function number_pad($number,$n) {
 					$string = "^\\+(".substr($string, 1).")$";
 				}
 			//add prefix
-				if (strlen($prefix) > 0) {
-					if (strlen($prefix) > 0 && strlen($prefix) < 4) {
+				if (!empty($prefix)) {
+					if (!empty($prefix) && strlen($prefix) < 4) {
 						$plus = (substr($string, 0, 1) == "+") ? '' : '\+?';
 						$prefix = $plus.$prefix.'?';
 					}
@@ -1888,16 +1892,19 @@ function number_pad($number,$n) {
 
 //escape user data
 	function escape($string) {
-		if (is_array($string)) {
-			return false;
-		}
-		elseif (isset($string) && strlen($string)) {
+		if (is_string($string)) {
 			return htmlentities($string, ENT_QUOTES | ENT_HTML5, 'UTF-8');
 		}
-		else {
-			return false;
+		elseif (is_numeric($string)) {
+			return $string;
 		}
-		//return htmlspecialchars($string, ENT_QUOTES, 'UTF-8');
+		else {
+			$string = (array) $string;
+			if (isset($string[0])) {
+				return htmlentities($string[0], ENT_QUOTES | ENT_HTML5, 'UTF-8');
+			}
+		}
+		return false;
 	}
 
 //output pre-formatted array keys and values
@@ -2010,8 +2017,9 @@ function number_pad($number,$n) {
 	if (!function_exists('order_by')) {
 		function order_by($col, $dir, $col_default = '', $dir_default = 'asc') {
 			$order_by = ' order by ';
-			$col = preg_replace('#[^a-zA-Z0-9-_.]#', '', $col);
-			$dir = strtolower($dir) == 'desc' ? 'desc' : 'asc';
+			$col = preg_replace('#[^a-zA-Z0-9-_.]#', '', $col ?? '');
+			if(!empty($dir))
+				$dir = strtolower($dir) == 'desc' ? 'desc' : 'asc';
 			if ($col != '') {
 				return $order_by.$col.' '.$dir.' ';
 			}
@@ -2037,7 +2045,7 @@ function number_pad($number,$n) {
 		function limit_offset($limit, $offset = 0) {
 			$regex = '#[^0-9]#';
 			$limit = preg_replace($regex, '', $limit);
-			$offset = preg_replace($regex, '', $offset);
+			$offset = preg_replace($regex, '', $offset ?? '');
 			if (is_numeric($limit) && $limit > 0) {
 				$clause = ' limit '.$limit;
 				$offset = is_numeric($offset) ? $offset : 0;
@@ -2152,7 +2160,7 @@ function number_pad($number,$n) {
 //get accountcode
 	if (!function_exists('get_accountcode')) {
 		function get_accountcode() {
-			if (strlen($accountcode = $_SESSION['domain']['accountcode']['text']) > 0) {
+			if (!empty($accountcode = $_SESSION['domain']['accountcode']['text'] ?? '')) {
 				if ($accountcode == "none") {
 					return;
 				}

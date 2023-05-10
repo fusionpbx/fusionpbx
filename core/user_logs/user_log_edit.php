@@ -86,7 +86,7 @@
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
 	echo "	<select class='formfld' name='domain_uuid'>\n";
-	if (strlen($domain_uuid) == 0) {
+	if (empty($domain_uuid)) {
 		echo "		<option value='' selected='selected'>".$text['select-global']."</option>\n";
 	}
 	else {
