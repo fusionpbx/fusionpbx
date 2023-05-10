@@ -266,7 +266,7 @@
 				$result = false;
 			//permissions exist
 				if (is_array($_SESSION["permissions"]) && @sizeof($_SESSION['permissions']) != 0) {
-				//array
+					//array
 					if (is_array($permission) && @sizeof($permission) != 0) {
 						if ($operator == 'and') {
 							$exists_all = true;
@@ -281,7 +281,7 @@
 						else {
 							$exists_one = false;
 							foreach ($permission as $perm) {
-								if ($_SESSION["permissions"][$permission] != true) {
+								if (isset($_SESSION["permissions"][$perm]) && $_SESSION["permissions"][$perm] != true) {
 									$exists_one = true;
 									break;
 								}
@@ -289,9 +289,9 @@
 							$result = $exists_one;
 						}
 					}
-				//single
+					//single
 					else {
-						if ($_SESSION["permissions"][$permission] == true) {
+						if (isset($_SESSION["permissions"][$permission]) && $_SESSION["permissions"][$permission] == true) {
 							$result = true;
 						}
 					}
@@ -1900,7 +1900,7 @@ function number_pad($number,$n) {
 		}
 		else {
 			$string = (array) $string;
-			if (is_string($string[0])) {
+			if (isset($string[0])) {
 				return htmlentities($string[0], ENT_QUOTES | ENT_HTML5, 'UTF-8');
 			}
 		}
