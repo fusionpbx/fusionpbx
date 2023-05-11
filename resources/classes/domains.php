@@ -421,7 +421,7 @@ if (!class_exists('domains')) {
 		public function set() {
 
 			//get previous domain settings
-				if (is_uuid($_SESSION["previous_domain_uuid"])) {
+				if (isset($_SESSION["previous_domain_uuid"])) {
 					$sql = "select * from v_domain_settings ";
 					$sql .= "where domain_uuid = :previous_domain_uuid ";
 					$sql .= "and domain_setting_enabled = 'true' ";
