@@ -21,7 +21,7 @@ $text['label-switch_status']['ro-ro'] = "Comutare stare";
 $text['label-switch_status']['ru-ru'] = "FreeSwitch";
 $text['label-switch_status']['sv-se'] = "Växlingsstatus";
 $text['label-switch_status']['uk-ua'] = "Статус перемикача";
-$text['label-switch_status']['zh-cn'] = "现况";
+$text['label-switch_status']['zh-cn'] = "切换状态";
 $text['label-switch_status']['ja-jp'] = "スイッチの状態";
 $text['label-switch_status']['ko-kr'] = "스위치 상태";
 
@@ -46,9 +46,9 @@ $text['label-channels']['ro-ro'] = "Canale";
 $text['label-channels']['ru-ru'] = "Каналы";
 $text['label-channels']['sv-se'] = "Kanaler";
 $text['label-channels']['uk-ua'] = "Канали";
-$text['label-channels']['zh-cn'] = "渠道";
-$text['label-channels']['ja-jp'] = "チャンネル";
-$text['label-channels']['ko-kr'] = "채널 :";
+$text['label-channels']['zh-cn'] = "频道";
+$text['label-channels']['ja-jp'] = "チャネル";
+$text['label-channels']['ko-kr'] = "채널";
 
 $text['label-registrations']['en-us'] = "Registrations";
 $text['label-registrations']['en-gb'] = "Registrations";
@@ -72,8 +72,8 @@ $text['label-registrations']['ru-ru'] = "Регистрации SIP";
 $text['label-registrations']['sv-se'] = "Registreringar";
 $text['label-registrations']['uk-ua'] = "Реєстрації";
 $text['label-registrations']['zh-cn'] = "登记";
-$text['label-registrations']['ja-jp'] = "参加登録";
-$text['label-registrations']['ko-kr'] = "이름 *";
+$text['label-registrations']['ja-jp'] = "登録";
+$text['label-registrations']['ko-kr'] = "등록";
 
 $text['label-switch_uptime']['en-us'] = "Switch Uptime";
 $text['label-switch_uptime']['en-gb'] = "Switch Uptime";
@@ -96,8 +96,8 @@ $text['label-switch_uptime']['ro-ro'] = "Comutați Uptime";
 $text['label-switch_uptime']['ru-ru'] = "Время непрерывной работы FreeSwitch";
 $text['label-switch_uptime']['sv-se'] = "Byt upptid";
 $text['label-switch_uptime']['uk-ua'] = "Перемикач безвідмовної роботи";
-$text['label-switch_uptime']['zh-cn'] = "电话";
-$text['label-switch_uptime']['ja-jp'] = "スイッチ稼働時間";
+$text['label-switch_uptime']['zh-cn'] = "切换正常运行时间";
+$text['label-switch_uptime']['ja-jp'] = "稼働時間の切り替え";
 $text['label-switch_uptime']['ko-kr'] = "스위치 가동 시간";
 
 $text['label-switch']['en-us'] = "Switch";
@@ -120,8 +120,8 @@ $text['label-switch']['ro-ro'] = "Intrerupator";
 $text['label-switch']['ru-ru'] = "FreeSwitch";
 $text['label-switch']['sv-se'] = "Switch";
 $text['label-switch']['uk-ua'] = "перемикач";
-$text['label-switch']['zh-cn'] = "电话";
+$text['label-switch']['zh-cn'] = "转变";
 $text['label-switch']['ja-jp'] = "スイッチ";
-$text['label-switch']['ko-kr'] = "기타 제품";
+$text['label-switch']['ko-kr'] = "스위치";
 
 ?>

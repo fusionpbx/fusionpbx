@@ -22,7 +22,7 @@
 	$apps[$x]['menu'][$y]['title']['sv-se'] = "Konferenskontroller";
 	$apps[$x]['menu'][$y]['title']['uk-ua'] = "Контроль конференції";
 	$apps[$x]['menu'][$y]['title']['zh-cn'] = "会议控制";
-	$apps[$x]['menu'][$y]['title']['ja-jp'] = "会議の制御";
+	$apps[$x]['menu'][$y]['title']['ja-jp'] = "会議コントロール";
 	$apps[$x]['menu'][$y]['title']['ko-kr'] = "회의 컨트롤";
 	$apps[$x]['menu'][$y]['uuid'] = "9896d4b5-507f-4d0e-8db7-caa7f4655202";
 	$apps[$x]['menu'][$y]['parent_uuid'] = "fd29e39c-c936-f5fc-8e2b-611681b266b5";
