@@ -27,6 +27,7 @@ class plugin_totp {
 
 		//pre-process some settings
 			$settings['theme']['favicon'] = !empty($settings['theme']['favicon']) ? $settings['theme']['favicon'] : PROJECT_PATH.'/themes/default/favicon.ico';
+			$settings['login']['destination'] = !empty($settings['login']['destination']) ? $settings['login']['destination'] : '';
 
 		//get the username
 			if (isset($_SESSION["username"])) {
@@ -67,6 +68,9 @@ class plugin_totp {
 				$view->init();
 
 				//assign default values to the template
+				$view->assign("project_path", PROJECT_PATH);
+				$view->assign("login_destination_url", $settings['login']['destination']);
+				$view->assign("favicon", $settings['theme']['favicon']);
 				$view->assign("login_title", $text['label-username']);
 				$view->assign("login_username", $text['label-username']);
 				$view->assign("login_logo_width", $login_logo_width);
@@ -146,6 +150,8 @@ class plugin_totp {
 				$view->init();
 
 				//assign values to the template
+				$view->assign("login_destination_url", $settings['login']['destination']);
+				$view->assign("favicon", $settings['theme']['favicon']);
 				$view->assign("login_title", $text['label-verify']);
 				$view->assign("login_authentication_code", $text['label-authentication_code']);
 				$view->assign("login_logo_width", $login_logo_width);
