@@ -65,7 +65,7 @@
 				$this->toggle_values = ['true','false'];
 
 			//set the domain_uuid if not provided
-				if (strlen($this->domain_uuid ?? '') === 0) {
+				if (empty($this->domain_uuid)) {
 					$this->domain_uuid = $_SESSION['domain_uuid'];
 				}
 
@@ -143,7 +143,7 @@
 					}
 				}
 				else {
-					if (is_array($voicemail_ids) && @sizeof($voicemail_ids) != 0) {
+					if (!empty($voicemail_ids) && @sizeof($voicemail_ids) != 0) {
 						//show only the assigned voicemail ids
 						$sql .= "and ";
 						if (is_numeric($this->voicemail_id) && in_array($this->voicemail_id, $voicemail_ids)) {
