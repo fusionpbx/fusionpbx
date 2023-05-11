@@ -415,7 +415,7 @@ class authentication {
 			$this->domain_name = $_SERVER["HTTP_HOST"];
 
 		//get the domain name from the username
-			if ($_SESSION["users"]["unique"]["text"] != "global") {
+			if (isset($_SESSION["users"]["unique"]) && $_SESSION["users"]["unique"]["text"] != "global") {
 				$username_array = explode("@", $_REQUEST["username"] ?? '');
 				if (count($username_array) > 1) {
 					//get the domain name
