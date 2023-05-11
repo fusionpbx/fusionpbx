@@ -40,7 +40,7 @@ class plugin_database {
 			}
 
 		//show the authentication code view
-			if ($_REQUEST["username"] == '' && $_REQUEST["key"] == '') {
+			if (empty($_REQUEST["username"]) && empty($_REQUEST["key"])) {
 
 				//login logo source
 					if (isset($_SESSION['theme']['logo_login']['text']) && $_SESSION['theme']['logo_login']['text'] != '') {
