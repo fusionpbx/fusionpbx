@@ -73,6 +73,11 @@
 --disable the cache
 	cached_value = nil;
 
+--domain_uuid is null then use a random uuid to prevent an error and allow domain_uuid is null SQL to still run
+	if (domain_uuid == nil) then
+		domain_uuid = '74040b66-ca70-4a80-84b5-8cb2139c07dd';
+	end
+
 --run call block one time
 	if (call_block == nil and call_block ~= 'true') then
 
