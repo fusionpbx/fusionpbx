@@ -21,7 +21,7 @@
 	<link rel='stylesheet' type='text/css' href='{$project_path}/resources/fontawesome/css/all.min.css.php'>
 	<link rel='stylesheet' type='text/css' href='{$project_path}/themes/default/css.php'>
 {*//link to custom css file *}
-	{if $settings.theme.custom_css}
+	{if !empty($settings.theme.custom_css)}
 		<link rel='stylesheet' type='text/css' href='{$settings.theme.custom_css}'>
 	{/if}
 
@@ -43,7 +43,7 @@
 	<script language='JavaScript' type='text/javascript' src='{$project_path}/resources/fontawesome/js/solid.min.js.php' defer></script>
 
 {*//web font loader *}
-	{if $settings.theme.font_loader == 'true'}
+	{if isset($settings.theme.font_loader) && $settings.theme.font_loader == 'true'}
 		{if $settings.theme.font_retrieval != 'asynchronous'}
 			<script language='JavaScript' type='text/javascript' src='//ajax.googleapis.com/ajax/libs/webfont/{$settings.theme.font_loader_version}/webfont.js'></script>
 		{/if}
@@ -1139,7 +1139,7 @@
 		</div>
 
 	{*//login page *}
-		{if $login_page}
+		{if !empty($login_page)}
 			<div id='default_login'>
 				<a href='{$project_path}/'><img id='login_logo' style='width: {$login_logo_width}; height: {$login_logo_height};' src='{$login_logo_source}'></a><br />
 				{$document_body}
