@@ -27,6 +27,7 @@ class plugin_email {
 
 			//pre-process some settings
 			$settings['theme']['favicon'] = !empty($settings['theme']['favicon']) ? $settings['theme']['favicon'] : PROJECT_PATH.'/themes/default/favicon.ico';
+			$settings['login']['destination'] = !empty($settings['login']['destination']) ? $settings['login']['destination'] : '';
 
 			//set a default template
 			$_SESSION['domain']['template']['name'] = 'default';
@@ -86,13 +87,15 @@ class plugin_email {
 				$view->init();
 
 				//assign default values to the template
+				$view->assign("project_path", PROJECT_PATH);
+				$view->assign("login_destination_url", $settings['login']['destination']);
+				$view->assign("favicon", $settings['theme']['favicon']);
 				$view->assign("login_title", $text['label-username']);
 				$view->assign("login_username", $text['label-username']);
 				$view->assign("login_logo_width", $login_logo_width);
 				$view->assign("login_logo_height", $login_logo_height);
 				$view->assign("login_logo_source", $login_logo_source);
 				$view->assign("button_login", $text['button-login']);
-				$view->assign("favicon", $settings['theme']['favicon']);
 
 				//show the views
 				$content = $view->render('username.htm');
@@ -263,6 +266,9 @@ class plugin_email {
 				$view->init();
 
 				//assign default values to the template
+				$view->assign("project_path", PROJECT_PATH);
+				$view->assign("login_destination_url", $settings['login']['destination']);
+				$view->assign("favicon", $settings['theme']['favicon']);
 				$view->assign("login_title", $text['label-verify']);
 				$view->assign("login_email_description", $text['label-email_description']);
 				$view->assign("login_authentication_code", $text['label-authentication_code']);
@@ -270,7 +276,6 @@ class plugin_email {
 				$view->assign("login_logo_height", $login_logo_height);
 				$view->assign("login_logo_source", $login_logo_source);
 				$view->assign("button_verify", $text['label-verify']);
-				$view->assign("favicon", $settings['theme']['favicon']);
 
 				//debug information
 				//echo "<pre>\n";
