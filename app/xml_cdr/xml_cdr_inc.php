@@ -45,43 +45,49 @@
 //set 24hr or 12hr clock
 	define('TIME_24HR', 1);
 
+//set defaults
+	if(!isset($_GET['show'])) {
+		$_GET['show'] = 'domain';
+	}
+
+
 //get post or get variables from http
 	if (count($_REQUEST) > 0) {
-		$cdr_id = $_REQUEST["cdr_id"];
-		$direction = $_REQUEST["direction"];
-		$caller_id_name = $_REQUEST["caller_id_name"];
-		$caller_id_number = $_REQUEST["caller_id_number"];
-		$caller_destination = $_REQUEST["caller_destination"];
-		$extension_uuid = $_REQUEST["extension_uuid"];
-		$destination_number = $_REQUEST["destination_number"];
-		$context = $_REQUEST["context"];
-		$start_stamp_begin = $_REQUEST["start_stamp_begin"];
-		$start_stamp_end = $_REQUEST["start_stamp_end"];
-		$answer_stamp_begin = $_REQUEST["answer_stamp_begin"];
-		$answer_stamp_end = $_REQUEST["answer_stamp_end"];
-		$end_stamp_begin = $_REQUEST["end_stamp_begin"];
-		$end_stamp_end = $_REQUEST["end_stamp_end"];
-		$start_epoch = $_REQUEST["start_epoch"];
-		$stop_epoch = $_REQUEST["stop_epoch"];
-		$duration_min = $_REQUEST["duration_min"];
-		$duration_max = $_REQUEST["duration_max"];
-		$billsec = $_REQUEST["billsec"];
-		$hangup_cause = $_REQUEST["hangup_cause"];
-		$call_result = $_REQUEST["call_result"];
-		$xml_cdr_uuid = $_REQUEST["xml_cdr_uuid"];
-		$bleg_uuid = $_REQUEST["bleg_uuid"];
-		$accountcode = $_REQUEST["accountcode"];
-		$read_codec = $_REQUEST["read_codec"];
-		$write_codec = $_REQUEST["write_codec"];
-		$remote_media_ip = $_REQUEST["remote_media_ip"];
-		$network_addr = $_REQUEST["network_addr"];
-		$bridge_uuid = $_REQUEST["network_addr"];
-		$tta_min = $_REQUEST['tta_min'];
-		$tta_max = $_REQUEST['tta_max'];
-		$recording = $_REQUEST['recording'];
-		$order_by = $_REQUEST["order_by"];
-		$order = $_REQUEST["order"];
-		if (is_array($_SESSION['cdr']['field'])) {
+		$cdr_id = $_REQUEST["cdr_id"] ?? '';
+		$direction = $_REQUEST["direction"] ?? '';
+		$caller_id_name = $_REQUEST["caller_id_name"] ?? '';
+		$caller_id_number = $_REQUEST["caller_id_number"] ?? '';
+		$caller_destination = $_REQUEST["caller_destination"] ?? '';
+		$extension_uuid = $_REQUEST["extension_uuid"] ?? '';
+		$destination_number = $_REQUEST["destination_number"] ?? '';
+		$context = $_REQUEST["context"] ?? '';
+		$start_stamp_begin = $_REQUEST["start_stamp_begin"] ?? '';
+		$start_stamp_end = $_REQUEST["start_stamp_end"] ?? '';
+		$answer_stamp_begin = $_REQUEST["answer_stamp_begin"] ?? '';
+		$answer_stamp_end = $_REQUEST["answer_stamp_end"] ?? '';
+		$end_stamp_begin = $_REQUEST["end_stamp_begin"] ?? '';
+		$end_stamp_end = $_REQUEST["end_stamp_end"] ?? '';
+		$start_epoch = $_REQUEST["start_epoch"] ?? '';
+		$stop_epoch = $_REQUEST["stop_epoch"] ?? '';
+		$duration_min = $_REQUEST["duration_min"] ?? '';
+		$duration_max = $_REQUEST["duration_max"] ?? '';
+		$billsec = $_REQUEST["billsec"] ?? '';
+		$hangup_cause = $_REQUEST["hangup_cause"] ?? '';
+		$call_result = $_REQUEST["call_result"] ?? '';
+		$xml_cdr_uuid = $_REQUEST["xml_cdr_uuid"] ?? '';
+		$bleg_uuid = $_REQUEST["bleg_uuid"] ?? '';
+		$accountcode = $_REQUEST["accountcode"] ?? '';
+		$read_codec = $_REQUEST["read_codec"] ?? '';
+		$write_codec = $_REQUEST["write_codec"] ?? '';
+		$remote_media_ip = $_REQUEST["remote_media_ip"] ?? '';
+		$network_addr = $_REQUEST["network_addr"] ?? '';
+		$bridge_uuid = $_REQUEST["network_addr"] ?? '';
+		$tta_min = $_REQUEST['tta_min'] ?? '';
+		$tta_max = $_REQUEST['tta_max'] ?? '';
+		$recording = $_REQUEST['recording'] ?? '';
+		$order_by = $_REQUEST["order_by"] ?? '';
+		$order = $_REQUEST["order"] ?? '';
+		if (isset($_SESSION['cdr']['field']) && is_array($_SESSION['cdr']['field'])) {
 			foreach ($_SESSION['cdr']['field'] as $field) {
 				$array = explode(",", $field);
 				$field_name = end($array);
@@ -99,23 +105,19 @@
 				case 'equal': $mos_comparison = "<"; break;
 				case 'notequal': $mos_comparison = "<>"; break;
 			}
+			//$mos_comparison = $_REQUEST["mos_comparison"];
+			$mos_score = $_REQUEST["mos_score"];
 		}
 		else {
 			$mos_comparison = '';
 		}
-		//$mos_comparison = $_REQUEST["mos_comparison"];
-		$mos_score = $_REQUEST["mos_score"];
-		$leg = $_REQUEST["leg"];
+		$leg = $_REQUEST["leg"] ?? '';
 	}
 
 //check to see if permission does not exist
 	if (!permission_exists('xml_cdr_b_leg')) {
 		$leg = 'a';
 	}
-
-//get variables used to control the order
-	$order_by = $_REQUEST["order_by"];
-	$order = $_REQUEST["order"];
 
 //validate the order
 	switch ($order) {
@@ -128,7 +130,7 @@
 	}
 
 //set the assigned extensions
-	if (!permission_exists('xml_cdr_domain') && is_array($_SESSION['user']['extension'])) {
+	if (!permission_exists('xml_cdr_domain') && isset($_SESSION['user']['extension']) && is_array($_SESSION['user']['extension'])) {
 		foreach ($_SESSION['user']['extension'] as $row) {
 			if (is_uuid($row['extension_uuid'])) {
 				$extension_uuids[] = $row['extension_uuid'];
@@ -172,7 +174,7 @@
 	$param .= "&tta_min=".urlencode($tta_min ?? '');
 	$param .= "&tta_max=".urlencode($tta_max ?? '');
 	$param .= "&recording=".urlencode($recording ?? '');
-	if (is_array($_SESSION['cdr']['field'])) {
+	if (isset($_SESSION['cdr']['field']) && is_array($_SESSION['cdr']['field'])) {
 		foreach ($_SESSION['cdr']['field'] as $field) {
 			$array = explode(",", $field);
 			$field_name = end($array);
@@ -218,8 +220,10 @@
 
 //prepare to page the results
 	//$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50; //set on the page that includes this page
-	if (is_numeric($_GET['page'])) { $page = $_GET['page']; }
-	if (!isset($_GET['page'])) { $page = 0; $_GET['page'] = 0; }
+	if (!isset($_GET['page']) || !is_numeric($_GET['page'])) { 
+		$_GET['page'] = 0;
+	}
+	$page = $_GET['page'];
 	$offset = $rows_per_page * $page;
 
 //set the time zone
@@ -260,14 +264,14 @@
 	$sql .= "c.cc_side, \n";
 	//$sql .= "(c.xml is not null or c.json is not null) as raw_data_exists, \n";
 	//$sql .= "c.json, \n";
-	if (is_array($_SESSION['cdr']['field'])) {
+	if (isset($_SESSION['cdr']['field']) && is_array($_SESSION['cdr']['field'])) {
 		foreach ($_SESSION['cdr']['field'] as $field) {
 			$array = explode(",", $field);
 			$field_name = end($array);
 			$sql .= $field_name.", \n";
 		}
 	}
-	if (is_array($_SESSION['cdr']['export'])) {
+	if (isset($_SESSION['cdr']['export']) && is_array($_SESSION['cdr']['export'])) {
 		foreach ($_SESSION['cdr']['export'] as $field) {
 			$sql .= $field.", \n";
 		}
@@ -296,7 +300,7 @@
 		$parameters['domain_uuid'] = $domain_uuid;
 	}
 	if (!permission_exists('xml_cdr_domain')) { //only show the user their calls
-		if (is_array($extension_uuids) && @sizeof($extension_uuids)) {
+		if (isset($extension_uuids) && is_array($extension_uuids) && @sizeof($extension_uuids)) {
 			$sql .= "and (c.extension_uuid = '".implode("' or c.extension_uuid = '", $extension_uuids)."') \n";
 		}
 		else {
@@ -572,7 +576,7 @@
 	if (!empty($order_by)) {
 		$sql .= order_by($order_by, $order);
 	}
-	if ($_REQUEST['export_format'] !== "csv" && $_REQUEST['export_format'] !== "pdf") {
+	if (isset($_REQUEST['export_format']) && $_REQUEST['export_format'] !== "csv" && $_REQUEST['export_format'] !== "pdf") {
 		if ($rows_per_page == 0) {
 			$sql .= " limit :limit offset 0 \n";
 			$parameters['limit'] = $_SESSION['cdr']['limit']['numeric'];
@@ -599,7 +603,7 @@
 	unset($database, $sql, $parameters);
 
 //return the paging
-	if ($_REQUEST['export_format'] !== "csv" && $_REQUEST['export_format'] !== "pdf") {
+	if (isset($_REQUEST['export_format']) && $_REQUEST['export_format'] !== "csv" && $_REQUEST['export_format'] !== "pdf") {
 		list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true, $result_count); //top
 		list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page, false, $result_count); //bottom
 	}
