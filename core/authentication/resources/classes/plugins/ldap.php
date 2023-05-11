@@ -28,6 +28,7 @@ class plugin_ldap {
 
 				//pre-process some settings
 					$settings['theme']['favicon'] = !empty($settings['theme']['favicon']) ? $settings['theme']['favicon'] : PROJECT_PATH.'/themes/default/favicon.ico';
+					$settings['login']['destination'] = !empty($settings['login']['destination']) ? $settings['login']['destination'] : '';
 
 				//login logo source
 					if (isset($_SESSION['theme']['logo_login']['text']) && $_SESSION['theme']['logo_login']['text'] != '') {
@@ -83,11 +84,12 @@ class plugin_ldap {
 					$view->assign("button_login", $text['button-login']);
 
 				//assign default values to the template
-					$view->assign("login_destination_url", $login_destination_url);
+					$view->assign("project_path", PROJECT_PATH);
+					$view->assign("login_destination_url", $settings['login']['destination']);
+					$view->assign("favicon", $settings['theme']['favicon']);
 					$view->assign("login_logo_width", $login_logo_width);
 					$view->assign("login_logo_height", $login_logo_height);
 					$view->assign("login_logo_source", $login_logo_source);
-					$view->assign("favicon", $settings['theme']['favicon']);
 
 				//add the token name and hash to the view
 					//$view->assign("token_name", $token['name']);
