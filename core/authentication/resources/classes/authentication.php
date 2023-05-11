@@ -60,7 +60,7 @@ class authentication {
 			$sql .= "and username = :username \n";
 			$parameters['remote_address'] = $_SERVER['REMOTE_ADDR'];
 			$parameters['find_time'] = $_SESSION['users']['find_time']['numeric'];
-			$parameters['username'] = $_SESSION['username'];
+			$parameters['username'] = isset($_SESSION['username']) ? $_SESSION['username'] : null;
 			$database = new database;
 			$auth_tries = $database->select($sql, $parameters, 'column');
 			if ($_SESSION['users']['max_retry']['numeric'] <= $auth_tries) {
@@ -81,7 +81,7 @@ class authentication {
 			foreach ($_SESSION['authentication']['methods'] as $name) {
 
 				//already processed the plugin move to the next plugin
-				if ($_SESSION['authentication']['plugin'][$name]['authorized']) {
+				if (!empty($_SESSION['authentication']['plugin'][$name]['authorized'])) {
 					continue;
 				}
 
