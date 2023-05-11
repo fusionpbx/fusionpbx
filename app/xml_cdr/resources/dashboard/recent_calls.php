@@ -48,7 +48,7 @@
 			v_xml_cdr
 		where
 			domain_uuid = :domain_uuid ";
-			if (is_array($assigned_extensions) && sizeof($assigned_extensions) != 0) {
+			if (!empty($assigned_extensions)) {
 				$x = 0;
 				foreach ($assigned_extensions as $assigned_extension_uuid => $assigned_extension) {
 					$sql_where_array[] = "extension_uuid = :extension_uuid_".$x;
@@ -61,7 +61,7 @@
 					$parameters['destination_number_2_'.$x] = '*99'.$assigned_extension;
 					$x++;
 				}
-				if (is_array($sql_where_array) && sizeof($sql_where_array) != 0) {
+				if (!empty($sql_where_array)) {
 					$sql .= "and (".implode(' or ', $sql_where_array).") ";
 				}
 				unset($sql_where_array);
@@ -73,7 +73,7 @@
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	if (!isset($database)) { $database = new database; }
 	$result = $database->select($sql, $parameters, 'all');
-	$num_rows = is_array($result) ? sizeof($result) : 0;
+	$num_rows = !empty($result) ? sizeof($result) : 0;
 
 //define row styles
 	$c = 0;
