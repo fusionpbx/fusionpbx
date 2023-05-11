@@ -1,4 +1,6 @@
-include_once('virtual.php');
+<?php
+
+	include_once('virtual.php');
 
 class Syslog extends Event_Handler{
 
