@@ -21,7 +21,7 @@ $text['title-call_recordings']['ru-ru'] = "Записи разговоров";
 $text['title-call_recordings']['sv-se'] = "Samtalsinspelningar";
 $text['title-call_recordings']['uk-ua'] = "Записи дзвінків";
 $text['title-call_recordings']['zh-cn'] = "通话录音";
-$text['title-call_recordings']['ja-jp'] = "コール録音";
+$text['title-call_recordings']['ja-jp'] = "通話録音";
 $text['title-call_recordings']['ko-kr'] = "통화 녹음";
 
 $text['title-call_recording']['en-us'] = "Call Recording";
@@ -45,7 +45,7 @@ $text['title-call_recording']['ru-ru'] = "Запись разговора";
 $text['title-call_recording']['sv-se'] = "Samtalsinspelning";
 $text['title-call_recording']['uk-ua'] = "Запис дзвінків";
 $text['title-call_recording']['zh-cn'] = "通话录音";
-$text['title-call_recording']['ja-jp'] = "コール録音";
+$text['title-call_recording']['ja-jp'] = "通話録音";
 $text['title-call_recording']['ko-kr'] = "통화 녹음";
 
 $text['title_description-call_recordings']['en-us'] = "Shows the call recordings with name, length, date and time, and call direction.";
@@ -68,9 +68,9 @@ $text['title_description-call_recordings']['ro-ro'] = "Afișează înregistrări
 $text['title_description-call_recordings']['ru-ru'] = "Показывает доступные записи разговоров с именем, датой, временем и направлением вызова.";
 $text['title_description-call_recordings']['sv-se'] = "Visar samtalsinspelningarna med namn, längd, datum och tid samt samtalsriktning.";
 $text['title_description-call_recordings']['uk-ua'] = "Показує записи дзвінків із назвою, тривалістю, датою та часом, а також напрямком дзвінка.";
-$text['title_description-call_recordings']['zh-cn'] = "用名称、长度、日期和时间显示电话记录,并按电话指示进行。";
-$text['title_description-call_recordings']['ja-jp'] = "名前、長さ、日付、時刻、通話方向のコール録画を表示します。";
-$text['title_description-call_recordings']['ko-kr'] = "이름, 길이, 날짜 및 시간, 통화 방향과 통화 녹음을 표시합니다.";
+$text['title_description-call_recordings']['zh-cn'] = "显示带有名称、长度、日期和时间以及呼叫方向的通话录音。";
+$text['title_description-call_recordings']['ja-jp'] = "通話録音を名前、長さ、日付と時刻、通話方向とともに表示します。";
+$text['title_description-call_recordings']['ko-kr'] = "이름, 길이, 날짜 및 시간, 통화 방향과 함께 통화 녹음을 표시합니다.";
 
 $text['label-call_recording_name']['en-us'] = "Name";
 $text['label-call_recording_name']['en-gb'] = "Name";
@@ -93,7 +93,7 @@ $text['label-call_recording_name']['ru-ru'] = "Имя";
 $text['label-call_recording_name']['sv-se'] = "namn";
 $text['label-call_recording_name']['uk-ua'] = "Ім'я";
 $text['label-call_recording_name']['zh-cn'] = "姓名";
-$text['label-call_recording_name']['ja-jp'] = "お名前";
+$text['label-call_recording_name']['ja-jp'] = "名前";
 $text['label-call_recording_name']['ko-kr'] = "이름";
 
 $text['label-caller_id_name']['en-us'] = "Caller Name";
@@ -118,7 +118,7 @@ $text['label-caller_id_name']['sv-se'] = "CID Namn";
 $text['label-caller_id_name']['uk-ua'] = "CID Ім’я";
 $text['label-caller_id_name']['zh-cn'] = "来电者姓名";
 $text['label-caller_id_name']['ja-jp'] = "発信者名";
-$text['label-caller_id_name']['ko-kr'] = "담당자 이름";
+$text['label-caller_id_name']['ko-kr'] = "발신자 이름";
 
 $text['label-caller_id_number']['en-us'] = "Caller Number";
 $text['label-caller_id_number']['en-gb'] = "Caller Number";
@@ -164,7 +164,7 @@ $text['label-caller_destination']['ro-ro'] = "Destinația apelantului";
 $text['label-caller_destination']['ru-ru'] = "Вызывающий абонент";
 $text['label-caller_destination']['sv-se'] = "Uppringarens destination";
 $text['label-caller_destination']['uk-ua'] = "Пункт призначення абонента";
-$text['label-caller_destination']['zh-cn'] = "电话目的地";
+$text['label-caller_destination']['zh-cn'] = "来电目的地";
 $text['label-caller_destination']['ja-jp'] = "発信者の宛先";
 $text['label-caller_destination']['ko-kr'] = "발신자 목적지";
 
@@ -189,7 +189,7 @@ $text['label-destination_number']['ru-ru'] = "Место назначения";
 $text['label-destination_number']['sv-se'] = "Destination";
 $text['label-destination_number']['uk-ua'] = "Пункт призначення";
 $text['label-destination_number']['zh-cn'] = "目的地";
-$text['label-destination_number']['ja-jp'] = "目的地";
+$text['label-destination_number']['ja-jp'] = "行き先";
 $text['label-destination_number']['ko-kr'] = "목적지";
 
 $text['description-call_recording_name']['en-us'] = "Call Recording Name";
@@ -213,7 +213,7 @@ $text['description-call_recording_name']['ru-ru'] = "Имя записи зво�
 $text['description-call_recording_name']['sv-se'] = "Namn på samtalsinspelning";
 $text['description-call_recording_name']['uk-ua'] = "Назва запису виклику";
 $text['description-call_recording_name']['zh-cn'] = "通话录音名称";
-$text['description-call_recording_name']['ja-jp'] = "コール録音名";
+$text['description-call_recording_name']['ja-jp'] = "通話録音名";
 $text['description-call_recording_name']['ko-kr'] = "통화 녹음 이름";
 
 $text['label-call_recording_path']['en-us'] = "Path";
@@ -237,7 +237,7 @@ $text['label-call_recording_path']['ru-ru'] = "Путь";
 $text['label-call_recording_path']['sv-se'] = "Väg";
 $text['label-call_recording_path']['uk-ua'] = "шлях";
 $text['label-call_recording_path']['zh-cn'] = "小路";
-$text['label-call_recording_path']['ja-jp'] = "パス";
+$text['label-call_recording_path']['ja-jp'] = "道";
 $text['label-call_recording_path']['ko-kr'] = "길";
 
 $text['description-call_recording_path']['en-us'] = "";
@@ -309,7 +309,7 @@ $text['description-call_recording_length']['ru-ru'] = "Продолжитель�
 $text['description-call_recording_length']['sv-se'] = "Samtalsinspelningslängd";
 $text['description-call_recording_length']['uk-ua'] = "Тривалість запису розмови";
 $text['description-call_recording_length']['zh-cn'] = "通话录音时长";
-$text['description-call_recording_length']['ja-jp'] = "コール録音期間";
+$text['description-call_recording_length']['ja-jp'] = "通話録音時間";
 $text['description-call_recording_length']['ko-kr'] = "통화 녹음 시간";
 
 $text['label-call_recording_date']['en-us'] = "Date";
@@ -356,8 +356,8 @@ $text['description-call_recording_date']['ro-ro'] = "Data înregistrării apelul
 $text['description-call_recording_date']['ru-ru'] = "Дата записи звонка";
 $text['description-call_recording_date']['sv-se'] = "Samtalsinspelningsdatum";
 $text['description-call_recording_date']['uk-ua'] = "Дата запису дзвінка";
-$text['description-call_recording_date']['zh-cn'] = "记录日期";
-$text['description-call_recording_date']['ja-jp'] = "コール録音日";
+$text['description-call_recording_date']['zh-cn'] = "通话录音日期";
+$text['description-call_recording_date']['ja-jp'] = "通話録音日";
 $text['description-call_recording_date']['ko-kr'] = "통화 녹음 날짜";
 
 $text['label-call_direction']['en-us'] = "Direction";
@@ -458,7 +458,7 @@ $text['description-call_recording_description']['ko-kr'] = "";
 
 $text['label-call_recording_base64']['en-us'] = "Base64";
 $text['label-call_recording_base64']['en-gb'] = "Base64";
-$text['label-call_recording_base64']['ar-eg'] = "Base64";
+$text['label-call_recording_base64']['ar-eg'] = "قاعدة64";
 $text['label-call_recording_base64']['de-at'] = "Base64";
 $text['label-call_recording_base64']['de-ch'] = "Base64";
 $text['label-call_recording_base64']['de-de'] = "Base64";
@@ -466,7 +466,7 @@ $text['label-call_recording_base64']['es-cl'] = "Base64";
 $text['label-call_recording_base64']['es-mx'] = "Base64";
 $text['label-call_recording_base64']['fr-ca'] = "Base64";
 $text['label-call_recording_base64']['fr-fr'] = "Base64";
-$text['label-call_recording_base64']['he-il'] = "Base64";
+$text['label-call_recording_base64']['he-il'] = "64בסיס";
 $text['label-call_recording_base64']['it-it'] = "Base64";
 $text['label-call_recording_base64']['nl-nl'] = "Base64";
 $text['label-call_recording_base64']['pl-pl'] = "Base64";
@@ -550,7 +550,7 @@ $text['label-outbound']['sv-se'] = "Utgående";
 $text['label-outbound']['uk-ua'] = "Вихідний";
 $text['label-outbound']['zh-cn'] = "出站";
 $text['label-outbound']['ja-jp'] = "アウトバウンド";
-$text['label-outbound']['ko-kr'] = "아웃바운드";
+$text['label-outbound']['ko-kr'] = "배 밖으로";
 
 $text['label-local']['en-us'] = "Local";
 $text['label-local']['en-gb'] = "Local";
@@ -573,7 +573,7 @@ $text['label-local']['ru-ru'] = "Местный";
 $text['label-local']['sv-se'] = "Lokal";
 $text['label-local']['uk-ua'] = "Місцевий";
 $text['label-local']['zh-cn'] = "当地的";
-$text['label-local']['ja-jp'] = "ローカル";
+$text['label-local']['ja-jp'] = "地元";
 $text['label-local']['ko-kr'] = "현지의";
 
 ?>
