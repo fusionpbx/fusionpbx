@@ -41,7 +41,7 @@ class authentication {
 
 		//set the default authentication method to the database
 			if (!is_array($_SESSION['authentication']['methods'])) {
-				$_SESSION['authentication']['methods'][]  = 'database';	
+				$_SESSION['authentication']['methods'][]  = 'database';
 			}
 
 		//automatically block multiple authentication failures
@@ -409,14 +409,14 @@ class authentication {
 	/**
 	 *  get_domain used to get the domain name from the URL or username and then sets both domain_name and domain_uuid
 	 */
-	public static function get_domain() {
+	public function get_domain() {
 
 		//get the domain from the url
-			$domain_name = $_SERVER["HTTP_HOST"];
+			$this->domain_name = $_SERVER["HTTP_HOST"];
 
 		//get the domain name from the http value
 			if (!empty($_REQUEST["domain_name"])) {
-				$domain_name = $_REQUEST["domain_name"];
+				$this->domain_name = $_REQUEST["domain_name"];
 			}
 
 		//remote port number from the domain name
@@ -442,11 +442,11 @@ class authentication {
 					//get the domain name
 						$domain_name =  $username_array[count($username_array) -1];
 
-					//check if the domain from the username exists then set the domain_uuid
+					//check if the domain from the username exists
 						$domain_exists = false;
 						foreach ($_SESSION['domains'] as $row) {
 							if (lower_case($row['domain_name']) == lower_case($domain_name)) {
-								$domain_uuid = $row['domain_uuid'];
+								$this->domain_uuid = $row['domain_uuid'];
 								$domain_exists = true;
 								break;
 							}
@@ -454,10 +454,11 @@ class authentication {
 
 					//if the domain exists then set domain_name and update the username
 						if ($domain_exists) {
-							$username = substr($_SESSION['username'], 0, -(strlen($domain_name)+1));
-							$_SESSION['domain_name'] = $domain_name;
-							$_SESSION['username'] = $username;
-							$_SESSION['domain_uuid'] = $domain_uuid;
+							$this->domain_name = $domain_name;
+							$this->username = substr($_SESSION['username'], 0, -(strlen($domain_name)+1));
+							//$_SESSION['domain_name'] = $domain_name;
+							$_SESSION['username'] = $this->username;
+							$_SESSION['domain_uuid'] = $this->domain_uuid;
 						}
 
 					//unset the domain name variable
@@ -466,10 +467,10 @@ class authentication {
 			}
 
 		//get the domain uuid and domain settings
-			if (isset($domain_name) && !isset($domain_uuid)) {
+			if (isset($this->domain_name) && !isset($this->domain_uuid)) {
 				foreach ($_SESSION['domains'] as $row) {
-					if (lower_case($row['domain_name']) == lower_case($domain_name)) {
-						$domain_uuid = $row['domain_uuid'];
+					if (lower_case($row['domain_name']) == lower_case($this->domain_name)) {
+						$this->domain_uuid = $row['domain_uuid'];
 						$_SESSION['domain_uuid'] = $row['domain_uuid'];
 						break;
 					}
@@ -481,11 +482,11 @@ class authentication {
 			$obj->set();
 
 		//set the domain settings
-			$_SESSION['domain_name'] = $domain_name;
+			$_SESSION['domain_name'] = $this->domain_name;
 			$_SESSION['domain_parent_uuid'] = $_SESSION["domain_uuid"];
 
 		//set the domain name
-			return $domain_name;
+			return $this->domain_name;
 	}
 }
 
