@@ -47,7 +47,7 @@
 
 //set defaults
 	if(!isset($_GET['show'])) {
-		$_GET['show'] = 'domain';
+		$_GET['show'] = 'false';
 	}
 
 
@@ -105,13 +105,13 @@
 				case 'equal': $mos_comparison = "<"; break;
 				case 'notequal': $mos_comparison = "<>"; break;
 			}
-			//$mos_comparison = $_REQUEST["mos_comparison"];
-			$mos_score = $_REQUEST["mos_score"];
 		}
 		else {
 			$mos_comparison = '';
 		}
-		$leg = $_REQUEST["leg"] ?? '';
+		//$mos_comparison = $_REQUEST["mos_comparison"];
+		$mos_score = $_REQUEST["mos_score"] ?? '';
+		$leg = $_REQUEST["leg"] ?? 'a';
 	}
 
 //check to see if permission does not exist
