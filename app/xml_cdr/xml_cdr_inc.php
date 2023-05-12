@@ -223,7 +223,8 @@
 	if (!isset($_GET['page']) || !is_numeric($_GET['page'])) { 
 		$_GET['page'] = 0;
 	}
-	$page = $_GET['page'];
+	//ensure page is within bounds of integer
+	$page = filter_input(INPUT_GET, 'page', FILTER_VALIDATE_INT);
 	$offset = $rows_per_page * $page;
 
 //set the time zone
