@@ -41,6 +41,9 @@
 		exit;
 	}
 
+// assign default value for show all
+	$showall = false;
+
 //show all call detail records to admin and superadmin. for everyone else show only the call details for extensions assigned to them
 	if (!permission_exists('xml_cdr_domain')) {
 		// select caller_id_number, destination_number from v_xml_cdr where domain_uuid = ''
@@ -65,7 +68,7 @@
 	}
 	else {
 		//superadmin or admin
-		if (isset($_GET['show']) && $_GET['show'] === 'all' && permission_exists('xml_cdr_all')) {
+		if (isset($_GET['showall']) && $_GET['showall'] === 'true' && permission_exists('xml_cdr_all')) {
 			$sql_where = '';
 		} else {
 			$sql_where = "c.domain_uuid = '".$_SESSION['domain_uuid']."' ";
@@ -145,7 +148,7 @@
 		$show_all = permission_exists('xml_cdr_all') && (isset($_REQUEST['show']) && $_REQUEST['show'] === 'all');
 	}
 	else {
-		$show_all = permission_exists('xml_cdr_all') && ($_GET['show'] === 'all');
+		$show_all = permission_exists('xml_cdr_all') && ($_GET['showall'] === 'true');
 		//$direction = 'inbound';
 	}
 
