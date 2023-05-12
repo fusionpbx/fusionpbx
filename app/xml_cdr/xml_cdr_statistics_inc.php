@@ -65,7 +65,7 @@
 	}
 	else {
 		//superadmin or admin
-		if ($_GET['showall'] && permission_exists('xml_cdr_all')) {
+		if (isset($_GET['show']) && $_GET['show'] === 'all' && permission_exists('xml_cdr_all')) {
 			$sql_where = '';
 		} else {
 			$sql_where = "c.domain_uuid = '".$_SESSION['domain_uuid']."' ";
@@ -82,36 +82,36 @@
 
 //get post or get variables from http
 	if (isset($_REQUEST)) {
-		$cdr_id = $_REQUEST["cdr_id"];
-		$missed = $_REQUEST["missed"];
-		$direction = $_REQUEST["direction"];
-		$caller_id_name = $_REQUEST["caller_id_name"];
-		$caller_id_number = $_REQUEST["caller_id_number"];
-		$caller_extension_uuid = $_REQUEST["caller_extension_uuid"];
-		$extension_uuid = $_REQUEST["extension_uuid"];
-		$destination_number = $_REQUEST["destination_number"];
-		$context = $_REQUEST["context"];
-		$start_stamp_begin = $_REQUEST["start_stamp_begin"];
-		$start_stamp_end = $_REQUEST["start_stamp_end"];
-		$answer_stamp_begin = $_REQUEST["answer_stamp_begin"];
-		$answer_stamp_end = $_REQUEST["answer_stamp_end"];
-		$end_stamp_begin = $_REQUEST["end_stamp_begin"];
-		$end_stamp_end = $_REQUEST["end_stamp_end"];
-		$start_epoch = $_REQUEST["start_epoch"];
-		$stop_epoch = $_REQUEST["stop_epoch"];
-		$duration = $_REQUEST["duration"];
-		$billsec = $_REQUEST["billsec"];
-		$hangup_cause = $_REQUEST["hangup_cause"];
-		$uuid = $_REQUEST["uuid"];
-		$bleg_uuid = $_REQUEST["bleg_uuid"];
-		$accountcode = $_REQUEST["accountcode"];
-		$read_codec = $_REQUEST["read_codec"];
-		$write_codec = $_REQUEST["write_codec"];
-		$remote_media_ip = $_REQUEST["remote_media_ip"];
-		$network_addr = $_REQUEST["network_addr"];
-		$bridge_uuid = $_REQUEST["network_addr"];
-		$order_by = $_REQUEST["order_by"];
-		$order = $_REQUEST["order"];
+		$cdr_id = $_REQUEST["cdr_id"] ?? '';
+		$missed = $_REQUEST["missed"] ?? '';
+		$direction = $_REQUEST["direction"] ?? '';
+		$caller_id_name = $_REQUEST["caller_id_name"] ?? '';
+		$caller_id_number = $_REQUEST["caller_id_number"] ?? '';
+		$caller_extension_uuid = $_REQUEST["caller_extension_uuid"] ?? '';
+		$extension_uuid = $_REQUEST["extension_uuid"] ?? '';
+		$destination_number = $_REQUEST["destination_number"] ?? '';
+		$context = $_REQUEST["context"] ?? '';
+		$start_stamp_begin = $_REQUEST["start_stamp_begin"] ?? '';
+		$start_stamp_end = $_REQUEST["start_stamp_end"] ?? '';
+		$answer_stamp_begin = $_REQUEST["answer_stamp_begin"] ?? '';
+		$answer_stamp_end = $_REQUEST["answer_stamp_end"] ?? '';
+		$end_stamp_begin = $_REQUEST["end_stamp_begin"] ?? '';
+		$end_stamp_end = $_REQUEST["end_stamp_end"] ?? '';
+		$start_epoch = $_REQUEST["start_epoch"] ?? '';
+		$stop_epoch = $_REQUEST["stop_epoch"] ?? '';
+		$duration = $_REQUEST["duration"] ?? '';
+		$billsec = $_REQUEST["billsec"] ?? '';
+		$hangup_cause = $_REQUEST["hangup_cause"] ?? '';
+		$uuid = $_REQUEST["uuid"] ?? '';
+		$bleg_uuid = $_REQUEST["bleg_uuid"] ?? '';
+		$accountcode = $_REQUEST["accountcode"] ?? '';
+		$read_codec = $_REQUEST["read_codec"] ?? '';
+		$write_codec = $_REQUEST["write_codec"] ?? '';
+		$remote_media_ip = $_REQUEST["remote_media_ip"] ?? '';
+		$network_addr = $_REQUEST["network_addr"] ?? '';
+		$bridge_uuid = $_REQUEST["network_addr"] ?? '';
+		$order_by = $_REQUEST["order_by"] ?? '';
+		$order = $_REQUEST["order"] ?? '';
 		if (!empty($_REQUEST["mos_comparison"])) {
 			switch($_REQUEST["mos_comparison"]) {
 				case 'less':
@@ -138,14 +138,14 @@
 			unset($mos_comparison);
 		}
 		//$mos_comparison = $_REQUEST["mos_comparison"];
-		$mos_score = $_REQUEST["mos_score"];
+		$mos_score = $_REQUEST["mos_score"] ?? '';
 		if (permission_exists('xml_cdr_b_leg')) {
-			$leg = $_REQUEST["leg"];
+			$leg = $_REQUEST["leg"] ?? '';
 		}
-		$show_all = permission_exists('xml_cdr_all') && ($_REQUEST['showall'] == 'true');
+		$show_all = permission_exists('xml_cdr_all') && (isset($_REQUEST['show']) && $_REQUEST['show'] === 'all');
 	}
 	else {
-		$show_all = permission_exists('xml_cdr_all') && ($_GET['showall'] == 'true');
+		$show_all = permission_exists('xml_cdr_all') && ($_GET['show'] === 'all');
 		//$direction = 'inbound';
 	}
 
