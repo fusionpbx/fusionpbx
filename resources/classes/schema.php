@@ -164,7 +164,7 @@ if (!class_exists('schema')) {
 					}
 				}
 				if ($this->db_type == "pgsql") {
-					$sql = "SELECT attname FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = '$table_name') AND attname = '$column_name'; ";
+					$sql = "SELECT attname FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = '$table_name' limit 1) AND attname = '$column_name'; ";
 				}
 				if ($this->db_type == "mysql") {
 					//$sql .= "SELECT * FROM information_schema.COLUMNS where TABLE_SCHEMA = '$db_name' and TABLE_NAME = '$table_name' and COLUMN_NAME = '$column_name' ";
@@ -325,7 +325,7 @@ if (!class_exists('schema')) {
 					}
 				}
 				if ($db_type == "pgsql") {
-					$sql = "SELECT attname FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = '$table_name') AND attname = '$column_name'; ";
+					$sql = "SELECT attname FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = '$table_name' limit 1) AND attname = '$column_name'; ";
 				}
 				if ($db_type == "mysql") {
 					//$sql .= "SELECT * FROM information_schema.COLUMNS where TABLE_SCHEMA = '$db_name' and TABLE_NAME = '$table_name' and COLUMN_NAME = '$column_name' ";
