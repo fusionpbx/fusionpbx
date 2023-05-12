@@ -144,6 +144,11 @@ class plugin_database {
 			$this->domain_name = $_SESSION['domain_name'];
 			$this->username = $_SESSION['username'];
 
+		//debug information
+			//echo "domain_uuid: ".$this->domain_uuid."<br />\n";
+			//echo "domain_name: ".$this->domain_name."<br />\n";
+			//echo "username: ".$this->username."<br />\n";
+
 		//set the default status
 			$user_authorized = false;
 
