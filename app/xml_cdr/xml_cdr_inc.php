@@ -50,7 +50,6 @@
 		$_GET['show'] = 'false';
 	}
 
-
 //get post or get variables from http
 	if (count($_REQUEST) > 0) {
 		$cdr_id = $_REQUEST["cdr_id"] ?? '';
@@ -117,6 +116,14 @@
 //check to see if permission does not exist
 	if (!permission_exists('xml_cdr_b_leg')) {
 		$leg = 'a';
+	}
+
+//set the export_format
+	if (isset($_REQUEST['export_format'])) {
+		$export_format = $_REQUEST['export_format'];
+	}
+	else {
+		$export_format = '';
 	}
 
 //validate the order
@@ -577,7 +584,7 @@
 	if (!empty($order_by)) {
 		$sql .= order_by($order_by, $order);
 	}
-	if (isset($_REQUEST['export_format']) && $_REQUEST['export_format'] !== "csv" && $_REQUEST['export_format'] !== "pdf") {
+	if ($export_format !== "csv" && $export_format !== "pdf") {
 		if ($rows_per_page == 0) {
 			$sql .= " limit :limit offset 0 \n";
 			$parameters['limit'] = $_SESSION['cdr']['limit']['numeric'];
