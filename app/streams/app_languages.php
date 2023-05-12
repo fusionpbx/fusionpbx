@@ -46,7 +46,7 @@ $text['title-stream']['sv-se'] = "Ström";
 $text['title-stream']['uk-ua'] = "Потік";
 $text['title-stream']['zh-cn'] = "溪流";
 $text['title-stream']['ja-jp'] = "ストリーム";
-$text['title-stream']['ko-kr'] = "스트레이트";
+$text['title-stream']['ko-kr'] = "스트림";
 
 $text['title_description-stream']['en-us'] = "Define details for streaming audio.";
 $text['title_description-stream']['en-gb'] = "Define details for streaming audio.";
@@ -141,8 +141,8 @@ $text['label-stream_location']['ru-ru'] = "Расположение";
 $text['label-stream_location']['sv-se'] = "Plats";
 $text['label-stream_location']['uk-ua'] = "Місцезнаходження";
 $text['label-stream_location']['zh-cn'] = "地点";
-$text['label-stream_location']['ja-jp'] = "アクセス";
-$text['label-stream_location']['ko-kr'] = "연혁";
+$text['label-stream_location']['ja-jp'] = "位置";
+$text['label-stream_location']['ko-kr'] = "위치";
 
 $text['description-stream_location']['en-us'] = "Enter the location.";
 $text['description-stream_location']['en-gb'] = "Enter the location.";
@@ -166,7 +166,7 @@ $text['description-stream_location']['sv-se'] = "Ange platsen.";
 $text['description-stream_location']['uk-ua'] = "Введіть місце розташування.";
 $text['description-stream_location']['zh-cn'] = "进入地点。";
 $text['description-stream_location']['ja-jp'] = "所在地を入力してください。";
-$text['description-stream_location']['ko-kr'] = "자주 묻는 질문";
+$text['description-stream_location']['ko-kr'] = "위치를 입력합니다.";
 
 $text['label-stream_enabled']['en-us'] = "Enabled";
 $text['label-stream_enabled']['en-gb'] = "Enabled";
@@ -189,7 +189,7 @@ $text['label-stream_enabled']['ru-ru'] = "Включено";
 $text['label-stream_enabled']['sv-se'] = "Aktiverad";
 $text['label-stream_enabled']['uk-ua'] = "Увімкнено";
 $text['label-stream_enabled']['zh-cn'] = "启用";
-$text['label-stream_enabled']['ja-jp'] = "有効";
+$text['label-stream_enabled']['ja-jp'] = "启用";
 $text['label-stream_enabled']['ko-kr'] = "사용";
 
 $text['description-stream_enabled']['en-us'] = "Enable or disable this stream.";

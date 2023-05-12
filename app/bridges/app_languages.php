@@ -21,7 +21,7 @@ $text['title-bridges']['ru-ru'] = "Мосты";
 $text['title-bridges']['sv-se'] = "Broar";
 $text['title-bridges']['uk-ua'] = "Мости";
 $text['title-bridges']['zh-cn'] = "桥梁";
-$text['title-bridges']['ja-jp'] = "ブリッジ";
+$text['title-bridges']['ja-jp'] = "橋";
 $text['title-bridges']['ko-kr'] = "교량";
 
 $text['title-bridge']['en-us'] = "Bridge";
@@ -44,8 +44,8 @@ $text['title-bridge']['ro-ro'] = "Pod";
 $text['title-bridge']['ru-ru'] = "Мост";
 $text['title-bridge']['sv-se'] = "Bro";
 $text['title-bridge']['uk-ua'] = "Міст";
-$text['title-bridge']['zh-cn'] = "桥梁";
-$text['title-bridge']['ja-jp'] = "ブリッジ";
+$text['title-bridge']['zh-cn'] = "桥";
+$text['title-bridge']['ja-jp'] = "橋";
 $text['title-bridge']['ko-kr'] = "다리";
 
 $text['title_description-bridge']['en-us'] = "Add bridge statements to destination select list.";
@@ -68,8 +68,8 @@ $text['title_description-bridge']['ro-ro'] = "Adăugați declarații bridge la l
 $text['title_description-bridge']['ru-ru'] = "Добавьте операторы моста в список выбора места назначения.";
 $text['title_description-bridge']['sv-se'] = "Lägg till bryggsatser till destinationsvallistan.";
 $text['title_description-bridge']['uk-ua'] = "Додайте оператори моста до списку вибору призначення.";
-$text['title_description-bridge']['zh-cn'] = "在目的地选择名单中增加桥梁说明。";
-$text['title_description-bridge']['ja-jp'] = "宛先選択リストにブリッジステートメントを追加します。";
+$text['title_description-bridge']['zh-cn'] = "将桥接语句添加到目标选择列表。";
+$text['title_description-bridge']['ja-jp'] = "宛先選択リストにブリッジ ステートメントを追加します。";
 $text['title_description-bridge']['ko-kr'] = "대상 선택 목록에 브리지 문을 추가합니다.";
 
 $text['label-bridge_name']['en-us'] = "Name";
@@ -93,7 +93,7 @@ $text['label-bridge_name']['ru-ru'] = "Имя";
 $text['label-bridge_name']['sv-se'] = "namn";
 $text['label-bridge_name']['uk-ua'] = "Імя";
 $text['label-bridge_name']['zh-cn'] = "姓名";
-$text['label-bridge_name']['ja-jp'] = "お名前";
+$text['label-bridge_name']['ja-jp'] = "名前";
 $text['label-bridge_name']['ko-kr'] = "이름";
 
 $text['description-bridge_name']['en-us'] = "Enter the name.";
@@ -116,9 +116,9 @@ $text['description-bridge_name']['ro-ro'] = "Introduceți numele.";
 $text['description-bridge_name']['ru-ru'] = "Введите имя.";
 $text['description-bridge_name']['sv-se'] = "Ange namnet.";
 $text['description-bridge_name']['uk-ua'] = "Введіть назву.";
-$text['description-bridge_name']['zh-cn'] = "填写姓名。";
-$text['description-bridge_name']['ja-jp'] = "お名前を入力してください。";
-$text['description-bridge_name']['ko-kr'] = "이름 입력";
+$text['description-bridge_name']['zh-cn'] = "输入名称。";
+$text['description-bridge_name']['ja-jp'] = "名前を入力します。";
+$text['description-bridge_name']['ko-kr'] = "이름을 입력하세요.";
 
 $text['label-bridge_destination']['en-us'] = "Destination";
 $text['label-bridge_destination']['en-gb'] = "Destination";
@@ -164,8 +164,8 @@ $text['description-bridge_destination']['ro-ro'] = "Introduceți destinația.";
 $text['description-bridge_destination']['ru-ru'] = "Введите пункт назначения.";
 $text['description-bridge_destination']['sv-se'] = "Ange destinationen.";
 $text['description-bridge_destination']['uk-ua'] = "Введіть пункт призначення.";
-$text['description-bridge_destination']['zh-cn'] = "进入目的地。";
-$text['description-bridge_destination']['ja-jp'] = "目的地を入力してください。";
+$text['description-bridge_destination']['zh-cn'] = "输入目的地。";
+$text['description-bridge_destination']['ja-jp'] = "目的地を入力します。";
 $text['description-bridge_destination']['ko-kr'] = "목적지를 입력하세요.";
 
 $text['label-bridge_enabled']['en-us'] = "Enabled";
@@ -213,8 +213,8 @@ $text['description-bridge_enabled']['ru-ru'] = "Выберите, чтобы в�
 $text['description-bridge_enabled']['sv-se'] = "Välj för att aktivera eller inaktivera.";
 $text['description-bridge_enabled']['uk-ua'] = "Виберіть, щоб увімкнути або вимкнути.";
 $text['description-bridge_enabled']['zh-cn'] = "选择启用或禁用。";
-$text['description-bridge_enabled']['ja-jp'] = "有効または無効にするを選択します。";
-$text['description-bridge_enabled']['ko-kr'] = "활성화 또는 비활성화를 선택하십시오.";
+$text['description-bridge_enabled']['ja-jp'] = "有効または無効を選択します。";
+$text['description-bridge_enabled']['ko-kr'] = "활성화 또는 비활성화를 선택합니다.";
 
 $text['label-bridge_description']['en-us'] = "Description";
 $text['label-bridge_description']['en-gb'] = "Description";
@@ -262,7 +262,7 @@ $text['description-bridge_description']['ru-ru'] = "Введите описан�
 $text['description-bridge_description']['sv-se'] = "Ange beskrivningen.";
 $text['description-bridge_description']['uk-ua'] = "Введіть опис.";
 $text['description-bridge_description']['zh-cn'] = "输入说明。";
-$text['description-bridge_description']['ja-jp'] = "説明を入力してください。";
+$text['description-bridge_description']['ja-jp'] = "説明を入力します。";
 $text['description-bridge_description']['ko-kr'] = "설명을 입력합니다.";
 
 ?>
