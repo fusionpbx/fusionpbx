@@ -289,14 +289,17 @@ if ($db_type == "odbc") {
 			$domain_array = explode(":", $_SERVER["HTTP_HOST"] ?? '');
 
 		//get the domains from the database
-			$sql = "select * from v_domains";
-			$prep_statement = $db->prepare($sql);
-			$prep_statement->execute();
-			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-			foreach($result as $row) {
-				$domain_names[] = $row['domain_name'];
+			$database = new database;
+			if ($database->table_exists('v_domains')) {
+				$sql = "select * from v_domains";
+				$prep_statement = $db->prepare($sql);
+				$prep_statement->execute();
+				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+				foreach($result as $row) {
+					$domain_names[] = $row['domain_name'];
+				}
+				unset($prep_statement);
 			}
-			unset($prep_statement);
 
 		//put the domains in natural order
 			if (is_array($domain_names)) {
@@ -337,14 +340,17 @@ if ($db_type == "odbc") {
 
 //get the software name
 	if (!isset($_SESSION["software_name"])) {
-		$sql = "select * from v_software ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		if ($prep_statement) {
-			$prep_statement->execute();
-			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-			$_SESSION["software_name"] = $row['software_name'];
+		$database = new database;
+		if ($database->table_exists('v_software')) {
+			$sql = "select * from v_software ";
+			$prep_statement = $db->prepare(check_sql($sql));
+			if ($prep_statement) {
+				$prep_statement->execute();
+				$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+				$_SESSION["software_name"] = $row['software_name'];
+			}
+			unset($prep_statement, $result);
 		}
-		unset($prep_statement, $result);
 	}
 
 //set the setting arrays
