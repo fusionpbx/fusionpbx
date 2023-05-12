@@ -3,8 +3,7 @@
 /**
  * plugin_database
  *
- * @method validate uses authentication plugins to check if a user is authorized to login
- * @method get_domain used to get the domain name from the URL or username and then sets both domain_name and domain_uuid
+ * @method plugin_database validates the authentication using information from the database
  */
 class plugin_database {
 
@@ -137,6 +136,13 @@ class plugin_database {
 			if (isset($_REQUEST["key"])) {
 				$this->key = $_REQUEST["key"];
 			}
+
+		//get the domain name
+			$auth = new authentication;
+			$auth->get_domain();
+			$this->domain_uuid = $_SESSION['domain_uuid'];
+			$this->domain_name = $_SESSION['domain_name'];
+			$this->username = $_SESSION['username'];
 
 		//set the default status
 			$user_authorized = false;
