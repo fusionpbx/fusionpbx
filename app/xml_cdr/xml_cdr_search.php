@@ -45,6 +45,31 @@
 	$language = new text;
 	$text = $language->get();
 
+//declare variables
+	$direction = "";
+	$caller_id_name = "";
+	$caller_id_number = "";
+	$destination_number = "";
+	$context = "";
+	$start_stamp_begin = "";
+	$start_stamp_end = "";
+	$answer_stamp_begin = "";
+	$answer_stamp_end = "";
+	$end_stamp_begin = "";
+	$end_stamp_end = "";
+	$duration_min = "";
+	$duration_max = "";
+	$billsec = "";
+	$hangup_cause = "";
+	$xml_cdr_uuid = "";
+	$bridge_uuid = "";
+	$accountcode = "";
+	$read_codec = "";
+	$write_codec = "";
+	$remote_media_ip = "";
+	$network_addr = "";
+	$mos_score = "";
+
 //send the header
 	$document['title'] = $text['title-advanced_search'];
 	require_once "resources/header.php";
@@ -63,7 +88,7 @@
 	echo "</script>";
 
 //start the html form
-	if ($_GET['redirect'] == 'xml_cdr_statistics') {
+	if (isset($_GET['redirect']) && $_GET['redirect'] == 'xml_cdr_statistics') {
 		echo "<form method='get' action='xml_cdr_statistics.php'>\n";
 	}
 	else {
@@ -201,7 +226,7 @@
 			echo "	<tr>";
 			echo "		<td class='vncell'>".$text['button-show_all']."</td>";
 			echo "		<td class='vtable'>\n";
-			if (permission_exists('xml_cdr_all') && $_REQUEST['showall'] == "true") {
+			if (permission_exists('xml_cdr_all') && isset($_REQUEST['show']) && $_REQUEST['show'] == "all") {
 				echo "			<input type='checkbox' class='formfld' name='showall' checked='checked' value='true'>";
 			}
 			else {
@@ -252,7 +277,7 @@
 		echo "		<td class='vncell'>".$text['label-network_addr']."</td>";
 		echo "		<td class='vtable'><input type='text' class='formfld' name='network_addr' value='".escape($network_addr)."'></td>";
 		echo "	</tr>";
-		if (is_array($_SESSION['cdr']['field'])) {
+		if (isset($_SESSION['cdr']['field']) && is_array($_SESSION['cdr']['field'])) {
 			foreach ($_SESSION['cdr']['field'] as $field) {
 				$array = explode(",", $field);
 				$field_name = end($array);
