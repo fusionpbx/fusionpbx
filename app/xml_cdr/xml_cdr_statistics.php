@@ -46,6 +46,9 @@
 	$language = new text;
 	$text = $language->get();
 
+//set default showall
+	$showall = false;
+
 //additional includes
 	$document['title'] = $text['title-call-statistics'];
 	require_once "resources/header.php";
@@ -55,8 +58,9 @@
 	if (permission_exists('xml_cdr_search_advanced')) {
 		$search_url .= '&redirect=xml_cdr_statistics';
 	}
-	if(permission_exists('xml_cdr_all') && ($_GET['showall'] === 'true')){
+	if(permission_exists('xml_cdr_all') && (isset($_GET['showall']) && $_GET['showall'] === 'true')){
 		$search_url .= '&showall=true';
+		$showall = true;
 	}
 	if (!empty($_GET['direction'])) {
 		$search_url .= '&direction='.urlencode($_GET['direction']);
@@ -144,7 +148,7 @@
 	if (permission_exists('xml_cdr_search_advanced')) {
 		echo button::create(['type'=>'button','label'=>$text['button-advanced_search'],'icon'=>'tools','link'=>'xml_cdr_search.php?type=advanced'.$search_url]);
 	}
-	if (permission_exists('xml_cdr_all') && $_GET['showall'] != 'true') {
+	if (permission_exists('xml_cdr_all') && !$showall) {
 		echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$_SESSION['theme']['button_icon_all'],'link'=>'xml_cdr_statistics.php?showall=true'.$search_url]);
 	}
 	echo button::create(['type'=>'button','label'=>$text['button-extension_summary'],'icon'=>'list','link'=>'xml_cdr_extension_summary.php']);
