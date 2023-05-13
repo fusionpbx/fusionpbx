@@ -1094,7 +1094,7 @@
 									$parent_key_name = self::singular($parent_name)."_uuid";
 
 								//build the delete array
-									if ($row['checked'] == 'true') {
+									if (!empty($row['checked']) && $row['checked'] == 'true') {
 										//set checked to true
 										$checked = true;
 
@@ -2909,20 +2909,22 @@
 
 				//get the apps array
 					$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/{core,app}/{".$schema.",".self::singular($schema)."}/app_config.php", GLOB_BRACE);
+					$x = 0;
 					foreach ($config_list as &$config_path) {
 						include($config_path);
+						$x++;
 					}
 
 				//search through all fields to find relations
-					if (is_array($apps)) {
+					if (!empty($apps) && is_array($apps)) {
 						foreach ($apps as $x => &$app) {
 							foreach ($app['db'] as $y => &$row) {
 								foreach ($row['fields'] as $z => $field) {
-									if ($field['deprecated'] != "true") {
-										if ($field['key']['type'] == "foreign") {
+									if (!empty($field['deprecated']) && $field['deprecated'] != "true") {
+										if (!empty($field['key']['type']) &&  $field['key']['type'] == "foreign") {
 											if ($row['table']['name'] == self::TABLE_PREFIX.$schema || $field['key']['reference']['table'] == self::TABLE_PREFIX.$schema) {
 												//get the field name
-													if (is_array($field['name'])) {
+													if (!empty($field['name']) && is_array($field['name'])) {
 														$field_name = trim($field['name']['text']);
 													}
 													else {
@@ -2949,7 +2951,7 @@
 					}
 
 				//return the array
-					if (is_array($relations)) {
+					if (!empty($relations) && is_array($relations)) {
 						return $relations;
 					} else {
 						return false;
