@@ -486,7 +486,7 @@ if (!class_exists('domains')) {
 				}
 
 			//get the domains settings
-				if (is_uuid($_SESSION["domain_uuid"])) {
+				if (!empty($_SESSION["domain_uuid"]) && is_uuid($_SESSION["domain_uuid"])) {
 
 					//get settings from the database
 					$sql = "select * from v_domain_settings ";
