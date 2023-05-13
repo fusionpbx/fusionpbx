@@ -283,7 +283,7 @@ if ($db_type == "odbc") {
 } //end if db_type pgsql
 
 //get the domain list
-	if (!is_array($_SESSION['domains']) or !isset($_SESSION["domain_uuid"])) {
+	if (empty($_SESSION['domains']) or empty($_SESSION["domain_uuid"])) {
 
 		//get the domain
 			$domain_array = explode(":", $_SERVER["HTTP_HOST"] ?? '');
