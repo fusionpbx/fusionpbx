@@ -2118,14 +2118,14 @@ function number_pad($number,$n) {
 					}
 					break;
 				case 'exists':
-					return is_array($_SESSION['persistent'][$_SERVER['PHP_SELF']]) && @sizeof($_SESSION['persistent'][$_SERVER['PHP_SELF']]) != 0 ? true : false;
+					return !empty($_SESSION['persistent']) && is_array($_SESSION['persistent'][$_SERVER['PHP_SELF']]) && @sizeof($_SESSION['persistent'][$_SERVER['PHP_SELF']]) != 0 ? true : false;
 					break;
 				case 'load':
 					// $array is expected to be the name of the array to create containing the key / value pairs
 					if ($array && !is_array($array)) {
 						global $$array;
 					}
-					if (is_array($_SESSION['persistent'][$_SERVER['PHP_SELF']]) && @sizeof($_SESSION['persistent'][$_SERVER['PHP_SELF']]) != 0) {
+					if (!empty($_SESSION['persistent']) && is_array($_SESSION['persistent'][$_SERVER['PHP_SELF']]) && @sizeof($_SESSION['persistent'][$_SERVER['PHP_SELF']]) != 0) {
 						foreach ($_SESSION['persistent'][$_SERVER['PHP_SELF']] as $key => $value) {
 							if ($key != 'XID' && $key != 'ACT' && $key != 'RET') {
 								if ($array && !is_array($array)) {
