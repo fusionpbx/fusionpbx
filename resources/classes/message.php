@@ -54,7 +54,7 @@ if (!class_exists('message')) {
 			$spacer .="\t";
 			if (isset($_SESSION['message'])) {
 				if (is_string($_SESSION['message']) && !empty(trim($_SESSION['message']))) {
-					self::add($_SESSION['message'], $_SESSION['message_mood'], $_SESSION['message_delay']);
+					self::add($_SESSION['message'], $_SESSION['message_mood'] ?? null, $_SESSION['message_delay'] ?? null);
 					unset($_SESSION['message'], $_SESSION['message_mood'], $_SESSION['message_delay']);
 				}
 				if (is_array($_SESSION['messages']) && count($_SESSION['messages']) > 0 ) {
