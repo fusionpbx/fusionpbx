@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2020
+ Portions created by the Initial Developer are Copyright (C) 2008-2023
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -47,17 +47,17 @@
 
 //retrieve allowed setting categories
 	if (!permission_exists('user_setting_category_edit')) {
-		if (is_array($_SESSION['settings']) && sizeof($_SESSION['settings']) > 0) {
+		if (!empty($_SESSION['settings'])) {
 			foreach ($_SESSION['groups'] as $index => $group) {
 				$group_name = $group['group_name'];
-				if (is_array($_SESSION['settings'][$group_name]) && sizeof($_SESSION['settings'][$group_name]) > 0) {
+				if (!empty($_SESSION['settings'][$group_name])) {
 					foreach ($_SESSION['settings'][$group_name] as $category) {
 						$categories[] = strtolower($category);
 					}
 				}
 			}
 		}
-		if (is_array($categories) && sizeof($categories) > 0) {
+		if (!empty($categories)) {
 			$allowed_categories = array_unique($categories);
 			sort($allowed_categories, SORT_NATURAL);
 		}
@@ -65,7 +65,7 @@
 	}
 
 //action add or update
-	if (is_uuid($_REQUEST["id"])) {
+	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
 		$user_setting_uuid = $_REQUEST["id"];
 	}
@@ -74,7 +74,7 @@
 	}
 
 //set the user_uuid
-	if (is_uuid($_GET["user_uuid"])) {
+	if (!empty($_GET["user_uuid"]) && is_uuid($_GET["user_uuid"])) {
 		$user_uuid = $_GET["user_uuid"];
 	}
 
@@ -82,11 +82,11 @@
 	if (!empty($_REQUEST)) {
 		$user_setting_category = strtolower($_REQUEST["user_setting_category"] ?? '');
 		$user_setting_subcategory = strtolower($_POST["user_setting_subcategory"] ?? '');
-		$user_setting_name = strtolower($_POST["user_setting_name"]);
-		$user_setting_value = $_POST["user_setting_value"];
-		$user_setting_order = $_POST["user_setting_order"];
+		$user_setting_name = strtolower($_POST["user_setting_name"] ?? '');
+		$user_setting_value = $_POST["user_setting_value"] ?? '';
+		$user_setting_order = $_POST["user_setting_order"] ?? '';
 		$user_setting_enabled = strtolower($_POST["user_setting_enabled"] ?? '');
-		$user_setting_description = $_POST["user_setting_description"];
+		$user_setting_description = $_POST["user_setting_description"] ?? '';
 	}
 
 if (!empty($_POST) && empty($_POST["persistformvar"])) {
@@ -126,7 +126,7 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 		}
 
 	//add or update the database
-		if ($_POST["persistformvar"] != "true") {
+		if (empty($_POST["persistformvar"])) {
 			// fix null
 				$user_setting_order = ($user_setting_order != '') ? $user_setting_order : 'null';
 
@@ -320,7 +320,7 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 }
 
 //pre-populate the form
-	if (is_uuid($_GET["id"]) && count($_GET) > 0 && $_POST["persistformvar"] != "true") {
+	if (!empty($_GET["id"]) && empty($_POST["persistformvar"])) {
 		$user_setting_uuid = $_GET["id"];
 		$sql = "select user_setting_category, user_setting_subcategory, user_setting_name, user_setting_value, user_setting_order, cast(user_setting_enabled as text), user_setting_description ";
 		$sql .= "from v_user_settings ";
@@ -760,7 +760,7 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 		echo "	</select>\n";
 	}
 	echo "<br />\n";
-	echo $text['description-setting_enabled']."\n";
+	//echo $text['description-setting_enabled']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
