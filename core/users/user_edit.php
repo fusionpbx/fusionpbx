@@ -81,7 +81,7 @@
 	}
 
 //delete the group from the user
-	if ($_GET["a"] == "delete" && is_uuid($_GET["group_uuid"]) && is_uuid($user_uuid) && permission_exists("user_delete")) {
+	if (!empty($_GET["a"]) && $_GET["a"] == "delete" && is_uuid($_GET["group_uuid"]) && is_uuid($user_uuid) && permission_exists("user_delete")) {
 		//set the variables
 			$group_uuid = $_GET["group_uuid"];
 		//delete the group from the users
@@ -125,7 +125,7 @@
 			$password = $_POST["password"];
 			$password_confirm = $_POST["password_confirm"];
 			$user_email = $_POST["user_email"];
-			$user_status = $_POST["user_status"];
+			$user_status = $_POST["user_status"] ?? null;
 			$user_language = $_POST["user_language"];
 			$user_time_zone = $_POST["user_time_zone"];
 			
@@ -228,7 +228,7 @@
 			}
 
 		//return if error
-			if (message::count() != 0 || (is_array($invalid) && @sizeof($invalid) != 0)) {
+			if (message::count() != 0 || !empty($invalid)) {
 				if ($invalid) { message::add($text['message-required'].implode(', ', $invalid), 'negative', 7500); }
 				persistent_form_values('store', $_POST);
 				header("Location: user_edit.php".(permission_exists('user_edit') && $action != 'add' ? "?id=".urlencode($user_uuid) : null));
@@ -301,7 +301,7 @@
 			$parameters['user_uuid'] = $user_uuid;
 			$database = new database;
 			$row = $database->select($sql, $parameters, 'row');
-			if ($row['user_setting_uuid'] == '' && $user_time_zone != '') {
+			if (empty($row['user_setting_uuid']) && !empty($user_time_zone)) {
 				//add user setting to array for insert
 				$array['user_settings'][$i]['user_setting_uuid'] = uuid();
 				$array['user_settings'][$i]['user_uuid'] = $user_uuid;
@@ -314,7 +314,7 @@
 				$i++;
 			}
 			else {
-				if ($row['user_setting_value'] == '' || $user_time_zone == '') {
+				if (empty($row['user_setting_value']) || !empty($user_time_zone)) {
 					$array_delete['user_settings'][0]['user_setting_category'] = 'domain';
 					$array_delete['user_settings'][0]['user_setting_subcategory'] = 'time_zone';
 					$array_delete['user_settings'][0]['user_uuid'] = $user_uuid;
@@ -695,7 +695,7 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['header-user_edit']."</b></div>\n";
 	echo "	<div class='actions'>\n";
-	if ($unsaved) {
+	if (!empty($unsaved)) {
 		echo "<div class='unsaved'>".$text['message-unsaved_changes']." <i class='fas fa-exclamation-triangle'></i></div>";
 	}
 	if (permission_exists('user_add') || permission_exists('user_edit')) {
@@ -738,7 +738,7 @@
 	echo "		<td class='vncell".(($action == 'add') ? 'req' : null)."' valign='top'>".$text['label-password']."</td>";
 	echo "		<td class='vtable'>";
 	echo "			<input type='password' style='display: none;' disabled='disabled'>"; //help defeat browser auto-fill
-	echo "			<input type='password' autocomplete='new-password' class='formfld' name='password' id='password' value=\"".escape($password)."\" ".($action == 'add' ? "required='required'" : null)." onkeypress='show_strength_meter();' onfocus='compare_passwords();' onkeyup='compare_passwords();' onblur='compare_passwords();'>";
+	echo "			<input type='password' autocomplete='new-password' class='formfld' name='password' id='password' value=\"".escape($password ?? null)."\" ".($action == 'add' ? "required='required'" : null)." onkeypress='show_strength_meter();' onfocus='compare_passwords();' onkeyup='compare_passwords();' onblur='compare_passwords();'>";
 	echo "			<div id='pwstrength_progress' class='pwstrength_progress'></div><br />\n";
 	if ((is_numeric($required['length']) && $required['length'] != 0) || $required['number'] || $required['lowercase'] || $required['uppercase'] || $required['special']) {
 		echo $text['label-required'].': ';
@@ -773,7 +773,7 @@
 	echo "	<tr>";
 	echo "		<td class='vncell".(($action == 'add') ? 'req' : null)."' valign='top'>".$text['label-confirm_password']."</td>";
 	echo "		<td class='vtable'>";
-	echo "			<input type='password' autocomplete='new-password' class='formfld' name='password_confirm' id='password_confirm' value=\"".escape($password_confirm)."\" ".($action == 'add' ? "required='required'" : null)." onfocus='compare_passwords();' onkeyup='compare_passwords();' onblur='compare_passwords();'><br />\n";
+	echo "			<input type='password' autocomplete='new-password' class='formfld' name='password_confirm' id='password_confirm' value=\"".escape($password_confirm ?? null)."\" ".($action == 'add' ? "required='required'" : null)." onfocus='compare_passwords();' onkeyup='compare_passwords();' onblur='compare_passwords();'><br />\n";
 	echo "			".$text['message-green_border_passwords_match']."\n";
 	echo "		</td>";
 	echo "	</tr>";
@@ -802,8 +802,8 @@
 	unset($sql, $languages, $row);
 	if (is_array($_SESSION['app']['languages']) && sizeof($_SESSION['app']['languages']) != 0) {
 		foreach ($_SESSION['app']['languages'] as $code) {
-			$selected = $code == $user_language || $code == $user_settings['domain']['language']['code'] ? "selected='selected'" : null;
-			echo "	<option value='".$code."' ".$selected.">".escape($language_codes[$code])." [".escape($code)."]</option>\n";
+			$selected = (isset($user_language) && $code == $user_language) || $code == $user_settings['domain']['language']['code'] ? "selected='selected'" : null;
+			echo "	<option value='".$code."' ".$selected.">".escape($language_codes[$code] ?? null)." [".escape($code ?? null)."]</option>\n";
 		}
 	}
 	echo "		</select>\n";
@@ -832,7 +832,7 @@
 			}
 			echo "		<optgroup label='".$category."'>\n";
 		}
-		$selected = $row == $user_time_zone || $row == $user_settings['domain']['time_zone']['name'] ? "selected='selected'" : null;
+		$selected = (isset($user_time_zone) && $row == $user_time_zone) || (!empty($user_settings['domain']['time_zone']) && $row == $user_settings['domain']['time_zone']['name']) ? "selected='selected'" : null;
 		echo "			<option value='".escape($row)."' ".$selected.">".escape($row)."</option>\n";
 		$previous_category = $category;
 		$x++;
@@ -843,7 +843,7 @@
 	echo "	</td>\n";
 	echo "	</tr>\n";
 
-	if ($_SESSION['user_status_display'] != "false") {
+	if (isset($_SESSION['user_status_display']) && $_SESSION['user_status_display'] != "false") {
 		echo "	<tr>\n";
 		echo "	<td width='20%' class=\"vncell\" valign='top'>\n";
 		echo "		".$text['label-status']."\n";
@@ -999,7 +999,7 @@
 			foreach($groups as $field) {
 				if ($field['group_level'] <= $_SESSION['user']['group_level']) {
 					if (!isset($assigned_groups) || (isset($assigned_groups) && !in_array($field["group_uuid"], $assigned_groups))) {
-						if ($group_uuid_name == $field['group_uuid']."|".$field['group_name']) { $selected = "selected='selected'"; } else { $selected = ''; }
+						if (isset($group_uuid_name) && $group_uuid_name == $field['group_uuid']."|".$field['group_name']) { $selected = "selected='selected'"; } else { $selected = ''; }
 						echo "	<option value='".$field['group_uuid']."|".$field['group_name']."' $selected>".$field['group_name'].(($field['domain_uuid'] != '') ? "@".$_SESSION['domains'][$field['domain_uuid']]['domain_name'] : null)."</option>\n";
 					}
 				}
