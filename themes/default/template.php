@@ -365,7 +365,7 @@
 			{/if}
 
 		//common (used by delete and toggle)
-			{if $settings.theme.keyboard_shortcut_delete_enabled || $settings.theme.keyboard_shortcut_toggle_enabled}
+			{if !empty($settings.theme.keyboard_shortcut_delete_enabled) || !empty($settings.theme.keyboard_shortcut_toggle_enabled)}
 				var list_checkboxes;
 				list_checkboxes = document.querySelectorAll('table.list tr.list-row td.checkbox input[type=checkbox]');
 			{/if}
@@ -426,7 +426,7 @@
 					{/if}
 
 				//key: [delete], list: to delete checked, edit: to delete
-					{if $settings.theme.keyboard_shortcut_delete_enabled}
+					{if !empty($settings.theme.keyboard_shortcut_delete_enabled)}
 						{literal}
 						if (e.which == 46 && !(e.target.tagName == 'INPUT' && e.target.type == 'text') && e.target.tagName != 'TEXTAREA') {
 							e.preventDefault();
@@ -647,7 +647,7 @@
 			{/literal}
 
 		//crossfade menu brand images (if hover version set)
-			{if $settings.theme.menu_brand_image != '' && $settings.theme.menu_brand_image_hover != '' && $settings.theme.menu_style != 'side'}
+			{if !empty($settings.theme.menu_brand_image) && !empty($settings.theme.menu_brand_image_hover) && isset($settings.theme.menu_style) && $settings.theme.menu_style != 'side'}
 				{literal}
 				$(function(){
 					$('#menu_brand_image').on('mouseover',function(){
@@ -1015,7 +1015,9 @@
 		{/literal}
 
 	{*//session timer *}
-		{$session_timer}
+		{if !empty($session_timer)}
+			{$session_timer}
+		{/if}
 
 	{*//domain selector *}
 	function search_domains(element_id) {
