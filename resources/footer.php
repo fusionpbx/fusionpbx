@@ -167,7 +167,7 @@
 		else if (isset($_SESSION['software_name'])) {
 			$document_title = $_SESSION['software_name'];
 		}
-		$document_title = ($document['title'] != '' ? $document['title'].' - ' : null).$document_title;
+		$document_title = (!empty($document['title']) ? $document['title'].' - ' : null).$document_title;
 		$view->assign('document_title', $document_title);
 	//domain selector control
 		$domain_selector_enabled = permission_exists('domain_select') && count($_SESSION['domains']) > 1 ? true : false;
@@ -178,7 +178,7 @@
 		$view->assign('browser_name', $user_agent['name']);
 		$view->assign('browser_name_short', $user_agent['name_short']);
 	//login state
-		$authenticated = isset($_SESSION['username']) && $_SESSION['username'] != '' ? true : false;
+		$authenticated = isset($_SESSION['username']) && !empty($_SESSION['username']) ? true : false;
 		$view->assign('authenticated', $authenticated);
 	//domains application path
 		$view->assign('domains_app_path', PROJECT_PATH.(file_exists($_SERVER['DOCUMENT_ROOT'].'/app/domains/domains.php') ? '/app/domains/domains.php' : '/core/domains/domains.php'));
