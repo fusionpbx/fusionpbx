@@ -482,8 +482,10 @@ class authentication {
 			$obj->set();
 
 		//set the domain settings
-			$_SESSION['domain_name'] = $this->domain_name;
-			$_SESSION['domain_parent_uuid'] = $_SESSION["domain_uuid"];
+			if (!empty($this->domain_name) && !empty($_SESSION["domain_uuid"])) {
+				$_SESSION['domain_name'] = $this->domain_name;
+				$_SESSION['domain_parent_uuid'] = $_SESSION["domain_uuid"];
+			}
 
 		//set the domain name
 			return $this->domain_name;
