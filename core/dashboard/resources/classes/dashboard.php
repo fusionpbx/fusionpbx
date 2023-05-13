@@ -132,7 +132,7 @@ if (!class_exists('dashboard')) {
 					if (is_array($records) && @sizeof($records) != 0) {
 						//get current toggle state
 							foreach($records as $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['dashboard_uuid'])) {
+								if (isset($record['checked']) && $record['checked'] == 'true' && is_uuid($record['dashboard_uuid'])) {
 									$uuids[] = "'".$record['dashboard_uuid']."'";
 								}
 							}
@@ -140,7 +140,7 @@ if (!class_exists('dashboard')) {
 								$sql = "select ".$this->name."_uuid as uuid, ".$this->toggle_field." as toggle from v_".$this->table." ";
 								$sql .= "where ".$this->name."_uuid in (".implode(', ', $uuids).") ";
 								$database = new database;
-								$rows = $database->select($sql, $parameters, 'all');
+								$rows = $database->select($sql, $parameters ?? null, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
 										$states[$row['uuid']] = $row['toggle'];
