@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2022
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -585,7 +585,9 @@ if (!class_exists('domains')) {
 				}
 
 			//set the context
-				$_SESSION["context"] = $_SESSION["domain_name"];
+				if (!empty($_SESSION["domain_name"])) {
+					$_SESSION["context"] = $_SESSION["domain_name"];
+				}
 		}
 
 		/**
