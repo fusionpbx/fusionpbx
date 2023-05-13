@@ -77,7 +77,7 @@ if (!class_exists('schema')) {
 								$sql = "CREATE TABLE " . $row['table']['name'] . " (\n";
 								$field_count = 0;
 								foreach ($row['fields'] as $field) {
-									if (isset($field['deprecated']) and ($field['deprecated'] == "true")) {
+									if (!empty($field['deprecated']) and ($field['deprecated'] == "true")) {
 										//skip this field
 									}
 									else {
@@ -368,7 +368,7 @@ if (!class_exists('schema')) {
 							$sql = "CREATE TABLE " . $table_name . " (\n";
 							$field_count = 0;
 							if (is_array($row['fields'])) foreach ($row['fields'] as $field) {
-								if ($field['deprecated'] == "true") {
+								if (!empty($field['deprecated']) && $field['deprecated'] == "true") {
 									//skip this row
 								}
 								else {
@@ -407,7 +407,7 @@ if (!class_exists('schema')) {
 							$sql = "INSERT INTO " . $row['table']['name'] . " (";
 							$field_count = 0;
 							foreach ($row['fields'] as $field) {
-								if ($field['deprecated'] == "true") {
+								if (!empty($field['deprecated']) && $field['deprecated'] == "true") {
 									//skip this field
 								}
 								else {
@@ -425,7 +425,7 @@ if (!class_exists('schema')) {
 							$sql .= "SELECT ";
 							$field_count = 0;
 							foreach ($row['fields'] as $field) {
-								if ($field['deprecated'] == "true") {
+								if (!empty($field['deprecated']) && $field['deprecated'] == "true") {
 									//skip this field
 								}
 								else {
@@ -575,7 +575,7 @@ if (!class_exists('schema')) {
 									}
 								//check if the column exists
 									foreach ($row['fields'] as $z => $field) {
-										if ($field['deprecated'] == "true") {
+										if (!empty($field['deprecated']) && $field['deprecated'] == "true") {
 											//skip this field
 										}
 										else {
@@ -605,7 +605,7 @@ if (!class_exists('schema')) {
 
 				//prepare the variables
 					$sql_update = '';
-					$var_uuid = $_GET["id"];
+					$var_uuid = $_GET["id"] ?? '';
 
 				//add missing tables and fields
 					foreach ($apps as $x => &$app) {
@@ -641,7 +641,7 @@ if (!class_exists('schema')) {
 								if ($row['exists'] == "true") {
 									if (count($row['fields']) > 0) {
 										foreach ($row['fields'] as $z => $field) {
-											if ($field['deprecated'] == "true") {
+											if (!empty($field['deprecated']) && $field['deprecated'] == "true") {
 												//skip this field
 											}
 											else {
@@ -761,7 +761,7 @@ if (!class_exists('schema')) {
 							else {
 								$table_name = $row['table']['name'];
 							}
-							if ($row['rebuild'] == "true") {
+							if (!empty($field['rebuild']) && $row['rebuild'] == "true") {
 								if ($db_type == "sqlite") {
 									//start the transaction
 										//$sql_update .= "BEGIN TRANSACTION;\n";
@@ -835,7 +835,7 @@ if (!class_exists('schema')) {
 													$response .= "<th>".$text['label-exists']."</th>\n";
 													$response .= "</tr>\n";
 													foreach ($row['fields'] as $field) {
-														if ($field['deprecated'] == "true") {
+														if (!empty($field['deprecated']) && $field['deprecated'] == "true") {
 															//skip this field
 														}
 														else {
