@@ -264,7 +264,7 @@
 	}
 
 //pre-populate the form
-	if (!empty($_GET) && !empty($_GET["id"]) && is_uuid($_GET["id"]) && !empty($_POST["persistformvar"])) {
+	if (!empty($_GET) && !empty($_GET["id"]) && is_uuid($_GET["id"]) && empty($_POST["persistformvar"])) {
 		$gateway_uuid = $_GET["id"];
 		$sql = "select * from v_gateways ";
 		$sql .= "where gateway_uuid = :gateway_uuid ";
