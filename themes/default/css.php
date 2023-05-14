@@ -55,7 +55,6 @@ $header_user_color_hover = $_SESSION['theme']['header_user_color_hover']['text']
 $header_domain_color_hover = $_SESSION['theme']['header_domain_color_hover']['text'] ?? '#1892e6';
 $logout_icon_color = $_SESSION['theme']['logout_icon_color']['text'] ?? 'rgba(255,255,255,0.8)';
 $logout_icon_color_hover = $_SESSION['theme']['logout_icon_color_hover']['text'] ?? 'rgba(255,255,255,1.0)';
-$menu_main_background_color_hover = $_SESSION['theme']['menu_main_background_color_hover']['text'] ?? '#fd9c03';
 $menu_main_toggle_color = $_SESSION['theme']['menu_main_toggle_color']['text'] ?? 'rgba(255,255,255,0.8)';
 $menu_main_toggle_color_hover = $_SESSION['theme']['menu_main_toggle_color_hover']['text'] ?? 'rgba(255,255,255,1.0)';
 $menu_side_state = $_SESSION['theme']['menu_side_state']['text'] ?? null;
