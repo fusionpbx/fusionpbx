@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2022
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -89,7 +89,7 @@
 				break;
 		}
 
-		header('Location: gateways.php'.(!empty($search) ? '?search='.urlencode($search) : null));
+		header('Location: gateways.php'.($search != '' ? '?search='.urlencode($search) : null));
 		exit;
 	}
 
@@ -150,7 +150,7 @@
 	$num_rows = $total_gateways;
 
 //prepare to page the results
-	$rows_per_page = (!empty($_SESSION['domain']['paging']['numeric'])) ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
 	$param = "&search=".$search;
 	$param .= $order_by ? "&order_by=".$order_by."&order=".$order : null;
 	$page = !empty($_GET['page']) ? $_GET['page'] : 0;
@@ -228,7 +228,7 @@
 	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=''>";
 	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search']);
 	//echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','link'=>'gateways.php','style'=>($search == '' ? 'display: none;' : null)]);
-	if (!empty($paging_controls_mini)) {
+	if ($paging_controls_mini != '') {
 		echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>";
 	}
 	echo "		</form>\n";
