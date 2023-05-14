@@ -159,7 +159,7 @@
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = "select * from ";
+	$sql = "select * ";
 	$sql .= "from v_gateways ";
 	$sql .= "where true ";
 	if (!($show == "all" && permission_exists('gateway_all'))) {
@@ -261,7 +261,7 @@
 	echo "<tr class='list-header'>\n";
 	if (permission_exists('gateway_add') || permission_exists('gateway_edit') || permission_exists('gateway_delete')) {
 		echo "	<th class='checkbox'>\n";
-		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".($gateways ?: "style='visibility: hidden;'").">\n";
+		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".(!empty($gateways) ?: "style='visibility: hidden;'").">\n";
 		echo "	</th>\n";
 	}
 	if ($show == "all" && permission_exists('gateway_all')) {
