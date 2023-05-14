@@ -318,6 +318,7 @@
 	unset($sql);
 
 //set defaults
+	if (empty($gateway_uuid)) { $gateway_uuid = ""; }
 	if (empty($enabled)) { $enabled = "true"; }
 	if (empty($register)) { $register = "true"; }
 	if (empty($retry_seconds)) { $retry_seconds = "30"; }
