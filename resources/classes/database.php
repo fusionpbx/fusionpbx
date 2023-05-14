@@ -924,7 +924,7 @@
 						foreach($this->fields as $name => $value) {
 							$name = self::sanitize($name);
 							if ($field_count == $i) {
-								if (strlen($value) > 0) {
+								if (isset($value) && $value != '') {
 									//$sql .= "'".$value."' ";
 									$sql .= ":".$name." \n";
 									$params[$name] = trim($value);
@@ -934,7 +934,7 @@
 								}
 							}
 							else {
-								if (strlen($value) > 0) {
+								if (isset($value) && $value != '') {
 									//$sql .= "'".$value."', ";
 									$sql .= ":".$name.", \n";
 									$params[$name] = trim($value);
@@ -992,7 +992,7 @@
 						foreach($this->fields as $name => $value) {
 							$name = self::sanitize($name);
 							if (count($this->fields) == $i) {
-								if (strlen($name) > 0 && $value == null) {
+								if (!empty($name) && $value == null) {
 									$sql .= $name." = null ";
 								}
 								else {
@@ -1002,7 +1002,7 @@
 								}
 							}
 							else {
-								if (strlen($name) > 0 && $value == null) {
+								if (!empty($name) && $value == null) {
 									$sql .= $name." = null, ";
 								}
 								else {
@@ -1185,7 +1185,7 @@
 									}
 								}
 							}
-							if (strlen($field_value) > 0) {
+							if (isset($field_value) && $field_value != '') {
 								$results = $this->execute($sql, $parameters, 'all');
 								unset($parameters);
 								if (is_array($results)) {
@@ -2123,7 +2123,7 @@
 															$array_key != 'insert_date' &&
 															$array_key != 'update_user' &&
 															$array_key != 'update_date') {
-															if (strlen($array_value) == 0) {
+															if (!isset($array_value) || $array_value == '') {
 																$sql .= "null, ";
 															}
 															elseif ($array_value === "now()") {
@@ -2138,6 +2138,7 @@
 																$params[$array_key] = $_SERVER['REMOTE_ADDR'];
 															}
 															else {
+																$array_value = $array_value ?? '';
 																$sql .= ':'.$array_key.", ";
 																$params[$array_key] = trim($array_value);
 															}
@@ -2221,7 +2222,7 @@
 												foreach ($array as $array_key => $array_value) {
 													if (!is_array($array_value) && $array_key != $parent_key_name) {
 														$array_key = self::sanitize($array_key);
-														if (strlen($array_value) == 0) {
+														if (!isset($array_value) || $array_value == '') {
 															$sql .= $array_key." = null, ";
 														}
 														elseif ($array_value === "now()") {
@@ -2661,8 +2662,8 @@
 					$this->db->commit();
 
 				//set the action if not set
-					if (strlen($action ?? '') === 0) {
-						if (is_array($old_array)) {
+					if (empty($action)) {
+						if (!empty($old_array)) {
 							$transaction_type = 'update';
 						}
 						else {
@@ -2722,13 +2723,13 @@
 							$sql .= ":remote_address, ";
 							$sql .= "'".$transaction_type."', ";
 							$sql .= "now(), ";
-							if (is_array($old_array)) {
+							if (!empty($old_array)) {
 								$sql .= ":transaction_old, ";
 							}
 							else {
 								$sql .= "null, ";
 							}
-							if (is_array($array)) {
+							if (!empty($array)) {
 								$sql .= ":transaction_new, ";
 							}
 							else {
@@ -2747,11 +2748,11 @@
 								$statement->bindParam(':app_name', $this->app_name);
 							}
 							$statement->bindParam(':remote_address', $_SERVER['REMOTE_ADDR']);
-							if (is_array($old_array)) {
+							if (!empty($old_array)) {
 								$old_json = json_encode($old_array, JSON_PRETTY_PRINT);
 								$statement->bindParam(':transaction_old', $old_json);
 							}
-							if (isset($new_json)) {
+							if (!empty($new_json)) {
 								$statement->bindParam(':transaction_new', $new_json);
 							}
 							$message = json_encode($this->message, JSON_PRETTY_PRINT);
