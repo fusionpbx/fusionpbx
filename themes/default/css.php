@@ -286,7 +286,7 @@ if (!empty($_SESSION['theme'])) {
 	foreach ($_SESSION['theme'] as $subcategory => $type) {
 		if (substr($subcategory, -5) == '_font') {
 			$font_string = $type['text'];
-			if ($font_string != '') {
+			if (!empty($font_string)) {
 				if (substr_count($font_string, ',') > 0) {
 					$tmp_array = explode(',', $font_string);
 				}
@@ -326,13 +326,13 @@ else {
 		$background_images_enabled = true;
 		$background_images = $_SESSION['theme']['login_background_image'];
 	}
-	else if ($_SESSION['theme']['login_background_color'][0] != '' || $_SESSION['theme']['login_background_color'][1] != '') {
+	else if (!empty($_SESSION['theme']['login_background_color'][0]) || !empty($_SESSION['theme']['login_background_color'][1])) {
 		$background_colors[0] = $_SESSION['theme']['login_background_color'][0] ?? null;
 		$background_colors[1] = $_SESSION['theme']['login_background_color'][1] ?? null;
 	}
 	else {
 		//otherwise, use standard background images/colors
-		if ($_SESSION['theme']['background_image_enabled']['boolean'] == 'true' && is_array($_SESSION['theme']['background_image'])) {
+		if (!empty($_SESSION['theme']['background_image_enabled']['boolean']) && $_SESSION['theme']['background_image_enabled']['boolean'] == 'true' && is_array($_SESSION['theme']['background_image'])) {
 			$background_images_enabled = true;
 			$background_images = $_SESSION['theme']['background_image'];
 		}
@@ -400,7 +400,7 @@ if ($background_images_enabled) {
 					$x++;
 				}
 			}
-			if ($_SESSION['background_image'] == '' && sizeof($v_background_array) > 0) {
+			if (empty($_SESSION['background_image']) && !empty($v_background_array)) {
 				$_SESSION['background_image'] = PROJECT_PATH.$source_path.$v_background_array[array_rand($v_background_array, 1)];
 			}
 		}
@@ -415,23 +415,20 @@ if ($background_images_enabled) {
 }
 
 //check for background color
-else if (
-	$background_colors[0] != '' ||
-	$background_colors[1] != ''
-	) { //background color 1 or 2 is enabled
+else if (!empty($background_colors[0]) || !empty($background_colors[1])) { //background color 1 or 2 is enabled
 
-	if ($background_colors[0] != '' && $background_colors[1] == '') { // use color 1
+	if (!empty($background_colors[0]) && empty($background_colors[1])) { // use color 1
 		$background_color = "background: ".$background_colors[0].";";
 	}
-	else if ($background_colors[0] == '' && $background_colors[1] != '') { // use color 2
+	else if (!empty($background_colors[0]) && !empty($background_colors[1])) { // use color 2
 		$background_color = "background: ".$background_colors[1].";";
 	}
-	else if ($background_colors[0] != '' && $background_colors[1] != '' && isset($_SESSION['theme']['background_radial_gradient']['text'])) { // radial gradient
+	else if (!empty($background_colors[0]) && !empty($background_colors[1]) && isset($_SESSION['theme']['background_radial_gradient']['text'])) { // radial gradient
 		$background_color = "background: ".$background_colors[0].";\n";
 		$background_color .= "background: -ms-radial-gradient(center, circle, ".$background_colors[0]." 0%, ".$background_colors[1]." 100%);\n";
 		$background_color .= "background: radial-gradient(circle at center, ".$background_colors[0]." 0%, ".$background_colors[1]." 100%);\n";
 	}
-	else if ($background_colors[0] != '' && $background_colors[1] != '') { // vertical gradient
+	else if (!empty($background_colors[0]) && !empty($background_colors[1])) { // vertical gradient
 		$background_color = "background: ".$background_colors[0].";\n";
 		$background_color .= "background: -ms-linear-gradient(top, ".$background_colors[0]." 0%, ".$background_colors[1]." 100%);\n";
 		$background_color .= "background: -moz-linear-gradient(top, ".$background_colors[0]." 0%, ".$background_colors[1]." 100%);\n";
@@ -1430,7 +1427,7 @@ else { //default: white
 		-khtml-transform: translate(-50%, -50%);
 		transform: translate(-50%, -50%);
 		padding: <?=$login_body_padding?>;
-		width: <?=$login_body_width?>
+		width: <?=$login_body_width?>;
 		background: <?=$login_body_background_color?>;
 		<?php $br = format_border_radius($login_body_border_radius, '4px'); ?>
 		-moz-border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
@@ -1481,7 +1478,7 @@ else { //default: white
 		display: inline-block;
 		width: 100%;
 		<?php
-		if (isset($background_images) || $background_colors[0] != '' || $background_colors[1] != '') {
+		if (isset($background_images) || !empty($background_colors[0]) || !empty($background_colors[1])) {
 			?>
 			background: <?=$body_color?>;
 			background-attachment: fixed;
