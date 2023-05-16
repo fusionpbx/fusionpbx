@@ -26,7 +26,8 @@
 
 function persistformvar($form_array) {
 	// Remember Form Input Values
-	if (is_array($form_array)) {
+	$content = '';
+	if (!empty($form_array)) {
 		$content .= "<form method='post' action='".escape($_SERVER["HTTP_REFERER"])."' target='_self'>\n";
 		foreach($form_array as $key => $val) {
 			if ($key == "XID" || $key == "ACT" || $key == "RET") continue;

@@ -77,7 +77,7 @@ if (!class_exists('schema')) {
 								$sql = "CREATE TABLE " . $row['table']['name'] . " (\n";
 								$field_count = 0;
 								foreach ($row['fields'] as $field) {
-									if (isset($field['deprecated']) and ($field['deprecated'] == "true")) {
+									if (!empty($field['deprecated']) and ($field['deprecated'] == "true")) {
 										//skip this field
 									}
 									else {
@@ -164,7 +164,7 @@ if (!class_exists('schema')) {
 					}
 				}
 				if ($this->db_type == "pgsql") {
-					$sql = "SELECT attname FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = '$table_name') AND attname = '$column_name'; ";
+					$sql = "SELECT attname FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = '$table_name' limit 1) AND attname = '$column_name'; ";
 				}
 				if ($this->db_type == "mysql") {
 					//$sql .= "SELECT * FROM information_schema.COLUMNS where TABLE_SCHEMA = '$db_name' and TABLE_NAME = '$table_name' and COLUMN_NAME = '$column_name' ";
@@ -190,7 +190,7 @@ if (!class_exists('schema')) {
 
 		//get the table information
 			public function table_info($db_name, $table_name) {
-				if (strlen($table_name) == 0) { return false; }
+				if (empty($table_name)) { return false; }
 				if ($this->db_type == "sqlite") {
 					$sql = "PRAGMA table_info(".$table_name.");";
 				}
@@ -252,7 +252,7 @@ if (!class_exists('schema')) {
 
 		//database table information
 			private function db_table_info($db_name, $db_type, $table_name) {
-				if (strlen($table_name) == 0) { return false; }
+				if (empty($table_name)) { return false; }
 				if ($db_type == "sqlite") {
 					$sql = "PRAGMA table_info(".$table_name.");";
 				}
@@ -325,7 +325,7 @@ if (!class_exists('schema')) {
 					}
 				}
 				if ($db_type == "pgsql") {
-					$sql = "SELECT attname FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = '$table_name') AND attname = '$column_name'; ";
+					$sql = "SELECT attname FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = '$table_name' limit 1) AND attname = '$column_name'; ";
 				}
 				if ($db_type == "mysql") {
 					//$sql .= "SELECT * FROM information_schema.COLUMNS where TABLE_SCHEMA = '$db_name' and TABLE_NAME = '$table_name' and COLUMN_NAME = '$column_name' ";
@@ -368,7 +368,7 @@ if (!class_exists('schema')) {
 							$sql = "CREATE TABLE " . $table_name . " (\n";
 							$field_count = 0;
 							if (is_array($row['fields'])) foreach ($row['fields'] as $field) {
-								if ($field['deprecated'] == "true") {
+								if (!empty($field['deprecated']) && $field['deprecated'] == "true") {
 									//skip this row
 								}
 								else {
@@ -407,7 +407,7 @@ if (!class_exists('schema')) {
 							$sql = "INSERT INTO " . $row['table']['name'] . " (";
 							$field_count = 0;
 							foreach ($row['fields'] as $field) {
-								if ($field['deprecated'] == "true") {
+								if (!empty($field['deprecated']) && $field['deprecated'] == "true") {
 									//skip this field
 								}
 								else {
@@ -425,7 +425,7 @@ if (!class_exists('schema')) {
 							$sql .= "SELECT ";
 							$field_count = 0;
 							foreach ($row['fields'] as $field) {
-								if ($field['deprecated'] == "true") {
+								if (!empty($field['deprecated']) && $field['deprecated'] == "true") {
 									//skip this field
 								}
 								else {
@@ -564,7 +564,7 @@ if (!class_exists('schema')) {
 									$table_name = $row['table'];
 								}
 							}
-							if (strlen($table_name) > 0) {
+							if (!empty($table_name)) {
 
 								//check if the table exists
 									if ($this->db_table_exists($db_type, $db_name, $table_name)) {
@@ -575,7 +575,7 @@ if (!class_exists('schema')) {
 									}
 								//check if the column exists
 									foreach ($row['fields'] as $z => $field) {
-										if ($field['deprecated'] == "true") {
+										if (!empty($field['deprecated']) && $field['deprecated'] == "true") {
 											//skip this field
 										}
 										else {
@@ -585,7 +585,7 @@ if (!class_exists('schema')) {
 											else {
 												$field_name = $field['name'];
 											}
-											if (strlen($field_name) > 0) {
+											if (!empty($field_name)) {
 												if ($this->db_column_exists ($db_type, $db_name, $table_name, $field_name)) {
 													//found
 													$apps[$x]['db'][$y]['fields'][$z]['exists'] = 'true';
@@ -605,7 +605,7 @@ if (!class_exists('schema')) {
 
 				//prepare the variables
 					$sql_update = '';
-					$var_uuid = $_GET["id"];
+					$var_uuid = $_GET["id"] ?? '';
 
 				//add missing tables and fields
 					foreach ($apps as $x => &$app) {
@@ -641,7 +641,7 @@ if (!class_exists('schema')) {
 								if ($row['exists'] == "true") {
 									if (count($row['fields']) > 0) {
 										foreach ($row['fields'] as $z => $field) {
-											if ($field['deprecated'] == "true") {
+											if (!empty($field['deprecated']) && $field['deprecated'] == "true") {
 												//skip this field
 											}
 											else {
@@ -690,7 +690,7 @@ if (!class_exists('schema')) {
 														$db_field_type = $this->db_column_data_type ($db_type, $db_name, $table_name, $field_name);
 														$field_type_array = explode("(", $field_type);
 														$field_type = $field_type_array[0];
-														if (trim($db_field_type) != trim($field_type) && strlen($db_field_type) > 0) {
+														if (trim($db_field_type) != trim($field_type) && !empty($db_field_type)) {
 															if ($db_type == "pgsql") {
 																if (strtolower($field_type) == "uuid") {
 																	$sql_update .= "ALTER TABLE ".$table_name." ALTER COLUMN ".$field_name." TYPE uuid USING\n";
@@ -761,7 +761,7 @@ if (!class_exists('schema')) {
 							else {
 								$table_name = $row['table']['name'];
 							}
-							if ($row['rebuild'] == "true") {
+							if (!empty($field['rebuild']) && $row['rebuild'] == "true") {
 								if ($db_type == "sqlite") {
 									//start the transaction
 										//$sql_update .= "BEGIN TRANSACTION;\n";
@@ -790,7 +790,7 @@ if (!class_exists('schema')) {
 						//start the table
 							$response .= "<table width='100%' border='0' cellpadding='20' cellspacing='0'>\n";
 						//show the changes
-							if (strlen($sql_update) > 0) {
+							if (!empty($sql_update)) {
 								$response .= "<tr>\n";
 								$response .= "<td class='row_style1' colspan='3'>\n";
 								$response .= "<br />\n";
@@ -835,7 +835,7 @@ if (!class_exists('schema')) {
 													$response .= "<th>".$text['label-exists']."</th>\n";
 													$response .= "</tr>\n";
 													foreach ($row['fields'] as $field) {
-														if ($field['deprecated'] == "true") {
+														if (!empty($field['deprecated']) && $field['deprecated'] == "true") {
 															//skip this field
 														}
 														else {
@@ -887,7 +887,7 @@ if (!class_exists('schema')) {
 
 					//loop line by line through all the lines of sql code
 						$x = 0;
-						if (strlen($sql_update) == 0 && $format == "text") {
+						if (empty($sql_update) && $format == "text") {
 							$response .= "	".$text['label-schema'].":			".$text['label-no_change']."\n";
 						}
 						else {

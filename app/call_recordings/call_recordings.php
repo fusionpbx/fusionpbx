@@ -108,7 +108,7 @@
 //prepare some of the paging values
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
 	$page = $_GET['page'];
-	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
+	if (empty($page)) { $page = 0; $_GET['page'] = 0; }
 	$offset = $rows_per_page * $page;
 
 //get the list

@@ -46,6 +46,9 @@
 	$language = new text;
 	$text = $language->get();
 
+//set default showall
+	$show_all = false;
+
 //additional includes
 	$document['title'] = $text['title-call-statistics'];
 	require_once "resources/header.php";
@@ -55,82 +58,83 @@
 	if (permission_exists('xml_cdr_search_advanced')) {
 		$search_url .= '&redirect=xml_cdr_statistics';
 	}
-	if(permission_exists('xml_cdr_all') && ($_GET['showall'] === 'true')){
+	if(permission_exists('xml_cdr_all') && (isset($_GET['showall']) && $_GET['showall'] === 'true')){
 		$search_url .= '&showall=true';
+		$show_all = true;
 	}
-	if (strlen($_GET['direction']) > 0) {
+	if (!empty($_GET['direction'])) {
 		$search_url .= '&direction='.urlencode($_GET['direction']);
 	}
-	if (strlen($_GET['leg']) > 0) {
+	if (!empty($_GET['leg'])) {
 		$search_url .= '&leg='.urlencode($_GET['leg']);
 	}
-	if (strlen($_GET['caller_id_name']) > 0) {
+	if (!empty($_GET['caller_id_name'])) {
 		$search_url .= '&caller_id_name='.urlencode($_GET['caller_id_name']);
 	}
-	if (strlen($_GET['caller_extension_uuid']) > 0) {
+	if (!empty($_GET['caller_extension_uuid'])) {
 		$search_url .= '&caller_extension_uuid='.urlencode($_GET['caller_extension_uuid']);
 	}
-	if (strlen($_GET['caller_id_number']) > 0) {
+	if (!empty($_GET['caller_id_number'])) {
 		$search_url .= '&caller_id_number='.urlencode($_GET['caller_id_number']);
 	}
-	if (strlen($_GET['destination_number']) > 0) {
+	if (!empty($_GET['destination_number'])) {
 		$search_url .= '&destination_number='.urlencode($_GET['destination_number']);
 	}
-	if (strlen($_GET['context']) > 0) {
+	if (!empty($_GET['context'])) {
 		$search_url .= '&context='.urlencode($_GET['context']);
 	}
-	if (strlen($_GET['start_stamp_begin']) > 0) {
+	if (!empty($_GET['start_stamp_begin'])) {
 		$search_url .= '&start_stamp_begin='.urlencode($_GET['start_stamp_begin']);
 	}
-	if (strlen($_GET['start_stamp_end']) > 0) {
+	if (!empty($_GET['start_stamp_end'])) {
 		$search_url .= '&start_stamp_end='.urlencode($_GET['start_stamp_end']);
 	}
-	if (strlen($_GET['answer_stamp_begin']) > 0) {
+	if (!empty($_GET['answer_stamp_begin'])) {
 		$search_url .= '&answer_stamp_begin='.urlencode($_GET['answer_stamp_begin']);
 	}
-	if (strlen($_GET['answer_stamp_end']) > 0) {
+	if (!empty($_GET['answer_stamp_end'])) {
 		$search_url .= '&answer_stamp_end='.urlencode($_GET['answer_stamp_end']);
 	}
-	if (strlen($_GET['end_stamp_begin']) > 0) {
+	if (!empty($_GET['end_stamp_begin'])) {
 		$search_url .= '&end_stamp_begin='.urlencode($_GET['end_stamp_begin']);
 	}
-	if (strlen($_GET['end_stamp_end']) > 0) {
+	if (!empty($_GET['end_stamp_end'])) {
 		$search_url .= '&end_stamp_end='.urlencode($_GET['end_stamp_end']);
 	}
-	if (strlen($_GET['duration']) > 0) {
+	if (!empty($_GET['duration'])) {
 		$search_url .= '&duration='.urlencode($_GET['duration']);
 	}
-	if (strlen($_GET['billsec']) > 0) {
+	if (!empty($_GET['billsec'])) {
 		$search_url .= '&billsec='.urlencode($_GET['billsec']);
 	}
-	if (strlen($_GET['hangup_cause']) > 0) {
+	if (!empty($_GET['hangup_cause'])) {
 		$search_url .= '&hangup_cause='.urlencode($_GET['hangup_cause']);
 	}
-	if (strlen($_GET['uuid']) > 0) {
+	if (!empty($_GET['uuid'])) {
 		$search_url .= '&uuid='.urlencode($_GET['uuid']);
 	}
-	if (strlen($_GET['bleg_uuid']) > 0) {
+	if (!empty($_GET['bleg_uuid'])) {
 		$search_url .= '&bleg_uuid='.urlencode($_GET['bleg_uuid']);
 	}
-	if (strlen($_GET['accountcode']) > 0) {
+	if (!empty($_GET['accountcode'])) {
 		$search_url .= '&accountcode='.urlencode($_GET['accountcode']);
 	}
-	if (strlen($_GET['read_codec']) > 0) {
+	if (!empty($_GET['read_codec'])) {
 		$search_url .= '&read_codec='.urlencode($_GET['read_codec']);
 	}
-	if (strlen($_GET['write_codec']) > 0) {
+	if (!empty($_GET['write_codec'])) {
 		$search_url .= '&write_codec='.urlencode($_GET['write_codec']);
 	}
-	if (strlen($_GET['remote_media_ip']) > 0) {
+	if (!empty($_GET['remote_media_ip'])) {
 		$search_url .= '&remote_media_ip='.urlencode($_GET['remote_media_ip']);
 	}
-	if (strlen($_GET['network_addr']) > 0) {
+	if (!empty($_GET['network_addr'])) {
 		$search_url .= '&network_addr='.urlencode($_GET['network_addr']);
 	}
-	if (strlen($_GET['mos_comparison']) > 0) {
+	if (!empty($_GET['mos_comparison'])) {
 		$search_url .= '&mos_comparison='.urlencode($_GET['mos_comparison']);
 	}
-	if (strlen($_GET['mos_score']) > 0) {
+	if (!empty($_GET['mos_score'])) {
 		$search_url .= '&mos_score='.urlencode($_GET['mos_score']);
 	}
 
@@ -144,7 +148,7 @@
 	if (permission_exists('xml_cdr_search_advanced')) {
 		echo button::create(['type'=>'button','label'=>$text['button-advanced_search'],'icon'=>'tools','link'=>'xml_cdr_search.php?type=advanced'.$search_url]);
 	}
-	if (permission_exists('xml_cdr_all') && $_GET['showall'] != 'true') {
+	if (permission_exists('xml_cdr_all') && !$show_all) {
 		echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$_SESSION['theme']['button_icon_all'],'link'=>'xml_cdr_statistics.php?showall=true'.$search_url]);
 	}
 	echo button::create(['type'=>'button','label'=>$text['button-extension_summary'],'icon'=>'list','link'=>'xml_cdr_extension_summary.php']);

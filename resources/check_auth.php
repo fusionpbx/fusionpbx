@@ -43,13 +43,13 @@
 	if (!isset($_SESSION['template_content'])) { $_SESSION["template_content"] = null; }
 
 //if the session is not authorized then verify the identity
-	if (!isset($_SESSION['authorized']) && !$_SESSION['authorized']) {
+	if (!isset($_SESSION['authorized']) || (isset($_SESSION['authorized']) && !$_SESSION['authorized'])) {
 
 		//clear the menu
 			unset($_SESSION["menu"]);
 
 		//clear the template only if the template has not been assigned by the superadmin
-			if (strlen($_SESSION['domain']['template']['name']) == 0) {
+			if (empty($_SESSION['domain']['template']['name'])) {
 				$_SESSION["template_content"] = '';
 			}
 

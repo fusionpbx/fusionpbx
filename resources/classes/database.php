@@ -36,7 +36,7 @@
 			 * @access private
 			 * @var PDO object
 			 */
-			private $db;
+			public $db;
 
 			/**
 			 * Driver to use.
@@ -375,21 +375,10 @@
 					case 'username':
 					case 'where':
 					case 'debug':
-						return $this->$name;
 					case 'count':
 						return $this->count();
 					default:
 						trigger_error('Object property not available', E_USER_ERROR);
-				}
-			}
-
-			/**
-			 * Called when there are no references to a particular object
-			 * unset the variables used in the class
-			 */
-			public function __destruct() {
-				foreach ($this as $key => $value) {
-					unset($this->$key);
 				}
 			}
 
@@ -444,7 +433,7 @@
 					if (!isset($this->path) && isset($db_path)) { $this->path = $db_path; }
 
 				if ($this->driver == "sqlite") {
-					if (strlen($this->db_name) == 0) {
+					if (empty($this->db_name)) {
 						$server_name = $_SERVER["SERVER_NAME"];
 						$server_name = str_replace ("www.", "", $server_name);
 						$db_name_short = $server_name;
@@ -477,12 +466,12 @@
 				if ($this->driver == "mysql") {
 					try {
 						//mysql pdo connection
-							if (strlen($this->host) == 0 && strlen($this->port) == 0) {
+							if (strlen($this->host) == 0 && empty($this->port)) {
 								//if both host and port are empty use the unix socket
 								$this->db = new PDO("mysql:host=$this->host;unix_socket=/var/run/mysqld/mysqld.sock;dbname=$this->db_name", $this->username, $this->password);
 							}
 							else {
-								if (strlen($this->port) == 0) {
+								if (empty($this->port)) {
 									//leave out port if it is empty
 									$this->db = new PDO("mysql:host=$this->host;dbname=$this->db_name;", $this->username, $this->password, array(
 									PDO::ATTR_ERRMODE,
@@ -506,8 +495,8 @@
 				if ($this->driver == "pgsql") {
 					//database connection
 					try {
-						if (strlen($this->host) > 0) {
-							if (strlen($this->port) == 0) { $this->port = "5432"; }
+						if (!empty($this->host)) {
+							if (empty($this->port)) { $this->port = "5432"; }
 							if ($this->db_secure === true) {
 								$this->db = new PDO("pgsql:host=$this->host port=$this->port dbname=$this->db_name user=$this->username password=$this->password sslmode=verify-ca sslrootcert=$this->db_cert_authority");
 							}
@@ -603,7 +592,7 @@
 					}
 
 				//get the table info
-					if (strlen($this->table) == 0) { return false; }
+					if (empty($this->table)) { return false; }
 					if ($this->type == "sqlite") {
 						$sql = "PRAGMA table_info(".$this->table.");";
 					}
@@ -686,7 +675,7 @@
 				//public $type;
 				//public $table;
 				//public $name;
-				
+
 				//initialize the array
 					$result = [];
 
@@ -890,9 +879,7 @@
 						$message["message"] = "Bad Request";
 						$message["code"] = "400";
 						$message["error"]["message"] = $e->getMessage();
-						if ($this->debug["sql"]) {
-							$message["sql"] = $sql;
-						}
+						$message["sql"] = $sql;
 						if (is_array($parameters)) {
 							$message["parameters"] = $parameters;
 						}
@@ -937,7 +924,7 @@
 						foreach($this->fields as $name => $value) {
 							$name = self::sanitize($name);
 							if ($field_count == $i) {
-								if (strlen($value) > 0) {
+								if (isset($value) && $value != '') {
 									//$sql .= "'".$value."' ";
 									$sql .= ":".$name." \n";
 									$params[$name] = trim($value);
@@ -947,7 +934,7 @@
 								}
 							}
 							else {
-								if (strlen($value) > 0) {
+								if (isset($value) && $value != '') {
 									//$sql .= "'".$value."', ";
 									$sql .= ":".$name.", \n";
 									$params[$name] = trim($value);
@@ -1005,7 +992,7 @@
 						foreach($this->fields as $name => $value) {
 							$name = self::sanitize($name);
 							if (count($this->fields) == $i) {
-								if (strlen($name) > 0 && $value == null) {
+								if (!empty($name) && $value == null) {
 									$sql .= $name." = null ";
 								}
 								else {
@@ -1015,7 +1002,7 @@
 								}
 							}
 							else {
-								if (strlen($name) > 0 && $value == null) {
+								if (!empty($name) && $value == null) {
 									$sql .= $name." = null, ";
 								}
 								else {
@@ -1107,7 +1094,7 @@
 									$parent_key_name = self::singular($parent_name)."_uuid";
 
 								//build the delete array
-									if ($row['checked'] == 'true') {
+									if (!empty($row['checked']) && $row['checked'] == 'true') {
 										//set checked to true
 										$checked = true;
 
@@ -1198,7 +1185,7 @@
 									}
 								}
 							}
-							if (strlen($field_value) > 0) {
+							if (isset($field_value) && $field_value != '') {
 								$results = $this->execute($sql, $parameters, 'all');
 								unset($parameters);
 								if (is_array($results)) {
@@ -1240,7 +1227,7 @@
 											}
 
 											//delete the child data
-											if (isset($row[$relation['field']]) && strlen($row[$relation['field']]) > 0) {
+											if (isset($row[$relation['field']]) && !empty($row[$relation['field']])) {
 												$sql = "delete from ".self::TABLE_PREFIX.$child_table." ";
 												$sql .= "where ".$relation['field']." = :".$relation['field'];
 												$parameters[$relation['field']] = $row[$relation['field']];
@@ -1281,9 +1268,8 @@
 									$message["details"][$m]["message"] = "OK";
 									$message["details"][$m]["code"] = "200";
 									//$message["details"][$m]["uuid"] = $parent_key_value;
-									if ($this->debug["sql"]) {
-										$message["details"][$m]["sql"] = $sql;
-									}
+									$message["details"][$m]["sql"] = $sql;
+
 									$this->message = $message;
 									$m++;
 									unset($sql);
@@ -1296,9 +1282,8 @@
 									$message["details"][$m]["name"] = $this->name;
 									$message["details"][$m]["message"] = $e->getMessage();
 									$message["details"][$m]["code"] = "400";
-									if ($this->debug["sql"]) {
-										$message["details"][$m]["sql"] = $sql;
-									}
+									$message["details"][$m]["sql"] = $sql;
+
 									$this->message = $message;
 									$m++;
 								}
@@ -1330,7 +1315,7 @@
 						if (isset($this->app_uuid) && is_uuid($this->app_uuid)) {
 							$sql .= "app_uuid, ";
 						}
-						if (isset($this->app_name) && strlen($this->app_name) > 0) {
+						if (isset($this->app_name) && !empty($this->app_name)) {
 							$sql .= "app_name, ";
 						}
 						$sql .= "transaction_code, ";
@@ -1353,7 +1338,7 @@
 						if (isset($this->app_uuid) && is_uuid($this->app_uuid)) {
 							$sql .= ":app_uuid, ";
 						}
-						if (isset($this->app_name) && strlen($this->app_name) > 0) {
+						if (isset($this->app_name) && !empty($this->app_name)) {
 							$sql .= ":app_name, ";
 						}
 						$sql .= "'".$message["code"]."', ";
@@ -1381,7 +1366,7 @@
 						if (isset($this->app_uuid) && is_uuid($this->app_uuid)) {
 							$statement->bindParam(':app_uuid', $this->app_uuid);
 						}
-						if (isset($this->app_name) && strlen($this->app_name) > 0) {
+						if (isset($this->app_name) && !empty($this->app_name)) {
 							$statement->bindParam(':app_name', $this->app_name);
 						}
 						$statement->bindParam(':remote_address', $_SERVER['REMOTE_ADDR']);
@@ -1412,51 +1397,56 @@
 						$this->connect();
 					}
 
+				//return if the table name is not set
+					if (empty($this->table)) {
+						return;
+					}
+
 				//sanitize the table name
 					//$this->table = self::sanitize($this->table); // no longer needed
 
 				//get the number of rows
 					$sql = "select count(*) as num_rows from ".$this->table." ";
-					if ($this->where) {
-						$i = 0;
-						if (is_array($this->where)) {
-							foreach($this->where as $row) {
-								//sanitize the name
-								$row['name'] = self::sanitize($row['name']);
+					$i = 0;
+					if (is_array($this->where)) {
+						foreach($this->where as $row) {
+							//sanitize the name
+							$row['name'] = self::sanitize($row['name']);
 
-								//validate the operator
-								switch ($row['operator']) {
-									case "<": break;
-									case ">": break;
-									case "<=": break;
-									case ">=": break;
-									case "=": break;
-									case "<>": break;
-									case "!=": break;
-									default:
-										//invalid operator
-										return -1;
-								}
-
-								//build the sql
-								if ($i == 0) {
-									$sql .= "where ".$row['name']." ".$row['operator']." :".$row['name']." ";
-								}
-								else {
-									$sql .= "and ".$row['name']." ".$row['operator']." :".$row['name']." ";
-								}
-
-								//add the name and value to the params array
-								$params[$row['name']] = $row['value'];
-
-								//increment $i
-								$i++;
+							//validate the operator
+							switch ($row['operator']) {
+								case "<": break;
+								case ">": break;
+								case "<=": break;
+								case ">=": break;
+								case "=": break;
+								case "<>": break;
+								case "!=": break;
+								default:
+									//invalid operator
+									return -1;
 							}
+
+							//build the sql
+							if ($i == 0) {
+								$sql .= "where ".$row['name']." ".$row['operator']." :".$row['name']." ";
+							}
+							else {
+								$sql .= "and ".$row['name']." ".$row['operator']." :".$row['name']." ";
+							}
+
+							//add the name and value to the params array
+							$params[$row['name']] = $row['value'];
+
+							//increment $i
+							$i++;
 						}
 					}
+
 					//unset($this->where); //should not be objects resposibility
 					$prep_statement = $this->db->prepare($sql);
 					if ($prep_statement) {
+						if (!isset($params)) { $params = null; }
 						$prep_statement->execute($params);
 						$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
 						if ($row['num_rows'] > 0) {
@@ -1525,9 +1515,8 @@
 						$message["message"] = "Bad Request";
 						$message["code"] = "400";
 						$message["error"]["message"] = $e->getMessage();
-						if ($this->debug["sql"]) {
-							$message["sql"] = $sql;
-						}
+						$message["sql"] = $sql;
+
 						if (is_array($parameters)) {
 							$message["parameters"] = $parameters;
 						}
@@ -1620,9 +1609,8 @@
 					$message["details"][$m]["name"] = $this->name;
 					$message["details"][$m]["message"] = "OK";
 					$message["details"][$m]["code"] = "200";
-					if ($this->debug["sql"]) {
-						$message["details"][$m]["sql"] = $sql;
-					}
+					$message["details"][$m]["sql"] = $sql;
+
 					$this->message = $message;
 					$this->result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 					unset($prep_statement);
@@ -1633,9 +1621,8 @@
 					$message["details"][$m]["name"] = $this->name;
 					$message["details"][$m]["message"] = $e->getMessage();
 					$message["details"][$m]["code"] = "400";
-					if ($this->debug["sql"]) {
-						$message["details"][$m]["sql"] = $sql;
-					}
+					$message["details"][$m]["sql"] = $sql;
+
 					$this->message = $message;
 					$this->result = '';
 					$m++;
@@ -2034,7 +2021,7 @@
 								$parent_key_name = self::singular($this->name)."_uuid";
 								$parent_key_name = self::sanitize($parent_key_name);
 
-							//if the uuid is set then set parent key exists and value 
+							//if the uuid is set then set parent key exists and value
 								//determine if the parent_key_exists
 								$parent_key_exists = false;
 								if (isset($array[$parent_key_name])) {
@@ -2114,7 +2101,7 @@
 														$array_key = self::sanitize($array_key);
 														if ($array_key != 'insert_user' &&
 															$array_key != 'insert_date' &&
-															$array_key != 'update_user' && 
+															$array_key != 'update_user' &&
 															$array_key != 'update_date') {
 															$sql .= $array_key.", ";
 														}
@@ -2134,9 +2121,9 @@
 													if (!is_array($array_value)) {
 														if ($array_key != 'insert_user' &&
 															$array_key != 'insert_date' &&
-															$array_key != 'update_user' && 
+															$array_key != 'update_user' &&
 															$array_key != 'update_date') {
-															if (strlen($array_value) == 0) {
+															if (!isset($array_value) || $array_value == '') {
 																$sql .= "null, ";
 															}
 															elseif ($array_value === "now()") {
@@ -2151,6 +2138,7 @@
 																$params[$array_key] = $_SERVER['REMOTE_ADDR'];
 															}
 															else {
+																$array_value = $array_value ?? '';
 																$sql .= ':'.$array_key.", ";
 																$params[$array_key] = trim($array_value);
 															}
@@ -2186,11 +2174,9 @@
 												$message["details"][$m]["message"] = "OK";
 												$message["details"][$m]["code"] = "200";
 												$message["details"][$m]["uuid"] = $parent_key_value;
-												if ($this->debug["sql"]) {
-													$message["details"][$m]["sql"] = $sql;
-													if (is_array($params)) {
-														$message["details"][$m]["params"] = $params;
-													}
+												$message["details"][$m]["sql"] = $sql;
+												if (is_array($params)) {
+													$message["details"][$m]["params"] = $params;
 												}
 												unset($params);
 												$this->message = $message;
@@ -2204,11 +2190,9 @@
 												$message["details"][$m]["message"] = $e->getMessage();
 												$message["details"][$m]["code"] = "400";
 												$message["details"][$m]["array"] = $array;
-												if ($this->debug["sql"]) {
-													$message["details"][$m]["sql"] = $sql;
-													if (is_array($params)) {
-														$message["details"][$m]["params"] = $params;
-													}
+												$message["details"][$m]["sql"] = $sql;
+												if (is_array($params)) {
+													$message["details"][$m]["params"] = $params;
 												}
 												unset($params);
 												$this->message = $message;
@@ -2238,7 +2222,7 @@
 												foreach ($array as $array_key => $array_value) {
 													if (!is_array($array_value) && $array_key != $parent_key_name) {
 														$array_key = self::sanitize($array_key);
-														if (strlen($array_value) == 0) {
+														if (!isset($array_value) || $array_value == '') {
 															$sql .= $array_key." = null, ";
 														}
 														elseif ($array_value === "now()") {
@@ -2292,11 +2276,9 @@
 												$message["details"][$m]["message"] = "OK";
 												$message["details"][$m]["code"] = "200";
 												$message["details"][$m]["uuid"] = $parent_key_value;
-												if ($this->debug["sql"]) {
-													$message["details"][$m]["sql"] = $sql;
-													if (is_array($params)) {
-														$message["details"][$m]["params"] = $params;
-													}
+												$message["details"][$m]["sql"] = $sql;
+												if (is_array($params)) {
+													$message["details"][$m]["params"] = $params;
 												}
 												unset($params);
 												$this->message = $message;
@@ -2310,11 +2292,9 @@
 												$message["details"][$m]["name"] = $this->name;
 												$message["details"][$m]["message"] = $e->getMessage();
 												$message["details"][$m]["code"] = "400";
-												if ($this->debug["sql"]) {
-													$message["details"][$m]["sql"] = $sql;
-													if (is_array($params)) {
-														$message["details"][$m]["params"] = $params;
-													}
+												$message["details"][$m]["sql"] = $sql;
+												if (is_array($params)) {
+													$message["details"][$m]["params"] = $params;
 												}
 												unset($params);
 												$this->message = $message;
@@ -2478,11 +2458,9 @@
 																	$message["details"][$m]["message"] = "OK";
 																	$message["details"][$m]["code"] = "200";
 																	$message["details"][$m]["uuid"] = $child_key_value;
-																	if ($this->debug["sql"]) {
-																		$message["details"][$m]["sql"] = $sql;
-																		if (is_array($params)) {
-																			$message["details"][$m]["params"] = $params;
-																		}
+																	$message["details"][$m]["sql"] = $sql;
+																	if (is_array($params)) {
+																		$message["details"][$m]["params"] = $params;
 																	}
 																	unset($params);
 																	$this->message = $message;
@@ -2497,11 +2475,9 @@
 																	$message["details"][$m]["name"] = $key;
 																	$message["details"][$m]["message"] = $e->getMessage();
 																	$message["details"][$m]["code"] = "400";
-																	if ($this->debug["sql"]) {
-																		$message["details"][$m]["sql"] = $sql;
-																		if (is_array($params)) {
-																			$message["details"][$m]["params"] = $params;
-																		}
+																	$message["details"][$m]["sql"] = $sql;
+																	if (is_array($params)) {
+																		$message["details"][$m]["params"] = $params;
 																	}
 																	unset($params);
 																	$this->message = $message;
@@ -2511,7 +2487,7 @@
 															else {
 																$retval = false;
 																$message["name"] = $child_name;
-																$message["message"] = "Forbidden, does not have '${child_name}_edit'";
+																$message["message"] = "Forbidden, does not have '".$child_name."_edit'";
 																$message["code"] = "403";
 																$message["line"] = __line__;
 																$this->message = $message;
@@ -2529,7 +2505,7 @@
 															if (is_array($row)) {
 																foreach ($row as $k => $v) {
 																	if ($k == $parent_key_name) {
-																		$parent_key_exists = true; 
+																		$parent_key_exists = true;
 																	}
 																	if ($k == $child_key_name) {
 																		$child_key_exists = true;
@@ -2555,7 +2531,7 @@
 																		$k = self::sanitize($k);
 																		if ($k != 'insert_user' &&
 																		$k != 'insert_date' &&
-																		$k != 'update_user' && 
+																		$k != 'update_user' &&
 																		$k != 'update_date') {
 																			$sql .= $k.", ";
 																		}
@@ -2578,7 +2554,7 @@
 																	if (!is_array($v)) {
 																		if ($k != 'insert_user' &&
 																			$k != 'insert_date' &&
-																			$k != 'update_user' && 
+																			$k != 'update_user' &&
 																			$k != 'update_date') {
 																			if (strlen($v) == 0) {
 																				$sql .= "null, ";
@@ -2598,7 +2574,7 @@
 																				$k = self::sanitize($k);
 																				if ($k != 'insert_user' &&
 																				$k != 'insert_date' &&
-																				$k != 'update_user' && 
+																				$k != 'update_user' &&
 																				$k != 'update_date') {
 																					$sql .= ':'.$k.", ";
 																					$params[$k] = trim($v);
@@ -2632,11 +2608,9 @@
 																$message["details"][$m]["message"] = "OK";
 																$message["details"][$m]["code"] = "200";
 																$message["details"][$m]["uuid"] = $child_key_value;
-																if ($this->debug["sql"]) {
-																	$message["details"][$m]["sql"] = $sql;
-																	if (is_array($params)) {
-																		$message["details"][$m]["params"] = $params;
-																	}
+																$message["details"][$m]["sql"] = $sql;
+																if (is_array($params)) {
+																	$message["details"][$m]["params"] = $params;
 																}
 																unset($params);
 																$this->message = $message;
@@ -2651,11 +2625,9 @@
 																$message["details"][$m]["name"] = $key;
 																$message["details"][$m]["message"] = $e->getMessage();
 																$message["details"][$m]["code"] = "400";
-																if ($this->debug["sql"]) {
-																	$message["details"][$m]["sql"] = $sql;
-																	if (is_array($params)) {
-																		$message["details"][$m]["params"] = $params;
-																	}
+																$message["details"][$m]["sql"] = $sql;
+																if (is_array($params)) {
+																	$message["details"][$m]["params"] = $params;
 																}
 																unset($params);
 																$this->message = $message;
@@ -2665,7 +2637,7 @@
 														else {
 															$retval = false;
 															$message["name"] = $child_name;
-															$message["message"] = "Forbidden, does not have '${child_name}_add'";
+															$message["message"] = "Forbidden, does not have '".$child_name."_add'";
 															$message["code"] = "403";
 															$message["line"] = __line__;
 															$this->message = $message;
@@ -2690,8 +2662,8 @@
 					$this->db->commit();
 
 				//set the action if not set
-					if (strlen($action) == 0) {
-						if (is_array($old_array)) {
+					if (empty($action)) {
+						if (!empty($old_array)) {
 							$transaction_type = 'update';
 						}
 						else {
@@ -2718,7 +2690,7 @@
 							if (isset($this->app_uuid) && is_uuid($this->app_uuid)) {
 								$sql .= "app_uuid, ";
 							}
-							if (isset($this->app_name) && strlen($this->app_name) > 0) {
+							if (isset($this->app_name) && !empty($this->app_name)) {
 								$sql .= "app_name, ";
 							}
 							$sql .= "transaction_code, ";
@@ -2744,20 +2716,20 @@
 							if (isset($this->app_uuid) && is_uuid($this->app_uuid)) {
 								$sql .= ":app_uuid, ";
 							}
-							if (isset($this->app_name) && strlen($this->app_name) > 0) {
+							if (isset($this->app_name) && !empty($this->app_name)) {
 								$sql .= ":app_name, ";
 							}
 							$sql .= "'".$message["code"]."', ";
 							$sql .= ":remote_address, ";
 							$sql .= "'".$transaction_type."', ";
 							$sql .= "now(), ";
-							if (is_array($old_array)) {
+							if (!empty($old_array)) {
 								$sql .= ":transaction_old, ";
 							}
 							else {
 								$sql .= "null, ";
 							}
-							if (is_array($array)) {
+							if (!empty($array)) {
 								$sql .= ":transaction_new, ";
 							}
 							else {
@@ -2772,15 +2744,15 @@
 							if (isset($this->app_uuid) && is_uuid($this->app_uuid)) {
 								$statement->bindParam(':app_uuid', $this->app_uuid);
 							}
-							if (isset($this->app_name) && strlen($this->app_name) > 0) {
+							if (isset($this->app_name) && !empty($this->app_name)) {
 								$statement->bindParam(':app_name', $this->app_name);
 							}
 							$statement->bindParam(':remote_address', $_SERVER['REMOTE_ADDR']);
-							if (is_array($old_array)) {
+							if (!empty($old_array)) {
 								$old_json = json_encode($old_array, JSON_PRETTY_PRINT);
 								$statement->bindParam(':transaction_old', $old_json);
 							}
-							if (isset($new_json)) {
+							if (!empty($new_json)) {
 								$statement->bindParam(':transaction_new', $new_json);
 							}
 							$message = json_encode($this->message, JSON_PRETTY_PRINT);
@@ -2938,20 +2910,22 @@
 
 				//get the apps array
 					$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/{core,app}/{".$schema.",".self::singular($schema)."}/app_config.php", GLOB_BRACE);
+					$x = 0;
 					foreach ($config_list as &$config_path) {
 						include($config_path);
+						$x++;
 					}
 
 				//search through all fields to find relations
-					if (is_array($apps)) {
+					if (!empty($apps) && is_array($apps)) {
 						foreach ($apps as $x => &$app) {
 							foreach ($app['db'] as $y => &$row) {
 								foreach ($row['fields'] as $z => $field) {
-									if ($field['deprecated'] != "true") {
-										if ($field['key']['type'] == "foreign") {
+									if (!empty($field['deprecated']) && $field['deprecated'] != "true") {
+										if (!empty($field['key']['type']) &&  $field['key']['type'] == "foreign") {
 											if ($row['table']['name'] == self::TABLE_PREFIX.$schema || $field['key']['reference']['table'] == self::TABLE_PREFIX.$schema) {
 												//get the field name
-													if (is_array($field['name'])) {
+													if (!empty($field['name']) && is_array($field['name'])) {
 														$field_name = trim($field['name']['text']);
 													}
 													else {
@@ -2978,7 +2952,7 @@
 					}
 
 				//return the array
-					if (is_array($relations)) {
+					if (!empty($relations) && is_array($relations)) {
 						return $relations;
 					} else {
 						return false;

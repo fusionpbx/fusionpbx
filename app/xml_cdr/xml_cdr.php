@@ -47,14 +47,26 @@
 	$language = new text;
 	$text = $language->get();
 
+//set defaults
+	$archive_request = false;
+	$action = '';
+	$xml_cdrs = [];
+	$paging_controls_mini = '';
+	$paging_controls = null;
+	$order_by = "";
+	if(!isset($_REQUEST['show'])) {
+		//set to show only this domain
+		$_REQUEST['show'] = 'domain';
+	}
+
 //get posted data
-	if (!$archive_request && is_array($_POST['xml_cdrs'])) {
-		$action = $_POST['action'];
-		$xml_cdrs = $_POST['xml_cdrs'];
+	if (!$archive_request && isset($_POST['xml_cdrs']) && is_array($_POST['xml_cdrs'])) {
+		$action = $_POST['action'] ?? '';
+		$xml_cdrs = $_POST['xml_cdrs'] ?? [];
 	}
 
 //process the http post data by action
-	if (!$archive_request && $action != '' && is_array($xml_cdrs) && @sizeof($xml_cdrs) != 0) {
+	if (!$archive_request && $action != '' && count($xml_cdrs) > 0) {
 		switch ($action) {
 			case 'delete':
 				if (permission_exists('xml_cdr_delete')) {
@@ -134,39 +146,41 @@
 	if ($archive_request) {
 		echo "	<input type='hidden' name='archive_request' value='true'>\n";
 	}
-	echo "		<input type='hidden' name='cdr_id' value='".escape($cdr_id)."'>\n";
-	echo "		<input type='hidden' name='direction' value='".escape($direction)."'>\n";
-	echo "		<input type='hidden' name='caller_id_name' value='".escape($caller_id_name)."'>\n";
-	echo "		<input type='hidden' name='start_stamp_begin' value='".escape($start_stamp_begin)."'>\n";
-	echo "		<input type='hidden' name='start_stamp_end' value='".escape($start_stamp_end)."'>\n";
-	echo "		<input type='hidden' name='hangup_cause' value='".escape($hangup_cause)."'>\n";
-	echo "		<input type='hidden' name='call_result' value='".escape($call_result)."'>\n";
-	echo "		<input type='hidden' name='caller_id_number' value='".escape($caller_id_number)."'>\n";
-	echo "		<input type='hidden' name='caller_destination' value='".escape($caller_destination)."'>\n";
-	echo "		<input type='hidden' name='extension_uuid' value='".escape($extension_uuid)."'>\n";
-	echo "		<input type='hidden' name='destination_number' value='".escape($destination_number)."'>\n";
-	echo "		<input type='hidden' name='context' value='".escape($context)."'>\n";
-	echo "		<input type='hidden' name='answer_stamp_begin' value='".escape($answer_stamp_begin)."'>\n";
-	echo "		<input type='hidden' name='answer_stamp_end' value='".escape($answer_stamp_end)."'>\n";
-	echo "		<input type='hidden' name='end_stamp_begin' value='".escape($end_stamp_begin)."'>\n";
-	echo "		<input type='hidden' name='end_stamp_end' value='".escape($end_stamp_end)."'>\n";
-	echo "		<input type='hidden' name='start_epoch' value='".escape($start_epoch)."'>\n";
-	echo "		<input type='hidden' name='stop_epoch' value='".escape($stop_epoch)."'>\n";
-	echo "		<input type='hidden' name='duration' value='".escape($duration)."'>\n";
-	echo "		<input type='hidden' name='billsec' value='".escape($billsec)."'>\n";
-	echo "		<input type='hidden' name='xml_cdr_uuid' value='".escape($xml_cdr_uuid)."'>\n";
-	echo "		<input type='hidden' name='bleg_uuid' value='".escape($bleg_uuid)."'>\n";
-	echo "		<input type='hidden' name='accountcode' value='".escape($accountcode)."'>\n";
-	echo "		<input type='hidden' name='read_codec' value='".escape($read_codec)."'>\n";
-	echo "		<input type='hidden' name='write_codec' value='".escape($write_codec)."'>\n";
-	echo "		<input type='hidden' name='remote_media_ip' value='".escape($remote_media_ip)."'>\n";
-	echo "		<input type='hidden' name='network_addr' value='".escape($network_addr)."'>\n";
-	echo "		<input type='hidden' name='bridge_uuid' value='".escape($bridge_uuid)."'>\n";
-	echo "		<input type='hidden' name='leg' value='".escape($leg)."'>\n";
+	echo "		<input type='hidden' name='cdr_id' value='".escape($cdr_id ?? '')."'>\n";
+	echo "		<input type='hidden' name='direction' value='".escape($direction ?? '')."'>\n";
+	echo "		<input type='hidden' name='caller_id_name' value='".escape($caller_id_name ?? '')."'>\n";
+	echo "		<input type='hidden' name='start_stamp_begin' value='".escape($start_stamp_begin ?? '')."'>\n";
+	echo "		<input type='hidden' name='start_stamp_end' value='".escape($start_stamp_end ?? '')."'>\n";
+	echo "		<input type='hidden' name='hangup_cause' value='".escape($hangup_cause ?? '')."'>\n";
+	echo "		<input type='hidden' name='call_result' value='".escape($call_result ?? '')."'>\n";
+	echo "		<input type='hidden' name='caller_id_number' value='".escape($caller_id_number ?? '')."'>\n";
+	echo "		<input type='hidden' name='caller_destination' value='".escape($caller_destination ?? '')."'>\n";
+	echo "		<input type='hidden' name='extension_uuid' value='".escape($extension_uuid ?? '')."'>\n";
+	echo "		<input type='hidden' name='destination_number' value='".escape($destination_number ?? '')."'>\n";
+	echo "		<input type='hidden' name='context' value='".escape($context ?? '')."'>\n";
+	echo "		<input type='hidden' name='answer_stamp_begin' value='".escape($answer_stamp_begin ?? '')."'>\n";
+	echo "		<input type='hidden' name='answer_stamp_end' value='".escape($answer_stamp_end ?? '')."'>\n";
+	echo "		<input type='hidden' name='end_stamp_begin' value='".escape($end_stamp_begin ?? '')."'>\n";
+	echo "		<input type='hidden' name='end_stamp_end' value='".escape($end_stamp_end ?? '')."'>\n";
+	echo "		<input type='hidden' name='start_epoch' value='".escape($start_epoch ?? '')."'>\n";
+	echo "		<input type='hidden' name='stop_epoch' value='".escape($stop_epoch ?? '')."'>\n";
+	echo "		<input type='hidden' name='duration' value='".escape($duration ?? '')."'>\n";
+	echo "		<input type='hidden' name='billsec' value='".escape($billsec ?? '')."'>\n";
+	echo "		<input type='hidden' name='xml_cdr_uuid' value='".escape($xml_cdr_uuid ?? '')."'>\n";
+	echo "		<input type='hidden' name='bleg_uuid' value='".escape($bleg_uuid ?? '')."'>\n";
+	echo "		<input type='hidden' name='accountcode' value='".escape($accountcode ?? '')."'>\n";
+	echo "		<input type='hidden' name='read_codec' value='".escape($read_codec ?? '')."'>\n";
+	echo "		<input type='hidden' name='write_codec' value='".escape($write_codec ?? '')."'>\n";
+	echo "		<input type='hidden' name='remote_media_ip' value='".escape($remote_media_ip ?? '')."'>\n";
+	echo "		<input type='hidden' name='network_addr' value='".escape($network_addr ?? '')."'>\n";
+	echo "		<input type='hidden' name='bridge_uuid' value='".escape($bridge_uuid ?? '')."'>\n";
+	echo "		<input type='hidden' name='leg' value='".escape($leg ?? '')."'>\n";
+	echo "		<input type='hidden' name='tta_min' value='".escape($tta_min ?? '')."'>\n";
+	echo "		<input type='hidden' name='tta_max' value='".escape($tta_max ?? '')."'>\n";
 	if (permission_exists('xml_cdr_all') && $_REQUEST['show'] == 'all') {
 		echo "	<input type='hidden' name='show' value='all'>\n";
 	}
-	if (is_array($_SESSION['cdr']['field'])) {
+	if (isset($_SESSION['cdr']['field']) && is_array($_SESSION['cdr']['field'])) {
 		foreach ($_SESSION['cdr']['field'] as $field) {
 			$array = explode(",", $field);
 			$field_name = $array[count($array) - 1];
@@ -183,7 +197,7 @@
 		echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'link'=>'xml_cdr.php']);
 	}
 	echo button::create(['type'=>'button','label'=>$text['button-refresh'],'icon'=>'sync-alt','style'=>'margin-left: 15px;','onclick'=>'location.reload(true);']);
-	if ($_GET['call_result'] != 'missed') {
+	if (isset($_GET['call_result']) &&  $_GET['call_result'] != 'missed') {
 		echo button::create(['type'=>'button','label'=>$text['button-missed'],'icon'=>'phone-slash','link'=>'?call_result=missed']);
 	}
 
@@ -218,9 +232,6 @@
 	}
 
 	echo $text['description']." \n";
-	echo $text['description2']." \n";
-	echo $text['description-3']." \n";
-	echo $text['description-4']." \n";
 	echo "<br /><br />\n";
 
 //basic search of call detail records
@@ -345,7 +356,7 @@
 			echo "			".$text['label-destination']."\n";
 			echo "		</div>\n";
 			echo "		<div class='field'>\n";
-			echo "			<input type='text' class='formfld' name='destination_number' id='destination_number' value='".escape($destination_number)."'>\n";
+			echo "			<input type='text' class='formfld' name='destination_number' id='destination_number' value='".escape($destination_number ?? '')."'>\n";
 			echo "		</div>\n";
 			echo "	</div>\n";
 		}
@@ -355,8 +366,8 @@
 			echo "			".$text['label-tta']." (".$text['label-seconds'].")\n";
 			echo "		</div>\n";
 			echo "		<div class='field no-wrap'>\n";
-			echo "			<input type='text' class='formfld' style='min-width: 75px; width: 75px;' name='tta_min' id='tta_min' value='".escape($tta)."' placeholder=\"".$text['label-minimum']."\">\n";
-			echo "			<input type='text' class='formfld' style='min-width: 75px; width: 75px;' name='tta_max' id='tta_max' value='".escape($tta)."' placeholder=\"".$text['label-maximum']."\">\n";
+			echo "			<input type='text' class='formfld' style='min-width: 75px; width: 75px;' name='tta_min' id='tta_min' value='".escape($tta_min)."' placeholder=\"".$text['label-minimum']."\">\n";
+			echo "			<input type='text' class='formfld' style='min-width: 75px; width: 75px;' name='tta_max' id='tta_max' value='".escape($tta_max)."' placeholder=\"".$text['label-maximum']."\">\n";
 			echo "		</div>\n";
 			echo "	</div>\n";
 		}
@@ -563,7 +574,7 @@
 		$col_count++;
 	}
 	if (permission_exists('xml_cdr_custom_fields')) {
-		if (is_array($_SESSION['cdr']['field']) && @sizeof($_SESSION['cdr']['field'])) {
+		if (isset($_SESSION['cdr']['field']) && is_array($_SESSION['cdr']['field']) && @sizeof($_SESSION['cdr']['field'])) {
 			foreach ($_SESSION['cdr']['field'] as $field) {
 				$array = explode(",", $field);
 				$field_name = end($array);
@@ -690,7 +701,7 @@
 								else if ($row['answer_stamp'] == '' && $row['bridge_uuid'] != '') { $call_result = 'cancelled'; }
 								else { $call_result = 'failed'; }
 							}
-							if (strlen($row['direction']) > 0) {
+							if (!empty($row['direction'])) {
 								$image_name = "icon_cdr_" . $row['direction'] . "_" . $call_result;
 								if ($row['leg'] == 'b') {
 									$image_name .= '_b';
@@ -801,7 +812,7 @@
 					}
 				//mos (mean opinion score)
 					if (permission_exists("xml_cdr_mos")) {
-						if(strlen($row['rtp_audio_in_mos']) > 0){
+						if(!empty($row['rtp_audio_in_mos'])){
 							$title = " title='".$text['label-mos_score-'.round($row['rtp_audio_in_mos'])]."'";
 							$value = $row['rtp_audio_in_mos'];
 						}
@@ -842,4 +853,3 @@
 //show the footer
 	require_once "resources/footer.php";
 
-?>

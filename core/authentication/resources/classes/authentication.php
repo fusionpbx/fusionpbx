@@ -1,7 +1,7 @@
 <?php
 
 /**
- * authentication 
+ * authentication
  *
  * @method validate uses authentication plugins to check if a user is authorized to login
  * @method get_domain used to get the domain name from the URL or username and then sets both domain_name and domain_uuid
@@ -24,16 +24,6 @@ class authentication {
 	}
 
 	/**
-	 * Called when there are no references to a particular object
-	 * unset the variables used in the class
-	 */
-	public function __destruct() {
-		foreach ($this as $key => $value) {
-			unset($this->$key);
-		}
-	}
-
-	/**
 	 * validate uses authentication plugins to check if a user is authorized to login
 	 * @return array [plugin] => last plugin used to authenticate the user [authorized] => true or false
 	 */
@@ -51,7 +41,7 @@ class authentication {
 
 		//set the default authentication method to the database
 			if (!is_array($_SESSION['authentication']['methods'])) {
-				$_SESSION['authentication']['methods'][]  = 'database';	
+				$_SESSION['authentication']['methods'][]  = 'database';
 			}
 
 		//automatically block multiple authentication failures
@@ -70,7 +60,7 @@ class authentication {
 			$sql .= "and username = :username \n";
 			$parameters['remote_address'] = $_SERVER['REMOTE_ADDR'];
 			$parameters['find_time'] = $_SESSION['users']['find_time']['numeric'];
-			$parameters['username'] = $_SESSION['username'];
+			$parameters['username'] = isset($_SESSION['username']) ? $_SESSION['username'] : null;
 			$database = new database;
 			$auth_tries = $database->select($sql, $parameters, 'column');
 			if ($_SESSION['users']['max_retry']['numeric'] <= $auth_tries) {
@@ -91,7 +81,7 @@ class authentication {
 			foreach ($_SESSION['authentication']['methods'] as $name) {
 
 				//already processed the plugin move to the next plugin
-				if ($_SESSION['authentication']['plugin'][$name]['authorized']) {
+				if (!empty($_SESSION['authentication']['plugin'][$name]['authorized'])) {
 					continue;
 				}
 
@@ -138,6 +128,7 @@ class authentication {
 					$_SESSION['authentication']['plugin'][$name]['domain_uuid'] = $_SESSION['domain_uuid'];
 					$_SESSION['authentication']['plugin'][$name]['username'] = $_SESSION['username'];
 					$_SESSION['authentication']['plugin'][$name]['user_uuid'] = $_SESSION['user_uuid'];
+					$_SESSION['authentication']['plugin'][$name]['user_email'] = $_SESSION['user_email'];
 					$_SESSION['authentication']['plugin'][$name]['authorized'] = 0;
 				}
 			}
@@ -175,17 +166,17 @@ class authentication {
 			$result["authorized"] = $authorized;
 
 		//add user logs
-			if ($result["authorized"]) {
-				user_logs::add($result);
-			}
+			user_logs::add($result);
 
 		//debug information
-			//if ($row["authorized"]) {
-			//	echo "authorized: true\n";
-			//}
-			//else {
-			//	echo "authorized: false\n";
-			//}
+			if ($debug) {
+				if ($row["authorized"]) {
+					echo "authorized: true\n";
+				}
+				else {
+					echo "authorized: false\n";
+				}
+			}
 
 		//user is authorized - get user settings, check user cidr
 			if ($authorized) {
@@ -287,7 +278,7 @@ class authentication {
 						$sql = "select distinct(permission_name) from v_group_permissions ";
 						$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 						foreach ($_SESSION["groups"] as $field) {
-							if (strlen($field['group_name']) > 0) {
+							if (!empty($field['group_name'])) {
 								$sql_where_or[] = "group_name = :group_name_".$x;
 								$parameters['group_name_'.$x] = $field['group_name'];
 								$x++;
@@ -320,8 +311,8 @@ class authentication {
 							$name = $row['user_setting_name'];
 							$category = $row['user_setting_category'];
 							$subcategory = $row['user_setting_subcategory'];
-							if (strlen($row['user_setting_value']) > 0) {
-								if (strlen($subcategory) == 0) {
+							if (!empty($row['user_setting_value'])) {
+								if (empty($subcategory)) {
 									//$$category[$name] = $row['domain_setting_value'];
 									if ($name == "array") {
 										$_SESSION[$category][] = $row['user_setting_value'];
@@ -375,7 +366,7 @@ class authentication {
 									foreach($result as $x => $row) {
 										//set the destination
 										$destination = $row['extension'];
-										if (strlen($row['number_alias']) > 0) {
+										if (!empty($row['number_alias'])) {
 											$destination = $row['number_alias'];
 										}
 
@@ -400,7 +391,7 @@ class authentication {
 
 				//set the time zone
 					if (!isset($_SESSION["time_zone"]["user"])) { $_SESSION["time_zone"]["user"] = null; }
-					if (strlen($_SESSION["time_zone"]["user"]) == 0) {
+					if (strlen($_SESSION["time_zone"]["user"] ?? '') === 0) {
 						//set the domain time zone as the default time zone
 						date_default_timezone_set($_SESSION['domain']['time_zone']['name']);
 					}
@@ -418,19 +409,40 @@ class authentication {
 	/**
 	 *  get_domain used to get the domain name from the URL or username and then sets both domain_name and domain_uuid
 	 */
-	function get_domain() {
+	public function get_domain() {
 
 		//get the domain from the url
 			$this->domain_name = $_SERVER["HTTP_HOST"];
 
+		//get the domain name from the http value
+			if (!empty($_REQUEST["domain_name"])) {
+				$this->domain_name = $_REQUEST["domain_name"];
+			}
+
+		//remote port number from the domain name
+			$domain_array = explode(":", $this->domain_name);
+			if (count($domain_array) > 1) {
+				$domain_name = $domain_array[0];
+			}
+
+		//if the username
+			if (!empty($_REQUEST["username"])) {
+				$_SESSION['username'] = $_REQUEST["username"];
+			}
+
+		//set a default value for unqiue
+			if (empty($_SESSION["users"]["unique"]["text"])) {
+				$_SESSION["users"]["unique"]["text"] = 'false';
+			}
+
 		//get the domain name from the username
-			if ($_SESSION["users"]["unique"]["text"] != "global") {
-				$username_array = explode("@", $_REQUEST["username"]);
+			if (!empty($_SESSION['username']) && $_SESSION["users"]["unique"]["text"] != "global") {
+				$username_array = explode("@", $_SESSION['username']);
 				if (count($username_array) > 1) {
 					//get the domain name
 						$domain_name =  $username_array[count($username_array) -1];
 
-					//check if the domain from the username exists then set the domain_uuid
+					//check if the domain from the username exists
 						$domain_exists = false;
 						foreach ($_SESSION['domains'] as $row) {
 							if (lower_case($row['domain_name']) == lower_case($domain_name)) {
@@ -443,7 +455,8 @@ class authentication {
 					//if the domain exists then set domain_name and update the username
 						if ($domain_exists) {
 							$this->domain_name = $domain_name;
-							$this->username = substr($_REQUEST["username"], 0, -(strlen($domain_name)+1));
+							$this->username = substr($_SESSION['username'], 0, -(strlen($domain_name)+1));
+							//$_SESSION['domain_name'] = $domain_name;
 							$_SESSION['username'] = $this->username;
 							$_SESSION['domain_uuid'] = $this->domain_uuid;
 						}
@@ -451,17 +464,6 @@ class authentication {
 					//unset the domain name variable
 						unset($domain_name);
 				}
-			}
-
-		//get the domain name from the http value
-			if (strlen($_REQUEST["domain_name"]) > 0) {
-				$this->domain_name = $_REQUEST["domain_name"];
-			}
-
-		//remote port number from the domain name
-			$domain_array = explode(":", $this->domain_name);
-			if (count($domain_array) > 1) {
-				$this->domain_name = $domain_array[0];
 			}
 
 		//get the domain uuid and domain settings
@@ -480,8 +482,10 @@ class authentication {
 			$obj->set();
 
 		//set the domain settings
-			$_SESSION['domain_name'] = $this->domain_name;
-			$_SESSION['domain_parent_uuid'] = $_SESSION["domain_uuid"];
+			if (!empty($this->domain_name) && !empty($_SESSION["domain_uuid"])) {
+				$_SESSION['domain_name'] = $this->domain_name;
+				$_SESSION['domain_parent_uuid'] = $_SESSION["domain_uuid"];
+			}
 
 		//set the domain name
 			return $this->domain_name;

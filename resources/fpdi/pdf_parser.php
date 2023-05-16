@@ -866,7 +866,7 @@ class pdf_parser
                 case '/Fl':
                     if (function_exists('gzuncompress')) {
                         $oStream = $stream;
-                        $stream = (strlen($stream) > 0) ? @gzuncompress($stream) : '';
+                        $stream = (!empty($stream)) ? @gzuncompress($stream) : '';
                     } else {
                         throw new Exception(
                             sprintf('To handle %s filter, please compile php with zlib support.', $filter[1])

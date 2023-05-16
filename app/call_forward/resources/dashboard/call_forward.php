@@ -39,7 +39,7 @@
 			do_not_disturb
 		from
 			v_extensions ";
-	if ($_GET['show'] == "all" && permission_exists('call_forward_all')) {
+	if (!empty($_GET['show']) && $_GET['show'] == "all" && permission_exists('call_forward_all')) {
 		$sql .= "where true ";
 	}
 	else {
@@ -63,13 +63,17 @@
 			$sql .= "and extension = 'disabled' ";
 		}
 	}
-	$sql .= order_by($order_by, $order, 'extension', 'asc');
+	$sql .= order_by($order_by ?? null, $order ?? null, 'extension', 'asc');
 	$database = new database;
 	$extensions = $database->select($sql, $parameters, 'all');
 	unset($parameters);
 
 //determine keys and stats
 	unset($stats);
+
+	//set defaults
+	$stats['dnd'] = $stats['follow_me'] = $stats['call_forward'] = $stats['active'] = 0;
+
 	$show_stat = false;
 	if (is_array($extensions) && @sizeof($extensions) != 0) {
 		foreach ($extensions as $row) {
@@ -91,12 +95,6 @@
 
 //begin widget
 	echo "<div class='hud_box'>\n";
-
-//set defaults
-	if ($stats['dnd'] == null) { $stats['dnd'] = 0; }
-	if ($stats['follow_me'] == null) { $stats['follow_me'] = 0; }
-	if ($stats['call_forward'] == null) { $stats['call_forward'] = 0; }
-	if ($stats['active'] == null) { $stats['active'] = 0; }
 
 //doughnut chart
 	echo "<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 20px;' onclick=\"$('#hud_call_forward_details').slideToggle('fast');\">\n";
@@ -230,7 +228,7 @@
 
 	echo "</table>\n";
 	echo "</div>";
-	$n++;
+	//$n++;
 
 	echo "<span class='hud_expander' onclick=\"$('#hud_call_forward_details').slideToggle('fast');\"><span class='fas fa-ellipsis-h'></span></span>\n";
 	echo "</div>\n";

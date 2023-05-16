@@ -60,7 +60,7 @@
 		//$default_gateway = $_POST["default_gateway"];
 		$setting_uuid = $_POST["setting_uuid"];
 		$event_socket_ip_address = $_POST["event_socket_ip_address"];
-		if (strlen($event_socket_ip_address) == 0) { $event_socket_ip_address = '127.0.0.1'; }
+		if (empty($event_socket_ip_address)) { $event_socket_ip_address = '127.0.0.1'; }
 		$event_socket_port = $_POST["event_socket_port"];
 		$event_socket_password = $_POST["event_socket_password"];
 		$event_socket_acl = $_POST["event_socket_acl"];
@@ -73,23 +73,23 @@
 		$mod_shout_volume = $_POST["mod_shout_volume"];
 	}
 
-if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
+if (count($_POST)>0 && empty($_POST["persistformvar"])) {
 
 	//check for all required data
 		$msg = '';
-		//if (strlen($numbering_plan) == 0) { $msg .= "Please provide: Numbering Plan<br>\n"; }
-		//if (strlen($default_gateway) == 0) { $msg .= "Please provide: Default Gateway<br>\n"; }
-		if (strlen($event_socket_port) == 0) { $msg .= "Please provide: Event Socket Port<br>\n"; }
-		if (strlen($event_socket_password) == 0) { $msg .= "Please provide: Event Socket Password<br>\n"; }
-		//if (strlen($event_socket_acl) == 0) { $msg .= "Please provide: Event Socket ACL<br>\n"; }
-		//if (strlen($xml_rpc_http_port) == 0) { $msg .= "Please provide: XML RPC HTTP Port<br>\n"; }
-		//if (strlen($xml_rpc_auth_realm) == 0) { $msg .= "Please provide: XML RPC Auth Realm<br>\n"; }
-		//if (strlen($xml_rpc_auth_user) == 0) { $msg .= "Please provide: XML RPC Auth User<br>\n"; }
-		//if (strlen($xml_rpc_auth_pass) == 0) { $msg .= "Please provide: XML RPC Auth Password<br>\n"; }
-		//if (strlen($admin_pin) == 0) { $msg .= "Please provide: Admin PIN Number<br>\n"; }
-		//if (strlen($mod_shout_decoder) == 0) { $msg .= "Please provide: Mod Shout Decoder<br>\n"; }
-		//if (strlen($mod_shout_volume) == 0) { $msg .= "Please provide: Mod Shout Volume<br>\n"; }
-		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+		//if (empty($numbering_plan)) { $msg .= "Please provide: Numbering Plan<br>\n"; }
+		//if (empty($default_gateway)) { $msg .= "Please provide: Default Gateway<br>\n"; }
+		if (empty($event_socket_port)) { $msg .= "Please provide: Event Socket Port<br>\n"; }
+		if (empty($event_socket_password)) { $msg .= "Please provide: Event Socket Password<br>\n"; }
+		//if (empty($event_socket_acl)) { $msg .= "Please provide: Event Socket ACL<br>\n"; }
+		//if (empty($xml_rpc_http_port)) { $msg .= "Please provide: XML RPC HTTP Port<br>\n"; }
+		//if (empty($xml_rpc_auth_realm)) { $msg .= "Please provide: XML RPC Auth Realm<br>\n"; }
+		//if (empty($xml_rpc_auth_user)) { $msg .= "Please provide: XML RPC Auth User<br>\n"; }
+		//if (empty($xml_rpc_auth_pass)) { $msg .= "Please provide: XML RPC Auth Password<br>\n"; }
+		//if (empty($admin_pin)) { $msg .= "Please provide: Admin PIN Number<br>\n"; }
+		//if (empty($mod_shout_decoder)) { $msg .= "Please provide: Mod Shout Decoder<br>\n"; }
+		//if (empty($mod_shout_volume)) { $msg .= "Please provide: Mod Shout Volume<br>\n"; }
+		if (!empty($msg) && empty($_POST["persistformvar"])) {
 			require_once "resources/header.php";
 			require_once "resources/persist_form_var.php";
 			echo "<div align='center'>\n";

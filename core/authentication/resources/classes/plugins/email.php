@@ -17,6 +17,7 @@ class plugin_email {
 	public $user_uuid;
 	public $user_email;
 	public $contact_uuid;
+	public $debug;
 
 	/**
 	 * time based one time password with email
@@ -24,35 +25,18 @@ class plugin_email {
 	 */
 	function email() {
 
+			//pre-process some settings
+			$settings['theme']['favicon'] = !empty($_SESSION['theme']['favicon']['text']) ? $_SESSION['theme']['favicon']['text'] : PROJECT_PATH.'/themes/default/favicon.ico';
+			$settings['login']['destination'] = !empty($_SESSION['login']['destination']['text']) ? $_SESSION['login']['destination']['text'] : '';
+			$settings['users']['unique'] = !empty($_SESSION['users']['unique']['text']) ? $_SESSION['users']['unique']['text'] : '';
+			$settings['theme']['logo'] = !empty($_SESSION['theme']['logo']['text']) ? $_SESSION['theme']['logo']['text'] : PROJECT_PATH.'/themes/default/images/logo_login.png';
+			$settings['theme']['login_logo_width'] = !empty($_SESSION['theme']['login_logo_width']['text']) ? $_SESSION['theme']['login_logo_width']['text'] : 'auto; max-width: 300px';
+			$settings['theme']['login_logo_height'] = !empty($_SESSION['theme']['login_logo_height']['text']) ? $_SESSION['theme']['login_logo_height']['text'] : 'auto; max-height: 300px';
+
 			//set a default template
 			$_SESSION['domain']['template']['name'] = 'default';
 			$_SESSION['theme']['menu_brand_image']['text'] = PROJECT_PATH.'/themes/default/images/logo.png';
 			$_SESSION['theme']['menu_brand_type']['text'] = 'image';
-
-			//login logo source
-			if (isset($_SESSION['theme']['logo_login']['text']) && $_SESSION['theme']['logo_login']['text'] != '') {
-				$login_logo_source = $_SESSION['theme']['logo_login']['text'];
-			}
-			else if (isset($_SESSION['theme']['logo']['text']) && $_SESSION['theme']['logo']['text'] != '') {
-				$login_logo_source = $_SESSION['theme']['logo']['text'];
-			}
-			else {
-				$login_logo_source = PROJECT_PATH.'/themes/default/images/logo_login.png';
-			}
-
-			//login logo dimensions
-			if (isset($_SESSION['theme']['login_logo_width']['text']) && $_SESSION['theme']['login_logo_width']['text'] != '') {
-				$login_logo_width = $_SESSION['theme']['login_logo_width']['text'];
-			}
-			else {
-				$login_logo_width = 'auto; max-width: 300px';
-			}
-			if (isset($_SESSION['theme']['login_logo_height']['text']) && $_SESSION['theme']['login_logo_height']['text'] != '') {
-				$login_logo_height = $_SESSION['theme']['login_logo_height']['text'];
-			}
-			else {
-				$login_logo_height = 'auto; max-height: 300px';
-			}
 
 			//get the domain
 			$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
@@ -82,11 +66,14 @@ class plugin_email {
 				$view->init();
 
 				//assign default values to the template
+				$view->assign("project_path", PROJECT_PATH);
+				$view->assign("login_destination_url", $settings['login']['destination']);
+				$view->assign("favicon", $settings['theme']['favicon']);
 				$view->assign("login_title", $text['label-username']);
 				$view->assign("login_username", $text['label-username']);
-				$view->assign("login_logo_width", $login_logo_width);
-				$view->assign("login_logo_height", $login_logo_height);
-				$view->assign("login_logo_source", $login_logo_source);
+				$view->assign("login_logo_width", $settings['theme']['login_logo_width']);
+				$view->assign("login_logo_height", $settings['theme']['login_logo_height']);
+				$view->assign("login_logo_source", $settings['theme']['logo']);
 				$view->assign("button_login", $text['button-login']);
 
 				//show the views
@@ -107,8 +94,11 @@ class plugin_email {
 				//get the user details
 				$sql = "select user_uuid, username, user_email, contact_uuid \n";
 				$sql .= "from v_users\n";
-				$sql .= "where username = :username\n";
-				if ($_SESSION["users"]["unique"]["text"] != "global") {
+				$sql .= "where (\n";
+				$sql .= "	username = :username\n";
+				$sql .= "	or user_email = :username\n";
+				$sql .= ")\n";
+				if ($settings['users']['unique'] != "global") {
 					//unique username per domain (not globally unique across system - example: email address)
 					$sql .= "and domain_uuid = :domain_uuid ";
 					$parameters['domain_uuid'] = $_SESSION["domain_uuid"];
@@ -119,7 +109,7 @@ class plugin_email {
 				unset($parameters);
 
 				//set class variables
-				//if (strlen($row["user_email"]) > 0) {
+				//if (!empty($row["user_email"])) {
 				//	$this->user_uuid = $row['user_uuid'];
 				//	$this->user_email = $row['user_email'];
 				//	$this->contact_uuid = $row['contact_uuid'];
@@ -132,7 +122,7 @@ class plugin_email {
 				$_SESSION["contact_uuid"] = $row["contact_uuid"];
 
 				//user email not found
-				if (strlen($row["user_email"]) == 0) {
+				if (empty($row["user_email"])) {
 					//build the result array
 					$result["plugin"] = "email";
 					$result["domain_name"] = $_SESSION["domain_name"];
@@ -255,12 +245,15 @@ class plugin_email {
 				$view->init();
 
 				//assign default values to the template
+				$view->assign("project_path", PROJECT_PATH);
+				$view->assign("login_destination_url", $settings['login']['destination']);
+				$view->assign("favicon", $settings['theme']['favicon']);
 				$view->assign("login_title", $text['label-verify']);
 				$view->assign("login_email_description", $text['label-email_description']);
 				$view->assign("login_authentication_code", $text['label-authentication_code']);
-				$view->assign("login_logo_width", $login_logo_width);
-				$view->assign("login_logo_height", $login_logo_height);
-				$view->assign("login_logo_source", $login_logo_source);
+				$view->assign("login_logo_width", $settings['theme']['login_logo_width']);
+				$view->assign("login_logo_height", $settings['theme']['login_logo_height']);
+				$view->assign("login_logo_source", $settings['theme']['logo']);
 				$view->assign("button_verify", $text['label-verify']);
 
 				//debug information
@@ -293,8 +286,11 @@ class plugin_email {
 				//get the user details
 				$sql = "select user_uuid, user_email, contact_uuid, user_email_secret\n";
 				$sql .= "from v_users\n";
-				$sql .= "where username = :username\n";
-				if ($_SESSION["users"]["unique"]["text"] != "global") {
+				$sql .= "where (\n";
+				$sql .= "	username = :username\n";
+				$sql .= "	or user_email = :username\n";
+				$sql .= ")\n";
+				if ($settings['users']['unique'] != "global") {
 					//unique username per domain (not globally unique across system - example: email address)
 					$sql .= "and domain_uuid = :domain_uuid ";
 					$parameters['domain_uuid'] = $_SESSION["domain_uuid"];
@@ -321,7 +317,7 @@ class plugin_email {
 					//get user data from the database
 					$sql = "select user_uuid, username, user_email, contact_uuid from v_users ";
 					$sql .= "where user_uuid = :user_uuid ";
-					if ($_SESSION["users"]["unique"]["text"] != "global") {
+					if ($settings['users']['unique'] != "global") {
 						//unique username per domain (not globally unique across system - example: email address)
 						$sql .= "and domain_uuid = :domain_uuid ";
 						$parameters['domain_uuid'] = $_SESSION["domain_uuid"];

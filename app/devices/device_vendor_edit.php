@@ -62,7 +62,7 @@
 	}
 
 //process the data
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 
 		//get the uuid
 			if ($action == "update") {
@@ -79,10 +79,10 @@
 
 		//check for all required data
 			$msg = '';
-			if (strlen($name) == 0) { $msg .= $text['message-required']." ".$text['label-name']."<br>\n"; }
-			if (strlen($enabled) == 0) { $msg .= $text['message-required']." ".$text['label-enabled']."<br>\n"; }
-			//if (strlen($description) == 0) { $msg .= $text['message-required']." ".$text['label-description']."<br>\n"; }
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+			if (empty($name)) { $msg .= $text['message-required']." ".$text['label-name']."<br>\n"; }
+			if (empty($enabled)) { $msg .= $text['message-required']." ".$text['label-enabled']."<br>\n"; }
+			//if (empty($description)) { $msg .= $text['message-required']." ".$text['label-description']."<br>\n"; }
+			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -141,7 +141,7 @@
 	}
 
 //set the defaults
-	if (strlen($enabled) == 0) { $enabled = true; }
+	if (empty($enabled)) { $enabled = true; }
 
 //create token
 	$object = new token;

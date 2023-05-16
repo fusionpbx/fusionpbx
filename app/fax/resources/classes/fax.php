@@ -66,16 +66,6 @@ if (!class_exists('fax')) {
 		}
 
 		/**
-		* Called when there are no references to a particular object
-		* unset the variables used in the class
-		*/
-		public function __destruct() {
-			foreach ($this as $key => $value) {
-				unset($this->$key);
-			}
-		}
-
-		/**
 		* Add a dialplan for call center
 		* @var string $domain_uuid		the multi-tenant id
 		* @var string $value	string to be cached
@@ -97,7 +87,7 @@ if (!class_exists('fax')) {
 				}
 
 			//set the dialplan_uuid
-				if (strlen($this->dialplan_uuid) == 0) {
+				if (empty($this->dialplan_uuid)) {
 					$this->dialplan_uuid = uuid();
 				}
 				else {
@@ -124,7 +114,7 @@ if (!class_exists('fax')) {
 				$fax_name = ($this->fax_name != '') ? $this->fax_name : format_phone($this->destination_number);
 
 			//set the  last fax
-				if (strlen($_SESSION['fax']['last_fax']['text']) > 0) {
+				if (!empty($_SESSION['fax']['last_fax']['text'])) {
 					$last_fax = "last_fax=".xml::sanitize($_SESSION['fax']['last_fax']['text']);
 				}
 				else {
