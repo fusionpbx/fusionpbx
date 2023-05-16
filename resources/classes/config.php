@@ -106,7 +106,7 @@ class config {
 			return false;
 		}
 	}
-	}
+}
 /*
 $config = new config;
 $config_exists = $config->exists();
