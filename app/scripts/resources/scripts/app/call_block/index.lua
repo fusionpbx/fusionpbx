@@ -101,8 +101,8 @@
 				sql = sql .. "	(\n";
 				sql = sql .. "		call_block_name = :call_block_name \n";
 				sql = sql .. "		and ( \n";
-				sql = sql .. " 			CONCAT('+', call_block_country_code, call_block_number) = :call_block_number \n";
-				sql = sql .. " 			or CONCAT(call_block_country_code, call_block_number) = :call_block_number \n";
+				sql = sql .. "			'+' || call_block_country_code || call_block_number = :call_block_number \n";
+				sql = sql .. "			or call_block_country_code || call_block_number = :call_block_number \n";
 				sql = sql .. "			or call_block_number = :call_block_number \n";
 				sql = sql .. "		) \n";
 				sql = sql .. "	) \n";
