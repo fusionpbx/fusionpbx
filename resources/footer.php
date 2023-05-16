@@ -39,7 +39,7 @@
 	if (!isset($_SESSION["username"])) { $_SESSION["username"] = null; }
 
 //get the output from the buffer
-	$body = $content_from_db.ob_get_contents();
+	$body = ($content_from_db ?? '').ob_get_contents();
 	ob_end_clean(); //clean the buffer
 
 //clear the template
