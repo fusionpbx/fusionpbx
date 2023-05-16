@@ -585,10 +585,6 @@ if (!class_exists('schema')) {
 											else {
 												$field_name = $field['name'];
 											}
-										else{
-											if ($field['deprecated'] == "true") {
-												//skip this field
-											}
 											if (strlen($field_name) > 0) {
 												if ($this->db_column_exists ($db_type, $db_name, $table_name, $field_name)) {
 													//found
@@ -599,6 +595,7 @@ if (!class_exists('schema')) {
 													$apps[$x]['db'][$y]['fields'][$z]['exists'] = 'false';
 												}
 											}
+											unset($field_name);
 										}
 									}
 								unset($table_name);
