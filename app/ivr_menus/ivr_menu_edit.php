@@ -229,7 +229,7 @@
 			}
 
 		//add or update the database
-			if (!empty($_POST["persistformvar"])) {
+			if (empty($_POST["persistformvar"])) {
 
 				//used for debugging
 					if (!empty($_POST["debug"]) && $_POST["debug"] == "true") {
