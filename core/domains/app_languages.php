@@ -1119,3 +1119,5 @@ $text['description-domain-add']['ro-ro'] = "";
 $text['description-domain-add']['ru-ru'] = "Введите данные домена ниже.";
 $text['description-domain-add']['sv-se'] = "Ange domändetaljer nedan.";
 $text['description-domain-add']['uk-ua'] = "Введіть дані домену нижче.";
+
+?>
