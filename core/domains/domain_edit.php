@@ -67,7 +67,6 @@
 		$domain_name = strtolower($_POST["domain_name"]);
 		$domain_enabled = $_POST["domain_enabled"] ?: 'false';
 		$domain_description = $_POST["domain_description"];
-		$domain_parent_uuid = check_str($_POST["domain_parent_uuid"]);
 	}
 
 //process the data
@@ -139,9 +138,6 @@
 							$array['domains'][0]['domain_name'] = $domain_name;
 							$array['domains'][0]['domain_enabled'] = $domain_enabled;
 							$array['domains'][0]['domain_description'] = $domain_description;
-							if (strlen($domain_parent_uuid)){
-								$array['domains'][0]['domain_parent_uuid'] = $domain_parent_uuid;
-							}
 
 						//create a copy of the domain array as the database save method empties the array that we still need.
 							$domain_array = $array;
@@ -205,9 +201,6 @@
 						$array['domains'][0]['domain_name'] = $domain_name;
 						$array['domains'][0]['domain_enabled'] = $domain_enabled;
 						$array['domains'][0]['domain_description'] = $domain_description;
-						if (strlen($domain_parent_uuid)){
-							$array['domains'][0]['domain_parent_uuid'] = $domain_parent_uuid;
-						}
 						$database = new database;
 						$database->app_name = 'domains';
 						$database->app_uuid = '8b91605b-f6d2-42e6-a56d-5d1ded01bb44';
@@ -562,8 +555,7 @@
 		$sql = "select ";
 		$sql .= "domain_uuid, ";
 		$sql .= "domain_name, ";
-		$sql .= "".($db_type == 'pgsql'?"cast(domain_enabled as text)":"domain_enabled").", ";
-		$sql .= "domain_parent_uuid, ";
+		$sql .= "cast(domain_enabled as text), ";
 		$sql .= "domain_description ";
 		$sql .= "from v_domains ";
 		$sql .= "where domain_uuid = :domain_uuid ";
@@ -574,7 +566,6 @@
 			$domain_name = strtolower($row["domain_name"]);
 			$domain_enabled = $row["domain_enabled"];
 			$domain_description = $row["domain_description"];
-			$domain_parent_uuid = $row["domain_parent_uuid"];
 		}
 		unset($sql, $parameters, $row);
 	}
@@ -730,51 +721,6 @@
 	echo "	<input class='formfld' type='text' name='domain_description' maxlength='255' value=\"".escape($domain_description)."\">\n";
 	echo "<br />\n";
 	echo $text['description-description']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-child-of']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	$sql = "select domain_uuid, domain_name from v_domains ";
-	$sql .= "where domain_enabled='true' and domain_uuid <> '".$domain_uuid."';";
-
-	$sql = "WITH RECURSIVE children AS (
-	SELECT d.domain_uuid, d.domain_parent_uuid, d.domain_name, ".($db_type == 'pgsql'?"cast(d.domain_enabled as text)":"d.domain_enabled").", d.domain_description, '' as parent_domain_name, 1 as depth, domain_name as path
-		FROM v_domains d ";
-	$sql .= "WHERE ";
-	if (!if_group("superadmin")){
-		$sql .= "domain_uuid = :domain_uuid ";
-		$parameters['domain_uuid'] = $_SESSION['user']['domain_uuid'];
-	}
-	else {
-		$sql .= "d.domain_parent_uuid IS null OR NOT exists (select 1 from v_domains t1 where d.domain_parent_uuid = t1.domain_uuid) ";
-	}
-
-	$sql .= "UNION
-	SELECT tp.domain_uuid, tp.domain_parent_uuid, tp.domain_name, ".($db_type == 'pgsql'?"cast(tp.domain_enabled as text)":"tp.domain_enabled").", tp.domain_description, c.domain_name as parent_domain_name, depth + 1, CONCAT(path,'.',tp.domain_name)  FROM v_domains tp
-		JOIN children c ON tp.domain_parent_uuid = c.domain_uuid ) SELECT * FROM children ";
-	$sql .= 'order by path asc, domain_name asc ';
-
-
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute($parameters);
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	echo "  <select class='formfld' name='domain_parent_uuid'>";
-	echo "  <option value=''></option>";
-	foreach ($result as &$row) {
-		$list_domain_name = $row["domain_name"];
-		$list_domain_uuid = $row["domain_uuid"];
-		$ident = str_repeat('-',$row['depth'] - 1);
-		$list_selected = ($domain_parent_uuid	 == $list_domain_uuid)?" selected='selected' ":'';
-		echo "  <option value='$list_domain_uuid' $list_selected>$ident$list_domain_name</option>";
-	}
-	unset($sql, $prep_statement);
-	echo "  </select>";
-	echo "<br />\n";
-	echo $text['description-child-of']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
