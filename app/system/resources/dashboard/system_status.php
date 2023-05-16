@@ -205,7 +205,7 @@
 			$tmp = event_socket_request($fp, 'api status');
 			$matches = Array();
 			preg_match("/(\d+)\s+session\(s\)\s+\-\speak/", $tmp, $matches);
-			$channels = $matches[1] ? $matches[1] : 0;
+			$channels = !empty($matches[1]) ? $matches[1] : 0;
 			$tr_link = "href='".PROJECT_PATH."/app/calls_active/calls_active.php'";
 			echo "<tr ".$tr_link.">\n";
 			echo "<td valign='top' class='".$row_style[$c]." hud_text'><a ".$tr_link.">".$text['label-channels']."</a></td>\n";
