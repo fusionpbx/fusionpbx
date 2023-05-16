@@ -296,7 +296,7 @@
 					$array['ivr_menus'][0]["ivr_menu_description"] = $ivr_menu_description;
 					$y = 0;
 					foreach ($ivr_menu_options as $row) {
-						if (isset($row['ivr_menu_option_digits'])) {
+						if (isset($row['ivr_menu_option_digits']) && $row['ivr_menu_option_digits'] != '') {
 							if (is_uuid($row['ivr_menu_option_uuid'])) {
 								$ivr_menu_option_uuid = $row['ivr_menu_option_uuid'];
 							}
