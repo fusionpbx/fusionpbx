@@ -69,7 +69,7 @@ if (!class_exists('permissions')) {
 			//set default false
 				$result = false;
 			//search for the permission
-				if (is_array($_SESSION["permissions"]) && isset($_SESSION["permissions"][$permission])) {
+				if (!empty($_SESSION["permissions"]) && is_array($_SESSION["permissions"]) && isset($_SESSION["permissions"][$permission])) {
 					$result = true;
 				}
 			//return the result
