@@ -204,7 +204,6 @@ if (!class_exists('switch_settings')) {
 				$array[$x]['default_setting_enabled'] = 'true';
 				$array[$x]['default_setting_description'] = '';
 				$x++;
-				$array2 = $array;
 
 			//get an array of the default settings
 				$sql = "select * from v_default_settings ";
@@ -260,10 +259,10 @@ if (!class_exists('switch_settings')) {
 
 			//set the default settings
 				if (is_array($array)) {
-					foreach ($array2 as $row) {
+					foreach ($array as $row) {
 						if (!isset($_SESSION['switch'][$row['default_setting_subcategory']])) {
 							if ($row['default_setting_enabled'] != "false") {
-								$_SESSION['switch'][$row['default_setting_subcategory']][$row['default_setting_name']] = $row['default_setting_value'];
+								$_SESSION['switch'][$row['default_setting_subcategory']] = $row['default_setting_value'];
 							}
 						}
 					}
