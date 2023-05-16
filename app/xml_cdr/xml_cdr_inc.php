@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2021
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -46,12 +46,12 @@
 	define('TIME_24HR', 1);
 
 //set defaults
-	if(!isset($_GET['show'])) {
+	if(empty($_GET['show'])) {
 		$_GET['show'] = 'false';
 	}
 
 //get post or get variables from http
-	if (count($_REQUEST) > 0) {
+	if (!empty($_REQUEST)) {
 		$cdr_id = $_REQUEST["cdr_id"] ?? '';
 		$direction = $_REQUEST["direction"] ?? '';
 		$caller_id_name = $_REQUEST["caller_id_name"] ?? '';
@@ -193,7 +193,7 @@
 	if ($_GET['show'] == 'all' && permission_exists('xml_cdr_all')) {
 		$param .= "&show=all";
 	}
-	if (isset($order_by)) {
+	if (!empty($order_by)) {
 		$param .= "&order_by=".urlencode($order_by)."&order=".urlencode($order);
 	}
 
@@ -223,11 +223,11 @@
 	}
 
 //set the default paging
-	$rows_per_page = $_SESSION['domain']['paging']['numeric'];
+	//$rows_per_page = $_SESSION['domain']['paging']['numeric'];
 
 //prepare to page the results
 	//$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50; //set on the page that includes this page
-	if (!isset($_GET['page']) || !is_numeric($_GET['page'])) { 
+	if (empty($_GET['page']) || (!empty($_GET['page']) && !is_numeric($_GET['page']))) { 
 		$_GET['page'] = 0;
 	}
 	//ensure page is within bounds of integer
@@ -611,7 +611,7 @@
 	unset($database, $sql, $parameters);
 
 //return the paging
-	if (isset($_REQUEST['export_format']) && $_REQUEST['export_format'] !== "csv" && $_REQUEST['export_format'] !== "pdf") {
+	if (empty($_REQUEST['export_format'])) {
 		list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true, $result_count); //top
 		list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page, false, $result_count); //bottom
 	}
