@@ -94,7 +94,7 @@
 			}
 
 		//process the http post data by submitted action
-			if ($_POST['action'] != '' && !empty($_POST['action'])) {
+			if (!empty($_POST['action'])) {
 
 				//prepare the array(s)
 				//send the array to the database class
@@ -377,7 +377,7 @@
 		foreach($groups as $row) {
 			if ($field['group_level'] <= $_SESSION['user']['group_level']) {
 				if (!in_array($row["group_uuid"], $assigned_groups)) {
-					echo "	<option value='".$row['group_uuid']."'>".$row['group_name'].(($row['domain_uuid'] != '') ? "@".$_SESSION['domains'][$row['domain_uuid']]['domain_name'] : null)."</option>\n";
+					echo "	<option value='".$row['group_uuid']."'>".$row['group_name'].(!empty($row['domain_uuid']) ? "@".$_SESSION['domains'][$row['domain_uuid']]['domain_name'] : null)."</option>\n";
 				}
 			}
 		}
