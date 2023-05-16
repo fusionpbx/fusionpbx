@@ -190,7 +190,7 @@
 
 //show the content
 	echo "<div class='action_bar' id='action_bar'>\n";
-	echo " <div class='heading'><b>".$text['title-domains']." (".$num_rows.")</b></div>\n";
+	echo "  <div class='heading'><b>".$text['title-domains']." (".$num_rows.")</b></div>\n";
 	echo "	<div class='actions'>\n";
 	if (permission_exists('domain_add')) {
 		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'id'=>'btn_add','link'=>'domain_edit.php']);
@@ -255,7 +255,7 @@
 			echo "<tr class='list-row' href='".$list_row_url."'>\n";
 			if (permission_exists('domain_edit') || permission_exists('domain_delete')) {
 				echo "	<td class='checkbox'>\n";
-				echo "          <input type='checkbox' name='domains[$x][checked]' id='checkbox_".$x."' value='true' onclick=\"checkbox_on_change(this); if (!this.checked) { document.getElementById('checkbox_all').checked = false; }\">\n";				
+				echo " <input type='checkbox' name='domains[$x][checked]' id='checkbox_".$x."' value='true' onclick=\"checkbox_on_change(this); if (!this.checked) { document.getElementById('checkbox_all').checked = false; }\">\n";
 				echo "		<input type='hidden' name='domains[$x][uuid]' value='".escape($row['domain_uuid'])."' />\n";
 				echo "	</td>\n";
 			}
@@ -267,7 +267,7 @@
 				echo " <a href='".$list_row_url."' title=\"".$text['button-edit']."\">".escape($row['domain_name'])."</a>\n";
 			}
 			else {
-				echo " ".escape($row['domain_name']);
+				echo "  ".escape($row['domain_name']);
 			}
 			
 			if ($row['parent_uuid']){
