@@ -151,7 +151,7 @@
 	if ($show_contact_fields) {
 		$sql .= "contact_organization,contact_name, ";
 	}
-	$sql .= ($db_type=='pgsql'?"cast(user_enabled as text)":"user_enabled")." ";
+	$sql .= "cast(user_enabled as text) ";
 	$sql .= "from view_users ";
 	if ($_GET['show'] == "all" && permission_exists('user_all')) {
 		if (isset($sql_search)) {
