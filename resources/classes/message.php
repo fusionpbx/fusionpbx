@@ -52,12 +52,12 @@ if (!class_exists('message')) {
 		static function html($clear_messages = true, $spacer = "") {
 			$html = "{$spacer}//render the messages\n";
 			$spacer .="\t";
-			if (isset($_SESSION['message'])) {
-				if (is_string($_SESSION['message']) && !empty(trim($_SESSION['message']))) {
+			if (isset($_SESSION['message']) || isset($_SESSION['messages'])) {
+				if (!empty($_SESSION['message']) && is_string(trim($_SESSION['message']))) {
 					self::add($_SESSION['message'], $_SESSION['message_mood'] ?? null, $_SESSION['message_delay'] ?? null);
 					unset($_SESSION['message'], $_SESSION['message_mood'], $_SESSION['message_delay']);
 				}
-				if (is_array($_SESSION['messages']) && count($_SESSION['messages']) > 0 ) {
+				if (!empty($_SESSION['messages']) && is_array($_SESSION['messages']) && @sizeof($_SESSION['messages']) != 0) {
 					foreach ($_SESSION['messages'] as $message_mood => $message) {
 						$message_text = str_replace(array("\r\n", "\n", "\r"),'\\n',addslashes(join('<br/>', $message['message'])));
 						$message_delay = array_sum($message['delay'])/count($message['delay']);
