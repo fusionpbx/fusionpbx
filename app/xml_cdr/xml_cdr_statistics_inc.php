@@ -146,9 +146,7 @@
 	}
 	else {
 		$show_all = permission_exists('xml_cdr_all') && ($_GET['showall'] == 'true');
-		if (isset($_SESSION['cdr']['stats_default_direction']['text'])){
-			$direction = $_SESSION['cdr']['stats_default_direction']['text'];
-		}
+		//$direction = 'inbound';
 	}
 
 //if we do not see b-leg then use only a-leg to generate statistics
