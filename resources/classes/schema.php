@@ -228,7 +228,7 @@ if (!class_exists('schema')) {
 			}
 
 		//database table exists
-			public function db_table_exists ($db_type, $db_name, $table_name) {
+			private function db_table_exists ($db_type, $db_name, $table_name) {
 				$sql = "";
 				if ($db_type == "sqlite") {
 					$sql .= "SELECT * FROM sqlite_master WHERE type='table' and name='$table_name' ";
@@ -575,31 +575,29 @@ if (!class_exists('schema')) {
 									}
 								//check if the column exists
 									foreach ($row['fields'] as $z => $field) {
-										if ($apps[$x]['db'][$y]['exists'] == 'false'){
-											$apps[$x]['db'][$y]['fields'][$z]['exists'] = 'false';
+										if ($field['deprecated'] == "true") {
+											//skip this field
+										}
+										else {
+											if (is_array($field['name'])) {
+												$field_name = $field['name']['text'];
+											}
+											else {
+												$field_name = $field['name'];
 											}
 										else{
 											if ($field['deprecated'] == "true") {
 												//skip this field
 											}
-											else {
-												if (is_array($field['name'])) {
-													$field_name = $field['name']['text'];
+											if (strlen($field_name) > 0) {
+												if ($this->db_column_exists ($db_type, $db_name, $table_name, $field_name)) {
+													//found
+													$apps[$x]['db'][$y]['fields'][$z]['exists'] = 'true';
 												}
 												else {
-													$field_name = $field['name'];
+													//not found
+													$apps[$x]['db'][$y]['fields'][$z]['exists'] = 'false';
 												}
-												if (strlen($field_name) > 0) {
-													if ($this->db_column_exists ($db_type, $db_name, $table_name, $field_name)) {
-														//found
-														$apps[$x]['db'][$y]['fields'][$z]['exists'] = 'true';
-													}
-													else {
-														//not found
-														$apps[$x]['db'][$y]['fields'][$z]['exists'] = 'false';
-													}
-												}
-												unset($field_name);
 											}
 										}
 									}
