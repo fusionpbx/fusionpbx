@@ -651,7 +651,7 @@ if (!class_exists('domains')) {
 							$_SESSION["domain_name"] = $row['domain_name'];
 						}
 						else {
-							if (lower_case($row['domain_name']) == lower_case($domain_array[0] ?? '') || lower_case($row['domain_name']) == lower_case('www.'.$domain_array[0] ?? '')) {
+							if (!empty($domain_array[0]) && (lower_case($row['domain_name']) == lower_case($domain_array[0] ?? '') || lower_case($row['domain_name']) == lower_case('www.'.$domain_array[0] ?? ''))) {
 								$_SESSION["domain_uuid"] = $row["domain_uuid"];
 								$_SESSION["domain_name"] = $row['domain_name'];
 							}
@@ -755,7 +755,7 @@ if (!class_exists('domains')) {
 				}
 				$x = 0;
 				foreach ($apps as $app) {
-					if (is_array($app['default_settings'])) {
+					if (isset($app['default_settings']) && is_array($app['default_settings'])) {
 						foreach ($app['default_settings'] as $row) {
 							if (!isset($setting[$row['default_setting_uuid']])) {
 								$array['default_settings'][$x] = $row;
@@ -767,7 +767,7 @@ if (!class_exists('domains')) {
 				}
 
 			//add the missing default settings
-				if (is_array($array) && count($array) > 0) {
+				if (isset($array) && is_array($array) && count($array) > 0) {
 					//grant temporary permissions
 						$p = new permissions;
 						$p->add('default_setting_add', 'temp');
