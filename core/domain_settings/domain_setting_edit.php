@@ -176,7 +176,7 @@
 								$array['dialplan_details'][0]['dialplan_detail_order'] = '20';
 								$p->add('dialplan_detail_add', 'temp');
 							}
-	//view_array($array);
+
 							if (!empty($array)) {
 								$database = new database;
 								$database->app_name = 'domain_settings';
