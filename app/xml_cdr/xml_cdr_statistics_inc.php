@@ -149,7 +149,9 @@
 	}
 	else {
 		$show_all = permission_exists('xml_cdr_all') && ($_GET['showall'] === 'true');
-		//$direction = 'inbound';
+		if (isset($_SESSION['cdr']['stats_default_direction']['text'])){
+			$direction = $_SESSION['cdr']['stats_default_direction']['text'];
+		}
 	}
 
 //if we do not see b-leg then use only a-leg to generate statistics
@@ -344,6 +346,9 @@
 					}
 				}
 			}
+			foreach ($_SESSION['user']['extension'] as $row) {
+                                $sql_where_ors[] = "extension_uuid = '".$row['extension_uuid']."'";
+                        }
 			// concatenate the 'or's array, then add to the 'and's array
 			if (sizeof($sql_where_ors) > 0) {
 				$sql_where_ands[] = "( ".implode(" or ", $sql_where_ors)." )";
