@@ -50,10 +50,10 @@
 	$destination = new destinations;
 
 //action add or update
-	if (is_uuid($_REQUEST["id"]) || is_uuid($_REQUEST["ivr_menu_uuid"])) {
+	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"]) || !empty($_REQUEST["ivr_menu_uuid"]) &&  is_uuid($_REQUEST["ivr_menu_uuid"])) {
 		$action = "update";
 		$ivr_menu_uuid = $_REQUEST["id"];
-		if (is_uuid($_REQUEST["ivr_menu_uuid"])) {
+		if (!empty($_REQUEST["ivr_menu_uuid"])) {
 			$ivr_menu_uuid = $_REQUEST["ivr_menu_uuid"];
 		}
 	}
@@ -62,7 +62,7 @@
 	}
 
 //get total ivr menu count from the database, check limit, if defined
-	if (is_numeric($_SESSION['limit']['ivr_menus']['numeric'])) {
+	if (!empty($_SESSION['limit']['ivr_menus']['numeric'])) {
 		$sql = "select count(*) as num_rows from v_ivr_menus where domain_uuid = :domain_uuid ";
 		$parameters['domain_uuid'] = $domain_uuid;
 		$database = new database;
@@ -77,14 +77,14 @@
 	}
 
 //get http post values and set them to php variables
-	if (count($_POST) > 0) {
+	if (!empty($_POST)) {
 
 		//process the http post data by submitted action
-			if ($_POST['action'] != '' && is_uuid($_POST['ivr_menu_uuid'])) {
+			if (!empty($_POST['action']) && is_uuid($_POST['ivr_menu_uuid'])) {
 				$array[0]['checked'] = 'true';
 				$array[0]['uuid'] = $_POST['ivr_menu_uuid'];
 
-				switch ($_POST['action']) {
+				switch (!empty($_POST['action']) && $_POST['action']) {
 					case 'copy':
 						if (permission_exists('ivr_menu_add')) {
 							$obj = new ivr_menu;
@@ -154,7 +154,7 @@
 	}
 
 //process the http data
-	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
+	if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
 		//set the domain_uuid
 			if (permission_exists('ivr_menu_domain')) {
@@ -215,7 +215,7 @@
 			//if (empty($ivr_menu_ringback)) { $msg .= $text['message-required'].$text['label-ring_back']."<br>\n"; }
 			
 			//if (empty($ivr_menu_description)) { $msg .= $text['message-required'].$text['label-description']."<br>\n"; }
-			if (!empty($msg) && empty($_POST["persistformvar"])) {
+			if (!empty($msg) && !empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -232,7 +232,7 @@
 			if ($_POST["persistformvar"] != "true") {
 
 				//used for debugging
-					if ($_POST["debug"] == "true") {
+					if (!emtpy($_POST["debug"]) && $_POST["debug"] == "true") {
 						unset($_POST["debug"]);
 						echo "<pre>\n";
 						print_r($_POST);
@@ -296,7 +296,7 @@
 					$array['ivr_menus'][0]["ivr_menu_description"] = $ivr_menu_description;
 					$y = 0;
 					foreach ($ivr_menu_options as $row) {
-						if (!empty($row['ivr_menu_option_digits'])) {
+						if (isset($row['ivr_menu_option_digits'])) {
 							if (is_uuid($row['ivr_menu_option_uuid'])) {
 								$ivr_menu_option_uuid = $row['ivr_menu_option_uuid'];
 							}
@@ -457,7 +457,7 @@
 	}
 
 //pre-populate the form
-	if (!is_uuid($ivr_menu_uuid)) { $ivr_menu_uuid = $_REQUEST["id"]; }
+	if (empty($ivr_menu_uuid)) { $ivr_menu_uuid = $_REQUEST["id"]; }
 	if (is_uuid($ivr_menu_uuid) && $_POST["persistformvar"] != "true") {
 		$ivr = new ivr_menu;
 		$ivr->domain_uuid = $_SESSION["domain_uuid"];
@@ -706,13 +706,15 @@
 	echo "		<td class='vtable'>";
 	echo "<select name=\"ivr_menu_parent_uuid\" class='formfld'>\n";
 	echo "<option value=\"\"></option>\n";
-	foreach($ivr_menus as $field) {
-		if ($field['ivr_menu_uuid'] != $ivr_menu_uuid) {
-			if ($ivr_menu_parent_uuid == $field['ivr_menu_uuid']) {
-				echo "<option value='".escape($field['ivr_menu_uuid'])."' selected='selected'>".escape($field['ivr_menu_name'])."</option>\n";
-			}
-			else {
-				echo "<option value='".escape($field['ivr_menu_uuid'])."'>".escape($field['ivr_menu_name'])."</option>\n";
+	if (!empty($ivr_menus)) {
+		foreach($ivr_menus as $field) {
+			if ($field['ivr_menu_uuid'] != $ivr_menu_uuid) {
+				if ($ivr_menu_parent_uuid == $field['ivr_menu_uuid']) {
+					echo "<option value='".escape($field['ivr_menu_uuid'])."' selected='selected'>".escape($field['ivr_menu_name'])."</option>\n";
+				}
+				else {
+					echo "<option value='".escape($field['ivr_menu_uuid'])."'>".escape($field['ivr_menu_name'])."</option>\n";
+				}
 			}
 		}
 	}
@@ -731,13 +733,15 @@
 		$language_formatted = $ivr_menu_language."-".$ivr_menu_dialect." ".$ivr_menu_voice;
 		echo "		<option value='".escape($ivr_menu_language.'/'.$ivr_menu_dialect.'/'.$ivr_menu_voice)."' selected='selected'>".escape($language_formatted)."</option>\n";
 	}
-	foreach ($language_paths as $key => $language_variables) {
-		$language_variables = explode ('/',$language_paths[$key]);
-		$language = $language_variables[0];
-		$dialect = $language_variables[1];
-		$voice = $language_variables[2];
-		if ($language_formatted <> $language.'-'.$dialect.' '.$voice) {
-			echo "		<option value='".$language."/".$dialect."/".$voice."'>".$language."-".$dialect." ".$voice."</option>\n";
+	if (!empty($language_paths)) {
+		foreach ($language_paths as $key => $language_variables) {
+			$language_variables = explode ('/',$language_paths[$key]);
+			$language = $language_variables[0];
+			$dialect = $language_variables[1];
+			$voice = $language_variables[2];
+			if ($language_formatted <> $language.'-'.$dialect.' '.$voice) {
+				echo "		<option value='".$language."/".$dialect."/".$voice."'>".$language."-".$dialect." ".$voice."</option>\n";
+			}
 		}
 	}
 	echo "<br />\n";
@@ -946,7 +950,7 @@
 		}
 	//recordings
 		$tmp_selected = false;
-		if (is_array($recordings)) {
+		if (!empty($recordings)) {
 			echo "<optgroup label='Recordings'>\n";
 			foreach ($recordings as &$row) {
 				$recording_name = $row["recording_name"];
@@ -966,7 +970,7 @@
 			echo "</optgroup>\n";
 		}
 	//phrases
-		if (is_array($phrases)) {
+		if (!empty($phrases)) {
 			echo "<optgroup label='Phrases'>\n";
 			foreach ($phrases as &$row) {
 				if ($ivr_menu_greet_short == "phrase:".$row["phrase_uuid"]) {
