@@ -282,14 +282,8 @@ if ($db_type == "odbc") {
 	}
 } //end if db_type pgsql
 
-//verify v_domains exist
-	require_once "resources/classes/schema.php";
-	$obj = new schema;
-	$has_v_domains = $obj->db_table_exists($db_type, $db_name, 'v_domains');
-	$has_v_software = $obj->db_table_exists($db_type, $db_name, 'v_software');
-
 //get the domain list
-	if ($has_v_domains and ((!is_array($_SESSION['domains']) or !isset($_SESSION["domain_uuid"])))) {
+	if (!is_array($_SESSION['domains']) or !isset($_SESSION["domain_uuid"])) {
 
 		//get the domain
 			$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
@@ -342,7 +336,7 @@ if ($db_type == "odbc") {
 	}
 
 //get the software name
-	if ($has_v_software and (!isset($_SESSION["software_name"]))) {
+	if (!isset($_SESSION["software_name"])) {
 		$sql = "select * from v_software ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		if ($prep_statement) {
