@@ -66,9 +66,11 @@ class file {
 		if (!isset($voice)) { $voice = 'callie'; }
 
 		//set the variables
-		$dir = $_SESSION['switch']['sounds']['dir'].'/'.$language.'/'.$dialect.'/'.$voice;
-		$rate = '8000';
-		$files = $this->glob($dir.'/*/'.$rate, true);
+		if (!empty($_SESSION['switch']['sounds']['dir']) && file_exists($_SESSION['switch']['sounds']['dir'])) {
+			$dir = $_SESSION['switch']['sounds']['dir'].'/'.$language.'/'.$dialect.'/'.$voice;
+			$rate = '8000';
+			$files = $this->glob($dir.'/*/'.$rate, true);
+		}
 
 		//loop through the languages
 		if (!empty($files)) {
