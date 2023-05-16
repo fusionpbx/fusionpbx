@@ -213,7 +213,7 @@
 			if (empty($ivr_menu_digit_len)) { $msg .= $text['message-required'].$text['label-digit_length']."<br>\n"; }
 			if (empty($ivr_menu_direct_dial)) { $msg .= $text['message-required'].$text['label-direct_dial']."<br>\n"; }
 			//if (empty($ivr_menu_ringback)) { $msg .= $text['message-required'].$text['label-ring_back']."<br>\n"; }
-			
+
 			//if (empty($ivr_menu_description)) { $msg .= $text['message-required'].$text['label-description']."<br>\n"; }
 			if (!empty($msg) && !empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
@@ -229,10 +229,10 @@
 			}
 
 		//add or update the database
-			if ($_POST["persistformvar"] != "true") {
+			if (!empty($_POST["persistformvar"])) {
 
 				//used for debugging
-					if (!emtpy($_POST["debug"]) && $_POST["debug"] == "true") {
+					if (!empty($_POST["debug"]) && $_POST["debug"] == "true") {
 						unset($_POST["debug"]);
 						echo "<pre>\n";
 						print_r($_POST);
@@ -458,7 +458,7 @@
 
 //pre-populate the form
 	if (empty($ivr_menu_uuid)) { $ivr_menu_uuid = $_REQUEST["id"]; }
-	if (is_uuid($ivr_menu_uuid) && $_POST["persistformvar"] != "true") {
+	if (!empty($ivr_menu_uuid) && is_uuid($ivr_menu_uuid) && empty($_POST["persistformvar"])) {
 		$ivr = new ivr_menu;
 		$ivr->domain_uuid = $_SESSION["domain_uuid"];
 		$ivr->ivr_menu_uuid = $ivr_menu_uuid;
@@ -506,6 +506,11 @@
 		}
 		unset($ivr_menus, $row);
 	}
+
+//set defaults
+	$ivr_menu_language = $ivr_menu_language ?? '';
+	$ivr_menu_dialect = $ivr_menu_language ?? '';
+	$ivr_menu_voice = $ivr_menu_voice ?? '';
 
 //get the ivr menu options
 	$sql = "select * from v_ivr_menu_options ";
@@ -651,14 +656,13 @@
 	echo "	<div class='actions'>\n";
 	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','link'=>'ivr_menus.php']);
 	if ($action == "update") {
-		$button_margin = 'margin-left: 15px;';
-		if (permission_exists('ivr_menu_add') && (!is_numeric($_SESSION['limit']['ivr_menus']['numeric']) || $total_ivr_menus < $_SESSION['limit']['ivr_menus']['numeric'])) {
+		if (permission_exists('ivr_menu_add') && (empty($_SESSION['limit']['ivr_menus']['numeric']) || $total_ivr_menus < $_SESSION['limit']['ivr_menus']['numeric'])) {
+			$button_margin = 'margin-left: 15px;';
 			echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'name'=>'btn_copy','style'=>$button_margin,'onclick'=>"modal_open('modal-copy','btn_copy');"]);
-			unset($button_margin);
 		}
 		if (permission_exists('ivr_menu_delete') || permission_exists('ivr_menu_option_delete')) {
+			$button_margin = 'margin-left: 0px;';
 			echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'name'=>'btn_delete','style'=>$button_margin,'onclick'=>"modal_open('modal-delete','btn_delete');"]);
-			unset($button_margin);
 		}
 	}
 	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save','style'=>'margin-left: 15px']);
@@ -667,7 +671,7 @@
 	echo "</div>\n";
 
 	if ($action == "update") {
-		if (permission_exists('ivr_menu_add') && (!is_numeric($_SESSION['limit']['ivr_menus']['numeric']) || $total_ivr_menus < $_SESSION['limit']['ivr_menus']['numeric'])) {
+		if (permission_exists('ivr_menu_add') && (empty($_SESSION['limit']['ivr_menus']['numeric']) || $total_ivr_menus < $_SESSION['limit']['ivr_menus']['numeric'])) {
 			echo modal::create(['id'=>'modal-copy','type'=>'copy','actions'=>button::create(['type'=>'submit','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_copy','style'=>'float: right; margin-left: 15px;','collapse'=>'never','name'=>'action','value'=>'copy','onclick'=>"modal_close();"])]);
 		}
 		if (permission_exists('ivr_menu_delete') || permission_exists('ivr_menu_option_delete')) {
