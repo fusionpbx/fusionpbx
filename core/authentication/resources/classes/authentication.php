@@ -169,7 +169,7 @@ class authentication {
 			user_logs::add($result);
 
 		//debug information
-			if ($debug) {
+			if (!empty($debug)) {
 				if ($row["authorized"]) {
 					echo "authorized: true\n";
 				}
@@ -179,7 +179,7 @@ class authentication {
 			}
 
 		//user is authorized - get user settings, check user cidr
-			if ($authorized) {
+			if (!empty($authorized)) {
 
 				//set a session variable to indicate authorized is set to true
 					$_SESSION['authorized'] = true;
@@ -403,7 +403,7 @@ class authentication {
 			} //authorized true
 
 		//return the result
-			return $result;
+			return $result ?? false;
 	}
 
 	/**
