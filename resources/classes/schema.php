@@ -228,7 +228,7 @@ if (!class_exists('schema')) {
 			}
 
 		//database table exists
-			private function db_table_exists ($db_type, $db_name, $table_name) {
+			public function db_table_exists ($db_type, $db_name, $table_name) {
 				$sql = "";
 				if ($db_type == "sqlite") {
 					$sql .= "SELECT * FROM sqlite_master WHERE type='table' and name='$table_name' ";
@@ -575,27 +575,33 @@ if (!class_exists('schema')) {
 									}
 								//check if the column exists
 									foreach ($row['fields'] as $z => $field) {
-										if (!empty($field['deprecated']) && $field['deprecated'] == "true") {
-											//skip this field
+										if ($apps[$x]['db'][$y]['exists'] == 'false'){
+											// If table does not exist, then this obviously doesn't exist.
+											$apps[$x]['db'][$y]['fields'][$z]['exists'] = 'false';
 										}
-										else {
-											if (is_array($field['name'])) {
-												$field_name = $field['name']['text'];
+										else{
+											if (!empty($field['deprecated']) && $field['deprecated'] == "true") {
+												//skip this field
 											}
 											else {
-												$field_name = $field['name'];
-											}
-											if (!empty($field_name)) {
-												if ($this->db_column_exists ($db_type, $db_name, $table_name, $field_name)) {
-													//found
-													$apps[$x]['db'][$y]['fields'][$z]['exists'] = 'true';
+												if (is_array($field['name'])) {
+													$field_name = $field['name']['text'];
 												}
 												else {
-													//not found
-													$apps[$x]['db'][$y]['fields'][$z]['exists'] = 'false';
+													$field_name = $field['name'];
 												}
-											}
+												if (!empty($field_name)) {
+													if ($this->db_column_exists ($db_type, $db_name, $table_name, $field_name)) {
+														//found
+														$apps[$x]['db'][$y]['fields'][$z]['exists'] = 'true';
+													}
+													else {
+														//not found
+														$apps[$x]['db'][$y]['fields'][$z]['exists'] = 'false';
+													}
+												}
 											unset($field_name);
+											}
 										}
 									}
 								unset($table_name);
