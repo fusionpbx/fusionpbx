@@ -43,8 +43,7 @@
 //set the error reporting
 	if (isset($conf['error.reporting'])) {
 		ini_set('display_errors', '1');
-		eval ('$error_reporting = '.$conf['error.reporting'].';');
-		error_reporting($error_reporting);
+		error_reporting($conf['error.reporting']);
 	}
 
 //get the database connection settings
@@ -78,7 +77,7 @@
 	require_once "resources/php.php";
 	require_once "resources/functions.php";
 	if (is_array($conf) && count($conf) > 0) {
-		require_once "resources/pdo.php";
+		require "resources/pdo.php";
 		require_once "resources/cidr.php";
 		if (file_exists($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/resources/switch.php")) {
 			require_once "resources/switch.php";
