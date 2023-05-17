@@ -61,7 +61,7 @@
 		$dashboard_column_span = $_POST["dashboard_column_span"] ?? '';
 		$dashboard_details_state = $_POST["dashboard_details_state"] ?? '';
 		$dashboard_order = $_POST["dashboard_order"] ?? '';
-		$dashboard_enabled = $_POST["dashboard_enabled"] ?: 'false';
+		$dashboard_enabled = $_POST["dashboard_enabled"] ?? 'false';
 		$dashboard_description = $_POST["dashboard_description"] ?? '';
 	}
 
@@ -370,13 +370,13 @@
 		}
 		echo "</table>\n";
 	}
-	if (is_array($groups)) {
-		echo "<br />\n";
+	if (!empty($groups) && is_array($groups)) {
+		if (!empty($dashboard_groups)) { echo "<br />\n"; }
 		echo "<select name='dashboard_groups[0][group_uuid]' class='formfld' style='width: auto; margin-right: 3px;'>\n";
 		echo "	<option value=''></option>\n";
-		foreach($groups as $row) {
-			if ($field['group_level'] <= $_SESSION['user']['group_level']) {
-				if (!in_array($row["group_uuid"], $assigned_groups)) {
+		foreach ($groups as $row) {
+			if ((!empty($field['group_level']) && $field['group_level'] <= $_SESSION['user']['group_level']) || empty($field['group_level'])) {
+				if (empty($assigned_groups) || !in_array($row["group_uuid"], $assigned_groups)) {
 					echo "	<option value='".$row['group_uuid']."'>".$row['group_name'].(!empty($row['domain_uuid']) ? "@".$_SESSION['domains'][$row['domain_uuid']]['domain_name'] : null)."</option>\n";
 				}
 			}
