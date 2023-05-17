@@ -39,13 +39,25 @@
 		/** @var $object template_engine */
 		private $object;
 
-		public function __construct() {
-			//set the preferred engine
+		public function __construct(string $engine = "", string $cache_dir = "", string $template_dir = "") {
+			//set defaults
 			$this->engine = 'smarty';
 			//set the cache location from default settings or use the system temp dir
 			$this->cache_dir = $_SESSION['server']['temp']['dir'] ?? sys_get_temp_dir();
-			//template directory can not be reliably determined
 			$this->template_dir = null;
+
+			//override defaults
+			if(!empty($engine)) 
+				$this->engine = $engine;
+			if(!empty($cache_dir)) 
+				$this->cache_dir = $cache_dir;			
+			if(!empty($template_dir))
+				$this->template_dir = $template_dir;
+
+			//call init if all variables are supplied in the constructor
+			if(!empty($this->engine) && !empty($this->cache_dir) && !empty($this->template_dir)) {
+				$this->init();
+			}
 		}
 
 		public function init() {
