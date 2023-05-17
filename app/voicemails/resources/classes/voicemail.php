@@ -289,7 +289,7 @@
 								$sql = "select ".$this->uuid_prefix."uuid as uuid, voicemail_id from v_".$this->table." ";
 								$sql .= "where ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
 								$database = new database;
-								$rows = $database->select($sql, $parameters, 'all');
+								$rows = $database->select($sql, $parameters ?? null, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
 										$voicemail_ids[$row['uuid']] = $row['voicemail_id'];
@@ -583,9 +583,10 @@
 				$this->get_voicemail_id();
 
 			//send the message waiting status
+
 				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 				if ($fp) {
-					$switch_cmd .= "luarun app.lua voicemail mwi ".$this->voicemail_id."@".$_SESSION['domain_name'];
+					$switch_cmd = "luarun app.lua voicemail mwi ".$this->voicemail_id."@".$_SESSION['domain_name'];
 					$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
 				}
 		}
