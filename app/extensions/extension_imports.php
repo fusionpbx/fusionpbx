@@ -58,10 +58,10 @@
 	}
 
 //get the http get values and set them as php variables
-	$action = $_POST["action"];
-	$from_row = $_POST["from_row"];
-	$delimiter = $_POST["data_delimiter"];
-	$enclosure = $_POST["data_enclosure"];
+	$action = $_POST["action"] ?? null;
+	$from_row = $_POST["from_row"] ?? null;
+	$delimiter = $_POST["data_delimiter"] ?? null;
+	$enclosure = $_POST["data_enclosure"] ?? null;
 
 //save the data to the csv file
 	if (isset($_POST['data'])) {
@@ -72,7 +72,7 @@
 
 //copy the csv file
 	//$_POST['submit'] == "Upload" &&
-	if ( is_uploaded_file($_FILES['ulfile']['tmp_name']) && permission_exists('extension_import')) {
+	if (!empty($_FILES['ulfile']['tmp_name']) && is_uploaded_file($_FILES['ulfile']['tmp_name']) && permission_exists('extension_import')) {
 		if ($_POST['type'] == 'csv') {
 			move_uploaded_file($_FILES['ulfile']['tmp_name'], $_SESSION['server']['temp']['dir'].'/'.$_FILES['ulfile']['name']);
 			$save_msg = "Uploaded file to ".$_SESSION['server']['temp']['dir']."/". htmlentities($_FILES['ulfile']['name']);
@@ -111,7 +111,7 @@
 					$schema[$i]['table'] = $table_name;
 					$schema[$i]['parent'] = $parent_name;
 					foreach ($table['fields'] as $row) {
-						if ($row['deprecated'] !== 'true') {
+						if (empty($row['deprecated']) || $row['deprecated'] !== 'true') {
 							if (is_array($row['name'])) {
 								$field_name = $row['name']['text'];
 							}
@@ -181,13 +181,15 @@
 				echo "			<option value=''></option>\n";
 				foreach($schema as $row) {
 					echo "			<optgroup label='".$row['table']."'>\n";
-					foreach($row['fields'] as $field) {
-						$selected = '';
-						if ($field == $line_field) {
-							$selected = "selected='selected'";
-						}
-						if ($field !== 'domain_uuid') {
-							echo "				<option value='".$row['table'].".".$field."' ".$selected.">".$field."</option>\n";
+					if (!empty($row['fields'])) {
+						foreach($row['fields'] as $field) {
+							$selected = '';
+							if ($field == $line_field) {
+								$selected = "selected='selected'";
+							}
+							if ($field !== 'domain_uuid') {
+								echo "				<option value='".$row['table'].".".$field."' ".$selected.">".$field."</option>\n";
+							}
 						}
 					}
 					echo "			</optgroup>\n";
@@ -278,7 +280,7 @@
 									//get the table and field name
 									$field_array = explode(".",$value);
 									$table_name = $field_array[0];
-									$field_name = $field_array[1];
+									$field_name = $field_array[1] ?? null;
 									//echo "value: $value<br />\n";
 									//echo "table_name: $table_name<br />\n";
 									//echo "field_name: $field_name<br />\n";
@@ -387,7 +389,7 @@
 	echo "    ".$text['label-import_data']."\n";
 	echo "</td>\n";
 	echo "<td width='70%' class='vtable' align='left'>\n";
-	echo "    <textarea name='data' id='data' class='formfld' style='width: 100%; min-height: 150px;' wrap='off'>$data</textarea>\n";
+	echo "    <textarea name='data' id='data' class='formfld' style='width: 100%; min-height: 150px;' wrap='off'>".($data ?? null)."</textarea>\n";
 	echo "<br />\n";
 	echo $text['description-import_data']."\n";
 	echo "</td>\n";
