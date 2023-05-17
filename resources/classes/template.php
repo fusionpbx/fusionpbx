@@ -27,22 +27,33 @@
 	 */
 
 	/**
-	 * Description of template
+	 * Allows the use of templates without hard-coding which template can be used with full backward compatibility
 	 *
 	 * @author Tim Fry <tim@voipstratus.com>
 	 */
 	class template {
 
+		/** @var string path and filename of template for engine to use */
 		public $template_dir;
+
+		/** @var string path and filename of the caching location engine will use */
 		public $cache_dir;
+
+		/** @var string $engine */
 		public $engine;
-		/** @var $object template_engine */
+
+		/** @var template_engine $object */
 		private $object;
 
-		public function __construct(string $engine = "", string $cache_dir = "", string $template_dir = "") {
-			//set defaults
-			$this->engine = 'smarty';
-			//set the cache location from default settings or use the system temp dir
+		/**
+		 * Optional constructor params. When all params are set the init() method will be called.
+		 * @see template::init()
+		 * @param string $template_dir full path to the templates folder for the engine to use
+		 * @param string $cache_dir default value of session variable or sys_get_temp_dir if not available
+		 * @param string $engine default value of smarty
+		 */
+		public function __construct(string $template_dir = "", string $cache_dir = "", string $engine = 'smarty') {
+			//set defaults for cache location from default settings or use the system temp dir
 			$this->cache_dir = $_SESSION['server']['temp']['dir'] ?? sys_get_temp_dir();
 			$this->template_dir = null;
 
@@ -52,7 +63,7 @@
 			if(!empty($cache_dir)) 
 				$this->cache_dir = $cache_dir;			
 			if(!empty($template_dir))
-				$this->template_dir = $template_dir;
+				$this->template_dir = realpath($template_dir);
 
 			//call init if all variables are supplied in the constructor
 			if(!empty($this->engine) && !empty($this->cache_dir) && !empty($this->template_dir)) {
@@ -60,6 +71,9 @@
 			}
 		}
 
+		/**
+		 * Initialize the template object using the property 'engine'.
+		 */
 		public function init() {
 			require_once 'template_engine.php';
 			if (!empty($this->engine)) {
@@ -72,10 +86,20 @@
 			}
 		}
 
+		/**
+		 * Assign a key and value to the template.
+		 * @param type $key
+		 * @param type $value
+		 */
 		public function assign($key, $value) {
 			$this->object->assign($key, $value);
 		}
 
+		/**
+		 * Render a template file
+		 * @param string $name Filename of the template to render
+		 * @return string
+		 */
 		public function render($name): string {
 			return $this->object->render($name);
 		}
