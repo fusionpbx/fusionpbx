@@ -114,7 +114,7 @@
 
 //prepare the data
 	if (!empty($_POST)) {
-view_array($_POST, 0);
+
 		//get the HTTP values and set as variables
 			if (permission_exists('user_edit') && $action == 'edit') {
 				$user_uuid = $_REQUEST["id"];
