@@ -45,14 +45,14 @@
 
 		public function __construct(string $template_dir = "", string $cache_dir = "") {
 			require_once "resources/templates/engine/smarty/Smarty.class.php";
+			$this->smarty = new \Smarty();
 
 			if(!empty($template_dir))
-				$this->template_dir = $template_dir;
+				$this->template_dir($template_dir);
 
 			if(!empty($cache_dir)) {
-				$this->cache_dir = $cache_dir;
+				$this->cache_dir($cache_dir);
 			}
-			$this->smarty = new \Smarty();
 		}
 
 		public function assign($key, $value) {
@@ -69,6 +69,7 @@
 				return $this->cache_dir;
 
 			if(file_exists($cache_dir)) {
+				$this->cache_dir = $cache_dir;
 				$this->smarty->setCompileDir($this->cache_dir);
 				$this->smarty->setCacheDir($this->cache_dir);
 			} else {
