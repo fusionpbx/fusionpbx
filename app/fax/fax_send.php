@@ -729,76 +729,48 @@ else {
 			$dial_string .= "fax_retry_sleep=180"  . ",";
 			//$dial_string .= "fax_verbose=true"     . ",";
 			$dial_string .= "fax_use_ecm=off"      . ",";
-			if ($_SESSION['fax_queue']['enabled']['boolean']) {
-				$dial_string .= "api_hangup_hook='lua app/fax/resources/scripts/hangup_tx.lua'";
-			}
-			else {
-				$dial_string .= "api_hangup_hook='lua fax_retry.lua'";
-			}
+			$dial_string .= "api_hangup_hook='lua app/fax/resources/scripts/hangup_tx.lua'";
 			$dial_string  = "{" . $dial_string . "}" . $fax_uri." &txfax('".$fax_file."')";
 
-			//add fax to the fax queue or send it directly
-			if ($_SESSION['fax_queue']['enabled']['boolean']) {
-				//build an array to add the fax to the queue
-				$array['fax_queue'][0]['fax_queue_uuid'] = $fax_queue_uuid;
-				$array['fax_queue'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
-				$array['fax_queue'][0]['fax_uuid'] = $fax_uuid;
-				$array['fax_queue'][0]['fax_date'] = 'now()';
-				$array['fax_queue'][0]['hostname'] = gethostname();
-				$array['fax_queue'][0]['fax_caller_id_name'] = $fax_caller_id_name;
-				$array['fax_queue'][0]['fax_caller_id_number'] = $fax_caller_id_number;
-				$array['fax_queue'][0]['fax_number'] = $fax_number;
-				$array['fax_queue'][0]['fax_prefix'] = $fax_prefix;
-				$array['fax_queue'][0]['fax_email_address'] = $mail_to_address;
-				$array['fax_queue'][0]['fax_file'] = $fax_file;
-				$array['fax_queue'][0]['fax_status'] = 'waiting';
-				//$array['fax_queue'][0]['fax_retry_date'] = $fax_retry_date;
-				$array['fax_queue'][0]['fax_retry_count'] = 0;
-				$array['fax_queue'][0]['fax_accountcode'] = $fax_accountcode;
-				$array['fax_queue'][0]['fax_command'] = 'originate '.$dial_string;
+			//build an array to add the fax to the queue
+			$array['fax_queue'][0]['fax_queue_uuid'] = $fax_queue_uuid;
+			$array['fax_queue'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
+			$array['fax_queue'][0]['fax_uuid'] = $fax_uuid;
+			$array['fax_queue'][0]['fax_date'] = 'now()';
+			$array['fax_queue'][0]['hostname'] = gethostname();
+			$array['fax_queue'][0]['fax_caller_id_name'] = $fax_caller_id_name;
+			$array['fax_queue'][0]['fax_caller_id_number'] = $fax_caller_id_number;
+			$array['fax_queue'][0]['fax_number'] = $fax_number;
+			$array['fax_queue'][0]['fax_prefix'] = $fax_prefix;
+			$array['fax_queue'][0]['fax_email_address'] = $mail_to_address;
+			$array['fax_queue'][0]['fax_file'] = $fax_file;
+			$array['fax_queue'][0]['fax_status'] = 'waiting';
+			//$array['fax_queue'][0]['fax_retry_date'] = $fax_retry_date;
+			$array['fax_queue'][0]['fax_retry_count'] = 0;
+			$array['fax_queue'][0]['fax_accountcode'] = $fax_accountcode;
+			$array['fax_queue'][0]['fax_command'] = 'originate '.$dial_string;
 
-				//add temporary permisison
-				$p = new permissions;
-				$p->add('fax_queue_add', 'temp');
+			//add temporary permisison
+			$p = new permissions;
+			$p->add('fax_queue_add', 'temp');
 
-				//save the data
-				$database = new database;
-				$database->app_name = 'fax queue';
-				$database->app_uuid = '3656287f-4b22-4cf1-91f6-00386bf488f4';
-				$database->save($array);
+			//save the data
+			$database = new database;
+			$database->app_name = 'fax queue';
+			$database->app_uuid = '3656287f-4b22-4cf1-91f6-00386bf488f4';
+			$database->save($array);
 
-				//remove temporary permisison
-				$p->delete('fax_queue_add', 'temp');
-				
-				//add message to show in the browser
-				message::add($text['confirm-queued']);
-			}
-			else {
-				//send the fax directly
-				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-				if ($fp) {
-					$cmd = "api originate " . $dial_string;
-					$response = event_socket_request($fp, $cmd);
-					$response = str_replace("\n", "", $response);
-					$uuid = str_replace("+OK ", "", $response);
-				}
-				fclose($fp);
-				
-				//add message to show in the browser
-				message::add($text['confirm-sent']." ".$response);
-			}
+			//remove temporary permisison
+			$p->delete('fax_queue_add', 'temp');
+			
+			//add message to show in the browser
+			message::add($text['confirm-queued']);
 		}
 
 		//redirect the browser
 		if (!$included && is_uuid($fax_uuid)) {
-			if ($_SESSION['fax_queue']['enabled']['boolean']) {
-				//header("Location: ".PROJECT_PATH."/app/fax_queue/fax_queue.php?id=".$fax_uuid);
-				header("Location: ".PROJECT_PATH."fax.php");
-			}
-			else {
-				header("Location: fax_files.php?id=".$fax_uuid."&box=sent");
-				//header("Location: fax_outbox.php?id=".$fax_uuid);
-			}
+			header("Location: fax_files.php?id=".$fax_uuid."&box=sent");
+			//header("Location: fax_outbox.php?id=".$fax_uuid);
 			exit;
 		}
 
