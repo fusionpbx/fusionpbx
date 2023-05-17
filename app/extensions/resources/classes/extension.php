@@ -559,7 +559,7 @@ if (!class_exists('extension')) {
 						//build the delete array
 							$y = @sizeof($records) + 1;
 							foreach ($records as $x => $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 
 									//get the extension details
 										$sql = "select extension, number_alias, user_context, follow_me_uuid from v_extensions ";
@@ -669,7 +669,7 @@ if (!class_exists('extension')) {
 									unset($extensions);
 
 								//synchronize configuration
-									if (is_writable($_SESSION['switch']['extensions']['dir'])) {
+									if (!empty($_SESSION['switch']['extensions']['dir']) && is_writable($_SESSION['switch']['extensions']['dir'])) {
 										$this->xml();
 									}
 
