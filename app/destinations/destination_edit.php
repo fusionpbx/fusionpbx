@@ -1147,10 +1147,18 @@
 	unset($sql, $parameters);
 
 //add an empty row to the array
-	$x = (!empty($dialplan_details)) ? count($dialplan_details) : $x = 0;
+	if (empty($dialplan_details)) {
+		//create an empty array
+		$dialplan_details = [];
+		$x = 0;
+	}
+	else {
+		//count the rows in the array
+		$x = count($dialplan_details);
+	}
 	$limit = $x + 1;
 	while($x < $limit) {
-		$dialplan_details[$x]['domain_uuid'] = $domain_uuid ?? null;
+		$dialplan_details[$x]['domain_uuid'] = $domain_uuid;
 		$dialplan_details[$x]['dialplan_uuid'] = $dialplan_uuid;
 		$dialplan_details[$x]['dialplan_detail_type'] = '';
 		$dialplan_details[$x]['dialplan_detail_data'] = '';
@@ -1158,6 +1166,7 @@
 		$x++;
 	}
 	unset($limit);
+
 
 //remove previous fax details
 	$x = 0;
