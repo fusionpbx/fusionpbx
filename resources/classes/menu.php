@@ -403,12 +403,12 @@ https://www.fusionpbx.com/app/pages/page.php?id=f48cceb2-5e31-47c2-a84a-8f45d805
 									}
 									$uuid = $menu['uuid'];
 									$menu_item_uuid = $uuid_array[$menu['uuid']];
-									$menu_item_parent_uuid = $uuid_array[$menu['parent_uuid']];
+									$menu_item_parent_uuid = $uuid_array[$menu['parent_uuid']] ?? null;
 									$menu_item_category = $menu['category'];
-									$menu_item_icon = $menu['icon'];
+									$menu_item_icon = $menu['icon'] ?? null;
 									$menu_item_path = $menu['path'];
-									$menu_item_order = $menu['order'];
-									$menu_item_description = $menu['desc'];
+									$menu_item_order = $menu['order'] ?? null;
+									$menu_item_description = $menu['desc'] ?? null;
 
 								//sanitize the menu link
 									$menu_item_path = preg_replace('#[^a-zA-Z0-9_:\-\.\&\=\?\/]#', '', $menu_item_path);
@@ -465,8 +465,10 @@ https://www.fusionpbx.com/app/pages/page.php?id=f48cceb2-5e31-47c2-a84a-8f45d805
 									if (!$menu_item_exists && is_array($language->languages)) {
 										foreach ($language->languages as $menu_language) {
 											//set the menu item title
-												$menu_item_title = $menu["title"][$menu_language];
-												if (empty($menu_item_title)) {
+												if (!empty($menu["title"][$menu_language])) {
+													$menu_item_title = $menu["title"][$menu_language];
+												}
+												else {
 													$menu_item_title = $menu["title"]['en-us'];
 												}
 
