@@ -163,6 +163,10 @@ if (!class_exists('destinations')) {
 			//set the global variables
 			global $db_type;
 
+			//set defaults
+			$select_style = '';
+			$onchange = '';
+
 			//get the domain_name
 			$sql = "select domain_name from v_domains ";
 			$sql .= "where domain_uuid = :domain_uuid ";
@@ -171,7 +175,7 @@ if (!class_exists('destinations')) {
 			$this->domain_name = $database->select($sql, $parameters, 'column');
 
 			//create a single destination select list
-			if ($_SESSION['destinations']['select_mode']['text'] == 'default') {
+			if (!empty($_SESSION['destinations']['select_mode']['text']) && $_SESSION['destinations']['select_mode']['text'] == 'default') {
 				//get the destinations
 				if (!is_array($this->destinations)) {
 
@@ -296,7 +300,7 @@ if (!class_exists('destinations')) {
 					$response .= "	tb.className='formfld';\n";
 					$response .= "	tb.setAttribute('id', '".$destination_id."');\n";
 					$response .= "	tb.setAttribute('style', '".$select_style."');\n";
-					if ($onchange != '') {
+					if (!empty($onchange)) {
 						$response .= "	tb.setAttribute('onchange', \"".$onchange."\");\n";
 						$response .= "	tb.setAttribute('onkeyup', \"".$onchange."\");\n";
 					}
@@ -320,7 +324,7 @@ if (!class_exists('destinations')) {
 					$response .= "	obj[0].parentNode.removeChild(obj[1]);\n";
 					$response .= "	obj[0].parentNode.removeChild(obj[2]);\n";
 					$response .= "	document.getElementById('btn_select_to_input_".$destination_id."').style.visibility = 'visible';\n";
-					if ($onchange != '') {
+					if (!empty($onchange)) {
 						$response .= "	".$onchange.";\n";
 					}
 					$response .= "}\n";
@@ -337,7 +341,7 @@ if (!class_exists('destinations')) {
 
 					$name = $row['name'];
 					$label = $row['label'];
-					$destination = $row['field']['destination'];
+					$destination = $row['field']['destination'] ?? '';
 
 					//add multi-lingual support
 					if (file_exists($_SERVER["PROJECT_ROOT"]."/app/".$name."/app_languages.php")) {
@@ -345,7 +349,7 @@ if (!class_exists('destinations')) {
 						$text2 = $language2->get($_SESSION['domain']['language']['code'], 'app/'.$name);
 					}
 
-					if (is_array($row['result']['data']) && count($row['result']['data']) > 0 and !empty($row['select_value'][$destination_type])) {
+					if (!empty($row['result']['data']) && !empty($row['select_value'][$destination_type])) {
 						$response .= "		<optgroup label='".$text2['title-'.$label]."'>\n";
 						$label2 = $label;
 						foreach ($row['result']['data'] as $data) {
@@ -412,7 +416,7 @@ if (!class_exists('destinations')) {
 					$destination_label = str_replace("menu-exec-app", "", $destination_label);
 					$destination_label = str_replace("transfer", "", $destination_label);
 					$destination_label = str_replace("XML ".$this->domain_name, "", $destination_label);
-					if ($destination_value != '' || $destination_label != '') {
+					if (!empty($destination_value) || !empty($destination_label)) {
 						$response .= "			<option value='".escape($destination_value)."' selected='selected'>".trim($destination_label)."</option>\n";
 					}
 				}
@@ -537,6 +541,10 @@ if (!class_exists('destinations')) {
 			//set the global variables
 			global $db_type;
 
+			//set default values
+			$destination_name = '';
+			$destination_id = '';
+
 			//get the domain_name
 			$sql = "select domain_name from v_domains ";
 			$sql .= "where domain_uuid = :domain_uuid ";
@@ -653,7 +661,7 @@ if (!class_exists('destinations')) {
 
 				$name = $row['name'];
 				$label = $row['label'];
-				$destination = $row['field']['destination'];
+				$destination = $row['field']['destination'] ?? '';
 
 				//add multi-lingual support
 				if (file_exists($_SERVER["PROJECT_ROOT"]."/app/".$name."/app_languages.php")) {
@@ -661,14 +669,14 @@ if (!class_exists('destinations')) {
 					$text2 = $language2->get($_SESSION['domain']['language']['code'], 'app/'.$name);
 				}
 
-				if (is_array($row['result']['data']) && !empty($row['select_value'][$destination_type])) {
+				if (!empty($row['result']['data']) && !empty($row['select_value'][$destination_type])) {
 					$label2 = $label;
 					foreach ($row['result']['data'] as $data) {
 						$select_value = $row['select_value'][$destination_type];
 						$select_label = $row['select_label'];
 						foreach ($row['field'] as $key => $value) {
-							if ($key == 'destination' and is_array($value)){
-								if ($value['type'] == 'csv') {
+							if ($key == 'destination' and !empty($value)){
+								if (!empty($value['type']) && $value['type'] == 'csv') {
 									$array = explode($value['delimiter'], $data[$key]);
 									$select_value = str_replace("\${destination}", $array[0], $select_value);
 									$select_label = str_replace("\${destination}", $array[0], $select_label);
@@ -714,7 +722,7 @@ if (!class_exists('destinations')) {
 						$select_label = str_replace("&#9993", 'email-icon', $select_label);
 						$select_label = escape(trim($select_label));
 						$select_label = str_replace('email-icon', '&#9993', $select_label);
-						if ($select_value == $destination_value) { $selected = "selected='selected' "; $select_found = true; } else { $selected = ''; }
+						if (!empty($destination_value) && $select_value == $destination_value) { $selected = "selected='selected' "; $select_found = true; } else { $selected = ''; }
 						if ($label2 == 'destinations') { $select_label = format_phone($select_label); }
 						$array[$label][$select_label] = $select_value;
 					}
@@ -722,9 +730,12 @@ if (!class_exists('destinations')) {
 				}
 			}
 			if (!$select_found) {
-				if(!empty($destination_value))
+				$destination_label = $destination_label ?? '';
+				$destination_value = $destination_value ?? '';
+				if(!empty($destination_value)) {
 					$destination_label = str_replace(":", " ", $destination_value);
-				$destination_label = str_replace("menu-exec-app", "", $destination_label ?? '');
+				}
+				$destination_label = str_replace("menu-exec-app", "", $destination_label);
 				$destination_label = str_replace("transfer", "", $destination_label);
 				$destination_label = str_replace("XML ".$this->domain_name, "", $destination_label);
 				$array[$label][$destination_label] = $destination_value;
