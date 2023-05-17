@@ -55,7 +55,8 @@
 	}
 
 //set the type
-	switch ($_GET['type']) {
+	$destination_type = !empty($_GET['type']) ? $_GET['type'] : 'inbound';
+	switch ($destination_type) {
 		case 'inbound': $destination_type = 'inbound'; break;
 		case 'outbound': $destination_type = 'outbound'; break;
 		case 'local': $destination_type = 'local'; break;
@@ -183,7 +184,7 @@
 
 		//check for all required data
 			$msg = '';
-			if (empty($destination_type)) { $msg .= $text['message-required']." ".$text['label-destination_type']."<br>\n"; }
+			//if (empty($destination_type)) { $msg .= $text['message-required']." ".$text['label-destination_type']."<br>\n"; }
 			//if (empty($destination_prefix) && permission_exists('destination_prefix')) { $msg .= $text['message-required']." ".$text['label-destination_country_code']."<br>\n"; }
 			if (empty($destination_number)) { $msg .= $text['message-required']." ".$text['label-destination_number']."<br>\n"; }
 			if (empty($destination_context)) { $msg .= $text['message-required']." ".$text['label-destination_context']."<br>\n"; }
@@ -1069,7 +1070,7 @@
 	$destination_enabled = '';
 	$destination_description = '';
 	$select_style = '';
-				
+		
 //pre-populate the form
 	if (!empty($_GET["id"]) > 0 && empty($_POST["persistformvar"])) {
 	 	if (is_uuid($_GET["id"])) {
@@ -1103,14 +1104,14 @@
 				$destination_conditions = $row["destination_conditions"];
 				$destination_actions = $row["destination_actions"];
 				$fax_uuid = $row["fax_uuid"];
-				$provider_uuid = $row["provider_uuid"];
+				$provider_uuid = $row["provider_uuid"] ?? '';
 				$user_uuid = $row["user_uuid"];
 				$group_uuid = $row["group_uuid"];
-				$currency = $row["currency"];
-				$destination_sell = $row["destination_sell"];
-				$destination_buy = $row["destination_buy"];
-				$currency_buy = $row["currency_buy"];
-				$destination_carrier = $row["destination_carrier"];
+				//$currency = $row["currency"] ?? ''
+				//$destination_sell = $row["destination_sell"];
+				//$destination_buy = $row["destination_buy"];
+				//$currency_buy = $row["currency_buy"];
+				//$destination_carrier = $row["destination_carrier"];
 				$destination_order = $row["destination_order"];
 				$destination_enabled = $row["destination_enabled"];
 				$destination_description = $row["destination_description"];
@@ -1362,6 +1363,7 @@
 	echo "</td>\n";
 	echo "<td width='70%' class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='destination_type' id='destination_type' onchange='type_control(this.options[this.selectedIndex].value);context_control();'>\n";
+
 	switch ($destination_type) {
 		case "inbound" :	$selected[0] = "selected='selected'";	break;
 		case "outbound" :	$selected[1] = "selected='selected'";	break;

@@ -292,6 +292,10 @@
 		$x = 0;
 		foreach($destinations as $row) {
 
+			//define variables with an empty string
+			$destination_app = '';
+			$destination_data = '';
+
 			//prepare the destination actions
 			$destination_actions = json_decode($row['destination_actions'], true);
 			if (!empty($destination_actions)) {
