@@ -710,7 +710,7 @@ if (!class_exists('extension')) {
 
 						//get current toggle state
 							foreach($records as $x => $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$uuids[] = "'".$record['uuid']."'";
 								}
 							}
@@ -759,7 +759,7 @@ if (!class_exists('extension')) {
 									$p->delete('extension_edit', 'temp');
 
 								//synchronize configuration
-									if (is_writable($_SESSION['switch']['extensions']['dir'])) {
+									if (!empty($_SESSION['switch']['extensions']['dir']) && is_writable($_SESSION['switch']['extensions']['dir'])) {
 										$this->xml();
 									}
 
