@@ -85,7 +85,7 @@
 		$user_setting_name = strtolower($_POST["user_setting_name"] ?? '');
 		$user_setting_value = $_POST["user_setting_value"] ?? '';
 		$user_setting_order = $_POST["user_setting_order"] ?? '';
-		$user_setting_enabled = strtolower($_POST["user_setting_enabled"] ?? '');
+		$user_setting_enabled = strtolower($_POST["user_setting_enabled"] ?? 'false');
 		$user_setting_description = $_POST["user_setting_description"] ?? '';
 	}
 
@@ -105,7 +105,7 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 		}
 
 	//check for all required/authorized data
-		if (empty($user_setting_category) || (is_array($allowed_categories) && sizeof($allowed_categories) > 0 && !in_array(strtolower($user_setting_category), $allowed_categories))) { $msg .= $text['message-required'].$text['label-category']."<br>\n"; }
+		if (empty($user_setting_category) || (!empty($allowed_categories) && is_array($allowed_categories) && sizeof($allowed_categories) > 0 && !in_array(strtolower($user_setting_category), $allowed_categories))) { $msg .= $text['message-required'].$text['label-category']."<br>\n"; }
 		if (empty($user_setting_subcategory)) { $msg .= $text['message-required'].$text['label-subcategory']."<br>\n"; }
 		if (empty($user_setting_name)) { $msg .= $text['message-required'].$text['label-type']."<br>\n"; }
 		//if (empty($user_setting_value)) { $msg .= $text['message-required'].$text['label-value']."<br>\n"; }
@@ -735,7 +735,7 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 	}
 	echo "	</select>\n";
 	echo "	<br />\n";
-	echo $text['description-order']."\n";
+	echo $text['description-order'] ?? ''."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "</table>\n";

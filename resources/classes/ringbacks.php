@@ -61,7 +61,7 @@ if (!class_exists('ringbacks')) {
 						$ringtones_list[$ringtone] = $label;
 					}
 				}
-				$this->ringtones_list = $ringtones_list;
+				$this->ringtones_list = $ringtones_list ?? '';
 				unset($sql, $ringtones, $ringtone, $ringtones_list);
 
 			//get the default_ringback label

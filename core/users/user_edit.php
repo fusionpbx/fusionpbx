@@ -38,7 +38,7 @@
 	$text = $language->get();
 
 //get user uuid
-	if ((is_uuid($_REQUEST["id"]) && permission_exists('user_edit')) || (is_uuid($_REQUEST["id"]) && $_REQUEST["id"] == $_SESSION['user_uuid'])) {
+	if (!empty($_REQUEST["id"]) && ((is_uuid($_REQUEST["id"]) && permission_exists('user_edit')) || (is_uuid($_REQUEST["id"]) && $_REQUEST["id"] == $_SESSION['user_uuid']))) {
 		$user_uuid = $_REQUEST["id"];
 		$action = 'edit';
 	}
@@ -113,7 +113,7 @@
 	$required['special'] = ($_SESSION['users']['password_special']['boolean'] == 'true') ? true : false;
 
 //prepare the data
-	if (count($_POST) > 0) {
+	if (!empty($_POST)) {
 
 		//get the HTTP values and set as variables
 			if (permission_exists('user_edit') && $action == 'edit') {
@@ -172,7 +172,7 @@
 			if ((permission_exists('user_edit') && $action == 'edit' && $username != $username_old && $username != '') ||
 				(permission_exists('user_add') && $action == 'add' && $username != '')) {
 				$sql = "select count(*) from v_users where username = :username ";
-				if ($_SESSION["users"]["unique"]["text"] != "global") {
+				if (!empty($_SESSION["users"]["unique"]["text"]) && $_SESSION["users"]["unique"]["text"] != "global") {
 					$sql .= "and domain_uuid = :domain_uuid ";
 					$parameters['domain_uuid'] = $domain_uuid;
 				}
@@ -182,7 +182,7 @@
 				if ($num_rows > 0) {
 					message::add($text['message-username_exists'], 'negative', 7500);
 				}
-				unset($sql);
+				unset($sql, $parameters);
 			}
 			if ($password != '' && $password != $password_confirm) {
 				message::add($text['message-password_mismatch'], 'negative', 7500);
@@ -249,7 +249,7 @@
 			$parameters['user_uuid'] = $user_uuid;
 			$database = new database;
 			$row = $database->select($sql, $parameters, 'row');
-			if (!is_uuid($row['user_setting_uuid']) && $user_language != '') {
+			if (!empty($user_language) && (empty($row) || (!empty($row['user_setting_uuid']) && !is_uuid($row['user_setting_uuid'])))) {
 				//add user setting to array for insert
 					$array['user_settings'][$i]['user_setting_uuid'] = uuid();
 					$array['user_settings'][$i]['user_uuid'] = $user_uuid;
@@ -262,7 +262,7 @@
 					$i++;
 			}
 			else {
-				if ($row['user_setting_value'] == '' || $user_language == '') {
+				if (empty($row['user_setting_value']) || empty($user_language)) {
 					$array_delete['user_settings'][0]['user_setting_category'] = 'domain';
 					$array_delete['user_settings'][0]['user_setting_subcategory'] = 'language';
 					$array_delete['user_settings'][0]['user_uuid'] = $user_uuid;
@@ -278,7 +278,7 @@
 
 					$p->delete('user_setting_delete', 'temp');
 				}
-				else {
+				if (!empty($user_language)) {
 					//add user setting to array for update
 					$array['user_settings'][$i]['user_setting_uuid'] = $row['user_setting_uuid'];
 					$array['user_settings'][$i]['user_uuid'] = $user_uuid;
@@ -301,7 +301,7 @@
 			$parameters['user_uuid'] = $user_uuid;
 			$database = new database;
 			$row = $database->select($sql, $parameters, 'row');
-			if (empty($row['user_setting_uuid']) && !empty($user_time_zone)) {
+			if (!empty($user_time_zone) && (empty($row) || (!empty($row['user_setting_uuid']) && !is_uuid($row['user_setting_uuid'])))) {
 				//add user setting to array for insert
 				$array['user_settings'][$i]['user_setting_uuid'] = uuid();
 				$array['user_settings'][$i]['user_uuid'] = $user_uuid;
@@ -314,7 +314,7 @@
 				$i++;
 			}
 			else {
-				if (empty($row['user_setting_value']) || !empty($user_time_zone)) {
+				if (empty($row['user_setting_value']) || empty($user_time_zone)) {
 					$array_delete['user_settings'][0]['user_setting_category'] = 'domain';
 					$array_delete['user_settings'][0]['user_setting_subcategory'] = 'time_zone';
 					$array_delete['user_settings'][0]['user_uuid'] = $user_uuid;
@@ -330,7 +330,7 @@
 
 					$p->delete('user_setting_delete', 'temp');
 				}
-				else {
+				if (!empty($user_time_zone)) {
 					//add user setting to array for update
 					$array['user_settings'][$i]['user_setting_uuid'] = $row['user_setting_uuid'];
 					$array['user_settings'][$i]['user_uuid'] = $user_uuid;
@@ -354,7 +354,7 @@
 				$parameters['user_uuid'] = $user_uuid;
 				$database = new database;
 				$row = $database->select($sql, $parameters, 'row');
-				if ($row['user_setting_uuid'] == '' && $message_key != '') {
+				if (!empty($message_key) && (empty($row) || (!empty($row['user_setting_uuid']) && !is_uuid($row['user_setting_uuid'])))) {
 					//add user setting to array for insert
 					$array['user_settings'][$i]['user_setting_uuid'] = uuid();
 					$array['user_settings'][$i]['user_uuid'] = $user_uuid;
@@ -367,7 +367,7 @@
 					$i++;
 				}
 				else {
-					if ($row['user_setting_value'] == '' || $message_key == '') {
+					if (empty($row['user_setting_value']) || empty($message_key)) {
 						$array_delete['user_settings'][0]['user_setting_category'] = 'message';
 						$array_delete['user_settings'][0]['user_setting_subcategory'] = 'key';
 						$array_delete['user_settings'][0]['user_uuid'] = $user_uuid;
@@ -383,7 +383,7 @@
 
 						$p->delete('user_setting_delete', 'temp');
 					}
-					else {
+					if (!empty($message_key)) {
 						//add user setting to array for update
 						$array['user_settings'][$i]['user_setting_uuid'] = $row['user_setting_uuid'];
 						$array['user_settings'][$i]['user_uuid'] = $user_uuid;
@@ -397,6 +397,7 @@
 					}
 				}
 			}
+			unset($sql, $parameters, $row);
 
 		//assign the user to the group
 			if ((permission_exists('user_add') || permission_exists('user_edit')) && $_REQUEST["group_uuid_name"] != '') {
@@ -497,7 +498,7 @@
 		//add user setting to array for update
 			$array['users'][$x]['user_uuid'] = $user_uuid;
 			$array['users'][$x]['domain_uuid'] = $domain_uuid;
-			if ($username != '' && $username != $username_old) {
+			if ($username != '' && (empty($username_old) || $username != $username_old)) {
 				$array['users'][$x]['username'] = $username;
 			}
 			if ($password != '' && $password == $password_confirm) {
@@ -724,12 +725,12 @@
 	echo "		<td width='30%' class='vncellreq' valign='top'>".$text['label-username']."</td>";
 	echo "		<td width='70%' class='vtable'>";
 	if (permission_exists("user_edit")) {
-		echo "		<input type='text' class='formfld' name='username' id='username' autocomplete='new-password' value='".escape($username)."' required='required'>\n";
+		echo "		<input type='text' class='formfld' name='username' id='username' autocomplete='new-password' value='".escape($username ?? '')."' required='required'>\n";
 		echo "		<input type='text' style='display: none;' disabled='disabled'>\n"; //help defeat browser auto-fill
 	}
 	else {
 		echo "		".escape($username)."\n";
-		echo "		<input type='hidden' name='username' id='username' autocomplete='new-password' value='".escape($username)."'>\n";
+		echo "		<input type='hidden' name='username' id='username' autocomplete='new-password' value='".escape($username ?? '')."'>\n";
 	}
 	echo "		</td>";
 	echo "	</tr>";
@@ -780,7 +781,7 @@
 
 	echo "	<tr>";
 	echo "		<td class='vncellreq'>".$text['label-email']."</td>";
-	echo "		<td class='vtable'><input type='text' class='formfld' name='user_email' value='".escape($user_email)."' required='required'></td>";
+	echo "		<td class='vtable'><input type='text' class='formfld' name='user_email' value='".escape($user_email ?? '')."' required='required'></td>";
 	echo "	</tr>";
 
 	echo "	<tr>\n";
@@ -802,7 +803,7 @@
 	unset($sql, $languages, $row);
 	if (is_array($_SESSION['app']['languages']) && sizeof($_SESSION['app']['languages']) != 0) {
 		foreach ($_SESSION['app']['languages'] as $code) {
-			$selected = (isset($user_language) && $code == $user_language) || $code == $user_settings['domain']['language']['code'] ? "selected='selected'" : null;
+			$selected = (isset($user_language) && $code == $user_language) || (isset($user_settings['domain']['language']['code']) && $code == $user_settings['domain']['language']['code']) ? "selected='selected'" : null;
 			echo "	<option value='".$code."' ".$selected.">".escape($language_codes[$code] ?? null)." [".escape($code ?? null)."]</option>\n";
 		}
 	}
@@ -923,15 +924,15 @@
 	elseif ($action == 'add' && permission_exists("user_add") && permission_exists('contact_add')) {
 		echo "	<tr>";
 		echo "		<td class='vncell'>".$text['label-first_name']."</td>";
-		echo "		<td class='vtable'><input type='text' class='formfld' name='contact_name_given' value='".escape($contact_name_given)."'></td>";
+		echo "		<td class='vtable'><input type='text' class='formfld' name='contact_name_given' value='".escape($contact_name_given ?? '')."'></td>";
 		echo "	</tr>";
 		echo "	<tr>";
 		echo "		<td class='vncell'>".$text['label-last_name']."</td>";
-		echo "		<td class='vtable'><input type='text' class='formfld' name='contact_name_family' value='".escape($contact_name_family)."'></td>";
+		echo "		<td class='vtable'><input type='text' class='formfld' name='contact_name_family' value='".escape($contact_name_family ?? '')."'></td>";
 		echo "	</tr>";
 		echo "	<tr>";
 		echo "		<td class='vncell'>".$text['label-organization']."</td>";
-		echo "		<td class='vtable'><input type='text' class='formfld' name='contact_organization' value='".escape($contact_organization)."'></td>";
+		echo "		<td class='vtable'><input type='text' class='formfld' name='contact_organization' value='".escape($contact_organization ?? '')."'></td>";
 		echo "	</tr>";
 	}
 
@@ -985,7 +986,7 @@
 
 		$sql = "select * from v_groups ";
 		$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
-		if (is_array($assigned_groups) && sizeof($assigned_groups) > 0) {
+		if (!empty($assigned_groups) && is_array($assigned_groups) && sizeof($assigned_groups) > 0) {
 			$sql .= "and group_uuid not in ('".implode("','",$assigned_groups)."') ";
 		}
 		$sql .= "order by domain_uuid desc, group_name asc ";
@@ -1039,7 +1040,7 @@
 		echo "	<tr>";
 		echo "		<td class='vncell' valign='top'>".$text['label-api_key']."</td>";
 		echo "		<td class='vtable'>\n";
-		echo "			<input type='text' class='formfld' style='width: 250px; display: none;' name='api_key' id='api_key' value=\"".escape($api_key)."\" >";
+		echo "			<input type='text' class='formfld' style='width: 250px; display: none;' name='api_key' id='api_key' value=\"".escape($api_key ?? '')."\" >";
 		if (empty($api_key)) {
 			//generate api key
 			echo button::create(['type'=>'button',
@@ -1123,20 +1124,20 @@
 			'label'=>$text['button-view'],
 			'id'=>'button-totp_view',
 			'icon'=>'key',
-			'onclick'=>"document.getElementById ('totp_qr').style.display = 'inline';
-				document.getElementById ('button-totp_hide').style.display = 'inline';
-				document.getElementById ('button-totp_disable').style.display = 'inline';
-				document.getElementById ('button-totp_view').style.display = 'none';"]);
+			'onclick'=>"document.getElementById('totp_qr').style.display = 'inline';
+				document.getElementById('button-totp_hide').style.display = 'inline';
+				document.getElementById('button-totp_disable').style.display = 'inline';
+				document.getElementById('button-totp_view').style.display = 'none';"]);
 
 			echo button::create(['type'=>'button',
 			'label'=>$text['button-hide'],
 			'id'=>'button-totp_hide',
 			'icon'=>'key',
 			'style'=>'display: none;',
-			'onclick'=>"document.getElementById ('totp_qr').style.display = 'none';
-				document.getElementById ('button-totp_hide').style.display = 'none';
-				document.getElementById ('button-totp_disable').style.display = 'none';
-				document.getElementById ('button-totp_view').style.display = 'inline';"]);
+			'onclick'=>"document.getElementById('totp_qr').style.display = 'none';
+				document.getElementById('button-totp_hide').style.display = 'none';
+				document.getElementById('button-totp_disable').style.display = 'none';
+				document.getElementById('button-totp_view').style.display = 'inline';"]);
 
 			echo button::create(['type'=>'button',
 				'label'=>$text['button-disable'],
