@@ -100,7 +100,7 @@
 	}
 
 //set the type
-	$destination_type = '';
+	$destination_type = 'inbound';
 	if (!empty($_REQUEST['type'])) {
 		switch ($_REQUEST['type']) {
 			case 'inbound': $destination_type = 'inbound'; break;
