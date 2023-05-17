@@ -75,7 +75,7 @@ class token {
 	 * @var string $key
 	 * @var string $value
 	 */
-	public function validate($key, $value = null) {
+	public function validate($key, $value = '') {
 
 		//allow only specific characters
 			$key = preg_replace('[^a-zA-Z0-9]', '', $key);
