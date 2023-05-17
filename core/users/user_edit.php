@@ -113,8 +113,8 @@
 	$required['special'] = ($_SESSION['users']['password_special']['boolean'] == 'true') ? true : false;
 
 //prepare the data
-	if (count($_POST) > 0) {
-
+	if (!empty($_POST)) {
+view_array($_POST, 0);
 		//get the HTTP values and set as variables
 			if (permission_exists('user_edit') && $action == 'edit') {
 				$user_uuid = $_REQUEST["id"];
@@ -172,7 +172,7 @@
 			if ((permission_exists('user_edit') && $action == 'edit' && $username != $username_old && $username != '') ||
 				(permission_exists('user_add') && $action == 'add' && $username != '')) {
 				$sql = "select count(*) from v_users where username = :username ";
-				if ($_SESSION["users"]["unique"]["text"] != "global") {
+				if (!empty($_SESSION["users"]["unique"]["text"]) && $_SESSION["users"]["unique"]["text"] != "global") {
 					$sql .= "and domain_uuid = :domain_uuid ";
 					$parameters['domain_uuid'] = $domain_uuid;
 				}
@@ -182,7 +182,7 @@
 				if ($num_rows > 0) {
 					message::add($text['message-username_exists'], 'negative', 7500);
 				}
-				unset($sql);
+				unset($sql, $parameters);
 			}
 			if ($password != '' && $password != $password_confirm) {
 				message::add($text['message-password_mismatch'], 'negative', 7500);
@@ -249,7 +249,7 @@
 			$parameters['user_uuid'] = $user_uuid;
 			$database = new database;
 			$row = $database->select($sql, $parameters, 'row');
-			if (!is_uuid($row['user_setting_uuid']) && $user_language != '') {
+			if (!empty($user_language) && (empty($row) || (!empty($row['user_setting_uuid']) && !is_uuid($row['user_setting_uuid'])))) {
 				//add user setting to array for insert
 					$array['user_settings'][$i]['user_setting_uuid'] = uuid();
 					$array['user_settings'][$i]['user_uuid'] = $user_uuid;
@@ -262,7 +262,7 @@
 					$i++;
 			}
 			else {
-				if ($row['user_setting_value'] == '' || $user_language == '') {
+				if (empty($row['user_setting_value']) || empty($user_language)) {
 					$array_delete['user_settings'][0]['user_setting_category'] = 'domain';
 					$array_delete['user_settings'][0]['user_setting_subcategory'] = 'language';
 					$array_delete['user_settings'][0]['user_uuid'] = $user_uuid;
@@ -278,7 +278,7 @@
 
 					$p->delete('user_setting_delete', 'temp');
 				}
-				else {
+				if (!empty($user_language)) {
 					//add user setting to array for update
 					$array['user_settings'][$i]['user_setting_uuid'] = $row['user_setting_uuid'];
 					$array['user_settings'][$i]['user_uuid'] = $user_uuid;
@@ -301,7 +301,7 @@
 			$parameters['user_uuid'] = $user_uuid;
 			$database = new database;
 			$row = $database->select($sql, $parameters, 'row');
-			if (empty($row['user_setting_uuid']) && !empty($user_time_zone)) {
+			if (!empty($user_time_zone) && (empty($row) || (!empty($row['user_setting_uuid']) && !is_uuid($row['user_setting_uuid'])))) {
 				//add user setting to array for insert
 				$array['user_settings'][$i]['user_setting_uuid'] = uuid();
 				$array['user_settings'][$i]['user_uuid'] = $user_uuid;
@@ -314,7 +314,7 @@
 				$i++;
 			}
 			else {
-				if (empty($row['user_setting_value']) || !empty($user_time_zone)) {
+				if (empty($row['user_setting_value']) || empty($user_time_zone)) {
 					$array_delete['user_settings'][0]['user_setting_category'] = 'domain';
 					$array_delete['user_settings'][0]['user_setting_subcategory'] = 'time_zone';
 					$array_delete['user_settings'][0]['user_uuid'] = $user_uuid;
@@ -330,7 +330,7 @@
 
 					$p->delete('user_setting_delete', 'temp');
 				}
-				else {
+				if (!empty($user_time_zone)) {
 					//add user setting to array for update
 					$array['user_settings'][$i]['user_setting_uuid'] = $row['user_setting_uuid'];
 					$array['user_settings'][$i]['user_uuid'] = $user_uuid;
@@ -354,7 +354,7 @@
 				$parameters['user_uuid'] = $user_uuid;
 				$database = new database;
 				$row = $database->select($sql, $parameters, 'row');
-				if ($row['user_setting_uuid'] == '' && $message_key != '') {
+				if (!empty($message_key) && (empty($row) || (!empty($row['user_setting_uuid']) && !is_uuid($row['user_setting_uuid'])))) {
 					//add user setting to array for insert
 					$array['user_settings'][$i]['user_setting_uuid'] = uuid();
 					$array['user_settings'][$i]['user_uuid'] = $user_uuid;
@@ -367,7 +367,7 @@
 					$i++;
 				}
 				else {
-					if ($row['user_setting_value'] == '' || $message_key == '') {
+					if (empty($row['user_setting_value']) || empty($message_key)) {
 						$array_delete['user_settings'][0]['user_setting_category'] = 'message';
 						$array_delete['user_settings'][0]['user_setting_subcategory'] = 'key';
 						$array_delete['user_settings'][0]['user_uuid'] = $user_uuid;
@@ -383,7 +383,7 @@
 
 						$p->delete('user_setting_delete', 'temp');
 					}
-					else {
+					if (!empty($message_key)) {
 						//add user setting to array for update
 						$array['user_settings'][$i]['user_setting_uuid'] = $row['user_setting_uuid'];
 						$array['user_settings'][$i]['user_uuid'] = $user_uuid;
@@ -397,6 +397,7 @@
 					}
 				}
 			}
+			unset($sql, $parameters, $row);
 
 		//assign the user to the group
 			if ((permission_exists('user_add') || permission_exists('user_edit')) && $_REQUEST["group_uuid_name"] != '') {
@@ -802,7 +803,7 @@
 	unset($sql, $languages, $row);
 	if (is_array($_SESSION['app']['languages']) && sizeof($_SESSION['app']['languages']) != 0) {
 		foreach ($_SESSION['app']['languages'] as $code) {
-			$selected = (isset($user_language) && $code == $user_language) || $code == $user_settings['domain']['language']['code'] ? "selected='selected'" : null;
+			$selected = (isset($user_language) && $code == $user_language) || (isset($user_settings['domain']['language']['code']) && $code == $user_settings['domain']['language']['code']) ? "selected='selected'" : null;
 			echo "	<option value='".$code."' ".$selected.">".escape($language_codes[$code] ?? null)." [".escape($code ?? null)."]</option>\n";
 		}
 	}
@@ -1123,20 +1124,20 @@
 			'label'=>$text['button-view'],
 			'id'=>'button-totp_view',
 			'icon'=>'key',
-			'onclick'=>"document.getElementById ('totp_qr').style.display = 'inline';
-				document.getElementById ('button-totp_hide').style.display = 'inline';
-				document.getElementById ('button-totp_disable').style.display = 'inline';
-				document.getElementById ('button-totp_view').style.display = 'none';"]);
+			'onclick'=>"document.getElementById('totp_qr').style.display = 'inline';
+				document.getElementById('button-totp_hide').style.display = 'inline';
+				document.getElementById('button-totp_disable').style.display = 'inline';
+				document.getElementById('button-totp_view').style.display = 'none';"]);
 
 			echo button::create(['type'=>'button',
 			'label'=>$text['button-hide'],
 			'id'=>'button-totp_hide',
 			'icon'=>'key',
 			'style'=>'display: none;',
-			'onclick'=>"document.getElementById ('totp_qr').style.display = 'none';
-				document.getElementById ('button-totp_hide').style.display = 'none';
-				document.getElementById ('button-totp_disable').style.display = 'none';
-				document.getElementById ('button-totp_view').style.display = 'inline';"]);
+			'onclick'=>"document.getElementById('totp_qr').style.display = 'none';
+				document.getElementById('button-totp_hide').style.display = 'none';
+				document.getElementById('button-totp_disable').style.display = 'none';
+				document.getElementById('button-totp_view').style.display = 'inline';"]);
 
 			echo button::create(['type'=>'button',
 				'label'=>$text['button-disable'],
