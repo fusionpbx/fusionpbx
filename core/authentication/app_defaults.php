@@ -11,7 +11,7 @@
 		$array['email_templates'][$x]['template_category'] = 'authentication';
 		$array['email_templates'][$x]['template_subcategory'] = 'email';
 		$array['email_templates'][$x]['template_subject'] = 'Authentication Code';
-		$array['email_templates'][$x]['template_body'] .= "<html>\n";
+		$array['email_templates'][$x]['template_body'] = "<html>\n";
 		$array['email_templates'][$x]['template_body'] .= "	<body>\n";
 		$array['email_templates'][$x]['template_body'] .= "		<br />\n";
 		$array['email_templates'][$x]['template_body'] .= "		<br><strong>Security Code</strong><br><br>\n";
@@ -28,7 +28,7 @@
 		$array['email_templates'][$x]['template_category'] = 'authentication';
 		$array['email_templates'][$x]['template_subcategory'] = 'email';
 		$array['email_templates'][$x]['template_subject'] = 'Authentication Code';
-		$array['email_templates'][$x]['template_body'] .= "<html>\n";
+		$array['email_templates'][$x]['template_body'] = "<html>\n";
 		$array['email_templates'][$x]['template_body'] .= "	<body>\n";
 		$array['email_templates'][$x]['template_body'] .= "		<br />\n";
 		$array['email_templates'][$x]['template_body'] .= "		<br><strong>Security Code</strong><br><br>\n";
@@ -49,7 +49,7 @@
 		}
 
 		//add the email templates to the database
-		if (is_array($uuids) && @sizeof($uuids) != 0) {
+		if (!empty($uuids)) {
 			$sql = "select * from v_email_templates where ";
 			foreach ($uuids as $index => $uuid) {
 				$sql_where[] = "email_template_uuid = :email_template_uuid_".$index;
@@ -74,7 +74,7 @@
 		}
 
 		//add the missing email templates
-		if (is_array($array['email_templates']) && @sizeof($array['email_templates']) != 0) {
+		if (!empty($array['email_templates'])) {
 			//add the temporary permission
 			$p = new permissions;
 			$p->add("email_template_add", 'temp');
@@ -93,7 +93,9 @@
 		}
 
 		//remove the array
-		unset($array);
+		if (!empty($array)) {
+			unset($array);
+		}
 
 	}
 

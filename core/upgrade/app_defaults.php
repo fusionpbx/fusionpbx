@@ -27,7 +27,9 @@
 if ($domains_processed == 1) {
 
 	//remove smarty cache
-		system('rm '.sys_get_temp_dir().'/*.php');
+		foreach(glob(sys_get_temp_dir().'*.php') as $file) {
+			unlink($file);
+		}
 
 	//ensure the login message is set, if new message exists
 		$sql = "select count(*) as num_rows from v_default_settings ";

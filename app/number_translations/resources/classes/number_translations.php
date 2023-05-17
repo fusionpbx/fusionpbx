@@ -127,7 +127,7 @@ if (!class_exists('number_translations')) {
 						$database->app_uuid = '6ad54de6-4909-11e7-a919-92ebcb67fe33';
 						$database->save($array);
 						unset($array);
-						if ($this->display_type == "text") {
+						if (!empty($this->display_type) && $this->display_type == "text") {
 							if ($database->message['code'] != '200') { 
 								echo "number_translation:".$number_translation['@attributes']['name'].":	failed: ".$database->message['message']."\n";
 							}

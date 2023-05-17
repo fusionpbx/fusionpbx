@@ -37,7 +37,7 @@ if ($domains_processed == 1) {
 		$extensions = $database->select($sql, null, 'all');
 		unset($sql);
 
-		if (is_array($extensions) && @sizeof($extensions) != 0) {
+		if (!empty($extensions)) {
 			foreach($extensions as $row) {
 				$sql = "update v_destinations ";
 				$sql .= "set destination_app = :destination_app, destination_data = :destination_data ";
@@ -65,17 +65,17 @@ if ($domains_processed == 1) {
 			//loop through the array
 			foreach ($destinations as $row) {
 				//prepare the actions array
-				if (isset($row['destination_app']) && $row['destination_data'] != '') {
+				if (isset($row['destination_app']) && !empty($row['destination_data'])) {
 					$actions[0]['destination_app'] = $row['destination_app'];
 					$actions[0]['destination_data'] = $row['destination_data'];
 				}
-				if (isset($row['destination_alternate_data']) && $row['destination_alternate_data'] != '') {
+				if (isset($row['destination_alternate_data']) && !empty($row['destination_alternate_data'])) {
 					$actions[1]['destination_app'] = $row['destination_alternate_app'];
 					$actions[1]['destination_data'] = $row['destination_alternate_data'];
 				}
 
 				//build the array of destinations
-				if (is_array($actions)) {
+				if (!empty($actions)) {
 					$array['destinations'][$z]['destination_uuid'] = $row['destination_uuid'];
 					$array['destinations'][$z]['destination_actions'] = json_encode($actions);
 					$z++;
@@ -84,7 +84,7 @@ if ($domains_processed == 1) {
 				//process a chunk of the array
 				if ($row_id === 1000) {
 					//save to the data
-					if (is_array($array)) {
+					if (!empty($array)) {
 						//add temporary permissions
 						$p = new permissions;
 						$p->add('destination_edit', 'temp');
@@ -111,7 +111,7 @@ if ($domains_processed == 1) {
 				unset($actions);
 			}
 
-			if (is_array($array)) {
+			if (!empty($array)) {
 				//add temporary permissions
 				$p = new permissions;
 				$p->add('destination_edit', 'temp');

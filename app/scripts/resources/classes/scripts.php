@@ -85,9 +85,9 @@ if (!class_exists('scripts')) {
 		 * Copy the switch scripts from the web directory to the switch directory
 		 */
 		public function copy_files() {
-			if (is_array($_SESSION['switch']['scripts'])) {
+			if (!empty($_SESSION['switch']['scripts'])) {
 				$destination_directory = $_SESSION['switch']['scripts']['dir'];
-				if (file_exists($destination_directory)) {
+				if ($destination_directory != '' && file_exists($destination_directory)) {
 					//get the source directory
 					if (file_exists('/usr/share/examples/fusionpbx/scripts')) {
 						$source_directory = '/usr/share/examples/fusionpbx/scripts';

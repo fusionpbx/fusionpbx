@@ -109,19 +109,23 @@
 					$array['dialplans'][0]['dialplan_context'] = $this->dialplan_context;
 					$array['dialplans'][0]['dialplan_enabled'] = $this->dialplan_enabled;
 					$array['dialplans'][0]['dialplan_description'] = $this->dialplan_description;
+
 				//grant temporary permissions
 					$p = new permissions;
 					$p->add('dialplan_add', 'temp');
+
 				//execute insert
 					$database = new database;
 					$database->app_name = 'dialplans';
 					$database->app_uuid = '742714e5-8cdf-32fd-462c-cbe7e3d655db';
 					$database->save($array);
 					unset($array);
+
 				//clear the destinations session array
 					if (isset($_SESSION['destinations']['array'])) {
 						unset($_SESSION['destinations']['array']);
 					}
+
 				//revoke temporary permissions
 					$p->delete('dialplan_add', 'temp');
 			}
@@ -133,19 +137,23 @@
 					if (!empty($this->dialplan_continue)) {
 						$array['dialplans'][0]['dialplan_continue'] = $this->dialplan_continue;
 					}
+
 					$array['dialplans'][0]['dialplan_order'] = $this->dialplan_order;
 					$array['dialplans'][0]['dialplan_context'] = $this->dialplan_context;
 					$array['dialplans'][0]['dialplan_enabled'] = $this->dialplan_enabled;
 					$array['dialplans'][0]['dialplan_description'] = $this->dialplan_description;
+
 				//grant temporary permissions
 					$p = new permissions;
 					$p->add('dialplan_edit', 'temp');
+
 				//execute update
 					$database = new database;
 					$database->app_name = 'dialplans';
 					$database->app_uuid = '742714e5-8cdf-32fd-462c-cbe7e3d655db';
 					$database->save($array);
 					unset($array);
+
 				//revoke temporary permissions
 					$p->delete('dialplan_edit', 'temp');
 			}
@@ -342,16 +350,16 @@
 													}
 													$y++;
 
-													if (is_array($row['action']) || is_array($row['anti-action'])) {
+													if (!empty($row['action']) || !empty($row['anti-action'])) {
 														$condition_self_closing_tag = false;
-														if (!is_array($row['action'][0])) {
+														if (empty($row['action'][0])) {
 															if ($row['action']['@attributes']['application']) {
 																$tmp = $row['action'];
 																unset($row['action']);
 																$row['action'][0] = $tmp;
 															}
 														}
-														if (!is_array($row['anti-action'][0])) {
+														if (empty($row['anti-action'][0])) {
 															if ($row['anti-action']['@attributes']['application']) {
 																$tmp = $row['anti-action'];
 																unset($row['anti-action']);
@@ -445,7 +453,7 @@
 							$p->add('dialplan_detail_edit', 'temp');
 
 						//save the data
-							if (is_array($array)) {
+							if (!empty($array)) {
 								//$database = new database;
 								$database->app_name = 'dialplans';
 								$database->app_uuid = '742714e5-8cdf-32fd-462c-cbe7e3d655db';
@@ -475,7 +483,7 @@
 					$destination_number = trim($destination_number);
 
 				//check the session array if it doesn't exist then build the array
-					if (!is_array($_SESSION[$_SESSION['domain_uuid']]['outbound_routes'])) {
+					if (empty($_SESSION[$_SESSION['domain_uuid']]['outbound_routes'])) {
 						//get the outbound routes from the database
 							$sql = "select * ";
 							$sql .= "from v_dialplans as d, ";
@@ -535,6 +543,7 @@
 										$previous_dialplan_uuid = $row['dialplan_uuid'];
 								}
 							}
+
 						//set the session array
 							$_SESSION[$_SESSION['domain_uuid']]['outbound_routes'] = $array;
 					}
@@ -676,7 +685,7 @@
 							$sql .= "else 100 end, \n";
 							$sql .= "s.dialplan_detail_order asc \n";
 							$database = new database;
-							$results = $database->select($sql, $parameters, 'all');
+							$results = $database->select($sql, $parameters ?? null, 'all');
 							unset($sql, $parameters);
 
 						//loop through the results to get the xml from the dialplan_xml field or from dialplan details table
@@ -914,8 +923,8 @@
 							unset($row);
 
 						// prevent partial dialplan (pass=nil may be error in sql or empty resultset)
-							if ($pass == false) {
-								if (count($results)) {
+							if (isset($pass) && $pass == false) {
+								if (!empty($results)) {
 									echo 'error while build context: ' . $this->context;
 								}
 							}
@@ -953,7 +962,7 @@
 
 				//save the dialplan xml
 					if ($this->destination == "database") {
-						if (is_array($dialplans)) {
+						if (!empty($dialplans)) {
 							$x = 0;
 							foreach ($dialplans as $key => $value) {
 								//build update array
