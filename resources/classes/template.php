@@ -29,6 +29,7 @@
 	/**
 	 * Allows the use of templates without hard-coding which template can be used with full backward compatibility
 	 *
+	 * @author Mark Crane <markjcrane@fusionpbx.com>
 	 * @author Tim Fry <tim@voipstratus.com>
 	 */
 	class template {
