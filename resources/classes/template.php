@@ -1,94 +1,71 @@
 <?php
-/*
-	FusionPBX
-	Version: MPL 1.1
 
-	The contents of this file are subject to the Mozilla Public License Version
-	1.1 (the "License"); you may not use this file except in compliance with
-	the License. You may obtain a copy of the License at
-	http://www.mozilla.org/MPL/
+	/*
+	  FusionPBX
+	  Version: MPL 1.1
 
-	Software distributed under the License is distributed on an "AS IS" basis,
-	WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
-	for the specific language governing rights and limitations under the
-	License.
+	  The contents of this file are subject to the Mozilla Public License Version
+	  1.1 (the "License"); you may not use this file except in compliance with
+	  the License. You may obtain a copy of the License at
+	  http://www.mozilla.org/MPL/
 
-	The Original Code is FusionPBX
+	  Software distributed under the License is distributed on an "AS IS" basis,
+	  WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+	  for the specific language governing rights and limitations under the
+	  License.
 
-	The Initial Developer of the Original Code is
-	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2013
-	All Rights Reserved.
+	  The Original Code is FusionPBX
 
-	Contributor(s):
-	Mark J Crane <markjcrane@fusionpbx.com>
-*/
+	  The Initial Developer of the Original Code is
+	  Mark J Crane <markjcrane@fusionpbx.com>
+	  Portions created by the Initial Developer are Copyright (C) 2018 - 2019
+	  the Initial Developer. All Rights Reserved.
 
-//define the template class
-	if (!class_exists('template')) {
-		class template {
+	  Contributor(s):
+	  Mark J Crane <markjcrane@fusionpbx.com>
+	  Tim Fry <tim@voipstratus.com>
+	 */
 
-			public $engine;
-			public $template_dir;
-			public $cache_dir;
-			private $object;
-			private $var_array;
+	/**
+	 * Description of template
+	 *
+	 * @author Tim Fry <tim@voipstratus.com>
+	 */
+	class template {
 
-			public function __construct(){
-			}
+		public $template_dir;
+		public $cache_dir;
+		public $engine;
+		/** @var $object template_engine */
+		private $object;
 
-			public function init() {
-				if ($this->engine === 'smarty') {
-					require_once "resources/templates/engine/smarty/Smarty.class.php";
-					$this->object = new Smarty();
-					$this->object->setTemplateDir($this->template_dir);
-					$this->object->setCompileDir($this->cache_dir);
-					$this->object->setCacheDir($this->cache_dir);
-				}
-				if ($this->engine === 'raintpl') {
-					require_once "resources/templates/engine/raintpl/rain.tpl.class.php";
-					$this->object = new RainTPL();
-					RainTPL::configure('tpl_dir', realpath($this->template_dir)."/");
-					RainTPL::configure('cache_dir', realpath($this->cache_dir)."/");
-				}
-				if ($this->engine === 'twig') {
-					require_once "resources/templates/engine/Twig/Autoloader.php";
-					Twig_Autoloader::register();
-					$loader = new Twig_Loader_Filesystem($this->template_dir);
-					$this->object = new Twig_Environment($loader);
-					$lexer = new Twig_Lexer($this->object, array(
-						'tag_comment'  => array('{*', '*}'),
-						'tag_block'    => array('{', '}'),
-						'tag_variable' => array('{$', '}'),
-					));
-					$this->object->setLexer($lexer);
-				}
-			}
+		public function __construct() {
+			//set the preferred engine
+			$this->engine = 'smarty';
+			//set the cache location from default settings or use the system temp dir
+			$this->cache_dir = $_SESSION['server']['temp']['dir'] ?? sys_get_temp_dir();
+			//template directory can not be reliably determined
+			$this->template_dir = null;
+		}
 
-			public function assign($key, $value) {
-				if ($this->engine === 'smarty') {
-					$this->object->assign($key, $value);
-				}
-				if ($this->engine === 'raintpl') {
-					$this->object->assign($key, $value);
-				}
-				if ($this->engine === 'twig') {
-					$this->var_array[$key] = $value;
-				}
-			}
-
-			public function render($name) {
-				if ($this->engine === 'smarty') {
-					return $this->object->fetch($name);
-				}
-				if ($this->engine === 'raintpl') {
-					return $this->object-> draw($name, 'return_string=true');
-				}
-				if ($this->engine === 'twig') {
-					return $this->object->render($name,$this->var_array);
-				}
+		public function init() {
+			require_once 'template_engine.php';
+			if (!empty($this->engine)) {
+				//set the class interface to use the _template suffix
+				$classname = $this->engine . '_template';
+				//load the class
+				require_once $classname . '.php';
+				//create the object
+				$this->object = new $classname($this->template_dir, $this->cache_dir);
 			}
 		}
-	}
 
-?>
+		public function assign($key, $value) {
+			$this->object->assign($key, $value);
+		}
+
+		public function render($name): string {
+			return $this->object->render($name);
+		}
+
+	}
