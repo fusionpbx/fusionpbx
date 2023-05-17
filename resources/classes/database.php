@@ -2154,7 +2154,7 @@
 
 											//add insert user parameter
 											if (!empty($_SESSION['user_uuid'])) {
-												$params['insert_user'] = $_SESSION['uer_uuid'];
+												$params['insert_user'] = $_SESSION['user_uuid'];
 											}
 
 											//set the error mode
