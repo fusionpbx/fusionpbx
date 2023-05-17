@@ -40,7 +40,7 @@
 	}
 
 //process the user data and save it to the database
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 
 		//validate the token
 			$token = new token;
@@ -51,7 +51,7 @@
 			}
 
 		//process the http post data by submitted action
-			if ($_POST['action'] != '' && strlen($_POST['action']) > 0) {
+			if ($_POST['action'] != '' && !empty($_POST['action'])) {
 
 				//prepare the array(s)
 				//send the array to the database class
@@ -85,11 +85,11 @@
 
 		//check for all required data
 			$msg = '';
-			if (strlen($global_setting_name) == 0) { $msg .= $text['message-required']." ".$text['label-global_setting_name']."<br>\n"; }
-			if (strlen($global_setting_value) == 0) { $msg .= $text['message-required']." ".$text['label-global_setting_value']."<br>\n"; }
-			if (strlen($global_setting_enabled) == 0) { $msg .= $text['message-required']." ".$text['label-global_setting_enabled']."<br>\n"; }
-			//if (strlen($global_setting_description) == 0) { $msg .= $text['message-required']." ".$text['label-global_setting_description']."<br>\n"; }
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+			if (empty($global_setting_name)) { $msg .= $text['message-required']." ".$text['label-global_setting_name']."<br>\n"; }
+			if (empty($global_setting_value)) { $msg .= $text['message-required']." ".$text['label-global_setting_value']."<br>\n"; }
+			if (empty($global_setting_enabled)) { $msg .= $text['message-required']." ".$text['label-global_setting_enabled']."<br>\n"; }
+			//if (empty($global_setting_description)) { $msg .= $text['message-required']." ".$text['label-global_setting_description']."<br>\n"; }
+			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -157,7 +157,7 @@
 	}
 
 //set the defaults
-	if (strlen($global_setting_enabled) == 0) { $global_setting_enabled = true; }
+	if (empty($global_setting_enabled)) { $global_setting_enabled = true; }
 
 //create token
 	$object = new token;

@@ -135,10 +135,6 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the IP CIDR range.";
 		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = "node_domain";
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the domain.";
-		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "node_description";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the description.";

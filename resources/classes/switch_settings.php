@@ -20,23 +20,13 @@ if (!class_exists('switch_settings')) {
 		}
 
 		/**
-		 * Called when there are no references to a particular object
-		 * unset the variables used in the class
-		 */
-		public function __destruct() {
-			foreach ($this as $key => $value) {
-				unset($this->$key);
-			}
-		}
-
-		/**
 		 * settings Set switch directories in default settings
 		 */
 		public function settings() {
 
 			//define the variables
 				if (!isset($this->event_socket_ip_address)) {
-					if (strlen($_SESSION['event_socket_ip_address']) > 0) {
+					if (!empty($_SESSION['event_socket_ip_address'])) {
 						$this->event_socket_ip_address = $_SESSION['event_socket_ip_address'];
 					}
 					else {
@@ -44,7 +34,7 @@ if (!class_exists('switch_settings')) {
 					}
 				}
 				if (!isset($this->event_socket_port)) {
-					if (strlen($_SESSION['event_socket_port']) > 0) {
+					if (!empty($_SESSION['event_socket_port'])) {
 						$this->event_socket_port = $_SESSION['event_socket_port'];
 					}
 					else {
@@ -52,7 +42,7 @@ if (!class_exists('switch_settings')) {
 					}
 				}
 				if (!isset($this->event_socket_password)) {
-					if (strlen($_SESSION['event_socket_password']) > 0) {
+					if (!empty($_SESSION['event_socket_password'])) {
 						$this->event_socket_password = $_SESSION['event_socket_password'];
 					}
 					else {
@@ -75,6 +65,18 @@ if (!class_exists('switch_settings')) {
 						$vars[$a[0]] = $a[1];
 					}
 				}
+
+			//set defaults
+				$vars['base_dir'] = empty($vars['base_dir']) ?? '';
+				$vars['conf_dir'] = empty($vars['conf_dir']) ?? '';
+				$vars['db_dir'] = empty($vars['db_dir']) ?? '';
+				$vars['recordings_dir'] = empty($vars['recordings_dir']) ?? '';
+				$vars['script_dir'] = empty($vars['script_dir']) ?? '';
+				$vars['sounds_dir'] = empty($vars['sounds_dir']) ?? '';
+				$vars['storage_dir'] = empty($vars['storage_dir']) ?? '';
+				$vars['grammar_dir'] = empty($vars['grammar_dir']) ?? '';
+				$vars['log_dir'] = empty($vars['log_dir']) ?? '';
+				$vars['mod_dir'] = empty($vars['mod_dir']) ?? '';
 
 			//set the bin directory
 				if ($vars['base_dir'] == "/usr/local/freeswitch") {

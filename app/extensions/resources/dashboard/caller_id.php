@@ -45,7 +45,7 @@
 			}
 
 		//add or update the database
-			if (is_array($_POST['extensions']) && @sizeof($_POST['extensions']) != 0) {
+			if (isset($_POST['extensions']) && is_array($_POST['extensions']) && @sizeof($_POST['extensions']) != 0) {
 
 				//validate the token
 					$token = new token;
@@ -148,6 +148,11 @@
 				unset($sql, $parameters);
 			}
 
+
+		//set defaults
+			unset($stats);
+			$stats['defined'] = $stats['undefined'] = 0;
+
 		//determine stats
 			if (is_array($extensions) && @sizeof($extensions) != 0) {
 				foreach ($extensions as $row) {
@@ -159,10 +164,6 @@
 					}
 				}
 			}
-
-		//set defaults
-			if ($stats['defined'] == null) { $stats['defined'] = 0; }
-			if ($stats['undefined'] == null) { $stats['undefined'] = 0; }
 
 		//set the row style
 			$c = 0;
@@ -269,7 +270,7 @@
 							echo "<select class='formfld' name='extensions[".$x."][outbound_caller_id]' id='outbound_caller_id_number_".$x."' style='width: 100%; min-width: 150px;'>\n";
 							echo "	<option value=''></option>\n";
 							foreach ($destinations as &$field) {
-								if (strlen($field['destination_caller_id_number']) > 0) {
+								if (!empty($field['destination_caller_id_number'])) {
 									echo "<option value='".escape($field['destination_caller_id_name'])."@".escape($field['destination_caller_id_number'])."' ".($row['outbound_caller_id_number'] == $field['destination_caller_id_number'] ? "selected='selected'" : null).">".escape($field['destination_caller_id_name'])." ".escape($field['destination_caller_id_number'])."</option>\n";
 								}
 							}
@@ -295,7 +296,7 @@
 
 			echo "</table>\n";
 			echo "</div>";
-			$n++;
+			//$n++;
 
 			echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 			echo "</form>\n";

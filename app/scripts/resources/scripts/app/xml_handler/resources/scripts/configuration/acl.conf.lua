@@ -32,6 +32,9 @@
 		loopback.auto - ACL for your local lan.
 	]]
 
+--include xml library
+	local Xml = require "resources.functions.xml";
+
 --get the cache
 	local cache = require "resources.functions.cache"
 	local acl_cache_key = "configuration:acl.conf"
@@ -64,12 +67,12 @@
 			assert(dbh:connected());
 
 		--start the xml array
-			local xml = {}
-			table.insert(xml, [[<?xml version="1.0" encoding="UTF-8" standalone="no"?>]]);
-			table.insert(xml, [[<document type="freeswitch/xml">]]);
-			table.insert(xml, [[	<section name="configuration">]]);
-			table.insert(xml, [[		<configuration name="acl.conf" description="Network Lists">]]);
-			table.insert(xml, [[			<network-lists>]]);
+			local xml = Xml:new();
+			xml:append([[<?xml version="1.0" encoding="UTF-8" standalone="no"?>]]);
+			xml:append([[<document type="freeswitch/xml">]]);
+			xml:append([[	<section name="configuration">]]);
+			xml:append([[		<configuration name="acl.conf" description="Network Lists">]]);
+			xml:append([[			<network-lists>]]);
 
 		--run the query
 			sql = "select * from v_access_controls ";
@@ -81,35 +84,48 @@
 			dbh:query(sql, function(row)
 
 				--list open tag
-					table.insert(xml, [[				<list name="]]..row.access_control_name..[[" default="]]..row.access_control_default..[[">]]);
+					xml:append([[				<list name="]] .. xml.sanitize(row.access_control_name) .. [[" default="]] .. xml.sanitize(row.access_control_default) .. [[">]]);
 
 				--get the nodes
 					sql = "select * from v_access_control_nodes ";
-					sql = sql .. "where access_control_uuid = :access_control_uuid";
+					sql = sql .. "where access_control_uuid = :access_control_uuid ";
+					sql = sql .. "and length(node_cidr) > 0 ";
 					local params = {access_control_uuid = row.access_control_uuid}
 					if (debug["sql"]) then
 						freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 					end
 					x = 0;
 					dbh:query(sql, params, function(field)
-						if (string.len(field.node_domain) > 0) then
-							table.insert(xml, [[					<node type="]] .. field.node_type .. [[" domain="]] .. field.node_domain .. [[" description="]] .. field.node_description .. [["/>]]);
-						else
-							table.insert(xml, [[					<node type="]] .. field.node_type .. [[" cidr="]] .. field.node_cidr .. [[" description="]] .. field.node_description .. [["/>]]);
-						end
+						xml:append([[					<node type="]] .. xml.sanitize(field.node_type) .. [[" cidr="]] .. xml.sanitize(field.node_cidr) .. [[" description="]] .. xml.sanitize(field.node_description) .. [["/>]]);
 					end)
 
+				--add the domains
+					if (row.access_control_name == 'providers' or row.access_control_name == 'domains') then
+						sql = "select domain_name, domain_description from v_domains ";
+						sql = sql .. "where domain_uuid in (select distinct(domain_uuid) ";
+						sql = sql .. "from v_extensions where enabled = 'true') ";
+						sql = sql .. "and domain_enabled = 'true' ";
+						local params = {}
+						if (debug["sql"]) then
+							freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. ";\n");
+						end
+						x = 0;
+						dbh:query(sql, params, function(field)
+							xml:append([[					<node type="allow" domain="]] .. xml.sanitize(field.domain_name) .. [[" description="]] .. xml.sanitize(field.domain_description) .. [["/>]]);
+						end)
+					end
+
 				--list close tag
-					table.insert(xml, [[				</list>]]);
+					xml:append([[				</list>]]);
 
 			end)
 
 		--close the extension tag if it was left open
-			table.insert(xml, [[			</network-lists>]]);
-			table.insert(xml, [[		</configuration>]]);
-			table.insert(xml, [[	</section>]]);
-			table.insert(xml, [[</document>]]);
-			XML_STRING = table.concat(xml, "\n");
+			xml:append([[			</network-lists>]]);
+			xml:append([[		</configuration>]]);
+			xml:append([[	</section>]]);
+			xml:append([[</document>]]);
+			XML_STRING = xml:build();
 			if (debug["xml_string"]) then
 				freeswitch.consoleLog("notice", "[xml_handler] XML_STRING: " .. XML_STRING .. "\n");
 			end

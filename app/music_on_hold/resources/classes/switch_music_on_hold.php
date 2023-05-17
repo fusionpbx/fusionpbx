@@ -56,16 +56,6 @@ if (!class_exists('switch_music_on_hold')) {
 
 		}
 
-		/**
-		 * called when there are no references to a particular object
-		 * unset the variables used in the class
-		 */
-		public function __destruct() {
-			foreach ($this as $key => $value) {
-				unset($this->$key);
-			}
-		}
-
 		public function select($name, $selected, $options) {
 			//add multi-lingual support
 				$language = new text;
@@ -83,7 +73,7 @@ if (!class_exists('switch_music_on_hold')) {
 					foreach($music_list as $row) {
 						if ($previous_name != $row['music_on_hold_name']) {
 							$name = '';
-							if (strlen($row['domain_uuid']) > 0) {
+							if (!empty($row['domain_uuid'])) {
 								$name = $row['domain_name'].'/';	
 							}
 							$name .= $row['music_on_hold_name'];
@@ -125,11 +115,12 @@ if (!class_exists('switch_music_on_hold')) {
 					unset($sql, $parameters, $streams, $row);
 				}
 			//add additional options
+				$select .= "	<optgroup label='".$text['label-others']."'>";
+				$select .= "		<option value='silence' ".($selected == "silence" ? 'selected="selected"' : null).">".$text['label-none']."</option>\n";
 				if (is_array($options) && sizeof($options) > 0) {
-					$select .= "	<optgroup label='".$text['label-others']."'>";
 					$select .= $options;
-					$select .= "	</optgroup>\n";
 				}
+				$select .= "	</optgroup>\n";
 			//end the select and return it
 				$select .= "</select>\n";
 				return $select;

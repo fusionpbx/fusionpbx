@@ -184,13 +184,21 @@ if (!function_exists('fax_split_dtmf')) {
 			}
 	}
 
+//check if the domain is enabled
+if($_SESSION['domains'][$_SESSION['domain_uuid']]['domain_enabled'] == "1" || $_SESSION['domains'][$_SESSION['domain_uuid']]['domain_enabled'] == "true") {
+	$domain_enabled = true;
+}
+else {
+	$domain_enabled = false;
+}
+
 //clear file status cache
 	clearstatcache();
 
 //send the fax
 	$continue = false;
 	if (!$included) {
-		if (($_POST['action'] == "send")) {
+		if (($_POST['action'] == "send") && $domain_enabled == true) {
 			//get the values from the HTTP POST
 				$fax_numbers = $_POST['fax_numbers'];
 				$fax_uuid = $_POST["id"];
@@ -361,7 +369,7 @@ if (!function_exists('fax_split_dtmf')) {
 			$pdf->setPrintFooter(false);
 			$pdf->SetMargins(0, 0, 0, true);
 
-			if (strlen($fax_cover_font) > 0) {
+			if (!empty($fax_cover_font)) {
 				if (substr($fax_cover_font, -4) == '.ttf') {
 					$pdf_font = TCPDF_FONTS::addTTFfont($fax_cover_font);
 				}
@@ -692,7 +700,7 @@ if (!function_exists('fax_split_dtmf')) {
 			fax_split_dtmf($fax_number, $fax_dtmf);
 
 			//prepare the fax command
-			if (strlen($fax_toll_allow) > 0) {
+			if (!empty($fax_toll_allow)) {
 				$channel_variables["toll_allow"] = $fax_toll_allow;
 			}
 			$route_array = outbound_route_to_bridge($_SESSION['domain_uuid'], $fax_prefix . $fax_number, $channel_variables);
@@ -940,14 +948,20 @@ if (!$included) {
 		echo "	<div class='heading'><b>".$text['header-new_fax']."</b></div>\n";
 		echo "	<div class='actions'>\n";
 		echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'fax.php']);
+		if ($domain_enabled == true) {
 		echo button::create(['type'=>'submit','label'=>$text['button-preview'],'icon'=>'eye','name'=>'submit','value'=>'preview']);
 		echo button::create(['type'=>'submit','label'=>$text['button-send'],'icon'=>'paper-plane','id'=>'btn_save','name'=>'submit','value'=>'send','style'=>'margin-left: 15px;']);
+		}
 		echo "	</div>\n";
 		echo "	<div style='clear: both;'></div>\n";
 		echo "</div>\n";
 		echo $text['description-2']." ".(permission_exists('fax_extension_view_domain') ? $text['description-3'] : null)."\n";
 		echo "<br /><br />\n";
-
+		
+		if ($domain_enabled == false) {
+		echo "<div class='warning_bar'>".$text['notice-sending-disabled']."</div>\n";
+		}
+		
 		echo "<table width='100%' border='0' cellspacing='0' cellpadding='0'>\n";
 
 		echo "<tr>\n";

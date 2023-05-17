@@ -41,18 +41,18 @@ function paging($num_rows, $param, $rows_per_page, $mini = false, $result_count 
 
 	//sanitize the parameters
 	$sanitized_parameters = '';
-	if (isset($param) && strlen($param) > 0) {
+	if (isset($param) && !empty($param)) {
 		$param_array = explode("&", $param);
 		if (is_array($param_array)) {
 			foreach($param_array as $row) {
 				$param_sub_array = explode("=", $row);
 				$key = preg_replace('#[^a-zA-Z0-9_\-]#', '', $param_sub_array['0']);
-				$value = urldecode($param_sub_array['1']);
-				if ($key == 'order_by' && strlen($value) > 0) {
+				$value = urldecode($param_sub_array['1'] ?? '');
+				if ($key === 'order_by' && !empty($value)) {
 					//validate order by
 					$sanitized_parameters .= "&order_by=". preg_replace('#[^a-zA-Z0-9_\-]#', '', $value);
 				}
-				else if ($key == 'order' && strlen($value) > 0) {
+				else if ($key == 'order' && !empty($value)) {
 					//validate order
 					switch ($value) {
 						case 'asc':
@@ -63,11 +63,11 @@ function paging($num_rows, $param, $rows_per_page, $mini = false, $result_count 
 							break;
 					}
 				}
-				else if (strlen($value) > 0 && is_numeric($value)) {
+				else if (!empty($value) && is_numeric($value)) {
 					$sanitized_parameters .= "&".$key."=".$value;
 				}
 				else {
-					$sanitized_parameters .= "&".$key."=".urlencode($value);
+					$sanitized_parameters .= "&".$key."=".urlencode($value ?? '');
 				}
 			}
 		}

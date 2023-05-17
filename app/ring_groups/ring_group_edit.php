@@ -234,7 +234,7 @@
 	}
 
 //process the HTTP POST
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 
 		//validate the token
 			$token = new token;
@@ -246,17 +246,17 @@
 
 		//check for all required data
 			$msg = '';
-			if (strlen($ring_group_name) == 0) { $msg .= $text['message-name']."<br>\n"; }
-			if (strlen($ring_group_extension) == 0) { $msg .= $text['message-extension']."<br>\n"; }
-			//if (strlen($ring_group_greeting) == 0) { $msg .= $text['message-greeting']."<br>\n"; }
-			if (strlen($ring_group_strategy) == 0) { $msg .= $text['message-strategy']."<br>\n"; }
-			if (strlen($ring_group_call_timeout) == 0) { $msg .= $text['message-call_timeout']."<br>\n"; }
-			//if (strlen($ring_group_timeout_app) == 0) { $msg .= $text['message-timeout_action']."<br>\n"; }
-			//if (strlen($ring_group_cid_name_prefix) == 0) { $msg .= "Please provide: Caller ID Name Prefix<br>\n"; }
-			//if (strlen($ring_group_cid_number_prefix) == 0) { $msg .= "Please provide: Caller ID Number Prefix<br>\n"; }
-			//if (strlen($ring_group_ringback) == 0) { $msg .= "Please provide: Ringback<br>\n"; }
-			//if (strlen($ring_group_description) == 0) { $msg .= "Please provide: Description<br>\n"; }
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+			if (empty($ring_group_name)) { $msg .= $text['message-name']."<br>\n"; }
+			if (empty($ring_group_extension)) { $msg .= $text['message-extension']."<br>\n"; }
+			//if (empty($ring_group_greeting)) { $msg .= $text['message-greeting']."<br>\n"; }
+			if (empty($ring_group_strategy)) { $msg .= $text['message-strategy']."<br>\n"; }
+			if (empty($ring_group_call_timeout)) { $msg .= $text['message-call_timeout']."<br>\n"; }
+			//if (empty($ring_group_timeout_app)) { $msg .= $text['message-timeout_action']."<br>\n"; }
+			//if (empty($ring_group_cid_name_prefix)) { $msg .= "Please provide: Caller ID Name Prefix<br>\n"; }
+			//if (empty($ring_group_cid_number_prefix)) { $msg .= "Please provide: Caller ID Number Prefix<br>\n"; }
+			//if (empty($ring_group_ringback)) { $msg .= "Please provide: Ringback<br>\n"; }
+			//if (empty($ring_group_description)) { $msg .= "Please provide: Description<br>\n"; }
+			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -371,7 +371,7 @@
 				else {
 					$ring_group_destination_uuid = uuid();
 				}
-				if (strlen($row['destination_number']) > 0) {
+				if (!empty($row['destination_number'])) {
 					$array["ring_groups"][0]["ring_group_destinations"][$y]["ring_group_uuid"] = $ring_group_uuid;
 					$array['ring_groups'][0]["ring_group_destinations"][$y]["ring_group_destination_uuid"] = $ring_group_destination_uuid;
 					$array['ring_groups'][0]["ring_group_destinations"][$y]["destination_number"] = $row['destination_number'];
@@ -385,10 +385,10 @@
 			}
 
 		//build the xml dialplan
-			$dialplan_xml = "<extension name=\"".$ring_group_name."\" continue=\"\" uuid=\"".$dialplan_uuid."\">\n";
-			$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".$ring_group_extension."$\">\n";
+			$dialplan_xml = "<extension name=\"".xml::sanitize($ring_group_name)."\" continue=\"\" uuid=\"".xml::sanitize($dialplan_uuid)."\">\n";
+			$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".xml::sanitize($ring_group_extension)."$\">\n";
 			$dialplan_xml .= "		<action application=\"ring_ready\" data=\"\"/>\n";
-			$dialplan_xml .= "		<action application=\"set\" data=\"ring_group_uuid=".$ring_group_uuid."\"/>\n";
+			$dialplan_xml .= "		<action application=\"set\" data=\"ring_group_uuid=".xml::sanitize($ring_group_uuid)."\"/>\n";
 			$dialplan_xml .= "		<action application=\"lua\" data=\"app.lua ring_groups\"/>\n";
 			$dialplan_xml .= "	</condition>\n";
 			$dialplan_xml .= "</extension>\n";
@@ -498,7 +498,7 @@
 			$dialplan_uuid = $row["dialplan_uuid"];
 		}
 		unset($sql, $parameters, $row);
-		if (strlen($ring_group_timeout_app) > 0) {
+		if (!empty($ring_group_timeout_app)) {
 			$ring_group_timeout_action = $ring_group_timeout_app.":".$ring_group_timeout_data;
 		}
 	}
@@ -506,13 +506,13 @@
 //set the defaults
 	$destination_delay_max = $_SESSION['ring_group']['destination_delay_max']['numeric'];
 	$destination_timeout_max = $_SESSION['ring_group']['destination_timeout_max']['numeric'];
-	if (strlen($ring_group_ringback) == 0) {
+	if (empty($ring_group_ringback)) {
 		$ring_group_ringback = '${us-ring}';
 	}
-	if (strlen($ring_group_call_timeout) == 0) {
+	if (empty($ring_group_call_timeout)) {
 		$ring_group_call_timeout = '30';
 	}
-	if (strlen($ring_group_enabled) == 0) { $ring_group_enabled = 'true'; }
+	if (empty($ring_group_enabled)) { $ring_group_enabled = 'true'; }
 
 //get the ring group destination array
 	if ($action == "add") {
@@ -577,10 +577,10 @@
 	unset($sql, $parameters);
 
 //set defaults
-	if (strlen($ring_group_enabled) == 0) { $ring_group_enabled = 'true'; }
+	if (empty($ring_group_enabled)) { $ring_group_enabled = 'true'; }
 
 //set the default ring group context
-	if (strlen($ring_group_context) == 0) {
+	if (empty($ring_group_context)) {
 		$ring_group_context = $_SESSION['domain_name'];
 	}
 
@@ -714,7 +714,7 @@
 		echo "</optgroup>\n";
 	}
 	if (if_group("superadmin")) {
-		if (!$selected && strlen($ring_group_greeting) > 0) {
+		if (!$selected && !empty($ring_group_greeting)) {
 			echo "	<option value='".escape($ring_group_greeting)."' selected='selected'>".escape($ring_group_greeting)."</option>\n";
 		}
 		unset($selected);
@@ -766,10 +766,10 @@
 	echo "				</tr>\n";
 	$x = 0;
 	foreach ($ring_group_destinations as $row) {
-		if (strlen($row['destination_delay']) == 0) { $row['destination_delay'] = "0"; }
-		if (strlen($row['destination_timeout']) == 0) { $row['destination_timeout'] = "30"; }
+		if (empty($row['destination_delay'])) { $row['destination_delay'] = "0"; }
+		if (empty($row['destination_timeout'])) { $row['destination_timeout'] = "30"; }
 
-		if (strlen($row['ring_group_destination_uuid']) > 0) {
+		if (!empty($row['ring_group_destination_uuid'])) {
 			echo "		<input name='ring_group_destinations[".$x."][ring_group_destination_uuid]' type='hidden' value=\"".escape($row['ring_group_destination_uuid'])."\">\n";
 		}
 

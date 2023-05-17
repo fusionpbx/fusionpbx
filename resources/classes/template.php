@@ -65,12 +65,6 @@
 				}
 			}
 
-			public function __destruct() {
-				foreach ($this as $key => $value) {
-					unset($this->$key);
-				}
-			}
-
 			public function assign($key, $value) {
 				if ($this->engine === 'smarty') {
 					$this->object->assign($key, $value);

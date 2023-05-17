@@ -52,7 +52,7 @@
 	$dialplan_xml = $_REQUEST['dialplan_xml'];
 
 //process the HTTP POST
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 
 		//validate the token
 			$token = new token;

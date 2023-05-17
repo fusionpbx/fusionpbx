@@ -37,8 +37,8 @@
 			if (count($path_array) <> 3 || strlen($path_array[0]) <> 2 || strlen($path_array[1]) <> 2) {
 				unset($languages[$key]);
 			}
-			$languages[$key] = str_replace($_SESSION["switch"]['sounds']['dir']."/","",$languages[$key]);
-			if (strlen($languages[$key]) == 0) {
+			$languages[$key] = str_replace($_SESSION["switch"]['sounds']['dir']."/","",$languages[$key] ?? '');
+			if (empty($languages[$key])) {
 				unset($languages[$key]);
 			}
 		}
@@ -50,8 +50,8 @@
 		$apps[$x]['destinations'][$y]['field']['language'] = 'language';
 		$apps[$x]['destinations'][$y]['field']['dialect'] = 'dialect';
 		$apps[$x]['destinations'][$y]['field']['voice'] = 'voice';
-		$apps[$x]['destinations'][$y]['select_value']['dialplan'] = "multiset:^^,default_language=\${language},default_dialect=\${dialect},default_voice=\${voice}";
-		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "menu-exec-app:multiset ^^,default_language=\${language},default_dialect=\${dialect},default_voice=\${voice}";
+		$apps[$x]['destinations'][$y]['select_value']['dialplan'] = "multiset:^^,sound_prefix=\$\${sounds_dir}/\${language}/\${dialect}/\${voice},default_language=\${language},default_dialect=\${dialect},default_voice=\${voice}";
+		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "menu-exec-app:multiset ^^,sound_prefix=\$\${sounds_dir}/\${language}/\${dialect}/\${voice},default_language=\${language},default_dialect=\${dialect},default_voice=\${voice}";
 		$apps[$x]['destinations'][$y]['select_label'] = "\${name}";
 		$z=0;
 		foreach ($languages as $language) {

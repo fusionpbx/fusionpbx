@@ -136,7 +136,7 @@
 		}
 
 		//add the headers and stream the file
-		if (strlen($download_filename) > 0) {
+		if (!empty($download_filename)) {
 			$fd = fopen($download_filename, "rb");
 			if ($_GET['t'] == "bin") {
 				header("Content-Type: application/force-download");
@@ -172,7 +172,7 @@
 	}
 
 //get the fax extension
-	if (strlen($fax_extension) > 0) {
+	if (!empty($fax_extension)) {
 		//set the fax directories. example /usr/local/freeswitch/storage/fax/329/inbox
 			$dir_fax_inbox = $fax_dir.'/'.$fax_extension.'/inbox';
 			$dir_fax_sent = $fax_dir.'/'.$fax_extension.'/sent';
@@ -322,7 +322,9 @@
 	if ($_REQUEST['box'] == 'sent') {
 		echo th_order_by('fax_destination', $text['label-fax_destination'], $order_by, $order, "&id=".$fax_uuid."&box=".$_GET['box']."&page=".$_GET['page']);
 	}
-	echo "<th>".$text['table-file']."</th>\n";
+	if (permission_exists('fax_download_view')) {
+		echo "<th>".$text['table-file']."</th>\n";
+	}
 	echo "<th width='10%'>".$text['table-view']."</th>\n";
 	echo th_order_by('fax_date', $text['label-fax_date'], $order_by, $order, "&id=".$fax_uuid."&box=".$_GET['box']."&page=".$_GET['page']);
 	echo "</tr>\n";
@@ -337,7 +339,7 @@
 			$file_ext = $row['fax_file_type'];
 
 			//decode the base64
-			if (strlen($row['fax_base64']) > 0) {
+			if (!empty($row['fax_base64'])) {
 				if ($_REQUEST['box'] == 'inbox' && permission_exists('fax_inbox_view')) {
 					if (!file_exists($dir_fax_inbox.'/'.$file)) {
 						file_put_contents($dir_fax_inbox.'/'.$file, base64_decode($row['fax_base64']));
@@ -423,7 +425,9 @@
 			if ($_REQUEST['box'] == 'sent') {
 				echo "	<td>".escape(format_phone($row['fax_destination']))."&nbsp;</td>\n";
 			}
-			echo "  <td><a href='".$list_row_url."'>".$file_name."</a></td>\n";
+			if (permission_exists('fax_download_view')) {
+				echo "  <td><a href='".$list_row_url."'>".$file_name."</a></td>\n";
+			}
 			echo "  <td class='no-link'>\n";
 			if ($_REQUEST['box'] == 'inbox') {
 				$dir_fax = $dir_fax_inbox;

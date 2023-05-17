@@ -84,7 +84,7 @@
 				$array['follow_me'][0]['follow_me_uuid'] = $this->follow_me_uuid;
 				$array['follow_me'][0]['domain_uuid'] = $this->domain_uuid;
 				$array['follow_me'][0]['cid_name_prefix'] = $this->cid_name_prefix;
-				if (strlen($this->cid_number_prefix) > 0) {
+				if (!empty($this->cid_number_prefix)) {
 					$array['follow_me'][0]['cid_number_prefix'] = $this->cid_number_prefix;
 				}
 
@@ -148,7 +148,7 @@
 
 			//build follow me destinations insert array
 				$x = 0;
-				if (strlen($this->destination_data_1) > 0) {
+				if (!empty($this->destination_data_1)) {
 					$array['follow_me_destinations'][$x]['follow_me_destination_uuid'] = uuid();
 					$array['follow_me_destinations'][$x]['domain_uuid'] = $this->domain_uuid;
 					$array['follow_me_destinations'][$x]['follow_me_uuid'] = $this->follow_me_uuid;
@@ -160,7 +160,7 @@
 					$this->destination_order++;
 					$x++;
 				}
-				if (strlen($this->destination_data_2) > 0) {
+				if (!empty($this->destination_data_2)) {
 					$array['follow_me_destinations'][$x]['follow_me_destination_uuid'] = uuid();
 					$array['follow_me_destinations'][$x]['domain_uuid'] = $this->domain_uuid;
 					$array['follow_me_destinations'][$x]['follow_me_uuid'] = $this->follow_me_uuid;
@@ -172,7 +172,7 @@
 					$this->destination_order++;
 					$x++;
 				}
-				if (strlen($this->destination_data_3) > 0) {
+				if (!empty($this->destination_data_3)) {
 					$array['follow_me_destinations'][$x]['follow_me_destination_uuid'] = uuid();
 					$array['follow_me_destinations'][$x]['domain_uuid'] = $this->domain_uuid;
 					$array['follow_me_destinations'][$x]['follow_me_uuid'] = $this->follow_me_uuid;
@@ -184,7 +184,7 @@
 					$this->destination_order++;
 					$x++;
 				}
-				if (strlen($this->destination_data_4) > 0) {
+				if (!empty($this->destination_data_4)) {
 					$array['follow_me_destinations'][$x]['follow_me_destination_uuid'] = uuid();
 					$array['follow_me_destinations'][$x]['domain_uuid'] = $this->domain_uuid;
 					$array['follow_me_destinations'][$x]['follow_me_uuid'] = $this->follow_me_uuid;
@@ -196,7 +196,7 @@
 					$this->destination_order++;
 					$x++;
 				}
-				if (strlen($this->destination_data_5) > 0) {
+				if (!empty($this->destination_data_5)) {
 					$array['follow_me_destinations'][$x]['follow_me_destination_uuid'] = uuid();
 					$array['follow_me_destinations'][$x]['domain_uuid'] = $this->domain_uuid;
 					$array['follow_me_destinations'][$x]['follow_me_uuid'] = $this->follow_me_uuid;

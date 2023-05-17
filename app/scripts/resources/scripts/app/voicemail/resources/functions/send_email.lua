@@ -70,15 +70,53 @@
 					local text = Text.new("app.voicemail.app_languages")
 					local dbh = dbh
 
+				--user setting time zone, if set
+					local sql = [[
+						select
+							us.user_setting_value as time_zone
+						from
+							v_user_settings as us,
+							v_extension_users as eu,
+							v_extensions as e,
+							v_voicemails as v
+						where
+							v.voicemail_id = :voicemail_id and
+							v.domain_uuid = :domain_uuid and
+							v.voicemail_id = e.extension and
+							e.domain_uuid = :domain_uuid and
+							e.extension_uuid = eu.extension_uuid and
+							eu.domain_uuid = :domain_uuid and
+							eu.user_uuid = us.user_uuid and
+							us.domain_uuid = :domain_uuid and
+							us.user_setting_category = 'domain' and
+							us.user_setting_subcategory = 'time_zone' and
+							us.user_setting_name = 'name' and
+							us.user_setting_enabled = 'true'
+						order by
+							eu.insert_date asc
+						limit 1
+						]]
+					local params = {domain_uuid = domain_uuid, voicemail_id = id};
+					if (debug["sql"]) then
+						freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
+					end
+					dbh:query(sql, params, function(row)
+						time_zone = row["time_zone"];
+					end);
+
+				--default/domain setting time zone
+					if (time_zone == nil or time_zone == '') then
+						time_zone = settings:get('domain', 'time_zone', 'name');
+					end
+
+				--default time zone
+					if (time_zone == nil or time_zone == '') then
+						time_zone = 'UTC';
+					end
+
 				--connect using other backend if needed
 					if storage_type == "base64" then
 						dbh = Database.new('system', 'base64/read')
-					end
-
-				--get the time zone
-					local time_zone = settings:get('domain', 'time_zone', 'name');
-					if (time_zone == nil) then
-						time_zone = 'UTC';
 					end
 
 				--get voicemail message details

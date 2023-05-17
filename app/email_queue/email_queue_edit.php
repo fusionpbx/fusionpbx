@@ -45,7 +45,7 @@
 	}
 
 //process the user data and save it to the database
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 
 		//validate the token
 			$token = new token;
@@ -56,7 +56,7 @@
 			}
 
 		//process the http post data by submitted action
-			if ($_POST['action'] != '' && strlen($_POST['action']) > 0) {
+			if ($_POST['action'] != '' && !empty($_POST['action'])) {
 
 				//prepare the array(s)
 				//send the array to the database class
@@ -90,13 +90,13 @@
 
 		//check for all required data
 			$msg = '';
-			//if (strlen($email_date) == 0) { $msg .= $text['message-required']." ".$text['label-email_date']."<br>\n"; }
-			//if (strlen($email_from) == 0) { $msg .= $text['message-required']." ".$text['label-email_from']."<br>\n"; }
-			//if (strlen($email_to) == 0) { $msg .= $text['message-required']." ".$text['label-email_to']."<br>\n"; }
-			//if (strlen($email_subject) == 0) { $msg .= $text['message-required']." ".$text['label-email_subject']."<br>\n"; }
-			//if (strlen($email_body) == 0) { $msg .= $text['message-required']." ".$text['label-email_body']."<br>\n"; }
-			//if (strlen($email_status) == 0) { $msg .= $text['message-required']." ".$text['label-email_status']."<br>\n"; }
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+			//if (empty($email_date)) { $msg .= $text['message-required']." ".$text['label-email_date']."<br>\n"; }
+			//if (empty($email_from)) { $msg .= $text['message-required']." ".$text['label-email_from']."<br>\n"; }
+			//if (empty($email_to)) { $msg .= $text['message-required']." ".$text['label-email_to']."<br>\n"; }
+			//if (empty($email_subject)) { $msg .= $text['message-required']." ".$text['label-email_subject']."<br>\n"; }
+			//if (empty($email_body)) { $msg .= $text['message-required']." ".$text['label-email_body']."<br>\n"; }
+			//if (empty($email_status)) { $msg .= $text['message-required']." ".$text['label-email_status']."<br>\n"; }
+			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -107,6 +107,46 @@
 				echo "</div>\n";
 				require_once "resources/footer.php";
 				return;
+			}
+
+		//parse email addresses to single string csv string
+			if (substr_count($email_to, "\n") != 0) {
+				$email_to_lines = explode("\n", $email_to);
+				if (is_array($email_to_lines) && @sizeof($email_to_lines) != 0) {
+					foreach ($email_to_lines as $email_to_line) {
+						if (substr_count($email_to_line, ',') != 0) {
+							$email_to_array = explode(',', $email_to_line);
+							if (is_array($email_to_array) && @sizeof($email_to_array) != 0) {
+								foreach ($email_to_array as $email_to_address) {
+									if (valid_email(trim($email_to_address))) {
+										$email_to_addresses[] = strtolower(trim($email_to_address));
+									}
+								}
+							}
+						}
+						else {
+							if (valid_email(trim($email_to_line))) {
+								$email_to_addresses[] = strtolower(trim($email_to_line));
+							}
+						}
+					}
+				}
+			}
+			else {
+				if (substr_count($email_to, ',') != 0) {
+					$email_to_array = explode(',', $email_to);
+					if (is_array($email_to_array) && @sizeof($email_to_array) != 0) {
+						foreach ($email_to_array as $email_to_address) {
+							if (valid_email(trim($email_to_address))) {
+								$email_to_addresses[] = strtolower(trim($email_to_address));
+							}
+						}
+					}
+				}
+			}
+			if (is_array($email_to_addresses) && @sizeof($email_to_addresses) != 0) {
+				$email_to = implode(',', $email_to_addresses);
+				unset($email_to_array, $email_to_addresses);
 			}
 
 		//add the email_queue_uuid
@@ -241,7 +281,19 @@
 	echo "	".$text['label-email_to']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='email_to' maxlength='255' value='".escape($email_to)."'>\n";
+	if (substr_count($email_to, ',') != 0) {
+		echo "	<textarea class='formfld' style='width: 450px; height: 100px;' name='email_to'>";
+		$email_to_array = explode(',', $email_to);
+		if (is_array($email_to_array) && @sizeof($email_to_array) != 0) {
+			foreach ($email_to_array as $email_to_address) {
+				echo escape($email_to_address)."\n";
+			}
+		}
+		echo "</textarea>\n";
+	}
+	else {
+		echo "	<input class='formfld' type='text' name='email_to' maxlength='255' value='".escape($email_to)."'>\n";
+	}
 	echo "<br />\n";
 	echo $text['description-email_to']."\n";
 	echo "</td>\n";
@@ -263,7 +315,7 @@
 	echo "	".$text['label-email_body']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='email_body' maxlength='255' value='".escape($email_body)."'>\n";
+	echo "	<textarea class='formfld' style='width: 450px; height: 100px;' name='email_body'>".$email_body."</textarea>\n";
 	echo "<br />\n";
 	echo $text['description-email_body']."\n";
 	echo "</td>\n";
@@ -274,7 +326,12 @@
 	echo "	".$text['label-email_status']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='email_status' maxlength='255' value='".escape($email_status)."'>\n";
+	echo "	<select class='formfld' name='email_status'>\n";
+	echo "		<option value='waiting' ".($email_status == 'waiting' ? "selected='selected'" : null).">".ucwords($text['label-waiting'])."</option>\n";
+	echo "		<option value='trying' ".($email_status == 'trying' ? "selected='selected'" : null).">".ucwords($text['label-trying'])."</option>\n";
+	echo "		<option value='sent' ".($email_status == 'sent' ? "selected='selected'" : null).">".ucwords($text['label-sent'])."</option>\n";
+	echo "		<option value='failed' ".($email_status == 'failed' ? "selected='selected'" : null).">".ucwords($text['label-failed'])."</option>\n";
+	echo "	</select>\n";
 	echo "<br />\n";
 	echo $text['description-email_status']."\n";
 	echo "</td>\n";

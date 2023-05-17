@@ -3,7 +3,6 @@
 /**
  * Get the text for the correct translation
  *
- * @method array get
  */
 class text {
 	public $languages;
@@ -51,16 +50,6 @@ class text {
 	}
 
 	/**
-	 * Called when there are no references to a particular object
-	 * unset the variables used in the class
-	 */
-	public function __destruct() {
-		if (is_array($this)) foreach ($this as $key => $value) {
-			unset($this->$key);
-		}
-	}
-
-	/**
 	 * Get a specific item from the cache
 	 * @var string $language_code	examples: en-us, es-cl, fr-fr, pt-pt
 	 * @var string $app_path		examples: app/exec or core/domains
@@ -82,9 +71,9 @@ class text {
 			else {
 				$lang_path = getcwd();
 			}
-			if (file_exists("${lang_path}/app_languages.php")) {
+			if (file_exists($lang_path."/app_languages.php")) {
 				if ($lang_path != 'resources' or $exclude_global) {
-					include "${lang_path}/app_languages.php";
+					include "{$lang_path}/app_languages.php";
 				}
 			}
 			//else {
@@ -110,7 +99,7 @@ class text {
 			if ($language_code != 'all') {
 				if (is_array($text)) {
 					foreach ($text as $key => $value) {
-						if (isset($value[$language_code]) && strlen($value[$language_code]) > 0) {
+						if (isset($value[$language_code]) && !empty($value[$language_code])) {
 							$text[$key] = $value[$language_code];
 						}
 						else {
@@ -187,7 +176,7 @@ class text {
 				if ($app_path == 'resources') {
 					foreach($this->languages as $language) {
 						$label = array_shift($text["language-$language"]);
-						if (strlen($label) == 0)
+						if (empty($label))
 							$label = $language;
 						$text["language-$language"]['en-us'] = $label;
 					}
@@ -210,7 +199,7 @@ class text {
 						if (strlen($target_lang) == 11)
 							$spacer = "   ";
 						$language_name = $this->escape_str(array_shift($text[$lang_label]));
-						if (strlen($language_name) == 0)
+						if (empty($language_name))
 							$language_name = $this->escape_str($target_lang);
 						fwrite($lang_file, "\$text['language-$target_lang'$spacer]['en-us'] = \"$language_name\";\n");
 					}
@@ -233,27 +222,27 @@ class text {
 										$spacer = "   ";
 									if (array_key_exists($lang_code, $text[$lang_label]))
 										$value = $text[$lang_label][$lang_code];
-									if (strlen($value) == 0 and array_key_exists($target_lang, $this->legacy_map)) {
+									if (empty($value) and array_key_exists($target_lang, $this->legacy_map)) {
 										$value = $text[$lang_label][$this->legacy_map[$target_lang]];
 									}
 									$base_code = substr($target_lang, 0, 2);
-									if (strlen($value) > 0
+									if (!empty($value)
 										and array_key_exists($base_code, $this->legacy_map )
 										and $this->legacy_map[$base_code] != $target_lang
 										and $value == $text[$lang_label][$this->legacy_map[$base_code]]
 									) {
 										$append = " //copied from ".$this->legacy_map[$base_code];
 									}
-									if (strlen($value) == 0) {
+									if (empty($value)) {
 										foreach($this->languages as $lang_code) {
-											if (substr($lang_code, 0, 2) == $base_code and strlen($text[$lang_label][$lang_code]) > 0) {
+											if (substr($lang_code, 0, 2) == $base_code and !empty($text[$lang_label][$lang_code])) {
 												$value = $text[$lang_label][$lang_code];
 												$append = " //copied from $lang_code";
 												continue;
 											}
 										}
 									}
-									if(strlen($append) == 0 && array_key_exists($comment, $lang_label) && array_key_exists($comment[$lang_label], $lang_code)) {
+									if(empty($append) && array_key_exists($comment, $lang_label) && array_key_exists($comment[$lang_label], $lang_code)) {
 										$append = " //$comment[$lang_label][$lang_code]";
 									}
 									fwrite($lang_file, "\$text['$lang_label']['$target_lang'$spacer] = \"".$this->escape_str($value)."\";$append\n");
@@ -329,7 +318,7 @@ class text {
 			foreach($text as $label_name => $values) {
 				$language_totals['languages']['total']++;
 				foreach ($this->languages as $language_code) {
-					if (strlen($values[$language_code]) > 0)
+					if (!empty($values[$language_code]))
 						$language_totals['languages'][$language_code]++;
 				}
 			}
@@ -352,12 +341,12 @@ class text {
 				foreach($app['menu'] as $menu_item) {
 					$language_totals['menu_items']['total']++;
 					foreach ($this->languages as $language_code) {
-						if (strlen($menu_item['title'][$language_code]) > 0)
+						if (!empty($menu_item['title'][$language_code]))
 							$language_totals['menu_items'][$language_code]++;
 					}
 				}
 				foreach ($this->languages as $language_code) {
-					if (strlen($app['description'][$language_code]) > 0) {
+					if (!empty($app['description'][$language_code])) {
 						$language_totals['app_descriptions'][$language_code]++;
 					}
 				}

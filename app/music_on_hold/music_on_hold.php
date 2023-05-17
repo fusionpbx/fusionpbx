@@ -379,9 +379,9 @@
 				echo "	<optgroup label='".$text['option-global']."'>\n";
 				if (is_array($streams) && @sizeof($streams) != 0) {
 					foreach ($streams as $row) {
-						if (strlen($row['domain_uuid']) == 0) {
-							if (strlen($row['music_on_hold_rate']) == 0) { $option_name = $row['music_on_hold_name']; }
-							if (strlen($row['music_on_hold_rate']) > 0) { $option_name = $row['music_on_hold_name'] .'/'.$row['music_on_hold_rate']; }
+						if (empty($row['domain_uuid'])) {
+							if (empty($row['music_on_hold_rate'])) { $option_name = $row['music_on_hold_name']; }
+							if (!empty($row['music_on_hold_rate'])) { $option_name = $row['music_on_hold_name'] .'/'.$row['music_on_hold_rate']; }
 							echo "	<option value='".escape($row['music_on_hold_uuid'])."'>".escape($option_name)."</option>\n";
 						}
 					}
@@ -403,9 +403,9 @@
 				}
 				if (is_array($streams) && @sizeof($streams) != 0) {
 					foreach ($streams as $row) {
-						if (strlen($row['domain_uuid']) > 0) {
-							if (strlen($row['music_on_hold_rate']) == 0) { $option_name = $row['music_on_hold_name']; }
-							if (strlen($row['music_on_hold_rate']) > 0) { $option_name = $row['music_on_hold_name'] .'/'.$row['music_on_hold_rate']; }
+						if (!empty($row['domain_uuid'])) {
+							if (empty($row['music_on_hold_rate'])) { $option_name = $row['music_on_hold_name']; }
+							if (!empty($row['music_on_hold_rate'])) { $option_name = $row['music_on_hold_name'] .'/'.$row['music_on_hold_rate']; }
 							echo "	<option value='".escape($row['music_on_hold_uuid'])."'>".escape($option_name)."</option>\n";
 						}
 					}
@@ -478,7 +478,7 @@
 					}
 
 				//determine if rate was set to auto or not
-					$auto_rate = strlen($music_on_hold_rate) == 0 ? true : false;
+					$auto_rate = empty($music_on_hold_rate) ? true : false;
 
 				//determine icons to show
 					$stream_icons = array();
@@ -520,7 +520,7 @@
 					}
 
 				//get the music on hold path and files
-					$stream_path = str_replace("\$\${sounds_dir}",$_SESSION['switch']['sounds']['dir'], $row['music_on_hold_path']);
+					$stream_path = str_replace("\$\${sounds_dir}",$_SESSION['switch']['sounds']['dir'] ?? '', $row['music_on_hold_path']);
 					if (file_exists($stream_path)) {
 						$stream_files = array_merge(glob($stream_path.'/*.wav'), glob($stream_path.'/*.mp3'), glob($stream_path.'/*.ogg'));
 					}
@@ -569,7 +569,7 @@
 								echo "	</td>\n";
 							}
 							if ($_GET['show'] == "all" && permission_exists('music_on_hold_all')) {
-								if (strlen($_SESSION['domains'][$row['domain_uuid']]['domain_name']) > 0) {
+								if (!empty($_SESSION['domains'][$row['domain_uuid']]['domain_name'])) {
 									$domain = $_SESSION['domains'][$row['domain_uuid']]['domain_name'];
 								}
 								else {

@@ -70,7 +70,7 @@
 	}
 
 //process the data
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 
 		//get the domain_uuid
 			if ($action == "update" && $_POST["domain_uuid"]) {
@@ -102,9 +102,9 @@
 
 		//check for all required data
 			$msg = '';
-			if (strlen($domain_name) == 0) { $msg .= $text['message-required'].$text['label-name']."<br>\n"; }
-			//if (strlen($domain_description) == 0) { $msg .= $text['message-required'].$text['label-description']."<br>\n"; }
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+			if (empty($domain_name)) { $msg .= $text['message-required'].$text['label-name']."<br>\n"; }
+			//if (empty($domain_description)) { $msg .= $text['message-required'].$text['label-description']."<br>\n"; }
+			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -165,14 +165,14 @@
 							}
 
 						//create the recordings directory for the new domain.
-							if (isset($_SESSION['switch']['recordings']['dir']) && strlen($_SESSION['switch']['recordings']['dir']) > 0) {
+							if (isset($_SESSION['switch']['recordings']['dir']) && !empty($_SESSION['switch']['recordings']['dir'])) {
 								if (!file_exists($_SESSION['switch']['recordings']['dir']."/".$domain_name)) {
 									mkdir($_SESSION['switch']['recordings']['dir']."/".$domain_name, 0770);
 								}
 							}
 
 						//create the voicemail directory for the new domain.
-							if (isset($_SESSION['switch']['voicemail']['dir']) && strlen($_SESSION['switch']['voicemail']['dir']) > 0) {
+							if (isset($_SESSION['switch']['voicemail']['dir']) && !empty($_SESSION['switch']['voicemail']['dir'])) {
 								if (!file_exists($_SESSION['switch']['voicemail']['dir']."/default/".$domain_name)) {
 									mkdir($_SESSION['switch']['voicemail']['dir']."/default/".$domain_name, 0770);
 								}
@@ -382,7 +382,7 @@
 							}
 
 						//update call center queue record templates
-							if (file_exists($_SERVER["PROJECT_ROOT"]."/app/call_center/app_config.php")) {
+							if (file_exists($_SERVER["PROJECT_ROOT"]."/app/call_centers/app_config.php")) {
 								$sql = "update v_call_center_queues set ";
 								$sql .= "queue_record_template = replace(queue_record_template, :domain_name_old, :domain_name_new) ";
 								$sql .= "where domain_uuid = :domain_uuid ";
@@ -395,7 +395,7 @@
 							}
 
 						//update call center agent contacts
-							if (file_exists($_SERVER["PROJECT_ROOT"]."/app/call_center/app_config.php")) {
+							if (file_exists($_SERVER["PROJECT_ROOT"]."/app/call_centers/app_config.php")) {
 								$sql = "update v_call_center_agents set ";
 								$sql .= "agent_contact = replace(agent_contact, :domain_name_old, :domain_name_new) ";
 								$sql .= "where domain_uuid = :domain_uuid ";
@@ -571,7 +571,7 @@
 	}
 
 //set the defaults
-	if (strlen($domain_enabled) == 0) { $domain_enabled = 'true'; }
+	if (empty($domain_enabled)) { $domain_enabled = 'true'; }
 
 //create token
 	$object = new token;

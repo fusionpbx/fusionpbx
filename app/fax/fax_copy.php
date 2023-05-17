@@ -105,7 +105,7 @@
 			$array['fax'][0]['fax_pin_number'] = $fax_pin_number;
 			$array['fax'][0]['fax_caller_id_name'] = $fax_caller_id_name;
 			$array['fax'][0]['fax_caller_id_number'] = $fax_caller_id_number;
-			if (strlen($fax_forward_number) > 0) {
+			if (!empty($fax_forward_number)) {
 				$array['fax'][0]['fax_forward_number'] = $fax_forward_number;
 			}
 			$array['fax'][0]['fax_description'] = $fax_description;

@@ -71,10 +71,10 @@
 	unset($sql, $parameters, $row);
 
 //get the format
-	if (strlen($xml_string) > 0) {
+	if (!empty($xml_string)) {
 		$format = "xml";
 	}
-	if (strlen($json_string) > 0) {
+	if (!empty($json_string)) {
 		$format = "json";
 	}
 
@@ -125,9 +125,7 @@
 	echo "</tr>\n";
 	echo "<tr>\n";
 	echo "<td align='left' colspan='2'>\n";
-	echo "".$text['description-5']." \n";
-	echo "".$text['description-6']." \n";
-	echo "".$text['description-7']." \n";
+	echo "".$text['description-details']." \n";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "</table>\n";
@@ -385,12 +383,12 @@
 					else if (file_exists($tmp_dir.'/'.$value.'_1.mp3')) {
 						$tmp_name = $value."_1.mp3";
 					}
-					if (strlen($tmp_name) > 0 && file_exists($_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$tmp_name)) {
+					if (!empty($tmp_name) && file_exists($_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$tmp_name)) {
 						echo "	<a href=\"javascript:void(0);\" onclick=\"window.open('../recordings/recording_play.php?a=download&type=moh&filename=".base64_encode('archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$tmp_name)."', 'play',' width=420,height=150,menubar=no,status=no,toolbar=no')\">\n";
 						echo "		play";
 						echo "	</a>&nbsp;";
 					}
-					if (strlen($tmp_name) > 0 && file_exists($_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$tmp_name)) {
+					if (!empty($tmp_name) && file_exists($_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$tmp_name)) {
 						echo "	<a href=\"../recordings/recordings.php?a=download&type=rec&t=bin&filename=".base64_encode("archive/".$tmp_year."/".$tmp_month."/".$tmp_day."/".$tmp_name)."\">\n";
 						echo "		download";
 						echo "	</a>";

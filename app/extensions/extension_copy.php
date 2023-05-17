@@ -112,7 +112,7 @@
 	$array['extensions'][0]['extension_uuid'] = uuid();
 	$array['extensions'][0]['extension'] = $extension_new;
 	$array['extensions'][0]['number_alias'] = $number_alias_new;
-	$array['extensions'][0]['password'] = generate_password();
+	$array['extensions'][0]['password'] = generate_password($_SESSION["extension"]["password_length"]["numeric"], $_SESSION["extension"]["password_strength"]["numeric"]);
 	$array['extensions'][0]['accountcode'] = $password;
 	$array['extensions'][0]['effective_caller_id_name'] = $effective_caller_id_name;
 	$array['extensions'][0]['effective_caller_id_number'] = $effective_caller_id_number;
@@ -167,7 +167,7 @@
 			unset($sql, $parameters, $row);
 
 		//set the new voicemail password
-			if (strlen($voicemail_password) == 0) {
+			if (empty($voicemail_password)) {
 				$voicemail_password = generate_password(9, 1);
 			}
 

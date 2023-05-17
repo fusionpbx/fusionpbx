@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2022
+	Portions created by the Initial Developer are Copyright (C) 2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -42,12 +42,12 @@
 	}
 
 //get posted data
-	if (is_array($_POST['search'])) {
+	if (!empty($_POST['search'])) {
 		$search = $_POST['search'];
 	}
 
 //add the search term
-	if (isset($_GET["search"])) {
+	if (!empty($_GET["search"])) {
 		$search = strtolower($_GET["search"]);
 	}
 
@@ -63,7 +63,7 @@
 	//echo "<link rel='stylesheet' type='text/css' href='/resources/fontawesome/css/all.min.css.php'>\n";
 
 //get the list of domains
-	if (permission_exists('domain_all')) {
+	if (permission_exists('domain_all') || permission_exists('domain_select')) {
 		$sql = "select * ";
 		$sql .= "from v_domains ";
 		$sql .= "where true ";
@@ -76,9 +76,8 @@
 			$parameters['search'] = '%'.$search.'%';
 		}
 		$sql .= "order by domain_name asc ";
-		$sql .= "limit 300 ";
 		$database = new database;
-		$domains = $database->select($sql, $parameters, 'all');
+		$domains = $database->select($sql, $parameters ?? '', 'all');
 		unset($sql, $parameters);
 	}
 

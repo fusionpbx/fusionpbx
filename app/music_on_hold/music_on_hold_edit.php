@@ -72,7 +72,7 @@
 	}
 
 //add or update the data
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 
 		//get the uuid
 			if ($action == "update") {
@@ -89,17 +89,17 @@
 
 		//check for all required data
 			$msg = '';
-			if (strlen($music_on_hold_name) == 0) { $msg .= $text['message-required']." ".$text['label-name']."<br>\n"; }
-			if (strlen($music_on_hold_path) == 0) { $msg .= $text['message-required']." ".$text['label-path']."<br>\n"; }
-			//if (strlen($music_on_hold_rate) == 0) { $msg .= $text['message-required']." ".$text['label-rate']."<br>\n"; }
-			if (strlen($music_on_hold_shuffle) == 0) { $msg .= $text['message-required']." ".$text['label-shuffle']."<br>\n"; }
-			if (strlen($music_on_hold_channels) == 0) { $msg .= $text['message-required']." ".$text['label-channels']."<br>\n"; }
-			//if (strlen($music_on_hold_interval) == 0) { $msg .= $text['message-required']." ".$text['label-interval']."<br>\n"; }
-			//if (strlen($music_on_hold_timer_name) == 0) { $msg .= $text['message-required']." ".$text['label-timer_name']."<br>\n"; }
-			//if (strlen($music_on_hold_chime_list) == 0) { $msg .= $text['message-required']." ".$text['label-chime_list']."<br>\n"; }
-			//if (strlen($music_on_hold_chime_freq) == 0) { $msg .= $text['message-required']." ".$text['label-chime_freq']."<br>\n"; }
-			//if (strlen($music_on_hold_chime_max) == 0) { $msg .= $text['message-required']." ".$text['label-chime_max']."<br>\n"; }
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+			if (empty($music_on_hold_name)) { $msg .= $text['message-required']." ".$text['label-name']."<br>\n"; }
+			if (empty($music_on_hold_path)) { $msg .= $text['message-required']." ".$text['label-path']."<br>\n"; }
+			//if (empty($music_on_hold_rate)) { $msg .= $text['message-required']." ".$text['label-rate']."<br>\n"; }
+			if (empty($music_on_hold_shuffle)) { $msg .= $text['message-required']." ".$text['label-shuffle']."<br>\n"; }
+			if (empty($music_on_hold_channels)) { $msg .= $text['message-required']." ".$text['label-channels']."<br>\n"; }
+			//if (empty($music_on_hold_interval)) { $msg .= $text['message-required']." ".$text['label-interval']."<br>\n"; }
+			//if (empty($music_on_hold_timer_name)) { $msg .= $text['message-required']." ".$text['label-timer_name']."<br>\n"; }
+			//if (empty($music_on_hold_chime_list)) { $msg .= $text['message-required']." ".$text['label-chime_list']."<br>\n"; }
+			//if (empty($music_on_hold_chime_freq)) { $msg .= $text['message-required']." ".$text['label-chime_freq']."<br>\n"; }
+			//if (empty($music_on_hold_chime_max)) { $msg .= $text['message-required']." ".$text['label-chime_max']."<br>\n"; }
+			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -377,11 +377,11 @@
 			foreach ($recordings as &$row) {
 				$recording_name = $row["recording_name"];
 				$recording_filename = $row["recording_filename"];
-				if ($music_on_hold_chime_list == $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$recording_filename && strlen($music_on_hold_chime_list) > 0) {
+				if ($music_on_hold_chime_list == $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$recording_filename && !empty($music_on_hold_chime_list)) {
 					$tmp_selected = true;
 					echo "	<option value='".escape($_SESSION['switch']['recordings']['dir'])."/".escape($_SESSION['domain_name'])."/".escape($recording_filename)."' selected='selected'>".escape($recording_name)."</option>\n";
 				}
-				else if ($music_on_hold_chime_list == $recording_filename && strlen($music_on_hold_chime_list) > 0) {
+				else if ($music_on_hold_chime_list == $recording_filename && !empty($music_on_hold_chime_list)) {
 					$tmp_selected = true;
 					echo "	<option value='".escape($recording_filename)."' selected='selected'>".escape($recording_name)."</option>\n";
 				}
@@ -418,7 +418,7 @@
 		if (is_array($sound_files) && @sizeof($sound_files) != 0) {
 			echo "<optgroup label='Sounds'>\n";
 			foreach ($sound_files as $value) {
-				if (strlen($value) > 0) {
+				if (!empty($value)) {
 					if (substr($music_on_hold_chime_list, 0, 71) == "\$\${sounds_dir}/\${default_language}/\${default_dialect}/\${default_voice}/") {
 						$music_on_hold_chime_list = substr($music_on_hold_chime_list, 71);
 					}
@@ -436,7 +436,7 @@
 		unset($sound_files, $value);
 	//select
 		if (if_group("superadmin")) {
-			if (!$tmp_selected && strlen($music_on_hold_chime_list) > 0) {
+			if (!$tmp_selected && !empty($music_on_hold_chime_list)) {
 				echo "<optgroup label='Selected'>\n";
 				if (file_exists($_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$music_on_hold_chime_list)) {
 					echo "	<option value='".escape($_SESSION['switch']['recordings']['dir'])."/".escape($_SESSION['domain_name'])."/".escape($music_on_hold_chime_list)."' selected='selected'>".escape($music_on_hold_chime_list)."</option>\n";
@@ -481,7 +481,7 @@
 		echo "</td>\n";
 		echo "<td class='vtable'>\n";
 		echo "	<select name='domain_uuid' class='formfld'>\n";
-		if (strlen($domain_uuid) == 0) {
+		if (empty($domain_uuid)) {
 			echo "		<option value='' selected='selected'>".$text['label-global']."</option>\n";
 		}
 		else {

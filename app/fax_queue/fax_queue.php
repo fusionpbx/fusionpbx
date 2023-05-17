@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2022
+	Portions created by the Initial Developer are Copyright (C) 2023
 	the Initial Developer. All Rights Reserved.
 */
 
@@ -51,6 +51,11 @@
 //add the search
 	if (isset($_REQUEST["search"])) {
 		$search = strtolower($_REQUEST["search"]);
+	}
+
+//get the fax_queue item checked
+	if (isset($_REQUEST['fax_queue'])) {
+		$fax_queue = $_REQUEST['fax_queue'];
 	}
 
 //process the http post data by action
@@ -243,29 +248,6 @@
 	if (permission_exists('fax_queue_delete') && $fax_queue) {
 		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','name'=>'btn_delete','style'=>'display:none;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
-	echo 		"<form id='form_search' class='inline' method='get'>\n";
-	echo "		<select class='formfld' name='fax_status'>\n";
-    echo "			<option value='' selected='selected' disabled hidden>".$text['label-fax_status']."...</option>";
-	echo "			<option value=''></option>\n";
-	if (isset($_GET["fax_status"]) && $_GET["fax_status"] == "waiting") {
-		echo "			<option value='waiting' selected='selected'>".$text['label-waiting']."</option>\n";
-	}
-	else {
-		echo "			<option value='waiting'>".$text['label-waiting']."</option>\n";
-	}
-	if (isset($_GET["fax_status"]) && $_GET["fax_status"] == "failed") {
-		echo "			<option value='failed' selected='selected'>".$text['label-failed']."</option>\n";
-	}
-	else {
-		echo "			<option value='failed'>".$text['label-failed']."</option>\n";
-	}
-	if (isset($_GET["fax_status"]) && $_GET["fax_status"] == "sent") {
-		echo "			<option value='sent' selected='selected'>".$text['label-sent']."</option>\n";
-	}
-	else {
-		echo "			<option value='sent'>".$text['label-sent']."</option>\n";
-	}
-	echo "		</select>\n";
 	if (permission_exists('fax_queue_all')) {
 		if ($_GET['show'] == 'all') {
 			echo "		<input type='hidden' name='show' value='all'>\n";
@@ -274,6 +256,17 @@
 			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$_SESSION['theme']['button_icon_all'],'link'=>'?show=all']);
 		}
 	}
+	echo 		"<form id='form_search' class='inline' method='get'>\n";
+	echo "		<select class='formfld' name='fax_status' style='margin-left: 15px;'>\n";
+    echo "			<option value='' selected='selected' disabled hidden>".$text['label-fax_status']."...</option>";
+	echo "			<option value=''></option>\n";
+	echo "			<option value='waiting' ".($_GET["fax_status"] == "waiting" ? "selected='selected'" : null).">".ucwords($text['label-waiting'])."</option>\n";
+	echo "			<option value='sending' ".($_GET["fax_status"] == "sending" ? "selected='selected'" : null).">".ucwords($text['label-sending'])."</option>\n";
+	echo "			<option value='trying' ".($_GET["fax_status"] == "trying" ? "selected='selected'" : null).">".ucwords($text['label-trying'])."</option>\n";
+	echo "			<option value='sent' ".($_GET["fax_status"] == "sent" ? "selected='selected'" : null).">".ucwords($text['label-sent'])."</option>\n";
+	echo "			<option value='busy' ".($_GET["fax_status"] == "busy" ? "selected='selected'" : null).">".ucwords($text['label-busy'])."</option>\n";
+	echo "			<option value='failed' ".($_GET["fax_status"] == "failed" ? "selected='selected'" : null).">".ucwords($text['label-failed'])."</option>\n";
+	echo "		</select>\n";
 	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" />";
 	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search']);
 	if ($paging_controls_mini != '') {
@@ -312,12 +305,12 @@
 	//echo th_order_by('fax_date', $text['label-fax_date'], $order_by, $order);
 	echo "<th class='center shrink'>".$text['label-date']."</th>\n";
 	echo "<th class='center shrink hide-md-dn'>".$text['label-time']."</th>\n";
-	echo th_order_by('hostname', $text['label-hostname'], $order_by, $order);
-	echo th_order_by('fax_caller_id_name', $text['label-fax_caller_id_name'], $order_by, $order);
+	echo th_order_by('hostname', $text['label-hostname'], $order_by, $order, null, "class='hide-md-dn'");
+	echo th_order_by('fax_caller_id_name', $text['label-fax_caller_id_name'], $order_by, $order, null, "class='hide-md-dn'");
 	echo th_order_by('fax_caller_id_number', $text['label-fax_caller_id_number'], $order_by, $order);
 	echo th_order_by('fax_number', $text['label-fax_number'], $order_by, $order);
 	echo th_order_by('fax_email_address', $text['label-fax_email_address'], $order_by, $order);
-	echo th_order_by('fax_file', $text['label-fax_file'], $order_by, $order);
+// 	echo th_order_by('fax_file', $text['label-fax_file'], $order_by, $order);
 	echo th_order_by('fax_status', $text['label-fax_status'], $order_by, $order);
 	echo th_order_by('fax_retry_date', $text['label-fax_retry_date'], $order_by, $order);
 	echo th_order_by('fax_notify_date', $text['label-fax_notify_date'], $order_by, $order);
@@ -344,14 +337,14 @@
 				echo "	<td>".escape($row['domain_name'])."</td>\n";
 			}
 			echo "	<td nowrap='nowrap'>".escape($row['fax_date_formatted'])."</td>\n";
-			echo "	<td nowrap='nowrap'>".escape($row['fax_time_formatted'])."</td>\n";
-			echo "	<td>".escape($row['hostname'])."</td>\n";
-			echo "	<td>".escape($row['fax_caller_id_name'])."</td>\n";
+			echo "	<td class='hide-md-dn' nowrap='nowrap'>".escape($row['fax_time_formatted'])."</td>\n";
+			echo "	<td class='hide-md-dn'>".escape($row['hostname'])."</td>\n";
+			echo "	<td class='hide-md-dn'>".escape($row['fax_caller_id_name'])."</td>\n";
 			echo "	<td>".escape($row['fax_caller_id_number'])."</td>\n";
 			echo "	<td>".escape($row['fax_number'])."</td>\n";
 			echo "	<td>".escape(str_replace(',', ' ', $row['fax_email_address']))."</td>\n";
-			echo "	<td>".escape($row['fax_file'])."</td>\n";
-			echo "	<td>".escape($row['fax_status'])."</td>\n";
+// 			echo "	<td>".escape($row['fax_file'])."</td>\n";
+			echo "	<td>".ucwords($text['label-'.$row['fax_status']])."</td>\n";
 			echo "	<td>".escape($row['fax_retry_date_formatted'])." ".escape($row['fax_retry_time_formatted'])."</td>\n";
 			echo "	<td>".escape($row['fax_notify_date_formatted'])." ".escape($row['fax_notify_time_formatted'])."</td>\n";
 			echo "	<td>".escape($row['fax_retry_count'])."</td>\n";

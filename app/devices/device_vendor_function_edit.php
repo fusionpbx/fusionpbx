@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2016-2020
+	Portions created by the Initial Developer are Copyright (C) 2016-2022
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -89,14 +89,15 @@
 //get http post variables and set them to php variables
 	if (count($_POST)>0) {
 		//$label = $_POST["label"];
-		$name = $_POST["name"];
+		$type = $_POST["type"];
+		$subtype = $_POST["subtype"];
 		$value = $_POST["value"];
 		$enabled = $_POST["enabled"];
 		$description = $_POST["description"];
 	}
 
 //process the http variables
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 
 		//get the uuid
 			if ($action == "update") {
@@ -113,12 +114,12 @@
 
 		//check for all required data
 			$msg = '';
-			//if (strlen($label) == 0) { $msg .= $text['message-required']." ".$text['label-label']."<br>\n"; }
-			if (strlen($name) == 0) { $msg .= $text['message-required']." ".$text['label-name']."<br>\n"; }
-			if (strlen($value) == 0) { $msg .= $text['message-required']." ".$text['label-value']."<br>\n"; }
-			if (strlen($enabled) == 0) { $msg .= $text['message-required']." ".$text['label-enabled']."<br>\n"; }
-			//if (strlen($description) == 0) { $msg .= $text['message-required']." ".$text['label-description']."<br>\n"; }
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+			//if (empty($label)) { $msg .= $text['message-required']." ".$text['label-label']."<br>\n"; }
+			if (empty($type)) { $msg .= $text['message-required']." ".$text['label-type']."<br>\n"; }
+			if (empty($value)) { $msg .= $text['message-required']." ".$text['label-value']."<br>\n"; }
+			if (empty($enabled)) { $msg .= $text['message-required']." ".$text['label-enabled']."<br>\n"; }
+			//if (empty($description)) { $msg .= $text['message-required']." ".$text['label-description']."<br>\n"; }
+			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -149,7 +150,8 @@
 					if (is_array($array) && @sizeof($array) != 0) {
 						$array['device_vendor_functions'][0]['device_vendor_uuid'] = $device_vendor_uuid;
 						//$array['device_vendor_functions'][0]['label'] = $label;
-						$array['device_vendor_functions'][0]['name'] = $name;
+						$array['device_vendor_functions'][0]['type'] = $type;
+						$array['device_vendor_functions'][0]['subtype'] = $subtype;
 						$array['device_vendor_functions'][0]['value'] = $value;
 						$array['device_vendor_functions'][0]['enabled'] = $enabled;
 						$array['device_vendor_functions'][0]['description'] = $description;
@@ -208,7 +210,8 @@
 		$row = $database->select($sql, $parameters, 'row');
 		if (is_array($row) && @sizeof($row) != 0) {
 			//$label = $row["label"];
-			$name = $row["name"];
+			$type = $row["type"];
+			$subtype = $row["subtype"];
 			$value = $row["value"];
 			$enabled = $row["enabled"];
 			$description = $row["description"];
@@ -238,7 +241,7 @@
 //set the assigned_groups array
 	if (is_array($function_groups) && @sizeof($function_groups) != 0) {
 		foreach($function_groups as $field) {
-			if (strlen($field['group_name']) > 0) {
+			if (!empty($field['group_name'])) {
 				$assigned_groups[] = $field['group_uuid'];
 			}
 		}
@@ -285,12 +288,23 @@
 
 	echo "<tr>\n";
 	echo "<td width='30%' class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-name']."\n";
+	echo "	".$text['label-type']."\n";
 	echo "</td>\n";
 	echo "<td width='70%' class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='name' maxlength='255' value=\"".escape($name)."\">\n";
+	echo "	<input class='formfld' type='text' name='type' maxlength='255' value=\"".escape($type)."\">\n";
 	echo "<br />\n";
-	echo $text['description-name']."\n";
+	echo $text['description-type']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td width='30%' class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-subtype']."\n";
+	echo "</td>\n";
+	echo "<td width='70%' class='vtable' align='left'>\n";
+	echo "	<input class='formfld' type='text' name='subtype' maxlength='255' value=\"".escape($subtype)."\">\n";
+	echo "<br />\n";
+	echo $text['description-subtype']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -311,7 +325,7 @@
 	if (is_array($function_groups) && @sizeof($function_groups) != 0) {
 		echo "<table cellpadding='0' cellspacing='0' border='0'>\n";
 		foreach ($function_groups as $field) {
-			if (strlen($field['group_name']) > 0) {
+			if (!empty($field['group_name'])) {
 				echo "<tr>\n";
 				echo "	<td class='vtable' style='white-space: nowrap; padding-right: 30px;' nowrap='nowrap'>";
 				echo $field['group_name'].(($field['group_domain_uuid'] != '') ? "@".$_SESSION['domains'][$field['group_domain_uuid']]['domain_name'] : null);

@@ -81,7 +81,7 @@
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$parameters['domain_uuid'] = $domain_uuid;
 	}
-	if (strlen($search) > 0) {
+	if (!empty($search)) {
 		$sql = "and (";
 		$sql .= "lower(type) like :search ";
 		$sql .= "or lower(email) like :search ";
@@ -98,7 +98,7 @@
 		$param .= "&show=all";
 	}
 	$page = $_GET['page'];
-	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
+	if (empty($page)) { $page = 0; $_GET['page'] = 0; }
 	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
 	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
@@ -112,7 +112,7 @@
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$parameters['domain_uuid'] = $domain_uuid;
 	}
-	if (strlen($search) > 0) {
+	if (!empty($search)) {
 		$sql = "and (";
 		$sql .= "lower(type) like :search ";
 		$sql .= "or lower(email) like :search ";
@@ -131,7 +131,7 @@
 			$sql = "select caller_id_name, caller_id_number, destination_number ";
 			$sql .= "from v_xml_cdr ";
 			$sql .= "where domain_uuid = :domain_uuid ";
-			$sql .= "and uuid = :uuid ";
+			$sql .= "and xml_cdr_uuid = :uuid ";
 			$parameters['domain_uuid'] = $domain_uuid;
 			$parameters['uuid'] = $row['call_uuid'];
 			$database = new database;

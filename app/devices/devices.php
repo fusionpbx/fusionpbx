@@ -53,8 +53,8 @@
 	}
 
 //get the search
-	$search = strtolower($_REQUEST["search"]);
-	$fields = strtolower($_REQUEST["fields"]);
+	$search = strtolower($_REQUEST["search"] ?? '');
+	$fields = strtolower($_REQUEST["fields"] ?? '');
 
 //process the http post data by action
 	if ($action != '' && is_array($devices) && @sizeof($devices) != 0) {
@@ -112,7 +112,7 @@
 //prepare to page the results
 	$sql = "select count(*) from v_devices as d ";
 	if (isset($_GET['show']) && $_GET['show'] == "all" && permission_exists('device_all')) {
-		if (strlen($search) > 0) {
+		if (!empty($search)) {
 			$sql .= "where ";
 		}
 	}
@@ -123,12 +123,12 @@
 			$sql .= "	or d.domain_uuid is null ";
 		}
 		$sql .= ") ";
-		if (strlen($search) > 0) {
+		if (!empty($search)) {
 			$sql .= "and ";
 		}
 		$parameters['domain_uuid'] = $domain_uuid;
 	}
-	if (strlen($search) > 0) {
+	if (!empty($search)) {
 		$sql .= "(";
 		$sql .= "	lower(d.device_mac_address) like :search ";
 		$sql .= "	or lower(d.device_label) like :search ";
@@ -178,7 +178,7 @@
 		$param .= "&show=all";
 	}
 	$page = $_GET['page'];
-	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
+	if (empty($page)) { $page = 0; $_GET['page'] = 0; }
 	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
 	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
@@ -214,7 +214,7 @@
 		$sql .= "and d.device_user_uuid = :user_uuid ";
 		$parameters['user_uuid'] = $_SESSION['user_uuid'];
 	}
-	if (strlen($search) > 0) {
+	if (!empty($search)) {
 		$sql .= "and (";
 		$sql .= "	lower(d.device_mac_address) like :search ";
 		$sql .= "	or lower(d.device_label) like :search ";
@@ -250,7 +250,7 @@
 		$sql .= ") ";
 		$parameters['search'] = '%'.strtolower($search).'%';
 	}
-	if (strlen($order_by) == 0) {
+	if (empty($order_by)) {
 		$sql .= "order by d.device_label, d.device_description asc ";
 	}
 	else {
@@ -421,7 +421,7 @@
 			echo "	</td>\n";
 			echo "	<td>".escape($row['device_label'])."&nbsp;</td>\n";
 			if ($device_alternate) {
-				if (strlen($row['device_uuid_alternate']) > 0) {
+				if (!empty($row['device_uuid_alternate'])) {
 					echo "	<td class='no-link'>\n";
 					echo "		<a href='device_edit.php?id=".urlencode($row['device_uuid_alternate'])."'>".escape($row['alternate_label'])."</a>\n";
 					echo "	</td>\n";
