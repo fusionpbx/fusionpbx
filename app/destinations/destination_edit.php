@@ -46,7 +46,7 @@
 	$text = $language->get();
 
 //action add or update
-	if (is_uuid($_REQUEST["id"])) {
+	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
 		$destination_uuid = $_REQUEST["id"];
 	}
@@ -82,7 +82,7 @@
 	}
 
 //get http post variables and set them to php variables
-	if (count($_POST) > 0) {
+	if (!empty($_POST)) {
 		//get the uuid
 			if ($action == "update" && is_uuid($_POST["destination_uuid"])) {
 				$destination_uuid = $_POST["destination_uuid"];
@@ -126,7 +126,7 @@
 			$destination_carrier = $_POST["destination_carrier"];
 
 		//sanitize the destination conditions
-			if (is_array($destination_conditions)) {
+			if (!empty($destination_conditions)) {
 				$i=0;
 				foreach($destination_conditions as $row) {
 					if (isset($row['condition_expression']) && !empty($row['condition_expression'])) {
@@ -142,11 +142,11 @@
 	}
 
 //process the http post
-	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
+	if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
 		//initialize the destinations object
 			$destination = new destinations;
-			if (permission_exists('destination_domain') && is_uuid($domain_uuid)) {
+			if (permission_exists('destination_domain') && !empty($domain_uuid) && is_uuid($domain_uuid)) {
 				$destination->domain_uuid = $domain_uuid;
 			}
 
@@ -172,7 +172,7 @@
 			}
 
 		//if the user doesn't have permission to set the destination_number then get it from the database
-			if (is_uuid($destination_uuid) && !permission_exists('destination_number')) {
+			if (!empty($destination_uuid) && is_uuid($destination_uuid) && !permission_exists('destination_number')) {
 				$sql = "select destination_number from v_destinations ";
 				$sql .= "where destination_uuid = :destination_uuid ";
 				$parameters['destination_uuid'] = $destination_uuid;
@@ -218,12 +218,12 @@
 			}
 
 		//get the uuid
-			if ($action == "update" && is_uuid($_POST["destination_uuid"])) {
+			if ($action == "update" && !empty($_POST["destination_uuid"]) && is_uuid($_POST["destination_uuid"])) {
 				$destination_uuid = $_POST["destination_uuid"];
 			}
 
 		//get the destination row values
-			if ($action == 'update' && is_uuid($destination_uuid)) {
+			if ($action == 'update' && !empty($destination_uuid) && is_uuid($destination_uuid)) {
 				$sql = "select * from v_destinations ";
 				$sql .= "where destination_uuid = :destination_uuid ";
 				$parameters['destination_uuid'] = $destination_uuid;
@@ -233,7 +233,7 @@
 			}
 
 		//get the destination settings from the database
-			if (is_array($row) && @sizeof($row) != 0) {
+			if (!empty($row)) {
 				//get the dialplan_uuid from the database
 				$dialplan_uuid = $row["dialplan_uuid"];
 
@@ -246,7 +246,7 @@
 
 		//if the user doesn't have the correct permission then
 		//override variables using information from the database
-			if (is_array($row) && @sizeof($row) != 0) {
+			if (!empty($row)) {
 				if (!permission_exists('destination_prefix')) {
 					$destination_prefix = $row["destination_prefix"];
 				}
@@ -342,7 +342,7 @@
 					$dialplan_details = $_POST["dialplan_details"];
 
 				//array cleanup
-					if (is_array($dialplan_details)) {
+					if (!empty($dialplan_details)) {
 						foreach ($dialplan_details as $index => $row) {
 							//unset the empty row
 							if (empty($row["dialplan_detail_data"])) {
@@ -362,7 +362,7 @@
 						//$parameters['domain_uuid'] = $domain_uuid;
 						$database = new database;
 						$row = $database->select($sql, $parameters, 'row');
-						if (is_array($row) && @sizeof($row) != 0) {
+						if (!empty($row)) {
 							$fax_extension = $row["fax_extension"];
 							$fax_destination_number = $row["fax_destination_number"];
 							$fax_name = $row["fax_name"];
@@ -422,7 +422,7 @@
 								$dialplan["app_uuid"] = "b5242951-686f-448f-8b4e-5031ba0601a4";
 							}
 							$dialplan["dialplan_uuid"] = $dialplan_uuid;
-							$dialplan["domain_uuid"] = $domain_uuid;
+							$dialplan["domain_uuid"] = $domain_uuid ?? null;
 							$dialplan["dialplan_name"] = ($dialplan_name != '') ? $dialplan_name : format_phone($destination_area_code.$destination_number);
 							$dialplan["dialplan_number"] = $destination_area_code.$destination_number;
 							$dialplan["dialplan_context"] = $destination_context;
@@ -469,7 +469,7 @@
 							$dialplan["dialplan_xml"] = "<extension name=\"".xml::sanitize($dialplan["dialplan_name"])."\" continue=\"false\" uuid=\"".xml::sanitize($dialplan_uuid)."\">\n";
 
 							//add the dialplan xml destination conditions
-							if (is_array($conditions)) {
+							if (!empty($conditions)) {
 								foreach($conditions as $row) {
 									if (is_numeric($row['condition_expression']) && strlen($destination_number) == strlen($row['condition_expression']) && !empty($destination_prefix)) {
 										$condition_expression = '\+?'.$destination_prefix.'?'.$row['condition_expression'];
@@ -544,7 +544,7 @@
 									$dialplan_detail_order = $dialplan_detail_order + 10;
 
 								//add the dialplan detail destination conditions
-									if (is_array($conditions)) {
+									if (!empty($conditions)) {
 										foreach($conditions as $row) {
 											//prepare the expression
 											if (is_numeric($row['condition_expression']) && strlen($destination_number) == strlen($row['condition_expression']) && !empty($destination_prefix)) {
@@ -902,7 +902,7 @@
 							}
 
 							//prepare the destination_conditions json
-							if (is_array($conditions)) {
+							if (!empty($conditions)) {
 								$array['destinations'][$x]["destination_conditions"] = json_encode($conditions);
 								unset($conditions);
 							}
@@ -1033,8 +1033,45 @@
 
 	}
 
+//set default values
+	$domain_uuid = '';
+	$dialplan_uuid = '';
+	$destination_type = '';
+	$destination_number = '';
+	$destination_condition_field = '';
+	$destination_prefix = '';
+	$destination_trunk_prefix = '';
+	$destination_area_code = '';
+	$destination_caller_id_name = '';
+	$destination_caller_id_number = '';
+	$destination_cid_name_prefix = '';
+	$destination_hold_music = '';
+	$destination_distinctive_ring = '';
+	$destination_record = '';
+	$destination_accountcode = '';
+	$destination_type_voice = '';
+	$destination_type_fax = '';
+	$destination_type_text = '';
+	$destination_type_emergency = '';
+	$destination_context = '';
+	$destination_conditions = '';
+	$destination_actions = '';
+	$fax_uuid = '';
+	$provider_uuid = '';
+	$user_uuid = '';
+	$group_uuid = '';
+	$currency = '';
+	$destination_sell = '';
+	$destination_buy = '';
+	$currency_buy = '';
+	$destination_carrier = '';
+	$destination_order = '';
+	$destination_enabled = '';
+	$destination_description = '';
+	$select_style = '';
+				
 //pre-populate the form
-	if (is_array($_GET) > 0 && $_POST["persistformvar"] != "true") {
+	if (!empty($_GET["id"]) > 0 && empty($_POST["persistformvar"])) {
 	 	if (is_uuid($_GET["id"])) {
 	 		$destination_uuid = $_GET["id"];
 			$sql = "select * from v_destinations ";
@@ -1042,7 +1079,7 @@
 			$parameters['destination_uuid'] = $destination_uuid;
 			$database = new database;
 			$row = $database->select($sql, $parameters, 'row');
-			if (is_array($row) && @sizeof($row) != 0) {
+			if (!empty($row)) {
 				$domain_uuid = $row["domain_uuid"];
 				$dialplan_uuid = $row["dialplan_uuid"];
 				$destination_type = $row["destination_type"];
@@ -1083,11 +1120,11 @@
 	}
 
 //decode the json to an array
-	$destination_conditions = json_decode($destination_conditions, true);
+	$destination_conditions = json_decode($destination_conditions ?? '', true);
 	$destination_actions = json_decode($destination_actions ?? '', true);
 
 //prepare the conditions array, add an empty row
-	if (is_array($destination_conditions)) {
+	if (!empty($destination_conditions)) {
 		$i=0;
 		foreach ($destination_conditions as $row) { $i++; }
 		$destination_conditions[$i]['condition_field'] = '';
@@ -1110,10 +1147,10 @@
 	unset($sql, $parameters);
 
 //add an empty row to the array
-	$x = (is_array($dialplan_details)) ? count($dialplan_details) : $x = 0;
+	$x = (!empty($dialplan_details)) ? count($dialplan_details) : $x = 0;
 	$limit = $x + 1;
 	while($x < $limit) {
-		$dialplan_details[$x]['domain_uuid'] = $domain_uuid;
+		$dialplan_details[$x]['domain_uuid'] = $domain_uuid ?? null;
 		$dialplan_details[$x]['dialplan_uuid'] = $dialplan_uuid;
 		$dialplan_details[$x]['dialplan_detail_type'] = '';
 		$dialplan_details[$x]['dialplan_detail_data'] = '';
@@ -1480,7 +1517,7 @@
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	$x=0;
-	if (is_array($destination_actions)) {
+	if (!empty($destination_actions)) {
 		foreach($destination_actions as $row) {
 			echo $destination->select('dialplan', "destination_actions[$x]", $row['destination_app'].':'.$row['destination_data']);
 			echo "<br />\n";
@@ -1501,7 +1538,7 @@
 		$parameters['domain_uuid'] = $domain_uuid;
 		$database = new database;
 		$result = $database->select($sql, $parameters, 'all');
-		if (is_array($result) && @sizeof($result) != 0) {
+		if (!empty($result)) {
 			echo "<tr id='tr_fax_detection'>\n";
 			echo "<td class='vncell' valign='top' align='left' nowrap>\n";
 			echo "	".$text['label-fax_uuid']."\n";
@@ -1527,7 +1564,7 @@
 	}
 
 	//providers
-	if (permission_exists('provider_edit') && is_array($providers) && @sizeof($providers) != 0) {
+	if (permission_exists('provider_edit') && !empty($providers)) {
 		echo "<tr id='tr_provider'>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
 		echo "	".$text['label-provider']."\n";
