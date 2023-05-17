@@ -38,7 +38,7 @@
 	$text = $language->get();
 
 //get user uuid
-	if ((is_uuid($_REQUEST["id"]) && permission_exists('user_edit')) || (is_uuid($_REQUEST["id"]) && $_REQUEST["id"] == $_SESSION['user_uuid'])) {
+	if (!empty($_REQUEST["id"]) && ((is_uuid($_REQUEST["id"]) && permission_exists('user_edit')) || (is_uuid($_REQUEST["id"]) && $_REQUEST["id"] == $_SESSION['user_uuid']))) {
 		$user_uuid = $_REQUEST["id"];
 		$action = 'edit';
 	}
@@ -498,7 +498,7 @@
 		//add user setting to array for update
 			$array['users'][$x]['user_uuid'] = $user_uuid;
 			$array['users'][$x]['domain_uuid'] = $domain_uuid;
-			if ($username != '' && $username != $username_old) {
+			if ($username != '' && (empty($username_old) || $username != $username_old)) {
 				$array['users'][$x]['username'] = $username;
 			}
 			if ($password != '' && $password == $password_confirm) {
@@ -725,12 +725,12 @@
 	echo "		<td width='30%' class='vncellreq' valign='top'>".$text['label-username']."</td>";
 	echo "		<td width='70%' class='vtable'>";
 	if (permission_exists("user_edit")) {
-		echo "		<input type='text' class='formfld' name='username' id='username' autocomplete='new-password' value='".escape($username)."' required='required'>\n";
+		echo "		<input type='text' class='formfld' name='username' id='username' autocomplete='new-password' value='".escape($username ?? '')."' required='required'>\n";
 		echo "		<input type='text' style='display: none;' disabled='disabled'>\n"; //help defeat browser auto-fill
 	}
 	else {
 		echo "		".escape($username)."\n";
-		echo "		<input type='hidden' name='username' id='username' autocomplete='new-password' value='".escape($username)."'>\n";
+		echo "		<input type='hidden' name='username' id='username' autocomplete='new-password' value='".escape($username ?? '')."'>\n";
 	}
 	echo "		</td>";
 	echo "	</tr>";
@@ -781,7 +781,7 @@
 
 	echo "	<tr>";
 	echo "		<td class='vncellreq'>".$text['label-email']."</td>";
-	echo "		<td class='vtable'><input type='text' class='formfld' name='user_email' value='".escape($user_email)."' required='required'></td>";
+	echo "		<td class='vtable'><input type='text' class='formfld' name='user_email' value='".escape($user_email ?? '')."' required='required'></td>";
 	echo "	</tr>";
 
 	echo "	<tr>\n";
@@ -924,15 +924,15 @@
 	elseif ($action == 'add' && permission_exists("user_add") && permission_exists('contact_add')) {
 		echo "	<tr>";
 		echo "		<td class='vncell'>".$text['label-first_name']."</td>";
-		echo "		<td class='vtable'><input type='text' class='formfld' name='contact_name_given' value='".escape($contact_name_given)."'></td>";
+		echo "		<td class='vtable'><input type='text' class='formfld' name='contact_name_given' value='".escape($contact_name_given ?? '')."'></td>";
 		echo "	</tr>";
 		echo "	<tr>";
 		echo "		<td class='vncell'>".$text['label-last_name']."</td>";
-		echo "		<td class='vtable'><input type='text' class='formfld' name='contact_name_family' value='".escape($contact_name_family)."'></td>";
+		echo "		<td class='vtable'><input type='text' class='formfld' name='contact_name_family' value='".escape($contact_name_family ?? '')."'></td>";
 		echo "	</tr>";
 		echo "	<tr>";
 		echo "		<td class='vncell'>".$text['label-organization']."</td>";
-		echo "		<td class='vtable'><input type='text' class='formfld' name='contact_organization' value='".escape($contact_organization)."'></td>";
+		echo "		<td class='vtable'><input type='text' class='formfld' name='contact_organization' value='".escape($contact_organization ?? '')."'></td>";
 		echo "	</tr>";
 	}
 
@@ -986,7 +986,7 @@
 
 		$sql = "select * from v_groups ";
 		$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
-		if (is_array($assigned_groups) && sizeof($assigned_groups) > 0) {
+		if (!empty($assigned_groups) && is_array($assigned_groups) && sizeof($assigned_groups) > 0) {
 			$sql .= "and group_uuid not in ('".implode("','",$assigned_groups)."') ";
 		}
 		$sql .= "order by domain_uuid desc, group_name asc ";
@@ -1040,7 +1040,7 @@
 		echo "	<tr>";
 		echo "		<td class='vncell' valign='top'>".$text['label-api_key']."</td>";
 		echo "		<td class='vtable'>\n";
-		echo "			<input type='text' class='formfld' style='width: 250px; display: none;' name='api_key' id='api_key' value=\"".escape($api_key)."\" >";
+		echo "			<input type='text' class='formfld' style='width: 250px; display: none;' name='api_key' id='api_key' value=\"".escape($api_key ?? '')."\" >";
 		if (empty($api_key)) {
 			//generate api key
 			echo button::create(['type'=>'button',
