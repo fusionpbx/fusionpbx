@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2016-2020
+	Portions created by the Initial Developer are Copyright (C) 2016-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -58,6 +58,11 @@ if (!class_exists('xml_cdr')) {
 		private $list_page;
 		private $table;
 		private $uuid_prefix;
+
+		/**
+		 * Used by read_files, xml_array, and save methods
+		 */
+		public $file;
 
 		/**
 		 * Called when the object is created
@@ -215,6 +220,11 @@ if (!class_exists('xml_cdr')) {
 						}
 					}
 
+					//set the directory
+					if (!empty($_SESSION['switch']['log']['dir'])) {
+						$xml_cdr_dir = $_SESSION['switch']['log']['dir'].'/xml_cdr';
+					}
+
 					//add the temporary permission
 					$p = new permissions;
 					$p->add("xml_cdr_add", "temp");
@@ -225,7 +235,29 @@ if (!class_exists('xml_cdr')) {
 					$database->app_name = 'xml_cdr';
 					$database->app_uuid = '4a085c51-7635-ff03-f67b-86e834422848';
 					$database->domain_uuid = $domain_uuid;
-					$database->save($array, false);
+					$response = $database->save($array, false);
+					if ($response['code'] == '200') {
+						//saved to the database successfully delete the database file
+						if (!empty($xml_cdr_dir)) {
+							if (file_exists($xml_cdr_dir.'/'.$this->file)) {
+								unlink($xml_cdr_dir.'/'.$this->file);
+							}
+						}
+					}
+					else {
+						//move the file to a failed directory
+						if (!empty($xml_cdr_dir)) {
+							if (!file_exists($xml_cdr_dir.'/failed')) {
+								if (!mkdir($xml_cdr_dir.'/failed', 0660, true)) {
+								    die('Failed to create '.$xml_cdr_dir.'/failed');
+								}
+							}
+							rename($xml_cdr_dir.'/'.$this->file, $xml_cdr_dir.'/failed/'.$this->file);
+						}
+
+						//send an error message
+						echo 'failed file moved to '.$xml_cdr_dir.'/failed/'.$this->file;
+					}
 
 					//debug results
 					$this->log(print_r($database->message, true));
@@ -274,7 +306,7 @@ if (!class_exists('xml_cdr')) {
 			//check for duplicate call uuid's
 				$duplicate_uuid = false;
 				$uuid = urldecode($xml->variables->uuid);
-				if($uuid != null && is_uuid($uuid)) {
+				if ($uuid != null && is_uuid($uuid)) {
 					$sql = "select count(xml_cdr_uuid) ";
 					$sql .= "from v_xml_cdr ";
 					$sql .= "where xml_cdr_uuid = :xml_cdr_uuid ";
@@ -282,7 +314,16 @@ if (!class_exists('xml_cdr')) {
 					$database = new database;
 					$count = $database->select($sql, $parameters, 'column');
 					if ($count > 0) {
+						//duplicate uuid detected
 						$duplicate_uuid = true;
+
+						//remove the file as the record already exists in the database
+						if (!empty($_SESSION['switch']['log']['dir'])) {
+							$xml_cdr_dir = $_SESSION['switch']['log']['dir'].'/xml_cdr';
+							if (file_exists($xml_cdr_dir.'/'.$this->file)) {
+								unlink($xml_cdr_dir.'/'.$this->file);
+							}
+						}
 					}
 					unset($sql, $parameters);
 				}
@@ -936,14 +977,14 @@ if (!class_exists('xml_cdr')) {
 								//get the xml cdr string
 									$xml_string = file_get_contents($xml_cdr_dir.'/'.$file);
 
+								//set the file
+									$this->file = $file;
+
 								//decode the xml string
 									//$xml_string = urldecode($xml_string);
 
 								//parse the xml and insert the data into the db
 									$this->xml_array($x, $leg, $xml_string);
-
-								//delete the file after it has been imported
-									unlink($xml_cdr_dir.'/'.$file);
 
 								//increment the value
 									$x++;
@@ -957,6 +998,7 @@ if (!class_exists('xml_cdr')) {
 					}
 				}
 			}
+			//save data to the database
 			$this->save();
 			closedir($dir_handle);
 		}
