@@ -433,7 +433,7 @@ if (!class_exists('destinations')) {
 				$destination_id = str_replace("]", "", $destination_name);
 				$destination_id = str_replace("[", "_", $destination_id);
 				//$destination_id = preg_replace('/[^a-zA-Z_,.]/', '', $destination_name);
-	
+
 				?>
 				<script type="text/javascript">
 					function get_destinations(id, destination_type, action, search) {
@@ -482,7 +482,7 @@ if (!class_exists('destinations')) {
 					$singular = $this->singular($key);
 					if (permission_exists("{$singular}_destinations")) {
 						//determine if selected
-						$selected = ($key == $destination_key) ? "selected='selected'" : ''; 
+						$selected = ($key == $destination_key) ? "selected='selected'" : '';
 
 						//add multi-lingual support
 						if (file_exists($_SERVER["PROJECT_ROOT"]."/app/".$key."/app_languages.php")) {
@@ -675,7 +675,7 @@ if (!class_exists('destinations')) {
 						$select_value = $row['select_value'][$destination_type];
 						$select_label = $row['select_label'];
 						foreach ($row['field'] as $key => $value) {
-							if ($key == 'destination' and !empty($value)){
+							if (!empty($key) && $key == 'destination' && !empty($value) && is_array($value)){
 								if (!empty($value['type']) && $value['type'] == 'csv') {
 									$array = explode($value['delimiter'], $data[$key]);
 									$select_value = str_replace("\${destination}", $array[0], $select_value);
@@ -957,7 +957,7 @@ if (!class_exists('destinations')) {
 						//$array[$name][$i]['selected'] = $selected;
 						$array[$name][$i]['destination'] = $select_value;
 						$array[$name][$i]["extension"] = $data["extension"];
-						
+
 						$i++;
 					}
 

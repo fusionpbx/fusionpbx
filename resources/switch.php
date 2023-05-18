@@ -39,7 +39,7 @@
 			$sql = "select * from v_settings ";
 			$database = new database;
 			$row = $database->select($sql, null, 'row');
-			if (is_array($row) && @sizeof($row) != 0) {
+			if (!empty($row)) {
 				$_SESSION['event_socket_ip_address'] = $row["event_socket_ip_address"];
 				$_SESSION['event_socket_port'] = $row["event_socket_port"];
 				$_SESSION['event_socket_password'] = $row["event_socket_password"];
@@ -74,7 +74,7 @@ function event_socket_request_cmd($cmd) {
 		$sql = "select * from v_settings ";
 		$database = new database;
 		$row = $database->select($sql, null, 'row');
-		if (is_array($row) && @sizeof($row) != 0) {
+		if (!empty($row)) {
 			$event_socket_ip_address = $row["event_socket_ip_address"];
 			$event_socket_port = $row["event_socket_port"];
 			$event_socket_password = $row["event_socket_password"];
@@ -127,7 +127,7 @@ function save_setting_xml() {
 	$sql = "select * from v_settings ";
 	$database = new database;
 	$row = $database->select($sql, null, 'row');
-	if (is_array($row) && @sizeof($row) != 0) {
+	if (!empty($row)) {
 		$fout = fopen($_SESSION['switch']['conf']['dir']."/directory/default/default.xml","w");
 		$xml = "<include>\n";
 		$xml .= "  <user id=\"default\"> <!--if id is numeric mailbox param is not necessary-->\n";
@@ -248,7 +248,7 @@ function save_gateway_xml() {
 		$parameters['domain_uuid'] = $domain_uuid;
 		$database = new database;
 		$result = $database->select($sql, $parameters, 'all');
-		if (is_array($result) && @sizeof($result) != 0) {
+		if (!empty($result)) {
 			foreach ($result as &$row) {
 				if ($row['enabled'] != "false") {
 						//set the default profile as external
@@ -386,10 +386,10 @@ function save_var_xml() {
 		$sql .= "where var_enabled = 'true' ";
 		$sql .= "order by var_category, var_order asc ";
 		$database = new database;
-		$variables = $database->select($sql, $parameters, 'all');
+		$variables = $database->select($sql, null, 'all');
 		$prev_var_category = '';
 		$xml = '';
-		if (is_array($variables) && @sizeof($variables) != 0) {
+		if (!empty($variables)) {
 			foreach ($variables as &$row) {
 				if ($row['var_category'] != 'Provision') {
 					if ($prev_var_category != $row['var_category']) {
@@ -469,7 +469,7 @@ function outbound_route_to_bridge($domain_uuid, $destination_number, array $chan
 	$result = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
-	if (is_array($result) && @sizeof($result) != 0) {
+	if (!empty($result)) {
 		foreach ($result as &$row) {
 			$dialplan_uuid = $row["dialplan_uuid"];
 			$dialplan_detail_uuid = $row["dialplan_detail_uuid"];
@@ -480,7 +480,7 @@ function outbound_route_to_bridge($domain_uuid, $destination_number, array $chan
 		}
 	}
 	
-	if (is_array($outbound_routes) && @sizeof($outbound_routes) != 0) {
+	if (!empty($outbound_routes)) {
 		$x = 0;
 		foreach ($outbound_routes as &$dialplan) {
 			$condition_match = false;
@@ -574,7 +574,7 @@ function extension_presence_id($extension, $number_alias = false) {
 		$parameters['extension'] = $extension;
 		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
-		if (is_array($row) && @sizeof($row) != 0) {
+		if (!empty($row)) {
 			$extension = $row['extension'];
 			$number_alias = $row['number_alias'];
 		}
@@ -602,7 +602,7 @@ function get_recording_filename($id) {
 	$parameters['domain_uuid'] = $domain_uuid;
 	$database = new database;
 	$row = $database->select($sql, $parameters, 'row');
-	if (is_array($row) && @sizeof($row) != 0) {
+	if (!empty($row)) {
 		//$filename = $row["filename"];
 		//$recording_name = $row["recording_name"];
 		//$recording_uuid = $row["recording_uuid"];
@@ -662,7 +662,7 @@ if (!function_exists('save_call_center_xml')) {
 			$call_center_queues = $database->select($sql, null, 'all');
 			unset($sql);
 
-			if (is_array($call_center_queues) && @sizeof($call_center_queues) != 0) {
+			if (!empty($call_center_queues)) {
 
 				//prepare Queue XML string
 					$x=0;
@@ -735,7 +735,7 @@ if (!function_exists('save_call_center_xml')) {
 					unset($sql);
 
 					$x=0;
-					if (is_array($result) && @sizeof($result) != 0) {
+					if (!empty($result)) {
 						foreach ($result as &$row) {
 							//get the values from the db and set as php variables
 								$agent_name = $row["agent_name"];
@@ -825,7 +825,7 @@ if (!function_exists('save_call_center_xml')) {
 					unset($sql);
 
 					$x=0;
-					if (is_array($result) && @sizeof($result) != 0) {
+					if (!empty($result)) {
 						foreach ($result as &$row) {
 							$agent_name = $row["agent_name"];
 							$queue_name = $row["queue_name"];
@@ -986,7 +986,7 @@ if (!function_exists('save_sip_profile_xml')) {
 			$result = $database->select($sql, null, 'all');
 			unset($sql);
 
-			if (is_array($result) && @sizeof($result) != 0) {
+			if (!empty($result)) {
 				foreach($result as $row) {
 					$sip_profile_uuid = $row['sip_profile_uuid'];
 					$sip_profile_name = $row['sip_profile_name'];
@@ -1015,7 +1015,7 @@ if (!function_exists('save_sip_profile_xml')) {
 						$parameters['sip_profile_uuid'] = $sip_profile_uuid;
 						$database = new database;
 						$result_2 = $database->select($sql, $parameters, 'all');
-						if (is_array($result_2) && @sizeof($result_2) != 0) {
+						if (!empty($result_2)) {
 							$sip_profile_settings = '';
 							foreach ($result_2 as &$row_2) {
 								$sip_profile_settings .= "		<param name=\"".$row_2["sip_profile_setting_name"]."\" value=\"".$row_2["sip_profile_setting_value"]."\"/>\n";
