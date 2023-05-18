@@ -1044,7 +1044,7 @@ https://www.fusionpbx.com/app/pages/page.php?id=f48cceb2-5e31-47c2-a84a-8f45d805
 						$html .= "		</li>\n";
 					}
 				//domain name/selector
-					if (isset($_SESSION['username']) && $_SESSION['username'] != '' && permission_exists('domain_select') && count($_SESSION['domains']) > 1 && $_SESSION['theme']['domain_visible']['text'] == 'true') {
+					if (isset($_SESSION['username']) && $_SESSION['username'] != '' && permission_exists('domain_select') && !empty($_SESSION['domains']) && count($_SESSION['domains']) > 1 && $_SESSION['theme']['domain_visible']['text'] == 'true') {
 						$html .= "		<li class='nav-item'>\n";
 						$html .= "			<a class='header_domain' href='#' id='header_domain_selector_domain' title='".$this->text['theme-label-open_selector']."'><i class='fas fa-".($_SESSION['theme']['body_header_icon_domain']['text'] != '' ? $_SESSION['theme']['body_header_icon_domain']['text'] : 'globe-americas')." fa-lg fa-fw' style='margin-top: 6px; margin-right: 5px;'></i>".escape($_SESSION['domain_name'])."</a>";
 						$html .= "		</li>\n";
