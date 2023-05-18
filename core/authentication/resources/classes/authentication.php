@@ -54,7 +54,12 @@ class authentication {
 			$sql = "select count(user_log_uuid) \n";
 			$sql .= "from v_user_logs \n";
 			$sql .= "where result = 'failure' \n";
-			$sql .= "and floor(extract(epoch from now()) - extract(epoch from timestamp)) < :find_time \n";
+			if ($db_type == "pgsql"){
+				$sql .= "and floor(extract(epoch from now()) - extract(epoch from timestamp)) < :find_time \n";
+			}
+			else{
+				$sql .= "and flor(UNIX_TIMESTAMP() - UNIX_TIMESTAMP(timestamp)) < :find_time \n";
+			}
 			$sql .= "and type = 'login' \n";
 			$sql .= "and remote_address = :remote_address \n";
 			$sql .= "and username = :username \n";
