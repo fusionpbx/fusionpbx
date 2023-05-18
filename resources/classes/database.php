@@ -1299,9 +1299,7 @@
 					$transaction_type = 'delete';
 
 				//get the UUIDs
-					if (!empty($_SESSION['user_uuid'])) {
-						$user_uuid = $_SESSION['user_uuid'];
-					}
+					$user_uuid = $_SESSION['user_uuid'] ?? null;
 
 				//log the transaction results
 					if (file_exists($_SERVER["PROJECT_ROOT"]."/app/database_transactions/app_config.php")) {
@@ -2153,9 +2151,7 @@
 											$sql .= ");";
 
 											//add insert user parameter
-											if (!empty($_SESSION['user_uuid'])) {
-												$params['insert_user'] = $_SESSION['user_uuid'];
-											}
+											$params['insert_user'] = $_SESSION['user_uuid'] ?? null;
 
 											//set the error mode
 											$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -2249,20 +2245,16 @@
 											}
 
 											//add the modified date and user
-											if (!empty($_SESSION['user_uuid'])) {
-												$sql .= "update_date = now(), ";
-												$sql .= "update_user = :update_user ";
-												$params['update_user'] = $_SESSION['user_uuid'];
-											}
+											$sql .= "update_date = now(), ";
+											$sql .= "update_user = :update_user ";
+											$params['update_user'] = $_SESSION['user_uuid'] ?? null;
 
 											//add the where with the parent name and value
 											$sql .= "WHERE ".$parent_key_name." = '".$parent_key_value."'; ";
 											$sql = str_replace(", WHERE", " WHERE", $sql);
 
 											//add update user parameter
-											if (!empty($_SESSION['user_uuid'])) {
-												$params['update_user'] = $_SESSION['user_uuid'];
-											}
+											$params['update_user'] = $_SESSION['user_uuid'] ?? null;
 
 											//set the error mode
 											$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -2285,7 +2277,7 @@
 												$message["details"][$m]["code"] = "200";
 												$message["details"][$m]["uuid"] = $parent_key_value;
 												$message["details"][$m]["sql"] = $sql;
-												if (!empty($params)) {
+												if (is_array($params)) {
 													$message["details"][$m]["params"] = $params;
 												}
 												unset($params);
@@ -2301,7 +2293,7 @@
 												$message["details"][$m]["message"] = $e->getMessage();
 												$message["details"][$m]["code"] = "400";
 												$message["details"][$m]["sql"] = $sql;
-												if (!empty($params)) {
+												if (is_array($params)) {
 													$message["details"][$m]["params"] = $params;
 												}
 												unset($params);
@@ -2597,9 +2589,7 @@
 															$sql .= ");";
 
 															//add insert user parameter
-															if (!empty($_SESSION['user_uuid'])) {
-																$params['insert_user'] = $_SESSION['user_uuid'];
-															}
+															$params['insert_user'] = $_SESSION['user_uuid'] ?? null;
 
 															//set the error mode
 															$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -2685,9 +2675,7 @@
 					}
 
 				//get the UUIDs
-					if (!empty($_SESSION['user_uuid'])) {
-						$user_uuid = $_SESSION['user_uuid'];
-					}
+					$user_uuid = $_SESSION['user_uuid'] ?? null;
 
 				//log the transaction results
 					if ($transaction_save && file_exists($_SERVER["PROJECT_ROOT"]."/app/database_transactions/app_config.php")) {
