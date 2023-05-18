@@ -58,7 +58,7 @@ class authentication {
 				$sql .= "and floor(extract(epoch from now()) - extract(epoch from timestamp)) < :find_time \n";
 			}
 			else{
-				$sql .= "and flor(UNIX_TIMESTAMP() - UNIX_TIMESTAMP(timestamp)) < :find_time \n";
+				$sql .= "and floor(UNIX_TIMESTAMP() - UNIX_TIMESTAMP(timestamp)) < :find_time \n";
 			}
 			$sql .= "and type = 'login' \n";
 			$sql .= "and remote_address = :remote_address \n";
