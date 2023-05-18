@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2019
+ Portions created by the Initial Developer are Copyright (C) 2008-2023
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -203,8 +203,19 @@
 					return false;
 				}
 
+			//set the time zone
+				if (isset($_SESSION['domain']['time_zone']['name'])) {
+					$time_zone = $_SESSION['domain']['time_zone']['name'];
+				}
+				else {
+					$time_zone = date_default_timezone_get();
+				}
+
 			//get the message from the database
-				$sql = "select * from v_voicemail_messages as m, v_voicemails as v ";
+				$sql = "select *, ";
+				$sql .= "to_char(timezone(:time_zone, to_timestamp(m.created_epoch)), 'DD Mon YYYY') as created_date_formatted, \n";
+				$sql .= "to_char(timezone(:time_zone, to_timestamp(m.created_epoch)), 'HH12:MI:SS am') as created_time_formatted \n";
+				$sql .= "from v_voicemail_messages as m, v_voicemails as v ";
 				$sql .= "where m.domain_uuid = :domain_uuid ";
 				$sql .= "and m.voicemail_uuid = v.voicemail_uuid ";
 				if (is_array($this->voicemail_id) && @sizeof($this->voicemail_id) != 0) {
@@ -230,10 +241,11 @@
 					$sql .= "order by v.voicemail_id, m.".$this->order_by." ".$this->order." ";
 				}
 				$parameters['domain_uuid'] = $this->domain_uuid;
+				$parameters['time_zone'] = $time_zone;
 				$database = new database;
 				$result = $database->select($sql, $parameters, 'all');
 				unset($sql, $parameters);
-			
+
 			//update the array with additional information
 				if (is_array($result)) {
 					foreach($result as &$row) {
