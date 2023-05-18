@@ -1154,9 +1154,9 @@ $text['description-domain_enabled']['ro-ro'] = "Setați starea domeniului.";
 $text['description-domain_enabled']['ru-ru'] = "Установить статус домена.";
 $text['description-domain_enabled']['sv-se'] = "Ange status för Domänen.";
 $text['description-domain_enabled']['uk-ua'] = "Вкажіть стан домену";
-$text['description-domain_enabled']['zh-cn'] = "确立该领域的地位。";
+$text['description-domain_enabled']['zh-cn'] = "设置域的状态。";
 $text['description-domain_enabled']['ja-jp'] = "ドメインのステータスを設定します。";
-$text['description-domain_enabled']['ko-kr'] = "도메인의 상태를 설정합니다.";
+$text['description-domain_enabled']['ko-kr'] = "도메인 상태를 설정합니다.";
 
 $text['description-domain-edit']['en-us'] = "Edit the details of this domain.";
 $text['description-domain-edit']['en-gb'] = "Edit the details of this domain.";
@@ -1178,9 +1178,9 @@ $text['description-domain-edit']['ro-ro'] = "Editați detaliile acestui domeniu.
 $text['description-domain-edit']['ru-ru'] = "Редактирование сведений о домене.";
 $text['description-domain-edit']['sv-se'] = "Ändra detaljer för denna Domän.";
 $text['description-domain-edit']['uk-ua'] = "Редагування деталей домену";
-$text['description-domain-edit']['zh-cn'] = "了解该领域的细节。";
+$text['description-domain-edit']['zh-cn'] = "编辑此域的详细信息。";
 $text['description-domain-edit']['ja-jp'] = "このドメインの詳細を編集します。";
-$text['description-domain-edit']['ko-kr'] = "이 도메인의 세부 사항을 편집합니다.";
+$text['description-domain-edit']['ko-kr'] = "이 도메인의 세부 정보를 편집합니다.";
 
 $text['description-domain-add']['en-us'] = "Enter the domain details below.";
 $text['description-domain-add']['en-gb'] = "Enter the domain details below.";
@@ -1202,8 +1202,8 @@ $text['description-domain-add']['ro-ro'] = "Introduceți detaliile domeniului ma
 $text['description-domain-add']['ru-ru'] = "Введите данные домена ниже.";
 $text['description-domain-add']['sv-se'] = "Ange domändetaljer nedan.";
 $text['description-domain-add']['uk-ua'] = "Введіть дані домену нижче.";
-$text['description-domain-add']['zh-cn'] = "查阅以下领域细节。";
-$text['description-domain-add']['ja-jp'] = "ドメインの詳細を入力してください。";
-$text['description-domain-add']['ko-kr'] = "아래 도메인 세부 사항을 입력하십시오.";
+$text['description-domain-add']['zh-cn'] = "在下面输入域详细信息。";
+$text['description-domain-add']['ja-jp'] = "以下にドメインの詳細を入力します。";
+$text['description-domain-add']['ko-kr'] = "아래에 도메인 세부 정보를 입력하십시오.";
 
 ?>
