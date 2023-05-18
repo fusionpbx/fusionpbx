@@ -632,6 +632,7 @@
 			 * @depends connect()
 			 */
 			public function table_exists ($table_name) {
+				global $db_name;
 				if (self::sanitize($table_name) != $table_name) {
 					trigger_error('Table Name must be sanitized', E_USER_WARNING);
 					return false;
