@@ -145,7 +145,7 @@
 			if (permission_exists('message_key')) {
 				$message_key = $_POST["message_key"];
 			}
-			if (in_array('totp', $_SESSION['authentication']['methods'])) {
+			if (is_array($_SESSION['authentication']['methods']) && (in_array('totp', $_SESSION['authentication']['methods']))) {
 				$user_totp_secret = strtoupper($_POST["user_totp_secret"]);
 			}
 
@@ -1078,7 +1078,7 @@
 	}
 
 	//user time based one time password secret
-	if (in_array('totp', $_SESSION['authentication']['methods'])) {
+	if (is_array($_SESSION['authentication']['methods']) && (in_array('totp', $_SESSION['authentication']['methods']))) {
 		if ($user_totp_secret != '' && $username != '') {
 			$otpauth = "otpauth://totp/".$username."?secret=".$user_totp_secret."&issuer=".$_SESSION['domain_name'];
 
