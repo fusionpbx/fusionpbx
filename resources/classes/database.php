@@ -1984,7 +1984,7 @@
 			 * <p>Usage Example:<br><code>$database = new database();<br>$database->app_name = "MyApp";<br>$database->app_uuid = "12345678-1234-1234-1234-123456789abc";<br>$row = 0;<br>$array['mytable'][$row]['mycolumn'] = "myvalue";<br>if ($database->save($array)) { <br>&nbsp;&nbsp;echo "Saved Successfully.";<br> } else {<br>&nbsp;&nbsp;echo "Save Failed.";<br>}</code></p>
 			 * @param array $array Three dimensional Array. The first dimension is the table name without the prefix 'v_'. Second dimension in the row value as int. Third dimension is the column name.
 			 * @param bool $transaction_save
-			 * @return boolean Returns <b>true</b> on success and <b>false</b> on failure of one or more failed write attempts.
+			 * @return returns and array wih result details
 			 */
 			public function save(array &$array, bool $transaction_save = true) {
 				//set default return value
@@ -2765,7 +2765,7 @@
 							exit;
 						}
 					}
-					return $retval;
+					return $message;
 			} //save method
 
 			/**
