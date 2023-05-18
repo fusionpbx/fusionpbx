@@ -170,7 +170,7 @@
 		$document_title = (!empty($document['title']) ? $document['title'].' - ' : null).$document_title;
 		$view->assign('document_title', $document_title);
 	//domain selector control
-		$domain_selector_enabled = permission_exists('domain_select') && count($_SESSION['domains']) > 1 ? true : false;
+		$domain_selector_enabled = permission_exists('domain_select') && empty($_SESSION['domains'])?false:(count($_SESSION['domains']) > 1 ? true : false);
 		$view->assign('domain_selector_enabled', $domain_selector_enabled);
 	//browser name
 		$user_agent = http_user_agent();
