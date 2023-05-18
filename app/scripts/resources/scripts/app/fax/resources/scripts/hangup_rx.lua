@@ -16,7 +16,7 @@
 --
 --	The Initial Developer of the Original Code is
 --	Mark J Crane <markjcrane@fusionpbx.com>
---	Copyright (C) 2015-2022
+--	Copyright (C) 2015-2023
 --	the Initial Developer. All Rights Reserved.
 --
 --	Contributor(s):
@@ -212,7 +212,6 @@
 	end
 
 --fax to email
-	cmd = "lua" .. " " .. quote(scripts_dir .. "/fax_to_email.lua") .. " ";
 	cmd = quote(shell_esc(php_dir).."/"..shell_esc(php_bin)).." "..quote(shell_esc(document_root).."/secure/fax_to_email.php").." ";
 	cmd = cmd .. "email="..quote(shell_esc(fax_email)).." ";
 	cmd = cmd .. "extension="..quote(shell_esc(fax_extension)).." ";
@@ -233,7 +232,6 @@
 	end
 	freeswitch.consoleLog("notice", "[fax] command: " .. cmd .. "\n");
 	os.execute(cmd);
-	
 
 --add to fax logs
 	sql = "insert into v_fax_logs ";

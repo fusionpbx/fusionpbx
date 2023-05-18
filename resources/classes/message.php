@@ -53,7 +53,7 @@ if (!class_exists('message')) {
 			$html = "{$spacer}//render the messages\n";
 			$spacer .="\t";
 			if (isset($_SESSION['message']) || isset($_SESSION['messages'])) {
-				if (!empty($_SESSION['message']) && is_string(trim($_SESSION['message']))) {
+				if (!empty($_SESSION['message']) && !is_array($_SESSION['message'])) {
 					self::add($_SESSION['message'], $_SESSION['message_mood'] ?? null, $_SESSION['message_delay'] ?? null);
 					unset($_SESSION['message'], $_SESSION['message_mood'], $_SESSION['message_delay']);
 				}

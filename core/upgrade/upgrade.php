@@ -185,7 +185,7 @@
 		if (isset($argv[2]) && $argv[2] == 'data_types') {
 			$obj->data_types = true;
 		}
-		echo $obj->schema($format);
+		echo $obj->schema($format ?? '');
 	}
 
 //restore the default menu
