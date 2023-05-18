@@ -1,0 +1,11 @@
+<context name="{v_context}">
+	<extension name="INTERCOM" number="*8[ext]" continue="false" app_uuid="b1184631-f52b-4849-9161-96296b256930" order="241">
+		<condition field="destination_number" expression="^\*8(\d{2,7})$">
+		<action application="set" data="destinations=$1"/>
+		<action application="set" data="hangup_after_bridge=true"/>
+		<action application="export" data="sip_auto_answer=true"/>
+		<action application="export" data="domain_name=${domain_name}"/>
+		<action application="bridge" data="user/$1@${domain_name}"/>
+		</condition>
+	</extension>
+</context>
