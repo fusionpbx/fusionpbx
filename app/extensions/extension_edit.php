@@ -1358,7 +1358,7 @@
 						if (is_dir($template_dir.'/'.$row["name"])) {
 							$templates = scandir($template_dir.'/'.$row["name"]);
 							foreach($templates as $dir) {
-								if (!empty($file) && $file != "." && !empty($dir) && $dir != ".." && $dir[0] != '.' && !empty($template_dir) && is_dir($template_dir.'/'.$row["name"].'/'.$dir)) {
+								if (!empty($dir) && $dir != "." && $dir != ".." && $dir[0] != '.' && !empty($template_dir) && is_dir($template_dir.'/'.$row["name"].'/'.$dir)) {
 									$selected = $device_template == $row["name"]."/".$dir ? "selected='selected'" : null;
 									echo "				<option value='".escape($row["name"])."/".escape($dir)."' ".$selected.">".escape($row["name"])."/".escape($dir)."</option>\n";
 								}
