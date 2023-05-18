@@ -511,7 +511,7 @@
 				if (permission_exists('api_key')) {
 					$array['users'][$x]['api_key'] = ($api_key != '') ? $api_key : null;
 				}
-				if (in_array('totp', $_SESSION['authentication']['methods'])) {
+				if (is_array($_SESSION['authentication']['methods']) && (in_array('totp', $_SESSION['authentication']['methods']))) {
 					$array['users'][$x]['user_totp_secret'] = $user_totp_secret;
 				}
 				$array['users'][$x]['user_enabled'] = $user_enabled;
