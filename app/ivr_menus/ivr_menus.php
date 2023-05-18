@@ -98,9 +98,11 @@
 
 //prepare to page the results
 	$sql = "select count(*) from v_ivr_menus ";
-	$sql .= "where true ";
-	if (!empty($show) && $show != "all" || !permission_exists('ivr_menu_all')) {
-		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
+	if ($show == "all" && permission_exists('ivr_menu_all')) {
+		$sql .= "where true ";
+	}
+	else {
+		$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	}
 	if (!empty($search)) {
@@ -129,9 +131,11 @@
 
 //get the list
 	$sql = "select * from v_ivr_menus ";
-	$sql .= "where true ";
-	if (!empty($show) && $show != "all" || !permission_exists('ivr_menu_all')) {
-		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
+	if ($show == "all" && permission_exists('ivr_menu_all')) {
+		$sql .= "where true ";
+	}
+	else {
+		$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	}
 	if (!empty($search)) {
