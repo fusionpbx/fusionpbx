@@ -9,7 +9,7 @@
 			set_include_path($document_root);
 			$_SERVER["DOCUMENT_ROOT"] = $document_root;
 		}
-		require_once "resources/require.php";
+		require_once  dirname(dirname(dirname(__DIR__))) . "/resources/require.php";
 	}
 	else {
 		exit;
