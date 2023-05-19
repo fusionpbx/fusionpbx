@@ -84,7 +84,7 @@
 	local sql = "SELECT * FROM v_call_center_agents ";
 	sql = sql .. "WHERE domain_uuid = :domain_uuid ";
 	if (agent_id ~= nil) then
-		sql = sql .. "AND agent_id = :agent_id ";
+		sql = sql .. "AND (agent_id = :agent_id or agent_name = :agent_id) ";
 	else
 		sql = sql .. "AND agent_name = :agent_name ";
 	end
