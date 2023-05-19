@@ -86,12 +86,6 @@
 		exit;
 	}
 
-//fax queue enabled
-	if ($_SESSION['fax_queue']['enabled']['boolean'] != 'true') {
-		echo "FAX Queue is disabled in Default Settings\n";
-		exit;
-	}
-
 //make sure the /var/run/fusionpbx directory exists
 	if (!file_exists('/var/run/fusionpbx')) {
 		$result = mkdir('/var/run/fusionpbx', 0777, true);
