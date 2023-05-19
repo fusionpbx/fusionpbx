@@ -2222,7 +2222,7 @@
 												foreach ($array as $array_key => $array_value) {
 													if (!is_array($array_value) && $array_key != $parent_key_name) {
 														$array_key = self::sanitize($array_key);
-														if (!isset($array_value) || $array_value == '') {
+														if (!isset($array_value) || (isset($array_value) && $array_value === '')) {
 															$sql .= $array_key." = null, ";
 														}
 														elseif ($array_value === "now()") {
