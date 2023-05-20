@@ -39,7 +39,7 @@
 		private $template_dir;
 
 		public function __construct(string $template_dir = "", string $cache_dir = "") {
-			require_once "resources/templates/engine/Twig/Autoloader.php";
+			require_once dirname(__DIR__) . "/templates/engine/Twig/Autoloader.php";
 			if(!empty($template_dir))
 				$this->template_dir = $template_dir;
 			if(!empty($cache_dir))
