@@ -25,7 +25,7 @@
 */
 
 //includes files
-    require_once dirname(dirname(__DIR__)) . "/resources/require.php";
+	require_once dirname(dirname(__DIR__)) . "/resources/require.php";
 
 //add multi-lingual support
 	$language = new text;

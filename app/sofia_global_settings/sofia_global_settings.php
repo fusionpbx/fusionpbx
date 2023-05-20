@@ -22,7 +22,7 @@
 */
 
 //includes files
-    require_once dirname(dirname(__DIR__)) . "/resources/require.php";
+	require_once dirname(dirname(__DIR__)) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
 

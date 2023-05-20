@@ -25,7 +25,7 @@
 */
 
 //includes files
-    require_once dirname(dirname(__DIR__)) . "/resources/require.php";
+	require_once dirname(dirname(__DIR__)) . "/resources/require.php";
 	require_once "resources/pdo.php";
 
 //check the domain cidr range 

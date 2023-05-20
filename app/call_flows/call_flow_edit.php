@@ -26,7 +26,7 @@
 */
 
 //includes files
-    require_once dirname(dirname(__DIR__)) . "/resources/require.php";
+	require_once dirname(dirname(__DIR__)) . "/resources/require.php";
 
 //check permissions
 	require_once "resources/check_auth.php";
