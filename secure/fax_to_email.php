@@ -204,12 +204,8 @@ if (!function_exists('fax_split_dtmf')) {
 	}
 }
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+    require_once dirname(__DIR__) . "/resources/require.php";
 	include "resources/classes/event_socket.php";
 	include "resources/phpmailer/class.phpmailer.php";
 	include "resources/phpmailer/class.smtp.php"; // optional, gets called from within class.phpmailer.php if not already loaded
