@@ -44,7 +44,7 @@
 		private $smarty;
 
 		public function __construct(string $template_dir = "", string $cache_dir = "") {
-			require_once "resources/templates/engine/smarty/Smarty.class.php";
+			require_once dirname(__DIR__) . "/templates/engine/smarty/Smarty.class.php";
 			$this->smarty = new \Smarty();
 
 			if(!empty($template_dir))
