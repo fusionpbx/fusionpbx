@@ -301,11 +301,6 @@ if ($db_type == "odbc") {
 				unset($prep_statement);
 			}
 
-		//put the domains in natural order
-			if (is_array($domain_names)) {
-				natsort($domain_names);
-			}
-
 		//build the domains array in the correct order
 			if (is_array($domain_names)) { 
 				foreach ($domain_names as $dn) {
