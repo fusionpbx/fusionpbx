@@ -39,7 +39,7 @@
 		
 		//put your code here
 		public function __construct(string $template_dir = "", string $cache_dir = "") {
-			require_once "resources/templates/engine/raintpl/rain.tpl.class.php";
+			require_once dirname(__DIR__) . "/templates/engine/raintpl/rain.tpl.class.php";
 			$this->object = new RainTPL();
 
 			if(!empty($template_dir)) {
