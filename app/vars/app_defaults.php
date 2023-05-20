@@ -175,16 +175,18 @@ if ($domains_processed == 1) {
 					unset($num_rows, $countries);
 				}
 
-				if (is_array($array) && @sizeof($array) != 0) {
+				if (!empty($array)) {
 					//grant temporary permissions
 						$p = new permissions;
 						$p->add("var_add", "temp");
+
 					//execute inserts
 						$database = new database;
 						$database->app_name = 'vars';
 						$database->app_uuid = '54e08402-c1b8-0a9d-a30a-f569fc174dd8';
 						$database->save($array, false);
 						unset($array);
+
 					//revoke temporary permissions
 						$p->delete("var_add", "temp");
 				}
