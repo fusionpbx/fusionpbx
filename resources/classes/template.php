@@ -76,14 +76,21 @@
 		 * Initialize the template object using the property 'engine'.
 		 */
 		public function init() {
-			require_once 'template_engine.php';
+			require_once __DIR__ . '/template_engine.php';
 			if (!empty($this->engine)) {
 				//set the class interface to use the _template suffix
 				$classname = $this->engine . '_template';
 				//load the class
 				require_once $classname . '.php';
 				//create the object
-				$this->object = new $classname($this->template_dir, $this->cache_dir);
+				$this->object = new $classname();
+				//ensure the class has implemented the template_engine interface
+				if($this->object instanceof template_engine) {
+					$this->object->template_dir($this->template_dir);
+					$this->object->cache_dir($this->cache_dir);
+				} else {
+					throw new ErrorException($classname.' Must implement template_engine');
+				}
 			}
 		}
 
