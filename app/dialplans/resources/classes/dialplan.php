@@ -165,7 +165,7 @@
 				$parameters['domain_uuid'] = $this->domain_uuid;
 				$parameters['app_uuid'] = $this->app_uuid;
 				$database = new database;
-				return $database->select($sql, $parameters, 'column') != 0 ? true : false;
+				return $database->select($sql, $parameters ?? null, 'column') != 0 ? true : false;
 				unset($sql, $parameters);
 			}
 
@@ -176,7 +176,7 @@
 				$parameters['domain_uuid'] = $this->domain_uuid;
 				$parameters['dialplan_uuid'] = $this->dialplan_uuid;
 				$database = new database;
-				return $database->select($sql, $parameters, 'column') != 0 ? true : false;
+				return $database->select($sql, $parameters ?? null, 'column') != 0 ? true : false;
 				unset($sql, $parameters);
 			}
 
@@ -509,7 +509,7 @@
 							$sql .= "s.dialplan_detail_order asc ";
 							$parameters['domain_uuid'] = $this->domain_uuid;
 							$database = new database;
-							$dialplans = $database->select($sql, $parameters, 'all');
+							$dialplans = $database->select($sql, $parameters ?? null, 'all');
 							unset($sql, $parameters);
 							$x = 0; $y = 0;
 							if (!empty($dialplans)) {
@@ -635,7 +635,7 @@
 							$sql .= "dialplan_context asc, ";
 							$sql .= "dialplan_order asc ";
 							$database = new database;
-							$results = $database->select($sql, $parameters, 'all');
+							$results = $database->select($sql, $parameters ?? null, 'all');
 							if (!empty($results)) {
 								foreach ($results as $row) {
 									$dialplans[$row["dialplan_uuid"]] = $row["dialplan_xml"];
@@ -718,7 +718,7 @@
 										//$dialplan_detail_order = $row["dialplan_detail_order;
 
 									//remove $$ and replace with $
-										$dialplan_detail_data = str_replace("$$", "$", $dialplan_detail_data);
+										$dialplan_detail_data = str_replace("$$", "$", $dialplan_detail_data ?? '');
 
 									//get the dialplan detail inline
 										$detail_inline = "";
@@ -1082,7 +1082,7 @@
 											$sql .= "where dialplan_uuid = :dialplan_uuid ";
 											$parameters['dialplan_uuid'] = $record['uuid'];
 											$database = new database;
-											$dialplan_contexts[] = $database->select($sql, $parameters, 'column');
+											$dialplan_contexts[] = $database->select($sql, $parameters ?? null, 'column');
 											unset($sql, $parameters);
 
 									}
@@ -1175,7 +1175,7 @@
 
 							//build the delete array
 								foreach ($records as $x => $record) {
-									if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+									if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 
 										//build delete array
 											$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
@@ -1186,7 +1186,7 @@
 											$sql .= "where dialplan_uuid = :dialplan_uuid ";
 											$parameters['dialplan_uuid'] = $this->dialplan_uuid;
 											$database = new database;
-											$dialplan_contexts[] = $database->select($sql, $parameters, 'column');
+											$dialplan_contexts[] = $database->select($sql, $parameters ?? null, 'column');
 											unset($sql, $parameters);
 
 									}
@@ -1281,7 +1281,7 @@
 										$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 									}
 									$database = new database;
-									$rows = $database->select($sql, $parameters, 'all');
+									$rows = $database->select($sql, $parameters ?? null, 'all');
 									if (!empty($rows)) {
 										foreach ($rows as $row) {
 											$states[$row['uuid']] = $row['toggle'];
@@ -1396,7 +1396,7 @@
 										$sql = "select * from v_".$this->table." ";
 										$sql .= "where ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
 										$database = new database;
-										$rows = $database->select($sql, $parameters, 'all');
+										$rows = $database->select($sql, $parameters ?? null, 'all');
 										if (!empty($rows)) {
 											$y = 0;
 											foreach ($rows as $x => $row) {
@@ -1428,7 +1428,7 @@
 													$sql_2 = "select * from v_dialplan_details where dialplan_uuid = :dialplan_uuid";
 													$parameters_2['dialplan_uuid'] = $row['dialplan_uuid'];
 													$database = new database;
-													$rows_2 = $database->select($sql_2, $parameters_2, 'all');
+													$rows_2 = $database->select($sql_2, $parameters_2 ?? null, 'all');
 													if (!empty($rows_2)) {
 														foreach ($rows_2 as $row_2) {
 
