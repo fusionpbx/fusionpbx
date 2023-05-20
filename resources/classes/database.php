@@ -2408,7 +2408,7 @@
 																	foreach ($row as $k => $v) {
 																		if (!is_array($v) && ($k != $parent_key_name || $k != $child_key_name)) {
 																			$k = self::sanitize($k);
-																			if (strlen($v) == 0) {
+																			if (empty($v) || strlen($v) == 0) {
 																				$sql .= $k." = null, ";
 																			}
 																			elseif ($v === "now()") {
@@ -2424,7 +2424,7 @@
 																			}
 																			else {
 																				$sql .= $k." = :".$k.", ";
-																				$params[$k] = trim($v);
+																				$params[$k] = !empty($v) ? trim($v) : null;
 																			}
 																		}
 																	}
