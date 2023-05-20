@@ -1,17 +1,12 @@
 <?php
 
 //add the document root to the include path
-	if (defined('STDIN')) {
-		$config_glob = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-		$conf = parse_ini_file($config_glob[0]);
-		set_include_path($conf['document.root']);
-	}
-	else {
+	if (!defined('STDIN')) {
 		exit;
 	}
 
 //includes files
-	require_once "resources/require.php";
+	require_once  dirname(dirname(dirname(dirname(__DIR__)))) . "/resources/require.php";
 	require_once "resources/pdo.php";
 	include "resources/classes/permissions.php";
 
