@@ -26,12 +26,8 @@
 	Riccardo Granchi <riccardo.granchi@nems.it>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
-//includes files";
-	require_once "resources/require.php";
+//includes files
+    require_once __DIR__ . "/require.php";
 
 //get the event socket information
 	if (file_exists($_SERVER["PROJECT_ROOT"]."/app/settings/app_config.php")) {
