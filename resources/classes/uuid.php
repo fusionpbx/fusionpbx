@@ -28,8 +28,8 @@
 
 	/**
 	 * UUID Class
-	 * <p>The uuid class provides an already validated uuid object. This can greatly
-	 * reduce the requirement for checking a uuid each time as a valid object is
+	 * <p>The uuid class provides an already validated UUID string. This can greatly
+	 * reduce the requirement for checking a UUID each time as a valid object is
 	 * guaranteed to have a valid UUID.</p>
 	 * <p>
 	 *   <b>Example 1 - standard constructor:</b><br>
@@ -40,11 +40,11 @@
 	 *   <code>$ex2_uuid = uuid::new();</code>
 	 * </p>
 	 * <p>
-	 *   <b>Example 3 - validate a proposed uuid:</b><br>
+	 *   <b>Example 3 - validate a proposed UUID:</b><br>
 	 *   <code>$ex3_uuid = new uuid('a24d4d25-4f3a-3c10-1333-12a560bef91a');</code>
 	 * </p>
 	 * <p>
-	 *   <b>Example 4 - building on previous examples we can echo the uuid contained in the object;</b><br>
+	 *   <b>Example 4 - building on previous examples we can echo the UUID contained in the object;</b><br>
 	 *   <code>echo "Current valid uuid: $ex1_uuid\n";</code>
 	 *   <code>echo "Current valid uuid: $ex2_uuid\n";</code>
 	 *   <code>echo "Current valid uuid: $ex3_uuid\n";</code>
@@ -72,31 +72,17 @@
 		private $uuid;
 
 		/**
-		 * Creates a new uuid using installed operating system packages
+		 * Constructs the object using the provided string ensuring that it is a valid uuid.
 		 * @param string $uuid
 		 * @throws InvalidArgumentException Thrown when the string provided to the constructor is not a valid UUID.
-		 * @throws \Throwable
 		 */
-		public function __construct(string $uuid = null) {
-			//if a uuid is passed then immediately check if it is valid
-			if($uuid !== null) {
-				if(!self::is_valid($uuid)) {
-					throw new InvalidArgumentException('The uuid string must be a valid UUID type');
-				}
-			} else {
-				//otherwise create a new one
-				try {
-					$uuid = self::generate();
-				} catch (\Throwable $ex) {
-					//catch any exception the uuid creation methods throw
-					//and then rethrow them so the caller can decide what to do
-					throw $ex;
-				}
+		public function __construct(string $uuid) {
+			if(!self::is_valid($uuid)) {
+				throw new InvalidArgumentException('The uuid string must be a valid UUID type');
 			}
 			//all sanity checks have passed so it must be valid so store it
 			$this->uuid = $uuid;
 		}
-
 
 		/**
 		 * String representation of <i>$this</i> object.
@@ -114,10 +100,10 @@
 		 *     <b>FreeBSD:</b>
 		 *       - Requires package <i>ossp-uuid</i>.<br>
 		 *     <b>Linux:</b>
-		 *       - Requires package <i>uuidgen</i>.<br>
+		 *       - Requires package <i>uuidgen</i> if the <i>/proc/sys/kernel/random/uuid</i> file is not present.<br>
 		 *     <b>Windows:</b>
 		 *       - Requires the function <i>com_create_guid</i> to be available.<br></p>
-		 * <p>The operating system is detected using the PHP constand <i>PHP_OS</i>. The first
+		 * <p>The operating system is detected using the PHP constant <i>PHP_OS</i>. The first
 		 * Three letters are then extracted and converted to lower case to test for known
 		 * operating systems. If the operating system cannot be determined from the lowercase
 		 * first three letters an Exception is thrown.</p>
@@ -141,18 +127,24 @@
 		}
 
 		/**
-		 * Returns a newly constructed uuid object containing a valid uuid string.
+		 * Returns a newly constructed UUID object containing a valid UUID string.
 		 * @return uuid
 		 * @see uuid::__construct()
+		 * @see uuid::generate()
+		 * @throws Throwable
 		 */
 		public static function new(): uuid {
-			return new uuid();
+			try {
+				return new uuid(self::generate());
+			} catch (Throwable $t) {
+				throw $t;
+			}
 		}
 
 		/**
-		 * Checks if a uuid is valid using a regular expression
+		 * Checks if a UUID is valid using a regular expression
 		 * @param string $uuid
-		 * @return bool true if it conforms to an uuid standard
+		 * @return bool true if it conforms to an UUID standard
 		 * @see self::UUID_REGEX
 		 */
 		public static function is_valid(string $uuid): bool {
@@ -173,7 +165,7 @@
 		}
 		
 		/**
-		 * Executes a shell function to create a UUID.
+		 * Create a UUID using the kernel generated UUID function or the uuidgen command.
 		 * @return string new UUID
 		 * @throws Exception
 		 */
