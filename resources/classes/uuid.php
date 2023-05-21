@@ -31,23 +31,31 @@
 	 * <p>The uuid class provides an already validated uuid object. This can greatly
 	 * reduce the requirement for checking a uuid each time as a valid object is
 	 * guaranteed to have a valid UUID.</p>
-	 *
-	 * <h1>Example 1 - standard constructor:</h1>
-	 * <p><i>$ex1_uuid = new uuid();</i></p>
-	 * 
-	 * <h1>Example 2 - static method call:</h1>
-	 * <p><i>$ex2_uuid = uuid::new();</i></p>
-	 *
-	 * <h1>Example 3 - validate a proposed uuid:</h1>
-	 * <p><i>$ex3_uuid = new uuid('a24d4d25-4f3a-3c10-1333-12a560bef91a');</i></p>
-	 * <h1>Example 4 - building on previous examples we can echo the uuid contained in the object</h1>
 	 * <p>
-	 *    <i>echo "Current valid uuid: $ex1_uuid\n";</i>
-	 *    <i>echo "Current valid uuid: $ex2_uuid\n";</i>
-	 *    <i>echo "Current valid uuid: $ex3_uuid\n";</i>
+	 *   <b>Example 1 - standard constructor:</b><br>
+	 *   <code>$ex1_uuid = new uuid();</code>
 	 * </p>
-	 * <p><b>NOTE:</b><br>
-	 * When combined with typed function parameters it makes a fail-safe way to handle UUIDs.</p>
+	 * <p>
+	 *   <b>Example 2 - static method call:</b><br>
+	 *   <code>$ex2_uuid = uuid::new();</code>
+	 * </p>
+	 * <p>
+	 *   <b>Example 3 - validate a proposed uuid:</b><br>
+	 *   <code>$ex3_uuid = new uuid('a24d4d25-4f3a-3c10-1333-12a560bef91a');</code>
+	 * </p>
+	 * <p>
+	 *   <b>Example 4 - building on previous examples we can echo the uuid contained in the object;</b><br>
+	 *   <code>echo "Current valid uuid: $ex1_uuid\n";</code>
+	 *   <code>echo "Current valid uuid: $ex2_uuid\n";</code>
+	 *   <code>echo "Current valid uuid: $ex3_uuid\n";</code>
+	 * </p>
+	 * <p>
+	 * <b>Example 5 - using the uuid with typed parameter:</b><br>
+	 *  <code>
+	 *    function save_uuid(uuid $my_uuid) {<br>
+	 *        echo "The uuid from the function is gauranteed to be correct as it has already been validated by PHP: $my_uuid";<br>
+	 *    }<br>
+	 *  </code>
 	 * @author Tim Fry <tim@voipstratus.com>
 	 */
 	final class uuid implements \Stringable {
