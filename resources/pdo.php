@@ -291,7 +291,7 @@ if ($db_type == "odbc") {
 		//get the domains from the database
 			$database = new database;
 			if ($database->table_exists('v_domains')) {
-				$sql = "select * from v_domains";
+				$sql = "select * from v_domains order by domain_names asc;";
 				$prep_statement = $db->prepare($sql);
 				$prep_statement->execute();
 				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
