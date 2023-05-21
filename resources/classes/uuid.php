@@ -46,6 +46,8 @@
 	 *    <i>echo "Current valid uuid: $ex2_uuid\n";</i>
 	 *    <i>echo "Current valid uuid: $ex3_uuid\n";</i>
 	 * </p>
+	 * <p><b>NOTE:</b><br>
+	 * When combined with typed function parameters it makes a fail-safe way to handle UUIDs.</p>
 	 * @author Tim Fry <tim@voipstratus.com>
 	 */
 	final class uuid implements \Stringable {
