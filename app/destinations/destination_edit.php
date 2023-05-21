@@ -1031,46 +1031,45 @@
 			}
 			header("Location: destination_edit.php?id=".urlencode($destination_uuid)."&type=".urlencode($destination_type));
 			return;
-
 	}
 
 //set default values
-	$domain_uuid = '';
-	$dialplan_uuid = '';
-	$destination_type = '';
-	$destination_number = '';
-	$destination_condition_field = '';
-	$destination_prefix = '';
-	$destination_trunk_prefix = '';
-	$destination_area_code = '';
-	$destination_caller_id_name = '';
-	$destination_caller_id_number = '';
-	$destination_cid_name_prefix = '';
-	$destination_hold_music = '';
-	$destination_distinctive_ring = '';
-	$destination_record = '';
-	$destination_accountcode = '';
-	$destination_type_voice = '';
-	$destination_type_fax = '';
-	$destination_type_text = '';
-	$destination_type_emergency = '';
-	$destination_context = '';
-	$destination_conditions = '';
-	$destination_actions = '';
-	$fax_uuid = '';
-	$provider_uuid = '';
-	$user_uuid = '';
-	$group_uuid = '';
-	$currency = '';
-	$destination_sell = '';
-	$destination_buy = '';
-	$currency_buy = '';
-	$destination_carrier = '';
-	$destination_order = '';
-	$destination_enabled = '';
-	$destination_description = '';
-	$select_style = '';
-		
+	$domain_uuid = $domain_uuid ?? '';
+	$dialplan_uuid = $dialplan_uuid ?? '';
+	$destination_type = $destination_type ?? '';
+	$destination_number = $destination_number ?? '';
+	$destination_condition_field = $destination_condition_field ?? '';
+	$destination_prefix = $destination_prefix ?? '';
+	$destination_trunk_prefix = $destination_trunk_prefix ?? '';
+	$destination_area_code = $destination_area_code ?? '';
+	$destination_caller_id_name = $destination_caller_id_name ?? '';
+	$destination_caller_id_number = $destination_caller_id_number ?? '';
+	$destination_cid_name_prefix = $destination_cid_name_prefix ?? '';
+	$destination_hold_music = $destination_hold_music ?? '';
+	$destination_distinctive_ring = $destination_distinctive_ring ?? '';
+	$destination_record = $destination_record ?? '';
+	$destination_accountcode = $destination_accountcode ?? '';
+	$destination_type_voice = $destination_type_voice ?? '';
+	$destination_type_fax = $destination_type_fax ?? '';
+	$destination_type_text = $destination_type_text ?? '';
+	$destination_type_emergency = $destination_type_emergency ?? '';
+	$destination_context = $destination_context ?? '';
+	$destination_conditions = $destination_conditions ?? '';
+	$destination_actions = $destination_actions ?? '';
+	$fax_uuid = $fax_uuid ?? '';
+	$provider_uuid = $provider_uuid ?? '';
+	$user_uuid = $user_uuid ?? '';
+	$group_uuid = $group_uuid ?? '';
+	$currency = $currency ?? '';
+	$destination_sell = $destination_sell ?? '';
+	$destination_buy = $destination_buy ?? '';
+	$currency_buy = $currency_buy ?? '';
+	$destination_carrier = $destination_carrier ?? '';
+	$destination_order = $destination_order ?? '';
+	$destination_enabled = $destination_enabled ?? '';
+	$destination_description = $destination_description ?? '';
+	$select_style = $select_style ?? '';
+
 //pre-populate the form
 	if (!empty($_GET["id"]) > 0 && empty($_POST["persistformvar"])) {
 	 	if (is_uuid($_GET["id"])) {
