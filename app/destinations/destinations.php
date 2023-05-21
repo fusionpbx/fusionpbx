@@ -48,9 +48,9 @@
 
 //get posted data
 	if (!empty($_POST['destinations'])) {
-		$action = $_POST['action'];
-		$search = $_POST['search'];
-		$destinations = $_POST['destinations'];
+		$action = $_POST['action'] ?? '';
+		$search = $_POST['search'] ?? '';
+		$destinations = $_POST['destinations'] ?? '';
 	}
 
 //process the http post data by action
@@ -123,8 +123,11 @@
 
 //prepare to page the results
 	$sql = "select count(*) from v_destinations ";
-	$sql .= "where destination_type = :destination_type ";
-	if ($show != "all" || !permission_exists('destination_all')) {
+	if ($show == "all" && permission_exists('destination_all')) {
+		$sql .= "where destination_type = :destination_type ";
+	}
+	else {
+		$sql .= "where destination_type = :destination_type ";
 		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
 		$parameters['domain_uuid'] = $domain_uuid;
 	}
@@ -165,8 +168,11 @@
 
 //get the list
 	$sql = "select * from v_destinations ";
-	$sql .= "where destination_type = :destination_type ";
-	if ($show != "all" || !permission_exists('destination_all')) {
+	if ($show == "all" && permission_exists('destination_all')) {
+		$sql .= "where destination_type = :destination_type ";
+	}
+	else {
+		$sql .= "where destination_type = :destination_type ";
 		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
 		$parameters['domain_uuid'] = $domain_uuid;
 	}
