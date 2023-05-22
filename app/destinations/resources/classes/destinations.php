@@ -93,9 +93,9 @@ if (!class_exists('destinations')) {
 				elseif ((isset($array['destination_prefix']) && isset($array['destination_number'])) || isset($array['destination_number'])) {
 
 					//set the variables
-						$destination_prefix = $array['destination_prefix'];
-						$destination_number = $array['destination_number'];
-						$destination_regex = $array['destination_number'];
+						$destination_prefix = $array['destination_prefix'] ?? null;
+						$destination_number = $array['destination_number'] ?? null;
+						$destination_regex = $array['destination_number'] ?? null;
 
 					//escape the plus
 						if (substr($destination_number, 0, 1) == "+") {
@@ -1036,7 +1036,7 @@ if (!class_exists('destinations')) {
 
 						//build the delete array
 							foreach ($records as $x => $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked'] ) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 
 									//build delete array
 										$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
