@@ -36,7 +36,7 @@
 	$text = $language->get();
 
 //action add or update
-	if (is_uuid($_REQUEST["id"])) {
+	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
 		$bridge_uuid = $_REQUEST["id"];
 		$id = $_REQUEST["id"];
@@ -46,11 +46,11 @@
 	}
 
 //get http post variables and set them to php variables
-	if (count($_POST) > 0) {
-		$bridge_uuid = $_POST["bridge_uuid"];
+	if (!empty($_POST)) {
+		$bridge_uuid = $_POST["bridge_uuid"] ?? null;
 		$bridge_name = $_POST["bridge_name"];
 		$bridge_destination = $_POST["bridge_destination"];
-		$bridge_enabled = $_POST["bridge_enabled"] ?: 'false';
+		$bridge_enabled = $_POST["bridge_enabled"] ?? 'false';
 		$bridge_description = $_POST["bridge_description"];
 	}
 
@@ -142,7 +142,7 @@
 	}
 
 //pre-populate the form
-	if (is_array($_GET) && $_POST["persistformvar"] != "true") {
+	if (!empty($_GET) && is_array($_GET) && (empty($_POST["persistformvar"]) || $_POST["persistformvar"] != "true")) {
 		$bridge_uuid = $_GET["id"];
 		$sql = "select * from v_bridges ";
 		$sql .= "where bridge_uuid = :bridge_uuid ";
@@ -195,7 +195,7 @@
 	echo "	".$text['label-bridge_name']."\n";
 	echo "</td>\n";
 	echo "<td width='70%' class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='bridge_name' maxlength='255' value='".escape($bridge_name)."'>\n";
+	echo "	<input class='formfld' type='text' name='bridge_name' maxlength='255' value='".escape($bridge_name ?? '')."'>\n";
 	echo "<br />\n";
 	echo $text['description-bridge_name']."\n";
 	echo "</td>\n";
@@ -206,7 +206,7 @@
 	echo "	".$text['label-bridge_destination']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='bridge_destination' maxlength='255' value='".escape($bridge_destination)."'>\n";
+	echo "	<input class='formfld' type='text' name='bridge_destination' maxlength='255' value='".escape($bridge_destination ?? '')."'>\n";
 	echo "<br />\n";
 	echo $text['description-bridge_destination']."\n";
 	echo "</td>\n";
@@ -219,7 +219,7 @@
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
 	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
 		echo "	<label class='switch'>\n";
-		echo "		<input type='checkbox' id='bridge_enabled' name='bridge_enabled' value='true' ".($bridge_enabled == 'true' ? "checked='checked'" : null).">\n";
+		echo "		<input type='checkbox' id='bridge_enabled' name='bridge_enabled' value='true' ".(!empty($bridge_enabled) && $bridge_enabled == 'true' ? "checked='checked'" : null).">\n";
 		echo "		<span class='slider'></span>\n";
 		echo "	</label>\n";
 	}
@@ -239,7 +239,7 @@
 	echo "	".$text['label-bridge_description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='bridge_description' maxlength='255' value=\"".escape($bridge_description)."\">\n";
+	echo "	<input class='formfld' type='text' name='bridge_description' maxlength='255' value=\"".escape($bridge_description ?? '')."\">\n";
 	echo "<br />\n";
 	echo $text['description-bridge_description']."\n";
 	echo "</td>\n";

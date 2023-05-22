@@ -288,7 +288,7 @@ if ($db_type == "odbc") {
 		//get the domains from the database
 			$database = new database;
 			if ($database->table_exists('v_domains')) {
-				$sql = "select * from v_domains";
+				$sql = "select * from v_domains order by domain_name asc;";
 				$prep_statement = $db->prepare($sql);
 				$prep_statement->execute();
 				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -296,11 +296,6 @@ if ($db_type == "odbc") {
 					$domain_names[] = $row['domain_name'];
 				}
 				unset($prep_statement);
-			}
-
-		//put the domains in natural order
-			if (is_array($domain_names)) {
-				natsort($domain_names);
 			}
 
 		//build the domains array in the correct order

@@ -161,7 +161,6 @@
 	$parameters['fax_queue_uuid'] = $fax_queue_uuid;
 	$database = new database;
 	$row = $database->select($sql, $parameters, 'row');
-//view_array($row);
 	if (is_array($row)) {
 		$fax_queue_uuid = $row['fax_queue_uuid'];
 		$domain_uuid = $row['domain_uuid'];
@@ -272,7 +271,7 @@
 	//$retry_interval = $_SESSION['fax_queue']['retry_interval']['numeric'];
 
 //prepare the fax retry count
-	if (empty($fax_retry_count)) {
+	if (!isset($fax_retry_count)) {
 		$fax_retry_count = 0;
 	}
 	elseif ($fax_status != 'busy') {
