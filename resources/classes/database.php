@@ -2408,7 +2408,7 @@
 																	foreach ($row as $k => $v) {
 																		if (!is_array($v) && ($k != $parent_key_name || $k != $child_key_name)) {
 																			$k = self::sanitize($k);
-																			if (!isset($v) || isset($v) && $v == '') {
+																			if (!isset($v) || (isset($v) && $v == '')) {
 																				$sql .= $k." = null, ";
 																			}
 																			elseif ($v === "now()") {
