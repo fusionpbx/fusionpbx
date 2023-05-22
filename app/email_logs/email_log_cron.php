@@ -3,7 +3,7 @@
 //restrict to command line only
 	if (defined('STDIN')) {
 		//includes files
-		require_once dirname(dirname(__DIR__)) . "/resources/require.php";
+		require_once dirname(__DIR__, 2) . "/resources/require.php";
 		require_once "resources/classes/text.php";
 		$_SERVER["DOCUMENT_ROOT"] = $document_root;
 		$format = 'text'; //html, text

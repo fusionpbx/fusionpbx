@@ -27,7 +27,7 @@
 //check permisions
 	if (!$included) {
 		//includes files
-		require_once dirname(dirname(__DIR__)) . "/resources/require.php";
+		require_once dirname(__DIR__, 2) . "/resources/require.php";
 		require_once "resources/check_auth.php";
 		if (permission_exists('group_edit')) {
 			//access granted

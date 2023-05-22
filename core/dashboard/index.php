@@ -25,7 +25,7 @@
 */
 
 //includes files
-	require_once dirname(dirname(__DIR__)) . "/resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 
 //if config.conf file does not exist then redirect to the install page
 	if (file_exists("/usr/local/etc/fusionpbx/config.conf")){

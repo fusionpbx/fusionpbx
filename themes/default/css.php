@@ -1,7 +1,7 @@
 <?php
 
 //includes files
-	require_once dirname(dirname(__DIR__)) . "/resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 
 ob_start('ob_gzhandler');
 header('Content-type: text/css; charset: UTF-8');

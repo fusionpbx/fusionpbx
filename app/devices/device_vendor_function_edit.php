@@ -25,7 +25,7 @@
 */
 
 //includes files
-	require_once dirname(dirname(__DIR__)) . "/resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 
 //delete the group from the menu item
 	if ($_REQUEST["a"] == "delete" && permission_exists("device_vendor_function_delete") && $_REQUEST["id"] != '') {

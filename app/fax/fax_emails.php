@@ -26,7 +26,7 @@
 */
 
 //includes files
-	require_once dirname(dirname(__DIR__)) . "/resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 require_once "resources/functions/object_to_array.php";
 require_once "resources/functions/parse_message.php";
 require_once "resources/classes/text.php";

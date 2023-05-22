@@ -23,7 +23,7 @@
 */
 
 //includes files
-	require_once  dirname(dirname(dirname(dirname(__DIR__)))) . "/resources/require.php";
+	require_once  dirname(dirname(dirname(__DIR__, 2))) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //add multi-lingual support
