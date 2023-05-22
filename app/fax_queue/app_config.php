@@ -16,6 +16,7 @@
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
 		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
 		$apps[$x]['permissions'][$y]['groups'][] = 'user';
+		$apps[$x]['permissions'][$y]['groups'][] = 'fax';
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = 'fax_queue_domain';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';

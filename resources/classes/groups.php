@@ -389,6 +389,14 @@ if (!class_exists('groups')) {
 					$x++;
 					$array['groups'][$x]['group_uuid'] = uuid();
 					$array['groups'][$x]['domain_uuid'] = null;
+					$array['groups'][$x]['group_name'] = 'fax';
+					$array['groups'][$x]['group_level'] = '20';
+					$array['groups'][$x]['group_description'] = 'Fax User Group';
+					$array['groups'][$x]['group_protected'] = 'false';
+					$group_uuids[$array['groups'][$x]['group_name']] = $array['groups'][$x]['group_uuid'];
+					$x++;
+					$array['groups'][$x]['group_uuid'] = uuid();
+					$array['groups'][$x]['domain_uuid'] = null;
 					$array['groups'][$x]['group_name'] = 'public';
 					$array['groups'][$x]['group_level'] = '10';
 					$array['groups'][$x]['group_description'] = 'Public Group';

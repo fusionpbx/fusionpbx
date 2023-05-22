@@ -65,6 +65,7 @@
 	$apps[$x]['menu'][$y]['groups'][] = "admin";
 	$apps[$x]['menu'][$y]['groups'][] = "user";
 	$apps[$x]['menu'][$y]['groups'][] = "agent";
+	$apps[$x]['menu'][$y]['groups'][] = "fax";
 	$y++;
 	$apps[$x]['menu'][$y]['title']['en-us'] = "Accounts";
 	$apps[$x]['menu'][$y]['title']['en-gb'] = "Accounts";
@@ -130,6 +131,7 @@
 	$apps[$x]['menu'][$y]['groups'][] = "admin";
 	$apps[$x]['menu'][$y]['groups'][] = "user";
 	$apps[$x]['menu'][$y]['groups'][] = "agent";
+	$apps[$x]['menu'][$y]['groups'][] = "fax";
 	$y++;
 	$apps[$x]['menu'][$y]['title']['en-us'] = "Status";
 	$apps[$x]['menu'][$y]['title']['en-gb'] = "Status";
@@ -258,6 +260,7 @@
 	$apps[$x]['menu'][$y]['groups'][] = "admin";
 	$apps[$x]['menu'][$y]['groups'][] = "user";
 	$apps[$x]['menu'][$y]['groups'][] = "agent";
+	$apps[$x]['menu'][$y]['groups'][] = "fax";
 	$y++;
 
 ?>
