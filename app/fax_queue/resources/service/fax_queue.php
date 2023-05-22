@@ -6,7 +6,7 @@
 	}
 
 //includes files
-	require_once  dirname(dirname(dirname(__DIR__, 2))) . "/resources/require.php";
+	require_once  dirname(__DIR__, 4) . "/resources/require.php";
 	require_once "resources/pdo.php";
 	include "resources/classes/permissions.php";
 
