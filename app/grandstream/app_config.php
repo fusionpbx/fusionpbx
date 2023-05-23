@@ -1117,4 +1117,13 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Listening group name, for example: \"Cordless\", \"PTT\", or \"WalkieTalkie\"";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "b2f79366-07e8-4def-8e55-6e9ea635226d";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_public_mode";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Public Mode. 0 - No, 1 - Yes. Default is 0";
+
 ?>
