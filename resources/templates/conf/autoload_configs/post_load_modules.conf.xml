@@ -1,6 +1,0 @@
-<configuration name="post_load_modules.conf" description="Modules"> 
-	<modules> 
-		<!-- Video --> 
-		<load module="mod_av"/> 
-	</modules> 
-</configuration>

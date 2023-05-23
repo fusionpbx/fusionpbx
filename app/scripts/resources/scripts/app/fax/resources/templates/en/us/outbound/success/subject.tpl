@@ -1,1 +1,0 @@
-Fax to: ${destination_number} sent
