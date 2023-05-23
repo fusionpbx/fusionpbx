@@ -369,6 +369,11 @@ function save_var_xml() {
                 $dsn = $config->dsn(1, false);
                 $odbc_dsn = $config->dsn(1, true);
 
+		//skip this function if the conf directory is empty
+		if (empty($_SESSION['switch']['conf']['dir'])) {
+			return false;
+		}
+
 		//open the vars.xml file
 		$fout = fopen($_SESSION['switch']['conf']['dir']."/vars.xml","w");
 

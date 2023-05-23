@@ -68,7 +68,7 @@
 			if ($search) { $params[] = "search=".urlencode($search); }
 			if ($order_by) { $params[] = "order_by=".urlencode($order_by); }
 			if ($order) { $params[] = "order=".urlencode($order); }
-			$list_page = 'dialplans.php'.($params ? '?'.implode('&', $params) : null);
+			$list_page = 'dialplans.php'.(!empty($params) ? '?'.implode('&', $params) : null);
 			unset($params);
 
 		//process action

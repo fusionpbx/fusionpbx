@@ -33,7 +33,7 @@
 
 	if (!function_exists('check_float')) {
 		function check_float($string) {
-			$string = str_replace(",",".",$string);
+			$string = str_replace(",",".",$string ?? '');
 			return trim($string);
 		}
 	}
