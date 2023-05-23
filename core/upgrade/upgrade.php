@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2022
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -163,6 +163,11 @@
 //show the upgrade type
 	//echo $upgrade_type."\n";
 
+//get the version of the software
+	if ($upgrade_type == 'version') {
+		echo software::version()."\n";
+	}
+
 //run all app_defaults.php files
 	if ($upgrade_type == 'domains') {
 		require_once "resources/classes/config.php";
@@ -180,7 +185,7 @@
 		if (isset($argv[2]) && $argv[2] == 'data_types') {
 			$obj->data_types = true;
 		}
-		echo $obj->schema($format);
+		echo $obj->schema($format ?? '');
 	}
 
 //restore the default menu
@@ -204,11 +209,15 @@
 		}
 
 		//set the menu back to default
-		if (isset($argv[2]) && (is_null($argv[2]) || $argv[2] == 'default')) {
+		if (!isset($argv[2]) || $argv[2] == 'default') {
 			//restore the menu
 			$included = true;
 			require_once("core/menu/menu_restore_default.php");
 			unset($sel_menu);
+
+			//use upgrade language file
+			$language = new text;
+			$text = $language->get(null, 'core/upgrade');
 
 			//send message to the console
 			echo $text['message-upgrade_menu']."\n";
@@ -217,9 +226,16 @@
 
 //restore the default permissions
 	if ($upgrade_type == 'permissions') {
+		//default the groups in case they are missing
+		(new groups())->defaults();
+
 		//default the permissions
 		$included = true;
 		require_once("core/groups/permissions_default.php");
+
+		//use upgrade language file
+		$language = new text;
+		$text = $language->get(null, 'core/upgrade');
 
 		//send message to the console
 		echo $text['message-upgrade_permissions']."\n";

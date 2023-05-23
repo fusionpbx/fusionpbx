@@ -36,7 +36,7 @@
 	session_destroy();
 
 //check for login return preference
-	if ($_SESSION["user_uuid"] != '') {
+	if (!empty($_SESSION["user_uuid"])) {
 		if (isset($_SESSION['login']['destination_last']) && ($_SESSION['login']['destination_last']['boolean'] == 'true')) {
 			if ($_SERVER['HTTP_REFERER'] != '') {
 				//convert to relative path
@@ -101,7 +101,7 @@
 	}
 
 //redirect the user to the index page
-	header("Location: ".PROJECT_PATH."/login.php");
+	header("Location: ".PROJECT_PATH."/");
 	exit;
 
 ?>

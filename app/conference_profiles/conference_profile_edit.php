@@ -33,11 +33,11 @@
 //get http post variables and set them to php variables
 	if (count($_POST) > 0) {
 		$profile_name = $_POST["profile_name"];
-		$profile_enabled = $_POST["profile_enabled"];
+		$profile_enabled = $_POST["profile_enabled"] ?: 'false';
 		$profile_description = $_POST["profile_description"];
 	}
 //check to see if the http post exists
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 	
 		//get the uuid
 			if ($action == "update") {
@@ -54,10 +54,10 @@
 
 		//check for all required data
 			$msg = '';
-			if (strlen($profile_name) == 0) { $msg .= $text['message-required']." ".$text['label-profile_name']."<br>\n"; }
-			if (strlen($profile_enabled) == 0) { $msg .= $text['message-required']." ".$text['label-profile_enabled']."<br>\n"; }
-			//if (strlen($profile_description) == 0) { $msg .= $text['message-required']." ".$text['label-profile_description']."<br>\n"; }
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+			if (empty($profile_name)) { $msg .= $text['message-required']." ".$text['label-profile_name']."<br>\n"; }
+			if (empty($profile_enabled)) { $msg .= $text['message-required']." ".$text['label-profile_enabled']."<br>\n"; }
+			//if (empty($profile_description)) { $msg .= $text['message-required']." ".$text['label-profile_description']."<br>\n"; }
+			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				$document['title'] = $text['title-conference_profile'];
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
@@ -120,6 +120,9 @@
 		unset($sql, $parameters);
 	}
 
+//set the defaults
+	if (empty($profile_enabled)) { $profile_enabled = 'true'; }
+
 //create token
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);
@@ -158,10 +161,18 @@
 	echo "	".$text['label-profile_enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='profile_enabled'>\n";
-	echo "		<option value='true'>".$text['label-true']."</option>\n";
-	echo "		<option value='false' ".($profile_enabled == "false" ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
-	echo "	</select>\n";
+	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
+		echo "	<label class='switch'>\n";
+		echo "		<input type='checkbox' id='profile_enabled' name='profile_enabled' value='true' ".($profile_enabled == 'true' ? "checked='checked'" : null).">\n";
+		echo "		<span class='slider'></span>\n";
+		echo "	</label>\n";
+	}
+	else {
+		echo "	<select class='formfld' name='profile_enabled'>\n";
+		echo "		<option value='true' ".($profile_enabled == "true" ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
+		echo "		<option value='false' ".($profile_enabled == "false" ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
+		echo "	</select>\n";
+	}
 	echo "<br />\n";
 	echo $text['description-profile_enabled']."\n";
 	echo "</td>\n";

@@ -84,7 +84,7 @@
 		if (permission_exists('time_condition_context')) {
 			$dialplan_context = $_POST["dialplan_context"];
 		}
-		$dialplan_enabled = $_POST["dialplan_enabled"];
+		$dialplan_enabled = $_POST["dialplan_enabled"] ?: 'false';
 		$dialplan_description = $_POST["dialplan_description"];
 
 		if (!permission_exists('time_condition_domain')) {
@@ -92,7 +92,7 @@
 		}
 	}
 
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 
 		//validate the token
 			$token = new token;
@@ -103,11 +103,11 @@
 			}
 
 		//check for all required data
-			//if (strlen($domain_uuid) == 0) { $msg .= $text['label-required-domain_uuid']."<br>\n"; }
-	 		if (strlen($dialplan_name) == 0) { $msg .= $text['label-required-dialplan_name']."<br>\n"; }
-	 		if (strlen($dialplan_number) == 0) { $msg .= $text['label-required-dialplan_number']."<br>\n"; }
-	 		//if (strlen($dialplan_action) == 0) { $msg .= $text['label-required-action']."<br>\n"; }
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+			//if (empty($domain_uuid)) { $msg .= $text['label-required-domain_uuid']."<br>\n"; }
+	 		if (empty($dialplan_name)) { $msg .= $text['label-required-dialplan_name']."<br>\n"; }
+	 		if (empty($dialplan_number)) { $msg .= $text['label-required-dialplan_number']."<br>\n"; }
+	 		//if (empty($dialplan_action)) { $msg .= $text['label-required-action']."<br>\n"; }
+			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -180,7 +180,7 @@
 				//build update array
 					$array['dialplans'][0]['dialplan_uuid'] = $dialplan_uuid;
 					$array['dialplans'][0]['dialplan_continue'] = 'false';
-					if (strlen($dialplan_context) > 0) {
+					if (!empty($dialplan_context)) {
 						$array['dialplans'][0]['dialplan_context'] = $dialplan_context;
 					}
 
@@ -443,7 +443,7 @@
 			} //if
 
 		//add to query for default anti-action (if defined)
-			if (strlen($dialplan_anti_action_app) > 0) {
+			if (!empty($dialplan_anti_action_app)) {
 
 				//increment group number, reset order number
 				$dialplan_detail_group = 999;
@@ -663,7 +663,8 @@
 	}
 
 //set the defaults
-	if (strlen($dialplan_context) == 0) { $dialplan_context = $_SESSION['domain_name']; }
+	if (empty($dialplan_context)) { $dialplan_context = $_SESSION['domain_name']; }
+	if (empty($dialplan_enabled)) { $dialplan_enabled = 'true'; }
 
 //create token
 	$object = new token;
@@ -1094,7 +1095,7 @@ if ($action == 'update') {
 					foreach ($preset as $preset_name => $preset_variables) {
 						$checked = is_array($current_presets) && in_array($preset_name, $current_presets) ? "checked='checked'" : null;
 						$preset_group_id = $preset_number * 5 + 100;
-						if (strlen($text['label-preset_'.$preset_name]) > 0) {
+						if (!empty($text['label-preset_'.$preset_name])) {
 							$label_preset_name = $text['label-preset_'.$preset_name];
 						}
 						else {
@@ -1232,7 +1233,7 @@ if ($action == 'update') {
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "    <select class='formfld' name='domain_uuid'>\n";
-		if (strlen($domain_uuid) == 0) {
+		if (empty($domain_uuid)) {
 			echo "    <option value='' selected='selected'>".$text['label-global']."</option>\n";
 		}
 		else {
@@ -1271,10 +1272,18 @@ if ($action == 'update') {
 	echo "    ".$text['label-enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "<select class='formfld' name='dialplan_enabled'>\n";
-	echo "	<option value='true' ".(($dialplan_enabled == "true") ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
-	echo "	<option value='false' ".(($dialplan_enabled == "false") ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
-	echo "</select>\n";
+	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
+		echo "	<label class='switch'>\n";
+		echo "		<input type='checkbox' id='dialplan_enabled' name='dialplan_enabled' value='true' ".($dialplan_enabled == 'true' ? "checked='checked'" : null).">\n";
+		echo "		<span class='slider'></span>\n";
+		echo "	</label>\n";
+	}
+	else {
+		echo "	<select class='formfld' id='dialplan_enabled' name='dialplan_enabled'>\n";
+		echo "		<option value='true' ".($dialplan_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($dialplan_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "	</select>\n";
+	}
 	echo "<br />\n";
 	echo "</td>\n";
 	echo "</tr>\n";

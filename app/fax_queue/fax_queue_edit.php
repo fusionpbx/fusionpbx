@@ -73,7 +73,7 @@
 	}
 
 //process the user data and save it to the database
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 
 		//validate the token
 			$token = new token;
@@ -84,7 +84,7 @@
 			}
 
 		//process the http post data by submitted action
-			if ($_POST['action'] != '' && strlen($_POST['action']) > 0) {
+			if ($_POST['action'] != '' && !empty($_POST['action'])) {
 
 				//prepare the array(s)
 				//send the array to the database class
@@ -118,21 +118,21 @@
 
 		//check for all required data
 			$msg = '';
-			//if (strlen($fax_uuid) == 0) { $msg .= $text['message-required']." ".$text['label-fax_uuid']."<br>\n"; }
-			if (strlen($fax_date) == 0) { $msg .= $text['message-required']." ".$text['label-fax_date']."<br>\n"; }
-			if (strlen($hostname) == 0) { $msg .= $text['message-required']." ".$text['label-hostname']."<br>\n"; }
-			//if (strlen($fax_caller_id_name) == 0) { $msg .= $text['message-required']." ".$text['label-fax_caller_id_name']."<br>\n"; }
-			//if (strlen($fax_caller_id_number) == 0) { $msg .= $text['message-required']." ".$text['label-fax_caller_id_number']."<br>\n"; }
-			if (strlen($fax_number) == 0) { $msg .= $text['message-required']." ".$text['label-fax_number']."<br>\n"; }
-			//if (strlen($fax_prefix) == 0) { $msg .= $text['message-required']." ".$text['label-fax_prefix']."<br>\n"; }
-			//if (strlen($fax_email_address) == 0) { $msg .= $text['message-required']." ".$text['label-fax_email_address']."<br>\n"; }
-			if (strlen($fax_file) == 0) { $msg .= $text['message-required']." ".$text['label-fax_file']."<br>\n"; }
-			if (strlen($fax_status) == 0) { $msg .= $text['message-required']." ".$text['label-fax_status']."<br>\n"; }
-			//if (strlen($fax_retry_date) == 0) { $msg .= $text['message-required']." ".$text['label-fax_retry_date']."<br>\n"; }
-			//if (strlen($fax_retry_count) == 0) { $msg .= $text['message-required']." ".$text['label-fax_retry_count']."<br>\n"; }
-			//if (strlen($fax_accountcode) == 0) { $msg .= $text['message-required']." ".$text['label-fax_accountcode']."<br>\n"; }
-			//if (strlen($fax_command) == 0) { $msg .= $text['message-required']." ".$text['label-fax_command']."<br>\n"; }
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+			//if (empty($fax_uuid)) { $msg .= $text['message-required']." ".$text['label-fax_uuid']."<br>\n"; }
+			if (empty($fax_date)) { $msg .= $text['message-required']." ".$text['label-fax_date']."<br>\n"; }
+			if (empty($hostname)) { $msg .= $text['message-required']." ".$text['label-hostname']."<br>\n"; }
+			//if (empty($fax_caller_id_name)) { $msg .= $text['message-required']." ".$text['label-fax_caller_id_name']."<br>\n"; }
+			//if (empty($fax_caller_id_number)) { $msg .= $text['message-required']." ".$text['label-fax_caller_id_number']."<br>\n"; }
+			if (empty($fax_number)) { $msg .= $text['message-required']." ".$text['label-fax_number']."<br>\n"; }
+			//if (empty($fax_prefix)) { $msg .= $text['message-required']." ".$text['label-fax_prefix']."<br>\n"; }
+			//if (empty($fax_email_address)) { $msg .= $text['message-required']." ".$text['label-fax_email_address']."<br>\n"; }
+			if (empty($fax_file)) { $msg .= $text['message-required']." ".$text['label-fax_file']."<br>\n"; }
+			if (empty($fax_status)) { $msg .= $text['message-required']." ".$text['label-fax_status']."<br>\n"; }
+			//if (empty($fax_retry_date)) { $msg .= $text['message-required']." ".$text['label-fax_retry_date']."<br>\n"; }
+			//if (empty($fax_retry_count)) { $msg .= $text['message-required']." ".$text['label-fax_retry_count']."<br>\n"; }
+			//if (empty($fax_accountcode)) { $msg .= $text['message-required']." ".$text['label-fax_accountcode']."<br>\n"; }
+			//if (empty($fax_command)) { $msg .= $text['message-required']." ".$text['label-fax_command']."<br>\n"; }
+			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -381,7 +381,14 @@
 	echo "	".$text['label-fax_status']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='fax_status' maxlength='255' value='".escape($fax_status)."'>\n";
+	echo "	<select class='formfld' name='fax_status'>\n";
+	echo "		<option value='waiting' ".($fax_status == 'waiting' ? "selected='selected'" : null).">".ucwords($text['label-waiting'])."</option>\n";
+	echo "		<option value='trying' ".($fax_status == 'trying' ? "selected='selected'" : null).">".ucwords($text['label-trying'])."</option>\n";
+	echo "		<option value='sending' ".($fax_status == 'sending' ? "selected='selected'" : null).">".ucwords($text['label-sending'])."</option>\n";
+	echo "		<option value='sent' ".($fax_status == 'sent' ? "selected='selected'" : null).">".ucwords($text['label-sent'])."</option>\n";
+	echo "		<option value='busy' ".($fax_status == 'busy' ? "selected='selected'" : null).">".ucwords($text['label-busy'])."</option>\n";
+	echo "		<option value='failed' ".($fax_status == 'failed' ? "selected='selected'" : null).">".ucwords($text['label-failed'])."</option>\n";
+	echo "	</select>\n";
 	echo "<br />\n";
 	echo $text['description-fax_status']."\n";
 	echo "</td>\n";

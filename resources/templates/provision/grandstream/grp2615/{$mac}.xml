@@ -719,7 +719,7 @@
     <!-- # Call Log. 0 - Log All Calls, 1 - Log Incoming/Outgoing only (missed calls NOT recorded), 2 - Disable Call Log. Default is 0 -->
     <!-- # Number: 0, 1, 2 -->
     <!-- # Mandatory -->
-    <P182>0</P182>
+    {if isset($grandstream_call_log) }<P182>{$grandstream_call_log}</P182>{else}<P182>0</P182>{/if}
 
     <!-- # Send Anonymous (caller ID will be blocked if set to Yes). 0 - No, 1 - Yes. Default is 0 -->
     <!-- # Number: 0, 1 -->
@@ -734,7 +734,8 @@
     <!-- # Auto Answer. 0 - No, 1 - Yes. Default is 0 -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P90>0</P90>
+    {if isset($grandstream_auto_answer) }<P90>{$grandstream_auto_answer}</P90>{else}<P90>0</P90>{/if}
+    {if isset($grandstream_auto_answer_numbers) }<P29064>{$grandstream_auto_answer_numbers}</P29064>{/if}
 
     <!-- # Refer-To Use Target Contact. 0 - No, 1 - Yes. Default is 0 -->
     <!-- # Number: 0, 1 -->
@@ -759,7 +760,11 @@
     <!-- # No Key Entry Timeout (in seconds). Default is 4 -->
     <!-- # Number: 1 - 15 -->
     <!-- # Mandatory -->
-    <P85>4</P85>
+{if isset($grandstream_dial_timeout)}
+<P85>{$grandstream_dial_timeout}</P85>
+{else}
+<P85>4</P85>
+{/if}
 
     <!-- # Key as Send. 0 - Disabled, 1 - Pound (#), 2 - Star (*). Default is 1 -->
     <!-- # Number: 0, 1, 2 -->
@@ -933,7 +938,11 @@
     <!-- # Play warning tone for Auto Answer Intercom. 0 - No, 1 - Yes. Default is 0 -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P26072>1</P26072>
+    {if isset($grandstream_intercom_playwarningtoneforautoanswer) }	
+    <P26072>{$grandstream_intercom_playwarningtoneforautoanswer}</P26072>	
+    {else}	
+    <P26072>0</P26072>	
+    {/if}
 
     <!-- # Custom Call-Info for Auto Answer. -->
     <!-- # String -->
@@ -5526,37 +5535,49 @@
     <!-- # Mandatory -->
     <P1414>0</P1414>
 
-    <!-- # Automatic Upgrade.  -->
-    <!-- # 0 - No,  -->
-    <!-- # 1 - Yes, check for upgrade based on minute(s) setting, -->
-    <!-- # 2 - Yes, check for upgrade based on Hour of Day setting, -->
-    <!-- # 3 - Yes, check for upgrade based on Day of Week setting, -->
-    <!-- # Default is No -->
-    <!-- # Number: 0, 1, 2, 3 -->
-    <!-- # Mandatory -->
+    <!-- Automatic Provisioning.  -->
+    <!-- 0 - No,  -->
+    <!-- 1 - Yes, check for provisioning based on minute(s) setting, -->
+    <!-- 2 - Yes, check for provisioning based on Hour of Day setting, -->
+    <!-- 3 - Yes, check for provisioning based on Day of Week setting, -->
+    <!-- Default is No. -->
+    <!-- Number: 0, 1, 2, 3 -->
+    <!-- Mandatory -->
+    {if isset($grandstream_automatic_provisioning) }
+    <P194>{$grandstream_automatic_provisioning}</P194>
+    {else}
     <P194>0</P194>
+    {/if}
 
-    <!-- # Check for new firmware every () minutes. Default is 7 days. -->
-    <!-- # Number: 60-86400 -->
-    <!-- # Mandatory -->
+    <!-- Automatic Provisioning. Check for new config file every () minutes. Default is 7 days. -->
+    <!-- Number: 60-86400 -->
+    <!-- Mandatory -->
+    {if isset($grandstream_automatic_provisioning_minutes)}
+    <P193>{$grandstream_automatic_provisioning_minutes}</P193>
+    {else}
     <P193>10080</P193>
+    {/if}
+
+    <!-- Automatic Provisioning. Hour of the Day (0-23). Defines the hour of the day to check the HTTP/TFTP server for configuration file changes. Default is 1.  -->
+    <!-- Number: 0 - 23 -->
+    {if isset($grandstream_automatic_provisioning_hour)}
+    <P285>{$grandstream_automatic_provisioning_hour}</P285>
+    {else}
+    <P285>1</P285>
+    {/if}
+
+    <!-- Automatic Provisioning. Day of the Week (0-6). Defines the day of the week to check HTTP/TFTP server for configuration file changes. Default is 1. -->
+    <!-- Number: 0-6 -->
+    {if isset($grandstream_automatic_provisioning_day)}
+    <P286>{$grandstream_automatic_provisioning_day}</P286>
+    {else}
+    <P286>1</P286>
+    {/if}
 
     <!-- # Radomized Automitic Upgrade. 0 - No, 1 - Yes. Default is No -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P8458>1</P8458>
-
-    <!-- # Hour of the Day ~~ Start (0-23). Default is 1 -->
-    <!-- # Number: 0 - 23 -->
-    <P285>0</P285>
-
-    <!-- # Hour of the Day ~~ End (-1, 0-23). Default is 0 -->
-    <!-- # Number: -1, 0 - 23 -->
-    <P8459>0</P8459>
-
-    <!-- # Day of the Week (0-6). Default is 1 -->
-    <!-- # Number: 0-6 -->
-    <P286>0</P286>
+    <P8458>0</P8458>
 
     <!-- # Disable SIP NOTIFY Authentication. 0 - No, 1 - Yes. Default is 0 -->
     <!-- # Number: 0,1 -->
@@ -6077,25 +6098,20 @@
 
     <!-- # STUN server -->
     <!-- # String -->
+{if isset($grandstream_stun_server) }
+    <P76>{$grandstream_stun_server}</P76>
+{else}
     <P76></P76>
+{/if}
 
     <!-- # Public Mode. 0 - No, 1 - Yes. Default is 0 -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-{if isset($public_mode) }
-{if $public_mode|strtolower == 'true'}
-    <P1345>1</P1345>
-{elseif $public_mode|strtolower == 'yes'}
-    <P1345>1</P1345>
-{elseif $public_mode == '1'}
-    <P1345>1</P1345>
+{if isset($grandstream_public_mode) }
+    <P1345>{$grandstream_public_mode}</P1345>
 {else}
     <P1345>0</P1345>
 {/if}
-{else}
-    <P1345>0</P1345>
-{/if}
-
 
     <!-- # Enable Fix For RTP Timestamp Jump. Default is 0 -->
     <!-- # Number: 0, 1 -->
@@ -6911,11 +6927,19 @@
     <!-- # Multicast Paging Codec. 18 - G.729A/B, 0 - PCMU, 8 - PCMA, 2 - G.726-32, 9 - G.722, 98 - iLBC, 4- G.723.1 -->
     <!-- # Number: 18, 0, 8, 2, 9, 98, 4. Default is 0. -->
     <!-- # Mandatory -->
-    <P1568>0</P1568>
+    {if isset($grandstream_multicast_paging_codec) }	
+    <P1568>{$grandstream_multicast_paging_codec}</P1568>	
+    {else}	
+    <P1568>0</P1568>	
+    {/if}
 
     <!-- # Multicase Channel Number -->
     <!-- # Number: 0 - 50 (0 for normal RTP packets, 1-50 for Polycom multicast format packets). Default is 0 -->
-    <P8454>0</P8454>
+    {if isset($grandstream_multicast_channel_number) }	
+    <P8454>{$grandstream_multicast_channel_number}</P8454>	
+    {else}	
+    <P8454>0</P8454>	
+    {/if}
 
     <!-- # Multicast Sender ID -->
     <!-- # Strings -->
@@ -6925,11 +6949,19 @@
     <!-- # Priority 1 -->
     <!-- # Listening Address -->
     <!-- # String -->
-    <P1569>224.0.1.117:5003</P1569>
+    {if isset($grandstream_multicast_listening_address_1) }	
+    <P1569>{$grandstream_multicast_listening_address_1}</P1569>	
+    {else}	
+    <P1569></P1569>	
+    {/if}
 
     <!-- # Label -->
     <!-- # String -->
-    <P1570>Page</P1570>
+    {if isset($grandstream_multicast_listening_label_1) }	
+    <P1570>{$grandstream_multicast_listening_label_1}</P1570>	
+    {else}	
+    <P1570></P1570>	
+    {/if}
 
     <!-- # Priority 2 -->
     <!-- # Listening Address -->
@@ -7227,7 +7259,7 @@
     <!-- # Handset TX gain(db). 1 - -6, 0 - 0, 2 - +6. Default is 0 -->
     <!-- # Number: 0, 1, 2 -->
     <!-- # Mandatory -->
-    <P1464>0</P1464>
+    {if isset($grandstream_handset_tx_gain)}<P1464>{$grandstream_handset_tx_gain}</P1464>{else}<P1464>0</P1464>{/if}
 
     <!-- ############################################################################## -->
     <!-- ##  Settings/Preferences / Date and Time -->
@@ -7360,7 +7392,7 @@
     <!-- # Time Display Format. 0 - 12 Hour, 1 - 24 Hour -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P122>0</P122>
+    {if isset($grandstream_24hr_time_display)}<P122>{$grandstream_24hr_time_display}</P122>{else}<P122>0</P122>{/if}
 
     <!-- # Show Date On Status Bar. 0 - No, 1 - Yes. Default is 0 -->
     <!-- # Number: 0, 1 -->
@@ -7488,7 +7520,7 @@
     <!-- # System Ring Tone -->
     <!-- # String -->
     <!-- # Mandatory -->
-    <P345>f1=500,f2=540,c=20/20-80/400;</P345>
+    {if isset($grandstream_system_ring)}<P345>{$grandstream_system_ring}</P345>{else}<P345>f1=500,f2=540,c=20/20-80/400;</P345>{/if}
 
     <!-- # Dial Tone -->
     <!-- # String -->
@@ -7540,12 +7572,16 @@
     <!-- # Notification Tone Volume -->
     <!-- # Number: 0-7. Default is 5. -->
     <!-- # Mandatory -->
-    <P8399>5</P8399>
+    {if isset($grandstream_notification_tone_volume)}<P8399>{$grandstream_notification_tone_volume}</P8399>{/if}
 
     <!-- # Lock Volumne. 0 - No, 1 - Yes. Default is 0 -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
+{if isset($grandstream_lock_volume)}
+    <P8392>{$grandstream_lock_volume}</P8392>
+{else}
     <P8392>0</P8392>
+{/if}
 
     <!-- # Default Ringtone. 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3, 4 - silent. Default is 0 -->
     <!-- # Number: 0, 1, 2, 3, 4 -->
@@ -7570,11 +7606,11 @@
     <!-- ############################################################################## -->
     <!-- # Server Path -->
     <!-- # String -->
-    <P337></P337>
+    <P337>{$grandstreaml_xmlapp_url}</P337>
 
     <!-- # Softkey Label -->
     <!-- # String -->
-    <P352>XMLApp</P352>
+    <P352>{$grandstream_xmlapp_label}</P352>
 
     <!-- # Default Background Color -->
     <!-- # String -->
@@ -7606,7 +7642,7 @@
     <!-- # Key Mode. 1 - Line Mode, 2 - Account Mode. Default is 1 -->
     <!-- # Number: 1, 2 -->
     <!-- # Mandatory -->
-    <P8369>1</P8369>
+    {if isset($grandstream_key_mode)}<P8369>{$grandstream_key_mode}</P8369>{else}<P8369>1</P8369>{/if}
 
     <!-- # Transfer Mode via VPK. 0 - Blind Transfer, 1 - Attended Transfer, 2 - New Call. Default is 0 -->
     <!-- # Number: 0, 1, 2 -->

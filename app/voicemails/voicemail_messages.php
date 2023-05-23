@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2020
+ Portions created by the Initial Developer are Copyright (C) 2008-2023
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -45,7 +45,9 @@
 		$voicemail->voicemail_id = $_REQUEST['id'];
 		$voicemail->voicemail_uuid = $_REQUEST['voicemail_uuid'];
 		$voicemail->voicemail_message_uuid = $_REQUEST['uuid'];
-		$result = $voicemail->message_download();
+		if(!$voicemail->message_download()) {
+			echo "unable to download voicemail";
+		}
 		unset($voicemail);
 		exit;
 	}
@@ -289,14 +291,6 @@
 
 			if (is_array($field['messages']) && @sizeof($field['messages']) > 0) {
 				foreach ($field['messages'] as $row) {
-					//responsive date
-					$array = explode(' ', $row['created_date']);
-					if ($array[0].' '.$array[1].' '.$array[2] == date('j M Y')) { //today
-						$created_date = escape($array[3].' '.$array[4]); //only show time
-					}
-					else {
-						$created_date = escape($array[0].' '.$array[1].' '.$array[2])." <span class='hide-xs' title=\"".escape($array[3].' '.$array[4])."\">".escape($array[3].' '.$array[4])."</span>";
-					}
 
 					//playback progress bar
 					echo "<tr class='list-row' id='recording_progress_bar_".escape($row['voicemail_message_uuid'])."' style='display: none;'><td class='playback_progress_bar_background' style='padding: 0; border: none;' colspan='".$col_count."'><span class='playback_progress_bar' id='recording_progress_".escape($row['voicemail_message_uuid'])."'></span></td></tr>\n";
@@ -310,7 +304,7 @@
 					echo "		<input type='hidden' name='voicemail_messages[$x][uuid]' value='".escape($row['voicemail_message_uuid'])."' />\n";
 					echo "		<input type='hidden' name='voicemail_messages[$x][voicemail_uuid]' value='".escape($row['voicemail_uuid'])."' />\n";
 					echo "	</td>\n";
-					echo "	<td class='no-wrap' style='".$bold."'>".$created_date."</td>\n";
+					echo "	<td class='no-wrap' style='".$bold."'>".escape($row['created_date_formatted'])." ".escape($row['created_time_formatted'])."</td>\n";
 					echo "	<td class='overflow' style='".$bold."'>".escape($row['caller_id_name'])."&nbsp;</td>\n";
 					echo "	<td class='hide-xs' style='".$bold."'>".escape($row['caller_id_number'])."&nbsp;</td>\n";
 					echo "	<td class='button center no-link no-wrap'>";

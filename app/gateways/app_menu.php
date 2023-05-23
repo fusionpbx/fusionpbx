@@ -10,20 +10,26 @@
 	$apps[$x]['menu'][$y]['title']['es-mx'] = "Pasarelas";
 	$apps[$x]['menu'][$y]['title']['fr-ca'] = "Passerelles";
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Passerelles";
-	$apps[$x]['menu'][$y]['title']['he-il'] = "";
+	$apps[$x]['menu'][$y]['title']['he-il'] = "שערות";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Gateways";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Gateways";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Brama wyjściowa ";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Troncos";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Gateways";
-	$apps[$x]['menu'][$y]['title']['ro-ro'] = "";
+	$apps[$x]['menu'][$y]['title']['ro-ro'] = "Gateway-uri";
 	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Шлюзы";
 	$apps[$x]['menu'][$y]['title']['sv-se'] = "Gateways";
 	$apps[$x]['menu'][$y]['title']['uk-ua'] = "Шлюзи";
+	$apps[$x]['menu'][$y]['title']['zh-cn'] = "网关";
+	$apps[$x]['menu'][$y]['title']['ja-jp'] = "ゲートウェイ";
+	$apps[$x]['menu'][$y]['title']['ko-kr'] = "게이트웨이";
 	$apps[$x]['menu'][$y]['uuid'] = "237a512a-f8fe-1ce4-b5d7-e71c401d7159";
 	$apps[$x]['menu'][$y]['parent_uuid'] = "bc96d773-ee57-0cdd-c3ac-2d91aba61b55";
 	$apps[$x]['menu'][$y]['category'] = "internal";
+	$apps[$x]['menu'][$y]['icon'] = "";
 	$apps[$x]['menu'][$y]['path'] = "/app/gateways/gateways.php";
+	$apps[$x]['menu'][$y]['order'] = "";
 	$apps[$x]['menu'][$y]['groups'][] = "superadmin";
+	$y++;
 
 ?>

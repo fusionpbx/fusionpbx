@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2022
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -46,7 +46,7 @@
 	$text = $language->get();
 
 //action add or update
-	if (is_uuid($_REQUEST["id"])) {
+	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
 		$destination_uuid = $_REQUEST["id"];
 	}
@@ -55,7 +55,8 @@
 	}
 
 //set the type
-	switch ($_GET['type']) {
+	$destination_type = !empty($_GET['type']) ? $_GET['type'] : 'inbound';
+	switch ($destination_type) {
 		case 'inbound': $destination_type = 'inbound'; break;
 		case 'outbound': $destination_type = 'outbound'; break;
 		case 'local': $destination_type = 'local'; break;
@@ -82,22 +83,22 @@
 	}
 
 //get http post variables and set them to php variables
-	if (count($_POST) > 0) {
+	if (!empty($_POST)) {
 		//get the uuid
-			if ($action == "update" && is_uuid($_POST["destination_uuid"])) {
+			if ($action == "update" && !empty($_POST["destination_uuid"]) && is_uuid($_POST["destination_uuid"])) {
 				$destination_uuid = $_POST["destination_uuid"];
 			}
 
 		//set the variables
-			$dialplan_uuid = $_POST["dialplan_uuid"];
+			$dialplan_uuid = $_POST["dialplan_uuid"] ?? null;
 			$domain_uuid = $_POST["domain_uuid"];
 			$destination_type = $_POST["destination_type"];
-			$destination_condition_field = $_POST["destination_condition_field"];
+			$destination_condition_field = $_POST["destination_condition_field"] ?? null;
 			$destination_number = $_POST["destination_number"];
 			$destination_prefix = $_POST["destination_prefix"];
-			$destination_trunk_prefix = $_POST["destination_trunk_prefix"];
-			$destination_area_code = $_POST["destination_area_code"];
-			$db_destination_number = $_POST["db_destination_number"];
+			$destination_trunk_prefix = $_POST["destination_trunk_prefix"] ?? null;
+			$destination_area_code = $_POST["destination_area_code"] ?? null;
+			$db_destination_number = $_POST["db_destination_number"] ?? null;
 			$destination_caller_id_name = $_POST["destination_caller_id_name"];
 			$destination_caller_id_number = $_POST["destination_caller_id_number"];
 			$destination_cid_name_prefix = $_POST["destination_cid_name_prefix"];
@@ -105,31 +106,31 @@
 			$destination_conditions = $_POST["destination_conditions"];
 			$destination_actions = $_POST["destination_actions"];
 			$fax_uuid = $_POST["fax_uuid"];
-			$provider_uuid = $_POST["provider_uuid"];
+			$provider_uuid = $_POST["provider_uuid"] ?? null;
 			$user_uuid = $_POST["user_uuid"];
 			$group_uuid = $_POST["group_uuid"];
 			$destination_order= $_POST["destination_order"];
-			$destination_enabled = $_POST["destination_enabled"];
+			$destination_enabled = $_POST["destination_enabled"] ?? 'false';
 			$destination_description = $_POST["destination_description"];
-			$destination_sell = check_float($_POST["destination_sell"]);
-			$currency = $_POST["currency"];
-			$destination_buy = check_float($_POST["destination_buy"]);
-			$currency_buy = $_POST["currency_buy"];
+			$destination_sell = check_float($_POST["destination_sell"] ?? '');
+			$currency = $_POST["currency"] ?? null;
+			$destination_buy = check_float($_POST["destination_buy"] ?? '');
+			$currency_buy = $_POST["currency_buy"] ?? null;
 			$destination_hold_music = $_POST["destination_hold_music"];
 			$destination_distinctive_ring = $_POST["destination_distinctive_ring"];
 			$destination_record = $_POST["destination_record"];
 			$destination_accountcode = $_POST["destination_accountcode"];
-			$destination_type_voice = $_POST["destination_type_voice"];
-			$destination_type_fax = $_POST["destination_type_fax"];
-			$destination_type_text = $_POST["destination_type_text"];
-			$destination_type_emergency = $_POST["destination_type_emergency"];
-			$destination_carrier = $_POST["destination_carrier"];
+			$destination_type_voice = $_POST["destination_type_voice"] ?? null;
+			$destination_type_fax = $_POST["destination_type_fax"] ?? null;
+			$destination_type_text = $_POST["destination_type_text"] ?? null;
+			$destination_type_emergency = $_POST["destination_type_emergency"] ?? null;
+			$destination_carrier = $_POST["destination_carrier"] ?? null;
 
 		//sanitize the destination conditions
-			if (is_array($destination_conditions)) {
+			if (!empty($destination_conditions)) {
 				$i=0;
 				foreach($destination_conditions as $row) {
-					if (isset($row['condition_expression']) && strlen($row['condition_expression']) > 0) {
+					if (isset($row['condition_expression']) && !empty($row['condition_expression'])) {
 						if ($row['condition_field'] == 'caller_id_number') {
 							$row['condition_expression'] = preg_replace('#[^\+0-9\*]#', '', $row['condition_expression']);
 							$conditions[$i]['condition_field'] = $row['condition_field'];
@@ -142,19 +143,19 @@
 	}
 
 //process the http post
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
 		//initialize the destinations object
 			$destination = new destinations;
-			if (permission_exists('destination_domain') && is_uuid($domain_uuid)) {
+			if (permission_exists('destination_domain') && !empty($domain_uuid) && is_uuid($domain_uuid)) {
 				$destination->domain_uuid = $domain_uuid;
 			}
 
 		//set the default context
-			if ($destination_type =="inbound" && strlen($destination_context) == 0) {
+			if ($destination_type =="inbound" && empty($destination_context)) {
 				$destination_context = 'public';
 			}
-			if ($destination_type =="outbound" && strlen($destination_context) == 0) {
+			if ($destination_type =="outbound" && empty($destination_context)) {
 				$destination_context = $_SESSION['domain_name'];
 			}
 
@@ -171,12 +172,23 @@
 				$destination_number = trim($destination_number);
 			}
 
+		//if the user doesn't have permission to set the destination_number then get it from the database
+			if (!empty($destination_uuid) && is_uuid($destination_uuid) && !permission_exists('destination_number')) {
+				$sql = "select destination_number from v_destinations ";
+				$sql .= "where destination_uuid = :destination_uuid ";
+				$parameters['destination_uuid'] = $destination_uuid;
+				$database = new database;
+				$destination_number = $database->select($sql, $parameters, 'column');
+				unset($sql, $parameters, $num_rows);
+			}
+
 		//check for all required data
 			$msg = '';
-			if (strlen($destination_type) == 0) { $msg .= $text['message-required']." ".$text['label-destination_type']."<br>\n"; }
-			if (strlen($destination_number) == 0 && $action == 'add') { $msg .= $text['message-required']." ".$text['label-destination_number']."<br>\n"; }
-			if (strlen($destination_context) == 0) { $msg .= $text['message-required']." ".$text['label-destination_context']."<br>\n"; }
-			if (strlen($destination_enabled) == 0) { $msg .= $text['message-required']." ".$text['label-destination_enabled']."<br>\n"; }
+			//if (empty($destination_type)) { $msg .= $text['message-required']." ".$text['label-destination_type']."<br>\n"; }
+			//if (empty($destination_prefix) && permission_exists('destination_prefix')) { $msg .= $text['message-required']." ".$text['label-destination_country_code']."<br>\n"; }
+			if (empty($destination_number)) { $msg .= $text['message-required']." ".$text['label-destination_number']."<br>\n"; }
+			if (empty($destination_context)) { $msg .= $text['message-required']." ".$text['label-destination_context']."<br>\n"; }
+			if (empty($destination_enabled)) { $msg .= $text['message-required']." ".$text['label-destination_enabled']."<br>\n"; }
 
 		//check for duplicates
 			if ($destination_type == 'inbound' && $destination_number != $db_destination_number && $_SESSION['destinations']['unique']['boolean'] == 'true') {
@@ -193,7 +205,7 @@
 			}
 
 		//show the message
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -207,12 +219,12 @@
 			}
 
 		//get the uuid
-			if ($action == "update" && is_uuid($_POST["destination_uuid"])) {
+			if ($action == "update" && !empty($_POST["destination_uuid"]) && is_uuid($_POST["destination_uuid"])) {
 				$destination_uuid = $_POST["destination_uuid"];
 			}
 
 		//get the destination row values
-			if ($action == 'update' && is_uuid($destination_uuid)) {
+			if ($action == 'update' && !empty($destination_uuid) && is_uuid($destination_uuid)) {
 				$sql = "select * from v_destinations ";
 				$sql .= "where destination_uuid = :destination_uuid ";
 				$parameters['destination_uuid'] = $destination_uuid;
@@ -222,9 +234,9 @@
 			}
 
 		//get the destination settings from the database
-			if (is_array($row) && @sizeof($row) != 0) {
+			if (!empty($row)) {
 				//get the dialplan_uuid from the database
-				$dialplan_uuid = $row["dialplan_uuid"];
+				$dialplan_uuid = $row["dialplan_uuid"] ?? null;
 
 				//if the destination_number is not set then get it from the database
 				if (!isset($destination_number)) {
@@ -235,64 +247,64 @@
 
 		//if the user doesn't have the correct permission then
 		//override variables using information from the database
-			if (is_array($row) && @sizeof($row) != 0) {
+			if (!empty($row)) {
 				if (!permission_exists('destination_prefix')) {
-					$destination_prefix = $row["destination_prefix"];
+					$destination_prefix = $row["destination_prefix"] ?? null;
 				}
 				if (!permission_exists('destination_trunk_prefix')) {
-					$destination_trunk_prefix = $row["destination_trunk_prefix"];
+					$destination_trunk_prefix = $row["destination_trunk_prefix"] ?? null;
 				}
 				if (!permission_exists('destination_area_code')) {
-					$destination_area_code = $row["destination_area_code"];
+					$destination_area_code = $row["destination_area_code"] ?? null;
 				}
 				if (!permission_exists('destination_number')) {
-					$destination_prefix = $row["destination_prefix"];
-					$destination_number = $row["destination_number"];
+					$destination_prefix = $row["destination_prefix"] ?? null;
+					$destination_number = $row["destination_number"] ?? null;
 				}
 				if (!permission_exists('destination_condition_field')) {
-					$destination_condition_field = $row["destination_condition_field"];
+					$destination_condition_field = $row["destination_condition_field"] ?? null;
 				}
 				if (!permission_exists('destination_caller_id_name')) {
-					$destination_caller_id_name = $row["destination_caller_id_name"];
+					$destination_caller_id_name = $row["destination_caller_id_name"] ?? null;
 				}
 				if (!permission_exists('destination_caller_id_number')) {
-					$destination_caller_id_number = $row["destination_caller_id_number"];
+					$destination_caller_id_number = $row["destination_caller_id_number"] ?? null;
 				}
 				if (!permission_exists('destination_context')) {
-					$destination_context = $row["destination_context"];
+					$destination_context = $row["destination_context"] ?? null;
 				}
 				if (!permission_exists('destination_fax')) {
-					$fax_uuid = $row["fax_uuid"];
+					$fax_uuid = $row["fax_uuid"] ?? null;
 				}
 				if (!permission_exists('provider_edit')) {
-					$provider_uuid = $row["provider_uuid"];
+					$provider_uuid = $row["provider_uuid"] ?? null;
 				}
 				if (!permission_exists('user_edit')) {
-					$user_uuid = $row["user_uuid"];
+					$user_uuid = $row["user_uuid"] ?? null;
 				}
 				if (!permission_exists('group_edit')) {
-					$group_uuid = $row["group_uuid"];
+					$group_uuid = $row["group_uuid"] ?? null;
 				}
 				if (!permission_exists('destination_cid_name_prefix')) {
-					$destination_cid_name_prefix = $row["destination_cid_name_prefix"];
+					$destination_cid_name_prefix = $row["destination_cid_name_prefix"] ?? null;
 				}
 				if (!permission_exists('destination_record')) {
-					$destination_record = $row["destination_record"];
+					$destination_record = $row["destination_record"] ?? null;
 				}
 				if (!permission_exists('destination_hold_music')) {
-					$destination_hold_music = $row["destination_hold_music"];
+					$destination_hold_music = $row["destination_hold_music"] ?? null;
 				}
 				if (!permission_exists('destination_distinctive_ring')) {
-					$destination_distinctive_ring = $row["destination_distinctive_ring"];
+					$destination_distinctive_ring = $row["destination_distinctive_ring"] ?? null;
 				}
 				if (!permission_exists('destination_accountcode')) {
-					$destination_accountcode = $row["destination_accountcode"];
+					$destination_accountcode = $row["destination_accountcode"] ?? null;
 				}
 				if (!permission_exists('destination_emergency')) {
-					$destination_type_emergency = $row["destination_type_emergency"];
+					$destination_type_emergency = $row["destination_type_emergency"] ?? null;
 				}
 				if (!permission_exists('destination_domain')) {
-					$domain_uuid = $row["domain_uuid"];
+					$domain_uuid = $row["domain_uuid"] ?? null;
 				}
 			}
 			unset($row);
@@ -328,13 +340,13 @@
 			if ($destination_type == 'inbound' || $destination_type == 'local') {
 
 				//get the array
-					$dialplan_details = $_POST["dialplan_details"];
+					$dialplan_details = $_POST["dialplan_details"] ?? null;
 
 				//array cleanup
-					if (is_array($dialplan_details)) {
+					if (!empty($dialplan_details)) {
 						foreach ($dialplan_details as $index => $row) {
 							//unset the empty row
-							if (strlen($row["dialplan_detail_data"]) == 0) {
+							if (empty($row["dialplan_detail_data"])) {
 								unset($dialplan_details[$index]);
 							}
 						}
@@ -351,7 +363,7 @@
 						//$parameters['domain_uuid'] = $domain_uuid;
 						$database = new database;
 						$row = $database->select($sql, $parameters, 'row');
-						if (is_array($row) && @sizeof($row) != 0) {
+						if (!empty($row)) {
 							$fax_extension = $row["fax_extension"];
 							$fax_destination_number = $row["fax_destination_number"];
 							$fax_name = $row["fax_name"];
@@ -370,16 +382,16 @@
 					foreach($destination_numbers as $destination_number) {
 
 						//convert the number to a regular expression
-							if (isset($destination_prefix) && strlen($destination_prefix) > 0) {
+							if (isset($destination_prefix) && !empty($destination_prefix)) {
 								$destination_numbers['destination_prefix'] = $destination_prefix;
 							}
-							if (isset($destination_trunk_prefix) && strlen($destination_trunk_prefix) > 0) {
+							if (isset($destination_trunk_prefix) && !empty($destination_trunk_prefix)) {
 								$destination_numbers['destination_trunk_prefix'] = $destination_trunk_prefix;
 							}
-							if (isset($destination_area_code) && strlen($destination_area_code) > 0) {
+							if (isset($destination_area_code) && !empty($destination_area_code)) {
 								$destination_numbers['destination_area_code'] = $destination_area_code;
 							}
-							if (isset($destination_number) && strlen($destination_number) > 0) {
+							if (isset($destination_number) && !empty($destination_number)) {
 								$destination_numbers['destination_number'] = $destination_number;
 							}
 							$destination = new destinations;
@@ -387,10 +399,10 @@
 							unset($destination_numbers);
 
 						//if empty then get new uuid
-							if (!is_uuid($destination_uuid)) {
+							if (empty($destination_uuid) || !is_uuid($destination_uuid)) {
 								$destination_uuid = uuid();
 							}
-							if (!is_uuid($dialplan_uuid)) {
+							if (empty($dialplan_uuid) || !is_uuid($dialplan_uuid)) {
 								$dialplan_uuid = uuid();
 							}
 
@@ -411,25 +423,38 @@
 								$dialplan["app_uuid"] = "b5242951-686f-448f-8b4e-5031ba0601a4";
 							}
 							$dialplan["dialplan_uuid"] = $dialplan_uuid;
-							$dialplan["domain_uuid"] = $domain_uuid;
-							$dialplan["dialplan_name"] = ($dialplan_name != '') ? $dialplan_name : format_phone($destination_area_code.$destination_number);
+							$dialplan["domain_uuid"] = $domain_uuid ?? null;
+							$dialplan["dialplan_name"] = (!empty($dialplan_name)) ? $dialplan_name : format_phone($destination_area_code.$destination_number);
 							$dialplan["dialplan_number"] = $destination_area_code.$destination_number;
 							$dialplan["dialplan_context"] = $destination_context;
 							$dialplan["dialplan_continue"] = "false";
 							$dialplan["dialplan_order"] = $destination_order;
 							$dialplan["dialplan_enabled"] = $destination_enabled;
-							$dialplan["dialplan_description"] = ($dialplan_description != '') ? $dialplan_description : $destination_description;
+							$dialplan["dialplan_description"] = (!empty($dialplan_description)) ? $dialplan_description : $destination_description;
 							$dialplan_detail_order = 10;
 
 						//set the dialplan detail type
-							if (strlen($destination_condition_field) > 0) {
+							if (!empty($destination_condition_field)) {
 								$dialplan_detail_type = $destination_condition_field;
 							}
-							elseif (strlen($_SESSION['dialplan']['destination']['text']) > 0) {
+							elseif (!empty($_SESSION['dialplan']['destination']['text'])) {
 								$dialplan_detail_type = $_SESSION['dialplan']['destination']['text'];
 							}
 							else {
 								$dialplan_detail_type = "destination_number";
+							}
+
+						//authorized specific dialplan_detail_type that are safe, sanitize all other values
+							$dialplan_detail_type = $_SESSION['dialplan']['destination']['text'];
+							switch ($dialplan_detail_type) {
+							case 'destination_number':
+								break;
+							case '${sip_to_user}':
+								break;
+							case '${sip_req_user}':
+								break;
+							default:
+								$dialplan_detail_type = xml::sanitize($dialplan_detail_type);
 							}
 
 						//set the last destination_app and destination_data variables
@@ -442,36 +467,36 @@
 							}
 
 						//build the xml dialplan
-							$dialplan["dialplan_xml"] = "<extension name=\"".$dialplan["dialplan_name"]."\" continue=\"false\" uuid=\"".$dialplan_uuid."\">\n";
+							$dialplan["dialplan_xml"] = "<extension name=\"".xml::sanitize($dialplan["dialplan_name"])."\" continue=\"false\" uuid=\"".xml::sanitize($dialplan_uuid)."\">\n";
 
 							//add the dialplan xml destination conditions
-							if (is_array($conditions)) {
+							if (!empty($conditions)) {
 								foreach($conditions as $row) {
-									if (is_numeric($row['condition_expression']) && strlen($destination_number) == strlen($row['condition_expression']) && strlen($destination_prefix) > 0) {
+									if (is_numeric($row['condition_expression']) && strlen($destination_number) == strlen($row['condition_expression']) && !empty($destination_prefix)) {
 										$condition_expression = '\+?'.$destination_prefix.'?'.$row['condition_expression'];
 									}
 									else {
 										$condition_expression = str_replace("+", "\+", $row['condition_expression']);
 									}
-									$dialplan["dialplan_xml"] .= "	<condition field=\"".$row['condition_field']."\" expression=\"^".$condition_expression."$\"/>\n";
+									$dialplan["dialplan_xml"] .= "	<condition field=\"".xml::sanitize($row['condition_field'])."\" expression=\"^".xml::sanitize($condition_expression)."$\"/>\n";
 								}
 							}
 
-							$dialplan["dialplan_xml"] .= "	<condition field=\"".$dialplan_detail_type."\" expression=\"".$destination_number_regex."\">\n";
+							$dialplan["dialplan_xml"] .= "	<condition field=\"".$dialplan_detail_type."\" expression=\"".xml::sanitize($destination_number_regex)."\">\n";
 							$dialplan["dialplan_xml"] .= "		<action application=\"export\" data=\"call_direction=inbound\" inline=\"true\"/>\n";
 							$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"domain_uuid=".$_SESSION['domain_uuid']."\" inline=\"true\"/>\n";
 							$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"domain_name=".$_SESSION['domain_name']."\" inline=\"true\"/>\n";
 
 							//add this only if using application bridge
-							if ($destination_app == 'bridge') {
+							if (!empty($destination_app) && $destination_app == 'bridge') {
 									$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"hangup_after_bridge=true\" inline=\"true\"/>\n";
 									$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"continue_on_fail=true\" inline=\"true\"/>\n";
 							}
 
-							if (strlen($destination_cid_name_prefix) > 0) {
-								$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"effective_caller_id_name=".$destination_cid_name_prefix."#\${caller_id_name}\" inline=\"false\"/>\n";
+							if (!empty($destination_cid_name_prefix)) {
+								$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"effective_caller_id_name=".xml::sanitize($destination_cid_name_prefix)."#\${caller_id_name}\" inline=\"false\"/>\n";
 							}
-							if (strlen($destination_record) > 0 && $destination_record == 'true') {
+							if (!empty($destination_record) && $destination_record == 'true') {
 								$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"record_path=\${recordings_dir}/\${domain_name}/archive/\${strftime(%Y)}/\${strftime(%b)}/\${strftime(%d)}\" inline=\"true\"/>\n";
 								$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"record_name=\${uuid}.\${record_ext}\" inline=\"true\"/>\n";
 								$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"record_append=true\" inline=\"true\"/>\n";
@@ -479,21 +504,21 @@
 								$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"recording_follow_transfer=true\" inline=\"true\"/>\n";
 								$dialplan["dialplan_xml"] .= "		<action application=\"record_session\" data=\"\${record_path}/\${record_name}\" inline=\"false\"/>\n";
 							}
-							if (strlen($destination_hold_music) > 0) {
-								$dialplan["dialplan_xml"] .= "		<action application=\"export\" data=\"hold_music=".$destination_hold_music."\" inline=\"true\"/>\n";
+							if (!empty($destination_hold_music)) {
+								$dialplan["dialplan_xml"] .= "		<action application=\"export\" data=\"hold_music=".xml::sanitize($destination_hold_music)."\" inline=\"true\"/>\n";
 							}
-							if (strlen($destination_distinctive_ring) > 0) {
-								$dialplan["dialplan_xml"] .= "		<action application=\"export\" data=\"sip_h_Alert-Info=".$destination_distinctive_ring."\" inline=\"true\"/>\n";
+							if (!empty($destination_distinctive_ring)) {
+								$dialplan["dialplan_xml"] .= "		<action application=\"export\" data=\"sip_h_Alert-Info=".xml::sanitize($destination_distinctive_ring)."\" inline=\"true\"/>\n";
 							}
-							if (strlen($destination_accountcode) > 0) {
-								$dialplan["dialplan_xml"] .= "		<action application=\"export\" data=\"accountcode=".$destination_accountcode."\" inline=\"true\"/>\n";
+							if (!empty($destination_accountcode)) {
+								$dialplan["dialplan_xml"] .= "		<action application=\"export\" data=\"accountcode=".xml::sanitize($destination_accountcode)."\" inline=\"true\"/>\n";
 							}
-							if (strlen($destination_carrier) > 0) {
-								$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"carrier=".$destination_carrier."\" inline=\"true\"/>\n";
+							if (!empty($destination_carrier)) {
+								$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"carrier=".xml::sanitize($destination_carrier)."\" inline=\"true\"/>\n";
 							}
-							if (strlen($fax_uuid) > 0) {
+							if (!empty($fax_uuid)) {
 								$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"tone_detect_hits=1\" inline=\"true\"/>\n";
-								$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"execute_on_tone_detect=transfer ".$fax_extension." XML \${domain_name}\" inline=\"true\"/>\n";
+								$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"execute_on_tone_detect=transfer ".xml::sanitize($fax_extension)." XML \${domain_name}\" inline=\"true\"/>\n";
 								$dialplan["dialplan_xml"] .= "		<action application=\"tone_detect\" data=\"fax 1100 r +3000\"/>\n";
 							}
 
@@ -502,7 +527,7 @@
 								$action_array = explode(":", $destination_action, 2);
 								if (isset($action_array[0]) && $action_array[0] != '') {
 									if ($destination->valid($action_array[0].':'.$action_array[1])) {
-										$dialplan["dialplan_xml"] .= "		<action application=\"".$action_array[0]."\" data=\"".$action_array[1]."\"/>\n";
+										$dialplan["dialplan_xml"] .= "		<action application=\"".xml::sanitize($action_array[0])."\" data=\"".$action_array[1]."\"/>\n";
 									}
 								}
 							}
@@ -520,10 +545,10 @@
 									$dialplan_detail_order = $dialplan_detail_order + 10;
 
 								//add the dialplan detail destination conditions
-									if (is_array($conditions)) {
+									if (!empty($conditions)) {
 										foreach($conditions as $row) {
 											//prepare the expression
-											if (is_numeric($row['condition_expression']) && strlen($destination_number) == strlen($row['condition_expression']) && strlen($destination_prefix) > 0) {
+											if (is_numeric($row['condition_expression']) && strlen($destination_number) == strlen($row['condition_expression']) && !empty($destination_prefix)) {
 												$condition_expression = '\+?'.$destination_prefix.'?'.$row['condition_expression'];
 											}
 											else {
@@ -548,10 +573,10 @@
 									$dialplan["dialplan_details"][$y]["domain_uuid"] = $domain_uuid;
 									$dialplan["dialplan_details"][$y]["dialplan_uuid"] = $dialplan_uuid;
 									$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "condition";
-									if (strlen($destination_condition_field) > 0) {
+									if (!empty($destination_condition_field)) {
 										$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = $destination_condition_field;
 									}
-									elseif (strlen($_SESSION['dialplan']['destination']['text']) > 0) {
+									elseif (!empty($_SESSION['dialplan']['destination']['text'])) {
 										$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = $_SESSION['dialplan']['destination']['text'];
 									}
 									else {
@@ -565,7 +590,7 @@
 									$dialplan_detail_order = $dialplan_detail_order + 10;
 
 								//add this only if using application bridge
-									if ($destination_app == 'bridge') {
+									if (!empty($destination_app) && $destination_app == 'bridge') {
 										//add hangup_after_bridge
 											$dialplan["dialplan_details"][$y]["domain_uuid"] = $domain_uuid;
 											$dialplan["dialplan_details"][$y]["dialplan_uuid"] = $dialplan_uuid;
@@ -594,7 +619,7 @@
 									$dialplan_detail_order = $dialplan_detail_order + 10;
 
 								//set the caller id name prefix
-									if (strlen($destination_cid_name_prefix) > 0) {
+									if (!empty($destination_cid_name_prefix)) {
 										$dialplan["dialplan_details"][$y]["domain_uuid"] = $domain_uuid;
 										$dialplan["dialplan_details"][$y]["dialplan_uuid"] = $dialplan_uuid;
 										$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
@@ -609,7 +634,7 @@
 									}
 
 								//set the call accountcode
-									if (strlen($destination_accountcode) > 0) {
+									if (!empty($destination_accountcode)) {
 										$dialplan["dialplan_details"][$y]["domain_uuid"] = $domain_uuid;
 										$dialplan["dialplan_details"][$y]["dialplan_uuid"] = $dialplan_uuid;
 										$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
@@ -624,7 +649,7 @@
 									}
 
 								//set the call carrier
-									if (strlen($destination_carrier) > 0) {
+									if (!empty($destination_carrier)) {
 										$dialplan["dialplan_details"][$y]["domain_uuid"] = $domain_uuid;
 										$dialplan["dialplan_details"][$y]["dialplan_uuid"] = $dialplan_uuid;
 										$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
@@ -639,7 +664,7 @@
 									}
 
 								//set the hold music
-									if (strlen($destination_hold_music) > 0) {
+									if (!empty($destination_hold_music)) {
 										$dialplan["dialplan_details"][$y]["domain_uuid"] = $domain_uuid;
 										$dialplan["dialplan_details"][$y]["dialplan_uuid"] = $dialplan_uuid;
 										$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
@@ -651,7 +676,7 @@
 									}
 
 								//set the distinctive ring
-									if (strlen($destination_distinctive_ring) > 0) {
+									if (!empty($destination_distinctive_ring)) {
 										$dialplan["dialplan_details"][$y]["domain_uuid"] = $domain_uuid;
 										$dialplan["dialplan_details"][$y]["dialplan_uuid"] = $dialplan_uuid;
 										$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
@@ -792,8 +817,8 @@
 								//add the actions
 									foreach($destination_actions as $field) {
 										$action_array = explode(":", $field, 2);
-										$action_app = $action_array[0];
-										$action_data = $action_array[1];
+										$action_app = $action_array[0] ?? null;
+										$action_data = $action_array[1] ?? null;
 										if (isset($action_array[0]) && $action_array[0] != '') {
 											if ($destination->valid($action_app.':'.$action_data)) {
 												//add to the dialplan_details array
@@ -878,7 +903,7 @@
 							}
 
 							//prepare the destination_conditions json
-							if (is_array($conditions)) {
+							if (!empty($conditions)) {
 								$array['destinations'][$x]["destination_conditions"] = json_encode($conditions);
 								unset($conditions);
 							}
@@ -890,8 +915,8 @@
 							$y=0;
 							foreach($destination_actions as $destination_action) {
 								$action_array = explode(":", $destination_action, 2);
-								$action_app = $action_array[0];
-								$action_data = $action_array[1];
+								$action_app = $action_array[0] ?? null;
+								$action_data = $action_array[1] ?? null;
 								if (isset($action_array[0]) && $action_array[0] != '') {
 									if ($destination->valid($action_app.':'.$action_data)) {
 										$actions[$y]['destination_app'] = $action_app;
@@ -900,7 +925,7 @@
 									}
 								}
 							}
-							$array['destinations'][$x]["destination_actions"] = json_encode($actions);
+							$array['destinations'][$x]["destination_actions"] = json_encode($actions ?? null);
 							$array['destinations'][$x]["destination_order"] = $destination_order;
 							$array['destinations'][$x]["destination_enabled"] = $destination_enabled;
 							$array['destinations'][$x]["destination_description"] = $destination_description;
@@ -1006,11 +1031,47 @@
 			}
 			header("Location: destination_edit.php?id=".urlencode($destination_uuid)."&type=".urlencode($destination_type));
 			return;
-
 	}
 
+//set default values
+	$domain_uuid = $domain_uuid ?? '';
+	$dialplan_uuid = $dialplan_uuid ?? '';
+	$destination_type = $destination_type ?? '';
+	$destination_number = $destination_number ?? '';
+	$destination_condition_field = $destination_condition_field ?? '';
+	$destination_prefix = $destination_prefix ?? '';
+	$destination_trunk_prefix = $destination_trunk_prefix ?? '';
+	$destination_area_code = $destination_area_code ?? '';
+	$destination_caller_id_name = $destination_caller_id_name ?? '';
+	$destination_caller_id_number = $destination_caller_id_number ?? '';
+	$destination_cid_name_prefix = $destination_cid_name_prefix ?? '';
+	$destination_hold_music = $destination_hold_music ?? '';
+	$destination_distinctive_ring = $destination_distinctive_ring ?? '';
+	$destination_record = $destination_record ?? '';
+	$destination_accountcode = $destination_accountcode ?? '';
+	$destination_type_voice = $destination_type_voice ?? '';
+	$destination_type_fax = $destination_type_fax ?? '';
+	$destination_type_text = $destination_type_text ?? '';
+	$destination_type_emergency = $destination_type_emergency ?? '';
+	$destination_context = $destination_context ?? '';
+	$destination_conditions = $destination_conditions ?? '';
+	$destination_actions = $destination_actions ?? '';
+	$fax_uuid = $fax_uuid ?? '';
+	$provider_uuid = $provider_uuid ?? '';
+	$user_uuid = $user_uuid ?? '';
+	$group_uuid = $group_uuid ?? '';
+	$currency = $currency ?? '';
+	$destination_sell = $destination_sell ?? '';
+	$destination_buy = $destination_buy ?? '';
+	$currency_buy = $currency_buy ?? '';
+	$destination_carrier = $destination_carrier ?? '';
+	$destination_order = $destination_order ?? '';
+	$destination_enabled = $destination_enabled ?? '';
+	$destination_description = $destination_description ?? '';
+	$select_style = $select_style ?? '';
+
 //pre-populate the form
-	if (is_array($_GET) > 0 && $_POST["persistformvar"] != "true") {
+	if (!empty($_GET["id"]) > 0 && empty($_POST["persistformvar"])) {
 	 	if (is_uuid($_GET["id"])) {
 	 		$destination_uuid = $_GET["id"];
 			$sql = "select * from v_destinations ";
@@ -1018,7 +1079,7 @@
 			$parameters['destination_uuid'] = $destination_uuid;
 			$database = new database;
 			$row = $database->select($sql, $parameters, 'row');
-			if (is_array($row) && @sizeof($row) != 0) {
+			if (!empty($row)) {
 				$domain_uuid = $row["domain_uuid"];
 				$dialplan_uuid = $row["dialplan_uuid"];
 				$destination_type = $row["destination_type"];
@@ -1042,14 +1103,14 @@
 				$destination_conditions = $row["destination_conditions"];
 				$destination_actions = $row["destination_actions"];
 				$fax_uuid = $row["fax_uuid"];
-				$provider_uuid = $row["provider_uuid"];
+				$provider_uuid = $row["provider_uuid"] ?? '';
 				$user_uuid = $row["user_uuid"];
 				$group_uuid = $row["group_uuid"];
-				$currency = $row["currency"];
-				$destination_sell = $row["destination_sell"];
-				$destination_buy = $row["destination_buy"];
-				$currency_buy = $row["currency_buy"];
-				$destination_carrier = $row["destination_carrier"];
+				//$currency = $row["currency"] ?? ''
+				//$destination_sell = $row["destination_sell"];
+				//$destination_buy = $row["destination_buy"];
+				//$currency_buy = $row["currency_buy"];
+				//$destination_carrier = $row["destination_carrier"];
 				$destination_order = $row["destination_order"];
 				$destination_enabled = $row["destination_enabled"];
 				$destination_description = $row["destination_description"];
@@ -1059,11 +1120,11 @@
 	}
 
 //decode the json to an array
-	$destination_conditions = json_decode($destination_conditions, true);
-	$destination_actions = json_decode($destination_actions, true);
+	$destination_conditions = json_decode($destination_conditions ?? '', true);
+	$destination_actions = json_decode($destination_actions ?? '', true);
 
 //prepare the conditions array, add an empty row
-	if (is_array($destination_conditions)) {
+	if (!empty($destination_conditions)) {
 		$i=0;
 		foreach ($destination_conditions as $row) { $i++; }
 		$destination_conditions[$i]['condition_field'] = '';
@@ -1086,7 +1147,15 @@
 	unset($sql, $parameters);
 
 //add an empty row to the array
-	$x = (is_array($dialplan_details)) ? count($dialplan_details) : $x = 0;
+	if (empty($dialplan_details)) {
+		//create an empty array
+		$dialplan_details = [];
+		$x = 0;
+	}
+	else {
+		//count the rows in the array
+		$x = count($dialplan_details);
+	}
 	$limit = $x + 1;
 	while($x < $limit) {
 		$dialplan_details[$x]['domain_uuid'] = $domain_uuid;
@@ -1098,6 +1167,7 @@
 	}
 	unset($limit);
 
+
 //remove previous fax details
 	$x = 0;
 	foreach($dialplan_details as $row) {
@@ -1107,7 +1177,7 @@
  		if ($row['dialplan_detail_type'] == "tone_detect") {
 			unset($dialplan_details[$x]);
 		}
-		if (substr($dialplan_detail_data,0,22) == "execute_on_tone_detect") {
+		if (substr($dialplan_detail_data ?? '',0,22) == "execute_on_tone_detect") {
 			unset($dialplan_details[$x]);
 		}
  		if ($row['dialplan_detail_type'] == "answer") {
@@ -1124,9 +1194,10 @@
 	}
 
 //set the defaults
-	if (strlen($destination_order) == 0) { $destination_order = '100'; }
-	if (strlen($destination_type) == 0) { $destination_type = 'inbound'; }
-	if (strlen($destination_context) == 0) { $destination_context = 'public'; }
+	if (empty($destination_order)) { $destination_order = '100'; }
+	if (empty($destination_type)) { $destination_type = 'inbound'; }
+	if (empty($destination_context)) { $destination_context = 'public'; }
+	if (empty($destination_enabled)) { $destination_enabled = 'true'; }
 	if ($destination_type =="outbound") { $destination_context = $_SESSION['domain_name']; }
 	if ($destination_type =="local") { $destination_context = $_SESSION['domain_name']; }
 
@@ -1292,13 +1363,13 @@
 	echo "<td width='70%' class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='destination_type' id='destination_type' onchange='type_control(this.options[this.selectedIndex].value);context_control();'>\n";
 	switch ($destination_type) {
-		case "inbound" :	$selected[0] = "selected='selected'";	break;
-		case "outbound" :	$selected[1] = "selected='selected'";	break;
-		case "local" :	$selected[2] = "selected='selected'";		break;
+		case "inbound": $selected[0] = "selected='selected'"; break;
+		case "outbound": $selected[1] = "selected='selected'"; break;
+		case "local": $selected[2] = "selected='selected'";	break;
 	}
-	echo "	<option value='inbound' ".$selected[0].">".$text['option-inbound']."</option>\n";
-	echo "	<option value='outbound' ".$selected[1].">".$text['option-outbound']."</option>\n";
-	echo "	<option value='local' ".$selected[2].">".$text['option-local']."</option>\n";
+	echo "	<option value='inbound' ".($selected[0] ?? null).">".$text['option-inbound']."</option>\n";
+	echo "	<option value='outbound' ".($selected[1] ?? null).">".$text['option-outbound']."</option>\n";
+	echo "	<option value='local' ".($selected[2] ?? null).">".$text['option-local']."</option>\n";
 	unset($selected);
 	echo "	</select>\n";
 	echo "<br />\n";
@@ -1455,7 +1526,7 @@
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	$x=0;
-	if (is_array($destination_actions)) {
+	if (!empty($destination_actions)) {
 		foreach($destination_actions as $row) {
 			echo $destination->select('dialplan', "destination_actions[$x]", $row['destination_app'].':'.$row['destination_data']);
 			echo "<br />\n";
@@ -1476,7 +1547,7 @@
 		$parameters['domain_uuid'] = $domain_uuid;
 		$database = new database;
 		$result = $database->select($sql, $parameters, 'all');
-		if (is_array($result) && @sizeof($result) != 0) {
+		if (!empty($result)) {
 			echo "<tr id='tr_fax_detection'>\n";
 			echo "<td class='vncell' valign='top' align='left' nowrap>\n";
 			echo "	".$text['label-fax_uuid']."\n";
@@ -1502,7 +1573,7 @@
 	}
 
 	//providers
-	if (permission_exists('provider_edit') && is_array($providers) && @sizeof($providers) != 0) {
+	if (permission_exists('provider_edit') && !empty($providers)) {
 		echo "<tr id='tr_provider'>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
 		echo "	".$text['label-provider']."\n";
@@ -1678,7 +1749,7 @@
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "    <select class='formfld' name='domain_uuid' id='destination_domain' onchange='context_control();'>\n";
-		if (strlen($domain_uuid) == 0) {
+		if (empty($domain_uuid)) {
 			echo "    <option value='' selected='selected'>".$text['select-global']."</option>\n";
 		}
 		else {
@@ -1735,15 +1806,23 @@
 	echo "	".$text['label-destination_enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='destination_enabled'>\n";
-	switch ($destination_enabled) {
-		case "true" :	$selected[1] = "selected='selected'";	break;
-		case "false" :	$selected[2] = "selected='selected'";	break;
+	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
+		echo "	<label class='switch'>\n";
+		echo "		<input type='checkbox' id='destination_enabled' name='destination_enabled' value='true' ".($destination_enabled == 'true' ? "checked='checked'" : null).">\n";
+		echo "		<span class='slider'></span>\n";
+		echo "	</label>\n";
 	}
-	echo "	<option value='true' ".$selected[1].">".$text['label-true']."</option>\n";
-	echo "	<option value='false' ".$selected[2].">".$text['label-false']."</option>\n";
-	unset($selected);
-	echo "	</select>\n";
+	else {
+		echo "	<select class='formfld' name='destination_enabled'>\n";
+		switch ($destination_enabled) {
+			case "true" :	$selected[1] = "selected='selected'";	break;
+			case "false" :	$selected[2] = "selected='selected'";	break;
+		}
+		echo "	<option value='true' ".$selected[1].">".$text['label-true']."</option>\n";
+		echo "	<option value='false' ".$selected[2].">".$text['label-false']."</option>\n";
+		unset($selected);
+		echo "	</select>\n";
+	}
 	echo "<br />\n";
 	echo $text['description-destination_enabled']."\n";
 	echo "</td>\n";

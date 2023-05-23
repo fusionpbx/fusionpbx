@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en' lang='en'>
+	<head>
+		<meta charset='utf-8' />
+		<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
+		<meta http-equiv='X-UA-Compatible' content='IE=edge' />
+		<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no' />
+		<link rel='stylesheet' type='text/css' href='{$project_path}/themes/default/css.php' />
+		<link rel='icon' href='{$favicon}'>
+		<title>{$login_title}</title>
+	</head>
+	<body>
+		<div id='page' align='center'>
+			<div id='default_login'>
+				<form method='post' name='frm' action=''>
+					<div>
+						{$login_email_description}
+						<br /><br />
+						<input class='formfld' type='text' style='text-align: center; min-width: 200px; width: 200px; margin-bottom: 8px;' name='authentication_code' maxlength='255' placeholder="{$login_authentication_code}" value="{$authentication_code}" />
+						<br /><br />
+					</div>
+					<div>
+						<input type='submit' name='' class='btn' value='{$button_verify}' />
+					</div>
+				</form>
+			</div>
+		</div>
+	</body>
+</html>

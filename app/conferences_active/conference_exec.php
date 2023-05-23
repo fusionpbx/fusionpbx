@@ -73,7 +73,7 @@
 	}
 
 //get the conference name
-	if (isset($name) && strlen($name) > 0) {
+	if (isset($name) && !empty($name)) {
 		$name_array = explode('@', $name);
 		$name = $name_array[0];
 	}
@@ -182,12 +182,12 @@
 
 //execute the command
 	if (count($_GET) > 0) {
-		if (strlen($cmd) > 0) {
+		if (!empty($cmd)) {
 			//prepare the switch cmd
 				$switch_cmd = $cmd . " ";
 				$switch_cmd .= $name . " ";
 				$switch_cmd .= $data . " ";
-				if ($id && strlen($id) > 0) {
+				if ($id && !empty($id)) {
 					$switch_cmd .= " ".$id;
 				}
 

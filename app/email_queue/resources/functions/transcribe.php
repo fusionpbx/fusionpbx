@@ -122,10 +122,10 @@ if (!function_exists('transcribe')) {
 				$transcribe_language = $_SESSION['voicemail']['transcribe_language']['text'];
 				$transcribe_alternate_language = $_SESSION['voicemail']['transcribe_alternate_language']['text'];
 
-				if (!isset($transcribe_language) && strlen($transcribe_language) == 0) {
+				if (!isset($transcribe_language) && empty($transcribe_language)) {
 					$transcribe_language = 'en-Us';
 				}
-				if (!isset($transcribe_alternate_language) && strlen($transcribe_alternate_language) == 0) {
+				if (!isset($transcribe_alternate_language) && empty($transcribe_alternate_language)) {
 					$transcribe_alternate_language = 'es-Us';
 				}
 				if ($file_extension == "mp3") {
@@ -183,7 +183,7 @@ if (!function_exists('transcribe')) {
 				$api_key = $_SESSION['voicemail']['azure_key']['text'];
 				$api_url = $_SESSION['voicemail']['azure_server_region']['text'];
 
-				if (strlen($transcribe_language) == 0) {
+				if (empty($transcribe_language)) {
 					$transcribe_language = 'en-US';
 				}
 
@@ -197,7 +197,7 @@ if (!function_exists('transcribe')) {
 				if (isset($api_key) && $api_key != '') {
 					$command = "curl -X POST \"https://".$api_url.".api.cognitive.microsoft.com/sts/v1.0/issueToken\" -H \"Content-type: application/x-www-form-urlencoded\" -H \"Content-Length: 0\" -H \"Ocp-Apim-Subscription-Key: ".$api_key."\"";
 					$access_token_result = shell_exec($command);
-					if (strlen($access_token_result) == 0) {
+					if (empty($access_token_result)) {
 						return false;
 					}
 					else {
@@ -223,14 +223,13 @@ if (!function_exists('transcribe')) {
 
 			}
 
-			//transcribe - custom
-			//Works with Mozilla DeepSpeech or Coqui with https://github.com/AccelerateNetworks/DeepSpeech_Frontend
-			//or Vosk with https://git.callpipe.com/fusionpbx/vosk_frontend
+			// transcribe - custom
+			// Works with self-hostable transcription service at https://github.com/AccelerateNetworks/an-transcriptions
 			if ($transcribe_provider == 'custom') {
 				$api_key = $_SESSION['voicemail']['api_key']['text'];
 				$api_url = $_SESSION['voicemail']['transcription_server']['text'];
 
-				if (strlen($transcribe_language) == 0) {
+				if (empty($transcribe_language)) {
 					$transcribe_language = 'en-US';
 				}
 
@@ -241,21 +240,63 @@ if (!function_exists('transcribe')) {
 					$content_type = 'audio/wav';
 				}
 
-				$file_path = $file_path.'/'.$file_name;
-				$command = "curl -X POST ".$api_url." -H 'Authorization: Bearer ".$api_key."' -F file=@".$file_path;
-				echo $command."\n";
-				$http_response = shell_exec($command);
-				$array = json_decode($http_response, true);
-				if ($array === null) {
+				$message = null;
+				for($retries = 5; $retries > 0; $retries--) {
+					echo "sending voicemail recording to ".$api_url." for transcription";
+
+					// submit the file for transcribing
+					$file_path = $file_path.'/'.$file_name;
+					$command = "curl -sX POST ".$api_url."/enqueue -H 'Authorization: Bearer ".$api_key."' -F file=@".$file_path;
+					$stdout = shell_exec($command);
+					$resp = json_decode($stdout, true);
+					if ($resp === null) {
+						echo "unexpected error: ".$stdout;
+						// json not parsable, try again
+						continue;
+					}
+
+					$transcription_id = $resp['id'];
+
+					// wait for transcription to complete
+					sleep(1);
+
+					while(true) {
+						echo "checking ".$api_url." for completion of job ".$transcription_id;
+						$command = "curl -s ".$api_url."/j/".$transcription_id." -H 'Authorization: Bearer ".$api_key."'";
+						$resp = json_decode(shell_exec($command), true);
+						if ($resp === null) {
+							// json not parsable, try again
+							continue;
+						}
+
+						if($resp['status'] == "failed") {
+							echo "transcription failed, retrying";
+							break;
+						}
+
+						if($resp['status'] == "finished") {
+							echo "transcription succeeded";
+							$message = $resp['result'];
+							break;
+						}
+
+						// transcription is queued or in progress, check again in 1 second
+						sleep(1);
+					}
+
+					if($message !== null) {
+						break;
+					}
+				}
+
+				if($message == null) {
 					return false;
 				}
-				else {
-					$message = $array['message'];
-				}
+
 				$array['provider'] = $transcribe_provider;
 				$array['language'] = $transcribe_language;
 				$array['api_key'] = $api_key;
-				$array['command'] = $command;
+				// $array['command'] = $command
 				$array['message'] = $message;
 				return $array;
 			}

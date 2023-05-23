@@ -47,7 +47,7 @@
 	$text = $language->get();
 
 //set the action as an add or an update
-	if (is_uuid($_REQUEST["id"])) {
+	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
 		$extension_uuid = $_REQUEST["id"];
 		$page = $_REQUEST['page'];
@@ -89,8 +89,8 @@
 				$extension = $database->select($sql, $parameters, 'column');
 				unset($sql, $parameters);
 			}
-			$number_alias = $_POST["number_alias"];
-			$password = $_POST["password"];
+			$number_alias = $_POST["number_alias"] ?? null;
+			$password = $_POST["password"] ?? null;
 
 			//server verification on account code
 			$accountcode = $_POST["accountcode"];
@@ -111,13 +111,13 @@
 			//$device_uuid = $_POST["device_uuid"];
 			//$device_line = $_POST["device_line"];
 			$voicemail_password = $_POST["voicemail_password"];
-			$voicemail_enabled = $_POST["voicemail_enabled"];
+			$voicemail_enabled = $_POST["voicemail_enabled"] ?? 'false';
 			$voicemail_mail_to = $_POST["voicemail_mail_to"];
 			$voicemail_transcription_enabled = $_POST["voicemail_transcription_enabled"];
 			$voicemail_file = $_POST["voicemail_file"];
 			$voicemail_local_after_email = $_POST["voicemail_local_after_email"];
 			$user_context = $_POST["user_context"];
-			$range = $_POST["range"];
+			$range = $_POST["range"] ?? null;
 			$missed_call_app = $_POST["missed_call_app"];
 			$missed_call_data = $_POST["missed_call_data"];
 			$toll_allow = $_POST["toll_allow"];
@@ -130,22 +130,22 @@
 			$cidr = $_POST["cidr"];
 			$sip_force_contact = $_POST["sip_force_contact"];
 			$sip_force_expires = $_POST["sip_force_expires"];
-			$nibble_account = $_POST["nibble_account"];
+			$nibble_account = $_POST["nibble_account"] ?? null;
 			$mwi_account = $_POST["mwi_account"];
 			$sip_bypass_media = $_POST["sip_bypass_media"];
 			$absolute_codec_string = $_POST["absolute_codec_string"];
 			$force_ping = $_POST["force_ping"];
 			$dial_string = $_POST["dial_string"];
-			$enabled = $_POST["enabled"];
+			$enabled = $_POST["enabled"] ?? 'false';
 			$description = $_POST["description"];
 
 			//outbound caller id number - only allow numeric and +
-			if (strlen($outbound_caller_id_number) > 0) {
+			if (!empty($outbound_caller_id_number)) {
 				$outbound_caller_id_number = preg_replace('#[^\+0-9]#', '', $outbound_caller_id_number);
 			}
 
 			$voicemail_id = $extension;
-			if (permission_exists('number_alias') && strlen($number_alias) > 0) {
+			if (permission_exists('number_alias') && !empty($number_alias)) {
 				$voicemail_id = $number_alias;
 			}
 
@@ -171,7 +171,7 @@
 			$toll_allow = str_replace(',',':', $toll_allow);
 
 		//set assigned user variables
-			$user_uuid = $_POST["extension_users"][0]["user_uuid"];
+			$user_uuid = $_POST["extension_users"][0]["user_uuid"] ?? null;
 
 		//device provisioning variables
 			if (is_array($_POST["devices"]) && @sizeof($_POST["devices"]) != 0) {
@@ -186,7 +186,7 @@
 			}
 
 		//get or set the device_uuid
-			if (is_array($device_mac_addresses) && @sizeof($device_mac_addresses) != 0) {
+			if (!empty($device_mac_addresses) && is_array($device_mac_addresses) && @sizeof($device_mac_addresses) != 0) {
 				foreach ($device_mac_addresses as $d => $device_mac_address) {
 					$device_mac_address = strtolower($device_mac_address);
 					$device_mac_address = preg_replace('#[^a-fA-F0-9./]#', '', $device_mac_address);
@@ -220,14 +220,14 @@
 					}
 					unset($sql, $parameters);
 
-					$device_uuids[$d] = is_uuid($device_uuid) ? $device_uuid : uuid();
+					$device_uuids[$d] = !empty($device_uuid) && is_uuid($device_uuid) ? $device_uuid : uuid();
 				}
 			}
 
 	}
 
 //delete the user from the v_extension_users
-	if ($_REQUEST["delete_type"] == "user" && is_uuid($_REQUEST["delete_uuid"]) && permission_exists("extension_delete")) {
+	if (!empty($_REQUEST["delete_type"]) && $_REQUEST["delete_type"] == "user" && is_uuid($_REQUEST["delete_uuid"]) && permission_exists("extension_delete")) {
 		//set the variables
 			$extension_uuid = $_REQUEST["id"];
 			$user_uuid = $_REQUEST["delete_uuid"];
@@ -257,7 +257,7 @@
 
 //delete the line from the v_device_lines
 	if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/devices')) {
-		if ($_REQUEST["delete_type"] == "device_line" && is_uuid($_REQUEST["delete_uuid"]) && permission_exists("extension_delete")) {
+		if (!empty($_REQUEST["delete_type"]) && $_REQUEST["delete_type"] == "device_line" && is_uuid($_REQUEST["delete_uuid"]) && permission_exists("extension_delete")) {
 			//set the variables
 				$device_line_uuid = $_REQUEST["delete_uuid"];
 
@@ -285,7 +285,7 @@
 	}
 
 //process the user data and save it to the database
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 
 		//set the domain_uuid
 			if (permission_exists('extension_domain') && is_uuid($_POST["domain_uuid"])) {
@@ -305,11 +305,11 @@
 
 		//check for all required data
 			$msg = '';
-			if (strlen($extension) == 0) { $msg .= $text['message-required'].$text['label-extension']."<br>\n"; }
+			if (empty($extension)) { $msg .= $text['message-required'].$text['label-extension']."<br>\n"; }
 			if (permission_exists('extension_enabled')) {
-				if (strlen($enabled) == 0) { $msg .= $text['message-required'].$text['label-enabled']."<br>\n"; }
+				if (empty($enabled)) { $msg .= $text['message-required'].$text['label-enabled']."<br>\n"; }
 			}
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -324,13 +324,13 @@
 
 		//prevent users from bypassing extension limit by using range
 			if ($_SESSION['limit']['extensions']['numeric'] != '') {
-				if ($total_extensions + $range > $_SESSION['limit']['extensions']['numeric']){
+				if (isset($total_extensions) && ($total_extensions ?? 0) + $range > $_SESSION['limit']['extensions']['numeric']) {
 					$range = $_SESSION['limit']['extensions']['numeric'] - $total_extensions;
 				}
 			}
 
 		//add or update the database
-			if ($_POST["persistformvar"] != "true") {
+			if (empty($_POST["persistformvar"]) || $_POST["persistformvar"] != "true") {
 
 				//prep missed call values for db insert/update
 					switch ($missed_call_app) {
@@ -392,17 +392,17 @@
 									}
 
 								//prepare the values for mwi account
-										if (strlen($mwi_account) > 0) {
+										if (!empty($mwi_account)) {
 											if (strpos($mwi_account, '@') === false) {
 													$mwi_account .= "@".$_SESSION['domain_name'];
 											}
 										}
 
 								//generate a password
-									if ($action == "add" && strlen($password) == 0) {
+									if ($action == "add" && empty($password)) {
 										$password = generate_password($password_length, $password_strength);
 									}
-									if ($action == "update" && permission_exists('extension_password') && strlen($password) == 0) {
+									if ($action == "update" && permission_exists('extension_password') && empty($password)) {
 										$password = generate_password($password_length, $password_strength);
 									}
 
@@ -413,7 +413,7 @@
 									if (permission_exists('number_alias')) {
 										$array["extensions"][$i]["number_alias"] = $number_alias;
 									}
-									if (strlen($password) > 0) {
+									if (!empty($password)) {
 										$array["extensions"][$i]["password"] = $password;
 									}
 									if (permission_exists('extension_accountcode')) {
@@ -475,7 +475,7 @@
 									if (permission_exists('extension_toll')) {
 										$array["extensions"][$i]["toll_allow"] = $toll_allow;
 									}
-									if (strlen($call_timeout) > 0) {
+									if (!empty($call_timeout)) {
 										$array["extensions"][$i]["call_timeout"] = $call_timeout;
 									}
 									if (permission_exists("extension_call_group")) {
@@ -496,7 +496,7 @@
 										$array["extensions"][$i]["sip_force_contact"] = $sip_force_contact;
 										$array["extensions"][$i]["sip_force_expires"] = $sip_force_expires;
 										if (permission_exists('extension_nibble_account')) {
-											if (strlen($nibble_account) > 0) {
+											if (!empty($nibble_account)) {
 												$array["extensions"][$i]["nibble_account"] = $nibble_account;
 											}
 										}
@@ -541,16 +541,16 @@
 												}
 
 												//determine the name
-												if (strlen($effective_caller_id_name) > 0) {
+												if (!empty($effective_caller_id_name)) {
 													$name = $effective_caller_id_name;
 												}
-												elseif (strlen($directory_first_name) > 0 && strlen($directory_last_name) > 0) {
+												elseif (strlen($directory_first_name) > 0 && !empty($directory_last_name)) {
 													$name = $directory_first_name.' '.$directory_last_name;
 												}
-												elseif (strlen($directory_first_name) > 0) {
+												elseif (!empty($directory_first_name)) {
 													$name = $directory_first_name;
 												}
-												elseif (strlen($directory_first_name) > 0) {
+												elseif (!empty($directory_first_name)) {
 													$name = $directory_first_name.' '.$directory_last_name;
 												}
 												else {
@@ -565,6 +565,7 @@
 													$line_label = $_SESSION['provision']['line_label']['text'];
 													$line_label = str_replace("\${name}", $name, $line_label);
 													$line_label = str_replace("\${effective_caller_id_name}", $effective_caller_id_name, $line_label);
+													$line_label = str_replace("\${caller_id_name}", $effective_caller_id_name, $line_label);
 													$line_label = str_replace("\${first_name}", $directory_first_name, $line_label);
 													$line_label = str_replace("\${last_name}", $directory_last_name, $line_label);
 													$line_label = str_replace("\${user_id}", $extension, $line_label);
@@ -581,6 +582,7 @@
 													$line_display_name = $_SESSION['provision']['line_display_name']['text'];
 													$line_display_name = str_replace("\${name}", $name, $line_display_name);
 													$line_display_name = str_replace("\${effective_caller_id_name}", $effective_caller_id_name, $line_display_name);
+													$line_display_name = str_replace("\${caller_id_name}", $effective_caller_id_name, $line_display_name);
 													$line_display_name = str_replace("\${first_name}", $directory_first_name, $line_display_name);
 													$line_display_name = str_replace("\${last_name}", $directory_last_name, $line_display_name);
 													$line_display_name = str_replace("\${user_id}", $extension, $line_display_name);
@@ -602,7 +604,7 @@
 													$array["devices"][$j]["device_mac_address"] = $device_mac_address;
 													$array["devices"][$j]["device_label"] = $extension;
 													$array["devices"][$j]["device_vendor"] = $device_vendor;
-													if (strlen($device_templates[$d]) > 0) {
+													if (!empty($device_templates[$d])) {
 														$array["devices"][$j]["device_template"] = $device_templates[$d];
 													}
 													$array["devices"][$j]["device_enabled"] = "true";
@@ -637,7 +639,7 @@
 						//add or update voicemail
 							if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/voicemails')) {
 								//set the voicemail password
-									if (strlen($voicemail_password) == 0) {
+									if (empty($voicemail_password)) {
 										$voicemail_password = generate_password($_SESSION['voicemail']['password_length']['numeric'], 1);
 									}
 
@@ -683,7 +685,7 @@
 												$array["voicemails"][$i]["voicemail_local_after_email"] = $voicemail_local_after_email;
 											}
 											$array["voicemails"][$i]["voicemail_transcription_enabled"] = $voicemail_transcription_enabled;
-											$array["voicemails"][$i]["voicemail_tutorial"] = $voicemail_tutorial;
+											$array["voicemails"][$i]["voicemail_tutorial"] = $voicemail_tutorial ?? null;
 											$array["voicemails"][$i]["voicemail_enabled"] = $voicemail_enabled;
 											$array["voicemails"][$i]["voicemail_description"] = $description;
 
@@ -700,12 +702,12 @@
 								$extension++;
 								$voicemail_id = $extension;
 
-								if (strlen($number_alias) > 0) {
+								if (!empty($number_alias)) {
 									$number_alias++;
 									$voicemail_id = $number_alias;
 								}
 
-								if (strlen($mwi_account) > 0) {
+								if (!empty($mwi_account)) {
 									$mwi_account_array = explode('@', $mwi_account);
 									$mwi_account_array[0]++;
 									$mwi_account = implode('@', $mwi_account_array);
@@ -731,7 +733,7 @@
 					}
 
 				//update device key label
-					if (strlen($effective_caller_id_name) > 0) {
+					if (!empty($effective_caller_id_name)) {
 						$sql = "update v_device_keys set ";
 						$sql .= "device_key_label = :device_key_label ";
 						$sql .= "where domain_uuid = :domain_uuid ";
@@ -762,7 +764,7 @@
 					if (permission_exists('extension_add') || permission_exists('extension_edit')) {
 
 						//synchronize configuration
-							if (is_writable($_SESSION['switch']['extensions']['dir'])) {
+							if (!empty($_SESSION['switch']['extensions']['dir']) && is_writable($_SESSION['switch']['extensions']['dir'])) {
 								require_once "app/extensions/resources/classes/extension.php";
 								$ext = new extension;
 								$ext->xml();
@@ -770,7 +772,7 @@
 							}
 
 						//write the provision files
-							if (strlen($_SESSION['provision']['path']['text']) > 0) {
+							if (!empty($_SESSION['provision']['path']['text'])) {
 								if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/provision')) {
 									$prov = new provision;
 									$prov->domain_uuid = $domain_uuid;
@@ -788,7 +790,7 @@
 							}
 							$cache = new cache;
 							$cache->delete("directory:".$extension."@".$user_context);
-							if (permission_exists('number_alias') && strlen($number_alias) > 0) {
+							if (permission_exists('number_alias') && !empty($number_alias)) {
 								$cache->delete("directory:".$number_alias."@".$user_context);
 							}
 
@@ -817,7 +819,7 @@
 	}
 
 //pre-populate the form
-	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
+	if (count($_GET) > 0 && (empty($_POST["persistformvar"]) || $_POST["persistformvar"] != "true")) {
 		$extension_uuid = $_GET["id"];
 		$sql = "select * from v_extensions ";
 		$sql .= "where extension_uuid = :extension_uuid ";
@@ -868,7 +870,7 @@
 		unset($sql, $parameters, $row);
 
 	//outbound caller id number - only allow numeric and +
-		if (strlen($outbound_caller_id_number) > 0) {
+		if (!empty($outbound_caller_id_number)) {
 			$outbound_caller_id_number = preg_replace('#[^\+0-9]#', '', $outbound_caller_id_number);
 		}
 
@@ -882,8 +884,8 @@
 			$database = new database;
 			$row = $database->select($sql, $parameters, 'row');
 			if (is_array($row) && @sizeof($row) != 0) {
-				$voicemail_password = str_replace("#", "", $row["voicemail_password"]);
-				$voicemail_mail_to = str_replace(" ", "", $row["voicemail_mail_to"]);
+				$voicemail_password = str_replace("#", "", $row["voicemail_password"] ?? '');
+				$voicemail_mail_to = str_replace(" ", "", $row["voicemail_mail_to"] ?? '');
 				$voicemail_transcription_enabled = $row["voicemail_transcription_enabled"];
 				$voicemail_tutorial = $row["voicemail_tutorial"];
 				$voicemail_file = $row["voicemail_file"];
@@ -906,8 +908,8 @@
 	$sql .= "and l.domain_uuid = :domain_uuid ";
 	$sql .= "and l.device_uuid = d.device_uuid ";
 	$sql .= "order by l.line_number, d.device_mac_address asc ";
-	$parameters['user_id_1'] = $extension;
-	$parameters['user_id_2'] = $number_alias;
+	$parameters['user_id_1'] = $extension ?? null;
+	$parameters['user_id_2'] = $number_alias ?? null;
 	$parameters['domain_uuid'] = $domain_uuid;
 	$database = new database;
 	$device_lines = $database->select($sql, $parameters, 'all');
@@ -932,7 +934,7 @@
 	unset($sql);
 
 //get assigned users
-	if (is_uuid($extension_uuid)) {
+	if (!empty($extension_uuid) && is_uuid($extension_uuid)) {
 		$sql = "select u.username, e.user_uuid ";
 		$sql .= "from v_extension_users as e, v_users as u ";
 		$sql .= "where e.user_uuid = u.user_uuid  ";
@@ -955,7 +957,7 @@
 //get the users
 	$sql = "select * from v_users ";
 	$sql .= "where domain_uuid = :domain_uuid ";
-	if (is_array($assigned_user_uuids) && @sizeof($assigned_user_uuids) != 0) {
+	if (!empty($assigned_user_uuids) && is_array($assigned_user_uuids) && @sizeof($assigned_user_uuids) != 0) {
 		foreach ($assigned_user_uuids as $index => $assigned_user_uuid) {
 			$sql .= "and user_uuid <> :user_uuid_".$index." ";
 			$parameters['user_uuid_'.$index] = $assigned_user_uuid;
@@ -992,19 +994,20 @@
 	}
 
 //change toll allow delimiter
-	$toll_allow = str_replace(':',',', $toll_allow);
+	$toll_allow = str_replace(':',',', $toll_allow ?? '');
 
 //set the defaults
-	if (strlen($user_context) == 0) { $user_context = $_SESSION['domain_name']; }
-	if (strlen($max_registrations) == 0) { $max_registrations = $_SESSION['extension']['max_registrations']['numeric']; }
-	if (strlen($accountcode) == 0) { $accountcode = get_accountcode(); }
-	if (strlen($limit_max) == 0) { $limit_max = '5'; }
-	if (strlen($limit_destination) == 0) { $limit_destination = '!USER_BUSY'; }
-	if (strlen($call_timeout) == 0) { $call_timeout = '30'; }
-	if (strlen($call_screen_enabled) == 0) { $call_screen_enabled = 'false'; }
-	if (strlen($user_record) == 0) { $user_record = $_SESSION['extension']['user_record_default']['text']; }
-	if (strlen($voicemail_transcription_enabled) == 0) { $voicemail_transcription_enabled = $_SESSION['voicemail']['transcription_enabled_default']['boolean']; }
-	if (strlen($voicemail_enabled) == 0) { $voicemail_enabled = $_SESSION['voicemail']['enabled_default']['boolean']; }
+	if (empty($user_context)) { $user_context = $_SESSION['domain_name']; }
+	if (empty($max_registrations)) { $max_registrations = $_SESSION['extension']['max_registrations']['numeric'] ?? ''; }
+	if (empty($accountcode)) { $accountcode = get_accountcode(); }
+	if (empty($limit_max)) { $limit_max = '5'; }
+	if (empty($limit_destination)) { $limit_destination = '!USER_BUSY'; }
+	if (empty($call_timeout)) { $call_timeout = '30'; }
+	if (empty($call_screen_enabled)) { $call_screen_enabled = 'false'; }
+	if (empty($user_record)) { $user_record = $_SESSION['extension']['user_record_default']['text']; }
+	if (empty($voicemail_transcription_enabled)) { $voicemail_transcription_enabled = $_SESSION['voicemail']['transcription_enabled_default']['boolean']; }
+	if (empty($voicemail_enabled)) { $voicemail_enabled = $_SESSION['voicemail']['enabled_default']['boolean']; }
+	if (empty($enabled)) { $enabled = 'true'; }
 
 //create token
 	$object = new token;
@@ -1039,13 +1042,13 @@
 	echo "	var new_ext = prompt('".$text['message-extension']."');\n";
 	echo "	if (new_ext != null) {\n";
 	echo "		if (!isNaN(new_ext)) {\n";
-	echo "			document.location.href='extension_copy.php?id=".escape($extension_uuid)."&ext=' + new_ext".(is_numeric($page) ? " + '&page=".$page."'" : null).";\n";
+	echo "			document.location.href='extension_copy.php?id=".escape($extension_uuid ?? '')."&ext=' + new_ext".(!empty($page) && is_numeric($page) ? " + '&page=".$page."'" : null).";\n";
 	echo "		}\n";
 	echo "		else {\n";
 	echo "			var new_number_alias = prompt('".$text['message-number_alias']."');\n";
 	echo "			if (new_number_alias != null) {\n";
 	echo "				if (!isNaN(new_number_alias)) {\n";
-	echo "					document.location.href='extension_copy.php?id=".escape($extension_uuid)."&ext=' + new_ext + '&alias=' + new_number_alias".(is_numeric($page) ? " + '&page=".$page."'" : null).";\n";
+	echo "					document.location.href='extension_copy.php?id=".escape($extension_uuid ?? '')."&ext=' + new_ext + '&alias=' + new_number_alias".(!empty($page) && is_numeric($page) ? " + '&page=".$page."'" : null).";\n";
 	echo "				}\n";
 	echo "			}\n";
 	echo "		}\n";
@@ -1065,15 +1068,15 @@
 	}
 	echo 	"</div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','link'=>'extensions.php'.(is_numeric($page) ? '?page='.$page : null)]);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','link'=>'extensions.php'.(isset($page) && is_numeric($page) ? '?page='.$page : null)]);
 	if ($action == 'update') {
 		$button_margin = 'margin-left: 15px;';
 		if (permission_exists('xml_cdr_view')) {
-			echo button::create(['type'=>'button','label'=>$text['button-cdr'],'icon'=>'info-circle','style'=>$button_margin,'link'=>'../xml_cdr/xml_cdr.php?extension_uuid='.urlencode($extension_uuid)]);
+			echo button::create(['type'=>'button','label'=>$text['button-cdr'],'icon'=>'info-circle','style'=>($button_margin ?? ''),'link'=>'../xml_cdr/xml_cdr.php?extension_uuid='.urlencode($extension_uuid)]);
 			unset($button_margin);
 		}
 		if (permission_exists('follow_me') || permission_exists('call_forward') || permission_exists('do_not_disturb')) {
-			echo button::create(['type'=>'button','label'=>$text['button-call_forward'],'icon'=>'project-diagram','style'=>$button_margin,'link'=>'../call_forward/call_forward_edit.php?id='.urlencode($extension_uuid)]);
+			echo button::create(['type'=>'button','label'=>$text['button-call_forward'],'icon'=>'project-diagram','style'=>($button_margin ?? ''),'link'=>'../call_forward/call_forward_edit.php?id='.urlencode($extension_uuid)]);
 			unset($button_margin);
 		}
 		if (permission_exists('extension_setting_view')) {
@@ -1097,7 +1100,7 @@
 	echo "</td>\n";
 	echo "<td width='70%' class='vtable' align='left'>\n";
 	if ($action == "add" || permission_exists("extension_extension")) {
-		echo "    <input class='formfld' type='text' name='extension' autocomplete='new-password' maxlength='255' value=\"".escape($extension)."\" required='required'>\n";
+		echo "    <input class='formfld' type='text' name='extension' autocomplete='new-password' maxlength='255' value=\"".escape($extension ?? '')."\" required='required'>\n";
 		echo "    <input type='text' style='display: none;' disabled='disabled'>\n"; //help defeat browser auto-fill
 		echo "<br />\n";
 		echo $text['description-extension']."\n";
@@ -1114,7 +1117,7 @@
 		echo "    ".$text['label-number_alias']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "    <input class='formfld' type='number' name='number_alias' autocomplete='new-password' maxlength='255' min='0' step='1' value=\"".escape($number_alias)."\">\n";
+		echo "    <input class='formfld' type='number' name='number_alias' autocomplete='new-password' maxlength='255' min='0' step='1' value=\"".escape($number_alias ?? '')."\">\n";
 		echo "    <input type='text' style='display: none;' disabled='disabled'>\n"; //help defeat browser auto-fill
 		echo "<br />\n";
 		echo $text['description-number_alias']."\n";
@@ -1129,7 +1132,7 @@
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "    <input type='password' style='display: none;' disabled='disabled'>\n"; //help defeat browser auto-fill
-		echo "    <input class='formfld' type='password' name='password' id='password' autocomplete='new-password' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" maxlength='50' value=\"".escape($password)."\">\n";
+		echo "    <input class='formfld' type='password' name='password' id='password' autocomplete='new-password' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" maxlength='50' value=\"".escape($password ?? '')."\">\n";
 		echo "    <br />\n";
 		echo "    ".$text['description-password']."\n";
 		echo "</td>\n";
@@ -1181,7 +1184,7 @@
 		echo "	<tr>";
 		echo "		<td class='vncell' valign='top'>".($action == "update" ? $text['label-users'] : $text['label-user'])."</td>";
 		echo "		<td class='vtable'>";
-		if (is_array($assigned_users) && @sizeof($assigned_users) != 0 && $action == "update") {
+		if (!empty($assigned_users) && is_array($assigned_users) && @sizeof($assigned_users) != 0 && $action == "update") {
 			echo "		<table width='30%'>\n";
 			foreach($assigned_users as $field) {
 				echo "		<tr>\n";
@@ -1219,7 +1222,7 @@
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "    <input type='password' style='display: none;' disabled='disabled'>\n"; //help defeat browser auto-fill
-		echo "    <input class='formfld' type='password' name='voicemail_password' id='voicemail_password' autocomplete='new-password' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" maxlength='255' value='".escape($voicemail_password)."'>\n";
+		echo "    <input class='formfld' type='password' name='voicemail_password' id='voicemail_password' autocomplete='new-password' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" maxlength='255' value='".escape($voicemail_password ?? '')."'>\n";
 		echo "    <br />\n";
 		echo "    ".$text['description-voicemail_password']."\n";
 		echo "</td>\n";
@@ -1281,7 +1284,7 @@
 			for ($d = 0; $d <= 4; $d++) {
 				echo "		<tr>\n";
 				echo "		<td ".($action == 'edit' ? "class='vtable'" : null).">";
-				echo "			<select id='line_number' name='devices[".$d."][line_number]' class='formfld' style='width: auto;' onchange=\"".escape($onchange)."\">\n";
+				echo "			<select id='line_number' name='devices[".$d."][line_number]' class='formfld' style='width: auto;' onchange=\"".escape($onchange ?? '')."\">\n";
 				echo "			<option value=''></option>\n";
 				for ($n = 1; $n <=99; $n++) {
 					echo "		<option value='".escape($n)."'>".escape($n)."</option>\n";
@@ -1331,7 +1334,7 @@
 				echo "							<option value=''></option>\n";
 				if (is_array($devices) && @sizeof($devices) != 0) {
 					foreach ($devices as $field) {
-						if (strlen($field["device_mac_address"]) > 0) {
+						if (!empty($field["device_mac_address"])) {
 							$selected = $field_current_value == $field["device_mac_address"] ? "selected='selected'" : null;
 							echo "							<option value='".escape($field["device_mac_address"])."' ".$selected.">".escape($field["device_mac_address"])." - ".escape($field['device_model'])." ".escape($field['device_description'])."</option>\n";
 						}
@@ -1355,7 +1358,7 @@
 						if (is_dir($template_dir.'/'.$row["name"])) {
 							$templates = scandir($template_dir.'/'.$row["name"]);
 							foreach($templates as $dir) {
-								if ($file != "." && $dir != ".." && $dir[0] != '.' && is_dir($template_dir.'/'.$row["name"].'/'.$dir)) {
+								if (!empty($dir) && $dir != "." && $dir != ".." && $dir[0] != '.' && !empty($template_dir) && is_dir($template_dir.'/'.$row["name"].'/'.$dir)) {
 									$selected = $device_template == $row["name"]."/".$dir ? "selected='selected'" : null;
 									echo "				<option value='".escape($row["name"])."/".escape($dir)."' ".$selected.">".escape($row["name"])."/".escape($dir)."</option>\n";
 								}
@@ -1390,7 +1393,7 @@
 		echo "    ".$text['label-effective_caller_id_name']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "    <input class='formfld' type='text' name='effective_caller_id_name' maxlength='255' value=\"".escape($effective_caller_id_name)."\">\n";
+		echo "    <input class='formfld' type='text' name='effective_caller_id_name' maxlength='255' value=\"".escape($effective_caller_id_name ?? '')."\">\n";
 		echo "<br />\n";
 		echo $text['description-effective_caller_id_name']."\n";
 		echo "</td>\n";
@@ -1403,7 +1406,7 @@
 		echo "    ".$text['label-effective_caller_id_number']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "    <input class='formfld' type='text' name='effective_caller_id_number' min='0' step='1' maxlength='255' value=\"".escape($effective_caller_id_number)."\">\n";
+		echo "    <input class='formfld' type='text' name='effective_caller_id_number' min='0' step='1' maxlength='255' value=\"".escape($effective_caller_id_number ?? '')."\">\n";
 		echo "<br />\n";
 		echo $text['description-effective_caller_id_number']."\n";
 		echo "</td>\n";
@@ -1422,10 +1425,10 @@
 				echo "	<option value=''></option>\n";
 				foreach ($destinations as &$row) {
 					$tmp = $row["destination_caller_id_name"];
-					if(strlen($tmp) == 0){
+					if(empty($tmp)){
 						// $tmp = $row["destination_description"];
 					}
-					if(strlen($tmp) > 0 && !in_array($tmp, $in_list)){
+					if(!empty($tmp) && !in_array($tmp, $in_list)){
 						$in_list[] = $tmp;
 						if ($outbound_caller_id_name == $tmp) {
 							echo "		<option value='".escape($tmp)."' selected='selected'>".escape($tmp)."</option>\n";
@@ -1440,11 +1443,11 @@
 				echo $text['description-outbound_caller_id_name-select']."\n";
 			}
 			else {
-				echo "	<input type=\"button\" class=\"btn\" name=\"\" alt=\"".$text['button-add']."\" onclick=\"window.location='".PROJECT_PATH."/app/destinations/destinations.php'\" value='".$text['button-add']."'>\n";
+				echo "	<input type='button' class='btn' name='' alt=\"".$text['button-add']."\" onclick=\"window.location='".PROJECT_PATH."/app/destinations/destinations.php'\" value='".$text['button-add']."'>\n";
 			}
 		}
 		else {
-			echo "    <input class='formfld' type='text' name='outbound_caller_id_name' maxlength='255' value=\"".escape($outbound_caller_id_name)."\">\n";
+			echo "    <input class='formfld' type='text' name='outbound_caller_id_name' maxlength='255' value=\"".escape($outbound_caller_id_name ?? '')."\">\n";
 			echo "<br />\n";
 			echo $text['description-outbound_caller_id_name-custom']."\n";
 		}
@@ -1464,10 +1467,10 @@
 				echo "	<option value=''></option>\n";
 				foreach ($destinations as &$row) {
 					$tmp = $row["destination_caller_id_number"];
-					if(strlen($tmp) == 0){
+					if(empty($tmp)){
 						$tmp = $row["destination_number"];
 					}
-					if(strlen($tmp) > 0){
+					if(!empty($tmp)){
 						if ($outbound_caller_id_number == $tmp) {
 							echo "		<option value='".escape($tmp)."' selected='selected'>".escape($tmp)."</option>\n";
 						}
@@ -1481,11 +1484,11 @@
 				echo $text['description-outbound_caller_id_number-select']."\n";
 			}
 			else {
-				echo "	<input type=\"submit\" class=\"btn\" name=\"\" alt=\"".$text['button-add']."\" onclick=\"window.location='".PROJECT_PATH."/app/destinations/destinations.php'\" value='".$text['button-add']."'>\n";
+				echo "	<input type='submit' class='btn' name='' alt=\"".$text['button-add']."\" onclick=\"window.location='".PROJECT_PATH."/app/destinations/destinations.php'\" value='".$text['button-add']."'>\n";
 			}
 		}
 		else {
-			echo "    <input class='formfld' type='text' name='outbound_caller_id_number' maxlength='255' min='0' step='1' value=\"".escape($outbound_caller_id_number)."\">\n";
+			echo "    <input class='formfld' type='text' name='outbound_caller_id_number' maxlength='255' min='0' step='1' value=\"".escape($outbound_caller_id_number ?? '')."\">\n";
 			echo "<br />\n";
 			echo $text['description-outbound_caller_id_number-custom']."\n";
 		}
@@ -1505,10 +1508,10 @@
 				echo "		<option value=''></option>\n";
 				foreach ($emergency_destinations as &$row) {
 					$tmp = $row["destination_caller_id_name"];
-					if(strlen($tmp) == 0){
+					if(empty($tmp)){
 						$tmp = $row["destination_description"];
 					}
-					if(strlen($tmp) > 0){
+					if(!empty($tmp)){
 						if ($emergency_caller_id_name == $tmp) {
 							echo "		<option value='".escape($tmp)."' selected='selected'>".escape($tmp)."</option>\n";
 						}
@@ -1524,7 +1527,7 @@
 			}
 		}
 		else {
-			echo "	<input class='formfld' type='text' name='emergency_caller_id_name' maxlength='255' value=\"".escape($emergency_caller_id_name)."\">\n";
+			echo "	<input class='formfld' type='text' name='emergency_caller_id_name' maxlength='255' value=\"".escape($emergency_caller_id_name ?? '')."\">\n";
 		}
 		echo "<br />\n";
 		if (permission_exists('outbound_caller_id_select') && count($destinations) > 0) {
@@ -1551,10 +1554,10 @@
 				}
 				foreach ($emergency_destinations as &$row) {
 					$tmp = $row["destination_caller_id_number"];
-					if(strlen($tmp) == 0){
+					if(empty($tmp)){
 						$tmp = $row["destination_number"];
 					}
-					if(strlen($tmp) > 0){
+					if(!empty($tmp)){
 						if ($emergency_caller_id_number == $tmp) {
 							echo "		<option value='".escape($tmp)."' selected='selected'>".escape($tmp)."</option>\n";
 						}
@@ -1570,7 +1573,7 @@
 			}
 		}
 		else {
-			echo "    <input class='formfld' type='text' name='emergency_caller_id_number' maxlength='255' min='0' step='1' value=\"".escape($emergency_caller_id_number)."\">\n";
+			echo "    <input class='formfld' type='text' name='emergency_caller_id_number' maxlength='255' min='0' step='1' value=\"".escape($emergency_caller_id_number ?? '')."\">\n";
 		}
 		echo "<br />\n";
 		if (permission_exists('emergency_caller_id_select') && count($emergency_destinations) > 0){
@@ -1592,8 +1595,8 @@
 		echo "    ".$text['label-directory_full_name']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "    <input class='formfld' type='text' name='directory_first_name' maxlength='255' value=\"".escape($directory_first_name)."\">\n";
-		echo "    <input class='formfld' type='text' name='directory_last_name' maxlength='255' value=\"".escape($directory_last_name)."\">\n";
+		echo "    <input class='formfld' type='text' name='directory_first_name' maxlength='255' value=\"".escape($directory_first_name ?? '')."\">\n";
+		echo "    <input class='formfld' type='text' name='directory_last_name' maxlength='255' value=\"".escape($directory_last_name ?? '')."\">\n";
 		echo "<br />\n";
 		echo $text['description-directory_full_name']."\n";
 		echo "</td>\n";
@@ -1605,20 +1608,19 @@
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "    <select class='formfld' name='directory_visible'>\n";
-		if ($directory_visible == "true") {
+		if (!empty($directory_visible) && $directory_visible == "true") {
 			echo "    <option value='true' selected='selected'>".$text['label-true']."</option>\n";
 		}
 		else {
 			echo "    <option value='true'>".$text['label-true']."</option>\n";
 		}
-		if ($directory_visible == "false") {
+		if (!empty($directory_visible) && $directory_visible == "false") {
 			echo "    <option value='false' selected >".$text['label-false']."</option>\n";
 		}
 		else {
 			echo "    <option value='false'>".$text['label-false']."</option>\n";
 		}
 		echo "    </select>\n";
-		echo "<br />\n";
 		echo "<br />\n";
 		echo $text['description-directory_visible']."\n";
 		echo "</td>\n";
@@ -1630,20 +1632,19 @@
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "    <select class='formfld' name='directory_exten_visible'>\n";
-		if ($directory_exten_visible == "true") {
+		if (!empty($directory_exten_visible) && $directory_exten_visible == "true") {
 			echo "    <option value='true' selected='selected'>".$text['label-true']."</option>\n";
 		}
 		else {
 			echo "    <option value='true'>".$text['label-true']."</option>\n";
 		}
-		if ($directory_exten_visible == "false") {
+		if (!empty($directory_exten_visible) && $directory_exten_visible == "false") {
 			echo "    <option value='false' selected >".$text['label-false']."</option>\n";
 		}
 		else {
 			echo "    <option value='false'>".$text['label-false']."</option>\n";
 		}
 		echo "    </select>\n";
-		echo "<br />\n";
 		echo "<br />\n";
 		echo $text['description-directory_exten_visible']."\n";
 		echo "</td>\n";
@@ -1656,7 +1657,7 @@
 		echo "    ".$text['label-max_registrations']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "    <input class='formfld' type='text' name='max_registrations' maxlength='255' value=\"".escape($max_registrations)."\">\n";
+		echo "    <input class='formfld' type='text' name='max_registrations' maxlength='255' value=\"".escape($max_registrations ?? '')."\">\n";
 		echo "<br />\n";
 		echo $text['description-max_registrations']."\n";
 		echo "</td>\n";
@@ -1669,7 +1670,7 @@
 		echo "    ".$text['label-limit_max']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "    <input class='formfld' type='text' name='limit_max' maxlength='255' value=\"".escape($limit_max)."\">\n";
+		echo "    <input class='formfld' type='text' name='limit_max' maxlength='255' value=\"".escape($limit_max ?? '')."\">\n";
 		echo "<br />\n";
 		echo $text['description-limit_max']."\n";
 		echo "</td>\n";
@@ -1680,7 +1681,7 @@
 		echo "    ".$text['label-limit_destination']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "    <input class='formfld' type='text' name='limit_destination' maxlength='255' value=\"".escape($limit_destination)."\">\n";
+		echo "    <input class='formfld' type='text' name='limit_destination' maxlength='255' value=\"".escape($limit_destination ?? '')."\">\n";
 		echo "<br />\n";
 		echo $text['description-limit_destination']."\n";
 		echo "</td>\n";
@@ -1717,7 +1718,7 @@
 		echo "    ".$text['label-voicemail_mail_to']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "    <input class='formfld' type='text' name='voicemail_mail_to' maxlength='255' value=\"".escape($voicemail_mail_to)."\">\n";
+		echo "    <input class='formfld' type='text' name='voicemail_mail_to' maxlength='255' value=\"".escape($voicemail_mail_to ?? '')."\">\n";
 		echo "<br />\n";
 		echo $text['description-voicemail_mail_to']."\n";
 		echo "</td>\n";
@@ -1746,7 +1747,7 @@
 			echo "</td>\n";
 			echo "<td class='vtable' align='left'>\n";
 			echo "    <select class='formfld' name='voicemail_file' id='voicemail_file' onchange=\"if (this.selectedIndex != 2) { document.getElementById('voicemail_local_after_email').selectedIndex = 0; }\">\n";
-			echo "    	<option value='' ".(($voicemail_file == "listen") ? "selected='selected'" : null).">".$text['option-voicemail_file_listen']."</option>\n";
+			echo "    	<option value=''>".$text['option-voicemail_file_listen']."</option>\n";
 			echo "    	<option value='link' ".(($voicemail_file == "link") ? "selected='selected'" : null).">".$text['option-voicemail_file_link']."</option>\n";
 			echo "    	<option value='attach' ".(($voicemail_file == "attach") ? "selected='selected'" : null).">".$text['option-voicemail_file_attach']."</option>\n";
 			echo "    </select>\n";
@@ -1781,12 +1782,12 @@
 		echo "<td class='vtable' align='left'>\n";
 		echo "    <select class='formfld' name='missed_call_app' id='missed_call_app' onchange=\"if (this.selectedIndex != 0) { document.getElementById('missed_call_data').style.display = ''; document.getElementById('missed_call_data').focus(); } else { document.getElementById('missed_call_data').style.display='none'; }\">\n";
 		echo "		<option value=''></option>\n";
-		echo "    	<option value='email' ".(($missed_call_app == "email" && $missed_call_data != '') ? "selected='selected'" : null).">".$text['label-email']."</option>\n";
+		echo "    	<option value='email' ".((!empty($missed_call_app) && $missed_call_app == "email" && !empty($missed_call_data) && $missed_call_data != '') ? "selected='selected'" : null).">".$text['label-email']."</option>\n";
 		//echo "    	<option value='text' ".(($missed_call_app == "text" && $missed_call_data != '') ? "selected='selected'" : null).">".$text['label-text']."</option>\n";
 		//echo "    	<option value='url' ".(($missed_call_app == "url" && $missed_call_data != '') ? "selected='selected'" : null).">".$text['label-url']."</option>\n";
 		echo "    </select>\n";
-		$missed_call_data = ($missed_call_app == 'text') ? format_phone($missed_call_data) : $missed_call_data;
-		echo "    <input class='formfld' type='text' name='missed_call_data' id='missed_call_data' maxlength='255' value=\"".escape($missed_call_data)."\" style='min-width: 200px; width: 200px; ".(($missed_call_app == '' || $missed_call_data == '') ? "display: none;" : null)."'>\n";
+		$missed_call_data = !empty($missed_call_app) && $missed_call_app == 'text' ? format_phone($missed_call_data ?? '') : $missed_call_data ?? '';
+		echo "    <input class='formfld' type='text' name='missed_call_data' id='missed_call_data' maxlength='255' value=\"".escape($missed_call_data ?? '')."\" style='min-width: 200px; width: 200px; ".((empty($missed_call_app) || empty($missed_call_data)) ? "display: none;" : null)."'>\n";
 		echo "<br />\n";
 		echo $text['description-missed_call']."\n";
 		echo "</td>\n";
@@ -1799,7 +1800,7 @@
 		echo "    ".$text['label-toll_allow']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		if (is_array($_SESSION['toll allow']['name'])) {
+		if (!empty($_SESSION['toll allow']['name']) && is_array($_SESSION['toll allow']['name'])) {
 			echo "	<select class='formfld' name='toll_allow' id='toll_allow'>\n";
 			echo "		<option value=''></option>\n";
 			foreach ($_SESSION['toll allow']['name'] as $name) {
@@ -1813,7 +1814,7 @@
 			echo "	</select>\n";
 		}
 		else {
-			echo "    <input class='formfld' type='text' name='toll_allow' maxlength='255' value=\"".escape($toll_allow)."\">\n";
+			echo "    <input class='formfld' type='text' name='toll_allow' maxlength='255' value=\"".escape($toll_allow ?? '')."\">\n";
 		}
 		echo "<br />\n";
 		echo $text['description-toll_allow']."\n";
@@ -1826,7 +1827,7 @@
 	echo "	".$text['label-call_timeout']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='number' name='call_timeout' maxlength='255' min='1' step='1' value=\"".escape($call_timeout)."\">\n";
+	echo "	<input class='formfld' type='number' name='call_timeout' maxlength='255' min='1' step='1' value=\"".escape($call_timeout ?? '')."\">\n";
 	echo "<br />\n";
 	echo $text['description-call_timeout']."\n";
 	echo "</td>\n";
@@ -1838,7 +1839,7 @@
 		echo "	".$text['label-call_group']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		if (is_array($_SESSION['call group']['name'])) {
+		if (!empty($_SESSION['call group']['name']) && is_array($_SESSION['call group']['name'])) {
 			echo "	<select class='formfld' name='call_group'>\n";
 			echo "		<option value=''></option>\n";
 			foreach ($_SESSION['call group']['name'] as $name) {
@@ -1850,8 +1851,9 @@
 				}
 			}
 			echo "	</select>\n";
-		} else {
-			echo "	<input class='formfld' type='text' name='call_group' maxlength='255' value=\"".escape($call_group)."\">\n";
+		}
+		else {
+			echo "	<input class='formfld' type='text' name='call_group' maxlength='255' value=\"".escape($call_group ?? '')."\">\n";
 		}
 		echo "<br />\n";
 		echo $text['description-call_group']."\n";
@@ -1933,7 +1935,7 @@
 		require_once "app/music_on_hold/resources/classes/switch_music_on_hold.php";
 		$options = '';
 		$moh = new switch_music_on_hold;
-		echo $moh->select('hold_music', $hold_music, $options);
+		echo $moh->select('hold_music', $hold_music ?? '', $options);
 		echo "	<br />\n";
 		echo $text['description-hold_music']."\n";
 		echo "</td>\n";
@@ -1968,7 +1970,7 @@
 		echo "    ".$text['label-user_context']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "    <input class='formfld' type='text' name='user_context' maxlength='255' value=\"".escape($user_context)."\" required='required'>\n";
+		echo "    <input class='formfld' type='text' name='user_context' maxlength='255' value=\"".escape($user_context ?? '')."\" required='required'>\n";
 		echo "<br />\n";
 		echo $text['description-user_context']."\n";
 		echo "</td>\n";
@@ -2000,7 +2002,7 @@
 		echo "    ".$text['label-auth_acl']."\n";
 		echo "</td>\n";
 		echo "<td width=\"70%\" class='vtable' align='left'>\n";
-		echo "   <input class='formfld' type='text' name='auth_acl' maxlength='255' value=\"".escape($auth_acl)."\">\n";
+		echo "   <input class='formfld' type='text' name='auth_acl' maxlength='255' value=\"".escape($auth_acl ?? '')."\">\n";
 		echo "   <br />\n";
 		echo $text['description-auth_acl']."\n";
 		echo "</td>\n";
@@ -2012,7 +2014,7 @@
 			echo "    ".$text['label-cidr']."\n";
 			echo "</td>\n";
 			echo "<td class='vtable' align='left'>\n";
-			echo "    <input class='formfld' type='text' name='cidr' maxlength='255' value=\"".escape($cidr)."\">\n";
+			echo "    <input class='formfld' type='text' name='cidr' maxlength='255' value=\"".escape($cidr ?? '')."\">\n";
 			echo "<br />\n";
 			echo $text['description-cidr']."\n";
 			echo "</td>\n";
@@ -2026,14 +2028,14 @@
 		echo "<td class='vtable' align='left'>\n";
 		echo "    <select class='formfld' name='sip_force_contact'>\n";
 		echo "    <option value=''></option>\n";
-		switch ($sip_force_contact) {
+		switch ($sip_force_contact ?? null) {
 			case "NDLB-connectile-dysfunction": 		$selected[1] = "selected='selected'"; 	break;
 			case "NDLB-connectile-dysfunction-2.0": 	$selected[2] = "selected='selected'"; 	break;
 			case "NDLB-tls-connectile-dysfunction": 	$selected[3] = "selected='selected'"; 	break;
 		}
-		echo "    <option value='NDLB-connectile-dysfunction' ".$selected[1].">".$text['label-rewrite_contact_ip_and_port']."</option>\n";
-		echo "    <option value='NDLB-connectile-dysfunction-2.0' ".$selected[2].">".$text['label-rewrite_contact_ip_and_port_2']."</option>\n";
-		echo "    <option value='NDLB-tls-connectile-dysfunction' ".$selected[3].">".$text['label-rewrite_tls_contact_port']."</option>\n";
+		echo "    <option value='NDLB-connectile-dysfunction' ".($selected[1] ?? '').">".$text['label-rewrite_contact_ip_and_port']."</option>\n";
+		echo "    <option value='NDLB-connectile-dysfunction-2.0' ".($selected[2] ?? '').">".$text['label-rewrite_contact_ip_and_port_2']."</option>\n";
+		echo "    <option value='NDLB-tls-connectile-dysfunction' ".($selected[3] ?? '').">".$text['label-rewrite_tls_contact_port']."</option>\n";
 		unset($selected);
 		echo "    </select>\n";
 		echo "<br />\n";
@@ -2046,7 +2048,7 @@
 		echo "    ".$text['label-sip_force_expires']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "    <input class='formfld' type='number' name='sip_force_expires' maxlength='255' min='1' step='1' value=\"".escape($sip_force_expires)."\">\n";
+		echo "    <input class='formfld' type='number' name='sip_force_expires' maxlength='255' min='1' step='1' value=\"".escape($sip_force_expires ?? '')."\">\n";
 		echo "<br />\n";
 		echo $text['description-sip_force_expires']."\n";
 		echo "</td>\n";
@@ -2058,7 +2060,7 @@
 			echo "    ".$text['label-nibble_account']."\n";
 			echo "</td>\n";
 			echo "<td class='vtable' align='left'>\n";
-			echo "    <input class='formfld' type='text' name='nibble_account' maxlength='255' value=\"".escape($nibble_account)."\">\n";
+			echo "    <input class='formfld' type='text' name='nibble_account' maxlength='255' value=\"".escape($nibble_account ?? '')."\">\n";
 			echo "<br />\n";
 			echo $text['description-nibble_account']."\n";
 			echo "</td>\n";
@@ -2070,7 +2072,7 @@
 		echo "    ".$text['label-mwi_account']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "    <input class='formfld' type='text' name='mwi_account' maxlength='255' value=\"".escape($mwi_account)."\">\n";
+		echo "    <input class='formfld' type='text' name='mwi_account' maxlength='255' value=\"".escape($mwi_account ?? '')."\">\n";
 		echo "<br />\n";
 		echo $text['description-mwi_account']."\n";
 		echo "</td>\n";
@@ -2083,14 +2085,14 @@
 		echo "<td class='vtable' align='left'>\n";
 		echo "    <select class='formfld' name='sip_bypass_media'>\n";
 		echo "    <option value=''></option>\n";
-		switch ($sip_bypass_media) {
+		switch ($sip_bypass_media ?? null) {
 			case "bypass-media" : 				$selected[1] = "selected='selected'"; 	break;
 			case "bypass-media-after-bridge" : 	$selected[2] = "selected='selected'"; 	break;
 			case "proxy-media" : 				$selected[3] = "selected='selected'"; 	break;
 		}
-		echo "    <option value='bypass-media' ".$selected[1].">".$text['label-bypass_media']."</option>\n";
-		echo "    <option value='bypass-media-after-bridge'".$selected[2].">".$text['label-bypass_media_after_bridge']."</option>\n";
-		echo "    <option value='proxy-media'".$selected[3].">".$text['label-proxy_media']."</option>\n";
+		echo "    <option value='bypass-media' ".($selected[1] ?? '').">".$text['label-bypass_media']."</option>\n";
+		echo "    <option value='bypass-media-after-bridge'".($selected[2] ?? '').">".$text['label-bypass_media_after_bridge']."</option>\n";
+		echo "    <option value='proxy-media'".($selected[3] ?? '').">".$text['label-proxy_media']."</option>\n";
 		unset($selected);
 		echo "    </select>\n";
 		echo "<br />\n";
@@ -2104,7 +2106,7 @@
 			echo "    ".$text['label-absolute_codec_string']."\n";
 			echo "</td>\n";
 			echo "<td class='vtable' align='left'>\n";
-			echo "    <input class='formfld' type='text' name='absolute_codec_string' maxlength='255' value=\"".escape($absolute_codec_string)."\">\n";
+			echo "    <input class='formfld' type='text' name='absolute_codec_string' maxlength='255' value=\"".escape($absolute_codec_string ?? '')."\">\n";
 			echo "<br />\n";
 			echo $text['description-absolute_codec_string']."\n";
 			echo "</td>\n";
@@ -2118,24 +2120,9 @@
 			echo "</td>\n";
 			echo "<td class='vtable' align='left'>\n";
 			echo "    <select class='formfld' name='force_ping'>\n";
-			if ($force_ping == "") {
-				echo "    <option value='' selected='selected'></option>\n";
-			}
-			else {
-				echo "    <option value=''></option>\n";
-			}
-			if ($force_ping == "true") {
-				echo "    <option value='true' selected='selected'>".$text['label-true']."</option>\n";
-			}
-			else {
-				echo "    <option value='true'>".$text['label-true']."</option>\n";
-			}
-			if ($force_ping == "false") {
-				echo "    <option value='false' selected='selected'>".$text['label-false']."</option>\n";
-			}
-			else {
-				echo "    <option value='false'>".$text['label-false']."</option>\n";
-			}
+			echo "    	<option value=''></option>\n";
+			echo "    	<option value='true' ".(!empty($force_ping) && $force_ping == "true" ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
+			echo "    	<option value='false' ".(!empty($force_ping) && $force_ping == "false" ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
 			echo "    </select>\n";
 			echo "<br />\n";
 			echo $text['description-force_ping']."\n";
@@ -2149,7 +2136,7 @@
 			echo "    ".$text['label-dial_string']."\n";
 			echo "</td>\n";
 			echo "<td class='vtable' align='left'>\n";
-			echo "    <input class='formfld' type='text' name='dial_string' maxlength='4096' value=\"".escape($dial_string)."\">\n";
+			echo "    <input class='formfld' type='text' name='dial_string' maxlength='4096' value=\"".escape($dial_string ?? '')."\">\n";
 			echo "<br />\n";
 			echo $text['description-dial_string']."\n";
 			echo "</td>\n";
@@ -2171,20 +2158,18 @@
 		echo "    ".$text['label-enabled']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "    <select class='formfld' name='enabled'>\n";
-		if ($enabled == "true") {
-			echo "    <option value='true' selected='selected'>".$text['label-true']."</option>\n";
+		if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
+			echo "	<label class='switch'>\n";
+			echo "		<input type='checkbox' id='enabled' name='enabled' value='true' ".($enabled == 'true' ? "checked='checked'" : null).">\n";
+			echo "		<span class='slider'></span>\n";
+			echo "	</label>\n";
 		}
 		else {
-			echo "    <option value='true'>".$text['label-true']."</option>\n";
+			echo "	<select class='formfld' id='enabled' name='enabled'>\n";
+			echo "		<option value='true' ".($enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+			echo "		<option value='false' ".($enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+			echo "	</select>\n";
 		}
-		if ($enabled == "false") {
-			echo "    <option value='false' selected='selected'>".$text['label-false']."</option>\n";
-		}
-		else {
-			echo "    <option value='false'>".$text['label-false']."</option>\n";
-		}
-		echo "    </select>\n";
 		echo "<br />\n";
 		echo $text['description-enabled']."\n";
 		echo "</td>\n";
@@ -2196,7 +2181,7 @@
 	echo "    ".$text['label-description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <input type='text' class='formfld' name='description' value=\"".$description."\">\n";
+	echo "    <input type='text' class='formfld' name='description' value=\"".escape($description ?? '')."\">\n";
 	echo "<br />\n";
 	echo $text['description-description']."\n";
 	echo "</td>\n";
@@ -2205,7 +2190,7 @@
 	echo "</table>";
 	echo "<br><br>";
 
-	if (is_numeric($page)) {
+	if (isset($page) && is_numeric($page)) {
 		echo "<input type='hidden' name='page' value='".$page."'>\n";
 	}
 	if ($action == "update") {

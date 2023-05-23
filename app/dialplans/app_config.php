@@ -53,7 +53,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "dialplan";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "destination";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "\${sip_to_user}";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "destination_number";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Options: destination_number, \${sip_to_user}, \${sip_req_user}";
 		$y++;

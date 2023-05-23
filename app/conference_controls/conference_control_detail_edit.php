@@ -40,11 +40,11 @@
 		$control_digits = $_POST["control_digits"];
 		$control_action = $_POST["control_action"];
 		$control_data = $_POST["control_data"];
-		$control_enabled = $_POST["control_enabled"];
+		$control_enabled = $_POST["control_enabled"] ?: 'false';
 	}
 
 //process the http post
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 
 		//get the uuid
 			if ($action == "update") {
@@ -61,11 +61,11 @@
 
 		//check for all required data
 			$msg = '';
-			//if (strlen($control_digits) == 0) { $msg .= $text['message-required']." ".$text['label-control_digits']."<br>\n"; }
-			if (strlen($control_action) == 0) { $msg .= $text['message-required']." ".$text['label-control_action']."<br>\n"; }
-			//if (strlen($control_data) == 0) { $msg .= $text['message-required']." ".$text['label-control_data']."<br>\n"; }
-			if (strlen($control_enabled) == 0) { $msg .= $text['message-required']." ".$text['label-control_enabled']."<br>\n"; }
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+			//if (empty($control_digits)) { $msg .= $text['message-required']." ".$text['label-control_digits']."<br>\n"; }
+			if (empty($control_action)) { $msg .= $text['message-required']." ".$text['label-control_action']."<br>\n"; }
+			//if (empty($control_data)) { $msg .= $text['message-required']." ".$text['label-control_data']."<br>\n"; }
+			if (empty($control_enabled)) { $msg .= $text['message-required']." ".$text['label-control_enabled']."<br>\n"; }
+			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -130,6 +130,9 @@
 		unset($sql, $parameters, $row);
 	}
 
+//set the defaults
+	if (empty($control_enabled)) { $control_enabled = 'true'; }
+
 //create token
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);
@@ -190,10 +193,18 @@
 	echo "	".$text['label-control_enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='control_enabled'>\n";
-	echo "		<option value='true'>".$text['label-true']."</option>\n";
-	echo "		<option value='false' ".($control_enabled == "false" ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
-	echo "	</select>\n";
+	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
+		echo "	<label class='switch'>\n";
+		echo "		<input type='checkbox' id='control_enabled' name='control_enabled' value='true' ".($control_enabled == 'true' ? "checked='checked'" : null).">\n";
+		echo "		<span class='slider'></span>\n";
+		echo "	</label>\n";
+	}
+	else {
+		echo "	<select class='formfld' id='control_enabled' name='control_enabled'>\n";
+		echo "		<option value='true' ".($control_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($control_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "	</select>\n";
+	}
 	echo "<br />\n";
 	echo $text['description-control_enabled']."\n";
 	echo "</td>\n";

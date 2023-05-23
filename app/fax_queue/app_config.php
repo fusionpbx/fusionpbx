@@ -16,6 +16,7 @@
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
 		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
 		$apps[$x]['permissions'][$y]['groups'][] = 'user';
+		$apps[$x]['permissions'][$y]['groups'][] = 'fax';
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = 'fax_queue_domain';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
@@ -36,14 +37,6 @@
 
 	//default settings
 		$y=0;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "e63df592-9928-4cd3-85bc-afdec2f4cd1c";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "fax_queue";
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "enabled";
-		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enable or disable the fax queue.";
-		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "84a6f2a8-4633-49d9-ad28-c9f96d630050";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "fax_queue";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "limit";
@@ -56,7 +49,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "fax_queue";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "retry_limit";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "3";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "5";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Number of tries to send before giving up.";
 		$y++;

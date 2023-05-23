@@ -73,6 +73,7 @@
 		echo "<table class='list'>\n";
 		echo "<tr class='list-header'>\n";
 		echo "	<th>".$text['label-name']."</th>\n";
+		echo "	<th>".$text['label-extension']."</th>\n";
 		echo "	<th>".$text['label-participant-pin']."</th>\n";
 		echo "	<th class='center'>".$text['label-member-count']."</th>\n";
 		if (permission_exists('conference_interactive_view')) {
@@ -95,42 +96,41 @@
 					if (isset($name_array[0]) && is_uuid($name_array[0])) {
 						//check for the conference center room
 						$sql = "select ";
-						$sql .= "conference_room_name, ";
-						$sql .= "participant_pin ";
-						$sql .= "from v_conference_rooms ";
-						$sql .= "where conference_room_uuid = :conference_room_uuid ";
+						$sql .= "cr.conference_room_name, ";
+						$sql .= "cc.conference_center_extension, ";
+						$sql .= "cr.participant_pin ";
+						$sql .= "from v_conference_rooms as cr ";
+						$sql .= "left join v_conference_centers as cc on cr.conference_center_uuid = cc.conference_center_uuid ";
+						$sql .= "where cr.conference_room_uuid = :conference_room_uuid ";
 						$parameters['conference_room_uuid'] = $conference_uuid;
 						$database = new database;
 						$conference = $database->select($sql, $parameters, 'row');
 						$conference_name = $conference['conference_room_name'];
+						$conference_extension = $conference['conference_center_extension'];
 						$participant_pin = $conference['participant_pin'];
 						unset ($parameters, $conference, $sql);
-						$conference_uuid = $name_array[0];
-
+					}
+					else if (isset($name_array[0]) && is_numeric($name_array[0])) {
 						//check the conference table
-						if (strlen($conference_name) == 0) {
-							$sql = "select ";
-							$sql .= "conference_name, ";
-							$sql .= "conference_pin_number ";
-							$sql .= "from ";
-							$sql .= "v_conferences ";
-							$sql .= "where ";
-							$sql .= "domain_uuid = :domain_uuid ";
-							$sql .= "and conference_uuid = :conference_uuid ";
-							$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-							$parameters['conference_uuid'] = $conference_uuid;
-							$database = new database;
-							$conference = $database->select($sql, $parameters, 'row');
-							$conference_name = $conference['conference_name'];
-							$participant_pin = $conference['conference_pin_number'];
-							unset ($parameters, $sql);
-						}
+						$sql = "select ";
+						$sql .= "conference_name, ";
+						$sql .= "conference_extension, ";
+						$sql .= "conference_pin_number ";
+						$sql .= "from ";
+						$sql .= "v_conferences ";
+						$sql .= "where ";
+						$sql .= "domain_uuid = :domain_uuid ";
+						$sql .= "and conference_extension = :conference_extension ";
+						$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+						$parameters['conference_extension'] = $name_array[0];
+						$database = new database;
+						$conference = $database->select($sql, $parameters, 'row');
+						$conference_name = $conference['conference_name'];
+						$conference_extension = $conference['conference_extension'];
+						$participant_pin = $conference['conference_pin_number'];
+						unset ($parameters, $sql);
 					}
 
-					//if numeric use the conference extension as the name
-					if (isset($name_array[0]) && is_numeric($name_array[0])) {
-						$conference_name = $name_array[0];
-					}
 					if (permission_exists('conference_interactive_view')) {
 						$list_row_url = 'conference_interactive.php?c='.urlencode($conference_uuid);
 					}
@@ -144,6 +144,7 @@
 						echo escape($conference_name);
 					}
 					echo "	</td>\n";
+					echo "	<td>".escape($conference_extension)."</td>\n";
 					echo "	<td>".escape($participant_pin)."</td>\n";
 					echo "	<td class='center'>".escape($member_count)."</td>\n";
 					if (permission_exists('conference_interactive_view') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {

@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2022
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -35,9 +35,11 @@
 //if config.conf file does not exist then redirect to the install page
 	if (file_exists("/usr/local/etc/fusionpbx/config.conf")) {
 		//BSD
-	} elseif (file_exists("/etc/fusionpbx/config.conf")) {
+	}
+	elseif (file_exists("/etc/fusionpbx/config.conf")) {
 		//Linux
-	} else {
+	}
+	else {
 		header("Location: /core/install/install.php");
 		exit;
 	}
@@ -47,9 +49,10 @@
 
 //if logged in, redirect to login destination
 	if (isset($_SESSION["username"])) {
-		if (isset($_SESSION['login']['destination']['url'])) {
-			header("Location: ".$_SESSION['login']['destination']['url']);
-		} elseif (file_exists($_SERVER["PROJECT_ROOT"]."/core/dashboard/app_config.php")) {
+		if (isset($_SESSION['login']['destination']['text'])) {
+			header("Location: ".$_SESSION['login']['destination']['text']);
+		}
+		elseif (file_exists($_SERVER["PROJECT_ROOT"]."/core/dashboard/app_config.php")) {
 			header("Location: ".PROJECT_PATH."/core/dashboard/");
 		}
 		else {
@@ -61,11 +64,9 @@
 		//use custom index, if present, otherwise use custom login, if present, otherwise use default login
 		if (file_exists($_SERVER["PROJECT_ROOT"]."/themes/".$_SESSION['domain']['template']['name']."/index.php")) {
 			require_once "themes/".$_SESSION['domain']['template']['name']."/index.php";
-		} else if (file_exists($_SERVER["PROJECT_ROOT"]."/themes/".$_SESSION['domain']['template']['name']."/login.php")) {
-			require_once "themes/".$_SESSION['domain']['template']['name']."/login.php";
 		}
 		else {
-			require_once "resources/login.php";
+			header("Location: ".PROJECT_PATH."/core/dashboard/");
 		}
 	}
 

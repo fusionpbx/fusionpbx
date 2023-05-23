@@ -128,9 +128,10 @@
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
-	$param = $search ? "&search=".$search : null;
-	$param = ($_GET['show'] == 'all' && permission_exists('email_queue_all')) ? "&show=all" : null;
-	$page = is_numeric($_GET['page']) ? $_GET['page'] : 0;
+	$param = $_GET["email_status"] ? "&email_status=".urlencode($_GET["email_status"]) : null;
+	$param .= $search ? "&search=".urlencode($search) : null;
+	$param .= ($_REQUEST['show'] == 'all' && permission_exists('email_queue_all')) ? "&show=all" : null;
+	$page = is_numeric($_REQUEST['page']) ? $_REQUEST['page'] : 0;
 	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
 	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
@@ -201,24 +202,10 @@
 	echo "		<select class='formfld' name='email_status'>\n";
     echo "			<option value='' selected='selected' disabled hidden>".$text['label-email_status']."...</option>";
 	echo "			<option value=''></option>\n";
-	if (isset($_GET["email_status"]) && $_GET["email_status"] == "waiting") {
-		echo "			<option value='waiting' selected='selected'>".$text['label-waiting']."</option>\n";
-	}
-	else {
-		echo "			<option value='waiting'>".$text['label-waiting']."</option>\n";
-	}
-	if (isset($_GET["email_status"]) && $_GET["email_status"] == "failed") {
-		echo "			<option value='failed' selected='selected'>".$text['label-failed']."</option>\n";
-	}
-	else {
-		echo "			<option value='failed'>".$text['label-failed']."</option>\n";
-	}
-	if (isset($_GET["email_status"]) && $_GET["email_status"] == "sent") {
-		echo "			<option value='sent' selected='selected'>".$text['label-sent']."</option>\n";
-	}
-	else {
-		echo "			<option value='sent'>".$text['label-sent']."</option>\n";
-	}
+	echo "			<option value='waiting' ".($_GET["email_status"] == "waiting" ? "selected='selected'" : null).">".ucwords($text['label-waiting'])."</option>\n";
+	echo "			<option value='trying' ".($_GET["email_status"] == "trying" ? "selected='selected'" : null).">".ucwords($text['label-trying'])."</option>\n";
+	echo "			<option value='sent' ".($_GET["email_status"] == "sent" ? "selected='selected'" : null).">".ucwords($text['label-sent'])."</option>\n";
+	echo "			<option value='failed' ".($_GET["email_status"] == "failed" ? "selected='selected'" : null).">".ucwords($text['label-failed'])."</option>\n";
 	echo "		</select>\n";
 	//if (permission_exists('email_queue_all')) {
 	//	if ($_GET['show'] == 'all') {
@@ -269,7 +256,7 @@
 	echo "<th class='shrink hide-md-dn'>".$text['label-email_from']."</th>\n";
 	echo th_order_by('email_to', $text['label-email_to'], $order_by, $order);
 	echo th_order_by('email_subject', $text['label-email_subject'], $order_by, $order);
-	echo "<th class='hide-md-dn'>".$text['label-email_body']."</th>\n";
+// 	echo "<th class='hide-md-dn'>".$text['label-email_body']."</th>\n";
 	echo th_order_by('email_status', $text['label-email_status'], $order_by, $order);
 	echo th_order_by('email_retry_count', $text['label-email_retry_count'], $order_by, $order);
 	
@@ -308,10 +295,10 @@
 			}
 			echo "	<td class='hide-md-dn'>".escape($row['hostname'])."</td>\n";
 			echo "	<td class='shrink hide-md-dn'>".escape($row['email_from'])."</td>\n";
-			echo "	<td>".escape($row['email_to'])."</td>\n";
-			echo "	<td>".iconv_mime_decode($row['email_subject'])."</td>\n";
-			echo "	<td class='hide-md-dn'>".escape($row['email_body'])."</td>\n";
-			echo "	<td>".escape($row['email_status'])."</td>\n";
+			echo "	<td class='overflow' style='width: 20%; max-width: 200px;'>".escape($row['email_to'])."</td>\n";
+			echo "	<td class='overflow' style='width: 30%; max-width: 200px;'>".iconv_mime_decode($row['email_subject'])."</td>\n";
+// 			echo "	<td class='hide-md-dn'>".escape($row['email_body'])."</td>\n";
+			echo "	<td>".ucwords($text['label-'.$row['email_status']])."</td>\n";
 			echo "	<td>".escape($row['email_retry_count'])."</td>\n";
 			//echo "	<td>".escape($row['email_action_before'])."</td>\n";
 			echo "	<td class='hide-md-dn'>".escape($row['email_action_after'])."</td>\n";

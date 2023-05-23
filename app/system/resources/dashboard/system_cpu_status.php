@@ -38,7 +38,7 @@
 			if (is_numeric($value)) { $percent_cpu = $percent_cpu + $value; }
 		}
 		if (stristr(PHP_OS, 'BSD')) {
-			$result = trim(shell_exec("dmesg | grep -i --max-count 1 CPUs | sed 's/[^0-9]*//g'"));
+			$result = system("dmesg | grep -i --max-count 1 CPUs | sed 's/[^0-9]*//g'");
 			$cpu_cores = trim($result);
 		}
 		if (stristr(PHP_OS, 'Linux')) {
@@ -56,7 +56,7 @@
 
 //add half doughnut chart
 	?>
-	<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 20px'>
+	<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 20px;' onclick="$('#hud_system_cpu_status_details').slideToggle('fast');">
 		<div><canvas id='system_cpu_status_chart' width='175px' height='175px' ></canvas></div>
 	</div>
 
@@ -124,7 +124,7 @@
 	echo "</tr>\n";
 
 	if (PHP_OS == 'FreeBSD' || PHP_OS == 'Linux') {
-		if ($percent_cpu != '') {
+		if (!empty($percent_cpu)) {
 			echo "<tr class='tr_link_void'>\n";
 			echo "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-cpu_usage']."</td>\n";
 			echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'>".$percent_cpu."%</td>\n";
@@ -132,7 +132,7 @@
 			$c = ($c) ? 0 : 1;
 		}
 
-		if ($cpu_cores != '') {
+		if (!empty($cpu_cores)) {
 			echo "<tr class='tr_link_void'>\n";
 			echo "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-cpu_cores']."</td>\n";
 			echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'>".$cpu_cores."</td>\n";
@@ -161,7 +161,7 @@
 
 	echo "</table>\n";
 	echo "</div>";
-	$n++;
+	//$n++;
 
 	echo "<span class='hud_expander' onclick=\"$('#hud_system_cpu_status_details').slideToggle('fast');\"><span class='fas fa-ellipsis-h'></span></span>";
 	echo "</div>\n";

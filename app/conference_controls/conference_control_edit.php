@@ -31,14 +31,14 @@
 	}
 
 //get http post variables and set them to php variables
-	if (is_array($_POST)) {
+	if (count($_POST) > 0) {
 		$control_name = $_POST["control_name"];
-		$control_enabled = $_POST["control_enabled"];
+		$control_enabled = $_POST["control_enabled"] ?: 'false';
 		$control_description = $_POST["control_description"];
 	}
 
 //process the user data and save it to the database
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 
 		//get the uuid from the POST
 			if ($action == "update") {
@@ -55,10 +55,10 @@
 
 		//check for all required data
 			$msg = '';
-			if (strlen($control_name) == 0) { $msg .= $text['message-required']." ".$text['label-control_name']."<br>\n"; }
-			if (strlen($control_enabled) == 0) { $msg .= $text['message-required']." ".$text['label-control_enabled']."<br>\n"; }
-			//if (strlen($control_description) == 0) { $msg .= $text['message-required']." ".$text['label-control_description']."<br>\n"; }
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+			if (empty($control_name)) { $msg .= $text['message-required']." ".$text['label-control_name']."<br>\n"; }
+			if (empty($control_enabled)) { $msg .= $text['message-required']." ".$text['label-control_enabled']."<br>\n"; }
+			//if (empty($control_description)) { $msg .= $text['message-required']." ".$text['label-control_description']."<br>\n"; }
+			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				$document['title'] = $text['title-conference_control'];
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
@@ -87,7 +87,7 @@
 			$database = new database;
 			$database->app_name = 'conference_controls';
 			$database->app_uuid = 'e1ad84a2-79e1-450c-a5b1-7507a043e048';
-			if (strlen($conference_control_uuid) > 0) {
+			if (!empty($conference_control_uuid)) {
 				$database->uuid($conference_control_uuid);
 			}
 			$database->save($array);
@@ -104,7 +104,7 @@
 				header("Location: conference_controls.php");
 				return;
 			}
-	} //(is_array($_POST) && strlen($_POST["persistformvar"]) == 0)
+	} //(is_array($_POST) && empty($_POST["persistformvar"]))
 
 //pre-populate the form
 	if (is_array($_GET) && $_POST["persistformvar"] != "true") {
@@ -122,6 +122,9 @@
 		}
 		unset($sql, $parameters, $row);
 	}
+
+//set the defaults
+	if (empty($control_enabled)) { $control_enabled = 'true'; }
 
 //create token
 	$object = new token;
@@ -161,10 +164,18 @@
 	echo "	".$text['label-control_enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='control_enabled'>\n";
-	echo "		<option value='true'>".$text['label-true']."</option>\n";
-	echo "		<option value='false' ".($control_enabled == "false" ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
-	echo "	</select>\n";
+	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
+		echo "	<label class='switch'>\n";
+		echo "		<input type='checkbox' id='control_enabled' name='control_enabled' value='true' ".($control_enabled == 'true' ? "checked='checked'" : null).">\n";
+		echo "		<span class='slider'></span>\n";
+		echo "	</label>\n";
+	}
+	else {
+		echo "	<select class='formfld' id='control_enabled' name='control_enabled'>\n";
+		echo "		<option value='true' ".($control_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($control_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "	</select>\n";
+	}
 	echo "<br />\n";
 	echo $text['description-control_enabled']."\n";
 	echo "</td>\n";

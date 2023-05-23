@@ -61,12 +61,12 @@
 		$module_description = $_POST["module_description"];
 		$module_category = $_POST["module_category"];
 		$module_order = $_POST["module_order"];
-		$module_enabled = $_POST["module_enabled"];
-		$module_default_enabled = $_POST["module_default_enabled"];
+		$module_enabled = $_POST["module_enabled"] ?: 'false';
+		$module_default_enabled = $_POST["module_default_enabled"] ?: 'false';
 	}
 
 //process the data
-	if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST)>0 && empty($_POST["persistformvar"])) {
 
 		//get the uuid
 			if ($action == "update") {
@@ -83,13 +83,13 @@
 
 		//check for all required data
 			$msg = '';
-			if (strlen($module_label) == 0) { $msg .= $text['message-required'].$text['label-label']."<br>\n"; }
-			if (strlen($module_name) == 0) { $msg .= $text['message-required'].$text['label-module_name']."<br>\n"; }
-			//if (strlen($module_description) == 0) { $msg .= $text['message-required'].$text['label-description']."<br>\n"; }
-			if (strlen($module_category) == 0) { $msg .= $text['message-required'].$text['label-module_category']."<br>\n"; }
-			if (strlen($module_enabled) == 0) { $msg .= $text['message-required'].$text['label-enabled']."<br>\n"; }
-			if (strlen($module_default_enabled) == 0) { $msg .= $text['message-required'].$text['label-default_enabled']."<br>\n"; }
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+			if (empty($module_label)) { $msg .= $text['message-required'].$text['label-label']."<br>\n"; }
+			if (empty($module_name)) { $msg .= $text['message-required'].$text['label-module_name']."<br>\n"; }
+			//if (empty($module_description)) { $msg .= $text['message-required'].$text['label-description']."<br>\n"; }
+			if (empty($module_category)) { $msg .= $text['message-required'].$text['label-module_category']."<br>\n"; }
+			if (empty($module_enabled)) { $msg .= $text['message-required'].$text['label-enabled']."<br>\n"; }
+			if (empty($module_default_enabled)) { $msg .= $text['message-required'].$text['label-default_enabled']."<br>\n"; }
+			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -162,6 +162,10 @@
 		}
 		unset($sql, $parameters, $row);
 	}
+
+//set the defaults
+	if (empty($module_enabled)) { $module_enabled = 'true'; }
+	if (empty($module_default_enabled)) { $module_default_enabled = 'true'; }
 
 //create token
 	$object = new token;
@@ -242,20 +246,18 @@
 	echo "    ".$text['label-enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <select class='formfld' name='module_enabled'>\n";
-	if ($module_enabled == "false") {
-		echo "    <option value='false' SELECTED >".$text['option-false']."</option>\n";
+	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
+		echo "	<label class='switch'>\n";
+		echo "		<input type='checkbox' id='module_enabled' name='module_enabled' value='true' ".($module_enabled == 'true' ? "checked='checked'" : null).">\n";
+		echo "		<span class='slider'></span>\n";
+		echo "	</label>\n";
 	}
 	else {
-		echo "    <option value='false'>".$text['option-false']."</option>\n";
+		echo "	<select class='formfld' id='module_enabled' name='module_enabled'>\n";
+		echo "		<option value='true' ".($module_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($module_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "	</select>\n";
 	}
-	if ($module_enabled == "true") {
-		echo "    <option value='true' SELECTED >".$text['option-true']."</option>\n";
-	}
-	else {
-		echo "    <option value='true'>".$text['option-true']."</option>\n";
-	}
-	echo "    </select>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -264,20 +266,18 @@
 	echo "    ".$text['label-default_enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <select class='formfld' name='module_default_enabled'>\n";
-	if ($module_default_enabled == "false") {
-		echo "    <option value='false' selected='selected'>".$text['option-false']."</option>\n";
+	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
+		echo "	<label class='switch'>\n";
+		echo "		<input type='checkbox' id='module_default_enabled' name='module_default_enabled' value='true' ".($module_default_enabled == 'true' ? "checked='checked'" : null).">\n";
+		echo "		<span class='slider'></span>\n";
+		echo "	</label>\n";
 	}
 	else {
-		echo "    <option value='false'>".$text['option-false']."</option>\n";
+		echo "	<select class='formfld' id='module_default_enabled' name='module_default_enabled'>\n";
+		echo "		<option value='true' ".($module_default_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($module_default_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "	</select>\n";
 	}
-	if ($module_default_enabled == "true") {
-		echo "    <option value='true' selected='selected'>".$text['option-true']."</option>\n";
-	}
-	else {
-		echo "    <option value='true'>".$text['option-true']."</option>\n";
-	}
-	echo "    </select>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 

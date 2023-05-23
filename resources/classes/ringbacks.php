@@ -51,7 +51,7 @@ if (!class_exists('ringbacks')) {
 				$sql .= "order by var_name asc ";
 				$database = new database;
 				$ringtones = $database->select($sql, null, 'all');
-				if (is_array($ringtones) && @sizeof($ringtones) != 0) {
+				if (!empty($ringtones)) {
 					foreach ($ringtones as $ringtone) {
 						$ringtone = $ringtone['var_name'];
 						$label = $text['label-'.$ringtone];
@@ -61,7 +61,7 @@ if (!class_exists('ringbacks')) {
 						$ringtones_list[$ringtone] = $label;
 					}
 				}
-				$this->ringtones_list = $ringtones_list;
+				$this->ringtones_list = $ringtones_list ?? '';
 				unset($sql, $ringtones, $ringtone, $ringtones_list);
 
 			//get the default_ringback label
@@ -106,15 +106,16 @@ if (!class_exists('ringbacks')) {
 
 			//start the select
 				$select = "<select class='formfld' name='".$name."' id='".$name."' style='width: auto;'>\n";
+				$select .= "		<option value=''></option>\n";
 
 			//music list
-				if (count($this->music_list) > 0) {
+				if (!empty($this->music_list)) {
 					$select .= "	<optgroup label='".$text['label-music_on_hold']."'>\n";
 					$previous_name = '';
 					foreach ($this->music_list as $row) {
 						if ($previous_name != $row['music_on_hold_name']) {
 							$name = '';
-							if (strlen($row['domain_uuid']) > 0) {
+							if (!empty($row['domain_uuid'])) {
 								$name = $row['domain_name'].'/';	
 							}
 							$name .= $row['music_on_hold_name'];
@@ -126,7 +127,7 @@ if (!class_exists('ringbacks')) {
 				}
 
 			//recordings
-				if (is_array($this->recordings_list) && sizeof($this->recordings_list) > 0) {
+				if (!empty($this->recordings_list)) {
 					$select .= "	<optgroup label='".$text['label-recordings']."'>";
 					foreach ($this->recordings_list as $recording_value => $recording_name) {
 						$select .= "		<option value='".$recording_value."' ".(($selected == $recording_value) ? 'selected="selected"' : null).">".$recording_name."</option>\n";
@@ -154,7 +155,7 @@ if (!class_exists('ringbacks')) {
 				}
 
 			//ringtones
-				if (sizeof($this->ringtones_list) > 0) {
+				if (!empty($this->ringtones_list)) {
 					$selected_ringtone = $selected;
 					$selected_ringtone = preg_replace('/\A\${/',"",$selected_ringtone);
 					$selected_ringtone = preg_replace('/}\z/',"",$selected_ringtone);
@@ -170,7 +171,7 @@ if (!class_exists('ringbacks')) {
 				}
 
 			//tones
-				if (sizeof($this->tones_list) > 0) {
+				if (!empty($this->tones_list)) {
 					$selected_tone = $selected;
 					$selected_tone = preg_replace('/\A\${/',"",$selected_tone);
 					$selected_tone = preg_replace('/}\z/',"",$selected_tone);

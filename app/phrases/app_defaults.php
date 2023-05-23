@@ -28,7 +28,7 @@ if ($domains_processed == 1) {
 
 	//create phrases folder and add include line in xml for each language found
 		/*
-		if (strlen($_SESSION['switch']['languages']['dir']) > 0) {
+		if (!empty($_SESSION['switch']['languages']['dir'])) {
 			if (is_readable($_SESSION['switch']['languages']['dir'])) {
 				$conf_lang_folders = glob($_SESSION['switch']['languages']['dir']."/*");
 				foreach ($conf_lang_folders as $conf_lang_folder) {
@@ -65,7 +65,7 @@ if ($domains_processed == 1) {
 		*/
 
 	//if base64, convert existing incompatible phrases
-		if ($_SESSION['recordings']['storage_type']['text'] == 'base64') {
+		if (!empty($_SESSION['recordings']['storage_type']['text']) && $_SESSION['recordings']['storage_type']['text'] == 'base64') {
 			$sql = "select phrase_detail_uuid, phrase_detail_data ";
 			$sql .= "from v_phrase_details where phrase_detail_function = 'play-file' ";
 			$database = new database;
@@ -100,7 +100,7 @@ if ($domains_processed == 1) {
 		}
 
 	//if not base64, revert base64 phrases to standard method
-		else if ($_SESSION['recordings']['storage_type']['text'] != 'base64') {
+		else if (!empty($_SESSION['recordings']['storage_type']) && $_SESSION['recordings']['storage_type']['text'] != 'base64') {
 			$sql = "select phrase_detail_uuid, phrase_detail_data ";
 			$sql .= "from v_phrase_details where ";
 			$sql .= "phrase_detail_function = 'execute' ";
@@ -121,7 +121,7 @@ if ($domains_processed == 1) {
 						$array['phrase_details'][$index]['phrase_detail_function'] = 'play-file';
 						$array['phrase_details'][$index]['phrase_detail_data'] = $phrase_detail_data;
 				}
-				if (is_array($array) && @sizeof($array) != 0) {
+				if (!empty($array)) {
 					$p = new permissions;
 					$p->add('phrase_detail_edit', 'temp');
 
@@ -149,7 +149,7 @@ if ($domains_processed == 1) {
 			$database = new database;
 			$result = $database->select($sql, null, 'all');
 			//delete memcache var
-			if (is_array($result) && @sizeof($result) != 0) {
+			if (!empty($result)) {
 				foreach ($result as $row) {
 					//clear the cache
 					$cache = new cache;

@@ -940,7 +940,11 @@
     <!-- # Play warning tone for Auto Answer Intercom. 0 - No, 1 - Yes. Default is 0 -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P26072>0</P26072>
+    {if isset($grandstream_intercom_playwarningtoneforautoanswer) }	
+    <P26072>{$grandstream_intercom_playwarningtoneforautoanswer}</P26072>	
+    {else}	
+    <P26072>0</P26072>	
+    {/if}
 
     <!-- # Custom Call-Info for Auto Answer. -->
     <!-- # String -->
@@ -6639,7 +6643,11 @@
     <!-- # Web Access Mode. 0 - HTTPS, 1 - HTTP, 2 - Disabled, 3 - Both HTTP and HTTPS. Default is 1 -->
     <!-- # Number: 0, 1, 2, 3 -->
     <!-- # Mandatory -->
+    {if isset($grandstream_web_access_mode)}
+    <P1650>{$grandstream_web_access_mode}</P1650>
+    {else}
     <P1650>0</P1650>
+    {/if}
 
     <!-- # Enable User Web Access. 0 - Disabled, 1 - Enabled. Default is 0 -->
     <!-- # Number: 0, 1 -->
@@ -6935,25 +6943,20 @@
 
     <!-- # STUN server -->
     <!-- # String -->
+{if isset($grandstream_stun_server) }
+    <P76>{$grandstream_stun_server}</P76>
+{else}
     <P76></P76>
+{/if}
 
     <!-- # Public Mode. 0 - No, 1 - Yes. Default is 0 -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-{if isset($public_mode) }
-{if $public_mode|strtolower == 'true'}
-    <P1345>1</P1345>
-{elseif $public_mode|strtolower == 'yes'}
-    <P1345>1</P1345>
-{elseif $public_mode == '1'}
-    <P1345>1</P1345>
+{if isset($grandstream_public_mode) }
+    <P1345>{$grandstream_public_mode}</P1345>
 {else}
     <P1345>0</P1345>
 {/if}
-{else}
-    <P1345>0</P1345>
-{/if}
-
 
     <!-- # Enable Fix For RTP Timestamp Jump. Default is 0 -->
     <!-- # Number: 0, 1 -->
@@ -7778,25 +7781,41 @@
     <!-- # Multicast Paging Codec. 18 - G.729A/B, 0 - PCMU, 8 - PCMA, 2 - G.726-32, 9 - G.722, 98 - iLBC, 4- G.723.1 -->
     <!-- # Number: 18, 0, 8, 2, 9, 98, 4. Default is 0. -->
     <!-- # Mandatory -->
-    <P1568>0</P1568>
+    {if isset($grandstream_multicast_paging_codec) }	
+    <P1568>{$grandstream_multicast_paging_codec}</P1568>	
+    {else}	
+    <P1568>0</P1568>	
+    {/if}
 
     <!-- # Multicase Channel Number -->
     <!-- # Number: 0 - 50 (0 for normal RTP packets, 1-50 for Polycom multicast format packets). Default is 0 -->
-    <P8454>0</P8454>
+    {if isset($grandstream_multicast_channel_number) }	
+    <P8454>{$grandstream_multicast_channel_number}</P8454>	
+    {else}	
+    <P8454>0</P8454>	
+    {/if}
 
     <!-- # Multicast Sender ID -->
     <!-- # Strings -->
-    <P8455></P8455>
+    <P8455>{$account.1.display_name}</P8455>
 
     <!-- ### Multicast Listening ###  -->
     <!-- # Priority 1 -->
     <!-- # Listening Address -->
     <!-- # String -->
-    <P1569></P1569>
+    {if isset($grandstream_multicast_listening_address_1) }	
+    <P1569>{$grandstream_multicast_listening_address_1}</P1569>	
+    {else}	
+    <P1569></P1569>	
+    {/if}
 
     <!-- # Label -->
     <!-- # String -->
-    <P1570></P1570>
+    {if isset($grandstream_multicast_listening_label_1) }	
+    <P1570>{$grandstream_multicast_listening_label_1}</P1570>	
+    {else}	
+    <P1570></P1570>	
+    {/if}
 
     <!-- # Priority 2 -->
     <!-- # Listening Address -->

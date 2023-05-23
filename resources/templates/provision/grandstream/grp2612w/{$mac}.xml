@@ -759,7 +759,11 @@
     <!-- # No Key Entry Timeout (in seconds). Default is 4 -->
     <!-- # Number: 1 - 15 -->
     <!-- # Mandatory -->
-    <P85>4</P85>
+{if isset($grandstream_dial_timeout)}
+<P85>{$grandstream_dial_timeout}</P85>
+{else}
+<P85>4</P85>
+{/if}
 
     <!-- # Key as Send. 0 - Disabled, 1 - Pound (#), 2 - Star (*). Default is 1 -->
     <!-- # Number: 0, 1, 2 -->
@@ -3019,25 +3023,20 @@
 
     <!-- # STUN server -->
     <!-- # String -->
+{if isset($grandstream_stun_server) }
+    <P76>{$grandstream_stun_server}</P76>
+{else}
     <P76></P76>
+{/if}
 
     <!-- # Public Mode. 0 - No, 1 - Yes. Default is 0 -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-{if isset($public_mode) }
-{if $public_mode|strtolower == 'true'}
-    <P1345>1</P1345>
-{elseif $public_mode|strtolower == 'yes'}
-    <P1345>1</P1345>
-{elseif $public_mode == '1'}
-    <P1345>1</P1345>
+{if isset($grandstream_public_mode) }
+    <P1345>{$grandstream_public_mode}</P1345>
 {else}
     <P1345>0</P1345>
 {/if}
-{else}
-    <P1345>0</P1345>
-{/if}
-
 
     <!-- # Enable Fix For RTP Timestamp Jump. Default is 0 -->
     <!-- # Number: 0, 1 -->
@@ -4428,7 +4427,11 @@
     <!-- # Lock Volumne. 0 - No, 1 - Yes. Default is 0 -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
+{if isset($grandstream_lock_volume)}
+    <P8392>{$grandstream_lock_volume}</P8392>
+{else}
     <P8392>0</P8392>
+{/if}
 
     <!-- # Default Ringtone. 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3, 4 - silent. Default is 0 -->
     <!-- # Number: 0, 1, 2, 3, 4 -->

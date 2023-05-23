@@ -89,7 +89,7 @@
 
 		//get the username
 			$username = $field['extension'];
-			if (isset($field['number_alias']) && strlen($field['number_alias']) > 0) {
+			if (isset($field['number_alias']) && !empty($field['number_alias'])) {
 				$username = $field['number_alias'];
 			}
 

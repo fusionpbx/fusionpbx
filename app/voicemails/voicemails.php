@@ -77,7 +77,7 @@
 //set the voicemail uuid array
 	if (isset($_SESSION['user']['voicemail'])) {
 		foreach ($_SESSION['user']['voicemail'] as $row) {
-			if (strlen($row['voicemail_uuid']) > 0) {
+			if (!empty($row['voicemail_uuid'])) {
 				$voicemail_uuids[]['voicemail_uuid'] = $row['voicemail_uuid'];
 			}
 		}
@@ -99,7 +99,7 @@
 
 //add the search string
 	$search = strtolower($_GET["search"]);
-	if (strlen($search) > 0) {
+	if (!empty($search)) {
 		$sql_search = "and (";
 		$sql_search .= "	lower(cast(voicemail_id as text)) like :search ";
 		$sql_search .= " 	or lower(voicemail_mail_to) like :search ";
@@ -250,9 +250,6 @@
 	if (permission_exists('voicemail_message_view') || permission_exists('voicemail_greeting_view')) {
 		echo "<th>".$text['label-tools']."</th>\n";
 	}
-	if (permission_exists('voicemail_message_view') && permission_exists('voicemail_greeting_view')) {
-		echo "<th></th>\n";
-	}
 	echo th_order_by('voicemail_enabled', $text['label-voicemail_enabled'], $order_by, $order, null, "class='center'");
 	echo th_order_by('voicemail_description', $text['label-voicemail_description'], $order_by, $order, null, "class='hide-sm-dn'");
 	if (permission_exists('voicemail_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
@@ -274,7 +271,7 @@
 				echo "	</td>\n";
 			}
 			if ($_GET['show'] == "all" && permission_exists('voicemail_all')) {
-				if (strlen($_SESSION['domains'][$row['domain_uuid']]['domain_name']) > 0) {
+				if (!empty($_SESSION['domains'][$row['domain_uuid']]['domain_name'])) {
 					$domain = $_SESSION['domains'][$row['domain_uuid']]['domain_name'];
 				}
 				else {
@@ -297,15 +294,15 @@
 			if (is_array($_SESSION['voicemail']['transcribe_enabled']) && $_SESSION['voicemail']['transcribe_enabled']['boolean'] == 'true') {
 				echo "	<td>".ucwords(escape($row['voicemail_transcription_enabled']))."&nbsp;</td>\n";
 			}
-			if (permission_exists('voicemail_message_view')) {
-				echo "	<td class='no-wrap' width = '10%'>\n";
-				$tmp_voicemail_string = (array_key_exists($row['voicemail_uuid'], $voicemails_count)) ? " (" . $voicemails_count[$row['voicemail_uuid']] . ")" : " (0)";
-				echo "		<a href='voicemail_messages.php?id=".escape($row['voicemail_uuid'])."'>".$text['label-messages'].$tmp_voicemail_string."</a>\n";
-				echo "	</td>\n";
-			}
-			if (permission_exists('voicemail_greeting_view')) {
-				echo "	<td class='no-wrap' width = '10%'>\n";
-				echo "		<a href='".PROJECT_PATH."/app/voicemail_greetings/voicemail_greetings.php?id=".$row['voicemail_id']."&back=".urlencode($_SERVER["REQUEST_URI"])."'>".$text['label-greetings']."</a>\n";
+			if (permission_exists('voicemail_message_view') || permission_exists('voicemail_greeting_view')) {
+				echo "	<td class='no-link no-wrap'>\n";
+				if (permission_exists('voicemail_greeting_view')) {
+					echo "	<a href='".PROJECT_PATH."/app/voicemail_greetings/voicemail_greetings.php?id=".$row['voicemail_id']."&back=".urlencode($_SERVER["REQUEST_URI"])."' style='margin-right: 15px;'>".$text['label-greetings']."</a>\n";
+				}
+				if (permission_exists('voicemail_message_view')) {
+					$tmp_voicemail_string = (array_key_exists($row['voicemail_uuid'], $voicemails_count)) ? " (" . $voicemails_count[$row['voicemail_uuid']] . ")" : " (0)";
+					echo "	<a href='voicemail_messages.php?id=".escape($row['voicemail_uuid'])."'>".$text['label-messages'].$tmp_voicemail_string."</a>\n";
+				}
 				echo "	</td>\n";
 			}
 			if (permission_exists('voicemail_edit')) {

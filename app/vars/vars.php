@@ -86,7 +86,7 @@
 
 //add the search string
 	$search = strtolower($_GET["search"]);
-	if (strlen($search) > 0) {
+	if (!empty($search)) {
 		$sql_search = "where (";
 		$sql_search .= "	lower(var_category) like :search ";
 		$sql_search .= "	or lower(var_name) like :search ";
@@ -245,7 +245,7 @@
 				echo $text['label-'.$row['var_enabled']];
 			}
 			echo "	</td>\n";
-			echo "	<td class='description overflow hide-sm-dn'>".escape(base64_decode($row['var_description']))."</td>\n";
+			echo "	<td class='description overflow hide-sm-dn'>".escape(base64_decode($row['var_description'] ?? ''))."</td>\n";
 			if (permission_exists('var_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
 				echo "	<td class='action-button'>\n";
 				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);

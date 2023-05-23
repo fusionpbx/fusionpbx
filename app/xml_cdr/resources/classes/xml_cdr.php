@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2016-2020
+	Portions created by the Initial Developer are Copyright (C) 2016-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -60,6 +60,11 @@ if (!class_exists('xml_cdr')) {
 		private $uuid_prefix;
 
 		/**
+		 * Used by read_files, xml_array, and save methods
+		 */
+		public $file;
+
+		/**
 		 * Called when the object is created
 		 */
 		public function __construct() {
@@ -81,20 +86,10 @@ if (!class_exists('xml_cdr')) {
 		}
 
 		/**
-		 * Called when there are no references to a particular object
-		 * unset the variables used in the class
-		 */
-		public function __destruct() {
-			if (isset($this)) foreach ($this as $key => $value) {
-				unset($this->$key);
-			}
-		}
-
-		/**
 		 * cdr process logging
 		 */
 		public function log($message) {
-			
+
 			//save the log if enabled is true
 			if ($_SESSION['log']['enabled']['boolean'] == 'true') {
 
@@ -202,6 +197,7 @@ if (!class_exists('xml_cdr')) {
 					$this->fields[] = $field_name;
 				}
 			}
+			$this->fields = array_unique($this->fields);
 		}
 
 		/**
@@ -218,10 +214,15 @@ if (!class_exists('xml_cdr')) {
 					if (isset($this->fields)) {
 						foreach ($this->fields as $field) {
 							$field = preg_replace('#[^a-zA-Z0-9_\-]#', '', $field);
-							if (isset($row[$field]) && strlen($row[$field]) > 0) {
+							if (isset($row[$field]) && !empty($row[$field])) {
 								$array['xml_cdr'][0][$field] = $row[$field];
 							}
 						}
+					}
+
+					//set the directory
+					if (!empty($_SESSION['switch']['log']['dir'])) {
+						$xml_cdr_dir = $_SESSION['switch']['log']['dir'].'/xml_cdr';
 					}
 
 					//add the temporary permission
@@ -234,9 +235,31 @@ if (!class_exists('xml_cdr')) {
 					$database->app_name = 'xml_cdr';
 					$database->app_uuid = '4a085c51-7635-ff03-f67b-86e834422848';
 					$database->domain_uuid = $domain_uuid;
-					$database->save($array, false);
+					$response = $database->save($array, false);
+					if ($response['code'] == '200') {
+						//saved to the database successfully delete the database file
+						if (!empty($xml_cdr_dir)) {
+							if (file_exists($xml_cdr_dir.'/'.$this->file)) {
+								unlink($xml_cdr_dir.'/'.$this->file);
+							}
+						}
+					}
+					else {
+						//move the file to a failed directory
+						if (!empty($xml_cdr_dir)) {
+							if (!file_exists($xml_cdr_dir.'/failed')) {
+								if (!mkdir($xml_cdr_dir.'/failed', 0660, true)) {
+								    die('Failed to create '.$xml_cdr_dir.'/failed');
+								}
+							}
+							rename($xml_cdr_dir.'/'.$this->file, $xml_cdr_dir.'/failed/'.$this->file);
+						}
 
-					//debug results	
+						//send an error message
+						echo 'failed file moved to '.$xml_cdr_dir.'/failed/'.$this->file;
+					}
+
+					//debug results
 					$this->log(print_r($database->message, true));
 
 					//remove the temporary permission
@@ -283,7 +306,7 @@ if (!class_exists('xml_cdr')) {
 			//check for duplicate call uuid's
 				$duplicate_uuid = false;
 				$uuid = urldecode($xml->variables->uuid);
-				if($uuid != null && is_uuid($uuid)) {
+				if ($uuid != null && is_uuid($uuid)) {
 					$sql = "select count(xml_cdr_uuid) ";
 					$sql .= "from v_xml_cdr ";
 					$sql .= "where xml_cdr_uuid = :xml_cdr_uuid ";
@@ -291,7 +314,16 @@ if (!class_exists('xml_cdr')) {
 					$database = new database;
 					$count = $database->select($sql, $parameters, 'column');
 					if ($count > 0) {
+						//duplicate uuid detected
 						$duplicate_uuid = true;
+
+						//remove the file as the record already exists in the database
+						if (!empty($_SESSION['switch']['log']['dir'])) {
+							$xml_cdr_dir = $_SESSION['switch']['log']['dir'].'/xml_cdr';
+							if (file_exists($xml_cdr_dir.'/'.$this->file)) {
+								unlink($xml_cdr_dir.'/'.$this->file);
+							}
+						}
 					}
 					unset($sql, $parameters);
 				}
@@ -333,15 +365,15 @@ if (!class_exists('xml_cdr')) {
 						if (isset($xml->variables->effective_caller_id_name)) {
 							$caller_id_name = urldecode($xml->variables->effective_caller_id_name);
 						}
-					
+
 						if (isset($xml->variables->origination_caller_id_name)) {
 							$caller_id_name = urldecode($xml->variables->origination_caller_id_name);
 						}
-						
+
 						if (isset($xml->variables->origination_caller_id_number)) {
 							$caller_id_number = urldecode($xml->variables->origination_caller_id_number);
 						}
-					
+
 						if (urldecode($xml->variables->call_direction) == 'outbound' && isset($xml->variables->effective_caller_id_number)) {
 							$caller_id_number = urldecode($xml->variables->effective_caller_id_number);
 						}
@@ -349,7 +381,7 @@ if (!class_exists('xml_cdr')) {
 					//if the sip_from_domain and domain_name are not the same then original call direction was inbound
 						//when an inbound call is forward the call_direction is set to inbound and then updated to outbound
 						//use sip_from_display and sip_from_user to get the original caller ID instead of the updated caller ID info from the forward
-						if (isset($xml->variables->sip_from_domain) && urldecode($xml->variables->sip_from_domain) != urldecode($xml->variables->domain_name)) { 
+						if (isset($xml->variables->sip_from_domain) && urldecode($xml->variables->sip_from_domain) != urldecode($xml->variables->domain_name)) {
 							if (isset($xml->variables->sip_from_display)) {
 								$caller_id_name = urldecode($xml->variables->sip_from_display);
 							}
@@ -371,7 +403,7 @@ if (!class_exists('xml_cdr')) {
 						unset($i);
 
 					//if last_sent_callee_id_number is set use it for the destination_number
-						if (strlen($xml->variables->last_sent_callee_id_number) > 0) {
+						if (!empty($xml->variables->last_sent_callee_id_number)) {
 							$destination_number = urldecode($xml->variables->last_sent_callee_id_number);
 						}
 
@@ -423,9 +455,18 @@ if (!class_exists('xml_cdr')) {
 							//answered call
 							$missed_call = 'false';
 						}
+						elseif (isset($xml->variables->cc_side) && $xml->variables->cc_side == 'agent') {
+							//call center
+							$missed_call = 'false';
+						}
 						else {
 							//missed call
 							$missed_call = 'true';
+						}
+
+					//get the last bridge_uuid from the call to preserve previous behavior
+						foreach ($xml->variables->bridge_uuids as $bridge) {
+							$last_bridge = urldecode($bridge);
 						}
 
 					//misc
@@ -442,7 +483,7 @@ if (!class_exists('xml_cdr')) {
 						$this->array[$key]['caller_destination'] = $caller_destination;
 						$this->array[$key]['accountcode'] = urldecode($xml->variables->accountcode);
 						$this->array[$key]['default_language'] = urldecode($xml->variables->default_language);
-						$this->array[$key]['bridge_uuid'] = urldecode($xml->variables->bridge_uuid);
+						$this->array[$key]['bridge_uuid'] = urldecode($xml->variables->bridge_uuid) ?: $last_bridge;
 						//$this->array[$key]['digits_dialed'] = urldecode($xml->variables->digits_dialed);
 						$this->array[$key]['sip_hangup_disposition'] = urldecode($xml->variables->sip_hangup_disposition);
 						$this->array[$key]['pin_number'] = urldecode($xml->variables->pin_number);
@@ -473,8 +514,13 @@ if (!class_exists('xml_cdr')) {
 
 					//store the call direction
 						$this->array[$key]['direction'] = urldecode($xml->variables->call_direction);
-						  
+
 					//call center
+						if ($xml->variables->cc_member_uuid == '_undef_') { $xml->variables->cc_member_uuid = ''; }
+						if ($xml->variables->cc_member_session_uuid == '_undef_') { $xml->variables->cc_member_session_uuid = ''; }
+						if ($xml->variables->cc_agent_uuid == '_undef_') { $xml->variables->cc_agent_uuid = ''; }
+						if ($xml->variables->call_center_queue_uuid == '_undef_') { $xml->variables->call_center_queue_uuid = ''; }
+						if ($xml->variables->cc_queue_joined_epoch == '_undef_') { $xml->variables->cc_queue_joined_epoch = ''; }
 						$this->array[$key]['cc_side'] = urldecode($xml->variables->cc_side);
 						$this->array[$key]['cc_member_uuid'] = urldecode($xml->variables->cc_member_uuid);
 						$this->array[$key]['cc_queue'] = urldecode($xml->variables->cc_queue);
@@ -514,7 +560,7 @@ if (!class_exists('xml_cdr')) {
 
 					//call quality
 						$rtp_audio_in_mos = urldecode($xml->variables->rtp_audio_in_mos);
-						if (strlen($rtp_audio_in_mos) > 0) {
+						if (!empty($rtp_audio_in_mos)) {
 							$this->array[$key]['rtp_audio_in_mos'] = $rtp_audio_in_mos;
 						}
 
@@ -539,18 +585,18 @@ if (!class_exists('xml_cdr')) {
 						$domain_uuid = urldecode($xml->variables->domain_uuid);
 
 					//get the domain name
-						if (strlen($domain_name) == 0) {
+						if (empty($domain_name)) {
 							$domain_name = urldecode($xml->variables->dialed_domain);
 						}
-						if (strlen($domain_name) == 0) {
+						if (empty($domain_name)) {
 							$domain_name = urldecode($xml->variables->sip_invite_domain);
 						}
-						if (strlen($domain_name) == 0) {
+						if (empty($domain_name)) {
 							$domain_name = urldecode($xml->variables->sip_req_host);
 						}
-						if (strlen($domain_name) == 0) {
+						if (empty($domain_name)) {
 							$presence_id = urldecode($xml->variables->presence_id);
-							if (strlen($presence_id) > 0) {
+							if (!empty($presence_id)) {
 								$presence_array = explode($presence_id, '%40');
 								$domain_name = $presence_array[1];
 							}
@@ -562,20 +608,22 @@ if (!class_exists('xml_cdr')) {
 								$fields = explode(",", $field);
 								$field_name = end($fields);
 								$this->fields[] = $field_name;
-								if (count($fields) == 1) {
-									$this->array[$key][$field_name] = urldecode($xml->variables->{$fields[0]});
-								}
-								if (count($fields) == 2) {
-									$this->array[$key][$field_name] = urldecode($xml->{$fields[0]}->{$fields[1]});
-								}
-								if (count($fields) == 3) {
-									$this->array[$key][$field_name] = urldecode($xml->{$fields[0]}->{$fields[1]}->{$fields[2]});
-								}
-								if (count($fields) == 4) {
-									$this->array[$key][$field_name] = urldecode($xml->{$fields[0]}->{$fields[1]}->{$fields[2]}->{$fields[3]});
-								}
-								if (count($fields) == 5) {
-									$this->array[$key][$field_name] = urldecode($xml->{$fields[0]}->{$fields[1]}->{$fields[2]}->{$fields[3]}->{$fields[4]});
+								if (!isset($this->array[$key][$field_name])) {
+									if (count($fields) == 1) {
+										$this->array[$key][$field_name] = urldecode($xml->variables->{$fields[0]});
+									}
+									if (count($fields) == 2) {
+										$this->array[$key][$field_name] = urldecode($xml->{$fields[0]}->{$fields[1]});
+									}
+									if (count($fields) == 3) {
+										$this->array[$key][$field_name] = urldecode($xml->{$fields[0]}->{$fields[1]}->{$fields[2]});
+									}
+									if (count($fields) == 4) {
+										$this->array[$key][$field_name] = urldecode($xml->{$fields[0]}->{$fields[1]}->{$fields[2]}->{$fields[3]});
+									}
+									if (count($fields) == 5) {
+										$this->array[$key][$field_name] = urldecode($xml->{$fields[0]}->{$fields[1]}->{$fields[2]}->{$fields[3]}->{$fields[4]});
+									}
 								}
 							}
 						}
@@ -584,9 +632,9 @@ if (!class_exists('xml_cdr')) {
 						//$this->log("\ndomain_name is `$domain_name`;\ndomain_uuid is '$domain_uuid'\n");
 
 					//get the domain_uuid with the domain_name
-						if (strlen($domain_uuid) == 0) {
+						if (empty($domain_uuid)) {
 							$sql = "select domain_uuid from v_domains ";
-							if (strlen($domain_name) == 0 && $context != 'public' && $context != 'default') {
+							if (empty($domain_name) && $context != 'public' && $context != 'default') {
 								$sql .= "where domain_name = :context ";
 								$parameters['context'] = $context;
 							}
@@ -600,15 +648,15 @@ if (!class_exists('xml_cdr')) {
 						}
 
 					//set values in the database
-						if (strlen($domain_uuid) > 0) {
+						if (!empty($domain_uuid)) {
 							$this->array[$key]['domain_uuid'] = $domain_uuid;
 						}
-						if (strlen($domain_name) > 0) {
+						if (!empty($domain_name)) {
 							$this->array[$key]['domain_name'] = $domain_name;
 						}
 
 					//get the recording details
-						if (strlen($xml->variables->record_session) > 0) {
+						if (isset($xml->variables->record_path)) {
 							$record_path = urldecode($xml->variables->record_path);
 							$record_name = urldecode($xml->variables->record_name);
 							if (isset($xml->variables->record_seconds)) {
@@ -623,7 +671,7 @@ if (!class_exists('xml_cdr')) {
 							$record_name = basename(urldecode($xml->variables->last_arg));
 							$record_length = urldecode($xml->variables->record_seconds);
 						}
-						elseif (strlen($xml->variables->record_name) > 0) {
+						elseif (isset($xml->variables->record_name)) {
 							if (isset($xml->variables->record_path)) {
 								$record_path = urldecode($xml->variables->record_path);
 							}
@@ -633,17 +681,17 @@ if (!class_exists('xml_cdr')) {
 							$record_name = urldecode($xml->variables->record_name);
 							$record_length = urldecode($xml->variables->duration);
 						}
-						elseif (strlen($xml->variables->sofia_record_file) > 0) {
+						elseif (!empty($xml->variables->sofia_record_file)) {
 							$record_path = dirname(urldecode($xml->variables->sofia_record_file));
 							$record_name = basename(urldecode($xml->variables->sofia_record_file));
 							$record_length = urldecode($xml->variables->record_seconds);
 						}
-						elseif (strlen($xml->variables->cc_record_filename) > 0) {
+						elseif (!empty($xml->variables->cc_record_filename)) {
 							$record_path = dirname(urldecode($xml->variables->cc_record_filename));
 							$record_name = basename(urldecode($xml->variables->cc_record_filename));
 							$record_length = urldecode($xml->variables->record_seconds);
 						}
-						elseif (strlen($xml->variables->api_on_answer) > 0) {
+						elseif (!empty($xml->variables->api_on_answer)) {
 							$command = str_replace("\n", " ", urldecode($xml->variables->api_on_answer));
 							$parts = explode(" ", $command);
 							if ($parts[0] == "uuid_record") {
@@ -653,14 +701,13 @@ if (!class_exists('xml_cdr')) {
 								$record_length = urldecode($xml->variables->duration);
 							}
 						}
-						elseif (strlen($xml->variables->conference_recording) > 0) {
+						elseif (!empty($xml->variables->conference_recording)) {
 							$conference_recording = urldecode($xml->variables->conference_recording);
 							$record_path = dirname($conference_recording);
 							$record_name = basename($conference_recording);
 							$record_length = urldecode($xml->variables->duration);
 						}
-
-						elseif (strlen($xml->variables->current_application_data) > 0) {
+						elseif (!empty($xml->variables->current_application_data)) {
 							$commands = explode(",", urldecode($xml->variables->current_application_data));
 							foreach ($commands as $command) {
 								$cmd = explode("=", $command);
@@ -678,7 +725,7 @@ if (!class_exists('xml_cdr')) {
 							}
 						}
 						if (!isset($record_name)) {
-							$bridge_uuid = urldecode($xml->variables->bridge_uuid);
+							$bridge_uuid = urldecode($xml->variables->bridge_uuid) ?: $last_bridge;
 							$path = $_SESSION['switch']['recordings']['dir'].'/'.$domain_name.'/archive/'.$start_year.'/'.$start_month.'/'.$start_day;
 							if (file_exists($path.'/'.$bridge_uuid.'.wav')) {
 								$record_path = $path;
@@ -704,8 +751,8 @@ if (!class_exists('xml_cdr')) {
 						}
 
 					//last check
-						 if (!isset($record_name) || is_null ($record_name) || (strlen($record_name) == 0)) {
-							$bridge_uuid = urldecode($xml->variables->bridge_uuid);
+						 if (!isset($record_name) || is_null ($record_name) || (empty($record_name))) {
+							$bridge_uuid = urldecode($xml->variables->bridge_uuid) ?: $last_bridge ;
 							$path = $_SESSION['switch']['recordings']['dir'].'/'.$domain_name.'/archive/'.$start_year.'/'.$start_month.'/'.$start_day;
 							if (file_exists($path.'/'.$bridge_uuid.'.wav')) {
 								$record_path = $path;
@@ -733,12 +780,16 @@ if (!class_exists('xml_cdr')) {
 						//echo "record_length: ".$record_length."\n";
 						//exit;
 
-					//add the call recording path name and length
-						if (isset($record_path) && isset($record_name) && file_exists($record_path.'/'.$record_name) && $record_length > 0) {
-							//add to the xml cdr table
+					//add the call record path, name and length to the database
+						if (isset($record_path) && isset($record_name) && file_exists($record_path.'/'.$record_name)) {
 							$this->array[$key]['record_path'] = $record_path;
 							$this->array[$key]['record_name'] = $record_name;
-							$this->array[$key]['record_length'] = $record_length;
+							if (isset($record_length)) {
+								$this->array[$key]['record_length'] = $record_length;
+							}
+							else {
+								$this->array[$key]['record_length'] = urldecode($xml->variables->duration);
+							}
 						}
 
 					//add to the call recordings table
@@ -837,7 +888,6 @@ if (!class_exists('xml_cdr')) {
 							$tmp_dir = $_SESSION['switch']['log']['dir'].'/xml_cdr/failed/';
 							if(!file_exists($tmp_dir)) {
 								mkdir($tmp_dir, 0770, true);
-								
 							}
 							if ($_SESSION['cdr']['format']['text'] == "xml") {
 								$tmp_file = $uuid.'.xml';
@@ -858,7 +908,7 @@ if (!class_exists('xml_cdr')) {
 						}
 
 						if ($_SESSION['cdr']['storage']['text'] == "dir" && $error != "true") {
-							if (strlen($uuid) > 0) {
+							if (!empty($uuid)) {
 								$tmp_dir = $_SESSION['switch']['log']['dir'].'/xml_cdr/archive/'.$start_year.'/'.$start_month.'/'.$start_day;
 								if(!file_exists($tmp_dir)) {
 									mkdir($tmp_dir, 0770, true);
@@ -932,14 +982,14 @@ if (!class_exists('xml_cdr')) {
 								//get the xml cdr string
 									$xml_string = file_get_contents($xml_cdr_dir.'/'.$file);
 
+								//set the file
+									$this->file = $file;
+
 								//decode the xml string
 									//$xml_string = urldecode($xml_string);
 
 								//parse the xml and insert the data into the db
 									$this->xml_array($x, $leg, $xml_string);
-
-								//delete the file after it has been imported
-									unlink($xml_cdr_dir.'/'.$file);
 
 								//increment the value
 									$x++;
@@ -953,6 +1003,7 @@ if (!class_exists('xml_cdr')) {
 					}
 				}
 			}
+			//save data to the database
 			$this->save();
 			closedir($dir_handle);
 		}
@@ -969,7 +1020,7 @@ if (!class_exists('xml_cdr')) {
 
 				//authentication for xml cdr http post
 					if (!defined('STDIN')) {
-						if ($_SESSION["cdr"]["http_enabled"]["boolean"] == "true" && strlen($_SESSION["xml_cdr"]["username"]) == 0) {
+						if ($_SESSION["cdr"]["http_enabled"]["boolean"] == "true" && empty($_SESSION["xml_cdr"]["username"])) {
 							//get the contents of xml_cdr.conf.xml
 								$conf_xml_string = file_get_contents($_SESSION['switch']['conf']['dir'].'/autoload_configs/xml_cdr.conf.xml');
 
@@ -1061,20 +1112,20 @@ if (!class_exists('xml_cdr')) {
 				}
 
 			//build the date range
-				if (strlen($this->start_stamp_begin) > 0 || strlen($this->start_stamp_end) > 0) {
+				if (strlen($this->start_stamp_begin) > 0 || !empty($this->start_stamp_end)) {
 					unset($this->quick_select);
-					if (strlen($this->start_stamp_begin) > 0 && strlen($this->start_stamp_end) > 0) {
+					if (strlen($this->start_stamp_begin) > 0 && !empty($this->start_stamp_end)) {
 						$sql_date_range = " and start_stamp between :start_stamp_begin::timestamptz and :start_stamp_end::timestamptz \n";
 						$parameters['start_stamp_begin'] = $this->start_stamp_begin.':00.000 '.$time_zone;
 						$parameters['start_stamp_end'] = $this->start_stamp_end.':59.999 '.$time_zone;
 					}
 					else {
-						if (strlen($this->start_stamp_begin) > 0) { 
-							$sql_date_range = "and start_stamp >= :start_stamp_begin::timestamptz \n"; 
+						if (!empty($this->start_stamp_begin)) {
+							$sql_date_range = "and start_stamp >= :start_stamp_begin::timestamptz \n";
 							$parameters['start_stamp_begin'] = $this->start_stamp_begin.':00.000 '.$time_zone;
 						}
-						if (strlen($this->start_stamp_end) > 0) { 
-							$sql_date_range .= "and start_stamp <= :start_stamp_end::timestamptz \n"; 
+						if (!empty($this->start_stamp_end)) {
+							$sql_date_range .= "and start_stamp <= :start_stamp_end::timestamptz \n";
 							$parameters['start_stamp_end'] = $this->start_stamp_end.':59.999 '.$time_zone;
 						}
 					}
@@ -1137,7 +1188,7 @@ if (!class_exists('xml_cdr')) {
  				if ($this->include_internal) {
 					$sql .= " and (direction = 'inbound' or direction = 'local') \n";
 				}
-				else { 
+				else {
 					$sql .= "and direction = 'inbound' \n";
 				}
 				$sql .= ") \n";
@@ -1272,60 +1323,72 @@ if (!class_exists('xml_cdr')) {
 		 * download the recordings
 		 */
 		public function download($uuid) {
-			if (permission_exists('xml_cdr_view')) {
-
-				//get call recording from database
-					if (is_uuid($uuid)) {
-						$sql = "select record_name, record_path from v_xml_cdr ";
-						$sql .= "where xml_cdr_uuid = :xml_cdr_uuid ";
-						//$sql .= "and domain_uuid = '".$domain_uuid."' \n";
-						$parameters['xml_cdr_uuid'] = $uuid;
-						//$parameters['domain_uuid'] = $domain_uuid;
-						$database = new database;
-						$row = $database->select($sql, $parameters, 'row');
-						if (is_array($row)) {
-							$record_name = $row['record_name'];
-							$record_path = $row['record_path'];
-						}
-						unset ($sql, $parameters, $row);
-					}
-
-				//build full path
-					$record_file = $record_path.'/'.$record_name;
-
-				//download the file
-					if (file_exists($record_file)) {
-						//content-range
-						if (isset($_SERVER['HTTP_RANGE']) && $_GET['t'] != "bin")  {
-							$this->range_download($record_file);
-						}
-						ob_clean();
-						$fd = fopen($record_file, "rb");
-						if ($_GET['t'] == "bin") {
-							header("Content-Type: application/force-download");
-							header("Content-Type: application/octet-stream");
-							header("Content-Type: application/download");
-							header("Content-Description: File Transfer");
-						}
-						else {
-							$file_ext = pathinfo($record_name, PATHINFO_EXTENSION);
-							switch ($file_ext) {
-								case "wav" : header("Content-Type: audio/x-wav"); break;
-								case "mp3" : header("Content-Type: audio/mpeg"); break;
-								case "ogg" : header("Content-Type: audio/ogg"); break;
-							}
-						}
-						$record_name = preg_replace('#[^a-zA-Z0-9_\-\.]#', '', $record_name);
-						header('Content-Disposition: attachment; filename="'.$record_name.'"');
-						header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
-						header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
-						if ($_GET['t'] == "bin") {
-							header("Content-Length: ".filesize($record_file));
-						}
-						ob_clean();
-						fpassthru($fd);
-					}
+			if (!permission_exists('xml_cdr_view')) {
+				echo "permission denied";
+				return;
 			}
+
+			//get call recording from database
+			if (!is_uuid($uuid)) {
+				echo "invalid uuid";
+				return;
+			}
+
+			$sql = "select record_name, record_path from v_xml_cdr ";
+			$sql .= "where xml_cdr_uuid = :xml_cdr_uuid ";
+			//$sql .= "and domain_uuid = '".$domain_uuid."' \n";
+			$parameters['xml_cdr_uuid'] = $uuid;
+			//$parameters['domain_uuid'] = $domain_uuid;
+			$database = new database;
+			$row = $database->select($sql, $parameters, 'row');
+			if (is_array($row)) {
+				$record_name = $row['record_name'];
+				$record_path = $row['record_path'];
+			} else {
+				echo "recording not found";
+				return;
+			}
+			unset ($sql, $parameters, $row);
+
+			//build full path
+			$record_file = $record_path.'/'.$record_name;
+
+			//download the file
+			if (!file_exists($record_file)) {
+				echo "recording not found";
+				return;
+			}
+
+			//content-range
+			if (isset($_SERVER['HTTP_RANGE']) && $_GET['t'] != "bin")  {
+				$this->range_download($record_file);
+			}
+
+			ob_clean();
+			$fd = fopen($record_file, "rb");
+			if ($_GET['t'] == "bin") {
+				header("Content-Type: application/force-download");
+				header("Content-Type: application/octet-stream");
+				header("Content-Type: application/download");
+				header("Content-Description: File Transfer");
+			} else {
+				$file_ext = pathinfo($record_name, PATHINFO_EXTENSION);
+				switch ($file_ext) {
+					case "wav" : header("Content-Type: audio/x-wav"); break;
+					case "mp3" : header("Content-Type: audio/mpeg"); break;
+					case "ogg" : header("Content-Type: audio/ogg"); break;
+				}
+			}
+			$record_name = preg_replace('#[^a-zA-Z0-9_\-\.]#', '', $record_name);
+			header('Content-Disposition: attachment; filename="'.$record_name.'"');
+			header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
+			header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
+			if ($_GET['t'] == "bin") {
+				header("Content-Length: ".filesize($record_file));
+			}
+			ob_clean();
+			fpassthru($fd);
+
 		} //end download method
 
 		/*
@@ -1426,74 +1489,78 @@ if (!class_exists('xml_cdr')) {
 		 */
 		public function delete($records) {
 			if (permission_exists($this->permission_prefix.'delete')) {
-
-				//add multi-lingual support
-					$language = new text;
-					$text = $language->get();
-
-				//validate the token
-					$token = new token;
-					if (!$token->validate($_SERVER['PHP_SELF'])) {
-						message::add($text['message-invalid_token'],'negative');
-						header('Location: '.$this->list_page);
-						exit;
-					}
-
-				//delete multiple records
-					if (is_array($records) && @sizeof($records) != 0) {
-						$records_deleted = 0;
-
-						//loop through records
-							foreach($records as $x => $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
-
-									//get the call recordings
-										$sql = "select * from view_call_recordings ";
-										$sql .= "where call_recording_uuid = :xml_cdr_uuid ";
-										$parameters['xml_cdr_uuid'] = $record['uuid'];
-										$database = new database;
-										$row = $database->select($sql, $parameters, 'row');
-										unset($sql, $parameters);
-
-									//delete the call recording (file)
-										$call_recording_path = realpath($row['call_recording_path']);
-										$call_recording_name = $row['call_recording_name'];
-										if (file_exists($call_recording_path.'/'.$call_recording_name)) {
-											@unlink($call_recording_path.'/'.$call_recording_name);
-										}
-
-									//build the delete array
-										$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
-										$array['call_recordings'][$x]['call_recording_uuid'] = $record['uuid'];
-
-									//increment counter
-										$records_deleted++;
-								}
-							}
-
-						//delete the checked rows
-							if (is_array($array) && @sizeof($array) != 0) {
-
-								//grant temporary permissions
-									$p = new permissions;
-									$p->add('call_recording_delete', 'temp');
-
-								//execute delete
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->delete($array);
-									unset($array);
-
-								//revoke temporary permissions
-									$p->delete('call_recording_delete', 'temp');
-
-								//set message
-									message::add($text['message-delete'].": ".$records_deleted);
-							}
-							unset($records);
-					}
+				return false;
 			}
+
+			//add multi-lingual support
+			$language = new text;
+			$text = $language->get();
+
+			//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: '.$this->list_page);
+				exit;
+			}
+
+			//delete multiple records
+			if (!is_array($records) || @sizeof($records) == 0) {
+				return;
+			}
+			$records_deleted = 0;
+
+			//loop through records
+			foreach($records as $x => $record) {
+				if ($record['checked'] != 'true' || !is_uuid($record['uuid'])) {
+					continue;
+				}
+
+				//get the call recordings
+				$sql = "select xml_cdr_uuid, record_name, record_path from v_xml_cdr ";
+				$sql .= "where xml_cdr_uuid = :xml_cdr_uuid ";
+				$sql .= "and record_name is not null";
+				$parameters['xml_cdr_uuid'] = $record['uuid'];
+				$database = new database;
+				$row = $database->select($sql, $parameters, 'row');
+				unset($sql, $parameters);
+
+				//delete the call recording (file)
+				$call_recording_path = realpath($row['record_path']);
+				$call_recording_name = $row['record_name'];
+				if (file_exists($call_recording_path.'/'.$call_recording_name)) {
+					@unlink($call_recording_path.'/'.$call_recording_name);
+				}
+
+				//build the delete array
+				$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
+
+				//increment counter
+				$records_deleted++;
+			}
+
+			if (!is_array($array) || @sizeof($array) == 0) {
+				return;
+			}
+
+			//grant temporary permissions
+			$p = new permissions;
+			$p->add('call_recording_delete', 'temp');
+
+			//execute delete
+			$database = new database;
+			$database->app_name = $this->app_name;
+			$database->app_uuid = $this->app_uuid;
+			$database->delete($array);
+			unset($array);
+
+			//revoke temporary permissions
+			$p->delete('call_recording_delete', 'temp');
+
+			//set message
+			message::add($text['message-delete'].": ".$records_deleted);
+
+			unset($records);
 		} //method
 
 	} //class

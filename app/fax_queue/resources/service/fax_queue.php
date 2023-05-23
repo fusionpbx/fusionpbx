@@ -86,12 +86,6 @@
 		exit;
 	}
 
-//fax queue enabled
-	if ($_SESSION['fax_queue']['enabled']['boolean'] != 'true') {
-		echo "FAX Queue is disabled in Default Settings\n";
-		exit;
-	}
-
 //make sure the /var/run/fusionpbx directory exists
 	if (!file_exists('/var/run/fusionpbx')) {
 		$result = mkdir('/var/run/fusionpbx', 0777, true);
@@ -153,7 +147,7 @@
 			$sql .= "where hostname = :hostname ";
 			$sql .= "and ( ";
 			$sql .= "	( ";
-			$sql .= "		(fax_status = 'waiting' or fax_status = 'trying') ";
+			$sql .= "		(fax_status = 'waiting' or fax_status = 'trying' or fax_status = 'busy') ";
 			$sql .= "		and (fax_retry_date is null or floor(extract(epoch from now()) - extract(epoch from fax_retry_date)) > :retry_interval) ";
 			$sql .= "	)  ";
 			$sql .= "	or ( ";

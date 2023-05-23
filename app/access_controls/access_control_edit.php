@@ -61,7 +61,7 @@
 	}
 
 //process the user data and save it to the database
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 
 		//enforce valid data
 			if ($access_control_name == 'providers' || $access_control_name == 'domains') {
@@ -80,7 +80,7 @@
 			}
 
 		//process the http post data by submitted action
-			if ($_POST['action'] != '' && strlen($_POST['action']) > 0) {
+			if (!empty($_POST['action'])) {
 
 				//prepare the array(s)
 				$x = 0;
@@ -134,11 +134,11 @@
 
 		//check for all required data
 			$msg = '';
-			if (strlen($access_control_name) == 0) { $msg .= $text['message-required']." ".$text['label-access_control_name']."<br>\n"; }
-			if (strlen($access_control_default) == 0) { $msg .= $text['message-required']." ".$text['label-access_control_default']."<br>\n"; }
-			//if (strlen($access_control_nodes) == 0) { $msg .= $text['message-required']." ".$text['label-access_control_nodes']."<br>\n"; }
-			//if (strlen($access_control_description) == 0) { $msg .= $text['message-required']." ".$text['label-access_control_description']."<br>\n"; }
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+			if (empty($access_control_name)) { $msg .= $text['message-required']." ".$text['label-access_control_name']."<br>\n"; }
+			if (empty($access_control_default)) { $msg .= $text['message-required']." ".$text['label-access_control_default']."<br>\n"; }
+			//if (empty($access_control_nodes)) { $msg .= $text['message-required']." ".$text['label-access_control_nodes']."<br>\n"; }
+			//if (empty($access_control_description)) { $msg .= $text['message-required']." ".$text['label-access_control_description']."<br>\n"; }
+			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -184,16 +184,12 @@
 							//valid IPv6 address
 							$node_cidr = $row["node_cidr"];
 						}
-
-						//if the cidr is provided ignore the domain.
-						$row["node_domain"] = '';
 					}
 
 					//build the sub array
 					$array['access_controls'][0]['access_control_nodes'][$y]['access_control_node_uuid'] = $row["access_control_node_uuid"];
 					$array['access_controls'][0]['access_control_nodes'][$y]['node_type'] = $row["node_type"];
 					$array['access_controls'][0]['access_control_nodes'][$y]['node_cidr'] = $node_cidr;
-					$array['access_controls'][0]['access_control_nodes'][$y]['node_domain'] = $row["node_domain"];
 					$array['access_controls'][0]['access_control_nodes'][$y]['node_description'] = $row["node_description"];
 					$y++;
 
@@ -278,7 +274,6 @@
 	$access_control_nodes[$x]['access_control_node_uuid'] = uuid();
 	$access_control_nodes[$x]['node_type'] = '';
 	$access_control_nodes[$x]['node_cidr'] = '';
-	$access_control_nodes[$x]['node_domain'] = '';
 	$access_control_nodes[$x]['node_description'] = '';
 
 //create token
@@ -381,7 +376,6 @@
 	echo "		<tr>\n";
 	echo "			<th class='vtablereq'>".$text['label-node_type']."</th>\n";
 	echo "			<td class='vtable'>".$text['label-node_cidr']."</td>\n";
-	echo "			<td class='vtable'>".$text['label-node_domain']."</td>\n";
 	echo "			<td class='vtable'>".$text['label-node_description']."</td>\n";
 	if (is_array($access_control_nodes) && @sizeof($access_control_nodes) > 1 && permission_exists('access_control_node_delete')) {
 		echo "			<td class='vtable edit_delete_checkbox_all' onmouseover=\"swap_display('delete_label_details', 'delete_toggle_details');\" onmouseout=\"swap_display('delete_label_details', 'delete_toggle_details');\">\n";
@@ -414,9 +408,6 @@
 		echo "			</td>\n";
 		echo "			<td class='formfld'>\n";
 		echo "				<input class='formfld' type='text' name='access_control_nodes[$x][node_cidr]' maxlength='255' value=\"".escape($row["node_cidr"])."\">\n";
-		echo "			</td>\n";
-		echo "			<td class='formfld'>\n";
-		echo "				<input class='formfld' type='text' name='access_control_nodes[$x][node_domain]' maxlength='255' value=\"".escape($row["node_domain"])."\">\n";
 		echo "			</td>\n";
 		echo "			<td class='formfld'>\n";
 		echo "				<input class='formfld' type='text' name='access_control_nodes[$x][node_description]' maxlength='255' value=\"".escape($row["node_description"])."\">\n";

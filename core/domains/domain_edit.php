@@ -65,12 +65,12 @@
 //get http post variables and set them to php variables
 	if (count($_POST) > 0) {
 		$domain_name = strtolower($_POST["domain_name"]);
-		$domain_enabled = $_POST["domain_enabled"];
+		$domain_enabled = $_POST["domain_enabled"] ?: 'false';
 		$domain_description = $_POST["domain_description"];
 	}
 
 //process the data
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 
 		//get the domain_uuid
 			if ($action == "update" && $_POST["domain_uuid"]) {
@@ -102,9 +102,9 @@
 
 		//check for all required data
 			$msg = '';
-			if (strlen($domain_name) == 0) { $msg .= $text['message-required'].$text['label-name']."<br>\n"; }
-			//if (strlen($domain_description) == 0) { $msg .= $text['message-required'].$text['label-description']."<br>\n"; }
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+			if (empty($domain_name)) { $msg .= $text['message-required'].$text['label-name']."<br>\n"; }
+			//if (empty($domain_description)) { $msg .= $text['message-required'].$text['label-description']."<br>\n"; }
+			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -165,14 +165,14 @@
 							}
 
 						//create the recordings directory for the new domain.
-							if (isset($_SESSION['switch']['recordings']['dir']) && strlen($_SESSION['switch']['recordings']['dir']) > 0) {
+							if (isset($_SESSION['switch']['recordings']['dir']) && !empty($_SESSION['switch']['recordings']['dir'])) {
 								if (!file_exists($_SESSION['switch']['recordings']['dir']."/".$domain_name)) {
 									mkdir($_SESSION['switch']['recordings']['dir']."/".$domain_name, 0770);
 								}
 							}
 
 						//create the voicemail directory for the new domain.
-							if (isset($_SESSION['switch']['voicemail']['dir']) && strlen($_SESSION['switch']['voicemail']['dir']) > 0) {
+							if (isset($_SESSION['switch']['voicemail']['dir']) && !empty($_SESSION['switch']['voicemail']['dir'])) {
 								if (!file_exists($_SESSION['switch']['voicemail']['dir']."/default/".$domain_name)) {
 									mkdir($_SESSION['switch']['voicemail']['dir']."/default/".$domain_name, 0770);
 								}
@@ -382,7 +382,7 @@
 							}
 
 						//update call center queue record templates
-							if (file_exists($_SERVER["PROJECT_ROOT"]."/app/call_center/app_config.php")) {
+							if (file_exists($_SERVER["PROJECT_ROOT"]."/app/call_centers/app_config.php")) {
 								$sql = "update v_call_center_queues set ";
 								$sql .= "queue_record_template = replace(queue_record_template, :domain_name_old, :domain_name_new) ";
 								$sql .= "where domain_uuid = :domain_uuid ";
@@ -395,7 +395,7 @@
 							}
 
 						//update call center agent contacts
-							if (file_exists($_SERVER["PROJECT_ROOT"]."/app/call_center/app_config.php")) {
+							if (file_exists($_SERVER["PROJECT_ROOT"]."/app/call_centers/app_config.php")) {
 								$sql = "update v_call_center_agents set ";
 								$sql .= "agent_contact = replace(agent_contact, :domain_name_old, :domain_name_new) ";
 								$sql .= "where domain_uuid = :domain_uuid ";
@@ -570,6 +570,9 @@
 		unset($sql, $parameters, $row);
 	}
 
+//set the defaults
+	if (empty($domain_enabled)) { $domain_enabled = 'true'; }
+
 //create token
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);
@@ -693,10 +696,18 @@
 	echo "	".$text['label-enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='domain_enabled'>\n";
-	echo "		<option value='true' ".(($domain_enabled == "true") ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
-	echo "		<option value='false' ".(($domain_enabled == "false") ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
-	echo "	</select>\n";
+	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
+		echo "	<label class='switch'>\n";
+		echo "		<input type='checkbox' id='domain_enabled' name='domain_enabled' value='true' ".($domain_enabled == 'true' ? "checked='checked'" : null).">\n";
+		echo "		<span class='slider'></span>\n";
+		echo "	</label>\n";
+	}
+	else {
+		echo "	<select class='formfld' id='domain_enabled' name='domain_enabled'>\n";
+		echo "		<option value='true' ".($domain_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($domain_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "	</select>\n";
+	}
 	echo "<br />\n";
 	echo $text['description-domain_enabled']."\n";
 	echo "</td>\n";

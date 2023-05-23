@@ -211,9 +211,10 @@
 					}
 
 					//log the blocked ip address to the database
-					$array['event_guard_logs'][0]['event_guard_log_uuid'] = $row['event_guard_log_uuid'];
-					$array['event_guard_logs'][0]['log_date'] = 'now()';
-					$array['event_guard_logs'][0]['log_status'] = 'unblocked';
+					$array['event_guard_logs'][$x]['event_guard_log_uuid'] = $row['event_guard_log_uuid'];
+					$array['event_guard_logs'][$x]['log_date'] = 'now()';
+					$array['event_guard_logs'][$x]['log_status'] = 'unblocked';
+					$x++;
 				}
 				if (is_array($array)) {
 					$p = new permissions;
@@ -586,6 +587,7 @@
 		$sql .= "from v_user_logs ";
 		$sql .= "where remote_address = :remote_address ";
 		$sql .= "and result = 'success' ";
+		$sql .= "and timestamp > NOW() - INTERVAL '8 days' ";
 		$parameters['remote_address'] = $ip_address;  
 		$database = new database;
 		$user_log_count = $database->select($sql, $parameters, 'column');

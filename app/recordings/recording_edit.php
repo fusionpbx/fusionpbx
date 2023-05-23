@@ -72,7 +72,7 @@
 		$recording_name = str_replace("'", '', $recording_name);
 	}
 
-if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 	//get recording uuid to edit
 		$recording_uuid = $_POST["recording_uuid"];
 
@@ -101,9 +101,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 	//check for all required data
 		$msg = '';
-		if (strlen($recording_filename) == 0) { $msg .= $text['label-edit-file']."<br>\n"; }
-		if (strlen($recording_name) == 0) { $msg .= $text['label-edit-recording']."<br>\n"; }
-		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+		if (empty($recording_filename)) { $msg .= $text['label-edit-file']."<br>\n"; }
+		if (empty($recording_name)) { $msg .= $text['label-edit-recording']."<br>\n"; }
+		if (!empty($msg) && empty($_POST["persistformvar"])) {
 			require_once "resources/header.php";
 			require_once "resources/persist_form_var.php";
 			echo "<div align='center'>\n";

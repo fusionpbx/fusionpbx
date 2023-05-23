@@ -65,16 +65,6 @@ if (!class_exists('modules')) {
 
 		}
 
-		/**
-		 * called when there are no references to a particular object
-		 * unset the variables used in the class
-		 */
-		public function __destruct() {
-			foreach ($this as $key => $value) {
-				unset($this->$key);
-			}
-		}
-
 		//get the additional information about a specific module
 			public function info($name) {
 				$module_label = substr($name, 4);
@@ -715,7 +705,7 @@ if (!class_exists('modules')) {
 
 		//add missing modules for more module info see http://wiki.freeswitch.com/wiki/Modules
 			public function synch() {
-				if ($handle = opendir($this->dir)) {
+				if (false !== ($handle = opendir($this->dir ?? ''))) {
 					$modules_new = '';
 					$module_found = false;
 					$x = 0;
@@ -751,7 +741,7 @@ if (!class_exists('modules')) {
 							}
 						}
 					}
-					if (is_array($array) && @sizeof($array) != 0) {
+					if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
 						//grant temporary permissions
 							$p = new permissions;
 							$p->add('module_add', 'temp');

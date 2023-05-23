@@ -63,16 +63,6 @@
 			}
 
 			/**
-			 * Called when there are no references to a particular object
-			 * unset the variables used in the class
-			 */
-			public function __destruct() {
-				foreach ($this as $key => $value) {
-					unset($this->$key);
-				}
-			}
-
-			/**
 			 * Add a dialplan for call center
 			 * @var string $domain_uuid		the multi-tenant id
 			 * @var string $value	string to be cached
@@ -156,7 +146,7 @@
 					$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $y * 10;
 					$y++;
 
-					if (strlen($this->queue_cid_prefix) > 0) {
+					if (!empty($this->queue_cid_prefix)) {
 						$dialplan["dialplan_details"][$y]["domain_uuid"] = $this->domain_uuid;
 						$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
 						$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "set";
@@ -166,7 +156,7 @@
 						$y++;
 					}
 
-					if (strlen($this->queue_greeting) > 0) {
+					if (!empty($this->queue_greeting)) {
 						$dialplan["dialplan_details"][$y]["domain_uuid"] = $this->domain_uuid;
 						$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
 						$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "sleep";
@@ -176,7 +166,7 @@
 						$y++;
 					}
 
-					if (strlen($this->queue_greeting) > 0) {
+					if (!empty($this->queue_greeting)) {
 						$dialplan["dialplan_details"][$y]["domain_uuid"] = $this->domain_uuid;
 						$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
 						$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "playback";
@@ -186,7 +176,7 @@
 						$y++;
 					}
 
-					if (strlen($this->queue_cc_exit_keys) > 0) {
+					if (!empty($this->queue_cc_exit_keys)) {
 						$dialplan["dialplan_details"][$y]["domain_uuid"] = $this->domain_uuid;
 						$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
 						$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "set";
@@ -204,7 +194,7 @@
 					$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $y * 10;
 					$y++;
 
-					if (strlen($this->queue_timeout_action) > 0) {
+					if (!empty($this->queue_timeout_action)) {
 						$action_array = explode(":",$this->queue_timeout_action);
 						$dialplan["dialplan_details"][$y]["domain_uuid"] = $this->domain_uuid;
 						$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";

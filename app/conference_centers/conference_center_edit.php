@@ -55,7 +55,7 @@
 	}
 
 //process the user data and save it to the database
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 
 		//delete the conference center
 			if ($_POST['action'] == 'delete' && permission_exists('conference_center_delete') && is_uuid($conference_center_uuid)) {
@@ -77,7 +77,7 @@
 			$conference_center_extension = $_POST["conference_center_extension"];
 			$conference_center_greeting = $_POST["conference_center_greeting"];
 			$conference_center_pin_length = $_POST["conference_center_pin_length"];
-			$conference_center_enabled = $_POST["conference_center_enabled"];
+			$conference_center_enabled = $_POST["conference_center_enabled"] ?: 'false';
 			$conference_center_description = $_POST["conference_center_description"];
 
 		//validate the token
@@ -90,14 +90,14 @@
 
 		//check for all required data
 			$msg = '';
-			//if (strlen($dialplan_uuid) == 0) { $msg .= "Please provide: Dialplan UUID<br>\n"; }
-			if (strlen($conference_center_name) == 0) { $msg .= "Please provide: Name<br>\n"; }
-			if (strlen($conference_center_extension) == 0) { $msg .= "Please provide: Extension<br>\n"; }
-			if (strlen($conference_center_pin_length) == 0) { $msg .= "Please provide: PIN Length<br>\n"; }
-			//if (strlen($conference_center_order) == 0) { $msg .= "Please provide: Order<br>\n"; }
-			//if (strlen($conference_center_description) == 0) { $msg .= "Please provide: Description<br>\n"; }
-			if (strlen($conference_center_enabled) == 0) { $msg .= "Please provide: Enabled<br>\n"; }
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+			//if (empty($dialplan_uuid)) { $msg .= "Please provide: Dialplan UUID<br>\n"; }
+			if (empty($conference_center_name)) { $msg .= "Please provide: Name<br>\n"; }
+			if (empty($conference_center_extension)) { $msg .= "Please provide: Extension<br>\n"; }
+			if (empty($conference_center_pin_length)) { $msg .= "Please provide: PIN Length<br>\n"; }
+			//if (empty($conference_center_order)) { $msg .= "Please provide: Order<br>\n"; }
+			//if (empty($conference_center_description)) { $msg .= "Please provide: Description<br>\n"; }
+			if (empty($conference_center_enabled)) { $msg .= "Please provide: Enabled<br>\n"; }
+			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -132,15 +132,15 @@
 		    $array['conference_centers'][0]['conference_center_description'] = $conference_center_description;
 
 		//build the xml dialplan
-			$dialplan_xml = "<extension name=\"".$conference_center_name."\" continue=\"\" uuid=\"".$dialplan_uuid."\">\n";
+			$dialplan_xml = "<extension name=\"".xml::sanitize($conference_center_name)."\" continue=\"\" uuid=\"".xml::sanitize($dialplan_uuid)."\">\n";
 			if ($conference_center_pin_length > 1 && $conference_center_pin_length < 4) {
-				$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^(".$conference_center_extension.")(\d{".$conference_center_pin_length."})$\" break=\"on-true\">\n";
+				$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^(".xml::sanitize($conference_center_extension).")(\d{".xml::sanitize($conference_center_pin_length)."})$\" break=\"on-true\">\n";
 				$dialplan_xml .= "		<action application=\"set\" data=\"destination_number=$1\"/>\n";
 				$dialplan_xml .= "		<action application=\"set\" data=\"pin_number=$2\"/>\n";
 				$dialplan_xml .= "		<action application=\"lua\" data=\"app.lua conference_center\"/>\n";
 				$dialplan_xml .= "	</condition>\n";
 			}
-			$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".$conference_center_extension."$\">\n";
+			$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".xml::sanitize($conference_center_extension)."$\">\n";
 			$dialplan_xml .= "		<action application=\"lua\" data=\"app.lua conference_center\"/>\n";
 			$dialplan_xml .= "	</condition>\n";
 			$dialplan_xml .= "</extension>\n";
@@ -204,7 +204,7 @@
 				header("Location: conference_centers.php");
 				return;
 			}
-	} //(is_array($_POST) && strlen($_POST["persistformvar"]) == 0)
+	} //(is_array($_POST) && empty($_POST["persistformvar"]))
 
 //pre-populate the form
 	if (is_array($_GET) && $_POST["persistformvar"] != "true") {
@@ -230,8 +230,8 @@
 	}
 
 //set defaults
-	if (strlen($conference_center_enabled) == 0) { $conference_center_enabled = "true"; }
-	if (strlen($conference_center_pin_length) == 0) { $conference_center_pin_length = 9; }
+	if (empty($conference_center_enabled)) { $conference_center_enabled = "true"; }
+	if (empty($conference_center_pin_length)) { $conference_center_pin_length = 9; }
 
 //get the recordings
 	$sql = "select recording_name, recording_filename from v_recordings ";
@@ -383,7 +383,7 @@
 		if (is_array($sound_files)) {
 			echo "<optgroup label='".$text['label-sounds']."'>\n";
 			foreach ($sound_files as $key => $value) {
-				if (strlen($value) > 0) {
+				if (!empty($value)) {
 					if (substr($conference_center_greeting, 0, 71) == "\$\${sounds_dir}/\${default_language}/\${default_dialect}/\${default_voice}/") {
 						$conference_center_greeting = substr($conference_center_greeting, 71);
 					}
@@ -395,7 +395,7 @@
 			echo "</optgroup>\n";
 		}
 	//select
-		if (strlen($conference_center_greeting) > 0) {
+		if (!empty($conference_center_greeting)) {
 			if (permission_exists('conference_center_add') || permission_exists('conference_center_edit')) {
 				if (!$tmp_selected) {
 					echo "<optgroup label='selected'>\n";
@@ -435,10 +435,18 @@
 	echo "	".$text['label-conference_center_enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='conference_center_enabled'>\n";
-	echo "		<option value='true'>".$text['label-true']."</option>\n";
-	echo "		<option value='false' ".($conference_center_enabled == "false" ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
-	echo "	</select>\n";
+	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
+		echo "	<label class='switch'>\n";
+		echo "		<input type='checkbox' id='conference_center_enabled' name='conference_center_enabled' value='true' ".($conference_center_enabled == 'true' ? "checked='checked'" : null).">\n";
+		echo "		<span class='slider'></span>\n";
+		echo "	</label>\n";
+	}
+	else {
+		echo "	<select class='formfld' id='conference_center_enabled' name='conference_center_enabled'>\n";
+		echo "		<option value='true' ".($conference_center_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($conference_center_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "	</select>\n";
+	}
 	echo "<br />\n";
 	echo $text['description-conference_center_enabled']."\n";
 	echo "</td>\n";

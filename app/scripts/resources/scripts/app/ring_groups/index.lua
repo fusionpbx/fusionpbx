@@ -162,7 +162,6 @@
 		call_direction = session:getVariable("call_direction");
 		accountcode = session:getVariable("accountcode");
 		local_ip_v4 = session:getVariable("local_ip_v4")
-		hold_music = session:getVariable("hold_music");
 	end
 
 --set caller id
@@ -489,6 +488,7 @@
 					AND d.ring_group_uuid = :ring_group_uuid
 					AND r.domain_uuid = :domain_uuid
 					AND r.ring_group_enabled = 'true'
+					AND d.destination_enabled = 'true'
 				ORDER BY
 					]]..sql_order..[[
 			]];
@@ -813,10 +813,10 @@
 							extension_uuid = trim(api:executeString(cmd));
 
 							--set hold music
-							if (hold_music == nil) then
+							if (session:getVariable("hold_music") == nil) then
 								hold_music = '';
 							else
-								hold_music = ",hold_music="..hold_music;
+								hold_music = ",hold_music="..session:getVariable("hold_music");
 							end
 
 							--send to user

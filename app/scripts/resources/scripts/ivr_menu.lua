@@ -332,9 +332,17 @@
 			end
 
 		--get the ivr menu options
-			local sql = "SELECT * FROM v_ivr_menu_options "
-				.. "WHERE ivr_menu_uuid = :ivr_menu_uuid "
-				.. "ORDER BY ivr_menu_option_order asc ";
+			local sql = [[
+				SELECT
+					*
+				FROM
+					v_ivr_menu_options
+				WHERE
+					ivr_menu_uuid = :ivr_menu_uuid
+					AND ivr_menu_option_enabled = 'true'
+				ORDER BY
+					ivr_menu_option_order asc
+			]];
 			local params = {ivr_menu_uuid = ivr_menu_uuid};
 			if (debug["sql"]) then
 				log.notice("SQL: " .. sql .. "; params: " .. json.encode(params));

@@ -30,7 +30,7 @@ if ($domains_processed == 1) {
 		$sql .= "where enabled is null or enabled = '' ";
 		$database = new database;
 		$device_lines = $database->select($sql, null, 'all');
-		if (is_array($device_lines) && @sizeof($device_lines) != 0) {
+		if (!empty($device_lines)) {
 			$sql = "update v_device_lines set ";
 			$sql .= "enabled = 'true' ";
 			$sql .= "where enabled is null ";
@@ -46,7 +46,7 @@ if ($domains_processed == 1) {
 		$sql .= "where label is null ";
 		$database = new database;
 		$device_lines = $database->select($sql, null, 'all');
-		if (is_array($device_lines) && @sizeof($device_lines) != 0) {
+		if (!empty($device_lines)) {
 			foreach($device_lines as $row) {
 				$sql = "update v_device_lines ";
 				$sql .= "set label = user_id ";
@@ -62,7 +62,7 @@ if ($domains_processed == 1) {
 		$sql .= "and k.device_key_vendor is null ";
 		$database = new database;
 		$device_keys = $database->select($sql, null, 'all');
-		if (is_array($device_keys) && @sizeof($device_keys)) {
+		if (!empty($device_keys)) {
 			foreach ($device_keys as $index => &$row) {
 				$array['device_keys'][$index]['device_key_uuid'] = $row["device_key_uuid"];
 				$array['device_keys'][$index]['device_key_vendor'] = $row["device_vendor"];
@@ -95,7 +95,7 @@ if ($domains_processed == 1) {
 			$device_profile_keys = $database->select($sql, null, 'all');
 
 			//loop through the device_keys to build the data array
-			if (is_array($device_profile_keys) && @sizeof($device_profile_keys)) {
+			if (!empty($device_profile_keys)) {
 				foreach ($device_profile_keys as $index => &$row) {
 					$array['device_profile_keys'][$index]['device_profile_key_uuid'] = $row["device_key_uuid"];
 					$array['device_profile_keys'][$index]['domain_uuid'] = $row["domain_uuid"];
@@ -114,7 +114,7 @@ if ($domains_processed == 1) {
 			}
 
 			//save the array
-			if (is_array($array) && @sizeof($array)) {
+			if (!empty($array)) {
 				$p = new permissions;
 				$p->add('device_profile_key_add', 'temp');
 
@@ -142,7 +142,7 @@ if ($domains_processed == 1) {
 			$device_profile_keys = $database->select($sql, null, 'all');
 
 			//loop through the device_keys to build the data array
-			if (is_array($device_profile_keys) && @sizeof($device_profile_keys)) {
+			if (!empty($device_profile_keys)) {
 				foreach ($device_profile_keys as $index => &$row) {
 					$array['device_profile_settings'][$index]['device_profile_setting_uuid'] = $row["device_setting_uuid"];
 					$array['device_profile_settings'][$index]['domain_uuid'] = $row["domain_uuid"];
@@ -155,7 +155,7 @@ if ($domains_processed == 1) {
 			}
 
 			//save the array
-			if (is_array($array) && @sizeof($array)) {
+			if (!empty($array)) {
 				$p = new permissions;
 				$p->add('device_profile_setting_add', 'temp');
 
@@ -192,7 +192,7 @@ if ($domains_processed == 1) {
 				unset($sql, $groups, $row);
 
 			//build the array
-				if (is_array($vendors) && @sizeof($vendors) != 0) {
+				if (!empty($vendors)) {
 					$x = 0; $y = 0; $z = 0;
 					foreach ($vendors as $vendor) {
 						//insert the data into the database
@@ -200,22 +200,24 @@ if ($domains_processed == 1) {
 							$array['device_vendors'][$x]['device_vendor_uuid'] = $device_vendor_uuid;
 							$array['device_vendors'][$x]['name'] = $vendor['name'];
 							$array['device_vendors'][$x]['enabled'] = 'true';
+							$array['device_vendors'][$x]['description'] = $vendor['description'];
 
 						//add the vendor functions
-							if (is_array($vendor['functions']) && @sizeof($vendor['functions'])) {
+							if (!empty($vendor['functions'])) {
 
 								foreach ($vendor['functions'] as $function) {
 									//add the device vendor function
 										$device_vendor_function_uuid = uuid();
 										$array['device_vendor_functions'][$y]['device_vendor_uuid'] = $device_vendor_uuid;
 										$array['device_vendor_functions'][$y]['device_vendor_function_uuid'] = $device_vendor_function_uuid;
-										$array['device_vendor_functions'][$y]['name'] = $function['name'];
+										$array['device_vendor_functions'][$y]['type'] = $function['type'];
+										$array['device_vendor_functions'][$y]['subtype'] = $function['subtype'];
 										$array['device_vendor_functions'][$y]['value'] = $function['value'];
 										$array['device_vendor_functions'][$y]['enabled'] = 'true';
 										$array['device_vendor_functions'][$y]['description'] = $function['description'];
 
 									//add the device vendor function groups
-										if (is_array($function['groups']) && @sizeof($function['groups']) != 0) {
+										if (!empty($function['groups'])) {
 											foreach ($function['groups'] as $group_name) {
 												$array['device_vendor_function_groups'][$z]['device_vendor_function_group_uuid'] = uuid();
 												$array['device_vendor_function_groups'][$z]['device_vendor_function_uuid'] = $device_vendor_function_uuid;
@@ -237,7 +239,7 @@ if ($domains_processed == 1) {
 				}
 
 			//execute
-				if (is_array($array) && @sizeof($array) != 0) {
+				if (!empty($array)) {
 					$p = new permissions;
 					$p->add('device_vendor_add', 'temp');
 					$p->add('device_vendor_function_add', 'temp');

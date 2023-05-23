@@ -56,16 +56,6 @@ if (!class_exists('groups')) {
 		}
 
 		/**
-		 * called when there are no references to a particular object
-		 * unset the variables used in the class
-		 */
-		public function __destruct() {
-			foreach ($this as $key => $value) {
-				unset($this->$key);
-			}
-		}
-
-		/**
 		 * delete rows from the database
 		 */
 		public function delete($records) {
@@ -394,6 +384,14 @@ if (!class_exists('groups')) {
 					$array['groups'][$x]['group_name'] = 'agent';
 					$array['groups'][$x]['group_level'] = '20';
 					$array['groups'][$x]['group_description'] = 'Call Center Agent Group';
+					$array['groups'][$x]['group_protected'] = 'false';
+					$group_uuids[$array['groups'][$x]['group_name']] = $array['groups'][$x]['group_uuid'];
+					$x++;
+					$array['groups'][$x]['group_uuid'] = uuid();
+					$array['groups'][$x]['domain_uuid'] = null;
+					$array['groups'][$x]['group_name'] = 'fax';
+					$array['groups'][$x]['group_level'] = '20';
+					$array['groups'][$x]['group_description'] = 'Fax User Group';
 					$array['groups'][$x]['group_protected'] = 'false';
 					$group_uuids[$array['groups'][$x]['group_name']] = $array['groups'][$x]['group_uuid'];
 					$x++;

@@ -285,7 +285,7 @@
 	if ($show_stat) {
 		//add doughnut chart
 		?>
-		<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 20px;'>
+		<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 20px;' onclick="$('#hud_system_counts_details').slideToggle('fast');">
 			<div style='width: 250px; height: 175px;'><canvas id='system_counts_chart'></canvas></div>
 		</div>
 
@@ -315,7 +315,7 @@
 								chart_text: '<?php echo $domain_total; ?>'
 							},
 							legend: {
-							position: 'right',
+								position: 'right',
 								reverse: true,
 								labels: {
 									usePointStyle: true,
@@ -472,7 +472,7 @@
 
 	echo "</table>\n";
 	echo "</div>";
-	$n++;
+	//$n++;
 
 	echo "<span class='hud_expander' onclick=\"$('#hud_system_counts_details').slideToggle('fast');\"><span class='fas fa-ellipsis-h'></span></span>\n";
 	echo "</div>\n";
