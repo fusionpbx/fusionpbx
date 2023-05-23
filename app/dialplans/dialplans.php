@@ -46,6 +46,18 @@
 	$language = new text;
 	$text = $language->get();
 
+//drop app uuid from the query if not for inbound or outbound routes, or fifo queues
+	$allowed_app_uuids = [
+		'c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4', //inbound routes
+		'8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3', //outbound routes
+		'16589224-c876-aeb3-f59f-523a1c0801f7', //fifo queues
+		];
+	if (!empty($_GET['app_uuid']) && is_uuid($_GET['app_uuid']) && !in_array($_GET['app_uuid'], $allowed_app_uuids)) {
+		unset($_GET['app_uuid']);
+		header('Location: dialplans.php'.(!empty($_GET) ? '?'.http_build_query($_GET) : null));
+		exit;
+	}
+
 //get posted data
 	if (!empty($_POST['dialplans'])) {
 		$action = $_POST['action'];
