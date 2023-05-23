@@ -365,6 +365,11 @@ function save_var_xml() {
 	if (is_array($_SESSION['switch']['conf'])) {
 		global $config, $domain_uuid;
 
+		//skip this function if the conf directory is empty
+		if (empty($_SESSION['switch']['conf']['dir'])) {
+			return false;
+		}
+
 		//open the vars.xml file
 		$fout = fopen($_SESSION['switch']['conf']['dir']."/vars.xml","w");
 
