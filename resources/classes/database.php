@@ -2513,7 +2513,7 @@
 																	}
 																}
 															}
-															if (!$child_key_value) {
+															if (!isset($child_key_value) || $child_key_value == '') {
 																$child_key_value = uuid();
 															}
 															//build the insert
