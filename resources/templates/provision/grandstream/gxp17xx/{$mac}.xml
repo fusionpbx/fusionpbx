@@ -3569,12 +3569,21 @@
 
 <!-- # STUN server -->
 <!-- # String -->
-<P76></P76>
+{if isset($grandstream_stun_server) }
+    <P76>{$grandstream_stun_server}</P76>
+{else}
+    <P76></P76>
+{/if}
 
 <!-- # Public Mode. 0 - No, 1 - Yes. Default is 0 -->
 <!-- # Number: 0, 1 -->
 <!-- # Mandatory -->
-<P1345>0</P1345>
+{if isset($grandstream_public_mode) }
+    <P1345>{$grandstream_public_mode}</P1345>
+{else}
+    <P1345>0</P1345>
+{/if}
+
 <!-- ############################################################################## -->
 <!-- ##  Settings/Call Features -->
 <!-- ############################################################################## -->
