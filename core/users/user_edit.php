@@ -53,7 +53,7 @@
 	}
 
 //get total user count from the database, check limit, if defined
-	if (permission_exists('user_add') && $action == 'add' && $_SESSION['limit']['users']['numeric'] != '') {
+	if (permission_exists('user_add') && $action == 'add' && !empty($_SESSION['limit']['users']['numeric'])) {
 		$sql = "select count(*) ";
 		$sql .= "from v_users ";
 		$sql .= "where domain_uuid = :domain_uuid ";
@@ -145,7 +145,7 @@
 			if (permission_exists('message_key')) {
 				$message_key = $_POST["message_key"];
 			}
-			if (is_array($_SESSION['authentication']['methods']) && (in_array('totp', $_SESSION['authentication']['methods']))) {
+			if (!empty($_SESSION['authentication']['methods']) && in_array('totp', $_SESSION['authentication']['methods'])) {
 				$user_totp_secret = strtoupper($_POST["user_totp_secret"]);
 			}
 
@@ -163,7 +163,7 @@
 			}
 
 			//require a username format: any, email, no_email
-			if ($_SESSION['users']['username_format']['text'] != '' && $_SESSION['users']['username_format']['text'] != 'any') {
+			if (!empty($_SESSION['users']['username_format']['text']) && $_SESSION['users']['username_format']['text'] != 'any') {
 				if (
 					($_SESSION['users']['username_format']['text'] == 'email' && !valid_email($username)) ||
 					($_SESSION['users']['username_format']['text'] == 'no_email' && valid_email($username))
@@ -173,8 +173,8 @@
 			}
 
 			//require unique globally or per domain
-			if ((permission_exists('user_edit') && $action == 'edit' && $username != $username_old && $username != '') ||
-				(permission_exists('user_add') && $action == 'add' && $username != '')) {
+			if ((permission_exists('user_edit') && $action == 'edit' && $username != $username_old && !empty($username)) ||
+				(permission_exists('user_add') && $action == 'add' && !empty($username))) {
 
 				$sql = "select count(*) from v_users ";
 				if (isset($_SESSION["users"]["unique"]["text"]) && $_SESSION["users"]["unique"]["text"] == "global") {
@@ -195,16 +195,16 @@
 			}
 
 			//require the passwords to match
-			if ($password != '' && $password != $password_confirm) {
+			if (!empty($password) && $password != $password_confirm) {
 				message::add($text['message-password_mismatch'], 'negative', 7500);
 			}
 
 			//require passwords not allowed to be empty
 			if (permission_exists('user_add') && $action == 'add') {
-				if ($password == '') {
+				if (empty($password)) {
 					message::add($text['message-password_blank'], 'negative', 7500);
 				}
-				if ($group_uuid_name == '') {
+				if (empty($group_uuid_name)) {
 					$invalid[] = $text['label-group'];
 				}
 			}
@@ -216,7 +216,7 @@
 
 			//require passwords with the defined required attributes: length, number, lower case, upper case, and special characters
 			if (!empty($password)) {
-				if (is_numeric($required['length']) && $required['length'] != 0) {
+				if (!empty($required['length']) && is_numeric($required['length']) && $required['length'] != 0) {
 					if (strlen($password) < $required['length']) {
 						$invalid[] = $text['label-characters'];
 					}
@@ -416,7 +416,7 @@
 			unset($sql, $parameters, $row);
 
 		//assign the user to the group
-			if ((permission_exists('user_add') || permission_exists('user_edit')) && $_REQUEST["group_uuid_name"] != '') {
+			if ((permission_exists('user_add') || permission_exists('user_edit')) && !empty($_REQUEST["group_uuid_name"])) {
 				$group_data = explode('|', $group_uuid_name);
 				$group_uuid = $group_data[0];
 				$group_name = $group_data[1];
@@ -514,10 +514,10 @@
 		//add user setting to array for update
 			$array['users'][$x]['user_uuid'] = $user_uuid;
 			$array['users'][$x]['domain_uuid'] = $domain_uuid;
-			if ($username != '' && (empty($username_old) || $username != $username_old)) {
+			if (!empty($username) && (empty($username_old) || $username != $username_old)) {
 				$array['users'][$x]['username'] = $username;
 			}
-			if ($password != '' && $password == $password_confirm) {
+			if (!empty($password) && $password == $password_confirm) {
 				$array['users'][$x]['password'] = password_hash($password, PASSWORD_DEFAULT, $options);
 				$array['users'][$x]['salt'] = null;
 			}
@@ -525,14 +525,14 @@
 			$array['users'][$x]['user_status'] = $user_status;
 			if (permission_exists('user_add') || permission_exists('user_edit')) {
 				if (permission_exists('api_key')) {
-					$array['users'][$x]['api_key'] = ($api_key != '') ? $api_key : null;
+					$array['users'][$x]['api_key'] = (!empty($api_key)) ? $api_key : null;
 				}
-				if (is_array($_SESSION['authentication']['methods']) && (in_array('totp', $_SESSION['authentication']['methods']))) {
+				if (!empty($_SESSION['authentication']['methods']) && in_array('totp', $_SESSION['authentication']['methods'])) {
 					$array['users'][$x]['user_totp_secret'] = $user_totp_secret;
 				}
 				$array['users'][$x]['user_enabled'] = $user_enabled;
 				if (permission_exists('contact_add')) {
-					$array['users'][$x]['contact_uuid'] = ($contact_uuid != '') ? $contact_uuid : null;
+					$array['users'][$x]['contact_uuid'] = (!empty($contact_uuid)) ? $contact_uuid : null;
 				}
 				if ($action == 'add') {
 					$array['users'][$x]['add_user'] = $_SESSION["user"]["username"];
@@ -757,7 +757,7 @@
 	echo "			<input type='password' style='display: none;' disabled='disabled'>"; //help defeat browser auto-fill
 	echo "			<input type='password' autocomplete='new-password' class='formfld' name='password' id='password' value=\"".escape($password ?? null)."\" ".($action == 'add' ? "required='required'" : null)." onkeypress='show_strength_meter();' onfocus='compare_passwords();' onkeyup='compare_passwords();' onblur='compare_passwords();'>";
 	echo "			<div id='pwstrength_progress' class='pwstrength_progress'></div><br />\n";
-	if ((is_numeric($required['length']) && $required['length'] != 0) || $required['number'] || $required['lowercase'] || $required['uppercase'] || $required['special']) {
+	if ((!empty($required['length']) && is_numeric($required['length']) && $required['length'] != 0) || $required['number'] || $required['lowercase'] || $required['uppercase'] || $required['special']) {
 		echo $text['label-required'].': ';
 		if (is_numeric($required['length']) && $required['length'] != 0) {
 			echo $required['length']." ".$text['label-characters'];
@@ -777,7 +777,7 @@
 		if ($required['special']) {
 			$required_temp[] = $text['label-special'];
 		}
-		if (is_array($required_temp) && sizeof($required_temp) != 0) {
+		if (!empty($required_temp)) {
 			echo implode(', ',$required_temp);
 			if (is_numeric($required['length']) && $required['length'] != 0) {
 				echo ")";
@@ -811,7 +811,7 @@
 	$sql = "select * from v_languages order by language asc ";
 	$database = new database;
 	$languages = $database->select($sql, null, 'all');
-	if (is_array($languages) && sizeof($languages) != 0) {
+	if (!empty($languages) && is_array($languages) && sizeof($languages) != 0) {
 		foreach ($languages as $row) {
 			$language_codes[$row["code"]] = $row["language"];
 		}
@@ -921,10 +921,10 @@
 		echo "<option value=\"\"></option>\n";
 		foreach($contacts as $row) {
 			$contact_name = array();
-			if ($row['contact_organization'] != '') { $contact_name[] = $row['contact_organization']; }
-			if ($row['contact_name_family'] != '') { $contact_name[] = $row['contact_name_family']; }
-			if ($row['contact_name_given'] != '') { $contact_name[] = $row['contact_name_given']; }
-			if ($row['contact_name_family'] == '' && $row['contact_name_family'] == '' && $row['contact_nickname'] != '') { $contact_name[] = $row['contact_nickname']; }
+			if (!empty($row['contact_organization'])) { $contact_name[] = $row['contact_organization']; }
+			if (!empty($row['contact_name_family'])) { $contact_name[] = $row['contact_name_family']; }
+			if (!empty($row['contact_name_given'])) { $contact_name[] = $row['contact_name_given']; }
+			if (!empty($row['contact_name_family']) && empty($row['contact_name_family']) && !empty($row['contact_nickname'])) { $contact_name[] = $row['contact_nickname']; }
 			echo "<option value='".escape($row['contact_uuid'])."' ".(($row['contact_uuid'] == $contact_uuid) ? "selected='selected'" : null).">".escape(implode(', ', $contact_name))."</option>\n";
 		}
 		unset($sql, $row_count);
@@ -983,7 +983,7 @@
 				if (!empty($field['group_name'])) {
 					echo "<tr>\n";
 					echo "	<td class='vtable' style='white-space: nowrap; padding-right: 30px;' nowrap='nowrap'>";
-					echo escape($field['group_name']).(($field['group_domain_uuid'] != '') ? "@".$_SESSION['domains'][$field['group_domain_uuid']]['domain_name'] : null);
+					echo escape($field['group_name']).((!empty($field['group_domain_uuid'])) ? "@".$_SESSION['domains'][$field['group_domain_uuid']]['domain_name'] : null);
 					echo "	</td>\n";
 					if (permission_exists('user_group_delete') || if_group("superadmin")) {
 						echo "	<td class='list_control_icons' style='width: 25px;'>\n";
@@ -1017,7 +1017,7 @@
 				if ($field['group_level'] <= $_SESSION['user']['group_level']) {
 					if (!isset($assigned_groups) || (isset($assigned_groups) && !in_array($field["group_uuid"], $assigned_groups))) {
 						if (isset($group_uuid_name) && $group_uuid_name == $field['group_uuid']."|".$field['group_name']) { $selected = "selected='selected'"; } else { $selected = ''; }
-						echo "	<option value='".$field['group_uuid']."|".$field['group_name']."' $selected>".$field['group_name'].(($field['domain_uuid'] != '') ? "@".$_SESSION['domains'][$field['domain_uuid']]['domain_name'] : null)."</option>\n";
+						echo "	<option value='".$field['group_uuid']."|".$field['group_name']."' $selected>".$field['group_name'].((!empty($field['domain_uuid'])) ? "@".$_SESSION['domains'][$field['domain_uuid']]['domain_name'] : null)."</option>\n";
 					}
 				}
 			}
@@ -1094,8 +1094,8 @@
 	}
 
 	//user time based one time password secret
-	if (is_array($_SESSION['authentication']['methods']) && (in_array('totp', $_SESSION['authentication']['methods']))) {
-		if ($user_totp_secret != '' && $username != '') {
+	if (!empty($_SESSION['authentication']['methods']) && in_array('totp', $_SESSION['authentication']['methods'])) {
+		if (!empty($user_totp_secret) && !empty($username)) {
 			$otpauth = "otpauth://totp/".$username."?secret=".$user_totp_secret."&issuer=".$_SESSION['domain_name'];
 
 			require_once 'resources/qr_code/QRErrorCorrectLevel.php';
