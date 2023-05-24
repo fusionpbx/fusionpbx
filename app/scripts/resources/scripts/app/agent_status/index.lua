@@ -1,5 +1,4 @@
 
-
 --set default variables
 	max_digits = 15;
 	digit_timeout = 5000;
@@ -97,14 +96,14 @@
 	end
 
 	dbh:query(sql, params, function(row)
-	          --set the variables
-	          agent_uuid = row.call_center_agent_uuid;
-	         agent_name = row.agent_name;
-	         agent_id = row.agent_id;
-	         user_uuid = row.user_uuid;
-	         --authorize the user
-	         agent_authorized = 'true';
-	         end);
+		--set the variables
+		agent_uuid = row.call_center_agent_uuid;
+		agent_name = row.agent_name;
+		agent_id = row.agent_id;
+		user_uuid = row.user_uuid;
+		--authorize the user
+		agent_authorized = 'true';
+	end);
 
 	--show the results
 	if (agent_id) then
@@ -162,30 +161,41 @@
 				freeswitch.consoleLog("notice", "[call_center] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 			end
 			dbh:query(sql, params, function(row)
-
-			          --set the user_status in the users table
-			          local sql = "UPDATE v_users SET ";
-			         sql = sql .. "user_status = :status ";
-			         sql = sql .. "WHERE user_uuid = :user_uuid ";
-			         local params = {status = status, user_uuid = user_uuid};
-			         if (debug["sql"]) then
-			         freeswitch.consoleLog("notice", "[call_center] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
-			         end
-			         dbh:query(sql, params);
-			         end);
+				--set the user_status in the users table
+				local sql = "UPDATE v_users SET ";
+				sql = sql .. "user_status = :status ";
+				sql = sql .. "WHERE user_uuid = :user_uuid ";
+				local params = {status = status, user_uuid = user_uuid};
+				if (debug["sql"]) then
+					freeswitch.consoleLog("notice", "[call_center] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
+				end
+				dbh:query(sql, params);
+			end);
 		end
 
 		--set the presence to terminated - turn the lamp off:
 		if (action == "logout" or action == "break") then
 			event = freeswitch.Event("PRESENCE_IN");
-			event:addHeader("proto", "sip");
+			event:addHeader("proto", "agent");
 			event:addHeader("event_type", "presence");
 			event:addHeader("alt_event_type", "dialog");
 			event:addHeader("Presence-Call-Direction", "outbound");
 			event:addHeader("state", "Active (1 waiting)");
 			event:addHeader("from", agent_name.."@"..domain_name);
 			event:addHeader("login", agent_name.."@"..domain_name);
-			event:addHeader("unique-id", agent_uuid);
+			event:addHeader("unique-id", uuid);
+			event:addHeader("answer-state", "terminated");
+			event:fire();
+
+			event = freeswitch.Event("PRESENCE_IN");
+			event:addHeader("proto", "agent");
+			event:addHeader("event_type", "presence");
+			event:addHeader("alt_event_type", "dialog");
+			event:addHeader("Presence-Call-Direction", "outbound");
+			event:addHeader("state", "Active (1 waiting)");
+			event:addHeader("from", agent_id.."@"..domain_name);
+			event:addHeader("login", agent_id.."@"..domain_name);
+			event:addHeader("unique-id", uuid);
 			event:addHeader("answer-state", "terminated");
 			event:fire();
 		end
@@ -193,7 +203,7 @@
 		--set presence in - turn lamp on
 		if (action == "login") then
 			event = freeswitch.Event("PRESENCE_IN");
-			event:addHeader("proto", "sip");
+			event:addHeader("proto", "agent");
 			event:addHeader("login", agent_name.."@"..domain_name);
 			event:addHeader("from", agent_name.."@"..domain_name);
 			event:addHeader("status", "Active (1 waiting)");
@@ -201,7 +211,21 @@
 			event:addHeader("event_type", "presence");
 			event:addHeader("alt_event_type", "dialog");
 			event:addHeader("event_count", "1");
-			event:addHeader("unique-id", agent_uuid);
+			event:addHeader("unique-id", uuid);
+			event:addHeader("Presence-Call-Direction", "outbound");
+			event:addHeader("answer-state", "confirmed");
+			event:fire();
+
+			event = freeswitch.Event("PRESENCE_IN");
+			event:addHeader("proto", "agent");
+			event:addHeader("login", agent_id.."@"..domain_name);
+			event:addHeader("from", agent_id.."@"..domain_name);
+			event:addHeader("status", "Active (1 waiting)");
+			event:addHeader("rpid", "unknown");
+			event:addHeader("event_type", "presence");
+			event:addHeader("alt_event_type", "dialog");
+			event:addHeader("event_count", "1");
+			event:addHeader("unique-id", uuid);
 			event:addHeader("Presence-Call-Direction", "outbound");
 			event:addHeader("answer-state", "confirmed");
 			event:fire();
@@ -212,9 +236,9 @@
 		end
 		if string.find(agent_name, 'agent+', nil, true) ~= 1 then
 			presence_in.turn_lamp( blf_status,
-			                       'agent+'..agent_name.."@"..domain_name,
-			                       uuid
-			                     );
+				'agent+'..agent_name.."@"..domain_name,
+				uuid
+			);
 		end
 	end
 
