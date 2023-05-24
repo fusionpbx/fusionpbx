@@ -49,7 +49,7 @@ if (!class_exists('install')) {
 				$scripts_dir = '/usr/share/freeswitch/scripts';
 				$php_dir = PHP_BINDIR ;
 				$cache_location = '/var/cache/fusionpbx';
-			break;
+				break;
 			case "LIN":
 				$config_path = '/etc/fusionpbx/';
 				$config_file = $config_path.'/config.conf';
@@ -64,7 +64,7 @@ if (!class_exists('install')) {
 				$scripts_dir = '/usr/share/freeswitch/scripts';
 				$php_dir = PHP_BINDIR ;
 				$cache_location = '/var/cache/fusionpbx';
-			break;
+				break;
 			case "WIN":
 				$config_path = $_SERVER["DOCUMENT_ROOT"].DIRECTORY_SEPARATOR.'resources';
 				$config_file = $config_path.DIRECTORY_SEPARATOR.'config.conf';
@@ -80,7 +80,7 @@ if (!class_exists('install')) {
 				$scripts_dir = $_SERVER['ProgramFiles'].DIRECTORY_SEPARATOR.'freeswitch'.DIRECTORY_SEPARATOR.'scripts';
 				$php_dir = dirname(PHP_BINARY);
 				$cache_location = dirname($_SERVER['DOCUMENT_ROOT']).DIRECTORY_SEPARATOR.'cache'.DIRECTORY_SEPARATOR.'fusionpbx';
-			break;
+				break;
 			}
 
 			//end the script if the config path is not set
