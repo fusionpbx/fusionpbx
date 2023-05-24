@@ -43,13 +43,14 @@
 	$text = $language->get();
 
 //action add or update
-	if (is_uuid($_REQUEST["id"])) {
+	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
 		$access_control_uuid = $_REQUEST["id"];
 		$id = $_REQUEST["id"];
 	}
 	else {
 		$action = "add";
+		$access_control_uuid = uuid();
 	}
 
 //get http post variables and set them to php variables
@@ -151,11 +152,6 @@
 				return;
 			}
 
-		//add the access_control_uuid
-			if (!is_uuid($_POST["access_control_uuid"])) {
-				$access_control_uuid = uuid();
-			}
-
 		//prepare the array
 			$array['access_controls'][0]['access_control_uuid'] = $access_control_uuid;
 			$array['access_controls'][0]['access_control_name'] = $access_control_name;
@@ -231,14 +227,19 @@
 			}
 	}
 
+//set default values
+	$access_control_name = '';
+	$access_control_default = '';
+	$access_control_description = '';
+
 //pre-populate the form
-	if (is_array($_GET) && $_POST["persistformvar"] != "true") {
+	if (!empty($access_control_uuid) && is_uuid($access_control_uuid) && empty($_POST["persistformvar"])) {
 		$sql = "select * from v_access_controls ";
 		$sql .= "where access_control_uuid = :access_control_uuid ";
 		$parameters['access_control_uuid'] = $access_control_uuid;
 		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
-		if (is_array($row) && @sizeof($row) != 0) {
+		if (!empty($row) && count($row) > 0) {
 			$access_control_name = $row["access_control_name"];
 			$access_control_default = $row["access_control_default"];
 			$access_control_description = $row["access_control_description"];
@@ -247,7 +248,7 @@
 	}
 
 //get the child data
-	if (is_uuid($access_control_uuid)) {
+	if (!empty($access_control_uuid) && is_uuid($access_control_uuid)) {
 		$sql = "select * from v_access_control_nodes ";
 		$sql .= "where access_control_uuid = :access_control_uuid ";
 		$sql .= "order by node_cidr asc";
@@ -258,19 +259,19 @@
 	}
 
 //add the $access_control_node_uuid
-	if (!is_uuid($access_control_node_uuid)) {
+	if (empty($access_control_node_uuid)) {
 		$access_control_node_uuid = uuid();
 	}
 
 //add an empty row
-	if (is_array($access_control_nodes) && @sizeof($access_control_nodes) != 0) {
+	if (!empty($access_control_nodes) && count($access_control_nodes) > 0) {
 		$x = count($access_control_nodes);
 	}
 	else {
 		$access_control_nodes = array();
 		$x = 0;
 	}
-	$access_control_nodes[$x]['access_control_uuid'] = $access_control_uuid;
+	$access_control_nodes[$x]['access_control_uuid'] = $access_control_uuid ?? '';
 	$access_control_nodes[$x]['access_control_node_uuid'] = uuid();
 	$access_control_nodes[$x]['node_type'] = '';
 	$access_control_nodes[$x]['node_cidr'] = '';
