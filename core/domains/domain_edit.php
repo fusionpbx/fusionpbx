@@ -551,7 +551,7 @@
 	}
 
 //pre-populate the form (admin won't have domain_add permissions, but domain_uuid will already be set above)
-	if ((count($_GET) > 0 || (!permission_exists('domain_add') && $domain_uuid != '')) && $_POST["persistformvar"] != "true") {
+	if ((!empty($_GET) || (!permission_exists('domain_add') && !empty($domain_uuid))) && empty($_POST["persistformvar"])) {
 		$sql = "select ";
 		$sql .= "domain_uuid, ";
 		$sql .= "domain_name, ";
@@ -587,7 +587,7 @@
 	}
 
 //copy settings javascript
-	if (permission_exists("domain_select") && permission_exists("domain_setting_add") && count($_SESSION['domains']) > 1) {
+	if (permission_exists("domain_select") && permission_exists("domain_setting_add") && !empty($_SESSION['domains']) && count($_SESSION['domains']) > 1) {
 		echo "<script language='javascript' type='text/javascript'>\n";
 		echo "	var fade_speed = 400;\n";
 		echo "	function show_domains() {\n";
