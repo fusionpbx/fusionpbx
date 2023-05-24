@@ -38,7 +38,6 @@ if (!class_exists('install')) {
 			case "BSD":
 				$config_path = '/usr/local/etc/fusionpbx';
 				$config_file = $config_path.'/config.conf';
-				$config_filephp = $config_path.'/config.php';
 				$document_root = '/usr/local/www/fusionpbx';
 
 				$conf_dir = '/usr/local/etc/freeswitch';
@@ -54,7 +53,6 @@ if (!class_exists('install')) {
 			case "LIN":
 				$config_path = '/etc/fusionpbx/';
 				$config_file = $config_path.'/config.conf';
-				$config_filephp = $config_path.'/config.php';
 				$document_root = '/var/www/fusionpbx';
 
 				$conf_dir = '/etc/freeswitch';
