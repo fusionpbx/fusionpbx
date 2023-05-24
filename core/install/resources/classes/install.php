@@ -47,7 +47,7 @@ if (!class_exists('install')) {
 				$storage_dir = '/var/lib/freeswitch/storage';
 				$voicemail_dir = '/var/lib/freeswitch/storage/voicemail';
 				$scripts_dir = '/usr/share/freeswitch/scripts';
-				$php_dir = PHP_BINDIR ;
+				$php_dir = PHP_BINDIR;
 				$cache_location = '/var/cache/fusionpbx';
 				break;
 			case "LIN":
@@ -62,7 +62,7 @@ if (!class_exists('install')) {
 				$storage_dir = '/var/lib/freeswitch/storage';
 				$voicemail_dir = '/var/lib/freeswitch/storage/voicemail';
 				$scripts_dir = '/usr/share/freeswitch/scripts';
-				$php_dir = PHP_BINDIR ;
+				$php_dir = PHP_BINDIR;
 				$cache_location = '/var/cache/fusionpbx';
 				break;
 			case "WIN":
