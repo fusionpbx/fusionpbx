@@ -293,7 +293,7 @@ if (!class_exists('xml_cdr')) {
 			//parse the xml to get the call detail record info
 				try {
 					//disable xml entities
-					libxml_disable_entity_loader(true);
+					if (PHP_VERSION_ID < 80000) { libxml_disable_entity_loader(true); }
 
 					//load the string into an xml object
 					$xml = simplexml_load_string($xml_string, 'SimpleXMLElement', LIBXML_NOCDATA);

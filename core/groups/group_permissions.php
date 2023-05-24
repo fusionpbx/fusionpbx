@@ -56,6 +56,13 @@
 	$language = new text;
 	$text = $language->get();
 
+
+//get the http post data
+	$view = $_REQUEST['view'] ?? '';
+	// 	$action = $_POST['action'] ?? '';
+	$search = $_REQUEST['search'] ?? '';
+	$group_permissions = $_POST['group_permissions'] ?? '';
+
 //process permission reload
 	if (!empty($_GET['action']) && $_GET['action'] == 'reload' && !empty($group_uuid)) {
 		if (is_array($_SESSION["groups"]) && @sizeof($_SESSION["groups"]) != 0) {
@@ -90,16 +97,10 @@
 
 			//set message and redirect
 				message::add($text['message-permissions_reloaded'],'positive');
-				header('Location: group_permissions.php?group_uuid='.urlencode($_GET['group_uuid']));
+				header('Location: group_permissions.php?group_uuid='.urlencode($_GET['group_uuid']).($view ? '&view='.urlencode($view) : null).($search ? '&search='.urlencode($search) : null));
 				exit;
 		}
 	}
-
-//get the http post data
-	$view = $_REQUEST['view'] ?? '';
-	$action = $_POST['action'] ?? '';
-	$search = $_POST['search'] ?? '';
-	$group_permissions = $_POST['group_permissions'] ?? '';
 
 //get the list
 	$sql = "select "; 
@@ -239,7 +240,7 @@
 			}
 
 		//save the save array
-			if (is_array($array['save']) && @sizeof($array['save']) != 0) {
+			if (!empty($array['save']) && is_array($array['save']) && @sizeof($array['save']) != 0) {
 				$database = new database;
 				$database->app_name = 'groups';
 				$database->app_uuid = '2caf27b0-540a-43d5-bb9b-c9871a1e4f84';
@@ -248,7 +249,7 @@
 			}
 
 		//delete the delete array
-			if (is_array($array['delete']) && @sizeof($array['delete']) != 0) {
+			if (!empty($array['delete']) && is_array($array['delete']) && @sizeof($array['delete']) != 0) {
 				if (permission_exists('group_permission_delete')) {
 					$database = new database;
 					$database->app_name = 'groups';
@@ -261,7 +262,7 @@
 			message::add($text['message-update']);
 
 		//redirect
-			header('Location: group_permissions.php?group_uuid='.urlencode($group_uuid));
+			header('Location: group_permissions.php?group_uuid='.urlencode($group_uuid).($view ? '&view='.urlencode($view) : null).($search ? '&search='.urlencode($search) : null));
 			exit;
 	}
 
@@ -278,7 +279,7 @@
 	echo "	<div class='heading'><b>".$text['title-group_permissions']." (".escape($group_name).")</b></div>\n";
 	echo "	<div class='actions'>\n";
 	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','style'=>'margin-right: 15px;','collapse'=>'hide-sm-dn','link'=>'groups.php']);
-	echo button::create(['type'=>'button','label'=>$text['button-reload'],'icon'=>$_SESSION['theme']['button_icon_reload'],'link'=>'?group_uuid='.urlencode($group_uuid).'&action=reload']);
+	echo button::create(['type'=>'button','label'=>$text['button-reload'],'icon'=>$_SESSION['theme']['button_icon_reload'],'link'=>'?group_uuid='.urlencode($group_uuid).'&action=reload'.($view ? '&view='.urlencode($view) : null).($search ? '&search='.urlencode($search) : null)]);
 	if (permission_exists('group_member_view')) {
 		echo button::create(['type'=>'button','label'=>$text['button-members'],'icon'=>'users','link'=>'group_members.php?group_uuid='.urlencode($group_uuid)]);
 	}

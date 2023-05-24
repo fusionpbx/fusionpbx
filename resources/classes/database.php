@@ -2408,7 +2408,7 @@
 																	foreach ($row as $k => $v) {
 																		if (!is_array($v) && ($k != $parent_key_name || $k != $child_key_name)) {
 																			$k = self::sanitize($k);
-																			if (empty($v) || strlen($v) == 0) {
+																			if (!isset($v) || (isset($v) && $v == '')) {
 																				$sql .= $k." = null, ";
 																			}
 																			elseif ($v === "now()") {
@@ -2424,7 +2424,7 @@
 																			}
 																			else {
 																				$sql .= $k." = :".$k.", ";
-																				$params[$k] = !empty($v) ? trim($v) : null;
+																				$params[$k] = isset($v) ? trim($v) : null;
 																			}
 																		}
 																	}
@@ -2513,7 +2513,7 @@
 																	}
 																}
 															}
-															if (!$child_key_value) {
+															if (!isset($child_key_value) || $child_key_value == '') {
 																$child_key_value = uuid();
 															}
 															//build the insert

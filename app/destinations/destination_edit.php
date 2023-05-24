@@ -81,20 +81,20 @@
 //get http post variables and set them to php variables
 	if (!empty($_POST)) {
 		//get the uuid
-			if ($action == "update" && is_uuid($_POST["destination_uuid"])) {
+			if ($action == "update" && !empty($_POST["destination_uuid"]) && is_uuid($_POST["destination_uuid"])) {
 				$destination_uuid = $_POST["destination_uuid"];
 			}
 
 		//set the variables
-			$dialplan_uuid = $_POST["dialplan_uuid"];
+			$dialplan_uuid = $_POST["dialplan_uuid"] ?? null;
 			$domain_uuid = $_POST["domain_uuid"];
 			$destination_type = $_POST["destination_type"];
-			$destination_condition_field = $_POST["destination_condition_field"];
+			$destination_condition_field = $_POST["destination_condition_field"] ?? null;
 			$destination_number = $_POST["destination_number"];
 			$destination_prefix = $_POST["destination_prefix"];
-			$destination_trunk_prefix = $_POST["destination_trunk_prefix"];
-			$destination_area_code = $_POST["destination_area_code"];
-			$db_destination_number = $_POST["db_destination_number"];
+			$destination_trunk_prefix = $_POST["destination_trunk_prefix"] ?? null;
+			$destination_area_code = $_POST["destination_area_code"] ?? null;
+			$db_destination_number = $_POST["db_destination_number"] ?? null;
 			$destination_caller_id_name = $_POST["destination_caller_id_name"];
 			$destination_caller_id_number = $_POST["destination_caller_id_number"];
 			$destination_cid_name_prefix = $_POST["destination_cid_name_prefix"];
@@ -102,25 +102,25 @@
 			$destination_conditions = $_POST["destination_conditions"];
 			$destination_actions = $_POST["destination_actions"];
 			$fax_uuid = $_POST["fax_uuid"];
-			$provider_uuid = $_POST["provider_uuid"];
+			$provider_uuid = $_POST["provider_uuid"] ?? null;
 			$user_uuid = $_POST["user_uuid"];
 			$group_uuid = $_POST["group_uuid"];
 			$destination_order= $_POST["destination_order"];
-			$destination_enabled = $_POST["destination_enabled"] ?: 'false';
+			$destination_enabled = $_POST["destination_enabled"] ?? 'false';
 			$destination_description = $_POST["destination_description"];
-			$destination_sell = check_float($_POST["destination_sell"]);
-			$currency = $_POST["currency"];
-			$destination_buy = check_float($_POST["destination_buy"]);
-			$currency_buy = $_POST["currency_buy"];
+			$destination_sell = check_float($_POST["destination_sell"] ?? '');
+			$currency = $_POST["currency"] ?? null;
+			$destination_buy = check_float($_POST["destination_buy"] ?? '');
+			$currency_buy = $_POST["currency_buy"] ?? null;
 			$destination_hold_music = $_POST["destination_hold_music"];
 			$destination_distinctive_ring = $_POST["destination_distinctive_ring"];
 			$destination_record = $_POST["destination_record"];
 			$destination_accountcode = $_POST["destination_accountcode"];
-			$destination_type_voice = $_POST["destination_type_voice"];
-			$destination_type_fax = $_POST["destination_type_fax"];
-			$destination_type_text = $_POST["destination_type_text"];
-			$destination_type_emergency = $_POST["destination_type_emergency"];
-			$destination_carrier = $_POST["destination_carrier"];
+			$destination_type_voice = $_POST["destination_type_voice"] ?? null;
+			$destination_type_fax = $_POST["destination_type_fax"] ?? null;
+			$destination_type_text = $_POST["destination_type_text"] ?? null;
+			$destination_type_emergency = $_POST["destination_type_emergency"] ?? null;
+			$destination_carrier = $_POST["destination_carrier"] ?? null;
 
 		//sanitize the destination conditions
 			if (!empty($destination_conditions)) {
@@ -232,7 +232,7 @@
 		//get the destination settings from the database
 			if (!empty($row)) {
 				//get the dialplan_uuid from the database
-				$dialplan_uuid = $row["dialplan_uuid"];
+				$dialplan_uuid = $row["dialplan_uuid"] ?? null;
 
 				//if the destination_number is not set then get it from the database
 				if (!isset($destination_number)) {
@@ -245,62 +245,62 @@
 		//override variables using information from the database
 			if (!empty($row)) {
 				if (!permission_exists('destination_prefix')) {
-					$destination_prefix = $row["destination_prefix"];
+					$destination_prefix = $row["destination_prefix"] ?? null;
 				}
 				if (!permission_exists('destination_trunk_prefix')) {
-					$destination_trunk_prefix = $row["destination_trunk_prefix"];
+					$destination_trunk_prefix = $row["destination_trunk_prefix"] ?? null;
 				}
 				if (!permission_exists('destination_area_code')) {
-					$destination_area_code = $row["destination_area_code"];
+					$destination_area_code = $row["destination_area_code"] ?? null;
 				}
 				if (!permission_exists('destination_number')) {
-					$destination_prefix = $row["destination_prefix"];
-					$destination_number = $row["destination_number"];
+					$destination_prefix = $row["destination_prefix"] ?? null;
+					$destination_number = $row["destination_number"] ?? null;
 				}
 				if (!permission_exists('destination_condition_field')) {
-					$destination_condition_field = $row["destination_condition_field"];
+					$destination_condition_field = $row["destination_condition_field"] ?? null;
 				}
 				if (!permission_exists('destination_caller_id_name')) {
-					$destination_caller_id_name = $row["destination_caller_id_name"];
+					$destination_caller_id_name = $row["destination_caller_id_name"] ?? null;
 				}
 				if (!permission_exists('destination_caller_id_number')) {
-					$destination_caller_id_number = $row["destination_caller_id_number"];
+					$destination_caller_id_number = $row["destination_caller_id_number"] ?? null;
 				}
 				if (!permission_exists('destination_context')) {
-					$destination_context = $row["destination_context"];
+					$destination_context = $row["destination_context"] ?? null;
 				}
 				if (!permission_exists('destination_fax')) {
-					$fax_uuid = $row["fax_uuid"];
+					$fax_uuid = $row["fax_uuid"] ?? null;
 				}
 				if (!permission_exists('provider_edit')) {
-					$provider_uuid = $row["provider_uuid"];
+					$provider_uuid = $row["provider_uuid"] ?? null;
 				}
 				if (!permission_exists('user_edit')) {
-					$user_uuid = $row["user_uuid"];
+					$user_uuid = $row["user_uuid"] ?? null;
 				}
 				if (!permission_exists('group_edit')) {
-					$group_uuid = $row["group_uuid"];
+					$group_uuid = $row["group_uuid"] ?? null;
 				}
 				if (!permission_exists('destination_cid_name_prefix')) {
-					$destination_cid_name_prefix = $row["destination_cid_name_prefix"];
+					$destination_cid_name_prefix = $row["destination_cid_name_prefix"] ?? null;
 				}
 				if (!permission_exists('destination_record')) {
-					$destination_record = $row["destination_record"];
+					$destination_record = $row["destination_record"] ?? null;
 				}
 				if (!permission_exists('destination_hold_music')) {
-					$destination_hold_music = $row["destination_hold_music"];
+					$destination_hold_music = $row["destination_hold_music"] ?? null;
 				}
 				if (!permission_exists('destination_distinctive_ring')) {
-					$destination_distinctive_ring = $row["destination_distinctive_ring"];
+					$destination_distinctive_ring = $row["destination_distinctive_ring"] ?? null;
 				}
 				if (!permission_exists('destination_accountcode')) {
-					$destination_accountcode = $row["destination_accountcode"];
+					$destination_accountcode = $row["destination_accountcode"] ?? null;
 				}
 				if (!permission_exists('destination_emergency')) {
-					$destination_type_emergency = $row["destination_type_emergency"];
+					$destination_type_emergency = $row["destination_type_emergency"] ?? null;
 				}
 				if (!permission_exists('destination_domain')) {
-					$domain_uuid = $row["domain_uuid"];
+					$domain_uuid = $row["domain_uuid"] ?? null;
 				}
 			}
 			unset($row);
@@ -336,7 +336,7 @@
 			if ($destination_type == 'inbound' || $destination_type == 'local') {
 
 				//get the array
-					$dialplan_details = $_POST["dialplan_details"];
+					$dialplan_details = $_POST["dialplan_details"] ?? null;
 
 				//array cleanup
 					if (!empty($dialplan_details)) {
@@ -395,10 +395,10 @@
 							unset($destination_numbers);
 
 						//if empty then get new uuid
-							if (!is_uuid($destination_uuid)) {
+							if (empty($destination_uuid) || !is_uuid($destination_uuid)) {
 								$destination_uuid = uuid();
 							}
-							if (!is_uuid($dialplan_uuid)) {
+							if (empty($dialplan_uuid) || !is_uuid($dialplan_uuid)) {
 								$dialplan_uuid = uuid();
 							}
 
@@ -420,13 +420,13 @@
 							}
 							$dialplan["dialplan_uuid"] = $dialplan_uuid;
 							$dialplan["domain_uuid"] = $domain_uuid ?? null;
-							$dialplan["dialplan_name"] = ($dialplan_name != '') ? $dialplan_name : format_phone($destination_area_code.$destination_number);
+							$dialplan["dialplan_name"] = (!empty($dialplan_name)) ? $dialplan_name : format_phone($destination_area_code.$destination_number);
 							$dialplan["dialplan_number"] = $destination_area_code.$destination_number;
 							$dialplan["dialplan_context"] = $destination_context;
 							$dialplan["dialplan_continue"] = "false";
 							$dialplan["dialplan_order"] = $destination_order;
 							$dialplan["dialplan_enabled"] = $destination_enabled;
-							$dialplan["dialplan_description"] = ($dialplan_description != '') ? $dialplan_description : $destination_description;
+							$dialplan["dialplan_description"] = (!empty($dialplan_description)) ? $dialplan_description : $destination_description;
 							$dialplan_detail_order = 10;
 
 						//set the dialplan detail type
@@ -484,7 +484,7 @@
 							$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"domain_name=".$_SESSION['domain_name']."\" inline=\"true\"/>\n";
 
 							//add this only if using application bridge
-							if ($destination_app == 'bridge') {
+							if (!empty($destination_app) && $destination_app == 'bridge') {
 									$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"hangup_after_bridge=true\" inline=\"true\"/>\n";
 									$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"continue_on_fail=true\" inline=\"true\"/>\n";
 							}
@@ -586,7 +586,7 @@
 									$dialplan_detail_order = $dialplan_detail_order + 10;
 
 								//add this only if using application bridge
-									if ($destination_app == 'bridge') {
+									if (!empty($destination_app) && $destination_app == 'bridge') {
 										//add hangup_after_bridge
 											$dialplan["dialplan_details"][$y]["domain_uuid"] = $domain_uuid;
 											$dialplan["dialplan_details"][$y]["dialplan_uuid"] = $dialplan_uuid;
@@ -813,8 +813,8 @@
 								//add the actions
 									foreach($destination_actions as $field) {
 										$action_array = explode(":", $field, 2);
-										$action_app = $action_array[0];
-										$action_data = $action_array[1];
+										$action_app = $action_array[0] ?? null;
+										$action_data = $action_array[1] ?? null;
 										if (isset($action_array[0]) && $action_array[0] != '') {
 											if ($destination->valid($action_app.':'.$action_data)) {
 												//add to the dialplan_details array
@@ -911,8 +911,8 @@
 							$y=0;
 							foreach($destination_actions as $destination_action) {
 								$action_array = explode(":", $destination_action, 2);
-								$action_app = $action_array[0];
-								$action_data = $action_array[1];
+								$action_app = $action_array[0] ?? null;
+								$action_data = $action_array[1] ?? null;
 								if (isset($action_array[0]) && $action_array[0] != '') {
 									if ($destination->valid($action_app.':'.$action_data)) {
 										$actions[$y]['destination_app'] = $action_app;
@@ -921,7 +921,7 @@
 									}
 								}
 							}
-							$array['destinations'][$x]["destination_actions"] = json_encode($actions);
+							$array['destinations'][$x]["destination_actions"] = json_encode($actions ?? null);
 							$array['destinations'][$x]["destination_order"] = $destination_order;
 							$array['destinations'][$x]["destination_enabled"] = $destination_enabled;
 							$array['destinations'][$x]["destination_description"] = $destination_description;
@@ -1358,15 +1358,14 @@
 	echo "</td>\n";
 	echo "<td width='70%' class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='destination_type' id='destination_type' onchange='type_control(this.options[this.selectedIndex].value);context_control();'>\n";
-
 	switch ($destination_type) {
-		case "inbound" :	$selected[0] = "selected='selected'";	break;
-		case "outbound" :	$selected[1] = "selected='selected'";	break;
-		case "local" :	$selected[2] = "selected='selected'";		break;
+		case "inbound": $selected[0] = "selected='selected'"; break;
+		case "outbound": $selected[1] = "selected='selected'"; break;
+		case "local": $selected[2] = "selected='selected'";	break;
 	}
-	echo "	<option value='inbound' ".$selected[0].">".$text['option-inbound']."</option>\n";
-	echo "	<option value='outbound' ".$selected[1].">".$text['option-outbound']."</option>\n";
-	echo "	<option value='local' ".$selected[2].">".$text['option-local']."</option>\n";
+	echo "	<option value='inbound' ".($selected[0] ?? null).">".$text['option-inbound']."</option>\n";
+	echo "	<option value='outbound' ".($selected[1] ?? null).">".$text['option-outbound']."</option>\n";
+	echo "	<option value='local' ".($selected[2] ?? null).">".$text['option-local']."</option>\n";
 	unset($selected);
 	echo "	</select>\n";
 	echo "<br />\n";

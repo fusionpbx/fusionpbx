@@ -89,6 +89,19 @@
 			$event .= "unique-id: ".uuid()."\n";
 			$event .= "Presence-Call-Direction: outbound\n";
 			$event .= "answer-state: ".$answer_state."\n";
+
+			$event = "sendevent PRESENCE_IN\n";
+			$event .= "proto: agent\n";
+			$event .= "from: ".$row['agent_id']."@".$row['domain_name']."\n";
+			$event .= "login: ".$row['agent_id']."@".$row['domain_name']."\n";
+			$event .= "status: Active (1 waiting)\n";
+			$event .= "rpid: unknown\n";
+			$event .= "event_type: presence\n";
+			$event .= "alt_event_type: dialog\n";
+			$event .= "event_count: 1\n";
+			$event .= "unique-id: ".uuid()."\n";
+			$event .= "Presence-Call-Direction: outbound\n";
+			$event .= "answer-state: ".$answer_state."\n";
 		}
 
 		//send message to the console
