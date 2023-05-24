@@ -1870,10 +1870,10 @@
 					$m = 0;
 
 				//loop through the array
-					if (is_array($array)) {
+					if (!empty($array) && is_array($array)) {
 						$x = 0;
 						foreach ($array as $parent_name => $tables) {
-							if (is_array($tables)) {
+							if (!empty($tables) && is_array($tables)) {
 								foreach ($tables as $id => $row) {
 
 									//prepare the variables
@@ -1881,7 +1881,7 @@
 										$parent_key_name = self::singular($parent_name)."_uuid";
 
 									//build the toggle array
-										if ($row['checked'] == 'true') {
+										if (!empty($row['checked']) && $row['checked'] == 'true') {
 											//toggle the field value
 											//$toggle_array[$parent_name][$x][$parent_key_name] = $row[$parent_key_name];
 											$toggle_array[$parent_name][$x] = $row;
@@ -1895,7 +1895,7 @@
 
 											//find the child tables
 											$y = 0;
-											if (is_array($field_value)) {
+											if (!empty($field_value) && is_array($field_value)) {
 												//prepare the variables
 												$child_name = self::sanitize($field_name);
 												$child_key_name = self::singular($child_name)."_uuid";
@@ -1930,14 +1930,14 @@
 					unset($array);
 
 					//get the $apps array from the installed apps from the core and mod directories
-					if (!is_array($_SESSION['apps'])) {
+					if (empty($_SESSION['apps']) || !is_array($_SESSION['apps'])) {
 						self::get_apps();
 					}
 
 					//search through all fields to see if toggle field exists
 					if (is_array($_SESSION['apps'])) {
 						foreach ($_SESSION['apps'] as $x => $app) {
-							if (is_array($app['db'])) {
+							if (!empty($app['db']) && is_array($app['db'])) {
 								foreach ($app['db'] as $y => $row) {
 									if (is_array($row['table']['name'])) {
 										$table_name = $row['table']['name']['text'];
@@ -1984,7 +1984,7 @@
 			 * <p>Usage Example:<br><code>$database = new database();<br>$database->app_name = "MyApp";<br>$database->app_uuid = "12345678-1234-1234-1234-123456789abc";<br>$row = 0;<br>$array['mytable'][$row]['mycolumn'] = "myvalue";<br>if ($database->save($array)) { <br>&nbsp;&nbsp;echo "Saved Successfully.";<br> } else {<br>&nbsp;&nbsp;echo "Save Failed.";<br>}</code></p>
 			 * @param array $array Three dimensional Array. The first dimension is the table name without the prefix 'v_'. Second dimension in the row value as int. Third dimension is the column name.
 			 * @param bool $transaction_save
-			 * @return boolean Returns <b>true</b> on success and <b>false</b> on failure of one or more failed write attempts.
+			 * @return returns and array wih result details
 			 */
 			public function save(array &$array, bool $transaction_save = true) {
 				//set default return value
@@ -2222,7 +2222,7 @@
 												foreach ($array as $array_key => $array_value) {
 													if (!is_array($array_value) && $array_key != $parent_key_name) {
 														$array_key = self::sanitize($array_key);
-														if (!isset($array_value) || $array_value == '') {
+														if (!isset($array_value) || (isset($array_value) && $array_value === '')) {
 															$sql .= $array_key." = null, ";
 														}
 														elseif ($array_value === "now()") {
@@ -2408,7 +2408,7 @@
 																	foreach ($row as $k => $v) {
 																		if (!is_array($v) && ($k != $parent_key_name || $k != $child_key_name)) {
 																			$k = self::sanitize($k);
-																			if (strlen($v) == 0) {
+																			if (!isset($v) || (isset($v) && $v == '')) {
 																				$sql .= $k." = null, ";
 																			}
 																			elseif ($v === "now()") {
@@ -2424,7 +2424,7 @@
 																			}
 																			else {
 																				$sql .= $k." = :".$k.", ";
-																				$params[$k] = trim($v);
+																				$params[$k] = isset($v) ? trim($v) : null;
 																			}
 																		}
 																	}
@@ -2513,7 +2513,7 @@
 																	}
 																}
 															}
-															if (!$child_key_value) {
+															if (!isset($child_key_value) || $child_key_value == '') {
 																$child_key_value = uuid();
 															}
 															//build the insert
@@ -2765,7 +2765,7 @@
 							exit;
 						}
 					}
-					return $retval;
+					return $message;
 			} //save method
 
 			/**

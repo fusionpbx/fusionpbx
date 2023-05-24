@@ -58,7 +58,7 @@
 
 //get total extension count from the database, check limit, if defined
 	if ($action == 'add') {
-		if ($_SESSION['limit']['extensions']['numeric'] != '') {
+		if (!empty($_SESSION['limit']['extensions']['numeric'])) {
 			$sql = "select count(*) ";
 			$sql .= "from v_extensions ";
 			$sql .= "where domain_uuid = :domain_uuid ";
@@ -76,7 +76,7 @@
 	}
 
 //get the http values and set them as php variables
-	if (count($_POST) > 0) {
+	if (!empty($_POST) && count($_POST) > 0) {
 
 		//get the values from the HTTP POST and save them as PHP variables
 			if ($action == 'add' || permission_exists("extension_extension")) {

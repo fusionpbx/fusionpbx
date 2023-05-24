@@ -125,10 +125,10 @@
 			$password = $_POST["password"];
 			$password_confirm = $_POST["password_confirm"];
 			$user_email = $_POST["user_email"];
-			$user_status = $_POST["user_status"] ?? null;
+			$user_status = $_POST["user_status"] ?? '';
 			$user_language = $_POST["user_language"];
 			$user_time_zone = $_POST["user_time_zone"];
-			
+
 			if (permission_exists('contact_edit') && $action == 'edit') {
 				$contact_uuid = $_POST["contact_uuid"];
 			}
@@ -158,9 +158,11 @@
 			}
 
 		//check required values
-			if ($username == '') {
+			if (empty($username)) {
 				$invalid[] = $text['label-username'];
 			}
+
+			//require a username format: any, email, no_email
 			if ($_SESSION['users']['username_format']['text'] != '' && $_SESSION['users']['username_format']['text'] != 'any') {
 				if (
 					($_SESSION['users']['username_format']['text'] == 'email' && !valid_email($username)) ||
@@ -169,10 +171,17 @@
 					message::add($text['message-username_format_invalid'], 'negative', 7500);
 				}
 			}
+
+			//require unique globally or per domain
 			if ((permission_exists('user_edit') && $action == 'edit' && $username != $username_old && $username != '') ||
 				(permission_exists('user_add') && $action == 'add' && $username != '')) {
-				$sql = "select count(*) from v_users where username = :username ";
-				if (!empty($_SESSION["users"]["unique"]["text"]) && $_SESSION["users"]["unique"]["text"] != "global") {
+
+				$sql = "select count(*) from v_users ";
+				if (isset($_SESSION["users"]["unique"]["text"]) && $_SESSION["users"]["unique"]["text"] == "global") {
+					$sql .= "where username = :username ";
+				}
+				else {
+					$sql .= "where username = :username ";
 					$sql .= "and domain_uuid = :domain_uuid ";
 					$parameters['domain_uuid'] = $domain_uuid;
 				}
@@ -184,9 +193,13 @@
 				}
 				unset($sql, $parameters);
 			}
+
+			//require the passwords to match
 			if ($password != '' && $password != $password_confirm) {
 				message::add($text['message-password_mismatch'], 'negative', 7500);
 			}
+
+			//require passwords not allowed to be empty
 			if (permission_exists('user_add') && $action == 'add') {
 				if ($password == '') {
 					message::add($text['message-password_blank'], 'negative', 7500);
@@ -195,10 +208,13 @@
 					$invalid[] = $text['label-group'];
 				}
 			}
+
+			//require a value a valid email address format
 			if (!valid_email($user_email)) {
 				$invalid[] = $text['label-email'];
 			}
 
+			//require passwords with the defined required attributes: length, number, lower case, upper case, and special characters
 			if (!empty($password)) {
 				if (is_numeric($required['length']) && $required['length'] != 0) {
 					if (strlen($password) < $required['length']) {
@@ -558,7 +574,7 @@
 					unset($sql, $parameters);
 
 				//update the user_status
-					if (isset($call_center_agent_uuid) && is_uuid($call_center_agent_uuid)) {
+					if (isset($call_center_agent_uuid) && is_uuid($call_center_agent_uuid) && !empty($user_status)) {
 						$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 						$switch_cmd .= "callcenter_config agent set status ".$call_center_agent_uuid." '".$user_status."'";
 						$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
