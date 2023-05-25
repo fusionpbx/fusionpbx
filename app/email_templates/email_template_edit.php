@@ -43,7 +43,7 @@
 	$text = $language->get();
 
 //action add or update
-	if (is_uuid($_REQUEST["id"])) {
+	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
 		$email_template_uuid = $_REQUEST["id"];
 	}
@@ -51,8 +51,18 @@
 		$action = "add";
 	}
 
+//set the defaults
+	$template_language = '';
+	$template_category = '';
+	$template_subcategory = '';
+	$template_subject = '';
+	$template_body = '';
+	$template_type = '';
+	$template_enabled = '';
+	$template_description = '';
+
 //get http post variables and set them to php variables
-	if (count($_POST) > 0) {
+	if (!empty($_POST)) {
 		$domain_uuid = $_POST["domain_uuid"];
 		$template_language = $_POST["template_language"];
 		$template_category = $_POST["template_category"];
