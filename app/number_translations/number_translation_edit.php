@@ -43,13 +43,14 @@
 	$text = $language->get();
 
 //action add or update
-	if (is_uuid($_REQUEST["id"])) {
+	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
 		$number_translation_uuid = $_REQUEST["id"];
-		$id = $_REQUEST["id"];
 	}
 	else {
 		$action = "add";
+		$number_translation_uuid = uuid();
+		$number_translation_detail_uuid = uuid();
 	}
 
 //get http post variables and set them to php variables
@@ -61,7 +62,7 @@
 	}
 
 //process the user data and save it to the database
-	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
+	if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
 		//validate the token
 			$token = new token;
@@ -72,7 +73,7 @@
 			}
 
 		//process the http post data by submitted action
-			if ($_POST['action'] != '' && !empty($_POST['action'])) {
+			if (!empty($_POST['action']) && !empty($_POST['action'])) {
 
 				//prepare the array(s)
 				$x = 0;
@@ -108,7 +109,7 @@
 
 				//redirect the user
 				if (in_array($_POST['action'], array('copy', 'delete', 'toggle'))) {
-					header('Location: number_translation_edit.php?id='.$id);
+					header('Location: number_translation_edit.php?id='.$number_translation_uuid);
 					exit;
 				}
 			}
@@ -130,11 +131,6 @@
 				echo "</div>\n";
 				require_once "resources/footer.php";
 				return;
-			}
-
-		//add the number_translation_uuid
-			if (!is_uuid($_POST["number_translation_uuid"])) {
-				$number_translation_uuid = uuid();
 			}
 
 		//prepare the array
@@ -176,7 +172,7 @@
 	}
 
 //pre-populate the form
-	if (is_array($_GET) && $_POST["persistformvar"] != "true") {
+	if (!empty($number_translation_uuid) && empty($_POST["persistformvar"])) {
 		$sql = "select * from v_number_translations ";
 		$sql .= "where number_translation_uuid = :number_translation_uuid ";
 		$parameters['number_translation_uuid'] = $number_translation_uuid;
@@ -191,7 +187,7 @@
 	}
 
 //get the child data
-	if (is_uuid($number_translation_uuid)) {
+	if (!empty($number_translation_uuid) && empty($_POST["persistformvar"])) {
 		$sql = "select * from v_number_translation_details ";
 		$sql .= "where number_translation_uuid = :number_translation_uuid ";
 		$sql .= "order by number_translation_detail_order asc";
@@ -199,11 +195,6 @@
 		$database = new database;
 		$number_translation_details = $database->select($sql, $parameters, 'all');
 		unset ($sql, $parameters);
-	}
-
-//add the $number_translation_detail_uuid
-	if (!is_uuid($number_translation_detail_uuid)) {
-		$number_translation_detail_uuid = uuid();
 	}
 
 //add an empty row
