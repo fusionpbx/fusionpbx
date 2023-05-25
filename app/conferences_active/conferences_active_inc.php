@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -147,7 +147,7 @@
 					echo "	<td>".escape($conference_extension)."</td>\n";
 					echo "	<td>".escape($participant_pin)."</td>\n";
 					echo "	<td class='center'>".escape($member_count)."</td>\n";
-					if (permission_exists('conference_interactive_view') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+					if (permission_exists('conference_interactive_view') && !empty($_SESSION['theme']['list_row_edit_button']['boolean']) && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
 						echo "	<td class='action-button'>";
 						echo button::create(['type'=>'button','title'=>$text['button-view'],'icon'=>$_SESSION['theme']['button_icon_view'],'link'=>$list_row_url]);
 						echo "	</td>\n";
