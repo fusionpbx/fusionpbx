@@ -156,7 +156,7 @@
 			echo "<tr class='list-header'>\n";
 			if (permission_exists('call_active_hangup')) {
 				echo "	<th class='checkbox'>\n";
-				echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='if (this.checked) { refresh_stop(); } else { refresh_start(); } list_all_toggle();' ".($rows ?: "style='visibility: hidden;'").">\n";
+				echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='if (this.checked) { refresh_stop(); } else { refresh_start(); } list_all_toggle();' ".(empty($rows) ? "style='visibility: hidden;'" : null).">\n";
 				echo "	</th>\n";
 			}
 			echo "	<th>".$text['label-profile']."</th>\n";

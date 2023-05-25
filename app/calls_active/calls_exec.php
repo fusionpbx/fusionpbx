@@ -70,7 +70,7 @@
 					}
 				}
 			}
-			if (is_uuid($_REQUEST['uuid'])) {
+			if (!empty($_REQUEST['uuid']) && is_uuid($_REQUEST['uuid'])) {
 				$calls[] = $_REQUEST['uuid'];
 			}
 
