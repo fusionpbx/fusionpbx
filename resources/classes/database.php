@@ -2556,7 +2556,7 @@
 																			$k != 'insert_date' &&
 																			$k != 'update_user' &&
 																			$k != 'update_date') {
-																			if (strlen($v) == 0) {
+																			if (!isset($v) || strlen($v) == 0) {
 																				$sql .= "null, ";
 																			}
 																			elseif ($v === "now()") {
@@ -2656,7 +2656,6 @@
 						} // foreach schema_array
 					} // foreach main array
 
-				//save the message
 					$this->message = $message;
 
 				//commit the atomic transaction
@@ -2766,7 +2765,7 @@
 							exit;
 						}
 					}
-					return $this->message;
+					return $message;
 			} //save method
 
 			/**
