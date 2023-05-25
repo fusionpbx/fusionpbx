@@ -54,7 +54,7 @@
 							$_SESSION["domain_name"] = $row['domain_name'];
 						}
 						else {
-							if ($row['domain_name'] == $domain_array[0] || $row['domain_name'] == 'www.'.$domain_array[0]) {
+							if (!empty($domain_array) && ($row['domain_name'] == $domain_array[0] || $row['domain_name'] == 'www.'.$domain_array[0])) {
 								$_SESSION["domain_uuid"] = $row["domain_uuid"];
 								$_SESSION["domain_name"] = $row['domain_name'];
 							}
@@ -68,7 +68,7 @@
 				$_SESSION["previous_domain_uuid"] = $_SESSION['domain_uuid'];
 				$_SESSION['domain_uuid'] = $domain_uuid;
 				$_SESSION["domain_name"] = $_SESSION['domains'][$domain_uuid]['domain_name'];
-				$_SESSION['domain']['template']['name'] = $_SESSION['domains'][$domain_uuid]['template_name'];
+				$_SESSION['domain']['template']['name'] = $_SESSION['domains'][$domain_uuid]['template_name'] ?? null;
 				$_SESSION["context"] = $_SESSION["domain_name"];
 
 			//clear the extension array so that it is regenerated for the selected domain
