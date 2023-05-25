@@ -49,16 +49,16 @@
 
 //get http values and set them as variables
 	if (count($_POST)>0) {
-		$order_by = $_GET["order_by"];
-		$order = $_GET["order"];
+		$order_by = $_GET["order_by"] ?? null;
+		$order = $_GET["order"] ?? null;
 		$extension_name = $_POST["extension_name"];
 		$queue_extension_number = $_POST["queue_extension_number"];
 		$agent_queue_extension_number = $_POST["agent_queue_extension_number"];
 		$agent_login_logout_extension_number = $_POST["agent_login_logout_extension_number"];
 		$dialplan_order = $_POST["dialplan_order"];
-		$pin_number = $_POST["pin_number"];
-		$profile = $_POST["profile"];
-		$flags = $_POST["flags"];
+		$pin_number = $_POST["pin_number"] ?? null;
+		$profile = $_POST["profile"] ?? null;
+		$flags = $_POST["flags"] ?? null;
 		$dialplan_enabled = $_POST["dialplan_enabled"];
 		$dialplan_description = $_POST["dialplan_description"];
 		if (empty($dialplan_enabled)) { $dialplan_enabled = "true"; } //set default to enabled
