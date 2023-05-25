@@ -187,7 +187,7 @@ if (count($_POST)>0 && empty($_POST["persistformvar"])) {
 }
 
 //pre-populate the form
-	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
+	if (count($_GET)>0 && empty($_POST["persistformvar"])) {
 		$database_uuid = $_GET["id"];
 		$sql = "select * from v_databases ";
 		$sql .= "where database_uuid = :database_uuid ";
