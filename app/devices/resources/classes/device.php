@@ -1052,11 +1052,11 @@
 									$uuids[] = "'".$record['uuid']."'";
 								}
 							}
-							if (is_array($uuids) && @sizeof($uuids) != 0) {
+							if (!empty($uuids) && is_array($uuids) && @sizeof($uuids) != 0) {
 								$sql = "select ".$this->uuid_prefix."uuid as uuid, ".$this->toggle_field." as toggle from v_".$this->table." ";
 								$sql .= "where ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
 								$database = new database;
-								$rows = $database->select($sql, $parameters, 'all');
+								$rows = $database->select($sql, $parameters ?? null, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
 										$states[$row['uuid']] = $row['toggle'];
@@ -1067,10 +1067,12 @@
 
 						//build update array
 							$x = 0;
-							foreach ($states as $uuid => $state) {
-								$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $uuid;
-								$array[$this->table][$x][$this->toggle_field] = $state == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
-								$x++;
+							if (!empty($states) && is_array($states) && @sizeof($states) != 0) {
+								foreach ($states as $uuid => $state) {
+									$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $uuid;
+									$array[$this->table][$x][$this->toggle_field] = $state == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
+									$x++;
+								}
 							}
 
 						//save the changes
@@ -1128,7 +1130,7 @@
 							}
 
 						//create insert array from existing data
-							if (is_array($uuids) && @sizeof($uuids) != 0) {
+							if (!empty($uuids) && is_array($uuids) && @sizeof($uuids) != 0) {
 								$sql = "select * from v_".$this->table." ";
 								$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
