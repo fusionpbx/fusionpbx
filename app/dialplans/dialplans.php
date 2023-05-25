@@ -426,7 +426,7 @@
 		echo 	"<select name='context' id='context' class='formfld' style='max-width: ".(empty($context) || $context == 'global' ? '80px' : '140px')."; margin-left: 18px;' onchange=\"$('#form_search').submit();\">\n";
 		echo 		"<option value='' ".(!$context ? "selected='selected'" : null)." disabled='disabled'>".$text['label-context']."...</option>\n";
 		echo 		"<option value=''></option>\n";
-		if (is_array($dialplan_contexts) && @sizeof($dialplan_contexts) != 0) {
+		if (!empty($dialplan_contexts) && is_array($dialplan_contexts) && @sizeof($dialplan_contexts) != 0) {
 			foreach ($dialplan_contexts as $dialplan_context => $dialplan_subcontexts) {
 				if (is_array($dialplan_subcontexts) && @sizeof($dialplan_subcontexts) != 0) {
 					echo "<option value='".$dialplan_context."' ".($context == $dialplan_context ? "selected='selected'" : null).">".escape($dialplan_context)."</option>\n";
