@@ -45,8 +45,18 @@
 	$language = new text;
 	$text = $language->get();
 
+//define the variables
+	$module_label = '';
+	$modules = '';
+	$module_name = '';
+	$module_description = '';
+	$module_category = '';
+	$module_order = '';
+	$module_enabled = '';
+	$module_default_enabled = '';
+
 //determin the action add or update
-	if (is_uuid($_REQUEST["id"])) {
+	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
 		$module_uuid = $_REQUEST["id"];
 	}
@@ -55,7 +65,7 @@
 	}
 
 //set the http post variables to php variables
-	if (count($_POST)>0) {
+	if (!empty($_POST)) {
 		$module_label = $_POST["module_label"];
 		$module_name = $_POST["module_name"];
 		$module_description = $_POST["module_description"];
@@ -66,7 +76,7 @@
 	}
 
 //process the data
-	if (count($_POST)>0 && empty($_POST["persistformvar"])) {
+	if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
 		//get the uuid
 			if ($action == "update") {
@@ -103,7 +113,7 @@
 			}
 
 		//add or update the database
-			if ($_POST["persistformvar"] != "true") {
+			if (empty($_POST["persistformvar"])) {
 				if ($action == "add" && permission_exists('module_add')) {
 					$module_uuid = uuid();
 					$array['modules'][0]['module_uuid'] = $module_uuid;
@@ -144,7 +154,7 @@
 	}
 
 //pre-populate the form
-	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
+	if (!empty($_GET) && empty($_POST["persistformvar"])) {
 		$module_uuid = $_GET["id"];
 		$sql = "select * from v_modules ";
 		$sql .= "where module_uuid = :module_uuid ";
