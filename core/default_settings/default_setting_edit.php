@@ -45,15 +45,29 @@
 	$language = new text;
 	$text = $language->get();
 
+//define the variables
+	$default_setting_category = '';
+	$default_setting_subcategory = '';
+	$default_setting_name = '';
+	$default_setting_value = '';
+	$default_setting_order = '';
+	$default_setting_enabled = '';
+	$default_setting_description = '';
+	$search = '';
+
 //action add or update
-	if (is_uuid($_REQUEST["id"])) {
+	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
 		$default_setting_uuid = $_REQUEST["id"];
 	}
 	else {
 		$action = "add";
 	}
-	$search = $_REQUEST['search'] ?? '';
+
+//get the search variable
+	if (!empty($_REQUEST['search'])) {
+		$search = $_REQUEST['search'];
+	}
 		
 //get http post variables and set them to php variables
 	if (!empty($_REQUEST)) {
@@ -336,9 +350,9 @@
 	echo "	".$text['label-value']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	$category = $row['default_setting_category'];
-	$subcategory = $row['default_setting_subcategory'];
-	$name = $row['default_setting_name'];
+	$category = $default_setting_category;
+	$subcategory = $default_setting_subcategory;
+	$name = $default_setting_name;
 	if ($category == "cdr" && $subcategory == "format" && $name == "text" ) {
 		echo "		<select class='formfld' id='default_setting_value' name='default_setting_value' style=''>\n";
 		if ($default_setting_value == "json") {
@@ -806,7 +820,7 @@
 
 	echo "</form>";
 
-	if ($_REQUEST["id"] == '' && $_REQUEST["default_setting_category"] != '') {
+	if (empty($_REQUEST["id"]) && !empty($_REQUEST["default_setting_category"])) {
 		echo "<script>document.getElementById('default_setting_subcategory').focus();</script>";
 	}
 
