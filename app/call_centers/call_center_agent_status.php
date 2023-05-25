@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -154,7 +154,7 @@
 	}
 
 //remove rows from the http post array where the status has not changed
-	if (is_array($_POST['agents']) && !$per_queue_login) {
+	if (!empty($_POST['agents']) && is_array($_POST['agents']) && !$per_queue_login) {
 		foreach($_POST['agents'] as $key => $row) {
 			foreach($agents as $k => $field) {
 				if ($field['agent_name'] === $row['agent_name'] && $field['agent_status'] === $row['agent_status']) {
@@ -165,14 +165,14 @@
 	}
 
 //use the http post array to change the status
-	if (is_array($_POST['agents'])) {
+	if (!empty($_POST['agents']) && is_array($_POST['agents'])) {
 		foreach($_POST['agents'] as $row) {
 			if (isset($row['agent_status'])) {
 				//agent set status
 					if ($fp) {
 						//set the user_status
 							if (!isset($row['queue_name'])) {
-								$array['users'][0]['user_uuid'] = $row['user_uuid'];
+								$array['users'][0]['user_uuid'] = $row['user_uuid'] ?? null;
 								$array['users'][0]['user_status'] = $row['agent_status'];
 								$array['users'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
 
@@ -291,10 +291,14 @@
 		} //foreach
 
 		//send a message
-		message::add($text['confirm-add']);
+		message::add($text['message-status_set']);
 		header("Location: call_center_agent_status.php");
 		return;
 	} //post
+
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
 
 //includes the header
 	$document['title'] = $text['title-call_center_agent_status'];
@@ -332,7 +336,7 @@
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
 
-	if (is_array($_POST['agents']) && !$per_queue_login) {
+	if (!empty($_POST['agents']) && is_array($_POST['agents']) && !$per_queue_login) {
 		echo $text['description-call_center_agent_status']."\n";
 		echo "<br /><br />\n";
 	}
