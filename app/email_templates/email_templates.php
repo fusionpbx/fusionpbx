@@ -43,8 +43,11 @@
 	$language = new text;
 	$text = $language->get();
 
+//set from session variables
+	$list_row_edit_button = !empty($_SESSION['theme']['list_row_edit_button']['boolean']) ? $_SESSION['theme']['list_row_edit_button']['boolean'] : 'false';
+
 //get posted data
-	if (is_array($_POST['email_templates'])) {
+	if (!empty($_POST['email_templates'])) {
 		$action = $_POST['action'];
 		$category = $_POST['category'];
 		$search = $_POST['search'];
@@ -52,7 +55,7 @@
 	}
 
 //process the http post data by action
-	if ($action != '' && is_array($email_templates) && @sizeof($email_templates) != 0) {
+	if (!empty($action) && !empty($email_templates)) {
 		switch ($action) {
 			case 'copy':
 				if (permission_exists('email_template_add')) {
@@ -74,16 +77,16 @@
 				break;
 		}
 
-		header('Location: email_templates.php?'.($search != '' ? '&search='.urlencode($search) : null).($category != '' ? '&category='.urlencode($category) : null));
+		header('Location: email_templates.php?'.(!empty($search) ? '&search='.urlencode($search) : null).($category != '' ? '&category='.urlencode($category) : null));
 		exit;
 	}
 
 //get variables used to control the order
-	$order_by = $_GET["order_by"];
-	$order = $_GET["order"];
+	$order_by = $_GET["order_by"] ?? '';
+	$order = $_GET["order"] ?? '';
 
 //add the category
-	$category = strtolower($_GET["category"]);
+	$category = strtolower($_GET["category"] ?? '');
 	if ($category) {
 		$sql_category = "and (";
 		$sql_category .= " lower(template_category) = :category";
@@ -109,29 +112,29 @@
 
 //prepare to page the results
 	$sql = "select count(*) from v_email_templates where true ";
-	if ($_GET['show'] == "all" && permission_exists('email_template_all')) {
-		if ($sql_search != '') {
+	if (!empty($_GET['show']) == "all" && permission_exists('email_template_all')) {
+		if (!empty($sql_search)) {
 			$sql .= "and ".$sql_search;
 		}
 	}
 	else {
 		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
-		if ($sql_search != '') {
+		if (!empty($sql_search)) {
 			$sql .= "and ".$sql_search;
 		}
 		$parameters['domain_uuid'] = $domain_uuid;
 	}
-	$sql .= $sql_category;
+	$sql .= $sql_category ?? '';
 	$database = new database;
 	$num_rows = $database->select($sql, $parameters, 'column');
 
 //prepare to page the results
-	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$rows_per_page = (!empty($_SESSION['domain']['paging']['numeric'])) ? $_SESSION['domain']['paging']['numeric'] : 50;
 	$param = "&search=".$search;
-	if ($_GET['show'] == "all" && permission_exists('email_template_all')) {
+	if (!empty($_GET['show']) == "all" && permission_exists('email_template_all')) {
 		$param .= "&show=all";
 	}
-	$page = is_numeric($_GET['page']) ? $_GET['page'] : 0;
+	$page = isset($_GET['page']) ? $_GET['page'] : 0;
 	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
 	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
@@ -146,15 +149,15 @@
 	}
 	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;
-	$result = $database->select($sql, $parameters, 'all');
+	$result = $database->select($sql, $parameters ?? '', 'all');
 	unset($sql, $parameters);
 
 //get email template categories
 	$sql = "select distinct template_category from v_email_templates ";
 	$sql .= "order by template_category asc ";
 	$database = new database;
-	$rows = $database->select($sql, $parameters, 'all');
-	if (is_array($rows) && @sizeof($rows) != 0) {
+	$rows = $database->select($sql, $parameters ?? '', 'all');
+	if (!empty($rows)) {
 		foreach ($rows as $row) {
 			$template_categories[$row['template_category']] = ucwords(str_replace('_',' ',$row['template_category']));
 		}
@@ -187,7 +190,7 @@
 	}
 	echo 		"<form id='form_search' class='inline' method='get'>\n";
 	if (permission_exists('email_template_all')) {
-		if ($_GET['show'] == 'all') {
+		if (!empty($_GET['show']) == 'all') {
 			echo "		<input type='hidden' name='show' value='all'>";
 		}
 		else {
@@ -235,10 +238,10 @@
 	echo "<tr class='list-header'>\n";
 	if (permission_exists('email_template_add') || permission_exists('email_template_edit') || permission_exists('email_template_delete')) {
 		echo "	<th class='checkbox'>\n";
-		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".($result ?: "style='visibility: hidden;'").">\n";
+		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".(!empty($result) ?: "style='visibility: hidden;'").">\n";
 		echo "	</th>\n";
 	}
-	if ($_GET['show'] == "all" && permission_exists('email_template_all')) {
+	if (!empty($_GET['show']) == "all" && permission_exists('email_template_all')) {
 		echo "<th>".$text['label-domain']."</th>\n";
 		//echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, null, null, $param);
 	}
@@ -249,7 +252,7 @@
 	echo th_order_by('template_type', $text['label-template_type'], $order_by, $order, null, null, $param);
 	echo th_order_by('template_enabled', $text['label-template_enabled'], $order_by, $order, null, "class='center pct-10'", $param);
 	echo th_order_by('template_description', $text['label-template_description'], $order_by, $order, null, "class='hide-sm-dn'", $param);
-	if (permission_exists('email_template_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+	if (permission_exists('email_template_edit') && $list_row_edit_button == 'true') {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
@@ -267,7 +270,7 @@
 				echo "		<input type='hidden' name='email_templates[$x][uuid]' value='".escape($row['email_template_uuid'])."' />\n";
 				echo "	</td>\n";
 			}
-			if ($_GET['show'] == "all" && permission_exists('email_template_all')) {
+			if (!empty($_GET['show']) == "all" && permission_exists('email_template_all')) {
 				echo "	<td>";
 				if (is_uuid($row['domain_uuid'])) {
 					echo escape($_SESSION['domains'][$row['domain_uuid']]['domain_name']);
@@ -299,7 +302,7 @@
 			}
 			echo "	</td>\n";
 			echo "	<td class='description overflow hide-sm-dn'>".escape($row['template_description'])."</td>\n";
-			if (permission_exists('email_template_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+			if (permission_exists('email_template_edit') && $list_row_edit_button == 'true') {
 				echo "	<td class='action-button'>";
 				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
 				echo "	</td>\n";
