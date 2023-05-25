@@ -979,9 +979,9 @@
 					$templates = scandir($template_dir.'/'.$row["name"]);
 					if (is_array($templates) && @sizeof($templates) != 0) {
 						foreach ($templates as $dir) {
-							if (!empty($file) && $file != "." && !empty($dir) && $dir != ".." && $dir[0] != '.') {
+							if ((!isset($file) || $file != ".") && (!isset($dir) || ($dir != ".." && $dir[0] != '.'))) {
 								if (is_dir($template_dir . '/' . $row["name"] .'/'. $dir)) {
-									if ($device_template == $row["name"]."/".$dir) {
+									if (!empty($device_template) && $device_template == $row["name"]."/".$dir) {
 										echo "			<option value='".escape($row["name"])."/".escape($dir)."' selected='selected'>".escape($row["name"])."/".escape($dir)."</option>\n";
 										$current_device = escape($dir);
 										$current_device_path = $template_dir . '/' . $row["name"];
@@ -1324,7 +1324,7 @@
 			echo "			<select class='formfld' id='device_profile_uuid' name='device_profile_uuid'>\n";
 			echo "				<option value=''></option>\n";
 			foreach($result as $row) {
-				echo "			<option value='".escape($row['device_profile_uuid'])."' ".(($row['device_profile_uuid'] == $device_profile_uuid) ? "selected='selected'" : null).">".escape($row['device_profile_name'])." ".(($row['domain_uuid'] == '') ? "&nbsp;&nbsp;(".$text['select-global'].")" : null)."</option>\n";
+				echo "			<option value='".escape($row['device_profile_uuid'])."' ".(!empty($device_profile_uuid) && $row['device_profile_uuid'] == $device_profile_uuid ? "selected='selected'" : null).">".escape($row['device_profile_name'])." ".(($row['domain_uuid'] == '') ? "&nbsp;&nbsp;(".$text['select-global'].")" : null)."</option>\n";
 			}
 			echo "			</select>\n";
 			echo "			<button type='button' class='btn btn-default list_control_icon' id='device_profile_edit' onclick=\"if($('#device_profile_uuid').val() != '') window.location='device_profile_edit.php?id='+$('#device_profile_uuid').val();\"><span class='fas fa-pencil-alt'></span></button>";
@@ -1594,10 +1594,10 @@
 						$selected = "selected='selected'";
 					}
 					if (empty($row['device_key_vendor'])) {
-						echo "		<option value='".$function['value']."' vendor='".$function['vendor_name']."' $selected >".$text['label-'.$function['type']]."</option>\n";
+						echo "		<option value='".$function['value']."' vendor='".$function['vendor_name']."' $selected >".($text['label-'.$function['type'] ?? ''] ?? $function['value'])."</option>\n";
 					}
 					if (!empty($row['device_key_vendor']) && strtolower($row['device_key_vendor']) == $function['vendor_name']) {
-						echo "		<option value='".$function['value']."' vendor='".$function['vendor_name']."' $selected >".$text['label-'.$function['type']]."</option>\n";
+						echo "		<option value='".$function['value']."' vendor='".$function['vendor_name']."' $selected >".($text['label-'.$function['type'] ?? ''] ?? $function['value'])."</option>\n";
 					}
 					$previous_vendor = $function['vendor_name'];
 					$i++;
