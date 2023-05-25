@@ -45,15 +45,21 @@
 	$language = new text;
 	$text = $language->get();
 
+//set additional variables
+	$search = $_GET["search"] ?? '';
+
+//set from session variables
+	$list_row_edit_button = !empty($_SESSION['theme']['list_row_edit_button']['boolean']) ? $_SESSION['theme']['list_row_edit_button']['boolean'] : 'false';
+
 //get posted data
-	if (is_array($_POST['call_blocks'])) {
+	if (!empty($_POST['call_blocks'])) {
 		$action = $_POST['action'];
 		$search = $_POST['search'];
 		$call_blocks = $_POST['call_blocks'];
 	}
 
 //process the http post data by action
-	if ($action != '' && is_array($call_blocks) && @sizeof($call_blocks) != 0) {
+	if (!empty($action) && !empty($call_blocks)) {
 		switch ($action) {
 			case 'copy':
 				if (permission_exists('call_block_add')) {
@@ -80,18 +86,18 @@
 	}
 
 //get variables used to control the order
-	$order_by = $_GET["order_by"];
-	$order = $_GET["order"];
+	$order_by = $_GET["order_by"] ?? '';
+	$order = $_GET["order"] ?? '';
 
 //add the search term
-	if (isset($_GET["search"])) {
+	if (!empty($_GET["search"])) {
 		$search = strtolower($_GET["search"]);
 	}
 
 //prepare to page the results
 	$sql = "select count(*) from view_call_block ";
 	$sql .= "where true ";
-	if ($_GET['show'] == "all" && permission_exists('call_block_all')) {
+	if (!empty($_GET['show']) == "all" && permission_exists('call_block_all')) {
 		//$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
 		//$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	}
@@ -110,7 +116,7 @@
 		}
 		$sql .= ") ";
 	}
-	if (isset($search)) {
+	if (!empty($search)) {
 		$sql .= "and (";
 		$sql .= " lower(call_block_name) like :search ";
 		$sql .= " or lower(call_block_direction) like :search ";
@@ -122,16 +128,16 @@
 		$parameters['search'] = '%'.$search.'%';
 	}
 	$database = new database;
-	$num_rows = $database->select($sql, $parameters, 'column');
+	$num_rows = $database->select($sql, $parameters ?? '', 'column');
 	unset($parameters);
 
 //prepare to page the results
-	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$rows_per_page = (!empty($_SESSION['domain']['paging']['numeric'])) ? $_SESSION['domain']['paging']['numeric'] : 50;
 	$param = "&search=".$search;
-	if ($_GET['show'] == "all" && permission_exists('call_block_all')) {
+	if (!empty($_GET['show']) == "all" && permission_exists('call_block_all')) {
 		$param .= "&show=all";
 	}
-	$page = $_GET['page'];
+	$page = $_GET['page'] ?? '';
 	if (empty($page)) { $page = 0; $_GET['page'] = 0; }
 	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
 	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
@@ -140,7 +146,7 @@
 //get the list
 	$sql = "select * from view_call_block ";
 	$sql .= "where true ";
-	if ($_GET['show'] == "all" && permission_exists('call_block_all')) {
+	if (!empty($_GET['show']) == "all" && permission_exists('call_block_all')) {
 		//$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
 		//$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	}
@@ -148,7 +154,7 @@
 		$sql .= "and (domain_uuid = :domain_uuid) ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	}
-	if (!permission_exists('call_block_all') && is_array($_SESSION['user']['extension']) && count($_SESSION['user']['extension']) > 0) {
+	if (!permission_exists('call_block_all') && !empty($_SESSION['user']['extension']) && count($_SESSION['user']['extension']) > 0) {
 		$sql .= "and extension_uuid in (";
 		$x = 0;
 		foreach ($_SESSION['user']['extension'] as $field) {
@@ -159,7 +165,7 @@
 		}
 		$sql .= ") ";
 	}
-	if (isset($search)) {
+	if (!empty($search)) {
 		$sql .= "and (";
 		$sql .= " lower(call_block_name) like :search ";
 		$sql .= " or lower(call_block_direction) like :search ";
@@ -202,7 +208,7 @@
 	}
 	echo 		"<form id='form_search' class='inline' method='get'>\n";
 	if (permission_exists('call_block_all')) {
-		if ($_GET['show'] == 'all') {
+		if (!empty($_GET['show']) == 'all') {
 			echo "		<input type='hidden' name='show' value='all'>";
 		}
 		else {
@@ -241,10 +247,10 @@
 	echo "<tr class='list-header'>\n";
 	if (permission_exists('call_block_add') || permission_exists('call_block_edit') || permission_exists('call_block_delete')) {
 		echo "	<th class='checkbox'>\n";
-		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".($result ?: "style='visibility: hidden;'").">\n";
+		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".(!empty($result) ?: "style='visibility: hidden;'").">\n";
 		echo "	</th>\n";
 	}
-	if ($_GET['show'] == 'all' && permission_exists('domain_all')) {
+	if (!empty($_GET['show']) == 'all' && permission_exists('domain_all')) {
 		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order);
 	}
 	echo th_order_by('call_block_direction', $text['label-direction'], $order_by, $order, null, "style='width: 1%;' class='center'");
@@ -257,12 +263,12 @@
 	echo th_order_by('call_block_enabled', $text['label-enabled'], $order_by, $order, null, "class='center'");
 	echo th_order_by('date_added', $text['label-date-added'], $order_by, $order, null, "class='shrink no-wrap'");
 	echo "<th class='hide-md-dn pct-20'>".$text['label-description']."</th>\n";
-	if (permission_exists('call_block_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+	if (permission_exists('call_block_edit') && $list_row_edit_button == 'true') {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
 
-	if (is_array($result)) {
+	if (!empty($result)) {
 		$x = 0;
 		foreach($result as $row) {
 			if (permission_exists('call_block_edit')) {
@@ -275,7 +281,7 @@
 				echo "		<input type='hidden' name='call_blocks[".$x."][uuid]' value='".escape($row['call_block_uuid'])."' />\n";
 				echo "	</td>\n";
 			}
-			if ($_GET['show'] == 'all' && permission_exists('domain_all')) {
+			if (!empty($_GET['show']) == 'all' && permission_exists('domain_all')) {
 				echo "	<td>".escape($_SESSION['domains'][$row['domain_uuid']]['domain_name'])."</td>\n";
 			}
 			echo "	<td class='center'>";
@@ -320,9 +326,9 @@
 				echo $text['label-'.$row['call_block_enabled']];
 			}
 			echo "	</td>\n";
-			echo "	<td class='no-wrap'>".date('j M Y', $row['date_added'])." <span class='hide-sm-dn'>".date(($_SESSION['domain']['time_format']['text'] == '12h' ? 'h:i:s a' : 'H:i:s'), $row['date_added'])."</span></td>\n";
+			echo "	<td class='no-wrap'>".date('j M Y', $row['date_added'])." <span class='hide-sm-dn'>".date((!empty($_SESSION['domain']['time_format']['text']) == '12h' ? 'h:i:s a' : 'H:i:s'), $row['date_added'])."</span></td>\n";
 			echo "	<td class='description overflow hide-md-dn'>".escape($row['call_block_description'])."</td>\n";
-			if (permission_exists('call_block_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+			if (permission_exists('call_block_edit') && $list_row_edit_button == 'true') {
 				echo "	<td class='action-button'>";
 				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
 				echo "	</td>\n";
