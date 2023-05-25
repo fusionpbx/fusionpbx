@@ -179,7 +179,7 @@
 	$sql .= order_by($order_by, $order, ['call_block_country_code','call_block_number']);
 	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;
-	$result = $database->select($sql, $parameters, 'all');
+	$result = $database->select($sql, $parameters ?? '', 'all');
 	unset($sql, $parameters);
 
 //create token
