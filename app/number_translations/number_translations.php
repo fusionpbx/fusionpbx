@@ -112,7 +112,7 @@
 	$order = $_GET["order"] ?? '';
 
 //add the search
-	if (isset($_GET["search"])) {
+	if (!empty($search)) {
 		$search = strtolower($_GET["search"]);
 		$parameters['search'] = '%'.$search.'%';
 	}
@@ -120,7 +120,7 @@
 //get the count
 	$sql = "select count(number_translation_uuid) ";
 	$sql .= "from v_number_translations ";
-	if (isset($_GET["search"])) {
+	if (!empty($search)) {
 		$sql .= "where (";
 		$sql .= "	lower(number_translation_name) like :search ";
 		$sql .= "	or lower(number_translation_description) like :search ";
@@ -144,7 +144,7 @@
 	$sql .= "cast(number_translation_enabled as text), ";
 	$sql .= "number_translation_description ";
 	$sql .= "from v_number_translations ";
-	if (isset($_GET["search"])) {
+	if (!empty($search)) {
 		$sql .= "where (";
 		$sql .= "	lower(number_translation_name) like :search ";
 		$sql .= "	or lower(number_translation_description) like :search ";
