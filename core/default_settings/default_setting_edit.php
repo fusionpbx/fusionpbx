@@ -53,17 +53,17 @@
 	else {
 		$action = "add";
 	}
-	$search = $_REQUEST['search'];
-
+	$search = $_REQUEST['search'] ?? '';
+		
 //get http post variables and set them to php variables
-	if (count($_REQUEST) > 0) {
-		$default_setting_category = strtolower($_REQUEST["default_setting_category"]);
-		$default_setting_subcategory = strtolower($_POST["default_setting_subcategory"]);
-		$default_setting_name = strtolower($_POST["default_setting_name"]);
-		$default_setting_value = $_POST["default_setting_value"];
-		$default_setting_order = $_POST["default_setting_order"];
-		$default_setting_enabled = $_POST["default_setting_enabled"] ?: 'false';
-		$default_setting_description = $_POST["default_setting_description"];
+	if (!empty($_REQUEST)) {
+		$default_setting_category = strtolower($_REQUEST["default_setting_category"] ?? '');
+		$default_setting_subcategory = strtolower($_POST["default_setting_subcategory"] ?? '');
+		$default_setting_name = strtolower($_POST["default_setting_name"] ?? '');
+		$default_setting_value = $_POST["default_setting_value"] ?? '';
+		$default_setting_order = $_POST["default_setting_order"] ?? '';
+		$default_setting_enabled = $_POST["default_setting_enabled"] ?? '';
+		$default_setting_description = $_POST["default_setting_description"] ?? '';
 	}
 
 //sanitize the variables
@@ -226,7 +226,7 @@
 	} //(count($_POST)>0 && empty($_POST["persistformvar"]))
 
 //pre-populate the form
-	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
+	if (count($_GET) > 0 && empty($_POST["persistformvar"])) {
 		$default_setting_uuid = $_GET["id"];
 		$sql = "select default_setting_uuid, default_setting_category, default_setting_subcategory, default_setting_name, default_setting_value, default_setting_order, cast(default_setting_enabled as text), default_setting_description ";
 		$sql .= "from v_default_settings ";
