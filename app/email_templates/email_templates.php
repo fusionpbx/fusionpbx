@@ -77,7 +77,7 @@
 				break;
 		}
 
-		header('Location: email_templates.php?'.(!empty($search) ? '&search='.urlencode($search) : null).($category != '' ? '&category='.urlencode($category) : null));
+		header('Location: email_templates.php?'.(!empty($search) ? '&search='.urlencode($search) : null).(!empty($category) ? '&category='.urlencode($category) : null));
 		exit;
 	}
 
@@ -126,7 +126,7 @@
 	}
 	$sql .= $sql_category ?? '';
 	$database = new database;
-	$num_rows = $database->select($sql, $parameters, 'column');
+	$num_rows = $database->select($sql, $parameters ?? '', 'column');
 
 //prepare to page the results
 	$rows_per_page = (!empty($_SESSION['domain']['paging']['numeric'])) ? $_SESSION['domain']['paging']['numeric'] : 50;
@@ -200,7 +200,7 @@
 	echo 		"<select name='category' id='category' class='formfld' style='margin-left: 18px;' onchange=\"$('#form_search').submit();\">\n";
 	echo 			"<option value='' ".(!$category ? "selected='selected'" : null)." disabled='disabled'>".$text['label-category']."...</option>\n";
 	echo 			"<option value=''></option>\n";
-	if (is_array($template_categories) && @sizeof($template_categories) != 0) {
+	if (!empty($template_categories)) {
 		foreach ($template_categories as $template_category_value => $template_category_label) {
 			echo "<option value='".$template_category_value."' ".($category == $template_category_value ? "selected='selected'" : null).">".escape($template_category_label)."</option>\n";
 		}
@@ -209,7 +209,7 @@
 	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=''>";
 	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search']);
 	//echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','link'=>'email_templates.php','style'=>($search == '' ? 'display: none;' : null)]);
-	if ($paging_controls_mini != '') {
+	if (!empty($paging_controls_mini)) {
 		echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>";
 	}
 	echo "		</form>\n";
@@ -257,7 +257,7 @@
 	}
 	echo "</tr>\n";
 
-	if (is_array($result) && @sizeof($result) != 0) {
+	if (!empty($result)) {
 		$x = 0;
 		foreach($result as $row) {
 			if (permission_exists('email_template_edit')) {
