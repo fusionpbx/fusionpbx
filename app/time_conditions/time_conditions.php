@@ -84,29 +84,30 @@
 	$order_by = $_GET["order_by"] ?? null;
 	$order = $_GET["order"] ?? null;
 
-//add the search string
-	$search = !empty($_GET["search"]) ? strtolower($_GET["search"]) : null;
-	if (!empty($search)) {
-		$sql_search = "and (";
-		$sql_search .= " 	lower(dialplan_context) like :search ";
-		$sql_search .= " 	or lower(dialplan_name) like :search ";
-		$sql_search .= " 	or lower(dialplan_number) like :search ";
-		$sql_search .= " 	or lower(dialplan_continue) like :search ";
-		if (is_numeric($search)) {
-			$sql_search .= " 	or dialplan_order = :search ";
-		}
-		$sql_search .= " 	or lower(dialplan_enabled) like :search ";
-		$sql_search .= " 	or lower(dialplan_description) like :search ";
-		$sql_search .= ") ";
-		$parameters['search'] = '%'.$search.'%';
-	}
+//add the search variable
+	$search = $_GET["search"] ?? '';
+	$show = $_GET["show"] ?? '';
 
 //get the number of rows in the dialplan
 	$sql = "select count(dialplan_uuid) from v_dialplans ";
-	$sql .= "where true ";
-	if ((!empty($_GET['show']) && $_GET['show'] != "all") || !permission_exists('time_condition_all')) {
-		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
+	if ($show == "all" && permission_exists('time_condition_all')) {
+		$sql .= "where true ";
+	}
+	else {
+		$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	}
+	if (!empty($search)) {
+		$search = strtolower($search);
+		$sql .= "and (";
+		$sql .= " 	lower(dialplan_context) like :search ";
+		$sql .= " 	or lower(dialplan_name) like :search ";
+		$sql .= " 	or lower(dialplan_number) like :search ";
+		$sql .= " 	or lower(dialplan_continue) like :search ";
+		$sql .= " 	or lower(dialplan_enabled) like :search ";
+		$sql .= " 	or lower(dialplan_description) like :search ";
+		$sql .= ") ";
+		$parameters['search'] = '%'.$search.'%';
 	}
 	$sql .= "and app_uuid = '4b821450-926b-175a-af93-a03c441818b1' ";
 	$sql .= $sql_search ?? null;
