@@ -47,7 +47,7 @@
 	$text = $language->get();
 
 //set the action with add or update
-	if (is_uuid($_REQUEST["id"])) {
+	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
 		$call_broadcast_uuid = $_REQUEST["id"];
 	}
@@ -184,7 +184,7 @@ if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 		}
 
 	//add or update the database
-	if ($_POST["persistformvar"] != "true") {
+	if (empty($_POST["persistformvar"])) {
 
 		//prep insert
 			if ($action == "add" && permission_exists('call_broadcast_add')) {
@@ -212,7 +212,7 @@ if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 			}
 
 		//execute
-			if (is_array($array) && @sizeof($array) != 0) {
+			if (!empty($array)) {
 
 				//add file selection and download sample
 					$file_res = upload_file($sql, $broadcast_phone_numbers);
@@ -275,7 +275,7 @@ if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 }
 
 //pre-populate the form
-	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
+	if (count($_GET) > 0 && empty($_POST["persistformvar"])) {
 		$call_broadcast_uuid = $_GET["id"];
 		$sql = "select * from v_call_broadcasts ";
 		$sql .= "where domain_uuid = :domain_uuid ";
@@ -283,7 +283,7 @@ if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 		$parameters['domain_uuid'] = $domain_uuid;
 		$parameters['call_broadcast_uuid'] = $call_broadcast_uuid;
 		$database = new database;
-		$row = $database->select($sql, $parameters, 'row');
+		$row = $database->select($sql, $parameters ?? null, 'row');
 		if (is_array($row) && @sizeof($row) != 0) {
 			$broadcast_name = $row["broadcast_name"];
 			$broadcast_start_time = $row["broadcast_start_time"];
