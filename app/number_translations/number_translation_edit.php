@@ -108,7 +108,7 @@
 				}
 
 				//redirect the user
-				if (!empty($_POST['action'], array('copy', 'delete', 'toggle'))) {
+				if (!empty($_POST['action']) && in_array($_POST['action'], array('copy', 'delete', 'toggle'))) {
 					header('Location: number_translation_edit.php?id='.$number_translation_uuid);
 					exit;
 				}
