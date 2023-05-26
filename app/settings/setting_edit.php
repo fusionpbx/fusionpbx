@@ -49,13 +49,13 @@
 //get the number of rows in v_extensions
 	$sql = " select count(*) from v_settings ";
 	$database = new database;
-	$num_rows = $database->select($sql, $parameters ?? '', 'column');
+	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 
 //set the action
 	$action = $num_rows == 0 ? "add" : "update";
 
 //get the http values and set them as php variables
-	if (count($_POST)>0) {
+	if (!empty($_POST)) {
 		//$numbering_plan = $_POST["numbering_plan"];
 		//$default_gateway = $_POST["default_gateway"];
 		$setting_uuid = $_POST["setting_uuid"];
@@ -73,7 +73,7 @@
 		$mod_shout_volume = $_POST["mod_shout_volume"];
 	}
 
-if (count($_POST)>0 && empty($_POST["persistformvar"])) {
+if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
 	//check for all required data
 		$msg = '';

@@ -86,7 +86,7 @@
 
 //build the query string
 	$query_string = '';
-	if ($search != '') {
+	if (!empty($search)) {
 		$query_string .= 'search='.urlencode($search);
 	}
 	if ($default_setting_category != '') {
@@ -95,7 +95,7 @@
 	}
 
 //process the http post
-	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
+	if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
 		//set the default_setting_uuid
 			if ($action == "update") {

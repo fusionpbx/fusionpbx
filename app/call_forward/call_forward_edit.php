@@ -85,8 +85,8 @@
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$parameters['extension_uuid'] = $extension_uuid;
 	$database = new database;
-	$row = $database->select($sql, $parameters, 'row');
-	if (is_array($row) && sizeof($row) != 0) {
+	$row = $database->select($sql, $parameters ?? null, 'row');
+	if (!empty($row)) {
 		$extension = $row["extension"];
 		$number_alias = $row["number_alias"];
 		$accountcode = $row["accountcode"];
@@ -112,10 +112,10 @@
 	unset($sql, $parameters, $row);
 
 //process post vars
-	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
+	if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
 		//get http post variables and set them to php variables
-			if (count($_POST) > 0) {
+			if (!empty($_POST)) {
 				$forward_all_enabled = $_POST["forward_all_enabled"];
 				$forward_all_destination = $_POST["forward_all_destination"];
 				$forward_busy_enabled = $_POST["forward_busy_enabled"];
@@ -272,7 +272,7 @@
 			$p->delete("extension_edit", "temp");
 
 		//delete empty destination records
-			if (is_array($follow_me_delete_uuids) && sizeof($follow_me_delete_uuids) > 0) {
+			if (!empty($follow_me_delete_uuids)) {
 				foreach ($follow_me_delete_uuids as $follow_me_delete_uuid) {
 					$array['follow_me_destinations'][]['follow_me_destination_uuid'] = $follow_me_delete_uuid;
 				}
@@ -457,7 +457,7 @@
 	require_once "resources/header.php";
 
 //pre-populate the form
-	if (is_uuid($follow_me_uuid)) {
+	if (!empty($follow_me_uuid) && is_uuid($follow_me_uuid)) {
 		$sql = "select * from v_follow_me ";
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$sql .= "and follow_me_uuid = :follow_me_uuid ";
@@ -467,7 +467,7 @@
 		$row = $database->select($sql, $parameters, 'row');
 		unset($sql, $parameters);
 
-		if (is_array($row) && sizeof($row) != 0) {
+		if (!empty($row)) {
 			$cid_name_prefix = $row["cid_name_prefix"];
 			$cid_number_prefix = $row["cid_number_prefix"];
 			$follow_me_enabled = $row["follow_me_enabled"];
@@ -479,7 +479,7 @@
 			$sql .= "order by follow_me_order asc ";
 			$parameters['follow_me_uuid'] = $follow_me_uuid;
 			$database = new database;
-			$result = $database->select($sql, $parameters, 'all');
+			$result = $database->select($sql, $parameters ?? null, 'all');
 
 			unset($destinations);
 			foreach ($result as $x => &$row) {
@@ -499,40 +499,39 @@
 	$sql .= "order by extension, number_alias asc ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$database = new database;
-	$extensions = $database->select($sql, $parameters, 'all');
+	$extensions = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters, $row);
 
 //set the default
-	if (!isset($dnd_enabled)) {
+	if (empty($dnd_enabled)) {
 		//set the value from the database
 		$dnd_enabled = $do_not_disturb;
 	}
 
 //prepare the autocomplete
-	if($_SESSION['follow_me']['follow_me_autocomplete']['boolean'] == 'true') {
-
-	echo "<link rel=\"stylesheet\" href=\"".PROJECT_PATH."/resources/jquery/jquery-ui.min.css\" />\n";
-	echo "<script src=\"".PROJECT_PATH."/resources/jquery/jquery-ui.min.js\"></script>\n";
-	echo "<script type=\"text/javascript\">\n";
-	echo "\$(function() {\n";
-	echo "	var extensions = [\n";
-	foreach ($extensions as &$row) {
-		if (empty($number_alias)) {
-			echo "		\"".escape($row["extension"])."\",\n";
+	if(!empty($_SESSION['follow_me']['follow_me_autocomplete']['boolean']) == 'true') {
+		echo "<link rel=\"stylesheet\" href=\"".PROJECT_PATH."/resources/jquery/jquery-ui.min.css\" />\n";
+		echo "<script src=\"".PROJECT_PATH."/resources/jquery/jquery-ui.min.js\"></script>\n";
+		echo "<script type=\"text/javascript\">\n";
+		echo "\$(function() {\n";
+		echo "	var extensions = [\n";
+		foreach ($extensions as &$row) {
+			if (empty($number_alias)) {
+				echo "		\"".escape($row["extension"])."\",\n";
+			}
+			else {
+				echo "		\"".escape($row["number_alias"])."\",\n";
+			}
 		}
-		else {
-			echo "		\"".escape($row["number_alias"])."\",\n";
+		echo "	];\n";
+		for ($n = 0; $n <= ((($_SESSION['follow_me']['max_destinations']['numeric'] != '') ? $_SESSION['follow_me']['max_destinations']['numeric'] : 5) - 1); $n++) {
+			echo "	\$(\"#destination_".$n."\").autocomplete({\n";
+			echo "		source: extensions\n";
+			echo "	});\n";
 		}
-	}
-	echo "	];\n";
-	for ($n = 0; $n <= ((($_SESSION['follow_me']['max_destinations']['numeric'] != '') ? $_SESSION['follow_me']['max_destinations']['numeric'] : 5) - 1); $n++) {
-		echo "	\$(\"#destination_".$n."\").autocomplete({\n";
-		echo "		source: extensions\n";
-		echo "	});\n";
-	}
-
-	echo "});\n";
-	echo "</script>\n";
+	
+		echo "});\n";
+		echo "</script>\n";
 	}
 
 //create token
@@ -561,10 +560,10 @@
 	echo "	<strong>".$text['label-call_forward']."</strong>\n";
 	echo "</td>\n";
 	echo "<td width='70%' class='vtable' align='left'>\n";
-	$on_click .= "$('#tr_follow_me_settings').slideUp('fast'); ";
+	$on_click = "$('#tr_follow_me_settings').slideUp('fast'); ";
 	$on_click .= "document.getElementById('dnd_disabled').checked=true; ";
 	$on_click .= "document.getElementById('forward_all_destination').focus(); ";
-	$on_click2 .= "(document.getElementById('follow_me_enabled').checked) ? $('#tr_follow_me_settings').slideDown('fast') : '' ";
+	$on_click2 = "(document.getElementById('follow_me_enabled').checked) ? $('#tr_follow_me_settings').slideDown('fast') : '' ";
 	echo "	<label for='forward_all_disabled'><input type='radio' name='forward_all_enabled' id='forward_all_disabled' onclick=\"$on_click2\" value='false' ".(($forward_all_enabled == "false" || $forward_all_enabled == "") ? "checked='checked'" : null)." /> ".$text['label-disabled']."</label> \n";
 	echo "	<label for='forward_all_enabled'><input type='radio' name='forward_all_enabled' id='forward_all_enabled' onclick=\"$on_click\" value='true' ".(($forward_all_enabled == "true") ? "checked='checked'" : null)." /> ".$text['label-enabled']."</label> \n";
 	unset($on_click);
@@ -746,7 +745,7 @@
 	echo "</table>";
 	echo "<br /><br />";
 
-	if ($action == "update") {
+	if (!empty($action) == "update") {
 		echo "<input type='hidden' name='id' value='".escape($extension_uuid)."'>\n";
 	}
 	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";

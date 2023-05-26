@@ -49,6 +49,13 @@
 		$action = "add";
 	}
 
+//set the defaults
+	$bridge_uuid = '';
+	$bridge_name = '';
+	$bridge_destination = '';
+	$bridge_enabled = '';
+	$bridge_description = '';
+
 //get http post variables and set them to php variables
 	if (!empty($_POST)) {
 		$bridge_uuid = $_POST["bridge_uuid"] ?? null;
@@ -59,7 +66,7 @@
 	}
 
 //process the user data and save it to the database
-	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
+	if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
 		//delete the bridge
 			if (permission_exists('bridge_delete')) {
@@ -152,8 +159,8 @@
 		$sql .= "where bridge_uuid = :bridge_uuid ";
 		$parameters['bridge_uuid'] = $bridge_uuid;
 		$database = new database;
-		$row = $database->select($sql, $parameters, 'row');
-		if (is_array($row) && sizeof($row) != 0) {
+		$row = $database->select($sql, $parameters ?? null, 'row');
+		if (!empty($row)) {
 			$bridge_name = $row["bridge_name"];
 			$bridge_destination = $row["bridge_destination"];
 			$bridge_enabled = $row["bridge_enabled"];
@@ -199,7 +206,7 @@
 	echo "	".$text['label-bridge_name']."\n";
 	echo "</td>\n";
 	echo "<td width='70%' class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='bridge_name' maxlength='255' value='".escape($bridge_name ?? '')."'>\n";
+	echo "	<input class='formfld' type='text' name='bridge_name' maxlength='255' value='".escape($bridge_name)."'>\n";
 	echo "<br />\n";
 	echo $text['description-bridge_name']."\n";
 	echo "</td>\n";
@@ -210,7 +217,7 @@
 	echo "	".$text['label-bridge_destination']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='bridge_destination' maxlength='255' value='".escape($bridge_destination ?? '')."'>\n";
+	echo "	<input class='formfld' type='text' name='bridge_destination' maxlength='255' value='".escape($bridge_destination)."'>\n";
 	echo "<br />\n";
 	echo $text['description-bridge_destination']."\n";
 	echo "</td>\n";
@@ -243,7 +250,7 @@
 	echo "	".$text['label-bridge_description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='bridge_description' maxlength='255' value=\"".escape($bridge_description ?? '')."\">\n";
+	echo "	<input class='formfld' type='text' name='bridge_description' maxlength='255' value=\"".escape($bridge_description)."\">\n";
 	echo "<br />\n";
 	echo $text['description-bridge_description']."\n";
 	echo "</td>\n";
