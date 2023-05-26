@@ -21,18 +21,24 @@
 	$language = new text;
 	$text = $language->get();
 
+//set the defaults
+	$global_setting_name = '';
+	$global_setting_value = '';
+	$global_setting_description = '';
+
 //action add or update
-	if (is_uuid($_REQUEST["id"])) {
+	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
 		$sofia_global_setting_uuid = $_REQUEST["id"];
 		$id = $_REQUEST["id"];
 	}
 	else {
 		$action = "add";
+		$sofia_global_setting_uuid = uuid();
 	}
 
 //get http post variables and set them to php variables
-	if (is_array($_POST)) {
+	if (!empty($_POST)) {
 		$global_setting_name = $_POST["global_setting_name"];
 		$global_setting_value = $_POST["global_setting_value"];
 		$global_setting_enabled = $_POST["global_setting_enabled"];
@@ -40,7 +46,7 @@
 	}
 
 //process the user data and save it to the database
-	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
+	if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
 		//validate the token
 			$token = new token;
@@ -51,7 +57,7 @@
 			}
 
 		//process the http post data by submitted action
-			if ($_POST['action'] != '' && !empty($_POST['action'])) {
+			if (!empty($_POST['action']) && !empty($_POST['action'])) {
 
 				//prepare the array(s)
 				//send the array to the database class
@@ -102,11 +108,6 @@
 				return;
 			}
 
-		//add the sofia_global_setting_uuid
-			if (!is_uuid($_POST["sofia_global_setting_uuid"])) {
-				$sofia_global_setting_uuid = uuid();
-			}
-
 		//prepare the array
 			$array['sofia_global_settings'][0]['sofia_global_setting_uuid'] = $sofia_global_setting_uuid;
 			$array['sofia_global_settings'][0]['global_setting_name'] = $global_setting_name;
@@ -135,7 +136,7 @@
 	}
 
 //pre-populate the form
-	if (is_array($_GET) && $_POST["persistformvar"] != "true") {
+	if (!empty($_GET) && empty($_POST["persistformvar"])) {
 		$sql = "select ";
 		$sql .= " sofia_global_setting_uuid, ";
 		$sql .= " global_setting_name, ";
