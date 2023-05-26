@@ -58,14 +58,14 @@
 	}
 
 //set the defaults
-		$voicemail_id = '';
-		$voicemail_password = '';
-		$voicemail_alternate_greet_id = '';
-		$voicemail_description =  '';
-		$voicemail_destinations_assigned = '';
-		$show_option_delete = '';
-		$voicemail_option_digits = '';
-		$voicemail_option_description = '';
+	$voicemail_id = '';
+	$voicemail_password = '';
+	$voicemail_alternate_greet_id = '';
+	$voicemail_description =  '';
+	$voicemail_destinations_assigned = '';
+	$show_option_delete = '';
+	$voicemail_option_digits = '';
+	$voicemail_option_description = '';
 
 //get http variables and set them to php variables
 	$referer_path = $_REQUEST["referer_path"] ?? '';
