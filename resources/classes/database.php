@@ -2656,6 +2656,7 @@
 						} // foreach schema_array
 					} // foreach main array
 
+				//save the message
 					$this->message = $message;
 
 				//commit the atomic transaction
@@ -2765,7 +2766,7 @@
 							exit;
 						}
 					}
-					return $message;
+					return $this->message;
 			} //save method
 
 			/**
