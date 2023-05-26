@@ -113,7 +113,7 @@
 
 //get the count
 	$sql = "select count(default_setting_uuid) from v_default_settings ";
-	if (!empty($search) && !empty($search)) {
+	if (!empty($search)) {
 		$sql .= "where (";
 		$sql .= "	lower(default_setting_category) like :search ";
 		$sql .= "	or lower(default_setting_subcategory) like :search ";
@@ -135,7 +135,7 @@
 	$sql = "select default_setting_uuid, default_setting_category, default_setting_subcategory, default_setting_name, ";
 	$sql .= "default_setting_value, cast(default_setting_enabled as text), default_setting_description ";
 	$sql .= "from v_default_settings ";
-	if (!empty($search) && !empty($search)) {
+	if (!empty($search)) {
 		$sql .= "where (";
 		$sql .= "	lower(default_setting_category) like :search ";
 		$sql .= "	or lower(default_setting_subcategory) like :search ";
