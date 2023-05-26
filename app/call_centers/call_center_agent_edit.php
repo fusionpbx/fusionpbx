@@ -47,14 +47,14 @@
 	$text = $language->get();
 
 //check for duplicates
-	if ($_GET["check"] == 'duplicate') {
+	if (!empty($_GET["check"]) == 'duplicate') {
 		//agent id
-			if ($_GET["agent_id"] != '') {
+			if (!empty($_GET["agent_id"])) {
 				$sql = "select agent_name ";
 				$sql .= "from v_call_center_agents ";
 				$sql .= "where agent_id = :agent_id ";
 				$sql .= "and domain_uuid = :domain_uuid ";
-				if (is_uuid($_GET["agent_uuid"])) {
+				if (!empty($_GET["agent_uuid"]) && is_uuid($_GET["agent_uuid"])) {
 					$sql .= " and call_center_agent_uuid <> :call_center_agent_uuid ";
 					$parameters['call_center_agent_uuid'] = $_GET["agent_uuid"];
 				}
@@ -62,7 +62,7 @@
 				$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 				$database = new database;
 				$row = $database->select($sql, $parameters, 'row');
-				if (is_array($row) && sizeof($row) != 0 && $row['agent_name'] != '') {
+				if (!empty($row) && !empty($row['agent_name'])) {
 					echo $text['message-duplicate_agent_id'].(if_group("superadmin") ? ": ".$row["agent_name"] : null);
 				}
 				unset($sql, $parameters);
@@ -72,7 +72,7 @@
 	}
 
 //action add or update
-	if (is_uuid($_REQUEST["id"])) {
+	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
 		$call_center_agent_uuid = $_REQUEST["id"];
 	}
@@ -81,7 +81,7 @@
 	}
 
 //get http post variables and set them to php variables
-	if (is_array($_POST)) {
+	if (!empty($_POST)) {
 		$call_center_agent_uuid = $_POST["call_center_agent_uuid"];
 		$user_uuid = $_POST["user_uuid"];
 		$agent_name = $_POST["agent_name"];
@@ -101,7 +101,7 @@
 	}
 
 //process the user data and save it to the database
-	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
+	if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
 		//validate the token
 			$token = new token;
@@ -287,7 +287,7 @@
 	$destination = new destinations;
 
 //pre-populate the form
-	if (is_uuid($_GET["id"]) && $_POST["persistformvar"] != "true") {
+	if (!empty($_GET["id"]) && is_uuid($_GET["id"]) && empty($_POST["persistformvar"])) {
 		$call_center_agent_uuid = $_GET["id"];
 		$sql = "select * from v_call_center_agents ";
 		$sql .= "where domain_uuid = :domain_uuid ";
@@ -296,7 +296,7 @@
 		$parameters['call_center_agent_uuid'] = $call_center_agent_uuid;
 		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
-		if (is_array($row) && @sizeof($row) != 0) {
+		if (!empty($row)) {
 			$call_center_agent_uuid = $row["call_center_agent_uuid"];
 			$user_uuid = $row["user_uuid"];
 			$agent_name = $row["agent_name"];
@@ -401,7 +401,7 @@
 	echo "	".$text['label-agent_name']."\n";
 	echo "</td>\n";
 	echo "<td width='70%' class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='agent_name' maxlength='255' value=\"".escape($agent_name)."\" />\n";
+	echo "	<input class='formfld' type='text' name='agent_name' maxlength='255' value=\"".escape($agent_name ?? '')."\" />\n";
 	/*
 	echo "<select id=\"agent_name\" name=\"agent_name\" class='formfld'>\n";
 	echo "<option value=\"\"></option>\n";
@@ -460,7 +460,7 @@
 	echo "			</select>";
 	unset($users);
 	echo "			<br>\n";
-	echo "			".$text['description-users']."\n";
+	echo "			".!empty($text['description-users'])."\n";
 	echo "		</td>";
 	echo "	</tr>";
 
@@ -469,7 +469,7 @@
 	echo "	".$text['label-agent_id']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "  <input class='formfld' type='number' name='agent_id' id='agent_id' maxlength='255' min='1' step='1' value='".escape($agent_id)."'>\n";
+	echo "  <input class='formfld' type='number' name='agent_id' id='agent_id' maxlength='255' min='1' step='1' value='".escape($agent_id ?? '')."'>\n";
 	echo "	<div style='display: none;' id='duplicate_agent_id_response'></div>\n";
 	echo "<br />\n";
 	echo $text['description-agent_id']."\n";
@@ -481,7 +481,7 @@
 	echo "	".$text['label-agent_password']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "  <input class='formfld' type='password' name='agent_password' autocomplete='off' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!\$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" maxlength='255' min='1' step='1' value='".escape($agent_password)."'>\n";
+	echo "  <input class='formfld' type='password' name='agent_password' autocomplete='off' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!\$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" maxlength='255' min='1' step='1' value='".escape($agent_password ?? '')."'>\n";
 	echo "<br />\n";
 	echo $text['description-agent_password']."\n";
 	echo "</td>\n";
@@ -492,7 +492,7 @@
 	echo "	".$text['label-contact']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo $destination->select('user_contact', 'agent_contact', $agent_contact);
+	echo $destination->select('user_contact', 'agent_contact', !empty($agent_contact));
 	echo "<br />\n";
 	echo $text['description-contact']."\n";
 	echo "</td>\n";
