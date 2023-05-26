@@ -108,10 +108,10 @@
 
 				//remove the v_ table prefix
 				if (substr($table_name, 0, 2) == 'v_') {
-						$table_name = substr($table_name, 2);
+					$table_name = substr($table_name, 2);
 				}
 				if (substr($parent_name, 0, 2) == 'v_') {
-						$parent_name = substr($parent_name, 2);
+					$parent_name = substr($parent_name, 2);
 				}
 
 				//filter for specific tables and build the schema array
@@ -119,7 +119,8 @@
 					$schema[$i]['table'] = $table_name;
 					$schema[$i]['parent'] = $parent_name;
 					foreach($table['fields'] as $row) {
-						if (!empty($row['deprecated']) !== 'true') {
+						$row['deprecated'] = $row['deprecated'] ?? '';
+						if ($row['deprecated'] !== 'true') {
 							if (is_array($row['name'])) {
 								$field_name = $row['name']['text'];
 							}
