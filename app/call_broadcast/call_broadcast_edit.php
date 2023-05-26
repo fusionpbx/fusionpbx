@@ -94,7 +94,7 @@
 	}
 
 //get the http post variables and set them to php variables
-	if (count($_POST)>0) {
+	if (!empty($_POST)) {
 		$broadcast_name = $_POST["broadcast_name"];
 		$broadcast_start_time = $_POST["broadcast_start_time"];
 		$broadcast_timeout = $_POST["broadcast_timeout"];
@@ -128,7 +128,7 @@
 		}
 	}
 
-if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
+if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
 	//delete the call broadcast
 		if (permission_exists('call_broadcast_delete')) {
@@ -275,7 +275,7 @@ if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 }
 
 //pre-populate the form
-	if (count($_GET) > 0 && empty($_POST["persistformvar"])) {
+	if (!empty($_GET) && empty($_POST["persistformvar"])) {
 		$call_broadcast_uuid = $_GET["id"];
 		$sql = "select * from v_call_broadcasts ";
 		$sql .= "where domain_uuid = :domain_uuid ";
