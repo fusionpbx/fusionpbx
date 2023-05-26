@@ -327,7 +327,9 @@
 	}
 
 //remove the spaces
-	$voicemail_mail_to = str_replace(" ", "", !empty($voicemail_mail_to));
+	if (!empty($voicemail_mail_to)) {
+		$voicemail_mail_to = str_replace(" ", "", $voicemail_mail_to);
+	}
 
 //set the defaults
 	if (empty($voicemail_local_after_email)) { $voicemail_local_after_email = 'true'; }
