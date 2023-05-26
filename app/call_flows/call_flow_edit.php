@@ -47,7 +47,7 @@
 	$text = $language->get();
 
 //action add or update
-	if (is_uuid($_REQUEST["id"])) {
+	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
 		$call_flow_uuid = $_REQUEST["id"];
 	}
@@ -59,7 +59,7 @@
 	$destination = new destinations;
 
 //get http post variables and set them to php variables
-	if (count($_POST) > 0) {
+	if (!empty($_POST)) {
 
 		//set the variables from the http values
 			$call_flow_uuid = $_POST["call_flow_uuid"];
@@ -91,7 +91,7 @@
 	}
 
 //process the user data and save it to the database
-	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
+	if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
 		//get the uuid from the POST
 			if ($action == "update") {
@@ -302,7 +302,7 @@
 	} //(is_array($_POST) && empty($_POST["persistformvar"]))
 
 //pre-populate the form
-	if (is_array($_GET) && $_POST["persistformvar"] != "true") {
+	if (!empty($_GET) && empty($_POST["persistformvar"])) {
 		$call_flow_uuid = $_GET["id"];
 		$sql = "select * from v_call_flows ";
 		$sql .= "where domain_uuid = :domain_uuid ";
@@ -310,7 +310,7 @@
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$parameters['call_flow_uuid'] = $call_flow_uuid;
 		$database = new database;
-		$result = $database->select($sql, $parameters, 'all');
+		$result = $database->select($sql, $parameters ?? null, 'all');
 		foreach ($result as $row) {
 			//set the php variables
 				$call_flow_uuid = $row["call_flow_uuid"];
@@ -365,7 +365,7 @@
 	$sql .= "order by recording_name asc ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$database = new database;
-	$recordings = $database->select($sql, $parameters, 'all');
+	$recordings = $database->select($sql, $parameters ?? null, 'all');
 	unset($parameters, $sql);
 
 	if (if_group("superadmin")) {
@@ -420,7 +420,7 @@
 			}
 		//recordings
 			$tmp_selected = false;
-			if (count($recordings) > 0) {
+			if (!empty($recordings)) {
 				echo "<optgroup label=".$text['recordings'].">\n";
 				foreach ($recordings as &$row) {
 					$recording_name = $row["recording_name"];
@@ -443,9 +443,9 @@
 			$sql = "select * from v_phrases where domain_uuid = :domain_uuid ";
 			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 			$database = new database;
-			$result = $database->select($sql, $parameters, 'all');
+			$result = $database->select($sql, $parameters ?? null, 'all');
 			unset($parameters, $sql);
-			if (is_array($result)) {
+			if (!empty($result)) {
 				echo "<optgroup label='Phrases'>\n";
 				foreach ($result as &$row) {
 					if ($var == "phrase:".$row["phrase_uuid"]) {
@@ -462,7 +462,7 @@
 			if ($load_sound) {
 				$file = new file;
 				$sound_files = $file->sounds();
-				if (is_array($sound_files)) {
+				if (!empty($sound_files)) {
 					echo "<optgroup label=".$text["sounds"].">\n";
 					foreach ($sound_files as $value) {
 						if (!empty($value)) {
@@ -532,7 +532,7 @@
 	echo "	".$text['label-call_flow_name']."\n";
 	echo "</td>\n";
 	echo "<td width='70%' class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='call_flow_name' maxlength='255' value=\"".escape($call_flow_name)."\">\n";
+	echo "	<input class='formfld' type='text' name='call_flow_name' maxlength='255' value=\"".escape($call_flow_name ?? '')."\">\n";
 	echo "<br />\n";
 	echo $text['description-call_flow_name']."\n";
 	echo "</td>\n";
@@ -543,7 +543,7 @@
 	echo "	".$text['label-call_flow_extension']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='call_flow_extension' maxlength='255' value=\"".escape($call_flow_extension)."\">\n";
+	echo "	<input class='formfld' type='text' name='call_flow_extension' maxlength='255' value=\"".escape($call_flow_extension ?? '')."\">\n";
 	echo "<br />\n";
 	echo $text['description-call_flow_extension']."\n";
 	echo "</td>\n";
@@ -554,7 +554,7 @@
 	echo "	".$text['label-call_flow_feature_code']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='call_flow_feature_code' maxlength='255' value=\"".escape($call_flow_feature_code)."\">\n";
+	echo "	<input class='formfld' type='text' name='call_flow_feature_code' maxlength='255' value=\"".escape($call_flow_feature_code ?? '')."\">\n";
 	echo "<br />\n";
 	echo $text['description-call_flow_feature_code']."\n";
 	echo "</td>\n";
@@ -610,7 +610,7 @@
 	echo "	".$text['label-call_flow_pin_number']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='call_flow_pin_number' maxlength='255' value=\"".escape($call_flow_pin_number)."\">\n";
+	echo "	<input class='formfld' type='text' name='call_flow_pin_number' maxlength='255' value=\"".escape($call_flow_pin_number ?? '')."\">\n";
 	echo "<br />\n";
 	echo $text['description-call_flow_pin_number']."\n";
 	echo "</td>\n";
@@ -621,13 +621,13 @@
 	echo "	".$text['label-call_flow_label']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='call_flow_label' maxlength='255' value=\"".escape($call_flow_label)."\">\n";
+	echo "	<input class='formfld' type='text' name='call_flow_label' maxlength='255' value=\"".escape($call_flow_label ?? '')."\">\n";
 	echo "<br />\n";
-	echo $text['description-call_flow_label']."\n";
+	echo !empty($text['description-call_flow_label'])."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	sound_select_list($call_flow_sound, 'call_flow_sound', 'call_flow_sound', true);
+	sound_select_list(!empty($call_flow_sound), 'call_flow_sound', 'call_flow_sound', true);
 
 	/*
 	echo "<tr>\n";
@@ -647,9 +647,9 @@
 	echo "	".$text['label-call_flow_destination']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	$select_value = '';
 	//set the selected value
-	if (!empty($call_flow_app.$call_flow_data)) {
+	$select_value = '';
+	if (!empty($call_flow_app) && !empty($call_flow_data)) {
 		$select_value = $call_flow_app.':'.$call_flow_data;
 	}
 	//show the destination list
@@ -665,13 +665,13 @@
 	echo "	".$text['label-call_flow_alternate_label']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='call_flow_alternate_label' maxlength='255' value=\"".escape($call_flow_alternate_label)."\">\n";
+	echo "	<input class='formfld' type='text' name='call_flow_alternate_label' maxlength='255' value=\"".escape($call_flow_alternate_label ?? '')."\">\n";
 	echo "<br />\n";
 	echo $text['description-call_flow_alternate_label']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	sound_select_list($call_flow_alternate_sound, 'call_flow_alternate_sound', 'call_flow_alternate_sound', true);
+	sound_select_list(!empty($call_flow_alternate_sound), 'call_flow_alternate_sound', 'call_flow_alternate_sound', true);
 
 	/*
 	echo "<tr>\n";
@@ -692,7 +692,7 @@
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	$select_value = '';
-	if (!empty($call_flow_alternate_app.$call_flow_alternate_data)) {
+	if (!empty($call_flow_alternate_app) && !empty($call_flow_alternate_data)) {
 		$select_value = $call_flow_alternate_app.':'.$call_flow_alternate_data;
 	}
 	echo $destination->select('dialplan', 'call_flow_alternate_destination', $select_value);
@@ -737,9 +737,9 @@
 	echo "	".$text['label-call_flow_description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='call_flow_description' maxlength='255' value=\"".escape($call_flow_description)."\">\n";
+	echo "	<input class='formfld' type='text' name='call_flow_description' maxlength='255' value=\"".escape($call_flow_description ?? '')."\">\n";
 	echo "<br />\n";
-	echo $text['description-call_flow_description']."\n";
+	echo !empty($text['description-call_flow_description'])."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 

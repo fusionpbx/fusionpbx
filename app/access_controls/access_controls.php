@@ -126,7 +126,7 @@
 		$sql .= ") ";
 	}
 	$database = new database;
-	$num_rows = $database->select($sql, $parameters ?? '', 'column');
+	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 
 //get the list
 	$sql = "select ";
@@ -144,7 +144,7 @@
 	}
 	$sql .= order_by($order_by, $order, 'access_control_name', 'asc');
 	$database = new database;
-	$access_controls = $database->select($sql, $parameters ?? '', 'all');
+	$access_controls = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 
 //create token
