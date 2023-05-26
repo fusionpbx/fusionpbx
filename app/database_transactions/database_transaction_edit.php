@@ -45,15 +45,21 @@
 	$language = new text;
 	$text = $language->get();
 
+//set default values
+	$search = '';
+	$action = '';
+	$page = 0;
+
 //set the variables
-	if (is_uuid($_GET["id"])) {
+	if (!empty($_GET["id"]) && is_uuid($_GET["id"])) {
 		$database_transaction_uuid = $_GET["id"];
-		$search = $_GET['search'];
-		$page = $_GET['page'];
+		$search = $_GET['search'] ?? '';
+		$page = $_GET['page'] ?? 0;
+		$action = $_GET['action'] ?? '';
 	}
 
 //pre-populate the form
-	if (count($_GET) > 0 && is_uuid($_GET["id"]) && $_POST["persistformvar"] != "true") {
+	if (!empty($_GET["id"]) && empty($_POST["persistformvar"])) {
 
 		$sql = "select ";
 		$sql .= "t.database_transaction_uuid, d.domain_name, u.username, t.user_uuid, t.app_name, t.app_uuid, ";
@@ -86,7 +92,7 @@
 	}
 
 //undo the transaction
-	if ($_GET['action'] == 'undo' && ($transaction_type == 'delete' || $transaction_type == 'update')) {
+	if ($action == 'undo' && ($transaction_type == 'delete' || $transaction_type == 'update')) {
 		//get the array
 			$array = json_decode($transaction_old, true);
 
@@ -99,7 +105,7 @@
 
 		//redirect the user
 			$_SESSION["message"] = $text['message-update'];
-			header("Location: database_transactions.php?".($search != '' ? "&search=".urlencode($search) : null).($page != '' ? "&page=".urlencode($page) : null));
+			header("Location: database_transactions.php?".(!empty($search) ? "&search=".urlencode($search) : null).(!empty($page) ? "&page=".urlencode($page) : null));
 	} 
 
 //get the type if not provided
@@ -120,9 +126,9 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-database_transaction']."</b></div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','link'=>'database_transactions.php?'.($search != '' ? "&search=".urlencode($search) : null).(is_numeric($page) ? "&page=".urlencode($page) : null)]);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','link'=>'database_transactions.php?'.(!empty($search) ? "&search=".urlencode($search) : null).(is_numeric($page) ? "&page=".urlencode($page) : null)]);
 	if ($transaction_type == 'delete' || $transaction_type == 'update') {
-		echo button::create(['type'=>'button','label'=>$text['button-undo'],'icon'=>'undo-alt','id'=>'btn_save','style'=>'margin-left: 15px;','link'=>'database_transaction_edit.php?id='.urlencode($database_transaction_uuid).'&action=undo'.($search != '' ? "&search=".urlencode($search) : null).(is_numeric($page) ? "&page=".urlencode($page) : null)]);
+		echo button::create(['type'=>'button','label'=>$text['button-undo'],'icon'=>'undo-alt','id'=>'btn_save','style'=>'margin-left: 15px;','link'=>'database_transaction_edit.php?id='.urlencode($database_transaction_uuid).'&action=undo'.(!empty($search) ? "&search=".urlencode($search) : null).(is_numeric($page) ? "&page=".urlencode($page) : null)]);
 	}
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
@@ -196,7 +202,7 @@
 	echo "</tr>\n";
 	echo "</table>\n";
 
-	if ($_REQUEST["debug"] == "true") {
+	if (!empty($_REQUEST["debug"]) && $_REQUEST["debug"] == "true") {
 		echo "<table width='50%'  border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "<tr>\n";
 		echo "<th valign='top' align='left' nowrap='nowrap'>\n";
@@ -284,7 +290,7 @@
 							$color = "#ff0000";
 						}
 					//set the table header
-						if ($_SESSION['previous_name'] !== $_SESSION['name'] || $_SESSION['previous_row'] !== $_SESSION['row']) {
+						if (!empty($_SESSION['previous_name']) && $_SESSION['previous_name'] !== $_SESSION['name'] || !empty($_SESSION['previous_row']) && $_SESSION['previous_row'] !== $_SESSION['row']) {
 							echo str_replace("<th>name</th>","<th>".$_SESSION['name']."</th>",$_SESSION['table_header']);
 							//echo $_SESSION['table_header'];
 						}
