@@ -127,26 +127,10 @@ function save_setting_xml() {
 	$sql = "select * from v_settings ";
 	$database = new database;
 	$row = $database->select($sql, null, 'row');
-	if (!empty($row)) {
-		$fout = fopen($_SESSION['switch']['conf']['dir']."/directory/default/default.xml","w");
-		$xml = "<include>\n";
-		$xml .= "  <user id=\"default\"> <!--if id is numeric mailbox param is not necessary-->\n";
-		$xml .= "    <variables>\n";
-		$xml .= "      <!--all variables here will be set on all inbound calls that originate from this user -->\n";
-		$xml .= "      <!-- set these to take advantage of a dialplan localized to this user -->\n";
-		$xml .= "      <variable name=\"numbering_plan\" value=\"" . $row['numbering_plan'] . "\"/>\n";
-		$xml .= "      <variable name=\"default_gateway\" value=\"" . $row['default_gateway'] . "\"/>\n";
-		$xml .= "      <variable name=\"default_area_code\" value=\"" . $row['default_area_code'] . "\"/>\n";
-		$xml .= "    </variables>\n";
-		$xml .= "  </user>\n";
-		$xml .= "</include>\n";
-		fwrite($fout, $xml);
-		unset($xml);
-		fclose($fout);
-
+	if (!empty($row) && !empty($_SESSION['switch']['conf']['dir'])) {
+		//event_socket.conf.xml
 		$event_socket_ip_address = $row['event_socket_ip_address'];
 		if (empty($event_socket_ip_address)) { $event_socket_ip_address = '127.0.0.1'; }
-
 		$fout = fopen($_SESSION['switch']['conf']['dir']."/autoload_configs/event_socket.conf.xml","w");
 		$xml = "<configuration name=\"event_socket.conf\" description=\"Socket Client\">\n";
 		$xml .= "  <settings>\n";
@@ -162,6 +146,7 @@ function save_setting_xml() {
 		unset($xml, $event_socket_password);
 		fclose($fout);
 
+		//xml_rpc.conf.xml
 		$fout = fopen($_SESSION['switch']['conf']['dir']."/autoload_configs/xml_rpc.conf.xml","w");
 		$xml = "<configuration name=\"xml_rpc.conf\" description=\"XML RPC\">\n";
 		$xml .= "  <settings>\n";
@@ -178,18 +163,18 @@ function save_setting_xml() {
 		fclose($fout);
 
 		//shout.conf.xml
-			$fout = fopen($_SESSION['switch']['conf']['dir']."/autoload_configs/shout.conf.xml","w");
-			$xml = "<configuration name=\"shout.conf\" description=\"mod shout config\">\n";
-			$xml .= "  <settings>\n";
-			$xml .= "    <!-- Don't change these unless you are insane -->\n";
-			$xml .= "    <param name=\"decoder\" value=\"" . $row['mod_shout_decoder'] . "\"/>\n";
-			$xml .= "    <param name=\"volume\" value=\"" . $row['mod_shout_volume'] . "\"/>\n";
-			$xml .= "    <!--<param name=\"outscale\" value=\"8192\"/>-->\n";
-			$xml .= "  </settings>\n";
-			$xml .= "</configuration>";
-			fwrite($fout, $xml);
-			unset($xml);
-			fclose($fout);
+		$fout = fopen($_SESSION['switch']['conf']['dir']."/autoload_configs/shout.conf.xml","w");
+		$xml = "<configuration name=\"shout.conf\" description=\"mod shout config\">\n";
+		$xml .= "  <settings>\n";
+		$xml .= "    <!-- Don't change these unless you are insane -->\n";
+		$xml .= "    <param name=\"decoder\" value=\"" . $row['mod_shout_decoder'] . "\"/>\n";
+		$xml .= "    <param name=\"volume\" value=\"" . $row['mod_shout_volume'] . "\"/>\n";
+		$xml .= "    <!--<param name=\"outscale\" value=\"8192\"/>-->\n";
+		$xml .= "  </settings>\n";
+		$xml .= "</configuration>";
+		fwrite($fout, $xml);
+		unset($xml);
+		fclose($fout);
 	}
 	unset($sql, $row);
 
