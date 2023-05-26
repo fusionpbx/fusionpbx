@@ -108,7 +108,7 @@
 	}
 	$sql .= "and enabled = 'true' ";
 	if (!permission_exists('extension_edit')) {
-		if (is_array($_SESSION['user']['extension']) && count($_SESSION['user']['extension']) > 0) {
+		if (!empty($_SESSION['user']['extension']) && count($_SESSION['user']['extension']) > 0) {
 			$sql .= "and (";
 			$x = 0;
 			foreach ($_SESSION['user']['extension'] as $row) {
@@ -125,7 +125,7 @@
 		}
 	}
 	$database = new database;
-	$num_rows = $database->select($sql, $parameters, 'column');
+	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 	unset($parameters);
 
 //prepare the paging
@@ -173,7 +173,7 @@
 	}
 	$sql .= "and enabled = 'true' ";
 	if (!permission_exists('extension_edit')) {
-		if (is_array($_SESSION['user']['extension']) && count($_SESSION['user']['extension']) > 0) {
+		if (!empty($_SESSION['user']['extension']) && count($_SESSION['user']['extension']) > 0) {
 			$sql .= "and (";
 			$x = 0;
 			foreach ($_SESSION['user']['extension'] as $row) {
@@ -192,7 +192,7 @@
 	$sql .= order_by($order_by, $order, 'extension', 'asc');
 	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;
-	$extensions = $database->select($sql, $parameters, 'all');
+	$extensions = $database->select($sql, $parameters ?? null, 'all');
 	unset($parameters);
 
 	//if there are no extensions then set to empty array
@@ -247,7 +247,7 @@
 		echo "<input type='text' class='txt list-search' name='search' id='search' value=\"" . escape($search) . "\" placeholder=\"" . $text['label-search'] . "\" onkeydown=''>";
 		echo button::create(['label' => $text['button-search'], 'icon' => $_SESSION['theme']['button_icon_search'], 'type' => 'submit', 'id' => 'btn_search']);
 		//echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','link'=>'call_forward.php','style'=>($search == '' ? 'display: none;' : null)]);
-		if ($paging_controls_mini != '') {
+		if (!empty($paging_controls_mini)) {
 			echo "<span style='margin-left: 15px;'>" . $paging_controls_mini . "</span>";
 		}
 		echo "		</form>\n";
@@ -297,7 +297,7 @@
 	}
 	echo "</tr>\n";
 
-	if (is_array($extensions)) {
+	if (!empty($extensions)) {
 		$x = 0;
 		foreach ($extensions as $row) {
 			$list_row_url = PROJECT_PATH . "/app/call_forward/call_forward_edit.php?id=" . $row['extension_uuid'] . "&return_url=" . urlencode($_SERVER['REQUEST_URI']);
@@ -369,7 +369,7 @@
 					$parameters['follow_me_uuid'] = $row['follow_me_uuid'];
 					$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 					$database = new database;
-					$follow_me_destination_count = $database->select($sql, $parameters, 'column');
+					$follow_me_destination_count = $database->select($sql, $parameters ?? null, 'column');
 					unset($sql, $parameters);
 				}
 				echo "	<td>\n";
