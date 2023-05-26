@@ -66,7 +66,6 @@
 		$show_option_delete = '';
 		$voicemail_option_digits = '';
 		$voicemail_option_description = '';
-		$voicemail_mail_to = '';
 
 //get http variables and set them to php variables
 	$referer_path = $_REQUEST["referer_path"] ?? '';
@@ -297,7 +296,7 @@
 	}
 
 //pre-populate the form
-	if (count($_GET)>0 && is_uuid($_GET["id"]) && $_POST["persistformvar"] != "true") {
+	if (!empty($_GET)&& is_uuid($_GET["id"]) && empty($_POST["persistformvar"])) {
 		$voicemail_uuid = $_GET["id"];
 		$sql = "select * from v_voicemails ";
 		$sql .= "where domain_uuid = :domain_uuid ";
@@ -306,7 +305,7 @@
 		$parameters['voicemail_uuid'] = $voicemail_uuid;
 		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
-		if (is_array($row) && @sizeof($row) != 0) {
+		if (!empty($row)) {
 			$voicemail_id = $row["voicemail_id"];
 			$voicemail_password = $row["voicemail_password"];
 			$greeting_id = $row["greeting_id"];
@@ -328,7 +327,7 @@
 	}
 
 //remove the spaces
-	$voicemail_mail_to = str_replace(" ", "", $voicemail_mail_to) ?? '';
+	$voicemail_mail_to = str_replace(" ", "", !empty($voicemail_mail_to));
 
 //set the defaults
 	if (empty($voicemail_local_after_email)) { $voicemail_local_after_email = 'true'; }
