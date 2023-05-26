@@ -231,7 +231,6 @@ if (!class_exists('sofia_global_settings')) {
 
 						//save the changes and set the message
 							if (!empty($array) && @sizeof($array) != 0) {
-//view_array($array);
 								//save the array
 									$database = new database;
 									$database->app_name = $this->app_name;
