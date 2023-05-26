@@ -365,7 +365,7 @@
 	echo "    ".$text['label-import_data']."\n";
 	echo "</td>\n";
 	echo "<td width='70%' class='vtable' align='left'>\n";
-	echo "    <textarea name='data' id='data' class='formfld' style='width: 100%; min-height: 150px;' wrap='off'>".!empty($data)."</textarea>\n";
+	echo "    <textarea name='data' id='data' class='formfld' style='width: 100%; min-height: 150px;' wrap='off'></textarea>\n";
 	echo "<br />\n";
 	echo $text['description-import_data']."\n";
 	echo "</td>\n";
