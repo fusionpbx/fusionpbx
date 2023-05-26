@@ -48,6 +48,7 @@
 
 //set additional variables
 	$search = $_GET["search"] ?? '';
+	$show = $_GET["show"] ?? '';
 
 //get the http post data
 	if (!empty($_POST['call_recordings'])) {
@@ -77,7 +78,7 @@
 	$order = $_GET["order"] ?? '';
 
 //add the search string
-	if (!empty($_GET["search"])) {
+	if (!empty($search)) {
 		$search =  strtolower($_GET["search"]);
 	}
 
@@ -123,7 +124,7 @@
 	$sql .= "from view_call_recordings as r, v_domains as d ";
 	//$sql .= "from v_call_recordings as r, v_domains as d ";
 	$sql .= "where true ";
-	if (!empty($_GET['show']) != "all" || !permission_exists('call_recording_all')) {
+	if ($show != "all" || !permission_exists('call_recording_all')) {
 		$sql .= "and (r.domain_uuid = :domain_uuid or r.domain_uuid is null) ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	}
@@ -156,7 +157,7 @@
 
 //prepare to page the results
 	$param = "&search=".urlencode($search);
-	if (!empty($_GET['show']) == "all" && permission_exists('call_recording_all')) {
+	if ($show == "all" && permission_exists('call_recording_all')) {
 		$param .= "&show=all";
 	}
 	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true, $result_count); //top
@@ -182,7 +183,7 @@
 	}
 	echo 		"<form id='form_search' class='inline' method='get'>\n";
 	if (permission_exists('call_recording_all')) {
-		if (!empty($_GET['show']) == 'all') {
+		if ($show == 'all') {
 			echo "		<input type='hidden' name='show' value='all'>";
 		}
 		else {
@@ -192,7 +193,7 @@
 	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=''>";
 	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search','collapse'=>'hide-xs']);
 	echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','link'=>'call_recordings.php','style'=>($search == '' ? 'display: none;' : null),'collapse'=>'hide-xs']);
-	if ($paging_controls_mini != '') {
+	if (!empty($paging_controls_mini)) {
 		echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>\n";
 	}
 	echo "		</form>\n";
@@ -214,7 +215,7 @@
 	echo "<table class='list'>\n";
 	echo "<tr class='list-header'>\n";
 	$col_count = 7;
-	if (!empty($_GET['show']) == "all" && permission_exists('call_recording_all')) {
+	if ($show == "all" && permission_exists('call_recording_all')) {
 		$col_count++;
 	}
 	if (permission_exists('call_recording_delete')) {
@@ -223,7 +224,7 @@
 		echo "	</th>\n";
 		$col_count++;
 	}
-	if (!empty($_GET['show']) == "all" && permission_exists('call_recording_all')) {
+	if ($show == "all" && permission_exists('call_recording_all')) {
 		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, $param, "class='shrink'");
 	}
 	echo th_order_by('caller_id_name', $text['label-caller_id_name'], $order_by, $order, null, "class='hide-sm-dn shrink'");
