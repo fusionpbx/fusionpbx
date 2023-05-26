@@ -49,7 +49,7 @@
 	$destination = new destinations;
 
 //action add or update
-	if (is_uuid($_REQUEST["id"] ?? '')) {
+	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
 		$voicemail_uuid = $_REQUEST["id"];
 	}
