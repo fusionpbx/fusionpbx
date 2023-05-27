@@ -189,9 +189,9 @@
 				$caller_id_number = $row->caller_id_number;
 				$switch_cmd = "uuid_getvar ".$uuid. " hand_raised";
 				$hand_raised = (trim(event_socket_request($fp, 'api '.$switch_cmd)) == "true") ? "true" : "false";
-				//format seconds
-				$join_time_formatted = sprintf('%02d:%02d:%02d', floor($join_time / 3600), floor($join_time / 60), $join_time % 60);
-				$last_talking_formatted = sprintf('%02d:%02d:%02d', floor($last_talking / 3600), floor($last_talking / 60), $last_talking % 60);
+				//format secondsfloor(floor($fifo_duration / 60) % 60)
+				$join_time_formatted = sprintf('%02d:%02d:%02d', floor($join_time / 3600), floor(floor($join_time / 60) % 60), $join_time % 60);
+				$last_talking_formatted = sprintf('%02d:%02d:%02d', floor($last_talking / 3600), floor(floor($last_talking / 60) % 60), $last_talking % 60);
 
 				if (empty($record_path)) {
 					if (permission_exists('conference_interactive_mute')) {
