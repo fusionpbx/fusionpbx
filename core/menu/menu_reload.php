@@ -58,7 +58,7 @@
 	unset($menu);
 
 //redirect the user
-	message::add($text['message-reload']);
+	//message::add($text['message-reload']);
 	header("Location: ".PROJECT_PATH."/core/menu/menu_edit.php?id=".urlencode($menu_uuid));
 	return;
 
