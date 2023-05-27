@@ -123,7 +123,7 @@
 				$parameters['menu_item_uuid'] = $menu_item_uuid;
 				$database = new database;
 				$sub_result = $database->select($sql, $parameters, 'all');
-				unset($sql, $parameters, $group_list);
+				unset($sql, $parameters, $group_array);
 
 				$group_list = '';
 				if (!empty($sub_result) && sizeof($sub_result) != 0) {
