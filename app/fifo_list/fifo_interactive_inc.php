@@ -183,7 +183,7 @@
 					$fifo_timestamp = urldecode($row->cdr->variables->fifo_timestamp);
 					$fifo_time = strtotime($fifo_timestamp);
 					$fifo_duration = time() - $fifo_time;
-					$fifo_duration_formatted = sprintf('%02d:%02d:%02d', floor($fifo_duration / 3600), floor($fifo_duration / 60), $fifo_duration % 60);
+					$fifo_duration_formatted = sprintf('%02d:%02d:%02d', floor($fifo_duration / 3600), floor(floor($fifo_duration / 60) % 60), $fifo_duration % 60);
 
 					echo "<tr>\n";
 					echo "<td valign='top' class='".$row_style[$c]."'>".escape($username)." &nbsp;</td>\n";
