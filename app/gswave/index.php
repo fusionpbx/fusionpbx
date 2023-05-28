@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -46,7 +46,7 @@
 	$text = $language->get();
 
 //verify the id is as uuid then set as a variable
-	if (is_uuid($_GET['id'])) {
+	if (!empty($_GET['id']) && is_uuid($_GET['id'])) {
 		$extension_uuid = $_GET['id'];
 	}
 
@@ -75,10 +75,10 @@
 	$extensions = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
-	if (is_uuid($extension_uuid) && is_array($extensions) && @sizeof($extensions) != 0) {
+	if (!empty($extension_uuid) && is_uuid($extension_uuid) && !empty($extensions)) {
 
 		//loop through get selected extension
-			if (is_array($extensions) && @sizeof($extensions) != 0) {
+			if (!empty($extensions)) {
 				foreach ($extensions as $extension) {
 					if ($extension['extension_uuid'] == $extension_uuid) {
 						$field = $extension;
@@ -129,7 +129,7 @@
 	echo "	<div class='heading'><b>".$text['title-gswave']."</b></div>\n";
 	echo "	<div class='actions'>\n";
 	echo "		<a href='https://play.google.com/store/apps/details?id=com.grandstream.wave' target='_blank'><img src='/app/gswave/resources/images/google_play.png' style='width: auto; height: 30px;' /></a>";
-	echo "		<a href='https://itunes.apple.com/us/app/grandstream-wave/id1029274043?ls=1&mt=8' target='_blank'><img src='/app/gswave/resources/images/apple_app_store.png' style='width: auto; height: 30px;' /></a>";
+	echo "		<a href='https://apps.apple.com/us/app/grandstream-wave/id1523254549' target='_blank'><img src='/app/gswave/resources/images/apple_app_store.png' style='width: auto; height: 30px;' /></a>";
 	//echo button::create(['type'=>'button','label'=>'Website','icon'=>'globe','style='margin-left: 15px;','link'=>'http://www.grandstream.com/products/ip-voice-telephony/softphone-app/product/grandstream-wave']);
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
@@ -154,7 +154,7 @@
 	echo "<br>\n";
 
 //stream the file
-	if (is_uuid($extension_uuid)) {
+	if (!empty($extension_uuid) && is_uuid($extension_uuid)) {
 		$xml = html_entity_decode( $xml, ENT_QUOTES, 'UTF-8' );
 		
 		require_once 'resources/qr_code/QRErrorCorrectLevel.php';
@@ -177,7 +177,7 @@
 	}
 
 //html image
-	if (is_uuid($extension_uuid)) {
+	if (!empty($extension_uuid) && is_uuid($extension_uuid)) {
 		echo "<img src=\"data:image/jpeg;base64,".base64_encode($image)."\" style='margin-top: 30px; padding: 5px; background: white; max-width: 100%;'>\n";
 	}
 
