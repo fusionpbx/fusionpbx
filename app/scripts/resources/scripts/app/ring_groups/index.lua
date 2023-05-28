@@ -614,7 +614,8 @@
 								if (tonumber(field.destination_timeout) < (tonumber(row.destination_timeout) - tonumber(field.destination_delay))) then
 									new_destination_timeout = field.destination_timeout;
 								else
-									new_destination_timeout = row.destination_timeout - field.destination_delay;
+									--new_destination_timeout = row.destination_timeout - field.destination_delay;
+									new_destination_timeout = row.destination_timeout;
 								end
 
 								--add to the destinations array
@@ -630,7 +631,8 @@
 								destinations[new_key]['ring_group_ringback'] = row.ring_group_ringback;
 								destinations[new_key]['domain_name'] = field.domain_name;
 								destinations[new_key]['destination_number'] = field.destination_number;
-								destinations[new_key]['destination_delay'] = field.destination_delay + row.destination_delay;
+								--destinations[new_key]['destination_delay'] = field.destination_delay + row.destination_delay;
+								destinations[new_key]['destination_delay'] = field.destination_delay;
 								destinations[new_key]['destination_timeout'] = new_destination_timeout;
 								destinations[new_key]['destination_prompt'] = field.destination_prompt;
 								destinations[new_key]['group_confirm_key'] = row.group_confirm_key;
@@ -744,7 +746,7 @@
 					--leg delay settings
 						if (ring_group_strategy == "enterprise") then
 							delay_name = "originate_delay_start";
-							destination_delay = destination_delay * 500;
+							--destination_delay = destination_delay * 500;
 						else
 							delay_name = "leg_delay_start";
 						end
@@ -828,7 +830,7 @@
 						else
 							--external number
 								-- have to double destination_delay here due a FS bug requiring a 50% delay value for internal externsions, but not external calls. 
-								destination_delay = destination_delay * 2;
+								--destination_delay = destination_delay * 2;
 
 								route_bridge = 'loopback/'..destination_number;
 								if (extension_toll_allow ~= nil) then
