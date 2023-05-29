@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2022
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -1359,7 +1359,7 @@
 							$templates = scandir($template_dir.'/'.$row["name"]);
 							foreach($templates as $dir) {
 								if (!empty($dir) && $dir != "." && $dir != ".." && $dir[0] != '.' && !empty($template_dir) && is_dir($template_dir.'/'.$row["name"].'/'.$dir)) {
-									$selected = $device_template == $row["name"]."/".$dir ? "selected='selected'" : null;
+									$selected = !empty($device_template) && $device_template == $row["name"]."/".$dir ? "selected='selected'" : null;
 									echo "				<option value='".escape($row["name"])."/".escape($dir)."' ".$selected.">".escape($row["name"])."/".escape($dir)."</option>\n";
 								}
 							}
