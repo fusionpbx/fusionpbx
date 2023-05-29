@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -150,9 +150,7 @@
 				foreach ($xml->profile as $row) {
 					unset($list_row_url);
 					$profile_name = (string) $row->name;
-					if (is_uuid($sip_profiles[$profile_name]) && permission_exists('sip_profile_edit')) {
-						$list_row_url = PROJECT_PATH."/app/sip_profiles/sip_profile_edit.php?id=".$sip_profiles[$profile_name];
-					}
+					$list_row_url = is_uuid($sip_profiles[$profile_name]) && permission_exists('sip_profile_edit') ? PROJECT_PATH."/app/sip_profiles/sip_profile_edit.php?id=".$sip_profiles[$profile_name] : null;
 					echo "<tr class='list-row' href='".$list_row_url."'>\n";
 					echo "	<td>";
 					if ($list_row_url) {
@@ -185,9 +183,7 @@
 							}
 						}
 					}
-					if ($_SESSION["domain_name"] == $gateway_domain_name) {
-						$list_row_url = PROJECT_PATH."/app/gateways/gateway_edit.php?id=".strtolower(escape($row->name));
-					}
+					$list_row_url = $_SESSION["domain_name"] == $gateway_domain_name ? PROJECT_PATH."/app/gateways/gateway_edit.php?id=".strtolower(escape($row->name)) : null;
 					echo "<tr class='list-row' href='".$list_row_url."'>\n";
 					echo "	<td>";
 					if ($_SESSION["domain_name"] == $gateway_domain_name) {
