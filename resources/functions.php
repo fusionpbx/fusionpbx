@@ -817,7 +817,7 @@ function format_string($format, $data) {
 //format seconds into hh:mm:ss
 	function format_hours($seconds) {
 		$hours = floor($seconds / 3600);
-		$minutes = floor(($seconds / 60) % 60);
+		$minutes = floor(floor($seconds / 60) % 60);
 		$seconds = $seconds % 60;
 		if (strlen($minutes) == 1) { $minutes = '0'.$minutes; }
 		if (strlen($seconds) == 1) { $seconds = '0'.$seconds; }
