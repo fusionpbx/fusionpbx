@@ -1112,7 +1112,7 @@ if (!class_exists('xml_cdr')) {
 				}
 
 			//build the date range
-				if (strlen($this->start_stamp_begin) > 0 || !empty($this->start_stamp_end)) {
+				if ((!empty($this->start_stamp_begin) && strlen($this->start_stamp_begin) > 0) || !empty($this->start_stamp_end)) {
 					unset($this->quick_select);
 					if (strlen($this->start_stamp_begin) > 0 && !empty($this->start_stamp_end)) {
 						$sql_date_range = " and start_stamp between :start_stamp_begin::timestamptz and :start_stamp_end::timestamptz \n";
@@ -1292,7 +1292,7 @@ if (!class_exists('xml_cdr')) {
 				$sql .= " sip_hangup_disposition, \n";
 				$sql .= " voicemail_message \n";
 				$sql .= " from v_xml_cdr \n";
-				if (!($_GET['show'] === 'all' && permission_exists('xml_cdr_extension_summary_all'))) {
+				if (!(!empty($_GET['show']) && $_GET['show'] === 'all' && permission_exists('xml_cdr_extension_summary_all'))) {
 					$sql .= " where domain_uuid = :domain_uuid \n";
 				}
 				else {
@@ -1303,12 +1303,12 @@ if (!class_exists('xml_cdr')) {
 
 				$sql .= "where \n";
 				$sql .= "d.domain_uuid = e.domain_uuid \n";
-				if (!($_GET['show'] === 'all' && permission_exists('xml_cdr_extension_summary_all'))) {
+				if (!(!empty($_GET['show']) && $_GET['show'] === 'all' && permission_exists('xml_cdr_extension_summary_all'))) {
 					$sql .= "and e.domain_uuid = :domain_uuid \n";
 				}
 				$sql .= "group by e.extension, e.domain_uuid, d.domain_uuid, e.number_alias, e.description \n";
 				$sql .= "order by extension asc \n";
-				if (!($_GET['show'] === 'all' && permission_exists('xml_cdr_extension_summary_all'))) {
+				if (!(!empty($_GET['show']) && $_GET['show'] === 'all' && permission_exists('xml_cdr_extension_summary_all'))) {
 					$parameters['domain_uuid'] = $this->domain_uuid;
 				}
 				$database = new database;
