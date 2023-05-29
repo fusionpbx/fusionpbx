@@ -42,9 +42,9 @@
 	}
 
 //set the variables
-	$profile = $_GET['profile'];
+	$profile = $_GET['profile'] ?? null;
 	$action = $_GET['action'];
-	$gateway = $_GET['gateway'];
+	$gateway = $_GET['gateway'] ?? null;
 
 //validate the sip profile name
 	$sql = "select sip_profile_name from v_sip_profiles ";
@@ -55,7 +55,7 @@
 	unset($sql, $parameters);
 
 //validate the gateway
-	if (is_uuid($_GET['gateway'])) {
+	if (!empty($_GET['gateway']) && is_uuid($_GET['gateway'])) {
 		$gateway_name = $_GET['gateway'];
 	}
 
@@ -110,7 +110,7 @@
 			if (isset($profile) && strlen($profile)) {
 				message::add('<strong>'.$profile.'</strong> '.$result, 'alert', 3000);
 			}
-			else {
+			else if (!empty($result)) {
 				message::add($result, 'alert');
 			}
 
