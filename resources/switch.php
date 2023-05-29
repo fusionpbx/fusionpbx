@@ -467,9 +467,9 @@ function outbound_route_to_bridge($domain_uuid, $destination_number, array $chan
 	if (!empty($outbound_routes)) {
 		$x = 0;
 		foreach ($outbound_routes as &$dialplan) {
-			$condition_match = false;
+			$condition_match = [];
 			foreach ($dialplan as &$dialplan_details) {
-				if ($dialplan_details['dialplan_detail_tag'] == "condition") {
+				if (!empty($dialplan_details['dialplan_detail_tag']) && $dialplan_details['dialplan_detail_tag'] == "condition") {
 					if ($dialplan_details['dialplan_detail_type'] == "destination_number") {
 							$pattern = '/'.$dialplan_details['dialplan_detail_data'].'/';
 							preg_match($pattern, $destination_number, $matches, PREG_OFFSET_CAPTURE);
@@ -478,11 +478,11 @@ function outbound_route_to_bridge($domain_uuid, $destination_number, array $chan
 							}
 							else {
 								$condition_match[] = 'true';
-								$regex_match_1 = $matches[1][0];
-								$regex_match_2 = $matches[2][0];
-								$regex_match_3 = $matches[3][0];
-								$regex_match_4 = $matches[4][0];
-								$regex_match_5 = $matches[5][0];
+								$regex_match_1 = $matches[1][0] ?? '';
+								$regex_match_2 = $matches[2][0] ?? '';
+								$regex_match_3 = $matches[3][0] ?? '';
+								$regex_match_4 = $matches[4][0] ?? '';
+								$regex_match_5 = $matches[5][0] ?? '';
 							}
 					}
 					elseif ($dialplan_details['dialplan_detail_type'] == "\${toll_allow}") {
@@ -500,8 +500,14 @@ function outbound_route_to_bridge($domain_uuid, $destination_number, array $chan
 		
 			if (!in_array('false', $condition_match)) {
 				foreach ($dialplan as &$dialplan_details) {
-					$dialplan_detail_data = $dialplan_details['dialplan_detail_data'];
-					if ($dialplan_details['dialplan_detail_tag'] == "action" && $dialplan_details['dialplan_detail_type'] == "bridge" && $dialplan_detail_data != "\${enum_auto_route}") {
+					$dialplan_detail_data = $dialplan_details['dialplan_detail_data'] ?? '';
+					if (
+						!empty($dialplan_details['dialplan_detail_tag']) &&
+						$dialplan_details['dialplan_detail_tag'] == "action" &&
+						!empty($dialplan_details['dialplan_detail_type']) &&
+						$dialplan_details['dialplan_detail_type'] == "bridge" &&
+						$dialplan_detail_data != "\${enum_auto_route}"
+						) {
 						$dialplan_detail_data = str_replace("\$1", $regex_match_1, $dialplan_detail_data);
 						$dialplan_detail_data = str_replace("\$2", $regex_match_2, $dialplan_detail_data);
 						$dialplan_detail_data = str_replace("\$3", $regex_match_3, $dialplan_detail_data);
