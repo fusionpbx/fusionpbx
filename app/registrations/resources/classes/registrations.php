@@ -243,6 +243,7 @@ if (!class_exists('registrations')) {
 					if (is_array($records) && @sizeof($records) != 0) {
 						foreach($records as $record) {
 							if (
+								!empty($record['checked']) &&
 								$record['checked'] == 'true' &&
 								$record['user'] != '' &&
 								$record['profile'] != ''
