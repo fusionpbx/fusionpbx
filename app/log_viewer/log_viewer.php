@@ -94,7 +94,7 @@
 				}
 			}
 			if (isset($filename) && file_exists($filename)) {
-				session_cache_limiter('public');
+				@session_cache_limiter('public');
 				$fd = fopen($filename, "rb");
 				header("Content-Type: binary/octet-stream");
 				header("Content-Length: " . filesize($filename));
@@ -320,7 +320,7 @@
 		else {
 			$adj_index = 1;
 		}
-		if (is_array($array_output)) {
+		if (!empty($array_output) && is_array($array_output)) {
 			foreach ($array_output as $index => $line) {
 				$line_num = "";
 				if ($line != "<span style='color: #fff; font-family: monospace;'></span><br>") {
