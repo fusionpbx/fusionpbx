@@ -56,6 +56,10 @@ if (!class_exists('registrations')) {
 		 */
 		public function get($profile = 'all') {
 
+			//add multi-lingual support
+				$language = new text;
+				$text = $language->get();
+
 			//initialize the id used in the registrations array
 				$id = 0;
 
