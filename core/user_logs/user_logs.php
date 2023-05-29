@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018 - 2022
+	Portions created by the Initial Developer are Copyright (C) 2018 - 2023
 	the Initial Developer. All Rights Reserved.
 */
 
@@ -44,14 +44,14 @@
 	$text = $language->get();
 
 //get the http post data
-	if (is_array($_POST['user_logs'])) {
+	if (!empty($_POST['user_logs']) && is_array($_POST['user_logs'])) {
 		$action = $_POST['action'];
 		$search = $_POST['search'];
 		$user_logs = $_POST['user_logs'];
 	}
 
 //process the http post data by action
-	if ($action != '' && is_array($user_logs) && @sizeof($user_logs) != 0) {
+	if (!empty($action) && !empty($user_logs) && is_array($user_logs) && @sizeof($user_logs) != 0) {
 
 		//validate the token
 		$token = new token;
@@ -62,7 +62,7 @@
 		}
 
 		//prepare the array
-		foreach($user_logs as $row) {
+		foreach ($user_logs as $row) {
 			$array['user_logs'][$x]['checked'] = $row['checked'];
 			$array['user_logs'][$x]['user_log_uuid'] = $row['user_log_uuid'];
 			$x++;
@@ -86,8 +86,8 @@
 	}
 
 //get order and order by
-	$order_by = $_GET["order_by"];
-	$order = $_GET["order"];
+	$order_by = $_GET["order_by"] ?? null;
+	$order = $_GET["order"] ?? null;
 
 //add the search
 	if (isset($_GET["search"])) {
@@ -98,7 +98,7 @@
 //get the count
 	$sql = "select count(user_log_uuid) ";
 	$sql .= "from v_user_logs ";
-	if (permission_exists('user_log_all') && $_GET['show'] == 'all') {
+	if (permission_exists('user_log_all') && !empty($_GET['show']) && $_GET['show'] == 'all') {
 		$sql .= "where true ";
 	}
 	else {
@@ -116,14 +116,14 @@
 		$parameters['search'] = '%'.$search.'%';
 	}
 	$database = new database;
-	$num_rows = $database->select($sql, $parameters, 'column');
+	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 	unset($sql, $parameters);
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
-	$param = $search ? "search=".$search : null;
-	$param .= ($_GET['show'] == 'all' && permission_exists('user_log_all')) ? "&show=all" : null;
-	$page = is_numeric($_GET['page']) ? $_GET['page'] : 0;
+	$param = !empty($search) ? "search=".$search : null;
+	$param .= !empty($_GET['show']) && $_GET['show'] == 'all' && permission_exists('user_log_all') ? "&show=all" : null;
+	$page = !empty($_GET['page']) && is_numeric($_GET['page']) ? $_GET['page'] : 0;
 	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
 	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
@@ -150,7 +150,7 @@
 	$sql .= "remote_address, ";
 	$sql .= "user_agent ";
 	$sql .= "from v_user_logs ";
-	if (permission_exists('user_log_all') && $_GET['show'] == 'all') {
+	if (permission_exists('user_log_all') && !empty($_GET['show']) && $_GET['show'] == 'all') {
 		$sql .= "where true ";
 	}
 	else {
@@ -190,14 +190,14 @@
 	}
 	echo 		"<form id='form_search' class='inline' method='get'>\n";
 	if (permission_exists('user_log_all')) {
-		if ($_GET['show'] == 'all') {
+		if (!empty($_GET['show']) && $_GET['show'] == 'all') {
 			echo "		<input type='hidden' name='show' value='all'>\n";
 		}
 		else {
-			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$_SESSION['theme']['button_icon_all'],'link'=>'?show=all&search='.$search]);
+			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$_SESSION['theme']['button_icon_all'],'link'=>'?show=all'.(!empty($search) ? '&search='.urlencode($search) : null)]);
 		}
 	}
-	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=''>";
+	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search ?? '')."\" placeholder=\"".$text['label-search']."\" onkeydown=''>";
 	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search']);
 	//echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','link'=>'user_logs.php','style'=>($search == '' ? 'display: none;' : null)]);
 	if ($paging_controls_mini != '') {
@@ -217,16 +217,16 @@
 
 	echo "<form id='form_list' method='post'>\n";
 	echo "<input type='hidden' id='action' name='action' value=''>\n";
-	echo "<input type='hidden' name='search' value=\"".escape($search)."\">\n";
+	echo "<input type='hidden' name='search' value=\"".escape($search ?? '')."\">\n";
 
 	echo "<table class='list'>\n";
 	echo "<tr class='list-header'>\n";
 	if (permission_exists('user_log_add') || permission_exists('user_log_edit') || permission_exists('user_log_delete')) {
 		echo "	<th class='checkbox'>\n";
-		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".($user_logs ?: "style='visibility: hidden;'").">\n";
+		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".(empty($user_logs) ? "style='visibility: hidden;'" : null).">\n";
 		echo "	</th>\n";
 	}
-	if ($_GET['show'] == 'all' && permission_exists('user_log_all')) {
+	if (!empty($_GET['show']) && $_GET['show'] == 'all' && permission_exists('user_log_all')) {
 		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order);
 	}
 	echo "<th class='left'>".$text['label-date']."</th>\n";
@@ -241,12 +241,10 @@
 	}
 	echo "</tr>\n";
 
-	if (is_array($user_logs) && @sizeof($user_logs) != 0) {
+	if (!empty($user_logs) && is_array($user_logs) && @sizeof($user_logs) != 0) {
 		$x = 0;
 		foreach ($user_logs as $row) {
-			if (permission_exists('user_log_edit')) {
-				$list_row_url = "user_log_edit.php?id=".urlencode($row['user_log_uuid']);
-			}
+			$list_row_url = permission_exists('user_log_edit') ? "user_log_edit.php?id=".urlencode($row['user_log_uuid']) : null;
 			echo "<tr class='list-row' href='".$list_row_url."'>\n";
 			if (permission_exists('user_log_add') || permission_exists('user_log_edit') || permission_exists('user_log_delete')) {
 				echo "	<td class='checkbox'>\n";
@@ -254,7 +252,7 @@
 				echo "		<input type='hidden' name='user_logs[$x][user_log_uuid]' value='".escape($row['user_log_uuid'])."' />\n";
 				echo "	</td>\n";
 			}
-			if ($_GET['show'] == 'all' && permission_exists('user_log_all')) {
+			if (!empty($_GET['show']) && $_GET['show'] == 'all' && permission_exists('user_log_all')) {
 				echo "	<td>".escape($_SESSION['domains'][$row['domain_uuid']]['domain_name'])."</td>\n";
 			}
 			echo "	<td>".escape($row['date_formatted'])."</td>\n";
