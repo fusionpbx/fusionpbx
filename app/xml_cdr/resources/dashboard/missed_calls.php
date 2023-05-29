@@ -152,15 +152,15 @@
 			//set click-to-call variables
 			if (permission_exists('click_to_call_call')) {
 				$tr_link = "onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php".
-					"?src_cid_name=".urlencode($row['caller_id_name']).
-					"&src_cid_number=".urlencode($row['caller_id_number']).
-					"&dest_cid_name=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_name']).
-					"&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number']).
-					"&src=".urlencode($_SESSION['user']['extension'][0]['user']).
-					"&dest=".urlencode($row['caller_id_number']).
-					"&rec=".(isset($_SESSION['click_to_call']['record']['boolean'])?$_SESSION['click_to_call']['record']['boolean']:"false").
-					"&ringback=".(isset($_SESSION['click_to_call']['ringback']['text'])?$_SESSION['click_to_call']['ringback']['text']:"us-ring").
-					"&auto_answer=".(isset($_SESSION['click_to_call']['auto_answer']['boolean'])?$_SESSION['click_to_call']['auto_answer']['boolean']:"true").
+					"?src_cid_name=".urlencode($row['caller_id_name'] ?? '').
+					"&src_cid_number=".urlencode($row['caller_id_number'] ?? '').
+					"&dest_cid_name=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_name'] ?? '').
+					"&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number'] ?? '').
+					"&src=".urlencode($_SESSION['user']['extension'][0]['user'] ?? '').
+					"&dest=".urlencode($row['caller_id_number'] ?? '').
+					"&rec=".(isset($_SESSION['click_to_call']['record']['boolean']) ? $_SESSION['click_to_call']['record']['boolean'] : "false").
+					"&ringback=".(isset($_SESSION['click_to_call']['ringback']['text']) ? $_SESSION['click_to_call']['ringback']['text'] : "us-ring").
+					"&auto_answer=".(isset($_SESSION['click_to_call']['auto_answer']['boolean']) ? $_SESSION['click_to_call']['auto_answer']['boolean'] : "true").
 					"');\" ".
 					"style='cursor: pointer;'";
 			}
