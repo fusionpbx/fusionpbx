@@ -278,12 +278,12 @@
 	if (!isset($fax_retry_count)) {
 		$fax_retry_count = 0;
 	}
-	elseif ($fax_status != 'busy') {
+	else {
 		$fax_retry_count = $fax_retry_count + 1;
 	}
 
 //determine if the retry count exceed the limit
-	if ($fax_status != 'sent' && $fax_status != 'busy' && $fax_retry_count > $retry_limit) {
+	if ($fax_status != 'sent' && $fax_retry_count > $retry_limit) {
 		$fax_status = 'failed';
 	}
 
