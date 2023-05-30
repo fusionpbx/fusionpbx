@@ -627,7 +627,7 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	sound_select_list(!empty($call_flow_sound), 'call_flow_sound', 'call_flow_sound', true);
+	sound_select_list($call_flow_sound, 'call_flow_sound', 'call_flow_sound', true);
 
 	/*
 	echo "<tr>\n";
@@ -671,7 +671,7 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	sound_select_list(!empty($call_flow_alternate_sound), 'call_flow_alternate_sound', 'call_flow_alternate_sound', true);
+	sound_select_list($call_flow_alternate_sound, 'call_flow_alternate_sound', 'call_flow_alternate_sound', true);
 
 	/*
 	echo "<tr>\n";
