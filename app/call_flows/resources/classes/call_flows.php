@@ -56,7 +56,6 @@ if (!class_exists('call_flows')) {
 				$this->list_page = 'call_flows.php';
 				$this->table = 'call_flows';
 				$this->uuid_prefix = 'call_flow_';
-				$this->toggle_field = 'call_flow_enabled';
 				$this->toggle_values = ['true','false'];
 
 		}
