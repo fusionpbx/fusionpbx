@@ -116,7 +116,7 @@
 		$parameters['domain_uuid'] = $domain_uuid;
 	}
 	$database = new database;
-	$num_rows = $database->select($sql, $parameters, 'column');
+	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 	unset($parameters);
 
 //prepare to page the results
@@ -155,7 +155,7 @@
 	$sql .= order_by($order_by, $order, 'stream_name', 'asc');
 	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;
-	$streams = $database->select($sql, (is_array($parameters) && @sizeof($parameters) != 0 ? $parameters : null), 'all');
+	$streams = $database->select($sql, (!empty($parameters) && @sizeof($parameters) != 0 ? $parameters : null), 'all');
 	unset($sql, $parameters);
 
 //create token
