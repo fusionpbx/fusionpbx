@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -10,7 +11,13 @@ use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, HasUuids;
+    protected $table = 'v_users';
+    protected $primaryKey = 'user_uuid';
+    public $incrementing = false;
+    protected $keyType='string';	// TODO, check if UUID is valid
+    const CREATED_AT = 'insert_date';
+    const UPDATED_AT = 'update_date';
 
     /**
      * The attributes that are mass assignable.
