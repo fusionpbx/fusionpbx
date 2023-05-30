@@ -43,15 +43,21 @@
 	$language = new text;
 	$text = $language->get();
 
+//set additional variables
+	$show = $_GET["show"] ?? '';
+
+//set the defaults
+	$search = '';
+
 //get the http post data
-	if (is_array($_POST['streams'])) {
+	if (!empty($_POST['streams'])) {
 		$action = $_POST['action'];
 		$search = $_POST['search'];
 		$streams = $_POST['streams'];
 	}
 
 //process the http post data by action
-	if ($action != '' && is_array($streams) && @sizeof($streams) != 0) {
+	if (!empty($action)) {
 		switch ($action) {
 			case 'copy':
 				if (permission_exists('stream_add')) {
@@ -78,8 +84,8 @@
 	}
 
 //get order and order by
-	$order_by = $_GET["order_by"];
-	$order = $_GET["order"];
+	$order_by = $_GET["order_by"] ?? '';
+	$order = $_GET["order"] ?? '';
 
 //add the search term
 	if (isset($_GET["search"])) {
@@ -98,7 +104,7 @@
 		$sql .= ") ";
 		$parameters['search'] = '%'.$search.'%';
 	}
-	if (permission_exists('stream_all') && $_GET['show'] == "all") {
+	if (permission_exists('stream_all') && $show == "all") {
 		//show all
 	}
 	elseif (permission_exists('stream_all')) {
@@ -116,9 +122,9 @@
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
 	$param = "&search=".$search;
-	$param = ($_GET['show'] == 'all' && permission_exists('stream_all')) ? "&show=all" : null;
-	$page = is_numeric($_GET['page']) ? $_GET['page'] : 0;
-	if (empty($page)) { $page = 0; $_GET['page'] = 0; }
+	$param = ($show == 'all' && permission_exists('stream_all')) ? "&show=all" : null;
+	$page = isset($_GET['page']) ? $_GET['page'] : 0;
+	if (!empty($page)) { $page = 0; $_GET['page'] = 0; }
 	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
 	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
@@ -135,7 +141,7 @@
 		$sql .= ") ";
 		$parameters['search'] = '%'.$search.'%';
 	}
-	if (permission_exists('stream_all') && $_GET['show'] == "all") {
+	if (permission_exists('stream_all') && $show == "all") {
 		//show all
 	}
 	elseif (permission_exists('stream_all')) {
@@ -188,7 +194,7 @@
 	}
 	echo 		"<form id='form_search' class='inline' method='get'>\n";
 	if (permission_exists('stream_all')) {
-		if ($_GET['show'] == 'all') {
+		if ($show == 'all') {
 			echo "		<input type='hidden' name='show' value='all'>\n";
 		}
 		else {
@@ -230,14 +236,14 @@
 		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".($streams ?: "style='visibility: hidden;'").">\n";
 		echo "	</th>\n";
 	}
-	if ($_GET['show'] == 'all' && permission_exists('stream_all')) {
+	if ($show == 'all' && permission_exists('stream_all')) {
 		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order);
 	}
 	echo th_order_by('stream_name', $text['label-stream_name'], $order_by, $order);
 	echo "	<th class='pct-60'>".$text['label-play']."</th>\n";
 	echo th_order_by('stream_enabled', $text['label-stream_enabled'], $order_by, $order, null, "class='center'");
 	echo th_order_by('stream_description', $text['label-stream_description'], $order_by, $order, null, "class='hide-sm-dn'");
-	if (permission_exists('stream_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+	if (permission_exists('stream_edit') && !empty($_SESSION['theme']['list_row_edit_button']['boolean']) && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
