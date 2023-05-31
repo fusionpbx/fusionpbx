@@ -136,7 +136,7 @@
 //add the search term
 	$search = strtolower($_GET["search"] ?? '');
 	if (!empty($search)) {
-		if (is_numeric($search)) {
+		if (isset($search)) {
 			$sql_search .= "and contact_uuid in ( ";
 			$sql_search .= "	select contact_uuid from v_contact_phones ";
 			$sql_search .= "	where phone_number like :search ";
