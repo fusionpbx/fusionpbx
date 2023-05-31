@@ -61,13 +61,13 @@
 	$sql .= "c.contact_name_given asc, ";
 	$sql .= "c.contact_name_family asc ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$parameters['contact_uuid'] = $contact_uuid;
+	$parameters['contact_uuid'] = $contact_uuid ?? '';
 	$database = new database;
-	$contact_relations = $database->select($sql, $parameters, 'all');
+	$contact_relations = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 
 //show if exists
-	if (is_array($contact_relations) && @sizeof($contact_relations) != 0) {
+	if (!empty($contact_relations)) {
 
 		//show the content
 			echo "<div class='grid' style='grid-template-columns: 70px auto auto;'>\n";
