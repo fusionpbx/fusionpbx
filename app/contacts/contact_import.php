@@ -116,9 +116,9 @@
 					$schema[$i]['table'] = $table_name;
 					$schema[$i]['parent'] = $parent_name;
 					foreach ($table['fields'] as $row) {
-						if ($row['deprecated'] !== 'true') {
+						if (!empty($row['deprecated']) && $row['deprecated'] !== 'true') {
 							if (!empty($row['name'])) {
-								$field_name = $row['name']['text'];
+								$field_name = $row['name']['text'] ?? '';
 							}
 							else {
 								$field_name = $row['name'];
