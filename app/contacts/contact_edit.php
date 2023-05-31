@@ -1606,19 +1606,7 @@ if (permission_exists('contact_phone_view')) {
 			echo "			<div class='checkbox' style='float: left; margin-top: 3px; margin-left: 8px;'>\n";
 			echo "				<input type='checkbox' name='contact_phones[$x][checked]' id='checkbox_".$x."' class='chk_delete checkbox_phones' value='true' onclick=\"edit_delete_action('phones');\">\n";
 			echo "				<input type='hidden' name='contact_phones[$x][uuid]' value='".escape($row['contact_phone_uuid'])."' />\n";
-			echo "	
-
-Warning: Undefined variable $contact_name_given in /usr/local/www/fusionpbx/app/contacts/contact_edit.php on line 1240
-Middle
-
-Warning: Undefined variable $contact_name_middle in /usr/local/www/fusionpbx/app/contacts/contact_edit.php on line 1247
-Last Name
-
-Warning: Undefined variable $contact_name_family in /usr/local/www/fusionpbx/app/contacts/contact_edit.php on line 1254
-Suffix
-
-Warning: Undefined variable $contact_name_suffix in /usr/local/www/fusionpbx/app/contacts/contact_edit.php on line 1261
-		</div>\n";
+			echo "			</div>\n";
 		}
 		echo "			<div class='button no-link' style='float: left; margin-top: 1px; margin-left: 8px;'>\n";
 		echo "				<a href='../xml_cdr/xml_cdr.php?caller_id_number=".urlencode($row['phone_number'])."'>\n";
