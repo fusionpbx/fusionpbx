@@ -43,13 +43,13 @@
 	$text = $language->get();
 
 //action add or update
-	$contact_attachment_uuid = $_REQUEST['id'];
-	$contact_uuid = $_REQUEST['contact_uuid'];
+	$contact_attachment_uuid = $_REQUEST['id'] ?? '';
+	$contact_uuid = $_REQUEST['contact_uuid'] ?? '';
 
-	if (is_uuid($contact_attachment_uuid) && is_uuid($contact_uuid)) {
+	if (!empty($contact_attachment_uuid) && !empty($contact_uuid) && is_uuid($contact_attachment_uuid) && is_uuid($contact_uuid)) {
 		$action = 'update';
 	}
-	else if (is_uuid($contact_uuid)) {
+	else if (!empty($contact_uuid) && is_uuid($contact_uuid)) {
 		$action = 'add';
 	}
 	else {
@@ -57,7 +57,7 @@
 	}
 
 //get http post variables and set them to php variables
-	if (is_array($_POST) && sizeof($_POST) != 0) {
+	if (!empty($_POST)) {
 
 		$attachment = $_FILES['attachment'];
 		$attachment_primary = $_POST['attachment_primary'];
@@ -71,7 +71,7 @@
 				exit;
 			}
 
-		if (!is_array($attachment) || sizeof($attachment) == 0) {
+		if (empty($attachment) || sizeof($attachment) == 0) {
 			$attachment_type = strtolower(pathinfo($_POST['attachment_filename'], PATHINFO_EXTENSION));
 		}
 		else {
@@ -87,7 +87,7 @@
 				$parameters['domain_uuid'] = $domain_uuid;
 				$parameters['contact_uuid'] = $contact_uuid;
 				$database = new database;
-				$database->execute($sql, $parameters);
+				$database->execute($sql, $parameters ?? null);
 				unset($sql, $parameters);
 
 				$allowed_primary_attachment = true;
@@ -124,15 +124,15 @@
 	}
 
 //get form data
-	if (is_array($_GET) && sizeof($_GET) != 0) {
+	if (!empty($_GET)) {
 		$sql = "select * from v_contact_attachments ";
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$sql .= "and contact_attachment_uuid = :contact_attachment_uuid ";
 		$parameters['domain_uuid'] = $domain_uuid;
 		$parameters['contact_attachment_uuid'] = $contact_attachment_uuid;
 		$database = new database;
-		$row = $database->select($sql, $parameters, 'row');
-		if (is_array($row) && @sizeof($row) != 0) {
+		$row = $database->select($sql, $parameters ?? null, 'row');
+		if (!empty($row)) {
 			$attachment_primary = $row["attachment_primary"];
 			$attachment_filename = $row["attachment_filename"];
 			$attachment_content = $row["attachment_content"];
