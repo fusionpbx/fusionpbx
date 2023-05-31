@@ -88,13 +88,13 @@
 		$contact_time_zone = $_POST["contact_time_zone"];
 		$contact_note = $_POST["contact_note"];
 
-		$last_mod_date = $_POST["last_mod_date"];
-		$last_mod_user = $_POST["last_mod_user"];
+		$last_mod_date = $_POST["last_mod_date"] ?? '';
+		$last_mod_user = $_POST["last_mod_user"] ?? '';
 
 		//$contact_users = $_POST["contact_users"];
 		//$contact_groups = $_POST["contact_groups"];
-		$contact_user_uuid = $_POST["contact_user_uuid"];
-		$contact_group_uuid = $_POST["contact_group_uuid"];
+		$contact_user_uuid = $_POST["contact_user_uuid"] ?? '';
+		$contact_group_uuid = $_POST["contact_group_uuid"] ?? '';
 
 		$contact_phones = $_POST["contact_phones"];
 		$contact_addresses = $_POST["contact_addresses"];
@@ -102,9 +102,9 @@
 		$contact_urls = $_POST["contact_urls"];
 		$contact_relations = $_POST["contact_relations"];
 		$contact_settings = $_POST["contact_settings"];
-		$contact_attachments = $_POST["contact_attachments"];
-		$contact_times = $_POST["contact_times"];
-		$contact_notes = $_POST["contact_notes"];
+		$contact_attachments = $_POST["contact_attachments"] ?? '';
+		$contact_times = $_POST["contact_times"] ?? '';
+		$contact_notes = $_POST["contact_notes"] ?? '';
 	}
 
 //process the user data and save it to the database
@@ -341,9 +341,9 @@
 						$array['contacts'][0]['contact_phones'][$y]['contact_uuid'] = $contact_uuid;
 						$array['contacts'][0]['contact_phones'][$y]['contact_phone_uuid'] = $row["contact_phone_uuid"];
 						$array['contacts'][0]['contact_phones'][$y]['phone_label'] = $row["phone_label"];
-						$array['contacts'][0]['contact_phones'][$y]['phone_type_voice'] = $row["phone_type_voice"];
+						$array['contacts'][0]['contact_phones'][$y]['phone_type_voice'] = $row["phone_type_voice"] ?? '';
 						$array['contacts'][0]['contact_phones'][$y]['phone_type_fax'] = $row["phone_type_fax"];
-						$array['contacts'][0]['contact_phones'][$y]['phone_type_video'] = $row["phone_type_video"];
+						$array['contacts'][0]['contact_phones'][$y]['phone_type_video'] = $row["phone_type_video"] ?? '';
 						$array['contacts'][0]['contact_phones'][$y]['phone_type_text'] = $row["phone_type_text"];
 						$array['contacts'][0]['contact_phones'][$y]['phone_speed_dial'] = $row["phone_speed_dial"];
 						$array['contacts'][0]['contact_phones'][$y]['phone_country_code'] = $row["phone_country_code"];
@@ -419,7 +419,7 @@
 						$array['contacts'][0]['contact_urls'][$y]['domain_uuid'] = $_SESSION['domain_uuid'];
 						$array['contacts'][0]['contact_urls'][$y]['contact_uuid'] = $contact_uuid;
 						$array['contacts'][0]['contact_urls'][$y]['contact_url_uuid'] = $row["contact_url_uuid"];
-						$array['contacts'][0]['contact_urls'][$y]['url_type'] = $row["url_type"];
+						$array['contacts'][0]['contact_urls'][$y]['url_type'] = $row["url_type"] ?? '';
 						$array['contacts'][0]['contact_urls'][$y]['url_label'] = $row["url_label"];
 						$array['contacts'][0]['contact_urls'][$y]['url_address'] = $row["url_address"];
 						$array['contacts'][0]['contact_urls'][$y]['url_primary'] = $row["url_primary"];
@@ -967,7 +967,7 @@
 		$qr_mode = '4';
 		$qr_size = '0.2';
 	}
-	elseif (empty($_SESSION['theme']['qr_brand_image']['text']) && $_SESSION['theme']['qr_brand_type']['text'] == 'image') {
+	elseif (empty($_SESSION['theme']['qr_brand_image']['text']) && !empty($_SESSION['theme']['qr_brand_type']['text']) && $_SESSION['theme']['qr_brand_type']['text'] == 'image') {
 		$qr_option = '';
 		$qr_mode = '3';
 		$qr_size = '0';
@@ -2023,7 +2023,7 @@ if (permission_exists('contact_address_view')) {
 		echo "		</div>\n";
 		echo "		<div class='field no-wrap'>\n";
 		echo "			<select class='formfld' name='contact_addresses[$x][address_primary]' style='width: auto;'>\n";
-		echo "				<option value=''>".escape($text['label-address_primary'])."</option>\n";
+		echo "				<option value=''>".escape($text['label-address_primary'] ?? '')."</option>\n";
 		if ($row['address_primary'] == "1") {
 			echo "			<option value='1' selected='selected'>".$text['label-true']."</option>\n";
 		}
@@ -2108,7 +2108,7 @@ if (permission_exists('contact_email_view')) {
 		echo "		</div>\n";
 		echo "		<div class='field no-wrap'>\n";
 		echo "			<select class='formfld' name='contact_emails[$x][email_primary]' style='width: auto;'>\n";
-		echo "				<option value=''>".escape($text['label-contact_emails'])."</option>\n";
+		echo "				<option value=''>".escape($text['label-contact_emails'] ?? '')."</option>\n";
 		if ($row['email_primary'] == "1") {
 			echo "				<option value='1' selected='selected'>".$text['label-true']."</option>\n";
 		}
@@ -2425,7 +2425,7 @@ if (permission_exists('contact_setting_view')) {
 		echo "		</div>\n";
 		echo "		<div class='field no-wrap'>\n";
 		echo "			<select name='contact_settings[$x][contact_setting_order]' class='formfld'>\n";
-		echo "				<option value='$i' ".$selected.">".escape($text['label-contact_setting_order'])."</option>\n";
+		echo "				<option value='$i' ".!empty($selected).">".escape($text['label-contact_setting_order'] ?? '')."</option>\n";
 		$i=0;
 		while ($i<=999) {
 			$selected = ($i == $row["contact_setting_order"]) ? "selected" : null;
@@ -2448,7 +2448,7 @@ if (permission_exists('contact_setting_view')) {
 		echo "		</div>\n";
 		echo "		<div class='field no-wrap'>\n";
 		echo "			<select class='formfld' name='contact_settings[$x][contact_setting_enabled]' style='width: 5em;'>\n";
-		echo "				<option value=''><b>".escape($text['label-contact_setting_enabled'])."</b></option>\n";
+		echo "				<option value=''><b>".escape($text['label-contact_setting_enabled'] ?? '')."</b></option>\n";
 		if ($row['contact_setting_enabled'] == "true") {
 			echo "				<option value='true' selected='selected'>".$text['label-true']."</option>\n";
 		}
