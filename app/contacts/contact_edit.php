@@ -588,8 +588,8 @@
 			//$contact_settings = $row["contact_settings"];
 			//$contact_user_uuid = $row["contact_user_uuid"];
 
-			$contact_user_uuid = $row["contact_user_uuid"];
-			$contact_group_uuid = $row["contact_group_uuid"];
+			$contact_user_uuid = $row["contact_user_uuid"] ?? '';
+			$contact_group_uuid = $row["contact_group_uuid"] ?? '';
 
 		}
 		unset($sql, $parameters, $row);
@@ -967,7 +967,7 @@
 		$qr_mode = '4';
 		$qr_size = '0.2';
 	}
-	elseif (!empty($_SESSION['theme']['qr_brand_image']['text']) && $_SESSION['theme']['qr_brand_type']['text'] == 'image') {
+	elseif (empty($_SESSION['theme']['qr_brand_image']['text']) && $_SESSION['theme']['qr_brand_type']['text'] == 'image') {
 		$qr_option = '';
 		$qr_mode = '3';
 		$qr_size = '0';
