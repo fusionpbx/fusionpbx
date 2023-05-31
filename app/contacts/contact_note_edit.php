@@ -46,7 +46,7 @@
 	$text = $language->get();
 
 //action add or update
-	if (is_uuid($_REQUEST["id"])) {
+	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
 		$contact_note_uuid = $_REQUEST["id"];
 	}
@@ -55,19 +55,19 @@
 	}
 
 //get the primary id for the contact
-	if (is_uuid($_GET["contact_uuid"])) {
+	if (!empty($_GET["contact_uuid"]) && is_uuid($_GET["contact_uuid"])) {
 		$contact_uuid = $_GET["contact_uuid"];
 	}
 
 //get http post variables and set them to php variables
-	if (count($_POST)>0) {
+	if (!empty($_POST)) {
 		$contact_note = $_POST["contact_note"];
 		$last_mod_date = $_POST["last_mod_date"];
 		$last_mod_user = $_POST["last_mod_user"];
 	}
 
 //process the form data
-	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
+	if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
 		//get the primary id for the contact note
 			if ($action == "update") {
@@ -98,7 +98,7 @@
 			}
 
 		//add or update the database
-			if ($_POST["persistformvar"] != "true") {
+			if (empty($_POST["persistformvar"])) {
 
 				//update last modified
 					$array['contacts'][0]['contact_uuid'] = $contact_uuid;
@@ -133,7 +133,7 @@
 					}
 
 				//execute
-					if (is_array($array) && @sizeof($array) != 0) {
+					if (!empty($array)) {
 						$array['contact_notes'][0]['contact_uuid'] = $contact_uuid;
 						$array['contact_notes'][0]['domain_uuid'] = $domain_uuid;
 						$array['contact_notes'][0]['contact_note'] = $contact_note;
@@ -155,7 +155,7 @@
 	}
 
 //pre-populate the form
-	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
+	if (!empty($_GET) && empty($_POST["persistformvar"])) {
 		$contact_note_uuid = $_GET["id"];
 		$sql = "select * from v_contact_notes ";
 		$sql .= "where domain_uuid = :domain_uuid ";
@@ -163,8 +163,8 @@
 		$parameters['domain_uuid'] = $domain_uuid;
 		$parameters['contact_note_uuid'] = $contact_note_uuid;
 		$database = new database;
-		$row = $database->select($sql, $parameters, 'row');
-		if (is_array($row) && @sizeof($row) != 0) {
+		$row = $database->select($sql, $parameters ?? null, 'row');
+		if (!empty($row)) {
 			$contact_note = $row["contact_note"];
 			$last_mod_date = $row["last_mod_date"];
 			$last_mod_user = $row["last_mod_user"];
