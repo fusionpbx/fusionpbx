@@ -275,7 +275,7 @@ if ($_POST['a'] == 'import') {
 //*******************************************************************************************
 
 //check if authenticated
-if ($_SESSION['contact_auth']['token'] == '') {
+if (empty($_SESSION['contact_auth']['token'])) {
 	$_SESSION['contact_auth']['referer'] = substr($_SERVER["HTTP_REFERER"], strrpos($_SERVER["HTTP_REFERER"],'/')+1);
 	header("Location: contact_auth.php?source=google&target=".substr($_SERVER["PHP_SELF"], strrpos($_SERVER["PHP_SELF"],'/')+1));
 	exit;
@@ -340,7 +340,7 @@ echo "<td width='30%' class='vncell' valign='top' align='left' nowrap='nowrap'>\
 echo "	".$text['label-contact_type']."\n";
 echo "</td>\n";
 echo "<td class='vtable' align='left'>\n";
-if (is_array($_SESSION["contact"]["type"])) {
+if (!empty($_SESSION["contact"]["type"])) {
 	sort($_SESSION["contact"]["type"]);
 	echo "	<select class='formfld' name='import_type'>\n";
 	echo "		<option value=''></option>\n";
@@ -375,7 +375,7 @@ echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 echo "	".$text['label-contact_category']."\n";
 echo "</td>\n";
 echo "<td class='vtable' align='left'>\n";
-if (is_array($_SESSION["contact"]["category"])) {
+if (!empty($_SESSION["contact"]["category"])) {
 	sort($_SESSION["contact"]["category"]);
 	echo "	<select class='formfld' name='import_category'>\n";
 	echo "		<option value=''></option>\n";
