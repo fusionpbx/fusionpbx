@@ -39,7 +39,7 @@ else {
 	exit;
 }
 
-if (is_array($_GET) && @sizeof($_GET) != 0) {
+if (!empty($_GET)) {
 
 	//add multi-lingual support
 		$language = new text;
@@ -50,7 +50,7 @@ if (is_array($_GET) && @sizeof($_GET) != 0) {
 		$vcard = new vcard();
 
 	//get the contact id
-		$contact_uuid = $_GET["id"];
+		$contact_uuid = $_GET["id"] ?? '';
 
 	//get the contact's information
 		$sql = "select * from v_contacts ";
@@ -59,8 +59,8 @@ if (is_array($_GET) && @sizeof($_GET) != 0) {
 		$parameters['domain_uuid'] = $domain_uuid;
 		$parameters['contact_uuid'] = $contact_uuid;
 		$database = new database;
-		$row = $database->select($sql, $parameters, 'row');
-		if (is_array($row) && @sizeof($row) != 0) {
+		$row = $database->select($sql, $parameters ?? null, 'row');
+		if (!empty($row)) {
 			$contact_type = $row["contact_type"];
 			$contact_organization = $row["contact_organization"];
 			$contact_name_given = $row["contact_name_given"];
@@ -73,9 +73,9 @@ if (is_array($_GET) && @sizeof($_GET) != 0) {
 		}
 		unset($sql, $parameters, $row);
 
-		$vcard->data['company'] = $contact_organization;
-		$vcard->data['first_name'] = $contact_name_given;
-		$vcard->data['last_name'] = $contact_name_family;
+		$vcard->data['company'] = $contact_organization ?? '';
+		$vcard->data['first_name'] = $contact_name_given ?? '';
+		$vcard->data['last_name'] = $contact_name_family ?? '';
 
 	//get the contact's primary (and a secondary, if available) email
 		$sql = "select email_address from v_contact_emails ";
@@ -85,8 +85,8 @@ if (is_array($_GET) && @sizeof($_GET) != 0) {
 		$parameters['domain_uuid'] = $domain_uuid;
 		$parameters['contact_uuid'] = $contact_uuid;
 		$database = new database;
-		$result = $database->select($sql, $parameters, 'all');
-		if (is_array($result) && @sizeof($result) != 0) {
+		$result = $database->select($sql, $parameters ?? null, 'all');
+		if (!empty($result)) {
 			$e = 1;
 			foreach ($result as &$row) {
 				$vcard->data['email'.$e] = $row["email_address"];
@@ -103,7 +103,7 @@ if (is_array($_GET) && @sizeof($_GET) != 0) {
 		$parameters['domain_uuid'] = $domain_uuid;
 		$parameters['contact_uuid'] = $contact_uuid;
 		$database = new database;
-		$url_address = $database->select($sql, $parameters, 'column');
+		$url_address = $database->select($sql, $parameters ?? null, 'column');
 		$vcard->data['url'] = $url_address;
 		unset($sql, $parameters, $row);
 
@@ -112,12 +112,12 @@ if (is_array($_GET) && @sizeof($_GET) != 0) {
 			//don't add this to the QR code at this time
 		}
 		else {
-			$vcard->data['display_name'] = $contact_name_given." ".$contact_name_family;
-			$vcard->data['contact_nickname'] = $contact_nickname;
-			$vcard->data['contact_title'] = $contact_title;
-			$vcard->data['contact_role'] = $contact_role;
-			$vcard->data['timezone'] = $contact_time_zone;
-			$vcard->data['contact_note'] = $contact_note;
+			$vcard->data['display_name'] = !empty($contact_name_given)." ".!empty($contact_name_family);
+			$vcard->data['contact_nickname'] = !empty($contact_nickname);
+			$vcard->data['contact_title'] = !empty($contact_title);
+			$vcard->data['contact_role'] = !empty($contact_role);
+			$vcard->data['timezone'] = !empty($contact_time_zone);
+			$vcard->data['contact_note'] = !empty($contact_note);
 		}
 
 	//get the contact's telephone numbers
@@ -127,8 +127,8 @@ if (is_array($_GET) && @sizeof($_GET) != 0) {
 		$parameters['domain_uuid'] = $domain_uuid;
 		$parameters['contact_uuid'] = $contact_uuid;
 		$database = new database;
-		$result = $database->select($sql, $parameters, 'all');
-		if (is_array($result) && @sizeof($result) != 0) {
+		$result = $database->select($sql, $parameters ?? null, 'all');
+		if (!empty($result)) {
 			foreach ($result as &$row) {
 				$phone_label = $row["phone_label"];
 				$phone_number = $row["phone_number"];
@@ -156,8 +156,8 @@ if (is_array($_GET) && @sizeof($_GET) != 0) {
 			$parameters['domain_uuid'] = $domain_uuid;
 			$parameters['contact_uuid'] = $contact_uuid;
 			$database = new database;
-			$result = $database->select($sql, $parameters, 'all');
-			if (is_array($result) && @sizeof($result) != 0) {
+			$result = $database->select($sql, $parameters ?? null, 'all');
+			if (!empty($result)) {
 				foreach ($result as &$row) {
 					$address_type = $row["address_type"];
 					$address_street = $row["address_street"];
