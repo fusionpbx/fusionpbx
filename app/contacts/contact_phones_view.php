@@ -47,13 +47,13 @@
 	$sql .= "and contact_uuid = :contact_uuid ";
 	$sql .= "order by phone_primary desc, phone_label asc ";
 	$parameters['domain_uuid'] = $domain_uuid;
-	$parameters['contact_uuid'] = $contact_uuid;
+	$parameters['contact_uuid'] = $contact_uuid ?? '';
 	$database = new database;
-	$contact_phones = $database->select($sql, $parameters, 'all');
+	$contact_phones = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 
 //show if exists
-	if (is_array($contact_phones) && @sizeof($contact_phones) != 0) {
+	if (!empty($contact_phones)) {
 
 		//javascript function: send_cmd
 			echo "<script type='text/javascript'>\n";
@@ -84,7 +84,7 @@
 				if ($row['phone_type_fax']) { $phone_types[] = "<i class='fas fa-fax fa-fw' style='margin-right: 3px;' title=\"".$text['label-fax']."\"></i>"; }
 				if ($row['phone_type_video']) { $phone_types[] = "<i class='fas fa-video fa-fw' style='margin-right: 3px;' title=\"".$text['label-video']."\"></i>"; }
 				if ($row['phone_type_text']) { $phone_types[] = "<i class='fas fa-sms fa-fw' style='margin-right: 3px;' title=\"".$text['label-text']."\"></i>"; }
-				if (is_array($phone_types)) {
+				if (!empty($phone_types)) {
 					echo "	".implode(" ", $phone_types)."\n";
 				}
 				unset($phone_types);
