@@ -47,7 +47,7 @@
 
 
 //action add or update
-	if (is_uuid($_REQUEST["id"])) {
+	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$contact_uuid = $_REQUEST["id"];
 	}
 	else {
@@ -61,8 +61,8 @@
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$parameters['contact_uuid'] = $contact_uuid;
 	$database = new database;
-	$row = $database->select($sql, $parameters, 'row');
-	if (is_array($row) && @sizeof($row) != 0) {
+	$row = $database->select($sql, $parameters ?? null, 'row');
+	if (!empty($row)) {
 		$contact_type = $row["contact_type"];
 		$contact_organization = $row["contact_organization"];
 		$contact_name_prefix = $row["contact_name_prefix"];
@@ -85,11 +85,11 @@
 	$sql .= "order by username asc ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$database = new database;
-	$users = $database->select($sql, $parameters, 'all');
+	$users = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 
 //determine if contact assigned to a user
-	if (is_array($users) && sizeof($users) != 0) {
+	if (!empty($users)) {
 		foreach ($users as $user) {
 			if ($user['contact_uuid'] == $contact_uuid) {
 				$contact_user_uuid = $user['user_uuid'];
@@ -108,7 +108,7 @@
 	$parameters['contact_uuid'] = $contact_uuid;
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$database = new database;
-	$contact_users_assigned = $database->select($sql, $parameters, 'all');
+	$contact_users_assigned = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 
 //get the assigned groups that can view this contact
@@ -123,8 +123,8 @@
 	$parameters['contact_uuid'] = $contact_uuid;
 	$parameters['group_uuid'] = $_SESSION["user_uuid"];
 	$database = new database;
-	$contact_groups_assigned = $database->select($sql, $parameters, 'all');
-	if (is_array($contact_groups_assigned) && @sizeof($contact_groups_assigned) != 0) {
+	$contact_groups_assigned = $database->select($sql, $parameters ?? null, 'all');
+	if (!empty($contact_groups_assigned)) {
 		foreach ($contact_groups_assigned as $field) {
 			$contact_groups[] = "'".$field['group_uuid']."'";
 		}
@@ -134,13 +134,13 @@
 //get the available groups for this contact
 	$sql = "select group_uuid, group_name from v_groups ";
 	$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
-	if (is_array($contact_groups) && @sizeof($contact_groups) != 0) {
+	if (!empty($contact_groups)) {
 		$sql .= "and group_uuid not in (".implode(',', $contact_groups).") ";
 	}
 	$sql .= "order by group_name asc ";
 	$parameters['domain_uuid'] = $domain_uuid;
 	$database = new database;
-	$contact_groups_available = $database->select($sql, $parameters, 'all');
+	$contact_groups_available = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters, $contact_groups);
 
 //determine title name
@@ -160,23 +160,23 @@
 	require_once "resources/header.php";
 
 //determine qr branding
-	if ($_SESSION['theme']['qr_brand_type']['text'] == 'image' && $_SESSION['theme']['qr_brand_image']['text'] != '') {
+	if (!empty($_SESSION['theme']['qr_brand_type']['text']) && !empty($_SESSION['theme']['qr_brand_image']['text']) && $_SESSION['theme']['qr_brand_type']['text'] == 'image') {
 		echo "<img id='img-buffer' style='display: none;' src='".$_SESSION["theme"]["qr_brand_image"]["text"]."'>";
 		$qr_option = "image: $('#img-buffer')[0],";
 		$qr_mode = '4';
 		$qr_size = '0.2';
 	}
-	elseif ($_SESSION['theme']['qr_brand_type']['text'] == 'image' && $_SESSION['theme']['qr_brand_image']['text'] == '') {
+	elseif (!empty($_SESSION['theme']['qr_brand_type']['text']) && empty($_SESSION['theme']['qr_brand_image']['text']) && $_SESSION['theme']['qr_brand_type']['text'] == 'image') {
 		$qr_option = '';
 		$qr_mode = '3';
 		$qr_size = '0';
 	}
-	elseif ($_SESSION['theme']['qr_brand_type']['text'] == 'text' && $_SESSION['theme']['qr_brand_text']['text'] != '') {
+	elseif (!empty($_SESSION['theme']['qr_brand_type']['text']) && !empty($_SESSION['theme']['qr_brand_text']['text']) && $_SESSION['theme']['qr_brand_type']['text'] == 'text') {
 		$qr_option = 'label: "'.$_SESSION['theme']['qr_brand_text']['text'].'"';
 		$qr_mode = '2';
 		$qr_size = '0.05';
 	}
-	elseif ($_SESSION['theme']['qr_brand_type']['text'] == 'none') {
+	elseif (!empty($_SESSION['theme']['qr_brand_type']['text']) && $_SESSION['theme']['qr_brand_type']['text'] == 'none') {
 		$qr_option = '';
 		$qr_mode = '3';
 		$qr_size = '0';
@@ -254,7 +254,7 @@
 		$parameters['user_uuid'] = $_SESSION['user']['user_uuid'];
 		$parameters['contact_uuid'] = $contact_uuid;
 		$database = new database;
-		$time_start = $database->select($sql, $parameters, 'column');
+		$time_start = $database->select($sql, $parameters ?? null, 'column');
 		$btn_style = $time_start ? 'color: #fff; background-color: #3693df; background-image: none;' : null;
 		unset($sql, $parameters);
 		echo button::create(['type'=>'button','label'=>$text['button-timer'],'icon'=>'clock','style'=>$btn_style,'title'=>$time_start,'collapse'=>'hide-sm-dn','onclick'=>"window.open('contact_timer.php?domain_uuid=".urlencode($domain_uuid)."&contact_uuid=".urlencode($contact_uuid)."','contact_time_".escape($contact_uuid)."','width=300, height=375, top=30, left='+(screen.width - 350)+', menubar=no, scrollbars=no, status=no, toolbar=no, resizable=no');"]);
@@ -267,7 +267,7 @@
 	if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/certificates')) {
 		echo button::create(['type'=>'button','label'=>$text['button-certificate'],'icon'=>'certificate','collapse'=>'hide-sm-dn','link'=>'../certificates/index.php?name='.urlencode($contact_name_given." ".$contact_name_family)]);
 	}
-	if (permission_exists('user_edit') && is_uuid($contact_user_uuid)) {
+	if (!empty($contact_user_uuid) && permission_exists('user_edit') && is_uuid($contact_user_uuid)) {
 		echo button::create(['type'=>'button','label'=>$text['button-user'],'icon'=>'user','collapse'=>'hide-sm-dn','link'=>'../../core/users/user_edit.php?id='.urlencode($contact_user_uuid)]);
 	}
 	if (
@@ -302,6 +302,7 @@
 	echo "</div>\n";
 
 	if (
+		!empty($action) &&
 		$action == "update" && (
 		permission_exists('contact_delete') ||
 		permission_exists('contact_user_delete') ||
@@ -344,7 +345,7 @@
 			if ($contact_type) {
 				echo "<div class='box contact-details-label'>".$text['label-contact_type']."</div>\n";
 				echo "<div class='box'>";
-				if (is_array($_SESSION["contact"]["type"])) {
+				if (!empty($_SESSION["contact"]["type"])) {
 					sort($_SESSION["contact"]["type"]);
 					foreach ($_SESSION["contact"]["type"] as $type) {
 						if ($contact_type == $type) {
@@ -364,7 +365,7 @@
 			if ($contact_category) {
 				echo "<div class='box contact-details-label'>".$text['label-contact_category']."</div>\n";
 				echo "<div class='box'>";
-				if (is_array($_SESSION["contact"]["category"])) {
+				if (!empty($_SESSION["contact"]["category"])) {
 					sort($_SESSION["contact"]["category"]);
 					foreach ($_SESSION["contact"]["category"] as $category) {
 						if ($contact_category == $category) {
@@ -382,7 +383,7 @@
 			if ($contact_role) {
 				echo "<div class='box contact-details-label'>".$text['label-contact_role']."</div>\n";
 				echo "<div class='box'>";
-				if (is_array($_SESSION["contact"]["role"])) {
+				if (!empty($_SESSION["contact"]["role"])) {
 					sort($_SESSION["contact"]["role"]);
 					foreach ($_SESSION["contact"]["role"] as $role) {
 						if ($contact_role == $role) {
@@ -404,7 +405,7 @@
 				echo "</div>\n";
 			}
 		//users (viewing contact)
-			if (permission_exists('contact_user_view') && is_array($contact_users_assigned) && @sizeof($contact_users_assigned) != 0) {
+			if (permission_exists('contact_user_view') && !empty($contact_users_assigned)) {
 				echo "<div class='box contact-details-label'>".$text['label-users']."</div>\n";
 				echo "<div class='box'>";
 				foreach ($contact_users_assigned as $field) {
@@ -413,7 +414,7 @@
 				echo "</div>\n";
 			}
 		//groups (viewing contact)
-			if (permission_exists('contact_group_view') && is_array($contact_groups_assigned) && @sizeof($contact_groups_assigned) != 0) {
+			if (permission_exists('contact_group_view') && !empty($contact_groups_assigned)) {
 				echo "<div class='box contact-details-label'>".$text['label-groups']."</div>\n";
 				echo "<div class='box'>";
 				foreach ($contact_groups_assigned as $field) {
