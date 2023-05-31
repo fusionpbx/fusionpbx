@@ -96,7 +96,7 @@
 		//format array
 			$allowed_extensions = array_keys(json_decode($_SESSION['contact']['allowed_attachment_types']['text'], true));
 			$array['contact_attachments'][$index]['contact_attachment_uuid'] = $action == 'update' ? $contact_attachment_uuid : uuid();
-			$array['contact_attachments'][$index]['domain_uuid'] = $_SESSION['domain_uuid'];
+			$array['contact_attachments'][$index]['domain_uuid'] = $_SESSION['domain_uuid'] ?? '';
 			$array['contact_attachments'][$index]['contact_uuid'] = $contact_uuid;
 			$array['contact_attachments'][$index]['attachment_primary'] = $allowed_primary_attachment ? 1 : 0;
 			if ($attachment['error'] == '0' && in_array(strtolower(pathinfo($attachment['name'], PATHINFO_EXTENSION)), $allowed_extensions)) {
