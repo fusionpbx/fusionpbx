@@ -26,7 +26,12 @@ class plugin_totp {
 	function totp() {
 
 		//pre-process some settings
-			$settings['theme']['favicon'] = !empty($settings['theme']['favicon']) ? $settings['theme']['favicon'] : PROJECT_PATH.'/themes/default/favicon.ico';
+			$settings['theme']['favicon'] = !empty($_SESSION['theme']['favicon']['text']) ? $_SESSION['theme']['favicon']['text'] : PROJECT_PATH.'/themes/default/favicon.ico';
+			$settings['login']['destination'] = !empty($_SESSION['login']['destination']['text']) ? $_SESSION['login']['destination']['text'] : '';
+			$settings['users']['unique'] = !empty($_SESSION['users']['unique']['text']) ? $_SESSION['users']['unique']['text'] : '';
+			$settings['theme']['logo'] = !empty($_SESSION['theme']['logo']['text']) ? $_SESSION['theme']['logo']['text'] : PROJECT_PATH.'/themes/default/images/logo_login.png';
+			$settings['theme']['login_logo_width'] = !empty($_SESSION['theme']['login_logo_width']['text']) ? $_SESSION['theme']['login_logo_width']['text'] : 'auto; max-width: 300px';
+			$settings['theme']['login_logo_height'] = !empty($_SESSION['theme']['login_logo_height']['text']) ? $_SESSION['theme']['login_logo_height']['text'] : 'auto; max-height: 300px';
 
 		//get the username
 			if (isset($_SESSION["username"])) {
@@ -67,11 +72,14 @@ class plugin_totp {
 				$view->init();
 
 				//assign default values to the template
+				$view->assign("project_path", PROJECT_PATH);
+				$view->assign("login_destination_url", $settings['login']['destination']);
+				$view->assign("favicon", $settings['theme']['favicon']);
 				$view->assign("login_title", $text['label-username']);
 				$view->assign("login_username", $text['label-username']);
-				$view->assign("login_logo_width", $login_logo_width);
-				$view->assign("login_logo_height", $login_logo_height);
-				$view->assign("login_logo_source", $login_logo_source);
+				$view->assign("login_logo_width", $settings['theme']['login_logo_width']);
+				$view->assign("login_logo_height", $settings['theme']['login_logo_height']);
+				$view->assign("login_logo_source", $settings['theme']['logo']);
 				$view->assign("button_login", $text['button-login']);
 				$view->assign("favicon", $settings['theme']['favicon']);
 
@@ -87,6 +95,16 @@ class plugin_totp {
 				//get the username
 				if (!isset($this->username) && isset($_REQUEST['username'])) {
 					$this->username = $_REQUEST['username'];
+					$_SESSION['username'] = $this->username;
+				}
+
+				//get the domain name
+				if (!empty($_SESSION['username'])) {
+					$auth = new authentication;
+					$auth->get_domain();
+					$this->domain_uuid = $_SESSION['domain_uuid'];
+					$this->domain_name = $_SESSION['domain_name'];
+					$this->username = $_SESSION['username'];
 				}
 
 				//get the user details
@@ -146,11 +164,13 @@ class plugin_totp {
 				$view->init();
 
 				//assign values to the template
+				$view->assign("login_destination_url", $settings['login']['destination']);
+				$view->assign("favicon", $settings['theme']['favicon']);
 				$view->assign("login_title", $text['label-verify']);
 				$view->assign("login_authentication_code", $text['label-authentication_code']);
-				$view->assign("login_logo_width", $login_logo_width);
-				$view->assign("login_logo_height", $login_logo_height);
-				$view->assign("login_logo_source", $login_logo_source);
+				$view->assign("login_logo_width", $settings['theme']['login_logo_width']);
+				$view->assign("login_logo_height", $settings['theme']['login_logo_height']);
+				$view->assign("login_logo_source", $settings['theme']['logo']);
 				$view->assign("favicon", $settings['theme']['favicon']);
 
 				//show the views
@@ -235,7 +255,7 @@ class plugin_totp {
 				$sql .= "	username = :username\n";
 				$sql .= "	or user_email = :username\n";
 				$sql .= ")\n";
-				if ($_SESSION["users"]["unique"]["text"] != "global") {
+				if ($settings['users']['unique'] != "global") {
 					//unique username per domain (not globally unique across system - example: email address)
 					$sql .= "and domain_uuid = :domain_uuid ";
 					$parameters['domain_uuid'] = $_SESSION["domain_uuid"];
@@ -266,7 +286,7 @@ class plugin_totp {
 					$sql = "select user_uuid, username, user_email, contact_uuid ";
 					$sql .= "from v_users ";
 					$sql .= "where user_uuid = :user_uuid ";
-					if ($_SESSION["users"]["unique"]["text"] != "global") {
+					if ($settings['users']['unique'] != "global") {
 						//unique username per domain (not globally unique across system - example: email address)
 						$sql .= "and domain_uuid = :domain_uuid ";
 						$parameters['domain_uuid'] = $_SESSION["domain_uuid"];

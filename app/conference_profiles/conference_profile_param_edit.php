@@ -21,8 +21,13 @@
 	$language = new text;
 	$text = $language->get();
 
+//set the defaults
+	$profile_param_name = '';
+	$profile_param_value = '';
+	$profile_param_description = '';
+
 //action add or update
-	if (is_uuid($_REQUEST["id"])) {
+	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
 		$conference_profile_param_uuid = $_REQUEST["id"];
 	}
@@ -31,12 +36,12 @@
 	}
 
 //set the parent uuid
-	if (is_uuid($_GET["conference_profile_uuid"])) {
+	if (!empty($_GET["conference_profile_uuid"]) && is_uuid($_GET["conference_profile_uuid"])) {
 		$conference_profile_uuid = $_GET["conference_profile_uuid"];
 	}
 
 //get http post variables and set them to php variables
-	if (count($_POST)>0) {
+	if (!empty($_POST)) {
 		$profile_param_name = $_POST["profile_param_name"];
 		$profile_param_value = $_POST["profile_param_value"];
 		$profile_param_enabled = $_POST["profile_param_enabled"] ?: 'false';
@@ -44,7 +49,7 @@
 	}
 
 //process the http post if it exists
-	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
+	if (!empty($_POST) && empty($_POST["persistformvar"])) {
 	
 		//get the uuid
 			if ($action == "update") {
@@ -79,7 +84,7 @@
 			}
 	
 		//add or update the database
-			if ($_POST["persistformvar"] != "true") {
+			if (!empty($_POST["persistformvar"])) {
 
 				$array['conference_profile_params'][0]['conference_profile_uuid'] = $conference_profile_uuid;
 				$array['conference_profile_params'][0]['profile_param_name'] = $profile_param_name;
@@ -112,14 +117,14 @@
 	}
 
 //pre-populate the form
-	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
-		$conference_profile_param_uuid = $_GET["id"];
+	if (!empty($_GET) && empty($_POST["persistformvar"])) {
+		$conference_profile_param_uuid = $_GET["id"] ?? '';
 		$sql = "select * from v_conference_profile_params ";
 		$sql .= "where conference_profile_param_uuid = :conference_profile_param_uuid ";
 		$parameters['conference_profile_param_uuid'] = $conference_profile_param_uuid;
 		$database = new database;
-		$row = $database->select($sql, $parameters, 'row');
-		if (is_array($row) && sizeof($row)) {
+		$row = $database->select($sql, $parameters ?? null, 'row');
+		if (!empty($row)) {
 			$profile_param_name = $row["profile_param_name"];
 			$profile_param_value = $row["profile_param_value"];
 			$profile_param_enabled = $row["profile_param_enabled"];

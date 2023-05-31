@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2019
+ Portions created by the Initial Developer are Copyright (C) 2008-2023
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -65,7 +65,7 @@
 				$this->toggle_values = ['true','false'];
 
 			//set the domain_uuid if not provided
-				if (strlen($this->domain_uuid ?? '') === 0) {
+				if (empty($this->domain_uuid)) {
 					$this->domain_uuid = $_SESSION['domain_uuid'];
 				}
 
@@ -143,7 +143,7 @@
 					}
 				}
 				else {
-					if (is_array($voicemail_ids) && @sizeof($voicemail_ids) != 0) {
+					if (!empty($voicemail_ids) && @sizeof($voicemail_ids) != 0) {
 						//show only the assigned voicemail ids
 						$sql .= "and ";
 						if (is_numeric($this->voicemail_id) && in_array($this->voicemail_id, $voicemail_ids)) {
@@ -152,6 +152,7 @@
 						}
 						else {
 							$x = 0;
+							$sql_where = '';
 							foreach($voicemail_ids as $voicemail_id) {
 								$sql_where_or[] = "voicemail_id = :voicemail_id_".$x;
 								$parameters['voicemail_id_'.$x] = $voicemail_id;
@@ -202,8 +203,19 @@
 					return false;
 				}
 
+			//set the time zone
+				if (isset($_SESSION['domain']['time_zone']['name'])) {
+					$time_zone = $_SESSION['domain']['time_zone']['name'];
+				}
+				else {
+					$time_zone = date_default_timezone_get();
+				}
+
 			//get the message from the database
-				$sql = "select * from v_voicemail_messages as m, v_voicemails as v ";
+				$sql = "select *, ";
+				$sql .= "to_char(timezone(:time_zone, to_timestamp(m.created_epoch)), 'DD Mon YYYY') as created_date_formatted, \n";
+				$sql .= "to_char(timezone(:time_zone, to_timestamp(m.created_epoch)), 'HH12:MI:SS am') as created_time_formatted \n";
+				$sql .= "from v_voicemail_messages as m, v_voicemails as v ";
 				$sql .= "where m.domain_uuid = :domain_uuid ";
 				$sql .= "and m.voicemail_uuid = v.voicemail_uuid ";
 				if (is_array($this->voicemail_id) && @sizeof($this->voicemail_id) != 0) {
@@ -229,10 +241,11 @@
 					$sql .= "order by v.voicemail_id, m.".$this->order_by." ".$this->order." ";
 				}
 				$parameters['domain_uuid'] = $this->domain_uuid;
+				$parameters['time_zone'] = $time_zone;
 				$database = new database;
 				$result = $database->select($sql, $parameters, 'all');
 				unset($sql, $parameters);
-			
+
 			//update the array with additional information
 				if (is_array($result)) {
 					foreach($result as &$row) {
@@ -288,7 +301,7 @@
 								$sql = "select ".$this->uuid_prefix."uuid as uuid, voicemail_id from v_".$this->table." ";
 								$sql .= "where ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
 								$database = new database;
-								$rows = $database->select($sql, $parameters, 'all');
+								$rows = $database->select($sql, $parameters ?? null, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
 										$voicemail_ids[$row['uuid']] = $row['voicemail_id'];
@@ -582,9 +595,10 @@
 				$this->get_voicemail_id();
 
 			//send the message waiting status
+
 				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 				if ($fp) {
-					$switch_cmd .= "luarun app.lua voicemail mwi ".$this->voicemail_id."@".$_SESSION['domain_name'];
+					$switch_cmd = "luarun app.lua voicemail mwi ".$this->voicemail_id."@".$_SESSION['domain_name'];
 					$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
 				}
 		}

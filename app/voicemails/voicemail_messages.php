@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2020
+ Portions created by the Initial Developer are Copyright (C) 2008-2023
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -34,7 +34,7 @@
 
 //download the message
 	if (
-		$_REQUEST["action"] == "download"
+		!empty($_REQUEST["action"]) == "download"
 		&& is_numeric($_REQUEST["id"])
 		&& is_uuid($_REQUEST["uuid"])
 		&& is_uuid($_REQUEST["voicemail_uuid"])
@@ -73,13 +73,13 @@
 	}
 
 //get the http post data
-	if (is_array($_POST['voicemail_messages'])) {
+	if (!empty($_POST['voicemail_messages'])) {
 		$action = $_POST['action'];
 		$voicemail_messages = $_POST['voicemail_messages'];
 	}
 
 //process the http post data by action
-	if ($action != '' && is_array($voicemail_messages) && @sizeof($voicemail_messages) != 0) {
+	if (!empty($action) && !empty($voicemail_messages)) {
 
 		//set the referrer
 			$http_referer = parse_url($_SERVER["HTTP_REFERER"]);
@@ -166,8 +166,8 @@
 	$text = $language->get();
 
 //get the html values and set them as variables
-	$order_by = $_GET["order_by"];
-	$order = $_GET["order"];
+	$order_by = $_GET["order_by"] ?? '';
+	$order = $_GET["order"] ?? '';
 
 //get the voicemail
 	$vm = new voicemail;
@@ -282,7 +282,7 @@
 				$col_count++;
 				echo th_order_by('message_length', $text['label-message_length'], $order_by, $order, null, "class='hide-xs right pct-15'");
 				$col_count++;
-				if ($_SESSION['voicemail']['storage_type']['text'] != 'base64') {
+				if (!empty($_SESSION['voicemail']['storage_type']['text']) != 'base64') {
 					echo "<th class='right pct-15 hide-sm-dn'>".$text['label-message_size']."</th>\n";
 					$col_count++;
 				}
@@ -291,20 +291,12 @@
 
 			if (is_array($field['messages']) && @sizeof($field['messages']) > 0) {
 				foreach ($field['messages'] as $row) {
-					//responsive date
-					$array = explode(' ', $row['created_date']);
-					if ($array[0].' '.$array[1].' '.$array[2] == date('j M Y')) { //today
-						$created_date = escape($array[3].' '.$array[4]); //only show time
-					}
-					else {
-						$created_date = escape($array[0].' '.$array[1].' '.$array[2])." <span class='hide-xs' title=\"".escape($array[3].' '.$array[4])."\">".escape($array[3].' '.$array[4])."</span>";
-					}
 
 					//playback progress bar
 					echo "<tr class='list-row' id='recording_progress_bar_".escape($row['voicemail_message_uuid'])."' style='display: none;'><td class='playback_progress_bar_background' style='padding: 0; border: none;' colspan='".$col_count."'><span class='playback_progress_bar' id='recording_progress_".escape($row['voicemail_message_uuid'])."'></span></td></tr>\n";
 					echo "<tr style='display: none;'><td></td></tr>\n"; // dummy row to maintain alternating background color
 
-					$bold = ($row['message_status'] == '' && $_REQUEST["uuid"] != $row['voicemail_message_uuid']) ? 'font-weight: bold;' : null;
+					$bold = ($row['message_status'] && !empty($_REQUEST["uuid"]) != $row['voicemail_message_uuid']) ? 'font-weight: bold;' : null;
 					$list_row_url = "javascript:recording_play('".escape($row['voicemail_message_uuid'])."');";
 					echo "<tr class='list-row' href=\"".$list_row_url."\">\n";
 					echo "	<td class='checkbox'>\n";
@@ -312,23 +304,23 @@
 					echo "		<input type='hidden' name='voicemail_messages[$x][uuid]' value='".escape($row['voicemail_message_uuid'])."' />\n";
 					echo "		<input type='hidden' name='voicemail_messages[$x][voicemail_uuid]' value='".escape($row['voicemail_uuid'])."' />\n";
 					echo "	</td>\n";
-					echo "	<td class='no-wrap' style='".$bold."'>".$created_date."</td>\n";
+					echo "	<td class='no-wrap' style='".$bold."'>".escape($row['created_date_formatted'])." ".escape($row['created_time_formatted'])."</td>\n";
 					echo "	<td class='overflow' style='".$bold."'>".escape($row['caller_id_name'])."&nbsp;</td>\n";
 					echo "	<td class='hide-xs' style='".$bold."'>".escape($row['caller_id_number'])."&nbsp;</td>\n";
 					echo "	<td class='button center no-link no-wrap'>";
 					echo 		"<audio id='recording_audio_".escape($row['voicemail_message_uuid'])."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".escape($row['voicemail_message_uuid'])."')\" onended=\"recording_reset('".escape($row['voicemail_message_uuid'])."');\" src='voicemail_messages.php?action=download&id=".urlencode($row['voicemail_id'])."&voicemail_uuid=".urlencode($row['voicemail_uuid'])."&uuid=".urlencode($row['voicemail_message_uuid'])."&r=".uuid()."'></audio>";
 					echo button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'icon'=>$_SESSION['theme']['button_icon_play'],'id'=>'recording_button_'.escape($row['voicemail_message_uuid']),'onclick'=>"recording_play('".escape($row['voicemail_message_uuid'])."');"]);
 					echo button::create(['type'=>'button','title'=>$text['label-download'],'icon'=>$_SESSION['theme']['button_icon_download'],'link'=>"voicemail_messages.php?action=download&id=".urlencode($row['voicemail_id'])."&voicemail_uuid=".escape($row['voicemail_uuid'])."&uuid=".escape($row['voicemail_message_uuid'])."&t=bin&r=".uuid(),'onclick'=>"$(this).closest('tr').children('td').css('font-weight','normal');"]);
-					if ($_SESSION['voicemail']['transcribe_enabled']['boolean'] == 'true' && $row['message_transcription'] != '') {
+					if (!empty($_SESSION['voicemail']['transcribe_enabled']['boolean']) == 'true' && $row['message_transcription'] != '') {
 						echo button::create(['type'=>'button','title'=>$text['label-transcription'],'icon'=>'quote-right','onclick'=>"document.getElementById('transcription_".$row['voicemail_message_uuid']."').style.display = document.getElementById('transcription_".$row['voicemail_message_uuid']."').style.display == 'none' ? 'table-row' : 'none'; this.blur(); return false;"]);
 					}
 					echo "	</td>\n";
 					echo "	<td class='right no-wrap hide-xs' style='".$bold."'>".escape($row['message_length_label'])."</td>\n";
-					if ($_SESSION['voicemail']['storage_type']['text'] != 'base64') {
+					if (!empty($_SESSION['voicemail']['storage_type']['text']) != 'base64') {
 						echo "	<td class='right no-wrap hide-sm-dn' style='".$bold."'>".escape($row['file_size_label'])."</td>\n";
 					}
 					echo "</tr>\n";
-					if ($_SESSION['voicemail']['transcribe_enabled']['boolean'] == 'true' && $row['message_transcription'] != '') {
+					if (!empty($_SESSION['voicemail']['transcribe_enabled']['boolean']) == 'true' && $row['message_transcription'] != '') {
 						echo "<tr style='display: none;'><td></td></tr>\n"; // dummy row to maintain same background color for transcription row
 						echo "<tr id='transcription_".$row['voicemail_message_uuid']."' class='list-row' style='display: none;'>\n";
 						echo "	<td style='padding: 10px 20px 15px 20px;' colspan='".$col_count."'>\n";
@@ -359,7 +351,7 @@
 	echo "<br />";
 
 //autoplay message
-	if ($_REQUEST["action"] == "autoplay" && is_uuid($_REQUEST["uuid"])) {
+	if (!empty($_REQUEST["action"]) == "autoplay" && is_uuid($_REQUEST["uuid"])) {
 		echo "<script>recording_play('".$_REQUEST["uuid"]."');</script>";
 	}
 

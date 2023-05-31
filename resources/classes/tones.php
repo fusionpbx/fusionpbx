@@ -46,15 +46,19 @@ if (!class_exists('tones')) {
 				$sql .= "order by var_name asc ";
 				$database = new database;
 				$tones = $database->select($sql, null, 'all');
-				foreach ($tones as $tone) {
-					$tone = $tone['var_name'];
-					$label = $text['label-'.$tone];
-					if ($label == "") {
-						$label = $tone;
+				if (!empty($tones)) {
+					foreach ($tones as $tone) {
+						$tone = $tone['var_name'];
+						if (isset($text['label-'.$tone])) {
+							$label = $text['label-'.$tone];
+						}
+						else {
+							$label = $tone;
+						}
+						$tone_list[$tone] = $label;
 					}
-					$tone_list[$tone] = $label;
 				}
-				$this->tones = $tone_list;
+				$this->tones = $tone_list ?? '';
 				unset($sql, $tones, $tone, $tone_list);
 		}
 		

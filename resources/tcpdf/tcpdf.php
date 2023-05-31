@@ -4134,8 +4134,8 @@ class TCPDF {
 			// SHY character will not be printed
 			return (0);
 		}
-		if (isset($this->CurrentFont['cw'][$char])) {
-			$w = $this->CurrentFont['cw'][$char];
+		if (isset($this->CurrentFont['cw'][floor($char)])) {
+			$w = $this->CurrentFont['cw'][floor($char)];
 		} elseif (isset($this->CurrentFont['dw'])) {
 			// default width
 			$w = $this->CurrentFont['dw'];
@@ -7039,7 +7039,7 @@ class TCPDF {
 		}
 		if ($newimage) {
 			//First use of image, get info
-			$type = strtolower($type);
+			$type = strtolower($type ?? '');
 			if ($type == '') {
 				$type = TCPDF_IMAGES::getImageFileType($file, $imsize);
 			} elseif ($type == 'jpg') {

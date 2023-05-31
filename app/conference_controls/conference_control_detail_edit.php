@@ -21,8 +21,13 @@
 	$language = new text;
 	$text = $language->get();
 
+//set the defaults
+	$control_digits = '';
+	$control_action = '';
+	$control_data = '';
+
 //action add or update
-	if (is_uuid($_REQUEST["id"])) {
+	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
 		$conference_control_detail_uuid = $_REQUEST["id"];
 	}
@@ -31,12 +36,12 @@
 	}
 
 //set the parent uuid
-	if (is_uuid($_GET["conference_control_uuid"])) {
+	if (!empty($_GET["conference_control_uuid"]) && is_uuid($_GET["conference_control_uuid"])) {
 		$conference_control_uuid = $_GET["conference_control_uuid"];
 	}
 
 //get http post variables and set them to php variables
-	if (count($_POST) > 0) {
+	if (!empty($_POST)) {
 		$control_digits = $_POST["control_digits"];
 		$control_action = $_POST["control_action"];
 		$control_data = $_POST["control_data"];
@@ -44,7 +49,7 @@
 	}
 
 //process the http post
-	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
+	if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
 		//get the uuid
 			if ($action == "update") {
@@ -79,7 +84,7 @@
 			}
 
 		//add or update the database
-			if ($_POST["persistformvar"] != "true") {
+			if (empty($_POST["persistformvar"])) {
 
 				$array['conference_control_details'][0]['conference_control_uuid'] = $conference_control_uuid;
 				$array['conference_control_details'][0]['control_digits'] = $control_digits;
@@ -112,16 +117,16 @@
 	}
 
 //pre-populate the form
-	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
-		$conference_control_detail_uuid = $_GET["id"];
+	if (!empty($_GET) && empty($_POST["persistformvar"])) {
+		$conference_control_detail_uuid = $_GET["id"] ?? '';
 		$sql = "select * from v_conference_control_details ";
 		$sql .= "where conference_control_detail_uuid = :conference_control_detail_uuid ";
 		//$sql .= "and domain_uuid = :domain_uuid ";
 		$parameters['conference_control_detail_uuid'] = $conference_control_detail_uuid;
 		//$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$database = new database;
-		$row = $database->select($sql, $parameters, 'row');
-		if (is_array($row) && sizeof($row) != 0) {
+		$row = $database->select($sql, $parameters ?? null, 'row');
+		if (!empty($row)) {
 			$control_digits = $row["control_digits"];
 			$control_action = $row["control_action"];
 			$control_data = $row["control_data"];
@@ -147,7 +152,7 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-conference_control_detail']."</b></div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','collapse'=>'hide-xs','style'=>'margin-right: 15px;','link'=>'conference_control_edit.php?id='.urlencode($conference_control_uuid)]);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','collapse'=>'hide-xs','style'=>'margin-right: 15px;','link'=>'conference_control_edit.php?id='.urlencode($conference_control_uuid ?? '')]);
 	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save','collapse'=>'hide-xs']);
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
@@ -213,9 +218,9 @@
 	echo "</table>";
 	echo "<br /><br />";
 
-	echo "<input type='hidden' name='conference_control_uuid' value='".escape($conference_control_uuid)."'>\n";
+	echo "<input type='hidden' name='conference_control_uuid' value='".escape($conference_control_uuid ?? '')."'>\n";
 	if ($action == "update") {
-		echo "<input type='hidden' name='conference_control_detail_uuid' value='".escape($conference_control_detail_uuid)."'>\n";
+		echo "<input type='hidden' name='conference_control_detail_uuid' value='".escape($conference_control_detail_uuid ?? '')."'>\n";
 	}
 	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 

@@ -26,6 +26,7 @@ class file {
 	 * @var boolean $recursive	get the sub directories
 	 */
 	public function glob($dir, $recursive) {
+		$files = [];
 		if ($dir != '' || $dir != '/') {
 			$tree = glob(rtrim($dir, '/') . '/*');
 			if ($recursive) {
@@ -56,21 +57,28 @@ class file {
 	 * Get the sounds list of search as a relative path without the rate
 	 */
 	public function sounds($language = 'en', $dialect = 'us', $voice = 'callie') {
+		//define an empty array
+		$array = [];
+
 		//set default values
 		if (!isset($language)) { $language = 'en'; }
 		if (!isset($dialect)) { $dialect = 'us'; }
 		if (!isset($voice)) { $voice = 'callie'; }
 
 		//set the variables
-		$dir = $_SESSION['switch']['sounds']['dir'].'/'.$language.'/'.$dialect.'/'.$voice;
-		$rate = '8000';
-		$files = $this->glob($dir.'/*/'.$rate, true);
-		
+		if (!empty($_SESSION['switch']['sounds']['dir']) && file_exists($_SESSION['switch']['sounds']['dir'])) {
+			$dir = $_SESSION['switch']['sounds']['dir'].'/'.$language.'/'.$dialect.'/'.$voice;
+			$rate = '8000';
+			$files = $this->glob($dir.'/*/'.$rate, true);
+		}
+
 		//loop through the languages
-		foreach($files as $file) {
-			$file = substr($file, strlen($dir)+1);
-			$file = str_replace("/".$rate, "", $file);
-			$array[] = $file;
+		if (!empty($files)) {
+			foreach($files as $file) {
+				$file = substr($file, strlen($dir)+1);
+				$file = str_replace("/".$rate, "", $file);
+				$array[] = $file;
+			}
 		}
 
 		//return the list of sounds

@@ -3,8 +3,7 @@
 /**
  * plugin_database
  *
- * @method validate uses authentication plugins to check if a user is authorized to login
- * @method get_domain used to get the domain name from the URL or username and then sets both domain_name and domain_uuid
+ * @method plugin_database validates the authentication using information from the database
  */
 class plugin_database {
 
@@ -27,7 +26,12 @@ class plugin_database {
 	function database() {
 
 		//pre-process some settings
-			$settings['theme']['favicon'] = !empty($settings['theme']['favicon']) ? $settings['theme']['favicon'] : PROJECT_PATH.'/themes/default/favicon.ico';
+			$settings['theme']['favicon'] = !empty($_SESSION['theme']['favicon']['text']) ? $_SESSION['theme']['favicon']['text'] : PROJECT_PATH.'/themes/default/favicon.ico';
+			$settings['login']['destination'] = !empty($_SESSION['login']['destination']['text']) ? $_SESSION['login']['destination']['text'] : '';
+			$settings['users']['unique'] = !empty($_SESSION['users']['unique']['text']) ? $_SESSION['users']['unique']['text'] : '';
+			$settings['theme']['logo'] = !empty($_SESSION['theme']['logo']['text']) ? $_SESSION['theme']['logo']['text'] : PROJECT_PATH.'/themes/default/images/logo_login.png';
+			$settings['theme']['login_logo_width'] = !empty($_SESSION['theme']['login_logo_width']['text']) ? $_SESSION['theme']['login_logo_width']['text'] : 'auto; max-width: 300px';
+			$settings['theme']['login_logo_height'] = !empty($_SESSION['theme']['login_logo_height']['text']) ? $_SESSION['theme']['login_logo_height']['text'] : 'auto; max-height: 300px';
 
 		//already authorized
 			if (isset($_SESSION['authentication']['plugin']['database']) && $_SESSION['authentication']['plugin']['database']["authorized"]) {
@@ -40,32 +44,7 @@ class plugin_database {
 			}
 
 		//show the authentication code view
-			if ($_REQUEST["username"] == '' && $_REQUEST["key"] == '') {
-
-				//login logo source
-					if (isset($_SESSION['theme']['logo_login']['text']) && $_SESSION['theme']['logo_login']['text'] != '') {
-						$login_logo_source = $_SESSION['theme']['logo_login']['text'];
-					}
-					else if (isset($_SESSION['theme']['logo']['text']) && $_SESSION['theme']['logo']['text'] != '') {
-						$login_logo_source = $_SESSION['theme']['logo']['text'];
-					}
-					else {
-						$login_logo_source = PROJECT_PATH.'/themes/default/images/logo_login.png';
-					}
-
-				//login logo dimensions
-					if (isset($_SESSION['theme']['login_logo_width']['text']) && $_SESSION['theme']['login_logo_width']['text'] != '') {
-						$login_logo_width = $_SESSION['theme']['login_logo_width']['text'];
-					}
-					else {
-						$login_logo_width = 'auto; max-width: 300px';
-					}
-					if (isset($_SESSION['theme']['login_logo_height']['text']) && $_SESSION['theme']['login_logo_height']['text'] != '') {
-						$login_logo_height = $_SESSION['theme']['login_logo_height']['text'];
-					}
-					else {
-						$login_logo_height = 'auto; max-height: 300px';
-					}
+			if (empty($_REQUEST["username"]) && empty($_REQUEST["key"])) {
 
 				//get the domain
 					$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
@@ -96,10 +75,12 @@ class plugin_database {
 					$view->assign("button_login", $text['button-login']);
 
 				//assign default values to the template
-					$view->assign("login_logo_width", $login_logo_width);
-					$view->assign("login_logo_height", $login_logo_height);
-					$view->assign("login_logo_source", $login_logo_source);
+					$view->assign("project_path", PROJECT_PATH);
+					$view->assign("login_destination_url", $settings['login']['destination']);
 					$view->assign("favicon", $settings['theme']['favicon']);
+					$view->assign("login_logo_width", $settings['theme']['login_logo_width']);
+					$view->assign("login_logo_height", $settings['theme']['login_logo_height']);
+					$view->assign("login_logo_source", $settings['theme']['logo']);
 
 				//add the token name and hash to the view
 					//$view->assign("token_name", $token['name']);
@@ -134,6 +115,18 @@ class plugin_database {
 				$this->key = $_REQUEST["key"];
 			}
 
+		//get the domain name
+			$auth = new authentication;
+			$auth->get_domain();
+			$this->domain_uuid = $_SESSION['domain_uuid'];
+			$this->domain_name = $_SESSION['domain_name'];
+			$this->username = $_SESSION['username'];
+
+		//debug information
+			//echo "domain_uuid: ".$this->domain_uuid."<br />\n";
+			//echo "domain_name: ".$this->domain_name."<br />\n";
+			//echo "username: ".$this->username."<br />\n";
+
 		//set the default status
 			$user_authorized = false;
 
@@ -153,7 +146,7 @@ class plugin_database {
 				$sql .= ")\n";
 				$parameters['username'] = $this->username;
 			}
-			if ($_SESSION["users"]["unique"]["text"] === "global") {
+			if ($settings['users']['unique'] === "global") {
 				//unique username - global (example: email address)
 			}
 			else {
@@ -171,7 +164,7 @@ class plugin_database {
 					$this->domain_name = $_SESSION['domain_name'];
 
 				//get the domain uuid when users are unique globally
-					if ($_SESSION["users"]["unique"]["text"] === "global" && $row["domain_uuid"] !== $this->domain_uuid) {
+					if ($settings['users']['unique'] === "global" && $row["domain_uuid"] !== $this->domain_uuid) {
 						//set the domain_uuid
 							$this->domain_uuid = $row["domain_uuid"];
 							$this->domain_name = $row["domain_name"];

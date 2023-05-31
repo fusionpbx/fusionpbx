@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -46,7 +46,7 @@
 	$text = $language->get();
 
 //get the HTTP values and set as variables
-	$show = trim($_REQUEST["show"]);
+	$show = trim($_REQUEST["show"] ?? '');
 	if ($show != "all") { $show = ''; }
 
 //show the header
@@ -56,7 +56,7 @@
 //load gateways into a session variable
 	$sql = "select gateway_uuid, domain_uuid, gateway from v_gateways where enabled = 'true' ";
 	$database = new database;
-	$gateways = $database->select($sql, $parameters, 'all');
+	$gateways = $database->select($sql, $parameters ?? null, 'all');
 	foreach ($gateways as $row) {
 		$_SESSION['gateways'][$row['gateway_uuid']] = $row['gateway'];
 	}

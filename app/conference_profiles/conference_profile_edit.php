@@ -21,8 +21,12 @@
 	$language = new text;
 	$text = $language->get();
 
+//set the defaults
+	$profile_name = '';
+	$profile_description = '';
+
 //action add or update
-	if (is_uuid($_REQUEST["id"])) {
+	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
 		$conference_profile_uuid = $_REQUEST["id"];
 	}
@@ -31,13 +35,13 @@
 	}
 
 //get http post variables and set them to php variables
-	if (count($_POST) > 0) {
+	if (!empty($_POST)) {
 		$profile_name = $_POST["profile_name"];
 		$profile_enabled = $_POST["profile_enabled"] ?: 'false';
 		$profile_description = $_POST["profile_description"];
 	}
 //check to see if the http post exists
-	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
+	if (!empty($_POST) && empty($_POST["persistformvar"])) {
 	
 		//get the uuid
 			if ($action == "update") {
@@ -72,7 +76,7 @@
 			}
 	
 		//add or update the database
-			if ($_POST["persistformvar"] != "true") {
+			if (empty($_POST["persistformvar"])) {
 
 				$array['conference_profiles'][0]['profile_name'] = $profile_name;
 				$array['conference_profiles'][0]['profile_enabled'] = $profile_enabled;
@@ -103,7 +107,7 @@
 	}
 
 //pre-populate the form
-	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
+	if (!empty($_GET) && empty($_POST["persistformvar"])) {
 		$conference_profile_uuid = $_GET["id"];
 		$sql = "select * from v_conference_profiles ";
 		$sql .= "where conference_profile_uuid = :conference_profile_uuid ";
@@ -111,7 +115,7 @@
 		$parameters['conference_profile_uuid'] = $conference_profile_uuid;
 		//$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$database = new database;
-		$row = $database->select($sql, $parameters, 'row');
+		$row = $database->select($sql, $parameters ?? null, 'row');
 		if (is_array($row) && sizeof($row) != 0) {
 			$profile_name = $row["profile_name"];
 			$profile_enabled = $row["profile_enabled"];

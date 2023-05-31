@@ -72,10 +72,13 @@ if (!class_exists('switch_recordings')) {
 			$parameters['domain_uuid'] = $this->domain_uuid;
 			$database = new database;
 			$result = $database->select($sql, $parameters, 'all');
-			if (is_array($result) && @sizeof($result) != 0) {
+			if (!empty($result)) {
 				foreach ($result as &$row) {
 					$recordings[$_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name']."/".$row['recording_filename']] = $row['recording_filename'];
 				}
+			}
+			else {
+				$recordings = false;
 			}
 			unset($sql, $parameters, $result, $row);
 			return $recordings;
@@ -104,7 +107,7 @@ if (!class_exists('switch_recordings')) {
 
 						//get recording filename, build delete array
 							foreach ($records as $x => $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && !empty($record['uuid'])) {
 
 									//get filename
 										$sql = "select recording_filename from v_recordings ";

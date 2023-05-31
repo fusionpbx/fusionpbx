@@ -11,7 +11,7 @@
 	$apps[$x]['menu'][$y]['title']['es-mx'] = "Conference Centers";
 	$apps[$x]['menu'][$y]['title']['fr-ca'] = "Centres de conférences";
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Centre de Conférences";
-	$apps[$x]['menu'][$y]['title']['he-il'] = "מרכזים";
+	$apps[$x]['menu'][$y]['title']['he-il'] = "מרכזי כנסים";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Centro Conferenze";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Conferentie centra";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Centrum Konferencyjne";
@@ -22,7 +22,7 @@
 	$apps[$x]['menu'][$y]['title']['sv-se'] = "Konferenscenter";
 	$apps[$x]['menu'][$y]['title']['uk-ua'] = "Конференц-центр";
 	$apps[$x]['menu'][$y]['title']['zh-cn'] = "会议中心";
-	$apps[$x]['menu'][$y]['title']['ja-jp'] = "会議センター";
+	$apps[$x]['menu'][$y]['title']['ja-jp'] = "カンファレンスセンター";
 	$apps[$x]['menu'][$y]['title']['ko-kr'] = "컨퍼런스 센터";
 	$apps[$x]['menu'][$y]['uuid'] = "95f88726-4706-43f0-b52b-9504a0b8046f";
 	$apps[$x]['menu'][$y]['parent_uuid'] = "fd29e39c-c936-f5fc-8e2b-611681b266b5";
@@ -42,7 +42,7 @@
 	$apps[$x]['menu'][$y]['title']['es-mx'] = "Conference Centers";
 	$apps[$x]['menu'][$y]['title']['fr-ca'] = "Centres de conférences";
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Centre de Conférences";
-	$apps[$x]['menu'][$y]['title']['he-il'] = "מרכזים";
+	$apps[$x]['menu'][$y]['title']['he-il'] = "מרכזי כנסים";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Centro Conferenze";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Conferentie centra";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Centrum Konferencyjne";
@@ -53,7 +53,7 @@
 	$apps[$x]['menu'][$y]['title']['sv-se'] = "Konferenscenter";
 	$apps[$x]['menu'][$y]['title']['uk-ua'] = "Конференц-центр";
 	$apps[$x]['menu'][$y]['title']['zh-cn'] = "会议中心";
-	$apps[$x]['menu'][$y]['title']['ja-jp'] = "会議センター";
+	$apps[$x]['menu'][$y]['title']['ja-jp'] = "カンファレンスセンター";
 	$apps[$x]['menu'][$y]['title']['ko-kr'] = "컨퍼런스 센터";
 	$apps[$x]['menu'][$y]['uuid'] = "b99cb768-ca19-4374-a954-02e344313d84";
 	$apps[$x]['menu'][$y]['parent_uuid'] = "fd29e39c-c936-f5fc-8e2b-611681b266b5";

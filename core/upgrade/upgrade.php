@@ -185,7 +185,7 @@
 		if (isset($argv[2]) && $argv[2] == 'data_types') {
 			$obj->data_types = true;
 		}
-		echo $obj->schema($format);
+		echo $obj->schema($format ?? '');
 	}
 
 //restore the default menu
@@ -209,11 +209,15 @@
 		}
 
 		//set the menu back to default
-		if (isset($argv[2]) && (is_null($argv[2]) || $argv[2] == 'default')) {
+		if (!isset($argv[2]) || $argv[2] == 'default') {
 			//restore the menu
 			$included = true;
 			require_once("core/menu/menu_restore_default.php");
 			unset($sel_menu);
+
+			//use upgrade language file
+			$language = new text;
+			$text = $language->get(null, 'core/upgrade');
 
 			//send message to the console
 			echo $text['message-upgrade_menu']."\n";
@@ -228,6 +232,10 @@
 		//default the permissions
 		$included = true;
 		require_once("core/groups/permissions_default.php");
+
+		//use upgrade language file
+		$language = new text;
+		$text = $language->get(null, 'core/upgrade');
 
 		//send message to the console
 		echo $text['message-upgrade_permissions']."\n";

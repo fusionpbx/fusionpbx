@@ -34,8 +34,8 @@
 	$vm = new voicemail;
 	$vm->db = $db;
 	$vm->domain_uuid = $_SESSION['domain_uuid'];
-	$vm->order_by = $order_by;
-	$vm->order = $order;
+	$vm->order_by = $order_by ?? null;
+	$vm->order = $order ?? null;
 	$voicemails = $vm->messages();
 
 //sum total and new
@@ -134,7 +134,7 @@
 		echo "<br />".$text['label-no_voicemail_assigned'];
 	}
 	echo "</div>";
-	$n++;
+	//$n++;
 	
 	echo "<span class='hud_expander' onclick=\"$('#hud_voicemail_details').slideToggle('fast');\"><span class='fas fa-ellipsis-h'></span></span>";
 	echo "</div>\n";
