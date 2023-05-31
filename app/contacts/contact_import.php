@@ -118,7 +118,7 @@
 					foreach ($table['fields'] as $row) {
 						if (!empty($row['deprecated']) && $row['deprecated'] !== 'true') {
 							if (!empty($row['name'])) {
-								$field_name = $row['name']['text'] ?? '';
+								$field_name = $row['name']['text'];
 							}
 							else {
 								$field_name = $row['name'];
