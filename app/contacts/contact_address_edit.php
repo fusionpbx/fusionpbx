@@ -46,8 +46,22 @@
 	$language = new text;
 	$text = $language->get();
 
+//set the defaults
+	$address_label = '';
+	$address_label_custom = '';
+	$address_street = '';
+	$address_extended = '';
+	$address_community = '';
+	$address_locality = '';
+	$address_region = '';
+	$address_postal_code  = '';
+	$address_country = '';
+	$address_latitude = '';
+	$address_longitude = '';
+	$address_description = '';
+
 //action add or update
-	if (is_uuid($_REQUEST["id"])) {
+	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
 		$contact_address_uuid = $_REQUEST["id"];
 	}
@@ -56,12 +70,12 @@
 	}
 
 //get the contact uuid
-	if (is_uuid($_GET["contact_uuid"])) {
+	if (!empty($_GET["contact_uuid"]) && is_uuid($_GET["contact_uuid"])) {
 		$contact_uuid = $_GET["contact_uuid"];
 	}
 
 //get http post variables and set them to php variables
-	if (count($_POST)>0) {
+	if (!empty($_POST)) {
 		$address_type = $_POST["address_type"];
 		$address_label = $_POST["address_label"];
 		$address_label_custom = $_POST["address_label_custom"];
@@ -78,11 +92,11 @@
 		$address_description = $_POST["address_description"];
 
 		//use custom label if set
-		$address_label = $address_label_custom != '' ? $address_label_custom : $address_label;
+		$address_label = !empty($address_label_custom) ? $address_label_custom : $address_label;
 	}
 
 //process the form data
-	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
+	if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
 		//set the uuid
 			if ($action == "update") {
@@ -113,7 +127,7 @@
 			}
 
 		//add or update the database
-			if ($_POST["persistformvar"] != "true") {
+			if (empty($_POST["persistformvar"])) {
 
 				//update last modified
 					$array['contacts'][0]['contact_uuid'] = $contact_uuid;
@@ -140,7 +154,7 @@
 						$parameters['domain_uuid'] = $domain_uuid;
 						$parameters['contact_uuid'] = $contact_uuid;
 						$database = new database;
-						$database->execute($sql, $parameters);
+						$database->execute($sql, $parameters ?? null);
 						unset($sql, $parameters);
 					}
 
@@ -157,7 +171,7 @@
 					message::add($text['message-update']);
 				}
 
-				if (is_array($array) && @sizeof($array) != 0) {
+				if (!empty($array)) {
 					$array['contact_addresses'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
 					$array['contact_addresses'][0]['contact_uuid'] = $contact_uuid;
 					$array['contact_addresses'][0]['address_type'] = $address_type;
@@ -188,7 +202,7 @@
 	}
 
 //pre-populate the form
-	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
+	if (!empty($_GET) && !empty($_POST["persistformvar"])) {
 		$contact_address_uuid = $_GET["id"];
 		$sql = "select * from v_contact_addresses ";
 		$sql .= "where domain_uuid = :domain_uuid ";
@@ -196,8 +210,8 @@
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$parameters['contact_address_uuid'] = $contact_address_uuid;
 		$database = new database;
-		$row = $database->select($sql, $parameters, 'row');
-		if (is_array($row) && @sizeof($row) != 0) {
+		$row = $database->select($sql, $parameters ?? null, 'row');
+		if (!empty($row)) {
 			$address_type = $row["address_type"];
 			$address_label = $row["address_label"];
 			$address_street = $row["address_street"];
@@ -273,7 +287,7 @@
 	echo "	".$text['label-address_label']."\n";
 	echo "</td>\n";
 	echo "<td width='70%' class='vtable' align='left'>\n";
-	if (is_array($_SESSION["contact"]["address_label"])) {
+	if (!empty($_SESSION["contact"]["address_label"])) {
 		sort($_SESSION["contact"]["address_label"]);
 		foreach($_SESSION["contact"]["address_label"] as $row) {
 			$address_label_options[] = "<option value='".$row."' ".(($row == $address_label) ? "selected='selected'" : null).">".$row."</option>";
@@ -290,15 +304,15 @@
 		$default_labels[] = $text['option-billing'];
 		$default_labels[] = $text['option-other'];
 		foreach ($default_labels as $default_label) {
-			$address_label_options[] = "<option value='".$default_label."' ".$selected[$default_label].">".$default_label."</option>";
+			$address_label_options[] = "<option value='".$default_label."' ".!empty($selected[$default_label]).">".$default_label."</option>";
 		}
 		$address_label_found = (in_array($address_label, $default_labels)) ? true : false;
 	}
-	echo "	<select class='formfld' ".((!$address_label_found && $address_label != '') ? "style='display: none;'" : null)." name='address_label' id='address_label' onchange=\"getElementById('address_label_custom').value='';\">\n";
+	echo "	<select class='formfld' ".((!empty($address_label) && !$address_label_found) ? "style='display: none;'" : null)." name='address_label' id='address_label' onchange=\"getElementById('address_label_custom').value='';\">\n";
 	echo "		<option value=''></option>\n";
-	echo 		(is_array($address_label_options)) ? implode("\n", $address_label_options) : null;
+	echo 		(!empty($address_label_options)) ? implode("\n", $address_label_options) : null;
 	echo "	</select>\n";
-	echo "	<input type='text' class='formfld' ".(($address_label_found || $address_label == '') ? "style='display: none;'" : null)." name='address_label_custom' id='address_label_custom' value=\"".((!$address_label_found) ? htmlentities($address_label) : null)."\">\n";
+	echo "	<input type='text' class='formfld' ".((empty($address_label) || $address_label_found) ? "style='display: none;'" : null)." name='address_label_custom' id='address_label_custom' value=\"".((!$address_label_found) ? htmlentities($address_label) : null)."\">\n";
 	echo "	<input type='button' id='btn_toggle_label' class='btn' alt='".$text['button-back']."' value='&#9665;' onclick=\"toggle_custom('address_label');\">\n";
 	echo "<br />\n";
 	echo $text['description-address_label']."\n";
