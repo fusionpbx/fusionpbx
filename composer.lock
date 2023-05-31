@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "cc51c1e0540efe42399806af3c744abf",
+    "content-hash": "547e4abd791ffe2284f4f40d0b992299",
     "packages": [
         {
             "name": "brick/math",
@@ -770,6 +770,49 @@
                 }
             ],
             "time": "2023-01-14T14:17:03+00:00"
+        },
+        {
+            "name": "elvanto/litemoji",
+            "version": "4.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/elvanto/litemoji.git",
+                "reference": "f13cf10686f7110a3b17d09de03050d0708840b8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/elvanto/litemoji/zipball/f13cf10686f7110a3b17d09de03050d0708840b8",
+                "reference": "f13cf10686f7110a3b17d09de03050d0708840b8",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mbstring": "*",
+                "php": ">=7.3"
+            },
+            "require-dev": {
+                "milesj/emojibase": "7.0.*",
+                "phpunit/phpunit": "^9.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "LitEmoji\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "A PHP library simplifying the conversion of unicode, HTML and shortcode emoji.",
+            "keywords": [
+                "emoji",
+                "php-emoji"
+            ],
+            "support": {
+                "issues": "https://github.com/elvanto/litemoji/issues",
+                "source": "https://github.com/elvanto/litemoji/tree/4.3.0"
+            },
+            "time": "2022-10-28T02:32:19+00:00"
         },
         {
             "name": "fruitcake/php-cors",
@@ -2698,6 +2741,43 @@
                 }
             ],
             "time": "2023-02-08T01:06:31+00:00"
+        },
+        {
+            "name": "okayinc/stateless-session",
+            "version": "v0.0.10",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/OKayInc/stateless-session.git",
+                "reference": "2feb8909fe376e4e89751b85552ee7d3ce39a9e3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/OKayInc/stateless-session/zipball/2feb8909fe376e4e89751b85552ee7d3ce39a9e3",
+                "reference": "2feb8909fe376e4e89751b85552ee7d3ce39a9e3",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "OKayInc\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Luis Daniel Lucio Quiroz",
+                    "email": "dlucio@okay.com.mx"
+                }
+            ],
+            "description": "Library that allows Telegram Bots to have short term memory without using database access",
+            "support": {
+                "issues": "https://github.com/OKayInc/stateless-session/issues",
+                "source": "https://github.com/OKayInc/stateless-session/tree/v0.0.10"
+            },
+            "time": "2023-01-22T00:53:48+00:00"
         },
         {
             "name": "php-telegram-bot/laravel",
