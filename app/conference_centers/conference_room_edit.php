@@ -46,8 +46,15 @@
 	$language = new text;
 	$text = $language->get();
 
+//set the defaults
+	$conference_room_name = '';
+	$start_datetime = '';
+	$stop_datetime = '';
+	$account_code = '';
+	$description = '';
+
 //action add or update
-	if (is_uuid($_REQUEST["id"])) {
+	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
 		$conference_room_uuid = $_REQUEST["id"];
 	}
@@ -56,7 +63,7 @@
 	}
 
 //get http post variables and set them to php variables
-	if (count($_POST) > 0) {
+	if (!empty($_POST)) {
 		$conference_center_uuid = $_POST["conference_center_uuid"];
 		$conference_room_name = $_POST['conference_room_name'];
 		$moderator_pin = $_POST["moderator_pin"];
@@ -106,7 +113,7 @@
 	unset ($sql);
 
 //set the default
-	if ($profile === "") { $profile = "default"; }
+	if (empty($profile)) { $profile = "default"; }
 
 //define fucntion get_conference_pin - used to find a unique pin number
 	function get_conference_pin($length, $conference_room_uuid) {
@@ -131,7 +138,7 @@
 	}
 
 //record announcment
-	if ($record == "true") {
+	if (!empty($record) && $record == "true") {
 		//prepare the values
 			$default_language = 'en';
 			$default_dialect = 'us';
@@ -145,7 +152,7 @@
 	}
 
 //generate the pins
-	if (is_uuid($conference_center_uuid)) {
+	if (!empty($conference_center_uuid) && is_uuid($conference_center_uuid)) {
 		$sql = "select conference_center_pin_length ";
 		$sql .= "from v_conference_centers ";
 		$sql .= "where domain_uuid = :domain_uuid ";
@@ -154,7 +161,7 @@
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
-		if (is_array($row) && sizeof($row) != 0) {
+		if (!empty($row)) {
 			$pin_length = $row['conference_center_pin_length'];
 		}
 		unset($sql, $parameters);
@@ -167,7 +174,7 @@
 	}
 
 //delete the user
-	if ($_GET["a"] == "delete" && permission_exists('conference_room_delete')) {
+	if (!empty($_GET["a"]) && $_GET["a"] == "delete" && permission_exists('conference_room_delete')) {
 		if (is_uuid($_REQUEST["conference_room_user_uuid"])) {
 			//set the variables
 				$conference_room_user_uuid = $_REQUEST["conference_room_user_uuid"];
@@ -196,7 +203,7 @@
 	}
 
 
-if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
+if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
 	$msg = '';
 	if ($action == "update") {
@@ -287,7 +294,7 @@ if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 		}
 
 	//add or update the database
-		if ($_POST["persistformvar"] != "true") {
+		if (empty($_POST["persistformvar"])) {
 
 			if ($action == "add" && permission_exists('conference_room_add')) {
 				//set default values
@@ -454,7 +461,7 @@ if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 }
 
 //pre-populate the form
-	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
+	if (!empty($_GET) && empty($_POST["persistformvar"])) {
 		//get the conference room details
 			$conference_room_uuid = $_REQUEST["id"];
 			$sql = "select * from v_conference_rooms ";
@@ -463,8 +470,8 @@ if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 			$parameters['conference_room_uuid'] = $conference_room_uuid;
 			$database = new database;
-			$row = $database->select($sql, $parameters, 'row');
-			if (is_array($row) && sizeof($row) != 0) {
+			$row = $database->select($sql, $parameters ?? null, 'row');
+			if (!empty($row)) {
 				$conference_center_uuid = $row["conference_center_uuid"];
 				$conference_room_name = $row["conference_room_name"];
 				$profile = $row["profile"];
@@ -499,10 +506,10 @@ if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 	$sql .= "and r.conference_room_uuid = :conference_room_uuid ";
 	$sql .= "order by u.username asc ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$parameters['conference_room_uuid'] = $conference_room_uuid;
+	$parameters['conference_room_uuid'] = $conference_room_uuid ?? '';
 	$database = new database;
-	$rows = $database->select($sql, $parameters, 'all');
-	if (is_array($rows) && @sizeof($rows) != 0) {
+	$rows = $database->select($sql, $parameters ?? null, 'all');
+	if (!empty($rows)) {
 		foreach ($rows as $row) {
 			$conference_room_users[$row['user_uuid']]['username'] = $row['username'];
 			$conference_room_users[$row['user_uuid']]['conference_room_user_uuid'] = $row['conference_room_user_uuid'];
@@ -513,13 +520,13 @@ if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 //get the users array
 	$sql = "select user_uuid, username from v_users ";
 	$sql .= "where domain_uuid = :domain_uuid ";
-	if (is_array($conference_room_users) && @sizeof($conference_room_users) != 0) {
+	if (!empty($conference_room_users)) {
 		$sql .= "and user_uuid not in ('".implode("','", array_keys($conference_room_users))."') ";
 	}
 	$sql .= "order by username asc ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$database = new database;
-	$users = $database->select($sql, $parameters, 'all');
+	$users = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 
 //set default profile
@@ -527,10 +534,10 @@ if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 
 //get default pins
 	if (empty($moderator_pin)) {
-		$moderator_pin = get_conference_pin($pin_length, $conference_room_uuid);
+		$moderator_pin = get_conference_pin($pin_length ?? '', $conference_room_uuid ?? '');
 	}
 	if (empty($participant_pin)) {
-		$participant_pin = get_conference_pin($pin_length, $conference_room_uuid);
+		$participant_pin = get_conference_pin($pin_length ?? '', $conference_room_uuid ?? '');
 	}
 
 //format the pins
@@ -568,7 +575,7 @@ if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 	echo "	<div class='heading'><b>".$text['title-conference_room']."</b></div>\n";
 	echo "	<div class='actions'>\n";
 	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','link'=>'conference_rooms.php']);
-	if (is_uuid($conference_room_uuid)) {
+	if (!empty($conference_room_uuid) && is_uuid($conference_room_uuid)) {
 		if (permission_exists('conference_interactive_view')) {
 			echo button::create(['type'=>'button','label'=>$text['button-view'],'icon'=>$_SESSION['theme']['button_icon_view'],'style'=>'margin-left: 15px;','link'=>'../conferences_active/conference_interactive.php?c='.urlencode($conference_room_uuid)]);
 		}

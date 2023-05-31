@@ -120,8 +120,8 @@
 	}
 	$page = $_GET['page'] ?? '';
 	if (empty($page)) { $page = 0; $_GET['page'] = 0; }
-	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
-	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
+	list($paging_controls, $rows_per_page) = paging($num_rows, $param ?? null, $rows_per_page);
+	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param ?? null, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
 
 //get the call broadcasts
@@ -175,11 +175,11 @@
 	}
 	echo 		"<form id='form_search' class='inline' method='get'>\n";
 	if (permission_exists('call_broadcast_all')) {
-		if ($_GET['show'] == 'all') {
+		if ($show == 'all') {
 			echo "		<input type='hidden' name='show' value='all'>";
 		}
 		else {
-			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$_SESSION['theme']['button_icon_all'],'link'=>'?type='.urlencode($destination_type ?? '').'&show=all'.($search != '' ? "&search=".urlencode($search ?? '') : null)]);
+			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$_SESSION['theme']['button_icon_all'],'link'=>'?type='.urlencode($destination_type ?? '').'&show=all'.(!empty($search) ? "&search=".urlencode($search ?? '') : null)]);
 		}
 	}
 	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=''>";
@@ -211,7 +211,7 @@
 	echo "<tr class='list-header'>\n";
 	if (permission_exists('call_broadcast_add') || permission_exists('call_broadcast_delete')) {
 		echo "	<th class='checkbox'>\n";
-		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".($result ?: "style='visibility: hidden;'").">\n";
+		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".(!empty($result) ?: "style='visibility: hidden;'").">\n";
 		echo "	</th>\n";
 	}
 	if ($show == "all" && permission_exists('call_broadcast_all')) {
@@ -250,7 +250,7 @@
 			}
 			echo "	<td>";
 			if (permission_exists('call_broadcast_edit')) {
-				echo "<a href='".$list_row_url."'>".escape($row['broadcast_name'])."</a>";
+				echo "<a href='".$list_row_url."'>".escape($row['broadcast_name'] ?? '')."</a>";
 			}
 			else {
 				echo escape($row['broadcast_name']);
@@ -258,11 +258,11 @@
 			echo "	</td>\n";
 			echo "	<td>".escape($row['broadcast_concurrent_limit'])."</td>\n";
 			//determine start date and time
-			$broadcast_start_reference = $row['update_date'] ?: $row['insert_date'];
+			$broadcast_start_reference = !empty($row['update_date']) ?: !empty($row['insert_date']);
 			if ($row['broadcast_start_time'] && $broadcast_start_reference) {
 				$broadcast_start_time = date('Y-m-d H:i', strtotime($broadcast_start_reference) + $row['broadcast_start_time']);
 			}
-			echo "	<td>".escape($broadcast_start_time)."</td>\n";
+			echo "	<td>".escape($broadcast_start_time ?? '')."</td>\n";
 			echo "	<td class='description overflow hide-xs'>".escape($row['broadcast_description'])."</td>\n";
 			if (permission_exists('call_broadcast_edit') && $list_row_edit_button == 'true') {
 				echo "	<td class='action-button'>";

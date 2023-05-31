@@ -54,6 +54,18 @@
 	else {
 		$action = "add";
 	}
+	
+//set the defaults
+	$broadcast_name = '';
+	$broadcast_start_time = '';
+	$broadcast_timeout = '';
+	$broadcast_concurrent_limit = '';
+	$broadcast_caller_id_name = '';
+	$broadcast_caller_id_number = '';
+	$broadcast_accountcode = '';
+	$broadcast_destination_data = '';
+	$broadcast_description = '';
+	$broadcast_toll_allow = '';
 
 //function to Upload CSV/TXT file
 	function upload_file($sql, $broadcast_phone_numbers) {

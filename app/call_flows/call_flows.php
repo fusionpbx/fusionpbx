@@ -46,6 +46,9 @@
 	$language = new text;
 	$text = $language->get();
 
+//set additional variables
+	$show = $_GET["show"] ?? '';
+
 //set from session variables
 	$list_row_edit_button = !empty($_SESSION['theme']['list_row_edit_button']['boolean']) ? $_SESSION['theme']['list_row_edit_button']['boolean'] : 'false';
 
@@ -90,7 +93,7 @@
 	$order = $_GET["order"] ?? '';
 
 //add the search term
-	$search = strtolower($_GET["search"] ?? '');
+	$search = strtolower($search ?? '');
 	if (!empty($search)) {
 		$sql_search = "and (";
 		$sql_search .= "lower(call_flow_name) like :search ";
@@ -108,7 +111,7 @@
 //prepare to page the results
 	$sql = "select count(*) from v_call_flows ";
 	$sql .= "where true ";
-	if (!empty($_GET['show']) != "all" || !permission_exists('call_flow_all')) {
+	if ($show != "all" || !permission_exists('call_flow_all')) {
 		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	}
@@ -119,7 +122,7 @@
 //prepare to page the results
 	$rows_per_page = (!empty($_SESSION['domain']['paging']['numeric'])) ? $_SESSION['domain']['paging']['numeric'] : 50;
 	$param = "&search=".urlencode($search);
-	if (!empty($_GET['show']) == "all" && permission_exists('call_flow_all')) {
+	if ($show == "all" && permission_exists('call_flow_all')) {
 		$param .= "&show=all";
 	}
 	$page = $_GET['page'] ?? '';
@@ -177,7 +180,7 @@
 	}
 	echo 		"<form id='form_search' class='inline' method='get'>\n";
 	if (permission_exists('call_flow_all')) {
-		if (!empty($_GET['show']) == 'all') {
+		if ($show == 'all') {
 			echo "		<input type='hidden' name='show' value='all'>";
 		}
 		else {
@@ -220,7 +223,7 @@
 		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".(!empty($call_flows) ?: "style='visibility: hidden;'").">\n";
 		echo "	</th>\n";
 	}
-	if (!empty($_GET['show']) == "all" && permission_exists('call_flow_all')) {
+	if ($show == "all" && permission_exists('call_flow_all')) {
 		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, $param, "class='shrink'");
 	}
 	echo th_order_by('call_flow_name', $text['label-call_flow_name'], $order_by, $order);
@@ -250,7 +253,7 @@
 				echo "		<input type='hidden' name='call_flows[$x][uuid]' value='".escape($row['call_flow_uuid'])."' />\n";
 				echo "	</td>\n";
 			}
-			if (!empty($_GET['show']) == "all" && permission_exists('call_flow_all')) {
+			if ($show == "all" && permission_exists('call_flow_all')) {
 				if (!empty($_SESSION['domains'][$row['domain_uuid']]['domain_name'])) {
 					$domain = $_SESSION['domains'][$row['domain_uuid']]['domain_name'];
 				}

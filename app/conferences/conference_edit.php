@@ -45,8 +45,16 @@
 	$language = new text;
 	$text = $language->get();
 
+//set the defaults
+	$conference_name = '';
+	$conference_extension = '';
+	$conference_pin_number = '';
+	$conference_flags = '';
+	$conference_account_code = '';
+	$conference_description = '';
+
 //action add or update
-	if (is_uuid($_REQUEST["id"])) {
+	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
 		$conference_uuid = $_REQUEST["id"];
 	}
@@ -55,7 +63,7 @@
 	}
 
 //get http post variables and set them to php variables
-	if (count($_POST) > 0) {
+	if (!empty($_POST)) {
 		$dialplan_uuid = $_POST["dialplan_uuid"];
 		$conference_name = $_POST["conference_name"];
 		$conference_extension = $_POST["conference_extension"];
@@ -74,7 +82,7 @@
 	}
 
 //delete the user from the v_conference_users
-	if ($_GET["a"] == "delete" && permission_exists("conference_delete")) {
+	if (!empty($_GET["a"]) && $_GET["a"] == "delete" && permission_exists("conference_delete")) {
 
 		$user_uuid = $_REQUEST["user_uuid"];
 		$conference_uuid = $_REQUEST["id"];
@@ -101,7 +109,7 @@
 	}
 
 //add the user to the v_conference_users
-	if (is_uuid($_REQUEST["user_uuid"]) && is_uuid($_REQUEST["id"]) && $_GET["a"] != "delete") {
+	if (!empty($_REQUEST["user_uuid"]) && is_uuid($_REQUEST["user_uuid"]) && is_uuid($_REQUEST["id"]) && $_GET["a"] != "delete") {
 		//set the variables
 			$user_uuid = $_REQUEST["user_uuid"];
 			$conference_uuid = $_REQUEST["id"];
@@ -131,7 +139,7 @@
 	}
 
 //process http post variables
-	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
+	if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
 		//get the conference id
 			if ($action == "add") {
@@ -176,7 +184,7 @@
 			}
 
 		//add or update the database
-			if ($_POST["persistformvar"] != "true") {
+			if (!empty($_POST["persistformvar"])) {
 
 				//update the conference extension
 					$array['conferences'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
@@ -245,7 +253,7 @@
 					//$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 					$parameters['dialplan_uuid'] = $dialplan_uuid;
 					$database = new database;
-					$database->execute($sql, $parameters);
+					$database->execute($sql, $parameters ?? null);
 					unset($sql, $parameters);
 
 				//add the message
@@ -271,7 +279,7 @@
 	}
 
 //pre-populate the form
-	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
+	if (!empty($_GET) && !empty($_POST["persistformvar"])) {
 		$conference_uuid = $_GET["id"];
 		$sql = "select * from v_conferences ";
 		$sql .= "where domain_uuid = :domain_uuid ";
@@ -279,8 +287,8 @@
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$parameters['conference_uuid'] = $conference_uuid;
 		$database = new database;
-		$row = $database->select($sql, $parameters, 'row');
-		if (is_array($row) && sizeof($row) != 0) {
+		$row = $database->select($sql, $parameters ?? null, 'row');
+		if (!empty($row)) {
 			$dialplan_uuid = $row["dialplan_uuid"];
 			$conference_name = $row["conference_name"];
 			$conference_extension = $row["conference_extension"];
@@ -316,9 +324,9 @@
 	$sql .= "and e.domain_uuid = :domain_uuid ";
 	$sql .= "and e.conference_uuid = :conference_uuid ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$parameters['conference_uuid'] = $conference_uuid;
+	$parameters['conference_uuid'] = $conference_uuid ?? '';
 	$database = new database;
-	$conference_users = $database->select($sql, $parameters, 'all');
+	$conference_users = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 
 //get the users
@@ -327,11 +335,11 @@
 	$sql .= "and user_enabled = 'true' ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$database = new database;
-	$users = $database->select($sql, $parameters, 'all');
+	$users = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 
 //set the default
-	if ($conference_profile == "") { $conference_profile = "default"; }
+	if (empty($conference_profile)) { $conference_profile = "default"; }
 
 //create token
 	$object = new token;
@@ -411,7 +419,7 @@
 			echo "		<td class='vncell' valign='top'>".$text['label-user_list']."</td>";
 			echo "		<td class='vtable'>";
 
-			if (is_array($conference_users) && @sizeof($conference_users) != 0) {
+			if (!empty($conference_users)) {
 				echo "		<table width='50%'>\n";
 				foreach ($conference_users as $field) {
 					echo "		<tr>\n";
@@ -557,7 +565,7 @@
 	echo "<br><br>";
 
 	if ($action == "update") {
-		echo "<input type='hidden' name='dialplan_uuid' value='".escape($dialplan_uuid)."'>\n";
+		echo "<input type='hidden' name='dialplan_uuid' value='".escape($dialplan_uuid ?? '')."'>\n";
 		echo "<input type='hidden' name='conference_uuid' value='".escape($conference_uuid)."'>\n";
 	}
 	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
