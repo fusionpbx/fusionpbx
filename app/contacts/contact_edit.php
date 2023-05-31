@@ -548,7 +548,7 @@
 					$_SESSION["message"] = $text['message-update'];
 				}
 				//header('Location: contacts.php');
-				header('Location: contact_edit.php?id='.urlencode($contact_uuid ?? ''));
+				header('Location: contact_edit.php?id='.urlencode($contact_uuid ?? null));
 				return;
 			}
 	}
@@ -685,7 +685,7 @@
 	if (empty($contact_phones) || count($contact_phones) == 0) {
 		$x = !empty($contact_phones) ? count($contact_phones) : 0;
 		$contact_phones[$x]['domain_uuid'] = $_SESSION['domain_uuid'];
-		$contact_phones[$x]['contact_uuid'] = $contact_uuid ?? '';
+		$contact_phones[$x]['contact_uuid'] = $contact_uuid ?? null;
 		$contact_phones[$x]['contact_phone_uuid'] = uuid();
 		$contact_phones[$x]['phone_label'] = '';
 		$contact_phones[$x]['phone_type_voice'] = '';
@@ -722,7 +722,7 @@
 	if (empty($contact_addresses) || count($contact_addresses) == 0) {
 		$x = !empty($contact_addresses) ? count($contact_addresses) : 0;
 		$contact_addresses[$x]['domain_uuid'] = $_SESSION['domain_uuid'];
-		$contact_addresses[$x]['contact_uuid'] = $contact_uuid ?? '';
+		$contact_addresses[$x]['contact_uuid'] = $contact_uuid ?? null;
 		$contact_addresses[$x]['contact_address_uuid'] = uuid();
 		$contact_addresses[$x]['address_label'] = '';
 		$contact_addresses[$x]['address_type'] = '';
@@ -760,7 +760,7 @@
 	if (empty($contact_emails) || count($contact_emails) == 0) {
 		$x = !empty($contact_emails) ? count($contact_emails) : 0;
 		$contact_emails[$x]['domain_uuid'] = $_SESSION['domain_uuid'];
-		$contact_emails[$x]['contact_uuid'] = $contact_uuid ?? '';
+		$contact_emails[$x]['contact_uuid'] = $contact_uuid ?? null;
 		$contact_emails[$x]['contact_email_uuid'] = uuid();
 		$contact_emails[$x]['email_label'] = '';
 		$contact_emails[$x]['email_address'] = '';
@@ -790,7 +790,7 @@
 	if (empty($contact_urls) || count($contact_urls) == 0) {
 		$x = !empty($contact_urls) ? count($contact_urls) : 0;
 		$contact_urls[$x]['domain_uuid'] = $_SESSION['domain_uuid'];
-		$contact_urls[$x]['contact_uuid'] = $contact_uuid ?? '';
+		$contact_urls[$x]['contact_uuid'] = $contact_uuid ?? null;
 		$contact_urls[$x]['contact_url_uuid'] = uuid();
 		$contact_urls[$x]['url_type'] = '';
 		$contact_urls[$x]['url_label'] = '';
@@ -805,7 +805,7 @@
 		$sql .= "where contact_uuid = :contact_uuid ";
 		//$sql .= "and domain_uuid = '".$domain_uuid."' ";
 		//$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-		$parameters['contact_uuid'] = $contact_uuid ?? '';
+		$parameters['contact_uuid'] = $contact_uuid ?? null;
 		$database = new database;
 		$contact_relations = $database->select($sql, $parameters ?? null, 'all');
 		unset ($sql, $parameters);
@@ -820,7 +820,7 @@
 	if (empty($contact_relations) || count($contact_relations) == 0) {
 		$x = !empty($contact_relations) ? count($contact_relations) : 0;
 		$contact_relations[$x]['domain_uuid'] = $_SESSION['domain_uuid'];
-		$contact_relations[$x]['contact_uuid'] = $contact_uuid ?? '';
+		$contact_relations[$x]['contact_uuid'] = $contact_uuid ?? null;
 		$contact_relations[$x]['contact_relation_uuid'] = uuid();
 		$contact_relations[$x]['relation_label'] = '';
 		$contact_relations[$x]['relation_contact_uuid'] = '';
@@ -832,7 +832,7 @@
 		$sql .= "where contact_uuid = :contact_uuid ";
 		//$sql .= "and domain_uuid = '".$domain_uuid."' ";
 		//$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-		$parameters['contact_uuid'] = $contact_uuid ?? '';
+		$parameters['contact_uuid'] = $contact_uuid;
 		$database = new database;
 		$contact_settings = $database->select($sql, $parameters ?? null, 'all');
 		unset ($sql, $parameters);
@@ -847,7 +847,7 @@
 	if (empty($contact_settings) || count($contact_settings) == 0) {
 		$x = !empty($contact_settings) ? count($contact_settings) : 0;
 		$contact_settings[$x]['domain_uuid'] = $_SESSION['domain_uuid'];
-		$contact_settings[$x]['contact_uuid'] = $contact_uuid ?? '';
+		$contact_settings[$x]['contact_uuid'] = $contact_uuid ?? null;
 		$contact_settings[$x]['contact_setting_uuid'] = uuid();
 		$contact_settings[$x]['contact_setting_category'] = '';
 		$contact_settings[$x]['contact_setting_subcategory'] = '';
@@ -865,7 +865,7 @@
 		$sql .= "and contact_uuid = :contact_uuid ";
 		$sql .= "order by attachment_primary desc, attachment_filename asc ";
 		$parameters['domain_uuid'] = $domain_uuid;
-		$parameters['contact_uuid'] = $contact_uuid ?? '';
+		$parameters['contact_uuid'] = $contact_uuid;
 		$database = new database;
 		$contact_attachments = $database->select($sql, $parameters ?? null, 'all');
 		unset($sql, $parameters);
@@ -877,7 +877,7 @@
 		$sql .= "where contact_uuid = :contact_uuid ";
 		//$sql .= "and domain_uuid = '".$domain_uuid."' ";
 		//$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-		$parameters['contact_uuid'] = $contact_uuid ?? '';
+		$parameters['contact_uuid'] = $contact_uuid;
 		$database = new database;
 		$contact_times = $database->select($sql, $parameters ?? null, 'all');
 		unset ($sql, $parameters);
@@ -892,7 +892,7 @@
 	if (empty($contact_times)) {
 		$x = !empty($contact_times) ? count($contact_times) : 0;
 		$contact_times[$x]['domain_uuid'] = $_SESSION['domain_uuid'];
-		$contact_times[$x]['contact_uuid'] = $contact_uuid ?? '';
+		$contact_times[$x]['contact_uuid'] = $contact_uuid ?? null;
 		$contact_times[$x]['contact_time_uuid'] = uuid();
 	}
 
@@ -902,7 +902,7 @@
 	$sql .= "and contact_uuid = :contact_uuid ";
 	$sql .= "order by last_mod_date desc ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$parameters['contact_uuid'] = $contact_uuid ?? '';
+	$parameters['contact_uuid'] = $contact_uuid ?? null;
 	$database = new database;
 	$contact_notes = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
@@ -911,7 +911,7 @@
 	if (empty($contact_times)) {
 		$x = !empty($contact_times) ? count($contact_times) : 0;
 		$contact_times[$x]['domain_uuid'] = $_SESSION['domain_uuid'];
-		$contact_times[$x]['contact_uuid'] = $contact_uuid ?? '';
+		$contact_times[$x]['contact_uuid'] = $contact_uuid ?? null;
 		$contact_times[$x]['contact_time_uuid'] = uuid();
 	}
 
@@ -1076,7 +1076,7 @@
 		}
 
 		echo button::create(['type'=>'button','label'=>$text['button-qr_code'],'icon'=>'qrcode','collapse'=>'hide-sm-dn','onclick'=>"$('#qr_code_container').fadeIn(400);"]);
-		echo button::create(['type'=>'button','label'=>$text['button-vcard'],'icon'=>'address-card','collapse'=>'hide-sm-dn','link'=>'contacts_vcard.php?id='.urlencode($contact_uuid ?? '').'&type=download']);
+		echo button::create(['type'=>'button','label'=>$text['button-vcard'],'icon'=>'address-card','collapse'=>'hide-sm-dn','link'=>'contacts_vcard.php?id='.urlencode($contact_uuid ?? null).'&type=download']);
 	}
 	//add edit
 	//if (isset($id)) {
@@ -1099,7 +1099,7 @@
 		permission_exists('contact_setting_add') ||
 		permission_exists('contact_attachment_add')
 		)) {
-		echo 		"<select class='formfld' style='width: auto; margin-left: 15px;' id='select_add' onchange=\"document.location.href='contact_' + (this.options[this.selectedIndex].value) + '_edit.php?contact_uuid=".urlencode($contact_uuid ?? '')."';\">\n";
+		echo 		"<select class='formfld' style='width: auto; margin-left: 15px;' id='select_add' onchange=\"document.location.href='contact_' + (this.options[this.selectedIndex].value) + '_edit.php?contact_uuid=".urlencode($contact_uuid ?? null)."';\">\n";
 		echo "			<option value=''>".$text['button-add']."...</option>\n";
 		if (permission_exists('contact_phone_add')) { echo "<option value='phone'>".$text['label-phone_number']."</option>\n"; }
 		if (permission_exists('contact_address_add')) { echo "<option value='address'>".$text['label-address_address']."</option>\n"; }
