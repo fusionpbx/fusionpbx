@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -260,7 +260,7 @@
 	echo "	".$text['label-name']."\n";
 	echo "</td>\n";
 	echo "<td width='70%' class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='dialplan_name' maxlength='255' value=\"".escape($dialplan_name)."\">\n";
+	echo "	<input class='formfld' type='text' name='dialplan_name' maxlength='255' value=\"".escape($dialplan_name ?? null)."\">\n";
 	echo "<br />\n";
 	echo "\n";
 	echo "</td>\n";
@@ -371,7 +371,7 @@
 	echo "	</td>\n";
 	//echo "	<td>&nbsp;&nbsp;&nbsp;".$text['label-expression']."</td>\n";
 	echo "	<td>\n";
-	echo "		&nbsp;<input class='formfld' type='text' name='condition_expression_1' maxlength='255' value=\"".escape($condition_expression_1)."\">\n";
+	echo "		&nbsp;<input class='formfld' type='text' name='condition_expression_1' maxlength='255' value=\"".escape($condition_expression_1 ?? null)."\">\n";
 	echo "	</td>\n";
 	echo "	</tr>\n";
 	echo "	</table>\n";
@@ -460,7 +460,7 @@
 	echo "	</td>\n";
 	//echo "	<td>&nbsp;&nbsp;&nbsp;".$text['label-expression']."</td>\n";
 	echo "	<td>\n";
-	echo "		&nbsp;<input class='formfld' type='text' name='condition_expression_2' maxlength='255' value=\"".escape($condition_expression_2)."\">\n";
+	echo "		&nbsp;<input class='formfld' type='text' name='condition_expression_2' maxlength='255' value=\"".escape($condition_expression_2 ?? null)."\">\n";
 	echo "	</td>\n";
 	echo "	</tr>\n";
 	echo "	</table>\n";
@@ -473,7 +473,7 @@
 	echo "    ".$text['label-action_1']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo $destination->select('dialplan', 'action_1', escape($action_1));
+	echo $destination->select('dialplan', 'action_1', escape($action_1 ?? null));
 	echo "</td>\n";
 	echo "</tr>\n";
 	
@@ -485,7 +485,7 @@
 	echo "    ".$text['label-action_2']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo $destination->select('dialplan', 'action_2', escape($action_2));
+	echo $destination->select('dialplan', 'action_2', escape($action_2 ?? null));
 	echo "</td>\n";
 	echo "</tr>\n";
 	
@@ -494,7 +494,7 @@
 	echo " 		".$text['label-context']."\n";
 	echo "	</td>\n";
 	echo "	<td colspan='4' class='vtable' align='left'>\n";
-	echo "		<input class='formfld' style='width: 60%;' type='text' name='dialplan_context' maxlength='255' value=\"".escape($dialplan_context)."\">\n";
+	echo "		<input class='formfld' style='width: 60%;' type='text' name='dialplan_context' maxlength='255' value=\"".escape($dialplan_context ?? null)."\">\n";
 	echo "		<br />\n";
 	echo "	</td>\n";
 	echo "</tr>\n";
@@ -507,11 +507,11 @@
 	echo "	<select name='dialplan_order' class='formfld'>\n";
 	//echo "		<option></option>\n";
 	if (!empty($dialplan_order)) {
-		echo "		 <option selected='selected' value='".escape($dialplan_order)."'>".escape($dialplan_order)."</option>\n";
+		echo "		 <option selected='selected' value='".escape($dialplan_order ?? null)."'>".escape($dialplan_order ?? null)."</option>\n";
 	}
 	$i = 200;
 	while($i <= 999) {
-		echo "		<option value='$i'>$i</option>\n";
+		echo "		<option value='".$i."'>".$i."</option>\n";
 		$i = $i + 10;
 	}
 	echo "	</select>\n";
@@ -525,18 +525,8 @@
 	echo "	</td>\n";
 	echo "	<td class='vtable' align='left'>\n";
 	echo "		<select class='formfld' name='dialplan_enabled'>\n";
-	if ($dialplan_enabled == "true") {
-		echo "			<option value='true' selected='selected' >".$text['option-true']."</option>\n";
-	}
-	else {
-		echo "			<option value='true'>".$text['option-true']."</option>\n";
-	}
-	if ($dialplan_enabled == "false") {
-		echo "			<option value='false' selected='selected' >".$text['option-false']."</option>\n";
-	}
-	else {
-		echo "			<option value='false'>".$text['option-false']."</option>\n";
-	}
+	echo "			<option value='true'>".$text['option-true']."</option>\n";
+	echo "			<option value='false' ".(!empty($dialplan_enabled) && $dialplan_enabled == "false" ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 	echo "		</select>\n";
 	echo "		<br />\n";
 	echo "	</td>\n";
@@ -547,7 +537,7 @@
 	echo " 		".$text['label-description']."\n";
 	echo "	</td>\n";
 	echo "	<td colspan='4' class='vtable' align='left'>\n";
-	echo "		<input class='formfld' type='text' name='dialplan_description' maxlength='255' value=\"".escape($dialplan_description)."\">\n";
+	echo "		<input class='formfld' type='text' name='dialplan_description' maxlength='255' value=\"".escape($dialplan_description ?? null)."\">\n";
 	echo "		<br />\n";
 	echo "	</td>\n";
 	echo "</tr>\n";
@@ -555,8 +545,8 @@
 	echo "</table>";
 	echo "<br><br>";
 
-	if ($action == "update") {
-		echo "<input type='hidden' name='dialplan_uuid' value='".escape($dialplan_uuid)."'>\n";
+	if (!empty($action) && $action == "update") {
+		echo "<input type='hidden' name='dialplan_uuid' value='".escape($dialplan_uuid ?? null)."'>\n";
 	}
 	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 

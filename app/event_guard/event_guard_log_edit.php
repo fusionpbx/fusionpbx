@@ -1,6 +1,6 @@
 <?php
 /*
-	Copyright (C) 2022 Mark J Crane <markjcrane@fusionpbx.com>
+	Copyright (C) 2022-2023 Mark J Crane <markjcrane@fusionpbx.com>
 	Redistribution and use in source and binary forms, with or without
 	modification, are permitted provided that the following conditions are met:
 	1. Redistributions of source code must retain the above copyright notice,
@@ -52,7 +52,7 @@
 	}
 
 //get http post variables and set them to php variables
-	if (is_array($_POST)) {
+	if (!empty($_POST) && is_array($_POST)) {
 		$hostname = $_POST["hostname"];
 		$log_date = $_POST["log_date"];
 		$filter = $_POST["filter"];
@@ -74,7 +74,7 @@
 			}
 
 		//process the http post data by submitted action
-			if ($_POST['action'] != '' && !empty($_POST['action'])) {
+			if (!empty($_POST['action'])) {
 
 				//prepare the array(s)
 				//send the array to the database class
@@ -164,7 +164,7 @@
 	}
 
 //pre-populate the form
-	if (is_array($_GET) && $_POST["persistformvar"] != "true") {
+	if (!empty($_GET) && is_array($_GET) && (empty($_POST["persistformvar"]) || $_POST["persistformvar"] != "true")) {
 		$sql = "select ";
 		$sql .= " event_guard_log_uuid, ";
 		$sql .= " hostname, ";

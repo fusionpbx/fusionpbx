@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2019 - 2022
+	Portions created by the Initial Developer are Copyright (C) 2019-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -132,7 +132,7 @@ if (!class_exists('event_guard')) {
 							$x = 0;
 							foreach ($records as $record) {
 								//add to the array
-									if ($record['checked'] == 'true' && is_uuid($record['event_guard_log_uuid'])) {
+									if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['event_guard_log_uuid'])) {
 										$array[$this->table][$x]['event_guard_log_uuid'] = $record['event_guard_log_uuid'];
 										$array[$this->table][$x]['log_status'] = 'pending';
 									}
@@ -187,7 +187,7 @@ if (!class_exists('event_guard')) {
 					if (is_array($records) && @sizeof($records) != 0) {
 						//get current toggle state
 							foreach($records as $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['event_guard_log_uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['event_guard_log_uuid'])) {
 									$uuids[] = "'".$record['event_guard_log_uuid']."'";
 								}
 							}
@@ -255,7 +255,7 @@ if (!class_exists('event_guard')) {
 
 						//get checked records
 							foreach($records as $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['event_guard_log_uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['event_guard_log_uuid'])) {
 									$uuids[] = "'".$record['event_guard_log_uuid']."'";
 								}
 							}

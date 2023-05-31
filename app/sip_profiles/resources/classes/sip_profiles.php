@@ -203,14 +203,14 @@ if (!class_exists('sip_profiles')) {
 
 						//filter out unchecked sip profiles, build the delete array
 							foreach ($records as $x => $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
 									$array[$this->table][$x]['sip_profile_uuid'] = $this->sip_profile_uuid;
 								}
 							}
 
 						//get necessary sip profile details
-							if (is_uuid($this->sip_profile_uuid)) {
+							if (!empty($this->sip_profile_uuid) && is_uuid($this->sip_profile_uuid)) {
 								$sql = "select sip_profile_hostname from v_sip_profiles ";
 								$sql .= "where sip_profile_uuid = :sip_profile_uuid ";
 								$parameters['sip_profile_uuid'] = $this->sip_profile_uuid;
@@ -220,7 +220,7 @@ if (!class_exists('sip_profiles')) {
 							}
 
 						//delete the checked rows
-							if (is_array($array) && @sizeof($array) != 0) {
+							if (!empty($array) && @sizeof($array) != 0) {
 
 								//execute delete
 									$database = new database;
@@ -277,18 +277,18 @@ if (!class_exists('sip_profiles')) {
 					}
 
 				//delete multiple records
-					if (is_array($records) && @sizeof($records) != 0) {
+					if (!empty($records) && @sizeof($records) != 0) {
 
 						//filter out unchecked sip profiles, build the delete array
 							foreach ($records as $x => $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
 									$array[$this->table][$x]['sip_profile_uuid'] = $this->sip_profile_uuid;
 								}
 							}
 
 						//get necessary sip profile details
-							if (is_uuid($this->sip_profile_uuid)) {
+							if (!empty($this->sip_profile_uuid) && is_uuid($this->sip_profile_uuid)) {
 								$sql = "select sip_profile_hostname from v_sip_profiles ";
 								$sql .= "where sip_profile_uuid = :sip_profile_uuid ";
 								$parameters['sip_profile_uuid'] = $this->sip_profile_uuid;
@@ -298,7 +298,7 @@ if (!class_exists('sip_profiles')) {
 							}
 
 						//delete the checked rows
-							if (is_array($array) && @sizeof($array) != 0) {
+							if (!empty($array) && @sizeof($array) != 0) {
 
 								//execute delete
 									$database = new database;
@@ -356,11 +356,11 @@ if (!class_exists('sip_profiles')) {
 
 						//get current toggle state
 							foreach ($records as $x => $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$uuids[] = "'".$record['uuid']."'";
 								}
 							}
-							if (is_array($uuids) && @sizeof($uuids) != 0) {
+							if (!empty($uuids) && @sizeof($uuids) != 0) {
 								$sql = "select ".$this->uuid_prefix."uuid as uuid, ".$this->toggle_field." as toggle, sip_profile_hostname from v_".$this->table." ";
 								$sql .= "where ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
 								$database = new database;
@@ -383,7 +383,7 @@ if (!class_exists('sip_profiles')) {
 							}
 
 						//save the changes
-							if (is_array($array) && @sizeof($array) != 0) {
+							if (!empty($array) && @sizeof($array) != 0) {
 
 								//save the array
 									$database = new database;
@@ -410,7 +410,7 @@ if (!class_exists('sip_profiles')) {
 									}
 
 								//clear the cache
-									if (is_array($hostnames) && @sizeof($hostnames) != 0) {
+									if (!empty($hostnames) && @sizeof($hostnames) != 0) {
 										$hostnames = array_unique($hostnames);
 										$cache = new cache;
 										foreach ($hostnames as $hostname) {

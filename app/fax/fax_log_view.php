@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -54,7 +54,7 @@
 	}
 
 //process the http post data by submitted action
-	if ($_POST['action'] != '' && is_uuid($fax_log_uuid) && is_uuid($fax_uuid)) {
+	if (!empty($_POST['action']) && !empty($fax_log_uuid) && is_uuid($fax_log_uuid) && is_uuid($fax_uuid)) {
 		$array[0]['checked'] = 'true';
 		$array[0]['uuid'] = $fax_log_uuid;
 
@@ -73,7 +73,7 @@
 	}
 
 //pre-populate the form
-	if (is_uuid($fax_log_uuid) && is_uuid($fax_uuid)) {
+	if (!empty($fax_log_uuid) && is_uuid($fax_log_uuid) && !empty($fax_uuid) && is_uuid($fax_uuid)) {
 		$sql = "select * from v_fax_logs ";
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$sql .= "and fax_log_uuid = :fax_log_uuid ";

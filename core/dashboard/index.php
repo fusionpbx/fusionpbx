@@ -31,9 +31,11 @@
 //if config.conf file does not exist then redirect to the install page
 	if (file_exists("/usr/local/etc/fusionpbx/config.conf")){
 		//BSD
-	} elseif (file_exists("/etc/fusionpbx/config.conf")){
+	}
+	elseif (file_exists("/etc/fusionpbx/config.conf")){
 		//Linux
-	} else {
+	}
+	else {
 		header("Location: /core/install/install.php");
 		exit;
 	}
@@ -85,7 +87,7 @@
 	$sql .= ")\n";
 	$sql .= "order by dashboard_order asc \n";
 	$database = new database;
-	$dashboard = $database->select($sql, $parameters, 'all');
+	$dashboard = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 
 //get http post variables and set them to php variables
@@ -242,7 +244,7 @@
 		foreach($dashboard as $row) {
 			$dashboard_name = strtolower($row['dashboard_name']);
 			$dashboard_name = str_replace(" ", "_", $dashboard_name);
-			if (is_numeric($dashboard_column_span)) {
+			if (isset($dashboard_column_span) && is_numeric($dashboard_column_span)) {
 				echo "#".$dashboard_name." {\n";
 				echo "	grid-column: span 1;\n";
 				echo "}\n";
@@ -366,7 +368,7 @@
 
 		.ghost {
 			border: 2px dashed rgba(0,0,0,1);
-			<?php $br = format_border_radius($_SESSION['theme']['dashboard_border_radius']['text'], '5px'); ?>
+			<?php $br = format_border_radius($_SESSION['theme']['dashboard_border_radius']['text'] ?? null, '5px'); ?>
 			-webkit-border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
 			-moz-border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
 			border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;

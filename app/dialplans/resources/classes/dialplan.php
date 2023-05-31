@@ -109,19 +109,23 @@
 					$array['dialplans'][0]['dialplan_context'] = $this->dialplan_context;
 					$array['dialplans'][0]['dialplan_enabled'] = $this->dialplan_enabled;
 					$array['dialplans'][0]['dialplan_description'] = $this->dialplan_description;
+
 				//grant temporary permissions
 					$p = new permissions;
 					$p->add('dialplan_add', 'temp');
+
 				//execute insert
 					$database = new database;
 					$database->app_name = 'dialplans';
 					$database->app_uuid = '742714e5-8cdf-32fd-462c-cbe7e3d655db';
 					$database->save($array);
 					unset($array);
+
 				//clear the destinations session array
 					if (isset($_SESSION['destinations']['array'])) {
 						unset($_SESSION['destinations']['array']);
 					}
+
 				//revoke temporary permissions
 					$p->delete('dialplan_add', 'temp');
 			}
@@ -133,19 +137,23 @@
 					if (!empty($this->dialplan_continue)) {
 						$array['dialplans'][0]['dialplan_continue'] = $this->dialplan_continue;
 					}
+
 					$array['dialplans'][0]['dialplan_order'] = $this->dialplan_order;
 					$array['dialplans'][0]['dialplan_context'] = $this->dialplan_context;
 					$array['dialplans'][0]['dialplan_enabled'] = $this->dialplan_enabled;
 					$array['dialplans'][0]['dialplan_description'] = $this->dialplan_description;
+
 				//grant temporary permissions
 					$p = new permissions;
 					$p->add('dialplan_edit', 'temp');
+
 				//execute update
 					$database = new database;
 					$database->app_name = 'dialplans';
 					$database->app_uuid = '742714e5-8cdf-32fd-462c-cbe7e3d655db';
 					$database->save($array);
 					unset($array);
+
 				//revoke temporary permissions
 					$p->delete('dialplan_edit', 'temp');
 			}
@@ -157,7 +165,7 @@
 				$parameters['domain_uuid'] = $this->domain_uuid;
 				$parameters['app_uuid'] = $this->app_uuid;
 				$database = new database;
-				return $database->select($sql, $parameters, 'column') != 0 ? true : false;
+				return $database->select($sql, $parameters ?? null, 'column') != 0 ? true : false;
 				unset($sql, $parameters);
 			}
 
@@ -168,7 +176,7 @@
 				$parameters['domain_uuid'] = $this->domain_uuid;
 				$parameters['dialplan_uuid'] = $this->dialplan_uuid;
 				$database = new database;
-				return $database->select($sql, $parameters, 'column') != 0 ? true : false;
+				return $database->select($sql, $parameters ?? null, 'column') != 0 ? true : false;
 				unset($sql, $parameters);
 			}
 
@@ -234,7 +242,7 @@
 								//prepare the xml
 									if (!empty($xml_string)) {
 										//replace the variables
-											$length = (is_numeric($_SESSION["security"]["pin_length"]["var"])) ? $_SESSION["security"]["pin_length"]["var"] : 8;
+											$length = (!empty($_SESSION["security"]["pin_length"]["var"])) ? $_SESSION["security"]["pin_length"]["var"] : 8;
 											$xml_string = str_replace("{v_context}", $domain['domain_name'], $xml_string);
 											$xml_string = str_replace("{v_pin_number}", generate_password($length, 1), $xml_string);
 
@@ -254,8 +262,8 @@
 									}
 
 								//ensure the condition array is uniform
-									if (is_array($dialplan)) {
-										if (!is_array($dialplan['condition'][0])) {
+									if (!empty($dialplan)) {
+										if (empty($dialplan['condition'][0])) {
 											$tmp = $dialplan['condition'];
 											unset($dialplan['condition']);
 											$dialplan['condition'][0] = $tmp;
@@ -342,16 +350,16 @@
 													}
 													$y++;
 
-													if (is_array($row['action']) || is_array($row['anti-action'])) {
+													if (!empty($row['action']) || !empty($row['anti-action'])) {
 														$condition_self_closing_tag = false;
-														if (!is_array($row['action'][0])) {
+														if (empty($row['action'][0])) {
 															if ($row['action']['@attributes']['application']) {
 																$tmp = $row['action'];
 																unset($row['action']);
 																$row['action'][0] = $tmp;
 															}
 														}
-														if (!is_array($row['anti-action'][0])) {
+														if (empty($row['anti-action'][0])) {
 															if ($row['anti-action']['@attributes']['application']) {
 																$tmp = $row['anti-action'];
 																unset($row['anti-action']);
@@ -445,7 +453,7 @@
 							$p->add('dialplan_detail_edit', 'temp');
 
 						//save the data
-							if (is_array($array)) {
+							if (!empty($array)) {
 								//$database = new database;
 								$database->app_name = 'dialplans';
 								$database->app_uuid = '742714e5-8cdf-32fd-462c-cbe7e3d655db';
@@ -475,7 +483,7 @@
 					$destination_number = trim($destination_number);
 
 				//check the session array if it doesn't exist then build the array
-					if (!is_array($_SESSION[$_SESSION['domain_uuid']]['outbound_routes'])) {
+					if (empty($_SESSION[$_SESSION['domain_uuid']]['outbound_routes'])) {
 						//get the outbound routes from the database
 							$sql = "select * ";
 							$sql .= "from v_dialplans as d, ";
@@ -501,10 +509,10 @@
 							$sql .= "s.dialplan_detail_order asc ";
 							$parameters['domain_uuid'] = $this->domain_uuid;
 							$database = new database;
-							$dialplans = $database->select($sql, $parameters, 'all');
+							$dialplans = $database->select($sql, $parameters ?? null, 'all');
 							unset($sql, $parameters);
 							$x = 0; $y = 0;
-							if (isset($dialplans) && @sizeof($dialplans) != 0) {
+							if (!empty($dialplans)) {
 								foreach ($dialplans as &$row) {
 									//if the previous dialplan uuid has not been set then set it
 										if (!isset($previous_dialplan_uuid)) { $previous_dialplan_uuid = $row['dialplan_uuid']; }
@@ -535,6 +543,7 @@
 										$previous_dialplan_uuid = $row['dialplan_uuid'];
 								}
 							}
+
 						//set the session array
 							$_SESSION[$_SESSION['domain_uuid']]['outbound_routes'] = $array;
 					}
@@ -608,7 +617,7 @@
 								$parameters['dialplan_uuid'] = $this->uuid;
 							}
 							else {
-								if (isset($this->context)) {
+								if (!empty($this->context)) {
 									if ($this->context == "public" || substr($this->context, 0, 7) == "public@" || substr($this->context, -7) == ".public") {
 										$sql .= "where dialplan_context = :dialplan_context ";
 									}
@@ -626,8 +635,8 @@
 							$sql .= "dialplan_context asc, ";
 							$sql .= "dialplan_order asc ";
 							$database = new database;
-							$results = $database->select($sql, $parameters, 'all');
-							if (is_array($results) && @sizeof($results) != 0) {
+							$results = $database->select($sql, $parameters ?? null, 'all');
+							if (!empty($results)) {
 								foreach ($results as $row) {
 									$dialplans[$row["dialplan_uuid"]] = $row["dialplan_xml"];
 								}
@@ -676,12 +685,12 @@
 							$sql .= "else 100 end, \n";
 							$sql .= "s.dialplan_detail_order asc \n";
 							$database = new database;
-							$results = $database->select($sql, $parameters, 'all');
+							$results = $database->select($sql, $parameters ?? null, 'all');
 							unset($sql, $parameters);
 
 						//loop through the results to get the xml from the dialplan_xml field or from dialplan details table
 							$x = 0;
-							if (is_array($results) && @sizeof($results) != 0) {
+							if (!empty($results)) {
 								foreach ($results as $row) {
 									//clear flag pass
 										$pass = false;
@@ -709,7 +718,7 @@
 										//$dialplan_detail_order = $row["dialplan_detail_order;
 
 									//remove $$ and replace with $
-										$dialplan_detail_data = str_replace("$$", "$", $dialplan_detail_data);
+										$dialplan_detail_data = str_replace("$$", "$", $dialplan_detail_data ?? '');
 
 									//get the dialplan detail inline
 										$detail_inline = "";
@@ -873,7 +882,7 @@
 															$sql = "select * from v_domains ";
 															$database = new database;
 															$result = $database->select($sql, null, 'all');
-															if (is_array($result) && @sizeof($result) != 0) {
+															if (!empty($result)) {
 																foreach($result as $row) {
 																	$domains[$row['domain_uuid']] = $row['domain_name'];
 																}
@@ -882,11 +891,11 @@
 														}
 													//add the call direction and domain name and uuid
 														$xml .= "		<action application=\"export\" data=\"call_direction=inbound\" inline=\"true\"/>\n";
-														if ($domain_uuid != null and $domain_uuid != '') {
+														if (!empty($domain_uuid)) {
 															$domain_name = $domains[$domain_uuid];
 															$xml .= "		<action application=\"set\" data=\"domain_uuid=" . $domain_uuid . "\" inline=\"true\"/>\n";
 														}
-														if ($domain_name != null and $domain_name != '') {
+														if (!empty($domain_name)) {
 															$xml .= "		<action application=\"set\" data=\"domain_name=" . $domain_name . "\" inline=\"true\"/>\n";
 														}
 														$first_action = false;
@@ -914,8 +923,8 @@
 							unset($row);
 
 						// prevent partial dialplan (pass=nil may be error in sql or empty resultset)
-							if ($pass == false) {
-								if (count($results)) {
+							if (isset($pass) && $pass == false) {
+								if (!empty($results)) {
 									echo 'error while build context: ' . $this->context;
 								}
 							}
@@ -953,7 +962,7 @@
 
 				//save the dialplan xml
 					if ($this->destination == "database") {
-						if (is_array($dialplans)) {
+						if (!empty($dialplans)) {
 							$x = 0;
 							foreach ($dialplans as $key => $value) {
 								//build update array
@@ -1058,11 +1067,11 @@
 						}
 
 					//delete multiple records
-						if (is_array($records) && @sizeof($records) != 0) {
+						if (!empty($records)) {
 
 							//build the delete array
 								foreach ($records as $x => $record) {
-									if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+									if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 
 										//build delete array
 											$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
@@ -1073,14 +1082,14 @@
 											$sql .= "where dialplan_uuid = :dialplan_uuid ";
 											$parameters['dialplan_uuid'] = $record['uuid'];
 											$database = new database;
-											$dialplan_contexts[] = $database->select($sql, $parameters, 'column');
+											$dialplan_contexts[] = $database->select($sql, $parameters ?? null, 'column');
 											unset($sql, $parameters);
 
 									}
 								}
 
 							//delete the checked rows
-								if (is_array($array) && @sizeof($array) != 0) {
+								if (!empty($array)) {
 
 									//grant temporary permissions
 										$p = new permissions;
@@ -1098,7 +1107,7 @@
 										$p->delete('dialplan_detail_delete', 'temp');
 
 									//clear the cache
-										if (is_array($dialplan_contexts) && @sizeof($dialplan_contexts) != 0) {
+										if (!empty($dialplan_contexts)) {
 											$dialplan_contexts = array_unique($dialplan_contexts, SORT_STRING);
 											$cache = new cache;
 											foreach ($dialplan_contexts as $dialplan_context) {
@@ -1162,11 +1171,11 @@
 						}
 
 					//delete multiple records
-						if (is_array($records) && @sizeof($records) != 0) {
+						if (!empty($records)) {
 
 							//build the delete array
 								foreach ($records as $x => $record) {
-									if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+									if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 
 										//build delete array
 											$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
@@ -1177,14 +1186,14 @@
 											$sql .= "where dialplan_uuid = :dialplan_uuid ";
 											$parameters['dialplan_uuid'] = $this->dialplan_uuid;
 											$database = new database;
-											$dialplan_contexts[] = $database->select($sql, $parameters, 'column');
+											$dialplan_contexts[] = $database->select($sql, $parameters ?? null, 'column');
 											unset($sql, $parameters);
 
 									}
 								}
 
 							//delete the checked rows
-								if (is_array($array) && @sizeof($array) != 0) {
+								if (!empty($array)) {
 
 									//grant temporary permissions
 										$p = new permissions;
@@ -1200,7 +1209,7 @@
 										$p->delete('dialplan_detail_delete', 'temp');
 
 									//clear the cache
-										if (is_array($dialplan_contexts) && @sizeof($dialplan_contexts) != 0) {
+										if (!empty($dialplan_contexts)) {
 											$dialplan_contexts = array_unique($dialplan_contexts, SORT_STRING);
 											$cache = new cache;
 											foreach ($dialplan_contexts as $dialplan_context) {
@@ -1256,15 +1265,15 @@
 						}
 
 					//toggle the checked records
-						if (is_array($records) && @sizeof($records) != 0) {
+						if (!empty($records)) {
 
 							//get current toggle state
 								foreach($records as $x => $record) {
-									if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+									if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 										$uuids[] = "'".$record['uuid']."'";
 									}
 								}
-								if (is_array($uuids) && @sizeof($uuids) != 0) {
+								if (!empty($uuids)) {
 									$sql = "select ".$this->uuid_prefix."uuid as uuid, ".$this->toggle_field." as toggle, dialplan_context from v_".$this->table." ";
 									$sql .= "where ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
 									if (!permission_exists('dialplan_all')) {
@@ -1272,8 +1281,8 @@
 										$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 									}
 									$database = new database;
-									$rows = $database->select($sql, $parameters, 'all');
-									if (is_array($rows) && @sizeof($rows) != 0) {
+									$rows = $database->select($sql, $parameters ?? null, 'all');
+									if (!empty($rows)) {
 										foreach ($rows as $row) {
 											$states[$row['uuid']] = $row['toggle'];
 											$dialplan_contexts[] = $row['dialplan_context'];
@@ -1291,7 +1300,7 @@
 								}
 
 							//save the changes
-								if (is_array($array) && @sizeof($array) != 0) {
+								if (!empty($array)) {
 
 									//grant temporary permissions
 										$p = new permissions;
@@ -1308,7 +1317,7 @@
 										$p->delete('dialplan_edit', 'temp');
 
 									//clear the cache
-										if (is_array($dialplan_contexts) && @sizeof($dialplan_contexts) != 0) {
+										if (!empty($dialplan_contexts)) {
 											$dialplan_contexts = array_unique($dialplan_contexts, SORT_STRING);
 											$cache = new cache;
 											foreach ($dialplan_contexts as $dialplan_context) {
@@ -1371,24 +1380,24 @@
 						}
 
 					//copy the checked records
-						if (is_array($records) && @sizeof($records) != 0) {
+						if (!empty($records)) {
 
 							//get checked records
 								foreach($records as $x => $record) {
-									if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+									if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 										$uuids[] = "'".$record['uuid']."'";
 									}
 								}
 
 							//create insert array from existing data
-								if (is_array($uuids) && @sizeof($uuids) != 0) {
+								if (!empty($uuids)) {
 
 									//primary table
 										$sql = "select * from v_".$this->table." ";
 										$sql .= "where ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
 										$database = new database;
-										$rows = $database->select($sql, $parameters, 'all');
-										if (is_array($rows) && @sizeof($rows) != 0) {
+										$rows = $database->select($sql, $parameters ?? null, 'all');
+										if (!empty($rows)) {
 											$y = 0;
 											foreach ($rows as $x => $row) {
 												//set a unique uuid
@@ -1419,8 +1428,8 @@
 													$sql_2 = "select * from v_dialplan_details where dialplan_uuid = :dialplan_uuid";
 													$parameters_2['dialplan_uuid'] = $row['dialplan_uuid'];
 													$database = new database;
-													$rows_2 = $database->select($sql_2, $parameters_2, 'all');
-													if (is_array($rows_2) && @sizeof($rows_2) != 0) {
+													$rows_2 = $database->select($sql_2, $parameters_2 ?? null, 'all');
+													if (!empty($rows_2)) {
 														foreach ($rows_2 as $row_2) {
 
 															//copy data
@@ -1445,7 +1454,7 @@
 								}
 
 							//save the changes and set the message
-								if (is_array($array) && @sizeof($array) != 0) {
+								if (!empty($array)) {
 
 									//grant temporary permissions
 										$p = new permissions;
@@ -1463,7 +1472,7 @@
 										$p->delete('dialplan_detail_add', 'temp');
 
 									//clear the cache
-										if (is_array($dialplan_contexts) && @sizeof($dialplan_contexts) != 0) {
+										if (!empty($dialplan_contexts)) {
 											$dialplan_contexts = array_unique($dialplan_contexts, SORT_STRING);
 											$cache = new cache;
 											foreach ($dialplan_contexts as $dialplan_context) {

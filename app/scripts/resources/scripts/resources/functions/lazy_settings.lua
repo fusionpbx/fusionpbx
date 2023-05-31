@@ -2,7 +2,7 @@
 -- local settings = Settings.new('system')
 -- print(settings:get('switch', 'base', 'dir'))
 --
--- Domain settings (to `fax_retry.lua`)
+-- Domain settings
 --	local Settings = require "resources.functions.settings"
 --	local settings = Settings.new(dbh, domain_name, domain_uuid)
 --	storage_type = settings:get('fax', 'storage_type', 'text') or ''

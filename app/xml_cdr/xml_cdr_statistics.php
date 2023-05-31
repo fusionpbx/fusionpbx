@@ -46,6 +46,9 @@
 	$language = new text;
 	$text = $language->get();
 
+//set default showall
+	$show_all = false;
+
 //additional includes
 	$document['title'] = $text['title-call-statistics'];
 	require_once "resources/header.php";
@@ -55,8 +58,9 @@
 	if (permission_exists('xml_cdr_search_advanced')) {
 		$search_url .= '&redirect=xml_cdr_statistics';
 	}
-	if(permission_exists('xml_cdr_all') && ($_GET['showall'] === 'true')){
+	if(permission_exists('xml_cdr_all') && (isset($_GET['showall']) && $_GET['showall'] === 'true')){
 		$search_url .= '&showall=true';
+		$show_all = true;
 	}
 	if (!empty($_GET['direction'])) {
 		$search_url .= '&direction='.urlencode($_GET['direction']);
@@ -144,7 +148,7 @@
 	if (permission_exists('xml_cdr_search_advanced')) {
 		echo button::create(['type'=>'button','label'=>$text['button-advanced_search'],'icon'=>'tools','link'=>'xml_cdr_search.php?type=advanced'.$search_url]);
 	}
-	if (permission_exists('xml_cdr_all') && $_GET['showall'] != 'true') {
+	if (permission_exists('xml_cdr_all') && !$show_all) {
 		echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$_SESSION['theme']['button_icon_all'],'link'=>'xml_cdr_statistics.php?showall=true'.$search_url]);
 	}
 	echo button::create(['type'=>'button','label'=>$text['button-extension_summary'],'icon'=>'list','link'=>'xml_cdr_extension_summary.php']);
@@ -325,11 +329,11 @@
 			echo "	<td>".$row['time']."&nbsp;</td>\n";
 		}
 		echo "	<td>".escape($row['volume'])."&nbsp;</td>\n";
-		echo "	<td>".(round(escape($row['minutes']),2))."&nbsp;</td>\n";
-		echo "	<td>".(round(escape($row['avg_min']),2))."&nbsp;/&nbsp;".(round(escape($row['cpm_ans']),2))."&nbsp;</td>\n";
-		echo "	<td class='center'><a href=\"xml_cdr.php?call_result=missed&direction=$direction&start_epoch=".escape($row['start_epoch'])."&stop_epoch=".escape($row['stop_epoch'])."\">".escape($row['missed'])."</a>&nbsp;</td>\n";
-		echo "	<td>".(round(escape($row['asr']),2))."&nbsp;</td>\n";
-		echo "	<td>".(round(escape($row['aloc']),2))."&nbsp;</td>\n";
+		echo "	<td>".escape(round($row['minutes'] ?? 0, 2))."&nbsp;</td>\n";
+		echo "	<td>".escape(round($row['avg_min'] ?? 0, 2))."&nbsp;/&nbsp;".escape(round($row['cpm_ans'] ?? 0, 2))."&nbsp;</td>\n";
+		echo "	<td class='center'><a href=\"xml_cdr.php?call_result=missed&direction=".$direction."&start_epoch=".escape($row['start_epoch'] ?? '')."&stop_epoch=".escape($row['stop_epoch'] ?? '')."\">".escape($row['missed'] ?? '')."</a>&nbsp;</td>\n";
+		echo "	<td>".escape(round($row['asr'] ?? 0, 2))."&nbsp;</td>\n";
+		echo "	<td>".escape(round($row['aloc'] ?? 0, 2))."&nbsp;</td>\n";
 		echo "</tr >\n";
 		$i++;
 	}

@@ -85,7 +85,7 @@ if (!class_exists('dashboard')) {
 							$x = 0;
 							foreach ($records as $record) {
 								//add to the array
-									if ($record['checked'] == 'true' && is_uuid($record['dashboard_uuid'])) {
+									if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['dashboard_uuid'])) {
 										$array[$this->table][$x]['dashboard_uuid'] = $record['dashboard_uuid'];
 									}
 
@@ -132,7 +132,7 @@ if (!class_exists('dashboard')) {
 					if (is_array($records) && @sizeof($records) != 0) {
 						//get current toggle state
 							foreach($records as $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['dashboard_uuid'])) {
+								if (isset($record['checked']) && $record['checked'] == 'true' && is_uuid($record['dashboard_uuid'])) {
 									$uuids[] = "'".$record['dashboard_uuid']."'";
 								}
 							}
@@ -140,7 +140,7 @@ if (!class_exists('dashboard')) {
 								$sql = "select ".$this->name."_uuid as uuid, ".$this->toggle_field." as toggle from v_".$this->table." ";
 								$sql .= "where ".$this->name."_uuid in (".implode(', ', $uuids).") ";
 								$database = new database;
-								$rows = $database->select($sql, $parameters, 'all');
+								$rows = $database->select($sql, $parameters ?? null, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
 										$states[$row['uuid']] = $row['toggle'];
@@ -200,7 +200,7 @@ if (!class_exists('dashboard')) {
 
 						//get checked records
 							foreach($records as $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['dashboard_uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['dashboard_uuid'])) {
 									$uuids[] = "'".$record['dashboard_uuid']."'";
 								}
 							}
@@ -210,7 +210,7 @@ if (!class_exists('dashboard')) {
 								$sql = "select * from v_".$this->table." ";
 								$sql .= "where dashboard_uuid in (".implode(', ', $uuids).") ";
 								$database = new database;
-								$rows = $database->select($sql, $parameters, 'all');
+								$rows = $database->select($sql, $parameters ?? null, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									$x = 0;
 									foreach ($rows as $row) {
@@ -218,7 +218,7 @@ if (!class_exists('dashboard')) {
 											$array[$this->table][$x] = $row;
 
 										//add copy to the description
-											$array[$this->table][$x][dashboard.'_uuid'] = uuid();
+											$array[$this->table][$x]['dashboard_uuid'] = uuid();
 											$array[$this->table][$x][$this->description_field] = trim($row[$this->description_field]).' ('.$text['label-copy'].')';
 
 										//increment the id

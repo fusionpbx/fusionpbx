@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2022
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -46,12 +46,12 @@
 	$text = $language->get();
 
 //action add or update
-	if (is_uuid($_REQUEST["id"])) {
+	if (!empty($_REQUEST["id"])) {
 		$action = "update";
-		if (is_uuid($_POST["id"])) {
+		if (!empty($_POST["id"]) && is_uuid($_POST["id"])) {
 			$gateway_uuid = $_REQUEST["id"];
 		}
-		if (is_uuid($_POST["gateway_uuid"])) {
+		if (!empty($_POST["gateway_uuid"]) && is_uuid($_POST["gateway_uuid"])) {
 			$gateway_uuid = $_POST["gateway_uuid"];
 		}
 	}
@@ -62,7 +62,7 @@
 
 //get total gateway count from the database, check limit, if defined
 	if ($action == 'add') {
-		if (is_numeric($_SESSION['limit']['gateways']['numeric'])) {
+		if (!empty($_SESSION['limit']['gateways']['numeric'])) {
 			$sql = "select count(gateway_uuid) from v_gateways ";
 			$sql .= "where (domain_uuid = :domain_uuid ".(permission_exists('gateway_domain') ? " or domain_uuid is null " : null).") ";
 			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
@@ -78,7 +78,7 @@
 	}
 
 //get http post variables and set them to php variables
-	if (count($_POST) > 0) {
+	if (!empty($_POST)) {
 		$domain_uuid = $_POST["domain_uuid"];
 		$gateway = $_POST["gateway"];
 		$username = $_POST["username"];
@@ -162,7 +162,7 @@
 			}
 
 		//add or update the database
-			if ($_POST["persistformvar"] != "true") {
+			if (empty($_POST["persistformvar"]) || $_POST["persistformvar"] != "true") {
 
 				//build the gateway array
 					$x = 0;
@@ -220,7 +220,7 @@
 					$message = $database->message;
 
 				//remove xml file (if any) if not enabled
-					if ($enabled != 'true' && $_SESSION['switch']['sip_profiles']['dir'] != '') {
+					if ($enabled != 'true' && !empty($_SESSION['switch']['sip_profiles']['dir'])) {
 						$gateway_xml_file = $_SESSION['switch']['sip_profiles']['dir']."/".$profile."/v_".$gateway_uuid.".xml";
 						if (file_exists($gateway_xml_file)) {
 							unlink($gateway_xml_file);
@@ -264,14 +264,14 @@
 	}
 
 //pre-populate the form
-	if (count($_GET) > 0 && is_uuid($_GET["id"]) && $_POST["persistformvar"] != "true") {
+	if (!empty($_GET) && !empty($_GET["id"]) && is_uuid($_GET["id"]) && empty($_POST["persistformvar"])) {
 		$gateway_uuid = $_GET["id"];
 		$sql = "select * from v_gateways ";
 		$sql .= "where gateway_uuid = :gateway_uuid ";
 		$parameters['gateway_uuid'] = $gateway_uuid;
 		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
-		if (is_array($row) && @sizeof($row) != 0) {
+		if (!empty($row)) {
 			$domain_uuid = $row["domain_uuid"];
 			$gateway = $row["gateway"];
 			$username = $row["username"];
@@ -318,9 +318,42 @@
 	unset($sql);
 
 //set defaults
+	if (empty($gateway_uuid)) { $gateway_uuid = ""; }
 	if (empty($enabled)) { $enabled = "true"; }
 	if (empty($register)) { $register = "true"; }
 	if (empty($retry_seconds)) { $retry_seconds = "30"; }
+	if (empty($gateway)) { $gateway = ''; }
+	if (empty($username)) { $username = ''; }
+	if (empty($password)) { $password = ''; }
+	if (empty($distinct_to)) { $distinct_to = ''; }
+	if (empty($auth_username)) { $auth_username = ''; }
+	if (empty($realm)) { $realm = ''; }
+	if (empty($from_user)) { $from_user = ''; }
+	if (empty($from_domain)) { $from_domain = ''; }
+	if (empty($proxy)) { $proxy = ''; }
+	if (empty($register_proxy)) { $register_proxy = ''; }
+	if (empty($outbound_proxy)) { $outbound_proxy = ''; }
+	if (empty($expire_seconds)) { $expire_seconds = ''; }
+	if (empty($register)) { $register = ''; }
+	if (empty($register_transport)) { $register_transport = ''; }
+	if (empty($contact_params)) { $contact_params = ''; }
+	if (empty($retry_seconds)) { $retry_seconds = ''; }
+	if (empty($extension)) { $extension = ''; }
+	if (empty($ping)) { $ping = ''; }
+	if (empty($ping_min)) { $ping_min = ''; }
+	if (empty($ping_max)) { $ping_max = ''; }
+	if (empty($contact_in_ping)) { $contact_in_ping = ''; }
+	if (empty($channels)) { $channels = ''; }
+	if (empty($caller_id_in_from)) { $caller_id_in_from = ''; }
+	if (empty($supress_cng)) { $supress_cng = ''; }
+	if (empty($sip_cid_type)) { $sip_cid_type = ''; }
+	if (empty($codec_prefs)) { $codec_prefs = ''; }
+	if (empty($extension_in_contact)) { $extension_in_contact = ''; }
+	if (empty($context)) { $context = ''; }
+	if (empty($profile)) { $profile = ''; }
+	if (empty($hostname)) { $hostname = ''; }
+	if (empty($enabled)) { $enabled = 'true'; }
+	if (empty($description)) { $description = ''; }
 
 //create token
 	$object = new token;

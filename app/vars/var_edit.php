@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -46,7 +46,7 @@
 	$text = $language->get();
 
 //set the action as an add or an update
-	if (is_uuid($_REQUEST["id"])) {
+	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
 		$var_uuid = $_REQUEST["id"];
 	}
@@ -54,8 +54,18 @@
 		$action = "add";
 	}
 
+//define the variables
+	$var_category = '';
+	$var_name = '';
+	$var_value = '';
+	$var_command = '';
+	$var_hostname = '';
+	$var_enabled = '';
+	$var_order = '';
+	$var_description = '';
+
 //set http values as php variables
-	if (count($_POST) > 0) {
+	if (!empty($_POST)) {
 		$var_category = trim($_POST["var_category"]);
 		$var_name = trim($_POST["var_name"]);
 		$var_value = trim($_POST["var_value"]);
@@ -64,7 +74,6 @@
 		$var_enabled = trim($_POST["var_enabled"] ?: 'false');
 		$var_order = trim($_POST["var_order"]);
 		$var_description = trim($_POST["var_description"]);
-		$var_description = str_replace("''", "'", $var_description);
 
 		if (!empty($_POST["var_category_other"])) {
 			$var_category = trim($_POST["var_category_other"]);
@@ -72,7 +81,7 @@
 	}
 
 //process the post
-	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
+	if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
 		//get the uuid
 			if ($action == "update") {
@@ -131,10 +140,10 @@
 						$array['vars'][0]['var_name'] = $var_name;
 						$array['vars'][0]['var_value'] = $var_value;
 						$array['vars'][0]['var_command'] = $var_command;
-						$array['vars'][0]['var_hostname'] = $var_hostname != '' ? $var_hostname : null;
+						$array['vars'][0]['var_hostname'] = !empty($var_hostname) ? $var_hostname : null;
 						$array['vars'][0]['var_enabled'] = $var_enabled;
 						$array['vars'][0]['var_order'] = $var_order;
-						$array['vars'][0]['var_description'] = base64_encode($var_description);
+						$array['vars'][0]['var_description'] = $var_description;
 
 					//execute insert/update
 						$database = new database;
@@ -158,7 +167,7 @@
 	}
 
 //pre-populate the form
-	if (is_array($_GET) && is_uuid($_GET["id"]) && $_POST["persistformvar"] != "true") {
+	if (!empty($_GET["id"]) && is_uuid($_GET["id"]) && empty($_POST["persistformvar"])) {
 		$var_uuid = $_GET["id"];
 		$sql = "select * from v_vars ";
 		$sql .= "where var_uuid = :var_uuid ";
@@ -173,7 +182,7 @@
 			$var_hostname = $row["var_hostname"];
 			$var_enabled = $row["var_enabled"];
 			$var_order = $row["var_order"];
-			$var_description = base64_decode($row["var_description"]);
+			$var_description = $row["var_description"];
 		}
 		unset($sql, $parameters);
 	}

@@ -42,12 +42,12 @@
 	}
 
 //get posted data
-	if (is_array($_POST['search'])) {
+	if (!empty($_POST['search'])) {
 		$search = $_POST['search'];
 	}
 
 //add the search term
-	if (isset($_GET["search"])) {
+	if (!empty($_GET["search"])) {
 		$search = strtolower($_GET["search"]);
 	}
 
@@ -77,7 +77,7 @@
 		}
 		$sql .= "order by domain_name asc ";
 		$database = new database;
-		$domains = $database->select($sql, $parameters, 'all');
+		$domains = $database->select($sql, $parameters ?? '', 'all');
 		unset($sql, $parameters);
 	}
 

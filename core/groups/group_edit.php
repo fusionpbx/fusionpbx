@@ -46,31 +46,36 @@
 	$text = $language->get();
 
 //action add or update
-	if (is_uuid($_REQUEST["id"])) {
+	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
 		$group_uuid = $_REQUEST["id"];
-		$id = $_REQUEST["id"];
 	}
 	else {
 		$action = "add";
+		$group_uuid = '';
 	}
 
+//set default values
+	$group_name = '';
+	$group_level = '10';
+	$group_description = '';
+
 //get http post variables and set them to php variables
-	if (is_array($_POST)) {
-		$group_uuid = $_POST["group_uuid"];
-		$group_name = $_POST["group_name"];
+	if (!empty($_POST)) {
+		$group_uuid = $_POST["group_uuid"] ?? '';
+		$group_name = $_POST["group_name"] ?? '';
 		$group_name_previous = $_POST["group_name_previous"];
 		$domain_uuid = $_POST["domain_uuid"];
-		$group_level = $_POST["group_level"];
-		$group_protected = $_POST["group_protected"];
-		$group_description = $_POST["group_description"];
+		$group_level = $_POST["group_level"] ?? '10';
+		$group_protected = $_POST["group_protected"] ?? '';
+		$group_description = $_POST["group_description"] ?? '';
 	}
 
 //process the user data and save it to the database
-	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
+	if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
 		//process the http post data by submitted action
-			if ($_POST['action'] != '' && is_uuid($group_uuid)) {
+			if (!empty($_POST['action']) && is_uuid($group_uuid)) {
 				$array[0]['checked'] = 'true';
 				$array[0]['uuid'] = $group_uuid;
 
@@ -122,7 +127,7 @@
 			}
 
 		//add the group_uuid
-			if (!is_uuid($_POST["group_uuid"])) {
+			if (empty($_POST["group_uuid"])) {
 				$group_uuid = uuid();
 			}
 
@@ -170,8 +175,7 @@
 	}
 
 //pre-populate the form
-	if (is_array($_GET) && $_POST["persistformvar"] != "true") {
-		$group_uuid = $_GET["id"];
+	if (!empty($group_uuid) && empty($_POST["persistformvar"])) {
 		$sql = "select * from v_groups ";
 		$sql .= "where group_uuid = :group_uuid ";
 		//$sql .= "and domain_uuid = :domain_uuid ";
@@ -179,11 +183,11 @@
 		$parameters['group_uuid'] = $group_uuid;
 		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
-		if (is_array($row) && @sizeof($row) != 0) {
+		if (!empty($row)) {
 			$group_name = $row["group_name"];
 			$domain_uuid = $row["domain_uuid"];
-			$group_permissions = $row["group_permissions"];
-			$group_members = $row["group_members"];
+			$group_permissions = $row["group_permissions"] ?? '';
+			$group_members = $row["group_members"] ?? '';
 			$group_level = $row["group_level"];
 			$group_protected = $row["group_protected"];
 			$group_description = $row["group_description"];
@@ -206,23 +210,21 @@
 	echo "	<div class='heading'><b>".$text['title-group']."</b></div>\n";
 	echo "	<div class='actions'>\n";
 	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','link'=>'groups.php']);
-	$button_margin = 'margin-left: 15px;';
-	if (permission_exists('group_permission_view')) {
+	if ($action == 'update' && permission_exists('group_permission_view')) {
+		$button_margin = 'margin-left: 15px;';
 		echo button::create(['type'=>'button','label'=>$text['button-permissions'],'icon'=>'key','style'=>$button_margin,'link'=>'group_permissions.php?group_uuid='.urlencode($group_uuid)]);
-		unset($button_margin);
 	}
-	if (permission_exists('group_member_view')) {
+	if ($action == 'update' && permission_exists('group_member_view')) {
+		$button_margin = 'margin-left: 0px;';
 		echo button::create(['type'=>'button','label'=>$text['button-members'],'icon'=>'users','style'=>$button_margin,'link'=>'group_members.php?group_uuid='.urlencode($group_uuid)]);
-		unset($button_margin);
 	}
-	$button_margin = 'margin-left: 15px;';
 	if ($action == 'update' && permission_exists('group_add')) {
+		$button_margin = 'margin-left: 15px;';
 		echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'name'=>'btn_copy','style'=>$button_margin,'onclick'=>"modal_open('modal-copy','btn_copy');"]);
-		unset($button_margin);
 	}
 	if ($action == 'update' && permission_exists('group_delete')) {
+		$button_margin = 'margin-left: 0px;';
 		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'name'=>'btn_delete','style'=>$button_margin,'onclick'=>"modal_open('modal-delete','btn_delete');"]);
-		unset($button_margin);
 	}
 	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save','style'=>'margin-left: 15px;']);
 	echo "	</div>\n";
@@ -249,7 +251,7 @@
 	echo "	<input class='formfld' type='text' name='group_name' maxlength='255' value='".escape($group_name)."'>\n";
 	echo "	<input type='hidden' name='group_name_previous' value='".escape($group_name)."'>\n";
 	echo "<br />\n";
-	echo $text['description-group_name']."\n";
+	//echo $text['description-group_name']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -275,7 +277,7 @@
 	}
 	echo "	</select>\n";
 	echo "<br />\n";
-	echo $text['description-domain_uuid']."\n";
+	//echo $text['description-domain_uuid']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -292,7 +294,7 @@
 		}
 		echo "	</select>\n";
 	echo "<br />\n";
-	echo $text['description-group_level']."\n";
+	//echo $text['description-group_level']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -306,7 +308,7 @@
 	echo "		<option value='true' ".($group_protected == "true" ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
 	echo "	</select>\n";
 	echo "<br />\n";
-	echo $text['description-group_protected']."\n";
+	//echo $text['description-group_protected']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -317,7 +319,7 @@
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='group_description' maxlength='255' value='".escape($group_description)."'>\n";
 	echo "<br />\n";
-	echo $text['description-group_description']."\n";
+	//echo $text['description-group_description']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 

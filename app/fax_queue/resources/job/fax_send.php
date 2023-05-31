@@ -165,7 +165,6 @@
 	$parameters['fax_queue_uuid'] = $fax_queue_uuid;
 	$database = new database;
 	$row = $database->select($sql, $parameters, 'row');
-//view_array($row);
 	if (is_array($row)) {
 		$fax_queue_uuid = $row['fax_queue_uuid'];
 		$domain_uuid = $row['domain_uuid'];
@@ -276,15 +275,15 @@
 	//$retry_interval = $_SESSION['fax_queue']['retry_interval']['numeric'];
 
 //prepare the fax retry count
-	if (empty($fax_retry_count)) {
+	if (!isset($fax_retry_count)) {
 		$fax_retry_count = 0;
 	}
-	elseif ($fax_status != 'busy') {
+	else {
 		$fax_retry_count = $fax_retry_count + 1;
 	}
 
 //determine if the retry count exceed the limit
-	if ($fax_status != 'sent' && $fax_status != 'busy' && $fax_retry_count > $retry_limit) {
+	if ($fax_status != 'sent' && $fax_retry_count > $retry_limit) {
 		$fax_status = 'failed';
 	}
 
@@ -406,9 +405,10 @@
 			$dial_string .= "fax_uri="             . $fax_uri  . ",";
 			$dial_string .= "fax_retry_attempts="  . $fax_retry_count  . ",";  
 			$dial_string .= "fax_retry_limit="     . $retry_limit  . ",";
-			//$dial_string .= "fax_retry_sleep=180"  . ",";
-			$dial_string .= "fax_verbose=true"     . ",";
-			//$dial_string .= "fax_use_ecm=off"      . ",";
+			//$dial_string .= "fax_retry_sleep=180,";
+			$dial_string .= "fax_verbose=true,";
+			//$dial_string .= "fax_use_ecm=off,";
+			$dial_string .= "absolute_codec_string=PCMU,PCMA,";
 			$dial_string .= "api_hangup_hook='lua app/fax/resources/scripts/hangup_tx.lua'";
 			$fax_command  = "originate {" . $dial_string . "}" . $fax_uri." &txfax('".$fax_file."')";
 			//echo $fax_command."\n";

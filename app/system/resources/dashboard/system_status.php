@@ -201,11 +201,11 @@
 		}
 
 	//channel count
-		if ($fp) {
+		if (isset($fp)) {
 			$tmp = event_socket_request($fp, 'api status');
 			$matches = Array();
 			preg_match("/(\d+)\s+session\(s\)\s+\-\speak/", $tmp, $matches);
-			$channels = $matches[1] ? $matches[1] : 0;
+			$channels = !empty($matches[1]) ? $matches[1] : 0;
 			$tr_link = "href='".PROJECT_PATH."/app/calls_active/calls_active.php'";
 			echo "<tr ".$tr_link.">\n";
 			echo "<td valign='top' class='".$row_style[$c]." hud_text'><a ".$tr_link.">".$text['label-channels']."</a></td>\n";
@@ -215,7 +215,7 @@
 		}
 
 	//registration count
-		if ($fp && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/registrations/")) {
+		if (isset($fp) && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/registrations/")) {
 			$registration = new registrations;
 			$registrations = $registration->count();
 			$tr_link = "href='".PROJECT_PATH."/app/registrations/registrations.php'";
@@ -228,7 +228,7 @@
 
 	echo "</table>\n";
 	echo "</div>";
-	$n++;
+	//$n++;
 
 	echo "<span class='hud_expander' onclick=\"$('#hud_system_status_details').slideToggle('fast');\"><span class='fas fa-ellipsis-h'></span></span>";
 	echo "</div>\n";

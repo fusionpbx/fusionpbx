@@ -66,6 +66,18 @@ if (!class_exists('switch_settings')) {
 					}
 				}
 
+			//set defaults
+				$vars['base_dir'] = $vars['base_dir'] ?? '';
+				$vars['conf_dir'] = $vars['conf_dir'] ?? '';
+				$vars['db_dir'] = $vars['db_dir'] ?? '';
+				$vars['recordings_dir'] = $vars['recordings_dir'] ?? '';
+				$vars['script_dir'] = $vars['script_dir'] ?? '';
+				$vars['sounds_dir'] = $vars['sounds_dir'] ?? '';
+				$vars['storage_dir'] = $vars['storage_dir'] ?? '';
+				$vars['grammar_dir'] = $vars['grammar_dir'] ?? '';
+				$vars['log_dir'] = $vars['log_dir'] ?? '';
+				$vars['mod_dir'] = $vars['mod_dir'] ?? '';
+
 			//set the bin directory
 				if ($vars['base_dir'] == "/usr/local/freeswitch") {
 					$bin = "/usr/local/freeswitch/bin"; 

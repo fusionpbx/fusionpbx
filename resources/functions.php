@@ -33,7 +33,7 @@
 
 	if (!function_exists('check_float')) {
 		function check_float($string) {
-			$string = str_replace(",",".",$string);
+			$string = str_replace(",",".",$string ?? '');
 			return trim($string);
 		}
 	}
@@ -817,7 +817,7 @@ function format_string($format, $data) {
 //format seconds into hh:mm:ss
 	function format_hours($seconds) {
 		$hours = floor($seconds / 3600);
-		$minutes = floor(($seconds / 60) % 60);
+		$minutes = floor(floor($seconds / 60) % 60);
 		$seconds = $seconds % 60;
 		if (strlen($minutes) == 1) { $minutes = '0'.$minutes; }
 		if (strlen($seconds) == 1) { $seconds = '0'.$seconds; }
@@ -1218,6 +1218,7 @@ function number_pad($number,$n) {
 
 				//return adjusted color in format received
 				if (isset($hash) && $hash == '#') { //hex
+					$hex = '';
 					for ($i = 0; $i <= 2; $i++) {
 						$hex_color = dechex($color[$i]);
 						if (strlen($hex_color) == 1) { $hex_color = '0'.$hex_color; }
@@ -2042,16 +2043,21 @@ function number_pad($number,$n) {
 
 //validate and format limit and offset clause of select statement
 	if (!function_exists('limit_offset')) {
-		function limit_offset($limit, $offset = 0) {
+		function limit_offset($limit = null, $offset = 0) {
 			$regex = '#[^0-9]#';
-			$limit = preg_replace($regex, '', $limit);
-			$offset = preg_replace($regex, '', $offset ?? '');
-			if (is_numeric($limit) && $limit > 0) {
-				$clause = ' limit '.$limit;
-				$offset = is_numeric($offset) ? $offset : 0;
-				$clause .= ' offset '.$offset;
+			if (!empty($limit)) {
+				$limit = preg_replace($regex, '', $limit);
+				$offset = preg_replace($regex, '', $offset ?? '');
+				if (is_numeric($limit) && $limit > 0) {
+					$clause = ' limit '.$limit;
+					$offset = is_numeric($offset) ? $offset : 0;
+					$clause .= ' offset '.$offset;
+				}
+				return $clause.' ';
 			}
-			return $clause.' ';
+			else {
+				return '';
+			}
 		}
 	}
 
@@ -2112,14 +2118,14 @@ function number_pad($number,$n) {
 					}
 					break;
 				case 'exists':
-					return is_array($_SESSION['persistent'][$_SERVER['PHP_SELF']]) && @sizeof($_SESSION['persistent'][$_SERVER['PHP_SELF']]) != 0 ? true : false;
+					return !empty($_SESSION['persistent']) && is_array($_SESSION['persistent'][$_SERVER['PHP_SELF']]) && @sizeof($_SESSION['persistent'][$_SERVER['PHP_SELF']]) != 0 ? true : false;
 					break;
 				case 'load':
 					// $array is expected to be the name of the array to create containing the key / value pairs
 					if ($array && !is_array($array)) {
 						global $$array;
 					}
-					if (is_array($_SESSION['persistent'][$_SERVER['PHP_SELF']]) && @sizeof($_SESSION['persistent'][$_SERVER['PHP_SELF']]) != 0) {
+					if (!empty($_SESSION['persistent']) && is_array($_SESSION['persistent'][$_SERVER['PHP_SELF']]) && @sizeof($_SESSION['persistent'][$_SERVER['PHP_SELF']]) != 0) {
 						foreach ($_SESSION['persistent'][$_SERVER['PHP_SELF']] as $key => $value) {
 							if ($key != 'XID' && $key != 'ACT' && $key != 'RET') {
 								if ($array && !is_array($array)) {
