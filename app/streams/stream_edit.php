@@ -42,8 +42,14 @@
 	$language = new text;
 	$text = $language->get();
 
+//set the defaults
+	$stream_name = '';
+	$stream_location = '';
+	$stream_description = '';
+	$stream_uuid = '';
+
 //action add or update
-	if (is_uuid($_REQUEST["id"])) {
+	if (!empty($_REQUEST["id"])) {
 		$action = "update";
 		$stream_uuid = $_REQUEST["id"];
 		$id = $_REQUEST["id"];
@@ -137,7 +143,7 @@
 	}
 
 //pre-populate the form
-	if (is_array($_GET) && $_POST["persistformvar"] != "true") {
+	if (!empty($_GET) && $_POST["persistformvar"] != "true") {
 		$stream_uuid = $_GET["id"];
 		$sql = "select * from v_streams ";
 		$sql .= "where stream_uuid = :stream_uuid ";
@@ -252,7 +258,7 @@
 		}
 		echo "	</select>\n";
 		echo "<br />\n";
-		echo $text['description-domain_uuid']."\n";
+		echo !empty($text['description-domain_uuid'])."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 	}

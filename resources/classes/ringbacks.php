@@ -30,7 +30,7 @@ if (!class_exists('ringbacks')) {
 
 		//define variables
 		public $domain_uuid;
-		private $ringtones_list;
+		public $ringtones_list;
 		private $tones_list;
 		private $music_list;
 		private $recordings_list;
@@ -54,14 +54,16 @@ if (!class_exists('ringbacks')) {
 				if (!empty($ringtones)) {
 					foreach ($ringtones as $ringtone) {
 						$ringtone = $ringtone['var_name'];
-						$label = $text['label-'.$ringtone];
-						if ($label == "") {
+						if (isset($text['label-'.$ringtone])) {
+							$label = $text['label-'.$ringtone];
+						}
+						else {
 							$label = $ringtone;
 						}
 						$ringtones_list[$ringtone] = $label;
 					}
 				}
-				$this->ringtones_list = $ringtones_list ?? '';
+				$this->ringtones_list = $ringtones_list;
 				unset($sql, $ringtones, $ringtone, $ringtones_list);
 
 			//get the default_ringback label
