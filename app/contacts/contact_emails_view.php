@@ -47,13 +47,13 @@
 	$sql .= "and contact_uuid = :contact_uuid ";
 	$sql .= "order by email_primary desc, email_label asc ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$parameters['contact_uuid'] = $contact_uuid;
+	$parameters['contact_uuid'] = $contact_uuid ?? '';
 	$database = new database;
-	$contact_emails = $database->select($sql, $parameters, 'all');
+	$contact_emails = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 
 //show if exists
-	if (is_array($contact_emails) && @sizeof($contact_emails) != 0) {
+	if (!empty($contact_emails)) {
 
 		//show the content
 			echo "<div class='grid' style='grid-template-columns: 70px auto;'>\n";
