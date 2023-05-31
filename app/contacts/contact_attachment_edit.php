@@ -180,7 +180,7 @@
 	echo "	".$text['label-attachment']."\n";
 	echo "</td>\n";
 	echo "<td width='70%' class='vtable' align='left'>\n";
-	$attachment_type = strtolower(pathinfo($attachment_filename, PATHINFO_EXTENSION));
+	$attachment_type = strtolower(pathinfo($attachment_filename ?? '', PATHINFO_EXTENSION));
 	if ($action == 'update') {
 		echo "<input type='hidden' name='attachment_filename' value=\"".escape($attachment_filename)."\">\n";
 		if ($attachment_type == 'jpg' || $attachment_type == 'jpeg' || $attachment_type == 'gif' || $attachment_type == 'png') {
@@ -226,7 +226,7 @@
 	echo "	".$text['label-attachment_description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='attachment_description' maxlength='255' value=\"".escape($attachment_description)."\">\n";
+	echo "	<input class='formfld' type='text' name='attachment_description' maxlength='255' value=\"".escape($attachment_description ?? '')."\">\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
