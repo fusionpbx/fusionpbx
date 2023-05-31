@@ -156,7 +156,7 @@
 
 //pre-populate the form
 	if (!empty($_GET) && empty($_POST["persistformvar"])) {
-		$contact_note_uuid = $_GET["id"];
+		$contact_note_uuid = $_GET["id"] ?? '';
 		$sql = "select * from v_contact_notes ";
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$sql .= "and contact_note_uuid = :contact_note_uuid ";
@@ -211,7 +211,7 @@
 	echo "	".$text['label-contact_note']."\n";
 	echo "</td>\n";
 	echo "<td width='70%' class='vtable' align='left'>\n";
-	echo "  <textarea class='formfld' name='contact_note' style='min-width: 100%; height: 400px;'>".$contact_note."</textarea>\n";
+	echo "  <textarea class='formfld' name='contact_note' style='min-width: 100%; height: 400px;'>".escape($contact_note ?? '')."</textarea>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
