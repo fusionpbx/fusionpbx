@@ -42,7 +42,7 @@
 	}
 
 //set the uuid
-	if (is_uuid($_GET['id'])) {
+	if (!empty($_GET['id']) && is_uuid($_GET['id'])) {
 		$contact_uuid = $_GET['id'];
 	}
 
@@ -52,13 +52,13 @@
 	$sql .= "and contact_uuid = :contact_uuid ";
 	$sql .= "order by url_primary desc, url_label asc ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$parameters['contact_uuid'] = $contact_uuid;
+	$parameters['contact_uuid'] = $contact_uuid ?? '';
 	$database = new database;
-	$contact_urls = $database->select($sql, $parameters, 'all');
+	$contact_urls = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 
 //show if exists
-	if (is_array($contact_urls) && @sizeof($contact_urls) != 0) {
+	if (!empty($contact_urls)) {
 
 		//show the content
 			echo "<div class='action_bar sub shrink'>\n";
@@ -81,7 +81,7 @@
 			}
 			echo "</tr>\n";
 
-			if (is_array($contact_urls) && @sizeof($contact_urls) != 0) {
+			if (!empty($contact_urls)) {
 				$x = 0;
 				foreach ($contact_urls as $row) {
 					if (permission_exists('contact_url_edit')) {
