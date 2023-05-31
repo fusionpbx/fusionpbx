@@ -46,7 +46,7 @@
 	$text = $language->get();
 
 //action add or update
-	if (is_uuid($_REQUEST["id"])) {
+	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
 		$conference_center_uuid = $_REQUEST["id"];
 	}
@@ -54,8 +54,13 @@
 		$action = "add";
 	}
 
+//set the defaults
+	$conference_center_name = '';
+	$conference_center_extension = '';
+	$conference_center_description = '';
+
 //process the user data and save it to the database
-	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
+	if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
 		//delete the conference center
 			if ($_POST['action'] == 'delete' && permission_exists('conference_center_delete') && is_uuid($conference_center_uuid)) {
@@ -207,7 +212,7 @@
 	} //(is_array($_POST) && empty($_POST["persistformvar"]))
 
 //pre-populate the form
-	if (is_array($_GET) && $_POST["persistformvar"] != "true") {
+	if (!empty($_GET) && empty($_POST["persistformvar"])) {
 		$conference_center_uuid = $_GET["id"];
 		$sql = "select * from v_conference_centers ";
 		$sql .= "where domain_uuid = :domain_uuid ";
@@ -215,8 +220,8 @@
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$parameters['conference_center_uuid'] = $conference_center_uuid;
 		$database = new database;
-		$row = $database->select($sql, $parameters, 'row');
-		if (is_array($row) && sizeof($row) != 0) {
+		$row = $database->select($sql, $parameters ?? null, 'row');
+		if (!empty($row)) {
 			$conference_center_uuid = $row["conference_center_uuid"];
 			$dialplan_uuid = $row["dialplan_uuid"];
 			$conference_center_name = $row["conference_center_name"];
@@ -239,7 +244,7 @@
 	$sql .= "order by recording_name asc ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$database = new database;
-	$recordings = $database->select($sql, $parameters, 'all');
+	$recordings = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 
 //get the phrases
@@ -247,7 +252,7 @@
 	$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$database = new database;
-	$phrases = $database->select($sql, $parameters, 'all');
+	$phrases = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 
 //get the streams
@@ -257,7 +262,7 @@
 	$sql .= "order by stream_name asc ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$database = new database;
-	$streams = $database->select($sql, $parameters, 'all');
+	$streams = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 
 //create token
@@ -459,7 +464,7 @@
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='conference_center_description' maxlength='255' value=\"".escape($conference_center_description)."\">\n";
 	echo "<br />\n";
-	echo $text['description-conference_center_description']."\n";
+	//echo $text['description-conference_center_description']."\n";
 	echo "</td>\n";
 
 	echo "</table>";

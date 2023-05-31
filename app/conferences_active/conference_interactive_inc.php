@@ -55,7 +55,7 @@
 	}
 
 //replace the space with underscore
-	$conference_name = $conference_id.'@'.$_SESSION['domain_name'];
+	$conference_name = !empty($conference_id).'@'.$_SESSION['domain_name'];
 
 //create the conference list command
 	$switch_cmd = "conference '".$conference_name."' xml_list";

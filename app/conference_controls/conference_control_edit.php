@@ -21,8 +21,12 @@
 	$language = new text;
 	$text = $language->get();
 
+//set the defaults
+	$control_name = '';
+	$control_description = '';
+
 //action add or update
-	if (is_uuid($_REQUEST["id"])) {
+	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
 		$conference_control_uuid = $_REQUEST["id"];
 	}
@@ -31,14 +35,14 @@
 	}
 
 //get http post variables and set them to php variables
-	if (count($_POST) > 0) {
+	if (!empty($_POST)) {
 		$control_name = $_POST["control_name"];
 		$control_enabled = $_POST["control_enabled"] ?: 'false';
 		$control_description = $_POST["control_description"];
 	}
 
 //process the user data and save it to the database
-	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
+	if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
 		//get the uuid from the POST
 			if ($action == "update") {
@@ -107,15 +111,15 @@
 	} //(is_array($_POST) && empty($_POST["persistformvar"]))
 
 //pre-populate the form
-	if (is_array($_GET) && $_POST["persistformvar"] != "true") {
+	if (!empty($_GET) && !empty($_POST["persistformvar"])) {
 		$conference_control_uuid = $_GET["id"];
 		$sql = "select * from v_conference_controls ";
 		//$sql .= "where domain_uuid = '$domain_uuid' ";
 		$sql .= "where conference_control_uuid = :conference_control_uuid ";
 		$parameters['conference_control_uuid'] = $conference_control_uuid;
 		$database = new database;
-		$row = $database->select($sql, $parameters, 'row');
-		if (is_array($row) && sizeof($row) != 0) {
+		$row = $database->select($sql, $parameters ?? null, 'row');
+		if (!empty($row)) {
 			$control_name = $row["control_name"];
 			$control_enabled = $row["control_enabled"];
 			$control_description = $row["control_description"];
