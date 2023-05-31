@@ -172,7 +172,7 @@
 
 //pre-populate the form
 	if (!empty($_GET) && empty($_POST["persistformvar"])) {
-		$contact_relation_uuid = $_GET["id"];
+		$contact_relation_uuid = $_GET["id"] ?? '';
 		$sql = "select * from v_contact_relations ";
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$sql .= "and contact_relation_uuid = :contact_relation_uuid ";
@@ -294,7 +294,7 @@
 		$relation_label_found = (in_array($relation_label, $_SESSION["contact"]["relation_label"])) ? true : false;
 	}
 	else {
-		$selected[$relation_label] = "selected";
+		$selected[!empty($relation_label)] = "selected";
 		$default_labels[] = $text['label-contact_relation_option_parent'];
 		$default_labels[] = $text['label-contact_relation_option_child'];
 		$default_labels[] = $text['label-contact_relation_option_employee'];
@@ -304,16 +304,16 @@
 		foreach ($default_labels as $default_label) {
 			$relation_label_options[] = "<option value='".$default_label."' ".!empty($selected[$default_label]).">".$default_label."</option>";
 		}
-		$relation_label_found = (in_array($relation_label, $default_labels)) ? true : false;
+		$relation_label_found = (in_array(!empty($relation_label), $default_labels)) ? true : false;
 	}
 	echo "	<select class='formfld' ".((!empty($relation_label) && !$relation_label_found) ? "style='display: none;'" : null)." name='relation_label' id='relation_label' onchange=\"getElementById('relation_label_custom').value='';\">\n";
 	echo "		<option value=''></option>\n";
 	echo 		(is_array($relation_label_options)) ? implode("\n", $relation_label_options) : null;
 	echo "	</select>\n";
-	echo "	<input type='text' class='formfld' ".(empty($relation_label) || $relation_label_found) ? "style='display: none;'" : null)." name='relation_label_custom' id='relation_label_custom' value=\"".((!$relation_label_found) ? htmlentities($relation_label ?? '') : null)."\">\n";
+	echo "	<input type='text' class='formfld' ".((empty($relation_label) || $relation_label_found) ? "style='display: none;'" : null)." name='relation_label_custom' id='relation_label_custom' value=\"".((!$relation_label_found) ? htmlentities($relation_label ?? '') : null)."\">\n";
 	echo "	<input type='button' id='btn_toggle_label' class='btn' alt='".$text['button-back']."' value='&#9665;' onclick=\"toggle_custom('relation_label');\">\n";
 	echo "<br />\n";
-	echo $text['description-relation_label']."\n";
+	echo !empty($text['description-relation_label'])."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
