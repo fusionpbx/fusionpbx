@@ -66,7 +66,7 @@
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$parameters['contact_uuid'] = $contact_uuid ?? '';
 	$database = new database;
-	$contact_relations = $database->select($sql, $parameters ?? null, 'all');
+	$contact_relations = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
 //show if exists
