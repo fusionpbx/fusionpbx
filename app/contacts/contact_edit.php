@@ -601,7 +601,7 @@
 	$sql .= "order by username asc ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$database = new database;
-	$users = $database->select($sql, $parameters ?? null, 'all');
+	$users = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
 //determine if contact assigned to a user
@@ -626,7 +626,7 @@
 		$parameters['contact_uuid'] = $contact_uuid;
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$database = new database;
-		$contact_users_assigned = $database->select($sql, $parameters ?? null, 'all');
+		$contact_users_assigned = $database->select($sql, $parameters, 'all');
 		unset($sql, $parameters);
 	}
 
@@ -643,7 +643,7 @@
 		$parameters['contact_uuid'] = $contact_uuid;
 		$parameters['group_uuid'] = $_SESSION["user_uuid"];
 		$database = new database;
-		$contact_groups_assigned = $database->select($sql, $parameters ?? null, 'all');
+		$contact_groups_assigned = $database->select($sql, $parameters, 'all');
 		if (!empty($contact_groups_assigned)) {
 			foreach ($contact_groups_assigned as $field) {
 				$contact_groups[] = "'".$field['group_uuid']."'";
@@ -661,7 +661,7 @@
 	$sql .= "order by group_name asc ";
 	$parameters['domain_uuid'] = $domain_uuid;
 	$database = new database;
-	$contact_groups_available = $database->select($sql, $parameters ?? null, 'all');
+	$contact_groups_available = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters, $contact_groups);
 
 //get the child data
@@ -672,7 +672,7 @@
 		//$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$parameters['contact_uuid'] = $contact_uuid;
 		$database = new database;
-		$contact_phones = $database->select($sql, $parameters ?? null, 'all');
+		$contact_phones = $database->select($sql, $parameters, 'all');
 		unset ($sql, $parameters);
 	}
 
@@ -709,7 +709,7 @@
 		//$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$parameters['contact_uuid'] = $contact_uuid;
 		$database = new database;
-		$contact_addresses = $database->select($sql, $parameters ?? null, 'all');
+		$contact_addresses = $database->select($sql, $parameters, 'all');
 		unset ($sql, $parameters);
 	}
 
@@ -747,7 +747,7 @@
 		//$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$parameters['contact_uuid'] = $contact_uuid;
 		$database = new database;
-		$contact_emails = $database->select($sql, $parameters ?? null, 'all');
+		$contact_emails = $database->select($sql, $parameters, 'all');
 		unset ($sql, $parameters);
 	}
 
@@ -777,7 +777,7 @@
 		//$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$parameters['contact_uuid'] = $contact_uuid;
 		$database = new database;
-		$contact_urls = $database->select($sql, $parameters ?? null, 'all');
+		$contact_urls = $database->select($sql, $parameters, 'all');
 		unset ($sql, $parameters);
 	}
 
@@ -807,7 +807,7 @@
 		//$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$parameters['contact_uuid'] = $contact_uuid ?? null;
 		$database = new database;
-		$contact_relations = $database->select($sql, $parameters ?? null, 'all');
+		$contact_relations = $database->select($sql, $parameters, 'all');
 		unset ($sql, $parameters);
 	}
 
@@ -834,7 +834,7 @@
 		//$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$parameters['contact_uuid'] = $contact_uuid;
 		$database = new database;
-		$contact_settings = $database->select($sql, $parameters ?? null, 'all');
+		$contact_settings = $database->select($sql, $parameters, 'all');
 		unset ($sql, $parameters);
 	}
 
@@ -867,7 +867,7 @@
 		$parameters['domain_uuid'] = $domain_uuid;
 		$parameters['contact_uuid'] = $contact_uuid;
 		$database = new database;
-		$contact_attachments = $database->select($sql, $parameters ?? null, 'all');
+		$contact_attachments = $database->select($sql, $parameters, 'all');
 		unset($sql, $parameters);
 	}
 
@@ -879,7 +879,7 @@
 		//$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$parameters['contact_uuid'] = $contact_uuid;
 		$database = new database;
-		$contact_times = $database->select($sql, $parameters ?? null, 'all');
+		$contact_times = $database->select($sql, $parameters, 'all');
 		unset ($sql, $parameters);
 	}
 
@@ -904,7 +904,7 @@
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$parameters['contact_uuid'] = $contact_uuid ?? null;
 	$database = new database;
-	$contact_notes = $database->select($sql, $parameters ?? null, 'all');
+	$contact_notes = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
 //add an empty row
@@ -1069,7 +1069,7 @@
 			$parameters['user_uuid'] = $_SESSION['user']['user_uuid'];
 			$parameters['contact_uuid'] = $contact_uuid;
 			$database = new database;
-			$time_start = $database->select($sql, $parameters ?? null, 'column');
+			$time_start = $database->select($sql, $parameters, 'column');
 			$btn_style = $time_start ? 'color: #fff; background-color: #3693df; background-image: none;' : null;
 			unset($sql, $parameters);
 			echo button::create(['type'=>'button','label'=>$text['button-timer'],'icon'=>'clock','style'=>$btn_style,'title'=>$time_start,'collapse'=>'hide-sm-dn','onclick'=>"window.open('contact_timer.php?domain_uuid=".urlencode($domain_uuid)."&contact_uuid=".urlencode($contact_uuid)."','contact_time_".escape($contact_uuid)."','width=300, height=375, top=30, left='+(screen.width - 350)+', menubar=no, scrollbars=no, status=no, toolbar=no, resizable=no');"]);
