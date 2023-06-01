@@ -193,7 +193,7 @@
 		$parameters['domain_uuid'] = $domain_uuid;
 		$parameters['contact_setting_uuid'] = $contact_setting_uuid;
 		$database = new database;
-		$row = $database->select($sql, $parameters ?? null, 'row');
+		$row = $database->select($sql, $parameters, 'row');
 		if (!empty($row)) {
 			$contact_setting_category = escape($row["contact_setting_category"]);
 			$contact_setting_subcategory = escape($row["contact_setting_subcategory"]);
