@@ -294,7 +294,7 @@
 			$sql = "select * from v_users where domain_uuid = :domain_uuid ";
 			$parameters['domain_uuid'] = $domain_uuid;
 			$database = new database;
-			$users = $database->select($sql, $parameters ?? null, 'all');
+			$users = $database->select($sql, $parameters, 'all');
 			unset($sql, $parameters);
 
 		//get the contents of the csv file and convert them into an array
