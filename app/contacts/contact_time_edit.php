@@ -166,7 +166,7 @@
 		$parameters['user_uuid'] = $_SESSION["user"]["user_uuid"];
 		$parameters['contact_time_uuid'] = $contact_time_uuid;
 		$database = new database;
-		$row = $database->select($sql, $parameters ?? null, 'row');
+		$row = $database->select($sql, $parameters, 'row');
 		$time_start = $row["time_start"];
 		$time_stop = $row["time_stop"];
 		$time_description = $row["time_description"];
