@@ -102,4 +102,9 @@
     </item>
     {/foreach}
   </tbook>
+  <dialplan e="2">
+    {foreach $snom_dialplan as $row}
+      {$row}
+    {/foreach}
+  </dialplan>
 </settings>
