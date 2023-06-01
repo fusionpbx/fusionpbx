@@ -68,21 +68,21 @@
 		//get the variables from the http post
 		$call_block_direction = $_POST["call_block_direction"];
 		$extension_uuid = $_POST["extension_uuid"];
-		$call_block_name = $_POST["call_block_name"];
-		$call_block_country_code = $_POST["call_block_country_code"];
-		$call_block_number = $_POST["call_block_number"];
-		$call_block_enabled = $_POST["call_block_enabled"] ?: 'false';
-		$call_block_description = $_POST["call_block_description"];
+		$call_block_name = $_POST["call_block_name"] ?? null;
+		$call_block_country_code = $_POST["call_block_country_code"] ?? null;
+		$call_block_number = $_POST["call_block_number"] ?? null;
+		$call_block_enabled = $_POST["call_block_enabled"] ?? 'false';
+		$call_block_description = $_POST["call_block_description"] ?? null;
 
 		//get the call block app and data
 		$action_array = explode(':', $_POST["call_block_action"]);
 		$call_block_app = $action_array[0];
-		$call_block_data = $action_array[1];
+		$call_block_data = $action_array[1] ?? null;
 		
 		//sanitize the data
 		$extension_uuid = preg_replace("#[^a-fA-F0-9./]#", "", $extension_uuid);
-		$call_block_country_code = preg_replace('#[^0-9./]#', '', $call_block_country_code);
-		$call_block_number = preg_replace('#[^0-9./]#', '', $call_block_number);
+		$call_block_country_code = preg_replace('#[^0-9./]#', '', $call_block_country_code ?? '');
+		$call_block_number = preg_replace('#[^0-9./]#', '', $call_block_number ?? '');
 	}
 
 //handle the http post
@@ -379,7 +379,7 @@ if (permission_exists('call_block_all') || permission_exists('call_block_ring_gr
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='call_block_direction'>\n";
 	echo "		<option value='inbound'>".$text['label-inbound']."</option>\n";
-	echo "		<option value='outbound' ".($call_block_direction == "outbound" ? "selected" : null).">".$text['label-outbound']."</option>\n";
+	echo "		<option value='outbound' ".(!empty($call_block_direction) && $call_block_direction == "outbound" ? "selected" : null).">".$text['label-outbound']."</option>\n";
 	echo "	</select>\n";
 	echo "<br />\n";
 	echo $text['description-direction']."\n";
@@ -397,7 +397,7 @@ if (permission_exists('call_block_all') || permission_exists('call_block_ring_gr
 		echo "		<option value=''>".$text['label-all']."</option>\n";
 		if (!empty($extensions)) {
 			foreach ($extensions as $row) {
-				$selected = $extension_uuid == $row['extension_uuid'] ? "selected='selected'" : null;
+				$selected = !empty($extension_uuid) && $extension_uuid == $row['extension_uuid'] ? "selected='selected'" : null;
 				echo "	<option value='".urlencode($row["extension_uuid"])."' ".$selected.">".escape($row['extension'])." ".escape($row['description'])."</option>\n";
 			}
 		}
@@ -611,7 +611,7 @@ if (permission_exists('call_block_all') || permission_exists('call_block_ring_gr
 				echo "		<option value='' selected='selected'>".$text['label-all']."</option>\n";
 				if (!empty($extensions)) {
 					foreach ($extensions as $row) {
-						$selected = $extension_uuid == $row['extension_uuid'] ? "selected='selected'" : null;
+						$selected = !empty($extension_uuid) && $extension_uuid == $row['extension_uuid'] ? "selected='selected'" : null;
 						echo "	<option value='".urlencode($row["extension_uuid"])."' ".$selected.">".escape($row['extension'])." ".escape($row['description'])."</option>\n";
 					}
 				}
@@ -633,7 +633,7 @@ if (permission_exists('call_block_all') || permission_exists('call_block_ring_gr
 			echo "<table class='list' id='list_".$direction."' ".($direction == 'outbound' ? "style='display: none;'" : null).">\n";
 			echo "<tr class='list-header'>\n";
 			echo "	<th class='checkbox'>\n";
-			echo "		<input type='checkbox' id='checkbox_all_".$direction."' name='checkbox_all' onclick=\"list_all_toggle('".$direction."');\" ".($result ?: "style='visibility: hidden;'").">\n";
+			echo "		<input type='checkbox' id='checkbox_all_".$direction."' name='checkbox_all' onclick=\"list_all_toggle('".$direction."');\" ".(empty($result) ? "style='visibility: hidden;'" : null).">\n";
 			echo "	</th>\n";
 			echo "<th style='width: 1%;'>&nbsp;</th>\n";
 			echo th_order_by('caller_id_name', $text['label-name'], $order_by, $order);
@@ -649,13 +649,13 @@ if (permission_exists('call_block_all') || permission_exists('call_block_ring_gr
 						$list_row_onclick_uncheck = "if (!this.checked) { document.getElementById('checkbox_all_".$direction."').checked = false; }";
 						$list_row_onclick_toggle = "onclick=\"document.getElementById('checkbox_".$x."').checked = document.getElementById('checkbox_".$x."').checked ? false : true; ".$list_row_onclick_uncheck."\"";
 						if (strlen($row['caller_id_number']) >= 7) {
-							if ($_SESSION['domain']['time_format']['text'] == '24h') {
+							if (!empty($_SESSION['domain']['time_format']['text']) && $_SESSION['domain']['time_format']['text'] == '24h') {
 								$tmp_start_epoch = date('j M Y', $row['start_epoch'])." <span class='hide-sm-dn'>".date('H:i:s', $row['start_epoch']).'</span>';
 							}
 							else {
 								$tmp_start_epoch = date('j M Y', $row['start_epoch'])." <span class='hide-sm-dn'>".date('h:i:s a', $row['start_epoch']).'</span>';
 							}
-							echo "<tr class='list-row row_".$row['direction']."' href='".$list_row_url."'>\n";
+							echo "<tr class='list-row row_".$row['direction']."' href=''>\n";
 							echo "	<td class='checkbox'>\n";
 							echo "		<input type='checkbox' class='checkbox_".$row['direction']."' name='xml_cdrs[$x][checked]' id='checkbox_".$x."' value='true' onclick=\"".$list_row_onclick_uncheck."\">\n";
 							echo "		<input type='hidden' name='xml_cdrs[$x][uuid]' value='".escape($row['xml_cdr_uuid'])."' />\n";
@@ -666,6 +666,7 @@ if (permission_exists('call_block_all') || permission_exists('call_block_ring_gr
 								file_exists($_SERVER["DOCUMENT_ROOT"]."/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_outbound_failed.png") &&
 								file_exists($_SERVER["DOCUMENT_ROOT"]."/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_outbound_answered.png")
 								) {
+								$title_mod = null;
 								echo "	<td class='center' ".$list_row_onclick_toggle.">";
 								switch ($row['direction']) {
 									case "inbound":
@@ -723,7 +724,7 @@ if (permission_exists('call_block_all') || permission_exists('call_block_ring_gr
 		echo "		document.getElementById('list_' + direction_other).style.display='none';\n";
 
 		echo "		//uncheck all checkboxes\n";
-		echo "		var checkboxes = document.querySelectorAll(\"input[type='checkbox']\")\n";
+		echo "		var checkboxes = document.querySelectorAll(\"input[type='checkbox']:not(#call_block_enabled)\")\n";
 		echo "		if (checkboxes.length > 0) {\n";
 		echo "			for (var i = 0; i < checkboxes.length; ++i) {\n";
 		echo "				checkboxes[i].checked = false;\n";

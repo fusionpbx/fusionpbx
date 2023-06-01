@@ -68,7 +68,7 @@ if (!class_exists('call_block')) {
 
 						//filter out unchecked, build where clause for below
 							foreach($records as $x => $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$uuids[] = "'".$record['uuid']."'";
 								}
 							}
@@ -144,7 +144,7 @@ if (!class_exists('call_block')) {
 
 						//get current toggle state
 							foreach ($records as $x => $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$uuids[] = "'".$record['uuid']."'";
 								}
 							}
@@ -220,7 +220,7 @@ if (!class_exists('call_block')) {
 
 						//get checked records
 							foreach ($records as $x => $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$uuids[] = "'".$record['uuid']."'";
 								}
 							}
@@ -291,7 +291,7 @@ if (!class_exists('call_block')) {
 
 						//filter checked records
 							foreach ($records as $x => $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$uuids[] = "'".$record['uuid']."'";
 								}
 							}
@@ -301,7 +301,7 @@ if (!class_exists('call_block')) {
 								$sql = "select caller_id_name, caller_id_number, caller_destination from v_xml_cdr ";
 								$sql .= "where xml_cdr_uuid in (".implode(', ', $uuids).") ";
 								$database = new database;
-								$rows = $database->select($sql, $parameters, 'all');
+								$rows = $database->select($sql, $parameters ?? null, 'all');
 								unset($sql);
 							}
 
@@ -322,12 +322,13 @@ if (!class_exists('call_block')) {
 												if (trim($row["caller_id_number"])[0] == "+") {
 													//format e.164
 													$call_block_number = str_replace("+".trim($_SESSION['domain']['country_code']['numeric']), "", trim($row["caller_id_number"]));
-												} else {
+												}
+												else {
 													//remove the country code if its the first in the string
-													$call_block_number = ltrim(trim($row["caller_id_number"]),$_SESSION['domain']['country_code']['numeric']);
+													$call_block_number = ltrim(trim($row["caller_id_number"]), $_SESSION['domain']['country_code']['numeric'] ?? '');
 												}
 												//build the array
-												$array['call_block'][$x]['call_block_country_code'] = trim($_SESSION['domain']['country_code']['numeric']);
+												$array['call_block'][$x]['call_block_country_code'] = trim($_SESSION['domain']['country_code']['numeric'] ?? '');
 												$array['call_block'][$x]['call_block_name'] = '';
 												$array['call_block'][$x]['call_block_number'] = $call_block_number;
 												$array['call_block'][$x]['call_block_description'] = trim($row["caller_id_name"]);
