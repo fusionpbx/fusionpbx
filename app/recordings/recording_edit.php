@@ -215,7 +215,7 @@ if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 	echo "    <input class='formfld' type='text' name='recording_filename' maxlength='255' value=\"".escape($recording_filename)."\">\n";
 	echo "    <input type='hidden' name='recording_filename_original' value=\"".escape($recording_filename)."\">\n";
 	echo "<br />\n";
-	echo $text['message-file']."\n";
+	//echo $text['message-file']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 

@@ -98,7 +98,7 @@ if (!class_exists('basic_operator_panel')) {
 				if (isset($extensions)) {
 					foreach($extensions as &$row) {
 						$user = $row['extension'];
-						if (strlen($row['number_alias']) >0 ) {
+						if (!empty($row['number_alias'])) {
 							$user = $row['number_alias'];
 						}
 
