@@ -88,13 +88,13 @@
 		$contact_time_zone = $_POST["contact_time_zone"];
 		$contact_note = $_POST["contact_note"];
 
-		$last_mod_date = $_POST["last_mod_date"] ?? '';
-		$last_mod_user = $_POST["last_mod_user"] ?? '';
+		$last_mod_date = $_POST["last_mod_date"];
+		$last_mod_user = $_POST["last_mod_user"];
 
 		//$contact_users = $_POST["contact_users"];
 		//$contact_groups = $_POST["contact_groups"];
-		$contact_user_uuid = $_POST["contact_user_uuid"] ?? '';
-		$contact_group_uuid = $_POST["contact_group_uuid"] ?? '';
+		$contact_user_uuid = $_POST["contact_user_uuid"];
+		$contact_group_uuid = $_POST["contact_group_uuid"];
 
 		$contact_phones = $_POST["contact_phones"];
 		$contact_addresses = $_POST["contact_addresses"];
@@ -102,9 +102,9 @@
 		$contact_urls = $_POST["contact_urls"];
 		$contact_relations = $_POST["contact_relations"];
 		$contact_settings = $_POST["contact_settings"];
-		$contact_attachments = $_POST["contact_attachments"] ?? '';
-		$contact_times = $_POST["contact_times"] ?? '';
-		$contact_notes = $_POST["contact_notes"] ?? '';
+		$contact_attachments = $_POST["contact_attachments"];
+		$contact_times = $_POST["contact_times"];
+		$contact_notes = $_POST["contact_notes"];
 	}
 
 //process the user data and save it to the database
