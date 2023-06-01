@@ -108,13 +108,13 @@ class vcard {
 
 		$vcard_address_type_values = array('work','home','dom','intl','postal','parcel','pref');
 		foreach ($vcard_address_type_values as $vcard_address_type_value) {
-			if ($this->data[$vcard_address_type_value.'_po_box']
-			|| $this->data[$vcard_address_type_value.'_extended_address']
-			|| $this->data[$vcard_address_type_value.'_address']
-			|| $this->data[$vcard_address_type_value.'_city']
-			|| $this->data[$vcard_address_type_value.'_state']
-			|| $this->data[$vcard_address_type_value.'_postal_code']
-			|| $this->data[$vcard_address_type_value.'_country']) {
+			if (!empty($this->data[$vcard_address_type_value.'_po_box'])
+			|| !empty($this->data[$vcard_address_type_value.'_extended_address'])
+			|| !empty($this->data[$vcard_address_type_value.'_address'])
+			|| !empty($this->data[$vcard_address_type_value.'_city'])
+			|| !empty($this->data[$vcard_address_type_value.'_state'])
+			|| !empty($this->data[$vcard_address_type_value.'_postal_code'])
+			|| !empty($this->data[$vcard_address_type_value.'_country'])) {
 				$this->card .= "ADR;TYPE=".$vcard_address_type_value.":";
 				if (!empty($this->data[$vcard_address_type_value.'_po_box'])) {
 					$this->card .= $this->data[$vcard_address_type_value.'_po_box'].";";

@@ -46,8 +46,17 @@
 	$language = new text;
 	$text = $language->get();
 
+//set the defaults
+	$contact_setting_category = '';
+	$contact_setting_subcategory = '';
+	$contact_setting_name = '';
+	$contact_setting_value = '';
+	$contact_setting_order = '';
+	$contact_setting_enabled = '';
+	$contact_setting_description = '';
+
 //action add or update
-	if (is_uuid($_REQUEST["id"])) {
+	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
 		$contact_setting_uuid = $_REQUEST["id"];
 	}
@@ -56,7 +65,7 @@
 	}
 
 //get the contact uuid
-	if (is_uuid($_GET["contact_uuid"])) {
+	if (!empty($_GET["contact_uuid"]) && is_uuid($_GET["contact_uuid"])) {
 		$contact_uuid = $_GET["contact_uuid"];
 	}
 
@@ -64,7 +73,7 @@
 	$domain_uuid = $_SESSION['domain_uuid'];
 
 //get http post variables and set them to php variables
-	if (count($_POST) > 0) {
+	if (!empty($_POST)) {
 		$contact_setting_category = strtolower($_POST["contact_setting_category"]);
 		$contact_setting_subcategory = strtolower($_POST["contact_setting_subcategory"]);
 		$contact_setting_name = strtolower($_POST["contact_setting_name"]);
@@ -75,7 +84,7 @@
 	}
 
 //process the form data
-	if (is_array($_POST) && sizeof($_POST) != 0 && empty($_POST["persistformvar"])) {
+	if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
 		//set the uuid
 			if ($action == "update") {
@@ -113,7 +122,7 @@
 			}
 
 		//add or update the database
-			if ($_POST["persistformvar"] != "true") {
+			if (empty($_POST["persistformvar"])) {
 
 				//set the order
 					$contact_setting_order = $contact_setting_order != '' ? $contact_setting_order : null;
@@ -151,7 +160,7 @@
 					}
 
 				//execute
-					if (is_array($array) && @sizeof($array) != 0) {
+					if (!empty($array)) {
 						$array['contact_settings'][0]['contact_uuid'] = $contact_uuid;
 						$array['contact_settings'][0]['domain_uuid'] = $domain_uuid;
 						$array['contact_settings'][0]['contact_setting_category'] = $contact_setting_category;
@@ -176,8 +185,8 @@
 	}
 
 //pre-populate the form
-	if (is_array($_GET) && sizeof($_GET) != 0 && $_POST["persistformvar"] != "true") {
-		$contact_setting_uuid = $_GET["id"];
+	if (!empty($_GET) && empty($_POST["persistformvar"])) {
+		$contact_setting_uuid = $_GET["id"] ?? '';
 		$sql = "select * from v_contact_settings ";
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$sql .= "and contact_setting_uuid = :contact_setting_uuid ";
@@ -185,7 +194,7 @@
 		$parameters['contact_setting_uuid'] = $contact_setting_uuid;
 		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
-		if (is_array($row) && sizeof($row) != 0) {
+		if (!empty($row)) {
 			$contact_setting_category = escape($row["contact_setting_category"]);
 			$contact_setting_subcategory = escape($row["contact_setting_subcategory"]);
 			$contact_setting_name = escape($row["contact_setting_name"]);
@@ -223,7 +232,7 @@
 	}
 	echo "	</div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'contact_edit.php?id='.urlencode($contact_uuid)]);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'contact_edit.php?id='.urlencode($contact_uuid ?? '')]);
 	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save']);
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
@@ -349,7 +358,7 @@
 	echo "</table>";
 	echo "<br><br>";
 
-	echo "<input type='hidden' name='contact_uuid' value='".$contact_uuid."'>\n";
+	echo "<input type='hidden' name='contact_uuid' value='".!empty($contact_uuid)."'>\n";
 	if ($action == "update") {
 		echo "<input type='hidden' name='contact_setting_uuid' value='".$contact_setting_uuid."'>\n";
 	}
