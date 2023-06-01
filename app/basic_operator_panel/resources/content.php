@@ -237,7 +237,7 @@ if (is_array($activity)) {
 		if ($_REQUEST['name_filter'] != '' && substr_count($ext['filter_name'], $_REQUEST['name_filter']) == 0 && !in_array($extension, $_SESSION['user']['extensions'])) { continue; }
 
 		//check if feature code being called
-		$format_number = (substr(!empty($ext['dest']), 0, 1) == '*') ? false : true;
+		$format_number = (!empty($ext['dest']) && substr($ext['dest'], 0, 1) == '*') ? false : true;
 
 		//determine extension state, direction icon, and displayed name/number for caller/callee
 		if ($ext['state'] == 'CS_EXECUTE') {
