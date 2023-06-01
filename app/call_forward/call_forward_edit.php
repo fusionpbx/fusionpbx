@@ -476,7 +476,7 @@
 
 			$sql = "select * from v_follow_me_destinations ";
 			$sql .= "where follow_me_uuid = :follow_me_uuid ";
-			$sql .= "order by follow_me_order asc ";
+			$sql .= "order by follow_me_delay, follow_me_destination asc ";
 			$parameters['follow_me_uuid'] = $follow_me_uuid;
 			$database = new database;
 			$result = $database->select($sql, $parameters ?? null, 'all');
