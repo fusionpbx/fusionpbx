@@ -43,15 +43,21 @@
 	$language = new text;
 	$text = $language->get();
 
+//set the defaults
+	$sql_search = '';
+
+//add additional variables
+	$show = $_GET['show'] ?? ''; 
+
 //get posted data
-	if (is_array($_POST['phrases'])) {
+	if (!empty($_POST['phrases'])) {
 		$action = $_POST['action'];
 		$search = $_POST['search'];
 		$phrases = $_POST['phrases'];
 	}
 
 //process the http post data by action
-	if ($action != '' && is_array($phrases) && @sizeof($phrases) != 0) {
+	if (!empty($action) != '' && is_array($phrases)) {
 		switch ($action) {
 			case 'copy':
 				if (permission_exists('phrase_add')) {
@@ -81,11 +87,11 @@
 	}
 
 //get order and order by
-	$order_by = $_GET["order_by"];
-	$order = $_GET["order"];
+	$order_by = $_GET["order_by"] ?? '';
+	$order = $_GET["order"] ?? '';
 
 //add the search term
-	$search = strtolower($_GET["search"]);
+	$search = strtolower($_GET["search"] ?? '');
 	if (!empty($search)) {
 		$sql_search = "and (";
 		$sql_search .= "lower(phrase_name) like :search ";
@@ -98,21 +104,21 @@
 //get phrases record count
 	$sql = "select count(*) from v_phrases ";
 	$sql .= "where true ";
-	if ($_GET['show'] != "all" || !permission_exists('phrase_all')) {
+	if ($show != "all" || !permission_exists('phrase_all')) {
 		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	}
 	$sql .= $sql_search;
 	$database = new database;
-	$num_rows = $database->select($sql, $parameters, 'column');
+	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
 	$param = "&search=".urlencode($search);
-	if ($_GET['show'] == "all" && permission_exists('phrase_all')) {
+	if ($show == "all" && permission_exists('phrase_all')) {
 		$param .= "&show=all";
 	}
-	$page = is_numeric($_GET['page']) ? $_GET['page'] : 0;
+	$page = isset($_GET['page']) ? $_GET['page'] : 0;
 	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
 	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
@@ -122,7 +128,7 @@
 	$sql .= order_by($order_by, $order, 'phrase_name', 'asc');
 	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;
-	$phrases = $database->select($sql, $parameters, 'all');
+	$phrases = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 
 //create token
@@ -151,7 +157,7 @@
 	}
 	echo 		"<form id='form_search' class='inline' method='get'>\n";
 	if (permission_exists('phrase_all')) {
-		if ($_GET['show'] == 'all') {
+		if ($show == 'all') {
 			echo "		<input type='hidden' name='show' value='all'>";
 		}
 		else {
@@ -193,14 +199,14 @@
 		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".($phrases ?: "style='visibility: hidden;'").">\n";
 		echo "	</th>\n";
 	}
-	if ($_GET['show'] == "all" && permission_exists('phrase_all')) {
+	if ($show == "all" && permission_exists('phrase_all')) {
 		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, $param, "class='shrink'");
 	}
 	echo th_order_by('phrase_name', $text['label-name'], $order_by, $order);
 	echo th_order_by('phrase_language', $text['label-language'], $order_by, $order);
 	echo th_order_by('phrase_enabled', $text['label-enabled'], $order_by, $order, null, "class='center'");
 	echo th_order_by('phrase_description', $text['label-description'], $order_by, $order, null, "class='hide-sm-dn' style='min-width: 40%;'");
-	if (permission_exists('phrase_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+	if (permission_exists('phrase_edit') && !empty($_SESSION['theme']['list_row_edit_button']['boolean']) && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
