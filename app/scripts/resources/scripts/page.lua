@@ -214,30 +214,22 @@
 									break;
 								end
 							end
-
-							--if available then page then originate the call with auto answer
-							if (destination_status == 'available') then
+							if (destination_status == "available") then
 								freeswitch.consoleLog("NOTICE", "[page] destination "..destination.." available\n");
-								if destination == sip_from_user then
-									--this destination is the caller that initated the page
-								else
-									--originate the call
-									cmd_string = "bgapi originate {"..auto_answer..","..alert_info..",hangup_after_bridge=false,rtp_secure_media="..rtp_secure_media..",origination_caller_id_name='"..caller_id_name.."',origination_caller_id_number="..caller_id_number.."}user/"..destination.."@"..domain_name.." conference:"..conference_bridge.."+"..flags.." inline";
-									api:executeString(cmd_string);
-									destination_count = destination_count + 1;
-								end
 							end
+
+						
 						else
 							--endpoint determines what to do with the call when the destination is active
 							freeswitch.consoleLog("NOTICE", "[page] endpoint determines what to do if the it has an active call.\n");
-							if destination == sip_from_user then
-								--this destination is the caller that initated the page
-							else
-								--originate the call
-								cmd_string = "bgapi originate {"..auto_answer..","..alert_info..",hangup_after_bridge=false,rtp_secure_media="..rtp_secure_media..",origination_caller_id_name='"..caller_id_name.."',origination_caller_id_number="..caller_id_number.."}user/"..destination.."@"..domain_name.." conference:"..conference_bridge.."+"..flags.." inline";
-								api:executeString(cmd_string);
-								destination_count = destination_count + 1;
-							end
+						end
+						
+						--if available then page then originate the call with auto answer
+						if (destination_status == 'available' or check_destination_status == "false") then
+							--originate the call
+							cmd_string = "bgapi originate {"..auto_answer..","..alert_info..",hangup_after_bridge=false,rtp_secure_media="..rtp_secure_media..",origination_caller_id_name='"..caller_id_name.."',origination_caller_id_number="..caller_id_number.."}user/"..destination.."@"..domain_name.." conference:"..conference_bridge.."+"..flags.." inline";
+							api:executeString(cmd_string);
+							destination_count = destination_count + 1;
 						end
 					end
 				end
