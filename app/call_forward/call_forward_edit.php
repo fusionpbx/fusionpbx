@@ -698,8 +698,8 @@
 		echo 				$text['label-ignore_busy'];
 		echo "			</td>\n";
 		echo "			<td class='vtable' align='left'>\n";
-		echo "				<label for='follow_me_ignore_busy_false'><input type='radio' name='follow_me_ignore_busy' id='follow_me_ignore_busy_false' value='false' onclick=\"\" ".(($follow_me_ignore_busy == "false" || $follow_me_ignore_busy == "") ? "checked='checked'" : null)." /> ".$text['label-disabled']."</label> \n";
-		echo "				<label for='follow_me_ignore_busy_true'><input type='radio' name='follow_me_ignore_busy' id='follow_me_ignore_busy_true' value='true' onclick=\"$on_click\" ".(($follow_me_ignore_busy == "true") ? "checked='checked'" : null)." /> ".$text['label-enabled']."</label> \n";
+		echo "				<label for='follow_me_ignore_busy_false'><input type='radio' name='follow_me_ignore_busy' id='follow_me_ignore_busy_false' value='false' onclick=\"\" ".(empty($follow_me_ignore_busy) || $follow_me_ignore_busy == "false" ? "checked='checked'" : null)." /> ".$text['label-disabled']."</label> \n";
+		echo "				<label for='follow_me_ignore_busy_true'><input type='radio' name='follow_me_ignore_busy' id='follow_me_ignore_busy_true' value='true' onclick=\"".$on_click."\" ".(!empty($follow_me_ignore_busy) && $follow_me_ignore_busy == "true" ? "checked='checked'" : null)." /> ".$text['label-enabled']."</label> \n";
 		echo "				<br />\n";
 		echo 				$text['description-ignore_busy']."\n";
 		echo "			</td>\n";
