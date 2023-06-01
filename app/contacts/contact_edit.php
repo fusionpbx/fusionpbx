@@ -56,7 +56,7 @@
 	$contact_note = '';
 	$url_label = '';
 	$relation_label = '';
-	$contact_attachments = '';
+	$contact_attachments = [];
 
 //set from session variables
 	$body_text_color = !empty($_SESSION['theme']['body_text_color']) ? $_SESSION['theme']['body_text_color'] : 'false';
