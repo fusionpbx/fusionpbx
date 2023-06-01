@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -126,7 +126,7 @@
 	$offset = $rows_per_page * $page;
 
 //get the call broadcasts
-	$sql = "select call_broadcast_uuid, domain_uuid, broadcast_name ";
+	$sql = "select call_broadcast_uuid, domain_uuid, broadcast_name, ";
 	$sql .= "broadcast_description, broadcast_start_time, broadcast_timeout, ";
 	$sql .= "broadcast_concurrent_limit, recording_uuid, broadcast_caller_id_name, ";
 	$sql .= "broadcast_caller_id_number, broadcast_destination_type, broadcast_phone_numbers, ";
