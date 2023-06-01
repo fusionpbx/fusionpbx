@@ -52,7 +52,7 @@
 	$parameters['user_uuid'] = $_SESSION['user']['user_uuid'];
 	$parameters['contact_time_uuid'] = $contact_time_uuid;
 	$database = new database;
-	$row = $database->select($sql, $parameters ?? null, 'row');
+	$row = $database->select($sql, $parameters, 'row');
 	if (!empty($row)) {
 		$time_start = strtotime($row["time_start"]);
 		$time_now = strtotime(date("Y-m-d H:i:s"));
