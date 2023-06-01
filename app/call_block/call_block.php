@@ -98,7 +98,7 @@
 //prepare to page the results
 	$sql = "select count(*) from view_call_block ";
 	$sql .= "where true ";
-	if ($show == "all" && permission_exists('call_block_all')) {
+	if (!empty($show) && $show == "all" && permission_exists('call_block_all')) {
 		//$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
 		//$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	}
@@ -209,7 +209,7 @@
 	}
 	echo 		"<form id='form_search' class='inline' method='get'>\n";
 	if (permission_exists('call_block_all')) {
-		if ($show == 'all') {
+		if (!empty($show) && $show == 'all') {
 			echo "		<input type='hidden' name='show' value='all'>";
 		}
 		else {
@@ -251,7 +251,7 @@
 		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".(!empty($result) ?: "style='visibility: hidden;'").">\n";
 		echo "	</th>\n";
 	}
-	if (!$show == 'all' && permission_exists('domain_all')) {
+	if (!empty($show) && $show == 'all' && permission_exists('domain_all')) {
 		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order);
 	}
 	echo th_order_by('call_block_direction', $text['label-direction'], $order_by, $order, null, "style='width: 1%;' class='center'");
@@ -282,7 +282,7 @@
 				echo "		<input type='hidden' name='call_blocks[".$x."][uuid]' value='".escape($row['call_block_uuid'])."' />\n";
 				echo "	</td>\n";
 			}
-			if ($show == 'all' && permission_exists('domain_all')) {
+			if (!empty($show) && $show == 'all' && permission_exists('domain_all')) {
 				echo "	<td>".escape($_SESSION['domains'][$row['domain_uuid']]['domain_name'])."</td>\n";
 			}
 			echo "	<td class='center'>";
