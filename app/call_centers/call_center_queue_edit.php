@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2022
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -89,7 +89,7 @@
 	if (!empty($_POST)) {
 		//get the post variables a run a security chack on them
 			//$domain_uuid = $_POST["domain_uuid"];
-			$dialplan_uuid = $_POST["dialplan_uuid"];
+			$dialplan_uuid = $_POST["dialplan_uuid"] ?? null;
 			$queue_name = $_POST["queue_name"];
 			$queue_extension = $_POST["queue_extension"];
 			$queue_greeting = $_POST["queue_greeting"];
@@ -110,13 +110,13 @@
 			$queue_discard_abandoned_after = $_POST["queue_discard_abandoned_after"];
 			$queue_abandoned_resume_allowed = $_POST["queue_abandoned_resume_allowed"];
 			$queue_cid_prefix = $_POST["queue_cid_prefix"];
-			$queue_outbound_caller_id_name = $_POST["queue_outbound_caller_id_name"];
-			$queue_outbound_caller_id_number = $_POST["queue_outbound_caller_id_number"];
-			$queue_announce_position = $_POST["queue_announce_position"];
+			$queue_outbound_caller_id_name = $_POST["queue_outbound_caller_id_name"] ?? null;
+			$queue_outbound_caller_id_number = $_POST["queue_outbound_caller_id_number"] ?? null;
+			$queue_announce_position = $_POST["queue_announce_position"] ?? null;
 			$queue_announce_sound = $_POST["queue_announce_sound"];
 			$queue_announce_frequency = $_POST["queue_announce_frequency"];
 			$queue_cc_exit_keys = $_POST["queue_cc_exit_keys"];
-			$queue_email_address = $_POST["queue_email_address"];
+			$queue_email_address = $_POST["queue_email_address"] ?? null;
 			$queue_description = $_POST["queue_description"];
 
 		//remove invalid characters
@@ -362,7 +362,7 @@
 			if ($queue_time_base_score_sec != '') {
 				$dialplan_xml .= "		<action application=\"set\" data=\"cc_base_score=".xml::sanitize($queue_time_base_score_sec)."\"/>\n";
 			}
-			if ($queue_greeting_path != '') {
+			if (!empty($queue_greeting_path)) {
 				$dialplan_xml .= "		<action application=\"sleep\" data=\"1000\"/>\n";
 				$greeting_array = explode(':', $queue_greeting_path);
 				if (count($greeting_array) == 1) {
@@ -446,9 +446,9 @@
 			remove_config_from_cache('configuration:callcenter.conf');
 
 		//add agent/tier to queue
-			$agent_name = $_POST["agent_name"];
-			$tier_level = $_POST["tier_level"];
-			$tier_position = $_POST["tier_position"];
+			$agent_name = $_POST["agent_name"] ?? null;
+			$tier_level = $_POST["tier_level"] ?? null;
+			$tier_position = $_POST["tier_position"] ?? null;
 
 			if (!empty($agent_name)) {
 				//setup the event socket connection
@@ -735,7 +735,7 @@
 		echo "<optgroup label=".$text['label-'.$key].">\n";
 		$selected = false;
 		foreach($value as $row) {
-			if ($queue_greeting == $row["value"]) { 
+			if (!empty($queue_greeting) && $queue_greeting == $row["value"]) {
 				$selected = true;
 				echo "	<option value='".escape($row["value"])."' selected='selected'>".escape($row["name"])."</option>\n";
 			}
@@ -890,7 +890,7 @@
 	}
 
 	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
 	echo "	".$text['label-music_on_hold']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
@@ -1248,11 +1248,11 @@
 			foreach ($recordings as &$row) {
 				$recording_name = $row["recording_name"];
 				$recording_filename = $row["recording_filename"];
-				if ($queue_announce_sound == $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$recording_filename && !empty($queue_announce_sound)) {
+				if (!empty($queue_announce_sound) && $queue_announce_sound == $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$recording_filename) {
 					$tmp_selected = true;
 					echo "	<option value='".escape($_SESSION['switch']['recordings']['dir'])."/".escape($_SESSION['domain_name'])."/".escape($recording_filename)."' selected='selected'>".escape($recording_name)."</option>\n";
 				}
-				else if ($queue_announce_sound == $recording_filename && !empty($queue_announce_sound)) {
+				else if (!empty($queue_announce_sound) && $queue_announce_sound == $recording_filename) {
 					$tmp_selected = true;
 					echo "	<option value='".escape($_SESSION['switch']['recordings']['dir'])."/".escape($_SESSION['domain_name'])."/".escape($recording_filename)."' selected='selected'>".escape($recording_name)."</option>\n";
 				}
