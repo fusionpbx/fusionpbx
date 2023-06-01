@@ -524,7 +524,7 @@ function outbound_route_to_bridge($domain_uuid, $destination_number, array $chan
 			}
 		}
 	}
-	return $bridge_array;
+	return $bridge_array ?? [];
 }
 //$destination_number = '1231234';
 //$bridge_array = outbound_route_to_bridge ($domain_uuid, $destination_number);
