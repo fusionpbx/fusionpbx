@@ -131,7 +131,7 @@
 		$parameters['domain_uuid'] = $domain_uuid;
 		$parameters['contact_attachment_uuid'] = $contact_attachment_uuid;
 		$database = new database;
-		$row = $database->select($sql, $parameters ?? null, 'row');
+		$row = $database->select($sql, $parameters, 'row');
 		if (!empty($row)) {
 			$attachment_primary = $row["attachment_primary"];
 			$attachment_filename = $row["attachment_filename"];
