@@ -46,6 +46,15 @@
 	$language = new text;
 	$text = $language->get();
 
+//set the defaults
+	$queue_name = '';
+	$queue_extension = '';
+	$queue_time_base_score_sec = '';
+	$queue_cid_prefix = '';
+	$queue_announce_frequency = '';
+	$queue_cc_exit_keys = '';
+	$queue_description = '';
+
 //action add or update
 	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
