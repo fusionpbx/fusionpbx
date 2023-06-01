@@ -111,19 +111,9 @@
 
 	//os uptime
 		if (stristr(PHP_OS, 'Linux')) {
-			unset($tmp);
-			$cut = shell_exec("/usr/bin/which cut");
-			$uptime = trim(shell_exec(escapeshellcmd($cut." -d. -f1 /proc/uptime")));
-			$tmp['y'] = floor($uptime/60/60/24/365);
-			$tmp['d'] = intdiv(intdiv(intdiv($uptime,60),60),24)%365;
-			$tmp['h'] = intdiv(intdiv($uptime,60),60)%24;
-			$tmp['m'] = intdiv($uptime,60)%60;
-			$tmp['s'] = $uptime%60;
-			$uptime = (($tmp['y'] != 0 && $tmp['y'] != '') ? $tmp['y'].'y ' : null);
-			$uptime .= (($tmp['d'] != 0 && $tmp['d'] != '') ? $tmp['d'].'d ' : null);
-			$uptime .= (($tmp['h'] != 0 && $tmp['h'] != '') ? $tmp['h'].'h ' : null);
-			$uptime .= (($tmp['m'] != 0 && $tmp['m'] != '') ? $tmp['m'].'m ' : null);
-			$uptime .= (($tmp['s'] != 0 && $tmp['s'] != '') ? $tmp['s'].'s' : null);
+                        $prefix = 'up ';
+                        $linux_uptime = shell_exec('uptime  -p');
+                        $uptime = substr($linux_uptime, strlen($prefix));
 			if ($uptime != '') {
 				echo "<tr class='tr_link_void'>\n";
 				echo "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-system_uptime']."</td>\n";
