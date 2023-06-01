@@ -61,7 +61,7 @@
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$parameters['contact_uuid'] = $contact_uuid;
 	$database = new database;
-	$row = $database->select($sql, $parameters ?? null, 'row');
+	$row = $database->select($sql, $parameters, 'row');
 	if (!empty($row)) {
 		$contact_type = $row["contact_type"];
 		$contact_organization = $row["contact_organization"];
@@ -108,7 +108,7 @@
 	$parameters['contact_uuid'] = $contact_uuid;
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$database = new database;
-	$contact_users_assigned = $database->select($sql, $parameters ?? null, 'all');
+	$contact_users_assigned = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
 //get the assigned groups that can view this contact
@@ -123,7 +123,7 @@
 	$parameters['contact_uuid'] = $contact_uuid;
 	$parameters['group_uuid'] = $_SESSION["user_uuid"];
 	$database = new database;
-	$contact_groups_assigned = $database->select($sql, $parameters ?? null, 'all');
+	$contact_groups_assigned = $database->select($sql, $parameters, 'all');
 	if (!empty($contact_groups_assigned)) {
 		foreach ($contact_groups_assigned as $field) {
 			$contact_groups[] = "'".$field['group_uuid']."'";
@@ -140,7 +140,7 @@
 	$sql .= "order by group_name asc ";
 	$parameters['domain_uuid'] = $domain_uuid;
 	$database = new database;
-	$contact_groups_available = $database->select($sql, $parameters ?? null, 'all');
+	$contact_groups_available = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters, $contact_groups);
 
 //determine title name
