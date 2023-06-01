@@ -213,7 +213,7 @@
 		$parameters['domain_uuid'] = $domain_uuid;
 		$parameters['contact_phone_uuid'] = $contact_phone_uuid;
 		$database = new database;
-		$row = $database->select($sql, $parameters ?? null, 'row');
+		$row = $database->select($sql, $parameters, 'row');
 		if (!empty($row)) {
 			$phone_label = $row["phone_label"];
 			$phone_type_voice = $row["phone_type_voice"];
