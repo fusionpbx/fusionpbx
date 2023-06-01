@@ -61,7 +61,7 @@
 	$phone_description = '';
 
 //action add or update
-	if (!empty($_REQUEST["id"])&& is_uuid($_REQUEST["id"])) {
+	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
 		$contact_phone_uuid = $_REQUEST["id"];
 	}
