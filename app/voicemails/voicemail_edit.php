@@ -540,6 +540,7 @@
 	echo "	<select class='formfld' name='greeting_id'>\n";
 	echo "		<option value=''>".$text['label-default']."</option>\n";
 	echo "		<option value='0' ".(($greeting_id == "0") ? "selected='selected'" : null).">".$text['label-none']."</option>\n";
+  echo "		<option value='11' ".(($greeting_id == "11") ? "selected='selected'" : null).">".$text['label-name']."</option>\n";
 	if (is_array($greetings) && @sizeof($greetings) != 0) {
 		foreach ($greetings as $greeting) {
 			$selected = ($greeting['greeting_id'] == $greeting_id) ? 'selected' : null;

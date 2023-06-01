@@ -141,26 +141,33 @@
 						dtmf_digits = '';
 					--flush dtmf digits from the input buffer
 						session:flushDigits();
-					--to record a greeting press 1
+					--to select a standard greeting num press 1, name press 2, custom press 3
 						if (session:ready()) then
 							if (string.len(dtmf_digits) == 0) then
-								dtmf_digits = session:playAndGetDigits(0, 1, 1, 200, "#", "phrase:tutorial_record_greeting:1", "", "\\d+");
+								dtmf_digits = session:playAndGetDigits(0, 1, 1, 5000, "#", "phrase:voicemail_choose_standard_greeting:1:2:3", "", "\\d+");
 							end
 						end
-					--skip the record greeting press 2. finishes the tutorial and routes to main menu
-						if (session:ready()) then
-							if (string.len(dtmf_digits) == 0) then
-								dtmf_digits = session:playAndGetDigits(0, 1, 1, 3000, "#", "phrase:tutorial_skip:2", "", "\\d+");
-							end
-						end
+
 					--process the dtmf
 						if (session:ready()) then
 							if (dtmf_digits == "1") then
 								timeouts = 0;
-								record_greeting(nil, "tutorial");
-							elseif (dtmf_digits == "2") then
-								timeouts = 0;
 								tutorial("finish");
+							elseif (dtmf_digits == "2") then
+								local sql = [[UPDATE v_voicemails
+								set greeting_id = '11'
+								WHERE domain_uuid = :domain_uuid
+								AND voicemail_id = :voicemail_id ]];
+								local params = {domain_uuid = domain_uuid,
+									voicemail_id = voicemail_id};
+								if (debug["sql"]) then
+									freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
+								end
+								dbh:query(sql, params);
+								tutorial("finish");
+							elseif (dtmf_digits == "3") then
+								timeouts = 0;
+								record_greeting(nil, "tutorial");
 							else
 								if (session:ready()) then
 									timeouts = timeouts + 1;
@@ -173,6 +180,7 @@
 							end
 						end
 				end
+
 				if (menu == "finish") then 
 					--clear the value
 						dtmf_digits = '';

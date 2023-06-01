@@ -31,6 +31,48 @@
 		--flush dtmf digits from the input buffer
 			session:flushDigits();
 
+		--select the greeting type
+			if (session:ready()) then
+				dtmf_digits = '';
+				greeting_type = session:playAndGetDigits(1, 1, max_tries, 5000, "#", "phrase:voicemail_choose_standard_greeting:".. "1:2:3", "", "\\d+");
+			end
+
+		--validate the input
+			if (tonumber(greeting_type) > 3 or tonumber(greeting_type) == 0) then
+				if (session:ready()) then
+					timeouts = timeouts + 1;
+					if (timeouts < max_timeouts) then
+						choose_greeting();
+					else
+						timeouts = 0;
+						advanced();
+					end
+				end
+			end
+
+			if (greeting_type == "1" or greeting_type == "2") then
+				if (session:ready()) then
+					local params = {domain_uuid = domain_uuid, voicemail_uuid = voicemail_uuid};
+					local sql = "UPDATE v_voicemails SET greeting_id = ";
+					if (greeting_type == "2") then
+						sql = sql .. "11 ";
+					else
+						sql = sql .. "null ";
+					end
+					sql = sql .. "WHERE domain_uuid = :domain_uuid ";
+					sql = sql .. "AND voicemail_uuid = :voicemail_uuid ";
+					if (debug["sql"]) then
+						freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
+					end
+					dbh:query(sql, params);
+				end
+			--return to advanced menu
+				if (session:ready()) then
+					timeouts = 0;
+					advanced();
+				end
+			end
+
 		--select the greeting
 			if (session:ready()) then
 				dtmf_digits = '';

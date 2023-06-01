@@ -45,7 +45,8 @@
 
 				--play the greeting
 					dtmf_digits = '';
-					if (string.len(greeting_id) > 0 and greeting_id ~= "default") then
+					if (string.len(greeting_id) > 0 and greeting_id ~= "default"
+						and greeting_id ~= "11") then
 
 						--greeting set to none, return without a greeting
 							if (greeting_id == "0") then
@@ -107,6 +108,52 @@
 								dtmf_digits = session:playAndGetDigits(0, max_digits, tries, timeout, "#", voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id.."."..greeting_ext, "",".*", max_timeout);
 								--session:execute("playback",voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav");
 							end
+
+					elseif (string.len(greeting_id) > 0 and greeting_id == "11") then
+						--play the recorded name
+							if (storage_type == "base64") then
+								local dbh = Database.new('system', 'base64/read')
+
+								local sql = [[SELECT * FROM v_voicemails
+									WHERE domain_uuid = :domain_uuid
+									AND voicemail_id = :voicemail_id]];
+								local params = {domain_uuid = domain_uuid, voicemail_id = voicemail_id};
+								if (debug["sql"]) then
+									freeswitch.consoleLog("notice", "[directory] SQL: " .. sql .. "; params: " .. json.encode(params) .. "\n");
+								end
+								dbh:query(sql, params, function(field)
+									--set the voicemail message path
+										file_location = voicemail_dir.."/"..voicemail_id.."/recorded_name.wav";
+
+									--save the recording to the file system
+										if (string.len(field["voicemail_name_base64"]) > 32) then
+											--include the file io
+												local file = require "resources.functions.file"
+
+											--write decoded string to file
+												file.write_base64(file_location, field["voicemail_name_base64"]);
+										end
+								end);
+								dbh:release()
+							elseif (storage_type == "http_cache") then
+								file_location = storage_path.."/"..voicemail_id.."/recorded_name.wav";
+							else
+								if (debug["info"]) then
+									freeswitch.consoleLog("notice", "[directory] path: "..voicemail_dir.."/"..voicemail_id.."/recorded_name.wav\n");
+								end
+								file_location = voicemail_dir.."/"..voicemail_id.."/recorded_name.wav";
+							end
+
+						session:execute("playback","silence_stream://200");
+						if (file_exists(file_location)) then
+							dtmf_digits = session:playAndGetDigits(0, max_digits, tries, timeout, "#", "phrase:voicemail_name_greeting:"..file_location, "",".*", max_timeout);
+						else
+							dtmf_digits = session:playAndGetDigits(0, 1, 1, 200, "#", "phrase:voicemail_play_greeting:" .. voicemail_id, "", ".*");
+						end
+						if (storage_type == "base64") then
+							--delete the greeting
+							os.remove(file_location);
+						end
 
 					else
 						--default greeting
