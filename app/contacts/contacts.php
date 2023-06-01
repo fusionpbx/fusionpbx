@@ -121,7 +121,7 @@
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$parameters['group_uuid'] = $_SESSION['group_uuid'] ?? '';
 	$database = new database;
-	$result = $database->select($sql, $parameters ?? null, 'all');
+	$result = $database->select($sql, $parameters, 'all');
 	if (!empty($result)) {
 		foreach($result as $row) {
 			$contact_sync_sources[$row['contact_uuid']][] = $row['contact_setting_value'];
