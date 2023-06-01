@@ -46,8 +46,6 @@ else {
 $language = new text;
 $text = $language->get(null,'app/basic_operator_panel');
 
-//set the defaults
-
 //get the call activity
 $operator_panel = new basic_operator_panel;
 $activity = $operator_panel->call_activity();
