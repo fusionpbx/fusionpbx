@@ -513,8 +513,9 @@
 						$i++;
 					}
 					if (!empty($stream_icons)) {
+						$icons = '';
 						foreach ($stream_icons as $stream_icon) {
-							$icons = "<span class='fas ".$stream_icon['icon']." icon_body' title='".escape($stream_icon['title'])."' style='width: 12px; height: 12px; margin-left: ".(!empty($stream_icon['margin']) ? $stream_icon['margin'] : 8)."px; vertical-align: text-top; cursor: help;'></span>";
+							$icons .= "<span class='fas ".$stream_icon['icon']." icon_body' title='".escape($stream_icon['title'])."' style='width: 12px; height: 12px; margin-left: ".(!empty($stream_icon['margin']) ? $stream_icon['margin'] : 8)."px; vertical-align: text-top; cursor: help;'></span>";
 						}
 					}
 
