@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2008-2018
+	Copyright (C) 2008-2023
 	All Rights Reserved.
 
 	Contributor(s):
@@ -164,7 +164,7 @@
 		$result_e = $database->select($sql, $parameters, 'all');
 		if (is_array($result_e) && @sizeof($result_e) != 0) {
 			foreach ($result_e as &$row) {
-				$selected = ($row['extension_uuid'] == $caller_extension_uuid) ? "selected" : null;
+				$selected = (!empty($caller_extension_uuid) && $row['extension_uuid'] == $caller_extension_uuid) ? "selected" : null;
 				echo "			<option value='".escape($row['extension_uuid'])."' ".escape($selected).">".((is_numeric($row['extension'])) ? escape($row['extension']) : escape($row['number_alias'])." (".escape($row['extension']).")")."</option>";
 			}
 		}

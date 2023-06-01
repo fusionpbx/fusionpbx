@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -47,7 +47,7 @@
 
 //additional includes
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
-	$archive_request = $_POST['archive_request'] == 'true' ? true : false;
+	$archive_request = isset($_POST['archive_request']) && $_POST['archive_request'] == 'true' ? true : false;
 	require_once "xml_cdr_inc.php";
 
 //get the format
@@ -159,7 +159,7 @@
 		$data_head .= '<td width="8%" align="right"><b>'.$text['label-billsec'].'</b></td>';
 		$data_head .= '<td width="5%" align="right"><b>'."PDD".'</b></td>';
 		$data_head .= '<td width="5%" align="center"><b>'."MOS".'</b></td>';
-		if (is_array($_SESSION['cdr']['field'])) {
+		if (!empty($_SESSION['cdr']['field']) && is_array($_SESSION['cdr']['field'])) {
 			foreach ($_SESSION['cdr']['field'] as $field) {
 				$array = explode(",", $field);
 				$field_name = end($array);
@@ -188,7 +188,7 @@
 		$p = 0; // per page counter
 		if (sizeof($result) > 0) {
 			foreach ($result as $cdr_num => $fields) {
-				$data_body[$p] .= '<tr>';
+				$data_body[$p] = '<tr>';
 				$data_body[$p] .= '<td>'.$text['label-'.$fields['direction']].'</td>';
 				$data_body[$p] .= '<td>'.$fields['caller_id_name'].'</td>';
 				$data_body[$p] .= '<td>'.$fields['caller_id_number'].'</td>';
@@ -214,7 +214,7 @@
 				}
 				$data_body[$p] .= '</td>';
 
-				if (is_array($_SESSION['cdr']['field'])) {
+				if (!empty($_SESSION['cdr']['field']) && is_array($_SESSION['cdr']['field'])) {
 					foreach ($_SESSION['cdr']['field'] as $field) {
 						$array = explode(",", $field);
 						$field_name = end($array);
@@ -278,7 +278,7 @@
 		$data_footer .= '<td><b>'.$text['label-average'].'</b></td>';
 		$data_footer .= '<td colspan="4"></td>';
 		$data_footer .= '<td align="right"><b>'.round(($total['tta'] / $z), 1).'</b></td>';
-		$data_footer .= '<td align="right"><b>'.gmdate("G:i:s", ($total['duration'] / $z)).'</b></td>';
+		$data_footer .= '<td align="right"><b>'.gmdate("G:i:s", floor($total['duration'] / $z)).'</b></td>';
 		$data_footer .= '<td align="right"><b>'.gmdate("G:i:s", round($total['billmsec'] / $z / 1000, 0)).'</b></td>';
 		$data_footer .= '<td align="right"><b>'.number_format(round(($total['pdd_ms'] / $z / 1000), 2), 2).'s</b></td>';
 		$data_footer .= '<td align="right"><b>'.round(($total['rtp_audio_in_mos'] / $z), 2).'</b></td>';

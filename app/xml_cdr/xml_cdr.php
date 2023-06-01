@@ -255,8 +255,8 @@
 			if (permission_exists('xml_cdr_b_leg')){
 				echo "		<select name='leg' class='formfld'>\n";
 				echo "			<option value=''></option>\n";
-				echo "			<option value='a'>a-leg</option>\n";
-				echo "			<option value='b'>b-leg</option>\n";
+				echo "			<option value='a' ".(!empty($_REQUEST["leg"]) && $leg == 'a' ? "selected='selected'" : null).">a-leg</option>\n";
+				echo "			<option value='b' ".($leg == 'b' ? "selected='selected'" : null).">b-leg</option>\n";
 				echo "		</select>\n";
 			}
 			echo "		</div>\n";
@@ -480,7 +480,7 @@
 				echo "			<option value='hangup_cause' ".($order_by == 'desc' ? "selected='selected'" : null).">".$text['label-hangup_cause']."</option>\n";
 			}
 			if (permission_exists('xml_cdr_custom_fields')) {
-				if (is_array($_SESSION['cdr']['field'])) {
+				if (!empty($_SESSION['cdr']['field']) && is_array($_SESSION['cdr']['field'])) {
 					echo "			<option value='' disabled='disabled'></option>\n";
 					echo "			<optgroup label=\"".$text['label-custom_cdr_fields']."\">\n";
 					foreach ($_SESSION['cdr']['field'] as $field) {
@@ -535,7 +535,7 @@
 	$col_count = 0;
 	if (!$archive_request && permission_exists('xml_cdr_delete')) {
 		echo "	<th class='checkbox'>\n";
-		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle();' ".($result ?: "style='visibility: hidden;'").">\n";
+		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle();' ".(empty($result) ? "style='visibility: hidden;'" : null).">\n";
 		echo "	</th>\n";
 		$col_count++;
 	}
@@ -644,6 +644,9 @@
 			$x = 0;
 			foreach ($result as $index => $row) {
 
+				//clear previous variables
+					unset($record_path, $record_name);
+
 				//get the hangup cause
 					$hangup_cause = $row['hangup_cause'];
 					$hangup_cause = str_replace("_", " ", $hangup_cause);
@@ -654,7 +657,7 @@
 					$seconds = $row['hangup_cause'] == "ORIGINATOR_CANCEL" ? $row['duration'] : round(($row['billmsec'] / 1000), 0, PHP_ROUND_HALF_UP);
 
 				//determine recording properties
-					if (permission_exists('xml_cdr_recording_play') || permission_exists('xml_cdr_recording_download')) {
+					if (!empty($row['record_path']) && !empty($row['record_name']) && permission_exists('xml_cdr_recording') && (permission_exists('xml_cdr_recording_play') || permission_exists('xml_cdr_recording_download'))) {
 						$record_path = $row['record_path'];
 						$record_name = $row['record_name'];
 						//$record_name = strtolower(pathinfo($tmp_name, PATHINFO_BASENAME));
@@ -670,7 +673,7 @@
 					$content = '';
 
 				//recording playback
-					if (permission_exists('xml_cdr_recording_play') && $record_path != '') {
+					if (permission_exists('xml_cdr_recording_play')) {
 						$content .= "<tr class='list-row' id='recording_progress_bar_".$row['xml_cdr_uuid']."' style='display: none;'><td class='playback_progress_bar_background' style='padding: 0; border-bottom: none; overflow: hidden;' colspan='".$col_count."'><span class='playback_progress_bar' id='recording_progress_".$row['xml_cdr_uuid']."'></span></td></tr>\n";
 						$content .= "<tr class='list-row' style='display: none;'><td></td></tr>\n"; // dummy row to maintain alternating background color
 					}
@@ -743,10 +746,10 @@
 						$content .= "	<td class='middle no-link no-wrap hide-md-dn'>";
 						$content .= "		<a href=\"javascript:void(0)\" onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php?src_cid_name=".urlencode(escape($row['caller_id_name']))."&src_cid_number=".urlencode(escape($row['caller_id_number']))."&dest_cid_name=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_name'])."&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number'])."&src=".urlencode($_SESSION['user']['extension'][0]['user'])."&dest=".urlencode(escape($row['caller_destination']))."&rec=false&ringback=us-ring&auto_answer=true');\">\n";
 						if (is_numeric($row['caller_destination'])) {
-							$content .= "		".format_phone(escape(substr($row['caller_destination'], 0, 20))).' ';
+							$content .= "		".escape(format_phone(substr($row['caller_destination'], 0, 20))).' ';
 						}
 						else {
-							$content .= "		".escape(substr($row['caller_destination'], 0, 20)).' ';
+							$content .= "		".escape(substr($row['caller_destination'] ?? '', 0, 20)).' ';
 						}
 						$content .= "		</a>";
 						$content .= "	</td>\n";
@@ -756,7 +759,7 @@
 						$content .= "	<td class='middle no-link no-wrap'>";
 						$content .= "		<a href=\"javascript:void(0)\" onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php?src_cid_name=".urlencode(escape($row['destination_number']))."&src_cid_number=".urlencode(escape($row['destination_number']))."&dest_cid_name=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_name'])."&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number'])."&src=".urlencode($_SESSION['user']['extension'][0]['user'])."&dest=".urlencode(escape($row['destination_number']))."&rec=false&ringback=us-ring&auto_answer=true');\">\n";
 						if (is_numeric($row['destination_number'])) {
-							$content .= format_phone(escape(substr($row['destination_number'], 0, 20)))."\n";
+							$content .= escape(format_phone(substr($row['destination_number'], 0, 20)))."\n";
 						}
 						else {
 							$content .= escape(substr($row['destination_number'], 0, 20))."\n";
@@ -766,7 +769,7 @@
 					}
 				//recording
 					if (permission_exists('xml_cdr_recording') && (permission_exists('xml_cdr_recording_play') || permission_exists('xml_cdr_recording_download'))) {
-						if ($record_path != '') {
+						if (!empty($record_path) || !empty($record_name)) {
 							$content .= "	<td class='middle button center no-link no-wrap'>";
 							if (permission_exists('xml_cdr_recording_play')) {
 								$content .= 	"<audio id='recording_audio_".escape($row['xml_cdr_uuid'])."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".escape($row['xml_cdr_uuid'])."')\" onended=\"recording_reset('".escape($row['xml_cdr_uuid'])."');\" src=\"download.php?id=".escape($row['xml_cdr_uuid'])."&t=record\" type='".escape($record_type)."'></audio>";
@@ -783,7 +786,7 @@
 					}
 				//custom cdr fields
 					if (permission_exists('xml_cdr_custom_fields')) {
-						if (is_array($_SESSION['cdr']['field'])) {
+						if (!empty($_SESSION['cdr']['field']) && is_array($_SESSION['cdr']['field'])) {
 							foreach ($_SESSION['cdr']['field'] as $field) {
 								$array = explode(",", $field);
 								$field_name = $array[count($array) - 1];
@@ -800,7 +803,7 @@
 					}
 				//tta (time to answer)
 					if (permission_exists('xml_cdr_tta')) {
-						$content .= "	<td class='middle right hide-md-dn'>".(($row['tta'] >= 0) ? $row['tta']."s" : "&nbsp;")."</td>\n";
+						$content .= "	<td class='middle right hide-md-dn'>".(!empty($row['tta']) && $row['tta'] >= 0 ? $row['tta']."s" : "&nbsp;")."</td>\n";
 					}
 				//duration
 					if (permission_exists('xml_cdr_duration')) {
@@ -816,7 +819,7 @@
 							$title = " title='".$text['label-mos_score-'.round($row['rtp_audio_in_mos'])]."'";
 							$value = $row['rtp_audio_in_mos'];
 						}
-						$content .= "	<td class='middle center hide-md-dn' ".$title.">".$value."</td>\n";
+						$content .= "	<td class='middle center hide-md-dn' ".($title ?? '').">".($value ?? '')."</td>\n";
 					}
 				//call result/status
 					if (permission_exists("xml_cdr_status")) {
