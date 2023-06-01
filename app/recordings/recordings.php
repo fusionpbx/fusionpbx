@@ -452,7 +452,7 @@
 	$col_count = 0;
 	if (permission_exists('recording_delete')) {
 		echo "	<th class='checkbox'>\n";
-		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".!empty($recordings ?: "style='visibility: hidden;'").">\n";
+		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".(!empty($recordings) ?: "style='visibility: hidden;'").">\n";
 		echo "	</th>\n";
 		$col_count++;
 	}
