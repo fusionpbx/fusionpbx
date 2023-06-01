@@ -185,7 +185,7 @@
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$parameters['contact_url_uuid'] = $contact_url_uuid;
 		$database = new database;
-		$row = $database->select($sql, $parameters ?? null, 'row');
+		$row = $database->select($sql, $parameters, 'row');
 		if (!empty($row)) {
 			$url_label = $row["url_label"];
 			$url_address = $row["url_address"];
