@@ -516,7 +516,7 @@
 				echo escape($row['recording_name']);
 			}
 			echo "	</td>\n";
-			if (!empty($_SESSION['recordings']['storage_type']['text']) != 'base64') {
+			if (!empty($_SESSION['recordings']['storage_type']['text']) && $_SESSION['recordings']['storage_type']['text'] != 'base64') {
 				echo "	<td class='hide-md-dn'>".str_replace('_', '_&#8203;', escape($row['recording_filename']))."</td>\n";
 			}
 			if (permission_exists('recording_play') || permission_exists('recording_download')) {
@@ -538,7 +538,7 @@
 				}
 				echo "	</td>\n";
 			}
-			if (!empty($_SESSION['recordings']['storage_type']['text']) == 'base64') {
+			if (!empty($_SESSION['recordings']['storage_type']['text']) && $_SESSION['recordings']['storage_type']['text'] == 'base64') {
 				$file_size = byte_convert($row['recording_size']);
 				echo "	<td class='center no-wrap'>".$file_size."</td>\n";
 			}
@@ -556,7 +556,7 @@
 				echo "	<td class='center hide-md-dn'>".$file_date."</td>\n";
 			}
 			echo "	<td class='description overflow hide-sm-dn'>".escape($row['recording_description'])."&nbsp;</td>\n";
-			if (permission_exists('recording_edit') && !empty($_SESSION['theme']['list_row_edit_button']['boolean']) == 'true') {
+			if (permission_exists('recording_edit') && !empty($_SESSION['theme']['list_row_edit_button']['boolean']) && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
 				echo "	<td class='action-button'>";
 				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
 				echo "	</td>\n";
