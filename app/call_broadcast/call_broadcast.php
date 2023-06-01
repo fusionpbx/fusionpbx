@@ -111,12 +111,13 @@
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 
 //prepare the paging
+	$param = '';
 	$rows_per_page = (!empty($_SESSION['domain']['paging']['numeric'])) ? $_SESSION['domain']['paging']['numeric'] : 50;
 	if (!empty($search)) {
-		$param = "&search=".urlencode($search);
+		$param .= "&search=".urlencode($search);
 	}
 	if ($show == "all" && permission_exists('call_broadcast_all')) {
-		$param = "&show=all";
+		$param .= "&show=all";
 	}
 	$page = $_GET['page'] ?? '';
 	if (empty($page)) { $page = 0; $_GET['page'] = 0; }
