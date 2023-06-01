@@ -46,6 +46,9 @@
 	$language = new text;
 	$text = $language->get();
 
+//set additional variables
+	$show = $_GET["show"] ?? '';
+
 //set from session variables
 	$list_row_edit_button = !empty($_SESSION['theme']['list_row_edit_button']['boolean']) ? $_SESSION['theme']['list_row_edit_button']['boolean'] : 'false';
 
@@ -107,7 +110,7 @@
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
 	$param = "&search=".urlencode($search);
-	if (!empty($_GET['show']) == "all" && permission_exists('call_center_all')) {
+	if ($show == "all" && permission_exists('call_center_all')) {
 		$param .= "&show=all";
 	}
 	$page = $_GET['page'] ?? '';
@@ -160,7 +163,7 @@
 	}
 	echo 		"<form id='form_search' class='inline' method='get'>\n";
 	if (permission_exists('call_center_all')) {
-		if (!empty($_GET['show']) == 'all') {
+		if ($show == 'all') {
 			echo "		<input type='hidden' name='show' value='all'>";
 		}
 		else {
@@ -199,7 +202,7 @@
 		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".(!empty($result) ?: "style='visibility: hidden;'").">\n";
 		echo "	</th>\n";
 	}
-	if (!empty($_GET['show']) == "all" && permission_exists('call_center_all')) {
+	if ($show == "all" && permission_exists('call_center_all')) {
 		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, $param, "class='shrink'");
 	}
 	echo th_order_by('queue_name', $text['label-queue_name'], $order_by, $order);
@@ -236,7 +239,7 @@
 				echo "		<input type='hidden' name='call_center_queues[$x][uuid]' value='".escape($row['call_center_queue_uuid'])."' />\n";
 				echo "	</td>\n";
 			}
-			if (!empty($_GET['show']) == "all" && permission_exists('call_center_all')) {
+			if ($show == "all" && permission_exists('call_center_all')) {
 				if (!empty($_SESSION['domains'][$row['domain_uuid']]['domain_name'])) {
 					$domain = $_SESSION['domains'][$row['domain_uuid']]['domain_name'];
 				}

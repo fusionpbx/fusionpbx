@@ -167,7 +167,7 @@ if (!class_exists('conference_centers')) {
 				$database = new database;
 				$conference_rooms = $database->select($sql, $parameters, 'all');
 
-				if (is_array($conference_rooms)) {
+				if (!empty($conference_rooms)) {
 					$x = 0;
 					foreach($conference_rooms as $row) {
 						//increment the array index
@@ -200,7 +200,7 @@ if (!class_exists('conference_centers')) {
 					}
 				}
 				unset($sql, $parameters, $conference_rooms);
-				return $result;
+				return $result ?? null;
 		}
 
 		/**
@@ -312,7 +312,7 @@ if (!class_exists('conference_centers')) {
 					}
 
 				//delete multiple records
-					if (is_array($records) && @sizeof($records) != 0) {
+					if (!empty($records)) {
 
 						//build the delete array
 							foreach ($records as $x => $record) {
@@ -339,7 +339,7 @@ if (!class_exists('conference_centers')) {
 							}
 
 						//delete the checked rows
-							if (is_array($array) && @sizeof($array) != 0) {
+							if (!empty($array)) {
 
 								//grant temporary permissions
 									$p = new permissions;
@@ -400,7 +400,7 @@ if (!class_exists('conference_centers')) {
 					}
 
 				//delete multiple records
-					if (is_array($records) && @sizeof($records) != 0) {
+					if (!empty($records)) {
 
 						//build the delete array
 							foreach ($records as $x => $record) {
@@ -415,7 +415,7 @@ if (!class_exists('conference_centers')) {
 							}
 
 						//delete the checked rows
-							if (is_array($array) && @sizeof($array) != 0) {
+							if (!empty($array)) {
 
 								//grant temporary permissions
 									$p = new permissions;
@@ -464,7 +464,7 @@ if (!class_exists('conference_centers')) {
 					}
 
 				//delete multiple records
-					if (is_array($records) && @sizeof($records) != 0) {
+					if (!empty($records)) {
 
 						//build the delete array
 							foreach ($records as $x => $record) {
@@ -479,7 +479,7 @@ if (!class_exists('conference_centers')) {
 							}
 
 						//delete the checked rows
-							if (is_array($array) && @sizeof($array) != 0) {
+							if (!empty($array)) {
 
 								//grant temporary permissions
 									$p = new permissions;
@@ -533,7 +533,7 @@ if (!class_exists('conference_centers')) {
 					}
 
 				//toggle the checked records
-					if (is_array($records) && @sizeof($records) != 0) {
+					if (!empty($records)) {
 
 						//get current toggle state
 							foreach($records as $x => $record) {
@@ -541,14 +541,14 @@ if (!class_exists('conference_centers')) {
 									$uuids[] = "'".$record['uuid']."'";
 								}
 							}
-							if (is_array($uuids) && @sizeof($uuids) != 0) {
+							if (!empty($uuids)) {
 								$sql = "select ".$this->uuid_prefix."uuid as uuid, ".$this->toggle_field." as toggle, dialplan_uuid from v_".$this->table." ";
 								$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
 								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 								$database = new database;
 								$rows = $database->select($sql, $parameters, 'all');
-								if (is_array($rows) && @sizeof($rows) != 0) {
+								if (!empty($rows)) {
 									foreach ($rows as $row) {
 										$conference_centers[$row['uuid']]['state'] = $row['toggle'];
 										$conference_centers[$row['uuid']]['dialplan_uuid'] = $row['dialplan_uuid'];
@@ -568,7 +568,7 @@ if (!class_exists('conference_centers')) {
 							}
 
 						//save the changes
-							if (is_array($array) && @sizeof($array) != 0) {
+							if (!empty($array)) {
 
 								//grant temporary permissions
 									$p = new permissions;
@@ -630,7 +630,7 @@ if (!class_exists('conference_centers')) {
 					}
 
 				//toggle the checked records
-					if (is_array($records) && @sizeof($records) != 0) {
+					if (!empty($records)) {
 
 						//validate submitted toggle field
 							if (!in_array($this->toggle_field, ['record','wait_mod','announce_name','announce_count','announce_recording','mute','sounds','enabled'])) {
@@ -647,14 +647,14 @@ if (!class_exists('conference_centers')) {
 									}
 								}
 							}
-							if (is_array($uuids) && @sizeof($uuids) != 0) {
+							if (!empty($uuids)) {
 								$sql = "select ".$this->uuid_prefix."uuid as uuid, ".$this->toggle_field." as toggle from v_".$this->table." ";
 								$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
 								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 								$database = new database;
 								$rows = $database->select($sql, $parameters, 'all');
-								if (is_array($rows) && @sizeof($rows) != 0) {
+								if (!empty($rows)) {
 									foreach ($rows as $row) {
 										$states[$row['uuid']] = $row['toggle'];
 									}
@@ -692,7 +692,7 @@ if (!class_exists('conference_centers')) {
 							}
 
 						//save the changes
-							if (is_array($array) && @sizeof($array) != 0) {
+							if (!empty($array)) {
 
 								//save the array
 									$database = new database;
@@ -738,7 +738,7 @@ if (!class_exists('conference_centers')) {
 					}
 
 				//copy the checked records
-					if (is_array($records) && @sizeof($records) != 0) {
+					if (!empty($records)) {
 
 						//get checked records
 							foreach($records as $x => $record) {
@@ -748,14 +748,14 @@ if (!class_exists('conference_centers')) {
 							}
 
 						//create insert array from existing data
-							if (is_array($uuids) && @sizeof($uuids) != 0) {
+							if (!empty($uuids)) {
 								$sql = "select * from v_".$this->table." ";
 								$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
 								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 								$database = new database;
 								$rows = $database->select($sql, $parameters, 'all');
-								if (is_array($rows) && @sizeof($rows) != 0) {
+								if (!empty($rows)) {
 									foreach ($rows as $x => $row) {
 
 										//copy data
@@ -771,7 +771,7 @@ if (!class_exists('conference_centers')) {
 							}
 
 						//save the changes and set the message
-							if (is_array($array) && @sizeof($array) != 0) {
+							if (!empty($array)) {
 
 								//save the array
 									$database = new database;

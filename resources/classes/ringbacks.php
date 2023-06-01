@@ -63,7 +63,7 @@ if (!class_exists('ringbacks')) {
 						$ringtones_list[$ringtone] = $label;
 					}
 				}
-				$this->ringtones_list = $ringtones_list;
+				$this->ringtones_list = $ringtones_list ?? '';
 				unset($sql, $ringtones, $ringtone, $ringtones_list);
 
 			//get the default_ringback label
@@ -146,7 +146,7 @@ if (!class_exists('ringbacks')) {
 					$parameters['domain_uuid'] = $this->domain_uuid;
 					$database = new database;
 					$streams = $database->select($sql, $parameters, 'all');
-					if (is_array($streams) && @sizeof($streams) != 0) {
+					if (!empty($streams)) {
 						$select .= "	<optgroup label='".$text['label-streams']."'>";
 						foreach ($streams as $row) {
 							$select .= "		<option value='".$row['stream_location']."' ".(($selected == $row['stream_location']) ? 'selected="selected"' : null).">".$row['stream_name']."</option>\n";

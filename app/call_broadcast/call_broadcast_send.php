@@ -83,7 +83,7 @@
 	$parameters['call_broadcast_uuid'] = $call_broadcast_uuid;
 	$database = new database;
 	$row = $database->select($sql, $parameters, 'row');
-	if (is_array($row) && sizeof($row) != 0) {
+	if (!empty($row)) {
 		$broadcast_name = $row["broadcast_name"];
 		$broadcast_start_time = $row["broadcast_start_time"];
 		$broadcast_timeout = $row["broadcast_timeout"];

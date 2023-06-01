@@ -130,7 +130,7 @@
 	$sql .= order_by($order_by, $order, 't.transaction_date', 'desc');
 	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;
-	$result = $database->select($sql, $parameters ?? null, 'all');
+	$result = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
 //get users
@@ -140,7 +140,7 @@
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$database = new database;
 	$rows = $database->select($sql, $parameters, 'all');
-	if (is_array($rows) && @sizeof($rows) != 0) {
+	if (!empty($rows)) {
 		foreach ($rows as $row) {
 			$users[$row['user_uuid']] = $row['username'];
 		}
@@ -197,7 +197,7 @@
 	}
 	echo "</tr>\n";
 
-	if (is_array($result)) {
+	if (!empty($result)) {
 		$x = 0;
 		foreach($result as $row) {
 			if (permission_exists('database_transaction_edit')) {

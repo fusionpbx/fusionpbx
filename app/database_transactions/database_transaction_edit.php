@@ -49,6 +49,13 @@
 	$search = '';
 	$action = '';
 	$page = 0;
+	$user_uuid = '';
+	$app_name = '';
+	$app_uuid = '';
+	$domain_name = '';
+	$username = '';
+	$transaction_code = '';
+	$transaction_address = '';
 
 //set the variables
 	if (!empty($_GET["id"]) && is_uuid($_GET["id"])) {
@@ -74,7 +81,7 @@
 		$parameters['database_transaction_uuid'] = $database_transaction_uuid;
 		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
-		if (is_array($row) && @sizeof($row) != 0) {
+		if (!empty($row)) {
 			$user_uuid = $row["user_uuid"];
 			$app_name = $row["app_name"];
 			$app_uuid = $row["app_uuid"];
@@ -110,7 +117,7 @@
 
 //get the type if not provided
 	if (empty($transaction_type)) {
-		if ($transaction_old == null || $transaction_old == "null") {
+		if (empty($transaction_old) || $transaction_old == null || $transaction_old == "null") {
 			$transaction_type = 'add';
 		}
 		else {
@@ -237,9 +244,9 @@
 	//this adds old and new values to the array
 	function array_difference($array1, $array2) {
 		$array = array();
-		if (is_array($array1)) {
+		if (!empty($array1)) {
 			foreach ($array1 as $key => $value) {
-				if (is_array($array2[$key])) {
+				if (!empty($array2[$key])) {
 					$array[$key] = array_difference($array1[$key], $array2[$key]);
 				}
 				else {
@@ -247,9 +254,9 @@
 				}
 			}
 		}
-		if (is_array($array2)) {
+		if (!empty($array2)) {
 			foreach ($array2 as $key => $value) {
-				if (is_array($value)) {
+				if (!empty($value)) {
 					$array[$key] = array_difference($array1[$key], $array2[$key]);
 				}
 				else {
@@ -265,7 +272,7 @@
 
 		//loop through the array
 			foreach ($array as $key => $value) {
-				if (is_array($value) && !isset($value['old']) && !isset($value['new'])) {
+				if (!empty($value) && !isset($value['old']) && !isset($value['new'])) {
 					if (!is_numeric($key)) {
 						//get the table name
 							$_SESSION['name'] = $key;
@@ -320,14 +327,14 @@
 	if ($transaction_type == "add") {
 
 		//multiple dimensional array into a 2 dimensional array
-		if (is_array($after)) {
+		if (!empty($after)) {
 			$x = 0;
 			foreach ($after as $key => $value) {
 				$id = 0;
 				foreach ($value as $row) {
 					$sub_id = 0;
 					foreach ($row as $sub_key => $val) {
-						if (is_array($val)) {
+						if (!empty($val)) {
 							foreach ($val as $sub_row) {
 								foreach ($sub_row as $k => $v) {
 									$array[$x]['schema'] = $sub_key;
@@ -353,7 +360,7 @@
 		}
 		echo "<br />\n";
 		echo "<table width='100%'>\n";
-		if (is_array($array)) {
+		if (!empty($array)) {
 			foreach ($array as $row) {
 				if ($row['schema'] !== $previous_schema || $row['row'] !== $previous_row) {
 					echo "<tr><td colspan='4'>&nbsp;</td></tr>\n";
@@ -373,7 +380,7 @@
 			echo "</table>\n";
 		}
 		/*
-		if (is_array($after)) {
+		if (!empty($after)) {
 			//create the table header
 				$array = array_difference(null, $after, 1);
 				$table_header = "<tr><td colspan='5'>&nbsp;</td></tr>\n";
@@ -418,7 +425,7 @@
 	if ($transaction_type == "delete") {
 		echo "<br /><br />\n";
 		echo "<table width='100%'>\n";
-		if (is_array($before)) {
+		if (!empty($before)) {
 			foreach ($before as $table_name => $rows) {
 				echo "	<tr>\n";
 				echo "		<th>".escape($table_name)."</th><th>&nbsp;</th>\n";

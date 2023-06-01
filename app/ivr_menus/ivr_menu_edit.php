@@ -46,6 +46,12 @@
 	$language = new text;
 	$text = $language->get();
 
+//set the defaults
+	$ivr_menu_name = '';
+	$ivr_menu_extension = '';
+	$ivr_menu_cid_prefix = '';
+	$ivr_menu_description = '';
+
 //initialize the destinations object
 	$destination = new destinations;
 
@@ -296,7 +302,7 @@
 					$array['ivr_menus'][0]["ivr_menu_description"] = $ivr_menu_description;
 					$y = 0;
 					foreach ($ivr_menu_options as $row) {
-						if (isset($row['ivr_menu_option_digits']) && $row['ivr_menu_option_digits'] != '') {
+						if (!empty($row['ivr_menu_option_digits'])) {
 							if (!empty($row['ivr_menu_option_uuid']) && is_uuid($row['ivr_menu_option_uuid'])) {
 								$ivr_menu_option_uuid = $row['ivr_menu_option_uuid'];
 							}
@@ -458,13 +464,13 @@
 	}
 
 //pre-populate the form
-	if (empty($ivr_menu_uuid)) { $ivr_menu_uuid = $_REQUEST["id"]; }
+	if (empty($ivr_menu_uuid)) { $ivr_menu_uuid = $_REQUEST["id"] ?? null; }
 	if (!empty($ivr_menu_uuid) && is_uuid($ivr_menu_uuid) && empty($_POST["persistformvar"])) {
 		$ivr = new ivr_menu;
 		$ivr->domain_uuid = $_SESSION["domain_uuid"];
 		$ivr->ivr_menu_uuid = $ivr_menu_uuid;
 		$ivr_menus = $ivr->find();
-		if (is_array($ivr_menus)) {
+		if (!empty($ivr_menus)) {
 			foreach ($ivr_menus as &$row) {
 				$dialplan_uuid = $row["dialplan_uuid"];
 				$ivr_menu_name = $row["ivr_menu_name"];
@@ -992,7 +998,7 @@
 		}
 	//sounds
 		/*
-		if (is_array($sound_files)) {
+		if (!empty($sound_files)) {
 			echo "<optgroup label='Sounds'>\n";
 			foreach ($sound_files as $value) {
 				if (!empty($value)) {
@@ -1055,7 +1061,7 @@
 		echo "					</td>\n";
 	}
 	echo "				</tr>\n";
-	if (is_array($ivr_menu_options)) {
+	if (!empty($ivr_menu_options)) {
 		$x = 0;
 		foreach($ivr_menu_options as $field) {
 
@@ -1291,7 +1297,7 @@
 			}
 		//recordings
 			$tmp_selected = false;
-			if (is_array($recordings) && !empty($_SESSION['switch']['recordings']['dir'])) {
+			if (!empty($recordings) && !empty($_SESSION['switch']['recordings']['dir'])) {
 				echo "<optgroup label='Recordings'>\n";
 				foreach ($recordings as &$row) {
 					$recording_name = $row["recording_name"];
@@ -1311,7 +1317,7 @@
 				echo "</optgroup>\n";
 			}
 		//phrases
-			if (is_array($phrases)) {
+			if (!empty($phrases)) {
 				echo "<optgroup label='Phrases'>\n";
 				foreach ($phrases as &$row) {
 					if ($ivr_menu_invalid_sound == "phrase:".$row["phrase_uuid"]) {
@@ -1325,7 +1331,7 @@
 				echo "</optgroup>\n";
 			}
 		//sounds
-			if (is_array($sound_files)) {
+			if (!empty($sound_files)) {
 				echo "<optgroup label='Sounds'>\n";
 				foreach ($sound_files as $value) {
 					if (!empty($value)) {
@@ -1380,7 +1386,7 @@
 			}
 		//recordings
 			$tmp_selected = false;
-			if (is_array($recordings) && !empty($_SESSION['switch']['recordings']['dir'])) {
+			if (!empty($recordings) && !empty($_SESSION['switch']['recordings']['dir'])) {
 				echo "<optgroup label='Recordings'>\n";
 				foreach ($recordings as &$row) {
 					$recording_name = $row["recording_name"];
@@ -1400,7 +1406,7 @@
 				echo "</optgroup>\n";
 			}
 		//phrases
-			if (is_array($phrases)) {
+			if (!empty($phrases)) {
 				echo "<optgroup label='Phrases'>\n";
 				foreach ($phrases as &$row) {
 					if ($ivr_menu_exit_sound == "phrase:".$row["phrase_uuid"]) {
@@ -1414,7 +1420,7 @@
 				echo "</optgroup>\n";
 			}
 		//sounds
-			if (is_array($sound_files)) {
+			if (!empty($sound_files)) {
 				echo "<optgroup label='Sounds'>\n";
 				foreach ($sound_files as $value) {
 					if (!empty($value)) {

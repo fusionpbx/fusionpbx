@@ -46,6 +46,17 @@
 	$language = new text;
 	$text = $language->get();
 
+//set the defaults
+	$call_flow_sound = '';
+	$call_flow_alternate_sound = '';
+	$call_flow_name = '';
+	$call_flow_extension = '';
+	$call_flow_feature_code = '';
+	$call_flow_pin_number = '';
+	$call_flow_label = '';
+	$call_flow_alternate_label = '';
+	$call_flow_description = '';
+
 //action add or update
 	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
@@ -140,12 +151,12 @@
 			}
 
 		//add the call_flow_uuid
-			if (!is_uuid($call_flow_uuid)) {
+			if (empty($call_flow_uuid)) {
 				$call_flow_uuid = uuid();
 			}
 
 		//add the dialplan_uuid
-			if (!is_uuid($dialplan_uuid)) {
+			if (empty($dialplan_uuid)) {
 				$dialplan_uuid = uuid();
 			}
 
@@ -310,7 +321,7 @@
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$parameters['call_flow_uuid'] = $call_flow_uuid;
 		$database = new database;
-		$result = $database->select($sql, $parameters ?? null, 'all');
+		$result = $database->select($sql, $parameters, 'all');
 		foreach ($result as $row) {
 			//set the php variables
 				$call_flow_uuid = $row["call_flow_uuid"];
@@ -365,7 +376,7 @@
 	$sql .= "order by recording_name asc ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$database = new database;
-	$recordings = $database->select($sql, $parameters ?? null, 'all');
+	$recordings = $database->select($sql, $parameters, 'all');
 	unset($parameters, $sql);
 
 	if (if_group("superadmin")) {
@@ -443,7 +454,7 @@
 			$sql = "select * from v_phrases where domain_uuid = :domain_uuid ";
 			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 			$database = new database;
-			$result = $database->select($sql, $parameters ?? null, 'all');
+			$result = $database->select($sql, $parameters, 'all');
 			unset($parameters, $sql);
 			if (!empty($result)) {
 				echo "<optgroup label='Phrases'>\n";
@@ -532,7 +543,7 @@
 	echo "	".$text['label-call_flow_name']."\n";
 	echo "</td>\n";
 	echo "<td width='70%' class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='call_flow_name' maxlength='255' value=\"".escape($call_flow_name ?? '')."\">\n";
+	echo "	<input class='formfld' type='text' name='call_flow_name' maxlength='255' value=\"".escape($call_flow_name)."\">\n";
 	echo "<br />\n";
 	echo $text['description-call_flow_name']."\n";
 	echo "</td>\n";
@@ -543,7 +554,7 @@
 	echo "	".$text['label-call_flow_extension']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='call_flow_extension' maxlength='255' value=\"".escape($call_flow_extension ?? '')."\">\n";
+	echo "	<input class='formfld' type='text' name='call_flow_extension' maxlength='255' value=\"".escape($call_flow_extension)."\">\n";
 	echo "<br />\n";
 	echo $text['description-call_flow_extension']."\n";
 	echo "</td>\n";
@@ -554,7 +565,7 @@
 	echo "	".$text['label-call_flow_feature_code']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='call_flow_feature_code' maxlength='255' value=\"".escape($call_flow_feature_code ?? '')."\">\n";
+	echo "	<input class='formfld' type='text' name='call_flow_feature_code' maxlength='255' value=\"".escape($call_flow_feature_code)."\">\n";
 	echo "<br />\n";
 	echo $text['description-call_flow_feature_code']."\n";
 	echo "</td>\n";
@@ -610,7 +621,7 @@
 	echo "	".$text['label-call_flow_pin_number']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='call_flow_pin_number' maxlength='255' value=\"".escape($call_flow_pin_number ?? '')."\">\n";
+	echo "	<input class='formfld' type='text' name='call_flow_pin_number' maxlength='255' value=\"".escape($call_flow_pin_number)."\">\n";
 	echo "<br />\n";
 	echo $text['description-call_flow_pin_number']."\n";
 	echo "</td>\n";
@@ -621,7 +632,7 @@
 	echo "	".$text['label-call_flow_label']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='call_flow_label' maxlength='255' value=\"".escape($call_flow_label ?? '')."\">\n";
+	echo "	<input class='formfld' type='text' name='call_flow_label' maxlength='255' value=\"".escape($call_flow_label)."\">\n";
 	echo "<br />\n";
 	echo !empty($text['description-call_flow_label'])."\n";
 	echo "</td>\n";
@@ -665,7 +676,7 @@
 	echo "	".$text['label-call_flow_alternate_label']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='call_flow_alternate_label' maxlength='255' value=\"".escape($call_flow_alternate_label ?? '')."\">\n";
+	echo "	<input class='formfld' type='text' name='call_flow_alternate_label' maxlength='255' value=\"".escape($call_flow_alternate_label)."\">\n";
 	echo "<br />\n";
 	echo $text['description-call_flow_alternate_label']."\n";
 	echo "</td>\n";
@@ -737,7 +748,7 @@
 	echo "	".$text['label-call_flow_description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='call_flow_description' maxlength='255' value=\"".escape($call_flow_description ?? '')."\">\n";
+	echo "	<input class='formfld' type='text' name='call_flow_description' maxlength='255' value=\"".escape($call_flow_description)."\">\n";
 	echo "<br />\n";
 	echo !empty($text['description-call_flow_description'])."\n";
 	echo "</td>\n";

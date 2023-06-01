@@ -46,6 +46,11 @@
 	$language = new text;
 	$text = $language->get();
 
+//set the defaults
+	$agent_id = '';
+	$agent_name = '';
+	$agent_password = '';
+
 //check for duplicates
 	if (!empty($_GET["check"]) == 'duplicate') {
 		//agent id
@@ -401,7 +406,7 @@
 	echo "	".$text['label-agent_name']."\n";
 	echo "</td>\n";
 	echo "<td width='70%' class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='agent_name' maxlength='255' value=\"".escape($agent_name ?? '')."\" />\n";
+	echo "	<input class='formfld' type='text' name='agent_name' maxlength='255' value=\"".escape($agent_name)."\" />\n";
 	/*
 	echo "<select id=\"agent_name\" name=\"agent_name\" class='formfld'>\n";
 	echo "<option value=\"\"></option>\n";
@@ -469,7 +474,7 @@
 	echo "	".$text['label-agent_id']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "  <input class='formfld' type='number' name='agent_id' id='agent_id' maxlength='255' min='1' step='1' value='".escape($agent_id ?? '')."'>\n";
+	echo "  <input class='formfld' type='number' name='agent_id' id='agent_id' maxlength='255' min='1' step='1' value='".escape($agent_id)."'>\n";
 	echo "	<div style='display: none;' id='duplicate_agent_id_response'></div>\n";
 	echo "<br />\n";
 	echo $text['description-agent_id']."\n";
@@ -481,7 +486,7 @@
 	echo "	".$text['label-agent_password']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "  <input class='formfld' type='password' name='agent_password' autocomplete='off' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!\$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" maxlength='255' min='1' step='1' value='".escape($agent_password ?? '')."'>\n";
+	echo "  <input class='formfld' type='password' name='agent_password' autocomplete='off' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!\$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" maxlength='255' min='1' step='1' value='".escape($agent_password)."'>\n";
 	echo "<br />\n";
 	echo $text['description-agent_password']."\n";
 	echo "</td>\n";

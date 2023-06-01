@@ -159,7 +159,7 @@
 	echo "<tr class='list-header'>\n";
 	if (permission_exists('conference_control_detail_edit') || permission_exists('conference_control_detail_delete')) {
 		echo "	<th class='checkbox'>\n";
-		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle();' ".($result ?: "style='visibility: hidden;'").">\n";
+		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle();' ".(!empty($result) ?: "style='visibility: hidden;'").">\n";
 		echo "	</th>\n";
 	}
 	echo th_order_by('control_digits', $text['label-control_digits'], $order_by, $order, null, "class='pct-5 center'", $param);

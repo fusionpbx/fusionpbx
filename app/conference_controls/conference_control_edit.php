@@ -118,7 +118,7 @@
 		$sql .= "where conference_control_uuid = :conference_control_uuid ";
 		$parameters['conference_control_uuid'] = $conference_control_uuid;
 		$database = new database;
-		$row = $database->select($sql, $parameters ?? null, 'row');
+		$row = $database->select($sql, $parameters, 'row');
 		if (!empty($row)) {
 			$control_name = $row["control_name"];
 			$control_enabled = $row["control_enabled"];
