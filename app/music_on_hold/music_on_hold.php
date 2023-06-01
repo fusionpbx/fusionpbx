@@ -372,7 +372,7 @@
 	echo "	<div class='heading'><b>".$text['title-music_on_hold']."</b></div>\n";
 	echo "	<div class='actions'>\n";
 	if (permission_exists('music_on_hold_add')) {
-		$modify_add_action = !!empty($streams) || @sizeof($streams) == 0 ? "name_mode('new'); $('#btn_select').hide();" : null; //hide categories select box when none exist
+		$modify_add_action = empty($streams) || @sizeof($streams) == 0 ? "name_mode('new'); $('#btn_select').hide();" : null; //hide categories select box when none exist
 		echo 	"<form id='form_upload' class='inline' method='post' enctype='multipart/form-data'>\n";
 		echo 	"<input name='action' type='hidden' value='upload'>\n";
 		echo 	"<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
