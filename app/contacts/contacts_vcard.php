@@ -59,7 +59,7 @@ if (!empty($_GET)) {
 		$parameters['domain_uuid'] = $domain_uuid;
 		$parameters['contact_uuid'] = $contact_uuid;
 		$database = new database;
-		$row = $database->select($sql, $parameters ?? null, 'row');
+		$row = $database->select($sql, $parameters, 'row');
 		if (!empty($row)) {
 			$contact_type = $row["contact_type"];
 			$contact_organization = $row["contact_organization"];
@@ -85,7 +85,7 @@ if (!empty($_GET)) {
 		$parameters['domain_uuid'] = $domain_uuid;
 		$parameters['contact_uuid'] = $contact_uuid;
 		$database = new database;
-		$result = $database->select($sql, $parameters ?? null, 'all');
+		$result = $database->select($sql, $parameters, 'all');
 		if (!empty($result)) {
 			$e = 1;
 			foreach ($result as &$row) {
@@ -103,7 +103,7 @@ if (!empty($_GET)) {
 		$parameters['domain_uuid'] = $domain_uuid;
 		$parameters['contact_uuid'] = $contact_uuid;
 		$database = new database;
-		$url_address = $database->select($sql, $parameters ?? null, 'column');
+		$url_address = $database->select($sql, $parameters, 'column');
 		$vcard->data['url'] = $url_address;
 		unset($sql, $parameters, $row);
 
@@ -127,7 +127,7 @@ if (!empty($_GET)) {
 		$parameters['domain_uuid'] = $domain_uuid;
 		$parameters['contact_uuid'] = $contact_uuid;
 		$database = new database;
-		$result = $database->select($sql, $parameters ?? null, 'all');
+		$result = $database->select($sql, $parameters, 'all');
 		if (!empty($result)) {
 			foreach ($result as &$row) {
 				$phone_label = $row["phone_label"];
@@ -156,7 +156,7 @@ if (!empty($_GET)) {
 			$parameters['domain_uuid'] = $domain_uuid;
 			$parameters['contact_uuid'] = $contact_uuid;
 			$database = new database;
-			$result = $database->select($sql, $parameters ?? null, 'all');
+			$result = $database->select($sql, $parameters, 'all');
 			if (!empty($result)) {
 				foreach ($result as &$row) {
 					$address_type = $row["address_type"];
