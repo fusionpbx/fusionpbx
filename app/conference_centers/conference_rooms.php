@@ -197,7 +197,7 @@
 
 //get the conference rooms
 	$conference_center->rows_per_page = $rows_per_page;
-	$conference_center->offset = $offset;
+	$conference_center->offset = $offset ?? '';
 	$conference_center->order_by = $order_by;
 	$conference_center->order = $order;
 	if (!empty($search)) {
@@ -446,7 +446,7 @@
 // 			}
 // 			echo "	</td>\n";
 
-			if (strlen($conference[$meeting_uuid]["session_uuid"])) {
+			if (!empty($conference) && !empty($meeting_uuid) && strlen($conference[$meeting_uuid]["session_uuid"])) {
 				echo "	<td class='center'>".escape($conference[$meeting_uuid]["member_count"])."&nbsp;</td>\n";
 			}
 			else {

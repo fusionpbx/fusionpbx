@@ -115,8 +115,8 @@
 		$parameters['conference_profile_uuid'] = $conference_profile_uuid;
 		//$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$database = new database;
-		$row = $database->select($sql, $parameters ?? null, 'row');
-		if (is_array($row) && sizeof($row) != 0) {
+		$row = $database->select($sql, $parameters, 'row');
+		if (!empty($row)) {
 			$profile_name = $row["profile_name"];
 			$profile_enabled = $row["profile_enabled"];
 			$profile_description = $row["profile_description"];

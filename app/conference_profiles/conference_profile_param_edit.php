@@ -123,7 +123,7 @@
 		$sql .= "where conference_profile_param_uuid = :conference_profile_param_uuid ";
 		$parameters['conference_profile_param_uuid'] = $conference_profile_param_uuid;
 		$database = new database;
-		$row = $database->select($sql, $parameters ?? null, 'row');
+		$row = $database->select($sql, $parameters, 'row');
 		if (!empty($row)) {
 			$profile_param_name = $row["profile_param_name"];
 			$profile_param_value = $row["profile_param_value"];

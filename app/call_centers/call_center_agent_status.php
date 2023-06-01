@@ -51,8 +51,8 @@
 	$sql .= "where domain_uuid = :domain_uuid ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$database = new database;
-	$tiers = $database->select($sql, $parameters ?? null, 'all');
-	if (is_array($tiers) && count($tiers) == 0) {
+	$tiers = $database->select($sql, $parameters, 'all');
+	if (!empty($tiers)) {
 		$per_queue_login = true;
 	}
 	else {
@@ -69,7 +69,7 @@
 	$sql .= "order by agent_name asc ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$database = new database;
-	$agents = $database->select($sql, $parameters ?? null, 'all');
+	$agents = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
 //get the agent list from event socket
@@ -91,7 +91,7 @@
 	$sql .= "order by queue_name asc ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$database = new database;
-	$call_center_queues = $database->select($sql, $parameters ??  null, 'all');
+	$call_center_queues = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 	//view_array($call_center_queues, false);
 
@@ -228,7 +228,7 @@
 
 						//get the queue_id
 							if (isset($row['queue_uuid']) && is_uuid($row['queue_uuid'])) {
-								if (is_array($call_center_queues)) {
+								if (!empty($call_center_queues)) {
 									foreach ($call_center_queues as $queue) {
 										if ($queue['call_center_queue_uuid'] == $row['queue_uuid']) {
 											$queue_id = $queue['queue_extension'].'@'.$queue['domain_name'];
@@ -336,7 +336,7 @@
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
 
-	if (!empty($_POST['agents']) && is_array($_POST['agents']) && !$per_queue_login) {
+	if (!empty($_POST['agents']) && !$per_queue_login) {
 		echo $text['description-call_center_agent_status']."\n";
 		echo "<br /><br />\n";
 	}
@@ -376,14 +376,14 @@
 
 			if ($per_queue_login) {
 				$html .= "	<td class='description'>";
-				if (is_array($row['queues'])) {
+				if (!empty($row['queues'])) {
 					$html .= "	<table class='list' >\n";
 					$html .= "		<tr>\n";
 					$html .= "			<th>".$text['label-queue']."</th>\n";
 					$html .= "			<th>".$text['label-status']."</th>\n";
 					$html .= "			<th>".$text['label-options']."</th>\n";
 					$html .= "		</tr>\n";
-					if (is_array($row['queues'])) {
+					if (!empty($row['queues'])) {
 						foreach ($row['queues'] as $queue) {
 							$x++;
 							$onclick = "onclick=\"cycle('agents[".$x."][agent_status]');\"";

@@ -89,7 +89,7 @@
 	$search = strtolower($_GET["search"] ?? '');
 
 //set the show variable
-	$show = $_GET['show'] ?? 'domain';
+	$show = $_GET['show'] ?? '';
 
 //define select count query
 	$sql = "select count(*) from v_extensions ";
@@ -131,8 +131,6 @@
 //prepare the paging
 	$rows_per_page = !empty($_SESSION['domain']['paging']['numeric']) ? $_SESSION['domain']['paging']['numeric'] : 50;
 
-	$params[] = "app_uuid=" . call_forward::APP_UUID;
-
 	if ($search) {
 		$params[] = "search=" . $search;
 	}
@@ -143,7 +141,7 @@
 		$params[] = "order=" . $order;
 	}
 	if ($show == "all" && permission_exists('call_forward_all')) {
-		$params[] .= "show=all";
+		$params[] = "show=all";
 	}
 	$param = !empty($params) ? implode('&', $params) : '';
 	unset($params);
