@@ -116,7 +116,7 @@
 		$param = "&search=".urlencode($search);
 	}
 	if ($show == "all" && permission_exists('call_broadcast_all')) {
-		$param .= "&show=all";
+		$param = "&show=all";
 	}
 	$page = $_GET['page'] ?? '';
 	if (empty($page)) { $page = 0; $_GET['page'] = 0; }
