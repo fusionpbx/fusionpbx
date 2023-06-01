@@ -358,7 +358,7 @@ if (is_array($activity)) {
 		if (permission_exists('operator_panel_manage')) {
 			if (!in_array($extension, $_SESSION['user']['extensions'])) {
 				//other extension
-				if (!empty($ext_state) == "ringing") {
+				if (!empty($ext_state) && $ext_state == "ringing") {
 					if ($_GET['vd_ext_from'] == '' && $dir_icon == 'inbound') {
 						$draggable = true; // selectable - is ringing and not outbound so can transfer away the call (can set as vd_ext_from)
 					}
@@ -366,7 +366,7 @@ if (is_array($activity)) {
 						$draggable = false; // unselectable - is ringing so can't send a call to the ext (can't set as vd_ext_to)
 					}
 				}
-				else if (!empty($ext_state) == 'active') {
+				else if (!empty($ext_state) && $ext_state == 'active') {
 					$draggable = false; // unselectable - on a call already so can't transfer or send a call to the ext (can't set as vd_ext_from or vd_ext_to)
 				}
 				else { // idle
