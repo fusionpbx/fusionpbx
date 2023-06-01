@@ -113,7 +113,7 @@
 	$parameters['user_uuid'] = $_SESSION['user']['user_uuid'];
 	$parameters['contact_uuid'] = $contact_uuid ?? '';
 	$database = new database;
-	$row = $database->select($sql, $parameters ?? null, 'row');
+	$row = $database->select($sql, $parameters, 'row');
 	if (!empty($row)) {
 		$contact_time_uuid = $row["contact_time_uuid"];
 		$time_description = $row["time_description"];
