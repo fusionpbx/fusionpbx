@@ -155,7 +155,7 @@ if ($_POST['a'] == 'import') {
 			}
 
 			//insert emails
-			if ($_POST['import_fields']['email'] && is_array($contact['emails']) && @sizeof($contact['emails']) != 0) {
+			if (!empty($contact['emails']) && $_POST['import_fields']['email']) {
 				foreach ($contact['emails'] as $index_2 => $contact_email) {
 					$contact_email_uuid = uuid();
 					$array['contact_emails'][$index_2]['domain_uuid'] = $_SESSION['domain_uuid'];
@@ -168,7 +168,7 @@ if ($_POST['a'] == 'import') {
 			}
 
 			//insert numbers
-			if ($_POST['import_fields']['number'] && is_array($contact['numbers']) && @sizeof($contact['numbers']) != 0) {
+			if (!empty($contact['numbers']) && $_POST['import_fields']['number']) {
 				foreach ($contact['numbers'] as $index_3 => $contact_number) {
 					$contact_phone_uuid = uuid();
 					$array['contact_phones'][$index_3]['domain_uuid'] = $domain_uuid;
@@ -183,7 +183,7 @@ if ($_POST['a'] == 'import') {
 			}
 
 			//insert urls
-			if ($_POST['import_fields']['url'] && is_array($contact['urls']) && @sizeof($contact['urls']) != 0) {
+			if (!empty($contact['urls']) && $_POST['import_fields']['url']) {
 				foreach ($contact['urls'] as $index_4 => $contact_url) {
 					$contact_url_uuid = uuid();
 					$array['contact_urls'][$index_4]['domain_uuid'] = $_SESSION['domain_uuid'];
@@ -196,7 +196,7 @@ if ($_POST['a'] == 'import') {
 			}
 
 			//insert addresses
-			if ($_POST['import_fields']['address'] && is_array($contact['addresses']) && @sizeof($contact['addresses']) != 0) {
+			if (!empty($contact['addresses']) && $_POST['import_fields']['address']) {
 				foreach ($contact['addresses'] as $index_5 => $contact_address) {
 					$contact_address_uuid = uuid();
 					$array['contact_addresses'][$index_5]['domain_uuid'] = $_SESSION['domain_uuid'];
