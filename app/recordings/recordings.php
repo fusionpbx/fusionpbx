@@ -330,7 +330,7 @@
 	$offset = $rows_per_page * $page;
 
 //get the recordings from the database
-	if (!empty($_SESSION['recordings']['storage_type']['text']) == 'base64') {
+	if (!empty($_SESSION['recordings']['storage_type']['text']) && $_SESSION['recordings']['storage_type']['text'] == 'base64') {
 		switch ($db_type) {
 			case 'pgsql': $sql_file_size = "length(decode(recording_base64,'base64')) as recording_size, "; break;
 			case 'mysql': $sql_file_size = "length(from_base64(recording_base64)) as recording_size, "; break;
