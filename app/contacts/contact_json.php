@@ -159,7 +159,7 @@
 	$sql .= "order by contact_organization asc ";
 	$sql .= "limit 300 ";
 	$database = new database;
-	$contact_array = $database->select($sql, $parameters, 'all');
+	$contact_array = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 
 //return the contacts as json
