@@ -144,7 +144,7 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
 	//delete the call broadcast
 		if (permission_exists('call_broadcast_delete')) {
-			if ($_POST['action'] == 'delete' && is_uuid($call_broadcast_uuid)) {
+			if (!empty($_POST['action']) && $_POST['action'] == 'delete' && is_uuid($call_broadcast_uuid)) {
 				//prepare
 					$call_broadcasts[0]['checked'] = 'true';
 					$call_broadcasts[0]['uuid'] = $call_broadcast_uuid;
@@ -227,7 +227,7 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 			if (!empty($array)) {
 
 				//add file selection and download sample
-					$file_res = upload_file($sql, $broadcast_phone_numbers);
+					$file_res = upload_file($sql ?? '', $broadcast_phone_numbers);
 					if ($file_res['code'] != true) {
 						$_SESSION["message_mood"] = "negative";
 						$_SESSION["message"] = $text['file-error'];
@@ -538,10 +538,9 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "    <select class='formfld' name='broadcast_avmd'>\n";
-		echo "    	<option value='false' ".(($broadcast_avmd == "false") ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-		echo "    	<option value='true' ".(($broadcast_avmd == "true") ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "    	<option value='false'>".$text['option-false']."</option>\n";
+		echo "    	<option value='true' ".(!empty($broadcast_avmd) && $broadcast_avmd == "true" ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
 		echo "    </select>\n";
-		echo "<br />\n";
 		echo "<br />\n";
 		echo $text['description-avmd']."\n";
 		echo "</td>\n";
