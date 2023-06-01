@@ -1341,7 +1341,7 @@ if (!class_exists('xml_cdr')) {
 			//$parameters['domain_uuid'] = $domain_uuid;
 			$database = new database;
 			$row = $database->select($sql, $parameters, 'row');
-			if (is_array($row)) {
+			if (!empty($row) && is_array($row)) {
 				$record_name = $row['record_name'];
 				$record_path = $row['record_path'];
 			} else {
@@ -1354,24 +1354,20 @@ if (!class_exists('xml_cdr')) {
 			$record_file = $record_path.'/'.$record_name;
 
 			//download the file
-			if (!file_exists($record_file)) {
+			if (!file_exists($record_file) || $record_file == '/') {
 				echo "recording not found";
 				return;
 			}
 
-			//content-range
-			if (isset($_SERVER['HTTP_RANGE']) && $_GET['t'] != "bin")  {
-				$this->range_download($record_file);
-			}
-
-			ob_clean();
+			//ob_clean();
 			$fd = fopen($record_file, "rb");
 			if ($_GET['t'] == "bin") {
 				header("Content-Type: application/force-download");
 				header("Content-Type: application/octet-stream");
 				header("Content-Type: application/download");
 				header("Content-Description: File Transfer");
-			} else {
+			}
+			else {
 				$file_ext = pathinfo($record_name, PATHINFO_EXTENSION);
 				switch ($file_ext) {
 					case "wav" : header("Content-Type: audio/x-wav"); break;
@@ -1386,8 +1382,13 @@ if (!class_exists('xml_cdr')) {
 			if ($_GET['t'] == "bin") {
 				header("Content-Length: ".filesize($record_file));
 			}
-			ob_clean();
-			fpassthru($fd);
+ 			//ob_clean();
+			//fpassthru($fd);
+
+			//content-range
+			if (isset($_SERVER['HTTP_RANGE']) && $_GET['t'] != "bin")  {
+				$this->range_download($record_file);
+			}
 
 		} //end download method
 
@@ -1488,7 +1489,7 @@ if (!class_exists('xml_cdr')) {
 		 * delete records
 		 */
 		public function delete($records) {
-			if (permission_exists($this->permission_prefix.'delete')) {
+			if (!permission_exists($this->permission_prefix.'delete')) {
 				return false;
 			}
 
@@ -1512,7 +1513,7 @@ if (!class_exists('xml_cdr')) {
 
 			//loop through records
 			foreach($records as $x => $record) {
-				if ($record['checked'] != 'true' || !is_uuid($record['uuid'])) {
+				if (empty($record['checked']) || $record['checked'] != 'true' || !is_uuid($record['uuid'])) {
 					continue;
 				}
 
