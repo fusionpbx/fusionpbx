@@ -163,7 +163,7 @@
 		$parameters['domain_uuid'] = $domain_uuid;
 		$parameters['contact_note_uuid'] = $contact_note_uuid;
 		$database = new database;
-		$row = $database->select($sql, $parameters ?? null, 'row');
+		$row = $database->select($sql, $parameters, 'row');
 		if (!empty($row)) {
 			$contact_note = $row["contact_note"];
 			$last_mod_date = $row["last_mod_date"];
