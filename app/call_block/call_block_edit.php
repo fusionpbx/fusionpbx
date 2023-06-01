@@ -44,8 +44,14 @@
 	$language = new text;
 	$text = $language->get();
 
+//set the defaults
+	$call_block_name = '';
+	$call_block_country_code = '';
+	$call_block_number = '';
+	$call_block_description = '';
+
 //action add or update
-	if (is_uuid($_REQUEST["id"])) {
+	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
 		$call_block_uuid = $_REQUEST["id"];
 	}
@@ -53,8 +59,12 @@
 		$action = "add";
 	}
 
+//get order and order by and sanitize the values
+	$order_by = $_GET["order_by"] ?? '';
+	$order = $_GET["order"] ?? '';
+
 //get http post variables and set them to php variables
-	if (count($_POST) > 0) {
+	if (!empty($_POST)) {
 		//get the variables from the http post
 		$call_block_direction = $_POST["call_block_direction"];
 		$extension_uuid = $_POST["extension_uuid"];
@@ -76,7 +86,7 @@
 	}
 
 //handle the http post
-	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
+	if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
 		//handle action
 			if (!empty($_POST['action'])) {
@@ -93,7 +103,7 @@
 						break;
 					case 'add':
 						$xml_cdrs = $_POST['xml_cdrs'];
-						if (permission_exists('call_block_add') && is_array($xml_cdrs) && @sizeof($xml_cdrs) != 0) {
+						if (!empty($xml_cdrs) && permission_exists('call_block_add')) {
 							$obj = new call_block;
 							$obj->call_block_direction = $call_block_direction;
 							$obj->extension_uuid = $extension_uuid;
@@ -174,7 +184,7 @@
 						$array['call_block'][0]['call_block_uuid'] = uuid();
 						$array['call_block'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
 						$array['call_block'][0]['call_block_direction'] = $call_block_direction;
-						if (is_uuid($extension_uuid)) {
+						if (!empty($extension_uuid) && is_uuid($extension_uuid)) {
 							$array['call_block'][0]['extension_uuid'] = $extension_uuid;
 						}
 						$array['call_block'][0]['call_block_name'] = $call_block_name;
@@ -221,7 +231,7 @@
 						$array['call_block'][0]['call_block_uuid'] = $call_block_uuid;
 						$array['call_block'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
 						$array['call_block'][0]['call_block_direction'] = $call_block_direction;
-						if (is_uuid($extension_uuid)) {
+						if (!empty($extension_uuid) && is_uuid($extension_uuid)) {
 							$array['call_block'][0]['extension_uuid'] = $extension_uuid;
 						}
 						$array['call_block'][0]['call_block_name'] = $call_block_name;
@@ -248,7 +258,7 @@
 	}
 
 //pre-populate the form
-	if (count($_GET) > 0 && !empty($_POST["persistformvar"])) {
+	if (!empty($_GET) && empty($_POST["persistformvar"])) {
 		$call_block_uuid = $_GET["id"];
 		$sql = "select * from v_call_block ";
 		$sql .= "where domain_uuid = :domain_uuid ";
@@ -404,7 +414,7 @@ if (permission_exists('call_block_all') || permission_exists('call_block_ring_gr
 	echo "	".$text['label-name']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='call_block_name' maxlength='255' value=\"".escape($call_block_name ?? '')."\">\n";
+	echo "	<input class='formfld' type='text' name='call_block_name' maxlength='255' value=\"".escape($call_block_name)."\">\n";
 	echo "<br />\n";
 	echo $text['description-call_block_name']."\n";
 	echo "</td>\n";
@@ -415,8 +425,8 @@ if (permission_exists('call_block_all') || permission_exists('call_block_ring_gr
 	echo "	".$text['label-number']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='call_block_country_code' maxlength='6' style='width: 60px;' value=\"".escape($call_block_country_code ?? '')."\">\n";
-	echo "	<input class='formfld' type='text' name='call_block_number' maxlength='255' value=\"".escape($call_block_number ?? '')."\">\n";
+	echo "	<input class='formfld' type='text' name='call_block_country_code' maxlength='6' style='width: 60px;' value=\"".escape($call_block_country_code)."\">\n";
+	echo "	<input class='formfld' type='text' name='call_block_number' maxlength='255' value=\"".escape($call_block_number)."\">\n";
 	echo "<br />\n";
 	echo $text['description-call_block_number']."\n";
 	echo "<br />\n";
@@ -529,7 +539,7 @@ if (permission_exists('call_block_all') || permission_exists('call_block_ring_gr
 	echo "	".$text['label-description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='call_block_description' maxlength='255' value=\"".escape($call_block_description ?? '')."\">\n";
+	echo "	<input class='formfld' type='text' name='call_block_description' maxlength='255' value=\"".escape($call_block_description)."\">\n";
 	echo "<br />\n";
 	echo $text['description-description']."\n";
 	echo "</td>\n";
@@ -546,7 +556,7 @@ if (permission_exists('call_block_all') || permission_exists('call_block_ring_gr
 	echo "</form>";
 
 //get recent calls from the db (if not editing an existing call block record)
-	if (!is_uuid($_REQUEST["id"])) {
+	if (empty($_REQUEST["id"])) {
 
 		//without block all permission, limit to assigned extension(s)
 		if (!permission_exists('call_block_all') && !empty($_SESSION['user']['extension'])) {
@@ -571,7 +581,7 @@ if (permission_exists('call_block_all') || permission_exists('call_block_ring_gr
 		$sql = "select caller_id_name, caller_id_number, caller_destination, start_epoch, direction, hangup_cause, duration, billsec, xml_cdr_uuid ";
 		$sql .= "from v_xml_cdr where domain_uuid = :domain_uuid ";
 		$sql .= "and direction <> 'local' ";
-		$sql .= $sql_where;
+		$sql .= $sql_where ?? null;
 		$sql .= "order by start_stamp desc ";
 		$sql .= limit_offset($_SESSION['call_block']['recent_call_limit']['text']);
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
