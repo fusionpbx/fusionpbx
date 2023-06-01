@@ -135,7 +135,7 @@ if (!empty($_GET["contact_uuid"]) && is_uuid($_GET["contact_uuid"])) {
 						$parameters['domain_uuid'] = $domain_uuid;
 						$parameters['contact_uuid'] = $contact_uuid;
 						$database = new database;
-						$database->execute($sql, $parameters ?? null);
+						$database->execute($sql, $parameters);
 						unset($sql, $parameters);
 					}
 
@@ -182,7 +182,7 @@ if (!empty($_GET["contact_uuid"]) && is_uuid($_GET["contact_uuid"])) {
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$parameters['contact_email_uuid'] = $contact_email_uuid;
 		$database = new database;
-		$row = $database->select($sql, $parameters ?? null, 'row');;
+		$row = $database->select($sql, $parameters, 'row');;
 		if (!empty($row)) {
 			$email_label = $row["email_label"];
 			$email_address = $row["email_address"];
