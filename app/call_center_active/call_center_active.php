@@ -47,7 +47,7 @@
 
 //get the queue_name and set it as a variable
 	$queue_name = $_GET['queue_name'];
-	$name = $_GET['name'];
+	$name = $_GET['name'] ?? null;
 
 //get a new session array
 	unset($_SESSION['queues']);
