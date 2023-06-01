@@ -797,7 +797,7 @@ function format_string($format, $data) {
 
 //get the format and use it to format the phone number
 	function format_phone($phone_number) {
-		if (is_numeric(trim($phone_number, ' +'))) {
+		if (is_numeric(trim($phone_number ?? '', ' +'))) {
 			if (isset($_SESSION["format"]["phone"])) {
 				$phone_number = trim($phone_number, ' +');
 				foreach ($_SESSION["format"]["phone"] as &$format) {
