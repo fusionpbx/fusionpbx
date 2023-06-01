@@ -295,8 +295,8 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 		$parameters['domain_uuid'] = $domain_uuid;
 		$parameters['call_broadcast_uuid'] = $call_broadcast_uuid;
 		$database = new database;
-		$row = $database->select($sql, $parameters ?? null, 'row');
-		if (is_array($row) && @sizeof($row) != 0) {
+		$row = $database->select($sql, $parameters, 'row');
+		if (!empty($row)) {
 			$broadcast_name = $row["broadcast_name"];
 			$broadcast_start_time = $row["broadcast_start_time"];
 			$broadcast_timeout = $row["broadcast_timeout"];
@@ -433,7 +433,7 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 	//$parameters['domain_uuid'] = $domain_uuid;
 	//$database = new database;
 	//$rows = $database->select($sql, $parameters, 'all');
-	//if (is_array($rows) && @sizeof($rows) != 0) {
+	//if (!empty($rows)) {
 	//	foreach ($rows as $row) {
 	//		if ($recording_uuid == $row['recording_uuid']) {
 	//			echo "		<option value='".$row['recording_uuid']."' selected='yes'>".escape($row['recordingname'])."</option>\n";
