@@ -1562,5 +1562,13 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Options: 0-Name+Number, 1-Number+Name, 2-Name, 3-Number, 4-Full Contact, 5-Null";	
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "42f0005b-46f9-479b-9b94-81c8860b5ad2";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_idle_clock";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Options: 0-Disabled, 1-Enabled";	
+		$y++;
 
 ?>
