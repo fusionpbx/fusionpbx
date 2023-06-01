@@ -111,8 +111,9 @@
 
 	//os uptime
 		if (stristr(PHP_OS, 'Linux')) {
-			$linux_uptime = shell_exec("/usr/bin/which uptime");
-			$uptime = shell_exec("$linux_uptime -p");
+                        $prefix = 'up ';
+                        $linux_uptime = shell_exec('uptime  -p');
+                        $uptime = substr($linux_uptime, strlen($prefix));
 			if ($uptime != '') {
 				echo "<tr class='tr_link_void'>\n";
 				echo "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-system_uptime']."</td>\n";
