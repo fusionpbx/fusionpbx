@@ -51,6 +51,9 @@
 //set the defaults
 	$dialplan_name = '';
 	$dialplan_description = '';
+	$condition_expression_1 = '';
+	$condition_expression_2 = '';
+	$action_2 = '';
 	$limit = '';
 
 //get the http get values and set them as php variables
