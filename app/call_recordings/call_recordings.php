@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018 - 2022
+	Portions created by the Initial Developer are Copyright (C) 2018 - 2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -190,9 +190,9 @@
 			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$_SESSION['theme']['button_icon_all'],'link'=>'?type='.urlencode($destination_type ?? '').'&show=all'.($search ? "&search=".urlencode($search) : null)]);
 		}
 	}
-	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=''>";
-	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search','collapse'=>'hide-xs']);
-	echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','link'=>'call_recordings.php','style'=>($search == '' ? 'display: none;' : null),'collapse'=>'hide-xs']);
+	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=\"$('#btn_reset').hide(); $('#btn_search').show();\">";
+	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search','style'=>(!empty($search) ? 'display: none;' : null),'collapse'=>'hide-xs']);
+	echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','link'=>'call_recordings.php','style'=>(empty($search) ? 'display: none;' : null),'collapse'=>'hide-xs']);
 	if (!empty($paging_controls_mini)) {
 		echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>\n";
 	}
@@ -214,13 +214,13 @@
 
 	echo "<table class='list'>\n";
 	echo "<tr class='list-header'>\n";
-	$col_count = 7;
+	$col_count = 8;
 	if ($show == "all" && permission_exists('call_recording_all')) {
 		$col_count++;
 	}
 	if (permission_exists('call_recording_delete')) {
 		echo "	<th class='checkbox'>\n";
-		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".($call_recordings ?: "style='visibility: hidden;'").">\n";
+		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".(empty($call_recordings) ? "style='visibility: hidden;'" : null).">\n";
 		echo "	</th>\n";
 		$col_count++;
 	}
