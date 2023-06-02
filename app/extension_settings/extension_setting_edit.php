@@ -42,8 +42,14 @@
 	$language = new text;
 	$text = $language->get();
 
+//set the defaults
+	$extension_setting_uuid = '';
+	$extension_setting_name = '';
+	$extension_setting_value = '';
+	$extension_setting_description = '';
+
 //action add or update
-	if (is_uuid($_REQUEST["id"])) {
+	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
 		$extension_setting_uuid = $_REQUEST["id"];
 		$id = $_REQUEST["id"];
@@ -53,15 +59,15 @@
 	}
 
 //get the extension id
-	if (is_uuid($_REQUEST["extension_setting_uuid"])) {
+	if (!empty($_REQUEST["extension_setting_uuid"]) && is_uuid($_REQUEST["extension_setting_uuid"])) {
 		$extension_setting_uuid = $_REQUEST["extension_setting_uuid"];
 	}
-	if (is_uuid($_REQUEST["extension_uuid"])) {
+	if (!empty($_REQUEST["extension_uuid"]) && is_uuid($_REQUEST["extension_uuid"])) {
 		$extension_uuid = $_REQUEST["extension_uuid"];
 	}
 
 //get http post variables and set them to php variables
-	if (count($_POST) > 0) {
+	if (!empty($_POST)) {
 		$domain_uuid = $_POST["domain_uuid"];
 		$extension_setting_type = $_POST["extension_setting_type"];
 		$extension_setting_name = $_POST["extension_setting_name"];
@@ -71,7 +77,7 @@
 	}
 
 //process the user data and save it to the database
-	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
+	if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
 		//validate the token
 			$token = new token;
@@ -82,7 +88,7 @@
 			}
 
 		//process the http post data by submitted action
-			if ($_POST['action'] != '' && !empty($_POST['action'])) {
+			if (!empty($_POST['action'])) {
 
 				//prepare the array(s)
 				//send the array to the database class
@@ -136,7 +142,7 @@
 			}
 
 		//add the extension_setting_uuid
-			if (!is_uuid($extension_setting_uuid)) {
+			if (empty($extension_setting_uuid)) {
 				$extension_setting_uuid = uuid();
 			}
 
@@ -182,7 +188,7 @@
 	}
 
 //pre-populate the form
-	if (is_array($_GET) && $_POST["persistformvar"] != "true") {
+	if (!empty($_GET) && empty($_POST["persistformvar"])) {
 		$sql = "select ";
 		//$sql .= "extension_uuid, ";
 		//$sql .= "domain_uuid, ";
@@ -196,11 +202,11 @@
 		$sql .= "where extension_setting_uuid = :extension_setting_uuid ";
 		//$sql .= "and domain_uuid = :domain_uuid ";
 		//$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-		$parameters['extension_setting_uuid'] = $extension_setting_uuid;
+		$parameters['extension_setting_uuid'] = $extension_setting_uuid ?? '';
 		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
-		if (is_array($row) && @sizeof($row) != 0) {
-			if (is_uuid($row["extension_uuid"])) {
+		if (!empty($row)) {
+			if (!empty($row["extension_uuid"]) && is_uuid($row["extension_uuid"])) {
 				$extension_uuid = $row["extension_uuid"];
 			}
 			//$domain_uuid = $row["domain_uuid"];
