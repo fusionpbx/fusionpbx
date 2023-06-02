@@ -50,7 +50,7 @@
 	$dashboard_column_span = '';
 	$dashboard_details_state = '';
 	$dashboard_order = '';
-	$dashboard_enabled = '';
+	$dashboard_enabled = 'false';
 	$dashboard_description = '';
 	$dashboard_uuid = '';
 
