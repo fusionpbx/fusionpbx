@@ -17,7 +17,7 @@ The Original Code is FusionPBX
 
 The Initial Developer of the Original Code is
 Mark J Crane <markjcrane@fusionpbx.com>
-Portions created by the Initial Developer are Copyright (C) 2008-2021
+Portions created by the Initial Developer are Copyright (C) 2008-2023
 the Initial Developer. All Rights Reserved.
 
 Contributor(s):
@@ -146,10 +146,17 @@ if (!class_exists('conference_centers')) {
 					$sql .= "and u.user_uuid = :user_uuid ";
 					$parameters['user_uuid'] = $_SESSION["user_uuid"];
 				}
-				//if (is_numeric($this->search)) {
-				//	$sql .= "and p.member_pin = '".$this->search."' ";
-				//	$parameters['domain_uuid'] = $this->domain_uuid;
-				//}
+				if (!empty($this->search)) {
+					$sql .= "and (";
+					$sql .= "lower(r.conference_room_name) like :search or ";
+					$sql .= "lower(r.moderator_pin) like :search or ";
+					$sql .= "lower(r.participant_pin) like :search or ";
+					$sql .= "lower(r.account_code) like :search or ";
+					$sql .= "lower(r.description) like :search ";
+					$sql .= ") ";
+					$parameters['search'] = '%'.strtolower($this->search).'%';
+					$parameters['domain_uuid'] = $this->domain_uuid;
+				}
 				if (isset($this->created_by)) {
 					$sql .= "and r.created_by = :created_by ";
 					$parameters['created_by'] = $this->created_by;
@@ -187,8 +194,8 @@ if (!class_exists('conference_centers')) {
 							$result[$x]["record"] = $row["record"];
 							$result[$x]["sounds"] = $row["sounds"];
 							$result[$x]["profile"] = $row["profile"];
-							$result[$x]["conference_room_user_uuid"] = $row["conference_room_user_uuid"];
-							$result[$x]["user_uuid"] = $row["user_uuid"];
+							$result[$x]["conference_room_user_uuid"] = $row["conference_room_user_uuid"] ?? null;
+							$result[$x]["user_uuid"] = $row["user_uuid"] ?? null;
 							$result[$x]["moderator_pin"] = $row["moderator_pin"];
 							$result[$x]["participant_pin"] = $row["participant_pin"];
 							$result[$x]["created"] = $row["created"];
@@ -316,7 +323,7 @@ if (!class_exists('conference_centers')) {
 
 						//build the delete array
 							foreach ($records as $x => $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 
 									//get the dialplan uuid
 										$sql = "select dialplan_uuid from v_conference_centers ";
@@ -404,7 +411,7 @@ if (!class_exists('conference_centers')) {
 
 						//build the delete array
 							foreach ($records as $x => $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 
 									//create array
 										$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
@@ -537,7 +544,7 @@ if (!class_exists('conference_centers')) {
 
 						//get current toggle state
 							foreach($records as $x => $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$uuids[] = "'".$record['uuid']."'";
 								}
 							}
@@ -640,9 +647,9 @@ if (!class_exists('conference_centers')) {
 
 						//get current toggle state
 							foreach($records as $x => $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$uuids[$x] = "'".$record['uuid']."'";
-									if (($this->toggle_field == 'record' || $this->toggle_field == 'enabled') && is_uuid($record['meeting_uuid'])) {
+									if (($this->toggle_field == 'record' || $this->toggle_field == 'enabled') && !empty($record['meeting_uuid']) && is_uuid($record['meeting_uuid'])) {
 										$meeting_uuid[$record['uuid']] = $record['meeting_uuid'];
 									}
 								}
@@ -742,7 +749,7 @@ if (!class_exists('conference_centers')) {
 
 						//get checked records
 							foreach($records as $x => $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$uuids[] = "'".$record['uuid']."'";
 								}
 							}

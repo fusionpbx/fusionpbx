@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -63,7 +63,7 @@
 	if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
 		//delete the conference center
-			if ($_POST['action'] == 'delete' && permission_exists('conference_center_delete') && is_uuid($conference_center_uuid)) {
+			if (!empty($_POST['action']) && $_POST['action'] == 'delete' && permission_exists('conference_center_delete') && is_uuid($conference_center_uuid)) {
 				//prepare
 					$array[0]['checked'] = 'true';
 					$array[0]['uuid'] = $conference_center_uuid;
@@ -76,13 +76,13 @@
 			}
 
 		//get http post variables and set them to php variables
-			$conference_center_uuid = $_POST["conference_center_uuid"];
-			$dialplan_uuid = $_POST["dialplan_uuid"];
+			$conference_center_uuid = $_POST["conference_center_uuid"] ?? null;
+			$dialplan_uuid = $_POST["dialplan_uuid"] ?? null;
 			$conference_center_name = $_POST["conference_center_name"];
 			$conference_center_extension = $_POST["conference_center_extension"];
 			$conference_center_greeting = $_POST["conference_center_greeting"];
 			$conference_center_pin_length = $_POST["conference_center_pin_length"];
-			$conference_center_enabled = $_POST["conference_center_enabled"] ?: 'false';
+			$conference_center_enabled = $_POST["conference_center_enabled"] ?? 'false';
 			$conference_center_description = $_POST["conference_center_description"];
 
 		//validate the token
@@ -116,12 +116,12 @@
 			}
 
 		//add the conference_center_uuid
-			if (!is_uuid($_POST["conference_center_uuid"])) {
+			if (empty($_POST["conference_center_uuid"]) || !is_uuid($_POST["conference_center_uuid"])) {
 				$conference_center_uuid = uuid();
 			}
 
 		//add the dialplan_uuid
-			if (!is_uuid($_POST["dialplan_uuid"])) {
+			if (empty($_POST["dialplan_uuid"]) || !is_uuid($_POST["dialplan_uuid"])) {
 				$dialplan_uuid = uuid();
 			}
 
@@ -364,7 +364,7 @@
 				$recording_filename = $row["recording_filename"];
 				$recording_path = $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name'];
 				$selected = '';
-				if ($conference_center_greeting == $recording_path."/".$recording_filename) {
+				if (!empty($conference_center_greeting) && $conference_center_greeting == $recording_path."/".$recording_filename) {
 					$selected = "selected='selected'";
 				}
 				echo "	<option value='".escape($recording_path)."/".escape($recording_filename)."' ".escape($selected).">".escape($recording_name)."</option>\n";
@@ -376,7 +376,7 @@
 		if (count($phrases) > 0) {
 			echo "<optgroup label='".$text['label-phrases']."'>\n";
 			foreach ($phrases as &$row) {
-				$selected = ($conference_center_greeting == "phrase:".$row["phrase_uuid"]) ? true : false;
+				$selected = !empty($conference_center_greeting) && $conference_center_greeting == "phrase:".$row["phrase_uuid"] ? true : false;
 				echo "	<option value='phrase:".escape($row["phrase_uuid"])."' ".(($selected) ? "selected='selected'" : null).">".escape($row["phrase_name"])."</option>\n";
 				if ($selected) { $tmp_selected = true; }
 			}
@@ -389,10 +389,10 @@
 			echo "<optgroup label='".$text['label-sounds']."'>\n";
 			foreach ($sound_files as $key => $value) {
 				if (!empty($value)) {
-					if (substr($conference_center_greeting, 0, 71) == "\$\${sounds_dir}/\${default_language}/\${default_dialect}/\${default_voice}/") {
+					if (!empty($conference_center_greeting) && substr($conference_center_greeting, 0, 71) == "\$\${sounds_dir}/\${default_language}/\${default_dialect}/\${default_voice}/") {
 						$conference_center_greeting = substr($conference_center_greeting, 71);
 					}
-					$selected = ($conference_center_greeting == $value) ? true : false;
+					$selected = !empty($conference_center_greeting) && $conference_center_greeting == $value ? true : false;
 					echo "	<option value='".escape($value)."' ".(($selected) ? "selected='selected'" : null).">".escape($value)."</option>\n";
 					if ($selected) { $tmp_selected = true; }
 				}

@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -47,7 +47,7 @@
 	$text = $language->get();
 
 //set additional variables
-	$search = $_GET["search"] ?? '';
+	$search = $_GET["search"] ?? null;
 
 //set from session variables
 	$list_row_edit_button = !empty($_SESSION['theme']['list_row_edit_button']['boolean']) ? $_SESSION['theme']['list_row_edit_button']['boolean'] : 'false';
@@ -187,7 +187,7 @@
 
 //prepare to page the results
 	$rows_per_page = (!empty($_SESSION['domain']['paging']['numeric'])) ? $_SESSION['domain']['paging']['numeric'] : 50;
-	$param = $search ? "&search=".$search : null;
+	$param = !empty($search) ? "&search=".$search : null;
 	if (isset($_GET['page'])) {
 		$page = is_numeric($_GET['page']) ? $_GET['page'] : 0;
 		list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
@@ -197,7 +197,7 @@
 
 //get the conference rooms
 	$conference_center->rows_per_page = $rows_per_page;
-	$conference_center->offset = $offset ?? '';
+	$conference_center->offset = $offset ?? 0;
 	$conference_center->order_by = $order_by;
 	$conference_center->order = $order;
 	if (!empty($search)) {
@@ -251,7 +251,7 @@
 	echo 		"<form id='form_search' class='inline' method='get'>\n";
 	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown='list_search_reset();'>";
 	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search','style'=>(!empty($search) ? 'display: none;' : null)]);
-	echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','link'=>'bridges.php','style'=>(empty($search) ? 'display: none;' : null)]);
+	echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','link'=>'conference_rooms.php','style'=>(empty($search) ? 'display: none;' : null)]);
 	if (!empty($paging_controls_mini)) {
 		echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>\n";
 	}

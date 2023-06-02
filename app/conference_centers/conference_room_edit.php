@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2021
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -82,11 +82,11 @@
 		$announce_count = $_POST["announce_count"];
 		$sounds = $_POST["sounds"];
 		$mute = $_POST["mute"];
-		$created = $_POST["created"];
-		$created_by = $_POST["created_by"];
-		$email_address = $_POST["email_address"];
+		$created = $_POST["created"] ?? null;
+		$created_by = $_POST["created_by"] ?? null;
+		$email_address = $_POST["email_address"] ?? null;
 		$account_code = $_POST["account_code"];
-		$enabled = $_POST["enabled"] ?: 'false';
+		$enabled = $_POST["enabled"] ?? 'false';
 		$description = $_POST["description"];
 
 		//remove any pin number formatting
@@ -166,10 +166,10 @@
 		}
 		unset($sql, $parameters);
 		if (empty($moderator_pin)) {
-			$moderator_pin = get_conference_pin($pin_length, $conference_room_uuid);
+			$moderator_pin = get_conference_pin($pin_length, $conference_room_uuid ?? null);
 		}
 		if (empty($participant_pin)) {
-			$participant_pin = get_conference_pin($pin_length, $conference_room_uuid);
+			$participant_pin = get_conference_pin($pin_length, $conference_room_uuid ?? null);
 		}
 	}
 
@@ -230,7 +230,7 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 				$sql .= ") ";
 				$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 				$parameters['moderator_pin'] = $moderator_pin;
-				$parameters['conference_room_uuid'] = $conference_room_uuid;
+				$parameters['conference_room_uuid'] = $conference_room_uuid ?? null;
 				$database = new database;
 				$num_rows = $database->select($sql, $parameters, 'column');
 				if ($num_rows > 0) {
@@ -248,7 +248,7 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 				$sql .= ") ";
 				$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 				$parameters['participant_pin'] = $participant_pin;
-				$parameters['conference_room_uuid'] = $conference_room_uuid;
+				$parameters['conference_room_uuid'] = $conference_room_uuid ?? null;
 				$num_rows = $database->select($sql, $parameters, 'column');
 				if ($num_rows > 0) {
 					$msg .= $text['message-unique_participant_pin']."<br />\n";
@@ -597,12 +597,9 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 	echo "<td width='30%' class='vncell' valign='top' align='left' nowrap='nowrap'>".$text['label-conference_name']."</td>\n";
 	echo "<td width='70%' class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='conference_center_uuid'>\n";
-	foreach ($conference_centers as $row) {
-		if ($conference_center_uuid == $row["conference_center_uuid"]) {
-			echo "		<option value='".escape($row["conference_center_uuid"])."' selected='selected'>".escape($row["conference_center_name"])."</option>\n";
-		}
-		else {
-			echo "		<option value='".escape($row["conference_center_uuid"])."'>".escape($row["conference_center_name"])."</option>\n";
+	if (!empty($conference_centers) && is_array($conference_centers) && @sizeof($conference_centers) != 0) {
+		foreach ($conference_centers as $row) {
+			echo "		<option value='".escape($row["conference_center_uuid"])."' ".(!empty($conference_center_uuid) && $conference_center_uuid == $row["conference_center_uuid"] ? "selected='selected'" : null).">".escape($row["conference_center_name"])."</option>\n";
 		}
 	}
 	echo "	</select>\n";
