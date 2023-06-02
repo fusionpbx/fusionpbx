@@ -42,20 +42,28 @@
 	$language = new text;
 	$text = $language->get();
 
+//set the defaults
+	$search = '';
+	$paging_controls = '';
+	$id = '';
+
+//set from session variables
+	$list_row_edit_button = !empty($_SESSION['theme']['list_row_edit_button']['boolean']) ? $_SESSION['theme']['list_row_edit_button']['boolean'] : 'false';
+
 //get the http post data
-	if (is_array($_POST['extension_settings'])) {
+	if (!empty($_POST['extension_settings'])) {
 		$action = $_POST['action'];
 		$search = $_POST['search'];
 		$extension_settings = $_POST['extension_settings'];
 	}
 
 //action add or update
-	if (is_uuid($_REQUEST["id"])) {
+	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$extension_uuid = $_REQUEST["id"];
 	}
 
 //process the http post data by action
-	if (!empty($action) && is_array($extension_settings)) {
+	if (!empty($action) && !empty($extension_settings)) {
 
 		//validate the token
 		$token = new token;
@@ -150,11 +158,11 @@
 	}
 
 	$sql .= order_by($order_by, $order, 'extension_setting_type', 'asc');
-	$sql .= limit_offset($rows_per_page, $offset);
+	$sql .= limit_offset($rows_per_page ?? null, $offset ?? null);
 	$parameters['extension_uuid'] = $extension_uuid;
 	$parameters['domain_uuid'] = $domain_uuid;
 	$database = new database;
-	$extension_settings = $database->select($sql, $parameters ?? null, 'all');
+	$extension_settings = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
 //create token
@@ -223,7 +231,7 @@
 	echo "<input type='hidden' name='search' value=\"".escape($search)."\">\n";
 
 	echo "<table class='list'>\n";
-	if (is_array($extension_settings) && @sizeof($extension_settings) != 0) {
+	if (!empty($extension_settings)) {
 		$x = 0;
 		foreach ($extension_settings as $row) {
 			$extension_setting_type = $row['extension_setting_type'];
@@ -234,7 +242,7 @@
 			$label_extension_setting_type = str_replace("-", " ", $label_extension_setting_type);
 			$label_extension_setting_type = ucwords($label_extension_setting_type);
 
-			if ($previous_extension_setting_type !== $row['extension_setting_type']) {
+			if (!empty($previous_extension_setting_type) && $previous_extension_setting_type !== $row['extension_setting_type']) {
 				echo "		<tr>";
 				echo "			<td align='left' colspan='999'>&nbsp;</td>\n";
 				echo "		</tr>";
@@ -261,7 +269,7 @@
 				echo "	<th class='center'>".$text['label-extension_setting_enabled']."</th>\n";
 
 				echo "	<th class='hide-sm-dn'>".$text['label-extension_setting_description']."</th>\n";
-				if (permission_exists('extension_setting_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+				if (permission_exists('extension_setting_edit') && $list_row_edit_button == 'true') {
 					echo "	<td class='action-button'>&nbsp;</td>\n";
 				}
 				echo "</tr>\n";
@@ -294,7 +302,7 @@
 			}
 			echo "	</td>\n";
 			echo "	<td class='description overflow hide-sm-dn'>".escape($row['extension_setting_description'])."</td>\n";
-			if (permission_exists('extension_setting_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+			if (permission_exists('extension_setting_edit') && $list_row_edit_button == 'true') {
 				echo "	<td class='action-button'>\n";
 				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
 				echo "	</td>\n";
