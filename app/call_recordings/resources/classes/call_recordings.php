@@ -1,4 +1,28 @@
 <?php
+/*
+	FusionPBX
+	Version: MPL 1.1
+
+	The contents of this file are subject to the Mozilla Public License Version
+	1.1 (the "License"); you may not use this file except in compliance with
+	the License. You may obtain a copy of the License at
+	http://www.mozilla.org/MPL/
+
+	Software distributed under the License is distributed on an "AS IS" basis,
+	WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+	for the specific language governing rights and limitations under the
+	License.
+
+	The Original Code is FusionPBX
+
+	The Initial Developer of the Original Code is
+	Mark J Crane <markjcrane@fusionpbx.com>
+	Portions created by the Initial Developer are Copyright (C) 2018 - 2023
+	the Initial Developer. All Rights Reserved.
+
+	Contributor(s):
+	Mark J Crane <markjcrane@fusionpbx.com>
+*/
 
 /**
  * call_recordings class
@@ -57,7 +81,7 @@ if (!class_exists('call_recordings')) {
 							$x = 0;
 							foreach ($records as $record) {
 								//add to the array
-									if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+									if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 										//get the information to delete
 											$sql = "select call_recording_name, call_recording_path ";
 											$sql .= "from view_call_recordings ";
@@ -118,7 +142,7 @@ if (!class_exists('call_recordings')) {
 				//get call recording from database
 					if (is_uuid($this->recording_uuid)) {
 						$sql = "select call_recording_name, call_recording_path ";
-						if ($_SESSION['call_recordings']['storage_type']['text'] == 'base64' && $row['call_recording_base64'] != '') {
+						if (!empty($_SESSION['call_recordings']['storage_type']['text']) && $_SESSION['call_recordings']['storage_type']['text'] == 'base64' && $row['call_recording_base64'] != '') {
 							$sql = ", call_recording_base64 ";
 						}
 						$sql .= "from view_call_recordings ";
@@ -129,7 +153,7 @@ if (!class_exists('call_recordings')) {
 						if (is_array($row) && @sizeof($row) != 0) {
 							$call_recording_name = $row['call_recording_name'];
 							$call_recording_path = $row['call_recording_path'];
-							if ($_SESSION['call_recordings']['storage_type']['text'] == 'base64' && $row['call_recording_base64'] != '') {
+							if (!empty($_SESSION['call_recordings']['storage_type']['text']) && $_SESSION['call_recordings']['storage_type']['text'] == 'base64' && $row['call_recording_base64'] != '') {
 								file_put_contents($path.'/'.$call_recording_name, base64_decode($row['call_recording_base64']));
 							}
 						}
@@ -137,18 +161,14 @@ if (!class_exists('call_recordings')) {
 					}
 
 				//set the path for the directory
-					$default_path = $_SESSION['switch']['call_recordings']['dir']."/".$_SESSION['domain_name'];
+// 					$default_path = $_SESSION['switch']['call_recordings']['dir']."/".$_SESSION['domain_name'];
 
 				//build full path
 					$full_recording_path = $call_recording_path.'/'.$call_recording_name;
 
 				//download the file
-					if (file_exists($full_recording_path)) {
-						//content-range
-						if (isset($_SERVER['HTTP_RANGE']) && !$this->binary)  {
-							$this->range_download($full_recording_path);
-						}
-						ob_clean();
+					if ($full_recording_path != '/' && file_exists($full_recording_path)) {
+// 						ob_clean();
 						$fd = fopen($full_recording_path, "rb");
 						if ($this->binary) {
 							header("Content-Type: application/force-download");
@@ -170,12 +190,17 @@ if (!class_exists('call_recordings')) {
 						if ($this->binary) {
 							header("Content-Length: ".filesize($full_recording_path));
 						}
-						ob_clean();
-						fpassthru($fd);
+// 						ob_clean();
+// 						fpassthru($fd);
+
+						//content-range
+						if (isset($_SERVER['HTTP_RANGE']) && !$this->binary)  {
+							$this->range_download($full_recording_path);
+						}
 					}
 
 				//if base64, remove temp recording file
-					if ($_SESSION['call_recordings']['storage_type']['text'] == 'base64' && $row['call_recording_base64'] != '') {
+					if (!empty($_SESSION['call_recordings']['storage_type']['text']) && $_SESSION['call_recordings']['storage_type']['text'] == 'base64' && $row['call_recording_base64'] != '') {
 						@unlink($full_recording_path);
 					}
 			}
@@ -204,7 +229,7 @@ if (!class_exists('call_recordings')) {
 			* (mediatype = mimetype)
 			* as well as a boundry header to indicate the various chunks of data.
 			*/
-			header("Accept-Ranges: 0-$length");
+			header("Accept-Ranges: 0-".$length);
 			// header('Accept-Ranges: bytes');
 			// multipart/byteranges
 			// http://www.w3.org/Protocols/rfc2616/rfc2616-sec19.html#sec19.2
@@ -227,7 +252,7 @@ if (!class_exists('call_recordings')) {
 				// If the range starts with an '-' we start from the beginning
 				// If not, we forward the file pointer
 				// And make sure to get the end byte if spesified
-				if ($range0 == '-') {
+				if ($range[0] == '-') {
 					// The n-number of the last bytes is requested
 					$c_start = $size - substr($range, 1);
 				}
