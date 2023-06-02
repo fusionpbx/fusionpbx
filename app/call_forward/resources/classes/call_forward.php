@@ -18,7 +18,7 @@
 
 	  The Initial Developer of the Original Code is
 	  Mark J Crane <markjcrane@fusionpbx.com>
-	  Copyright (C) 2010 - 2022
+	  Copyright (C) 2010 - 2023
 	  All Rights Reserved.
 
 	  Contributor(s):
@@ -143,7 +143,7 @@
 				
 				//get current toggle state
 				foreach ($records as $x => $record) {
-					if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+					if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 						$uuids[] = "'" . $record['uuid'] . "'";
 					}
 				}
@@ -227,7 +227,7 @@
 					$p->delete('extension_edit', 'temp');
 
 					//send feature event notify to the phone
-					if ($_SESSION['device']['feature_sync']['boolean'] == "true") {
+					if (!empty($_SESSION['device']['feature_sync']['boolean']) && $_SESSION['device']['feature_sync']['boolean'] == "true") {
 						foreach ($extensions as $uuid => $extension) {
 							$feature_event_notify = new feature_event_notify;
 							$feature_event_notify->domain_name = $_SESSION['domain_name'];
@@ -247,7 +247,7 @@
 					}
 
 					//synchronize configuration
-					if (is_readable($_SESSION['switch']['extensions']['dir'])) {
+					if (!empty($_SESSION['switch']['extensions']['dir']) && is_readable($_SESSION['switch']['extensions']['dir'])) {
 						require_once "app/extensions/resources/classes/extension.php";
 						$ext = new extension;
 						$ext->xml();
