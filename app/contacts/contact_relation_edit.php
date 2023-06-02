@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -324,7 +324,7 @@
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class=\"formfld\" type=\"text\" name=\"contact_search\" placeholder=\"search\" style=\"width: 80px;\" onkeyup=\"get_contacts('contact_select', 'contact_uuid', this.value);\" maxlength=\"255\" value=\"\">\n";
 	echo "	<select class='formfld' style=\"width: 150px;\" id=\"contact_select\" name=\"relation_contact_uuid\" >\n";
-	echo "		<option value='".escape($relation_contact_uuid)."'>".escape($contact_name)."</option>\n";
+	echo "		<option value='".escape($relation_contact_uuid ?? '')."'>".escape($contact_name ?? '')."</option>\n";
 	echo "	</select>\n";
 	echo "</td>\n";
 	echo "</tr>\n";

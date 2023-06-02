@@ -112,12 +112,12 @@ if (!empty($_GET)) {
 			//don't add this to the QR code at this time
 		}
 		else {
-			$vcard->data['display_name'] = !empty($contact_name_given)." ".!empty($contact_name_family);
-			$vcard->data['contact_nickname'] = !empty($contact_nickname);
-			$vcard->data['contact_title'] = !empty($contact_title);
-			$vcard->data['contact_role'] = !empty($contact_role);
-			$vcard->data['timezone'] = !empty($contact_time_zone);
-			$vcard->data['contact_note'] = !empty($contact_note);
+			$vcard->data['display_name'] = implode(' ', array_filter([$contact_name_given, $contact_name_family]));
+			$vcard->data['contact_nickname'] = $contact_nickname ?? null;
+			$vcard->data['contact_title'] = $contact_title ?? null;
+			$vcard->data['contact_role'] = $contact_role ?? null;
+			$vcard->data['timezone'] = $contact_time_zone ?? null;
+			$vcard->data['contact_note'] = $contact_note ?? null;
 		}
 
 	//get the contact's telephone numbers

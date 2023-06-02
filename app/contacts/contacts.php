@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -136,15 +136,15 @@
 //add the search term
 	$search = strtolower($_GET["search"] ?? '');
 	if (!empty($search)) {
-		if (isset($search)) {
-			$sql_search .= "and contact_uuid in ( ";
+		if (is_numeric($search)) {
+			$sql_search = "and contact_uuid in ( ";
 			$sql_search .= "	select contact_uuid from v_contact_phones ";
 			$sql_search .= "	where phone_number like :search ";
 			$sql_search .= ") ";
 		}
 		else {
 			//open container
-				$sql_search .= "and ( ";
+				$sql_search = "and ( ";
 			//search contact
 				$sql_search .= "contact_uuid in ( ";
 				$sql_search .= "	select contact_uuid from v_contacts ";
