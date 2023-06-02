@@ -54,6 +54,7 @@
 	$condition_expression_1 = '';
 	$condition_expression_2 = '';
 	$action_2 = '';
+	$limit = '';
 
 //get the http get values and set them as php variables
 	$order_by = $_GET["order_by"] ?? '';
