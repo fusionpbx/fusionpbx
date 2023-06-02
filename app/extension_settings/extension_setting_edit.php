@@ -43,6 +43,7 @@
 	$text = $language->get();
 
 //set the defaults
+	$extension_uuid = '';
 	$extension_setting_uuid = '';
 	$extension_setting_name = '';
 	$extension_setting_value = '';
