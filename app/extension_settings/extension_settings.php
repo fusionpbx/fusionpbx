@@ -232,7 +232,13 @@
 
 	echo "<table class='list'>\n";
 	if (!empty($extension_settings)) {
+		//define the variable
+		$previous_extension_setting_type = '';
+
+		//set the initial value
 		$x = 0;
+
+		//show the extension settings
 		foreach ($extension_settings as $row) {
 			$extension_setting_type = $row['extension_setting_type'];
 			$extension_setting_type = strtolower($extension_setting_type);
@@ -242,7 +248,7 @@
 			$label_extension_setting_type = str_replace("-", " ", $label_extension_setting_type);
 			$label_extension_setting_type = ucwords($label_extension_setting_type);
 
-			if (!empty($previous_extension_setting_type) && $previous_extension_setting_type !== $row['extension_setting_type']) {
+			if ($previous_extension_setting_type !== $row['extension_setting_type']) {
 				echo "		<tr>";
 				echo "			<td align='left' colspan='999'>&nbsp;</td>\n";
 				echo "		</tr>";
