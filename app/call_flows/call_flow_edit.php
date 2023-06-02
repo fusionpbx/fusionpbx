@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -73,8 +73,8 @@
 	if (!empty($_POST)) {
 
 		//set the variables from the http values
-			$call_flow_uuid = $_POST["call_flow_uuid"];
-			$dialplan_uuid = $_POST["dialplan_uuid"];
+			$call_flow_uuid = $_POST["call_flow_uuid"] ?? null;
+			$dialplan_uuid = $_POST["dialplan_uuid"] ?? null;
 			$call_flow_name = $_POST["call_flow_name"];
 			$call_flow_extension = $_POST["call_flow_extension"];
 			$call_flow_feature_code = $_POST["call_flow_feature_code"];
@@ -130,8 +130,8 @@
 			//if (empty($call_flow_pin_number)) { $msg .= $text['message-required']." ".$text['label-call_flow_pin_number']."<br>\n"; }
 			//if (empty($call_flow_label)) { $msg .= $text['message-required']." ".$text['label-call_flow_label']."<br>\n"; }
 			//if (empty($call_flow_sound)) { $msg .= $text['message-required']." ".$text['label-call_flow_sound']."<br>\n"; }
-			if (empty($call_flow_app)) { $msg .= $text['message-required']." ".$text['label-call_flow_app']."<br>\n"; }
-			if (empty($call_flow_data)) { $msg .= $text['message-required']." ".$text['label-call_flow_data']."<br>\n"; }
+			if (empty($call_flow_app)) { $msg .= $text['message-required']." ".($text['label-call_flow_app'] ?? '')."<br>\n"; }
+			if (empty($call_flow_data)) { $msg .= $text['message-required']." ".($text['label-call_flow_data'] ?? '')."<br>\n"; }
 			//if (empty($call_flow_alternate_label)) { $msg .= $text['message-required']." ".$text['label-call_flow_alternate_label']."<br>\n"; }
 			//if (empty($call_flow_alternate_sound)) { $msg .= $text['message-required']." ".$text['label-call_flow_alternate_sound']."<br>\n"; }
 			//if (empty($call_flow_alternate_app)) { $msg .= $text['message-required']." ".$text['label-call_flow_alternate_app']."<br>\n"; }
