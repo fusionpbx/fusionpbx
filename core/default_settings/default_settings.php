@@ -356,12 +356,17 @@
 
 			//check if the default setting uuid exists in the array
 			$field = find_in_array($setting_array, 'default_setting_uuid',  $row['default_setting_uuid'], 'row');
-			
+
 			//set default empty string
 			$setting_bold = '';
 			$enabled_bold = '';
 			$default_value = '';
 			$default_enabled = '';
+
+			//set empty default setting enabled to false by default
+			if (empty($row['default_setting_enabled'])) {
+				$row['default_setting_enabled'] = 'false';
+			}
 
 			if (!empty($field)) {
 				if ($row['default_setting_value'] !== $field['default_setting_value']) {
