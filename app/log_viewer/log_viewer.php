@@ -251,7 +251,7 @@
 				else {
 					//open the file
 					$byte_count ='0';
-					if (!empty($file) && $file) {
+					if (!empty($file)) {
 						fseek($file, 0);
 					}
 					echo "<br>".$text['label-open_file']."<br>";
@@ -275,7 +275,7 @@
 
 		//start processing
 		$byte_count = 0;
-		if (!empty($file) && $file) {
+		if (!empty($file)) {
 			while(!feof($file)) {
 				$log_line = escape(fgets($file));
 				$byte_count++;
@@ -345,7 +345,7 @@
 	require_once "resources/footer.php";
 
 //close the file
-	if (!empty($file) && $file) {
+	if (!empty($file)) {
 		fclose($file);
 	}
 
