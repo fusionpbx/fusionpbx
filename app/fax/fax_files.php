@@ -114,10 +114,12 @@
 	}
 
 //set the fax directory
-	$fax_dir = $_SESSION['switch']['storage']['dir'].'/fax/'.$_SESSION['domain_name'];
+	if (!empty($_SESSION['switch']['storage']['dir'])) {
+		$fax_dir = $_SESSION['switch']['storage']['dir'].'/fax/'.$_SESSION['domain_name'];
+	}
 
 //download the fax
-	if (!empty($_GET['a']) && $_GET['a'] == "download") {
+	if (isset($fax_dir) && !empty($_GET['a']) && $_GET['a'] == "download") {
 
 		//sanitize the values that are used in the file name and path
 		$fax_extension = preg_replace('/[^0-9]/', '', $_GET['ext']);
@@ -172,14 +174,14 @@
 	}
 
 //get the fax extension
-	if (!empty($fax_extension)) {
+	if (isset($fax_dir) && !empty($fax_extension)) {
 		//set the fax directories. example /usr/local/freeswitch/storage/fax/329/inbox
 			$dir_fax_inbox = $fax_dir.'/'.$fax_extension.'/inbox';
 			$dir_fax_sent = $fax_dir.'/'.$fax_extension.'/sent';
 			$dir_fax_temp = $fax_dir.'/'.$fax_extension.'/temp';
 
 		//make sure the directories exist
-			if (!is_dir($_SESSION['switch']['storage']['dir'])) {
+			if (!empty($_SESSION['switch']['storage']['dir']) && !is_dir($_SESSION['switch']['storage']['dir'])) {
 				mkdir($_SESSION['switch']['storage']['dir'], 0770, false);
 			}
 			if (!is_dir($fax_dir.'/'.$fax_extension)) {
