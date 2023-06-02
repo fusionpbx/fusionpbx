@@ -120,7 +120,7 @@
 	echo "<tr>\n";
 	echo "<td width='30%' align='left' valign='top' nowrap='nowrap'><b>".$text['title2']."</b></td>\n";
 	echo "<td width='70%' align='right' valign='top'>\n";
-	echo "	<input type='button' class='btn' name='' alt='back' onclick=\"window.location='xml_cdr.php".(($_SESSION['xml_cdr']['last_query'] != '') ? "?".urlencode($_SESSION['xml_cdr']['last_query']) : null)."'\" value='".$text['button-back']."'>\n";
+	echo "	<input type='button' class='btn' name='' alt='back' onclick=\"window.location='xml_cdr.php".(!empty($_SESSION['xml_cdr']['last_query']) ? "?".urlencode($_SESSION['xml_cdr']['last_query']) : null)."'\" value='".$text['button-back']."'>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
