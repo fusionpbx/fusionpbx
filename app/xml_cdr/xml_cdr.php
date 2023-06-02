@@ -640,6 +640,11 @@
 				file_exists($theme_image_path."icon_cdr_local_failed.png")
 				) ? true : false;
 
+		//simplify the variables
+			$outbound_caller_id_name = $_SESSION['user']['extension'][0]['outbound_caller_id_name'] ?? '';
+			$outbound_caller_id_number = $_SESSION['user']['extension'][0]['outbound_caller_id_number'] ?? '';
+			$user_extension = $_SESSION['user']['extension'][0]['user'] ?? '';
+
 		//loop through the results
 			$x = 0;
 			foreach ($result as $index => $row) {
@@ -731,7 +736,7 @@
 				//source
 					if (permission_exists('xml_cdr_caller_id_number')) {
 						$content .= "	<td class='middle no-link no-wrap'>";
-						$content .= "		<a href=\"javascript:void(0)\" onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php?src_cid_name=".urlencode(escape($row['caller_id_name']))."&src_cid_number=".urlencode(escape($row['caller_id_number']))."&dest_cid_name=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_name'])."&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number'])."&src=".urlencode($_SESSION['user']['extension'][0]['user'])."&dest=".urlencode(escape($row['caller_id_number']))."&rec=false&ringback=us-ring&auto_answer=true');\">\n";
+						$content .= "		<a href=\"javascript:void(0)\" onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php?src_cid_name=".urlencode(escape($row['caller_id_name']))."&src_cid_number=".urlencode(escape($row['caller_id_number']))."&dest_cid_name=".urlencode($outbound_caller_id_name)."&dest_cid_number=".urlencode($outbound_caller_id_number)."&src=".urlencode($user_extension)."&dest=".urlencode(escape($row['caller_id_number']))."&rec=false&ringback=us-ring&auto_answer=true');\">\n";
 						if (is_numeric($row['caller_id_number'])) {
 							$content .= "		".escape(format_phone(substr($row['caller_id_number'], 0, 20))).' ';
 						}
@@ -744,7 +749,7 @@
 				//caller destination
 					if (permission_exists('xml_cdr_caller_destination')) {
 						$content .= "	<td class='middle no-link no-wrap hide-md-dn'>";
-						$content .= "		<a href=\"javascript:void(0)\" onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php?src_cid_name=".urlencode(escape($row['caller_id_name']))."&src_cid_number=".urlencode(escape($row['caller_id_number']))."&dest_cid_name=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_name'])."&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number'])."&src=".urlencode($_SESSION['user']['extension'][0]['user'])."&dest=".urlencode(escape($row['caller_destination']))."&rec=false&ringback=us-ring&auto_answer=true');\">\n";
+						$content .= "		<a href=\"javascript:void(0)\" onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php?src_cid_name=".urlencode(escape($row['caller_id_name']))."&src_cid_number=".urlencode(escape($row['caller_id_number']))."&dest_cid_name=".urlencode($outbound_caller_id_name)."&dest_cid_number=".urlencode($outbound_caller_id_number)."&src=".urlencode($user_extension)."&dest=".urlencode(escape($row['caller_destination']))."&rec=false&ringback=us-ring&auto_answer=true');\">\n";
 						if (is_numeric($row['caller_destination'])) {
 							$content .= "		".escape(format_phone(substr($row['caller_destination'], 0, 20))).' ';
 						}
@@ -757,7 +762,7 @@
 				//destination
 					if (permission_exists('xml_cdr_destination')) {
 						$content .= "	<td class='middle no-link no-wrap'>";
-						$content .= "		<a href=\"javascript:void(0)\" onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php?src_cid_name=".urlencode(escape($row['destination_number']))."&src_cid_number=".urlencode(escape($row['destination_number']))."&dest_cid_name=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_name'])."&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number'])."&src=".urlencode($_SESSION['user']['extension'][0]['user'])."&dest=".urlencode(escape($row['destination_number']))."&rec=false&ringback=us-ring&auto_answer=true');\">\n";
+						$content .= "		<a href=\"javascript:void(0)\" onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php?src_cid_name=".urlencode(escape($row['destination_number']))."&src_cid_number=".urlencode(escape($row['destination_number']))."&dest_cid_name=".urlencode($outbound_caller_id_name)."&dest_cid_number=".urlencode($outbound_caller_id_number)."&src=".urlencode($user_extension)."&dest=".urlencode(escape($row['destination_number']))."&rec=false&ringback=us-ring&auto_answer=true');\">\n";
 						if (is_numeric($row['destination_number'])) {
 							$content .= escape(format_phone(substr($row['destination_number'], 0, 20)))."\n";
 						}
