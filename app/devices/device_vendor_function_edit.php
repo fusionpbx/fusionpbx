@@ -31,10 +31,12 @@
 //includes files
 	require_once "resources/require.php";
 
-
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
+
+//set the defaults
+	$device_vendor_function_uuid = '';
 
 //delete the group from the menu item
 	if (!empty($_REQUEST["a"]) && $_REQUEST["a"] == "delete" && permission_exists("device_vendor_function_delete") && !empty($_REQUEST["id"])) {
