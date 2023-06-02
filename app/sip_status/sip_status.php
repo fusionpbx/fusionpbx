@@ -67,7 +67,7 @@
 	}
 	$sql = "select sip_profile_uuid, sip_profile_name from v_sip_profiles ";
 	$sql .= "where sip_profile_enabled = 'true' ";
-	if ($hostname) {
+	if (!empty($hostname)) {
 		$sql .= "and (sip_profile_hostname = :sip_profile_hostname ";
 		$sql .= "or sip_profile_hostname = '' ";
 		$sql .= "or sip_profile_hostname is null) ";
@@ -75,8 +75,8 @@
 	}
 	$sql .= "order by sip_profile_name asc ";
 	$database = new database;
-	$rows = $database->select($sql, $parameters, 'all');
-	if (is_array($rows) && @sizeof($rows) != 0) {
+	$rows = $database->select($sql, $parameters ?? null, 'all');
+	if (!empty($rows)) {
 		foreach ($rows as $row) {
 			$sip_profiles[$row['sip_profile_name']] = $row['sip_profile_uuid'];
 		}
@@ -146,7 +146,7 @@
 		echo "</tr>\n";
 
 		//profiles
-			if ($xml->profile) {
+			if (!empty($xml) && $xml->profile) {
 				foreach ($xml->profile as $row) {
 					unset($list_row_url);
 					$profile_name = (string) $row->name;
@@ -169,7 +169,7 @@
 			}
 
 		//gateways
-			if ($xml_gateways->gateway) {
+			if (!empty($xml_gateways) && $xml_gateways->gateway) {
 				foreach ($xml_gateways->gateway as $row) {
 					unset($gateway_name, $gateway_domain_name, $list_row_url);
 
@@ -208,7 +208,7 @@
 			}
 
 		//aliases
-			if ($xml->alias) {
+			if (!empty($xml) && $xml->alias) {
 				foreach ($xml->alias as $row) {
 					echo "<tr class='list-row'>\n";
 					echo "	<td>".escape($row->name)."</td>\n";
