@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -52,10 +52,12 @@
 //set from session variables
 	$list_row_edit_button = !empty($_SESSION['theme']['list_row_edit_button']['boolean']) ? $_SESSION['theme']['list_row_edit_button']['boolean'] : 'false';
 
+//get search
+	$search = $_REQUEST['search'] ?? null;
+
 //get posted data
 	if (!empty($_POST['call_flows'])) {
 		$action = $_POST['action'];
-		$search = $_POST['search'];
 		$call_flows = $_POST['call_flows'];
 		$toggle_field = $_POST['toggle_field'];
 	}
