@@ -43,6 +43,17 @@
 	$language = new text;
 	$text = $language->get();
 
+//set the defaults
+	$dashboard_name = '';
+	$dashboard_path = '';
+	$dashboard_groups = [];
+	$dashboard_column_span = '';
+	$dashboard_details_state = '';
+	$dashboard_order = '';
+	$dashboard_enabled = '';
+	$dashboard_description = '';
+	$dashboard_uuid = '';
+
 //action add or update
 	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
@@ -224,7 +235,7 @@
 	}
 
 //get the child data
-	if (is_uuid($dashboard_uuid)) {
+	if (!empty($dashboard_uuid) && is_uuid($dashboard_uuid)) {
 		$sql = "select ";
 		$sql .= " dashboard_group_uuid, ";
 		$sql .= " group_uuid ";
@@ -264,7 +275,7 @@
 	$sql = "select * from v_dashboard_groups as x, v_groups as g ";
 	$sql .= "where x.dashboard_uuid = :dashboard_uuid ";
 	$sql .= "and x.group_uuid = g.group_uuid ";
-	$parameters['dashboard_uuid'] = $dashboard_uuid;
+	$parameters['dashboard_uuid'] = $dashboard_uuid ?? '';
 	$database = new database;
 	$dashboard_groups = $database->select($sql, $parameters, 'all');
 	unset ($sql, $parameters);
