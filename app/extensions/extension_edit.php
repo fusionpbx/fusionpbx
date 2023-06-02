@@ -50,7 +50,7 @@
 	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
 		$extension_uuid = $_REQUEST["id"];
-		$page = $_REQUEST['page'];
+		$page = $_REQUEST['page'] ?? '';
 	}
 	else {
 		$action = "add";
