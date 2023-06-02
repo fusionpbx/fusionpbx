@@ -305,6 +305,7 @@
 	$parameters['sip_profile_uuid'] = $sip_profile_uuid;
 	$database = new database;
 	$sip_profile_settings = $database->select($sql, $parameters, 'all');
+	if (empty($sip_profile_settings)) { $sip_profile_settings = []; }
 	unset($sql, $parameters);
 
 //add an empty row
@@ -324,6 +325,7 @@
 	$parameters['sip_profile_uuid'] = $sip_profile_uuid;
 	$database = new database;
 	$sip_profile_domains = $database->select($sql, $parameters, 'all');
+	if (empty($sip_profile_domains)) { $sip_profile_domains = []; }
 	unset($sql, $parameters);
 
 //add an empty row
