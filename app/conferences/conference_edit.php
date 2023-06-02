@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2021
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -64,17 +64,17 @@
 
 //get http post variables and set them to php variables
 	if (!empty($_POST)) {
-		$dialplan_uuid = $_POST["dialplan_uuid"];
+		$dialplan_uuid = $_POST["dialplan_uuid"] ?? null;
 		$conference_name = $_POST["conference_name"];
 		$conference_extension = $_POST["conference_extension"];
 		$conference_pin_number = $_POST["conference_pin_number"];
 		$conference_profile = $_POST["conference_profile"];
 		$conference_flags = $_POST["conference_flags"];
-		$conference_email_address = $_POST["conference_email_address"];
+		$conference_email_address = $_POST["conference_email_address"] ?? null;
 		$conference_account_code = $_POST["conference_account_code"];
 		$conference_order = $_POST["conference_order"];
 		$conference_description = $_POST["conference_description"];
-		$conference_enabled = $_POST["conference_enabled"] ?: 'false';
+		$conference_enabled = $_POST["conference_enabled"] ?? 'false';
 
 		//sanitize the conference name
 		$conference_name = preg_replace("/[^A-Za-z0-9\- ]/", "", $conference_name);
@@ -109,7 +109,7 @@
 	}
 
 //add the user to the v_conference_users
-	if (!empty($_REQUEST["user_uuid"]) && is_uuid($_REQUEST["user_uuid"]) && is_uuid($_REQUEST["id"]) && $_GET["a"] != "delete") {
+	if (!empty($_REQUEST["user_uuid"]) && is_uuid($_REQUEST["user_uuid"]) && is_uuid($_REQUEST["id"]) && (empty($_GET["a"]) || $_GET["a"] != "delete")) {
 		//set the variables
 			$user_uuid = $_REQUEST["user_uuid"];
 			$conference_uuid = $_REQUEST["id"];
@@ -184,7 +184,7 @@
 			}
 
 		//add or update the database
-			if (!empty($_POST["persistformvar"])) {
+			if (empty($_POST["persistformvar"])) {
 
 				//update the conference extension
 					$array['conferences'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
@@ -279,7 +279,7 @@
 	}
 
 //pre-populate the form
-	if (!empty($_GET) && !empty($_POST["persistformvar"])) {
+	if (!empty($_GET) && empty($_POST["persistformvar"])) {
 		$conference_uuid = $_GET["id"];
 		$sql = "select * from v_conferences ";
 		$sql .= "where domain_uuid = :domain_uuid ";
@@ -324,7 +324,7 @@
 	$sql .= "and e.domain_uuid = :domain_uuid ";
 	$sql .= "and e.conference_uuid = :conference_uuid ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$parameters['conference_uuid'] = $conference_uuid ?? '';
+	$parameters['conference_uuid'] = $conference_uuid ?? null;
 	$database = new database;
 	$conference_users = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
@@ -512,7 +512,7 @@
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select name='conference_order' class='formfld'>\n";
-	if (strlen(htmlspecialchars($dialplan_order))> 0) {
+	if (!empty($dialplan_order) && strlen(htmlspecialchars($dialplan_order) ?? '') != 0) {
 		echo "		<option selected='selected' value='".htmlspecialchars($dialplan_order)."'>".htmlspecialchars($dialplan_order)."</option>\n";
 	}
 	$i=0;
