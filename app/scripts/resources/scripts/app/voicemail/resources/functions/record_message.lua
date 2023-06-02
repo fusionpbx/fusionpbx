@@ -184,6 +184,9 @@
 			session:execute("playback","silence_stream://200");
 			session:streamFile("tone_stream://L=1;%(1000, 0, 640)");
 
+		--make sure the voicemail directory exists
+			mkdir(voicemail_dir.."/"..voicemail_id);
+
 		--start epoch
 			start_epoch = os.time();
 
