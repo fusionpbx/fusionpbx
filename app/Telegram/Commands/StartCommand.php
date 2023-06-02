@@ -24,7 +24,7 @@ class StartCommand extends UserCommand
 	public function execute(): ServerResponse
 	{
 		$message = $this->getMessage();
-		$from_user = $message->getFrom()
+		$from_user = $message->getFrom();
 		$from_user_id = $from_user->getId();
 		$session_id = md5($from_user_id);
 		\OKayInc\StatelessSession::start($session_id);

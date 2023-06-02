@@ -7,25 +7,30 @@ namespace App\Telegram\Commands;
 use Longman\TelegramBot\Commands\UserCommand;
 use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Exception\TelegramException;
-use Auth;
 use LitEmoji\LitEmoji;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\App;
+use Auth;
+use Illuminate\Database\Eloquent\Builder;
 use App\Models\User;
+use App\Models\Domain;
+use App\Models\Group;
 
-class WhoamiCommand extends UserCommand
+class GroupsCommand extends UserCommand
 {
 
 	/** @var string Command name */
-	protected $name = 'whoami';
+	protected $name = 'groups';
 	/** @var string Command description */
 	protected $description = '';
 	/** @var string Usage description */
-	protected $usage = '/whoami';
+	protected $usage = '/groups';
 	/** @var string Version */
 	protected $version = '1.0.0';
 
 	public function execute(): ServerResponse
 	{
+
 		$message = $this->getMessage();
 		$text = $message->getText(true);
 		$from_user = $message->getFrom();
@@ -39,19 +44,27 @@ class WhoamiCommand extends UserCommand
 		$coolpbx_user = \OKayInc\StatelessSession::get('coolpbx_user');
 		$coolpbx_domain = \OKayInc\StatelessSession::get('coolpbx_domain');
 		$user_uuid = \OKayInc\StatelessSession::get('user_uuid');
-
+		$domain_uuid = \OKayInc\StatelessSession::get('domain_uuid');
+		\Log::debug('$domain_uuid: ' .$domain_uuid);
+		$answer = '';
 		if (!empty($coolpbx_user) && !empty($coolpbx_domain) && !empty($user_uuid)) {
-			$answer = __('telegram.linked', ['telegram_user' => $from_user_username, 'coolpbx_user' => $coolpbx_user, 'coolpbx_domain' => $coolpbx_domain]);
-
-			$user = User::find($user_uuid);
-			if (count($user->groups) > 0){
-				$answer .= PHP_EOL . __('telegram.you-belong-to') . PHP_EOL;
-				foreach ($user->groups as $group){
-					$answer .= $group->group_name.PHP_EOL;
+			$answer = __('telegram.accesible-groups') . PHP_EOL;
+			$groups = Domain::find($domain_uuid)->groups();
+			$global_groups = Group::findGlobals();
+			if ($groups->count() > 0) {
+				$domain_name = Domain::find($domain_uuid)->domain_name;
+				\Log::debug('$domain_name: ' .$domain_name);
+				foreach ($groups as $group){
+					$answer .= $group->group_name . ' @ ' . $domain_name . PHP_EOL;
 				}
 			}
 			else {
-				$answer .= PHP_EOL . __('telegram.you-dont-belong-to') . __('telegram.any-group');
+				$answer .= __('telegram.no-local-groups') . PHP_EOL;
+			}
+
+			$answer .= PHP_EOL . __('telegram.global-groups') . PHP_EOL;
+			foreach ($global_groups as $group){
+				$answer .= '<i>'.$group->group_name . '</i>' . PHP_EOL;
 			}
 		}
 		else{
@@ -66,5 +79,4 @@ class WhoamiCommand extends UserCommand
 			]
 		);
 	}
-
 }
