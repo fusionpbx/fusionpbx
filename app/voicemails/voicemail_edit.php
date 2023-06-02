@@ -45,6 +45,9 @@
 	$language = new text;
 	$text = $language->get();
 
+//set the defaults
+	$voicemail_mail_to = '';
+
 //initialize the destinations object
 	$destination = new destinations;
 
@@ -66,12 +69,11 @@
 	$show_option_delete = '';
 	$voicemail_option_digits = '';
 	$voicemail_option_description = '';
-	$voicemail_mail_to = '';
 
 //get http variables and set them to php variables
 	$referer_path = $_REQUEST["referer_path"] ?? '';
 	$referer_query = $_REQUEST["referer_query"] ?? '';
-	if (!empty($_POST)) {
+	if (count($_POST) > 0) {
 
 		//process the http post data by submitted action
 			if ($_POST['action'] != '' && is_uuid($_POST['voicemail_uuid'])) {
@@ -114,7 +116,7 @@
 	}
 
 //process the data
-	if (!empty($_POST) && empty($_POST["persistformvar"])) {
+	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 
 		$msg = '';
 		if ($action == "update") {
@@ -147,7 +149,7 @@
 			}
 
 		//add or update the database
-			if (empty($_POST["persistformvar"])) {
+			if ($_POST["persistformvar"] != "true") {
 
 				//get a new voicemail_uuid
 					if ($action == "add" && permission_exists('voicemail_add')) {
@@ -362,7 +364,7 @@
 		unset($sql, $parameters);
 
 		$show_option_delete = false;
-		if (!empty($voicemail_options)) {
+		if (is_array($voicemail_options) && @sizeof($voicemail_options) != 0) {
 			foreach ($voicemail_options as $x => $field) {
 				$voicemail_option_param = $field['voicemail_option_param'];
 				if (empty(trim($voicemail_option_param))) {
@@ -417,7 +419,7 @@
 	}
 	$sql .= "order by v.voicemail_id asc";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	if (!empty($voicemail_uuid) && is_uuid($voicemail_uuid)) {
+	if (is_uuid($voicemail_uuid ?? '')) {
 		$parameters['voicemail_uuid'] = $voicemail_uuid;
 	}
 	$database = new database;
