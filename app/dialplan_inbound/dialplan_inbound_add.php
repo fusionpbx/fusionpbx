@@ -741,7 +741,7 @@
 	echo "    ".$text['label-limit']."\n";
 	echo "</td>\n";
 	echo "<td colspan='4' class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='text' name='limit' maxlength='255' value=\"".escape($limit ?? null)."\">\n";
+	echo "    <input class='formfld' type='text' name='limit' maxlength='255' value=\"".escape($limit)."\">\n";
 	echo "<br />\n";
 	echo "\n";
 	echo "</td>\n";
@@ -752,7 +752,7 @@
 	echo "    ".$text['label-caller-id-number-prefix']."\n";
 	echo "</td>\n";
 	echo "<td colspan='4' class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='text' name='caller_id_outbound_prefix' maxlength='255' value=\"".escape($limit ?? null)."\">\n";
+	echo "    <input class='formfld' type='text' name='caller_id_outbound_prefix' maxlength='255' value=\"".escape($limit)."\">\n";
 	echo "<br />\n";
 	echo "".$text['description-caller-id-number-prefix']."<br />\n";
 	echo "\n";
