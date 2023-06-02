@@ -244,20 +244,24 @@
 	//this adds old and new values to the array
 	function array_difference($array1, $array2) {
 		$array = array();
-		if (!empty($array1)) {
+		if (is_array($array1)) {
 			foreach ($array1 as $key => $value) {
-				if (!empty($array2[$key])) {
-					$array[$key] = array_difference($array1[$key], $array2[$key]);
+				if (is_array($array2[$key])) {
+					if (isset($array1[$key]) && isset($array2[$key])) {
+						$array[$key] = array_difference($array1[$key], $array2[$key]);
+					}
 				}
 				else {
 				  	$array[$key]['old'] = $value;
 				}
 			}
 		}
-		if (!empty($array2)) {
+		if (is_array($array2)) {
 			foreach ($array2 as $key => $value) {
-				if (!empty($value)) {
-					$array[$key] = array_difference($array1[$key], $array2[$key]);
+				if (is_array($value)) {
+					if (isset($array1[$key]) && isset($array2[$key])) {
+						$array[$key] = array_difference($array1[$key], $array2[$key]);
+					}
 				}
 				else {
 					$array[$key]['new'] = $value;
@@ -285,10 +289,8 @@
 				}
 				else {
 					//set the variables
-						$old = $value['old'];
-						$new = $value['new'];
-						if (is_null($old)) { $old = ''; }
-						if (is_null($new)) { $new = ''; }
+						$old = $value['old'] ?? '';
+						$new = $value['new'] ?? '';
 					//determine if the value has changed
 						if (strval($old) == strval($new) && isset($old)) {
 							$color = "#000000";
@@ -316,8 +318,8 @@
 	}
 
 //decode the json to arrays
-	$before = json_decode($transaction_old, true);
-	$after = json_decode($transaction_new, true);
+	$before = json_decode($transaction_old ?? '', true);
+	$after = json_decode($transaction_new ?? '', true);
 
 //unset the sessions
 	unset($_SESSION['previous_name']);
@@ -334,16 +336,18 @@
 				foreach ($value as $row) {
 					$sub_id = 0;
 					foreach ($row as $sub_key => $val) {
-						if (!empty($val)) {
+						if (!empty($val) && is_array($val)) {
 							foreach ($val as $sub_row) {
-								foreach ($sub_row as $k => $v) {
-									$array[$x]['schema'] = $sub_key;
-									$array[$x]['row'] = $sub_id;
-									$array[$x]['name'] = $k;
-									$array[$x]['value'] = htmlentities($v);
-									$x++;
+								if (!empty($sub_row) && is_array($sub_row)) {
+									foreach ($sub_row as $k => $v) {
+										$array[$x]['schema'] = $sub_key;
+										$array[$x]['row'] = $sub_id;
+										$array[$x]['name'] = $k;
+										$array[$x]['value'] = htmlentities($v ?? '');
+										$x++;
+									}
+									$sub_id++;
 								}
-								$sub_id++;
 							}
 						}
 						else {
@@ -361,6 +365,7 @@
 		echo "<br />\n";
 		echo "<table width='100%'>\n";
 		if (!empty($array)) {
+			$previous_schema = null;
 			foreach ($array as $row) {
 				if ($row['schema'] !== $previous_schema || $row['row'] !== $previous_row) {
 					echo "<tr><td colspan='4'>&nbsp;</td></tr>\n";
