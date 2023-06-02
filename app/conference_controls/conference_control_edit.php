@@ -1,4 +1,28 @@
 <?php
+/*
+	FusionPBX
+	Version: MPL 1.1
+
+	The contents of this file are subject to the Mozilla Public License Version
+	1.1 (the "License"); you may not use this file except in compliance with
+	the License. You may obtain a copy of the License at
+	http://www.mozilla.org/MPL/
+
+	Software distributed under the License is distributed on an "AS IS" basis,
+	WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+	for the specific language governing rights and limitations under the
+	License.
+
+	The Original Code is FusionPBX
+
+	The Initial Developer of the Original Code is
+	Mark J Crane <markjcrane@fusionpbx.com>
+	Portions created by the Initial Developer are Copyright (C) 2018 - 2023
+	the Initial Developer. All Rights Reserved.
+
+	Contributor(s):
+	Mark J Crane <markjcrane@fusionpbx.com>
+*/
 
 //set the include path
 	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
@@ -37,7 +61,7 @@
 //get http post variables and set them to php variables
 	if (!empty($_POST)) {
 		$control_name = $_POST["control_name"];
-		$control_enabled = $_POST["control_enabled"] ?: 'false';
+		$control_enabled = $_POST["control_enabled"] ?? 'false';
 		$control_description = $_POST["control_description"];
 	}
 
@@ -77,7 +101,7 @@
 			}
 
 		//add the conference_control_uuid
-			if (!is_uuid($_POST["conference_control_uuid"])) {
+			if (empty($_POST["conference_control_uuid"]) || !is_uuid($_POST["conference_control_uuid"])) {
 				$conference_control_uuid = uuid();
 			}
 
@@ -111,7 +135,7 @@
 	} //(is_array($_POST) && empty($_POST["persistformvar"]))
 
 //pre-populate the form
-	if (!empty($_GET) && !empty($_POST["persistformvar"])) {
+	if (!empty($_GET) && empty($_POST["persistformvar"])) {
 		$conference_control_uuid = $_GET["id"];
 		$sql = "select * from v_conference_controls ";
 		//$sql .= "where domain_uuid = '$domain_uuid' ";
