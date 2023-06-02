@@ -482,12 +482,12 @@
 	echo "<select name=\"menu_item_parent_uuid\" class='formfld'>\n";
 	echo "<option value=\"\"></option>\n";
 	foreach($menu_items as $field) {
-			if ($menu_item_parent_uuid == $field['menu_item_uuid']) {
-				echo "<option value='".escape($field['menu_item_uuid'])."' selected>".escape($field['menu_item_title'])."</option>\n";
-			}
-			else {
-				echo "<option value='".escape($field['menu_item_uuid'])."'>".escape($field['menu_item_title'])."</option>\n";
-			}
+		if ($menu_item_parent_uuid == $field['menu_item_uuid']) {
+			echo "<option value='".escape($field['menu_item_uuid'])."' selected>".escape($field['menu_item_title'])." (order ".escape($field['menu_item_order']).")</option>\n";
+		}
+		else {
+			echo "<option value='".escape($field['menu_item_uuid'])."'>".escape($field['menu_item_title'])." (order ".escape($field['menu_item_order']).")</option>\n";
+		}
 	}
 	echo "</select>";
 	unset($sql, $result);
