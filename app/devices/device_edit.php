@@ -43,6 +43,10 @@
 	$language = new text;
 	$text = $language->get();
 
+//set the defaults
+	$device_model = '';
+	$device_firmware_version = '';
+
 //include the device class
 	require_once "app/devices/resources/classes/device.php";
 
@@ -57,7 +61,7 @@
 
 //get total device count from the database, check limit, if defined
 	if ($action == 'add') {
-		if ($_SESSION['limit']['devices']['numeric'] != '') {
+		if (!empty($_SESSION['limit']['devices']['numeric']) && $_SESSION['limit']['devices']['numeric']) {
 			$sql = "select count(*) from v_devices where domain_uuid = :domain_uuid ";
 			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 			$database = new database;
