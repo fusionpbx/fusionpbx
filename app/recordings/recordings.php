@@ -315,7 +315,7 @@
 	}
 	$sql .= $sql_search;
 	$database = new database;
-	$num_rows = $database->select($sql, $parameters, 'column');
+	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
@@ -340,7 +340,7 @@
 	$sql .= order_by($order_by, $order, 'recording_name', 'asc');
 	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;
-	$recordings = $database->select($sql, $parameters, 'all');
+	$recordings = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 
 //get current recordings password

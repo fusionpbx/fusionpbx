@@ -111,7 +111,7 @@ if ($fp) {
 }
 
 //prevent warnings
-if (!is_array($_SESSION['user']['extensions'])) {
+if (empty($_SESSION['user']['extensions'])) {
 	$_SESSION['user']['extensions'] = array();
 }
 

@@ -60,6 +60,7 @@
 	$ring_group_forward_destination = '';
 	$ring_group_forward_toll_allow = '';
 	$ring_group_description = '';
+	$onkeyup = '';
 
 //initialize the destinations object
 	$destination = new destinations;
@@ -78,7 +79,7 @@
 
 		//get the ring_group_uuid
 		$ring_group_uuid = $_REQUEST["id"];
-		if (is_uuid($_REQUEST["ring_group_uuid"])) {
+		if (!empty($_REQUEST["ring_group_uuid"])) {
 			$ring_group_uuid = $_REQUEST["ring_group_uuid"];
 		}
 
@@ -655,12 +656,12 @@
 	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','link'=>'ring_groups.php']);
 	if ($action == 'update') {
 		$button_margin = 'margin-left: 15px;';
-		if (permission_exists('ring_group_add') && (!is_numeric($_SESSION['limit']['ring_groups']['numeric']) || ($total_ring_groups < $_SESSION['limit']['ring_groups']['numeric']))) {
+		if (permission_exists('ring_group_add') && (!isset($_SESSION['limit']['ring_groups']['numeric']) || ($total_ring_groups < $_SESSION['limit']['ring_groups']['numeric']))) {
 			echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'name'=>'btn_copy','style'=>$button_margin,'onclick'=>"modal_open('modal-copy','btn_copy');"]);
 			unset($button_margin);
 		}
 		if (permission_exists('ring_group_delete') || permission_exists('ring_group_destination_delete')) {
-			echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'name'=>'btn_delete','style'=>$button_margin,'onclick'=>"modal_open('modal-delete','btn_delete');"]);
+			echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'name'=>'btn_delete','style'=>$button_margin ?? '','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 			unset($button_margin);
 		}
 	}
@@ -670,7 +671,7 @@
 	echo "</div>\n";
 
 	if ($action == "update") {
-		if (permission_exists('ring_group_add') && (!is_numeric($_SESSION['limit']['ring_groups']['numeric']) || ($total_ring_groups < $_SESSION['limit']['ring_groups']['numeric']))) {
+		if (permission_exists('ring_group_add') && (!isset($_SESSION['limit']['ring_groups']['numeric']) || ($total_ring_groups < $_SESSION['limit']['ring_groups']['numeric']))) {
 			echo modal::create(['id'=>'modal-copy','type'=>'copy','actions'=>button::create(['type'=>'submit','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_copy','style'=>'float: right; margin-left: 15px;','collapse'=>'never','name'=>'action','value'=>'copy','onclick'=>"modal_close();"])]);
 		}
 		if (permission_exists('ring_group_delete') || permission_exists('ring_group_destination_delete')) {
@@ -782,7 +783,7 @@
 		if (empty($row['destination_delay'])) { $row['destination_delay'] = "0"; }
 		if (empty($row['destination_timeout'])) { $row['destination_timeout'] = "30"; }
 
-		if (!empty($row['ring_group_destination_uuid'])) {
+		if (!empty($row['ring_group_destination_uuid']) && is_uuid($row['ring_group_destination_uuid'])) {
 			echo "		<input name='ring_group_destinations[".$x."][ring_group_destination_uuid]' type='hidden' value=\"".escape($row['ring_group_destination_uuid'])."\">\n";
 		}
 
@@ -853,7 +854,7 @@
 		}
 		echo "				</td>\n";
 		if ($show_destination_delete && permission_exists('ring_group_destination_delete')) {
-			if (is_uuid($row['ring_group_destination_uuid'])) {
+			if (!empty($row['ring_group_destination_uuid']) && is_uuid($row['ring_group_destination_uuid'])) {
 				echo "			<td class='vtable' style='text-align: center; padding-bottom: 3px;'>";
 				echo "				<input type='checkbox' name='ring_group_destinations_delete[".$x."][checked]' value='true' class='chk_delete checkbox_destinations' onclick=\"edit_delete_action('destinations');\">\n";
 				echo "				<input type='hidden' name='ring_group_destinations_delete[".$x."][uuid]' value='".escape($row['ring_group_destination_uuid'])."' />\n";
