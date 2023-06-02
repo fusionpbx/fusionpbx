@@ -480,6 +480,9 @@
 		echo "		</tr>\n";
 	}
 
+	//define the previous profile key vendor
+	$previous_profile_key_vendor = null;
+
 	$x = 0;
 	foreach($device_profile_keys as $row) {
 
@@ -494,7 +497,6 @@
 		$device_vendor = str_replace(' ', '_', $row['profile_key_vendor']);
 
 		//set the column names
-		$previous_profile_key_vendor = null;
 		if ($previous_profile_key_vendor != $row['profile_key_vendor']) {
 			echo "			<tr>\n";
 			echo "				<th class='vtablereq'>".$text['label-device_key_category']."</td>\n";
