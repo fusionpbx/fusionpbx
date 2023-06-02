@@ -46,6 +46,10 @@
 	$language = new text;
 	$text = $language->get();
 
+//set the defaults
+	$domain_name = '';
+	$domain_description = '';
+
 //action add or update
 	if (!permission_exists('domain_add') || (file_exists($_SERVER["PROJECT_ROOT"]."/app/domains/") && !permission_exists('domain_all'))) {
 		//admin editing own domain/settings
@@ -53,7 +57,7 @@
 		$action = "update";
 	}
 	else {
-		if (is_uuid($_REQUEST["id"])) {
+		if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 			$action = "update";
 			$domain_uuid = $_REQUEST["id"];
 		}
@@ -63,14 +67,14 @@
 	}
 
 //get http post variables and set them to php variables
-	if (count($_POST) > 0) {
+	if (!empty($_POST)) {
 		$domain_name = strtolower($_POST["domain_name"]);
 		$domain_enabled = $_POST["domain_enabled"] ?: 'false';
 		$domain_description = $_POST["domain_description"];
 	}
 
 //process the data
-	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
+	if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
 		//get the domain_uuid
 			if ($action == "update" && $_POST["domain_uuid"]) {
@@ -118,7 +122,7 @@
 			}
 
 		//add or update the database
-			if ($_POST["persistformvar"] != "true") {
+			if (empty($_POST["persistformvar"])) {
 				if ($action == "add" && permission_exists('domain_add')) {
 					$sql = "select count(*) from v_domains ";
 					$sql .= "where lower(domain_name) = :domain_name ";
