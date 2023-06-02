@@ -67,7 +67,7 @@
 	}
 	$sql = "select sip_profile_uuid, sip_profile_name from v_sip_profiles ";
 	$sql .= "where sip_profile_enabled = 'true' ";
-	if (!empty($hostname) && $hostname) {
+	if (!empty($hostname)) {
 		$sql .= "and (sip_profile_hostname = :sip_profile_hostname ";
 		$sql .= "or sip_profile_hostname = '' ";
 		$sql .= "or sip_profile_hostname is null) ";
