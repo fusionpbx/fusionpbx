@@ -244,7 +244,7 @@
 				}
 				else {
 					echo "	<td class='hide-xs'>\n";
-					echo $row['module_enabled'] == 'true' ? "<strong style='color: red;'>".$text['label-stopped']."</strong>" : $text['label-stopped']." ".escape($notice);
+					echo $row['module_enabled'] == 'true' ? "<strong style='color: red;'>".$text['label-stopped']."</strong>" : $text['label-stopped']." ".escape($notice ?? null);
 					echo "	</td>\n";
 					if (permission_exists('module_edit')) {
 						echo "	<td class='no-link center'>";

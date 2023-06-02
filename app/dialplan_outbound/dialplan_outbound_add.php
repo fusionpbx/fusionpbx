@@ -50,6 +50,13 @@
 	$language = new text;
 	$text = $language->get();
 
+//set the defaults
+	$prefix_number = '';
+	$dialplan_description = '';
+	$limit = '';
+	$accountcode = '';
+	$toll_allow = '';
+
 //get the http post values and set theme as php variables
 	if (!empty($_POST)) {
 		//set the variables
@@ -1270,7 +1277,7 @@ function type_onchange(dialplan_detail_type) {
 		echo "		<option value='false' selected='true'>".$text['label-false']."</option>\n";
 		echo "	</select>\n";
 		echo "<br />\n";
-		echo $text['description-enable-pin_numbers']."\n";
+		//echo $text['description-enable-pin_numbers']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 	}
@@ -1337,7 +1344,7 @@ function type_onchange(dialplan_detail_type) {
 	echo "</table>";
 	echo "<br><br>";
 
-	if ($action == "update") {
+	if (!empty($action) && $action == "update") {
 		echo "<input type='hidden' name='dialplan_uuid' value='".escape($dialplan_uuid)."'>\n";
 	}
 	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
