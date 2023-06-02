@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -78,10 +78,10 @@
 	if (!empty($_POST)) {
 		$phone_label = $_POST["phone_label"];
 		$phone_label_custom = $_POST["phone_label_custom"];
-		$phone_type_voice = $_POST["phone_type_voice"];
-		$phone_type_fax = $_POST["phone_type_fax"];
-		$phone_type_video = $_POST["phone_type_video"];
-		$phone_type_text = $_POST["phone_type_text"];
+		$phone_type_voice = $_POST["phone_type_voice"] ?? null;
+		$phone_type_fax = $_POST["phone_type_fax"] ?? null;
+		$phone_type_video = $_POST["phone_type_video"] ?? null;
+		$phone_type_text = $_POST["phone_type_text"] ?? null;
 		$phone_speed_dial = $_POST["phone_speed_dial"];
 		$phone_country_code = $_POST["phone_country_code"];
 		$phone_number = $_POST["phone_number"];

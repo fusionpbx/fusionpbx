@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -296,7 +296,7 @@ if (!empty($_GET["contact_uuid"]) && is_uuid($_GET["contact_uuid"])) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='email_primary' id='email_primary'>\n";
 	echo "		<option value='0'>".$text['option-false']."</option>\n";
-	echo "		<option value='1' ".(($email_primary) ? "selected" : null).">".$text['option-true']."</option>\n";
+	echo "		<option value='1' ".(!empty($email_primary) && $email_primary ? "selected" : null).">".$text['option-true']."</option>\n";
 	echo "	</select>\n";
 	echo "<br />\n";
 	echo $text['description-email_primary']."\n";

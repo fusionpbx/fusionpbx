@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -336,7 +336,7 @@
 		'pref' => $text['option-pref']
 		);
 	foreach ($vcard_address_types as $vcard_address_type_value => $vcard_address_type_label) {
-		echo "	<option value='".$vcard_address_type_value."' ".(($address_type == $vcard_address_type_value) ? "selected" : null).">".$vcard_address_type_label."</option>\n";
+		echo "	<option value='".$vcard_address_type_value."' ".(!empty($address_type) && $address_type == $vcard_address_type_value ? "selected" : null).">".$vcard_address_type_label."</option>\n";
 	}
 	echo "	</select>\n";
 	echo "<br />\n";
@@ -440,7 +440,7 @@
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='address_primary' id='address_primary'>\n";
 	echo "		<option value='0'>".$text['option-false']."</option>\n";
-	echo "		<option value='1' ".(($address_primary) ? "selected" : null).">".$text['option-true']."</option>\n";
+	echo "		<option value='1' ".(!empty($address_primary) && $address_primary ? "selected" : null).">".$text['option-true']."</option>\n";
 	echo "	</select>\n";
 	echo "<br />\n";
 	echo $text['description-address_primary']."\n";

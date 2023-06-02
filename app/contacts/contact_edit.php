@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018 - 2022
+	Portions created by the Initial Developer are Copyright (C) 2018 - 2023
 	the Initial Developer. All Rights Reserved.
 */
 
@@ -88,13 +88,13 @@
 		$contact_time_zone = $_POST["contact_time_zone"];
 		$contact_note = $_POST["contact_note"];
 
-		$last_mod_date = $_POST["last_mod_date"];
-		$last_mod_user = $_POST["last_mod_user"];
+		$last_mod_date = $_POST["last_mod_date"] ?? null;
+		$last_mod_user = $_POST["last_mod_user"] ?? null;
 
 		//$contact_users = $_POST["contact_users"];
 		//$contact_groups = $_POST["contact_groups"];
-		$contact_user_uuid = $_POST["contact_user_uuid"];
-		$contact_group_uuid = $_POST["contact_group_uuid"];
+		$contact_user_uuid = $_POST["contact_user_uuid"] ?? null;
+		$contact_group_uuid = $_POST["contact_group_uuid"] ?? null;
 
 		$contact_phones = $_POST["contact_phones"];
 		$contact_addresses = $_POST["contact_addresses"];
@@ -102,9 +102,9 @@
 		$contact_urls = $_POST["contact_urls"];
 		$contact_relations = $_POST["contact_relations"];
 		$contact_settings = $_POST["contact_settings"];
-		$contact_attachments = $_POST["contact_attachments"];
-		$contact_times = $_POST["contact_times"];
-		$contact_notes = $_POST["contact_notes"];
+		$contact_attachments = $_POST["contact_attachments"] ?? null;
+		$contact_times = $_POST["contact_times"] ?? null;
+		$contact_notes = $_POST["contact_notes"] ?? null;
 	}
 
 //process the user data and save it to the database
@@ -126,124 +126,148 @@
 
 				//prepare the array(s)
 				$x = 0;
-				foreach ($_POST['contact_users'] as $row) {
-					if (!empty($row['contact_uuid']) && is_uuid($row['contact_uuid']) && $row['checked'] === 'true') {
-						$array['contacts'][$x]['checked'] = $row['checked'];
-						$array['contacts'][$x]['contact_users'][]['contact_user_uuid'] = $row['contact_user_uuid'];
-						$x++;
+				if (!empty($_POST['contact_users']) && is_array($_POST['contact_users']) && @sizeof($_POST['contact_users']) != 0) {
+					foreach ($_POST['contact_users'] as $row) {
+						if (!empty($row['contact_uuid']) && is_uuid($row['contact_uuid']) && !empty($row['checked']) && $row['checked'] === 'true') {
+							$array['contacts'][$x]['checked'] = $row['checked'];
+							$array['contacts'][$x]['contact_users'][]['contact_user_uuid'] = $row['contact_user_uuid'];
+							$x++;
+						}
 					}
 				}
 
 				$x = 0;
-				foreach ($_POST['contact_groups'] as $row) {
-					if (!empty($row['contact_uuid']) && is_uuid($row['contact_uuid']) && $row['checked'] === 'true') {
-						$array['contacts'][$x]['checked'] = $row['checked'];
-						$array['contacts'][$x]['contact_groups'][]['contact_group_uuid'] = $row['contact_group_uuid'];
-						$x++;
+				if (!empty($_POST['contact_groups']) && is_array($_POST['contact_groups']) && @sizeof($_POST['contact_groups']) != 0) {
+					foreach ($_POST['contact_groups'] as $row) {
+						if (!empty($row['contact_uuid']) && is_uuid($row['contact_uuid']) && !empty($row['checked']) && $row['checked'] === 'true') {
+							$array['contacts'][$x]['checked'] = $row['checked'];
+							$array['contacts'][$x]['contact_groups'][]['contact_group_uuid'] = $row['contact_group_uuid'];
+							$x++;
+						}
 					}
 				}
 
 				$x = 0;
-				foreach ($_POST['contact_phones'] as $row) {
-					if (!empty($row['contact_uuid']) && is_uuid($row['contact_uuid']) && $row['checked'] === 'true') {
-						$array['contacts'][$x]['checked'] = $row['checked'];
-						$array['contacts'][$x]['contact_phones'][]['contact_phone_uuid'] = $row['contact_phone_uuid'];
-						$x++;
+				if (!empty($_POST['contact_phones']) && is_array($_POST['contact_phones']) && @sizeof($_POST['contact_phones']) != 0) {
+					foreach ($_POST['contact_phones'] as $row) {
+						if (!empty($row['contact_uuid']) && is_uuid($row['contact_uuid']) && !empty($row['checked']) && $row['checked'] === 'true') {
+							$array['contacts'][$x]['checked'] = $row['checked'];
+							$array['contacts'][$x]['contact_phones'][]['contact_phone_uuid'] = $row['contact_phone_uuid'];
+							$x++;
+						}
 					}
 				}
 
 				$x = 0;
-				foreach ($_POST['contact_addresses'] as $row) {
-					if (!empty($row['contact_uuid']) && is_uuid($row['contact_uuid']) && $row['checked'] === 'true') {
-						$array['contacts'][$x]['checked'] = $row['checked'];
-						$array['contacts'][$x]['contact_addresses'][]['contact_address_uuid'] = $row['contact_address_uuid'];
-						$x++;
+				if (!empty($_POST['contact_addresses']) && is_array($_POST['contact_addresses']) && @sizeof($_POST['contact_addresses']) != 0) {
+					foreach ($_POST['contact_addresses'] as $row) {
+						if (!empty($row['contact_uuid']) && is_uuid($row['contact_uuid']) && !empty($row['checked']) && $row['checked'] === 'true') {
+							$array['contacts'][$x]['checked'] = $row['checked'];
+							$array['contacts'][$x]['contact_addresses'][]['contact_address_uuid'] = $row['contact_address_uuid'];
+							$x++;
+						}
 					}
 				}
 
 				$x = 0;
-				foreach ($_POST['contact_emails'] as $row) {
-					if (!empty($row['contact_uuid']) && is_uuid($row['contact_uuid']) && $row['checked'] === 'true') {
-						$array['contacts'][$x]['checked'] = $row['checked'];
-						$array['contacts'][$x]['contact_emails'][]['contact_email_uuid'] = $row['contact_email_uuid'];
-						$x++;
+				if (!empty($_POST['contact_emails']) && is_array($_POST['contact_emails']) && @sizeof($_POST['contact_emails']) != 0) {
+					foreach ($_POST['contact_emails'] as $row) {
+						if (!empty($row['contact_uuid']) && is_uuid($row['contact_uuid']) && !empty($row['checked']) && $row['checked'] === 'true') {
+							$array['contacts'][$x]['checked'] = $row['checked'];
+							$array['contacts'][$x]['contact_emails'][]['contact_email_uuid'] = $row['contact_email_uuid'];
+							$x++;
+						}
 					}
 				}
 
 				$x = 0;
-				foreach ($_POST['contact_urls'] as $row) {
-					if (!empty($row['contact_uuid']) && is_uuid($row['contact_uuid']) && $row['checked'] === 'true') {
-						$array['contacts'][$x]['checked'] = $row['checked'];
-						$array['contacts'][$x]['contact_urls'][]['contact_url_uuid'] = $row['contact_url_uuid'];
-						$x++;
+				if (!empty($_POST['contact_urls']) && is_array($_POST['contact_urls']) && @sizeof($_POST['contact_urls']) != 0) {
+					foreach ($_POST['contact_urls'] as $row) {
+						if (!empty($row['contact_uuid']) && is_uuid($row['contact_uuid']) && !empty($row['checked']) && $row['checked'] === 'true') {
+							$array['contacts'][$x]['checked'] = $row['checked'];
+							$array['contacts'][$x]['contact_urls'][]['contact_url_uuid'] = $row['contact_url_uuid'];
+							$x++;
+						}
 					}
 				}
 
 				$x = 0;
-				foreach ($_POST['contact_relations'] as $row) {
-					if (!empty($row['contact_uuid']) && is_uuid($row['contact_uuid']) && $row['checked'] === 'true') {
-						$array['contacts'][$x]['checked'] = $row['checked'];
-						$array['contacts'][$x]['contact_relations'][]['contact_relation_uuid'] = $row['contact_relation_uuid'];
-						$x++;
+				if (!empty($_POST['contact_relations']) && is_array($_POST['contact_relations']) && @sizeof($_POST['contact_relations']) != 0) {
+					foreach ($_POST['contact_relations'] as $row) {
+						if (!empty($row['contact_uuid']) && is_uuid($row['contact_uuid']) && !empty($row['checked']) && $row['checked'] === 'true') {
+							$array['contacts'][$x]['checked'] = $row['checked'];
+							$array['contacts'][$x]['contact_relations'][]['contact_relation_uuid'] = $row['contact_relation_uuid'];
+							$x++;
+						}
 					}
 				}
 
 				$x = 0;
-				foreach ($_POST['contact_settings'] as $row) {
-					if (!empty($row['contact_uuid']) && is_uuid($row['contact_uuid']) && $row['checked'] === 'true') {
-						$array['contacts'][$x]['checked'] = $row['checked'];
-						$array['contacts'][$x]['contact_settings'][]['contact_setting_uuid'] = $row['contact_setting_uuid'];
-						$x++;
+				if (!empty($_POST['contact_settings']) && is_array($_POST['contact_settings']) && @sizeof($_POST['contact_settings']) != 0) {
+					foreach ($_POST['contact_settings'] as $row) {
+						if (!empty($row['contact_uuid']) && is_uuid($row['contact_uuid']) && !empty($row['checked']) && $row['checked'] === 'true') {
+							$array['contacts'][$x]['checked'] = $row['checked'];
+							$array['contacts'][$x]['contact_settings'][]['contact_setting_uuid'] = $row['contact_setting_uuid'];
+							$x++;
+						}
 					}
 				}
 
 				$x = 0;
-				foreach ($_POST['contact_attachments'] as $row) {
-					if (!empty($row['contact_uuid']) && is_uuid($row['contact_uuid']) && $row['checked'] === 'true') {
-						$array['contacts'][$x]['checked'] = $row['checked'];
-						$array['contacts'][$x]['contact_attachments'][]['contact_attachment_uuid'] = $row['contact_attachment_uuid'];
-						$x++;
+				if (!empty($_POST['contact_attachments']) && is_array($_POST['contact_attachments']) && @sizeof($_POST['contact_attachments']) != 0) {
+					foreach ($_POST['contact_attachments'] as $row) {
+						if (!empty($row['contact_uuid']) && is_uuid($row['contact_uuid']) && !empty($row['checked']) && $row['checked'] === 'true') {
+							$array['contacts'][$x]['checked'] = $row['checked'];
+							$array['contacts'][$x]['contact_attachments'][]['contact_attachment_uuid'] = $row['contact_attachment_uuid'];
+							$x++;
+						}
 					}
 				}
 
 				$x = 0;
-				foreach ($_POST['contact_times'] as $row) {
-					if (!empty($row['contact_uuid']) && is_uuid($row['contact_uuid']) && $row['checked'] === 'true') {
-						$array['contacts'][$x]['checked'] = $row['checked'];
-						$array['contacts'][$x]['contact_times'][]['contact_time_uuid'] = $row['contact_time_uuid'];
-						$x++;
+				if (!empty($_POST['contact_times']) && is_array($_POST['contact_times']) && @sizeof($_POST['contact_times']) != 0) {
+					foreach ($_POST['contact_times'] as $row) {
+						if (!empty($row['contact_uuid']) && is_uuid($row['contact_uuid']) && !empty($row['checked']) && $row['checked'] === 'true') {
+							$array['contacts'][$x]['checked'] = $row['checked'];
+							$array['contacts'][$x]['contact_times'][]['contact_time_uuid'] = $row['contact_time_uuid'];
+							$x++;
+						}
 					}
 				}
 
 				$x = 0;
-				foreach ($_POST['contact_notes'] as $row) {
-					if (!empty($row['contact_uuid']) && is_uuid($row['contact_uuid']) && $row['checked'] === 'true') {
-						$array['contacts'][$x]['checked'] = $row['checked'];
-						$array['contacts'][$x]['contact_notes'][]['contact_note_uuid'] = $row['contact_note_uuid'];
-						$x++;
+				if (!empty($_POST['contact_notes']) && is_array($_POST['contact_notes']) && @sizeof($_POST['contact_notes']) != 0) {
+					foreach ($_POST['contact_notes'] as $row) {
+						if (!empty($row['contact_uuid']) && is_uuid($row['contact_uuid']) && !empty($row['checked']) && $row['checked'] === 'true') {
+							$array['contacts'][$x]['checked'] = $row['checked'];
+							$array['contacts'][$x]['contact_notes'][]['contact_note_uuid'] = $row['contact_note_uuid'];
+							$x++;
+						}
 					}
 				}
 
 				//send the array to the database class
-				switch ($_POST['action']) {
-					case 'copy':
-						if (permission_exists('contact_add')) {
-							$obj = new database;
-							$obj->copy($array);
-						}
-						break;
-					case 'delete':
-						if (permission_exists('contact_delete')) {
-							$obj = new database;
-							$obj->delete($array);
-						}
-						break;
-					case 'toggle':
-						if (permission_exists('contact_update')) {
-							$obj = new database;
-							$obj->toggle($array);
-						}
-						break;
+				if (!empty($array)) {
+					switch ($_POST['action']) {
+						case 'copy':
+							if (permission_exists('contact_add')) {
+								$obj = new database;
+								$obj->copy($array);
+							}
+							break;
+						case 'delete':
+							if (permission_exists('contact_delete')) {
+								$obj = new database;
+								$obj->delete($array);
+							}
+							break;
+						case 'toggle':
+							if (permission_exists('contact_update')) {
+								$obj = new database;
+								$obj->toggle($array);
+							}
+							break;
+					}
 				}
 
 				//redirect the user
@@ -1317,17 +1341,17 @@ if (!empty($_SESSION["contact"]["type"])) {
 else {
 	echo "	<select class='formfld' name='contact_type'>\n";
 	echo "		<option value=''></option>\n";
-	echo "		<option value='customer' ".(($contact_type == "customer") ? "selected='selected'" : null).">".$text['option-contact_type_customer']."</option>\n";
-	echo "		<option value='contractor' ".(($contact_type == "contractor") ? "selected='selected'" : null).">".$text['option-contact_type_contractor']."</option>\n";
-	echo "		<option value='friend' ".(($contact_type == "friend") ? "selected='selected'" : null).">".$text['option-contact_type_friend']."</option>\n";
-	echo "		<option value='lead' ".(($contact_type == "lead") ? "selected='selected'" : null).">".$text['option-contact_type_lead']."</option>\n";
-	echo "		<option value='member' ".(($contact_type == "member") ? "selected='selected'" : null).">".$text['option-contact_type_member']."</option>\n";
-	echo "		<option value='family' ".(($contact_type == "family") ? "selected='selected'" : null).">".$text['option-contact_type_family']."</option>\n";
-	echo "		<option value='subscriber' ".(($contact_type == "subscriber") ? "selected='selected'" : null).">".$text['option-contact_type_subscriber']."</option>\n";
-	echo "		<option value='supplier' ".(($contact_type == "supplier") ? "selected='selected'" : null).">".$text['option-contact_type_supplier']."</option>\n";
-	echo "		<option value='provider' ".(($contact_type == "provider") ? "selected='selected'" : null).">".$text['option-contact_type_provider']."</option>\n";
-	echo "		<option value='user' ".(($contact_type == "user") ? "selected='selected'" : null).">".$text['option-contact_type_user']."</option>\n";
-	echo "		<option value='volunteer' ".(($contact_type == "volunteer") ? "selected='selected'" : null).">".$text['option-contact_type_volunteer']."</option>\n";
+	echo "		<option value='customer' ".(!empty($contact_type) && $contact_type == "customer" ? "selected='selected'" : null).">".$text['option-contact_type_customer']."</option>\n";
+	echo "		<option value='contractor' ".(!empty($contact_type) && $contact_type == "contractor" ? "selected='selected'" : null).">".$text['option-contact_type_contractor']."</option>\n";
+	echo "		<option value='friend' ".(!empty($contact_type) && $contact_type == "friend" ? "selected='selected'" : null).">".$text['option-contact_type_friend']."</option>\n";
+	echo "		<option value='lead' ".(!empty($contact_type) && $contact_type == "lead" ? "selected='selected'" : null).">".$text['option-contact_type_lead']."</option>\n";
+	echo "		<option value='member' ".(!empty($contact_type) && $contact_type == "member" ? "selected='selected'" : null).">".$text['option-contact_type_member']."</option>\n";
+	echo "		<option value='family' ".(!empty($contact_type) && $contact_type == "family" ? "selected='selected'" : null).">".$text['option-contact_type_family']."</option>\n";
+	echo "		<option value='subscriber' ".(!empty($contact_type) && $contact_type == "subscriber" ? "selected='selected'" : null).">".$text['option-contact_type_subscriber']."</option>\n";
+	echo "		<option value='supplier' ".(!empty($contact_type) && $contact_type == "supplier" ? "selected='selected'" : null).">".$text['option-contact_type_supplier']."</option>\n";
+	echo "		<option value='provider' ".(!empty($contact_type) && $contact_type == "provider" ? "selected='selected'" : null).">".$text['option-contact_type_provider']."</option>\n";
+	echo "		<option value='user' ".(!empty($contact_type) && $contact_type == "user" ? "selected='selected'" : null).">".$text['option-contact_type_user']."</option>\n";
+	echo "		<option value='volunteer' ".(!empty($contact_type) && $contact_type == "volunteer" ? "selected='selected'" : null).">".$text['option-contact_type_volunteer']."</option>\n";
 	echo "	</select>\n";
 }
 echo "		</div>\n";
@@ -1419,12 +1443,7 @@ foreach ($time_zone_identifiers as $key => $val) {
 			$time_zone_offset_hours = "-".number_pad($time_zone_offset_hours, 2);
 		}
 	}
-	if ($val == $contact_time_zone) {
-		echo "				<option value='".$val."' selected='selected'>(UTC ".$time_zone_offset_hours.":".$time_zone_offset_minutes.") ".$val."</option>\n";
-	}
-	else {
-		echo "				<option value='".$val."'>(UTC ".$time_zone_offset_hours.":".$time_zone_offset_minutes.") ".$val."</option>\n";
-	}
+	echo "				<option value='".$val."' ".(!empty($contact_time_zone) && $val == $contact_time_zone ? "selected='selected'" : null).">(UTC ".$time_zone_offset_hours.":".$time_zone_offset_minutes.") ".$val."</option>\n";
 	$previous_category = $category;
 	$x++;
 }
@@ -1609,7 +1628,7 @@ if (permission_exists('contact_phone_view')) {
 			echo "			</div>\n";
 		}
 		echo "			<div class='button no-link' style='float: left; margin-top: 1px; margin-left: 8px;'>\n";
-		echo "				<a href='../xml_cdr/xml_cdr.php?caller_id_number=".urlencode($row['phone_number'])."'>\n";
+		echo "				<a href='../xml_cdr/xml_cdr.php?caller_id_number=".urlencode($row['phone_number'] ?? '')."'>\n";
 		echo "					<i class='fas fa-search fa-fw' style='color: ".$body_text_color."; float: left; margin-top: 7px; margin-left: 3px; margin-right: 3px;' title=\"".$text['button-cdr']."\"></i>\n";
 		echo "				</a>\n";
 
@@ -1802,6 +1821,7 @@ if (permission_exists('contact_phone_view')) {
 }
 
 if (permission_exists('contact_address_view')) {
+	$x = 0;
 	foreach($contact_addresses as $row) {
 		echo "	<div class='form_set'>\n";
 		echo "		<div class='heading'>\n";
@@ -2055,7 +2075,7 @@ if (permission_exists('contact_email_view')) {
 	foreach($contact_emails as $row) {
 		echo "	<div class='form_set'>\n";
 		echo "		<div class='heading'>\n";
-		echo "			<b style='float: left;'>".!empty($text['label-emails'])."</b>\n";
+		echo "			<b style='float: left;'>".$text['label-emails']."</b>\n";
 		if ($row['email_primary'] == "1") {
 			echo "			<i class='fas fa-star fa-xs' style='color: ".$body_text_color."; float: left; margin-top: 7px; margin-left: 8px;' title=\"".$text['label-primary']."\"></i>\n";
 		}
@@ -2216,7 +2236,7 @@ if (permission_exists('contact_url_view')) {
 		echo "			</div>\n";
 		echo "			<div class='field no-wrap'>\n";
 		echo "				<select class='formfld' name='contact_urls[$x][url_primary]' style='width: auto;'>\n";
-		echo "					<option value=''>".escape($text['label-url_primary'])."</option>\n";
+		echo "					<option value=''></option>\n";
 		if ($row['url_primary'] == "1") {
 			echo "					<option value='1' selected='selected'>".$text['label-true']."</option>\n";
 		}
@@ -2344,7 +2364,7 @@ if (permission_exists('contact_relation_view')) {
 			echo "			<div id='contacts' class='field no-wrap' style=\"width: auto; display: inline;\">\n";
 			echo "				<input class=\"formfld\" type=\"text\" name=\"contact_search\" placeholder=\"search\" style=\"width: 30%;\" onkeyup=\"get_contacts('contact_select_".$x."', 'contact_uuid', this.value);\" maxlength=\"255\" value=\"\">\n";
 			echo "				<select class='formfld' style=\"width: 70%;\" id=\"contact_select_".$x."\" name=\"contact_relations[".$x."][relation_contact_uuid]\" >\n";
-			echo "					<option value='".escape($row['relation_contact_uuid'])."'>".escape($contact_name)."</option>\n";
+			echo "					<option value='".escape($row['relation_contact_uuid'])."'>".escape($contact_name ?? '')."</option>\n";
 			echo "				</select>\n";
 			echo "			</div>\n";
 			echo "		</div>\n";
@@ -2413,10 +2433,10 @@ if (permission_exists('contact_setting_view')) {
 		echo "		</div>\n";
 		echo "		<div class='field no-wrap'>\n";
 		echo "			<select name='contact_settings[$x][contact_setting_order]' class='formfld'>\n";
-		echo "				<option value='$i' ".!empty($selected).">".escape($text['label-contact_setting_order'] ?? '')."</option>\n";
+		echo "				<option value=''></option>\n";
 		$i=0;
 		while ($i<=999) {
-			$selected = ($i == $row["contact_setting_order"]) ? "selected" : null;
+			$selected = ($i == $row["contact_setting_order"]) ? "selected='selected'" : null;
 			if (strlen($i) == 1) {
 				echo "				<option value='00$i' ".$selected.">00$i</option>\n";
 			}

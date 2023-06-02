@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -216,7 +216,7 @@
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='attachment_primary' id='attachment_primary'>\n";
 	echo "		<option value='0'>".$text['option-false']."</option>\n";
-	echo "		<option value='1' ".(($attachment_primary) ? "selected" : null).">".$text['option-true']."</option>\n";
+	echo "		<option value='1' ".(!empty($attachment_primary) && $attachment_primary ? "selected" : null).">".$text['option-true']."</option>\n";
 	echo "	</select>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
