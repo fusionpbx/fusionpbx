@@ -200,7 +200,10 @@
 		$array_filter[6]['type'] = 'bold';
 		$array_filter[6]['font'] = 'monospace';
 
-		$file_size = filesize($log_file);
+		$file_size = 0;
+		if (file_exists($log_file)) {
+			$file_size = filesize($log_file);
+		}
 
 		/*
 		// removed: duplicate of above
@@ -248,7 +251,7 @@
 				else {
 					//open the file
 					$byte_count ='0';
-					if ($file) {
+					if (!empty($file)) {
 						fseek($file, 0);
 					}
 					echo "<br>".$text['label-open_file']."<br>";
@@ -272,7 +275,7 @@
 
 		//start processing
 		$byte_count = 0;
-		if ($file) {
+		if (!empty($file)) {
 			while(!feof($file)) {
 				$log_line = escape(fgets($file));
 				$byte_count++;
@@ -342,7 +345,7 @@
 	require_once "resources/footer.php";
 
 //close the file
-	if ($file) {
+	if (!empty($file)) {
 		fclose($file);
 	}
 
