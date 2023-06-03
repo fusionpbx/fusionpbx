@@ -9,5 +9,7 @@ return [
 	'accesible-groups' => 'accesible groups',
 	'no-local-groups' => 'no local groups',
 	'global-groups' => 'global groups',
+	'have-permission' => 'Your Telegram account have the :permission_name assigned.',
+	'have-no-permission' => 'Your Telegram account does not have the :permission_name assigned.',
 ];
 

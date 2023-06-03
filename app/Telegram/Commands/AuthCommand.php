@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\App;
 use Auth;
 use Illuminate\Database\Eloquent\Builder;
 use App\Models\User;
+use App\Http\Controllers\UserController;
 
 class AuthCommand extends UserCommand
 {
@@ -34,9 +35,9 @@ class AuthCommand extends UserCommand
 		$from_user_username = $from_user->getUsername();
 		$from_user_id = $from_user->getId();
 		$from_user_language = $from_user->getLanguageCode() ?? 'en';
-
 		App::setLocale($from_user_language);
 		$session_id = md5($from_user_id);
+
 		\OKayInc\StatelessSession::start($session_id);
 		Auth::logout();
 		\OKayInc\StatelessSession::reset();
@@ -55,31 +56,23 @@ class AuthCommand extends UserCommand
 			\Log::debug('$coolpbx_user: ' .$coolpbx_user);
 			\Log::debug('$coolpbx_domain: ' .$coolpbx_domain);
 			\Log::debug('$coolpbx_password: ' .$coolpbx_password);
-			// Let's find the user_uuid
-			// select * from v_users inner join v_domains using(domain_uuid) where username='superadmin' and domain_name='to-call.me'\G
 
-			$user_uuid = DB::table('v_users')
-					->join('v_domains', 'v_users.domain_uuid', '=', 'v_domains.domain_uuid')
-					->whereRaw('(username = ?) or (username = ? and domain_name = ?)',[$coolpbx_user.'@'.$coolpbx_domain, $coolpbx_user, $coolpbx_domain])
-					->value('v_users.user_uuid');
+			$user_controller = new UserController;
+			$authenticated = $user_controller->Autheticate($coolpbx_user, $coolpbx_domain, $coolpbx_password);
 
-			\Log::debug('$user_uuid: ' .$user_uuid);
-			if(!empty($user_uuid)){
-				if (Auth::attempt(['user_uuid' => $user_uuid, 'password' => $coolpbx_password], true)){
-					$user = User::find($user_uuid);
-					$domain_uuid = $user->domain_uuid;
-					\Log::debug('$domain_uuid: ' .$domain_uuid);
-					$answer = __('telegram.linked', ['telegram_user' => $from_user_username, 'coolpbx_user' => $coolpbx_user, 'coolpbx_domain' => $coolpbx_domain]);
-					\OKayInc\StatelessSession::set('coolpbx_user', $coolpbx_user);
-					\OKayInc\StatelessSession::set('coolpbx_domain', $coolpbx_domain);
-					\OKayInc\StatelessSession::set('user_uuid', $user_uuid);
-					\OKayInc\StatelessSession::set('domain_uuid', $domain_uuid);
-				}
-				else{
-					$answer = __('auth.failed');
-				}
+			if ($authenticated){
+				$user_uuid = $user_controller->getUuid($coolpbx_user, $coolpbx_domain);
+				$user = User::find($user_uuid);
+				$domain_uuid = $user->domain_uuid;
+				\Log::debug('$domain_uuid: ' .$domain_uuid);
+				$answer = __('telegram.linked', ['telegram_user' => $from_user_username, 'coolpbx_user' => $coolpbx_user, 'coolpbx_domain' => $coolpbx_domain]);
+				\OKayInc\StatelessSession::set('coolpbx_user', $coolpbx_user);
+				\OKayInc\StatelessSession::set('coolpbx_domain', $coolpbx_domain);
+				\OKayInc\StatelessSession::set('user_uuid', $user_uuid);
+				\OKayInc\StatelessSession::set('domain_uuid', $domain_uuid);
 			}
 			else{
+				$answer = __('auth.failed');
 			}
 
 		}

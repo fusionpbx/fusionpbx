@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Telegram\Commands;
-
 
 use Longman\TelegramBot\Commands\UserCommand;
 use Longman\TelegramBot\Entities\ServerResponse;
@@ -15,6 +13,8 @@ use Illuminate\Database\Eloquent\Builder;
 use App\Models\User;
 use App\Models\Domain;
 use App\Models\Group;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\GroupController;
 
 class GroupsCommand extends UserCommand
 {
@@ -30,16 +30,15 @@ class GroupsCommand extends UserCommand
 
 	public function execute(): ServerResponse
 	{
-
 		$message = $this->getMessage();
 		$text = $message->getText(true);
 		$from_user = $message->getFrom();
 		$from_user_username = $from_user->getUsername();
 		$from_user_id = $from_user->getId();
 		$from_user_language = $from_user->getLanguageCode() ?? 'en';
-
 		App::setLocale($from_user_language);
 		$session_id = md5($from_user_id);
+
 		\OKayInc\StatelessSession::start($session_id);
 		$coolpbx_user = \OKayInc\StatelessSession::get('coolpbx_user');
 		$coolpbx_domain = \OKayInc\StatelessSession::get('coolpbx_domain');
@@ -47,14 +46,19 @@ class GroupsCommand extends UserCommand
 		$domain_uuid = \OKayInc\StatelessSession::get('domain_uuid');
 		\Log::debug('$domain_uuid: ' .$domain_uuid);
 		$answer = '';
-		if (!empty($coolpbx_user) && !empty($coolpbx_domain) && !empty($user_uuid)) {
+
+		$user_controller = new UserController;
+		$authenticated = $user_controller->logginbyUsernameDomain($coolpbx_user, $coolpbx_domain);
+
+		if ($authenticated){
 			$answer = __('telegram.accesible-groups') . PHP_EOL;
-			$groups = Domain::find($domain_uuid)->groups();
-			$global_groups = Group::findGlobals();
-			if ($groups->count() > 0) {
+			$groups = new GroupController();
+			$local_groups = $groups->findFromDomainUuid($domain_uuid);
+			$global_groups = $groups->findGlobals();
+			if ($local_groups->count() > 0) {
 				$domain_name = Domain::find($domain_uuid)->domain_name;
 				\Log::debug('$domain_name: ' .$domain_name);
-				foreach ($groups as $group){
+				foreach ($local_groups as $group){
 					$answer .= $group->group_name . ' @ ' . $domain_name . PHP_EOL;
 				}
 			}

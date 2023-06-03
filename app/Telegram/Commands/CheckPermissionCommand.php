@@ -12,6 +12,7 @@ use LitEmoji\LitEmoji;
 use Illuminate\Support\Facades\App;
 use App\Models\User;
 use App\Models\Group;
+use App\Http\Controllers\GroupPermissionController;
 
 class CheckPermissionCommand extends UserCommand
 {
@@ -33,17 +34,19 @@ class CheckPermissionCommand extends UserCommand
 		$from_user_username = $from_user->getUsername();
 		$from_user_id = $from_user->getId();
 		$from_user_language = $from_user->getLanguageCode() ?? 'en';
+		App::setLocale($from_user_language);
+		$session_id = md5($from_user_id);
 
-		$group_permission = new \App\Http\Controllers\GroupPermissionController();
+		$group_permission = new GroupPermissionController();
 		$group_permission->setTelegramUser($from_user_id);
 
 		App::setLocale($from_user_language);
 
 		if ($group_permission->allowed($text) === true){
-			$answer = 'Found';
+			$answer =  __('telegram.have-permission', ['permission_name' => $text]);
 		}
 		else{
-			$answer = 'Not Found';
+			$answer =  __('telegram.have-no-permission', ['permission_name' => $text]);
 		}
 
 		return $this->replyToChat(
