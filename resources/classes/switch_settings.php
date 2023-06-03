@@ -260,12 +260,10 @@ if (!class_exists('switch_settings')) {
 				}
 
 			//set the default settings
-				if (is_array($array)) {
+				if (!empty($array) && is_array($array)) {
 					foreach ($array as $row) {
-						if (!isset($_SESSION['switch'][$row['default_setting_subcategory']])) {
-							if ($row['default_setting_enabled'] != "false") {
-								$_SESSION['switch'][$row['default_setting_subcategory']] = $row['default_setting_value'];
-							}
+						if (isset($row['default_setting_enabled']) && $row['default_setting_enabled'] == "true" && isset($row['default_setting_subcategory'])) {
+							$_SESSION['switch'][$row['default_setting_subcategory']] = $row['default_setting_value'] ?? '';
 						}
 					}
 				}
