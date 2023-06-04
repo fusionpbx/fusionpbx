@@ -62,8 +62,8 @@
 //get http post variables and set them to php variables
 	if (!empty($_POST)) {
 		$contact_note = $_POST["contact_note"];
-		$last_mod_date = $_POST["last_mod_date"];
-		$last_mod_user = $_POST["last_mod_user"] ?? '';
+		$last_mod_date = $_POST["last_mod_date"] ?? null;
+		$last_mod_user = $_POST["last_mod_user"] ?? null;
 	}
 
 //process the form data

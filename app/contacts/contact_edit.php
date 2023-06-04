@@ -365,10 +365,10 @@
 						$array['contacts'][0]['contact_phones'][$y]['contact_uuid'] = $contact_uuid;
 						$array['contacts'][0]['contact_phones'][$y]['contact_phone_uuid'] = $row["contact_phone_uuid"];
 						$array['contacts'][0]['contact_phones'][$y]['phone_label'] = $row["phone_label"];
-						$array['contacts'][0]['contact_phones'][$y]['phone_type_voice'] = $row["phone_type_voice"] ?? '';
-						$array['contacts'][0]['contact_phones'][$y]['phone_type_fax'] = $row["phone_type_fax"];
-						$array['contacts'][0]['contact_phones'][$y]['phone_type_video'] = $row["phone_type_video"] ?? '';
-						$array['contacts'][0]['contact_phones'][$y]['phone_type_text'] = $row["phone_type_text"];
+						$array['contacts'][0]['contact_phones'][$y]['phone_type_voice'] = $row["phone_type_voice"] ?? null;
+						$array['contacts'][0]['contact_phones'][$y]['phone_type_fax'] = $row["phone_type_fax"] ?? null;
+						$array['contacts'][0]['contact_phones'][$y]['phone_type_video'] = $row["phone_type_video"] ?? null;
+						$array['contacts'][0]['contact_phones'][$y]['phone_type_text'] = $row["phone_type_text"] ?? null;
 						$array['contacts'][0]['contact_phones'][$y]['phone_speed_dial'] = $row["phone_speed_dial"];
 						$array['contacts'][0]['contact_phones'][$y]['phone_country_code'] = $row["phone_country_code"];
 						$array['contacts'][0]['contact_phones'][$y]['phone_number'] = $row["phone_number"];
@@ -1067,7 +1067,7 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-contact-edit']."</b></div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','collapse'=>'hide-xs','style'=>'margin-right: 15px;','link'=>'contacts.php']);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','collapse'=>'hide-xs','style'=>'margin-right: 15px;','link'=>'contact_view.php?id='.$contact_uuid]);
 	if ($action == 'update') {
 		if (permission_exists('contact_phone_add')) {
 			echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'id'=>'btn_copy','name'=>'btn_copy','style'=>'display: none;','onclick'=>"modal_open('modal-copy','btn_copy');"]);
@@ -1315,6 +1315,7 @@ echo "		<div class='label empty_row' style='grid-row: 10 / span 99;'>\n";
 echo "			&nbsp;\n";
 echo "		</div>\n";
 echo "		<div class='field empty_row' style='grid-row: 10 / span 99;'>\n";
+echo "			&nbsp;\n";
 echo "		</div>\n";
 
 echo "	</div>\n";
@@ -1461,6 +1462,7 @@ echo "		<div class='label empty_row' style='grid-row: 8 / span 99;'>\n";
 echo "			&nbsp;\n";
 echo "		</div>\n";
 echo "		<div class='field empty_row' style='grid-row: 8 / span 99;'>\n";
+echo "			&nbsp;\n";
 echo "		</div>\n";
 
 echo "	</div>\n";
@@ -1725,10 +1727,10 @@ if (permission_exists('contact_phone_view')) {
 		echo "			".$text['label-phone_type']."\n";
 		echo "		</div>\n";
 		echo "		<div class='field no-wrap'>\n";
-		echo "			<label><input type='checkbox' name='contact_phones[$x][phone_type_voice]' id='phone_type_voice' value='1' ".(($row['phone_type_voice']) ? "checked='checked'" : null)."> ".$text['label-voice']."</label>&nbsp;\n";
-		echo "			<label><input type='checkbox' name='contact_phones[$x][phone_type_fax]' id='phone_type_fax' value='1' ".(($row['phone_type_fax']) ? "checked='checked'" : null)."> ".$text['label-fax']."</label>&nbsp;\n";
-		echo "			<label><input type='checkbox' name='contact_phones[$x][phone_type_video]' id='phone_type_video' value='1' ".(($row['phone_type_video']) ? "checked='checked'" : null)."> ".$text['label-video']."</label>&nbsp;\n";
-		echo "			<label><input type='checkbox' name='contact_phones[$x][phone_type_text]' id='phone_type_text' value='1' ".(($row['phone_type_text']) ? "checked='checked'" : null)."> ".$text['label-text']."</label>\n";
+		echo "			<label style='padding-top: 2px; margin: 0;'><input type='checkbox' name='contact_phones[$x][phone_type_voice]' id='phone_type_voice' value='1' ".(($row['phone_type_voice']) ? "checked='checked'" : null)."> ".$text['label-voice']."</label>&nbsp;\n";
+		echo "			<label style='padding-top: 2px; margin: 0;'><input type='checkbox' name='contact_phones[$x][phone_type_fax]' id='phone_type_fax' value='1' ".(($row['phone_type_fax']) ? "checked='checked'" : null)."> ".$text['label-fax']."</label>&nbsp;\n";
+		echo "			<label style='padding-top: 2px; margin: 0;'><input type='checkbox' name='contact_phones[$x][phone_type_video]' id='phone_type_video' value='1' ".(($row['phone_type_video']) ? "checked='checked'" : null)."> ".$text['label-video']."</label>&nbsp;\n";
+		echo "			<label style='padding-top: 2px; margin: 0;'><input type='checkbox' name='contact_phones[$x][phone_type_text]' id='phone_type_text' value='1' ".(($row['phone_type_text']) ? "checked='checked'" : null)."> ".$text['label-text']."</label>\n";
 		echo "			<br />\n";
 		//echo 			$text['description-phone_type']."\n";
 		echo "		</div>\n";
@@ -1796,10 +1798,11 @@ if (permission_exists('contact_phone_view')) {
 		//echo 				$text['description-phone_description']."\n";
 		echo "		</div>\n";
 
-		echo "		<div class='label empty_row' style='grid-row: 9 / span 99;'>\n";
+		echo "		<div class='label empty_row' style='grid-row: 10 / span 99;'>\n";
 		echo "			&nbsp;\n";
 		echo "		</div>\n";
-		echo "		<div class='field empty_row' style='grid-row: 9 / span 99;'>\n";
+		echo "		<div class='field empty_row' style='grid-row: 10 / span 99;'>\n";
+		echo "			&nbsp;\n";
 		echo "		</div>\n";
 
 		//if (!empty($contact_phones) && @sizeof($contact_phones) > 1 && permission_exists('contact_phone_delete')) {
@@ -2362,7 +2365,7 @@ if (permission_exists('contact_relation_view')) {
 			echo "		</div>\n";
 			echo "		<div class='field no-wrap'>\n";
 			echo "			<div id='contacts' class='field no-wrap' style=\"width: auto; display: inline;\">\n";
-			echo "				<input class=\"formfld\" type=\"text\" name=\"contact_search\" placeholder=\"search\" style=\"width: 30%;\" onkeyup=\"get_contacts('contact_select_".$x."', 'contact_uuid', this.value);\" maxlength=\"255\" value=\"\">\n";
+			echo "				<input class=\"formfld\" type=\"text\" name=\"contact_search\" placeholder=\"".$text['label-search']."\" style=\"width: calc(30% - 5px);\" onkeyup=\"get_contacts('contact_select_".$x."', 'contact_uuid', this.value);\" maxlength=\"255\" value=\"\">\n";
 			echo "				<select class='formfld' style=\"width: 70%;\" id=\"contact_select_".$x."\" name=\"contact_relations[".$x."][relation_contact_uuid]\" >\n";
 			echo "					<option value='".escape($row['relation_contact_uuid'])."'>".escape($contact_name ?? '')."</option>\n";
 			echo "				</select>\n";
