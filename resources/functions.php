@@ -2074,6 +2074,31 @@ function number_pad($number,$n) {
 		}
 	}
 
+	/**
+	 * Generate Random Password
+	 * <p>Generates a random password using the allowable character set</p>
+	 * @param int $length Generated random character length from 1 to 100. Default is 16 characters.
+	 * @param string $charset Allowable characters to use for password. Default is all characters except the backslash \
+	 */
+	if(!function_exists('random_password')) {
+		function random_password(int $length = 16, string $charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 !@#$%^&*(),-./:<>@[]^_|~'): string {
+			//create a buffer
+			$sb = "";
+
+			//set this outside the loop so it is not calculated many times
+			$char_ndx = strlen($charset) - 1;
+
+			//randomly get individual characters from the string array and assign it to the buffer array
+			for($buf_ndx = 0; $buf_ndx < $length; $buf_ndx++) {
+				//use the .= operator for an optimized concate
+				$sb .= $charset[\random_int(0, $char_ndx)];
+			}
+
+			//return the resulting random_password
+			return $sb;
+		}
+	}
+
 //add a hash_equals function when it doesn't exist for old versions of PHP
 	if (!function_exists('hash_equals')) {
 		function hash_equals($var1, $var2) {
