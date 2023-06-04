@@ -2077,7 +2077,7 @@ function number_pad($number,$n) {
 	/**
 	 * Generate Random Password
 	 * <p>Generates a random password using the allowable character set</p>
-	 * @param int $length Generated random character length from 1 to 100. Default is 16 characters.
+	 * @param int $length Generated random character length. Default is 16 characters.
 	 * @param string $charset Allowable characters to use for password. Default is all characters except the backslash \
 	 */
 	if(!function_exists('random_password')) {
