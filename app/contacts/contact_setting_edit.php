@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2018
+ Portions created by the Initial Developer are Copyright (C) 2008-2023
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -78,7 +78,7 @@
 		$contact_setting_subcategory = strtolower($_POST["contact_setting_subcategory"]);
 		$contact_setting_name = strtolower($_POST["contact_setting_name"]);
 		$contact_setting_value = $_POST["contact_setting_value"];
-		$contact_setting_order = $_POST["contact_setting_order"];
+		$contact_setting_order = $_POST["contact_setting_order"] ?? null;
 		$contact_setting_enabled = strtolower($_POST["contact_setting_enabled"]);
 		$contact_setting_description = $_POST["contact_setting_description"];
 	}

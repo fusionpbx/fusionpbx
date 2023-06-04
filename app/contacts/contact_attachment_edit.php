@@ -95,18 +95,18 @@
 
 		//format array
 			$allowed_extensions = array_keys(json_decode($_SESSION['contact']['allowed_attachment_types']['text'], true));
-			$array['contact_attachments'][$index]['contact_attachment_uuid'] = $action == 'update' ? $contact_attachment_uuid : uuid();
-			$array['contact_attachments'][$index]['domain_uuid'] = $_SESSION['domain_uuid'] ?? '';
-			$array['contact_attachments'][$index]['contact_uuid'] = $contact_uuid;
-			$array['contact_attachments'][$index]['attachment_primary'] = $allowed_primary_attachment ? 1 : 0;
+			$array['contact_attachments'][0]['contact_attachment_uuid'] = $action == 'update' ? $contact_attachment_uuid : uuid();
+			$array['contact_attachments'][0]['domain_uuid'] = $_SESSION['domain_uuid'] ?? '';
+			$array['contact_attachments'][0]['contact_uuid'] = $contact_uuid;
+			$array['contact_attachments'][0]['attachment_primary'] = $allowed_primary_attachment ? 1 : 0;
 			if ($attachment['error'] == '0' && in_array(strtolower(pathinfo($attachment['name'], PATHINFO_EXTENSION)), $allowed_extensions)) {
-				$array['contact_attachments'][$index]['attachment_filename'] = $attachment['name'];
-				$array['contact_attachments'][$index]['attachment_content'] = base64_encode(file_get_contents($attachment['tmp_name']));
+				$array['contact_attachments'][0]['attachment_filename'] = $attachment['name'];
+				$array['contact_attachments'][0]['attachment_content'] = base64_encode(file_get_contents($attachment['tmp_name']));
 			}
-			$array['contact_attachments'][$index]['attachment_description'] = $attachment_description;
+			$array['contact_attachments'][0]['attachment_description'] = $attachment_description;
 			if ($action == 'add') {
-				$array['contact_attachments'][$index]['attachment_uploaded_date'] = 'now()';
-				$array['contact_attachments'][$index]['attachment_uploaded_user_uuid'] = $_SESSION['user_uuid'];
+				$array['contact_attachments'][0]['attachment_uploaded_date'] = 'now()';
+				$array['contact_attachments'][0]['attachment_uploaded_user_uuid'] = $_SESSION['user_uuid'];
 			}
 
 		//save data
@@ -117,7 +117,7 @@
 			unset($array);
 
 		//redirect
-			message::add($text['message-message_'.($action == 'update' ? 'updated' : 'added')]);
+			message::add($text['message-'.($action == 'update' ? 'update' : 'uploaded')]);
 			header('Location: contact_edit.php?id='.$contact_uuid);
 			exit;
 
