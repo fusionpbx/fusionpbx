@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -25,7 +25,7 @@
 */
 
 //if the recordings directory doesn't exist then create it
-	if (!empty($_SESSION['switch']['recordings']) && !empty($_SESSION['switch']['recordings']['dir']."/".$domain_name)) {
+	if (!empty($_SESSION['switch']['recordings']['dir']) && !empty($domain_name)) {
 		if (!is_readable($_SESSION['switch']['recordings']['dir']."/".$domain_name)) {
 			mkdir($_SESSION['switch']['recordings']['dir']."/".$domain_name, 0770, true);
 		}
