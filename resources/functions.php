@@ -33,7 +33,7 @@
 
 	if (!function_exists('check_float')) {
 		function check_float($string) {
-			$string = str_replace(",",".",$string);
+			$string = str_replace(",",".",$string ?? '');
 			return trim($string);
 		}
 	}
@@ -797,7 +797,7 @@ function format_string($format, $data) {
 
 //get the format and use it to format the phone number
 	function format_phone($phone_number) {
-		if (is_numeric(trim($phone_number, ' +'))) {
+		if (is_numeric(trim($phone_number ?? '', ' +'))) {
 			if (isset($_SESSION["format"]["phone"])) {
 				$phone_number = trim($phone_number, ' +');
 				foreach ($_SESSION["format"]["phone"] as &$format) {
@@ -817,7 +817,7 @@ function format_string($format, $data) {
 //format seconds into hh:mm:ss
 	function format_hours($seconds) {
 		$hours = floor($seconds / 3600);
-		$minutes = floor(($seconds / 60) % 60);
+		$minutes = floor(floor($seconds / 60) % 60);
 		$seconds = $seconds % 60;
 		if (strlen($minutes) == 1) { $minutes = '0'.$minutes; }
 		if (strlen($seconds) == 1) { $seconds = '0'.$seconds; }

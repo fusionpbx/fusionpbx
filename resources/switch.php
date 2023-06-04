@@ -127,26 +127,10 @@ function save_setting_xml() {
 	$sql = "select * from v_settings ";
 	$database = new database;
 	$row = $database->select($sql, null, 'row');
-	if (!empty($row)) {
-		$fout = fopen($_SESSION['switch']['conf']['dir']."/directory/default/default.xml","w");
-		$xml = "<include>\n";
-		$xml .= "  <user id=\"default\"> <!--if id is numeric mailbox param is not necessary-->\n";
-		$xml .= "    <variables>\n";
-		$xml .= "      <!--all variables here will be set on all inbound calls that originate from this user -->\n";
-		$xml .= "      <!-- set these to take advantage of a dialplan localized to this user -->\n";
-		$xml .= "      <variable name=\"numbering_plan\" value=\"" . $row['numbering_plan'] . "\"/>\n";
-		$xml .= "      <variable name=\"default_gateway\" value=\"" . $row['default_gateway'] . "\"/>\n";
-		$xml .= "      <variable name=\"default_area_code\" value=\"" . $row['default_area_code'] . "\"/>\n";
-		$xml .= "    </variables>\n";
-		$xml .= "  </user>\n";
-		$xml .= "</include>\n";
-		fwrite($fout, $xml);
-		unset($xml);
-		fclose($fout);
-
+	if (!empty($row) && !empty($_SESSION['switch']['conf']['dir'])) {
+		//event_socket.conf.xml
 		$event_socket_ip_address = $row['event_socket_ip_address'];
 		if (empty($event_socket_ip_address)) { $event_socket_ip_address = '127.0.0.1'; }
-
 		$fout = fopen($_SESSION['switch']['conf']['dir']."/autoload_configs/event_socket.conf.xml","w");
 		$xml = "<configuration name=\"event_socket.conf\" description=\"Socket Client\">\n";
 		$xml .= "  <settings>\n";
@@ -162,6 +146,7 @@ function save_setting_xml() {
 		unset($xml, $event_socket_password);
 		fclose($fout);
 
+		//xml_rpc.conf.xml
 		$fout = fopen($_SESSION['switch']['conf']['dir']."/autoload_configs/xml_rpc.conf.xml","w");
 		$xml = "<configuration name=\"xml_rpc.conf\" description=\"XML RPC\">\n";
 		$xml .= "  <settings>\n";
@@ -178,18 +163,18 @@ function save_setting_xml() {
 		fclose($fout);
 
 		//shout.conf.xml
-			$fout = fopen($_SESSION['switch']['conf']['dir']."/autoload_configs/shout.conf.xml","w");
-			$xml = "<configuration name=\"shout.conf\" description=\"mod shout config\">\n";
-			$xml .= "  <settings>\n";
-			$xml .= "    <!-- Don't change these unless you are insane -->\n";
-			$xml .= "    <param name=\"decoder\" value=\"" . $row['mod_shout_decoder'] . "\"/>\n";
-			$xml .= "    <param name=\"volume\" value=\"" . $row['mod_shout_volume'] . "\"/>\n";
-			$xml .= "    <!--<param name=\"outscale\" value=\"8192\"/>-->\n";
-			$xml .= "  </settings>\n";
-			$xml .= "</configuration>";
-			fwrite($fout, $xml);
-			unset($xml);
-			fclose($fout);
+		$fout = fopen($_SESSION['switch']['conf']['dir']."/autoload_configs/shout.conf.xml","w");
+		$xml = "<configuration name=\"shout.conf\" description=\"mod shout config\">\n";
+		$xml .= "  <settings>\n";
+		$xml .= "    <!-- Don't change these unless you are insane -->\n";
+		$xml .= "    <param name=\"decoder\" value=\"" . $row['mod_shout_decoder'] . "\"/>\n";
+		$xml .= "    <param name=\"volume\" value=\"" . $row['mod_shout_volume'] . "\"/>\n";
+		$xml .= "    <!--<param name=\"outscale\" value=\"8192\"/>-->\n";
+		$xml .= "  </settings>\n";
+		$xml .= "</configuration>";
+		fwrite($fout, $xml);
+		unset($xml);
+		fclose($fout);
 	}
 	unset($sql, $row);
 
@@ -365,6 +350,11 @@ function save_var_xml() {
 	if (is_array($_SESSION['switch']['conf'])) {
 		global $config, $domain_uuid;
 
+		//skip this function if the conf directory is empty
+		if (empty($_SESSION['switch']['conf']['dir'])) {
+			return false;
+		}
+
 		//open the vars.xml file
 		$fout = fopen($_SESSION['switch']['conf']['dir']."/vars.xml","w");
 
@@ -477,9 +467,9 @@ function outbound_route_to_bridge($domain_uuid, $destination_number, array $chan
 	if (!empty($outbound_routes)) {
 		$x = 0;
 		foreach ($outbound_routes as &$dialplan) {
-			$condition_match = false;
+			$condition_match = [];
 			foreach ($dialplan as &$dialplan_details) {
-				if ($dialplan_details['dialplan_detail_tag'] == "condition") {
+				if (!empty($dialplan_details['dialplan_detail_tag']) && $dialplan_details['dialplan_detail_tag'] == "condition") {
 					if ($dialplan_details['dialplan_detail_type'] == "destination_number") {
 							$pattern = '/'.$dialplan_details['dialplan_detail_data'].'/';
 							preg_match($pattern, $destination_number, $matches, PREG_OFFSET_CAPTURE);
@@ -488,11 +478,11 @@ function outbound_route_to_bridge($domain_uuid, $destination_number, array $chan
 							}
 							else {
 								$condition_match[] = 'true';
-								$regex_match_1 = $matches[1][0];
-								$regex_match_2 = $matches[2][0];
-								$regex_match_3 = $matches[3][0];
-								$regex_match_4 = $matches[4][0];
-								$regex_match_5 = $matches[5][0];
+								$regex_match_1 = $matches[1][0] ?? '';
+								$regex_match_2 = $matches[2][0] ?? '';
+								$regex_match_3 = $matches[3][0] ?? '';
+								$regex_match_4 = $matches[4][0] ?? '';
+								$regex_match_5 = $matches[5][0] ?? '';
 							}
 					}
 					elseif ($dialplan_details['dialplan_detail_type'] == "\${toll_allow}") {
@@ -510,8 +500,14 @@ function outbound_route_to_bridge($domain_uuid, $destination_number, array $chan
 		
 			if (!in_array('false', $condition_match)) {
 				foreach ($dialplan as &$dialplan_details) {
-					$dialplan_detail_data = $dialplan_details['dialplan_detail_data'];
-					if ($dialplan_details['dialplan_detail_tag'] == "action" && $dialplan_details['dialplan_detail_type'] == "bridge" && $dialplan_detail_data != "\${enum_auto_route}") {
+					$dialplan_detail_data = $dialplan_details['dialplan_detail_data'] ?? '';
+					if (
+						!empty($dialplan_details['dialplan_detail_tag']) &&
+						$dialplan_details['dialplan_detail_tag'] == "action" &&
+						!empty($dialplan_details['dialplan_detail_type']) &&
+						$dialplan_details['dialplan_detail_type'] == "bridge" &&
+						$dialplan_detail_data != "\${enum_auto_route}"
+						) {
 						$dialplan_detail_data = str_replace("\$1", $regex_match_1, $dialplan_detail_data);
 						$dialplan_detail_data = str_replace("\$2", $regex_match_2, $dialplan_detail_data);
 						$dialplan_detail_data = str_replace("\$3", $regex_match_3, $dialplan_detail_data);
@@ -528,7 +524,7 @@ function outbound_route_to_bridge($domain_uuid, $destination_number, array $chan
 			}
 		}
 	}
-	return $bridge_array;
+	return $bridge_array ?? [];
 }
 //$destination_number = '1231234';
 //$bridge_array = outbound_route_to_bridge ($domain_uuid, $destination_number);

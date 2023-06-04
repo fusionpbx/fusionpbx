@@ -41,6 +41,8 @@
 				max_len_seconds = 30;
 				silence_threshold = 30;
 				silence_seconds = 5;
+			
+			--make sure the voicemail directory exists
 				mkdir(voicemail_dir.."/"..voicemail_id);
 
 			--record and save the file

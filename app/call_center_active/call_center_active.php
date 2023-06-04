@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -47,7 +47,7 @@
 
 //get the queue_name and set it as a variable
 	$queue_name = $_GET['queue_name'];
-	$name = $_GET['name'];
+	$name = $_GET['name'] ?? null;
 
 //get a new session array
 	unset($_SESSION['queues']);

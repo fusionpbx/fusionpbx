@@ -150,7 +150,7 @@ if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 }
 
 //pre-populate the form
-	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
+	if (!empty($_GET) && empty($_POST["persistformvar"])) {
 		$recording_uuid = $_GET["id"];
 		$sql = "select recording_name, recording_filename, recording_description from v_recordings ";
 		$sql .= "where domain_uuid = :domain_uuid ";
@@ -215,7 +215,7 @@ if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 	echo "    <input class='formfld' type='text' name='recording_filename' maxlength='255' value=\"".escape($recording_filename)."\">\n";
 	echo "    <input type='hidden' name='recording_filename_original' value=\"".escape($recording_filename)."\">\n";
 	echo "<br />\n";
-	echo $text['message-file']."\n";
+	//echo $text['message-file']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 

@@ -80,7 +80,7 @@ if (!class_exists('registrations')) {
 							$xml_response = trim(event_socket_request($fp, $cmd));
 							if (function_exists('iconv')) { $xml_response = iconv("utf-8", "utf-8//IGNORE", $xml_response); }
 							$xml_response = preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/u', '', $xml_response);
-							if ($xml_response == "Invalid Profile!") { $xml_response = "<error_msg>".$text['label-message']."</error_msg>"; }
+							if ($xml_response == "Invalid Profile!") { $xml_response = "<error_msg>".!empty($text['label-message'])."</error_msg>"; }
 							$xml_response = str_replace("<profile-info>", "<profile_info>", $xml_response);
 							$xml_response = str_replace("</profile-info>", "</profile_info>", $xml_response);
 							$xml_response = str_replace("&lt;", "", $xml_response);

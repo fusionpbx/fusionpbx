@@ -1,6 +1,6 @@
 <?php
 /*
-	Copyright (C) 2022 Mark J Crane <markjcrane@fusionpbx.com>
+	Copyright (C) 2022-2023 Mark J Crane <markjcrane@fusionpbx.com>
 
 	Redistribution and use in source and binary forms, with or without
 	modification, are permitted provided that the following conditions are met:
@@ -51,6 +51,7 @@
 	if (isset($_GET['hostname'])) {
 		$hostname = urldecode($_GET['hostname']);
 	}
+	$debug = false;
 	if (isset($_GET['debug'])) {
 		if (is_numeric($_GET['debug'])) {
 			$debug_level = $_GET['debug'];

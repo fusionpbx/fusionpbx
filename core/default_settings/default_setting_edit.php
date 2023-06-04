@@ -45,25 +45,39 @@
 	$language = new text;
 	$text = $language->get();
 
+//define the variables
+	$default_setting_category = '';
+	$default_setting_subcategory = '';
+	$default_setting_name = '';
+	$default_setting_value = '';
+	$default_setting_order = '';
+	$default_setting_enabled = '';
+	$default_setting_description = '';
+	$search = '';
+
 //action add or update
-	if (is_uuid($_REQUEST["id"])) {
+	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
 		$default_setting_uuid = $_REQUEST["id"];
 	}
 	else {
 		$action = "add";
 	}
-	$search = $_REQUEST['search'];
 
+//get the search variable
+	if (!empty($_REQUEST['search'])) {
+		$search = $_REQUEST['search'];
+	}
+		
 //get http post variables and set them to php variables
-	if (count($_REQUEST) > 0) {
-		$default_setting_category = strtolower($_REQUEST["default_setting_category"]);
-		$default_setting_subcategory = strtolower($_POST["default_setting_subcategory"]);
-		$default_setting_name = strtolower($_POST["default_setting_name"]);
-		$default_setting_value = $_POST["default_setting_value"];
-		$default_setting_order = $_POST["default_setting_order"];
-		$default_setting_enabled = $_POST["default_setting_enabled"] ?: 'false';
-		$default_setting_description = $_POST["default_setting_description"];
+	if (!empty($_REQUEST)) {
+		$default_setting_category = strtolower($_REQUEST["default_setting_category"] ?? '');
+		$default_setting_subcategory = strtolower($_POST["default_setting_subcategory"] ?? '');
+		$default_setting_name = strtolower($_POST["default_setting_name"] ?? '');
+		$default_setting_value = $_POST["default_setting_value"] ?? '';
+		$default_setting_order = $_POST["default_setting_order"] ?? '';
+		$default_setting_enabled = $_POST["default_setting_enabled"] ?? '';
+		$default_setting_description = $_POST["default_setting_description"] ?? '';
 	}
 
 //sanitize the variables
@@ -72,7 +86,7 @@
 
 //build the query string
 	$query_string = '';
-	if ($search != '') {
+	if (!empty($search)) {
 		$query_string .= 'search='.urlencode($search);
 	}
 	if ($default_setting_category != '') {
@@ -81,7 +95,7 @@
 	}
 
 //process the http post
-	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
+	if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
 		//set the default_setting_uuid
 			if ($action == "update") {
@@ -226,7 +240,7 @@
 	} //(count($_POST)>0 && empty($_POST["persistformvar"]))
 
 //pre-populate the form
-	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
+	if (count($_GET) > 0 && empty($_POST["persistformvar"])) {
 		$default_setting_uuid = $_GET["id"];
 		$sql = "select default_setting_uuid, default_setting_category, default_setting_subcategory, default_setting_name, default_setting_value, default_setting_order, cast(default_setting_enabled as text), default_setting_description ";
 		$sql .= "from v_default_settings ";
@@ -336,9 +350,9 @@
 	echo "	".$text['label-value']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	$category = $row['default_setting_category'];
-	$subcategory = $row['default_setting_subcategory'];
-	$name = $row['default_setting_name'];
+	$category = $default_setting_category;
+	$subcategory = $default_setting_subcategory;
+	$name = $default_setting_name;
 	if ($category == "cdr" && $subcategory == "format" && $name == "text" ) {
 		echo "		<select class='formfld' id='default_setting_value' name='default_setting_value' style=''>\n";
 		if ($default_setting_value == "json") {
@@ -806,7 +820,7 @@
 
 	echo "</form>";
 
-	if ($_REQUEST["id"] == '' && $_REQUEST["default_setting_category"] != '') {
+	if (empty($_REQUEST["id"]) && !empty($_REQUEST["default_setting_category"])) {
 		echo "<script>document.getElementById('default_setting_subcategory').focus();</script>";
 	}
 

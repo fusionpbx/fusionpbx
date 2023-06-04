@@ -297,7 +297,7 @@
 	}
 	//Exclude enterprise ring group legs
 	if (!permission_exists('xml_cdr_enterprise_leg')) {
-		$sql_where_ands[] .= "c.originating_leg_uuid IS NULL";
+		$sql_where_ands[] = "c.originating_leg_uuid IS NULL";
 	}
 	//If you can't see lose_race, don't run stats on it
 	elseif (!permission_exists('xml_cdr_lose_race')) {
@@ -604,7 +604,7 @@
 	$x = 0;
 	foreach ($stats as $row) {
 		$graph['minutes'][$x][] = $row['start_epoch'] * 1000;
-		$graph['minutes'][$x][] = round($row['minutes'],2);
+		$graph['minutes'][$x][] = round($row['minutes'] ?? 0,2);
 		if ($x == $hours) { break; }
 		$x++;
 	}
@@ -625,14 +625,14 @@
 	$x = 0;
 	foreach ($stats as $row) {
 		$graph['asr'][$x][] = $row['start_epoch'] * 1000;
-		$graph['asr'][$x][] = round($row['asr'],2) / 100;
+		$graph['asr'][$x][] = round($row['asr'] ?? 0,2) / 100;
 		if ($x == $hours) { break; }
 		$x++;
 	}
 	$x = 0;
 	foreach ($stats as $row) {
 		$graph['aloc'][$x][] = $row['start_epoch'] * 1000;
-		$graph['aloc'][$x][] = round($row['aloc'],2);
+		$graph['aloc'][$x][] = round($row['aloc'] ?? 0,2);
 		if ($x == $hours) { break; }
 		$x++;
 	}

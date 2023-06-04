@@ -242,7 +242,7 @@
 --get the follow me destinations
 	if (follow_me_uuid ~= nil) then
 		sql = "select d.domain_uuid, d.domain_name, f.follow_me_destination as destination_number, ";
-		sql = sql .. "f.follow_me_delay as destination_delay, f.follow_me_timeout as destination_timeout, ";
+		sql = sql .. "f.follow_me_delay * 500 as destination_delay, f.follow_me_timeout as destination_timeout, ";
 		sql = sql .. "f.follow_me_prompt as destination_prompt ";
 		sql = sql .. "from v_follow_me_destinations as f, v_domains as d ";
 		sql = sql .. "where f.follow_me_uuid = :follow_me_uuid ";
@@ -385,7 +385,7 @@
 			if (follow_me_strategy == "enterprise") then
 				timeout_name = "originate_timeout";
 				delay_name = "originate_delay_start";
-				destination_delay = destination_delay * 500;
+				--destination_delay = destination_delay * 500;
 			else
 				timeout_name = "leg_timeout";
 				delay_name = "leg_delay_start";
@@ -474,7 +474,7 @@
 
 				--set the destination dial string
 					-- have to double destination_delay here due a FS bug requiring a 50% delay value for internal extensions, but not external calls. 
-					destination_delay = destination_delay * 2;
+					--destination_delay = destination_delay * 2;
 					dial_string = "[toll_allow=".. toll_allow ..",accountcode="..accountcode..",".. caller_id ..",sip_invite_domain="..domain_name..",domain_uuid="..domain_uuid..",call_direction="..call_direction..","..group_confirm..","..timeout_name.."="..destination_timeout..","..delay_name.."="..destination_delay.."]"..route_bridge
 			end
 

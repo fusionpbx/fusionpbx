@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2022
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -50,7 +50,7 @@
 	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
 		$extension_uuid = $_REQUEST["id"];
-		$page = $_REQUEST['page'];
+		$page = $_REQUEST['page'] ?? '';
 	}
 	else {
 		$action = "add";
@@ -58,7 +58,7 @@
 
 //get total extension count from the database, check limit, if defined
 	if ($action == 'add') {
-		if ($_SESSION['limit']['extensions']['numeric'] != '') {
+		if (!empty($_SESSION['limit']['extensions']['numeric'])) {
 			$sql = "select count(*) ";
 			$sql .= "from v_extensions ";
 			$sql .= "where domain_uuid = :domain_uuid ";
@@ -76,7 +76,7 @@
 	}
 
 //get the http values and set them as php variables
-	if (count($_POST) > 0) {
+	if (!empty($_POST) && count($_POST) > 0) {
 
 		//get the values from the HTTP POST and save them as PHP variables
 			if ($action == 'add' || permission_exists("extension_extension")) {
@@ -1359,7 +1359,7 @@
 							$templates = scandir($template_dir.'/'.$row["name"]);
 							foreach($templates as $dir) {
 								if (!empty($dir) && $dir != "." && $dir != ".." && $dir[0] != '.' && !empty($template_dir) && is_dir($template_dir.'/'.$row["name"].'/'.$dir)) {
-									$selected = $device_template == $row["name"]."/".$dir ? "selected='selected'" : null;
+									$selected = !empty($device_template) && $device_template == $row["name"]."/".$dir ? "selected='selected'" : null;
 									echo "				<option value='".escape($row["name"])."/".escape($dir)."' ".$selected.">".escape($row["name"])."/".escape($dir)."</option>\n";
 								}
 							}

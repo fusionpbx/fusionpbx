@@ -293,7 +293,7 @@ if (!class_exists('xml_cdr')) {
 			//parse the xml to get the call detail record info
 				try {
 					//disable xml entities
-					libxml_disable_entity_loader(true);
+					if (PHP_VERSION_ID < 80000) { libxml_disable_entity_loader(true); }
 
 					//load the string into an xml object
 					$xml = simplexml_load_string($xml_string, 'SimpleXMLElement', LIBXML_NOCDATA);
@@ -1112,7 +1112,7 @@ if (!class_exists('xml_cdr')) {
 				}
 
 			//build the date range
-				if (strlen($this->start_stamp_begin) > 0 || !empty($this->start_stamp_end)) {
+				if ((!empty($this->start_stamp_begin) && strlen($this->start_stamp_begin) > 0) || !empty($this->start_stamp_end)) {
 					unset($this->quick_select);
 					if (strlen($this->start_stamp_begin) > 0 && !empty($this->start_stamp_end)) {
 						$sql_date_range = " and start_stamp between :start_stamp_begin::timestamptz and :start_stamp_end::timestamptz \n";
@@ -1292,7 +1292,7 @@ if (!class_exists('xml_cdr')) {
 				$sql .= " sip_hangup_disposition, \n";
 				$sql .= " voicemail_message \n";
 				$sql .= " from v_xml_cdr \n";
-				if (!($_GET['show'] === 'all' && permission_exists('xml_cdr_extension_summary_all'))) {
+				if (!(!empty($_GET['show']) && $_GET['show'] === 'all' && permission_exists('xml_cdr_extension_summary_all'))) {
 					$sql .= " where domain_uuid = :domain_uuid \n";
 				}
 				else {
@@ -1303,12 +1303,12 @@ if (!class_exists('xml_cdr')) {
 
 				$sql .= "where \n";
 				$sql .= "d.domain_uuid = e.domain_uuid \n";
-				if (!($_GET['show'] === 'all' && permission_exists('xml_cdr_extension_summary_all'))) {
+				if (!(!empty($_GET['show']) && $_GET['show'] === 'all' && permission_exists('xml_cdr_extension_summary_all'))) {
 					$sql .= "and e.domain_uuid = :domain_uuid \n";
 				}
 				$sql .= "group by e.extension, e.domain_uuid, d.domain_uuid, e.number_alias, e.description \n";
 				$sql .= "order by extension asc \n";
-				if (!($_GET['show'] === 'all' && permission_exists('xml_cdr_extension_summary_all'))) {
+				if (!(!empty($_GET['show']) && $_GET['show'] === 'all' && permission_exists('xml_cdr_extension_summary_all'))) {
 					$parameters['domain_uuid'] = $this->domain_uuid;
 				}
 				$database = new database;
@@ -1341,7 +1341,7 @@ if (!class_exists('xml_cdr')) {
 			//$parameters['domain_uuid'] = $domain_uuid;
 			$database = new database;
 			$row = $database->select($sql, $parameters, 'row');
-			if (is_array($row)) {
+			if (!empty($row) && is_array($row)) {
 				$record_name = $row['record_name'];
 				$record_path = $row['record_path'];
 			} else {
@@ -1354,24 +1354,20 @@ if (!class_exists('xml_cdr')) {
 			$record_file = $record_path.'/'.$record_name;
 
 			//download the file
-			if (!file_exists($record_file)) {
+			if (!file_exists($record_file) || $record_file == '/') {
 				echo "recording not found";
 				return;
 			}
 
-			//content-range
-			if (isset($_SERVER['HTTP_RANGE']) && $_GET['t'] != "bin")  {
-				$this->range_download($record_file);
-			}
-
-			ob_clean();
+			//ob_clean();
 			$fd = fopen($record_file, "rb");
 			if ($_GET['t'] == "bin") {
 				header("Content-Type: application/force-download");
 				header("Content-Type: application/octet-stream");
 				header("Content-Type: application/download");
 				header("Content-Description: File Transfer");
-			} else {
+			}
+			else {
 				$file_ext = pathinfo($record_name, PATHINFO_EXTENSION);
 				switch ($file_ext) {
 					case "wav" : header("Content-Type: audio/x-wav"); break;
@@ -1386,8 +1382,13 @@ if (!class_exists('xml_cdr')) {
 			if ($_GET['t'] == "bin") {
 				header("Content-Length: ".filesize($record_file));
 			}
-			ob_clean();
-			fpassthru($fd);
+ 			//ob_clean();
+			//fpassthru($fd);
+
+			//content-range
+			if (isset($_SERVER['HTTP_RANGE']) && $_GET['t'] != "bin")  {
+				$this->range_download($record_file);
+			}
 
 		} //end download method
 
@@ -1488,7 +1489,7 @@ if (!class_exists('xml_cdr')) {
 		 * delete records
 		 */
 		public function delete($records) {
-			if (permission_exists($this->permission_prefix.'delete')) {
+			if (!permission_exists($this->permission_prefix.'delete')) {
 				return false;
 			}
 
@@ -1512,7 +1513,7 @@ if (!class_exists('xml_cdr')) {
 
 			//loop through records
 			foreach($records as $x => $record) {
-				if ($record['checked'] != 'true' || !is_uuid($record['uuid'])) {
+				if (empty($record['checked']) || $record['checked'] != 'true' || !is_uuid($record['uuid'])) {
 					continue;
 				}
 

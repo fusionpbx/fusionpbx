@@ -46,12 +46,25 @@
 	$language = new text;
 	$text = $language->get();
 
+
+//define the variables
+	$action = '';
+	$search = '';
+	$modules = '';
+
 //get posted data
-	if (is_array($_POST['modules'])) {
-		$action = $_POST['action'];
-		$search = $_POST['search'];
+	if (!empty($_POST['modules'])) {
 		$modules = $_POST['modules'];
 	}
+	if (!empty($_POST['action'])) {
+		$action = $_POST['action'];
+	}
+	if (!empty($_POST['search'])) {
+		$search = $_POST['search'];
+	}
+
+//set from session variables
+	$list_row_edit_button = !empty($_SESSION['theme']['list_row_edit_button']['boolean']) ? $_SESSION['theme']['list_row_edit_button']['boolean'] : 'false';
 
 //process the http post data by action
 	if ($action != '' && is_array($modules) && @sizeof($modules) != 0) {
@@ -142,7 +155,7 @@
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
 
-	if (permission_exists('module_edit') && $modules && $fp) {
+	if (permission_exists('module_edit') && !empty($modules) && $fp) {
 		echo modal::create(['id'=>'modal-stop','type'=>'general','message'=>$text['confirm-stop_modules'],'actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_stop','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('stop'); list_form_submit('form_list');"])]);
 		echo modal::create(['id'=>'modal-start','type'=>'general','message'=>$text['confirm-start_modules'],'actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_start','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('start'); list_form_submit('form_list');"])]);
 	}
@@ -162,7 +175,7 @@
 
 	echo "<table class='list'>\n";
 	function write_header($modifier) {
-		global $fp, $text, $modules;
+		global $fp, $text, $modules, $list_row_edit_button;
 		$modifier = str_replace('/', '', $modifier);
 		$modifier = str_replace('  ', ' ', $modifier);
 		$modifier = str_replace(' ', '_', $modifier);
@@ -171,7 +184,7 @@
 		echo "<tr class='list-header'>\n";
 		if (permission_exists('module_edit') || permission_exists('module_delete')) {
 			echo "	<th class='checkbox'>\n";
-			echo "		<input type='checkbox' id='checkbox_all_".$modifier."' name='checkbox_all' onclick=\"list_all_toggle('".$modifier."'); checkbox_on_change(this);\" ".($modules ?: "style='visibility: hidden;'").">\n";
+			echo "		<input type='checkbox' id='checkbox_all_".$modifier."' name='checkbox_all' onclick=\"list_all_toggle('".$modifier."'); checkbox_on_change(this);\" ".(!empty($modules) ?: "style='visibility: hidden;'").">\n";
 			echo "	</th>\n";
 		}
 		echo "<th>".$text['label-label']."</th>\n";
@@ -181,7 +194,7 @@
 		}
 		echo "<th class='center'>".$text['label-enabled']."</th>\n";
 		echo "<th class='hide-sm-dn' style='min-width: 40%;'>".$text['label-description']."</th>\n";
-		if (permission_exists('module_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+		if (permission_exists('module_edit') && $list_row_edit_button == 'true') {
 			echo "<td class='action-button'>&nbsp;</td>\n";
 		}
 		echo "</tr>\n";
@@ -231,7 +244,7 @@
 				}
 				else {
 					echo "	<td class='hide-xs'>\n";
-					echo $row['module_enabled'] == 'true' ? "<strong style='color: red;'>".$text['label-stopped']."</strong>" : $text['label-stopped']." ".escape($notice);
+					echo $row['module_enabled'] == 'true' ? "<strong style='color: red;'>".$text['label-stopped']."</strong>" : $text['label-stopped']." ".escape($notice ?? null);
 					echo "	</td>\n";
 					if (permission_exists('module_edit')) {
 						echo "	<td class='no-link center'>";
@@ -253,7 +266,7 @@
 			}
 			echo "	</td>\n";
 			echo "	<td class='description overflow hide-sm-dn'>".escape($row["module_description"])."&nbsp;</td>\n";
-			if (permission_exists('module_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+			if (permission_exists('module_edit') && $list_row_edit_button == 'true') {
 				echo "	<td class='action-button'>";
 				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
 				echo "	</td>\n";

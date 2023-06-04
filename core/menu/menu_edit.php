@@ -46,7 +46,7 @@
 	$text = $language->get();
 
 //action add or update
-	if (is_uuid($_REQUEST["id"])) {
+	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
 		$menu_uuid = $_REQUEST["id"];
 	}
@@ -135,14 +135,14 @@
 	}
 
 //pre-populate the form
-	if (count($_GET) > 0 && is_uuid($_GET["id"]) && $_POST["persistformvar"] != "true") {
+	if (count($_GET) > 0 && is_uuid($_GET["id"]) && empty($_POST["persistformvar"])) {
 		$menu_uuid = $_GET["id"];
 		$sql = "select * from v_menus ";
 		$sql .= "where menu_uuid = :menu_uuid ";
 		$parameters['menu_uuid'] = $menu_uuid;
 		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
-		if (is_array($row) && sizeof($row) != 0) {
+		if (!empty($row)) {
 			$menu_uuid = $row["menu_uuid"];
 			$menu_name = $row["menu_name"];
 			$menu_language = $row["menu_language"];
@@ -166,7 +166,7 @@
 	echo "	<div class='heading'><b>".$text['header-menu']."</b></div>\n";
 	echo "	<div class='actions'>\n";
 	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','collapse'=>'hide-xs','link'=>'menu.php']);
-	echo button::create(['type'=>'button','label'=>$text['button-reload'],'icon'=>$_SESSION['theme']['button_icon_reload'],'collapse'=>'hide-xs','style'=>'margin-left: 15px;','link'=>'menu_reload.php?menu_uuid='.urlencode($menu_uuid).'&menu_language='.urlencode($menu_language)]);
+	echo button::create(['type'=>'button','label'=>$text['button-reload'],'icon'=>$_SESSION['theme']['button_icon_reload'],'collapse'=>'hide-xs','style'=>'margin-left: 15px;','link'=>'menu_reload.php?menu_uuid='.urlencode($menu_uuid ?? '').'&menu_language='.urlencode($menu_language ?? '')]);
 	if (permission_exists('menu_restore') && $action == "update") {
 		echo button::create(['type'=>'button','label'=>$text['button-restore_default'],'icon'=>'undo-alt','collapse'=>'hide-xs','onclick'=>"modal_open('modal-restore','btn_restore');"]);
 	}
@@ -189,7 +189,7 @@
 	echo "	".$text['label-name']."\n";
 	echo "</td>\n";
 	echo "<td width='70%' class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='menu_name' maxlength='255' value=\"".escape($menu_name)."\">\n";
+	echo "	<input class='formfld' type='text' name='menu_name' maxlength='255' value=\"".escape($menu_name ?? '')."\">\n";
 	echo "<br />\n";
 	echo "\n";
 	echo $text['description-name']."</td>\n";
@@ -200,7 +200,7 @@
 	echo "	".$text['label-language']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='menu_language' maxlength='255' value=\"".escape($menu_language)."\">\n";
+	echo "	<input class='formfld' type='text' name='menu_language' maxlength='255' value=\"".escape($menu_language ?? '')."\">\n";
 	echo "<br />\n";
 	echo $text['description-language']."\n";
 	echo "</td>\n";
@@ -211,7 +211,7 @@
 	echo "	".$text['label-description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='menu_description' maxlength='255' value=\"".escape($menu_description)."\">\n";
+	echo "	<input class='formfld' type='text' name='menu_description' maxlength='255' value=\"".escape($menu_description ?? '')."\">\n";
 	echo "<br />\n";
 	echo $text['description-description']."\n";
 	echo "</td>\n";

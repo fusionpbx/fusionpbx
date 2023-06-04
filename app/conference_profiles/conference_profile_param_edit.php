@@ -1,4 +1,28 @@
 <?php
+/*
+	FusionPBX
+	Version: MPL 1.1
+
+	The contents of this file are subject to the Mozilla Public License Version
+	1.1 (the "License"); you may not use this file except in compliance with
+	the License. You may obtain a copy of the License at
+	http://www.mozilla.org/MPL/
+
+	Software distributed under the License is distributed on an "AS IS" basis,
+	WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+	for the specific language governing rights and limitations under the
+	License.
+
+	The Original Code is FusionPBX
+
+	The Initial Developer of the Original Code is
+	Mark J Crane <markjcrane@fusionpbx.com>
+	Portions created by the Initial Developer are Copyright (C) 2018-2023
+	the Initial Developer. All Rights Reserved.
+
+	Contributor(s):
+	Mark J Crane <markjcrane@fusionpbx.com>
+*/
 
 //set the include path
 	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
@@ -21,8 +45,13 @@
 	$language = new text;
 	$text = $language->get();
 
+//set the defaults
+	$profile_param_name = '';
+	$profile_param_value = '';
+	$profile_param_description = '';
+
 //action add or update
-	if (is_uuid($_REQUEST["id"])) {
+	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
 		$conference_profile_param_uuid = $_REQUEST["id"];
 	}
@@ -31,20 +60,20 @@
 	}
 
 //set the parent uuid
-	if (is_uuid($_GET["conference_profile_uuid"])) {
+	if (!empty($_GET["conference_profile_uuid"]) && is_uuid($_GET["conference_profile_uuid"])) {
 		$conference_profile_uuid = $_GET["conference_profile_uuid"];
 	}
 
 //get http post variables and set them to php variables
-	if (count($_POST)>0) {
+	if (!empty($_POST)) {
 		$profile_param_name = $_POST["profile_param_name"];
 		$profile_param_value = $_POST["profile_param_value"];
-		$profile_param_enabled = $_POST["profile_param_enabled"] ?: 'false';
+		$profile_param_enabled = $_POST["profile_param_enabled"] ?? 'false';
 		$profile_param_description = $_POST["profile_param_description"];
 	}
 
 //process the http post if it exists
-	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
+	if (!empty($_POST) && empty($_POST["persistformvar"])) {
 	
 		//get the uuid
 			if ($action == "update") {
@@ -79,7 +108,7 @@
 			}
 	
 		//add or update the database
-			if ($_POST["persistformvar"] != "true") {
+			if (empty($_POST["persistformvar"])) {
 
 				$array['conference_profile_params'][0]['conference_profile_uuid'] = $conference_profile_uuid;
 				$array['conference_profile_params'][0]['profile_param_name'] = $profile_param_name;
@@ -112,14 +141,14 @@
 	}
 
 //pre-populate the form
-	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
-		$conference_profile_param_uuid = $_GET["id"];
+	if (!empty($_GET) && empty($_POST["persistformvar"])) {
+		$conference_profile_param_uuid = $_GET["id"] ?? '';
 		$sql = "select * from v_conference_profile_params ";
 		$sql .= "where conference_profile_param_uuid = :conference_profile_param_uuid ";
 		$parameters['conference_profile_param_uuid'] = $conference_profile_param_uuid;
 		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
-		if (is_array($row) && sizeof($row)) {
+		if (!empty($row)) {
 			$profile_param_name = $row["profile_param_name"];
 			$profile_param_value = $row["profile_param_value"];
 			$profile_param_enabled = $row["profile_param_enabled"];

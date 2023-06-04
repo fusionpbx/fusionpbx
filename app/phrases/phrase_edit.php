@@ -45,8 +45,13 @@
 	$language = new text;
 	$text = $language->get();
 
+//add the defaults
+	$phrase_name = '';
+	$phrase_language = '';
+	$phrase_description = '';
+
 //set the action as an add or an update
-	if (is_uuid($_REQUEST["id"])) {
+	if (!empty($_REQUEST["id"])) {
 		$action = "update";
 		$phrase_uuid = $_REQUEST["id"];
 	}
@@ -58,7 +63,7 @@
 	if (count($_POST) > 0) {
 
 		//process the http post data by submitted action
-			if ($_POST['action'] != '' && is_uuid($_POST['phrase_uuid'])) {
+			if (!empty($_POST['action']) != '' && is_uuid($_POST['phrase_uuid'])) {
 				$array[0]['checked'] = 'true';
 				$array[0]['uuid'] = $_POST['phrase_uuid'];
 
@@ -82,7 +87,7 @@
 		$phrase_language = $_POST["phrase_language"];
 		$phrase_enabled = $_POST["phrase_enabled"] ?: 'false';
 		$phrase_description = $_POST["phrase_description"];
-		$phrase_details_delete = $_POST["phrase_details_delete"];
+		$phrase_details_delete = $_POST["phrase_details_delete"] ?? '';
 
 		//clean the name
 		$phrase_name = str_replace(" ", "_", $phrase_name);
@@ -290,7 +295,7 @@
 	if (empty($phrase_enabled)) { $phrase_enabled = 'true'; }
 
 //get the phrase details
-	if (is_uuid($phrase_uuid)) {
+	if (!empty($phrase_uuid)) {
 		$sql = "select * from v_phrase_details ";
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$sql .= "and phrase_uuid = :phrase_uuid ";
@@ -498,14 +503,14 @@
 	echo "			<td class='vtable'><strong>".$text['label-function']."</strong></td>\n";
 	echo "			<td class='vtable'><strong>".$text['label-action']."</strong></td>\n";
 	echo "			<td class='vtable' style='text-align: center;'><strong>".$text['label-order']."</strong></td>\n";
-	if ($phrase_details) {
+	if (!empty($phrase_details)) {
 		echo "			<td class='vtable edit_delete_checkbox_all' onmouseover=\"swap_display('delete_label_details', 'delete_toggle_details');\" onmouseout=\"swap_display('delete_label_details', 'delete_toggle_details');\">\n";
 		echo "				<span id='delete_label_details'>".$text['label-delete']."</span>\n";
 		echo "				<span id='delete_toggle_details'><input type='checkbox' id='checkbox_all_details' name='checkbox_all' onclick=\"edit_all_toggle('details');\"></span>\n";
 		echo "			</td>\n";
 	}
 	echo "		</tr>\n";
-	if (is_array($phrase_details) && @sizeof($phrase_details) != 0) {
+	if (!empty($phrase_details)) {
 		foreach($phrase_details as $x => $field) {
 			//clean up output for display
 			if ($field['phrase_detail_function'] == 'play-file' && substr($field['phrase_detail_data'], 0, 21) == '${lua streamfile.lua ') {
