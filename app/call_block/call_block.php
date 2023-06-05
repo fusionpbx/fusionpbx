@@ -135,7 +135,7 @@
 //prepare to page the results
 	$rows_per_page = (!empty($_SESSION['domain']['paging']['numeric'])) ? $_SESSION['domain']['paging']['numeric'] : 50;
 	$param = "&search=".$search;
-	if (!empty($_GET['show']) == "all" && permission_exists('call_block_all')) {
+	if (!empty($_GET['show']) && $_GET['show'] == "all" && permission_exists('call_block_all')) {
 		$param .= "&show=all";
 	}
 	$page = $_GET['page'] ?? '';
