@@ -57,7 +57,7 @@
 	}
 
 //process the http post data by action
-	if (!empty($action) != '' && is_array($phrases)) {
+	if (!empty($action) && is_array($phrases)) {
 		switch ($action) {
 			case 'copy':
 				if (permission_exists('phrase_add')) {
