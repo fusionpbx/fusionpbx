@@ -114,7 +114,7 @@
 //get the count
 	$sql = "select count(*) from v_device_profiles ";
 	$sql .= "where true ";
-	if (empty($_GET['show']) || $_GET['show'] != "all" || !permission_exists('device_profile_all')) {
+	if (!empty($_GET['show']) || $_GET['show'] != "all" || !permission_exists('device_profile_all')) {
 		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
 		$parameters['domain_uuid'] = $domain_uuid;
 	}
