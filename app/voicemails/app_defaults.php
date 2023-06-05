@@ -48,7 +48,7 @@ if ($domains_processed == 1) {
 	//define initial, get current, define correct languages folder paths
 	$switch_configuration_dir = !empty($_SESSION['switch']['conf']['dir']) ? $_SESSION['switch']['conf']['dir'] : '/etc/freeswitch';
 	$switch_languages_dir_initial = $switch_configuration_dir.'/lang';
-	$switch_languages_dir_current = $_SESSION['switch']['languages']['dir'];
+	$switch_languages_dir_current = $_SESSION['switch']['languages']['dir'] ?? '';
 	$switch_languages_dir_correct = $switch_configuration_dir.'/languages';
 
 	//ensure switch using languages (not lang) folder
