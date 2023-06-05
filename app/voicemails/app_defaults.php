@@ -35,9 +35,9 @@ if ($domains_processed == 1) {
 	$database = new database;
 	$voicemails = $database->select($sql, null, 'all');
 	unset($sql, $parameters);
-	if (!empty($voicemails) && is_array($voicemails) && @sizeof($voicemails) != 0) {
+	if (!empty($voicemails) && is_array($voicemails)) {
 		foreach($voicemails as $row) {
-			if (is_numeric($row['voicemail_id'])) {
+			if (!empty($_SESSION['switch']['voicemail']['dir']) && !empty($row['voicemail_id']) && is_numeric($row['voicemail_id'])) {
 				if (!file_exists($_SESSION['switch']['voicemail']['dir']."/default/".$row['domain_name']."/".$row['voicemail_id'])) {
 					mkdir($_SESSION['switch']['voicemail']['dir']."/default/".$row['domain_name']."/".$row['voicemail_id'], 0770, true);
 				}
