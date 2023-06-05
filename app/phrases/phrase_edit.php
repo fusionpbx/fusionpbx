@@ -63,7 +63,7 @@
 	if (count($_POST) > 0) {
 
 		//process the http post data by submitted action
-			if (!empty($_POST['action']) != '' && is_uuid($_POST['phrase_uuid'])) {
+			if (!empty($_POST['action']) && is_uuid($_POST['phrase_uuid'])) {
 				$array[0]['checked'] = 'true';
 				$array[0]['uuid'] = $_POST['phrase_uuid'];
 
@@ -270,7 +270,7 @@
 	}
 
 //pre-populate the form
-	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
+	if (count($_GET)>0 && empty($_POST["persistformvar"])) {
 		$phrase_uuid = $_GET["id"];
 		$sql = "select * from v_phrases ";
 		$sql .= "where ( ";
