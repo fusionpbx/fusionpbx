@@ -83,7 +83,7 @@
 	$greeting_dir = $_SESSION['switch']['storage']['dir'].'/voicemail/default/'.$_SESSION['domains'][$domain_uuid]['domain_name'].'/'.$voicemail_id;
 
 //download the greeting
-	if (!empty($_GET['a']) == "download" && (permission_exists('voicemail_greeting_play') || permission_exists('voicemail_greeting_download'))) {
+	if (!empty($_GET['a']) && $_GET['a'] == "download" && (permission_exists('voicemail_greeting_play') || permission_exists('voicemail_greeting_download'))) {
 		if ($_GET['type'] == "rec") {
 			//get the id
 			$voicemail_greeting_uuid = $_GET['uuid'];
@@ -148,7 +148,7 @@
 	}
 
 //upload the greeting
-	if (!empty($_POST['a']) == "upload" && permission_exists('voicemail_greeting_upload')
+	if (!empty($_POST['a']) && $_POST['a'] == "upload" && permission_exists('voicemail_greeting_upload')
 		&& $_POST['type'] == 'rec' && is_uploaded_file($_FILES['file']['tmp_name'])) {
 
 		//validate the token
@@ -256,7 +256,7 @@
 	}
 
 //set the greeting
-	if (!empty($_REQUEST['action']) == "set") {
+	if (!empty($_REQUEST['action']) && $_REQUEST['action'] == "set") {
 		//save the greeting_id to a variable
 		$greeting_id = $_REQUEST['greeting_id'];
 
@@ -304,7 +304,7 @@
 	}
 
 //get the greetings list
-	if (!empty($_SESSION['voicemail']['storage_type']['text']) == 'base64') {
+	if (!empty($_SESSION['voicemail']['storage_type']['text']) && $_SESSION['voicemail']['storage_type']['text'] == 'base64') {
 		switch ($db_type) {
 			case 'pgsql': $sql_file_size = ", length(decode(greeting_base64,'base64')) as greeting_size "; break;
 			case 'mysql': $sql_file_size = ", length(from_base64(greeting_base64)) as greeting_size "; break;
@@ -393,7 +393,7 @@
 	$col_count++;
 	echo th_order_by('greeting_name', $text['label-name'], $order_by, $order, null, null, "id=".urlencode($voicemail_id));
 	$col_count++;
-	if (!empty($_SESSION['voicemail']['storage_type']['text']) != 'base64') {
+	if (!empty($_SESSION['voicemail']['storage_type']['text']) && $_SESSION['voicemail']['storage_type']['text'] != 'base64') {
 		echo th_order_by('greeting_filename', $text['label-filename'], $order_by, $order, null, "class='hide-sm-dn'", "id=".urlencode($voicemail_id));
 		$col_count++;
 	}
@@ -403,12 +403,12 @@
 	}
 	echo "<th class='center no-wrap hide-xs'>".$text['label-size']."</th>\n";
 	$col_count++;
-	if (!empty($_SESSION['voicemail']['storage_type']['text']) != 'base64') {
+	if (!empty($_SESSION['voicemail']['storage_type']['text']) && $_SESSION['voicemail']['storage_type']['text'] != 'base64') {
 		echo "<th class='center no-wrap hide-xs'>".$text['label-uploaded']."</th>\n";
 		$col_count++;
 	}
 	echo th_order_by('greeting_description', $text['label-description'], $order_by, $order, null, "class='hide-sm-dn pct-25'", "id=".urlencode($voicemail_id));
-	if (permission_exists('voicemail_greeting_edit') && !empty($_SESSION['theme']['list_row_edit_button']['boolean']) == 'true') {
+	if (permission_exists('voicemail_greeting_edit') && !empty($_SESSION['theme']['list_row_edit_button']['boolean']) && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
