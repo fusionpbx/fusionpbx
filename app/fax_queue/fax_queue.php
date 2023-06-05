@@ -99,8 +99,6 @@
 	$order_by = $_GET["order_by"] ?? null;
 	$order = $_GET["order"] ?? null;
 
-
-
 //get the count
 	$sql = "select count(fax_queue_uuid) ";
 	$sql .= "from v_fax_queue as q ";

@@ -268,7 +268,7 @@
 	}
 
 //process the http post data by action
-	if ($action ?? '' && is_array($recordings)) {
+	if (!empty($action) && is_array($recordings)) {
 		switch ($action) {
 			case 'delete':
 				if (permission_exists('recording_delete')) {

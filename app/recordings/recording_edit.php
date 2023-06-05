@@ -47,7 +47,7 @@
 	$text = $language->get();
 
 //get recording id
-	if (is_uuid($_REQUEST["id"])) {
+	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$recording_uuid = $_REQUEST["id"];
 	}
 
@@ -117,7 +117,7 @@ if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 		}
 
 	//update the database
-	if ($_POST["persistformvar"] != "true") {
+	if (empty($_POST["persistformvar"])) {
 		if (permission_exists('recording_edit')) {
 			//if file name is not the same then rename the file
 				if ($recording_filename != $recording_filename_original) {

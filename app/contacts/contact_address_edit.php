@@ -202,7 +202,7 @@
 	}
 
 //pre-populate the form
-	if (!empty($_GET) && !empty($_POST["persistformvar"])) {
+	if (!empty($_GET) && empty($_POST["persistformvar"])) {
 		$contact_address_uuid = $_GET["id"];
 		$sql = "select * from v_contact_addresses ";
 		$sql .= "where domain_uuid = :domain_uuid ";

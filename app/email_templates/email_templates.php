@@ -112,7 +112,7 @@
 
 //prepare to page the results
 	$sql = "select count(*) from v_email_templates where true ";
-	if (!empty($_GET['show']) == "all" && permission_exists('email_template_all')) {
+	if (!empty($_GET['show']) && $_GET['show'] == "all" && permission_exists('email_template_all')) {
 		if (!empty($sql_search)) {
 			$sql .= "and ".$sql_search;
 		}
@@ -190,7 +190,7 @@
 	}
 	echo 		"<form id='form_search' class='inline' method='get'>\n";
 	if (permission_exists('email_template_all')) {
-		if (!empty($_GET['show']) == 'all') {
+		if (!empty($_GET['show']) && $_GET['show'] == 'all') {
 			echo "		<input type='hidden' name='show' value='all'>";
 		}
 		else {
@@ -241,7 +241,7 @@
 		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".(!empty($result) ?: "style='visibility: hidden;'").">\n";
 		echo "	</th>\n";
 	}
-	if (!empty($_GET['show']) == "all" && permission_exists('email_template_all')) {
+	if (!empty($_GET['show']) && $_GET['show'] == "all" && permission_exists('email_template_all')) {
 		echo "<th>".$text['label-domain']."</th>\n";
 		//echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, null, null, $param);
 	}
@@ -270,7 +270,7 @@
 				echo "		<input type='hidden' name='email_templates[$x][uuid]' value='".escape($row['email_template_uuid'])."' />\n";
 				echo "	</td>\n";
 			}
-			if (!empty($_GET['show']) == "all" && permission_exists('email_template_all')) {
+			if (!empty($_GET['show']) && $_GET['show'] == "all" && permission_exists('email_template_all')) {
 				echo "	<td>";
 				if (is_uuid($row['domain_uuid'])) {
 					echo escape($_SESSION['domains'][$row['domain_uuid']]['domain_name']);

@@ -52,7 +52,7 @@
 	$agent_password = '';
 
 //check for duplicates
-	if (!empty($_GET["check"]) == 'duplicate') {
+	if (!empty($_GET["check"]) && $_GET["check"] == 'duplicate') {
 		//agent id
 			if (!empty($_GET["agent_id"])) {
 				$sql = "select agent_name ";

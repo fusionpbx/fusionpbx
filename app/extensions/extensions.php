@@ -115,8 +115,6 @@
 		$parameters['search'] = '%'.$search.'%';
 	}
 
-
-
 //get total extension count
 	$sql = "select count(*) from v_extensions where true ";
 	if (!(!empty($_GET['show']) && $_GET['show'] == "all" && permission_exists('extension_all'))) {

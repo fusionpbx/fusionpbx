@@ -92,7 +92,7 @@
 			}
 
 		//add or update the database
-		if ($_POST["persistformvar"] != "true") {
+		if (empty($_POST["persistformvar"])) {
 			if ($action == "add") {
 				//create a new unique id
 					$menu_uuid = uuid();

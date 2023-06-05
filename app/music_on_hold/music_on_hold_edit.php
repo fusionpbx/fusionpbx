@@ -46,7 +46,7 @@
 	$text = $language->get();
 
 //action add or update
-	if (is_uuid($_REQUEST["id"])) {
+	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
 		$music_on_hold_uuid = $_REQUEST["id"];
 	}
@@ -113,7 +113,7 @@
 			}
 
 		//add or update the database
-			if ($_POST["persistformvar"] != "true") {
+			if (empty($_POST["persistformvar"])) {
 				if ($action == "add" && permission_exists('music_on_hold_add')) {
 					//begin insert array
 						$array['music_on_hold'][0]['music_on_hold_uuid'] = uuid();
@@ -174,7 +174,7 @@
 	}
 
 //pre-populate the form
-	if (count($_GET) > 0 && is_uuid($_GET["id"]) && $_POST["persistformvar"] != "true") {
+	if (count($_GET) > 0 && is_uuid($_GET["id"]) && empty($_POST["persistformvar"])) {
 		$music_on_hold_uuid = $_GET["id"];
 		$sql = "select * from v_music_on_hold ";
 		$sql .= "where ( ";

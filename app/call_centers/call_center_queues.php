@@ -97,7 +97,7 @@
 //get total call center queues count from the database
 	$sql = "select count(*) from v_call_center_queues ";
 	$sql .= "where true ";
-	if (!empty($_GET['show']) != "all" || !permission_exists('call_center_all')) {
+	if (!empty($_GET['show']) && $_GET['show'] != "all" || !permission_exists('call_center_all')) {
 		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	}
