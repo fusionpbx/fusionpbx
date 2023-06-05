@@ -592,7 +592,7 @@
 //set default values
 	if (empty($queue_strategy)) { $queue_strategy = "longest-idle-agent"; }
 	if (empty($queue_moh_sound)) { $queue_moh_sound = "\$\${hold_music}"; }
-	if (empty($queue_time_base_score)) { $queue_time_base_score = "system"; }
+	if (empty($queue_time_base_score)) { $queue_time_base_score = "queue"; }
 	if (empty($queue_time_base_score)) { $queue_time_base_score = ""; }
 	if (empty($queue_max_wait_time)) { $queue_max_wait_time = "0"; }
 	if (empty($queue_max_wait_time_with_no_agent)) { $queue_max_wait_time_with_no_agent = "90"; }
@@ -601,7 +601,7 @@
 	if (empty($queue_tier_rule_wait_second)) { $queue_tier_rule_wait_second = "30"; }
 	if (empty($queue_tier_rule_wait_multiply_level)) { $queue_tier_rule_wait_multiply_level = "true"; }
 	if (empty($queue_tier_rule_no_agent_no_wait)) { $queue_tier_rule_no_agent_no_wait = "true"; }
-	if (empty($queue_discard_abandoned_after)) { $queue_discard_abandoned_after = "900"; }
+	if (empty($queue_discard_abandoned_after)) { $queue_discard_abandoned_after = "90"; }
 	if (empty($queue_abandoned_resume_allowed)) { $queue_abandoned_resume_allowed = "false"; }
 
 //create token
