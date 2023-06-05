@@ -132,7 +132,7 @@ if (count($_POST)>0 && empty($_POST["persistformvar"])) {
 		}
 
 	//add or update the database
-	if ($_POST["persistformvar"] != "true") {
+	if (empty($_POST["persistformvar"])) {
 
 		//begin array
 			$array['databases'][0]['database_driver'] = $database_driver;
