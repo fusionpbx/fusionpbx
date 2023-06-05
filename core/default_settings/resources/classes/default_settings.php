@@ -84,7 +84,7 @@ if (!class_exists('default_settings')) {
 							$x = 0;
 							foreach ($records as $record) {
 								//add to the array
-									if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+									if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 										$array[$this->table][$x][$this->name.'_uuid'] = $record['uuid'];
 									}
 
@@ -131,7 +131,7 @@ if (!class_exists('default_settings')) {
 					if (is_array($records) && @sizeof($records) != 0) {
 						//get current toggle state
 							foreach($records as $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$uuids[] = "'".$record['uuid']."'";
 								}
 							}
@@ -199,7 +199,7 @@ if (!class_exists('default_settings')) {
 
 						//get checked records
 							foreach($records as $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$uuids[] = $record['uuid'];
 								}
 							}
