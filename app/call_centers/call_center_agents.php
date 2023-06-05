@@ -88,7 +88,7 @@
 //get total call center agent count from the database
 	$sql = "select count(*) from v_call_center_agents ";
 	$sql .= "where true ";
-	if (!empty($_GET['show']) != "all" || !permission_exists('call_center_all')) {
+	if (!empty($_GET['show']) && $_GET['show'] != "all" || !permission_exists('call_center_all')) {
 		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	}
@@ -145,7 +145,7 @@
 	}
 	echo 		"<form id='form_search' class='inline' method='get'>";
 	if (permission_exists('call_center_all')) {
-		if (!empty($_GET['show']) == 'all') {
+		if (!empty($_GET['show']) && $_GET['show'] == 'all') {
 			echo "		<input type='hidden' name='show' value='all'>";
 		}
 		else {
@@ -181,7 +181,7 @@
 		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".(!empty($result) ?: "style='visibility: hidden;'").">\n";
 		echo "	</th>\n";
 	}
-	if (!empty($_GET['show']) == "all" && permission_exists('call_center_all')) {
+	if (!empty($_GET['show']) && $_GET['show'] == "all" && permission_exists('call_center_all')) {
 		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, $param, "class='shrink'");
 	}
 	//echo th_order_by('domain_uuid', 'domain_uuid', $order_by, $order);
@@ -213,7 +213,7 @@
 				echo "		<input type='hidden' name='call_center_agents[$x][uuid]' value='".escape($row['call_center_agent_uuid'])."' />\n";
 				echo "	</td>\n";
 			}
-			if (!empty($_GET['show']) == "all" && permission_exists('call_center_all')) {
+			if (!empty($_GET['show']) && $_GET['show'] == "all" && permission_exists('call_center_all')) {
 				if (!empty($_SESSION['domains'][$row['domain_uuid']]['domain_name'])) {
 					$domain = $_SESSION['domains'][$row['domain_uuid']]['domain_name'];
 				}
