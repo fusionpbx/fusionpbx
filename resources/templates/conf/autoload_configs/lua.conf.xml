@@ -31,9 +31,6 @@
     need to run.
     -->
 
-    <!-- FusionPBX: Run FAX server queue poller  -->
-    <!--<param name="startup-script" value="app/fax/resources/scripts/fax_queue_monitor.lua"/>-->
-
     <!-- FusionPBX: Support BLF for call flow -->
     <!-- There 2 way to handle this
       1 - Monitor - ignore SUBSCRIBE and just send NOTIFY each X seconds
