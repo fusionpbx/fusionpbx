@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -55,8 +55,8 @@
 	}
 
 //get http post variables and set them to php variables
-	if (count($_POST) > 0) {
-		$menu_uuid = $_POST["menu_uuid"];
+	if (!empty($_POST) && count($_POST) > 0) {
+		$menu_uuid = $_POST["menu_uuid"] ?? null;
 		$menu_name = $_POST["menu_name"];
 		$menu_language = $_POST["menu_language"];
 		$menu_description = $_POST["menu_description"];
@@ -75,8 +75,8 @@
 
 		//check for all required data
 			$msg = '';
-			//if (empty($menu_name)) { $msg .= $text['message-required'].$text['label-name']."<br>\n"; }
-			//if (empty($menu_language)) { $msg .= $text['message-required'].$text['label-language']."<br>\n"; }
+			if (empty($menu_name)) { $msg .= $text['message-required'].$text['label-name']."<br>\n"; }
+			if (empty($menu_language)) { $msg .= $text['message-required'].$text['label-language']."<br>\n"; }
 			//if (empty($menu_description)) { $msg .= $text['message-required'].$text['label-description']."<br>\n"; }
 			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
