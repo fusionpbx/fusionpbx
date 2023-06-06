@@ -218,7 +218,7 @@
 	*/
 
 //limit the number of results
-	if ($_SESSION['cdr']['limit']['numeric'] > 0) {
+	if (!empty($_SESSION['cdr']['limit']['numeric']) && $_SESSION['cdr']['limit']['numeric'] > 0) {
 		$num_rows = $_SESSION['cdr']['limit']['numeric'];
 	}
 
