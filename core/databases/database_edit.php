@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -46,7 +46,7 @@
 	$text = $language->get();
 
 //action add or update
-	if (is_uuid($_REQUEST["id"])) {
+	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
 		$database_uuid = $_REQUEST["id"];
 	}
@@ -87,7 +87,7 @@ if (count($_POST)>0 && empty($_POST["persistformvar"])) {
 
 	//delete the database
 		if (permission_exists('database_delete')) {
-			if ($_POST['action'] == 'delete' && is_uuid($database_uuid)) {
+			if (!empty($_POST['action']) && $_POST['action'] == 'delete' && is_uuid($database_uuid)) {
 				//prepare
 					$array[0]['checked'] = 'true';
 					$array[0]['uuid'] = $database_uuid;
