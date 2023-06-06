@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -355,7 +355,7 @@
 				}
 				echo "</td>\n";
 				echo "<td class='no-wrap overflow no-link hide-sm-dn'>".$menu_item_link."&nbsp;</td>\n";
-				echo "<td class='no-wrap overflow hide-xs'>".$group_list."&nbsp;</td>\n";
+				echo "<td class='no-wrap overflow hide-xs'>".($group_list ?? '')."&nbsp;</td>\n";
 				echo "<td class='center'>".$menu_item_category."&nbsp;</td>\n";
 				if (permission_exists('menu_item_edit')) {
 					echo "<td class='no-link center'>\n";
