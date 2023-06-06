@@ -83,7 +83,7 @@
 	}
 
 //set the time zone
-	if (isset($_SESSION['domain']['time_zone']['name'])) {
+	if (!empty($_SESSION['domain']['time_zone']['name'])) {
 		$time_zone = $_SESSION['domain']['time_zone']['name'];
 	}
 	else {
