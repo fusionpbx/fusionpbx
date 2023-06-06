@@ -559,7 +559,7 @@
 
 //add an empty row to the tiers array
 	if (count($tiers) == 0) {
-		$rows = $_SESSION['call_center']['agent_add_rows']['numeric'];
+		$rows = $_SESSION['call_center']['agent_add_rows']['numeric'] ?? null;
 		$id = 0;
 	}
 	if (count($tiers) > 0) {

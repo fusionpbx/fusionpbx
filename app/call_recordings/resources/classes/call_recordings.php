@@ -160,15 +160,11 @@ if (!class_exists('call_recordings')) {
 						unset($sql, $parameters, $row);
 					}
 
-				//set the path for the directory
-// 					$default_path = $_SESSION['switch']['call_recordings']['dir']."/".$_SESSION['domain_name'];
-
 				//build full path
 					$full_recording_path = $call_recording_path.'/'.$call_recording_name;
 
 				//download the file
 					if ($full_recording_path != '/' && file_exists($full_recording_path)) {
-// 						ob_clean();
 						$fd = fopen($full_recording_path, "rb");
 						if ($this->binary) {
 							header("Content-Type: application/force-download");
@@ -190,8 +186,8 @@ if (!class_exists('call_recordings')) {
 						if ($this->binary) {
 							header("Content-Length: ".filesize($full_recording_path));
 						}
-// 						ob_clean();
-// 						fpassthru($fd);
+ 						ob_clean();
+ 						fpassthru($fd);
 
 						//content-range
 						if (isset($_SERVER['HTTP_RANGE']) && !$this->binary)  {
