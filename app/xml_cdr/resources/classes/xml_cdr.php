@@ -1382,8 +1382,8 @@ if (!class_exists('xml_cdr')) {
 			if ($_GET['t'] == "bin") {
 				header("Content-Length: ".filesize($record_file));
 			}
- 			//ob_clean();
-			//fpassthru($fd);
+ 			ob_clean();
+			fpassthru($fd);
 
 			//content-range
 			if (isset($_SERVER['HTTP_RANGE']) && $_GET['t'] != "bin")  {
