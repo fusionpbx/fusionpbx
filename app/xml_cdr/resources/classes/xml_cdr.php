@@ -1359,7 +1359,7 @@ if (!class_exists('xml_cdr')) {
 				return;
 			}
 
-			//ob_clean();
+			ob_clean();
 			$fd = fopen($record_file, "rb");
 			if ($_GET['t'] == "bin") {
 				header("Content-Type: application/force-download");
@@ -1382,13 +1382,14 @@ if (!class_exists('xml_cdr')) {
 			if ($_GET['t'] == "bin") {
 				header("Content-Length: ".filesize($record_file));
 			}
- 			//ob_clean();
-			//fpassthru($fd);
+ 			ob_clean();
 
-			//content-range
-			if (isset($_SERVER['HTTP_RANGE']) && $_GET['t'] != "bin")  {
+ 			//content-range
+ 			if (isset($_SERVER['HTTP_RANGE']) && $_GET['t'] != "bin")  {
 				$this->range_download($record_file);
 			}
+
+ 			fpassthru($fd);
 
 		} //end download method
 
