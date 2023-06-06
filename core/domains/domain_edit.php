@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2022
+ Portions created by the Initial Developer are Copyright (C) 2008-2023
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -69,7 +69,7 @@
 //get http post variables and set them to php variables
 	if (!empty($_POST)) {
 		$domain_name = strtolower($_POST["domain_name"]);
-		$domain_enabled = $_POST["domain_enabled"] ?: 'false';
+		$domain_enabled = $_POST["domain_enabled"] ?? 'false';
 		$domain_description = $_POST["domain_description"];
 	}
 
@@ -83,7 +83,7 @@
 
 		//delete the domain
 			if (permission_exists('domain_delete')) {
-				if ($_POST['action'] == 'delete' && is_uuid($domain_uuid)) {
+				if (!empty($_POST['action']) && $_POST['action'] == 'delete' && is_uuid($domain_uuid)) {
 					//prepare
 						$array[0]['checked'] = 'true';
 						$array[0]['uuid'] = $domain_uuid;
@@ -214,7 +214,7 @@
 						if (file_exists($_SERVER["PROJECT_ROOT"]."/app/dialplans/app_config.php")) {
 							//import the dialplans
 							$dialplan = new dialplan;
-							$dialplan->import($array['domains']);
+							$dialplan->import($array['domains'] ?? null);
 							unset($array);
 
 							//add xml for each dialplan where the dialplan xml is empty
@@ -614,7 +614,7 @@
 		echo "\n";
 		echo "	$(document).ready(function() {\n";
 		echo "		$('#domain_setting_search').trigger('focus');\n";
-		if ($search == '') {
+		if (!empty($search)) {
 			echo "		// scroll to previous category\n";
 			echo "		var category_span_id;\n";
 			echo "		var url = document.location.href;\n";
