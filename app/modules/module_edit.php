@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -71,8 +71,8 @@
 		$module_description = $_POST["module_description"];
 		$module_category = $_POST["module_category"];
 		$module_order = $_POST["module_order"];
-		$module_enabled = $_POST["module_enabled"] ?: 'false';
-		$module_default_enabled = $_POST["module_default_enabled"] ?: 'false';
+		$module_enabled = $_POST["module_enabled"] ?? 'false';
+		$module_default_enabled = $_POST["module_default_enabled"] ?? 'false';
 	}
 
 //process the data

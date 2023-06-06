@@ -71,7 +71,7 @@
 		$var_value = trim($_POST["var_value"]);
 		$var_command = trim($_POST["var_command"]);
 		$var_hostname = trim($_POST["var_hostname"]);
-		$var_enabled = trim($_POST["var_enabled"] ?: 'false');
+		$var_enabled = trim($_POST["var_enabled"] ?? 'false');
 		$var_order = trim($_POST["var_order"]);
 		$var_description = trim($_POST["var_description"]);
 

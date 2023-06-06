@@ -138,7 +138,7 @@
 				$contact_name_family = $_POST["contact_name_family"];
 			}
 			$group_uuid_name = $_POST["group_uuid_name"];
-			$user_enabled = $_POST["user_enabled"] ?: 'false';
+			$user_enabled = $_POST["user_enabled"] ?? 'false';
 			if (permission_exists('api_key')) {
 				$api_key = $_POST["api_key"];
 			}

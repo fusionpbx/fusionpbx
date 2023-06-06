@@ -133,7 +133,7 @@
 			$ivr_menu_direct_dial = $_POST["ivr_menu_direct_dial"];
 			$ivr_menu_ringback = $_POST["ivr_menu_ringback"];
 			$ivr_menu_cid_prefix = $_POST["ivr_menu_cid_prefix"];
-			$ivr_menu_enabled = $_POST["ivr_menu_enabled"] ?: 'false';
+			$ivr_menu_enabled = $_POST["ivr_menu_enabled"] ?? 'false';
 			$ivr_menu_description = $_POST["ivr_menu_description"];
 			$ivr_menu_options_delete = $_POST["ivr_menu_options_delete"];
 			$dialplan_uuid = $_POST["dialplan_uuid"];
@@ -330,7 +330,7 @@
 							}
 							$array['ivr_menus'][0]['ivr_menu_options'][$y]["ivr_menu_option_order"] = $row["ivr_menu_option_order"];
 							$array['ivr_menus'][0]['ivr_menu_options'][$y]["ivr_menu_option_description"] = $row["ivr_menu_option_description"];
-							$array['ivr_menus'][0]["ivr_menu_options"][$y]["ivr_menu_option_enabled"] = !empty($row['ivr_menu_option_enabled']) ?: 'false';
+							$array['ivr_menus'][0]["ivr_menu_options"][$y]["ivr_menu_option_enabled"] = !empty($row['ivr_menu_option_enabled']) ?? 'false';
 							$y++;
 						}
 					}

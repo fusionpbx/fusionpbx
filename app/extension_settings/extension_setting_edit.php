@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2021
+	Portions created by the Initial Developer are Copyright (C) 2021-2023
 	the Initial Developer. All Rights Reserved.
 */
 
@@ -73,7 +73,7 @@
 		$extension_setting_type = $_POST["extension_setting_type"];
 		$extension_setting_name = $_POST["extension_setting_name"];
 		$extension_setting_value = $_POST["extension_setting_value"];
-		$extension_setting_enabled = $_POST["extension_setting_enabled"] ?: 'false';
+		$extension_setting_enabled = $_POST["extension_setting_enabled"] ?? 'false';
 		$extension_setting_description = $_POST["extension_setting_description"];
 	}
 

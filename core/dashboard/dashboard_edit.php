@@ -18,7 +18,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2021
+	Portions created by the Initial Developer are Copyright (C) 2021-2023
 	the Initial Developer. All Rights Reserved.
 */
 
@@ -228,7 +228,7 @@
 			$dashboard_column_span = $row["dashboard_column_span"];
 			$dashboard_details_state = $row["dashboard_details_state"];
 			$dashboard_order = $row["dashboard_order"];
-			$dashboard_enabled = $row["dashboard_enabled"] ?: 'false';
+			$dashboard_enabled = $row["dashboard_enabled"] ?? 'false';
 			$dashboard_description = $row["dashboard_description"];
 		}
 		unset($sql, $parameters, $row);
