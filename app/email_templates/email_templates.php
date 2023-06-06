@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2016-2018
+ Portions created by the Initial Developer are Copyright (C) 2016-2023
  the Initial Developer. All Rights Reserved.
 */
 
@@ -49,7 +49,7 @@
 //get posted data
 	if (!empty($_POST['email_templates'])) {
 		$action = $_POST['action'];
-		$category = $_POST['category'];
+		$category = $_POST['category'] ?? null;
 		$search = $_POST['search'];
 		$email_templates = $_POST['email_templates'];
 	}

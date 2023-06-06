@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2018
+ Portions created by the Initial Developer are Copyright (C) 2018-2023
  the Initial Developer. All Rights Reserved.
 */
 
@@ -70,7 +70,7 @@
 		$template_subject = $_POST["template_subject"];
 		$template_body = $_POST["template_body"];
 		$template_type = $_POST["template_type"];
-		$template_enabled = $_POST["template_enabled"] ?: 'false';
+		$template_enabled = $_POST["template_enabled"] ?? 'false';
 		$template_description = $_POST["template_description"];
 	}
 
@@ -115,7 +115,7 @@
 			}
 
 		//add the email_template_uuid
-			if (!is_uuid($_POST["email_template_uuid"])) {
+			if (empty($_POST["email_template_uuid"]) || !is_uuid($_POST["email_template_uuid"])) {
 				$email_template_uuid = uuid();
 			}
 
