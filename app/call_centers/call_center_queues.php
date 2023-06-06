@@ -101,7 +101,7 @@
 		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	}
-	if (isset($sql_search)) {
+	if (!empty($sql_search)) {
 		$sql .= "and ".$sql_search;
 	}
 	$database = new database;
@@ -226,7 +226,7 @@
 	}
 	echo "</tr>\n";
 
-	if (is_array($result)) {
+	if (!empty($result)) {
 		$x = 0;
 		foreach($result as $row) {
 			if (permission_exists('call_center_queue_edit')) {
