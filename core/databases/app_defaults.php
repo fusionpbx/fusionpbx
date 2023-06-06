@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -25,7 +25,7 @@
 */
 
 //proccess this only one time
-if ($domains_processed == 1) {
+if (!empty($domains_processed) && $domains_processed == 1) {
 
 	//set the database driver
 		$sql = "select * from v_databases ";
