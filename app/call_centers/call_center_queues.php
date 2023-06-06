@@ -53,14 +53,14 @@
 	$list_row_edit_button = !empty($_SESSION['theme']['list_row_edit_button']['boolean']) ? $_SESSION['theme']['list_row_edit_button']['boolean'] : 'false';
 
 //get posted data
-	if (!empty($_POST['call_center_queues'])) {
+	if (!empty($_POST['call_center_queues']) && is_array($_POST['call_center_queues'])) {
 		$action = $_POST['action'];
 		$search = $_POST['search'];
 		$call_center_queues = $_POST['call_center_queues'];
 	}
 
 //process the http post data by action
-	if (!empty($action) && !empty($call_center_queues)) {
+	if (!empty($action) && is_array($call_center_queues) && @sizeof($call_center_queues) != 0) {
 		switch ($action) {
 			case 'copy':
 				if (permission_exists('call_center_queue_add')) {
@@ -97,11 +97,11 @@
 //get total call center queues count from the database
 	$sql = "select count(*) from v_call_center_queues ";
 	$sql .= "where true ";
-	if (!empty($_GET['show']) && $_GET['show'] != "all" || !permission_exists('call_center_all')) {
+	if ($show != "all" || !permission_exists('call_center_all')) {
 		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	}
-	if (!empty($sql_search)) {
+	if (isset($sql_search)) {
 		$sql .= "and ".$sql_search;
 	}
 	$database = new database;
@@ -226,7 +226,7 @@
 	}
 	echo "</tr>\n";
 
-	if (!empty($result)) {
+	if (is_array($result)) {
 		$x = 0;
 		foreach($result as $row) {
 			if (permission_exists('call_center_queue_edit')) {
