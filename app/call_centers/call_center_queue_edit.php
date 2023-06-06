@@ -818,7 +818,7 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	if (permission_exists('call_center_tier_view') && is_array($agents) && count($agents) > 0) {
+	if (permission_exists('call_center_tier_view') && !empty($agents) && is_array($agents)) {
 		echo "<tr>";
 		echo "	<td class='vncell' valign='top'>".$text['label-agents']."</td>";
 		echo "	<td class='vtable' align='left'>";
