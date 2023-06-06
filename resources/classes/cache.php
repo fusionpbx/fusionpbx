@@ -104,7 +104,7 @@ class cache {
 			}
 
 		//cache method memcache 
-			if ($_SESSION['cache']['method']['text'] == "memcache") {
+			if (!empty($_SESSION['cache']['method']['text']) && $_SESSION['cache']['method']['text'] == "memcache") {
 				//connect to event socket
 					$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 					if ($fp === false) {
@@ -128,7 +128,7 @@ class cache {
 			}
 
 		//cache method file
-			if ($_SESSION['cache']['method']['text'] == "file") {
+			if (!empty($_SESSION['cache']['method']['text']) && $_SESSION['cache']['method']['text'] == "file") {
 				//change the delimiter
 					$key = str_replace(":", ".", $key);
 
