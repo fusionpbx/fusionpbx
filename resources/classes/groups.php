@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2016-2021
+	Portions created by the Initial Developer are Copyright (C) 2016-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -82,7 +82,7 @@ if (!class_exists('groups')) {
 					if (is_array($records) && @sizeof($records) != 0) {
 						//build array of checked records
 							foreach ($records as $x => $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$array[$this->table][$x][$this->name.'_uuid'] = $record['uuid'];
 									$array['group_permissions'][$x][$this->name.'_uuid'] = $record['uuid'];
 								}
@@ -137,7 +137,7 @@ if (!class_exists('groups')) {
 					if (is_array($records) && @sizeof($records) != 0) {
 						//build array of checked records
 							foreach ($records as $x => $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$array[$this->table][$x]['user_uuid'] = $record['uuid'];
 									$array[$this->table][$x]['group_uuid'] = $this->group_uuid;
 								}
@@ -197,7 +197,7 @@ if (!class_exists('groups')) {
 					if (is_array($records) && @sizeof($records) != 0) {
 						//get current toggle state
 							foreach($records as $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$uuids[] = "'".$record['uuid']."'";
 								}
 							}
@@ -272,7 +272,7 @@ if (!class_exists('groups')) {
 
 						//get checked records
 							foreach($records as $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$uuids[] = "'".$record['uuid']."'";
 								}
 							}
