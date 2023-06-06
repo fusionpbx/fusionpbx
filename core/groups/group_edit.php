@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018-2020
+	Portions created by the Initial Developer are Copyright (C) 2018-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -305,7 +305,7 @@
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
 	echo "	<select class='formfld' name='group_protected'>\n";
 	echo "		<option value='false'>".$text['label-false']."</option>\n";
-	echo "		<option value='true' ".($group_protected == "true" ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
+	echo "		<option value='true' ".(!empty($group_protected) && $group_protected == "true" ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
 	echo "	</select>\n";
 	echo "<br />\n";
 	//echo $text['description-group_protected']."\n";
