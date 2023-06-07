@@ -695,6 +695,8 @@ if (!class_exists('domains')) {
 									$_SESSION[$category][$subcategory][] = $row['default_setting_value'];
 								}
 								else {
+									if (!array($_SESSION[$category])) { $_SESSION[$category] = []; }
+									if (!array($_SESSION[$category][$subcategory])) { $_SESSION[$category][$subcategory] = []; }
 									$_SESSION[$category][$subcategory]['uuid'] = $row['default_setting_uuid'];
 									$_SESSION[$category][$subcategory][$name] = $row['default_setting_value'];
 								}
