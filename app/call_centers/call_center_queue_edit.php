@@ -106,7 +106,7 @@
 			$queue_tier_rule_wait_second = $_POST["queue_tier_rule_wait_second"];
 			$queue_tier_rule_wait_multiply_level = $_POST["queue_tier_rule_wait_multiply_level"];
 			$queue_tier_rule_no_agent_no_wait = $_POST["queue_tier_rule_no_agent_no_wait"];
-			$queue_timeout_action = $_POST["queue_timeout_action"];
+			$queue_timeout_action = $_POST["queue_timeout_action"] ?? null;
 			$queue_discard_abandoned_after = $_POST["queue_discard_abandoned_after"];
 			$queue_abandoned_resume_allowed = $_POST["queue_abandoned_resume_allowed"];
 			$queue_cid_prefix = $_POST["queue_cid_prefix"];
@@ -351,15 +351,15 @@
 			$dialplan_xml .= "	</condition>\n";
 			$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^(callcenter\+)?".xml::sanitize($queue_extension)."$\">\n";
 			$dialplan_xml .= "		<action application=\"answer\" data=\"\"/>\n";
-			if (is_uuid($call_center_queue_uuid)) {
+			if (!empty($call_center_queue_uuid) && is_uuid($call_center_queue_uuid)) {
 				$dialplan_xml .= "		<action application=\"set\" data=\"call_center_queue_uuid=".xml::sanitize($call_center_queue_uuid)."\"/>\n";
 			}
-			if (is_numeric($queue_extension)) {
+			if (!empty($queue_extension) && is_numeric($queue_extension)) {
 				$dialplan_xml .= "		<action application=\"set\" data=\"queue_extension=".xml::sanitize($queue_extension)."\"/>\n";
 			}
 			$dialplan_xml .= "		<action application=\"set\" data=\"cc_export_vars=\${cc_export_vars},call_center_queue_uuid,sip_h_Alert-Info\"/>\n";
 			$dialplan_xml .= "		<action application=\"set\" data=\"hangup_after_bridge=true\"/>\n";
-			if ($queue_time_base_score_sec != '') {
+			if (!empty($queue_time_base_score_sec)) {
 				$dialplan_xml .= "		<action application=\"set\" data=\"cc_base_score=".xml::sanitize($queue_time_base_score_sec)."\"/>\n";
 			}
 			if (!empty($queue_greeting_path)) {
@@ -1001,7 +1001,7 @@
 	echo "    ".$text['label-timeout_action']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo $destination->select('dialplan', 'queue_timeout_action', !empty($queue_timeout_action));
+	echo $destination->select('dialplan', 'queue_timeout_action', $queue_timeout_action);
 	echo "<br />\n";
 	echo $text['description-timeout_action']."\n";
 	echo "</td>\n";
