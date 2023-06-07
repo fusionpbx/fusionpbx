@@ -645,6 +645,7 @@ if (!class_exists('domains')) {
 			//get the default settings
 				$sql = "select * from v_default_settings ";
 				$sql .= "where default_setting_enabled = 'true' ";
+				$sql .= "and default_setting_category <> 'switch' ";
 				$database = new database;
 				$database_default_settings = $database->select($sql, null, 'all');
 				unset($sql);
@@ -683,6 +684,9 @@ if (!class_exists('domains')) {
 							$category = $row['default_setting_category'];
 							$subcategory = $row['default_setting_subcategory'];
 							if (empty($subcategory)) {
+								if (!isset($_SESSION[$category])) {
+									$_SESSION[$category] = [];
+								}
 								if ($name == "array") {
 									$_SESSION[$category][] = $row['default_setting_value'];
 								}
@@ -691,12 +695,16 @@ if (!class_exists('domains')) {
 								}
 							}
 							else {
+								if (!isset($_SESSION[$category])) {
+									$_SESSION[$category] = [];
+								}
+								if (!isset($_SESSION[$category][$subcategory])) {
+									$_SESSION[$category][$subcategory] = [];
+								}
 								if ($name == "array") {
 									$_SESSION[$category][$subcategory][] = $row['default_setting_value'];
 								}
 								else {
-									if (!array($_SESSION[$category])) { $_SESSION[$category] = []; }
-									if (!array($_SESSION[$category][$subcategory])) { $_SESSION[$category][$subcategory] = []; }
 									$_SESSION[$category][$subcategory]['uuid'] = $row['default_setting_uuid'];
 									$_SESSION[$category][$subcategory][$name] = $row['default_setting_value'];
 								}
