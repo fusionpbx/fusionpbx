@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -75,25 +75,25 @@
 	$order_by = $_GET["order_by"] ?? '';
 	$order = $_GET["order"] ?? '';
 
-//add the search term
-	$search = strtolower($_GET["search"] ?? '');
-	if (!empty($search)) {
-		$sql_search = " (";
-		$sql_search .= "lower(agent_name) like :search ";
-		$sql_search .= "or lower(agent_id) like :search ";
-		$sql_search .= ") ";
-		$parameters['search'] = '%'.$search.'%';
-	}
+//add the search and show variables
+	$search = $_GET["search"] ?? '';
+	$show = $_GET["show"] ?? '';
 
 //get total call center agent count from the database
 	$sql = "select count(*) from v_call_center_agents ";
-	$sql .= "where true ";
-	if (!empty($_GET['show']) && $_GET['show'] != "all" || !permission_exists('call_center_all')) {
-		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
+	if ($show == "all" && permission_exists('call_center_all')) {
+		$sql .= "where true ";
+	}
+	else {
+		$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	}
-	if (!empty($sql_search)) {
-		$sql .= "and ".$sql_search;
+	if (!empty($search)) {
+		$sql .= "and (";
+		$sql .= "	lower(agent_name) like :search ";
+		$sql .= "	or lower(agent_id) like :search ";
+		$sql .= ") ";
+		$parameters['search'] = '%'.strtolower($search).'%';
 	}
 	$database = new database;
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
@@ -101,17 +101,31 @@
 //prepare to page the results
 	$rows_per_page = (!empty($_SESSION['domain']['paging']['numeric'])) ? $_SESSION['domain']['paging']['numeric'] : 50;
 	$param = "&search=".urlencode($search);
-	if (!empty($_GET['show']) == "all" && permission_exists('call_center_all')) {
+	if ($show == "all" && permission_exists('call_center_all')) {
 		$param .= "&show=all";
 	}
-	$page = $_GET['page'] ?? '';
-	if (empty($page)) { $page = 0; $_GET['page'] = 0; }
+	$page = !empty($_GET['page']) ? $_GET['page'] : 0;
 	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
 	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = str_replace('count(*)', '*', $sql ?? '');
+	$sql = "select * ";
+	$sql .= "from v_call_center_agents ";
+	if ($show == "all" && permission_exists('call_center_all')) {
+		$sql .= "where true ";
+	}
+	else {
+		$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	}
+	if (!empty($search)) {
+		$sql .= "and (";
+		$sql .= "	lower(agent_name) like :search ";
+		$sql .= "	or lower(agent_id) like :search ";
+		$sql .= ") ";
+		$parameters['search'] = '%'.strtolower($search).'%';
+	}
 	$sql .= order_by($order_by, $order, 'agent_name', 'asc');
 	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;
@@ -181,7 +195,7 @@
 		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".(!empty($result) ?: "style='visibility: hidden;'").">\n";
 		echo "	</th>\n";
 	}
-	if (!empty($_GET['show']) && $_GET['show'] == "all" && permission_exists('call_center_all')) {
+	if ($show == "all" && permission_exists('call_center_all')) {
 		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, $param, "class='shrink'");
 	}
 	//echo th_order_by('domain_uuid', 'domain_uuid', $order_by, $order);
@@ -213,7 +227,7 @@
 				echo "		<input type='hidden' name='call_center_agents[$x][uuid]' value='".escape($row['call_center_agent_uuid'])."' />\n";
 				echo "	</td>\n";
 			}
-			if (!empty($_GET['show']) && $_GET['show'] == "all" && permission_exists('call_center_all')) {
+			if ($show == "all" && permission_exists('call_center_all')) {
 				if (!empty($_SESSION['domains'][$row['domain_uuid']]['domain_name'])) {
 					$domain = $_SESSION['domains'][$row['domain_uuid']]['domain_name'];
 				}
