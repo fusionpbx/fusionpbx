@@ -54,6 +54,7 @@
 	$queue_announce_frequency = '';
 	$queue_cc_exit_keys = '';
 	$queue_description = '';
+	$queue_timeout_action = '';
 
 //action add or update
 	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
