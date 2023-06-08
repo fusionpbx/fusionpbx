@@ -123,13 +123,9 @@
 
 		//download the file
 			if (file_exists($stream_full_path)) {
-				//content-range
-				if (isset($_SERVER['HTTP_RANGE']) && $_GET['t'] != "bin")  {
-					range_download($stream_full_path);
-				}
 
 				$fd = fopen($stream_full_path, "rb");
-				if ($_GET['t'] == "bin") {
+				if (!empty($_GET['t']) && $_GET['t'] == "bin") {
 					header("Content-Type: application/force-download");
 					header("Content-Type: application/octet-stream");
 					header("Content-Type: application/download");
@@ -146,10 +142,16 @@
 				header('Content-Disposition: attachment; filename="'.$stream_file.'"');
 				header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
 				header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
-				if ($_GET['t'] == "bin") {
+				if (!empty($_GET['t']) && $_GET['t'] == "bin") {
 					header("Content-Length: ".filesize($stream_full_path));
 				}
 				ob_clean();
+
+				//content-range
+				if (isset($_SERVER['HTTP_RANGE']) && (empty($_GET['t']) || $_GET['t'] != "bin"))  {
+					range_download($stream_full_path);
+				}
+
 				fpassthru($fd);
 			}
 			exit;
@@ -659,7 +661,7 @@
 			// If the range starts with an '-' we start from the beginning
 			// If not, we forward the file pointer
 			// And make sure to get the end byte if spesified
-			if ($range0 == '-') {
+			if (!empty($range0) && $range0 == '-') {
 				// The n-number of the last bytes is requested
 				$c_start = $size - substr($range, 1);
 			}
