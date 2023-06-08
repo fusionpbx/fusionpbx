@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018-2020
+	Portions created by the Initial Developer are Copyright (C) 2018-2023
 	the Initial Developer. All Rights Reserved.
 */
 
@@ -143,7 +143,7 @@
 	}
 
 //pre-populate the form
-	if (!empty($_GET) && $_POST["persistformvar"] != "true") {
+	if (!empty($_GET) && (empty($_POST["persistformvar"]) || $_POST["persistformvar"] != "true")) {
 		$stream_uuid = $_GET["id"];
 		$sql = "select * from v_streams ";
 		$sql .= "where stream_uuid = :stream_uuid ";
