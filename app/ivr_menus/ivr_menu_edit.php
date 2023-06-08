@@ -752,7 +752,7 @@
 			$language = $language_variables[0];
 			$dialect = $language_variables[1];
 			$voice = $language_variables[2];
-			if ($language_formatted <> $language.'-'.$dialect.' '.$voice) {
+			if (empty($language_formatted) || $language_formatted != $language.'-'.$dialect.' '.$voice) {
 				echo "		<option value='".$language."/".$dialect."/".$voice."'>".$language."-".$dialect." ".$voice."</option>\n";
 			}
 		}
