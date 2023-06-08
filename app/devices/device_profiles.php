@@ -52,6 +52,9 @@
 		$profiles = $_POST['profiles'];
 	}
 
+//set additional variables
+	$show = $_GET["show"] ?? '';
+
 //get the search
 	$search = strtolower($_REQUEST["search"] ?? '');
 	$fields = strtolower($_REQUEST["fields"] ?? '');
@@ -114,7 +117,7 @@
 //get the count
 	$sql = "select count(*) from v_device_profiles ";
 	$sql .= "where true ";
-	if (!empty($_GET['show']) || $_GET['show'] != "all" || !permission_exists('device_profile_all')) {
+	if ($show != "all" || !permission_exists('device_profile_all')) {
 		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
 		$parameters['domain_uuid'] = $domain_uuid;
 	}
@@ -129,7 +132,7 @@
 		$param .= "&search=".$search;
 		$param .= "&fields=".$fields;
 	}
-	if (!empty($_GET['show']) && $_GET['show'] == "all" && permission_exists('device_profile_all')) {
+	if ($show == "all" && permission_exists('device_profile_all')) {
 		$param .= "&show=all";
 	}
 	$page = $_GET['page'] ?? 0;
@@ -172,7 +175,7 @@
 	}
 	echo 		"<form id='form_search' class='inline' method='get'>\n";
 	if (permission_exists('device_profile_all')) {
-		if (!empty($_GET['show']) && $_GET['show'] == 'all') {
+		if ($show == 'all') {
 			echo "		<input type='hidden' name='show' value='all'>";
 		}
 		else {
@@ -223,7 +226,7 @@
 		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".(empty($device_profiles) ? "style='visibility: hidden;'" : null).">\n";
 		echo "	</th>\n";
 	}
-	if (!empty($_GET['show']) && $_GET['show'] == "all" && permission_exists('device_profile_all')) {
+	if ($show == "all" && permission_exists('device_profile_all')) {
 		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, $param);
 	}
 	echo th_order_by('device_profile_name', $text['label-device_profile_name'], $order_by, $order);
@@ -247,7 +250,7 @@
 				echo "		<input type='hidden' name='profiles[$x][uuid]' value='".escape($row['device_profile_uuid'])."' />\n";
 				echo "	</td>\n";
 			}
-			if (!empty($_GET['show']) && $_GET['show'] == "all" && permission_exists('device_profile_all')) {
+			if ($show == "all" && permission_exists('device_profile_all')) {
 				if (!empty($_SESSION['domains'][$row['domain_uuid']]['domain_name'])) {
 					$domain = $_SESSION['domains'][$row['domain_uuid']]['domain_name'];
 				}
