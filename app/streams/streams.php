@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018-2022
+	Portions created by the Initial Developer are Copyright (C) 2018-2023
 	the Initial Developer. All Rights Reserved.
 */
 
@@ -88,21 +88,21 @@
 	$order = $_GET["order"] ?? '';
 
 //add the search term
-	if (isset($_GET["search"])) {
-		$search = strtolower($_GET["search"]);
+	if (!empty($_GET["search"])) {
+		$search = $_GET["search"];
 	}
 
 //prepare to page the results
 	$sql = "select count(stream_uuid) from v_streams ";
 	$sql .= "where true ";
-	if (isset($search) && $search != '') {
-		$sql = "and (";
+	if (!empty($search)) {
+		$sql .= "and (";
 		$sql .= "lower(stream_name) like :search ";
 		$sql .= "or lower(stream_location) like :search ";
 		$sql .= "or lower(stream_enabled) like :search ";
 		$sql .= "or lower(stream_description) like :search ";
 		$sql .= ") ";
-		$parameters['search'] = '%'.$search.'%';
+		$parameters['search'] = '%'.strtolower($search).'%';
 	}
 	if (permission_exists('stream_all') && $show == "all") {
 		//show all
@@ -132,14 +132,14 @@
 //get the list
 	$sql = "select * from v_streams ";
 	$sql .= "where true ";
-	if (isset($search) && $search != '') {
-		$sql = "and (";
+	if (!empty($search)) {
+		$sql .= "and (";
 		$sql .= "	lower(stream_name) like :search ";
 		$sql .= "	or lower(stream_location) like :search ";
 		$sql .= "	or lower(stream_enabled) like :search ";
 		$sql .= "	or lower(stream_description) like :search ";
 		$sql .= ") ";
-		$parameters['search'] = '%'.$search.'%';
+		$parameters['search'] = '%'.strtolower($search).'%';
 	}
 	if (permission_exists('stream_all') && $show == "all") {
 		//show all
@@ -233,7 +233,7 @@
 	echo "<tr class='list-header'>\n";
 	if (permission_exists('stream_add') || permission_exists('stream_edit') || permission_exists('stream_delete')) {
 		echo "	<th class='checkbox'>\n";
-		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".($streams ?: "style='visibility: hidden;'").">\n";
+		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".(empty($streams) ? "style='visibility: hidden;'" : null).">\n";
 		echo "	</th>\n";
 	}
 	if ($show == 'all' && permission_exists('stream_all')) {
@@ -261,7 +261,7 @@
 				echo "		<input type='hidden' name='streams[$x][uuid]' value='".escape($row['stream_uuid'])."' />\n";
 				echo "	</td>\n";
 			}
-			if ($_GET['show'] == 'all' && permission_exists('stream_all')) {
+			if (!empty($_GET['show']) && $_GET['show'] == 'all' && permission_exists('stream_all')) {
 				echo "	<td>";
 				if ($_SESSION['domains'][$row['domain_uuid']]['domain_name'] != '') {
 					echo escape($_SESSION['domains'][$row['domain_uuid']]['domain_name']);
@@ -283,7 +283,7 @@
 			if (!empty($row['stream_location'])) {
 				$location_parts = explode('://',$row['stream_location']);
 				$http_protocol = ($location_parts[0] == "shout") ? 'http' : 'https';
-				echo "<audio src='".$http_protocol."://".$location_parts[1]."' controls='controls' />\n";
+				echo "<audio src='".$http_protocol."://".($location_parts[1] ?? '')."' controls='controls' />\n";
 			}
 			echo "	</td>\n";
 			if (permission_exists('stream_edit')) {
@@ -296,7 +296,7 @@
 			}
 			echo "	</td>\n";
 			echo "	<td class='description overflow hide-sm-dn'>".escape($row['stream_description'])."&nbsp;</td>\n";
-			if (permission_exists('stream_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+			if (permission_exists('stream_edit') && !empty($_SESSION['theme']['list_row_edit_button']['boolean']) && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
 				echo "	<td class='action-button'>\n";
 				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
 				echo "	</td>\n";
