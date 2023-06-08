@@ -145,7 +145,7 @@ if (!class_exists('basic_operator_panel')) {
 									$presence_id = $field['presence_id'];
 									$presence = explode("@", $presence_id);
 									$presence_id = $presence[0];
-									$presence_domain = $presence[1];
+									$presence_domain = $presence[1] ?? '';
 									if ($user == $presence_id) {
 										if ($presence_domain == $_SESSION['domain_name']) {
 											$found = true;
