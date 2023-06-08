@@ -65,6 +65,7 @@ if ($domains_processed == 1) {
 		unset($sql);
 
 	//update all callcenter dialplans to have the @domain in the queue name
+		/*
 		$sql = "select q.domain_uuid, d.domain_name, q.call_center_queue_uuid, q.dialplan_uuid, dp.dialplan_xml, ";
 		$sql .= "q.queue_name, q.queue_extension, q.queue_timeout_action, q.queue_cid_prefix, q.queue_cc_exit_keys, ";
 		$sql .= "q.queue_description, q.queue_time_base_score_sec, q.queue_greeting ";
@@ -157,7 +158,7 @@ if ($domains_processed == 1) {
 		}
 		unset ($prep_statement);
 
-	//save the array to the database
+		//save the array to the database
 		if (!empty($array)) {
 			//add the dialplan permission
 				$p = new permissions;
@@ -175,6 +176,7 @@ if ($domains_processed == 1) {
 				$p->delete("dialplan_add", "temp");
 				$p->delete("dialplan_edit", "temp");
 		}
+		*/
 
 }
 
