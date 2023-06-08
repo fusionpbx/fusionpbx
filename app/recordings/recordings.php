@@ -48,7 +48,7 @@
 
 //download the recording
 	if ($action == "download" && (permission_exists('recording_play') || permission_exists('recording_download'))) {
-		if ($_GET['type'] = "rec") {
+		if ($_GET['type'] == "rec") {
 			//set the path for the directory
 				$path = $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name'];
 
@@ -65,7 +65,7 @@
 					$row = $database->select($sql, $parameters, 'row');
 					if (is_array($row) && @sizeof($row) != 0) {
 						$recording_filename = $row['recording_filename'];
-						if ($_SESSION['recordings']['storage_type']['text'] == 'base64' && $row['recording_base64'] != '') {
+						if (!empty($_SESSION['recordings']['storage_type']['text']) && $_SESSION['recordings']['storage_type']['text'] == 'base64' && !empty($row['recording_base64'])) {
 							$recording_decoded = base64_decode($row['recording_base64']);
 							file_put_contents($path.'/'.$recording_filename, $recording_decoded);
 						}
@@ -83,13 +83,9 @@
 
 			//send the headers and then the data stream
 				if (file_exists($full_recording_path)) {
-					//content-range
-					if (isset($_SERVER['HTTP_RANGE']) && $_GET['t'] != "bin")  {
-						range_download($full_recording_path);
-					}
 
 					$fd = fopen($full_recording_path, "rb");
-					if ($_GET['t'] == "bin") {
+					if (!empty($_GET['t']) && $_GET['t'] == "bin") {
 						header("Content-Type: application/force-download");
 						header("Content-Type: application/octet-stream");
 						header("Content-Type: application/download");
@@ -106,10 +102,16 @@
 					header('Content-Disposition: attachment; filename="'.$recording_filename.'"');
 					header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
 					header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
-					if ($_GET['t'] == "bin") {
+					if (!empty($_GET['t'] ) && $_GET['t'] == "bin") {
 						header("Content-Length: ".filesize($full_recording_path));
 					}
 					ob_clean();
+
+					//content-range
+					if (isset($_SERVER['HTTP_RANGE']) && (empty($_GET['t']) || $_GET['t'] != "bin"))  {
+						range_download($full_recording_path);
+					}
+
 					fpassthru($fd);
 				}
 		}
@@ -551,7 +553,7 @@
 				echo "	<td class='center no-wrap'>".$file_size."</td>\n";
 			}
 			else {
-				$file_name = $_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/'.$row['recording_filename'];
+				$file_name = $_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domains'][$row['domain_uuid']]['domain_name'].'/'.$row['recording_filename'];
 				if (file_exists($file_name)) {
 					$file_size = filesize($file_name);
 					$file_size = byte_convert($file_size);
@@ -560,8 +562,8 @@
 				else {
 					unset($file_size, $file_date);
 				}
-				echo "	<td class='center no-wrap'>".$file_size."</td>\n";
-				echo "	<td class='center hide-md-dn'>".$file_date."</td>\n";
+				echo "	<td class='center no-wrap'>".($file_size ?? '')."</td>\n";
+				echo "	<td class='center hide-md-dn'>".($file_date ?? '')."</td>\n";
 			}
 			echo "	<td class='description overflow hide-sm-dn'>".escape($row['recording_description'])."&nbsp;</td>\n";
 			if (permission_exists('recording_edit') && !empty($_SESSION['theme']['list_row_edit_button']['boolean']) && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
