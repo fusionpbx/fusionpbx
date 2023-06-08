@@ -48,6 +48,7 @@
 
 //set default values
 	$search = '';
+	$user_uuid = '';
 
 //get variables used to control the order
 	$order_by = $_GET["order_by"] ?? '';
