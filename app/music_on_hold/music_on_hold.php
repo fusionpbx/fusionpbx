@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -380,7 +380,7 @@
 		echo 	"<span id='form_upload' style='display: none;'>";
 		echo button::create(['label'=>$text['button-cancel'],'icon'=>$_SESSION['theme']['button_icon_cancel'],'type'=>'button','id'=>'btn_upload_cancel','onclick'=>"$('span#form_upload').fadeOut(250, function(){ name_mode('select'); document.getElementById('form_upload').reset(); $('#btn_add').fadeIn(250) });"]);
 		//name (category)
-			echo 	"<select name='name' id='name_select' class='formfld' style='width: auto;'>\n";
+			echo 	"<select name='name' id='name_select' class='formfld' style='width: auto; margin: 0;'>\n";
 			echo "		<option value='' selected='selected' disabled='disabled'>".$text['label-category']."</option>\n";
 
 			if (permission_exists('music_on_hold_domain')) {
@@ -423,9 +423,9 @@
 				}
 			}
 			echo "	</select>";
-			echo 	"<input class='formfld' style='width: 100px; display: none;' type='text' name='name_new' id='name_new' maxlength='255' placeholder=\"".$text['label-category']."\" value=''>";
+			echo 	"<input class='formfld' style='width: 100px; margin: 0; display: none;' type='text' name='name_new' id='name_new' maxlength='255' placeholder=\"".$text['label-category']."\" value=''>";
 		//rate
-			echo 	"<select id='rate' name='rate' class='formfld' style='display: none; width: auto;'>\n";
+			echo 	"<select id='rate' name='rate' class='formfld' style='display: none; width: auto; margin: 0;'>\n";
 			echo "		<option value=''>".$text['option-default']."</option>\n";
 			echo "		<option value='8000'>8 kHz</option>\n";
 			echo "		<option value='16000'>16 kHz</option>\n";
@@ -435,7 +435,7 @@
 			echo button::create(['type'=>'button','title'=>!empty($text['label-new']),'icon'=>$_SESSION['theme']['button_icon_add'],'id'=>'btn_new','onclick'=>"name_mode('new');"]);
 			echo button::create(['type'=>'button','title'=>$text['label-select'],'icon'=>'list','id'=>'btn_select','style'=>'display: none;','onclick'=>"name_mode('select');"]);
 		//file
-			echo 	"<input type='text' class='txt' style='width: 100px; cursor: pointer;' id='filename' placeholder='Select...' onclick=\"document.getElementById('file').click(); this.blur();\" onfocus='this.blur();'>";
+			echo 	"<input type='text' class='txt' style='width: 100px; cursor: pointer; margin: 0;' id='filename' placeholder='Select...' onclick=\"document.getElementById('file').click(); this.blur();\" onfocus='this.blur();'>";
 			echo 	"<input type='file' id='file' name='file' style='display: none;' accept='.wav,.mp3,.ogg' onchange=\"document.getElementById('filename').value = this.files.item(0).name; check_file_type(this);\">";
 		//submit
 			$margin_right = permission_exists('music_on_hold_delete') ? 'margin-right: 15px;' : null;
