@@ -135,8 +135,8 @@
 			$ivr_menu_cid_prefix = $_POST["ivr_menu_cid_prefix"];
 			$ivr_menu_enabled = $_POST["ivr_menu_enabled"] ?? 'false';
 			$ivr_menu_description = $_POST["ivr_menu_description"];
-			$ivr_menu_options_delete = $_POST["ivr_menu_options_delete"];
-			$dialplan_uuid = $_POST["dialplan_uuid"];
+			$ivr_menu_options_delete = $_POST["ivr_menu_options_delete"] ?? null;
+			$dialplan_uuid = $_POST["dialplan_uuid"] ?? null;
 
 		//set the context for users that do not have the permission
 			if (permission_exists('ivr_menu_context')) {
