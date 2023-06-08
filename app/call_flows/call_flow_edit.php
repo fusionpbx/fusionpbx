@@ -56,6 +56,7 @@
 	$call_flow_label = '';
 	$call_flow_alternate_label = '';
 	$call_flow_description = '';
+	$call_flow_status = '';
 
 //action add or update
 	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {

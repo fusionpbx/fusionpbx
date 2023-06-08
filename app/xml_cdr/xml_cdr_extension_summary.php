@@ -160,7 +160,7 @@
 		echo "		<div class='field'>\n";
 		echo "			<select class='formfld' name='include_internal' id='include_internal'>\n";
 		echo "				<option value='0'>".$text['option-false']."</option>\n";
-		echo "				<option value='1' ".(($include_internal == 1) ? "selected" : null).">".$text['option-true']."</option>\n";
+		echo "				<option value='1' ".((!empty($include_internal) && $include_internal == 1) ? "selected" : null).">".$text['option-true']."</option>\n";
 		echo "			</select>\n";
 		echo "		</div>\n";
 		echo "	</div>\n";

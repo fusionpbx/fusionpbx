@@ -42,6 +42,11 @@
 	$language = new text;
 	$text = $language->get();
 
+//set the defaults
+	$number_translation_name = '';
+	$number_translation_enabled = 'false';
+	$number_translation_description = '';
+
 //action add or update
 	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
