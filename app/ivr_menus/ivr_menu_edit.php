@@ -90,7 +90,7 @@
 				$array[0]['checked'] = 'true';
 				$array[0]['uuid'] = $_POST['ivr_menu_uuid'];
 
-				switch (!empty($_POST['action']) && $_POST['action']) {
+				switch ($_POST['action']) {
 					case 'copy':
 						if (permission_exists('ivr_menu_add')) {
 							$obj = new ivr_menu;
