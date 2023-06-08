@@ -128,7 +128,7 @@
 			}
 
 		//add the phrase
-			if ($_POST["persistformvar"] != "true") {
+			if (empty($_POST["persistformvar"]) || $_POST["persistformvar"] != "true") {
 				if ($action == "add" && permission_exists('phrase_add')) {
 					//build data array
 						$phrase_uuid = uuid();
@@ -154,11 +154,11 @@
 								$array['phrase_details'][0]['domain_uuid'] = $domain_uuid;
 								$array['phrase_details'][0]['phrase_detail_order'] = $_POST['phrase_detail_order'];
 								$array['phrase_details'][0]['phrase_detail_tag'] = $_POST['phrase_detail_tag'];
-								$array['phrase_details'][0]['phrase_detail_pattern'] = $_POST['phrase_detail_pattern'];
+								$array['phrase_details'][0]['phrase_detail_pattern'] = $_POST['phrase_detail_pattern'] ?? null;
 								$array['phrase_details'][0]['phrase_detail_function'] = $_POST['phrase_detail_function'];
 								$array['phrase_details'][0]['phrase_detail_data'] = $_POST['phrase_detail_data'];
-								$array['phrase_details'][0]['phrase_detail_method'] = $_POST['phrase_detail_method'];
-								$array['phrase_details'][0]['phrase_detail_type'] = $_POST['phrase_detail_type'];
+								$array['phrase_details'][0]['phrase_detail_method'] = $_POST['phrase_detail_method'] ?? null;
+								$array['phrase_details'][0]['phrase_detail_type'] = $_POST['phrase_detail_type'] ?? null;
 								$array['phrase_details'][0]['phrase_detail_group'] = $_POST['phrase_detail_group'];
 							}
 						}
@@ -218,11 +218,11 @@
 								$array['phrase_details'][0]['domain_uuid'] = $domain_uuid;
 								$array['phrase_details'][0]['phrase_detail_order'] = $_POST['phrase_detail_order'];
 								$array['phrase_details'][0]['phrase_detail_tag'] = $_POST['phrase_detail_tag'];
-								$array['phrase_details'][0]['phrase_detail_pattern'] = $_POST['phrase_detail_pattern'];
+								$array['phrase_details'][0]['phrase_detail_pattern'] = $_POST['phrase_detail_pattern'] ?? null;
 								$array['phrase_details'][0]['phrase_detail_function'] = $_POST['phrase_detail_function'];
 								$array['phrase_details'][0]['phrase_detail_data'] = $_POST['phrase_detail_data'];
-								$array['phrase_details'][0]['phrase_detail_method'] = $_POST['phrase_detail_method'];
-								$array['phrase_details'][0]['phrase_detail_type'] = $_POST['phrase_detail_type'];
+								$array['phrase_details'][0]['phrase_detail_method'] = $_POST['phrase_detail_method'] ?? null;
+								$array['phrase_details'][0]['phrase_detail_type'] = $_POST['phrase_detail_type'] ?? null;
 								$array['phrase_details'][0]['phrase_detail_group'] = $_POST['phrase_detail_group'];
 							}
 						}
@@ -354,7 +354,7 @@
 			echo "var opt_group = document.createElement('optgroup');\n";
 			echo "opt_group.label = \"".$text['label-recordings']."\";\n";
 			foreach ($recordings as &$row) {
-				if ($_SESSION['recordings']['storage_type']['text'] == 'base64') {
+				if (!empty($_SESSION['recordings']['storage_type']['text']) && $_SESSION['recordings']['storage_type']['text'] == 'base64') {
 					echo "opt_group.appendChild(new Option(\"".$row["recording_name"]."\", \"\${lua streamfile.lua ".$row["recording_filename"]."}\"));\n";
 				}
 				else {
