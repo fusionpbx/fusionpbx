@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -115,7 +115,7 @@
 				//update do not disturb
 					if ($user_status == "Do Not Disturb") {
 						$x = 0;
-						foreach($_SESSION['user']['extension'] as $row) {
+						foreach ($_SESSION['user']['extension'] as $row) {
 							//build the array
 							$array['extensions'][$x]['extension_uuid'] = $row['extension_uuid'];
 							$array['extensions'][$x]['dial_string'] = '!USER_BUSY';
@@ -123,8 +123,10 @@
 
 							//delete extension from the cache
 							$cache = new cache;
-							$cache->delete("directory:".$row['extension']."@".$_SESSION['user']['domain_name']);
-							if(!empty($number_alias)){
+							if (!empty($row['extension'])) {
+								$cache->delete("directory:".$row['extension']."@".$_SESSION['user']['domain_name']);
+							}
+							if (!empty($number_alias)) {
 								$cache->delete("directory:".$row['number_alias']."@".$_SESSION['user']['domain_name']);
 							}
 
@@ -142,8 +144,10 @@
 
 							//delete extension from the cache
 							$cache = new cache;
-							$cache->delete("directory:".$row['extension']."@".$_SESSION['user']['domain_name']);
-							if(!empty($number_alias)){
+							if (!empty($row['extension'])) {
+								$cache->delete("directory:".$row['extension']."@".$_SESSION['user']['domain_name']);
+							}
+							if (!empty($number_alias)) {
 								$cache->delete("directory:".$row['number_alias']."@".$_SESSION['user']['domain_name']);
 							}
 
@@ -168,8 +172,10 @@
 
 				//delete extension from the cache
 					$cache = new cache;
-					$cache->delete("directory:".$extension."@".$this->domain_name);
-					if(!empty($number_alias)){
+					if (!empty($extension)) {
+						$cache->delete("directory:".$extension."@".$this->domain_name);
+					}
+					if (!empty($number_alias)) {
 						$cache->delete("directory:".$number_alias."@".$this->domain_name);
 					}
 			}

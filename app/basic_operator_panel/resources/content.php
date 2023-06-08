@@ -274,7 +274,7 @@ if (is_array($activity)) {
 				$call_number = $ext['dest'];
 			}
 			else {
-				$call_name = $activity[$ext['dest']]['effective_caller_id_name'];
+				$call_name = $activity[$ext['dest']]['effective_caller_id_name'] ?? null;
 				$call_number = format_phone($ext['dest']);
 			}
 			$dir_icon = 'outbound';
@@ -391,7 +391,7 @@ if (is_array($activity)) {
 			}
 			else {
 				//user extension
-				if ($ext['uuid'] != '' && $ext['uuid'] == $ext['call_uuid'] && $ext['variable_bridge_uuid'] == '') {
+				if ($ext['uuid'] != '' && $ext['uuid'] == $ext['call_uuid'] && empty($ext['variable_bridge_uuid'])) {
 					$draggable = false;
 				}
 				else if (!empty($ext_state) && $ext_state == 'ringing' && $ext['variable_call_direction'] == 'local') {
@@ -476,7 +476,7 @@ if (is_array($activity)) {
 			}
 			//hangup
 			if (permission_exists('operator_panel_hangup') || in_array($extension, $_SESSION['user']['extensions'])) {
-				if ($ext['variable_bridge_uuid'] == '' && $ext_state == 'ringing') {
+				if (empty($ext['variable_bridge_uuid']) && $ext_state == 'ringing') {
 					$call_identifier_hangup_uuid = $ext['uuid'];
 				}
 				else if ($dir_icon == 'outbound') {
