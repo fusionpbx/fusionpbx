@@ -291,7 +291,7 @@
 
 						//filter out unchecked sip profiles
 							foreach ($records as $x => $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$uuids[] = "'".$record['uuid']."'";
 								}
 							}
@@ -411,7 +411,7 @@
 
 						//filter out unchecked sip profiles
 							foreach ($records as $x => $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									//build the delete array
 										$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
 										$array[$this->table][$x]['voicemail_uuid'] = $this->voicemail_uuid;
@@ -458,7 +458,7 @@
 
 						//filter out unchecked sip profiles
 							foreach ($records as $x => $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									//build the delete array
 										$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
 										$array[$this->table][$x]['voicemail_uuid'] = $this->voicemail_uuid;
@@ -507,7 +507,7 @@
 
 						//filter out unchecked sip profiles
 							foreach ($records as $x => $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$uuids[] = "'".$record['uuid']."'";
 								}
 							}
@@ -748,7 +748,7 @@
 			$path = $_SESSION['switch']['voicemail']['dir'].'/default/'.$_SESSION['domain_name'].'/'.$this->voicemail_id;
 
 			//prepare base64 content from db, if enabled
-			if ($_SESSION['voicemail']['storage_type']['text'] == 'base64') {
+			if (!empty($_SESSION['voicemail']['storage_type']['text']) && $_SESSION['voicemail']['storage_type']['text'] == 'base64') {
 				$sql = "select message_base64 ";
 				$sql .= "from ";
 				$sql .= "v_voicemail_messages as m, ";
@@ -799,11 +799,6 @@
 				return false;
 			}
 
-			//content-range
-			if (isset($_SERVER['HTTP_RANGE']) && $this->type != 'bin')  {
-				$this->range_download($file_path);
-			}
-
 			$fd = fopen($file_path, "rb");
 			if ($this->type == 'bin') {
 				header("Content-Type: application/force-download");
@@ -830,10 +825,16 @@
 				header("Content-Length: ".filesize($file_path));
 			}
 			ob_end_clean();
+
+			//content-range
+			if (isset($_SERVER['HTTP_RANGE']) && $this->type != 'bin')  {
+				$this->range_download($file_path);
+			}
+
 			fpassthru($fd);
 
 			//if base64, remove temp file
-			if ($_SESSION['voicemail']['storage_type']['text'] == 'base64') {
+			if (!empty($_SESSION['voicemail']['storage_type']['text']) && $_SESSION['voicemail']['storage_type']['text'] == 'base64') {
 				@unlink($path.'/msg_'.$this->voicemail_message_uuid.'.'.$file_ext);
 			}
 
@@ -884,7 +885,7 @@
 				// If the range starts with an '-' we start from the beginning
 				// If not, we forward the file pointer
 				// And make sure to get the end byte if spesified
-				if ($range0 == '-') {
+				if (!empty($range0) && $range0 == '-') {
 					// The n-number of the last bytes is requested
 					$c_start = $size - substr($range, 1);
 				}

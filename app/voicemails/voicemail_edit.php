@@ -74,7 +74,7 @@
 	if (!empty($_POST)) {
 
 		//process the http post data by submitted action
-			if ($_POST['action'] != '' && is_uuid($_POST['voicemail_uuid'])) {
+			if (!empty($_POST['action']) && is_uuid($_POST['voicemail_uuid'])) {
 				$array[0]['checked'] = 'true';
 				$array[0]['uuid'] = $_POST['voicemail_uuid'];
 
@@ -98,16 +98,16 @@
 			$voicemail_options = $_POST["voicemail_options"];
 			$voicemail_alternate_greet_id = $_POST["voicemail_alternate_greet_id"];
 			$voicemail_mail_to = $_POST["voicemail_mail_to"];
-			$voicemail_sms_to = $_POST["voicemail_sms_to"];
-			$voicemail_transcription_enabled = $_POST["voicemail_transcription_enabled"];
+			$voicemail_sms_to = $_POST["voicemail_sms_to"] ?? null;
+			$voicemail_transcription_enabled = $_POST["voicemail_transcription_enabled"] ?? null;
 			$voicemail_file = $_POST["voicemail_file"];
 			$voicemail_local_after_email = $_POST["voicemail_local_after_email"];
 			$voicemail_destination = $_POST["voicemail_destination"];
 			$voicemail_enabled = $_POST["voicemail_enabled"] ?? 'false';
 			$voicemail_description = $_POST["voicemail_description"];
 			$voicemail_tutorial = $_POST["voicemail_tutorial"];
-			$voicemail_options_delete = $_POST["voicemail_options_delete"];
-			$voicemail_destinations_delete = $_POST["voicemail_destinations_delete"];
+			$voicemail_options_delete = $_POST["voicemail_options_delete"] ?? null;
+			$voicemail_destinations_delete = $_POST["voicemail_destinations_delete"] ?? null;
 
 		//remove the space
 			$voicemail_mail_to = str_replace(" ", "", $voicemail_mail_to);
@@ -211,7 +211,7 @@
 								$array['voicemail_options'][$x]['voicemail_option_order'] = $voicemail_option['voicemail_option_order'];
 								$array['voicemail_options'][$x]['voicemail_option_description'] = $voicemail_option['voicemail_option_description'];
 						}
-						if (is_array($array['voicemail_options']) && @sizeof($array['voicemail_options']) != 0) {
+						if (!empty($array['voicemail_options']) && is_array($array['voicemail_options']) && @sizeof($array['voicemail_options']) != 0) {
 							//grant temporary permission
 								$p->add('voicemail_option_add', 'temp');
 						}
@@ -540,7 +540,7 @@
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='greeting_id'>\n";
 	echo "		<option value=''>".$text['label-default']."</option>\n";
-	echo "		<option value='0' ".(($greeting_id == "0") ? "selected='selected'" : null).">".$text['label-none']."</option>\n";
+	echo "		<option value='0' ".(empty($greeting_id) || $greeting_id == "0" ? "selected='selected'" : null).">".$text['label-none']."</option>\n";
 	if (is_array($greetings) && @sizeof($greetings) != 0) {
 		foreach ($greetings as $greeting) {
 			$selected = ($greeting['greeting_id'] == $greeting_id) ? 'selected' : null;
@@ -611,7 +611,7 @@
 			echo "	</td>\n";
 			echo "	<td class='vtable' style='border-bottom: none;' align='left'>\n";
 			echo "		<select name='voicemail_options[".$c."][voicemail_option_order]' class='formfld' style='width:55px'>\n";
-			if (strlen(htmlspecialchars($voicemail_option_order))> 0) {
+			if (strlen(htmlspecialchars($voicemail_option_order ?? ''))> 0) {
 				echo "		<option selected='yes' value='".htmlspecialchars($voicemail_option_order)."'>".htmlspecialchars($voicemail_option_order)."</option>\n";
 			}
 			$i = 0;
