@@ -102,7 +102,7 @@
 						}
 						break;
 					case 'add':
-						$xml_cdrs = $_POST['xml_cdrs'];
+						$xml_cdrs = $_POST['xml_cdrs'] ?? null;
 						if (!empty($xml_cdrs) && permission_exists('call_block_add')) {
 							$obj = new call_block;
 							$obj->call_block_direction = $call_block_direction;
