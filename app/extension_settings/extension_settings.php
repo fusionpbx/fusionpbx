@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2021
+	Portions created by the Initial Developer are Copyright (C) 2021-2023
 	the Initial Developer. All Rights Reserved.
 */
 
@@ -178,7 +178,7 @@
 	echo "	<div class='heading'><b>".$text['title-extension_settings']." (".$num_rows.")</b></div>\n";
 	echo "	<div class='actions'>\n";
 
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_add','name'=>'btn_add','link'=>'/app/extensions/extension_edit.php?id='.$extension_uuid]);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_add','name'=>'btn_add','style'=>'margin-right: 15px;','link'=>'/app/extensions/extension_edit.php?id='.$extension_uuid]);
 
 	if (permission_exists('extension_setting_add')) {
 		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'id'=>'btn_add','name'=>'btn_add','link'=>'extension_setting_edit.php?extension_uuid='.$extension_uuid]);

@@ -69,7 +69,7 @@
 
 //get http post variables and set them to php variables
 	if (!empty($_POST)) {
-		$domain_uuid = $_POST["domain_uuid"];
+		$domain_uuid = $_POST["domain_uuid"] ?? null;
 		$extension_setting_type = $_POST["extension_setting_type"];
 		$extension_setting_name = $_POST["extension_setting_name"];
 		$extension_setting_value = $_POST["extension_setting_value"];
@@ -299,13 +299,13 @@
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
 	echo "	<select class='formfld' name='extension_setting_type'>\n";
 	echo "		<option value=''></option>\n";
-	if ($extension_setting_type == "param") {
+	if (!empty($extension_setting_type) && $extension_setting_type == "param") {
 		echo "		<option value='param' selected='selected'>".$text['label-param']."</option>\n";
 	}
 	else {
 		echo "		<option value='param'>".$text['label-param']."</option>\n";
 	}
-	if ($extension_setting_type == "variable") {
+	if (!empty($extension_setting_type) && $extension_setting_type == "variable") {
 		echo "		<option value='variable' selected='selected'>".$text['label-variable']."</option>\n";
 	}
 	else {
