@@ -247,7 +247,7 @@
 	$field_name = 'module_category';
 	$sql_where_optional = '';
 	$field_current_value = $module_category;
-	echo html_select_other($table_name, $field_name, $sql_where_optional, $field_current_value);
+	echo html_select_other($table_name, $field_name, $sql_where_optional, $field_current_value, $field_name.' asc', $text['label-other']);
 	echo "</td>\n";
 	echo "</tr>\n";
 
