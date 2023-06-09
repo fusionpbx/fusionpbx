@@ -71,8 +71,9 @@
 		}
 
 		//prepare the array
-		foreach($number_translations as $row) {
-			$array['number_translations'][$x]['checked'] = $row['checked'];
+		$x = 0;
+		foreach ($number_translations as $row) {
+			$array['number_translations'][$x]['checked'] = $row['checked'] ?? null;
 			$array['number_translations'][$x]['number_translation_uuid'] = $row['number_translation_uuid'];
 			$array['number_translations'][$x]['number_translation_enabled'] = $row['number_translation_enabled'];
 			$x++;
