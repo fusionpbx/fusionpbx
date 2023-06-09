@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018 - 2020
+	Portions created by the Initial Developer are Copyright (C) 2018 - 2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -70,8 +70,9 @@
 		}
 
 		//prepare the array
-		foreach($access_controls as $row) {
-			$array['access_controls'][$x]['checked'] = $row['checked'];
+		$x = 0;
+		foreach ($access_controls as $row) {
+			$array['access_controls'][$x]['checked'] = $row['checked'] ?? null;
 			$array['access_controls'][$x]['access_control_uuid'] = $row['access_control_uuid'];
 			$x++;
 		}
