@@ -98,7 +98,7 @@
 
 		//check for all required data
 			$msg = '';
-			//if (empty($var_category)) { $msg .= $text['message-required'].$text['label-category']."<br>\n"; }
+			if (empty($var_category)) { $msg .= $text['message-required'].$text['label-category']."<br>\n"; }
 			if (empty($var_name)) { $msg .= $text['message-required'].$text['label-name']."<br>\n"; }
 			//if (empty($var_value)) { $msg .= $text['message-required'].$text['label-value']."<br>\n"; }
 			//if (empty($var_command)) { $msg .= $text['message-required'].$text['label-command']."<br>\n"; }
@@ -118,7 +118,7 @@
 			}
 
 		//add or update the database
-			if ($_POST["persistformvar"] != "true") {
+			if (empty($_POST["persistformvar"]) || $_POST["persistformvar"] != "true") {
 				if ($action == "add" && permission_exists('var_add')) {
 					//begin insert array
 						$var_uuid = uuid();
@@ -221,7 +221,7 @@
 	$field_name = 'var_category';
 	$sql_where_optional = "";
 	$field_current_value = $var_category;
-	echo html_select_other($table_name, $field_name, $sql_where_optional, $field_current_value);
+	echo html_select_other($table_name, $field_name, $sql_where_optional, $field_current_value, $field_name.' asc', $text['label-other']);
 	echo $text['description-category']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
@@ -238,7 +238,7 @@
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-value']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
