@@ -95,7 +95,7 @@
 	}
 
 //process the http post
-	if (!empty($_POST) && empty($_POST["persistformvar"])) {
+	if (!empty($_POST) && (empty($_POST["persistformvar"]) || $_POST["persistformvar"] != "true")) {
 
 		//set the default_setting_uuid
 			if ($action == "update") {
@@ -136,7 +136,7 @@
 			}
 
 		//add or update the database
-			if (empty($_POST["persistformvar"])) {
+			if (empty($_POST["persistformvar"]) || $_POST["persistformvar"] != "true") {
 				// fix null
 				$default_setting_order = ($default_setting_order != '') ? $default_setting_order : 'null';
 
@@ -236,8 +236,8 @@
 					header("Location: default_settings.php?".$query_string."#anchor_".$default_setting_category);
 					return;
 				}
-			} //if ($_POST["persistformvar"] != "true")
-	} //(count($_POST)>0 && empty($_POST["persistformvar"]))
+			}
+	}
 
 //pre-populate the form
 	if (count($_GET) > 0 && empty($_POST["persistformvar"])) {
