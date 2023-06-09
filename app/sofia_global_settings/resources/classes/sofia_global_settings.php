@@ -220,7 +220,7 @@ if (!class_exists('sofia_global_settings')) {
 										//add copy to the description
 											$array[$this->table][$x][$this->name.'_uuid'] = uuid();
 											$array[$this->table][$x]['global_setting_enabled'] = $row['global_setting_enabled'];
-											$array[$this->table][$x][$this->description_field] = trim($row[$this->description_field]).' ('.$text['label-copy'].')';
+											$array[$this->table][$x][$this->description_field] = trim($row[$this->description_field] ?? '').trim(' ('.$text['label-copy'].')');
 
 										//increment the id
 											$x++;
