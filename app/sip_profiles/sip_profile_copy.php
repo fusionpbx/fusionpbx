@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -69,7 +69,7 @@ if (is_uuid($sip_profile_uuid) && $sip_profile_name != '') {
 	if (!in_array($sip_profile_name, $sip_profile_names)) {
 
 		//get the sip profile data
-			if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
+			if (count($_GET) > 0 && (empty($_POST["persistformvar"]) || $_POST["persistformvar"] != "true")) {
 				$sql = "select sip_profile_hostname, sip_profile_enabled, sip_profile_description from v_sip_profiles ";
 				$sql .= "where sip_profile_uuid = :sip_profile_uuid ";
 				$parameters['sip_profile_uuid'] = $sip_profile_uuid;
