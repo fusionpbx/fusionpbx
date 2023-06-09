@@ -5,7 +5,8 @@
 		<action application="set" data="hangup_after_bridge=true"/>
 		<action application="export" data="sip_auto_answer=true"/>
 		<action application="export" data="domain_name=${domain_name}"/>
-		<action application="bridge" data="user/$1@${domain_name}"/>
+		<action application="set" data="check_destination_status=true"/>
+		<action application="lua" data="intercom.lua"/>
 		</condition>
 	</extension>
 </context>
