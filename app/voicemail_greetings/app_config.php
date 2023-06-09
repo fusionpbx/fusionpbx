@@ -30,6 +30,7 @@
 		$apps[$x]['description']['uk-ua'] = "";
 
 	//permission details
+		$y=0;
 		$apps[$x]['permissions'][$y]['name'] = "voicemail_greeting_view";
 		$apps[$x]['permissions'][$y]['groups'][] = "user";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";

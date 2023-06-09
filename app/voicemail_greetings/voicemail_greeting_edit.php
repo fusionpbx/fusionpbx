@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -66,7 +66,7 @@ if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 
 	//delete the voicemail greeting
 		if (permission_exists('voicemail_greeting_delete')) {
-			if ($_POST['action'] == 'delete' && is_uuid($voicemail_greeting_uuid)) {
+			if (!empty($_POST['action']) && $_POST['action'] == 'delete' && is_uuid($voicemail_greeting_uuid)) {
 				//prepare
 					$array[0]['checked'] = 'true';
 					$array[0]['uuid'] = $voicemail_greeting_uuid;
@@ -105,7 +105,7 @@ if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 		}
 
 	//update the database
-	if ($_POST["persistformvar"] != "true" && permission_exists('voicemail_greeting_edit')) {
+	if ((empty($_POST["persistformvar"]) || $_POST["persistformvar"] != "true") && permission_exists('voicemail_greeting_edit')) {
 		//build update array
 			$array['voicemail_greetings'][0]['voicemail_greeting_uuid'] = $voicemail_greeting_uuid;
 			$array['voicemail_greetings'][0]['greeting_name'] = $greeting_name;
@@ -125,7 +125,7 @@ if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 }
 
 //pre-populate the form
-	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
+	if (count($_GET) > 0 && (empty($_POST["persistformvar"]) || $_POST["persistformvar"] != "true")) {
 		$sql = "select * from v_voicemail_greetings ";
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$sql .= "and voicemail_greeting_uuid = :voicemail_greeting_uuid ";
