@@ -99,8 +99,8 @@
 			$effective_caller_id_number = $_POST["effective_caller_id_number"];
 			$outbound_caller_id_name = $_POST["outbound_caller_id_name"];
 			$outbound_caller_id_number = $_POST["outbound_caller_id_number"];
-			$emergency_caller_id_name = $_POST["emergency_caller_id_name"];
-			$emergency_caller_id_number = $_POST["emergency_caller_id_number"];
+			$emergency_caller_id_name = $_POST["emergency_caller_id_name"] ?? null;
+			$emergency_caller_id_number = $_POST["emergency_caller_id_number"] ?? null;
 			$directory_first_name = $_POST["directory_first_name"];
 			$directory_last_name = $_POST["directory_last_name"];
 			$directory_visible = $_POST["directory_visible"];
@@ -1428,7 +1428,7 @@
 					if(empty($tmp)){
 						// $tmp = $row["destination_description"];
 					}
-					if(!empty($tmp) && !in_array($tmp, $in_list)){
+					if(!empty($tmp) && !empty($in_list) && is_array($in_list) && !in_array($tmp, $in_list)){
 						$in_list[] = $tmp;
 						if ($outbound_caller_id_name == $tmp) {
 							echo "		<option value='".escape($tmp)."' selected='selected'>".escape($tmp)."</option>\n";
