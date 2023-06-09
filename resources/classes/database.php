@@ -1669,7 +1669,7 @@
 									$parent_key_name = self::singular($parent_name)."_uuid";
 
 								//build the copy array
-									if ($row['checked'] == 'true') {
+									if (!empty($row['checked']) && $row['checked'] == 'true') {
 										//set checked to true
 										$checked = true;
 
@@ -1810,9 +1810,20 @@
 								//update the parent key id
 									$array[$parent_name][$x][$parent_key_name] = $parent_key_value;
 
+								//set enabled
+									if (array_key_exists(self::singular($parent_name).'_enabled', $array[$parent_name][$x])) {
+										$array[$parent_name][$x][self::singular($parent_name).'_enabled'] = $row[self::singular($parent_name).'_enabled'] === true || $row[self::singular($parent_name).'_enabled'] == 'true' ? 'true' : 'false';
+									}
+									else if (array_key_exists('enabled', $array[$parent_name][$x])) {
+										$array[$parent_name][$x]['enabled'] = $row['enabled'] === true || $row['enabled'] == 'true' ? 'true' : 'false';
+									}
+
 								//add copy to the description
-									if (isset($array[$parent_name][$x][self::singular($parent_name).'_description'])) {
-										$array[$parent_name][$x][self::singular($parent_name).'_description'] = $suffix.$array[$parent_name][$x][self::singular($parent_name).'_description'];
+									if (array_key_exists(self::singular($parent_name).'_description', $array[$parent_name][$x])) {
+										$array[$parent_name][$x][self::singular($parent_name).'_description'] = trim($array[$parent_name][$x][self::singular($parent_name).'_description'].' '.$suffix);
+									}
+									else if (array_key_exists('description', $array[$parent_name][$x])) {
+										$array[$parent_name][$x]['description'] = trim($array[$parent_name][$x]['description'].' '.$suffix);
 									}
 
 								//loop through the fields
