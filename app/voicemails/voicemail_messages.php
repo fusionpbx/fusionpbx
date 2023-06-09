@@ -41,7 +41,7 @@
 		) {
 		$voicemail = new voicemail;
 		$voicemail->domain_uuid = $_SESSION['domain_uuid'];
-		$voicemail->type = $_REQUEST['t'];
+		$voicemail->type = $_REQUEST['t'] ?? null;
 		$voicemail->voicemail_id = $_REQUEST['id'];
 		$voicemail->voicemail_uuid = $_REQUEST['voicemail_uuid'];
 		$voicemail->voicemail_message_uuid = $_REQUEST['uuid'];
@@ -64,11 +64,14 @@
 		exit;
 	}
 
+//set the back button url
+	$_SESSION['back'][$_SERVER['PHP_SELF']] = !empty($_GET['back']) ? urldecode($_GET['back']) : ($_SESSION['back'][$_SERVER['PHP_SELF']] ?? PROJECT_PATH.'/app/voicemails/voicemails.php');
+
 //set the voicemail_uuid
-	if (is_uuid($_REQUEST['id'])) {
+	if (!empty($_REQUEST['id']) && is_uuid($_REQUEST['id'])) {
 		$voicemail_uuid = $_REQUEST['id'];
 	}
-	else if (is_numeric($_REQUEST['id'])) {
+	else if (!empty($_REQUEST['id']) && is_numeric($_REQUEST['id'])) {
 		$voicemail_id = $_REQUEST['id'];
 	}
 
@@ -105,7 +108,7 @@
 					if (is_array($voicemail_messages) && @sizeof($voicemail_messages) != 0) {
 						$messages_toggled = 0;
 						foreach ($voicemail_messages as $voicemail_message) {
-							if ($voicemail_message['checked'] == 'true' && is_uuid($voicemail_message['uuid']) && is_uuid($voicemail_message['voicemail_uuid'])) {
+							if (!empty($voicemail_message['checked']) && $voicemail_message['checked'] == 'true' && is_uuid($voicemail_message['uuid']) && is_uuid($voicemail_message['voicemail_uuid'])) {
 								//delete voicemail message
 									$voicemail = new voicemail;
 									$voicemail->db = $db;
@@ -129,7 +132,7 @@
 						if (is_array($voicemail_messages) && @sizeof($voicemail_messages) != 0) {
 							$messages_deleted = 0;
 							foreach ($voicemail_messages as $voicemail_message) {
-								if ($voicemail_message['checked'] == 'true' && is_uuid($voicemail_message['uuid']) && is_uuid($voicemail_message['voicemail_uuid'])) {
+								if (!empty($voicemail_message['checked']) && $voicemail_message['checked'] == 'true' && is_uuid($voicemail_message['uuid']) && is_uuid($voicemail_message['voicemail_uuid'])) {
 									//delete voicemail message
 										$voicemail = new voicemail;
 										$voicemail->db = $db;
@@ -172,10 +175,10 @@
 //get the voicemail
 	$vm = new voicemail;
 	$vm->domain_uuid = $_SESSION['domain_uuid'];
-	if (is_uuid($voicemail_uuid)) {
+	if (!empty($voicemail_uuid) && is_uuid($voicemail_uuid)) {
 		$vm->voicemail_uuid = $voicemail_uuid;
 	}
-	else if (is_numeric($voicemail_id)) {
+	else if (!empty($voicemail_id) && is_numeric($voicemail_id)) {
 		$vm->voicemail_id = $voicemail_id;
 	}
 	$vm->order_by = $order_by;
@@ -209,11 +212,12 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-voicemail_messages']." (".$num_rows.")</b></div>\n";
 	echo "	<div class='actions'>\n";
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','link'=>$_SESSION['back'][$_SERVER['PHP_SELF']]]);
 	if ($num_rows) {
-		echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$_SESSION['theme']['button_icon_toggle'],'name'=>'btn_toggle','collapse'=>'hide-xs','onclick'=>"modal_open('modal-toggle','btn_toggle');"]);
+		echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$_SESSION['theme']['button_icon_toggle'],'id'=>'btn_toggle','name'=>'btn_toggle','collapse'=>'hide-xs','style'=>'margin-left: 15px; display: none;','onclick'=>"modal_open('modal-toggle','btn_toggle');"]);
 	}
 	if (permission_exists('voicemail_message_delete') && $num_rows) {
-		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'name'=>'btn_delete','collapse'=>'hide-xs','onclick'=>"modal_open('modal-delete','btn_delete');"]);
+		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','name'=>'btn_delete','collapse'=>'hide-xs','style'=>'display: none;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
@@ -268,7 +272,7 @@
 				$col_count = 0;
 				if (permission_exists('voicemail_message_delete')) {
 					echo "	<th class='checkbox'>\n";
-					echo "		<input type='checkbox' id='checkbox_all_".$field['voicemail_id']."' name='checkbox_all' onclick=\"list_all_toggle('".$field['voicemail_id']."');\" ".(is_array($field['messages']) && @sizeof($field['messages']) > 0 ?: "style='visibility: hidden;'").">\n";
+					echo "		<input type='checkbox' id='checkbox_all_".$field['voicemail_id']."' name='checkbox_all' onclick=\"list_all_toggle('".$field['voicemail_id']."'); checkbox_on_change(this);\" ".(is_array($field['messages']) && @sizeof($field['messages']) > 0 ?: "style='visibility: hidden;'").">\n";
 					echo "	</th>\n";
 					$col_count++;
 				}
@@ -282,7 +286,7 @@
 				$col_count++;
 				echo th_order_by('message_length', $text['label-message_length'], $order_by, $order, null, "class='hide-xs right pct-15'");
 				$col_count++;
-				if (!empty($_SESSION['voicemail']['storage_type']['text']) != 'base64') {
+				if (empty($_SESSION['voicemail']['storage_type']['text']) || $_SESSION['voicemail']['storage_type']['text'] != 'base64') {
 					echo "<th class='right pct-15 hide-sm-dn'>".$text['label-message_size']."</th>\n";
 					$col_count++;
 				}
@@ -300,7 +304,7 @@
 					$list_row_url = "javascript:recording_play('".escape($row['voicemail_message_uuid'])."');";
 					echo "<tr class='list-row' href=\"".$list_row_url."\">\n";
 					echo "	<td class='checkbox'>\n";
-					echo "		<input type='checkbox' name='voicemail_messages[$x][checked]' id='checkbox_".$x."' class='checkbox_".$field['voicemail_id']."' value='true' onclick=\"if (!this.checked) { document.getElementById('checkbox_all_".$field['voicemail_id']."').checked = false; }\">\n";
+					echo "		<input type='checkbox' name='voicemail_messages[$x][checked]' id='checkbox_".$x."' class='checkbox_".$field['voicemail_id']."' value='true' onclick=\"if (!this.checked) { document.getElementById('checkbox_all_".$field['voicemail_id']."').checked = false; } checkbox_on_change(this);\">\n";
 					echo "		<input type='hidden' name='voicemail_messages[$x][uuid]' value='".escape($row['voicemail_message_uuid'])."' />\n";
 					echo "		<input type='hidden' name='voicemail_messages[$x][voicemail_uuid]' value='".escape($row['voicemail_uuid'])."' />\n";
 					echo "	</td>\n";
@@ -316,7 +320,7 @@
 					}
 					echo "	</td>\n";
 					echo "	<td class='right no-wrap hide-xs' style='".$bold."'>".escape($row['message_length_label'])."</td>\n";
-					if (!empty($_SESSION['voicemail']['storage_type']['text']) != 'base64') {
+					if (empty($_SESSION['voicemail']['storage_type']['text']) || $_SESSION['voicemail']['storage_type']['text'] != 'base64') {
 						echo "	<td class='right no-wrap hide-sm-dn' style='".$bold."'>".escape($row['file_size_label'])."</td>\n";
 					}
 					echo "</tr>\n";

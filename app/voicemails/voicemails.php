@@ -307,7 +307,7 @@
 				}
 				if (permission_exists('voicemail_message_view')) {
 					$tmp_voicemail_string = (array_key_exists($row['voicemail_uuid'], $voicemails_count)) ? " (" . $voicemails_count[$row['voicemail_uuid']] . ")" : " (0)";
-					echo "	<a href='voicemail_messages.php?id=".escape($row['voicemail_uuid'])."'>".$text['label-messages'].$tmp_voicemail_string."</a>\n";
+					echo "	<a href='voicemail_messages.php?id=".escape($row['voicemail_uuid'])."&back=".urlencode($_SERVER["REQUEST_URI"])."'>".$text['label-messages'].$tmp_voicemail_string."</a>\n";
 				}
 				echo "	</td>\n";
 			}
