@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2019
+ Portions created by the Initial Developer are Copyright (C) 2008-2023
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -85,7 +85,7 @@ if (!class_exists('sip_profiles')) {
 
 						//filter out unchecked sip profiles, build where clause for below
 							foreach ($records as $x => $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$uuids[] = "'".$record['uuid']."'";
 								}
 							}
@@ -94,7 +94,7 @@ if (!class_exists('sip_profiles')) {
 							$sql = "select ".$this->uuid_prefix."uuid as uuid, sip_profile_name, sip_profile_hostname from v_".$this->table." ";
 							$sql .= "where ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
 							$database = new database;
-							$rows = $database->select($sql, $parameters, 'all');
+							$rows = $database->select($sql, $parameters ?? null, 'all');
 							if (is_array($rows) && @sizeof($rows) != 0) {
 								foreach ($rows as $row) {
 									$sip_profiles[$row['uuid']]['name'] = $row['sip_profile_name'];
@@ -236,15 +236,15 @@ if (!class_exists('sip_profiles')) {
 									$_SESSION["reload_xml"] = true;
 
 								//get system hostname if necessary
-									if ($sip_profile_hostname == '') {
+									if (empty($sip_profile_hostname)) {
 										$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 										if ($fp) {
-											$sip_profile_hostname[] = event_socket_request($fp, 'api switchname');
+											$sip_profile_hostname = event_socket_request($fp, 'api switchname');
 										}
 									}
 
 								//clear the cache
-									if ($sip_profile_hostname != '') {
+									if (!empty($sip_profile_hostname)) {
 										$cache = new cache;
 										$cache->delete("configuration:sofia.conf:".$sip_profile_hostname);
 									}
@@ -314,15 +314,15 @@ if (!class_exists('sip_profiles')) {
 									$_SESSION["reload_xml"] = true;
 
 								//get system hostname if necessary
-									if ($sip_profile_hostname == '') {
+									if (empty($sip_profile_hostname)) {
 										$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 										if ($fp) {
-											$sip_profile_hostname[] = event_socket_request($fp, 'api switchname');
+											$sip_profile_hostname = event_socket_request($fp, 'api switchname');
 										}
 									}
 
 								//clear the cache
-									if ($sip_profile_hostname != '') {
+									if (!empty($sip_profile_hostname)) {
 										$cache = new cache;
 										$cache->delete("configuration:sofia.conf:".$sip_profile_hostname);
 									}
@@ -364,7 +364,7 @@ if (!class_exists('sip_profiles')) {
 								$sql = "select ".$this->uuid_prefix."uuid as uuid, ".$this->toggle_field." as toggle, sip_profile_hostname from v_".$this->table." ";
 								$sql .= "where ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
 								$database = new database;
-								$rows = $database->select($sql, $parameters, 'all');
+								$rows = $database->select($sql, $parameters ?? null, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
 										$sip_profiles[$row['uuid']]['state'] = $row['toggle'];

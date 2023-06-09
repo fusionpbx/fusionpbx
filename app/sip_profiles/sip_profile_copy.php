@@ -56,7 +56,7 @@
 //get existing sip profile names to prevent duplicates
 	$sql = "select sip_profile_name from v_sip_profiles";
 	$database = new database;
-	$rows = $database->select($sql, $parameters, 'all');
+	$rows = $database->select($sql, $parameters ?? null, 'all');
 	if (is_array($rows) && @sizeof($rows) != 0) {
 		foreach ($rows as $row) {
 			$sip_profile_names[] = $row['sip_profile_name'];
