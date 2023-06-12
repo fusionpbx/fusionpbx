@@ -279,7 +279,7 @@
 
 		//user selected fields, labels
 			$fields = $_POST['fields'];
-			$labels = $_POST['labels'];
+			$labels = $_POST['labels'] ?? [];
 			
 		//set the domain_uuid
 			$domain_uuid = $_SESSION['domain_uuid'];
