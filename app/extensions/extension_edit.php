@@ -50,7 +50,7 @@
 	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
 		$extension_uuid = $_REQUEST["id"];
-		$page = $_REQUEST['page'] ?? '';
+		$page = $_REQUEST['page'];
 	}
 	else {
 		$action = "add";
@@ -69,7 +69,7 @@
 
 			if ($total_extensions >= $_SESSION['limit']['extensions']['numeric']) {
 				message::add($text['message-maximum_extensions'].' '.$_SESSION['limit']['extensions']['numeric'], 'negative');
-				header('Location: extensions.php'.(is_numeric($page) ? '?page='.$page : null));
+				header('Location: extensions.php'.(isset($page) && is_numeric($page) ? '?page='.$page : null));
 				exit;
 			}
 		}
@@ -812,7 +812,7 @@
 						header("Location: extensions.php");
 					}
 					else {
-						header("Location: extension_edit.php?id=".$extension_uuid.(isset($page) ? '&page='.$page : null));
+						header("Location: extension_edit.php?id=".$extension_uuid.(isset($page) && is_numeric($page) ? '&page='.$page : null));
 					}
 					exit;
 			}
