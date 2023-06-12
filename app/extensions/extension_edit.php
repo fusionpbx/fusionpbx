@@ -1471,7 +1471,7 @@
 						$tmp = $row["destination_number"];
 					}
 					if(!empty($tmp)){
-						if ($outbound_caller_id_number == $tmp) {
+						if (!empty($outbound_caller_id_number) && $outbound_caller_id_number == $tmp) {
 							echo "		<option value='".escape($tmp)."' selected='selected'>".escape($tmp)."</option>\n";
 						}
 						else {
