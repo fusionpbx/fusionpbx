@@ -165,6 +165,7 @@ if (!class_exists('call_recordings')) {
 
 				//download the file
 					if ($full_recording_path != '/' && file_exists($full_recording_path)) {
+ 						ob_clean();
 						$fd = fopen($full_recording_path, "rb");
 						if ($this->binary) {
 							header("Content-Type: application/force-download");
@@ -187,12 +188,13 @@ if (!class_exists('call_recordings')) {
 							header("Content-Length: ".filesize($full_recording_path));
 						}
  						ob_clean();
- 						fpassthru($fd);
 
 						//content-range
 						if (isset($_SERVER['HTTP_RANGE']) && !$this->binary)  {
 							$this->range_download($full_recording_path);
 						}
+
+ 						fpassthru($fd);
 					}
 
 				//if base64, remove temp recording file

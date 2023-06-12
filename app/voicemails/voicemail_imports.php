@@ -321,7 +321,7 @@
 					fclose($handle);
 
 				//save to the data
-					if (is_array($array)) {
+					if (!empty($array) && is_array($array)) {
 						$database = new database;
 						$database->app_name = 'voicemails';
 						$database->app_uuid = 'b523c2d2-64cd-46f1-9520-ca4b4098e044';

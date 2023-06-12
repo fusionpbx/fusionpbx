@@ -129,7 +129,7 @@
 		$parameters['user_uuid'] = $_SESSION['user_uuid'];
 	}
 	$database = new database;
-	$num_rows = $database->select($sql, $parameters, 'column');
+	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 
 //prepare paging
 	$rows_per_page = (!empty($_SESSION['domain']['paging']['numeric'])) ? $_SESSION['domain']['paging']['numeric'] : 50;
@@ -192,7 +192,7 @@
 	$sql .= order_by($order_by, $order, 'f.fax_name', 'asc');
 	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;
-	$result = $database->select($sql, $parameters, 'all');
+	$result = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 
 //create token

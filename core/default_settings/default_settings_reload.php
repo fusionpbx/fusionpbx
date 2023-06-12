@@ -46,7 +46,7 @@ $language = new text;
 $text = $language->get();
 
 //set the variables
-$search = $_REQUEST['search'] ?? null;
+$search = $_REQUEST['search'] ?? '';
 $domain_uuid = $_GET['id'] ?? null;
 
 //reload default settings

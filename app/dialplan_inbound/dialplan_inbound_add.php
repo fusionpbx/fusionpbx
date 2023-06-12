@@ -765,7 +765,7 @@
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select name='public_order' class='formfld'>\n";
-	if (strlen(htmlspecialchars($public_order))> 0) {
+	if (!empty($public_order) && strlen(htmlspecialchars($public_order))> 0) {
 		echo "		<option selected='yes' value='".htmlspecialchars($public_order)."'>".htmlspecialchars($public_order)."</option>\n";
 	}
 	$i = 100;
@@ -787,13 +787,13 @@
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <select class='formfld' name='dialplan_enabled'>\n";
-	if ($dialplan_enabled == "true") {
+	if (!empty($dialplan_enabled) && $dialplan_enabled == "true") {
 		echo "    <option value='true' SELECTED >".$text['label-true']."</option>\n";
 	}
 	else {
 		echo "    <option value='true'>".$text['label-true']."</option>\n";
 	}
-	if ($dialplan_enabled == "false") {
+	if (!empty($dialplan_enabled) && $dialplan_enabled == "false") {
 		echo "    <option value='false' SELECTED >".$text['label-false']."</option>\n";
 	}
 	else {
