@@ -492,7 +492,7 @@
 	echo "	".$text['label-contact']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo $destination->select('user_contact', 'agent_contact', !empty($agent_contact));
+	echo $destination->select('user_contact', 'agent_contact', ($agent_contact ?? null));
 	echo "<br />\n";
 	echo $text['description-contact']."\n";
 	echo "</td>\n";
