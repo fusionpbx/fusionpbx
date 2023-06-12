@@ -55,7 +55,6 @@
 
 		//validate the username and password
 			$auth = new authentication;
-			$auth->debug = true;
 			$result = $auth->validate();
 
 		//if not authorized
