@@ -1143,7 +1143,7 @@
 		echo "	".$text['label-outbound_caller_id_name']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "  <input class='formfld' type='text' name='queue_outbound_caller_id_name' maxlength='255' value='".escape($queue_outbound_caller_id_name)."'>\n";
+		echo "  <input class='formfld' type='text' name='queue_outbound_caller_id_name' maxlength='255' value='".escape($queue_outbound_caller_id_name ?? '')."'>\n";
 		echo "<br />\n";
 		echo $text['description-outbound_caller_id_name']."\n";
 		echo "</td>\n";
@@ -1156,7 +1156,7 @@
 		echo "	".$text['label-outbound_caller_id_number']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "  <input class='formfld' type='text' name='queue_outbound_caller_id_number' maxlength='255' value='".escape($queue_outbound_caller_id_number)."'>\n";
+		echo "  <input class='formfld' type='text' name='queue_outbound_caller_id_number' maxlength='255' value='".escape($queue_outbound_caller_id_number ?? '')."'>\n";
 		echo "<br />\n";
 		echo $text['description-outbound_caller_id_number']."\n";
 		echo "</td>\n";
@@ -1170,21 +1170,11 @@
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "	<select class='formfld' name='queue_announce_position'>\n";
-		if ($queue_announce_position == "false") {
-			echo "	<option value='false' selected='selected' >".$text['option-false']."</option>\n";
-		}
-		else {
-			echo "	<option value='false'>".$text['option-false']."</option>\n";
-		}
-		if ($queue_announce_position == "true") {
-			echo "	<option value='true' selected='selected' >".$text['option-true']."</option>\n";
-		}
-		else {
-			echo "	<option value='true'>".$text['option-true']."</option>\n";
-		}
+		echo "		<option value='false'>".$text['option-false']."</option>\n";
+		echo "		<option value='true' ".(!empty($queue_announce_position) && $queue_announce_position == "true" ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
 		echo "	</select>\n";
 		echo "<br />\n";
-		echo $text['description-queue_announce_position']."\n";
+		echo ($text['description-queue_announce_position'] ?? '')."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 	}
@@ -1321,7 +1311,7 @@
 		echo "	".$text['label-queue_email_address']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "  <input class='formfld' type='text' name='queue_email_address' maxlength='255' value='".escape($queue_email_address)."'>\n";
+		echo "  <input class='formfld' type='text' name='queue_email_address' maxlength='255' value='".escape($queue_email_address ?? '')."'>\n";
 		echo "<br />\n";
 		echo $text['description-queue_email_address']."\n";
 		echo "</td>\n";
