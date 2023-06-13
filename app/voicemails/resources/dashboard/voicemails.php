@@ -32,7 +32,6 @@
 
 //get the voicemail
 	$vm = new voicemail;
-	$vm->db = $db;
 	$vm->domain_uuid = $_SESSION['domain_uuid'];
 	$vm->order_by = $order_by ?? null;
 	$vm->order = $order ?? null;

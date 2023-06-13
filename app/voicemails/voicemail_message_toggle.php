@@ -56,7 +56,6 @@
 			foreach ($voicemail_message_uuids as $voicemail_message_uuid) {
 				if (is_uuid($voicemail_uuid) && is_uuid($voicemail_message_uuid)) {
 					$voicemail = new voicemail;
-					$voicemail->db = $db;
 					$voicemail->domain_uuid = $_SESSION['domain_uuid'];
 					$voicemail->voicemail_uuid = $voicemail_uuid;
 					$voicemail->voicemail_message_uuid = $voicemail_message_uuid;

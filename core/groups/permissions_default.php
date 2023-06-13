@@ -49,7 +49,6 @@
 //permission restore default
 	require_once "core/groups/resources/classes/permission.php";
 	$permission = new permission;
-	$permission->db = $db;
 	$permission->restore();
 
 //redirect the users

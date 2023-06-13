@@ -385,7 +385,6 @@
 
 				//dialplan add or update
 					$c = new fax;
-					$c->db = $db;
 					$c->domain_uuid = $_SESSION['domain_uuid'];
 					$c->dialplan_uuid = $dialplan_uuid;
 					$c->fax_name = $fax_name;
