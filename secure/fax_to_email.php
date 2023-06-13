@@ -306,7 +306,6 @@ if (!function_exists('fax_split_dtmf')) {
 				$_SESSION["domain_name"] = $domain_name;
 			//set the setting arrays
 				$domain = new domains();
-				$domain->db = $db;
 				$domain->set();
 		}
 	}

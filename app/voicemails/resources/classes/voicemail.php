@@ -38,7 +38,6 @@
 		public $order_by;
 		public $order;
 		public $type;
-		public $db;
 
 		/**
 		 * declare private variables
@@ -939,7 +938,6 @@
 //example voicemail messages
 	//require_once "app/voicemails/resources/classes/voicemail.php";
 	//$voicemail = new voicemail;
-	//$voicemail->db = $db;
 	//$voicemail->voicemail_uuid = $voicemail_uuid;
 	//$voicemail->order_by = $order_by;
 	//$voicemail->order = $order;

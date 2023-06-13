@@ -173,7 +173,6 @@
 
 		//add voicemail via class
 			$ext = new extension;
-			$ext->db = $db;
 			$ext->domain_uuid = $domain_uuid;
 			$ext->extension = $extension_new;
 			$ext->number_alias = $number_alias_new;

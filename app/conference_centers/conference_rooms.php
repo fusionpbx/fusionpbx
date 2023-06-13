@@ -178,7 +178,6 @@
 
 //get the conference room count
 	$conference_center = new conference_centers;
-	$conference_center->db = $db;
 	$conference_center->domain_uuid = $_SESSION['domain_uuid'];
 	if (!empty($search)) {
 		$conference_center->search = $search;
