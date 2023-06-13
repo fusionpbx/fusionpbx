@@ -111,7 +111,6 @@
 							if (!empty($voicemail_message['checked']) && $voicemail_message['checked'] == 'true' && is_uuid($voicemail_message['uuid']) && is_uuid($voicemail_message['voicemail_uuid'])) {
 								//delete voicemail message
 									$voicemail = new voicemail;
-									$voicemail->db = $db;
 									$voicemail->domain_uuid = $_SESSION['domain_uuid'];
 									$voicemail->voicemail_uuid = $voicemail_message['voicemail_uuid'];
 									$voicemail->voicemail_message_uuid = $voicemail_message['uuid'];
@@ -135,7 +134,6 @@
 								if (!empty($voicemail_message['checked']) && $voicemail_message['checked'] == 'true' && is_uuid($voicemail_message['uuid']) && is_uuid($voicemail_message['voicemail_uuid'])) {
 									//delete voicemail message
 										$voicemail = new voicemail;
-										$voicemail->db = $db;
 										$voicemail->domain_uuid = $_SESSION['domain_uuid'];
 										$voicemail->voicemail_uuid = $voicemail_message['voicemail_uuid'];
 										$voicemail->voicemail_message_uuid = $voicemail_message['uuid'];
