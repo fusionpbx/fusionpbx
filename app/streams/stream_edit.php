@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018-2020
+	Portions created by the Initial Developer are Copyright (C) 2018-2023
 	the Initial Developer. All Rights Reserved.
 */
 
@@ -42,8 +42,14 @@
 	$language = new text;
 	$text = $language->get();
 
+//set the defaults
+	$stream_name = '';
+	$stream_location = '';
+	$stream_description = '';
+	$stream_uuid = '';
+
 //action add or update
-	if (is_uuid($_REQUEST["id"])) {
+	if (!empty($_REQUEST["id"])) {
 		$action = "update";
 		$stream_uuid = $_REQUEST["id"];
 		$id = $_REQUEST["id"];
@@ -58,7 +64,7 @@
 		$stream_uuid = $_POST["stream_uuid"];
 		$stream_name = $_POST["stream_name"];
 		$stream_location = $_POST["stream_location"];
-		$stream_enabled = $_POST["stream_enabled"] ?: 'false';
+		$stream_enabled = $_POST["stream_enabled"] ?? 'false';
 		$stream_description = $_POST["stream_description"];
 	}
 
@@ -137,7 +143,7 @@
 	}
 
 //pre-populate the form
-	if (is_array($_GET) && $_POST["persistformvar"] != "true") {
+	if (!empty($_GET) && (empty($_POST["persistformvar"]) || $_POST["persistformvar"] != "true")) {
 		$stream_uuid = $_GET["id"];
 		$sql = "select * from v_streams ";
 		$sql .= "where stream_uuid = :stream_uuid ";
@@ -252,7 +258,7 @@
 		}
 		echo "	</select>\n";
 		echo "<br />\n";
-		echo $text['description-domain_uuid']."\n";
+		echo !empty($text['description-domain_uuid'])."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 	}

@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -48,10 +48,18 @@
 	$language = new text;
 	$text = $language->get();
 
+//set the defaults
+	$dialplan_name = '';
+	$dialplan_description = '';
+	$condition_expression_1 = '';
+	$condition_expression_2 = '';
+	$action_2 = '';
+	$limit = '';
+
 //get the http get values and set them as php variables
-	$order_by = $_GET["order_by"];
-	$order = $_GET["order"];
-	$action = $_GET["action"];
+	$order_by = $_GET["order_by"] ?? '';
+	$order = $_GET["order"] ?? '';
+	$action = $_GET["action"] ?? '';
 
 //initialize the destinations object
 	$destination = new destinations;
@@ -710,7 +718,7 @@
 	}
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo $destination->select('dialplan', 'action_1', $action_1);
+	echo $destination->select('dialplan', 'action_1', $action_1 ?? null);
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -757,7 +765,7 @@
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select name='public_order' class='formfld'>\n";
-	if (strlen(htmlspecialchars($public_order))> 0) {
+	if (!empty($public_order) && strlen(htmlspecialchars($public_order))> 0) {
 		echo "		<option selected='yes' value='".htmlspecialchars($public_order)."'>".htmlspecialchars($public_order)."</option>\n";
 	}
 	$i = 100;
@@ -779,13 +787,13 @@
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <select class='formfld' name='dialplan_enabled'>\n";
-	if ($dialplan_enabled == "true") {
+	if (!empty($dialplan_enabled) && $dialplan_enabled == "true") {
 		echo "    <option value='true' SELECTED >".$text['label-true']."</option>\n";
 	}
 	else {
 		echo "    <option value='true'>".$text['label-true']."</option>\n";
 	}
-	if ($dialplan_enabled == "false") {
+	if (!empty($dialplan_enabled) && $dialplan_enabled == "false") {
 		echo "    <option value='false' SELECTED >".$text['label-false']."</option>\n";
 	}
 	else {

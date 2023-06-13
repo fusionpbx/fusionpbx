@@ -49,8 +49,10 @@ if (!class_exists('tones')) {
 				if (!empty($tones)) {
 					foreach ($tones as $tone) {
 						$tone = $tone['var_name'];
-						$label = $text['label-'.$tone];
-						if ($label == "") {
+						if (isset($text['label-'.$tone])) {
+							$label = $text['label-'.$tone];
+						}
+						else {
 							$label = $tone;
 						}
 						$tone_list[$tone] = $label;

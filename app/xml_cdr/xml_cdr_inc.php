@@ -218,7 +218,7 @@
 	*/
 
 //limit the number of results
-	if ($_SESSION['cdr']['limit']['numeric'] > 0) {
+	if (!empty($_SESSION['cdr']['limit']['numeric']) && $_SESSION['cdr']['limit']['numeric'] > 0) {
 		$num_rows = $_SESSION['cdr']['limit']['numeric'];
 	}
 
@@ -294,13 +294,13 @@
 		$sql .= "c.rtp_audio_in_mos, \n";
 	}
 	$sql .= "(c.answer_epoch - c.start_epoch) as tta ";
-	if ($_REQUEST['show'] == "all" && permission_exists('xml_cdr_all')) {
+	if (!empty($_REQUEST['show']) && $_REQUEST['show'] == "all" && permission_exists('xml_cdr_all')) {
 		$sql .= ", c.domain_name \n";
 	}
 	$sql .= "from v_xml_cdr as c \n";
 	$sql .= "left join v_extensions as e on e.extension_uuid = c.extension_uuid \n";
 	$sql .= "inner join v_domains as d on d.domain_uuid = c.domain_uuid \n";
-	if ($_REQUEST['show'] == "all" && permission_exists('xml_cdr_all')) {
+	if (!empty($_REQUEST['show']) && $_REQUEST['show'] == "all" && permission_exists('xml_cdr_all')) {
 		$sql .= "where true \n";
 	}
 	else {

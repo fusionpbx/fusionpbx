@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2016-2020
+	Portions created by the Initial Developer are Copyright (C) 2016-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -96,7 +96,7 @@ if (count($_POST)>0 && empty($_POST["persistformvar"])) {
 		}
 
 	//add or update the database
-		if ($_POST["persistformvar"] != "true") {
+		if (empty($_POST["persistformvar"]) || $_POST["persistformvar"] != "true") {
 			if ($action == "add" && permission_exists('pin_number_add')) {
 				//begin array
 					$pin_number_uuid = uuid();
@@ -134,7 +134,7 @@ if (count($_POST)>0 && empty($_POST["persistformvar"])) {
 }
 
 //pre-populate the form
-	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
+	if (count($_GET) > 0 && (empty($_POST["persistformvar"]) || $_POST["persistformvar"] != "true")) {
 		$pin_number_uuid = $_GET["id"];
 		$sql = "select * from v_pin_numbers ";
 		$sql .= "where domain_uuid = :domain_uuid ";

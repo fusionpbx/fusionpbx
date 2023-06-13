@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2019
+ Portions created by the Initial Developer are Copyright (C) 2008-2023
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -92,7 +92,7 @@ if (!class_exists('contacts')) {
 
 						//build the delete array
 							foreach ($records as $x => $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									if (is_array($this->tables) && @sizeof($this->tables) != 0) {
 										foreach ($this->tables as $table) {
 											$array[$table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
@@ -206,7 +206,7 @@ if (!class_exists('contacts')) {
 						//filter out unchecked ivr menu options, build delete array
 							$x = 0;
 							foreach ($records as $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
 									$array[$this->table][$x]['contact_uuid'] = $this->contact_uuid;
 									$x++;
@@ -253,7 +253,7 @@ if (!class_exists('contacts')) {
 						//filter out unchecked ivr menu options, build delete array
 							$x = 0;
 							foreach ($records as $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
 									$array[$this->table][$x]['contact_uuid'] = $this->contact_uuid;
 									$x++;

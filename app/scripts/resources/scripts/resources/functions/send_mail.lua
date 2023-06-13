@@ -5,7 +5,7 @@ local log = require "resources.functions.log".send_mail
 
 local db = dbh or Database.new('system');
 local settings = Settings.new(db, domain_name, domain_uuid)
-local email_queue_enabled = settings:get('email_queue', 'enabled', 'boolean') or "false";
+local email_queue_enabled = "true";
 
 if (email_queue_enabled == 'true') then
 	function send_mail(headers, email_from, email_address, email_message, email_file)

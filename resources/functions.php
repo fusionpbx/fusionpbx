@@ -343,7 +343,7 @@
 	}
 
 	if (!function_exists('html_select_other')) {
-		function html_select_other($table_name, $field_name, $sql_where_optional, $field_current_value) {
+		function html_select_other($table_name, $field_name, $sql_where_optional, $field_current_value, $sql_order_by = null, $label_other = 'Other...') {
 			//html select other: build a select box from distinct items in db with option for other
 			global $domain_uuid;
 			$table_name = preg_replace("#[^a-zA-Z0-9_]#", "", $table_name);
@@ -358,6 +358,7 @@
 
 			$sql = "select distinct(".$field_name.") as ".$field_name." ";
 			$sql .= "from ".$table_name." ".$sql_where_optional." ";
+			$sql .= "order by ".(!empty($sql_order_by) ? $sql_order_by : $field_name.' asc');
 			$database = new database;
 			$result = $database->select($sql, null, 'all');
 			if (is_array($result) && @sizeof($result) != 0) {
@@ -369,7 +370,8 @@
 			}
 			unset($sql, $result, $field);
 
-			$html .= "<option value='Other'>Other</option>\n";
+			$html .= "<option value='' disabled='disabled'></option>\n";
+			$html .= "<option value='Other'>".$label_other."</option>\n";
 			$html .= "</select>\n";
 			$html .= "</td>\n";
 			$html .= "<td id=\"cell".$field_name."2\" width='5'>\n";
@@ -797,7 +799,7 @@ function format_string($format, $data) {
 
 //get the format and use it to format the phone number
 	function format_phone($phone_number) {
-		if (is_numeric(trim($phone_number, ' +'))) {
+		if (is_numeric(trim($phone_number ?? '', ' +'))) {
 			if (isset($_SESSION["format"]["phone"])) {
 				$phone_number = trim($phone_number, ' +');
 				foreach ($_SESSION["format"]["phone"] as &$format) {
@@ -817,7 +819,7 @@ function format_string($format, $data) {
 //format seconds into hh:mm:ss
 	function format_hours($seconds) {
 		$hours = floor($seconds / 3600);
-		$minutes = floor(($seconds / 60) % 60);
+		$minutes = floor(floor($seconds / 60) % 60);
 		$seconds = $seconds % 60;
 		if (strlen($minutes) == 1) { $minutes = '0'.$minutes; }
 		if (strlen($seconds) == 1) { $seconds = '0'.$seconds; }

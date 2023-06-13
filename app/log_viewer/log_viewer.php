@@ -94,7 +94,7 @@
 				}
 			}
 			if (isset($filename) && file_exists($filename)) {
-				session_cache_limiter('public');
+				@session_cache_limiter('public');
 				$fd = fopen($filename, "rb");
 				header("Content-Type: binary/octet-stream");
 				header("Content-Length: " . filesize($filename));
@@ -200,7 +200,10 @@
 		$array_filter[6]['type'] = 'bold';
 		$array_filter[6]['font'] = 'monospace';
 
-		$file_size = filesize($log_file);
+		$file_size = 0;
+		if (file_exists($log_file)) {
+			$file_size = filesize($log_file);
+		}
 
 		/*
 		// removed: duplicate of above
@@ -248,7 +251,7 @@
 				else {
 					//open the file
 					$byte_count ='0';
-					if ($file) {
+					if (!empty($file)) {
 						fseek($file, 0);
 					}
 					echo "<br>".$text['label-open_file']."<br>";
@@ -272,7 +275,7 @@
 
 		//start processing
 		$byte_count = 0;
-		if ($file) {
+		if (!empty($file)) {
 			while(!feof($file)) {
 				$log_line = escape(fgets($file));
 				$byte_count++;
@@ -320,7 +323,7 @@
 		else {
 			$adj_index = 1;
 		}
-		if (is_array($array_output)) {
+		if (!empty($array_output) && is_array($array_output)) {
 			foreach ($array_output as $index => $line) {
 				$line_num = "";
 				if ($line != "<span style='color: #fff; font-family: monospace;'></span><br>") {
@@ -342,7 +345,7 @@
 	require_once "resources/footer.php";
 
 //close the file
-	if ($file) {
+	if (!empty($file)) {
 		fclose($file);
 	}
 

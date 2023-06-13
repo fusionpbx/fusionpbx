@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018 - 2020
+	Portions created by the Initial Developer are Copyright (C) 2018-2023
 	the Initial Developer. All Rights Reserved.
 */
 
@@ -42,26 +42,32 @@
 	$language = new text;
 	$text = $language->get();
 
+//set the defaults
+	$number_translation_name = '';
+	$number_translation_enabled = 'false';
+	$number_translation_description = '';
+
 //action add or update
-	if (is_uuid($_REQUEST["id"])) {
+	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
 		$number_translation_uuid = $_REQUEST["id"];
-		$id = $_REQUEST["id"];
 	}
 	else {
 		$action = "add";
+		$number_translation_uuid = uuid();
+		$number_translation_detail_uuid = uuid();
 	}
 
 //get http post variables and set them to php variables
-	if (is_array($_POST) && @sizeof($_POST) != 0) {
+	if (!empty($_POST)) {
 		$number_translation_name = $_POST["number_translation_name"];
 		$number_translation_details = $_POST["number_translation_details"];
-		$number_translation_enabled = $_POST["number_translation_enabled"] ?: 'false';
+		$number_translation_enabled = $_POST["number_translation_enabled"] ?? 'false';
 		$number_translation_description = $_POST["number_translation_description"];
 	}
 
 //process the user data and save it to the database
-	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
+	if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
 		//validate the token
 			$token = new token;
@@ -72,7 +78,7 @@
 			}
 
 		//process the http post data by submitted action
-			if ($_POST['action'] != '' && !empty($_POST['action'])) {
+			if (!empty($_POST['action']) && !empty($_POST['action'])) {
 
 				//prepare the array(s)
 				$x = 0;
@@ -107,8 +113,8 @@
 				}
 
 				//redirect the user
-				if (in_array($_POST['action'], array('copy', 'delete', 'toggle'))) {
-					header('Location: number_translation_edit.php?id='.$id);
+				if (!empty($_POST['action']) && in_array($_POST['action'], array('copy', 'delete', 'toggle'))) {
+					header('Location: number_translation_edit.php?id='.$number_translation_uuid);
 					exit;
 				}
 			}
@@ -130,11 +136,6 @@
 				echo "</div>\n";
 				require_once "resources/footer.php";
 				return;
-			}
-
-		//add the number_translation_uuid
-			if (!is_uuid($_POST["number_translation_uuid"])) {
-				$number_translation_uuid = uuid();
 			}
 
 		//prepare the array
@@ -162,7 +163,7 @@
 			$database->save($array);
 
 		//redirect the user
-			if (isset($action)) {
+			if (!empty($action)) {
 				if ($action == "add") {
 					$_SESSION["message"] = $text['message-add'];
 				}
@@ -176,7 +177,7 @@
 	}
 
 //pre-populate the form
-	if (is_array($_GET) && $_POST["persistformvar"] != "true") {
+	if (!empty($number_translation_uuid) && empty($_POST["persistformvar"])) {
 		$sql = "select * from v_number_translations ";
 		$sql .= "where number_translation_uuid = :number_translation_uuid ";
 		$parameters['number_translation_uuid'] = $number_translation_uuid;
@@ -191,23 +192,18 @@
 	}
 
 //get the child data
-	if (is_uuid($number_translation_uuid)) {
+	if (!empty($number_translation_uuid) && empty($_POST["persistformvar"])) {
 		$sql = "select * from v_number_translation_details ";
 		$sql .= "where number_translation_uuid = :number_translation_uuid ";
 		$sql .= "order by number_translation_detail_order asc";
 		$parameters['number_translation_uuid'] = $number_translation_uuid;
 		$database = new database;
-		$number_translation_details = $database->select($sql, $parameters, 'all');
+		$number_translation_details = $database->select($sql, $parameters ?? null, 'all');
 		unset ($sql, $parameters);
 	}
 
-//add the $number_translation_detail_uuid
-	if (!is_uuid($number_translation_detail_uuid)) {
-		$number_translation_detail_uuid = uuid();
-	}
-
 //add an empty row
-	if (is_array($number_translation_details) && @sizeof($number_translation_details) != 0) {
+	if (!empty($number_translation_details)) {
 		$x = count($number_translation_details);
 	}
 	else {
@@ -284,7 +280,7 @@
 	echo "			<th class='vtablereq'>".$text['label-number_translation_detail_regex']."</th>\n";
 	echo "			<th class='vtablereq'>".$text['label-number_translation_detail_replace']."</th>\n";
 	echo "			<th class='vtablereq'>".$text['label-number_translation_detail_order']."</th>\n";
-	if (is_array($number_translation_details) && @sizeof($number_translation_details) > 1 && permission_exists('number_translation_detail_delete')) {
+	if (!empty($number_translation_details) && @sizeof($number_translation_details) > 1 && permission_exists('number_translation_detail_delete')) {
 		echo "			<td class='vtable edit_delete_checkbox_all' onmouseover=\"swap_display('delete_label_details', 'delete_toggle_details');\" onmouseout=\"swap_display('delete_label_details', 'delete_toggle_details');\">\n";
 		echo "				<span id='delete_label_details'>".$text['label-action']."</span>\n";
 		echo "				<span id='delete_toggle_details'><input type='checkbox' id='checkbox_all_details' name='checkbox_all' onclick=\"edit_all_toggle('details'); checkbox_on_change(this);\"></span>\n";

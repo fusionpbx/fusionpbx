@@ -46,6 +46,19 @@
 	$language = new text;
 	$text = $language->get();
 
+//drop app uuid from the query if not from specific apps
+	$allowed_app_uuids = [
+		'c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4', //inbound routes
+		'8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3', //outbound routes
+		'16589224-c876-aeb3-f59f-523a1c0801f7', //fifo queues
+		'4b821450-926b-175a-af93-a03c441818b1', //time conditions
+		];
+	if (!empty($_GET['app_uuid']) && is_uuid($_GET['app_uuid']) && !in_array($_GET['app_uuid'], $allowed_app_uuids)) {
+		unset($_GET['app_uuid']);
+		header('Location: dialplans.php'.(!empty($_GET) ? '?'.http_build_query($_GET) : null));
+		exit;
+	}
+
 //get posted data
 	if (!empty($_POST['dialplans'])) {
 		$action = $_POST['action'];
@@ -413,7 +426,7 @@
 		echo 	"<select name='context' id='context' class='formfld' style='max-width: ".(empty($context) || $context == 'global' ? '80px' : '140px')."; margin-left: 18px;' onchange=\"$('#form_search').submit();\">\n";
 		echo 		"<option value='' ".(!$context ? "selected='selected'" : null)." disabled='disabled'>".$text['label-context']."...</option>\n";
 		echo 		"<option value=''></option>\n";
-		if (is_array($dialplan_contexts) && @sizeof($dialplan_contexts) != 0) {
+		if (!empty($dialplan_contexts) && is_array($dialplan_contexts) && @sizeof($dialplan_contexts) != 0) {
 			foreach ($dialplan_contexts as $dialplan_context => $dialplan_subcontexts) {
 				if (is_array($dialplan_subcontexts) && @sizeof($dialplan_subcontexts) != 0) {
 					echo "<option value='".$dialplan_context."' ".($context == $dialplan_context ? "selected='selected'" : null).">".escape($dialplan_context)."</option>\n";

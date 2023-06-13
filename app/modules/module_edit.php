@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -45,8 +45,18 @@
 	$language = new text;
 	$text = $language->get();
 
+//define the variables
+	$module_label = '';
+	$modules = '';
+	$module_name = '';
+	$module_description = '';
+	$module_category = '';
+	$module_order = '';
+	$module_enabled = '';
+	$module_default_enabled = '';
+
 //determin the action add or update
-	if (is_uuid($_REQUEST["id"])) {
+	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
 		$module_uuid = $_REQUEST["id"];
 	}
@@ -55,18 +65,18 @@
 	}
 
 //set the http post variables to php variables
-	if (count($_POST)>0) {
+	if (!empty($_POST)) {
 		$module_label = $_POST["module_label"];
 		$module_name = $_POST["module_name"];
 		$module_description = $_POST["module_description"];
 		$module_category = $_POST["module_category"];
 		$module_order = $_POST["module_order"];
-		$module_enabled = $_POST["module_enabled"] ?: 'false';
-		$module_default_enabled = $_POST["module_default_enabled"] ?: 'false';
+		$module_enabled = $_POST["module_enabled"] ?? 'false';
+		$module_default_enabled = $_POST["module_default_enabled"] ?? 'false';
 	}
 
 //process the data
-	if (count($_POST)>0 && empty($_POST["persistformvar"])) {
+	if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
 		//get the uuid
 			if ($action == "update") {
@@ -103,7 +113,7 @@
 			}
 
 		//add or update the database
-			if ($_POST["persistformvar"] != "true") {
+			if (empty($_POST["persistformvar"])) {
 				if ($action == "add" && permission_exists('module_add')) {
 					$module_uuid = uuid();
 					$array['modules'][0]['module_uuid'] = $module_uuid;
@@ -144,7 +154,7 @@
 	}
 
 //pre-populate the form
-	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
+	if (!empty($_GET) && empty($_POST["persistformvar"])) {
 		$module_uuid = $_GET["id"];
 		$sql = "select * from v_modules ";
 		$sql .= "where module_uuid = :module_uuid ";
@@ -237,7 +247,7 @@
 	$field_name = 'module_category';
 	$sql_where_optional = '';
 	$field_current_value = $module_category;
-	echo html_select_other($table_name, $field_name, $sql_where_optional, $field_current_value);
+	echo html_select_other($table_name, $field_name, $sql_where_optional, $field_current_value, $field_name.' asc', $text['label-other']);
 	echo "</td>\n";
 	echo "</tr>\n";
 

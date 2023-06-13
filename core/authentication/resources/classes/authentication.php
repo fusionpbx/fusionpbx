@@ -94,7 +94,6 @@ class authentication {
 				if (file_exists($plugin)) {
 					include_once $plugin;
 					$object = new $class_name();
-					$object->debug = $this->debug;
 					$object->domain_name = $this->domain_name;
 					$object->domain_uuid = $this->domain_uuid;
 					if ($plugin == 'database' && isset($this->key)) {
@@ -167,16 +166,6 @@ class authentication {
 
 		//add user logs
 			user_logs::add($result);
-
-		//debug information
-			if (!empty($debug)) {
-				if ($row["authorized"]) {
-					echo "authorized: true\n";
-				}
-				else {
-					echo "authorized: false\n";
-				}
-			}
 
 		//user is authorized - get user settings, check user cidr
 			if (!empty($authorized)) {
@@ -497,7 +486,6 @@ $auth = new authentication;
 $auth->username = "user";
 $auth->password = "password";
 $auth->domain_name = "sip.fusionpbx.com";
-$auth->debug = false;
 $response = $auth->validate();
 print_r($response);
 */

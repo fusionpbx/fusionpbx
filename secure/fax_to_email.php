@@ -215,7 +215,7 @@ if (!function_exists('fax_split_dtmf')) {
 	include "resources/phpmailer/class.smtp.php"; // optional, gets called from within class.phpmailer.php if not already loaded
 
 //set php ini values
-	ini_set(max_execution_time,900); //15 minutes
+	ini_set('max_execution_time', 900); //15 minutes
 	ini_set('memory_limit', '96M');
 
 //start the to cache the output
@@ -306,7 +306,6 @@ if (!function_exists('fax_split_dtmf')) {
 				$_SESSION["domain_name"] = $domain_name;
 			//set the setting arrays
 				$domain = new domains();
-				$domain->db = $db;
 				$domain->set();
 		}
 	}

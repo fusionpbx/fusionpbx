@@ -84,14 +84,14 @@
 	$order = $_GET["order"] ?? '';
 
 //get total extension count for domain
-if (is_numeric($_SESSION['limit']['extensions']['numeric'])) {
-	$sql = "select count(*) from v_extensions ";
-	$sql .= "where domain_uuid = :domain_uuid ";
-	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$database = new database;
-	$total_extensions = $database->select($sql, $parameters, 'column');
-	unset($sql, $parameters);
-}
+	if (isset($_SESSION['limit']['extensions']['numeric'])) {
+		$sql = "select count(*) from v_extensions ";
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$database = new database;
+		$total_extensions = $database->select($sql, $parameters, 'column');
+		unset($sql, $parameters);
+	}
 
 //add the search term
 	$search = strtolower($_GET["search"] ?? '');
@@ -114,8 +114,6 @@ if (is_numeric($_SESSION['limit']['extensions']['numeric'])) {
 		$sql_search .= ") ";
 		$parameters['search'] = '%'.$search.'%';
 	}
-
-
 
 //get total extension count
 	$sql = "select count(*) from v_extensions where true ";
@@ -177,14 +175,14 @@ if (is_numeric($_SESSION['limit']['extensions']['numeric'])) {
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['header-extensions']." (".$num_rows.")</b></div>\n";
 	echo "	<div class='actions'>\n";
-	if (permission_exists('extension_import') && (!is_numeric($_SESSION['limit']['extensions']['numeric']) || $total_extensions < $_SESSION['limit']['extensions']['numeric'])) {
+	if (permission_exists('extension_import') && (!isset($_SESSION['limit']['extensions']['numeric']) || $total_extensions < $_SESSION['limit']['extensions']['numeric'])) {
 		echo button::create(['type'=>'button','label'=>$text['button-import'],'icon'=>$_SESSION['theme']['button_icon_import'],'link'=>'extension_imports.php']);
 	}
 	if (permission_exists('extension_export')) {
 		echo button::create(['type'=>'button','label'=>$text['button-export'],'icon'=>$_SESSION['theme']['button_icon_export'],'link'=>'extension_download.php']);
 	}
 	$margin_left = permission_exists('extension_import') || permission_exists('extension_export') ? "margin-left: 15px;" : null;
-	if (permission_exists('extension_add') && (!is_numeric($_SESSION['limit']['extensions']['numeric']) || $total_extensions < $_SESSION['limit']['extensions']['numeric'])) {
+	if (permission_exists('extension_add') && (!isset($_SESSION['limit']['extensions']['numeric']) || $total_extensions < $_SESSION['limit']['extensions']['numeric'])) {
 		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'id'=>'btn_add','style'=>($margin_left ?? ''),'link'=>'extension_edit.php']);
 		unset($margin_left);
 	}

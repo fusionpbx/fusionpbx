@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2017
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -25,6 +25,24 @@
 */
 
 if ($domains_processed == 1) {
+
+	//base64 decode the description - added for backwards comptability with old versions of FusionPBX
+		$sql = "select * from v_vars \n";
+		$sql .= "where var_description like '%=';\n";
+		$database = new database;
+		$vars = $database->select($sql, null, 'all');
+		if (!empty($vars)) {
+			foreach($vars as $row) {
+				$sql = "update v_vars ";
+				$sql .= "set var_description = :var_description ";
+				$sql .= "where var_uuid = :var_uuid ";
+				$parameters['var_uuid'] = $row['var_uuid'];
+				$parameters['var_description'] = base64_decode($row['var_description']);
+				$database->execute($sql, $parameters);
+				unset($sql, $parameters);
+			}
+		}
+		unset($sql, $vars);
 
 	//add the variables to the database
 		$sql = "select count(*) from v_vars ";
@@ -94,9 +112,9 @@ if ($domains_processed == 1) {
 		if (!function_exists('set_country_vars')) {
 			function set_country_vars($x) {
 				require "resources/countries.php";
-	
+
 				//$country_iso=$_SESSION['domain']['country']['iso_code'];
-	
+
 				$sql = "select default_setting_value ";
 				$sql .= "from v_default_settings ";
 				$sql .= "where default_setting_name = 'iso_code' ";
@@ -198,6 +216,7 @@ if ($domains_processed == 1) {
 
 	//save the vars.xml file
 		save_var_xml();
+
 }
 
 ?>

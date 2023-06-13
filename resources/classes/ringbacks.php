@@ -30,7 +30,7 @@ if (!class_exists('ringbacks')) {
 
 		//define variables
 		public $domain_uuid;
-		private $ringtones_list;
+		public $ringtones_list;
 		private $tones_list;
 		private $music_list;
 		private $recordings_list;
@@ -54,8 +54,10 @@ if (!class_exists('ringbacks')) {
 				if (!empty($ringtones)) {
 					foreach ($ringtones as $ringtone) {
 						$ringtone = $ringtone['var_name'];
-						$label = $text['label-'.$ringtone];
-						if ($label == "") {
+						if (isset($text['label-'.$ringtone])) {
+							$label = $text['label-'.$ringtone];
+						}
+						else {
 							$label = $ringtone;
 						}
 						$ringtones_list[$ringtone] = $label;
@@ -144,7 +146,7 @@ if (!class_exists('ringbacks')) {
 					$parameters['domain_uuid'] = $this->domain_uuid;
 					$database = new database;
 					$streams = $database->select($sql, $parameters, 'all');
-					if (is_array($streams) && @sizeof($streams) != 0) {
+					if (!empty($streams)) {
 						$select .= "	<optgroup label='".$text['label-streams']."'>";
 						foreach ($streams as $row) {
 							$select .= "		<option value='".$row['stream_location']."' ".(($selected == $row['stream_location']) ? 'selected="selected"' : null).">".$row['stream_name']."</option>\n";

@@ -1,4 +1,28 @@
 <?php
+/*
+	FusionPBX
+	Version: MPL 1.1
+
+	The contents of this file are subject to the Mozilla Public License Version
+	1.1 (the "License"); you may not use this file except in compliance with
+	the License. You may obtain a copy of the License at
+	http://www.mozilla.org/MPL/
+
+	Software distributed under the License is distributed on an "AS IS" basis,
+	WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+	for the specific language governing rights and limitations under the
+	License.
+
+	The Original Code is FusionPBX
+
+	The Initial Developer of the Original Code is
+	Mark J Crane <markjcrane@fusionpbx.com>
+	Portions created by the Initial Developer are Copyright (C) 2018 - 2023
+	the Initial Developer. All Rights Reserved.
+
+	Contributor(s):
+	Mark J Crane <markjcrane@fusionpbx.com>
+*/
 
 //set the include path
 	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
@@ -21,8 +45,12 @@
 	$language = new text;
 	$text = $language->get();
 
+//set the defaults
+	$control_name = '';
+	$control_description = '';
+
 //action add or update
-	if (is_uuid($_REQUEST["id"])) {
+	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
 		$conference_control_uuid = $_REQUEST["id"];
 	}
@@ -31,14 +59,14 @@
 	}
 
 //get http post variables and set them to php variables
-	if (count($_POST) > 0) {
+	if (!empty($_POST)) {
 		$control_name = $_POST["control_name"];
-		$control_enabled = $_POST["control_enabled"] ?: 'false';
+		$control_enabled = $_POST["control_enabled"] ?? 'false';
 		$control_description = $_POST["control_description"];
 	}
 
 //process the user data and save it to the database
-	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
+	if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
 		//get the uuid from the POST
 			if ($action == "update") {
@@ -73,7 +101,7 @@
 			}
 
 		//add the conference_control_uuid
-			if (!is_uuid($_POST["conference_control_uuid"])) {
+			if (empty($_POST["conference_control_uuid"]) || !is_uuid($_POST["conference_control_uuid"])) {
 				$conference_control_uuid = uuid();
 			}
 
@@ -107,7 +135,7 @@
 	} //(is_array($_POST) && empty($_POST["persistformvar"]))
 
 //pre-populate the form
-	if (is_array($_GET) && $_POST["persistformvar"] != "true") {
+	if (!empty($_GET) && empty($_POST["persistformvar"])) {
 		$conference_control_uuid = $_GET["id"];
 		$sql = "select * from v_conference_controls ";
 		//$sql .= "where domain_uuid = '$domain_uuid' ";
@@ -115,7 +143,7 @@
 		$parameters['conference_control_uuid'] = $conference_control_uuid;
 		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
-		if (is_array($row) && sizeof($row) != 0) {
+		if (!empty($row)) {
 			$control_name = $row["control_name"];
 			$control_enabled = $row["control_enabled"];
 			$control_description = $row["control_description"];

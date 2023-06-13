@@ -49,13 +49,13 @@
 //get the number of rows in v_extensions
 	$sql = " select count(*) from v_settings ";
 	$database = new database;
-	$num_rows = $database->select($sql, $parameters, 'column');
+	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 
 //set the action
 	$action = $num_rows == 0 ? "add" : "update";
 
 //get the http values and set them as php variables
-	if (count($_POST)>0) {
+	if (!empty($_POST)) {
 		//$numbering_plan = $_POST["numbering_plan"];
 		//$default_gateway = $_POST["default_gateway"];
 		$setting_uuid = $_POST["setting_uuid"];
@@ -73,7 +73,7 @@
 		$mod_shout_volume = $_POST["mod_shout_volume"];
 	}
 
-if (count($_POST)>0 && empty($_POST["persistformvar"])) {
+if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
 	//check for all required data
 		$msg = '';
@@ -103,7 +103,7 @@ if (count($_POST)>0 && empty($_POST["persistformvar"])) {
 		}
 
 	//add or update the database
-		if ($_POST["persistformvar"] != "true") {
+		if (empty($_POST["persistformvar"])) {
 			if (permission_exists('setting_edit')) {
 				//build array
 					$array['settings'][0]['setting_uuid'] = $action == "add" ? uuid() : $setting_uuid;
@@ -151,11 +151,11 @@ if (count($_POST)>0 && empty($_POST["persistformvar"])) {
 	}
 
 //pre-populate the form
-	if ($_POST["persistformvar"] != "true") {
+	if (empty($_POST["persistformvar"])) {
 		$sql = "select * from v_settings ";
 		$database = new database;
 		$row = $database->select($sql, null, 'row');
-		if (is_array($row) && @sizeof($row) != 0) {
+		if (!empty($row)) {
 			$setting_uuid = $row['setting_uuid'];
 			$event_socket_ip_address = $row["event_socket_ip_address"];
 			$event_socket_port = $row["event_socket_port"];
@@ -242,7 +242,7 @@ if (count($_POST)>0 && empty($_POST["persistformvar"])) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <input class='formfld' type='text' name='event_socket_acl' id='event_socket_acl' maxlength='50' value=\"".escape($event_socket_acl)."\">\n";
 	echo "<br />\n";
-	echo $text['description-event_socket_acl']."\n";
+	echo !empty($text['description-event_socket_acl'])."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
