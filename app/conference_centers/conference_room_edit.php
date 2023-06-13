@@ -68,7 +68,7 @@
 		$conference_room_name = $_POST['conference_room_name'];
 		$moderator_pin = $_POST["moderator_pin"];
 		$participant_pin = $_POST["participant_pin"];
-		
+
 		$profile = $_POST["profile"];
 		$record = $_POST["record"];
 		$user_uuid = $_POST["user_uuid"];
@@ -151,26 +151,28 @@
 			}
 	}
 
-//generate the pins
+//generate the pin number length
+	$sql = "select conference_center_pin_length ";
+	$sql .= "from v_conference_centers ";
+	$sql .= "where domain_uuid = :domain_uuid ";
 	if (!empty($conference_center_uuid) && is_uuid($conference_center_uuid)) {
-		$sql = "select conference_center_pin_length ";
-		$sql .= "from v_conference_centers ";
-		$sql .= "where domain_uuid = :domain_uuid ";
 		$sql .= "and conference_center_uuid = :conference_center_uuid ";
 		$parameters['conference_center_uuid'] = $conference_center_uuid;
-		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-		$database = new database;
-		$row = $database->select($sql, $parameters, 'row');
-		if (!empty($row)) {
-			$pin_length = $row['conference_center_pin_length'];
-		}
-		unset($sql, $parameters);
-		if (empty($moderator_pin)) {
-			$moderator_pin = get_conference_pin($pin_length, $conference_room_uuid ?? null);
-		}
-		if (empty($participant_pin)) {
-			$participant_pin = get_conference_pin($pin_length, $conference_room_uuid ?? null);
-		}
+	}
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$database = new database;
+	$row = $database->select($sql, $parameters, 'row');
+	if (!empty($row)) {
+		$pin_length = $row['conference_center_pin_length'];
+	}
+	unset($sql, $parameters);
+
+//generate the pin numbers
+	if (empty($moderator_pin)) {
+		$moderator_pin = get_conference_pin($pin_length, $conference_room_uuid ?? null);
+	}
+	if (empty($participant_pin)) {
+		$participant_pin = get_conference_pin($pin_length, $conference_room_uuid ?? null);
 	}
 
 //delete the user
@@ -202,161 +204,147 @@
 		return;
 	}
 
+//save the changes from the HTTP POST
+	if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
-if (!empty($_POST) && empty($_POST["persistformvar"])) {
+		//define the variable
+			$msg = '';
 
-	$msg = '';
-	if ($action == "update") {
-		$conference_room_uuid = $_POST["conference_room_uuid"];
-	}
+		//get the conference rooom ID
+			if ($action == "update") {
+				$conference_room_uuid = $_POST["conference_room_uuid"];
+			}
 
-	//validate the token
-		$token = new token;
-		if (!$token->validate($_SERVER['PHP_SELF'])) {
-			message::add($text['message-invalid_token'],'negative');
-			header('Location: conference_rooms.php');
-			exit;
-		}
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: conference_rooms.php');
+				exit;
+			}
 
-	//check for a unique pin number and length
-		if (strlen($moderator_pin) > 0 || !empty($participant_pin)) {
-			//make sure the moderator pin number is unique
-				$sql = "select count(*) from v_conference_rooms ";
-				$sql .= "where domain_uuid = :domain_uuid ";
-				$sql .= "and conference_room_uuid <> :conference_room_uuid ";
-				$sql .= "and (";
-				$sql .= "	moderator_pin = :moderator_pin ";
-				$sql .= "	or participant_pin = :moderator_pin ";
-				$sql .= ") ";
-				$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-				$parameters['moderator_pin'] = $moderator_pin;
-				$parameters['conference_room_uuid'] = $conference_room_uuid ?? null;
-				$database = new database;
-				$num_rows = $database->select($sql, $parameters, 'column');
-				if ($num_rows > 0) {
-					$msg .= $text['message-unique_moderator_pin']."<br />\n";
-				}
-				unset($sql, $parameters);
-
-			//make sure the participant pin number is unique
-				$sql = "select count(*) from v_conference_rooms ";
-				$sql .= "where domain_uuid = :domain_uuid ";
-				$sql .= "and conference_room_uuid <> :conference_room_uuid ";
-				$sql .= "and (";
-				$sql .= "	moderator_pin = :participant_pin ";
-				$sql .= "	or participant_pin = :participant_pin ";
-				$sql .= ") ";
-				$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-				$parameters['participant_pin'] = $participant_pin;
-				$parameters['conference_room_uuid'] = $conference_room_uuid ?? null;
-				$num_rows = $database->select($sql, $parameters, 'column');
-				if ($num_rows > 0) {
-					$msg .= $text['message-unique_participant_pin']."<br />\n";
-				}
-				unset($sql, $parameters);
-
-			//additional checks
-				if ($moderator_pin == $participant_pin) {
-					$msg .= $text['message-non_unique_pin']."<br />\n";
-				}
-				if (strlen($moderator_pin) < $pin_length || strlen($participant_pin) < $pin_length) {
-					$msg .= $text['message-minimum_pin_length']." ".$pin_length."<br />\n";
-				}
-		}
-
-	//check for all required data
-		//if (empty($conference_center_uuid)) { $msg .= "Please provide: Conference UUID<br>\n"; }
-		//if (empty($max_members)) { $msg .= "Please provide: Max Members<br>\n"; }
-		//if (empty($start_datetime)) { $msg .= "Please provide: Start Date/Time<br>\n"; }
-		//if (empty($stop_datetime)) { $msg .= "Please provide: Stop Date/Time<br>\n"; }
-		//if (empty($wait_mod)) { $msg .= "Please provide: Wait for the Moderator<br>\n"; }
-		//if (empty($profile)) { $msg .= "Please provide: Conference Profile<br>\n"; }
-		//if (empty($announce)) { $msg .= "Please provide: Announce<br>\n"; }
-		//if (empty($enter_sound)) { $msg .= "Please provide: Enter Sound<br>\n"; }
-		//if (empty($mute)) { $msg .= "Please provide: Mute<br>\n"; }
-		//if (empty($sounds)) { $msg .= "Please provide: Sounds<br>\n"; }
-		//if (empty($created)) { $msg .= "Please provide: Created<br>\n"; }
-		//if (empty($created_by)) { $msg .= "Please provide: Created By<br>\n"; }
-		//if (empty($enabled)) { $msg .= "Please provide: Enabled<br>\n"; }
-		//if (empty($description)) { $msg .= "Please provide: Description<br>\n"; }
-		if (!empty($msg) && empty($_POST["persistformvar"])) {
-			$document['title'] = $text['title-conference_room'];
-			require_once "resources/header.php";
-			require_once "resources/persist_form_var.php";
-			echo "<div align='center'>\n";
-			echo "<table><tr><td>\n";
-			echo $msg."<br />";
-			echo "</td></tr></table>\n";
-			persistformvar($_POST);
-			echo "</div>\n";
-			require_once "resources/footer.php";
-			exit;
-		}
-
-	//add or update the database
-		if (empty($_POST["persistformvar"])) {
-
-			if ($action == "add" && permission_exists('conference_room_add')) {
-				//set default values
-					if (empty($profile)) { $profile = 'default'; }
-					if (empty($record)) { $record = 'false'; }
-					if (empty($max_members)) { $max_members = 0; }
-					if (empty($wait_mod)) { $wait_mod = 'true'; }
-					if (empty($moderator_endconf)) { $moderator_endconf = 'false'; }
-					if (empty($announce_name)) { $announce_name = 'true'; }
-					if (empty($announce_recording)) { $announce_recording = 'true'; }
-					if (empty($announce_count)) { $announce_count = 'true'; }
-					if (empty($mute)) { $mute = 'false'; }
-					if (empty($enabled)) { $enabled = 'true'; }
-					if (empty($sounds)) { $sounds = 'false'; }
-
-				//add a conference room
-					$conference_room_uuid = uuid();
-					$array['conference_rooms'][0]['conference_room_uuid'] = $conference_room_uuid;
-					$array['conference_rooms'][0]['conference_center_uuid'] = $conference_center_uuid;
-					$array['conference_rooms'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
-					$array['conference_rooms'][0]['conference_room_name'] = $conference_room_name;
-					$array['conference_rooms'][0]['profile'] = $profile;
-					$array['conference_rooms'][0]['record'] = $record;
-					$array['conference_rooms'][0]['moderator_pin'] = $moderator_pin;
-					$array['conference_rooms'][0]['participant_pin'] = $participant_pin;
-					$array['conference_rooms'][0]['max_members'] = $max_members;
-					$array['conference_rooms'][0]['start_datetime'] = $start_datetime;
-					$array['conference_rooms'][0]['stop_datetime'] = $stop_datetime;
-					$array['conference_rooms'][0]['wait_mod'] = $wait_mod;
-					$array['conference_rooms'][0]['moderator_endconf'] = $moderator_endconf;
-					$array['conference_rooms'][0]['announce_name'] = $announce_name;
-					$array['conference_rooms'][0]['announce_recording'] = $announce_recording;
-					$array['conference_rooms'][0]['announce_count'] = $announce_count;
-					$array['conference_rooms'][0]['sounds'] = $sounds;
-					$array['conference_rooms'][0]['mute'] = $mute;
-					$array['conference_rooms'][0]['created'] = 'now()';
-					$array['conference_rooms'][0]['created_by'] = $_SESSION['user_uuid'];
-					if (permission_exists('conference_room_email_address')) {
-						$array['conference_rooms'][0]['email_address'] = $email_address;
-					}
-					if (permission_exists('conference_room_account_code')) {
-						$array['conference_rooms'][0]['account_code'] = $account_code;
-					}
-					$array['conference_rooms'][0]['enabled'] = $enabled;
-					$array['conference_rooms'][0]['description'] = $description;
-
+		//check for a unique pin number and length
+			if (strlen($moderator_pin) > 0 || !empty($participant_pin)) {
+				//make sure the moderator pin number is unique
+					$sql = "select count(*) from v_conference_rooms ";
+					$sql .= "where domain_uuid = :domain_uuid ";
+					$sql .= "and conference_room_uuid <> :conference_room_uuid ";
+					$sql .= "and (";
+					$sql .= "	moderator_pin = :moderator_pin ";
+					$sql .= "	or participant_pin = :moderator_pin ";
+					$sql .= ") ";
+					$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+					$parameters['moderator_pin'] = $moderator_pin;
+					$parameters['conference_room_uuid'] = $conference_room_uuid ?? null;
 					$database = new database;
-					$database->app_name = 'conference_centers';
-					$database->app_uuid = '8d083f5a-f726-42a8-9ffa-8d28f848f10e';
-					$database->save($array);
-					unset($array);
+					$num_rows = $database->select($sql, $parameters, 'column');
+					if ($num_rows > 0) {
+						$msg .= $text['message-unique_moderator_pin']."<br />\n";
+					}
+					unset($sql, $parameters);
 
-				//assign the logged in user to the conference room
-					if (is_uuid($_SESSION["user_uuid"])) {
-						$conference_room_user_uuid = uuid();
-						$array['conference_room_users'][0]['conference_room_user_uuid'] = $conference_room_user_uuid;
-						$array['conference_room_users'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
-						$array['conference_room_users'][0]['conference_room_uuid'] = $conference_room_uuid;
-						$array['conference_room_users'][0]['user_uuid'] = $_SESSION["user_uuid"];
+				//make sure the participant pin number is unique
+					$sql = "select count(*) from v_conference_rooms ";
+					$sql .= "where domain_uuid = :domain_uuid ";
+					$sql .= "and conference_room_uuid <> :conference_room_uuid ";
+					$sql .= "and (";
+					$sql .= "	moderator_pin = :participant_pin ";
+					$sql .= "	or participant_pin = :participant_pin ";
+					$sql .= ") ";
+					$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+					$parameters['participant_pin'] = $participant_pin;
+					$parameters['conference_room_uuid'] = $conference_room_uuid ?? null;
+					$num_rows = $database->select($sql, $parameters, 'column');
+					if ($num_rows > 0) {
+						$msg .= $text['message-unique_participant_pin']."<br />\n";
+					}
+					unset($sql, $parameters);
 
-						$p = new permissions;
-						$p->add('conference_room_user_add', 'temp');
+				//additional checks
+					if ($moderator_pin == $participant_pin) {
+						$msg .= $text['message-non_unique_pin']."<br />\n";
+					}
+					if (strlen($moderator_pin) < $pin_length || strlen($participant_pin) < $pin_length) {
+						$msg .= $text['message-minimum_pin_length']." ".$pin_length."<br />\n";
+					}
+			}
+
+		//check for all required data
+			//if (empty($conference_center_uuid)) { $msg .= "Please provide: Conference UUID<br>\n"; }
+			//if (empty($max_members)) { $msg .= "Please provide: Max Members<br>\n"; }
+			//if (empty($start_datetime)) { $msg .= "Please provide: Start Date/Time<br>\n"; }
+			//if (empty($stop_datetime)) { $msg .= "Please provide: Stop Date/Time<br>\n"; }
+			//if (empty($wait_mod)) { $msg .= "Please provide: Wait for the Moderator<br>\n"; }
+			//if (empty($profile)) { $msg .= "Please provide: Conference Profile<br>\n"; }
+			//if (empty($announce)) { $msg .= "Please provide: Announce<br>\n"; }
+			//if (empty($enter_sound)) { $msg .= "Please provide: Enter Sound<br>\n"; }
+			//if (empty($mute)) { $msg .= "Please provide: Mute<br>\n"; }
+			//if (empty($sounds)) { $msg .= "Please provide: Sounds<br>\n"; }
+			//if (empty($created)) { $msg .= "Please provide: Created<br>\n"; }
+			//if (empty($created_by)) { $msg .= "Please provide: Created By<br>\n"; }
+			//if (empty($enabled)) { $msg .= "Please provide: Enabled<br>\n"; }
+			//if (empty($description)) { $msg .= "Please provide: Description<br>\n"; }
+			if (!empty($msg) && empty($_POST["persistformvar"])) {
+				$document['title'] = $text['title-conference_room'];
+				require_once "resources/header.php";
+				require_once "resources/persist_form_var.php";
+				echo "<div align='center'>\n";
+				echo "<table><tr><td>\n";
+				echo $msg."<br />";
+				echo "</td></tr></table>\n";
+				persistformvar($_POST);
+				echo "</div>\n";
+				require_once "resources/footer.php";
+				exit;
+			}
+
+		//add or update the database
+			if (empty($_POST["persistformvar"])) {
+
+				if ($action == "add" && permission_exists('conference_room_add')) {
+					//set default values
+						if (empty($profile)) { $profile = 'default'; }
+						if (empty($record)) { $record = 'false'; }
+						if (empty($max_members)) { $max_members = 0; }
+						if (empty($wait_mod)) { $wait_mod = 'true'; }
+						if (empty($moderator_endconf)) { $moderator_endconf = 'false'; }
+						if (empty($announce_name)) { $announce_name = 'true'; }
+						if (empty($announce_recording)) { $announce_recording = 'true'; }
+						if (empty($announce_count)) { $announce_count = 'true'; }
+						if (empty($mute)) { $mute = 'false'; }
+						if (empty($enabled)) { $enabled = 'true'; }
+						if (empty($sounds)) { $sounds = 'false'; }
+
+					//add a conference room
+						$conference_room_uuid = uuid();
+						$array['conference_rooms'][0]['conference_room_uuid'] = $conference_room_uuid;
+						$array['conference_rooms'][0]['conference_center_uuid'] = $conference_center_uuid;
+						$array['conference_rooms'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
+						$array['conference_rooms'][0]['conference_room_name'] = $conference_room_name;
+						$array['conference_rooms'][0]['profile'] = $profile;
+						$array['conference_rooms'][0]['record'] = $record;
+						$array['conference_rooms'][0]['moderator_pin'] = $moderator_pin;
+						$array['conference_rooms'][0]['participant_pin'] = $participant_pin;
+						$array['conference_rooms'][0]['max_members'] = $max_members;
+						$array['conference_rooms'][0]['start_datetime'] = $start_datetime;
+						$array['conference_rooms'][0]['stop_datetime'] = $stop_datetime;
+						$array['conference_rooms'][0]['wait_mod'] = $wait_mod;
+						$array['conference_rooms'][0]['moderator_endconf'] = $moderator_endconf;
+						$array['conference_rooms'][0]['announce_name'] = $announce_name;
+						$array['conference_rooms'][0]['announce_recording'] = $announce_recording;
+						$array['conference_rooms'][0]['announce_count'] = $announce_count;
+						$array['conference_rooms'][0]['sounds'] = $sounds;
+						$array['conference_rooms'][0]['mute'] = $mute;
+						$array['conference_rooms'][0]['created'] = 'now()';
+						$array['conference_rooms'][0]['created_by'] = $_SESSION['user_uuid'];
+						if (permission_exists('conference_room_email_address')) {
+							$array['conference_rooms'][0]['email_address'] = $email_address;
+						}
+						if (permission_exists('conference_room_account_code')) {
+							$array['conference_rooms'][0]['account_code'] = $account_code;
+						}
+						$array['conference_rooms'][0]['enabled'] = $enabled;
+						$array['conference_rooms'][0]['description'] = $description;
 
 						$database = new database;
 						$database->app_name = 'conference_centers';
@@ -364,62 +352,100 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 						$database->save($array);
 						unset($array);
 
-						$p->delete('conference_room_user_add', 'temp');
-					}
+					//assign the logged in user to the conference room
+						if (is_uuid($_SESSION["user_uuid"])) {
+							$conference_room_user_uuid = uuid();
+							$array['conference_room_users'][0]['conference_room_user_uuid'] = $conference_room_user_uuid;
+							$array['conference_room_users'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
+							$array['conference_room_users'][0]['conference_room_uuid'] = $conference_room_uuid;
+							$array['conference_room_users'][0]['user_uuid'] = $_SESSION["user_uuid"];
 
-				//add the message
-					message::add($text['message-add']);
-			}
+							$p = new permissions;
+							$p->add('conference_room_user_add', 'temp');
 
-			if ($action == "update" && permission_exists('conference_room_edit')) {
+							$database = new database;
+							$database->app_name = 'conference_centers';
+							$database->app_uuid = '8d083f5a-f726-42a8-9ffa-8d28f848f10e';
+							$database->save($array);
+							unset($array);
 
-				//update the conference room
-					$array['conference_rooms'][0]['conference_room_uuid'] = $conference_room_uuid;
-					$array['conference_rooms'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
-					$array['conference_rooms'][0]['conference_center_uuid'] = $conference_center_uuid;
-					$array['conference_rooms'][0]['conference_room_name'] = $conference_room_name;
-					if (!empty($profile)) {
-						$array['conference_rooms'][0]['profile'] = $profile;
-					}
-					if (!empty($record)) {
-						$array['conference_rooms'][0]['record'] = $record;
-					}
-					$array['conference_rooms'][0]['moderator_pin'] = $moderator_pin;
-					$array['conference_rooms'][0]['participant_pin'] = $participant_pin;
-					if (!empty($max_members)) {
-						$array['conference_rooms'][0]['max_members'] = $max_members;
-					}
-					$array['conference_rooms'][0]['start_datetime'] = $start_datetime;
-					$array['conference_rooms'][0]['stop_datetime'] = $stop_datetime;
-					if (!empty($wait_mod)) {
-						$array['conference_rooms'][0]['wait_mod'] = $wait_mod;
-					}
-					if (!empty($moderator_endconf)) {
-						$array['conference_rooms'][0]['moderator_endconf'] = $moderator_endconf;
-					}
-					if (!empty($announce_name)) {
-						$array['conference_rooms'][0]['announce_name'] = $announce_name;
-					}
-					if (!empty($announce_name)) {
-						$array['conference_rooms'][0]['announce_recording'] = $announce_recording;
-					}
-					if (!empty($announce_name)) {
-						$array['conference_rooms'][0]['announce_count'] = $announce_count;
-					}
-					if (!empty($mute)) {
-						$array['conference_rooms'][0]['mute'] = $mute;
-					}
-					$array['conference_rooms'][0]['sounds'] = $sounds;
-					if (permission_exists('conference_room_email_address')) {
-						$array['conference_rooms'][0]['email_address'] = $email_address;
-					}
-					if (permission_exists('conference_room_account_code')) {
-						$array['conference_rooms'][0]['account_code'] = $account_code;
-					}
-					if (!empty($enabled)) {
-						$array['conference_rooms'][0]['enabled'] = $enabled;
-					}
-					$array['conference_rooms'][0]['description'] = $description;
+							$p->delete('conference_room_user_add', 'temp');
+						}
+
+					//add the message
+						message::add($text['message-add']);
+				}
+
+				if ($action == "update" && permission_exists('conference_room_edit')) {
+
+					//update the conference room
+						$array['conference_rooms'][0]['conference_room_uuid'] = $conference_room_uuid;
+						$array['conference_rooms'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
+						$array['conference_rooms'][0]['conference_center_uuid'] = $conference_center_uuid;
+						$array['conference_rooms'][0]['conference_room_name'] = $conference_room_name;
+						if (!empty($profile)) {
+							$array['conference_rooms'][0]['profile'] = $profile;
+						}
+						if (!empty($record)) {
+							$array['conference_rooms'][0]['record'] = $record;
+						}
+						$array['conference_rooms'][0]['moderator_pin'] = $moderator_pin;
+						$array['conference_rooms'][0]['participant_pin'] = $participant_pin;
+						if (!empty($max_members)) {
+							$array['conference_rooms'][0]['max_members'] = $max_members;
+						}
+						$array['conference_rooms'][0]['start_datetime'] = $start_datetime;
+						$array['conference_rooms'][0]['stop_datetime'] = $stop_datetime;
+						if (!empty($wait_mod)) {
+							$array['conference_rooms'][0]['wait_mod'] = $wait_mod;
+						}
+						if (!empty($moderator_endconf)) {
+							$array['conference_rooms'][0]['moderator_endconf'] = $moderator_endconf;
+						}
+						if (!empty($announce_name)) {
+							$array['conference_rooms'][0]['announce_name'] = $announce_name;
+						}
+						if (!empty($announce_name)) {
+							$array['conference_rooms'][0]['announce_recording'] = $announce_recording;
+						}
+						if (!empty($announce_name)) {
+							$array['conference_rooms'][0]['announce_count'] = $announce_count;
+						}
+						if (!empty($mute)) {
+							$array['conference_rooms'][0]['mute'] = $mute;
+						}
+						$array['conference_rooms'][0]['sounds'] = $sounds;
+						if (permission_exists('conference_room_email_address')) {
+							$array['conference_rooms'][0]['email_address'] = $email_address;
+						}
+						if (permission_exists('conference_room_account_code')) {
+							$array['conference_rooms'][0]['account_code'] = $account_code;
+						}
+						if (!empty($enabled)) {
+							$array['conference_rooms'][0]['enabled'] = $enabled;
+						}
+						$array['conference_rooms'][0]['description'] = $description;
+
+						$database = new database;
+						$database->app_name = 'conference_centers';
+						$database->app_uuid = '8d083f5a-f726-42a8-9ffa-8d28f848f10e';
+						$database->save($array);
+						unset($array);
+
+					//set message
+						message::add($text['message-update']);
+				}
+
+				//assign the user to the conference room
+				if (is_uuid($user_uuid)) {
+					$conference_room_user_uuid = uuid();
+					$array['conference_room_users'][0]['conference_room_user_uuid'] = $conference_room_user_uuid;
+					$array['conference_room_users'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
+					$array['conference_room_users'][0]['conference_room_uuid'] = $conference_room_uuid;
+					$array['conference_room_users'][0]['user_uuid'] = $user_uuid;
+
+					$p = new permissions;
+					$p->add('conference_room_user_add', 'temp');
 
 					$database = new database;
 					$database->app_name = 'conference_centers';
@@ -427,38 +453,16 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 					$database->save($array);
 					unset($array);
 
-				//set message
-					message::add($text['message-update']);
+					$p->delete('conference_room_user_add', 'temp');
+
+					message::add($text['message-add']);
+				}
+
+				//redirect
+				header("Location: conference_room_edit.php?id=".escape($conference_room_uuid));
+				exit;
 			}
-
-			//assign the user to the conference room
-			if (is_uuid($user_uuid)) {
-				$conference_room_user_uuid = uuid();
-				$array['conference_room_users'][0]['conference_room_user_uuid'] = $conference_room_user_uuid;
-				$array['conference_room_users'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
-				$array['conference_room_users'][0]['conference_room_uuid'] = $conference_room_uuid;
-				$array['conference_room_users'][0]['user_uuid'] = $user_uuid;
-
-				$p = new permissions;
-				$p->add('conference_room_user_add', 'temp');
-
-				$database = new database;
-				$database->app_name = 'conference_centers';
-				$database->app_uuid = '8d083f5a-f726-42a8-9ffa-8d28f848f10e';
-				$database->save($array);
-				unset($array);
-
-				$p->delete('conference_room_user_add', 'temp');
-
-				message::add($text['message-add']);
-			}
-
-			//redirect
-			header("Location: conference_room_edit.php?id=".escape($conference_room_uuid));
-			exit;
-
-		}
-}
+	}
 
 //pre-populate the form
 	if (!empty($_GET) && empty($_POST["persistformvar"])) {
