@@ -908,7 +908,7 @@
 		function list_self_check(checkbox_id) {
 			var inputs = document.getElementsByTagName('input');
 			for (var i = 0, max = inputs.length; i < max; i++) {
-				if (inputs[i].type === 'checkbox') {
+				if (inputs[i].type === 'checkbox' && inputs[i].name.search['enabled'] == -1) {
 					inputs[i].checked = false;
 				}
 			}
