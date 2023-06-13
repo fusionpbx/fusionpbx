@@ -262,7 +262,6 @@
 
 		//run all app_defaults.php files
 			$domain = new domains;
-			$domain->display_type = $display_type;
 			$domain->upgrade();
 
 		//show the content

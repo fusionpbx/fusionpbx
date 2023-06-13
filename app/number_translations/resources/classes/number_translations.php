@@ -39,6 +39,7 @@ if (!class_exists('number_translations')) {
 		private $uuid_prefix;
 		private $toggle_field;
 		private $toggle_values;
+		public  $xml;
 
 		/**
 		 * declare public variables
