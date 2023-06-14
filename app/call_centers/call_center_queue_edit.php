@@ -345,6 +345,14 @@
 				}
 			}
 
+		//add definable export variables can be set in default settings
+			$export_variables = 'call_center_queue_uuid,sip_h_Alert-Info';
+			if (!empty($_SESSION['call_center']['export_vars'])) {
+				foreach ($_SESSION['call_center']['export_vars'] as $export_variable) {
+				    $export_variables .= ','.$export_variable;
+				}
+			}
+
 		//build the xml dialplan
 			$dialplan_xml = "<extension name=\"".xml::sanitize($queue_name)."\" continue=\"\" uuid=\"".xml::sanitize($dialplan_uuid)."\">\n";
 			$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^([^#]+#)(.*)\$\" break=\"never\">\n";
@@ -358,7 +366,7 @@
 			if (!empty($queue_extension) && is_numeric($queue_extension)) {
 				$dialplan_xml .= "		<action application=\"set\" data=\"queue_extension=".xml::sanitize($queue_extension)."\"/>\n";
 			}
-			$dialplan_xml .= "		<action application=\"set\" data=\"cc_export_vars=\${cc_export_vars},call_center_queue_uuid,sip_h_Alert-Info\"/>\n";
+			$dialplan_xml .= "		<action application=\"set\" data=\"cc_export_vars=\${cc_export_vars},".$export_variables."\"/>\n";
 			$dialplan_xml .= "		<action application=\"set\" data=\"hangup_after_bridge=true\"/>\n";
 			if (!empty($queue_time_base_score_sec)) {
 				$dialplan_xml .= "		<action application=\"set\" data=\"cc_base_score=".xml::sanitize($queue_time_base_score_sec)."\"/>\n";
