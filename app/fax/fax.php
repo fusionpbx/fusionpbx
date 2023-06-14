@@ -83,7 +83,7 @@
 	$show = $_GET["show"] ?? '';
 
 //get record counts
-	if (permission_exists('fax_extension_view_all') && permission_exists('fax_extension_view_domain')) {
+	if (permission_exists('fax_extension_view_all') || permission_exists('fax_extension_view_domain')) {
 		//count the fax extensions
 		$sql = "select count(f.fax_uuid) from v_fax as f ";
 		if ($show == "all" && permission_exists('fax_extension_view_all')) {
