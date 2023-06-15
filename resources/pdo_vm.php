@@ -25,7 +25,7 @@
 */
 
 //includes files
-    require_once __DIR__ . "/require.php";
+	require_once __DIR__ . "/require.php";
 
 //get the contents of xml_cdr.conf.xml
 	$conf_xml_string = file_get_contents($_SESSION['switch']['conf']['dir'].'/autoload_configs/voicemail.conf.xml');
