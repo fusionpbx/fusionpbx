@@ -415,7 +415,7 @@ else if (!empty($background_colors[0]) || !empty($background_colors[1])) { //bac
 	if (!empty($background_colors[0]) && empty($background_colors[1])) { // use color 1
 		$background_color = "background: ".$background_colors[0].";";
 	}
-	else if (!empty($background_colors[0]) && !empty($background_colors[1])) { // use color 2
+	else if (empty($background_colors[0]) && !empty($background_colors[1])) { // use color 2
 		$background_color = "background: ".$background_colors[1].";";
 	}
 	else if (!empty($background_colors[0]) && !empty($background_colors[1]) && isset($_SESSION['theme']['background_radial_gradient']['text'])) { // radial gradient

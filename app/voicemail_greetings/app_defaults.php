@@ -109,7 +109,7 @@ if ($domains_processed == 1) {
 		}
 
 	//if not base64, decode to local files, remove base64 data from db
-		else if (!empty($_SESSION['voicemail']['storage_type']['text']) && $_SESSION['voicemail']['storage_type']['text'] != 'base64') {
+		else if (empty($_SESSION['voicemail']['storage_type']['text']) || $_SESSION['voicemail']['storage_type']['text'] != 'base64') {
 			//get greetings with base64 in db
 				$sql = "select voicemail_greeting_uuid, domain_uuid, voicemail_id, greeting_filename, greeting_base64 ";
 				$sql .= "from v_voicemail_greetings ";

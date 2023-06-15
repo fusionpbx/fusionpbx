@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2021
+ Portions created by the Initial Developer are Copyright (C) 2008-2023
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -43,7 +43,7 @@ $text = $language->get();
 
 //set the variables
 $search = $_REQUEST['search'] ?? '';
-$domain_uuid = $_GET['id'];
+$domain_uuid = $_GET['id'] ?? null;
 
 //reload default settings
 require "resources/classes/domains.php";

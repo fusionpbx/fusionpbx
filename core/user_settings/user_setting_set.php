@@ -108,7 +108,6 @@ Mark J Crane <markjcrane@fusionpbx.com>
 					//reset session variables to default
 						require "resources/classes/domains.php";
 						$domain = new domains();
-						$domain->db = $db;
 						$domain->set();
 				}
 

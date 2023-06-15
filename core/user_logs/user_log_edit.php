@@ -21,7 +21,7 @@
 	$user_log_uuid = $_GET['id'];
 
 //pre-populate the form
-	if (is_array($_GET) && $_POST["persistformvar"] != "true") {
+	if (!empty($_GET) && is_array($_GET) && (empty($_POST["persistformvar"]) || $_POST["persistformvar"] != "true")) {
 		$sql = "select * from v_user_logs ";
 		$sql .= "where user_log_uuid = :user_log_uuid ";
 		//$sql .= "and domain_uuid = :domain_uuid ";

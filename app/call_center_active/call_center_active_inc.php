@@ -46,7 +46,7 @@
 	$queue_uuid = $_GET['queue_name'];
 
 //get the queues from the database
-	if (!is_array($_SESSION['queues'])) {
+	if (empty($_SESSION['queues']) || !is_array($_SESSION['queues'])) {
 		$sql = "select * from v_call_center_queues ";
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$sql .= "order by queue_name asc ";
@@ -143,7 +143,7 @@
 				$agent_result = str_to_named_array($event_socket_str, '|');
 
 			//get the agents from the database
-				if (!is_array($_SESSION['agents'])) {
+				if (empty($_SESSION['agents']) || !is_array($_SESSION['agents'])) {
 					$sql = "select * from v_call_center_agents ";
 					$sql .= "where domain_uuid = :domain_uuid ";
 					$sql .= "order by agent_name asc ";
@@ -260,7 +260,7 @@
 										}
 										else {
 											//$orig_call="{origination_caller_id_name=c2c-".urlencode(escape($name)).",origination_caller_id_number=".escape($agent_extension)."}user/".$_SESSION['user']['extension'][0]['user']."@".$_SESSION['domain_name']." %26bridge(user/".escape($agent_extension)."@".$_SESSION['domain_name'].")";
-											echo button::create(['type'=>'button','class'=>'link','label'=>$text['label-call'],'onclick'=>"if (confirm('".$text['message-confirm']."')) { send_command('call_center_exec.php?command=bridge&extension=".urlencode($agent_extension)."&caller_id_name=".urlencode($name)."'); } else { this.blur(); return false; }"]);
+											echo button::create(['type'=>'button','class'=>'link','label'=>$text['label-call'],'onclick'=>"if (confirm('".$text['message-confirm']."')) { send_command('call_center_exec.php?command=bridge&extension=".urlencode($agent_extension)."&caller_id_name=".urlencode($name ?? '')."'); } else { this.blur(); return false; }"]);
 										}
 										echo "</td>";
 									}
@@ -327,7 +327,7 @@
 			if (is_array($result)) {
 				foreach ($result as $row) {
 					$queue = $row['queue'];
-					$system = $row['system'];
+					$system = $row['system'] ?? null;
 					$uuid = $row['uuid'];
 					$session_uuid = $row['session_uuid'];
 					$caller_number = $row['cid_number'];
@@ -369,7 +369,7 @@
 					if (permission_exists('call_center_active_options')) {
 						echo "<td>";
 						if ($state != "Abandoned") {
-							$orig_command="{origination_caller_id_name=eavesdrop,origination_caller_id_number=".escape($q_caller_number)."}user/".escape($_SESSION['user']['extension'][0]['user'])."@".escape($_SESSION['domain_name'])." %26eavesdrop(".escape($session_uuid).")";
+							$orig_command = "{origination_caller_id_name=eavesdrop,origination_caller_id_number=".escape($q_caller_number ?? '')."}user/".escape($_SESSION['user']['extension'][0]['user'] ?? '')."@".escape($_SESSION['domain_name'])." %26eavesdrop(".escape($session_uuid).")";
 							echo button::create(['type'=>'button','class'=>'link','label'=>$text['label-eavesdrop'],'onclick'=>"if (confirm('".$text['message-confirm']."')) { send_command('call_center_exec.php?command=eavesdrop&caller_id_number=".urlencode($caller_number)."&uuid=".urlencode($session_uuid)."'); } else { this.blur(); return false; }"]);
 							echo button::create(['type'=>'button','class'=>'link','label'=>$text['label-transfer'],'style'=>'margin-left: 15px;','onclick'=>"if (confirm('".$text['message-confirm']."')) { send_command('call_center_exec.php?command=uuid_pickup&uuid=".urlencode($session_uuid)."'); } else { this.blur(); return false; }"]);
 						}

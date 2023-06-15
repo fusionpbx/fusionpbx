@@ -1,5 +1,5 @@
 --	Part of FusionPBX
---	Copyright (C) 2010-2022 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2010-2023 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -477,7 +477,7 @@
 			sql = [[
 				SELECT
 					r.ring_group_strategy, r.ring_group_timeout_app, r.ring_group_distinctive_ring,
-					d.destination_number, d.destination_delay, d.destination_timeout, d.destination_prompt,
+					d.destination_number, d.destination_delay * 1000 as destination_delay, d.destination_timeout, d.destination_prompt,
 					r.ring_group_caller_id_name, r.ring_group_caller_id_number, 
 					r.ring_group_cid_name_prefix, r.ring_group_cid_number_prefix, 
 					r.ring_group_timeout_data, r.ring_group_ringback
@@ -585,7 +585,7 @@
 						--get the follow me destinations
 						if (follow_me_uuid ~= nil and row.is_follow_me_destination ~= "true") then
 							sql = "select d.domain_uuid, d.domain_name, f.follow_me_destination as destination_number, ";
-							sql = sql .. "f.follow_me_delay as destination_delay, f.follow_me_timeout as destination_timeout, ";
+							sql = sql .. "f.follow_me_delay * 500 as destination_delay, f.follow_me_timeout as destination_timeout, ";
 							sql = sql .. "f.follow_me_prompt as destination_prompt ";
 							sql = sql .. "from v_follow_me_destinations as f, v_domains as d ";
 							sql = sql .. "where f.follow_me_uuid = :follow_me_uuid ";
@@ -614,7 +614,8 @@
 								if (tonumber(field.destination_timeout) < (tonumber(row.destination_timeout) - tonumber(field.destination_delay))) then
 									new_destination_timeout = field.destination_timeout;
 								else
-									new_destination_timeout = row.destination_timeout - field.destination_delay;
+									--new_destination_timeout = row.destination_timeout - field.destination_delay;
+									new_destination_timeout = row.destination_timeout;
 								end
 
 								--add to the destinations array
@@ -630,7 +631,8 @@
 								destinations[new_key]['ring_group_ringback'] = row.ring_group_ringback;
 								destinations[new_key]['domain_name'] = field.domain_name;
 								destinations[new_key]['destination_number'] = field.destination_number;
-								destinations[new_key]['destination_delay'] = field.destination_delay + row.destination_delay;
+								--destinations[new_key]['destination_delay'] = field.destination_delay + row.destination_delay;
+								destinations[new_key]['destination_delay'] = field.destination_delay;
 								destinations[new_key]['destination_timeout'] = new_destination_timeout;
 								destinations[new_key]['destination_prompt'] = field.destination_prompt;
 								destinations[new_key]['group_confirm_key'] = row.group_confirm_key;
@@ -741,12 +743,13 @@
 							delimiter = ":_:";
 						end
 
-					--leg delay settings
+					--leg delay and timeout settings
 						if (ring_group_strategy == "enterprise") then
 							delay_name = "originate_delay_start";
-							destination_delay = destination_delay * 500;
+							timeout_name = "originate_timeout";
 						else
 							delay_name = "leg_delay_start";
+							timeout_name = "leg_timeout";
 						end
 
 					--export the ringback
@@ -820,15 +823,15 @@
 							end
 
 							--send to user
-							local dial_string_to_user = "[sip_invite_domain="..domain_name..",domain_name="..domain_name..",call_direction="..call_direction..","..group_confirm.."leg_timeout="..destination_timeout..","..delay_name.."="..destination_delay..",dialed_extension=" .. row.destination_number .. ",extension_uuid=".. extension_uuid .. row.record_session .. hold_music .."]user/" .. row.destination_number .. "@" .. domain_name;
+							local dial_string_to_user = "[sip_invite_domain="..domain_name..",domain_name="..domain_name..",call_direction="..call_direction..","..group_confirm..""..timeout_name.."="..destination_timeout..","..delay_name.."="..destination_delay..",dialed_extension=" .. row.destination_number .. ",extension_uuid=".. extension_uuid .. row.record_session .. hold_music .."]user/" .. row.destination_number .. "@" .. domain_name;
 							dial_string = dial_string_to_user;
 						elseif (tonumber(destination_number) == nil) then
 							--sip uri
-							dial_string = "[sip_invite_domain="..domain_name..",domain_name="..domain_name..",call_direction="..call_direction..","..group_confirm.."leg_timeout="..destination_timeout..","..delay_name.."="..destination_delay.."]" .. row.destination_number;
+							dial_string = "[sip_invite_domain="..domain_name..",domain_name="..domain_name..",call_direction="..call_direction..","..group_confirm..""..timeout_name.."="..destination_timeout..","..delay_name.."="..destination_delay.."]" .. row.destination_number;
 						else
 							--external number
 								-- have to double destination_delay here due a FS bug requiring a 50% delay value for internal externsions, but not external calls. 
-								destination_delay = destination_delay * 2;
+								--destination_delay = destination_delay * 2;
 
 								route_bridge = 'loopback/'..destination_number;
 								if (extension_toll_allow ~= nil) then
@@ -864,7 +867,7 @@
 								end
 
 							--set the destination dial string
-								dial_string = "[toll_allow=".. toll_allow ..",".. caller_id ..",sip_invite_domain="..domain_name..",domain_name="..domain_name..",domain_uuid="..domain_uuid..",call_direction="..call_direction..","..group_confirm.."leg_timeout="..destination_timeout..","..delay_name.."="..destination_delay.."]"..route_bridge
+								dial_string = "[toll_allow=".. toll_allow ..",".. caller_id ..",sip_invite_domain="..domain_name..",domain_name="..domain_name..",domain_uuid="..domain_uuid..",call_direction="..call_direction..","..group_confirm..""..timeout_name.."="..destination_timeout..","..delay_name.."="..destination_delay.."]"..route_bridge
 						end
 
 					--add a delimiter between destinations

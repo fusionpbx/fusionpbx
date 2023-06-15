@@ -175,7 +175,6 @@ class plugin_database {
 
 						//set the setting arrays
 							$domain = new domains();
-							$domain->db = $db;
 							$domain->set();
 					}
 

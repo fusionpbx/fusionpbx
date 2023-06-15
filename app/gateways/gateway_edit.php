@@ -106,7 +106,7 @@
 		$context = $_POST["context"];
 		$profile = $_POST["profile"];
 		$hostname = $_POST["hostname"];
-		$enabled = $_POST["enabled"] ?: 'false';
+		$enabled = $_POST["enabled"] ?? 'false';
 		$description = $_POST["description"];
 	}
 

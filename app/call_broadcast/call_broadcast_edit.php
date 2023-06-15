@@ -43,13 +43,25 @@
 	$text = $language->get();
 
 //set the action with add or update
-	if (is_uuid($_REQUEST["id"])) {
+	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
 		$call_broadcast_uuid = $_REQUEST["id"];
 	}
 	else {
 		$action = "add";
 	}
+	
+//set the defaults
+	$broadcast_name = '';
+	$broadcast_start_time = '';
+	$broadcast_timeout = '';
+	$broadcast_concurrent_limit = '';
+	$broadcast_caller_id_name = '';
+	$broadcast_caller_id_number = '';
+	$broadcast_accountcode = '';
+	$broadcast_destination_data = '';
+	$broadcast_description = '';
+	$broadcast_toll_allow = '';
 
 //function to Upload CSV/TXT file
 	function upload_file($sql, $broadcast_phone_numbers) {
@@ -90,7 +102,7 @@
 	}
 
 //get the http post variables and set them to php variables
-	if (count($_POST)>0) {
+	if (!empty($_POST)) {
 		$broadcast_name = $_POST["broadcast_name"];
 		$broadcast_start_time = $_POST["broadcast_start_time"];
 		$broadcast_timeout = $_POST["broadcast_timeout"];
@@ -124,11 +136,11 @@
 		}
 	}
 
-if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
+if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
 	//delete the call broadcast
 		if (permission_exists('call_broadcast_delete')) {
-			if ($_POST['action'] == 'delete' && is_uuid($call_broadcast_uuid)) {
+			if (!empty($_POST['action']) && $_POST['action'] == 'delete' && is_uuid($call_broadcast_uuid)) {
 				//prepare
 					$call_broadcasts[0]['checked'] = 'true';
 					$call_broadcasts[0]['uuid'] = $call_broadcast_uuid;
@@ -180,7 +192,7 @@ if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 		}
 
 	//add or update the database
-	if ($_POST["persistformvar"] != "true") {
+	if (empty($_POST["persistformvar"])) {
 
 		//prep insert
 			if ($action == "add" && permission_exists('call_broadcast_add')) {
@@ -208,10 +220,10 @@ if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 			}
 
 		//execute
-			if (is_array($array) && @sizeof($array) != 0) {
+			if (!empty($array)) {
 
 				//add file selection and download sample
-					$file_res = upload_file($sql, $broadcast_phone_numbers);
+					$file_res = upload_file($sql ?? '', $broadcast_phone_numbers);
 					if ($file_res['code'] != true) {
 						$_SESSION["message_mood"] = "negative";
 						$_SESSION["message"] = $text['file-error'];
@@ -271,7 +283,7 @@ if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 }
 
 //pre-populate the form
-	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
+	if (!empty($_GET) && empty($_POST["persistformvar"])) {
 		$call_broadcast_uuid = $_GET["id"];
 		$sql = "select * from v_call_broadcasts ";
 		$sql .= "where domain_uuid = :domain_uuid ";
@@ -280,7 +292,7 @@ if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 		$parameters['call_broadcast_uuid'] = $call_broadcast_uuid;
 		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
-		if (is_array($row) && @sizeof($row) != 0) {
+		if (!empty($row)) {
 			$broadcast_name = $row["broadcast_name"];
 			$broadcast_start_time = $row["broadcast_start_time"];
 			$broadcast_timeout = $row["broadcast_timeout"];
@@ -417,7 +429,7 @@ if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 	//$parameters['domain_uuid'] = $domain_uuid;
 	//$database = new database;
 	//$rows = $database->select($sql, $parameters, 'all');
-	//if (is_array($rows) && @sizeof($rows) != 0) {
+	//if (!empty($rows)) {
 	//	foreach ($rows as $row) {
 	//		if ($recording_uuid == $row['recording_uuid']) {
 	//			echo "		<option value='".$row['recording_uuid']."' selected='yes'>".escape($row['recordingname'])."</option>\n";
@@ -522,10 +534,9 @@ if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "    <select class='formfld' name='broadcast_avmd'>\n";
-		echo "    	<option value='false' ".(($broadcast_avmd == "false") ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-		echo "    	<option value='true' ".(($broadcast_avmd == "true") ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "    	<option value='false'>".$text['option-false']."</option>\n";
+		echo "    	<option value='true' ".(!empty($broadcast_avmd) && $broadcast_avmd == "true" ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
 		echo "    </select>\n";
-		echo "<br />\n";
 		echo "<br />\n";
 		echo $text['description-avmd']."\n";
 		echo "</td>\n";

@@ -1,4 +1,28 @@
 <?php
+/*
+	FusionPBX
+	Version: MPL 1.1
+
+	The contents of this file are subject to the Mozilla Public License Version
+	1.1 (the "License"); you may not use this file except in compliance with
+	the License. You may obtain a copy of the License at
+	http://www.mozilla.org/MPL/
+
+	Software distributed under the License is distributed on an "AS IS" basis,
+	WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+	for the specific language governing rights and limitations under the
+	License.
+
+	The Original Code is FusionPBX
+
+	The Initial Developer of the Original Code is
+	Mark J Crane <markjcrane@fusionpbx.com>
+	Portions created by the Initial Developer are Copyright (C) 2022-2023
+	the Initial Developer. All Rights Reserved.
+
+	Contributor(s):
+	Mark J Crane <markjcrane@fusionpbx.com>
+*/
 
 //includes files
 	require_once dirname(__DIR__, 2) . "/resources/require.php";
@@ -18,7 +42,7 @@
 	$text = $language->get();
 
 //action add or update
-	if (is_uuid($_REQUEST["id"])) {
+	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
 		$email_queue_uuid = $_REQUEST["id"];
 		$id = $_REQUEST["id"];
@@ -28,7 +52,7 @@
 	}
 
 //get http post variables and set them to php variables
-	if (is_array($_POST)) {
+	if (!empty($_POST) && is_array($_POST)) {
 		$email_date = $_POST["email_date"];
 		$email_from = $_POST["email_from"];
 		$email_to = $_POST["email_to"];
@@ -52,7 +76,7 @@
 			}
 
 		//process the http post data by submitted action
-			if ($_POST['action'] != '' && !empty($_POST['action'])) {
+			if (!empty($_POST['action']) && !empty($_POST['action'])) {
 
 				//prepare the array(s)
 				//send the array to the database class
@@ -106,7 +130,7 @@
 			}
 
 		//parse email addresses to single string csv string
-			if (substr_count($email_to, "\n") != 0) {
+			if (isset($email_to) && substr_count($email_to, "\n") != 0) {
 				$email_to_lines = explode("\n", $email_to);
 				if (is_array($email_to_lines) && @sizeof($email_to_lines) != 0) {
 					foreach ($email_to_lines as $email_to_line) {
@@ -129,7 +153,7 @@
 				}
 			}
 			else {
-				if (substr_count($email_to, ',') != 0) {
+				if (isset($email_to) && substr_count($email_to, ',') != 0) {
 					$email_to_array = explode(',', $email_to);
 					if (is_array($email_to_array) && @sizeof($email_to_array) != 0) {
 						foreach ($email_to_array as $email_to_address) {
@@ -140,7 +164,7 @@
 					}
 				}
 			}
-			if (is_array($email_to_addresses) && @sizeof($email_to_addresses) != 0) {
+			if (!empty($email_to_addresses) && is_array($email_to_addresses) && @sizeof($email_to_addresses) != 0) {
 				$email_to = implode(',', $email_to_addresses);
 				unset($email_to_array, $email_to_addresses);
 			}
@@ -184,7 +208,7 @@
 	}
 
 //pre-populate the form
-	if (is_array($_GET) && $_POST["persistformvar"] != "true") {
+	if (!empty($_GET) && is_array($_GET) && (empty($_POST["persistformvar"]) || $_POST["persistformvar"] != "true")) {
 		$sql = "select * from v_email_queue ";
 		$sql .= "where email_queue_uuid = :email_queue_uuid ";
 		//$sql .= "and domain_uuid = :domain_uuid ";
@@ -277,7 +301,7 @@
 	echo "	".$text['label-email_to']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	if (substr_count($email_to, ',') != 0) {
+	if (isset($email_to) && substr_count($email_to, ',') != 0) {
 		echo "	<textarea class='formfld' style='width: 450px; height: 100px;' name='email_to'>";
 		$email_to_array = explode(',', $email_to);
 		if (is_array($email_to_array) && @sizeof($email_to_array) != 0) {
@@ -373,7 +397,7 @@
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
 	echo "	<textarea class='formfld' style='width: 450px; height: 100px;' name='email_response'>".$email_response."</textarea>\n";
 	echo "<br />\n";
-	echo $text['description-email_response']."\n";
+	echo ($text['description-email_response'] ?? '')."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 

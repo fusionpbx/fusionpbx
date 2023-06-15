@@ -62,7 +62,7 @@
 //get total destination count from the database, check limit, if defined
 	if (!permission_exists('destination_domain')) {
 		if ($action == 'add') {
-			if ($_SESSION['limit']['destinations']['numeric'] != '') {
+			if (!empty($_SESSION['limit']['destinations']['numeric'])) {
 				$sql = "select count(*) from v_destinations where domain_uuid = :domain_uuid ";
 				$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 				$database = new database;
@@ -1067,7 +1067,7 @@
 	$select_style = $select_style ?? '';
 
 //pre-populate the form
-	if (!empty($_GET["id"]) > 0 && empty($_POST["persistformvar"])) {
+	if (!empty($_GET["id"]) && empty($_POST["persistformvar"])) {
 	 	if (is_uuid($_GET["id"])) {
 	 		$destination_uuid = $_GET["id"];
 			$sql = "select * from v_destinations ";

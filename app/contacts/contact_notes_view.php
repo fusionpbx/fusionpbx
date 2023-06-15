@@ -43,13 +43,13 @@
 	$sql .= "and contact_uuid = :contact_uuid ";
 	$sql .= "order by last_mod_date desc ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$parameters['contact_uuid'] = $contact_uuid;
+	$parameters['contact_uuid'] = $contact_uuid ?? '';
 	$database = new database;
 	$contact_notes = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
 //show if exists
-	if (is_array($contact_notes) && @sizeof($contact_notes) != 0) {
+	if (!empty($contact_notes)) {
 
 		//show the content
 			echo "<div class='grid' style='grid-template-columns: auto 190px;'>\n";

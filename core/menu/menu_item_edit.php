@@ -41,29 +41,50 @@
 	$language = new text;
 	$text = $language->get();
 
+//define the variables
+	$menu_uuid = null;
+	$menu_item_uuid = null;
+	$menu_item_title = '';
+	$menu_item_link = '';
+	$menu_item_category = '';
+	$menu_item_icon = '';
+	$menu_item_description = '';
+	$menu_item_protected = '';
+	$menu_item_parent_uuid = null;
+	$menu_item_order = null;
+
 //get the menu_uuid
-	$menu_uuid = $_REQUEST["id"];
-	$menu_item_uuid = $_REQUEST['menu_item_uuid'];
-	$group_uuid_name = $_REQUEST['group_uuid_name'];
-	$menu_item_group_uuid = $_REQUEST['menu_item_group_uuid'];
+	if (!empty($_REQUEST)) {
+		$menu_uuid = $_REQUEST["id"];
+		$menu_item_uuid = $_REQUEST['menu_item_uuid'] ?? null;
+		$group_uuid_name = $_REQUEST['group_uuid_name'] ?? null;
+		$menu_item_group_uuid = $_REQUEST['menu_item_group_uuid'] ?? null;
+	}
+
+//set the action
+	$action = '';
+	if (!empty($_REQUEST["a"])) {
+		$action = $_REQUEST["a"];
+	}
 
 //delete the group from the menu item
-	if ($_REQUEST["a"] == "delete" && permission_exists("menu_delete") && is_uuid($menu_item_group_uuid)) {
+	if ($action == "delete" && permission_exists("menu_delete") && is_uuid($menu_item_group_uuid)) {
 		//delete the group from the users
-			$array['menu_item_groups'][0]['menu_item_group_uuid'] = $menu_item_group_uuid;
-			$database = new database;
-			$database->app_name = 'menu';
-			$database->app_uuid = 'f4b3b3d2-6287-489c-2a00-64529e46f2d7';
-			$database->delete($array);
-			unset($array);
+		$array['menu_item_groups'][0]['menu_item_group_uuid'] = $menu_item_group_uuid;
+		$database = new database;
+		$database->app_name = 'menu';
+		$database->app_uuid = 'f4b3b3d2-6287-489c-2a00-64529e46f2d7';
+		$database->delete($array);
+		unset($array);
+
 		//redirect the browser
-			message::add($text['message-delete']);
-			header("Location: menu_item_edit.php?id=".urlencode($menu_uuid)."&menu_item_uuid=".urlencode($menu_item_uuid)."&menu_uuid=".urlencode($menu_uuid));
-			return;
+		message::add($text['message-delete']);
+		header("Location: menu_item_edit.php?id=".urlencode($menu_uuid)."&menu_item_uuid=".urlencode($menu_item_uuid)."&menu_uuid=".urlencode($menu_uuid));
+		return;
 	}
 
 //action add or update
-	if (is_uuid($_REQUEST["menu_item_uuid"])) {
+	if (!empty($_REQUEST["menu_item_uuid"]) && is_uuid($_REQUEST["menu_item_uuid"])) {
 		$action = "update";
 		$menu_item_uuid = $_REQUEST["menu_item_uuid"];
 	}
@@ -72,25 +93,24 @@
 	}
 
 //get the HTTP POST variables and set them as PHP variables
-	if (count($_POST) > 0) {
-		$menu_uuid = $_POST["menu_uuid"];
-		$menu_item_uuid = $_POST["menu_item_uuid"];
-		$menu_item_title = $_POST["menu_item_title"];
-		$menu_item_link = $_POST["menu_item_link"];
-		$menu_item_category = $_POST["menu_item_category"];
-		$menu_item_icon = $_POST["menu_item_icon"];
-		$menu_item_description = $_POST["menu_item_description"];
-		$menu_item_protected = $_POST["menu_item_protected"];
-		//$menu_item_uuid = $_POST["menu_item_uuid"];
-		$menu_item_parent_uuid = $_POST["menu_item_parent_uuid"];
-		$menu_item_order = $_POST["menu_item_order"];
+	if (!empty($_POST)) {
+		$menu_uuid = $_POST["menu_uuid"] ?? '';
+		$menu_item_uuid = $_POST["menu_item_uuid"] ?? '';
+		$menu_item_title = $_POST["menu_item_title"] ?? '';
+		$menu_item_link = $_POST["menu_item_link"] ?? '';
+		$menu_item_category = $_POST["menu_item_category"] ?? '';
+		$menu_item_icon = $_POST["menu_item_icon"] ?? '';
+		$menu_item_description = $_POST["menu_item_description"] ?? '';
+		$menu_item_protected = $_POST["menu_item_protected"] ?? '';
+		$menu_item_parent_uuid = $_POST["menu_item_parent_uuid"] ?? null;
+		$menu_item_order = $_POST["menu_item_order"] ?? '';
 	}
 
 //sanitize the menu link
 	$menu_item_link = preg_replace('#[^a-zA-Z0-9_:\-\.\&\=\?\/]#', '', $menu_item_link);
 
 //when a HTTP POST is available then process it
-	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
+	if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
 		if ($action == "update") {
 			$menu_item_uuid = $_POST["menu_item_uuid"];
@@ -123,7 +143,7 @@
 			}
 
 		//add or update the database
-		if ($_POST["persistformvar"] != "true") {
+		if (empty($_POST["persistformvar"])) {
 			//get the language from the menu
 				$sql = "select menu_language from v_menus ";
 				$sql .= "where menu_uuid = :menu_uuid ";
@@ -209,7 +229,7 @@
 				unset($parameters);
 
 			//add a group to the menu
-				if ($_REQUEST["a"] != "delete" && !empty($group_uuid_name) && permission_exists('menu_add')) {
+				if (!empty($group_uuid_name) && permission_exists('menu_add')) {
 					$group_data = explode('|', $group_uuid_name);
 					$group_uuid = $group_data[0];
 					$group_name = $group_data[1];
@@ -230,7 +250,7 @@
 				}
 
 			//add the menu item label
-				if ($_REQUEST["a"] != "delete" && !empty($menu_item_title) && permission_exists('menu_add')) {
+				if (!empty($menu_item_title) && permission_exists('menu_add')) {
 					$sql = "select count(*) from v_menu_languages ";
 					$sql .= "where menu_item_uuid = :menu_item_uuid ";
 					$sql .= "and menu_language = :menu_language ";
@@ -275,7 +295,7 @@
 				}
 
 			//redirect the user
-				if ($_REQUEST['submit'] == $text['button-add']) {
+				if (!empty($_REQUEST['submit']) && $_REQUEST['submit'] == $text['button-add']) {
 					header("Location: menu_item_edit.php?id=".urlencode($menu_uuid)."&menu_item_uuid=".urlencode($menu_item_uuid)."&menu_uuid=".urlencode($menu_uuid));
 				}
 				else {
@@ -286,7 +306,7 @@
 	}
 
 //pre-populate the form
-	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
+	if (!empty($_GET["menu_item_uuid"]) && empty($_POST["persistformvar"])) {
 		$menu_item_uuid = $_GET["menu_item_uuid"];
 
 		$sql = "select * from v_menu_items ";
@@ -344,8 +364,8 @@
 	unset($sql, $parameters);
 
 //set the assigned_groups array
-	if (is_array($menu_item_groups) && sizeof($menu_item_groups) != 0) {
-		$assigned_groups = array();
+	$assigned_groups = array();
+	if (!empty($menu_item_groups) && sizeof($menu_item_groups) != 0) {
 		foreach ($menu_item_groups as $field) {
 			if (!empty($field['group_name'])) {
 				if (is_uuid($field['group_uuid'])) {
@@ -358,7 +378,7 @@
 //get the groups
 	$sql = "select * from v_groups ";
 	$sql .= "where (domain_uuid is null or domain_uuid = :domain_uuid) ";
-	if (is_array($assigned_groups) && sizeof($assigned_groups) != 0) {
+	if (!empty($assigned_groups) && is_array($assigned_groups) && sizeof($assigned_groups) != 0) {
 		$sql .= "and group_uuid not in ('".implode("','",$assigned_groups)."') ";
 	}
 	$sql .= "order by domain_uuid desc, group_name asc ";
@@ -473,13 +493,13 @@
 	echo "	<tr>";
 	echo "		<td class='vncell' valign='top'>".$text['label-groups']."</td>";
 	echo "		<td class='vtable'>";
-	if (is_array($menu_item_groups) && sizeof($menu_item_groups) != 0) {
+	if (!empty($menu_item_groups) && sizeof($menu_item_groups) != 0) {
 		echo "<table cellpadding='0' cellspacing='0' border='0'>\n";
 		foreach($menu_item_groups as $field) {
 			if (!empty($field['group_name'])) {
 				echo "<tr>\n";
 				echo "	<td class='vtable' style='white-space: nowrap; padding-right: 30px;' nowrap='nowrap'>";
-				echo $field['group_name'].(($field['group_domain_uuid'] != '') ? "@".$_SESSION['domains'][$field['group_domain_uuid']]['domain_name'] : null);
+				echo $field['group_name'].((!empty($field['group_domain_uuid'])) ? "@".$_SESSION['domains'][$field['group_domain_uuid']]['domain_name'] : null);
 				echo "	</td>\n";
 				if (permission_exists('group_member_delete') || if_group("superadmin")) {
 					echo "	<td class='list_control_icons' style='width: 25px;'>";
@@ -492,13 +512,13 @@
 		echo "</table>\n";
 		echo "<br />\n";
 	}
-	if (is_array($groups)) {
+	if (!empty($groups)) {
 		echo "<select name='group_uuid_name' class='formfld' style='width: auto; margin-right: 3px;'>\n";
 		echo "	<option value=''></option>\n";
 		foreach($groups as $row) {
-			if ($field['group_level'] <= $_SESSION['user']['group_level']) {
+			if ($row['group_level'] <= $_SESSION['user']['group_level']) {
 				if (!is_array($assigned_groups) || !in_array($row["group_uuid"], $assigned_groups)) {
-					echo "	<option value='".$row['group_uuid']."|".$row['group_name']."'>".$row['group_name'].(($row['domain_uuid'] != '') ? "@".$_SESSION['domains'][$row['domain_uuid']]['domain_name'] : null)."</option>\n";
+					echo "	<option value='".$row['group_uuid']."|".$row['group_name']."'>".$row['group_name'].((!empty($row['domain_uuid'])) ? "@".$_SESSION['domains'][$row['domain_uuid']]['domain_name'] : null)."</option>\n";
 				}
 			}
 		}
@@ -532,8 +552,8 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	if ($action == "update") {
-		if ($menu_item_parent_uuid == "") {
+	if (!empty($action) && $action == "update") {
+		if (empty($menu_item_parent_uuid)) {
 			echo "	<tr>";
 			echo "		<td class='vncell'>".$text['label-menu_order']."</td>";
 			echo "		<td class='vtable'><input type='text' class='formfld' name='menu_item_order' value='".escape($menu_item_order)."'></td>";

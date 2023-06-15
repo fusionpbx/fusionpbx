@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2022
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -54,7 +54,7 @@
 
 //get total extension count from the database, check limit, if defined
 	if ($action == 'add') {
-		if ($_SESSION['limit']['extensions']['numeric'] != '') {
+		if (!empty($_SESSION['limit']['extensions']['numeric'])) {
 			$sql = "select count(*) ";
 			$sql .= "from v_extensions ";
 			$sql .= "where domain_uuid = :domain_uuid ";
@@ -65,14 +65,14 @@
 
 			if ($total_extensions >= $_SESSION['limit']['extensions']['numeric']) {
 				message::add($text['message-maximum_extensions'].' '.$_SESSION['limit']['extensions']['numeric'], 'negative');
-				header('Location: extensions.php'.(is_numeric($page) ? '?page='.$page : null));
+				header('Location: extensions.php'.(isset($page) && is_numeric($page) ? '?page='.$page : null));
 				exit;
 			}
 		}
 	}
 
 //get the http values and set them as php variables
-	if (count($_POST) > 0) {
+	if (!empty($_POST) && count($_POST) > 0) {
 
 		//get the values from the HTTP POST and save them as PHP variables
 			if ($action == 'add' || permission_exists("extension_extension")) {
@@ -95,8 +95,8 @@
 			$effective_caller_id_number = $_POST["effective_caller_id_number"];
 			$outbound_caller_id_name = $_POST["outbound_caller_id_name"];
 			$outbound_caller_id_number = $_POST["outbound_caller_id_number"];
-			$emergency_caller_id_name = $_POST["emergency_caller_id_name"];
-			$emergency_caller_id_number = $_POST["emergency_caller_id_number"];
+			$emergency_caller_id_name = $_POST["emergency_caller_id_name"] ?? null;
+			$emergency_caller_id_number = $_POST["emergency_caller_id_number"] ?? null;
 			$directory_first_name = $_POST["directory_first_name"];
 			$directory_last_name = $_POST["directory_last_name"];
 			$directory_visible = $_POST["directory_visible"];
@@ -319,7 +319,7 @@
 			}
 
 		//prevent users from bypassing extension limit by using range
-			if ($_SESSION['limit']['extensions']['numeric'] != '') {
+			if (!empty($_SESSION['limit']['extensions']['numeric'])) {
 				if (isset($total_extensions) && ($total_extensions ?? 0) + $range > $_SESSION['limit']['extensions']['numeric']) {
 					$range = $_SESSION['limit']['extensions']['numeric'] - $total_extensions;
 				}
@@ -808,7 +808,7 @@
 						header("Location: extensions.php");
 					}
 					else {
-						header("Location: extension_edit.php?id=".$extension_uuid.(is_numeric($page) ? '&page='.$page : null));
+						header("Location: extension_edit.php?id=".$extension_uuid.(isset($page) && is_numeric($page) ? '&page='.$page : null));
 					}
 					exit;
 			}
@@ -1355,7 +1355,7 @@
 							$templates = scandir($template_dir.'/'.$row["name"]);
 							foreach($templates as $dir) {
 								if (!empty($dir) && $dir != "." && $dir != ".." && $dir[0] != '.' && !empty($template_dir) && is_dir($template_dir.'/'.$row["name"].'/'.$dir)) {
-									$selected = $device_template == $row["name"]."/".$dir ? "selected='selected'" : null;
+									$selected = !empty($device_template) && $device_template == $row["name"]."/".$dir ? "selected='selected'" : null;
 									echo "				<option value='".escape($row["name"])."/".escape($dir)."' ".$selected.">".escape($row["name"])."/".escape($dir)."</option>\n";
 								}
 							}
@@ -1424,7 +1424,7 @@
 					if(empty($tmp)){
 						// $tmp = $row["destination_description"];
 					}
-					if(!empty($tmp) && !in_array($tmp, $in_list)){
+					if(!empty($tmp) && !empty($in_list) && is_array($in_list) && !in_array($tmp, $in_list)){
 						$in_list[] = $tmp;
 						if ($outbound_caller_id_name == $tmp) {
 							echo "		<option value='".escape($tmp)."' selected='selected'>".escape($tmp)."</option>\n";
@@ -1467,7 +1467,7 @@
 						$tmp = $row["destination_number"];
 					}
 					if(!empty($tmp)){
-						if ($outbound_caller_id_number == $tmp) {
+						if (!empty($outbound_caller_id_number) && $outbound_caller_id_number == $tmp) {
 							echo "		<option value='".escape($tmp)."' selected='selected'>".escape($tmp)."</option>\n";
 						}
 						else {

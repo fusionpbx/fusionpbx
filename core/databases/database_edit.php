@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -42,7 +42,7 @@
 	$text = $language->get();
 
 //action add or update
-	if (is_uuid($_REQUEST["id"])) {
+	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
 		$database_uuid = $_REQUEST["id"];
 	}
@@ -83,7 +83,7 @@ if (count($_POST)>0 && empty($_POST["persistformvar"])) {
 
 	//delete the database
 		if (permission_exists('database_delete')) {
-			if ($_POST['action'] == 'delete' && is_uuid($database_uuid)) {
+			if (!empty($_POST['action']) && $_POST['action'] == 'delete' && is_uuid($database_uuid)) {
 				//prepare
 					$array[0]['checked'] = 'true';
 					$array[0]['uuid'] = $database_uuid;
@@ -128,7 +128,7 @@ if (count($_POST)>0 && empty($_POST["persistformvar"])) {
 		}
 
 	//add or update the database
-	if ($_POST["persistformvar"] != "true") {
+	if (empty($_POST["persistformvar"])) {
 
 		//begin array
 			$array['databases'][0]['database_driver'] = $database_driver;
@@ -183,7 +183,7 @@ if (count($_POST)>0 && empty($_POST["persistformvar"])) {
 }
 
 //pre-populate the form
-	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
+	if (count($_GET)>0 && empty($_POST["persistformvar"])) {
 		$database_uuid = $_GET["id"];
 		$sql = "select * from v_databases ";
 		$sql .= "where database_uuid = :database_uuid ";

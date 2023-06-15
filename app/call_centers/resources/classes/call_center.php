@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2015 - 2021
+	Copyright (C) 2015 - 2023
 	All Rights Reserved.
 
 	Contributor(s):
@@ -294,8 +294,8 @@
 
 							//filter out unchecked, build where clause for below
 								foreach ($records as $x => $record) {
-									if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
-										$uuids[] = "'".$record['uuid']."'";
+									if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
+										$uuids[] = $record['uuid'];
 									}
 								}
 
@@ -303,7 +303,7 @@
 								if (is_array($uuids) && @sizeof($uuids) != 0) {
 									$sql = "select ".$this->uuid_prefix."uuid as uuid, dialplan_uuid, queue_name, queue_extension from v_".$this->table." ";
 									$sql .= "where domain_uuid = :domain_uuid ";
-									$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
+									$sql .= "and ".$this->uuid_prefix."uuid in ('".implode("','", $uuids)."') ";
 									$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 									$database = new database;
 									$rows = $database->select($sql, $parameters, 'all');
@@ -343,7 +343,7 @@
 									//delete the queue in the switch
 										if ($fp) {
 											foreach ($uuids as $uuid) {
-												$cmd = "api callcenter_config queue unload ".$call_center_queues[$uuid]['queue_extension']."@".$_SESSION["domin_name"];
+												$cmd = "api callcenter_config queue unload ".$call_center_queues[$uuid]['queue_extension']."@".$_SESSION["domain_name"];
 												$response = event_socket_request($fp, $cmd);
 											}
 										}
@@ -417,7 +417,7 @@
 
 							//filter out unchecked
 								foreach ($records as $x => $record) {
-									if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+									if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 										$uuids[] = $record['uuid'];
 									}
 								}
@@ -503,8 +503,8 @@
 
 							//get checked records
 								foreach ($records as $x => $record) {
-									if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
-										$uuids[] = "'".$record['uuid']."'";
+									if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
+										$uuids[] = $record['uuid'];
 									}
 								}
 
@@ -513,7 +513,7 @@
 
 									//primary table
 										$sql = "select * from v_".$this->table." ";
-										$sql .= "where ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
+										$sql .= "where ".$this->uuid_prefix."uuid in ('".implode("','", $uuids)."') ";
 										$database = new database;
 										$rows = $database->select($sql, $parameters, 'all');
 										if (is_array($rows) && @sizeof($rows) != 0) {

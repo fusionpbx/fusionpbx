@@ -46,6 +46,13 @@
 	$language = new text;
 	$text = $language->get();
 
+//set the defaults
+	$prefix_number = '';
+	$dialplan_description = '';
+	$limit = '';
+	$accountcode = '';
+	$toll_allow = '';
+
 //get the http post values and set theme as php variables
 	if (!empty($_POST)) {
 		//set the variables
@@ -996,7 +1003,7 @@ function type_onchange(dialplan_detail_type) {
 				echo "</optgroup>";
 				echo "<optgroup label='&nbsp; &nbsp;".$domain_name."'>\n";
 			}
-			if ($row['gateway'] == $gateway_name) {
+			if (!empty($gateway_name) && $row['gateway'] == $gateway_name) {
 				echo "<option value=\"".escape($row['gateway_uuid']).":".escape($row['gateway'])."\" selected=\"selected\">".escape($row['gateway'])."</option>\n";
 			}
 			else {
@@ -1004,7 +1011,7 @@ function type_onchange(dialplan_detail_type) {
 			}
 		}
 		else {
-			if ($row['gateway'] == $gateway_name) {
+			if (!empty($gateway_name) && $row['gateway'] == $gateway_name) {
 				echo "<option value=\"".escape($row['gateway_uuid']).":".escape($row['gateway'])."\" $onchange selected=\"selected\">".escape($row['gateway'])."</option>\n";
 			}
 			else {
@@ -1056,7 +1063,7 @@ function type_onchange(dialplan_detail_type) {
 				echo "	</optgroup>\n";
 				echo "	<optgroup label='&nbsp; &nbsp;".$domain_name."'>\n";
 			}
-			if ($row['gateway'] == $gateway_2_name) {
+			if (!empty($gateway_2_name) && $row['gateway'] == $gateway_2_name) {
 				echo "		<option value=\"".escape($row['gateway_uuid']).":".escape($row['gateway'])."\" selected=\"selected\">".escape($row['gateway'])."</option>\n";
 			}
 			else {
@@ -1064,7 +1071,7 @@ function type_onchange(dialplan_detail_type) {
 			}
 		}
 		else {
-			if ($row['gateway'] == $gateway_2_name) {
+			if (!empty($gateway_2_name) && $row['gateway'] == $gateway_2_name) {
 				echo "		<option value=\"".escape($row['gateway_uuid']).":".escape($row['gateway'])."\" selected=\"selected\">".escape($row['gateway'])."</option>\n";
 			}
 			else {
@@ -1116,7 +1123,7 @@ function type_onchange(dialplan_detail_type) {
 				echo "	</optgroup>\n";
 				echo "	<optgroup label='&nbsp; &nbsp;".$domain_name."'>\n";
 			}
-			if ($row['gateway'] == $gateway_3_name) {
+			if (!empty($gateway_3_name) && $row['gateway'] == $gateway_3_name) {
 				echo "		<option value=\"".escape($row['gateway_uuid']).":".escape($row['gateway'])."\" selected=\"selected\">".escape($row['gateway'])."</option>\n";
 			}
 			else {
@@ -1124,7 +1131,7 @@ function type_onchange(dialplan_detail_type) {
 			}
 		}
 		else {
-			if ($row['gateway'] == $gateway_3_name) {
+			if (!empty($gateway_3_name) && $row['gateway'] == $gateway_3_name) {
 				echo "		<option value=\"".escape($row['gateway_uuid']).":".escape($row['gateway'])."\" selected=\"selected\">".escape($row['gateway'])."</option>\n";
 			}
 			else {
@@ -1165,7 +1172,7 @@ function type_onchange(dialplan_detail_type) {
 	echo "	<div id=\"enter_custom_outbound_prefix_box\" style=\"display:none\">\n";
 	echo "		<input class='formfld' style='width: 10%;' type='text' name='custom-outbound-prefix' id=\"outbound_prefix\" maxlength='255'>\n";
 	echo "		<input type='button' class='btn' name='' onclick=\"update_outbound_prefix()\" value='".$text['button-add']."'>\n";
-	echo "		<br />".$text['description-enter-custom-outbound-prefix'].".\n";
+	//echo "		<br />".$text['description-enter-custom-outbound-prefix'].".\n";
 	echo "	</div>\n";
 
 	echo "	<select name='dialplan_expression_select' id='dialplan_expression_select' onchange=\"update_dialplan_expression()\" class='formfld'>\n";
@@ -1266,7 +1273,7 @@ function type_onchange(dialplan_detail_type) {
 		echo "		<option value='false' selected='true'>".$text['label-false']."</option>\n";
 		echo "	</select>\n";
 		echo "<br />\n";
-		echo $text['description-enable-pin_numbers']."\n";
+		//echo $text['description-enable-pin_numbers']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 	}
@@ -1278,7 +1285,7 @@ function type_onchange(dialplan_detail_type) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select name='dialplan_order' class='formfld'>\n";
 	//echo "		<option></option>\n";
-	if (strlen(htmlspecialchars($dialplan_order))> 0) {
+	if (!empty($dialplan_order) && strlen(htmlspecialchars($dialplan_order))> 0) {
 		echo "		<option selected='yes' value='".escape($dialplan_order)."'>".escape($dialplan_order)."</option>\n";
 	}
 	$i = 100;
@@ -1301,13 +1308,13 @@ function type_onchange(dialplan_detail_type) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='dialplan_enabled'>\n";
 	//echo "	<option value=''></option>\n";
-	if ($dialplan_enabled == "true") {
+	if (!empty($dialplan_enabled) && $dialplan_enabled == "true") {
 		echo "	<option value='true' selected='selected'>".$text['label-true']."</option>\n";
 	}
 	else {
 		echo "	<option value='true'>".$text['label-true']."</option>\n";
 	}
-	if ($dialplan_enabled == "false") {
+	if (!empty($dialplan_enabled) && $dialplan_enabled == "false") {
 		echo "	<option value='false' selected='selected'>".$text['label-false']."</option>\n";
 	}
 	else {
@@ -1333,7 +1340,7 @@ function type_onchange(dialplan_detail_type) {
 	echo "</table>";
 	echo "<br><br>";
 
-	if ($action == "update") {
+	if (!empty($action) && $action == "update") {
 		echo "<input type='hidden' name='dialplan_uuid' value='".escape($dialplan_uuid)."'>\n";
 	}
 	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";

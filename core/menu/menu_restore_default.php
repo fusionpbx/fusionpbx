@@ -25,7 +25,11 @@
 */
 
 //check permissions
-	if (!$included) {
+	if(!defined('STDIN')) {
+		//set the include path
+		$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+		set_include_path(parse_ini_file($conf[0])['document.root']);
+
 		//includes files
 		require_once dirname(__DIR__, 2) . "/resources/require.php";
 		require_once "resources/check_auth.php";
@@ -43,13 +47,15 @@
 	$text = $language->get();
 
 //get the http value and set as a php variable
-	if (!$included) {
+	if (!empty($_REQUEST["menu_uuid"])) {
 		$menu_uuid = $_REQUEST["menu_uuid"];
+	}
+	if (!empty($_REQUEST["menu_language"])) {
 		$menu_language = $_REQUEST["menu_language"];
 	}
 
 //menu restore default
-	require_once "resources/classes/menu.php";
+	//require_once "resources/classes/menu.php";
 	$menu = new menu;
 	$menu->menu_uuid = $menu_uuid;
 	$menu->menu_language = $menu_language;
@@ -64,7 +70,7 @@
 	unset($menu);
 
 //redirect
-	if (!$included) {
+	if(!defined('STDIN')) {
 		//show a message to the user
 		message::add($text['message-restore']);
 		header("Location: ".PROJECT_PATH."/core/menu/menu_edit.php?id=".urlencode($menu_uuid));

@@ -81,7 +81,7 @@
 		$domain_setting_name = strtolower($_POST["domain_setting_name"]);
 		$domain_setting_value = $_POST["domain_setting_value"];
 		$domain_setting_order = $_POST["domain_setting_order"];
-		$domain_setting_enabled = strtolower($_POST["domain_setting_enabled"] ?: 'false');
+		$domain_setting_enabled = strtolower($_POST["domain_setting_enabled"] ?? 'false');
 		$domain_setting_description = $_POST["domain_setting_description"];
 	}
 

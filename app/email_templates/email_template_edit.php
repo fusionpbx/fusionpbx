@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2018
+ Portions created by the Initial Developer are Copyright (C) 2018-2023
  the Initial Developer. All Rights Reserved.
 */
 
@@ -39,7 +39,7 @@
 	$text = $language->get();
 
 //action add or update
-	if (is_uuid($_REQUEST["id"])) {
+	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
 		$email_template_uuid = $_REQUEST["id"];
 	}
@@ -47,8 +47,18 @@
 		$action = "add";
 	}
 
+//set the defaults
+	$template_language = '';
+	$template_category = '';
+	$template_subcategory = '';
+	$template_subject = '';
+	$template_body = '';
+	$template_type = '';
+	$template_enabled = '';
+	$template_description = '';
+
 //get http post variables and set them to php variables
-	if (count($_POST) > 0) {
+	if (!empty($_POST)) {
 		$domain_uuid = $_POST["domain_uuid"];
 		$template_language = $_POST["template_language"];
 		$template_category = $_POST["template_category"];
@@ -56,12 +66,12 @@
 		$template_subject = $_POST["template_subject"];
 		$template_body = $_POST["template_body"];
 		$template_type = $_POST["template_type"];
-		$template_enabled = $_POST["template_enabled"] ?: 'false';
+		$template_enabled = $_POST["template_enabled"] ?? 'false';
 		$template_description = $_POST["template_description"];
 	}
 
 //process the user data and save it to the database
-	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
+	if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
 		//get the uuid from the POST
 			if ($action == "update") {
@@ -101,7 +111,7 @@
 			}
 
 		//add the email_template_uuid
-			if (!is_uuid($_POST["email_template_uuid"])) {
+			if (empty($_POST["email_template_uuid"]) || !is_uuid($_POST["email_template_uuid"])) {
 				$email_template_uuid = uuid();
 			}
 
@@ -141,7 +151,7 @@
 	}
 
 //pre-populate the form
-	if (is_array($_GET) && $_POST["persistformvar"] != "true") {
+	if (count($_GET)>0 && empty($_POST["persistformvar"])) {
 		$email_template_uuid = $_GET["id"];
 		$sql = "select * from v_email_templates ";
 		$sql .= "where email_template_uuid = :email_template_uuid ";
@@ -150,7 +160,7 @@
 		//$parameters['domain_uuid'] = $domain_uuid;
 		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
-		if (is_array($row) && @sizeof($row) != 0) {
+		if (!empty($row)) {
 			$domain_uuid = $row["domain_uuid"];
 			$template_language = $row["template_language"];
 			$template_category = $row["template_category"];
@@ -168,11 +178,11 @@
 	if (empty($template_enabled)) { $template_enabled = 'true'; }
 
 //load editor preferences/defaults
-	$setting_size = $_SESSION["editor"]["font_size"]["text"] != '' ? $_SESSION["editor"]["font_size"]["text"] : '12px';
-	$setting_theme = $_SESSION["editor"]["theme"]["text"] != '' ? $_SESSION["editor"]["theme"]["text"] : 'cobalt';
-	$setting_invisibles = $_SESSION["editor"]["invisibles"]["boolean"] != '' ? $_SESSION["editor"]["invisibles"]["boolean"] : 'false';
-	$setting_indenting = $_SESSION["editor"]["indent_guides"]["boolean"] != '' ? $_SESSION["editor"]["indent_guides"]["boolean"] : 'false';
-	$setting_numbering = $_SESSION["editor"]["line_numbers"]["boolean"] != '' ? $_SESSION["editor"]["line_numbers"]["boolean"] : 'true';
+	$setting_size = !empty($_SESSION["editor"]["font_size"]["text"]) ? $_SESSION["editor"]["font_size"]["text"] : '12px';
+	$setting_theme = !empty($_SESSION["editor"]["theme"]["text"]) ? $_SESSION["editor"]["theme"]["text"] : 'cobalt';
+	$setting_invisibles = !empty($_SESSION["editor"]["invisibles"]["boolean"]) ? $_SESSION["editor"]["invisibles"]["boolean"] : 'false';
+	$setting_indenting = !empty($_SESSION["editor"]["indent_guides"]["boolean"]) ? $_SESSION["editor"]["indent_guides"]["boolean"] : 'false';
+	$setting_numbering = !empty($_SESSION["editor"]["line_numbers"]["boolean"]) ? $_SESSION["editor"]["line_numbers"]["boolean"] : 'true';
 
 //create token
 	$object = new token;
@@ -406,7 +416,7 @@
 	}
 	echo "	</select>\n";
 	echo "<br />\n";
-	echo $text['description-domain_uuid']."\n";
+	echo !empty($text['description-domain_uuid'])."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 

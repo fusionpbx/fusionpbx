@@ -37,8 +37,11 @@
 		exit;
 	}
 
+//set additional variables
+	$show = $_GET["show"] ?? '';
+
 //get posted data
-	if (is_array($_POST['contacts'])) {
+	if (!empty($_POST['contacts'])) {
 		$action = $_POST['action'];
 		$search = $_POST['search'];
 		$name = $_POST['name'];
@@ -53,7 +56,7 @@
 	$user_group_uuids[] = $_SESSION["user_uuid"];
 
 //add the search term
-	if (isset($_GET["search"])) {
+	if (isset($search)) {
 		$search = strtolower($_GET["search"]);
 	}
 
@@ -65,7 +68,7 @@
 	$sql .= ") as contact_attachment_uuid ";
 	$sql .= "from v_contacts as c ";
 	$sql .= "where true ";
-	if ($_GET['show'] != "all" || !permission_exists('contact_all')) {
+	if ($show != "all" || !permission_exists('contact_all')) {
 		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	}
@@ -74,14 +77,14 @@
 		$sql .= "	contact_uuid in ( ";
 		$sql .= "		select contact_uuid from v_contact_groups ";
 		$sql .= "		where ";
-		if (is_array($user_group_uuids) && @sizeof($user_group_uuids) != 0) {
+		if (!empty($user_group_uuids)) {
 			foreach ($user_group_uuids as $index => $user_group_uuid) {
 				if (is_uuid($user_group_uuid)) {
 					$sql_where_or[] = "group_uuid = :group_uuid_".$index;
 					$parameters['group_uuid_'.$index] = $user_group_uuid;
 				}
 			}
-			if (is_array($sql_where_or) && @sizeof($sql_where_or) != 0) {
+			if (!empty($sql_where_or)) {
 				$sql .= " ( ".implode(' or ', $sql_where_or)." ) ";
 			}
 			unset($sql_where_or, $index, $user_group_uuid);
@@ -152,18 +155,18 @@
 	$sql .= "order by contact_organization asc ";
 	$sql .= "limit 300 ";
 	$database = new database;
-	$contact_array = $database->select($sql, $parameters, 'all');
+	$contact_array = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 
 //return the contacts as json
 	$i = 0;
-	if (is_array($contact_array)) {
+	if (!empty($contact_array)) {
 		foreach($contact_array as $row) {
 			$contact_name = array();
-			if ($row['contact_organization'] != '') { $contact_name[] = $row['contact_organization']; }
-			if ($row['contact_name_family'] != '') { $contact_name[] = $row['contact_name_family']; }
-			if ($row['contact_name_given'] != '') { $contact_name[] = $row['contact_name_given']; }
-			if ($row['contact_name_family'] == '' && $row['contact_name_given'] == '' && $row['contact_nickname'] != '') { $contact_name[] = $row['contact_nickname']; }
+			if (!empty($row['contact_organization'])) { $contact_name[] = $row['contact_organization']; }
+			if (!empty($row['contact_name_family'])) { $contact_name[] = $row['contact_name_family']; }
+			if (!empty($row['contact_name_given'])) { $contact_name[] = $row['contact_name_given']; }
+			if (empty($row['contact_name_family']) && empty($row['contact_name_given']) && !empty($row['contact_nickname'])) { $contact_name[] = $row['contact_nickname']; }
 			$contacts[$i]['id'] = $row['contact_uuid'];
 			$contacts[$i]['name'] = implode(', ', $contact_name);
 			$i++;

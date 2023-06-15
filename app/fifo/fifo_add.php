@@ -45,16 +45,16 @@
 
 //get http values and set them as variables
 	if (count($_POST)>0) {
-		$order_by = $_GET["order_by"];
-		$order = $_GET["order"];
+		$order_by = $_GET["order_by"] ?? null;
+		$order = $_GET["order"] ?? null;
 		$extension_name = $_POST["extension_name"];
 		$queue_extension_number = $_POST["queue_extension_number"];
 		$agent_queue_extension_number = $_POST["agent_queue_extension_number"];
 		$agent_login_logout_extension_number = $_POST["agent_login_logout_extension_number"];
 		$dialplan_order = $_POST["dialplan_order"];
-		$pin_number = $_POST["pin_number"];
-		$profile = $_POST["profile"];
-		$flags = $_POST["flags"];
+		$pin_number = $_POST["pin_number"] ?? null;
+		$profile = $_POST["profile"] ?? null;
+		$flags = $_POST["flags"] ?? null;
 		$dialplan_enabled = $_POST["dialplan_enabled"];
 		$dialplan_description = $_POST["dialplan_description"];
 		if (empty($dialplan_enabled)) { $dialplan_enabled = "true"; } //set default to enabled
@@ -484,12 +484,18 @@
 	echo "    ".$text['label-enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <select class='formfld' name='dialplan_enabled'>\n";
-	echo "    	<option value='true'>".$text['option-true']."</option>\n";
-	echo "    	<option value='false' ".(!empty($dialplan_enabled) && $dialplan_enabled == "false" ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-	echo "    </select>\n";
-	echo "<br />\n";
-	echo "\n";
+	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
+		echo "	<label class='switch'>\n";
+		echo "		<input type='checkbox' id='dialplan_enabled' name='dialplan_enabled' value='true' checked='checked'>\n";
+		echo "		<span class='slider'></span>\n";
+		echo "	</label>\n";
+	}
+	else {
+		echo "	<select class='formfld' id='dialplan_enabled' name='dialplan_enabled'>\n";
+		echo "		<option value='true' ".($dialplan_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($dialplan_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "	</select>\n";
+	}
 	echo "</td>\n";
 	echo "</tr>\n";
 

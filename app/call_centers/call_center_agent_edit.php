@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -42,15 +42,20 @@
 	$language = new text;
 	$text = $language->get();
 
+//set the defaults
+	$agent_id = '';
+	$agent_name = '';
+	$agent_password = '';
+
 //check for duplicates
-	if ($_GET["check"] == 'duplicate') {
+	if (!empty($_GET["check"]) && $_GET["check"] == 'duplicate') {
 		//agent id
-			if ($_GET["agent_id"] != '') {
+			if (!empty($_GET["agent_id"])) {
 				$sql = "select agent_name ";
 				$sql .= "from v_call_center_agents ";
 				$sql .= "where agent_id = :agent_id ";
 				$sql .= "and domain_uuid = :domain_uuid ";
-				if (is_uuid($_GET["agent_uuid"])) {
+				if (!empty($_GET["agent_uuid"]) && is_uuid($_GET["agent_uuid"])) {
 					$sql .= " and call_center_agent_uuid <> :call_center_agent_uuid ";
 					$parameters['call_center_agent_uuid'] = $_GET["agent_uuid"];
 				}
@@ -58,7 +63,7 @@
 				$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 				$database = new database;
 				$row = $database->select($sql, $parameters, 'row');
-				if (is_array($row) && sizeof($row) != 0 && $row['agent_name'] != '') {
+				if (!empty($row) && !empty($row['agent_name'])) {
 					echo $text['message-duplicate_agent_id'].(if_group("superadmin") ? ": ".$row["agent_name"] : null);
 				}
 				unset($sql, $parameters);
@@ -68,7 +73,7 @@
 	}
 
 //action add or update
-	if (is_uuid($_REQUEST["id"])) {
+	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
 		$call_center_agent_uuid = $_REQUEST["id"];
 	}
@@ -77,8 +82,8 @@
 	}
 
 //get http post variables and set them to php variables
-	if (is_array($_POST)) {
-		$call_center_agent_uuid = $_POST["call_center_agent_uuid"];
+	if (!empty($_POST)) {
+		$call_center_agent_uuid = $_POST["call_center_agent_uuid"] ?? null;
 		$user_uuid = $_POST["user_uuid"];
 		$agent_name = $_POST["agent_name"];
 		$agent_type = $_POST["agent_type"];
@@ -97,7 +102,7 @@
 	}
 
 //process the user data and save it to the database
-	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
+	if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
 		//validate the token
 			$token = new token;
@@ -283,7 +288,7 @@
 	$destination = new destinations;
 
 //pre-populate the form
-	if (is_uuid($_GET["id"]) && $_POST["persistformvar"] != "true") {
+	if (!empty($_GET["id"]) && is_uuid($_GET["id"]) && empty($_POST["persistformvar"])) {
 		$call_center_agent_uuid = $_GET["id"];
 		$sql = "select * from v_call_center_agents ";
 		$sql .= "where domain_uuid = :domain_uuid ";
@@ -292,7 +297,7 @@
 		$parameters['call_center_agent_uuid'] = $call_center_agent_uuid;
 		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
-		if (is_array($row) && @sizeof($row) != 0) {
+		if (!empty($row)) {
 			$call_center_agent_uuid = $row["call_center_agent_uuid"];
 			$user_uuid = $row["user_uuid"];
 			$agent_name = $row["agent_name"];
@@ -351,7 +356,7 @@
 		function check_duplicates() {
 			//check agent id
 				var agent_id = document.getElementById('agent_id').value;
-				$("#duplicate_agent_id_response").load("call_center_agent_edit.php?check=duplicate&agent_id="+agent_id+"&agent_uuid=<?php echo escape($call_center_agent_uuid); ?>", function() {
+				$("#duplicate_agent_id_response").load("call_center_agent_edit.php?check=duplicate&agent_id="+agent_id+"&agent_uuid=<?php echo escape($call_center_agent_uuid ?? ''); ?>", function() {
 					var duplicate_agent_id = false;
 					if ($("#duplicate_agent_id_response").html() != '') {
 						$('#agent_id').addClass('formfld_highlight_bad');
@@ -445,18 +450,13 @@
 	echo "		<td class='vtable' align='left'>";
 	echo "			<select name=\"user_uuid\" class='formfld' style='width: auto;'>\n";
 	echo "			<option value=\"\"></option>\n";
-	foreach($users as $field) {
-		if ($user_uuid == $field['user_uuid']) {
-			echo "			<option value='".escape($field['user_uuid'])."' selected='selected'>".escape($field['username'])."</option>\n";
-		}
-		else {
-			echo "			<option value='".escape($field['user_uuid'])."' $selected>".escape($field['username'])."</option>\n";
-		}
+	foreach ($users as $field) {
+		echo "			<option value='".escape($field['user_uuid'])."' ".(!empty($user_uuid) && $user_uuid == $field['user_uuid'] ? "selected='selected'" : null).">".escape($field['username'])."</option>\n";
 	}
 	echo "			</select>";
 	unset($users);
 	echo "			<br>\n";
-	echo "			".$text['description-users']."\n";
+	echo "			".!empty($text['description-users'])."\n";
 	echo "		</td>";
 	echo "	</tr>";
 
@@ -488,7 +488,7 @@
 	echo "	".$text['label-contact']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo $destination->select('user_contact', 'agent_contact', $agent_contact);
+	echo $destination->select('user_contact', 'agent_contact', ($agent_contact ?? null));
 	echo "<br />\n";
 	echo $text['description-contact']."\n";
 	echo "</td>\n";
@@ -500,31 +500,11 @@
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='agent_status'>\n";
-	echo "	<option value=''></option>\n";
-	if ($agent_status == "Logged Out") {
-		echo "	<option value='Logged Out' SELECTED >".$text['option-logged_out']."</option>\n";
-	}
-	else {
-		echo "	<option value='Logged Out'>".$text['option-logged_out']."</option>\n";
-	}
-	if ($agent_status == "Available") {
-		echo "	<option value='Available' SELECTED >".$text['option-available']."</option>\n";
-	}
-	else {
-		echo "	<option value='Available'>".$text['option-available']."</option>\n";
-	}
-	if ($agent_status == "Available (On Demand)") {
-		echo "	<option value='Available (On Demand)' SELECTED >".$text['option-available_on_demand']."</option>\n";
-	}
-	else {
-		echo "	<option value='Available (On Demand)'>".$text['option-available_on_demand']."</option>\n";
-	}
-	if ($agent_status == "On Break") {
-		echo "	<option value='On Break' SELECTED >".$text['option-on_break']."</option>\n";
-	}
-	else {
-		echo "	<option value='On Break'>".$text['option-on_break']."</option>\n";
-	}
+	echo "		<option value=''></option>\n";
+	echo "		<option value='Logged Out' ".(!empty($agent_status) && $agent_status == "Logged Out" ? "selected='selected'" : null).">".$text['option-logged_out']."</option>\n";
+	echo "		<option value='Available' ".(!empty($agent_status) && $agent_status == "Available" ? "selected='selected'" : null).">".$text['option-available']."</option>\n";
+	echo "		<option value='Available (On Demand)' ".(!empty($agent_status) && $agent_status == "Available (On Demand)" ? "selected='selected'" : null).">".$text['option-available_on_demand']."</option>\n";
+	echo "		<option value='On Break' ".(!empty($agent_status) && $agent_status == "On Break" ? "selected='selected'" : null).">".$text['option-on_break']."</option>\n";
 	echo "	</select>\n";
 	echo "<br />\n";
 	echo $text['description-status']."\n";
@@ -592,8 +572,8 @@
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='agent_record'>\n";
-	echo "	<option value='true' ".($agent_record == "true" ?  "selected='selected'" : '')." >".$text['option-true']."</option>\n";
-	echo "	<option value='false' ".($agent_record != "true" ?  "selected='selected'" : '').">".$text['option-false']."</option>\n";
+	echo "		<option value='true'>".$text['option-true']."</option>\n";
+	echo "		<option value='false' ".(!empty($agent_record) && $agent_record != "true" ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 	echo "	</select>\n";
 	echo "<br />\n";
 	echo $text['description-record_template']."\n";

@@ -497,7 +497,7 @@
 					fclose($handle);
 
 				//save to the data
-					if (is_array($array)) {
+					if (!empty($array) && is_array($array)) {
 						$database = new database;
 						$database->app_name = 'destinations';
 						$database->app_uuid = '5ec89622-b19c-3559-64f0-afde802ab139';

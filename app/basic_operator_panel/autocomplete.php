@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -181,8 +181,8 @@
 	}
 
 //output suggestions, if any
-	if (sizeof($suggestions) > 0) {
-		$resp .= "[\n";
+	if (!empty($suggestions) && is_array($suggestions) && @sizeof($suggestions) > 0) {
+		$resp = "[\n";
 		$resp .= implode(",\n", $suggestions)."\n";
 		$resp .= "]";
 

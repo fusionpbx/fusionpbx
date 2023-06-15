@@ -341,7 +341,7 @@
 					fclose($handle);
 
 				//save to the data
-					if (is_array($array)) {
+					if (!empty($array) && is_array($array)) {
 						$database = new database;
 						$database->app_name = 'extensions';
 						$database->app_uuid = 'e68d9689-2769-e013-28fa-6214bf47fca3';

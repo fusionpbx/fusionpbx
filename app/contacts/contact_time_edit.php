@@ -42,7 +42,7 @@
 	$text = $language->get();
 
 //action add or update
-	if (is_uuid($_REQUEST["id"])) {
+	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
 		$contact_time_uuid = $_REQUEST["id"];
 	}
@@ -51,19 +51,19 @@
 	}
 
 //get the contact uuid
-	if (is_uuid($_GET["contact_uuid"])) {
+	if (!empty($_GET["contact_uuid"]) && is_uuid($_GET["contact_uuid"])) {
 		$contact_uuid = $_GET["contact_uuid"];
 	}
 
 //get http post variables and set them to php variables
-	if (is_array($_POST) && @sizeof($_POST) != 0) {
+	if (!empty($_POST)) {
 		$time_start = $_POST["time_start"];
 		$time_stop = $_POST["time_stop"];
 		$time_description = $_POST["time_description"];
 	}
 
 //process the form data
-	if (is_array($_POST) && @sizeof($_POST) != 0 && empty($_POST["persistformvar"])) {
+	if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
 		//set the uuid
 			if ($action == "update") {
@@ -94,7 +94,7 @@
 			}
 
 		//add or update the database
-			if ($_POST["persistformvar"] != "true") {
+			if (empty($_POST["persistformvar"])) {
 
 				//update last modified
 				$array['contacts'][0]['contact_uuid'] = $contact_uuid;
@@ -126,7 +126,7 @@
 					message::add($text['message-update']);
 				}
 
-				if (is_array($array) && @sizeof($array) != 0) {
+				if (!empty($array)) {
 					$array['contact_times'][0]['domain_uuid'] = $domain_uuid;
 					$array['contact_times'][0]['contact_uuid'] = $contact_uuid;
 					$array['contact_times'][0]['user_uuid'] = $_SESSION["user"]["user_uuid"];
@@ -148,7 +148,7 @@
 	}
 
 //pre-populate the form
-	if (is_array($_GET) && @sizeof($_GET) != 0 && $_POST["persistformvar"] != "true") {
+	if (!empty($_GET) && empty($_POST["persistformvar"])) {
 		$contact_time_uuid = $_GET["id"];
 		$sql = "select ct.*, u.username ";
 		$sql .= "from v_contact_times as ct, v_users as u ";
@@ -158,7 +158,7 @@
 		$sql .= "and ct.user_uuid = :user_uuid ";
 		$sql .= "and contact_time_uuid = :contact_time_uuid ";
 		$parameters['domain_uuid'] = $domain_uuid;
-		$parameters['contact_uuid'] = $contact_uuid;
+		$parameters['contact_uuid'] = $contact_uuid ?? '';
 		$parameters['user_uuid'] = $_SESSION["user"]["user_uuid"];
 		$parameters['contact_time_uuid'] = $contact_time_uuid;
 		$database = new database;
@@ -195,7 +195,7 @@
 	}
 	echo "	</div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'contact_edit.php?id='.urlencode($contact_uuid)]);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'contact_edit.php?id='.urlencode($contact_uuid ?? '')]);
 	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save']);
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";

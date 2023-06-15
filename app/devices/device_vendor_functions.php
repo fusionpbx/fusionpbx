@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2016-2022
+ Portions created by the Initial Developer are Copyright (C) 2016-2023
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -43,14 +43,14 @@
 	$text = $language->get();
 
 //get the http post data
-	if (is_array($_POST['vendor_functions'])) {
+	if (!empty($_POST['vendor_functions']) && is_array($_POST['vendor_functions'])) {
 		$action = $_POST['action'];
 		$device_vendor_uuid = $_POST['device_vendor_uuid'];
 		$vendor_functions = $_POST['vendor_functions'];
 	}
 
 //process the http post data by action
-	if ($action != '' && is_array($vendor_functions) && @sizeof($vendor_functions) != 0) {
+	if (!empty($action) && !empty($vendor_functions) && is_array($vendor_functions) && @sizeof($vendor_functions) != 0) {
 		switch ($action) {
 			case 'toggle':
 				if (permission_exists('device_vendor_function_edit')) {
@@ -73,8 +73,8 @@
 	}
 
 //get variables used to control the order
-	$order_by = $_GET["order_by"];
-	$order = $_GET["order"];
+	$order_by = $_GET["order_by"] ?? null;
+	$order = $_GET["order"] ?? null;
 
 //prepare to page the results
 	$sql = "select count(*) from v_device_vendor_functions ";
@@ -121,7 +121,7 @@
 	}
 	$parameters['device_vendor_uuid'] = $device_vendor_uuid;
 	$sql .= order_by($order_by, $order, 'type', 'asc');
-	$sql .= limit_offset($rows_per_page, $offset);
+	$sql .= limit_offset($rows_per_page, $offset ?? null);
 	$database = new database;
 	$vendor_functions = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
@@ -148,7 +148,7 @@
 	if (permission_exists('device_vendor_function_delete') && $vendor_functions) {
 		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','name'=>'btn_delete','style'=>'display: none;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
-	if ($paging_controls_mini != '') {
+	if (!empty($paging_controls_mini)) {
 		echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>\n";
 	}
 	echo "	</div>\n";
@@ -166,7 +166,7 @@
 	echo "<tr class='list-header'>\n";
 	if (permission_exists('device_vendor_function_add') || permission_exists('device_vendor_function_edit') || permission_exists('device_vendor_function_delete')) {
 		echo "	<th class='checkbox'>\n";
-		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".($vendor_functions ?: "style='visibility: hidden;'").">\n";
+		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".(empty($vendor_functions) ? "style='visibility: hidden;'" : null).">\n";
 		echo "	</th>\n";
 	}
 	echo th_order_by('type', $text['label-type'], $order_by, $order);
@@ -175,7 +175,7 @@
 	echo "<th class='hide-sm-dn'>".$text['label-groups']."</th>\n";
 	echo th_order_by('enabled', $text['label-enabled'], $order_by, $order, null, "class='center'");
 	echo th_order_by('description', $text['label-description'], $order_by, $order, null, "class='hide-sm-dn'");
-	if (permission_exists('device_vendor_function_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+	if (permission_exists('device_vendor_function_edit') && !empty($_SESSION['theme']['list_row_edit_button']['boolean']) && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
@@ -251,7 +251,7 @@
 				}
 				echo "	</td>\n";
 				echo "	<td class='description overflow hide-sm-dn'>".escape($row['description'])."</td>\n";
-				if (permission_exists('device_vendor_function_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+				if (permission_exists('device_vendor_function_edit') && !empty($_SESSION['theme']['list_row_edit_button']['boolean']) && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
 					echo "	<td class='action-button'>\n";
 					echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
 					echo "	</td>\n";
@@ -264,7 +264,7 @@
 
 	echo "</table>\n";
 	echo "<br />\n";
-	echo "<div align='center'>".$paging_controls."</div>\n";
+	echo "<div align='center'>".($paging_controls ?? '')."</div>\n";
 
 	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "</form>\n";

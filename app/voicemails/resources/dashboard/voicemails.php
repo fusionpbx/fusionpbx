@@ -28,7 +28,6 @@
 
 //get the voicemail
 	$vm = new voicemail;
-	$vm->db = $db;
 	$vm->domain_uuid = $_SESSION['domain_uuid'];
 	$vm->order_by = $order_by ?? null;
 	$vm->order = $order ?? null;
@@ -116,7 +115,7 @@
 			if (is_uuid($voicemail_uuid)) {
 				$tr_link = "href='".PROJECT_PATH."/app/voicemails/voicemail_messages.php?id=".(permission_exists('voicemail_view') ? $voicemail_uuid : $row['ext'])."'";
 				echo "<tr ".$tr_link." style='cursor: pointer;'>";
-				echo "	<td class='".$row_style[$c]." hud_text'><a href='".PROJECT_PATH."/app/voicemails/voicemail_messages.php?id=".(permission_exists('voicemail_view') ? $voicemail_uuid : $row['ext'])."'>".$row['ext']."</a></td>";
+				echo "	<td class='".$row_style[$c]." hud_text'><a href='".PROJECT_PATH."/app/voicemails/voicemail_messages.php?id=".(permission_exists('voicemail_view') ? $voicemail_uuid : $row['ext'])."&back=".urlencode($_SERVER["REQUEST_URI"])."'>".$row['ext']."</a></td>";
 				echo "	<td class='".$row_style[$c]." hud_text' style='text-align: center;'>".$row['new']."</td>";
 				echo "	<td class='".$row_style[$c]." hud_text' style='text-align: center;'>".$row['total']."</td>";
 				echo "</tr>";

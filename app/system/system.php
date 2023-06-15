@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -157,7 +157,7 @@
 			echo "	<td class=\"row_style1\">$switch_version ($switch_bits)</td>\n";
 			echo "</tr>\n";
 			preg_match("/\(git\s*(.*?)\s*\d+\w+\s*\)/", $switch_version, $matches);
-			$switch_git_info = $matches[1];
+			$switch_git_info = $matches[1] ?? null;
 			if(!empty($switch_git_info)){
 				echo "<tr>\n";
 				echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";

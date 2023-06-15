@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2014
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -25,7 +25,11 @@
 */
 
 //check permisions
-	if (!$included) {
+	if (empty($included) || !$included) {
+		//set the include path
+		$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+		set_include_path(parse_ini_file($conf[0])['document.root']);
+
 		//includes files
 		require_once dirname(__DIR__, 2) . "/resources/require.php";
 		require_once "resources/check_auth.php";
@@ -45,11 +49,10 @@
 //permission restore default
 	require_once "core/groups/resources/classes/permission.php";
 	$permission = new permission;
-	$permission->db = $db;
 	$permission->restore();
 
 //redirect the users
-	if (!$included) {
+	if (empty($included) || !$included) {
 		//show a message to the user
 		message::add($text['message-restore']);
 		header("Location: groups.php");

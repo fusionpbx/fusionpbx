@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018-2020
+	Portions created by the Initial Developer are Copyright (C) 2018-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -206,13 +206,13 @@
 	echo "	<div class='heading'><b>".$text['title-group']."</b></div>\n";
 	echo "	<div class='actions'>\n";
 	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','link'=>'groups.php']);
-	if (permission_exists('group_permission_view')) {
+	if ($action == 'update' && permission_exists('group_permission_view')) {
 		$button_margin = 'margin-left: 15px;';
-		echo button::create(['type'=>'button','label'=>$text['button-permissions'],'icon'=>'key','style'=>$button_margin,'link'=>'group_permissions.php?group_uuid='.urlencode($group_uuid ?? '')]);
+		echo button::create(['type'=>'button','label'=>$text['button-permissions'],'icon'=>'key','style'=>$button_margin,'link'=>'group_permissions.php?group_uuid='.urlencode($group_uuid)]);
 	}
-	if (permission_exists('group_member_view')) {
+	if ($action == 'update' && permission_exists('group_member_view')) {
 		$button_margin = 'margin-left: 0px;';
-		echo button::create(['type'=>'button','label'=>$text['button-members'],'icon'=>'users','style'=>$button_margin,'link'=>'group_members.php?group_uuid='.urlencode($group_uuid ?? '')]);
+		echo button::create(['type'=>'button','label'=>$text['button-members'],'icon'=>'users','style'=>$button_margin,'link'=>'group_members.php?group_uuid='.urlencode($group_uuid)]);
 	}
 	if ($action == 'update' && permission_exists('group_add')) {
 		$button_margin = 'margin-left: 15px;';
@@ -301,7 +301,7 @@
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
 	echo "	<select class='formfld' name='group_protected'>\n";
 	echo "		<option value='false'>".$text['label-false']."</option>\n";
-	echo "		<option value='true' ".($group_protected == "true" ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
+	echo "		<option value='true' ".(!empty($group_protected) && $group_protected == "true" ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
 	echo "	</select>\n";
 	echo "<br />\n";
 	//echo $text['description-group_protected']."\n";

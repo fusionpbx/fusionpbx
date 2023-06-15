@@ -42,15 +42,21 @@
 	$language = new text;
 	$text = $language->get();
 
+//set additional variables
+	$show = $_GET["show"] ?? '';
+
+//set from session variables
+	$list_row_edit_button = !empty($_SESSION['theme']['list_row_edit_button']['boolean']) ? $_SESSION['theme']['list_row_edit_button']['boolean'] : 'false';
+
 //get posted data
-	if (is_array($_POST['conferences'])) {
+	if (!empty($_POST['conferences'])) {
 		$action = $_POST['action'];
 		$search = $_POST['search'];
 		$conferences = $_POST['conferences'];
 	}
 
 //process the http post data by action
-	if ($action != '' && is_array($conferences) && @sizeof($conferences) != 0) {
+	if (!empty($action) && !empty($conferences)) {
 		switch ($action) {
 			case 'copy':
 				if (permission_exists('conference_add')) {
@@ -77,11 +83,11 @@
 	}
 
 //get variables used to control the order
-	$order_by = $_GET["order_by"];
-	$order = $_GET["order"];
+	$order_by = $_GET["order_by"] ?? '';
+	$order = $_GET["order"] ?? '';
 
 //add the search term
-	$search = strtolower($_GET["search"]);
+	$search = strtolower($_GET["search"] ?? '');
 	if (!empty($search)) {
 		$sql_search = "and (";
 		$sql_search .= "lower(conference_name) like :search ";
@@ -97,7 +103,7 @@
 		//show all extensions
 		$sql = "select count(*) from v_conferences ";
 		$sql .= "where true ";
-		if ($_GET['show'] != "all" || !permission_exists('conference_all')) {
+		if ($show != "all" || !permission_exists('conference_all')) {
 			$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
 			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		}
@@ -110,17 +116,17 @@
 		$sql .= "and u.user_uuid = :user_uuid ";
 		$parameters['user_uuid'] = $_SESSION['user_uuid'];
 	}
-	$sql .= $sql_search;
+	$sql .= $sql_search ?? '';
 	$database = new database;
-	$num_rows = $database->select($sql, $parameters, 'column');
+	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 
 //prepare to page the results
-	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$rows_per_page = (!empty($_SESSION['domain']['paging']['numeric'])) ? $_SESSION['domain']['paging']['numeric'] : 50;
 	$param = "&search=".urlencode($search);
-	if ($_GET['show'] == "all" && permission_exists('conference_all')) {
+	if ($show == "all" && permission_exists('conference_all')) {
 		$param .= "&show=all";
 	}
-	$page = $_GET['page'];
+	$page = $_GET['page'] ?? '';
 	if (empty($page)) { $page = 0; $_GET['page'] = 0; }
 	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
 	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
@@ -131,7 +137,7 @@
 	$sql .= order_by($order_by, $order);
 	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;
-	$conferences = $database->select($sql, $parameters, 'all');
+	$conferences = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 
 //create token
@@ -163,7 +169,7 @@
 	}
 	echo 		"<form id='form_search' class='inline' method='get'>\n";
 	if (permission_exists('conference_all')) {
-		if ($_GET['show'] == 'all') {
+		if ($show == 'all') {
 			echo "		<input type='hidden' name='show' value='all'>";
 		}
 		else {
@@ -202,10 +208,10 @@
 	echo "<tr class='list-header'>\n";
 	if (permission_exists('conference_add') || permission_exists('conference_edit') || permission_exists('conference_delete')) {
 		echo "	<th class='checkbox'>\n";
-		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".($conferences ?: "style='visibility: hidden;'").">\n";
+		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".(!empty($conferences) ?: "style='visibility: hidden;'").">\n";
 		echo "	</th>\n";
 	}
-	if ($_GET['show'] == "all" && permission_exists('conference_all')) {
+	if ($show == "all" && permission_exists('conference_all')) {
 		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, $param, "class='shrink'");
 	}
 	echo th_order_by('conference_name', $text['table-name'], $order_by, $order);
@@ -215,12 +221,12 @@
 	echo "<th style='text-align: center;'>".$text['label-tools']."</th>\n";
 	echo th_order_by('conference_enabled', $text['table-enabled'], $order_by, $order, null, "class='center'");
 	echo th_order_by('conference_description', $text['table-description'], $order_by, $order, null, "class='hide-sm-dn'");
-	if (permission_exists('conference_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+	if (permission_exists('conference_edit') && $list_row_edit_button == 'true') {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
 
-	if (is_array($conferences) && @sizeof($conferences) != 0) {
+	if (!empty($conferences)) {
 		$x = 0;
 		foreach($conferences as $row) {
 			if (permission_exists('conference_edit')) {
@@ -233,7 +239,7 @@
 				echo "		<input type='hidden' name='conferences[$x][uuid]' value='".escape($row['conference_uuid'])."' />\n";
 				echo "	</td>\n";
 			}
-			if ($_GET['show'] == "all" && permission_exists('conference_all')) {
+			if ($show == "all" && permission_exists('conference_all')) {
 				if (!empty($_SESSION['domains'][$row['domain_uuid']]['domain_name'])) {
 					$domain = $_SESSION['domains'][$row['domain_uuid']]['domain_name'];
 				}
@@ -269,7 +275,7 @@
 				echo $text['label-'.$row['conference_enabled']];
 			}
 			echo "	<td class='description overflow hide-sm-dn'>".escape($row['conference_description'])."&nbsp;</td>\n";
-			if (permission_exists('conference_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+			if (permission_exists('conference_edit') && $list_row_edit_button == 'true') {
 				echo "	<td class='action-button'>";
 				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
 				echo "	</td>\n";

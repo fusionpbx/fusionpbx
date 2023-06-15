@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2021
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -908,7 +908,7 @@
 										// split up failover bridges and get variables in statement
 										$failover_bridges = explode('|', $dialplan_detail_data);
 										preg_match('/^\{.*\}/', $failover_bridges[0], $bridge_vars);
-										$bridge_vars = $bridge_vars[0];
+										$bridge_vars = $bridge_vars[0] ?? '';
 
 										// rename parse and rename each gateway
 										foreach ($failover_bridges as $bridge_statement_exploded) {

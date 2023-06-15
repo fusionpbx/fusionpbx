@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -99,6 +99,7 @@
 			}
 
 		//check for all required data
+			$msg = null;
 			//if (empty($domain_uuid)) { $msg .= $text['label-required-domain_uuid']."<br>\n"; }
 	 		if (empty($dialplan_name)) { $msg .= $text['label-required-dialplan_name']."<br>\n"; }
 	 		if (empty($dialplan_number)) { $msg .= $text['label-required-dialplan_number']."<br>\n"; }
@@ -477,7 +478,7 @@
 			}
 
 		//execute query
-			if (is_array($array) && @sizeof($array) != 0) {
+			if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
 				//grant temporary permissions
 					$p = new permissions;
 					$p->add('dialplan_detail_add', 'temp');
@@ -622,7 +623,7 @@
 					if (is_array($preset) && @sizeof($preset) != 0) {
 						foreach ($preset as $preset_name => $preset_variables) {
 							//loop through each condition group
-							if (is_array($current_conditions)) {
+							if (!empty($current_conditions) && is_array($current_conditions)) {
 								foreach ($current_conditions as $group_id => $condition_variables) {
 									$matches = 0;
 									if (is_array($condition_variables)) {
@@ -653,8 +654,8 @@
 			}
 
 		//sort arrays by keys
-			if (is_array($dialplan_actions)) { ksort($dialplan_actions); }
-			if (is_array($current_conditions)) { ksort($current_conditions); }
+			if (!empty($dialplan_actions) && is_array($dialplan_actions)) { ksort($dialplan_actions); }
+			if (!empty($current_conditions) && is_array($current_conditions)) { ksort($current_conditions); }
 
 	}
 
@@ -1018,7 +1019,7 @@ function add_custom_condition($destination, $group_id, $dialplan_action = '') {
 
 if ($action == 'update') {
 	$largest_group_id = 0;
-	if (is_array($current_conditions)) {
+	if (!empty($current_conditions) && is_array($current_conditions)) {
 		foreach ($current_conditions as $group_id => $conditions) {
 			if (empty($current_presets) || (is_array($current_presets) && !in_array($group_id, $current_presets))) {
 				add_custom_condition($destination, $group_id, $dialplan_actions[$group_id]);
@@ -1214,7 +1215,7 @@ if ($action == 'update') {
 	echo "	<select name='dialplan_order' class='formfld'>\n";
 	for ($i = 300; $i <= 999; $i += 10) {
 		$padded_i = str_pad($i, 3, '0', STR_PAD_LEFT);
-		$selected = ($dialplan_order == $i) ? "selected='selected'" : null;
+		$selected = !empty($dialplan_order) && $dialplan_order == $i ? "selected='selected'" : null;
 		echo "<option value='".$padded_i."' ".$selected.">".$padded_i."</option>\n";
 	}
 	echo "	</select>\n";

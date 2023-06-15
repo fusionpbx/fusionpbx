@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -41,7 +41,7 @@
 	$cmd = $_GET['cmd'];
 
 //pre-populate the form
-	if (is_array($_GET) && is_uuid($_GET["id"]) && $_POST["persistformvar"] != "true") {
+	if (!empty($_GET) && is_array($_GET) && is_uuid($_GET["id"]) && (empty($_POST["persistformvar"]) || $_POST["persistformvar"] != "true")) {
 		$call_center_queue_uuid = $_GET["id"];
 		$sql = "select queue_extension from v_call_center_queues ";
 		$sql .= "where domain_uuid = :domain_uuid ";

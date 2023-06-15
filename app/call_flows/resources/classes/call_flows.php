@@ -187,7 +187,8 @@ if (!class_exists('call_flows')) {
 									$uuids[] = "'".$record['uuid']."'";
 								}
 							}
-							if (is_array($uuids) && @sizeof($uuids) != 0) {
+
+							if (!empty($uuids)) {
 								$sql = "select ".$this->uuid_prefix."uuid as uuid, ".$this->toggle_field." as toggle, ";
 								$sql .= "dialplan_uuid, call_flow_feature_code, call_flow_context from v_".$this->table." ";
 								$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
@@ -195,7 +196,7 @@ if (!class_exists('call_flows')) {
 								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 								$database = new database;
 								$rows = $database->select($sql, $parameters, 'all');
-								if (is_array($rows) && @sizeof($rows) != 0) {
+								if (!empty($rows)) {
 									foreach ($rows as $row) {
 										$call_flows[$row['uuid']]['state'] = $row['toggle'];
 										$call_flows[$row['uuid']]['dialplan_uuid'] = $row['dialplan_uuid'];

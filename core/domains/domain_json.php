@@ -73,7 +73,7 @@
 		}
 		$sql .= "order by domain_name asc ";
 		$database = new database;
-		$domains = $database->select($sql, $parameters ?? '', 'all');
+		$domains = $database->select($sql, $parameters ?? null, 'all');
 		unset($sql, $parameters);
 	}
 

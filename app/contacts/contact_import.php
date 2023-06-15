@@ -57,10 +57,10 @@
 	ini_set('max_execution_time', 7200);
 
 //get the http get values and set them as php variables
-	$action = $_POST["action"];
-	$from_row = $_POST["from_row"];
-	$delimiter = $_POST["data_delimiter"];
-	$enclosure = $_POST["data_enclosure"];
+	$action = $_POST["action"] ?? '';
+	$from_row = $_POST["from_row"] ?? '';
+	$delimiter = $_POST["data_delimiter"] ?? '';
+	$enclosure = $_POST["data_enclosure"] ?? '';
 
 //save the data to the csv file
 	if (isset($_POST['data'])) {
@@ -71,7 +71,7 @@
 
 //copy the csv file
 	//$_POST['submit'] == "Upload" &&
-	if ( is_uploaded_file($_FILES['ulfile']['tmp_name']) && permission_exists('contact_upload')) {
+	if (!empty($_FILES['ulfile']['tmp_name']) && is_uploaded_file($_FILES['ulfile']['tmp_name']) && permission_exists('contact_upload')) {
 		if ($_POST['type'] == 'csv') {
 			move_uploaded_file($_FILES['ulfile']['tmp_name'], $_SESSION['server']['temp']['dir'].'/'.$_FILES['ulfile']['name']);
 			$save_msg = "Uploaded file to ".$_SESSION['server']['temp']['dir']."/". htmlentities($_FILES['ulfile']['name']);
@@ -112,8 +112,8 @@
 					$schema[$i]['table'] = $table_name;
 					$schema[$i]['parent'] = $parent_name;
 					foreach ($table['fields'] as $row) {
-						if ($row['deprecated'] !== 'true') {
-							if (is_array($row['name'])) {
+						if (!empty($row['deprecated']) && $row['deprecated'] !== 'true') {
+							if (!empty($row['name'])) {
 								$field_name = $row['name']['text'];
 							}
 							else {
@@ -171,7 +171,7 @@
 			echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 			//define phone label options
-			if (is_array($_SESSION["contact"]["phone_label"]) && @sizeof($_SESSION["contact"]["phone_label"]) != 0) {
+			if (!empty($_SESSION["contact"]["phone_label"])) {
 				sort($_SESSION["contact"]["phone_label"]);
 				foreach($_SESSION["contact"]["phone_label"] as $row) {
 					$label_options[] = "<option value='".$row.">".$row."</option>";
@@ -263,7 +263,7 @@
 	}
 
 //upload the csv
-	if (file_exists($_SESSION['file']) && $action == 'import') {
+	if (!empty($_SESSION['file']) && file_exists($_SESSION['file']) && $action == 'import') {
 
 		//validate the token
 			$token = new token;
@@ -275,7 +275,7 @@
 
 		//user selected fields, labels
 			$fields = $_POST['fields'];
-			$labels = $_POST['labels'];
+			$labels = $_POST['labels'] ?? [];
 			
 		//set the domain_uuid
 			$domain_uuid = $_SESSION['domain_uuid'];
@@ -374,7 +374,7 @@
 											}
 										}
 									}
-									if (is_array($array[$parent][$row_id])) { $y++; }
+									if (!empty($array[$parent][$row_id])) { $y++; }
 								}
 
 							//debug information
@@ -406,7 +406,7 @@
 					//view_array($array);
 
 				//save to the data
-					if (is_array($array)) {
+					if (!empty($array)) {
 						$database = new database;
 						$database->app_name = 'contacts';
 						$database->app_uuid = '04481e0e-a478-c559-adad-52bd4174574c';
@@ -450,7 +450,7 @@
 	echo "    ".$text['label-import_data']."\n";
 	echo "</td>\n";
 	echo "<td width='70%' class='vtable' align='left'>\n";
-	echo "    <textarea name='data' id='data' class='formfld' style='width: 100%; min-height: 150px;' wrap='off'>$data</textarea>\n";
+	echo "    <textarea name='data' id='data' class='formfld' style='width: 100%; min-height: 150px;' wrap='off'></textarea>\n";
 	echo "<br />\n";
 	echo $text['description-import_data']."\n";
 	echo "</td>\n";
@@ -515,7 +515,7 @@
 	echo "</table>\n";
 	echo "<br />\n";
 
-	if (function_exists('curl_version') && $_SESSION['contact']['google_oauth_client_id']['text'] != '' && $_SESSION['contact']['google_oauth_client_secret']['text'] != '') {
+	if (function_exists('curl_version') && !empty($_SESSION['contact']['google_oauth_client_id']['text']) && !empty($_SESSION['contact']['google_oauth_client_secret']['text'])) {
 		echo "<a href='contact_import_google.php'><img src='resources/images/icon_gcontacts.png' style='width: 21px; height: 21px; border: none; text-decoration: none; margin-right: 5px;' align='absmiddle'>".$text['header-contacts_import_google']."</a>\n";
 	}
 
