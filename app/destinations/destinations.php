@@ -267,10 +267,10 @@
 	echo th_order_by('destination_type', $text['label-destination_type'], $order_by, $order, $param, "class='shrink'");
 	echo th_order_by('destination_prefix', $text['label-destination_prefix'], $order_by, $order, $param, "class='shrink'");
 	if (permission_exists('destination_trunk_prefix')) {
-		echo th_order_by('destination_trunk_prefix', '', $order_by, $order, $param, "class='shrink'");
+		echo th_order_by('destination_trunk_prefix', $text['label-destination_trunk_prefix'], $order_by, $order, $param, "class='shrink'");
 	}
 	if (permission_exists('destination_area_code')) {
-		echo th_order_by('destination_area_code', '', $order_by, $order, $param, "class='shrink'");
+		echo th_order_by('destination_area_code', $text['label-destination_area_code'], $order_by, $order, $param, "class='shrink'");
 	}
 	echo th_order_by('destination_number', $text['label-destination_number'], $order_by, $order, $param, "class='shrink'");
 	if (!$show == "all") {
