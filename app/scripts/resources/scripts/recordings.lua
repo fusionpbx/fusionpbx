@@ -32,6 +32,8 @@
 	recording_number = "";
 	recording_id = "";
 	recording_prefix = "";
+	recording_description = "";
+	recording_base64 = "";
 
 --include config.lua
 	require "resources.functions.config";
@@ -204,9 +206,7 @@
 			table.insert(array, "domain_uuid, ");
 			table.insert(array, "recording_filename, ");
 			table.insert(array, "recording_description, ");
-			if (storage_type == "base64") then
-				table.insert(array, "recording_base64, ");
-			end
+			table.insert(array, "recording_base64, ");
 			table.insert(array, "recording_name ");
 			table.insert(array, ") ");
 			table.insert(array, "VALUES ");
@@ -215,9 +215,7 @@
 			table.insert(array, ":domain_uuid, ");
 			table.insert(array, ":recording_filename, ");
 			table.insert(array, ":recording_description, ");
-			if (storage_type == "base64") then
-				table.insert(array, ":recording_base64, ");
-			end
+			table.insert(array, ":recording_base64, ");
 			table.insert(array, ":recording_name ");
 			table.insert(array, ") ");
 			sql = table.concat(array, "\n");
