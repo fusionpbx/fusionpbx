@@ -1,6 +1,6 @@
 <?php
 
-//add the document root to the include path
+//run from command line only
 	if (!defined('STDIN')) {
 		exit;
 	}
