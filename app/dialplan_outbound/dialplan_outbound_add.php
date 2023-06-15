@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2022
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -98,7 +98,7 @@
 			if ($gateway_type == "gateway") {
 				$gateway_array = explode(":",$gateway);
 				$gateway_uuid = $gateway_array[0];
-				$gateway_name = $gateway_array[1];
+				$gateway_name = $gateway_array[1] ?? null;
 			}
 			else {
 				$gateway_name = '';
@@ -171,10 +171,8 @@
 				$gateway_3_name = '';
 			}
 		//set additional variables
-			$dialplan_enabled = $_POST["dialplan_enabled"];
+			$dialplan_enabled = $_POST["dialplan_enabled"] ?? 'true';
 			$dialplan_description = $_POST["dialplan_description"];
-		//set default to enabled
-			if (empty($dialplan_enabled)) { $dialplan_enabled = "true"; }
 	}
 
 //process the http form values
@@ -189,6 +187,7 @@
 			}
 
 		//check for all required data
+			$msg = '';
 			if (empty($gateway)) { $msg .= $text['message-provide'].": ".$text['label-gateway-name']."<br>\n"; }
 			//if (empty($gateway_2)) { $msg .= "Please provide: Alternat 1<br>\n"; }
 			//if (empty($gateway_3)) { $msg .= "Please provide: Alternat 2<br>\n"; }
@@ -1305,22 +1304,19 @@ function type_onchange(dialplan_detail_type) {
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
 	echo "	".$text['label-enabled']."\n";
 	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='dialplan_enabled'>\n";
-	//echo "	<option value=''></option>\n";
-	if (!empty($dialplan_enabled) && $dialplan_enabled == "true") {
-		echo "	<option value='true' selected='selected'>".$text['label-true']."</option>\n";
+	echo "<td class='vtable' style='position: relative;' align='left'>\n";
+	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
+		echo "	<label class='switch'>\n";
+		echo "		<input type='checkbox' id='dialplan_enabled' name='dialplan_enabled' value='true' ".(!empty($dialplan_enabled) && $dialplan_enabled == 'true' ? "checked='checked'" : null).">\n";
+		echo "		<span class='slider'></span>\n";
+		echo "	</label>\n";
 	}
 	else {
-		echo "	<option value='true'>".$text['label-true']."</option>\n";
+		echo "	<select class='formfld' id='dialplan_enabled' name='dialplan_enabled'>\n";
+		echo "		<option value='true' ".($dialplan_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($dialplan_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "	</select>\n";
 	}
-	if (!empty($dialplan_enabled) && $dialplan_enabled == "false") {
-		echo "	<option value='false' selected='selected'>".$text['label-false']."</option>\n";
-	}
-	else {
-		echo "	<option value='false'>".$text['label-false']."</option>\n";
-	}
-	echo "	</select>\n";
 	echo "<br />\n";
 	echo $text['description-enabled']."\n";
 	echo "</td>\n";
