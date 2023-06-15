@@ -1,5 +1,5 @@
 --	Part of FusionPBX
---	Copyright (C) 2013-2019 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2013-2023 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -143,7 +143,7 @@
 
 		--if voicemail_id is non numeric then get the number-alias
 			if (voicemail_id ~= nil) then
-				if tonumber(voicemail_id) == nil then
+				if (voicemail_id and #voicemail_id == nil) then
 					 voicemail_id = api:execute("user_data", voicemail_id .. "@" .. domain_name .. " attr number-alias");
 				end
 			end
@@ -445,7 +445,7 @@
 					dbh:query(sql, params, function(row)
 						message_sum = row["message_sum"];
 					end);
-					if (tonumber(vm_disk_quota) <= tonumber(message_sum)) then
+					if (vm_disk_quota and message_sum and #vm_disk_quota <= #message_sum) then
 						--play message mailbox full
 							session:execute("playback", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/voicemail/vm-mailbox_full.wav")
 						--hangup
@@ -518,7 +518,7 @@
 							end
 							y = y + 1;
 						--save the message to the voicemail messages
-							if (tonumber(message_length) > 2) then
+							if (message_length and #message_length > 2) then
 								caller_id_name = string.gsub(caller_id_name,"'","''");
 								local sql = {}
 								table.insert(sql, "INSERT INTO v_voicemail_messages ");
@@ -632,12 +632,12 @@
 							end
 
 						--send the message waiting event
-							if (tonumber(message_length) > 2) then
+							if (message_length and #message_length > 2) then
 								message_waiting(voicemail_id_copy, domain_uuid);
 							end
 
 						--send the email with the voicemail recording attached
-							if (tonumber(message_length) > 2) then
+							if (message_length and #message_length > 2) then
 								send_email(voicemail_id_copy, voicemail_message_uuid);
 								if (voicemail_to_sms) then
 									send_sms(voicemail_id_copy, voicemail_message_uuid);
