@@ -27,7 +27,7 @@
 */
 
 //includes files
-    require_once __DIR__ . "/require.php";
+	require_once __DIR__ . "/require.php";
 
 //get the event socket information
 	if (file_exists($_SERVER["PROJECT_ROOT"]."/app/settings/app_config.php")) {
