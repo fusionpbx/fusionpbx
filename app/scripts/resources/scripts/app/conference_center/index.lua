@@ -206,7 +206,7 @@
 				if (debug["sql"]) then
 					freeswitch.consoleLog("notice", "[conference center] SQL: " .. sql .. "; params:" .. json.encode(params) .. "; Rows: "..num_rows.."\n");
 				end
-				if (tonumber(num_rows) == 0) then
+				if (#num_rows == 0) then
 					local sql = {}
 					table.insert(sql, "INSERT INTO v_conference_sessions ");
 					table.insert(sql, "(");
@@ -651,14 +651,14 @@
 
 		--set a conference parameter
 			if (max_members ~= nil) then
-				if (tonumber(max_members) > 0) then
+				if (#max_members > 0) then
 					--max members must be 2 or more
 					session:execute("set","conference_max_members="..max_members);
 					if (conference_exists) then
 						cmd = "conference "..conference_room_uuid.."@"..domain_name.." get count";
 						count = trim(api:executeString(cmd));
 						if (count ~= nil) then
-							if (tonumber(count) >= tonumber(max_members)) then
+							if (#count >= #max_members) then
 								session:execute("playback", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/conference/conf-locked.wav");
 								session:hangup("CALL_REJECTED");
 							end
