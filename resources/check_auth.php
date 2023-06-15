@@ -24,8 +24,8 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//includes
-	require_once "resources/require.php";
+//includes files
+    require_once __DIR__ . "/require.php";
 
 //add multi-lingual support
 	$language = new text;

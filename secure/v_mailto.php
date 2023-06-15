@@ -25,17 +25,13 @@
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 
-//set the include path
-	if (defined('STDIN')) {	
-		$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-		set_include_path(parse_ini_file($conf[0])['document.root']);
-	}
-	else {
+//only allow command line
+	if (!defined('STDIN')) {
 		exit;
 	}
 
-//include files
-	require_once "resources/require.php";
+//includes files
+	require_once dirname(__DIR__) . "/resources/require.php";
 
 //define a function to remove html tags
 	if (!function_exists('remove_tags')) {

@@ -8,7 +8,6 @@ function device_by_mac($mac) {
 	$database = new database;
 	$row = $database->select($sql, $parameters, 'row');
 	return is_array($row) && @sizeof($row) != 0 ? $row : false;
-	unset($sql, $parameters, $row);
 }
 
 function device_by_ext($ext, $domain) {
@@ -25,7 +24,6 @@ function device_by_ext($ext, $domain) {
 	$database = new database;
 	$row = $database->select($sql, $parameters, 'row');
 	return is_array($row) && @sizeof($row) != 0 ? $row : false;
-	unset($sql, $parameters, $row);
 }
 
 ?>
