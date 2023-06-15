@@ -1,10 +1,6 @@
 <?php
-//set the include path
-$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-set_include_path(parse_ini_file($conf[0])['document.root']);
-
-//includes files;
-require_once "resources/require.php";
+//includes files
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 
 $font_loader_version = ($_GET['v'] != '') ? $_GET['v'] : 1;
 

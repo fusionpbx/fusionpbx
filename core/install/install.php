@@ -128,30 +128,16 @@
 //process and save the data
 	if (count($_POST) > 0) {
 		foreach($_POST as $key => $value) {
-			//$_SESSION['install'][$key] = $value;
-			if ($key == 'admin_username') {
-				$_SESSION['install'][$key] = $value;
-			}
-			if ($key == 'admin_password') {
-				$_SESSION['install'][$key] = $value;
-			}
-			if ($key == 'domain_name') {
-				$_SESSION['install'][$key] = $value;
-			}
-			if ($key == 'database_host') {
-				$_SESSION['install'][$key] = $value;
-			}
-			if ($key == 'database_port') {
-				$_SESSION['install'][$key] = $value;
-			}
-			if ($key == 'database_name') {
-				$_SESSION['install'][$key] = $value;
-			}
-			if ($key == 'database_username') {
-				$_SESSION['install'][$key] = $value;
-			}
-			if ($key == 'database_password') {
-				$_SESSION['install'][$key] = $value;
+			switch($key) {
+				case 'admin_username':
+				case 'admin_password':
+				case 'domain_name':
+				case 'database_host':
+				case 'database_port':
+				case 'database_name':
+				case 'database_username':
+				case 'database_password':
+					$_SESSION['install'][$key] = $value;
 			}
 		}
 		if ($_REQUEST["step"] == "install") {
@@ -187,7 +173,7 @@
 			$output = shell_exec('cd '.$_SERVER["DOCUMENT_ROOT"].' && php /var/www/fusionpbx/core/upgrade/upgrade_schema.php');
 
 			//includes - this includes the config.php
-			require_once "resources/require.php";
+			require_once dirname(__DIR__, 2) . "/resources/require.php";
 
 			//get the domain name
 			$domain_name = $_SESSION['install']['domain_name'];
