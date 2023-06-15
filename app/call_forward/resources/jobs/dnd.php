@@ -3,7 +3,7 @@
 //check the permission
 	if (defined('STDIN')) {
 		//includes files
-		require_once  dirname(__DIR__, 3) . "/resources/require.php";
+		require_once  dirname(__DIR__, 4) . "/resources/require.php";
 	}
 	else {
 		exit;
