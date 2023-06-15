@@ -25,21 +25,16 @@
 	James Rose <james.o.rose@gmail.com>
 */
 
-$output_type = "file"; //file or console
+//file or console
+	$output_type = "file"; 
 
-if (defined('STDIN')) {
-	//get the document root php file must be executed with the full path
-		$document_root = str_replace("\\", "/", $_SERVER["PHP_SELF"]);
-		$document_root = str_replace("\\", "/", $_SERVER["PHP_SELF"]);
-		preg_match("/^(.*)\/secure\/.*$/", $document_root, $matches);
-		$document_root = $matches[1];
-	//set the include path
-		set_include_path($document_root);
-		$_SERVER["DOCUMENT_ROOT"] = $document_root;
-		//echo "$document_root is document_root\n";
-}
+//only allow command line
+	if (!defined('STDIN')) {
+		exit;
+	}
 
-$IS_WINDOWS = stristr(PHP_OS, 'WIN') ? true : false;
+//determine if windows is true or false
+	$IS_WINDOWS = stristr(PHP_OS, 'WIN') ? true : false;
 
 if (!function_exists('exec_in_dir')) {
 	function exec_in_dir($dir, $cmd, &$ok) {
@@ -205,7 +200,7 @@ if (!function_exists('fax_split_dtmf')) {
 }
 
 //includes files
-    require_once dirname(__DIR__) . "/resources/require.php";
+	require_once dirname(__DIR__) . "/resources/require.php";
 	include "resources/classes/event_socket.php";
 	include "resources/phpmailer/class.phpmailer.php";
 	include "resources/phpmailer/class.smtp.php"; // optional, gets called from within class.phpmailer.php if not already loaded
