@@ -26,7 +26,7 @@
  */
 
 //includes files
-    require_once __DIR__ . "/require.php";
+	require_once __DIR__ . "/require.php";
 	require_once "resources/functions.php";
 
 //set defaults
