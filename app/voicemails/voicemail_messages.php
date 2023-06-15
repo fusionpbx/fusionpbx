@@ -34,10 +34,10 @@
 
 //download the message
 	if (
-		!empty($_REQUEST["action"]) == "download"
-		&& is_numeric($_REQUEST["id"])
-		&& is_uuid($_REQUEST["uuid"])
-		&& is_uuid($_REQUEST["voicemail_uuid"])
+		!empty($_REQUEST["action"]) && $_REQUEST["action"] == "download"
+		&& !empty($_REQUEST["id"]) && is_numeric($_REQUEST["id"])
+		&& !empty($_REQUEST["uuid"]) && is_uuid($_REQUEST["uuid"])
+		&& !empty($_REQUEST["voicemail_uuid"]) && is_uuid($_REQUEST["voicemail_uuid"])
 		) {
 		$voicemail = new voicemail;
 		$voicemail->domain_uuid = $_SESSION['domain_uuid'];
@@ -293,13 +293,16 @@
 
 			if (is_array($field['messages']) && @sizeof($field['messages']) > 0) {
 				foreach ($field['messages'] as $row) {
+					//set voicemail messages as bold if unread and normal font weight if read
+					$bold = (empty($row['message_status'])) ? 'font-weight: bold;' : null;
 
+					//set the list row url as a variable
+					$list_row_url = "javascript:recording_play('".escape($row['voicemail_message_uuid'])."');";
+					
 					//playback progress bar
 					echo "<tr class='list-row' id='recording_progress_bar_".escape($row['voicemail_message_uuid'])."' style='display: none;'><td class='playback_progress_bar_background' style='padding: 0; border: none;' colspan='".$col_count."'><span class='playback_progress_bar' id='recording_progress_".escape($row['voicemail_message_uuid'])."'></span></td></tr>\n";
 					echo "<tr style='display: none;'><td></td></tr>\n"; // dummy row to maintain alternating background color
 
-					$bold = ($row['message_status'] && !empty($_REQUEST["uuid"]) != $row['voicemail_message_uuid']) ? 'font-weight: bold;' : null;
-					$list_row_url = "javascript:recording_play('".escape($row['voicemail_message_uuid'])."');";
 					echo "<tr class='list-row' href=\"".$list_row_url."\">\n";
 					echo "	<td class='checkbox'>\n";
 					echo "		<input type='checkbox' name='voicemail_messages[$x][checked]' id='checkbox_".$x."' class='checkbox_".$field['voicemail_id']."' value='true' onclick=\"if (!this.checked) { document.getElementById('checkbox_all_".$field['voicemail_id']."').checked = false; } checkbox_on_change(this);\">\n";
@@ -313,7 +316,7 @@
 					echo 		"<audio id='recording_audio_".escape($row['voicemail_message_uuid'])."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".escape($row['voicemail_message_uuid'])."')\" onended=\"recording_reset('".escape($row['voicemail_message_uuid'])."');\" src='voicemail_messages.php?action=download&id=".urlencode($row['voicemail_id'])."&voicemail_uuid=".urlencode($row['voicemail_uuid'])."&uuid=".urlencode($row['voicemail_message_uuid'])."&r=".uuid()."'></audio>";
 					echo button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'icon'=>$_SESSION['theme']['button_icon_play'],'id'=>'recording_button_'.escape($row['voicemail_message_uuid']),'onclick'=>"recording_play('".escape($row['voicemail_message_uuid'])."');"]);
 					echo button::create(['type'=>'button','title'=>$text['label-download'],'icon'=>$_SESSION['theme']['button_icon_download'],'link'=>"voicemail_messages.php?action=download&id=".urlencode($row['voicemail_id'])."&voicemail_uuid=".escape($row['voicemail_uuid'])."&uuid=".escape($row['voicemail_message_uuid'])."&t=bin&r=".uuid(),'onclick'=>"$(this).closest('tr').children('td').css('font-weight','normal');"]);
-					if (!empty($_SESSION['voicemail']['transcribe_enabled']['boolean']) == 'true' && $row['message_transcription'] != '') {
+					if (!empty($_SESSION['voicemail']['transcribe_enabled']['boolean']) && $_SESSION['voicemail']['transcribe_enabled']['boolean'] == 'true' && $row['message_transcription'] != '') {
 						echo button::create(['type'=>'button','title'=>$text['label-transcription'],'icon'=>'quote-right','onclick'=>"document.getElementById('transcription_".$row['voicemail_message_uuid']."').style.display = document.getElementById('transcription_".$row['voicemail_message_uuid']."').style.display == 'none' ? 'table-row' : 'none'; this.blur(); return false;"]);
 					}
 					echo "	</td>\n";
@@ -322,7 +325,7 @@
 						echo "	<td class='right no-wrap hide-sm-dn' style='".$bold."'>".escape($row['file_size_label'])."</td>\n";
 					}
 					echo "</tr>\n";
-					if (!empty($_SESSION['voicemail']['transcribe_enabled']['boolean']) == 'true' && $row['message_transcription'] != '') {
+					if (!empty($_SESSION['voicemail']['transcribe_enabled']['boolean']) && $_SESSION['voicemail']['transcribe_enabled']['boolean'] == 'true' && !empty($row['message_transcription'])) {
 						echo "<tr style='display: none;'><td></td></tr>\n"; // dummy row to maintain same background color for transcription row
 						echo "<tr id='transcription_".$row['voicemail_message_uuid']."' class='list-row' style='display: none;'>\n";
 						echo "	<td style='padding: 10px 20px 15px 20px;' colspan='".$col_count."'>\n";
@@ -353,7 +356,7 @@
 	echo "<br />";
 
 //autoplay message
-	if (!empty($_REQUEST["action"]) == "autoplay" && is_uuid($_REQUEST["uuid"])) {
+	if (!empty($_REQUEST["action"]) && $_REQUEST["action"] == "autoplay" && !empty($_REQUEST["uuid"]) && is_uuid($_REQUEST["uuid"])) {
 		echo "<script>recording_play('".$_REQUEST["uuid"]."');</script>";
 	}
 
