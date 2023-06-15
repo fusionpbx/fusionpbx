@@ -236,7 +236,7 @@
 					sql = "update v_call_block ";
 					sql = sql .. "set call_block_count = :call_block_count ";
 					sql = sql .. "where call_block_uuid = :call_block_uuid ";
-					local params = {call_block_uuid = call_block_uuid, call_block_count = call_block_count + 1};
+					local params = {call_block_uuid = call_block_uuid, call_block_count = #call_block_count + 1};
 					if (debug["sql"]) then
 						freeswitch.consoleLog("notice", "[dialplan] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 					end
