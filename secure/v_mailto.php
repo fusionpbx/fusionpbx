@@ -25,13 +25,13 @@
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 
-//set the include path
+//only allow command line
 	if (!defined('STDIN')) {
 		exit;
 	}
 
 //includes files
-    require_once dirname(__DIR__) . "/resources/require.php";
+	require_once dirname(__DIR__) . "/resources/require.php";
 
 //define a function to remove html tags
 	if (!function_exists('remove_tags')) {
