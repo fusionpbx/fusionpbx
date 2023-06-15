@@ -726,20 +726,6 @@
 		echo "		<option value='false' ".($dialplan_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 		echo "	</select>\n";
 	}
-// 	echo "	<select class='formfld' name='dialplan_enabled'>\n";
-// 	if ($dialplan_enabled == "true") {
-// 		echo "		<option value='true' selected='selected'>".$text['option-true']."</option>\n";
-// 	}
-// 	else {
-// 		echo "		<option value='true'>".$text['option-true']."</option>\n";
-// 	}
-// 	if ($dialplan_enabled == "false") {
-// 		echo "		<option value='false' selected='selected'>".$text['option-false']."</option>\n";
-// 	}
-// 	else {
-// 		echo "		<option value='false'>".$text['option-false']."</option>\n";
-// 	}
-// 	echo "		</select>\n";
 	echo "	</td>\n";
 	echo "	</tr>\n";
 
