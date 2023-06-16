@@ -340,6 +340,10 @@
 	$_SESSION['domain']['template']['name'] = 'default';
 	$_SESSION['theme']['menu_brand_image']['text'] = PROJECT_PATH.'/themes/default/images/logo.png';
 	$_SESSION['theme']['menu_brand_type']['text'] = 'image';
+//set a default step if not already set
+	if(empty($_REQUEST['step'])) {
+		$_REQUEST['step'] = '1';
+	}
 
 //save an install log if debug is true
 	//if ($debug) {
@@ -389,10 +393,6 @@
 	//if ($_GET["step"] == "" || $_GET["step"] == "1") {
 	//	$content = $view->render('language.htm');
 	//}
-
-	if(empty($_REQUEST['step'])) {
-		$_REQUEST['step'] = '1';
-	}
 
 	if ($_REQUEST["step"] == "1") {
 		$content = $view->render('configuration.htm');
