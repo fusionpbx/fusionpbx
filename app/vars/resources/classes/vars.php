@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2019
+ Portions created by the Initial Developer are Copyright (C) 2008-2023
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -224,7 +224,7 @@ if (!class_exists('vars')) {
 
 										//overwrite
 											$array[$this->table][$x][$this->uuid_prefix.'uuid'] = uuid();
-											$array[$this->table][$x]['var_description'] = trim($row['var_description']).' ('.$text['label-copy'].')';
+											$array[$this->table][$x]['var_description'] = trim($row['var_description'] ?? '').trim(' ('.$text['label-copy'].')');
 
 									}
 								}

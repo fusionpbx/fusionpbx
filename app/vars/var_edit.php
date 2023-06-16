@@ -24,12 +24,8 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -71,7 +67,7 @@
 		$var_value = trim($_POST["var_value"]);
 		$var_command = trim($_POST["var_command"]);
 		$var_hostname = trim($_POST["var_hostname"]);
-		$var_enabled = trim($_POST["var_enabled"] ?: 'false');
+		$var_enabled = trim($_POST["var_enabled"] ?? 'false');
 		$var_order = trim($_POST["var_order"]);
 		$var_description = trim($_POST["var_description"]);
 
@@ -98,7 +94,7 @@
 
 		//check for all required data
 			$msg = '';
-			//if (empty($var_category)) { $msg .= $text['message-required'].$text['label-category']."<br>\n"; }
+			if (empty($var_category)) { $msg .= $text['message-required'].$text['label-category']."<br>\n"; }
 			if (empty($var_name)) { $msg .= $text['message-required'].$text['label-name']."<br>\n"; }
 			//if (empty($var_value)) { $msg .= $text['message-required'].$text['label-value']."<br>\n"; }
 			//if (empty($var_command)) { $msg .= $text['message-required'].$text['label-command']."<br>\n"; }
@@ -118,7 +114,7 @@
 			}
 
 		//add or update the database
-			if ($_POST["persistformvar"] != "true") {
+			if (empty($_POST["persistformvar"]) || $_POST["persistformvar"] != "true") {
 				if ($action == "add" && permission_exists('var_add')) {
 					//begin insert array
 						$var_uuid = uuid();
@@ -221,7 +217,7 @@
 	$field_name = 'var_category';
 	$sql_where_optional = "";
 	$field_current_value = $var_category;
-	echo html_select_other($table_name, $field_name, $sql_where_optional, $field_current_value);
+	echo html_select_other($table_name, $field_name, $sql_where_optional, $field_current_value, $field_name.' asc', $text['label-other']);
 	echo $text['description-category']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
@@ -238,7 +234,7 @@
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-value']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";

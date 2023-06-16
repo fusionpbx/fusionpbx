@@ -17,19 +17,15 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2016 - 2022
+	Portions created by the Initial Developer are Copyright (C) 2016 - 2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
 
@@ -48,6 +44,7 @@
 
 //set default values
 	$search = '';
+	$user_uuid = '';
 
 //get variables used to control the order
 	$order_by = $_GET["order_by"] ?? '';
@@ -189,10 +186,7 @@
 	echo th_order_by('transaction_address', $text['label-transaction_address'], $order_by, $order);
 	echo th_order_by('transaction_type', $text['label-transaction_type'], $order_by, $order);
 	echo th_order_by('transaction_date', $text['label-transaction_date'], $order_by, $order);
-	//echo th_order_by('transaction_old', $text['label-transaction_old'], $order_by, $order);
-	//echo th_order_by('transaction_new', $text['label-transaction_new'], $order_by, $order);
-	//echo th_order_by('transaction_result', $text['label-transaction_result'], $order_by, $order);
-	if (permission_exists('database_transaction_edit') && $list_row_edit_button == 'true') {
+	if (permission_exists('database_transaction_edit') && !empty($list_row_edit_button) && $list_row_edit_button == 'true') {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
@@ -211,12 +205,9 @@
 			echo "	<td>".escape($row['transaction_address'])."&nbsp;</td>\n";
 			echo "	<td>".escape($row['transaction_type'])."&nbsp;</td>\n";
 			echo "	<td>".escape($row['transaction_date'])."&nbsp;</td>\n";
-			//echo "	<td>".escape($row['transaction_old']."&nbsp;</td>\n";
-			//echo "	<td>".escape($row['transaction_new']."&nbsp;</td>\n";
-			//echo "	<td>".escape($row['transaction_result']."&nbsp;</td>\n";
-			if (permission_exists('database_transaction_edit')) {
-				echo "	<td class='action-button'>";
-				echo button::create(['type'=>'button','title'=>$text['button-view'],'icon'=>$button_icon_view,'link'=>$list_row_url]);
+			if (permission_exists('database_transaction_edit') && !empty($list_row_edit_button) && $list_row_edit_button == 'true') {
+				echo "	<td class='action-button'>\n";
+				echo button::create(['type'=>'button','title'=>$text['button-view'],'icon'=>$_SESSION['theme']['button_icon_view'],'link'=>$list_row_url]);
 				echo "	</td>\n";
 			}
 			echo "</tr>\n";

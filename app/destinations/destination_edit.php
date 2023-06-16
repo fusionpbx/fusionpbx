@@ -24,12 +24,8 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -66,7 +62,7 @@
 //get total destination count from the database, check limit, if defined
 	if (!permission_exists('destination_domain')) {
 		if ($action == 'add') {
-			if ($_SESSION['limit']['destinations']['numeric'] != '') {
+			if (!empty($_SESSION['limit']['destinations']['numeric'])) {
 				$sql = "select count(*) from v_destinations where domain_uuid = :domain_uuid ";
 				$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 				$database = new database;
@@ -1071,7 +1067,7 @@
 	$select_style = $select_style ?? '';
 
 //pre-populate the form
-	if (!empty($_GET["id"]) > 0 && empty($_POST["persistformvar"])) {
+	if (!empty($_GET["id"]) && empty($_POST["persistformvar"])) {
 	 	if (is_uuid($_GET["id"])) {
 	 		$destination_uuid = $_GET["id"];
 			$sql = "select * from v_destinations ";

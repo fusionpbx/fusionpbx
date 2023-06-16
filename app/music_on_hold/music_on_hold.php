@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -25,12 +25,8 @@
 	James Rose <james.o.rose@gmail.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -123,13 +119,9 @@
 
 		//download the file
 			if (file_exists($stream_full_path)) {
-				//content-range
-				if (isset($_SERVER['HTTP_RANGE']) && $_GET['t'] != "bin")  {
-					range_download($stream_full_path);
-				}
 
 				$fd = fopen($stream_full_path, "rb");
-				if ($_GET['t'] == "bin") {
+				if (!empty($_GET['t']) && $_GET['t'] == "bin") {
 					header("Content-Type: application/force-download");
 					header("Content-Type: application/octet-stream");
 					header("Content-Type: application/download");
@@ -146,10 +138,16 @@
 				header('Content-Disposition: attachment; filename="'.$stream_file.'"');
 				header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
 				header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
-				if ($_GET['t'] == "bin") {
+				if (!empty($_GET['t']) && $_GET['t'] == "bin") {
 					header("Content-Length: ".filesize($stream_full_path));
 				}
 				ob_clean();
+
+				//content-range
+				if (isset($_SERVER['HTTP_RANGE']) && (empty($_GET['t']) || $_GET['t'] != "bin"))  {
+					range_download($stream_full_path);
+				}
+
 				fpassthru($fd);
 			}
 			exit;
@@ -380,7 +378,7 @@
 		echo 	"<span id='form_upload' style='display: none;'>";
 		echo button::create(['label'=>$text['button-cancel'],'icon'=>$_SESSION['theme']['button_icon_cancel'],'type'=>'button','id'=>'btn_upload_cancel','onclick'=>"$('span#form_upload').fadeOut(250, function(){ name_mode('select'); document.getElementById('form_upload').reset(); $('#btn_add').fadeIn(250) });"]);
 		//name (category)
-			echo 	"<select name='name' id='name_select' class='formfld' style='width: auto;'>\n";
+			echo 	"<select name='name' id='name_select' class='formfld' style='width: auto; margin: 0;'>\n";
 			echo "		<option value='' selected='selected' disabled='disabled'>".$text['label-category']."</option>\n";
 
 			if (permission_exists('music_on_hold_domain')) {
@@ -423,9 +421,9 @@
 				}
 			}
 			echo "	</select>";
-			echo 	"<input class='formfld' style='width: 100px; display: none;' type='text' name='name_new' id='name_new' maxlength='255' placeholder=\"".$text['label-category']."\" value=''>";
+			echo 	"<input class='formfld' style='width: 100px; margin: 0; display: none;' type='text' name='name_new' id='name_new' maxlength='255' placeholder=\"".$text['label-category']."\" value=''>";
 		//rate
-			echo 	"<select id='rate' name='rate' class='formfld' style='display: none; width: auto;'>\n";
+			echo 	"<select id='rate' name='rate' class='formfld' style='display: none; width: auto; margin: 0;'>\n";
 			echo "		<option value=''>".$text['option-default']."</option>\n";
 			echo "		<option value='8000'>8 kHz</option>\n";
 			echo "		<option value='16000'>16 kHz</option>\n";
@@ -435,7 +433,7 @@
 			echo button::create(['type'=>'button','title'=>!empty($text['label-new']),'icon'=>$_SESSION['theme']['button_icon_add'],'id'=>'btn_new','onclick'=>"name_mode('new');"]);
 			echo button::create(['type'=>'button','title'=>$text['label-select'],'icon'=>'list','id'=>'btn_select','style'=>'display: none;','onclick'=>"name_mode('select');"]);
 		//file
-			echo 	"<input type='text' class='txt' style='width: 100px; cursor: pointer;' id='filename' placeholder='Select...' onclick=\"document.getElementById('file').click(); this.blur();\" onfocus='this.blur();'>";
+			echo 	"<input type='text' class='txt' style='width: 100px; cursor: pointer; margin: 0;' id='filename' placeholder='Select...' onclick=\"document.getElementById('file').click(); this.blur();\" onfocus='this.blur();'>";
 			echo 	"<input type='file' id='file' name='file' style='display: none;' accept='.wav,.mp3,.ogg' onchange=\"document.getElementById('filename').value = this.files.item(0).name; check_file_type(this);\">";
 		//submit
 			$margin_right = permission_exists('music_on_hold_delete') ? 'margin-right: 15px;' : null;
@@ -659,7 +657,7 @@
 			// If the range starts with an '-' we start from the beginning
 			// If not, we forward the file pointer
 			// And make sure to get the end byte if spesified
-			if ($range0 == '-') {
+			if (!empty($range0) && $range0 == '-') {
 				// The n-number of the last bytes is requested
 				$c_start = $size - substr($range, 1);
 			}

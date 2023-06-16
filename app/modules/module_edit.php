@@ -17,19 +17,15 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -71,8 +67,8 @@
 		$module_description = $_POST["module_description"];
 		$module_category = $_POST["module_category"];
 		$module_order = $_POST["module_order"];
-		$module_enabled = $_POST["module_enabled"] ?: 'false';
-		$module_default_enabled = $_POST["module_default_enabled"] ?: 'false';
+		$module_enabled = $_POST["module_enabled"] ?? 'false';
+		$module_default_enabled = $_POST["module_default_enabled"] ?? 'false';
 	}
 
 //process the data
@@ -247,7 +243,7 @@
 	$field_name = 'module_category';
 	$sql_where_optional = '';
 	$field_current_value = $module_category;
-	echo html_select_other($table_name, $field_name, $sql_where_optional, $field_current_value);
+	echo html_select_other($table_name, $field_name, $sql_where_optional, $field_current_value, $field_name.' asc', $text['label-other']);
 	echo "</td>\n";
 	echo "</tr>\n";
 

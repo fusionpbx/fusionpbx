@@ -25,12 +25,8 @@
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -50,7 +46,7 @@
 	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
 		$extension_uuid = $_REQUEST["id"];
-		$page = $_REQUEST['page'] ?? '';
+		$page = $_REQUEST['page'];
 	}
 	else {
 		$action = "add";
@@ -69,7 +65,7 @@
 
 			if ($total_extensions >= $_SESSION['limit']['extensions']['numeric']) {
 				message::add($text['message-maximum_extensions'].' '.$_SESSION['limit']['extensions']['numeric'], 'negative');
-				header('Location: extensions.php'.(is_numeric($page) ? '?page='.$page : null));
+				header('Location: extensions.php'.(isset($page) && is_numeric($page) ? '?page='.$page : null));
 				exit;
 			}
 		}
@@ -99,8 +95,8 @@
 			$effective_caller_id_number = $_POST["effective_caller_id_number"];
 			$outbound_caller_id_name = $_POST["outbound_caller_id_name"];
 			$outbound_caller_id_number = $_POST["outbound_caller_id_number"];
-			$emergency_caller_id_name = $_POST["emergency_caller_id_name"];
-			$emergency_caller_id_number = $_POST["emergency_caller_id_number"];
+			$emergency_caller_id_name = $_POST["emergency_caller_id_name"] ?? null;
+			$emergency_caller_id_number = $_POST["emergency_caller_id_number"] ?? null;
 			$directory_first_name = $_POST["directory_first_name"];
 			$directory_last_name = $_POST["directory_last_name"];
 			$directory_visible = $_POST["directory_visible"];
@@ -323,7 +319,7 @@
 			}
 
 		//prevent users from bypassing extension limit by using range
-			if ($_SESSION['limit']['extensions']['numeric'] != '') {
+			if (!empty($_SESSION['limit']['extensions']['numeric'])) {
 				if (isset($total_extensions) && ($total_extensions ?? 0) + $range > $_SESSION['limit']['extensions']['numeric']) {
 					$range = $_SESSION['limit']['extensions']['numeric'] - $total_extensions;
 				}
@@ -812,7 +808,7 @@
 						header("Location: extensions.php");
 					}
 					else {
-						header("Location: extension_edit.php?id=".$extension_uuid.(is_numeric($page) ? '&page='.$page : null));
+						header("Location: extension_edit.php?id=".$extension_uuid.(isset($page) && is_numeric($page) ? '&page='.$page : null));
 					}
 					exit;
 			}
@@ -1428,7 +1424,7 @@
 					if(empty($tmp)){
 						// $tmp = $row["destination_description"];
 					}
-					if(!empty($tmp) && !in_array($tmp, $in_list)){
+					if(!empty($tmp) && !empty($in_list) && is_array($in_list) && !in_array($tmp, $in_list)){
 						$in_list[] = $tmp;
 						if ($outbound_caller_id_name == $tmp) {
 							echo "		<option value='".escape($tmp)."' selected='selected'>".escape($tmp)."</option>\n";
@@ -1471,7 +1467,7 @@
 						$tmp = $row["destination_number"];
 					}
 					if(!empty($tmp)){
-						if ($outbound_caller_id_number == $tmp) {
+						if (!empty($outbound_caller_id_number) && $outbound_caller_id_number == $tmp) {
 							echo "		<option value='".escape($tmp)."' selected='selected'>".escape($tmp)."</option>\n";
 						}
 						else {

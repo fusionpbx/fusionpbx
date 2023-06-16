@@ -25,12 +25,8 @@
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -85,7 +81,7 @@
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$parameters['extension_uuid'] = $extension_uuid;
 	$database = new database;
-	$row = $database->select($sql, $parameters ?? null, 'row');
+	$row = $database->select($sql, $parameters, 'row');
 	if (!empty($row)) {
 		$extension = $row["extension"];
 		$number_alias = $row["number_alias"];
@@ -478,7 +474,7 @@
 			$sql .= "order by follow_me_order asc ";
 			$parameters['follow_me_uuid'] = $follow_me_uuid;
 			$database = new database;
-			$result = $database->select($sql, $parameters ?? null, 'all');
+			$result = $database->select($sql, $parameters, 'all');
 
 			unset($destinations);
 			foreach ($result as $x => &$row) {
@@ -507,7 +503,7 @@
 	$sql .= "order by extension, number_alias asc ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$database = new database;
-	$extensions = $database->select($sql, $parameters ?? null, 'all');
+	$extensions = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters, $row);
 
 //set the default
@@ -517,7 +513,7 @@
 	}
 
 //prepare the autocomplete
-	if(!empty($_SESSION['follow_me']['follow_me_autocomplete']['boolean']) == 'true') {
+	if(!empty($_SESSION['follow_me']['follow_me_autocomplete']['boolean']) && $_SESSION['follow_me']['follow_me_autocomplete']['boolean'] == 'true') {
 		echo "<link rel=\"stylesheet\" href=\"".PROJECT_PATH."/resources/jquery/jquery-ui.min.css\" />\n";
 		echo "<script src=\"".PROJECT_PATH."/resources/jquery/jquery-ui.min.js\"></script>\n";
 		echo "<script type=\"text/javascript\">\n";
@@ -754,7 +750,7 @@
 	echo "</table>";
 	echo "<br /><br />";
 
-	if (!empty($action) == "update") {
+	if (!empty($action) && $action == "update") {
 		echo "<input type='hidden' name='id' value='".escape($extension_uuid)."'>\n";
 	}
 	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";

@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2010-2019
+	Portions created by the Initial Developer are Copyright (C) 2010-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -25,12 +25,8 @@
 	James Rose <james.o.rose@gmail.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
 
@@ -101,7 +97,7 @@
 //get filtered ring group count
 	if (!empty($search)) {
 		$sql = "select count(*) from v_ring_groups where true ";
-		if ($_GET['show'] != "all" || !permission_exists('ring_group_all')) {
+		if (empty($_GET['show']) || $_GET['show'] != "all" || !permission_exists('ring_group_all')) {
 			$sql .= "and domain_uuid = :domain_uuid ";
 			$parameters['domain_uuid'] = $domain_uuid;
 		}
@@ -166,13 +162,13 @@
 		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'id'=>'btn_add','link'=>'ring_group_edit.php']);
 	}
 	if (permission_exists('ring_group_add') && $ring_groups && (!isset($_SESSION['limit']['ring_groups']['numeric']) || ($total_ring_groups < $_SESSION['limit']['ring_groups']['numeric']))) {
-		echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'name'=>'btn_copy','onclick'=>"modal_open('modal-copy','btn_copy');"]);
+		echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'id'=>'btn_copy','name'=>'btn_copy','style'=>'display: none;','onclick'=>"modal_open('modal-copy','btn_copy');"]);
 	}
 	if (permission_exists('ring_group_edit') && $ring_groups) {
-		echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$_SESSION['theme']['button_icon_toggle'],'name'=>'btn_toggle','onclick'=>"modal_open('modal-toggle','btn_toggle');"]);
+		echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$_SESSION['theme']['button_icon_toggle'],'id'=>'btn_toggle','name'=>'btn_toggle','style'=>'display: none;','onclick'=>"modal_open('modal-toggle','btn_toggle');"]);
 	}
 	if (permission_exists('ring_group_delete') && $ring_groups) {
-		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'name'=>'btn_delete','onclick'=>"modal_open('modal-delete','btn_delete');"]);
+		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','name'=>'btn_delete','style'=>'display: none;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
 	echo 		"<form id='form_search' class='inline' method='get'>\n";
 	if (permission_exists('ring_group_all')) {
@@ -215,7 +211,7 @@
 	echo "<tr class='list-header'>\n";
 	if (permission_exists('ring_group_add') || permission_exists('ring_group_edit') || permission_exists('ring_group_delete')) {
 		echo "	<th class='checkbox'>\n";
-		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle();' ".!empty($ring_groups ?: "style='visibility: hidden;'").">\n";
+		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".!empty($ring_groups ?: "style='visibility: hidden;'").">\n";
 		echo "	</th>\n";
 	}
 	if ($show == "all" && permission_exists('ring_group_all')) {
@@ -241,7 +237,7 @@
 			echo "<tr class='list-row' href='".$list_row_url."'>\n";
 			if (permission_exists('ring_group_add') || permission_exists('ring_group_edit') || permission_exists('ring_group_delete')) {
 				echo "	<td class='checkbox'>\n";
-				echo "		<input type='checkbox' name='ring_groups[$x][checked]' id='checkbox_".$x."' value='true' onclick=\"if (!this.checked) { document.getElementById('checkbox_all').checked = false; }\">\n";
+				echo "		<input type='checkbox' name='ring_groups[$x][checked]' id='checkbox_".$x."' value='true' onclick=\"checkbox_on_change(this); if (!this.checked) { document.getElementById('checkbox_all').checked = false; }\">\n";
 				echo "		<input type='hidden' name='ring_groups[$x][uuid]' value='".escape($row['ring_group_uuid'])."' />\n";
 				echo "	</td>\n";
 			}

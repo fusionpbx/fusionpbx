@@ -17,16 +17,12 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2016-2018
+ Portions created by the Initial Developer are Copyright (C) 2016-2023
  the Initial Developer. All Rights Reserved.
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
 
@@ -49,7 +45,7 @@
 //get posted data
 	if (!empty($_POST['email_templates'])) {
 		$action = $_POST['action'];
-		$category = $_POST['category'];
+		$category = $_POST['category'] ?? null;
 		$search = $_POST['search'];
 		$email_templates = $_POST['email_templates'];
 	}
@@ -112,7 +108,7 @@
 
 //prepare to page the results
 	$sql = "select count(*) from v_email_templates where true ";
-	if (!empty($_GET['show']) == "all" && permission_exists('email_template_all')) {
+	if (!empty($_GET['show']) && $_GET['show'] == "all" && permission_exists('email_template_all')) {
 		if (!empty($sql_search)) {
 			$sql .= "and ".$sql_search;
 		}
@@ -190,7 +186,7 @@
 	}
 	echo 		"<form id='form_search' class='inline' method='get'>\n";
 	if (permission_exists('email_template_all')) {
-		if (!empty($_GET['show']) == 'all') {
+		if (!empty($_GET['show']) && $_GET['show'] == 'all') {
 			echo "		<input type='hidden' name='show' value='all'>";
 		}
 		else {
@@ -241,7 +237,7 @@
 		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".(!empty($result) ?: "style='visibility: hidden;'").">\n";
 		echo "	</th>\n";
 	}
-	if (!empty($_GET['show']) == "all" && permission_exists('email_template_all')) {
+	if (!empty($_GET['show']) && $_GET['show'] == "all" && permission_exists('email_template_all')) {
 		echo "<th>".$text['label-domain']."</th>\n";
 		//echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, null, null, $param);
 	}
@@ -270,7 +266,7 @@
 				echo "		<input type='hidden' name='email_templates[$x][uuid]' value='".escape($row['email_template_uuid'])."' />\n";
 				echo "	</td>\n";
 			}
-			if (!empty($_GET['show']) == "all" && permission_exists('email_template_all')) {
+			if (!empty($_GET['show']) && $_GET['show'] == "all" && permission_exists('email_template_all')) {
 				echo "	<td>";
 				if (is_uuid($row['domain_uuid'])) {
 					echo escape($_SESSION['domains'][$row['domain_uuid']]['domain_name']);

@@ -17,19 +17,15 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -63,7 +59,7 @@
 	if (count($_POST) > 0) {
 
 		//process the http post data by submitted action
-			if (!empty($_POST['action']) != '' && is_uuid($_POST['phrase_uuid'])) {
+			if (!empty($_POST['action']) && is_uuid($_POST['phrase_uuid'])) {
 				$array[0]['checked'] = 'true';
 				$array[0]['uuid'] = $_POST['phrase_uuid'];
 
@@ -85,7 +81,7 @@
 		}
 		$phrase_name = $_POST["phrase_name"];
 		$phrase_language = $_POST["phrase_language"];
-		$phrase_enabled = $_POST["phrase_enabled"] ?: 'false';
+		$phrase_enabled = $_POST["phrase_enabled"] ?? 'false';
 		$phrase_description = $_POST["phrase_description"];
 		$phrase_details_delete = $_POST["phrase_details_delete"] ?? '';
 
@@ -128,7 +124,7 @@
 			}
 
 		//add the phrase
-			if ($_POST["persistformvar"] != "true") {
+			if (empty($_POST["persistformvar"]) || $_POST["persistformvar"] != "true") {
 				if ($action == "add" && permission_exists('phrase_add')) {
 					//build data array
 						$phrase_uuid = uuid();
@@ -154,11 +150,11 @@
 								$array['phrase_details'][0]['domain_uuid'] = $domain_uuid;
 								$array['phrase_details'][0]['phrase_detail_order'] = $_POST['phrase_detail_order'];
 								$array['phrase_details'][0]['phrase_detail_tag'] = $_POST['phrase_detail_tag'];
-								$array['phrase_details'][0]['phrase_detail_pattern'] = $_POST['phrase_detail_pattern'];
+								$array['phrase_details'][0]['phrase_detail_pattern'] = $_POST['phrase_detail_pattern'] ?? null;
 								$array['phrase_details'][0]['phrase_detail_function'] = $_POST['phrase_detail_function'];
 								$array['phrase_details'][0]['phrase_detail_data'] = $_POST['phrase_detail_data'];
-								$array['phrase_details'][0]['phrase_detail_method'] = $_POST['phrase_detail_method'];
-								$array['phrase_details'][0]['phrase_detail_type'] = $_POST['phrase_detail_type'];
+								$array['phrase_details'][0]['phrase_detail_method'] = $_POST['phrase_detail_method'] ?? null;
+								$array['phrase_details'][0]['phrase_detail_type'] = $_POST['phrase_detail_type'] ?? null;
 								$array['phrase_details'][0]['phrase_detail_group'] = $_POST['phrase_detail_group'];
 							}
 						}
@@ -218,11 +214,11 @@
 								$array['phrase_details'][0]['domain_uuid'] = $domain_uuid;
 								$array['phrase_details'][0]['phrase_detail_order'] = $_POST['phrase_detail_order'];
 								$array['phrase_details'][0]['phrase_detail_tag'] = $_POST['phrase_detail_tag'];
-								$array['phrase_details'][0]['phrase_detail_pattern'] = $_POST['phrase_detail_pattern'];
+								$array['phrase_details'][0]['phrase_detail_pattern'] = $_POST['phrase_detail_pattern'] ?? null;
 								$array['phrase_details'][0]['phrase_detail_function'] = $_POST['phrase_detail_function'];
 								$array['phrase_details'][0]['phrase_detail_data'] = $_POST['phrase_detail_data'];
-								$array['phrase_details'][0]['phrase_detail_method'] = $_POST['phrase_detail_method'];
-								$array['phrase_details'][0]['phrase_detail_type'] = $_POST['phrase_detail_type'];
+								$array['phrase_details'][0]['phrase_detail_method'] = $_POST['phrase_detail_method'] ?? null;
+								$array['phrase_details'][0]['phrase_detail_type'] = $_POST['phrase_detail_type'] ?? null;
 								$array['phrase_details'][0]['phrase_detail_group'] = $_POST['phrase_detail_group'];
 							}
 						}
@@ -270,7 +266,7 @@
 	}
 
 //pre-populate the form
-	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
+	if (count($_GET)>0 && empty($_POST["persistformvar"])) {
 		$phrase_uuid = $_GET["id"];
 		$sql = "select * from v_phrases ";
 		$sql .= "where ( ";
@@ -354,7 +350,7 @@
 			echo "var opt_group = document.createElement('optgroup');\n";
 			echo "opt_group.label = \"".$text['label-recordings']."\";\n";
 			foreach ($recordings as &$row) {
-				if ($_SESSION['recordings']['storage_type']['text'] == 'base64') {
+				if (!empty($_SESSION['recordings']['storage_type']['text']) && $_SESSION['recordings']['storage_type']['text'] == 'base64') {
 					echo "opt_group.appendChild(new Option(\"".$row["recording_name"]."\", \"\${lua streamfile.lua ".$row["recording_filename"]."}\"));\n";
 				}
 				else {

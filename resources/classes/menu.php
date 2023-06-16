@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2010 - 2022
+	Copyright (C) 2010 - 2023
 	All Rights Reserved.
 
 	Contributor(s):
@@ -191,7 +191,7 @@ if (!class_exists('menu')) {
 							}
 
 						//delete the checked rows
-							if (is_array($array) && @sizeof($array) != 0) {
+							if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
 
 								//grant temporary permissions
 									$p = new permissions;
@@ -249,7 +249,7 @@ if (!class_exists('menu')) {
 									$uuids[] = "'".$record['uuid']."'";
 								}
 							}
-							if (is_array($uuids) && @sizeof($uuids) != 0) {
+							if (!empty($uuids) && is_array($uuids) && @sizeof($uuids) != 0) {
 								$sql = "select ".$this->name."_uuid as uuid, ".$this->toggle_field." as toggle from v_".$this->table." ";
 								$sql .= "where ".$this->name."_uuid in (".implode(', ', $uuids).") ";
 								$database = new database;
@@ -265,17 +265,19 @@ if (!class_exists('menu')) {
 
 						//build update array
 							$x = 0;
-							foreach ($states as $uuid => $state) {
-								//create the array
-									$array[$this->table][$x][$this->name.'_uuid'] = $uuid;
-									$array[$this->table][$x][$this->toggle_field] = $state == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
+							if (!empty($states) && is_array($states) && @sizeof($states) != 0) {
+								foreach ($states as $uuid => $state) {
+									//create the array
+										$array[$this->table][$x][$this->name.'_uuid'] = $uuid;
+										$array[$this->table][$x][$this->toggle_field] = $state == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
 
-								//increment
-									$x++;
+									//increment
+										$x++;
+								}
 							}
 
 						//save the changes
-							if (is_array($array) && @sizeof($array) != 0) {
+							if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
 								//save the array
 									$database = new database;
 									$database->app_name = $this->app_name;
@@ -534,7 +536,7 @@ if (!class_exists('menu')) {
 										$parameters['menu_item_uuid'] = $uuid_array[$sub_row['uuid']];
 										$parameters['menu_uuid'] = $this->menu_uuid;
 										$parameters['group_name'] = $group;
-										$parameters['group_uuid'] = $group_uuids[$group];
+										$parameters['group_uuid'] = $group_uuids[$group] ?? null;
 										$database = new database;
 										$num_rows = $database->select($sql, $parameters, 'column');
 										if ($num_rows == 0) {
@@ -543,7 +545,7 @@ if (!class_exists('menu')) {
 												$array['menu_item_groups'][$x]['menu_uuid'] = $this->menu_uuid;
 												$array['menu_item_groups'][$x]['menu_item_uuid'] = $uuid_array[$sub_row['uuid']];
 												$array['menu_item_groups'][$x]['group_name'] = $group;
-												$array['menu_item_groups'][$x]['group_uuid'] = $group_uuids[$group];
+												$array['menu_item_groups'][$x]['group_uuid'] = $group_uuids[$group] ?? null;
 												$x++;
 										}
 										unset($sql, $parameters, $num_rows);

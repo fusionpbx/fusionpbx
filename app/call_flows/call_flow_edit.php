@@ -25,12 +25,8 @@
 	Lewis Hallam <lewishallam80@gmail.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 
 //check permissions
 	require_once "resources/check_auth.php";
@@ -56,6 +52,7 @@
 	$call_flow_label = '';
 	$call_flow_alternate_label = '';
 	$call_flow_description = '';
+	$call_flow_status = '';
 
 //action add or update
 	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
@@ -87,7 +84,7 @@
 			$call_flow_alternate_sound = $_POST["call_flow_alternate_sound"];
 			$call_flow_alternate_destination = $_POST["call_flow_alternate_destination"];
 			$call_flow_context = $_POST["call_flow_context"];
-			$call_flow_enabled = $_POST["call_flow_enabled"] ?: 'false';
+			$call_flow_enabled = $_POST["call_flow_enabled"] ?? 'false';
 			$call_flow_description = $_POST["call_flow_description"];
 
 		//seperate the action and the param

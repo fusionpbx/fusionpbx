@@ -17,19 +17,15 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
-//includes files";
-	require_once "resources/require.php";
+//includes files
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
 
@@ -56,7 +52,7 @@
 //get existing sip profile names to prevent duplicates
 	$sql = "select sip_profile_name from v_sip_profiles";
 	$database = new database;
-	$rows = $database->select($sql, $parameters, 'all');
+	$rows = $database->select($sql, $parameters ?? null, 'all');
 	if (is_array($rows) && @sizeof($rows) != 0) {
 		foreach ($rows as $row) {
 			$sip_profile_names[] = $row['sip_profile_name'];
@@ -69,7 +65,7 @@ if (is_uuid($sip_profile_uuid) && $sip_profile_name != '') {
 	if (!in_array($sip_profile_name, $sip_profile_names)) {
 
 		//get the sip profile data
-			if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
+			if (count($_GET) > 0 && (empty($_POST["persistformvar"]) || $_POST["persistformvar"] != "true")) {
 				$sql = "select sip_profile_hostname, sip_profile_enabled, sip_profile_description from v_sip_profiles ";
 				$sql .= "where sip_profile_uuid = :sip_profile_uuid ";
 				$parameters['sip_profile_uuid'] = $sip_profile_uuid;

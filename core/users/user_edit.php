@@ -25,12 +25,8 @@
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //add multi-lingual support
@@ -138,7 +134,7 @@
 				$contact_name_family = $_POST["contact_name_family"];
 			}
 			$group_uuid_name = $_POST["group_uuid_name"];
-			$user_enabled = $_POST["user_enabled"] ?: 'false';
+			$user_enabled = $_POST["user_enabled"] ?? 'false';
 			if (permission_exists('api_key')) {
 				$api_key = $_POST["api_key"];
 			}
@@ -576,12 +572,13 @@
 				//update the user_status
 					if (isset($call_center_agent_uuid) && is_uuid($call_center_agent_uuid) && !empty($user_status)) {
 						$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-						$switch_cmd .= "callcenter_config agent set status ".$call_center_agent_uuid." '".$user_status."'";
+						$switch_cmd = "callcenter_config agent set status ".$call_center_agent_uuid." '".$user_status."'";
 						$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
 					}
 
 				//update the user state
 					if (isset($call_center_agent_uuid) && is_uuid($call_center_agent_uuid)) {
+						$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 						$cmd = "api callcenter_config agent set state ".$call_center_agent_uuid." Waiting";
 						$response = event_socket_request($fp, $cmd);
 					}
