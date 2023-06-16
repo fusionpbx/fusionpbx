@@ -465,14 +465,13 @@
 			header("Content-Length: ".strlen($file_contents));
 		}
 		else {
-			$result = simplexml_load_string ($file_contents, 'SimpleXmlElement', LIBXML_NOERROR+LIBXML_ERR_FATAL+LIBXML_ERR_NONE);
-			if (false == $result) {
-				header("Content-Type: text/plain");
-				header("Content-Length: ".strval(strlen($file_contents)));
-			}
-			else {
+			if (is_xml($file_contents)) {
 				header("Content-Type: text/xml; charset=utf-8");
 				header("Content-Length: ".strlen($file_contents));
+			}
+			else {
+				header("Content-Type: text/plain");
+				header("Content-Length: ".strval(strlen($file_contents)));
 			}
 		}
 	}
