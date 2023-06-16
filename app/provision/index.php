@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2008-2020 All Rights Reserved.
+	Copyright (C) 2008-2023 All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
@@ -140,8 +140,8 @@
 			}
 	}
 
-//get the domain_uuid
-	$sql = "select d.device_uuid, d.domain_uuid, n.domain_name ";
+//get the domain_uuid, domain_name, device_name and device_vendor
+	$sql = "select d.device_uuid, d.domain_uuid, d.device_vendor, n.domain_name ";
 	$sql .= "from v_devices as d, v_domains as n ";
 	$sql .= "where device_mac_address = :mac ";
 	$sql .= "and d.domain_uuid = n.domain_uuid; ";
@@ -152,6 +152,7 @@
 		$device_uuid = $row['device_uuid'];
 		$domain_uuid = $row['domain_uuid'];
 		$domain_name = $row['domain_name'];
+		$device_vendor = $row['device_vendor'];
 		$_SESSION['domain_uuid'] = $domain_uuid;
 	}
 	unset($sql, $parameters);
@@ -280,7 +281,9 @@
 	}
 
 //use the mac address to get the vendor
-	$device_vendor = device::get_vendor($mac);
+	if (empty($device_vendor)) {
+		$device_vendor = device::get_vendor($mac);
+	}
 
 //keep backwards compatibility
 	if (!empty($_SESSION['provision']["cidr"]["text"])) {
