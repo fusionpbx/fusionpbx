@@ -159,6 +159,13 @@
 		}
 	}
 
+	if (!function_exists('is_xml')) {
+		function is_xml($string) {
+		    $pattern = '/^<\?xml(?:\s+[^>]+\s*)?\?>\s*<(\w+)>.*<\/\1>\s*$/s';
+		    return preg_match($pattern, $string) === 1;
+		}
+	}
+
 	if (!function_exists('recursive_copy')) {
 		if (file_exists('/bin/cp')) {
 			function recursive_copy($source, $destination, $options = '') {
