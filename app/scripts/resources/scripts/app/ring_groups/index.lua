@@ -477,7 +477,13 @@
 			sql = [[
 				SELECT
 					r.ring_group_strategy, r.ring_group_timeout_app, r.ring_group_distinctive_ring,
-					d.destination_number, d.destination_delay * 1000 as destination_delay, d.destination_timeout, d.destination_prompt,
+					d.destination_number, d.destination_timeout, d.destination_prompt,
+					CASE
+						WHEN r.ring_group_strategy = 'enterprise'
+							THEN d.destination_delay * 1000
+						WHEN r.ring_group_strategy <> 'enterprise'
+							THEN d.destination_delay
+					END as destination_delay,
 					r.ring_group_caller_id_name, r.ring_group_caller_id_number, 
 					r.ring_group_cid_name_prefix, r.ring_group_cid_number_prefix, 
 					r.ring_group_timeout_data, r.ring_group_ringback
@@ -585,7 +591,12 @@
 						--get the follow me destinations
 						if (follow_me_uuid ~= nil and row.is_follow_me_destination ~= "true") then
 							sql = "select d.domain_uuid, d.domain_name, f.follow_me_destination as destination_number, ";
-							sql = sql .. "f.follow_me_delay * 500 as destination_delay, f.follow_me_timeout as destination_timeout, ";
+							if (row.ring_group_strategy == 'enterprise') then
+								sql = sql .. "f.follow_me_delay * 1000 as destination_delay, ";
+							else
+								sql = sql .. "f.follow_me_delay as destination_delay, ";
+							end
+							sql = sql .. "f.follow_me_timeout as destination_timeout, ";
 							sql = sql .. "f.follow_me_prompt as destination_prompt ";
 							sql = sql .. "from v_follow_me_destinations as f, v_domains as d ";
 							sql = sql .. "where f.follow_me_uuid = :follow_me_uuid ";
