@@ -533,7 +533,7 @@
 												}
 												else {
 													//use the mac address to get the vendor
-													$device_vendor = device::get_vendor($device_mac_address);	
+													$device_vendor = device::get_vendor($device_mac_address);
 												}
 
 												//determine the name
@@ -599,7 +599,9 @@
 													$array["devices"][$j]["domain_uuid"] = $_SESSION['domain_uuid'];
 													$array["devices"][$j]["device_mac_address"] = $device_mac_address;
 													$array["devices"][$j]["device_label"] = $extension;
-													$array["devices"][$j]["device_vendor"] = $device_vendor;
+													if (!empty($device_vendor)) {
+														$array["devices"][$j]["device_vendor"] = $device_vendor;
+													}
 													if (!empty($device_templates[$d])) {
 														$array["devices"][$j]["device_template"] = $device_templates[$d];
 													}
