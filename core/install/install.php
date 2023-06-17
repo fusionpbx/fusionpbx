@@ -168,11 +168,6 @@
 				exit;
 			}
 
-			//set the include path
-			$config_glob = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-			$conf = parse_ini_file($config_glob[0]);
-			set_include_path($conf['document.root']);
-
 			//add the database schema
 			$output = shell_exec('cd '.$_SERVER["DOCUMENT_ROOT"].' && php /var/www/fusionpbx/core/upgrade/upgrade_schema.php');
 
