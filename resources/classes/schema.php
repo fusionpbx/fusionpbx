@@ -37,14 +37,14 @@ if (!class_exists('schema')) {
 
 		//class constructor
 			public function __construct() {
+
+				//includes files
+				require dirname(__DIR__, 2) . "/resources/require.php";
+
 				//connect to the database
-				require_once "resources/classes/database.php";
 				$database = new database;
 				$database->connect();
 				$this->db = $database->db;
-
-				//includes files
-				require_once dirname(__DIR__, 2) . "/resources/require.php";
 
 				//get the list of installed apps from the core and mod directories
 				$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_config.php");
@@ -474,21 +474,21 @@ if (!class_exists('schema')) {
 					if ($format == '') $format = $output_format;
 
 				//get the db variables
-					require_once "resources/classes/config.php";
-					$config = new config;
-					$config_exists = $config->exists();
-					$config_path = $config->find();
-					$config->get();
-					$db_type = $config->db_type;
-					$db_name = $config->db_name;
-					$db_username = $config->db_username;
-					$db_password = $config->db_password;
-					$db_host = $config->db_host;
-					$db_path = $config->db_path;
-					$db_port = $config->db_port;
+					//require_once "resources/classes/config.php";
+					//$config = new config;
+					//$config_exists = $config->exists();
+					//$config_path = $config->find();
+					//$config->get();
+					//$db_type = $config->db_type;
+					//$db_name = $config->db_name;
+					//$db_username = $config->db_username;
+					//$db_password = $config->db_password;
+					//$db_host = $config->db_host;
+					//$db_path = $config->db_path;
+					//$db_port = $config->db_port;
 
 				//includes files
-					require_once dirname(__DIR__, 2) . "/resources/require.php";
+					require dirname(__DIR__, 2) . "/resources/require.php";
 
 				//add multi-lingual support
 					if (!isset($text)) {
