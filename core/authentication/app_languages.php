@@ -104,30 +104,4 @@ $text['description-totp']['zh-cn'] = "载有认证申请或密码管理员的编
 $text['description-totp']['ja-jp'] = "認証アプリケーションまたはパスワードマネージャでコードをスキャンします。 ログイン時にトークンを生成します。";
 $text['description-totp']['ko-kr'] = "인증 신청서 또는 비밀번호 관리자로 코드를 스캔합니다. 그런 다음 로그인 토큰을 생성합니다.";
 
-$text['message-authentication_failed']['en-us'] = "Authentication Failed";
-$text['message-authentication_failed']['en-gb'] = "Authentication Failed";
-$text['message-authentication_failed']['ar-eg'] = "";
-$text['message-authentication_failed']['de-at'] = "";
-$text['message-authentication_failed']['de-ch'] = "";
-$text['message-authentication_failed']['de-de'] = "";
-$text['message-authentication_failed']['el-gr'] = "";
-$text['message-authentication_failed']['es-cl'] = "";
-$text['message-authentication_failed']['es-mx'] = "";
-$text['message-authentication_failed']['fr-ca'] = "";
-$text['message-authentication_failed']['fr-fr'] = "";
-$text['message-authentication_failed']['he-il'] = "";
-$text['message-authentication_failed']['it-it'] = "";
-$text['message-authentication_failed']['nl-nl'] = "";
-$text['message-authentication_failed']['pl-pl'] = "";
-$text['message-authentication_failed']['pt-br'] = "";
-$text['message-authentication_failed']['pt-pt'] = "";
-$text['message-authentication_failed']['ro-ro'] = "";
-$text['message-authentication_failed']['ru-ru'] = "";
-$text['message-authentication_failed']['sv-se'] = "";
-$text['message-authentication_failed']['uk-ua'] = "";
-$text['message-authentication_failed']['tr-tr'] = "";
-$text['message-authentication_failed']['zh-cn'] = "";
-$text['message-authentication_failed']['ja-jp'] = "";
-$text['message-authentication_failed']['ko-kr'] = "";
-
 ?>
