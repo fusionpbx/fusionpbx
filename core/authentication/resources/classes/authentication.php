@@ -53,7 +53,7 @@ class authentication {
 			foreach ($_SESSION['authentication']['methods'] as $name) {
 
 				//already processed the plugin move to the next plugin
-				if ($_SESSION['authentication']['plugin'][$name]['authorized']) {
+				if (!empty($_SESSION['authentication']['plugin']) && $_SESSION['authentication']['plugin'][$name]['authorized']) {
 					continue;
 				}
 

@@ -97,12 +97,37 @@ $text['description-totp']['pt-br'] = "Escaneie o código com um aplicativo de au
 $text['description-totp']['pt-pt'] = "Escaneie o código com um aplicativo de autenticação ou gerenciador de senhas. Em seguida, use-o para gerar o token para o login.";
 $text['description-totp']['ro-ro'] = "Scanați codul cu o aplicație de autentificare sau un manager de parole. Apoi utilizați-l pentru a genera simbolul pentru autentificare.";
 $text['description-totp']['ru-ru'] = "Отсканируйте код с помощью приложения для аутентификации или менеджера паролей. Затем используйте его для создания токена для входа в систему.";
-
 $text['description-totp']['sv-se'] = "Skanna koden med en autentiseringsapplikation eller lösenordshanterare. Använd sedan den för att generera token för inloggningen.";
 $text['description-totp']['uk-ua'] = "Відскануйте код за допомогою програми автентифікації або менеджера паролів. Потім використовуйте його, щоб створити маркер для входу.";
 $text['description-totp']['tr-tr'] = "Kodu bir kimlik doğrulama uygulaması veya parola yöneticisi ile tarayın. Ardından, oturum açma için belirteci oluşturmak için kullanın.";
 $text['description-totp']['zh-cn'] = "载有认证申请或密码管理员的编码。 然后使用该标识生成标识。";
 $text['description-totp']['ja-jp'] = "認証アプリケーションまたはパスワードマネージャでコードをスキャンします。 ログイン時にトークンを生成します。";
 $text['description-totp']['ko-kr'] = "인증 신청서 또는 비밀번호 관리자로 코드를 스캔합니다. 그런 다음 로그인 토큰을 생성합니다.";
+
+$text['message-authentication_failed']['en-us'] = "Authentication Failed";
+$text['message-authentication_failed']['en-gb'] = "Authentication Failed";
+$text['message-authentication_failed']['ar-eg'] = "";
+$text['message-authentication_failed']['de-at'] = "";
+$text['message-authentication_failed']['de-ch'] = "";
+$text['message-authentication_failed']['de-de'] = "";
+$text['message-authentication_failed']['el-gr'] = "";
+$text['message-authentication_failed']['es-cl'] = "";
+$text['message-authentication_failed']['es-mx'] = "";
+$text['message-authentication_failed']['fr-ca'] = "";
+$text['message-authentication_failed']['fr-fr'] = "";
+$text['message-authentication_failed']['he-il'] = "";
+$text['message-authentication_failed']['it-it'] = "";
+$text['message-authentication_failed']['nl-nl'] = "";
+$text['message-authentication_failed']['pl-pl'] = "";
+$text['message-authentication_failed']['pt-br'] = "";
+$text['message-authentication_failed']['pt-pt'] = "";
+$text['message-authentication_failed']['ro-ro'] = "";
+$text['message-authentication_failed']['ru-ru'] = "";
+$text['message-authentication_failed']['sv-se'] = "";
+$text['message-authentication_failed']['uk-ua'] = "";
+$text['message-authentication_failed']['tr-tr'] = "";
+$text['message-authentication_failed']['zh-cn'] = "";
+$text['message-authentication_failed']['ja-jp'] = "";
+$text['message-authentication_failed']['ko-kr'] = "";
 
 ?>

@@ -67,7 +67,7 @@
 
 				//redirect the user to the login page
 					$target_path = ($_REQUEST["path"] != '') ? $_REQUEST["path"] : $_SERVER["PHP_SELF"];
-					message::add($text['message-invalid_credentials'], 'negative');
+					message::add($text['message-authentication_failed'], 'negative');
 					header("Location: ".PROJECT_PATH."/?path=".urlencode($target_path));
 					exit;
 			}
