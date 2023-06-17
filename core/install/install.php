@@ -64,8 +64,8 @@
 
 //error reporting
 	ini_set('display_errors', '1');
-	error_reporting (E_ALL); // Report everything
-//	error_reporting (E_ALL ^ E_NOTICE); // Report warnings
+	//error_reporting (E_ALL); // Report everything
+	error_reporting (E_ALL ^ E_NOTICE); // Report warnings
 	//error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING ); //hide notices and warnings
 
 //set the default time zone
