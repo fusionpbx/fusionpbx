@@ -601,17 +601,13 @@ if (!class_exists('domains')) {
 		 */
 		public function upgrade() {
 
+			//includes files
+				require dirname(__DIR__, 2) . "/resources/require.php";
+
 			//get the variables
 				$config = new config;
 				$config_path = $config->find();
 				$config->get();
-
-			//set the include path
-				$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-				set_include_path(parse_ini_file($conf[0])['document.root']);
-
-			//includes files
-				include "resources/require.php";
 
 			//check for default settings
 				$this->settings();

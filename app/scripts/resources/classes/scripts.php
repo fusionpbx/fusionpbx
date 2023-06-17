@@ -86,6 +86,9 @@ if (!class_exists('scripts')) {
 		 */
 		public function copy_files() {
 
+			//includes files
+			//require dirname(__DIR__, 2) . "/resources/require.php";
+
 			//read the config.conf settings
 			$config_glob = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
 			$conf = parse_ini_file($config_glob[0]);
