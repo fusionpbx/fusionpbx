@@ -40,16 +40,16 @@
 	require_once "resources/classes/message.php";
 	require_once "core/install/resources/classes/install.php";
 
+//start the session before text object stores values in session
+	//ini_set("session.cookie_httponly", True);
+	session_start();
+
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
 
 //set debug to true or false
 	$debug = false;
-
-//start the session
-	//ini_set("session.cookie_httponly", True);
-	session_start();
 
 //set the default domain_uuid
 	$domain_uuid = uuid();
