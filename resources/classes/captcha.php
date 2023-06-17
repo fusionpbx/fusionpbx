@@ -56,7 +56,6 @@ class captcha {
 		require_once "resources/functions.php";
 
 		//start the session
-		ini_set("session.cookie_httponly", True);
 		if (!isset($_SESSION)) { session_start(); }
 
 		//$_SESSION["captcha"] = substr(md5(uuid()), 0, 6);
