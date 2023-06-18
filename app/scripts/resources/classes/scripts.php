@@ -87,12 +87,9 @@ if (!class_exists('scripts')) {
 		public function copy_files() {
 
 			//includes files
-			//require dirname(__DIR__, 2) . "/resources/require.php";
+			require dirname(__DIR__, 4) . "/resources/require.php";
 
-			//read the config.conf settings
-			$config_glob = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-			$conf = parse_ini_file($config_glob[0]);
-
+			//copy the scripts directory
 			if (!empty($conf['switch.scripts.dir'])) {
 				$destination_directory = $conf['switch.scripts.dir'];
 				if ($destination_directory != '' && file_exists($destination_directory)) {
