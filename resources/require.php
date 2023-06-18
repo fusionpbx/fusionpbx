@@ -29,6 +29,12 @@
 	$conf = parse_ini_file($config_glob[0]);
 	set_include_path($conf['document.root']);
 
+//config file
+	$config_file = $config_glob[0] ?? '';
+
+//check if the config file exists
+	$config_exists = file_exists($config_file) ? true : false;
+
 //set the server variables and define project path constant
 	$_SERVER["DOCUMENT_ROOT"] = $conf['document.root'];
 	$_SERVER["PROJECT_ROOT"] = $conf['document.root'];
