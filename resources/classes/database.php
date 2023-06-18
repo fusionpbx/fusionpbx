@@ -392,22 +392,15 @@
 			public function connect() {
 
 				//includes files
-					//require dirname(__DIR__, 2) . "/resources/require.php";
-
-				//set the include path
-					$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-					set_include_path(parse_ini_file($conf[0])['document.root']);
-
-				//parset the config.conf file
-					$conf = parse_ini_file($conf[0]);
+					require dirname(__DIR__, 2) . "/resources/require.php";
 
 				//get the database connection settings
-					$db_type = $conf['database.0.type'];
-					$db_host = $conf['database.0.host'];
-					$db_port = $conf['database.0.port'];
-					$db_name = $conf['database.0.name'];
-					$db_username = $conf['database.0.username'];
-					$db_password = $conf['database.0.password'];
+					//$db_type = $conf['database.0.type'];
+					//$db_host = $conf['database.0.host'];
+					//$db_port = $conf['database.0.port'];
+					//$db_name = $conf['database.0.name'];
+					//$db_username = $conf['database.0.username'];
+					//$db_password = $conf['database.0.password'];
 
 				//debug info
 					//echo "db type:".$db_type."\n";
@@ -643,6 +636,13 @@
 				//connect to the database if needed
 				if (!$this->db) {
 					$this->connect();
+				}
+
+				//if unable to connect to the database
+				if (!$this->db) {
+					echo "Connection Failed<br />\n";
+					echo "line number ".__line__."<br />\n";
+					exit;
 				}
 
 				//query table store to see if the table exists
@@ -1477,11 +1477,20 @@
 						$this->connect();
 					}
 
+				//unable to connect to the database
+					if (!$this->db) {
+						echo "Connection Failed<br />\n";
+						echo "line number ".__line__."<br />\n";
+						exit;
+					}
+
 				//set the error mode
-					$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+					if ($this->db) {
+						$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+					}
 
 				//reduce prepared statement latency
-					if (defined('PDO::PGSQL_ATTR_DISABLE_PREPARES')) {
+					if ($this->db && defined('PDO::PGSQL_ATTR_DISABLE_PREPARES')) {
 						$this->db->setAttribute(PDO::PGSQL_ATTR_DISABLE_PREPARES, true);
 					}
 
