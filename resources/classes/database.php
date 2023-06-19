@@ -237,7 +237,7 @@
 			 * @var array Contains the message array after a query
 			 * @access private
 			 */
-			private $message;
+			public $message;
 
 			/**
 			 * Called when the object is created
@@ -879,18 +879,18 @@
 						}
 					}
 					catch(PDOException $e) {
-						$message["message"] = "Bad Request";
-						$message["code"] = "400";
-						$message["error"]["message"] = $e->getMessage();
+						$message["type"] = 'error';
+						$message["code"] = $e->getCode();
+						$message["message"] = $e->getMessage();
 						$message["sql"] = $sql;
-						if (is_array($parameters)) {
+						if (!empty($parameters)) {
 							$message["parameters"] = $parameters;
 						}
 						$this->message = $message;
 						return false;
 					}
 			}
-
+    
 			public function add() {
 				//connect to the database if needed
 					if (!$this->db) {
