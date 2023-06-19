@@ -53,6 +53,7 @@
 	}
 
 //channel count
+	$channels = '';
 	$tr_link_channels = '';
 	if (permission_exists('switch_channels') && $fp) {
 		$tmp = event_socket_request($fp, 'api status');
