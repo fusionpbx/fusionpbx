@@ -53,6 +53,7 @@
 	}
 
 //channel count
+	$tr_link_channels = '';
 	if (permission_exists('switch_channels') && $fp) {
 		$tmp = event_socket_request($fp, 'api status');
 		$matches = Array();
@@ -64,6 +65,7 @@
 	}
 
 //registration count
+	$registrations = '';
 	if (permission_exists('switch_registrations') && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/registrations/")) {
 		$registration = new registrations;
 		if (permission_exists("registration_all")) {
@@ -125,7 +127,7 @@
 	echo "</tr>\n";
 
 	//switch version
-	if (permission_exists('switch_version') && $switch_version != '') {
+	if (permission_exists('switch_version') && !empty($switch_version)) {
 		echo "<tr class='tr_link' ".$tr_link_sip_status.">\n";
 		echo "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-switch']."</td>\n";
 		echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'><a ".$tr_link_sip_status.">".$switch_version." (".$switch_bits.")</a></td>\n";
@@ -134,7 +136,7 @@
 	}
 
 	//switch uptime
-	if (permission_exists('switch_uptime') && $uptime != '') {
+	if (permission_exists('switch_uptime') && !empty($uptime)) {
 		echo "<tr class='tr_link' ".$tr_link_sip_status.">\n";
 		echo "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-switch_uptime']."</td>\n";
 		echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'><a ".$tr_link_sip_status.">".$uptime."</a></td>\n";
