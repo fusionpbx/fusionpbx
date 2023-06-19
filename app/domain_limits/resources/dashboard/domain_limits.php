@@ -57,6 +57,10 @@
 			$row_style["0"] = "row_style0";
 			$row_style["1"] = "row_style1";
 
+		//set default values
+			if (!isset($_SESSION['limit']['extensions']['numeric'])) { $_SESSION['limit']['extensions']['numeric'] = 0; }
+			if (!isset($_SESSION['limit']['destinations']['numeric'])) { $_SESSION['limit']['destinations']['numeric'] = 0; }
+
 		//caller id
 			echo "<div class='hud_box'>\n";
 
