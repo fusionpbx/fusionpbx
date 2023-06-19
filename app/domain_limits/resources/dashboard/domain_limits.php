@@ -50,7 +50,7 @@
 	unset($hud_stat);
 
 //domain limits
-	if (is_array($_SESSION['limit']) && sizeof($_SESSION['limit']) > 0) {
+	if (!empty($_SESSION['limit']) && sizeof($_SESSION['limit']) > 0) {
 
 		//set the row style
 			$c = 0;
