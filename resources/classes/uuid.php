@@ -58,7 +58,7 @@
 	 *  </code>
 	 * @author Tim Fry <tim@voipstratus.com>
 	 */
-	final class uuid implements \Stringable {
+	final class uuid {
 
 		/**
 		 * @var const UUID regular expression
