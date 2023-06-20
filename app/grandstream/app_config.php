@@ -31,7 +31,7 @@
 	//default settings
 		$y=0;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "bf083e2c-ad73-48ba-a981-9e1c92b2554e";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_call_waiting";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
@@ -39,7 +39,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Call Waiting 0-default, 1-enabled, 2-disable.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "3efa97d6-a35a-4371-b3db-efca7ef9b9b5";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_call_waiting_ring";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
@@ -47,7 +47,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Call waiting ringing instead of playing call waiting tone when call waiting is on. 0-disabled (default), 1-enabled";		
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "3a8841f3-e1c0-4eb1-abd3-068a3e3701a5";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_gxp_time_zone";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "auto";
@@ -55,7 +55,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "See provision profile for codes.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "bce5c360-ec90-468b-9bed-aa5ceabfe87d";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_check_sip_user_id";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
@@ -63,7 +63,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "GXV Android phones - fix auto-ring bug.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "4965e699-65a2-4309-b30c-6c6aae9c5e60";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_config_server_path";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "https://server.yourdomain.com/app/provision";
@@ -71,7 +71,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Location to use for Grandstream provisioning configuration.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "87895c98-10a1-44db-a6cc-db7ae0eb70d1";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_dns_mode";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
@@ -79,7 +79,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "DNS Mode 0=A; 1=SRV; 2=NAPTR/SRV;";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "1d1d4b7c-2cd2-474b-8cdf-8f5b8842a9e5";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_firmware_path";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "https://server.yourdomain.com/app/grandstream/resources/firmware";
@@ -87,7 +87,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Grandstream firmware and provision.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "712daa4c-d657-4ed1-85f6-9134bef2969d";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_global_contact_groups";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "contacts_elementary,contacts_facilities,contacts_other,contacts_secondary";
@@ -95,7 +95,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "List of contact groups that every phone will have access to.  Namely building sites.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "daeec650-12ab-47b7-a079-d274beee66f5";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_lan_port_vlan";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
@@ -103,7 +103,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Default VLAN for phone LAN port. Default 0 is disabled.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "5200174e-b644-438f-a2f8-b721ee052cea";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_pc_port_vlan";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
@@ -111,7 +111,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Default VLAN for phone PC port.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "a3adbb11-4e9f-4a56-86f8-0fefa5fb8c1d";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_ldap_base_dn";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "dc=mydomain,dc=com";
@@ -119,7 +119,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Base DN";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "2d820643-b2ad-4824-946e-540d800ebd82";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_ldap_display_name";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "givenName sn title";
@@ -127,7 +127,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Which named attributes to display on device.  Must be pulled in through grandstream_ldap_name_attr.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "108f9c23-d44b-41f0-b332-ef9d586ecb8d";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_ldap_mail_attr";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "mail";
@@ -135,7 +135,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Mail attribute returned to phone";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "a8acdbb0-98de-48d6-9d6d-1f7961a50a6b";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_ldap_mail_filter";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "(mail=%)";
@@ -143,7 +143,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Search filter for mail lookups";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "3f1fa270-7a73-41b0-8210-8a9e9295f658";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_ldap_name_attr";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "givenName sn title mail";
@@ -151,7 +151,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "The NAME attributes returned in the LDAP search result available to device";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "72b87ed4-588c-4706-a221-e15d5fcaa79d";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_ldap_name_filter";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "(cn=%)";
@@ -159,7 +159,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Search filter for name lookups";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "902d7bd7-4040-4082-a6ab-737f5f6e76a0";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_ldap_number_attr";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "telephoneNumber mobile homePhone";
@@ -167,7 +167,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Number attributes returned to the phone.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "7f123561-b35f-475b-b3c7-202df5be63b6";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_ldap_number_filter";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "(|(telephoneNumber=%)(homePhone=%)(moblie=%))";
@@ -175,7 +175,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Search filter for number lookups.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "33728232-dd89-4e30-8bc9-379891f2696b";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_ldap_password";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "super-secret";
@@ -183,7 +183,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Ldap bind user password.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "614745a2-2441-48f7-a62d-e0dc098c7db0";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_ldap_server";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "mydomain.com";
@@ -191,7 +191,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Ldap server host name";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "c5d91dcd-cc74-4bc9-a3a8-e3b8ee5bd1a6";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_ldap_user_base";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "ou=users,dc=mydomain,dc=com";
@@ -199,7 +199,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Ldap base for users.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "35dfa15a-1bfb-43e1-ba91-79c78dc89f04";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_ldap_username";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "cn=pbxadmin,dc=mydomain,dc=com";
@@ -207,7 +207,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Ldap server bind username";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "c1411d05-8f55-4bbf-96e8-6ab8cbb77bb5";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_nat_traversal";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
@@ -215,7 +215,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "NAT Traversal. 0 - No, 1 - STUN, 2 - keep alive, 3 - UPnP, 4 - Auto, 5 - VPN";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "8f4cea83-f4fd-4f21-948a-9f434b46b286";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_phonebook_download";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
@@ -223,7 +223,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "0 - Disabled, 1 - Enabled, use HTTP, 2 - Enabled, use TFTP, 3 - Enabled, use HTTPS. Default is 0";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "f7bf7fb8-5d2a-46a8-b218-32826c29fd53";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_phonebook_download_interval";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "720";
@@ -231,7 +231,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "0=disabled, 5-720 minutes";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "66c37aae-8381-460d-bac3-d08fea5d3217";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_phonebook_xml_server_path";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "mydomain.com/app/provision/";
@@ -239,7 +239,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Grandstream Phonebook Server Path - NOTE template adds MAC on the end of this if contact_grandstream is enabled.  This also requires nginx rewrite rules for phonebook.xml";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "00f51316-4405-4450-b619-12e0b2594e1a";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_qos_rtp";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "5";
@@ -247,7 +247,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Layer 2 QoS 802.1p Priority Value for RTP media";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "4e1e89b8-f114-4580-944a-2537eebb0915";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_qos_sip";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "3";
@@ -255,7 +255,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Layer 2 QoS 802.1p Priority Value for SIP signaling";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "be807a0d-d939-484a-b34a-5605c28b7e11";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_sip_only_known_servers";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
@@ -263,7 +263,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "GXV Android phones - fix auto-ring bug.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "40435232-cdc7-412a-8927-892f2bd44bda";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_stun_server";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "stun.counterpath.com";
@@ -271,7 +271,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Bug in Grandstream where null stun_server defaults to sip server/port";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "6dbe4a02-33a3-4c1d-9145-0b8d6a5b8c81";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_validate_incoming_sip";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
@@ -279,7 +279,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "GXV Android phones - fix auto-ring bug.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "0971caf6-679a-4442-a16f-e729f2f402d7";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_wallpaper_url";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "https://mydomain.com/files/wallpaper.jpg";
@@ -287,7 +287,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Wallpaper Image JPEG 480x272 16-bit depth dithered";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "f7f352d2-a3f0-4ea3-b013-8856404b66a4";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_dial_plan";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = '{\+x+|x+|*x+|*++|\p\a\r\k\+*x+|\p\a\r\k\+x+|\f\l\o\w\+*x+|**x+}';
@@ -295,7 +295,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Define the digits that are allowed to be called.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "a004dee4-4621-4c6d-8c20-7f315f812d85";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_bluetooth_power";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
@@ -303,7 +303,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Bluetooth Power - 0 - Off, 1 - On, 2 - Off & Hide Menu From LCD";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "09d534c5-551b-47ad-86bc-c053b66679a6";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_bluetooth_handsfree";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
@@ -311,7 +311,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Bluetooth Handsfree - 0 - Off, 1 - On";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "5bc527d0-6f83-403b-a6c0-574540cfa9a6";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_headset_type";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
@@ -319,7 +319,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Headset Type. 0 - Normal, 1 - Plantronics EHS. Default is 0";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "522ee640-5e24-4058-95ed-605bd982ec33";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_headset_key_mode";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
@@ -327,7 +327,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "HEADSET Key Mode. 0 - Default Mode, 1 - Toggle Headset/Speaker. Default is 0";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "c245a640-9caa-472a-9e5a-f2f0392c40ff";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_headset_ring";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
@@ -335,7 +335,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Always Ring Speaker. 0 - No, 1 - Yes both, 2 - Yes Speaker Only. Default is 0";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "453ec939-ef61-4ecd-ad0a-31905153efd8";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_auto_attended_transfer";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
@@ -343,7 +343,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Attended Transfer Mode. 0 - Static, 1 - Dynamic. Default is 0";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "5d68ccaa-34c3-46f4-8ba5-d105e135a073";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_fxs_enabled";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
@@ -351,7 +351,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enable FXS (TR-069) (0 - No, 1 - Yes, default is Yes";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "0f1062d5-d262-4444-a8cb-a48faa4ce580";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_syslog_server";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
@@ -359,7 +359,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Syslog Server (name of the server, max length is 64 characters)";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "4f234e60-5653-4d4a-bac5-07135ea0549c";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_syslog_level";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
@@ -367,7 +367,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Syslog Level. 0 - NONE, 1 - DEBUG, 2 - INFO, 3 - WARNING, 4 - ERROR. Default is 0";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "8e42975d-fe62-4e5a-8115-5a8bdb6ae2bd";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_send_sip_log";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
@@ -375,7 +375,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Send SIP Log. 0 - Do not send SIP log in Syslog, 1 - Send SIP log in Syslog if configured and set to DEBUG level. Default is 0";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "7bb45800-e493-4b3d-bffe-1b401a64a9b3";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_screensaver";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
@@ -383,7 +383,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Screensaver. 0 - No, 1 - Yes, 2 - On if no VPK is active. Default is 1";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "eb96abe3-0225-4c75-adcf-982e7121d905";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_screensaver_source";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
@@ -391,7 +391,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Screensaver Source. 0 - Default, 1 - USB, 2 - Download. Default is 0. --for GXP2140/2160/2170 only";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "6be4fe78-59f1-4677-b0e1-18984682aac5";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_screensaver_show_date_time";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
@@ -399,7 +399,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Show Date and Time. 0 - No, 1 - Yes. Default is 1";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "55d20480-687c-45d2-b6a5-65295a908917";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_screensaver_timeout";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "5";
@@ -407,7 +407,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Screensaver Timeout. Minutes 3-60";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "918685f9-aa99-4de7-b3b0-06aff5d69e4c";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_screensaver_server_path";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
@@ -415,7 +415,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Screensaver Server Path";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "1cbf0a48-9e4f-4af6-8d91-8ebff8ba27ec";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_screensaver_xml_download_interval";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
@@ -423,7 +423,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Screensaver XML Download Interval Number: 5 - 720. Default is 0 (disable auto downloading)";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "af73fb5c-8ded-4ee0-bd11-97f14f06f3c3";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_srtp";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
@@ -431,7 +431,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "SRTP Mode. 0 - Disabled, 1 - Enabled but not forced, 2 - Enabled and forced, 3 - Optional. Default is 0";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "37bb9332-5261-4826-b675-0fd4b836bb98";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_account_ring_tone_1";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
@@ -439,7 +439,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Account Ring Tone. 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone, 4 - silent. Default is 0";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "3714f5c5-4eef-41a6-8f21-2e9ca9e60128";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_blf_call_pickup";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
@@ -447,7 +447,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "BLF Call-pickup. 0 - Auto, 1 - Force BLF Call-pickup by prefix, 2 - Disabled. Default is 0";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "53a9f955-d199-44f5-a97d-eed636348da5";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_blf_remote_status";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
@@ -455,7 +455,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Hide BLF Remote Status. Default 0 - Not hidden, 1 - Hidden";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "09ed1352-2594-4eb8-b3f8-93cdaabe6302";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_active_backlight_timeout";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
@@ -463,7 +463,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Active Backlight Timeout. Default is 1. Value 1-90.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "66aa21c7-abc9-4265-85ef-5de630d7987c";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_lcd_brightness_idle";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "60";
@@ -471,7 +471,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Active Backlight Idle Time. Default is 60.. Value 0-100.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "14154480-e12d-473f-9967-2381eea88c76";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_lcd_brightness";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "100";
@@ -479,7 +479,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Backlight Brightness. Default is 100.. Value 10-100.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "513f981f-3954-4bbd-a311-8ea134fe0818";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_fax_mode";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
@@ -487,7 +487,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "FAX Mode. 0 - T.38 (Auto Detect), 1 - Pass Through.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "7084cb02-e07a-464d-bc55-63b22b0f726f";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_config_via_keypad";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
@@ -495,7 +495,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Configuration Via Keypad Menu. 0 - Unrestricted, 1 - Basic settings only, 2 - Constraint mode. Default is 0";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "c175caec-fd16-426f-a135-4b254a983fa0";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_distinctive_ringtone_name_1";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "ring1";
@@ -503,7 +503,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Matching Incoming Caller ID. Matching Rule 1. Also use grandstream_distinctive_ringtone_1";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "8c41ae46-c58a-498f-a863-9048f879ff91";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_distinctive_ringtone_name_2";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "ring2";
@@ -511,7 +511,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Matching Incoming Caller ID. Matching Rule 2. Also use grandstream_distinctive_ringtone_2";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "cfe1b2b8-414c-426d-8046-accdfe916d46";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_distinctive_ringtone_name_3";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "ring3";
@@ -519,7 +519,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Matching Incoming Caller ID. Matching Rule 3. Also use grandstream_distinctive_ringtone_3";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "546a23b2-f996-4163-935e-889136c54650";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_distinctive_ringtone_name_4";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
@@ -527,7 +527,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Matching Incoming Caller ID. Matching Rule 4. Also use grandstream_distinctive_ringtone_4";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "9daa6692-efb2-442e-8af6-7419575aa771";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_distinctive_ringtone_name_5";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
@@ -535,7 +535,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Matching Incoming Caller ID. Matching Rule 5. Also use grandstream_distinctive_ringtone_5";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "06982cf9-e683-4bb8-a3c8-990063152bfd";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_distinctive_ringtone_name_6";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
@@ -543,7 +543,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Matching Incoming Caller ID. Matching Rule 6. Also use grandstream_distinctive_ringtone_6";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "cfed0d3f-7ae9-4061-a09f-d10770953e03";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_distinctive_ringtone_name_7";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
@@ -551,7 +551,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Matching Incoming Caller ID. Matching Rule 7. Also use grandstream_distinctive_ringtone_7";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "73da25a6-096c-4674-a261-b5e188420a36";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_distinctive_ringtone_name_8";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
@@ -559,7 +559,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Matching Incoming Caller ID. Matching Rule 8. Also use grandstream_distinctive_ringtone_8";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "c87150d9-cb89-400e-a93f-a4d6f22d2f4b";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_distinctive_ringtone_name_9";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
@@ -567,7 +567,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Matching Incoming Caller ID. Matching Rule 9. Also use grandstream_distinctive_ringtone_9";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "41d69797-9028-4869-9936-eab8921db874";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_distinctive_ringtone_name_10";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
@@ -575,7 +575,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Matching Incoming Caller ID. Matching Rule 10. Also use grandstream_distinctive_ringtone_10";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "0304ea35-7cab-4755-a654-80cca0359bd9";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_distinctive_ringtone_1";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "5";
@@ -583,7 +583,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Also use grandstream_distinctive_ringtone_name_1 -1 - No Ringtone, 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3, 4 - silent, 5 - Default Ringtone.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "3efcac65-6aac-438d-af15-996c6ed82d60";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_distinctive_ringtone_2";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "5";
@@ -591,7 +591,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Also use grandstream_distinctive_ringtone_name_2 -1 - No Ringtone, 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3, 4 - silent, 5 - Default Ringtone.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "ff646a6f-bde7-4804-831e-392dfab22c4c";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_distinctive_ringtone_3";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "5";
@@ -599,7 +599,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Also use grandstream_distinctive_ringtone_name_3 -1 - No Ringtone, 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3, 4 - silent, 5 - Default Ringtone.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "b961bd6d-76b0-496d-ab0c-06028d84d387";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_distinctive_ringtone_4";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "5";
@@ -607,7 +607,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Also use grandstream_distinctive_ringtone_name_4 -1 - No Ringtone, 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3, 4 - silent, 5 - Default Ringtone.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "4d840eb3-345b-4c9a-b07b-106031d5daad";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_distinctive_ringtone_5";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "5";
@@ -615,7 +615,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Also use grandstream_distinctive_ringtone_name_5 -1 - No Ringtone, 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3, 4 - silent, 5 - Default Ringtone.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "bfd94422-15b1-40f7-ba21-2ec0a28091df";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_distinctive_ringtone_6";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "5";
@@ -623,7 +623,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Also use grandstream_distinctive_ringtone_name_6 -1 - No Ringtone, 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3, 4 - silent, 5 - Default Ringtone.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "48ee1ad5-5b0d-4c60-8e1a-d18cf0a9dee7";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_distinctive_ringtone_7";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "5";
@@ -631,7 +631,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Also use grandstream_distinctive_ringtone_name_7 -1 - No Ringtone, 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3, 4 - silent, 5 - Default Ringtone.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "b7429f03-ecd7-4f4d-bee0-71bbb16b42e6";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_distinctive_ringtone_8";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "5";
@@ -639,7 +639,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Also use grandstream_distinctive_ringtone_name_8 -1 - No Ringtone, 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3, 4 - silent, 5 - Default Ringtone.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "2ed68c05-b196-4c4f-8a78-74625ab87c28";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_distinctive_ringtone_9";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "5";
@@ -647,7 +647,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Also use grandstream_distinctive_ringtone_name_9 -1 - No Ringtone, 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3, 4 - silent, 5 - Default Ringtone.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "4e6a634a-8cbc-4b6d-8e05-1e2901138bb9";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_distinctive_ringtone_10";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "5";
@@ -655,7 +655,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Also use grandstream_distinctive_ringtone_name_10 -1 - No Ringtone, 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3, 4 - silent, 5 - Default Ringtone.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "e19a93ab-4b14-4167-8619-5ffedbf34868";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_ring_timeout";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "60";
@@ -663,7 +663,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Ring Timeout (in seconds). Default is 60 (30-3600)";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "06a35172-1bea-4611-87d0-9d66475ae709";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_wallpaper_source";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
@@ -671,7 +671,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "0 - Default, 1 - Download, 2-USB(for GXP2140/2160/2170 only), 3 - Uploaded, 4 - Color Background";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "7ee552de-4634-4d61-8869-e0f5230858fa";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_display_language";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "Auto";
@@ -679,7 +679,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Display Language. See provision profile for codes.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "19604f85-b643-4b92-8e28-9c09c34cf559";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_blind_xfer_blf";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
@@ -687,7 +687,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enable Blind Transfer to BLF Yes=1, No=0. Default=0";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "82b7076b-e596-49e8-b535-af86e21e0453";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_ip_address_mode";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
@@ -695,7 +695,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "IP Address Mode. 0 - DHCP, 1 - Static IP, 2 - PPPoE. Default is 0";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "6ab26457-fcc8-414e-8ac5-ae681f114974";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_speaker_ring_volume";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "5";
@@ -703,7 +703,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Number: 0-7. Default is 5.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "6f3f3390-2b69-4898-a4d9-e62249d58d58";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_feature_key_sync";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
@@ -711,7 +711,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enabled: 1, Disabled: 0  Defaults to 0. Valid for firmware higher than 1.0.9.202 for the GXP series and all firmwares GRP phones.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "a6c84c0b-a7f1-4457-8afb-b64af601597d";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_wifi_enable";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
@@ -719,7 +719,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Configure the WiFi radio on supported phones. If disabled allow the device to manage itself";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "f7fdbe09-0d4a-4d06-b70b-e25cdf1b3376";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_wifi_essid";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
@@ -727,7 +727,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Configure the WiFi ESSID on supported phones";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "2edaa516-d87e-410f-8ddc-1cc468dabd2e";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_wifi_password";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
@@ -735,7 +735,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Configure the WiFi password on supported phones";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "7b525ca5-96ae-4104-ad6c-c929f85c30dc";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_wifi_hidden_security";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "None";
@@ -743,7 +743,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Configure the security to use when connecting to a hidden SSID. Valid values: None, WEP, WPA/WPA2_PSK, 802.1X_EAP";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "032e7e44-2f61-4d62-ba64-00199a51b4f6";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_dhcp_option_override";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
@@ -751,7 +751,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Allow DHCP Option 43 and Option 66 to override server. 0 - No, 1 - Yes, 2 - Prefer, fallback when failed. Default is 1. option 2 not on all phones";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "b91d347a-4705-4798-92d4-a3a98916f330";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_dhcp_option_additional_override";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
@@ -759,7 +759,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Additional Override DHCP Option. 0 - None,  1 - Option 150,  2 - Option 160. Default is 0. option will be effective only when grandstream_dhcp_option_override is enabled";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "12d023f4-9fdf-4f4b-830b-f311fcaa2503";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_dhcp_option_override_sip_server";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
@@ -767,7 +767,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Allow DHCP Option 120 to Override SIP Server. 0 - No, 1 - Yes. Default is 0";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "3addc91a-820c-4a97-8c95-d1b404eae8b2";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_ipv_mode";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
@@ -775,7 +775,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Internet Protocol. 0 - Both, prefer IPv4, 1 - Both, prefer IPv6, 2 - IPv4 Only, 3 - IPv6 Only. Default is 0";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "3dd34197-e1e8-40bc-baf2-2e07c39d59b5";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_accept_sip_from_proxy_only";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
@@ -783,7 +783,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Accept Incoming SIP from Proxy Only. 0 - No, 1 - Yes. Default is 0";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "643bd502-9052-45a8-9811-5d42669a4a89";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_dnssrv_transport";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
@@ -791,7 +791,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "SIP transport if dns/srv is selected.  Value options - udp, tcp, tls.  ";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "2aebb9db-ade3-4983-bffc-a53be0ad30d2";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_disable_active_mpk_page";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
@@ -799,7 +799,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Disable Active MPK Page. 0 - No, 1 - Yes. Default is 0";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "f4a764b1-7c31-406c-ba81-4fe3328450f6";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_long_label";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
@@ -807,7 +807,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Use Long Label. 0 - No, 1 - Yes. Default is 0";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "39fc74a8-1af6-4150-ba2b-52a2597f324c";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_configuration_via_keypad";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
@@ -815,7 +815,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Configuration Via Keypad Menu. 0 - Unrestricted, 1 - Basic settings only, 2 - Constraint mode, 3 - Locked Mode. Default is 0";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "06e28a20-25ed-484f-b385-a64361c9aed1";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_dhcp_time_zone";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
@@ -823,7 +823,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Allow DHCP server to set Time Zone. 0 - No, 1 - Yes";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "db6bf37d-b240-4cd9-91d3-bf326a4d8462";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_idle_mute_function";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
@@ -831,7 +831,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Mute Key Functions While Idle. 0 - DND, 1 - Idle Mute, 2 - Disabled. Default is 0";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "bba15ab9-fb7b-4551-b83c-101b968bef02";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_idle_mute_function_old";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
@@ -839,7 +839,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enable Idle Mute. 0 - No, 1 - Yes. Default is 0";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "e08a9c4e-fd4b-485a-bb60-c47fa03d525f";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_show_key_labels";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
@@ -847,7 +847,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Show Keys Label. 1 - Show, 2 - Hide, 0 - Toggle. Default is 0";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "13d088f2-5d1b-47bf-a9b5-e7fdc24faeec";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_missed_call_log";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
@@ -855,7 +855,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Missed Call Log. 0 - Disabled, 1 - Enabled. Default is 0";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "f6c06df3-1d62-4c1d-a10c-11ddd42e0dff";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_missed_call_notification";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
@@ -863,7 +863,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enable Missed Call Notification. 0 - No, 1 - Yes. Default is 0";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "2303515c-198c-4229-87e2-495e1121d0cf";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_missed_call_backlight";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
@@ -871,7 +871,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Disable Missed Call Backlight. 0 - No, 1 - Yes, 2 - Yes, but flash MWI LED. Default is 0";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "bc8725c3-29c7-4d99-ba4d-177070e6e398";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_firmware_upgrade_protocol";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
@@ -879,7 +879,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Firmware Upgrade Via. 0 - TFTP,  1 - HTTP, 2 - HTTPS, 3 - FTP, 4 - FTPS. Default is 1.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "54222376-2427-4260-9553-c7c379fc9721";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_onhook_dial_barging";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
@@ -887,7 +887,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Onhook Dial Barging. 0 - Disabled, 1 - Enabled. Default is 1";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "f21df044-9ff4-426c-b87c-422786deac44";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_transfer_mode_via_vpk";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
@@ -895,7 +895,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Transfer Mode via VPK. 0 - Blind Transfer, 1 - Attended Transfer, 2 - New Call. Default is 0";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "00d3dc88-1f66-4cbb-81d1-5463e9c3dfa8";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_enable_call_features";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
@@ -903,7 +903,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enable Call Features.  0 - no, 1 - yes";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "4828806c-efae-44a8-9317-651313be2e60";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_ptt_enable";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
@@ -911,7 +911,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enable/Disable PTT. 0 - Disable, 1 - Enable. Default is 0.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "39dd684a-7150-443f-bb92-916f919f46d5";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_auto_dial_number";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
@@ -919,7 +919,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Offhook Auto-Dial (User ID/extension to dial automatically when offhook)";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "8174d01b-0281-43ab-ba39-81f4f070ffcd";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_auto_dial_delay";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
@@ -927,7 +927,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Offhook Auto-Dial Delay (0-60 seconds, default is 0)";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "e7dd2fb0-e4f0-4678-b886-d53bcd8cf6e1";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_dp750_use_standard_firmware_path";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
@@ -935,7 +935,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "look for Grandstream DP750 firmware in the same location as other grandstream firmwares (if false /dp750 will be suffixed to the path)";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "3fa4345b-f04d-475e-a85a-b341440dd677";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_automatic_provisioning";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
@@ -943,7 +943,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "if grandstream devices should automatically upgrade and reprovision themselves. 0 - no, 1 - every interval specified in minutes 2 - every day 3 - every week";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "cd742ad6-e03c-4a8d-98b1-a8f888a986c5";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_automatic_provisioning_minutes";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
@@ -951,7 +951,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "when grandstream_automatic_provisioning is set to 1, when do upgrade (specify number of minutes between update checks, 60-86400)";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "1698812f-b8a7-47b8-84ac-bbcd49cf84c8";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_automatic_provisioning_hour";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
@@ -959,7 +959,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "when grandstream_automatic_provisioning is set to 2, when do upgrade (which hour of the day, 0-23)";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "3a7398dc-6b87-4cb1-b975-e0f316f0f648";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_automatic_provisioning_day";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
@@ -967,7 +967,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "when grandstream_automatic_provisioning is set to 3, when do upgrade (which day of the week, 0-6)";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "0e775328-c4de-4907-8cc2-7dbd8f668bb2";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_key_mode";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
@@ -975,7 +975,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Grandstream call screening key mode. 1 - line mode 2 - account mode";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "54773af9-e06b-49ed-93bd-8ce4095d77aa";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_auto_answer";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
@@ -983,7 +983,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "auto answer calls";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "9e595090-8b81-469b-9fb8-c21435f2bf42";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_auto_answer_numbers";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
@@ -991,7 +991,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "when grandstream_auto_answer is enabled, only automatically answer calls from numbers matching this template (for example, specify XXX to auto-answer calls from 3 digit numbers)";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "3ebdbdd6-69ff-4a23-b075-867559c1acd5";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_call_log";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
@@ -999,7 +999,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "0 - Log All Calls, 1 - Log Incoming/Outgoing only (missed calls NOT recorded), 2 - Disable Call Log. Default is 0";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "92c1ed11-b487-48b3-bfb8-b0f035f4f505";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_handset_tx_gain";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
@@ -1007,7 +1007,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "handset TX gain";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "e17bc983-cc7c-440d-a572-5c86b6bef7ad";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_24hr_time_display";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
@@ -1015,7 +1015,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "whether or not to use 24 hour time";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "71ea0f47-be10-4db3-ac25-d225369d9a12";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_system_ring";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
@@ -1023,7 +1023,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "the system ringtone";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "de422ef9-feed-4c13-ab2a-0b68e86e3dee";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_notification_tone_volume";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "5";
@@ -1031,7 +1031,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "notification tone volume 0-7";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "d84e7561-d76d-4232-9bec-fff56bacb09c";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_dial_timeout";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "4";
@@ -1039,7 +1039,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "No Key Entry Timeout (in seconds). Default is 4";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "7d9bb6de-c5e6-42f2-9661-347b615a9814";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_lock_volume";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
@@ -1047,7 +1047,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Lock Volumne. 0 - No, 1 - Yes. Default is 0";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "9f4e1c98-c1cc-4800-a754-819608d81d08";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_call_popup_enable";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
@@ -1055,7 +1055,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enable Incoming Call Popup. 0 - No, 1 - Yes. Default is 1";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "b0487a11-f601-47fd-91d6-801800eb4d7b";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_weather_enabled";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
@@ -1063,7 +1063,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enable weather update. 0 - No, 1 - Yes. Default is 1";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "f2ad92e0-669c-4553-9c99-5386f93e75df";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstreaml_xmlapp_url";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
@@ -1071,7 +1071,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "URL for the XML application. XML Application disabled if blank";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "dfd1e86a-d864-4947-89af-6ba51380e47c";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_xmlapp_label";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "XMLApp";
@@ -1079,7 +1079,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "label to display for XML application softkey";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "4ec80f34-4edc-476f-a04d-b157b85b69d3";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_intercom_playwarningtoneforautoanswer";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
@@ -1087,7 +1087,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Play warning tone for Auto Answer Intercom. 0 - No, 1 - Yes. Default is 0";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "153481e8-7a49-4d01-80f6-e7caa37a7ce2";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_multicast_paging_codec";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "9";
@@ -1095,7 +1095,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Multicast Paging Codec. 18 - G.729A/B, 0 - PCMU, 8 - PCMA, 2 - G.726-32, 9 - G.722, 98 - iLBC, 4- G.723.1 \r\nDefault is 0.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "c1039b72-fd3a-4de7-8a74-e5e967f03b2a";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_multicast_channel_number";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
@@ -1103,7 +1103,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Multicast Channel Number \r\n\r\nNumber: 0 - 50 (0 for normal RTP packets, 1-50 for Polycom multicast format packets.) Default is 0 - WP8xx defaults to 1-cannot use 0";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "a3da99f4-c970-439b-a42f-b632291ec97c";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_multicast_listening_address_1";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "224.0.1.116:5001";
@@ -1111,7 +1111,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Multicast Listening\r\n\r\nPriority 1 Listening Address \r\n\r\n(224.0.1.116:5001 is default address for WP8xx PTT)";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "7bcd0340-72bb-4043-8ec1-d58ffed0d518";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_multicast_listening_label_1";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
@@ -1119,7 +1119,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Listening group name, for example: \"Cordless\", \"PTT\", or \"WalkieTalkie\"";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "b2f79366-07e8-4def-8e55-6e9ea635226d";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "grandstream_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_public_mode";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
