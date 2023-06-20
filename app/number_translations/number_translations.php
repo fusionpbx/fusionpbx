@@ -24,12 +24,8 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
 
@@ -71,8 +67,9 @@
 		}
 
 		//prepare the array
-		foreach($number_translations as $row) {
-			$array['number_translations'][$x]['checked'] = $row['checked'];
+		$x = 0;
+		foreach ($number_translations as $row) {
+			$array['number_translations'][$x]['checked'] = $row['checked'] ?? null;
 			$array['number_translations'][$x]['number_translation_uuid'] = $row['number_translation_uuid'];
 			$array['number_translations'][$x]['number_translation_enabled'] = $row['number_translation_enabled'];
 			$x++;

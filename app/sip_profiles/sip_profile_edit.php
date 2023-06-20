@@ -24,12 +24,8 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -91,7 +87,7 @@
 			$sip_profile_uuid = $_POST["sip_profile_uuid"];
 			$sip_profile_name = $_POST["sip_profile_name"];
 			$sip_profile_hostname = $_POST["sip_profile_hostname"];
-			$sip_profile_enabled = $_POST["sip_profile_enabled"] ?: 'false';
+			$sip_profile_enabled = $_POST["sip_profile_enabled"] ?? 'false';
 			$sip_profile_description = $_POST["sip_profile_description"];
 			$sip_profile_domains = $_POST["sip_profile_domains"];
 			$sip_profile_settings = $_POST["sip_profile_settings"];

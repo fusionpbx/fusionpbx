@@ -529,6 +529,7 @@ if (!class_exists('xml_cdr')) {
 						$this->array[$key]['cc_agent'] = urldecode($xml->variables->cc_agent);
 						$this->array[$key]['cc_agent_type'] = urldecode($xml->variables->cc_agent_type);
 						$this->array[$key]['cc_agent_bridged'] = urldecode($xml->variables->cc_agent_bridged);
+						$this->array[$key]['cc_queue_joined_epoch'] = urldecode($xml->variables->cc_queue_joined_epoch);
 						$this->array[$key]['cc_queue_answered_epoch'] = urldecode($xml->variables->cc_queue_answered_epoch);
 						$this->array[$key]['cc_queue_terminated_epoch'] = urldecode($xml->variables->cc_queue_terminated_epoch);
 						$this->array[$key]['cc_queue_canceled_epoch'] = urldecode($xml->variables->cc_queue_canceled_epoch);
@@ -1359,7 +1360,7 @@ if (!class_exists('xml_cdr')) {
 				return;
 			}
 
-			//ob_clean();
+			ob_clean();
 			$fd = fopen($record_file, "rb");
 			if ($_GET['t'] == "bin") {
 				header("Content-Type: application/force-download");
@@ -1382,13 +1383,14 @@ if (!class_exists('xml_cdr')) {
 			if ($_GET['t'] == "bin") {
 				header("Content-Length: ".filesize($record_file));
 			}
- 			//ob_clean();
-			//fpassthru($fd);
+ 			ob_clean();
 
-			//content-range
-			if (isset($_SERVER['HTTP_RANGE']) && $_GET['t'] != "bin")  {
+ 			//content-range
+ 			if (isset($_SERVER['HTTP_RANGE']) && $_GET['t'] != "bin")  {
 				$this->range_download($record_file);
 			}
+
+ 			fpassthru($fd);
 
 		} //end download method
 

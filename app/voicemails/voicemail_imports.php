@@ -24,12 +24,8 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -321,7 +317,7 @@
 					fclose($handle);
 
 				//save to the data
-					if (is_array($array)) {
+					if (!empty($array) && is_array($array)) {
 						$database = new database;
 						$database->app_name = 'voicemails';
 						$database->app_uuid = 'b523c2d2-64cd-46f1-9520-ca4b4098e044';

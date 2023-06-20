@@ -24,12 +24,8 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -46,7 +42,7 @@
 	$text = $language->get();
 
 //action add or update
-	if (is_uuid($_REQUEST["id"])) {
+	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
 		$email_queue_uuid = $_REQUEST["id"];
 		$id = $_REQUEST["id"];

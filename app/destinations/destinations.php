@@ -24,12 +24,8 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
 
@@ -271,10 +267,10 @@
 	echo th_order_by('destination_type', $text['label-destination_type'], $order_by, $order, $param, "class='shrink'");
 	echo th_order_by('destination_prefix', $text['label-destination_prefix'], $order_by, $order, $param, "class='shrink'");
 	if (permission_exists('destination_trunk_prefix')) {
-		echo th_order_by('destination_trunk_prefix', '', $order_by, $order, $param, "class='shrink'");
+		echo th_order_by('destination_trunk_prefix', $text['label-destination_trunk_prefix'], $order_by, $order, $param, "class='shrink'");
 	}
 	if (permission_exists('destination_area_code')) {
-		echo th_order_by('destination_area_code', '', $order_by, $order, $param, "class='shrink'");
+		echo th_order_by('destination_area_code', $text['label-destination_area_code'], $order_by, $order, $param, "class='shrink'");
 	}
 	echo th_order_by('destination_number', $text['label-destination_number'], $order_by, $order, $param, "class='shrink'");
 	if (!$show == "all") {

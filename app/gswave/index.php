@@ -24,12 +24,8 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -112,6 +108,7 @@
 			$xml .= "<Voicemail>*97</Voicemail>";
 			$xml .= "</Account>";
 			$xml .= "</AccountConfig>";
+			$qr_data = $xml;
 
 	}
 
@@ -144,7 +141,7 @@
 	echo "	<option value='' >".$text['label-select']."...</option>\n";
 	if (is_array($extensions) && @sizeof($extensions) != 0) {
 		foreach ($extensions as $row) {
-			$selected = $row['extension_uuid'] == $extension_uuid ? "selected='selected'" : null;
+			$selected = !empty($extension_uuid) && $row['extension_uuid'] == $extension_uuid ? "selected='selected'" : null;
 			echo "	<option value='".escape($row['extension_uuid'])."' ".$selected.">".escape($row['extension'])." ".escape($row['number_alias'])." ".escape($row['description'])."</option>\n";
 		}
 	}
@@ -155,7 +152,7 @@
 
 //stream the file
 	if (!empty($extension_uuid) && is_uuid($extension_uuid)) {
-		$xml = html_entity_decode( $xml, ENT_QUOTES, 'UTF-8' );
+		$xml = html_entity_decode($xml, ENT_QUOTES, 'UTF-8');
 		
 		require_once 'resources/qr_code/QRErrorCorrectLevel.php';
 		require_once 'resources/qr_code/QRCode.php';
@@ -179,6 +176,19 @@
 //html image
 	if (!empty($extension_uuid) && is_uuid($extension_uuid)) {
 		echo "<img src=\"data:image/jpeg;base64,".base64_encode($image)."\" style='margin-top: 30px; padding: 5px; background: white; max-width: 100%;'>\n";
+		//qr data preview
+		if (permission_exists('gswave_xml_view')) {
+			echo "<br><br><br>\n";
+			echo "<button id='btn_show_qr_data' type='button' class='btn btn-link' onclick=\"$('#qr_data').show(); $(this).hide(); $('#btn_hide_qr_data').show();\">Show QR Code Data</button>\n";
+			echo "<button id='btn_hide_qr_data' type='button' class='btn btn-link' style='display: none;' onclick=\"$('#qr_data').hide(); $(this).hide(); $('#btn_show_qr_data').show();\">Hide QR Code Data</button><br>\n";
+			echo "<textarea id='qr_data' spellcheck='false' readonly='readonly' style='margin: 20px auto; border: 1px solid ".($_SESSION['theme']['table_row_border_color']['text'] ?? '#c5d1e5')."; padding: 20px; width: 100%; max-width: 600px; height: 350px; overflow: auto; font-family: monospace; font-size: 12px; background-color: ".($_SESSION['theme']['table_row_background_color_light']['text'] ?? '#fff')."; color: ".($_SESSION['theme']['table_row_text_color']['text'] ?? '#000')."; display: none;'>\n";
+			$dom = new DOMDocument('1.0');
+			$dom->preserveWhiteSpace = true;
+			$dom->formatOutput = true;
+			$dom->loadXML($qr_data);
+			echo $dom->saveXML();
+			echo "</textarea>\n";
+		}
 	}
 
 	echo "</div>\n";

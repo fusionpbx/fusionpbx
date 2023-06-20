@@ -18,16 +18,12 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2021
+	Portions created by the Initial Developer are Copyright (C) 2021-2023
 	the Initial Developer. All Rights Reserved.
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -228,7 +224,7 @@
 			$dashboard_column_span = $row["dashboard_column_span"];
 			$dashboard_details_state = $row["dashboard_details_state"];
 			$dashboard_order = $row["dashboard_order"];
-			$dashboard_enabled = $row["dashboard_enabled"] ?: 'false';
+			$dashboard_enabled = $row["dashboard_enabled"] ?? 'false';
 			$dashboard_description = $row["dashboard_description"];
 		}
 		unset($sql, $parameters, $row);

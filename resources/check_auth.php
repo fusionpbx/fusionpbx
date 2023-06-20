@@ -24,8 +24,8 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//includes
-	require_once "resources/require.php";
+//includes files
+    require_once __DIR__ . "/require.php";
 
 //add multi-lingual support
 	$language = new text;
@@ -55,7 +55,6 @@
 
 		//validate the username and password
 			$auth = new authentication;
-			$auth->debug = true;
 			$result = $auth->validate();
 
 		//if not authorized
@@ -68,7 +67,7 @@
 
 				//redirect the user to the login page
 					$target_path = ($_REQUEST["path"] != '') ? $_REQUEST["path"] : $_SERVER["PHP_SELF"];
-					message::add($text['message-invalid_credentials'], 'negative');
+					message::add($text['message-authentication_failed'], 'negative');
 					header("Location: ".PROJECT_PATH."/?path=".urlencode($target_path));
 					exit;
 			}

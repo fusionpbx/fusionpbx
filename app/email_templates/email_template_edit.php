@@ -17,16 +17,12 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2018
+ Portions created by the Initial Developer are Copyright (C) 2018-2023
  the Initial Developer. All Rights Reserved.
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -70,7 +66,7 @@
 		$template_subject = $_POST["template_subject"];
 		$template_body = $_POST["template_body"];
 		$template_type = $_POST["template_type"];
-		$template_enabled = $_POST["template_enabled"] ?: 'false';
+		$template_enabled = $_POST["template_enabled"] ?? 'false';
 		$template_description = $_POST["template_description"];
 	}
 
@@ -115,7 +111,7 @@
 			}
 
 		//add the email_template_uuid
-			if (!is_uuid($_POST["email_template_uuid"])) {
+			if (empty($_POST["email_template_uuid"]) || !is_uuid($_POST["email_template_uuid"])) {
 				$email_template_uuid = uuid();
 			}
 

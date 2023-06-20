@@ -17,16 +17,12 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018-2020
+	Portions created by the Initial Developer are Copyright (C) 2018-2023
 	the Initial Developer. All Rights Reserved.
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -64,7 +60,7 @@
 		$stream_uuid = $_POST["stream_uuid"];
 		$stream_name = $_POST["stream_name"];
 		$stream_location = $_POST["stream_location"];
-		$stream_enabled = $_POST["stream_enabled"] ?: 'false';
+		$stream_enabled = $_POST["stream_enabled"] ?? 'false';
 		$stream_description = $_POST["stream_description"];
 	}
 
@@ -143,7 +139,7 @@
 	}
 
 //pre-populate the form
-	if (!empty($_GET) && $_POST["persistformvar"] != "true") {
+	if (!empty($_GET) && (empty($_POST["persistformvar"]) || $_POST["persistformvar"] != "true")) {
 		$stream_uuid = $_GET["id"];
 		$sql = "select * from v_streams ";
 		$sql .= "where stream_uuid = :stream_uuid ";

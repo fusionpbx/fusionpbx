@@ -25,12 +25,8 @@
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
 
@@ -79,7 +75,7 @@
 		$dialplan_continue = $_POST["dialplan_continue"] != '' ? $_POST["dialplan_continue"] : 'false';
 		$dialplan_details = $_POST["dialplan_details"] ?? null;
 		$dialplan_context = $_POST["dialplan_context"];
-		$dialplan_enabled = $_POST["dialplan_enabled"];
+		$dialplan_enabled = $_POST["dialplan_enabled"] ?? 'false';
 		$dialplan_description = $_POST["dialplan_description"];
 		$dialplan_details_delete = $_POST["dialplan_details_delete"] ?? null;
 	}
@@ -237,7 +233,7 @@
 			$array['dialplans'][$x]['dialplan_context'] = $_POST["dialplan_context"];
 			$array['dialplans'][$x]['dialplan_continue'] = $_POST["dialplan_continue"];
 			$array['dialplans'][$x]['dialplan_order'] = $_POST["dialplan_order"];
-			$array['dialplans'][$x]['dialplan_enabled'] = $_POST["dialplan_enabled"];
+			$array['dialplans'][$x]['dialplan_enabled'] = $_POST["dialplan_enabled"] ?? 'false';
 			$array['dialplans'][$x]['dialplan_description'] = $_POST["dialplan_description"];
 			$y = 0;
 			if (!empty($_POST["dialplan_details"]) && is_array($_POST["dialplan_details"])) {
@@ -717,21 +713,19 @@
 	echo "	<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-enabled']."\n";
 	echo "	</td>\n";
-	echo "	<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='dialplan_enabled'>\n";
-	if ($dialplan_enabled == "true") {
-		echo "		<option value='true' selected='selected'>".$text['option-true']."</option>\n";
+	echo "	<td class='vtable' style='position: relative;' align='left'>\n";
+	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
+		echo "	<label class='switch'>\n";
+		echo "		<input type='checkbox' id='dialplan_enabled' name='dialplan_enabled' value='true' ".(!empty($dialplan_enabled) && $dialplan_enabled == 'true' ? "checked='checked'" : null).">\n";
+		echo "		<span class='slider'></span>\n";
+		echo "	</label>\n";
 	}
 	else {
-		echo "		<option value='true'>".$text['option-true']."</option>\n";
+		echo "	<select class='formfld' id='dialplan_enabled' name='dialplan_enabled'>\n";
+		echo "		<option value='true' ".($dialplan_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($dialplan_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "	</select>\n";
 	}
-	if ($dialplan_enabled == "false") {
-		echo "		<option value='false' selected='selected'>".$text['option-false']."</option>\n";
-	}
-	else {
-		echo "		<option value='false'>".$text['option-false']."</option>\n";
-	}
-	echo "		</select>\n";
 	echo "	</td>\n";
 	echo "	</tr>\n";
 

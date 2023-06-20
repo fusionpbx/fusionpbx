@@ -25,12 +25,8 @@
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -54,6 +50,7 @@
 	$queue_announce_frequency = '';
 	$queue_cc_exit_keys = '';
 	$queue_description = '';
+	$queue_timeout_action = '';
 
 //action add or update
 	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
@@ -106,7 +103,7 @@
 			$queue_tier_rule_wait_second = $_POST["queue_tier_rule_wait_second"];
 			$queue_tier_rule_wait_multiply_level = $_POST["queue_tier_rule_wait_multiply_level"];
 			$queue_tier_rule_no_agent_no_wait = $_POST["queue_tier_rule_no_agent_no_wait"];
-			$queue_timeout_action = $_POST["queue_timeout_action"];
+			$queue_timeout_action = $_POST["queue_timeout_action"] ?? null;
 			$queue_discard_abandoned_after = $_POST["queue_discard_abandoned_after"];
 			$queue_abandoned_resume_allowed = $_POST["queue_abandoned_resume_allowed"];
 			$queue_cid_prefix = $_POST["queue_cid_prefix"];
@@ -344,6 +341,14 @@
 				}
 			}
 
+		//add definable export variables can be set in default settings
+			$export_variables = 'call_center_queue_uuid,sip_h_Alert-Info';
+			if (!empty($_SESSION['call_center']['export_vars'])) {
+				foreach ($_SESSION['call_center']['export_vars'] as $export_variable) {
+				    $export_variables .= ','.$export_variable;
+				}
+			}
+
 		//build the xml dialplan
 			$dialplan_xml = "<extension name=\"".xml::sanitize($queue_name)."\" continue=\"\" uuid=\"".xml::sanitize($dialplan_uuid)."\">\n";
 			$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^([^#]+#)(.*)\$\" break=\"never\">\n";
@@ -351,15 +356,15 @@
 			$dialplan_xml .= "	</condition>\n";
 			$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^(callcenter\+)?".xml::sanitize($queue_extension)."$\">\n";
 			$dialplan_xml .= "		<action application=\"answer\" data=\"\"/>\n";
-			if (is_uuid($call_center_queue_uuid)) {
+			if (!empty($call_center_queue_uuid) && is_uuid($call_center_queue_uuid)) {
 				$dialplan_xml .= "		<action application=\"set\" data=\"call_center_queue_uuid=".xml::sanitize($call_center_queue_uuid)."\"/>\n";
 			}
-			if (is_numeric($queue_extension)) {
+			if (!empty($queue_extension) && is_numeric($queue_extension)) {
 				$dialplan_xml .= "		<action application=\"set\" data=\"queue_extension=".xml::sanitize($queue_extension)."\"/>\n";
 			}
-			$dialplan_xml .= "		<action application=\"set\" data=\"cc_export_vars=\${cc_export_vars},call_center_queue_uuid,sip_h_Alert-Info\"/>\n";
+			$dialplan_xml .= "		<action application=\"set\" data=\"cc_export_vars=\${cc_export_vars},".$export_variables."\"/>\n";
 			$dialplan_xml .= "		<action application=\"set\" data=\"hangup_after_bridge=true\"/>\n";
-			if ($queue_time_base_score_sec != '') {
+			if (!empty($queue_time_base_score_sec)) {
 				$dialplan_xml .= "		<action application=\"set\" data=\"cc_base_score=".xml::sanitize($queue_time_base_score_sec)."\"/>\n";
 			}
 			if (!empty($queue_greeting_path)) {
@@ -559,7 +564,7 @@
 
 //add an empty row to the tiers array
 	if (count($tiers) == 0) {
-		$rows = $_SESSION['call_center']['agent_add_rows']['numeric'];
+		$rows = $_SESSION['call_center']['agent_add_rows']['numeric'] ?? null;
 		$id = 0;
 	}
 	if (count($tiers) > 0) {
@@ -818,7 +823,7 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	if (permission_exists('call_center_tier_view') && !empty($agents)) {
+	if (permission_exists('call_center_tier_view') && !empty($agents) && is_array($agents)) {
 		echo "<tr>";
 		echo "	<td class='vncell' valign='top'>".$text['label-agents']."</td>";
 		echo "	<td class='vtable' align='left'>";
@@ -830,7 +835,7 @@
 		echo "				<td></td>\n";
 		echo "			</tr>\n";
 		$x = 0;
-		if (!empty($tiers)) {
+		if (is_array($tiers)) {
 			foreach($tiers as $field) {
 				echo "	<tr>\n";
 				echo "		<td class=''>";
@@ -1001,7 +1006,7 @@
 	echo "    ".$text['label-timeout_action']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo $destination->select('dialplan', 'queue_timeout_action', !empty($queue_timeout_action));
+	echo $destination->select('dialplan', 'queue_timeout_action', $queue_timeout_action);
 	echo "<br />\n";
 	echo $text['description-timeout_action']."\n";
 	echo "</td>\n";
@@ -1142,7 +1147,7 @@
 		echo "	".$text['label-outbound_caller_id_name']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "  <input class='formfld' type='text' name='queue_outbound_caller_id_name' maxlength='255' value='".escape($queue_outbound_caller_id_name)."'>\n";
+		echo "  <input class='formfld' type='text' name='queue_outbound_caller_id_name' maxlength='255' value='".escape($queue_outbound_caller_id_name ?? '')."'>\n";
 		echo "<br />\n";
 		echo $text['description-outbound_caller_id_name']."\n";
 		echo "</td>\n";
@@ -1155,7 +1160,7 @@
 		echo "	".$text['label-outbound_caller_id_number']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "  <input class='formfld' type='text' name='queue_outbound_caller_id_number' maxlength='255' value='".escape($queue_outbound_caller_id_number)."'>\n";
+		echo "  <input class='formfld' type='text' name='queue_outbound_caller_id_number' maxlength='255' value='".escape($queue_outbound_caller_id_number ?? '')."'>\n";
 		echo "<br />\n";
 		echo $text['description-outbound_caller_id_number']."\n";
 		echo "</td>\n";
@@ -1169,21 +1174,11 @@
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "	<select class='formfld' name='queue_announce_position'>\n";
-		if ($queue_announce_position == "false") {
-			echo "	<option value='false' selected='selected' >".$text['option-false']."</option>\n";
-		}
-		else {
-			echo "	<option value='false'>".$text['option-false']."</option>\n";
-		}
-		if ($queue_announce_position == "true") {
-			echo "	<option value='true' selected='selected' >".$text['option-true']."</option>\n";
-		}
-		else {
-			echo "	<option value='true'>".$text['option-true']."</option>\n";
-		}
+		echo "		<option value='false'>".$text['option-false']."</option>\n";
+		echo "		<option value='true' ".(!empty($queue_announce_position) && $queue_announce_position == "true" ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
 		echo "	</select>\n";
 		echo "<br />\n";
-		echo $text['description-queue_announce_position']."\n";
+		echo ($text['description-queue_announce_position'] ?? '')."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 	}
@@ -1320,7 +1315,7 @@
 		echo "	".$text['label-queue_email_address']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "  <input class='formfld' type='text' name='queue_email_address' maxlength='255' value='".escape($queue_email_address)."'>\n";
+		echo "  <input class='formfld' type='text' name='queue_email_address' maxlength='255' value='".escape($queue_email_address ?? '')."'>\n";
 		echo "<br />\n";
 		echo $text['description-queue_email_address']."\n";
 		echo "</td>\n";

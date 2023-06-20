@@ -24,17 +24,13 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//add the document root to the include path
-	$config_glob = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	if (is_array($config_glob) && count($config_glob) > 0) {
-		$config_glob = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-		$conf = parse_ini_file($config_glob[0]);
-		set_include_path($conf['document.root']);
-	}
-	else {
+//include file
+	require dirname(__DIR__, 2) . "/resources/require.php";
+
+//if the config file doesn't exist and the config.php does exist use it to write a new config file
+	if (!$config_exists && file_exists("/etc/fusionpbx/config.php")) {
 		//include the config.php
-		$config_php_glob = glob("{/usr/local/etc,/etc}/fusionpbx/config.php", GLOB_BRACE);
-		include($config_php_glob[0]);
+		include("/etc/fusionpbx/config.php");
 
 		//set the default config file location
 		if (stristr(PHP_OS, 'BSD')) {
@@ -123,15 +119,10 @@
 		if(!$file_handle){ return; }
 		fwrite($file_handle, $conf);
 		fclose($file_handle);
-
-		//set the include path
-		$config_glob = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-		$conf = parse_ini_file($config_glob[0]);
-		set_include_path($conf['document.root']);
 	}
 
 //include files
-	require_once "resources/require.php";
+	require dirname(__DIR__, 2) . "/resources/require.php";
 
 //check the permission
 	if(defined('STDIN')) {
@@ -262,7 +253,6 @@
 
 		//run all app_defaults.php files
 			$domain = new domains;
-			$domain->display_type = $display_type;
 			$domain->upgrade();
 
 		//show the content

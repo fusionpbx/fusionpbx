@@ -24,12 +24,8 @@
  Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
 	
@@ -307,7 +303,7 @@
 				}
 				if (permission_exists('voicemail_message_view')) {
 					$tmp_voicemail_string = (array_key_exists($row['voicemail_uuid'], $voicemails_count)) ? " (" . $voicemails_count[$row['voicemail_uuid']] . ")" : " (0)";
-					echo "	<a href='voicemail_messages.php?id=".escape($row['voicemail_uuid'])."'>".$text['label-messages'].$tmp_voicemail_string."</a>\n";
+					echo "	<a href='voicemail_messages.php?id=".escape($row['voicemail_uuid'])."&back=".urlencode($_SERVER["REQUEST_URI"])."'>".$text['label-messages'].$tmp_voicemail_string."</a>\n";
 				}
 				echo "	</td>\n";
 			}

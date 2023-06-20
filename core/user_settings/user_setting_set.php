@@ -24,12 +24,8 @@ Contributor(s):
 Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
   	require_once "resources/check_auth.php";
 
 //add multi-lingual support
@@ -112,7 +108,6 @@ Mark J Crane <markjcrane@fusionpbx.com>
 					//reset session variables to default
 						require "resources/classes/domains.php";
 						$domain = new domains();
-						$domain->db = $db;
 						$domain->set();
 				}
 

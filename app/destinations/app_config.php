@@ -54,6 +54,7 @@
 		$apps[$x]['destinations'][$y]['select_value']['dialplan'] = "transfer:\${destination}";
 		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "menu-exec-app:transfer \${destination}";
 		$apps[$x]['destinations'][$y]['select_label'] = "\${name}";
+		/*
 		$z=0;
 		$apps[$x]['destinations'][$y]['result']['data'][$z]['name'] = 'check_voicemail';
 		$apps[$x]['destinations'][$y]['result']['data'][$z]['destination'] = '*98 XML ${context}';
@@ -66,6 +67,7 @@
 		$z++;
 		$apps[$x]['destinations'][$y]['result']['data'][$z]['name'] = 'company_directory';
 		$apps[$x]['destinations'][$y]['result']['data'][$z]['destination'] = '*732 XML ${context}';
+		*/
 
 	//permission details
 		$y=0;

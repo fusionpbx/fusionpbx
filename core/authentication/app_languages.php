@@ -97,7 +97,6 @@ $text['description-totp']['pt-br'] = "Escaneie o código com um aplicativo de au
 $text['description-totp']['pt-pt'] = "Escaneie o código com um aplicativo de autenticação ou gerenciador de senhas. Em seguida, use-o para gerar o token para o login.";
 $text['description-totp']['ro-ro'] = "Scanați codul cu o aplicație de autentificare sau un manager de parole. Apoi utilizați-l pentru a genera simbolul pentru autentificare.";
 $text['description-totp']['ru-ru'] = "Отсканируйте код с помощью приложения для аутентификации или менеджера паролей. Затем используйте его для создания токена для входа в систему.";
-
 $text['description-totp']['sv-se'] = "Skanna koden med en autentiseringsapplikation eller lösenordshanterare. Använd sedan den för att generera token för inloggningen.";
 $text['description-totp']['uk-ua'] = "Відскануйте код за допомогою програми автентифікації або менеджера паролів. Потім використовуйте його, щоб створити маркер для входу.";
 $text['description-totp']['tr-tr'] = "Kodu bir kimlik doğrulama uygulaması veya parola yöneticisi ile tarayın. Ardından, oturum açma için belirteci oluşturmak için kullanın.";

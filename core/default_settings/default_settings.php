@@ -17,19 +17,15 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008 - 2022
+	Portions created by the Initial Developer are Copyright (C) 2008 - 2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -309,7 +305,7 @@
 		echo "			<option value=''>".$text['label-category']."...</option>\n";
 		echo "			<option value=''>".$text['label-all']."</option>\n";
 		foreach ($categories as $category_name => $category) {
-			$selected = ($_GET['default_setting_category'] == $category_name) ? " selected='selected'" : "";
+			$selected = (!empty($_GET['default_setting_category']) && $_GET['default_setting_category'] == $category_name) ? " selected='selected'" : null;
 			echo "		<option value='".escape($category_name)."' $selected>".escape($category['formatted']).($category['count'] ? " (".$category['count'].")" : null)."</option>\n";
 		}
 		echo "			<option disabled='disabled'>\n";

@@ -25,12 +25,8 @@
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -90,7 +86,7 @@
 				$array[0]['checked'] = 'true';
 				$array[0]['uuid'] = $_POST['ivr_menu_uuid'];
 
-				switch (!empty($_POST['action']) && $_POST['action']) {
+				switch ($_POST['action']) {
 					case 'copy':
 						if (permission_exists('ivr_menu_add')) {
 							$obj = new ivr_menu;
@@ -133,10 +129,10 @@
 			$ivr_menu_direct_dial = $_POST["ivr_menu_direct_dial"];
 			$ivr_menu_ringback = $_POST["ivr_menu_ringback"];
 			$ivr_menu_cid_prefix = $_POST["ivr_menu_cid_prefix"];
-			$ivr_menu_enabled = $_POST["ivr_menu_enabled"] ?: 'false';
+			$ivr_menu_enabled = $_POST["ivr_menu_enabled"] ?? 'false';
 			$ivr_menu_description = $_POST["ivr_menu_description"];
-			$ivr_menu_options_delete = $_POST["ivr_menu_options_delete"];
-			$dialplan_uuid = $_POST["dialplan_uuid"];
+			$ivr_menu_options_delete = $_POST["ivr_menu_options_delete"] ?? null;
+			$dialplan_uuid = $_POST["dialplan_uuid"] ?? null;
 
 		//set the context for users that do not have the permission
 			if (permission_exists('ivr_menu_context')) {
@@ -302,7 +298,7 @@
 					$array['ivr_menus'][0]["ivr_menu_description"] = $ivr_menu_description;
 					$y = 0;
 					foreach ($ivr_menu_options as $row) {
-						if (!empty($row['ivr_menu_option_digits'])) {
+						if (isset($row['ivr_menu_option_digits']) && $row['ivr_menu_option_digits'] != '') {
 							if (!empty($row['ivr_menu_option_uuid']) && is_uuid($row['ivr_menu_option_uuid'])) {
 								$ivr_menu_option_uuid = $row['ivr_menu_option_uuid'];
 							}
@@ -330,7 +326,7 @@
 							}
 							$array['ivr_menus'][0]['ivr_menu_options'][$y]["ivr_menu_option_order"] = $row["ivr_menu_option_order"];
 							$array['ivr_menus'][0]['ivr_menu_options'][$y]["ivr_menu_option_description"] = $row["ivr_menu_option_description"];
-							$array['ivr_menus'][0]["ivr_menu_options"][$y]["ivr_menu_option_enabled"] = !empty($row['ivr_menu_option_enabled']) ?: 'false';
+							$array['ivr_menus'][0]["ivr_menu_options"][$y]["ivr_menu_option_enabled"] = !empty($row['ivr_menu_option_enabled']) ?? 'false';
 							$y++;
 						}
 					}
@@ -722,7 +718,7 @@
 	if (!empty($ivr_menus)) {
 		foreach($ivr_menus as $field) {
 			if ($field['ivr_menu_uuid'] != $ivr_menu_uuid) {
-				if ($ivr_menu_parent_uuid == $field['ivr_menu_uuid']) {
+				if (!empty($ivr_menu_parent_uuid) && $ivr_menu_parent_uuid == $field['ivr_menu_uuid']) {
 					echo "<option value='".escape($field['ivr_menu_uuid'])."' selected='selected'>".escape($field['ivr_menu_name'])."</option>\n";
 				}
 				else {
@@ -752,7 +748,7 @@
 			$language = $language_variables[0];
 			$dialect = $language_variables[1];
 			$voice = $language_variables[2];
-			if ($language_formatted <> $language.'-'.$dialect.' '.$voice) {
+			if (empty($language_formatted) || $language_formatted != $language.'-'.$dialect.' '.$voice) {
 				echo "		<option value='".$language."/".$dialect."/".$voice."'>".$language."-".$dialect." ".$voice."</option>\n";
 			}
 		}
@@ -827,11 +823,11 @@
 			foreach ($recordings as &$row) {
 				$recording_name = $row["recording_name"];
 				$recording_filename = $row["recording_filename"];
-				if ($ivr_menu_greet_long == $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$recording_filename && !empty($ivr_menu_greet_long)) {
+				if (!empty($ivr_menu_greet_long) && $ivr_menu_greet_long == $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$recording_filename) {
 					$tmp_selected = true;
 					echo "	<option value='".escape($_SESSION['switch']['recordings']['dir'])."/".escape($_SESSION['domain_name'])."/".escape($recording_filename)."' selected='selected'>".escape($recording_name)."</option>\n";
 				}
-				else if ($ivr_menu_greet_long == $recording_filename && !empty($ivr_menu_greet_long)) {
+				else if (!empty($ivr_menu_greet_long) && $ivr_menu_greet_long == $recording_filename) {
 					$tmp_selected = true;
 					echo "	<option value='".escape($recording_filename)."' selected='selected'>".escape($recording_name)."</option>\n";
 				}
@@ -845,7 +841,7 @@
 		if (!empty($phrases)) {
 			echo "<optgroup label='Phrases'>\n";
 			foreach ($phrases as &$row) {
-				if ($ivr_menu_greet_long == "phrase:".$row["phrase_uuid"]) {
+				if (!empty($ivr_menu_greet_long) && $ivr_menu_greet_long == "phrase:".$row["phrase_uuid"]) {
 					$tmp_selected = true;
 					echo "	<option value='phrase:".escape($row["phrase_uuid"])."' selected='selected'>".escape($row["phrase_name"])."</option>\n";
 				}
@@ -968,11 +964,11 @@
 			foreach ($recordings as &$row) {
 				$recording_name = $row["recording_name"];
 				$recording_filename = $row["recording_filename"];
-				if ($ivr_menu_greet_short == $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".escape($recording_filename) && !empty($ivr_menu_greet_short)) {
+				if (!empty($ivr_menu_greet_short) && $ivr_menu_greet_short == $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".escape($recording_filename)) {
 					$tmp_selected = true;
 					echo "	<option value='".$_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".escape($recording_filename)."' selected='selected'>".escape($recording_name)."</option>\n";
 				}
-				else if ($ivr_menu_greet_short == $recording_filename && !empty($ivr_menu_greet_short)) {
+				else if (!empty($ivr_menu_greet_short) && $ivr_menu_greet_short == $recording_filename) {
 					$tmp_selected = true;
 					echo "	<option value='".escape($recording_filename)."' selected='selected'>".escape($recording_name)."</option>\n";
 				}
@@ -986,7 +982,7 @@
 		if (!empty($phrases)) {
 			echo "<optgroup label='Phrases'>\n";
 			foreach ($phrases as &$row) {
-				if ($ivr_menu_greet_short == "phrase:".$row["phrase_uuid"]) {
+				if (!empty($ivr_menu_greet_short) && $ivr_menu_greet_short == "phrase:".$row["phrase_uuid"]) {
 					$tmp_selected = true;
 					echo "	<option value='phrase:".escape($row["phrase_uuid"])."' selected='selected'>".escape($row["phrase_name"])."</option>\n";
 				}
@@ -1391,11 +1387,11 @@
 				foreach ($recordings as &$row) {
 					$recording_name = $row["recording_name"];
 					$recording_filename = $row["recording_filename"];
-					if ($ivr_menu_exit_sound == $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$recording_filename && !empty($ivr_menu_exit_sound)) {
+					if (!empty($ivr_menu_exit_sound) && $ivr_menu_exit_sound == $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$recording_filename) {
 						$tmp_selected = true;
 						echo "	<option value='".escape($_SESSION['switch']['recordings']['dir'])."/".escape($_SESSION['domain_name'])."/".escape($recording_filename)."' selected='selected'>".escape($recording_name)."</option>\n";
 					}
-					else if ($ivr_menu_exit_sound == $recording_filename && !empty($ivr_menu_exit_sound)) {
+					else if (!empty($ivr_menu_exit_sound) && $ivr_menu_exit_sound == $recording_filename) {
 						$tmp_selected = true;
 						echo "	<option value='".escape($recording_filename)."' selected='selected'>".escape($recording_name)."</option>\n";
 					}
@@ -1409,7 +1405,7 @@
 			if (!empty($phrases)) {
 				echo "<optgroup label='Phrases'>\n";
 				foreach ($phrases as &$row) {
-					if ($ivr_menu_exit_sound == "phrase:".$row["phrase_uuid"]) {
+					if (!empty($ivr_menu_exit_sound) && $ivr_menu_exit_sound == "phrase:".$row["phrase_uuid"]) {
 						$tmp_selected = true;
 						echo "	<option value='phrase:".escape($row["phrase_uuid"])."' selected='selected'>".escape($row["phrase_name"])."</option>\n";
 					}
@@ -1424,10 +1420,10 @@
 				echo "<optgroup label='Sounds'>\n";
 				foreach ($sound_files as $value) {
 					if (!empty($value)) {
-						if (substr($ivr_menu_exit_sound, 0, 71) == "\$\${sounds_dir}/\${default_language}/\${default_dialect}/\${default_voice}/") {
+						if (!empty($ivr_menu_exit_sound) && substr($ivr_menu_exit_sound, 0, 71) == "\$\${sounds_dir}/\${default_language}/\${default_dialect}/\${default_voice}/") {
 							$ivr_menu_exit_sound = substr($ivr_menu_exit_sound, 71);
 						}
-						if ($ivr_menu_exit_sound == $value) {
+						if (!empty($ivr_menu_exit_sound) && $ivr_menu_exit_sound == $value) {
 							$tmp_selected = true;
 							echo "	<option value='".escape($value)."' selected='selected'>".escape($value)."</option>\n";
 						}
@@ -1463,7 +1459,7 @@
 		echo "	".$text['label-pin_number']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<input class='formfld' type='text' name='ivr_menu_pin_number' maxlength='255' value=\"".escape($ivr_menu_pin_number)."\">\n";
+		echo "	<input class='formfld' type='text' name='ivr_menu_pin_number' maxlength='255' value=\"".escape($ivr_menu_pin_number ?? '')."\">\n";
 		echo "<br />\n";
 		echo $text['description-pin_number']."\n";
 		echo "</td>\n";
@@ -1474,7 +1470,7 @@
 		echo "	".$text['label-comfirm_macro']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<input class='formfld' type='text' name='ivr_menu_confirm_macro' maxlength='255' value=\"".escape($ivr_menu_confirm_macro)."\">\n";
+		echo "	<input class='formfld' type='text' name='ivr_menu_confirm_macro' maxlength='255' value=\"".escape($ivr_menu_confirm_macro ?? '')."\">\n";
 		echo "<br />\n";
 		echo $text['description-comfirm_macro']."\n";
 		echo "</td>\n";
@@ -1485,7 +1481,7 @@
 		echo "	".$text['label-comfirm_key']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<input class='formfld' type='text' name='ivr_menu_confirm_key' maxlength='255' value=\"".escape($ivr_menu_confirm_key)."\">\n";
+		echo "	<input class='formfld' type='text' name='ivr_menu_confirm_key' maxlength='255' value=\"".escape($ivr_menu_confirm_key ?? '')."\">\n";
 		echo "<br />\n";
 		echo $text['description-comfirm_key']."\n";
 		echo "</td>\n";

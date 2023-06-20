@@ -25,7 +25,7 @@
 */
 
 //set the include path
-	$document_root = substr(getcwd(), 0, strlen(getcwd()) - strlen('/core/install'));
+	$document_root = dirname(__DIR__, 2);
 	set_include_path($document_root);
 	$_SERVER["DOCUMENT_ROOT"] = $document_root;
 	$_SERVER["PROJECT_ROOT"] = $document_root;
@@ -37,7 +37,12 @@
 //include required classes
 	require_once "resources/classes/text.php";
 	require_once "resources/classes/template.php";
+	require_once "resources/classes/message.php";
 	require_once "core/install/resources/classes/install.php";
+
+//start the session before text object stores values in session
+	//ini_set("session.cookie_httponly", True);
+	session_start();
 
 //add multi-lingual support
 	$language = new text;
@@ -45,10 +50,6 @@
 
 //set debug to true or false
 	$debug = false;
-
-//start the session
-	//ini_set("session.cookie_httponly", True);
-	session_start();
 
 //set the default domain_uuid
 	$domain_uuid = uuid();
@@ -64,7 +65,7 @@
 //error reporting
 	ini_set('display_errors', '1');
 	//error_reporting (E_ALL); // Report everything
-	error_reporting (E_ALL ^ E_NOTICE); // Report everything
+	error_reporting (E_ALL ^ E_NOTICE); // Report warnings
 	//error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING ); //hide notices and warnings
 
 //set the default time zone
@@ -81,7 +82,10 @@
 		$config_exists = true;
 	}
 	if ($config_exists) {
-		$msg .= "Already Installed";
+		$msg = "Already Installed";
+		//report to user
+		message::add($msg);
+		//redirect with message
 		header("Location: ".PROJECT_PATH."/index.php?msg=".urlencode($msg));
 		exit;
 	}
@@ -128,30 +132,16 @@
 //process and save the data
 	if (count($_POST) > 0) {
 		foreach($_POST as $key => $value) {
-			//$_SESSION['install'][$key] = $value;
-			if ($key == 'admin_username') {
-				$_SESSION['install'][$key] = $value;
-			}
-			if ($key == 'admin_password') {
-				$_SESSION['install'][$key] = $value;
-			}
-			if ($key == 'domain_name') {
-				$_SESSION['install'][$key] = $value;
-			}
-			if ($key == 'database_host') {
-				$_SESSION['install'][$key] = $value;
-			}
-			if ($key == 'database_port') {
-				$_SESSION['install'][$key] = $value;
-			}
-			if ($key == 'database_name') {
-				$_SESSION['install'][$key] = $value;
-			}
-			if ($key == 'database_username') {
-				$_SESSION['install'][$key] = $value;
-			}
-			if ($key == 'database_password') {
-				$_SESSION['install'][$key] = $value;
+			switch($key) {
+				case 'admin_username':
+				case 'admin_password':
+				case 'domain_name':
+				case 'database_host':
+				case 'database_port':
+				case 'database_name':
+				case 'database_username':
+				case 'database_password':
+					$_SESSION['install'][$key] = $value;
 			}
 		}
 		if ($_REQUEST["step"] == "install") {
@@ -178,16 +168,11 @@
 				exit;
 			}
 
-			//set the include path
-			$config_glob = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-			$conf = parse_ini_file($config_glob[0]);
-			set_include_path($conf['document.root']);
-
 			//add the database schema
 			$output = shell_exec('cd '.$_SERVER["DOCUMENT_ROOT"].' && php /var/www/fusionpbx/core/upgrade/upgrade_schema.php');
 
 			//includes - this includes the config.php
-			require_once "resources/require.php";
+			require_once dirname(__DIR__, 2) . "/resources/require.php";
 
 			//get the domain name
 			$domain_name = $_SESSION['install']['domain_name'];
@@ -351,6 +336,11 @@
 	$_SESSION['theme']['menu_brand_image']['text'] = PROJECT_PATH.'/themes/default/images/logo.png';
 	$_SESSION['theme']['menu_brand_type']['text'] = 'image';
 
+//set a default step if not already set
+	if(empty($_REQUEST['step'])) {
+		$_REQUEST['step'] = '1';
+	}
+
 //save an install log if debug is true
 	//if ($debug) {
 	//	$fp = fopen(sys_get_temp_dir()."/install.log", "w");
@@ -378,6 +368,7 @@
 	$view->assign("database_port", "5432");
 	$view->assign("database_name", "fusionpbx");
 	$view->assign("database_username", "fusionpbx");
+	$view->assign("database_password", "fusionpbx");
 
 //add translations
 	foreach($text as $key => $value) {
@@ -398,7 +389,8 @@
 	//if ($_GET["step"] == "" || $_GET["step"] == "1") {
 	//	$content = $view->render('language.htm');
 	//}
-	if ($_REQUEST["step"] == "" || $_REQUEST["step"] == "1") {
+
+	if ($_REQUEST["step"] == "1") {
 		$content = $view->render('configuration.htm');
 	}
 	if ($_REQUEST["step"] == "2") {

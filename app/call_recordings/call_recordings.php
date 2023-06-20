@@ -24,12 +24,8 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
 
@@ -51,14 +47,14 @@
 	$show = $_GET["show"] ?? '';
 
 //get the http post data
-	if (!empty($_POST['call_recordings'])) {
+	if (!empty($_POST['call_recordings']) && is_array($_POST['call_recordings'])) {
 		$action = $_POST['action'];
 		$search = $_POST['search'];
 		$call_recordings = $_POST['call_recordings'];
 	}
 
 //process the http post data by action
-	if (!empty($action) && !empty($call_recordings)) {
+	if (!empty($action) && is_array($call_recordings) && @sizeof($call_recordings) != 0) {
 		switch ($action) {
 			case 'delete':
 				if (permission_exists('call_recording_delete')) {
@@ -148,10 +144,10 @@
 	unset($sql, $parameters);
 
 //count the results
-	$result_count = !empty($call_recordings) ? sizeof($call_recordings) : 0;
+	$result_count = is_array($call_recordings) ? sizeof($call_recordings) : 0;
 
 //limit the number of results
-	if ($_SESSION['cdr']['limit']['numeric'] > 0) {
+	if (!empty($_SESSION['cdr']['limit']['numeric']) && $_SESSION['cdr']['limit']['numeric'] > 0) {
 		$num_rows = $_SESSION['cdr']['limit']['numeric'];
 	}
 
@@ -160,8 +156,8 @@
 	if ($show == "all" && permission_exists('call_recording_all')) {
 		$param .= "&show=all";
 	}
-	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true, $result_count); //top
-	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page, false, $result_count); //bottom
+	list($paging_controls_mini, $rows_per_page) = paging($num_rows ?? null, $param, $rows_per_page, true, $result_count); //top
+	list($paging_controls, $rows_per_page) = paging($num_rows ?? null, $param, $rows_per_page, false, $result_count); //bottom
 
 //create token
 	$object = new token;
@@ -187,7 +183,7 @@
 			echo "		<input type='hidden' name='show' value='all'>";
 		}
 		else {
-			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$_SESSION['theme']['button_icon_all'],'link'=>'?type='.urlencode($destination_type ?? '').'&show=all'.($search ? "&search=".urlencode($search) : null)]);
+			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$_SESSION['theme']['button_icon_all'],'link'=>'?type='.urlencode($destination_type ?? '').'&show=all'.(!empty($search) ? "&search=".urlencode($search) : null)]);
 		}
 	}
 	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=\"$('#btn_reset').hide(); $('#btn_search').show();\">";
@@ -244,7 +240,7 @@
 	}
 	echo "</tr>\n";
 
-	if (!empty($call_recordings)) {
+	if (is_array($call_recordings) && @sizeof($call_recordings) != 0) {
 		$x = 0;
 		foreach ($call_recordings as $row) {
 			//playback progress bar
@@ -262,7 +258,7 @@
 				echo "		<input type='hidden' name='call_recordings[$x][uuid]' value='".escape($row['call_recording_uuid'])."' />\n";
 				echo "	</td>\n";
 			}
-			if (!empty($_GET['show']) == "all" && permission_exists('call_recording_all')) {
+			if ($show == "all" && permission_exists('call_recording_all')) {
 				echo "	<td class='overflow hide-sm-dn shrink'>".escape($row['domain_name'])."</td>\n";
 			}
 			echo "	<td class='hide-sm-dn shrink'>".escape($row['caller_id_name'])."</td>\n";

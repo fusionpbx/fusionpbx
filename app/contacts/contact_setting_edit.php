@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2018
+ Portions created by the Initial Developer are Copyright (C) 2008-2023
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -25,12 +25,8 @@
  Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -78,7 +74,7 @@
 		$contact_setting_subcategory = strtolower($_POST["contact_setting_subcategory"]);
 		$contact_setting_name = strtolower($_POST["contact_setting_name"]);
 		$contact_setting_value = $_POST["contact_setting_value"];
-		$contact_setting_order = $_POST["contact_setting_order"];
+		$contact_setting_order = $_POST["contact_setting_order"] ?? null;
 		$contact_setting_enabled = strtolower($_POST["contact_setting_enabled"]);
 		$contact_setting_description = $_POST["contact_setting_description"];
 	}

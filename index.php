@@ -24,10 +24,6 @@
 	Mark J. Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //start the session
 	ini_set("session.cookie_httponly", True);
 	if (!isset($_SESSION)) { session_start(); }
@@ -44,8 +40,8 @@
 		exit;
 	}
 
-//adds multiple includes
-	require_once "resources/require.php";
+//includes files
+	require_once __DIR__ . "/resources/require.php";
 
 //if logged in, redirect to login destination
 	if (isset($_SESSION["username"])) {
@@ -66,7 +62,8 @@
 			require_once "themes/".$_SESSION['domain']['template']['name']."/index.php";
 		}
 		else {
-			header("Location: ".PROJECT_PATH."/core/dashboard/");
+			//login prompt
+			require_once "resources/check_auth.php";
 		}
 	}
 

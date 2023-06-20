@@ -17,19 +17,15 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2022
+ Portions created by the Initial Developer are Copyright (C) 2008-2023
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
  Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -95,7 +91,7 @@
 	}
 
 //process the http post
-	if (!empty($_POST) && empty($_POST["persistformvar"])) {
+	if (!empty($_POST) && (empty($_POST["persistformvar"]) || $_POST["persistformvar"] != "true")) {
 
 		//set the default_setting_uuid
 			if ($action == "update") {
@@ -136,7 +132,7 @@
 			}
 
 		//add or update the database
-			if ($_POST["persistformvar"] != "true") {
+			if (empty($_POST["persistformvar"]) || $_POST["persistformvar"] != "true") {
 				// fix null
 				$default_setting_order = ($default_setting_order != '') ? $default_setting_order : 'null';
 
@@ -236,12 +232,12 @@
 					header("Location: default_settings.php?".$query_string."#anchor_".$default_setting_category);
 					return;
 				}
-			} //if ($_POST["persistformvar"] != "true")
-	} //(count($_POST)>0 && empty($_POST["persistformvar"]))
+			}
+	}
 
 //pre-populate the form
 	if (count($_GET) > 0 && empty($_POST["persistformvar"])) {
-		$default_setting_uuid = $_GET["id"];
+		$default_setting_uuid = $_GET["id"] ?? '';
 		$sql = "select default_setting_uuid, default_setting_category, default_setting_subcategory, default_setting_name, default_setting_value, default_setting_order, cast(default_setting_enabled as text), default_setting_description ";
 		$sql .= "from v_default_settings ";
 		$sql .= "where default_setting_uuid = :default_setting_uuid ";

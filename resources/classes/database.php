@@ -391,20 +391,16 @@
 			 */
 			public function connect() {
 
-				//set the include path
-					$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-					set_include_path(parse_ini_file($conf[0])['document.root']);
-
-				//parset the config.conf file
-					$conf = parse_ini_file($conf[0]);
+				//includes files
+					require dirname(__DIR__, 2) . "/resources/require.php";
 
 				//get the database connection settings
-					$db_type = $conf['database.0.type'];
-					$db_host = $conf['database.0.host'];
-					$db_port = $conf['database.0.port'];
-					$db_name = $conf['database.0.name'];
-					$db_username = $conf['database.0.username'];
-					$db_password = $conf['database.0.password'];
+					//$db_type = $conf['database.0.type'];
+					//$db_host = $conf['database.0.host'];
+					//$db_port = $conf['database.0.port'];
+					//$db_name = $conf['database.0.name'];
+					//$db_username = $conf['database.0.username'];
+					//$db_password = $conf['database.0.password'];
 
 				//debug info
 					//echo "db type:".$db_type."\n";
@@ -640,6 +636,13 @@
 				//connect to the database if needed
 				if (!$this->db) {
 					$this->connect();
+				}
+
+				//if unable to connect to the database
+				if (!$this->db) {
+					echo "Connection Failed<br />\n";
+					echo "line number ".__line__."<br />\n";
+					exit;
 				}
 
 				//query table store to see if the table exists
@@ -1474,11 +1477,20 @@
 						$this->connect();
 					}
 
+				//unable to connect to the database
+					if (!$this->db) {
+						echo "Connection Failed<br />\n";
+						echo "line number ".__line__."<br />\n";
+						exit;
+					}
+
 				//set the error mode
-					$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+					if ($this->db) {
+						$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+					}
 
 				//reduce prepared statement latency
-					if (defined('PDO::PGSQL_ATTR_DISABLE_PREPARES')) {
+					if ($this->db && defined('PDO::PGSQL_ATTR_DISABLE_PREPARES')) {
 						$this->db->setAttribute(PDO::PGSQL_ATTR_DISABLE_PREPARES, true);
 					}
 
@@ -1669,7 +1681,7 @@
 									$parent_key_name = self::singular($parent_name)."_uuid";
 
 								//build the copy array
-									if ($row['checked'] == 'true') {
+									if (!empty($row['checked']) && $row['checked'] == 'true') {
 										//set checked to true
 										$checked = true;
 
@@ -1810,9 +1822,20 @@
 								//update the parent key id
 									$array[$parent_name][$x][$parent_key_name] = $parent_key_value;
 
+								//set enabled
+									if (array_key_exists(self::singular($parent_name).'_enabled', $array[$parent_name][$x])) {
+										$array[$parent_name][$x][self::singular($parent_name).'_enabled'] = $row[self::singular($parent_name).'_enabled'] === true || $row[self::singular($parent_name).'_enabled'] == 'true' ? 'true' : 'false';
+									}
+									else if (array_key_exists('enabled', $array[$parent_name][$x])) {
+										$array[$parent_name][$x]['enabled'] = $row['enabled'] === true || $row['enabled'] == 'true' ? 'true' : 'false';
+									}
+
 								//add copy to the description
-									if (isset($array[$parent_name][$x][self::singular($parent_name).'_description'])) {
-										$array[$parent_name][$x][self::singular($parent_name).'_description'] = $suffix.$array[$parent_name][$x][self::singular($parent_name).'_description'];
+									if (array_key_exists(self::singular($parent_name).'_description', $array[$parent_name][$x])) {
+										$array[$parent_name][$x][self::singular($parent_name).'_description'] = trim($array[$parent_name][$x][self::singular($parent_name).'_description'].' '.$suffix);
+									}
+									else if (array_key_exists('description', $array[$parent_name][$x])) {
+										$array[$parent_name][$x]['description'] = trim($array[$parent_name][$x]['description'].' '.$suffix);
 									}
 
 								//loop through the fields

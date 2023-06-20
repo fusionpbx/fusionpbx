@@ -17,19 +17,15 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018-2020
+	Portions created by the Initial Developer are Copyright (C) 2018-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -305,7 +301,7 @@
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
 	echo "	<select class='formfld' name='group_protected'>\n";
 	echo "		<option value='false'>".$text['label-false']."</option>\n";
-	echo "		<option value='true' ".($group_protected == "true" ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
+	echo "		<option value='true' ".(!empty($group_protected) && $group_protected == "true" ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
 	echo "	</select>\n";
 	echo "<br />\n";
 	//echo $text['description-group_protected']."\n";

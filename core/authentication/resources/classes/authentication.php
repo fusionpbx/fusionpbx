@@ -44,34 +44,6 @@ class authentication {
 				$_SESSION['authentication']['methods'][]  = 'database';
 			}
 
-		//automatically block multiple authentication failures
-			if (!isset($_SESSION['users']['max_retry']['numeric'])) {
-				$_SESSION['users']['max_retry']['numeric'] = 5;
-			}
-			if (!isset($_SESSION['users']['find_time']['numeric'])) {
-				$_SESSION['users']['find_time']['numeric'] = 3600;
-			}
-			$sql = "select count(user_log_uuid) \n";
-			$sql .= "from v_user_logs \n";
-			$sql .= "where result = 'failure' \n";
-			$sql .= "and floor(extract(epoch from now()) - extract(epoch from timestamp)) < :find_time \n";
-			$sql .= "and type = 'login' \n";
-			$sql .= "and remote_address = :remote_address \n";
-			$sql .= "and username = :username \n";
-			$parameters['remote_address'] = $_SERVER['REMOTE_ADDR'];
-			$parameters['find_time'] = $_SESSION['users']['find_time']['numeric'];
-			$parameters['username'] = isset($_SESSION['username']) ? $_SESSION['username'] : null;
-			$database = new database;
-			$auth_tries = $database->select($sql, $parameters, 'column');
-			if ($_SESSION['users']['max_retry']['numeric'] <= $auth_tries) {
-				$result["plugin"] = "database";
-				$result["domain_name"] = $this->domain_name;
-				$result["username"] = $this->username;
-				$result["domain_uuid"] = $this->domain_uuid;
-				$result["authorized"] = "false";
-				return $result;
-			}
-
 		//set the database as the default plugin
 			if (!isset($_SESSION['authentication']['methods'])) {
 				$_SESSION['authentication']['methods'][] = 'database';
@@ -81,7 +53,7 @@ class authentication {
 			foreach ($_SESSION['authentication']['methods'] as $name) {
 
 				//already processed the plugin move to the next plugin
-				if (!empty($_SESSION['authentication']['plugin'][$name]['authorized'])) {
+				if (!empty($_SESSION['authentication']['plugin']) && $_SESSION['authentication']['plugin'][$name]['authorized']) {
 					continue;
 				}
 
@@ -92,9 +64,9 @@ class authentication {
 
 				//process the plugin
 				if (file_exists($plugin)) {
+					//run the plugin
 					include_once $plugin;
 					$object = new $class_name();
-					$object->debug = $this->debug;
 					$object->domain_name = $this->domain_name;
 					$object->domain_uuid = $this->domain_uuid;
 					if ($plugin == 'database' && isset($this->key)) {
@@ -106,7 +78,7 @@ class authentication {
 					}
 					$array = $object->$name();
 
-					$id = $array["plugin"];
+					//build a result array
 					$result['plugin'] = $array["plugin"];
 					$result['domain_name'] = $array["domain_name"];
 					$result['username'] = $array["username"];
@@ -117,6 +89,11 @@ class authentication {
 
 					//save the result to the authentication plugin
 					$_SESSION['authentication']['plugin'][$name] = $result;
+
+					//plugin authorized false
+					if (!$result['authorized']) {
+						break;
+					}
 				}
 			}
 
@@ -168,18 +145,8 @@ class authentication {
 		//add user logs
 			user_logs::add($result);
 
-		//debug information
-			if (!empty($debug)) {
-				if ($row["authorized"]) {
-					echo "authorized: true\n";
-				}
-				else {
-					echo "authorized: false\n";
-				}
-			}
-
 		//user is authorized - get user settings, check user cidr
-			if (!empty($authorized)) {
+			if ($authorized) {
 
 				//set a session variable to indicate authorized is set to true
 					$_SESSION['authorized'] = true;
@@ -497,7 +464,6 @@ $auth = new authentication;
 $auth->username = "user";
 $auth->password = "password";
 $auth->domain_name = "sip.fusionpbx.com";
-$auth->debug = false;
 $response = $auth->validate();
 print_r($response);
 */

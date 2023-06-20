@@ -17,19 +17,15 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -55,8 +51,8 @@
 	}
 
 //get http post variables and set them to php variables
-	if (count($_POST) > 0) {
-		$menu_uuid = $_POST["menu_uuid"];
+	if (!empty($_POST) && count($_POST) > 0) {
+		$menu_uuid = $_POST["menu_uuid"] ?? null;
 		$menu_name = $_POST["menu_name"];
 		$menu_language = $_POST["menu_language"];
 		$menu_description = $_POST["menu_description"];
@@ -75,8 +71,8 @@
 
 		//check for all required data
 			$msg = '';
-			//if (empty($menu_name)) { $msg .= $text['message-required'].$text['label-name']."<br>\n"; }
-			//if (empty($menu_language)) { $msg .= $text['message-required'].$text['label-language']."<br>\n"; }
+			if (empty($menu_name)) { $msg .= $text['message-required'].$text['label-name']."<br>\n"; }
+			if (empty($menu_language)) { $msg .= $text['message-required'].$text['label-language']."<br>\n"; }
 			//if (empty($menu_description)) { $msg .= $text['message-required'].$text['label-description']."<br>\n"; }
 			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
@@ -92,7 +88,7 @@
 			}
 
 		//add or update the database
-		if ($_POST["persistformvar"] != "true") {
+		if (empty($_POST["persistformvar"])) {
 			if ($action == "add") {
 				//create a new unique id
 					$menu_uuid = uuid();

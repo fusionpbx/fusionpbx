@@ -800,7 +800,7 @@
 <P850>{$grandstream_dtmf_method_1}</P850>
 {else}
 <P850>100</P850>
-{endif}
+{/if}
 
 <!-- Preferred DTMF Method 2 -->
 <!-- Number: 100 to 102 -->
@@ -809,7 +809,7 @@
 <P851>{$grandstream_dtmf_method_2}</P851>
 {else}
 <P851>101</P851>
-{endif}
+{/if}
 
 <!-- Preferred DTMF Method 3 -->
 <!-- Number: 100 to 102 -->
@@ -818,7 +818,7 @@
 <P852>{$grandstream_dtmf_method_3}</P852>
 {else}
 <P852>102</P852>
-{endif}
+{/if}
 
 <!-- Disable DTMF Negotiation. 0 - no, 1 - yes -->
 <!-- Number: 0,1 -->

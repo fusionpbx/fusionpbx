@@ -23,12 +23,8 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
 
@@ -51,6 +47,9 @@
 		$search = $_POST['search'];
 		$profiles = $_POST['profiles'];
 	}
+
+//set additional variables
+	$show = $_GET["show"] ?? '';
 
 //get the search
 	$search = strtolower($_REQUEST["search"] ?? '');
@@ -114,7 +113,7 @@
 //get the count
 	$sql = "select count(*) from v_device_profiles ";
 	$sql .= "where true ";
-	if (empty($_GET['show']) || $_GET['show'] != "all" || !permission_exists('device_profile_all')) {
+	if ($show != "all" || !permission_exists('device_profile_all')) {
 		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
 		$parameters['domain_uuid'] = $domain_uuid;
 	}
@@ -129,7 +128,7 @@
 		$param .= "&search=".$search;
 		$param .= "&fields=".$fields;
 	}
-	if (!empty($_GET['show']) && $_GET['show'] == "all" && permission_exists('device_profile_all')) {
+	if ($show == "all" && permission_exists('device_profile_all')) {
 		$param .= "&show=all";
 	}
 	$page = $_GET['page'] ?? 0;
@@ -172,7 +171,7 @@
 	}
 	echo 		"<form id='form_search' class='inline' method='get'>\n";
 	if (permission_exists('device_profile_all')) {
-		if (!empty($_GET['show']) && $_GET['show'] == 'all') {
+		if ($show == 'all') {
 			echo "		<input type='hidden' name='show' value='all'>";
 		}
 		else {
@@ -223,7 +222,7 @@
 		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".(empty($device_profiles) ? "style='visibility: hidden;'" : null).">\n";
 		echo "	</th>\n";
 	}
-	if (!empty($_GET['show']) && $_GET['show'] == "all" && permission_exists('device_profile_all')) {
+	if ($show == "all" && permission_exists('device_profile_all')) {
 		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, $param);
 	}
 	echo th_order_by('device_profile_name', $text['label-device_profile_name'], $order_by, $order);
@@ -247,7 +246,7 @@
 				echo "		<input type='hidden' name='profiles[$x][uuid]' value='".escape($row['device_profile_uuid'])."' />\n";
 				echo "	</td>\n";
 			}
-			if (!empty($_GET['show']) && $_GET['show'] == "all" && permission_exists('device_profile_all')) {
+			if ($show == "all" && permission_exists('device_profile_all')) {
 				if (!empty($_SESSION['domains'][$row['domain_uuid']]['domain_name'])) {
 					$domain = $_SESSION['domains'][$row['domain_uuid']]['domain_name'];
 				}
