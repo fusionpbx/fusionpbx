@@ -32,7 +32,7 @@
 	//default settings
 		$y=0;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "a9f1e1a3-8165-45ed-b598-a09ea8965966";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_provision_url";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = 'https://{$domain_name}/app/provision/';
@@ -40,7 +40,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Provisioning URL for Yealink";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "fc2fa8cd-b14e-48e3-99bd-7c01c9d6208d";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_time_zone";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "-5";
@@ -48,7 +48,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Time zone ranges from -11 to +12";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "9009cb3d-5eb8-41fa-bcbb-ee6b63cdccfa";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_time_zone_name";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "United States-Eastern Time";
@@ -56,7 +56,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Time zone name example United States-Mountain Time";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "7f4a1607-4cbe-49f5-8cd2-6d599b89bd9b";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_time_format";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
@@ -64,7 +64,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "0-12 Hour, 1-24 Hour";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "166b27d1-1860-4154-88d3-5e15781e7bbb";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_date_format";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "3";
@@ -72,7 +72,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "0-WWW MMM DD (default), 1-DD-MMM-YY, 2-YYYY-MM-DD, 3-DD/MM/YYYY, 4-MM/DD/YY, 5-DD MMM YYYY, 6-WWW DD MMM";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "05bcbb47-06f6-4c81-a1c9-cdf2982d60a7";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_rport";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
@@ -80,7 +80,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enable or disable the NAT Rport. 0-Disabled (default), 1-Enabled.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "70894b7b-2edd-41ad-8526-060589df4e11";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_session_timer";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
@@ -88,7 +88,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "SIP Session Timers";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "aa200d6f-c048-4203-9838-8dd05fa31bd5";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_retransmission";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
@@ -96,7 +96,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Retransmission";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "8e73d35a-dea9-11eb-a34d-536492a496c1";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_subscribe_mwi";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
@@ -104,7 +104,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "subscribe the message waiting indicator 0-Disabled (default), 1-Enabled";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "d0fb35a5-b5cb-4d9c-9554-56c5087d74ec";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_subscribe_mwi_to_vm";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
@@ -112,7 +112,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Subscribe to the voicemail MWI 0-Disabled (default), 1-Enabled";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "1374da96-dc40-4f12-8269-0b94278b7c55";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_srtp_encryption";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
@@ -120,7 +120,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "0=Disabled, 1=Optional, 2=Mandatory";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "f0704072-c3d9-48df-b89b-2aea6035b3c4";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_call_waiting";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
@@ -128,7 +128,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Call Waiting 1=enabled 0=disable";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "c032b49e-dec9-40f0-959b-2371a914c409";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_voice_tone_callwaiting";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
@@ -136,7 +136,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Change the call tone volume";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "3401d056-56b1-4038-a03b-4be041b80b0e";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_call_waiting_tone";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
@@ -144,7 +144,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Call Waiting Tone 0-Disabled, 1-Enabled (default)";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "1f298476-c8e0-4315-9d7f-b70d36166fcc";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_direct_pickup_enable";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
@@ -152,7 +152,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Direct Pickup 0-Disabled, 1-Enabled (default)";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "2c3445ff-0339-43d4-8762-3c87ec37be57";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_outbound_proxy_fallback_interval";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "3600";
@@ -160,7 +160,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Integer from 0 to 65535";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "78f05ec5-d59c-4033-aeb5-62c9f46999cb";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_rfc2543_hold";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
@@ -168,7 +168,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Default 0";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "be02b916-3419-4bc7-881e-46711134577c";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_blf_led_mode";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
@@ -176,7 +176,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "The value is 0 (default) or 1.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "2f5e8429-6890-4da7-84ae-65c9c29b5091";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_trust_ctrl";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
@@ -184,7 +184,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "(0-Disabled;1-Enabled)";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "561035ed-e388-4d5e-888d-367455faa05c";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_direct_ip_call_enable";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
@@ -192,7 +192,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "0-Disabled, 1-Enabled";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "c45264b7-6e85-42e4-b245-f22caff091d4";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_hide_feature_access_codes_enable";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
@@ -200,7 +200,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "0-Disabled, 1-Enabled";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "ada36bd5-51ab-4bf8-a2ad-bc39671b2a3a";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_missed_call_power_led_flash_enable";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
@@ -208,7 +208,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "0-Disabled:power indicator LED is off, 1-Enabled:power indicator LED is solid red";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "fb13e647-ca3f-4da6-901c-584b8cde4055";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_voice_mail_popup_enable";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
@@ -216,7 +216,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Display Voice Mail Popup";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "dc4a391f-25b7-44bb-accb-efb23f20662c";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_missed_call_popup_enable";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
@@ -224,7 +224,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Display Missed Call Popup";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "85c7d304-2c91-447d-b139-c05d2499ea7d";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_cid_source";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "2";
@@ -232,7 +232,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "The type of SIP header(s) to carry the caller ID; 0-FROM, 1-PAI 2-PAI-FROM (default), 3-PRID-PAI-FROM, 4-PAI-RPID-FROM, 5-RPID-FROM, 6-Preference";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "0767daa9-9a7d-4949-86e4-63a779f750e0";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_cp_source";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
@@ -240,7 +240,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Configure the type of SIP header(s) to display on the caller's LCD screen; 0-RPID-FROM, 1-Dialed Digits(default), 2-RFC4916";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "ba0ebf59-6364-47b2-9a98-73430669a4c4";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_dtmf_type";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
@@ -248,7 +248,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "0-INBAND, 1-RFC 2833 (default), 2-SIP INFO, 3-RFC2833 + SIP INFO";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "6fd955ef-2f65-41f0-84cf-5b3ad917cc20";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_dtmf_hide";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
@@ -256,7 +256,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enables or disables suppressing the display of DTMF digits during an active call. Enabled, the DTMF digits are displayed as asterisks. 0-Disabled (default), 1-Enabled.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "968c9f53-305c-4fbd-a7dd-4dd6099e829e";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_sip_listen_port";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "5060";
@@ -264,7 +264,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "5060 default";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "089119ac-c2f2-46a2-8d0e-6f78ac3fb740";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_super_search_url";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "https://server.yourdomain.com/app/provision/?file=super_search.xml";
@@ -272,7 +272,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "URL for Yealink Super Search XML configuration file";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "3f903069-c0fc-4bf1-9c33-907bf238475e";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_firmware_url";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "https://server.yourdomain.com/app/yealink/resources/firmware";
@@ -280,7 +280,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Base URL for Yealink Firmware. Download from http://support.yealink.com";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "e8f3e617-a6b3-4859-af59-04e2349f3d49";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_firmware_cp860";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "cp860-37.81.0.10.rom";
@@ -288,7 +288,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the CP860 firmware ROM";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "2d167eaf-dbfb-423d-a073-feb66e1434bd";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_firmware_cp920";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "cp920-78.85.0.5.rom";
@@ -296,7 +296,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the CP920 firmware ROM";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "7a769f2f-2833-4b90-9789-ff96a4723773";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_firmware_cp960";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "cp960-73.80.0.25.rom";
@@ -304,7 +304,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the CP960 firmware ROM";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "d5fdf57e-45b2-4704-bdbf-ff7821692a07";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_firmware_t23g";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "t23g-44.84.0.140.rom";
@@ -312,7 +312,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the T23G firmware ROM";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "2f27755a-5082-469d-8ea6-52e350cb9988";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_firmware_t27g";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "t27g-69.84.0.15.rom";
@@ -320,7 +320,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the T27G firmware ROM";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "311d2739-a340-42f5-8e3e-6e6ecce1faa2";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_firmware_t29g";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "t29g-46.81.0.110.rom";
@@ -328,7 +328,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the T29G firmware ROM";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "4f118a31-aeee-4c7b-97ba-ff5939f62f2e";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_firmware_t33g";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "t33g-124.86.0.20.rom";
@@ -336,7 +336,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the T33G firmware ROM";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "75850968-9226-450f-a3e1-414ec1d610ee";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_firmware_t38g";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "t38g-38.70.0.185.rom";
@@ -344,7 +344,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the T38G firmware ROM";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "7223c3a7-5ef9-46a8-84be-39338a6788a6";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_firmware_t40g";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "t40g-76.81.0.110.rom";
@@ -352,7 +352,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the T40G firmware ROM";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "c5d9b7ea-8e3b-4428-9845-438be7be0baa";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_firmware_t40p";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "t40p-54.81.0.110.rom";
@@ -360,7 +360,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the T40P firmware ROM";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "f714e8a0-9753-48e0-9674-0f4efc7e4ff1";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_firmware_t41p";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "t41p-36.81.0.110.rom";
@@ -368,7 +368,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the T41P firmware ROM";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "9480f346-c038-462b-b440-329383290b84";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_firmware_t41s";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "t41s-66.81.0.110.rom";
@@ -376,7 +376,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the T41S firmware ROM";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "84eb10e2-bd9f-4bd0-8073-ac8cf002e7f0";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_firmware_t42g";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "t42g-29.81.0.110.rom";
@@ -384,7 +384,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the T42G firmware ROM";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "768f216e-fc19-4c97-b843-03d48ce70c4e";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_firmware_t42s";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "t42s-66.81.0.110.rom";
@@ -392,7 +392,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the T42S firmware ROM";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "5fb6ef46-0a7f-4bb6-b415-49b437454321";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_firmware_t46g";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "t46g-28.81.0.110.rom";
@@ -400,7 +400,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the T46G firmware ROM";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "4e2b8fcb-7d06-4553-becf-9904e1331c4c";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_firmware_t46s";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "t46s-66.81.0.110.rom";
@@ -408,7 +408,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the T46S firmware ROM";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "7a901cc2-451a-4f10-8e64-ecc98d9ec69e";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_firmware_t46u";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "t46u-108.85.0.15.rom";
@@ -416,7 +416,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the T46U firmware ROM";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "fe57b4db-e6a2-49be-b103-74345e8dd8b5";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_firmware_t48u";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "T46U(T43U,T46U,T41U,T48U,T42U)-108.86.0.20.rom";
@@ -424,7 +424,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the T48U firmware ROM";
 	    	$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "6b70cfeb-2124-42dc-ba8b-6cd77da3fa5f";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_firmware_t53w";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "T53W(T53)-95.84.0.125.rom";
@@ -432,7 +432,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the T53w firmware ROM";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "304c78ff-bbac-477e-a399-8cdf7b0264ef";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_firmware_t53";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "T54W(T57W,T53W,T53)-96.85.0.5.rom";
@@ -440,7 +440,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the T53 firmware ROM";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "83e51b20-2d8d-4437-889d-dc97d9810fb5";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_firmware_t54s";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "T54S(T52S)-70.82.0.20.rom";
@@ -448,7 +448,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the T54s firmware ROM";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "84be24be-d03d-49cf-bc9e-79fb19e04718";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_firmware_t54w";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "T54W-96.84.0.125.rom";
@@ -456,7 +456,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the T54w firmware ROM";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "27ae0140-7ea1-44e5-892c-d59a24b0ad22";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_firmware_t57w";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "T57W-97.84.0.125.rom";
@@ -464,7 +464,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the T57w firmware ROM";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "0276b965-0ef6-493a-bdd0-b9786bf8aad7";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_firmware_t48g";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "t48g-35.81.0.110.rom";
@@ -472,7 +472,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the T48G firmware ROM";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "77314a84-6304-47d8-a6b4-fb6d12b8804f";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_firmware_t48s";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "t48s-66.81.0.110.rom";
@@ -480,7 +480,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = " Filename of the T48S firmware ROM";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "c53fdce7-b0eb-49ef-9d58-5a3a212bf5bf";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_firmware_t49g";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "t49g-51.80.0.100.rom";
@@ -488,7 +488,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the T49Gfirmware ROM";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "804003fc-f0e9-4b3b-a35b-6c2742f965eb";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_firmware_t52s";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "t52s-70.81.0.10.rom";
@@ -496,7 +496,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the T52Sfirmware ROM";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "4ffd1ad7-1b00-41f7-8e93-19412127245a";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_firmware_t56a";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "t56a-58.80.0.25.rom";
@@ -504,7 +504,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the T56A firmware ROM";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "616d6358-d07e-4e42-8560-7de0f42cd5b1";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_firmware_t58a";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "t58a-58.80.0.25.rom";
@@ -512,7 +512,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the T58A firmware ROM";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "2cdd8b87-db72-4ad1-b18b-745fc1f7e906";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_firmware_t58v";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "t58v-58.80.0.25.rom";
@@ -520,7 +520,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the T58V firmware ROM";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "323cc84f-70f0-4d67-9597-0fbdc0a7317b";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_firmware_w60b";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "w60b-77.85.0.25.rom";
@@ -528,7 +528,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the W60B firmware ROM";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "0777060f-8c28-4c25-bf10-82b569949bdd";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_firmware_w70b";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "w70b-146.85.0.25.rom";
@@ -536,7 +536,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the w70b firmware ROM";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "d8cc3f82-41d9-49fa-924e-d204e999d79f";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_w53h_handset_firmware_url";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "w53h-88.83.0.90.rom";
@@ -544,7 +544,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the W53H Cordless firmware ROM";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "7ad642b6-9c07-4216-ac7f-98e7ebe7c6cf";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_w56h_handset_firmware_url";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "w56h-61.85.0.20.rom";
@@ -552,7 +552,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the W56H Cordless firmware ROM";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "246c63db-8b56-4d09-80ec-ac4a6c85bd11";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_w59r_handset_firmware_url";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "w59r-115.85.0.20.rom";
@@ -560,7 +560,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the W59R Cordless firmware ROM";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "a39fc1af-9c30-46c7-a564-212e4af0331f";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_firmware_vp530";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "vp530-23.70.0.40.rom";
@@ -568,7 +568,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the VP530 firmware ROM";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "68eba481-aeb1-4c7e-a4e4-630946abc0e7";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_network_vpn_enable";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
@@ -576,7 +576,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "(0-Disabled;1-Enabled)";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "85675560-82cf-48a5-8056-227c01a44f37";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_openvpn_url";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "hxxps://replace-this.url/openvpn.tar";
@@ -584,7 +584,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "(URL within 511 characters)";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "b75ef82b-a225-43a5-a208-78d545cca8aa";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_ip_address_mode";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
@@ -592,7 +592,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "IP Address mode 0-ipv4, 1-ipv6, 2-ipv4&ipv6";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "e731d65f-132b-49a1-9f20-39ecd1e70b54";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_lldp_enable";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
@@ -600,7 +600,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "LLDP 0-Disabled, 1-Enabled";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "2d380c07-aba5-46a9-8ef5-7e6b713868fd";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_cdp_enable";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
@@ -608,7 +608,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "CDP 0-Disabled, 1-Enabled";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "f54bd090-723c-47c8-a9cd-c1e875134501";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_overwrite_mode";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
@@ -616,7 +616,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Overwrite Mode 0-Disabled, 1-Enabled";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "709945c3-7fc4-4903-b6b2-7c0d695fea43";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_dsskey_length";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
@@ -624,7 +624,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "DSS Key Label Length 0-Default, 1-Extended, 2-Mid Range";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "3dee932a-6987-4693-b289-825d192e8f85";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_feature_key_sync";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
@@ -632,7 +632,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enable or disable the feature key synchronization; 0-Disabled (default), 1-Enabled";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "c7227e2b-870f-4c11-aab8-dfff8d626ded";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_predial_autodial";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
@@ -640,7 +640,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Auto dial after digit timeout 0-Disabled (default), 1-Enabled";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "627ef79d-1a49-4bae-b215-56182e308351";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_ring_type";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "custom.wav";
@@ -648,7 +648,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Custom ring tone (Busy.wav);";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "7af991ec-ddb9-4942-a05d-d1acc529fef5";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_ringtone_url";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "custom.wav";
@@ -656,7 +656,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Before using this parameter, you should store the desired ring tone (custom.wav) to the provisioning server";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "368d8f25-9faf-417b-a1ac-942ecf8b9793";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_ringtone_delete";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "http://localhost/all,delete";
@@ -664,7 +664,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "http://localhost/all,delete all the customized ring tones";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "95862d61-18ac-41b5-ac69-467e0ef3afd7";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_remote_phonebook_1_name";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "Personal";
@@ -672,7 +672,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Remote Phonebook Users on Yealink";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "32cdd450-2ba4-43d7-95d8-dcd825084455";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_remote_phonebook_2_name";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "Global";
@@ -680,7 +680,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Remote Phonebook Groups on Yealink";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "0abb1daf-e88f-4151-9bbb-fed244b9d3e4";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_remote_phonebook_3_name";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "Local";
@@ -688,7 +688,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Remote Phonebook Extensions on Yealink";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "c786b947-2d08-4a48-a2b3-cb508c179c3b";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_remote_phonebook_enable";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
@@ -696,7 +696,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enable phone to query the contact names from the remote phonebook when receiving incoming calls. 0-Disabled (default), 1-Enabled;";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "1a703585-bee8-4b77-8e5b-7f1fb29958ff";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_local_directory_enable";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
@@ -704,7 +704,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enable the Local Directory.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "765e18d9-9440-42be-a858-2c0ef90ee50f";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_ring_text_1";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
@@ -712,7 +712,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Text to map the keywords contained in the Alert-info header.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "78dee88b-6b6e-42e2-98ad-99ab9c521bd5";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_ring_text_2";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "2";
@@ -720,7 +720,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Text to map the keywords contained in the Alert-info header.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "16150946-b283-4227-90ce-865ad2c3bb1d";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_ring_text_3";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "3";
@@ -728,7 +728,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Text to map the keywords contained in the Alert-info header.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "af56de21-f82e-496b-aa2f-c36c89aad136";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_ring_text_4";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "4";
@@ -736,7 +736,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Text to map the keywords contained in the Alert-info header.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "f2985575-04ed-47d0-b301-059caff3bba1";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_ring_text_5";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "5";
@@ -744,7 +744,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Text to map the keywords contained in the Alert-info header.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "0b02df63-256c-46ed-a6e4-8099addf2af0";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_ring_text_6";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "6";
@@ -752,7 +752,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Text to map the keywords contained in the Alert-info header.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "32c7a515-afdf-4198-b185-83176c4a6e65";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_ring_text_7";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "7";
@@ -760,7 +760,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Text to map the keywords contained in the Alert-info header.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "a6a3b3f6-486e-4e69-a864-42964db271b7";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_ring_text_8";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "8";
@@ -768,7 +768,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Text to map the keywords contained in the Alert-info header.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "0c4aec7f-0f39-4984-be6a-0401a8d5e02b";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_ring_text_9";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "9";
@@ -776,7 +776,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Text to map the keywords contained in the Alert-info header.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "eff410eb-1256-4ea7-9a60-ff9fe380ff08";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_ring_text_10";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "10";
@@ -784,7 +784,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Text to map the keywords contained in the Alert-info header.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "ddc70c4e-69be-43e7-8ad0-1e934ac47d0e";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_ring_file_1";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "Ring1.wav";
@@ -792,7 +792,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Ring tone for each text ranges from 1 to 8. The default value 1 stands for Ring1.wav.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "5958dab7-d8de-49f5-a412-49567701a4b0";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_ring_file_2";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "Ring2.wav";
@@ -800,7 +800,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Ring tone for each text ranges from 1 to 8. The value 2 stands for Ring2.wav.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "392b549d-35ec-48cd-943d-fe3799bfa508";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_ring_file_3";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "Ring3.wav";
@@ -808,7 +808,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Ring tone for each text ranges from 1 to 8. The value 3 stands for Ring3.wav.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "24e46bf0-edfd-4d82-a617-c1aa3656b046";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_ring_file_4";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "Ring4.wav";
@@ -816,7 +816,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Ring tone for each text ranges from 1 to 8. The value 4 stands for Ring4.wav.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "4d38a1ff-b391-48b4-8552-a200f299d838";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_ring_file_5";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "Ring5.wav";
@@ -824,7 +824,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Ring tone for each text ranges from 1 to 8. The value 5 stands for Ring5.wav.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "b46a4a0e-6e58-484d-a1a6-20af1c97295d";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_ring_file_6";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "Ring6.wav";
@@ -832,7 +832,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Ring tone for each text ranges from 1 to 8. The value 6 stands for Ring6.wav.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "205fe7ac-a259-4902-ac41-75479b03614e";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_ring_file_7";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "Ring7.wav";
@@ -840,7 +840,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Ring tone for each text ranges from 1 to 8. The value 7 stands for Ring7.wav.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "7db19fce-f2f7-4be1-bab4-7678fd90e2a2";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_ring_file_8";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "Ring8.wav";
@@ -848,7 +848,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Ring tone for each text ranges from 1 to 8. The value 8 stands for Ring8.wav.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "3a9c4b27-8fac-4a64-acae-ff8e5b94f70e";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_ring_file_9";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "Ring9.wav";
@@ -856,7 +856,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Ring tone for each text ranges from 1 to 8. The value 8 stands for Ring8.wav.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "a55346e4-0562-4455-b003-1950e33151d7";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_ring_file_10";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "Ring10.wav";
@@ -864,7 +864,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Ring tone for each text ranges from 1 to 8. The value 8 stands for Ring8.wav.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "35f217f6-8551-4cdd-80f9-9c98ae702e30";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_dsskey_transfer_mode";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "2";
@@ -872,7 +872,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "DSS key transfer mode: 0-Display Number, 1 Attended Transfer, 2 Blind Transfer (default).";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "df933bbc-9d69-405f-80b1-99871c4d39e4";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_language_gui";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
@@ -880,7 +880,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "The language used in phone interface.";
 		$y++;		
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "3f7a5ed6-364c-4d5c-ba7e-4c6e9bdf9131";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_dialplan_dialnow_delay";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
@@ -888,7 +888,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Time in second till dialnow activates.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "b2d1e9c4-7097-4fc8-bb14-5aba6df4ef32";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_dialplan_dialnow_rule_1";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "[2-9]xx[2-9]xxxxxx";
@@ -896,7 +896,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Dial Now - Automatically dial out the entered numbers.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "5ea731fc-51d6-4b0a-9c2f-0dcc6560becd";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_dialplan_dialnow_rule_2";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "911";
@@ -904,7 +904,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Dial Now - Automatically dial out the entered numbers.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "91a03c96-1597-41dd-9605-0ca1df7e010c";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_dialplan_dialnow_rule_3";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "411";
@@ -912,7 +912,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Dial Now - Automatically dial out the entered numbers.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "ed6080df-0d8b-40e6-887d-ace104855114";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_dialplan_dialnow_rule_4";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
@@ -920,7 +920,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Dial Now - Automatically dial out the entered numbers.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "81035ca7-cbc6-4b26-90ef-89997e43a5fb";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_dialplan_dialnow_rule_5";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
@@ -928,7 +928,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Dial Now - Automatically dial out the entered numbers.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "0ad4500c-cfdf-46cf-952f-711b41252327";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_codec_1_priority";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
@@ -936,7 +936,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "The priority of the specified codec.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "6b520b18-050c-49f6-b29c-71cd299c294d";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_codec_2_priority";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "2";
@@ -944,7 +944,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "The priority of the specified codec.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "92b48426-6658-40a4-a3b6-14d73560bcfa";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_codec_3_priority";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "3";
@@ -952,7 +952,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "The priority of the specified codec.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "2bbfd8da-0cc1-4d20-8186-a37b13f96435";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_codec_4_priority";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "4";
@@ -960,7 +960,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "The priority of the specified codec.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "a26ce50f-d877-45fc-8112-3fc3888a07e4";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_codec_5_priority";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "5";
@@ -968,7 +968,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "The priority of the specified codec.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "3c235e65-9b25-4ecc-a29d-ce5ffa19170b";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_codec_6_priority";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "6";
@@ -976,7 +976,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "The priority of the specified codec.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "d8569da8-01d7-4615-8484-0c1a5b0fe53a";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_codec_7_priority";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "7";
@@ -984,7 +984,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "The priority of the specified codec.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "f20eea5d-402c-4d40-bfee-a5b8abe7217a";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_transfer_semi_attended";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
@@ -992,7 +992,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "0-Disabled, 1-Enabled (default). Enable or disable the transferee to display the missed call prompt when receiving a semi_attended transfer call.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "ecff53ed-89aa-4ee6-9f75-60fcdf3f7629";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_voice_tone_country";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "United States";
@@ -1000,7 +1000,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "For example, United States, France, Germany etc.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "fabea2c0-3585-4cfc-8819-f45ef61002ab";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_trust_certificates";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
@@ -1008,7 +1008,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Only Accept Trusted Certificates 0-Disabled (default), 1-Enabled.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "e1d03aea-1563-4c57-86de-4d4d274b8352";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_codec_opus_enable";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
@@ -1016,7 +1016,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set to enable or disable the selected Yealink codec.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "22683fe3-d2c0-4f84-a99d-3a4b8a821570";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_codec_g723_63_enable";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
@@ -1024,7 +1024,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set to enable or disable the selected Yealink codec.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "21f7bdbe-97cd-456f-911a-8dd4101a4dd9";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_codec_g722_enable";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
@@ -1032,7 +1032,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set to enable or disable the selected Yealink codec.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "ea57f5d1-a52f-4973-9073-d5f8ef3f5b26";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_codec_g723_53_enable";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
@@ -1040,7 +1040,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set to enable or disable the selected Yealink codec.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "2f7e7465-31f4-4fb1-87ba-54d283f9b96b";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_codec_g729_enable";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
@@ -1048,7 +1048,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set to enable or disable the selected Yealink codec.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "6483045a-931d-4d8d-ba21-75bc2c9aa9ce";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_codec_pcma_enable";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
@@ -1056,7 +1056,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set to enable or disable the selected Yealink codec.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "226b612f-ed90-4c1c-965d-030bd0c0f5c0";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_codec_pcmu_enable";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
@@ -1064,7 +1064,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set to enable or disable the selected Yealink codec.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "c8d10105-152b-419b-8836-c5af755b36cf";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_codec_ilbc_enable";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
@@ -1072,7 +1072,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set to enable or disable the selected Yealink codec.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "d4e238e6-877b-4b39-a99f-6cee3d2f1919";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_codec_gsm_enable";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
@@ -1080,7 +1080,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set to enable or disable the selected Yealink codec.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "b49dc66e-0ff9-4a41-ac0d-1cc0743cc3be";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_codec_g726_32_enable";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
@@ -1088,7 +1088,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set to enable or disable the selected Yealink codec.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "eb9261fc-d2b2-4bb5-aebf-3357b5d41f49";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_codec_g726_40_enable";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
@@ -1096,7 +1096,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set to enable or disable the selected Yealink codec.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "314b14aa-7d5e-4bbf-92c8-7801b19ad078";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_codec_g726_24_enable";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
@@ -1104,7 +1104,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set to enable or disable the selected Yealink codec.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "bb18c828-7e10-4f75-948f-8cd7804a0bb4";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_codec_g726_16_enable";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
@@ -1112,7 +1112,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set to enable or disable the selected Yealink codec.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "a018c028-0f99-4ef8-869d-f5322636ae36";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_codec_opus_priority";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "13";
@@ -1120,7 +1120,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set to enable or disable the selected Yealink codec.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "3b6685b3-0ca7-49f5-8863-f1b358b1c0e4";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_codec_g723_53_priority";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "5";
@@ -1128,7 +1128,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set to enable or disable the selected Yealink codec.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "4cab3f85-da3d-47b0-b3e6-15129583bc86";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_codec_g729_priority";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "3";
@@ -1136,7 +1136,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set to enable or disable the selected Yealink codec.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "0d96067e-5cfd-4618-b779-00a37ae80bc2";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_codec_pcmu_priority";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
@@ -1144,7 +1144,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set to enable or disable the selected Yealink codec.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "f1396ecd-3a56-4573-995e-446ddd2cb2c2";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_codec_pcma_priority";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "2";
@@ -1152,7 +1152,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set to enable or disable the selected Yealink codec.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "57d98ac9-9df0-41bd-b494-2d46ce9a10e9";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_codec_g723_63_priority";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "6";
@@ -1160,7 +1160,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set to enable or disable the selected Yealink codec.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "314425f8-2fe8-4a1c-8ae5-c540cfc3072d";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_codec_g722_priority";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "4";
@@ -1168,7 +1168,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set to enable or disable the selected Yealink codec.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "792cee0e-f2af-42a9-9b59-a8cbaabf17be";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_codec_ilbc_priority";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "7";
@@ -1176,7 +1176,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set to enable or disable the selected Yealink codec.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "c8dd14e4-b8be-4b91-ad71-2d83b97d1bb3";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_codec_g726_16_priority";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "8";
@@ -1184,7 +1184,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set to enable or disable the selected Yealink codec.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "ed2914e6-4af5-49aa-9310-590b6492798d";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_codec_g726_24_priority";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "9";
@@ -1192,7 +1192,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set to enable or disable the selected Yealink codec.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "2e13034b-14b6-4dc9-b390-921eacdbc536";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_codec_g726_32_priority";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "10";
@@ -1200,7 +1200,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set to enable or disable the selected Yealink codec.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "3bee322f-7de7-48ed-91be-ee5dfa14c55c";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_codec_g726_40_priority";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "11";
@@ -1208,7 +1208,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set to enable or disable the selected Yealink codec.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "8dd3b8c5-885d-494a-bca5-266e2b317f31";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_codec_gsm_priority";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "12";
@@ -1216,7 +1216,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set to enable or disable the selected Yealink codec.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "20ae69b7-c2c5-4781-b968-2e57c1c85b32";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_usb_record_enable";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
@@ -1224,7 +1224,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set 1 = ON 0 = OFF.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "3f6beec0-01d0-4015-b7f2-26a2b94a0b5d";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_auto_dst_url";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "https://server.yourdomain.com/app/yealink/resources/auto_dst.xml";
@@ -1232,7 +1232,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "URL to AutoDST.xml file. The time zone and corresponding DST pre-configurations exist in the AutoDST file. If the DST is set to Automatic, the IP phone obtains the DST configuration from the AutoDST file.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "4351b29e-d12e-4887-bd60-3b4ae0c33784";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_inter_digit_time";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "4";
@@ -1240,7 +1240,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "#Configure the time (in seconds) the phone automatically dials out the dialed digits. It ranges from 1 to 14, the default value is 4.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "a53de282-d291-4a4c-9308-9cbbd4a4629b";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_fwd_allow";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
@@ -1248,7 +1248,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set 1 = On, 0 = Off";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "c02d516f-c5db-4dd6-a756-083fa690a204";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_dnd_allow";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
@@ -1256,7 +1256,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set 1 = On, 0 = off";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "e9d76ed5-efaa-4202-b19d-5e33f6bb4f87";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_voice_cng";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
@@ -1264,7 +1264,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set 1 = On (default), 0 = Off";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "d650488c-f87b-492d-9c9c-7e332f69ad92";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_voice_vad";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
@@ -1272,7 +1272,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set 1 = On, 0 = Off (default)";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "768c0f46-c9cf-44e2-87fc-4279f956d368";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_security_default_ssl_method";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "3";
@@ -1280,7 +1280,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Configures the TLS version to use. 0-TLS 1.0 only, 3-SSL V23 automatic negotiation with the server, 4-TLS 1.1 only, 5-TLS 1.2 only, Default 3";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "dc570a6d-daa5-49e5-aacb-db51478883b8";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_security_tls_cipher_list";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "AES:!ADH:!LOW:!EXPORT:!NULL";
@@ -1288,7 +1288,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "TLS cipher list Default";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "a369c69f-bd35-42be-973f-5648023007bb";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_vlan_cos";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
@@ -1296,7 +1296,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Configure the Internet VLAN priority, it ranges from 0 (default) to 7.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "a81914e2-d839-42f9-9505-fe612f187d03";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_vlan_id";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
@@ -1304,7 +1304,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Configure the Internet port VLAN ID, it ranges from 0 to 4094, the default value is 0.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "57a05a8e-e795-4122-a156-845aeeadc073";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_vlan_enable";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
@@ -1312,7 +1312,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Internet port VLAN enable Set 1 = ON 0 = OFF.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "2ba2754d-19ff-4e66-a765-7d7c263ab21d";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_vlan_pc_cos";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
@@ -1320,7 +1320,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Configure the VLAN PC port priority, it ranges from 0 (default) to 7.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "9e548866-cf99-410e-a568-4c0a4519bd73";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_vlan_pc_id";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
@@ -1328,7 +1328,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Configure the PC VLAN ID, it ranges from 0 to 4094, the default value is 1.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "1ef6e253-b80b-45f1-83d6-c301ee6a78a3";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_vlan_pc_enable";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
@@ -1336,7 +1336,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "PC port VLAN enable Set 1 = ON 0 = OFF.";	
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "fe946865-b2a4-47a0-92f7-9b2b879be8ef";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_lock_enable";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
@@ -1344,7 +1344,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Configure the keypad lock type; 0-Disabled (default), 1-Enable. If needing remove pin lock, set value=0 and enabled=true, reprovision. Then you can set enabled=false and reprovision again for full removal and disablement.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "c9020c9e-ffb8-4755-9bf8-e3c9344cd129";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_lock_key_type";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
@@ -1352,7 +1352,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Configure the keypad lock type;0-All Keys(default), 1-Function Key, 2-Menu Key";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "d3ebfed3-13a8-44b6-bed9-6eaeb6ba7bf6";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_lock_pin";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "123";
@@ -1360,7 +1360,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Configure the unlock password for the phone. The default value is 123.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "b4e7451c-ff42-4269-8404-5434a6303013";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_emergency_number";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "911,110,112";
@@ -1368,7 +1368,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Configure the emergency number, each separated by a comma. The default value is 911,110,112.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "76efe175-8701-4222-b022-552c43e647cf";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_lock_timeout";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
@@ -1376,7 +1376,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Configures the interval (in seconds) to automatically lock the IP phone. It ranges from 0 to 3600, the default value is 0.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "1549a926-fcb5-4384-a237-83aa77170e5a";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_summer_time";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
@@ -1384,7 +1384,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "It configures Daylight Saving Time (DST) feature. 0-Disabled, 1-Enabled, 2-Automatic";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "2bcfc683-8731-4eb1-b79e-a4fb94ede2c9";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_dst_type";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
@@ -1392,7 +1392,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "It configures the Daylight Saving Time (DST) type. (It works only if “local_time.summer_time” is set to 1 (Enabled)). 0-DST by Date, 1-DST by Week";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "196b9a0d-6445-4db8-bdcc-6c86436309f0";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_app_unavailable";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "array";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "none";
@@ -1401,7 +1401,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Restore all applications on the phone's screen. 'none'";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "ecacc385-3bbb-49f6-b04a-3e3ac7fd1d72";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_app_unavailable";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "array";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "Browser";
@@ -1410,7 +1410,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Disable Browser application on the phone's screen. Separate applications with forward slashes '/'.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "687bb607-be50-4eba-9ce2-228d5d2ff8d4";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_app_unavailable";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "array";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "Calculator";
@@ -1419,7 +1419,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Disable Calculator application on the phone's screen. Separate applications with forward slashes '/'.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "dd14abe4-7902-447c-a710-d99ba21abfe2";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_app_unavailable";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "array";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "Calendar";
@@ -1428,7 +1428,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Disable Calendar application on the phone's screen. Separate applications with forward slashes '/'.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "2ff9758a-f020-4d98-9ff9-2484665d8dfc";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_app_unavailable";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "array";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "Camera";
@@ -1437,7 +1437,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Disable Camera application on the phone's screen. Separate applications with forward slashes '/'.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "5b66d206-8d83-44dd-97de-55d18d582614";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_app_unavailable";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "array";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "Email";
@@ -1446,7 +1446,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Disable Email application on the phone's screen. Separate applications with forward slashes '/'.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "66bf434d-2c72-4d58-95b9-025fd1321684";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_app_unavailable";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "array";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "File Manager/FileManager";
@@ -1455,7 +1455,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Disable File Manager application on the phone's screen. Separate applications with forward slashes '/'.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "a69e87d3-32f9-41bd-a4d8-f9ea8006a025";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_app_unavailable";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "array";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "Gallery";
@@ -1464,7 +1464,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Disable Gallery application on the phone's screen. Separate applications with forward slashes '/'.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "b4390263-6947-4433-b3af-4d339cd8a1da";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_app_unavailable";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "array";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "Message";
@@ -1473,7 +1473,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Disable Message application on the phone's screen. Separate applications with forward slashes '/'.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "8fa0f055-7c35-4780-baca-afbd3d2f557c";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_app_unavailable";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "array";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "Recorder";
@@ -1482,7 +1482,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Disable Recorder application on the phone's screen. Separate applications with forward slashes '/'.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "2e491769-de2f-4fd7-a055-58ee4333acd8";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_app_unavailable";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "array";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "Settings";
@@ -1491,7 +1491,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Disable Settings application on the phone's screen. Separate applications with forward slashes '/'.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "0a86ac21-de2f-4a52-b6ee-3e9e63720214";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_enhanced_dss_keys";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
@@ -1499,7 +1499,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "enables customizing the functions of the DSS keys(line keys, programmable keys, and ext keys)and assign functions to custom soft keys.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "e803d3d4-d58f-413b-be33-37b91d6b64b8";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_screensaver_wait";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "6h";
@@ -1507,7 +1507,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Options: 1h, 2h, 3h or 6h, the default is 6h";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "06f33638-df48-11eb-a35d-536492a496c1";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_forward_always_on_code";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "*72";
@@ -1515,7 +1515,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "8250e104-df48-11eb-a35e-536492a496c1";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_forward_always_off_code";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "*73";
@@ -1523,7 +1523,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "fc337406-a3db-46ae-9d56-440bb514bb9f";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_dnd_on_code";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "*78";
@@ -1531,7 +1531,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "21569457-b9b3-4c24-b631-4cc33fbe1bce";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_dnd_off_code";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "*79";
@@ -1539,7 +1539,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "9e7091a9-6a1c-478c-9a4b-39dd93f19f94";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_udp_update_enable";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
@@ -1547,7 +1547,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enable or disable the NAT keep-alive; 0-Disabled, 1-Default (default), 2-Option, 3-Notify";	
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "94a40988-057c-428e-b3fc-f125a345f85f";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_hold_or_swap_mode";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
@@ -1555,7 +1555,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "configures the display rule of the Hold/Swap soft key when there are two calls on the phone. 0-Only display Swap softkey (default), 1-Only display Hold softkey, 2-Display Hold and Swap softkeys";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "ba047b88-ff57-468b-b1a5-99ec2f95fd7f";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_call_info_display_method";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
@@ -1563,7 +1563,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Options: 0-Name+Number, 1-Number+Name, 2-Name, 3-Number, 4-Full Contact, 5-Null";	
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "42f0005b-46f9-479b-9b94-81c8860b5ad2";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "yealink_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_idle_clock";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
