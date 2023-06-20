@@ -265,6 +265,17 @@
 		unset($value);
 	}
 
+	//build the vendor specific provision array
+	foreach($_SESSION[$device_vendor . '_provision'] as $key=>$val) {
+		if (!empty($val['var'])) { $value = $val['var']; }
+		if (!empty($val['text'])) { $value = $val['text']; }
+		if (!empty($val['boolean'])) { $value = $val['boolean']; }
+		if (!empty($val['numeric'])) { $value = $val['numeric']; }
+		if (!empty($value)) { $provision[$key] = $value; }
+		unset($value);
+	}
+
+
 //check if provisioning has been enabled
 	if ($provision["enabled"] != "true") {
 		syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempt but provisioning is not enabled for ".check_str($_REQUEST['mac']));
@@ -431,6 +442,7 @@
 	$prov->domain_uuid = $domain_uuid;
 	$prov->mac = $mac;
 	$prov->file = $file;
+	$prov->vendor = $device_vendor;
 	$file_contents = $prov->render();
 
 //deliver the customized config over HTTP/HTTPS
