@@ -32,7 +32,7 @@
 	//default settings
 		$y=0;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "307e4444-1a75-4f32-b494-cff6a3f9308e";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "swissvoice_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "swissvoice_codec_order";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "PCMU,PCMA,G726-32,G729,G723,iLBC,AMR,G722,AMR-WB";
