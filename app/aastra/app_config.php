@@ -32,7 +32,7 @@
 	//default settings
 		$y=0;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "c471163a-12fa-11e8-b642-0ed5f89f718b";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "aastra_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "aastra_gmt_offset";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
@@ -40,7 +40,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Aastra timezone offset in minutes (e.g. 300 = GMT-5 = Eastern Standard Time)";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "c47117a2-12fa-11e8-b642-0ed5f89f718b";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "aastra_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "aastra_time_format";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
@@ -48,7 +48,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Aastra clock format";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "c47119aa-12fa-11e8-b642-0ed5f89f718b";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "aastra_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "aastra_date_format";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
@@ -56,7 +56,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Aastra date format";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "b31b1423-a04c-4b4a-9c55-a0b3791642c3";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "aastra_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "aastra_ptime";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "20";
@@ -64,7 +64,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set Aastra ptime";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "8b676397-2cf7-45de-a7ec-f3ceb7d529e3";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "aastra_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "aastra_silence_suppression";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
@@ -72,7 +72,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enable Aastra codec silence suppression (on / off)";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "1455b1b0-68ec-400d-be84-1d1132aea72f";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "aastra_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "aastra_zone_minutes";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
@@ -80,7 +80,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Offset in minutes from GMT, 300 = GMT-5 = Eastern Standard Time, -120 = GMT+2 = Eastern European Time";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "c90e804a-d2bb-431a-ace8-5c69e140c539";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "aastra_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "aastra_sip_silence_suppression";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
