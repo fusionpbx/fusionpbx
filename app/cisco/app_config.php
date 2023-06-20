@@ -32,7 +32,7 @@
 	//default settings
 		$y=0;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "da21eec7-699b-4a8b-a5e5-30ce118aaf8c";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "cisco_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "spa_time_zone";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "GMT-07:00";
@@ -40,7 +40,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "a6529f0e-9d8b-43b9-b487-db42b9b6be25";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "cisco_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "spa_time_format";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "12hr";
@@ -48,7 +48,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "12hr,24hr";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "58c764a9-4f71-4cd2-a44a-1ab52990b97f";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "cisco_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "spa_date_format";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "day/month";
@@ -56,7 +56,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "94d7d463-770e-48d9-8ba7-6009a54be413";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "cisco_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "spa_provision_url";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
@@ -64,7 +64,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "SPA Provision URL";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "9c9886a0-92f6-4dd7-8c1b-d04f240d9a9b";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "cisco_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "spa_back_light_timer";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "30 s";
@@ -72,7 +72,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "7c7fb3c1-3796-4c5f-b090-2aec955e023b";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "cisco_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "spa_handle_via_rport";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "Yes";
@@ -80,7 +80,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "8311d0c9-73ae-4d49-9036-e2f649586b5b";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "cisco_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "spa_insert_via_rport";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "Yes";
@@ -88,7 +88,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "72de5cdf-31f8-4d4b-b94b-468be0aa7a3d";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "cisco_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "spa_dial_plan";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "(park+*xxxx|*xxxxxxx|*xxxxxx|*xxxxx|*xxxx|*xxx|*xx*|*x|**xxxxx|**xxxx|**xxx|**xx|[3469]11|0|00|[2-9]xxxxxx|1xxx[2-9]xxxxxxS0|xxxxxxxxxxxx.)";
@@ -96,7 +96,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "564c50ee-4403-4e26-a30b-637f661db389";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "cisco_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "spa_call_waiting";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "Yes";
@@ -104,7 +104,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Call Waiting Yes=enabled No=disable";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "05176dde-763e-4983-b8d2-93f6bf984805";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "cisco_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "spa_feature_key_sync";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "No";
@@ -112,7 +112,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Feature Key Sync Yes=enabled No=disable";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "2ce5d7a2-2a72-423f-adb4-777b1f0f8586";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "cisco_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "spa_dual_registration";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "No";
@@ -120,7 +120,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Dual Registration Yes=enabled No=disable";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "6f815035-9b80-4007-8cc6-ac151727e5fb";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "cisco_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "spa_register_when_failover";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "No";
@@ -128,7 +128,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Auto register when failover Yes=enabled No=disable";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "7f93d499-13e8-4938-ba1f-01eafff43354";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "cisco_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "spa_secure_call_setting";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "No";
@@ -136,7 +136,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "SPA secure call No or Yes";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "e8efadd1-8753-42b3-92d8-d2b40f111c63";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "cisco_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "spa_resync_time";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
@@ -144,7 +144,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "SPA resync at 0300 every night at 3:00 am. Default disabled.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "753ed706-a5b0-47c1-a466-5ed35c4d27da";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "cisco_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "spa_upgrade_enable";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
@@ -152,7 +152,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "SPA upgrade firmware enable Yes or No Default No.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "c142a1aa-957f-441e-9b05-366d10929b72";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "cisco_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "spa_vlan_enable";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "No";
@@ -160,7 +160,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "SPA vlan enable. Options: Yes or No Default No.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "3d3ffb11-9ade-4725-a02e-926dd483a2bf";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "cisco_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "spa_vlan_id";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
@@ -168,7 +168,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "SPA VLAN ID. Options 0 to 4094.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "78637de4-ec12-4d41-8c65-39afe50d2b02";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "cisco_provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "spa_vlan_pc_id";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
