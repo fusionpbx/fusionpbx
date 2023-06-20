@@ -32,8 +32,10 @@
 		public $domain_name;
 		public $template_dir;
 		public $mac;
+		public $vendor;
 
 		public function __construct() {
+			$this->vendor = "";
 			//set the default template directory
 				if (PHP_OS == "Linux") {
 					//set the default template dir
@@ -289,6 +291,23 @@
 				$provision = array();
 				if (is_array($_SESSION['provision'])) {
 					foreach ($_SESSION['provision'] as $key => $val) {
+						if (isset($val['var'])) { $value = $val['var']; }
+						elseif (isset($val['text'])) { $value = $val['text']; }
+						elseif (isset($val['boolean'])) { $value = $val['boolean']; }
+						elseif (isset($val['numeric'])) { $value = $val['numeric']; }
+						elseif (is_array($val) && !is_uuid($val['uuid'])) { $value = $val; }
+						if (isset($value)) {
+							$value = str_replace('${domain_name}', $domain_name, $value);
+							$value = str_replace('${mac_address}', $mac, $value);
+							$provision[$key] = $value;
+						}
+						unset($value);
+					}
+				}
+			//build the vendor specific provision array
+				$provision = array();
+				if (is_array($_SESSION[$this->vendor . '_provision'])) {
+					foreach ($_SESSION[$this->vendor . '_provision'] as $key => $val) {
 						if (isset($val['var'])) { $value = $val['var']; }
 						elseif (isset($val['text'])) { $value = $val['text']; }
 						elseif (isset($val['boolean'])) { $value = $val['boolean']; }
