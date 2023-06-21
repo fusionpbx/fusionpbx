@@ -84,8 +84,8 @@
 					}
 					header("Location: ".$redirect_path);
 				}
-				elseif (isset($_SESSION['login']['destination']['url'])) {
-					header("Location: ".$_SESSION['login']['destination']['url']);
+				elseif (isset($_SESSION['login']['destination']['text'])) {
+					header("Location: ".$_SESSION['login']['destination']['text']);
 				}
 				elseif (file_exists($_SERVER["PROJECT_ROOT"]."/core/dashboard/app_config.php")) {
 					header("Location: ".PROJECT_PATH."/core/dashboard/");
