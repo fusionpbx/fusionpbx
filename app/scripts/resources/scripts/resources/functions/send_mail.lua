@@ -67,8 +67,8 @@ if (email_queue_enabled == 'true') then
 		sql = sql .. "	email_body, ";
 		sql = sql .. "	email_status, ";
 		sql = sql .. "	email_uuid, ";
-		sql = sql .. "	email_action_after ";
-		
+		sql = sql .. "	email_action_after, ";
+		sql = sql .. "	insert_date ";
 		sql = sql .. ") ";
 		sql = sql .. "values ( ";
 		sql = sql .. "	:email_queue_uuid, ";
@@ -81,7 +81,8 @@ if (email_queue_enabled == 'true') then
 		sql = sql .. "	:email_body, ";
 		sql = sql .. "	:email_status, ";
 		sql = sql .. "	:email_uuid, ";
-		sql = sql .. "	:email_action_after ";
+		sql = sql .. "	:email_action_after, ";
+		sql = sql .. "	now() ";
 		sql = sql .. ") ";
 		local params = {
 			email_queue_uuid = email_queue_uuid;
@@ -147,7 +148,8 @@ if (email_queue_enabled == 'true') then
 			sql = sql .. "	email_attachment_type, ";
 			sql = sql .. "	email_attachment_path, ";
 			sql = sql .. "	email_attachment_name, ";
-			sql = sql .. "	email_attachment_base64 ";
+			sql = sql .. "	email_attachment_base64, ";
+			sql = sql .. "	insert_date ";
 			sql = sql .. ") ";
 			sql = sql .. "values ( ";
 			sql = sql .. "	:email_queue_attachment_uuid, ";
@@ -157,7 +159,8 @@ if (email_queue_enabled == 'true') then
 			sql = sql .. "	:email_attachment_type, ";
 			sql = sql .. "	:email_attachment_path, ";
 			sql = sql .. "	:email_attachment_name, ";
-			sql = sql .. "	:email_attachment_base64 ";
+			sql = sql .. "	:email_attachment_base64, ";
+			sql = sql .. "	now() ";
 			sql = sql .. ") ";
 			local params = {
 				email_queue_attachment_uuid = email_queue_attachment_uuid;
@@ -223,41 +226,7 @@ else
 				file = file;
 			}
 
-			if not ok then
-				log.warningf("Mailer Error: %s", err)
-
-				local email_uuid = uuid.new()
-				local sql = "insert into v_email_logs ( "
-				sql = sql .. "email_log_uuid, "
-				if call_uuid then sql = sql .. "call_uuid, " end
-				sql = sql .. "domain_uuid, "
-				sql = sql .. "sent_date, "
-				sql = sql .. "type, "
-				sql = sql .. "status, "
-				sql = sql .. "email "
-				sql = sql .. ") values ( "
-				sql = sql .. ":email_log_uuid, "
-				if call_uuid then sql = sql .. ":call_uuid, " end
-				sql = sql .. ":domain_uuid, "
-				sql = sql .. "now(),"
-				sql = sql .. ":email_type, "
-				sql = sql .. "'failed', "
-				sql = sql .. "'' "
-				sql = sql .. ") "
-
-				local params = {
-					email_log_uuid  = email_log_uuid;
-					call_uuid   = call_uuid;
-					domain_uuid = domain_uuid;
-					email_type  = email_type;
-				}
-
-				db:query(sql, params)
-
-				log.infof("Retained in v_email_logs as email_log_uuid = %s", email_log_uuid)
-			else
-				log.infof("Mail to %s sent!", address)
-			end
+			log.infof("Mail to %s sent!", address)
 		end
 	end
 
