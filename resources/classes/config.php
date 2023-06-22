@@ -43,19 +43,26 @@ class config {
 	 * @var string $db_cert_authority - location of certificate authority
 	 */
 	public function get() {
+		//find the config_path
 		$this->find();
-		if ($this->exists()) {
-			require $this->config_path;
-			$this->db_type = $db_type;
-			$this->db_name = $db_name;
-			$this->db_username = $db_username;
-			$this->db_password = $db_password;
-			$this->db_secure = $db_secure;
-			$this->db_cert_authority = $db_cert_authority;
-			$this->db_host = $db_host;
-			$this->db_path = $db_path;
-			$this->db_port = $db_port;
-		}
+
+		//add the document root to the include path
+		$conf = parse_ini_file($this->config_path);
+		set_include_path($this->config_path);
+
+		//require $this->config_path;
+
+		//add the database settings
+		$this->db_type = $db_type;
+		$this->db_name = $db_name;
+		$this->db_username = $db_username;
+		$this->db_password = $db_password;
+		$this->db_secure = $db_secure;
+		$this->db_cert_authority = $db_cert_authority;
+		$this->db_host = $db_host;
+		$this->db_path = $db_path;
+		$this->db_port = $db_port;
+
 	}
 
 	/**
@@ -63,15 +70,20 @@ class config {
 	 * @var string $config_path - full path to the config.php file
 	 */
 	public function find() {
-		//includes files
-			require dirname(__DIR__, 2) . "/resources/require.php";
-
 		//find the file
-			if (file_exists($_SERVER["PROJECT_ROOT"]."/resources/config.php")) {
+			if (file_exists("/etc/fusionpbx/config.conf")) {
+				$this->config_path = "/etc/fusionpbx/config.conf";
+			}
+			elseif (file_exists("/usr/local/etc/fusionpbx/config.conf")) {
+				$this->config_path = "/usr/local/etc/fusionpbx/config.conf";
+			}
+			elseif (file_exists($_SERVER["PROJECT_ROOT"]."/resources/config.php")) {
 				$this->config_path = $_SERVER["PROJECT_ROOT"]."/resources/config.php";
-			} elseif (file_exists("/etc/fusionpbx/config.php")) {
+			}
+			elseif (file_exists("/etc/fusionpbx/config.php")) {
 				$this->config_path = "/etc/fusionpbx/config.php";
-			} elseif (file_exists("/usr/local/etc/fusionpbx/config.php")) {
+			}
+			elseif (file_exists("/usr/local/etc/fusionpbx/config.php")) {
 				$this->config_path = "/usr/local/etc/fusionpbx/config.php";
 			}
 			else {
@@ -83,7 +95,7 @@ class config {
 	}
 
 	/**
-	 * Determine whether the config.php exists
+	 * Determine whether the config file exists
 	 */
 	public function exists() {
 		$this->find();
