@@ -169,6 +169,7 @@ class plugin_totp {
 				$view->assign("login_destination_url", $settings['login']['destination']);
 				$view->assign("favicon", $settings['theme']['favicon']);
 				$view->assign("login_title", $text['label-verify']);
+				$view->assign("login_totp_description", $text['label-totp_description']);
 				$view->assign("login_authentication_code", $text['label-authentication_code']);
 				$view->assign("login_logo_width", $settings['theme']['login_logo_width']);
 				$view->assign("login_logo_height", $settings['theme']['login_logo_height']);
