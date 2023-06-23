@@ -29,12 +29,4 @@
 //additional includes
 	require_once "resources/check_auth.php";
 
-//redirect
-	if (isset($_SESSION['login']['destination']['text'])) {
-		header("Location: ".$_SESSION['login']['destination']['text']);
-	}
-	else {
-		header("Location: ".PROJECT_PATH."/core/dashboard/");
-	}
-
 ?>
