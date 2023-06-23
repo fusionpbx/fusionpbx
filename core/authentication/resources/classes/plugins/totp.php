@@ -81,6 +81,7 @@ class plugin_totp {
 				$view->assign("login_logo_height", $settings['theme']['login_logo_height']);
 				$view->assign("login_logo_source", $settings['theme']['logo']);
 				$view->assign("button_login", $text['button-login']);
+				$view->assign("button_cancel", $text['button-cancel']);
 				$view->assign("favicon", $settings['theme']['favicon']);
 
 				//show the views
@@ -114,7 +115,7 @@ class plugin_totp {
 				$sql .= "	username = :username\n";
 				$sql .= "	or user_email = :username\n";
 				$sql .= ")\n";
-				if ($_SESSION["users"]["unique"]["text"] != "global") {
+				if (empty($_SESSION["users"]["unique"]["text"]) || $_SESSION["users"]["unique"]["text"] != "global") {
 					//unique username per domain (not globally unique across system - example: email address)
 					$sql .= "and domain_uuid = :domain_uuid ";
 					$parameters['domain_uuid'] = $this->domain_uuid;
@@ -164,6 +165,7 @@ class plugin_totp {
 				$view->init();
 
 				//assign values to the template
+				$view->assign("project_path", PROJECT_PATH);
 				$view->assign("login_destination_url", $settings['login']['destination']);
 				$view->assign("favicon", $settings['theme']['favicon']);
 				$view->assign("login_title", $text['label-verify']);
@@ -172,6 +174,7 @@ class plugin_totp {
 				$view->assign("login_logo_height", $settings['theme']['login_logo_height']);
 				$view->assign("login_logo_source", $settings['theme']['logo']);
 				$view->assign("favicon", $settings['theme']['favicon']);
+				$view->assign("button_cancel", $text['button-cancel']);
 
 				//show the views
 				if ($_SESSION['authentication']['plugin']['database']['authorized'] && empty($this->user_totp_secret)) {

@@ -75,6 +75,7 @@ class plugin_email {
 				$view->assign("login_logo_height", $settings['theme']['login_logo_height']);
 				$view->assign("login_logo_source", $settings['theme']['logo']);
 				$view->assign("button_login", $text['button-login']);
+				$view->assign("button_cancel", $text['button-cancel']);
 
 				//show the views
 				$content = $view->render('username.htm');
@@ -255,6 +256,7 @@ class plugin_email {
 				$view->assign("login_logo_height", $settings['theme']['login_logo_height']);
 				$view->assign("login_logo_source", $settings['theme']['logo']);
 				$view->assign("button_verify", $text['label-verify']);
+				$view->assign("button_cancel", $text['button-cancel']);
 
 				//debug information
 				//echo "<pre>\n";

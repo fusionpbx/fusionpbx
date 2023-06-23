@@ -19,9 +19,12 @@
 					</div>
 					<div>
 						<input type='submit' id='btn_login' class='btn' style='width: 100px; margin-top: 15px;' value='{$button_login}' />
+						<br /><br />
+						<a class='login_link' href='{$project_path}/logout.php'>{$button_cancel}</a>
 					</div>
 				</form>
 			</div>
 		</div>
+		<script>document.getElementsByName('username')[0].focus();</script>
 	</body>
 </html>

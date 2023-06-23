@@ -136,6 +136,9 @@ $input_shadow_outer_color_focus = isset($_SESSION['theme']['input_shadow_outer_c
 $input_border_radius = $_SESSION['theme']['input_border_radius']['text'] ?? null;
 $input_border_color_hover = $_SESSION['theme']['input_border_color_hover']['text'] ?? '#c0c0c0';
 $input_border_color_focus = $_SESSION['theme']['input_border_color_focus']['text'] ?? '#c0c0c0';
+$login_text_color = $_SESSION['theme']['login_text_color']['text'] ?? '#888888';
+$login_text_size = $_SESSION['theme']['login_text_size']['text'] ?? '12px';
+$login_text_font = $_SESSION['theme']['login_text_font']['text'] ?? 'Arial';
 $login_input_text_font = $_SESSION['theme']['login_input_text_font']['text'] ?? $input_text_font;
 $login_input_text_size = $_SESSION['theme']['login_input_text_size']['text'] ?? $input_text_size;
 $login_input_text_color = $_SESSION['theme']['login_input_text_color']['text'] ?? $input_text_color;
@@ -1452,6 +1455,13 @@ else { //default: white
 	a.login_link:hover {
 		color: <?=$login_link_text_color_hover?> !important;
 		cursor: pointer;
+		text-decoration: none;
+		}
+
+	.login_text {
+		color: <?=$login_text_color?> !important;
+		font-size: <?=$login_text_size?>;
+		font-family: <?=$login_text_font?>;
 		text-decoration: none;
 		}
 
