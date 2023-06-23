@@ -177,7 +177,7 @@ class plugin_totp {
 				$view->assign("button_cancel", $text['button-cancel']);
 
 				//show the views
-				if ($_SESSION['authentication']['plugin']['database']['authorized'] && empty($this->user_totp_secret)) {
+				if (!empty($_SESSION['authentication']['plugin']['database']['authorized']) && empty($this->user_totp_secret)) {
 
 					//create the totp secret
 					$base32 = new base2n(5, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567', FALSE, TRUE, TRUE);
