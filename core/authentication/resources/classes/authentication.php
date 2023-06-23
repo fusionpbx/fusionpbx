@@ -40,7 +40,7 @@ class authentication {
 			}
 
 		//set the default authentication method to the database
-			if (!is_array($_SESSION['authentication']['methods'])) {
+			if (empty($_SESSION['authentication']['methods']) || !is_array($_SESSION['authentication']['methods'])) {
 				$_SESSION['authentication']['methods'][]  = 'database';
 			}
 
@@ -53,7 +53,7 @@ class authentication {
 			foreach ($_SESSION['authentication']['methods'] as $name) {
 
 				//already processed the plugin move to the next plugin
-				if (!empty($_SESSION['authentication']['plugin']) && $_SESSION['authentication']['plugin'][$name]['authorized']) {
+				if (!empty($_SESSION['authentication']['plugin']) && !empty($_SESSION['authentication']['plugin'][$name]) && $_SESSION['authentication']['plugin'][$name]['authorized']) {
 					continue;
 				}
 
