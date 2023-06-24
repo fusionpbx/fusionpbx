@@ -16,6 +16,7 @@ class config {
 	public $db_name;
 	public $db_username;
 	public $db_password;
+	public $db_sslmode;
 	public $db_host;
 	public $db_path;
 	public $db_port;
@@ -31,7 +32,7 @@ class config {
 	}
 
 	/**
-	 * Determine whether the config.php exists
+	 * Determine whether the config file exists
 	 * @var string $db_type - type of database
 	 * @var string $db_name - name of the database
 	 * @var string $db_username - username to access the database
