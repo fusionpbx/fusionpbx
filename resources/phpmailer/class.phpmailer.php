@@ -870,6 +870,8 @@ class PHPMailer
      */
     protected function addOrEnqueueAnAddress($kind, $address, $name)
     {
+        if (empty($address)) { $address = ''; }
+        if (empty($name)) { $name = ''; }
         $address = trim($address);
         $name = trim(preg_replace('/[\r\n]+/', '', $name)); //Strip breaks and trim
         if (($pos = strrpos($address, '@')) === false) {
@@ -1010,8 +1012,10 @@ class PHPMailer
      * @throws phpmailerException
      * @return boolean
      */
-    public function setFrom($address, $name = '', $auto = true)
+    public function setFrom($address, $name, $auto = true)
     {
+        if (empty($address)) { $address = ''; }
+        if (empty($name)) { $name = ''; }
         $address = trim($address);
         $name = trim(preg_replace('/[\r\n]+/', '', $name)); //Strip breaks and trim
         // Don't validate now addresses with IDN. Will be done in send().
