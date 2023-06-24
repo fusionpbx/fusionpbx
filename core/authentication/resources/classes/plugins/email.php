@@ -100,6 +100,9 @@ class plugin_email {
 				$view->assign("login_logo_source", $settings['theme']['logo']);
 				$view->assign("button_login", $text['button-login']);
 
+				//messages
+				$view->assign('messages', message::html(true, '		'));
+
 				//show the views
 				$content = $view->render('username.htm');
 				echo $content;
@@ -145,8 +148,23 @@ class plugin_email {
 				$_SESSION["user_email"] = $row['user_email'];
 				$_SESSION["contact_uuid"] = $row["contact_uuid"];
 
+				//user not found
+				if (empty($row) || !is_array($row) || @sizeof($row) == 0) {
+					//clear submitted usernames
+					unset($this->username, $_SESSION['username'], $_POST['username']);
+
+					//build the result array
+					$result["plugin"] = "totp";
+					$result["domain_uuid"] = $_SESSION["domain_uuid"];
+					$result["domain_name"] = $_SESSION["domain_name"];
+					$result["authorized"] = false;
+
+					//retun the array
+					return $result;
+				}
+
 				//user email not found
-				if (empty($row["user_email"])) {
+				else if (empty($row["user_email"])) {
 					//build the result array
 					$result["plugin"] = "email";
 					$result["domain_name"] = $_SESSION["domain_name"];
@@ -283,6 +301,9 @@ class plugin_email {
 					$view->assign("username", $_SESSION['username']);
 					$view->assign("button_cancel", $text['button-cancel']);
 				}
+
+				//messages
+				$view->assign('messages', message::html(true, '		'));
 
 				//show the views
 				$content = $view->render('email.htm');
