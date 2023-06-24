@@ -21,8 +21,10 @@
 					</div>
 					<div>
 						<input type='submit' name='' class='btn' style='width: 100px; margin-top: 15px;' value='{$button_verify}' />
-						<br /><br />
-						<a class='login_link' href='{$project_path}/logout.php'>{$button_cancel}</a>
+						{if !empty($username)}
+							<br /><br />
+							<a class='login_link' href='{$project_path}/logout.php'>{$button_cancel}</a>
+						{/if}
 					</div>
 				</form>
 			</div>
