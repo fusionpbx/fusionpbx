@@ -106,10 +106,6 @@ class plugin_totp {
 				$view->assign("login_logo_source", $settings['theme']['logo']);
 				$view->assign("button_login", $text['button-login']);
 				$view->assign("favicon", $settings['theme']['favicon']);
-				if (!empty($_SESSION['username'])) {
-					$view->assign("username", $_SESSION['username']);
-					$view->assign("button_cancel", $text['button-cancel']);
-				}
 
 				//show the views
 				$content = $view->render('username.htm');
