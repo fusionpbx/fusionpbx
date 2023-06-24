@@ -129,7 +129,7 @@
 
 //get the list
 	$sql = "select default_setting_uuid, default_setting_category, default_setting_subcategory, default_setting_name, ";
-	$sql .= "default_setting_value, cast(default_setting_enabled as text), default_setting_description ";
+	$sql .= "default_setting_value, default_setting_order, cast(default_setting_enabled as text), default_setting_description ";
 	$sql .= "from v_default_settings ";
 	if (!empty($search)) {
 		$sql .= "where (";
@@ -447,7 +447,7 @@
 			}
 			echo "	</td>\n";
 			$setting_types = ['Array','Boolean','Code','Dir','Name','Numeric','Text','UUID'];
-			echo "	<td class='hide-sm-dn'>".$setting_types[array_search(strtolower($row['default_setting_name']), array_map('strtolower',$setting_types))]."</td>\n";
+			echo "	<td class='hide-sm-dn'>".$setting_types[array_search(strtolower($row['default_setting_name']), array_map('strtolower',$setting_types))].($row['default_setting_name'] == 'array' && isset($row['default_setting_order']) ? ' ('.$row['default_setting_order'].')' : null)."</td>\n";
 			echo "	<td class='overflow no-wrap' title=\"".escape($default_value)."\" style=\"".$setting_bold."\">\n";
 
 			$category = $row['default_setting_category'] ?? '';
