@@ -44,24 +44,40 @@ class config {
 	 */
 	public function get() {
 		//find the config_path
-		$this->find();
+		$config_path = $this->find();
 
 		//add the document root to the include path
-		$conf = parse_ini_file($this->config_path);
-		set_include_path($this->config_path);
+		$conf = parse_ini_file($config_path);
+		set_include_path($conf['document.root']);
 
-		//require $this->config_path;
+		//check if the config file exists
+		$config_exists = file_exists($config_path) ? true : false;
+		
+		//set the server variables and define project path constant
+		$_SERVER["DOCUMENT_ROOT"] = $conf['document.root'];
+		$_SERVER["PROJECT_ROOT"] = $conf['document.root'];
+		$_SERVER["PROJECT_PATH"]  = $conf['project.path'];
+		if (isset($conf['project.path'])) {
+			$_SERVER["PROJECT_ROOT"] = $conf['document.root'].'/'.$conf['project.path'];
+			if (!defined('PROJECT_ROOT')) { define("PROJECT_ROOT", $conf['document.root'].'/'.$conf['project.path']); }
+			if (!defined('PROJECT_PATH')) { define("PROJECT_PATH", $conf['project.path']); }
+		}
+		else {
+			if (!defined('PROJECT_ROOT')) { define("PROJECT_ROOT", $conf['document.root']); }
+			if (!defined('PROJECT_PATH')) { define("PROJECT_PATH", ''); }
+		}
 
 		//add the database settings
-		$this->db_type = $db_type;
-		$this->db_name = $db_name;
-		$this->db_username = $db_username;
-		$this->db_password = $db_password;
-		$this->db_secure = $db_secure;
-		$this->db_cert_authority = $db_cert_authority;
-		$this->db_host = $db_host;
-		$this->db_path = $db_path;
-		$this->db_port = $db_port;
+		$this->db_type = $conf['database.0.type'];
+		$this->db_name = $conf['database.0.name'];
+		$this->db_username = $conf['database.0.username'];
+		$this->db_password = $conf['database.0.password'];
+		$this->db_sslmode = $conf['database.0.sslmode'] ?? '';
+		$this->db_secure = $conf['database.0.secure'] ?? '';
+		$this->db_cert_authority = $conf['database.0.db_cert_authority'] ?? '';
+		$this->db_host = $conf['database.0.host'];
+		$this->db_path = $conf['database.0.path'] ?? '';
+		$this->db_port = $conf['database.0.port'];
 
 	}
 
@@ -70,6 +86,7 @@ class config {
 	 * @var string $config_path - full path to the config.php file
 	 */
 	public function find() {
+
 		//find the file
 			if (file_exists("/etc/fusionpbx/config.conf")) {
 				$this->config_path = "/etc/fusionpbx/config.conf";
