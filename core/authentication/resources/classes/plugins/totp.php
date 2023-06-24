@@ -56,6 +56,7 @@ class plugin_totp {
 			$settings['theme']['logo'] = !empty($_SESSION['theme']['logo']['text']) ? $_SESSION['theme']['logo']['text'] : PROJECT_PATH.'/themes/default/images/logo_login.png';
 			$settings['theme']['login_logo_width'] = !empty($_SESSION['theme']['login_logo_width']['text']) ? $_SESSION['theme']['login_logo_width']['text'] : 'auto; max-width: 300px';
 			$settings['theme']['login_logo_height'] = !empty($_SESSION['theme']['login_logo_height']['text']) ? $_SESSION['theme']['login_logo_height']['text'] : 'auto; max-height: 300px';
+			$settings['theme']['message_delay'] = isset($_SESSION['theme']['message_delay']) ? 1000 * (float) $_SESSION['theme']['message_delay'] : 3000;
 
 		//get the username
 			if (isset($_SESSION["username"])) {
@@ -106,6 +107,10 @@ class plugin_totp {
 				$view->assign("login_logo_source", $settings['theme']['logo']);
 				$view->assign("button_login", $text['button-login']);
 				$view->assign("favicon", $settings['theme']['favicon']);
+				$view->assign("message_delay", $settings['theme']['message_delay']);
+
+				//messages
+				$view->assign('messages', message::html(true, '		'));
 
 				//show the views
 				$content = $view->render('username.htm');
@@ -146,6 +151,19 @@ class plugin_totp {
 				$parameters['username'] = $this->username;
 				$database = new database;
 				$row = $database->select($sql, $parameters, 'row');
+				if (empty($row) || !is_array($row) || @sizeof($row) == 0) {
+					//clear submitted usernames
+					unset($this->username, $_SESSION['username'], $_POST['username']);
+
+					//build the result array
+					$result["plugin"] = "totp";
+					$result["domain_uuid"] = $_SESSION["domain_uuid"];
+					$result["domain_name"] = $_SESSION["domain_name"];
+					$result["authorized"] = false;
+
+					//retun the array
+					return $result;
+				}
 				unset($parameters);
 
 				//set class variables
@@ -261,12 +279,18 @@ class plugin_totp {
 					$view->assign("button_next", $text['button-next']);
 					$view->assign("favicon", $settings['theme']['favicon']);
 
+					//messages
+					$view->assign('messages', message::html(true, '		'));
+
 					//render the template
 					$content = $view->render('totp_secret.htm');
 				}
 				else {
 					//assign values to the template
 					$view->assign("button_verify", $text['label-verify']);
+
+					//messages
+					$view->assign('messages', message::html(true, '		'));
 
 					//render the template
 					$content = $view->render('totp.htm');

@@ -107,7 +107,7 @@ class plugin_database {
 					$view->assign("login_logo_height", $settings['theme']['login_logo_height']);
 					$view->assign("login_logo_source", $settings['theme']['logo']);
 					$view->assign("message_delay", $settings['theme']['message_delay']);
-					if (!empty($_SESSION['username'])) {
+					if (!empty($_SESSION['authentication']['plugin']['database']['authorized']) && $_SESSION['authentication']['plugin']['database']['authorized'] == 1 && !empty($_SESSION['username'])) {
 						$view->assign("login_password_description", $text['label-password_description']);
 						$view->assign("username", $_SESSION['username']);
 						$view->assign("button_cancel", $text['button-cancel']);
@@ -285,6 +285,9 @@ class plugin_database {
 								$p->delete('user_edit', 'temp');
 
 						}
+					}
+					else {
+						unset($_SESSION['username'], $_REQUEST['username'], $_POST['username'], $this->username);
 					}
 
 			}
