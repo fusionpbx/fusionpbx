@@ -1,4 +1,28 @@
 <?php
+/*
+	FusionPBX
+	Version: MPL 1.1
+
+	The contents of this file are subject to the Mozilla Public License Version
+	1.1 (the "License"); you may not use this file except in compliance with
+	the License. You may obtain a copy of the License at
+	http://www.mozilla.org/MPL/
+
+	Software distributed under the License is distributed on an "AS IS" basis,
+	WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+	for the specific language governing rights and limitations under the
+	License.
+
+	The Original Code is FusionPBX
+
+	The Initial Developer of the Original Code is
+	Mark J Crane <markjcrane@fusionpbx.com>
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
+	the Initial Developer. All Rights Reserved.
+
+	Contributor(s):
+	Mark J Crane <markjcrane@fusionpbx.com>
+*/
 
 /**
  * plugin_email
@@ -75,7 +99,10 @@ class plugin_email {
 				$view->assign("login_logo_height", $settings['theme']['login_logo_height']);
 				$view->assign("login_logo_source", $settings['theme']['logo']);
 				$view->assign("button_login", $text['button-login']);
-				$view->assign("button_cancel", $text['button-cancel']);
+				if (!empty($_SESSION['username'])) {
+					$view->assign("username", $_SESSION['username']);
+					$view->assign("button_cancel", $text['button-cancel']);
+				}
 
 				//show the views
 				$content = $view->render('username.htm');
@@ -256,12 +283,10 @@ class plugin_email {
 				$view->assign("login_logo_height", $settings['theme']['login_logo_height']);
 				$view->assign("login_logo_source", $settings['theme']['logo']);
 				$view->assign("button_verify", $text['label-verify']);
-				$view->assign("button_cancel", $text['button-cancel']);
-
-				//debug information
-				//echo "<pre>\n";
-				//print_r($text);
-				//echo "</pre>\n";
+				if (!empty($_SESSION['username'])) {
+					$view->assign("username", $_SESSION['username']);
+					$view->assign("button_cancel", $text['button-cancel']);
+				}
 
 				//show the views
 				$content = $view->render('email.htm');
@@ -273,7 +298,7 @@ class plugin_email {
 			if (isset($_POST['authentication_code'])) {
 
 				//check if the authentication code has expired. if expired return false
-				if ($_SESSION["user"]["authentication"]["email"]["epoch"] + 3 > time()) {
+				if (!empty($_SESSION["user"]) && $_SESSION["user"]["authentication"]["email"]["epoch"] + 3 > time()) {
 					//authentication code expired
 					$result["plugin"] = "email";
 					$result["domain_name"] = $_SESSION["domain_name"];
@@ -286,7 +311,7 @@ class plugin_email {
 				}
 
 				//get the user details
-				$sql = "select user_uuid, user_email, contact_uuid, user_email_secret\n";
+				$sql = "select user_uuid, user_email, contact_uuid\n";
 				$sql .= "from v_users\n";
 				$sql .= "where (\n";
 				$sql .= "	username = :username\n";
@@ -303,16 +328,18 @@ class plugin_email {
 				$this->user_uuid = $row['user_uuid'];
 				$this->user_email = $row['user_email'];
 				$this->contact_uuid = $row['contact_uuid'];
-				$this->user_email_secret = $row['user_email_secret'];
 				unset($parameters);
 
 				//validate the code
-				if ($_SESSION["user"]["authentication"]["email"]["code"] === $_POST['authentication_code']) {
+				if (!empty($_SESSION["user"]) && $_SESSION["user"]["authentication"]["email"]["code"] === $_POST['authentication_code']) {
 					$auth_valid = true;
 				}
 				else {
 					$auth_valid = false;
 				}
+
+				//clear posted authentication code
+				unset($_POST['authentication_code']);
 
 				//get the user details
 				if ($auth_valid) {
@@ -327,7 +354,6 @@ class plugin_email {
 					$parameters['user_uuid'] = $_SESSION["user_uuid"];
 					$database = new database;
 					$row = $database->select($sql, $parameters, 'row');
-					//view_array($row);
 					unset($parameters);
 
 					//set a few session variables
