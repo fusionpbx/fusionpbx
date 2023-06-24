@@ -71,7 +71,7 @@ if (!class_exists('scripts')) {
 				$source_directory = '/usr/local/www/fusionpbx/app/switch/resources/scripts';
 			}
 			elseif (file_exists('/var/www/fusionpbx/app/switch/resources/scripts')) {
-				$source_directory = '/usr/local/share/freeswitch/scripts';
+				$source_directory = '/var/www/fusionpbx/app/switch/resources/scripts';
 			}
 			else {
 				$source_directory = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/switch/resources/scripts';
