@@ -64,6 +64,7 @@ class plugin_totp {
 			}
 			if (isset($_POST['username'])) {
 				$this->username = $_POST['username'];
+				$_SESSION["username"] = $this->username;
 			}
 
 		//request the username
@@ -153,7 +154,7 @@ class plugin_totp {
 				$row = $database->select($sql, $parameters, 'row');
 				if (empty($row) || !is_array($row) || @sizeof($row) == 0) {
 					//clear submitted usernames
-					unset($this->username, $_SESSION['username'], $_POST['username']);
+					unset($this->username, $_SESSION['username'], $_REQUEST['username'], $_POST['username']);
 
 					//build the result array
 					$result["plugin"] = "totp";
@@ -278,6 +279,7 @@ class plugin_totp {
 					$view->assign("totp_description", $text['description-totp']);
 					$view->assign("button_next", $text['button-next']);
 					$view->assign("favicon", $settings['theme']['favicon']);
+					$view->assign("message_delay", $settings['theme']['message_delay']);
 
 					//messages
 					$view->assign('messages', message::html(true, '		'));
@@ -288,6 +290,7 @@ class plugin_totp {
 				else {
 					//assign values to the template
 					$view->assign("button_verify", $text['label-verify']);
+					$view->assign("message_delay", $settings['theme']['message_delay']);
 
 					//messages
 					$view->assign('messages', message::html(true, '		'));
@@ -354,18 +357,24 @@ class plugin_totp {
 					unset($parameters);
 				}
 				else {
-					//destroy session
-					session_unset();
-					session_destroy();
+// 					//destroy session
+// 					session_unset();
+// 					session_destroy();
+//
+// 					//send http 403
+// 					header('HTTP/1.0 403 Forbidden', true, 403);
+//
+// 					//redirect to the root of the website
+// 					header("Location: ".PROJECT_PATH."/");
+//
+// 					//exit the code
+// 					exit();
 
-					//send http 403
-					header('HTTP/1.0 403 Forbidden', true, 403);
+					//clear authentication session
+					unset($_SESSION['authentication']);
 
-					//redirect to the root of the website
-					header("Location: ".PROJECT_PATH."/");
-
-					//exit the code
-					exit();
+					// clear username
+					unset($_SESSION["username"]);
 				}
 
 				/*

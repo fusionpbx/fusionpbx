@@ -56,6 +56,7 @@ class plugin_email {
 			$settings['theme']['logo'] = !empty($_SESSION['theme']['logo']['text']) ? $_SESSION['theme']['logo']['text'] : PROJECT_PATH.'/themes/default/images/logo_login.png';
 			$settings['theme']['login_logo_width'] = !empty($_SESSION['theme']['login_logo_width']['text']) ? $_SESSION['theme']['login_logo_width']['text'] : 'auto; max-width: 300px';
 			$settings['theme']['login_logo_height'] = !empty($_SESSION['theme']['login_logo_height']['text']) ? $_SESSION['theme']['login_logo_height']['text'] : 'auto; max-height: 300px';
+			$settings['theme']['message_delay'] = isset($_SESSION['theme']['message_delay']) ? 1000 * (float) $_SESSION['theme']['message_delay'] : 3000;
 
 			//set a default template
 			$_SESSION['domain']['template']['name'] = 'default';
@@ -99,6 +100,7 @@ class plugin_email {
 				$view->assign("login_logo_height", $settings['theme']['login_logo_height']);
 				$view->assign("login_logo_source", $settings['theme']['logo']);
 				$view->assign("button_login", $text['button-login']);
+				$view->assign("message_delay", $settings['theme']['message_delay']);
 
 				//messages
 				$view->assign('messages', message::html(true, '		'));
@@ -151,10 +153,13 @@ class plugin_email {
 				//user not found
 				if (empty($row) || !is_array($row) || @sizeof($row) == 0) {
 					//clear submitted usernames
-					unset($this->username, $_SESSION['username'], $_POST['username']);
+					unset($this->username, $_SESSION['username'], $_REQUEST['username'], $_POST['username']);
+
+					//clear authentication session
+					unset($_SESSION['authentication']);
 
 					//build the result array
-					$result["plugin"] = "totp";
+					$result["plugin"] = "email";
 					$result["domain_uuid"] = $_SESSION["domain_uuid"];
 					$result["domain_name"] = $_SESSION["domain_name"];
 					$result["authorized"] = false;
@@ -165,6 +170,12 @@ class plugin_email {
 
 				//user email not found
 				else if (empty($row["user_email"])) {
+					//clear submitted usernames
+					unset($this->username, $_SESSION['username'], $_REQUEST['username'], $_POST['username']);
+
+					//clear authentication session
+					unset($_SESSION['authentication']);
+
 					//build the result array
 					$result["plugin"] = "email";
 					$result["domain_name"] = $_SESSION["domain_name"];
@@ -185,8 +196,8 @@ class plugin_email {
 				$_SESSION["user"]["authentication"]["email"]["code"] = generate_password(6, 1);
 				$_SESSION["user"]["authentication"]["email"]["epoch"] = time();
 
-				////$_SESSION["authentication_address"] = $_SERVER['REMOTE_ADDR'];
-				////$_SESSION["authentication_date"] = 'now()';
+				//$_SESSION["authentication_address"] = $_SERVER['REMOTE_ADDR'];
+				//$_SESSION["authentication_date"] = 'now()';
 
 				//set the authentication code
 				//$sql = "update v_users \n";
@@ -346,6 +357,11 @@ class plugin_email {
 				$this->user_email = $row['user_email'];
 				$this->contact_uuid = $row['contact_uuid'];
 				unset($parameters);
+				/*
+				echo 'session code = '.$_SESSION["user"]["authentication"]["email"]["code"].'<br>';
+				echo 'post code = '.$_POST['authentication_code'].'<br>';
+				exit;
+				*/
 
 				//validate the code
 				if (!empty($_SESSION["user"]) && $_SESSION["user"]["authentication"]["email"]["code"] === $_POST['authentication_code']) {
@@ -379,18 +395,25 @@ class plugin_email {
 					//$_SESSION["contact_uuid"] = $row["contact_uuid"];
 				}
 				else {
-					//destroy session
-					session_unset();
-					session_destroy();
-					//$_SESSION['authentication']['plugin']
-					//send http 403
-					header('HTTP/1.0 403 Forbidden', true, 403);
+// 					//destroy session
+// 					session_unset();
+// 					session_destroy();
+// 					//$_SESSION['authentication']['plugin']
+// 					//send http 403
+// 					header('HTTP/1.0 403 Forbidden', true, 403);
+//
+// 					//redirect to the root of the website
+// 					header("Location: ".PROJECT_PATH."/");
+//
+// 					//exit the code
+// 					exit();
 
-					//redirect to the root of the website
-					header("Location: ".PROJECT_PATH."/");
+					//clear submitted usernames
+					unset($this->username, $_SESSION['username'], $_REQUEST['username'], $_POST['username']);
 
-					//exit the code
-					exit();
+					//clear authentication session
+					unset($_SESSION['authentication']);
+
 				}
 
 				/*
@@ -422,6 +445,13 @@ class plugin_email {
 				$result["domain_uuid"] = $_SESSION["domain_uuid"];
 				$result["contact_uuid"] = $_SESSION["contact_uuid"];
 				$result["authorized"] = $auth_valid ? true : false;
+
+				//add the failed login to user logs
+				if (!$auth_valid) {
+					user_logs::add($result);
+				}
+
+				//retun the array
 				return $result;
 
 				//$_SESSION['authentication']['plugin']['email']['plugin'] = "email";
