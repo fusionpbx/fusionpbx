@@ -156,15 +156,39 @@
 
 		//user selected fields
 			$fields = $_POST['fields'];
-			$domain_uuid = $_POST['domain_uuid'];
+			$domain_uuid = $_POST['domain_uuid'] ?? $_SESSION['domain_uuid'];
 			$destination_record = $_POST['destination_record'];
 			$destination_type = $_POST['destination_type'];
 			$destination_context = $_POST['destination_context'];
 			$destination_enabled = $_POST['destination_enabled'];
 
-		//set the domain_uuid
-			$domain_uuid = $_SESSION['domain_uuid'];
+		//get existing destination numbers in all domains
+			$database = new database();
+			$sql = "select destination_number from v_destinations";
+		//reset parameters
+			$result = $database->select($sql);
+		//reset array
+			$existing = [];
+			if ($result !== false && !empty($result)) {
+				foreach ($result as $row) {
+					if(!empty($row['destination_number'])) {
+						// use the destination number as the key and value
+						$existing[$row['destination_number']] = $row['destination_number'];
+					}
+				}
+			}
 
+		//set the destination field ndx to not found
+			$destination_ndx = -1;
+		//find the destination number field index
+			for($ndx = 0; $ndx < count($fields); $ndx++) {
+				if(trim($line_fields[$ndx]) === 'destination_number') {
+					$destination_ndx = $ndx;
+					//stop looking
+					break;
+				}
+			}
+		
 		//get the contents of the csv file and convert them into an array
 			$handle = @fopen($_SESSION['file'], "r");
 			if ($handle) {
@@ -175,11 +199,21 @@
 				//loop through the array
 					while (($line = fgets($handle, 4096)) !== false) {
 						if ($from_row <= $row_number) {
+
+							//get the line outside of the field loop
+							$result = str_getcsv($line, $delimiter, $enclosure);
+
+							//ensure the number does not already exist in the destinations table
+							if($destination_ndx >= 0) {
+								$destination_number = $result[$destination_ndx] ?? '';
+								if(array_key_exists($destination_number, $existing)) {
+									//skip importing this number
+									continue;
+								}
+							}
 							//format the data
 								$y = 0;
 								foreach ($fields as $key => $value) {
-									//get the line
-									$result = str_getcsv($line, $delimiter, $enclosure);
 
 									//get the table and field name
 									$field_array = explode(".",$value);
