@@ -48,7 +48,7 @@
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$database = new database;
 	$tiers = $database->select($sql, $parameters, 'all');
-	if (!empty($tiers)) {
+	if (empty($tiers)) {
 		$per_queue_login = true;
 	}
 	else {
