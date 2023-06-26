@@ -47,7 +47,7 @@
 					$sip_profile_dir = '/var/www/fusionpbx/app/switch/resources/conf/sip_profiles/*.xml.noload';
 				}
 				else {
-					$sip_profile_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/conf/sip_profiles/*.xml.noload';
+					$sip_profile_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/switch/resources/conf/sip_profiles/*.xml.noload';
 				}
 				$xml_files = glob($sip_profile_dir);
 				foreach ($xml_files as $x => &$xml_file) {
