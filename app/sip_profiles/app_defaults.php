@@ -34,16 +34,21 @@
 			unset($sql);
 
 			if ($num_rows == 0) {
-				if (file_exists('/usr/share/examples/fusionpbx/resources/templates/conf/sip_profiles')) {
+				if (file_exists('/usr/share/examples/fusionpbx/resources/templates/conf/sip_profiles/*.xml.noload')) {
 					$sip_profile_dir = '/usr/share/examples/fusionpbx/resources/templates/conf/sip_profiles/*.xml.noload';
 				}
-				elseif (file_exists('/usr/local/share/fusionpbx/resources/templates/conf/sip_profiles')) {
+				elseif (file_exists('/usr/local/share/fusionpbx/resources/templates/conf/sip_profiles/*.xml.noload')) {
 					$sip_profile_dir = '/usr/local/share/fusionpbx/resources/templates/conf/sip_profiles/*.xml.noload';
+				}
+				elseif (file_exists('/usr/local/www/fusionpbx/app/switch/resources/conf/sip_profiles/*.xml.noload')) {
+					$sip_profile_dir = '/usr/local/www/fusionpbx/app/switch/resources/conf/sip_profiles/*.xml.noload';
+				}
+				elseif (file_exists('/var/www/fusionpbx/app/switch/resources/conf/sip_profiles/*.xml.noload')) {
+					$sip_profile_dir = '/var/www/fusionpbx/app/switch/resources/conf/sip_profiles/*.xml.noload';
 				}
 				else {
 					$sip_profile_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/conf/sip_profiles/*.xml.noload';
 				}
-
 				$xml_files = glob($sip_profile_dir);
 				foreach ($xml_files as $x => &$xml_file) {
 					//load the sip profile xml and save it into an array
