@@ -466,7 +466,7 @@
 							}
 
 						//delete the checked rows
-							if (is_array($array) && @sizeof($array) != 0) {
+							if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
 								//grant temporary permissions
 									$p = new permissions;
 									$p->add('voicemail_destination_delete', 'temp');
