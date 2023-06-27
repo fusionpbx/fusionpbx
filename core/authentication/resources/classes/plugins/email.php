@@ -308,6 +308,7 @@ class plugin_email {
 				$view->assign("login_logo_height", $settings['theme']['login_logo_height']);
 				$view->assign("login_logo_source", $settings['theme']['logo']);
 				$view->assign("button_verify", $text['label-verify']);
+				$view->assign("message_delay", $settings['theme']['message_delay']);
 				if (!empty($_SESSION['username'])) {
 					$view->assign("username", $_SESSION['username']);
 					$view->assign("button_cancel", $text['button-cancel']);

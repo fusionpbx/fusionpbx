@@ -401,7 +401,7 @@ class plugin_totp {
 				//build the result array
 				$result["plugin"] = "totp";
 				$result["domain_name"] = $_SESSION["domain_name"];
-				$result["username"] = $_SESSION["username"];
+				$result["username"] = $_SESSION["username"] ?? null;
 				$result["user_uuid"] = $_SESSION["user_uuid"];
 				$result["domain_uuid"] = $_SESSION["domain_uuid"];
 				$result["contact_uuid"] = $_SESSION["contact_uuid"];

@@ -226,9 +226,9 @@ class plugin_database {
 
 				//set a few session variables
 					$_SESSION["user_uuid"] = $row['user_uuid'];
-					$_SESSION["contact_uuid"] = $row["contact_uuid"];
 					$_SESSION["username"] = $row['username'];
 					$_SESSION["user_email"] = $row['user_email'];
+					$_SESSION["contact_uuid"] = $row["contact_uuid"];
 
 				//validate the password
 					$valid_password = false;
@@ -286,30 +286,46 @@ class plugin_database {
 								$p->delete('user_edit', 'temp');
 
 						}
+
 					}
 					else {
 						//clear authentication session
-						unset($_SESSION['authentication']);
+						if (empty($_SESSION['authentication']['methods']) || !is_array($_SESSION['authentication']['methods']) || sizeof($_SESSION['authentication']['methods']) == 0) {
+							unset($_SESSION['authentication']);
+						}
 
 						// clear username
-						unset($_SESSION['username'], $_REQUEST['username'], $_POST['username']);
+						if (!empty($_REQUEST["password"])) {
+							unset($_SESSION['username'], $_REQUEST['username'], $_POST['username']);
+							unset($_SESSION['authentication']);
+						}
 					}
+
+					//result array
+					if ($valid_password) {
+						$result["plugin"] = "database";
+						$result["domain_name"] = $this->domain_name;
+						$result["username"] = $this->username;
+						$result["user_uuid"] = $this->user_uuid;
+						$result["domain_uuid"] = $_SESSION['domain_uuid'];
+						$result["contact_uuid"] = $this->contact_uuid;
+						$result["user_email"] = $this->user_email;
+						$result["sql"] = $sql;
+						$result["authorized"] = $valid_password;
+					}
+
+					//return the results
+					return $result ?? false;
+
+			}
+			else {
+
+				unset($_SESSION['username'], $_REQUEST['username'], $_POST['username']);
+				unset($_SESSION['authentication']);
 
 			}
 
-		//result array
-			$result["plugin"] = "database";
-			$result["domain_name"] = $this->domain_name;
-			$result["username"] = $this->username;
-			$result["user_uuid"] = $this->user_uuid;
-			$result["domain_uuid"] = $_SESSION['domain_uuid'];
-			$result["contact_uuid"] = $this->contact_uuid;
-			$result["user_email"] = $this->user_email;
-			$result["sql"] = $sql;
-			$result["authorized"] = $valid_password;
-
-		//return the results
-			return $result;
+		return;
 
 	}
 }
