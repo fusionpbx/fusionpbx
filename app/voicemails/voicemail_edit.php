@@ -536,7 +536,7 @@
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='greeting_id'>\n";
 	echo "		<option value=''>".$text['label-default']."</option>\n";
-	echo "		<option value='0' ".(empty($greeting_id) || $greeting_id == "0" ? "selected='selected'" : null).">".$text['label-none']."</option>\n";
+	echo "		<option value='0' ".(isset($greeting_id) && $greeting_id == "0" ? "selected='selected'" : null).">".$text['label-none']."</option>\n";
 	if (is_array($greetings) && @sizeof($greetings) != 0) {
 		foreach ($greetings as $greeting) {
 			$selected = ($greeting['greeting_id'] == $greeting_id) ? 'selected' : null;
