@@ -58,7 +58,7 @@
 			$result = $auth->validate();
 
 		//if not authorized
-			if (!$_SESSION['authorized']) {
+			if (empty($_SESSION['authorized']) || !$_SESSION['authorized']) {
 
 				//log the failed auth attempt to the system to the syslog server
 					openlog('FusionPBX', LOG_NDELAY, LOG_AUTH);
@@ -66,7 +66,7 @@
 					closelog();
 
 				//redirect the user to the login page
-					$target_path = ($_REQUEST["path"] != '') ? $_REQUEST["path"] : $_SERVER["PHP_SELF"];
+					$target_path = !empty($_REQUEST["path"]) ? $_REQUEST["path"] : $_SERVER["PHP_SELF"];
 					message::add($text['message-authentication_failed'], 'negative');
 					header("Location: ".PROJECT_PATH."/?path=".urlencode($target_path));
 					exit;
