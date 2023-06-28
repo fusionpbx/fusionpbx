@@ -2664,8 +2664,8 @@ $text['description-strategy']['zh-cn'] = "选择队列环策略。";
 $text['description-strategy']['ja-jp'] = "キュー リング戦略を選択します。";
 $text['description-strategy']['ko-kr'] = "대기열 링 전략을 선택합니다.";
 
-$text['description-status']['en-us'] = "Select the default agent status. Leaving this field blank will ensure that a reboot of freeswitch will keep the last known status.";
-$text['description-status']['en-gb'] = "Select the default agent status. Leaving this field blank will ensure that a reboot of freeswitch will keep the last known status.";
+$text['description-status']['en-us'] = "Select the default agent status. Leaving this field blank will ensure that restarting the service or server reboot will keep the last known status.";
+$text['description-status']['en-gb'] = "Select the default agent status. Leaving this field blank will ensure that restarting the service or server reboot will keep the last known status.";
 $text['description-status']['ar-eg'] = "حدد حالة الوكيل الافتراضية.";
 $text['description-status']['de-at'] = "Standard Benutzerstatus auswählen.";
 $text['description-status']['de-ch'] = "Standard Benutzerstatus auswählen.";
@@ -2784,8 +2784,8 @@ $text['description-options']['zh-cn'] = "选择队列名称。";
 $text['description-options']['ja-jp'] = "キュー名を選択します。";
 $text['description-options']['ko-kr'] = "대기열 이름을 선택합니다.";
 
-$text['description-no_answer_delay_time']['en-us'] = "Enter the agent no answer delay time in seconds. This is how long the system will wait before reattempting a call to an agent who has not answered.";
-$text['description-no_answer_delay_time']['en-gb'] = "Enter the agent no answer delay time in seconds. This is how long the system will wait before reattempting a call to an agent who has not answered.";
+$text['description-no_answer_delay_time']['en-us'] = "Enter the agent no answer delay time in seconds. How long the system will wait before reattempting a call to an agent who has not answered.";
+$text['description-no_answer_delay_time']['en-gb'] = "Enter the agent no answer delay time in seconds. How long the system will wait before reattempting a call to an agent who has not answered.";
 $text['description-no_answer_delay_time']['ar-eg'] = "أدخل الوكيل أي وقت تأخير الرد بالثواني.";
 $text['description-no_answer_delay_time']['de-at'] = "Geben Sie die Zeit in Sekunden an, die gewartet werden soll bis ein Agent annimmt.";
 $text['description-no_answer_delay_time']['de-ch'] = "Geben Sie die Zeit in Sekunden an, die gewartet werden soll bis ein Agent annimmt.";
