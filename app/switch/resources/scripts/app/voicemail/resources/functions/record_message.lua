@@ -278,12 +278,16 @@
 			end
 
 		--check voicemail recording options setting
-			if (skip_options == nil) then
-				if (voicemail_recording_options == 'true') then
-					skip_options = 'false';
-				elseif (voicemail_recording_options == 'false') then
-					skip_options = 'true';
+			if (skip_instructions == nil) then
+				if (skip_options == nil) then
+					if (voicemail_recording_options == 'true') then
+						skip_options = 'false';
+					elseif (voicemail_recording_options == 'false') then
+						skip_options = 'true';
+					end
 				end
+			else
+				skip_options = skip_instructions;
 			end
 
 		--options press 1 to listen to the recording, press 2 to save the recording, press 3 to re-record
