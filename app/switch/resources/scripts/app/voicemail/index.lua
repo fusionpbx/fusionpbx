@@ -79,6 +79,7 @@
 			effective_caller_id_name = session:getVariable("effective_caller_id_name");
 			voicemail_greeting_number = session:getVariable("voicemail_greeting_number");
 			skip_instructions = session:getVariable("skip_instructions");
+			skip_options = session:getVariable("skip_options");
 			skip_greeting = session:getVariable("skip_greeting");
 			vm_message_ext = session:getVariable("vm_message_ext");
 			vm_say_caller_id_number = session:getVariable("vm_say_caller_id_number");

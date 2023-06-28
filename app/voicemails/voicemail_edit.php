@@ -102,6 +102,8 @@
 			$voicemail_enabled = $_POST["voicemail_enabled"] ?? 'false';
 			$voicemail_description = $_POST["voicemail_description"];
 			$voicemail_tutorial = $_POST["voicemail_tutorial"];
+			$voicemail_recording_instructions = $_POST["voicemail_recording_instructions"];
+			$voicemail_recording_options = $_POST["voicemail_recording_options"];
 			$voicemail_options_delete = $_POST["voicemail_options_delete"] ?? null;
 			$voicemail_destinations_delete = $_POST["voicemail_destinations_delete"] ?? null;
 
@@ -165,6 +167,8 @@
 					$array['voicemails'][0]['voicemail_sms_to'] = $voicemail_sms_to;
 					$array['voicemails'][0]['voicemail_transcription_enabled'] = $voicemail_transcription_enabled;
 					$array['voicemails'][0]['voicemail_tutorial'] = $voicemail_tutorial;
+					$array['voicemails'][0]['voicemail_recording_instructions'] = $voicemail_recording_instructions;
+					$array['voicemails'][0]['voicemail_recording_options'] = $voicemail_recording_options;
 					if (permission_exists('voicemail_file')) {
 						$array['voicemails'][0]['voicemail_file'] = $voicemail_file;
 					}
@@ -311,6 +315,8 @@
 			$voicemail_sms_to = $row["voicemail_sms_to"];
 			$voicemail_transcription_enabled = $row["voicemail_transcription_enabled"];
 			$voicemail_tutorial = $row["voicemail_tutorial"];
+			$voicemail_recording_instructions = $row["voicemail_recording_instructions"];
+			$voicemail_recording_options = $row["voicemail_recording_options"];
 			$voicemail_file = $row["voicemail_file"];
 			$voicemail_local_after_email = $row["voicemail_local_after_email"];
 			$voicemail_enabled = $row["voicemail_enabled"];
@@ -333,6 +339,8 @@
 	if (empty($voicemail_enabled)) { $voicemail_enabled = 'true'; }
 	if (empty($voicemail_transcription_enabled)) { $voicemail_transcription_enabled = $_SESSION['voicemail']['transcription_enabled_default']['boolean']; }	
 	if (empty($voicemail_tutorial)) { $voicemail_tutorial = 'false'; }
+	if (empty($voicemail_recording_instructions)) { $voicemail_recording_instructions = 'true'; }
+	if (empty($voicemail_recording_options)) { $voicemail_recording_options = 'true'; }
 
 //get the greetings list
 	$sql = "select * from v_voicemail_greetings ";
@@ -534,7 +542,7 @@
 	echo "	".$text['label-greeting']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='greeting_id'>\n";
+	echo "	<select class='formfld' name='greeting_id' onchange=\"if (this.selectedIndex == 0) { $('#alternate_greeting_id').slideDown(); } else { $('#alternate_greeting_id').slideUp(); }\">\n";
 	echo "		<option value=''>".$text['label-default']."</option>\n";
 	echo "		<option value='0' ".(isset($greeting_id) && $greeting_id == "0" ? "selected='selected'" : null).">".$text['label-none']."</option>\n";
 	if (is_array($greetings) && @sizeof($greetings) != 0) {
@@ -549,14 +557,52 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
+	echo "</table>\n";
+
+	echo "<div id='alternate_greeting_id' ".(!isset($greeting_id) ? null : "style='display: none;'").">\n";
+	echo "	<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+
+		echo "<tr>\n";
+		echo "<td width='30%' class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-voicemail_alternate_greet_id']."\n";
+		echo "</td>\n";
+		echo "<td width='70%' class='vtable' align='left'>\n";
+		echo "	<input class='formfld' type='text' name='voicemail_alternate_greet_id' maxlength='255' value='".escape($voicemail_alternate_greet_id)."'>\n";
+		echo "	<br />\n";
+		echo "	".$text['description-voicemail_alternate_greet_id']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+
+	echo "	</table>\n";
+	echo "</div>\n";
+
+	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+
+	echo "<tr>\n";
+	echo "<td width='30%' class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-recording_instructions']."\n";
+	echo "</td>\n";
+	echo "<td width='70%' class='vtable' align='left'>\n";
+	echo "	<select class='formfld' name='voicemail_recording_instructions' id='voicemail_recording_instructions'>\n";
+	echo "    	<option value='true'>".$text['label-true']."</option>\n";
+	echo "    	<option value='false' ".(!empty($voicemail_recording_instructions) && $voicemail_recording_instructions == "false" ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
+	echo "	</select>\n";
+	echo "<br />\n";
+	echo $text['description-recording_instructions']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-voicemail_alternate_greet_id']."\n";
+	echo "	".$text['label-recording_options']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='voicemail_alternate_greet_id' maxlength='255' value='".escape($voicemail_alternate_greet_id)."'>\n";
-	echo "	<br />\n";
-	echo "	".$text['description-voicemail_alternate_greet_id']."\n";
+	echo "	<select class='formfld' name='voicemail_recording_options' id='voicemail_recording_options'>\n";
+	echo "    	<option value='true'>".$text['label-true']."</option>\n";
+	echo "    	<option value='false' ".(!empty($voicemail_recording_options) && $voicemail_recording_options == "false" ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
+	echo "	</select>\n";
+	echo "<br />\n";
+	echo $text['description-recording_options']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
