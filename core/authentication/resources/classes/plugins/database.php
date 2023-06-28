@@ -155,7 +155,7 @@ class plugin_database {
 			$auth->get_domain();
 			$this->domain_uuid = $_SESSION['domain_uuid'];
 			$this->domain_name = $_SESSION['domain_name'];
-			$this->username = $_SESSION['username'];
+			$this->username = $_SESSION['username'] ?? null;
 
 		//debug information
 			//echo "domain_uuid: ".$this->domain_uuid."<br />\n";
