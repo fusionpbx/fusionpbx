@@ -2664,8 +2664,8 @@ $text['description-strategy']['zh-cn'] = "选择队列环策略。";
 $text['description-strategy']['ja-jp'] = "キュー リング戦略を選択します。";
 $text['description-strategy']['ko-kr'] = "대기열 링 전략을 선택합니다.";
 
-$text['description-status']['en-us'] = "Select the default agent status. Leaving this field blank will ensure that restarting the service or server reboot will keep the last known status.";
-$text['description-status']['en-gb'] = "Select the default agent status. Leaving this field blank will ensure that restarting the service or server reboot will keep the last known status.";
+$text['description-status']['en-us'] = "Select the default agent status. Recommend leaving the status empty as it will keep the last known status after the service is restarted.";
+$text['description-status']['en-gb'] = "Select the default agent status. Recommend leaving the status empty as it will keep the last known status after the service is restarted.";
 $text['description-status']['ar-eg'] = "حدد حالة الوكيل الافتراضية.";
 $text['description-status']['de-at'] = "Standard Benutzerstatus auswählen.";
 $text['description-status']['de-ch'] = "Standard Benutzerstatus auswählen.";
