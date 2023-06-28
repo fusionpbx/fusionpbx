@@ -3264,8 +3264,8 @@ $text['description-call_center_agent_status']['zh-cn'] = "列出所有呼叫中�
 $text['description-call_center_agent_status']['ja-jp'] = "1 人以上のエージェントのステータスを変更するオプションを使用して、すべてのコール センター エージェントを一覧表示します。";
 $text['description-call_center_agent_status']['ko-kr'] = "하나 이상의 상담원 상태를 변경하는 옵션과 함께 모든 콜 센터 상담원을 나열합니다.";
 
-$text['description-busy_delay_time']['en-us'] = "If the agent is returns a busy then wait for the delay time in seconds before trying again.";
-$text['description-busy_delay_time']['en-gb'] = "If the agent is returns a busy then wait for the delay time in seconds before trying again.";
+$text['description-busy_delay_time']['en-us'] = "If a busy response is received then wait for the delay time in seconds before calling the agent again.";
+$text['description-busy_delay_time']['en-gb'] = "If a busy response is received then wait for the delay time in seconds before calling the agent again.";
 $text['description-busy_delay_time']['ar-eg'] = "أدخل العميل مشغول بالوقت المتأخر";
 $text['description-busy_delay_time']['de-at'] = "Geben Sie eine Wartezeit für den Agenten an.";
 $text['description-busy_delay_time']['de-ch'] = "Geben Sie eine Wartezeit für den Agenten an.";
