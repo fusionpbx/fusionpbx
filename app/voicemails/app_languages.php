@@ -1924,8 +1924,8 @@ $text['description-voicemail_tutorial']['zh-cn'] = "下次语音信箱登录后�
 $text['description-voicemail_tutorial']['ja-jp'] = "次回ボイスメールにログインした後、ボイスメール チュートリアルを再生します。";
 $text['description-voicemail_tutorial']['ko-kr'] = "다음 음성 메일 로그인 후 음성 메일 자습서를 재생합니다.";
 
-$text['description-recording_instructions']['en-us'] = "Play recording instructions (before recording).";
-$text['description-recording_instructions']['en-gb'] = "Play recording instructions (before recording).";
+$text['description-recording_instructions']['en-us'] = "Play instructions <strong>before</strong> the recording.";
+$text['description-recording_instructions']['en-gb'] = "Play instructions <strong>before</strong> the recording.";
 $text['description-recording_instructions']['ar-eg'] = "قم بتشغيل تعليمات تسجيل البريد الصوتي.";
 $text['description-recording_instructions']['de-at'] = "Spielen Sie die Anweisungen zur Voicemail-Aufzeichnung ab.";
 $text['description-recording_instructions']['de-ch'] = "Spielen Sie die Anweisungen zur Voicemail-Aufzeichnung ab.";
@@ -1948,8 +1948,8 @@ $text['description-recording_instructions']['zh-cn'] = "播放語音郵件錄音
 $text['description-recording_instructions']['ja-jp'] = "ボイスメールの録音手順を再生します。";
 $text['description-recording_instructions']['ko-kr'] = "음성 메일 녹음 지침을 재생합니다.";
 
-$text['description-recording_options']['en-us'] = "Play recording options (after recording).";
-$text['description-recording_options']['en-gb'] = "Play recording options (after recording).";
+$text['description-recording_options']['en-us'] = "Play options <strong>after</strong> the recording.";
+$text['description-recording_options']['en-gb'] = "Play options <strong>after</strong> the recording.";
 $text['description-recording_options']['ar-eg'] = "تشغيل خيارات التسجيل.";
 $text['description-recording_options']['de-at'] = "Spielen Sie die Aufnahmeoptionen ab.";
 $text['description-recording_options']['de-ch'] = "Spielen Sie die Aufnahmeoptionen ab.";
