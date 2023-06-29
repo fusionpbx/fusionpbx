@@ -2952,8 +2952,8 @@ $text['description-extension']['zh-cn'] = "输入分机号码。";
 $text['description-extension']['ja-jp'] = "内線番号を入力します。";
 $text['description-extension']['ko-kr'] = "내선번호를 입력하세요.";
 
-$text['description-discard_abandoned_after']['en-us'] = "The number of seconds before we completely remove an abandoned caller from the queue. When used in conjunction with 'Abandoned Resume Allowed', callers can come back into a queue and resume their previous position.";
-$text['description-discard_abandoned_after']['en-gb'] = "The number of seconds before we completely remove an abandoned caller from the queue. When used in conjunction with 'Abandoned Resume Allowed', callers can come back into a queue and resume their previous position.";
+$text['description-discard_abandoned_after']['en-us'] = "The number of seconds before the abandoned call is removed from the queue.";
+$text['description-discard_abandoned_after']['en-gb'] = "The number of seconds before the abandoned call is removed from the queue.";
 $text['description-discard_abandoned_after']['ar-eg'] = "قم بتعيين المهملة بعد ثوانٍ.";
 $text['description-discard_abandoned_after']['de-at'] = "Setzen Sie die Zeit in Sekunden, nach der ein Anrufer nicht wieder in die Warteschlange eingereiht wird.";
 $text['description-discard_abandoned_after']['de-ch'] = "Setzen Sie die Zeit in Sekunden, nach der ein Anrufer nicht wieder in die Warteschlange eingereiht wird.";
