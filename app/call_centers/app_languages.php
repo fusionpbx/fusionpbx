@@ -1872,8 +1872,8 @@ $text['label-exit_keys']['zh-cn'] = "退出键";
 $text['label-exit_keys']['ja-jp'] = "終了キー";
 $text['label-exit_keys']['ko-kr'] = "종료 키";
 
-$text['description-exit_keys']['en-us'] = "Define a key that can be used during the call to exit the queue.";
-$text['description-exit_keys']['en-gb'] = "Define a key that can be used during the call to exit the queue.";
+$text['description-exit_keys']['en-us'] = "Define a key that can be used to exit the queue.";
+$text['description-exit_keys']['en-gb'] = "Define a key that can be used to exit the queue.";
 $text['description-exit_keys']['ar-eg'] = "مفاتيح لإنهاء انتظار قائمة الانتظار الحالية.";
 $text['description-exit_keys']['de-at'] = "Tasten um die aktuelle Warteschlange zu verlassen.";
 $text['description-exit_keys']['de-ch'] = "Tasten um die aktuelle Warteschlange zu verlassen.";
