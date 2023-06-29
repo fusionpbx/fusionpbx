@@ -3120,8 +3120,8 @@ $text['description-caller_id_name_prefix']['zh-cn'] = "在来电显示名称上�
 $text['description-caller_id_name_prefix']['ja-jp'] = "発信者 ID 名にプレフィックスを設定します。";
 $text['description-caller_id_name_prefix']['ko-kr'] = "발신자 ID 이름에 접두사를 설정합니다.";
 
-$text['description-caller_announce_sound']['en-us'] = "A sound to play for a caller at specific intervals, as defined (in seconds) by the Announce Frequency. Needs the full path to the wav file.";
-$text['description-caller_announce_sound']['en-gb'] = "A sound to play for a caller at specific intervals, as defined (in seconds) by the Announce Frequency. Needs the full path to the wav file.";
+$text['description-caller_announce_sound']['en-us'] = "A sound to play for a caller at specific intervals, as defined in seconds by the Announce Frequency. Full path to the recording is required.";
+$text['description-caller_announce_sound']['en-gb'] = "A sound to play for a caller at specific intervals, as defined in seconds by the Announce Frequency. Full path to the recording is required.";
 $text['description-caller_announce_sound']['ar-eg'] = "صوت يتم تشغيله للمتصل على فترات زمنية محددة ، كما هو محدد (بالثواني) بواسطة تردد الإعلان. يحتاج إلى المسار الكامل لملف wav.";
 $text['description-caller_announce_sound']['de-at'] = "Eine Datei, die regelmäßig dem Anrufer vorgespielt werden soll. Benötigt den kompletten Pfad zur wav Datei.";
 $text['description-caller_announce_sound']['de-ch'] = "Eine Datei, die regelmäßig dem Anrufer vorgespielt werden soll. Benötigt den kompletten Pfad zur wav Datei.";
