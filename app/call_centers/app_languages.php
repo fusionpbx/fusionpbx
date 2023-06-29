@@ -2448,8 +2448,8 @@ $text['description-time_base_score']['zh-cn'] = "选择时基分数。";
 $text['description-time_base_score']['ja-jp'] = "タイム ベース スコアを選択します。";
 $text['description-time_base_score']['ko-kr'] = "시간축 점수를 선택합니다.";
 
-$text['description-time_base_score_sec']['en-us'] = "Set the time base score in seconds. Higher numbers mean higher priority over other call centers.";
-$text['description-time_base_score_sec']['en-gb'] = "Set the time base score in seconds. Higher numbers mean higher priority over other call centers.";
+$text['description-time_base_score_sec']['en-us'] = "Set the time base score in seconds. Higher numbers mean higher priority.";
+$text['description-time_base_score_sec']['en-gb'] = "Set the time base score in seconds. Higher numbers mean higher priority.";
 $text['description-time_base_score_sec']['ar-eg'] = "قم بتعيين النتيجة الأساسية للوقت بالثواني. تعني الأرقام الأعلى أولوية أعلى على مراكز الاتصال الأخرى.";
 $text['description-time_base_score_sec']['de-at'] = "Stellen Sie den Zeitbasiswert in Sekunden ein. Höhere Nummern bedeuten eine höhere Priorität gegenüber anderen Callcentern.";
 $text['description-time_base_score_sec']['de-ch'] = "Stellen Sie den Zeitbasiswert in Sekunden ein. Höhere Nummern bedeuten eine höhere Priorität gegenüber anderen Callcentern.";
