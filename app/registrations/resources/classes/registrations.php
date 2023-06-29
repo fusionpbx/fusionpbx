@@ -83,7 +83,7 @@ if (!class_exists('registrations')) {
 							if ($xml_response == "Invalid Profile!") { 
 								//add multi-lingual support
 								$language = new text;
-								$text = $language->get();
+								$text = $language->get(null, '/app/registrations');
 
 								//show the error message
 								$xml_response = "<error_msg>".escape($text['label-message'])."</error_msg>"; 
