@@ -3408,8 +3408,8 @@ $text['description-agent']['zh-cn'] = "选择代理名称。";
 $text['description-agent']['ja-jp'] = "エージェント名を選択します。";
 $text['description-agent']['ko-kr'] = "에이전트 이름을 선택합니다.";
 
-$text['description-abandoned_resume_allowed']['en-us'] = "Can be True or False. If True, a caller who has abandoned the queue can re-enter and resume their previous position in that queue. In order to maintain their position in the queue, they must not abandoned it for longer than the number of seconds defined in 'Discard Abandoned After'.";
-$text['description-abandoned_resume_allowed']['en-gb'] = "Can be True or False. If True, a caller who has abandoned the queue can re-enter and resume their previous position in that queue. In order to maintain their position in the queue, they must not abandoned it for longer than the number of seconds defined in 'Discard Abandoned After'.";
+$text['description-abandoned_resume_allowed']['en-us'] = "A caller who has left the queue can resume their position in the queue by calling back before the abandoned call has been discarded.";
+$text['description-abandoned_resume_allowed']['en-gb'] = "A caller who has left the queue can resume their position in the queue by calling back before the abandoned call has been discarded.";
 $text['description-abandoned_resume_allowed']['ar-eg'] = "اضبط السيرة الذاتية المهجورة المسموح بها على صواب أو خطأ.";
 $text['description-abandoned_resume_allowed']['de-at'] = "Schalten Sie die Wideraufnahme von Anrufern in der Warteschlange Ein oder Aus.";
 $text['description-abandoned_resume_allowed']['de-ch'] = "Schalten Sie die Wideraufnahme von Anrufern in der Warteschlange Ein oder Aus.";
