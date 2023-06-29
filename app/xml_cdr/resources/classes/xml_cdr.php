@@ -77,12 +77,12 @@ if (!class_exists('xml_cdr')) {
 			}
 
 			//assign private variables (for delete method)
-				$this->app_name = 'xml_cdr';
-				$this->app_uuid = '4a085c51-7635-ff03-f67b-86e834422848';
-				$this->permission_prefix = 'xml_cdr_';
-				$this->list_page = 'xml_cdr.php';
-				$this->table = 'xml_cdr';
-				$this->uuid_prefix = 'xml_cdr_';
+			$this->app_name = 'xml_cdr';
+			$this->app_uuid = '4a085c51-7635-ff03-f67b-86e834422848';
+			$this->permission_prefix = 'xml_cdr_';
+			$this->list_page = 'xml_cdr.php';
+			$this->table = 'xml_cdr';
+			$this->uuid_prefix = 'xml_cdr_';
 		}
 
 		/**
@@ -95,13 +95,13 @@ if (!class_exists('xml_cdr')) {
 
 				//save the log to the php error log
 				if ($_SESSION['log']['type']['text'] == 'error_log') {
-	    			error_log($message);
+					error_log($message);
 				}
 
 				//save the log to the syslog server
 				if ($_SESSION['log']['type']['text'] == 'syslog') {
 					openlog("XML CDR", LOG_PID | LOG_PERROR, LOG_LOCAL0);
-	    			syslog(LOG_WARNING, $message);
+					syslog(LOG_WARNING, $message);
 					closelog();
 				}
 
@@ -208,7 +208,8 @@ if (!class_exists('xml_cdr')) {
 			$this->fields();
 			$field_count = sizeof($this->fields);
 			//$field_count = sizeof($this->fields);
-			if (isset($this->array)) {
+
+			if (!empty($this->array)) {
 				foreach ($this->array as $row) {
 					//build the array
 					if (isset($this->fields)) {
@@ -234,8 +235,9 @@ if (!class_exists('xml_cdr')) {
 					$database = new database;
 					$database->app_name = 'xml_cdr';
 					$database->app_uuid = '4a085c51-7635-ff03-f67b-86e834422848';
-					$database->domain_uuid = $domain_uuid;
+					//$database->domain_uuid = $domain_uuid;
 					$response = $database->save($array, false);
+
 					if ($response['code'] == '200') {
 						//saved to the database successfully delete the database file
 						if (!empty($xml_cdr_dir)) {
@@ -259,6 +261,9 @@ if (!class_exists('xml_cdr')) {
 						echo 'failed file moved to '.$xml_cdr_dir.'/failed/'.$this->file;
 					}
 
+					//clear the array
+					unset($this->array);
+
 					//debug results
 					$this->log(print_r($database->message, true));
 
@@ -276,8 +281,13 @@ if (!class_exists('xml_cdr')) {
 		 */
 		public function xml_array($key, $leg, $xml_string) {
 
+			//xml string is empty
+				if (empty($xml_string)) {
+					return false;
+				}
+
 			//fix the xml by escaping the contents of <sip_full_XXX>
-				if(defined('STDIN')) {
+				if (defined('STDIN')) {
 					$xml_string = preg_replace_callback("/<([^><]+)>(.*?[><].*?)<\/\g1>/",
 						function ($matches) {
 							return '<' . $matches[1] . '>' .
@@ -290,17 +300,32 @@ if (!class_exists('xml_cdr')) {
 					);
 				}
 
-			//parse the xml to get the call detail record info
-				try {
-					//disable xml entities
-					if (PHP_VERSION_ID < 80000) { libxml_disable_entity_loader(true); }
+			//remove invalid numeric xml tags
+				$xml_string = preg_replace('/<\/?\d+>/', '', $xml_string);
 
-					//load the string into an xml object
-					$xml = simplexml_load_string($xml_string, 'SimpleXMLElement', LIBXML_NOCDATA);
-				}
-				catch(Exception $e) {
-					echo $e->getMessage();
-					$this->log("\nXML parsing error: " . $e->getMessage() . "\n");
+			//disable xml entities
+				if (PHP_VERSION_ID < 80000) { libxml_disable_entity_loader(true); }
+
+			//load the string into an xml object
+				$xml = simplexml_load_string($xml_string, 'SimpleXMLElement', LIBXML_NOCDATA);
+				if ($xml === false) {
+					//set the directory
+					if (!empty($_SESSION['switch']['log']['dir'])) {
+						$xml_cdr_dir = $_SESSION['switch']['log']['dir'].'/xml_cdr';
+					}
+
+					//failed to load the XML, move the XML file to the failed directory
+					if (!empty($xml_cdr_dir)) {
+						if (!file_exists($xml_cdr_dir.'/failed')) {
+							if (!mkdir($xml_cdr_dir.'/failed', 0660, true)) {
+								die('Failed to create '.$xml_cdr_dir.'/failed');
+							}
+						}
+						rename($xml_cdr_dir.'/'.$this->file, $xml_cdr_dir.'/failed/'.$this->file);
+					}
+
+					//return without saving the invalid xml
+					return false;
 				}
 
 			//check for duplicate call uuid's
@@ -470,6 +495,7 @@ if (!class_exists('xml_cdr')) {
 						}
 
 					//misc
+						$key = 0;
 						$uuid = urldecode($xml->variables->uuid);
 						$this->array[$key]['xml_cdr_uuid'] = $uuid;
 						$this->array[$key]['destination_number'] = $destination_number;
@@ -877,37 +903,7 @@ if (!class_exists('xml_cdr')) {
 							}
 						}
 
-					//insert the values
-						//if ($this->debug) {
-						//	$time5_insert = microtime(true);
-						//}
-						try {
-							$error = "false";
-							//$this->db->exec($sql);
-						}
-						catch(PDOException $e) {
-							$tmp_dir = $_SESSION['switch']['log']['dir'].'/xml_cdr/failed/';
-							if(!file_exists($tmp_dir)) {
-								mkdir($tmp_dir, 0770, true);
-							}
-							if ($_SESSION['cdr']['format']['text'] == "xml") {
-								$tmp_file = $uuid.'.xml';
-								$fh = fopen($tmp_dir.'/'.$tmp_file, 'w');
-								fwrite($fh, $xml_string);
-							}
-							else {
-								$tmp_file = $uuid.'.json';
-								$fh = fopen($tmp_dir.'/'.$tmp_file, 'w');
-								fwrite($fh, json_encode($xml));
-							}
-							fclose($fh);
-
-							//debug info
-							$this->log($e->getMessage());
-
-							$error = "true";
-						}
-
+					//store xml cdr on the file system as a file
 						if ($_SESSION['cdr']['storage']['text'] == "dir" && $error != "true") {
 							if (!empty($uuid)) {
 								$tmp_dir = $_SESSION['switch']['log']['dir'].'/xml_cdr/archive/'.$start_year.'/'.$start_month.'/'.$start_day;
@@ -929,7 +925,10 @@ if (!class_exists('xml_cdr')) {
 						}
 						unset($error);
 
-						//debug
+					//save data to the database
+						$this->save();
+
+					//debug
 						//GLOBAL $insert_time,$insert_count;
 						//$insert_time+=microtime(true)-$time5_insert; //add this current query.
 						//$insert_count++;
@@ -946,6 +945,10 @@ if (!class_exists('xml_cdr')) {
 			$x = 0;
 			while($file = readdir($dir_handle)) {
 				if ($file != '.' && $file != '..') {
+					//used to test a single file
+					//$file = 'a_aa76e0af-461e-4d46-be23-433260307ede.cdr.xml';
+
+					//process the XML files
 					if ( !is_dir($xml_cdr_dir . '/' . $file) ) {
 						//get the leg of the call and the file prefix
 							if (substr($file, 0, 2) == "a_") {
@@ -979,7 +982,7 @@ if (!class_exists('xml_cdr')) {
 							}
 
 						//import the call detail files are less than 3 mb - 3 million bytes
-							if ($import && filesize($xml_cdr_dir.'/'.$file) < 3000000) {
+							if ($import && filesize($xml_cdr_dir.'/'.$file) <= 3000000) {
 								//get the xml cdr string
 									$xml_string = file_get_contents($xml_cdr_dir.'/'.$file);
 
@@ -996,6 +999,18 @@ if (!class_exists('xml_cdr')) {
 									$x++;
 							}
 
+						//move the files that are too large to the failed directory
+							if ($import && filesize($xml_cdr_dir.'/'.$file) >= 3000000) {
+								if (!empty($xml_cdr_dir)) {
+									if (!file_exists($xml_cdr_dir.'/failed')) {
+										if (!mkdir($xml_cdr_dir.'/failed', 0660, true)) {
+											die('Failed to create '.$xml_cdr_dir.'/failed');
+										}
+									}
+									rename($xml_cdr_dir.'/'.$file, $xml_cdr_dir.'/failed/'.$file);
+								}
+							}
+
 						//if limit exceeded exit the loop
 							if ($limit == $x) {
 								//echo "limit: $limit count: $x if\n";
@@ -1004,8 +1019,7 @@ if (!class_exists('xml_cdr')) {
 					}
 				}
 			}
-			//save data to the database
-			$this->save();
+			//close the directory handle
 			closedir($dir_handle);
 		}
 		//$this->read_files();
@@ -1093,8 +1107,6 @@ if (!class_exists('xml_cdr')) {
 
 				//parse the xml and insert the data into the database
 					$this->xml_array(0, $leg, $xml_string);
-					$this->save();
-
 			}
 		}
 		//$this->post();
