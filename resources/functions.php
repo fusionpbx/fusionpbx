@@ -2083,7 +2083,7 @@ function number_pad($number,$n) {
 	 * @param string $charset Allowable characters to use for password. Default is all characters except the backslash \
 	 */
 	if(!function_exists('random_password')) {
-		function random_password(int $length = 16, string $charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 !@#$%^&*(),-./:<>@[]^_|~'): string {
+		function random_password(int $length = 16, string $charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 !@#$%^&*(),-./:<>@[]^_|~"\'?-+=\\'): string {
 			//create a buffer
 			$sb = "";
 
