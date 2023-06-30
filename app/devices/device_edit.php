@@ -92,9 +92,9 @@
 				exit;
 			}
 
-		//device mac address
-			if (permission_exists('device_mac_address')) {
-				$device_mac_address = $_POST["device_mac_address"];
+		//device device address
+			if (permission_exists('device_address')) {
+				$device_address = $_POST["device_address"];
 			}
 			else {
 				$sql = "select * from v_devices ";
@@ -103,7 +103,7 @@
 				$database = new database;
 				$row = $database->select($sql, $parameters, 'row');
 				if (is_array($row) && @sizeof($row) != 0) {
-					$device_mac_address = $row["device_mac_address"];
+					$device_address = $row["device_address"];
 				}
 				unset($sql, $parameters, $row);
 			}
@@ -161,16 +161,16 @@
 			//$device_setting_enabled = $_POST["device_setting_enabled"];
 			//$device_setting_description = $_POST["device_setting_description"];
 
-		//normalize the mac address
-			if (!empty($device_mac_address)) {
-				$device_mac_address = strtolower($device_mac_address);
-				$device_mac_address = preg_replace('#[^a-fA-F0-9./]#', '', $device_mac_address);
+		//normalize the address
+			if (!empty($device_address)) {
+				$device_address = strtolower($device_address);
+				$device_address = preg_replace('#[^a-fA-F0-9./]#', '', $device_address);
 			}
 	}
 
-//use the mac address to get the vendor
+//use the device address to get the vendor
 	if (empty($device_vendor)) {
-		$device_vendor = device::get_vendor($device_mac_address ?? null);
+		$device_vendor = device::get_vendor($device_address ?? null);
 	}
 
 //add or update the database
@@ -186,7 +186,7 @@
 
 		//check for all required data
 			$msg = '';
-			if (empty($device_mac_address)) { $msg .= $text['message-required'].$text['label-device_mac_address']."<br>\n"; }
+			if (empty($device_address)) { $msg .= $text['message-required'].$text['label-device_address']."<br>\n"; }
 			//if (empty($device_label)) { $msg .= "Please provide: Label<br>\n"; }
 			//if (empty($device_vendor)) { $msg .= "Please provide: Vendor<br>\n"; }
 			//if (empty($device_model)) { $msg .= "Please provide: Model<br>\n"; }
@@ -210,7 +210,7 @@
 			}
 
 		//check for duplicates
-			if ($action == 'add' && $device_mac_address != "000000000000") {
+			if ($action == 'add' && $device_address != "000000000000") {
 				$sql = "select ";
 				$sql .= "d2.domain_name ";
 				$sql .= "from ";
@@ -218,11 +218,11 @@
 				$sql .= "v_domains as d2 ";
 				$sql .= "where ";
 				$sql .= "d1.domain_uuid = d2.domain_uuid and ";
-				$sql .= "d1.device_mac_address = :device_mac_address ";
+				$sql .= "d1.device_address = :device_address ";
 				if (!empty($_GET["device_uuid"]) && is_uuid($_GET["device_uuid"])) {
 					$sql .= " and d1.device_uuid <> :device_uuid ";
 				}
-				$parameters['device_mac_address'] = $device_mac_address;
+				$parameters['device_address'] = $device_address;
 				$database = new database;
 				$domain_name = $database->select($sql, $parameters, 'column');
 				if ($domain_name != '') {
@@ -245,8 +245,8 @@
 				//prepare the array
 					$array['devices'][0]['domain_uuid'] = $domain_uuid;
 					$array['devices'][0]['device_uuid'] = $device_uuid;
-					if (permission_exists('device_mac_address')) {
-						$array['devices'][0]['device_mac_address'] = $device_mac_address;
+					if (permission_exists('device_address')) {
+						$array['devices'][0]['device_address'] = $device_address;
 					}
 					//$array['devices'][0]['device_provisioned_ip'] = $device_provisioned_ip;
 					if (permission_exists('device_label')) {
@@ -509,11 +509,11 @@
 		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
 		if (is_array($row) && @sizeof($row) != 0) {
-			$device_mac_address = $row["device_mac_address"];
+			$device_address = $row["device_address"];
 			$device_provisioned_ip = $row["device_provisioned_ip"];
 			$domain_uuid = $row["domain_uuid"];
 			$device_label = $row["device_label"];
-			//$device_mac_address = substr($device_mac_address, 0,2).'-'.substr($device_mac_address, 2,2).'-'.substr($device_mac_address, 4,2).'-'.substr($device_mac_address, 6,2).'-'.substr($device_mac_address, 8,2).'-'.substr($device_mac_address, 10,2);
+			//$device_address = substr($device_address, 0,2).'-'.substr($device_address, 2,2).'-'.substr($device_address, 4,2).'-'.substr($device_address, 6,2).'-'.substr($device_address, 8,2).'-'.substr($device_address, 10,2);
 			$device_label = $row["device_label"];
 			$device_user_uuid = $row["device_user_uuid"];
 			$device_username = $row["device_username"];
@@ -534,12 +534,12 @@
 //set the defaults
 	if (empty($device_enabled)) { $device_enabled = 'true'; }
 
-//use the mac address to get the vendor
+//use the device address to get the vendor
 	if (empty($device_vendor)) {
-		//get the device vendor using the mac address
-		$device_vendor = device::get_vendor($device_mac_address ?? null);
+		//get the device vendor using the device address
+		$device_vendor = device::get_vendor($device_address ?? null);
 		
-		//if the vendor was not found using the mac address use an alternative method
+		//if the vendor was not found using the device address use an alternative method
 		if (empty($device_vendor)) {
 			$template_array = explode("/", $device_template ?? '');
 			$device_vendor = $template_array[0] ?? '';
@@ -664,9 +664,9 @@
 	$users = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
-//use the mac address to get the vendor
+//use the device address to get the vendor
 	if (empty($device_vendor)) {
-		$device_vendor = device::get_vendor($device_mac_address ?? null);
+		$device_vendor = device::get_vendor($device_address ?? null);
 	}
 
 //get the device line info for provision button
@@ -720,7 +720,7 @@
 			if ($_SERVER['HTTPS'] == 'on') { $_SERVER['HTTP_PROTOCOL'] = 'https'; }
 			if ($_SERVER['SERVER_PORT'] == '443') { $_SERVER['HTTP_PROTOCOL'] = 'https'; }
 		}
-		echo "		window.location = '".$_SERVER['HTTP_PROTOCOL']."://".$domain_name.PROJECT_PATH."/app/provision/index.php?mac=".escape($device_mac_address ?? '')."&file=' + d + '&content_type=application/octet-stream';\n";
+		echo "		window.location = '".$_SERVER['HTTP_PROTOCOL']."://".$domain_name.PROJECT_PATH."/app/provision/index.php?mac=".escape($device_address ?? '')."&file=' + d + '&content_type=application/octet-stream';\n";
 		echo "	}\n";
 
 		echo "\n";
@@ -869,9 +869,9 @@
 				echo 		"<select class='formfld' style='display: none; width: auto;' name='target_file' id='target_file' onchange='download(this.value)'>\n";
 				echo "			<option value=''>".$text['label-download']."</option>\n";
 				foreach ($files as $file) {
-					//format the mac address and
+					//format the device address
 						$format = new provision();
-						$mac = $format->format_mac($device_mac_address, $device_vendor);
+						$mac = $format->format_address($device_address, $device_vendor);
 					//render the file name
 						$file_name = str_replace("{\$mac}", $mac, basename($file));
 					//add the select option
@@ -929,16 +929,16 @@
 
 	echo "<tr>\n";
 	echo "<td class='vncell' width='30%' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-device_mac_address']."\n";
+	echo "	".$text['label-device_address']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' width='70%' align='left'>\n";
-	if (permission_exists('device_mac_address')) {
-		echo "	<input class='formfld' type='text' name='device_mac_address' id='device_mac_address' maxlength='255' value=\"".escape($device_mac_address ?? '')."\"/>\n";
+	if (permission_exists('device_address')) {
+		echo "	<input class='formfld' type='text' name='device_address' id='device_address' maxlength='255' value=\"".escape($device_address ?? '')."\"/>\n";
 		echo "<br />\n";
-		echo $text['description-device_mac_address']."\n";
+		echo $text['description-device_address']."\n";
 	}
 	else {
-		echo escape($device_mac_address ?? '');
+		echo escape($device_address ?? '');
 	}
 	echo "	<div style='display: none;' id='duplicate_mac_response'></div>\n";
 	echo " ".escape($device_provisioned_ip ?? '')." (<a href='http://".escape($device_provisioned_ip ?? '')."' target='_blank'>http</a>|<a href='https://".escape($device_provisioned_ip ?? '')."' target='_blank'>https</a>)\n";
@@ -1794,7 +1794,7 @@
 		echo "<td class='vtable' align='left' nowrap='nowrap'>\n";
 		$label = $device_alternate[0]['device_label'];
 		if (empty($label)) { $label = $device_alternate[0]['device_description']; }
-		if (empty($label)) { $label = $device_alternate[0]['device_mac_address']; }
+		if (empty($label)) { $label = $device_alternate[0]['device_address']; }
 		echo "	<table>\n";
 		echo "	<tr>\n";
 		echo "		<td><a href='?id=".escape($device_uuid_alternate)."' id='device_uuid_alternate_link'>".escape($label)."</a><input class='formfld' type='hidden' name='device_uuid_alternate' id='device_uuid_alternate' maxlength='255' value=\"".escape($device_uuid_alternate)."\" />&nbsp;</td>";

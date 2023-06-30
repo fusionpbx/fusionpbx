@@ -48,7 +48,7 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
-		$apps[$x]['permissions'][$y]['name'] = "device_mac_address";
+		$apps[$x]['permissions'][$y]['name'] = "device_address";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$y++;
@@ -411,8 +411,8 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$apps[$x]['db'][$y]['fields'][$z]['deprecated'] = "true";
 		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "device_mac_address";
-		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "phone_mac_address";
+		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "device_address";
+		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "device_mac_address";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";

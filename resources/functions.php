@@ -1502,13 +1502,14 @@ function number_pad($number,$n) {
 		}
 	}
 
-//format mac address
-	if (!function_exists('format_mac')) {
-		function format_mac($str, $delim = '-', $case = 'lower') {
+//format device address
+	if (!function_exists('format_device_address')) {
+		function format_device_address($str, $delim = '-', $case = 'lower') {
+			if (empty($str)) { return false; }
 			if (is_mac($str)) {
 				$str = join($delim, str_split($str, 2));
-				$str = ($case == 'upper') ? strtoupper($str) : strtolower($str);
 			}
+			$str = ($case == 'upper') ? strtoupper($str) : strtolower($str);
 			return $str;
 		}
 	}
