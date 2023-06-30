@@ -1331,7 +1331,7 @@
 					foreach ($devices as $field) {
 						if (!empty($field["device_address"])) {
 							$selected = $field_current_value == $field["device_address"] ? "selected='selected'" : null;
-							echo "							<option value='".escape($field["device_address"])."' ".$selected.">".escape($field["device_address"])." - ".escape($field['device_model'])." ".escape($field['device_description'])."</option>\n";
+							echo "							<option value='".escape($field["device_address"])."' ".$selected.">".escape(format_device_address($field["device_address"])).(!empty($field['device_model']) || !empty($field['device_description']) ? " - ".escape($field['device_model'])." ".escape($field['device_description']) : null)."</option>\n";
 						}
 					}
 				}
