@@ -305,8 +305,8 @@
 										$result[$key] = preg_replace('{\D}', '', $result[$key]);
 									}
 
-									//normalize the MAC address
-									if ($field_name == "device_mac_address") {
+									//normalize the device address
+									if ($field_name == "device_address") {
 										$result[$key] = strtolower($result[$key]);
 										$result[$key] = preg_replace('#[^a-fA-F0-9./]#', '', $result[$key]);
 									}
@@ -334,12 +334,12 @@
 									}
 								}
 
-							// Do not duplicate MAC addresses, get the device UUID from the database and set it in the array
+							// Do not duplicate device addresses, get the device UUID from the database and set it in the array
 								if (isset($array['devices']) && !isset($array['devices'][$row_id]['device_uuid']) &&
-									isset($array['devices'][$row_id]['device_mac_address'])) {
+									isset($array['devices'][$row_id]['device_address'])) {
 									$sql = "SELECT device_uuid, domain_uuid FROM v_devices ";
-									$sql .= "WHERE device_mac_address = :mac ";
-									$parameters['mac'] = $array['devices'][$row_id]['device_mac_address'];
+									$sql .= "WHERE device_address = :mac ";
+									$parameters['mac'] = $array['devices'][$row_id]['device_address'];
 									$row = $database->select($sql, $parameters, 'row');
 									if (is_array($row)) {
 										// Validate that the hit we got is for the same domain, if not add a message stating the fact

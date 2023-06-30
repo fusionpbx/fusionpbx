@@ -76,7 +76,7 @@
 //define possible columns in the array
 	$available_columns['devices'][] = 'device_uuid';
 	$available_columns['devices'][] = 'device_profile_uuid';
-	$available_columns['devices'][] = 'device_mac_address';
+	$available_columns['devices'][] = 'device_address';
 	$available_columns['devices'][] = 'device_label';
 	$available_columns['devices'][] = 'device_vendor';
 	$available_columns['devices'][] = 'device_template';
