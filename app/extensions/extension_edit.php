@@ -171,9 +171,34 @@
 
 		//device provisioning variables
 			if (is_array($_POST["devices"]) && @sizeof($_POST["devices"]) != 0) {
+
+				//get the devices
+				$sql = "select count(device_uuid) from v_devices ";
+				$sql .= "where domain_uuid = :domain_uuid ";
+				if (!permission_exists('device_all') && !permission_exists('device_domain_all')) {
+					$sql .= "and device_user_uuid = :user_uuid ";
+					$parameters['user_uuid'] = $_SESSION['user_uuid'];
+				}
+				$sql .= "order by device_address asc ";
+				$parameters['domain_uuid'] = $domain_uuid;
+				$database = new database;
+				$total_devices = $database->select($sql, $parameters, 'column');
+				unset($sql, $parameters);
+
 				foreach ($_POST["devices"] as $d => $device) {
-					$device_address = strtolower($device["device_address"]);
-					$device_address = preg_replace('#[^a-fA-F0-9./]#', '', $device_address);
+					if (
+						permission_exists('device_address_uuid') &&
+						$device["device_address"] == 'UUID' &&
+						(
+							!isset($_SESSION['limit']['devices']['numeric']) ||
+							$total_devices < $_SESSION['limit']['devices']['numeric']
+						)) {
+						$device_address = strtolower(uuid());
+					}
+					else {
+						$device_address = strtolower($device["device_address"]);
+						$device_address = preg_replace('#[^a-fA-F0-9./]#', '', $device_address);
+					}
 
 					$line_numbers[$d] = $device["line_number"];
 					$device_addresses[$d] = $device_address;
@@ -914,10 +939,17 @@
 //get the devices
 	$sql = "select * from v_devices ";
 	$sql .= "where domain_uuid = :domain_uuid ";
+	if (!permission_exists('device_all') && !permission_exists('device_domain_all')) {
+		$sql .= "and device_user_uuid = :user_uuid ";
+		$parameters['user_uuid'] = $_SESSION['user_uuid'];
+	}
 	$sql .= "order by device_address asc ";
 	$parameters['domain_uuid'] = $domain_uuid;
 	$database = new database;
 	$devices = $database->select($sql, $parameters, 'all');
+	if (!empty($devices) && is_array($devices)) {
+		$total_devices = @sizeof($devices);
+	}
 	unset($sql, $parameters);
 
 //get the device vendors
@@ -1254,7 +1286,7 @@
 			echo "				<td class='vtable'>\n";
 			echo "					".$text['label-device_address']."&nbsp;\n";
 			echo "				</td>\n";
-			echo "				<td class='vtable'>\n";
+			echo "				<td class='vtable' style='padding-left: 8px;'>\n";
 			echo "					".$text['label-device_template']."&nbsp;\n";
 			echo "				</td>\n";
 			if ($action == 'update') {
@@ -1268,7 +1300,7 @@
 						echo "		<tr>\n";
 						echo "			<td class='vtable'>".escape($row['line_number'])."</td>\n";
 						echo "			<td class='vtable'><a href='".PROJECT_PATH."/app/devices/device_edit.php?id=".escape($row['device_uuid'])."'>".escape($device_address)."</a></td>\n";
-						echo "			<td class='vtable'>".escape($row['device_template'])."&nbsp;</td>\n";
+						echo "			<td class='vtable' style='padding-left: 10px;'>".escape($row['device_template'])."&nbsp;</td>\n";
 						//echo "			<td class='vtable'>".$row['device_description']."&nbsp;</td>\n";
 						echo "			<td>\n";
 						echo "				<a href='#' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.getElementById('delete_type').value = 'device_line'; document.getElementById('delete_uuid').value = '".escape($row['device_line_uuid'])."'; document.getElementById('frm').submit(); }\" alt='".$text['button-delete']."'>$v_link_label_delete</a>\n";
@@ -1301,9 +1333,9 @@
 					tb.name=obj.name;
 					tb.className='formfld';
 					tb.setAttribute('id', 'device_address_<?php echo $d; ?>');
-					tb.setAttribute('style', 'width: 80%;');
+					tb.setAttribute('style', 'width: 250px;');
 					tb.value=obj.options[obj.selectedIndex].value;
-					document.getElementById('btn_select_to_input_device_address_<?php echo $d; ?>').style.visibility = 'hidden';
+					document.getElementById('btn_select_to_input_device_address_<?php echo $d; ?>').style.display = 'none';
 					tbb=document.createElement('INPUT');
 					tbb.setAttribute('class', 'btn');
 					tbb.setAttribute('style', 'margin-left: 4px;');
@@ -1321,19 +1353,23 @@
 					obj[2].parentNode.insertBefore(obj[0],obj[2]);
 					obj[0].parentNode.removeChild(obj[1]);
 					obj[0].parentNode.removeChild(obj[2]);
-					document.getElementById('btn_select_to_input_device_address_<?php echo $d; ?>').style.visibility = 'visible';
+					document.getElementById('btn_select_to_input_device_address_<?php echo $d; ?>').style.display = 'inline';
 				}
 				</script>
 				<?php
-				echo "						<select id='device_address_".$d."' name='devices[".$d."][device_address]' class='formfld' style='width: 180px;' onchange=\"changeToInput_device_address_".$d."(this); this.style.visibility='hidden';\">\n";
+				echo "						<select id='device_address_".$d."' name='devices[".$d."][device_address]' class='formfld' style='width: 250px;' onchange=\"changeToInput_device_address_".$d."(this); this.style.visibility='hidden';\">\n";
 				echo "							<option value=''></option>\n";
 				if (is_array($devices) && @sizeof($devices) != 0) {
 					foreach ($devices as $field) {
 						if (!empty($field["device_address"])) {
-							$selected = $field_current_value == $field["device_address"] ? "selected='selected'" : null;
+							$selected = !empty($field_current_value) && $field_current_value == $field["device_address"] ? "selected='selected'" : null;
 							echo "							<option value='".escape($field["device_address"])."' ".$selected.">".escape(format_device_address($field["device_address"])).(!empty($field['device_model']) || !empty($field['device_description']) ? " - ".escape($field['device_model'])." ".escape($field['device_description']) : null)."</option>\n";
 						}
 					}
+				}
+				if (permission_exists('device_address_uuid') && (!isset($_SESSION['limit']['devices']['numeric']) || $total_devices < $_SESSION['limit']['devices']['numeric'])) {
+					echo "							<option disabled='disabled'></option>\n";
+					echo "							<option value='UUID'>".$text['label-generate']."</option>\n";
 				}
 				echo "						</select>\n";
 				echo "						<input type='button' id='btn_select_to_input_device_address_".$d."' class='btn' alt='".$text['button-back']."' onclick=\"changeToInput_device_address_".$d."(document.getElementById('device_address_".$d."')); this.style.visibility='hidden';\" value='&#9665;'>\n";
@@ -1342,7 +1378,7 @@
 				echo "			</table>\n";
 
 				echo "		</td>\n";
-				echo "		<td ".($action == 'edit' ? "class='vtable'" : null).">";
+				echo "		<td ".($action == 'edit' ? "class='vtable'" : null)." style='padding-left: 5px;'>";
 				$device = new device;
 				$template_dir = $device->get_template_dir();
 				echo "			<select id='device_template' name='devices[".$d."][device_template]' class='formfld'>\n";
