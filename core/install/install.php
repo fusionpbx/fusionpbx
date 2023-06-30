@@ -25,7 +25,7 @@
 */
 
 //set the include path
-	$document_root = substr(getcwd(), 0, strlen(getcwd()) - strlen('/core/install'));
+	$document_root = dirname(__DIR__, 2);
 	set_include_path($document_root);
 	$_SERVER["DOCUMENT_ROOT"] = $document_root;
 	$_SERVER["PROJECT_ROOT"] = $document_root;
@@ -37,7 +37,12 @@
 //include required classes
 	require_once "resources/classes/text.php";
 	require_once "resources/classes/template.php";
+	require_once "resources/classes/message.php";
 	require_once "core/install/resources/classes/install.php";
+
+//start the session before text object stores values in session
+	//ini_set("session.cookie_httponly", True);
+	session_start();
 
 //add multi-lingual support
 	$language = new text;
@@ -45,10 +50,6 @@
 
 //set debug to true or false
 	$debug = false;
-
-//start the session
-	//ini_set("session.cookie_httponly", True);
-	session_start();
 
 //set the default domain_uuid
 	$domain_uuid = uuid();
@@ -64,7 +65,7 @@
 //error reporting
 	ini_set('display_errors', '1');
 	//error_reporting (E_ALL); // Report everything
-	error_reporting (E_ALL ^ E_NOTICE); // Report everything
+	error_reporting (E_ALL ^ E_NOTICE); // Report warnings
 	//error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING ); //hide notices and warnings
 
 //set the default time zone
@@ -81,7 +82,10 @@
 		$config_exists = true;
 	}
 	if ($config_exists) {
-		$msg .= "Already Installed";
+		$msg = "Already Installed";
+		//report to user
+		message::add($msg);
+		//redirect with message
 		header("Location: ".PROJECT_PATH."/index.php?msg=".urlencode($msg));
 		exit;
 	}
@@ -163,11 +167,6 @@
 				echo $install->message;
 				exit;
 			}
-
-			//set the include path
-			$config_glob = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-			$conf = parse_ini_file($config_glob[0]);
-			set_include_path($conf['document.root']);
 
 			//add the database schema
 			$output = shell_exec('cd '.$_SERVER["DOCUMENT_ROOT"].' && php /var/www/fusionpbx/core/upgrade/upgrade_schema.php');
@@ -337,6 +336,11 @@
 	$_SESSION['theme']['menu_brand_image']['text'] = PROJECT_PATH.'/themes/default/images/logo.png';
 	$_SESSION['theme']['menu_brand_type']['text'] = 'image';
 
+//set a default step if not already set
+	if(empty($_REQUEST['step'])) {
+		$_REQUEST['step'] = '1';
+	}
+
 //save an install log if debug is true
 	//if ($debug) {
 	//	$fp = fopen(sys_get_temp_dir()."/install.log", "w");
@@ -364,6 +368,7 @@
 	$view->assign("database_port", "5432");
 	$view->assign("database_name", "fusionpbx");
 	$view->assign("database_username", "fusionpbx");
+	$view->assign("database_password", "fusionpbx");
 
 //add translations
 	foreach($text as $key => $value) {
@@ -384,7 +389,8 @@
 	//if ($_GET["step"] == "" || $_GET["step"] == "1") {
 	//	$content = $view->render('language.htm');
 	//}
-	if ($_REQUEST["step"] == "" || $_REQUEST["step"] == "1") {
+
+	if ($_REQUEST["step"] == "1") {
 		$content = $view->render('configuration.htm');
 	}
 	if ($_REQUEST["step"] == "2") {

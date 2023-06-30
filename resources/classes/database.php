@@ -40,74 +40,74 @@
 
 			/**
 			 * Driver to use.
-			 * @access private
+			 * @access public
 			 * @var string Can be pgsql, mysql, sqlite, odbc
 			 */
-			private $driver;
+			public $driver;
 
 			/**
 			 * Alias of driver.
-			 * @access private
+			 * @access public
 			 * @var string Can be pgsql, mysql, sqlite, odbc
 			 * @see $driver
 			 */
-			private $type;
+			public $type;
 
 			/**
 			 * Host for database connection
-			 * @access private
+			 * @access public
 			 * @var string host name or IP address.
 			 */
-			private $host;
+			public $host;
 
 			/**
 			 * Port number
-			 * @access private
+			 * @access public
 			 * @var int 1025 - 65534
 			 */
-			private $port;
+			public $port;
 
 			/**
 			 * Database name
-			 * @access private
+			 * @access public
 			 * @var string
 			 */
-			private $db_name;
+			public $db_name;
 
 			/**
 			 * Database security
-			 * @access private
+			 * @access public
 			 * @var boolean
 			 */
-			private $db_secure;
+			public $db_secure;
 
 			/**
 			 * Specifies the file name of the client SSL certificate
-			 * @access private
+			 * @access public
 			 * @var string full path
 			 */
-			private $db_cert_authority;
+			public $db_cert_authority;
 
 			/**
 			 * Username used to connect
-			 * @access private
+			 * @access public
 			 * @var string
 			 */
-			private $username;
+			public $username;
 
 			/**
 			 * Password used to connect
-			 * @access private
+			 * @access public
 			 * @var string
 			 */
-			private $password;
+			public $password;
 
 			/**
 			 * Full path to file name.
-			 * @access private
+			 * @access public
 			 * @var string full path to file name
 			 */
-			private $path;
+			public $path;
 
 			/**
 			 * Table name.
@@ -129,7 +129,7 @@
 			 * <p>Below is equivalent to the above.</p>
 			 * <p><code>$db->where[0] = ['name'=>'MyColumn','operator'=>'=','value'=>'MyValue'</code></p>
 			 * <p><code>$db->where[1] = ['name'=>'MyColumn','operator'=>'=&gt;','value'=>'MyValue'</code></p>
-			 * @access private
+			 * @access public
 			 * @var array Two dimensional array of key value pairs
 			 * @see $order_by
 			 */
@@ -157,48 +157,48 @@
 			/**
 			 * Ascending or Descending order.
 			 * @var string
-			 * @access private
+			 * @access public
 			 */
-			private $order_type;
+			public $order_type;
 
 			/**
 			 * Numerical value to limit returned results.
 			 * @var int Used for 'LIMIT' in SQL statement.
-			 * @access private
+			 * @access public
 			 */
-			private $limit;
+			public $limit;
 
 			/**
 			 * Numerical value to offset returned results.
 			 * @var int Used for 'OFFSET' in SQL statement.
-			 * @access private
+			 * @access public
 			 */
-			private $offset;
+			public $offset;
 
 			/**
 			 * <p>Array of fields.</p>
 			 * <p>Fields are specified in 'name'=>'value' format.
 			 * <p>Used by {@link database::add() } and {@link database::update() }</p>
-			 * @access private
+			 * @access public
 			 * @var array Array of columns
 			 * @see database::add()
 			 * @see database::update()
 			 */
-			private $fields;
+			public $fields;
 
 			/**
 			 * Unknown property
 			 * @var unknown
-			 * @access private
+			 * @access public
 			 */
-			private $count;
+			public $count;
 
 			/**
 			 * Unknown property
 			 * @var unknown
-			 * @access private
+			 * @access public
 			 */
-			private $sql;
+			public $sql;
 
 			/**
 			 * <p>Stores the result from the most recent query. The type will be based on what was requested.</p>
@@ -226,18 +226,18 @@
 			/**
 			 * <p>Stores the domain UUID making the request.</p>
 			 * <p>This is defaulted to the Session domain UUID.</p>
-			 * @access private
+			 * @access public
 			 * @uses $_SESSION['domain_uuid'] <br>Default value upon object creation
 			 * @var string Domain UUID making request.
 			 */
-			private $domain_uuid;
+			public $domain_uuid;
 
 			/**
 			 * <p>Message for the query results.</p>
 			 * @var array Contains the message array after a query
 			 * @access private
 			 */
-			private $message;
+			public $message;
 
 			/**
 			 * Called when the object is created
@@ -391,20 +391,16 @@
 			 */
 			public function connect() {
 
-				//set the include path
-					$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-					set_include_path(parse_ini_file($conf[0])['document.root']);
-
-				//parset the config.conf file
-					$conf = parse_ini_file($conf[0]);
+				//includes files
+					require dirname(__DIR__, 2) . "/resources/require.php";
 
 				//get the database connection settings
-					$db_type = $conf['database.0.type'];
-					$db_host = $conf['database.0.host'];
-					$db_port = $conf['database.0.port'];
-					$db_name = $conf['database.0.name'];
-					$db_username = $conf['database.0.username'];
-					$db_password = $conf['database.0.password'];
+					//$db_type = $conf['database.0.type'];
+					//$db_host = $conf['database.0.host'];
+					//$db_port = $conf['database.0.port'];
+					//$db_name = $conf['database.0.name'];
+					//$db_username = $conf['database.0.username'];
+					//$db_password = $conf['database.0.password'];
 
 				//debug info
 					//echo "db type:".$db_type."\n";
@@ -642,6 +638,13 @@
 					$this->connect();
 				}
 
+				//if unable to connect to the database
+				if (!$this->db) {
+					echo "Connection Failed<br />\n";
+					echo "line number ".__line__."<br />\n";
+					exit;
+				}
+
 				//query table store to see if the table exists
 				$sql = "";
 				if ($this->type == "sqlite") {
@@ -876,18 +879,18 @@
 						}
 					}
 					catch(PDOException $e) {
-						$message["message"] = "Bad Request";
-						$message["code"] = "400";
-						$message["error"]["message"] = $e->getMessage();
+						$message["type"] = 'error';
+						$message["code"] = $e->getCode();
+						$message["message"] = $e->getMessage();
 						$message["sql"] = $sql;
-						if (is_array($parameters)) {
+						if (!empty($parameters)) {
 							$message["parameters"] = $parameters;
 						}
 						$this->message = $message;
 						return false;
 					}
 			}
-
+    
 			public function add() {
 				//connect to the database if needed
 					if (!$this->db) {
@@ -1474,11 +1477,20 @@
 						$this->connect();
 					}
 
+				//unable to connect to the database
+					if (!$this->db) {
+						echo "Connection Failed<br />\n";
+						echo "line number ".__line__."<br />\n";
+						exit;
+					}
+
 				//set the error mode
-					$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+					if ($this->db) {
+						$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+					}
 
 				//reduce prepared statement latency
-					if (defined('PDO::PGSQL_ATTR_DISABLE_PREPARES')) {
+					if ($this->db && defined('PDO::PGSQL_ATTR_DISABLE_PREPARES')) {
 						$this->db->setAttribute(PDO::PGSQL_ATTR_DISABLE_PREPARES, true);
 					}
 

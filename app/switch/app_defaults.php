@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -27,6 +27,8 @@
 //process this only one time
 if ($domains_processed == 1) {
 
+	//includes files
+	require 'app/switch/resources/classes/scripts.php';
 	$obj = new scripts;
 	$obj->copy_files();
 

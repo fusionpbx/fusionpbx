@@ -1,5 +1,5 @@
 --	Part of FusionPBX
---	Copyright (C) 2013-2022 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2013-2023 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -64,6 +64,25 @@
 			local message_silence_threshold = settings:get('voicemail', 'message_silence_threshold', 'numeric') or 200;
 			local message_silence_seconds = settings:get('voicemail', 'message_silence_seconds', 'numeric') or 3;
 			local email_queue_enabled = settings:get('email_queue', 'enabled', 'boolean') or "false";
+
+		--get recording instructions and options settings
+			local sql = [[SELECT voicemail_recording_instructions, voicemail_recording_options FROM v_voicemails
+				WHERE domain_uuid = :domain_uuid
+				AND voicemail_id = :voicemail_id ]];
+			local params = {domain_uuid = domain_uuid, voicemail_id = voicemail_id};
+			dbh:query(sql, params, function(row)
+				voicemail_recording_instructions = row.voicemail_recording_instructions;
+				voicemail_recording_options = row.voicemail_recording_options;
+			end);
+
+		--check voicemail recording instructions setting
+			if (skip_instructions == nil) then
+				if (voicemail_recording_instructions == 'true') then
+					skip_instructions = 'false';
+				elseif (voicemail_recording_instructions == 'false') then
+					skip_instructions = 'true';
+				end
+			end
 
 		--record your message at the tone press any key or stop talking to end the recording
 			if (skip_instructions == "true") then
@@ -258,9 +277,22 @@
 				end
 			end
 
-		--instructions press 1 to listen to the recording, press 2 to save the recording, press 3 to re-record
+		--check voicemail recording options setting
+			if (skip_instructions == nil) then
+				if (skip_options == nil) then
+					if (voicemail_recording_options == 'true') then
+						skip_options = 'false';
+					elseif (voicemail_recording_options == 'false') then
+						skip_options = 'true';
+					end
+				end
+			else
+				skip_options = skip_instructions;
+			end
+
+		--options press 1 to listen to the recording, press 2 to save the recording, press 3 to re-record
 			if (session:ready()) then
-				if (skip_instructions == "true") then
+				if (skip_options == "true") then
 					--save the message
 						dtmf_digits = '';
 						session:execute("playback", "phrase:voicemail_ack:saved");

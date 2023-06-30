@@ -948,19 +948,19 @@
 
     <!-- #Do Not Disturb (DND) - On -->
     <!-- # String -->
-    <P2344></P2344>
+    <P2344>*78</P2344>
 
     <!-- #Do Not Disturb (DND) - Off -->
     <!-- # String -->
-    <P2345></P2345>
+    <P2345>*79</P2345>
 
     <!-- #Call Forward Unconditionally (All) - On -->
     <!-- # String -->
-    <P26013></P26013>
+    <P26013>*72</P26013>
 
     <!-- #Call Forward Unconditionally (All) - Off -->
     <!-- # String -->
-    <P26014></P26014>
+    <P26014>*73</P26014>
 
     <!-- #Call Forward Unconditionally (All) - Target -->
     <!-- # String -->
@@ -1929,19 +1929,19 @@
 
     <!-- #Do Not Disturb (DND) - On -->
     <!-- # String -->
-    <P2444></P2444>
+    <P2444>*78</P2444>
 
     <!-- #Do Not Disturb (DND) - Off -->
     <!-- # String -->
-    <P2445></P2445>
+    <P2445>*79</P2445>
 
     <!-- #Call Forward Unconditionally (All) - On -->
     <!-- # String -->
-    <P26113></P26113>
+    <P26113>*72</P26113>
 
     <!-- #Call Forward Unconditionally (All) - Off -->
     <!-- # String -->
-    <P26114></P26114>
+    <P26114>*73</P26114>
 
     <!-- #Call Forward Unconditionally (All) - Target -->
     <!-- # String -->
@@ -2909,19 +2909,19 @@
 
     <!-- #Do Not Disturb (DND) - On -->
     <!-- # String -->
-    <P2544></P2544>
+    <P2544>*78</P2544>
 
     <!-- #Do Not Disturb (DND) - Off -->
     <!-- # String -->
-    <P2545></P2545>
+    <P2545>*79</P2545>
 
     <!-- #Call Forward Unconditionally (All) - On -->
     <!-- # String -->
-    <P26213></P26213>
+    <P26213>*72</P26213>
 
     <!-- #Call Forward Unconditionally (All) - Off -->
     <!-- # String -->
-    <P26214></P26214>
+    <P26214>*73</P26214>
 
     <!-- #Call Forward Unconditionally (All) - Target -->
     <!-- # String -->
@@ -3892,19 +3892,19 @@
 
     <!-- #Do Not Disturb (DND) - On -->
     <!-- # String -->
-    <P2644></P2644>
+    <P2644>*78</P2644>
 
     <!-- #Do Not Disturb (DND) - Off -->
     <!-- # String -->
-    <P2645></P2645>
+    <P2645>*79</P2645>
 
     <!-- #Call Forward Unconditionally (All) - On -->
     <!-- # String -->
-    <P26313></P26313>
+    <P26313>*72</P26313>
 
     <!-- #Call Forward Unconditionally (All) - Off -->
     <!-- # String -->
-    <P26314></P26314>
+    <P26314>*73</P26314>
 
     <!-- #Call Forward Unconditionally (All) - Target -->
     <!-- # String -->
@@ -4875,19 +4875,19 @@
 
     <!-- #Do Not Disturb (DND) - On -->
     <!-- # String -->
-    <P2744></P2744>
+    <P2744>*78</P2744>
 
     <!-- #Do Not Disturb (DND) - Off -->
     <!-- # String -->
-    <P2745></P2745>
+    <P2745>*79</P2745>
 
     <!-- #Call Forward Unconditionally (All) - On -->
     <!-- # String -->
-    <P26413></P26413>
+    <P26413>*72</P26413>
 
     <!-- #Call Forward Unconditionally (All) - Off -->
     <!-- # String -->
-    <P26414></P26414>
+    <P26414>*73</P26414>
 
     <!-- #Call Forward Unconditionally (All) - Target -->
     <!-- # String -->

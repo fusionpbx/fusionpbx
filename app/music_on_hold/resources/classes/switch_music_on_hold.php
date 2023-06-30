@@ -208,7 +208,7 @@ if (!class_exists('switch_music_on_hold')) {
 					$file_contents = file_get_contents("/usr/share/examples/fusionpbx/resources/templates/conf/autoload_configs/local_stream.conf.xml");
 				}
 				else {
-					$file_contents = file_get_contents($_SERVER["PROJECT_ROOT"]."/resources/templates/conf/autoload_configs/local_stream.conf.xml");
+					$file_contents = file_get_contents($_SERVER["PROJECT_ROOT"]."/app/switch/resources/conf/autoload_configs/local_stream.conf.xml");
 				}
 			//check where the default music is stored
 				$default_moh_prefix = 'music/default';

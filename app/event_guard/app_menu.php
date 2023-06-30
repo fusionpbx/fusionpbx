@@ -4,9 +4,9 @@
 	$apps[$x]['menu'][$y]['title']['en-us'] = "Event Guard";
 	$apps[$x]['menu'][$y]['title']['en-gb'] = "Event Guard";
 	$apps[$x]['menu'][$y]['title']['ar-eg'] = "حراس الأحداث";
-	$apps[$x]['menu'][$y]['title']['de-at'] = "Eventgarde";
-	$apps[$x]['menu'][$y]['title']['de-ch'] = "Eventgarde";
-	$apps[$x]['menu'][$y]['title']['de-de'] = "Eventgarde";
+	$apps[$x]['menu'][$y]['title']['de-at'] = "Ereignisüberwachung";
+	$apps[$x]['menu'][$y]['title']['de-ch'] = "Ereignisüberwachung";
+	$apps[$x]['menu'][$y]['title']['de-de'] = "Ereignisüberwachung";
 	$apps[$x]['menu'][$y]['title']['es-cl'] = "Guardia de eventos";
 	$apps[$x]['menu'][$y]['title']['es-mx'] = "Guardia de eventos";
 	$apps[$x]['menu'][$y]['title']['fr-ca'] = "Event Guard";

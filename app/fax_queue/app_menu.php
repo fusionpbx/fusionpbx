@@ -4,9 +4,9 @@
 	$apps[$x]['menu'][$y]['title']['en-us'] = "FAX Queue";
 	$apps[$x]['menu'][$y]['title']['en-gb'] = "FAX Queue";
 	$apps[$x]['menu'][$y]['title']['ar-eg'] = "قائمة انتظار الفاكس";
-	$apps[$x]['menu'][$y]['title']['de-at'] = "FAX Frage";
-	$apps[$x]['menu'][$y]['title']['de-ch'] = "FAX Frage";
-	$apps[$x]['menu'][$y]['title']['de-de'] = "FAX Frage";
+	$apps[$x]['menu'][$y]['title']['de-at'] = "FAX Warteschlange";
+	$apps[$x]['menu'][$y]['title']['de-ch'] = "FAX Warteschlange";
+	$apps[$x]['menu'][$y]['title']['de-de'] = "FAX Warteschlange";
 	$apps[$x]['menu'][$y]['title']['el-gr'] = "Ουρά FAX";
 	$apps[$x]['menu'][$y]['title']['es-cl'] = "Cola de FAX";
 	$apps[$x]['menu'][$y]['title']['es-mx'] = "Cola de FAX";

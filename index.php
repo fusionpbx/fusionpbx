@@ -62,7 +62,8 @@
 			require_once "themes/".$_SESSION['domain']['template']['name']."/index.php";
 		}
 		else {
-			header("Location: ".PROJECT_PATH."/core/dashboard/");
+			//login prompt
+			header("Location: ".PROJECT_PATH."/login.php");
 		}
 	}
 

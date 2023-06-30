@@ -832,7 +832,7 @@ if (!function_exists('save_call_center_xml')) {
 						$path = "/usr/share/examples/fusionpbx/resources/templates/conf";
 					}
 					else {
-						$path = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/conf";
+						$path = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/switch/resources/conf";
 					}
 
 				//get the contents of the template
@@ -869,7 +869,7 @@ if (!function_exists('switch_conf_xml')) {
 				$path = "/usr/share/examples/fusionpbx/resources/templates/conf";
 			}
 			else {
-				$path = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/conf";
+				$path = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/switch/resources/conf";
 			}
 			$file_contents = file_get_contents($path."/autoload_configs/switch.conf.xml");
 
@@ -926,7 +926,7 @@ if (!function_exists('xml_cdr_conf_xml')) {
 				$path = "/usr/share/examples/fusionpbx/resources/templates/conf";
 			}
 			else {
-				$path = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/conf";
+				$path = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/switch/resources/conf";
 			}
 			$file_contents = file_get_contents($path."/autoload_configs/xml_cdr.conf.xml");
 
