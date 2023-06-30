@@ -1302,7 +1302,6 @@
 					tb.className='formfld';
 					tb.setAttribute('id', 'device_address_<?php echo $d; ?>');
 					tb.setAttribute('style', 'width: 80%;');
-					tb.setAttribute('pattern', '^([0-9A-Fa-f]{2}[:-]?){5}([0-9A-Fa-f]{2})$');
 					tb.value=obj.options[obj.selectedIndex].value;
 					document.getElementById('btn_select_to_input_device_address_<?php echo $d; ?>').style.visibility = 'hidden';
 					tbb=document.createElement('INPUT');
