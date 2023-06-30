@@ -4183,4 +4183,10 @@
 		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
 
+	//linphone details
+		$y++;
+		$vendors[$y]['uuid'] = "782bc1cc-149f-406f-b8e2-24a2bc484fad";
+		$vendors[$y]['name'] = "linphone";
+		$z=0;
+
 ?>
