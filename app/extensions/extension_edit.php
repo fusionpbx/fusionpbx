@@ -172,20 +172,20 @@
 		//device provisioning variables
 			if (is_array($_POST["devices"]) && @sizeof($_POST["devices"]) != 0) {
 				foreach ($_POST["devices"] as $d => $device) {
-					$device_mac_address = strtolower($device["device_mac_address"]);
-					$device_mac_address = preg_replace('#[^a-fA-F0-9./]#', '', $device_mac_address);
+					$device_address = strtolower($device["device_address"]);
+					$device_address = preg_replace('#[^a-fA-F0-9./]#', '', $device_address);
 
 					$line_numbers[$d] = $device["line_number"];
-					$device_mac_addresses[$d] = $device_mac_address;
+					$device_addresses[$d] = $device_address;
 					$device_templates[$d] = $device["device_template"];
 				}
 			}
 
 		//get or set the device_uuid
-			if (!empty($device_mac_addresses) && is_array($device_mac_addresses) && @sizeof($device_mac_addresses) != 0) {
-				foreach ($device_mac_addresses as $d => $device_mac_address) {
-					$device_mac_address = strtolower($device_mac_address);
-					$device_mac_address = preg_replace('#[^a-fA-F0-9./]#', '', $device_mac_address);
+			if (!empty($device_addresses) && is_array($device_addresses) && @sizeof($device_addresses) != 0) {
+				foreach ($device_addresses as $d => $device_address) {
+					$device_address = strtolower($device_address);
+					$device_address = preg_replace('#[^a-fA-F0-9./]#', '', $device_address);
 
 					$sql = "select ";
 					$sql .= "d1.device_uuid, ";
@@ -196,8 +196,8 @@
 					$sql .= "v_domains as d2 ";
 					$sql .= "where ";
 					$sql .= "d1.domain_uuid = d2.domain_uuid and ";
-					$sql .= "d1.device_mac_address = :device_mac_address ";
-					$parameters['device_mac_address'] = $device_mac_address;
+					$sql .= "d1.device_address = :device_address ";
+					$parameters['device_address'] = $device_address;
 					$database = new database;
 					$row = $database->select($sql, $parameters, 'row');
 					if (is_array($row)) {
@@ -520,9 +520,9 @@
 									}
 
 								//assign the device to the extension(s)
-									if (is_array($device_mac_addresses) && @sizeof($device_mac_addresses) != 0) {
-										foreach ($device_mac_addresses as $d => $device_mac_address) {
-											if (is_mac($device_mac_address)) {
+									if (is_array($device_addresses) && @sizeof($device_addresses) != 0) {
+										foreach ($device_addresses as $d => $device_address) {
+											if (!emtpy($device_address)) {
 												//get the device vendor
 												if (isset($device_templates[$d])) {
 													//use the the template to get the vendor
@@ -530,8 +530,8 @@
 													$device_vendor = $template_array[0];
 												}
 												else {
-													//use the mac address to get the vendor
-													$device_vendor = device::get_vendor($device_mac_address);
+													//use the device address to get the vendor
+													$device_vendor = device::get_vendor($device_address);
 												}
 
 												//determine the name
@@ -592,10 +592,10 @@
 												}
 
 												//build the devices array
-												if ($device_unique && $device_mac_address != '000000000000') {
+												if ($device_unique && $device_address != '000000000000') {
 													$array["devices"][$j]["device_uuid"] = $device_uuids[$d];
 													$array["devices"][$j]["domain_uuid"] = $_SESSION['domain_uuid'];
-													$array["devices"][$j]["device_mac_address"] = $device_mac_address;
+													$array["devices"][$j]["device_address"] = $device_address;
 													$array["devices"][$j]["device_label"] = $extension;
 													if (!empty($device_vendor)) {
 														$array["devices"][$j]["device_vendor"] = $device_vendor;
@@ -898,12 +898,12 @@
 	}
 
 //get the device lines
-	$sql = "select d.device_mac_address, d.device_template, d.device_description, l.device_line_uuid, l.device_uuid, l.line_number ";
+	$sql = "select d.device_address, d.device_template, d.device_description, l.device_line_uuid, l.device_uuid, l.line_number ";
 	$sql .= "from v_device_lines as l, v_devices as d ";
 	$sql .= "where (l.user_id = :user_id_1 or l.user_id = :user_id_2)";
 	$sql .= "and l.domain_uuid = :domain_uuid ";
 	$sql .= "and l.device_uuid = d.device_uuid ";
-	$sql .= "order by l.line_number, d.device_mac_address asc ";
+	$sql .= "order by l.line_number, d.device_address asc ";
 	$parameters['user_id_1'] = $extension ?? null;
 	$parameters['user_id_2'] = $number_alias ?? null;
 	$parameters['domain_uuid'] = $domain_uuid;
@@ -914,7 +914,7 @@
 //get the devices
 	$sql = "select * from v_devices ";
 	$sql .= "where domain_uuid = :domain_uuid ";
-	$sql .= "order by device_mac_address asc ";
+	$sql .= "order by device_address asc ";
 	$parameters['domain_uuid'] = $domain_uuid;
 	$database = new database;
 	$devices = $database->select($sql, $parameters, 'all');
@@ -1252,7 +1252,7 @@
 			echo "					".$text['label-line']."&nbsp;\n";
 			echo "				</td>\n";
 			echo "				<td class='vtable'>\n";
-			echo "					".$text['label-device_mac_address']."&nbsp;\n";
+			echo "					".$text['label-device_address']."&nbsp;\n";
 			echo "				</td>\n";
 			echo "				<td class='vtable'>\n";
 			echo "					".$text['label-device_template']."&nbsp;\n";
@@ -1264,10 +1264,10 @@
 			if ($action == 'update') {
 				if (is_array($device_lines) && @sizeof($device_lines) != 0) {
 					foreach ($device_lines as $row) {
-						$device_mac_address = format_mac($row['device_mac_address']);
+						$device_address = format_device_address($row['device_address']);
 						echo "		<tr>\n";
 						echo "			<td class='vtable'>".escape($row['line_number'])."</td>\n";
-						echo "			<td class='vtable'><a href='".PROJECT_PATH."/app/devices/device_edit.php?id=".escape($row['device_uuid'])."'>".escape($device_mac_address)."</a></td>\n";
+						echo "			<td class='vtable'><a href='".PROJECT_PATH."/app/devices/device_edit.php?id=".escape($row['device_uuid'])."'>".escape($device_address)."</a></td>\n";
 						echo "			<td class='vtable'>".escape($row['device_template'])."&nbsp;</td>\n";
 						//echo "			<td class='vtable'>".$row['device_description']."&nbsp;</td>\n";
 						echo "			<td>\n";
@@ -1295,49 +1295,49 @@
 				?>
 				<script>
 				var Objs;
-				function changeToInput_device_mac_address_<?php echo $d; ?>(obj){
+				function changeToInput_device_address_<?php echo $d; ?>(obj){
 					tb=document.createElement('INPUT');
 					tb.type='text';
 					tb.name=obj.name;
 					tb.className='formfld';
-					tb.setAttribute('id', 'device_mac_address_<?php echo $d; ?>');
+					tb.setAttribute('id', 'device_address_<?php echo $d; ?>');
 					tb.setAttribute('style', 'width: 80%;');
 					tb.setAttribute('pattern', '^([0-9A-Fa-f]{2}[:-]?){5}([0-9A-Fa-f]{2})$');
 					tb.value=obj.options[obj.selectedIndex].value;
-					document.getElementById('btn_select_to_input_device_mac_address_<?php echo $d; ?>').style.visibility = 'hidden';
+					document.getElementById('btn_select_to_input_device_address_<?php echo $d; ?>').style.visibility = 'hidden';
 					tbb=document.createElement('INPUT');
 					tbb.setAttribute('class', 'btn');
 					tbb.setAttribute('style', 'margin-left: 4px;');
 					tbb.type='button';
 					tbb.value=$("<div />").html('&#9665;').text();
 					tbb.objs=[obj,tb,tbb];
-					tbb.onclick=function(){ replace_device_mac_address_<?php echo $d; ?>(this.objs); }
+					tbb.onclick=function(){ replace_device_address_<?php echo $d; ?>(this.objs); }
 					obj.parentNode.insertBefore(tb,obj);
 					obj.parentNode.insertBefore(tbb,obj);
 					obj.parentNode.removeChild(obj);
-					replace_device_mac_address_<?php echo $d; ?>(this.objs);
+					replace_device_address_<?php echo $d; ?>(this.objs);
 				}
 
-				function replace_device_mac_address_<?php echo $d; ?>(obj){
+				function replace_device_address_<?php echo $d; ?>(obj){
 					obj[2].parentNode.insertBefore(obj[0],obj[2]);
 					obj[0].parentNode.removeChild(obj[1]);
 					obj[0].parentNode.removeChild(obj[2]);
-					document.getElementById('btn_select_to_input_device_mac_address_<?php echo $d; ?>').style.visibility = 'visible';
+					document.getElementById('btn_select_to_input_device_address_<?php echo $d; ?>').style.visibility = 'visible';
 				}
 				</script>
 				<?php
-				echo "						<select id='device_mac_address_".$d."' name='devices[".$d."][device_mac_address]' class='formfld' style='width: 180px;' onchange=\"changeToInput_device_mac_address_".$d."(this); this.style.visibility='hidden';\">\n";
+				echo "						<select id='device_address_".$d."' name='devices[".$d."][device_address]' class='formfld' style='width: 180px;' onchange=\"changeToInput_device_address_".$d."(this); this.style.visibility='hidden';\">\n";
 				echo "							<option value=''></option>\n";
 				if (is_array($devices) && @sizeof($devices) != 0) {
 					foreach ($devices as $field) {
-						if (!empty($field["device_mac_address"])) {
-							$selected = $field_current_value == $field["device_mac_address"] ? "selected='selected'" : null;
-							echo "							<option value='".escape($field["device_mac_address"])."' ".$selected.">".escape($field["device_mac_address"])." - ".escape($field['device_model'])." ".escape($field['device_description'])."</option>\n";
+						if (!empty($field["device_address"])) {
+							$selected = $field_current_value == $field["device_address"] ? "selected='selected'" : null;
+							echo "							<option value='".escape($field["device_address"])."' ".$selected.">".escape($field["device_address"])." - ".escape($field['device_model'])." ".escape($field['device_description'])."</option>\n";
 						}
 					}
 				}
 				echo "						</select>\n";
-				echo "						<input type='button' id='btn_select_to_input_device_mac_address_".$d."' class='btn' alt='".$text['button-back']."' onclick=\"changeToInput_device_mac_address_".$d."(document.getElementById('device_mac_address_".$d."')); this.style.visibility='hidden';\" value='&#9665;'>\n";
+				echo "						<input type='button' id='btn_select_to_input_device_address_".$d."' class='btn' alt='".$text['button-back']."' onclick=\"changeToInput_device_address_".$d."(document.getElementById('device_address_".$d."')); this.style.visibility='hidden';\" value='&#9665;'>\n";
 				echo "					</td>\n";
 				echo "				</tr>\n";
 				echo "			</table>\n";

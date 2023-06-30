@@ -265,7 +265,7 @@ if (!empty($result) && @sizeof($result) != 0) {
 					print('***********************' . "\n");
 					print('fax message:' . "\n");
 					print(' - length: ' . strlen($fax_message) . "\n");
-					if (isset($emailed_files['name']) {
+					if (isset($emailed_files['name'])) {
 						print('fax files [' . sizeof($emailed_files['name']) . ']:' . "\n");
 						for($i = 0; $i < sizeof($emailed_files['name']);++$i){
 							print(' - ' . $emailed_files['name'][$i] . ' - ' . $emailed_files['size'][$i] . "\n");

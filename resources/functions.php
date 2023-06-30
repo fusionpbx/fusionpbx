@@ -1502,13 +1502,14 @@ function number_pad($number,$n) {
 		}
 	}
 
-//format mac address
-	if (!function_exists('format_mac')) {
-		function format_mac($str, $delim = '-', $case = 'lower') {
+//format device address
+	if (!function_exists('format_device_address')) {
+		function format_device_address($str, $delim = '-', $case = 'lower') {
+			if (empty($str)) { return false; }
 			if (is_mac($str)) {
 				$str = join($delim, str_split($str, 2));
-				$str = ($case == 'upper') ? strtoupper($str) : strtolower($str);
 			}
+			$str = ($case == 'upper') ? strtoupper($str) : strtolower($str);
 			return $str;
 		}
 	}
@@ -2083,13 +2084,13 @@ function number_pad($number,$n) {
 		}
 	}
 
-	/**
-	 * Generate Random Password
-	 * <p>Generates a random password using the allowable character set</p>
-	 * @param int $length Generated random character length. Default is 16 characters.
-	 * @param string $charset Allowable characters to use for password. Default is all characters except the backslash \
-	 */
 	if(!function_exists('random_password')) {
+		/**
+		 * Generate Random Password
+		 * <p>Generates a random password using the allowable character set</p>
+		 * @param int $length Generated random character length. Default is 16 characters.
+		 * @param string $charset Allowable characters to use for password. Default is all characters except the backslash \
+		 */
 		function random_password(int $length = 16, string $charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 !@#$%^&*(),-./:<>@[]^_|~"\'?-+=\\'): string {
 			//create a buffer
 			$sb = "";
