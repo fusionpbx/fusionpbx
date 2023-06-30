@@ -522,7 +522,7 @@
 								//assign the device to the extension(s)
 									if (is_array($device_addresses) && @sizeof($device_addresses) != 0) {
 										foreach ($device_addresses as $d => $device_address) {
-											if (!emtpy($device_address)) {
+											if (!empty($device_address)) {
 												//get the device vendor
 												if (isset($device_templates[$d])) {
 													//use the the template to get the vendor
