@@ -445,8 +445,8 @@
 			$device_address_formatted = $prov->format_address($device_address, $device_vendor);
 
 		//replace the variable name with the value
-			$file_name = str_replace("{\$address}", $device_address_formatted, $file);
-			$file_name = str_replace("{\$mac}", $device_address_formatted, $file);
+			$file_name = str_replace("{\$address}", $device_address, $file);
+			$file_name = str_replace("{\$mac}", $device_address, $file_name);
 
 		//set the headers
 			header('Content-Description: File Transfer');
