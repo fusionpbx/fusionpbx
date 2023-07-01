@@ -1194,7 +1194,10 @@
 						if (file_exists($template_dir."/".$device_template ."/{\$address}")) {
 							$file = "{\$address}";
 						}
-						if (file_exists($template_dir."/".$device_template ."/{\$mac}")) {
+						elseif (file_exists($template_dir."/".$device_template ."/{\$address}.xml")) {
+							$file = "{\$address}.xml";
+						}
+						elseif (file_exists($template_dir."/".$device_template ."/{\$mac}")) {
 							$file = "{\$mac}";
 						}
 						elseif (file_exists($template_dir."/".$device_template ."/{\$mac}.xml")) {
