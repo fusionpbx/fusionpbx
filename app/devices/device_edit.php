@@ -871,16 +871,17 @@
 				foreach ($files as $file) {
 					//format the device address
 						$format = new provision();
-						$mac = $format->format_address($device_address, $device_vendor);
+						$address = $format->format_address($device_address, $device_vendor);
 					//render the file name
-						$file_name = str_replace("{\$mac}", $mac, basename($file));
+						$file_name = str_replace("{\$address}", $address, basename($file));
+						$file_name = str_replace("{\$mac}", $address, basename($file_name));
 					//add the select option
 						echo "		<option value='".basename($file)."'>".$file_name."</option>\n";
 				}
 				echo "		</select>";
 		}
 		if (permission_exists('device_add')) {
-			echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'name'=>'btn_copy','onclick'=>"modal_open('modal-copy','new_mac_address');"]);
+			echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'name'=>'btn_copy','onclick'=>"modal_open('modal-copy','new_address');"]);
 		}
 		if (
 			permission_exists('device_delete') ||
@@ -900,7 +901,7 @@
 		echo modal::create([
 			'id'=>'modal-copy',
 			'type'=>'general',
-			'message'=>$text['message_device']."...<br /><br /><input class='formfld modal-input' data-continue='btn_copy' style='font-family: monospace;' type='text' id='new_mac_address' maxlength='17' placeholder='FF-FF-FF-FF-FF-FF'>",
+			'message'=>$text['message_device']."...<br /><br /><input class='formfld modal-input' data-continue='btn_copy' style='font-family: monospace;' type='text' id='new_address' maxlength='17' placeholder='FF-FF-FF-FF-FF-FF'>",
 			'actions'=>button::create([
 				'type'=>'button',
 				'label'=>$text['button-continue'],
@@ -908,9 +909,9 @@
 				'id'=>'btn_copy',
 				'style'=>'float: right; margin-left: 15px;',
 				'collapse'=>'never',
-				'onclick'=>"modal_close(); if (document.getElementById('new_mac_address').value != '') { window.location='device_copy.php?id=".urlencode($device_uuid ?? '')."&mac=' + document.getElementById('new_mac_address').value; }"
+				'onclick'=>"modal_close(); if (document.getElementById('new_address').value != '') { window.location='device_copy.php?id=".urlencode($device_uuid ?? '')."&mac=' + document.getElementById('new_address').value; }"
 				]),
-			'onclose'=>"document.getElementById('new_mac_address').value = '';",
+			'onclose'=>"document.getElementById('new_address').value = '';",
 			]);
 	}
 	if (
@@ -1038,13 +1039,12 @@
 		$device_image_name = ($current_device ?? '').'.jpg';
 		$device_image_full = ($device_image_path ?? '').'/'.($current_device ?? '').'/'.($device_image_name ?? '');
 
-		if (file_exists($device_image_full))
-			{
-				$device_image = base64_encode(file_get_contents($device_image_full));
+		if (file_exists($device_image_full)) {
+			$device_image = base64_encode(file_get_contents($device_image_full));
 
-		echo "<div class='device_image'>\n";
-		echo "<img src='data:image/jpg;base64,".$device_image."' title='$current_device'>";
-		echo "</div>";
+			echo "<div class='device_image'>\n";
+			echo "<img src='data:image/jpg;base64,".$device_image."' title='$current_device'>";
+			echo "</div>";
 		}
 		echo "</td>\n";
 		echo "</tr>\n";
