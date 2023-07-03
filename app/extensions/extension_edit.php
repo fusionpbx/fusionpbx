@@ -187,8 +187,8 @@
 
 				foreach ($_POST["devices"] as $d => $device) {
 					if (
-						permission_exists('device_address_uuid') &&
-						$device["device_address"] == 'UUID' &&
+						!empty($device["device_address"]) &&
+						strtolower($device["device_address"]) == 'uuid' &&
 						(
 							!isset($_SESSION['limit']['devices']['numeric']) ||
 							$total_devices < $_SESSION['limit']['devices']['numeric']
@@ -199,7 +199,6 @@
 						$device_address = strtolower($device["device_address"]);
 						$device_address = preg_replace('#[^a-fA-F0-9./]#', '', $device_address);
 					}
-
 					$line_numbers[$d] = $device["line_number"];
 					$device_addresses[$d] = $device_address;
 					$device_templates[$d] = $device["device_template"];
