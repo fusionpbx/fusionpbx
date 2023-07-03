@@ -769,35 +769,39 @@
 		}
 
 		//get the device line settings
-		$row = $device_lines[0];
+		$row = $device_lines[0] ?? null;
 
-		//set the outbound proxy settings
-		if (empty($row['outbound_proxy_primary'])) {
-			$outbound_proxy_primary = $row['server_address'];
-		}
-		else {
-			$outbound_proxy_primary = $row['outbound_proxy_primary'];
-		}
-		$outbound_proxy_secondary = $row['outbound_proxy_secondary'];
+		if (!empty($row)) {
 
-		//build content for grandstream wave
-		if ($device_template == "grandstream/wave") {
-			$content = "<?xml version='1.0' encoding='utf-8'?>";
-			$content .= "<AccountConfig version='1'>";
-			$content .= "<Account>";
-			$content .= "<RegisterServer>".$row['server_address']."</RegisterServer>";
-			$content .= "<OutboundServer>".$outbound_proxy_primary.":".$row['sip_port']."</OutboundServer>";
-			$content .= "<SecOutboundServer>".$outbound_proxy_secondary.":".$row['sip_port']."</SecOutboundServer>";
-			$content .= "<UserID>".$row['user_id']."</UserID>";
-			$content .= "<AuthID>".$row['auth_id']."</AuthID>";
-			$content .= "<AuthPass>".$row['password']."</AuthPass>";
-			$content .= "<AccountName>".$row['user_id']."</AccountName>";
-			$content .= "<DisplayName>".$row['display_name']."</DisplayName>";
-			$content .= "<Dialplan>{x+|*x+|*++}</Dialplan>";
-			$content .= "<RandomPort>0</RandomPort>";
-			$content .= "<Voicemail>*97</Voicemail>";
-			$content .= "</Account>";
-			$content .= "</AccountConfig>";
+			//set the outbound proxy settings
+			if (empty($row['outbound_proxy_primary'])) {
+				$outbound_proxy_primary = $row['server_address'];
+			}
+			else {
+				$outbound_proxy_primary = $row['outbound_proxy_primary'];
+			}
+			$outbound_proxy_secondary = $row['outbound_proxy_secondary'];
+
+			//build content for grandstream wave
+			if ($device_template == "grandstream/wave") {
+				$content = "<?xml version='1.0' encoding='utf-8'?>";
+				$content .= "<AccountConfig version='1'>";
+				$content .= "<Account>";
+				$content .= "<RegisterServer>".$row['server_address']."</RegisterServer>";
+				$content .= "<OutboundServer>".$outbound_proxy_primary.":".$row['sip_port']."</OutboundServer>";
+				$content .= "<SecOutboundServer>".$outbound_proxy_secondary.":".$row['sip_port']."</SecOutboundServer>";
+				$content .= "<UserID>".$row['user_id']."</UserID>";
+				$content .= "<AuthID>".$row['auth_id']."</AuthID>";
+				$content .= "<AuthPass>".$row['password']."</AuthPass>";
+				$content .= "<AccountName>".$row['user_id']."</AccountName>";
+				$content .= "<DisplayName>".$row['display_name']."</DisplayName>";
+				$content .= "<Dialplan>{x+|*x+|*++}</Dialplan>";
+				$content .= "<RandomPort>0</RandomPort>";
+				$content .= "<Voicemail>*97</Voicemail>";
+				$content .= "</Account>";
+				$content .= "</AccountConfig>";
+			}
+
 		}
 
 		//build content for linphone
@@ -808,7 +812,7 @@
 
 		//stream the file
 		if (!empty($content)) {
-			$xml = html_entity_decode($xml, ENT_QUOTES, 'UTF-8');
+			$content = html_entity_decode($content, ENT_QUOTES, 'UTF-8');
 
 			require_once 'resources/qr_code/QRErrorCorrectLevel.php';
 			require_once 'resources/qr_code/QRCode.php';
@@ -830,7 +834,7 @@
 		}
 
 		//html image
-		if (!empty($content)) {
+		if (!empty($content) && !empty($image)) {
 
 			echo "<script>\n";
 			echo "\n";
