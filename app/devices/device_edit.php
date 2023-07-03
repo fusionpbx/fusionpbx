@@ -835,26 +835,20 @@
 
 		//html image
 		if (!empty($content) && !empty($image)) {
-
 			echo "<script>\n";
 			echo "\n";
 			echo "	function fade_in(id) {\n";
 			echo "		var image_container = document.getElementById(id);\n";
-			echo "		image_container.style.opacity = '1';\n";
-			echo "		image_container.style.zIndex = '999999';\n";
-			echo "		image_container.style.display = 'block';\n";
+			echo "		image_container.style.opacity = 1;\n";
+			echo "		image_container.style.zIndex = 999999;\n";
 			echo "	}\n";
 			echo "\n";
 			echo "	function fade_out(id) {\n";
 			echo "		var image_container = document.getElementById(id);\n";
-			echo "		image_container.style.opacity = '0';\n";
-			echo "		image_container.style.zIndex = '0';\n";
-			echo "		setTimeout(display_none, 1000);\n";
-			echo "	}\n";
-			echo "\n";
-			echo "	function display_none() {\n";
-			echo "		var image_container = document.getElementById('image-container');\n";
-			echo "		image_container.style.display = 'none';\n";
+			echo "		image_container.style.opacity = 0;\n";
+			echo "		setTimeout(function () {\n";
+			echo "			document.getElementById('image-container').style.zIndex = -1;\n";
+			echo "		}, 1000);\n";
 			echo "	}\n";
 			echo "\n";
 			echo "</script>\n";
@@ -863,26 +857,24 @@
 			echo "<style>\n";
 			echo "\n";
 			echo "	#image-container {\n";
-			echo "		z-index: = 0;\n";
+			echo "		z-index: -1;\n";
 			echo "		position: absolute;\n";
 			echo "		top: 50%;\n";
 			echo "		left: 50%;\n";
 			echo "		transform: translate(-50%, -50%);\n";
 			echo "		opacity: 0;\n";
 			echo "		transition: opacity 1s;\n";
-			echo "		display: none;\n";
 			echo "	}\n";
 			echo "\n";
-			echo "	#qr_code {\n";
-			echo "		width: 650px;\n";
-			echo "		height: 650px;\n";
+			echo "	img#qr_code {\n";
+			echo "		width: 100%;\n";
+			echo "		max-width: 650px;\n";
+			echo "		min-width: 300px;\n";
+			echo "		height: auto;\n";
 			echo "		-webkit-box-shadow: 0px 1px 20px #888;\n";
 			echo "		-moz-box-shadow: 0px 1px 20px #888;\n";
 			echo "		box-shadow: 0px 1px 20px #888;\n";
-			echo "	}\n";
-			echo "\n";
-			echo "	img {\n";
-			echo "		border: 100px solid white;\n";
+			echo "		border: 45px solid white;\n";
 			echo "		max-width: 100%;\n";
 			echo "		max-height: 100%;\n";
 			echo "	}\n";
