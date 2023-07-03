@@ -806,8 +806,15 @@
 
 		//build content for linphone
 		if ($device_template == "linphone/default") {
-			$content = "https://".$_SESSION['domain_name'].'/app/provision/index.php?address='.$device_address;
-			//$content = "https://".$_SESSION['domain_name'].'/'.$device_address.'.xml';
+			if (
+				!empty($_SESSION['provision']['http_auth_enabled']['boolean']) &&
+				$_SESSION['provision']['http_auth_enabled']['boolean'] == 'true' &&
+				!empty($_SESSION['provision']['http_auth_username']['text']) &&
+				!empty($_SESSION['provision']['http_auth_password'][0])
+				) {
+				$auth_string = $_SESSION['provision']['http_auth_username']['text'].':'.$_SESSION['provision']['http_auth_password'][0].'@';
+			}
+			$content = "https://".$auth_string.$_SESSION['domain_name'].'/app/provision/index.php?address='.$device_address;
 		}
 
 		//stream the file
@@ -836,52 +843,46 @@
 		//html image
 		if (!empty($content) && !empty($image)) {
 			echo "<script>\n";
-			echo "\n";
 			echo "	function fade_in(id) {\n";
 			echo "		var image_container = document.getElementById(id);\n";
 			echo "		image_container.style.opacity = 1;\n";
 			echo "		image_container.style.zIndex = 999999;\n";
 			echo "	}\n";
-			echo "\n";
-			echo "	function fade_out(id) {\n";
-			echo "		var image_container = document.getElementById(id);\n";
+			echo "	function fade_out(image_container) {\n";
 			echo "		image_container.style.opacity = 0;\n";
-			echo "		setTimeout(function () {\n";
-			echo "			document.getElementById('image-container').style.zIndex = -1;\n";
-			echo "		}, 1000);\n";
+			echo "		setTimeout(function(){ image_container.style.zIndex = -1; }, 1000);\n";
 			echo "	}\n";
-			echo "\n";
 			echo "</script>\n";
 			echo "\n";
 
 			echo "<style>\n";
-			echo "\n";
-			echo "	#image-container {\n";
+			echo "	div#image-container {\n";
 			echo "		z-index: -1;\n";
 			echo "		position: absolute;\n";
-			echo "		top: 50%;\n";
-			echo "		left: 50%;\n";
-			echo "		transform: translate(-50%, -50%);\n";
+			echo "		top: 0;\n";
+			echo "		left: 0;\n";
+			echo "		width: 100%;\n";
+			echo "		height: 100%;\n";
 			echo "		opacity: 0;\n";
 			echo "		transition: opacity 1s;\n";
+			echo "		padding: 20px;\n";
 			echo "	}\n";
-			echo "\n";
 			echo "	img#qr_code {\n";
+			echo "		display: block;\n";
+			echo "		margin: max(5%, 50px) auto;\n";
 			echo "		width: 100%;\n";
-			echo "		max-width: 650px;\n";
+			echo "		max-width: 600px;\n";
 			echo "		min-width: 300px;\n";
 			echo "		height: auto;\n";
+			echo "		max-height: 650px;\n";
 			echo "		-webkit-box-shadow: 0px 1px 20px #888;\n";
 			echo "		-moz-box-shadow: 0px 1px 20px #888;\n";
 			echo "		box-shadow: 0px 1px 20px #888;\n";
-			echo "		border: 45px solid white;\n";
-			echo "		max-width: 100%;\n";
-			echo "		max-height: 100%;\n";
+			echo "		border: 50px solid #fff;\n";
 			echo "	}\n";
-			echo "\n";
 			echo "</style>";
-			echo "<div id='image-container' onclick=\"fade_out('image-container');\">\n";
-			echo "	<img id='qr_code' src=\"data:image/jpeg;base64,".base64_encode($image)."\">\n";
+			echo "<div id='image-container' onclick='fade_out(this);'>\n";
+			echo "	<img id='qr_code' src='data:image/jpeg;base64,".base64_encode($image)."'>\n";
 			echo "</div>\n";
 		}
 		/*
