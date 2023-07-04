@@ -1756,8 +1756,8 @@ $text['description-destination_caller_id_name']['zh-cn'] = "输入来电显示�
 $text['description-destination_caller_id_name']['ja-jp'] = "発信者ID名を入力します。";
 $text['description-destination_caller_id_name']['ko-kr'] = "발신자 ID 이름을 입력합니다.";
 
-$text['description-destination_conditions']['en-us'] = "Add additional conditions.";
-$text['description-destination_conditions']['en-gb'] = "Add additional conditions.";
+$text['description-destination_conditions']['en-us'] = "If the condition matches perform the action.";
+$text['description-destination_conditions']['en-gb'] = "If the condition matches perform the action.";
 $text['description-destination_conditions']['ar-eg'] = "إضافة شروط إضافية.";
 $text['description-destination_conditions']['de-at'] = "Zusätzliche Bedingungen hinzufügen.";
 $text['description-destination_conditions']['de-ch'] = "Zusätzliche Bedingungen hinzufügen.";
