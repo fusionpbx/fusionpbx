@@ -806,6 +806,7 @@
 
 		//build content for linphone
 		if ($device_template == "linphone/default") {
+			$auth_string = '';
 			if (
 				!empty($_SESSION['provision']['http_auth_enabled']['boolean']) &&
 				$_SESSION['provision']['http_auth_enabled']['boolean'] == 'true' &&
