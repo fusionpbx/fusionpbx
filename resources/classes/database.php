@@ -1686,7 +1686,7 @@
 										$checked = true;
 
 										//copy the child data
-										if (is_uuid($row[$parent_key_name])) {
+										if (!empty($row[$parent_key_name]) && is_uuid($row[$parent_key_name])) {
 											$copy_array[$parent_name][$x][$parent_key_name] = $row[$parent_key_name];
 										}
 
