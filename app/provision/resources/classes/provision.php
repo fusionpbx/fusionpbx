@@ -32,6 +32,7 @@
 		public $domain_name;
 		public $template_dir;
 		public $device_address;
+		public $device_template;
 
 		public function __construct() {
 			//set the default template directory
@@ -251,7 +252,7 @@
 		public function render() {
 
 			//debug
-				$debug = $_REQUEST['debug']; // array
+				$debug = $_REQUEST['debug'] ?? ''; // array
 
 			//get the variables
 				$domain_uuid = $this->domain_uuid;
@@ -293,7 +294,7 @@
 						elseif (isset($val['text'])) { $value = $val['text']; }
 						elseif (isset($val['boolean'])) { $value = $val['boolean']; }
 						elseif (isset($val['numeric'])) { $value = $val['numeric']; }
-						elseif (is_array($val) && !is_uuid($val['uuid'])) { $value = $val; }
+						elseif (isset($val) && is_array($val) && empty($val['uuid'])) { $value = $val; }
 						if (isset($value)) {
 							$value = str_replace('${domain_name}', $domain_name, $value);
 							$value = str_replace('${mac_address}', $device_address, $value);
@@ -305,7 +306,7 @@
 				}
 
 			//add the http auth password to the array
-				if (is_array($_SESSION['provision']["http_auth_password"])) {
+				if (isset($_SESSION['provision']["http_auth_password"]) && is_array($_SESSION['provision']["http_auth_password"])) {
 					$provision["http_auth_password"] = $_SESSION['provision']["http_auth_password"][0];
 				}
 
@@ -378,7 +379,7 @@
 								$parameters['domain_uuid'] = $domain_uuid;
 								$database = new database;
 								$row = $database->select($sql, $parameters, 'row');
-								if (is_array($row) && sizeof($row) != 0) {
+								if (!empty($row) && is_array($row) && sizeof($row) != 0) {
 									$device_label = $row["device_label"];
 									$device_template = $row["device_template"];
 									$device_profile_uuid = $row["device_profile_uuid"];
@@ -926,7 +927,7 @@
 											$contact_name_given = $row['directory_first_name'];
 											$contact_name_family = $row['directory_last_name'];
 										} else {
-											$name_array = explode(" ", $row['effective_caller_id_name']);
+											$name_array = explode(" ", $row['effective_caller_id_name'] ?? '');
 											$contact_name_given = array_shift($name_array);
 											$contact_name_family = trim(implode(' ', $name_array));
 										}
@@ -972,7 +973,7 @@
 					$variables['domain_name'] = $domain_name;
 					$variables['user_id'] = $lines[$x]['user_id'];
 					$variables['auth_id'] = $lines[$x]['auth_id'];
-					$variables['extension'] = $lines[$x]['extension'];
+					$variables['extension'] = $lines[$x]['extension'] ?? '';
 					//$variables['password'] = $lines[$x]['password'];
 					$variables['register_expires'] = $lines[$x]['register_expires'];
 					$variables['sip_transport'] = $lines[$x]['sip_transport'];
@@ -985,7 +986,7 @@
 
 				//update the device keys by replacing variables with their values
 					foreach($variables as $name => $value) {
-						if (is_array($device_keys)) {
+						if (!empty($device_keys) && is_array($device_keys)) {
 							foreach($device_keys as $k => $field) {
 								if (!empty($field['device_key_uuid'])) {
 										if (isset($field['device_key_value'])) {
@@ -1024,12 +1025,14 @@
 					}
 
 				//assign the keys array
-					$view->assign("keys", $device_keys);
+					if (!empty($device_keys)) {
+						$view->assign("keys", $device_keys);
+					}
 
 				//set the variables
 					$types = array("line", "memory", "expansion", "programmable");
 					foreach ($types as $type) {
-						if (is_array($device_keys[$type])) {
+						if (!empty($device_keys[$type]) && is_array($device_keys[$type])) {
 							foreach($device_keys[$type] as $row) {
 								//set the variables
 									$device_key_category = $row['device_key_category'];
@@ -1132,10 +1135,10 @@
 					$view->assign("firmware_version", $device_firmware_version);
 					$view->assign("domain_name", $domain_name);
 					$view->assign("project_path", PROJECT_PATH);
-					$view->assign("server1_address", $server1_address);
-					$view->assign("proxy1_address", $proxy1_address);
-					$view->assign("user_id", $user_id);
-					$view->assign("password", $password);
+					$view->assign("server1_address", $server1_address ?? '');
+					$view->assign("proxy1_address", $proxy1_address ?? '');
+					$view->assign("user_id", $user_id ?? '');
+					$view->assign("password", $password ?? '');
 					$view->assign("template", $device_template);
 					$view->assign("location", $device_location);
 					$view->assign("device_location", $device_location);
@@ -1229,7 +1232,7 @@
 					$file_contents = $view->render($file);
 
 				//log file for testing
-					if ($_SESSION['provision']['debug']['boolean'] == 'true') {
+					if (!empty($_SESSION['provision']['debug']['boolean']) && $_SESSION['provision']['debug']['boolean'] == 'true') {
 						$tmp_file = "/tmp/provisioning_log.txt";
 						$fh = fopen($tmp_file, 'w') or die("can't open file");
 						$tmp_string = $device_address."\n";
