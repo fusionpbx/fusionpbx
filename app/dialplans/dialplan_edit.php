@@ -2,7 +2,7 @@
 /*
 	FusionPBX
 	Version: MPL 1.1
-
+javascript:void(0);
 	The contents of this file are subject to the Mozilla Public License Version
 	1.1 (the "License"); you may not use this file except in compliance with
 	the License. You may obtain a copy of the License at
@@ -52,8 +52,15 @@
 	$language = new text;
 	$text = $language->get();
 
+//set the defaults
+	$dialplan_uuid = '';
+	$dialplan_name = '';
+	$dialplan_number = '';
+	$hostname = '';
+	$dialplan_description = '';
+
 //set the action as an add or an update
-	if (is_uuid($_GET["id"])) {
+	if (!empty($_GET["id"]) && (is_uuid($_GET["id"]))) {
 		$action = "update";
 		$dialplan_uuid = $_GET["id"];
 	}
