@@ -75,7 +75,7 @@
 				break;
 		}
 
-		header('Location: streams.php'.($search != '' ? '?search='.urlencode($search) : null));
+		header('Location: streams.php'.(!empty($search) ? '?search='.urlencode($search) : null));
 		exit;
 	}
 
@@ -116,7 +116,7 @@
 	unset($parameters);
 
 //prepare to page the results
-	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$rows_per_page = (!empty($_SESSION['domain']['paging']['numeric'])) ? $_SESSION['domain']['paging']['numeric'] : 50;
 	$param = "&search=".$search;
 	$param = ($show == 'all' && permission_exists('stream_all')) ? "&show=all" : null;
 	$page = isset($_GET['page']) ? $_GET['page'] : 0;
@@ -198,9 +198,9 @@
 		}
 	}
 	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown='list_search_reset();'>";
-	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search','style'=>($search != '' ? 'display: none;' : null)]);
+	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search','style'=>(!empty($search) ? 'display: none;' : null)]);
 	echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','link'=>'streams.php','style'=>($search == '' ? 'display: none;' : null)]);
-	if ($paging_controls_mini != '') {
+	if (!empty($paging_controls_mini)) {
 		echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>\n";
 	}
 	echo "		</form>\n";
@@ -244,7 +244,7 @@
 	}
 	echo "</tr>\n";
 
-	if (is_array($streams) && @sizeof($streams) != 0) {
+	if (!empty($streams)) {
 		$x = 0;
 		foreach ($streams as $row) {
 			if (permission_exists('stream_edit')) {
@@ -259,7 +259,7 @@
 			}
 			if (!empty($_GET['show']) && $_GET['show'] == 'all' && permission_exists('stream_all')) {
 				echo "	<td>";
-				if ($_SESSION['domains'][$row['domain_uuid']]['domain_name'] != '') {
+				if (!empty($_SESSION['domains'][$row['domain_uuid']]['domain_name'])) {
 					echo escape($_SESSION['domains'][$row['domain_uuid']]['domain_name']);
 				}
 				else {
