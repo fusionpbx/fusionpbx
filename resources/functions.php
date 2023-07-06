@@ -832,12 +832,11 @@ function format_string($format, $data) {
 
 //format seconds into hh:mm:ss
 	function format_hours($seconds) {
+		$seconds = (int)$seconds; //convert seconds to an integer
 		$hours = floor($seconds / 3600);
 		$minutes = floor(floor($seconds / 60) % 60);
 		$seconds = $seconds % 60;
-		if (strlen($minutes) == 1) { $minutes = '0'.$minutes; }
-		if (strlen($seconds) == 1) { $seconds = '0'.$seconds; }
-		return "$hours:$minutes:$seconds";
+		return sprintf('%02d:%02d:%02d', $hours, $minutes, $seconds);
 	}
 
 //browser detection without browscap.ini dependency
