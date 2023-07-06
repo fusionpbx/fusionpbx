@@ -1502,7 +1502,7 @@
 	}
 
 	//destination conditions
-	if (permission_exists('destination_conditions')) {
+	if (permission_exists('destination_conditions') && $_SESSION['destinations']['dialplan_details']['boolean'] == "false") {
 		echo "<tr id='tr_conditions'>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-destination_conditions']."\n";
