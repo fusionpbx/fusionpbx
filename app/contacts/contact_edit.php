@@ -55,7 +55,7 @@
 	$contact_attachments = [];
 
 //set from session variables
-	$body_text_color = !empty($_SESSION['theme']['body_text_color']) ? $_SESSION['theme']['body_text_color'] : 'false';
+	$body_text_color = !empty($_SESSION['theme']['body_text_color']['text']) ? $_SESSION['theme']['body_text_color']['text'] : 'false';
 
 //action add or update
 	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
@@ -1642,6 +1642,7 @@ if (permission_exists('contact_phone_view')) {
 		$call .= "&ringback=us-ring";
 		$call .= "&auto_answer=true";
 		$call .= "');";
+
 		echo "				<a href='' onclick=\"".$call."\">\n";
 		echo "					<i class='fas fa-phone fa-fw' style='color: ".$body_text_color."; float: left; margin-top: 7px; margin-left: 7px;' title=\"".urlencode($row['phone_number'] ?? '')."\"></i>\n";
 		echo "				</a>\n";
