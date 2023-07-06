@@ -42,6 +42,7 @@
 //set the defaults
 	$device_model = '';
 	$device_firmware_version = '';
+	$device_template ='';
 
 //include the device class
 	require_once "app/devices/resources/classes/device.php";
