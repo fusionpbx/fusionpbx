@@ -34,7 +34,7 @@
 			if (substr_count($stat, '%') > 0) { $percent_disk_usage = rtrim($stat,'%'); break; }
 		}
 
-		if ($percent_disk_usage != '') {
+		if (!empty($percent_disk_usage)) {
 			//add half doughnut chart
 			?>
 			<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 20px;' onclick="$('#hud_system_status_details').slideToggle('fast');">
@@ -107,10 +107,10 @@
 
 	//os uptime
 		if (stristr(PHP_OS, 'Linux')) {
-                        $prefix = 'up ';
-                        $linux_uptime = shell_exec('uptime  -p');
-                        $uptime = substr($linux_uptime, strlen($prefix));
-			if ($uptime != '') {
+			$prefix = 'up ';
+			$linux_uptime = shell_exec('uptime  -p');
+			$uptime = substr($linux_uptime, strlen($prefix));
+			if (!empty($uptime)) {
 				echo "<tr class='tr_link_void'>\n";
 				echo "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-system_uptime']."</td>\n";
 				echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'>".$uptime."</td>\n";
@@ -124,7 +124,7 @@
 			$free = shell_exec("/usr/bin/which free");
 			$awk = shell_exec("/usr/bin/which awk");
 			$percent_memory = round((float)shell_exec(escapeshellcmd($free." | ".$awk." 'FNR == 3 {print $3/($3+$4)*100}'")), 1);
-			if ($percent_memory != '') {
+			if (!empty($percent_memory)) {
 				echo "<tr class='tr_link_void'>\n";
 				echo "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-memory_usage']."</td>\n";
 				echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'>".$percent_memory."%</td>\n";
@@ -136,7 +136,7 @@
 	//memory available
 		if (stristr(PHP_OS, 'Linux')) {
 			$result = trim(shell_exec('free -hw | grep \'Mem:\' | cut -d\' \' -f 55-64'));
-			if ($result != '') {
+			if (!empty($result)) {
 				echo "<tr class='tr_link_void'>\n";
 				echo "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-memory_available']."</td>\n";
 				echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'>".$result."</td>\n";
@@ -148,7 +148,7 @@
 	//disk usage
 		if (stristr(PHP_OS, 'Linux')) {
 			//calculated above
-			if ($percent_disk_usage != '') {
+			if (!empty($percent_disk_usage)) {
 				echo "<tr class='tr_link_void'>\n";
 				echo "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-disk_usage']."</td>\n";
 				echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'>".$percent_disk_usage."%</td>\n";
@@ -167,18 +167,18 @@
 				break;
 			default:
 				unset($sql);
-				if ($db_path != '' && $dbfilename != '') {
+				if (!empty($db_path) && !empty($dbfilename)) {
 					$tmp =  shell_exec("lsof ".realpath($db_path).'/'.$dbfilename);
 					$tmp = explode("\n", $tmp);
 					$connections = sizeof($tmp) - 1;
 				}
 		}
-		if ($sql != '') {
+		if (!empty($sql)) {
 			if (!isset($database)) { $database = new database; }
 			$connections = $database->select($sql, null, 'column');
 			unset($sql);
 		}
-		if ($connections != '') {
+		if (!empty($connections)) {
 			echo "<tr class='tr_link_void'>\n";
 			echo "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-database_connections']."</td>\n";
 			echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'>".$connections."</td>\n";
