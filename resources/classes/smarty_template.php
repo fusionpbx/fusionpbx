@@ -53,6 +53,7 @@
 			if(!empty($cache_dir)) {
 				$this->cache_dir($cache_dir);
 			}
+			$this->smarty->registerPlugin("modifier", "in_array", "in_array");
 		}
 
 		public function assign($key, $value) {

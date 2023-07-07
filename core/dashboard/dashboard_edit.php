@@ -18,16 +18,12 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2021
+	Portions created by the Initial Developer are Copyright (C) 2021-2023
 	the Initial Developer. All Rights Reserved.
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -42,6 +38,17 @@
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
+
+//set the defaults
+	$dashboard_name = '';
+	$dashboard_path = '';
+	$dashboard_groups = [];
+	$dashboard_column_span = '';
+	$dashboard_details_state = '';
+	$dashboard_order = '';
+	$dashboard_enabled = 'false';
+	$dashboard_description = '';
+	$dashboard_uuid = '';
 
 //action add or update
 	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
@@ -61,7 +68,7 @@
 		$dashboard_column_span = $_POST["dashboard_column_span"] ?? '';
 		$dashboard_details_state = $_POST["dashboard_details_state"] ?? '';
 		$dashboard_order = $_POST["dashboard_order"] ?? '';
-		$dashboard_enabled = $_POST["dashboard_enabled"] ?: 'false';
+		$dashboard_enabled = $_POST["dashboard_enabled"] ?? 'false';
 		$dashboard_description = $_POST["dashboard_description"] ?? '';
 	}
 
@@ -94,7 +101,7 @@
 			}
 
 		//process the http post data by submitted action
-			if ($_POST['action'] != '' && !empty($_POST['action'])) {
+			if (!empty($_POST['action'])) {
 
 				//prepare the array(s)
 				//send the array to the database class
@@ -217,14 +224,14 @@
 			$dashboard_column_span = $row["dashboard_column_span"];
 			$dashboard_details_state = $row["dashboard_details_state"];
 			$dashboard_order = $row["dashboard_order"];
-			$dashboard_enabled = $row["dashboard_enabled"] ?: 'false';
+			$dashboard_enabled = $row["dashboard_enabled"] ?? 'false';
 			$dashboard_description = $row["dashboard_description"];
 		}
 		unset($sql, $parameters, $row);
 	}
 
 //get the child data
-	if (is_uuid($dashboard_uuid)) {
+	if (!empty($dashboard_uuid) && is_uuid($dashboard_uuid)) {
 		$sql = "select ";
 		$sql .= " dashboard_group_uuid, ";
 		$sql .= " group_uuid ";
@@ -264,7 +271,7 @@
 	$sql = "select * from v_dashboard_groups as x, v_groups as g ";
 	$sql .= "where x.dashboard_uuid = :dashboard_uuid ";
 	$sql .= "and x.group_uuid = g.group_uuid ";
-	$parameters['dashboard_uuid'] = $dashboard_uuid;
+	$parameters['dashboard_uuid'] = $dashboard_uuid ?? '';
 	$database = new database;
 	$dashboard_groups = $database->select($sql, $parameters, 'all');
 	unset ($sql, $parameters);
@@ -370,14 +377,14 @@
 		}
 		echo "</table>\n";
 	}
-	if (is_array($groups)) {
-		echo "<br />\n";
+	if (!empty($groups) && is_array($groups)) {
+		if (!empty($dashboard_groups)) { echo "<br />\n"; }
 		echo "<select name='dashboard_groups[0][group_uuid]' class='formfld' style='width: auto; margin-right: 3px;'>\n";
 		echo "	<option value=''></option>\n";
-		foreach($groups as $row) {
-			if ($field['group_level'] <= $_SESSION['user']['group_level']) {
-				if (!in_array($row["group_uuid"], $assigned_groups)) {
-					echo "	<option value='".$row['group_uuid']."'>".$row['group_name'].(($row['domain_uuid'] != '') ? "@".$_SESSION['domains'][$row['domain_uuid']]['domain_name'] : null)."</option>\n";
+		foreach ($groups as $row) {
+			if ((!empty($field['group_level']) && $field['group_level'] <= $_SESSION['user']['group_level']) || empty($field['group_level'])) {
+				if (empty($assigned_groups) || !in_array($row["group_uuid"], $assigned_groups)) {
+					echo "	<option value='".$row['group_uuid']."'>".$row['group_name'].(!empty($row['domain_uuid']) ? "@".$_SESSION['domains'][$row['domain_uuid']]['domain_name'] : null)."</option>\n";
 				}
 			}
 		}

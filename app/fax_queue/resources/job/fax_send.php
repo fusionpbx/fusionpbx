@@ -2,12 +2,8 @@
 
 //check the permission
 	if (defined('STDIN')) {
-		//set the include path
-		$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-		set_include_path(parse_ini_file($conf[0])['document.root']);
-
 		//includes files
-		require_once "resources/require.php";
+		require_once  dirname(__DIR__, 4) . "/resources/require.php";
 		require_once "resources/functions.php";
 	}
 	else {
@@ -165,7 +161,6 @@
 	$parameters['fax_queue_uuid'] = $fax_queue_uuid;
 	$database = new database;
 	$row = $database->select($sql, $parameters, 'row');
-//view_array($row);
 	if (is_array($row)) {
 		$fax_queue_uuid = $row['fax_queue_uuid'];
 		$domain_uuid = $row['domain_uuid'];
@@ -276,15 +271,15 @@
 	//$retry_interval = $_SESSION['fax_queue']['retry_interval']['numeric'];
 
 //prepare the fax retry count
-	if (empty($fax_retry_count)) {
+	if (!isset($fax_retry_count)) {
 		$fax_retry_count = 0;
 	}
-	elseif ($fax_status != 'busy') {
+	else {
 		$fax_retry_count = $fax_retry_count + 1;
 	}
 
 //determine if the retry count exceed the limit
-	if ($fax_status != 'sent' && $fax_status != 'busy' && $fax_retry_count > $retry_limit) {
+	if ($fax_status != 'sent' && $fax_retry_count > $retry_limit) {
 		$fax_status = 'failed';
 	}
 

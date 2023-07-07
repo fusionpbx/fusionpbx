@@ -24,12 +24,8 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -41,6 +37,9 @@
 		exit;
 	}
 
+//set from session variables
+	$list_row_edit_button = !empty($_SESSION['theme']['list_row_edit_button']['boolean']) ? $_SESSION['theme']['list_row_edit_button']['boolean'] : 'false';
+
 //get the extension list
 	$sql = "select e.extension_uuid, e.extension, e.enabled, e.description ";
 	$sql .= "from v_extensions e, v_extension_users eu, v_users u ";
@@ -50,13 +49,13 @@
 	$sql .= "and u.contact_uuid = :contact_uuid ";
 	$sql .= "order by e.extension asc ";
 	$parameters['domain_uuid'] = $domain_uuid;
-	$parameters['contact_uuid'] = $contact_uuid;
+	$parameters['contact_uuid'] = $contact_uuid ?? '';
 	$database = new database;
 	$contact_extensions = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
 //show if exists
-	if (is_array($contact_extensions) && @sizeof($contact_extensions) != 0) {
+	if (!empty($contact_extensions)) {
 
 		//show the content
 			echo "<div class='action_bar sub shrink'>\n";
@@ -69,12 +68,12 @@
 			echo "<th>".$text['label-extension']."</th>\n";
 			echo "<th class='center'>".$text['label-enabled']."</th>\n";
 			echo "<th class='hide-md-dn'>".$text['label-description']."</th>\n";
-			if (permission_exists('extension_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+			if (permission_exists('extension_edit') && $list_row_edit_button == 'true') {
 				echo "	<td class='action-button'>&nbsp;</td>\n";
 			}
 			echo "</tr>\n";
 
-			if (is_array($contact_extensions) && @sizeof($contact_extensions) != 0) {
+			if (!empty($contact_extensions)) {
 				$x = 0;
 				foreach ($contact_extensions as $row) {
 					if (permission_exists('extension_edit')) {
@@ -91,7 +90,7 @@
 					echo "	</td>\n";
 					echo "	<td class='center'>".$text['label-'.escape($row['enabled'])]."&nbsp;</td>\n";
 					echo "	<td class='description overflow hide-md-dn'>".$row['description']."&nbsp;</td>\n";
-					if (permission_exists('extension_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+					if (permission_exists('extension_edit') && $list_row_edit_button == 'true') {
 						echo "	<td class='action-button'>\n";
 						echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
 						echo "	</td>\n";

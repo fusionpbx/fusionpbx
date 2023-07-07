@@ -26,12 +26,8 @@
 	Riccardo Granchi <riccardo.granchi@nems.it>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
-//includes files";
-	require_once "resources/require.php";
+//includes files
+	require_once __DIR__ . "/require.php";
 
 //get the event socket information
 	if (file_exists($_SERVER["PROJECT_ROOT"]."/app/settings/app_config.php")) {
@@ -39,7 +35,7 @@
 			$sql = "select * from v_settings ";
 			$database = new database;
 			$row = $database->select($sql, null, 'row');
-			if (is_array($row) && @sizeof($row) != 0) {
+			if (!empty($row)) {
 				$_SESSION['event_socket_ip_address'] = $row["event_socket_ip_address"];
 				$_SESSION['event_socket_port'] = $row["event_socket_port"];
 				$_SESSION['event_socket_password'] = $row["event_socket_password"];
@@ -74,7 +70,7 @@ function event_socket_request_cmd($cmd) {
 		$sql = "select * from v_settings ";
 		$database = new database;
 		$row = $database->select($sql, null, 'row');
-		if (is_array($row) && @sizeof($row) != 0) {
+		if (!empty($row)) {
 			$event_socket_ip_address = $row["event_socket_ip_address"];
 			$event_socket_port = $row["event_socket_port"];
 			$event_socket_password = $row["event_socket_password"];
@@ -127,26 +123,10 @@ function save_setting_xml() {
 	$sql = "select * from v_settings ";
 	$database = new database;
 	$row = $database->select($sql, null, 'row');
-	if (is_array($row) && @sizeof($row) != 0) {
-		$fout = fopen($_SESSION['switch']['conf']['dir']."/directory/default/default.xml","w");
-		$xml = "<include>\n";
-		$xml .= "  <user id=\"default\"> <!--if id is numeric mailbox param is not necessary-->\n";
-		$xml .= "    <variables>\n";
-		$xml .= "      <!--all variables here will be set on all inbound calls that originate from this user -->\n";
-		$xml .= "      <!-- set these to take advantage of a dialplan localized to this user -->\n";
-		$xml .= "      <variable name=\"numbering_plan\" value=\"" . $row['numbering_plan'] . "\"/>\n";
-		$xml .= "      <variable name=\"default_gateway\" value=\"" . $row['default_gateway'] . "\"/>\n";
-		$xml .= "      <variable name=\"default_area_code\" value=\"" . $row['default_area_code'] . "\"/>\n";
-		$xml .= "    </variables>\n";
-		$xml .= "  </user>\n";
-		$xml .= "</include>\n";
-		fwrite($fout, $xml);
-		unset($xml);
-		fclose($fout);
-
+	if (!empty($row) && !empty($_SESSION['switch']['conf']['dir'])) {
+		//event_socket.conf.xml
 		$event_socket_ip_address = $row['event_socket_ip_address'];
 		if (empty($event_socket_ip_address)) { $event_socket_ip_address = '127.0.0.1'; }
-
 		$fout = fopen($_SESSION['switch']['conf']['dir']."/autoload_configs/event_socket.conf.xml","w");
 		$xml = "<configuration name=\"event_socket.conf\" description=\"Socket Client\">\n";
 		$xml .= "  <settings>\n";
@@ -162,6 +142,7 @@ function save_setting_xml() {
 		unset($xml, $event_socket_password);
 		fclose($fout);
 
+		//xml_rpc.conf.xml
 		$fout = fopen($_SESSION['switch']['conf']['dir']."/autoload_configs/xml_rpc.conf.xml","w");
 		$xml = "<configuration name=\"xml_rpc.conf\" description=\"XML RPC\">\n";
 		$xml .= "  <settings>\n";
@@ -178,18 +159,18 @@ function save_setting_xml() {
 		fclose($fout);
 
 		//shout.conf.xml
-			$fout = fopen($_SESSION['switch']['conf']['dir']."/autoload_configs/shout.conf.xml","w");
-			$xml = "<configuration name=\"shout.conf\" description=\"mod shout config\">\n";
-			$xml .= "  <settings>\n";
-			$xml .= "    <!-- Don't change these unless you are insane -->\n";
-			$xml .= "    <param name=\"decoder\" value=\"" . $row['mod_shout_decoder'] . "\"/>\n";
-			$xml .= "    <param name=\"volume\" value=\"" . $row['mod_shout_volume'] . "\"/>\n";
-			$xml .= "    <!--<param name=\"outscale\" value=\"8192\"/>-->\n";
-			$xml .= "  </settings>\n";
-			$xml .= "</configuration>";
-			fwrite($fout, $xml);
-			unset($xml);
-			fclose($fout);
+		$fout = fopen($_SESSION['switch']['conf']['dir']."/autoload_configs/shout.conf.xml","w");
+		$xml = "<configuration name=\"shout.conf\" description=\"mod shout config\">\n";
+		$xml .= "  <settings>\n";
+		$xml .= "    <!-- Don't change these unless you are insane -->\n";
+		$xml .= "    <param name=\"decoder\" value=\"" . $row['mod_shout_decoder'] . "\"/>\n";
+		$xml .= "    <param name=\"volume\" value=\"" . $row['mod_shout_volume'] . "\"/>\n";
+		$xml .= "    <!--<param name=\"outscale\" value=\"8192\"/>-->\n";
+		$xml .= "  </settings>\n";
+		$xml .= "</configuration>";
+		fwrite($fout, $xml);
+		unset($xml);
+		fclose($fout);
 	}
 	unset($sql, $row);
 
@@ -248,7 +229,7 @@ function save_gateway_xml() {
 		$parameters['domain_uuid'] = $domain_uuid;
 		$database = new database;
 		$result = $database->select($sql, $parameters, 'all');
-		if (is_array($result) && @sizeof($result) != 0) {
+		if (!empty($result)) {
 			foreach ($result as &$row) {
 				if ($row['enabled'] != "false") {
 						//set the default profile as external
@@ -365,6 +346,11 @@ function save_var_xml() {
 	if (is_array($_SESSION['switch']['conf'])) {
 		global $config, $domain_uuid;
 
+		//skip this function if the conf directory is empty
+		if (empty($_SESSION['switch']['conf']['dir'])) {
+			return false;
+		}
+
 		//open the vars.xml file
 		$fout = fopen($_SESSION['switch']['conf']['dir']."/vars.xml","w");
 
@@ -382,10 +368,10 @@ function save_var_xml() {
 		$sql .= "where var_enabled = 'true' ";
 		$sql .= "order by var_category, var_order asc ";
 		$database = new database;
-		$variables = $database->select($sql, $parameters, 'all');
+		$variables = $database->select($sql, null, 'all');
 		$prev_var_category = '';
 		$xml = '';
-		if (is_array($variables) && @sizeof($variables) != 0) {
+		if (!empty($variables)) {
 			foreach ($variables as &$row) {
 				if ($row['var_category'] != 'Provision') {
 					if ($prev_var_category != $row['var_category']) {
@@ -463,7 +449,7 @@ function outbound_route_to_bridge($domain_uuid, $destination_number, array $chan
 	$result = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
-	if (is_array($result) && @sizeof($result) != 0) {
+	if (!empty($result)) {
 		foreach ($result as &$row) {
 			$dialplan_uuid = $row["dialplan_uuid"];
 			$dialplan_detail_uuid = $row["dialplan_detail_uuid"];
@@ -474,12 +460,12 @@ function outbound_route_to_bridge($domain_uuid, $destination_number, array $chan
 		}
 	}
 	
-	if (is_array($outbound_routes) && @sizeof($outbound_routes) != 0) {
+	if (!empty($outbound_routes)) {
 		$x = 0;
 		foreach ($outbound_routes as &$dialplan) {
-			$condition_match = false;
+			$condition_match = [];
 			foreach ($dialplan as &$dialplan_details) {
-				if ($dialplan_details['dialplan_detail_tag'] == "condition") {
+				if (!empty($dialplan_details['dialplan_detail_tag']) && $dialplan_details['dialplan_detail_tag'] == "condition") {
 					if ($dialplan_details['dialplan_detail_type'] == "destination_number") {
 							$pattern = '/'.$dialplan_details['dialplan_detail_data'].'/';
 							preg_match($pattern, $destination_number, $matches, PREG_OFFSET_CAPTURE);
@@ -488,11 +474,11 @@ function outbound_route_to_bridge($domain_uuid, $destination_number, array $chan
 							}
 							else {
 								$condition_match[] = 'true';
-								$regex_match_1 = $matches[1][0];
-								$regex_match_2 = $matches[2][0];
-								$regex_match_3 = $matches[3][0];
-								$regex_match_4 = $matches[4][0];
-								$regex_match_5 = $matches[5][0];
+								$regex_match_1 = $matches[1][0] ?? '';
+								$regex_match_2 = $matches[2][0] ?? '';
+								$regex_match_3 = $matches[3][0] ?? '';
+								$regex_match_4 = $matches[4][0] ?? '';
+								$regex_match_5 = $matches[5][0] ?? '';
 							}
 					}
 					elseif ($dialplan_details['dialplan_detail_type'] == "\${toll_allow}") {
@@ -510,8 +496,14 @@ function outbound_route_to_bridge($domain_uuid, $destination_number, array $chan
 		
 			if (!in_array('false', $condition_match)) {
 				foreach ($dialplan as &$dialplan_details) {
-					$dialplan_detail_data = $dialplan_details['dialplan_detail_data'];
-					if ($dialplan_details['dialplan_detail_tag'] == "action" && $dialplan_details['dialplan_detail_type'] == "bridge" && $dialplan_detail_data != "\${enum_auto_route}") {
+					$dialplan_detail_data = $dialplan_details['dialplan_detail_data'] ?? '';
+					if (
+						!empty($dialplan_details['dialplan_detail_tag']) &&
+						$dialplan_details['dialplan_detail_tag'] == "action" &&
+						!empty($dialplan_details['dialplan_detail_type']) &&
+						$dialplan_details['dialplan_detail_type'] == "bridge" &&
+						$dialplan_detail_data != "\${enum_auto_route}"
+						) {
 						$dialplan_detail_data = str_replace("\$1", $regex_match_1, $dialplan_detail_data);
 						$dialplan_detail_data = str_replace("\$2", $regex_match_2, $dialplan_detail_data);
 						$dialplan_detail_data = str_replace("\$3", $regex_match_3, $dialplan_detail_data);
@@ -528,7 +520,7 @@ function outbound_route_to_bridge($domain_uuid, $destination_number, array $chan
 			}
 		}
 	}
-	return $bridge_array;
+	return $bridge_array ?? [];
 }
 //$destination_number = '1231234';
 //$bridge_array = outbound_route_to_bridge ($domain_uuid, $destination_number);
@@ -568,7 +560,7 @@ function extension_presence_id($extension, $number_alias = false) {
 		$parameters['extension'] = $extension;
 		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
-		if (is_array($row) && @sizeof($row) != 0) {
+		if (!empty($row)) {
 			$extension = $row['extension'];
 			$number_alias = $row['number_alias'];
 		}
@@ -596,7 +588,7 @@ function get_recording_filename($id) {
 	$parameters['domain_uuid'] = $domain_uuid;
 	$database = new database;
 	$row = $database->select($sql, $parameters, 'row');
-	if (is_array($row) && @sizeof($row) != 0) {
+	if (!empty($row)) {
 		//$filename = $row["filename"];
 		//$recording_name = $row["recording_name"];
 		//$recording_uuid = $row["recording_uuid"];
@@ -656,7 +648,7 @@ if (!function_exists('save_call_center_xml')) {
 			$call_center_queues = $database->select($sql, null, 'all');
 			unset($sql);
 
-			if (is_array($call_center_queues) && @sizeof($call_center_queues) != 0) {
+			if (!empty($call_center_queues)) {
 
 				//prepare Queue XML string
 					$x=0;
@@ -729,7 +721,7 @@ if (!function_exists('save_call_center_xml')) {
 					unset($sql);
 
 					$x=0;
-					if (is_array($result) && @sizeof($result) != 0) {
+					if (!empty($result)) {
 						foreach ($result as &$row) {
 							//get the values from the db and set as php variables
 								$agent_name = $row["agent_name"];
@@ -819,7 +811,7 @@ if (!function_exists('save_call_center_xml')) {
 					unset($sql);
 
 					$x=0;
-					if (is_array($result) && @sizeof($result) != 0) {
+					if (!empty($result)) {
 						foreach ($result as &$row) {
 							$agent_name = $row["agent_name"];
 							$queue_name = $row["queue_name"];
@@ -840,7 +832,7 @@ if (!function_exists('save_call_center_xml')) {
 						$path = "/usr/share/examples/fusionpbx/resources/templates/conf";
 					}
 					else {
-						$path = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/conf";
+						$path = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/switch/resources/conf";
 					}
 
 				//get the contents of the template
@@ -877,7 +869,7 @@ if (!function_exists('switch_conf_xml')) {
 				$path = "/usr/share/examples/fusionpbx/resources/templates/conf";
 			}
 			else {
-				$path = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/conf";
+				$path = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/switch/resources/conf";
 			}
 			$file_contents = file_get_contents($path."/autoload_configs/switch.conf.xml");
 
@@ -934,7 +926,7 @@ if (!function_exists('xml_cdr_conf_xml')) {
 				$path = "/usr/share/examples/fusionpbx/resources/templates/conf";
 			}
 			else {
-				$path = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/conf";
+				$path = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/switch/resources/conf";
 			}
 			$file_contents = file_get_contents($path."/autoload_configs/xml_cdr.conf.xml");
 
@@ -980,7 +972,7 @@ if (!function_exists('save_sip_profile_xml')) {
 			$result = $database->select($sql, null, 'all');
 			unset($sql);
 
-			if (is_array($result) && @sizeof($result) != 0) {
+			if (!empty($result)) {
 				foreach($result as $row) {
 					$sip_profile_uuid = $row['sip_profile_uuid'];
 					$sip_profile_name = $row['sip_profile_name'];
@@ -1009,7 +1001,7 @@ if (!function_exists('save_sip_profile_xml')) {
 						$parameters['sip_profile_uuid'] = $sip_profile_uuid;
 						$database = new database;
 						$result_2 = $database->select($sql, $parameters, 'all');
-						if (is_array($result_2) && @sizeof($result_2) != 0) {
+						if (!empty($result_2)) {
 							$sip_profile_settings = '';
 							foreach ($result_2 as &$row_2) {
 								$sip_profile_settings .= "		<param name=\"".$row_2["sip_profile_setting_name"]."\" value=\"".$row_2["sip_profile_setting_value"]."\"/>\n";

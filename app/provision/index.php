@@ -17,19 +17,15 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2008-2020 All Rights Reserved.
+	Copyright (C) 2008-2023 All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/functions/device_by.php";
 
 //logging
@@ -42,18 +38,19 @@
 	$device_template = '';
 
 //define PHP variables from the HTTP values
-	$mac = $_REQUEST['mac'];
-	$file = $_REQUEST['file'];
-	$ext = $_REQUEST['ext'];
+	$device_address = $_REQUEST['mac'] ?? '';
+	$device_address = $_REQUEST['address'] ?? '';
+	$file = $_REQUEST['file'] ?? '';
+	$ext = $_REQUEST['ext'] ?? '';
 	//if (!empty($_REQUEST['template'])) {
 	//	$device_template = $_REQUEST['template'];
 	//}
 
-//get the mac address for Cisco 79xx in the URL as &name=SEP000000000000
-	if (empty($mac)) {
+//get the device address for Cisco 79xx in the URL as &name=SEP000000000000
+	if (empty($device_address)) {
 		$name = $_REQUEST['name'];
 		if (substr($name, 0, 3) == "SEP") {
-			$mac = strtolower(substr($name, 3, 12));
+			$device_address = strtolower(substr($name, 3, 12));
 			unset($name);
 		}
 	}
@@ -61,12 +58,12 @@
 // Escence make request based on UserID for Memory keys
 	// The file name is fixed to `Account1_Extern.xml`.
 	// (Account1 is the first account you register)
-	if (empty($mac) && !empty($ext)) {
+	if (empty($device_address) && !empty($ext)) {
 		$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
 		$domain_name = $domain_array[0];
 		$device = device_by_ext($ext, $domain_name);
 		if ($device !== false && ($device['device_vendor'] == 'escene' || $device['device_vendor'] == 'grandstream')) {
-			$mac = $device['device_mac_address'];
+			$device_address = $device['device_address'];
 		}
 	}
 
@@ -85,77 +82,78 @@
 		exit;
 	}
 
-//check alternate MAC source
-	if (empty($mac)) {
+//check alternate device address source
+	if (empty($device_address)) {
 		//set the http user agent
 			//$_SERVER['HTTP_USER_AGENT'] = "Yealink SIP-T38G  38.70.0.125 00:15:65:00:00:00";
 			//$_SERVER['HTTP_USER_AGENT'] = "Yealink SIP-T56A  58.80.0.25 001565f429a4"; 
 		//Yealink: 17 digit mac appended to the user agent, so check for a space exactly 17 digits before the end.
 			if (strtolower(substr($_SERVER['HTTP_USER_AGENT'],0,7)) == "yealink" || strtolower(substr($_SERVER['HTTP_USER_AGENT'],0,5)) == "vp530") {
 				if (strstr(substr($_SERVER['HTTP_USER_AGENT'],-4), ':')) { //remove colons if they exist
-					$mac = substr($_SERVER['HTTP_USER_AGENT'],-17);
-					$mac = preg_replace("#[^a-fA-F0-9./]#", "", $mac);
+					$device_address = substr($_SERVER['HTTP_USER_AGENT'],-17);
+					$device_address = preg_replace("#[^a-fA-F0-9./]#", "", $device_address);
 				} else { //take mac as is - fixes T5X series
-					$mac = substr($_SERVER['HTTP_USER_AGENT'],-12);
+					$device_address = substr($_SERVER['HTTP_USER_AGENT'],-12);
 				}
 			}
 		//HTek: $_SERVER['HTTP_USER_AGENT'] = "Htek UC926 2.0.4.2 00:1f:c1:00:00:00"
 			if (substr($_SERVER['HTTP_USER_AGENT'],0,4) == "Htek") {
-				$mac = substr($_SERVER['HTTP_USER_AGENT'],-17);
-				$mac = preg_replace("#[^a-fA-F0-9./]#", "", $mac);
+				$device_address = substr($_SERVER['HTTP_USER_AGENT'],-17);
+				$device_address = preg_replace("#[^a-fA-F0-9./]#", "", $device_address);
 			}
 		//Panasonic: $_SERVER['HTTP_USER_AGENT'] = "Panasonic_KX-UT670/01.022 (0080f000000)"
 			if (substr($_SERVER['HTTP_USER_AGENT'],0,9) == "Panasonic") {
-				$mac = substr($_SERVER['HTTP_USER_AGENT'],-14);
-				$mac = preg_replace("#[^a-fA-F0-9./]#", "", $mac);
+				$device_address = substr($_SERVER['HTTP_USER_AGENT'],-14);
+				$device_address = preg_replace("#[^a-fA-F0-9./]#", "", $device_address);
 			}
 		//Grandstream: $_SERVER['HTTP_USER_AGENT'] = "Grandstream Model HW GXP2135 SW 1.0.7.97 DevId 000b828aa872"
 			if (substr($_SERVER['HTTP_USER_AGENT'],0,11) == "Grandstream") {
-				$mac = substr($_SERVER['HTTP_USER_AGENT'],-12);
-				$mac = preg_replace("#[^a-fA-F0-9./]#", "", $mac);
+				$device_address = substr($_SERVER['HTTP_USER_AGENT'],-12);
+				$device_address = preg_replace("#[^a-fA-F0-9./]#", "", $device_address);
 			}
 		//Audiocodes: $_SERVER['HTTP_USER_AGENT'] = "AUDC-IPPhone/2.2.8.61 (440HDG-Rev0; 00908F602AAC)"
 			if (substr($_SERVER['HTTP_USER_AGENT'],0,12) == "AUDC-IPPhone") {
-				$mac = substr($_SERVER['HTTP_USER_AGENT'],-13);
-				$mac = preg_replace("#[^a-fA-F0-9./]#", "", $mac);
+				$device_address = substr($_SERVER['HTTP_USER_AGENT'],-13);
+				$device_address = preg_replace("#[^a-fA-F0-9./]#", "", $device_address);
 			}
 		//Aastra: $_SERVER['HTTP_USER_AGENT'] = "Aastra6731i MAC:00-08-5D-29-4C-6B V:3.3.1.4365-SIP"
 			if (substr($_SERVER['HTTP_USER_AGENT'],0,6) == "Aastra") {
 				preg_match("/MAC:([A-F0-9-]{17})/", $_SERVER['HTTP_USER_AGENT'], $matches);
-				$mac = $matches[1];
-				$mac = preg_replace("#[^a-fA-F0-9./]#", "", $mac);
+				$device_address = $matches[1];
+				$device_address = preg_replace("#[^a-fA-F0-9./]#", "", $device_address);
 			}
 		//Flyingvoice: $_SERVER['HTTP_USER_AGENT'] = "Flyingvoice FIP13G V0.6.24 00:21:F2:22:AE:F1"
 			if (strtolower(substr($_SERVER['HTTP_USER_AGENT'],0,11)) == "flyingvoice") {
-				$mac = substr($_SERVER['HTTP_USER_AGENT'],-17);
-				$mac = preg_replace("#[^a-fA-F0-9./]#", "", $mac);
+				$device_address = substr($_SERVER['HTTP_USER_AGENT'],-17);
+				$device_address = preg_replace("#[^a-fA-F0-9./]#", "", $device_address);
 			}
 	}
 
-//prepare the mac address
-	if (isset($mac)) {
-		//normalize the mac address to lower case
-			$mac = strtolower($mac);
-		//replace all non hexadecimal values and validate the mac address
-			$mac = preg_replace("#[^a-fA-F0-9./]#", "", $mac);
-			if (strlen($mac) != 12) {
-				echo "invalid mac address";
-				exit;
-			}
+//prepare the device address
+	if (isset($device_address)) {
+		//normalize the device address to lower case
+			$device_address = strtolower($device_address);
+		//replace all non hexadecimal values and validate the device address
+			$device_address = preg_replace("#[^a-fA-F0-9./]#", "", $device_address);
+			//if (strlen($device_address) != 12) {
+			//	echo "invalid mac address";
+			//	exit;
+			//}
 	}
 
-//get the domain_uuid
-	$sql = "select d.device_uuid, d.domain_uuid, n.domain_name ";
+//get the domain_uuid, domain_name, device_name and device_vendor
+	$sql = "select d.device_uuid, d.domain_uuid, d.device_vendor, n.domain_name ";
 	$sql .= "from v_devices as d, v_domains as n ";
-	$sql .= "where device_mac_address = :mac ";
+	$sql .= "where device_address = :device_address ";
 	$sql .= "and d.domain_uuid = n.domain_uuid; ";
-	$parameters['mac'] = $mac;
+	$parameters['device_address'] = $device_address;
 	$database = new database;
 	$row = $database->select($sql, $parameters, 'row');
 	if (is_array($row)) {
 		$device_uuid = $row['device_uuid'];
 		$domain_uuid = $row['domain_uuid'];
 		$domain_name = $row['domain_name'];
+		$device_vendor = $row['device_vendor'];
 		$_SESSION['domain_uuid'] = $domain_uuid;
 	}
 	unset($sql, $parameters);
@@ -270,21 +268,23 @@
 
 //check if provisioning has been enabled
 	if ($provision["enabled"] != "true") {
-		syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempt but provisioning is not enabled for ".check_str($_REQUEST['mac']));
+		syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempt but provisioning is not enabled for ".escape($_REQUEST['mac']));
 		http_error('404');
 	}
 
 //send a request to a remote server to validate the MAC address and secret
 	if (!empty($_SERVER['auth_server'])) {
-		$result = send_http_request($_SERVER['auth_server'], 'mac='.check_str($_REQUEST['mac']).'&secret='.check_str($_REQUEST['secret']));
+		$result = send_http_request($_SERVER['auth_server'], 'mac='.url_encode($_REQUEST['mac']).'&secret='.url_encode($_REQUEST['secret']));
 		if ($result == "false") {
-			syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempt but the remote auth server said no for ".check_str($_REQUEST['mac']));
+			syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempt but the remote auth server said no for ".escape($_REQUEST['mac']));
 			http_error('404');
 		}
 	}
 
-//use the mac address to get the vendor
-	$device_vendor = device::get_vendor($mac);
+//use the device address to get the vendor
+	if (empty($device_vendor)) {
+		$device_vendor = device::get_vendor($device_address);
+	}
 
 //keep backwards compatibility
 	if (!empty($_SESSION['provision']["cidr"]["text"])) {
@@ -301,7 +301,7 @@
 			}
 		}
 		if (!$found) {
-			syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempt but failed CIDR check for ".check_str($_REQUEST['mac']));
+			syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempt but failed CIDR check for ".escape($_REQUEST['mac']));
 			http_error('404');
 		}
 	}
@@ -430,18 +430,19 @@
 //output template to string for header processing
 	$prov = new provision;
 	$prov->domain_uuid = $domain_uuid;
-	$prov->mac = $mac;
+	$prov->device_address = $device_address;
 	$prov->file = $file;
 	$file_contents = $prov->render();
 
 //deliver the customized config over HTTP/HTTPS
 	//need to make sure content-type is correct
-	if ($_REQUEST['content_type'] == 'application/octet-stream') {
-		//format the mac address and
-			$mac = $prov->format_mac($mac, $device_vendor);
+	if (!empty($_REQUEST['content_type']) && $_REQUEST['content_type'] == 'application/octet-stream') {
+		//format the device address and
+			$device_address_formatted = $prov->format_address($device_address, $device_vendor);
 
 		//replace the variable name with the value
-			$file_name = str_replace("{\$mac}", $mac, $file);
+			$file_name = str_replace("{\$address}", $device_address, $file);
+			$file_name = str_replace("{\$mac}", $device_address, $file_name);
 
 		//set the headers
 			header('Content-Description: File Transfer');
@@ -469,14 +470,13 @@
 			header("Content-Length: ".strlen($file_contents));
 		}
 		else {
-			$result = simplexml_load_string ($file_contents, 'SimpleXmlElement', LIBXML_NOERROR+LIBXML_ERR_FATAL+LIBXML_ERR_NONE);
-			if (false == $result) {
-				header("Content-Type: text/plain");
-				header("Content-Length: ".strval(strlen($file_contents)));
-			}
-			else {
+			if (!empty($file_contents) && is_xml($file_contents)) {
 				header("Content-Type: text/xml; charset=utf-8");
 				header("Content-Length: ".strlen($file_contents));
+			}
+			else {
+				header("Content-Type: text/plain");
+				header("Content-Length: ".strval(strlen($file_contents)));
 			}
 		}
 	}

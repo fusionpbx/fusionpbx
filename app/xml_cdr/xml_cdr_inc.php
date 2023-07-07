@@ -17,19 +17,15 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2021
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
 
@@ -46,12 +42,12 @@
 	define('TIME_24HR', 1);
 
 //set defaults
-	if(!isset($_GET['show'])) {
+	if(empty($_GET['show'])) {
 		$_GET['show'] = 'false';
 	}
 
 //get post or get variables from http
-	if (count($_REQUEST) > 0) {
+	if (!empty($_REQUEST)) {
 		$cdr_id = $_REQUEST["cdr_id"] ?? '';
 		$direction = $_REQUEST["direction"] ?? '';
 		$caller_id_name = $_REQUEST["caller_id_name"] ?? '';
@@ -193,7 +189,7 @@
 	if ($_GET['show'] == 'all' && permission_exists('xml_cdr_all')) {
 		$param .= "&show=all";
 	}
-	if (isset($order_by)) {
+	if (!empty($order_by)) {
 		$param .= "&order_by=".urlencode($order_by)."&order=".urlencode($order);
 	}
 
@@ -218,16 +214,16 @@
 	*/
 
 //limit the number of results
-	if ($_SESSION['cdr']['limit']['numeric'] > 0) {
+	if (!empty($_SESSION['cdr']['limit']['numeric']) && $_SESSION['cdr']['limit']['numeric'] > 0) {
 		$num_rows = $_SESSION['cdr']['limit']['numeric'];
 	}
 
 //set the default paging
-	$rows_per_page = $_SESSION['domain']['paging']['numeric'];
+	//$rows_per_page = $_SESSION['domain']['paging']['numeric'];
 
 //prepare to page the results
 	//$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50; //set on the page that includes this page
-	if (!isset($_GET['page']) || !is_numeric($_GET['page'])) { 
+	if (empty($_GET['page']) || (!empty($_GET['page']) && !is_numeric($_GET['page']))) { 
 		$_GET['page'] = 0;
 	}
 	//ensure page is within bounds of integer
@@ -294,13 +290,13 @@
 		$sql .= "c.rtp_audio_in_mos, \n";
 	}
 	$sql .= "(c.answer_epoch - c.start_epoch) as tta ";
-	if ($_REQUEST['show'] == "all" && permission_exists('xml_cdr_all')) {
+	if (!empty($_REQUEST['show']) && $_REQUEST['show'] == "all" && permission_exists('xml_cdr_all')) {
 		$sql .= ", c.domain_name \n";
 	}
 	$sql .= "from v_xml_cdr as c \n";
 	$sql .= "left join v_extensions as e on e.extension_uuid = c.extension_uuid \n";
 	$sql .= "inner join v_domains as d on d.domain_uuid = c.domain_uuid \n";
-	if ($_REQUEST['show'] == "all" && permission_exists('xml_cdr_all')) {
+	if (!empty($_REQUEST['show']) && $_REQUEST['show'] == "all" && permission_exists('xml_cdr_all')) {
 		$sql .= "where true \n";
 	}
 	else {
@@ -591,8 +587,8 @@
 		}
 		else {
 			$sql .= " limit :limit offset :offset \n";
-			$parameters['limit'] = $rows_per_page;
-			$parameters['offset'] = $offset;
+			$parameters['limit'] = intval($rows_per_page);
+			$parameters['offset'] = intval($offset);
 		}
 	}
 	$sql = str_replace("  ", " ", $sql);
@@ -611,7 +607,7 @@
 	unset($database, $sql, $parameters);
 
 //return the paging
-	if (isset($_REQUEST['export_format']) && $_REQUEST['export_format'] !== "csv" && $_REQUEST['export_format'] !== "pdf") {
+	if (empty($_REQUEST['export_format'])) {
 		list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true, $result_count); //top
 		list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page, false, $result_count); //bottom
 	}

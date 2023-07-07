@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2019
+ Portions created by the Initial Developer are Copyright (C) 2008-2023
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -38,7 +38,6 @@
 		public $order_by;
 		public $order;
 		public $type;
-		public $db;
 
 		/**
 		 * declare private variables
@@ -203,8 +202,19 @@
 					return false;
 				}
 
+			//set the time zone
+				if (isset($_SESSION['domain']['time_zone']['name'])) {
+					$time_zone = $_SESSION['domain']['time_zone']['name'];
+				}
+				else {
+					$time_zone = date_default_timezone_get();
+				}
+
 			//get the message from the database
-				$sql = "select * from v_voicemail_messages as m, v_voicemails as v ";
+				$sql = "select *, ";
+				$sql .= "to_char(timezone(:time_zone, to_timestamp(m.created_epoch)), 'DD Mon YYYY') as created_date_formatted, \n";
+				$sql .= "to_char(timezone(:time_zone, to_timestamp(m.created_epoch)), 'HH12:MI:SS am') as created_time_formatted \n";
+				$sql .= "from v_voicemail_messages as m, v_voicemails as v ";
 				$sql .= "where m.domain_uuid = :domain_uuid ";
 				$sql .= "and m.voicemail_uuid = v.voicemail_uuid ";
 				if (is_array($this->voicemail_id) && @sizeof($this->voicemail_id) != 0) {
@@ -230,10 +240,11 @@
 					$sql .= "order by v.voicemail_id, m.".$this->order_by." ".$this->order." ";
 				}
 				$parameters['domain_uuid'] = $this->domain_uuid;
+				$parameters['time_zone'] = $time_zone;
 				$database = new database;
 				$result = $database->select($sql, $parameters, 'all');
 				unset($sql, $parameters);
-			
+
 			//update the array with additional information
 				if (is_array($result)) {
 					foreach($result as &$row) {
@@ -245,9 +256,9 @@
 						if (file_exists($path.'/msg_'.$row['voicemail_message_uuid'].'.mp3')) {
 							$row['file_path'] = $path.'/msg_'.$row['voicemail_message_uuid'].'.mp3';
 						}
-						$row['file_size'] = filesize($row['file_path']);
-						$row['file_size_label'] = byte_convert($row['file_size']);
-						$row['file_ext'] = substr($row['file_path'], -3);
+						$row['file_size'] = filesize($row['file_path'] ?? '');
+						$row['file_size_label'] = byte_convert($row['file_size'] ?? '');
+						$row['file_ext'] = substr($row['file_path'] ?? '', -3);
 
 						$message_minutes = floor($row['message_length'] / 60);
 						$message_seconds = $row['message_length'] % 60;
@@ -279,7 +290,7 @@
 
 						//filter out unchecked sip profiles
 							foreach ($records as $x => $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$uuids[] = "'".$record['uuid']."'";
 								}
 							}
@@ -289,7 +300,7 @@
 								$sql = "select ".$this->uuid_prefix."uuid as uuid, voicemail_id from v_".$this->table." ";
 								$sql .= "where ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
 								$database = new database;
-								$rows = $database->select($sql, $parameters, 'all');
+								$rows = $database->select($sql, $parameters ?? null, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
 										$voicemail_ids[$row['uuid']] = $row['voicemail_id'];
@@ -399,7 +410,7 @@
 
 						//filter out unchecked sip profiles
 							foreach ($records as $x => $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									//build the delete array
 										$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
 										$array[$this->table][$x]['voicemail_uuid'] = $this->voicemail_uuid;
@@ -446,7 +457,7 @@
 
 						//filter out unchecked sip profiles
 							foreach ($records as $x => $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									//build the delete array
 										$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
 										$array[$this->table][$x]['voicemail_uuid'] = $this->voicemail_uuid;
@@ -455,7 +466,7 @@
 							}
 
 						//delete the checked rows
-							if (is_array($array) && @sizeof($array) != 0) {
+							if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
 								//grant temporary permissions
 									$p = new permissions;
 									$p->add('voicemail_destination_delete', 'temp');
@@ -495,7 +506,7 @@
 
 						//filter out unchecked sip profiles
 							foreach ($records as $x => $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$uuids[] = "'".$record['uuid']."'";
 								}
 							}
@@ -583,9 +594,10 @@
 				$this->get_voicemail_id();
 
 			//send the message waiting status
+
 				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 				if ($fp) {
-					$switch_cmd .= "luarun app.lua voicemail mwi ".$this->voicemail_id."@".$_SESSION['domain_name'];
+					$switch_cmd = "luarun app.lua voicemail mwi ".$this->voicemail_id."@".$_SESSION['domain_name'];
 					$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
 				}
 		}
@@ -735,7 +747,7 @@
 			$path = $_SESSION['switch']['voicemail']['dir'].'/default/'.$_SESSION['domain_name'].'/'.$this->voicemail_id;
 
 			//prepare base64 content from db, if enabled
-			if ($_SESSION['voicemail']['storage_type']['text'] == 'base64') {
+			if (!empty($_SESSION['voicemail']['storage_type']['text']) && $_SESSION['voicemail']['storage_type']['text'] == 'base64') {
 				$sql = "select message_base64 ";
 				$sql .= "from ";
 				$sql .= "v_voicemail_messages as m, ";
@@ -786,11 +798,6 @@
 				return false;
 			}
 
-			//content-range
-			if (isset($_SERVER['HTTP_RANGE']) && $this->type != 'bin')  {
-				$this->range_download($file_path);
-			}
-
 			$fd = fopen($file_path, "rb");
 			if ($this->type == 'bin') {
 				header("Content-Type: application/force-download");
@@ -817,10 +824,16 @@
 				header("Content-Length: ".filesize($file_path));
 			}
 			ob_end_clean();
+
+			//content-range
+			if (isset($_SERVER['HTTP_RANGE']) && $this->type != 'bin')  {
+				$this->range_download($file_path);
+			}
+
 			fpassthru($fd);
 
 			//if base64, remove temp file
-			if ($_SESSION['voicemail']['storage_type']['text'] == 'base64') {
+			if (!empty($_SESSION['voicemail']['storage_type']['text']) && $_SESSION['voicemail']['storage_type']['text'] == 'base64') {
 				@unlink($path.'/msg_'.$this->voicemail_message_uuid.'.'.$file_ext);
 			}
 
@@ -871,7 +884,7 @@
 				// If the range starts with an '-' we start from the beginning
 				// If not, we forward the file pointer
 				// And make sure to get the end byte if spesified
-				if ($range0 == '-') {
+				if (!empty($range0) && $range0 == '-') {
 					// The n-number of the last bytes is requested
 					$c_start = $size - substr($range, 1);
 				}
@@ -925,7 +938,6 @@
 //example voicemail messages
 	//require_once "app/voicemails/resources/classes/voicemail.php";
 	//$voicemail = new voicemail;
-	//$voicemail->db = $db;
 	//$voicemail->voicemail_uuid = $voicemail_uuid;
 	//$voicemail->order_by = $order_by;
 	//$voicemail->order = $order;

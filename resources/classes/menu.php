@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2010 - 2022
+	Copyright (C) 2010 - 2023
 	All Rights Reserved.
 
 	Contributor(s):
@@ -86,7 +86,7 @@ if (!class_exists('menu')) {
 						//build the delete array
 							$x = 0;
 							foreach ($records as $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									//remove menu languages
 										$array['menu_languages'][$x][$this->name.'_uuid'] = $record['uuid'];
 
@@ -156,7 +156,7 @@ if (!class_exists('menu')) {
 						//build the delete array
 							$x = 0;
 							foreach ($records as $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									//build array
 										$uuids[] = "'".$record['uuid']."'";
 									//remove menu languages
@@ -171,12 +171,12 @@ if (!class_exists('menu')) {
 							}
 
 						//include child menu items
-							if (is_array($uuids) && @sizeof($uuids) != 0) {
+							if (!empty($uuids) && @sizeof($uuids) != 0) {
 								$sql = "select menu_item_uuid as uuid from v_".$this->table." ";
 								$sql .= "where menu_item_parent_uuid in (".implode(', ', $uuids).") ";
 								$database = new database;
-								$rows = $database->select($sql, $parameters, 'all');
-								if (is_array($rows) && @sizeof($rows) != 0) {
+								$rows = $database->select($sql, null, 'all');
+								if (!empty($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
 										//remove menu languages
 											$array['menu_languages'][$x][$this->name.'_uuid'] = $row['uuid'];
@@ -191,7 +191,7 @@ if (!class_exists('menu')) {
 							}
 
 						//delete the checked rows
-							if (is_array($array) && @sizeof($array) != 0) {
+							if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
 
 								//grant temporary permissions
 									$p = new permissions;
@@ -240,19 +240,20 @@ if (!class_exists('menu')) {
 						header('Location: '.$this->location);
 						exit;
 					}
-https://www.fusionpbx.com/app/pages/page.php?id=f48cceb2-5e31-47c2-a84a-8f45d805e327
+
 				//toggle the checked records
 					if (is_array($records) && @sizeof($records) != 0) {
 						//get current toggle state
 							foreach ($records as $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$uuids[] = "'".$record['uuid']."'";
 								}
 							}
-							if (is_array($uuids) && @sizeof($uuids) != 0) {
+							if (!empty($uuids) && is_array($uuids) && @sizeof($uuids) != 0) {
 								$sql = "select ".$this->name."_uuid as uuid, ".$this->toggle_field." as toggle from v_".$this->table." ";
 								$sql .= "where ".$this->name."_uuid in (".implode(', ', $uuids).") ";
 								$database = new database;
+								$parameters = null;
 								$rows = $database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
@@ -264,17 +265,19 @@ https://www.fusionpbx.com/app/pages/page.php?id=f48cceb2-5e31-47c2-a84a-8f45d805
 
 						//build update array
 							$x = 0;
-							foreach ($states as $uuid => $state) {
-								//create the array
-									$array[$this->table][$x][$this->name.'_uuid'] = $uuid;
-									$array[$this->table][$x][$this->toggle_field] = $state == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
+							if (!empty($states) && is_array($states) && @sizeof($states) != 0) {
+								foreach ($states as $uuid => $state) {
+									//create the array
+										$array[$this->table][$x][$this->name.'_uuid'] = $uuid;
+										$array[$this->table][$x][$this->toggle_field] = $state == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
 
-								//increment
-									$x++;
+									//increment
+										$x++;
+								}
 							}
 
 						//save the changes
-							if (is_array($array) && @sizeof($array) != 0) {
+							if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
 								//save the array
 									$database = new database;
 									$database->app_name = $this->app_name;
@@ -403,12 +406,12 @@ https://www.fusionpbx.com/app/pages/page.php?id=f48cceb2-5e31-47c2-a84a-8f45d805
 									}
 									$uuid = $menu['uuid'];
 									$menu_item_uuid = $uuid_array[$menu['uuid']];
-									$menu_item_parent_uuid = $uuid_array[$menu['parent_uuid']];
+									$menu_item_parent_uuid = $uuid_array[$menu['parent_uuid']] ?? null;
 									$menu_item_category = $menu['category'];
-									$menu_item_icon = $menu['icon'];
+									$menu_item_icon = $menu['icon'] ?? null;
 									$menu_item_path = $menu['path'];
-									$menu_item_order = $menu['order'];
-									$menu_item_description = $menu['desc'];
+									$menu_item_order = $menu['order'] ?? null;
+									$menu_item_description = $menu['desc'] ?? null;
 
 								//sanitize the menu link
 									$menu_item_path = preg_replace('#[^a-zA-Z0-9_:\-\.\&\=\?\/]#', '', $menu_item_path);
@@ -465,8 +468,10 @@ https://www.fusionpbx.com/app/pages/page.php?id=f48cceb2-5e31-47c2-a84a-8f45d805
 									if (!$menu_item_exists && is_array($language->languages)) {
 										foreach ($language->languages as $menu_language) {
 											//set the menu item title
-												$menu_item_title = $menu["title"][$menu_language];
-												if (empty($menu_item_title)) {
+												if (!empty($menu["title"][$menu_language])) {
+													$menu_item_title = $menu["title"][$menu_language];
+												}
+												else {
 													$menu_item_title = $menu["title"]['en-us'];
 												}
 
@@ -531,7 +536,7 @@ https://www.fusionpbx.com/app/pages/page.php?id=f48cceb2-5e31-47c2-a84a-8f45d805
 										$parameters['menu_item_uuid'] = $uuid_array[$sub_row['uuid']];
 										$parameters['menu_uuid'] = $this->menu_uuid;
 										$parameters['group_name'] = $group;
-										$parameters['group_uuid'] = $group_uuids[$group];
+										$parameters['group_uuid'] = $group_uuids[$group] ?? null;
 										$database = new database;
 										$num_rows = $database->select($sql, $parameters, 'column');
 										if ($num_rows == 0) {
@@ -540,7 +545,7 @@ https://www.fusionpbx.com/app/pages/page.php?id=f48cceb2-5e31-47c2-a84a-8f45d805
 												$array['menu_item_groups'][$x]['menu_uuid'] = $this->menu_uuid;
 												$array['menu_item_groups'][$x]['menu_item_uuid'] = $uuid_array[$sub_row['uuid']];
 												$array['menu_item_groups'][$x]['group_name'] = $group;
-												$array['menu_item_groups'][$x]['group_uuid'] = $group_uuids[$group];
+												$array['menu_item_groups'][$x]['group_uuid'] = $group_uuids[$group] ?? null;
 												$x++;
 										}
 										unset($sql, $parameters, $num_rows);
@@ -910,7 +915,7 @@ https://www.fusionpbx.com/app/pages/page.php?id=f48cceb2-5e31-47c2-a84a-8f45d805
 		public function menu_horizontal($menu_array) {
 
 			//determine menu behavior
-				$menu_style = $_SESSION['theme']['menu_style']['text'] != '' ? $_SESSION['theme']['menu_style']['text'] : 'fixed';
+				$menu_style = !empty($_SESSION['theme']['menu_style']['text']) ? $_SESSION['theme']['menu_style']['text'] : 'fixed';
 				switch ($menu_style) {
 					case 'inline':
 						$menu_type = 'default';
@@ -947,10 +952,10 @@ https://www.fusionpbx.com/app/pages/page.php?id=f48cceb2-5e31-47c2-a84a-8f45d805
 								$html .= "			<a class='navbar-brand-text' href='".PROJECT_PATH."/'>".$menu_brand_text."</a>\n";
 								break;
 							case 'image_text':
-								$menu_brand_image = ($_SESSION['theme']['menu_brand_image']['text'] != '') ? escape($_SESSION['theme']['menu_brand_image']['text']) : PROJECT_PATH."/themes/default/images/logo.png";
+								$menu_brand_image = (!empty($_SESSION['theme']['menu_brand_image']['text'])) ? escape($_SESSION['theme']['menu_brand_image']['text']) : PROJECT_PATH."/themes/default/images/logo.png";
 								$html .= "			<a href='".PROJECT_PATH."/'>";
 								$html .= "				<img id='menu_brand_image' class='navbar-logo' src='".$menu_brand_image."' title=\"".escape($menu_brand_text)."\">";
-								if ($_SESSION['theme']['menu_brand_image_hover']['text'] != '') {
+								if (!empty($_SESSION['theme']['menu_brand_image_hover']['text'])) {
 									$html .= 			"<img id='menu_brand_image_hover' class='navbar-logo' style='display: none;' src='".$_SESSION['theme']['menu_brand_image_hover']['text']."' title=\"".escape($menu_brand_text)."\">";
 								}
 								$html .= 			"</a>\n";
@@ -963,7 +968,7 @@ https://www.fusionpbx.com/app/pages/page.php?id=f48cceb2-5e31-47c2-a84a-8f45d805
 								$menu_brand_image = !empty($_SESSION['theme']['menu_brand_image']['text']) ? escape($_SESSION['theme']['menu_brand_image']['text']) : PROJECT_PATH."/themes/default/images/logo.png";
 								$html .= "			<a href='".PROJECT_PATH."/'>";
 								$html .= "				<img id='menu_brand_image' class='navbar-logo' src='".$menu_brand_image."' title=\"".escape($menu_brand_text)."\">";
-								if (isset($_SESSION['theme']['menu_brand_image_hover']['text']) && $_SESSION['theme']['menu_brand_image_hover']['text'] != '') {
+								if (isset($_SESSION['theme']['menu_brand_image_hover']['text']) && !empty($_SESSION['theme']['menu_brand_image_hover']['text'])) {
 									$html .= 			"<img id='menu_brand_image_hover' class='navbar-logo' style='display: none;' src='".$_SESSION['theme']['menu_brand_image_hover']['text']."' title=\"".escape($menu_brand_text)."\">";
 								}
 								$html .= 			"</a>\n";
@@ -980,20 +985,20 @@ https://www.fusionpbx.com/app/pages/page.php?id=f48cceb2-5e31-47c2-a84a-8f45d805
 				$html .= "		<div class='collapse navbar-collapse' id='main_navbar'>\n";
 				$html .= "			<ul class='navbar-nav'>\n";
 
-				if (is_array($menu_array) && sizeof($menu_array) != 0) {
+				if (!empty($menu_array) && sizeof($menu_array) != 0) {
 					foreach ($menu_array as $index_main => $menu_parent) {
 						$mod_li = "nav-item";
 						$mod_a_1 = "";
 						$submenu = false;
-						if (is_array($menu_parent['menu_items']) && sizeof($menu_parent['menu_items']) > 0) {
+						if (!empty($menu_parent['menu_items']) && sizeof($menu_parent['menu_items']) > 0) {
 							$mod_li = "nav-item dropdown ";
 							$mod_a_1 = "data-toggle='dropdown' ";
 							$submenu = true;
 						}
-						$mod_a_2 = ($menu_parent['menu_item_link'] != '' && !$submenu) ? $menu_parent['menu_item_link'] : '#';
+						$mod_a_2 = (!empty($menu_parent['menu_item_link']) && !$submenu) ? $menu_parent['menu_item_link'] : '#';
 						$mod_a_3 = ($menu_parent['menu_item_category'] == 'external') ? "target='_blank' " : null;
 						if (isset($_SESSION['theme']['menu_main_icons']['boolean']) && $_SESSION['theme']['menu_main_icons']['boolean'] == 'true') {
-							if ($menu_parent['menu_item_icon'] != '' && substr_count($menu_parent['menu_item_icon'], 'fa-') > 0) {
+							if (!empty($menu_parent['menu_item_icon']) && substr_count($menu_parent['menu_item_icon'], 'fa-') > 0) {
 								$menu_main_icon = "<span class='fas ".$menu_parent['menu_item_icon']."' title=\"".escape($menu_parent['menu_language_title'])."\"></span>\n";
 							}
 							else {
@@ -1018,7 +1023,7 @@ https://www.fusionpbx.com/app/pages/page.php?id=f48cceb2-5e31-47c2-a84a-8f45d805
 								$mod_a_3 = ($menu_sub['menu_item_category'] == 'external') ? "target='_blank' " : null;
 								$menu_sub_icon = null;
 								if ($_SESSION['theme']['menu_sub_icons']['boolean'] != 'false') {
-									if ($menu_sub['menu_item_icon'] != '' && substr_count($menu_sub['menu_item_icon'], 'fa-') > 0) {
+									if (!empty($menu_sub['menu_item_icon']) && substr_count($menu_sub['menu_item_icon'], 'fa-') > 0) {
 										$menu_sub_icon = "<span class='fas ".escape($menu_sub['menu_item_icon'])."'></span>";
 									}
 									else {
@@ -1038,17 +1043,17 @@ https://www.fusionpbx.com/app/pages/page.php?id=f48cceb2-5e31-47c2-a84a-8f45d805
 				//current user
 					if (isset($_SESSION['theme']['user_visible']['text']) && $_SESSION['theme']['user_visible']['text'] == 'true') {
 						$html .= "		<li class='nav-item'>\n";
-						$html .= "			<a class='header_user' href='".PROJECT_PATH."/core/users/user_edit.php?id=user' title=\"".$this->text['theme-label-user']."\"><i class='fas fa-".($_SESSION['theme']['body_header_icon_user']['text'] != '' ? $_SESSION['theme']['body_header_icon_user']['text'] : 'user-circle')." fa-lg fa-fw' style='margin-top: 6px; margin-right: 5px;'></i>".$_SESSION['username']."</a>";
+						$html .= "			<a class='header_user' href='".PROJECT_PATH."/core/users/user_edit.php?id=user' title=\"".$this->text['theme-label-user']."\"><i class='fas fa-".(!empty($_SESSION['theme']['body_header_icon_user']['text']) ? $_SESSION['theme']['body_header_icon_user']['text'] : 'user-circle')." fa-lg fa-fw' style='margin-top: 6px; margin-right: 5px;'></i>".$_SESSION['username']."</a>";
 						$html .= "		</li>\n";
 					}
 				//domain name/selector
-					if (isset($_SESSION['username']) && $_SESSION['username'] != '' && permission_exists('domain_select') && count($_SESSION['domains']) > 1 && $_SESSION['theme']['domain_visible']['text'] == 'true') {
+					if (!empty($_SESSION['username']) && permission_exists('domain_select') && count($_SESSION['domains']) > 1 && $_SESSION['theme']['domain_visible']['text'] == 'true') {
 						$html .= "		<li class='nav-item'>\n";
-						$html .= "			<a class='header_domain' href='#' id='header_domain_selector_domain' title='".$this->text['theme-label-open_selector']."'><i class='fas fa-".($_SESSION['theme']['body_header_icon_domain']['text'] != '' ? $_SESSION['theme']['body_header_icon_domain']['text'] : 'globe-americas')." fa-lg fa-fw' style='margin-top: 6px; margin-right: 5px;'></i>".escape($_SESSION['domain_name'])."</a>";
+						$html .= "			<a class='header_domain' href='#' id='header_domain_selector_domain' title='".$this->text['theme-label-open_selector']."'><i class='fas fa-".(!empty($_SESSION['theme']['body_header_icon_domain']['text']) ? $_SESSION['theme']['body_header_icon_domain']['text'] : 'globe-americas')." fa-lg fa-fw' style='margin-top: 6px; margin-right: 5px;'></i>".escape($_SESSION['domain_name'])."</a>";
 						$html .= "		</li>\n";
 					}
 				//logout icon
-					if (isset($_SESSION['username']) && $_SESSION['username'] != '' && isset($_SESSION['theme']['logout_icon_visible']) && $_SESSION['theme']['logout_icon_visible']['text'] == "true") {
+					if (!empty($_SESSION['username']) && isset($_SESSION['theme']['logout_icon_visible']) && $_SESSION['theme']['logout_icon_visible']['text'] == "true") {
 						$username_full = $_SESSION['username'].((count($_SESSION['domains']) > 1) ? "@".$_SESSION["user_context"] : null);
 						$html .= "		<li class='nav-item'>\n";
 						$html .= "			<a class='logout_icon' href='#' title=\"".$this->text['theme-label-logout']."\" onclick=\"modal_open('modal-logout','btn_logout');\"><span class='fas fa-sign-out-alt'></span></a>";
@@ -1062,7 +1067,7 @@ https://www.fusionpbx.com/app/pages/page.php?id=f48cceb2-5e31-47c2-a84a-8f45d805
 				$html .= "</nav>\n";
 
 				//modal for logout icon (above)
-					if (isset($_SESSION['username']) && $_SESSION['username'] != '' && isset($_SESSION['theme']['logout_icon_visible']) && $_SESSION['theme']['logout_icon_visible']['text'] == "true") {
+					if (!empty($_SESSION['username']) && isset($_SESSION['theme']['logout_icon_visible']) && $_SESSION['theme']['logout_icon_visible']['text'] == "true") {
 						$html .= modal::create(['id'=>'modal-logout','type'=>'general','message'=>$this->text['theme-confirm-logout'],'actions'=>button::create(['type'=>'button','label'=>$this->text['theme-label-logout'],'icon'=>'sign-out-alt','id'=>'btn_logout','style'=>'float: right; margin-left: 15px;','collapse'=>'never','link'=>PROJECT_PATH.'/logout.php','onclick'=>"modal_close();"])]);
 					}
 
@@ -1090,13 +1095,13 @@ https://www.fusionpbx.com/app/pages/page.php?id=f48cceb2-5e31-47c2-a84a-8f45d805
 				if ($_SESSION['theme']['menu_brand_type']['text'] == 'none') {
 					$html .= "		<a class='menu_side_item_main menu_side_contract' onclick='menu_side_contract();' style='".($_SESSION['theme']['menu_side_pin']['boolean'] == 'true' ? "max-width: calc(100% - 50px);" : null)." ".($_SESSION['theme']['menu_side_state']['text'] != 'expanded' ? "display: none;" : null)."' title=\"".$this->text['theme-label-contract_menu']."\"><i class='fas fa-bars fa-fw' style='z-index: 99800; padding-left: 1px;'></i></a>";
 				}
-				$menu_brand_text = $_SESSION['theme']['menu_brand_text']['text'] != '' ? escape($_SESSION['theme']['menu_brand_text']['text']) : "FusionPBX";
+				$menu_brand_text = !empty($_SESSION['theme']['menu_brand_text']['text']) ? escape($_SESSION['theme']['menu_brand_text']['text']) : "FusionPBX";
 				if ($_SESSION['theme']['menu_brand_type']['text'] == 'text') {
 					$html .= "		<a class='menu_brand_text' ".($_SESSION['theme']['menu_side_state']['text'] != 'expanded' ? "style='display: none;'" : null)." href='".PROJECT_PATH."/'>".$menu_brand_text."</a>\n";
 				}
 				if ($_SESSION['theme']['menu_brand_type']['text'] == 'image' || $_SESSION['theme']['menu_brand_type']['text'] == 'image_text' || $_SESSION['theme']['menu_brand_type']['text'] == '') {
-					$menu_brand_image_contracted = $_SESSION['theme']['menu_side_brand_image_contracted']['text'] != '' ? $_SESSION['theme']['menu_side_brand_image_contracted']['text'] : PROJECT_PATH."/themes/default/images/logo_side_contracted.png";
-					$menu_brand_image_expanded = $_SESSION['theme']['menu_side_brand_image_expanded']['text'] != '' ? $_SESSION['theme']['menu_side_brand_image_expanded']['text'] : PROJECT_PATH."/themes/default/images/logo_side_expanded.png";
+					$menu_brand_image_contracted = !empty($_SESSION['theme']['menu_side_brand_image_contracted']['text']) ? $_SESSION['theme']['menu_side_brand_image_contracted']['text'] : PROJECT_PATH."/themes/default/images/logo_side_contracted.png";
+					$menu_brand_image_expanded = !empty($_SESSION['theme']['menu_side_brand_image_expanded']['text']) ? $_SESSION['theme']['menu_side_brand_image_expanded']['text'] : PROJECT_PATH."/themes/default/images/logo_side_expanded.png";
 					$html .= "		<a class='menu_brand_image' href='".PROJECT_PATH."/'>";
 					$html .= 			"<img id='menu_brand_image_contracted' style='".($_SESSION['theme']['menu_side_state']['text'] == 'expanded' ? "display: none;" : null)."' src='".escape($menu_brand_image_contracted)."' title=\"".escape($menu_brand_text)."\">";
 					$html .= 			"<img id='menu_brand_image_expanded' ".($_SESSION['theme']['menu_side_state']['text'] != 'expanded' ? "style='display: none;'" : null)." src='".escape($menu_brand_image_expanded)."' title=\"".escape($menu_brand_text)."\">";
@@ -1107,14 +1112,14 @@ https://www.fusionpbx.com/app/pages/page.php?id=f48cceb2-5e31-47c2-a84a-8f45d805
 // 				}
 				$html .= "	</div>\n";
 			//main menu items
-				if (is_array($menu_array) && sizeof($menu_array) != 0) {
+				if (!empty($menu_array)) {
 					foreach ($menu_array as $menu_index_main => $menu_item_main) {
 						$menu_target = ($menu_item_main['menu_item_category'] == 'external') ? '_blank' : '';
-						$html .= "	<a class='menu_side_item_main' ".($menu_item_main['menu_item_link'] != '' ? "href='".$menu_item_main['menu_item_link']."' target='".$menu_target."'" : "onclick=\"menu_side_expand(); menu_side_item_toggle('".$menu_item_main['menu_item_uuid']."');\"")." title=\"".$menu_item_main['menu_language_title']."\">";
+						$html .= "	<a class='menu_side_item_main' ".(!empty($menu_item_main['menu_item_link']) ? "href='".$menu_item_main['menu_item_link']."' target='".$menu_target."'" : "onclick=\"menu_side_expand(); menu_side_item_toggle('".$menu_item_main['menu_item_uuid']."');\"")." title=\"".$menu_item_main['menu_language_title']."\">";
 						if (is_array($menu_item_main['menu_items']) && sizeof($menu_item_main['menu_items']) != 0 && $_SESSION['theme']['menu_side_item_main_sub_icons']['boolean'] == 'true') {
-							$html .= "	<div class='menu_side_item_main_sub_icons' style='float: right; margin-right: -1px; ".($_SESSION['theme']['menu_side_state']['text'] != 'expanded' ? "display: none;" : null)."'><i id='sub_arrow_".$menu_item_main['menu_item_uuid']."' class='sub_arrows fas fa-".($_SESSION['theme']['menu_side_item_main_sub_icon_expand']['text'] != '' ? $_SESSION['theme']['menu_side_item_main_sub_icon_expand']['text'] : 'chevron-down')." fa-xs'></i></div>\n";
+							$html .= "	<div class='menu_side_item_main_sub_icons' style='float: right; margin-right: -1px; ".($_SESSION['theme']['menu_side_state']['text'] != 'expanded' ? "display: none;" : null)."'><i id='sub_arrow_".$menu_item_main['menu_item_uuid']."' class='sub_arrows fas fa-".(!empty($_SESSION['theme']['menu_side_item_main_sub_icon_expand']['text']) ? $_SESSION['theme']['menu_side_item_main_sub_icon_expand']['text'] : 'chevron-down')." fa-xs'></i></div>\n";
 						}
-						if ($menu_item_main['menu_item_icon'] != '') {
+						if (!empty($menu_item_main['menu_item_icon'])) {
 							$html .= "<i class='menu_side_item_icon fas ".$menu_item_main['menu_item_icon']." fa-fw' style='z-index: 99800; margin-right: 8px;'></i>";
 						}
 						$html .= "<span class='menu_side_item_title' ".($_SESSION['theme']['menu_side_state']['text'] != 'expanded' ? "style='display: none;'" : null).">".$menu_item_main['menu_language_title']."</span>";
@@ -1141,9 +1146,9 @@ https://www.fusionpbx.com/app/pages/page.php?id=f48cceb2-5e31-47c2-a84a-8f45d805
 			//header: left
 				$html .= "<div class='float-left'>\n";
 				$html .= button::create(['type'=>'button','id'=>'menu_side_state_hidden_button','title'=>$this->text['theme-label-expand_menu'],'icon'=>'bars','class'=>'default '.($_SESSION['theme']['menu_side_state']['text'] != 'hidden' ? 'hide-sm-up ' : null).'float-left','onclick'=>'menu_side_expand();']);
-				$body_header_brand_text = $_SESSION['theme']['body_header_brand_text']['text'] != '' ? escape($_SESSION['theme']['body_header_brand_text']['text']) : "FusionPBX";
+				$body_header_brand_text = !empty($_SESSION['theme']['body_header_brand_text']['text']) ? escape($_SESSION['theme']['body_header_brand_text']['text']) : "FusionPBX";
 				if ($_SESSION['theme']['body_header_brand_type']['text'] == 'image' || $_SESSION['theme']['body_header_brand_type']['text'] == 'image_text') {
-					$body_header_brand_image = $_SESSION['theme']['body_header_brand_image']['text'] != '' ? $_SESSION['theme']['body_header_brand_image']['text'] : PROJECT_PATH."/themes/default/images/logo_side_expanded.png";
+					$body_header_brand_image = !empty($_SESSION['theme']['body_header_brand_image']['text']) ? $_SESSION['theme']['body_header_brand_image']['text'] : PROJECT_PATH."/themes/default/images/logo_side_expanded.png";
 					$html .= 	"<div id='body_header_brand_image'>";
 					$html .= 		"<a href='".PROJECT_PATH."/'><img id='body_header_brand_image' src='".escape($body_header_brand_image)."' title=\"".escape($body_header_brand_text)."\"></a>";
 					$html .= 	"</div>";
@@ -1159,20 +1164,20 @@ https://www.fusionpbx.com/app/pages/page.php?id=f48cceb2-5e31-47c2-a84a-8f45d805
 					$html .= "	<a href='".PROJECT_PATH."/core/users/user_edit.php?id=user' title=\"".$this->text['theme-label-user']."\"><i class='fas fa-".($_SESSION['theme']['body_header_icon_user']['text'] != '' ? $_SESSION['theme']['body_header_icon_user']['text'] : 'user-circle')." fa-lg fa-fw' style='margin-top: 6px; margin-right: 5px;'></i>".$_SESSION['username']."</a>";
 					$html .= "</span>\n";
 				//domain name/selector (sm+)
-					if (isset($_SESSION['username']) && $_SESSION['username'] != '' && permission_exists('domain_select') && count($_SESSION['domains']) > 1 && $_SESSION['theme']['domain_visible']['text'] == 'true') {
+					if (!empty($_SESSION['username']) && permission_exists('domain_select') && count($_SESSION['domains']) > 1 && $_SESSION['theme']['domain_visible']['text'] == 'true') {
 						$html .= "<span style='display: inline-block; padding-right: 10px; font-size: 90%;'>\n";
 						$html .= "	<a href='#' id='header_domain_selector_domain' title='".$this->text['theme-label-open_selector']."'><i class='fas fa-".($_SESSION['theme']['body_header_icon_domain']['text'] != '' ? $_SESSION['theme']['body_header_icon_domain']['text'] : 'globe-americas')." fa-lg fa-fw' style='margin-top: 6px; margin-right: 5px;'></i>".escape($_SESSION['domain_name'])."</a>";
 						$html .= "</span>\n";
 					}
 				//logout icon
-					if (isset($_SESSION['username']) && $_SESSION['username'] != '' && $_SESSION['theme']['logout_icon_visible']['text'] == "true") {
+					if (!empty($_SESSION['username']) && $_SESSION['theme']['logout_icon_visible']['text'] == "true") {
 						$html .= "<a id='header_logout_icon' href='#' title=\"".$this->text['theme-label-logout']."\" onclick=\"modal_open('modal-logout','btn_logout');\"><span class='fas fa-sign-out-alt'></span></a>";
 					}
 				$html .= "</div>";
 			$html .= "	</div>\n";
 
 			//modal for logout icon (above)
-				if (isset($_SESSION['username']) && $_SESSION['username'] != '' && $_SESSION['theme']['logout_icon_visible']['text'] == "true") {
+				if (!empty($_SESSION['username']) && $_SESSION['theme']['logout_icon_visible']['text'] == "true") {
 					$html .= modal::create(['id'=>'modal-logout','type'=>'general','message'=>$this->text['theme-confirm-logout'],'actions'=>button::create(['type'=>'button','label'=>$this->text['theme-label-logout'],'icon'=>'sign-out-alt','id'=>'btn_logout','style'=>'float: right; margin-left: 15px;','collapse'=>'never','link'=>PROJECT_PATH.'/logout.php','onclick'=>"modal_close();"])]);
 				}
 

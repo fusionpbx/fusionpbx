@@ -25,12 +25,8 @@
 	James Rose <james.o.rose@gmail.com>
 */
 
-//set the include path
-$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 require_once "resources/functions/object_to_array.php";
 require_once "resources/functions/parse_message.php";
 require_once "resources/classes/text.php";
@@ -44,7 +40,7 @@ $result = $database->select($sql, null, 'all');
 unset($sql);
 
 function arr_to_map(&$arr){
-	if(is_array($arr)){
+	if (!empty($arr)){
 		$map = Array();
 		foreach($arr as &$val){
 			$map[$val] = true;
@@ -54,7 +50,7 @@ function arr_to_map(&$arr){
 	return false;
 }
 
-if (is_array($result) && @sizeof($result) != 0) {
+if (!empty($result) && @sizeof($result) != 0) {
 
 	//load default settings
 	$default_settings = load_default_settings();
@@ -269,9 +265,11 @@ if (is_array($result) && @sizeof($result) != 0) {
 					print('***********************' . "\n");
 					print('fax message:' . "\n");
 					print(' - length: ' . strlen($fax_message) . "\n");
-					print('fax files [' . sizeof($emailed_files['name']) . ']:' . "\n");
-					for($i = 0; $i < sizeof($emailed_files['name']);++$i){
-						print(' - ' . $emailed_files['name'][$i] . ' - ' . $emailed_files['size'][$i] . "\n");
+					if (isset($emailed_files['name'])) {
+						print('fax files [' . sizeof($emailed_files['name']) . ']:' . "\n");
+						for($i = 0; $i < sizeof($emailed_files['name']);++$i){
+							print(' - ' . $emailed_files['name'][$i] . ' - ' . $emailed_files['size'][$i] . "\n");
+						}
 					}
 					print('***********************' . "\n");
 
@@ -307,7 +305,7 @@ function load_default_settings() {
 	$database = new database;
 	$result = $database->select($sql, null, 'all');
 	//load the settings into an array
-	if (is_array($result) && @sizeof($result) != 0) {
+	if (!empty($result) && @sizeof($result) != 0) {
 		foreach ($result as $row) {
 			$name = $row['default_setting_name'];
 			$category = $row['default_setting_category'];
@@ -344,7 +342,7 @@ function load_domain_settings($domain_uuid) {
 		$parameters['domain_uuid'] = $domain_uuid;
 		$database = new database;
 		$result = $database->select($sql, $parameters, 'all');
-		if (is_array($result) && @sizeof($result) != 0) {
+		if (!empty($result) && @sizeof($result) != 0) {
 			//unset the arrays that domains are overriding
 				foreach ($result as $row) {
 					$name = $row['domain_setting_name'];

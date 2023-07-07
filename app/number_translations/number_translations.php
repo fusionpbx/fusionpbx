@@ -24,12 +24,8 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
 
@@ -46,15 +42,21 @@
 	$language = new text;
 	$text = $language->get();
 
+//set additional variables
+	$search = $_GET["search"] ?? '';
+
+//set from session variables
+	$list_row_edit_button = !empty($_SESSION['theme']['list_row_edit_button']['boolean']) ? $_SESSION['theme']['list_row_edit_button']['boolean'] : 'false';
+
 //get the http post data
-	if (is_array($_POST['number_translations'])) {
+	if (!empty($_POST['number_translations'])) {
 		$action = $_POST['action'];
 		$search = $_POST['search'];
 		$number_translations = $_POST['number_translations'];
 	}
 
 //process the http post data by action
-	if ($action != '' && is_array($number_translations) && @sizeof($number_translations) != 0) {
+	if (!empty($action) && !empty($number_translations)) {
 
 		//validate the token
 		$token = new token;
@@ -65,8 +67,9 @@
 		}
 
 		//prepare the array
-		foreach($number_translations as $row) {
-			$array['number_translations'][$x]['checked'] = $row['checked'];
+		$x = 0;
+		foreach ($number_translations as $row) {
+			$array['number_translations'][$x]['checked'] = $row['checked'] ?? null;
 			$array['number_translations'][$x]['number_translation_uuid'] = $row['number_translation_uuid'];
 			$array['number_translations'][$x]['number_translation_enabled'] = $row['number_translation_enabled'];
 			$x++;
@@ -97,16 +100,16 @@
 		}
 
 		//redirect the user
-		header('Location: number_translations.php'.($search != '' ? '?search='.urlencode($search) : null));
+		header('Location: number_translations.php'.(!empty($search) ? '?search='.urlencode($search) : null));
 		exit;
 	}
 
 //get order and order by
-	$order_by = $_GET["order_by"];
-	$order = $_GET["order"];
+	$order_by = $_GET["order_by"] ?? '';
+	$order = $_GET["order"] ?? '';
 
 //add the search
-	if (isset($_GET["search"])) {
+	if (!empty($search)) {
 		$search = strtolower($_GET["search"]);
 		$parameters['search'] = '%'.$search.'%';
 	}
@@ -114,19 +117,19 @@
 //get the count
 	$sql = "select count(number_translation_uuid) ";
 	$sql .= "from v_number_translations ";
-	if (isset($_GET["search"])) {
+	if (!empty($search)) {
 		$sql .= "where (";
 		$sql .= "	lower(number_translation_name) like :search ";
 		$sql .= "	or lower(number_translation_description) like :search ";
 		$sql .= ") ";
 	}
 	$database = new database;
-	$num_rows = $database->select($sql, $parameters, 'column');
+	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 
 //prepare to page the results
-	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$rows_per_page = (!empty($_SESSION['domain']['paging']['numeric'])) ? $_SESSION['domain']['paging']['numeric'] : 50;
 	$param = $search ? "&search=".$search : null;
-	$page = is_numeric($_GET['page']) ? $_GET['page'] : 0;
+	$page = isset($_GET['page']) ? $_GET['page'] : 0;
 	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
 	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
@@ -138,7 +141,7 @@
 	$sql .= "cast(number_translation_enabled as text), ";
 	$sql .= "number_translation_description ";
 	$sql .= "from v_number_translations ";
-	if (isset($_GET["search"])) {
+	if (!empty($search)) {
 		$sql .= "where (";
 		$sql .= "	lower(number_translation_name) like :search ";
 		$sql .= "	or lower(number_translation_description) like :search ";
@@ -147,7 +150,7 @@
 	$sql .= order_by($order_by, $order, 'number_translation_name', 'asc');
 	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;
-	$number_translations = $database->select($sql, $parameters, 'all');
+	$number_translations = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 
 //create token
@@ -178,7 +181,7 @@
 	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=''>";
 	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search']);
 	//echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','link'=>'number_translations.php','style'=>($search == '' ? 'display: none;' : null)]);
-	if ($paging_controls_mini != '') {
+	if (!empty($paging_controls_mini)) {
 		echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>\n";
 	}
 	echo "		</form>\n";
@@ -207,18 +210,18 @@
 	echo "<tr class='list-header'>\n";
 	if (permission_exists('number_translation_add') || permission_exists('number_translation_edit') || permission_exists('number_translation_delete')) {
 		echo "	<th class='checkbox'>\n";
-		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".($number_translations ?: "style='visibility: hidden;'").">\n";
+		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".(!empty($number_translations) ?: "style='visibility: hidden;'").">\n";
 		echo "	</th>\n";
 	}
 	echo th_order_by('number_translation_name', $text['label-number_translation_name'], $order_by, $order);
 	echo th_order_by('number_translation_enabled', $text['label-number_translation_enabled'], $order_by, $order, null, "class='center'");
 	echo "	<th class='hide-sm-dn'>".$text['label-number_translation_description']."</th>\n";
-	if (permission_exists('number_translation_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+	if (permission_exists('number_translation_edit') && $list_row_edit_button == 'true') {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
 
-	if (is_array($number_translations) && @sizeof($number_translations) != 0) {
+	if (!empty($number_translations)) {
 		$x = 0;
 		foreach ($number_translations as $row) {
 			if (permission_exists('number_translation_edit')) {
@@ -250,7 +253,7 @@
 			}
 			echo "	</td>\n";
 			echo "	<td class='description overflow hide-sm-dn'>".escape($row['number_translation_description'])."</td>\n";
-			if (permission_exists('number_translation_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+			if (permission_exists('number_translation_edit') && $list_row_edit_button == 'true') {
 				echo "	<td class='action-button'>\n";
 				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
 				echo "	</td>\n";

@@ -24,12 +24,8 @@
  Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -85,7 +81,7 @@
 		$domain_setting_name = strtolower($_POST["domain_setting_name"]);
 		$domain_setting_value = $_POST["domain_setting_value"];
 		$domain_setting_order = $_POST["domain_setting_order"];
-		$domain_setting_enabled = strtolower($_POST["domain_setting_enabled"] ?: 'false');
+		$domain_setting_enabled = strtolower($_POST["domain_setting_enabled"] ?? 'false');
 		$domain_setting_description = $_POST["domain_setting_description"];
 	}
 
@@ -176,7 +172,7 @@
 								$array['dialplan_details'][0]['dialplan_detail_order'] = '20';
 								$p->add('dialplan_detail_add', 'temp');
 							}
-	view_array($array);
+
 							if (!empty($array)) {
 								$database = new database;
 								$database->app_name = 'domain_settings';

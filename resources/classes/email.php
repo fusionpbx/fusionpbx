@@ -398,7 +398,7 @@ if (!class_exists('email')) {
 					include_once("resources/phpmailer/class.smtp.php");
 
 					//use the session email default settings
-					if ($_SESSION['email']['smtp_hostname']['text'] != '') { 
+					if (!empty($_SESSION['email']['smtp_hostname']['text'])) {
 						$smtp['hostname'] = $_SESSION['email']['smtp_hostname']['text'];
 					}
 					$smtp['host'] 		= (strlen($_SESSION['email']['smtp_host']['text']) ? $_SESSION['email']['smtp_host']['text']: '127.0.0.1');
@@ -415,7 +415,7 @@ if (!class_exists('email')) {
 					$smtp['from'] 		= $_SESSION['email']['smtp_from']['text'];
 					$smtp['from_name'] 	= $_SESSION['email']['smtp_from_name']['text'];
 					$smtp['validate_certificate'] = $_SESSION['email']['smtp_validate_certificate']['boolean'];
-					$smtp['crypto_method'] = $_SESSION['email']['smtp_crypto_method']['text'];
+					$smtp['crypto_method'] = $_SESSION['email']['smtp_crypto_method']['text'] ?? null;
 
 					if (isset($_SESSION['voicemail']['smtp_from']) && !empty($_SESSION['voicemail']['smtp_from']['text'])) {
 						$smtp['from'] = $_SESSION['voicemail']['smtp_from']['text'];
@@ -451,7 +451,7 @@ if (!class_exists('email')) {
 					//create the email object and set general settings
 					$mail = new PHPMailer();
 					$mail->IsSMTP();
-					if ($smtp['hostname'] != '') {
+					if (!empty($smtp['hostname'])) {
 						$mail->Hostname = $smtp['hostname'];
 					}
 					$mail->Host = $smtp['host'];
@@ -469,7 +469,7 @@ if (!class_exists('email')) {
 					}
 
 					$smtp_secure = true;
-					if ($smtp['secure']  == "") {
+					if ($smtp['secure'] == "") {
 						$mail->SMTPSecure = 'none';
 						$mail->SMTPAutoTLS = false;
 						$smtp_secure = false;

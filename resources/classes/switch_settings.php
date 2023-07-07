@@ -66,6 +66,18 @@ if (!class_exists('switch_settings')) {
 					}
 				}
 
+			//set defaults
+				$vars['base_dir'] = $vars['base_dir'] ?? '';
+				$vars['conf_dir'] = $vars['conf_dir'] ?? '';
+				$vars['db_dir'] = $vars['db_dir'] ?? '';
+				$vars['recordings_dir'] = $vars['recordings_dir'] ?? '';
+				$vars['script_dir'] = $vars['script_dir'] ?? '';
+				$vars['sounds_dir'] = $vars['sounds_dir'] ?? '';
+				$vars['storage_dir'] = $vars['storage_dir'] ?? '';
+				$vars['grammar_dir'] = $vars['grammar_dir'] ?? '';
+				$vars['log_dir'] = $vars['log_dir'] ?? '';
+				$vars['mod_dir'] = $vars['mod_dir'] ?? '';
+
 			//set the bin directory
 				if ($vars['base_dir'] == "/usr/local/freeswitch") {
 					$bin = "/usr/local/freeswitch/bin"; 
@@ -248,12 +260,10 @@ if (!class_exists('switch_settings')) {
 				}
 
 			//set the default settings
-				if (is_array($array)) {
+				if (!empty($array) && is_array($array)) {
 					foreach ($array as $row) {
-						if (!isset($_SESSION['switch'][$row['default_setting_subcategory']])) {
-							if ($row['default_setting_enabled'] != "false") {
-								$_SESSION['switch'][$row['default_setting_subcategory']] = $row['default_setting_value'];
-							}
+						if (isset($row['default_setting_enabled']) && $row['default_setting_enabled'] == "true" && isset($row['default_setting_subcategory'])) {
+							$_SESSION['switch'][$row['default_setting_subcategory']] = $row['default_setting_value'] ?? '';
 						}
 					}
 				}

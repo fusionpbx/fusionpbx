@@ -1,14 +1,13 @@
 <?php
 
-function device_by_mac($mac) {
+function device_by_mac($device_address) {
 	$sql = "select * from v_devices ";
-	$sql .= "where device_mac_address = :mac ";
+	$sql .= "where device_address = :device_address ";
 	$sql .= "and device_enabled = 'true' ";
-	$parameters['mac'] = $mac;
+	$parameters['device_address'] = $device_address;
 	$database = new database;
 	$row = $database->select($sql, $parameters, 'row');
 	return is_array($row) && @sizeof($row) != 0 ? $row : false;
-	unset($sql, $parameters, $row);
 }
 
 function device_by_ext($ext, $domain) {
@@ -25,7 +24,6 @@ function device_by_ext($ext, $domain) {
 	$database = new database;
 	$row = $database->select($sql, $parameters, 'row');
 	return is_array($row) && @sizeof($row) != 0 ? $row : false;
-	unset($sql, $parameters, $row);
 }
 
 ?>

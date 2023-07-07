@@ -1,11 +1,31 @@
 <?php
+/*
+	FusionPBX
+	Version: MPL 1.1
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
+	The contents of this file are subject to the Mozilla Public License Version
+	1.1 (the "License"); you may not use this file except in compliance with
+	the License. You may obtain a copy of the License at
+	http://www.mozilla.org/MPL/
+
+	Software distributed under the License is distributed on an "AS IS" basis,
+	WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+	for the specific language governing rights and limitations under the
+	License.
+
+	The Original Code is FusionPBX
+
+	The Initial Developer of the Original Code is
+	Mark J Crane <markjcrane@fusionpbx.com>
+	Portions created by the Initial Developer are Copyright (C) 2018-2023
+	the Initial Developer. All Rights Reserved.
+
+	Contributor(s):
+	Mark J Crane <markjcrane@fusionpbx.com>
+*/
 
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
 
@@ -22,15 +42,18 @@
 	$language = new text;
 	$text = $language->get();
 
+//set from session variables
+	$list_row_edit_button = !empty($_SESSION['theme']['list_row_edit_button']['boolean']) ? $_SESSION['theme']['list_row_edit_button']['boolean'] : 'false';
+
 //get the http post data
-	if (is_array($_POST['conference_profile_params'])) {
+	if (!empty($_POST['conference_profile_params'])) {
 		$action = $_POST['action'];
 		$conference_profile_uuid = $_POST['conference_profile_uuid'];
 		$conference_profile_params = $_POST['conference_profile_params'];
 	}
 
 //process the http post data by action
-	if ($action != '' && is_array($conference_profile_params) && @sizeof($conference_profile_params) != 0) {
+	if (!empty($action) && !empty($conference_profile_params)) {
 		switch ($action) {
 			case 'toggle':
 				if (permission_exists('conference_profile_param_edit')) {
@@ -53,8 +76,8 @@
 	}
 
 //get variables used to control the order
-	$order_by = $_GET["order_by"];
-	$order = $_GET["order"];
+	$order_by = $_GET["order_by"] ?? '';
+	$order = $_GET["order"] ?? '';
 
 //prepare to page the results
 	$sql = "select count(conference_profile_param_uuid) ";
@@ -65,10 +88,10 @@
 	$num_rows = $database->select($sql, $parameters, 'column');
 
 //prepare to page the results
-	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$rows_per_page = (!empty($_SESSION['domain']['paging']['numeric'])) ? $_SESSION['domain']['paging']['numeric'] : 50;
 	$param = "&id=".$conference_profile_uuid;
 	if (isset($_GET['page'])) {
-		$page = is_numeric($_GET['page']) ? $_GET['page'] : 0;
+		$page = isset($_GET['page']) ? $_GET['page'] : 0;
 		list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
 		$offset = $rows_per_page * $page;
 	}
@@ -76,9 +99,9 @@
 //get the list
 	$sql = str_replace('count(conference_profile_param_uuid)', '*', $sql);
 	$sql .= order_by($order_by, $order, 'profile_param_name', 'asc');
-	$sql .= limit_offset($rows_per_page, $offset);
+	$sql .= limit_offset($rows_per_page ?? '', $offset ?? '');
 	$database = new database;
-	$result = $database->select($sql, $parameters, 'all');
+	$result = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 
 //create token
@@ -121,19 +144,19 @@
 	echo "<tr class='list-header'>\n";
 	if (permission_exists('conference_profile_param_edit') || permission_exists('conference_profile_param_delete')) {
 		echo "	<th class='checkbox'>\n";
-		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle();' ".($result ?: "style='visibility: hidden;'").">\n";
+		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle();' ".(!empty($result) ?: "style='visibility: hidden;'").">\n";
 		echo "	</th>\n";
 	}
 	echo th_order_by('profile_param_name', $text['label-profile_param_name'], $order_by, $order, null, null, $param);
 	echo th_order_by('profile_param_value', $text['label-profile_param_value'], $order_by, $order, null, "class='pct-40'", $param);
 	echo th_order_by('profile_param_enabled', $text['label-profile_param_enabled'], $order_by, $order, null, "class='center'", $param);
 	echo th_order_by('profile_param_description', $text['label-profile_param_description'], $order_by, $order, null, "class='hide-sm-dn'", $param);
-	if (permission_exists('conference_profile_param_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+	if (permission_exists('conference_profile_param_edit') && $list_row_edit_button == 'true') {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
 
-	if (is_array($result) && @sizeof($result) != 0) {
+	if (!empty($result)) {
 		$x = 0;
 		foreach ($result as $row) {
 			if (permission_exists('conference_profile_param_edit')) {
@@ -165,7 +188,7 @@
 			}
 			echo "	</td>\n";
 			echo "	<td class='description overflow hide-sm-dn'>".escape($row['profile_param_description'])."&nbsp;</td>\n";
-			if (permission_exists('conference_profile_param_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+			if (permission_exists('conference_profile_param_edit') && $list_row_edit_button == 'true') {
 				echo "	<td class='action-button'>\n";
 				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
 				echo "	</td>\n";
@@ -178,7 +201,7 @@
 
 	echo "</table>\n";
 	echo "<br />\n";
-	echo "<div align='center'>".$paging_controls."</div>\n";
+	echo "<div align='center'>".!empty($paging_controls)."</div>\n";
 	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "</form>\n";
 

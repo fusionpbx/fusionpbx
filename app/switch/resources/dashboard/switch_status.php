@@ -1,11 +1,7 @@
 <?php
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 4) . "/resources/require.php";
 
 //check permisions
 	require_once "resources/check_auth.php";
@@ -57,6 +53,8 @@
 	}
 
 //channel count
+	$channels = '';
+	$tr_link_channels = '';
 	if (permission_exists('switch_channels') && $fp) {
 		$tmp = event_socket_request($fp, 'api status');
 		$matches = Array();
@@ -68,6 +66,7 @@
 	}
 
 //registration count
+	$registrations = '';
 	if (permission_exists('switch_registrations') && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/registrations/")) {
 		$registration = new registrations;
 		if (permission_exists("registration_all")) {
@@ -129,7 +128,7 @@
 	echo "</tr>\n";
 
 	//switch version
-	if (permission_exists('switch_version') && $switch_version != '') {
+	if (permission_exists('switch_version') && !empty($switch_version)) {
 		echo "<tr class='tr_link' ".$tr_link_sip_status.">\n";
 		echo "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-switch']."</td>\n";
 		echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'><a ".$tr_link_sip_status.">".$switch_version." (".$switch_bits.")</a></td>\n";
@@ -138,7 +137,7 @@
 	}
 
 	//switch uptime
-	if (permission_exists('switch_uptime') && $uptime != '') {
+	if (permission_exists('switch_uptime') && !empty($uptime)) {
 		echo "<tr class='tr_link' ".$tr_link_sip_status.">\n";
 		echo "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-switch_uptime']."</td>\n";
 		echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'><a ".$tr_link_sip_status.">".$uptime."</a></td>\n";

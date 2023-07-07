@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -25,12 +25,8 @@
 	Lewis Hallam <lewishallam80@gmail.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 
 //check permissions
 	require_once "resources/check_auth.php";
@@ -46,8 +42,20 @@
 	$language = new text;
 	$text = $language->get();
 
+//set the defaults
+	$call_flow_sound = '';
+	$call_flow_alternate_sound = '';
+	$call_flow_name = '';
+	$call_flow_extension = '';
+	$call_flow_feature_code = '';
+	$call_flow_pin_number = '';
+	$call_flow_label = '';
+	$call_flow_alternate_label = '';
+	$call_flow_description = '';
+	$call_flow_status = '';
+
 //action add or update
-	if (is_uuid($_REQUEST["id"])) {
+	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
 		$call_flow_uuid = $_REQUEST["id"];
 	}
@@ -59,11 +67,11 @@
 	$destination = new destinations;
 
 //get http post variables and set them to php variables
-	if (count($_POST) > 0) {
+	if (!empty($_POST)) {
 
 		//set the variables from the http values
-			$call_flow_uuid = $_POST["call_flow_uuid"];
-			$dialplan_uuid = $_POST["dialplan_uuid"];
+			$call_flow_uuid = $_POST["call_flow_uuid"] ?? null;
+			$dialplan_uuid = $_POST["dialplan_uuid"] ?? null;
 			$call_flow_name = $_POST["call_flow_name"];
 			$call_flow_extension = $_POST["call_flow_extension"];
 			$call_flow_feature_code = $_POST["call_flow_feature_code"];
@@ -76,7 +84,7 @@
 			$call_flow_alternate_sound = $_POST["call_flow_alternate_sound"];
 			$call_flow_alternate_destination = $_POST["call_flow_alternate_destination"];
 			$call_flow_context = $_POST["call_flow_context"];
-			$call_flow_enabled = $_POST["call_flow_enabled"] ?: 'false';
+			$call_flow_enabled = $_POST["call_flow_enabled"] ?? 'false';
 			$call_flow_description = $_POST["call_flow_description"];
 
 		//seperate the action and the param
@@ -91,7 +99,7 @@
 	}
 
 //process the user data and save it to the database
-	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
+	if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
 		//get the uuid from the POST
 			if ($action == "update") {
@@ -119,8 +127,8 @@
 			//if (empty($call_flow_pin_number)) { $msg .= $text['message-required']." ".$text['label-call_flow_pin_number']."<br>\n"; }
 			//if (empty($call_flow_label)) { $msg .= $text['message-required']." ".$text['label-call_flow_label']."<br>\n"; }
 			//if (empty($call_flow_sound)) { $msg .= $text['message-required']." ".$text['label-call_flow_sound']."<br>\n"; }
-			if (empty($call_flow_app)) { $msg .= $text['message-required']." ".$text['label-call_flow_app']."<br>\n"; }
-			if (empty($call_flow_data)) { $msg .= $text['message-required']." ".$text['label-call_flow_data']."<br>\n"; }
+			if (empty($call_flow_app)) { $msg .= $text['message-required']." ".($text['label-call_flow_app'] ?? '')."<br>\n"; }
+			if (empty($call_flow_data)) { $msg .= $text['message-required']." ".($text['label-call_flow_data'] ?? '')."<br>\n"; }
 			//if (empty($call_flow_alternate_label)) { $msg .= $text['message-required']." ".$text['label-call_flow_alternate_label']."<br>\n"; }
 			//if (empty($call_flow_alternate_sound)) { $msg .= $text['message-required']." ".$text['label-call_flow_alternate_sound']."<br>\n"; }
 			//if (empty($call_flow_alternate_app)) { $msg .= $text['message-required']." ".$text['label-call_flow_alternate_app']."<br>\n"; }
@@ -140,12 +148,12 @@
 			}
 
 		//add the call_flow_uuid
-			if (!is_uuid($call_flow_uuid)) {
+			if (empty($call_flow_uuid)) {
 				$call_flow_uuid = uuid();
 			}
 
 		//add the dialplan_uuid
-			if (!is_uuid($dialplan_uuid)) {
+			if (empty($dialplan_uuid)) {
 				$dialplan_uuid = uuid();
 			}
 
@@ -302,7 +310,7 @@
 	} //(is_array($_POST) && empty($_POST["persistformvar"]))
 
 //pre-populate the form
-	if (is_array($_GET) && $_POST["persistformvar"] != "true") {
+	if (!empty($_GET) && empty($_POST["persistformvar"])) {
 		$call_flow_uuid = $_GET["id"];
 		$sql = "select * from v_call_flows ";
 		$sql .= "where domain_uuid = :domain_uuid ";
@@ -420,7 +428,7 @@
 			}
 		//recordings
 			$tmp_selected = false;
-			if (count($recordings) > 0) {
+			if (!empty($recordings)) {
 				echo "<optgroup label=".$text['recordings'].">\n";
 				foreach ($recordings as &$row) {
 					$recording_name = $row["recording_name"];
@@ -445,7 +453,7 @@
 			$database = new database;
 			$result = $database->select($sql, $parameters, 'all');
 			unset($parameters, $sql);
-			if (is_array($result)) {
+			if (!empty($result)) {
 				echo "<optgroup label='Phrases'>\n";
 				foreach ($result as &$row) {
 					if ($var == "phrase:".$row["phrase_uuid"]) {
@@ -462,7 +470,7 @@
 			if ($load_sound) {
 				$file = new file;
 				$sound_files = $file->sounds();
-				if (is_array($sound_files)) {
+				if (!empty($sound_files)) {
 					echo "<optgroup label=".$text["sounds"].">\n";
 					foreach ($sound_files as $value) {
 						if (!empty($value)) {
@@ -623,7 +631,7 @@
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='call_flow_label' maxlength='255' value=\"".escape($call_flow_label)."\">\n";
 	echo "<br />\n";
-	echo $text['description-call_flow_label']."\n";
+	echo !empty($text['description-call_flow_label'])."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -647,9 +655,9 @@
 	echo "	".$text['label-call_flow_destination']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	$select_value = '';
 	//set the selected value
-	if (!empty($call_flow_app.$call_flow_data)) {
+	$select_value = '';
+	if (!empty($call_flow_app) && !empty($call_flow_data)) {
 		$select_value = $call_flow_app.':'.$call_flow_data;
 	}
 	//show the destination list
@@ -692,7 +700,7 @@
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	$select_value = '';
-	if (!empty($call_flow_alternate_app.$call_flow_alternate_data)) {
+	if (!empty($call_flow_alternate_app) && !empty($call_flow_alternate_data)) {
 		$select_value = $call_flow_alternate_app.':'.$call_flow_alternate_data;
 	}
 	echo $destination->select('dialplan', 'call_flow_alternate_destination', $select_value);
@@ -739,7 +747,7 @@
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='call_flow_description' maxlength='255' value=\"".escape($call_flow_description)."\">\n";
 	echo "<br />\n";
-	echo $text['description-call_flow_description']."\n";
+	echo !empty($text['description-call_flow_description'])."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 

@@ -27,7 +27,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2022
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -36,12 +36,8 @@
 
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
-//includes
-	require_once "resources/require.php";
+//includes files
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -57,10 +53,10 @@
 	if (count($_GET) > 0) {
 		$cmd = trim($_GET["cmd"]);
 		$name = trim($_GET["name"]);
-		$uuid = trim($_GET["uuid"]);
+		$uuid = trim($_GET["uuid"] ?? '');
 		$data = trim($_GET["data"]);
-		$id = trim($_GET["id"]);
-		$direction = trim($_GET["direction"]);
+		$id = trim($_GET["id"] ?? '');
+		$direction = trim($_GET["direction"] ?? '');
 	}
 
 //authorized commands

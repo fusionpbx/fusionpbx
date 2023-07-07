@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2019
+	Portions created by the Initial Developer are Copyright (C) 2019-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -55,7 +55,7 @@ if (!class_exists('domain_settings')) {
 				$this->app_name = 'domain_settings';
 				$this->app_uuid = 'b31e723a-bf70-670c-a49b-470d2a232f71';
 				$this->permission_prefix = 'domain_setting_';
-				$this->list_page = PROJECT_PATH."/core/domains/domain_edit.php?id=".urlencode($this->domain_uuid);
+				$this->list_page = PROJECT_PATH."/core/domains/domain_edit.php?id=".urlencode($this->domain_uuid ?? '');
 				$this->table = 'domain_settings';
 				$this->uuid_prefix = 'domain_setting_';
 				$this->toggle_field = 'domain_setting_enabled';
@@ -86,7 +86,7 @@ if (!class_exists('domain_settings')) {
 
 						//build the delete array
 							foreach ($records as $x => $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
 									$array[$this->table][$x]['domain_uuid'] = $this->domain_uuid;
 								}
@@ -133,7 +133,7 @@ if (!class_exists('domain_settings')) {
 
 						//get current toggle state
 							foreach ($records as $x => $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$uuids[] = "'".$record['uuid']."'";
 								}
 							}
@@ -204,7 +204,7 @@ if (!class_exists('domain_settings')) {
 
 						//get checked records
 							foreach($records as $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$uuids[] = $record['uuid'];
 								}
 							}

@@ -1,4 +1,28 @@
 <?php
+/*
+	FusionPBX
+	Version: MPL 1.1
+
+	The contents of this file are subject to the Mozilla Public License Version
+	1.1 (the "License"); you may not use this file except in compliance with
+	the License. You may obtain a copy of the License at
+	http://www.mozilla.org/MPL/
+
+	Software distributed under the License is distributed on an "AS IS" basis,
+	WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+	for the specific language governing rights and limitations under the
+	License.
+
+	The Original Code is FusionPBX
+
+	The Initial Developer of the Original Code is
+	Mark J Crane <markjcrane@fusionpbx.com>
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
+	the Initial Developer. All Rights Reserved.
+
+	Contributor(s):
+	Mark J Crane <markjcrane@fusionpbx.com>
+*/
 
 /**
  * plugin_email
@@ -32,6 +56,7 @@ class plugin_email {
 			$settings['theme']['logo'] = !empty($_SESSION['theme']['logo']['text']) ? $_SESSION['theme']['logo']['text'] : PROJECT_PATH.'/themes/default/images/logo_login.png';
 			$settings['theme']['login_logo_width'] = !empty($_SESSION['theme']['login_logo_width']['text']) ? $_SESSION['theme']['login_logo_width']['text'] : 'auto; max-width: 300px';
 			$settings['theme']['login_logo_height'] = !empty($_SESSION['theme']['login_logo_height']['text']) ? $_SESSION['theme']['login_logo_height']['text'] : 'auto; max-height: 300px';
+			$settings['theme']['message_delay'] = isset($_SESSION['theme']['message_delay']) ? 1000 * (float) $_SESSION['theme']['message_delay'] : 3000;
 
 			//set a default template
 			$_SESSION['domain']['template']['name'] = 'default';
@@ -75,6 +100,10 @@ class plugin_email {
 				$view->assign("login_logo_height", $settings['theme']['login_logo_height']);
 				$view->assign("login_logo_source", $settings['theme']['logo']);
 				$view->assign("button_login", $text['button-login']);
+				$view->assign("message_delay", $settings['theme']['message_delay']);
+
+				//messages
+				$view->assign('messages', message::html(true, '		'));
 
 				//show the views
 				$content = $view->render('username.htm');
@@ -121,8 +150,32 @@ class plugin_email {
 				$_SESSION["user_email"] = $row['user_email'];
 				$_SESSION["contact_uuid"] = $row["contact_uuid"];
 
+				//user not found
+				if (empty($row) || !is_array($row) || @sizeof($row) == 0) {
+					//clear submitted usernames
+					unset($this->username, $_SESSION['username'], $_REQUEST['username'], $_POST['username']);
+
+					//clear authentication session
+					unset($_SESSION['authentication']);
+
+					//build the result array
+					$result["plugin"] = "email";
+					$result["domain_uuid"] = $_SESSION["domain_uuid"];
+					$result["domain_name"] = $_SESSION["domain_name"];
+					$result["authorized"] = false;
+
+					//retun the array
+					return $result;
+				}
+
 				//user email not found
-				if (empty($row["user_email"])) {
+				else if (empty($row["user_email"])) {
+					//clear submitted usernames
+					unset($this->username, $_SESSION['username'], $_REQUEST['username'], $_POST['username']);
+
+					//clear authentication session
+					unset($_SESSION['authentication']);
+
 					//build the result array
 					$result["plugin"] = "email";
 					$result["domain_name"] = $_SESSION["domain_name"];
@@ -143,8 +196,8 @@ class plugin_email {
 				$_SESSION["user"]["authentication"]["email"]["code"] = generate_password(6, 1);
 				$_SESSION["user"]["authentication"]["email"]["epoch"] = time();
 
-				////$_SESSION["authentication_address"] = $_SERVER['REMOTE_ADDR'];
-				////$_SESSION["authentication_date"] = 'now()';
+				//$_SESSION["authentication_address"] = $_SERVER['REMOTE_ADDR'];
+				//$_SESSION["authentication_date"] = 'now()';
 
 				//set the authentication code
 				//$sql = "update v_users \n";
@@ -255,11 +308,14 @@ class plugin_email {
 				$view->assign("login_logo_height", $settings['theme']['login_logo_height']);
 				$view->assign("login_logo_source", $settings['theme']['logo']);
 				$view->assign("button_verify", $text['label-verify']);
+				$view->assign("message_delay", $settings['theme']['message_delay']);
+				if (!empty($_SESSION['username'])) {
+					$view->assign("username", $_SESSION['username']);
+					$view->assign("button_cancel", $text['button-cancel']);
+				}
 
-				//debug information
-				//echo "<pre>\n";
-				//print_r($text);
-				//echo "</pre>\n";
+				//messages
+				$view->assign('messages', message::html(true, '		'));
 
 				//show the views
 				$content = $view->render('email.htm');
@@ -271,7 +327,7 @@ class plugin_email {
 			if (isset($_POST['authentication_code'])) {
 
 				//check if the authentication code has expired. if expired return false
-				if ($_SESSION["user"]["authentication"]["email"]["epoch"] + 3 > time()) {
+				if (!empty($_SESSION["user"]) && $_SESSION["user"]["authentication"]["email"]["epoch"] + 3 > time()) {
 					//authentication code expired
 					$result["plugin"] = "email";
 					$result["domain_name"] = $_SESSION["domain_name"];
@@ -284,7 +340,7 @@ class plugin_email {
 				}
 
 				//get the user details
-				$sql = "select user_uuid, user_email, contact_uuid, user_email_secret\n";
+				$sql = "select user_uuid, user_email, contact_uuid\n";
 				$sql .= "from v_users\n";
 				$sql .= "where (\n";
 				$sql .= "	username = :username\n";
@@ -301,16 +357,23 @@ class plugin_email {
 				$this->user_uuid = $row['user_uuid'];
 				$this->user_email = $row['user_email'];
 				$this->contact_uuid = $row['contact_uuid'];
-				$this->user_email_secret = $row['user_email_secret'];
 				unset($parameters);
+				/*
+				echo 'session code = '.$_SESSION["user"]["authentication"]["email"]["code"].'<br>';
+				echo 'post code = '.$_POST['authentication_code'].'<br>';
+				exit;
+				*/
 
 				//validate the code
-				if ($_SESSION["user"]["authentication"]["email"]["code"] === $_POST['authentication_code']) {
+				if (!empty($_SESSION["user"]) && $_SESSION["user"]["authentication"]["email"]["code"] === $_POST['authentication_code']) {
 					$auth_valid = true;
 				}
 				else {
 					$auth_valid = false;
 				}
+
+				//clear posted authentication code
+				unset($_POST['authentication_code']);
 
 				//get the user details
 				if ($auth_valid) {
@@ -325,7 +388,6 @@ class plugin_email {
 					$parameters['user_uuid'] = $_SESSION["user_uuid"];
 					$database = new database;
 					$row = $database->select($sql, $parameters, 'row');
-					//view_array($row);
 					unset($parameters);
 
 					//set a few session variables
@@ -334,18 +396,25 @@ class plugin_email {
 					//$_SESSION["contact_uuid"] = $row["contact_uuid"];
 				}
 				else {
-					//destroy session
-					session_unset();
-					session_destroy();
-					//$_SESSION['authentication']['plugin']
-					//send http 403
-					header('HTTP/1.0 403 Forbidden', true, 403);
+// 					//destroy session
+// 					session_unset();
+// 					session_destroy();
+// 					//$_SESSION['authentication']['plugin']
+// 					//send http 403
+// 					header('HTTP/1.0 403 Forbidden', true, 403);
+//
+// 					//redirect to the root of the website
+// 					header("Location: ".PROJECT_PATH."/");
+//
+// 					//exit the code
+// 					exit();
 
-					//redirect to the root of the website
-					header("Location: ".PROJECT_PATH."/");
+					//clear submitted usernames
+					unset($this->username, $_SESSION['username'], $_REQUEST['username'], $_POST['username']);
 
-					//exit the code
-					exit();
+					//clear authentication session
+					unset($_SESSION['authentication']);
+
 				}
 
 				/*
@@ -377,6 +446,13 @@ class plugin_email {
 				$result["domain_uuid"] = $_SESSION["domain_uuid"];
 				$result["contact_uuid"] = $_SESSION["contact_uuid"];
 				$result["authorized"] = $auth_valid ? true : false;
+
+				//add the failed login to user logs
+				if (!$auth_valid) {
+					user_logs::add($result);
+				}
+
+				//retun the array
 				return $result;
 
 				//$_SESSION['authentication']['plugin']['email']['plugin'] = "email";

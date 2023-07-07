@@ -35,7 +35,7 @@ if ($domains_processed == 1) {
 		$sql .= "and (t.call_center_queue_uuid is null or t.call_center_agent_uuid is null) ";
 		$database = new database;
 		$tiers = $database->select($sql, null, 'all');
-		if (is_array($tiers) && @sizeof($tiers) != 0) {
+		if (!empty($tiers)) {
 			foreach ($tiers as $index => &$row) {
 				if ($row['call_center_queue_uuid'] == null && $row['queue_uuid'] != null) {
 					$array['call_center_tiers'][$index]['call_center_queue_uuid'] = $row['queue_uuid'];
@@ -43,12 +43,12 @@ if ($domains_processed == 1) {
 				if ($row['call_center_agent_uuid'] == null && $row['agent_uuid'] != null) {
 					$array['call_center_tiers'][$index]['call_center_agent_uuid'] = $row['agent_uuid'];
 				}
-				if (is_array($array['call_center_tiers'][$index]) && @sizeof($array['call_center_tiers'][$index]) != 0) {
+				if (!empty($array['call_center_tiers'][$index])) {
 					$array['call_center_tiers'][$index]['call_center_tier_uuid'] = $row['call_center_tier_uuid'];
 				}
 			}
 
-			if (is_array($array) && @sizeof($array) != 0) {
+			if (!empty($array)) {
 				$p = new permissions;
 				$p->add('call_center_tier_edit', 'temp');
 
@@ -65,6 +65,7 @@ if ($domains_processed == 1) {
 		unset($sql);
 
 	//update all callcenter dialplans to have the @domain in the queue name
+		/*
 		$sql = "select q.domain_uuid, d.domain_name, q.call_center_queue_uuid, q.dialplan_uuid, dp.dialplan_xml, ";
 		$sql .= "q.queue_name, q.queue_extension, q.queue_timeout_action, q.queue_cid_prefix, q.queue_cc_exit_keys, ";
 		$sql .= "q.queue_description, q.queue_time_base_score_sec, q.queue_greeting ";
@@ -74,7 +75,7 @@ if ($domains_processed == 1) {
 		$database = new database;
 		$call_center_queues = $database->select($sql, null, 'all');
 		$id = 0;
-		if (is_array($call_center_queues)) {
+		if (!empty($call_center_queues)) {
 			foreach ($call_center_queues as $row) {
 
 				//get the application and data
@@ -100,7 +101,7 @@ if ($domains_processed == 1) {
 					$dialplan_xml .= "	</condition>\n";
 					$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^(callcenter\+)?".xml::sanitize($row["queue_extension"])."$\">\n";
 					$dialplan_xml .= "		<action application=\"answer\" data=\"\"/>\n";
-					if (is_uuid($row['call_center_queue_uuid'])) {
+					if (!empty($row['call_center_queue_uuid']) && is_uuid($row['call_center_queue_uuid'])) {
 						$dialplan_xml .= "		<action application=\"set\" data=\"call_center_queue_uuid=".xml::sanitize($row['call_center_queue_uuid'])."\"/>\n";
 					}
 					if (is_numeric($row['queue_extension'])) {
@@ -111,7 +112,7 @@ if ($domains_processed == 1) {
 					if ($row['queue_time_base_score_sec'] != '') {
 						$dialplan_xml .= "		<action application=\"set\" data=\"cc_base_score=".xml::sanitize($row['queue_time_base_score_sec'])."\"/>\n";
 					}
-					if ($row['queue_greeting'] != '') {
+					if (!empty($row['queue_greeting'])) {
 						$greeting_array = explode(':', $row['queue_greeting']);
 						if (count($greeting_array) == 1) {
 							$dialplan_xml .= "		<action application=\"playback\" data=\"".xml::sanitize($queue_greeting_path)."\"/>\n";
@@ -157,8 +158,8 @@ if ($domains_processed == 1) {
 		}
 		unset ($prep_statement);
 
-	//save the array to the database
-		if (is_array($array)) {
+		//save the array to the database
+		if (!empty($array)) {
 			//add the dialplan permission
 				$p = new permissions;
 				$p->add("dialplan_add", "temp");
@@ -175,6 +176,7 @@ if ($domains_processed == 1) {
 				$p->delete("dialplan_add", "temp");
 				$p->delete("dialplan_edit", "temp");
 		}
+		*/
 
 }
 

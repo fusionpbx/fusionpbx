@@ -17,19 +17,15 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
 
@@ -52,7 +48,7 @@
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$database = new database;
 	$tiers = $database->select($sql, $parameters, 'all');
-	if (is_array($tiers) && count($tiers) == 0) {
+	if (empty($tiers)) {
 		$per_queue_login = true;
 	}
 	else {
@@ -97,7 +93,7 @@
 
 //add the status to the call_center_queues array
 	$x = 0;
-	if (is_array($call_center_queues)) {
+	if (!empty($call_center_queues)) {
 		foreach ($call_center_queues as $queue) {
 			//set the queue id
 			$queue_id = $queue['queue_extension'].'@'.$queue['domain_name'];
@@ -113,7 +109,7 @@
 
 //get the agent status from mod_callcenter and update the agent status in the agents array
 	$x = 0;
-	if (is_array($agents)) {
+	if (!empty($agents)) {
 		foreach ($agents as $row) {
 			//add the domain name
 				$domain_name = $_SESSION['domains'][$row['domain_uuid']]['domain_name'];
@@ -121,14 +117,14 @@
 
 			//update the queue status
 				$i = 0;
-				if (is_array($call_center_queues)) {
+				if (!empty($call_center_queues)) {
 					foreach ($call_center_queues as $queue) {
 						$agents[$x]['queues'][$i]['agent_name'] = $row['agent_name'];
 						$agents[$x]['queues'][$i]['queue_name'] = $queue['queue_name'];
 						$agents[$x]['queues'][$i]['call_center_agent_uuid'] = $row['call_center_agent_uuid'];
 						$agents[$x]['queues'][$i]['call_center_queue_uuid'] = $queue['call_center_queue_uuid'];
 						$agents[$x]['queues'][$i]['queue_status'] = 'Logged Out';
-						if (is_array($queue['queue_list'])) {
+						if (!empty($queue['queue_list'])) {
 							foreach ($queue['queue_list'] as $queue_list) {
 								if ($row['call_center_agent_uuid'] == $queue_list['name']) {
 									$agents[$x]['queues'][$i]['queue_status'] = 'Available';
@@ -140,7 +136,7 @@
 				}
 
 			//update the agent status
-				if (is_array($agent_list)) {
+				if (!empty($agent_list)) {
 					foreach ($agent_list as $r) {
 						if ($r['name'] == $row['call_center_agent_uuid']) {
 							$agents[$x]['agent_status'] = $r['status'];
@@ -154,7 +150,7 @@
 	}
 
 //remove rows from the http post array where the status has not changed
-	if (is_array($_POST['agents']) && !$per_queue_login) {
+	if (!empty($_POST['agents']) && !$per_queue_login) {
 		foreach($_POST['agents'] as $key => $row) {
 			foreach($agents as $k => $field) {
 				if ($field['agent_name'] === $row['agent_name'] && $field['agent_status'] === $row['agent_status']) {
@@ -165,14 +161,14 @@
 	}
 
 //use the http post array to change the status
-	if (is_array($_POST['agents'])) {
+	if (!empty($_POST['agents'])) {
 		foreach($_POST['agents'] as $row) {
-			if (isset($row['agent_status'])) {
+			if (!empty($row['agent_status'])) {
 				//agent set status
 					if ($fp) {
 						//set the user_status
 							if (!isset($row['queue_name'])) {
-								$array['users'][0]['user_uuid'] = $row['user_uuid'];
+								$array['users'][0]['user_uuid'] = $row['user_uuid'] ?? null;
 								$array['users'][0]['user_status'] = $row['agent_status'];
 								$array['users'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
 
@@ -228,7 +224,7 @@
 
 						//get the queue_id
 							if (isset($row['queue_uuid']) && is_uuid($row['queue_uuid'])) {
-								if (is_array($call_center_queues)) {
+								if (!empty($call_center_queues)) {
 									foreach ($call_center_queues as $queue) {
 										if ($queue['call_center_queue_uuid'] == $row['queue_uuid']) {
 											$queue_id = $queue['queue_extension'].'@'.$queue['domain_name'];
@@ -291,10 +287,14 @@
 		} //foreach
 
 		//send a message
-		message::add($text['confirm-add']);
+		message::add($text['message-status_set']);
 		header("Location: call_center_agent_status.php");
 		return;
 	} //post
+
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
 
 //includes the header
 	$document['title'] = $text['title-call_center_agent_status'];
@@ -332,7 +332,7 @@
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
 
-	if (is_array($_POST['agents']) && !$per_queue_login) {
+	if (!empty($_POST['agents']) && !$per_queue_login) {
 		echo $text['description-call_center_agent_status']."\n";
 		echo "<br /><br />\n";
 	}
@@ -351,7 +351,7 @@
 	}
 	echo "</tr>\n";
 
-	if (is_array($agents) && @sizeof($agents) != 0) {
+	if (!empty($agents)) {
 		$x = 0;
 		foreach ($agents as $row) {
 			$onclick = "onclick=\"cycle('agents[".$x."][agent_status]');\"";
@@ -372,14 +372,14 @@
 
 			if ($per_queue_login) {
 				$html .= "	<td class='description'>";
-				if (is_array($row['queues'])) {
+				if (!empty($row['queues'])) {
 					$html .= "	<table class='list' >\n";
 					$html .= "		<tr>\n";
 					$html .= "			<th>".$text['label-queue']."</th>\n";
 					$html .= "			<th>".$text['label-status']."</th>\n";
 					$html .= "			<th>".$text['label-options']."</th>\n";
 					$html .= "		</tr>\n";
-					if (is_array($row['queues'])) {
+					if (!empty($row['queues'])) {
 						foreach ($row['queues'] as $queue) {
 							$x++;
 							$onclick = "onclick=\"cycle('agents[".$x."][agent_status]');\"";

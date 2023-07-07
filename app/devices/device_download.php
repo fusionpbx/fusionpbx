@@ -17,19 +17,15 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -80,7 +76,7 @@
 //define possible columns in the array
 	$available_columns['devices'][] = 'device_uuid';
 	$available_columns['devices'][] = 'device_profile_uuid';
-	$available_columns['devices'][] = 'device_mac_address';
+	$available_columns['devices'][] = 'device_address';
 	$available_columns['devices'][] = 'device_label';
 	$available_columns['devices'][] = 'device_vendor';
 	$available_columns['devices'][] = 'device_template';
@@ -113,7 +109,7 @@
 	$available_columns['device_lines'][] = 'enabled';
 
 //get the devices and send them as output
-	$column_group = $_REQUEST["column_group"];
+	$column_group = $_REQUEST["column_group"] ?? null;
 	if (is_array($column_group) && @sizeof($column_group) != 0) {
 
 		//validate the token
@@ -217,13 +213,13 @@
 			echo "<table class='list'>\n";
 			echo "<tr class='list-header'>\n";
 			echo "	<th class='checkbox'>\n";
-			echo "		<input type='checkbox' id='checkbox_all_".$table_name."' name='checkbox_all' onclick=\"list_all_toggle('".$table_name."');\" ".($available_columns ?: "style='visibility: hidden;'").">\n";
+			echo "		<input type='checkbox' id='checkbox_all_".$table_name."' name='checkbox_all' onclick=\"list_all_toggle('".$table_name."');\" ".(empty($available_columns) ? "style='visibility: hidden;'" : null).">\n";
 			echo "	</th>\n";
 			echo "	<th>".$text['label-column_name']."</th>\n";
 			echo "</tr>\n";
 			foreach ($columns as $column_name) {
 				$list_row_onclick = "if (!this.checked) { document.getElementById('checkbox_all').checked = false; }";
-				echo "<tr class='list-row' href='".$list_row_url."'>\n";
+				echo "<tr class='list-row' href='".($list_row_url ?? '')."'>\n";
 				echo "	<td class='checkbox'>\n";
 				echo "		<input type='checkbox' class='checkbox_".$table_name."' name='column_group[".$table_name."][".$column_name."]' id='checkbox_".$x."' value=\"".$column_name."\" onclick=\"".$list_row_onclick."\">\n";
 				echo "	</td>\n";

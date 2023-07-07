@@ -24,12 +24,8 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -58,14 +54,14 @@
 	}
 
 //get the http get values and set them as php variables
-	$action = $_POST["action"];
-	$from_row = $_POST["from_row"];
-	$delimiter = $_POST["data_delimiter"];
-	$enclosure = $_POST["data_enclosure"];
-	$destination_type = $_POST["destination_type"];
-	$destination_action = $_POST["destination_action"];
-	$destination_context = $_POST["destination_context"];
-	$destination_record = $_POST["destination_record"];
+	$action = $_POST["action"] ?? null;
+	$from_row = $_POST["from_row"] ?? null;
+	$delimiter = $_POST["data_delimiter"] ?? null;
+	$enclosure = $_POST["data_enclosure"] ?? null;
+	$destination_type = $_POST["destination_type"] ?? null;
+	$destination_action = $_POST["destination_action"] ?? null;
+	$destination_context = $_POST["destination_context"] ?? null;
+	$destination_record = $_POST["destination_record"] ?? null;
 
 //set the defaults
 	if (empty($destination_type)) { $destination_type = 'inbound'; }
@@ -84,7 +80,7 @@
 
 //copy the csv file
 	//$_POST['submit'] == "Upload" &&
-	if (is_uploaded_file($_FILES['ulfile']['tmp_name']) && permission_exists('destination_upload')) {
+	if (!empty($_FILES['ulfile']['tmp_name']) && is_uploaded_file($_FILES['ulfile']['tmp_name']) && permission_exists('destination_upload')) {
 		if ($_POST['type'] == 'csv') {
 			move_uploaded_file($_FILES['ulfile']['tmp_name'], $_SESSION['server']['temp']['dir'].'/'.$_FILES['ulfile']['name']);
 			$save_msg = "Uploaded file to ".$_SESSION['server']['temp']['dir']."/". htmlentities($_FILES['ulfile']['name']);
@@ -103,9 +99,9 @@
 
 		//get the schema
 			$x = 0;
-			include ("app/destinations/app_config.php");
+			include "app/destinations/app_config.php";
 			$i = 0;
-			foreach($apps[0]['db'] as $table) {
+			foreach ($apps[0]['db'] as $table) {
 				//get the table name and parent name
 				$table_name = $table["table"]['name'];
 				$parent_name = $table["table"]['parent'];
@@ -122,8 +118,8 @@
 				if ($table_name == "destinations") {
 					$schema[$i]['table'] = $table_name;
 					$schema[$i]['parent'] = $parent_name;
-					foreach($table['fields'] as $row) {
-						if ($row['deprecated'] !== 'true') {
+					foreach ($table['fields'] as $row) {
+						if (empty($row['deprecated']) || (!empty($row['deprecated']) && $row['deprecated'] !== 'true')) {
 							if (is_array($row['name'])) {
 								$field_name = $row['name']['text'];
 							}
@@ -187,8 +183,8 @@
 
 									//get the table and field name
 									$field_array = explode(".",$value);
-									$table_name = $field_array[0];
-									$field_name = $field_array[1];
+									$table_name = $field_array[0] ?? null;
+									$field_name = $field_array[1] ?? null;
 
 									//get the parent table name
 									$parent = get_parent($schema, $table_name);
@@ -256,7 +252,7 @@
 										$array["dialplans"][$row_id]["app_uuid"] = "c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4";
 										$array["dialplans"][$row_id]["dialplan_uuid"] = $dialplan_uuid;
 										$array["dialplans"][$row_id]["domain_uuid"] = $domain_uuid;
-										$array["dialplans"][$row_id]["dialplan_name"] = ($dialplan_name != '') ? $dialplan_name : format_phone($destination_number);
+										$array["dialplans"][$row_id]["dialplan_name"] = !empty($dialplan_name) ? $dialplan_name : format_phone($destination_number);
 										$array["dialplans"][$row_id]["dialplan_number"] = $destination_number;
 										$array["dialplans"][$row_id]["dialplan_context"] = $destination_context;
 										$array["dialplans"][$row_id]["dialplan_continue"] = "false";
@@ -289,7 +285,7 @@
 										}
 
 									//build the xml dialplan
-										$array["dialplans"][$row_id]["dialplan_xml"] = "<extension name=\"".xml::sanitize($dialplan_name)."\" continue=\"false\" uuid=\"".xml::sanitize($dialplan_uuid)."\">\n";
+										$array["dialplans"][$row_id]["dialplan_xml"] = "<extension name=\"".xml::sanitize($dialplan_name ?? '')."\" continue=\"false\" uuid=\"".xml::sanitize($dialplan_uuid ?? '')."\">\n";
 										$array["dialplans"][$row_id]["dialplan_xml"] .= "	<condition field=\"".$dialplan_detail_type."\" expression=\"".xml::sanitize($destination_number_regex)."\">\n";
 										$array["dialplans"][$row_id]["dialplan_xml"] .= "		<action application=\"export\" data=\"call_direction=inbound\" inline=\"true\"/>\n";
 										$array["dialplans"][$row_id]["dialplan_xml"] .= "		<action application=\"set\" data=\"domain_uuid=".$_SESSION['domain_uuid']."\" inline=\"true\"/>\n";
@@ -463,7 +459,7 @@
 													$y++;
 
 													//set inline to true
-													if ($action_app == 'set' || $action_app == 'export') {
+													if (!empty($action_app) && ($action_app == 'set' || $action_app == 'export')) {
 														$dialplan["dialplan_details"][$y]["dialplan_detail_inline"] = 'true';
 													}
 
@@ -501,7 +497,7 @@
 					fclose($handle);
 
 				//save to the data
-					if (is_array($array)) {
+					if (!empty($array) && is_array($array)) {
 						$database = new database;
 						$database->app_name = 'destinations';
 						$database->app_uuid = '5ec89622-b19c-3559-64f0-afde802ab139';
@@ -756,15 +752,13 @@
 				echo "	<td class='vtable' align='left'>\n";
 				echo "		<select class='formfld' style='' name='fields[$x]'>\n";
 				echo "			<option value=''></option>\n";
-				foreach($schema as $row) {
+				foreach ($schema as $row) {
 					echo "			<optgroup label='".$row['table']."'>\n";
-					foreach($row['fields'] as $field) {
-						$selected = '';
-						if ($field == $line_field) {
-							$selected = "selected='selected'";
-						}
-						if ($field !== 'domain_uuid') {
-							echo "				<option value='".escape($row['table']).".".$field."' ".$selected.">".escape($field)."</option>\n";
+					if (!empty($row['fields'])) {
+						foreach($row['fields'] as $field) {
+							if ($field !== 'domain_uuid') {
+								echo "				<option value='".escape($row['table']).".".$field."' ".($field == $line_field ? "selected='selected'" : null).">".escape($field)."</option>\n";
+							}
 						}
 					}
 					echo "			</optgroup>\n";
@@ -784,12 +778,12 @@
 			echo "<td width='70%' class='vtable' align='left'>\n";
 			echo "	<select class='formfld' name='destination_type' id='destination_type' onchange='type_control(this.options[this.selectedIndex].value);'>\n";
 			switch ($destination_type) {
-				case "inbound" : 	$selected[1] = "selected='selected'";	break;
-				case "outbound" : 	$selected[2] = "selected='selected'";	break;
-				//case "local" : 	$selected[2] = "selected='selected'";	break;
+				case "inbound": $selected[1] = "selected='selected'";	break;
+				case "outbound": $selected[2] = "selected='selected'";	break;
+				//case "local": $selected[2] = "selected='selected'";	break;
 			}
-			echo "	<option value='inbound' ".$selected[1].">".$text['option-inbound']."</option>\n";
-			echo "	<option value='outbound' ".$selected[2].">".$text['option-outbound']."</option>\n";
+			echo "	<option value='inbound' ".($selected[1] ?? null).">".$text['option-inbound']."</option>\n";
+			echo "	<option value='outbound' ".($selected[2] ?? null).">".$text['option-outbound']."</option>\n";
 			//echo "	<option value='local' ".$selected[3].">".$text['option-local']."</option>\n";
 			unset($selected);
 			echo "	</select>\n";
@@ -809,12 +803,12 @@
 				case "true" : 	$selected[1] = "selected='selected'";	break;
 				case "false" : 	$selected[2] = "selected='selected'";	break;
 			}
-			echo "	<option value='true' ".$selected[1].">".$text['option-true']."</option>\n";
-			echo "	<option value='false' ".$selected[2].">".$text['option-false']."</option>\n";
+			echo "	<option value='true' ".($selected[1] ?? null).">".$text['option-true']."</option>\n";
+			echo "	<option value='false' ".($selected[2] ?? null).">".$text['option-false']."</option>\n";
 			unset($selected);
 			echo "	</select>\n";
 			echo "<br />\n";
-			echo $text['description-destination_record']."\n";
+			echo ($text['description-destination_record'] ?? null)."\n";
 			echo "</td>\n";
 			echo "</tr>\n";
 
@@ -841,7 +835,7 @@
 			echo "	<option value='delete'>".$text['label-delete']."</option>\n";
 			echo "	</select>\n";
 			echo "<br />\n";
-			echo $text['description-actions']."\n";
+			echo ($text['description-actions'] ?? null)."\n";
 			echo "</td>\n";
 			echo "</tr>\n";
 
@@ -882,16 +876,18 @@
 			echo "</td>\n";
 			echo "<td class='vtable' align='left'>\n";
 			echo "	<select class='formfld' name='destination_enabled'>\n";
-			switch ($destination_enabled) {
-				case "true" :	$selected[1] = "selected='selected'";	break;
-				case "false" :	$selected[2] = "selected='selected'";	break;
+			if (!empty($destination_enabled)) {
+				switch ($destination_enabled) {
+					case "true": $selected[1] = "selected='selected'"; break;
+					case "false": $selected[2] = "selected='selected'"; break;
+				}
 			}
-			echo "	<option value='true' ".$selected[1].">".$text['label-true']."</option>\n";
-			echo "	<option value='false' ".$selected[2].">".$text['label-false']."</option>\n";
+			echo "	<option value='true' ".($selected[1] ?? null).">".$text['label-true']."</option>\n";
+			echo "	<option value='false' ".($selected[2] ?? null).">".$text['label-false']."</option>\n";
 			unset($selected);
 			echo "	</select>\n";
 			echo "<br />\n";
-			echo $text['description-destination_enabled']."\n";
+			echo ($text['description-destination_enabled'] ?? null)."\n";
 			echo "</td>\n";
 			echo "</tr>\n";
 
@@ -950,7 +946,7 @@
 	echo "    ".$text['label-import_data']."\n";
 	echo "</td>\n";
 	echo "<td width='70%' class='vtable' align='left'>\n";
-	echo "    <textarea name='data' id='data' class='formfld' style='width: 100%; min-height: 150px;' wrap='off'>$data</textarea>\n";
+	echo "    <textarea name='data' id='data' class='formfld' style='width: 100%; min-height: 150px;' wrap='off'>".($data ?? null)."</textarea>\n";
 	echo "<br />\n";
 	echo $text['description-import_data']."\n";
 	echo "</td>\n";
@@ -1011,7 +1007,7 @@
 		echo "<td class='vtable' align='left'>\n";
 		echo "			<input name='ulfile' type='file' class='formfld fileinput' id='ulfile'>\n";
 		echo "<br />\n";
-		echo $text['description-import_file_upload']."\n";
+		echo ($text['description-import_file_upload'] ?? null)."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 	}

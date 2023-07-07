@@ -24,12 +24,8 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -45,15 +41,22 @@
 	$language = new text;
 	$text = $language->get();
 
+//set additional variables
+	$search = $_GET["search"] ?? '';
+
+//set from session variables
+	$list_row_edit_button = !empty($_SESSION['theme']['list_row_edit_button']['boolean']) ? $_SESSION['theme']['list_row_edit_button']['boolean'] : 'false';
+	$button_icon_add = !empty($_SESSION['theme']['button_icon_add']) ? $_SESSION['theme']['button_icon_add'] : '';
+
 //get the http post data
-	if (is_array($_POST['menus'])) {
-		$action = $_POST['action'];
-		$search = $_POST['search'];
-		$menus = $_POST['menus'];
+	if (!empty($_POST['menus'])) {
+		$action = $_POST['action'] ?? '';
+		$search = $_POST['search'] ?? '';
+		$menus = $_POST['menus'] ?? '';
 	}
 
 //process the http post data by action
-	if ($action != '' && is_array($menus) && @sizeof($menus) != 0) {
+	if (!empty($action) && !empty($menus)) {
 		switch ($action) {
 			case 'delete':
 				if (permission_exists('menu_delete')) {
@@ -63,16 +66,16 @@
 				break;
 		}
 
-		header('Location: menu.php'.($search != '' ? '?search='.urlencode($search) : null));
+		header('Location: menu.php'.(!empty($search) ? '?search='.urlencode($search) : null));
 		exit;
 	}
 
 //get order and order by
-	$order_by = $_GET["order_by"];
-	$order = $_GET["order"];
+	$order_by = $_GET["order_by"] ?? '';
+	$order = $_GET["order"] ?? '';
 
 //add the search string
-	if (isset($_GET["search"])) {
+	if (!empty($_GET["search"])) {
 		$search =  strtolower($_GET["search"]);
 		$sql_search = " (";
 		$sql_search .= "	lower(menu_name) like :search ";
@@ -88,14 +91,14 @@
 		$sql .= "where ".$sql_search;
 	}
 	$database = new database;
-	$num_rows = $database->select($sql, $parameters, 'column');
+	$num_rows = $database->select($sql, $parameters ?? '', 'column');
 
 //get the list
 	$sql = str_replace('count(menu_uuid)', '*', $sql);
 	$sql .= order_by($order_by, $order, 'menu_name', 'asc');
-	$sql .= limit_offset($rows_per_page, $offset);
+	$sql .= limit_offset($rows_per_page ?? '', $offset ?? '');
 	$database = new database;
-	$menus = $database->select($sql, $parameters, 'all');
+	$menus = $database->select($sql, $parameters ?? '', 'all');
 	unset($sql, $parameters);
 
 //create token
@@ -120,7 +123,7 @@
 	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=''>";
 	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search']);
 	//echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','link'=>'menu.php','style'=>($search == '' ? 'display: none;' : null)]);
-	if ($paging_controls_mini != '') {
+	if (!empty($paging_controls_mini)) {
 		echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>\n";
 	}
 	echo "		</form>\n";
@@ -143,18 +146,18 @@
 	echo "<tr class='list-header'>\n";
 	if (permission_exists('menu_add') || permission_exists('menu_edit') || permission_exists('menu_delete')) {
 		echo "	<th class='checkbox'>\n";
-		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".($menus ?: "style='visibility: hidden;'").">\n";
+		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".(!empty($menus) ?: "style='visibility: hidden;'").">\n";
 		echo "	</th>\n";
 	}
 	echo th_order_by('menu_name', $text['label-menu_name'], $order_by, $order);
 	echo th_order_by('menu_language', $text['label-menu_language'], $order_by, $order);
 	echo "	<th class='hide-sm-dn'>".$text['label-menu_description']."</th>\n";
-	if (permission_exists('menu_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+	if (permission_exists('menu_edit') && $list_row_edit_button == 'true') {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
 
-	if (is_array($menus) && @sizeof($menus) != 0) {
+	if (!empty($menus)) {
 		$x = 0;
 		foreach ($menus as $row) {
 			if (permission_exists('menu_edit')) {
@@ -177,9 +180,9 @@
 			echo "	</td>\n";
 			echo "	<td>".escape($row['menu_language'])."</td>\n";
 			echo "	<td class='description overflow hide-sm-dn'>".escape($row['menu_description'])."</td>\n";
-			if (permission_exists('menu_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+			if (permission_exists('menu_edit') && $list_row_edit_button == 'true') {
 				echo "	<td class='action-button'>\n";
-				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
+				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$button_icon_edit,'link'=>$list_row_url]);
 				echo "	</td>\n";
 			}
 			echo "</tr>\n";
@@ -190,7 +193,7 @@
 
 	echo "</table>\n";
 	echo "<br />\n";
-	echo "<div align='center'>".$paging_controls."</div>\n";
+	echo "<div align='center'>".!empty($paging_controls)."</div>\n";
 	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "</form>\n";
 

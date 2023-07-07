@@ -27,12 +27,8 @@
 //set a timeout
 	set_time_limit(15*60); //15 minutes
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check the permission
@@ -61,7 +57,7 @@
 		$action = $_POST['action'];
 
 		//run source update
-		if ($action["upgrade_source"] && permission_exists("upgrade_source") && !is_dir("/usr/share/examples/fusionpbx")) {
+		if (!empty($action["upgrade_source"]) && permission_exists("upgrade_source") && !is_dir("/usr/share/examples/fusionpbx")) {
 			$cwd = getcwd();
 			chdir($_SERVER["PROJECT_ROOT"]);
 			exec("git pull 2>&1", $response_source_update);
@@ -89,7 +85,7 @@
 		}
 
 		//load an array of the database schema and compare it with the active database
-		if ($action["upgrade_schema"] && permission_exists("upgrade_schema")) {
+		if (!empty($action["upgrade_schema"]) && permission_exists("upgrade_schema")) {
 			require_once "resources/classes/schema.php";
 			$obj = new schema();
 			if (isset($action["data_types"]) && $action["data_types"] == 'true') {
@@ -100,7 +96,7 @@
 		}
 
 		//process the apps defaults
-		if ($action["app_defaults"] && permission_exists("upgrade_apps")) {
+		if (!empty($action["app_defaults"]) && permission_exists("upgrade_apps")) {
 			require_once "resources/classes/domains.php";
 			$domain = new domains;
 			$domain->upgrade();
@@ -108,7 +104,7 @@
 		}
 
 		//restore defaults of the selected menu
-		if ($action["menu_defaults"] && permission_exists("menu_restore")) {
+		if (!empty($action["menu_defaults"]) && permission_exists("menu_restore")) {
 			$sel_menu = explode('|', check_str($_POST["sel_menu"]));
 			$menu_uuid = $sel_menu[0];
 			$menu_language = $sel_menu[1];
@@ -119,7 +115,7 @@
 		}
 
 		//restore default permissions
-		if ($action["permission_defaults"] && permission_exists("group_edit")) {
+		if (!empty($action["permission_defaults"]) && permission_exists("group_edit")) {
 			$included = true;
 			require_once("core/groups/permissions_default.php");
 			message::add($text['message-upgrade_permissions'], null, $message_timeout);
@@ -133,7 +129,7 @@
 
 //adjust color and initialize step counter
 	$step = 1;
-	$step_color = $_SESSION['theme']['upgrade_step_color']['text'] ? $_SESSION['theme']['upgrade_step_color']['text'] : color_adjust(($_SESSION['theme']['form_table_label_background_color']['text'] != '' ? $_SESSION['theme']['form_table_label_background_color']['text'] : '#e5e9f0'), -0.1);
+	$step_color = isset($_SESSION['theme']['upgrade_step_color']['text']) ? $_SESSION['theme']['upgrade_step_color']['text'] : color_adjust((!empty($_SESSION['theme']['form_table_label_background_color']['text']) ? $_SESSION['theme']['form_table_label_background_color']['text'] : '#e5e9f0'), -0.1);
 	$step_container_style = "width: 30px; height: 30px; border: 2px solid ".$step_color."; border-radius: 50%; float: left; text-align: center; vertical-align: middle;";
 	$step_number_style = "font-size: 150%; font-weight: 600; color: ".$step_color.";";
 

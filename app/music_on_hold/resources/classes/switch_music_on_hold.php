@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2010-2019
+	Portions created by the Initial Developer are Copyright (C) 2010-2023
 	All Rights Reserved.
 
 	Contributor(s):
@@ -208,7 +208,7 @@ if (!class_exists('switch_music_on_hold')) {
 					$file_contents = file_get_contents("/usr/share/examples/fusionpbx/resources/templates/conf/autoload_configs/local_stream.conf.xml");
 				}
 				else {
-					$file_contents = file_get_contents($_SERVER["PROJECT_ROOT"]."/resources/templates/conf/autoload_configs/local_stream.conf.xml");
+					$file_contents = file_get_contents($_SERVER["PROJECT_ROOT"]."/app/switch/resources/conf/autoload_configs/local_stream.conf.xml");
 				}
 			//check where the default music is stored
 				$default_moh_prefix = 'music/default';
@@ -336,13 +336,14 @@ if (!class_exists('switch_music_on_hold')) {
 					if (is_array($records) && @sizeof($records) != 0) {
 
 						//filter checked records
+// 							view_array($records, 0);
 							foreach ($records as $music_on_hold_uuid => $record) {
 								if (is_uuid($music_on_hold_uuid)) {
 									if ($record['checked'] == 'true') {
 										$moh[$music_on_hold_uuid]['delete'] = true;
 									}
 									foreach ($record as $key => $array) {
-										if (is_numeric($key) && is_array($array) && @sizeof($array) != 0 && $array['checked'] == 'true') {
+										if (is_numeric($key) && is_array($array) && @sizeof($array) != 0 && !empty($array['checked']) && $array['checked'] == 'true') {
 											$moh[$music_on_hold_uuid][] = $array['file_name'];
 										}
 									}
@@ -370,6 +371,7 @@ if (!class_exists('switch_music_on_hold')) {
 
 								//delete files, folders, build delete array
 									$x = 0;
+// 									view_array($moh);
 									foreach ($moh as $music_on_hold_uuid => $row) {
 
 										//prepare path
@@ -387,7 +389,7 @@ if (!class_exists('switch_music_on_hold')) {
 											}
 
 										//delete name rate
-											if ($row['delete']) {
+											if (!empty($row['delete']) && $row['delete'] == true) {
 
 												//build delete array
 													$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $music_on_hold_uuid;
@@ -411,7 +413,7 @@ if (!class_exists('switch_music_on_hold')) {
 							}
 
 						//delete the moh records
-							if (is_array($array) && @sizeof($array) != 0) {
+							if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
 
 								//execute delete
 									$database = new database;
@@ -427,7 +429,7 @@ if (!class_exists('switch_music_on_hold')) {
 							unset($records, $moh);
 
 						//post delete
-							if ($moh_deleted || $files_deleted) {
+							if ((!empty($moh_deleted) && $moh_deleted == true) || $files_deleted != 0) {
 								//clear the cache
 									$cache = new cache;
 									$cache->delete("configuration:local_stream.conf");

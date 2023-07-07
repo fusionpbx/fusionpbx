@@ -2,14 +2,7 @@
 
 //check the permission
 	if (defined('STDIN')) {
-		$document_root = str_replace("\\", "/", $_SERVER["PHP_SELF"]);
-		preg_match("/^(.*)\/app\/.*$/", $document_root, $matches);
-		if (isset($matches[1])) {
-			$document_root = $matches[1];
-			set_include_path($document_root);
-			$_SERVER["DOCUMENT_ROOT"] = $document_root;
-		}
-		require_once "resources/require.php";
+		require_once  dirname(__DIR__, 4) . "/resources/require.php";
 	}
 	else {
 		exit;
@@ -81,6 +74,19 @@
 			$event .= "proto: agent\n";
 			$event .= "from: ".$row['agent_name']."@".$row['domain_name']."\n";
 			$event .= "login: ".$row['agent_name']."@".$row['domain_name']."\n";
+			$event .= "status: Active (1 waiting)\n";
+			$event .= "rpid: unknown\n";
+			$event .= "event_type: presence\n";
+			$event .= "alt_event_type: dialog\n";
+			$event .= "event_count: 1\n";
+			$event .= "unique-id: ".uuid()."\n";
+			$event .= "Presence-Call-Direction: outbound\n";
+			$event .= "answer-state: ".$answer_state."\n";
+
+			$event = "sendevent PRESENCE_IN\n";
+			$event .= "proto: agent\n";
+			$event .= "from: ".$row['agent_id']."@".$row['domain_name']."\n";
+			$event .= "login: ".$row['agent_id']."@".$row['domain_name']."\n";
 			$event .= "status: Active (1 waiting)\n";
 			$event .= "rpid: unknown\n";
 			$event .= "event_type: presence\n";

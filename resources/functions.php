@@ -33,7 +33,7 @@
 
 	if (!function_exists('check_float')) {
 		function check_float($string) {
-			$string = str_replace(",",".",$string);
+			$string = str_replace(",",".",$string ?? '');
 			return trim($string);
 		}
 	}
@@ -150,12 +150,26 @@
 	}
 
 	if (!function_exists('is_uuid')) {
-		function is_uuid($uuid) {
-			if (gettype($uuid) == 'string') {
-				$regex = '/^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$/i';
-				return preg_match($regex, $uuid);
+		function is_uuid($str) {
+			$is_uuid = false;
+			if (gettype($str) == 'string') {
+				if (substr_count($str, '-') != 0 && strlen($str) == 36) {
+					$regex = '/^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$/i';
+					$is_uuid = preg_match($regex, $str);
+				}
+				else if (strlen(preg_replace("#[^a-fA-F0-9]#", '', $str)) == 32) {
+					$regex = '/^[0-9A-F]{32}$/i';
+					$is_uuid = preg_match($regex, $str);
+				}
 			}
-			return false;
+			return $is_uuid;
+		}
+	}
+
+	if (!function_exists('is_xml')) {
+		function is_xml($string) {
+		    $pattern = '/^<\?xml(?:\s+[^>]+\s*)?\?>\s*<(\w+)>.*<\/\1>\s*$/s';
+		    return preg_match($pattern, $string) === 1;
 		}
 	}
 
@@ -343,7 +357,7 @@
 	}
 
 	if (!function_exists('html_select_other')) {
-		function html_select_other($table_name, $field_name, $sql_where_optional, $field_current_value) {
+		function html_select_other($table_name, $field_name, $sql_where_optional, $field_current_value, $sql_order_by = null, $label_other = 'Other...') {
 			//html select other: build a select box from distinct items in db with option for other
 			global $domain_uuid;
 			$table_name = preg_replace("#[^a-zA-Z0-9_]#", "", $table_name);
@@ -358,6 +372,7 @@
 
 			$sql = "select distinct(".$field_name.") as ".$field_name." ";
 			$sql .= "from ".$table_name." ".$sql_where_optional." ";
+			$sql .= "order by ".(!empty($sql_order_by) ? $sql_order_by : $field_name.' asc');
 			$database = new database;
 			$result = $database->select($sql, null, 'all');
 			if (is_array($result) && @sizeof($result) != 0) {
@@ -369,7 +384,8 @@
 			}
 			unset($sql, $result, $field);
 
-			$html .= "<option value='Other'>Other</option>\n";
+			$html .= "<option value='' disabled='disabled'></option>\n";
+			$html .= "<option value='Other'>".$label_other."</option>\n";
 			$html .= "</select>\n";
 			$html .= "</td>\n";
 			$html .= "<td id=\"cell".$field_name."2\" width='5'>\n";
@@ -797,7 +813,7 @@ function format_string($format, $data) {
 
 //get the format and use it to format the phone number
 	function format_phone($phone_number) {
-		if (is_numeric(trim($phone_number, ' +'))) {
+		if (is_numeric(trim($phone_number ?? '', ' +'))) {
 			if (isset($_SESSION["format"]["phone"])) {
 				$phone_number = trim($phone_number, ' +');
 				foreach ($_SESSION["format"]["phone"] as &$format) {
@@ -816,12 +832,11 @@ function format_string($format, $data) {
 
 //format seconds into hh:mm:ss
 	function format_hours($seconds) {
+		$seconds = (int)$seconds; //convert seconds to an integer
 		$hours = floor($seconds / 3600);
-		$minutes = floor(($seconds / 60) % 60);
+		$minutes = floor(floor($seconds / 60) % 60);
 		$seconds = $seconds % 60;
-		if (strlen($minutes) == 1) { $minutes = '0'.$minutes; }
-		if (strlen($seconds) == 1) { $seconds = '0'.$seconds; }
-		return "$hours:$minutes:$seconds";
+		return sprintf('%02d:%02d:%02d', $hours, $minutes, $seconds);
 	}
 
 //browser detection without browscap.ini dependency
@@ -1476,7 +1491,7 @@ function number_pad($number,$n) {
 //mac detection
 	if (!function_exists('is_mac')) {
 		function is_mac($str) {
-			return (preg_match('/([a-fA-F0-9]{2}[:|\-]?){6}/', $str) == 1) ? true : false;
+			return preg_match('/([a-fA-F0-9]{2}[:|\-]?){6}/', $str) == 1 && strlen(preg_replace("#[^a-fA-F0-9]#", '', $str)) == 12 ? true : false;
 		}
 	}
 
@@ -1493,13 +1508,18 @@ function number_pad($number,$n) {
 		}
 	}
 
-//format mac address
-	if (!function_exists('format_mac')) {
-		function format_mac($str, $delim = '-', $case = 'lower') {
+//format device address
+	if (!function_exists('format_device_address')) {
+		function format_device_address($str, $delim = '-', $case = 'lower') {
+			if (empty($str)) { return false; }
+			$str = preg_replace("#[^a-fA-F0-9]#", '', $str); //remove formatting, if any
 			if (is_mac($str)) {
 				$str = join($delim, str_split($str, 2));
-				$str = ($case == 'upper') ? strtoupper($str) : strtolower($str);
 			}
+			else if (is_uuid($str)) {
+				$str = substr($str, 0, 8).'-'.substr($str, 8, 4).'-'.substr($str, 12, 4).'-'.substr($str, 16, 4).'-'.substr($str, 20, 12);
+			}
+			$str = $case == 'upper' ? strtoupper($str) : strtolower($str);
 			return $str;
 		}
 	}

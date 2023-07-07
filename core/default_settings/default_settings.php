@@ -17,19 +17,15 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008 - 2022
+	Portions created by the Initial Developer are Copyright (C) 2008 - 2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -113,7 +109,7 @@
 
 //get the count
 	$sql = "select count(default_setting_uuid) from v_default_settings ";
-	if (!empty($search) && !empty($search)) {
+	if (!empty($search)) {
 		$sql .= "where (";
 		$sql .= "	lower(default_setting_category) like :search ";
 		$sql .= "	or lower(default_setting_subcategory) like :search ";
@@ -133,9 +129,9 @@
 
 //get the list
 	$sql = "select default_setting_uuid, default_setting_category, default_setting_subcategory, default_setting_name, ";
-	$sql .= "default_setting_value, cast(default_setting_enabled as text), default_setting_description ";
+	$sql .= "default_setting_value, default_setting_order, cast(default_setting_enabled as text), default_setting_description ";
 	$sql .= "from v_default_settings ";
-	if (!empty($search) && !empty($search)) {
+	if (!empty($search)) {
 		$sql .= "where (";
 		$sql .= "	lower(default_setting_category) like :search ";
 		$sql .= "	or lower(default_setting_subcategory) like :search ";
@@ -309,7 +305,7 @@
 		echo "			<option value=''>".$text['label-category']."...</option>\n";
 		echo "			<option value=''>".$text['label-all']."</option>\n";
 		foreach ($categories as $category_name => $category) {
-			$selected = ($_GET['default_setting_category'] == $category_name) ? " selected='selected'" : "";
+			$selected = (!empty($_GET['default_setting_category']) && $_GET['default_setting_category'] == $category_name) ? " selected='selected'" : null;
 			echo "		<option value='".escape($category_name)."' $selected>".escape($category['formatted']).($category['count'] ? " (".$category['count'].")" : null)."</option>\n";
 		}
 		echo "			<option disabled='disabled'>\n";
@@ -356,12 +352,17 @@
 
 			//check if the default setting uuid exists in the array
 			$field = find_in_array($setting_array, 'default_setting_uuid',  $row['default_setting_uuid'], 'row');
-			
+
 			//set default empty string
 			$setting_bold = '';
 			$enabled_bold = '';
 			$default_value = '';
 			$default_enabled = '';
+
+			//set empty default setting enabled to false by default
+			if (empty($row['default_setting_enabled'])) {
+				$row['default_setting_enabled'] = 'false';
+			}
 
 			if (!empty($field)) {
 				if ($row['default_setting_value'] !== $field['default_setting_value']) {
@@ -446,7 +447,7 @@
 			}
 			echo "	</td>\n";
 			$setting_types = ['Array','Boolean','Code','Dir','Name','Numeric','Text','UUID'];
-			echo "	<td class='hide-sm-dn'>".$setting_types[array_search(strtolower($row['default_setting_name']), array_map('strtolower',$setting_types))]."</td>\n";
+			echo "	<td class='hide-sm-dn'>".$setting_types[array_search(strtolower($row['default_setting_name']), array_map('strtolower',$setting_types))].($row['default_setting_name'] == 'array' && isset($row['default_setting_order']) ? ' ('.$row['default_setting_order'].')' : null)."</td>\n";
 			echo "	<td class='overflow no-wrap' title=\"".escape($default_value)."\" style=\"".$setting_bold."\">\n";
 
 			$category = $row['default_setting_category'] ?? '';

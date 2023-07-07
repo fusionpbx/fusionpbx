@@ -29,18 +29,24 @@
 	$conf = parse_ini_file($config_glob[0]);
 	set_include_path($conf['document.root']);
 
+//config file
+	$config_file = $config_glob[0] ?? '';
+
+//check if the config file exists
+	$config_exists = file_exists($config_file) ? true : false;
+
 //set the server variables and define project path constant
 	$_SERVER["DOCUMENT_ROOT"] = $conf['document.root'];
 	$_SERVER["PROJECT_ROOT"] = $conf['document.root'];
 	$_SERVER["PROJECT_PATH"]  = $conf['project.path'];
 	if (isset($conf['project.path'])) {
 		$_SERVER["PROJECT_ROOT"] = $conf['document.root'].'/'.$conf['project.path'];
-		define("PROJECT_ROOT", $conf['document.root'].'/'.$conf['project.path']);
-		define("PROJECT_PATH", $conf['project.path']);
+		if (!defined('PROJECT_ROOT')) { define("PROJECT_ROOT", $conf['document.root'].'/'.$conf['project.path']); }
+		if (!defined('PROJECT_PATH')) { define("PROJECT_PATH", $conf['project.path']); }
 	}
 	else {
-		define("PROJECT_ROOT", $conf['document.root']);
-		define("PROJECT_PATH", '');
+		if (!defined('PROJECT_ROOT')) { define("PROJECT_ROOT", $conf['document.root']); }
+		if (!defined('PROJECT_PATH')) { define("PROJECT_PATH", ''); }
 	}
 
 //set the error reporting
@@ -96,7 +102,7 @@
 	require_once "resources/php.php";
 	require_once "resources/functions.php";
 	if (is_array($conf) && count($conf) > 0) {
-		require "resources/pdo.php";
+		require_once "resources/pdo.php";
 		require_once "resources/cidr.php";
 		if (file_exists($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/resources/switch.php")) {
 			require_once "resources/switch.php";

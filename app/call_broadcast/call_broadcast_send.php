@@ -25,12 +25,8 @@
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //chec permissions
@@ -47,7 +43,7 @@
 	$text = $language->get();
 
 //set the max execution time to 1 hour
-	ini_set(max_execution_time,3600);
+	ini_set('max_execution_time',3600);
 
 //define the asynchronous command function
 	function cmd_async($cmd) {
@@ -68,12 +64,12 @@
 	}
 
 //get the http get values and set as php variables
-	$group_name = $_GET["group_name"];
-	$call_broadcast_uuid = $_GET["id"];
-	$user_category = $_GET["user_category"];
-	$gateway = $_GET["gateway"];
-	$phonetype1 = $_GET["phonetype1"];
-	$phonetype2 = $_GET["phonetype2"];
+	$group_name = $_GET["group_name"] ?? '';
+	$call_broadcast_uuid = $_GET["id"] ?? '';
+	$user_category = $_GET["user_category"] ?? '';
+	$gateway = $_GET["gateway"] ?? '';
+	$phonetype1 = $_GET["phonetype1"] ?? '';
+	$phonetype2 = $_GET["phonetype2"] ?? '';
 
 //get the call broadcast details from the database
 	$sql = "select * from v_call_broadcasts ";
@@ -83,12 +79,12 @@
 	$parameters['call_broadcast_uuid'] = $call_broadcast_uuid;
 	$database = new database;
 	$row = $database->select($sql, $parameters, 'row');
-	if (is_array($row) && sizeof($row) != 0) {
+	if (!empty($row)) {
 		$broadcast_name = $row["broadcast_name"];
 		$broadcast_start_time = $row["broadcast_start_time"];
 		$broadcast_timeout = $row["broadcast_timeout"];
 		$broadcast_concurrent_limit = $row["broadcast_concurrent_limit"];
-		$recordingid = $row["recordingid"];
+		$recordingid = $row["recordingid"] ?? '';
 		$broadcast_caller_id_name = $row["broadcast_caller_id_name"];
 		$broadcast_caller_id_number = $row["broadcast_caller_id_number"];
 		$broadcast_destination_type = $row["broadcast_destination_type"];

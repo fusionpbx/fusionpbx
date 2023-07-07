@@ -24,8 +24,8 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//includes
-	require_once "resources/require.php";
+//includes files
+    require_once __DIR__ . "/require.php";
 
 //add multi-lingual support
 	$language = new text;
@@ -55,11 +55,10 @@
 
 		//validate the username and password
 			$auth = new authentication;
-			$auth->debug = true;
 			$result = $auth->validate();
 
 		//if not authorized
-			if (!$_SESSION['authorized']) {
+			if (empty($_SESSION['authorized']) || !$_SESSION['authorized']) {
 
 				//log the failed auth attempt to the system to the syslog server
 					openlog('FusionPBX', LOG_NDELAY, LOG_AUTH);
@@ -67,8 +66,8 @@
 					closelog();
 
 				//redirect the user to the login page
-					$target_path = ($_REQUEST["path"] != '') ? $_REQUEST["path"] : $_SERVER["PHP_SELF"];
-					message::add($text['message-invalid_credentials'], 'negative');
+					$target_path = !empty($_REQUEST["path"]) ? $_REQUEST["path"] : $_SERVER["PHP_SELF"];
+					message::add($text['message-authentication_failed'], 'negative');
 					header("Location: ".PROJECT_PATH."/?path=".urlencode($target_path));
 					exit;
 			}
@@ -85,8 +84,8 @@
 					}
 					header("Location: ".$redirect_path);
 				}
-				elseif (isset($_SESSION['login']['destination']['url'])) {
-					header("Location: ".$_SESSION['login']['destination']['url']);
+				elseif (isset($_SESSION['login']['destination']['text'])) {
+					header("Location: ".$_SESSION['login']['destination']['text']);
 				}
 				elseif (file_exists($_SERVER["PROJECT_ROOT"]."/core/dashboard/app_config.php")) {
 					header("Location: ".PROJECT_PATH."/core/dashboard/");
