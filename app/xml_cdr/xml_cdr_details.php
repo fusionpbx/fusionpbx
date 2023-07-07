@@ -295,18 +295,37 @@
 				echo "			<th width='70%'>".$text['label-value']."</th>\n";
 				echo "		</tr>\n";
 				foreach ($stat as $key => $value) {
-					if (!empty($value)) {
-						if (is_array($value)) {
-							$value = urldecode(implode(' ',$value));
+					if (!empty($value) && is_array($value)) {
+						echo "<tr >\n";
+						echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".escape($key)."</td>\n";
+						echo "	<td valign='top' align='left' class='".$row_style[$c]."'>";
+						echo "		<table border='0' cellpadding='0' cellspacing='0'>\n";
+						foreach ($value as $vk => $arrays) {
+							echo "		<tr>\n";
+							echo "			<td valign='top' width='15%' class='".$row_style[$c]."'>".$vk."&nbsp;&nbsp;&nbsp;&nbsp;</td>\n";
+							echo "			<td valign='top'>\n";
+								echo "			<table border='0' cellpadding='0' cellspacing='0'>\n";
+								foreach ($arrays as $k => $v) {
+									echo "			<tr>\n";
+									echo "				<td valign='top' class='".$row_style[$c]."'>".$k."&nbsp;&nbsp;&nbsp;&nbsp;</td>\n";
+									echo "				<td valign='top' class='".$row_style[$c]."'>".$v."</td>\n";
+									echo "			</tr>\n";
+								}
+								echo "			</table>\n";
+								echo "		<td>\n";
+							echo "		</tr>\n";
 						}
-						else {
-							$value = urldecode($value);
-						}
+						echo "		</table>\n";
+						echo "	</td>\n";
+						echo "</tr>\n";
 					}
-					echo "<tr >\n";
-					echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".escape($key)."</td>\n";
-					echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".escape(wordwrap($value,75,"\n", true))."&nbsp;</td>\n";
-					echo "</tr>\n";
+					else {
+						$value =  urldecode($value);
+						echo "<tr >\n";
+						echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".escape($key)."</td>\n";
+						echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".escape(wordwrap($value,75,"\n", true))."&nbsp;</td>\n";
+						echo "</tr>\n";
+					}
 					$c = $c ? 0 : 1;
 				}
 				echo "		<tr>\n";
