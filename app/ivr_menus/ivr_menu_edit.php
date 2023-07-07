@@ -512,7 +512,7 @@
 
 //set defaults
 	$ivr_menu_language = $ivr_menu_language ?? '';
-	$ivr_menu_dialect = $ivr_menu_language ?? '';
+	$ivr_menu_dialect = $ivr_menu_dialect ?? '';
 	$ivr_menu_voice = $ivr_menu_voice ?? '';
 	$select_style = $select_style ?? '';
 	$onkeyup = $onkeyup ?? '';
@@ -744,7 +744,7 @@
 	}
 	if (!empty($language_paths)) {
 		foreach ($language_paths as $key => $language_variables) {
-			$language_variables = explode ('/',$language_paths[$key]);
+			$language_variables = explode('/',$language_paths[$key]);
 			$language = $language_variables[0];
 			$dialect = $language_variables[1];
 			$voice = $language_variables[2];
