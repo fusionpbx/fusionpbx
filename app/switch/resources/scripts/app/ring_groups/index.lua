@@ -245,7 +245,7 @@
 		record_name = session:getVariable("record_name");
 		record_ext = session:getVariable("record_ext");
 		if (not record_ext) then record_ext = 'wav'; end
-		if (not record_ext) then
+		if (not record_name) then
 			record_name = record_name:gsub("${caller_id_name}", caller_id_name);
 			record_name = record_name:gsub("${caller_id_number}", caller_id_number);
 			record_name = record_name:gsub("${sip_from_user}", sip_from_user);
@@ -812,6 +812,7 @@
 					--record the session
 						if (record_session) then
 							record_session = ",api_on_answer='uuid_record "..uuid.." start ".. record_path .. "/" .. record_name .. "',record_path='".. record_path .."',record_name="..record_name;
+							session.setVariable("record_path", record_path);
 						else
 							record_session = ""
 						end
