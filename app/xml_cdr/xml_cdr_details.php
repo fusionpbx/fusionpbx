@@ -295,7 +295,14 @@
 				echo "			<th width='70%'>".$text['label-value']."</th>\n";
 				echo "		</tr>\n";
 				foreach ($stat as $key => $value) {
-					$value = urldecode($value);
+					if (!empty($value)) {
+						if (is_array($value)) {
+							$value = urldecode(implode(' ',$value));
+						}
+						else {
+							$value = urldecode($value);
+						}
+					}
 					echo "<tr >\n";
 					echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".escape($key)."</td>\n";
 					echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".escape(wordwrap($value,75,"\n", true))."&nbsp;</td>\n";
@@ -520,7 +527,7 @@
 				echo "			<th width='30%'>".$text['label-name']."</th>\n";
 				echo "			<th width='70%'>".$text['label-data']."</th>\n";
 				echo "		</tr>\n";
-				if (is_array($row["extension"]["application"])) {
+				if (!empty($row["extension"]["application"]) && is_array($row["extension"]["application"])) {
 					foreach ($row["extension"]["application"] as $key => $tmp_row) {
 						if (!is_numeric($key)) {
 							$app_name = $tmp_row["app_name"] ?? '';
