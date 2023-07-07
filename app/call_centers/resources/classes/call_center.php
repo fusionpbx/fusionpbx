@@ -369,7 +369,7 @@
 									//clear the cache
 										$cache = new cache;
 										$cache->delete("dialplan:".$_SESSION["domain_name"]);
-										remove_config_from_cache('configuration:callcenter.conf');
+										$cache->delete('configuration:callcenter.conf:'.$_SESSION["domain_name"]);
 
 									//clear the destinations session array
 										if (isset($_SESSION['destinations']['array'])) {
@@ -462,7 +462,7 @@
 
 									//synchronize configuration
 										save_call_center_xml();
-										remove_config_from_cache('configuration:callcenter.conf');
+										$cache->delete('configuration:callcenter.conf:'.$_SESSION["domain_name"]);
 
 									//set message
 										message::add($text['message-delete']);

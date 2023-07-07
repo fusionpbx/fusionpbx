@@ -446,10 +446,6 @@
 				}
 			}
 
-		//synchronize the configuration
-			save_call_center_xml();
-			remove_config_from_cache('configuration:callcenter.conf');
-
 		//add agent/tier to queue
 			$agent_name = $_POST["agent_name"] ?? null;
 			$tier_level = $_POST["tier_level"] ?? null;
@@ -492,7 +488,7 @@
 
 		//clear the cache
 			$cache = new cache;
-			$cache->delete('configuration:callcenter.conf');
+			$cache->delete('configuration:callcenter.conf:'.$_SESSION["domain_name"]);
 
 		//redirect the user
 			if (is_uuid($call_center_queue_uuid)) {

@@ -204,7 +204,7 @@
 
 		//clear the cache
 			$cache = new cache;
-			$cache->delete('configuration:callcenter.conf');
+			$cache->delete('configuration:callcenter.conf:'.$_SESSION["domain_name"]);
 
 	//get and then set the complete agent_contact with the call_timeout and when necessary confirm
 		//if you change this variable, also change resources/switch.php

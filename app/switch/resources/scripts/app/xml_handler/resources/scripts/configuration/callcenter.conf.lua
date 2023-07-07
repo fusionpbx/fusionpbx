@@ -33,7 +33,16 @@
 --get the cache
 	local cache = require "resources.functions.cache"
 	hostname = trim(api:execute("switchname", ""));
-	local cc_cache_key = "configuration:callcenter.conf:" .. hostname
+	local queue_name = params:getHeader("CC-Queue");
+	local domain_name = queue_name and queue_name:match("@(.+)");
+	local domain_uuid;
+	
+	if (not domain_name) then
+		-- module load/reload or agent or tier reload
+		return
+	end
+	
+	local cc_cache_key = "configuration:callcenter.conf:" .. domain_name
 	XML_STRING, err = cache.get(cc_cache_key)
 
 --set the cache
@@ -53,6 +62,17 @@
 		--get the variables
 			dsn = freeswitch.getGlobalVariable("dsn") or ''
 			dsn_callcenter = freeswitch.getGlobalVariable("dsn_callcenter") or ''
+			
+		--get domain uuid
+			local sql = "SELECT domain_uuid FROM v_domains WHERE domain_name = :domain_name";
+			dbh:query(sql, {domain_name = domain_name}, function(row)
+				domain_uuid = row.domain_uuid;
+			end)
+			
+			if (not domain_uuid) then
+				freeswitch.consoleLog("err", "non existent domain "..domain_name);
+				return
+			end
 
 		--start the xml array
 			local xml = Xml:new();
@@ -72,17 +92,14 @@
 
 		--write the queues
 			xml:append([[                    <queues>]]);
-			sql = "select * from v_call_center_queues as q, v_domains as d ";
-			sql = sql .. "where d.domain_uuid = q.domain_uuid; ";
+			sql = "select * from v_call_center_queues where domain_uuid = :domain_uuid ";
 			if (debug["sql"]) then
 				freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");
 			end
 			x = 0;
-			dbh:query(sql, function(row)
+			dbh:query(sql, {domain_uuid = domain_uuid}, function(row)
 				--set as variables
 					queue_uuid = row.call_center_queue_uuid;
-					domain_uuid = row.domain_uuid;
-					domain_name = row.domain_name;
 					queue_name = row.queue_name;
 					queue_extension = row.queue_extension;
 					queue_strategy = row.queue_strategy;
@@ -166,22 +183,18 @@
 		--get the agents
 			xml:append([[                    <agents>]]);
 			sql = "select SPLIT_PART(SPLIT_PART(a.agent_contact, '/', 2), '@', 1) as extension,  ";
-			sql = sql .. "(select extension_uuid from v_extensions where domain_uuid = a.domain_uuid ";
-			sql = sql .. "and extension = SPLIT_PART(SPLIT_PART(a.agent_contact, '/', 2), '@', 1) limit 1) as extension_uuid, ";
-			sql = sql .. "a.*, d.domain_name  ";
-			sql = sql .. "from v_call_center_agents as a, v_domains as d ";
-			sql = sql .. "where d.domain_uuid = a.domain_uuid; ";
+			sql = sql .. "(select extension_uuid from v_extensions where domain_uuid = :domain_uuid and extension = SPLIT_PART(SPLIT_PART(a.agent_contact, '/', 2), '@', 1)) as extension_uuid, a.* ";
+			sql = sql .. "from v_call_center_agents as a ";
+			sql = sql .. "where domain_uuid = :domain_uuid; ";
 			--sql = "select * from v_call_center_agents as a, v_domains as d ";
 			--sql = sql .. "where d.domain_uuid = a.domain_uuid; ";
 			if (debug["sql"]) then
 				freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");
 			end
 			x = 0;
-			dbh:query(sql, function(row)
+			dbh:query(sql, {domain_uuid = domain_uuid}, function(row)
 				--get the values from the database and set as variables
 					agent_uuid = row.call_center_agent_uuid;
-					domain_uuid = row.domain_uuid;
-					domain_name = row.domain_name;
 					extension_uuid = row.extension_uuid;
 					agent_name = row.agent_name;
 					agent_type = row.agent_type;
@@ -275,18 +288,16 @@
 			xml:append([[                    </agents>]]);
 
 		--get the tiers
-			sql = "select t.domain_uuid, d.domain_name, t.call_center_agent_uuid, t.call_center_queue_uuid, q.queue_extension, t.tier_level, t.tier_position ";
-			sql = sql .. "from v_call_center_tiers as t, v_domains as d, v_call_center_queues as q ";
-			sql = sql .. "where d.domain_uuid = t.domain_uuid ";
+			sql = "select t.call_center_agent_uuid, t.call_center_queue_uuid, q.queue_extension, t.tier_level, t.tier_position ";
+			sql = sql .. "from v_call_center_tiers as t, v_call_center_queues as q ";
+			sql = sql .. "where t.domain_uuid = :domain_uuid ";
 			sql = sql .. "and t.call_center_queue_uuid = q.call_center_queue_uuid; ";
 			if (debug["sql"]) then
 				freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");
 			end
 			xml:append([[                    <tiers>]]);
-			dbh:query(sql, function(row)
+			dbh:query(sql, {domain_uuid = domain_uuid}, function(row)
 				--get the values from the database and set as variables
-					domain_uuid = row.domain_uuid;
-					domain_name = row.domain_name;
 					agent_uuid = row.call_center_agent_uuid;
 					queue_uuid = row.call_center_queue_uuid;
 					queue_extension = row.queue_extension;
