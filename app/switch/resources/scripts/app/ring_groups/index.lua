@@ -245,14 +245,14 @@
 		record_name = session:getVariable("record_name");
 		record_ext = session:getVariable("record_ext");
 		if (not record_ext) then record_ext = 'wav'; end
-		if (not record_name) then
+		if (record_name) then
 			record_name = record_name:gsub("${caller_id_name}", caller_id_name);
 			record_name = record_name:gsub("${caller_id_number}", caller_id_number);
 			record_name = record_name:gsub("${sip_from_user}", sip_from_user);
 			record_name = record_name:gsub("${sip_to_user}", sip_to_user);
 			record_name = record_name:gsub("${dialed_user}", ring_group_extension);
 			record_name = record_name:gsub("${record_ext}", record_ext);
-			record_name = record_name:gsub("${domain_name}", record_ext);
+			record_name = record_name:gsub("${domain_name}", domain_name);
 			record_name = record_name:gsub("${destination_number}", destination_number);
 		else
 			record_name = uuid .. "." .. record_ext;
@@ -355,6 +355,7 @@
 					subject = subject:gsub("${ring_group_extension}", ring_group_extension);
 					subject = subject:gsub("${sip_to_user}", ring_group_name);
 					subject = subject:gsub("${dialed_user}", ring_group_extension);
+					subject = subject:gsub("${destination_number}", destination_number);
 					subject = trim(subject);
 					subject = '=?utf-8?B?'..base64.encode(subject)..'?=';
 
@@ -365,6 +366,7 @@
 					body = body:gsub("${ring_group_extension}", ring_group_extension);
 					body = body:gsub("${sip_to_user}", ring_group_name);
 					body = body:gsub("${dialed_user}", ring_group_extension);
+					body = body:gsub("${destination_number}", destination_number);
 					body = body:gsub(" ", "&nbsp;");
 					body = body:gsub("%s+", "");
 					body = body:gsub("&nbsp;", " ");
