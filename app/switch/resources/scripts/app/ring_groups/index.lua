@@ -145,6 +145,8 @@
 		sounds_dir = session:getVariable("sounds_dir");
 		username = session:getVariable("username");
 		dialplan = session:getVariable("dialplan");
+		sip_from_user = session:getVariable("sip_from_user");
+		sip_to_user = session:getVariable("sip_to_user");
 		caller_id_name = session:getVariable("caller_id_name");
 		caller_id_number = session:getVariable("caller_id_number");
 		outbound_caller_id_name = session:getVariable("outbound_caller_id_name");
@@ -195,12 +197,6 @@
 		if (not default_voice) then default_voice = 'callie'; end
 	end
 
---get record_ext
-	record_ext = session:getVariable("record_ext");
-	if (not record_ext) then
-		record_ext = "wav";
-	end
-
 --prepare the api object
 	api = freeswitch.API();
 
@@ -240,25 +236,27 @@
 		missed_call_data = row["ring_group_missed_call_data"];
 	end);
 
---set the recording path
+--prepare the recording path
 	record_path = recordings_dir .. "/" .. domain_name .. "/archive/" .. os.date("%Y/%b/%d");
 	record_path = record_path:gsub("\\", "/");
 
---set the recording file name
+--prepare the recording name and file extension
 	if (session:ready()) then
-		--record_name = session:getVariable("record_name");
-		--sip_from_user = session:getVariable("sip_from_user");
-		--sip_to_user = session:getVariable("sip_to_user");
-
-		--record_name = record_name:gsub("${caller_id_name}", caller_id_name);
-		--record_name = record_name:gsub("${caller_id_number}", caller_id_number);
-		--record_name = record_name:gsub("${sip_from_user}", sip_from_user);
-		--record_name = record_name:gsub("${sip_to_user}", sip_to_user);
-		--record_name = record_name:gsub("${dialed_user}", ring_group_extension);
-
-		--if (not record_name) then
+		record_name = session:getVariable("record_name");
+		record_ext = session:getVariable("record_ext");
+		if (not record_ext) then record_ext = 'wav'; end
+		if (not record_ext) then
+			record_name = record_name:gsub("${caller_id_name}", caller_id_name);
+			record_name = record_name:gsub("${caller_id_number}", caller_id_number);
+			record_name = record_name:gsub("${sip_from_user}", sip_from_user);
+			record_name = record_name:gsub("${sip_to_user}", sip_to_user);
+			record_name = record_name:gsub("${dialed_user}", ring_group_extension);
+			record_name = record_name:gsub("${record_ext}", record_ext);
+			record_name = record_name:gsub("${domain_name}", record_ext);
+			record_name = record_name:gsub("${destination_number}", destination_number);
+		else
 			record_name = uuid .. "." .. record_ext;
-		--end
+		end
 	end
 
 ---set the call_timeout to a higher value to prevent the early timeout of the ring group
