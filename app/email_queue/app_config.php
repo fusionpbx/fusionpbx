@@ -32,9 +32,9 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "email_queue";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "interval";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "120";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "5";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "How often to process the email queue. Default 120 seconds.";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "How often to process the email queue. Default 5 seconds.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "d945ed66-39c1-44eb-b596-49c9399d8018";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "email_queue";
