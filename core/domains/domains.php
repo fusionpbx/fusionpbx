@@ -77,7 +77,7 @@
 			//redirect the user
 				if (!empty($_SESSION["login"]["destination"])) {
 					// to default, or domain specific, login destination
-					header("Location: ".PROJECT_PATH.$_SESSION["login"]["destination"]["url"]);
+					header("Location: ".PROJECT_PATH.$_SESSION["login"]["destination"]["text"]);
 				}
 				else {
 					header("Location: ".PROJECT_PATH."/core/dashboard/");
