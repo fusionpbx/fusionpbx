@@ -352,9 +352,10 @@ if (!class_exists('schema')) {
 
 		//database create table
 			public function db_create_table ($apps, $db_type, $table) {
+				if (empty($apps)) { return false; }
 				if (is_array($apps)) foreach ($apps as $x => &$app) {
-					if (is_array($app['db'])) foreach ($app['db'] as $y => $row) {
-						if (is_array($row['table']['name'])) {
+					if (!empty($app['db']) && is_array($app['db'])) foreach ($app['db'] as $y => $row) {
+						if (!empty($row['table']['name']) && is_array($row['table']['name'])) {
 							$table_name = $row['table']['name']['text'];
 						}
 						else {
@@ -362,26 +363,26 @@ if (!class_exists('schema')) {
 						}
 						if ($table_name == $table) {
 							$sql = "CREATE TABLE " . $table_name . " (\n";
-							$field_count = 0;
-							if (is_array($row['fields'])) foreach ($row['fields'] as $field) {
+							(int)$field_count = 0;
+							if (!empty($row['fields']) && is_array($row['fields'])) foreach ($row['fields'] as $field) {
 								if (!empty($field['deprecated']) && $field['deprecated'] == "true") {
 									//skip this row
 								}
 								else {
 									if ($field_count > 0 ) { $sql .= ",\n"; }
-									if (is_array($field['name'])) {
+									if (!empty($field['name']) &&is_array($field['name'])) {
 										$sql .= $field['name']['text'] . " ";
 									}
 									else {
 										$sql .= $field['name'] . " ";
 									}
-									if (is_array($field['type'])) {
+									if (!empty($field['type']) &&is_array($field['type'])) {
 										$sql .= $field['type'][$db_type];
 									}
 									else {
 										$sql .= $field['type'];
 									}
-									if ($field['key']['type'] == "primary") {
+									if (!empty($field['key']['type']) && $field['key']['type'] == "primary") {
 										$sql .= " PRIMARY KEY";
 									}
 									$field_count++;
