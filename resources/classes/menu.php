@@ -941,7 +941,7 @@ if (!class_exists('menu')) {
 
 			//begin navbar code
 				$html = "<nav class='navbar navbar-expand-sm ".$menu_type."' ".$menu_corners.">\n";
-				$html .= "	<div class='container-fluid' style='width: ".$menu_width."; padding: 0;'>\n";
+				$html .= "	<div class='container-fluid' style='width: ".($menu_width ?? '100%')."; padding: 0;'>\n";
 				$html .= "		<div class='navbar-brand'>\n";
 
 				if ($menu_brand) {
