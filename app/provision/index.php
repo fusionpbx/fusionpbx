@@ -38,8 +38,12 @@
 	$device_template = '';
 
 //define PHP variables from the HTTP values
-	$device_address = $_REQUEST['mac'] ?? '';
-	$device_address = $_REQUEST['address'] ?? '';
+	if (isset($_REQUEST['address'])) {
+		$device_address = $_REQUEST['address'];
+	}
+	if (isset($_REQUEST['mac'])) {
+		$device_address = $_REQUEST['mac'];
+	}
 	$file = $_REQUEST['file'] ?? '';
 	$ext = $_REQUEST['ext'] ?? '';
 	//if (!empty($_REQUEST['template'])) {
