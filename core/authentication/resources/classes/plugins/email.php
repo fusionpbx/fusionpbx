@@ -252,26 +252,12 @@ class plugin_email {
 				$email_from_address = $_SESSION['email']['smtp_from']['text'];
 				$email_from_name = $_SESSION['email']['smtp_from_name']['text'];
 
-				// Direct or email_queue
-				$sql = "select * ";
-				$sql .= "from v_default_settings ";
-				$sql .= "where default_setting_category = :authentication ";
-				$sql .= "and default_setting_subcategory = :email_queue";
-				$parameters['authentication'] = 'authentication';
-				$parameters['email_queue'] = 'email_queue';
-				$database = new database;
-				$row = $database->select($sql, $parameters, 'row');
-				unset($sql, $parameters);
-				if (is_array($row) && @sizeof($row) != 0) {
-					foreach ($row as $record => $value) {
-						if ($row['default_setting_subcategory'] == 'email_queue' && $row['default_setting_value'] == "true" && $row['default_setting_enabled'] == "1" ) {
-							$email_queue = $row['default_setting_value'];
-						}
-					}
-				}
+				//get the email send mode options: direct or email_queue
+				$email_send_mode = $_SESSION['authentication']['email_send_mode']['text'] ?? 'email_queue';
 
-				if ( $email_queue == 'true' ) {
-					// Array vars
+				//send the email
+				if ($email_send_mode == 'email_queue') {
+					//set the variables
 					$email_queue_uuid = uuid();
 					$email_uuid = uuid();
 					$hostname = gethostname();
