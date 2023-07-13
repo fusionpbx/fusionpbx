@@ -1864,10 +1864,10 @@
 		echo "	".$text['label-call_group']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		if (!empty($_SESSION['call group']['name']) && is_array($_SESSION['call group']['name'])) {
+		if (!empty($_SESSION['call_group']['name']) && is_array($_SESSION['call_group']['name'])) {
 			echo "	<select class='formfld' name='call_group'>\n";
 			echo "		<option value=''></option>\n";
-			foreach ($_SESSION['call group']['name'] as $name) {
+			foreach ($_SESSION['call_group']['name'] as $name) {
 				if ($name == $call_group) {
 					echo "		<option value='".escape($name)."' selected='selected'>".escape($name)."</option>\n";
 				}
