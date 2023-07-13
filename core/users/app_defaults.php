@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2021
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -233,6 +233,19 @@ if ($domains_processed == 1) {
 				$p->delete("email_template_add", 'temp');
 				$p->delete("email_template_edit", 'temp');
 			}
+		}
+
+	//update the user_type when the value is null
+		$sql = "select count(*) from v_users ";
+		$sql .= "where user_type is null; ";
+		$database = new database;
+		$num_rows = $database->select($sql, null, 'column');
+		if ($num_rows > 0) {
+			$sql = "update v_users ";
+			$sql .= "set user_type = 'default' ";
+			$sql .= "where user_type is null;";
+			$database = new database;
+			$database->execute($sql, null);
 		}
 
 }
