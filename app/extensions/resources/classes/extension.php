@@ -211,7 +211,7 @@ if (!class_exists('extension')) {
 					$extension_xml_condensed = false;
 					if (is_array($rows) && @sizeof($rows) != 0) {
 						foreach ($rows as $row) {
-							$call_group = $row['call_group'];
+							$call_group = $row['call_group'] ?? '';
 							$call_group = str_replace(";", ",", $call_group);
 							$tmp_array = explode(",", $call_group);
 							foreach ($tmp_array as &$tmp_call_group) {
@@ -252,7 +252,7 @@ if (!class_exists('extension')) {
 								$a1_hash = md5($extension.":".$domain_name.":".$password);
 								$vm_a1_hash = md5($extension.":".$domain_name.":".$voicemail_password);
 
-								$xml .= "<include>\n";
+								$xml = "<include>\n";
 								$cidr = '';
 								if (!empty($row['cidr'])) {
 									$cidr = " cidr=\"" . $row['cidr'] . "\"";
