@@ -446,9 +446,14 @@
 				echo escape($row['default_setting_subcategory']);
 			}
 			echo "	</td>\n";
-			$setting_types = ['Array','Boolean','Code','Dir','Name','Numeric','Text','UUID'];
-			echo "	<td class='hide-sm-dn'>".$setting_types[array_search(strtolower($row['default_setting_name']), array_map('strtolower',$setting_types))].($row['default_setting_name'] == 'array' && isset($row['default_setting_order']) ? ' ('.$row['default_setting_order'].')' : null)."</td>\n";
-			echo "	<td class='overflow no-wrap' title=\"".escape($default_value)."\" style=\"".$setting_bold."\">\n";
+			if (isset($_SESSION['default_settings']['display_order']['text']) && $_SESSION['default_settings']['display_order']['text'] == 'inline') {
+				$setting_types = ['Array','Boolean','Code','Dir','Name','Numeric','Text','UUID'];
+				echo "	<td class='hide-sm-dn' title=\"".escape($row['default_setting_order'])."\">".$setting_types[array_search(strtolower($row['default_setting_name']), array_map('strtolower',$setting_types))].($row['default_setting_name'] == 'array' && isset($row['default_setting_order']) ? ' ('.$row['default_setting_order'].')' : null)."</div></td>\n";
+			}
+			else {
+				echo "	<td class='hide-sm-dn' title=\"".escape($text['label-order'].' '.$row['default_setting_order'])."\">".escape($row['default_setting_name'])."</div></td>\n";
+				echo "	<td class='overflow no-wrap' title=\"".escape($default_value)."\" style=\"".$setting_bold."\">\n";
+			}
 
 			$category = $row['default_setting_category'] ?? '';
 			$subcategory = $row['default_setting_subcategory'] ?? '';
