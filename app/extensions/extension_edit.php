@@ -132,6 +132,7 @@
 			$absolute_codec_string = $_POST["absolute_codec_string"];
 			$force_ping = $_POST["force_ping"];
 			$dial_string = $_POST["dial_string"];
+			$extension_type = $_POST["extension_type"];
 			$enabled = $_POST["enabled"] ?? 'false';
 			$description = $_POST["description"];
 
@@ -530,6 +531,9 @@
 											$array["extensions"][$i]["dial_string"] = $dial_string;
 										}
 									}
+									if (permission_exists('extension_type')) {
+										$array["extensions"][$i]["extension_type"] = $extension_type;
+									}
 									if (permission_exists('extension_enabled')) {
 										$array["extensions"][$i]["enabled"] = $enabled;
 									}
@@ -884,6 +888,7 @@
 			$absolute_codec_string = $row["absolute_codec_string"];
 			$force_ping = $row["force_ping"];
 			$dial_string = $row["dial_string"];
+			$extension_type = $row["extension_type"];
 			$enabled = $row["enabled"];
 			$description = $row["description"];
 		}
@@ -1963,6 +1968,22 @@
 		echo $moh->select('hold_music', $hold_music ?? '', $options);
 		echo "	<br />\n";
 		echo $text['description-hold_music']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
+
+	if (permission_exists('extension_type')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-extension_type']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<select class='formfld' name='extension_type' id='extension_type'>\n";
+		echo "		<option value='default' ".(($extension_type == "default") ? "selected='selected'" : null).">".$text['label-default']."</option>\n";
+		echo "		<option value='virtual' ".(($extension_type == "virtual") ? "selected='selected'" : null).">".$text['label-virtual']."</option>\n";
+		echo "	</select>\n";
+		echo "<br />\n";
+		echo $text['description-extension_type']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 	}

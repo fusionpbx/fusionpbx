@@ -98,6 +98,7 @@
 		$mwi_account = $row["mwi_account"];
 		$sip_bypass_media = $row["sip_bypass_media"];
 		$dial_string = $row["dial_string"];
+		$extension_type = $row["extension_type"];
 		$enabled = $row["enabled"];
 		$description = $row["description"].' ('.$text['button-copy'].')';
 	}
@@ -136,6 +137,7 @@
 	$array['extensions'][0]['mwi_account'] = $mwi_account;
 	$array['extensions'][0]['sip_bypass_media'] = $sip_bypass_media;
 	$array['extensions'][0]['dial_string'] = $dial_string;
+	$array['extensions'][0]['extension_type'] = $extension_type;
 	$array['extensions'][0]['enabled'] = $enabled;
 	$array['extensions'][0]['description'] = $description;
 	$database = new database;
