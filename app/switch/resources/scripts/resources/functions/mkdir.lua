@@ -4,7 +4,7 @@
 		dir = dir:gsub([[\]], "/");
 
 		--retrieve allowed characters and then use it to sanitize the dir variable
-		local allowed_chars = os.getenv("ALLOWED_CHARS") or "^%a%d%-%._~"
+		local allowed_chars = os.getenv("ALLOWED_CHARS") or "^%a%d%-%._~/"
 		dir = dir:gsub("[^" .. allowed_chars .. "]", "")
 
 		if (package.config:sub(1,1) == "/") then
