@@ -38,14 +38,14 @@
 	$device_template = '';
 
 //define PHP variables from the HTTP values
-	if (isset($_REQUEST['mac'])) {
-		$device_address = $_REQUEST['mac'];
-	}
 	if (isset($_REQUEST['address'])) {
 		$device_address = $_REQUEST['address'];
 	}
-	$file = $_REQUEST['file'];
-	$ext = $_REQUEST['ext'];
+	if (isset($_REQUEST['mac'])) {
+		$device_address = $_REQUEST['mac'];
+	}
+	$file = $_REQUEST['file'] ?? '';
+	$ext = $_REQUEST['ext'] ?? '';
 	//if (!empty($_REQUEST['template'])) {
 	//	$device_template = $_REQUEST['template'];
 	//}
@@ -440,7 +440,7 @@
 
 //deliver the customized config over HTTP/HTTPS
 	//need to make sure content-type is correct
-	if ($_REQUEST['content_type'] == 'application/octet-stream') {
+	if (!empty($_REQUEST['content_type']) && $_REQUEST['content_type'] == 'application/octet-stream') {
 		//format the device address and
 			$device_address_formatted = $prov->format_address($device_address, $device_vendor);
 
@@ -474,7 +474,7 @@
 			header("Content-Length: ".strlen($file_contents));
 		}
 		else {
-			if (is_xml($file_contents)) {
+			if (!empty($file_contents) && is_xml($file_contents)) {
 				header("Content-Type: text/xml; charset=utf-8");
 				header("Content-Length: ".strlen($file_contents));
 			}

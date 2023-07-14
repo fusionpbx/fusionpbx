@@ -256,9 +256,9 @@
 						if (file_exists($path.'/msg_'.$row['voicemail_message_uuid'].'.mp3')) {
 							$row['file_path'] = $path.'/msg_'.$row['voicemail_message_uuid'].'.mp3';
 						}
-						$row['file_size'] = filesize($row['file_path']);
-						$row['file_size_label'] = byte_convert($row['file_size']);
-						$row['file_ext'] = substr($row['file_path'], -3);
+						$row['file_size'] = filesize($row['file_path'] ?? '');
+						$row['file_size_label'] = byte_convert($row['file_size'] ?? '');
+						$row['file_ext'] = substr($row['file_path'] ?? '', -3);
 
 						$message_minutes = floor($row['message_length'] / 60);
 						$message_seconds = $row['message_length'] % 60;

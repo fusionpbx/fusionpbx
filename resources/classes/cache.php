@@ -87,7 +87,7 @@ class cache {
 			}
 
 		//return result
-			return $result;
+			return $result ?? null;
 	}
 
 	/**

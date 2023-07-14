@@ -129,8 +129,11 @@
 					if (isset($row['condition_expression']) && !empty($row['condition_expression'])) {
 						if ($row['condition_field'] == 'caller_id_number') {
 							$row['condition_expression'] = preg_replace('#[^\+0-9\*]#', '', $row['condition_expression']);
+							$action_array = explode(":", $row['condition_action'], 2);
 							$conditions[$i]['condition_field'] = $row['condition_field'];
 							$conditions[$i]['condition_expression'] = $row['condition_expression'];
+							$conditions[$i]['condition_app'] = $action_array[0];
+							$conditions[$i]['condition_data'] = $action_array[1];
 							$i++;
 						}
 					}
@@ -456,7 +459,7 @@
 						//set the last destination_app and destination_data variables
 							foreach($destination_actions as $destination_action) {
 								$action_array = explode(":", $destination_action, 2);
-								if (isset($action_array[0]) && $action_array[0] != '') {
+								if (isset($action_array[0]) && !empty($action_array[0])) {
 									$destination_app = $action_array[0];
 									$destination_data = $action_array[1];
 								}
@@ -474,7 +477,15 @@
 									else {
 										$condition_expression = str_replace("+", "\+", $row['condition_expression']);
 									}
-									$dialplan["dialplan_xml"] .= "	<condition field=\"".xml::sanitize($row['condition_field'])."\" expression=\"^".xml::sanitize($condition_expression)."$\"/>\n";
+									$dialplan["dialplan_xml"] .= "	<condition regex=\"all\" break=\"never\">\n";
+									$dialplan["dialplan_xml"] .= "		<regex field=\"".$dialplan_detail_type."\" expression=\"".xml::sanitize($destination_number_regex)."\"/>\n";
+									$dialplan["dialplan_xml"] .= "		<regex field=\"".xml::sanitize($row['condition_field'])."\" expression=\"^".xml::sanitize($condition_expression)."$\"/>\n";
+									if (isset($row['condition_app']) && !empty($row['condition_app'])) {
+										if ($destination->valid($row['condition_app'].':'.$row['condition_data'])) {
+											$dialplan["dialplan_xml"] .= "		<action application=\"".xml::sanitize($row['condition_app'])."\" data=\"".xml::sanitize($row['condition_data'])."\"/>\n";
+										}
+									}
+									$dialplan["dialplan_xml"] .= "	</condition>\n";
 								}
 							}
 
@@ -521,7 +532,7 @@
 							//add the actions to the dialplan_xml
 							foreach($destination_actions as $destination_action) {
 								$action_array = explode(":", $destination_action, 2);
-								if (isset($action_array[0]) && $action_array[0] != '') {
+								if (isset($action_array[0]) && !empty($action_array[0])) {
 									if ($destination->valid($action_array[0].':'.$action_array[1])) {
 										$dialplan["dialplan_xml"] .= "		<action application=\"".xml::sanitize($action_array[0])."\" data=\"".$action_array[1]."\"/>\n";
 									}
@@ -550,7 +561,7 @@
 											else {
 												$condition_expression = str_replace("+", "\+", $row['condition_expression']);
 											}
-											
+
 											//add to the dialplan_details array
 											$dialplan["dialplan_details"][$y]["domain_uuid"] = $domain_uuid;
 											$dialplan["dialplan_details"][$y]["dialplan_uuid"] = $dialplan_uuid;
@@ -815,7 +826,7 @@
 										$action_array = explode(":", $field, 2);
 										$action_app = $action_array[0] ?? null;
 										$action_data = $action_array[1] ?? null;
-										if (isset($action_array[0]) && $action_array[0] != '') {
+										if (isset($action_array[0]) && !empty($action_array[0])) {
 											if ($destination->valid($action_app.':'.$action_data)) {
 												//add to the dialplan_details array
 												$dialplan["dialplan_details"][$y]["domain_uuid"] = $domain_uuid;
@@ -913,7 +924,7 @@
 								$action_array = explode(":", $destination_action, 2);
 								$action_app = $action_array[0] ?? null;
 								$action_data = $action_array[1] ?? null;
-								if (isset($action_array[0]) && $action_array[0] != '') {
+								if (isset($action_array[0]) && !empty($action_array[0])) {
 									if ($destination->valid($action_app.':'.$action_data)) {
 										$actions[$y]['destination_app'] = $action_app;
 										$actions[$y]['destination_data'] = $action_data;
@@ -1124,13 +1135,16 @@
 		$i=0;
 		foreach ($destination_conditions as $row) { $i++; }
 		$destination_conditions[$i]['condition_field'] = '';
-		$destination_conditions[$i]['condition_expression'] = '';
+		$destination_conditions[$i]['condition_app'] = '';
+		$destination_conditions[$i]['condition_data'] = '';
 	}
 	else {
 		$destination_conditions[0]['condition_field']  = '';
 		$destination_conditions[0]['condition_expression'] = '';
+		$destination_conditions[0]['condition_app'] = '';
+		$destination_conditions[0]['condition_data'] = '';
 	}
-		
+
 //get the dialplan details in an array
 	$sql = "select * from v_dialplan_details ";
 	$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
@@ -1162,7 +1176,6 @@
 		$x++;
 	}
 	unset($limit);
-
 
 //remove previous fax details
 	$x = 0;
@@ -1489,7 +1502,7 @@
 	}
 
 	//destination conditions
-	if (permission_exists('destination_conditions')) {
+	if (permission_exists('destination_conditions') && $_SESSION['destinations']['dialplan_details']['boolean'] == "false") {
 		echo "<tr id='tr_conditions'>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-destination_conditions']."\n";
@@ -1506,8 +1519,12 @@
 				echo "		<option value=\"caller_id_number\">".$text['option-caller_id_number']."</option>\n";
 			}
 			echo "	</select>\n";
-			echo "	<input class='formfld' type='text' name=\"destination_conditions[$x][condition_expression]\" id='destination_conditions' maxlength='255' value=\"".escape($row['condition_expression'])."\">\n";
+			echo "	<input class='formfld' type='text' name=\"destination_conditions[$x][condition_expression]\" id='destination_conditions' maxlength='255' value=\"".escape($row['condition_expression'] ?? '')."\">\n";
 			echo "	<br />\n";
+			echo $destination->select('dialplan', "destination_conditions[$x][condition_action]", $row['condition_app'].':'.$row['condition_data'])."<br />\n";
+			if (!empty($row['condition_app'])) {
+				echo "	<br />\n";
+			}
 			$x++;
 		}
 		echo "	".$text['description-destination_conditions']."\n";

@@ -76,18 +76,19 @@
 
 //add a function to return the action_name
 	function action_name($destination_array, $detail_action) {
+		$result = '';
 		if (!empty($destination_array)) {
 			foreach($destination_array as $group => $row) {
 				if (!empty($row)) {
 					foreach ($row as $key => $value) {
 						if ($value == $detail_action) {
 							//add multi-lingual support
-								if (file_exists($_SERVER["PROJECT_ROOT"]."/app/".$group."/app_languages.php")) {
-									$language2 = new text;
-									$text2 = $language2->get($_SESSION['domain']['language']['code'], 'app/'.$group);
-								}
-							//return the group and destination name
-								return trim($text2['title-'.$group].' '.$key);
+							if (file_exists($_SERVER["PROJECT_ROOT"]."/app/".$group."/app_languages.php")) {
+								$language2 = new text;
+								$text2 = $language2->get($_SESSION['domain']['language']['code'], 'app/'.$group);
+								$result = trim($text2['title-'.$group].' '.$key);
+							}
+							return $result;
 						}
 					}
 				}

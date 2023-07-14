@@ -132,6 +132,7 @@
 			$absolute_codec_string = $_POST["absolute_codec_string"];
 			$force_ping = $_POST["force_ping"];
 			$dial_string = $_POST["dial_string"];
+			$extension_type = $_POST["extension_type"];
 			$enabled = $_POST["enabled"] ?? 'false';
 			$description = $_POST["description"];
 
@@ -187,8 +188,8 @@
 
 				foreach ($_POST["devices"] as $d => $device) {
 					if (
-						permission_exists('device_address_uuid') &&
-						$device["device_address"] == 'UUID' &&
+						!empty($device["device_address"]) &&
+						strtolower($device["device_address"]) == 'uuid' &&
 						(
 							!isset($_SESSION['limit']['devices']['numeric']) ||
 							$total_devices < $_SESSION['limit']['devices']['numeric']
@@ -197,9 +198,8 @@
 					}
 					else {
 						$device_address = strtolower($device["device_address"]);
-						$device_address = preg_replace('#[^a-fA-F0-9./]#', '', $device_address);
 					}
-
+					$device_address = preg_replace('#[^a-fA-F0-9./]#', '', $device_address);
 					$line_numbers[$d] = $device["line_number"];
 					$device_addresses[$d] = $device_address;
 					$device_templates[$d] = $device["device_template"];
@@ -530,6 +530,9 @@
 										if (permission_exists('extension_dial_string')) {
 											$array["extensions"][$i]["dial_string"] = $dial_string;
 										}
+									}
+									if (permission_exists('extension_type')) {
+										$array["extensions"][$i]["extension_type"] = $extension_type;
 									}
 									if (permission_exists('extension_enabled')) {
 										$array["extensions"][$i]["enabled"] = $enabled;
@@ -885,6 +888,7 @@
 			$absolute_codec_string = $row["absolute_codec_string"];
 			$force_ping = $row["force_ping"];
 			$dial_string = $row["dial_string"];
+			$extension_type = $row["extension_type"];
 			$enabled = $row["enabled"];
 			$description = $row["description"];
 		}
@@ -1270,7 +1274,7 @@
 			echo "</tr>\n";	
 	}
 
-	if (permission_exists('device_edit')) {
+	if (permission_exists('device_edit') && (empty($extension_type) || $extension_type != 'virtual')) {
 		if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/devices')) {
 			echo "<tr>\n";
 			echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
@@ -1865,10 +1869,10 @@
 		echo "	".$text['label-call_group']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		if (!empty($_SESSION['call group']['name']) && is_array($_SESSION['call group']['name'])) {
+		if (!empty($_SESSION['call_group']['name']) && is_array($_SESSION['call_group']['name'])) {
 			echo "	<select class='formfld' name='call_group'>\n";
 			echo "		<option value=''></option>\n";
-			foreach ($_SESSION['call group']['name'] as $name) {
+			foreach ($_SESSION['call_group']['name'] as $name) {
 				if ($name == $call_group) {
 					echo "		<option value='".escape($name)."' selected='selected'>".escape($name)."</option>\n";
 				}
@@ -1964,6 +1968,22 @@
 		echo $moh->select('hold_music', $hold_music ?? '', $options);
 		echo "	<br />\n";
 		echo $text['description-hold_music']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
+
+	if (permission_exists('extension_type')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-extension_type']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<select class='formfld' name='extension_type' id='extension_type'>\n";
+		echo "		<option value='default' ".(($extension_type == "default") ? "selected='selected'" : null).">".$text['label-default']."</option>\n";
+		echo "		<option value='virtual' ".(($extension_type == "virtual") ? "selected='selected'" : null).">".$text['label-virtual']."</option>\n";
+		echo "	</select>\n";
+		echo "<br />\n";
+		echo $text['description-extension_type']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 	}
