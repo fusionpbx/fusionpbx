@@ -52,6 +52,7 @@
 		$sql = "select * from v_extensions ";
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$sql .= "and enabled = 'true' ";
+		$sql .= "and extension_type = 'default' ";
 		$sql .= "order by extension asc ";
 	}
 	else {
@@ -63,6 +64,7 @@
 		$sql .= "and eu.user_uuid = :user_uuid ";
 		$sql .= "and e.domain_uuid = :domain_uuid ";
 		$sql .= "and e.enabled = 'true' ";
+		$sql .= "and e.extension_type = 'default' ";
 		$sql .= "order by e.extension asc ";
 		$parameters['user_uuid'] = $_SESSION['user']['user_uuid'];
 	}
