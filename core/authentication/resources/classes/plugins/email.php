@@ -132,7 +132,7 @@ class plugin_email {
 					$sql .= "and domain_uuid = :domain_uuid ";
 					$parameters['domain_uuid'] = $_SESSION["domain_uuid"];
 				}
-				$sql .= "and user_type = 'default' ";
+				$sql .= "and (user_type = 'default' or user_type is null) ";
 				$parameters['username'] = $_REQUEST['username'];
 				$database = new database;
 				$row = $database->select($sql, $parameters, 'row');
