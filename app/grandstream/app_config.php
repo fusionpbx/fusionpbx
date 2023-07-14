@@ -1142,3 +1142,5 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Public Mode. 0 - No, 1 - Yes. Default is 0";
 		$y++;
+
+?>
