@@ -97,6 +97,19 @@
 			$database->execute($sql);
 			unset($sql);
 
+		//update the extension_type when the value is null
+			$sql = "select count(*) from v_extensions ";
+			$sql .= "where extension_type is null; ";
+			$database = new database;
+			$num_rows = $database->select($sql, null, 'column');
+			if ($num_rows > 0) {
+				$sql = "update v_extensions ";
+				$sql .= "set extension_type = 'default' ";
+				$sql .= "where extension_type is null;";
+				$database = new database;
+				$database->execute($sql, null);
+			}
+
 	}
 
 ?>
