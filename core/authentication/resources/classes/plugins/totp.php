@@ -149,6 +149,7 @@ class plugin_totp {
 					$sql .= "and domain_uuid = :domain_uuid ";
 					$parameters['domain_uuid'] = $this->domain_uuid;
 				}
+				$sql .= "and (user_type = 'default' or user_type is null) ";
 				$parameters['username'] = $this->username;
 				$database = new database;
 				$row = $database->select($sql, $parameters, 'row');
