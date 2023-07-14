@@ -17,16 +17,15 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//includes
-	include "root.php";
-	require_once "resources/require.php";
+//includes files
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -44,7 +43,7 @@
 
 //get the queue_name and set it as a variable
 	$queue_name = $_GET['queue_name'];
-	$name = $_GET['name'];
+	$name = $_GET['name'] ?? null;
 
 //get a new session array
 	unset($_SESSION['queues']);
@@ -114,7 +113,7 @@
 		var url = 'call_center_active_inc.php?queue_name=<?php echo escape($queue_name); ?>&name=<?php echo urlencode(escape($name)); ?>';
 		new loadXmlHttp(url, 'ajax_response');
 		<?php
-		if (strlen($_SESSION["ajax_refresh_rate"]) == 0) { $_SESSION["ajax_refresh_rate"] = "1777"; }
+		if (empty($_SESSION["ajax_refresh_rate"])) { $_SESSION["ajax_refresh_rate"] = "1777"; }
 		echo "setInterval(function(){new loadXmlHttp(url, 'ajax_reponse');}, ".$_SESSION["ajax_refresh_rate"].");";
 		?>
 	}

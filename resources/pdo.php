@@ -25,8 +25,8 @@
  Raymond Chandler <intralanman@gmail.com>
  */
 
-//includes
-	include "root.php";
+//includes files
+	require_once __DIR__ . "/require.php";
 	require_once "resources/functions.php";
 
 //set defaults
@@ -104,13 +104,13 @@ if (!function_exists('get_db_field_names')) {
 if ($db_type == "sqlite") {
 
 	//set the document_root
-		if (strlen($document_root) == 0) {
+		if (empty($document_root)) {
 			$document_root = $_SERVER["DOCUMENT_ROOT"];
 		}
 
 	//prepare the database connection
-		if (strlen($db_name) == 0) {
-			//if (strlen($_SERVER["SERVER_NAME"]) == 0) { $_SERVER["SERVER_NAME"] = "http://localhost"; }
+		if (empty($db_name)) {
+			//if (empty($_SERVER["SERVER_NAME"])) { $_SERVER["SERVER_NAME"] = "http://localhost"; }
 			$server_name = $_SERVER["SERVER_NAME"];
 			$server_name = str_replace ("www.", "", $server_name);
 			//$server_name = str_replace (".", "_", $server_name);
@@ -217,12 +217,12 @@ if ($db_type == "mysql") {
 				//$mysql_connection = mysqli_connect($db_host, $db_username, $db_password,$db_name) or die("Error " . mysqli_error($link));
 			}
 		//mysql pdo connection
-			if (strlen($db_host) == 0 && strlen($db_port) == 0) {
+			if (strlen($db_host) == 0 && empty($db_port)) {
 				//if both host and port are empty use the unix socket
 				$db = new PDO("mysql:host=$db_host;unix_socket=/var/run/mysqld/mysqld.sock;dbname=$db_name;charset=utf8;", $db_username, $db_password);
 			}
 			else {
-				if (strlen($db_port) == 0) {
+				if (empty($db_port)) {
 					//leave out port if it is empty
 					$db = new PDO("mysql:host=$db_host;dbname=$db_name;charset=utf8;", $db_username, $db_password, array(
 					PDO::ATTR_ERRMODE,
@@ -249,8 +249,8 @@ if ($db_type == "pgsql") {
 		if (!isset($db_secure)) {
 			$db_secure = false;
 		}
-		if (strlen($db_host) > 0) {
-			if (strlen($db_port) == 0) { $db_port = "5432"; }
+		if (!empty($db_host)) {
+			if (empty($db_port)) { $db_port = "5432"; }
 			if ($db_secure == true) {
 				$db = new PDO("pgsql:host=$db_host port=$db_port dbname=$db_name user=$db_username password=$db_password sslmode=verify-ca sslrootcert=$db_cert_authority");
 			}
@@ -268,25 +268,34 @@ if ($db_type == "pgsql") {
 	}
 } //end if db_type pgsql
 
+if ($db_type == "odbc") {
+	//database connection
+	try {
+		$db = new PDO("odbc:".$db_name);
+	}
+	catch (PDOException $error) {
+		print "error: " . $error->getMessage() . "<br/>";
+		die();
+	}
+} //end if db_type pgsql
+
 //get the domain list
-	if (!is_array($_SESSION['domains']) or !isset($_SESSION["domain_uuid"])) {
+	if (empty($_SESSION['domains']) or empty($_SESSION["domain_uuid"])) {
 
 		//get the domain
-			$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
+			$domain_array = explode(":", $_SERVER["HTTP_HOST"] ?? '');
 
 		//get the domains from the database
-			$sql = "select * from v_domains";
-			$prep_statement = $db->prepare($sql);
-			$prep_statement->execute();
-			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-			foreach($result as $row) {
-				$domain_names[] = $row['domain_name'];
-			}
-			unset($prep_statement);
-
-		//put the domains in natural order
-			if (is_array($domain_names)) {
-				natsort($domain_names);
+			$database = new database;
+			if ($database->table_exists('v_domains')) {
+				$sql = "select * from v_domains order by domain_name asc;";
+				$prep_statement = $db->prepare($sql);
+				$prep_statement->execute();
+				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+				foreach($result as $row) {
+					$domain_names[] = $row['domain_name'];
+				}
+				unset($prep_statement);
 			}
 
 		//build the domains array in the correct order
@@ -323,14 +332,17 @@ if ($db_type == "pgsql") {
 
 //get the software name
 	if (!isset($_SESSION["software_name"])) {
-		$sql = "select * from v_software ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		if ($prep_statement) {
-			$prep_statement->execute();
-			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-			$_SESSION["software_name"] = $row['software_name'];
+		$database = new database;
+		if ($database->table_exists('v_software')) {
+			$sql = "select * from v_software ";
+			$prep_statement = $db->prepare(check_sql($sql));
+			if ($prep_statement) {
+				$prep_statement->execute();
+				$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+				$_SESSION["software_name"] = $row['software_name'];
+			}
+			unset($prep_statement, $result);
 		}
-		unset($prep_statement, $result);
 	}
 
 //set the setting arrays
@@ -340,7 +352,7 @@ if ($db_type == "pgsql") {
 	}
 
 //set the domain_uuid variable from the session
-	if (strlen($_SESSION["domain_uuid"]) > 0) {
+	if (!empty($_SESSION["domain_uuid"])) {
 		$domain_uuid = $_SESSION["domain_uuid"];
 	}
 	else {

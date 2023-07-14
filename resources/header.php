@@ -24,14 +24,13 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//includes
-	include "root.php";
-	require_once "resources/require.php";
+//includes files
+    require_once __DIR__ . "/require.php";
 
 //if reloadxml then run the command
 	if (permission_exists('dialplan_edit') && isset($_SESSION["reload_xml"])) {
-		if (strlen($_SESSION["reload_xml"]) > 0) {
-			if ($_SESSION['apply_settings'] == "true") {
+		if (!empty($_SESSION["reload_xml"])) {
+			if (isset($_SESSION['apply_settings']) && $_SESSION['apply_settings'] == "true") {
 				//show the apply settings prompt
 			}
 			else {
@@ -92,23 +91,23 @@
 		$sql .= ") ";
 		$sql .= "order by rss_order asc ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-		$parameters['content'] = strlen($content) == 0 ? $_SERVER["PHP_SELF"] : $content;
+		$parameters['content'] = empty($content) ? $_SERVER["PHP_SELF"] : $content;
 		$database = new database;
 		$content_result = $database->select($sql, $parameters, 'all');
 		if (is_array($content_result) && @sizeof($content_result) != 0) {
 			foreach($content_result as $content_row) {
 				$template_rss_sub_category = $content_row['rss_sub_category'];
-				if (strlen($content_row['rss_group']) == 0) {
+				if (empty($content_row['rss_group'])) {
 					//content is public
 					$content_from_db = &$content_row['rss_description'];
-					if (strlen($content_row['rss_title']) > 0) {
+					if (!empty($content_row['rss_title'])) {
 						$page["title"] = $content_row['rss_title'];
 					}
 				}
 				else {
 					if (if_group($content_row[rss_group])) { //viewable only to designated group
 						$content_from_db = &$content_row[rss_description];
-						if (strlen($content_row['rss_title']) > 0) {
+						if (!empty($content_row['rss_title'])) {
 							$page["title"] = $content_row['rss_title'];
 						}
 					}
@@ -123,7 +122,7 @@
 	$button_icon_style = 'padding: 3px;';
 	$button_label_class = 'button-label';
 	$button_label_style = 'padding-left: 5px; padding-right: 3px;';
-	$button_icons = $_SESSION['theme']['button_icons']['text'];
+	$button_icons = (!empty($_SESSION['theme']['button_icons']['text'])) ? $button_icons = $_SESSION['theme']['button_icons']['text'] : '';
 	switch ($button_icons) {
 		case 'auto':
 			$button_label_class .= ' hide-md-dn';

@@ -7,7 +7,10 @@
  * $e->add_event_function('myfunction')  it could be a static method as well
  * $e->execute_event(ADD, $params)	event type, params is an associative array
  */
-include "root.php";
+
+//includes files
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
+
 
 define ("MODULE_LOAD", 1);	// when loading a FS module with FS
 define ("MODULE_UNLOAD", 2);

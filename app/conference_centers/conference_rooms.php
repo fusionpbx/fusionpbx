@@ -17,16 +17,15 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//includes
-	require_once "root.php";
-	require_once "resources/require.php";
+//includes files
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
 
@@ -43,8 +42,14 @@
 	$language = new text;
 	$text = $language->get();
 
+//set additional variables
+	$search = $_GET["search"] ?? null;
+
+//set from session variables
+	$list_row_edit_button = !empty($_SESSION['theme']['list_row_edit_button']['boolean']) ? $_SESSION['theme']['list_row_edit_button']['boolean'] : 'false';
+
 //get the http post data
-	if (is_array($_POST['conference_rooms'])) {
+	if (!empty($_POST['conference_rooms'])) {
 		$action = $_POST['action'];
 		$toggle_field = $_POST['toggle_field'];
 		$search = $_POST['search'];
@@ -52,7 +57,7 @@
 	}
 
 //process the http post data by action
-	if ($action != '' && is_array($conference_rooms) && @sizeof($conference_rooms) != 0) {
+	if (!empty($action) && !empty($conference_rooms)) {
 		switch ($action) {
 			case 'toggle':
 				if (permission_exists('conference_room_edit')) {
@@ -69,13 +74,13 @@
 				break;
 		}
 
-		header('Location: conference_rooms.php'.($search != '' ? '?search='.urlencode($search) : null));
+		header('Location: conference_rooms.php'.(!empty($search) ? '?search='.urlencode($search) : null));
 		exit;
 	}
 
 /*
 //if the $_GET array exists then process it
-	if (count($_GET) > 0 && strlen($_GET["search"]) == 0) {
+	if (!empty($_GET) && empty($_GET["search"])) {
 		//get http GET variables and set them as php variables
 			$conference_room_uuid = $_GET["conference_room_uuid"];
 			$record = $_GET["record"];
@@ -101,22 +106,22 @@
 
 		//build the array
 			$array['conference_rooms'][0]['conference_room_uuid'] = $conference_room_uuid;
-			if (strlen($record) > 0) {
+			if (!empty($record)) {
 				$array['conference_rooms'][0]['record'] = $record;
 			}
-			if (strlen($wait_mod) > 0) {
+			if (!empty($wait_mod)) {
 				$array['conference_rooms'][0]['wait_mod'] = $wait_mod;
 			}
-			if (strlen($announce) > 0) {
+			if (!empty($announce)) {
 				$array['conference_rooms'][0]['announce'] = $announce;
 			}
-			if (strlen($mute) > 0) {
+			if (!empty($mute)) {
 				$array['conference_rooms'][0]['mute'] = $mute;
 			}
-			if (strlen($sounds) > 0) {
+			if (!empty($sounds)) {
 				$array['conference_rooms'][0]['sounds'] = $sounds;
 			}
-			if (strlen($enabled) > 0) {
+			if (!empty($enabled)) {
 				$array['conference_rooms'][0]['enabled'] = $enabled;
 			}
 
@@ -164,21 +169,20 @@
 	}
 
 //get variables used to control the order
-	$order_by = $_GET["order_by"];
-	$order = $_GET["order"];
+	$order_by = $_GET["order_by"] ?? '';
+	$order = $_GET["order"] ?? '';
 
 //get the conference room count
 	$conference_center = new conference_centers;
-	$conference_center->db = $db;
 	$conference_center->domain_uuid = $_SESSION['domain_uuid'];
-	if (strlen($search) > 0) {
+	if (!empty($search)) {
 		$conference_center->search = $search;
 	}
 	$num_rows = $conference_center->room_count();
 
 //prepare to page the results
-	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
-	$param = $search ? "&search=".$search : null;
+	$rows_per_page = (!empty($_SESSION['domain']['paging']['numeric'])) ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$param = !empty($search) ? "&search=".$search : null;
 	if (isset($_GET['page'])) {
 		$page = is_numeric($_GET['page']) ? $_GET['page'] : 0;
 		list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
@@ -188,10 +192,10 @@
 
 //get the conference rooms
 	$conference_center->rows_per_page = $rows_per_page;
-	$conference_center->offset = $offset;
+	$conference_center->offset = $offset ?? 0;
 	$conference_center->order_by = $order_by;
 	$conference_center->order = $order;
-	if (strlen($search) > 0) {
+	if (!empty($search)) {
 		$conference_center->search = $search;
 	}
 	$result = $conference_center->rooms();
@@ -241,9 +245,9 @@
 	}
 	echo 		"<form id='form_search' class='inline' method='get'>\n";
 	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown='list_search_reset();'>";
-	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search','style'=>($search != '' ? 'display: none;' : null)]);
-	echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','link'=>'bridges.php','style'=>($search == '' ? 'display: none;' : null)]);
-	if ($paging_controls_mini != '') {
+	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search','style'=>(!empty($search) ? 'display: none;' : null)]);
+	echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','link'=>'conference_rooms.php','style'=>(empty($search) ? 'display: none;' : null)]);
+	if (!empty($paging_controls_mini)) {
 		echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>\n";
 	}
 	echo "		</form>\n";
@@ -270,7 +274,7 @@
 	echo "<tr class='list-header'>\n";
 	if (permission_exists('conference_room_add') || permission_exists('conference_room_edit') || permission_exists('conference_room_delete')) {
 		echo "	<th class='checkbox'>\n";
-		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".($result ?: "style='visibility: hidden;'").">\n";
+		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".(!empty($result) ?: "style='visibility: hidden;'").">\n";
 		echo "	</th>\n";
 	}
 	//echo th_order_by('conference_center_uuid', 'Conference UUID', $order_by, $order);
@@ -288,12 +292,12 @@
 	echo th_order_by('mute', $text['label-mute'], $order_by, $order, null, "class='center'");
 	echo th_order_by('sounds', $text['label-sounds'], $order_by, $order, null, "class='center'");
 	echo "<th class='center'>".$text['label-members']."</th>\n";
-	echo "<th>".$text['label-tools']."</th>\n";
+	echo "<th class='center'>".$text['label-tools']."</th>\n";
 	if (permission_exists('conference_room_enabled')) {
 		echo th_order_by('enabled', $text['label-enabled'], $order_by, $order, null, "class='center'");
 	}
 	echo th_order_by('description', $text['label-description'], $order_by, $order, null, "class='hide-sm-dn'");
-	if (permission_exists('conference_room_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+	if (permission_exists('conference_room_edit') && $list_row_edit_button == 'true') {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
@@ -437,15 +441,18 @@
 // 			}
 // 			echo "	</td>\n";
 
-			if (strlen($conference[$meeting_uuid]["session_uuid"])) {
+			if (!empty($conference) && !empty($meeting_uuid) && strlen($conference[$meeting_uuid]["session_uuid"])) {
 				echo "	<td class='center'>".escape($conference[$meeting_uuid]["member_count"])."&nbsp;</td>\n";
 			}
 			else {
 				echo "	<td class='center'>0</td>\n";
 			}
-			echo "	<td class='no-link no-wrap'>\n";
+			echo "	<td class='no-link no-wrap center'>\n";
 			if (permission_exists('conference_interactive_view')) {
-				echo "		<a href='".PROJECT_PATH."/app/conferences_active/conference_interactive.php?c=".urlencode($row['conference_room_uuid'])."'>".$text['label-view']."</a>&nbsp;\n";
+				echo "		<a href='".PROJECT_PATH."/app/conferences_active/conference_interactive.php?c=".urlencode($row['conference_room_uuid'])."'>".$text['label-view']."</a>\n";
+			}
+			else if (permission_exists('conference_active_view')) {
+				echo "		<a href='".PROJECT_PATH."/app/conferences_active/conferences_active.php'>".$text['label-view']."</a>\n";
 			}
 			if (permission_exists('conference_cdr_view')) {	
 				echo "		<a href='/app/conference_cdr/conference_cdr.php?id=".urlencode($row['conference_room_uuid'])."'>".$text['button-cdr']."</a>\n";
@@ -476,7 +483,7 @@
 			}
 
 			echo "	<td class='description overflow hide-sm-dn'>".escape($row['description'])."</td>\n";
-			if (permission_exists('conference_room_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+			if (permission_exists('conference_room_edit') && $list_row_edit_button == 'true') {
 				echo "	<td class='action-button'>\n";
 				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
 				echo "	</td>\n";
@@ -489,7 +496,7 @@
 
 	echo "</table>\n";
 	echo "<br />\n";
-	echo "<div align='center'>".$paging_controls."</div>\n";
+	echo "<div align='center'>".!empty($paging_controls)."</div>\n";
 	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "</form>\n";
 

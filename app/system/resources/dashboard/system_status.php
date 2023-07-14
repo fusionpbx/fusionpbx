@@ -1,8 +1,7 @@
 <?php
 
-//includes
-	require_once "root.php";
-	require_once "resources/require.php";
+//includes files
+	require_once dirname(__DIR__, 4) . "/resources/require.php";
 
 //check permisions
 	require_once "resources/check_auth.php";
@@ -38,13 +37,11 @@
 		if ($percent_disk_usage != '') {
 			//add half doughnut chart
 			?>
-			<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 20px'>
-				<div style='width: 175px; height: 175px;'><canvas id='system_status_chart'></canvas></div>
+			<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 20px;' onclick="$('#hud_system_status_details').slideToggle('fast');">
+				<div><canvas id='system_status_chart' width='175px' height='175px'></canvas></div>
 			</div>
 
 			<script>
-				var system_status_chart_context = document.getElementById('system_status_chart').getContext('2d');
-
 				var system_status_chart_background_color;
 				if ('<?php echo $percent_disk_usage; ?>' <= 80) {
 					system_status_chart_background_color = '<?php echo $_SESSION['dashboard']['disk_usage_chart_main_background_color'][0]; ?>';
@@ -54,44 +51,40 @@
 					system_status_chart_background_color = '<?php echo $_SESSION['dashboard']['disk_usage_chart_main_background_color'][2]; ?>';
 				}
 
-				const system_status_chart_data = {
-					datasets: [{
-						data: ['<?php echo $percent_disk_usage; ?>', 100 - '<?php echo $percent_disk_usage; ?>'],
-						backgroundColor: [system_status_chart_background_color,
-						'<?php echo $_SESSION['dashboard']['disk_usage_chart_sub_background_color']['text']; ?>'],
-						borderColor: '<?php echo $_SESSION['dashboard']['disk_usage_chart_border_color']['text']; ?>',
-						borderWidth: '<?php echo $_SESSION['dashboard']['disk_usage_chart_border_width']['text']; ?>',
-						cutout: chart_cutout
-					}]
-				};
-
-				const system_status_chart_config = {
-					type: 'doughnut',
-					data: system_status_chart_data,
-					options: {
-						responsive: true,
-						maintainAspectRatio: false,
-						circumference: 180,
-						rotation: 270,
-						plugins: {
-							chart_counter_2: {
-								chart_text: '<?php echo $percent_disk_usage; ?>'
-							},
-							legend: {
-								display: false
-							},
-							title: {
-								display: true,
-								text: '<?php echo $text['label-disk_usage']; ?>'
-							}
-						}
-					},
-					plugins: [chart_counter_2],
-				};
-
 				const system_status_chart = new Chart(
-					system_status_chart_context,
-					system_status_chart_config
+					document.getElementById('system_status_chart').getContext('2d'),
+					{
+						type: 'doughnut',
+						data: {
+							datasets: [{
+								data: ['<?php echo $percent_disk_usage; ?>', 100 - '<?php echo $percent_disk_usage; ?>'],
+								backgroundColor: [system_status_chart_background_color,
+								'<?php echo $_SESSION['dashboard']['disk_usage_chart_sub_background_color']['text']; ?>'],
+								borderColor: '<?php echo $_SESSION['dashboard']['disk_usage_chart_border_color']['text']; ?>',
+								borderWidth: '<?php echo $_SESSION['dashboard']['disk_usage_chart_border_width']['text']; ?>',
+								cutout: chart_cutout
+							}]
+						},
+						options: {
+							responsive: true,
+							maintainAspectRatio: false,
+							circumference: 180,
+							rotation: 270,
+							plugins: {
+								chart_counter_2: {
+									chart_text: '<?php echo $percent_disk_usage; ?>'
+								},
+								legend: {
+									display: false
+								},
+								title: {
+									display: true,
+									text: '<?php echo $text['label-disk_usage']; ?>'
+								}
+							}
+						},
+						plugins: [chart_counter_2],
+					}
 				);
 			</script>
 			<?php
@@ -114,19 +107,9 @@
 
 	//os uptime
 		if (stristr(PHP_OS, 'Linux')) {
-			unset($tmp);
-			$cut = shell_exec("/usr/bin/which cut");
-			$uptime = trim(shell_exec(escapeshellcmd($cut." -d. -f1 /proc/uptime")));
-			$tmp['y'] = floor($uptime/60/60/24/365);
-			$tmp['d'] = $uptime/60/60/24%365;
-			$tmp['h'] = $uptime/60/60%24;
-			$tmp['m'] = $uptime/60%60;
-			$tmp['s'] = $uptime%60;
-			$uptime = (($tmp['y'] != 0 && $tmp['y'] != '') ? $tmp['y'].'y ' : null);
-			$uptime .= (($tmp['d'] != 0 && $tmp['d'] != '') ? $tmp['d'].'d ' : null);
-			$uptime .= (($tmp['h'] != 0 && $tmp['h'] != '') ? $tmp['h'].'h ' : null);
-			$uptime .= (($tmp['m'] != 0 && $tmp['m'] != '') ? $tmp['m'].'m ' : null);
-			$uptime .= (($tmp['s'] != 0 && $tmp['s'] != '') ? $tmp['s'].'s' : null);
+                        $prefix = 'up ';
+                        $linux_uptime = shell_exec('uptime  -p');
+                        $uptime = substr($linux_uptime, strlen($prefix));
 			if ($uptime != '') {
 				echo "<tr class='tr_link_void'>\n";
 				echo "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-system_uptime']."</td>\n";
@@ -140,7 +123,7 @@
 		if (stristr(PHP_OS, 'Linux')) {
 			$free = shell_exec("/usr/bin/which free");
 			$awk = shell_exec("/usr/bin/which awk");
-			$percent_memory = round(shell_exec(escapeshellcmd($free." | ".$awk." 'FNR == 3 {print $3/($3+$4)*100}'")), 1);
+			$percent_memory = round((float)shell_exec(escapeshellcmd($free." | ".$awk." 'FNR == 3 {print $3/($3+$4)*100}'")), 1);
 			if ($percent_memory != '') {
 				echo "<tr class='tr_link_void'>\n";
 				echo "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-memory_usage']."</td>\n";
@@ -191,7 +174,7 @@
 				}
 		}
 		if ($sql != '') {
-			$database = new database;
+			if (!isset($database)) { $database = new database; }
 			$connections = $database->select($sql, null, 'column');
 			unset($sql);
 		}
@@ -204,11 +187,11 @@
 		}
 
 	//channel count
-		if ($fp) {
+		if (isset($fp)) {
 			$tmp = event_socket_request($fp, 'api status');
 			$matches = Array();
 			preg_match("/(\d+)\s+session\(s\)\s+\-\speak/", $tmp, $matches);
-			$channels = $matches[1] ? $matches[1] : 0;
+			$channels = !empty($matches[1]) ? $matches[1] : 0;
 			$tr_link = "href='".PROJECT_PATH."/app/calls_active/calls_active.php'";
 			echo "<tr ".$tr_link.">\n";
 			echo "<td valign='top' class='".$row_style[$c]." hud_text'><a ".$tr_link.">".$text['label-channels']."</a></td>\n";
@@ -218,7 +201,7 @@
 		}
 
 	//registration count
-		if ($fp && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/registrations/")) {
+		if (isset($fp) && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/registrations/")) {
 			$registration = new registrations;
 			$registrations = $registration->count();
 			$tr_link = "href='".PROJECT_PATH."/app/registrations/registrations.php'";
@@ -231,7 +214,7 @@
 
 	echo "</table>\n";
 	echo "</div>";
-	$n++;
+	//$n++;
 
 	echo "<span class='hud_expander' onclick=\"$('#hud_system_status_details').slideToggle('fast');\"><span class='fas fa-ellipsis-h'></span></span>";
 	echo "</div>\n";

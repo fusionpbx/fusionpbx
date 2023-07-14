@@ -1,8 +1,7 @@
 <?php
 
-//includes
-	include_once "root.php"; 
-	require_once "resources/require.php";
+//includes files
+    require_once dirname(__DIR__, 3) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions

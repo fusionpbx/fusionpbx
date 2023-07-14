@@ -27,7 +27,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -36,9 +36,8 @@
 
 */
 
-//includes
-	include "root.php";
-	require_once "resources/require.php";
+//includes files
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -54,10 +53,10 @@
 	if (count($_GET) > 0) {
 		$cmd = trim($_GET["cmd"]);
 		$name = trim($_GET["name"]);
-		$uuid = trim($_GET["uuid"]);
+		$uuid = trim($_GET["uuid"] ?? '');
 		$data = trim($_GET["data"]);
-		$id = trim($_GET["id"]);
-		$direction = trim($_GET["direction"]);
+		$id = trim($_GET["id"] ?? '');
+		$direction = trim($_GET["direction"] ?? '');
 	}
 
 //authorized commands
@@ -70,19 +69,19 @@
 	}
 
 //get the conference name
-	if (isset($name) && strlen($name) > 0) {
+	if (isset($name) && !empty($name)) {
 		$name_array = explode('@', $name);
 		$name = $name_array[0];
 	}
 
 //validate the name
 	if (!is_uuid($name)) {
-		$sql = "select conference_name ";
+		$sql = "select conference_extension ";
 		$sql .= "from v_conferences ";
 		$sql .= "where domain_uuid = :domain_uuid ";
-		$sql .= "and conference_name = :conference_name ";
+		$sql .= "and conference_extension = :conference_extension ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-		$parameters['conference_name'] = $name;
+		$parameters['conference_extension'] = $name;
 		$database = new database;
 		$name = $database->select($sql, $parameters, 'column');
 		unset ($parameters, $sql);
@@ -175,14 +174,16 @@
 		unset($uuid);
 	}
 
+
+
 //execute the command
 	if (count($_GET) > 0) {
-		if (strlen($cmd) > 0) {
+		if (!empty($cmd)) {
 			//prepare the switch cmd
 				$switch_cmd = $cmd . " ";
 				$switch_cmd .= $name . " ";
 				$switch_cmd .= $data . " ";
-				if ($id && strlen($id) > 0) {
+				if ($id && !empty($id)) {
 					$switch_cmd .= " ".$id;
 				}
 

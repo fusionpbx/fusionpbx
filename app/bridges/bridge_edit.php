@@ -21,9 +21,8 @@
 	the Initial Developer. All Rights Reserved.
 */
 
-//includes
-	require_once "root.php";
-	require_once "resources/require.php";
+//includes files
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -37,7 +36,7 @@
 	$text = $language->get();
 
 //action add or update
-	if (is_uuid($_REQUEST["id"])) {
+	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
 		$bridge_uuid = $_REQUEST["id"];
 		$id = $_REQUEST["id"];
@@ -46,17 +45,24 @@
 		$action = "add";
 	}
 
+//set the defaults
+	$bridge_uuid = '';
+	$bridge_name = '';
+	$bridge_destination = '';
+	$bridge_enabled = '';
+	$bridge_description = '';
+
 //get http post variables and set them to php variables
-	if (is_array($_POST)) {
-		$bridge_uuid = $_POST["bridge_uuid"];
+	if (!empty($_POST)) {
+		$bridge_uuid = $_POST["bridge_uuid"] ?? null;
 		$bridge_name = $_POST["bridge_name"];
 		$bridge_destination = $_POST["bridge_destination"];
-		$bridge_enabled = $_POST["bridge_enabled"];
+		$bridge_enabled = $_POST["bridge_enabled"] ?? 'false';
 		$bridge_description = $_POST["bridge_description"];
 	}
 
 //process the user data and save it to the database
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
 		//delete the bridge
 			if (permission_exists('bridge_delete')) {
@@ -88,10 +94,10 @@
 
 		//check for all required data
 			$msg = '';
-			if (strlen($bridge_name) == 0) { $msg .= $text['message-required']." ".$text['label-bridge_name']."<br>\n"; }
-			if (strlen($bridge_destination) == 0) { $msg .= $text['message-required']." ".$text['label-bridge_destination']."<br>\n"; }
-			if (strlen($bridge_enabled) == 0) { $msg .= $text['message-required']." ".$text['label-bridge_enabled']."<br>\n"; }
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+			if (empty($bridge_name)) { $msg .= $text['message-required']." ".$text['label-bridge_name']."<br>\n"; }
+			if (empty($bridge_destination)) { $msg .= $text['message-required']." ".$text['label-bridge_destination']."<br>\n"; }
+			if (empty($bridge_enabled)) { $msg .= $text['message-required']." ".$text['label-bridge_enabled']."<br>\n"; }
+			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -105,7 +111,7 @@
 			}
 
 		//add the bridge_uuid
-			if (strlen($bridge_uuid) == 0) {
+			if (empty($bridge_uuid)) {
 				$bridge_uuid = uuid();
 			}
 
@@ -143,14 +149,14 @@
 	}
 
 //pre-populate the form
-	if (is_array($_GET) && $_POST["persistformvar"] != "true") {
+	if (!empty($_GET) && is_array($_GET) && (empty($_POST["persistformvar"]) || $_POST["persistformvar"] != "true")) {
 		$bridge_uuid = $_GET["id"];
 		$sql = "select * from v_bridges ";
 		$sql .= "where bridge_uuid = :bridge_uuid ";
 		$parameters['bridge_uuid'] = $bridge_uuid;
 		$database = new database;
-		$row = $database->select($sql, $parameters, 'row');
-		if (is_array($row) && sizeof($row) != 0) {
+		$row = $database->select($sql, $parameters ?? null, 'row');
+		if (!empty($row)) {
 			$bridge_name = $row["bridge_name"];
 			$bridge_destination = $row["bridge_destination"];
 			$bridge_enabled = $row["bridge_enabled"];
@@ -158,6 +164,9 @@
 		}
 		unset($sql, $parameters, $row);
 	}
+
+//set the defaults
+	if (empty($bridge_enabled)) { $bridge_enabled = 'true'; }
 
 //create token
 	$object = new token;
@@ -215,20 +224,18 @@
 	echo "	".$text['label-bridge_enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<select class='formfld' name='bridge_enabled'>\n";
-	if ($bridge_enabled == "true") {
-		echo "		<option value='true' selected='selected'>".$text['label-true']."</option>\n";
+	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
+		echo "	<label class='switch'>\n";
+		echo "		<input type='checkbox' id='bridge_enabled' name='bridge_enabled' value='true' ".(!empty($bridge_enabled) && $bridge_enabled == 'true' ? "checked='checked'" : null).">\n";
+		echo "		<span class='slider'></span>\n";
+		echo "	</label>\n";
 	}
 	else {
-		echo "		<option value='true'>".$text['label-true']."</option>\n";
+		echo "	<select class='formfld' id='bridge_enabled' name='bridge_enabled'>\n";
+		echo "		<option value='true' ".($bridge_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($bridge_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "	</select>\n";
 	}
-	if ($bridge_enabled == "false") {
-		echo "		<option value='false' selected='selected'>".$text['label-false']."</option>\n";
-	}
-	else {
-		echo "		<option value='false'>".$text['label-false']."</option>\n";
-	}
-	echo "	</select>\n";
 	echo "<br />\n";
 	echo $text['description-bridge_enabled']."\n";
 	echo "</td>\n";

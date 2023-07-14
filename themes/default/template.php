@@ -13,6 +13,7 @@
 <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no' />
+<meta name="robots" content="noindex, nofollow, noarchive" />
 
 {*//external css files *}
 	<link rel='stylesheet' type='text/css' href='{$project_path}/resources/bootstrap/css/bootstrap.min.css.php'>
@@ -20,9 +21,8 @@
 	<link rel='stylesheet' type='text/css' href='{$project_path}/resources/bootstrap/css/bootstrap-colorpicker.min.css.php'>
 	<link rel='stylesheet' type='text/css' href='{$project_path}/resources/fontawesome/css/all.min.css.php'>
 	<link rel='stylesheet' type='text/css' href='{$project_path}/themes/default/css.php'>
-
 {*//link to custom css file *}
-	{if $settings.theme.custom_css}
+	{if !empty($settings.theme.custom_css)}
 		<link rel='stylesheet' type='text/css' href='{$settings.theme.custom_css}'>
 	{/if}
 
@@ -44,7 +44,7 @@
 	<script language='JavaScript' type='text/javascript' src='{$project_path}/resources/fontawesome/js/solid.min.js.php' defer></script>
 
 {*//web font loader *}
-	{if $settings.theme.font_loader == 'true'}
+	{if isset($settings.theme.font_loader) && $settings.theme.font_loader == 'true'}
 		{if $settings.theme.font_retrieval != 'asynchronous'}
 			<script language='JavaScript' type='text/javascript' src='//ajax.googleapis.com/ajax/libs/webfont/{$settings.theme.font_loader_version}/webfont.js'></script>
 		{/if}
@@ -298,6 +298,8 @@
 				$('#domains_hide').on('click', function() { hide_domains(); });
 
 				function show_domains() {
+					search_domains('domains_list');
+
 					$('#domains_visible').val(1);
 					var scrollbar_width = (window.innerWidth - $(window).width()); //gold: only solution that worked with body { overflow:auto } (add -ms-overflow-style: scrollbar; to <body> style for ie 10+)
 					if (scrollbar_width > 0) {
@@ -308,7 +310,7 @@
 					$(document).scrollTop(0);
 					$('#domains_container').show();
 					$('#domains_block').animate({marginRight: '+=300'}, 400, function() {
-						$('#domains_filter').trigger('focus');
+						$('#domains_search').trigger('focus');
 					});
 				}
 
@@ -316,8 +318,7 @@
 					$('#domains_visible').val(0);
 					$(document).ready(function() {
 						$('#domains_block').animate({marginRight: '-=300'}, 400, function() {
-							$('#domains_filter').val('');
-							domain_search($('#domains_filter').val());
+							$('#domains_search').val('');
 							$('.navbar').css('margin-right','0'); //restore navbar margin
 							$('#domains_container').css('right','0'); //domain container right position
 							$('#domains_container').hide();
@@ -365,7 +366,7 @@
 			{/if}
 
 		//common (used by delete and toggle)
-			{if $settings.theme.keyboard_shortcut_delete_enabled || $settings.theme.keyboard_shortcut_toggle_enabled}
+			{if !empty($settings.theme.keyboard_shortcut_delete_enabled) || !empty($settings.theme.keyboard_shortcut_toggle_enabled)}
 				var list_checkboxes;
 				list_checkboxes = document.querySelectorAll('table.list tr.list-row td.checkbox input[type=checkbox]');
 			{/if}
@@ -426,7 +427,7 @@
 					{/if}
 
 				//key: [delete], list: to delete checked, edit: to delete
-					{if $settings.theme.keyboard_shortcut_delete_enabled}
+					{if !empty($settings.theme.keyboard_shortcut_delete_enabled)}
 						{literal}
 						if (e.which == 46 && !(e.target.tagName == 'INPUT' && e.target.type == 'text') && e.target.tagName != 'TEXTAREA') {
 							e.preventDefault();
@@ -556,7 +557,6 @@
 			});
 			{/literal}
 
-
 		//link list rows
 			{literal}
 			$('.tr_hover tr,.list tr').each(function(i,e) {
@@ -601,6 +601,7 @@
 				//define formatting of individual classes
 					$('.datepicker').datetimepicker({ format: 'YYYY-MM-DD', });
 					$('.datetimepicker').datetimepicker({ format: 'YYYY-MM-DD HH:mm', });
+					$('.datetimepicker-future').datetimepicker({ format: 'YYYY-MM-DD HH:mm', minDate: new Date(), });
 					$('.datetimesecpicker').datetimepicker({ format: 'YYYY-MM-DD HH:mm:ss', });
 			});
 			{/literal}
@@ -647,7 +648,7 @@
 			{/literal}
 
 		//crossfade menu brand images (if hover version set)
-			{if $settings.theme.menu_brand_image != '' && $settings.theme.menu_brand_image_hover != '' && $settings.theme.menu_style != 'side'}
+			{if !empty($settings.theme.menu_brand_image) && !empty($settings.theme.menu_brand_image_hover) && isset($settings.theme.menu_style) && $settings.theme.menu_style != 'side'}
 				{literal}
 				$(function(){
 					$('#menu_brand_image').on('mouseover',function(){
@@ -907,7 +908,7 @@
 		function list_self_check(checkbox_id) {
 			var inputs = document.getElementsByTagName('input');
 			for (var i = 0, max = inputs.length; i < max; i++) {
-				if (inputs[i].type === 'checkbox') {
+				if (inputs[i].type === 'checkbox' && inputs[i].name.search['enabled'] == -1) {
 					inputs[i].checked = false;
 				}
 			}
@@ -1015,8 +1016,98 @@
 		{/literal}
 
 	{*//session timer *}
-		{$session_timer}
+		{if !empty($session_timer)}
+			{$session_timer}
+		{/if}
 
+	{*//domain selector *}
+	function search_domains(element_id) {
+		var xhttp = new XMLHttpRequest();
+		xhttp.onreadystatechange = function() {
+			//if (this.readyState == 4 && this.status == 200) {
+			//	document.getElementById(element_id).innerHTML = this.responseText;
+			//}
+
+			//remove current options
+			document.getElementById(element_id).innerHTML = '';
+
+			if (this.readyState == 4 && this.status == 200) {
+
+				//create the json object from the response
+				obj = JSON.parse(this.responseText);
+
+				//update the domain count
+				document.getElementById('domain_count').innerText = '('+ obj.length +')';
+
+				//add new options from the json results
+				for (var i=0; i < obj.length; i++) {
+					
+					//get the variables
+					domain_uuid = obj[i].domain_uuid;
+					domain_name = obj[i].domain_name;
+					if (obj[i].domain_description != null) {
+					//	domain_description = DOMPurify.sanitize(obj[i].domain_description);
+					}
+
+					//create a div element
+					var div = document.createElement('div');
+
+					//add a div title
+					div.title = obj[i].domain_name;
+
+					//add a css class
+					div.classList.add("domains_list_item");
+
+					//alternate the background color
+					if(i%2==0) {
+						div.style.background = '{$domain_selector_background_color_1}';
+					}
+					else {
+						div.style.background = '{$domain_selector_background_color_2}';
+					}
+
+					//set the active domain style 
+					if ('{$domain_uuid}' == obj[i].domain_uuid) {
+						div.style.background = '{$domain_active_background_color}';
+						div.style.fontWeight = 'bold';
+						//div.classList.add("domains_list_item_active");
+						//var item_description_class = 'domain_active_list_item_description';
+					}
+					else {
+						//div.classList.add("domains_list_item_inactive");
+						//var item_description_class = 'domain_inactive_list_item_description';
+					}
+
+					//set link on domain div in list
+					div.setAttribute('onclick',"window.location.href='{$domains_app_path}?domain_uuid=" + obj[i].domain_uuid + "&domain_change=true';");
+
+					//define domain link text and description (if any)
+					link_label = obj[i].domain_name;
+					if (obj[i].domain_description != null) {
+						link_label += " <span class='domain_list_item_description' title=\"" + obj[i].domain_description + "\">" + obj[i].domain_description + "</span>";
+					}
+					var a_tag = document.createElement('a');
+					a_tag.setAttribute('href','manage:'+obj[i].domain_name);
+					a_tag.setAttribute('onclick','event.preventDefault();');
+					a_tag.innerHTML = link_label;
+					div.appendChild(a_tag);
+
+					document.getElementById(element_id).appendChild(div);
+				}
+			}
+		};
+		search = document.getElementById('domains_search');
+		if (search.value) {
+			//xhttp.open("GET", "/core/domains/domain_list.php?search="+search.value, true);
+			xhttp.open("GET", "/core/domains/domain_json.php?search="+search.value+"&{$domain_json_token_name}={$domain_json_token_hash}", true);
+		}
+		else {
+			//xhttp.open("GET", "/core/domains/domain_list.php", true);
+			xhttp.open("GET", "/core/domains/domain_json.php?{$domain_json_token_name}={$domain_json_token_hash}", true);
+		}
+		xhttp.send();
+	}
+	{*//domain selector *}
 	</script>
 
 </head>
@@ -1033,70 +1124,11 @@
 				<div id='domains_block'>
 					<div id='domains_header'>
 						<input id='domains_hide' type='button' class='btn' style='float: right' value="{$text.theme_button_close}">
-						<a id='domains_title' href='{$domains_app_path}'>{$text.theme_title_domains} <span style='font-size: 80%;'>({$domain_count})</span></a>
+						<a id='domains_title' href='{$domains_app_path}'>{$text.theme_title_domains} <span id='domain_count' style='font-size: 80%;'></span></a>
 						<br><br>
-						<input type='text' id='domains_filter' class='formfld' style='margin-left: 0; min-width: 100%; width: 100%;' placeholder="{$text.theme_label_search}" onkeyup='domain_search(this.value)'>
+						<input type='text' id='domains_search' class='formfld' style='margin-left: 0; min-width: 100%; width: 100%;' placeholder="{$text.theme_label_search}" onkeyup="search_domains('domains_list');">
 					</div>
-					<div id='domains_list'>
-						{foreach $domains as $row}
-							{if $row.domain_enabled}
-								{*//alternate background colors of inactive domains *}
-									{if $background_color == $domain_selector_background_color_1}
-										{$background_color=$domain_selector_background_color_2}
-									{else}
-										{$background_color=$domain_selector_background_color_1}
-									{/if}
-								{*//set active domain color *}
-									{if $domain_active_background_color != ''}
-										{if $row.domain_uuid == $domain_uuid}{$background_color=$domain_active_background_color}{/if}
-									{/if}
-								{*//active domain text hover color *}
-									{if $settings.theme.domain_active_text_color_hover != '' && $row.domain_uuid == $domain_uuid}
-										<div id='{$row.domain_name}' class='domains_list_item_active' style='background-color: {$background_color}' onclick="document.location.href='{$domains_app_path}?domain_uuid={$row.domain_uuid}&domain_change=true';">
-									{elseif $settings.theme.domain_inactive_text_color_hover != '' && $row.domain_uuid != $domain_uuid}
-										<div id='{$row.domain_name}' class='domains_list_item_inactive' style='background-color: {$background_color}' onclick="document.location.href='{$domains_app_path}?domain_uuid={$row.domain_uuid}&domain_change=true';">
-									{else}
-										<div id='{$row.domain_name}' class='domains_list_item' style='background-color: {$background_color}' onclick="document.location.href='{$domains_app_path}?domain_uuid={$row.domain_uuid}&domain_change=true';">
-									{/if}
-								{*//domain link *}
-									<a href='{$domains_app_path}?domain_uuid={$row.domain_uuid}&domain_change=true' {if $row.domain_uuid == $domain_uuid}style='font-weight: bold;'{/if}>{$row.domain_name}</a>
-								{*//domain description *}
-									{if $row.domain_description != ''}
-										{*//active domain description text color *}
-											{if $settings.theme.domain_active_desc_text_color != '' && $row.domain_uuid == $domain_uuid}
-												<span class='domain_active_list_item_description' title="{$row.domain_description}"> - {$row.domain_description}</span>
-										{*//inactive domains description text color *}
-											{elseif $settings.theme.domain_inactive_desc_text_color != '' && $row.domain_uuid != $domain_uuid}
-												<span class='domain_inactive_list_item_description' title="{$row.domain_description}"> - {$row.domain_description}</span>
-										{*//default domain description text color *}
-											{else}
-												<span class='domain_list_item_description' title="{$row.domain_description}"> - {$row.domain_description}</span>
-											{/if}
-									{/if}
-								</div>
-								{$ary_domain_names[]=$row.domain_name}
-								{$ary_domain_descs[]=$row.domain_description|replace:'"':'\"'}
-							{/if}
-						{/foreach}
-					</div>
-
-					<script>
-						{literal}
-						var domain_names = new Array("{/literal}{'","'|implode:$ary_domain_names}{literal}");
-						var domain_descs = new Array("{/literal}{'","'|implode:$ary_domain_descs}{literal}");
-						function domain_search(criteria) {
-							for (var x = 0; x < domain_names.length; x++) {
-								if (domain_names[x].toLowerCase().match(criteria.toLowerCase()) || domain_descs[x].toLowerCase().match(criteria.toLowerCase())) {
-									document.getElementById(domain_names[x]).style.display = '';
-								}
-								else {
-									document.getElementById(domain_names[x]).style.display = 'none';
-								}
-							}
-						}
-						{/literal}
-					</script>
-
+					<div id='domains_list'></div>
 				</div>
 			</div>
 
@@ -1110,7 +1142,7 @@
 		</div>
 
 	{*//login page *}
-		{if $login_page}
+		{if !empty($login_page)}
 			<div id='default_login'>
 				<a href='{$project_path}/'><img id='login_logo' style='width: {$login_logo_width}; height: {$login_logo_height};' src='{$login_logo_source}'></a><br />
 				{$document_body}

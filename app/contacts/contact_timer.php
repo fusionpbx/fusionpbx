@@ -23,10 +23,10 @@
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-require_once "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (!permission_exists('contact_time_add')) { echo "access denied"; exit; }
+//includes files
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
+	require_once "resources/check_auth.php";
+	if (!permission_exists('contact_time_add')) { echo "access denied"; exit; }
 
 //add multi-lingual support
 	$language = new text;
@@ -37,7 +37,7 @@ if (!permission_exists('contact_time_add')) { echo "access denied"; exit; }
 	$contact_uuid = $_REQUEST['contact_uuid'];
 
 //get posted variables & set time status
-	if (is_array($_POST) && @sizeof($_POST) != 0) {
+	if (!empty($_POST)) {
 		$contact_time_uuid = $_POST['contact_time_uuid'];
 		$contact_uuid = $_POST['contact_uuid'];
 		$time_action = $_POST['time_action'];
@@ -60,7 +60,7 @@ if (!permission_exists('contact_time_add')) { echo "access denied"; exit; }
 			$array['contact_times'][0]['time_description'] = $time_description;
 		}
 
-		if (is_array($array) && @sizeof($array) != 0) {
+		if (!empty($array)) {
 			$database = new database;
 			$database->app_name = 'contacts';
 			$database->app_uuid = '04481e0e-a478-c559-adad-52bd4174574c';
@@ -84,7 +84,7 @@ if (!permission_exists('contact_time_add')) { echo "access denied"; exit; }
 	$parameters['contact_uuid'] = $contact_uuid;
 	$database = new database;
 	$row = $database->select($sql, $parameters, 'row');
-	if (is_array($row) && @sizeof($row) != 0) {
+	if (!empty($row)) {
 		$contact_organization = $row["contact_organization"];
 		$contact_name_given = $row["contact_name_given"];
 		$contact_name_family = $row["contact_name_family"];
@@ -107,10 +107,10 @@ if (!permission_exists('contact_time_add')) { echo "access denied"; exit; }
 	$sql .= "and time_stop is null ";
 	$parameters['domain_uuid'] = $domain_uuid;
 	$parameters['user_uuid'] = $_SESSION['user']['user_uuid'];
-	$parameters['contact_uuid'] = $contact_uuid;
+	$parameters['contact_uuid'] = $contact_uuid ?? '';
 	$database = new database;
 	$row = $database->select($sql, $parameters, 'row');
-	if (is_array($row) && @sizeof($row) != 0) {
+	if (!empty($row)) {
 		$contact_time_uuid = $row["contact_time_uuid"];
 		$time_description = $row["time_description"];
 	}
@@ -120,17 +120,17 @@ if (!permission_exists('contact_time_add')) { echo "access denied"; exit; }
 	$timer_action = $timer_state == 'running' ? 'stop' : 'start';
 
 //determine contact name to display
-	if ($contact_nickname != '') {
+	if (!empty($contact_nickname)) {
 		$contact = $contact_nickname;
 	}
-	else if ($contact_name_given != '') {
+	else if (!empty($contact_name_given)) {
 		$contact = $contact_name_given;
 	}
-	if ($contact_name_family != '') {
-		$contact .= ($contact != '') ? ' '.$contact_name_family : $contact_name_family;
+	if (!empty($contact_name_family)) {
+		$contact .= (!empty($contact)) ? ' '.$contact_name_family : $contact_name_family;
 	}
-	if ($contact_organization != '') {
-		$contact .= ($contact != '') ? ', '.$contact_organization : $contact_organization;
+	if (!empty($contact_organization)) {
+		$contact .= (!empty($contact)) ? ', '.$contact_organization : $contact_organization;
 	}
 
 //get the browser version
@@ -296,7 +296,7 @@ if (!permission_exists('contact_time_add')) { echo "access denied"; exit; }
 
 	</style>
 
-	<script language='JavaScript' type='text/javascript' src='<?php echo PROJECT_PATH; ?>/resources/jquery/jquery-3.4.1.min.js'></script>
+	<script language='JavaScript' type='text/javascript' src='<?php echo PROJECT_PATH; ?>/resources/jquery/jquery-3.6.1.min.js'></script>
 	<script src='https://code.jquery.com/jquery-migrate-3.1.0.js'></script>
 	<script type="text/javascript">
 		$(document).ready(function(){

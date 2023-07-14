@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2019
+ Portions created by the Initial Developer are Copyright (C) 2008-2023
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -70,16 +70,6 @@ if (!class_exists('contacts')) {
 		}
 
 		/**
-		 * called when there are no references to a particular object
-		 * unset the variables used in the class
-		 */
-		public function __destruct() {
-			foreach ($this as $key => $value) {
-				unset($this->$key);
-			}
-		}
-
-		/**
 		 * delete records
 		 */
 		public function delete($records) {
@@ -102,7 +92,7 @@ if (!class_exists('contacts')) {
 
 						//build the delete array
 							foreach ($records as $x => $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									if (is_array($this->tables) && @sizeof($this->tables) != 0) {
 										foreach ($this->tables as $table) {
 											$array[$table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
@@ -119,7 +109,7 @@ if (!class_exists('contacts')) {
 									$p = new permissions;
 									$database = new database;
 									foreach ($this->tables as $table) {
-										$p->add($database->singular($table).'_delete', 'temp');
+										$p->add(database::singular($table).'_delete', 'temp');
 									}
 
 								//execute delete
@@ -132,7 +122,7 @@ if (!class_exists('contacts')) {
 								//revoke temp permissions
 									$database = new database;
 									foreach ($this->tables as $table) {
-										$p->delete($database->singular($table).'_delete', 'temp');
+										$p->delete(database::singular($table).'_delete', 'temp');
 									}
 
 								//set message
@@ -163,11 +153,11 @@ if (!class_exists('contacts')) {
 						$x = 0;
 						foreach ($records as $property_name => $properties) {
 							$database = new database;
-							if (permission_exists($database->singular($property_name).'_delete')) {
+							if (permission_exists(database::singular($property_name).'_delete')) {
 								if (is_array($properties) && @sizeof($properties) != 0) {
 									foreach ($properties as $property) {
 										if ($property['checked'] == 'true' && is_uuid($property['uuid'])) {
-											$array[$property_name][$x][$database->singular($property_name).'_uuid'] = $property['uuid'];
+											$array[$property_name][$x][database::singular($property_name).'_uuid'] = $property['uuid'];
 											$array[$property_name][$x]['contact_uuid'] = $this->contact_uuid;
 											$array[$property_name][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
 											$x++;
@@ -216,7 +206,7 @@ if (!class_exists('contacts')) {
 						//filter out unchecked ivr menu options, build delete array
 							$x = 0;
 							foreach ($records as $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
 									$array[$this->table][$x]['contact_uuid'] = $this->contact_uuid;
 									$x++;
@@ -263,7 +253,7 @@ if (!class_exists('contacts')) {
 						//filter out unchecked ivr menu options, build delete array
 							$x = 0;
 							foreach ($records as $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
 									$array[$this->table][$x]['contact_uuid'] = $this->contact_uuid;
 									$x++;

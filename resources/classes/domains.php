@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2021
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -62,16 +62,6 @@ if (!class_exists('domains')) {
 		}
 
 		/**
-		 * called when there are no references to a particular object
-		 * unset the variables used in the class
-		 */
-		public function __destruct() {
-			foreach ($this as $key => $value) {
-				unset($this->$key);
-			}
-		}
-
-		/**
 		 * delete rows from the database
 		 */
 		public function delete($records) {
@@ -95,7 +85,7 @@ if (!class_exists('domains')) {
 							$d = 0;
 							foreach ($records as $record) {
 								//add to the array
-									if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+									if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 										//set the uuid
 											$id = $record['uuid'];
 
@@ -179,7 +169,7 @@ if (!class_exists('domains')) {
 											}
 
 										//delete the directories
-											if (strlen($domain_name) > 0) {
+											if (!empty($domain_name)) {
 												//set the needle
 												if (count($_SESSION["domains"]) > 1) {
 													$v_needle = 'v_'.$domain_name.'_';
@@ -190,69 +180,75 @@ if (!class_exists('domains')) {
 
 												//delete the dialplan
 												@unlink($_SESSION['switch']['dialplan']['dir'].'/'.$domain_name.'.xml');
-												if (strlen($_SESSION['switch']['dialplan']['dir']) > 0) {
+												if (!empty($_SESSION['switch']['dialplan']['dir'])) {
 													system('rm -rf '.$_SESSION['switch']['dialplan']['dir'].'/'.$domain_name);
 												}
 
 												//delete the dialplan public
 												@unlink($_SESSION['switch']['dialplan']['dir'].'/public/'.$domain_name.'.xml');
-												if (strlen($_SESSION['switch']['dialplan']['dir']) > 0) {
+												if (!empty($_SESSION['switch']['dialplan']['dir'])) {
 													system('rm -rf '.$_SESSION['switch']['dialplan']['dir'].'/public/'.$domain_name);
 												}
 
 												//delete the extension
 												@unlink($_SESSION['switch']['extensions']['dir'].'/'.$domain_name.'.xml');
-												if (strlen($_SESSION['switch']['extensions']['dir']) > 0) {
+												if (!empty($_SESSION['switch']['extensions']['dir'])) {
 													system('rm -rf '.$_SESSION['switch']['extensions']['dir'].'/'.$domain_name);
 												}
 
 												//delete fax
-												if (strlen($_SESSION['switch']['storage']['dir']) > 0) {
+												if (!empty($_SESSION['switch']['storage']['dir'])) {
 													system('rm -rf '.$_SESSION['switch']['storage']['dir'].'/fax/'.$domain_name);
 												}
 
 												//delete the gateways
-												if($dh = opendir($_SESSION['switch']['sip_profiles']['dir'])) {
-													$files = Array();
-													while($file = readdir($dh)) {
-														if($file != "." && $file != ".." && $file[0] != '.') {
-															if(is_dir($dir . "/" . $file)) {
-																//this is a directory do nothing
-															} else {
-																//check if file extension is xml
-																if (strpos($file, $v_needle) !== false && substr($file,-4) == '.xml') {
-																	@unlink($_SESSION['switch']['sip_profiles']['dir']."/".$file);
+												if (!empty($_SESSION['switch']['sip_profiles']['dir'])) {
+													if ($dh = opendir($_SESSION['switch']['sip_profiles']['dir'])) {
+														$files = Array();
+														while ($file = readdir($dh)) {
+															if ($file != "." && $file != ".." && $file[0] != '.') {
+																if (is_dir($dir . "/" . $file)) {
+																	//this is a directory do nothing
+																}
+																else {
+																	//check if file extension is xml
+																	if (strpos($file, $v_needle) !== false && substr($file,-4) == '.xml') {
+																		@unlink($_SESSION['switch']['sip_profiles']['dir']."/".$file);
+																	}
 																}
 															}
 														}
+														closedir($dh);
 													}
-													closedir($dh);
 												}
 
 												//delete the ivr menu
-												if($dh = opendir($_SESSION['switch']['conf']['dir']."/ivr_menus")) {
-													$files = Array();
-													while($file = readdir($dh)) {
-														if($file != "." && $file != ".." && $file[0] != '.') {
-															if(is_dir($dir . "/" . $file)) {
-																//this is a directory
-															} else {
-																if (strpos($file, $v_needle) !== false && substr($file,-4) == '.xml') {
-																	@unlink($_SESSION['switch']['conf']['dir']."/ivr_menus/".$file);
+												if (!empty($_SESSION['switch']['conf']['dir'])) {
+													if ($dh = opendir($_SESSION['switch']['conf']['dir']."/ivr_menus")) {
+														$files = Array();
+														while ($file = readdir($dh)) {
+															if ($file != "." && $file != ".." && $file[0] != '.') {
+																if (!empty($dir) && !empty($file) && is_dir($dir."/".$file)) {
+																	//this is a directory
+																}
+																else {
+																	if (strpos($file, $v_needle) !== false && substr($file,-4) == '.xml') {
+																		@unlink($_SESSION['switch']['conf']['dir']."/ivr_menus/".$file);
+																	}
 																}
 															}
 														}
+														closedir($dh);
 													}
-													closedir($dh);
 												}
 
 												//delete the recordings
-												if (strlen($_SESSION['switch']['recordings']['dir']) > 0) {
+												if (!empty($_SESSION['switch']['recordings']['dir'])) {
 													system('rm -rf '.$_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/'.$domain_name);
 												}
 
 												//delete voicemail
-												if (strlen($_SESSION['switch']['voicemail']['dir']) > 0) {
+												if (!empty($_SESSION['switch']['voicemail']['dir'])) {
 													system('rm -rf '.$_SESSION['switch']['voicemail']['dir'].'/'.$domain_name);
 												}
 											}
@@ -312,7 +308,7 @@ if (!class_exists('domains')) {
 					if (is_array($records) && @sizeof($records) != 0) {
 						//get current toggle state
 							foreach($records as $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$uuids[] = "'".$record['uuid']."'";
 								}
 							}
@@ -320,7 +316,7 @@ if (!class_exists('domains')) {
 								$sql = "select ".$this->name."_uuid as uuid, ".$this->toggle_field." as toggle from v_".$this->table." ";
 								$sql .= "where ".$this->name."_uuid in (".implode(', ', $uuids).") ";
 								$database = new database;
-								$rows = $database->select($sql, $parameters, 'all');
+								$rows = $database->select($sql, $parameters ?? null, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
 										$states[$row['uuid']] = $row['toggle'];
@@ -380,7 +376,7 @@ if (!class_exists('domains')) {
 
 						//get checked records
 							foreach($records as $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$uuids[] = "'".$record['uuid']."'";
 								}
 							}
@@ -430,8 +426,8 @@ if (!class_exists('domains')) {
 		 */
 		public function set() {
 
-			//get previous domains settings
-				if (is_uuid($_SESSION["previous_domain_uuid"])) {
+			//get previous domain settings
+				if (isset($_SESSION["previous_domain_uuid"])) {
 					$sql = "select * from v_domain_settings ";
 					$sql .= "where domain_uuid = :previous_domain_uuid ";
 					$sql .= "and domain_setting_enabled = 'true' ";
@@ -441,9 +437,11 @@ if (!class_exists('domains')) {
 					$result = $database->select($sql, $parameters, 'all');
 					unset($sql, $parameters);
 
-				//unset previous domain settings
+					//unset previous domain settings
 					foreach ($result as $row) {
-						unset($_SESSION[$row['domain_setting_category']]);
+						if ($row['domain_setting_category'] != 'user') { //skip off-limit categories
+							unset($_SESSION[$row['domain_setting_category']][$row['domain_setting_subcategory']]);
+						}
 					}
 					unset($_SESSION["previous_domain_uuid"]);
 				}
@@ -454,19 +452,21 @@ if (!class_exists('domains')) {
 				$database = new database;
 				$result = $database->select($sql, null, 'all');
 				unset($sql, $parameters);
+
 				//unset all settings
 				foreach ($result as $row) {
 					if ($row['default_setting_category'] != 'user') { //skip off-limit categories
-						unset($_SESSION[$row['default_setting_category']]);
+						unset($_SESSION[$row['default_setting_category']][$row['default_setting_subcategory']]);
 					}
 				}
+
 				//set the enabled settings as a session
 				foreach ($result as $row) {
 					if ($row['default_setting_enabled'] == 'true') {
 						$name = $row['default_setting_name'];
 						$category = $row['default_setting_category'];
 						$subcategory = $row['default_setting_subcategory'];
-						if (strlen($subcategory) == 0) {
+						if (empty($subcategory)) {
 							if ($name == "array") {
 								$_SESSION[$category][] = $row['default_setting_value'];
 							}
@@ -492,7 +492,7 @@ if (!class_exists('domains')) {
 				}
 
 			//get the domains settings
-				if (is_uuid($_SESSION["domain_uuid"])) {
+				if (!empty($_SESSION["domain_uuid"]) && is_uuid($_SESSION["domain_uuid"])) {
 
 					//get settings from the database
 					$sql = "select * from v_domain_settings ";
@@ -518,7 +518,7 @@ if (!class_exists('domains')) {
 						$name = $row['domain_setting_name'];
 						$category = $row['domain_setting_category'];
 						$subcategory = $row['domain_setting_subcategory'];
-						if (strlen($subcategory) == 0) {
+						if (empty($subcategory)) {
 							//$$category[$name] = $row['domain_setting_value'];
 							if ($name == "array") {
 								$_SESSION[$category][] = $row['domain_setting_value'];
@@ -555,8 +555,8 @@ if (!class_exists('domains')) {
 								$name = $row['user_setting_name'];
 								$category = $row['user_setting_category'];
 								$subcategory = $row['user_setting_subcategory'];
-								if (strlen($row['user_setting_value']) > 0) {
-									if (strlen($subcategory) == 0) {
+								if (!empty($row['user_setting_value'])) {
+									if (empty($subcategory)) {
 										//$$category[$name] = $row['domain_setting_value'];
 										if ($name == "array") {
 											$_SESSION[$category][] = $row['user_setting_value'];
@@ -581,7 +581,7 @@ if (!class_exists('domains')) {
 				}
 
 			//set the values from the session variables
-				if (strlen($_SESSION['domain']['time_zone']['name']) > 0) {
+				if (!empty($_SESSION['domain']['time_zone']['name'])) {
 					//server time zone
 					$_SESSION['time_zone']['system'] = date_default_timezone_get();
 					//domain time zone set in system settings
@@ -591,7 +591,9 @@ if (!class_exists('domains')) {
 				}
 
 			//set the context
-				$_SESSION["context"] = $_SESSION["domain_name"];
+				if (!empty($_SESSION["domain_name"])) {
+					$_SESSION["context"] = $_SESSION["domain_name"];
+				}
 		}
 
 		/**
@@ -599,30 +601,13 @@ if (!class_exists('domains')) {
 		 */
 		public function upgrade() {
 
-			//connect to the database if not connected
-				if (!$this->db) {
-					$database = new database;
-					$database->connect();
-					$this->db = $database->db;
-				}
+			//includes files
+				require dirname(__DIR__, 2) . "/resources/require.php";
 
 			//get the variables
 				$config = new config;
-				$config_exists = $config->exists();
 				$config_path = $config->find();
 				$config->get();
-				$db_type = $config->db_type;
-				$db_name = $config->db_name;
-				$db_username = $config->db_username;
-				$db_password = $config->db_password;
-				$db_secure = $config->db_secure;
-				$db_cert_authority = $config->db_cert_authority;
-				$db_host = $config->db_host;
-				$db_path = $config->db_path;
-				$db_port = $config->db_port;
-
-			//get the PROJECT PATH
-				include "root.php";
 
 			//check for default settings
 				$this->settings();
@@ -632,7 +617,6 @@ if (!class_exists('domains')) {
 				$config_list_2 = glob($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/*/*/app_menu.php");
 				$config_list = array_merge((array)$config_list_1, (array)$config_list_2);
 				unset($config_list_1,$config_list_2);
-				$db = $this->db;
 				$x=0;
 				foreach ($config_list as &$config_path) {
 					$app_path = dirname($config_path);
@@ -645,21 +629,22 @@ if (!class_exists('domains')) {
 				$sql = "select * from v_domains ";
 				$database = new database;
 				$domains = $database->select($sql, null, 'all');
-				unset($sql, $parameters);
+				unset($sql);
 
 			//get the domain_settings
 				$sql = "select * from v_domain_settings ";
 				$sql .= "where domain_setting_enabled = 'true' ";
 				$database = new database;
 				$domain_settings = $database->select($sql, null, 'all');
-				unset($sql, $parameters);
+				unset($sql);
 
 			//get the default settings
 				$sql = "select * from v_default_settings ";
 				$sql .= "where default_setting_enabled = 'true' ";
+				$sql .= "and default_setting_category <> 'switch' ";
 				$database = new database;
 				$database_default_settings = $database->select($sql, null, 'all');
-				unset($sql, $parameters);
+				unset($sql);
 
 			//get the domain_uuid
 				if (is_array($domains)) {
@@ -669,7 +654,7 @@ if (!class_exists('domains')) {
 							$_SESSION["domain_name"] = $row['domain_name'];
 						}
 						else {
-							if (lower_case($row['domain_name']) == lower_case($domain_array[0]) || lower_case($row['domain_name']) == lower_case('www.'.$domain_array[0])) {
+							if (!empty($domain_array[0]) && (lower_case($row['domain_name']) == lower_case($domain_array[0] ?? '') || lower_case($row['domain_name']) == lower_case('www.'.$domain_array[0] ?? ''))) {
 								$_SESSION["domain_uuid"] = $row["domain_uuid"];
 								$_SESSION["domain_name"] = $row['domain_name'];
 							}
@@ -680,12 +665,11 @@ if (!class_exists('domains')) {
 				}
 
 			//loop through all domains
-				$domain_count = count($domains);
 				$domains_processed = 1;
-				foreach ($domains as &$row) {
+				foreach ($domains as $domain) {
 					//get the values from database and set them as php variables
-						$domain_uuid = $row["domain_uuid"];
-						$domain_name = $row["domain_name"];
+						$domain_uuid = $domain["domain_uuid"];
+						$domain_name = $domain["domain_name"];
 
 					//get the context
 						$context = $domain_name;
@@ -695,7 +679,10 @@ if (!class_exists('domains')) {
 							$name = $row['default_setting_name'];
 							$category = $row['default_setting_category'];
 							$subcategory = $row['default_setting_subcategory'];
-							if (strlen($subcategory) == 0) {
+							if (empty($subcategory)) {
+								if (!isset($_SESSION[$category])) {
+									$_SESSION[$category] = [];
+								}
 								if ($name == "array") {
 									$_SESSION[$category][] = $row['default_setting_value'];
 								}
@@ -704,6 +691,12 @@ if (!class_exists('domains')) {
 								}
 							}
 							else {
+								if (!isset($_SESSION[$category])) {
+									$_SESSION[$category] = [];
+								}
+								if (!isset($_SESSION[$category][$subcategory])) {
+									$_SESSION[$category][$subcategory] = [];
+								}
 								if ($name == "array") {
 									$_SESSION[$category][$subcategory][] = $row['default_setting_value'];
 								}
@@ -720,7 +713,7 @@ if (!class_exists('domains')) {
 								$name = $row['domain_setting_name'];
 								$category = $row['domain_setting_category'];
 								$subcategory = $row['domain_setting_subcategory'];
-								if (strlen($subcategory) == 0) {
+								if (empty($subcategory)) {
 									//$$category[$name] = $row['domain_setting_value'];
 									$_SESSION[$category][$name] = $row['domain_setting_value'];
 								}
@@ -741,12 +734,6 @@ if (!class_exists('domains')) {
 						$domains_processed++;
 				}
 
-			//update config.lua
-				if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/scripts/resources/classes/scripts.php')) {
-					$obj = new scripts;
-					$obj->write_config();
-				}
-
 			//clear the session variables
 				unset($_SESSION['domain']);
 				unset($_SESSION['switch']);
@@ -758,6 +745,9 @@ if (!class_exists('domains')) {
 		 * update the uuid for older default settings that were added before the uuids was predefined.
 		 */
 		public function settings() {
+
+			//includes files
+				include "resources/require.php";
 
 			//get an array of the default settings UUIDs
 				$sql = "select * from v_default_settings ";
@@ -777,7 +767,7 @@ if (!class_exists('domains')) {
 				}
 				$x = 0;
 				foreach ($apps as $app) {
-					if (is_array($app['default_settings'])) {
+					if (isset($app['default_settings']) && is_array($app['default_settings'])) {
 						foreach ($app['default_settings'] as $row) {
 							if (!isset($setting[$row['default_setting_uuid']])) {
 								$array['default_settings'][$x] = $row;
@@ -789,7 +779,7 @@ if (!class_exists('domains')) {
 				}
 
 			//add the missing default settings
-				if (is_array($array) && count($array) > 0) {
+				if (isset($array) && is_array($array) && count($array) > 0) {
 					//grant temporary permissions
 						$p = new permissions;
 						$p->add('default_setting_add', 'temp');

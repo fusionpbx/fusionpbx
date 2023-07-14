@@ -45,16 +45,6 @@ if (!class_exists('basic_operator_panel')) {
 		}
 
 		/**
-		 * Called when there are no references to a particular object
-		 * unset the variables used in the class
-		 */
-		public function __destruct() {
-			foreach ($this as $key => $value) {
-				unset($this->$key);
-			}
-		}
-
-		/**
 		 * Get the call activity
 		 */
 		public function call_activity() {
@@ -67,7 +57,6 @@ if (!class_exists('basic_operator_panel')) {
 				$sql .= "e.extension, ";
 				$sql .= "e.number_alias, ";
 				$sql .= "e.effective_caller_id_name, ";
-				$sql .= "lower(e.effective_caller_id_name) as filter_name, ";
 				$sql .= "e.effective_caller_id_number, ";
 				$sql .= "e.call_group, ";
 				$sql .= "e.description, ";
@@ -108,7 +97,7 @@ if (!class_exists('basic_operator_panel')) {
 				if (isset($extensions)) {
 					foreach($extensions as &$row) {
 						$user = $row['extension'];
-						if (strlen($row['number_alias']) >0 ) {
+						if (!empty($row['number_alias'])) {
 							$user = $row['number_alias'];
 						}
 
@@ -156,7 +145,7 @@ if (!class_exists('basic_operator_panel')) {
 									$presence_id = $field['presence_id'];
 									$presence = explode("@", $presence_id);
 									$presence_id = $presence[0];
-									$presence_domain = $presence[1];
+									$presence_domain = $presence[1] ?? '';
 									if ($user == $presence_id) {
 										if ($presence_domain == $_SESSION['domain_name']) {
 											$found = true;

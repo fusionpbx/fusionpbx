@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -25,9 +25,8 @@
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 
-//includes
-	require_once "root.php";
-	require_once "resources/require.php";
+//includes files
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -44,7 +43,7 @@
 	$text = $language->get();
 
 //action add or update
-	if (is_uuid($_REQUEST["id"])) {
+	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
 		$contact_relation_uuid = $_REQUEST["id"];
 	}
@@ -53,12 +52,12 @@
 	}
 
 //get the contact uuid
-	if (is_uuid($_GET["contact_uuid"])) {
+	if (!empty($_GET["contact_uuid"]) && is_uuid($_GET["contact_uuid"])) {
 		$contact_uuid = $_GET["contact_uuid"];
 	}
 
 //get http post variables and set them to php variables
-	if (is_array($_POST) && @sizeof($_POST) != 0) {
+	if (!empty($_POST)) {
 		$relation_label = $_POST["relation_label"];
 		$relation_label_custom = $_POST["relation_label_custom"];
 		$relation_contact_uuid = $_POST["relation_contact_uuid"];
@@ -72,7 +71,7 @@
 	}
 
 //process the form data
-	if (is_array($_POST) && @sizeof($_POST) != 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
 		//set the uuid
 			if ($action == "update") {
@@ -89,7 +88,7 @@
 
 		//check for all required data
 			$msg = '';
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -103,7 +102,7 @@
 			}
 
 		//add or update the database
-			if ($_POST["persistformvar"] != "true") {
+			if (empty($_POST["persistformvar"])) {
 
 				//update last modified
 					$array['contacts'][0]['contact_uuid'] = $contact_uuid;
@@ -147,7 +146,7 @@
 					}
 
 				//execute
-					if (is_array($array) && @sizeof($array) != 0) {
+					if (!empty($array)) {
 						$array['contact_relations'][0]['contact_uuid'] = $contact_uuid;
 						$array['contact_relations'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
 						$array['contact_relations'][0]['relation_label'] = $relation_label;
@@ -168,8 +167,8 @@
 	}
 
 //pre-populate the form
-	if (is_array($_GET) && @sizeof($_GET) != 0 && $_POST["persistformvar"] != "true") {
-		$contact_relation_uuid = $_GET["id"];
+	if (!empty($_GET) && empty($_POST["persistformvar"])) {
+		$contact_relation_uuid = $_GET["id"] ?? '';
 		$sql = "select * from v_contact_relations ";
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$sql .= "and contact_relation_uuid = :contact_relation_uuid ";
@@ -184,6 +183,30 @@
 		unset($sql, $parameters, $row);
 	}
 
+//get contact details and contact_name
+	$sql = "select contact_uuid, contact_organization, contact_name_given, contact_name_family, contact_nickname ";
+	$sql .= "from v_contacts ";
+	$sql .= "where domain_uuid = :domain_uuid ";
+	$sql .= "and contact_uuid <> :contact_uuid ";
+	$sql .= "order by contact_organization desc, contact_name_given asc, contact_name_family asc ";
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$parameters['contact_uuid'] = $contact_relation_uuid;
+	$database = new database;
+	$contacts = $database->select($sql, $parameters, 'all');
+	if (!empty($contacts) && is_uuid($row['relation_contact_uuid'])) {
+		foreach($contacts as $field) {
+			if ($field['contact_uuid'] == $row['relation_contact_uuid']) {
+				$name = array();
+				if (!empty($field['contact_organization'])) { $name[] = $field['contact_organization']; }
+				if (!empty($field['contact_name_family'])) { $name[] = $field['contact_name_family']; }
+				if (!empty($field['contact_name_given'])) { $name[] = $field['contact_name_given']; }
+				if (empty($field['contact_name_family']) && empty($field['contact_name_given']) && !empty($field['contact_nickname'])) { $name[] = $field['contact_nickname']; }
+				$contact_name = implode(', ', $name);
+				break;
+			}
+		}
+	}
+
 //create token
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);
@@ -191,6 +214,43 @@
 //show the header
 	$document['title'] = $text['title-contact_relation'];
 	require_once "resources/header.php";
+
+?>
+
+<script type="text/javascript">
+	function get_contacts(element_id, id, search) {
+		var xhttp = new XMLHttpRequest();
+		xhttp.onreadystatechange = function() {
+			if (this.readyState == 4 && this.status == 200) {
+				//create a handle for the contact select object
+				select = document.getElementById(element_id);
+
+				//remove current options
+				while (select.options.length > 0) {
+					select.remove(0);
+				}
+
+				//add an empty row
+				//select.add(new Option('', ''));
+
+				//add new options from the json results
+				obj = JSON.parse(this.responseText);
+				for (var i=0; i < obj.length; i++) {
+					select.add(new Option(obj[i].name, obj[i].id));
+				}
+			}
+		};
+		if (search) {
+			xhttp.open("GET", "/app/contacts/contact_json.php?search="+search, true);
+		}
+		else {
+			xhttp.open("GET", "/app/contacts/contact_json.php", true);
+		}
+		xhttp.send();
+	}
+</script>
+
+<?php
 
 //javascript to toggle input/select boxes
 	echo "<script type='text/javascript'>";
@@ -222,7 +282,7 @@
 	echo "	".$text['label-contact_relation_label']."\n";
 	echo "</td>\n";
 	echo "<td width='70%' class='vtable' align='left'>\n";
-	if (is_array($_SESSION["contact"]["relation_label"])) {
+	if (!empty($_SESSION["contact"]["relation_label"])) {
 		sort($_SESSION["contact"]["relation_label"]);
 		foreach($_SESSION["contact"]["relation_label"] as $row) {
 			$relation_label_options[] = "<option value='".$row."' ".(($row == $relation_label) ? "selected='selected'" : null).">".$row."</option>";
@@ -230,7 +290,7 @@
 		$relation_label_found = (in_array($relation_label, $_SESSION["contact"]["relation_label"])) ? true : false;
 	}
 	else {
-		$selected[$relation_label] = "selected";
+		$selected[!empty($relation_label)] = "selected";
 		$default_labels[] = $text['label-contact_relation_option_parent'];
 		$default_labels[] = $text['label-contact_relation_option_child'];
 		$default_labels[] = $text['label-contact_relation_option_employee'];
@@ -238,18 +298,18 @@
 		$default_labels[] = $text['label-contact_relation_option_associate'];
 		$default_labels[] = $text['label-contact_relation_option_other'];
 		foreach ($default_labels as $default_label) {
-			$relation_label_options[] = "<option value='".$default_label."' ".$selected[$default_label].">".$default_label."</option>";
+			$relation_label_options[] = "<option value='".$default_label."' ".!empty($selected[$default_label]).">".$default_label."</option>";
 		}
-		$relation_label_found = (in_array($relation_label, $default_labels)) ? true : false;
+		$relation_label_found = (in_array(!empty($relation_label), $default_labels)) ? true : false;
 	}
-	echo "	<select class='formfld' ".((!$relation_label_found && $relation_label != '') ? "style='display: none;'" : null)." name='relation_label' id='relation_label' onchange=\"getElementById('relation_label_custom').value='';\">\n";
+	echo "	<select class='formfld' ".((!empty($relation_label) && !$relation_label_found) ? "style='display: none;'" : null)." name='relation_label' id='relation_label' onchange=\"getElementById('relation_label_custom').value='';\">\n";
 	echo "		<option value=''></option>\n";
 	echo 		(is_array($relation_label_options)) ? implode("\n", $relation_label_options) : null;
 	echo "	</select>\n";
-	echo "	<input type='text' class='formfld' ".(($relation_label_found || $relation_label == '') ? "style='display: none;'" : null)." name='relation_label_custom' id='relation_label_custom' value=\"".((!$relation_label_found) ? htmlentities($relation_label) : null)."\">\n";
+	echo "	<input type='text' class='formfld' ".((empty($relation_label) || $relation_label_found) ? "style='display: none;'" : null)." name='relation_label_custom' id='relation_label_custom' value=\"".((!$relation_label_found) ? htmlentities($relation_label ?? '') : null)."\">\n";
 	echo "	<input type='button' id='btn_toggle_label' class='btn' alt='".$text['button-back']."' value='&#9665;' onclick=\"toggle_custom('relation_label');\">\n";
 	echo "<br />\n";
-	echo $text['description-relation_label']."\n";
+	echo !empty($text['description-relation_label'])."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -258,32 +318,10 @@
 	echo "	".$text['label-contact_relation_contact']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	$sql = "select contact_uuid, contact_organization, contact_name_given, contact_name_family from v_contacts ";
-	$sql .= "where domain_uuid = :domain_uuid ";
-	$sql .= "and contact_uuid <> :contact_uuid ";
-	$sql .= "order by contact_organization desc, contact_name_given asc, contact_name_family asc ";
-	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$parameters['contact_uuid'] = $contact_uuid;
-	$database = new database;
-	$result = $database->select($sql, $parameters, 'all');
-	echo "<select class='formfld' name='relation_contact_uuid' id='relation_contact_uuid'>\n";
-	echo "<option value=''></option>\n";
-	if (is_array($result) && @sizeof($result) != 0) {
-		foreach($result as $row) {
-			$contact_name = $row['contact_name_given'].(($row['contact_name_given'] != '' && $row['contact_name_family'] != '') ? ' ' : null).$row['contact_name_family'];
-			if ($row['contact_organization'] != '') {
-				if ($contact_name != '') {
-					$contact_name = $row['contact_organization'].', '.$contact_name;
-				}
-				else {
-					$contact_name = $row['contact_organization'];
-				}
-			}
-			echo "<option value='".escape($row['contact_uuid'])."' ".(($row['contact_uuid'] == $relation_contact_uuid) ? "selected='selected'" : null).">".escape($contact_name)."</option>\n";
-		}
-	}
-	unset($sql, $parameters, $result, $row);
-	echo "</select>\n";
+	echo "	<input class=\"formfld\" type=\"text\" name=\"contact_search\" placeholder=\"search\" style=\"width: 80px;\" onkeyup=\"get_contacts('contact_select', 'contact_uuid', this.value);\" maxlength=\"255\" value=\"\">\n";
+	echo "	<select class='formfld' style=\"width: 150px;\" id=\"contact_select\" name=\"relation_contact_uuid\" >\n";
+	echo "		<option value='".escape($relation_contact_uuid ?? '')."'>".escape($contact_name ?? '')."</option>\n";
+	echo "	</select>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -312,7 +350,7 @@
 		echo "<td width='70%' class='vtable' align='left'>\n";
 		echo "	<select class='formfld' name='relation_reciprocal_label' id='relation_reciprocal_label' onchange=\"getElementById('relation_reciprocal_label_custom').value='';\">\n";
 		echo "		<option value=''></option>\n";
-		echo 		(is_array($relation_label_options)) ? implode("\n", $relation_label_options) : null;
+		echo 		(!empty($relation_label_options)) ? implode("\n", $relation_label_options) : null;
 		echo "	</select>\n";
 		echo "	<input type='text' class='formfld' style='display: none;' name='relation_reciprocal_label_custom' id='relation_reciprocal_label_custom' value=''>\n";
 		echo "	<input type='button' id='btn_toggle_reciprocal_label' class='btn' alt='".$text['button-back']."' value='&#9665;' onclick=\"toggle_custom('relation_reciprocal_label');\">\n";

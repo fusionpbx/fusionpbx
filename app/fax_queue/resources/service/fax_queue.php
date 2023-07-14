@@ -1,21 +1,14 @@
 <?php
 
-//check the permission
-	if (defined('STDIN')) {
-		$document_root = str_replace("\\", "/", $_SERVER["PHP_SELF"]);
-		preg_match("/^(.*)\/app\/.*$/", $document_root, $matches);
-		$document_root = $matches[1];
-		set_include_path($document_root);
-		$_SERVER["DOCUMENT_ROOT"] = $document_root;
-		require_once "resources/require.php";
-		require_once "resources/pdo.php";
-	}
-	else {
+//run from command line only
+	if (!defined('STDIN')) {
 		exit;
-		include "root.php";
-		require_once "resources/require.php";
-		require_once "resources/pdo.php";
 	}
+
+//includes files
+	require_once  dirname(__DIR__, 4) . "/resources/require.php";
+	require_once "resources/pdo.php";
+	include "resources/classes/permissions.php";
 
 //increase limits
 	set_time_limit(0);
@@ -39,11 +32,6 @@
 	if (isset($_GET['sql'])) {
 		$debug_sql = $_GET['sql'];
 	}
-
-//includes
-	if (!defined('STDIN')) { include_once "root.php"; }
-	require_once "resources/require.php";
-	include "resources/classes/permissions.php";
 
 //define the process id file
 	$pid_file = "/var/run/fusionpbx/".basename( $argv[0], ".php") .".pid";
@@ -90,12 +78,6 @@
 //prevent the process running more than once
 	if ($pid_exists) {
 		echo "Cannot lock pid file {$pid_file}\n";
-		exit;
-	}
-
-//fax queue enabled
-	if ($_SESSION['fax_queue']['enabled']['boolean'] != 'true') {
-		echo "FAX Queue is disabled in Default Settings\n";
 		exit;
 	}
 
@@ -150,7 +132,7 @@
 	}
 
 //change the working directory
-	chdir($document_root);
+	chdir($_SERVER['DOCUMENT_ROOT']);
 
 //get the messages waiting in the email queue
 	while (true) {
@@ -160,7 +142,7 @@
 			$sql .= "where hostname = :hostname ";
 			$sql .= "and ( ";
 			$sql .= "	( ";
-			$sql .= "		(fax_status = 'waiting' or fax_status = 'trying') ";
+			$sql .= "		(fax_status = 'waiting' or fax_status = 'trying' or fax_status = 'busy') ";
 			$sql .= "		and (fax_retry_date is null or floor(extract(epoch from now()) - extract(epoch from fax_retry_date)) > :retry_interval) ";
 			$sql .= "	)  ";
 			$sql .= "	or ( ";
@@ -196,7 +178,7 @@
 		//process the messages
 			if (is_array($fax_queue) && @sizeof($fax_queue) != 0) {
 				foreach($fax_queue as $row) {
-					$command = exec('which php')." ".$document_root."/app/fax_queue/resources/job/fax_send.php ";
+					$command = exec('which php')." ".$_SERVER['DOCUMENT_ROOT']."/app/fax_queue/resources/job/fax_send.php ";
 					$command .= "'action=send&fax_queue_uuid=".$row["fax_queue_uuid"]."&hostname=".$hostname."'";
 					if (isset($debug)) {
 						//run process inline to see debug info

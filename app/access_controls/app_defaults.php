@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2016 - 2022
+	Portions created by the Initial Developer are Copyright (C) 2016 - 2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -32,10 +32,12 @@
 		$database = new database;
 		$num_rows = $database->select($sql, null, 'column');
 		if ($num_rows == 0) {
+
 			//set the directory
 				$xml_dir = $_SESSION["switch"]["conf"]["dir"].'/autoload_configs';
 				$xml_file = $xml_dir."/acl.conf.xml";
-				$xml_file_alt = $_SERVER["DOCUMENT_ROOT"].'/'.PROJECT_PATH.'/resources/templates/conf/autoload_configs/acl.conf';
+				$xml_file_alt = $_SERVER["DOCUMENT_ROOT"].'/'.PROJECT_PATH.'/app/switch/resources/conf/autoload_configs/acl.conf';
+
 			//load the xml and save it into an array
 				if (file_exists($xml_file)) {
 					$xml_string = file_get_contents($xml_file);
@@ -62,12 +64,13 @@
 				$conf_array = json_decode($json, true);
 
 			//process the array
-				foreach($conf_array['network-lists']['list'] as $list) {
-					//get the attributes
+				if (is_array($conf_array['network-lists']['list'])) {
+					foreach($conf_array['network-lists']['list'] as $list) {
+						//get the attributes
 						$access_control_name = $list['@attributes']['name'];
 						$access_control_default = $list['@attributes']['default'];
 
-					//insert the name, description
+						//insert the name, description
 						$access_control_uuid = uuid();
 						$array['access_controls'][0]['access_control_uuid'] = $access_control_uuid;
 						$array['access_controls'][0]['access_control_name'] = $access_control_name;
@@ -84,42 +87,40 @@
 
 						$p->delete('access_control_add', 'temp');
 
-				//normalize the array - needed because the array is inconsistent when there is only one row vs multiple
-					if (strlen($list['node']['@attributes']['type']) > 0) {
+					//normalize the array - needed because the array is inconsistent when there is only one row vs multiple
+					if (!empty($list['node']['@attributes']['type'])) {
 						$list['node'][]['@attributes'] = $list['node']['@attributes'];
 						unset($list['node']['@attributes']);
 					}
 
-				//add the nodes
-					foreach ($list['node'] as $row) {
-						//get the name and value pair
-							$node_type = $row['@attributes']['type'];
-							$node_cidr = $row['@attributes']['cidr'];
-							$node_domain = $row['@attributes']['domain'];
-							$node_description = $row['@attributes']['description'];
-						//replace $${domain}
-							if (strlen($node_domain) > 0) {
-								$node_domain = str_replace("\$\${domain}", $domain_name, $node_domain);
+					//add the nodes
+						if (is_array($list['node'])) {
+							foreach ($list['node'] as $row) {
+								//get the name and value pair
+								$node_type = $row['@attributes']['type'];
+								$node_cidr = $row['@attributes']['cidr'];
+								$node_description = $row['@attributes']['description'];
+
+								//add the profile settings into the database
+								$access_control_node_uuid = uuid();
+								$array['access_control_nodes'][0]['access_control_node_uuid'] = $access_control_node_uuid;
+								$array['access_control_nodes'][0]['access_control_uuid'] = $access_control_uuid;
+								$array['access_control_nodes'][0]['node_type'] = $node_type;
+								$array['access_control_nodes'][0]['node_cidr'] = $node_cidr;
+								$array['access_control_nodes'][0]['node_description'] = $node_description;
+
+								$p = new permissions;
+								$p->add('access_control_node_add', 'temp');
+
+								$database = new database;
+								$database->app_name = 'access_controls';
+								$database->app_uuid = '1416a250-f6e1-4edc-91a6-5c9b883638fd';
+								$database->save($array, false);
+								unset($array);
+
+								$p->delete('access_control_node_add', 'temp');
 							}
-						//add the profile settings into the database
-							$access_control_node_uuid = uuid();
-							$array['access_control_nodes'][0]['access_control_node_uuid'] = $access_control_node_uuid;
-							$array['access_control_nodes'][0]['access_control_uuid'] = $access_control_uuid;
-							$array['access_control_nodes'][0]['node_type'] = $node_type;
-							$array['access_control_nodes'][0]['node_cidr'] = $node_cidr;
-							$array['access_control_nodes'][0]['node_domain'] = $node_domain;
-							$array['access_control_nodes'][0]['node_description'] = $node_description;
-
-							$p = new permissions;
-							$p->add('access_control_node_add', 'temp');
-
-							$database = new database;
-							$database->app_name = 'access_controls';
-							$database->app_uuid = '1416a250-f6e1-4edc-91a6-5c9b883638fd';
-							$database->save($array, false);
-							unset($array);
-
-							$p->delete('access_control_node_add', 'temp');
+						}
 					}
 				}
 
@@ -129,6 +130,57 @@
 				}
 		}
 		unset($sql, $num_rows);
+
+		//rename domains access control to providers
+		$sql = "select count(*) from v_access_controls ";
+		$sql .= "where access_control_name = 'domains' ";
+		$database = new database;
+		$num_rows = $database->select($sql, null, 'column');
+		if ($num_rows > 0) {
+			//update the access control name
+			$sql = "update v_access_controls set access_control_name = 'providers' ";
+			$sql .= "where access_control_name = 'domains' ";
+			$database = new database;
+			$database->execute($sql, null);
+			unset($sql);
+
+			//update the sip profile settings
+			$sql = "update v_sip_profile_settings set sip_profile_setting_value = 'providers' ";
+			$sql .= "where (sip_profile_setting_name = 'apply-inbound-acl' or sip_profile_setting_name = 'apply-register-acl') ";
+			$sql .= "and sip_profile_setting_value = 'domains'; ";
+			$database = new database;
+			$database->execute($sql, null);
+			unset($sql);
+
+			//clear the cache
+			$cache = new cache;
+			$cache->delete("configuration:acl.conf");
+			$cache->delete("configuration:sofia.conf:".gethostname());
+
+			//create the event socket connection
+			if (!$fp) {
+				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+			}
+
+			//reload the acl
+			event_socket_request($fp, "api reloadacl");
+
+			//rescan each sip profile
+			$sql = "select sip_profile_name from v_sip_profiles ";
+			$sql .= "where sip_profile_enabled = 'true'; ";
+			$database = new database;
+			$sip_profiles = $database->select($sql, null, 'all');
+			if (is_array($sip_profiles)) {
+				foreach ($sip_profiles as $row) {
+					if ($fp) {
+						$command = "sofia profile '".$row['sip_profile_name']."' rescan";
+						//echo $command."\n";
+						$result = event_socket_request($fp, "api ".$command);
+						//echo $result."\n";
+					}
+				}
+			}
+		}
 
 		//remove orphaned access control nodes
 		$sql = "delete from v_access_control_nodes ";

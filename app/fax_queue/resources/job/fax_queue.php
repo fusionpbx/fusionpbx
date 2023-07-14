@@ -2,18 +2,11 @@
 
 //includes
 	if (defined('STDIN')) {
-		$document_root = str_replace("\\", "/", $_SERVER["PHP_SELF"]);
-		preg_match("/^(.*)\/app\/.*$/", $document_root, $matches);
-		$document_root = $matches[1];
-		set_include_path($document_root);
-		$_SERVER["DOCUMENT_ROOT"] = $document_root;
-		require_once "resources/require.php";
+		//includes files
+		require_once  dirname(__DIR__, 4) . "/resources/require.php";
 	}
 	else {
 		exit;
-		include "root.php";
-		require_once "resources/require.php";
-		require_once "resources/pdo.php";
 	}
 
 //increase limits
@@ -142,12 +135,12 @@
 	unset($parameters);
 
 //change the working directory
-	chdir($document_root);
+	chdir($_SERVER['DOCUMENT_ROOT']);
 
 //process the messages
 	if (is_array($fax_queue) && @sizeof($fax_queue) != 0) {
 		foreach($fax_queue as $row) {
-			$command = exec('which php')." ".$document_root."/app/fax_queue/resources/job/fax_send.php ";
+			$command = exec('which php')." ".$_SERVER['DOCUMENT_ROOT']."/app/fax_queue/resources/job/fax_send.php ";
 			$command .= "'action=send&fax_queue_uuid=".$row["fax_queue_uuid"]."&hostname=".$hostname."&debug=true'";
 			if (isset($debug)) {
 				//run process inline to see debug info

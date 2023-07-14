@@ -1,20 +1,18 @@
 <?php
 
-//check the permission
+//add the document root to the include path
 	if (defined('STDIN')) {
-		$document_root = str_replace("\\", "/", $_SERVER["PHP_SELF"]);
-		preg_match("/^(.*)\/app\/.*$/", $document_root, $matches);
-		$document_root = $matches[1];
-		set_include_path($document_root);
-		$_SERVER["DOCUMENT_ROOT"] = $document_root;
-		require_once "resources/require.php";
+		//includes files
+		require_once dirname(__DIR__, 4) . "/resources/require.php";
 	}
 	else {
 		exit;
-		include "root.php";
-		require_once "resources/require.php";
-		require_once "resources/pdo.php";
 	}
+
+//include files
+	require_once "resources/require.php";
+	include "resources/classes/permissions.php";
+	require "app/email_queue/resources/functions/transcribe.php";
 
 //increase limits
 	set_time_limit(0);
@@ -40,12 +38,6 @@
 	if (!isset($hostname)) {
 		$hostname = gethostname();
 	}
-
-//includes
-	if (!defined('STDIN')) { include_once "root.php"; }
-	require_once "resources/require.php";
-	include "resources/classes/permissions.php";
-	require $document_root."/app/email_queue/resources/functions/transcribe.php";
 
 //define the process id file
 	$pid_file = "/var/run/fusionpbx/".basename( $argv[0], ".php") .".pid";
@@ -159,7 +151,7 @@
 		//process the messages
 		if (is_array($email_queue) && @sizeof($email_queue) != 0) {
 			foreach($email_queue as $row) {
-				$command = exec('which php')." ".$document_root."/app/email_queue/resources/jobs/email_send.php ";
+				$command = exec('which php')." ".$_SERVER['DOCUMENT_ROOT']."/app/email_queue/resources/jobs/email_send.php ";
 				$command .= "'action=send&email_queue_uuid=".$row["email_queue_uuid"]."&hostname=".$hostname."'";
 				if (isset($debug)) {
 					//run process inline to see debug info

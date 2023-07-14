@@ -17,19 +17,23 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2016-2022
+	Portions created by the Initial Developer are Copyright (C) 2016-2023
 	the Initial Developer. All Rights Reserved.
 
 */
 
-//includes
-	require_once "root.php";
-	require_once "resources/require.php";
+//includes files
+	require_once  dirname(__DIR__, 4) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get($_SESSION['domain']['language']['code'], 'app/devices');
+
+//connect to the database
+	if (!isset($database)) {
+		$database = new database;
+	}
 
 //get the vendor functions
 	$sql = "select v.name as vendor_name, f.name, f.value ";
@@ -54,15 +58,14 @@
 	$sql .= "and v.enabled = 'true' ";
 	$sql .= "and f.enabled = 'true' ";
 	$sql .= "order by v.name asc, f.name asc ";
-	$database = new database;
 	$vendor_functions = $database->select($sql, (is_array($parameters) ? $parameters : null), 'all');
 	unset($sql, $sql_where_or, $parameters);
 
 //add or update the database
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 
 		//add or update the database
-			if ($_POST["persistformvar"] != "true") {
+			if (empty($_POST["persistformvar"]) || $_POST["persistformvar"] != "true") {
 
 				//validate the token
 					$token = new token;
@@ -76,7 +79,6 @@
 					$sql = "select device_uuid, device_profile_uuid from v_devices ";
 					$sql .= "where device_user_uuid = :device_user_uuid ";
 					$parameters['device_user_uuid'] = $_SESSION['user_uuid'];
-					$database = new database;
 					$row = $database->select($sql, $parameters, 'row');
 					if (is_array($row) && @sizeof($row) != 0) {
 						$device_uuid = $row['device_uuid'];
@@ -89,7 +91,6 @@
 						$sql = "select * from v_device_keys ";
 						$sql .= "where device_profile_uuid = :device_profile_uuid ";
 						$parameters['device_profile_uuid'] = $device_profile_uuid;
-						$database = new database;
 						$device_profile_keys = $database->select($sql, $parameters, 'all');
 						unset($sql, $parameters);
 					}
@@ -99,7 +100,6 @@
 						$sql = "select * from v_device_keys ";
 						$sql .= "where device_uuid = :device_uuid ";
 						$parameters['device_uuid'] = $device_uuid;
-						$database = new database;
 						$device_keys = $database->select($sql, $parameters, 'all');
 						unset($sql, $parameters);
 					}
@@ -185,7 +185,7 @@
 								$device_key_vendor = $row["device_key_vendor"];
 
 							//process the profile keys
-								if (strlen($row["device_profile_uuid"]) > 0) {
+								if (!empty($row["device_profile_uuid"])) {
 									//get the profile key settings from the array
 										foreach ($device_profile_keys as &$field) {
 											if ($device_key_uuid == $field["device_key_uuid"]) {
@@ -209,14 +209,13 @@
 
 							//sql add or update
 								if (!is_uuid($device_key_uuid)) {
-									if (permission_exists('device_key_add') && strlen($device_key_type) > 0 && strlen($device_key_value) > 0) {
+									if (permission_exists('device_key_add') && strlen($device_key_type) > 0 && !empty($device_key_value)) {
 
 										//if the device_uuid is not in the array then get the device_uuid from the database
-											if (strlen($device_uuid) == 0) {
+											if (empty($device_uuid)) {
 												$sql = "select device_uuid from v_devices ";
 												$sql .= "where device_user_uuid = :device_user_uuid ";
 												$parameters['device_user_uuid'] = $_SESSION['user_uuid'];
-												$database = new database;
 												$device_uuid = $database->select($sql, $parameters, 'column');
 												unset($sql, $parameters);
 											}
@@ -265,7 +264,6 @@
 										$p->add('device_key_edit', 'temp');
 
 									//save the changes
-										$database = new database;
 										$database->app_name = 'devices';
 										$database->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
 										$database->save($array);
@@ -279,7 +277,7 @@
 					}
 
 				//write the provision files
-					if (strlen($_SESSION['provision']['path']['text']) > 0) {
+					if (!empty($_SESSION['provision']['path']['text'])) {
 						$prov = new provision;
 						$prov->domain_uuid = $domain_uuid;
 						$response = $prov->write();
@@ -302,7 +300,6 @@
 	$sql = "select device_uuid, device_profile_uuid from v_devices ";
 	$sql .= "where device_user_uuid = :device_user_uuid ";
 	$parameters['device_user_uuid'] = $_SESSION['user_uuid'];
-	$database = new database;
 	$row = $database->select($sql, $parameters, 'row');
 	if (is_array($row) && @sizeof($row) != 0) {
 		$device_uuid = $row['device_uuid'];
@@ -315,7 +312,6 @@
 		$sql = "select * from v_device_lines ";
 		$sql .= "where device_uuid = :device_uuid ";
 		$parameters['device_uuid'] = $device_uuid;
-		$database = new database;
 		$device_lines = $database->select($sql, $parameters, 'all');
 		unset($sql, $parameters);
 	}
@@ -355,7 +351,6 @@
 		if (is_uuid($device_profile_uuid)) {
 			$parameters['device_profile_uuid'] = $device_profile_uuid;
 		}
-		$database = new database;
 		$keys = $database->select($sql, $parameters, 'all');
 		unset($sql, $parameters);
 	}
@@ -466,7 +461,7 @@
 				if ($previous_device_key_vendor != $row['device_key_vendor'] || $row['device_key_vendor'] == '') {
 					echo "	<tr class='list-header'>\n";
 					echo "		<th class='shrink'>".$text['label-device_key_id']."</th>\n";
-					if (strlen($row['device_key_vendor']) > 0) {
+					if (!empty($row['device_key_vendor'])) {
 						echo "		<th>".ucwords($row['device_key_vendor'])."</th>\n";
 					}
 					else {
@@ -481,7 +476,7 @@
 				}
 
 			//determine whether to hide the element
-				if (strlen($device_key_uuid) == 0) {
+				if (empty($device_key_uuid)) {
 					$element['hidden'] = false;
 					$element['visibility'] = "visibility:visible;";
 				}
@@ -491,7 +486,7 @@
 				}
 
 			//add the primary key uuid
-				if (strlen($row['device_key_uuid']) > 0) {
+				if (!empty($row['device_key_uuid'])) {
 					echo "	<input name='device_keys[".$x."][device_key_uuid]' type='hidden' value=\"".$row['device_key_uuid']."\">\n";
 				}
 
@@ -519,7 +514,7 @@
 				else {
 					echo "	<option value='programmable'>".$text['label-programmable']."</option>\n";
 				}
-				if (strlen($device_vendor) == 0) {
+				if (empty($device_vendor)) {
 					if ($row['device_key_category'] == "expansion") {
 						echo "	<option value='expansion' selected='selected'>".$text['label-expansion']."</option>\n";
 					}
@@ -586,7 +581,7 @@
 				$i = 0;
 				if (is_array($vendor_functions)) {
 					foreach ($vendor_functions as $function) {
-						if (strlen($row['device_key_vendor']) == 0 && $function['vendor_name'] != $previous_vendor) {
+						if (empty($row['device_key_vendor']) && $function['vendor_name'] != $previous_vendor) {
 							if ($i > 0) {
 								echo "				</optgroup>\n";
 							}
@@ -596,17 +591,17 @@
 						if ($row['device_key_vendor'] == $function['vendor_name'] && $row['device_key_type'] == $function['value']) {
 							$selected = "selected='selected'";
 						}
-						if (strlen($row['device_key_vendor']) == 0) {
+						if (empty($row['device_key_vendor'])) {
 							echo "					<option value='".$function['value']."' $selected >".$text['label-'.$function['name']]."</option>\n";
 						}
-						if (strlen($row['device_key_vendor']) > 0 && $row['device_key_vendor'] == $function['vendor_name']) {
+						if (!empty($row['device_key_vendor']) && $row['device_key_vendor'] == $function['vendor_name']) {
 							echo "					<option value='".$function['value']."' $selected >".$text['label-'.$function['name']]."</option>\n";
 						}
 						$previous_vendor = $function['vendor_name'];
 						$i++;
 					}
 				}
-				if (strlen($row['device_key_vendor']) == 0) {
+				if (empty($row['device_key_vendor'])) {
 					echo "				</optgroup>\n";
 				}
 				echo "			</select>\n";

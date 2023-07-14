@@ -17,13 +17,12 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018-2022
+	Portions created by the Initial Developer are Copyright (C) 2018-2023
 	the Initial Developer. All Rights Reserved.
 */
 
-//includes
-	require_once "root.php";
-	require_once "resources/require.php";
+//includes files
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
 
@@ -40,15 +39,21 @@
 	$language = new text;
 	$text = $language->get();
 
+//set additional variables
+	$show = $_GET["show"] ?? '';
+
+//set the defaults
+	$search = '';
+
 //get the http post data
-	if (is_array($_POST['streams'])) {
+	if (!empty($_POST['streams'])) {
 		$action = $_POST['action'];
 		$search = $_POST['search'];
 		$streams = $_POST['streams'];
 	}
 
 //process the http post data by action
-	if ($action != '' && is_array($streams) && @sizeof($streams) != 0) {
+	if (!empty($action)) {
 		switch ($action) {
 			case 'copy':
 				if (permission_exists('stream_add')) {
@@ -75,47 +80,78 @@
 	}
 
 //get order and order by
-	$order_by = $_GET["order_by"];
-	$order = $_GET["order"];
+	$order_by = $_GET["order_by"] ?? '';
+	$order = $_GET["order"] ?? '';
 
 //add the search term
-	$search = strtolower($_GET["search"]);
-	if (strlen($search) > 0) {
-		$sql_search = "and (";
-		$sql_search .= "lower(stream_name) like :search ";
-		$sql_search .= "or lower(stream_location) like :search ";
-		$sql_search .= "or lower(stream_enabled) like :search ";
-		$sql_search .= "or lower(stream_description) like :search ";
-		$sql_search .= ") ";
-		$parameters['search'] = '%'.$search.'%';
+	if (!empty($_GET["search"])) {
+		$search = $_GET["search"];
 	}
 
 //prepare to page the results
-	$sql = "select count(stream_uuid) from v_streams where true ";
-	$sql .= $sql_search;
-	if (!($_GET['show'] == "all" && permission_exists('stream_all'))) {
+	$sql = "select count(stream_uuid) from v_streams ";
+	$sql .= "where true ";
+	if (!empty($search)) {
+		$sql .= "and (";
+		$sql .= "lower(stream_name) like :search ";
+		$sql .= "or lower(stream_location) like :search ";
+		$sql .= "or lower(stream_enabled) like :search ";
+		$sql .= "or lower(stream_description) like :search ";
+		$sql .= ") ";
+		$parameters['search'] = '%'.strtolower($search).'%';
+	}
+	if (permission_exists('stream_all') && $show == "all") {
+		//show all
+	}
+	elseif (permission_exists('stream_all')) {
 		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
 		$parameters['domain_uuid'] = $domain_uuid;
 	}
+	else {
+		$sql .= "and domain_uuid = :domain_uuid ";
+		$parameters['domain_uuid'] = $domain_uuid;
+	}
 	$database = new database;
-	$num_rows = $database->select($sql, $parameters, 'column');
+	$num_rows = $database->select($sql, $parameters ?? null, 'column');
+	unset($parameters);
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
 	$param = "&search=".$search;
-	$param = ($_GET['show'] == 'all' && permission_exists('stream_all')) ? "&show=all" : null;
-	$page = is_numeric($_GET['page']) ? $_GET['page'] : 0;
-	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
+	$param = ($show == 'all' && permission_exists('stream_all')) ? "&show=all" : null;
+	$page = isset($_GET['page']) ? $_GET['page'] : 0;
+	if (!empty($page)) { $page = 0; $_GET['page'] = 0; }
 	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
 	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = str_replace('count(stream_uuid)', '*', $sql);
+	$sql = "select * from v_streams ";
+	$sql .= "where true ";
+	if (!empty($search)) {
+		$sql .= "and (";
+		$sql .= "	lower(stream_name) like :search ";
+		$sql .= "	or lower(stream_location) like :search ";
+		$sql .= "	or lower(stream_enabled) like :search ";
+		$sql .= "	or lower(stream_description) like :search ";
+		$sql .= ") ";
+		$parameters['search'] = '%'.strtolower($search).'%';
+	}
+	if (permission_exists('stream_all') && $show == "all") {
+		//show all
+	}
+	elseif (permission_exists('stream_all')) {
+		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
+		$parameters['domain_uuid'] = $domain_uuid;
+	}
+	else {
+		$sql .= "and domain_uuid = :domain_uuid ";
+		$parameters['domain_uuid'] = $domain_uuid;
+	}
 	$sql .= order_by($order_by, $order, 'stream_name', 'asc');
 	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;
-	$streams = $database->select($sql, (is_array($parameters) && @sizeof($parameters) != 0 ? $parameters : null), 'all');
+	$streams = $database->select($sql, (!empty($parameters) && @sizeof($parameters) != 0 ? $parameters : null), 'all');
 	unset($sql, $parameters);
 
 //create token
@@ -154,7 +190,7 @@
 	}
 	echo 		"<form id='form_search' class='inline' method='get'>\n";
 	if (permission_exists('stream_all')) {
-		if ($_GET['show'] == 'all') {
+		if ($show == 'all') {
 			echo "		<input type='hidden' name='show' value='all'>\n";
 		}
 		else {
@@ -193,17 +229,17 @@
 	echo "<tr class='list-header'>\n";
 	if (permission_exists('stream_add') || permission_exists('stream_edit') || permission_exists('stream_delete')) {
 		echo "	<th class='checkbox'>\n";
-		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".($streams ?: "style='visibility: hidden;'").">\n";
+		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".(empty($streams) ? "style='visibility: hidden;'" : null).">\n";
 		echo "	</th>\n";
 	}
-	if ($_GET['show'] == 'all' && permission_exists('stream_all')) {
+	if ($show == 'all' && permission_exists('stream_all')) {
 		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order);
 	}
 	echo th_order_by('stream_name', $text['label-stream_name'], $order_by, $order);
 	echo "	<th class='pct-60'>".$text['label-play']."</th>\n";
 	echo th_order_by('stream_enabled', $text['label-stream_enabled'], $order_by, $order, null, "class='center'");
 	echo th_order_by('stream_description', $text['label-stream_description'], $order_by, $order, null, "class='hide-sm-dn'");
-	if (permission_exists('stream_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+	if (permission_exists('stream_edit') && !empty($_SESSION['theme']['list_row_edit_button']['boolean']) && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
@@ -221,7 +257,7 @@
 				echo "		<input type='hidden' name='streams[$x][uuid]' value='".escape($row['stream_uuid'])."' />\n";
 				echo "	</td>\n";
 			}
-			if ($_GET['show'] == 'all' && permission_exists('stream_all')) {
+			if (!empty($_GET['show']) && $_GET['show'] == 'all' && permission_exists('stream_all')) {
 				echo "	<td>";
 				if ($_SESSION['domains'][$row['domain_uuid']]['domain_name'] != '') {
 					echo escape($_SESSION['domains'][$row['domain_uuid']]['domain_name']);
@@ -240,10 +276,10 @@
 			}
 			echo "	</td>\n";
 			echo "	<td class='no-wrap button'>\n";
-			if (strlen($row['stream_location']) > 0) {
+			if (!empty($row['stream_location'])) {
 				$location_parts = explode('://',$row['stream_location']);
 				$http_protocol = ($location_parts[0] == "shout") ? 'http' : 'https';
-				echo "<audio src='".$http_protocol."://".$location_parts[1]."' controls='controls' />\n";
+				echo "<audio src='".$http_protocol."://".($location_parts[1] ?? '')."' controls='controls' />\n";
 			}
 			echo "	</td>\n";
 			if (permission_exists('stream_edit')) {
@@ -256,7 +292,7 @@
 			}
 			echo "	</td>\n";
 			echo "	<td class='description overflow hide-sm-dn'>".escape($row['stream_description'])."&nbsp;</td>\n";
-			if (permission_exists('stream_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+			if (permission_exists('stream_edit') && !empty($_SESSION['theme']['list_row_edit_button']['boolean']) && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
 				echo "	<td class='action-button'>\n";
 				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
 				echo "	</td>\n";

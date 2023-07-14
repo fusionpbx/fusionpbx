@@ -2,20 +2,11 @@
 
 //check the permission
 	if (defined('STDIN')) {
-		$document_root = str_replace("\\", "/", $_SERVER["PHP_SELF"]);
-		preg_match("/^(.*)\/app\/.*$/", $document_root, $matches);
-		if (isset($matches[1])) {
-			$document_root = $matches[1];
-			set_include_path($document_root);
-			$_SERVER["DOCUMENT_ROOT"] = $document_root;
-		}
-		require_once "resources/require.php";
+		//includes files
+		require_once  dirname(__DIR__, 4) . "/resources/require.php";
 	}
 	else {
 		exit;
-		include "root.php";
-		require_once "resources/require.php";
-		require_once "resources/pdo.php";
 	}
 
 //increase limits

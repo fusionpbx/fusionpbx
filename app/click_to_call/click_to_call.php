@@ -30,9 +30,8 @@
 	James Rose <james.o.rose@gmail.com>
 */
 
-//includes
-	include "root.php";
-	require_once "resources/require.php";
+//includes files
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -174,7 +173,7 @@
 			}
 			else {
 				//local extension (source) > external number (destination)
-				if (user_exists($src) && strlen($dest_cid_number) == 0) {
+				if (user_exists($src) && empty($dest_cid_number)) {
 					//retrieve outbound caller id from the (source) extension
 					$sql = "select outbound_caller_id_name, outbound_caller_id_number from v_extensions where domain_uuid = :domain_uuid and extension = :src ";
 					$parameters['domain_uuid'] = $_SESSION['domain_uuid'];

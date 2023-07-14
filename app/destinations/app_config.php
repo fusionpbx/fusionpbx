@@ -45,7 +45,6 @@
 		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "menu-exec-app:transfer \${destination_number} XML \${destination_context}";
 		$apps[$x]['destinations'][$y]['select_value']['user_contact'] = "loopback/\${destination_number}";
 		$apps[$x]['destinations'][$y]['select_label'] = "\${destination_number} \${destination_description}";
-		/*
 		$y++;
 		$apps[$x]['destinations'][$y]['type'] = 'array';
 		$apps[$x]['destinations'][$y]['label'] = 'other';
@@ -55,6 +54,7 @@
 		$apps[$x]['destinations'][$y]['select_value']['dialplan'] = "transfer:\${destination}";
 		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "menu-exec-app:transfer \${destination}";
 		$apps[$x]['destinations'][$y]['select_label'] = "\${name}";
+		/*
 		$z=0;
 		$apps[$x]['destinations'][$y]['result']['data'][$z]['name'] = 'check_voicemail';
 		$apps[$x]['destinations'][$y]['result']['data'][$z]['destination'] = '*98 XML ${context}';
@@ -154,6 +154,10 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "destination_destinations";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "other_destinations";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$y++;
@@ -382,5 +386,29 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the description.";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "insert_date";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'timestamptz';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'date';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = 'date';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "insert_user";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "char(36)";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "update_date";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'timestamptz';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'date';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = 'date';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "update_user";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "char(36)";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 
 ?>

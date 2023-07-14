@@ -43,7 +43,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_digitmap";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "[*]xxxx|[2-9]11|0T|011xxx.T|[0-1][2-9]xxxxxxxxx|[2-9]xxxxxxxxx|[1-9]xxT|**x.T";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "*x.T|**x.T|[9]11|[2-9]xxxxxxT|0T|[0-1][2-9]xxxxxxxxx|[2-9]xxxxxxxxx|[1-5]xxT";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Digit Timeouts";
 		$y++;
@@ -86,7 +86,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Nat IP";
-                $y++;
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "f65a2b0c-dbae-4ca0-aadc-93d9646b568f";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_softkey_do_not_disturb";

@@ -24,9 +24,8 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//includes
-	require_once "root.php";
-	require_once "resources/require.php";
+//includes files
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -44,13 +43,13 @@
 	$sql .= "and contact_uuid = :contact_uuid ";
 	$sql .= "order by attachment_primary desc, attachment_filename asc ";
 	$parameters['domain_uuid'] = $domain_uuid;
-	$parameters['contact_uuid'] = $contact_uuid;
+	$parameters['contact_uuid'] = $contact_uuid ?? '';
 	$database = new database;
 	$contact_attachments = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
 //show if exists
-	if (is_array($contact_attachments) && @sizeof($contact_attachments) != 0) {
+	if (!empty($contact_attachments)) {
 
 		//styles and attachment layer
 			echo "<style>\n";

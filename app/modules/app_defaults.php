@@ -34,7 +34,6 @@
 
 		//add the module object
 			$module = new modules;
-			$module->db = $db;
 
 		//add the access control list to the database
 			$sql = "select * from v_modules ";

@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2021
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -25,9 +25,8 @@
 	James Rose <james.o.rose@gmail.com>
 */
 
-//includes
-	require_once "root.php";
-	require_once "resources/require.php";
+//includes files
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -45,16 +44,16 @@
 
 //set a default line number value (off)
 	if (!isset($_POST['line_number']) || $_POST['line_number'] == '') {
-		$_POST['line_number'] = 0; 
+		$_POST['line_number'] = 0;
 	}
 
 //set a default ordinal (descending)
-	if (!isset($_POST['sort']) || $_POST['sort'] == '') { 
+	if (!isset($_POST['sort']) || $_POST['sort'] == '') {
 		$_POST['sort'] = "asc";
 	}
 
 //set a default file size
-	if (!isset($_POST['size']) || strlen($_POST['size']) == 0) { 
+	if (!isset($_POST['size']) || empty($_POST['size'])) {
 		$_POST['size'] = "32";
 	}
 
@@ -91,7 +90,7 @@
 				}
 			}
 			if (isset($filename) && file_exists($filename)) {
-				session_cache_limiter('public');
+				@session_cache_limiter('public');
 				$fd = fopen($filename, "rb");
 				header("Content-Type: binary/octet-stream");
 				header("Content-Length: " . filesize($filename));
@@ -107,9 +106,9 @@
 		$file_size = filesize($log_file);
 	}
 
-//read the log
+//open the log file
 	if (file_exists($log_file)) {
-		$file_handle = fopen($log_file, "r");
+		$file = fopen($log_file, "r") or exit($text['error-open_file']);
 	}
 
 //include the header
@@ -191,16 +190,21 @@
 		$array_filter[5]['color'] = 'gold';
 		$array_filter[5]['type'] = 'bold';
 		$array_filter[5]['font'] = 'monospace';
-		
+
 		$array_filter[6]['pattern'] = '[CRIT]';
 		$array_filter[6]['color'] = 'red';
 		$array_filter[6]['type'] = 'bold';
 		$array_filter[6]['font'] = 'monospace';
 
+		$file_size = 0;
+		if (file_exists($log_file)) {
+			$file_size = filesize($log_file);
+		}
+
 		/*
 		// removed: duplicate of above
 		if (isset($_POST['submit'])) {
-			if (strlen($_POST['size']) == 0) { $_POST['size'] = "32"; }
+			if (empty($_POST['size'])) { $_POST['size'] = "32"; }
 		}
 		*/
 
@@ -214,7 +218,7 @@
 			else {
 				$user_file_size = $_POST['size'] * 1024;
 			}
-			if (strlen($_REQUEST['filter']) > 0) {
+			if (!empty($_REQUEST['filter'])) {
 				$filter = $_REQUEST['filter'];
 			}
 		}
@@ -243,8 +247,8 @@
 				else {
 					//open the file
 					$byte_count ='0';
-					if ($file_handle) {
-						fseek($file_handle, 0);
+					if (!empty($file)) {
+						fseek($file, 0);
 					}
 					echo "<br>".$text['label-open_file']."<br>";
 				}
@@ -267,14 +271,14 @@
 
 		//start processing
 		$byte_count = 0;
-		if ($file_handle) {
-			while(!feof($file_handle)) {
-				$log_line = escape(fgets($file_handle));
+		if (!empty($file)) {
+			while(!feof($file)) {
+				$log_line = escape(fgets($file));
 				$byte_count++;
 				$noprint = false;
 
 				$skip_line = false;
-				if (!empty($filter) ) {
+				if (!empty($filter)) {
 					$uuid_match = strpos($log_line, $filter);
 					if ($uuid_match === false) {
 						$skip_line = true;
@@ -315,7 +319,7 @@
 		else {
 			$adj_index = 1;
 		}
-		if (is_array($array_output)) {
+		if (!empty($array_output) && is_array($array_output)) {
 			foreach ($array_output as $index => $line) {
 				$line_num = "";
 				if ($line != "<span style='color: #fff; font-family: monospace;'></span><br>") {
@@ -326,7 +330,7 @@
 				}
 			}
 		}
-		
+
 		echo "		</div>";
 	}
 	echo "		</td>";
@@ -337,8 +341,8 @@
 	require_once "resources/footer.php";
 
 //close the file
-	if ($file_handle) {
-		fclose($file_handle);
+	if (!empty($file)) {
+		fclose($file);
 	}
 
 ?>

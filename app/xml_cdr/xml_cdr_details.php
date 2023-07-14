@@ -17,16 +17,15 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//includes
-	include "root.php";
-	require_once "resources/require.php";
+//includes files
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions 
@@ -60,18 +59,18 @@
 	$parameters['xml_cdr_uuid'] = $uuid;
 	$database = new database;
 	$row = $database->select($sql, $parameters, 'row');
-	if (is_array($row) && @sizeof($row) != 0) {
+	if (!empty($row) && is_array($row) && @sizeof($row) != 0) {
 		$start_stamp = trim($row["start_stamp"]);
-		$xml_string = trim($row["xml"]);
+		$xml_string = trim($row["xml"] ?? '');
 		$json_string = trim($row["json"]);
 	}
 	unset($sql, $parameters, $row);
 
 //get the format
-	if (strlen($xml_string) > 0) {
+	if (!empty($xml_string)) {
 		$format = "xml";
 	}
-	if (strlen($json_string) > 0) {
+	if (!empty($json_string)) {
 		$format = "json";
 	}
 
@@ -117,14 +116,12 @@
 	echo "<tr>\n";
 	echo "<td width='30%' align='left' valign='top' nowrap='nowrap'><b>".$text['title2']."</b></td>\n";
 	echo "<td width='70%' align='right' valign='top'>\n";
-	echo "	<input type='button' class='btn' name='' alt='back' onclick=\"window.location='xml_cdr.php".(($_SESSION['xml_cdr']['last_query'] != '') ? "?".urlencode($_SESSION['xml_cdr']['last_query']) : null)."'\" value='".$text['button-back']."'>\n";
+	echo "	<input type='button' class='btn' name='' alt='back' onclick=\"window.location='xml_cdr.php".(!empty($_SESSION['xml_cdr']['last_query']) ? "?".urlencode($_SESSION['xml_cdr']['last_query']) : null)."'\" value='".$text['button-back']."'>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
 	echo "<td align='left' colspan='2'>\n";
-	echo "".$text['description-5']." \n";
-	echo "".$text['description-6']." \n";
-	echo "".$text['description-7']." \n";
+	echo "".$text['description-details']." \n";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "</table>\n";
@@ -135,11 +132,11 @@
 	//get the variables
 		$xml_cdr_uuid = urldecode($array["variables"]["uuid"]);
 		$direction = urldecode($array["variables"]["call_direction"]);
-		$language = urldecode($array["variables"]["language"]);
+		$language = urldecode($array["variables"]["language"] ?? '');
 		$start_epoch = urldecode($array["variables"]["start_epoch"]);
 		$start_stamp = urldecode($array["variables"]["start_stamp"]);
 		$start_uepoch = urldecode($array["variables"]["start_uepoch"]);
-		$answer_stamp = urldecode($array["variables"]["answer_stamp"]);
+		$answer_stamp = urldecode($array["variables"]["answer_stamp"] ?? '');
 		$answer_epoch = urldecode($array["variables"]["answer_epoch"]);
 		$answer_uepoch = urldecode($array["variables"]["answer_uepoch"]);
 		$end_epoch = urldecode($array["variables"]["end_epoch"]);
@@ -149,10 +146,10 @@
 		$mduration = urldecode($array["variables"]["mduration"]);
 		$billsec = urldecode($array["variables"]["billsec"]);
 		$billmsec = urldecode($array["variables"]["billmsec"]);
-		$bridge_uuid = urldecode($array["variables"]["bridge_uuid"]);
-		$read_codec = urldecode($array["variables"]["read_codec"]);
-		$write_codec = urldecode($array["variables"]["write_codec"]);
-		$remote_media_ip = urldecode($array["variables"]["remote_media_ip"]);
+		$bridge_uuid = urldecode($array["variables"]["bridge_uuid"] ?? '');
+		$read_codec = urldecode($array["variables"]["read_codec"] ?? '');
+		$write_codec = urldecode($array["variables"]["write_codec"] ?? '');
+		$remote_media_ip = urldecode($array["variables"]["remote_media_ip"] ?? '');
 		$hangup_cause = urldecode($array["variables"]["hangup_cause"]);
 		$hangup_cause_q850 = urldecode($array["variables"]["hangup_cause_q850"]);
 		if (!isset($array["callflow"][0])) {
@@ -178,9 +175,9 @@
 			else {
 				$tmp_end_stamp = urldecode($row["times"]["transfer_time"]) / 1000000;
 			}
-			$call_flow_summary[$x]["start_stamp"] = date("Y-m-d H:i:s", $tmp_start_stamp);
-			$call_flow_summary[$x]["end_stamp"] = date("Y-m-d H:i:s", $tmp_end_stamp);
-			$call_flow_summary[$x]["duration"] =  gmdate("G:i:s", $tmp_end_stamp - $tmp_start_stamp);
+			$call_flow_summary[$x]["start_stamp"] = date("Y-m-d H:i:s", (int) $tmp_start_stamp);
+			$call_flow_summary[$x]["end_stamp"] = date("Y-m-d H:i:s", (int) $tmp_end_stamp);
+			$call_flow_summary[$x]["duration"] =  gmdate("G:i:s", (int) $tmp_end_stamp - (int) $tmp_start_stamp);
 			$x++;
 		}
 		unset($x);
@@ -282,9 +279,9 @@
 	$c = 0;
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
-	if (is_array($array["call-stats"])) {
-		if (is_array($array["call-stats"]['audio'])) {
-			foreach($array["call-stats"]['audio'] as $audio_direction => $stat) {
+	if (!empty($array["call-stats"]) && is_array($array["call-stats"])) {
+		if (!empty($array["call-stats"]['audio']) && is_array($array["call-stats"]['audio'])) {
+			foreach ($array["call-stats"]['audio'] as $audio_direction => $stat) {
 				echo "	<table width='95%' border='0' cellpadding='0' cellspacing='0'>\n";
 				echo "		<tr>\n";
 				echo "			<td><b>".$text['label-call-stats'].": ".$audio_direction."</b>&nbsp;</td>\n";
@@ -297,7 +294,7 @@
 				echo "			<th width='30%'>".$text['label-name']."</th>\n";
 				echo "			<th width='70%'>".$text['label-value']."</th>\n";
 				echo "		</tr>\n";
-				foreach($stat as $key => $value) {
+				foreach ($stat as $key => $value) {
 					$value = urldecode($value);
 					echo "<tr >\n";
 					echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".escape($key)."</td>\n";
@@ -382,12 +379,12 @@
 					else if (file_exists($tmp_dir.'/'.$value.'_1.mp3')) {
 						$tmp_name = $value."_1.mp3";
 					}
-					if (strlen($tmp_name) > 0 && file_exists($_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$tmp_name)) {
+					if (!empty($tmp_name) && file_exists($_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$tmp_name)) {
 						echo "	<a href=\"javascript:void(0);\" onclick=\"window.open('../recordings/recording_play.php?a=download&type=moh&filename=".base64_encode('archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$tmp_name)."', 'play',' width=420,height=150,menubar=no,status=no,toolbar=no')\">\n";
 						echo "		play";
 						echo "	</a>&nbsp;";
 					}
-					if (strlen($tmp_name) > 0 && file_exists($_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$tmp_name)) {
+					if (!empty($tmp_name) && file_exists($_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$tmp_name)) {
 						echo "	<a href=\"../recordings/recordings.php?a=download&type=rec&t=bin&filename=".base64_encode("archive/".$tmp_year."/".$tmp_month."/".$tmp_day."/".$tmp_name)."\">\n";
 						echo "		download";
 						echo "	</a>";
@@ -518,16 +515,21 @@
 				echo "			<td>&nbsp;</td>\n";
 				echo "		</tr>\n";
 				echo "</table>\n";
-
 				echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 				echo "		<tr>\n";
 				echo "			<th width='30%'>".$text['label-name']."</th>\n";
 				echo "			<th width='70%'>".$text['label-data']."</th>\n";
 				echo "		</tr>\n";
 				if (is_array($row["extension"]["application"])) {
-					foreach ($row["extension"]["application"] as $tmp_row) {
-						$app_name = $tmp_row["@attributes"]["app_name"];
-						$app_data = urldecode($tmp_row["@attributes"]["app_data"]);
+					foreach ($row["extension"]["application"] as $key => $tmp_row) {
+						if (!is_numeric($key)) {
+							$app_name = $tmp_row["app_name"] ?? '';
+							$app_data = urldecode($tmp_row["app_data"] ?? '');
+						}
+						else {
+							$app_name = $tmp_row["@attributes"]["app_name"] ?? '';
+							$app_data = urldecode($tmp_row["@attributes"]["app_data"] ?? '');
+						}
 						echo "		<tr >\n";
 						echo "			<td valign='top' align='left' class='".$row_style[$c]."'>".escape($app_name)."&nbsp;</td>\n";
 						echo "			<td valign='top' align='left' class='".$row_style[$c]."'>".escape(wordwrap($app_data,75,"\n", true))."&nbsp;</td>\n";
@@ -554,36 +556,63 @@
 				echo "			<th width='70%'>".$text['label-value']."</th>\n";
 				echo "		</tr>\n";
 				if (is_array($row["caller_profile"])) {
-					foreach($row["caller_profile"] as $key => $value) {
-						if (is_array($value)) { $value = implode($value); }
-						$value = urldecode($value);
-						echo "		<tr >\n";
-						if ($key != "originatee") {
-							if (is_array($value)) { $value = implode($value); }
-							$value = urldecode($value);
+					foreach ($row["caller_profile"] as $key => $value) {
+						echo "		<tr>\n";
+						if ($key != "originatee" && $key != "origination") {
+							if (is_array($value)) {
+								$value = implode('', $value);
+							}
+							else {
+								$value = urldecode($value);
+							}
 							echo "			<td valign='top' align='left' class='".$row_style[$c]."'>".escape($key)."&nbsp;</td>\n";
-							echo "			<td valign='top' align='left' class='".$row_style[$c]."'>".escape(wordwrap($value,75,"\n", true))."&nbsp;</td>\n";
+							if ($key == "uuid") {
+								echo "			<td valign='top' align='left' class='".$row_style[$c]."'><a href='xml_cdr_details.php?id=".urlencode($value)."'>".escape($value)."</a>&nbsp;</td>\n";
+							}
+							else {
+								echo "			<td valign='top' align='left' class='".$row_style[$c]."'>".escape(wordwrap($value,75,"\n", true))."&nbsp;</td>\n";
+							}
 						}
 						else {
 							echo "			<td valign='top' align='left' class='".$row_style[$c]."'>".escape($key)."&nbsp;</td>\n";
 							echo "			<td class='".$row_style[$c]."'>\n";
-							echo "				<table width='100%'>\n";
-							if (isset($child["originatee_caller_profile"])) {
-								foreach($child["originatee_caller_profile"] as $key => $value) {
-									//print_r($tmp_child);
-									echo "				<tr >\n";
-									echo "					<td valign='top' align='left' width='20%' class='".$row_style[$c]."'>".escape($key)."&nbsp;</td>\n";
-									if ($key != "uuid") {
-										echo "					<td valign='top' align='left' class='".$row_style[$c]."'>".escape(wordwrap($value,75,"\n", true))."&nbsp;</td>\n";
+							if (isset($value[$key."_caller_profile"]) && is_array($value[$key."_caller_profile"])) {
+								echo "				<table width='100%'>\n";
+								foreach ($value[$key."_caller_profile"] as $key_2 => $value_2) {
+									if (is_numeric($key_2)) {
+										$group_output = false;
+										foreach ($value_2 as $key_3 => $value_3) {
+											echo "				<tr>\n";
+											if ($group_output == false) {
+												echo "					<td valign='top' align='left' width='10%' rowspan='".sizeof($value[$key."_caller_profile"][$key_2])."' class='".$row_style[$c]."'>".escape($key_2)."&nbsp;</td>\n";
+												$group_output = true;
+											}
+											echo "					<td valign='top' align='left' width='20%' class='".$row_style[$c]."'>".escape($key_3)."&nbsp;</td>\n";
+											if (is_array($value_3)) {
+												echo "					<td valign='top' align='left' class='".$row_style[$c]."'>".escape(implode('', $value_3))."&nbsp;</td>\n";
+											}
+											else {
+												echo "					<td valign='top' align='left' class='".$row_style[$c]."'>".escape(wordwrap($value_3,75,"\n", true))."&nbsp;</td>\n";
+											}
+											echo "				</tr>\n";
+										}
 									}
 									else {
-										echo "					<td valign='top' align='left' class='".$row_style[$c]."'><a href='xml_cdr_details.php?id=".urlencode($value)."'>".escape($value)."</a>&nbsp;</td>\n";
+										echo "				<tr>\n";
+										echo "					<td valign='top' align='left' width='20%' class='".$row_style[$c]."'>".escape($key_2)."&nbsp;</td>\n";
+										if (is_array($value_2)) {
+											echo "					<td valign='top' align='left' class='".$row_style[$c]."'>".escape(implode('', $value_2))."&nbsp;</td>\n";
+										}
+										else {
+											echo "					<td valign='top' align='left' class='".$row_style[$c]."'>".escape(wordwrap($value_2,75,"\n", true))."&nbsp;</td>\n";
+										}
+										echo "				</tr>\n";
 									}
-									echo "				</tr>\n";
 								}
+								unset($key_2, $value_2);
+								echo "				</table>\n";
+								echo "			</td>\n";
 							}
-							echo "				</table>\n";
-							echo "			</td>\n";
 						}
 						echo "</tr>\n";
 						$c = $c ? 0 : 1;

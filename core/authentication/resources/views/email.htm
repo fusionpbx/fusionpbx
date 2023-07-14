@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en' lang='en'>
+	<head>
+		<meta charset='utf-8' />
+		<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
+		<meta http-equiv='X-UA-Compatible' content='IE=edge' />
+		<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no' />
+		<link rel='stylesheet' type='text/css' href='{$project_path}/themes/default/css.php' />
+		<link rel='icon' href='{$favicon}'>
+		<script language='JavaScript' type='text/javascript' src='{$project_path}/resources/jquery/jquery.min.js.php'></script>
+		<script language='JavaScript' type='text/javascript'>
+
+			//message bar display
+			{literal}
+			function display_message(msg, mood, delay) {
+				mood = mood !== undefined ? mood : 'default';
+				delay = delay !== undefined ? delay : {/literal}{$message_delay}{literal};
+				if (msg !== '') {
+					var message_text = $(document.createElement('div'));
+					message_text.addClass('message_text message_mood_'+mood);
+					message_text.html(msg);
+					message_text.on('click', function() {
+						var object = $(this);
+						object.clearQueue().finish();
+						$('#message_container div').remove();
+						$('#message_container').css({opacity: 0, 'height': 0}).css({'height': 'auto'});
+					} );
+					$('#message_container').append(message_text);
+					message_text.css({'height': 'auto'}).animate({opacity: 1}, 250, function(){
+						$('#message_container').delay(delay).animate({opacity: 0, 'height': 0}, 500, function() {
+							$('#message_container div').remove();
+							$('#message_container').animate({opacity: 1}, 300).css({'height': 'auto'});
+						});
+					});
+				}
+			}
+			{/literal}
+
+			{literal}
+			$(document).ready(function() {
+				{/literal}
+
+				{$messages}
+
+				//message bar hide on hover
+					{literal}
+					$('#message_container').on('mouseenter',function() {
+						$('#message_container div').remove();
+						$('#message_container').css({opacity: 0, 'height': 0}).css({'height': 'auto'});
+					});
+					{/literal}
+
+			{literal}
+			}); //document ready end
+			{/literal}
+
+		</script>
+		<title>{$login_title}</title>
+	</head>
+	<body>
+		<div id='page' align='center'>
+			<div id='message_container'></div>
+			<div id='default_login'>
+				<a href='{$project_path}/'><img id='login_logo' style='width: {$login_logo_width}; height: {$login_logo_height};' src='{$login_logo_source}' /></a><br />
+				<form method='post' name='frm' action=''>
+					<div class='login_text'>
+						{$login_email_description}
+						<br /><br />
+						<input class='formfld' type='text' style='text-align: center; min-width: 200px; width: 200px; margin-bottom: 8px;' name='authentication_code' maxlength='255' placeholder="{$login_authentication_code}" />
+					</div>
+					<div>
+						<input type='submit' name='' class='btn' style='width: 100px; margin-top: 15px;' value='{$button_verify}' />
+						{if !empty($username)}
+							<br /><br />
+							<a class='login_link' href='{$project_path}/logout.php'>{$button_cancel}</a>
+						{/if}
+					</div>
+				</form>
+			</div>
+		</div>
+		<script>document.getElementsByName('authentication_code')[0].focus();</script>
+	</body>
+</html>

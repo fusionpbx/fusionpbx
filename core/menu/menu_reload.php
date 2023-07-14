@@ -17,16 +17,15 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2020
+	Portions created by the Initial Developer are Copyright (C) 2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//includes
-	include "root.php";
-	require_once "resources/require.php";
+//includes files
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 	
 //check permissions
@@ -55,7 +54,7 @@
 	unset($menu);
 
 //redirect the user
-	message::add($text['message-reload']);
+	//message::add($text['message-reload']);
 	header("Location: ".PROJECT_PATH."/core/menu/menu_edit.php?id=".urlencode($menu_uuid));
 	return;
 

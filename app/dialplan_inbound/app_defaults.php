@@ -27,7 +27,7 @@
 //if there are multiple domains then update the public dir path to include the domain
 	if ($domains_processed == 1) {
 		if (count($_SESSION["domains"]) > 1) {
-			if (is_dir($_SESSION['switch']['dialplan']['dir'].'/public')) {
+			if (!empty($_SESSION['switch']['dialplan']['dir']) && is_dir($_SESSION['switch']['dialplan']['dir'].'/public')) {
 				//clear out the old xml files
 					$v_needle = '_v_';
 					if($dh = opendir($_SESSION['switch']['dialplan']['dir'].'/public')) {
@@ -51,7 +51,7 @@
 
 //if the public directory doesn't exist then create it
 	if ($domains_processed == 1) {
-		if (strlen($_SESSION['switch']['dialplan']['dir']) > 0) {
+		if (!empty($_SESSION['switch']['dialplan']['dir'])) {
 			if (!is_dir($_SESSION['switch']['dialplan']['dir'].'/public')) {
 				mkdir($_SESSION['switch']['dialplan']['dir'].'/public', 0770, false);
 			}
@@ -61,7 +61,7 @@
 //if multiple domains then make sure that the dialplan/public/domain_name.xml file exists
 	if (count($_SESSION["domains"]) > 1) {
 		//make sure the public directory and xml file exist
-		if (strlen($_SESSION['switch']['dialplan']['dir']) > 0) {
+		if (!empty($_SESSION['switch']['dialplan']['dir'])) {
 			if (!is_dir($_SESSION['switch']['dialplan']['dir'].'/public'.$_SESSION['domains'][$domain_uuid]['domain_name'])) {
 				mkdir($_SESSION['switch']['dialplan']['dir'].'/public/'.$_SESSION['domains'][$domain_uuid]['domain_name'], 0770, false);
 			}

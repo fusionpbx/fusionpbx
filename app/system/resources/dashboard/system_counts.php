@@ -1,7 +1,7 @@
 <?php
 
-//includes
-	require_once "resources/require.php";
+//includes files
+	require_once dirname(__DIR__, 4) . "/resources/require.php";
 
 //check permisions
 	require_once "resources/check_auth.php";
@@ -11,6 +11,11 @@
 	else {
 		echo "access denied";
 		exit;
+	}
+
+//connect to the database
+	if (!isset($database)) {
+		$database = new database;
 	}
 
 //add multi-lingual support
@@ -34,7 +39,6 @@
 		$stats['domain']['devices']['total'] = 0;
 		$stats['domain']['devices']['disabled'] = 0;
 		$sql = "select domain_uuid, device_enabled from v_devices";
-		$database = new database;
 		$result = $database->select($sql, null, 'all');
 		if (is_array($result) && sizeof($result) != 0) {
 			$stats['system']['devices']['total'] = sizeof($result);
@@ -56,7 +60,6 @@
 		$stats['domain']['extensions']['total'] = 0;
 		$stats['domain']['extensions']['disabled'] = 0;
 		$sql = "select domain_uuid, enabled from v_extensions";
-		$database = new database;
 		$result = $database->select($sql, null, 'all');
 		if (is_array($result) && sizeof($result) != 0) {
 			$stats['system']['extensions']['total'] = sizeof($result);
@@ -78,7 +81,6 @@
 		$stats['domain']['gateways']['total'] = 0;
 		$stats['domain']['gateways']['disabled'] = 0;
 		$sql = "select domain_uuid, enabled from v_gateways";
-		$database = new database;
 		$result = $database->select($sql, null, 'all');
 		if (is_array($result) && sizeof($result) != 0) {
 			$stats['system']['gateways']['total'] = sizeof($result);
@@ -100,7 +102,6 @@
 		$stats['domain']['users']['total'] = 0;
 		$stats['domain']['users']['disabled'] = 0;
 		$sql = "select domain_uuid, user_enabled from v_users";
-		$database = new database;
 		$result = $database->select($sql, null, 'all');
 		if (is_array($result) && sizeof($result) != 0) {
 			$stats['system']['users']['total'] = sizeof($result);
@@ -122,7 +123,6 @@
 		$stats['domain']['destinations']['total'] = 0;
 		$stats['domain']['destinations']['disabled'] = 0;
 		$sql = "select domain_uuid, destination_enabled from v_destinations";
-		$database = new database;
 		$result = $database->select($sql, null, 'all');
 		if (is_array($result) && sizeof($result) != 0) {
 			$stats['system']['destinations']['total'] = sizeof($result);
@@ -144,7 +144,6 @@
 		$stats['domain']['call_center_queues']['total'] = 0;
 		$stats['domain']['call_center_queues']['disabled'] = 0;
 		$sql = "select domain_uuid from v_call_center_queues";
-		$database = new database;
 		$result = $database->select($sql, null, 'all');
 		if (is_array($result) && sizeof($result) != 0) {
 			$stats['system']['call_center_queues']['total'] = sizeof($result);
@@ -166,7 +165,6 @@
 		$stats['domain']['ivr_menus']['total'] = 0;
 		$stats['domain']['ivr_menus']['disabled'] = 0;
 		$sql = "select domain_uuid, ivr_menu_enabled from v_ivr_menus";
-		$database = new database;
 		$result = $database->select($sql, null, 'all');
 		if (is_array($result) && sizeof($result) != 0) {
 			$stats['system']['ivr_menus']['total'] = sizeof($result);
@@ -188,7 +186,6 @@
 		$stats['domain']['ring_groups']['total'] = 0;
 		$stats['domain']['ring_groups']['disabled'] = 0;
 		$sql = "select domain_uuid, ring_group_enabled from v_ring_groups";
-		$database = new database;
 		$result = $database->select($sql, null, 'all');
 		if (is_array($result) && sizeof($result) != 0) {
 			$stats['system']['ring_groups']['total'] = sizeof($result);
@@ -210,7 +207,6 @@
 		$stats['domain']['voicemails']['total'] = 0;
 		$stats['domain']['voicemails']['disabled'] = 0;
 		$sql = "select domain_uuid, voicemail_enabled from v_voicemails";
-		$database = new database;
 		$result = $database->select($sql, null, 'all');
 		if (is_array($result) && sizeof($result) != 0) {
 			$stats['system']['voicemails']['total'] = sizeof($result);
@@ -232,7 +228,6 @@
 		$stats['domain']['messages']['total'] = 0;
 		$stats['domain']['messages']['new'] = 0;
 		$sql = "select domain_uuid, message_status from v_voicemail_messages";
-		$database = new database;
 		$result = $database->select($sql, null, 'all');
 		if (is_array($result) && sizeof($result) != 0) {
 			$stats['system']['messages']['total'] = sizeof($result);
@@ -256,7 +251,6 @@
 	$sql = "select ";
 	$sql .= "(select count(*) from v_domains where domain_enabled = 'true') as active, ";
 	$sql .= "(select count(*) from v_domains where domain_enabled = 'false') as inactive; ";
-	$database = new database;
 	$row = $database->select($sql, null, 'row');
 	$domain_active = $row['active'];
 	$domain_inactive = $row['inactive'];
@@ -291,57 +285,51 @@
 	if ($show_stat) {
 		//add doughnut chart
 		?>
-		<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 20px;'>
+		<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 20px;' onclick="$('#hud_system_counts_details').slideToggle('fast');">
 			<div style='width: 250px; height: 175px;'><canvas id='system_counts_chart'></canvas></div>
 		</div>
 
 		<script>
-			var system_counts_chart_context = document.getElementById('system_counts_chart').getContext('2d');
-
-			const system_counts_chart_data = {
-				labels: ['<?php echo $text['label-inactive']; ?>: <?php echo $domain_inactive; ?>', '<?php echo $text['label-active']; ?>: <?php echo $domain_active; ?>'],
-				datasets: [{
-					data: ['<?php echo $domain_inactive; ?>', '<?php echo $domain_active; ?>'],
-					backgroundColor: [
-						'<?php echo $_SESSION['dashboard']['system_counts_chart_sub_background_color']['text']; ?>', 
-						'<?php echo $_SESSION['dashboard']['system_counts_chart_main_background_color']['text']; ?>'
-					],
-					borderColor: '<?php echo $_SESSION['dashboard']['system_counts_chart_border_color']['text']; ?>',
-					borderWidth: '<?php echo $_SESSION['dashboard']['system_counts_chart_border_width']['text']; ?>',
-					cutout: chart_cutout
-				}]
-			};
-
-			const system_counts_chart_config = {
-				type: 'doughnut',
-				data: system_counts_chart_data,
-				options: {
-				responsive: true,
-					maintainAspectRatio: false,
-					plugins: {
-						chart_counter: {
-							chart_text: '<?php echo $domain_total; ?>'
-						},
-						legend: {
-						position: 'right',
-							reverse: true,
-							labels: {
-								usePointStyle: true,
-								pointStyle: 'rect'
-							}
-						},
-						title: {
-							display: true,
-							text: '<?php echo $text['label-system_counts']; ?>'
-						}
-					}
-				},
-				plugins: [chart_counter],
-			};
-
 			const system_counts_chart = new Chart(
-				system_counts_chart_context,
-				system_counts_chart_config
+				document.getElementById('system_counts_chart').getContext('2d'),
+				{
+					type: 'doughnut',
+					data: {
+						labels: ['<?php echo $text['label-active']; ?>: <?php echo $domain_active; ?>', '<?php echo $text['label-inactive']; ?>: <?php echo $domain_inactive; ?>'],
+						datasets: [{
+							data: ['<?php echo $domain_active; ?>', '<?php echo $domain_inactive; ?>'],
+							backgroundColor: [
+								'<?php echo $_SESSION['dashboard']['system_counts_chart_main_background_color']['text']; ?>',
+								'<?php echo $_SESSION['dashboard']['system_counts_chart_sub_background_color']['text']; ?>'
+							],
+							borderColor: '<?php echo $_SESSION['dashboard']['system_counts_chart_border_color']['text']; ?>',
+							borderWidth: '<?php echo $_SESSION['dashboard']['system_counts_chart_border_width']['text']; ?>',
+							cutout: chart_cutout
+						}]
+					},
+					options: {
+					responsive: true,
+						maintainAspectRatio: false,
+						plugins: {
+							chart_counter: {
+								chart_text: '<?php echo $domain_total; ?>'
+							},
+							legend: {
+								position: 'right',
+								reverse: true,
+								labels: {
+									usePointStyle: true,
+									pointStyle: 'rect'
+								}
+							},
+							title: {
+								display: true,
+								text: '<?php echo $text['label-system_counts']; ?>'
+							}
+						}
+					},
+					plugins: [chart_counter],
+				}
 			);
 		</script>
 		<?php
@@ -484,7 +472,7 @@
 
 	echo "</table>\n";
 	echo "</div>";
-	$n++;
+	//$n++;
 
 	echo "<span class='hud_expander' onclick=\"$('#hud_system_counts_details').slideToggle('fast');\"><span class='fas fa-ellipsis-h'></span></span>\n";
 	echo "</div>\n";

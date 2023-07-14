@@ -24,9 +24,8 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//includes
-	include "root.php";
-	require_once "resources/require.php";
+//includes files
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -67,7 +66,7 @@
 					}
 				}
 			}
-			if (is_uuid($_REQUEST['uuid'])) {
+			if (!empty($_REQUEST['uuid']) && is_uuid($_REQUEST['uuid'])) {
 				$calls[] = $_REQUEST['uuid'];
 			}
 

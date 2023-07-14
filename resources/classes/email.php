@@ -67,16 +67,6 @@ if (!class_exists('email')) {
 		}
 
 		/**
-		 * called when there are no references to a particular object
-		 * unset the variables used in the class
-		 */
-		public function __destruct() {
-			foreach ($this as $key => $value) {
-				unset($this->$key);
-			}
-		}
-
-		/**
 		 * parse raw emails
 		 */
 		public function parse($message) {
@@ -172,7 +162,7 @@ if (!class_exists('email')) {
 					$body_part = $parts_array["BodyPart"];
 					$body_length = $parts_array["BodyLength"];
 
-					if (strlen($file) > 0) {
+					if (!empty($file)) {
 						//get the file information
 							$file_ext = pathinfo($file, PATHINFO_EXTENSION);
 							$file_name = substr($file, 0, (strlen($file) - strlen($file_ext))-1 );
@@ -256,24 +246,65 @@ if (!class_exists('email')) {
 				if (is_array($this->attachments) && sizeof($this->attachments) > 0) {
 					$y = 0;
 					foreach ($this->attachments as $attachment) {
-						//set the name of the file
-						if (strlen($attachment['value']) < 255 && file_exists($attachment['value'])) {
-							$attachment['name'] = $attachment['name'] != '' ? $attachment['name'] : basename($attachment['value']);
-							$attachment['type'] = strtolower(pathinfo($attachment['value'], PATHINFO_EXTENSION));
+						//set the name of the file, determine extension
+						if ($attachment['path'] && $attachment['name']) {
+							if (file_exists($attachment['path'] && $attachment['name'])) {
+								$attachment['type'] = strtolower(pathinfo($attachment['name'], PATHINFO_EXTENSION));
+							}
+						}
+						else if ($attachment['value']) {
+							//old method
+							if (strlen($attachment['value']) < 255 && file_exists($attachment['value'])) {
+								$attachment['name'] = $attachment['name'] != '' ? $attachment['name'] : basename($attachment['value']);
+								$attachment['path'] = pathinfo($attachment['value'], PATHINFO_DIRNAME);
+								$attachment['type'] = strtolower(pathinfo($attachment['value'], PATHINFO_EXTENSION));
+							}
+						}
+
+						//set the mime type
+						switch ($attachment['type']) {
+							case "jpg":
+							case "jpeg":
+								$attachment['mime_type'] = 'image/jpeg';
+								break;
+							case "gif":
+								$attachment['mime_type'] = 'image/gif';
+								break;
+							case "png":
+								$attachment['mime_type'] = 'image/png';
+								break;
+							case "pdf":
+								$attachment['mime_type'] = 'application/pdf';
+								break;
+							case "tif":
+							case "tiff":
+								$attachment['mime_type'] = 'image/tiff';
+								break;
+							case "mp3":
+								$attachment['mime_type'] = 'audio/mpeg';
+								break;
+							case "wav":
+								$attachment['mime_type'] = 'audio/x-wav';
+								break;
+							case "opus":
+								$attachment['mime_type'] = 'audio/opus';
+								break;
+							case "ogg":
+								$attachment['mime_type'] = 'audio/ogg';
+								break;
+							default:
+								$attachment['mime_type'] = 'binary/octet-stream';
 						}
 
 						//add the attachments to the array
 						$array['email_queue_attachments'][$y]['email_queue_attachment_uuid'] = uuid();
 						$array['email_queue_attachments'][$y]['email_queue_uuid'] = $email_queue_uuid;
 						$array['email_queue_attachments'][$y]['domain_uuid'] = $this->domain_uuid;
+						$array['email_queue_attachments'][$y]['email_attachment_mime_type'] = $attachment['mime_type'];
 						$array['email_queue_attachments'][$y]['email_attachment_type'] = $attachment['type'];
 						$array['email_queue_attachments'][$y]['email_attachment_name'] = $attachment['name'];
-						if (strlen($attachment['value']) < 255 && file_exists($attachment['value'])) {
-							$array['email_queue_attachments'][$y]['email_attachment_path'] = pathinfo($attachment['value'], PATHINFO_DIRNAME);
-						}
-						else {
-							$array['email_queue_attachments'][$y]['email_attachment_base64'] = base64_decode($attachment['value']);
-						}
+						$array['email_queue_attachments'][$y]['email_attachment_path'] = $attachment['path'];
+						$array['email_queue_attachments'][$y]['email_attachment_base64'] = $attachment['base64'];
 						$y++;
 					}
 				}
@@ -345,14 +376,14 @@ if (!class_exists('email')) {
 
 						Array (
 							[0] => Array (
-								[type] => file (or 'path')
+								[mime_type] => image/jpeg (will be determined by file extension, if empty)
 								[name] => filename.ext
-								[value] => /folder/filename.ext
+								[path] => /source/folder/ (not used if base64 content)
+								[base64] => file content as base64 (not used if name and path set)
+								[cid] => content id of file attachment (only used if referencing attached files in body content)
 								)
 							[1] => Array (
-								[type] => string
-								[name] => filename.ext
-								[value] => (string of file contents - if base64, will be decoded automatically)
+								...
 								)
 						)
 
@@ -367,7 +398,7 @@ if (!class_exists('email')) {
 					include_once("resources/phpmailer/class.smtp.php");
 
 					//use the session email default settings
-					if ($_SESSION['email']['smtp_hostname']['text'] != '') { 
+					if (!empty($_SESSION['email']['smtp_hostname']['text'])) {
 						$smtp['hostname'] = $_SESSION['email']['smtp_hostname']['text'];
 					}
 					$smtp['host'] 		= (strlen($_SESSION['email']['smtp_host']['text']) ? $_SESSION['email']['smtp_host']['text']: '127.0.0.1');
@@ -384,12 +415,12 @@ if (!class_exists('email')) {
 					$smtp['from'] 		= $_SESSION['email']['smtp_from']['text'];
 					$smtp['from_name'] 	= $_SESSION['email']['smtp_from_name']['text'];
 					$smtp['validate_certificate'] = $_SESSION['email']['smtp_validate_certificate']['boolean'];
-					$smtp['crypto_method'] = $_SESSION['email']['smtp_crypto_method']['text'];
+					$smtp['crypto_method'] = $_SESSION['email']['smtp_crypto_method']['text'] ?? null;
 
-					if (isset($_SESSION['voicemail']['smtp_from']) && strlen($_SESSION['voicemail']['smtp_from']['text']) > 0) {
+					if (isset($_SESSION['voicemail']['smtp_from']) && !empty($_SESSION['voicemail']['smtp_from']['text'])) {
 						$smtp['from'] = $_SESSION['voicemail']['smtp_from']['text'];
 					}
-					if (isset($_SESSION['voicemail']['smtp_from_name']) && strlen($_SESSION['voicemail']['smtp_from_name']['text']) > 0) {
+					if (isset($_SESSION['voicemail']['smtp_from_name']) && !empty($_SESSION['voicemail']['smtp_from_name']['text'])) {
 						$smtp['from_name'] = $_SESSION['voicemail']['smtp_from_name']['text'];
 					}
 
@@ -420,7 +451,7 @@ if (!class_exists('email')) {
 					//create the email object and set general settings
 					$mail = new PHPMailer();
 					$mail->IsSMTP();
-					if ($smtp['hostname'] != '') {
+					if (!empty($smtp['hostname'])) {
 						$mail->Hostname = $smtp['hostname'];
 					}
 					$mail->Host = $smtp['host'];
@@ -438,7 +469,7 @@ if (!class_exists('email')) {
 					}
 
 					$smtp_secure = true;
-					if ($smtp['secure']  == "") {
+					if ($smtp['secure'] == "") {
 						$mail->SMTPSecure = 'none';
 						$mail->SMTPAutoTLS = false;
 						$smtp_secure = false;
@@ -484,6 +515,8 @@ if (!class_exists('email')) {
 					if (is_numeric($this->debug_level) && $this->debug_level > 0) {
 						$mail->SMTPDebug = $this->debug_level;
 					}
+					$mail->Timeout       =   20; //set the timeout (seconds)
+    					$mail->SMTPKeepAlive = true; //don't close the connection between messages
 
 					//add the email recipients
 					$address_found = false;
@@ -519,49 +552,35 @@ if (!class_exists('email')) {
 					if (is_array($this->attachments) && sizeof($this->attachments) > 0) {
 						foreach ($this->attachments as $attachment) {
 
-							//set the name of the file
-							$attachment['name'] = $attachment['name'] != '' ? $attachment['name'] : basename($attachment['value']);
-
-							//set the mime type
-							switch (substr($attachment['name'], -4)) {
-								case ".png":
-									$attachment['mime_type'] = 'image/png';
-									break;
-								case ".pdf":
-									$attachment['mime_type'] = 'application/pdf';
-									break;
-								case ".mp3":
-									$attachment['mime_type'] = 'audio/mpeg';
-									break;
-								case ".wav":
-									$attachment['mime_type'] = 'audio/x-wav';
-									break;
-								case "opus":
-									$attachment['mime_type'] = 'audio/opus';
-									break;
-								case ".ogg":
-									$attachment['mime_type'] = 'audio/ogg';
-									break;
-							}
-
 							//add the attachments
-							if (strlen($attachment['value']) < 255 && file_exists($attachment['value'])) {
-								$mail->AddAttachment($attachment['value'], $attachment['name'], 'base64', $attachment['mime_type']);
+							if (file_exists($attachment['path'].'/'.$attachment['name'])) {
+								$mail->AddAttachment($attachment['path'].'/'.$attachment['name'], $attachment['name'], 'base64', $attachment['mime_type']);
 							}
 							else {
-								if (base64_encode(base64_decode($attachment['value'], true)) === $attachment['value']) {
-									$mail->AddStringAttachment(base64_decode($attachment['value']), $attachment['name'], 'base64', $attachment['mime_type']);
-								}
-								else {
-									$mail->AddStringAttachment($attachment['value'], $attachment['name'], 'base64', $attachment['mime_type']);
+								if ($attachment['base64']) {
+									if ($attachment['cid']) {
+										$mail->addStringEmbeddedImage(base64_decode($attachment['base64']), $attachment['cid'], $attachment['name'], 'base64', $attachment['mime_type']);
+									}
+									else {
+										$mail->AddStringAttachment(base64_decode($attachment['base64']), $attachment['name'], 'base64', $attachment['mime_type']);
+									}
 								}
 							}
 						}
 					}
 
+					//save output to a buffer
+					ob_start();
+
 					//send the email
-					if (!$mail->Send()) {
-						if (isset($mail->ErrorInfo) && strlen($mail->ErrorInfo) > 0) {
+					$mail_status = $mail->Send();
+
+					//get the output buffer
+					$this->response = ob_get_clean();
+
+					//send the email
+					if (!$mail_status) {
+						if (isset($mail->ErrorInfo) && !empty($mail->ErrorInfo)) {
 							$this->error = $mail->ErrorInfo;
 						}
 						return false;

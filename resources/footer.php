@@ -17,16 +17,15 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2022
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//includes
-	require_once "root.php";
-	require_once "resources/require.php";
+//includes files
+    require_once __DIR__ . "/require.php";
 
 //set variables if not set
 	//if (!isset($_SESSION["template_content"])) { $_SESSION["template_content"] = null; }
@@ -36,7 +35,7 @@
 	if (!isset($_SESSION["username"])) { $_SESSION["username"] = null; }
 
 //get the output from the buffer
-	$body = $content_from_db.ob_get_contents();
+	$body = ($content_from_db ?? '').ob_get_contents();
 	ob_end_clean(); //clean the buffer
 
 //clear the template
@@ -45,9 +44,9 @@
 	//}
 
 //set a default template
-	if (strlen($_SESSION["template_full_path"]) == 0) { //build template if session template has no length
+	if (empty($_SESSION["template_full_path"])) { //build template if session template has no length
 		$template_base_path = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/themes';
-		if (strlen($template_rss_sub_category) > 0) {
+		if (!empty($template_rss_sub_category)) {
 			//this template was assigned by the content manager
 				//get the contents of the template and save it to the template variable
 				$template_full_path = $template_base_path.'/'.$template_rss_sub_category.'/template.php';
@@ -81,6 +80,13 @@
 	$text_application = $language->get(null,'themes/'.$_SESSION['domain']['template']['name']);
 	$text = array_merge($text_default, $text_application);
 
+//create token
+	$object = new token;
+	$domain_json_token = $object->create('/core/domains/domain_json.php');
+
+//set the variable
+	$logo = '';
+
 //set template variables
 
 	//add translations
@@ -92,6 +98,9 @@
 		$view->assign('project_path', PROJECT_PATH);
 	//domain menu
 		$view->assign('domain_menu', escape($_SESSION['domain']['menu']['uuid']));
+	//domain json token
+		$view->assign('domain_json_token_name', $domain_json_token['name']);
+		$view->assign('domain_json_token_hash', $domain_json_token['hash']);
 	//theme settings
 		if (is_array($_SESSION['theme']) && @sizeof($_SESSION['theme']) != 0) {
 			//load into array
@@ -131,18 +140,21 @@
 								}
 					}
 				}
+
 			//pre-process some settings
-				$settings['theme']['favicon'] = $settings['theme']['favicon'] != '' ? $settings['theme']['favicon'] : PROJECT_PATH.'/themes/default/favicon.ico';
-				$settings['theme']['font_loader_version'] = $settings['theme']['font_loader_version'] != '' ? urlencode($settings['theme']['font_loader_version']) : '1';
-				$settings['theme']['message_delay'] = is_numeric($settings['theme']['message_delay']) ? 1000 * (float) $settings['theme']['message_delay'] : 3000;
-				$settings['theme']['menu_side_width_contracted'] = is_numeric($settings['theme']['menu_side_width_contracted']) ? $settings['theme']['menu_side_width_contracted'] : '60';
-				$settings['theme']['menu_side_width_expanded'] = is_numeric($settings['theme']['menu_side_width_expanded']) ? $settings['theme']['menu_side_width_expanded'] : '225';
-				$settings['theme']['menu_side_toggle_hover_delay_expand'] = is_numeric($settings['theme']['menu_side_toggle_hover_delay_expand']) ? $settings['theme']['menu_side_toggle_hover_delay_expand'] : '300';
-				$settings['theme']['menu_side_toggle_hover_delay_contract'] = is_numeric($settings['theme']['menu_side_toggle_hover_delay_contract']) ? $settings['theme']['menu_side_toggle_hover_delay_contract'] : '1000';
-				$settings['theme']['menu_style'] = $settings['theme']['menu_style'] != '' ? $settings['theme']['menu_style'] : 'fixed';
-				$settings['theme']['menu_position'] = $settings['theme']['menu_position'] != '' ? $settings['theme']['menu_position'] : 'top';
-				$settings['theme']['footer'] = $settings['theme']['footer'] != '' ? $settings['theme']['footer'] : '&copy; '.$text['theme-label-copyright'].' 2008 - '.date('Y')." <a href='http://www.fusionpbx.com' class='footer' target='_blank'>fusionpbx.com</a> ".$text['theme-label-all_rights_reserved'];
-			$view->assign('settings', $settings);
+				$settings['theme']['favicon'] = !empty($settings['theme']['favicon']) ? $settings['theme']['favicon'] : PROJECT_PATH.'/themes/default/favicon.ico';
+				$settings['theme']['font_loader_version'] = !empty($settings['theme']['font_loader_version']) ? urlencode($settings['theme']['font_loader_version']) : '1';
+				$settings['theme']['message_delay'] = isset($settings['theme']['message_delay']) ? 1000 * (float) $settings['theme']['message_delay'] : 3000;
+				$settings['theme']['menu_side_width_contracted'] = isset($settings['theme']['menu_side_width_contracted']) ? $settings['theme']['menu_side_width_contracted'] : '60';
+				$settings['theme']['menu_side_width_expanded'] = isset($settings['theme']['menu_side_width_expanded']) ? $settings['theme']['menu_side_width_expanded'] : '225';
+				$settings['theme']['menu_side_toggle_hover_delay_expand'] = isset($settings['theme']['menu_side_toggle_hover_delay_expand']) ? $settings['theme']['menu_side_toggle_hover_delay_expand'] : '300';
+				$settings['theme']['menu_side_toggle_hover_delay_contract'] = isset($settings['theme']['menu_side_toggle_hover_delay_contract']) ? $settings['theme']['menu_side_toggle_hover_delay_contract'] : '1000';
+				$settings['theme']['menu_style'] = !empty($settings['theme']['menu_style']) ? $settings['theme']['menu_style'] : 'fixed';
+				$settings['theme']['menu_position'] = isset($settings['theme']['menu_position']) ? $settings['theme']['menu_position'] : 'top';
+				$settings['theme']['footer'] = isset($settings['theme']['footer']) ? $settings['theme']['footer'] : '&copy; '.$text['theme-label-copyright'].' 2008 - '.date('Y')." <a href='http://www.fusionpbx.com' class='footer' target='_blank'>fusionpbx.com</a> ".$text['theme-label-all_rights_reserved'];
+
+			//assign the setings
+				$view->assign('settings', $settings);
 		}
 	//document title
 		if (isset($_SESSION['theme']['title']['text']) && $_SESSION['theme']['title']['text'] != '') {
@@ -151,7 +163,7 @@
 		else if (isset($_SESSION['software_name'])) {
 			$document_title = $_SESSION['software_name'];
 		}
-		$document_title = ($document['title'] != '' ? $document['title'].' - ' : null).$document_title;
+		$document_title = (!empty($document['title']) ? $document['title'].' - ' : null).$document_title;
 		$view->assign('document_title', $document_title);
 	//domain selector control
 		$domain_selector_enabled = permission_exists('domain_select') && count($_SESSION['domains']) > 1 ? true : false;
@@ -162,16 +174,16 @@
 		$view->assign('browser_name', $user_agent['name']);
 		$view->assign('browser_name_short', $user_agent['name_short']);
 	//login state
-		$authenticated = isset($_SESSION['username']) && $_SESSION['username'] != '' ? true : false;
+		$authenticated = isset($_SESSION['username']) && !empty($_SESSION['username']) ? true : false;
 		$view->assign('authenticated', $authenticated);
 	//domains application path
 		$view->assign('domains_app_path', PROJECT_PATH.(file_exists($_SERVER['DOCUMENT_ROOT'].'/app/domains/domains.php') ? '/app/domains/domains.php' : '/core/domains/domains.php'));
 	//domain count
 		$view->assign('domain_count', is_array($_SESSION['domains']) ? sizeof($_SESSION['domains']) : 0);
 	//domain selector row background colors
-		$view->assign('domain_selector_background_color_1', $_SESSION['theme']['domain_inactive_background_color'][0] != '' ? $_SESSION['theme']['domain_inactive_background_color'][0] : '#eaedf2');
-		$view->assign('domain_selector_background_color_2', $_SESSION['theme']['domain_inactive_background_color'][1] != '' ? $_SESSION['theme']['domain_inactive_background_color'][1] : '#ffffff');
-		$view->assign('domain_active_background_color', $_SESSION['theme']['domain_active_background_color']['text'] != '' ? $_SESSION['theme']['domain_active_background_color']['text'] : '#eeffee');
+		$view->assign('domain_selector_background_color_1', !empty($_SESSION['theme']['domain_inactive_background_color'][0]) != '' ? $_SESSION['theme']['domain_inactive_background_color'][0] : '#eaedf2');
+		$view->assign('domain_selector_background_color_2', !empty($_SESSION['theme']['domain_inactive_background_color'][1]) != '' ? $_SESSION['theme']['domain_inactive_background_color'][1] : '#ffffff');
+		$view->assign('domain_active_background_color', !empty($_SESSION['theme']['domain_active_background_color']['text']) ? $_SESSION['theme']['domain_active_background_color']['text'] : '#eeffee');
 	//domain list
 		$view->assign('domains', $_SESSION['domains']);
 	//domain uuid
@@ -256,8 +268,8 @@
 		$view->assign('login_logo_source', $login_logo_source);
 		$view->assign('login_logo_width', $login_logo_width);
 		$view->assign('login_logo_height', $login_logo_height);
-	//login page
-		$view->assign('login_page', $login_page);
+//login page
+	//$view->assign('login_page', $login_page);
 	//messages
 		$view->assign('messages', message::html(true, '		'));
 	//session timer

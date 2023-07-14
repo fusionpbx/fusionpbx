@@ -25,9 +25,8 @@
 	James Rose <james.o.rose@gmail.com>
 */
 
-//includes
-	require_once "root.php";
-	require_once "resources/require.php";
+//includes files
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -46,18 +45,18 @@
 //get the number of rows in v_extensions
 	$sql = " select count(*) from v_settings ";
 	$database = new database;
-	$num_rows = $database->select($sql, $parameters, 'column');
+	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 
 //set the action
 	$action = $num_rows == 0 ? "add" : "update";
 
 //get the http values and set them as php variables
-	if (count($_POST)>0) {
+	if (!empty($_POST)) {
 		//$numbering_plan = $_POST["numbering_plan"];
 		//$default_gateway = $_POST["default_gateway"];
 		$setting_uuid = $_POST["setting_uuid"];
 		$event_socket_ip_address = $_POST["event_socket_ip_address"];
-		if (strlen($event_socket_ip_address) == 0) { $event_socket_ip_address = '127.0.0.1'; }
+		if (empty($event_socket_ip_address)) { $event_socket_ip_address = '127.0.0.1'; }
 		$event_socket_port = $_POST["event_socket_port"];
 		$event_socket_password = $_POST["event_socket_password"];
 		$event_socket_acl = $_POST["event_socket_acl"];
@@ -70,23 +69,23 @@
 		$mod_shout_volume = $_POST["mod_shout_volume"];
 	}
 
-if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
+if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
 	//check for all required data
 		$msg = '';
-		//if (strlen($numbering_plan) == 0) { $msg .= "Please provide: Numbering Plan<br>\n"; }
-		//if (strlen($default_gateway) == 0) { $msg .= "Please provide: Default Gateway<br>\n"; }
-		if (strlen($event_socket_port) == 0) { $msg .= "Please provide: Event Socket Port<br>\n"; }
-		if (strlen($event_socket_password) == 0) { $msg .= "Please provide: Event Socket Password<br>\n"; }
-		//if (strlen($event_socket_acl) == 0) { $msg .= "Please provide: Event Socket ACL<br>\n"; }
-		//if (strlen($xml_rpc_http_port) == 0) { $msg .= "Please provide: XML RPC HTTP Port<br>\n"; }
-		//if (strlen($xml_rpc_auth_realm) == 0) { $msg .= "Please provide: XML RPC Auth Realm<br>\n"; }
-		//if (strlen($xml_rpc_auth_user) == 0) { $msg .= "Please provide: XML RPC Auth User<br>\n"; }
-		//if (strlen($xml_rpc_auth_pass) == 0) { $msg .= "Please provide: XML RPC Auth Password<br>\n"; }
-		//if (strlen($admin_pin) == 0) { $msg .= "Please provide: Admin PIN Number<br>\n"; }
-		//if (strlen($mod_shout_decoder) == 0) { $msg .= "Please provide: Mod Shout Decoder<br>\n"; }
-		//if (strlen($mod_shout_volume) == 0) { $msg .= "Please provide: Mod Shout Volume<br>\n"; }
-		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+		//if (empty($numbering_plan)) { $msg .= "Please provide: Numbering Plan<br>\n"; }
+		//if (empty($default_gateway)) { $msg .= "Please provide: Default Gateway<br>\n"; }
+		if (empty($event_socket_port)) { $msg .= "Please provide: Event Socket Port<br>\n"; }
+		if (empty($event_socket_password)) { $msg .= "Please provide: Event Socket Password<br>\n"; }
+		//if (empty($event_socket_acl)) { $msg .= "Please provide: Event Socket ACL<br>\n"; }
+		//if (empty($xml_rpc_http_port)) { $msg .= "Please provide: XML RPC HTTP Port<br>\n"; }
+		//if (empty($xml_rpc_auth_realm)) { $msg .= "Please provide: XML RPC Auth Realm<br>\n"; }
+		//if (empty($xml_rpc_auth_user)) { $msg .= "Please provide: XML RPC Auth User<br>\n"; }
+		//if (empty($xml_rpc_auth_pass)) { $msg .= "Please provide: XML RPC Auth Password<br>\n"; }
+		//if (empty($admin_pin)) { $msg .= "Please provide: Admin PIN Number<br>\n"; }
+		//if (empty($mod_shout_decoder)) { $msg .= "Please provide: Mod Shout Decoder<br>\n"; }
+		//if (empty($mod_shout_volume)) { $msg .= "Please provide: Mod Shout Volume<br>\n"; }
+		if (!empty($msg) && empty($_POST["persistformvar"])) {
 			require_once "resources/header.php";
 			require_once "resources/persist_form_var.php";
 			echo "<div align='center'>\n";
@@ -100,7 +99,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		}
 
 	//add or update the database
-		if ($_POST["persistformvar"] != "true") {
+		if (empty($_POST["persistformvar"])) {
 			if (permission_exists('setting_edit')) {
 				//build array
 					$array['settings'][0]['setting_uuid'] = $action == "add" ? uuid() : $setting_uuid;
@@ -148,11 +147,11 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 
 //pre-populate the form
-	if ($_POST["persistformvar"] != "true") {
+	if (empty($_POST["persistformvar"])) {
 		$sql = "select * from v_settings ";
 		$database = new database;
 		$row = $database->select($sql, null, 'row');
-		if (is_array($row) && @sizeof($row) != 0) {
+		if (!empty($row)) {
 			$setting_uuid = $row['setting_uuid'];
 			$event_socket_ip_address = $row["event_socket_ip_address"];
 			$event_socket_port = $row["event_socket_port"];
@@ -239,7 +238,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <input class='formfld' type='text' name='event_socket_acl' id='event_socket_acl' maxlength='50' value=\"".escape($event_socket_acl)."\">\n";
 	echo "<br />\n";
-	echo $text['description-event_socket_acl']."\n";
+	echo !empty($text['description-event_socket_acl'])."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 

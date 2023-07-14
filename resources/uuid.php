@@ -1,7 +1,9 @@
 <?php
 
-include "root.php";
-include "resources/functions.php";
-echo uuid();
+//includes files
+	require_once __DIR__ . "/functions.php";
+
+//show the uuid
+	echo uuid();
 
 ?>

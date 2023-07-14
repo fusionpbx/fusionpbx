@@ -1,8 +1,7 @@
 <?php
 
-//includes
-	require_once "root.php";
-	require_once "resources/require.php";
+//includes files
+	require_once dirname(__DIR__, 4) . "/resources/require.php";
 
 //check permisions
 	require_once "resources/check_auth.php";
@@ -27,18 +26,22 @@
 	$row_style["1"] = "row_style1";
 
 //get the CPU details
-	if (PHP_OS == 'FreeBSD' || PHP_OS == 'Linux') {
+	if (stristr(PHP_OS, 'BSD') || stristr(PHP_OS, 'Linux')) {
 
 		$result = shell_exec('ps -A -o pcpu');
 		$percent_cpu = 0;
 		foreach (explode("\n", $result) as $value) {
 			if (is_numeric($value)) { $percent_cpu = $percent_cpu + $value; }
 		}
+		if (stristr(PHP_OS, 'BSD')) {
+			$result = system("dmesg | grep -i --max-count 1 CPUs | sed 's/[^0-9]*//g'");
+			$cpu_cores = trim($result);
+		}
 		if (stristr(PHP_OS, 'Linux')) {
 			$result = trim(shell_exec("grep -P '^processor' /proc/cpuinfo"));
 			$cpu_cores = count(explode("\n", $result));
 		}
-		if ($percent_cpu > 1) { $percent_cpu = $percent_cpu / $cpu_cores; }
+		if ($cpu_cores > 1) { $percent_cpu = $percent_cpu / $cpu_cores; }
 		$percent_cpu = round($percent_cpu, 2);
 
 		//uptime
@@ -49,13 +52,11 @@
 
 //add half doughnut chart
 	?>
-	<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 20px'>
-		<div style='width: 175px; height: 175px; margin: 0 auto;'><canvas id='system_cpu_status_chart'></canvas></div>
+	<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 20px;' onclick="$('#hud_system_cpu_status_details').slideToggle('fast');">
+		<div><canvas id='system_cpu_status_chart' width='175px' height='175px' ></canvas></div>
 	</div>
 
 	<script>
-		var system_cpu_status_chart_context = document.getElementById('system_cpu_status_chart').getContext('2d');
-
 		var system_cpu_status_chart_background_color;
 		if ('<?php echo $percent_cpu; ?>' <= 60) {
 			system_cpu_status_chart_background_color = '<?php echo $_SESSION['dashboard']['cpu_usage_chart_main_background_color'][0]; ?>';
@@ -65,50 +66,46 @@
 			system_cpu_status_chart_background_color = '<?php echo $_SESSION['dashboard']['cpu_usage_chart_main_background_color'][2]; ?>';
 		}
 
-		const system_cpu_status_chart_data = {
-			datasets: [{
-				data: ['<?php echo $percent_cpu; ?>', 100 - '<?php echo $percent_cpu; ?>'],
-				backgroundColor: [
-					system_cpu_status_chart_background_color,
-					'<?php echo $_SESSION['dashboard']['cpu_usage_chart_sub_background_color']['text']; ?>'
-				],
-				borderColor: '<?php echo $_SESSION['dashboard']['cpu_usage_chart_border_color']['text']; ?>',
-				borderWidth: '<?php echo $_SESSION['dashboard']['cpu_usage_chart_border_width']['text']; ?>',
-				cutout: chart_cutout
-			}]
-		};
-
-		const system_cpu_status_chart_config = {
-			type: 'doughnut',
-			data: system_cpu_status_chart_data,
-			options: {
-				responsive: true,
-				maintainAspectRatio: false,
-				circumference: 180,
-				rotation: 270,
-				plugins: {
-					chart_counter_2: {
-						chart_text: '<?php echo $percent_cpu; ?>'
-					},
-					legend: {
-						display: false,
-					},
-					tooltip: {
-						yAlign: 'bottom',
-						displayColors: false,
-					},
-					title: {
-						display: true,
-						text: '<?php echo $text['label-cpu_usage']; ?>'
-					}
-				}
-			},
-			plugins: [chart_counter_2],
-		};
-
 		const system_cpu_status_chart = new Chart(
-			system_cpu_status_chart_context,
-			system_cpu_status_chart_config
+			document.getElementById('system_cpu_status_chart').getContext('2d'),
+			{
+				type: 'doughnut',
+				data: {
+					datasets: [{
+						data: ['<?php echo $percent_cpu; ?>', 100 - '<?php echo $percent_cpu; ?>'],
+						backgroundColor: [
+							system_cpu_status_chart_background_color,
+							'<?php echo $_SESSION['dashboard']['cpu_usage_chart_sub_background_color']['text']; ?>'
+						],
+						borderColor: '<?php echo $_SESSION['dashboard']['cpu_usage_chart_border_color']['text']; ?>',
+						borderWidth: '<?php echo $_SESSION['dashboard']['cpu_usage_chart_border_width']['text']; ?>',
+						cutout: chart_cutout
+					}]
+				},
+				options: {
+					responsive: true,
+					maintainAspectRatio: false,
+					circumference: 180,
+					rotation: 270,
+					plugins: {
+						chart_counter_2: {
+							chart_text: '<?php echo $percent_cpu; ?>'
+						},
+						legend: {
+							display: false,
+						},
+						tooltip: {
+							yAlign: 'bottom',
+							displayColors: false,
+						},
+						title: {
+							display: true,
+							text: '<?php echo $text['label-cpu_usage']; ?>'
+						}
+					}
+				},
+				plugins: [chart_counter_2],
+			}
 		);
 	</script>
 
@@ -123,7 +120,7 @@
 	echo "</tr>\n";
 
 	if (PHP_OS == 'FreeBSD' || PHP_OS == 'Linux') {
-		if ($percent_cpu != '') {
+		if (!empty($percent_cpu)) {
 			echo "<tr class='tr_link_void'>\n";
 			echo "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-cpu_usage']."</td>\n";
 			echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'>".$percent_cpu."%</td>\n";
@@ -131,7 +128,7 @@
 			$c = ($c) ? 0 : 1;
 		}
 
-		if ($cpu_cores != '') {
+		if (!empty($cpu_cores)) {
 			echo "<tr class='tr_link_void'>\n";
 			echo "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-cpu_cores']."</td>\n";
 			echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'>".$cpu_cores."</td>\n";
@@ -160,7 +157,7 @@
 
 	echo "</table>\n";
 	echo "</div>";
-	$n++;
+	//$n++;
 
 	echo "<span class='hud_expander' onclick=\"$('#hud_system_cpu_status_details').slideToggle('fast');\"><span class='fas fa-ellipsis-h'></span></span>";
 	echo "</div>\n";

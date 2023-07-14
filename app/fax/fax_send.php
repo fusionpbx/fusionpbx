@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2022
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -37,9 +37,8 @@
 //send email through browser
 if (!$included) {
 
-	//includes
-		include "root.php";
-		require_once "resources/require.php";
+	//includes files
+		require_once dirname(__DIR__, 2) . "/resources/require.php";
 		require_once "resources/check_auth.php";
 
 	//check permissions
@@ -61,7 +60,7 @@ if (!$included) {
 		}
 
 	//pre-populate the form
-		if (is_uuid($_REQUEST['id']) && $_POST["persistformvar"] != "true") {
+		if (!empty($_REQUEST['id']) && is_uuid($_REQUEST['id']) && (empty($_POST["persistformvar"]) || $_POST["persistformvar"] != "true")) {
 			$fax_uuid = $_REQUEST["id"];
 			if (permission_exists('fax_extension_view_domain')) {
 				//show all fax extensions
@@ -108,10 +107,12 @@ if (!$included) {
 		}
 
 	//set the fax directory
-		$fax_dir = $_SESSION['switch']['storage']['dir'].'/fax/'.$_SESSION['domain_name'];
+		if (!empty($_SESSION['switch']['storage']['dir'])) {
+			$fax_dir = $_SESSION['switch']['storage']['dir'].'/fax/'.$_SESSION['domain_name'];
+		}
 
 	//set fax cover font to generate pdf
-		$fax_cover_font = $_SESSION['fax']['cover_font']['text'];
+		$fax_cover_font = $_SESSION['fax']['cover_font']['text'] ?? null;
 }
 else {
 	require_once "resources/classes/event_socket.php";
@@ -151,20 +152,20 @@ if (!function_exists('fax_split_dtmf')) {
 }
 
 //get the fax extension
-	if (isset($fax_extension) && is_numeric($fax_extension)) {
+	if (isset($fax_dir) && isset($fax_extension) && is_numeric($fax_extension)) {
 		//set the fax directories. example /usr/local/freeswitch/storage/fax/329/inbox
 			$dir_fax_inbox = $fax_dir.'/'.$fax_extension.'/inbox';
 			$dir_fax_sent = $fax_dir.'/'.$fax_extension.'/sent';
 			$dir_fax_temp = $fax_dir.'/'.$fax_extension.'/temp';
 
 		//make sure the directories exist
-			if (!is_dir($_SESSION['switch']['storage']['dir'])) {
+			if (!empty($_SESSION['switch']['storage']['dir']) && !is_dir($_SESSION['switch']['storage']['dir'])) {
 				mkdir($_SESSION['switch']['storage']['dir'], 0770);
 			}
-			if (!is_dir($_SESSION['switch']['storage']['dir'].'/fax')) {
+			if (!empty($_SESSION['switch']['storage']['dir']) && !is_dir($_SESSION['switch']['storage']['dir'].'/fax')) {
 				mkdir($_SESSION['switch']['storage']['dir'].'/fax', 0770);
 			}
-			if (!is_dir($_SESSION['switch']['storage']['dir'].'/fax/'.$_SESSION['domain_name'])) {
+			if (!empty($_SESSION['switch']['storage']['dir']) && !is_dir($_SESSION['switch']['storage']['dir'].'/fax/'.$_SESSION['domain_name'])) {
 				mkdir($_SESSION['switch']['storage']['dir'].'/fax/'.$_SESSION['domain_name'], 0770);
 			}
 			if (!is_dir($fax_dir.'/'.$fax_extension)) {
@@ -181,13 +182,21 @@ if (!function_exists('fax_split_dtmf')) {
 			}
 	}
 
+//check if the domain is enabled
+if($_SESSION['domains'][$_SESSION['domain_uuid']]['domain_enabled'] == "1" || $_SESSION['domains'][$_SESSION['domain_uuid']]['domain_enabled'] == "true") {
+	$domain_enabled = true;
+}
+else {
+	$domain_enabled = false;
+}
+
 //clear file status cache
 	clearstatcache();
 
 //send the fax
 	$continue = false;
 	if (!$included) {
-		if (($_POST['action'] == "send")) {
+		if (!empty($_POST['action']) && $_POST['action'] == "send" && $domain_enabled == true) {
 			//get the values from the HTTP POST
 				$fax_numbers = $_POST['fax_numbers'];
 				$fax_uuid = $_POST["id"];
@@ -358,7 +367,7 @@ if (!function_exists('fax_split_dtmf')) {
 			$pdf->setPrintFooter(false);
 			$pdf->SetMargins(0, 0, 0, true);
 
-			if (strlen($fax_cover_font) > 0) {
+			if (!empty($fax_cover_font)) {
 				if (substr($fax_cover_font, -4) == '.ttf') {
 					$pdf_font = TCPDF_FONTS::addTTFfont($fax_cover_font);
 				}
@@ -367,7 +376,7 @@ if (!function_exists('fax_split_dtmf')) {
 				}
 			}
 
-			if (!$pdf_font) {
+			if (empty($pdf_font) || !$pdf_font) {
 				$pdf_font = 'times';
 			}
 
@@ -380,7 +389,7 @@ if (!function_exists('fax_split_dtmf')) {
 
 			//logo
 			$display_logo = false;
-			if (!is_array($_SESSION['fax']['cover_logo'])) {
+			if (empty($_SESSION['fax']['cover_logo']) || !is_array($_SESSION['fax']['cover_logo'])) {
 				$logo = $_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/fax/resources/images/logo.jpg";
 				$display_logo = true;
 			}
@@ -561,7 +570,7 @@ if (!function_exists('fax_split_dtmf')) {
 				$cmd = gs_cmd("-q -sDEVICE=tiffg32d -r".$gs_r." -g".$gs_g." -dBATCH -dPDFFitPage -dNOSAFER -dNOPAUSE -sOutputFile=".correct_path($fax_instance_uuid)."_cover.tif -- ".correct_path($fax_instance_uuid)."_cover.pdf -c quit");
 				// echo($cmd . "<br/>\n");
 				exec($cmd);
-				if (is_array($tif_files) && sizeof($tif_files) > 0) {
+				if (!empty($tif_files) && is_array($tif_files) && sizeof($tif_files) > 0) {
 					array_unshift($tif_files, $dir_fax_temp.'/'.$fax_instance_uuid.'_cover.tif');
 				}
 				else {
@@ -572,7 +581,7 @@ if (!function_exists('fax_split_dtmf')) {
 		}
 
 		//combine tif files into single multi-page tif
-		if (is_array($tif_files) && sizeof($tif_files) > 0) {
+		if (!empty($tif_files) && is_array($tif_files) && sizeof($tif_files) > 0) {
 			$cmd = exec('which tiffcp')." -c none ";
 			foreach ($tif_files as $tif_file) {
 				$cmd .= correct_path($tif_file) . ' ';
@@ -672,16 +681,16 @@ if (!function_exists('fax_split_dtmf')) {
 
 		//send the fax
 		$fax_file = $dir_fax_sent."/".$fax_instance_uuid.".tif";
-		$common_variables .= "fax_queue_uuid="               . $fax_queue_uuid          . ",";
-		$common_variables .= "accountcode='"                  . $fax_accountcode         . "',";
-		$common_variables .= "sip_h_accountcode='"          . $fax_accountcode         . "',";
-		$common_variables .= "domain_uuid="                   . $_SESSION["domain_uuid"] . ",";
-		$common_variables .= "domain_name="                   . $_SESSION["domain_name"] . ",";
-		$common_variables .= "origination_caller_id_name='"   . $fax_caller_id_name      . "',";
-		$common_variables .= "origination_caller_id_number='" . $fax_caller_id_number    . "',";
-		$common_variables .= "fax_ident='"                    . $fax_caller_id_number    . "',";
-		$common_variables .= "fax_header='"                   . $fax_caller_id_name      . "',";
-		$common_variables .= "fax_file='"                     . $fax_file               . "',";
+		$common_variables = "fax_queue_uuid=".$fax_queue_uuid.",";
+		$common_variables .= "accountcode='".$fax_accountcode."',";
+		$common_variables .= "sip_h_accountcode='".$fax_accountcode."',";
+		$common_variables .= "domain_uuid=".$_SESSION["domain_uuid"].",";
+		$common_variables .= "domain_name=".$_SESSION["domain_name"].",";
+		$common_variables .= "origination_caller_id_name='".$fax_caller_id_name."',";
+		$common_variables .= "origination_caller_id_number='".$fax_caller_id_number."',";
+		$common_variables .= "fax_ident='".$fax_caller_id_number."',";
+		$common_variables .= "fax_header='".$fax_caller_id_name."',";
+		$common_variables .= "fax_file='".$fax_file."',";
 
 		foreach ($fax_numbers as $fax_number) {
 
@@ -689,19 +698,22 @@ if (!function_exists('fax_split_dtmf')) {
 			fax_split_dtmf($fax_number, $fax_dtmf);
 
 			//prepare the fax command
-			if (strlen($fax_toll_allow) > 0) {
-				$channel_variables["toll_allow"] = $fax_toll_allow;
-			}
+			$channel_variables["toll_allow"] = !empty($fax_toll_allow) ? $fax_toll_allow : null;
 			$route_array = outbound_route_to_bridge($_SESSION['domain_uuid'], $fax_prefix . $fax_number, $channel_variables);
-			if (count($route_array) == 0) {
+			if (!empty($route_array) && count($route_array) == 0) {
 				//send the internal call to the registered extension
 				$fax_uri = "user/".$fax_number."@".$_SESSION['domain_name'];
 				$fax_variables = "";
 			}
 			else {
-				//send the external call
+				//prepare the fax uri
 				$fax_uri = $route_array[0];
-				$fax_variables = "";
+
+				//remove switch ${variables} from the bridge statement
+				$fax_uri = preg_replace('/\${[^}]+}/', '', $fax_uri);
+
+				//send the external call
+				$fax_variables = '';
 				foreach($_SESSION['fax']['variable'] as $variable) {
 					$fax_variables .= $variable.",";
 				}
@@ -718,76 +730,48 @@ if (!function_exists('fax_split_dtmf')) {
 			$dial_string .= "fax_retry_sleep=180"  . ",";
 			//$dial_string .= "fax_verbose=true"     . ",";
 			$dial_string .= "fax_use_ecm=off"      . ",";
-			if ($_SESSION['fax_queue']['enabled']['boolean']) {
-				$dial_string .= "api_hangup_hook='lua app/fax/resources/scripts/hangup_tx.lua'";
-			}
-			else {
-				$dial_string .= "api_hangup_hook='lua fax_retry.lua'";
-			}
+			$dial_string .= "api_hangup_hook='lua app/fax/resources/scripts/hangup_tx.lua'";
 			$dial_string  = "{" . $dial_string . "}" . $fax_uri." &txfax('".$fax_file."')";
 
-			//add fax to the fax queue or send it directly
-			if ($_SESSION['fax_queue']['enabled']['boolean']) {
-				//build an array to add the fax to the queue
-				$array['fax_queue'][0]['fax_queue_uuid'] = $fax_queue_uuid;
-				$array['fax_queue'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
-				$array['fax_queue'][0]['fax_uuid'] = $fax_uuid;
-				$array['fax_queue'][0]['fax_date'] = 'now()';
-				$array['fax_queue'][0]['hostname'] = gethostname();
-				$array['fax_queue'][0]['fax_caller_id_name'] = $fax_caller_id_name;
-				$array['fax_queue'][0]['fax_caller_id_number'] = $fax_caller_id_number;
-				$array['fax_queue'][0]['fax_number'] = $fax_number;
-				$array['fax_queue'][0]['fax_prefix'] = $fax_prefix;
-				$array['fax_queue'][0]['fax_email_address'] = $mail_to_address;
-				$array['fax_queue'][0]['fax_file'] = $fax_file;
-				$array['fax_queue'][0]['fax_status'] = 'waiting';
-				//$array['fax_queue'][0]['fax_retry_date'] = $fax_retry_date;
-				$array['fax_queue'][0]['fax_retry_count'] = 0;
-				$array['fax_queue'][0]['fax_accountcode'] = $fax_accountcode;
-				$array['fax_queue'][0]['fax_command'] = 'originate '.$dial_string;
+			//build an array to add the fax to the queue
+			$array['fax_queue'][0]['fax_queue_uuid'] = $fax_queue_uuid;
+			$array['fax_queue'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
+			$array['fax_queue'][0]['fax_uuid'] = $fax_uuid;
+			$array['fax_queue'][0]['fax_date'] = 'now()';
+			$array['fax_queue'][0]['hostname'] = gethostname();
+			$array['fax_queue'][0]['fax_caller_id_name'] = $fax_caller_id_name;
+			$array['fax_queue'][0]['fax_caller_id_number'] = $fax_caller_id_number;
+			$array['fax_queue'][0]['fax_number'] = $fax_number;
+			$array['fax_queue'][0]['fax_prefix'] = $fax_prefix;
+			$array['fax_queue'][0]['fax_email_address'] = $mail_to_address;
+			$array['fax_queue'][0]['fax_file'] = $fax_file;
+			$array['fax_queue'][0]['fax_status'] = 'waiting';
+			//$array['fax_queue'][0]['fax_retry_date'] = $fax_retry_date;
+			$array['fax_queue'][0]['fax_retry_count'] = 0;
+			$array['fax_queue'][0]['fax_accountcode'] = $fax_accountcode;
+			$array['fax_queue'][0]['fax_command'] = 'originate '.$dial_string;
 
-				//add temporary permisison
-				$p = new permissions;
-				$p->add('fax_queue_add', 'temp');
+			//add temporary permisison
+			$p = new permissions;
+			$p->add('fax_queue_add', 'temp');
 
-				//save the data
-				$database = new database;
-				$database->app_name = 'fax queue';
-				$database->app_uuid = '3656287f-4b22-4cf1-91f6-00386bf488f4';
-				$database->save($array);
+			//save the data
+			$database = new database;
+			$database->app_name = 'fax queue';
+			$database->app_uuid = '3656287f-4b22-4cf1-91f6-00386bf488f4';
+			$database->save($array);
 
-				//remove temporary permisison
-				$p->delete('fax_queue_add', 'temp');
-				
-				//add message to show in the browser
-				message::add($text['confirm-queued']);
-			}
-			else {
-				//send the fax directly
-				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-				if ($fp) {
-					$cmd = "api originate " . $dial_string;
-					$response = event_socket_request($fp, $cmd);
-					$response = str_replace("\n", "", $response);
-					$uuid = str_replace("+OK ", "", $response);
-				}
-				fclose($fp);
-				
-				//add message to show in the browser
-				message::add($text['confirm-sent']." ".$response);
-			}
+			//remove temporary permisison
+			$p->delete('fax_queue_add', 'temp');
+			
+			//add message to show in the browser
+			message::add($text['confirm-queued']);
 		}
 
 		//redirect the browser
 		if (!$included && is_uuid($fax_uuid)) {
-			if ($_SESSION['fax_queue']['enabled']['boolean']) {
-				//header("Location: ".PROJECT_PATH."/app/fax_queue/fax_queue.php?id=".$fax_uuid);
-				header("Location: ".PROJECT_PATH."fax.php");
-			}
-			else {
-				header("Location: fax_files.php?id=".$fax_uuid."&box=sent");
-				//header("Location: fax_outbox.php?id=".$fax_uuid);
-			}
+			header("Location: fax_files.php?id=".$fax_uuid."&box=sent");
+			//header("Location: fax_outbox.php?id=".$fax_uuid);
 			exit;
 		}
 
@@ -937,14 +921,20 @@ if (!$included) {
 		echo "	<div class='heading'><b>".$text['header-new_fax']."</b></div>\n";
 		echo "	<div class='actions'>\n";
 		echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'fax.php']);
+		if ($domain_enabled == true) {
 		echo button::create(['type'=>'submit','label'=>$text['button-preview'],'icon'=>'eye','name'=>'submit','value'=>'preview']);
 		echo button::create(['type'=>'submit','label'=>$text['button-send'],'icon'=>'paper-plane','id'=>'btn_save','name'=>'submit','value'=>'send','style'=>'margin-left: 15px;']);
+		}
 		echo "	</div>\n";
 		echo "	<div style='clear: both;'></div>\n";
 		echo "</div>\n";
 		echo $text['description-2']." ".(permission_exists('fax_extension_view_domain') ? $text['description-3'] : null)."\n";
 		echo "<br /><br />\n";
-
+		
+		if ($domain_enabled == false) {
+		echo "<div class='warning_bar'>".$text['notice-sending-disabled']."</div>\n";
+		}
+		
 		echo "<table width='100%' border='0' cellspacing='0' cellpadding='0'>\n";
 
 		echo "<tr>\n";
@@ -952,7 +942,7 @@ if (!$included) {
 		echo "	".$text['label-fax-header']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<input type='text' name='fax_header' class='formfld' style='' value='".$_SESSION['fax']['cover_header']['text']."'>\n";
+		echo "	<input type='text' name='fax_header' class='formfld' style='' value='".($_SESSION['fax']['cover_header']['text'] ?? '')."'>\n";
 		echo "	<br />\n";
 		echo "	".$text['description-fax-header']."\n";
 		echo "</td>\n";

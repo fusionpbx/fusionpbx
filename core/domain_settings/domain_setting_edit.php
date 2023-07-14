@@ -17,16 +17,15 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2021
+ Portions created by the Initial Developer are Copyright (C) 2008-2023
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
  Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//includes
-	require_once "root.php";
-	require_once "resources/require.php";
+//includes files
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -44,17 +43,17 @@
 
 //retrieve allowed setting categories
 	if (!permission_exists('domain_setting_category_edit')) {
-		if (is_array($_SESSION['settings']) && sizeof($_SESSION['settings']) > 0) {
+		if (!empty($_SESSION['settings'])) {
 			foreach ($_SESSION['groups'] as $index => $group) {
 				$group_name = $group['group_name'];
-				if (is_array($_SESSION['settings'][$group_name]) && sizeof($_SESSION['settings'][$group_name]) > 0) {
+				if (!empty($_SESSION['settings'][$group_name])) {
 					foreach ($_SESSION['settings'][$group_name] as $category) {
 						$categories[] = strtolower($category);
 					}
 				}
 			}
 		}
-		if (is_array($categories) && sizeof($categories) > 0) {
+		if (!empty($categories)) {
 			$allowed_categories = array_unique($categories);
 			sort($allowed_categories, SORT_NATURAL);
 		}
@@ -62,7 +61,7 @@
 	}
 
 //action add or update
-	if (is_uuid($_REQUEST["id"])) {
+	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
 		$domain_setting_uuid = $_REQUEST["id"];
 	}
@@ -71,259 +70,262 @@
 	}
 
 //set the domain_uuid
-	if (is_uuid($_GET["domain_uuid"])) {
+	if (!empty($_GET["domain_uuid"]) && is_uuid($_GET["domain_uuid"])) {
 		$domain_uuid = $_GET["domain_uuid"];
 	}
 
 //get http post variables and set them to php variables
-	if (count($_POST) > 0) {
+	if (!empty($_POST)) {
 		$domain_setting_category = strtolower($_POST["domain_setting_category"]);
 		$domain_setting_subcategory = strtolower($_POST["domain_setting_subcategory"]);
 		$domain_setting_name = strtolower($_POST["domain_setting_name"]);
 		$domain_setting_value = $_POST["domain_setting_value"];
 		$domain_setting_order = $_POST["domain_setting_order"];
-		$domain_setting_enabled = strtolower($_POST["domain_setting_enabled"]);
+		$domain_setting_enabled = strtolower($_POST["domain_setting_enabled"] ?? 'false');
 		$domain_setting_description = $_POST["domain_setting_description"];
 	}
 
-if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+//process the data
+	if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
-	$msg = '';
-	if ($action == "update") {
-		$domain_setting_uuid = $_POST["domain_setting_uuid"];
-	}
+		//get the domain setting uuid
+			if ($action == "update" && !empty($_POST["domain_setting_uuid"])) {
+				$domain_setting_uuid = $_POST["domain_setting_uuid"];
+			}
 
-	//validate the token
-		$token = new token;
-		if (!$token->validate($_SERVER['PHP_SELF'])) {
-			message::add($text['message-invalid_token'],'negative');
-			header('Location: ../domains/domain_edit.php?id='.$domain_uuid);
-			exit;
-		}
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: ../domains/domain_edit.php?id='.$domain_uuid);
+				exit;
+			}
 
-	//check for all required/authorized data
-		if (strlen($domain_setting_category) == 0 || (is_array($allowed_categories) && sizeof($allowed_categories) > 0 && !in_array(strtolower($domain_setting_category), $allowed_categories))) { $msg .= $text['message-required'].$text['label-category']."<br>\n"; }
-		if (strlen($domain_setting_subcategory) == 0) { $msg .= $text['message-required'].$text['label-subcategory']."<br>\n"; }
-		if (strlen($domain_setting_name) == 0) { $msg .= $text['message-required'].$text['label-type']."<br>\n"; }
-		//if (strlen($domain_setting_value) == 0) { $msg .= $text['message-required'].$text['label-value']."<br>\n"; }
-		if (strlen($domain_setting_order) == 0) { $msg .= $text['message-required'].$text['label-order']."<br>\n"; }
-		if (strlen($domain_setting_enabled) == 0) { $msg .= $text['message-required'].$text['label-enabled']."<br>\n"; }
-		//if (strlen($domain_setting_description) == 0) { $msg .= $text['message-required'].$text['label-description']."<br>\n"; }
-		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
-			require_once "resources/header.php";
-			require_once "resources/persist_form_var.php";
-			echo "<div align='center'>\n";
-			echo "<table><tr><td>\n";
-			echo $msg."<br />";
-			echo "</td></tr></table>\n";
-			persistformvar($_POST);
-			echo "</div>\n";
-			require_once "resources/footer.php";
-			return;
-		}
+		//check for all required/authorized data
+			$msg = '';
+			if (empty($domain_setting_category) || (!empty($allowed_categories) && !in_array(strtolower($domain_setting_category), $allowed_categories))) { $msg .= $text['message-required'].$text['label-category']."<br>\n"; }
+			if (empty($domain_setting_subcategory)) { $msg .= $text['message-required'].$text['label-subcategory']."<br>\n"; }
+			if (empty($domain_setting_name)) { $msg .= $text['message-required'].$text['label-type']."<br>\n"; }
+			//if (empty($domain_setting_value)) { $msg .= $text['message-required'].$text['label-value']."<br>\n"; }
+			if (empty($domain_setting_order)) { $msg .= $text['message-required'].$text['label-order']."<br>\n"; }
+			if (empty($domain_setting_enabled)) { $msg .= $text['message-required'].$text['label-enabled']."<br>\n"; }
+			//if (empty($domain_setting_description)) { $msg .= $text['message-required'].$text['label-description']."<br>\n"; }
+			if (!empty($msg) && empty($_POST["persistformvar"])) {
+				require_once "resources/header.php";
+				require_once "resources/persist_form_var.php";
+				echo "<div align='center'>\n";
+				echo "<table><tr><td>\n";
+				echo $msg."<br />";
+				echo "</td></tr></table>\n";
+				persistformvar($_POST);
+				echo "</div>\n";
+				require_once "resources/footer.php";
+				return;
+			}
 
-	//add or update the database
-		if ($_POST["persistformvar"] != "true") {
-			// fix null
-				$domain_setting_order = $domain_setting_order != '' ? $domain_setting_order : 'null';
+		//add or update the database
+			if (empty($_POST["persistformvar"])) {
+				// fix null
+					$domain_setting_order = !empty($domain_setting_order) ? $domain_setting_order : 'null';
 
-			//update switch timezone variables
-				if ($domain_setting_category == "domain" && $domain_setting_subcategory == "time_zone" && $domain_setting_name == "name" ) {
-					//get the dialplan_uuid
-						$sql = "select dialplan_uuid from v_dialplans ";
-						$sql .= "where domain_uuid = :domain_uuid ";
-						$sql .= "and app_uuid = '9f356fe7-8cf8-4c14-8fe2-6daf89304458' ";
-						$parameters['domain_uuid'] = $domain_uuid;
-						$database = new database;
-						$dialplan_uuid = $database->select($sql, $parameters, 'column');
-						unset($sql, $parameters);
-
-					//get the action
-						$sql = "select dialplan_detail_uuid from v_dialplan_details ";
-						$sql .= "where domain_uuid = :domain_uuid ";
-						$sql .= "and dialplan_uuid = :dialplan_uuid ";
-						$sql .= "and dialplan_detail_tag = 'action' ";
-						$sql .= "and dialplan_detail_type = 'set' ";
-						$sql .= "and dialplan_detail_data like 'timezone=%' ";
-						$parameters['domain_uuid'] = $domain_uuid;
-						$parameters['dialplan_uuid'] = $dialplan_uuid;
-						$database = new database;
-						$dialplan_detail_uuid = $database->select($sql, $parameters, 'column');
-						$detail_action = is_uuid($dialplan_detail_uuid) ? 'update' : 'add';
-						unset($sql, $parameters);
-
-					//update the timezone
-						$p = new permissions;
-						if ($detail_action == "update") {
-							$array['dialplan_details'][0]['dialplan_detail_uuid'] = $dialplan_detail_uuid;
-							$array['dialplan_details'][0]['dialplan_detail_data'] = 'timezone='.$domain_setting_value;
-							$p->add('dialplan_detail_edit', 'temp');
-						}
-						else {
-							$array['dialplan_details'][0]['dialplan_detail_uuid'] = uuid();
-							$array['dialplan_details'][0]['domain_uuid'] = $domain_uuid;
-							$array['dialplan_details'][0]['dialplan_uuid'] = $dialplan_uuid;
-							$array['dialplan_details'][0]['dialplan_detail_tag'] = 'action';
-							$array['dialplan_details'][0]['dialplan_detail_type'] = 'set';
-							$array['dialplan_details'][0]['dialplan_detail_data'] = 'timezone='.$domain_setting_value;
-							$array['dialplan_details'][0]['dialplan_detail_inline'] = 'true';
-							$array['dialplan_details'][0]['dialplan_detail_group'] = '0';
-							$array['dialplan_details'][0]['dialplan_detail_order'] = '20';
-							$p->add('dialplan_detail_add', 'temp');
-						}
-						if (is_array($array) && sizeof($array) != 0) {
+				//update switch timezone variables
+					if ($domain_setting_category == "domain" && $domain_setting_subcategory == "time_zone" && $domain_setting_name == "name" ) {
+						//get the dialplan_uuid
+							$sql = "select dialplan_uuid from v_dialplans ";
+							$sql .= "where domain_uuid = :domain_uuid ";
+							$sql .= "and app_uuid = '9f356fe7-8cf8-4c14-8fe2-6daf89304458' ";
+							$parameters['domain_uuid'] = $domain_uuid;
 							$database = new database;
-							$database->app_name = 'domain_settings';
-							$database->app_uuid = 'b31e723a-bf70-670c-a49b-470d2a232f71';
-							$database->save($array);
-							unset($array);
+							$dialplan_uuid = $database->select($sql, $parameters, 'column');
+							unset($sql, $parameters);
 
-							$p->delete('dialplan_detail_edit', 'temp');
-							$p->delete('dialplan_detail_add', 'temp');
-						}
+						//get the action
+							$sql = "select dialplan_detail_uuid from v_dialplan_details ";
+							$sql .= "where domain_uuid = :domain_uuid ";
+							$sql .= "and dialplan_uuid = :dialplan_uuid ";
+							$sql .= "and dialplan_detail_tag = 'action' ";
+							$sql .= "and dialplan_detail_type = 'set' ";
+							$sql .= "and dialplan_detail_data like 'timezone=%' ";
+							$parameters['domain_uuid'] = $domain_uuid;
+							$parameters['dialplan_uuid'] = $dialplan_uuid;
+							$database = new database;
+							$dialplan_detail_uuid = $database->select($sql, $parameters, 'column');
+							$detail_action = is_uuid($dialplan_detail_uuid) ? 'update' : 'add';
+							unset($sql, $parameters);
 
-					//get the dialplan uuid
-						$sql = "select domain_name from v_domains ";
-						$sql .= "where domain_uuid = :domain_uuid ";
-						$parameters['domain_uuid'] = $domain_uuid;
+						//update the timezone
+							$p = new permissions;
+							if ($detail_action == "update") {
+								$array['dialplan_details'][0]['dialplan_detail_uuid'] = $dialplan_detail_uuid;
+								$array['dialplan_details'][0]['dialplan_detail_data'] = 'timezone='.$domain_setting_value;
+								$p->add('dialplan_detail_edit', 'temp');
+							}
+							else {
+								$array['dialplan_details'][0]['dialplan_detail_uuid'] = uuid();
+								$array['dialplan_details'][0]['domain_uuid'] = $domain_uuid;
+								$array['dialplan_details'][0]['dialplan_uuid'] = $dialplan_uuid;
+								$array['dialplan_details'][0]['dialplan_detail_tag'] = 'action';
+								$array['dialplan_details'][0]['dialplan_detail_type'] = 'set';
+								$array['dialplan_details'][0]['dialplan_detail_data'] = 'timezone='.$domain_setting_value;
+								$array['dialplan_details'][0]['dialplan_detail_inline'] = 'true';
+								$array['dialplan_details'][0]['dialplan_detail_group'] = '0';
+								$array['dialplan_details'][0]['dialplan_detail_order'] = '20';
+								$p->add('dialplan_detail_add', 'temp');
+							}
+
+							if (!empty($array)) {
+								$database = new database;
+								$database->app_name = 'domain_settings';
+								$database->app_uuid = 'b31e723a-bf70-670c-a49b-470d2a232f71';
+								$database->save($array);
+								unset($array);
+
+								$p->delete('dialplan_detail_edit', 'temp');
+								$p->delete('dialplan_detail_add', 'temp');
+							}
+
+						//get the dialplan uuid
+							$sql = "select domain_name from v_domains ";
+							$sql .= "where domain_uuid = :domain_uuid ";
+							$parameters['domain_uuid'] = $domain_uuid;
+							$database = new database;
+							$domain_name = $database->select($sql, $parameters, 'column');
+							unset($sql, $parameters);
+
+						//update the dialplan xml
+							$dialplans = new dialplan;
+							$dialplans->source = "details";
+							$dialplans->destination = "database";
+							$dialplans->uuid = $dialplan_uuid;
+							$dialplans->xml();
+
+						//clear the cache
+							$cache = new cache;
+							$cache->delete("dialplan:".$domain_name);
+					}
+
+				//add
+					if ($action == "add" && permission_exists('domain_setting_add')) {
+						$array['domain_settings'][0]['domain_setting_uuid'] = uuid();
+					}
+
+				//update
+					if ($action == "update" && permission_exists('domain_setting_edit')) {
+						$array['domain_settings'][0]['domain_setting_uuid'] = $domain_setting_uuid;
+					}
+				//execute
+					if (is_uuid($array['domain_settings'][0]['domain_setting_uuid'])) {
+						$array['domain_settings'][0]['domain_uuid'] = $domain_uuid;
+						$array['domain_settings'][0]['domain_setting_category'] = $domain_setting_category;
+						$array['domain_settings'][0]['domain_setting_subcategory'] = $domain_setting_subcategory;
+						$array['domain_settings'][0]['domain_setting_name'] = $domain_setting_name;
+						$array['domain_settings'][0]['domain_setting_value'] = $domain_setting_value;
+						$array['domain_settings'][0]['domain_setting_order'] = $domain_setting_order;
+						$array['domain_settings'][0]['domain_setting_enabled'] = $domain_setting_enabled;
+						$array['domain_settings'][0]['domain_setting_description'] = $domain_setting_description;
 						$database = new database;
-						$domain_name = $database->select($sql, $parameters, 'column');
+						$database->app_name = 'domain_settings';
+						$database->app_uuid = 'b31e723a-bf70-670c-a49b-470d2a232f71';
+						$database->save($array);
+						unset($array);
+					}
+
+				//update time zone
+					if ($domain_setting_category == "domain" && $domain_setting_subcategory == "time_zone" && $domain_setting_name == "name" && !empty($domain_setting_value) ) {
+						$sql = "select * from v_dialplans ";
+						$sql .= "where app_uuid = '34dd307b-fffe-4ead-990c-3d070e288126' ";
+						$sql .= "and domain_uuid = :domain_uuid ";
+						$parameters['domain_uuid'] = $_SESSION["domain_uuid"];
+						$database = new database;
+						$result = $database->select($sql, $parameters, 'all');
 						unset($sql, $parameters);
 
-					//update the dialplan xml
-						$dialplans = new dialplan;
-						$dialplans->source = "details";
-						$dialplans->destination = "database";
-						$dialplans->uuid = $dialplan_uuid;
-						$dialplans->xml();
+						$time_zone_found = false;
+						if (!empty($result)) {
+							foreach ($result as &$row) {
+								//get the dialplan_uuid
+									$dialplan_uuid = $row["dialplan_uuid"];
 
-					//clear the cache
-						$cache = new cache;
-						$cache->delete("dialplan:".$domain_name);
-				}
-
-			//add
-				if ($action == "add" && permission_exists('domain_setting_add')) {
-					$array['domain_settings'][0]['domain_setting_uuid'] = uuid();
-				}
-
-			//update
-				if ($action == "update" && permission_exists('domain_setting_edit')) {
-					$array['domain_settings'][0]['domain_setting_uuid'] = $domain_setting_uuid;
-				}
-			//execute
-				if (is_uuid($array['domain_settings'][0]['domain_setting_uuid'])) {
-					$array['domain_settings'][0]['domain_uuid'] = $domain_uuid;
-					$array['domain_settings'][0]['domain_setting_category'] = $domain_setting_category;
-					$array['domain_settings'][0]['domain_setting_subcategory'] = $domain_setting_subcategory;
-					$array['domain_settings'][0]['domain_setting_name'] = $domain_setting_name;
-					$array['domain_settings'][0]['domain_setting_value'] = $domain_setting_value;
-					$array['domain_settings'][0]['domain_setting_order'] = $domain_setting_order;
-					$array['domain_settings'][0]['domain_setting_enabled'] = $domain_setting_enabled;
-					$array['domain_settings'][0]['domain_setting_description'] = $domain_setting_description;
-					$database = new database;
-					$database->app_name = 'domain_settings';
-					$database->app_uuid = 'b31e723a-bf70-670c-a49b-470d2a232f71';
-					$database->save($array);
-					unset($array);
-				}
-
-			//update time zone
-				if ($domain_setting_category == "domain" && $domain_setting_subcategory == "time_zone" && $domain_setting_name == "name" && strlen($domain_setting_value) > 0 ) {
-					$sql = "select * from v_dialplans ";
-					$sql .= "where app_uuid = '34dd307b-fffe-4ead-990c-3d070e288126' ";
-					$sql .= "and domain_uuid = :domain_uuid ";
-					$parameters['domain_uuid'] = $_SESSION["domain_uuid"];
-					$database = new database;
-					$result = $database->select($sql, $parameters, 'all');
-					unset($sql, $parameters);
-
-					$time_zone_found = false;
-					if (is_array($result) && sizeof($result) != 0) {
-						foreach ($result as &$row) {
-							//get the dialplan_uuid
-								$dialplan_uuid = $row["dialplan_uuid"];
-
-							//get the dialplan details
-								$sql = "select * from v_dialplan_details ";
-								$sql .= "where dialplan_uuid = :dialplan_uuid ";
-								$sql .= "and domain_uuid = :domain_uuid ";
-								$parameters['dialplan_uuid'] = $dialplan_uuid;
-								$parameters['domain_uuid'] = $_SESSION["domain_uuid"];
-								$database = new database;
-								$sub_result = $database->select($sql, $parameters, 'all');
-								if (is_array($sub_result) && sizeof($sub_result) != 0) {
-									foreach ($sub_result as $field) {
-										$dialplan_detail_uuid = $field["dialplan_detail_uuid"];
-										$dialplan_detail_tag = $field["dialplan_detail_tag"]; //action //condition
-										$dialplan_detail_type = $field["dialplan_detail_type"]; //set
-										$dialplan_detail_data = $field["dialplan_detail_data"];
-										$dialplan_detail_group = $field["dialplan_detail_group"];
-										if ($dialplan_detail_tag == "action" && $dialplan_detail_type == "set") {
-											$data_array = explode("=", $dialplan_detail_data);
-											if ($data_array[0] == "timezone") {
-												$time_zone_found = true;
-												break;
+								//get the dialplan details
+									$sql = "select * from v_dialplan_details ";
+									$sql .= "where dialplan_uuid = :dialplan_uuid ";
+									$sql .= "and domain_uuid = :domain_uuid ";
+									$parameters['dialplan_uuid'] = $dialplan_uuid;
+									$parameters['domain_uuid'] = $_SESSION["domain_uuid"];
+									$database = new database;
+									$sub_result = $database->select($sql, $parameters, 'all');
+									if (!empty($sub_result)) {
+										foreach ($sub_result as $field) {
+											$dialplan_detail_uuid = $field["dialplan_detail_uuid"];
+											$dialplan_detail_tag = $field["dialplan_detail_tag"]; //action //condition
+											$dialplan_detail_type = $field["dialplan_detail_type"]; //set
+											$dialplan_detail_data = $field["dialplan_detail_data"];
+											$dialplan_detail_group = $field["dialplan_detail_group"];
+											if ($dialplan_detail_tag == "action" && $dialplan_detail_type == "set") {
+												$data_array = explode("=", $dialplan_detail_data);
+												if ($data_array[0] == "timezone") {
+													$time_zone_found = true;
+													break;
+												}
 											}
 										}
 									}
-								}
-								unset($sql, $parameters, $sub_result, $field);
+									unset($sql, $parameters, $sub_result, $field);
 
-							//add the time zone
-								if (!$time_zone_found) {
-									$dialplan_detail_uuid = "eb3b3a4e-88ea-4306-b2a8-9f52d3c95f2f";
-									$array['dialplan_details'][0]['domain_uuid'] = $_SESSION["domain_uuid"]; //8cfd9525-6ccf-4c2c-813a-bca5809067cd
-									$array['dialplan_details'][0]['dialplan_uuid'] = $dialplan_uuid; //807b4aa6-4478-4663-a661-779397c1d542
-									$array['dialplan_details'][0]['dialplan_detail_uuid'] = $dialplan_detail_uuid;
-									$array['dialplan_details'][0]['dialplan_detail_tag'] = 'action';
-									$array['dialplan_details'][0]['dialplan_detail_type'] = 'set';
-									$array['dialplan_details'][0]['dialplan_detail_data'] = 'timezone='.$domain_setting_value;
-									$array['dialplan_details'][0]['dialplan_detail_group'] = $dialplan_detail_group;
-									$array['dialplan_details'][0]['dialplan_detail_order'] = '15';
+								//add the time zone
+									if (!$time_zone_found) {
+										$dialplan_detail_uuid = "eb3b3a4e-88ea-4306-b2a8-9f52d3c95f2f";
+										$array['dialplan_details'][0]['domain_uuid'] = $_SESSION["domain_uuid"]; //8cfd9525-6ccf-4c2c-813a-bca5809067cd
+										$array['dialplan_details'][0]['dialplan_uuid'] = $dialplan_uuid; //807b4aa6-4478-4663-a661-779397c1d542
+										$array['dialplan_details'][0]['dialplan_detail_uuid'] = $dialplan_detail_uuid;
+										$array['dialplan_details'][0]['dialplan_detail_tag'] = 'action';
+										$array['dialplan_details'][0]['dialplan_detail_type'] = 'set';
+										$array['dialplan_details'][0]['dialplan_detail_data'] = 'timezone='.$domain_setting_value;
+										$array['dialplan_details'][0]['dialplan_detail_group'] = $dialplan_detail_group;
+										$array['dialplan_details'][0]['dialplan_detail_order'] = '15';
 
-									$p = new permissions;
-									$p->add('dialplan_detail_add', 'temp');
-								}
+										$p = new permissions;
+										$p->add('dialplan_detail_add', 'temp');
+									}
 
-							//update the time zone
-								if ($time_zone_found) {
-									$array['dialplan_details'][0]['dialplan_detail_uuid'] = $dialplan_detail_uuid;
-									$array['dialplan_details'][0]['dialplan_detail_data'] = 'timezone='.$domain_setting_value;
+								//update the time zone
+									if ($time_zone_found) {
+										$array['dialplan_details'][0]['dialplan_detail_uuid'] = $dialplan_detail_uuid;
+										$array['dialplan_details'][0]['dialplan_detail_data'] = 'timezone='.$domain_setting_value;
 
-									$p = new permissions;
-									$p->add('dialplan_detail_edit', 'temp');
-								}
+										$p = new permissions;
+										$p->add('dialplan_detail_edit', 'temp');
+									}
 
-							//execute
-								if (is_array($array) && sizeof($array) != 0) {
-									$database = new database;
-									$database->app_name = 'domain_settings';
-									$database->app_uuid = 'b31e723a-bf70-670c-a49b-470d2a232f71';
-									$database->save($array);
-									unset($array);
+								//execute
+									if (!empty($array)) {
+										$database = new database;
+										$database->app_name = 'domain_settings';
+										$database->app_uuid = 'b31e723a-bf70-670c-a49b-470d2a232f71';
+										$database->save($array);
+										unset($array);
 
-									$p->delete('dialplan_detail_add', 'temp');
-									$p->delete('dialplan_detail_edit', 'temp');
-								}
+										$p->delete('dialplan_detail_add', 'temp');
+										$p->delete('dialplan_detail_edit', 'temp');
+									}
+							}
 						}
 					}
-				}
 
-			//redirect the browser
-				if ($action == "update") {
-					message::add($text['message-update']);
-				}
-				if ($action == "add") {
-					message::add($text['message-add']);
-				}
-				header("Location: ".PROJECT_PATH."/core/domain_settings/domain_settings.php?id=".$domain_uuid);
-				exit;
-		}
-}
+				//redirect the browser
+					if ($action == "update") {
+						message::add($text['message-update']);
+					}
+					if ($action == "add") {
+						message::add($text['message-add']);
+					}
+					header("Location: ".PROJECT_PATH."/core/domain_settings/domain_settings.php?id=".$domain_uuid);
+					exit;
+			}
+	}
 
 //pre-populate the form
-	if (count($_GET)>0 && $_POST["persistformvar"] != "true" && is_uuid($_GET["id"])) {
+	if (empty($_POST["persistformvar"]) && !empty($_GET["id"]) && is_uuid($_GET["id"])) {
 		$domain_setting_uuid = $_GET["id"];
 		$sql = "select domain_setting_uuid, domain_setting_category, domain_setting_subcategory, domain_setting_name, domain_setting_value, domain_setting_order, cast(domain_setting_enabled as text), domain_setting_description ";
 		$sql .= "from v_domain_settings ";
@@ -333,7 +335,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		$parameters['domain_setting_uuid'] = $domain_setting_uuid;
 		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
-		if (is_array($row) && sizeof($row) != 0) {
+		if (!empty($row)) {
 			$domain_setting_category = $row["domain_setting_category"];
 			$domain_setting_subcategory = $row["domain_setting_subcategory"];
 			$domain_setting_name = $row["domain_setting_name"];
@@ -344,6 +346,15 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		}
 		unset($sql, $parameters);
 	}
+
+//set the defaults
+	$domain_setting_category = $domain_setting_category ?? '';
+	$domain_setting_subcategory = $domain_setting_subcategory ?? '';
+	$domain_setting_name = $domain_setting_name ?? '';
+	$domain_setting_value = $domain_setting_value ?? '';
+	$domain_setting_order = $domain_setting_order ?? '';
+	$domain_setting_enabled = $domain_setting_enabled ?? 'true';
+	$domain_setting_description = $domain_setting_description ?? '';
 
 //create token
 	$object = new token;
@@ -394,14 +405,14 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td width='70%' class='vtable' align='left'>\n";
 	if (permission_exists('domain_setting_category_edit')) {
 		if ($action == 'add') {
-			$domain_setting_category = $_GET['domain_setting_category'];
+			$domain_setting_category = $_GET['domain_setting_category'] ?? '';
 		}
 		echo "	<input type='text' class='formfld' name='domain_setting_category' id='domain_setting_category' maxlength='255' value=\"".escape($domain_setting_category)."\">\n";
 	}
 	else {
 		echo "	<select class='formfld' name='domain_setting_category' id='domain_setting_category' onchange=\"$('#domain_setting_subcategory').trigger('focus');\">\n";
 		echo "		<option value=''></option>\n";
-		if (is_array($allowed_categories) && sizeof($allowed_categories) > 0) {
+		if (!empty($allowed_categories)) {
 			foreach ($allowed_categories as $category) {
 				$selected = ($domain_setting_category == $category) ? 'selected' : null;
 				echo "		<option value='".escape($category)."' ".$selected.">".ucwords(str_replace('_',' ',escape($category)))."</option>\n";
@@ -430,7 +441,16 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-type']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld lowercase' type='text' name='domain_setting_name' id='domain_setting_name' maxlength='255' value=\"".escape($domain_setting_name)."\">\n";
+	$setting_types = ['Array','Boolean','Code','Dir','Name','Numeric','Text','UUID'];
+	echo "	<select class='formfld' id='domain_setting_name' name='domain_setting_name' required='required'>\n";
+	echo "		<option value=''></option>\n";
+	if (!empty($setting_types)) {
+		foreach ($setting_types as $setting_type) {
+			echo "	<option value='".strtolower($setting_type)."' ".($domain_setting_name == strtolower($setting_type) ? "selected='selected'" : null).">".$setting_type."</option>\n";
+		}
+	}
+	echo "	</select>\n";
+	unset($setting_types, $setting_type);
 	echo "<br />\n";
 	echo $text['description-type']."\n";
 	echo "</td>\n";
@@ -441,9 +461,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-value']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	$category = $row['domain_setting_category'];
-	$subcategory = $row['domain_setting_subcategory'];
-	$name = $row['domain_setting_name'];
+	$category = $row['domain_setting_category'] ?? '';
+	$subcategory = $row['domain_setting_subcategory'] ?? '';
+	$name = $row['domain_setting_name'] ?? '';
 	if ($category == "domain" && $subcategory == "menu" && $name == "uuid" ) {
 		echo "		<select class='formfld' id='domain_setting_value' name='domain_setting_value' style=''>\n";
 		echo "		<option value=''></option>\n";
@@ -451,7 +471,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		$sql .= "order by menu_language, menu_name asc ";
 		$database = new database;
 		$sub_result = $database->select($sql, null, 'all');
-		if (is_array($sub_result) && sizeof($sub_result) != 0) {
+		if (!empty($sub_result)) {
 			foreach ($sub_result as $sub_row) {
 				$selected = strtolower($row['domain_setting_value']) == strtolower($sub_row["menu_uuid"]) ? "selected='selected'" : null;
 				echo "		<option value='".strtolower(escape($sub_row["menu_uuid"]))."' ".$selected.">".escape($sub_row["menu_language"])." - ".escape($sub_row["menu_name"])."</option>\n";
@@ -511,7 +531,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				}
 				echo "		<optgroup label='".escape($category)."'>\n";
 			}
-			if (strlen($val) > 0) {
+			if (!empty($val)) {
 				$time_zone_offset = get_time_zone_offset($val)/3600;
 				$time_zone_offset_hours = floor($time_zone_offset);
 				$time_zone_offset_minutes = ($time_zone_offset - $time_zone_offset_hours) * 60;
@@ -555,19 +575,21 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "		<option value=''></option>\n";
 			echo "		<optgroup label='".$text['label-web_fonts']."'>\n";
 			$option_found = false;
-			foreach ($fonts as $n => $font) {
-				if ($row['domain_setting_value'] == $font) {
-					$selected = 'selected';
-					$option_found = true;
+			if (!empty($fonts)) {
+				foreach ($fonts as $n => $font) {
+					if ($row['domain_setting_value'] == $font) {
+						$selected = 'selected';
+						$option_found = true;
+					}
+					else {
+						unset($selected);
+					}
+					echo "		<option value='".escape($font)."' ".$selected.">".escape($font)."</option>\n";
 				}
-				else {
-					unset($selected);
-				}
-				echo "		<option value='".escape($font)."' ".$selected.">".escape($font)."</option>\n";
 			}
 			echo "		</optgroup>\n";
 			echo "		<option value='' disabled='disabled'></option>\n";
-			echo "		<option value='' ".(($row['domain_setting_value'] != '' && $option_found == false) ? 'selected' : null).">".$text['label-other']."...</option>\n";
+			echo "		<option value='' ".((!empty($row['domain_setting_value']) && $option_found == false) ? 'selected' : null).">".$text['label-other']."...</option>\n";
 			echo "	</select>";
 			echo "	<input type='text' class='formfld' ".(($row['domain_setting_value'] == '' || $option_found) ? "style='display: none;'" : null)." id='txt_domain_setting_value' name='domain_setting_value' value=\"".escape($row['domain_setting_value'])."\">\n";
 		}
@@ -612,21 +634,6 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "    	<option value='false' ".(($row['domain_setting_value'] == "false") ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
 		echo "    	<option value='true' ".(($row['domain_setting_value'] == "true") ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
 		echo "    </select>\n";
-	}
-	elseif ($category == "theme" && $subcategory == "cache" && $name == "boolean" ) {
-		echo "    <select class='formfld' id='domain_setting_value' name='domain_setting_value'>\n";
-		echo "    	<option value='true' ".(($row['domain_setting_value'] == "true") ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
-		echo "    	<option value='false' ".(($row['domain_setting_value'] == "false") ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
-		echo "    </select>\n";
-	}
-	elseif (
-		($category == "theme" && $subcategory == "menu_main_icons" && $name == "boolean") ||
-		($category == "theme" && $subcategory == "menu_sub_icons" && $name == "boolean")
-		) {
-		echo "	<select class='formfld' id='domain_setting_value' name='domain_setting_value'>\n";
-		echo "    	<option value='true' ".(($row['domain_setting_value'] == "true") ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
-		echo "    	<option value='false' ".(($row['domain_setting_value'] == "false") ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
-		echo "	</select>\n";
 	}
 	elseif ($category == "theme" && $subcategory == "menu_brand_type" && $name == "text" ) {
 		echo "    <select class='formfld' id='domain_setting_value' name='domain_setting_value'>\n";
@@ -701,6 +708,13 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "    	<option value='none' ".(($row['domain_setting_value'] == "none") ? "selected='selected'" : null).">".$text['label-none']."</option>\n";
 		echo "    </select>\n";
 	}
+	elseif ($category == "theme" && $subcategory == "input_toggle_style" && $name == "text" ) {
+		echo "	<select class='formfld' id='domain_setting_value' name='domain_setting_value'>\n";
+		echo "    	<option value='select'>".$text['option-select']."</option>\n";
+		echo "    	<option value='switch_round' ".(($row['domain_setting_value'] == "switch_round") ? "selected='selected'" : null).">".$text['option-switch_round']."</option>\n";
+		echo "    	<option value='switch_square' ".(($row['domain_setting_value'] == "switch_square") ? "selected='selected'" : null).">".$text['option-switch_square']."</option>\n";
+		echo "	</select>\n";
+	}
 	elseif ($category == "users" && $subcategory == "username_format" && $name == "text" ) {
 		echo "	<select class='formfld' id='domain_setting_value' name='domain_setting_value'>\n";
 		echo "    	<option value='any' ".($row['domain_setting_value'] == 'any' ? "selected='selected'" : null).">".$text['option-username_format_any']."</option>\n";
@@ -715,9 +729,10 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "    	<option value='attach' ".(($row['domain_setting_value'] == "attach") ? "selected='selected'" : null).">".$text['option-voicemail_file_attach']."</option>\n";
 		echo "    </select>\n";
 	}
-	elseif ($category == "voicemail" && $subcategory == "keep_local" && $name == "boolean" ) {
+	elseif ($category == "voicemail" && ($subcategory == "message_caller_id_number" || $subcategory == "message_date_time") && $name == "text" ) {
 		echo "	<select class='formfld' id='domain_setting_value' name='domain_setting_value'>\n";
-		echo "    	<option value='true' ".(($row['domain_setting_value'] == "true") ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
+		echo "    	<option value='before'>".$text['label-before']."</option>\n";
+		echo "    	<option value='after' ".(($row['domain_setting_value'] == "after") ? "selected='selected'" : null).">".$text['label-after']."</option>\n";
 		echo "    	<option value='false' ".(($row['domain_setting_value'] == "false") ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
 		echo "	</select>\n";
 	}
@@ -725,12 +740,6 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "	<select class='formfld' id='domain_setting_value' name='domain_setting_value'>\n";
 		echo "    	<option value='file'>".$text['label-file']."</option>\n";
 		echo "    	<option value='base64' ".(($row['domain_setting_value'] == "base64") ? "selected='selected'" : null).">".$text['label-base64']."</option>\n";
-		echo "	</select>\n";
-	}
-	elseif ($category == "destinations" && $subcategory == "dialplan_details" && $name == "boolean" ) {
-		echo "	<select class='formfld' id='domain_setting_value' name='domain_setting_value'>\n";
-		echo "    	<option value='true'>".$text['label-true']."</option>\n";
-		echo "    	<option value='false' ".(($row['domain_setting_value'] == "false") ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
 		echo "	</select>\n";
 	}
 	elseif ($category == "destinations" && $subcategory == "dialplan_mode" && $name == "text" ) {
@@ -742,20 +751,26 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	elseif ($category == "destinations" && $subcategory == "select_mode" && $name == "text" ) {
 		echo "	<select class='formfld' id='domain_setting_value' name='domain_setting_value'>\n";
 		echo "    	<option value='default'>".$text['label-default']."</option>\n";
-		echo "    	<option value='dynamic' ".(($row['domain_setting_value'] == "dynamic") ? "selected='selected'" : null).">".$text['label-dynamic']."</option>\n";
+		echo "    	<option value='dynamic' ".((!empty($row['domain_setting_value']) && $row['domain_setting_value'] == "dynamic") ? "selected='selected'" : null).">".$text['label-dynamic']."</option>\n";
 		echo "	</select>\n";
 	}
-	elseif ($category == "destinations" && $subcategory == "unique" && $name == "boolean" ) {
-		echo "	<select class='formfld' id='domain_setting_value' name='domain_setting_value'>\n";
-		echo "    	<option value='true'>".$text['label-true']."</option>\n";
-		echo "    	<option value='false' ".(($row['domain_setting_value'] == "false") ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
-		echo "	</select>\n";
-	}
-	elseif (is_json($row['domain_setting_value'])) {
+	elseif (!empty($row['domain_setting_value']) && is_json($row['domain_setting_value'])) {
 		echo "	<textarea class='formfld' style='width: 100%; height: 80px; font-family: courier, monospace; overflow: auto;' id='domain_setting_value' name='domain_setting_value' wrap='off'>".$row['domain_setting_value']."</textarea>\n";
 	}
+	elseif ($name == "boolean") {
+		echo "	<select class='formfld' id='domain_setting_value' name='domain_setting_value'>\n";
+		if ($category == "provision" && is_numeric($row['domain_setting_value'])) {
+			echo "	<option value='0'>".$text['label-false']."</option>\n";
+			echo "	<option value='1' ".((!empty($row['domain_setting_value']) && $row['domain_setting_value'] == 1) ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
+		}
+		else {
+			echo "	<option value='false'>".$text['label-false']."</option>\n";
+			echo "	<option value='true' ".((!empty($row['domain_setting_value']) && strtolower($row['domain_setting_value']) == "true") ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
+		}
+		echo "	</select>\n";
+	}
 	else {
-		echo "	<input class='formfld' type='text' id='domain_setting_value' name='domain_setting_value' value=\"".escape($row['domain_setting_value'])."\">\n";
+		echo "	<input class='formfld' type='text' id='domain_setting_value' name='domain_setting_value' value=\"".escape($row['domain_setting_value'] ?? '') ."\">\n";
 	}
 	echo "<br />\n";
 	echo $text['description-value']."\n";
@@ -802,20 +817,18 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "    ".$text['label-enabled']."\n";
 	echo "</td>\n";
 	echo "<td width='70%' class='vtable' align='left'>\n";
-	echo "    <select class='formfld' name='domain_setting_enabled'>\n";
-	if ($domain_setting_enabled == "true") {
-		echo "    <option value='true' selected='selected'>".$text['label-true']."</option>\n";
+	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
+		echo "	<label class='switch'>\n";
+		echo "		<input type='checkbox' id='domain_setting_enabled' name='domain_setting_enabled' value='true' ".($domain_setting_enabled == 'true' ? "checked='checked'" : null).">\n";
+		echo "		<span class='slider'></span>\n";
+		echo "	</label>\n";
 	}
 	else {
-		echo "    <option value='true'>".$text['label-true']."</option>\n";
+		echo "	<select class='formfld' id='domain_setting_enabled' name='domain_setting_enabled'>\n";
+		echo "		<option value='true' ".($domain_setting_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($domain_setting_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "	</select>\n";
 	}
-	if ($domain_setting_enabled == "false") {
-		echo "    <option value='false' selected='selected'>".$text['label-false']."</option>\n";
-	}
-	else {
-		echo "    <option value='false'>".$text['label-false']."</option>\n";
-	}
-	echo "    </select>\n";
 	echo "<br />\n";
 	echo $text['description-setting_enabled']."\n";
 	echo "</td>\n";

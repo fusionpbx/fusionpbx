@@ -25,18 +25,13 @@
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 
-//set the include path
-	if (defined('STDIN')) {
-		$document_root = str_replace("\\", "/", $_SERVER["PHP_SELF"]);
-		preg_match("/^(.*)\/secure\/.*$/", $document_root, $matches);
-		$document_root = $matches[1];
-		set_include_path($document_root);
-		$_SERVER["DOCUMENT_ROOT"] = $document_root;
+//only allow command line
+	if (!defined('STDIN')) {
+		exit;
 	}
 
-//includes
-	if (!defined('STDIN')) { include_once "root.php"; }
-	require_once "resources/require.php";
+//includes files
+	require_once dirname(__DIR__) . "/resources/require.php";
 
 //define a function to remove html tags
 	if (!function_exists('remove_tags')) {

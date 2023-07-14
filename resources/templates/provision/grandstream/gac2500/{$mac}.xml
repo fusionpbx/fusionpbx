@@ -22,7 +22,7 @@
 
     <!--  SIP Server -->
     <!--  String -->
-    <P47>{$account.1.server_address}</P47>
+    <P47>{$account.1.server_address}:{$account.1.sip_port}</P47>
 
     <!-- # SIP User ID -->
     <P35>{$account.1.user_id}</P35>

@@ -24,9 +24,8 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//includes 
-	include "root.php";
-	require_once "resources/require.php";
+//includes files
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -48,7 +47,7 @@
 //GET to PHP variables
 	if (is_array($_GET)) {
 		//fs cmd
-		if (strlen($switch_cmd) > 0) {
+		if (!empty($switch_cmd)) {
 			/*
 			if ($action == "energy") {
 				//conference 3001-example.dyndns.org energy 103

@@ -65,16 +65,6 @@ if (!class_exists('modules')) {
 
 		}
 
-		/**
-		 * called when there are no references to a particular object
-		 * unset the variables used in the class
-		 */
-		public function __destruct() {
-			foreach ($this as $key => $value) {
-				unset($this->$key);
-			}
-		}
-
 		//get the additional information about a specific module
 			public function info($name) {
 				$module_label = substr($name, 4);
@@ -715,7 +705,7 @@ if (!class_exists('modules')) {
 
 		//add missing modules for more module info see http://wiki.freeswitch.com/wiki/Modules
 			public function synch() {
-				if ($handle = opendir($this->dir)) {
+				if (false !== ($handle = opendir($this->dir ?? ''))) {
 					$modules_new = '';
 					$module_found = false;
 					$x = 0;
@@ -751,7 +741,7 @@ if (!class_exists('modules')) {
 							}
 						}
 					}
-					if (is_array($array) && @sizeof($array) != 0) {
+					if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
 						//grant temporary permissions
 							$p = new permissions;
 							$p->add('module_add', 'temp');
@@ -870,18 +860,18 @@ if (!class_exists('modules')) {
 					if (is_array($records) && @sizeof($records) != 0) {
 
 						//filter out unchecked modules, build where clause for below
-							foreach($records as $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+							foreach ($records as $record) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$uuids[] = "'".$record['uuid']."'";
 								}
 							}
 
 						//get module details
-							if (is_array($uuids) && @sizeof($uuids) != 0) {
+							if (!empty($uuids) && is_array($uuids) && @sizeof($uuids) != 0) {
 								$sql = "select ".$this->uuid_prefix."uuid as uuid, module_name as module, module_enabled as enabled from v_".$this->table." ";
 								$sql .= "where ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
 								$database = new database;
-								$rows = $database->select($sql, $parameters, 'all');
+								$rows = $database->select($sql, $parameters ?? null, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
 										$modules[$row['uuid']]['name'] = $row['module'];
@@ -946,8 +936,8 @@ if (!class_exists('modules')) {
 					if (is_array($records) && @sizeof($records) != 0) {
 
 						//filter out unchecked modules, build where clause for below
-							foreach($records as $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+							foreach ($records as $record) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$uuids[] = "'".$record['uuid']."'";
 								}
 							}
@@ -957,7 +947,7 @@ if (!class_exists('modules')) {
 								$sql = "select ".$this->uuid_prefix."uuid as uuid, module_name as module from v_".$this->table." ";
 								$sql .= "where ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
 								$database = new database;
-								$rows = $database->select($sql, $parameters, 'all');
+								$rows = $database->select($sql, $parameters ?? null, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
 										$modules[$row['uuid']]['name'] = $row['module'];
@@ -1004,7 +994,7 @@ if (!class_exists('modules')) {
 
 								//set message
 									$message = $text['message-delete'];
-									if (is_array($responses) && @sizeof($responses) != 0) {
+									if (!empty($responses) && is_array($responses) && @sizeof($responses) != 0) {
 										foreach ($responses as $response) {
 											$message .= "<br><strong>".$response['module']."</strong>: ".$response['message'];
 										}
@@ -1039,8 +1029,8 @@ if (!class_exists('modules')) {
 					if (is_array($records) && @sizeof($records) != 0) {
 
 						//get current toggle state
-							foreach($records as $x => $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+							foreach ($records as $x => $record) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$uuids[] = "'".$record['uuid']."'";
 								}
 							}
@@ -1048,7 +1038,7 @@ if (!class_exists('modules')) {
 								$sql = "select ".$this->uuid_prefix."uuid as uuid, ".$this->toggle_field." as state, module_name as name from v_".$this->table." ";
 								$sql .= "where ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
 								$database = new database;
-								$rows = $database->select($sql, $parameters, 'all');
+								$rows = $database->select($sql, $parameters ?? null, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
 										$modules[$row['uuid']]['state'] = $row['state'];
@@ -1097,7 +1087,7 @@ if (!class_exists('modules')) {
 
 								//set message
 									$message = $text['message-toggle'];
-									if (is_array($responses) && @sizeof($responses) != 0) {
+									if (!empty($responses) && is_array($responses) && @sizeof($responses) != 0) {
 										foreach ($responses as $response) {
 											$message .= "<br><strong>".$response['module']."</strong>: ".$response['message'];
 										}

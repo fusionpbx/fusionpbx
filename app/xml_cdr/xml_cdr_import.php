@@ -17,28 +17,16 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2016-2021
+	Portions created by the Initial Developer are Copyright (C) 2016-2022
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//check the permission
-	if(defined('STDIN')) {
-		$document_root = str_replace("\\", "/", $_SERVER["PHP_SELF"]);
-		preg_match("/^(.*)\/app\/.*$/", $document_root, $matches);
-		$document_root = $matches[1];
-		set_include_path($document_root);
-		$_SERVER["DOCUMENT_ROOT"] = $document_root;
-		require_once "resources/require.php";
-	}
-	else {
-		//required includes
-		include "root.php";
-		require_once "resources/require.php";
-		require_once "resources/pdo.php";
-	}
+//includes files
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
+	require_once "resources/pdo.php";
 
 //check the domain cidr range 
 	if (isset($_SESSION['cdr']["cidr"]) && !defined('STDIN')) {

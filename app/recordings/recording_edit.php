@@ -25,9 +25,8 @@
 	James Rose <james.o.rose@gmail.com>
 */
 
-//includes
-	require_once "root.php";
-	require_once "resources/require.php";
+//includes files
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -44,7 +43,7 @@
 	$text = $language->get();
 
 //get recording id
-	if (is_uuid($_REQUEST["id"])) {
+	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$recording_uuid = $_REQUEST["id"];
 	}
 
@@ -69,7 +68,7 @@
 		$recording_name = str_replace("'", '', $recording_name);
 	}
 
-if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 	//get recording uuid to edit
 		$recording_uuid = $_POST["recording_uuid"];
 
@@ -98,9 +97,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 	//check for all required data
 		$msg = '';
-		if (strlen($recording_filename) == 0) { $msg .= $text['label-edit-file']."<br>\n"; }
-		if (strlen($recording_name) == 0) { $msg .= $text['label-edit-recording']."<br>\n"; }
-		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+		if (empty($recording_filename)) { $msg .= $text['label-edit-file']."<br>\n"; }
+		if (empty($recording_name)) { $msg .= $text['label-edit-recording']."<br>\n"; }
+		if (!empty($msg) && empty($_POST["persistformvar"])) {
 			require_once "resources/header.php";
 			require_once "resources/persist_form_var.php";
 			echo "<div align='center'>\n";
@@ -114,7 +113,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		}
 
 	//update the database
-	if ($_POST["persistformvar"] != "true") {
+	if (empty($_POST["persistformvar"])) {
 		if (permission_exists('recording_edit')) {
 			//if file name is not the same then rename the file
 				if ($recording_filename != $recording_filename_original) {
@@ -147,7 +146,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 }
 
 //pre-populate the form
-	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
+	if (!empty($_GET) && empty($_POST["persistformvar"])) {
 		$recording_uuid = $_GET["id"];
 		$sql = "select recording_name, recording_filename, recording_description from v_recordings ";
 		$sql .= "where domain_uuid = :domain_uuid ";
@@ -212,7 +211,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "    <input class='formfld' type='text' name='recording_filename' maxlength='255' value=\"".escape($recording_filename)."\">\n";
 	echo "    <input type='hidden' name='recording_filename_original' value=\"".escape($recording_filename)."\">\n";
 	echo "<br />\n";
-	echo $text['message-file']."\n";
+	//echo $text['message-file']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 

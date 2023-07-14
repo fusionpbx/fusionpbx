@@ -1,6 +1,6 @@
 <?php
-include "root.php";
-require_once "resources/require.php";
+//includes files
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 
 $font_loader_version = ($_GET['v'] != '') ? $_GET['v'] : 1;
 

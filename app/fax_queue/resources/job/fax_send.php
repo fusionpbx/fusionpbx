@@ -2,19 +2,12 @@
 
 //check the permission
 	if (defined('STDIN')) {
-		$document_root = str_replace("\\", "/", $_SERVER["PHP_SELF"]);
-		preg_match("/^(.*)\/app\/.*$/", $document_root, $matches);
-		$document_root = $matches[1];
-		set_include_path($document_root);
-		$_SERVER["DOCUMENT_ROOT"] = $document_root;
-		require_once "resources/require.php";
+		//includes files
+		require_once  dirname(__DIR__, 4) . "/resources/require.php";
 		require_once "resources/functions.php";
 	}
 	else {
 		exit;
-		include "root.php";
-		require_once "resources/require.php";
-		require_once "resources/pdo.php";
 	}
 
 //increase limits
@@ -67,6 +60,21 @@
 		//invalid uuid
 		exit;
 	}
+
+//shutdown call back function
+	function shutdown() {
+		//when the fax status is still sending
+		//then set the fax status to trying
+		$sql = "update v_fax_queue ";
+		$sql .= "set fax_status = 'trying' ";
+		$sql .= "where fax_queue_uuid = :fax_queue_uuid ";
+		$sql .= "and fax_status = 'sending' ";
+		$database = new database;
+		$parameters['fax_queue_uuid'] = $fax_queue_uuid;
+		$database->execute($sql, $parameters);
+		unset($sql);
+	}
+	register_shutdown_function('shutdown');
 
 //define the process id file
 	$pid_file = "/var/run/fusionpbx/fax_send".".".$fax_queue_uuid.".pid";
@@ -146,14 +154,13 @@
 	}
 
 //get the fax queue details to send
-	$sql = "select q.*, d.domain_name ";
-	$sql .= "from v_fax_queue as q, v_domains as d ";
+	$sql = "select q.*, d.domain_name, f.fax_toll_allow ";
+	$sql .= "from v_fax_queue as q, v_domains as d, v_fax as f ";
 	$sql .= "where fax_queue_uuid = :fax_queue_uuid ";
-	$sql .= "and q.domain_uuid = d.domain_uuid ";
+	$sql .= "and q.domain_uuid = d.domain_uuid and f.fax_uuid = q.fax_uuid";
 	$parameters['fax_queue_uuid'] = $fax_queue_uuid;
 	$database = new database;
 	$row = $database->select($sql, $parameters, 'row');
-//view_array($row);
 	if (is_array($row)) {
 		$fax_queue_uuid = $row['fax_queue_uuid'];
 		$domain_uuid = $row['domain_uuid'];
@@ -173,6 +180,7 @@
 		$fax_retry_count = $row["fax_retry_count"];
 		$fax_accountcode = $row["fax_accountcode"];
 		$fax_command = $row["fax_command"];
+		$fax_toll_allow = $row["fax_toll_allow"];
 	}
 	unset($parameters);
 
@@ -250,10 +258,10 @@
 //prepare the smtp from and from name variables
 	$email_from = $_SESSION['email']['smtp_from']['text'];
 	$email_from_name = $_SESSION['email']['smtp_from_name']['text'];
-	if (isset($_SESSION['fax']['smtp_from']['text']) && strlen($_SESSION['fax']['smtp_from']['text']) > 0) {
+	if (isset($_SESSION['fax']['smtp_from']['text']) && !empty($_SESSION['fax']['smtp_from']['text'])) {
 		$email_from = $_SESSION['fax']['smtp_from']['text'];
 	}
-	if (isset($_SESSION['fax']['smtp_from_name']['text']) && strlen($_SESSION['fax']['smtp_from_name']['text']) > 0) {
+	if (isset($_SESSION['fax']['smtp_from_name']['text']) && !empty($_SESSION['fax']['smtp_from_name']['text'])) {
 		$email_from_name = $_SESSION['fax']['smtp_from_name']['text'];
 	}
 
@@ -263,15 +271,15 @@
 	//$retry_interval = $_SESSION['fax_queue']['retry_interval']['numeric'];
 
 //prepare the fax retry count
-	if (strlen($fax_retry_count) == 0) {
+	if (!isset($fax_retry_count)) {
 		$fax_retry_count = 0;
 	}
-	elseif ($fax_status != 'busy') {
+	else {
 		$fax_retry_count = $fax_retry_count + 1;
 	}
 
 //determine if the retry count exceed the limit
-	if ($fax_status != 'sent' && $fax_status != 'busy' && $fax_retry_count > $retry_limit) {
+	if ($fax_status != 'sent' && $fax_retry_count > $retry_limit) {
 		$fax_status = 'failed';
 	}
 
@@ -290,18 +298,6 @@
 			if (!$fp) {
 				echo "Could not connect to event socket.\n";
 				exit;	
-			}
-
-		//check if the uuid exists if it does then end the script
-			if (trim(event_socket_request($fp, "api uuid_exists ".$origination_uuid)) == 'true') {
-				echo "FAX job in progress.\n";
-				exit;
-			}
-
-		//check if the uuid exists if it does then end the script
-			if (trim(event_socket_request($fp, "api uuid_exists ".$origination_uuid)) == 'true') {
-				echo "FAX job in progress.\n";
-				exit;
 			}
 
 		//fax options, first attempt use the fax variables from settings
@@ -346,7 +342,7 @@
 			fax_split_dtmf($fax_number, $fax_dtmf);
 
 		//prepare the fax command
-			if (strlen($fax_toll_allow) > 0) {
+			if (!empty($fax_toll_allow)) {
 				$channel_variables["toll_allow"] = $fax_toll_allow;
 			}
 			$route_array = outbound_route_to_bridge($domain_uuid, $fax_prefix . $fax_number, $channel_variables);
@@ -359,8 +355,37 @@
 				$fax_uri = $route_array[0];
 			}
 
-		//set the fax file name without the extension
-			$fax_instance_id = pathinfo($fax_file, PATHINFO_FILENAME);
+		//update the fax_queue table
+			if ($fp) {
+				//set the fax file name without the extension
+				$fax_instance_id = pathinfo($fax_file, PATHINFO_FILENAME);
+
+				//set the fax status
+				$fax_status = 'sending';
+
+				//update the database to say status to trying and set the command
+				$array['fax_queue'][0]['fax_queue_uuid'] = $fax_queue_uuid;
+				$array['fax_queue'][0]['domain_uuid'] = $domain_uuid;
+				$array['fax_queue'][0]['origination_uuid'] = $origination_uuid;
+				$array['fax_queue'][0]['fax_status'] = $fax_status;
+				$array['fax_queue'][0]['fax_retry_count'] = $fax_retry_count;
+				$array['fax_queue'][0]['fax_retry_date'] = 'now()';
+				$array['fax_queue'][0]['fax_command'] = $fax_command;
+
+				//add temporary permissions
+				$p = new permissions;
+				$p->add('fax_queue_edit', 'temp');
+
+				//save the data
+				$database = new database;
+				$database->app_name = 'fax queue';
+				$database->app_uuid = '3656287f-4b22-4cf1-91f6-00386bf488f4';
+				$database->save($array, false);
+				unset($array);
+
+				//remove temporary permissions
+				$p->delete('fax_queue_edit', 'temp');
+			}
 
 		//set the origination uuid
 			$origination_uuid = uuid();
@@ -376,9 +401,10 @@
 			$dial_string .= "fax_uri="             . $fax_uri  . ",";
 			$dial_string .= "fax_retry_attempts="  . $fax_retry_count  . ",";  
 			$dial_string .= "fax_retry_limit="     . $retry_limit  . ",";
-			//$dial_string .= "fax_retry_sleep=180"  . ",";
-			$dial_string .= "fax_verbose=true"     . ",";
-			//$dial_string .= "fax_use_ecm=off"      . ",";
+			//$dial_string .= "fax_retry_sleep=180,";
+			$dial_string .= "fax_verbose=true,";
+			//$dial_string .= "fax_use_ecm=off,";
+			$dial_string .= "absolute_codec_string=PCMU,PCMA,";
 			$dial_string .= "api_hangup_hook='lua app/fax/resources/scripts/hangup_tx.lua'";
 			$fax_command  = "originate {" . $dial_string . "}" . $fax_uri." &txfax('".$fax_file."')";
 			//echo $fax_command."\n";
@@ -398,39 +424,13 @@
 				echo "fax file missing: ".$fax_file."\n";
 			}
 
-		//set the fax status
-			$fax_status = 'trying';
-
-		//update the database to say status to trying and set the command
-			$array['fax_queue'][0]['fax_queue_uuid'] = $fax_queue_uuid;
-			$array['fax_queue'][0]['domain_uuid'] = $domain_uuid;
-			$array['fax_queue'][0]['origination_uuid'] = $origination_uuid;
-			$array['fax_queue'][0]['fax_status'] = $fax_status;
-			$array['fax_queue'][0]['fax_retry_count'] = $fax_retry_count;
-			$array['fax_queue'][0]['fax_retry_date'] = 'now()';
-			$array['fax_queue'][0]['fax_command'] = $fax_command;
-
-		//add temporary permissions
-			$p = new permissions;
-			$p->add('fax_queue_edit', 'temp');
-
-		//save the data
-			$database = new database;
-			$database->app_name = 'fax queue';
-			$database->app_uuid = '3656287f-4b22-4cf1-91f6-00386bf488f4';
-			$database->save($array, false);
-			unset($array);
-
-		//remove temporary permissions
-			$p->delete('fax_queue_edit', 'temp');
-
 	}
 
 //post process
 	if (in_array($fax_status, array('sent', 'failed'))) {
 
 		//send the email
-			if (strlen($fax_email_address) > 0 && file_exists($fax_file)) {
+			if (!empty($fax_email_address) && file_exists($fax_file)) {
 				//get the language code
 				$language_code = $_SESSION['domain']['language']['code'];
 
@@ -443,7 +443,7 @@
 				}
 
 				//get the email template from the database
-				if (isset($fax_email_address) && strlen($fax_email_address) > 0) {
+				if (isset($fax_email_address) && !empty($fax_email_address)) {
 					$sql = "select template_subcategory, template_subject, template_body from v_email_templates ";
 					$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 					$sql .= "and template_language = :template_language ";
@@ -501,7 +501,7 @@
 				}
 
 				//get fax log data for email variables
-				if (isset($fax_email_address) && strlen($fax_email_address) > 0 && isset($fax_log_uuid)) {
+				if (isset($fax_email_address) && !empty($fax_email_address) && isset($fax_log_uuid)) {
 					$sql = "select * ";
 					$sql .= "from v_fax_logs ";
 					$sql .= "where fax_log_uuid = :fax_log_uuid ";
@@ -576,9 +576,9 @@
 				$email_body = str_replace('${fax_duration_formatted}', $fax_duration_formatted, $email_body);
 
 				//send the email
-				if (isset($fax_email_address) && strlen($fax_email_address) > 0) {
+				if (isset($fax_email_address) && !empty($fax_email_address)) {
 					//add the attachment
-					if (strlen($fax_file_name) > 0) {
+					if (!empty($fax_file_name)) {
 						$email_attachments[0]['type'] = 'file';
 						$email_attachments[0]['name'] = $fax_file_name;
 						$email_attachments[0]['value'] = path_join($fax_file_dirname, '.', $fax_file_name);
@@ -648,13 +648,13 @@
 			//}
 	}
 
+//wait for a few seconds
+	sleep(1);
+
 //remove the old pid file
 	if (file_exists($pid_file)) {
 		unlink($pid_file);
 	}
-
-//wait for a few seconds
-	//sleep(1);
 
 //move the generated tif (and pdf) files to the sent directory
 	//if (file_exists($dir_fax_temp.'/'.$fax_instance_id.".tif")) {

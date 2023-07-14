@@ -1,11 +1,10 @@
 <?php
 
-//includes
-	require_once "root.php";
-	require_once "resources/require.php";
+//includes files
+	require_once  dirname(__DIR__, 4) . "/resources/require.php";
+	require_once "resources/check_auth.php";
 
 //check permisions
-	require_once "resources/check_auth.php";
 	if (permission_exists('xml_cdr_view')) {
 		//access granted
 	}
@@ -24,9 +23,10 @@
 			$assigned_extensions[$assigned_extension['extension_uuid']] = $assigned_extension['user'];
 		}
 	}
+	unset($assigned_extension);
 
 //if also viewing system status, show more recent calls (more room avaialble)
-	$recent_limit = (is_array($selected_blocks) && in_array('counts', $selected_blocks)) ? 10 : 5;
+	$recent_limit = isset($selected_blocks) && is_array($selected_blocks) && in_array('counts', $selected_blocks) ? 10 : 5;
 
 //get the recent calls from call detail records
 	$sql = "
@@ -44,7 +44,7 @@
 			v_xml_cdr
 		where
 			domain_uuid = :domain_uuid ";
-			if (is_array($assigned_extensions) && sizeof($assigned_extensions) != 0) {
+			if (!empty($assigned_extensions)) {
 				$x = 0;
 				foreach ($assigned_extensions as $assigned_extension_uuid => $assigned_extension) {
 					$sql_where_array[] = "extension_uuid = :extension_uuid_".$x;
@@ -57,7 +57,7 @@
 					$parameters['destination_number_2_'.$x] = '*99'.$assigned_extension;
 					$x++;
 				}
-				if (is_array($sql_where_array) && sizeof($sql_where_array) != 0) {
+				if (!empty($sql_where_array)) {
 					$sql .= "and (".implode(' or ', $sql_where_array).") ";
 				}
 				unset($sql_where_array);
@@ -67,9 +67,9 @@
 		order by
 			start_epoch desc";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$database = new database;
+	if (!isset($database)) { $database = new database; }
 	$result = $database->select($sql, $parameters, 'all');
-	$num_rows = is_array($result) ? sizeof($result) : 0;
+	$num_rows = !empty($result) ? sizeof($result) : 0;
 
 //define row styles
 	$c = 0;
@@ -81,49 +81,45 @@
 
 //add doughnut chart
 	?>
-	<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 20px;'>
-		<div style='width: 175px; height: 175px;'><canvas id='recent_calls_chart'></canvas></div>
+	<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 20px;' onclick="$('#hud_recent_calls_details').slideToggle('fast');">
+		<canvas id='recent_calls_chart' width='175px' height='175px'></canvas>
 	</div>
 
 	<script>
-		var recent_calls_chart_context = document.getElementById('recent_calls_chart').getContext('2d');
-
-		const recent_calls_chart_data = {
-			datasets: [{
-				data: ['<?php echo $num_rows; ?>', 0.00001],
-				backgroundColor: ['<?php echo $_SESSION['dashboard']['recent_calls_chart_main_background_color']['text']; ?>',
-				'<?php echo $_SESSION['dashboard']['missed_calls_chart_sub_background_color']['text']; ?>'],
-				borderColor: '<?php echo $_SESSION['dashboard']['recent_calls_chart_border_color']['text']; ?>',
-				borderWidth: '<?php echo $_SESSION['dashboard']['recent_calls_chart_border_width']['text']; ?>',
-				cutout: chart_cutout
-			}]
-		};
-
-		const recent_calls_chart_config = {
-			type: 'doughnut',
-			data: recent_calls_chart_data,
-			options: {
-				responsive: true,
-				maintainAspectRatio: false,
-				plugins: {
-					chart_counter: {
-						chart_text: '<?php echo $num_rows; ?>'
-					},
-					legend: {
-						display: false
-					},
-					title: {
-						display: true,
-						text: '<?php echo $text['label-recent_calls']; ?>'
-					}
-				}
-			},
-			plugins: [chart_counter],
-		};
-
 		const recent_calls_chart = new Chart(
-			recent_calls_chart_context,
-			recent_calls_chart_config
+			document.getElementById('recent_calls_chart').getContext('2d'),
+			{
+				type: 'doughnut',
+				data: {
+					datasets: [{
+						data: ['<?php echo $num_rows; ?>', 0.00001],
+						backgroundColor: [
+							'<?php echo $_SESSION['dashboard']['recent_calls_chart_main_background_color']['text']; ?>',
+							'<?php echo $_SESSION['dashboard']['recent_calls_chart_sub_background_color']['text']; ?>'
+						],
+						borderColor: '<?php echo $_SESSION['dashboard']['recent_calls_chart_border_color']['text']; ?>',
+						borderWidth: '<?php echo $_SESSION['dashboard']['recent_calls_chart_border_width']['text']; ?>',
+						cutout: chart_cutout
+					}]
+				},
+				options: {
+					responsive: true,
+					maintainAspectRatio: false,
+					plugins: {
+						chart_counter: {
+							chart_text: '<?php echo $num_rows; ?>'
+						},
+						legend: {
+							display: false
+						},
+						title: {
+							display: true,
+							text: '<?php echo $text['label-recent_calls']; ?>'
+						}
+					}
+				},
+				plugins: [chart_counter],
+			}
 		);
 	</script>
 	<?php
@@ -153,36 +149,36 @@
 			file_exists($theme_image_path."icon_cdr_local_failed.png")
 			) ? true : false;
 
-		foreach($result as $index => $row) {
+		foreach ($result as $index => $row) {
 			if ($index + 1 > $recent_limit) { break; } //only show limit
 			$tmp_year = date("Y", strtotime($row['start_stamp']));
 			$tmp_month = date("M", strtotime($row['start_stamp']));
 			$tmp_day = date("d", strtotime($row['start_stamp']));
-			$tmp_start_epoch = ($_SESSION['domain']['time_format']['text'] == '12h') ? date("n/j g:ia", $row['start_epoch']) : date("n/j H:i", $row['start_epoch']);
+			$tmp_start_epoch = !empty($_SESSION['domain']['time_format']) && $_SESSION['domain']['time_format']['text'] == '12h' ? date("n/j g:ia", $row['start_epoch']) : date("n/j H:i", $row['start_epoch']);
 
 			//determine name
-				$cdr_name = ($row['direction'] == 'inbound' || ($row['direction'] == 'local' && is_array($assigned_extensions) && in_array($row['destination_number'], $assigned_extensions))) ? $row['caller_id_name'] : $row['destination_number'];
+				$cdr_name = ($row['direction'] == 'inbound' || ($row['direction'] == 'local' && !empty($assigned_extensions) && is_array($assigned_extensions) && in_array($row['destination_number'], $assigned_extensions))) ? $row['caller_id_name'] : $row['destination_number'];
 			//determine number to display
-				if ($row['direction'] == 'inbound' || ($row['direction'] == 'local' && is_array($assigned_extensions) && in_array($row['destination_number'], $assigned_extensions))) {
+				if ($row['direction'] == 'inbound' || ($row['direction'] == 'local' && !empty($assigned_extensions) && is_array($assigned_extensions) && in_array($row['destination_number'], $assigned_extensions))) {
 					$cdr_number = (is_numeric($row['caller_id_number'])) ? format_phone($row['caller_id_number']) : $row['caller_id_number'];
 					$dest = $row['caller_id_number'];
 				}
-				else if ($row['direction'] == 'outbound' || ($row['direction'] == 'local' && is_array($assigned_extensions) && in_array($row['caller_id_number'], $assigned_extensions))) {
+				else if ($row['direction'] == 'outbound' || ($row['direction'] == 'local' && !empty($assigned_extensions) && is_array($assigned_extensions) && in_array($row['caller_id_number'], $assigned_extensions))) {
 					$cdr_number = (is_numeric($row['destination_number'])) ? format_phone($row['destination_number']) : $row['destination_number'];
 					$dest = $row['destination_number'];
 				}
 			//set click-to-call variables
 				if (permission_exists('click_to_call_call')) {
 					$tr_link = "onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php".
-						"?src_cid_name=".urlencode($cdr_name).
-						"&src_cid_number=".urlencode($cdr_number).
-						"&dest_cid_name=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_name']).
-						"&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number']).
-						"&src=".urlencode($_SESSION['user']['extension'][0]['user']).
-						"&dest=".urlencode($dest).
-						"&rec=".(isset($_SESSION['click_to_call']['record']['boolean'])?$_SESSION['click_to_call']['record']['boolean']:"false").
-						"&ringback=".(isset($_SESSION['click_to_call']['ringback']['text'])?$_SESSION['click_to_call']['ringback']['text']:"us-ring").
-						"&auto_answer=".(isset($_SESSION['click_to_call']['auto_answer']['boolean'])?$_SESSION['click_to_call']['auto_answer']['boolean']:"true").
+						"?src_cid_name=".urlencode($cdr_name ?? '').
+						"&src_cid_number=".urlencode($cdr_number ?? '').
+						"&dest_cid_name=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_name'] ?? '').
+						"&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number'] ?? '').
+						"&src=".urlencode($_SESSION['user']['extension'][0]['user'] ?? '').
+						"&dest=".urlencode($dest ?? '').
+						"&rec=".(isset($_SESSION['click_to_call']['record']['boolean']) ? $_SESSION['click_to_call']['record']['boolean'] : "false").
+						"&ringback=".(isset($_SESSION['click_to_call']['ringback']['text']) ? $_SESSION['click_to_call']['ringback']['text'] : "us-ring").
+						"&auto_answer=".(isset($_SESSION['click_to_call']['auto_answer']['boolean']) ? $_SESSION['click_to_call']['auto_answer']['boolean'] : "true").
 						"');\" ".
 						"style='cursor: pointer;'";
 				}
@@ -206,7 +202,7 @@
 					}
 				}
 				echo "</td>\n";
-				echo "<td valign='top' class='".$row_style[$c]." hud_text' nowrap='nowrap'><a href='javascript:void(0);' ".(($cdr_name != '') ? "title=\"".$cdr_name."\"" : null).">".$cdr_number."</a></td>\n";
+				echo "<td valign='top' class='".$row_style[$c]." hud_text' nowrap='nowrap'><a href='javascript:void(0);' ".(!empty($cdr_name) ? "title=\"".$cdr_name."\"" : null).">".($cdr_number ?? '')."</a></td>\n";
 				echo "<td valign='top' class='".$row_style[$c]." hud_text' nowrap='nowrap'>".$tmp_start_epoch."</td>\n";
 			echo "</tr>\n";
 
@@ -219,7 +215,7 @@
 	echo "</table>\n";
 	echo "<span style='display: block; margin: 6px 0 7px 0;'><a href='".PROJECT_PATH."/app/xml_cdr/xml_cdr.php'>".$text['label-view_all']."</a></span>\n";
 	echo "</div>";
-	$n++;
+	//$n++;
 
 	echo "<span class='hud_expander' onclick=\"$('#hud_recent_calls_details').slideToggle('fast');\"><span class='fas fa-ellipsis-h'></span></span>";
 	echo "</div>\n";

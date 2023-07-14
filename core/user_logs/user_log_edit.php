@@ -1,8 +1,7 @@
 <?php
 
-//includes
-	require_once "root.php";
-	require_once "resources/require.php";
+//includes files
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -22,7 +21,7 @@
 	$user_log_uuid = $_GET['id'];
 
 //pre-populate the form
-	if (is_array($_GET) && $_POST["persistformvar"] != "true") {
+	if (!empty($_GET) && is_array($_GET) && (empty($_POST["persistformvar"]) || $_POST["persistformvar"] != "true")) {
 		$sql = "select * from v_user_logs ";
 		$sql .= "where user_log_uuid = :user_log_uuid ";
 		//$sql .= "and domain_uuid = :domain_uuid ";
@@ -83,7 +82,7 @@
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
 	echo "	<select class='formfld' name='domain_uuid'>\n";
-	if (strlen($domain_uuid) == 0) {
+	if (empty($domain_uuid)) {
 		echo "		<option value='' selected='selected'>".$text['select-global']."</option>\n";
 	}
 	else {

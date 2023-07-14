@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2019 - 2021
+	Portions created by the Initial Developer are Copyright (C) 2019 - 2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -62,16 +62,6 @@ if (!class_exists('sofia_global_settings')) {
 		}
 
 		/**
-		 * called when there are no references to a particular object
-		 * unset the variables used in the class
-		 */
-		public function __destruct() {
-			foreach ($this as $key => $value) {
-				unset($this->$key);
-			}
-		}
-
-		/**
 		 * delete rows from the database
 		 */
 		public function delete($records) {
@@ -90,12 +80,12 @@ if (!class_exists('sofia_global_settings')) {
 					}
 
 				//delete multiple records
-					if (is_array($records) && @sizeof($records) != 0) {
+					if (!empty($records) && @sizeof($records) != 0) {
 						//build the delete array
 							$x = 0;
 							foreach ($records as $record) {
 								//add to the array
-									if ($record['checked'] == 'true' && is_uuid($record['sofia_global_setting_uuid'])) {
+									if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['sofia_global_setting_uuid'])) {
 										$array[$this->table][$x]['sofia_global_setting_uuid'] = $record['sofia_global_setting_uuid'];
 									}
 
@@ -104,7 +94,7 @@ if (!class_exists('sofia_global_settings')) {
 							}
 
 						//delete the checked rows
-							if (is_array($array) && @sizeof($array) != 0) {
+							if (!empty($array) && @sizeof($array) != 0) {
 								//execute delete
 									$database = new database;
 									$database->app_name = $this->app_name;
@@ -139,19 +129,19 @@ if (!class_exists('sofia_global_settings')) {
 					}
 
 				//toggle the checked records
-					if (is_array($records) && @sizeof($records) != 0) {
+					if (!empty($records) && @sizeof($records) != 0) {
 						//get current toggle state
 							foreach($records as $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['sofia_global_setting_uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['sofia_global_setting_uuid'])) {
 									$uuids[] = "'".$record['sofia_global_setting_uuid']."'";
 								}
 							}
-							if (is_array($uuids) && @sizeof($uuids) != 0) {
+							if (!empty($uuids) && @sizeof($uuids) != 0) {
 								$sql = "select ".$this->name."_uuid as uuid, ".$this->toggle_field." as toggle from v_".$this->table." ";
 								$sql .= "where ".$this->name."_uuid in (".implode(', ', $uuids).") ";
 								$database = new database;
-								$rows = $database->select($sql, $parameters, 'all');
-								if (is_array($rows) && @sizeof($rows) != 0) {
+								$rows = $database->select($sql, null, 'all');
+								if (!empty($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
 										$states[$row['uuid']] = $row['toggle'];
 									}
@@ -171,7 +161,7 @@ if (!class_exists('sofia_global_settings')) {
 							}
 
 						//save the changes
-							if (is_array($array) && @sizeof($array) != 0) {
+							if (!empty($array) && @sizeof($array) != 0) {
 								//save the array
 									$database = new database;
 									$database->app_name = $this->app_name;
@@ -206,30 +196,31 @@ if (!class_exists('sofia_global_settings')) {
 					}
 
 				//copy the checked records
-					if (is_array($records) && @sizeof($records) != 0) {
+					if (!empty($records) && @sizeof($records) != 0) {
 
 						//get checked records
 							foreach($records as $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['sofia_global_setting_uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['sofia_global_setting_uuid'])) {
 									$uuids[] = "'".$record['sofia_global_setting_uuid']."'";
 								}
 							}
 
 						//create the array from existing data
-							if (is_array($uuids) && @sizeof($uuids) != 0) {
+							if (!empty($uuids) && @sizeof($uuids) != 0) {
 								$sql = "select * from v_".$this->table." ";
 								$sql .= "where sofia_global_setting_uuid in (".implode(', ', $uuids).") ";
 								$database = new database;
-								$rows = $database->select($sql, $parameters, 'all');
-								if (is_array($rows) && @sizeof($rows) != 0) {
+								$rows = $database->select($sql, null, 'all');
+								if (!empty($rows) && @sizeof($rows) != 0) {
 									$x = 0;
 									foreach ($rows as $row) {
 										//copy data
 											$array[$this->table][$x] = $row;
 
 										//add copy to the description
-											$array[$this->table][$x][sofia_global_setting.'_uuid'] = uuid();
-											$array[$this->table][$x][$this->description_field] = trim($row[$this->description_field]).' ('.$text['label-copy'].')';
+											$array[$this->table][$x][$this->name.'_uuid'] = uuid();
+											$array[$this->table][$x]['global_setting_enabled'] = $row['global_setting_enabled'] === true ? 'true' : 'false';
+											$array[$this->table][$x][$this->description_field] = trim($row[$this->description_field] ?? '').trim(' ('.$text['label-copy'].')');
 
 										//increment the id
 											$x++;
@@ -239,7 +230,7 @@ if (!class_exists('sofia_global_settings')) {
 							}
 
 						//save the changes and set the message
-							if (is_array($array) && @sizeof($array) != 0) {
+							if (!empty($array) && @sizeof($array) != 0) {
 								//save the array
 									$database = new database;
 									$database->app_name = $this->app_name;

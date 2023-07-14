@@ -24,20 +24,19 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//includes
-	require_once "root.php";
-	require_once "resources/require.php";
+//includes files
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
 
 //get attachment uuid
-	$contact_attachment_uuid = $_GET['id'];
-	$action = $_GET['action'];
+	$contact_attachment_uuid = $_GET['id'] ?? '';
+	$action = $_GET['action'] ?? '';
 
 //get media
-	if (is_uuid($contact_attachment_uuid)) {
+	if (!empty($contact_attachment_uuid) && is_uuid($contact_attachment_uuid)) {
 
 		$sql = "select attachment_filename, attachment_content from v_contact_attachments ";
 		$sql .= "where contact_attachment_uuid = :contact_attachment_uuid ";
@@ -45,15 +44,15 @@
 		$parameters['contact_attachment_uuid'] = $contact_attachment_uuid;
 		$parameters['domain_uuid'] = $domain_uuid;
 		$database = new database;
-		$attachment = $database->select($sql, $parameters, 'row');
+		$attachment = $database->select($sql, $parameters ?? null, 'row');
 		unset($sql, $parameters);
 
-		$attachment_type = strtolower(pathinfo($attachment['attachment_filename'], PATHINFO_EXTENSION));
+		$attachment_type = strtolower(pathinfo($attachment['attachment_filename'] ?? '', PATHINFO_EXTENSION));
 
 		//determine mime type
 		$content_type = 'application/octet-stream'; //set default
-		$allowed_attachment_types = json_decode($_SESSION['contacts']['allowed_attachment_types']['text'], true);
-		if (is_array($allowed_attachment_types) && sizeof($allowed_attachment_types) != 0) {
+		$allowed_attachment_types = json_decode($_SESSION['contacts']['allowed_attachment_types']['text'] ?? '', true);
+		if (!empty($allowed_attachment_types)) {
 			if ($allowed_attachment_types[$attachment_type] != '') {
 				$content_type = $allowed_attachment_types[$attachment_type];
 			}
