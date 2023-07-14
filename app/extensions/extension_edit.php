@@ -1274,7 +1274,7 @@
 			echo "</tr>\n";	
 	}
 
-	if (permission_exists('device_edit')) {
+	if (permission_exists('device_edit') && (empty($extension_type) || $extension_type != 'virtual')) {
 		if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/devices')) {
 			echo "<tr>\n";
 			echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
