@@ -681,7 +681,8 @@
 							$sql .= "p.dialplan_uuid asc, \n";
 							$sql .= "s.dialplan_detail_group asc, \n";
 							$sql .= "case s.dialplan_detail_tag \n";
-							$sql .= "when 'condition' then 1 \n";
+							$sql .= "when 'condition' then 0 \n";
+							$sql .= "when 'regex' then 1 \n";
 							$sql .= "when 'action' then 2 \n";
 							$sql .= "when 'anti-action' then 3 \n";
 							$sql .= "else 100 end, \n";
@@ -739,7 +740,12 @@
 														$condition_attribute = "";
 														$condition_tag_status = "closed";
 													}
-													else if ($condition && (!empty($condition))) {
+													else if (!empty($condition) && substr($condition, -1) == ">") {
+														$xml .= " ".$condition;
+														$condition = "";
+														$condition_tag_status = "closed";
+													}
+													else if (!empty($condition)) {
 														$xml .= " ".$condition . "/>";
 														$condition = "";
 														$condition_tag_status = "closed";
@@ -771,7 +777,7 @@
 											$condition = "";
 											$condition_attribute = "";
 										}
-										if ($dialplan_detail_tag == "condition") {
+										if (isset($dialplan_detail_tag) && $dialplan_detail_tag == "condition" || $dialplan_detail_tag == "regex") {
 											//determine the type of condition
 												if ($dialplan_detail_type == "hour") {
 													$condition_type = 'time';
@@ -813,9 +819,14 @@
 													$condition_type = 'default';
 												}
 
-											// finalize any previous pending condition statements
+											//finalize any previous pending condition statements
 												if ($condition_tag_status == "open") {
-													if (!empty($condition)) {
+													if (!empty($condition) && substr($condition, -1) == ">") {
+														$xml .= $condition . "\n";
+														$condition = '';
+														$condition_tag_status = "closed";
+													}
+													else if (!empty($condition)) {
 														$xml .= $condition . "/>\n";
 														$condition = '';
 														$condition_tag_status = "closed";
@@ -846,7 +857,15 @@
 
 											//condition tag but leave off the ending
 												if ($condition_type == "default") {
-													$condition = "	<condition field=\"" . $dialplan_detail_type . "\" expression=\"" . $dialplan_detail_data . "\"" . $condition_break;
+													if (isset($dialplan_detail_type) && $dialplan_detail_tag == 'condition' && $dialplan_detail_type == 'regex') {
+														$condition = "	<condition regex=\"" . $dialplan_detail_data . "\"" . $condition_break.">";
+													}
+													elseif (isset($dialplan_detail_type) && $dialplan_detail_tag == 'regex') {
+														$condition = "		<regex field=\"" . $dialplan_detail_type . "\" expression=\"" . $dialplan_detail_data . "\"" . $condition_break . "/>";
+													}
+													else {
+														$condition = "	<condition field=\"" . $dialplan_detail_type . "\" expression=\"" . $dialplan_detail_data . "\"" . $condition_break;
+													}
 												}
 												else if ($condition_type == "time") {
 													if ($condition_attribute) {
@@ -869,7 +888,11 @@
 													$xml .= "	<condition " . $condition_attribute . $condition_break . ">\n";
 													$condition_attribute = "";
 												}
-												else if ($condition && (!empty($condition))) {
+												else if (!empty($condition) && !empty($condition_tag_status) && substr($condition, -1) == ">") {
+													$xml .= $condition . "\n";
+													$condition = "";
+												}
+												else if (!empty($condition) && !empty($condition_tag_status)) {
 													$xml .= $condition . ">\n";
 													$condition = "";
 												}
@@ -924,7 +947,7 @@
 							}
 							unset($row);
 
-						// prevent partial dialplan (pass=nil may be error in sql or empty resultset)
+						//prevent partial dialplan (pass=nil may be error in sql or empty resultset)
 							if (isset($pass) && $pass == false) {
 								if (!empty($results)) {
 									echo 'error while build context: ' . $this->context;
@@ -934,10 +957,13 @@
 						//close the extension tag if it was left open
 							if ($dialplan_tag_status == "open") {
 								if ($condition_tag_status == "open") {
-									if ($condition_attribute and (!empty($condition_attribute))) {
+									if ($condition_attribute && (!empty($condition_attribute))) {
 										$xml .= "	<condition " . $condition_attribute . $condition_break . "/>\n";
 									}
-									else if ($condition && (!empty($condition))) {
+									else if (!empty($condition) && substr($string, -1) == ">") {
+										$xml .= $condition . "\n";
+									}
+									else if (!empty($condition)) {
 										$xml .= $condition . "/>\n";
 									}
 									else {
