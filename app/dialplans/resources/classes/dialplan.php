@@ -649,6 +649,19 @@
 				//get the dialplans from the dialplan details
 					if ($this->source == "details") {
 
+						//get the domains
+							if (!isset($domains)) {
+								$sql = "select * from v_domains ";
+								$database = new database;
+								$result = $database->select($sql, null, 'all');
+								if (!empty($result)) {
+									foreach($result as $row) {
+										$domains[$row['domain_uuid']] = $row['domain_name'];
+									}
+								}
+								unset($sql, $result, $row);
+							}
+
 						//get the data using a join between the dialplans and dialplan details tables
 							$sql = "select \n";
 							$sql .= "p.domain_uuid, p.dialplan_uuid, p.app_uuid, p.dialplan_context, p.dialplan_name, p.dialplan_number, \n";
@@ -690,6 +703,10 @@
 							$database = new database;
 							$results = $database->select($sql, $parameters ?? null, 'all');
 							unset($sql, $parameters);
+
+						//define the values before they are used
+							$previous_dialplan_uuid = null;
+							$previous_dialplan_detail_group = null;
 
 						//loop through the results to get the xml from the dialplan_xml field or from dialplan details table
 							$x = 0;
@@ -902,18 +919,6 @@
 										if ($this->context == "public" || substr($this->context, 0, 7) == "public@" || substr($this->context, -7) == ".public") {
 											if ($dialplan_detail_tag == "action") {
 												if ($first_action) {
-													//get the domains
-														if (!isset($domains)) {
-															$sql = "select * from v_domains ";
-															$database = new database;
-															$result = $database->select($sql, null, 'all');
-															if (!empty($result)) {
-																foreach($result as $row) {
-																	$domains[$row['domain_uuid']] = $row['domain_name'];
-																}
-															}
-															unset($sql, $result, $row);
-														}
 													//add the call direction and domain name and uuid
 														$xml .= "		<action application=\"export\" data=\"call_direction=inbound\" inline=\"true\"/>\n";
 														if (!empty($domain_uuid)) {
@@ -932,6 +937,11 @@
 										}
 										if ($dialplan_detail_tag == "anti-action") {
 											$xml .= "		<anti-action application=\"" . $dialplan_detail_type . "\" data=\"" . $dialplan_detail_data . "\"" . $detail_inline . "/>\n";
+										}
+
+									//reset back to first action if the group has changed
+										if ($previous_dialplan_detail_group != $dialplan_detail_group) {
+											$first_action = true;
 										}
 
 									//save the previous values
