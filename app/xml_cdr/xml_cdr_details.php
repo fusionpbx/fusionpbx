@@ -248,7 +248,7 @@
 	echo "	<td valign='top' class='".$row_style[$c]."'>".escape($destination_number)."</td>\n";
 	echo "	<td valign='top' class='".$row_style[$c]."'>".escape($start_stamp)."</td>\n";
 	echo "	<td valign='top' class='".$row_style[$c]."'>".escape($end_stamp)."</td>\n";
-	echo "	<td valign='top' class='".$row_style[$c]."'>".escape(gmdate("G:i:s", $duration ?? 0))."</td>\n";
+	echo "	<td valign='top' class='".$row_style[$c]."'>".escape(gmdate("G:i:s", (int)$duration))."</td>\n";
 	echo "	<td valign='top' class='".$row_style[$c]."'>".escape($hangup_cause)."</td>\n";
 	echo "</table>";
 	echo "<br /><br />\n";
