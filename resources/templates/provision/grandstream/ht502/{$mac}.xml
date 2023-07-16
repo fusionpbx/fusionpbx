@@ -115,7 +115,12 @@
 		<!-- Max Length: 64 characters -->
 		<P4505></P4505>
 		<!-- Periodic Inform Enable 0 - No, 1 - Yes (default is No) -->
-		<P4506>0</P4506>
+		{if isset ($grandstream_tr069_periodic_inform_enable)}
+<P4506>{$grandstream_tr069_periodic_inform_enable}</P4506>
+{else}
+<P4506>0</P4506>
+{/if}
+
 		<!-- Periodic Inform Interval (default is 300) -->
 		<!-- Max Length: 5 characters -->
 		<P4507>300</P4507>
