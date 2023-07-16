@@ -799,7 +799,7 @@ if (!class_exists('modules')) {
 					$xml .= "	</modules>\n";
 					$xml .= "</configuration>";
 
-					if (file_exists($_SESSION['switch']['conf']['dir'].'/autoload_configs')) {
+					if (is_writable($_SESSION['switch']['conf']['dir'].'/autoload_configs/modules.conf.xml')) {
 						$fout = fopen($_SESSION['switch']['conf']['dir']."/autoload_configs/modules.conf.xml","w");
 						fwrite($fout, $xml);
 						unset($xml);
