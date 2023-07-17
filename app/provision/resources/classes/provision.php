@@ -212,8 +212,8 @@
 				$x = 0;
 				foreach ($database_contacts as &$row) {
 					$uuid = $row['contact_uuid'];
-					$phone_label = strtolower($row['phone_label']);
-					$contact_category = strtolower($row['contact_category']);
+					$phone_label = strtolower($row['phone_label'] ?? '');
+					$contact_category = strtolower($row['contact_category'] ?? '');
 
 					$contact = array();
 					$contacts[] = &$contact;
@@ -234,7 +234,7 @@
 						$contact['phone_extension']		= $row['phone_extension'];
 					}
 
-					$numbers[$x]['line_number']			= $line['line_number'];
+					$numbers[$x]['line_number']			= $line['line_number'] ?? null;
 					$numbers[$x]['phone_label']			= $phone_label;
 					$numbers[$x]['phone_number']		= $row['phone_number'];
 					$numbers[$x]['phone_extension']		= $row['phone_extension'];
@@ -905,7 +905,7 @@
 					}
 
 				//get the extensions and add them to the contacts array
-					if (is_uuid($device_uuid) && is_uuid($domain_uuid) && $_SESSION['provision']['contact_extensions']['boolean'] == "true") {
+					if (is_uuid($device_uuid) && is_uuid($domain_uuid) && !empty($_SESSION['provision']['contact_extensions']['boolean']) && $_SESSION['provision']['contact_extensions']['boolean'] == "true") {
 						//get contacts from the database
 							$sql = "select extension_uuid as contact_uuid, directory_first_name, directory_last_name, ";
 							$sql .= "effective_caller_id_name, effective_caller_id_number, ";
