@@ -87,11 +87,11 @@
 		//load an array of the database schema and compare it with the active database
 		if (!empty($action["upgrade_schema"]) && permission_exists("upgrade_schema")) {
 			require_once "resources/classes/schema.php";
-			$obj = new schema();
+			$schema = new schema();
 			if (isset($action["data_types"]) && $action["data_types"] == 'true') {
-				$obj->data_types = true;
+				$schema->check_data_types(true);
 			}
-			$_SESSION["response"]["schema"] = $obj->schema("html");
+			$_SESSION["response"]["schema"] = "" . $schema->output_format('html')->upgrade();
 			message::add($text['message-upgrade_schema'], null, $message_timeout);
 		}
 

@@ -6,8 +6,7 @@ if ($domains_processed == 1) {
 		$obj = new schema;
 		$obj->db_type = $db_type;
 		$obj->schema();
-		$field_exists = $obj->column_exists($db_name, 'v_contact_phones', 'phone_type');	//check if field exists
-		if ($field_exists) {
+		if ($obj->column_exists($db_name, 'v_contact_phones', 'phone_type')) {
 			//add multi-lingual support
 			$language = new text;
 			$text = $language->get();
@@ -20,24 +19,12 @@ if ($domains_processed == 1) {
 			$sql .= "or phone_type = 'voicemail' ";
 			$sql .= "or phone_type = 'cell' ";
 			$sql .= "or phone_type = 'pcs' ";
-			$database = new database;
 			$database->execute($sql);
 			unset($sql);
 
-			$sql = "update v_contact_phones set phone_type_fax = '1' where phone_type = 'fax'";
-			$database = new database;
-			$database->execute($sql);
-			unset($sql);
-
-			$sql = "update v_contact_phones set phone_type_video = '1' where phone_type = 'video'";
-			$database = new database;
-			$database->execute($sql);
-			unset($sql);
-
-			$sql = "update v_contact_phones set phone_type_text = '1' where phone_type = 'cell' or phone_type = 'pager'";
-			$database = new database;
-			$database->execute($sql);
-			unset($sql);
+			$database->execute("update v_contact_phones set phone_type_fax = '1' where phone_type = 'fax'");
+			$database->execute("update v_contact_phones set phone_type_video = '1' where phone_type = 'video'");
+			$database->execute("update v_contact_phones set phone_type_text = '1' where phone_type = 'cell' or phone_type = 'pager'");
 
 			// migrate phone_type values to phone_label, correct case and make multilingual where appropriate
 			$default_phone_types = array('home','work','pref','voice','fax','msg','cell','pager','modem','car','isdn','video','pcs');
@@ -46,32 +33,20 @@ if ($domains_processed == 1) {
 				$sql = "update v_contact_phones set phone_label = :phone_label where phone_type = :phone_type ";
 				$parameters['phone_label'] = $default_phone_labels[$index]; //new
 				$parameters['phone_type'] = $old;
-				$database = new database;
 				$database->execute($sql, $parameters);
 				unset($sql, $parameters);
 			}
 
 			// empty phone_type field to prevent confusion in the future
-			$sql = "update v_contact_phones set phone_type is null";
-			$database = new database;
-			$database->execute($sql);
-			unset($sql);
+			$database->execute("update v_contact_phones set phone_type is null");
 		}
-		unset($obj);
 
 	//populate primary email from deprecated field in v_contact table
-		$obj = new schema;
-		$obj->db_type = $db_type;
-		$obj->schema();
-		$field_exists = $obj->column_exists($db_name, 'v_contacts', 'contact_email');	//check if field exists
-		if ($field_exists) {
+		if ($obj->column_exists($database, 'v_contacts', 'contact_email')) {
 			// get email records
-			$sql = "select * from v_contacts where contact_email is not null and contact_email != '' ";
-			$database = new database;
-			$result = $database->select($sql);
-			unset($sql);
+			$result = $database->select("select * from v_contacts where contact_email is not null and contact_email != '' ");
 
-			if (is_array($result) && @sizeof($result) != 0) {
+			if ($result !== false && is_array($result) && count($result) > 0) {
 				foreach($result as $row) {
 					$array['contact_emails'][0]['contact_email_uuid'] = uuid();
 					$array['contact_emails'][0]['domain_uuid'] = $row['domain_uuid'];
@@ -82,9 +57,6 @@ if ($domains_processed == 1) {
 					$p = new permissions;
 					$p->add('contact_email_add', 'temp');
 
-					$database = new database;
-					$database->app_name = 'contacts';
-					$database->app_uuid = '04481e0e-a478-c559-adad-52bd4174574c';
 					$database->save($array, false);
 					unset($array);
 
@@ -98,17 +70,15 @@ if ($domains_processed == 1) {
 					$parameters['domain_uuid'] = $row['domain_uuid'];
 					$parameters['contact_uuid'] = $row['contact_uuid'];
 					$parameters['email_address'] = $row['contact_email'];
-					$database = new database;
 					$result_2 = $database->select($sql, $parameters, 'all');
 					unset($sql, $parameters);
 
-					if (is_array($result_2) && @sizeof($result_2) != 0) {
+					if ($result_2 !== false && is_array($result_2) && count($result_2) > 0) {
 						$sql = "update v_contacts set contact_email = null ";
 						$sql .= "where domain_uuid = :domain_uuid ";
 						$sql .= "and contact_uuid = :contact_uuid ";
 						$parameters['domain_uuid'] = $row['domain_uuid'];
 						$parameters['contact_uuid'] = $row['contact_uuid'];
-						$database = new database;
 						$database->execute($sql, $parameters);
 						unset($sql, $parameters);
 					}
@@ -117,21 +87,13 @@ if ($domains_processed == 1) {
 			}
 			unset($result, $row);
 		}
-		unset($obj);
 
 	//populate primary url from deprecated field in v_contact table
-		$obj = new schema;
-		$obj->db_type = $db_type;
-		$obj->schema();
-		$field_exists = $obj->column_exists($db_name, 'v_contacts', 'contact_url');	//check if field exists
-		if ($field_exists) {
+		if ($obj->column_exists($database, 'v_contacts', 'contact_url')) {
 			// get email records
-			$sql = "select * from v_contacts where contact_url is not null and contact_url != ''";
-			$database = new database;
-			$result = $database->select($sql);
-			unset($sql);
+			$result = $database->select("select * from v_contacts where contact_url is not null and contact_url != ''");
 
-			if (is_array($result) && @sizeof($result) != 0) {
+			if ($result !== false && is_array($result) && count($result) > 0) {
 				foreach($result as $row) {
 					$array['contact_urls'][0]['contact_url_uuid'] = uuid();
 					$array['contact_urls'][0]['domain_uuid'] = $row['domain_uuid'];
@@ -142,9 +104,6 @@ if ($domains_processed == 1) {
 					$p = new permissions;
 					$p->add('contact_url_add', 'temp');
 
-					$database = new database;
-					$database->app_name = 'contacts';
-					$database->app_uuid = '04481e0e-a478-c559-adad-52bd4174574c';
 					$database->save($array, false);
 					unset($array);
 
@@ -158,17 +117,15 @@ if ($domains_processed == 1) {
 					$parameters['domain_uuid'] = $row['domain_uuid'];
 					$parameters['contact_uuid'] = $row['contact_uuid'];
 					$parameters['url_address'] = $row['contact_url'];
-					$database = new database;
 					$result_2 = $database->select($sql, $parameters, 'all');
 					unset($sql, $parameters);
 
-					if (is_array($result_2) && @sizeof($result_2) != 0) {
+					if ($result_2 !== false && is_array($result_2) && count($result_2) > 0) {
 						$sql = "update v_contacts set contact_url = '' ";
 						$sql .= "where domain_uuid = :domain_uuid ";
 						$sql .= "and contact_uuid = :contact_uuid ";
 						$parameters['domain_uuid'] = $row['domain_uuid'];
 						$parameters['contact_uuid'] = $row['contact_uuid'];
-						$database = new database;
 						$database->execute($sql, $parameters);
 						unset($sql, $parameters);
 					}
@@ -177,7 +134,6 @@ if ($domains_processed == 1) {
 			}
 			unset($result, $row);
 		}
-		unset($obj);
 
 	//set [name]_primary fields to 0 where null
 		$name_tables = array('phones','addresses','emails','urls');
@@ -185,7 +141,6 @@ if ($domains_processed == 1) {
 		foreach ($name_tables as $name_index => $name_table) {
 			$sql = "update v_contact_".$name_table." set ".$name_fields[$name_index]."_primary = 0 ";
 			$sql .= "where ".$name_fields[$name_index]."_primary is null ";
-			$database = new database;
 			$database->execute($sql);
 			unset($sql);
 		}
@@ -194,9 +149,8 @@ if ($domains_processed == 1) {
 	//move the users from the contact groups table into the contact users table
 		$sql = "select * from v_contact_groups ";
 		$sql .= "where group_uuid in (select user_uuid from v_users) ";
-		$database = new database;
 		$result = $database->select($sql, null, 'all');
-		if (is_array($result) && @sizeof($result) != 0) {
+		if ($result !== false && is_array($result) && count($result) > 0) {
 			foreach ($result as &$row) {
 				$p = new permissions;
 				$p->add('contact_user_add', 'temp');
@@ -207,17 +161,11 @@ if ($domains_processed == 1) {
 				$array['contact_users'][0]['contact_uuid'] = $row["contact_uuid"];
 				$array['contact_users'][0]['user_uuid'] = $row["group_uuid"];
 
-				$database = new database;
-				$database->app_name = 'contacts';
-				$database->app_uuid = '04481e0e-a478-c559-adad-52bd4174574c';
 				$database->save($array, false);
 				unset($array);
 
 				$array['contact_groups'][0]['contact_group_uuid'] = $row["contact_group_uuid"];
 
-				$database = new database;
-				$database->app_name = 'contacts';
-				$database->app_uuid = '04481e0e-a478-c559-adad-52bd4174574c';
 				$database->delete($array);
 				unset($array);
 

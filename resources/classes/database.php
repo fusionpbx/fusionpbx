@@ -619,6 +619,21 @@
 			}
 
 			/**
+			 * Sets the table property in this object when <i>table_name</i> is set to a string value.
+			 * When the table name is null the currently set table name is returned as a string value.
+			 * If no name is currently present, then an empty string will be returned.
+			 * @param string|null $table_name Unsanitized table name.
+			 * @return mixed Returns the current table name as string when <i>table_name</i> is null or the database object when the <i>table_name</i> is a string.
+			 */
+			public function table(?string $table_name = null) {
+				if($table_name === null)
+					return "" . $this->table;
+				//sanitize the table name before setting the property
+				$this->table = self::sanitize($table_name);
+				return $this;
+			}
+
+			/**
 			 * Checks if the table exists in the database.
 			 * <p><b>Note:</b><br>
 			 * Table name must be sanitized. Otherwise, a warning will be
@@ -717,6 +732,154 @@
 
 				//return the result array
 					return $result;
+			}
+
+			public function get_pgsql_table_contraints() {
+				//SELECT conname, pg_catalog.pg_get_constraintdef(r.oid, true) as condef 
+				//FROM pg_catalog.pg_constraint r 
+				//WHERE r.conrelid = 'v_call_flows'::regclass ORDER BY 1;
+				$constraints = [];
+				if(!empty($this->table)) {
+					$sql = "SELECT conname as key, pg_catalog.pg_get_constraintdef(r.oid, true) as def"
+						. " FROM pg_catalog.pg_constraint r"
+						. " WHERE r.conrelid = '{$this->table}'::regclass ORDER BY 1;";
+					$result = $this->execute($sql);
+					if($result !== false) {
+						$constraints = $result;
+						echo "";
+					}
+				}
+				return $constraints;
+			}
+
+			public function get_pgsql_constraints($schema = 'public') {
+				$sql = "SELECT conrelid::regclass AS table_from, conname as key, pg_get_constraintdef(oid) as def"
+					. " FROM pg_constraint"
+					. " WHERE contype IN ('f', 'p ')"
+					. " AND connamespace = '$schema'::regnamespace"
+					. " ORDER BY conrelid::regclass::text, contype DESC;";
+				$result = $this->execute($sql);
+				if($result !== false && !empty($result)) {
+					$constraints = [];
+					foreach($result as $row) {
+						$constraints[$row['table_from']][] = ['key' => $row['key'], 'def' => $row['def']];
+					}
+					return $constraints;
+				} else {
+					return [];
+				}
+			}
+
+			public function get_pgsql_comments($schema = 'public') {
+				$sql = "SELECT cols.table_name, cols.column_name, ("
+					. "		SELECT pg_catalog.col_description(c.oid, cols.ordinal_position::int)"
+					. " FROM pg_catalog.pg_class c WHERE c.oid = (SELECT ('\"' || cols.table_name || '\"')::regclass::oid)"
+					. " AND c.relname = cols.table_name)"
+					. " AS column_comment"
+					. " FROM information_schema.columns cols "
+					. " WHERE cols.table_catalog    = 'fusionpbx' "
+					. " AND cols.table_schema = '$schema'"
+					. " ORDER BY cols.table_name, cols.column_name;";
+				$result = $this->execute($sql);
+				if($result !== false && !empty($result)) {
+					$comments = [];
+					foreach($result as $row) {
+						$comments[$row['table_name']][$row['column_name']] = $row['column_comment'];
+					}
+					return $comments;
+				}
+				return [];
+			}
+
+			public function get_pgsql_fields($schema = 'public') {
+				$sql = "select table_name, column_name, column_default, is_nullable, udt_name, character_maximum_length, numeric_precision, numeric_precision_radix, numeric_scale"
+					. " from information_schema.columns"
+					. " WHERE table_schema = '$schema'"
+					. " ORDER BY table_name, ordinal_position;";
+				$result = $this->execute($sql);
+				if($result !== false && !empty($result)) {
+					$fields = [];
+					foreach($result as $row) {
+						$fields[$row['table_name']][$row['column_name']] = $row;
+					}
+					return $fields;
+				}
+				return [];
+			}
+
+			public function get_pgsql_table_fields(string $table_name, $schema = 'public'): array {
+				$cols = [];
+				$sql = "SELECT * FROM information_schema.columns "
+					. "WHERE table_schema = '$schema' AND table_name = '$table_name'";
+				$result = $this->execute($sql);
+				if($result !== false && !empty($result)) {
+					foreach($result as $column) {
+						$cols[] = $column['column_name'];
+					}
+				}
+				return $cols;
+			}
+
+			public function get_field_details() {
+				//public $db;
+				//public $type;
+				//public $table;
+				//public $name;
+
+				//initialize the array
+					$result = [];
+
+				//get the table info
+					$table_info = $this->table_info();
+
+				//set the list of fields
+					if (is_array($table_info)) {
+						$key = "";
+						switch($this->type) {
+							case 'pgsql':
+								$key = 'column_name';
+								break;
+							case 'mysql':
+								$key = 'Field';
+								break;
+							case 'mssql':
+								$key = 'COLUMN_NAME';
+								break;
+							default:
+								trigger_error('Unknown database type');
+						}
+						foreach($table_info as $row) {
+							$result[$row[$key]] = $row;
+						}
+					}
+
+				//return the result array
+					return $result;
+			}
+
+			public function get_pgsql_indexes($schema = 'public') {
+				$fields = [];
+				$sql = "SELECT d.objid::regclass AS index_name,"
+						. " a.attname AS column_name,"
+						. " d.refobjid::regclass AS table_name"
+						. " FROM pg_catalog.pg_class c"
+						. " JOIN pg_depend AS d"
+						. " ON c.oid = d.refobjid"
+						. " JOIN pg_attribute AS a"
+						. " ON d.refobjid = a.attrelid"
+						. " AND d.refobjsubid = a.attnum"
+						. " WHERE d.refclassid = 'pg_class'::regclass"
+						. " AND d.classid = 'pg_class'::regclass"
+						. " AND c.relnamespace = '$schema'::regnamespace"
+						. " ORDER BY d.refobjid, d.objid;";
+				$result = $this->execute($sql);
+				if($result !== false && !empty($result)) {
+					$fields = [];
+					foreach($result as $row) {
+						$fields[$row['table_name']][$row['column_name']] = $row['index_name'];
+					}
+				}
+				return $fields;
 			}
 
 			/**
