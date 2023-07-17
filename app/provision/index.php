@@ -296,7 +296,7 @@
 	}
 
 //check the cidr range
-	if (is_array($_SESSION['provision']["cidr"])) {
+	if (!empty($_SESSION['provision']["cidr"]) && is_array($_SESSION['provision']["cidr"])) {
 		$found = false;
 		foreach($_SESSION['provision']["cidr"] as $cidr) {
 			if (check_cidr($cidr, $_SERVER['REMOTE_ADDR'])) {
@@ -312,7 +312,7 @@
 
 //http authentication - digest
 	if (!empty($provision["http_auth_username"]) && empty($provision["http_auth_type"])) { $provision["http_auth_type"] = "digest"; }
-	if (!empty($provision["http_auth_username"]) && $provision["http_auth_type"] === "digest" && $provision["http_auth_enabled"] === "true") {
+	if (!empty($provision["http_auth_username"]) && $provision["http_auth_type"] === "digest" && !empty($provision["http_auth_enabled"]) && $provision["http_auth_enabled"] === "true") {
 		//function to parse the http auth header
 			function http_digest_parse($txt) {
 				//protect against missing data
