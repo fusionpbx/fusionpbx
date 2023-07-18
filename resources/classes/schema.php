@@ -168,6 +168,19 @@
 				}
 			}
 
+			private function sql_generate_field_changes($table_name, $table_fields) {
+				foreach ($table_fields as $field) {
+					if (!self::app_field_skip($field)) {
+						$this->sql_field_rename($table_name, $field);
+						$this->sql_field_add($table_name, $field);
+						$this->sql_field_modify_type($table_name, $field);
+						$this->sql_field_add_index($table_name, $field);
+						$this->sql_field_add_comment($table_name, $field);
+						$this->sql_field_add_foreign_key($table_name, $field);
+					}
+				}
+			}
+
 			//datatase schema
 			public function upgrade() {
 
@@ -228,20 +241,6 @@
 
 			public function has_errors(): bool {
 				return (count($this->errors) > 0);
-			}
-
-			/**
-			 * Checks for an existing column.
-			 * @param type $db_name
-			 * @param type $table_name
-			 * @param type $column_name
-			 * @return bool
-			 * @deprecated since version 5.1.1
-			 */
-			public function column_exists($db_name, $table_name, $column_name): bool {
-				$database = $this->database;
-				$columns = $database->get_pgsql_table_fields($table_name);
-				return array_search($column_name, $columns, true) !== false;
 			}
 
 			private function sql_generate_table_insert($table_name, &$table_fields) {
@@ -348,19 +347,6 @@
 					return true;
 				}
 				return false;
-			}
-
-			private function sql_generate_field_changes($table_name, $table_fields) {
-				foreach ($table_fields as $field) {
-					if ($this->db_table_exists($table_name) && !self::app_field_skip($field)) {
-						$this->sql_field_rename($table_name, $field);
-						$this->sql_field_add($table_name, $field);
-						$this->sql_field_modify_type($table_name, $field);
-						$this->sql_field_add_index($table_name, $field);
-						$this->sql_field_add_comment($table_name, $field);
-						$this->sql_field_add_foreign_key($table_name, $field);
-					}
-				}
 			}
 
 			private function db_table_exists($table_name) {
@@ -478,6 +464,20 @@
 
 			private static function app_table_parent_exists($table) {
 				return !empty($table['parent'] ?? '');
+			}
+
+			/**
+			 * Checks for an existing column.
+			 * @param type $db_name
+			 * @param type $table_name
+			 * @param type $column_name
+			 * @return bool
+			 * @deprecated since version 5.1.1
+			 */
+			public function column_exists($db_name, $table_name, $column_name): bool {
+				$database = $this->database;
+				$columns = $database->get_pgsql_table_fields($table_name);
+				return array_search($column_name, $columns, true) !== false;
 			}
 
 			/*
