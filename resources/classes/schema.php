@@ -184,26 +184,8 @@
 			//datatase schema
 			public function upgrade() {
 
-				//enumerate database table and column info
-				$all_fields = $this->database->get_pgsql_fields();
-				//get the table names
-				$tables = array_keys($all_fields);
-				//get the primary keys and foreign keys
-				$constraints = $this->database->get_pgsql_constraints();
-				//get the comments
-				$comments = $this->database->get_pgsql_comments();
-				//get the indexes
-				$indexes = $this->database->get_pgsql_indexes();
-				//reorder the database tables
-				foreach ($tables as $table) {
-					$this->db_tables[$table]['fields'] = $all_fields[$table];
-					foreach($constraints[$table] ?? [] as $constraint) {
-						$this->db_field_f_key_add($table, $constraint['key'], $constraint['def']);
-					}
-					$this->db_tables[$table]['comments'] = $comments[$table] ?? '';
-					$this->db_tables[$table]['indexes'] = $indexes[$table] ?? '';
-				}
-
+				//set object properties to have database information
+				$this->enumerate_database();
 				//get the list of installed apps from the core and mod directories
 				$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_config.php");
 				//$apps is used by all app_config files to load default settings, permissions, database etc.
@@ -260,6 +242,28 @@
 					}
 				}
 				return $fields;
+			}
+
+			private function enumerate_database() {
+				//enumerate database table and column info
+				$all_fields = $this->database->get_pgsql_fields();
+				//get the table names
+				$tables = array_keys($all_fields);
+				//get the primary keys and foreign keys
+				$constraints = $this->database->get_pgsql_constraints();
+				//get the comments
+				$comments = $this->database->get_pgsql_comments();
+				//get the indexes
+				$indexes = $this->database->get_pgsql_indexes();
+				//reorder the database tables
+				foreach ($tables as $table) {
+					$this->db_tables[$table]['fields'] = $all_fields[$table];
+					foreach($constraints[$table] ?? [] as $constraint) {
+						$this->db_field_f_key_add($table, $constraint['key'], $constraint['def']);
+					}
+					$this->db_tables[$table]['comments'] = $comments[$table] ?? '';
+					$this->db_tables[$table]['indexes'] = $indexes[$table] ?? '';
+				}
 			}
 
 			private function sql_field_rename($table_name, &$field) {
