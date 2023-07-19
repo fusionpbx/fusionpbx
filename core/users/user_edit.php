@@ -134,6 +134,7 @@
 				$contact_name_family = $_POST["contact_name_family"];
 			}
 			$group_uuid_name = $_POST["group_uuid_name"];
+			$user_type = $_POST["user_type"];
 			$user_enabled = $_POST["user_enabled"] ?? 'false';
 			if (permission_exists('api_key')) {
 				$api_key = $_POST["api_key"];
@@ -526,6 +527,7 @@
 				if (!empty($_SESSION['authentication']['methods']) && in_array('totp', $_SESSION['authentication']['methods'])) {
 					$array['users'][$x]['user_totp_secret'] = $user_totp_secret;
 				}
+				$array['users'][$x]['user_type'] = $user_type;
 				$array['users'][$x]['user_enabled'] = $user_enabled;
 				if (permission_exists('contact_add')) {
 					$array['users'][$x]['contact_uuid'] = (!empty($contact_uuid)) ? $contact_uuid : null;
@@ -606,7 +608,7 @@
 		//populate the form with values from db
 			if ($action == 'edit') {
 				$sql = "select domain_uuid, user_uuid, username, user_email, api_key, user_totp_secret, ";
-				$sql .= "user_enabled, contact_uuid, cast(user_enabled as text), user_status ";
+				$sql .= "user_type, user_enabled, contact_uuid, cast(user_enabled as text), user_status ";
 				$sql .= "from v_users ";
 				$sql .= "where user_uuid = :user_uuid ";
 				if (!permission_exists('user_all')) {
@@ -623,6 +625,7 @@
 					$user_email = $row["user_email"];
 					$api_key = $row["api_key"];
 					$user_totp_secret = $row["user_totp_secret"];
+					$user_type = $row["user_type"];
 					$user_enabled = $row["user_enabled"];
 					if (permission_exists('contact_view')) {
 						$contact_uuid = $row["contact_uuid"];
@@ -1027,6 +1030,22 @@
 
 		echo "		</td>";
 		echo "	</tr>";
+	}
+
+	if (permission_exists('user_type')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-user_type']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<select class='formfld' name='user_type' id='user_type'>\n";
+		echo "		<option value='default' ".(($user_type == "default") ? "selected='selected'" : null).">".$text['label-default']."</option>\n";
+		echo "		<option value='virtual' ".(($user_type == "virtual") ? "selected='selected'" : null).">".$text['label-virtual']."</option>\n";
+		echo "	</select>\n";
+		echo "<br />\n";
+		echo $text['description-user_type']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
 	}
 
 	if (permission_exists('user_domain')) {

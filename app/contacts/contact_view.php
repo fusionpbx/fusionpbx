@@ -337,6 +337,11 @@
 				echo "<div class='box contact-details-label'>".$text['label-contact_nickname']."</div>\n";
 				echo "<div class='box'>\"".escape($contact_nickname)."\"</div>\n";
 			}
+		//name
+			if ($contact_name_given) {
+				echo "<div class='box contact-details-label'>".$text['label-name']."</div>\n";
+				echo "<div class='box'>".escape($contact_name_given).(!empty($contact_name_family) ? ' '.escape($contact_name_family) : null)."</div>\n";
+			}
 		//contact type
 			if ($contact_type) {
 				echo "<div class='box contact-details-label'>".$text['label-contact_type']."</div>\n";

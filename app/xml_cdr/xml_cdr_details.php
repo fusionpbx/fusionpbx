@@ -158,7 +158,7 @@
 			$array["callflow"][0] = $tmp;
 		}
 		$x = 0;
-		if (is_array($array["callflow"])) foreach ($array["callflow"] as $row) {
+		if (!empty($array["callflow"])) foreach ($array["callflow"] as $row) {
 			if ($x == 0) {
 				$destination_number = urldecode($row["caller_profile"]["destination_number"]);
 				$context = urldecode($row["caller_profile"]["context"]);
@@ -168,12 +168,18 @@
 			$caller_id_number = urldecode($row["caller_profile"]["caller_id_number"]);
 
 			$call_flow_summary[$x]["destination_number"] = urldecode($row["caller_profile"]["destination_number"]);
-			$tmp_start_stamp = urldecode($row["times"]["profile_created_time"]) / 1000000;
+			if (isset($row["times"]["profile_created_time"])) {
+				$tmp_start_stamp = urldecode($row["times"]["profile_created_time"]) / 1000000;
+			}
 			if ($x == 0) {
-				$tmp_end_stamp = urldecode($row["times"]["hangup_time"]) / 1000000; 
+				if (isset($row["times"]["hangup_time"])) {
+					$tmp_end_stamp = urldecode($row["times"]["hangup_time"]) / 1000000;
+				}
 			}
 			else {
-				$tmp_end_stamp = urldecode($row["times"]["transfer_time"]) / 1000000;
+				if (isset($row["times"]["transfer_time"])) {
+					$tmp_end_stamp = urldecode($row["times"]["transfer_time"]) / 1000000;
+				}
 			}
 			$call_flow_summary[$x]["start_stamp"] = date("Y-m-d H:i:s", (int) $tmp_start_stamp);
 			$call_flow_summary[$x]["end_stamp"] = date("Y-m-d H:i:s", (int) $tmp_end_stamp);
@@ -242,7 +248,7 @@
 	echo "	<td valign='top' class='".$row_style[$c]."'>".escape($destination_number)."</td>\n";
 	echo "	<td valign='top' class='".$row_style[$c]."'>".escape($start_stamp)."</td>\n";
 	echo "	<td valign='top' class='".$row_style[$c]."'>".escape($end_stamp)."</td>\n";
-	echo "	<td valign='top' class='".$row_style[$c]."'>".escape(gmdate("G:i:s", $duration))."</td>\n";
+	echo "	<td valign='top' class='".$row_style[$c]."'>".escape(gmdate("G:i:s", (int)$duration))."</td>\n";
 	echo "	<td valign='top' class='".$row_style[$c]."'>".escape($hangup_cause)."</td>\n";
 	echo "</table>";
 	echo "<br /><br />\n";

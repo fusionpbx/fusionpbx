@@ -936,7 +936,12 @@
 <!--  Periodic Inform Enable. 0 - No, 1 - Yes. Default is 0 -->
 <!--  Number: 0, 1 -->
 <!--  Mandatory -->
+{if isset ($grandstream_tr069_periodic_inform_enable)}
+<P4506>{$grandstream_tr069_periodic_inform_enable}</P4506>
+{else}
 <P4506>0</P4506>
+{/if}
+
 
 <!--  Periodic Inform Interval. Default is 86400 -->
 <!--  Number -->

@@ -170,6 +170,7 @@ class plugin_database {
 			$sql .= "u.user_email, u.salt, u.api_key, u.domain_uuid, d.domain_name ";
 			$sql .= "from v_users as u, v_domains as d ";
 			$sql .= "where u.domain_uuid = d.domain_uuid ";
+			$sql .= "and (user_type = 'default' or user_type is null) ";
 			if (isset($this->key) && strlen($this->key) > 30) {
 				$sql .= "and u.api_key = :api_key ";
 				$parameters['api_key'] = $this->key;

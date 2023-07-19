@@ -30,16 +30,30 @@
 
 		class schema {
 
-			CONST TABLE_NEW = 0,
+			const TABLE_NEW = 0,
 				TABLE_RENAME = 1,
 				TABLE_COMMENT = 2;
-			CONST FIELD_NEW = 0,
+			const FIELD_NEW = 0,
 				FIELD_ADD = 1,
 				FIELD_RENAME = 2,
 				FIELD_TYPE = 3,
 				FIELD_COMMENT = 4,
 				FIELD_KEY = 5,
 				FIELD_INDEX = 6;
+
+			//used to determine how the database transactions are performed
+			/**
+			 * ATOMIC commit will write the sql to the PDO driver and then commit at once. If there is an error in any of
+			 * the sql statements all changes are reversed.
+			 * BATCH commit groups each each change by type of statement. The types are determined by the constants
+			 * of FIELD_NEW, FIELD_ADD, FIELD_RENAME, FIELD_TYPE, FIELD_COMMENT, FIELD_KEY, FIELD_INDEX. If there are any
+			 * errors within that group, the changes are reversed for that group and the next group is tried.
+			 * SINGLE (default) commit executes each sql individually. This is the safest type of commit. If there are any errors
+			 * then only that single commit is not written to the database.
+			 */
+			const SCHEMA_COMMIT_ATOMIC = 0,
+				SCHEMA_COMMIT_BATCH = 1,
+				SCHEMA_COMMIT_SINGLE = 2;
 
 			/**
 			 * An array of error Exception objects from {@link \Exception} reported during processing of the included app_config files.
@@ -58,15 +72,16 @@
 			private $data_type;
 			private $type;
 			private $db_tables;
+			private $commit_mode;
 
 			/**
 			 * Sets database tables and fields to match the app_config files.
-			 * @global type $apps Used to parse the app_config files that use the apps[$x]['db']
 			 * @param string $output_type Return the formatted text response of either 'text' or 'html'
 			 * @param bool $check_data_types Forces check on each column type in the database
+			 * @param int $commit_mode Set writing to the database per single transaction, batches, or atomically
 			 * @depends database::new()
 			 */
-			public function __construct(string $output_type = null, bool $check_data_types = false) {
+			public function __construct(string $output_type = null, bool $check_data_types = false, int $commit_mode = 2) {
 				//open a database connection
 				$this->database = database::new();
 
@@ -94,6 +109,9 @@
 
 				//initialize the internal database tracking array
 				$this->db_tables = [];
+
+				//set the default write mode to the database
+				$this->commit_mode = $commit_mode;
 
 			}
 
@@ -142,22 +160,49 @@
 			//create the database schema
 			private function exec() {
 				if (!empty($this->sql)) {
-					//create all tables
-					if(isset($this->sql['tables'])) {
-						$this->do_transaction($this->sql['tables']);
-						unset($this->sql['tables']);
-					}
-					//write alter statements after tables are created
-					foreach($this->sql as $command_set) {
-						$this->do_transaction($command_set);
+					try {
+						//check database commit type
+						switch($this->commit_mode) {
+							//fastest write method but can reverse all changes if there is an error
+							case self::SCHEMA_COMMIT_ATOMIC:
+								$this->database->db->beginTransaction();
+								foreach($this->sql as $command_set) {
+									$this->database->db->query($sql);
+								}
+								$this->database->db->commit();
+								break;
+							//write each section of the statements
+							case self::SCHEMA_COMMIT_BATCH:
+								//create all tables
+								if(isset($this->sql['tables'])) {
+									$this->save_transaction_batch($this->sql['tables']);
+									unset($this->sql['tables']);
+								}
+								//write alter statements after tables are created
+								foreach($this->sql as $command_set) {
+									$this->save_transaction_batch($command_set);
+								}
+								break;
+							//safest option to ensure all changes are written
+							case self::SCHEMA_COMMIT_SINGLE:
+								foreach($this->sql as $sql) {
+									$this->database->db->exec($sql);
+								}
+								break;
+						}
+					} catch (Throwable $e) {
+						$this->errors[] = $e->getMessage();
+						if($this->database->db->inTransaction()) {
+							$this->database->db->rollBack();
+						}
 					}
 				}
 			}
 
-			private function do_transaction(array $command_set) {
+			private function save_transaction_batch(array $batch) {
 				try {
 					$this->database->db->beginTransaction();
-					foreach($command_set as $sql) {
+					foreach($batch as $sql) {
 						$this->database->db->query($sql);
 					}
 					$this->database->db->commit();
@@ -302,6 +347,14 @@
 				if (self::app_field_ref_exists($field)) {
 					$f_table_name = self::app_field_ref_table($field);
 					$f_field_name = self::app_field_ref_field($field);
+					if(!$this->db_table_exists($f_table_name)) {
+						trigger_error("Foreign key defined in table $table_name references table $f_table_name but table does not exist", E_USER_WARNING);
+						return false;
+					}
+					if(!$this->db_field_exists($f_table_name, $f_field_name)) {
+						trigger_error("Foreign key defined in table $table_name references column $f_table_name but table does not exist", E_USER_WARNING);
+						return false;
+					}
 					$key = "fk_{$table_name}_{$field_name}_{$f_table_name}_{$f_field_name}";
 					$sql = "ALTER TABLE {$table_name} ADD CONSTRAINT $key "
 						. " FOREIGN KEY({$field_name})"

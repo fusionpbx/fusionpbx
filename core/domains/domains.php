@@ -38,31 +38,25 @@
 //change the domain
 	if (!empty($_GET["domain_uuid"]) && is_uuid($_GET["domain_uuid"]) && $_GET["domain_change"] == "true") {
 		if (permission_exists('domain_select')) {
-			//get the domain_uuid
-				$sql = "select * from v_domains ";
-				$sql .= "order by domain_name asc ";
-				$database = new database;
-				$result = $database->select($sql, null, 'all');
-				if (!empty($result)) {
-					foreach($result as $row) {
-						if (count($result) == 0) {
-							$_SESSION["domain_uuid"] = $row["domain_uuid"];
-							$_SESSION["domain_name"] = $row['domain_name'];
-						}
-						else {
-							if (!empty($domain_array) && ($row['domain_name'] == $domain_array[0] || $row['domain_name'] == 'www.'.$domain_array[0])) {
-								$_SESSION["domain_uuid"] = $row["domain_uuid"];
-								$_SESSION["domain_name"] = $row['domain_name'];
-							}
-						}
-					}
-				}
-				unset($sql, $result);
 
 			//update the domain session variables
 				$domain_uuid = $_GET["domain_uuid"];
 				$_SESSION["previous_domain_uuid"] = $_SESSION['domain_uuid'];
 				$_SESSION['domain_uuid'] = $domain_uuid;
+
+			//get the domain details
+				$sql = "select * from v_domains ";
+				$sql .= "order by domain_name asc ";
+				$database = new database;
+				$domains = $database->select($sql, null, 'all');
+				if (!empty($domains)) {
+					foreach($domains as $row) {
+						$_SESSION['domains'][$row['domain_uuid']] = $row;
+					}
+				}
+				unset($sql, $result);
+
+			//update the domain session variables
 				$_SESSION["domain_name"] = $_SESSION['domains'][$domain_uuid]['domain_name'];
 				$_SESSION['domain']['template']['name'] = $_SESSION['domains'][$domain_uuid]['template_name'] ?? null;
 				$_SESSION["context"] = $_SESSION["domain_name"];
@@ -77,7 +71,7 @@
 			//redirect the user
 				if (!empty($_SESSION["login"]["destination"])) {
 					// to default, or domain specific, login destination
-					header("Location: ".PROJECT_PATH.$_SESSION["login"]["destination"]["url"]);
+					header("Location: ".PROJECT_PATH.$_SESSION["login"]["destination"]["text"]);
 				}
 				else {
 					header("Location: ".PROJECT_PATH."/core/dashboard/");
