@@ -73,6 +73,8 @@
 			private $type;
 			private $db_tables;
 			private $commit_mode;
+			private $text;
+			private $html;
 
 			/**
 			 * Sets database tables and fields to match the app_config files.
@@ -113,6 +115,9 @@
 				//set the default write mode to the database
 				$this->commit_mode = $commit_mode;
 
+				$this->html = [];
+
+				$this->text = [];
 			}
 
 			public function __get($name) {
@@ -167,7 +172,7 @@
 							case self::SCHEMA_COMMIT_ATOMIC:
 								$this->database->db->beginTransaction();
 								foreach($this->sql as $command_set) {
-									$this->database->db->query($sql);
+									$this->database->db->query($command_set);
 								}
 								$this->database->db->commit();
 								break;
@@ -321,12 +326,6 @@
 					$this->db_field_rename($table_name, $deprecated_name, $field_name);
 					return true;
 				}
-//				else {
-//					//if the new field doesn't exist then create it
-//					if(!$this->db_field_exists($table_name, $field_name)) {
-//						return $this->sql_field_add($table_name, $field);
-//					}
-//				}
 				return false;
 			}
 
@@ -537,370 +536,6 @@
 				return array_search($column_name, $columns, true) !== false;
 			}
 
-			/*
-			  //build the sql with anything changed or missing
-			  //				foreach ($this->apps as $app) {
-			  //					foreach ($app['db'] as $row) {
-			  //						if (isset($row['table']['name'])) {
-			  //							if (is_array($row['table']['name'])) {
-			  //								$table_name = $row['table']['name']['text'];
-			  //							} else {
-			  //								$table_name = $row['table']['name'];
-			  //							}
-			  //						} else {
-			  //							//old array syntax
-			  //							if (is_array($row['table'])) {
-			  //								$table_name = $row['table']['text'];
-			  //							} else {
-			  //								$table_name = $row['table'];
-			  //							}
-			  //						}
-			  //						if (!empty($table_name)) {
-			  //							//check if the table exists
-			  //							if (!empty($db_tables[$table_name])) {
-			  //								$apps[$x]['db'][$y]['exists'] = 'true';
-			  //								//check if the column exists
-			  //								foreach ($row['fields'] as $field) {
-			  //									if (!empty($field['deprecated']) && $field['deprecated'] === "true") {
-			  //										//skip this field
-			  //									} else {
-			  //										if (is_array($field['name'])) {
-			  //											$field_name = $field['name']['text'];
-			  //										} else {
-			  //											$field_name = $field['name'];
-			  //										}
-			  //										if (!empty($field_name)) {
-			  //											if (!empty($db_tables[$table_name][$field_name])) {
-			  //												//found
-			  //												$apps[$x]['db'][$y]['fields'][$z]['exists'] = 'true';
-			  //											} else {
-			  //												//not found
-			  //												$apps[$x]['db'][$y]['fields'][$z]['exists'] = 'false';
-			  //											}
-			  //										} else {
-			  //											//we are unable to parse field name
-			  //											trigger_error("unable to parse field name '$field_name' in table '$table_name'\n");
-			  //										}
-			  //										unset($field_name);
-			  //									}
-			  //								}
-			  //								unset($table_name);
-			  //							} else {
-			  //								$apps[$x]['db'][$y]['exists'] = 'false';
-			  //							}
-			  //						}
-			  //					}
-			  //				}
-
-			  //prepare the variables
-			  $sql_update = '';
-
-			  //				//add missing tables and fields
-			  //				foreach ($apps as $x => &$app) {
-			  //					if (isset($app['db']))
-			  //						foreach ($app['db'] as $y => &$row) {
-			  //							if (is_array($row['table']['name'])) {
-			  //								$table_name = $row['table']['name']['text'];
-			  //								if (in_array($row['table']['name']['deprecated'], $db_tables)) {
-			  //									//$row['exists'] = "false"; //testing
-			  //									if ($db_type == "pgsql") {
-			  //										$sql_update .= "ALTER TABLE " . $row['table']['name']['deprecated'] . " RENAME TO " . $row['table']['name']['text'] . ";\n";
-			  //									}
-			  //									if ($db_type == "mysql") {
-			  //										$sql_update .= "RENAME TABLE " . $row['table']['name']['deprecated'] . " TO " . $row['table']['name']['text'] . ";\n";
-			  //									}
-			  //									if ($db_type == "sqlite") {
-			  //										$sql_update .= "ALTER TABLE " . $row['table']['name']['deprecated'] . " RENAME TO " . $row['table']['name']['text'] . ";\n";
-			  //									}
-			  //								} else {
-			  //									if (!empty($row['table']['name']['text'], $db_tables)) {
-			  //										$row['exists'] = "true";
-			  //									} else {
-			  //										$row['exists'] = "false";
-			  //										$sql_update .= $this->db_create_table($apps, $db_type, $row['table']['name']['text']);
-			  //									}
-			  //								}
-			  //							} else {
-			  //								$table_name = $row['table']['name'];
-			  //							}
-			  //							//check if the table exists
-			  //							if ($row['exists'] == "true") {
-			  //								if (count($row['fields']) > 0) {
-			  //									$table_info = $this->db_table_info($db_name, $db_type, $table_name);
-			  //									foreach ($row['fields'] as $z => $field) {
-			  //										if (!empty($field['deprecated']) && $field['deprecated'] == "true") {
-			  //											//skip this field
-			  //										} else {
-			  //											//get the data type
-			  //											if (is_array($field['type'])) {
-			  //												$field_type = $field['type'][$db_type];
-			  //											} else {
-			  //												$field_type = $field['type'];
-			  //											}
-			  //											//get the field name
-			  //											if (is_array($field['name'])) {
-			  //												$field_name = $field['name']['text'];
-			  //												if (array_key_exists($field_name, $table_info)) {
-			  //													$field['exists'] = "false";
-			  //												}
-			  //											} else {
-			  //												$field_name = $field['name'];
-			  //											}
-			  //
-			  //											//add or rename fields
-			  //											if (isset($field['name']['deprecated']) && array_key_exists($field['name']['deprecated'], $table_info)) {
-			  //												if ($db_type == "pgsql") {
-			  //													$sql_update .= "ALTER TABLE " . $table_name . " RENAME COLUMN " . $field['name']['deprecated'] . " to " . $field['name']['text'] . ";\n";
-			  //												}
-			  //												if ($db_type == "mysql") {
-			  //													$field_type = str_replace("AUTO_INCREMENT PRIMARY KEY", "", $field_type);
-			  //													$sql_update .= "ALTER TABLE " . $table_name . " CHANGE " . $field['name']['deprecated'] . " " . $field['name']['text'] . " " . $field_type . ";\n";
-			  //												}
-			  //												if ($db_type == "sqlite") {
-			  //													//a change has been made to the field name
-			  //													$apps[$x]['db'][$y]['rebuild'] = 'true';
-			  //												}
-			  //											} else {
-			  //												//find missing fields and add them
-			  //												if ($field['exists'] == "false") {
-			  //													$sql_update .= "ALTER TABLE " . $table_name . " ADD " . $field_name . " " . $field_type . ";\n";
-			  //												}
-			  //											}
-			  //
-			  //											//change the data type if it has been changed
-			  //											//if the data type in the app db array is different than the type in the database then change the data type
-			  //											if ($this->data_types) {
-			  //												$db_field_type = $table_info[$field_name]['data_type'];
-			  //												if (trim($db_field_type) != trim($field_type) && !empty($db_field_type)) {
-			  //													if ($db_type == "pgsql") {
-			  //														if (strtolower($field_type) == "uuid") {
-			  //															$sql_update .= "ALTER TABLE " . $table_name . " ALTER COLUMN " . $field_name . " TYPE uuid USING\n";
-			  //															$sql_update .= "CAST(regexp_replace(" . $field_name . ", '([A-Z0-9]{4})([A-Z0-9]{12})', E'\\1-\\2')\n";
-			  //															$sql_update .= "AS uuid);\n";
-			  //														} else {
-			  //															//field type has not changed
-			  //															if ($db_field_type == "integer" && strtolower($field_type) == "serial") {
-			  //
-			  //															} else if ($db_field_type == "timestamp without time zone" && strtolower($field_type) == "timestamp") {
-			  //
-			  //															} else if ($db_field_type == "timestamp without time zone" && strtolower($field_type) == "datetime") {
-			  //
-			  //															} else if ($db_field_type == "timestamp with time zone" && strtolower($field_type) == "timestamptz") {
-			  //
-			  //															} else if ($db_field_type == "integer" && strtolower($field_type) == "numeric") {
-			  //
-			  //															} else if ($db_field_type == "character" && strtolower($field_type) == "char") {
-			  //
-			  //															}
-			  //															//field type has changed
-			  //															else {
-			  //																switch ($field_type) {
-			  //																	case 'numeric': $using = $field_name . "::numeric";
-			  //																		break;
-			  //																	case 'timestamp':
-			  //																	case 'datetime': $using = $field_name . "::timestamp without time zone";
-			  //																		break;
-			  //																	case 'timestamptz': $using = $field_name . "::timestamp with time zone";
-			  //																		break;
-			  //																	case 'boolean': $using = $field_name . "::boolean";
-			  //																		break;
-			  //																	default: unset($using);
-			  //																}
-			  //																$sql_update .= "ALTER TABLE " . $table_name . " ALTER COLUMN " . $field_name . " TYPE " . $field_type . " " . ($using ? "USING " . $using : null) . ";\n";
-			  //															}
-			  //														}
-			  //													}
-			  //													if ($db_type == "mysql") {
-			  //														$type = explode("(", $db_field_type);
-			  //														if ($type[0] == $field_type) {
-			  //															//do nothing
-			  //														} else if ($field_type == "numeric" && $type[0] == "decimal") {
-			  //															//do nothing
-			  //														} else {
-			  //															$sql_update .= "ALTER TABLE " . $table_name . " modify " . $field_name . " " . $field_type . ";\n";
-			  //														}
-			  //														unset($type);
-			  //													}
-			  //													if ($db_type == "sqlite") {
-			  //														//a change has been made to the field type
-			  //														$apps[$x]['db'][$y]['rebuild'] = 'true';
-			  //													}
-			  //												}
-			  //											}
-			  //										}
-			  //									}
-			  //								}
-			  //							} else {
-			  //								//create table
-			  //								if (!is_array($row['table']['name'])) {
-			  //									$sql_update .= $this->db_create_table($apps, $db_type, $row['table']['name']);
-			  //								}
-			  //							}
-			  //						}
-			  //				}
-			  //				//rebuild and populate the table
-			  //				foreach ($apps as $x => &$app) {
-			  //					if (isset($app['db']))
-			  //						foreach ($app['db'] as $y => &$row) {
-			  //							if (is_array($row['table']['name'])) {
-			  //								$table_name = $row['table']['name']['text'];
-			  //							} else {
-			  //								$table_name = $row['table']['name'];
-			  //							}
-			  //							if (!empty($field['rebuild']) && $row['rebuild'] == "true") {
-			  //								if ($db_type == "sqlite") {
-			  //									//start the transaction
-			  //									//$sql_update .= "BEGIN TRANSACTION;\n";
-			  //									//rename the table
-			  //									$sql_update .= "ALTER TABLE " . $table_name . " RENAME TO tmp_" . $table_name . ";\n";
-			  //									//create the table
-			  //									$sql_update .= $this->db_create_table($apps, $db_type, $table_name);
-			  //									//insert the data into the new table
-			  //									$sql_update .= $this->db_insert_into($apps, $db_type, $table_name);
-			  //									//drop the old table
-			  //									$sql_update .= "DROP TABLE tmp_" . $table_name . ";\n";
-			  //									//commit the transaction
-			  //									//$sql_update .= "COMMIT;\n";
-			  //								}
-			  //							}
-			  //						}
-			  //				}
-
-			  // initialize response variable
-			  $response = '';
-
-			  //display results as html
-			  if ($format == "html") {
-			  //show the database type
-			  $response .= "<strong>" . $text['header-database_type'] . ": " . $db_type . "</strong><br /><br />";
-			  //start the table
-			  $response .= "<table width='100%' border='0' cellpadding='20' cellspacing='0'>\n";
-			  //show the changes
-			  if (!empty($sql_update)) {
-			  $response .= "<tr>\n";
-			  $response .= "<td class='row_style1' colspan='3'>\n";
-			  $response .= "<br />\n";
-			  $response .= "<strong>" . $text['label-sql_changes'] . ":</strong><br />\n";
-			  $response .= "<pre>\n";
-			  $response .= $sql_update;
-			  $response .= "</pre>\n";
-			  $response .= "<br />\n";
-			  $response .= "</td>\n";
-			  $response .= "</tr>\n";
-			  }
-			  //list all tables
-			  $response .= "<tr>\n";
-			  $response .= "<th>" . $text['label-table'] . "</th>\n";
-			  $response .= "<th>" . $text['label-exists'] . "</th>\n";
-			  $response .= "<th>" . $text['label-details'] . "</th>\n";
-			  $response .= "<tr>\n";
-			  //build the html while looping through the app db array
-			  $sql = '';
-			  foreach ($apps as &$app) {
-			  if (isset($app['db']))
-			  foreach ($app['db'] as $row) {
-			  if (is_array($row['table']['name'])) {
-			  $table_name = $row['table']['name']['text'];
-			  } else {
-			  $table_name = $row['table']['name'];
-			  }
-			  $response .= "<tr>\n";
-
-			  //check if the table exists
-			  if ($row['exists'] == "true") {
-			  $response .= "<td valign='top' class='row_style1'>" . $table_name . "</td>\n";
-			  $response .= "<td valign='top' class='vncell' style='padding-top: 3px;'>" . $text['option-true'] . "</td>\n";
-
-			  if (count($row['fields']) > 0) {
-			  $response .= "<td class='row_style1'>\n";
-			  //show the list of columns
-			  $response .= "<table border='0' cellpadding='10' cellspacing='0'>\n";
-			  $response .= "<tr>\n";
-			  $response .= "<th>" . $text['label-name'] . "</th>\n";
-			  $response .= "<th>" . $text['label-type'] . "</th>\n";
-			  $response .= "<th>" . $text['label-exists'] . "</th>\n";
-			  $response .= "</tr>\n";
-			  foreach ($row['fields'] as $field) {
-			  if (!empty($field['deprecated']) && $field['deprecated'] == "true") {
-			  //skip this field
-			  } else {
-			  if (is_array($field['name'])) {
-			  $field_name = $field['name']['text'];
-			  } else {
-			  $field_name = $field['name'];
-			  }
-			  if (is_array($field['type'])) {
-			  $field_type = $field['type'][$db_type];
-			  } else {
-			  $field_type = $field['type'];
-			  }
-			  $response .= "<tr>\n";
-			  $response .= "<td class='row_style1' width='200'>" . $field_name . "</td>\n";
-			  $response .= "<td class='row_style1'>" . $field_type . "</td>\n";
-			  if ($field['exists'] == "true") {
-			  $response .= "<td class='row_style0' style=''>" . $text['option-true'] . "</td>\n";
-			  $response .= "<td>&nbsp;</td>\n";
-			  } else {
-			  $response .= "<td class='row_style1' style='background-color:#444444;color:#CCCCCC;'>" . $text['option-false'] . "</td>\n";
-			  $response .= "<td>&nbsp;</td>\n";
-			  }
-			  $response .= "</tr>\n";
-			  }
-			  }
-			  $response .= "	</table>\n";
-			  $response .= "</td>\n";
-			  }
-			  } else {
-			  $response .= "<td valign='top' class='row_style1'>$table_name</td>\n";
-			  $response .= "<td valign='top' class='row_style1' style='background-color:#444444;color:#CCCCCC;'><strong>" . $text['label-exists'] . "</strong><br />" . $text['option-false'] . "</td>\n";
-			  $response .= "<td valign='top' class='row_style1'>&nbsp;</td>\n";
-			  }
-			  $response .= "</tr>\n";
-			  }
-			  }
-			  //end the list of tables
-			  $response .= "</table>\n";
-			  $response .= "<br />\n";
-			  }
-
-			  //loop line by line through all the lines of sql code
-			  $x = 0;
-			  if (empty($sql_update) && $format == "text") {
-			  $response .= "	" . $text['label-schema'] . ":			" . $text['label-no_change'] . "\n";
-			  } else {
-			  if ($format == "text") {
-			  $response .= "	" . $text['label-schema'] . "\n";
-			  }
-			  //$this->db->beginTransaction();
-			  $update_array = explode(";", $sql_update);
-			  foreach ($update_array as $sql) {
-			  if (strlen(trim($sql))) {
-			  try {
-			  $this->db->query(trim($sql));
-			  if ($format == "text") {
-			  $response .= "	$sql;\n";
-			  }
-			  } catch (PDOException $error) {
-			  $response .= "	error: " . $error->getMessage() . "	sql: $sql\n";
-			  }
-			  }
-			  }
-			  //$this->db->commit();
-			  $response .= "\n";
-			  unset($sql_update, $sql);
-			  }
-
-			  //handle response
-			  //if ($output == "echo") {
-			  //	echo $response;
-			  //}
-			  //else if ($output == "return") {
-			  return $response;
-			  //}
-			  }
-			 */
-
-
 //end function
 		}
 
@@ -908,8 +543,6 @@
 
 //example use
 	//require_once "resources/classes/schema.php";
-	//$obj = new schema;
-	//$obj->schema();
-	//$result_array = $schema->obj['sql'];
-	//print_r($result_array);
+	//$schema = new schema();
+	//print_r($schema->output_type('text')->upgrade());
 ?>
