@@ -279,7 +279,7 @@
 			//set default
 				$result = false;
 			//permissions exist
-				if (is_array($_SESSION["permissions"]) && @sizeof($_SESSION['permissions']) != 0) {
+				if (!empty($_SESSION["permissions"]) && is_array($_SESSION["permissions"]) && @sizeof($_SESSION['permissions']) != 0) {
 					//array
 					if (is_array($permission) && @sizeof($permission) != 0) {
 						if ($operator == 'and') {
