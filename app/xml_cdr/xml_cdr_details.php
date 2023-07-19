@@ -158,7 +158,7 @@
 			$array["callflow"][0] = $tmp;
 		}
 		$x = 0;
-		if (is_array($array["callflow"])) foreach ($array["callflow"] as $row) {
+		if (!empty($array["callflow"])) foreach ($array["callflow"] as $row) {
 			if ($x == 0) {
 				$destination_number = urldecode($row["caller_profile"]["destination_number"]);
 				$context = urldecode($row["caller_profile"]["context"]);
@@ -168,12 +168,18 @@
 			$caller_id_number = urldecode($row["caller_profile"]["caller_id_number"]);
 
 			$call_flow_summary[$x]["destination_number"] = urldecode($row["caller_profile"]["destination_number"]);
-			$tmp_start_stamp = urldecode($row["times"]["profile_created_time"]) / 1000000;
+			if (isset($row["times"]["profile_created_time"])) {
+				$tmp_start_stamp = urldecode($row["times"]["profile_created_time"]) / 1000000;
+			}
 			if ($x == 0) {
-				$tmp_end_stamp = urldecode($row["times"]["hangup_time"]) / 1000000; 
+				if (isset($row["times"]["hangup_time"])) {
+					$tmp_end_stamp = urldecode($row["times"]["hangup_time"]) / 1000000;
+				}
 			}
 			else {
-				$tmp_end_stamp = urldecode($row["times"]["transfer_time"]) / 1000000;
+				if (isset($row["times"]["transfer_time"])) {
+					$tmp_end_stamp = urldecode($row["times"]["transfer_time"]) / 1000000;
+				}
 			}
 			$call_flow_summary[$x]["start_stamp"] = date("Y-m-d H:i:s", (int) $tmp_start_stamp);
 			$call_flow_summary[$x]["end_stamp"] = date("Y-m-d H:i:s", (int) $tmp_end_stamp);
@@ -242,7 +248,7 @@
 	echo "	<td valign='top' class='".$row_style[$c]."'>".escape($destination_number)."</td>\n";
 	echo "	<td valign='top' class='".$row_style[$c]."'>".escape($start_stamp)."</td>\n";
 	echo "	<td valign='top' class='".$row_style[$c]."'>".escape($end_stamp)."</td>\n";
-	echo "	<td valign='top' class='".$row_style[$c]."'>".escape(gmdate("G:i:s", $duration))."</td>\n";
+	echo "	<td valign='top' class='".$row_style[$c]."'>".escape(gmdate("G:i:s", (int)$duration))."</td>\n";
 	echo "	<td valign='top' class='".$row_style[$c]."'>".escape($hangup_cause)."</td>\n";
 	echo "</table>";
 	echo "<br /><br />\n";
@@ -295,11 +301,37 @@
 				echo "			<th width='70%'>".$text['label-value']."</th>\n";
 				echo "		</tr>\n";
 				foreach ($stat as $key => $value) {
-					$value = urldecode($value);
-					echo "<tr >\n";
-					echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".escape($key)."</td>\n";
-					echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".escape(wordwrap($value,75,"\n", true))."&nbsp;</td>\n";
-					echo "</tr>\n";
+					if (!empty($value) && is_array($value)) {
+						echo "<tr >\n";
+						echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".escape($key)."</td>\n";
+						echo "	<td valign='top' align='left' class='".$row_style[$c]."'>";
+						echo "		<table border='0' cellpadding='0' cellspacing='0'>\n";
+						foreach ($value as $vk => $arrays) {
+							echo "		<tr>\n";
+							echo "			<td valign='top' width='15%' class='".$row_style[$c]."'>".$vk."&nbsp;&nbsp;&nbsp;&nbsp;</td>\n";
+							echo "			<td valign='top'>\n";
+								echo "			<table border='0' cellpadding='0' cellspacing='0'>\n";
+								foreach ($arrays as $k => $v) {
+									echo "			<tr>\n";
+									echo "				<td valign='top' class='".$row_style[$c]."'>".$k."&nbsp;&nbsp;&nbsp;&nbsp;</td>\n";
+									echo "				<td valign='top' class='".$row_style[$c]."'>".$v."</td>\n";
+									echo "			</tr>\n";
+								}
+								echo "			</table>\n";
+								echo "		<td>\n";
+							echo "		</tr>\n";
+						}
+						echo "		</table>\n";
+						echo "	</td>\n";
+						echo "</tr>\n";
+					}
+					else {
+						$value =  urldecode($value);
+						echo "<tr >\n";
+						echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".escape($key)."</td>\n";
+						echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".escape(wordwrap($value,75,"\n", true))."&nbsp;</td>\n";
+						echo "</tr>\n";
+					}
 					$c = $c ? 0 : 1;
 				}
 				echo "		<tr>\n";
@@ -520,7 +552,7 @@
 				echo "			<th width='30%'>".$text['label-name']."</th>\n";
 				echo "			<th width='70%'>".$text['label-data']."</th>\n";
 				echo "		</tr>\n";
-				if (is_array($row["extension"]["application"])) {
+				if (!empty($row["extension"]["application"]) && is_array($row["extension"]["application"])) {
 					foreach ($row["extension"]["application"] as $key => $tmp_row) {
 						if (!is_numeric($key)) {
 							$app_name = $tmp_row["app_name"] ?? '';

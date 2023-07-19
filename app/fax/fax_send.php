@@ -700,15 +700,20 @@ else {
 			//prepare the fax command
 			$channel_variables["toll_allow"] = !empty($fax_toll_allow) ? $fax_toll_allow : null;
 			$route_array = outbound_route_to_bridge($_SESSION['domain_uuid'], $fax_prefix . $fax_number, $channel_variables);
-			if (count($route_array) == 0) {
+			if (!empty($route_array) && count($route_array) == 0) {
 				//send the internal call to the registered extension
 				$fax_uri = "user/".$fax_number."@".$_SESSION['domain_name'];
 				$fax_variables = "";
 			}
 			else {
-				//send the external call
+				//prepare the fax uri
 				$fax_uri = $route_array[0];
-				$fax_variables = "";
+
+				//remove switch ${variables} from the bridge statement
+				$fax_uri = preg_replace('/\${[^}]+}/', '', $fax_uri);
+
+				//send the external call
+				$fax_variables = '';
 				foreach($_SESSION['fax']['variable'] as $variable) {
 					$fax_variables .= $variable.",";
 				}

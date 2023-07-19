@@ -1055,11 +1055,15 @@
 				echo "	<table cellpadding='0' cellspacing='0' border='0'>";
 				echo "		<tr>";
 				echo "			<td id='authorized_senders'>";
-
 				if (!empty($fax_email_outbound_authorized_senders)) {
-					$senders = substr_count($fax_email_outbound_authorized_senders, ',') > 0 ? explode(',', $fax_email_outbound_authorized_senders) : $fax_email_outbound_authorized_senders;
+					if (substr_count($fax_email_outbound_authorized_senders, ',') > 0) {
+						$senders = explode(',', $fax_email_outbound_authorized_senders);
+					}
+					else {
+						$senders[] = $fax_email_outbound_authorized_senders;
+					}
 				}
-				$senders[] = ''; // empty one
+				$senders[] = ''; // add empty field
 				foreach ($senders as $sender_num => $sender) {
 					echo "	<input class='formfld' style='width: 225px; min-width: 225px; max-width: 225px; ".($sender_num > 0 ? "margin-top: 3px;" : null)."' type='text' name='fax_email_outbound_authorized_senders[]' maxlength='255' value=\"$sender\">".(sizeof($senders) > 0 && $sender_num < (sizeof($senders) - 1) ? "<br>" : null);
 				}

@@ -150,12 +150,19 @@
 	}
 
 	if (!function_exists('is_uuid')) {
-		function is_uuid($uuid) {
-			if (gettype($uuid) == 'string') {
-				$regex = '/^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$/i';
-				return preg_match($regex, $uuid);
+		function is_uuid($str) {
+			$is_uuid = false;
+			if (gettype($str) == 'string') {
+				if (substr_count($str, '-') != 0 && strlen($str) == 36) {
+					$regex = '/^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$/i';
+					$is_uuid = preg_match($regex, $str);
+				}
+				else if (strlen(preg_replace("#[^a-fA-F0-9]#", '', $str)) == 32) {
+					$regex = '/^[0-9A-F]{32}$/i';
+					$is_uuid = preg_match($regex, $str);
+				}
 			}
-			return false;
+			return $is_uuid;
 		}
 	}
 
@@ -272,7 +279,7 @@
 			//set default
 				$result = false;
 			//permissions exist
-				if (is_array($_SESSION["permissions"]) && @sizeof($_SESSION['permissions']) != 0) {
+				if (!empty($_SESSION["permissions"]) && is_array($_SESSION["permissions"]) && @sizeof($_SESSION['permissions']) != 0) {
 					//array
 					if (is_array($permission) && @sizeof($permission) != 0) {
 						if ($operator == 'and') {
@@ -825,12 +832,11 @@ function format_string($format, $data) {
 
 //format seconds into hh:mm:ss
 	function format_hours($seconds) {
+		$seconds = (int)$seconds; //convert seconds to an integer
 		$hours = floor($seconds / 3600);
 		$minutes = floor(floor($seconds / 60) % 60);
 		$seconds = $seconds % 60;
-		if (strlen($minutes) == 1) { $minutes = '0'.$minutes; }
-		if (strlen($seconds) == 1) { $seconds = '0'.$seconds; }
-		return "$hours:$minutes:$seconds";
+		return sprintf('%02d:%02d:%02d', $hours, $minutes, $seconds);
 	}
 
 //browser detection without browscap.ini dependency
@@ -1485,7 +1491,7 @@ function number_pad($number,$n) {
 //mac detection
 	if (!function_exists('is_mac')) {
 		function is_mac($str) {
-			return (preg_match('/([a-fA-F0-9]{2}[:|\-]?){6}/', $str) == 1) ? true : false;
+			return preg_match('/([a-fA-F0-9]{2}[:|\-]?){6}/', $str) == 1 && strlen(preg_replace("#[^a-fA-F0-9]#", '', $str)) == 12 ? true : false;
 		}
 	}
 
@@ -1502,13 +1508,18 @@ function number_pad($number,$n) {
 		}
 	}
 
-//format mac address
-	if (!function_exists('format_mac')) {
-		function format_mac($str, $delim = '-', $case = 'lower') {
+//format device address
+	if (!function_exists('format_device_address')) {
+		function format_device_address($str, $delim = '-', $case = 'lower') {
+			if (empty($str)) { return false; }
+			$str = preg_replace("#[^a-fA-F0-9]#", '', $str); //remove formatting, if any
 			if (is_mac($str)) {
 				$str = join($delim, str_split($str, 2));
-				$str = ($case == 'upper') ? strtoupper($str) : strtolower($str);
 			}
+			else if (is_uuid($str)) {
+				$str = substr($str, 0, 8).'-'.substr($str, 8, 4).'-'.substr($str, 12, 4).'-'.substr($str, 16, 4).'-'.substr($str, 20, 12);
+			}
+			$str = $case == 'upper' ? strtoupper($str) : strtolower($str);
 			return $str;
 		}
 	}

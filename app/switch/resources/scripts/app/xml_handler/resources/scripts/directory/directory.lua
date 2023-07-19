@@ -29,7 +29,7 @@
 --	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 
 --set the default
-continue = true;
+	continue = true;
 
 --get the action
 	action = params:getHeader("action");
@@ -289,7 +289,8 @@ continue = true;
 							.. "AND d.domain_uuid = :domain_uuid "
 							.. "AND d.domain_enabled = 'true' "
 							.. "AND (e.extension = :user or e.number_alias = :user) "
-							.. "AND e.enabled = 'true' ";
+							.. "AND e.enabled = 'true' "
+							.. "AND (e.extension_type = 'default' or extension_type is null) ";
 						local params = {domain_uuid=domain_uuid, user=user};
 						if (debug["sql"]) then
 							freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
