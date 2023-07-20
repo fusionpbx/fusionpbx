@@ -108,14 +108,6 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "char(36)";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
-		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "domains_user";
-		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "domains_user";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "char(36)";
-		$apps[$x]['db'][$y]['fields'][$z]['indexed'] = "true";
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		
 		$y++;
 		$apps[$x]['db'][$y]['table']['name'] = "v_access_control_nodes";
