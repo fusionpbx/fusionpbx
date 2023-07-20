@@ -75,6 +75,7 @@
 			private $commit_mode;
 			private $text;
 			private $html;
+			private $changes;
 
 			/**
 			 * Sets database tables and fields to match the app_config files.
@@ -115,9 +116,10 @@
 				//set the default write mode to the database
 				$this->commit_mode = $commit_mode;
 
-				$this->html = [];
-
 				$this->text = [];
+
+				//track the tables in the app_config files for display output
+				$this->changes = [];
 			}
 
 			public function __get($name) {
@@ -165,46 +167,63 @@
 			//create the database schema
 			private function exec() {
 				if (!empty($this->sql)) {
-					try {
 						//check database commit type
 						switch($this->commit_mode) {
-							//fastest write method but can reverse all changes if there is an error
+							//fastest write method but will reverse all changes if there is an error
 							case self::SCHEMA_COMMIT_ATOMIC:
-								$this->database->db->beginTransaction();
-								foreach($this->sql as $command_set) {
-									$this->database->db->query($command_set);
-								}
-								$this->database->db->commit();
+								$this->save_transactions_atomic();
 								break;
 							//write each section of the statements
 							case self::SCHEMA_COMMIT_BATCH:
 								//create all tables
 								if(isset($this->sql['tables'])) {
-									$this->save_transaction_batch($this->sql['tables']);
+									$this->save_transactions_batch($this->sql['tables']);
 									unset($this->sql['tables']);
 								}
 								//write alter statements after tables are created
 								foreach($this->sql as $command_set) {
-									$this->save_transaction_batch($command_set);
+									$this->save_transactions_batch($command_set);
 								}
 								break;
 							//safest option to ensure all changes are written
 							case self::SCHEMA_COMMIT_SINGLE:
-								foreach($this->sql as $sql) {
-									$this->database->db->exec($sql);
-								}
+								$this->save_transactions_single();
 								break;
 						}
-					} catch (Throwable $e) {
-						$this->errors[] = $e->getMessage();
-						if($this->database->db->inTransaction()) {
-							$this->database->db->rollBack();
+				}
+			}
+
+			private function save_transactions_single() {
+				foreach($this->sql as $command_set) {
+					foreach($command_set as $statement) {
+						try {
+							$this->database->db->exec($statement);
+						} catch (Throwable $e) {
+							$this->errors[] = $e->getMessage();
+							if($this->database->db->inTransaction()) {
+								$this->database->db->rollBack();
+							}
 						}
 					}
 				}
 			}
 
-			private function save_transaction_batch(array $batch) {
+			private function save_transactions_atomic() {
+				try {
+					$this->database->db->beginTransaction();
+					foreach($this->sql as $command_set) {
+						$this->database->db->query($command_set);
+					}
+					$this->database->db->commit();
+				} catch (Throwable $e) {
+					$this->errors[] = $e->getMessage();
+					if($this->database->db->inTransaction()) {
+						$this->database->db->rollBack();
+					}
+				}
+			}
+
+			private function save_transactions_batch(array $batch) {
 				try {
 					$this->database->db->beginTransaction();
 					foreach($batch as $sql) {
@@ -220,14 +239,20 @@
 
 			private function sql_generate_field_changes($table_name, $table_fields) {
 				foreach ($table_fields as $field) {
+					$field_name = $this->app_field_name($field);
+					$type = $this->app_field_type($this->type, $field);
 					if (!self::app_field_skip($field)) {
-						$this->sql_field_rename($table_name, $field);
-						$this->sql_field_add($table_name, $field);
-						$this->sql_field_modify_type($table_name, $field);
-						$this->sql_field_add_index($table_name, $field);
-						$this->sql_field_add_comment($table_name, $field);
-						$this->sql_field_add_foreign_key($table_name, $field);
+						$this->changes[$table_name][] = ['name' => $field_name,'status' => 'option-true', 'type' => $type];
+						$this->sql_field_rename($table_name, $field_name, $field);
+						$this->sql_field_add($table_name, $field_name, $field);
+						$this->sql_field_modify_type($table_name, $field_name, $field);
+						$this->sql_field_add_index($table_name, $field_name, $field);
+						$this->sql_field_add_comment($table_name, $field_name, $field);
+						$this->sql_field_add_foreign_key($table_name, $field_name, $field);
 					}
+//					else {
+//						$this->changes[$table_name][] = ['name' => $field_name,'status' => 'label-skipped', 'type' => $type];
+//					}
 				}
 			}
 
@@ -247,12 +272,16 @@
 					if (isset($apps[$x]['db']))
 						foreach ($apps[$x]['db'] as $table) {
 							$table_name = self::app_table_name($table);
-							//process a new table
-							if(!$this->db_table_exists($table_name)) {
-								$this->sql_generate_table_insert($table_name, $table['fields']);
-							} else {
+							if($this->db_table_exists($table_name)) {
+								// the tableoid is not allowed to be a column name
+								// so we will use that to track the 'status' of the table
+								$this->changes[$table_name]['tableoid'] = 'option-true';
 								// process the fields for existing tables
 								$this->sql_generate_field_changes($table_name, $table['fields']);
+							} else {
+								//process a new table
+								$this->changes[$table_name]['tableoid'] = 'option-false';
+								$this->sql_generate_table_insert($table_name, $table['fields']);
 							}
 						}
 				}
@@ -268,27 +297,102 @@
 			 */
 			public function __toString(): string {
 				$response = "";
+				switch($this->output_format) {
+					case 'html':
+						$response = $this->html_response();
+						break;
+					case 'text':
+						$response = $this->${$this->output_format};
+						break;
+					default:
+						trigger_error('Unknown display type');
+				}
 				return $response;
 			}
 
 			public function has_errors(): bool {
-				return (count($this->errors) > 0);
+				return (!empty($this->errors));
+			}
+
+			private function html_response(): string {
+				global $text;
+				//show the database type
+				$html = "<strong>{$text['header-database_type']}: {$this->type}</strong><br /><br />";
+				//start the table
+				$html .= "<table width='100%' border='0' cellpadding='20' cellspacing='0'>\n";
+				if(!empty($this->sql)) {
+					$html .= "<tr>\n";
+					$html .= "<td class='row_style1' colspan='3'>\n";
+					$html .= "<br />\n";
+					$html .= "<strong>".$text['label-sql_changes'].":</strong><br />\n";
+					$html .= "<pre>\n";
+					$html .= implode("\n", array_map(function ($statements) { return implode("\n", $statements); },$this->sql));
+					$html .= "</pre>\n";
+					$html .= "<br />\n";
+					$html .= "</td>\n";
+					$html .= "</tr>\n";
+				}
+				$html .= "<tr>\n";
+				$html .= "<th>".$text['label-table']."</th>\n";
+				$html .= "<th>".$text['label-exists']."</th>\n";
+				$html .= "<th>".$text['label-details']."</th>\n";
+				$html .= "<tr>\n";
+				$html .= $this->html_table();
+				return $html;
+			}
+
+			private function html_table(): string {
+				$html = implode("", array_map(function($fields, $table_name) {
+					global $text;
+					return "<tr>"
+							. "<td class='row_style1' valign='top'>$table_name</td>"
+							. "<td class='vncell' style='padding-top: 3px;' valign='top'>{$text[$this->changes[$table_name]['tableoid']]}</td>"
+							. "<td class='row_style1'>\n"
+								. "<table cellspacing='0' cellpadding='10' border='0'>\n"
+									. "<tbody>\n"
+										. "<tr><th>{$text['label-table']}</th><th>{$text['label-type']}</th><th>{$text['label-details']}</th></tr>"
+											. implode("", array_map(function($field) {
+												global $text;
+												if(is_array($field)) {
+													$field_name = $field['name'];
+													$status = $field['status'];
+													$type = $field['type'];
+													if($field_name === 'tableoid') {
+														return "";
+													}
+													return "<tr>\n"
+														. "<td class='row_style1'>$field_name</td>"
+														. "<td class='row_style1'>$type</td>"
+														. "<td class='row_style0'>$text[$status]</td>"
+														. "</tr>\n";
+													}
+												return "";
+											}, $fields))
+									. "</tbody>\n"
+								. "</table>\n";
+				}, $this->changes, array_keys($this->changes))) . "\n";
+				return $html;
 			}
 
 			private function sql_generate_table_insert($table_name, &$table_fields) {
 				$this->sql['tables'][$table_name] = "CREATE TABLE $table_name ("
-					. implode(', ', $this->sql_table_new($table_fields))
+					. implode(', ', $this->sql_table_new_fields($table_name, $table_fields))
 					. ");";
 			}
 
-			private function sql_table_new(&$table_fields) {
+			private function sql_table_new_fields($table_name, &$table_fields) {
 				$fields = [];
 				foreach($table_fields as &$field) {
 					if(!($this->app_field_name_is_deprecated($field) || $this->app_field_skip($field))) {
+						//get the field info
 						$field_name = self::app_field_name($field);
 						$type = self::app_field_type($this->type, $field);
 						$is_primary = self::app_field_is_primary($field);
+						//create the SQL statement
 						$fields[] = "$field_name $type" . ($is_primary ? " PRIMARY KEY" : "");
+						//track the response
+						$this->changes[$table_name][$field_name]['status'] = 'new';
+						$this->changes[$table_name][$field_name]['details'] = $type . ($is_primary ? " PRIMARY KEY" : "");
 					}
 				}
 				return $fields;
@@ -316,8 +420,7 @@
 				}
 			}
 
-			private function sql_field_rename($table_name, &$field) {
-				$field_name = self::app_field_name($field);
+			private function sql_field_rename($table_name, $field_name, &$field) {
 				$deprecated_name = self::app_field_deprecated_name($field);
 				if ($this->db_field_exists($table_name, $deprecated_name)) {
 					//set the sql statement to update database
@@ -329,8 +432,7 @@
 				return false;
 			}
 
-			private function sql_field_add($table_name, &$field) {
-				$field_name = self::app_field_name($field);
+			private function sql_field_add($table_name, $field_name, &$field) {
 				if (!$this->db_field_exists($table_name, $field_name)) {
 					$type = self::app_field_type($this->type, $field);
 					$this->sql[self::FIELD_ADD][] = "ALTER TABLE $table_name ADD $field_name $type";
@@ -341,8 +443,7 @@
 				return false;
 			}
 
-			private function sql_field_add_foreign_key($table_name, &$field) {
-				$field_name = self::app_field_name($field);
+			private function sql_field_add_foreign_key($table_name, $field_name, &$field) {
 				if (self::app_field_ref_exists($field)) {
 					$f_table_name = self::app_field_ref_table($field);
 					$f_field_name = self::app_field_ref_field($field);
@@ -355,20 +456,20 @@
 						return false;
 					}
 					$key = "fk_{$table_name}_{$field_name}_{$f_table_name}_{$f_field_name}";
-					$sql = "ALTER TABLE {$table_name} ADD CONSTRAINT $key "
-						. " FOREIGN KEY({$field_name})"
-						. " REFERENCES $f_table_name({$f_field_name}); ";
-					$this->sql[self::FIELD_KEY][] = $sql;
-					//track changes internally
-					$this->db_field_f_key_add($table_name, $key, $sql);
-					return true;
+					$reference = "FOREIGN KEY ({$field_name}) REFERENCES $f_table_name({$f_field_name})";
+					if(!$this->db_field_f_key_exists($table_name, $reference)) {
+						$sql = "ALTER TABLE {$table_name} ADD CONSTRAINT $key $reference";
+						$this->sql[self::FIELD_KEY][] = $sql;
+						//track changes internally
+						$this->db_field_f_key_add($table_name, $key, $sql);
+						return true;
+					}
 				}
 				return false;
 			}
 
-			private function sql_field_add_comment($table_name, &$field) {
+			private function sql_field_add_comment($table_name, $field_name, &$field) {
 				$comment = self::app_field_comment($field);
-				$field_name = self::app_field_name($field);
 				if (!empty($comment) && $this->db_field_comment($table_name, $field_name) !== $comment) {
 					if(strpos($comment, "'") > 0) {
 						//comment text is not allowed to have '
@@ -381,8 +482,7 @@
 				return false;
 			}
 
-			private function sql_field_add_index($table_name, &$field) {
-				$field_name = self::app_field_name($field);
+			private function sql_field_add_index($table_name, $field_name, &$field) {
 				if (!$this->db_field_has_index($table_name, $field_name) && self::app_field_is_indexed($field)) {
 					$this->sql[self::FIELD_INDEX][] = "CREATE INDEX {$table_name}_{$field_name}_idx ON {$table_name} ($field_name); ";
 					return true;
@@ -390,8 +490,7 @@
 				return false;
 			}
 
-			private function sql_field_modify_type($table_name, &$field) {
-				$field_name = self::app_field_name($field);
+			private function sql_field_modify_type($table_name, $field_name, &$field) {
 				$type = self::app_field_type($this->type, $field);
 				$db_type = $this->db_field_type($table_name, $field_name);
 				if ($type !== $db_type) {
@@ -413,6 +512,11 @@
 				$this->db_tables[$table_name]['constraints'][$key] = $sql;
 			}
 
+			private function db_field_f_key_exists($table_name, $value) {
+				$exists = array_search($value, $this->db_tables[$table_name]['constraints']) !== false;
+				return $exists;
+			}
+
 			private function db_field_exists($table_name, $field_name) {
 				if(!empty($field_name)) {
 					return isset($this->db_tables[$table_name]['fields'][$field_name]);
@@ -428,7 +532,11 @@
 			}
 
 			private function db_field_type($table_name, $field_name) {
-				return $this->db_tables[$table_name]['fields'][$field_name]['udt_name'] ?? '';
+				$type = $this->db_tables[$table_name]['fields'][$field_name]['udt_name'] ?? '';
+				if($type === 'bpchar') {
+					$type = 'char(1)';
+				}
+				return $type;
 			}
 
 			private function db_field_type_set($table_name, $field_name, $type = '') {
@@ -466,7 +574,11 @@
 			}
 
 			private static function app_field_type($db_type, &$field) {
-				return is_array($field['type']) ? $field['type'][$db_type] : $field['type'];
+				$type = is_array($field['type']) ? $field['type'][$db_type] : $field['type'];
+				if($type === 'boolean') {
+					$type = 'bool';
+				}
+				return $type;
 			}
 
 			private static function app_field_deprecated_name(&$field) {
