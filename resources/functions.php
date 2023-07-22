@@ -279,7 +279,7 @@
 			//set default
 				$result = false;
 			//permissions exist
-				if (is_array($_SESSION["permissions"]) && @sizeof($_SESSION['permissions']) != 0) {
+				if (!empty($_SESSION["permissions"]) && is_array($_SESSION["permissions"]) && @sizeof($_SESSION['permissions']) != 0) {
 					//array
 					if (is_array($permission) && @sizeof($permission) != 0) {
 						if ($operator == 'and') {
@@ -408,13 +408,13 @@
 			$field_value = preg_replace("#[^a-zA-Z0-9_]#", "", $field_value);
 		
 			if (!empty($field_value)) {
-				$html .= "<select id=\"".$field_value."\" name=\"".$field_value."\" class='formfld' style='".$style."' ".($on_change != '' ? "onchange=\"".$on_change."\"" : null).">\n";
+				$html .= "<select id=\"".$field_value."\" name=\"".$field_value."\" class='formfld' style='".$style."' ".(!empty($on_change) ? "onchange=\"".$on_change."\"" : null).">\n";
 				$html .= "	<option value=\"\"></option>\n";
 
 				$sql = "select distinct(".$field_name.") as ".$field_name.", ".$field_value." from ".$table_name." ".$sql_where_optional." order by ".$field_name." asc ";
 			}
 			else {
-				$html .= "<select id=\"".$field_name."\" name=\"".$field_name."\" class='formfld' style='".$style."' ".($on_change != '' ? "onchange=\"".$on_change."\"" : null).">\n";
+				$html .= "<select id=\"".$field_name."\" name=\"".$field_name."\" class='formfld' style='".$style."' ".(!empty($on_change) ? "onchange=\"".$on_change."\"" : null).">\n";
 				$html .= "	<option value=\"\"></option>\n";
 
 				$sql = "select distinct(".$field_name.") as ".$field_name." from ".$table_name." ".$sql_where_optional." ";
@@ -1004,7 +1004,7 @@ function format_string($format, $data) {
 
 //check password strength against requirements (if any)
 	function check_password_strength($password, $text, $type = 'default') {
-		if ($password != '') {
+		if (!empty($password)) {
 			if ($type == 'default') {
 				$req['length'] = $_SESSION['extension']['password_length']['numeric'];
 				$req['number'] = ($_SESSION['extension']['password_number']['boolean'] == 'true') ? true : false;
@@ -1132,7 +1132,7 @@ function number_pad($number,$n) {
 			}
 			$rgb = array($r, $g, $b);
 
-			if ($delim != '') {
+			if (!empty($delim)) {
 				return implode($delim, $rgb); // return rgb delimited string
 			}
 			else {
@@ -1243,7 +1243,7 @@ function number_pad($number,$n) {
 				}
 				else { //rgb(a)
 					$rgb = implode(',', $color);
-					if ($alpha != '') { $rgb .= ','.$alpha; $a = 'a'; }
+					if (!empty($alpha)) { $rgb .= ','.$alpha; $a = 'a'; }
 					if ($wrapper) { $rgb = 'rgb'.$a.'('.$rgb.')'; }
 					return $rgb;
 				}
@@ -1425,12 +1425,12 @@ function number_pad($number,$n) {
 
 			foreach ($email_recipients as $email_recipient) {
 				if (is_array($email_recipient)) { // check if each recipient has multiple fields
-					if ($email_recipient["address"] != '' && valid_email($email_recipient["address"])) { // check if valid address
+					if (!empty($email_recipient["address"]) && valid_email($email_recipient["address"])) { // check if valid address
 						$recipients = $email_recipient["address"];
 						$address_found = true;
 					}
 				}
-				else if ($email_recipient != '' && valid_email($email_recipient)) { // check if recipient value is simply (only) an address
+				else if (!empty($email_recipient) && valid_email($email_recipient)) { // check if recipient value is simply (only) an address
 					$email_recipients = $email_recipient;
 					$address_found = true;
 				}
@@ -1444,8 +1444,8 @@ function number_pad($number,$n) {
 			}
 
 			//get the from address and name
-			$email_from_address = ($email_from_address != '') ? $email_from_address : $_SESSION['email']['smtp_from']['text'];
-			$email_from_name = ($email_from_name != '') ? $email_from_name : $_SESSION['email']['smtp_from_name']['text'];
+			$email_from_address = (!empty($email_from_address)) ? $email_from_address : $_SESSION['email']['smtp_from']['text'];
+			$email_from_name = (!empty($email_from_name)) ? $email_from_name : $_SESSION['email']['smtp_from_name']['text'];
 
 			//send email
 			$email = new email;
@@ -1610,8 +1610,8 @@ function number_pad($number,$n) {
 				}
 				echo "	$(".$subject.").on('".$direction."', function(e) {\n";
 				echo "		if (".$exceptions.$key_code.") {\n";
-				if ($prompt != '') {
-					$action = ($action != '') ? $action : "alert('".$key."');";
+				if (!empty($prompt)) {
+					$action = (!empty($action)) ? $action : "alert('".$key."');";
 					echo "			if (confirm('".$prompt."')) {\n";
 					echo "				e.preventDefault();\n";
 					echo "				".$action."\n";
@@ -1633,7 +1633,7 @@ function number_pad($number,$n) {
 //format border radius values
 	if (!function_exists('format_border_radius')) {
 		function format_border_radius($radius_value, $default = 5) {
-			$radius_value = ($radius_value != '') ? $radius_value : $default;
+			$radius_value = (!empty($radius_value)) ? $radius_value : $default;
 			$br_a = explode(' ', $radius_value);
 			foreach ($br_a as $index => $br) {
 				if (substr_count($br, '%') > 0) {
@@ -1748,7 +1748,7 @@ function number_pad($number,$n) {
 //dynamically load available web fonts
 	if (!function_exists('get_available_fonts')) {
 		function get_available_fonts($sort = 'alpha') {
-			if ($_SESSION['theme']['font_source_key']['text'] != '') {
+			if (!empty($_SESSION['theme']['font_source_key']['text'])) {
 				if (!is_array($_SESSION['fonts_available']) || sizeof($_SESSION['fonts_available']) == 0) {
 					/*
 					sort options:
@@ -1760,7 +1760,7 @@ function number_pad($number,$n) {
 					*/
 					$google_api_url = 'https://www.googleapis.com/webfonts/v1/webfonts?key='.$_SESSION['theme']['font_source_key']['text'].'&sort='.$sort;
 					$response = file_get_contents($google_api_url);
-					if ($response != '') {
+					if (!empty($response)) {
 						$data = json_decode($response, true);
 						$items = $data['items'];
 						foreach ($items as $item) {
@@ -1804,7 +1804,7 @@ function number_pad($number,$n) {
 
 			$style_counter = 0;
 			foreach ($lines as $line_number => $line) {
-				if ($line_styles_begin != '' && $line_number < $line_styles_begin - 1) { continue; }
+				if (!empty($line_styles_begin) && $line_number < $line_styles_begin - 1) { continue; }
 				if (substr_count($line, "{") > 0) {
 					$style_lines[$style_counter]['begins'] = $line_number;
 				}
@@ -1945,7 +1945,7 @@ function number_pad($number,$n) {
 //format db date and/or time to local date and/or time
 	if (!function_exists('format_when_local')) {
 		function format_when_local($when, $format = 'dt', $include_seconds = false) {
-			if ($when != '') {
+			if (!empty($when)) {
 				// determine when format
 				if (substr_count($when, ' ') > 0) { // date and time
 					$tmp = explode(' ', $when);
@@ -1961,13 +1961,13 @@ function number_pad($number,$n) {
 				unset($when, $tmp);
 
 				// format date
-				if ($date != '') {
+				if (!empty($date)) {
 					$tmp = explode('-', $date);
 					$date = $tmp[1].'-'.$tmp[2].'-'.$tmp[0];
 				}
 
 				// format time
-				if ($time != '') {
+				if (!empty($time)) {
 					$tmp = explode(':', $time);
 					if ($tmp[0] >= 0 && $tmp[0] <= 11) {
 						$meridiem = 'AM';
@@ -2003,7 +2003,7 @@ function number_pad($number,$n) {
 		function email_button($text = 'Click Here!', $link = URL, $bg_color = '#dddddd', $fg_color = '#000000', $radius = '') {
 
 			// default button radius
-			$radius = $radius != '' ? $radius : '3px';
+			$radius = !empty($radius) ? $radius : '3px';
 
 			// retrieve single/first numeric radius value for ms arc
 			$tmp = $radius;
@@ -2041,10 +2041,10 @@ function number_pad($number,$n) {
 			$col = preg_replace('#[^a-zA-Z0-9-_.]#', '', $col ?? '');
 			if(!empty($dir))
 				$dir = strtolower($dir) == 'desc' ? 'desc' : 'asc';
-			if ($col != '') {
+			if (!empty($col)) {
 				return $order_by.$col.' '.$dir.' ';
 			}
-			else if (is_array($col_default) || $col_default != '') {
+			else if (!empty($col_default)) {
 				if (is_array($col_default) && @sizeof($col_default) != 0) {
 					foreach ($col_default as $k => $column) {
 						$direction = (is_array($dir_default) && @sizeof($dir_default) != 0 && (strtolower($dir_default[$k]) == 'asc' || strtolower($dir_default[$k]) == 'desc')) ? $dir_default[$k] : 'asc';
