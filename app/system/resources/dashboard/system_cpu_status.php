@@ -34,7 +34,7 @@
 			if (is_numeric($value)) { $percent_cpu = $percent_cpu + $value; }
 		}
 		if (stristr(PHP_OS, 'BSD')) {
-			$result = system("dmesg | grep -i --max-count 1 CPUs | sed 's/[^0-9]*//g'");
+			$result = shell_exec("dmesg | grep -i --max-count 1 CPUs | sed 's/[^0-9]*//g'");
 			$cpu_cores = trim($result);
 		}
 		if (stristr(PHP_OS, 'Linux')) {
