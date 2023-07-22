@@ -153,8 +153,8 @@ class plugin_database {
 		//get the domain name
 			$auth = new authentication;
 			$auth->get_domain();
-			$this->domain_uuid = $_SESSION['domain_uuid'];
-			$this->domain_name = $_SESSION['domain_name'];
+			$this->domain_uuid = $_SESSION['domain_uuid'] ?? null;
+			$this->domain_name = $_SESSION['domain_name'] ?? null;
 			$this->username = $_SESSION['username'] ?? null;
 
 		//debug information
@@ -195,42 +195,6 @@ class plugin_database {
 			$row = $database->select($sql, $parameters, 'row');
 			if (!empty($row) && is_array($row) && @sizeof($row) != 0) {
 
-				//set the domain details
-					$this->domain_uuid = $_SESSION['domain_uuid'];
-					$this->domain_name = $_SESSION['domain_name'];
-
-				//get the domain uuid when users are unique globally
-					if ($settings['users']['unique'] === "global" && $row["domain_uuid"] !== $this->domain_uuid) {
-						//set the domain_uuid
-							$this->domain_uuid = $row["domain_uuid"];
-							$this->domain_name = $row["domain_name"];
-
-						//set the domain session variables
-							$_SESSION["domain_uuid"] = $this->domain_uuid;
-							$_SESSION["domain_name"] = $this->domain_name;
-
-						//set the setting arrays
-							$domain = new domains();
-							$domain->set();
-					}
-
-				//set the variables
-					$this->user_uuid = $row['user_uuid'];
-					$this->username = $row['username'];
-					$this->user_email = $row['user_email'];
-					$this->contact_uuid = $row['contact_uuid'];
-
-				//debug info
-					//echo "user_uuid ".$this->user_uuid."<br />\n";
-					//echo "username ".$this->username."<br />\n";
-					//echo "contact_uuid ".$this->contact_uuid."<br />\n";
-
-				//set a few session variables
-					$_SESSION["user_uuid"] = $row['user_uuid'];
-					$_SESSION["username"] = $row['username'];
-					$_SESSION["user_email"] = $row['user_email'];
-					$_SESSION["contact_uuid"] = $row["contact_uuid"];
-
 				//validate the password
 					$valid_password = false;
 					if (isset($this->key) && strlen($this->key) > 30 && $this->key === $row["api_key"]) {
@@ -249,6 +213,40 @@ class plugin_database {
 							$row["password"] = crypt($this->password, '$1$'.$password_salt.'$');
 							$valid_password = true;
 						}
+					}
+
+				//set the domain and user settings
+					if ($valid_password) {
+						//set the domain_uuid
+							$this->domain_uuid = $row["domain_uuid"];
+							$this->domain_name = $row["domain_name"];
+
+						//set the domain session variables
+							$_SESSION["domain_uuid"] = $this->domain_uuid;
+							$_SESSION["domain_name"] = $this->domain_name;
+
+						//set the domain setting
+							if ($settings['users']['unique'] === "global" && $row["domain_uuid"] !== $this->domain_uuid) {
+								$domain = new domains();
+								$domain->set();
+							}
+
+						//set the variables
+							$this->user_uuid = $row['user_uuid'];
+							$this->username = $row['username'];
+							$this->user_email = $row['user_email'];
+							$this->contact_uuid = $row['contact_uuid'];
+
+						//debug info
+							//echo "user_uuid ".$this->user_uuid."<br />\n";
+							//echo "username ".$this->username."<br />\n";
+							//echo "contact_uuid ".$this->contact_uuid."<br />\n";
+
+						//set a few session variables
+							$_SESSION["user_uuid"] = $row['user_uuid'];
+							$_SESSION["username"] = $row['username'];
+							$_SESSION["user_email"] = $row['user_email'];
+							$_SESSION["contact_uuid"] = $row["contact_uuid"];
 					}
 
 				//check to to see if the the password hash needs to be updated
