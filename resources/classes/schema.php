@@ -148,6 +148,21 @@
 				}
 			}
 
+			/**
+			 * Alias of output_format
+			 * @param string|null $display_type
+			 * @return type
+			 */
+			public function display_type(?string $display_type = null) {
+				return $this->output_format($display_type);
+			}
+
+			/**
+			 * Sets the output type returned in the __toString method.
+			 * @param string|null $format Can be null or 'html' or 'text'
+			 * @return $this returns the object if the format parameter is omitted.
+			 * @throws InvalidArgumentException if the format given is not supported an InvalidArgumentException is thrown
+			 */
 			public function output_format(?string $format = null) {
 				if ($format === null) {
 					return $this->output_format;
@@ -172,7 +187,8 @@
 			}
 
 			public function schema() {
-				//do nothing
+				//report an error
+				print_r(debug_backtrace());
 				trigger_error('Deprecated function "schema" called');
 			}
 
