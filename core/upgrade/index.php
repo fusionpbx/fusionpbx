@@ -91,7 +91,7 @@
 			if (isset($action["data_types"]) && $action["data_types"] == 'true') {
 				$schema->check_data_types(true);
 			}
-			$_SESSION["response"]["schema"] = "" . $schema->output_format('html')->upgrade();
+			$_SESSION["response"]["schema"] = "".$schema->output_format('html')->upgrade();
 			message::add($text['message-upgrade_schema'], null, $message_timeout);
 		}
 
