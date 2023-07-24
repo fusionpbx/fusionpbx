@@ -188,8 +188,66 @@
 
 			public function schema() {
 				//report an error
-				print_r(debug_backtrace());
-				trigger_error('Deprecated function "schema" called');
+				//print_r(debug_backtrace());
+				//trigger_error('Deprecated function "schema" called');
+			}
+
+			public static function new(...$params): self {
+				$classname = static::class;
+				$obj = new $classname();
+				if (!empty($params) && is_array($params)) {
+					//if the array has another row then the attr have been passed
+					if (count($params) > 1) {
+						$attrs = array_pop($params);
+					}
+					//get the array of key=value pairs
+					$values = array_pop($params);
+					if (!empty($values) && is_array($values)) {
+						//set properties of the object
+						self::set_object_properties($values, $obj);
+					} else {
+						//not an array of key=value pairs so put the value back
+						array_push($params, $values);
+						//let the reflection class handle creating the object
+						$obj = self::create_reflection_object($params);
+					}
+					//store the attributes
+					if (!empty($attrs)) {
+						$obj->attributes = $attrs;
+					}
+				}
+				return $obj;
+			}
+
+			//preferred over the standard reflection as this will
+			//call the individual setter and getter methods utilizing
+			//their checks to make sure validation is done on properties
+			private static function set_object_properties(array $array, self $object) { //: never {
+				foreach ($array as $key => $value) {
+					if ($value !== null) {
+						//check for a setter method first for any validation being done
+						if (method_exists(static::class, "$key")) {
+							$object->{$key}($value);
+						}
+						//check for property
+						elseif (property_exists(static::class, "$key")) {
+							$object->{$key} = $value;
+						}
+					}
+				}
+			}
+
+			//generic method used to create a new object
+			//unable to call the constructor with different number
+			//of arguments so a reflection object is used
+			private static function create_reflection_object(array $params): self {
+				//get the registered class name
+				$classname = static::class;
+				//create a reflection class to instantiate the object
+				$reflection = new \ReflectionClass($classname);
+				//send the reflection class the params needed to create the object
+				$obj = $reflection->newInstanceArgs($params);
+				return $obj;
 			}
 
 			//create the database schema
@@ -300,7 +358,6 @@
 			}
 
 			private function sql_generate_field_changes($table_name, $table_fields) {
-				global $text;
 				foreach ($table_fields as $field) {
 					$field_name = $this->app_field_name($field);
 					$type = $this->app_field_type($this->type, $field);
@@ -328,7 +385,7 @@
 							$this->change_details[$table_name][$field_name] = ['name' => $field_name,'status' => $status, 'type' => $type];
 						} else {
 							//a field from the same table should not be processed twice
-							trigger_error("Field $field_name in table $table_name from file {$this->file} already processed", E_USER_WARNING);
+//							trigger_error("Field $field_name in table $table_name from file {$this->file} already processed", E_USER_WARNING);
 						}
 					} else {
 //						//report the field as skipped because it is no longer used
@@ -562,7 +619,7 @@
 				if (!empty($comment) && $this->db_field_comment($table_name, $field_name) !== $comment) {
 					if(strpos($comment, "'") > 0) {
 						//comment text is not allowed to have '
-						trigger_error("SKIPPING TABLE $table_name FIELD $field_name COMMENT {$comment}", E_USER_WARNING);
+//						trigger_error("SKIPPING TABLE $table_name FIELD $field_name COMMENT {$comment}", E_USER_WARNING);
 					} else {
 						$this->sql[self::FIELD_COMMENT][] = "COMMENT ON COLUMN $table_name.$field_name IS '$comment'; ";
 					}
@@ -585,7 +642,7 @@
 				if ($type !== $db_type) {
 					$type = is_array($field['type']) ? $field['type'][$this->type] : $field['type'];
 					//set the sql statement to update database
-					$this->sql[self::FIELD_TYPE][] = "ALTER TABLE $table_name ALTER COLUMN $field_name TYPE $type";
+					$this->sql[self::FIELD_TYPE][] = "ALTER TABLE $table_name ALTER COLUMN $field_name TYPE $type USING $field_name::$type";
 					//track the changes internally
 					$this->db_field_type_set($table_name, $field_name, $type);
 					return true;
