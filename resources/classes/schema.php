@@ -23,6 +23,7 @@
 
 	  Contributor(s):
 	  Mark J Crane <markjcrane@fusionpbx.com>
+	  Tim Fry <tim@dnsnetworks.com>
 	 */
 
 //define the schema class
@@ -43,12 +44,12 @@
 
 			//used to determine how the database transactions are performed
 			/**
-			 * ATOMIC commit will write the sql to the PDO driver and then commit at once. If there is an error in any of
-			 * the sql statements all changes are reversed.
+			 * ATOMIC commit will write all the SQL statements to the PDO driver and then commit at once. If there is an
+			 * error in any of the SQL statements all changes are reversed.
 			 * BATCH commit groups each each change by type of statement. The types are determined by the constants
 			 * of FIELD_NEW, FIELD_ADD, FIELD_RENAME, FIELD_TYPE, FIELD_COMMENT, FIELD_KEY, FIELD_INDEX. If there are any
 			 * errors within that group, the changes are reversed for that group and the next group is tried.
-			 * SINGLE (default) commit executes each sql individually. This is the safest type of commit. If there are any errors
+			 * SINGLE (default) commit executes each SQL individually. This is the safest type of commit. If there are any errors
 			 * then only that single commit is not written to the database.
 			 */
 			const SCHEMA_COMMIT_ATOMIC = 0,
@@ -69,13 +70,14 @@
 			private $response;
 			private $output_format;
 			private $sql;
+			private $sql_success;
 			private $data_type;
 			private $type;
 			private $db_tables;
 			private $commit_mode;
 			private $text;
-			private $html;
-			private $changes;
+			private $file;
+			private $change_details;
 
 			/**
 			 * Sets database tables and fields to match the app_config files.
@@ -84,7 +86,7 @@
 			 * @param int $commit_mode Set writing to the database per single transaction, batches, or atomically
 			 * @depends database::new()
 			 */
-			public function __construct(string $output_type = null, bool $check_data_types = false, int $commit_mode = 2) {
+			public function __construct(string $output_type = null, bool $check_data_types = false, int $commit_mode = 0) {
 				//open a database connection
 				$this->database = database::new();
 
@@ -119,7 +121,13 @@
 				$this->text = [];
 
 				//track the tables in the app_config files for display output
-				$this->changes = [];
+				$this->change_details = [];
+
+				//current app_config file being processed
+				$this->file = "";
+
+				//successful statements executed in the database
+				$this->sql_success = [];
 			}
 
 			public function __get($name) {
@@ -132,6 +140,10 @@
 			public function __set($name, $value) {
 				switch($name) {
 					case 'db_type':
+						$this->type = $value;
+						return $this;
+					case 'db':
+						$this->database->db = $value;
 						return $this;
 				}
 			}
@@ -175,15 +187,7 @@
 								break;
 							//write each section of the statements
 							case self::SCHEMA_COMMIT_BATCH:
-								//create all tables
-								if(isset($this->sql['tables'])) {
-									$this->save_transactions_batch($this->sql['tables']);
-									unset($this->sql['tables']);
-								}
-								//write alter statements after tables are created
-								foreach($this->sql as $command_set) {
-									$this->save_transactions_batch($command_set);
-								}
+								$this->save_transactions_batch();
 								break;
 							//safest option to ensure all changes are written
 							case self::SCHEMA_COMMIT_SINGLE:
@@ -193,12 +197,83 @@
 				}
 			}
 
+			//assume there are no mistakes so fastest method will work
+			private function save_transactions_atomic() {
+				try {
+					$this->database->db->beginTransaction();
+					if(!empty($this->sql['tables'])) {
+						foreach($this->sql['tables'] as $table_insert) {
+							$this->database->db->query($table_insert);
+						}
+						$this->sql_success = $this->sql['tables'];
+						unset($this->sql['tables']);
+					}
+					for($i=0; $i < 7; $i++) {
+						if(!empty($this->sql[$i])) {
+							foreach($this->sql[$i] as $sql) {
+								$this->database->db->query($sql);
+							}
+						}
+					}
+					$this->database->db->commit();
+					//save them as a successful commit
+					$this->sql_success += $this->sql;
+					//everything has been committed so reset the sql commands tracking array
+					$this->sql = [];
+				} catch (PDOException $e) {
+					if($this->database->db->inTransaction()) {
+						$this->database->db->rollBack();
+					}
+					//try in batch
+					$this->commit_mode = 1;
+					$this->exec();
+				}
+			}
+
+			//secondary commit mode tries each category of sql statements
+			private function save_transactions_batch() {
+				try {
+					if(!empty($this->sql['tables'])) {
+						$this->database->db->beginTransaction();
+						foreach($this->sql['tables'] as $table_insert) {
+							$this->database->db->query($table_insert);
+						}
+						$this->database->db->commit();
+						//save the sql commands that were successful
+						$this->sql_success += $this->sql['tables'];
+						unset($this->sql['tables']);
+					}
+					for($i=0; $i < 7; $i++) {
+						if(!empty($this->sql[$i])) {
+							$this->database->db->beginTransaction();
+							foreach($this->sql[$i] as $sql) {
+								$this->database->db->query($sql);
+							}
+							$this->database->db->commit();
+							//save the sql commands for this set that were successful
+							$this->sql_success += $this->sql[$i];
+							//this set of sql commands was successful so remove them from the tracking array
+							unset($this->sql[$i]);
+						}
+					}
+				} catch (PDOException $error) {
+					//reverse changes due to error
+					if($this->database->db->inTransaction()) {
+						$this->database->db->rollBack();
+					}
+					//try single commit type
+					$this->commit_mode = 2;
+					$this->exec();
+				}
+			}
+
 			private function save_transactions_single() {
 				foreach($this->sql as $command_set) {
 					foreach($command_set as $statement) {
 						try {
 							$this->database->db->exec($statement);
-						} catch (Throwable $e) {
+							$this->sql_success[] = $statement;
+						} catch (PDOException $e) {
 							$this->errors[] = $e->getMessage();
 							if($this->database->db->inTransaction()) {
 								$this->database->db->rollBack();
@@ -208,51 +283,41 @@
 				}
 			}
 
-			private function save_transactions_atomic() {
-				try {
-					$this->database->db->beginTransaction();
-					foreach($this->sql as $command_set) {
-						$this->database->db->query($command_set);
-					}
-					$this->database->db->commit();
-				} catch (Throwable $e) {
-					$this->errors[] = $e->getMessage();
-					if($this->database->db->inTransaction()) {
-						$this->database->db->rollBack();
-					}
-				}
-			}
-
-			private function save_transactions_batch(array $batch) {
-				try {
-					$this->database->db->beginTransaction();
-					foreach($batch as $sql) {
-						$this->database->db->query($sql);
-					}
-					$this->database->db->commit();
-				} catch (PDOException $error) {
-					$this->errors[] = $error->getMessage();
-					//reverse changes due to error
-					$this->database->db->rollBack();
-				}
-			}
-
 			private function sql_generate_field_changes($table_name, $table_fields) {
+				global $text;
 				foreach ($table_fields as $field) {
 					$field_name = $this->app_field_name($field);
 					$type = $this->app_field_type($this->type, $field);
+					//ensure this field is not set to be skipped or it has already been processed
 					if (!self::app_field_skip($field)) {
-						$this->changes[$table_name][] = ['name' => $field_name,'status' => 'option-true', 'type' => $type];
-						$this->sql_field_rename($table_name, $field_name, $field);
-						$this->sql_field_add($table_name, $field_name, $field);
-						$this->sql_field_modify_type($table_name, $field_name, $field);
-						$this->sql_field_add_index($table_name, $field_name, $field);
-						$this->sql_field_add_comment($table_name, $field_name, $field);
-						$this->sql_field_add_foreign_key($table_name, $field_name, $field);
+						//make sure we process the field only once
+						if(empty($this->change_details[$table_name][$field_name])) {
+							$status = "";
+							//report back more details
+							if($this->sql_field_rename($table_name, $field_name, $field))
+								$status .= "R";
+							if($this->sql_field_add($table_name, $field_name, $field))
+								$status .= "A";
+							if($this->sql_field_modify_type($table_name, $field_name, $field))
+								$status .= "T";
+							if($this->sql_field_add_index($table_name, $field_name, $field))
+								$status .= "I";
+							if($this->sql_field_add_comment($table_name, $field_name, $field))
+								$status .= "C";
+							if($this->sql_field_add_foreign_key($table_name, $field_name, $field))
+								$status .= "K";
+							//if nothing has been changed with the field then report "True"
+							if(empty($status))
+								$status = '-';
+							$this->change_details[$table_name][$field_name] = ['name' => $field_name,'status' => $status, 'type' => $type];
+						} else {
+							//a field from the same table should not be processed twice
+							trigger_error("Field $field_name in table $table_name from file {$this->file} already processed", E_USER_WARNING);
+						}
+					} else {
+//						//report the field as skipped because it is no longer used
+//						$this->display_changes[$table_name][$field_name] = ['name' => $field_name, 'status' => 'D', 'type' => $type];
 					}
-//					else {
-//						$this->changes[$table_name][] = ['name' => $field_name,'status' => 'label-skipped', 'type' => $type];
-//					}
 				}
 			}
 
@@ -267,23 +332,25 @@
 				global $apps;
 				//compare the database with the schema
 				for ($x = 0; $x < count($config_list); $x++) {
-					include($config_list[$x]);
+					$this->file = $config_list[$x];
+					include($this->file);
 					//process the file after loading
-					if (isset($apps[$x]['db']))
+					if (isset($apps[$x]['db'])) {
 						foreach ($apps[$x]['db'] as $table) {
 							$table_name = self::app_table_name($table);
 							if($this->db_table_exists($table_name)) {
 								// the tableoid is not allowed to be a column name
 								// so we will use that to track the 'status' of the table
-								$this->changes[$table_name]['tableoid'] = 'option-true';
-								// process the fields for existing tables
+								$this->change_details[$table_name]['tableoid'] = 'option-true';
+								// process the fields for existing table
 								$this->sql_generate_field_changes($table_name, $table['fields']);
 							} else {
 								//process a new table
-								$this->changes[$table_name]['tableoid'] = 'option-false';
+								$this->change_details[$table_name]['tableoid'] = 'option-false';
 								$this->sql_generate_table_insert($table_name, $table['fields']);
 							}
 						}
+					}
 				}
 				$this->exec();
 				return $this;
@@ -297,15 +364,11 @@
 			 */
 			public function __toString(): string {
 				$response = "";
-				switch($this->output_format) {
-					case 'html':
-						$response = $this->html_response();
-						break;
-					case 'text':
-						$response = $this->${$this->output_format};
-						break;
-					default:
-						trigger_error('Unknown display type');
+				$func = $this->output_format . "_response";
+				if(method_exists($this, $func)) {
+						$response = $this->{$func}();
+				} else {
+					trigger_error('Unknown display type');
 				}
 				return $response;
 			}
@@ -314,19 +377,30 @@
 				return (!empty($this->errors));
 			}
 
+			private function text_response(): string {
+				global $text;
+				$response = "";
+				if(!empty($this->change_details)) {
+					$response .= implode("\n", array_map(function ($statements) { return implode("\n", $statements); },$this->sql));
+				} else {
+					$response .= "	".$text['label-schema'].":			".$text['label-no_change']."\n";
+				}
+				return $response;
+			}
+
 			private function html_response(): string {
 				global $text;
 				//show the database type
-				$html = "<strong>{$text['header-database_type']}: {$this->type}</strong><br /><br />";
+				$html = "<strong>{$text['header-database_type']}: {$this->type}</strong><br />".(empty($this->errors) ? "" : $text['header-errors_detected'])."<br /><br />";
 				//start the table
 				$html .= "<table width='100%' border='0' cellpadding='20' cellspacing='0'>\n";
-				if(!empty($this->sql)) {
+				if(!empty($this->sql_success)) {
 					$html .= "<tr>\n";
 					$html .= "<td class='row_style1' colspan='3'>\n";
 					$html .= "<br />\n";
 					$html .= "<strong>".$text['label-sql_changes'].":</strong><br />\n";
 					$html .= "<pre>\n";
-					$html .= implode("\n", array_map(function ($statements) { return implode("\n", $statements); },$this->sql));
+					$html .= implode("\n", $this->sql_success);
 					$html .= "</pre>\n";
 					$html .= "<br />\n";
 					$html .= "</td>\n";
@@ -346,13 +420,12 @@
 					global $text;
 					return "<tr>"
 							. "<td class='row_style1' valign='top'>$table_name</td>"
-							. "<td class='vncell' style='padding-top: 3px;' valign='top'>{$text[$this->changes[$table_name]['tableoid']]}</td>"
+							. "<td class='vncell' style='padding-top: 3px;' valign='top'>{$text[$this->change_details[$table_name]['tableoid']]}</td>"
 							. "<td class='row_style1'>\n"
 								. "<table cellspacing='0' cellpadding='10' border='0'>\n"
 									. "<tbody>\n"
 										. "<tr><th>{$text['label-table']}</th><th>{$text['label-type']}</th><th>{$text['label-details']}</th></tr>"
 											. implode("", array_map(function($field) {
-												global $text;
 												if(is_array($field)) {
 													$field_name = $field['name'];
 													$status = $field['status'];
@@ -363,14 +436,14 @@
 													return "<tr>\n"
 														. "<td class='row_style1'>$field_name</td>"
 														. "<td class='row_style1'>$type</td>"
-														. "<td class='row_style0'>$text[$status]</td>"
+														. "<td class='row_style0' style='text-align:center'>$status</td>"
 														. "</tr>\n";
 													}
 												return "";
 											}, $fields))
 									. "</tbody>\n"
 								. "</table>\n";
-				}, $this->changes, array_keys($this->changes))) . "\n";
+				}, $this->change_details, array_keys($this->change_details))) . "\n";
 				return $html;
 			}
 
@@ -391,8 +464,8 @@
 						//create the SQL statement
 						$fields[] = "$field_name $type" . ($is_primary ? " PRIMARY KEY" : "");
 						//track the response
-						$this->changes[$table_name][$field_name]['status'] = 'new';
-						$this->changes[$table_name][$field_name]['details'] = $type . ($is_primary ? " PRIMARY KEY" : "");
+						$this->change_details[$table_name][$field_name]['status'] = 'new';
+						$this->change_details[$table_name][$field_name]['details'] = $type . ($is_primary ? " PRIMARY KEY" : "");
 					}
 				}
 				return $fields;
@@ -513,7 +586,7 @@
 			}
 
 			private function db_field_f_key_exists($table_name, $value) {
-				$exists = array_search($value, $this->db_tables[$table_name]['constraints']) !== false;
+				$exists = array_search($value, $this->db_tables[$table_name]['constraints'] ?? []) !== false;
 				return $exists;
 			}
 
