@@ -519,7 +519,7 @@
 							end
 							y = y + 1;
 						--save the message to the voicemail messages
-							if (message_length ~= nil and message_length > 2) then
+							if (message_length ~= nil and tonumber(message_length) > 2) then
 								caller_id_name = string.gsub(caller_id_name,"'","''");
 								local sql = {}
 								table.insert(sql, "INSERT INTO v_voicemail_messages ");
@@ -633,12 +633,12 @@
 							end
 
 						--send the message waiting event
-							if (message_length ~= nil and message_length > 2) then
+							if (message_length ~= nil and tonumber(message_length) > 2) then
 								message_waiting(voicemail_id_copy, domain_uuid);
 							end
 
 						--send the email with the voicemail recording attached
-							if (message_length ~= nil and message_length > 2) then
+							if (message_length ~= nil and tonumber(message_length) > 2) then
 								send_email(voicemail_id_copy, voicemail_message_uuid);
 								if (voicemail_to_sms) then
 									send_sms(voicemail_id_copy, voicemail_message_uuid);
