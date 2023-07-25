@@ -170,13 +170,10 @@
 
 //upgrade schema and/or data_types
 	if ($upgrade_type == 'schema') {
-		//get the database schema put it into an array then compare and update the database as needed.
-		require_once "resources/classes/schema.php";
-		$obj = new schema;
-		if (isset($argv[2]) && $argv[2] == 'data_types') {
-			$obj->data_types = true;
-		}
-		echo $obj->schema($format ?? '');
+		//load the schema class
+		require_once dirname(__DIR__, 2) . "/resources/classes/schema.php";
+		//report back any changes the schema makes
+		echo schema::new()->display_type($display_type)->upgrade();
 	}
 
 //restore the default menu
@@ -239,7 +236,7 @@
 			$text = $language->get(null, 'core/upgrade');
 
 		//show the title
-			if ($display_type == 'text') {
+			if ($display_type === 'text') {
 				echo "\n";
 				echo $text['label-upgrade']."\n";
 				echo "-----------------------------------------\n";
@@ -248,8 +245,10 @@
 			}
 
 		//make sure the database schema and installation have performed all necessary tasks
-			$obj = new schema;
-			echo $obj->schema("text");
+			//load the schema class
+			require_once dirname(__DIR__, 2) . "/resources/classes/schema.php";
+			//echo changes the schema makes to the console
+			echo schema::new()->output_format($display_type)->upgrade();
 
 		//run all app_defaults.php files
 			$domain = new domains;
