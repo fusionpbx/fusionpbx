@@ -253,21 +253,21 @@
 			//create the database schema
 			private function exec() {
 				if (!empty($this->sql)) {
-						//check database commit type
-						switch($this->commit_mode) {
-							//fastest write method but will reverse all changes if there is an error
-							case self::SCHEMA_COMMIT_ATOMIC:
-								$this->save_transactions_atomic();
-								break;
-							//write each section of the statements
-							case self::SCHEMA_COMMIT_BATCH:
-								$this->save_transactions_batch();
-								break;
-							//safest option to ensure all changes are written
-							case self::SCHEMA_COMMIT_SINGLE:
-								$this->save_transactions_single();
-								break;
-						}
+					//check database commit type
+					switch($this->commit_mode) {
+						//fastest write method but will reverse all changes if there is an error
+						case self::SCHEMA_COMMIT_ATOMIC:
+							$this->save_transactions_atomic();
+							break;
+						//write each section of the statements
+						case self::SCHEMA_COMMIT_BATCH:
+							$this->save_transactions_batch();
+							break;
+						//safest option to ensure all changes are written
+						case self::SCHEMA_COMMIT_SINGLE:
+							$this->save_transactions_single();
+							break;
+					}
 				}
 			}
 
@@ -385,6 +385,7 @@
 							$this->change_details[$table_name][$field_name] = ['name' => $field_name,'status' => $status, 'type' => $type];
 						} else {
 							//a field from the same table should not be processed twice
+							$this->errors[] = "Field $field_name in table $table_name from file {$this->file} already processed";
 //							trigger_error("Field $field_name in table $table_name from file {$this->file} already processed", E_USER_WARNING);
 						}
 					} else {
