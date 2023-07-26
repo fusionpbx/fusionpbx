@@ -198,7 +198,7 @@
 					unblock($row['ip_address'], $row['filter']);
 
 					//log the blocked ip address to the syslog
-					openlog("fusionpbx", LOG_PID | LOG_PERROR);
+					openlog("fusionpbx", LOG_PID | LOG_PERROR, LOG_AUTH);
 					syslog(LOG_WARNING, "fusionpbx: unblocked: [ip_address: ".$row['ip_address'].", filter: ".$row['filter'].", to-user: ".$row['extension'].", to-host: ".$row['hostname'].", line: ".__line__."]");
 					closelog();
 
@@ -321,7 +321,7 @@
 		}
 
 		//log the blocked ip address to the syslog
-		openlog("fusionpbx", LOG_PID | LOG_PERROR);
+		openlog("fusionpbx", LOG_PID | LOG_PERROR, LOG_AUTH);
 		syslog(LOG_WARNING, "fusionpbx: blocked: [ip_address: ".$ip_address.", filter: ".$filter.", to-user: ".$event['to-user'].", to-host: ".$event['to-host'].", line: ".__line__."]");
 		closelog();
 
