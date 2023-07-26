@@ -46,7 +46,7 @@
 	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
 		$extension_uuid = $_REQUEST["id"];
-		$page = $_REQUEST['page'];
+		$page = $_REQUEST['page'] ?? null;
 	}
 	else {
 		$action = "add";
@@ -72,7 +72,7 @@
 	}
 
 //get the http values and set them as php variables
-	if (!empty($_POST) && count($_POST) > 0) {
+	if (!empty($_POST)) {
 
 		//get the values from the HTTP POST and save them as PHP variables
 			if ($action == 'add' || permission_exists("extension_extension")) {
@@ -132,6 +132,7 @@
 			$absolute_codec_string = $_POST["absolute_codec_string"];
 			$force_ping = $_POST["force_ping"];
 			$dial_string = $_POST["dial_string"];
+			$extension_type = $_POST["extension_type"];
 			$enabled = $_POST["enabled"] ?? 'false';
 			$description = $_POST["description"];
 
@@ -171,21 +172,45 @@
 
 		//device provisioning variables
 			if (is_array($_POST["devices"]) && @sizeof($_POST["devices"]) != 0) {
-				foreach ($_POST["devices"] as $d => $device) {
-					$device_mac_address = strtolower($device["device_mac_address"]);
-					$device_mac_address = preg_replace('#[^a-fA-F0-9./]#', '', $device_mac_address);
 
+				//get the devices
+				$sql = "select count(device_uuid) from v_devices ";
+				$sql .= "where domain_uuid = :domain_uuid ";
+				if (!permission_exists('device_all') && !permission_exists('device_domain_all')) {
+					$sql .= "and device_user_uuid = :user_uuid ";
+					$parameters['user_uuid'] = $_SESSION['user_uuid'];
+				}
+				$sql .= "order by device_address asc ";
+				$parameters['domain_uuid'] = $domain_uuid;
+				$database = new database;
+				$total_devices = $database->select($sql, $parameters, 'column');
+				unset($sql, $parameters);
+
+				foreach ($_POST["devices"] as $d => $device) {
+					if (
+						!empty($device["device_address"]) &&
+						strtolower($device["device_address"]) == 'uuid' &&
+						(
+							!isset($_SESSION['limit']['devices']['numeric']) ||
+							$total_devices < $_SESSION['limit']['devices']['numeric']
+						)) {
+						$device_address = strtolower(uuid());
+					}
+					else {
+						$device_address = strtolower($device["device_address"]);
+					}
+					$device_address = preg_replace('#[^a-fA-F0-9./]#', '', $device_address);
 					$line_numbers[$d] = $device["line_number"];
-					$device_mac_addresses[$d] = $device_mac_address;
+					$device_addresses[$d] = $device_address;
 					$device_templates[$d] = $device["device_template"];
 				}
 			}
 
 		//get or set the device_uuid
-			if (!empty($device_mac_addresses) && is_array($device_mac_addresses) && @sizeof($device_mac_addresses) != 0) {
-				foreach ($device_mac_addresses as $d => $device_mac_address) {
-					$device_mac_address = strtolower($device_mac_address);
-					$device_mac_address = preg_replace('#[^a-fA-F0-9./]#', '', $device_mac_address);
+			if (!empty($device_addresses) && is_array($device_addresses) && @sizeof($device_addresses) != 0) {
+				foreach ($device_addresses as $d => $device_address) {
+					$device_address = strtolower($device_address);
+					$device_address = preg_replace('#[^a-fA-F0-9./]#', '', $device_address);
 
 					$sql = "select ";
 					$sql .= "d1.device_uuid, ";
@@ -196,8 +221,8 @@
 					$sql .= "v_domains as d2 ";
 					$sql .= "where ";
 					$sql .= "d1.domain_uuid = d2.domain_uuid and ";
-					$sql .= "d1.device_mac_address = :device_mac_address ";
-					$parameters['device_mac_address'] = $device_mac_address;
+					$sql .= "d1.device_address = :device_address ";
+					$parameters['device_address'] = $device_address;
 					$database = new database;
 					$row = $database->select($sql, $parameters, 'row');
 					if (is_array($row)) {
@@ -281,7 +306,7 @@
 	}
 
 //process the user data and save it to the database
-	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
+	if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
 		//set the domain_uuid
 			if (permission_exists('extension_domain') && is_uuid($_POST["domain_uuid"])) {
@@ -388,10 +413,8 @@
 									}
 
 								//prepare the values for mwi account
-										if (!empty($mwi_account)) {
-											if (strpos($mwi_account, '@') === false) {
-													$mwi_account .= "@".$_SESSION['domain_name'];
-											}
+										if (!empty($mwi_account) && strpos($mwi_account, '@') === false) {
+											$mwi_account .= "@".$_SESSION['domain_name'];
 										}
 
 								//generate a password
@@ -508,6 +531,9 @@
 											$array["extensions"][$i]["dial_string"] = $dial_string;
 										}
 									}
+									if (permission_exists('extension_type')) {
+										$array["extensions"][$i]["extension_type"] = $extension_type;
+									}
 									if (permission_exists('extension_enabled')) {
 										$array["extensions"][$i]["enabled"] = $enabled;
 									}
@@ -522,9 +548,9 @@
 									}
 
 								//assign the device to the extension(s)
-									if (is_array($device_mac_addresses) && @sizeof($device_mac_addresses) != 0) {
-										foreach ($device_mac_addresses as $d => $device_mac_address) {
-											if (is_mac($device_mac_address)) {
+									if (is_array($device_addresses) && @sizeof($device_addresses) != 0) {
+										foreach ($device_addresses as $d => $device_address) {
+											if (!empty($device_address)) {
 												//get the device vendor
 												if (isset($device_templates[$d])) {
 													//use the the template to get the vendor
@@ -532,8 +558,8 @@
 													$device_vendor = $template_array[0];
 												}
 												else {
-													//use the mac address to get the vendor
-													$device_vendor = device::get_vendor($device_mac_address);
+													//use the device address to get the vendor
+													$device_vendor = device::get_vendor($device_address);
 												}
 
 												//determine the name
@@ -594,10 +620,10 @@
 												}
 
 												//build the devices array
-												if ($device_unique && $device_mac_address != '000000000000') {
+												if ($device_unique && $device_address != '000000000000') {
 													$array["devices"][$j]["device_uuid"] = $device_uuids[$d];
 													$array["devices"][$j]["domain_uuid"] = $_SESSION['domain_uuid'];
-													$array["devices"][$j]["device_mac_address"] = $device_mac_address;
+													$array["devices"][$j]["device_address"] = $device_address;
 													$array["devices"][$j]["device_label"] = $extension;
 													if (!empty($device_vendor)) {
 														$array["devices"][$j]["device_vendor"] = $device_vendor;
@@ -817,7 +843,7 @@
 	}
 
 //pre-populate the form
-	if (count($_GET) > 0 && (empty($_POST["persistformvar"]) || $_POST["persistformvar"] != "true")) {
+	if (!empty($_GET) && (empty($_POST["persistformvar"]) || $_POST["persistformvar"] != "true")) {
 		$extension_uuid = $_GET["id"];
 		$sql = "select * from v_extensions ";
 		$sql .= "where extension_uuid = :extension_uuid ";
@@ -862,6 +888,7 @@
 			$absolute_codec_string = $row["absolute_codec_string"];
 			$force_ping = $row["force_ping"];
 			$dial_string = $row["dial_string"];
+			$extension_type = $row["extension_type"];
 			$enabled = $row["enabled"];
 			$description = $row["description"];
 		}
@@ -900,12 +927,12 @@
 	}
 
 //get the device lines
-	$sql = "select d.device_mac_address, d.device_template, d.device_description, l.device_line_uuid, l.device_uuid, l.line_number ";
+	$sql = "select d.device_address, d.device_template, d.device_description, l.device_line_uuid, l.device_uuid, l.line_number ";
 	$sql .= "from v_device_lines as l, v_devices as d ";
 	$sql .= "where (l.user_id = :user_id_1 or l.user_id = :user_id_2)";
 	$sql .= "and l.domain_uuid = :domain_uuid ";
 	$sql .= "and l.device_uuid = d.device_uuid ";
-	$sql .= "order by l.line_number, d.device_mac_address asc ";
+	$sql .= "order by l.line_number, d.device_address asc ";
 	$parameters['user_id_1'] = $extension ?? null;
 	$parameters['user_id_2'] = $number_alias ?? null;
 	$parameters['domain_uuid'] = $domain_uuid;
@@ -916,10 +943,17 @@
 //get the devices
 	$sql = "select * from v_devices ";
 	$sql .= "where domain_uuid = :domain_uuid ";
-	$sql .= "order by device_mac_address asc ";
+	if (!permission_exists('device_all') && !permission_exists('device_domain_all')) {
+		$sql .= "and device_user_uuid = :user_uuid ";
+		$parameters['user_uuid'] = $_SESSION['user_uuid'];
+	}
+	$sql .= "order by device_address asc ";
 	$parameters['domain_uuid'] = $domain_uuid;
 	$database = new database;
 	$devices = $database->select($sql, $parameters, 'all');
+	if (!empty($devices) && is_array($devices)) {
+		$total_devices = @sizeof($devices);
+	}
 	unset($sql, $parameters);
 
 //get the device vendors
@@ -1240,7 +1274,7 @@
 			echo "</tr>\n";	
 	}
 
-	if (permission_exists('device_edit')) {
+	if (permission_exists('device_edit') && (empty($extension_type) || $extension_type != 'virtual')) {
 		if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/devices')) {
 			echo "<tr>\n";
 			echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
@@ -1254,9 +1288,9 @@
 			echo "					".$text['label-line']."&nbsp;\n";
 			echo "				</td>\n";
 			echo "				<td class='vtable'>\n";
-			echo "					".$text['label-device_mac_address']."&nbsp;\n";
+			echo "					".$text['label-device_address']."&nbsp;\n";
 			echo "				</td>\n";
-			echo "				<td class='vtable'>\n";
+			echo "				<td class='vtable' style='padding-left: 8px;'>\n";
 			echo "					".$text['label-device_template']."&nbsp;\n";
 			echo "				</td>\n";
 			if ($action == 'update') {
@@ -1266,11 +1300,11 @@
 			if ($action == 'update') {
 				if (is_array($device_lines) && @sizeof($device_lines) != 0) {
 					foreach ($device_lines as $row) {
-						$device_mac_address = format_mac($row['device_mac_address']);
+						$device_address = format_device_address($row['device_address']);
 						echo "		<tr>\n";
 						echo "			<td class='vtable'>".escape($row['line_number'])."</td>\n";
-						echo "			<td class='vtable'><a href='".PROJECT_PATH."/app/devices/device_edit.php?id=".escape($row['device_uuid'])."'>".escape($device_mac_address)."</a></td>\n";
-						echo "			<td class='vtable'>".escape($row['device_template'])."&nbsp;</td>\n";
+						echo "			<td class='vtable'><a href='".PROJECT_PATH."/app/devices/device_edit.php?id=".escape($row['device_uuid'])."'>".escape($device_address)."</a></td>\n";
+						echo "			<td class='vtable' style='padding-left: 10px;'>".escape($row['device_template'])."&nbsp;</td>\n";
 						//echo "			<td class='vtable'>".$row['device_description']."&nbsp;</td>\n";
 						echo "			<td>\n";
 						echo "				<a href='#' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.getElementById('delete_type').value = 'device_line'; document.getElementById('delete_uuid').value = '".escape($row['device_line_uuid'])."'; document.getElementById('frm').submit(); }\" alt='".$text['button-delete']."'>$v_link_label_delete</a>\n";
@@ -1297,55 +1331,58 @@
 				?>
 				<script>
 				var Objs;
-				function changeToInput_device_mac_address_<?php echo $d; ?>(obj){
+				function changeToInput_device_address_<?php echo $d; ?>(obj){
 					tb=document.createElement('INPUT');
 					tb.type='text';
 					tb.name=obj.name;
 					tb.className='formfld';
-					tb.setAttribute('id', 'device_mac_address_<?php echo $d; ?>');
-					tb.setAttribute('style', 'width: 80%;');
-					tb.setAttribute('pattern', '^([0-9A-Fa-f]{2}[:-]?){5}([0-9A-Fa-f]{2})$');
+					tb.setAttribute('id', 'device_address_<?php echo $d; ?>');
+					tb.setAttribute('style', 'width: 250px;');
 					tb.value=obj.options[obj.selectedIndex].value;
-					document.getElementById('btn_select_to_input_device_mac_address_<?php echo $d; ?>').style.visibility = 'hidden';
+					document.getElementById('btn_select_to_input_device_address_<?php echo $d; ?>').style.display = 'none';
 					tbb=document.createElement('INPUT');
 					tbb.setAttribute('class', 'btn');
 					tbb.setAttribute('style', 'margin-left: 4px;');
 					tbb.type='button';
 					tbb.value=$("<div />").html('&#9665;').text();
 					tbb.objs=[obj,tb,tbb];
-					tbb.onclick=function(){ replace_device_mac_address_<?php echo $d; ?>(this.objs); }
+					tbb.onclick=function(){ replace_device_address_<?php echo $d; ?>(this.objs); }
 					obj.parentNode.insertBefore(tb,obj);
 					obj.parentNode.insertBefore(tbb,obj);
 					obj.parentNode.removeChild(obj);
-					replace_device_mac_address_<?php echo $d; ?>(this.objs);
+					replace_device_address_<?php echo $d; ?>(this.objs);
 				}
 
-				function replace_device_mac_address_<?php echo $d; ?>(obj){
+				function replace_device_address_<?php echo $d; ?>(obj){
 					obj[2].parentNode.insertBefore(obj[0],obj[2]);
 					obj[0].parentNode.removeChild(obj[1]);
 					obj[0].parentNode.removeChild(obj[2]);
-					document.getElementById('btn_select_to_input_device_mac_address_<?php echo $d; ?>').style.visibility = 'visible';
+					document.getElementById('btn_select_to_input_device_address_<?php echo $d; ?>').style.display = 'inline';
 				}
 				</script>
 				<?php
-				echo "						<select id='device_mac_address_".$d."' name='devices[".$d."][device_mac_address]' class='formfld' style='width: 180px;' onchange=\"changeToInput_device_mac_address_".$d."(this); this.style.visibility='hidden';\">\n";
+				echo "						<select id='device_address_".$d."' name='devices[".$d."][device_address]' class='formfld' style='width: 250px;' onchange=\"changeToInput_device_address_".$d."(this); this.style.visibility='hidden';\">\n";
 				echo "							<option value=''></option>\n";
 				if (is_array($devices) && @sizeof($devices) != 0) {
 					foreach ($devices as $field) {
-						if (!empty($field["device_mac_address"])) {
-							$selected = $field_current_value == $field["device_mac_address"] ? "selected='selected'" : null;
-							echo "							<option value='".escape($field["device_mac_address"])."' ".$selected.">".escape($field["device_mac_address"])." - ".escape($field['device_model'])." ".escape($field['device_description'])."</option>\n";
+						if (!empty($field["device_address"])) {
+							$selected = !empty($field_current_value) && $field_current_value == $field["device_address"] ? "selected='selected'" : null;
+							echo "							<option value='".escape($field["device_address"])."' ".$selected.">".escape(format_device_address($field["device_address"])).(!empty($field['device_model']) || !empty($field['device_description']) ? " - ".escape($field['device_model'])." ".escape($field['device_description']) : null)."</option>\n";
 						}
 					}
 				}
+				if (permission_exists('device_address_uuid') && (!isset($_SESSION['limit']['devices']['numeric']) || $total_devices < $_SESSION['limit']['devices']['numeric'])) {
+					echo "							<option disabled='disabled'></option>\n";
+					echo "							<option value='UUID'>".$text['label-generate']."</option>\n";
+				}
 				echo "						</select>\n";
-				echo "						<input type='button' id='btn_select_to_input_device_mac_address_".$d."' class='btn' alt='".$text['button-back']."' onclick=\"changeToInput_device_mac_address_".$d."(document.getElementById('device_mac_address_".$d."')); this.style.visibility='hidden';\" value='&#9665;'>\n";
+				echo "						<input type='button' id='btn_select_to_input_device_address_".$d."' class='btn' alt='".$text['button-back']."' onclick=\"changeToInput_device_address_".$d."(document.getElementById('device_address_".$d."')); this.style.visibility='hidden';\" value='&#9665;'>\n";
 				echo "					</td>\n";
 				echo "				</tr>\n";
 				echo "			</table>\n";
 
 				echo "		</td>\n";
-				echo "		<td ".($action == 'edit' ? "class='vtable'" : null).">";
+				echo "		<td ".($action == 'edit' ? "class='vtable'" : null)." style='padding-left: 5px;'>";
 				$device = new device;
 				$template_dir = $device->get_template_dir();
 				echo "			<select id='device_template' name='devices[".$d."][device_template]' class='formfld'>\n";
@@ -1418,21 +1455,16 @@
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		if (permission_exists('outbound_caller_id_select')) {
-			if (count($destinations) > 0) {
+			if (!empty($destinations)) {
 				echo "	<select name='outbound_caller_id_name' id='outbound_caller_id_name' class='formfld'>\n";
 				echo "	<option value=''></option>\n";
 				foreach ($destinations as &$row) {
-					$tmp = $row["destination_caller_id_name"];
-					if(empty($tmp)){
-						// $tmp = $row["destination_description"];
-					}
-					if(!empty($tmp) && !empty($in_list) && is_array($in_list) && !in_array($tmp, $in_list)){
-						$in_list[] = $tmp;
-						if ($outbound_caller_id_name == $tmp) {
-							echo "		<option value='".escape($tmp)."' selected='selected'>".escape($tmp)."</option>\n";
+					if(!empty($row["destination_caller_id_name"])){
+						if (!empty($outbound_caller_id_name) && $row["destination_caller_id_name"] == $outbound_caller_id_name) {
+							echo "		<option value='".escape($row["destination_caller_id_name"])."' selected='selected'>".escape($row["destination_caller_id_name"])."</option>\n";
 						}
 						else {
-							echo "		<option value='".escape($tmp)."'>".escape($tmp)."</option>\n";
+							echo "		<option value='".escape($row["destination_caller_id_name"])."'>".escape($row["destination_caller_id_name"])."</option>\n";
 						}
 					}
 				}
@@ -1460,7 +1492,7 @@
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		if (permission_exists('outbound_caller_id_select')) {
-			if (count($destinations) > 0) {
+			if (!empty($destinations)) {
 				echo "	<select name='outbound_caller_id_number' id='outbound_caller_id_number' class='formfld'>\n";
 				echo "	<option value=''></option>\n";
 				foreach ($destinations as &$row) {
@@ -1501,7 +1533,7 @@
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		if (permission_exists('emergency_caller_id_select')) {
-			if (count($emergency_destinations) > 0) {
+			if (!empty($emergency_destinations)) {
 				echo "	<select name='emergency_caller_id_name' id='emergency_caller_id_name' class='formfld'>\n";
 				echo "		<option value=''></option>\n";
 				foreach ($emergency_destinations as &$row) {
@@ -1545,7 +1577,7 @@
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		if (permission_exists('emergency_caller_id_select')) {
-			if (count($emergency_destinations) > 0) {
+			if (!empty($emergency_destinations)) {
 				echo "	<select name='emergency_caller_id_number' id='emergency_caller_id_number' class='formfld'>\n";
 				if (permission_exists('emergency_caller_id_select_empty')) {
 					echo "		<option value=''></option>\n";
@@ -1574,10 +1606,10 @@
 			echo "    <input class='formfld' type='text' name='emergency_caller_id_number' maxlength='255' min='0' step='1' value=\"".escape($emergency_caller_id_number ?? '')."\">\n";
 		}
 		echo "<br />\n";
-		if (permission_exists('emergency_caller_id_select') && count($emergency_destinations) > 0){
+		if (permission_exists('emergency_caller_id_select') && !empty($emergency_destinations)){
 			echo $text['description-emergency_caller_id_number-select']."\n";
 		}
-		elseif (permission_exists('outbound_caller_id_select') && count($destinations) > 0) {
+		elseif (permission_exists('outbound_caller_id_select') && !empty($destinations)) {
 			echo $text['description-emergency_caller_id_number-select']."\n";
 		}
 		else {
@@ -1780,9 +1812,9 @@
 		echo "<td class='vtable' align='left'>\n";
 		echo "    <select class='formfld' name='missed_call_app' id='missed_call_app' onchange=\"if (this.selectedIndex != 0) { document.getElementById('missed_call_data').style.display = ''; document.getElementById('missed_call_data').focus(); } else { document.getElementById('missed_call_data').style.display='none'; }\">\n";
 		echo "		<option value=''></option>\n";
-		echo "    	<option value='email' ".((!empty($missed_call_app) && $missed_call_app == "email" && !empty($missed_call_data) && $missed_call_data != '') ? "selected='selected'" : null).">".$text['label-email']."</option>\n";
-		//echo "    	<option value='text' ".(($missed_call_app == "text" && $missed_call_data != '') ? "selected='selected'" : null).">".$text['label-text']."</option>\n";
-		//echo "    	<option value='url' ".(($missed_call_app == "url" && $missed_call_data != '') ? "selected='selected'" : null).">".$text['label-url']."</option>\n";
+		echo "    	<option value='email' ".((!empty($missed_call_app) && $missed_call_app == "email" && !empty($missed_call_data) && !empty($missed_call_data)) ? "selected='selected'" : null).">".$text['label-email']."</option>\n";
+		//echo "    	<option value='text' ".(($missed_call_app == "text" && !empty($missed_call_data)) ? "selected='selected'" : null).">".$text['label-text']."</option>\n";
+		//echo "    	<option value='url' ".(($missed_call_app == "url" && !empty($missed_call_data)) ? "selected='selected'" : null).">".$text['label-url']."</option>\n";
 		echo "    </select>\n";
 		$missed_call_data = !empty($missed_call_app) && $missed_call_app == 'text' ? format_phone($missed_call_data ?? '') : $missed_call_data ?? '';
 		echo "    <input class='formfld' type='text' name='missed_call_data' id='missed_call_data' maxlength='255' value=\"".escape($missed_call_data ?? '')."\" style='min-width: 200px; width: 200px; ".((empty($missed_call_app) || empty($missed_call_data)) ? "display: none;" : null)."'>\n";
@@ -1837,10 +1869,10 @@
 		echo "	".$text['label-call_group']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		if (!empty($_SESSION['call group']['name']) && is_array($_SESSION['call group']['name'])) {
+		if (!empty($_SESSION['call_group']['name']) && is_array($_SESSION['call_group']['name'])) {
 			echo "	<select class='formfld' name='call_group'>\n";
 			echo "		<option value=''></option>\n";
-			foreach ($_SESSION['call group']['name'] as $name) {
+			foreach ($_SESSION['call_group']['name'] as $name) {
 				if ($name == $call_group) {
 					echo "		<option value='".escape($name)."' selected='selected'>".escape($name)."</option>\n";
 				}
@@ -1936,6 +1968,22 @@
 		echo $moh->select('hold_music', $hold_music ?? '', $options);
 		echo "	<br />\n";
 		echo $text['description-hold_music']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
+
+	if (permission_exists('extension_type')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-extension_type']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<select class='formfld' name='extension_type' id='extension_type'>\n";
+		echo "		<option value='default' ".(($extension_type == "default") ? "selected='selected'" : null).">".$text['label-default']."</option>\n";
+		echo "		<option value='virtual' ".(($extension_type == "virtual") ? "selected='selected'" : null).">".$text['label-virtual']."</option>\n";
+		echo "	</select>\n";
+		echo "<br />\n";
+		echo $text['description-extension_type']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 	}

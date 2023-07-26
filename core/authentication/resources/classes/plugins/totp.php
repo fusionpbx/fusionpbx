@@ -1,4 +1,28 @@
 <?php
+/*
+	FusionPBX
+	Version: MPL 1.1
+
+	The contents of this file are subject to the Mozilla Public License Version
+	1.1 (the "License"); you may not use this file except in compliance with
+	the License. You may obtain a copy of the License at
+	http://www.mozilla.org/MPL/
+
+	Software distributed under the License is distributed on an "AS IS" basis,
+	WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+	for the specific language governing rights and limitations under the
+	License.
+
+	The Original Code is FusionPBX
+
+	The Initial Developer of the Original Code is
+	Mark J Crane <markjcrane@fusionpbx.com>
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
+	the Initial Developer. All Rights Reserved.
+
+	Contributor(s):
+	Mark J Crane <markjcrane@fusionpbx.com>
+*/
 
 /**
  * plugin_totp
@@ -32,6 +56,7 @@ class plugin_totp {
 			$settings['theme']['logo'] = !empty($_SESSION['theme']['logo']['text']) ? $_SESSION['theme']['logo']['text'] : PROJECT_PATH.'/themes/default/images/logo_login.png';
 			$settings['theme']['login_logo_width'] = !empty($_SESSION['theme']['login_logo_width']['text']) ? $_SESSION['theme']['login_logo_width']['text'] : 'auto; max-width: 300px';
 			$settings['theme']['login_logo_height'] = !empty($_SESSION['theme']['login_logo_height']['text']) ? $_SESSION['theme']['login_logo_height']['text'] : 'auto; max-height: 300px';
+			$settings['theme']['message_delay'] = isset($_SESSION['theme']['message_delay']) ? 1000 * (float) $_SESSION['theme']['message_delay'] : 3000;
 
 		//get the username
 			if (isset($_SESSION["username"])) {
@@ -39,6 +64,7 @@ class plugin_totp {
 			}
 			if (isset($_POST['username'])) {
 				$this->username = $_POST['username'];
+				$_SESSION["username"] = $this->username;
 			}
 
 		//request the username
@@ -82,6 +108,10 @@ class plugin_totp {
 				$view->assign("login_logo_source", $settings['theme']['logo']);
 				$view->assign("button_login", $text['button-login']);
 				$view->assign("favicon", $settings['theme']['favicon']);
+				$view->assign("message_delay", $settings['theme']['message_delay']);
+
+				//messages
+				$view->assign('messages', message::html(true, '		'));
 
 				//show the views
 				$content = $view->render('username.htm');
@@ -114,14 +144,28 @@ class plugin_totp {
 				$sql .= "	username = :username\n";
 				$sql .= "	or user_email = :username\n";
 				$sql .= ")\n";
-				if ($_SESSION["users"]["unique"]["text"] != "global") {
+				if (empty($_SESSION["users"]["unique"]["text"]) || $_SESSION["users"]["unique"]["text"] != "global") {
 					//unique username per domain (not globally unique across system - example: email address)
 					$sql .= "and domain_uuid = :domain_uuid ";
 					$parameters['domain_uuid'] = $this->domain_uuid;
 				}
+				$sql .= "and (user_type = 'default' or user_type is null) ";
 				$parameters['username'] = $this->username;
 				$database = new database;
 				$row = $database->select($sql, $parameters, 'row');
+				if (empty($row) || !is_array($row) || @sizeof($row) == 0) {
+					//clear submitted usernames
+					unset($this->username, $_SESSION['username'], $_REQUEST['username'], $_POST['username']);
+
+					//build the result array
+					$result["plugin"] = "totp";
+					$result["domain_uuid"] = $_SESSION["domain_uuid"];
+					$result["domain_name"] = $_SESSION["domain_name"];
+					$result["authorized"] = false;
+
+					//retun the array
+					return $result;
+				}
 				unset($parameters);
 
 				//set class variables
@@ -164,17 +208,23 @@ class plugin_totp {
 				$view->init();
 
 				//assign values to the template
+				$view->assign("project_path", PROJECT_PATH);
 				$view->assign("login_destination_url", $settings['login']['destination']);
 				$view->assign("favicon", $settings['theme']['favicon']);
 				$view->assign("login_title", $text['label-verify']);
+				$view->assign("login_totp_description", $text['label-totp_description']);
 				$view->assign("login_authentication_code", $text['label-authentication_code']);
 				$view->assign("login_logo_width", $settings['theme']['login_logo_width']);
 				$view->assign("login_logo_height", $settings['theme']['login_logo_height']);
 				$view->assign("login_logo_source", $settings['theme']['logo']);
 				$view->assign("favicon", $settings['theme']['favicon']);
+				if (!empty($_SESSION['username'])) {
+					$view->assign("username", $_SESSION['username']);
+					$view->assign("button_cancel", $text['button-cancel']);
+				}
 
 				//show the views
-				if ($_SESSION['authentication']['plugin']['database']['authorized'] && empty($this->user_totp_secret)) {
+				if (!empty($_SESSION['authentication']['plugin']['database']['authorized']) && empty($this->user_totp_secret)) {
 
 					//create the totp secret
 					$base32 = new base2n(5, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567', FALSE, TRUE, TRUE);
@@ -230,6 +280,10 @@ class plugin_totp {
 					$view->assign("totp_description", $text['description-totp']);
 					$view->assign("button_next", $text['button-next']);
 					$view->assign("favicon", $settings['theme']['favicon']);
+					$view->assign("message_delay", $settings['theme']['message_delay']);
+
+					//messages
+					$view->assign('messages', message::html(true, '		'));
 
 					//render the template
 					$content = $view->render('totp_secret.htm');
@@ -237,6 +291,10 @@ class plugin_totp {
 				else {
 					//assign values to the template
 					$view->assign("button_verify", $text['label-verify']);
+					$view->assign("message_delay", $settings['theme']['message_delay']);
+
+					//messages
+					$view->assign('messages', message::html(true, '		'));
 
 					//render the template
 					$content = $view->render('totp.htm');
@@ -280,6 +338,9 @@ class plugin_totp {
 					$auth_valid = false;
 				}
 
+				//clear posted authentication code
+				unset($_POST['authentication_code']);
+
 				//get the user details
 				if ($auth_valid) {
 					//get user data from the database
@@ -294,22 +355,27 @@ class plugin_totp {
 					$parameters['user_uuid'] = $_SESSION["user_uuid"];
 					$database = new database;
 					$row = $database->select($sql, $parameters, 'row');
-					//view_array($row);
 					unset($parameters);
 				}
 				else {
-					//destroy session
-					session_unset();
-					session_destroy();
-					//$_SESSION['authentication']['plugin']
-					//send http 403
-					header('HTTP/1.0 403 Forbidden', true, 403);
+// 					//destroy session
+// 					session_unset();
+// 					session_destroy();
+//
+// 					//send http 403
+// 					header('HTTP/1.0 403 Forbidden', true, 403);
+//
+// 					//redirect to the root of the website
+// 					header("Location: ".PROJECT_PATH."/");
+//
+// 					//exit the code
+// 					exit();
 
-					//redirect to the root of the website
-					header("Location: ".PROJECT_PATH."/");
+					//clear authentication session
+					unset($_SESSION['authentication']);
 
-					//exit the code
-					exit();
+					// clear username
+					unset($_SESSION["username"]);
 				}
 
 				/*
@@ -336,7 +402,7 @@ class plugin_totp {
 				//build the result array
 				$result["plugin"] = "totp";
 				$result["domain_name"] = $_SESSION["domain_name"];
-				$result["username"] = $_SESSION["username"];
+				$result["username"] = $_SESSION["username"] ?? null;
 				$result["user_uuid"] = $_SESSION["user_uuid"];
 				$result["domain_uuid"] = $_SESSION["domain_uuid"];
 				$result["contact_uuid"] = $_SESSION["contact_uuid"];

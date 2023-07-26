@@ -93,7 +93,7 @@
 					x = 0;
 					dbh:query(sql, params, function(field)
 						if (string.len(field.number_translation_detail_regex) > 0) then
-							xml:append([[					<rule regex="]] .. xml.sanitize(field.number_translation_detail_regex) .. [[" replace="]] .. xml.sanitize(field.number_translation_detail_replace) .. [[" />]]);
+							xml:append([[					<rule regex="]] .. field.number_translation_detail_regex .. [[" replace="]] .. field.number_translation_detail_replace .. [[" />]]);
 						end
 					end)
 

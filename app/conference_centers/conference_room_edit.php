@@ -387,7 +387,7 @@
 						}
 						$array['conference_rooms'][0]['moderator_pin'] = $moderator_pin;
 						$array['conference_rooms'][0]['participant_pin'] = $participant_pin;
-						if (!empty($max_members)) {
+						if (isset($max_members)) {
 							$array['conference_rooms'][0]['max_members'] = $max_members;
 						}
 						$array['conference_rooms'][0]['start_datetime'] = $start_datetime;

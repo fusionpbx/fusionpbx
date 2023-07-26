@@ -28,21 +28,21 @@
 if ($domains_processed == 1) {
 
 	//normalize the mac address
-	$sql = "select device_uuid, device_mac_address ";
+	$sql = "select device_uuid, device_address ";
 	$sql .= "from v_devices ";
-	$sql .= "where (device_mac_address like '%-%' or device_mac_address like '%:%') ";
+	$sql .= "where (device_address like '%-%' or device_address like '%:%') ";
 	$database = new database;
 	$result = $database->select($sql, null, 'all');
 	if (is_array($result) && @sizeof($result) != 0) {
 		foreach ($result as $row) {
 			//define update values
 				$device_uuid = $row["device_uuid"];
-				$device_mac_address = $row["device_mac_address"];
-				$device_mac_address = strtolower($device_mac_address);
-				$device_mac_address = preg_replace('#[^a-fA-F0-9./]#', '', $device_mac_address);
+				$device_address = $row["device_address"];
+				$device_address = strtolower($device_address);
+				$device_address = preg_replace('#[^a-fA-F0-9./]#', '', $device_address);
 			//build update array
 				$array['devices'][0]['device_uuid'] = $device_uuid;
-				$array['devices'][0]['device_mac_address'] = $device_mac_address;
+				$array['devices'][0]['device_address'] = $device_address;
 			//grant temporary permissions
 				$p = new permissions;
 				$p->add('device_add', 'temp');

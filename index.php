@@ -63,7 +63,7 @@
 		}
 		else {
 			//login prompt
-			require_once "resources/check_auth.php";
+			header("Location: ".PROJECT_PATH."/login.php");
 		}
 	}
 

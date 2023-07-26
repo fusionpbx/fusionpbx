@@ -40,74 +40,74 @@
 
 			/**
 			 * Driver to use.
-			 * @access private
+			 * @access public
 			 * @var string Can be pgsql, mysql, sqlite, odbc
 			 */
-			private $driver;
+			public $driver;
 
 			/**
 			 * Alias of driver.
-			 * @access private
+			 * @access public
 			 * @var string Can be pgsql, mysql, sqlite, odbc
 			 * @see $driver
 			 */
-			private $type;
+			public $type;
 
 			/**
 			 * Host for database connection
-			 * @access private
+			 * @access public
 			 * @var string host name or IP address.
 			 */
-			private $host;
+			public $host;
 
 			/**
 			 * Port number
-			 * @access private
+			 * @access public
 			 * @var int 1025 - 65534
 			 */
-			private $port;
+			public $port;
 
 			/**
 			 * Database name
-			 * @access private
+			 * @access public
 			 * @var string
 			 */
-			private $db_name;
+			public $db_name;
 
 			/**
 			 * Database security
-			 * @access private
+			 * @access public
 			 * @var boolean
 			 */
-			private $db_secure;
+			public $db_secure;
 
 			/**
 			 * Specifies the file name of the client SSL certificate
-			 * @access private
+			 * @access public
 			 * @var string full path
 			 */
-			private $db_cert_authority;
+			public $db_cert_authority;
 
 			/**
 			 * Username used to connect
-			 * @access private
+			 * @access public
 			 * @var string
 			 */
-			private $username;
+			public $username;
 
 			/**
 			 * Password used to connect
-			 * @access private
+			 * @access public
 			 * @var string
 			 */
-			private $password;
+			public $password;
 
 			/**
 			 * Full path to file name.
-			 * @access private
+			 * @access public
 			 * @var string full path to file name
 			 */
-			private $path;
+			public $path;
 
 			/**
 			 * Table name.
@@ -129,7 +129,7 @@
 			 * <p>Below is equivalent to the above.</p>
 			 * <p><code>$db->where[0] = ['name'=>'MyColumn','operator'=>'=','value'=>'MyValue'</code></p>
 			 * <p><code>$db->where[1] = ['name'=>'MyColumn','operator'=>'=&gt;','value'=>'MyValue'</code></p>
-			 * @access private
+			 * @access public
 			 * @var array Two dimensional array of key value pairs
 			 * @see $order_by
 			 */
@@ -157,48 +157,48 @@
 			/**
 			 * Ascending or Descending order.
 			 * @var string
-			 * @access private
+			 * @access public
 			 */
-			private $order_type;
+			public $order_type;
 
 			/**
 			 * Numerical value to limit returned results.
 			 * @var int Used for 'LIMIT' in SQL statement.
-			 * @access private
+			 * @access public
 			 */
-			private $limit;
+			public $limit;
 
 			/**
 			 * Numerical value to offset returned results.
 			 * @var int Used for 'OFFSET' in SQL statement.
-			 * @access private
+			 * @access public
 			 */
-			private $offset;
+			public $offset;
 
 			/**
 			 * <p>Array of fields.</p>
 			 * <p>Fields are specified in 'name'=>'value' format.
 			 * <p>Used by {@link database::add() } and {@link database::update() }</p>
-			 * @access private
+			 * @access public
 			 * @var array Array of columns
 			 * @see database::add()
 			 * @see database::update()
 			 */
-			private $fields;
+			public $fields;
 
 			/**
 			 * Unknown property
 			 * @var unknown
-			 * @access private
+			 * @access public
 			 */
-			private $count;
+			public $count;
 
 			/**
 			 * Unknown property
 			 * @var unknown
-			 * @access private
+			 * @access public
 			 */
-			private $sql;
+			public $sql;
 
 			/**
 			 * <p>Stores the result from the most recent query. The type will be based on what was requested.</p>
@@ -226,11 +226,11 @@
 			/**
 			 * <p>Stores the domain UUID making the request.</p>
 			 * <p>This is defaulted to the Session domain UUID.</p>
-			 * @access private
+			 * @access public
 			 * @uses $_SESSION['domain_uuid'] <br>Default value upon object creation
 			 * @var string Domain UUID making request.
 			 */
-			private $domain_uuid;
+			public $domain_uuid;
 
 			/**
 			 * <p>Message for the query results.</p>
@@ -1686,7 +1686,7 @@
 										$checked = true;
 
 										//copy the child data
-										if (is_uuid($row[$parent_key_name])) {
+										if (!empty($row[$parent_key_name]) && is_uuid($row[$parent_key_name])) {
 											$copy_array[$parent_name][$x][$parent_key_name] = $row[$parent_key_name];
 										}
 

@@ -1,4 +1,28 @@
 <?php
+/*
+	FusionPBX
+	Version: MPL 1.1
+
+	The contents of this file are subject to the Mozilla Public License Version
+	1.1 (the "License"); you may not use this file except in compliance with
+	the License. You may obtain a copy of the License at
+	http://www.mozilla.org/MPL/
+
+	Software distributed under the License is distributed on an "AS IS" basis,
+	WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+	for the specific language governing rights and limitations under the
+	License.
+
+	The Original Code is FusionPBX
+
+	The Initial Developer of the Original Code is
+	Mark J Crane <markjcrane@fusionpbx.com>
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
+	the Initial Developer. All Rights Reserved.
+
+	Contributor(s):
+	Mark J Crane <markjcrane@fusionpbx.com>
+*/
 
 /**
  * authentication
@@ -40,8 +64,8 @@ class authentication {
 			}
 
 		//set the default authentication method to the database
-			if (!is_array($_SESSION['authentication']['methods'])) {
-				$_SESSION['authentication']['methods'][]  = 'database';
+			if (empty($_SESSION['authentication']['methods']) || !is_array($_SESSION['authentication']['methods'])) {
+				$_SESSION['authentication']['methods'][] = 'database';
 			}
 
 		//set the database as the default plugin
@@ -51,9 +75,8 @@ class authentication {
 
 		//use the authentication plugins
 			foreach ($_SESSION['authentication']['methods'] as $name) {
-
 				//already processed the plugin move to the next plugin
-				if (!empty($_SESSION['authentication']['plugin']) && $_SESSION['authentication']['plugin'][$name]['authorized']) {
+				if (!empty($_SESSION['authentication']['plugin']) && !empty($_SESSION['authentication']['plugin'][$name]) && $_SESSION['authentication']['plugin'][$name]['authorized']) {
 					continue;
 				}
 
@@ -69,26 +92,28 @@ class authentication {
 					$object = new $class_name();
 					$object->domain_name = $this->domain_name;
 					$object->domain_uuid = $this->domain_uuid;
-					if ($plugin == 'database' && isset($this->key)) {
+					if ($name == 'database' && isset($this->key)) {
 						$object->key = $this->key;
 					}
-					if ($plugin == 'database' && isset($this->username)) {
+					if ($name == 'database' && isset($this->username)) {
 						$object->username = $this->username;
 						$object->password = $this->password;
 					}
 					$array = $object->$name();
 
 					//build a result array
-					$result['plugin'] = $array["plugin"];
-					$result['domain_name'] = $array["domain_name"];
-					$result['username'] = $array["username"];
-					$result['user_uuid'] = $array["user_uuid"];
-					$result['contact_uuid'] = $array["contact_uuid"];
-					$result['domain_uuid'] = $array["domain_uuid"];
-					$result['authorized'] = $array["authorized"];
+					if (!empty($array) && is_array($array)) {
+						$result['plugin'] = $array["plugin"];
+						$result['domain_name'] = $array["domain_name"];
+						$result['username'] = $array["username"];
+						$result['user_uuid'] = $array["user_uuid"];
+						$result['contact_uuid'] = $array["contact_uuid"];
+						$result['domain_uuid'] = $array["domain_uuid"];
+						$result['authorized'] = $array["authorized"];
 
-					//save the result to the authentication plugin
-					$_SESSION['authentication']['plugin'][$name] = $result;
+						//save the result to the authentication plugin
+						$_SESSION['authentication']['plugin'][$name] = $result;
+					}
 
 					//plugin authorized false
 					if (!$result['authorized']) {
@@ -98,15 +123,17 @@ class authentication {
 			}
 
 		//make sure all plugins are in the array
-			foreach ($_SESSION['authentication']['methods'] as $name) {
-				if (!isset($_SESSION['authentication']['plugin'][$name]['authorized'])) {
-					$_SESSION['authentication']['plugin'][$name]['plugin'] = $name;
-					$_SESSION['authentication']['plugin'][$name]['domain_name'] = $_SESSION['domain_name'];
-					$_SESSION['authentication']['plugin'][$name]['domain_uuid'] = $_SESSION['domain_uuid'];
-					$_SESSION['authentication']['plugin'][$name]['username'] = $_SESSION['username'];
-					$_SESSION['authentication']['plugin'][$name]['user_uuid'] = $_SESSION['user_uuid'];
-					$_SESSION['authentication']['plugin'][$name]['user_email'] = $_SESSION['user_email'];
-					$_SESSION['authentication']['plugin'][$name]['authorized'] = 0;
+			if (!empty($_SESSION['authentication']['methods'])) {
+				foreach ($_SESSION['authentication']['methods'] as $name) {
+					if (!isset($_SESSION['authentication']['plugin'][$name]['authorized'])) {
+						$_SESSION['authentication']['plugin'][$name]['plugin'] = $name;
+						$_SESSION['authentication']['plugin'][$name]['domain_name'] = $_SESSION['domain_name'];
+						$_SESSION['authentication']['plugin'][$name]['domain_uuid'] = $_SESSION['domain_uuid'];
+						$_SESSION['authentication']['plugin'][$name]['username'] = $_SESSION['username'];
+						$_SESSION['authentication']['plugin'][$name]['user_uuid'] = $_SESSION['user_uuid'];
+						$_SESSION['authentication']['plugin'][$name]['user_email'] = $_SESSION['user_email'];
+						$_SESSION['authentication']['plugin'][$name]['authorized'] = 0;
+					}
 				}
 			}
 
@@ -128,19 +155,19 @@ class authentication {
 			}
 
 		//result array
-			$result["plugin"] = "database";
-			$result["domain_name"] = $_SESSION['domain_name'];
-			if (!isset($_SESSION['username'])) {
-				$result["username"] = $_SESSION['username'];
-			}
-			if (!isset($_SESSION['user_uuid'])) {
-				$result["user_uuid"] = $_SESSION['user_uuid'];
-			}
-			$result["domain_uuid"] = $_SESSION['domain_uuid'];
-			if (!isset($_SESSION['contact_uuid'])) {
-				$result["contact_uuid"] = $_SESSION['contact_uuid'];
-			}
-			$result["authorized"] = $authorized;
+// 			$result["plugin"] = "database";
+// 			$result["domain_name"] = $_SESSION['domain_name'];
+// 			if (!isset($_SESSION['username'])) {
+// 				$result["username"] = $_SESSION['username'];
+// 			}
+// 			if (!isset($_SESSION['user_uuid'])) {
+// 				$result["user_uuid"] = $_SESSION['user_uuid'];
+// 			}
+// 			$result["domain_uuid"] = $_SESSION['domain_uuid'];
+// 			if (!isset($_SESSION['contact_uuid'])) {
+// 				$result["contact_uuid"] = $_SESSION['contact_uuid'];
+// 			}
+// 			$result["authorized"] = $authorized;
 
 		//add user logs
 			user_logs::add($result);
