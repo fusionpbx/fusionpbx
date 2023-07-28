@@ -31,6 +31,7 @@
 
 		class schema {
 
+			//used to determine how the database transactions are performed
 			const TABLE_NEW = 0,
 				TABLE_RENAME = 1,
 				TABLE_COMMENT = 2;
@@ -42,7 +43,6 @@
 				FIELD_KEY = 5,
 				FIELD_INDEX = 6;
 
-			//used to determine how the database transactions are performed
 			/**
 			 * ATOMIC commit will write all the SQL statements to the PDO driver and then commit at once. If there is an
 			 * error in any of the SQL statements all changes are reversed.
