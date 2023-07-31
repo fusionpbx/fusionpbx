@@ -266,7 +266,7 @@
 		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, $param, "class='shrink'");
 	}
 	echo th_order_by('destination_type', $text['label-destination_type'], $order_by, $order, $param, "class='shrink'");
-	echo th_order_by('destination_prefix', $text['label-destination_prefix'], $order_by, $order, $param, "class='shrink'");
+	echo th_order_by('destination_prefix', $text['label-destination_prefix'], $order_by, $order, $param, "class='shrink center'");
 	if (permission_exists('destination_trunk_prefix')) {
 		echo th_order_by('destination_trunk_prefix', $text['label-destination_trunk_prefix'], $order_by, $order, $param, "class='shrink'");
 	}
@@ -303,7 +303,7 @@
 			if (!empty($row['destination_actions'])) {
 				$destination_actions = json_decode($row['destination_actions'], true);
 				if (!empty($destination_actions)) {
-					foreach($destination_actions as $action) {
+					foreach ($destination_actions as $action) {
 						$destination_app = $action['destination_app'];
 						$destination_data = $action['destination_data'];
 					}
@@ -332,9 +332,9 @@
 				}
 				echo "	<td>".escape($domain)."</td>\n";
 			}
-			echo "	<td>".escape($row['destination_type'])."&nbsp;</td>\n";
+			echo "	<td>".escape($text['option-'.$row['destination_type']])."&nbsp;</td>\n";
 
-			echo "	<td>".escape($row['destination_prefix'])."&nbsp;</td>\n";
+			echo "	<td class='center'>".escape($row['destination_prefix'])."&nbsp;</td>\n";
 			if (permission_exists('destination_trunk_prefix')) {
 				echo "	<td>".escape($row['destination_trunk_prefix'])."&nbsp;</td>\n";
 			}
