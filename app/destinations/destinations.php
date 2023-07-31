@@ -300,11 +300,13 @@
 			$destination_data = '';
 
 			//prepare the destination actions
-			$destination_actions = json_decode($row['destination_actions'], true);
-			if (!empty($destination_actions)) {
-				foreach($destination_actions as $action) {
-					$destination_app = $action['destination_app'];
-					$destination_data = $action['destination_data'];
+			if (!empty($row['destination_actions'])) {
+				$destination_actions = json_decode($row['destination_actions'], true);
+				if (!empty($destination_actions)) {
+					foreach($destination_actions as $action) {
+						$destination_app = $action['destination_app'];
+						$destination_data = $action['destination_data'];
+					}
 				}
 			}
 
