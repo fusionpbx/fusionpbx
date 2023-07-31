@@ -103,7 +103,9 @@
 		$sql_search .= "or lower(emergency_caller_id_number) like :search ";
 		$sql_search .= "or lower(directory_first_name) like :search ";
 		$sql_search .= "or lower(directory_last_name) like :search ";
-		$sql_search .= "or lower(call_group) like :search ";
+		if (permission_exists("extension_call_group")) {
+			$sql_search .= "or lower(call_group) like :search ";
+		}
 		$sql_search .= "or lower(user_context) like :search ";
 		$sql_search .= "or lower(enabled) like :search ";
 		$sql_search .= "or lower(description) like :search ";
@@ -258,7 +260,9 @@
 	if (permission_exists("outbound_caller_id_name")) {
 		echo th_order_by('outbound_caller_id_name', $text['label-outbound_cid_name'], $order_by, $order, null, "class='hide-sm-dn'");
 	}
-	echo th_order_by('call_group', $text['label-call_group'], $order_by, $order);
+	if (permission_exists("extension_call_group")) {
+		echo th_order_by('call_group', $text['label-call_group'], $order_by, $order);
+	}
 	if (permission_exists("extension_user_context")) {
 		echo th_order_by('user_context', $text['label-user_context'], $order_by, $order);
 	}
@@ -301,7 +305,9 @@
 			if (permission_exists("outbound_caller_id_name")) {
 				echo "	<td class='hide-sm-dn'>".escape($row['outbound_caller_id_name'])."&nbsp;</td>\n";
 			}
-			echo "	<td>".escape($row['call_group'])."&nbsp;</td>\n";
+			if (permission_exists("extension_call_group")) {
+				echo "	<td>".escape($row['call_group'])."&nbsp;</td>\n";
+			}
 			if (permission_exists("extension_user_context")) {
 				echo "	<td>".escape($row['user_context'])."</td>\n";
 			}
