@@ -64,6 +64,8 @@
 	$available_columns[] = 'destination_type_voice';
 	$available_columns[] = 'destination_type_fax';
 	$available_columns[] = 'destination_type_text';
+	$available_columns[] = 'destination_conditions';
+	$available_columns[] = 'destination_actions';
 	$available_columns[] = 'destination_app';
 	$available_columns[] = 'destination_data';
 	$available_columns[] = 'destination_alternate_app';
