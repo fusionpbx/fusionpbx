@@ -395,7 +395,32 @@
 				}
 			}
 
-			//datatase schema
+			/**
+			 * Upgrade the database schema to match the app_config.php files.
+			 * <p>The function reads all app_config.php files within the project and then parses the $apps[$x]['db']
+			 * section within the file. These are translated to sql commands required for the database to be
+			 * adjusted to match. However, the upgrade schema will not remove or drop any configuration from the
+			 * database. This is so that an application or plug-in can be removed and re-installed while retaining
+			 * the information.</p>
+			 * <p>This process can be broken down in to the following steps:
+			 * <ul>
+			 *		<li>
+			 *			Database is enumerated using four separate reads. This information is parsed in to an array of
+			 *			tables, fields, comments, constraints (primary keys), and indexes.
+			 *		</li>
+			 *		<li>
+			 *			The app_config.php files are then loaded using a glob command. The array of files are then
+			 *			<i>included</i> in the project.
+			 *		</li>
+			 *		<li>
+			 *			As each file is loaded the <i>$apps[$x]['db']</i> is then compared to the existing database
+			 *			structure using field functions.
+			 *		</li>
+			 * </ul>
+			 * </p>
+			 * @global array $apps Required array from the app_config.php file
+			 * @return $this Returns this object to allow object chaining
+			 */
 			public function upgrade() {
 
 				//set object properties to have database information
