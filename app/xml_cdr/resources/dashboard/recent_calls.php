@@ -33,7 +33,7 @@
 		select
 			direction,
 			start_stamp,
-			start_epoch,
+			to_char(timezone(:time_zone, start_stamp), '".(!empty($_SESSION['domain']['time_format']) && $_SESSION['domain']['time_format']['text'] == '12h' ? "MM/DD HH12:MI am" : "MM/DD HH24:MI")."') as start_date_time,
 			caller_id_name,
 			caller_id_number,
 			destination_number,
@@ -66,6 +66,7 @@
 			and start_epoch > ".(time() - 86400)."
 		order by
 			start_epoch desc";
+	$parameters['time_zone'] = isset($_SESSION['domain']['time_zone']['name']) ? $_SESSION['domain']['time_zone']['name'] : date_default_timezone_get();
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	if (!isset($database)) { $database = new database; }
 	$result = $database->select($sql, $parameters, 'all');
@@ -151,10 +152,10 @@
 
 		foreach ($result as $index => $row) {
 			if ($index + 1 > $recent_limit) { break; } //only show limit
-			$tmp_year = date("Y", strtotime($row['start_stamp']));
-			$tmp_month = date("M", strtotime($row['start_stamp']));
-			$tmp_day = date("d", strtotime($row['start_stamp']));
-			$tmp_start_epoch = !empty($_SESSION['domain']['time_format']) && $_SESSION['domain']['time_format']['text'] == '12h' ? date("n/j g:ia", $row['start_epoch']) : date("n/j H:i", $row['start_epoch']);
+			$start_date_time = str_replace('/0','/', ltrim($row['start_date_time'], '0'));
+			if (!empty($_SESSION['domain']['time_format']) && $_SESSION['domain']['time_format']['text'] == '12h') {
+				$start_date_time = str_replace(' 0',' ', $start_date_time);
+			}
 
 			//determine name
 				$cdr_name = ($row['direction'] == 'inbound' || ($row['direction'] == 'local' && !empty($assigned_extensions) && is_array($assigned_extensions) && in_array($row['destination_number'], $assigned_extensions))) ? $row['caller_id_name'] : $row['destination_number'];
@@ -203,7 +204,7 @@
 				}
 				echo "</td>\n";
 				echo "<td valign='top' class='".$row_style[$c]." hud_text' nowrap='nowrap'><a href='javascript:void(0);' ".(!empty($cdr_name) ? "title=\"".$cdr_name."\"" : null).">".($cdr_number ?? '')."</a></td>\n";
-				echo "<td valign='top' class='".$row_style[$c]." hud_text' nowrap='nowrap'>".$tmp_start_epoch."</td>\n";
+				echo "<td valign='top' class='".$row_style[$c]." hud_text' nowrap='nowrap'>".$start_date_time."</td>\n";
 			echo "</tr>\n";
 
 			unset($cdr_name, $cdr_number);
