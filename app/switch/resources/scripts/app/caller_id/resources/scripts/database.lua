@@ -1,17 +1,17 @@
 --
---  Part of FusionPBX
---	Copyright (C) 2013 - 2021 Mark J Crane <markjcrane@fusionpbx.com>
+--	FusionPBX - https://www.fusionpbx.com
+--	Copyright (C) 2023 Mark J Crane <markjcrane@fusionpbx.com>
 --
---  2-Clause BSD License
+--	2-Clause BSD License
 --	Redistribution and use in source and binary forms, with or without
 --	modification, are permitted provided that the following conditions are met:
 --
 --	1. Redistributions of source code must retain the above copyright notice,
---	   this list of conditions and the following disclaimer.
+--	  this list of conditions and the following disclaimer.
 --
 --	2. Redistributions in binary form must reproduce the above copyright
---	   notice, this list of conditions and the following disclaimer in the
---	   documentation and/or other materials provided with the distribution.
+--	  notice, this list of conditions and the following disclaimer in the
+--	  documentation and/or other materials provided with the distribution.
 --
 --	THIS SOFTWARE IS PROVIDED ''AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
 --	INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
@@ -122,6 +122,6 @@
 	end
 
 --set the caller ID name
-	if (session:ready() and caller_id_name and #caller_id_name) then
+	if (session:ready() and caller_id_name and #caller_id_name > 0) then
 		session:execute("set", "effective_caller_id_name="..caller_id_name);
 	end
