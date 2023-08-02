@@ -1,0 +1,5 @@
+<extension name="caller_id" number="" context="${domain_name}" continue="true" app_uuid="74a025d2-0c59-492b-955f-e31cdc46c981" enabled="false" order="080">
+	<condition field="${call_direction}" expression="inbound">
+		<action application="lua" data="app.lua caller_id database"/>
+	</condition>
+</extension>
