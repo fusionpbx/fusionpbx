@@ -137,11 +137,11 @@
 			$sql .= "and dialplan_detail_data like 'origination_callee_id_name%'; \n";
 			$database->execute($sql);
 
-			$sql = "update v_dialplans set dialplan_xml = REPLACE(dialplan_xml, '<action application=\"export\" data=\"origination_callee_id_name=\${destination_number}\"/>', ''), update_date = now() \n";
+			$sql = "update v_dialplans set dialplan_xml = REPLACE(dialplan_xml, '<action application=\"export\" data=\"origination_callee_id_name=\${caller_destination}\"/>', ''), update_date = now() \n";
 			$sql .= "where dialplan_uuid in (select dialplan_uuid from v_dialplans where dialplan_name = 'domain-variables' or dialplan_name = 'variables'); \n";
 			$database->execute($sql);
 
-			$sql = "update v_dialplans set dialplan_xml = REPLACE(dialplan_xml, '<action application=\"export\" data=\"origination_callee_id_name=\${destination_number}\" inline=\"true\"/>', ''), update_date = now() \n";
+			$sql = "update v_dialplans set dialplan_xml = REPLACE(dialplan_xml, '<action application=\"export\" data=\"origination_callee_id_name=\${caller_destination}\" inline=\"true\"/>', ''), update_date = now() \n";
 			$sql .= "where dialplan_uuid in (select dialplan_uuid from v_dialplans where dialplan_name = 'domain-variables' or dialplan_name = 'variables'); \n";
 			$database->execute($sql);
 		}
