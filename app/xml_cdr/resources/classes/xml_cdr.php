@@ -751,7 +751,7 @@ if (!class_exists('xml_cdr')) {
 								}
 							}
 						}
-						if (!isset($record_name)) {
+						if (empty($record_name)) {
 							$bridge_uuid = urldecode($xml->variables->bridge_uuid) ?: $last_bridge;
 							$path = $_SESSION['switch']['recordings']['dir'].'/'.$domain_name.'/archive/'.$start_year.'/'.$start_month.'/'.$start_day;
 							if (file_exists($path.'/'.$bridge_uuid.'.wav')) {
@@ -764,7 +764,7 @@ if (!class_exists('xml_cdr')) {
 								$record_length = urldecode($xml->variables->duration);
 							}
 						}
-						if (!isset($record_name)) {
+						if (empty($record_name)) {
 							$path = $_SESSION['switch']['recordings']['dir'].'/'.$domain_name.'/archive/'.$start_year.'/'.$start_month.'/'.$start_day;
 							if (file_exists($path.'/'.$uuid.'.wav')) {
 								$record_path = $path;
@@ -778,7 +778,7 @@ if (!class_exists('xml_cdr')) {
 						}
 
 					//last check
-						 if (!isset($record_name) || is_null ($record_name) || (empty($record_name))) {
+						 if (empty($record_name)) {
 							$bridge_uuid = urldecode($xml->variables->bridge_uuid) ?: $last_bridge ;
 							$path = $_SESSION['switch']['recordings']['dir'].'/'.$domain_name.'/archive/'.$start_year.'/'.$start_month.'/'.$start_day;
 							if (file_exists($path.'/'.$bridge_uuid.'.wav')) {
