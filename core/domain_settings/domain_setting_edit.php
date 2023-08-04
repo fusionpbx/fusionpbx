@@ -562,6 +562,12 @@
 		echo "    	<option value='12h' ".(($domain_setting_value == "12h") ? "selected='selected'" : null).">".$text['label-12-hour']."</option>\n";
 		echo "	</select>\n";
 	}
+	elseif ($category == "domain" && $subcategory == "setting_value_input_type" && $name == "text" ) {
+		echo "	<select class='formfld' id='domain_setting_value' name='domain_setting_value'>\n";
+		echo "    	<option value='input'>Input</option>\n";
+		echo "    	<option value='textarea' ".($domain_setting_value == "textarea" ? "selected='selected'" : null).">TextArea</option>\n";
+		echo "	</select>\n";
+	}
 	elseif ($subcategory == 'password' || substr_count($subcategory, '_password') > 0 || $category == "login" && $subcategory == "password_reset_key" && $name == "text") {
 		echo "	<input class='formfld' type='password' id='domain_setting_value' name='domain_setting_value' maxlength='255' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" value=\"".escape($row['domain_setting_value'])."\">\n";
 	}
@@ -770,7 +776,12 @@
 		echo "	</select>\n";
 	}
 	else {
-		echo "	<input class='formfld' type='text' id='domain_setting_value' name='domain_setting_value' value=\"".escape($row['domain_setting_value'] ?? '') ."\">\n";
+		if (!empty($_SESSION['domain']['setting_value_input_type']) && $_SESSION['domain']['setting_value_input_type']['text'] == 'textarea') {
+			echo "	<textarea class='formfld' style='width: 185px; height: 80px;' id='domain_setting_value' name='domain_setting_value'>".($row['domain_setting_value'] ?? '')."</textarea>\n";
+		}
+		else {
+			echo "	<input class='formfld' type='text' id='domain_setting_value' name='domain_setting_value' value=\"".escape($row['domain_setting_value'] ?? '')."\">\n";
+		}
 	}
 	echo "<br />\n";
 	echo $text['description-value']."\n";
