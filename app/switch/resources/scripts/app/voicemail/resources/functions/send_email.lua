@@ -214,53 +214,74 @@
 						voicemail_name_formatted = voicemail_name_formatted.." ("..voicemail_description..")";
 					end
 
+				--prepare file
+					file = voicemail_dir.."/"..id.."/msg_"..uuid.."."..vm_message_ext;
+
 				--prepare the subject
-					subject = subject:gsub("${caller_id_name}", caller_id_name);
-					subject = subject:gsub("${caller_id_number}", caller_id_number);
-					subject = subject:gsub("${message_date}", message_date);
-					subject = subject:gsub("${message_duration}", message_length_formatted);
-					subject = subject:gsub("${account}", voicemail_name_formatted);
-					subject = subject:gsub("${voicemail_id}", id);
-					subject = subject:gsub("${voicemail_description}", voicemail_description);
-					subject = subject:gsub("${voicemail_name_formatted}", voicemail_name_formatted);
-					subject = subject:gsub("${domain_name}", domain_name);
-					subject = subject:gsub("${new_messages}", new_messages);
-					subject = trim(subject);
+					if (subject ~= nil) then
+						subject = subject:gsub("${caller_id_name}", caller_id_name);
+						subject = subject:gsub("${caller_id_number}", caller_id_number);
+						subject = subject:gsub("${message_date}", message_date);
+						subject = subject:gsub("${message_duration}", message_length_formatted);
+						subject = subject:gsub("${account}", voicemail_name_formatted);
+						subject = subject:gsub("${voicemail_id}", id);
+						subject = subject:gsub("${voicemail_description}", voicemail_description);
+						subject = subject:gsub("${voicemail_name_formatted}", voicemail_name_formatted);
+						subject = subject:gsub("${domain_name}", domain_name);
+						subject = subject:gsub("${new_messages}", new_messages);
+						subject = trim(subject);
+					else
+						subject = text['label-voicemail'] .. ' ' .. caller_id_name .. ' <' .. caller_id_number .. '> ' .. message_length_formatted;
+					end
 					subject = '=?utf-8?B?'..base64.encode(subject)..'?=';
 
 				--prepare the body
-					body = body:gsub("${caller_id_name}", caller_id_name);
-					body = body:gsub("${caller_id_number}", caller_id_number);
-					body = body:gsub("${message_date}", message_date);
-					if (transcription ~= nil) then
-						transcription = transcription:gsub("%%", "*");
-						body = body:gsub("${message_text}", transcription);
-					end
-					body = body:gsub("${message_duration}", message_length_formatted);
-					body = body:gsub("${account}", voicemail_name_formatted);
-					body = body:gsub("${voicemail_id}", id);
-					body = body:gsub("${voicemail_description}", voicemail_description);
-					body = body:gsub("${voicemail_name_formatted}", voicemail_name_formatted);
-					body = body:gsub("${domain_name}", domain_name);
-					body = body:gsub("${sip_to_user}", id);
-					if (origination_callee_id_name ~= nil) then
-						body = body:gsub("${origination_callee_id_name}", origination_callee_id_name);
-					end
-					body = body:gsub("${dialed_user}", id);
-					if (voicemail_file == "attach") then
-						body = body:gsub("${message}", text['label-attached']);
-					elseif (voicemail_file == "link") then
-						body = body:gsub("${message}", "<a href='"..link_address.."/app/voicemails/voicemail_messages.php?action=download&id="..id.."&voicemail_uuid="..db_voicemail_uuid.."&uuid="..uuid.."&t=bin'>"..text['label-download'].."</a>");
+					if (body ~= nil) then
+						body = body:gsub("${caller_id_name}", caller_id_name);
+						body = body:gsub("${caller_id_number}", caller_id_number);
+						body = body:gsub("${message_date}", message_date);
+						if (transcription ~= nil) then
+							transcription = transcription:gsub("%%", "*");
+							body = body:gsub("${message_text}", transcription);
+						end
+						body = body:gsub("${message_duration}", message_length_formatted);
+						body = body:gsub("${account}", voicemail_name_formatted);
+						body = body:gsub("${voicemail_id}", id);
+						body = body:gsub("${voicemail_description}", voicemail_description);
+						body = body:gsub("${voicemail_name_formatted}", voicemail_name_formatted);
+						body = body:gsub("${domain_name}", domain_name);
+						body = body:gsub("${sip_to_user}", id);
+						if (origination_callee_id_name ~= nil) then
+							body = body:gsub("${origination_callee_id_name}", origination_callee_id_name);
+						end
+						body = body:gsub("${dialed_user}", id);
+						if (voicemail_file == "attach" and file) then
+							body = body:gsub("${message}", text['label-attached']);
+						elseif (voicemail_file == "link") then
+							body = body:gsub("${message}", "<a href='"..link_address.."/app/voicemails/voicemail_messages.php?action=download&id="..id.."&voicemail_uuid="..db_voicemail_uuid.."&uuid="..uuid.."&t=bin'>"..text['label-download'].."</a>");
+						else
+							body = body:gsub("${message}", "<a href='"..link_address.."/app/voicemails/voicemail_messages.php?action=autoplay&id="..db_voicemail_uuid.."&uuid="..uuid.."'>"..text['label-listen'].."</a>");
+						end
+						--body = body:gsub(" ", "&nbsp;");
+						--body = body:gsub("%s+", "");
+						--body = body:gsub("&nbsp;", " ");
+						body = trim(body);
 					else
-						body = body:gsub("${message}", "<a href='"..link_address.."/app/voicemails/voicemail_messages.php?action=autoplay&id="..db_voicemail_uuid.."&uuid="..uuid.."'>"..text['label-listen'].."</a>");
+						body = '<html><body>';
+						if (caller_id_name ~= nil and caller_id_name ~= caller_id_number) then
+							body = body .. caller_id_name .. '<br>';
+						end
+						body = body .. caller_id_number .. '<br>';
+						body = body .. message_date .. '<br>';
+						if (voicemail_file == "attach" and file) then
+							body = body .. '<br>' .. text['label-attached'];
+						elseif (voicemail_file == "link") then
+							body = body .. "<br><a href='"..link_address.."/app/voicemails/voicemail_messages.php?action=download&id="..id.."&voicemail_uuid="..db_voicemail_uuid.."&uuid="..uuid.."&t=bin'>"..text['label-download'].."</a>";
+						else
+							body = body .. "<br><a href='"..link_address.."/app/voicemails/voicemail_messages.php?action=autoplay&id="..db_voicemail_uuid.."&uuid="..uuid.."'>"..text['label-listen'].."</a>";
+						end
+						body = body .. '</body></html>';
 					end
-					--body = body:gsub(" ", "&nbsp;");
-					--body = body:gsub("%s+", "");
-					--body = body:gsub("&nbsp;", " ");
-					body = trim(body);
-
-				--prepare file
-					file = voicemail_dir.."/"..id.."/msg_"..uuid.."."..vm_message_ext;
 
 				--send the email
 					send_mail(headers,

@@ -27,4 +27,13 @@ text['label-attached']['fr-fr'] = "Attaché";
 text['label-attached']['de-de'] = "im Anhang";
 text['label-attached']['de-at'] = "im Anhang";
 
+text['label-voicemail'] = {};
+text['label-voicemail']['en-us'] = "Voicemail";
+text['label-voicemail']['es-cl'] = "Correo de Voz";
+text['label-voicemail']['pt-pt'] = "Correio de Voz";
+text['label-voicemail']['ru-ru'] = "Голосовая почта";
+text['label-voicemail']['fr-fr'] = "Messagerie Vocale";
+text['label-voicemail']['de-de'] = "Mailbox";
+text['label-voicemail']['de-at'] = "Mailbox";
+
 return text
