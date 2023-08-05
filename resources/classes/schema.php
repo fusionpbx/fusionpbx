@@ -65,7 +65,6 @@
 			 * @see \Exception::class
 			 */
 			public $errors;
-
 			//define variables
 			private $database;
 			private $response;
@@ -543,8 +542,34 @@
 				return $response;
 			}
 
+			/**
+			 * Returns true or false based on if there are errors stored in the errors array of the object.
+			 * @return bool true if errors have been detected or false otherwise
+			 */
 			public function has_errors(): bool {
 				return (!empty($this->errors));
+			}
+
+			/**
+			 * Returns the errors formatted as a string using a newline seperator
+			 * @return string
+			 */
+			public function errors(string $separator = "\n"): string {
+				return implode($separator, $this->errors);
+			}
+
+			/**
+			 * Returns the array of sql statements to be executed against the database
+			 * @return array
+			 */
+			public function sql(): array {
+				$arr = [];
+				foreach ($this->sql as $statement_type) {
+					foreach ($statement_type as $statement) {
+						$arr[] = $statement;
+					}
+				}
+				return $arr;
 			}
 
 			private function text_response(): string {
