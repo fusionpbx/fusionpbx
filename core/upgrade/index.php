@@ -88,11 +88,15 @@
 		if (!empty($action["upgrade_schema"]) && permission_exists("upgrade_schema")) {
 			require_once "resources/classes/schema.php";
 			$schema = new schema();
-			if (isset($action["data_types"]) && $action["data_types"] == 'true') {
-				$schema->check_data_types(true);
+			if (isset($action["dry_run"]) && $action["dry_run"] === 'true') {
+				$schema->dry_run(true);
 			}
-			$_SESSION["response"]["schema"] = "".$schema->output_format('html')->upgrade();
-			message::add($text['message-upgrade_schema'], null, $message_timeout);
+			$_SESSION["response"]["schema"] = (string)$schema->output_format('html')->upgrade();
+			if($schema->has_errors()) {
+				message::add($text['message-upgrade_schema'], 'negative', $message_timeout);
+			} else {
+				message::add($text['message-upgrade_schema'], null, $message_timeout);
+			}
 		}
 
 		//process the apps defaults
@@ -199,10 +203,10 @@
 		echo "<tr onclick=\"document.getElementById('do_data_types').checked = !document.getElementById('do_data_types').checked;\">\n";
 		echo "	<td width='30%' class='vncell' style='vertical-align:middle;'>\n";
 		echo "		<div style='".$step_container_style."'><span style='".$step_number_style." letter-spacing: -0.06em;'>".$step++."B</span></div>";
-		echo "		".$text['label-upgrade_data_types'];
+		echo "		".$text['label-dry_run'];
 		echo "	</td>\n";
 		echo "	<td width='70%' class='vtable' style='height: 50px; cursor: pointer;'>\n";
-		echo "		<input type='checkbox' name='action[data_types]' id='do_data_types' value='true' onclick=\"event.stopPropagation();\"> &nbsp;".$text['description-upgrade_data_types']."\n";
+		echo "		<input type='checkbox' name='action[dry_run]' id='do_data_types' value='true' onclick=\"event.stopPropagation();\"> &nbsp;".$text['description-upgrade_dry_run']."\n";
 		echo "	</td>\n";
 		echo "</tr>\n";
 		echo "</table>\n";
