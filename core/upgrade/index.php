@@ -89,11 +89,13 @@
 			require_once "resources/classes/schema.php";
 			$schema = new schema();
 			if (isset($action["dry_run"]) && $action["dry_run"] === 'true') {
-				$schema->dry_run(true);
+				$_SESSION["response"]["schema"] = implode("<br>", $schema->dry_run(true)->upgrade()->sql());
+			} else {
+				$_SESSION["response"]["schema"] = (string)$schema->output_format('html')->upgrade();
 			}
-			$_SESSION["response"]["schema"] = (string)$schema->output_format('html')->upgrade();
 			if($schema->has_errors()) {
 				message::add($text['message-upgrade_schema'], 'negative', $message_timeout);
+				$_SESSION["response"]["schema"] .= "<br>" . $schema->errors('<br>');
 			} else {
 				message::add($text['message-upgrade_schema'], null, $message_timeout);
 			}
