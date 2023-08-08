@@ -318,7 +318,8 @@
 								if ($cond_var == 'time-of-day') {
 									$cond_var = 'minute-of-day';
 									$array_cond_start = explode(':', $cond_start);
-									$cond_start = ($array_cond_start[0] * 60) + $array_cond_start[1];
+									//adjust time one minute later to account for freeswitch one minute early on start condition behavior.
+									$cond_start = ($array_cond_start[0] * 60) + $array_cond_start[1] + 1;
 									if ($cond_stop != '') {
 										$array_cond_stop = explode(':', $cond_stop);
 										$cond_stop = ($array_cond_stop[0] * 60) + $array_cond_stop[1];
@@ -1034,6 +1035,10 @@ if ($action == 'update') {
 						//convert minute-of-day to time-of-day values
 						if ($cond_var == 'minute-of-day') {
 							$cond_var = 'time-of-day';
+
+							//adjust time one minute earlier to account for freeswitch one minute early on start condition behavior.
+							$cond_val_start = $cond_val_start - 1;
+							
 							$cond_val_start = number_pad(floor($cond_val_start / 60),2).":".number_pad(fmod($cond_val_start, 60),2);
 							if ($cond_val_stop != '') {
 								$cond_val_stop = number_pad(floor($cond_val_stop / 60),2).":".number_pad(fmod($cond_val_stop, 60),2);
