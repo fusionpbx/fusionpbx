@@ -2933,7 +2933,18 @@
 					$schema = self::sanitize($schema);
 
 				//get the apps array
-					$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/{core,app}/{".$schema.",".self::singular($schema)."}/app_config.php", GLOB_BRACE);
+					$config_list = [];
+					$directories = ["core", "app"];
+					$applications = [$schema, self::singular($schema)];
+					foreach ($directories as $directory) {
+						foreach ($applications as $application) {
+							$path = $_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/$directory/$application/app_config.php";
+							$app_config_files = glob($path);
+							if ($app_config_files !== false) {
+								$config_list = array_merge($config_list, $app_config_files);
+							}
+						}
+					}
 					$x = 0;
 					foreach ($config_list as &$config_path) {
 						include($config_path);
