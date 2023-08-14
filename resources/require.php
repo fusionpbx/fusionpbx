@@ -17,23 +17,32 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2022
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//add the document root to the include path
-	$config_glob = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	$conf = parse_ini_file($config_glob[0]);
+//find the config.conf file
+	if (file_exists('/usr/local/etc/fusionpbx/config.conf')) {
+		$config_file = '/usr/local/etc/fusionpbx/config.conf';
+	}
+	elseif (file_exists('/etc/fusionpbx/config.conf')) {
+		$config_file = '/etc/fusionpbx/config.conf';
+	}
+	elseif (file_exists(__DIR__ . '/config.conf')) {
+		$config_file = __DIR__ . '/config.conf';
+	}
+
+//parse the config.conf file
+	$conf = parse_ini_file($config_file);
+
+//set the include path
 	set_include_path($conf['document.root']);
 
-//config file
-	$config_file = $config_glob[0] ?? '';
-
 //check if the config file exists
-	$config_exists = file_exists($config_file) ? true : false;
+	$config_exists = !empty($config_file) ? true : false;
 
 //set the server variables and define project path constant
 	$_SERVER["DOCUMENT_ROOT"] = $conf['document.root'];
