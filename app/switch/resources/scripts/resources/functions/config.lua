@@ -11,7 +11,8 @@
 		elseif (file_exists("/etc/fusionpbx/config.conf")) then
 			return "/etc/fusionpbx/config.conf";
 		else
-			return "resources.config";
+			require "resources.config";
+			return config_file;
 		end
 	end
 

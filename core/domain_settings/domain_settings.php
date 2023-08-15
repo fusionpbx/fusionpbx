@@ -364,7 +364,19 @@
 				echo "		".$text['label-'.$row['domain_setting_value']]."\n";
 			}
 			else {
-				echo "		".escape($row['domain_setting_value'])."\n";
+				if (!empty($row['domain_setting_value']) && substr_count($row['domain_setting_value'], "\n") > 0) {
+					$lines = explode("\n", $row['domain_setting_value']);
+					if (!empty($lines) && is_array($lines) && @sizeof($lines) != 0) {
+						foreach ($lines as $i => $line) {
+							$lines[$i] = escape($line);
+						}
+						echo implode("<i class='fas fa-level-down-alt fa-rotate-90 fa-xs ml-2 mr-5' style='opacity: 0.3;'></i>", $lines);
+					}
+					unset($lines, $line);
+				}
+				else {
+					echo escape($row['domain_setting_value'])."\n";
+				}
 			}
 			echo "	</td>\n";
 			if (permission_exists('domain_setting_edit')) {

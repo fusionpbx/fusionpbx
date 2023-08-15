@@ -536,7 +536,19 @@
 				echo "		".$text['label-'.$row['default_setting_value']]."\n";
 			}
 			else {
-				echo "		".escape($row['default_setting_value'])."\n";
+				if (!empty($row['default_setting_value']) && substr_count($row['default_setting_value'], "\n") > 0) {
+					$lines = explode("\n", $row['default_setting_value']);
+					if (!empty($lines) && is_array($lines) && @sizeof($lines) != 0) {
+						foreach ($lines as $i => $line) {
+							$lines[$i] = escape($line);
+						}
+						echo implode("<i class='fas fa-level-down-alt fa-rotate-90 fa-xs ml-2 mr-5' style='opacity: 0.3;'></i>", $lines);
+					}
+					unset($lines, $line);
+				}
+				else {
+					echo escape($row['default_setting_value'])."\n";
+				}
 			}
 			echo "	</td>\n";
 			if (permission_exists('default_setting_edit')) {

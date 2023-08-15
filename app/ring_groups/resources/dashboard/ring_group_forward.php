@@ -144,8 +144,10 @@
 	$row_style["1"] = "row_style1";
 
 //create token
-	$object = new token;
-	$token = $object->create('/app/ring_groups/ring_group_forward.php');
+	if (permission_exists('ring_group_forward')) {
+		$object = new token;
+		$token = $object->create('/app/ring_groups/ring_group_forward.php');
+	}
 
 //ring group forward
 	echo "<div class='hud_box'>\n";
@@ -207,11 +209,13 @@
 	echo "</script>\n";
 
 //details
-	echo "<form id='form_list_ring_group_forward' method='post' action='".$validated_path."'>\n";
+	if (permission_exists('ring_group_forward')) {
+		echo "<form id='form_list_ring_group_forward' method='post' action='".$validated_path."'>\n";
+	}
 
 	echo "<div class='hud_details hud_box' id='hud_ring_group_forward_details' style='text-align: right;'>";
 
-	if (is_array($result) && @sizeof($result) != 0) {
+	if (is_array($result) && @sizeof($result) != 0 && permission_exists('ring_group_forward')) {
 		echo button::create(['type'=>'button','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'collapse'=>false,'style'=>"position: absolute; margin-top: -35px; margin-left: -72px;",'onclick'=>"list_form_submit('form_list_ring_group_forward');"]);
 	}
 
@@ -231,25 +235,42 @@
 			echo "<tr href='".$tr_link."'>\n";
 			echo "	<td valign='top' class='".$row_style[$c]." hud_text'>".escape($row['ring_group_name'])."</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]." hud_text'><a href='".$tr_link."' title=\"".$text['button-edit']."\">".escape($row['ring_group_extension'])."</a></td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]." hud_text input tr_link_void' style='width: 1%; text-align: center;'>";
-			echo "		<input type='hidden' name='ring_groups[".$x."][ring_group_uuid]' value=\"".escape($row["ring_group_uuid"])."\">";
-			// switch
-			if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
-				echo "	<label class='switch'>\n";
-				echo "		<input type='checkbox' id='".escape($row['ring_group_uuid'])."' name='ring_groups[".$x."][ring_group_forward_enabled]' value='true' ".($row["ring_group_forward_enabled"] == 'true' ? "checked='checked'" : null)." onclick=\"this.checked && !document.getElementById('destination_".$x."').value ? document.getElementById('destination_".$x."').focus() : null;\">\n";
-				echo "		<span class='slider'></span>\n";
-				echo "	</label>\n";
+			if (permission_exists('ring_group_forward')) {
+				echo "	<td valign='top' class='".$row_style[$c]." hud_text input tr_link_void' style='width: 1%; text-align: center;'>";
+				echo "		<input type='hidden' name='ring_groups[".$x."][ring_group_uuid]' value=\"".escape($row["ring_group_uuid"])."\">";
+				// switch
+				if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
+					echo "	<label class='switch'>\n";
+					echo "		<input type='checkbox' id='".escape($row['ring_group_uuid'])."' name='ring_groups[".$x."][ring_group_forward_enabled]' value='true' ".($row["ring_group_forward_enabled"] == 'true' ? "checked='checked'" : null)." onclick=\"this.checked && !document.getElementById('destination_".$x."').value ? document.getElementById('destination_".$x."').focus() : null;\">\n";
+					echo "		<span class='slider'></span>\n";
+					echo "	</label>\n";
+				}
+				// select
+				else {
+					echo "	<select class='formfld' id='".escape($row['ring_group_uuid'])."' name='ring_groups[".$x."][ring_group_forward_enabled]' onchange=\"this.selectedIndex && !document.getElementById('destination_".$x."').value ? document.getElementById('destination_".$x."').focus() : null;\">\n";
+					echo "		<option value='false'>".$text['option-disabled']."</option>\n";
+					echo "		<option value='true' ".($row["ring_group_forward_enabled"] == 'true' ? "selected='selected'" : null).">".$text['option-enabled']."</option>\n";
+					echo "	</select>\n";
+				}
 			}
-			// select
 			else {
-				echo "	<select class='formfld' id='".escape($row['ring_group_uuid'])."' name='ring_groups[".$x."][ring_group_forward_enabled]' onchange=\"this.selectedIndex && !document.getElementById('destination_".$x."').value ? document.getElementById('destination_".$x."').focus() : null;\">\n";
-				echo "		<option value='false'>".$text['option-disabled']."</option>\n";
-				echo "		<option value='true' ".($row["ring_group_forward_enabled"] == 'true' ? "selected='selected'" : null).">".$text['option-enabled']."</option>\n";
-				echo "	</select>\n";
+				echo "	<td valign='top' class='".$row_style[$c]." hud_text' style='width: 1%; text-align: left;'>";
+				if ($row["ring_group_forward_enabled"] == 'true') {
+					echo $text['option-enabled'];
+				}
+				else {
+					echo $text['option-disabled'];
+				}
 			}
 			echo "	</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]." hud_text input tr_link_void'>";
-			echo "		<input class='formfld' style='width: 100%; min-width: 80px;' type='text' name='ring_groups[".$x."][ring_group_forward_destination]' id='destination_".$x."' placeholder=\"".$text['label-forward_destination']."\" maxlength='255' value=\"".escape($row["ring_group_forward_destination"])."\">";
+			if (permission_exists('ring_group_forward')) {
+				echo "	<td valign='top' class='".$row_style[$c]." hud_text input tr_link_void'>";
+				echo "		<input class='formfld' style='width: 100%; min-width: 80px;' type='text' name='ring_groups[".$x."][ring_group_forward_destination]' id='destination_".$x."' placeholder=\"".$text['label-forward_destination']."\" maxlength='255' value=\"".escape($row["ring_group_forward_destination"])."\">";
+			}
+			else {
+				echo "	<td valign='top' class='".$row_style[$c]." hud_text'>";
+				echo escape(format_phone($row["ring_group_forward_destination"] ?? ''));
+			}
 			echo "	</td>\n";
 			echo "</tr>\n";
 			$x++;
@@ -262,8 +283,10 @@
 	echo "</div>";
 	//$n++;
 
-	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
-	echo "</form>\n";
+	if (permission_exists('ring_group_forward')) {
+		echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+		echo "</form>\n";
+	}
 
 	echo "<span class='hud_expander' onclick=\"$('#hud_ring_group_forward_details').slideToggle('fast');\"><span class='fas fa-ellipsis-h'></span></span>";
 	echo "</div>\n";
