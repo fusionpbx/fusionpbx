@@ -31,8 +31,13 @@
 	elseif (file_exists('/etc/fusionpbx/config.conf')) {
 		$config_file = '/etc/fusionpbx/config.conf';
 	}
-	elseif (file_exists(__DIR__ . '/config.conf')) {
-		$config_file = __DIR__ . '/config.conf';
+	elseif (file_exists(__DIR__ . '/config.php')) {
+		//set a custom config_file variable after the config.php has been validated
+		$file_content = file_get_contents(__DIR__ . '/config.php');
+		$pattern = '/^<\?php\s+\$config_file\s+=\s+[\'"](.+?)[\'"];\s+\?>$/';
+		if (preg_match($pattern, $file_content, $matches)) {
+			$config_file = $matches[1];
+		}
 	}
 
 //parse the config.conf file
