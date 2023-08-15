@@ -28,18 +28,6 @@
 	ini_set("session.cookie_httponly", True);
 	if (!isset($_SESSION)) { session_start(); }
 
-//if config.conf file does not exist then redirect to the install page
-	if (file_exists("/usr/local/etc/fusionpbx/config.conf")) {
-		//BSD
-	}
-	elseif (file_exists("/etc/fusionpbx/config.conf")) {
-		//Linux
-	}
-	else {
-		header("Location: /core/install/install.php");
-		exit;
-	}
-
 //includes files
 	require_once __DIR__ . "/resources/require.php";
 
