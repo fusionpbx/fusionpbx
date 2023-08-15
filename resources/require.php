@@ -40,14 +40,20 @@
 		}
 	}
 
+//check if the config file exists
+	$config_exists = !empty($config_file) ? true : false;
+
+//config.conf file not found re-direct the request to the install
+	if (!$config_exists) {
+		header("Location: /core/install/install.php");
+		exit;
+	}
+
 //parse the config.conf file
 	$conf = parse_ini_file($config_file);
 
 //set the include path
 	set_include_path($conf['document.root']);
-
-//check if the config file exists
-	$config_exists = !empty($config_file) ? true : false;
 
 //set the server variables and define project path constant
 	$_SERVER["DOCUMENT_ROOT"] = $conf['document.root'];
