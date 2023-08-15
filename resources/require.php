@@ -33,9 +33,9 @@
 	}
 	elseif (file_exists(__DIR__ . '/config.php')) {
 		//set a custom config_file variable after the config.php has been validated
-		$file_content = file_get_contents(__DIR__ . '/config.php');
+		$file_content = trim(file_get_contents(__DIR__ . '/config.php'));
 		$pattern = '/^<\?php\s+\$config_file\s+=\s+[\'"](.+?)[\'"];\s+\?>$/';
-		if (preg_match($pattern, $file_content, $matches)) {
+		if (preg_match($pattern, $file_content, $matches) && file_exists($matches[1])) {
 			$config_file = $matches[1];
 		}
 	}
