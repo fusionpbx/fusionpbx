@@ -181,6 +181,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "user";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Options: user (default)";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "b8f8a95c-0167-4768-8aab-c386f64bdd06";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "call_center";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "refresh";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1500";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the refresh rate in seconds (<=120) or milliseconds (>=500).";
 
 	//cache details
 		$apps[$x]['cache']['key'] = "dialplan.\${domain_name}";
