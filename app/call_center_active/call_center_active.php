@@ -117,7 +117,7 @@
 		<?php
 
 		//determine refresh rate
-		$refresh_default = 15000; //milliseconds
+		$refresh_default = 1500; //milliseconds
 		$refresh = is_numeric($_SESSION['call_center']['refresh']['numeric']) ? $_SESSION['call_center']['refresh']['numeric'] : $refresh_default;
 		if ($refresh >= 0.5 && $refresh <= 120) { //convert seconds to milliseconds
 			$refresh = $refresh * 1000;
