@@ -85,36 +85,53 @@
 
 	loadXmlHttp.prototype.stateChanged=function () {
 		var url = new URL(this.xmlHttp.responseURL);
-        if (/login\.php$/.test(url.pathname)) {
-			// You are logged out. Stop refresh!
+
+		//logged out stop the refresh
+		if (/login\.php$/.test(url.pathname)) {
 			url.searchParams.set('path', '<?php echo $_SERVER['REQUEST_URI']; ?>');
 			window.location.href = url.href;
 			return;
 		}
 
-		if (this.xmlHttp.readyState == 4 && (this.xmlHttp.status == 200 || !/^http/.test(window.location.href)))
+		if (this.xmlHttp.readyState == 4 && (this.xmlHttp.status == 200 || !/^http/.test(window.location.href))) {
 			//this.el.innerHTML = this.xmlHttp.responseText;
 			document.getElementById('ajax_response').innerHTML = this.xmlHttp.responseText;
+		}
 
 		//link table rows (except the last - the list_control_icons cell) on a table with a class of 'tr_hover', according to the href attribute of the <tr> tag
-			$('.tr_hover tr,.list tr').each(function(i,e) {
-				$(e).children('td:not(.list_control_icon,.list_control_icons,.tr_link_void,.list-row > .no-link,.list-row > .checkbox,.list-row > .button,.list-row > .action-button)').on('click', function() {
-					var href = $(this).closest('tr').attr('href');
-					var target = $(this).closest('tr').attr('target');
-					if (href) {
-						if (target) { window.open(href, target); }
-						else { window.location = href; }
-					}
-				});
+		$('.tr_hover tr,.list tr').each(function(i,e) {
+			$(e).children('td:not(.list_control_icon,.list_control_icons,.tr_link_void,.list-row > .no-link,.list-row > .checkbox,.list-row > .button,.list-row > .action-button)').on('click', function() {
+				var href = $(this).closest('tr').attr('href');
+				var target = $(this).closest('tr').attr('target');
+				if (href) {
+					if (target) { window.open(href, target); }
+					else { window.location = href; }
+				}
 			});
+		});
 	}
 
 	var requestTime = function() {
 		var url = 'call_center_active_inc.php?queue_name=<?php echo escape($queue_name); ?>&name=<?php echo urlencode(escape($name)); ?>';
 		new loadXmlHttp(url, 'ajax_response');
 		<?php
-		if (empty($_SESSION["ajax_refresh_rate"])) { $_SESSION["ajax_refresh_rate"] = "1777"; }
-		echo "setInterval(function(){new loadXmlHttp(url, 'ajax_reponse');}, ".$_SESSION["ajax_refresh_rate"].");";
+
+		//determine refresh rate
+		$refresh_default = 15000; //milliseconds
+		$refresh = is_numeric($_SESSION['call_center']['refresh']['numeric']) ? $_SESSION['call_center']['refresh']['numeric'] : $refresh_default;
+		if ($refresh >= 0.5 && $refresh <= 120) { //convert seconds to milliseconds
+			$refresh = $refresh * 1000;
+		}
+		else if ($refresh < 0.5 || ($refresh > 120 && $refresh < 500)) {
+			$refresh = $refresh_default; //use default
+		}
+		else {
+			//>= 500, must be milliseconds
+		}
+
+		//set the value for the refresh
+		echo "setInterval(function(){new loadXmlHttp(url, 'ajax_reponse');}, ".$refresh.");";
+
 		?>
 	}
 
