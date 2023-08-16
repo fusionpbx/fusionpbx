@@ -1983,6 +1983,15 @@
 						}
 					}
 
+					//if the toggle field and values are empty then set defaults
+					if (empty($toggle_field)) {
+						$toggle_field = self::singular($parent_name)."_enabled";
+					}
+					if (empty($toggle_values)) {
+						$toggle_values[] = 'true';
+						$toggle_values[] = 'false';
+					}
+
 					//get the current values from the database
 					foreach ($toggle_array as $table_name => $table) {
 						$x = 0;
