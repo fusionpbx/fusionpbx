@@ -1676,3 +1676,6 @@ function do_play(s,d,id) {
 }
 </script>
 <?php
+//include the footer
+	require_once "resources/footer.php";
+?>
