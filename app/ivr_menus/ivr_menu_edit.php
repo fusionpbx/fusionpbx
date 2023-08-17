@@ -1661,7 +1661,7 @@ function do_play(s,d,id) {
 	if (s) {
 		$('#preview').val('true');
 		$('#listen_' + id).show();
-		src = "/app/recordings/recordings.php" + "?a=download&type=rec&filename=" + $('#ivr_menu_'+id).val() 
+		src = "/app/recordings/recordings.php" + "?action=download&type=rec&filename=" + $('#ivr_menu_'+id).val() 
 		if (d) {
 			$('#listen_' + id).hide();
 			window.location.href = src;
