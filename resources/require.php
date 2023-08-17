@@ -53,12 +53,18 @@
 	set_include_path($conf['document.root']);
 
 //set document root
-	$_SERVER["DOCUMENT_ROOT"] = $conf['document.root'];
+	$_SERVER["DOCUMENT_ROOT"] = substr($conf['document.root'], -1) === '/' ? substr($conf['document.root'], 0, -1) : $conf['document.root'];
 //set project path
-	if (isset($conf['project.path'])) {
-		if (!defined('PROJECT_PATH')) { define("PROJECT_PATH", (substr($conf['project.path'], 0, 1) === '/' ? $conf['project.path'] : '/' . $conf['project.path'])); }
-	} else {
-		if (!defined('PROJECT_PATH')) { define("PROJECT_PATH", ''); }
+	if (isset($conf['project.path']) && !defined('PROJECT_PATH')) {
+		if (substr($conf['project.path'], 0, 1) === '/') {
+			define("PROJECT_PATH", $conf['project.path']);
+		} else {
+			if (!empty($conf['project.path'])) {
+				define("PROJECT_PATH", '/' . $conf['project.path']);
+			} else {
+				define("PROJECT_PATH", '');
+			}
+		}
 	}
 	$_SERVER["PROJECT_PATH"] = PROJECT_PATH;
 
