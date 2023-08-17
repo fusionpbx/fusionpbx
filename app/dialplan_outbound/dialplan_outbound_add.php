@@ -1032,6 +1032,7 @@ function type_onchange(dialplan_detail_type) {
 	echo "		<option value=\"freetdm\">freetdm</option>\n";
 	echo "		<option value=\"transfer:\$1 XML \${domain_name}\">transfer</option>\n";
 	echo "		<option value=\"xmpp\">xmpp</option>\n";
+	echo "		<option value=\"hangup\">hangup</option>\n";
 	echo "	</optgroup>\n";
 	echo "</select>\n";
 	echo "<br />\n";
@@ -1092,6 +1093,7 @@ function type_onchange(dialplan_detail_type) {
 	echo "		<option value=\"freetdm\">freetdm</option>\n";
 	echo "		<option value=\"transfer:\$1 XML \${domain_name}\">transfer</option>\n";
 	echo "		<option value=\"xmpp\">xmpp</option>\n";
+	echo "		<option value=\"hangup\">hangup</option>\n";
 	echo "	</optgroup>\n";
 	echo "</select>\n";
 	echo "<br />\n";
@@ -1152,6 +1154,7 @@ function type_onchange(dialplan_detail_type) {
 	echo "		<option value=\"freetdm\">freetdm</option>\n";
 	echo "		<option value=\"transfer:\$1 XML \${domain_name}\">transfer</option>\n";
 	echo "		<option value=\"xmpp\">xmpp</option>\n";
+	echo "		<option value=\"hangup\">hangup</option>\n";
 	echo "	</optgroup>\n";
 	echo "</select>\n";
 	echo "<br />\n";
