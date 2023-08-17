@@ -40,11 +40,8 @@
 		}
 	}
 
-//check if the config file exists
-	$config_exists = !empty($config_file) ? true : false;
-
 //config.conf file not found re-direct the request to the install
-	if (!$config_exists) {
+	if (empty($config_file)) {
 		header("Location: /core/install/install.php");
 		exit;
 	}
@@ -55,19 +52,19 @@
 //set the include path
 	set_include_path($conf['document.root']);
 
-//set the server variables and define project path constant
+//set document root
 	$_SERVER["DOCUMENT_ROOT"] = $conf['document.root'];
-	$_SERVER["PROJECT_ROOT"] = $conf['document.root'];
-	$_SERVER["PROJECT_PATH"]  = $conf['project.path'];
+//set project path
 	if (isset($conf['project.path'])) {
-		$_SERVER["PROJECT_ROOT"] = $conf['document.root'].'/'.$conf['project.path'];
-		if (!defined('PROJECT_ROOT')) { define("PROJECT_ROOT", $conf['document.root'].'/'.$conf['project.path']); }
 		if (!defined('PROJECT_PATH')) { define("PROJECT_PATH", $conf['project.path']); }
-	}
-	else {
-		if (!defined('PROJECT_ROOT')) { define("PROJECT_ROOT", $conf['document.root']); }
+	} else {
 		if (!defined('PROJECT_PATH')) { define("PROJECT_PATH", ''); }
 	}
+	$_SERVER["PROJECT_PATH"] = PROJECT_PATH;
+
+//set project root using project path
+	if (!defined('PROJECT_ROOT')) { define("PROJECT_ROOT", $conf['document.root'] . PROJECT_PATH); }
+	$_SERVER["PROJECT_ROOT"] = PROJECT_ROOT;
 
 //set the error reporting
 	ini_set('display_errors', '1');
