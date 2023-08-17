@@ -56,7 +56,7 @@
 	$_SERVER["DOCUMENT_ROOT"] = $conf['document.root'];
 //set project path
 	if (isset($conf['project.path'])) {
-		if (!defined('PROJECT_PATH')) { define("PROJECT_PATH", $conf['project.path']); }
+		if (!defined('PROJECT_PATH')) { define("PROJECT_PATH", (substr($conf['project.path'], 0, 1) === '/' ? $conf['project.path'] : '/' . $conf['project.path'])); }
 	} else {
 		if (!defined('PROJECT_PATH')) { define("PROJECT_PATH", ''); }
 	}
