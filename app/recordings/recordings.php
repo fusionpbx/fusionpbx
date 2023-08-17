@@ -67,6 +67,8 @@
 						}
 					}
 					unset($sql, $parameters, $row, $recording_decoded);
+				} elseif ($_GET['filename']) {
+					$recording_filename = $_GET['filename'];
 				}
 
 			// build full path
