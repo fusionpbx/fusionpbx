@@ -287,7 +287,7 @@
 			end
 			sql = sql .. ") ";
 			sql = sql .. "AND call_uuid IS NOT NULL ";
-			sql = sql .. "LIMIT 1 ";
+			sql = sql .. "ORDER BY created_epoch DESC LIMIT 1 ";
 			if (debug["sql"]) then
 				log.noticef("SQL: %s; params: %s", sql, json.encode(params));
 			end
