@@ -124,6 +124,30 @@
 
 	}
 
+//remove origination_callee_id_name from domain-variables dialplan 
+	if ($domains_processed == 1) {
+		$sql = "select count(*) from v_dialplans ";
+		$sql .= "where dialplan_name = 'domain-variables' ";
+		$sql .= "and dialplan_xml like '%origination_callee_id_name%' ";
+		$database = new database;
+		$num_rows = $database->select($sql, null, 'column');
+		if ($num_rows > 0) {
+                        $sql = "update v_dialplan_details set dialplan_detail_data = 'origination_callee_id_name=\${caller_destination}', update_date = now() \n";
+                        $sql .= "where dialplan_uuid in (select dialplan_uuid from v_dialplans where dialplan_name = 'domain-variables' or dialplan_name = 'variables') \n";
+                        $sql .= "and dialplan_detail_data = 'origination_callee_id_name=\${destination_number}'; \n";
+                        $database->execute($sql);
+
+                        $sql = "update v_dialplans set dialplan_xml = REPLACE(dialplan_xml, '<action application=\"export\" data=\"origination_callee_id_name=\${destination_number}\"/>', '<action application=\"export\" data=\"origination_callee_id_name=\${caller_destination}\"/>'), update_date = now() \n";
+                        $sql .= "where dialplan_uuid in (select dialplan_uuid from v_dialplans where dialplan_name = 'domain-variables' or dialplan_name = 'variables'); \n";
+                        $database->execute($sql);
+
+                        $sql = "update v_dialplans set dialplan_xml = REPLACE(dialplan_xml, '<action application=\"export\" data=\"origination_callee_id_name=\${destination_number}\" inline=\"true\"/>', '<action application=\"export\" data=\"origination_callee_id_name=\${caller_destination}\" inline=\"true\"/>'), update_date = now() \n";
+                        $sql .= "where dialplan_uuid in (select dialplan_uuid from v_dialplans where dialplan_name = 'domain-variables' or dialplan_name = 'variables'); \n";
+                        $database->execute($sql);
+		}
+		unset($sql, $num_rows);
+	}
+
 //add not found dialplan to inbound routes
 	/*
 	if ($domains_processed == 1) {

@@ -29,8 +29,8 @@
 	if (is_uuid($_GET['email_queue_uuid'])) {
 		$email_queue_uuid = $_GET['email_queue_uuid'];
 		$hostname = urldecode($_GET['hostname']);
-		$debug = $_GET['debug'];
-		$sleep_seconds = $_GET['sleep'];
+		$debug = $_GET['debug'] ?? null;
+		$sleep_seconds = $_GET['sleep'] ?? null;
 	}
 	else {
 		//invalid uuid
@@ -84,7 +84,7 @@
 //create the process id file if the process doesn't exist
 	if (!$pid_exists) {
 		//remove the old pid file
-		if (file_exists($file)) {
+		if (!empty($pid_file) && file_exists($pid_file)) {
 			unlink($pid_file);
 		}
 
@@ -284,6 +284,7 @@
 	}
 
 //add email settings
+	$email_settings = '';
 	ksort($_SESSION['email']);
 	foreach ($_SESSION['email'] as $name => $setting) {
 		foreach ($setting as $type => $value) {
@@ -293,11 +294,27 @@
 		}
 	}
 
+//parse email and name
+	if (!empty($email_from)) {
+		if (valid_email($email_from)) {
+			$email_from_address = $email_from;
+		}
+		else {
+			$lt_pos = strpos($email_from, '<');
+			if ($lt_pos !== false) {
+				$email_from_address = str_replace('>', '', substr($email_from, $lt_pos + 1));
+				$email_from_name = trim(substr($email_from, 0, $lt_pos));
+			}
+		}
+	}
+
 //send the email
 	$email = new email;
 	$email->domain_uuid = $domain_uuid;
 	$email->from_address = $email_from_address;
-	$email->from_name = $email_from_name;
+	if (!empty($email_from_name)) {
+		$email->from_name = $email_from_name;
+	}
 	$email->recipients = $email_to;
 	$email->subject = $email_subject;
 	$email->body = $email_body;
