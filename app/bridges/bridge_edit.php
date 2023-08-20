@@ -114,35 +114,43 @@
 				return;
 			}
 
-		//add the bridge_uuid
+			//add the bridge_uuid
 			if (empty($bridge_uuid)) {
 				$bridge_uuid = uuid();
 			}
 
-		//create the main bridge statement
-			$bridge_base = '';
-			if (!empty($bridge_gateways)) {
-				foreach($bridge_gateways as $gateway) {
-					if (!empty($gateway)) {
-						$gateway_array = explode(':', $gateway);
-						$bridge_base .= ',sofia/gateway/'.$gateway_array[0].'/'.$destination_number;
-					}
-				}
-				if (!empty($bridge_base)) {
-					$bridge_destination = trim($bridge_base, ',');
-				}
+			//build the bridge statement for action user
+			if ($bridge_action == 'user' || $bridge_action == 'loopback') {
+				$bridge_destination = $bridge_action.'/'.$destination_number;
 			}
 
-		//add the variables back into the bridg_destination value
-			if (!empty($bridge_variables)) {
-				$variables = '';
-				foreach($bridge_variables as $key => $value) {
-					if (!empty($value)) {
-						$variables .= ','.$key.'='.$value;
+			//build the bridge statement for gateway, or profiles - build the bridge statement
+			if ($bridge_action == 'gateway' || $bridge_action == 'profile') {
+				//create the main bridge statement
+				$bridge_base = '';
+				if (!empty($bridge_gateways)) {
+					foreach($bridge_gateways as $gateway) {
+						if (!empty($gateway)) {
+							$gateway_array = explode(':', $gateway);
+							$bridge_base .= ',sofia/gateway/'.$gateway_array[0].'/'.$destination_number;
+						}
+					}
+					if (!empty($bridge_base)) {
+						$bridge_destination = trim($bridge_base, ',');
 					}
 				}
-				if (!empty($variables)) {
-					$bridge_destination = '{'.trim($variables, ',').'}'.$bridge_destination;
+				
+				//add the variables back into the bridg_destination value
+				if (!empty($bridge_variables)) {
+					$variables = '';
+					foreach($bridge_variables as $key => $value) {
+						if (!empty($value)) {
+							$variables .= ','.$key.'='.$value;
+						}
+					}
+					if (!empty($variables)) {
+						$bridge_destination = '{'.trim($variables, ',').'}'.$bridge_destination;
+					}
 				}
 			}
 
@@ -215,6 +223,36 @@
 		$i++;
 	}
 
+//get the bridge_action from the bridge_destination
+	if (!empty($bridge_destination)) {
+		if (substr($bridge_destination, 0, 1) == '{') {
+			$parts = explode('}', $bridge_destination);
+			$bridge_destination = $parts[1];
+		}
+		$bridge_array = explode("/", $bridge_destination);
+		if ($bridge_array[0] == 'sofia') {
+			if ($bridge_array[1] == 'gateway') {
+				$bridge_action = 'gateway';
+			}
+			else {
+				$bridge_action = 'profile';
+				$bridge_profile = $bridge_array[1];
+				$destination_number = $bridge_array[2];
+			}
+		}
+		elseif ($bridge_array[0] == 'user') {
+			$bridge_action = 'user';
+			$destination_number = $bridge_array[1];
+		}
+		elseif ($bridge_array[0] == 'loopback') {
+			$bridge_action = 'loopback';
+			$destination_number = $bridge_array[1];
+		}
+	}
+
+//create a variables array from the comma delimitted string
+	$variables = explode(",", $matches[1]);
+
 //get the bridge variables from the database bridge_destination value
 	$database_variables = []; $x = 0;
 	if (!empty($bridge_destination)) {
@@ -257,7 +295,9 @@
 			$i++;
 		}
 		if (!$found) {
-			$bridge_variables[] = $row;
+			if (!empty($row['name'])) {
+				$bridge_variables[] = $row;
+			}
 		}
 	}
 
@@ -312,6 +352,37 @@
 	$document['title'] = $text['title-bridge'];
 	require_once "resources/header.php";
 
+//show or hide form elements based on the bridge action
+	echo "<script type='text/javascript'>\n";
+	echo "	function action_control(action) {\n";
+	echo "		if (action == 'gateway') {\n";
+	echo "			if (document.getElementById('tr_bridge_gateways')) { document.getElementById('tr_bridge_gateways').style.display = ''; }\n";
+	echo "			if (document.getElementById('tr_bridge_profile')) { document.getElementById('tr_bridge_profile').style.display = 'none'; }\n";
+	echo "			if (document.getElementById('tr_bridge_variables')) { document.getElementById('tr_bridge_variables').style.display = ''; }\n";
+	echo "		}\n";
+	echo "		else if (action == 'user') {\n";
+	echo "			if (document.getElementById('tr_bridge_gateways')) { document.getElementById('tr_bridge_gateways').style.display = 'none'; }\n";
+	echo "			if (document.getElementById('tr_bridge_profile')) { document.getElementById('tr_bridge_profile').style.display = 'none'; }\n";
+	echo "			if (document.getElementById('tr_bridge_variables')) { document.getElementById('tr_bridge_variables').style.display = 'none'; }\n";
+	echo "		}\n";
+	echo "		else if (action == 'profile') {\n";
+	echo "			if (document.getElementById('tr_bridge_gateways')) { document.getElementById('tr_bridge_gateways').style.display = 'none'; }\n";
+	echo "			if (document.getElementById('tr_bridge_profile')) { document.getElementById('tr_bridge_profile').style.display = ''; }\n";
+	echo "			if (document.getElementById('tr_bridge_variables')) { document.getElementById('tr_bridge_variables').style.display = ''; }\n";
+	echo "		}\n";
+	echo "		else if (action == 'loopback') {\n";
+	echo "			if (document.getElementById('tr_bridge_gateways')) { document.getElementById('tr_bridge_gateways').style.display = 'none'; }\n";
+	echo "			if (document.getElementById('tr_bridge_profile')) { document.getElementById('tr_bridge_profile').style.display = 'none'; }\n";
+	echo "			if (document.getElementById('tr_bridge_variables')) { document.getElementById('tr_bridge_variables').style.display = 'none'; }\n";
+	echo "		}\n";
+	echo "		";
+	echo "	}\n";
+	echo "\n";
+	echo "	window.onload = function() {\n";
+	echo "		action_control('".$bridge_action."');\n";
+	echo "	};\n";
+	echo "</script>\n";
+
 //show the content
 	echo "<form name='frm' id='frm' method='post'>\n";
 
@@ -349,11 +420,11 @@
 	echo "	".$text['label-bridge_action']."\n";
 	echo "</td>\n";
 	echo "<td width='70%' class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<select class='formfld' id='bridge_enabled' name='bridge_enabled'>\n";
+	echo "	<select class='formfld' id='bridge_action' name='bridge_action' onchange='action_control(this.options[this.selectedIndex].value);'>\n";
 	echo "		<option value=''></option>\n";
 	$i = 0;
 	foreach($bridge_actions as $row) {
-		echo "		<option value='true' ".($bridge_action = $row['name'] ? "selected='selected'" : null).">".$row['label']."</option>\n";
+		echo "		<option value='".$row['action']."' ".($bridge_action == $row['action'] ? "selected='selected'" : null).">".$row['label']."</option>\n";
 	}
 	echo "	</select>\n";
 	echo "<br />\n";
@@ -361,49 +432,50 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	$i = 0;
-	foreach($bridge_variables as $row) {
-		echo "<tr>\n";
-		echo "<td width='30%' class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "	".$row['label']."\n";
-		echo "</td>\n";
-		echo "<td width='70%' class='vtable' style='position: relative;' align='left'>\n";
-		echo "	<input class='formfld' type='text' name='bridge_variables[".$row['name']."]' maxlength='255' value='".escape($row['value'])."'>\n";
-		echo "<br />\n";
-		echo $text['description-bridge_variables']."\n";
-		echo "</td>\n";
-		echo "</tr>\n";
-		$i++;
-	}
-
-	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "	".$text['label-profile']."\n";
+	echo "<tr id='tr_bridge_variables'>\n";
+	echo "<td width='30%' class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-bridge_variables']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='profile' required='required'>\n";
+	$i = 0;
+	foreach($bridge_variables as $row) {
+		if ($i > 0) { echo "<br >\n"; }
+		echo "	<input class='formfld' type='text' name='bridge_variables[".$row['name']."]' placeholder='".$row['label']."' maxlength='255' value='".escape($row['value'])."'>\n";
+		$i++;
+	}
+	echo "<br />\n";
+	echo $text['description-bridge_variables']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr id='tr_bridge_profile'>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+	echo "	".$text['label-bridge_profile']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<select class='formfld' name='bridge_profile'>\n";
 	echo "		<option value=''></option>\n";
 	foreach ($sip_profiles as $row) {
-		$sip_profile_name = $row["sip_profile_name"];
-		if ($profile == $sip_profile_name) {
-			echo "	<option value='$sip_profile_name' selected='selected'>".escape($sip_profile_name)."</option>\n";
+		if ($bridge_profile == $row["sip_profile_name"]) {
+			echo "	<option value='".$row['sip_profile_name']."' selected='selected'>".escape($row["sip_profile_name"])."</option>\n";
 		}
 		else {
-			echo "	<option value='".escape($sip_profile_name)."'>".escape($sip_profile_name)."</option>\n";
+			echo "	<option value='".escape($row["sip_profile_name"])."'>".escape($row["sip_profile_name"])."</option>\n";
 		}
 	}
 	echo "	</select>\n";
 	echo "<br />\n";
-	echo $text['description-profile']."\n";
+	echo $text['description-bridge_profile']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
+	echo "<tr id='tr_bridge_gateways'>\n";
+	echo "<td width='30%' class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-bridge_gateways']."\n";
+	echo "</td>\n";
+	echo "<td width='70%' class='vtable' style='position: relative;' align='left'>\n";
 	for ($x = 0; $x <= 2; $x++) {
-		echo "<tr>\n";
-		echo "<td width='30%' class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "	".$text['label-bridge_gateways']."\n";
-		echo "</td>\n";
-		echo "<td width='70%' class='vtable' style='position: relative;' align='left'>\n";
+		if ($x > 0) { echo "<br />\n"; }
 		echo "<select name=\"bridge_gateways[]\" id=\"gateway\" class=\"formfld\" $onchange>\n";
 		echo "<option value=''></option>\n";
 		echo "<optgroup label='".$text['label-gateway']."gateway'>\n";
@@ -446,11 +518,11 @@
 		//echo "		<option value=\"xmpp\">xmpp</option>\n";
 		//echo "	</optgroup>\n";
 		echo "</select>\n";
-		echo "<br />\n";
-		echo $text['description-bridge_gateways']."\n";
-		echo "</td>\n";
-		echo "</tr>\n";
 	}
+	echo "<br />\n";
+	echo $text['description-bridge_gateways']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
@@ -463,16 +535,16 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-bridge_destination']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<textarea class='formfld' name='bridge_destination'>".escape($bridge_destination)."</textarea>\n";
-	echo "<br />\n";
-	echo $text['description-bridge_destination']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
+	//echo "<tr>\n";
+	//echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+	//echo "	".$text['label-bridge_destination']."\n";
+	//echo "</td>\n";
+	//echo "<td class='vtable' style='position: relative;' align='left'>\n";
+	//echo "	<textarea class='formfld' name='bridge_destination'>".escape($bridge_destination)."</textarea>\n";
+	//echo "<br />\n";
+	//echo $text['description-bridge_destination']."\n";
+	//echo "</td>\n";
+	//echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
