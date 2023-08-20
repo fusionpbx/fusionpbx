@@ -139,7 +139,7 @@
 						$bridge_destination = trim($bridge_base, ',');
 					}
 				}
-				
+
 				//add the variables back into the bridg_destination value
 				if (!empty($bridge_variables)) {
 					$variables = '';
@@ -226,10 +226,9 @@
 //get the bridge_action from the bridge_destination
 	if (!empty($bridge_destination)) {
 		if (substr($bridge_destination, 0, 1) == '{') {
-			$parts = explode('}', $bridge_destination);
-			$bridge_destination = $parts[1];
+			$bridge_parts = explode('}', $bridge_destination);
 		}
-		$bridge_array = explode("/", $bridge_destination);
+		$bridge_array = explode("/", $bridge_parts[1]);
 		if ($bridge_array[0] == 'sofia') {
 			if ($bridge_array[1] == 'gateway') {
 				$bridge_action = 'gateway';
