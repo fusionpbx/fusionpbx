@@ -238,7 +238,7 @@
 	echo "	".$text['label-value']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='var_value' maxlength='255' value=\"".escape($var_value)."\">\n";
+	echo "	<textarea class='formfld' name='var_value'>".escape($var_value)."</textarea>\n";
 	echo "<br />\n";
 	echo $text['description-value']."\n";
 	echo "</td>\n";
