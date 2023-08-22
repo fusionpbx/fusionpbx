@@ -144,8 +144,17 @@
 
 		--if voicemail_id is non numeric then get the number-alias
 			if (voicemail_id ~= nil) then
-				if (tonumber(voicemail_id) == nil) then
+				if (voicemail_id and tonumber(voicemail_id) == nil) then
 					 voicemail_id = api:execute("user_data", voicemail_id .. "@" .. domain_name .. " attr number-alias");
+				end
+			end
+
+		--get the extension_uuid using the voicemail_id
+			extension_uuid = session:getVariable("extension_uuid");
+			if (extension_uuid == nil and session ~= nil and session:ready()) then
+				extension_uuid = api:execute("user_data", voicemail_id .. "@" .. domain_name .. " attr extension_uuid");
+				if (extension_uuid ~= nil) then
+					session:setVariable("extension_uuid", extension_uuid);
 				end
 			end
 
