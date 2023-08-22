@@ -149,6 +149,15 @@
 				end
 			end
 
+		--get the extension_uuid using the voicemail_id
+			extension_uuid = session:getVariable("extension_uuid");
+			if (extension_uuid == nil and session ~= nil and session:ready()) then
+				extension_uuid = api:execute("user_data", voicemail_id .. "@" .. domain_name .. " attr extension_uuid");
+				if (extension_uuid ~= nil) then
+					session:setVariable("extension_uuid", extension_uuid);
+				end
+			end
+
 		--set the voicemail_dir
 			voicemail_dir = voicemail_dir.."/default/"..domain_name;
 			if (debug["info"]) then
