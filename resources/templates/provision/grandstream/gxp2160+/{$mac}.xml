@@ -167,7 +167,7 @@
     <!-- # Subscribe Expiration. Default is 60. Max about 45 days -->
     <!-- # Number: 1 - 64800 -->
     <!-- # Mandatory -->
-    <P26051>60</P26051>
+    <P26051>3600</P26051>
 
     <!-- # Reregister Before Expiration (in seconds). Default is 0 second -->
     <!-- # Number: 0 - 64800 -->
@@ -245,12 +245,12 @@
     <!-- # SIP URI Scheme when using TLS. 0 - sip, 1 - sips. Default is 1 -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P2329>1</P2329>
+    <P2329>0</P2329>
 
     <!-- # Use Actual Ephemeral Port in Contact with TCP/TLS. 0 - No, 1 - Yes. Default is 0 -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P2331>0</P2331>
+    <P2331>1</P2331>
 
     <!-- # Outbound Proxy Mode. 0 - in route, 1 - not in route, 2 - always send to -->
     <!-- # Number: 0, 1, 2 -->
@@ -447,7 +447,7 @@
     <!-- # Enable Session Timer. 0 - No, 1 - Yes. Default is 1 -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P2395>1</P2395>
+    <P2395>0</P2395>
 
     <!-- # Session Expiration (in seconds). Default is 180 -->
     <!-- # Number: 90 - 64800 -->
@@ -1226,7 +1226,7 @@
     <!-- # Use Actual Ephemeral Port in Contact with TCP/TLS. 0 - No, 1- Yes. Default is 0 -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P2431>0</P2431>
+    <P2431>1</P2431>
 
     <!-- # Outbound Proxy Mode. 0 - in route, 1 - not in route, 2 - always send to -->
     <!-- # Number: 0, 1, 2 -->
