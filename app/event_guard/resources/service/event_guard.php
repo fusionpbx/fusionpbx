@@ -309,14 +309,14 @@
 		//run the block command for iptables
 		if ($firewall == 'iptables') {
 			//example: iptables -I INPUT -s 127.0.0.1 -j DROP
-			$command = 'iptables -I '.$filter.' -s '.$ip_address.' -j DROP';
+			$command = '/usr/sbin/./iptables -I '.$filter.' -s '.$ip_address.' -j DROP';
 			$result = shell($command);
 		}
 
 		//run the block command for pf
 		if ($firewall == 'pf') {
 			//example: pfctl -t sip-auth-ip -T add 127.0.0.5/32
-			$command = 'pfctl -t '.$filter.' -T add '.$ip_address.'/32';
+			$command = '/sbin/pfctl -t '.$filter.' -T add '.$ip_address.'/32';
 			$result = shell($command);
 		}
 
@@ -364,12 +364,12 @@
 
 		//unblock the address
 		if ($firewall == 'iptables') {
-			$command = 'iptables -L '.$filter.' -n --line-numbers | grep "'.$ip_address.' " | cut -d " " -f1';
+			$command = '/usr/sbin/./iptables -L '.$filter.' -n --line-numbers | grep "'.$ip_address.' " | cut -d " " -f1';
 			$line_number = trim(shell($command));
 			echo "\n". $command . " line ".__line__." result ".$result."\n";
 			if (is_numeric($line_number)) {
 				//$result = shell('iptables -D INPUT '.$line_number);
-				$command = 'iptables -D '.$filter.' '.$line_number;
+				$command = '/usr/sbin/./iptables -D '.$filter.' '.$line_number;
 				$result = shell($command);
 				echo "Unblock address ".$ip_address ." line ".$line_number." command ".$command." result ".$result."\n";
 			}
@@ -378,7 +378,7 @@
 		//unblock the address
 		if ($firewall == 'pf') {
 			//example: pfctl -t sip-auth-ip -T delete 127.0.0.5/32
-			$command = 'pfctl -t '.$filter.' -T delete '.$ip_address.'/32';
+			$command = '/sbin/pfctl -t '.$filter.' -T delete '.$ip_address.'/32';
 			$result = shell($command);
 		}
 
@@ -401,7 +401,7 @@
 		//determine whether to return true or false
 		if ($firewall == 'iptables') {
 			//check to see if the address is blocked
-			$command = 'iptables -L -n --line-numbers | grep '.$ip_address;
+			$command = '/usr/sbin/./iptables -L -n --line-numbers | grep '.$ip_address;
 			$result = shell($command);
 			if (strlen($result) > 3) {
 				return true;
@@ -409,7 +409,7 @@
 		}
 		elseif ($firewall == 'pf') {
 			//check to see if the address is blocked
-			$command = 'pfctl -t ".$filter." -Ts | grep '.$ip_address;
+			$command = '/sbin/pfctl -t ".$filter." -Ts | grep '.$ip_address;
 			$result = shell($command);
 			if (strlen($result) > 3) {
 				return true;
@@ -654,8 +654,8 @@
 		echo "Add iptables ".$chain." chain\n";
 
 		//add the chain
-		system('iptables --new '.$chain);
-		system('iptables -I INPUT -j '.$chain);
+		system('/usr/sbin/./iptables --new '.$chain);
+		system('/usr/sbin/./iptables -I INPUT -j '.$chain);
 
 		//check if the chain exists
 		if (iptables_chain_exists($chain)) {
@@ -669,7 +669,7 @@
 
 //check if the iptables chain exists
 	function iptables_chain_exists($chain) {
-		$command = "iptables --list INPUT --numeric | grep ".$chain." | awk '{print \$1}' | sed ':a;N;\$!ba;s/\\n/,/g' ";
+		$command = "/usr/sbin/./iptables --list INPUT --numeric | grep ".$chain." | awk '{print \$1}' | sed ':a;N;\$!ba;s/\\n/,/g' ";
 		//if ($debug) { echo $command."\n"; }
 		$response = shell($command);
 		if (in_array($chain, explode(",", $response))) {
