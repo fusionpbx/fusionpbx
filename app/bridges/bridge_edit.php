@@ -54,9 +54,11 @@
 
 //get http post variables and set them to php variables
 	if (!empty($_POST)) {
+//view_array($_POST);
 		$bridge_uuid = $_POST["bridge_uuid"];
 		$bridge_name = $_POST["bridge_name"];
 		$bridge_action = $_POST["bridge_action"];
+		$bridge_profile = $_POST["bridge_profile"];
 		$bridge_variables = $_POST["bridge_variables"];
 		$bridge_gateways = $_POST["bridge_gateways"];
 		$destination_number = $_POST["destination_number"];
@@ -139,8 +141,11 @@
 						$bridge_destination = trim($bridge_base, ',');
 					}
 				}
+				if ($bridge_action == 'profile' && empty($bridge_destination)) {
+					$bridge_destination = 'sofia/'.$bridge_profile.'/'.$destination_number;
+				}
 
-				//add the variables back into the bridg_destination value
+				//add the variables back into the bridge_destination value
 				if (!empty($bridge_variables)) {
 					$variables = '';
 					foreach($bridge_variables as $key => $value) {
@@ -161,6 +166,7 @@
 			$array['bridges'][0]['bridge_destination'] = $bridge_destination;
 			$array['bridges'][0]['bridge_enabled'] = $bridge_enabled;
 			$array['bridges'][0]['bridge_description'] = $bridge_description;
+//view_array($array);
 
 		//save to the data
 			$database = new database;
@@ -223,12 +229,42 @@
 		$i++;
 	}
 
+//get the bridge variables from the database bridge_destination value
+	$database_variables = []; $x = 0;
+	if (!empty($bridge_destination)) {
+		//get the variables from inside the { and } brackets
+		preg_match('/^\{([^}]+)\}/', $bridge_destination, $matches);
+
+		//create a variables array from the comma delimitted string
+		$variables = explode(",", $matches[1]);
+
+		//strip the variables from the $bridge_destination variable
+		$bridge_destination = str_replace("{$matches[0]}", '', $bridge_destination);
+
+		//build a bridge variables data set
+		$x = 0;
+		foreach($variables as $variable) {
+			$pairs = explode("=", $variable);
+			$database_variables[$x]['name'] = $pairs[0];
+			$database_variables[$x]['value'] = $pairs[1];
+			$database_variables[$x]['label'] = ucwords(str_replace('_', ' ', $pairs[0]));
+			$database_variables[$x]['label'] = str_replace('Effective Caller Id', 'Caller ID', $database_variables[$x]['label']);
+			$x++;
+		}
+	}
+
 //get the bridge_action from the bridge_destination
 	if (!empty($bridge_destination)) {
 		if (substr($bridge_destination, 0, 1) == '{') {
 			$bridge_parts = explode('}', $bridge_destination);
+
+			//get the variables from inside the { and } brackets
+			preg_match('/^\{([^}]+)\}/', $bridge_destination, $matches);
+
+			//strip the variables from the $bridge_destination variable
+			$bridge_destination = str_replace("{$matches[0]}", '', $bridge_destination);
 		}
-		$bridge_array = explode("/", $bridge_parts[1]);
+		$bridge_array = explode("/", $bridge_destination);
 		if ($bridge_array[0] == 'sofia') {
 			if ($bridge_array[1] == 'gateway') {
 				$bridge_action = 'gateway';
@@ -246,33 +282,6 @@
 		elseif ($bridge_array[0] == 'loopback') {
 			$bridge_action = 'loopback';
 			$destination_number = $bridge_array[1];
-		}
-	}
-
-//create a variables array from the comma delimitted string
-	$variables = explode(",", $matches[1]);
-
-//get the bridge variables from the database bridge_destination value
-	$database_variables = []; $x = 0;
-	if (!empty($bridge_destination)) {
-		//get the variables from inside the { and } brackets
-		preg_match('/\{([^}]+)\}/', $bridge_destination, $matches);
-
-		//create a variables array from the comma delimitted string
-		$variables = explode(",", $matches[1]);
-
-		//strip the variables from the $bridge_destination variable
-		$bridge_destination = str_replace("{$matches[0]}", '', $bridge_destination);
-
-		//build a bridge variables data set
-		$x = 0;
-		foreach($variables as $variable) {
-			$pairs = explode("=", $variable);
-			$database_variables[$x]['name'] = $pairs[0];
-			$database_variables[$x]['value'] = $pairs[1];
-			$database_variables[$x]['label'] = ucwords(str_replace('_', ' ', $pairs[0]));
-			$database_variables[$x]['label'] = str_replace('Effective Caller Id', 'Caller ID', $database_variables[$x]['label']);
-			$x++;
 		}
 	}
 
@@ -431,21 +440,23 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "<tr id='tr_bridge_variables'>\n";
-	echo "<td width='30%' class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-bridge_variables']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	$i = 0;
-	foreach($bridge_variables as $row) {
-		if ($i > 0) { echo "<br >\n"; }
-		echo "	<input class='formfld' type='text' name='bridge_variables[".$row['name']."]' placeholder='".$row['label']."' maxlength='255' value='".escape($row['value'])."'>\n";
-		$i++;
+	if (!empty($bridge_variables)) {
+		echo "<tr id='tr_bridge_variables'>\n";
+		echo "<td width='30%' class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-bridge_variables']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		$i = 0;
+		foreach($bridge_variables as $row) {
+			if ($i > 0) { echo "<br >\n"; }
+			echo "	<input class='formfld' type='text' name='bridge_variables[".$row['name']."]' placeholder='".$row['label']."' maxlength='255' value='".escape($row['value'])."'>\n";
+			$i++;
+		}
+		echo "<br />\n";
+		echo $text['description-bridge_variables']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
 	}
-	echo "<br />\n";
-	echo $text['description-bridge_variables']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
 
 	echo "<tr id='tr_bridge_profile'>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
