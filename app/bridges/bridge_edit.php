@@ -539,7 +539,7 @@
 	echo "	".$text['label-destination_number']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='destination_number' maxlength='255' value='".escape($destination_number)."'>\n";
+	echo "	<textarea class='formfld' name='destination_number'>".escape($destination_number)."</textarea>\n";
 	echo "<br />\n";
 	echo $text['description-destination_number']."\n";
 	echo "</td>\n";
