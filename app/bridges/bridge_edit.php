@@ -150,7 +150,7 @@
 					$variables = '';
 					foreach($bridge_variables as $key => $value) {
 						if (!empty($value)) {
-							$variables .= ','.$key.'='.$value;
+							$variables .= ','.trim($key).'='.trim($value);
 						}
 					}
 					if (!empty($variables)) {
@@ -166,7 +166,6 @@
 			$array['bridges'][0]['bridge_destination'] = $bridge_destination;
 			$array['bridges'][0]['bridge_enabled'] = $bridge_enabled;
 			$array['bridges'][0]['bridge_description'] = $bridge_description;
-//view_array($array);
 
 		//save to the data
 			$database = new database;
