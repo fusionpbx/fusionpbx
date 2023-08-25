@@ -63,6 +63,7 @@
 		$start_stamp = trim($row["start_stamp"]);
 		$xml_string = trim($row["xml"] ?? '');
 		$json_string = trim($row["json"]);
+		$direction = trim($row["direction"]);
 	}
 	unset($sql, $parameters, $row);
 
@@ -131,7 +132,6 @@
 //detail summary
 	//get the variables
 		$xml_cdr_uuid = urldecode($array["variables"]["uuid"]);
-		$direction = urldecode($array["variables"]["call_direction"]);
 		$language = urldecode($array["variables"]["language"] ?? '');
 		$start_epoch = urldecode($array["variables"]["start_epoch"]);
 		$start_stamp = urldecode($array["variables"]["start_stamp"]);
