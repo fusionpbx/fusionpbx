@@ -171,7 +171,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "bridge";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "variable";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "array";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = 'caller_direction=outbound';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = 'call_direction=outbound';
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 
