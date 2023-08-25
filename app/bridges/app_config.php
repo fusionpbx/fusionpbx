@@ -156,7 +156,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "variable";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "array";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = 'accountcode';
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "0d1b5374-9c7a-46a5-9a08-d32fd42d6f06";
@@ -164,7 +164,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "variable";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "array";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = 'effective_caller_id_number';
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "bdf5e430-ac50-4a15-b59d-b0c8a78fd410";
@@ -172,7 +172,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "variable";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "array";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = 'caller_direction=outbound';
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 
 ?>
