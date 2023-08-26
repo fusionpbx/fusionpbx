@@ -652,6 +652,27 @@
 	echo "		$('#show_advanced_box').slideToggle();\n";
 	echo "		$('#show_advanced').slideToggle();\n";
 	echo "	}\n";
+
+	if (permission_exists('recording_play') || permission_exists('recording_download')) {
+		echo "	function set_playable(id, greet_selected) {\n";
+		echo "		file_ext = greet_selected.split('.').pop();\n";
+		echo "		var recording_type = '';\n";
+		echo "		switch (file_ext) {\n";
+		echo "			case 'wav': recording_type = 'audio/wav'; break;\n";
+		echo "			case 'mp3': recording_type = 'audio/mpeg'; break;\n";
+		echo "			case 'ogg': recording_type = 'audio/ogg'; break;\n";
+		echo "		}\n";
+		echo "		if (recording_type != '') {\n";
+		echo "			$('#recording_audio_' + id).attr('src', '../recordings/recordings.php?action=download&type=rec&filename=' + greet_selected);\n";
+		echo "			$('#recording_audio_' + id).attr('type', recording_type);\n";
+		echo "			$('#recording_button_' + id).show();\n";
+		echo "		}\n";
+		echo "		else {\n";
+		echo "			$('#recording_button_' + id).hide();\n";
+		echo "			$('#recording_audio_' + id).attr('src','').attr('type','');\n";
+		echo "		}\n";
+		echo "	}\n";
+	}
 	echo "</script>";
 
 	echo "<form name='frm' id='frm' method='post'>\n";
@@ -759,9 +780,12 @@
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
+	echo "<td class='vncellreq' rowspan='2' valign='top' align='left' nowrap>\n";
 	echo "	".$text['label-greet_long']."\n";
 	echo "</td>\n";
+	echo "<td class='vtable playback_progress_bar_background' id='recording_progress_bar_greet_long' style='display: none; border-bottom: none; padding-top: 0 !important; padding-bottom: 0 !important;' align='left'><span class='playback_progress_bar' id='recording_progress_greet_long'></span></td>\n";
+	echo "</tr>\n";
+	echo "<tr>\n";
 	echo "<td class='vtable' align='left'>\n";
 	if (if_group("superadmin")) {
 		$destination_id = "ivr_menu_greet_long";
@@ -780,7 +804,7 @@
 			$script .= "	tb.setAttribute('onkeyup', \"".$on_change."\");\n";
 		}
 		$script .= "	tb.value=obj.options[obj.selectedIndex].value;\n";
-		$script .= "	document.getElementById('btn_select_to_input_".$destination_id."').style.visibility = 'hidden';\n";
+		$script .= "	document.getElementById('btn_select_to_input_".$destination_id."').style.display = 'none';\n";
 		$script .= "	tbb=document.createElement('INPUT');\n";
 		$script .= "	tbb.setAttribute('class', 'btn');\n";
 		$script .= "	tbb.setAttribute('style', 'margin-left: 4px;');\n";
@@ -798,7 +822,7 @@
 		$script .= "	obj[2].parentNode.insertBefore(obj[0],obj[2]);\n";
 		$script .= "	obj[0].parentNode.removeChild(obj[1]);\n";
 		$script .= "	obj[0].parentNode.removeChild(obj[2]);\n";
-		$script .= "	document.getElementById('btn_select_to_input_".$destination_id."').style.visibility = 'visible';\n";
+		$script .= "	document.getElementById('btn_select_to_input_".$destination_id."').style.display = 'inline';\n";
 		if (!empty($on_change)) {
 			$script .= "	".$on_change.";\n";
 		}
@@ -807,7 +831,7 @@
 		$script .= "\n";
 		echo $script;
 	}
-	echo "<select name='ivr_menu_greet_long' id='ivr_menu_greet_long' class='formfld'>\n";
+	echo "<select name='ivr_menu_greet_long' id='ivr_menu_greet_long' class='formfld' ".(permission_exists('recording_play') || permission_exists('recording_download') ? "onchange=\"recording_reset('greet_long'); set_playable('greet_long', this.value);\"" : null).">\n";
 	echo "	<option></option>\n";
 	//misc optgroup
 		if (if_group("superadmin")) {
@@ -825,10 +849,12 @@
 				$recording_filename = $row["recording_filename"];
 				if (!empty($ivr_menu_greet_long) && $ivr_menu_greet_long == $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$recording_filename) {
 					$tmp_selected = true;
+					$playable_recording_greet_long = $recording_filename;
 					echo "	<option value='".escape($_SESSION['switch']['recordings']['dir'])."/".escape($_SESSION['domain_name'])."/".escape($recording_filename)."' selected='selected'>".escape($recording_name)."</option>\n";
 				}
 				else if (!empty($ivr_menu_greet_long) && $ivr_menu_greet_long == $recording_filename) {
 					$tmp_selected = true;
+					$playable_recording_greet_long = $recording_filename;
 					echo "	<option value='".escape($recording_filename)."' selected='selected'>".escape($recording_name)."</option>\n";
 				}
 				else {
@@ -894,17 +920,29 @@
 		echo "<input type='button' id='btn_select_to_input_".escape($destination_id)."' class='btn' name='' alt='back' onclick='changeToInput".escape($destination_id)."(document.getElementById(\"".escape($destination_id)."\"));this.style.visibility = \"hidden\";' value='&#9665;'>";
 		unset($destination_id);
 	}
-	echo "&nbsp;<input type='submit' name='submit' class='btn'  onclick='return do_play(true,false,\"greet_long\");' value='"."Play"."'>&nbsp;\n";
-	echo "<span  style='display: none' align='right'  id='listen_greet_long'><audio controls=controls id=audio_greet_long autoplay=autoplay></span>\n";
+	if ((permission_exists('recording_play') || permission_exists('recording_download')) && !empty($playable_recording_greet_long)) {
+		$recording_file_ext = pathinfo($playable_recording_greet_long, PATHINFO_EXTENSION);
+		switch ($recording_file_ext) {
+			case 'wav' : $recording_type = 'audio/wav'; break;
+			case 'mp3' : $recording_type = 'audio/mpeg'; break;
+			case 'ogg' : $recording_type = 'audio/ogg'; break;
+		}
+	}
+	echo "<audio id='recording_audio_greet_long' style='display: none;' preload='none' ontimeupdate=\"update_progress('greet_long')\" onended=\"recording_reset('greet_long');\" src='".(!empty($playable_recording_greet_long) ? "../recordings/recordings.php?action=download&type=rec&filename=".$playable_recording_greet_long : null)."' type='".($recording_type ?? '')."'></audio>";
+	echo button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'icon'=>$_SESSION['theme']['button_icon_play'],'id'=>'recording_button_greet_long','style'=>'display: '.(!empty($recording_type) ? 'inline' : 'none'),'onclick'=>"recording_play('greet_long')"]);
+	unset($playable_recording_greet_long, $recording_type);
 	echo "	<br />\n";
 	echo $text['description-greet_long']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+	echo "<td class='vncell' rowspan='2' valign='top' align='left' nowrap>\n";
 	echo "	".$text['label-greet_short']."\n";
 	echo "</td>\n";
+	echo "<td class='vtable playback_progress_bar_background' id='recording_progress_bar_greet_short' style='display: none; border-bottom: none; padding-top: 0 !important; padding-bottom: 0 !important;' align='left'><span class='playback_progress_bar' id='recording_progress_greet_short'></span></td>\n";
+	echo "</tr>\n";
+	echo "<tr>\n";
 	echo "<td class='vtable' align='left'>\n";
 	if (if_group("superadmin")) {
 		$destination_id = "ivr_menu_greet_short";
@@ -923,7 +961,7 @@
 			$script .= "	tb.setAttribute('onkeyup', \"".$on_change."\");\n";
 		}
 		$script .= "	tb.value=obj.options[obj.selectedIndex].value;\n";
-		$script .= "	document.getElementById('btn_select_to_input_".$destination_id."').style.visibility = 'hidden';\n";
+		$script .= "	document.getElementById('btn_select_to_input_".$destination_id."').style.display = 'none';\n";
 		$script .= "	tbb=document.createElement('INPUT');\n";
 		$script .= "	tbb.setAttribute('class', 'btn');\n";
 		$script .= "	tbb.setAttribute('style', 'margin-left: 4px;');\n";
@@ -941,7 +979,7 @@
 		$script .= "	obj[2].parentNode.insertBefore(obj[0],obj[2]);\n";
 		$script .= "	obj[0].parentNode.removeChild(obj[1]);\n";
 		$script .= "	obj[0].parentNode.removeChild(obj[2]);\n";
-		$script .= "	document.getElementById('btn_select_to_input_".$destination_id."').style.visibility = 'visible';\n";
+		$script .= "	document.getElementById('btn_select_to_input_".$destination_id."').style.display = 'inline';\n";
 		if (!empty($on_change)) {
 			$script .= "	".$on_change.";\n";
 		}
@@ -950,7 +988,7 @@
 		$script .= "\n";
 		echo $script;
 	}
-	echo "<select name='ivr_menu_greet_short' id='ivr_menu_greet_short' class='formfld'>\n";
+	echo "<select name='ivr_menu_greet_short' id='ivr_menu_greet_short' class='formfld' ".(permission_exists('recording_play') || permission_exists('recording_download') ? "onchange=\"recording_reset('greet_short'); set_playable('greet_short', this.value);\"" : null).">\n";
 	echo "	<option></option>\n";
 	//misc
 		if (if_group("superadmin")) {
@@ -968,10 +1006,12 @@
 				$recording_filename = $row["recording_filename"];
 				if (!empty($ivr_menu_greet_short) && $ivr_menu_greet_short == $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".escape($recording_filename)) {
 					$tmp_selected = true;
+					$playable_recording_greet_short = $recording_filename;
 					echo "	<option value='".$_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".escape($recording_filename)."' selected='selected'>".escape($recording_name)."</option>\n";
 				}
 				else if (!empty($ivr_menu_greet_short) && $ivr_menu_greet_short == $recording_filename) {
 					$tmp_selected = true;
+					$playable_recording_greet_short = $recording_filename;
 					echo "	<option value='".escape($recording_filename)."' selected='selected'>".escape($recording_name)."</option>\n";
 				}
 				else {
@@ -1037,8 +1077,17 @@
 		echo "<input type='button' id='btn_select_to_input_".escape($destination_id)."' class='btn' name='' alt='back' onclick='changeToInput".escape($destination_id)."(document.getElementById(\"".escape($destination_id)."\"));this.style.visibility = \"hidden\";' value='&#9665;'>";
 		unset($destination_id);
 	}
-	echo "&nbsp;<input type='submit' name='submit' class='btn'  onclick='return do_play(true,false,\"greet_short\");' value='"."Play"."'>&nbsp;\n";
-	echo "<span  style='display: none' align='right'  id='listen_greet_short'><audio controls=controls id=audio_greet_short autoplay=autoplay></span>\n";
+	if ((permission_exists('recording_play') || permission_exists('recording_download')) && !empty($playable_recording_greet_short)) {
+		$recording_file_ext = pathinfo($playable_recording_greet_short, PATHINFO_EXTENSION);
+		switch ($recording_file_ext) {
+			case 'wav' : $recording_type = 'audio/wav'; break;
+			case 'mp3' : $recording_type = 'audio/mpeg'; break;
+			case 'ogg' : $recording_type = 'audio/ogg'; break;
+		}
+	}
+	echo "<audio id='recording_audio_greet_short' style='display: none;' preload='none' ontimeupdate=\"update_progress('greet_short')\" onended=\"recording_reset('greet_short');\" src='".(!empty($playable_recording_greet_short) ? "../recordings/recordings.php?action=download&type=rec&filename=".$playable_recording_greet_short : null)."' type='".($recording_type ?? '')."'></audio>";
+	echo button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'icon'=>$_SESSION['theme']['button_icon_play'],'id'=>'recording_button_greet_short','style'=>'display: '.(!empty($recording_type) ? 'inline' : 'none'),'onclick'=>"recording_play('greet_short')"]);
+	unset($playable_recording_greet_short, $recording_type);
 	echo "<br />\n";
 	echo $text['description-greet_short']."\n";
 	echo "</td>\n";
@@ -1653,29 +1702,6 @@
 
 	echo "</form>";
 
-//include the footer
-	?>
-
-<script>
-function do_play(s,d,id) {
-	if (s) {
-		$('#preview').val('true');
-		$('#listen_' + id).show();
-		src = "/app/recordings/recordings.php" + "?action=download&type=rec&filename=" + $('#ivr_menu_'+id).val() 
-		if (d) {
-			$('#listen_' + id).hide();
-			window.location.href = src;
-		} else {
-			$('#audio_'+id).attr('src', src);
-		}
-		return false;
-	} else {
-		$('#preview').val('false');
-		return true;
-	}
-}
-</script>
-<?php
 //include the footer
 	require_once "resources/footer.php";
 ?>
