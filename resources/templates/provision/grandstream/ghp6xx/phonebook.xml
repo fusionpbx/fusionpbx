@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<AddressBook>
+
+	<pbgroup>
+		<id>1</id>
+		<name>Users</name>
+		<ringtones>default ringtone</ringtones>
+	</pbgroup>
+	<pbgroup>
+		<id>2</id>
+		<name>Groups</name>
+		<ringtones>default ringtone</ringtones>
+	</pbgroup>
+	<pbgroup>
+		<id>3</id>
+		<name>Extensions</name>
+		<ringtones>system</ringtones>
+	</pbgroup>
+
+	{$start_id=0}
+	{foreach $contacts as $row}
+		{if $row.category == "users"}
+		<Contact>
+			<id>{$start_id++}</id>
+			{if $row.contact_name_given != ""}
+			{if $row.contact_organization != ""}
+				<FirstName>{$row.contact_name_given} {$row.contact_name_family}</FirstName>
+				<FirstName>{$row.contact_name_given} {$row.contact_name_family}</FirstName>
+				<Company>{$row.contact_organization}</Company>
+			{else}
+				<FirstName>{$row.contact_name_given}</FirstName>
+				<LastName>{$row.contact_name_family}</LastName>
+			{/if}
+			{else}
+				<FirstName>{$row.effective_caller_id_name}</FirstName>
+			{/if}
+			<JobTitle></JobTitle>
+			<Frequent>0</Frequent>
+			{foreach $row.numbers as $number}
+			{if $number.phone_number != ""}
+				{if $number.phone_label == "work"}
+				<Phone type="Work">
+					<phonenumber>{$number.phone_number}</phonenumber>
+					<accountindex>0</accountindex>
+				</Phone>
+				{/if}
+				{if $number.phone_label == "home"}
+				<Phone type="Home">
+					<phonenumber>{$number.phone_number}</phonenumber>
+					<accountindex>0</accountindex>
+				</Phone>
+				{/if}
+				{if $number.phone_label == "mobile"}
+				<Phone type="Cell">
+					<phonenumber>{$number.phone_number}</phonenumber>
+					<accountindex>0</accountindex>
+				</Phone>
+				{/if}
+			{/if}
+			{/foreach}
+			<Group>1</Group>
+			<Primary>0</Primary>
+			<Department></Department>
+			<Job></Job>
+			<Company></Company>
+		</Contact>
+		{elseif $row.category == "groups"}
+		<Contact>
+			<id>{$start_id++}</id>
+			{if $row.contact_name_given != ""}
+			{if $row.contact_organization != ""}
+				<FirstName>{$row.contact_name_given} {$row.contact_name_family}</FirstName>
+				<FirstName>{$row.contact_name_given} {$row.contact_name_family}</FirstName>
+				<Company>{$row.contact_organization}</Company>
+			{else}
+				<FirstName>{$row.contact_name_given}</FirstName>
+				<LastName>{$row.contact_name_family}</LastName>
+			{/if}
+			{else}
+				<FirstName>{$row.effective_caller_id_name}</FirstName>
+			{/if}
+			<JobTitle></JobTitle>
+
+			<Frequent>0</Frequent>
+			{foreach $row.numbers as $number}
+			{if $number.phone_number != ""}
+				{if $number.phone_label == "work"}
+				<Phone type="Work">
+					<phonenumber>{$number.phone_number}</phonenumber>
+					<accountindex>0</accountindex>
+				</Phone>
+				{/if}
+				{if $number.phone_label == "home"}
+				<Phone type="Home">
+					<phonenumber>{$number.phone_number}</phonenumber>
+					<accountindex>0</accountindex>
+				</Phone>
+				{/if}
+				{if $number.phone_label == "mobile"}
+				<Phone type="Cell">
+					<phonenumber>{$number.phone_number}</phonenumber>
+					<accountindex>0</accountindex>
+				</Phone>
+				{/if}
+			{/if}
+			{/foreach}
+			<Group>2</Group>
+			<Primary>0</Primary>
+			<Department></Department>
+			<Job></Job>
+			<Company></Company>
+		</Contact>
+		{elseif $row.category == "extensions"}
+		<Contact>
+			<id>{$start_id++}</id>
+			{if $row.contact_name_given != ""}
+			{if $row.contact_organization != ""}
+				<FirstName>{$row.contact_name_given} {$row.contact_name_family}</FirstName>
+				<FirstName>{$row.contact_name_given} {$row.contact_name_family}</FirstName>
+				<Company>{$row.contact_organization}</Company>
+			{else}
+				<FirstName>{$row.contact_name_given}</FirstName>
+				<LastName>{$row.contact_name_family}</LastName>
+			{/if}
+			{else}
+				<FirstName>{$row.effective_caller_id_name}</FirstName>
+			{/if}
+			<JobTitle></JobTitle>
+			<Frequent>0</Frequent>
+			{if $row.phone_number != ""}
+				<Phone type="Work">
+					<phonenumber>{$row.phone_number}</phonenumber>
+					<accountindex>0</accountindex>
+				</Phone>
+			{else}
+				<Phone type="Work">
+					<phonenumber>{$row.phone_extension}</phonenumber>
+					<accountindex>0</accountindex>
+				</Phone>
+			{/if}
+			<Group>3</Group>
+			<Primary>0</Primary>
+			<Department></Department>
+			<Job></Job>
+			<Company></Company>
+		</Contact>
+		{/if}
+	{/foreach}
+
+</AddressBook>
