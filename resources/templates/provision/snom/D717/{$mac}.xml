@@ -30,6 +30,8 @@
     <custom_bg_image_url perm="">{if isset($snom_wallpaper_url_d717)}{$snom_wallpaper_url_d717}{else}{$snom_wallpaper_url}{/if}</custom_bg_image_url>
     <!-- Expansion Mod (480x1280px PNG <2MB) -->
     <expansion_module_background_image perm="">{if isset($snom_exp_wallpaper_url_d717)}{$snom_exp_wallpaper_url_d717}{else}{$snom_exp_wallpaper_url}{/if}</expansion_module_background_image>
+    <!-- Snom Intercom Policy -->
+    <answer_after_policy perm="PERMISSIONFLAGS">{if isset($snom_intercom_policy)}{$snom_intercom_policy}{else}off{/if}</answer_after_policy>
     <!-- SIP Settings -->
     <mwi_notification perm="">silent</mwi_notification>
     <mwi_dialtone perm="">stutter</mwi_dialtone>
