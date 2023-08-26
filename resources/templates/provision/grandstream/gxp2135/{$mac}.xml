@@ -8602,14 +8602,15 @@
     <!-- # P1364 = 0 -->
 
     <!-- Set $fixed_keys variable below and the rest should work -->
-    <!-- detect with $template == grandstream/gxp21xx  2130=3fixed 2140=4fixed 2160=6fixed 2170=12fixed 2135=8fixed -->
+    <!-- detect with $template == grandstream/gxp21xx  2130=3fixed 2140=4fixed 2160=6fixed 2170=12fixed 2135=4fixed -->
+    <!-- $fixed_keys should be number of SIP accounts, not buttons--2135 has 8 buttons but 4 SIP accounts -->
 
 {$fixed_keys=4}
 {if $template == "grandstream/gxp2130"}{$fixed_keys=3}{/if}
 {if $template == "grandstream/gxp2140"}{$fixed_keys=4}{/if}
 {if $template == "grandstream/gxp2160"}{$fixed_keys=6}{/if}
 {if $template == "grandstream/gxp2170"}{$fixed_keys=12}{/if}
-{if $template == "grandstream/gxp2135"}{$fixed_keys=8}{/if}
+{if $template == "grandstream/gxp2135"}{$fixed_keys=4}{/if}
 <!-- Detected {$template} with {$fixed_keys} fixed keys -->
 {$start_id=1363}
 {assign var=key_types value=["none"=>-1,"line"=>0,"shared line"=>1,"speed dial"=>10, "blf"=>11, "presence watcher"=>12, "eventlist blf"=>13,"speed dial active"=>14,"dial dtmf"=>15,"voicemail"=>16,"call return"=>17,"transfer"=>18,"call park"=>19,"intercom"=>20,"ldap search"=>21,"multicast paging"=>23,"record"=>24,"call log"=>25,"monitored call park"=>26,"menu"=>27]}
