@@ -894,6 +894,8 @@
 		echo "<input type='button' id='btn_select_to_input_".escape($destination_id)."' class='btn' name='' alt='back' onclick='changeToInput".escape($destination_id)."(document.getElementById(\"".escape($destination_id)."\"));this.style.visibility = \"hidden\";' value='&#9665;'>";
 		unset($destination_id);
 	}
+	echo "&nbsp;<input type='submit' name='submit' class='btn'  onclick='return do_play(true,false,\"greet_long\");' value='"."Play"."'>&nbsp;\n";
+	echo "<span  style='display: none' align='right'  id='listen_greet_long'><audio controls=controls id=audio_greet_long autoplay=autoplay></span>\n";
 	echo "	<br />\n";
 	echo $text['description-greet_long']."\n";
 	echo "</td>\n";
@@ -1035,6 +1037,8 @@
 		echo "<input type='button' id='btn_select_to_input_".escape($destination_id)."' class='btn' name='' alt='back' onclick='changeToInput".escape($destination_id)."(document.getElementById(\"".escape($destination_id)."\"));this.style.visibility = \"hidden\";' value='&#9665;'>";
 		unset($destination_id);
 	}
+	echo "&nbsp;<input type='submit' name='submit' class='btn'  onclick='return do_play(true,false,\"greet_short\");' value='"."Play"."'>&nbsp;\n";
+	echo "<span  style='display: none' align='right'  id='listen_greet_short'><audio controls=controls id=audio_greet_short autoplay=autoplay></span>\n";
 	echo "<br />\n";
 	echo $text['description-greet_short']."\n";
 	echo "</td>\n";
@@ -1650,6 +1654,28 @@
 	echo "</form>";
 
 //include the footer
-	require_once "resources/footer.php";
+	?>
 
+<script>
+function do_play(s,d,id) {
+	if (s) {
+		$('#preview').val('true');
+		$('#listen_' + id).show();
+		src = "/app/recordings/recordings.php" + "?action=download&type=rec&filename=" + $('#ivr_menu_'+id).val() 
+		if (d) {
+			$('#listen_' + id).hide();
+			window.location.href = src;
+		} else {
+			$('#audio_'+id).attr('src', src);
+		}
+		return false;
+	} else {
+		$('#preview').val('false');
+		return true;
+	}
+}
+</script>
+<?php
+//include the footer
+	require_once "resources/footer.php";
 ?>
