@@ -1842,6 +1842,7 @@ else { //default: white
 		box-shadow: 0 0 3px 0px rgba(255,0,0,0.9);
 		}
 
+	td.vtable.playback_progress_bar_background,
 	table.list tr.list-row td.playback_progress_bar_background {
 		padding: 0;
 		border-bottom: none;
