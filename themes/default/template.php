@@ -743,7 +743,7 @@
 				$('[id*=recording_button]').not('[id*=recording_button_'+recording_id+']').html("<span class='{/literal}{$settings.theme.button_icon_play}{literal} fa-fw'></span>");
 				$('[id*=recording_progress_bar]').not('[id*=recording_progress_bar_'+recording_id+']').css('display', 'none');
 
-				$('audio').each(function(){$('#menu_side_container').width()
+				$('audio').each(function(){
 					if ($(this).get(0) != recording_audio) {
 						$(this).get(0).pause(); //stop playing
 						$(this).get(0).currentTime = 0; //reset time
