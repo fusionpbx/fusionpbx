@@ -203,10 +203,23 @@
 					end
 				end);
 				if (xml == nil) then
+					--sanitize the destination if not numeric	
+					if (type(destination_number) == "string") then
+						destination_number = destination_number:gsub("^%+", "");
+						destination_number = tonumber(destination_number);
+						if (type(tonumber(destination_number)) ~= "number") then
+							destination_number = 'not numeric';
+						end
+					end
+					if (type(destination_number) == "numeric") then
+						destination_number = tostring(destination_number);
+					end
+					
+					--build 404 not found XML
 					xml:append([[		<extension name="not-found" continue="false" uuid="9913df49-0757-414b-8cf9-bcae2fd81ae7">]]);
 					xml:append([[			<condition field="" expression="">]]);
 					xml:append([[				<action application="set" data="call_direction=inbound" inline="true"/>]]);
-					xml:append([[				<action application="log" data="WARNING [inbound routes] 404 not found ${sip_network_ip}" inline="true"/>]]);
+					xml:append([[				<action application="log" data="WARNING [inbound routes] 404 not found ${sip_network_ip} ]]..destination_number..[[" inline="true"/>]]);
 					xml:append([[			</condition>]]);
 					xml:append([[		</extension>]]);
 				end
