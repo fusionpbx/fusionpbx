@@ -376,9 +376,6 @@ function save_var_xml() {
 				if ($row['var_category'] != 'Provision') {
 					if ($prev_var_category != $row['var_category']) {
 						$xml .= "\n<!-- ".$row['var_category']." -->\n";
-						if (!empty($row["var_description"])) {
-							$xml .= "<!-- ".base64_decode($row['var_description'])." -->\n";
-						}
 					}
 					if (empty($row['var_command'])) { $row['var_command'] = 'set'; }
 					if ($row['var_category'] == 'Exec-Set') { $row['var_command'] = 'exec-set'; }
