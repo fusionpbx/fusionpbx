@@ -89,48 +89,62 @@
 //check alternate device address source
 	if (empty($device_address)) {
 		//set the http user agent
-			//$_SERVER['HTTP_USER_AGENT'] = "Yealink SIP-T38G  38.70.0.125 00:15:65:00:00:00";
-			//$_SERVER['HTTP_USER_AGENT'] = "Yealink SIP-T56A  58.80.0.25 001565f429a4"; 
-		//Yealink: 17 digit mac appended to the user agent, so check for a space exactly 17 digits before the end.
-			if (strtolower(substr($_SERVER['HTTP_USER_AGENT'],0,7)) == "yealink" || strtolower(substr($_SERVER['HTTP_USER_AGENT'],0,5)) == "vp530") {
-				if (strstr(substr($_SERVER['HTTP_USER_AGENT'],-4), ':')) { //remove colons if they exist
-					$device_address = substr($_SERVER['HTTP_USER_AGENT'],-17);
-					$device_address = preg_replace("#[^a-fA-F0-9./]#", "", $device_address);
-				} else { //take mac as is - fixes T5X series
-					$device_address = substr($_SERVER['HTTP_USER_AGENT'],-12);
-				}
-			}
-		//HTek: $_SERVER['HTTP_USER_AGENT'] = "Htek UC926 2.0.4.2 00:1f:c1:00:00:00"
-			if (substr($_SERVER['HTTP_USER_AGENT'],0,4) == "Htek") {
-				$device_address = substr($_SERVER['HTTP_USER_AGENT'],-17);
-				$device_address = preg_replace("#[^a-fA-F0-9./]#", "", $device_address);
-			}
-		//Panasonic: $_SERVER['HTTP_USER_AGENT'] = "Panasonic_KX-UT670/01.022 (0080f000000)"
-			if (substr($_SERVER['HTTP_USER_AGENT'],0,9) == "Panasonic") {
-				$device_address = substr($_SERVER['HTTP_USER_AGENT'],-14);
-				$device_address = preg_replace("#[^a-fA-F0-9./]#", "", $device_address);
-			}
-		//Grandstream: $_SERVER['HTTP_USER_AGENT'] = "Grandstream Model HW GXP2135 SW 1.0.7.97 DevId 000b828aa872"
-			if (substr($_SERVER['HTTP_USER_AGENT'],0,11) == "Grandstream") {
-				$device_address = substr($_SERVER['HTTP_USER_AGENT'],-12);
-				$device_address = preg_replace("#[^a-fA-F0-9./]#", "", $device_address);
-			}
-		//Audiocodes: $_SERVER['HTTP_USER_AGENT'] = "AUDC-IPPhone/2.2.8.61 (440HDG-Rev0; 00908F602AAC)"
-			if (substr($_SERVER['HTTP_USER_AGENT'],0,12) == "AUDC-IPPhone") {
-				$device_address = substr($_SERVER['HTTP_USER_AGENT'],-13);
-				$device_address = preg_replace("#[^a-fA-F0-9./]#", "", $device_address);
-			}
+		//$_SERVER['HTTP_USER_AGENT'] = "Yealink SIP-T38G  38.70.0.125 00:15:65:00:00:00";
+		//$_SERVER['HTTP_USER_AGENT'] = "Yealink SIP-T56A  58.80.0.25 001565f429a4";
+
 		//Aastra: $_SERVER['HTTP_USER_AGENT'] = "Aastra6731i MAC:00-08-5D-29-4C-6B V:3.3.1.4365-SIP"
-			if (substr($_SERVER['HTTP_USER_AGENT'],0,6) == "Aastra") {
-				preg_match("/MAC:([A-F0-9-]{17})/", $_SERVER['HTTP_USER_AGENT'], $matches);
-				$device_address = $matches[1];
-				$device_address = preg_replace("#[^a-fA-F0-9./]#", "", $device_address);
-			}
+		if (substr($_SERVER['HTTP_USER_AGENT'],0,6) == "Aastra") {
+			preg_match("/MAC:([A-F0-9-]{17})/", $_SERVER['HTTP_USER_AGENT'], $matches);
+			$device_address = $matches[1];
+			$device_address = preg_replace("#[^a-fA-F0-9./]#", "", $device_address);
+		}
+
+		//Audiocodes: $_SERVER['HTTP_USER_AGENT'] = "AUDC-IPPhone/2.2.8.61 (440HDG-Rev0; 00908F602AAC)"
+		if (substr($_SERVER['HTTP_USER_AGENT'],0,12) == "AUDC-IPPhone") {
+			$device_address = substr($_SERVER['HTTP_USER_AGENT'],-13);
+			$device_address = preg_replace("#[^a-fA-F0-9./]#", "", $device_address);
+		}
+
+		//Fanvil: $_SERVER['HTTP_USER_AGENT'] = "Fanvil X5U-V2 2.12.1 0c3800000000)"
+		if (substr($_SERVER['HTTP_USER_AGENT'],0,6) == "Fanvil") {
+			$device_address = substr($_SERVER['HTTP_USER_AGENT'],-13);
+			$device_address = preg_replace("#[^a-fA-F0-9./]#", "", $device_address);
+			//syslog(LOG_WARNING, 'Fanvil Device Address is: '.$device_address);
+		}
+
 		//Flyingvoice: $_SERVER['HTTP_USER_AGENT'] = "Flyingvoice FIP13G V0.6.24 00:21:F2:22:AE:F1"
-			if (strtolower(substr($_SERVER['HTTP_USER_AGENT'],0,11)) == "flyingvoice") {
+		if (strtolower(substr($_SERVER['HTTP_USER_AGENT'],0,11)) == "flyingvoice") {
+			$device_address = substr($_SERVER['HTTP_USER_AGENT'],-17);
+			$device_address = preg_replace("#[^a-fA-F0-9./]#", "", $device_address);
+		}
+
+		//Grandstream: $_SERVER['HTTP_USER_AGENT'] = "Grandstream Model HW GXP2135 SW 1.0.7.97 DevId 000b828aa872"
+		if (substr($_SERVER['HTTP_USER_AGENT'],0,11) == "Grandstream") {
+			$device_address = substr($_SERVER['HTTP_USER_AGENT'],-12);
+			$device_address = preg_replace("#[^a-fA-F0-9./]#", "", $device_address);
+		}
+
+		//HTek: $_SERVER['HTTP_USER_AGENT'] = "Htek UC926 2.0.4.2 00:1f:c1:00:00:00"
+		if (substr($_SERVER['HTTP_USER_AGENT'],0,4) == "Htek") {
+			$device_address = substr($_SERVER['HTTP_USER_AGENT'],-17);
+			$device_address = preg_replace("#[^a-fA-F0-9./]#", "", $device_address);
+		}
+
+		//Panasonic: $_SERVER['HTTP_USER_AGENT'] = "Panasonic_KX-UT670/01.022 (0080f000000)"
+		if (substr($_SERVER['HTTP_USER_AGENT'],0,9) == "Panasonic") {
+			$device_address = substr($_SERVER['HTTP_USER_AGENT'],-14);
+			$device_address = preg_replace("#[^a-fA-F0-9./]#", "", $device_address);
+		}
+
+		//Yealink: 17 digit mac appended to the user agent, so check for a space exactly 17 digits before the end.
+		if (strtolower(substr($_SERVER['HTTP_USER_AGENT'],0,7)) == "yealink" || strtolower(substr($_SERVER['HTTP_USER_AGENT'],0,5)) == "vp530") {
+			if (strstr(substr($_SERVER['HTTP_USER_AGENT'],-4), ':')) { //remove colons if they exist
 				$device_address = substr($_SERVER['HTTP_USER_AGENT'],-17);
 				$device_address = preg_replace("#[^a-fA-F0-9./]#", "", $device_address);
+			} else { //take mac as is - fixes T5X series
+				$device_address = substr($_SERVER['HTTP_USER_AGENT'],-12);
 			}
+		}
 	}
 
 //prepare the device address
