@@ -80,9 +80,10 @@ if (!class_exists('switch_settings')) {
 
 			//set the bin directory
 				if ($vars['base_dir'] == "/usr/local/freeswitch") {
-					$bin = "/usr/local/freeswitch/bin"; 
-				} else {
-					$bin = "";
+					$bin = '/usr/local/freeswitch/bin'; 
+				}
+				else {
+					$bin = '';
 				}
 
 			//create the default settings array
@@ -241,6 +242,7 @@ if (!class_exists('switch_settings')) {
 							$array['default_settings'][$i]['default_setting_value'] = $row['default_setting_value'];
 							$array['default_settings'][$i]['default_setting_enabled'] = $row['default_setting_enabled'];
 							$array['default_settings'][$i]['default_setting_description'] = $row['default_setting_description'];
+
 						//increment the row id
 							$i++;
 					}
@@ -248,11 +250,13 @@ if (!class_exists('switch_settings')) {
 						//grant temporary permissions
 							$p = new permissions;
 							$p->add('default_setting_add', 'temp');
+
 						//execute insert
 							$database = new database;
 							$database->app_name = 'switch_settings';
 							$database->app_uuid = '84e91084-a227-43cd-ae99-a0f8ed61eb8b';
 							$database->save($array);
+
 						//revoke temporary permissions
 							$p->delete('default_setting_add', 'temp');
 					}
@@ -263,7 +267,7 @@ if (!class_exists('switch_settings')) {
 				if (!empty($array) && is_array($array)) {
 					foreach ($array as $row) {
 						if (isset($row['default_setting_enabled']) && $row['default_setting_enabled'] == "true" && isset($row['default_setting_subcategory'])) {
-							$_SESSION['switch'][$row['default_setting_subcategory']] = $row['default_setting_value'] ?? '';
+							$_SESSION['switch'][$row['default_setting_subcategory']][$row['default_setting_name']] = $row['default_setting_value'] ?? '';
 						}
 					}
 				}
