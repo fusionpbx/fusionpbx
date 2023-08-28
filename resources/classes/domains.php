@@ -513,27 +513,30 @@ if (!class_exists('domains')) {
 							unset($_SESSION[$category][$subcategory]);
 						}
 					}
+
 					//set the enabled settings as a session
 					foreach ($result as $row) {
-						$name = $row['domain_setting_name'];
-						$category = $row['domain_setting_category'];
-						$subcategory = $row['domain_setting_subcategory'];
-						if (empty($subcategory)) {
-							//$$category[$name] = $row['domain_setting_value'];
-							if ($name == "array") {
-								$_SESSION[$category][] = $row['domain_setting_value'];
+						if ($row['domain_setting_enabled'] == 'true') {
+							$name = $row['domain_setting_name'];
+							$category = $row['domain_setting_category'];
+							$subcategory = $row['domain_setting_subcategory'];
+							if (empty($subcategory)) {
+								//$$category[$name] = $row['domain_setting_value'];
+								if ($name == "array") {
+									$_SESSION[$category][] = $row['domain_setting_value'];
+								}
+								else {
+									$_SESSION[$category][$name] = $row['domain_setting_value'];
+								}
 							}
 							else {
-								$_SESSION[$category][$name] = $row['domain_setting_value'];
-							}
-						}
-						else {
-							//$$category[$subcategory][$name] = $row['domain_setting_value'];
-							if ($name == "array") {
-								$_SESSION[$category][$subcategory][] = $row['domain_setting_value'];
-							}
-							else {
-								$_SESSION[$category][$subcategory][$name] = $row['domain_setting_value'];
+								//$$category[$subcategory][$name] = $row['domain_setting_value'];
+								if ($name == "array") {
+									$_SESSION[$category][$subcategory][] = $row['domain_setting_value'];
+								}
+								else {
+									$_SESSION[$category][$subcategory][$name] = $row['domain_setting_value'];
+								}
 							}
 						}
 					}
@@ -676,50 +679,54 @@ if (!class_exists('domains')) {
 
 					//get the default settings - this needs to be done to reset the session values back to the defaults for each domain in the loop
 						foreach($database_default_settings as $row) {
-							$name = $row['default_setting_name'];
-							$category = $row['default_setting_category'];
-							$subcategory = $row['default_setting_subcategory'];
-							if (empty($subcategory)) {
-								if (!isset($_SESSION[$category])) {
-									$_SESSION[$category] = [];
-								}
-								if ($name == "array") {
-									$_SESSION[$category][] = $row['default_setting_value'];
-								}
-								else {
-									$_SESSION[$category][$name] = $row['default_setting_value'];
-								}
-							}
-							else {
-								if (!isset($_SESSION[$category])) {
-									$_SESSION[$category] = [];
-								}
-								if (!isset($_SESSION[$category][$subcategory])) {
-									$_SESSION[$category][$subcategory] = [];
-								}
-								if ($name == "array") {
-									$_SESSION[$category][$subcategory][] = $row['default_setting_value'];
+							if ($row['default_setting_enabled'] == 'true') {
+								$name = $row['default_setting_name'];
+								$category = $row['default_setting_category'];
+								$subcategory = $row['default_setting_subcategory'];
+								if (empty($subcategory)) {
+									if ($name == "array") {
+										$_SESSION[$category][] = $row['default_setting_value'];
+									}
+									else {
+										$_SESSION[$category][$name] = $row['default_setting_value'];
+									}
 								}
 								else {
-									$_SESSION[$category][$subcategory]['uuid'] = $row['default_setting_uuid'];
-									$_SESSION[$category][$subcategory][$name] = $row['default_setting_value'];
+									if ($name == "array") {
+										$_SESSION[$category][$subcategory][] = $row['default_setting_value'];
+									}
+									else {
+										$_SESSION[$category][$subcategory]['uuid'] = $row['default_setting_uuid'];
+										$_SESSION[$category][$subcategory][$name] = $row['default_setting_value'];
+									}
 								}
 							}
 						}
 
-					//get the domains settings for the current domain
-						foreach($domain_settings as $row) {
-							if ($row['domain_uuid'] == $domain_uuid) {
+
+					//set the enabled settings as a session
+						foreach ($domain_settings as $row) {
+							if ($row['domain_setting_enabled'] == 'true') {
 								$name = $row['domain_setting_name'];
 								$category = $row['domain_setting_category'];
 								$subcategory = $row['domain_setting_subcategory'];
 								if (empty($subcategory)) {
 									//$$category[$name] = $row['domain_setting_value'];
-									$_SESSION[$category][$name] = $row['domain_setting_value'];
+									if ($name == "array") {
+										$_SESSION[$category][] = $row['domain_setting_value'];
+									}
+									else {
+										$_SESSION[$category][$name] = $row['domain_setting_value'];
+									}
 								}
 								else {
 									//$$category[$subcategory][$name] = $row['domain_setting_value'];
-									$_SESSION[$category][$subcategory][$name] = $row['domain_setting_value'];
+									if ($name == "array") {
+										$_SESSION[$category][$subcategory][] = $row['domain_setting_value'];
+									}
+									else {
+										$_SESSION[$category][$subcategory][$name] = $row['domain_setting_value'];
+									}
 								}
 							}
 						}
