@@ -327,7 +327,7 @@
 	else {
 		$sql .= "and domain_uuid = :domain_uuid ";
 	}
-	$parameters['domain_uuid'] = $_SESION['domain_uuid'];
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$database = new database;
 	$gateways = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
