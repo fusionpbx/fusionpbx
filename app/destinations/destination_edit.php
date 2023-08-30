@@ -537,7 +537,7 @@
 								$action_array = explode(":", $destination_action, 2);
 								if (isset($action_array[0]) && !empty($action_array[0])) {
 									if ($destination->valid($action_array[0].':'.$action_array[1])) {
-										$dialplan["dialplan_xml"] .= "		<action application=\"".xml::sanitize($action_array[0])."\" data=\"".$action_array[1]."\"/>\n";
+										$dialplan["dialplan_xml"] .= "		<action application=\"".xml::sanitize($action_array[0])."\" data=\"".xml::sanitize($action_array[1])."\"/>\n";
 									}
 								}
 							}
