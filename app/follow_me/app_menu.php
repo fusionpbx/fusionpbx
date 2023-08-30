@@ -11,7 +11,7 @@
 	$apps[$x]['menu'][$y]['title']['es-mx'] = "Sígueme";
 	$apps[$x]['menu'][$y]['title']['fr-ca'] = "Suis-moi.";
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Follow Me";
-	$apps[$x]['menu'][$y]['title']['he-il'] = "עקבו אחרי me";
+	$apps[$x]['menu'][$y]['title']['he-il'] = "עקוב אחריי";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Seguimi";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Volg me";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Chodź za mną";

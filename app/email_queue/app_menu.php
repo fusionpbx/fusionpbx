@@ -11,7 +11,7 @@
 	$apps[$x]['menu'][$y]['title']['es-mx'] = "Correo electrónico";
 	$apps[$x]['menu'][$y]['title']['fr-ca'] = "Email Queue";
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Email Queue";
-	$apps[$x]['menu'][$y]['title']['he-il'] = "דואר אלקטרוני Queue";
+	$apps[$x]['menu'][$y]['title']['he-il'] = "תור דוא"ל";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Coda di posta elettronica";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Email Wachtrij";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Kolejka e-maili";

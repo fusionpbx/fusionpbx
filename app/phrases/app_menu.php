@@ -10,7 +10,7 @@
 	$apps[$x]['menu'][$y]['title']['es-mx'] = "Frases";
 	$apps[$x]['menu'][$y]['title']['fr-ca'] = "Phrases";
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Guides Vocaux";
-	$apps[$x]['menu'][$y]['title']['he-il'] = "Phrases";
+	$apps[$x]['menu'][$y]['title']['he-il'] = "ביטויים";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Frasi";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Uitspraken";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Zwroty";
