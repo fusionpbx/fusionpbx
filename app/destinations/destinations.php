@@ -111,9 +111,13 @@
 	$order_by = $_GET["order_by"] ?? '';
 	$order = $_GET["order"] ?? '';
 
-//get the HTTP variables
-	$search = $_GET["search"] ?? '';
-	$show = $_GET["show"] ?? '';
+//get http variables
+	if (isset($_GET["search"]) && !empty($_GET["search"])) {
+		$search =  strtolower($_GET["search"]);
+	}
+	if (isset($_GET["show"]) && !empty($_GET["show"])) {
+		$show =  strtolower($_GET["show"]);
+	}
 
 //set from session variables
 	$list_row_edit_button = !empty($_SESSION['theme']['list_row_edit_button']['boolean']) ? $_SESSION['theme']['list_row_edit_button']['boolean'] : 'false';
