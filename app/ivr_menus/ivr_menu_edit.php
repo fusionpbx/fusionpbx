@@ -521,7 +521,7 @@
 	$sql = "select * from v_ivr_menu_options ";
 	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= "and ivr_menu_uuid = :ivr_menu_uuid ";
-	$sql .= "order by ivr_menu_option_digits, ivr_menu_option_order asc ";
+	$sql .= "order by ivr_menu_option_order, ivr_menu_option_digits asc ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$parameters['ivr_menu_uuid'] = $ivr_menu_uuid;
 	$database = new database;
