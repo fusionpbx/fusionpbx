@@ -582,7 +582,7 @@
 				foreach ($dialplan_details as $i => $row) {
 					if ($row['dialplan_detail_tag'] == 'action' && $row['dialplan_detail_type'] == 'set' && strpos($row['dialplan_detail_data'], 'preset=') === 0) {
 						$preset_name = explode('=',$row['dialplan_detail_data'])[1];
-						if (in_array($preset_name, $valid_presets)) {
+						if (!empty($valid_presets) && in_array($preset_name, $valid_presets)) {
 							$dialplan_detail_group_preset[$row['dialplan_detail_group']] = $preset_name;
 						}
 						else {
