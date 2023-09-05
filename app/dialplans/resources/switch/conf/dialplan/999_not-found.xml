@@ -4,5 +4,6 @@
 		<action application="set" data="domain_name=" inline="true" enabled="false"/>
 		<action application="set" data="domain_uuid=" inline="true" enabled="false"/>
 		<action application="log" data="WARNING [inbound routes] 404 not found ${sip_network_ip} destination_number ${destination_number} sip_to_user ${sip_to_user} sip_req_user ${sip_req_user}"/>
+		<action application="respond" data="404 Not Found"/>
 	</condition>
 </extension>
