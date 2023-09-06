@@ -676,6 +676,23 @@ else {
 		//	copy($dir_fax_temp.'/'.$fax_instance_uuid.".pdf ", $dir_fax_sent.'/'.$fax_instance_uuid.".pdf");
 		//}
 
+		//get the provider_prefix from the domain_variables dialplan
+		$sql = "select dialplan_detail_data from v_dialplan_details ";
+		$sql .= "where dialplan_uuid in ( ";
+		$sql .= "	select dialplan_uuid from v_dialplans ";
+		$sql .= "	where dialplan_name = 'domain-variables' ";
+		$sql .= "	and domain_uuid = :domain_uuid ";
+		$sql .= ")	";
+		$sql .= "and dialplan_detail_data like 'provider_prefix%' ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$database = new database;
+		$row = $database->select($sql, $parameters, 'row');
+		$dialplan_detail_data = $row["dialplan_detail_data"];
+		unset($sql, $parameters, $row);
+		if (!empty($dialplan_detail_data)) {
+			$provider_prefix = explode('=', $dialplan_detail_data)[1];
+		}
+
 		//set the fax
 		$fax_queue_uuid = uuid();
 
@@ -691,6 +708,9 @@ else {
 		$common_variables .= "fax_ident='".$fax_caller_id_number."',";
 		$common_variables .= "fax_header='".$fax_caller_id_name."',";
 		$common_variables .= "fax_file='".$fax_file."',";
+		if (!empty($provider_prefix)) {
+			$common_variables .= "provider_prefix='".$provider_prefix."',";
+		}
 
 		foreach ($fax_numbers as $fax_number) {
 
@@ -700,6 +720,7 @@ else {
 			//prepare the fax command
 			$channel_variables["toll_allow"] = !empty($fax_toll_allow) ? $fax_toll_allow : null;
 			$route_array = outbound_route_to_bridge($_SESSION['domain_uuid'], $fax_prefix . $fax_number, $channel_variables);
+
 			if (!empty($route_array) && count($route_array) == 0) {
 				//send the internal call to the registered extension
 				$fax_uri = "user/".$fax_number."@".$_SESSION['domain_name'];
@@ -708,6 +729,11 @@ else {
 			else {
 				//prepare the fax uri
 				$fax_uri = $route_array[0];
+
+				//add the provider_prefix
+				if (!empty($provider_prefix)) {
+					$fax_uri = preg_replace('/\${provider_prefix}/', $provider_prefix, $fax_uri);
+				}
 
 				//remove switch ${variables} from the bridge statement
 				$fax_uri = preg_replace('/\${[^}]+}/', '', $fax_uri);
