@@ -360,13 +360,17 @@
 	echo "<th width='30%'>".$text['label-name']."</th>\n";
 	echo "<th width='70%'>".$text['label-value']."</th>\n";
 	echo "</tr>\n";
-	if (is_array($array["channel_data"])) foreach($array["channel_data"] as $key => $value) {
-		$value = urldecode($value);
-		echo "<tr >\n";
-		echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".escape($key)."&nbsp;</td>\n";
-		echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".escape(wordwrap($value,75,"\n", TRUE))."&nbsp;</td>\n";
-		echo "</tr>\n";
-		$c = $c ? 0 : 1;
+	if (is_array($array["channel_data"])) {
+		foreach($array["channel_data"] as $key => $value) {
+			if (!empty($value)) {
+				$value = urldecode($value);
+				echo "<tr >\n";
+				echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".escape($key)."&nbsp;</td>\n";
+				echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".escape(wordwrap($value,75,"\n", TRUE))."&nbsp;</td>\n";
+				echo "</tr>\n";
+				$c = $c ? 0 : 1;
+			}
+		}
 	}
 	echo "</table>";
 	echo "<br /><br />\n";
