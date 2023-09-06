@@ -684,6 +684,7 @@ else {
 		$sql .= "	and domain_uuid = :domain_uuid ";
 		$sql .= ")	";
 		$sql .= "and dialplan_detail_data like 'provider_prefix%' ";
+		$sql .= "and dialplan_detail_enabled = 'true' ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
