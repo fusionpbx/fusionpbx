@@ -215,7 +215,7 @@
 							echo "	</td>\n";
 						}
 						echo "	<td>".escape($sip_profile)."&nbsp;</td>\n";
-						echo "	<td>".escape($created)."&nbsp;</td>\n";
+						echo "	<td nowrap=\"nowrap\">".escape($created)."&nbsp;</td>\n";
 						if ($show == 'all') {
 							echo "	<td>".escape($domain_name)."&nbsp;</td>\n";
 						}
@@ -223,7 +223,7 @@
 						echo "	<td>".escape($cid_name)."&nbsp;</td>\n";
 						echo "	<td>".escape($cid_num)."&nbsp;</td>\n";
 						echo "	<td>".escape($dest)."&nbsp;</td>\n";
-						echo "	<td>".(!empty($application) ? escape($application).":".escape($application_data) : null)."&nbsp;</td>\n";
+						echo "	<td style=\"max-width:300px; word-wrap:break-word;\">".(!empty($application) ? escape($application).":".escape($application_data) : null)."&nbsp;</td>\n";
 						echo "	<td>".escape($read_codec).":".escape($read_rate)." / ".escape($write_codec).":".escape($write_rate)."&nbsp;</td>\n";
 						echo "	<td>".escape($secure)."&nbsp;</td>\n";
 						if (permission_exists('call_active_hangup')) {
