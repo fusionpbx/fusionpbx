@@ -747,7 +747,10 @@
 	if ($device_template == "grandstream/wave") {
 		$qr_code_enabled = true;
 	}
-	elseif ($device_template == "linphone/default") {
+	else if ($device_template == "linphone/default") {
+		$qr_code_enabled = true;
+	}
+	else if ($device_template == "sipnetic/default") {
 		$qr_code_enabled = true;
 	}
 	else {
@@ -801,6 +804,34 @@
 				$content .= "<Voicemail>*97</Voicemail>";
 				$content .= "</Account>";
 				$content .= "</AccountConfig>";
+			}
+
+			//build content for sipnetic
+			else if ($device_template == 'sipnetic/default') {
+				switch ($row['sip_transport']) {
+					case 'udp': $sip_transport = 0; break;
+					case 'tls': $sip_transport = 2; break;
+					default: $sip_transport = 1; //tcp
+				}
+				//check custom template provision location
+				if (is_file('/usr/share/fusionpbx/templates/provision/'.$device_template.'/template.csv')) {
+					$template = file_get_contents('/usr/share/fusionpbx/templates/provision/'.$device_template.'/template.csv');
+				}
+				else if (is_file('/var/www/fusionpbx/resources/templates/provision/'.$device_template.'/template.csv')) {
+					$template = file_get_contents('/var/www/fusionpbx/resources/templates/provision/'.$device_template.'/template.csv');
+				}
+				if (!empty($template)) {
+					$template = str_replace('{$server_address}', $outbound_proxy_primary, $template);
+					$template = str_replace('{$user_id}', $row['user_id'], $template);
+					$template = str_replace('{$password}', str_replace(';',';;',$row['password']), $template);
+					$template = str_replace('{$display_name}', ($row['display_name'] ?? $row['user_id']), $template);
+					$template = str_replace('{$auth_id}', ($row['auth_id'] ?? $row['user_id']), $template);
+					$template = str_replace('{$sip_transport}', $sip_transport, $template);
+					$template = str_replace('{$outbound_proxy}', $outbound_proxy_primary, $template);
+					$template = str_replace('{$sip_port}', $row['sip_port'], $template);
+					$content = $template;
+					unset($template);
+				}
 			}
 
 		}
