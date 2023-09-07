@@ -4189,4 +4189,10 @@
 		$vendors[$y]['name'] = "linphone";
 		$z=0;
 
+	//sipnetic details
+		$y++;
+		$vendors[$y]['uuid'] = "d3e71b2e-f272-4455-ae46-6ac94bdd75cc";
+		$vendors[$y]['name'] = "sipnetic";
+		$z=0;
+
 ?>
