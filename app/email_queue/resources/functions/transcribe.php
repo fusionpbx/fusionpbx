@@ -122,11 +122,12 @@ if (!function_exists('transcribe')) {
 				$transcribe_language = $_SESSION['voicemail']['transcribe_language']['text'];
 				$transcribe_alternate_language = $_SESSION['voicemail']['transcribe_alternate_language']['text'];
 
+
 				if (!isset($transcribe_language) && empty($transcribe_language)) {
-					$transcribe_language = 'en-Us';
+					$transcribe_language = 'en-US';
 				}
 				if (!isset($transcribe_alternate_language) && empty($transcribe_alternate_language)) {
-					$transcribe_alternate_language = 'es-Us';
+					$transcribe_alternate_language = 'es-US';
 				}
 				if ($file_extension == "mp3") {
 					$content_type = 'audio/mp3';
@@ -139,7 +140,7 @@ if (!function_exists('transcribe')) {
 					//$command = "curl -X POST -silent -u \"apikey:".$api_key."\" --header \"Content-type: ".$content_type."\" --data-binary @".$file_path."/".$file_name." \"".$api_url."\"";
 					//echo "command: ".$command."\n";
 
-					//api version 1
+					//version 1
 					if (substr($api_url, 0, 32) == 'https://speech.googleapis.com/v1') {
 						$command = "sox ".$file_path."/".$file_name." ".$file_path."/".$file_name.".flac trim 0 00:59 ";
 						$command .= "&& echo \"{ 'config': { 'languageCode': '".$transcribe_language."', 'enableWordTimeOffsets': false , 'enableAutomaticPunctuation': true , 'alternativeLanguageCodes': '".$transcribe_alternate_language."' }, 'audio': { 'content': '`base64 -w 0 ".$file_path."/".$file_name.".flac`' } }\" ";
@@ -148,10 +149,10 @@ if (!function_exists('transcribe')) {
 						echo $command."\n";
 					}
 
-					//api version 2
+					//version 2
 					if (substr($api_url, 0, 32) == 'https://speech.googleapis.com/v2') {
 						$command = "echo \"{ 'config': { 'auto_decoding_config': {}, 'language_codes': ['".$transcribe_language."'], 'model': 'long' }, 'content': '`base64 -w 0 ".$file_path."/".$file_name.".wav`' } }\" ";
-						$command .= "| curl -X POST -H \"Content-Type: application/json\" -H \"Authorization: Bearer ".$api_key."\" -d @- ".$api_url;
+						$command .= "| curl -X POST -H \"Content-Type: application/json\" -H \"Authorization: Bearer \$(gcloud auth application-default print-access-token)\" -d @- ".$api_url;
 						echo $command."\n";
 					}
 
