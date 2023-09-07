@@ -151,7 +151,7 @@ if (!function_exists('transcribe')) {
 
 					//version 2
 					if (substr($api_url, 0, 32) == 'https://speech.googleapis.com/v2') {
-						$command = "echo \"{ 'config': { 'auto_decoding_config': {}, 'language_codes': ['".$transcribe_language."'], 'model': 'long' }, 'content': '`base64 -w 0 ".$file_path."/".$file_name.".wav`' } }\" ";
+						$command = "echo \"{ 'config': { 'auto_decoding_config': {}, 'language_codes': ['".$transcribe_language."'], 'model': 'long' }, 'content': '`base64 -w 0 ".$file_path."/".$file_name."`' } \" ";
 						$command .= "| curl -X POST -H \"Content-Type: application/json\" -H \"Authorization: Bearer \$(gcloud auth application-default print-access-token)\" -d @- ".$api_url;
 						echo $command."\n";
 					}
