@@ -498,7 +498,7 @@ if (!class_exists('destinations')) {
 					}
 				}
 				$response .= "	</select>\n";
-				$response .= "	<select id='".$destination_id."' name='".$destination_name."' class='formfld' style='".$select_style."'>\n";
+				$response .= "	<select id='".$destination_id."' name='".$destination_name."' class='formfld' style='".$select_style." min-width: 200px;'>\n";
 				foreach($_SESSION['destinations'][$this->domain_uuid]['array'][$destination_type] as $key => $value) {
 					if ($key == $destination_key) {
 						foreach($value as $k => $row) {
