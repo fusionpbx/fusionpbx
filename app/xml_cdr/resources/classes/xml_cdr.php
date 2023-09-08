@@ -191,12 +191,12 @@ if (!class_exists('xml_cdr')) {
 			$this->fields[] = "hangup_cause";
 			$this->fields[] = "hangup_cause_q850";
 			$this->fields[] = "sip_hangup_disposition";
-			if (is_array($_SESSION['cdr']['field'])) {
-				foreach ($_SESSION['cdr']['field'] as $field) {
-					$field_name = end($field);
-					$this->fields[] = $field_name;
-				}
-			}
+			if (!empty($_SESSION['cdr']['field'])) {
+ 				foreach ($_SESSION['cdr']['field'] as $field) {
+					$field_name = end(explode(',', $field));
+ 					$this->fields[] = $field_name;
+ 				}
+ 			}
 			$this->fields = array_unique($this->fields);
 		}
 
