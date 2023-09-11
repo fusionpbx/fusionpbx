@@ -64,7 +64,8 @@ if (!class_exists('permissions')) {
 		 * Check to see if the permission exists
 		 * @var string $permission
 		 */
-		public function exists($permission) {
+		public function exists($permission_name) {
+
 			//define permissions global variable
 			global $permissions;
 
@@ -82,7 +83,8 @@ if (!class_exists('permissions')) {
 				$permission = new permissions;
 				$permissions = $permission->assigned($domain_uuid, $groups);
 			}
-			if (!empty($_SESSION["permissions"])) {
+
+			if (empty($permissions)) {
 				$permissions = $_SESSION["permissions"];
 			}
 
@@ -90,10 +92,11 @@ if (!class_exists('permissions')) {
 			$result = false;
 
 			//search for the permission
-			if (!empty($permissions) && !empty($permission)) {
-				foreach($permissions as $field) {
-					if ($permission == $field) {
+			if (!empty($permissions) && !empty($permission_name)) {
+				foreach($permissions as $key => $value) {
+					if ($key == $permission_name) {
 						$result = true;
+						break;
 					}
 				}
 			}
