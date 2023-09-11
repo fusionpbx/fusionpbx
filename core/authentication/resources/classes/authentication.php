@@ -236,63 +236,13 @@ class authentication {
 					$_SESSION["user"]["username"] = $result["username"];
 					$_SESSION["user"]["contact_uuid"] = $result["contact_uuid"];
 
-				//get the groups assigned to the user and then set the groups in $_SESSION["groups"]
-					$sql = "select ";
-					$sql .= "u.user_group_uuid, ";
-					$sql .= "u.domain_uuid, ";
-					$sql .= "u.user_uuid, ";
-					$sql .= "u.group_uuid, ";
-					$sql .= "g.group_name, ";
-					$sql .= "g.group_level ";
-					$sql .= "from ";
-					$sql .= "v_user_groups as u, ";
-					$sql .= "v_groups as g ";
-					$sql .= "where u.domain_uuid = :domain_uuid ";
-					$sql .= "and u.user_uuid = :user_uuid ";
-					$sql .= "and u.group_uuid = g.group_uuid ";
-					$parameters['domain_uuid'] = $_SESSION["domain_uuid"];
-					$parameters['user_uuid'] = $_SESSION["user_uuid"];
-					$database = new database;
-					$result = $database->select($sql, $parameters, 'all');
-					$_SESSION["groups"] = $result;
-					$_SESSION["user"]["groups"] = $result;
-					unset($sql, $parameters);
+				//get the groups assigned to the user 
+					$group = new groups;
+					$group->session($result["domain_uuid"], $result["user_uuid"]);
 
-				//get the users group level
-					$_SESSION["user"]["group_level"] = 0;
-					foreach ($_SESSION['user']['groups'] as $row) {
-						if ($_SESSION["user"]["group_level"] < $row['group_level']) {
-							$_SESSION["user"]["group_level"] = $row['group_level'];
-						}
-					}
-
-				//get the permissions assigned to the groups that the user is a member of set the permissions in $_SESSION['permissions']
-					if (is_array($_SESSION["groups"]) && @sizeof($_SESSION["groups"]) != 0) {
-						$x = 0;
-						$sql = "select distinct(permission_name) from v_group_permissions ";
-						$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
-						foreach ($_SESSION["groups"] as $field) {
-							if (!empty($field['group_name'])) {
-								$sql_where_or[] = "group_name = :group_name_".$x;
-								$parameters['group_name_'.$x] = $field['group_name'];
-								$x++;
-							}
-						}
-						if (is_array($sql_where_or) && @sizeof($sql_where_or) != 0) {
-							$sql .= "and (".implode(' or ', $sql_where_or).") ";
-						}
-						$sql .= "and permission_assigned = 'true' ";
-						$parameters['domain_uuid'] = $_SESSION["domain_uuid"];
-						$database = new database;
-						$result = $database->select($sql, $parameters, 'all');
-						if (is_array($result) && @sizeof($result) != 0) {
-							foreach ($result as $row) {
-								$_SESSION['permissions'][$row["permission_name"]] = true;
-								$_SESSION["user"]["permissions"][$row["permission_name"]] = true;
-							}
-						}
-						unset($sql, $parameters, $result, $row);
-					}
+				//get the permissions assigned to the user through the assigned groups
+					$permission = new permissions;
+					$permission->session($result["domain_uuid"], $_SESSION["groups"]);
 
 				//get the domains
 					if (file_exists($_SERVER["PROJECT_ROOT"]."/app/domains/app_config.php") && !is_cli()){

@@ -25,7 +25,6 @@
 	sreis
 */
 
-
 /**
  * domains class
  *
@@ -803,6 +802,72 @@ if (!class_exists('domains')) {
 				}
 
 		} //end settings method
+
+		/**
+		 * get a domain list
+		 */
+		public function all() {
+			//get the domains from the database
+				$database = new database;
+				if ($database->table_exists('v_domains')) {
+					$sql = "select * from v_domains order by domain_name asc;";
+					$database = new database;
+					$result = $database->select($sql, null, 'all');
+					foreach($result as $row) {
+						$domain_names[] = $row['domain_name'];
+					}
+					unset($prep_statement);
+				}
+
+			//build the domains array in the correct order
+				if (is_array($domain_names)) { 
+					foreach ($domain_names as $dn) {
+						foreach ($result as $row) {
+							if ($row['domain_name'] == $dn) {
+								$domains[] = $row;
+							}
+						}
+					}
+					unset($result);
+				}
+
+			//return the domains array
+				return $domains;
+		}
+
+		/**
+		 * get a domain list
+		 */
+		public function session() {
+			//get the list of domains
+				$domains = $this->all();
+
+			//get the domain
+				$domain_array = explode(":", $_SERVER["HTTP_HOST"] ?? '');
+
+			//set domain_name and domain_uuid and update domains array with domain_uuid as the key
+				if (!empty($domains) && is_array($domains)) {
+					foreach($domains as $row) {
+						if (!isset($_SESSION['username'])) {
+							if (!empty($domains) && count($domains) == 1) {
+								$domain_uuid = $row["domain_uuid"];
+								$domain_name = $row['domain_name'];
+								$_SESSION["domain_uuid"] = $row["domain_uuid"];
+								$_SESSION["domain_name"] = $row['domain_name'];
+							}
+							else {
+								if ($row['domain_name'] == $domain_array[0] || $row['domain_name'] == 'www.'.$domain_array[0]) {
+									$_SESSION["domain_uuid"] = $row["domain_uuid"];
+									$_SESSION["domain_name"] = $row["domain_name"];
+								}
+							}
+						}	
+						$_SESSION['domains'][$row['domain_uuid']] = $row;
+					}
+					unset($domains, $prep_statement);
+				}
+		}
+
 	}
 }
 
