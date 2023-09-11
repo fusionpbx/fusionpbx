@@ -276,9 +276,9 @@
 
 	//check if the permission exists
 	if (!function_exists('permission_exists')) {
-		function permission_exists($permission, $operator = 'or') {
+		function permission_exists($permission_name, $operator = 'or') {
 			$permission = new permissions;
-			return $permission->exists($permission);
+			return $permission->exists($permission_name);
 		}
 	}
 
