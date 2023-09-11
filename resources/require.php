@@ -123,14 +123,16 @@
 	require_once "resources/functions.php";
 	if (is_array($conf) && count($conf) > 0) {
 		require_once "resources/pdo.php";
-		require_once "resources/cidr.php";
+		if (!defined('STDIN')) {
+			require_once "resources/cidr.php";
+		}
 		if (file_exists($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/resources/switch.php")) {
 			require_once "resources/switch.php";
 		}
 	}
 
 //change language on the fly - for translate tool (if available)
-	if (isset($_REQUEST['view_lang_code']) && ($_REQUEST['view_lang_code']) != '') {
+	if (!defined('STDIN') && isset($_REQUEST['view_lang_code']) && ($_REQUEST['view_lang_code']) != '') {
 		$_SESSION['domain']['language']['code'] = $_REQUEST['view_lang_code'];
 	}
 
