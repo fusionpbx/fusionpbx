@@ -42,11 +42,24 @@
 	$language = new text;
 	$text = $language->get();
 
-//get posted data
-	if (!empty($_POST['destinations'])) {
-		$action = $_POST['action'] ?? '';
-		$search = $_POST['search'] ?? '';
-		$destinations = $_POST['destinations'] ?? '';
+//pre-defined variables
+	$action = '';
+	$search = '';
+	$show = '';
+	$destinations = '';
+
+//get http variables
+	if (isset($_REQUEST["action"]) && !empty($_REQUEST["action"])) {
+		$action =  $_REQUEST["action"];
+	}
+	if (isset($_REQUEST["search"]) && !empty($_REQUEST["search"])) {
+		$search =  strtolower($_REQUEST["search"]);
+	}
+	if (isset($_REQUEST["show"]) && !empty($_REQUEST["show"])) {
+		$show =  strtolower($_REQUEST["show"]);
+	}
+	if (isset($_REQUEST["destinations"]) && !empty($_REQUEST["destinations"])) {
+		$destinations =  $_REQUEST["destinations"];
 	}
 
 //process the http post data by action
@@ -110,14 +123,6 @@
 //get variables used to control the order
 	$order_by = $_GET["order_by"] ?? '';
 	$order = $_GET["order"] ?? '';
-
-//get http variables
-	if (isset($_GET["search"]) && !empty($_GET["search"])) {
-		$search =  strtolower($_GET["search"]);
-	}
-	if (isset($_GET["show"]) && !empty($_GET["show"])) {
-		$show =  strtolower($_GET["show"]);
-	}
 
 //set from session variables
 	$list_row_edit_button = !empty($_SESSION['theme']['list_row_edit_button']['boolean']) ? $_SESSION['theme']['list_row_edit_button']['boolean'] : 'false';
