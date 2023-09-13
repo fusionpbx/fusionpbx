@@ -87,8 +87,12 @@
 		exit;
 	}
 
+//get the email queue settings
+	$setting = new settings();
+	$settings = $setting->default_settings('email_queue');
+
 //email queue enabled
-	if ($_SESSION['email_queue']['enabled']['boolean'] != 'true') {
+	if ($settings['email_queue']['enabled']['boolean'] != 'true') {
 		echo "Email Queue is disabled in Default Settings\n";
 		exit;
 	}
@@ -117,20 +121,20 @@
 	}
 
 //get the call center settings
-	$interval = $_SESSION['email_queue']['interval']['numeric'];
+	$interval = $settings['email_queue']['interval']['numeric'];
 
 //set the defaults
 	if (!is_numeric($interval)) { $interval = 30; }
 
 //set the email queue limit
-	if (isset($_SESSION['email_queue']['limit']['numeric'])) {
-		$email_queue_limit = $_SESSION['email_queue']['limit']['numeric'];
+	if (isset($settings['email_queue']['limit']['numeric'])) {
+		$email_queue_limit = $settings['email_queue']['limit']['numeric'];
 	}
 	else {
 		$email_queue_limit = '30';
 	}
-	if (isset($_SESSION['email_queue']['debug']['boolean'])) {
-		$debug = $_SESSION['email_queue']['debug']['boolean'];
+	if (isset($settings['email_queue']['debug']['boolean'])) {
+		$debug = $settings['email_queue']['debug']['boolean'];
 	}
 
 //get the messages waiting in the email queue
