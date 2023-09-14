@@ -80,6 +80,68 @@ class settings {
 
 	}
 
+
+	/**
+	 * set the default, domain, user, device or device profile settings
+	 * 
+	 */
+	public function set($setting_array) {
+
+		//find the table
+			if (!empty($setting_array['user_uuid']) && is_uuid($setting_array['user_uuid'])) {
+				$table_prefix = 'user';
+				$table_name = $table_prefix.'_settings';
+				$array[$table_name][0]['user_uuid'] = $setting_array['user_uuid'];
+				$array[$table_name][0]['domain_uuid'] = $setting_array['domain_uuid'];
+			}
+			elseif (!empty($setting_array['device_uuid']) && is_uuid($setting_array['device_uuid'])) {
+				$table_prefix = 'device';
+				$table_name = $table_prefix.'_settings';
+				$array[$table_name][0]['user_uuid'] = $setting_array['user_uuid'];
+				$array[$table_name][0]['domain_uuid'] = $setting_array['domain_uuid'];
+			}
+			elseif (!empty($setting_array['device_profile_uuid']) && is_uuid($setting_array['device_profile_uuid'])) {
+				$table_prefix = 'device_profile';
+				$table_name = $table_prefix.'_settings';
+				$array[$table_name][0]['device_profile_uuid'] = $setting_array['device_profile_uuid'];
+				if (!empty($setting_array['domain_uuid']) && is_uuid($setting_array['domain_uuid'])) {
+					$array[$table_name][0]['domain_uuid'] = $setting_array['domain_uuid'];
+				}
+			}
+			elseif (!empty($setting_array['domain_uuid']) && is_uuid($setting_array['domain_uuid'])) {
+				$table_prefix = 'domain';
+				$table_name = $table_prefix.'_settings';
+			}
+			else {
+				$table_prefix = 'default';
+				$table_name = $table_prefix.'_settings';
+			}
+
+		//build the array
+			$array[$table_name][0][$table_prefix.'_setting_uuid'] = $setting_array['setting_uuid'];
+			$array[$table_name][0][$table_prefix.'_setting_category'] = $setting_array['setting_category'];
+			$array[$table_name][0][$table_prefix.'_setting_subcategory'] = $setting_array['setting_subcategory'];
+			$array[$table_name][0][$table_prefix.'_setting_name'] = $setting_array['setting_name'];
+			$array[$table_name][0][$table_prefix.'_setting_value'] = $setting_array['setting_value'];
+			$array[$table_name][0][$table_prefix.'_setting_enabled'] = $setting_array['setting_enabled'];
+			$array[$table_name][0][$table_prefix.'_setting_description'] = $setting_array['setting_description'];
+			
+		//grant temporary permissions
+			$p = new permissions;
+			$p->add($table_prefix.'_setting_add', 'temp');
+			$p->add($table_prefix.'_setting_edit', 'temp');
+
+		//execute insert
+			$this->database->app_name = $table_prefix.'_settings';
+			$result = $this->database->save($array);
+			unset($array);
+
+		//revoke temporary permissions
+			$p->delete($table_prefix.'_setting_add', 'temp');
+			$p->delete($table_prefix.'_setting_edit', 'temp');
+
+	}
+
 	/**
 	 * set the default settings
 	 * 
