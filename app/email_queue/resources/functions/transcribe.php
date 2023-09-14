@@ -3,14 +3,17 @@
 if (!function_exists('transcribe')) {
 	function transcribe ($file_path, $file_name, $file_extension) {
 
+		//get the email queue settings
+			$setting = new settings(['category' => 'voicemail']);
+
 		//transcription variables
-			$transcribe_provider = $_SESSION['voicemail']['transcribe_provider']['text'];
-			$transcribe_language = $_SESSION['voicemail']['transcribe_language']['text'];
+			$transcribe_provider = $setting->get('voicemail', 'transcribe_provider');
+			$transcribe_language = $setting->get('voicemail', 'transcribe_language');
 
 		//transcribe - watson
 			if ($transcribe_provider == 'watson') {
-				$api_key = $_SESSION['voicemail']['watson_key']['text'];
-				$api_url = $_SESSION['voicemail']['watson_url']['text'];
+				$api_key = $setting->get('voicemail', 'watson_key');
+				$api_url = $setting->get('voicemail', 'watson_url');
 
 				if ($file_extension == "mp3") {
 					$content_type = 'audio/mp3';
@@ -117,11 +120,10 @@ if (!function_exists('transcribe')) {
 
 		//transcribe - google
 			if ($transcribe_provider == 'google') {
-				$api_key = $_SESSION['voicemail']['google_key']['text'];
-				$api_url = $_SESSION['voicemail']['google_url']['text'];
-				$transcribe_language = $_SESSION['voicemail']['transcribe_language']['text'];
-				$transcribe_alternate_language = $_SESSION['voicemail']['transcribe_alternate_language']['text'];
-
+				$api_key = $setting->get('voicemail', 'google_key');
+				$api_url = $setting->get('voicemail', 'google_url');
+				$transcribe_language =  $setting->get('voicemail', 'transcribe_language');
+				$transcribe_alternate_language = $setting->get('voicemail', 'transcribe_alternate_language');
 
 				if (!isset($transcribe_language) && empty($transcribe_language)) {
 					$transcribe_language = 'en-US';
@@ -191,8 +193,8 @@ if (!function_exists('transcribe')) {
 
 		//transcribe - azure
 			if ($transcribe_provider == 'azure') {
-				$api_key = $_SESSION['voicemail']['azure_key']['text'];
-				$api_url = $_SESSION['voicemail']['azure_server_region']['text'];
+				$api_key = $setting->get('voicemail', 'azure_key');
+				$api_url = $setting->get('voicemail', 'azure_server_region');
 
 				if (empty($transcribe_language)) {
 					$transcribe_language = 'en-US';
@@ -237,8 +239,8 @@ if (!function_exists('transcribe')) {
 			// transcribe - custom
 			// Works with self-hostable transcription service at https://github.com/AccelerateNetworks/an-transcriptions
 			if ($transcribe_provider == 'custom') {
-				$api_key = $_SESSION['voicemail']['api_key']['text'];
-				$api_url = $_SESSION['voicemail']['transcription_server']['text'];
+				$api_key = $setting->get('voicemail', 'api_key');
+				$api_url = $setting->get('voicemail', 'transcription_server');
 
 				if (empty($transcribe_language)) {
 					$transcribe_language = 'en-US';

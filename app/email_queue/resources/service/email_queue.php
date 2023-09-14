@@ -10,7 +10,6 @@
 	}
 
 //include files
-	require_once "resources/require.php";
 	include "resources/classes/permissions.php";
 	require "app/email_queue/resources/functions/transcribe.php";
 
@@ -88,11 +87,10 @@
 	}
 
 //get the email queue settings
-	$setting = new settings();
-	$settings = $setting->default_settings('email_queue');
+	$setting = new settings(["category" => "email_queue"]);
 
 //email queue enabled
-	if ($settings['email_queue']['enabled']['boolean'] != 'true') {
+	if ($setting->get('email_queue', 'enabled') != 'true') {
 		echo "Email Queue is disabled in Default Settings\n";
 		exit;
 	}
@@ -121,20 +119,20 @@
 	}
 
 //get the call center settings
-	$interval = $settings['email_queue']['interval']['numeric'];
+	$interval = $setting->get('email_queue', 'interval');
 
 //set the defaults
 	if (!is_numeric($interval)) { $interval = 30; }
 
 //set the email queue limit
-	if (isset($settings['email_queue']['limit']['numeric'])) {
-		$email_queue_limit = $settings['email_queue']['limit']['numeric'];
+	if (!empty($setting->get('email_queue', 'limit'))) {
+		$email_queue_limit = $setting->get('email_queue', 'limit');
 	}
 	else {
 		$email_queue_limit = '30';
 	}
-	if (isset($settings['email_queue']['debug']['boolean'])) {
-		$debug = $settings['email_queue']['debug']['boolean'];
+	if (!empty($setting->get('email_queue', 'debug'))) {
+		$debug = $setting->get('email_queue', 'debug');
 	}
 
 //get the messages waiting in the email queue
