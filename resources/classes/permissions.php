@@ -66,6 +66,11 @@ if (!class_exists('permissions')) {
 		 */
 		public function exists($permission_name) {
 
+			//if run from command line then return true
+			if (defined('STDIN') && empty($_SESSION["permissions"])) {
+				return true;
+			}
+
 			//define permissions global variable
 			global $permissions;
 
