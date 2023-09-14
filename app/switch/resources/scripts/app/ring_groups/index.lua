@@ -474,6 +474,7 @@
 			end);
 
 		--get the ring group destinations
+		--we must multiply destination_delay by 500 instead of 1000 because a freeswitch bug doubles the delay set in the dialstring
 			sql = [[
 				SELECT
 					r.ring_group_strategy, r.ring_group_timeout_app, r.ring_group_distinctive_ring,
@@ -592,6 +593,7 @@
 						if (follow_me_uuid ~= nil and row.is_follow_me_destination ~= "true") then
 							sql = "select d.domain_uuid, d.domain_name, f.follow_me_destination as destination_number, ";
 							if (row.ring_group_strategy == 'enterprise') then
+								--we must multiply destination_delay by 500 instead of 1000 because a freeswitch bug doubles the delay set in the dialstring
 								sql = sql .. "f.follow_me_delay * 500 as destination_delay, ";
 							else
 								sql = sql .. "f.follow_me_delay as destination_delay, ";
