@@ -480,7 +480,7 @@
 					d.destination_number, d.destination_timeout, d.destination_prompt,
 					CASE
 						WHEN r.ring_group_strategy = 'enterprise'
-							THEN d.destination_delay * 1000
+							THEN d.destination_delay * 500
 						WHEN r.ring_group_strategy <> 'enterprise'
 							THEN d.destination_delay
 					END as destination_delay,
@@ -592,7 +592,7 @@
 						if (follow_me_uuid ~= nil and row.is_follow_me_destination ~= "true") then
 							sql = "select d.domain_uuid, d.domain_name, f.follow_me_destination as destination_number, ";
 							if (row.ring_group_strategy == 'enterprise') then
-								sql = sql .. "f.follow_me_delay * 1000 as destination_delay, ";
+								sql = sql .. "f.follow_me_delay * 500 as destination_delay, ";
 							else
 								sql = sql .. "f.follow_me_delay as destination_delay, ";
 							end
