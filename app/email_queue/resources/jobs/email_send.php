@@ -143,9 +143,11 @@
 	}
 	unset($parameters);
 
+//get the email queue settings
+	$setting = new settings(["domain_uuid" => $domain_uuid]);
+
 //get the call center settings
-	$retry_limit = $_SESSION['email_queue']['retry_limit']['numeric'];
-	//$retry_interval = $_SESSION['email_queue']['retry_interval']['numeric'];
+	$retry_limit = $setting->get('email_queue', 'retry_limit');
 
 //set defaults
 	if (empty($email_retry_count)) {
@@ -285,10 +287,10 @@
 
 //add email settings
 	$email_settings = '';
-	ksort($_SESSION['email']);
-	foreach ($_SESSION['email'] as $name => $setting) {
+	$email_setting_array = $setting->get('email');
+	ksort($email_setting_array);
+	foreach ($email_setting_array as $name => $setting) {
 		foreach ($setting as $type => $value) {
-			if ($type == 'uuid') { $uuid = $value; continue; }
 			if ($name == 'smtp_password') { $value = '[REDACTED]'; }
 			$email_settings .= $name.': '.$value."\n";
 		}
@@ -383,7 +385,11 @@
 			$domain_name = $database->select($sql, $parameters, 'column');
 
 			//send the message waiting status
-			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+			$fp = event_socket_create(
+				$setting->get('event_socket','ip_address'), 
+				$setting->get('switch', 'event_socket_port'), 
+				$setting->get('switch', 'event_socket_password')
+			);
 			if ($fp) {
 				//$switch_cmd .= "luarun app.lua voicemail mwi ".$voicemail_id."@".$domain_name;
 				$switch_cmd .= "luarun app/voicemail/resources/scripts/mwi_notify.lua ".$voicemail_id." ".$domain_name." 0 0";
