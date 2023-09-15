@@ -322,11 +322,13 @@
 
 			//application heading
 			if ($previous_application_name !== $row['application_name']) {
+				if ($previous_application_name != '') {
+					echo "		<tr class='heading_".$application_name."'>";
+					echo "			<td align='left' colspan='999' style='cursor: default !important;'>&nbsp;</td>\n";
+					echo "		</tr>";
+				}
 				echo "		<tr class='heading_".$application_name."'>";
-				echo "			<td align='left' colspan='999'>&nbsp;</td>\n";
-				echo "		</tr>";
-				echo "		<tr class='heading_".$application_name."'>";
-				echo "			<td align='left' colspan='999' nowrap='nowrap'><b>".escape($application_name_label)."</b></td>\n";
+				echo "			<td align='left' colspan='999' style='cursor: default !important;' nowrap='nowrap'><b>".escape($application_name_label)."</b></td>\n";
 				echo "		</tr>";
 				echo "		<tr class='list-header heading_".$application_name."'>\n";
 				if (permission_exists('group_permission_add') || permission_exists('group_permission_edit') || permission_exists('group_permission_delete')) {
@@ -336,9 +338,9 @@
 				}
 				echo "			<th>".$text['label-group_name']."</th>\n";
 				if (permission_exists('group_permission_add') || permission_exists('group_permission_edit') || permission_exists('group_permission_delete')) {
-					echo "		<th>".$text['label-group_protected']."</th>\n";
-					echo "		<th class='checkbox'>\n";
-					echo "			<input type='checkbox' id='checkbox_all_".$application_name."_protected' name='checkbox_protected_all' onclick=\"list_all_toggle('".$application_name."_protected');\">\n";
+					echo "		<th class='checkbox' onmouseover=\"document.getElementById('checkbox_all_label_".$application_name."').style.display='none'; document.getElementById('checkbox_all_".$application_name."_protected').style.display='';\" onmouseout=\"document.getElementById('checkbox_all_label_".$application_name."').style.display=''; document.getElementById('checkbox_all_".$application_name."_protected').style.display='none';\">\n";
+					echo "			<span id='checkbox_all_label_".$application_name."'>".$text['label-group_protected']."</span>\n";
+					echo "			<input type='checkbox' id='checkbox_all_".$application_name."_protected' name='checkbox_protected_all' style='display: none;' onclick=\"list_all_toggle('".$application_name."_protected');\">\n";
 					echo "		</th>\n";
 				}
 				echo "		</tr>\n";
@@ -359,7 +361,6 @@
 				echo "		".escape($row['permission_name']);
 				echo "	</td>\n";
 				if (permission_exists('group_permission_add') || permission_exists('group_permission_edit') || permission_exists('group_permission_delete')) {
-					echo "	<td>&nbsp;</td>\n";
 					echo "	<td class='checkbox'>\n";
 					echo "		<input type='checkbox' name='group_permissions[$x][permission_protected]' id='checkbox_protected_".$x."' class='checkbox_".$application_name."_protected' value='true' ".$protected." onclick=\"if (!this.checked) { document.getElementById('checkbox_all_".$application_name."_protected').checked = false; }\">\n";
 					echo "	</td>\n";
