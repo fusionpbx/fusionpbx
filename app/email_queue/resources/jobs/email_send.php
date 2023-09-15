@@ -386,7 +386,7 @@
 
 			//send the message waiting status
 			$fp = event_socket_create(
-				$setting->get('event_socket','ip_address'), 
+				$setting->get('switch','event_socket_ip_address'), 
 				$setting->get('switch', 'event_socket_port'), 
 				$setting->get('switch', 'event_socket_password')
 			);
