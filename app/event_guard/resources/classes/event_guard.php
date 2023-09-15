@@ -150,11 +150,14 @@ if (!class_exists('event_guard')) {
 									$database->save($array);
 									unset($array);
 
+								//initialize the settings object
+									$setting = new settings(["category" => 'switch']);
+
 								//send unblock event
 									$cmd = "sendevent CUSTOM\n";
 									$cmd .= "Event-Name: CUSTOM\n";
 									$cmd .= "Event-Subclass: event_guard:unblock\n";
-									$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+									$fp = event_socket_create($setting->get('switch','event_socket_ip_address'), $setting->get('switch', 'event_socket_port'), $setting->get('switch', 'event_socket_password'));
 									$switch_result = event_socket_request($fp, $cmd);
 
 								//set message
