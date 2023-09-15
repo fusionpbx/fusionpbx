@@ -184,91 +184,22 @@
 	}
 	unset($parameters);
 
-//get the default settings
-	$sql = "select default_setting_uuid, default_setting_name, default_setting_category, default_setting_subcategory, default_setting_value ";
-	$sql .= "from v_default_settings ";
-	$sql .= "where default_setting_category in ('domain', 'fax', 'fax_queue') ";
-	$sql .= "and default_setting_enabled = 'true' ";
-	$parameters = null;
-	$database = new database;
-	$result = $database->select($sql, $parameters, 'all');
-	unset($sql, $parameters);
-	if (is_array($result) && sizeof($result) != 0) {
-		foreach ($result as $row) {
-			$name = $row['default_setting_name'];
-			$category = $row['default_setting_category'];
-			$subcategory = $row['default_setting_subcategory'];
-			if ($subcategory != '') {
-				if ($name == "array") {
-					$_SESSION[$category][] = $row['default_setting_value'];
-				}
-				else {
-					$_SESSION[$category][$name] = $row['default_setting_value'];
-				}
-			}
-			else {
-				if ($name == "array") {
-					$_SESSION[$category][$subcategory][] = $row['default_setting_value'];
-				}
-				else {
-					$_SESSION[$category][$subcategory]['uuid'] = $row['default_setting_uuid'];
-					$_SESSION[$category][$subcategory][$name] = $row['default_setting_value'];
-				}
-			}
-		}
-	}
-	unset($result, $row);
-
-//get the domain settings
-	$sql = "select domain_setting_uuid, domain_setting_name, domain_setting_category, domain_setting_subcategory, domain_setting_value ";
-	$sql .= "from v_domain_settings ";
-	$sql .= "where domain_uuid = :domain_uuid ";
-	$sql .= "and domain_setting_category in ('domain', 'fax', 'fax_queue') ";
-	$sql .= "and domain_setting_enabled = 'true' ";
-	$parameters['domain_uuid'] = $domain_uuid;
-	$database = new database;
-	$result = $database->select($sql, $parameters, 'all');
-	unset($sql, $parameters);
-	if (is_array($result) && sizeof($result) != 0) {
-		foreach ($result as $row) {
-			$name = $row['domain_setting_name'];
-			$category = $row['domain_setting_category'];
-			$subcategory = $row['domain_setting_subcategory'];
-			if ($subcategory != '') {
-				if ($name == "array") {
-					$_SESSION[$category][] = $row['domain_setting_value'];
-				}
-				else {
-					$_SESSION[$category][$name] = $row['domain_setting_value'];
-				}
-			}
-			else {
-				if ($name == "array") {
-					$_SESSION[$category][$subcategory][] = $row['domain_setting_value'];
-				}
-				else {
-					$_SESSION[$category][$subcategory]['uuid'] = $row['domain_setting_uuid'];
-					$_SESSION[$category][$subcategory][$name] = $row['domain_setting_value'];
-				}
-			}
-		}
-	}
-	unset($result, $parameters);
+//get the email queue settings
+	$setting = new settings(["domain_uuid" => $domain_uuid]);
 
 //prepare the smtp from and from name variables
-	$email_from = $_SESSION['email']['smtp_from']['text'];
-	$email_from_name = $_SESSION['email']['smtp_from_name']['text'];
-	if (isset($_SESSION['fax']['smtp_from']['text']) && !empty($_SESSION['fax']['smtp_from']['text'])) {
-		$email_from = $_SESSION['fax']['smtp_from']['text'];
+	$email_from = $setting->get('email','smtp_from');
+	$email_from_name = $setting->get('email','smtp_from_name');
+	if (!empty($setting->get('fax','smtp_from'))) {
+		$email_from = $setting->get('fax','smtp_from');
 	}
-	if (isset($_SESSION['fax']['smtp_from_name']['text']) && !empty($_SESSION['fax']['smtp_from_name']['text'])) {
-		$email_from_name = $_SESSION['fax']['smtp_from_name']['text'];
+	if (!empty($setting->get('fax','smtp_from_name'))) {
+		$email_from_name = $setting->get('fax','smtp_from_name');
 	}
 
 //prepare the variables to send the fax
-	$email_from_address = (isset($_SESSION['fax']['smtp_from']['text'])) ? $_SESSION['fax']['smtp_from']['text'] : $_SESSION['email']['smtp_from']['text'];
-	$retry_limit = $_SESSION['fax_queue']['retry_limit']['numeric'];
-	//$retry_interval = $_SESSION['fax_queue']['retry_interval']['numeric'];
+	$email_from_address = $email_from;
+	$retry_limit = $setting->get('fax_queue','retry_limit');
 
 //prepare the fax retry count
 	if (!isset($fax_retry_count)) {
@@ -294,7 +225,7 @@
 	if ($fax_status == 'waiting' || $fax_status == 'trying' || $fax_status == 'busy') {
 
 		//create event socket handle
-			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+			$fp = event_socket_create($setting->get('switch','event_socket_ip_address'), $setting->get('switch','event_socket_port'), $setting->get('switch','event_socket_password'));
 			if (!$fp) {
 				echo "Could not connect to event socket.\n";
 				exit;	
@@ -306,7 +237,7 @@
 			}
 			if ($fax_retry_count == 1) {
 				$fax_options = '';
-				foreach($_SESSION['fax']['variable'] as $variable) {
+				foreach($setting->get('fax','variable') as $variable) {
 					$fax_options .= $variable.",";
 				}
 			}
@@ -432,7 +363,7 @@
 		//send the email
 			if (!empty($fax_email_address) && file_exists($fax_file)) {
 				//get the language code
-				$language_code = $_SESSION['domain']['language']['code'];
+				$language_code = $setting->get('domain','language');
 
 				//get the template subcategory
 				if (isset($fax_relay) && $fax_relay == 'true') {
