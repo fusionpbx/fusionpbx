@@ -35,7 +35,12 @@ local host, port, auth
 function EventSocket:__init()
   if not host then
     local db = Database.new('system')
-    local settings, err = db:first_row("select event_socket_ip_address, event_socket_port, event_socket_password from v_settings")
+    local sql = [[SELECT
+		MAX(CASE WHEN default_setting_subcategory = 'event_socket_ip_address' THEN default_setting_value END) AS event_socket_address,
+		MAX(CASE WHEN default_setting_subcategory = 'event_socket_port' THEN default_setting_value END) AS event_socket_port,
+		MAX(CASE WHEN default_setting_subcategory = 'event_socket_password' THEN default_setting_value END) AS event_socket_password
+		FROM v_default_settings]];
+    local settings, err = db:first_row(sql)
     if not settings then return nil, err end
     host, port, auth = settings.event_socket_ip_address, settings.event_socket_port, settings.event_socket_password
   end
