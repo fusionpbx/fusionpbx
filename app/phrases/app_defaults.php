@@ -142,7 +142,7 @@ if ($domains_processed == 1) {
 		//save_phrases_xml();
 
 	//delete the phrase from memcache
-		$fp = event_socket_create($setting->get('switch','event_socket_ip_address'), $setting->get('switch','event_socket_port'), $setting->get('switch','event_socket_password'));
+		$fp = event_socket_create();
 		if ($fp) {
 			//get phrase languages
 			$sql = "select distinct phrase_language from v_phrases order by phrase_language asc ";
