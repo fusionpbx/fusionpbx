@@ -27,22 +27,15 @@
 */
 
 //includes files
-	require_once __DIR__ . "/require.php";
+require_once __DIR__ . "/require.php";
 
 //get the event socket information
-	if (file_exists($_SERVER["PROJECT_ROOT"]."/app/settings/app_config.php")) {
-		if ((! isset($_SESSION['event_socket_ip_address'])) or empty($_SESSION['event_socket_ip_address'])) {
-			$sql = "select * from v_settings ";
-			$database = new database;
-			$row = $database->select($sql, null, 'row');
-			if (!empty($row)) {
-				$_SESSION['event_socket_ip_address'] = $row["event_socket_ip_address"];
-				$_SESSION['event_socket_port'] = $row["event_socket_port"];
-				$_SESSION['event_socket_password'] = $row["event_socket_password"];
-			}
-			unset($sql, $row);
-		}
-	}
+if (empty($_SESSION['event_socket_ip_address'])) {
+	$setting = new settings(["category" => "switch"]);
+	$_SESSION['event_socket_ip_address'] = $setting->get('switch', 'event_socket_ip_address');
+	$_SESSION['event_socket_port'] = $setting->get('switch', 'event_socket_port');
+	$_SESSION['event_socket_password'] = $setting->get('switch', 'event_socket_password');
+}
 
 function event_socket_create($host, $port, $password) {
 	$esl = new event_socket;
