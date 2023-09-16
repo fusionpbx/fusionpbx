@@ -46,7 +46,7 @@ if (!$included) {
 		$domain_name = $_SESSION['domain_name'];
 		$user_uuid = $_SESSION['user_uuid'];
 
-	//get event socket connection parameters
+	//initialize the settings object
 		if (empty($settings)) {
 			$setting = new settings(["domain_uuid" => $domain_uuid]);
 		}
