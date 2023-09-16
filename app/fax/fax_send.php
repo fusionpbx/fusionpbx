@@ -47,7 +47,7 @@ if (!$included) {
 		$user_uuid = $_SESSION['user_uuid'];
 
 	//get event socket connection parameters
-		if (empty($setting)) {
+		if (empty($settings)) {
 			$setting = new settings(["domain_uuid" => $domain_uuid]);
 		}
 
@@ -117,7 +117,7 @@ if (!$included) {
 		}
 
 	//set the fax directory
-		if (!empty($setting->get('switch','storage')) {
+		if (!empty($setting->get('switch','storage'))) {
 			$fax_dir = $setting->get('switch','storage').'/fax/'.$domain_name;
 		}
 
@@ -981,7 +981,7 @@ if (!$included) {
 		echo "	".$text['label-fax-header']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<input type='text' name='fax_header' class='formfld' style='' value='".($setting->fax('contact','cover_header') ?? '')."'>\n";
+		echo "	<input type='text' name='fax_header' class='formfld' style='' value='".($setting->get('fax','cover_header') ?? '')."'>\n";
 		echo "	<br />\n";
 		echo "	".$text['description-fax-header']."\n";
 		echo "</td>\n";
@@ -1049,7 +1049,7 @@ if (!$included) {
 		for ($f = 1; $f <= 3; $f++) {
 			echo "	<span id='fax_file_".$f."' ".(($f > 1) ? "style='display: none;'" : null).">";
 			echo "	<input name='fax_files[]' id='fax_files_".$f."' type='file' class='formfld fileinput' style='margin-right: 3px; ".(($f > 1) ? "margin-top: 3px;" : null)."' onchange=\"".(($f < 3) ? "document.getElementById('fax_file_".($f+1)."').style.display='';" : null)." list_selected_files(".$f.");\" multiple='multiple'>";
-			echo button::create(['type'=>'button','label'=>$text['button-clear'],'icon'=>$setting->fax('theme','button_icon_reset'),'onclick'=>"reset_file_input('fax_files_".$f."'); document.getElementById('file_list_".$f."').innerHTML='';"]);
+			echo button::create(['type'=>'button','label'=>$text['button-clear'],'icon'=>$setting->get('theme','button_icon_reset'),'onclick'=>"reset_file_input('fax_files_".$f."'); document.getElementById('file_list_".$f."').innerHTML='';"]);
 			echo 	"<br />";
 			echo "	<span id='file_list_".$f."'></span>";
 			echo "	</span>\n";
@@ -1064,9 +1064,9 @@ if (!$included) {
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "	<select name='fax_resolution' class='formfld'>\n";
-		echo "		<option value='normal' ".(($setting->fax('fax','resolution') == 'normal') ? 'selected' : null).">".$text['option-fax-resolution-normal']."</option>\n";
-		echo "		<option value='fine' ".(($setting->fax('fax','resolution') == 'fine') ? 'selected' : null).">".$text['option-fax-resolution-fine']."</option>\n";
-		echo "		<option value='superfine' ".(($setting->fax('fax','resolution') == 'superfine') ? 'selected' : null).">".$text['option-fax-resolution-superfine']."</option>\n";
+		echo "		<option value='normal' ".(($setting->get('fax','resolution') == 'normal') ? 'selected' : null).">".$text['option-fax-resolution-normal']."</option>\n";
+		echo "		<option value='fine' ".(($setting->get('fax','resolution') == 'fine') ? 'selected' : null).">".$text['option-fax-resolution-fine']."</option>\n";
+		echo "		<option value='superfine' ".(($setting->get('fax','resolution') == 'superfine') ? 'selected' : null).">".$text['option-fax-resolution-superfine']."</option>\n";
 		echo "	</select>\n";
 		echo "	<br />\n";
 		echo "	".$text['description-fax-resolution']."\n";
@@ -1079,9 +1079,9 @@ if (!$included) {
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "	<select name='fax_page_size' class='formfld'>\n";
-		echo "		<option value='letter' ".(($setting->fax('fax','page_size') == 'letter') ? 'selected' : null).">Letter</option>\n";
-		echo "		<option value='legal' ".(($setting->fax('fax','page_size') == 'legal') ? 'selected' : null).">Legal</option>\n";
-		echo "		<option value='a4' ".(($setting->fax('fax','page_size') == 'a4') ? 'selected' : null).">A4</option>\n";
+		echo "		<option value='letter' ".(($setting->get('fax','page_size') == 'letter') ? 'selected' : null).">Letter</option>\n";
+		echo "		<option value='legal' ".(($setting->get('fax','page_size') == 'legal') ? 'selected' : null).">Legal</option>\n";
+		echo "		<option value='a4' ".(($setting->get('fax','page_size') == 'a4') ? 'selected' : null).">A4</option>\n";
 		echo "	</select>\n";
 		echo "	<br />\n";
 		echo "	".$text['description-fax-page-size']."\n";
@@ -1120,7 +1120,7 @@ if (!$included) {
 			echo "	".$text['label-fax-footer']."\n";
 			echo "</td>\n";
 			echo "<td class='vtable' align='left'>\n";
-			echo "	<textarea type='text' name='fax_footer' class='formfld' style='width: 65%; height: 100px;'>".$setting->fax('fax','cover_footer')."</textarea>\n";
+			echo "	<textarea type='text' name='fax_footer' class='formfld' style='width: 65%; height: 100px;'>".$setting->get('fax','cover_footer')."</textarea>\n";
 			echo "	<br />\n";
 			echo "	".$text['description-fax-footer']."\n";
 			echo "</td>\n";
