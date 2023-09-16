@@ -26,7 +26,7 @@
 
 //process this only one time
 	if ($domains_processed == 1) {
-	
+
 		//get the background images
 			$relative_path = PROJECT_PATH.'/themes/default/images/backgrounds';
 			$backgrounds = opendir($_SERVER["DOCUMENT_ROOT"].'/'.$relative_path);
@@ -54,6 +54,7 @@
 					if ($x > 300) { break; };
 				}
 			}
+
 		//migrate old default_settings
 			$sql = "update v_default_settings ";
 			$sql .= "set default_setting_value = '#fafafa' ";
