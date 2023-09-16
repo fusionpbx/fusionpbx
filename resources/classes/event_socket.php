@@ -101,12 +101,33 @@ class event_socket {
 		return $content;
 	}
 
-	public function connect($host, $port, $password) {
-		//set defaults
-		if ($host == '') { $host = '127.0.0.1'; }
-		if ($port == '') { $port = '8021'; }
-		if ($password == '') { $password = 'ClueCon'; }
+	public function connect($host = null, $port = null, $password = null) {
 
+		global $conf;
+
+		//get the database connection settings
+		if (empty($host) && empty($conf['event_socket.ip_address'])) {
+			$host = '127.0.0.1';
+		}
+		if (empty($port) && empty($conf['event_socket.port'])) {
+			$port = '8021';
+		}
+		if (empty($password) && empty($conf['switch.event_socket.password'])) {
+			$password = 'ClueCon';
+		}
+
+		//set the event socket variables
+		if (!empty($conf['switch.event_socket.host'])) {
+			$host = $conf['switch.event_socket.host'];
+		}
+		if (!empty($conf['switch.event_socket.port'])) {
+			$port = $conf['switch.event_socket.port'];
+		}
+		if (!empty($conf['switch.event_socket.password'])) {
+			$password = $conf['switch.event_socket.password'];
+		}
+
+		//open the socket connection
 		$fp = @fsockopen($host, $port, $errno, $errdesc, 3);
 
 		if (!$fp) {

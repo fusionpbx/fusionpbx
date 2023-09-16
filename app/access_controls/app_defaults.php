@@ -158,7 +158,7 @@
 
 			//create the event socket connection
 			if (!$fp) {
-				$fp = event_socket_create($setting->get('switch','event_socket_ip_address'), $setting->get('switch','event_socket_port'), $setting->get('switch','event_socket_password'));
+				$fp = event_socket_create();
 			}
 
 			//reload the acl
