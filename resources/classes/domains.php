@@ -611,9 +611,6 @@ if (!class_exists('domains')) {
 				$config_path = $config->find();
 				$config->get();
 
-			//check for default settings
-				$this->settings();
-
 			//get the list of installed apps from the core and app directories (note: GLOB_BRACE doesn't work on some systems)
 				$config_list_1 = glob($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/*/*/app_config.php");
 				$config_list_2 = glob($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/*/*/app_menu.php");
@@ -633,39 +630,6 @@ if (!class_exists('domains')) {
 				$domains = $database->select($sql, null, 'all');
 				unset($sql);
 
-			//get the domain_settings
-				$sql = "select * from v_domain_settings ";
-				$sql .= "where domain_setting_enabled = 'true' ";
-				$database = new database;
-				$domain_settings = $database->select($sql, null, 'all');
-				unset($sql);
-
-			//get the default settings
-				$sql = "select * from v_default_settings ";
-				$sql .= "where default_setting_enabled = 'true' ";
-				$sql .= "and default_setting_category <> 'switch' ";
-				$database = new database;
-				$database_default_settings = $database->select($sql, null, 'all');
-				unset($sql);
-
-			//get the domain_uuid
-				if (is_array($domains)) {
-					foreach($domains as $row) {
-						if (count($domains) == 1) {
-							$_SESSION["domain_uuid"] = $row["domain_uuid"];
-							$_SESSION["domain_name"] = $row['domain_name'];
-						}
-						else {
-							if (!empty($domain_array[0]) && (lower_case($row['domain_name']) == lower_case($domain_array[0] ?? '') || lower_case($row['domain_name']) == lower_case('www.'.$domain_array[0] ?? ''))) {
-								$_SESSION["domain_uuid"] = $row["domain_uuid"];
-								$_SESSION["domain_name"] = $row['domain_name'];
-							}
-							$_SESSION['domains'][$row['domain_uuid']]['domain_uuid'] = $row['domain_uuid'];
-							$_SESSION['domains'][$row['domain_uuid']]['domain_name'] = $row['domain_name'];
-						}
-					}
-				}
-
 			//loop through all domains
 				$domains_processed = 1;
 				foreach ($domains as $domain) {
@@ -676,59 +640,8 @@ if (!class_exists('domains')) {
 					//get the context
 						$context = $domain_name;
 
-					//get the default settings - this needs to be done to reset the session values back to the defaults for each domain in the loop
-						foreach($database_default_settings as $row) {
-							if ($row['default_setting_enabled'] == 'true') {
-								$name = $row['default_setting_name'];
-								$category = $row['default_setting_category'];
-								$subcategory = $row['default_setting_subcategory'];
-								if (empty($subcategory)) {
-									if ($name == "array") {
-										$_SESSION[$category][] = $row['default_setting_value'];
-									}
-									else {
-										$_SESSION[$category][$name] = $row['default_setting_value'];
-									}
-								}
-								else {
-									if ($name == "array") {
-										$_SESSION[$category][$subcategory][] = $row['default_setting_value'];
-									}
-									else {
-										$_SESSION[$category][$subcategory]['uuid'] = $row['default_setting_uuid'];
-										$_SESSION[$category][$subcategory][$name] = $row['default_setting_value'];
-									}
-								}
-							}
-						}
-
-
-					//set the enabled settings as a session
-						foreach ($domain_settings as $row) {
-							if ($row['domain_setting_enabled'] == 'true') {
-								$name = $row['domain_setting_name'];
-								$category = $row['domain_setting_category'];
-								$subcategory = $row['domain_setting_subcategory'];
-								if (empty($subcategory)) {
-									//$$category[$name] = $row['domain_setting_value'];
-									if ($name == "array") {
-										$_SESSION[$category][] = $row['domain_setting_value'];
-									}
-									else {
-										$_SESSION[$category][$name] = $row['domain_setting_value'];
-									}
-								}
-								else {
-									//$$category[$subcategory][$name] = $row['domain_setting_value'];
-									if ($name == "array") {
-										$_SESSION[$category][$subcategory][] = $row['domain_setting_value'];
-									}
-									else {
-										$_SESSION[$category][$subcategory][$name] = $row['domain_setting_value'];
-									}
-								}
-							}
-						}
+					//get the email queue settings
+						$setting = new settings(["domain_uuid" => $domain_uuid]);
 
 					//get the list of installed apps from the core and mod directories and execute the php code in app_defaults.php
 						$default_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_defaults.php");
@@ -739,10 +652,6 @@ if (!class_exists('domains')) {
 					//track of the number of domains processed
 						$domains_processed++;
 				}
-
-			//clear the session variables
-				unset($_SESSION['domain']);
-				unset($_SESSION['switch']);
 
 		} //end upgrade method
 
