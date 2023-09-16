@@ -142,8 +142,6 @@
 				//save the sip profile xml
 					save_sip_profile_xml();
 
-				//apply settings reminder
-					$_SESSION["reload_xml"] = true;
 			}
 
 
@@ -221,8 +219,6 @@
 				//save the sip profile xml
 					save_sip_profile_xml();
 
-				//apply settings reminder
-					$_SESSION["reload_xml"] = true;
 			}
 
 

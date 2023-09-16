@@ -37,11 +37,11 @@
 					$number_translation->xml = file_get_contents($xml_file);
 					$number_translation->import();
 			}
-			
+
 		//check for existing configuration
-			if (!empty($_SESSION['switch']['conf']['dir']) && file_exists($_SESSION['switch']['conf']['dir']."/autoload_configs/translate.conf.xml")) {
+			if (!empty($setting->get('switch','conf')) && file_exists($setting->get('switch','conf')."/autoload_configs/translate.conf.xml")) {
 				//import existing data
-					$xml = file_get_contents($_SESSION['switch']['conf']['dir']."/autoload_configs/translate.conf.xml");
+					$xml = file_get_contents($setting->get('switch','conf')."/autoload_configs/translate.conf.xml");
 
 				//convert the xml string to an xml object
 					$xml = simplexml_load_string($xml);

@@ -34,7 +34,7 @@
 		if ($num_rows == 0) {
 
 			//set the directory
-				$xml_dir = $_SESSION["switch"]["conf"]["dir"].'/autoload_configs';
+				$xml_dir = $setting->get('switch','conf').'/autoload_configs';
 				$xml_file = $xml_dir."/acl.conf.xml";
 				$xml_file_alt = $_SERVER["DOCUMENT_ROOT"].'/'.PROJECT_PATH.'/app/switch/resources/conf/autoload_configs/acl.conf';
 
@@ -54,7 +54,6 @@
 					$xml_string .= "			<node type=\"allow\" cidr=\"192.168.0.0/16\"/>\n";
 					$xml_string .= "		</list>\n";
 					$xml_string .= "		<list name=\"providers\" default=\"deny\">\n";
-					//$xml_string .= "			<node type=\"allow\" domain=\"".$_SESSION['domain_name']."\"/>\n";
 					$xml_string .= "		</list>\n";
 					$xml_string .= "	</network-lists>\n";
 					$xml_string .= "</configuration>\n";
@@ -159,7 +158,7 @@
 
 			//create the event socket connection
 			if (!$fp) {
-				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+				$fp = event_socket_create($setting->get('switch','event_socket_ip_address'), $setting->get('switch','event_socket_port'), $setting->get('switch','event_socket_password'));
 			}
 
 			//reload the acl

@@ -121,8 +121,6 @@ if ($domains_processed == 1) {
 			function set_country_vars($x) {
 				require "resources/countries.php";
 
-				//$country_iso=$_SESSION['domain']['country']['iso_code'];
-
 				$sql = "select default_setting_value ";
 				$sql .= "from v_default_settings ";
 				$sql .= "where default_setting_name = 'iso_code' ";

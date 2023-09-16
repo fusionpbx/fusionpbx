@@ -151,7 +151,7 @@
 //add not found dialplan to inbound routes
 	/*
 	if ($domains_processed == 1) {
-		if (is_readable($_SESSION['switch']['dialplan']['dir'])) {
+		if (is_readable($setting->get('switch','dialplan'))) {
 			$sql = "select count(*) from v_dialplans ";
 			$sql .= "where dialplan_uuid = 'ea5339de-1982-46ca-9695-c35176165314' ";
 			$database = new database;
