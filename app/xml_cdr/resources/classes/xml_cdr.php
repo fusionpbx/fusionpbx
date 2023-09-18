@@ -38,6 +38,9 @@ if (!class_exists('xml_cdr')) {
 		public $db;
 		public $array;
 		public $fields;
+		public $setting;
+		private $username;
+		private $password;
 
 		/**
 		 * user summary
@@ -70,11 +73,13 @@ if (!class_exists('xml_cdr')) {
 		public function __construct() {
 			//connect to the database if not connected
 			if (!$this->db) {
-				require_once "resources/classes/database.php";
 				$database = new database;
 				$database->connect();
 				$this->db = $database->db;
 			}
+
+			//get the email queue settings
+			$this->setting = new settings();
 
 			//assign private variables (for delete method)
 			$this->app_name = 'xml_cdr';
@@ -91,23 +96,23 @@ if (!class_exists('xml_cdr')) {
 		public function log($message) {
 
 			//save the log if enabled is true
-			if ($_SESSION['log']['enabled']['boolean'] == 'true') {
+			if ($this->setting->get('log', 'enabled') == 'true') {
 
 				//save the log to the php error log
-				if ($_SESSION['log']['type']['text'] == 'error_log') {
+				if ($this->setting->get('log', 'type') == 'error_log') {
 					error_log($message);
 				}
 
 				//save the log to the syslog server
-				if ($_SESSION['log']['type']['text'] == 'syslog') {
+				if ($this->setting->get('log', 'type') == 'syslog') {
 					openlog("XML CDR", LOG_PID | LOG_PERROR, LOG_LOCAL0);
 					syslog(LOG_WARNING, $message);
 					closelog();
 				}
 
 				//save the log to the file system
-				if ($_SESSION['log']['type']['text'] == 'file') {
-					$fp = fopen($_SESSION['server']['temp']['dir'].'/xml_cdr.log', 'a+');
+				if ($this->setting->get('log', 'text') == 'file') {
+					$fp = fopen($this->setting->get('server', 'temp').'/xml_cdr.log', 'a+');
 					if (!$fp) {
 						return;
 					}
@@ -191,8 +196,9 @@ if (!class_exists('xml_cdr')) {
 			$this->fields[] = "hangup_cause";
 			$this->fields[] = "hangup_cause_q850";
 			$this->fields[] = "sip_hangup_disposition";
-			if (!empty($_SESSION['cdr']['field'])) {
-				foreach ($_SESSION['cdr']['field'] as $field) {
+
+			if (!empty($this->setting->get('cdr', 'field'))) {
+				foreach ($this->setting->get('cdr', 'field') as $field) {
 					$field_name = end(explode(',', $field));
 					$this->fields[] = $field_name;
 				}
@@ -222,8 +228,8 @@ if (!class_exists('xml_cdr')) {
 					}
 
 					//set the directory
-					if (!empty($_SESSION['switch']['log']['dir'])) {
-						$xml_cdr_dir = $_SESSION['switch']['log']['dir'].'/xml_cdr';
+					if (!empty($this->setting->get('switch', 'log'))) {
+						$xml_cdr_dir = $this->setting->get('switch', 'log').'/xml_cdr';
 					}
 
 					//add the temporary permission
@@ -251,7 +257,7 @@ if (!class_exists('xml_cdr')) {
 						if (!empty($xml_cdr_dir)) {
 							if (!file_exists($xml_cdr_dir.'/failed')) {
 								if (!mkdir($xml_cdr_dir.'/failed', 0660, true)) {
-								    die('Failed to create '.$xml_cdr_dir.'/failed');
+									die('Failed to create '.$xml_cdr_dir.'/failed');
 								}
 							}
 							rename($xml_cdr_dir.'/'.$this->file, $xml_cdr_dir.'/failed/'.$this->file);
@@ -310,8 +316,8 @@ if (!class_exists('xml_cdr')) {
 				$xml = simplexml_load_string($xml_string, 'SimpleXMLElement', LIBXML_NOCDATA);
 				if ($xml === false) {
 					//set the directory
-					if (!empty($_SESSION['switch']['log']['dir'])) {
-						$xml_cdr_dir = $_SESSION['switch']['log']['dir'].'/xml_cdr';
+					if (!empty($this->setting->get('switch', 'log'))) {
+						$xml_cdr_dir = $this->setting->get('switch', 'log').'/xml_cdr';
 					}
 
 					//failed to load the XML, move the XML file to the failed directory
@@ -343,8 +349,8 @@ if (!class_exists('xml_cdr')) {
 						$duplicate_uuid = true;
 
 						//remove the file as the record already exists in the database
-						if (!empty($_SESSION['switch']['log']['dir'])) {
-							$xml_cdr_dir = $_SESSION['switch']['log']['dir'].'/xml_cdr';
+						if (!empty($this->setting->get('switch', 'log'))) {
+							$xml_cdr_dir = $this->setting->get('switch', 'log').'/xml_cdr';
 							if (file_exists($xml_cdr_dir.'/'.$this->file)) {
 								unlink($xml_cdr_dir.'/'.$this->file);
 							}
@@ -662,8 +668,8 @@ if (!class_exists('xml_cdr')) {
 						}
 
 					//dynamic cdr fields
-						if (is_array($_SESSION['cdr']['field'])) {
-							foreach ($_SESSION['cdr']['field'] as $field) {
+						if (!empty($this->setting->get('cdr', 'field'))) {
+							foreach ($this->setting->get('cdr', 'field') as $field) {
 								$fields = explode(",", $field);
 								$field_name = end($fields);
 								$this->fields[] = $field_name;
@@ -776,7 +782,7 @@ if (!class_exists('xml_cdr')) {
 					
 					//check to see if file exists with the default file name and path
 						if (empty($record_name)) {
-							$path = $_SESSION['switch']['recordings']['dir'].'/'.$domain_name.'/archive/'.$start_year.'/'.$start_month.'/'.$start_day;
+							$path = $this->setting->get('switch', 'recordings').'/'.$domain_name.'/archive/'.$start_year.'/'.$start_month.'/'.$start_day;
 							if (file_exists($path.'/'.$uuid.'.wav')) {
 								$record_path = $path;
 								$record_name = $uuid.'.wav';
@@ -791,7 +797,7 @@ if (!class_exists('xml_cdr')) {
 					//last check - check to see if file exists with the bridge_uuid for the file name and path
 						 if (empty($record_name)) {
 							$bridge_uuid = urldecode($xml->variables->bridge_uuid) ?: $last_bridge;
-							$path = $_SESSION['switch']['recordings']['dir'].'/'.$domain_name.'/archive/'.$start_year.'/'.$start_month.'/'.$start_day;
+							$path = $this->setting->get('switch', 'recordings').'/'.$domain_name.'/archive/'.$start_year.'/'.$start_month.'/'.$start_day;
 							if (file_exists($path.'/'.$bridge_uuid.'.wav')) {
 								$record_path = $path;
 								$record_name = $bridge_uuid.'.wav';
@@ -857,12 +863,12 @@ if (!class_exists('xml_cdr')) {
 						*/
 
 					//save to the database in xml format
-						if ($_SESSION['cdr']['format']['text'] == "xml" && $_SESSION['cdr']['storage']['text'] == "db") {
+						if ($this->setting->get('cdr', 'format') == "xml" && $this->setting->get('cdr', 'storage') == "db") {
 							$this->array[$key]['xml'] = $xml_string;
 						}
 
 					//save to the database in json format
-						if ($_SESSION['cdr']['format']['text'] == "json" && $_SESSION['cdr']['storage']['text'] == "db") {
+						if ($this->setting->get('cdr', 'format') == "json" && $this->setting->get('cdr', 'storage') == "db") {
 							$this->array[$key]['json'] = json_encode($xml);
 						}
 
@@ -907,13 +913,13 @@ if (!class_exists('xml_cdr')) {
 						}
 
 					//store xml cdr on the file system as a file
-						if ($_SESSION['cdr']['storage']['text'] == "dir" && $error != "true") {
+						if ($this->setting->get('cdr', 'storage') == "dir" && $error != "true") {
 							if (!empty($uuid)) {
-								$tmp_dir = $_SESSION['switch']['log']['dir'].'/xml_cdr/archive/'.$start_year.'/'.$start_month.'/'.$start_day;
+								$tmp_dir = $this->setting->get('switch', 'log').'/xml_cdr/archive/'.$start_year.'/'.$start_month.'/'.$start_day;
 								if(!file_exists($tmp_dir)) {
 									mkdir($tmp_dir, 0770, true);
 								}
-								if ($_SESSION['cdr']['format']['text'] == "xml") {
+								if ($this->setting->get('cdr', 'format') == "xml") {
 									$tmp_file = $uuid.'.xml';
 									$fh = fopen($tmp_dir.'/'.$tmp_file, 'w');
 									fwrite($fh, $xml_string);
@@ -943,7 +949,7 @@ if (!class_exists('xml_cdr')) {
 		 * get xml from the filesystem and save it to the database
 		 */
 		public function read_files() {
-			$xml_cdr_dir = $_SESSION['switch']['log']['dir'].'/xml_cdr';
+			$xml_cdr_dir = $this->setting->get('switch', 'log').'/xml_cdr';
 			$dir_handle = opendir($xml_cdr_dir);
 			$x = 0;
 			while($file = readdir($dir_handle)) {
@@ -1038,9 +1044,9 @@ if (!class_exists('xml_cdr')) {
 
 				//authentication for xml cdr http post
 					if (!defined('STDIN')) {
-						if ($_SESSION["cdr"]["http_enabled"]["boolean"] == "true" && empty($_SESSION["xml_cdr"]["username"])) {
+						if ($this->setting->get('cdr', 'http_enabled') == "true" && $this->username) {
 							//get the contents of xml_cdr.conf.xml
-								$conf_xml_string = file_get_contents($_SESSION['switch']['conf']['dir'].'/autoload_configs/xml_cdr.conf.xml');
+								$conf_xml_string = file_get_contents($this->setting->get('switch', 'conf').'/autoload_configs/xml_cdr.conf.xml');
 
 							//parse the xml to get the call detail record info
 								try {
@@ -1068,7 +1074,7 @@ if (!class_exists('xml_cdr')) {
 
 				//if http enabled is set to false then deny access
 					if (!defined('STDIN')) {
-						if ($_SESSION["cdr"]["http_enabled"]["boolean"] == "false") {
+						if ($this->setting->get('cdr', 'http_enabled') == "false") {
 							echo "access denied<br />\n";
 							return;
 						}
@@ -1076,11 +1082,11 @@ if (!class_exists('xml_cdr')) {
 
 				//check for the correct username and password
 					if (!defined('STDIN')) {
-						if ($_SESSION["cdr"]["http_enabled"]["boolean"] == "true") {
+						if ($this->setting->get('cdr', 'http_enabled') == "true") {
 							if ($auth_array[0] == $_SERVER["PHP_AUTH_USER"] && $auth_array[1] == $_SERVER["PHP_AUTH_PW"]) {
 								//echo "access granted<br />\n";
-								$_SESSION["xml_cdr"]["username"] = $auth_array[0];
-								$_SESSION["xml_cdr"]["password"] = $auth_array[1];
+								$this->username = $auth_array[0];
+								$this->password = $auth_array[1];
 							}
 							else {
 								echo "access denied<br />\n";
@@ -1120,8 +1126,8 @@ if (!class_exists('xml_cdr')) {
 		public function user_summary() {
 
 			//set the time zone
-				if (isset($_SESSION['domain']['time_zone']['name'])) {
-					$time_zone = $_SESSION['domain']['time_zone']['name'];
+				if (!empty($this->setting->get('domain', 'time_zone'))) {
+					$time_zone = $this->setting->get('domain', 'time_zone');
 				}
 				else {
 					$time_zone = date_default_timezone_get();
