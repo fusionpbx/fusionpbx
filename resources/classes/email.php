@@ -1,6 +1,6 @@
 <?php
 /*-
- * Copyright (c) 2022 Mark J Crane <markjcrane@fusionpbx.com>
+ * Copyright (c) 2022 - 2023 Mark J Crane <markjcrane@fusionpbx.com>
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -209,7 +209,7 @@ if (!class_exists('email')) {
 
 			//set the send_method if not already set
 			if (!isset($this->method)) {
-				if ($_SESSION['email_queue']['enabled']['boolean'] == 'true') {
+				if ($this->setting->get('email_queue','enabled') == 'true') {
 					$this->method = 'queue';
 				}
 				else {
@@ -221,7 +221,7 @@ if (!class_exists('email')) {
 			if ($this->method == 'queue') {
 
 				//set the domain_uuid if not set
-				if (!isset($this->domain_uuid)) {
+				if (!isset($this->domain_uuid) && isset($_SESSION)) {
 					$this->domain_uuid = $_SESSION['domain_uuid'];
 				}
 
@@ -397,31 +397,31 @@ if (!class_exists('email')) {
 					include_once("resources/phpmailer/class.phpmailer.php");
 					include_once("resources/phpmailer/class.smtp.php");
 
-					//use the session email default settings
-					if (!empty($_SESSION['email']['smtp_hostname']['text'])) {
-						$smtp['hostname'] = $_SESSION['email']['smtp_hostname']['text'];
+					//use the email default settings
+					if (!empty($this->setting->get('email','smtp_hostname'))) {
+						$smtp['hostname'] = $this->setting->get('email','smtp_hostname');
 					}
-					$smtp['host'] 		= (strlen($_SESSION['email']['smtp_host']['text']) ? $_SESSION['email']['smtp_host']['text']: '127.0.0.1');
-					if (isset($_SESSION['email']['smtp_port'])) {
-						$smtp['port'] = (int) $_SESSION['email']['smtp_port']['numeric'];
+					$smtp['host'] 		= (strlen($this->setting->get('email','smtp_host')) ? $this->setting->get('email','smtp_host'): '127.0.0.1');
+					if (isset($this->setting->get('email','smtp_port'))) {
+						$smtp['port'] = (int) $this->setting->get('email','smtp_port');
 					}
 					else {
 						$smtp['port'] = 0;
 					}
-					$smtp['secure'] 	= $_SESSION['email']['smtp_secure']['text'];
-					$smtp['auth'] 		= $_SESSION['email']['smtp_auth']['text'];
-					$smtp['username'] 	= $_SESSION['email']['smtp_username']['text'];
-					$smtp['password'] 	= $_SESSION['email']['smtp_password']['text'];
-					$smtp['from'] 		= $_SESSION['email']['smtp_from']['text'];
-					$smtp['from_name'] 	= $_SESSION['email']['smtp_from_name']['text'];
-					$smtp['validate_certificate'] = $_SESSION['email']['smtp_validate_certificate']['boolean'];
-					$smtp['crypto_method'] = $_SESSION['email']['smtp_crypto_method']['text'] ?? null;
+					$smtp['secure'] 	= $this->setting->get('email','smtp_secure');
+					$smtp['auth'] 		= $this->setting->get('email','smtp_auth');
+					$smtp['username'] 	= $this->setting->get('email','smtp_username');
+					$smtp['password'] 	= $this->setting->get('email','smtp_password');
+					$smtp['from'] 		= $this->setting->get('email','smtp_from');
+					$smtp['from_name'] 	= $this->setting->get('email','smtp_from_name');
+					$smtp['validate_certificate'] = $this->setting->get('email','smtp_validate_certificate');
+					$smtp['crypto_method'] = $this->setting->get('email','smtp_crypto_method') ?? null;
 
-					if (isset($_SESSION['voicemail']['smtp_from']) && !empty($_SESSION['voicemail']['smtp_from']['text'])) {
-						$smtp['from'] = $_SESSION['voicemail']['smtp_from']['text'];
+					if (isset($this->setting->get('voicemail','smtp_from')) && !empty($this->setting->get('voicemail','smtp_from'))) {
+						$smtp['from'] = $this->setting->get('voicemail','smtp_from');
 					}
-					if (isset($_SESSION['voicemail']['smtp_from_name']) && !empty($_SESSION['voicemail']['smtp_from_name']['text'])) {
-						$smtp['from_name'] = $_SESSION['voicemail']['smtp_from_name']['text'];
+					if (isset($this->setting->get('voicemail','smtp_from_name')) && !empty($this->setting->get('voicemail','smtp_from_name'))) {
+						$smtp['from_name'] = $this->setting->get('voicemail','smtp_from_name');
 					}
 
 					//override the domain-specific smtp server settings, if any
