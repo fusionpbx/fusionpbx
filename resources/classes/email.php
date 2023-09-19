@@ -417,10 +417,10 @@ if (!class_exists('email')) {
 					$smtp['validate_certificate'] = $this->setting->get('email','smtp_validate_certificate');
 					$smtp['crypto_method'] = $this->setting->get('email','smtp_crypto_method') ?? null;
 
-					if (isset($this->setting->get('voicemail','smtp_from')) && !empty($this->setting->get('voicemail','smtp_from'))) {
+					if (!empty($this->setting->get('voicemail','smtp_from')) && !empty($this->setting->get('voicemail','smtp_from'))) {
 						$smtp['from'] = $this->setting->get('voicemail','smtp_from');
 					}
-					if (isset($this->setting->get('voicemail','smtp_from_name')) && !empty($this->setting->get('voicemail','smtp_from_name'))) {
+					if (!empty($this->setting->get('voicemail','smtp_from_name')) && !empty($this->setting->get('voicemail','smtp_from_name'))) {
 						$smtp['from_name'] = $this->setting->get('voicemail','smtp_from_name');
 					}
 
