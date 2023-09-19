@@ -132,7 +132,7 @@
 			}
 
 		//check for duplicate profile name
-			$sql = "select sip_profile_name from v_sip_profiles".($action == 'update' ? "where sip_profile_name <> :sip_profile_name" : null);
+			$sql = "select sip_profile_name from v_sip_profiles ".($action == 'update' ? "where sip_profile_name <> :sip_profile_name" : null);
 			if ($action == 'update') {
 				$parameters['sip_profile_name'] = $sip_profile_name;
 			}
