@@ -427,7 +427,7 @@
 	echo "<tr>\n";
 	echo "	<td colspan='2' align='right'>\n";
 	echo "		<br>";
-	echo "		<input type=\"submit\" class='btn' value=\"".$text['button-call']."\">\n";
+	echo "		<button type='submit' class='btn btn-default'><i class='fas fa-phone fa-lg'></i>&nbsp;&nbsp;&nbsp;".$text['button-call']."</button>\n";
 	echo "	</td>\n";
 	echo "</tr>\n";
 	echo "</table>\n";
