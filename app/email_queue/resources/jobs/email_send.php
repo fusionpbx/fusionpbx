@@ -289,11 +289,9 @@
 	$email_settings = '';
 	$email_setting_array = $setting->get('email');
 	ksort($email_setting_array);
-	foreach ($email_setting_array as $name => $setting) {
-		foreach ($setting as $type => $value) {
-			if ($name == 'smtp_password') { $value = '[REDACTED]'; }
-			$email_settings .= $name.': '.$value."\n";
-		}
+	foreach ($email_setting_array as $name => $value) {
+		if ($name == 'smtp_password') { $value = '[REDACTED]'; }
+		$email_settings .= $name.': '.$value."\n";
 	}
 
 //parse email and name
