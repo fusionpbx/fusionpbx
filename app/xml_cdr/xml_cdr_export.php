@@ -138,7 +138,7 @@
 		$pdf->AddPage('L', array($page_width, $page_height));
 
 		//set the number of columns
-		$columns = 12;
+		$columns = 13;
 
 		//write the table column headers
 		$data_start = '<table cellpadding="0" cellspacing="0" border="0" width="100%">';
@@ -148,6 +148,7 @@
 		$data_head .= '<td width="5%"><b>'.$text['label-direction'].'</b></td>';
 		$data_head .= '<td width="9%"><b>'.$text['label-caller_id_name'].'</b></td>';
 		$data_head .= '<td width="9%"><b>'.$text['label-caller_id_number'].'</b></td>';
+		$data_head .= '<td width="9%"><b>'.$text['label-caller_destination'].'</b></td>';
 		$data_head .= '<td width="9%"><b>'.$text['label-destination'].'</b></td>';
 		$data_head .= '<td width="10%" nowrap="nowrap"><b>'.$text['label-start'].'</b></td>';
 		$data_head .= '<td width="3%" align="right"><b>'.$text['label-tta'].'</b></td>';
@@ -188,6 +189,7 @@
 				$data_body[$p] .= '<td>'.$text['label-'.$fields['direction']].'</td>';
 				$data_body[$p] .= '<td>'.$fields['caller_id_name'].'</td>';
 				$data_body[$p] .= '<td>'.$fields['caller_id_number'].'</td>';
+				$data_body[$p] .= '<td>'.format_phone($fields['caller_destination']).'</td>';
 				$data_body[$p] .= '<td>'.format_phone($fields['destination_number']).'</td>';
 				$data_body[$p] .= '<td>'.$fields['start_stamp'].'</td>';
 				$total['tta'] += ($fields['tta'] > 0) ? $fields['tta'] : 0;
