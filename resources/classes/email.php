@@ -401,9 +401,9 @@ if (!class_exists('email')) {
 					if (!empty($this->setting->get('email','smtp_hostname'))) {
 						$smtp['hostname'] = $this->setting->get('email','smtp_hostname');
 					}
-					$smtp['host'] 		= (strlen($this->setting->get('email','smtp_host')) ? $this->setting->get('email','smtp_host'): '127.0.0.1');
-					if (isset($this->setting->get('email','smtp_port'))) {
-						$smtp['port'] = (int) $this->setting->get('email','smtp_port');
+					$smtp['host'] 		= (!empty($this->setting->get('email','smtp_host')) ? $this->setting->get('email','smtp_host'): '127.0.0.1');
+					if (!empty($this->setting->get('email','smtp_port'))) {
+						$smtp['port'] = (int)$this->setting->get('email','smtp_port');
 					}
 					else {
 						$smtp['port'] = 0;
