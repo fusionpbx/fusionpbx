@@ -573,14 +573,14 @@
 
 				//update the user_status
 					if (isset($call_center_agent_uuid) && is_uuid($call_center_agent_uuid) && !empty($user_status)) {
-						$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+						$fp = event_socket_create();
 						$switch_cmd = "callcenter_config agent set status ".$call_center_agent_uuid." '".$user_status."'";
 						$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
 					}
 
 				//update the user state
 					if (isset($call_center_agent_uuid) && is_uuid($call_center_agent_uuid)) {
-						$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+						$fp = event_socket_create();
 						$cmd = "api callcenter_config agent set state ".$call_center_agent_uuid." Waiting";
 						$response = event_socket_request($fp, $cmd);
 					}

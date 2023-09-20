@@ -110,7 +110,7 @@ if (!class_exists('gateways')) {
 
 						if (!empty($gateways) && is_array($gateways) && @sizeof($gateways) != 0) {
 							//create the event socket connection
-							$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+							$fp = event_socket_create();
 							if ($fp) {
 								//start gateways
 									foreach ($gateways as $gateway_uuid => $gateway) {
@@ -198,7 +198,7 @@ if (!class_exists('gateways')) {
 
 						if (!empty($gateways) && is_array($gateways) && @sizeof($gateways) != 0) {
 							//create the event socket connection
-							$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+							$fp = event_socket_create();
 							if ($fp) {
 								//stop gateways
 									foreach ($gateways as $gateway_uuid => $gateway) {
@@ -275,7 +275,7 @@ if (!class_exists('gateways')) {
 
 						//create the event socket connection
 							if (!isset($fp)) {
-								$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+								$fp = event_socket_create();
 							}
 
 						//loop through gateways
@@ -321,7 +321,7 @@ if (!class_exists('gateways')) {
 
 								//clear the cache
 									if (!$fp) {
-										$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+										$fp = event_socket_create();
 									}
 									if ($fp) {
 										$hostname = trim(event_socket_request($fp, 'api switchname'));
@@ -331,7 +331,7 @@ if (!class_exists('gateways')) {
 
 								//rescan the sip profile to look for new or stopped gateways
 									if (!$fp) {
-										$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+										$fp = event_socket_create();
 									}
 									if ($fp) {
 										//get distinct profiles from gateways
@@ -452,14 +452,14 @@ if (!class_exists('gateways')) {
 									save_gateway_xml();
 
 								//clear the cache
-									$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+									$fp = event_socket_create();
 									$hostname = trim(event_socket_request($fp, 'api switchname'));
 									$cache = new cache;
 									$cache->delete("configuration:sofia.conf:".$hostname);
 
 								//create the event socket connection
 									if (!$fp) {
-										$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+										$fp = event_socket_create();
 									}
 
 								//rescan the sip profile to look for new or stopped gateways
@@ -585,7 +585,7 @@ if (!class_exists('gateways')) {
 									save_gateway_xml();
 
 								//clear the cache
-									$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+									$fp = event_socket_create();
 									$hostname = trim(event_socket_request($fp, 'api switchname'));
 									$cache = new cache;
 									$cache->delete("configuration:sofia.conf:".$hostname);

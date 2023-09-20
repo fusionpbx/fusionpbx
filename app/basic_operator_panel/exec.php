@@ -57,7 +57,7 @@ if (count($_GET) > 0) {
 		$direction = trim($_GET["direction"] ?? '');
 
 	//setup the event socket connection
-		$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+		$fp = event_socket_create();
 
 	//allow specific commands
 		if (!empty($switch_cmd)) {

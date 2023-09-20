@@ -31,7 +31,7 @@
 	}
 
 //connect to event socket
-	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+	$fp = event_socket_create();
 
 //get the agent list from event socket
 	$switch_cmd = 'callcenter_config agent list';

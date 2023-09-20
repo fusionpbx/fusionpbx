@@ -595,7 +595,7 @@
 
 			//send the message waiting status
 
-				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+				$fp = event_socket_create();
 				if ($fp) {
 					$switch_cmd = "luarun app.lua voicemail mwi ".$this->voicemail_id."@".$_SESSION['domain_name'];
 					$switch_result = event_socket_request($fp, 'api '.$switch_cmd);

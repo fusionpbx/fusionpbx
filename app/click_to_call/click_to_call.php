@@ -93,7 +93,7 @@
 			}
 
 		//create the even socket connection and send the event socket command
-			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+			$fp = event_socket_create();
 			if (!$fp) {
 				//error message
 				echo "<div align='center'><strong>Connection to Event Socket failed.</strong></div>";
@@ -200,7 +200,7 @@
 			unset($destination_common);
 
 		//create the even socket connection and send the event socket command
-			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+			$fp = event_socket_create();
 			if (!$fp) {
 				//error message
 				echo "<div align='center'><strong>Connection to Event Socket failed.</strong></div>";

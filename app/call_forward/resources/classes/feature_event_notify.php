@@ -42,7 +42,7 @@
 
 	//feature_event method		
 		public function send_notify() {
-			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+			$fp = event_socket_create();
 			if ($fp) {
 				// Get the SIP profiles for the extension
 				$command = "sofia_contact */{$this->extension}@{$this->domain_name}";
