@@ -90,7 +90,7 @@ if (!class_exists('permissions')) {
 			}
 
 			if (empty($permissions)) {
-				$permissions = $_SESSION["permissions"];
+				$permissions = $_SESSION["permissions"] ?? [];
 			}
 
 			//set default to false

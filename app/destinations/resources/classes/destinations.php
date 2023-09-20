@@ -506,7 +506,7 @@ if (!class_exists('destinations')) {
 					if (isset($destination_key) && $key == $destination_key) {
 						foreach($value as $k => $row) {
 							$selected = ($row['destination'] == $destination_value) ? "selected='selected'" : '';
-							$uuid = isset($row[$this->singular($key).'_uuid']) ? $row[$this->singular($key).'_uuid'] : $row['uuid'];
+							$uuid = isset($row[$this->singular($key).'_uuid']) ? $row[$this->singular($key).'_uuid'] : ($row['uuid'] ?? '');
 							$response .= "		<option id='{$uuid}' value='".$row['destination']."' $selected>".$row['label']."</option>\n";
 						}
 					}
@@ -881,7 +881,7 @@ if (!class_exists('destinations')) {
 
 				$name = $row['name'];
 				$label = $row['label'];
-				$destination = $row['field']['destination'];
+				$destination = $row['field']['destination'] ?? null;
 
 				//add multi-lingual support
 				if (file_exists($_SERVER["PROJECT_ROOT"]."/app/".$name."/app_languages.php")) {
@@ -889,7 +889,7 @@ if (!class_exists('destinations')) {
 					$text2 = $language2->get($_SESSION['domain']['language']['code'], 'app/'.$name);
 				}
 
-				if (is_array($row['result']['data']) && !empty($row['select_value'][$destination_type])) {
+				if (isset($row['result']) && is_array($row['result']['data']) && !empty($row['select_value'][$destination_type])) {
 					$label2 = $label;
 					foreach ($row['result']['data'] as $data) {
 						$select_value = $row['select_value'][$destination_type];
@@ -920,12 +920,12 @@ if (!class_exists('destinations')) {
 									}
 								}
 								else {
-									$select_value = str_replace("\${".$key."}", $data[$key], $select_value);
+									$select_value = str_replace("\${".$key."}", ($data[$key] ?? ''), $select_value);
 									if (empty($data['label'])) {
-										$select_label = str_replace("\${".$key."}", $data[$key], $select_label);
+										$select_label = str_replace("\${".$key."}", ($data[$key] ?? ''), $select_label);
 									}
 									else {
-										$label = $data['label'];
+// 										$label = $data['label'];
 										$select_label = str_replace("\${".$key."}", $text2['option-'.$label], $select_label);
 									}
 								}
@@ -949,7 +949,7 @@ if (!class_exists('destinations')) {
 						$select_label = str_replace("&#9993", 'email-icon', $select_label);
 						$select_label = escape(trim($select_label));
 						$select_label = str_replace('email-icon', '&#9993', $select_label);
-						if ($select_value == $destination_value) { $selected = "true' "; } else { $selected = 'false'; }
+						if (isset($destination_value) && $select_value == $destination_value) { $selected = "true' "; } else { $selected = 'false'; }
 						if ($label2 == 'destinations') { $select_label = format_phone($select_label); }
 
 						$array[$name][$i] = $data;
@@ -959,7 +959,7 @@ if (!class_exists('destinations')) {
 						//$array[$name][$i]['select_value'] = $select_value;
 						//$array[$name][$i]['selected'] = $selected;
 						$array[$name][$i]['destination'] = $select_value;
-						$array[$name][$i]["extension"] = $data["extension"];
+						$array[$name][$i]["extension"] = $data["extension"] ?? null;
 
 						$i++;
 					}
