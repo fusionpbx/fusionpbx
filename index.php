@@ -46,7 +46,7 @@
 	}
 	else {
 		//use custom index, if present, otherwise use custom login, if present, otherwise use default login
-		if (file_exists($_SERVER["PROJECT_ROOT"]."/themes/".$_SESSION['domain']['template']['name']."/index.php")) {
+		if (file_exists($_SERVER["PROJECT_ROOT"]."/themes/".($_SESSION['domain']['template']['name'] ?? '')."/index.php")) {
 			require_once "themes/".$_SESSION['domain']['template']['name']."/index.php";
 		}
 		else {

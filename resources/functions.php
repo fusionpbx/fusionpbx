@@ -1211,7 +1211,7 @@ function number_pad($number,$n) {
 				else { //rgb(a)
 					$rgb = implode(',', $color);
 					if (!empty($alpha)) { $rgb .= ','.$alpha; $a = 'a'; }
-					if ($wrapper) { $rgb = 'rgb'.$a.'('.$rgb.')'; }
+					if ($wrapper) { $rgb = 'rgb'.($a ?? '').'('.$rgb.')'; }
 					return $rgb;
 				}
 			}
