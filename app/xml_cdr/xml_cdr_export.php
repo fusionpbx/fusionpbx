@@ -68,11 +68,32 @@
 			$z = 0;
 			foreach ($result[0] as $key => $val) {
 				if ($key != "xml" && $key != "json") {
-					if ($z == 0) {
-						echo '"'.$key.'"';
+					$echo = true;
+					switch ($key) {
+						case 'direction': if (!permission_exists('xml_cdr_direction')) { $echo = false; } break;
+						case 'extension': if (!permission_exists('xml_cdr_extension')) { $echo = false; } break;
+						case 'caller_id_name': if (!permission_exists('xml_cdr_caller_id_name')) { $echo = false; } break;
+						case 'caller_id_number': if (!permission_exists('xml_cdr_caller_id_number')) { $echo = false; } break;
+						case 'caller_destination': if (!permission_exists('xml_cdr_caller_destination')) { $echo = false; } break;
+						case 'destination_number': if (!permission_exists('xml_cdr_destination')) { $echo = false; } break;
+						case 'answer_stamp':
+						case 'start_stamp':
+						case 'end_stamp':
+						case 'start_date_formatted':
+						case 'start_time_formatted':
+						case 'start_epoch': if (!permission_exists('xml_cdr_start')) { $echo = false; } break;
+						case 'tta': if (!permission_exists('xml_cdr_tta')) { $echo = false; } break;
+						case 'duration':
+						case 'billsec':
+						case 'billmsec': if (!permission_exists('xml_cdr_duration')) { $echo = false; } break;
+						case 'pdd_ms': if (!permission_exists('xml_cdr_pdd')) { $echo = false; } break;
+						case 'rtp_audio_in_mos': if (!permission_exists('xml_cdr_mos')) { $echo = false; } break;
+						case 'hangup_cause': if (!permission_exists('xml_cdr_hangup_cause')) { $echo = false; } break;
+						case 'record_path':
+						case 'record_name': if (!permission_exists('xml_cdr_recording')) { $echo = false; } break;
 					}
-					else {
-						echo ',"'.$key.'"';
+					if ($echo) {
+						echo ($z == 0 ? null : ',').'"'.$key.'"';
 					}
 				}
 				$z++;
@@ -85,18 +106,39 @@
 				$z = 0;
 				foreach ($result[0] as $key => $val) {
 					if ($key != "xml" && $key != "json") {
-						if ($z == 0) {
-							echo '"'.$result[$x][$key].'"';
+						$echo = true;
+						switch ($key) {
+							case 'direction': if (!permission_exists('xml_cdr_direction')) { $echo = false; } break;
+							case 'extension': if (!permission_exists('xml_cdr_extension')) { $echo = false; } break;
+							case 'caller_id_name': if (!permission_exists('xml_cdr_caller_id_name')) { $echo = false; } break;
+							case 'caller_id_number': if (!permission_exists('xml_cdr_caller_id_number')) { $echo = false; } break;
+							case 'caller_destination': if (!permission_exists('xml_cdr_caller_destination')) { $echo = false; } break;
+							case 'destination_number': if (!permission_exists('xml_cdr_destination')) { $echo = false; } break;
+							case 'answer_stamp':
+							case 'start_stamp':
+							case 'end_stamp':
+							case 'start_date_formatted':
+							case 'start_time_formatted':
+							case 'start_epoch': if (!permission_exists('xml_cdr_start')) { $echo = false; } break;
+							case 'tta': if (!permission_exists('xml_cdr_tta')) { $echo = false; } break;
+							case 'duration':
+							case 'billsec':
+							case 'billmsec': if (!permission_exists('xml_cdr_duration')) { $echo = false; } break;
+							case 'pdd_ms': if (!permission_exists('xml_cdr_pdd')) { $echo = false; } break;
+							case 'rtp_audio_in_mos': if (!permission_exists('xml_cdr_mos')) { $echo = false; } break;
+							case 'hangup_cause': if (!permission_exists('xml_cdr_hangup_cause')) { $echo = false; } break;
+							case 'record_path':
+							case 'record_name': if (!permission_exists('xml_cdr_recording')) { $echo = false; } break;
 						}
-						else {
-							echo ',"'.$result[$x][$key].'"';
+						if ($echo) {
+							echo ($z == 0 ? null : ',').'"'.$result[$x][$key].'"';
 						}
 					}
 					$z++;
 				}
 				echo "\n";
 				++$x;
-				if ($x > ($result_count-1)) {
+				if ($x > ($result_count - 1)) {
 					break;
 				}
 			}
