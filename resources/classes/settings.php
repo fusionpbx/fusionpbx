@@ -261,7 +261,3 @@ class settings {
 }
 
 ?>
-<?php
-
-	$setting = new settings();
-	$setting->set('default', '', 'API System', 'UserID', 'text');
