@@ -53,7 +53,7 @@
 	if (permission_exists('xml_cdr_export_csv') && $export_format == 'csv') {
 
 		//define file name
-			if ($_GET['show'] == 'all' && permission_exists('xml_cdr_all')) {
+			if ($_REQUEST['show'] == 'all' && permission_exists('xml_cdr_all')) {
 				$csv_filename = "cdr_".date("Ymd_His").".csv";
 			}
 			else {
@@ -184,11 +184,11 @@
 			$data_head .= '<td width="7%" align="right"><b>'.$text['label-billsec'].'</b></td>';
 		}
 		if (permission_exists('xml_cdr_pdd')) {
-			$data_head .= '<td width="5%" align="right"><b>'."PDD".'</b></td>';
+			$data_head .= '<td width="5%" align="right"><b>PDD</b></td>';
 			$columns++;
 		}
 		if (permission_exists('xml_cdr_mos')) {
-			$data_head .= '<td width="5%" align="center"><b>'."MOS".'</b></td>';
+			$data_head .= '<td width="5%" align="center"><b>MOS</b></td>';
 			$columns++;
 		}
 		if (!empty($_SESSION['cdr']['field']) && is_array($_SESSION['cdr']['field'])) {
@@ -221,6 +221,7 @@
 
 		//write the row cells
 		$z = 0; // total counter
+		$z_mos = 0; // total with mos counter
 		$p = 0; // per page counter
 		if (sizeof($result) > 0 && $columns != 0) {
 			foreach ($result as $cdr_num => $fields) {
@@ -264,6 +265,7 @@
 				if (permission_exists('xml_cdr_mos')) {
 					$total['rtp_audio_in_mos'] += $fields['rtp_audio_in_mos'];
 					$data_body[$p] .= '<td align="center">'.($fields['rtp_audio_in_mos'] ?? '').'</td>';
+					if (!empty($fields['rtp_audio_in_mos']) && is_numeric($fields['rtp_audio_in_mos'])) { $z_mos++; }
 				}
 				if (!empty($_SESSION['cdr']['field']) && is_array($_SESSION['cdr']['field'])) {
 					foreach ($_SESSION['cdr']['field'] as $field) {
@@ -351,7 +353,7 @@
 				$data_footer .= '<td align="right"><b>'.number_format(round(($total['pdd_ms'] / $z / 1000), 2), 2).'s</b></td>';
 			}
 			if (permission_exists('xml_cdr_mos')) {
-				$data_footer .= '<td align="center"><b>'.round(($total['rtp_audio_in_mos'] / $z), 2).'</b></td>';
+				$data_footer .= '<td align="center"><b>'.round(($total['rtp_audio_in_mos'] / $z_mos), 2).'</b></td>';
 			}
 			if (permission_exists('xml_cdr_hangup_cause')) {
 				$data_footer .= '<td></td>';
@@ -377,7 +379,12 @@
 		unset($data_body_chunk);
 
 		//define file name
-		$pdf_filename = "cdr_".$_SESSION['domain_name']."_".date("Ymd_His").".pdf";
+		if ($_REQUEST['show'] == 'all' && permission_exists('xml_cdr_all')) {
+			$pdf_filename = "cdr_".date("Ymd_His").".pdf";
+		}
+		else {
+			$pdf_filename = "cdr_".$_SESSION['domain_name']."_".date("Ymd_His").".csv";
+		}
 
 		header("Content-Type: application/force-download");
 		header("Content-Type: application/octet-stream");
