@@ -57,7 +57,7 @@
 
 	$switch_cmd = 'fifo list_verbose '.$fifo_name.'';
 	
-	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+	$fp = event_socket_create();
 	if (!$fp) {
 		$msg = "<div align='center'>Connection to Event Socket failed.<br /></div>";
 		echo "<div align='center'>\n";

@@ -90,7 +90,7 @@
 
 //run the command
 	if (isset($switch_command)) {
-		$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+		$fp = event_socket_create();
 		$response = event_socket_request($fp, 'api '.$switch_command);
 	}
 
@@ -134,7 +134,7 @@
 		//fs cmd
 		if (!empty($switch_cmd)) {
 			//setup the event socket connection
-				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+				$fp = event_socket_create();
 			//ensure the connection exists
 				if ($fp) {
 					//send the command

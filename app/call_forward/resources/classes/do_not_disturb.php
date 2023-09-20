@@ -39,7 +39,7 @@
 				if ($this->enabled == "true") {
 					//update the call center status
 						$user_status = "Logged Out";
-						$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+						$fp = event_socket_create();
 						if ($fp) {
 							$switch_cmd .= "callcenter_config agent set status ".$_SESSION['username']."@".$this->domain_name." '".$user_status."'";
 							$switch_result = event_socket_request($fp, 'api '.$switch_cmd);

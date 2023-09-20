@@ -154,7 +154,7 @@ if (!class_exists('sip_profiles')) {
 										}
 									}
 									if ($empty_hostname) {
-										$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+										$fp = event_socket_create();
 										if ($fp) {
 											$hostnames[] = event_socket_request($fp, 'api switchname');
 										}
@@ -237,7 +237,7 @@ if (!class_exists('sip_profiles')) {
 
 								//get system hostname if necessary
 									if (empty($sip_profile_hostname)) {
-										$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+										$fp = event_socket_create();
 										if ($fp) {
 											$sip_profile_hostname = event_socket_request($fp, 'api switchname');
 										}
@@ -315,7 +315,7 @@ if (!class_exists('sip_profiles')) {
 
 								//get system hostname if necessary
 									if (empty($sip_profile_hostname)) {
-										$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+										$fp = event_socket_create();
 										if ($fp) {
 											$sip_profile_hostname = event_socket_request($fp, 'api switchname');
 										}
@@ -403,7 +403,7 @@ if (!class_exists('sip_profiles')) {
 										}
 									}
 									if ($empty_hostname) {
-										$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+										$fp = event_socket_create();
 										if ($fp) {
 											$hostnames[] = event_socket_request($fp, 'api switchname');
 										}

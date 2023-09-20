@@ -61,7 +61,7 @@
 	$switch_cmd = "conference '".$conference_name."' xml_list";
 
 //connect to event socket, send the command and process the results
-	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+	$fp = event_socket_create();
 	if (!$fp) {
 		$msg = "<div align='center'>".$text['message-connection']."<br /></div>";
 		echo "<div align='center'>\n";

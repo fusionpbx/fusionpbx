@@ -188,7 +188,7 @@
 				}
 
 			//connect to event socket
-				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+				$fp = event_socket_create();
 				if ($fp) {
 					if ($data == "energy") {
 						//conference 3001-example-domain.org energy 103

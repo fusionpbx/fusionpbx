@@ -30,7 +30,7 @@ class cache {
 		//save to memcache
 			if ($_SESSION['cache']['method']['text'] == "memcache") {
 				//connect to event socket
-					$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+					$fp = event_socket_create();
 					if ($fp === false) {
 						return false;
 					}
@@ -64,7 +64,7 @@ class cache {
 		//cache method memcache 
 			if ($_SESSION['cache']['method']['text'] == "memcache") {
 				// connect to event socket
-					$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+					$fp = event_socket_create();
 					if ($fp === false) {
 						return false;
 					}
@@ -106,7 +106,7 @@ class cache {
 		//cache method memcache 
 			if (!empty($_SESSION['cache']['method']['text']) && $_SESSION['cache']['method']['text'] == "memcache") {
 				//connect to event socket
-					$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+					$fp = event_socket_create();
 					if ($fp === false) {
 						return false;
 					}
@@ -133,7 +133,7 @@ class cache {
 					$key = str_replace(":", ".", $key);
 
 				//connect to event socket
-					$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+					$fp = event_socket_create();
 					if ($fp === false) {
 						return false;
 					}
@@ -174,7 +174,7 @@ class cache {
 		//cache method memcache 
 			if ($_SESSION['cache']['method']['text'] == "memcache") {
 				// connect to event socket
-					$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+					$fp = event_socket_create();
 					if ($fp === false) {
 						return false;
 					}
@@ -198,7 +198,7 @@ class cache {
 		//cache method file 
 			if ($_SESSION['cache']['method']['text'] == "file") {
 				// connect to event socket
-					$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+					$fp = event_socket_create();
 					if ($fp === false) {
 						return false;
 					}

@@ -74,7 +74,7 @@
 			if (is_array($calls) && @sizeof($calls) != 0) {
 
 				//setup the event socket connection
-					$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+					$fp = event_socket_create();
 
 				//execute hangup command
 					foreach ($calls as $call_uuid) {

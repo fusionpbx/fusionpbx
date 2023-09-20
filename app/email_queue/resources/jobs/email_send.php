@@ -383,11 +383,7 @@
 			$domain_name = $database->select($sql, $parameters, 'column');
 
 			//send the message waiting status
-			$fp = event_socket_create(
-				$setting->get('switch','event_socket_ip_address'), 
-				$setting->get('switch', 'event_socket_port'), 
-				$setting->get('switch', 'event_socket_password')
-			);
+			$fp = event_socket_create();
 			if ($fp) {
 				//$switch_cmd .= "luarun app.lua voicemail mwi ".$voicemail_id."@".$domain_name;
 				$switch_cmd .= "luarun app/voicemail/resources/scripts/mwi_notify.lua ".$voicemail_id." ".$domain_name." 0 0";

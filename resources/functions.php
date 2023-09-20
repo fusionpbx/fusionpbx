@@ -715,7 +715,7 @@
 function switch_module_is_running($fp, $mod) {
 	if (!$fp) {
 		//if the handle does not exist create it
-			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+			$fp = event_socket_create();
 		//if the handle still does not exist show an error message
 			if (!$fp) {
 				$msg = "<div align='center'>Connection to Event Socket failed.<br /></div>";
@@ -1859,7 +1859,7 @@ function number_pad($number,$n) {
 //make directory with event socket
 	function event_socket_mkdir($dir) {
 		//connect to fs
-			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+			$fp = event_socket_create();
 			if (!$fp) {
 				return false;
 			}
@@ -2169,7 +2169,7 @@ function number_pad($number,$n) {
 	if (!function_exists('user_exists')) {
 		function user_exists($login, $domain_name = null) {
 			//connect to freeswitch
-			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+			$fp = event_socket_create();
 			if (!$fp) {
 				return false;
 			}

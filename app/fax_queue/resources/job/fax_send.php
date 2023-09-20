@@ -225,7 +225,7 @@
 	if ($fax_status == 'waiting' || $fax_status == 'trying' || $fax_status == 'busy') {
 
 		//create event socket handle
-			$fp = event_socket_create($setting->get('switch','event_socket_ip_address'), $setting->get('switch','event_socket_port'), $setting->get('switch','event_socket_password'));
+			$fp = event_socket_create();
 			if (!$fp) {
 				echo "Could not connect to event socket.\n";
 				exit;	

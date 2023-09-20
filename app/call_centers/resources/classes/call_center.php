@@ -338,7 +338,7 @@
 								if (is_array($array) && @sizeof($array) != 0) {
 
 									//setup the event socket connection
-										$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+										$fp = event_socket_create();
 
 									//delete the queue in the switch
 										if ($fp) {
@@ -436,7 +436,7 @@
 								if (is_array($array) && @sizeof($array) != 0) {
 
 									//setup the event socket connection
-										$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+										$fp = event_socket_create();
 
 									//delete the agent in the switch
 										if ($fp) {

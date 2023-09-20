@@ -52,7 +52,7 @@
 	$switch_cmd = 'show channels as json';
 
 //create the event socket connection
-	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+	$fp = event_socket_create();
 
 //send the event socket command and get the array
 	if ($fp) {

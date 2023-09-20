@@ -238,7 +238,7 @@
 
 	//add the agent
 		//setup the event socket connection
-			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+			$fp = event_socket_create();
 		//add the agent using event socket
 			if ($fp) {
 				//add the agent

@@ -399,7 +399,7 @@
 					$cmd .= "answer-state: confirmed\n";
 
 					//send the event
-					$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+					$fp = event_socket_create();
 					$switch_result = event_socket_request($fp, $cmd);
 					unset($fp);
 				}
@@ -421,7 +421,7 @@
 						$cmd .= "answer-state: terminated\n";
 
 						//send the event
-						$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+						$fp = event_socket_create();
 						$switch_result = event_socket_request($fp, $cmd);
 						unset($fp);
 					}

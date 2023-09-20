@@ -152,7 +152,7 @@
 
 		//delete the agent from freeswitch
 			//setup the event socket connection
-			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+			$fp = event_socket_create();
 			//delete the agent over event socket
 			if ($fp) {
 				//callcenter_config tier del [queue_name] [agent_name]
@@ -457,7 +457,7 @@
 
 			if (!empty($agent_name)) {
 				//setup the event socket connection
-					$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+					$fp = event_socket_create();
 				//add the agent using event socket
 					if ($fp) {
 						/* syntax:

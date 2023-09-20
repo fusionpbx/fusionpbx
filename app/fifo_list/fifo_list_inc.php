@@ -46,7 +46,7 @@
 
 //show the list
 	$switch_cmd = 'fifo list';
-	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+	$fp = event_socket_create();
 	if ($fp) {
 		$xml_str = trim(event_socket_request($fp, 'api '.$switch_cmd));
 		try {

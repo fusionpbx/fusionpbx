@@ -43,8 +43,7 @@
 	$text = $language->get();
 
 //create event socket
-	$socket_ip = $_SESSION['event_socket_ip_address'] != '0.0.0.0' ? $_SESSION['event_socket_ip_address'] : '127.0.0.1';
-	$fp = event_socket_create($socket_ip, $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+	$fp = event_socket_create();
 	if (!$fp) {
 		message::add($text['error-event-socket'], 'negative', 5000);
 	}

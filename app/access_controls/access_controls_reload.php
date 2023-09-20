@@ -41,7 +41,7 @@
 	$search = $_REQUEST['search'] ?? '';
 
 //create event socket connection
-	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+	$fp = event_socket_create();
 	if ($fp) {
 		//run the command
 			$result = rtrim(event_socket_request($fp, 'api reloadacl'));

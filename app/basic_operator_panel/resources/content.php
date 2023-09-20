@@ -64,7 +64,7 @@ if (!empty($groups)) {
 }
 
 //get the valet info
-$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+$fp = event_socket_create();
 if ($fp) {
 	$valet_info = event_socket_request($fp, 'api valet_info park@'.$_SESSION['domain_name']);
 

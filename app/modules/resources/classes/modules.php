@@ -682,7 +682,7 @@ if (!class_exists('modules')) {
 		//check the status of the module
 			public function active($name) {
 				if (!$this->fp) {
-					$this->fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+					$this->fp = event_socket_create();
 				}
 				if ($this->fp) {
 					$cmd = "api module_exists ".$name;
@@ -883,7 +883,7 @@ if (!class_exists('modules')) {
 
 						if (is_array($modules) && @sizeof($modules) != 0) {
 							//create the event socket connection
-								$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+								$fp = event_socket_create();
 
 							if ($fp) {
 								//control modules
@@ -969,7 +969,7 @@ if (!class_exists('modules')) {
 							if (is_array($array) && @sizeof($array) != 0) {
 
 								//create the event socket connection
-									$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+									$fp = event_socket_create();
 
 								//stop modules
 									if ($fp) {
@@ -1069,7 +1069,7 @@ if (!class_exists('modules')) {
 									unset($array);
 
 								//create the event socket connection
-									$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+									$fp = event_socket_create();
 
 								//stop modules if active
 									if ($fp) {

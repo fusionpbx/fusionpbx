@@ -45,7 +45,7 @@ else {
 	if (is_uuid($uuid)) {
 		//show the result
 			if (count($_GET) > 0) {
-				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+				$fp = event_socket_create();
 				if ($fp) {
 					$cmd = "sched_del ".$uuid;
 					$result = event_socket_request($fp, 'api '.$cmd);

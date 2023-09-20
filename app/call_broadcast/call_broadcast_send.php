@@ -130,7 +130,7 @@
 	$broadcast_name = str_replace("'", "", $broadcast_name);
 
 //create the event socket connection
-	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+	$fp = event_socket_create();
 
 //get information over event socket
 	if (!$fp) {
@@ -196,7 +196,7 @@
 
 						//if the event socket connection is lost then re-connect
 							if (!$fp) {
-								$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+								$fp = event_socket_create();
 							}
 
 						//method 1

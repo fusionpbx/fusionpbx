@@ -43,7 +43,7 @@
 	$text = $language->get();
 
 //show content
-	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+	$fp = event_socket_create();
 	if (!$fp) {
 		$msg = "<div align='center'>".$text['message-connection']."<br /></div>";
 		echo "<div align='center'>\n";

@@ -86,7 +86,7 @@ if (!class_exists('basic_operator_panel')) {
 				}
 
 			//send the command
-				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+				$fp = event_socket_create();
 				if ($fp) {
 					$switch_result = event_socket_request($fp, 'api show channels as json');
 					$json_array = json_decode($switch_result, true);
