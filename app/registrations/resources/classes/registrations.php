@@ -60,7 +60,7 @@ if (!class_exists('registrations')) {
 				$id = 0;
 
 			//create the event socket connection
-				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+				$fp = event_socket_create();
 
 			//get the default settings
 				$sql = "select sip_profile_name from v_sip_profiles ";
@@ -269,7 +269,7 @@ if (!class_exists('registrations')) {
 							unset($sql);
 
 						//create the event socket connection
-							$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+							$fp = event_socket_create();
 
 						//loop through registrations
 							if ($fp) {

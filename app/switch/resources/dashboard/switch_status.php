@@ -26,7 +26,7 @@
 	$row_style["1"] = "row_style1";
 
 //connect to event socket
-	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+	$fp = event_socket_create();
 
 //switch version
 	if (permission_exists('switch_version') && $fp) {

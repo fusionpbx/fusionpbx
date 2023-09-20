@@ -144,7 +144,7 @@
 		echo "	</td>\n";
 		echo "</tr>\n";
 
-		$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+		$fp = event_socket_create();
 		if ($fp) {
 			$switch_version = event_socket_request($fp, 'api version');
 			preg_match("/FreeSWITCH Version (\d+\.\d+\.\d+(?:\.\d+)?).*\(.*?(\d+\w+)\s*\)/", $switch_version, $matches);
@@ -544,7 +544,7 @@
 		$memcache_fail = false;
 		$mod = new modules;
 		if ($mod -> active("mod_memcache")) {
-			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+			$fp = event_socket_create();
 			if ($fp) {
 				$switch_cmd = "memcache status verbose";
 				$switch_result = event_socket_request($fp, 'api '.$switch_cmd);

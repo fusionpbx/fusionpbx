@@ -70,14 +70,14 @@
 					$obj->delete($gateways);
 				}
 			case 'start':
-				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+				$fp = event_socket_create();
 				if ($fp && permission_exists('gateway_edit')) {
 					$obj = new gateways;
 					$obj->start($gateways);
 				}
 				break;
 			case 'stop':
-				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+				$fp = event_socket_create();
 				if ($fp && permission_exists('gateway_edit')) {
 					$obj = new gateways;
 					$obj->stop($gateways);
@@ -90,14 +90,14 @@
 	}
 
 //connect to event socket
-	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+	$fp = event_socket_create();
 
 //gateway status function
 	if (!function_exists('switch_gateway_status')) {
 		function switch_gateway_status($gateway_uuid, $result_type = 'xml') {
 			global $fp;
 			if ($fp) {
-				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+				$fp = event_socket_create();
 				$cmd = 'api sofia xmlstatus gateway '.$gateway_uuid;
 				$response = trim(event_socket_request($fp, $cmd));
 				if ($response == "Invalid Gateway!") {
