@@ -174,6 +174,9 @@ if (!class_exists('destinations')) {
 			$database = new database;
 			$this->domain_name = $database->select($sql, $parameters, 'column');
 
+			//initialize variable
+			$response = '';
+
 			//create a single destination select list
 			if (!empty($_SESSION['destinations']['select_mode']['text']) && $_SESSION['destinations']['select_mode']['text'] == 'default') {
 				//get the destinations
@@ -290,7 +293,7 @@ if (!class_exists('destinations')) {
 
 				//add additional
 				if (if_group("superadmin")) {
-					$response = "<script>\n";
+					$response .= "<script>\n";
 					$response .= "var Objs;\n";
 					$response .= "\n";
 					$response .= "function changeToInput".$destination_id."(obj){\n";
@@ -482,7 +485,7 @@ if (!class_exists('destinations')) {
 					$singular = $this->singular($key);
 					if (permission_exists("{$singular}_destinations")) {
 						//determine if selected
-						$selected = ($key == $destination_key) ? "selected='selected'" : '';
+						$selected = (isset($destination_key) && $key == $destination_key) ? "selected='selected'" : '';
 
 						//add multi-lingual support
 						if (file_exists($_SERVER["PROJECT_ROOT"]."/app/".$key."/app_languages.php")) {
@@ -500,7 +503,7 @@ if (!class_exists('destinations')) {
 				$response .= "	</select>\n";
 				$response .= "	<select id='".$destination_id."' name='".$destination_name."' class='formfld' style='".$select_style." min-width: 200px;'>\n";
 				foreach($_SESSION['destinations'][$this->domain_uuid]['array'][$destination_type] as $key => $value) {
-					if ($key == $destination_key) {
+					if (isset($destination_key) && $key == $destination_key) {
 						foreach($value as $k => $row) {
 							$selected = ($row['destination'] == $destination_value) ? "selected='selected'" : '';
 							$uuid = isset($row[$this->singular($key).'_uuid']) ? $row[$this->singular($key).'_uuid'] : $row['uuid'];
@@ -513,7 +516,7 @@ if (!class_exists('destinations')) {
 					'type'=>'button',
 					'icon'=>'external-link-alt',
 					'id'=>'btn_dest_go',
-					'title'=>$text['label-edit'],
+					'title'=>$text2['button-edit'],
 					'onclick'=>"let types = document.getElementById('{$destination_id}_type').options; let opts = document.getElementById('{$destination_id}').options; if(opts[opts.selectedIndex].id && opts[opts.selectedIndex].id.length > 0) {window.open('/app/'+types[types.selectedIndex].className+'/'+types[types.selectedIndex].id+'_edit.php?id='+opts[opts.selectedIndex].id, '_blank');}"
 				])."\n";
 
@@ -867,7 +870,7 @@ if (!class_exists('destinations')) {
 			}
 
 			//remove special characters from the name
-			$destination_id = str_replace("]", "", $destination_name);
+			$destination_id = str_replace("]", "", $destination_name ?? '');
 			$destination_id = str_replace("[", "_", $destination_id);
 
 			//set default to false
