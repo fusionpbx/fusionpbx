@@ -348,7 +348,6 @@ function outbound_route_to_bridge($domain_uuid, $destination_number, array $chan
 	$database = new database;
 	$result = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
-
 	if (!empty($result)) {
 		foreach ($result as &$row) {
 			$dialplan_uuid = $row["dialplan_uuid"];
@@ -393,7 +392,7 @@ function outbound_route_to_bridge($domain_uuid, $destination_number, array $chan
 					}
 				}
 			}
-		
+
 			if (!in_array('false', $condition_match)) {
 				foreach ($dialplan as &$dialplan_details) {
 					$dialplan_detail_data = $dialplan_details['dialplan_detail_data'] ?? '';
@@ -413,7 +412,7 @@ function outbound_route_to_bridge($domain_uuid, $destination_number, array $chan
 						$x++;
 					}
 				}
-				
+
 				if ($dialplan["dialplan_continue"] == "false") {
 					break;
 				}
