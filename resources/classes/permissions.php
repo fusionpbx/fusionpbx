@@ -67,31 +67,12 @@ if (!class_exists('permissions')) {
 		public function exists($permission_name) {
 
 			//if run from command line then return true
-			if (defined('STDIN') && empty($_SESSION["permissions"])) {
+			if (defined('STDIN')) {
 				return true;
 			}
 
-			//define permissions global variable
-			global $permissions;
-
-			if (empty($permissions) && empty($_SESSION["permissions"])) {
-				//define additional global variables
-				global $groups, $domain_uuid, $user_uuid;
-
-				//get the groups assigned to the user
-				if (empty($groups)) {
-					$group = new groups;
-					$groups = $group->assigned($domain_uuid, $user_uuid);
-				}
-
-				//get the permissions assigned to the user through the assigned groups
-				$permission = new permissions;
-				$permissions = $permission->assigned($domain_uuid, $groups);
-			}
-
-			if (empty($permissions)) {
-				$permissions = $_SESSION["permissions"] ?? [];
-			}
+			//set permisisons array
+			$permissions = $_SESSION["permissions"];
 
 			//set default to false
 			$result = false;
