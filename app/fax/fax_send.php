@@ -712,99 +712,111 @@ if (!function_exists('fax_split_dtmf')) {
 		//send the fax
 		$fax_file = $dir_fax_sent."/".$fax_instance_uuid.".tif";
 		$common_variables = "fax_queue_uuid=".$fax_queue_uuid.",";
-		$common_variables .= "accountcode='".$fax_accountcode."',";
+		$common_variables .= "fax_uuid="   . $fax_uuid . ",";
+		//$common_variables .= "accountcode='".$fax_accountcode."',";
 		$common_variables .= "sip_h_accountcode='".$fax_accountcode."',";
 		$common_variables .= "domain_uuid=".$domain_uuid.",";
 		$common_variables .= "domain_name=".$domain_name.",";
-		$common_variables .= "origination_caller_id_name='".$fax_caller_id_name."',";
+		if (!empty($fax_caller_id_name)) {
+			$common_variables .= "origination_caller_id_name='".$fax_caller_id_name."',";
+		}
 		$common_variables .= "origination_caller_id_number='".$fax_caller_id_number."',";
 		$common_variables .= "fax_ident='".$fax_caller_id_number."',";
-		$common_variables .= "fax_header='".$fax_caller_id_name."',";
+		//$common_variables .= "fax_header='".$fax_caller_id_name."',";
 		$common_variables .= "fax_file='".$fax_file."',";
 		if (!empty($provider_prefix)) {
 			$common_variables .= "provider_prefix='".$provider_prefix."',";
 		}
 
-		foreach ($fax_numbers as $fax_number) {
+		if (!empty($fax_numbers)) {
+			foreach ($fax_numbers as $fax_number) {
 
-			$fax_number = trim($fax_number);
-			fax_split_dtmf($fax_number, $fax_dtmf);
+				$fax_number = trim($fax_number);
+				fax_split_dtmf($fax_number, $fax_dtmf);
 
-			//prepare the fax command
-			$channel_variables["toll_allow"] = !empty($fax_toll_allow) ? $fax_toll_allow : null;
-			$route_array = outbound_route_to_bridge($domain_uuid, $fax_prefix . $fax_number, $channel_variables);
+				//prepare the fax command
+				$channel_variables["toll_allow"] = !empty($fax_toll_allow) ? $fax_toll_allow : null;
+				$route_array = outbound_route_to_bridge($domain_uuid, $fax_prefix . $fax_number, $channel_variables);
 
-			if (!empty($route_array) && count($route_array) == 0) {
-				//send the internal call to the registered extension
-				$fax_uri = "user/".$fax_number."@".$domain_name;
-				$fax_variables = "";
-			}
-			else {
-				//prepare the fax uri
-				$fax_uri = $route_array[0];
+				if (!empty($route_array) && count($route_array) == 0) {
+					//send the internal call to the registered extension
+					$fax_uri = "user/".$fax_number."@".$domain_name;
+					$fax_variables = '';
+				}
+				else {
+					foreach($route_array as $key => $bridge) {
+						//add the bridge to the fax_uri, after first iteration add the delimiter
+						if ($key == 0) {
+							$fax_uri = $bridge;
+						}
+						else {
+							$fax_uri .= '|'.$bridge;
+						}
 
-				//add the provider_prefix
-				if (!empty($provider_prefix)) {
-					$fax_uri = preg_replace('/\${provider_prefix}/', $provider_prefix, $fax_uri);
+						//add the provider_prefix
+						if (!empty($provider_prefix)) {
+							$fax_uri = preg_replace('/\${provider_prefix}/', $provider_prefix, $fax_uri);
+						}
+
+						//remove switch ${variables} from the bridge statement
+						$fax_uri = preg_replace('/\${[^}]+}/', '', $fax_uri);
+					}
+
+					//send the external call
+					$fax_variables = '';
+					foreach($setting->get('fax','variable') as $variable) {
+						$fax_variables .= $variable.",";
+					}
 				}
 
-				//remove switch ${variables} from the bridge statement
-				$fax_uri = preg_replace('/\${[^}]+}/', '', $fax_uri);
+				//build the fax dial string
+				$dial_string = $common_variables;
+				$dial_string .= $fax_variables;
+				$dial_string .= "mailto_address='"     . $mail_to_address   . "',";
+				$dial_string .= "mailfrom_address='"   . $mail_from_address . "',";
+				//$dial_string .= "fax_uri="             . $fax_uri           . ",";
+				//$dial_string .= "fax_retry_attempts=1" . ",";
+				//$dial_string .= "fax_retry_limit=20"   . ",";
+				//$dial_string .= "fax_retry_sleep=180"  . ",";
+				//$dial_string .= "fax_verbose=true"     . ",";
+				$dial_string .= "fax_use_ecm=off"      . ",";
+				$dial_string .= "api_hangup_hook='lua app/fax/resources/scripts/hangup_tx.lua'";
+				$dial_string  = "{" . $dial_string . "}" . $fax_uri." &txfax('".$fax_file."')";
 
-				//send the external call
-				$fax_variables = '';
-				foreach($setting->get('fax','variable') as $variable) {
-					$fax_variables .= $variable.",";
-				}
+				//build an array to add the fax to the queue
+				$array['fax_queue'][0]['fax_queue_uuid'] = $fax_queue_uuid;
+				$array['fax_queue'][0]['domain_uuid'] = $domain_uuid;
+				$array['fax_queue'][0]['fax_uuid'] = $fax_uuid;
+				$array['fax_queue'][0]['fax_date'] = 'now()';
+				$array['fax_queue'][0]['hostname'] = gethostname();
+				$array['fax_queue'][0]['fax_caller_id_name'] = $fax_caller_id_name;
+				$array['fax_queue'][0]['fax_caller_id_number'] = $fax_caller_id_number;
+				$array['fax_queue'][0]['fax_number'] = $fax_number;
+				$array['fax_queue'][0]['fax_prefix'] = $fax_prefix;
+				$array['fax_queue'][0]['fax_email_address'] = $mail_to_address;
+				$array['fax_queue'][0]['fax_file'] = $fax_file;
+				$array['fax_queue'][0]['fax_status'] = 'waiting';
+				//$array['fax_queue'][0]['fax_retry_date'] = $fax_retry_date;
+				$array['fax_queue'][0]['fax_retry_count'] = 0;
+				$array['fax_queue'][0]['fax_accountcode'] = $fax_accountcode;
+				$array['fax_queue'][0]['fax_command'] = 'originate '.$dial_string;
+
+				//add temporary permisison
+				$p = new permissions;
+				$p->add('fax_queue_add', 'temp');
+
+				//save the data
+				$database = new database;
+				$database->app_name = 'fax queue';
+				$database->app_uuid = '3656287f-4b22-4cf1-91f6-00386bf488f4';
+				$database->save($array);
+
+				//remove temporary permisison
+				$p->delete('fax_queue_add', 'temp');
+
+				//add message to show in the browser
+				message::add($text['confirm-queued']);
 			}
-
-			//build the fax dial string
-			$dial_string = $common_variables;
-			$dial_string .= $fax_variables;
-			$dial_string .= "mailto_address='"     . $mail_to_address   . "',";
-			$dial_string .= "mailfrom_address='"   . $mail_from_address . "',";
-			$dial_string .= "fax_uri="             . $fax_uri           . ",";
-			$dial_string .= "fax_retry_attempts=1" . ",";
-			$dial_string .= "fax_retry_limit=20"   . ",";
-			$dial_string .= "fax_retry_sleep=180"  . ",";
-			//$dial_string .= "fax_verbose=true"     . ",";
-			$dial_string .= "fax_use_ecm=off"      . ",";
-			$dial_string .= "api_hangup_hook='lua app/fax/resources/scripts/hangup_tx.lua'";
-			$dial_string  = "{" . $dial_string . "}" . $fax_uri." &txfax('".$fax_file."')";
-
-			//build an array to add the fax to the queue
-			$array['fax_queue'][0]['fax_queue_uuid'] = $fax_queue_uuid;
-			$array['fax_queue'][0]['domain_uuid'] = $domain_uuid;
-			$array['fax_queue'][0]['fax_uuid'] = $fax_uuid;
-			$array['fax_queue'][0]['fax_date'] = 'now()';
-			$array['fax_queue'][0]['hostname'] = gethostname();
-			$array['fax_queue'][0]['fax_caller_id_name'] = $fax_caller_id_name;
-			$array['fax_queue'][0]['fax_caller_id_number'] = $fax_caller_id_number;
-			$array['fax_queue'][0]['fax_number'] = $fax_number;
-			$array['fax_queue'][0]['fax_prefix'] = $fax_prefix;
-			$array['fax_queue'][0]['fax_email_address'] = $mail_to_address;
-			$array['fax_queue'][0]['fax_file'] = $fax_file;
-			$array['fax_queue'][0]['fax_status'] = 'waiting';
-			//$array['fax_queue'][0]['fax_retry_date'] = $fax_retry_date;
-			$array['fax_queue'][0]['fax_retry_count'] = 0;
-			$array['fax_queue'][0]['fax_accountcode'] = $fax_accountcode;
-			$array['fax_queue'][0]['fax_command'] = 'originate '.$dial_string;
-
-			//add temporary permisison
-			$p = new permissions;
-			$p->add('fax_queue_add', 'temp');
-
-			//save the data
-			$database = new database;
-			$database->app_name = 'fax queue';
-			$database->app_uuid = '3656287f-4b22-4cf1-91f6-00386bf488f4';
-			$database->save($array);
-
-			//remove temporary permisison
-			$p->delete('fax_queue_add', 'temp');
-			
-			//add message to show in the browser
-			message::add($text['confirm-queued']);
 		}
 
 		//redirect the browser
