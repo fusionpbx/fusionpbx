@@ -401,18 +401,14 @@ if (!function_exists('fax_split_dtmf')) {
 
 			//logo
 			$display_logo = false;
-			if (empty($setting->get('fax','cover_logo')) || !is_array($setting->get('fax','cover_logo'))) {
-				$logo = $_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/fax/resources/images/logo.jpg";
-				$display_logo = true;
-			}
-			else if (is_null($setting->get('fax','cover_logo'))) {
+			if (empty($setting->get('fax','cover_logo'))) {
 				$logo = ''; //explicitly empty
 			}
 			else if ($setting->get('fax','cover_logo') != '') {
 				if (substr($setting->get('fax','cover_logo'), 0, 4) == 'http') {
 					$logo = $setting->get('fax','cover_logo');
 				}
-				else if (substr($$setting->get('fax','cover_logo'), 0, 1) == '/') {
+				else if (substr($setting->get('fax','cover_logo'), 0, 1) == '/') {
 					if (substr($setting->get('fax','cover_logo'), 0, strlen($_SERVER['DOCUMENT_ROOT'])) != $_SERVER['DOCUMENT_ROOT']) {
 						$logo = $_SERVER['DOCUMENT_ROOT'].$setting->get('fax','cover_logo');
 					}
