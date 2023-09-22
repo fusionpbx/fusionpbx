@@ -104,18 +104,19 @@
 	}
 
 //get the list
-	if (permission_exists('ring_group_add') || permission_exists('ring_group_edit')) {
-		//show all ring groups
+	if (permission_exists('ring_group_domain') || permission_exists('ring_group_all')) {
+		//show all ring groups for the current domain
 		$sql = "select * from v_ring_groups ";
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$parameters['domain_uuid'] = $domain_uuid;
 	}
 	else {
 		//show only assigned ring groups
-		$sql = "select r.ring_group_name, r.ring_group_uuid, r.ring_group_extension, r.ring_group_forward_destination, ";
-		$sql .= "r.ring_group_forward_enabled, r.ring_group_description from v_ring_groups as r, v_ring_group_users as u ";
-		$sql .= "where r.ring_group_uuid = u.ring_group_uuid ";
-		$sql .= "and r.domain_uuid = :domain_uuid ";
+		$sql = "select r.ring_group_uuid, r.ring_group_name, r.ring_group_extension, r.ring_group_strategy, ";
+		$sql .= "r.ring_group_forward_destination, r.ring_group_forward_enabled, r.ring_group_description ";
+		$sql .= "from v_ring_groups as r, v_ring_group_users as u ";
+		$sql .= "where r.domain_uuid = :domain_uuid ";
+		$sql .= "and r.ring_group_uuid = u.ring_group_uuid ";
 		$sql .= "and u.user_uuid = :user_uuid ";
 		$parameters['domain_uuid'] = $_SESSION['user']['domain_uuid'];
 		$parameters['user_uuid'] = $_SESSION['user']['user_uuid'];
