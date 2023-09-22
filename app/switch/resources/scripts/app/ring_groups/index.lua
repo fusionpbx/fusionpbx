@@ -163,7 +163,8 @@
 		context = session:getVariable("context");
 		call_direction = session:getVariable("call_direction");
 		accountcode = session:getVariable("accountcode");
-		local_ip_v4 = session:getVariable("local_ip_v4")
+		local_ip_v4 = session:getVariable("local_ip_v4");
+		verto_enabled = session:getVariable("verto_enabled") or '';
 	end
 
 --set caller id
@@ -834,8 +835,19 @@
 							end
 
 							--send to user
-							local dial_string_to_user = "[sip_invite_domain="..domain_name..",domain_name="..domain_name..",call_direction="..call_direction..","..group_confirm..""..timeout_name.."="..destination_timeout..","..delay_name.."="..destination_delay..",dialed_extension=" .. row.destination_number .. ",extension_uuid=".. extension_uuid .. row.record_session .. hold_music .."]user/" .. row.destination_number .. "@" .. domain_name;
-							dial_string = dial_string_to_user;
+							local dial_string_user = "[sip_invite_domain="..domain_name..",call_direction="..call_direction..",";
+							dial_string_user = dial_string_user .. group_confirm..","..timeout_name.."="..destination_timeout..",";
+							dial_string_user = dial_string_user .. delay_name.."="..destination_delay..",";
+							dial_string_user = dial_string_user .. "dialed_extension=" .. row.destination_number .. ",";
+							dial_string_user = dial_string_user .. "presence_id=" .. row.destination_number .. "@"..domain_name..",";
+							dial_string_user = dial_string_user .. "extension_uuid="..extension_uuid..record_session.."]";
+							user_contact = api:executeString("sofia_contact */".. row.destination_number .."@" ..domain_name);
+							if (user_contact ~= "error/user_not_registered") then
+								dial_string = dial_string_user .. user_contact;
+							end
+							if (verto_enabled == 'true') then
+								dial_string = dial_string .. ","..api:executeString("verto_contact ".. row.destination_number .."@" ..domain_name);
+							end
 						elseif (tonumber(destination_number) == nil) then
 							--sip uri
 							dial_string = "[sip_invite_domain="..domain_name..",domain_name="..domain_name..",call_direction="..call_direction..","..group_confirm..""..timeout_name.."="..destination_timeout..","..delay_name.."="..destination_delay.."]" .. row.destination_number;
