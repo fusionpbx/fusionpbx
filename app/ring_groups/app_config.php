@@ -55,6 +55,7 @@
 		$apps[$x]['permissions'][$y]['menu']['uuid'] = "b30f085f-3ec6-2819-7e62-53dfba5cb8d5";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$apps[$x]['permissions'][$y]['groups'][] = "user";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "ring_group_add";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
@@ -127,6 +128,9 @@
 		$apps[$x]['permissions'][$y]['name'] = "ring_group_cid_number_prefix";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "ring_group_context";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "ring_group_domain";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "ring_group_all";
