@@ -92,41 +92,38 @@
 	$parameters['domain_uuid'] = $domain_uuid;
 	$database = new database;
 	$total_ring_groups = $database->select($sql, $parameters, 'column');
-	$num_rows = $total_ring_groups;
 
 //get filtered ring group count
-	if (!empty($search)) {
-		if ($show == "all" && permission_exists('ring_group_all')) {
-			$sql = "select count(*) from v_ring_groups ";
-			$sql .= "where true ";
-		}
-		elseif (permission_exists('ring_group_domain') || permission_exists('ring_group_all')) {
-			$sql = "select count(*)  from v_ring_groups ";
-			$sql .= "where domain_uuid = :domain_uuid ";
-			$parameters['domain_uuid'] = $domain_uuid;
-		}
-		else {
-			$sql = "select count(*) ";
-			$sql .= "from v_ring_groups as r, v_ring_group_users as u ";
-			$sql .= "where r.domain_uuid = :domain_uuid ";
-			$sql .= "and r.ring_group_uuid = u.ring_group_uuid ";
-			$sql .= "and u.user_uuid = :user_uuid ";
-			$parameters['domain_uuid'] = $domain_uuid;
-			$parameters['user_uuid'] = $_SESSION['user_uuid'];
-		}
-		if (!empty($search)) {
-			$sql .= "and (";
-			$sql .= "lower(ring_group_name) like :search ";
-			$sql .= "or lower(ring_group_extension) like :search ";
-			$sql .= "or lower(ring_group_description) like :search ";
-			$sql .= "or lower(ring_group_enabled) like :search ";
-			$sql .= "or lower(ring_group_strategy) like :search ";
-			$sql .= ") ";
-			$parameters['search'] = '%'.$search.'%';
-		}
-		$database = new database;
-		$num_rows = $database->select($sql, $parameters, 'column');
+	if ($show == "all" && permission_exists('ring_group_all')) {
+		$sql = "select count(*) from v_ring_groups ";
+		$sql .= "where true ";
 	}
+	elseif (permission_exists('ring_group_domain') || permission_exists('ring_group_all')) {
+		$sql = "select count(*)  from v_ring_groups ";
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$parameters['domain_uuid'] = $domain_uuid;
+	}
+	else {
+		$sql = "select count(*) ";
+		$sql .= "from v_ring_groups as r, v_ring_group_users as u ";
+		$sql .= "where r.domain_uuid = :domain_uuid ";
+		$sql .= "and r.ring_group_uuid = u.ring_group_uuid ";
+		$sql .= "and u.user_uuid = :user_uuid ";
+		$parameters['domain_uuid'] = $domain_uuid;
+		$parameters['user_uuid'] = $_SESSION['user_uuid'];
+	}
+	if (!empty($search)) {
+		$sql .= "and (";
+		$sql .= "lower(ring_group_name) like :search ";
+		$sql .= "or lower(ring_group_extension) like :search ";
+		$sql .= "or lower(ring_group_description) like :search ";
+		$sql .= "or lower(ring_group_enabled) like :search ";
+		$sql .= "or lower(ring_group_strategy) like :search ";
+		$sql .= ") ";
+		$parameters['search'] = '%'.$search.'%';
+	}
+	$database = new database;
+	$num_rows = $database->select($sql, $parameters, 'column');
 	unset($sql, $parameters);
 
 //prepare to page the results
