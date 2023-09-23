@@ -79,50 +79,39 @@
 	$show = $_GET["show"] ?? '';
 
 //get record counts
-	if (permission_exists('fax_extension_view_all') || permission_exists('fax_extension_view_domain')) {
-		//count the fax extensions
-		$sql = "select count(f.fax_uuid) from v_fax as f ";
-		if ($show == "all" && permission_exists('fax_extension_view_all')) {
-			$sql .= "where true ";
-		}
-		else {
-			$sql .= "where (f.domain_uuid = :domain_uuid or f.domain_uuid is null) ";
-			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-		}
-		if (!empty($search)) {
-			$sql .= "and lower(fax_name) like :search ";
-			$sql .= "or lower(fax_email) like :search ";
-			$sql .= "or lower(fax_extension) like :search ";
-			$sql .= "or lower(fax_destination_number) like :search ";
-			$sql .= "or lower(fax_caller_id_name) like :search ";
-			$sql .= "or lower(fax_caller_id_number) like :search ";
-			$sql .= "or lower(fax_forward_number) like :search ";
-			$sql .= "or lower(fax_description) like :search ";
-			$parameters['search'] = '%'.strtolower($search).'%';
-		}
+	if ($show == "all" && permission_exists('fax_extension_view_all')) {
+		//show all fax extensions
+		$sql = "select count(f.fax_uuid) ";
+		$sql .= "from v_fax as f ";
+		$sql .= "where true ";
+	}
+	elseif (permission_exists('fax_extension_view_domain') || permission_exists('fax_extension_view_all')) {
+		//show all fax extensions for this domain
+		$sql = "select count(f.fax_uuid) ";
+		$sql .= "from v_fax as f ";
+		$sql .= "where (f.domain_uuid = :domain_uuid or f.domain_uuid is null) ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	}
 	else {
-		//count the assigned fax extensions
+		//show only assigned fax extensions
 		$sql = "select count(f.fax_uuid) ";
 		$sql .= "from v_fax as f, v_fax_users as u ";
 		$sql .= "where f.fax_uuid = u.fax_uuid ";
 		$sql .= "and f.domain_uuid = :domain_uuid ";
 		$sql .= "and u.user_uuid = :user_uuid ";
-		if (!empty($search)) {
-			$sql .= "and (";
-			$sql .= "	lower(fax_name) like :search ";
-			$sql .= "	or lower(fax_email) like :search ";
-			$sql .= "	or lower(fax_extension) like :search ";
-			$sql .= "	or lower(fax_destination_number) like :search ";
-			$sql .= "	or lower(fax_caller_id_name) like :search ";
-			$sql .= "	or lower(fax_caller_id_number) like :search ";
-			$sql .= "	or lower(fax_forward_number) like :search ";
-			$sql .= "	or lower(fax_description) like :search ";
-			$sql .= ") ";
-			$parameters['search'] = '%'.strtolower($search).'%';
-		}
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$parameters['user_uuid'] = $_SESSION['user_uuid'];
+	}
+	if (!empty($search)) {
+		$sql .= "and lower(fax_name) like :search ";
+		$sql .= "or lower(fax_email) like :search ";
+		$sql .= "or lower(fax_extension) like :search ";
+		$sql .= "or lower(fax_destination_number) like :search ";
+		$sql .= "or lower(fax_caller_id_name) like :search ";
+		$sql .= "or lower(fax_caller_id_number) like :search ";
+		$sql .= "or lower(fax_forward_number) like :search ";
+		$sql .= "or lower(fax_description) like :search ";
+		$parameters['search'] = '%'.strtolower($search).'%';
 	}
 	$database = new database;
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
@@ -139,28 +128,17 @@
 	$offset = $rows_per_page * $page;
 
 //get fax extensions
-	if (permission_exists('fax_extension_view_all') || permission_exists('fax_extension_view_domain')) {
+	if ($show == "all" && permission_exists('fax_extension_view_all')) {
 		//show all fax extensions
-		$sql = "select f.fax_uuid, f.domain_uuid, fax_extension, fax_prefix, fax_name, fax_email, fax_description ";
+		$sql = "select * from v_fax as f ";
+		$sql .= "where true ";
+	}
+	elseif (permission_exists('fax_extension_view_domain') || permission_exists('fax_extension_view_all')) {
+		//show all fax extensions for this domain
+		$sql = "select fax_uuid, domain_uuid, fax_extension, fax_prefix, fax_name, fax_email, fax_description ";
 		$sql .= "from v_fax as f ";
-		if ($show == "all" && permission_exists('fax_extension_view_all')) {
-			$sql .= "where true ";
-		}
-		else {
-			$sql .= "where (f.domain_uuid = :domain_uuid or f.domain_uuid is null) ";
-			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-		}
-		if (!empty($search)) {
-			$sql .= "and lower(fax_name) like :search ";
-			$sql .= "or lower(fax_email) like :search ";
-			$sql .= "or lower(fax_extension) like :search ";
-			$sql .= "or lower(fax_destination_number) like :search ";
-			$sql .= "or lower(fax_caller_id_name) like :search ";
-			$sql .= "or lower(fax_caller_id_number) like :search ";
-			$sql .= "or lower(fax_forward_number) like :search ";
-			$sql .= "or lower(fax_description) like :search ";
-			$parameters['search'] = '%'.strtolower($search).'%';
-		}
+		$sql .= "where (f.domain_uuid = :domain_uuid or f.domain_uuid is null) ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	}
 	else {
 		//show only assigned fax extensions
@@ -169,21 +147,19 @@
 		$sql .= "where f.fax_uuid = u.fax_uuid ";
 		$sql .= "and f.domain_uuid = :domain_uuid ";
 		$sql .= "and u.user_uuid = :user_uuid ";
-		if (isset($search)) {
-			$sql .= "and (";
-			$sql .= "	lower(fax_name) like :search ";
-			$sql .= "	or lower(fax_email) like :search ";
-			$sql .= "	or lower(fax_extension) like :search ";
-			$sql .= "	or lower(fax_destination_number) like :search ";
-			$sql .= "	or lower(fax_caller_id_name) like :search ";
-			$sql .= "	or lower(fax_caller_id_number) like :search ";
-			$sql .= "	or lower(fax_forward_number) like :search ";
-			$sql .= "	or lower(fax_description) like :search ";
-			$sql .= ") ";
-			$parameters['search'] = '%'.strtolower($search).'%';
-		}
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$parameters['user_uuid'] = $_SESSION['user_uuid'];
+	}
+	if (!empty($search)) {
+		$sql .= "and lower(fax_name) like :search ";
+		$sql .= "or lower(fax_email) like :search ";
+		$sql .= "or lower(fax_extension) like :search ";
+		$sql .= "or lower(fax_destination_number) like :search ";
+		$sql .= "or lower(fax_caller_id_name) like :search ";
+		$sql .= "or lower(fax_caller_id_number) like :search ";
+		$sql .= "or lower(fax_forward_number) like :search ";
+		$sql .= "or lower(fax_description) like :search ";
+		$parameters['search'] = '%'.strtolower($search).'%';
 	}
 	$sql .= order_by($order_by, $order, 'f.fax_name', 'asc');
 	$sql .= limit_offset($rows_per_page, $offset);
