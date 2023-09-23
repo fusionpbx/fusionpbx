@@ -92,6 +92,8 @@
 	}
 	$num_rows = @sizeof($rows);
 
+//set the time zone
+	$time_zone = $_SESSION['domain']['time_zone']['name'] ?? date_default_timezone_get();
 
 //if the connnection is available then run it and return the results
 	if (!$fp) {
@@ -181,6 +183,13 @@
 							$$key = $value;
 						}
 
+					//adjust created date and time to time zone
+						if ($time_zone != date_default_timezone_get()) {
+							$date = new DateTime($created, new DateTimeZone(date_default_timezone_get()));
+							$date->setTimeZone(new DateTimeZone($time_zone));
+							$created = $date->format('Y-m-d H:i:s');
+						}
+
 					//get the sip profile
 						$name_array = explode("/", $name);
 						$sip_profile = $name_array[1];
@@ -202,7 +211,7 @@
 						}
 
 					// reduce too long app data
-						if(strlen($application_data) > 512) {
+						if (strlen($application_data) > 512) {
 							$application_data = substr($application_data, 0, 512) . '...';
 						}
 
