@@ -156,15 +156,23 @@
 				end
 			end
 
+		--get settings
+			require "resources.functions.settings";
+			settings = settings(domain_uuid);
+
 		--set the voicemail_dir
-			voicemail_dir = voicemail_dir.."/default/"..domain_name;
+			if (settings['switch'] ~= nil) then
+				if (settings['switch']['voicemail'] ~= nil) then
+					if (settings['switch']['voicemail']['dir'] ~= nil) then
+						voicemail_dir = settings['switch']['voicemail']['dir'].."/default/"..domain_name;
+					end
+				end
+			end
 			if (debug["info"]) then
 				freeswitch.consoleLog("notice", "[voicemail] voicemail_dir: " .. voicemail_dir .. "\n");
 			end
 
 		--settings
-			require "resources.functions.settings";
-			settings = settings(domain_uuid);
 			if (settings['voicemail'] ~= nil) then
 				storage_type = '';
 				if (settings['voicemail']['storage_type'] ~= nil) then
