@@ -1044,7 +1044,7 @@ if (!class_exists('xml_cdr')) {
 
 				//authentication for xml cdr http post
 					if (!defined('STDIN')) {
-						if ($this->setting->get('cdr', 'http_enabled') == "true" && $this->username) {
+						if ($this->setting->get('cdr', 'http_enabled') == "true") {
 							//get the contents of xml_cdr.conf.xml
 								$conf_xml_string = file_get_contents($this->setting->get('switch', 'conf').'/autoload_configs/xml_cdr.conf.xml');
 
@@ -1059,14 +1059,16 @@ if (!class_exists('xml_cdr')) {
 								catch(Exception $e) {
 									echo $e->getMessage();
 								}
-								if (isset($conf_xml->settings->param)) foreach ($conf_xml->settings->param as $row) {
-									if ($row->attributes()->name == "cred") {
-										$auth_array = explode(":", $row->attributes()->value);
-										//echo "username: ".$auth_array[0]."<br />\n";
-										//echo "password: ".$auth_array[1]."<br />\n";
-									}
-									if ($row->attributes()->name == "url") {
-										//check name is equal to url
+								if (isset($conf_xml->settings->param)) {
+									foreach ($conf_xml->settings->param as $row) {
+										if ($row->attributes()->name == "cred") {
+											$auth_array = explode(":", $row->attributes()->value);
+											//echo "username: ".$auth_array[0]."<br />\n";
+											//echo "password: ".$auth_array[1]."<br />\n";
+										}
+										if ($row->attributes()->name == "url") {
+											//check name is equal to url
+										}
 									}
 								}
 						}
@@ -1075,7 +1077,11 @@ if (!class_exists('xml_cdr')) {
 				//if http enabled is set to false then deny access
 					if (!defined('STDIN')) {
 						if ($this->setting->get('cdr', 'http_enabled') == "false") {
-							echo "access denied<br />\n";
+							openlog('FusionPBX', LOG_NDELAY, LOG_AUTH);
+							syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR'].'] XML CDR import default setting http_enabled is not enabled. Line: '.__line__);
+							closelog();
+
+							echo "access denied\n";
 							return;
 						}
 					}
@@ -1084,12 +1090,16 @@ if (!class_exists('xml_cdr')) {
 					if (!defined('STDIN')) {
 						if ($this->setting->get('cdr', 'http_enabled') == "true") {
 							if ($auth_array[0] == $_SERVER["PHP_AUTH_USER"] && $auth_array[1] == $_SERVER["PHP_AUTH_PW"]) {
-								//echo "access granted<br />\n";
+								//echo "access granted\n";
 								$this->username = $auth_array[0];
 								$this->password = $auth_array[1];
 							}
 							else {
-								echo "access denied<br />\n";
+								openlog('FusionPBX', LOG_NDELAY, LOG_AUTH);
+								syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR'].'] XML CDR import username or password failed. Line: '.__line__);
+								closelog();
+
+								echo "access denied\n";
 								return;
 							}
 						}
@@ -1097,7 +1107,7 @@ if (!class_exists('xml_cdr')) {
 
 				//loop through all attribues
 					//foreach($xml->settings->param[1]->attributes() as $a => $b) {
-					//		echo $a,'="',$b,"\"<br />\n";
+					//		echo $a,'="',$b,"\"\n";
 					//}
 
 				//get the http post variable
