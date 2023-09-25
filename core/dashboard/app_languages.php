@@ -598,4 +598,30 @@ $text['button-expand_all']['zh-cn'] = "展开全部";
 $text['button-expand_all']['ja-jp'] = "すべて展開";
 $text['button-expand_all']['ko-kr'] = "모두 펼치기";
 
+$text['login-message_dismiss']['en-us'] = "Dismiss Message";
+$text['login-message_dismiss']['en-gb'] = "Dismiss Message";
+$text['login-message_dismiss']['ar-eg'] = "Dismiss Message";
+$text['login-message_dismiss']['de-at'] = "Dismiss Message";
+$text['login-message_dismiss']['de-ch'] = "Dismiss Message";
+$text['login-message_dismiss']['de-de'] = "Dismiss Message";
+$text['login-message_dismiss']['el-gr'] = "Dismiss Message";
+$text['login-message_dismiss']['es-cl'] = "Dismiss Message";
+$text['login-message_dismiss']['es-mx'] = "Dismiss Message";
+$text['login-message_dismiss']['fr-ca'] = "Dismiss Message";
+$text['login-message_dismiss']['fr-fr'] = "Dismiss Message";
+$text['login-message_dismiss']['he-il'] = "Dismiss Message";
+$text['login-message_dismiss']['it-it'] = "Dismiss Message";
+$text['login-message_dismiss']['nl-nl'] = "Dismiss Message";
+$text['login-message_dismiss']['pl-pl'] = "Dismiss Message";
+$text['login-message_dismiss']['pt-br'] = "Dismiss Message";
+$text['login-message_dismiss']['pt-pt'] = "Dismiss Message";
+$text['login-message_dismiss']['ro-ro'] = "Dismiss Message";
+$text['login-message_dismiss']['ru-ru'] = "Dismiss Message";
+$text['login-message_dismiss']['sv-se'] = "Dismiss Message";
+$text['login-message_dismiss']['uk-ua'] = "Dismiss Message";
+$text['login-message_dismiss']['tr-tr'] = "Dismiss Message";
+$text['login-message_dismiss']['zh-cn'] = "Dismiss Message";
+$text['login-message_dismiss']['ja-jp'] = "Dismiss Message";
+$text['login-message_dismiss']['ko-kr'] = "Dismiss Message";
+
 ?>
