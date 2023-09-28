@@ -66,6 +66,7 @@
 		$fax_retry_count = $_POST["fax_retry_count"];
 		$fax_accountcode = $_POST["fax_accountcode"];
 		$fax_command = $_POST["fax_command"];
+		$fax_response = $_POST["fax_response"];
 	}
 
 //process the user data and save it to the database
@@ -164,6 +165,7 @@
 			$array['fax_queue'][0]['fax_retry_count'] = $fax_retry_count;
 			$array['fax_queue'][0]['fax_accountcode'] = $fax_accountcode;
 			$array['fax_queue'][0]['fax_command'] = $fax_command;
+			$array['fax_queue'][0]['fax_response'] = $fax_response;
 
 		//save the data
 			$database = new database;
@@ -226,6 +228,7 @@
 			$fax_retry_count = $row["fax_retry_count"];
 			$fax_accountcode = $row["fax_accountcode"];
 			$fax_command = $row["fax_command"];
+			$fax_response = $row["fax_response"];
 		}
 		unset($sql, $parameters, $row);
 	}
@@ -442,6 +445,17 @@
 	echo "	<textarea class='formfld' name='fax_command' style='width: 185px; height: 80px;'>".($fax_command ?? '')."</textarea>\n";
 	echo "<br />\n";
 	echo $text['description-fax_command']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-fax_response']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' style='position: relative;' align='left'>\n";
+	echo "	<textarea class='formfld' name='fax_response' style='width: 185px; height: 80px;'>".($fax_response ?? '')."</textarea>\n";
+	echo "<br />\n";
+	echo $text['description-fax_response']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
