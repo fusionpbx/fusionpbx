@@ -62,16 +62,18 @@ class event_socket {
 
 		$b = $this->buffer;
 		$content_length = 0;
-		$content = Array();
+		$content = array();
 
 		while (true) {
-			while(($line = $b->read_line()) !== false ) {
-				if ($line == '') {
-					break 2;
+			$line = $b->read_line();
+			if ($line !== false) {
+				if ($line === '') {
+					break;
 				}
-				$kv = explode(':', $line, 2);
-				$content[trim($kv[0])] = trim($kv[1]);
 			}
+
+			list($key, $value) = explode(':', $line, 2);
+			$content[trim($key)] = trim($value);
 
 			if (feof($this->fp)) {
 				break;
@@ -137,7 +139,7 @@ class event_socket {
 		socket_set_blocking($fp, true);
 		$this->fp = $fp;
 
-		// Wait auth request and send response
+		//wait auth request and send response
 			while (!feof($fp)) {
 				$event = $this->read_event();
 				if(@$event['Content-Type'] == 'auth/request'){
@@ -146,7 +148,7 @@ class event_socket {
 				}
 			}
 
-		// Wait auth response
+		//wait auth response
 			while (!feof($fp)) {
 				$event = $this->read_event();
 				if (@$event['Content-Type'] == 'command/reply') {
