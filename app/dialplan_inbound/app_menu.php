@@ -19,7 +19,7 @@
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Rotas de Entrada";
 	$apps[$x]['menu'][$y]['title']['ro-ro'] = "Rute de intrare";
 	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Маршрутизация входящих";
-	$apps[$x]['menu'][$y]['title']['sv-se'] = "Inbound Routes";
+	$apps[$x]['menu'][$y]['title']['sv-se'] = "Inkommande rutter";
 	$apps[$x]['menu'][$y]['title']['uk-ua'] = "Вхідні маршрути";
 	$apps[$x]['menu'][$y]['title']['zh-cn'] = "入境航线";
 	$apps[$x]['menu'][$y]['title']['ja-jp'] = "インバウンドルート";
