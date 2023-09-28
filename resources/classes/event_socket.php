@@ -86,7 +86,11 @@ class event_socket {
 		if (array_key_exists('Content-Length', $content)) {
 			$str = $b->read_n($content['Content-Length']);
 			if ($str === false) {
-				while (!feof($this->fp)) {
+				while (true) {
+					if (feof($this->fp)) {
+						break;
+					}
+
 					$buffer = fgets($this->fp, 1024);
 					$b->append($buffer);
 					$str = $b->read_n($content['Content-Length']);
