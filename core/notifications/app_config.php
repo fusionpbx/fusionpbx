@@ -26,7 +26,7 @@
 		$apps[$x]['description']['pt-pt'] = "";
 		$apps[$x]['description']['ro-ro'] = "";
 		$apps[$x]['description']['ru-ru'] = "Настройка параметров уведомлений";
-		$apps[$x]['description']['sv-se'] = "";
+		$apps[$x]['description']['sv-se'] = "Konfigurera notifieringsinställningar.";
 		$apps[$x]['description']['uk-ua'] = "";
 
 	//schema details
