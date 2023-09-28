@@ -245,7 +245,7 @@
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Logotipo";
 	$apps[$x]['menu'][$y]['title']['ro-ro'] = "Log out";
 	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Выйти";
-	$apps[$x]['menu'][$y]['title']['sv-se'] = "Logout";
+	$apps[$x]['menu'][$y]['title']['sv-se'] = "Logga ut";
 	$apps[$x]['menu'][$y]['title']['uk-ua'] = "вийти";
 	$apps[$x]['menu'][$y]['title']['zh-cn'] = "登出";
 	$apps[$x]['menu'][$y]['title']['ja-jp'] = "ログアウト";
