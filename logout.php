@@ -29,7 +29,7 @@
 	
 //if custom logout destination is set, redirect to it
 	if (isset($_SESSION["login"]["logout_destination"]["text"])){
-		$logout_destination = $_SESSION["login"]["logout_destination"]["text"]."?SessionID=".session_id();
+		$logout_destination = $_SESSION["login"]["logout_destination"]["text"];
 	}
 //otherwise, redirect to the index page
 	else {
@@ -105,7 +105,7 @@
 		}
 	}
 
-//redirect the user to the index page
+//redirect the user to the logout page
 	header("Location: ".$logout_destination);
 	exit;
 
