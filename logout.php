@@ -27,11 +27,10 @@
 //includes files
 	require_once __DIR__ . "/resources/require.php";
 	
-//if custom logout destination is set, redirect to it
+//use custom logout destination if set otherwise redirect to the index page
 	if (isset($_SESSION["login"]["logout_destination"]["text"])){
 		$logout_destination = $_SESSION["login"]["logout_destination"]["text"];
 	}
-//otherwise, redirect to the index page
 	else {
 		$logout_destination = PROJECT_PATH."/";
 	}
