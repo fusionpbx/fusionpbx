@@ -140,19 +140,6 @@
 		sleep($sleep_seconds);
 	}
 
-//prepare to save the output
-	if (isset($file)) {
-		//create the debug log
-		$fp = fopen(sys_get_temp_dir()."/fax_queue.log", "a");
-		
-		//prepare the output buffers
-		ob_end_clean();
-		ob_start();
-
-		//message divider for log file
-		echo "\n\n====================================================\n\n";
-	}
-
 //get the fax queue details to send
 	$sql = "select q.*, d.domain_name, f.fax_toll_allow ";
 	$sql .= "from v_fax_queue as q, v_domains as d, v_fax as f ";
@@ -286,8 +273,46 @@
 				$fax_uri = $route_array[0];
 			}
 
-		//update the fax_queue table
-			if ($fp) {
+		//set the origination uuid
+			$origination_uuid = uuid();
+
+		//build a list of fax variables
+			$dial_string = $common_variables;
+			$dial_string .= $fax_options.",";
+			$dial_string .= "origination_uuid="    . $origination_uuid. ",";
+			$dial_string .= "fax_uuid="            . $fax_uuid. ",";
+			$dial_string .= "fax_queue_uuid="      . $fax_queue_uuid. ",";
+			$dial_string .= "mailto_address='"     . $fax_email_address   . "',";
+			$dial_string .= "mailfrom_address='"   . $email_from_address . "',";
+			$dial_string .= "fax_retry_attempts="  . $fax_retry_count  . ",";  
+			$dial_string .= "fax_retry_limit="     . $retry_limit  . ",";
+			//$dial_string .= "fax_retry_sleep=180,";
+			$dial_string .= "fax_verbose=true,";
+			//$dial_string .= "fax_use_ecm=off,";
+			$dial_string .= "absolute_codec_string=PCMU,PCMA,";
+			$dial_string .= "api_hangup_hook='lua app/fax/resources/scripts/hangup_tx.lua'";
+
+		//connect to event socket and send the command
+			if ($fax_status != 'failed' && file_exists($fax_file)) {
+				//send the fax and try another route if the fax fails
+				foreach($route_array as $route) {
+					$fax_command  = "originate {" . $dial_string . ",fax_uri=".$route."}" . $route." &txfax('".$fax_file."')";
+					$fax_response = event_socket_request($fp, "api " . $fax_command);
+					$response = str_replace("\n", "", $fax_response);
+					$response = trim(str_replace("+OK", "", $response));
+					if (is_uuid($response)) {
+						//originate command accepted
+						$uuid = $response;
+						echo "uuid: ".$uuid."\n";
+						break;
+					}
+					else {
+						//originate command failed (-ERR INVALID_GATEWAY or other errors)
+						echo "response: ".$response."\n";
+					}
+				}
+				fclose($fp);
+
 				//set the fax file name without the extension
 				$fax_instance_id = pathinfo($fax_file, PATHINFO_FILENAME);
 
@@ -302,6 +327,7 @@
 				$array['fax_queue'][0]['fax_retry_count'] = $fax_retry_count;
 				$array['fax_queue'][0]['fax_retry_date'] = 'now()';
 				$array['fax_queue'][0]['fax_command'] = $fax_command;
+				$array['fax_queue'][0]['fax_response'] = $fax_response;
 
 				//add temporary permissions
 				$p = new permissions;
@@ -316,40 +342,6 @@
 
 				//remove temporary permissions
 				$p->delete('fax_queue_edit', 'temp');
-			}
-
-		//set the origination uuid
-			$origination_uuid = uuid();
-
-		//build a list of fax variables
-			$dial_string = $common_variables;
-			$dial_string .= $fax_options.",";
-			$dial_string .= "origination_uuid="    . $origination_uuid. ",";
-			$dial_string .= "fax_uuid="            . $fax_uuid. ",";
-			$dial_string .= "fax_queue_uuid="      . $fax_queue_uuid. ",";
-			$dial_string .= "mailto_address='"     . $fax_email_address   . "',";
-			$dial_string .= "mailfrom_address='"   . $email_from_address . "',";
-			$dial_string .= "fax_uri="             . $fax_uri  . ",";
-			$dial_string .= "fax_retry_attempts="  . $fax_retry_count  . ",";  
-			$dial_string .= "fax_retry_limit="     . $retry_limit  . ",";
-			//$dial_string .= "fax_retry_sleep=180,";
-			$dial_string .= "fax_verbose=true,";
-			//$dial_string .= "fax_use_ecm=off,";
-			$dial_string .= "absolute_codec_string=PCMU,PCMA,";
-			$dial_string .= "api_hangup_hook='lua app/fax/resources/scripts/hangup_tx.lua'";
-			$fax_command  = "originate {" . $dial_string . "}" . $fax_uri." &txfax('".$fax_file."')";
-			//echo $fax_command."\n";
-
-		//connect to event socket and send the command
-			if ($fax_status != 'failed' && file_exists($fax_file)) {
-				if ($fp) {
-					$response = event_socket_request($fp, "api " . $fax_command);
-					//$response = event_socket_request($fp, $fax_command);
-					$response = str_replace("\n", "", $response);
-					$uuid = str_replace("+OK ", "", $response);
-					echo "uuid ".$uuid."\n";
-				}
-				fclose($fp);
 			}
 			else {
 				echo "fax file missing: ".$fax_file."\n";
@@ -603,17 +595,5 @@
 	//echo "Date: ".$email_date."\n";
 	//echo "Transcript: ".$array['message']."\n";
 	//echo "Body: ".$email_body."\n";
-
-//get and save the output from the buffer
-	if (isset($file)) {
-		echo "\n";
-		$content = ob_get_contents(); //get the output from the buffer
-		$content = str_replace("<br />", "", $content);
-
-		ob_end_clean(); //clean the buffer
-
-		fwrite($fp, $content);
-		fclose($fp);
-	}
 
 ?>
