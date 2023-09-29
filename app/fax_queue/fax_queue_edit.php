@@ -204,7 +204,8 @@
 		$sql .= " fax_notify_date, ";
 		$sql .= " fax_retry_count, ";
 		$sql .= " fax_accountcode, ";
-		$sql .= " fax_command ";
+		$sql .= " fax_command, ";
+		$sql .= " fax_response ";
 		$sql .= "from v_fax_queue ";
 		$sql .= "where fax_queue_uuid = :fax_queue_uuid ";
 		//$sql .= "and domain_uuid = :domain_uuid ";
@@ -442,7 +443,7 @@
 	echo "	".$text['label-fax_command']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<textarea class='formfld' name='fax_command' style='width: 185px; height: 80px;'>".($fax_command ?? '')."</textarea>\n";
+	echo "	<textarea class='formfld' name='fax_command' style='width: 185px; height: 80px;'>".escape($fax_command ?? '')."</textarea>\n";
 	echo "<br />\n";
 	echo $text['description-fax_command']."\n";
 	echo "</td>\n";
@@ -453,7 +454,7 @@
 	echo "	".$text['label-fax_response']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<textarea class='formfld' name='fax_response' style='width: 185px; height: 80px;'>".($fax_response ?? '')."</textarea>\n";
+	echo "	<textarea class='formfld' name='fax_response' style='width: 185px; height: 80px;'>".escape($fax_response ?? '')."</textarea>\n";
 	echo "<br />\n";
 	echo $text['description-fax_response']."\n";
 	echo "</td>\n";
