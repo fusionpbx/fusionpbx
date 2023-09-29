@@ -457,7 +457,7 @@ function outbound_route_to_bridge($domain_uuid, $destination_number, array $chan
 			$outbound_routes[$dialplan_uuid]["dialplan_continue"] = $row["dialplan_continue"];
 		}
 	}
-	
+
 	if (!empty($outbound_routes)) {
 		$x = 0;
 		foreach ($outbound_routes as &$dialplan) {
@@ -491,7 +491,7 @@ function outbound_route_to_bridge($domain_uuid, $destination_number, array $chan
 					}
 				}
 			}
-		
+
 			if (!in_array('false', $condition_match)) {
 				foreach ($dialplan as &$dialplan_details) {
 					$dialplan_detail_data = $dialplan_details['dialplan_detail_data'] ?? '';
@@ -511,8 +511,8 @@ function outbound_route_to_bridge($domain_uuid, $destination_number, array $chan
 						$x++;
 					}
 				}
-				
-				if ($dialplan["dialplan_continue"] == "false") {
+
+				if (!empty($bridge_array) && $dialplan["dialplan_continue"] == "false") {
 					break;
 				}
 			}
