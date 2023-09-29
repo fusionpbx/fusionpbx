@@ -413,7 +413,7 @@ function outbound_route_to_bridge($domain_uuid, $destination_number, array $chan
 					}
 				}
 
-				if ($dialplan["dialplan_continue"] == "false") {
+				if (!empty($bridge_array) && $dialplan["dialplan_continue"] == "false") {
 					break;
 				}
 			}
