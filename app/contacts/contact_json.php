@@ -40,13 +40,6 @@
 //set additional variables
 	$show = $_GET["show"] ?? '';
 
-//get posted data
-	if (!empty($_POST['contacts'])) {
-		$action = $_POST['action'];
-		$search = $_POST['search'];
-		$name = $_POST['name'];
-	}
-
 //retrieve current user's assigned groups (uuids)
 	foreach ($_SESSION['groups'] as $group_data) {
 		$user_group_uuids[] = $group_data['group_uuid'];
@@ -56,7 +49,7 @@
 	$user_group_uuids[] = $_SESSION["user_uuid"];
 
 //add the search term
-	if (isset($search)) {
+	if (!empty($_GET["search"])) {
 		$search = strtolower($_GET["search"]);
 	}
 
