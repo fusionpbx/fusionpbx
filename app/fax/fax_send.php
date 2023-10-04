@@ -295,8 +295,9 @@ if (!function_exists('fax_split_dtmf')) {
 				break;
 		}
 
-		//load authorized file extensions
+		//un/authorized file extensions
 		$allowed_file_extensions = $setting->get('fax','allowed_extension');
+		$disallowed_file_extensions = explode(',','sh,ssh,so,dll,exe,bat,vbs,zip,rar,z,tar,tbz,tgz,gz');
 
 		//process uploaded or emailed files (if any)
 		$fax_page_count = 0;
@@ -310,9 +311,8 @@ if (!function_exists('fax_split_dtmf')) {
 				if ($fax_file_extension == "tiff") { $fax_file_extension = "tif"; }
 
 				//block unauthorized files
-				$disallowed_file_extensions = explode(',','sh,ssh,so,dll,exe,bat,vbs,zip,rar,z,tar,tbz,tgz,gz');
 				if (in_array($fax_file_extension, $disallowed_file_extensions) || $fax_file_extension == '') { continue; }
-				if (!in_array('.'.$fax_file_extension, $allowed_file_extensions)) { continue; }
+				if (is_array($allowed_file_extensions) && !in_array('.'.$fax_file_extension, $allowed_file_extensions)) { continue; }
 
 				//use a safe file name
 				$fax_name = md5($_files['name'][$index]);
