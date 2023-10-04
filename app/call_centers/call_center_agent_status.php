@@ -57,7 +57,7 @@
 	unset($sql, $parameters);
 
 //setup the event socket connection
-	$fp = event_socket_create();
+	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 
 //get the agents from the database
 	$sql = "select * from v_call_center_agents ";
