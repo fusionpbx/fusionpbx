@@ -537,7 +537,24 @@
 								$action_array = explode(":", $destination_action, 2);
 								if (isset($action_array[0]) && !empty($action_array[0])) {
 									if ($destination->valid($action_array[0].':'.$action_array[1])) {
-										$dialplan["dialplan_xml"] .= "		<action application=\"".xml::sanitize($action_array[0])."\" data=\"".xml::sanitize($action_array[1])."\"/>\n";
+										//set variables from the action array
+										$action_app = $action_array[0];
+										$action_data = $action_array[1];
+
+										//allow specific api commands
+										$allowed_commands = array();
+										$allowed_commands[] = "regex";
+										$allowed_commands[] = "sofia_contact";
+										foreach ($allowed_commands as $allowed_command) {
+											$action_data = str_replace('${'.$allowed_command, '#{'.$allowed_command, $action_data);
+										}
+										$action_data = xml::sanitize($action_data);
+										foreach ($allowed_commands as $allowed_command) {
+											$action_data = str_replace('#{'.$allowed_command, '${'.$allowed_command, $action_data);
+										}
+
+										//add the action to the dialplan xml
+										$dialplan["dialplan_xml"] .= "		<action application=\"".xml::sanitize($action_app)."\" data=\"".$action_data."\"/>\n";
 									}
 								}
 							}
