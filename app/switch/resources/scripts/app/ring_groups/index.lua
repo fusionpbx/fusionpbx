@@ -903,6 +903,9 @@
 							end
 						end
 
+					--clear the dial_string variables
+						dial_string = nil;
+
 					--increment the value of x
 						x = x + 1;
 				end
