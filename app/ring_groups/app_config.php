@@ -132,6 +132,7 @@
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "ring_group_domain";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "ring_group_all";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
