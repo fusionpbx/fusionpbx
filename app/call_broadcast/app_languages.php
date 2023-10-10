@@ -6,6 +6,7 @@ $text['title-call_broadcasts']['ar-eg'] = "البث دعوة";
 $text['title-call_broadcasts']['de-at'] = "Rundrufe";
 $text['title-call_broadcasts']['de-ch'] = "Rundrufe";
 $text['title-call_broadcasts']['de-de'] = "Rundrufe";
+$text['title-call_broadcasts']['el-gr'] = "Εκπομπές κλήσεων";
 $text['title-call_broadcasts']['es-cl'] = "Llamada Masiva (Broadcast)";
 $text['title-call_broadcasts']['es-mx'] = "Llamada Masiva (Broadcast)";
 $text['title-call_broadcasts']['fr-ca'] = "Campagne d'appels";
@@ -30,6 +31,7 @@ $text['title-call_broadcast']['ar-eg'] = "بث دعوة";
 $text['title-call_broadcast']['de-at'] = "Rundrufe";
 $text['title-call_broadcast']['de-ch'] = "Rundrufe";
 $text['title-call_broadcast']['de-de'] = "Rundrufe";
+$text['title-call_broadcast']['el-gr'] = "Μετάδοση κλήσης";
 $text['title-call_broadcast']['es-cl'] = "Llamada Masiva (Broadcast)";
 $text['title-call_broadcast']['es-mx'] = "Llamada Masiva (Broadcast)";
 $text['title-call_broadcast']['fr-ca'] = "Campagne d'appels";
@@ -54,6 +56,7 @@ $text['title_description-call_broadcast']['ar-eg'] = "إدارة تسليم ال
 $text['title_description-call_broadcast']['de-at'] = "Verwalten Sie die Zustellung von aufgezeichneten Nachrichten an Massenempfänger.";
 $text['title_description-call_broadcast']['de-ch'] = "Verwalten Sie die Zustellung von aufgezeichneten Nachrichten an Massenempfänger.";
 $text['title_description-call_broadcast']['de-de'] = "Verwalten Sie die Zustellung von aufgezeichneten Nachrichten an Massenempfänger.";
+$text['title_description-call_broadcast']['el-gr'] = "Διαχειριστείτε την παράδοση προηχογραφημένων μηνυμάτων σε μαζικούς παραλήπτες.";
 $text['title_description-call_broadcast']['es-cl'] = "Gestionar el envío de mensajes pregrabados a destinatarios masivos.";
 $text['title_description-call_broadcast']['es-mx'] = "Gestionar el envío de mensajes pregrabados a destinatarios masivos.";
 $text['title_description-call_broadcast']['fr-ca'] = "Gérez la livraison de messages préenregistrés aux destinataires en masse.";
@@ -78,6 +81,7 @@ $text['option-true']['ar-eg'] = "حقيقي";
 $text['option-true']['de-at'] = "Ein";
 $text['option-true']['de-ch'] = "Ein";
 $text['option-true']['de-de'] = "Ein";
+$text['option-true']['el-gr'] = "Αληθής";
 $text['option-true']['es-cl'] = "Verdadero";
 $text['option-true']['es-mx'] = "Verdadero";
 $text['option-true']['fr-ca'] = "Oui";
@@ -102,6 +106,7 @@ $text['option-false']['ar-eg'] = "خطأ شنيع";
 $text['option-false']['de-at'] = "Aus";
 $text['option-false']['de-ch'] = "Aus";
 $text['option-false']['de-de'] = "Aus";
+$text['option-false']['el-gr'] = "Ψευδής";
 $text['option-false']['es-cl'] = "Falso";
 $text['option-false']['es-mx'] = "Falso";
 $text['option-false']['fr-ca'] = "Non";
@@ -126,6 +131,7 @@ $text['label-view-calls']['ar-eg'] = "مشاهدة المكالمات";
 $text['label-view-calls']['de-at'] = "Anrufe ansehen";
 $text['label-view-calls']['de-ch'] = "Anrufe ansehen";
 $text['label-view-calls']['de-de'] = "Anrufe ansehen";
+$text['label-view-calls']['el-gr'] = "Προβολή κλήσεων";
 $text['label-view-calls']['es-cl'] = "Ver llamadas";
 $text['label-view-calls']['es-mx'] = "Ver llamadas";
 $text['label-view-calls']['fr-ca'] = "Voir les appels";
@@ -150,6 +156,7 @@ $text['label-start_time']['ar-eg'] = "وقت البدء";
 $text['label-start_time']['de-at'] = "Startzeit";
 $text['label-start_time']['de-ch'] = "Startzeit";
 $text['label-start_time']['de-de'] = "Startzeit";
+$text['label-start_time']['el-gr'] = "Ωρα έναρξης";
 $text['label-start_time']['es-cl'] = "Hora de inicio";
 $text['label-start_time']['es-mx'] = "Hora de inicio";
 $text['label-start_time']['fr-ca'] = "Heure de début";
@@ -174,6 +181,7 @@ $text['label-timeout']['ar-eg'] = "نفذ الوقت";
 $text['label-timeout']['de-at'] = "Zeitüberschreitung";
 $text['label-timeout']['de-ch'] = "Zeitüberschreitung";
 $text['label-timeout']['de-de'] = "Zeitüberschreitung";
+$text['label-timeout']['el-gr'] = "Τέλος χρόνου";
 $text['label-timeout']['es-cl'] = "Tiempo Líimite";
 $text['label-timeout']['es-mx'] = "Tiempo Líimite";
 $text['label-timeout']['fr-ca'] = "Temps libre";
@@ -198,6 +206,7 @@ $text['label-phone']['ar-eg'] = "قائمة رقم الهاتف";
 $text['label-phone']['de-at'] = "Liste der Telefonnummern";
 $text['label-phone']['de-ch'] = "Liste der Telefonnummern";
 $text['label-phone']['de-de'] = "Liste der Telefonnummern";
+$text['label-phone']['el-gr'] = "Τηλεφωνικοί αριθμοί";
 $text['label-phone']['es-cl'] = "Lista de Números de Telefono";
 $text['label-phone']['es-mx'] = "Lista de Números de Telefono";
 $text['label-phone']['fr-ca'] = "Liste de Numéros de téléphone";
@@ -222,6 +231,7 @@ $text['label-message']['ar-eg'] = "رسالة";
 $text['label-message']['de-at'] = "Nachricht";
 $text['label-message']['de-ch'] = "Nachricht";
 $text['label-message']['de-de'] = "Nachricht";
+$text['label-message']['el-gr'] = "Μήνυμα";
 $text['label-message']['es-cl'] = "Mensaje";
 $text['label-message']['es-mx'] = "Mensaje";
 $text['label-message']['fr-ca'] = "Message";
@@ -246,6 +256,7 @@ $text['label-has-been']['ar-eg'] = "قد بدأ";
 $text['label-has-been']['de-at'] = "wurde gestartet";
 $text['label-has-been']['de-ch'] = "wurde gestartet";
 $text['label-has-been']['de-de'] = "wurde gestartet";
+$text['label-has-been']['el-gr'] = "έχει ξεκινήσει";
 $text['label-has-been']['es-cl'] = "iniciada";
 $text['label-has-been']['es-mx'] = "iniciada";
 $text['label-has-been']['fr-ca'] = "a commencé";
@@ -270,6 +281,7 @@ $text['label-destination']['ar-eg'] = "رقم الوجهة";
 $text['label-destination']['de-at'] = "Zielnummer";
 $text['label-destination']['de-ch'] = "Zielnummer";
 $text['label-destination']['de-de'] = "Zielnummer";
+$text['label-destination']['el-gr'] = "Αριθμός προορισμού";
 $text['label-destination']['es-cl'] = "Número de Destino";
 $text['label-destination']['es-mx'] = "Número de Destino";
 $text['label-destination']['fr-ca'] = "Numéro de Destination";
@@ -294,6 +306,7 @@ $text['label-concurrent-limit']['ar-eg'] = "الحد المتزامن";
 $text['label-concurrent-limit']['de-at'] = "Gleichzeitige Anrufe";
 $text['label-concurrent-limit']['de-ch'] = "Gleichzeitige Anrufe";
 $text['label-concurrent-limit']['de-de'] = "Gleichzeitige Anrufe";
+$text['label-concurrent-limit']['el-gr'] = "Ταυτόχρονο όριο";
 $text['label-concurrent-limit']['es-cl'] = "Límite de concurrencia";
 $text['label-concurrent-limit']['es-mx'] = "Límite de concurrencia";
 $text['label-concurrent-limit']['fr-ca'] = "Appels Simultanés";
@@ -318,6 +331,7 @@ $text['label-callerid-number']['ar-eg'] = "رقم هوية المتصل";
 $text['label-callerid-number']['de-at'] = "Anruferkennung (Nummer)";
 $text['label-callerid-number']['de-ch'] = "Anruferkennung (Nummer)";
 $text['label-callerid-number']['de-de'] = "Anruferkennung (Nummer)";
+$text['label-callerid-number']['el-gr'] = "Αριθμός αναγνώρισης καλούντος";
 $text['label-callerid-number']['es-cl'] = "Número de Origen";
 $text['label-callerid-number']['es-mx'] = "Número de Origen";
 $text['label-callerid-number']['fr-ca'] = "Numéro d'appelant";
@@ -342,6 +356,7 @@ $text['label-caller-id-name']['ar-eg'] = "اسم معرف المتصل";
 $text['label-caller-id-name']['de-at'] = "Anruferkennung (Name)";
 $text['label-caller-id-name']['de-ch'] = "Anruferkennung (Name)";
 $text['label-caller-id-name']['de-de'] = "Anruferkennung (Name)";
+$text['label-caller-id-name']['el-gr'] = "Όνομα αναγνώρισης κλήσης";
 $text['label-caller-id-name']['es-cl'] = "Nombre de origen";
 $text['label-caller-id-name']['es-mx'] = "Nombre de origen";
 $text['label-caller-id-name']['fr-ca'] = "Nom d'appelant";
@@ -366,6 +381,7 @@ $text['label-call-broadcasts']['ar-eg'] = "البث دعوة";
 $text['label-call-broadcasts']['de-at'] = "Rundrufe";
 $text['label-call-broadcasts']['de-ch'] = "Rundrufe";
 $text['label-call-broadcasts']['de-de'] = "Rundrufe";
+$text['label-call-broadcasts']['el-gr'] = "Εκπομπές κλήσεων";
 $text['label-call-broadcasts']['es-cl'] = "Llamadas Masivas (Broadcast)";
 $text['label-call-broadcasts']['es-mx'] = "Llamadas Masivas (Broadcast)";
 $text['label-call-broadcasts']['fr-ca'] = "Diffusions d'appels";
@@ -390,6 +406,7 @@ $text['label-call-broadcast']['ar-eg'] = "بث دعوة";
 $text['label-call-broadcast']['de-at'] = "Rundrufe";
 $text['label-call-broadcast']['de-ch'] = "Rundrufe";
 $text['label-call-broadcast']['de-de'] = "Rundrufe";
+$text['label-call-broadcast']['el-gr'] = "Μετάδοση κλήσης";
 $text['label-call-broadcast']['es-cl'] = "Llamada Masiva (Broadcast)";
 $text['label-call-broadcast']['es-mx'] = "Llamada Masiva (Broadcast)";
 $text['label-call-broadcast']['fr-ca'] = "Diffusion d'appels";
@@ -414,6 +431,7 @@ $text['label-avmd']['ar-eg'] = "كشف البريد الصوتي";
 $text['label-avmd']['de-at'] = "Erkennung von Sprachnachrichten";
 $text['label-avmd']['de-ch'] = "Erkennung von Sprachnachrichten";
 $text['label-avmd']['de-de'] = "Erkennung von Sprachnachrichten";
+$text['label-avmd']['el-gr'] = "Ανίχνευση τηλεφωνητή";
 $text['label-avmd']['es-cl'] = "Detección de correo de voz";
 $text['label-avmd']['es-mx'] = "Detección de correo de voz";
 $text['label-avmd']['fr-ca'] = "Détection de la messagerie vocale";
@@ -438,6 +456,7 @@ $text['label-broadcast_toll_allow']['ar-eg'] = "عدد مسموح به";
 $text['label-broadcast_toll_allow']['de-at'] = "Berechtigung";
 $text['label-broadcast_toll_allow']['de-ch'] = "Berechtigung";
 $text['label-broadcast_toll_allow']['de-de'] = "Berechtigung";
+$text['label-broadcast_toll_allow']['el-gr'] = "Επιτρέπονται διόδια";
 $text['label-broadcast_toll_allow']['es-cl'] = "Permitir Tarifas Especiales";
 $text['label-broadcast_toll_allow']['es-mx'] = "Permitir Tarifas Especiales";
 $text['label-broadcast_toll_allow']['fr-ca'] = "Permis de péage";
@@ -462,6 +481,7 @@ $text['label-accountcode']['ar-eg'] = "رمز الحساب";
 $text['label-accountcode']['de-at'] = "Kontoschlüssel";
 $text['label-accountcode']['de-ch'] = "Kontoschlüssel";
 $text['label-accountcode']['de-de'] = "Kontoschlüssel";
+$text['label-accountcode']['el-gr'] = "Κωδικός λογαριασμού";
 $text['label-accountcode']['es-cl'] = "Código de cuenta";
 $text['label-accountcode']['es-mx'] = "Código de cuenta";
 $text['label-accountcode']['fr-ca'] = "Code de compte";
@@ -486,6 +506,7 @@ $text['label-sample_file']['ar-eg'] = "نموذج لملف CSV";
 $text['label-sample_file']['de-at'] = "Beispiel-CSV-Datei";
 $text['label-sample_file']['de-ch'] = "Beispiel-CSV-Datei";
 $text['label-sample_file']['de-de'] = "Beispiel-CSV-Datei";
+$text['label-sample_file']['el-gr'] = "Δείγμα αρχείου CSV";
 $text['label-sample_file']['es-cl'] = "Archivo CSV de muestra";
 $text['label-sample_file']['es-mx'] = "Archivo CSV de muestra";
 $text['label-sample_file']['fr-ca'] = "Exemple de fichier CSV";
@@ -504,75 +525,30 @@ $text['label-sample_file']['zh-cn'] = "示例 CSV 文件";
 $text['label-sample_file']['ja-jp'] = "サンプル CSV ファイル";
 $text['label-sample_file']['ko-kr'] = "샘플 CSV 파일";
 
-$text['label-list_example']['en-us'] = "Number|First,Last
-Number|First,Last
-...";
-$text['label-list_example']['en-gb'] = "Number|First,Last
-Number|First,Last
-...";
-$text['label-list_example']['ar-eg'] = "رقم|أولاً,آخر
-رقم|أولاً,آخر
-...";
-$text['label-list_example']['de-at'] = "Nummer|Erste,Zuletzt
-Nummer|Erste,Zuletzt
-...";
-$text['label-list_example']['de-ch'] = "Nummer|Erste,Zuletzt
-Nummer|Erste,Zuletzt
-...";
-$text['label-list_example']['de-de'] = "Nummer|Erste,Zuletzt
-Nummer|Erste,Zuletzt
-...";
-$text['label-list_example']['es-cl'] = "Número|Primero,Último
-Número|Primero,Último
-...";
-$text['label-list_example']['es-mx'] = "Número|Primero,Último
-Número|Primero,Último
-...";
-$text['label-list_example']['fr-ca'] = "Nombre|First,D'abord
-Nombre|D'abord,Last
-...";
-$text['label-list_example']['fr-fr'] = "Nombre|First,D'abord
-Nombre|D'abord,Last
-...";
-$text['label-list_example']['he-il'] = "מספר|ראשון,אחרון
-מספר|ראשון,אחרון
-...";
-$text['label-list_example']['it-it'] = "Numero|Primo,Scorso
-Numero|Primo,Scorso
-...";
-$text['label-list_example']['nl-nl'] = "Nummer|Eerste,Laatste
-Nummer|Eerste,Laatste
-...";
-$text['label-list_example']['pl-pl'] = "Numer|Pierwsze,Ostatnie
-Numer|Pierwsze,Ostatnie
-...";
-$text['label-list_example']['pt-br'] = "Número|Primeiro,Durar
-Número|Primeiro,Durar
-...";
-$text['label-list_example']['pt-pt'] = "Número|Primeiro,Durar
-Número|Primeiro,Durar
-...";
-$text['label-list_example']['ro-ro'] = "Număr|Primul,Ultimul
-Număr|Primul,Ultimul
-...";
-$text['label-list_example']['ru-ru'] = "Число|Первый,Последний
-Число|Первый,Последний
-...";
-$text['label-list_example']['sv-se'] = "siffra|Först,Sista
-siffra|Först,Sista
-...";
-$text['label-list_example']['uk-ua'] = "Номер|Перший,Останній
-Номер|Перший,Останній
-...";
-$text['label-list_example']['zh-cn'] = "编号|第一个，最后一个
-编号|第一个，最后一个
-...";
-$text['label-list_example']['ja-jp'] = "番号|最初、最後
-番号|最初、最後
-...";
-$text['label-list_example']['ko-kr'] = "번호|이름, 성
-번호|이름, 성
-...";
+$text['label-list_example']['en-us'] = "Number|First,LastNumber|First,Last...";
+$text['label-list_example']['en-gb'] = "Number|First,LastNumber|First,Last...";
+$text['label-list_example']['ar-eg'] = "الرقم|الأول،الرقم الأخير|الأول،الأخير...";
+$text['label-list_example']['de-at'] = "Nummer|Erste,ZuletztNummer|Erste,Zuletzt...";
+$text['label-list_example']['de-ch'] = "Nummer|Erste,ZuletztNummer|Erste,Zuletzt...";
+$text['label-list_example']['de-de'] = "Nummer|Erste,ZuletztNummer|Erste,Zuletzt...";
+$text['label-list_example']['el-gr'] = "Αριθμός|Πρώτος,ΤελευταίοςΑριθμός|Πρώτος,Τελευταίος...";
+$text['label-list_example']['es-cl'] = "Número|Primero,ÚltimoNúmero|Primero,Último...";
+$text['label-list_example']['es-mx'] = "Número|Primero,ÚltimoNúmero|Primero,Último...";
+$text['label-list_example']['fr-ca'] = "Nombre|First,D'abordNombre|D'abord,Last...";
+$text['label-list_example']['fr-fr'] = "Nombre|First,D'abordNombre|D'abord,Last...";
+$text['label-list_example']['he-il'] = "מספר|ראשון, מספר אחרון|ראשון, אחרון...";
+$text['label-list_example']['it-it'] = "Numero|Primo,ScorsoNumero|Primo,Scorso...";
+$text['label-list_example']['nl-nl'] = "Nummer|Eerste,LaatsteNummer|Eerste,Laatste...";
+$text['label-list_example']['pl-pl'] = "Numer|Pierwsze,OstatnieNumer|Pierwsze,Ostatnie...";
+$text['label-list_example']['pt-br'] = "Número|Primeiro,DurarNúmero|Primeiro,Durar...";
+$text['label-list_example']['pt-pt'] = "Número|Primeiro,DurarNúmero|Primeiro,Durar...";
+$text['label-list_example']['ro-ro'] = "Număr|Primul,UltimulNumăr|Primul,Ultimul...";
+$text['label-list_example']['ru-ru'] = "Число|Первый,ПоследнийЧисло|Первый,Последний...";
+$text['label-list_example']['sv-se'] = "siffra|Först,Sistasiffra|Först,Sista...";
+$text['label-list_example']['uk-ua'] = "Номер|Перший,ОстаннійНомер|Перший,Останній...";
+$text['label-list_example']['zh-cn'] = "编号|第一个，最后一个编号|第一个，最后一个...";
+$text['label-list_example']['ja-jp'] = "番号|最初、最後番号|最初、最後...";
+$text['label-list_example']['ko-kr'] = "번호|이름, 성번호|이름, 성...";
 
 $text['description-start_time']['en-us'] = "The date and time to begin sending calls.";
 $text['description-start_time']['en-gb'] = "The date and time to begin sending calls.";
@@ -580,6 +556,7 @@ $text['description-start_time']['ar-eg'] = "تاريخ ووقت بدء إرسا�
 $text['description-start_time']['de-at'] = "Das Datum und die Uhrzeit für den Beginn des Sendens von Anrufen.";
 $text['description-start_time']['de-ch'] = "Das Datum und die Uhrzeit für den Beginn des Sendens von Anrufen.";
 $text['description-start_time']['de-de'] = "Das Datum und die Uhrzeit für den Beginn des Sendens von Anrufen.";
+$text['description-start_time']['el-gr'] = "Η ημερομηνία και η ώρα έναρξης της αποστολής κλήσεων.";
 $text['description-start_time']['es-cl'] = "La fecha y hora para comenzar a enviar llamadas.";
 $text['description-start_time']['es-mx'] = "La fecha y hora para comenzar a enviar llamadas.";
 $text['description-start_time']['fr-ca'] = "La date et l'heure auxquelles commencer à envoyer des appels.";
@@ -604,6 +581,7 @@ $text['description-accountcode']['ar-eg'] = "تستخدم في أغلب الأح
 $text['description-accountcode']['de-at'] = "Wird am häufigsten für Abrechnungssysteme verwendet.";
 $text['description-accountcode']['de-ch'] = "Wird am häufigsten für Abrechnungssysteme verwendet.";
 $text['description-accountcode']['de-de'] = "Wird am häufigsten für Abrechnungssysteme verwendet.";
+$text['description-accountcode']['el-gr'] = "Χρησιμοποιείται συχνότερα για συστήματα τιμολόγησης.";
 $text['description-accountcode']['es-cl'] = "Se utiliza con mayor frecuencia para los sistemas de facturación.";
 $text['description-accountcode']['es-mx'] = "Se utiliza con mayor frecuencia para los sistemas de facturación.";
 $text['description-accountcode']['fr-ca'] = "Utilisé le plus souvent pour les systèmes de facturation.";
@@ -628,6 +606,7 @@ $text['description-timeout']['ar-eg'] = "حدد المهلة المطلقة با
 $text['description-timeout']['de-at'] = "Geben Sie die absolute Zeitüberschreitung in Sekunden an.";
 $text['description-timeout']['de-ch'] = "Geben Sie die absolute Zeitüberschreitung in Sekunden an.";
 $text['description-timeout']['de-de'] = "Geben Sie die absolute Zeitüberschreitung in Sekunden an.";
+$text['description-timeout']['el-gr'] = "Καθορίστε το απόλυτο χρονικό όριο σε δευτερόλεπτα.";
 $text['description-timeout']['es-cl'] = "Especifique el tiempo de espera absoluto en segundos.";
 $text['description-timeout']['es-mx'] = "Especifique el tiempo de espera absoluto en segundos.";
 $text['description-timeout']['fr-ca'] = "Spécifiez le délai d'expiration absolu en secondes";
@@ -652,6 +631,7 @@ $text['description-phone']['ar-eg'] = "حدد ملف TXT / CSV للتحميل ،
 $text['description-phone']['de-at'] = "Optional: Ergänzen Sie eine Liste von Telefonnummern, eine Nummer pro Zeile im folgenden Format: 123-123-1234|Nachname,Vorname";
 $text['description-phone']['de-ch'] = "Optional: Ergänzen Sie eine Liste von Telefonnummern, eine Nummer pro Zeile im folgenden Format: 123-123-1234|Nachname,Vorname";
 $text['description-phone']['de-de'] = "Optional: Ergänzen Sie eine Liste von Telefonnummern, eine Nummer pro Zeile im folgenden Format: 123-123-1234|Nachname,Vorname";
+$text['description-phone']['el-gr'] = "Επιλέξτε ένα αρχείο TXT/CSV για μεταφόρτωση ή εισαγάγετε Αριθμούς τηλεφώνου έναν ανά γραμμή στη μορφή που φαίνεται παραπάνω.";
 $text['description-phone']['es-cl'] = "Opcional, definir una lista de números de telefono, uno por línea en el siguiente formato: 123-123-1234|Apellido,Nombre";
 $text['description-phone']['es-mx'] = "Opcional, definir una lista de números de telefono, uno por línea en el siguiente formato: 123-123-1234|Apellido,Nombre";
 $text['description-phone']['fr-ca'] = "Optionnel, Insérer une liste de numéros de téléphone, un par ligne, dans le format suivant ; 0123456789|Nom,Prénom";
@@ -676,6 +656,7 @@ $text['description-name']['ar-eg'] = "أدخل الاسم هنا.";
 $text['description-name']['de-at'] = "Geben Sie den Namen an.";
 $text['description-name']['de-ch'] = "Geben Sie den Namen an.";
 $text['description-name']['de-de'] = "Geben Sie den Namen an.";
+$text['description-name']['el-gr'] = "Εισαγάγετε το όνομα εδώ.";
 $text['description-name']['es-cl'] = "Ingrese el nombre aquí.";
 $text['description-name']['es-mx'] = "Ingrese el nombre aquí.";
 $text['description-name']['fr-ca'] = "Insérer le Nom.";
@@ -700,6 +681,7 @@ $text['description-info']['ar-eg'] = "أدخل الوصف هنا.";
 $text['description-info']['de-at'] = "Geben Sie eine Beschreibung an.";
 $text['description-info']['de-ch'] = "Geben Sie eine Beschreibung an.";
 $text['description-info']['de-de'] = "Geben Sie eine Beschreibung an.";
+$text['description-info']['el-gr'] = "Εισαγάγετε την περιγραφή εδώ.";
 $text['description-info']['es-cl'] = "Ingrese descripción aquí.";
 $text['description-info']['es-mx'] = "Ingrese descripción aquí.";
 $text['description-info']['fr-ca'] = "Entrez la description ici";
@@ -724,6 +706,7 @@ $text['description-destination']['ar-eg'] = "أرسل المكالمة إلى ر
 $text['description-destination']['de-at'] = "Der Anruf wird an eine Nebenstelle, eine Automatische Vermittlung, ein Konferenzraum oder jede andere Nummer weitergeleitet.";
 $text['description-destination']['de-ch'] = "Der Anruf wird an eine Nebenstelle, eine Automatische Vermittlung, ein Konferenzraum oder jede andere Nummer weitergeleitet.";
 $text['description-destination']['de-de'] = "Der Anruf wird an eine Nebenstelle, eine Automatische Vermittlung, ein Konferenzraum oder jede andere Nummer weitergeleitet.";
+$text['description-destination']['el-gr'] = "Στείλτε την κλήση σε μια επέκταση, ένα μενού IVR, αίθουσα συνεδριάσεων ή οποιονδήποτε άλλο αριθμό.";
 $text['description-destination']['es-cl'] = "Enviar la llamada a extension a IVR, conferencias o cualquier otro número.";
 $text['description-destination']['es-mx'] = "Enviar la llamada a extension a IVR, conferencias o cualquier otro número.";
 $text['description-destination']['fr-ca'] = "Emettre l'appel vers un SVI, salle de conférence, ou tout autre numéro.";
@@ -748,6 +731,7 @@ $text['description-concurrent-limit']['ar-eg'] = "حدد العدد التقري
 $text['description-concurrent-limit']['de-at'] = "Begrenzt die Anzahl gleichzeitiger Anrufe. Kein Limit wenn leer gelassen.";
 $text['description-concurrent-limit']['de-ch'] = "Begrenzt die Anzahl gleichzeitiger Anrufe. Kein Limit wenn leer gelassen.";
 $text['description-concurrent-limit']['de-de'] = "Begrenzt die Anzahl gleichzeitiger Anrufe. Kein Limit wenn leer gelassen.";
+$text['description-concurrent-limit']['el-gr'] = "Περιορίστε τον κατά προσέγγιση αριθμό ταυτόχρονων κλήσεων. Αφήστε το κενό χωρίς όριο.";
 $text['description-concurrent-limit']['es-cl'] = "Limitar el número de llamadas simultaneas. Deje en blanco para no establecer un límite.";
 $text['description-concurrent-limit']['es-mx'] = "Limitar el número de llamadas simultaneas. Deje en blanco para no establecer un límite.";
 $text['description-concurrent-limit']['fr-ca'] = "Limite le nombre d'appels concurrents. Laisser vide pour illimité.";
@@ -769,9 +753,10 @@ $text['description-concurrent-limit']['ko-kr'] = "대략적인 동시 호출 수
 $text['description-caller-id-number']['en-us'] = "Applicable if the provider that allow the Caller ID number to be sent. default: 0000000000";
 $text['description-caller-id-number']['en-gb'] = "Applicable if the provider that allow the Caller ID number to be sent. default: 0000000000";
 $text['description-caller-id-number']['ar-eg'] = "ينطبق إذا كان الموفر الذي يسمح بإرسال رقم معرف المتصل. الافتراضي: 0000000000";
-$text['description-caller-id-number']['de-at'] = "Geben Sie die Anruferkennung (Nummer) hier ein.";
-$text['description-caller-id-number']['de-ch'] = "Geben Sie die Anruferkennung (Nummer) hier ein.";
-$text['description-caller-id-number']['de-de'] = "Geben Sie die Anruferkennung (Nummer) hier ein.";
+$text['description-caller-id-number']['de-at'] = "Gilt, wenn der Anbieter das Senden der Anrufer-ID-Nummer zulässt. Standard: 0000000000";
+$text['description-caller-id-number']['de-ch'] = "Gilt, wenn der Anbieter das Senden der Anrufer-ID-Nummer zulässt. Standard: 0000000000";
+$text['description-caller-id-number']['de-de'] = "Gilt, wenn der Anbieter das Senden der Anrufer-ID-Nummer zulässt. Standard: 0000000000";
+$text['description-caller-id-number']['el-gr'] = "Ισχύει εάν ο πάροχος που επιτρέπει την αποστολή του αριθμού αναγνώρισης καλούντος. προεπιλογή: 0000000000";
 $text['description-caller-id-number']['es-cl'] = "Aplicable si el proveedor que permite enviar el número de Caller ID. predeterminado: 0000000000";
 $text['description-caller-id-number']['es-mx'] = "Aplicable si el proveedor que permite enviar el número de Caller ID. predeterminado: 0000000000";
 $text['description-caller-id-number']['fr-ca'] = "Applicable uniquement si le fournisseur d'accès authorise l'acheminement du numéro d'appelant. Par défaut: 0000000000";
@@ -796,6 +781,7 @@ $text['description-caller-id-name']['ar-eg'] = "قابل للتطبيق إذا �
 $text['description-caller-id-name']['de-at'] = "Geben Sie die Anruferkennung (Name) hier ein, sofern der Provider dieses unterstützt. Default: anonym.";
 $text['description-caller-id-name']['de-ch'] = "Geben Sie die Anruferkennung (Name) hier ein, sofern der Provider dieses unterstützt. Default: anonym.";
 $text['description-caller-id-name']['de-de'] = "Geben Sie die Anruferkennung (Name) hier ein, sofern der Provider dieses unterstützt. Default: anonym.";
+$text['description-caller-id-name']['el-gr'] = "Ισχύει εάν ο πάροχος επιτρέπει τον ορισμό του ονόματος αναγνώρισης καλούντος. προεπιλογή: ανώνυμος";
 $text['description-caller-id-name']['es-cl'] = "Applicable si el proveedor permite enviar el número de origen. Por defecto: 0000000000";
 $text['description-caller-id-name']['es-mx'] = "Applicable si el proveedor permite enviar el número de origen. Por defecto: 0000000000";
 $text['description-caller-id-name']['fr-ca'] = "Applicable uniquement si le fournisseur d'accès authorise l'acheminement du nom d'appelant. Par défaut: anonymous";
@@ -820,6 +806,7 @@ $text['description-avmd']['ar-eg'] = "حدد ما إذا كنت تريد تمك�
 $text['description-avmd']['de-at'] = "Wählen Sie ob die Erkennung von Sprach-Mailboxen und automatischen Anrufbeantwortern Ein- oder Ausgeschaltet werden soll.";
 $text['description-avmd']['de-ch'] = "Wählen Sie ob die Erkennung von Sprach-Mailboxen und automatischen Anrufbeantwortern Ein- oder Ausgeschaltet werden soll.";
 $text['description-avmd']['de-de'] = "Wählen Sie ob die Erkennung von Sprach-Mailboxen und automatischen Anrufbeantwortern Ein- oder Ausgeschaltet werden soll.";
+$text['description-avmd']['el-gr'] = "Επιλέξτε εάν θα ενεργοποιήσετε ή θα απενεργοποιήσετε τον εντοπισμό συστημάτων μηνυμάτων τηλεφωνητή και τηλεφωνητή.";
 $text['description-avmd']['es-cl'] = "Seleccione si desea activar o desactivar la detección de sistemas de contestador automático de mensajes de correo de voz y.";
 $text['description-avmd']['es-mx'] = "Seleccione si desea activar o desactivar la detección de sistemas de contestador automático de mensajes de correo de voz y.";
 $text['description-avmd']['fr-ca'] = "Indiquez si vous souhaitez activer ou désactiver la détection de la messagerie vocale et les systèmes de machines de répondeur.";
@@ -844,6 +831,7 @@ $text['description-broadcast_toll_allow']['ar-eg'] = "أدخل قيمة رسوم
 $text['description-broadcast_toll_allow']['de-at'] = "Geben Sie die Berechtigung an. (z.B.: domestic, international, local)";
 $text['description-broadcast_toll_allow']['de-ch'] = "Geben Sie die Berechtigung an. (z.B.: domestic, international, local)";
 $text['description-broadcast_toll_allow']['de-de'] = "Geben Sie die Berechtigung an. (z.B.: domestic, international, local)";
+$text['description-broadcast_toll_allow']['el-gr'] = "Εισαγάγετε την τιμή επιτρεπόμενης διοδίων εδώ. (Παραδείγματα: εγχώριο, διεθνές, τοπικό)";
 $text['description-broadcast_toll_allow']['es-cl'] = "Ingrese el tipo de tarifa especial a permitir (ej: doméstica, internacional, local).";
 $text['description-broadcast_toll_allow']['es-mx'] = "Ingrese el tipo de tarifa especial a permitir (ej: doméstica, internacional, local).";
 $text['description-broadcast_toll_allow']['fr-ca'] = "Insérer les droits d'accès. (Exemples: domestic,international,local)";
@@ -868,6 +856,7 @@ $text['confirm-update']['ar-eg'] = "Оновлення завершено";
 $text['confirm-update']['de-at'] = "Aktualisierung durchgeführt";
 $text['confirm-update']['de-ch'] = "Aktualisierung durchgeführt";
 $text['confirm-update']['de-de'] = "Aktualisierung durchgeführt";
+$text['confirm-update']['el-gr'] = "Η ενημέρωση ολοκληρώθηκε";
 $text['confirm-update']['es-cl'] = "Actualización Completa";
 $text['confirm-update']['es-mx'] = "Actualización Completa";
 $text['confirm-update']['fr-ca'] = "Mise à jour terminée";
@@ -892,6 +881,7 @@ $text['confirm-name']['ar-eg'] = "يرجى تقديم: الاسم";
 $text['confirm-name']['de-at'] = "Bitte geben Sie den Namen an";
 $text['confirm-name']['de-ch'] = "Bitte geben Sie den Namen an";
 $text['confirm-name']['de-de'] = "Bitte geben Sie den Namen an";
+$text['confirm-name']['el-gr'] = "Δώστε: Όνομα";
 $text['confirm-name']['es-cl'] = "Por favor agregue: Nombre";
 $text['confirm-name']['es-mx'] = "Por favor agregue: Nombre";
 $text['confirm-name']['fr-ca'] = "Merci d'indiquer: Nom";
@@ -916,6 +906,7 @@ $text['confirm-delete-info']['ar-eg'] = "هل تريد حقًا حذف هذا؟"
 $text['confirm-delete-info']['de-at'] = "Wollen Sie das wirklich löschen?";
 $text['confirm-delete-info']['de-ch'] = "Wollen Sie das wirklich löschen?";
 $text['confirm-delete-info']['de-de'] = "Wollen Sie das wirklich löschen?";
+$text['confirm-delete-info']['el-gr'] = "Θέλετε πραγματικά να το διαγράψετε;";
 $text['confirm-delete-info']['es-cl'] = "¿Desea realmente eliminar esto?";
 $text['confirm-delete-info']['es-mx'] = "¿Desea realmente eliminar esto?";
 $text['confirm-delete-info']['fr-ca'] = "Voulez-vous vraiment supprimer cela?";
@@ -940,6 +931,7 @@ $text['confirm-add']['ar-eg'] = "أضف مكتمل";
 $text['confirm-add']['de-at'] = "Erfolgreich hinzugefügt";
 $text['confirm-add']['de-ch'] = "Erfolgreich hinzugefügt";
 $text['confirm-add']['de-de'] = "Erfolgreich hinzugefügt";
+$text['confirm-add']['el-gr'] = "Προσθήκη Ολοκληρωμένη";
 $text['confirm-add']['es-cl'] = "Ingreso Completo";
 $text['confirm-add']['es-mx'] = "Ingreso Completo";
 $text['confirm-add']['fr-ca'] = "Ajouté";
@@ -964,6 +956,7 @@ $text['file-error']['ar-eg'] = "عذرا ، نوع الملف غير مسموح 
 $text['file-error']['de-at'] = "Entschuldigung, Dateityp nicht erlaubt";
 $text['file-error']['de-ch'] = "Entschuldigung, Dateityp nicht erlaubt";
 $text['file-error']['de-de'] = "Entschuldigung, Dateityp nicht erlaubt";
+$text['file-error']['el-gr'] = "Λυπούμαστε, ο τύπος αρχείου δεν επιτρέπεται";
 $text['file-error']['es-cl'] = "Lo sentimos, no se permite el tipo de archivo";
 $text['file-error']['es-mx'] = "Lo sentimos, no se permite el tipo de archivo";
 $text['file-error']['fr-ca'] = "Désolé, le type de fichier n'est pas autorisé";
