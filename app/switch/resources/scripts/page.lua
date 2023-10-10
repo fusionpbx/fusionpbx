@@ -177,6 +177,7 @@ if ( session:ready() ) then
 			
 			--ask user to record
 				session:execute("playback", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/voicemail/vm-record_message.wav")
+				session:streamFile("tone_stream://L=1;%(1000, 0, 640)");
 			--set callback function for when a user clicks DTMF
 				session:setInputCallback('onInputCBF', '');
 			--time before starting the recording
