@@ -295,22 +295,16 @@ if ( session:ready() ) then
 				end
 			--check if delay is true
 				if (delay == "true" and (dtmf_entered == 1 or silence_triggered == 1)) then
-					--needed to give freeswitch time to create the page/conference
-						os.execute("sleep 2") --need to wait for the page/conference to actually be started before we can end it. Needs to be done via os.execute since the session is destroyed
-					
-					--play the recorded file into the page/conference
-						response = api:executeString("conference "..conference_name.." play "..recording_filename);
+						
+					--play the recorded file into the page/conference. Need to wait for the page/conference to actually be started before we can end it.
+						response = api:executeString("sched_api +2 none conference "..conference_name.." play "..recording_filename);
 
 					--wait for recording to finish then end page/conference
-						os.execute("sleep "..recording_length+2) --wait the length of the wav file recording plus 2 seconds
-						response = api:executeString("conference "..conference_name.." hup all");
+						response = api:executeString("sched_api +"..tostring(recording_length+4).." none conference "..conference_name.." hup all");
 				else
 					--join the moderator into the page
 						session:execute("conference", conference_bridge.."+flags{endconf,mintwo"..moderator_flag.."}");
 				end
-
-			
-			
 			
 		else
 			--error tone due to no destinations
