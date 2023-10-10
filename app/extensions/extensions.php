@@ -263,6 +263,9 @@
 	if (permission_exists("extension_call_group")) {
 		echo th_order_by('call_group', $text['label-call_group'], $order_by, $order);
 	}
+	if (permission_exists("extension_mac_address")) {
+		echo th_order_by('extension_mac_address', $text['label-extension_mac_address'], $order_by, $order);
+	}
 	if (permission_exists("extension_user_context")) {
 		echo th_order_by('user_context', $text['label-user_context'], $order_by, $order);
 	}
@@ -307,6 +310,26 @@
 			}
 			if (permission_exists("extension_call_group")) {
 				echo "	<td>".escape($row['call_group'])."&nbsp;</td>\n";
+			}
+			if (permission_exists("extension_mac_address")) {
+				// inject to rows of table 
+				$sql = "select d.device_mac_address, d.device_template, d.device_description, l.device_line_uuid, l.device_uuid, l.line_number ";
+				$sql .= "from v_device_lines as l, v_devices as d ";
+				$sql .= "where (l.user_id = :user_id_1 or l.user_id = :user_id_2)";
+				$sql .= "and l.domain_uuid = :domain_uuid ";
+				$sql .= "and l.device_uuid = d.device_uuid ";
+				$sql .= "order by l.line_number, d.device_mac_address asc ";
+				$parameters['user_id_1'] = $row['extension'];
+				$parameters['user_id_2'] = $row['number_alias'];
+				$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+				$database = new database;
+				$device_lines = $database->select($sql, $parameters, 'all');
+				unset($sql, $parameters, $database);
+				if ($device_lines[0]['device_mac_address']) {
+					echo "	<td><a href='" . PROJECT_PATH . "/app/devices/device_edit.php?id=" . escape($device_lines[0]['device_uuid']) . "'>" . escape($device_lines[0]['device_mac_address']) . " " . ((count($device_lines) - 1) > 0 ? " (+" . (count($device_lines) - 1) . ")" : "") . "</td>\n";
+				} else {
+					echo "    <td> - </td>";
+				}
 			}
 			if (permission_exists("extension_user_context")) {
 				echo "	<td>".escape($row['user_context'])."</td>\n";
