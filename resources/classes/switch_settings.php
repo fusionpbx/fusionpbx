@@ -229,6 +229,7 @@ if (!class_exists('switch_settings')) {
 					}
 					$x++;
 				}
+				unset($array);
 
 			//add the missing default settings
 				if (count($missing) > 0) {
