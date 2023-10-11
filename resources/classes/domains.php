@@ -606,6 +606,9 @@ if (!class_exists('domains')) {
 			//includes files
 				require dirname(__DIR__, 2) . "/resources/require.php";
 
+			//add missing default settings
+				$this->settings();
+
 			//get the variables
 				$config = new config;
 				$config_path = $config->find();
@@ -662,7 +665,7 @@ if (!class_exists('domains')) {
 		public function settings() {
 
 			//includes files
-				include "resources/require.php";
+				require dirname(__DIR__, 2) . "/resources/require.php";
 
 			//get an array of the default settings UUIDs
 				$sql = "select * from v_default_settings ";
