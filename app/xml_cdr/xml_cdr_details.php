@@ -242,6 +242,11 @@
 //reverse the array to put events in chronological order
 	$array["callflow"] = array_reverse($array["callflow"]);
 
+//debug information
+	if (isset($_REQUEST['debug']) && $_REQUEST['debug'] == 'true') {
+		view_array($array["callflow"], false);
+	}
+
 //add the final call flow destination to the call flow array
 	//when call_direction is inbound
 	//when destination_number is not same as the last row
@@ -249,9 +254,18 @@
 	//count the array $i-1 finds the last record
 	//count the array $i is the next record
 	if ($call_direction == 'inbound') {
+		//count the array
 		$i = count($array["callflow"]);
+
+		//get the application array
+		if (!empty($array["callflow"][$i-1]["caller_profile"]["destination_number"])) {
+			$app = find_app($destination_array, $array["callflow"][$i-1]["caller_profile"]["destination_number"]);
+		}
+
+		//add last row to the array
 		if (!empty($array["callflow"]) 
 			&& $array["callflow"][$i-1]["destination_number"] != $destination_number 
+			&& $app["application"] != 'conferences' 
 			&& substr($array["callflow"][$i-1]["caller_profile"]["destination_number"], 0, 3) != '*99') {
 				$array["callflow"][$i]["caller_profile"]["destination_number"] = $destination_number;
 				$array["callflow"][$i]["caller_profile"]["network_addr"] = $network_address;
@@ -274,25 +288,33 @@
 		$caller_id_number = urldecode($row["caller_profile"]["caller_id_number"]);
 		$call_flow_destination_number = urldecode($row["caller_profile"]["destination_number"]);
 		$call_flow_summary[$x]["destination_number"] = $call_flow_destination_number;
-		if (isset($row["times"]["profile_created_time"])) {
-			$tmp_start_stamp = urldecode($row["times"]["profile_created_time"]) / 1000000;
+		if (isset($call_flow_summary[$x-1]["end_epoch"])) {
+			$tmp_start_stamp = $call_flow_summary[$x-1]["end_epoch"];
+		}
+		elseif (isset($row["times"]["created_time"])) {
+			$tmp_start_stamp = urldecode($row["times"]["created_time"]) / 1000000;
 		}
 
 		$tmp_end_stamp_formatted = '';
-		if (isset($array["callflow"][$x+1]["times"]["profile_created_time"])) {
-			$tmp_end_stamp = urldecode($array["callflow"][$x+1]["times"]["profile_created_time"]) / 1000000;
+		if (isset($array["callflow"][$x]["times"]["transfer_time"]) && $array["callflow"][$x]["times"]["transfer_time"] > 0) {
+			$tmp_end_stamp = urldecode($array["callflow"][$x]["times"]["transfer_time"]) / 1000000;
+			$tmp_end_stamp_formatted = date("Y-m-d H:i:s", (int) $tmp_end_stamp);
+		}
+		elseif (isset($array["callflow"][$x]["times"]["bridged_time"]) && $array["callflow"][$x]["times"]["bridged_time"] > 0) {
+			$tmp_end_stamp = urldecode($array["callflow"][$x]["times"]["bridged_time"]) / 1000000;
+			$tmp_end_stamp_formatted = date("Y-m-d H:i:s", (int) $tmp_end_stamp);
+		}
+		elseif (isset($array["callflow"][$x+1]["times"]["created_time"])) {
+			$tmp_end_stamp = urldecode($array["callflow"][$x+1]["times"]["created_time"]) / 1000000;
 			$tmp_end_stamp_formatted = date("Y-m-d H:i:s", (int) $tmp_end_stamp);
 		}
 		elseif (isset($row["times"]["hangup_time"])) {
 			$tmp_end_stamp = urldecode($row["times"]["hangup_time"]) / 1000000;
 			$tmp_end_stamp_formatted = date("Y-m-d H:i:s", (int) $tmp_end_stamp);
 		}
-		//if (isset($row["times"]["transfer_time"])) {
-		//	$tmp_end_stamp = urldecode($row["times"]["transfer_time"]) / 1000000;
-		//	$tmp_end_stamp = date("Y-m-d H:i:s", (int) $tmp_end_stamp);
-		//}
-
-		$call_flow_summary[$x]["start_stamp"] = date("Y-m-d H:i:s", (int) $tmp_start_stamp);
+		$call_flow_summary[$x]["start_epoch"] = $tmp_start_stamp;
+		$call_flow_summary[$x]["end_epoch"] = $tmp_end_stamp;
+		$call_flow_summary[$x]["start_stamp"] = gmdate("Y-m-d H:i:s", (int) $tmp_start_stamp);
 		$call_flow_summary[$x]["end_stamp"] = $tmp_end_stamp_formatted;
 		$call_flow_summary[$x]["duration"] =  gmdate("G:i:s", (int) $tmp_end_stamp - (int) $tmp_start_stamp);
 
