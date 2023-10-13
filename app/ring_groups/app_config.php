@@ -37,6 +37,7 @@
 		$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '\${domain_uuid}' and ring_group_enabled = 'true' ";
 		$apps[$x]['destinations'][$y]['order_by'] = "ring_group_extension asc";
 		$apps[$x]['destinations'][$y]['field']['ring_group_uuid'] = "ring_group_uuid";
+		$apps[$x]['destinations'][$y]['field']['uuid'] = "ring_group_uuid";
 		$apps[$x]['destinations'][$y]['field']['name'] = "ring_group_name";
 		$apps[$x]['destinations'][$y]['field']['destination'] = "ring_group_extension";
 		$apps[$x]['destinations'][$y]['field']['extension'] = "ring_group_extension";
@@ -132,7 +133,6 @@
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "ring_group_domain";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
-		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "ring_group_all";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";

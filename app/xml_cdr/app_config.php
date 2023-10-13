@@ -354,6 +354,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Limit allowed range of addresses for CDR over HTTP POST.";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "7b9a5a95-a964-4fa1-b1b6-7641ca478405";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "cdr";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "summary_style";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "horizontal";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Options: horizontal, vertical";
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "9d6ba316-a954-476b-9d8c-4520c3c69d2c";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "dashboard";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "missed_calls_chart_main_background_color";
