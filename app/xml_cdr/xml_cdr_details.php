@@ -247,6 +247,22 @@
 		view_array($array["callflow"], false);
 	}
 
+//count the callflow array
+	$callflow_count = 0;
+	if (!empty($array["callflow"])) {
+		$callflow_count = count($array["callflow"]);
+	}
+
+//call flow summary when the count array is 1 then use start_epoch and end_epoch
+	if ($callflow_count == 1) {
+		$call_flow_summary[0]["destination_number"] = urldecode($row["caller_profile"]["destination_number"]);
+		$call_flow_summary[0]["start_epoch"] = $start_epoch;
+		$call_flow_summary[0]["end_epoch"] = $end_epoch;
+		$call_flow_summary[0]["start_stamp"] = date("Y-m-d H:i:s", (int) $start_epoch);
+		$call_flow_summary[0]["end_stamp"] = date("Y-m-d H:i:s", (int) $end_epoch);
+		$call_flow_summary[0]["duration"] = gmdate("G:i:s", (int) $end_epoch - (int) $start_epoch);
+	}
+
 //add the final call flow destination to the call flow array
 	//when call_direction is inbound
 	//when destination_number is not same as the last row
@@ -255,7 +271,7 @@
 	//count the array $i is the next record
 	if ($call_direction == 'inbound') {
 		//count the array
-		$i = count($array["callflow"]);
+		$i = $callflow_count;
 
 		//get the application array
 		if (!empty($array["callflow"][$i-1]["caller_profile"]["destination_number"])) {
@@ -314,7 +330,7 @@
 		}
 		$call_flow_summary[$x]["start_epoch"] = $tmp_start_stamp;
 		$call_flow_summary[$x]["end_epoch"] = $tmp_end_stamp;
-		$call_flow_summary[$x]["start_stamp"] = gmdate("Y-m-d H:i:s", (int) $tmp_start_stamp);
+		$call_flow_summary[$x]["start_stamp"] = date("Y-m-d H:i:s", (int) $tmp_start_stamp);
 		$call_flow_summary[$x]["end_stamp"] = $tmp_end_stamp_formatted;
 		$call_flow_summary[$x]["duration"] =  gmdate("G:i:s", (int) $tmp_end_stamp - (int) $tmp_start_stamp);
 
