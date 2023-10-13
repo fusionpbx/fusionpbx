@@ -243,16 +243,23 @@
 	$array["callflow"] = array_reverse($array["callflow"]);
 
 //add the final call flow destination to the call flow array
-	if ($call_direction == 'inbound' || $call_direction == 'local') {
+	//when call_direction is inbound
+	//when destination_number is not same as the last row
+	//when last destination is not voicemail *99ext
+	//count the array $i-1 finds the last record
+	//count the array $i is the next record
+	if ($call_direction == 'inbound') {
 		$i = count($array["callflow"]);
-		if (!empty($array["callflow"]) && $array["callflow"][$i-1]["destination_number"] != $destination_number) {
-			$array["callflow"][$i]["caller_profile"]["destination_number"] = $destination_number;
-			$array["callflow"][$i]["caller_profile"]["network_addr"] = $network_address;
-			$array["callflow"][$i]["caller_profile"]["caller_id_name"] = $caller_id_name;
-			$array["callflow"][$i]["caller_profile"]["caller_id_number"] = $caller_id_number;
-			$array["callflow"][$i]["times"]["profile_created_time"] = ($end_epoch - $duration) * 1000000;
-			$array["callflow"][$i]["times"]["end_stamp"] = $end_epoch * 1000000;
-			$array["callflow"][$i]["times"]["hangup_time"] = $end_epoch * 1000000;
+		if (!empty($array["callflow"]) 
+			&& $array["callflow"][$i-1]["destination_number"] != $destination_number 
+			&& substr($array["callflow"][$i-1]["caller_profile"]["destination_number"], 0, 3) != '*99') {
+				$array["callflow"][$i]["caller_profile"]["destination_number"] = $destination_number;
+				$array["callflow"][$i]["caller_profile"]["network_addr"] = $network_address;
+				$array["callflow"][$i]["caller_profile"]["caller_id_name"] = $caller_id_name;
+				$array["callflow"][$i]["caller_profile"]["caller_id_number"] = $caller_id_number;
+				$array["callflow"][$i]["times"]["profile_created_time"] = ($end_epoch - $duration) * 1000000;
+				$array["callflow"][$i]["times"]["end_stamp"] = $end_epoch * 1000000;
+				$array["callflow"][$i]["times"]["hangup_time"] = $end_epoch * 1000000;
 		}
 	}
 
