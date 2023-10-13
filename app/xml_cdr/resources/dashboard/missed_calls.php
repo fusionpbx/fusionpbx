@@ -45,19 +45,24 @@
 	$sql .=	"	) \n";
 	$sql .=	"	and (missed_call = true or bridge_uuid is null) ";
 	$sql .=	"	and hangup_cause <> 'LOSE_RACE' ";
-	if (!empty($assigned_extensions)) {
-		$x = 0;
-		foreach ($assigned_extensions as $assigned_extension_uuid => $assigned_extension) {
-			$sql_where_array[] = "extension_uuid = :assigned_extension_uuid_".$x;
-			$sql_where_array[] = "destination_number = :destination_number_".$x;
-			$parameters['assigned_extension_uuid_'.$x] = $assigned_extension_uuid;
-			$parameters['destination_number_'.$x] = $assigned_extension;
-			$x++;
+	if (!permission_exists('xml_cdr_domain')) {
+		if (!empty($assigned_extensions)) {
+			$x = 0;
+			foreach ($assigned_extensions as $assigned_extension_uuid => $assigned_extension) {
+				$sql_where_array[] = "extension_uuid = :assigned_extension_uuid_".$x;
+				$sql_where_array[] = "destination_number = :destination_number_".$x;
+				$parameters['assigned_extension_uuid_'.$x] = $assigned_extension_uuid;
+				$parameters['destination_number_'.$x] = $assigned_extension;
+				$x++;
+			}
+			if (!empty($sql_where_array)) {
+				$sql .= "and (".implode(' or ', $sql_where_array).") \n";
+			}
+			unset($sql_where_array);
 		}
-		if (!empty($sql_where_array)) {
-			$sql .= "and (".implode(' or ', $sql_where_array).") \n";
+		else {
+			$sql .= "and false \n";
 		}
-		unset($sql_where_array);
 	}
 	$sql .= "and start_epoch > ".(time() - 86400)." \n";
 	$sql .=	"order by \n";
