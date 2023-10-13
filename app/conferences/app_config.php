@@ -37,6 +37,7 @@
 		$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '\${domain_uuid}' and conference_enabled = 'true' ";
 		$apps[$x]['destinations'][$y]['order_by'] = "conference_name asc";
 		$apps[$x]['destinations'][$y]['field']['conference_uuid'] = "conference_uuid";
+		$apps[$x]['destinations'][$y]['field']['uuid'] = "conference_uuid";
 		$apps[$x]['destinations'][$y]['field']['name'] = "conference_name";
 		$apps[$x]['destinations'][$y]['field']['destination'] = "conference_extension";
 		$apps[$x]['destinations'][$y]['field']['extension'] = "conference_extension";

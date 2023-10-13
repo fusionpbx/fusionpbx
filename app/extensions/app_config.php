@@ -34,7 +34,7 @@
 		$apps[$x]['destinations'][$y]['type'] = "sql";
 		$apps[$x]['destinations'][$y]['label'] = "extensions";
 		$apps[$x]['destinations'][$y]['name'] = "extensions";
-		$apps[$x]['destinations'][$y]['sql'] = "select extension_uuid, extension, number_alias, user_context as context, description from v_extensions ";
+		$apps[$x]['destinations'][$y]['sql'] = "select extension_uuid, extension_uuid as uuid, extension, number_alias, effective_caller_id_name as name, user_context as context, description from v_extensions ";
 		$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '\${domain_uuid}' and enabled = 'true' ";
 		$apps[$x]['destinations'][$y]['order_by'] = "number_alias, extension asc";
 		$apps[$x]['destinations'][$y]['field']['extension_uuid'] = "extension_uuid";

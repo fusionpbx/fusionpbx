@@ -46,6 +46,7 @@
 		$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '\${domain_uuid}' and bridge_enabled = 'true'";
 		$apps[$x]['destinations'][$y]['order_by'] = "bridge_name asc";
 		$apps[$x]['destinations'][$y]['field']['bridge_uuid'] = "bridge_uuid";
+		$apps[$x]['destinations'][$y]['field']['uuid'] = "bridge_uuid";
 		$apps[$x]['destinations'][$y]['field']['name'] = "bridge_name";
 		$apps[$x]['destinations'][$y]['field']['description'] = "bridge_description";
 		$apps[$x]['destinations'][$y]['field']['destination'] = "bridge_destination";
