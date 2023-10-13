@@ -34,7 +34,7 @@
 		$apps[$x]['destinations'][$y]['type'] = "sql";
 		$apps[$x]['destinations'][$y]['label'] = "voicemails";
 		$apps[$x]['destinations'][$y]['name'] = "voicemails";
-		$apps[$x]['destinations'][$y]['sql'] = "select voicemail_uuid, voicemail_uuid as uuid, voicemail_id as destination, '*99' || voicemail_id as extension, voicemail_description as description from v_voicemails";
+		$apps[$x]['destinations'][$y]['sql'] = "select voicemail_uuid, voicemail_uuid as uuid, voicemail_id as destination, '*99' || voicemail_id as extension, voicemail_description as description, voicemail_description as name from v_voicemails";
 		$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '\${domain_uuid}' and voicemail_enabled = 'true' ";
 		$apps[$x]['destinations'][$y]['order_by'] = "voicemail_id asc ";
 		$apps[$x]['destinations'][$y]['field']['uuid'] = "voicemail_uuid";
