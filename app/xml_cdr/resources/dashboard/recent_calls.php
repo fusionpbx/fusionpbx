@@ -44,23 +44,28 @@
 			v_xml_cdr
 		where
 			domain_uuid = :domain_uuid ";
-			if (!empty($assigned_extensions)) {
-				$x = 0;
-				foreach ($assigned_extensions as $assigned_extension_uuid => $assigned_extension) {
-					$sql_where_array[] = "extension_uuid = :extension_uuid_".$x;
-					$sql_where_array[] = "caller_id_number = :caller_id_number_".$x;
-					$sql_where_array[] = "destination_number = :destination_number_1_".$x;
-					$sql_where_array[] = "destination_number = :destination_number_2_".$x;
-					$parameters['extension_uuid_'.$x] = $assigned_extension_uuid;
-					$parameters['caller_id_number_'.$x] = $assigned_extension;
-					$parameters['destination_number_1_'.$x] = $assigned_extension;
-					$parameters['destination_number_2_'.$x] = '*99'.$assigned_extension;
-					$x++;
+			if (!permission_exists('xml_cdr_domain')) {
+				if (!empty($assigned_extensions)) {
+					$x = 0;
+					foreach ($assigned_extensions as $assigned_extension_uuid => $assigned_extension) {
+						$sql_where_array[] = "extension_uuid = :extension_uuid_".$x;
+						$sql_where_array[] = "caller_id_number = :caller_id_number_".$x;
+						$sql_where_array[] = "destination_number = :destination_number_1_".$x;
+						$sql_where_array[] = "destination_number = :destination_number_2_".$x;
+						$parameters['extension_uuid_'.$x] = $assigned_extension_uuid;
+						$parameters['caller_id_number_'.$x] = $assigned_extension;
+						$parameters['destination_number_1_'.$x] = $assigned_extension;
+						$parameters['destination_number_2_'.$x] = '*99'.$assigned_extension;
+						$x++;
+					}
+					if (!empty($sql_where_array)) {
+						$sql .= "and (".implode(' or ', $sql_where_array).") ";
+					}
+					unset($sql_where_array);
 				}
-				if (!empty($sql_where_array)) {
-					$sql .= "and (".implode(' or ', $sql_where_array).") ";
+				else {
+					$sql .= "and false \n";
 				}
-				unset($sql_where_array);
 			}
 			$sql .= "
 			and start_epoch > ".(time() - 86400)."
