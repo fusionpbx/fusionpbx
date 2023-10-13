@@ -253,16 +253,6 @@
 		$callflow_count = count($array["callflow"]);
 	}
 
-//call flow summary when the count array is 1 then use start_epoch and end_epoch
-	if ($callflow_count == 1) {
-		$call_flow_summary[0]["destination_number"] = urldecode($row["caller_profile"]["destination_number"]);
-		$call_flow_summary[0]["start_epoch"] = $start_epoch;
-		$call_flow_summary[0]["end_epoch"] = $end_epoch;
-		$call_flow_summary[0]["start_stamp"] = date("Y-m-d H:i:s", (int) $start_epoch);
-		$call_flow_summary[0]["end_stamp"] = date("Y-m-d H:i:s", (int) $end_epoch);
-		$call_flow_summary[0]["duration"] = gmdate("G:i:s", (int) $end_epoch - (int) $start_epoch);
-	}
-
 //add the final call flow destination to the call flow array
 	//when call_direction is inbound
 	//when destination_number is not same as the last row
@@ -338,6 +328,16 @@
 		$x++;
 	}
 	unset($x);
+
+//call flow summary with one row use start_epoch and end_epoch
+	if ($callflow_count == 1) {
+		$call_flow_summary[0]["destination_number"] = urldecode($row["caller_profile"]["destination_number"]);
+		$call_flow_summary[0]["start_epoch"] = $start_epoch;
+		$call_flow_summary[0]["end_epoch"] = $end_epoch;
+		$call_flow_summary[0]["start_stamp"] = date("Y-m-d H:i:s", (int) $start_epoch);
+		$call_flow_summary[0]["end_stamp"] = date("Y-m-d H:i:s", (int) $end_epoch);
+		$call_flow_summary[0]["duration"] = gmdate("G:i:s", (int) $end_epoch - (int) $start_epoch);
+	}
 
 //set the year, month and date
 	$tmp_year = date("Y", strtotime($start_stamp));
