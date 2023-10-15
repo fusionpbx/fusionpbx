@@ -246,7 +246,7 @@
 	foreach ($array["callflow"] as $row) {
 		foreach ($row["times"] as $name => $value) {
 			if ($value > 0) {
-				$array["callflow"][$i]["times"]["profile_duration_seconds"] = round($array["callflow"][$i]["times"]["profile_end_time"]/1000000 - $array["callflow"][$i]["times"]["profile_created_time"]/1000000);
+				$array["callflow"][$i]["times"]["profile_duration_seconds"] = round(((int) $array["callflow"][$i]["times"]["profile_end_time"])/1000000 - ((int) $array["callflow"][$i]["times"]["profile_created_time"])/1000000);
 				$array["callflow"][$i]["times"]["profile_duration_formatted"] = gmdate("G:i:s", (int) $array["callflow"][$i]["times"]["profile_duration_seconds"]);
 				$array["callflow"][$i]["times"][$name.'stamp'] = date("Y-m-d H:i:s", (int) $value/1000000);
 			}
@@ -305,14 +305,69 @@
 			//get the application array
 			$app = find_app($destination_array, urldecode($row["caller_profile"]["destination_number"]));
 
-			//add application details for valet park
+			//call centers
+			if ($app['application'] == 'call_centers') {
+				if (isset($row["caller_profile"]["transfer_source"])) {
+					$app['status'] = 'Answered'; //Out
+				}
+				else {
+					$app['status'] = 'Waited'; //In
+				}
+			}
+
+			//conferences
+			if ($app['application'] == 'conferences') {
+				$app['status'] = 'Answered';
+			}
+
+			//destinations
+			if ($app['application'] == 'destinations') {
+				$app['status'] = 'Routed';
+			}
+
+			//extensions
+			if ($app['application'] == 'extensions') {
+				if ($billsec == 0) {
+					$app['status'] = 'Missed';
+				}
+				else {
+					$app['status'] = 'Answered';
+				}
+			}
+
+			//outbound routes
+			if ($call_direction == 'outbound') {
+				$app['application'] = 'dialplans';
+				$app['uuid'] = '';
+				$app['status'] = '';
+				$app['name'] = 'Outbound';
+				$app['label'] = 'Outbound';
+			}
+
+			//ring groups
+			if ($app['application'] == 'ring_groups') {
+				$app['status'] = 'Waited';
+			}
+
+			//time conditions
+			if ($app['application'] == 'time_conditions') {
+				$app['status'] = 'Routed';
+			}
+
+			//valet park
 			if (substr($row["caller_profile"]["destination_number"], 0, 4) == 'park'
 				or (substr($row["caller_profile"]["destination_number"], 0, 3) == '*59' 
 				&& strlen($row["caller_profile"]["destination_number"]) == 5)) {
 				$app['application'] = 'dialplans';
 				$app['uuid'] = '46ae6d82-bb83-46a3-901d-33d0724347dd';
+				$app['status'] = '---';
 				$app['name'] = 'Park';
 				$app['label'] = 'Park';
+			}
+
+			//voicemails
+			if ($app['application'] == 'voicemails') {
+				$app['status'] = 'Answered';
 			}
 
 			//build the application urls
@@ -334,6 +389,7 @@
 			$call_flow_summary[$x]["destination_url"] = $destination_url;
 			$call_flow_summary[$x]["destination_number"] = $row["caller_profile"]["destination_number"];
 			$call_flow_summary[$x]["destination_label"] = $app['label'];
+			$call_flow_summary[$x]["destination_status"] = $app['status'];
 			$call_flow_summary[$x]["destination_description"] = $app['description'];
 			//$call_flow_summary[$x]["application"] = $app;
 
@@ -345,7 +401,7 @@
 			$call_flow_summary[$x]["duration_seconds"] =  $row['times']['profile_duration_seconds'];
 			$call_flow_summary[$x]["duration_formatted"] =  $row['times']['profile_duration_formatted'];
 
-			unset($tmp_end_stamp, $tmp_start_stamp, $tmp_end_stamp_formatted);
+			unset($app);
 			$x++;
 		}
 	}
@@ -406,7 +462,7 @@
 	echo "</tr>\n";
 	echo "<tr>\n";
 	echo "<td align='left' colspan='2'>\n";
-	echo "".$text['description-details']." \n";
+	echo "	".$text['description-details']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "</table>\n";
@@ -451,7 +507,7 @@
 		echo "<th>".$text['label-start']."</th>\n";
 		echo "<th>".$text['label-end']."</th>\n";
 		echo "<th>".$text['label-duration']."</th>\n";
-		echo "<th>".$text['label-status']."</th>\n";
+		echo "<th align='center'>".$text['label-status']."</th>\n";
 		echo "<th>".$text['label-hangup_cause']."</th>\n";
 		echo "</tr>\n";
 
@@ -509,6 +565,7 @@
 	echo "<th>".$text['label-name']."</th>\n";
 	echo "<th>".$text['label-start']."</th>\n";
 	echo "<th>".$text['label-end']."</th>\n";
+	echo "<th>".$text['label-status']."</th>\n";
 	echo "<th>".$text['label-duration']."</th>\n";
 	echo "</tr>\n";
 
@@ -521,6 +578,7 @@
 		echo "	<td valign='top' class='".$row_style[$c]."'><a href=\"".$row["destination_url"]."\">".escape($row["destination_name"])."</a></td>\n";
 		echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row["start_stamp"])."</td>\n";
 		echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row["end_stamp"])."</td>\n";
+		echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row["destination_status"])."</td>\n";
 		echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row["duration_formatted"])."</td>\n";
 		echo "</tr>\n";
 
