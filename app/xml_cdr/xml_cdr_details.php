@@ -135,12 +135,13 @@
 		$caller_destination = trim($row["caller_destination"]);
 		$destination_number = trim($row["destination_number"]);
 		$duration = trim($row["billsec"]);
+		$missed_call = trim($row["missed_call"]);
 		$start_stamp = trim($row["start_stamp"]);
 		$xml_string = trim($row["xml"] ?? '');
 		$json_string = trim($row["json"]);
 		$direction = trim($row["direction"]);
 		$call_direction = trim($row["direction"]);
-		//$status = trim($row["status"]);
+		$status = trim($row["status"]);
 	}
 	unset($sql, $parameters, $row);
 
@@ -186,26 +187,6 @@
 		echo $e->getMessage();
 	}
 
-//get the header
-	require_once "resources/header.php";
-
-//page title and description
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "<tr>\n";
-	echo "<td width='30%' align='left' valign='top' nowrap='nowrap'><b>".$text['title2']."</b></td>\n";
-	echo "<td width='70%' align='right' valign='top'>\n";
-	echo "	<input type='button' class='btn' name='' alt='back' onclick=\"window.location='xml_cdr.php".(!empty($_SESSION['xml_cdr']['last_query']) ? "?".urlencode($_SESSION['xml_cdr']['last_query']) : null)."'\" value='".$text['button-back']."'>\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-	echo "<tr>\n";
-	echo "<td align='left' colspan='2'>\n";
-	echo "".$text['description-details']." \n";
-	echo "</td>\n";
-	echo "</tr>\n";
-	echo "</table>\n";
-	echo "<br />\n";
-	echo "<br />\n";
-
 //get the variables
 	$xml_cdr_uuid = urldecode($array["variables"]["uuid"]);
 	$language = urldecode($array["variables"]["language"] ?? '');
@@ -239,8 +220,39 @@
 		$array["callflow"][0] = $tmp;
 	}
 
+//set the time zone
+	if (isset($_SESSION['domain']['time_zone']['name'])) {
+		date_default_timezone_set($_SESSION['domain']['time_zone']['name']);
+	}
+
 //reverse the array to put events in chronological order
 	$array["callflow"] = array_reverse($array["callflow"]);
+
+//add the profile end time to the call flow array
+	$i = 0;
+	foreach ($array["callflow"] as $row) {
+		//set the profile end time
+		if (isset($array["callflow"][$i+1]["times"]["profile_created_time"])) {
+			$array["callflow"][$i]["times"]["profile_end_time"] = $array["callflow"][$i+1]["times"]["profile_created_time"];
+		}
+		else {
+			$array["callflow"][$i]["times"]["profile_end_time"] = $end_epoch * 1000000;
+		}
+		$i++;
+	}
+
+//format the times in the call flow array and add the profile duration
+	$i = 0;
+	foreach ($array["callflow"] as $row) {
+		foreach ($row["times"] as $name => $value) {
+			if ($value > 0) {
+				$array["callflow"][$i]["times"]["profile_duration_seconds"] = round($array["callflow"][$i]["times"]["profile_end_time"]/1000000 - $array["callflow"][$i]["times"]["profile_created_time"]/1000000);
+				$array["callflow"][$i]["times"]["profile_duration_formatted"] = gmdate("G:i:s", (int) $array["callflow"][$i]["times"]["profile_duration_seconds"]);
+				$array["callflow"][$i]["times"][$name.'stamp'] = date("Y-m-d H:i:s", (int) $value/1000000);
+			}
+		}
+		$i++;
+	}
 
 //debug information
 	if (isset($_REQUEST['debug']) && $_REQUEST['debug'] == 'true') {
@@ -259,6 +271,7 @@
 	//when last destination is not voicemail *99ext
 	//count the array $i-1 finds the last record
 	//count the array $i is the next record
+	/*
 	if ($call_direction == 'inbound') {
 		//count the array
 		$i = $callflow_count;
@@ -277,67 +290,56 @@
 				$array["callflow"][$i]["caller_profile"]["network_addr"] = $network_address;
 				$array["callflow"][$i]["caller_profile"]["caller_id_name"] = $caller_id_name;
 				$array["callflow"][$i]["caller_profile"]["caller_id_number"] = $caller_id_number;
-				$array["callflow"][$i]["times"]["profile_created_time"] = ($end_epoch - $duration) * 1000000;
+				//$array["callflow"][$i]["times"]["profile_created_time"] = ($end_epoch - $duration) * 1000000;
 				$array["callflow"][$i]["times"]["end_stamp"] = $end_epoch * 1000000;
 				$array["callflow"][$i]["times"]["hangup_time"] = $end_epoch * 1000000;
+				$callflow_count++;
 		}
 	}
+	*/
 
 //build the call summary array
 	$x = 0;
-	if (!empty($array["callflow"])) foreach ($array["callflow"] as $row) {
-		if ($x == 0) {
-			$context = urldecode($row["caller_profile"]["context"]);
-			$network_addr = urldecode($row["caller_profile"]["network_addr"]);
-		}
-		$caller_id_name = urldecode($row["caller_profile"]["caller_id_name"]);
-		$caller_id_number = urldecode($row["caller_profile"]["caller_id_number"]);
-		$call_flow_destination_number = urldecode($row["caller_profile"]["destination_number"]);
-		$call_flow_summary[$x]["destination_number"] = $call_flow_destination_number;
-		if (isset($call_flow_summary[$x-1]["end_epoch"])) {
-			$tmp_start_stamp = $call_flow_summary[$x-1]["end_epoch"];
-		}
-		elseif (isset($row["times"]["created_time"])) {
-			$tmp_start_stamp = urldecode($row["times"]["created_time"]) / 1000000;
-		}
+	if (!empty($array["callflow"])) {
+		foreach ($array["callflow"] as $row) {
+			//get the application array
+			$app = find_app($destination_array, urldecode($row["caller_profile"]["destination_number"]));
 
-		$tmp_end_stamp_formatted = '';
-		if (isset($array["callflow"][$x]["times"]["transfer_time"]) && $array["callflow"][$x]["times"]["transfer_time"] > 0) {
-			$tmp_end_stamp = urldecode($array["callflow"][$x]["times"]["transfer_time"]) / 1000000;
-			$tmp_end_stamp_formatted = date("Y-m-d H:i:s", (int) $tmp_end_stamp);
-		}
-		elseif (isset($array["callflow"][$x]["times"]["bridged_time"]) && $array["callflow"][$x]["times"]["bridged_time"] > 0) {
-			$tmp_end_stamp = urldecode($array["callflow"][$x]["times"]["bridged_time"]) / 1000000;
-			$tmp_end_stamp_formatted = date("Y-m-d H:i:s", (int) $tmp_end_stamp);
-		}
-		elseif (isset($array["callflow"][$x+1]["times"]["created_time"])) {
-			$tmp_end_stamp = urldecode($array["callflow"][$x+1]["times"]["created_time"]) / 1000000;
-			$tmp_end_stamp_formatted = date("Y-m-d H:i:s", (int) $tmp_end_stamp);
-		}
-		elseif (isset($row["times"]["hangup_time"])) {
-			$tmp_end_stamp = urldecode($row["times"]["hangup_time"]) / 1000000;
-			$tmp_end_stamp_formatted = date("Y-m-d H:i:s", (int) $tmp_end_stamp);
-		}
-		$call_flow_summary[$x]["start_epoch"] = $tmp_start_stamp;
-		$call_flow_summary[$x]["end_epoch"] = $tmp_end_stamp;
-		$call_flow_summary[$x]["start_stamp"] = date("Y-m-d H:i:s", (int) $tmp_start_stamp);
-		$call_flow_summary[$x]["end_stamp"] = $tmp_end_stamp_formatted;
-		$call_flow_summary[$x]["duration"] =  gmdate("G:i:s", (int) $tmp_end_stamp - (int) $tmp_start_stamp);
+			//build the application urls
+			$destination_url = "/app/".$app['application']."/".$destination->singular($app['application'])."_edit.php?id=".$app["uuid"];
+			$application_url = "/app/".$app['application']."/".$app['application'].".php";
+			if ($app['application'] == 'call_centers') {
+				$destination_url = "/app/".$app['application']."/".$destination->singular($app['application'])."_queue_edit.php?id=".$app['uuid'];
+				$application_url = "/app/".$app['application']."/".$destination->singular($app['application'])."_queues.php";
+			}
 
-		unset($tmp_end_stamp, $tmp_start_stamp, $tmp_end_stamp_formatted);
-		$x++;
+			//add the application and destination details
+			$language2 = new text;
+			$text2 = $language2->get($_SESSION['domain']['language']['code'], 'app/'.$app['application']);
+			$call_flow_summary[$x]["application_name"] = $app['application'];
+			$call_flow_summary[$x]["application_label"] = trim($text2['title-'.$app['application']]);
+			$call_flow_summary[$x]["application_url"] = $application_url;
+			$call_flow_summary[$x]["destination_uuid"] = $app['uuid'];
+			$call_flow_summary[$x]["destination_name"] = $app['name'];
+			$call_flow_summary[$x]["destination_url"] = $destination_url;
+			$call_flow_summary[$x]["destination_number"] = $row["caller_profile"]["destination_number"];
+			$call_flow_summary[$x]["destination_label"] = $app['label'];
+			$call_flow_summary[$x]["destination_description"] = $app['description'];
+			//$call_flow_summary[$x]["application"] = $app;
+
+			//add the call flow times
+			$call_flow_summary[$x]["start_epoch"] = round($row['times']['profile_created_time'] / 1000000);
+			$call_flow_summary[$x]["end_epoch"] = round($row['times']['profile_end_time'] / 1000000);
+			$call_flow_summary[$x]["start_stamp"] =  $row['times']['profile_created_timestamp'];
+			$call_flow_summary[$x]["end_stamp"] =  $row['times']['profile_end_timestamp'];
+			$call_flow_summary[$x]["duration_seconds"] =  $row['times']['profile_duration_seconds'];
+			$call_flow_summary[$x]["duration_formatted"] =  $row['times']['profile_duration_formatted'];
+
+			unset($tmp_end_stamp, $tmp_start_stamp, $tmp_end_stamp_formatted);
+			$x++;
+		}
 	}
 	unset($x);
-
-//call flow summary with one row use start_epoch and end_epoch
-	if ($callflow_count == 1) {
-		$call_flow_summary[0]["destination_number"] = urldecode($row["caller_profile"]["destination_number"]);
-		$call_flow_summary[0]["start_epoch"] = $start_epoch;
-		$call_flow_summary[0]["end_epoch"] = $end_epoch;
-		$call_flow_summary[0]["start_stamp"] = date("Y-m-d H:i:s", (int) $start_epoch);
-		$call_flow_summary[0]["end_stamp"] = date("Y-m-d H:i:s", (int) $end_epoch);
-		$call_flow_summary[0]["duration"] = gmdate("G:i:s", (int) $end_epoch - (int) $start_epoch);
-	}
 
 //set the year, month and date
 	$tmp_year = date("Y", strtotime($start_stamp));
@@ -348,6 +350,17 @@
 	$c = 0;
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
+
+//set the status
+	if ($billsec > 0) {
+		$status = 'Answered';
+	}
+	if ($missed_call == '1') {
+		$status = 'Missed';
+	}
+	if (substr($destination_number, 0, 3) == '*99') {
+		$status = 'Voicemail';
+	}
 
 //build the summary array
 	$summary_array = array();
@@ -363,10 +376,32 @@
 	$summary_array['start'] = escape($start_stamp);
 	$summary_array['end'] = escape($end_stamp);
 	$summary_array['duration'] = escape(gmdate("G:i:s", (int)$duration));
-	//$summary_array['status'] = escape($status);
+	if (isset($status)) {
+		$summary_array['status'] = escape($status);
+	}
 	if (permission_exists('xml_cdr_hangup_cause')) {
 		$summary_array['hangup_cause'] = escape($hangup_cause);
 	}
+
+//get the header
+	require_once "resources/header.php";
+
+//page title and description
+	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "<tr>\n";
+	echo "<td width='30%' align='left' valign='top' nowrap='nowrap'><b>".$text['title2']."</b></td>\n";
+	echo "<td width='70%' align='right' valign='top'>\n";
+	echo "	<input type='button' class='btn' name='' alt='back' onclick=\"window.location='xml_cdr.php".(!empty($_SESSION['xml_cdr']['last_query']) ? "?".urlencode($_SESSION['xml_cdr']['last_query']) : null)."'\" value='".$text['button-back']."'>\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+	echo "<tr>\n";
+	echo "<td align='left' colspan='2'>\n";
+	echo "".$text['description-details']." \n";
+	echo "</td>\n";
+	echo "</tr>\n";
+	echo "</table>\n";
+	echo "<br />\n";
+	echo "<br />\n";
 
 //show the content
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
@@ -407,8 +442,9 @@
 		echo "<th>".$text['label-end']."</th>\n";
 		echo "<th>".$text['label-duration']."</th>\n";
 		echo "<th>".$text['label-status']."</th>\n";
+		echo "<th>".$text['label-hangup_cause']."</th>\n";
 		echo "</tr>\n";
-	
+
 		echo "<tr >\n";
 		echo "	<td valign='top' class='".$row_style[$c]."'><a href='xml_cdr_details.php?id=".urlencode($uuid)."'>".escape($direction)."</a></td>\n";
 		//echo "	<td valign='top' class='".$row_style[$c]."'>".$language."</td>\n";
@@ -417,7 +453,7 @@
 		if (file_exists($_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$uuid.'.wav')) {
 			//echo "		<a href=\"../recordings/recordings.php?a=download&type=rec&t=bin&filename=".base64_encode('archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$uuid.'.wav')."\">\n";
 			//echo "	  </a>";
-	
+
 			echo "	  <a href=\"javascript:void(0);\" onclick=\"window.open('../recordings/recording_play.php?a=download&type=moh&filename=".urlencode('archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$uuid.'.wav')."', 'play',' width=420,height=40,menubar=no,status=no,toolbar=no')\">\n";
 			//$tmp_file_array = explode("\.",$file);
 			echo 	$caller_id_name.' ';
@@ -438,9 +474,10 @@
 		}
 		echo "	</td>\n";
 		echo "	<td valign='top' class='".$row_style[$c]."'>".escape($destination_number)."</td>\n";
-		echo "	<td valign='top' class='".$row_style[$c]."'>".escape($start_stamp)."</td>\n";
-		echo "	<td valign='top' class='".$row_style[$c]."'>".escape($end_stamp)."</td>\n";
+		echo "	<td valign='top' class='".$row_style[$c]."'>".escape(date("Y-m-d H:i:s", (int) $start_epoch))."</td>\n";
+		echo "	<td valign='top' class='".$row_style[$c]."'>".escape(date("Y-m-d H:i:s", (int) $end_epoch))."</td>\n";
 		echo "	<td valign='top' class='".$row_style[$c]."'>".escape(gmdate("G:i:s", (int)$duration))."</td>\n";
+		echo "	<td valign='top' class='".$row_style[$c]."'>".escape($status)."</td>\n";
 		echo "	<td valign='top' class='".$row_style[$c]."'>".escape($hangup_cause)."</td>\n";
 		echo "</table>";
 		echo "<br /><br />\n";
@@ -457,37 +494,31 @@
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 
+	echo "<th>".$text['label-application']."</th>\n";
 	echo "<th>".$text['label-destination']."</th>\n";
 	echo "<th>".$text['label-name']."</th>\n";
-	echo "<th>".$text['label-application']."</th>\n";
 	echo "<th>".$text['label-start']."</th>\n";
 	echo "<th>".$text['label-end']."</th>\n";
 	echo "<th>".$text['label-duration']."</th>\n";
 	echo "</tr>\n";
 
 //show the call flow summary
+	$i = 1;
 	foreach ($call_flow_summary as $row) {
-		//get the application array
-		$app = find_app($destination_array, $row["destination_number"]);
-
-		//get the application translation
-		$language2 = new text;
-		$text2 = $language2->get($_SESSION['domain']['language']['code'], 'app/'.$app['application']);
-		$label_application = trim($text2['title-'.$app['application']]);
-		$label_name = $app['name'];
-
-		//show the call flow details
 		echo "<tr >\n";
-		echo "	<td valign='top' class='".$row_style[$c]."'><a href=\"/app/".$app['application']."/".$destination->singular($app['application'])."_edit.php?id=".$app['uuid']."\">".escape($row["destination_number"])."</a></td>\n";
-		echo "	<td valign='top' class='".$row_style[$c]."'><a href=\"/app/".$app['application']."/".$destination->singular($app['application'])."_edit.php?id=".$app['uuid']."\">".escape($label_name)."</a></td>\n";
-		echo "	<td valign='top' class='".$row_style[$c]."'><a href=\"/app/".$app['application']."/".$app['application'].".php\">".escape($label_application)."</a></td>\n";
+		echo "	<td valign='top' class='".$row_style[$c]."'><a href=\"".$row["application_url"]."\">".escape($row["application_label"])."</a></td>\n";
+		echo "	<td valign='top' class='".$row_style[$c]."'><a href=\"".$row["destination_url"]."\">".escape($row["destination_number"])."</a></td>\n";
+		echo "	<td valign='top' class='".$row_style[$c]."'><a href=\"".$row["destination_url"]."\">".escape($row["destination_name"])."</a></td>\n";
 		echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row["start_stamp"])."</td>\n";
 		echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row["end_stamp"])."</td>\n";
-		echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row["duration"])."</td>\n";
+		echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row["duration_formatted"])."</td>\n";
 		echo "</tr>\n";
 
 		//alternate $c
 		$c = $c ? 0 : 1;
+
+		//increment the row count
+		$i++;
 	}
 	echo "</table>";
 	echo "<br /><br />\n";
