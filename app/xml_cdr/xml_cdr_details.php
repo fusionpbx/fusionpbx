@@ -305,6 +305,16 @@
 			//get the application array
 			$app = find_app($destination_array, urldecode($row["caller_profile"]["destination_number"]));
 
+			//add application details for valet park
+			if (substr($row["caller_profile"]["destination_number"], 0, 4) == 'park'
+				or (substr($row["caller_profile"]["destination_number"], 0, 3) == '*59' 
+				&& strlen($row["caller_profile"]["destination_number"]) == 5)) {
+				$app['application'] = 'dialplans';
+				$app['uuid'] = '46ae6d82-bb83-46a3-901d-33d0724347dd';
+				$app['name'] = 'Park';
+				$app['label'] = 'Park';
+			}
+
 			//build the application urls
 			$destination_url = "/app/".$app['application']."/".$destination->singular($app['application'])."_edit.php?id=".$app["uuid"];
 			$application_url = "/app/".$app['application']."/".$app['application'].".php";
