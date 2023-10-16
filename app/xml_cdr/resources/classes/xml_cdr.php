@@ -993,16 +993,18 @@ if (!class_exists('xml_cdr')) {
 						//import the call detail files are less than 3 mb - 3 million bytes
 							if ($import && filesize($xml_cdr_dir.'/'.$file) <= 3000000) {
 								//get the xml cdr string
-									$xml_string = file_get_contents($xml_cdr_dir.'/'.$file);
+									$call_details = file_get_contents($xml_cdr_dir.'/'.$file);
 
 								//set the file
 									$this->file = $file;
 
 								//decode the xml string
-									//$xml_string = urldecode($xml_string);
+									if (substr($call_details, 0, 1) == '%') {
+										$call_details = urldecode($call_details);
+									}
 
 								//parse the xml and insert the data into the db
-									$this->xml_array($x, $leg, $xml_string);
+									$this->xml_array($x, $leg, $call_details);
 
 								//increment the value
 									$x++;
