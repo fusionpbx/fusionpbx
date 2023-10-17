@@ -5,7 +5,7 @@
 		$apps[$x]['uuid'] = "4a085c51-7635-ff03-f67b-86e834422848";
 		$apps[$x]['category'] = "Switch";
 		$apps[$x]['subcategory'] = "";
-		$apps[$x]['version'] = "1.0";
+		$apps[$x]['version'] = "1.1";
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Call Detail Records with all information about the call.";
@@ -777,6 +777,12 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "sip_hangup_disposition";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Save who hung up or cancelled the leg.";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "call_flow";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "jsonb";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "xml";
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "xml_cdr";

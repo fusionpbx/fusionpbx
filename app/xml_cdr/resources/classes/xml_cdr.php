@@ -39,8 +39,11 @@ if (!class_exists('xml_cdr')) {
 		public $array;
 		public $fields;
 		public $setting;
+		public $call_details;
+		public $call_direction;
 		private $username;
 		private $password;
+		private $json;
 
 		/**
 		 * user summary
@@ -137,6 +140,7 @@ if (!class_exists('xml_cdr')) {
 			$this->fields[] = "direction";
 			$this->fields[] = "default_language";
 			$this->fields[] = "context";
+			$this->fields[] = "call_flow";
 			$this->fields[] = "xml";
 			$this->fields[] = "json";
 			$this->fields[] = "missed_call";
@@ -779,7 +783,7 @@ if (!class_exists('xml_cdr')) {
 								}
 							}
 						}
-					
+
 					//check to see if file exists with the default file name and path
 						if (empty($record_name)) {
 							$path = $this->setting->get('switch', 'recordings').'/'.$domain_name.'/archive/'.$start_year.'/'.$start_month.'/'.$start_day;
@@ -828,39 +832,8 @@ if (!class_exists('xml_cdr')) {
 							}
 						}
 
-					//add to the call recordings table
-						/*
-						if (file_exists($_SERVER["PROJECT_ROOT"]."/app/call_recordings/app_config.php")) {
-							//build the array
-							$x = 0;
-							$array['call_recordings'][$x]['call_recording_uuid'] = $uuid;
-							$array['call_recordings'][$x]['domain_uuid'] = $domain_uuid;
-							$array['call_recordings'][$x]['call_recording_name'] = $record_name;
-							$array['call_recordings'][$x]['call_recording_path'] = $record_path;
-							$array['call_recordings'][$x]['call_recording_length'] = $record_length;
-							$array['call_recordings'][$x]['call_recording_date'] = date('c', $start_epoch);
-							$array['call_recordings'][$x]['call_direction'] = urldecode($call_direction);
-							//$array['call_recordings'][$x]['call_recording_description']= $row['zzz'];
-							//$array['call_recordings'][$x]['call_recording_base64']= $row['zzz'];
-
-							//add the temporary permission
-							$p = new permissions;
-							$p->add("call_recording_add", "temp");
-							$p->add("call_recording_edit", "temp");
-
-							$database = new database;
-							$database->app_name = 'call_recordings';
-							$database->app_uuid = '56165644-598d-4ed8-be01-d960bcb8ffed';
-							$database->domain_uuid = $domain_uuid;
-							$database->save($array, false);
-							//$message = $database->message;
-
-							//remove the temporary permission
-							$p->delete("call_recording_add", "temp");
-							$p->delete("call_recording_edit", "temp");
-							unset($array);
-						}
-						*/
+					//save the xml object to json
+						$this->json = json_encode($xml);
 
 					//save to the database in xml format
 						if ($this->setting->get('cdr', 'format') == "xml" && $this->setting->get('cdr', 'storage') == "db") {
@@ -869,8 +842,14 @@ if (!class_exists('xml_cdr')) {
 
 					//save to the database in json format
 						if ($this->setting->get('cdr', 'format') == "json" && $this->setting->get('cdr', 'storage') == "db") {
-							$this->array[$key]['json'] = json_encode($xml);
+							$this->array[$key]['json'] = $this->json;
 						}
+
+					//build the call detail array with json decode
+						$this->call_details = json_decode($this->json, true);
+
+					//get the call flow json
+						$this->array[$key]['call_flow'] = json_encode($this->call_flow());
 
 					//get the extension_uuid and then add it to the database fields array
 						if (isset($xml->variables->extension_uuid)) {
@@ -944,6 +923,199 @@ if (!class_exists('xml_cdr')) {
 
 				} //if ($duplicate_uuid == false)
 		} //function xml_array
+
+		/**
+		 * Build a call flow array based on call details.
+		 *
+		 * This method constructs an array that represents the call flow, utilizing the provided call_details array. Reverses the array to put the events in chronological order and adds profile end times.
+		 *
+		 * @return array The call flow array.
+		 */
+		public function call_flow() {
+
+			//save the call flow to the database
+			if (isset($this->call_details['callflow'])) {
+				//set the call flow array
+				$call_flow_array = $this->call_details['callflow'];
+
+				//normalize the array
+				if (!isset($call_flow_array[0])) {
+					$tmp = $call_flow_array;
+					unset($call_flow_array);
+					$call_flow_array[0] = $tmp;
+				}
+
+				//reverse the array to put events in chronological order
+				$call_flow_array = array_reverse($call_flow_array);
+
+				//add the profile end time to the call flow array
+				$i = 0;
+				foreach ($call_flow_array as $row) {
+					//set the profile end time
+					if (isset($call_flow_array[$i+1]["times"]["profile_created_time"])) {
+						$call_flow_array[$i]["times"]["profile_end_time"] = $call_flow_array[$i+1]["times"]["profile_created_time"];
+					}
+					else {
+						$call_flow_array[$i]["times"]["profile_end_time"] = urldecode($this->call_details['variables']['end_uepoch']);
+					}
+					$i++;
+				}
+
+				//format the times in the call flow array and add the profile duration
+				$i = 0;
+				foreach ($call_flow_array as $row) {
+					foreach ($row["times"] as $name => $value) {
+						if ($value > 0) {
+							$call_flow_array[$i]["times"]["profile_duration_seconds"] = round(((int) $call_flow_array[$i]["times"]["profile_end_time"])/1000000 - ((int) $call_flow_array[$i]["times"]["profile_created_time"])/1000000);
+							$call_flow_array[$i]["times"]["profile_duration_formatted"] = gmdate("G:i:s", (int) $call_flow_array[$i]["times"]["profile_duration_seconds"]);
+							//$call_flow_array[$i]["times"][$name.'stamp'] = date("Y-m-d H:i:s", (int) $value/1000000);
+						}
+					}
+					$i++;
+				}
+
+				//add the call_flow to the array
+				return $call_flow_array;
+			}
+		}
+
+		/**
+		 * Build a call flow summary array based on call summary
+		 *
+		 * This method constructs an array that represents the call flow summary using the call flow array array. The call flow summary array contains a simplified view of the call flow.
+		 *
+		 * @return array The call flow summary array.
+		 */
+		public function call_flow_summary($call_flow_array) {
+
+			//set the time zone
+			if (!empty($this->setting->get('domain', 'time_zone'))) {
+				$time_zone = $this->setting->get('domain', 'time_zone');
+			}
+			else {
+				$time_zone = date_default_timezone_get();
+			}
+
+			//get the destination select list
+			$destination = new destinations;
+			$destination_array = $destination->get('dialplan');
+
+			//build the call flow summary
+			$x = 0;
+			if (!empty($call_flow_array)) {
+				foreach ($call_flow_array as $row) {
+					//get the application array
+					$app = find_app($destination_array, urldecode($row["caller_profile"]["destination_number"]));
+
+					//call centers
+					if ($app['application'] == 'call_centers') {
+						if (isset($row["caller_profile"]["transfer_source"])) {
+							$app['status'] = 'Answered'; //Out
+						}
+						else {
+							$app['status'] = 'Waited'; //In
+						}
+					}
+
+					//conferences
+					if ($app['application'] == 'conferences') {
+						$app['status'] = 'Answered';
+					}
+
+					//destinations
+					if ($app['application'] == 'destinations') {
+						$app['status'] = 'Routed';
+					}
+
+					//extensions
+					if ($app['application'] == 'extensions') {
+						if ($billsec == 0) {
+							$app['status'] = 'Missed';
+						}
+						else {
+							$app['status'] = 'Answered';
+						}
+					}
+
+					//outbound routes
+					if ($this->call_direction == 'outbound') {
+						$app['application'] = 'dialplans';
+						$app['uuid'] = '';
+						$app['status'] = '';
+						$app['name'] = 'Outbound';
+						$app['label'] = 'Outbound';
+					}
+
+					//ring groups
+					if ($app['application'] == 'ring_groups') {
+						$app['status'] = 'Waited';
+					}
+
+					//time conditions
+					if ($app['application'] == 'time_conditions') {
+						$app['status'] = 'Routed';
+					}
+
+					//valet park
+					if (substr($row["caller_profile"]["destination_number"], 0, 4) == 'park'
+						or (substr($row["caller_profile"]["destination_number"], 0, 3) == '*59' 
+						&& strlen($row["caller_profile"]["destination_number"]) == 5)) {
+						$app['application'] = 'dialplans';
+						$app['uuid'] = '46ae6d82-bb83-46a3-901d-33d0724347dd';
+						$app['status'] = '---';
+						$app['name'] = 'Park';
+						$app['label'] = 'Park';
+					}
+
+					//voicemails
+					if ($app['application'] == 'voicemails') {
+						$app['status'] = 'Answered';
+					}
+
+					//build the application urls
+					$destination_url = "/app/".$app['application']."/".$destination->singular($app['application'])."_edit.php?id=".$app["uuid"];
+					$application_url = "/app/".$app['application']."/".$app['application'].".php";
+					if ($app['application'] == 'call_centers') {
+						$destination_url = "/app/".$app['application']."/".$destination->singular($app['application'])."_queue_edit.php?id=".$app['uuid'];
+						$application_url = "/app/".$app['application']."/".$destination->singular($app['application'])."_queues.php";
+					}
+
+					//add the application and destination details
+					$language2 = new text;
+					$text2 = $language2->get($_SESSION['domain']['language']['code'], 'app/'.$app['application']);
+					$call_flow_summary[$x]["application_name"] = $app['application'];
+					$call_flow_summary[$x]["application_label"] = trim($text2['title-'.$app['application']]);
+					$call_flow_summary[$x]["application_url"] = $application_url;
+					$call_flow_summary[$x]["destination_uuid"] = $app['uuid'];
+					$call_flow_summary[$x]["destination_name"] = $app['name'];
+					$call_flow_summary[$x]["destination_url"] = $destination_url;
+					$call_flow_summary[$x]["destination_number"] = $row["caller_profile"]["destination_number"];
+					$call_flow_summary[$x]["destination_label"] = $app['label'];
+					$call_flow_summary[$x]["destination_status"] = $app['status'];
+					$call_flow_summary[$x]["destination_description"] = $app['description'];
+					//$call_flow_summary[$x]["application"] = $app;
+
+					//set the start and epoch
+					$profile_created_epoch = round($row['times']['profile_created_time'] / 1000000);
+					$profile_end_epoch = round($row['times']['profile_end_time'] / 1000000);
+
+					//add the call flow times
+					$call_flow_summary[$x]["start_epoch"] = $profile_created_epoch;
+					$call_flow_summary[$x]["end_epoch"] = $profile_end_epoch;
+					$call_flow_summary[$x]["start_stamp"] =  date("Y-m-d H:i:s", $profile_created_epoch);
+					$call_flow_summary[$x]["end_stamp"] =  date("Y-m-d H:i:s", $profile_end_epoch);
+					$call_flow_summary[$x]["duration_seconds"] =  $row['times']['profile_duration_seconds'];
+					$call_flow_summary[$x]["duration_formatted"] =  $row['times']['profile_duration_formatted'];
+
+					unset($app);
+					$x++;
+				}
+			}
+			unset($x);
+
+			//return the call flow summary array
+			return $call_flow_summary;
+		}
 
 		/**
 		 * get xml from the filesystem and save it to the database
