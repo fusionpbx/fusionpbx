@@ -54,6 +54,7 @@
 
 //set document root
 	$_SERVER["DOCUMENT_ROOT"] = substr($conf['document.root'], -1) === '/' ? substr($conf['document.root'], 0, -1) : $conf['document.root'];
+
 //set project path
 	if (isset($conf['project.path']) && !defined('PROJECT_PATH')) {
 		if (substr($conf['project.path'], 0, 1) === '/') {
