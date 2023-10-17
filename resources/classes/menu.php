@@ -1004,7 +1004,7 @@ if (!class_exists('menu')) {
 							else {
 								$menu_main_icon = null;
 							}
-							$menu_main_item = "<span class='d-sm-none d-md-none d-lg-inline' style='margin-left: 5px;'>".$menu_parent['menu_language_title']."</span>\n";
+							$menu_main_item = "						<span class='d-sm-none d-md-none d-lg-inline' style='margin-left: 5px;'>".$menu_parent['menu_language_title']."</span>\n";
 						}
 						else {
 							$menu_main_item = $menu_parent['menu_language_title'];
@@ -1014,7 +1014,15 @@ if (!class_exists('menu')) {
 						$html .= "						".$menu_main_icon.$menu_main_item;
 						$html .= "					</a>\n";
 						if ($submenu) {
-							$html .= "					<ul class='dropdown-menu'>\n";
+							$columns = @sizeof($menu_parent['menu_items']) > 20 ? 2 : 1;
+							$column_current = 1;
+							$mod_ul = $columns > 1 ? 'multi-column' : null;
+							$html .= "					<ul class='dropdown-menu ".$mod_ul."'>\n";
+							if ($columns > 1) {
+								$html .= "						<div class='row'>\n";
+								$html .= "							<div class='col-12 col-sm-6 pr-sm-0'>\n";
+								$html .= "								<ul class='multi-column-dropdown'>\n";
+							}
 							foreach ($menu_parent['menu_items'] as $index_sub => $menu_sub) {
 								$mod_a_2 = $menu_sub['menu_item_link'];
 								if ($mod_a_2 == '') {
@@ -1030,7 +1038,20 @@ if (!class_exists('menu')) {
 										$menu_sub_icon = null;
 									}
 								}
-								$html .= "						<li class='nav-item'><a class='nav-link' href='".$mod_a_2."' ".$mod_a_3.">".($_SESSION['theme']['menu_sub_icons'] ? "<span class='fas fa-bar d-inline-block d-sm-none float-left' style='margin: 4px 10px 0 25px;'></span>" : null).escape($menu_sub['menu_language_title']).$menu_sub_icon."</a></li>\n";
+								$html .= "						<li class='nav-item'><a class='nav-link' href='".$mod_a_2."' ".$mod_a_3.">".($_SESSION['theme']['menu_sub_icons']['boolean'] != 'false' ? "<span class='fas fa-bar d-inline-block d-sm-none float-left' style='margin: 4px 10px 0 25px;'></span>" : null).escape($menu_sub['menu_language_title']).$menu_sub_icon."</a></li>\n";
+								if ($columns > 1 && $column_current == 1 && ($index_sub+1) > (ceil(@sizeof($menu_parent['menu_items'])/2)-1)) {
+									$html .= "								</ul>\n";
+									$html .= "							</div>\n";
+									$html .= "							<div class='col-12 col-sm-6 pl-sm-0'>\n";
+									$html .= "								<ul class='multi-column-dropdown'>\n";
+									$column_current = 2;
+								}
+
+							}
+							if ($columns > 1) {
+								$html .= "								</ul>\n";
+								$html .= "							</div>\n";
+								$html .= "						</div>\n";
 							}
 							$html .= "					</ul>\n";
 						}
