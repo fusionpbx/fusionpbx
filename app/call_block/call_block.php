@@ -99,7 +99,12 @@
 		//$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	}
 	else {
-		$sql .= "and (domain_uuid = :domain_uuid) ";
+		$sql .= "and ( ";
+		$sql .= "	domain_uuid = :domain_uuid ";
+		if (permission_exists('call_block_domain')) {
+			$sql .= "	or domain_uuid is null ";
+		}
+		$sql .= ") ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	}
 	if (!permission_exists('call_block_all') && !empty($_SESSION['user']['extension'])) {
@@ -148,7 +153,12 @@
 		//$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	}
 	else {
-		$sql .= "and (domain_uuid = :domain_uuid) ";
+		$sql .= "and ( ";
+		$sql .= "	domain_uuid = :domain_uuid ";
+		if (permission_exists('call_block_domain')) {
+			$sql .= "	or domain_uuid is null ";
+		}
+		$sql .= ") ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	}
 	if (!permission_exists('call_block_all') && !empty($_SESSION['user']['extension']) && count($_SESSION['user']['extension']) > 0) {
@@ -173,11 +183,19 @@
 		$sql .= ") ";
 		$parameters['search'] = '%'.$search.'%';
 	}
-	$sql .= order_by($order_by, $order, ['call_block_country_code','call_block_number']);
+	$sql .= order_by($order_by, $order, ['domain_uuid','call_block_country_code','call_block_number']);
 	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;
 	$result = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
+
+//determine if any global
+	$global_call_blocks = false;
+	if (permission_exists('call_block_domain') && !empty($result) && is_array($result) && @sizeof($result) != 0) {
+		foreach ($result as $row) {
+			if (!is_uuid($row['domain_uuid'])) { $global_call_blocks = true; break; }
+		}
+	}
 
 //create token
 	$object = new token;
@@ -250,6 +268,9 @@
 	if ($show == 'all' && permission_exists('domain_all')) {
 		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order);
 	}
+	else if (permission_exists('call_block_domain') && $global_call_blocks) {
+		echo th_order_by('domain_uuid', $text['label-domain'], $order_by, $order, null, "style='width: 1%;' class='center'");
+	}
 	echo th_order_by('call_block_direction', $text['label-direction'], $order_by, $order, null, "style='width: 1%;' class='center'");
 	echo th_order_by('extension', $text['label-extension'], $order_by, $order, null, "class='center'");
 	echo th_order_by('call_block_name', $text['label-name'], $order_by, $order);
@@ -267,7 +288,7 @@
 
 	if (!empty($result)) {
 		$x = 0;
-		foreach($result as $row) {
+		foreach ($result as $row) {
 			if (permission_exists('call_block_edit')) {
 				$list_row_url = "call_block_edit.php?id=".urlencode($row['call_block_uuid']);
 			}
@@ -279,7 +300,22 @@
 				echo "	</td>\n";
 			}
 			if (!empty($show) && $show == 'all' && permission_exists('domain_all')) {
-				echo "	<td>".escape($_SESSION['domains'][$row['domain_uuid']]['domain_name'])."</td>\n";
+				if (!empty($row['domain_uuid']) && is_uuid($row['domain_uuid'])) {
+					echo "	<td>".escape($_SESSION['domains'][$row['domain_uuid']]['domain_name'])."</td>\n";
+				}
+				else {
+					echo "	<td>".$text['label-global']."</td>\n";
+				}
+			}
+			else if ($global_call_blocks) {
+				if (permission_exists('call_block_domain') && !is_uuid($row['domain_uuid'])) {
+					echo "	<td>".$text['label-global'];
+				}
+				else {
+					echo "	<td class='overflow'>";
+					echo escape($_SESSION['domains'][$row['domain_uuid']]['domain_name']);
+				}
+				echo "</td>\n";
 			}
 			echo "	<td class='center'>";
 			switch ($row['call_block_direction']) {
