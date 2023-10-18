@@ -999,12 +999,12 @@ if (!class_exists('menu')) {
 						$mod_a_3 = ($menu_parent['menu_item_category'] == 'external') ? "target='_blank' " : null;
 						if (isset($_SESSION['theme']['menu_main_icons']['boolean']) && $_SESSION['theme']['menu_main_icons']['boolean'] == 'true') {
 							if (!empty($menu_parent['menu_item_icon']) && substr_count($menu_parent['menu_item_icon'], 'fa-') > 0) {
-								$menu_main_icon = "<span class='fas ".$menu_parent['menu_item_icon']."' title=\"".escape($menu_parent['menu_language_title'])."\"></span>\n";
+								$menu_main_icon = "<span class='fas ".$menu_parent['menu_item_icon']."' title=\"".escape($menu_parent['menu_language_title'])."\"></span>";
 							}
 							else {
 								$menu_main_icon = null;
 							}
-							$menu_main_item = "						<span class='d-sm-none d-md-none d-lg-inline' style='margin-left: 5px;'>".$menu_parent['menu_language_title']."</span>\n";
+							$menu_main_item = "<span class='d-sm-none d-md-none d-lg-inline' style='margin-left: 5px;'>".$menu_parent['menu_language_title']."</span>\n";
 						}
 						else {
 							$menu_main_item = $menu_parent['menu_language_title'];
