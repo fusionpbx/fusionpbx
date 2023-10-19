@@ -84,6 +84,7 @@
 //get order and order by
 	$order_by = $_GET["order_by"] ?? '';
 	$order = $_GET["order"] ?? '';
+	$sort = $order_by == 'ivr_menu_extension' ? 'natural' : null;
 
 //add the search variable
 	$search = $_GET["search"] ?? '';
@@ -144,7 +145,7 @@
 		$sql .= ")";
 		$parameters['search'] = '%'.$search.'%';
 	}
-	$sql .= order_by($order_by, $order, 'ivr_menu_name', 'asc');
+	$sql .= order_by($order_by, $order, 'ivr_menu_name', 'asc', $sort);
 	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;
 	$ivr_menus = $database->select($sql, $parameters ?? '', 'all');
