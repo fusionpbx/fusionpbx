@@ -76,8 +76,9 @@
 	}
 
 //get order and order by
-	$order_by = $_GET["order_by"] ?? '';
-	$order = $_GET["order"] ?? '';
+	$order_by = $_GET["order_by"] ?? 'extension';
+	$order = $_GET["order"] ?? 'asc';
+	$sort = $order_by == 'extension' ? 'natural' : null;
 
 //get total extension count for domain
 	if (isset($_SESSION['limit']['extensions']['numeric'])) {
@@ -136,17 +137,7 @@
 
 //get the extensions
 	$sql = str_replace('count(*)', '*', $sql);
-	if ($order_by == '' || $order_by == 'extension') {
-		if ($db_type == 'pgsql') {
-			$sql .= 'order by natural_sort(extension) '.$order; //function in app_defaults.php
-		}
-		else {
-			$sql .= 'order by extension '.$order;
-		}
-	}
-	else {
-		$sql .= order_by($order_by, $order);
-	}
+	$sql .= order_by($order_by, $order, null, null, $sort);
 	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;
 	$extensions = $database->select($sql, $parameters ?? null, 'all');
