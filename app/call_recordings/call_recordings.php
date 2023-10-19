@@ -56,6 +56,12 @@
 //process the http post data by action
 	if (!empty($action) && is_array($call_recordings) && @sizeof($call_recordings) != 0) {
 		switch ($action) {
+			case 'download':
+				if (permission_exists('call_recording_download')) {
+					$obj = new call_recordings;
+					$obj->download($call_recordings);
+				}
+				break;
 			case 'delete':
 				if (permission_exists('call_recording_delete')) {
 					$obj = new call_recordings;
@@ -171,11 +177,11 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-call_recordings']." </b></div>\n";
 	echo "	<div class='actions'>\n";
-	if (permission_exists('call_recording_download_add') && $call_recordings) {
-		echo button::create(['type'=>'button','label'=>$text['button-download'],'icon'=>$_SESSION['theme']['button_icon_download'],'collapse'=>'hide-xs','onclick'=>"list_action_set('download'); list_form_submit('form_list');"]);
+	if (permission_exists('call_recording_download') && $call_recordings) {
+		echo button::create(['type'=>'button','label'=>$text['button-download'],'icon'=>$_SESSION['theme']['button_icon_download'],'id'=>'btn_download','name'=>'btn_download','style'=>'display: none;','collapse'=>'hide-xs','onclick'=>"list_action_set('download'); list_form_submit('form_list');"]);
 	}
 	if (permission_exists('call_recording_delete') && $call_recordings) {
-		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','name'=>'btn_delete','style'=>'display: none; margin-left: 15px;','collapse'=>'hide-xs','onclick'=>"modal_open('modal-delete','btn_delete');"]);
+		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','name'=>'btn_delete','style'=>'display: none; margin-right: 15px;','collapse'=>'hide-xs','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
 	echo 		"<form id='form_search' class='inline' method='get'>\n";
 	if (permission_exists('call_recording_all')) {
