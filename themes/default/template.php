@@ -850,27 +850,18 @@
 			btn_copy = document.getElementById("btn_copy");
 			btn_toggle = document.getElementById("btn_toggle");
 			btn_delete = document.getElementById("btn_delete");
+			btn_download = document.getElementById("btn_download");
 			if (checked == true) {
-				if (btn_copy) {
-					btn_copy.style.display = "inline";
-				}
-				if (btn_toggle) {
-					btn_toggle.style.display = "inline";
-				}
-				if (btn_delete) {
-					btn_delete.style.display = "inline";
-				}
+				if (btn_copy) { btn_copy.style.display = "inline"; }
+				if (btn_toggle) { btn_toggle.style.display = "inline"; }
+				if (btn_delete) { btn_delete.style.display = "inline"; }
+				if (btn_download) { btn_download.style.display = "inline"; }
 			}
 		 	else {
-				if (btn_copy) {
-					btn_copy.style.display = "none";
-				}
-				if (btn_toggle) {
-					btn_toggle.style.display = "none";
-				}
-				if (btn_delete) {
-					btn_delete.style.display = "none";
-				}
+				if (btn_copy) { btn_copy.style.display = "none"; }
+				if (btn_toggle) { btn_toggle.style.display = "none"; }
+				if (btn_delete) { btn_delete.style.display = "none"; }
+				if (btn_download) { btn_download.style.display = "none"; }
 		 	}
 		}
 		{/literal}
