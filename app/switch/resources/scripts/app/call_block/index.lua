@@ -16,7 +16,7 @@
 --
 --	The Initial Developer of the Original Code is
 --	Mark J Crane <markjcrane@fusionpbx.com>
---	Copyright (C) 2019
+--	Copyright (C) 2019 - 2023
 --	the Initial Developer. All Rights Reserved.
 --
 --	Contributor(s):
@@ -106,16 +106,16 @@
 				sql = sql .. "	(\n";
 				sql = sql .. "		call_block_name = :call_block_name \n";
 				sql = sql .. "		and ( \n";
-				sql = sql .. "			'+' || call_block_country_code || call_block_number = :call_block_number \n";
-				sql = sql .. "			or call_block_country_code || call_block_number = :call_block_number \n";
+				sql = sql .. "			concat('+', call_block_country_code, call_block_number) = :call_block_number \n";
+				sql = sql .. "			or concat(call_block_country_code, call_block_number) = :call_block_number \n";
 				sql = sql .. "			or call_block_number = :call_block_number \n";
 				sql = sql .. "		) \n";
 				sql = sql .. "	) \n";
 				sql = sql .. "	or (\n";
 				sql = sql .. "		call_block_name is null \n";
 				sql = sql .. "		and ( \n";
-				sql = sql .. "			'+' || call_block_country_code || call_block_number = :call_block_number \n";
-				sql = sql .. "			or call_block_country_code || call_block_number = :call_block_number \n";
+				sql = sql .. "			concat('+', call_block_country_code, call_block_number) = :call_block_number \n";
+				sql = sql .. "			or concat(call_block_country_code, call_block_number) = :call_block_number \n";
 				sql = sql .. "			or call_block_number = :call_block_number \n";
 				sql = sql .. "		) \n";
 				sql = sql .. "	) \n";
