@@ -99,7 +99,7 @@
 									}
 							}
 						}
-						
+
 						//find all other matching actions
 						if ($value['extension'] == $detail_action) {
 							if (file_exists($_SERVER["PROJECT_ROOT"]."/app/".$application."/app_languages.php")) {
@@ -219,6 +219,7 @@
 //build the call flow summary array
 	$xml_cdr = new xml_cdr;
 	$xml_cdr->call_direction = $call_direction;
+	$xml_cdr->billsec = $billsec;
 	if (empty($call_flow)) {
 		$xml_cdr->call_details = $array;
 		$call_flow_array = $xml_cdr->call_flow();
