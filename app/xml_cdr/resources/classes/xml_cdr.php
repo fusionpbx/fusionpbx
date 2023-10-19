@@ -41,6 +41,7 @@ if (!class_exists('xml_cdr')) {
 		public $setting;
 		public $call_details;
 		public $call_direction;
+		public $billsec;
 		private $username;
 		private $password;
 		private $json;
@@ -968,7 +969,6 @@ if (!class_exists('xml_cdr')) {
 						if ($value > 0) {
 							$call_flow_array[$i]["times"]["profile_duration_seconds"] = round(((int) $call_flow_array[$i]["times"]["profile_end_time"])/1000000 - ((int) $call_flow_array[$i]["times"]["profile_created_time"])/1000000);
 							$call_flow_array[$i]["times"]["profile_duration_formatted"] = gmdate("G:i:s", (int) $call_flow_array[$i]["times"]["profile_duration_seconds"]);
-							//$call_flow_array[$i]["times"][$name.'stamp'] = date("Y-m-d H:i:s", (int) $value/1000000);
 						}
 					}
 					$i++;
@@ -1000,6 +1000,33 @@ if (!class_exists('xml_cdr')) {
 			$destination = new destinations;
 			$destination_array = $destination->get('dialplan');
 
+			//format the times in the call flow array and add the profile duration
+			$i = 0;
+			foreach ($call_flow_array as $row) {
+				foreach ($row["times"] as $name => $value) {
+					if ($value > 0) {
+						$call_flow_array[$i]["times"]["profile_duration_seconds"] = round(((int) $call_flow_array[$i]["times"]["profile_end_time"])/1000000 - ((int) $call_flow_array[$i]["times"]["profile_created_time"])/1000000);
+						$call_flow_array[$i]["times"]["profile_duration_formatted"] = gmdate("G:i:s", (int) $call_flow_array[$i]["times"]["profile_duration_seconds"]);
+						$call_flow_array[$i]["times"][$name.'stamp'] = date("Y-m-d H:i:s", (int) $value/1000000);
+					}
+				}
+				$i++;
+			}
+
+			//add a new row to the call flow array
+			if ($this->call_direction !== 'outbound') {
+				//count the call flow array
+				$id = count($call_flow_array);
+
+				//add a new row
+				$call_flow_array[$id]["caller_profile"]["destination_number"] = $call_flow_array[$id-1]["caller_profile"]["callee_id_number"];
+				$call_flow_array[$id]["caller_profile"]["caller_id_number"] = $call_flow_array[$id-1]["caller_profile"]["caller_id_number"];
+				$call_flow_array[$id]['times']["profile_created_time"] = $call_flow_array[$id-1]["times"]["profile_created_time"];
+				$call_flow_array[$id]['times']["profile_end_time"] = $call_flow_array[$id-1]["times"]["profile_end_time"];
+				$call_flow_array[$id]['times']["profile_duration_seconds"] = $call_flow_array[$id-1]["times"]["profile_duration_seconds"]; 
+				$call_flow_array[$id]['times']["profile_duration_formatted"] = gmdate("G:i:s", (int) $call_flow_array[$id]['times']["profile_duration_seconds"]);
+			}
+
 			//build the call flow summary
 			$x = 0;
 			if (!empty($call_flow_array)) {
@@ -1029,7 +1056,7 @@ if (!class_exists('xml_cdr')) {
 
 					//extensions
 					if ($app['application'] == 'extensions') {
-						if ($billsec == 0) {
+						if ($this->billsec == 0) {
 							$app['status'] = 'Missed';
 						}
 						else {
