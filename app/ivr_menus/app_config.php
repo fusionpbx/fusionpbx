@@ -35,7 +35,7 @@
 		$apps[$x]['destinations'][$y]['label'] = "ivr_menus";
 		$apps[$x]['destinations'][$y]['name'] = "ivr_menus";
 		$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '\${domain_uuid}' and ivr_menu_enabled = 'true' ";
-		$apps[$x]['destinations'][$y]['order_by'] = "ivr_menu_extension asc";
+		$apps[$x]['destinations'][$y]['order_by'] = "natural_sort(ivr_menu_extension) asc";
 		$apps[$x]['destinations'][$y]['field']['ivr_menu_uuid'] = "ivr_menu_uuid";
 		$apps[$x]['destinations'][$y]['field']['uuid'] = "ivr_menu_uuid";
 		$apps[$x]['destinations'][$y]['field']['name'] = "ivr_menu_name";
@@ -52,7 +52,7 @@
 		$apps[$x]['destinations'][$y]['name'] = "ivr_menus_sub";
 		$apps[$x]['destinations'][$y]['sql'] = "select ivr_menu_name as name, ivr_menu_uuid as uuid from v_ivr_menus ";
 		$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '\${domain_uuid}' and ivr_menu_enabled = 'true' ";
-		$apps[$x]['destinations'][$y]['order_by'] = "ivr_menu_extension asc";
+		$apps[$x]['destinations'][$y]['order_by'] = "natural_sort(ivr_menu_extension) asc";
 		$apps[$x]['destinations'][$y]['field']['name'] = "ivr_menu_name";
 		$apps[$x]['destinations'][$y]['field']['uuid'] = "ivr_menu_uuid";
 		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "menu-sub:\${uuid}";

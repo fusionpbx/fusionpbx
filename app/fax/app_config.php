@@ -35,7 +35,7 @@
 		$apps[$x]['destinations'][$y]['label'] = "fax";
 		$apps[$x]['destinations'][$y]['name'] = "fax";
 		$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '\${domain_uuid}' ";
-		$apps[$x]['destinations'][$y]['order_by'] = "fax_extension asc";
+		$apps[$x]['destinations'][$y]['order_by'] = "natural_sort(fax_extension) asc";
 		$apps[$x]['destinations'][$y]['field']['fax_uuid'] = "fax_uuid";
 		$apps[$x]['destinations'][$y]['field']['uuid'] = "fax_uuid";
 		$apps[$x]['destinations'][$y]['field']['name'] = "fax_name";
