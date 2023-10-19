@@ -2004,11 +2004,12 @@ function number_pad($number,$n) {
 //validate and format order by clause of select statement
 	if (!function_exists('order_by')) {
 		function order_by($col, $dir, $col_default = '', $dir_default = 'asc', $sort = '') {
+			global $db_type;
 			$order_by = ' order by ';
 			$col = preg_replace('#[^a-zA-Z0-9-_.]#', '', $col ?? '');
 			$dir = !empty($dir) && strtolower($dir) == 'desc' ? 'desc' : 'asc';
 			if (!empty($col)) {
-				if ($sort == 'natural') {
+				if ($sort == 'natural' && $db_type == "pgsql") {
 					return $order_by.'natural_sort('.$col.') '.$dir.' ';
 				}
 				else {
@@ -2026,7 +2027,7 @@ function number_pad($number,$n) {
 					}
 				}
 				else {
-					if ($sort == 'natural') {
+					if ($sort == 'natural' && $db_type == "pgsql") {
 						return $order_by.'natural_sort('.$col_default.') '.$dir_default.' ';
 					}
 					else {
