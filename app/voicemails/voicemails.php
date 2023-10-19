@@ -90,8 +90,9 @@
 	}
 
 //get order and order by
-	$order_by = $_GET["order_by"] ?? '';
-	$order = $_GET["order"] ?? '';
+	$order_by = $_GET["order_by"] ?? 'voicemail_id';
+	$order = $_GET["order"] ?? 'asc';
+	$sort = $order_by == 'voicemail_id' ? 'natural' : null;
 	
 //set additional variables
 	$show = $_GET["show"] ?? '';
@@ -152,7 +153,7 @@
 
 //get the list
 	$sql = str_replace('count(voicemail_uuid)', '*', $sql);
-	$sql .= order_by($order_by, $order, 'voicemail_id', 'asc');
+	$sql .= order_by($order_by, $order, null, null, $sort);
 	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;
 	$voicemails = $database->select($sql, $parameters ?? null, 'all');
