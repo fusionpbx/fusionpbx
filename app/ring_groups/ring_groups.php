@@ -78,8 +78,9 @@
 	}
 
 //get order and order by
-	$order_by = $_GET["order_by"] ?? '';
-	$order = $_GET["order"] ?? '';
+	$order_by = $_GET["order_by"] ?? 'ring_group_name';
+	$order = $_GET["order"] ?? 'asc';
+	$sort = $order_by == 'ring_group_extension' ? 'natural' : null;
 
 //add the search term
 	if (isset($_GET["search"])) {
@@ -165,7 +166,7 @@
 		$sql .= ") ";
 		$parameters['search'] = '%'.$search.'%';
 	}
-	$sql .= ($order_by) ? order_by($order_by, $order) : "order by ring_group_name asc, ring_group_extension asc ";
+	$sql .= order_by($order_by, $order, null, null, $sort);
 	$sql .= limit_offset($rows_per_page, $offset);
 	$ring_groups = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
