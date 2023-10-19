@@ -2003,13 +2003,17 @@ function number_pad($number,$n) {
 
 //validate and format order by clause of select statement
 	if (!function_exists('order_by')) {
-		function order_by($col, $dir, $col_default = '', $dir_default = 'asc') {
+		function order_by($col, $dir, $col_default = '', $dir_default = 'asc', $sort = '') {
 			$order_by = ' order by ';
 			$col = preg_replace('#[^a-zA-Z0-9-_.]#', '', $col ?? '');
-			if(!empty($dir))
-				$dir = strtolower($dir) == 'desc' ? 'desc' : 'asc';
+			$dir = !empty($dir) && strtolower($dir) == 'desc' ? 'desc' : 'asc';
 			if (!empty($col)) {
-				return $order_by.$col.' '.$dir.' ';
+				if ($sort == 'natural') {
+					return $order_by.'natural_sort('.$col.') '.$dir.' ';
+				}
+				else {
+					return $order_by.$col.' '.$dir.' ';
+				}
 			}
 			else if (!empty($col_default)) {
 				if (is_array($col_default) && @sizeof($col_default) != 0) {
@@ -2022,7 +2026,12 @@ function number_pad($number,$n) {
 					}
 				}
 				else {
-					return $order_by.$col_default.' '.$dir_default.' ';
+					if ($sort == 'natural') {
+						return $order_by.'natural_sort('.$col_default.') '.$dir_default.' ';
+					}
+					else {
+						return $order_by.$col_default.' '.$dir_default.' ';
+					}
 				}
 			}
 		}
