@@ -35,7 +35,7 @@
 		$apps[$x]['destinations'][$y]['label'] = "ring_groups";
 		$apps[$x]['destinations'][$y]['name'] = "ring_groups";
 		$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '\${domain_uuid}' and ring_group_enabled = 'true' ";
-		$apps[$x]['destinations'][$y]['order_by'] = "ring_group_extension asc";
+		$apps[$x]['destinations'][$y]['order_by'] = "natural_sort(ring_group_extension) asc";
 		$apps[$x]['destinations'][$y]['field']['ring_group_uuid'] = "ring_group_uuid";
 		$apps[$x]['destinations'][$y]['field']['uuid'] = "ring_group_uuid";
 		$apps[$x]['destinations'][$y]['field']['name'] = "ring_group_name";

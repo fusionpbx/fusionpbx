@@ -36,7 +36,7 @@
 		$apps[$x]['destinations'][$y]['name'] = "extensions";
 		$apps[$x]['destinations'][$y]['sql'] = "select extension_uuid, extension_uuid as uuid, extension, number_alias, effective_caller_id_name as name, user_context as context, description from v_extensions ";
 		$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '\${domain_uuid}' and enabled = 'true' ";
-		$apps[$x]['destinations'][$y]['order_by'] = "number_alias, extension asc";
+		$apps[$x]['destinations'][$y]['order_by'] = "natural_sort(number_alias) asc, natural_sort(extension) asc";
 		$apps[$x]['destinations'][$y]['field']['extension_uuid'] = "extension_uuid";
 		$apps[$x]['destinations'][$y]['field']['destination'] = "number_alias,extension";
 		$apps[$x]['destinations'][$y]['field']['extension'] = "number_alias,extension";
