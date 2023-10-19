@@ -77,8 +77,9 @@
 	}
 
 //get order and order by
-	$order_by = $_GET["order_by"] ?? null;
-	$order = $_GET["order"] ?? null;
+	$order_by = $_GET["order_by"] ?? 'dialplan_name';
+	$order = $_GET["order"] ?? 'asc';
+	$sort = $order_by == 'dialplan_number' ? 'natural' : null;
 
 //add the search variable
 	$search = $_GET["search"] ?? '';
@@ -123,7 +124,7 @@
 
 //get the data
 	$sql = str_replace('count(dialplan_uuid)', '*', $sql);
-	$sql .= $order_by != '' ? order_by($order_by, $order) : " order by dialplan_order asc, dialplan_name asc ";
+	$sql .= order_by($order_by, $order, null, null, $sort);
 	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;
 	$dialplans = $database->select($sql, $parameters ?? null, 'all');
