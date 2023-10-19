@@ -71,8 +71,9 @@
 	}
 
 //get order and order by
-	$order_by = $_GET["order_by"] ?? null;
-	$order = $_GET["order"] ?? null;
+	$order_by = $_GET["order_by"] ?? 'fax_name';
+	$order = $_GET["order"] ?? 'asc';
+	$sort = $order_by == 'fax_extension' ? 'natural' : null;
 
 //add the search and show variables
 	$search = $_GET["search"] ?? '';
@@ -161,7 +162,7 @@
 		$sql .= "or lower(fax_description) like :search ";
 		$parameters['search'] = '%'.strtolower($search).'%';
 	}
-	$sql .= order_by($order_by, $order, 'f.fax_name', 'asc');
+	$sql .= order_by($order_by, $order, 'fax_name', 'asc', $sort);
 	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;
 	$result = $database->select($sql, $parameters ?? null, 'all');
