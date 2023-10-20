@@ -1058,7 +1058,9 @@ if (!class_exists('xml_cdr')) {
 			if (!empty($call_flow_array)) {
 				foreach ($call_flow_array as $row) {
 					//get the application array
-					$app = find_app($destination_array, urldecode($row["caller_profile"]["destination_number"]));
+					if (!empty($destination_array) && !empty($row["caller_profile"]["destination_number"])) {
+						$app = find_app($destination_array, urldecode($row["caller_profile"]["destination_number"]));
+					}
 
 					//call centers
 					if ($app['application'] == 'call_centers') {
@@ -1110,9 +1112,11 @@ if (!class_exists('xml_cdr')) {
 					}
 
 					//valet park
-					if (substr($row["caller_profile"]["destination_number"], 0, 4) == 'park'
-						or (substr($row["caller_profile"]["destination_number"], 0, 3) == '*59' 
-						&& strlen($row["caller_profile"]["destination_number"]) == 5)) {
+					if (!empty($row["caller_profile"]["destination_number"]) 
+						&& (substr($row["caller_profile"]["destination_number"], 0, 4) == 'park'
+							or (substr($row["caller_profile"]["destination_number"], 0, 3) == '*59' 
+							&& strlen($row["caller_profile"]["destination_number"]) == 5))
+						) {
 
 						//add items to the app array
 						$app['application'] = 'dialplans';
@@ -1123,12 +1127,12 @@ if (!class_exists('xml_cdr')) {
 						//set the call park status
 						if (strpos($row["caller_profile"]["transfer_source"], 'park+') !== false) {
 							//$app['status'] = 'In '.$row["caller_profile"]["callee_id_name"].' '.$row["caller_profile"]["callee_id_number"];
-							$app['status'] = 'In ('.$row["caller_profile"]["callee_id_number"].')';
+							$app['status'] = 'In '.$row["caller_profile"]["callee_id_number"];
 							//$app['status'] = 'In';
 						}
 						else {
 							//$app['status'] = 'Out '.$row["caller_profile"]["callee_id_name"].' '.$row["caller_profile"]["callee_id_number"];
-							$app['status'] = 'Out ('.$row["caller_profile"]["callee_id_number"].')';
+							$app['status'] = 'Out '.$row["caller_profile"]["callee_id_number"];
 							//$app['status'] = 'Out';
 						}
 					}
