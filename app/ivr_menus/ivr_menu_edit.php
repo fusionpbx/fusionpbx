@@ -1336,6 +1336,7 @@
 		echo "</td>\n";
 		echo "<td width=\"70%\" class='vtable' align='left'>\n";
 		echo "<select name='ivr_menu_invalid_sound' class='formfld' style='width: 350px;' ".((if_group("superadmin")) ? "onchange='changeToInput(this);'" : null).">\n";
+		echo "	<option value=''></option>\n";
 		//misc optgroup
 			if (if_group("superadmin")) {
 				echo "<optgroup label='Misc'>\n";
