@@ -121,7 +121,7 @@
 			//if (empty($dialplan_uuid)) { $msg .= $text['message-required']." ".$text['label-dialplan_uuid']."<br>\n"; }
 			//if (empty($call_flow_name)) { $msg .= $text['message-required']." ".$text['label-call_flow_name']."<br>\n"; }
 			if (empty($call_flow_extension)) { $msg .= $text['message-required']." ".$text['label-call_flow_extension']."<br>\n"; }
-			if (empty($call_flow_feature_code)) { $msg .= $text['message-required']." ".$text['label-call_flow_feature_code']."<br>\n"; }
+			//if (empty($call_flow_feature_code)) { $msg .= $text['message-required']." ".$text['label-call_flow_feature_code']."<br>\n"; }
 			//if (empty($call_flow_context)) { $msg .= $text['message-required']." ".$text['label-call_flow_context']."<br>\n"; }
 			//if (empty($call_flow_status)) { $msg .= $text['message-required']." ".$text['label-call_flow_status']."<br>\n"; }
 			//if (empty($call_flow_pin_number)) { $msg .= $text['message-required']." ".$text['label-call_flow_pin_number']."<br>\n"; }
@@ -181,13 +181,15 @@
 
 		//build the xml dialplan
 			$dialplan_xml = "<extension name=\"".xml::sanitize($call_flow_name)."\" continue=\"\" uuid=\"".xml::sanitize($dialplan_uuid)."\">\n";
-			$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".xml::sanitize($destination_feature)."$\" break=\"on-true\">\n";
-			$dialplan_xml .= "		<action application=\"answer\" data=\"\"/>\n";
-			$dialplan_xml .= "		<action application=\"sleep\" data=\"200\"/>\n";
-			$dialplan_xml .= "		<action application=\"set\" data=\"feature_code=true\"/>\n";
-			$dialplan_xml .= "		<action application=\"set\" data=\"call_flow_uuid=".xml::sanitize($call_flow_uuid)."\"/>\n";
-			$dialplan_xml .= "		<action application=\"lua\" data=\"call_flow.lua\"/>\n";
-			$dialplan_xml .= "	</condition>\n";
+			if (!empty($call_flow_feature_code)) {
+				$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".xml::sanitize($destination_feature)."$\" break=\"on-true\">\n";
+				$dialplan_xml .= "		<action application=\"answer\" data=\"\"/>\n";
+				$dialplan_xml .= "		<action application=\"sleep\" data=\"200\"/>\n";
+				$dialplan_xml .= "		<action application=\"set\" data=\"feature_code=true\"/>\n";
+				$dialplan_xml .= "		<action application=\"set\" data=\"call_flow_uuid=".xml::sanitize($call_flow_uuid)."\"/>\n";
+				$dialplan_xml .= "		<action application=\"lua\" data=\"call_flow.lua\"/>\n";
+				$dialplan_xml .= "	</condition>\n";
+			}
 			$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".xml::sanitize($destination_extension)."$\">\n";
 			$dialplan_xml .= "		<action application=\"set\" data=\"call_flow_uuid=".xml::sanitize($call_flow_uuid)."\"/>\n";
 			$dialplan_xml .= "		<action application=\"lua\" data=\"call_flow.lua\"/>\n";
@@ -254,9 +256,10 @@
 			$p->delete("dialplan_edit", "temp");
 
 		// Update subscribed endpoints
-		$fp = event_socket_create();
-		if ($fp) {
-			//send the event
+		if (!empty($call_flow_feature_code)) {
+			$fp = event_socket_create();
+			if ($fp) {
+				//send the event
 				$event = "sendevent PRESENCE_IN\n";
 				$event .= "proto: flow\n";
 				$event .= "event_type: presence\n";
@@ -271,11 +274,9 @@
 				} else {
 					$event .= "answer-state: terminated\n";
 				}
-
 				event_socket_request($fp, $event);
-				//echo $event."<br />";
-			fclose($fp);
-
+				fclose($fp);
+			}
 		}
 
 		//debug info
@@ -558,7 +559,7 @@
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-call_flow_feature_code']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
@@ -695,7 +696,7 @@
 	*/
 
 	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-call_flow_alternate_destination']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
