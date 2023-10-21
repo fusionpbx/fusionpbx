@@ -49,7 +49,7 @@
 		$apps[$x]['destinations'][$y]['type'] = "sql";
 		$apps[$x]['destinations'][$y]['label'] = "call_flows";
 		$apps[$x]['destinations'][$y]['name'] = "call_flows";
-		$apps[$x]['destinations'][$y]['sql'] = "select call_flow_name as name, call_flow_uuid, call_flow_uuid as uuid, call_flow_extension as extension, call_flow_feature_code as destination, call_flow_context as context from v_call_flows ";
+		$apps[$x]['destinations'][$y]['sql'] = "select call_flow_name as name, call_flow_uuid, call_flow_uuid as uuid, call_flow_feature_code as extension, call_flow_feature_code as destination, call_flow_context as context from v_call_flows ";
 		$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '\${domain_uuid}' and call_flow_feature_code is not null and call_flow_enabled = 'true' ";
 		$apps[$x]['destinations'][$y]['order_by'] = "natural_sort(call_flow_feature_code) asc";
 		$apps[$x]['destinations'][$y]['field']['uuid'] = "uuid";
