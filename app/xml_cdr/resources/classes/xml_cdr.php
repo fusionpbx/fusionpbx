@@ -1081,6 +1081,11 @@ if (!class_exists('xml_cdr')) {
 						}
 					}
 
+					//call flows
+					if ($app['application'] == 'call_flows') {
+						$app['status'] = 'Routed';
+					}
+
 					//conferences
 					if ($app['application'] == 'conferences') {
 						$app['status'] = 'Answered';
