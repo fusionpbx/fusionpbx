@@ -1074,35 +1074,35 @@ if (!class_exists('xml_cdr')) {
 					//call centers
 					if ($app['application'] == 'call_centers') {
 						if (isset($row["caller_profile"]["transfer_source"])) {
-							$app['status'] = 'Answered'; //Out
+							$app['status'] = 'answered'; //Out
 						}
 						else {
-							$app['status'] = 'Waited'; //In
+							$app['status'] = 'waited'; //In
 						}
 					}
 
 					//call flows
 					if ($app['application'] == 'call_flows') {
-						$app['status'] = 'Routed';
+						$app['status'] = 'routed';
 					}
 
 					//conferences
 					if ($app['application'] == 'conferences') {
-						$app['status'] = 'Answered';
+						$app['status'] = 'answered';
 					}
 
 					//destinations
 					if ($app['application'] == 'destinations') {
-						$app['status'] = 'Routed';
+						$app['status'] = 'routed';
 					}
 
 					//extensions
 					if ($app['application'] == 'extensions') {
 						if ($this->billsec == 0) {
-							$app['status'] = 'Missed';
+							$app['status'] = 'missed';
 						}
 						else {
-							$app['status'] = 'Answered';
+							$app['status'] = 'answered';
 						}
 					}
 
@@ -1117,12 +1117,12 @@ if (!class_exists('xml_cdr')) {
 
 					//ring groups
 					if ($app['application'] == 'ring_groups') {
-						$app['status'] = 'Waited';
+						$app['status'] = 'waited';
 					}
 
 					//time conditions
 					if ($app['application'] == 'time_conditions') {
-						$app['status'] = 'Routed';
+						$app['status'] = 'routed';
 					}
 
 					//valet park
@@ -1139,14 +1139,14 @@ if (!class_exists('xml_cdr')) {
 						//set the call park status
 						if (strpos($row["caller_profile"]["transfer_source"], 'park+') !== false) {
 							//$app['status'] = 'In';
-							$app['status'] = 'Parked';
+							$app['status'] = 'parked';
 
 							//skip the next row
 							$skip_row = true;
 						}
 						else {
 							//$app['status'] = 'Out';
-							$app['status'] = 'Unparked';
+							$app['status'] = 'unparked';
 						}
 					}
 
@@ -1157,7 +1157,7 @@ if (!class_exists('xml_cdr')) {
 
 					//voicemails
 					if ($app['application'] == 'voicemails') {
-						$app['status'] = 'Answered';
+						$app['status'] = 'answered';
 					}
 
 					//debug - add the callee_id_number to the end of the status
