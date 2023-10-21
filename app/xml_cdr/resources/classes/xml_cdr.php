@@ -1000,9 +1000,52 @@ if (!class_exists('xml_cdr')) {
 			$destination = new destinations;
 			$destination_array = $destination->get('dialplan');
 
+			//add new rows when callee_id_number exists 
+			$new_rows = 0;
+			foreach ($call_flow_array as $key => $row) {
+				if (!empty($row["caller_profile"]["destination_number"]) 
+					and !empty($row["caller_profile"]["callee_id_number"])
+					and $row["caller_profile"]["destination_number"] !== $row["caller_profile"]["callee_id_number"]) {
+						//build the base of the new_row array
+						$new_row["caller_profile"]["destination_number"] = $row["caller_profile"]["callee_id_number"];
+						$new_row["caller_profile"]["caller_id_name"] = $row["caller_profile"]["callee_id_name"];
+						$new_row["caller_profile"]["caller_id_number"] = $row["caller_profile"]["caller_id_number"];
+						$new_row['times']["profile_created_time"] = $row["times"]["profile_created_time"];
+						$new_row['times']["profile_end_time"] = $row["times"]["profile_end_time"];
+
+						//update the times if the transfer_time exists. The order of this is important add new row needs to be set before this code
+						if (isset($row["times"]["transfer_time"]) and $row["times"]["transfer_time"] > 0) {
+							//change the end time for the current row
+							$call_flow_array[$key+$new_rows]["times"]["profile_end_time"] = $row["times"]["transfer_time"];
+
+							//change the created time for the new row
+							$new_row['times']["profile_created_time"] = $row["times"]["transfer_time"];
+						}
+
+						//update the times if the bridged_time exists. The order of this is important add new row needs to be set before this code, and transfer_time needs to be before bridge_time
+						if (isset($row["times"]["bridged_time"]) and $row["times"]["bridged_time"] > 0) {
+							//change the end time for the current row
+							$call_flow_array[$key+$new_rows]["times"]["profile_end_time"] = $row["times"]["bridged_time"];
+
+							//change the created time for the new row
+							$new_row['times']["profile_created_time"] = $row["times"]["bridged_time"];
+						}
+
+						//increment the new row id
+						$new_rows++;
+
+						//insert the new row into the array without overwriting an existing row
+						array_splice($call_flow_array, $key+$new_rows, 0, [$new_row]);
+
+						//clean up
+						unset($new_row);
+				}
+				$i++;
+			}
+
 			//format the times in the call flow array and add the profile duration
 			$i = 0;
-			foreach ($call_flow_array as $row) {
+			foreach ($call_flow_array as $key => $row) {
 				foreach ($row["times"] as $name => $value) {
 					if ($value > 0) {
 						$call_flow_array[$i]["times"]["profile_duration_seconds"] = round(((int) $call_flow_array[$i]["times"]["profile_end_time"])/1000000 - ((int) $call_flow_array[$i]["times"]["profile_created_time"])/1000000);
@@ -1013,50 +1056,16 @@ if (!class_exists('xml_cdr')) {
 				$i++;
 			}
 
-			//add a new row to the call flow array
-			if ($this->call_direction !== 'outbound') {
-				//count the call flow array
-				$id = count($call_flow_array);
-
-				//add a new row
-				$call_flow_array[$id]["caller_profile"]["destination_number"] = $call_flow_array[$id-1]["caller_profile"]["callee_id_number"];
-				$call_flow_array[$id]["caller_profile"]["caller_id_number"] = $call_flow_array[$id-1]["caller_profile"]["caller_id_number"];
-				$call_flow_array[$id]['times']["profile_created_time"] = $call_flow_array[$id-1]["times"]["profile_created_time"];
-				$call_flow_array[$id]['times']["profile_end_time"] = $call_flow_array[$id-1]["times"]["profile_end_time"];
-				$call_flow_array[$id]['times']["profile_duration_seconds"] = $call_flow_array[$id-1]["times"]["profile_duration_seconds"]; 
-				$call_flow_array[$id]['times']["profile_duration_formatted"] = gmdate("G:i:s", (int) $call_flow_array[$id]['times']["profile_duration_seconds"]);
-
-				//update the times if the transfer_time exists. The order of this is important add new row needs to be set before this code
-				if (isset($call_flow_array[$id-1]["times"]["transfer_time"])) {
-					//change the end time for the last row
-					$call_flow_array[$id-1]['times']["profile_end_time"] = $call_flow_array[$id-1]["times"]["transfer_time"];
-					$call_flow_array[$id-1]['times']["profile_duration_seconds"] = (int) $call_flow_array[$id-1]["times"]["profile_end_time"]/1000000 - $call_flow_array[$id-1]["times"]["profile_created_time"]/1000000;
-					$call_flow_array[$id-1]['times']["profile_duration_formatted"] = gmdate("G:i:s", (int) $call_flow_array[$id-1]['times']["profile_duration_seconds"]);
-
-					//change the created time for the new row
-					$call_flow_array[$id]['times']["profile_created_time"] = $call_flow_array[$id-1]["times"]["transfer_time"];
-					$call_flow_array[$id]['times']["profile_duration_seconds"] = (int) $call_flow_array[$id]["times"]["profile_end_time"]/1000000 - $call_flow_array[$id]["times"]["profile_created_time"]/1000000;
-					$call_flow_array[$id]['times']["profile_duration_formatted"] = gmdate("G:i:s", (int) $call_flow_array[$id]['times']["profile_duration_seconds"]);
-				}
-
-				//update the times if the bridged_time exists. The order of this is important add new row needs to be set before this code, and transfer_time needs to be before bridge_time
-				if (isset($call_flow_array[$id-1]["times"]["bridged_time"])) {
-					//change the end time for the last row
-					$call_flow_array[$id-1]['times']["profile_end_time"] = $call_flow_array[$id-1]["times"]["bridged_time"];
-					$call_flow_array[$id-1]['times']["profile_duration_seconds"] = (int) $call_flow_array[$id-1]["times"]["profile_end_time"]/1000000 - $call_flow_array[$id-1]["times"]["profile_created_time"]/1000000;
-					$call_flow_array[$id-1]['times']["profile_duration_formatted"] = gmdate("G:i:s", (int) $call_flow_array[$id-1]['times']["profile_duration_seconds"]);
-
-					//change the created time for the new row
-					$call_flow_array[$id]['times']["profile_created_time"] = $call_flow_array[$id-1]["times"]["bridged_time"];
-					$call_flow_array[$id]['times']["profile_duration_seconds"] = (int) $call_flow_array[$id]["times"]["profile_end_time"]/1000000 - $call_flow_array[$id]["times"]["profile_created_time"]/1000000;
-					$call_flow_array[$id]['times']["profile_duration_formatted"] = gmdate("G:i:s", (int) $call_flow_array[$id]['times']["profile_duration_seconds"]);
-				}
-			}
-
 			//build the call flow summary
-			$x = 0;
+			$x = 0; $skip_row = false;
 			if (!empty($call_flow_array)) {
 				foreach ($call_flow_array as $row) {
+					//skip this row
+					if ($skip_row) {
+						$skip_row = false;
+						continue;
+					}
+
 					//get the application array
 					if (!empty($destination_array) && !empty($row["caller_profile"]["destination_number"])) {
 						$app = find_app($destination_array, urldecode($row["caller_profile"]["destination_number"]));
@@ -1113,11 +1122,9 @@ if (!class_exists('xml_cdr')) {
 
 					//valet park
 					if (!empty($row["caller_profile"]["destination_number"]) 
-						&& (substr($row["caller_profile"]["destination_number"], 0, 4) == 'park'
-							or (substr($row["caller_profile"]["destination_number"], 0, 3) == '*59' 
-							&& strlen($row["caller_profile"]["destination_number"]) == 5))
-						) {
-
+						and (substr($row["caller_profile"]["destination_number"], 0, 4) == 'park'
+						or (substr($row["caller_profile"]["destination_number"], 0, 3) == '*59' 
+						and strlen($row["caller_profile"]["destination_number"]) == 5))) {
 						//add items to the app array
 						$app['application'] = 'dialplans';
 						$app['uuid'] = '46ae6d82-bb83-46a3-901d-33d0724347dd';
@@ -1126,14 +1133,15 @@ if (!class_exists('xml_cdr')) {
 
 						//set the call park status
 						if (strpos($row["caller_profile"]["transfer_source"], 'park+') !== false) {
-							//$app['status'] = 'In '.$row["caller_profile"]["callee_id_name"].' '.$row["caller_profile"]["callee_id_number"];
-							$app['status'] = 'In '.$row["caller_profile"]["callee_id_number"];
 							//$app['status'] = 'In';
+							$app['status'] = 'Parked';
+
+							//skip the next row
+							$skip_row = true;
 						}
 						else {
-							//$app['status'] = 'Out '.$row["caller_profile"]["callee_id_name"].' '.$row["caller_profile"]["callee_id_number"];
-							$app['status'] = 'Out '.$row["caller_profile"]["callee_id_number"];
 							//$app['status'] = 'Out';
+							$app['status'] = 'Unparked';
 						}
 					}
 
@@ -1145,6 +1153,13 @@ if (!class_exists('xml_cdr')) {
 					//voicemails
 					if ($app['application'] == 'voicemails') {
 						$app['status'] = 'Answered';
+					}
+
+					//debug - add the callee_id_number to the end of the status
+					if (isset($_REQUEST['debug']) && $_REQUEST['debug'] == 'true' && !empty($row["caller_profile"]["destination_number"]) 
+						and !empty($row["caller_profile"]["callee_id_number"])
+						and $row["caller_profile"]["destination_number"] !== $row["caller_profile"]["callee_id_number"]) {
+							$app['status'] .= ' ('.$row["caller_profile"]["callee_id_number"].')';
 					}
 
 					//build the application urls
