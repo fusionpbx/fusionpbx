@@ -255,13 +255,13 @@
 
 //set the status
 	if ($billsec > 0) {
-		$status = 'Answered';
+		$status = 'answered';
 	}
 	if ($missed_call == '1') {
-		$status = 'Missed';
+		$status = 'missed';
 	}
 	if (substr($destination_number, 0, 3) == '*99') {
-		$status = 'Voicemail';
+		$status = 'voicemail';
 	}
 
 //build the summary array
@@ -379,7 +379,7 @@
 		echo "	<td valign='top' class='".$row_style[$c]."'>".escape(date("Y-m-d H:i:s", (int) $start_epoch))."</td>\n";
 		echo "	<td valign='top' class='".$row_style[$c]."'>".escape(date("Y-m-d H:i:s", (int) $end_epoch))."</td>\n";
 		echo "	<td valign='top' class='".$row_style[$c]."'>".escape(gmdate("G:i:s", (int)$duration))."</td>\n";
-		echo "	<td valign='top' class='".$row_style[$c]."'>".escape($status)."</td>\n";
+		echo "	<td valign='top' class='".$row_style[$c]."'>".escape($text['label-'.$status])."</td>\n";
 		echo "	<td valign='top' class='".$row_style[$c]."'>".escape($hangup_cause)."</td>\n";
 		echo "</table>";
 		echo "<br /><br />\n";
@@ -410,7 +410,7 @@
 		echo "	<td valign='top' class='".$row_style[$c]."'><a href=\"".$row["destination_url"]."\">".escape($row["destination_name"])."</a></td>\n";
 		echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row["start_stamp"])."</td>\n";
 		echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row["end_stamp"])."</td>\n";
-		echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row["destination_status"])."</td>\n";
+		echo "	<td valign='top' class='".$row_style[$c]."'>".escape($text['label-'.$row["destination_status"]])."</td>\n";
 		echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row["duration_formatted"])."</td>\n";
 		echo "</tr>\n";
 
