@@ -101,7 +101,7 @@
 						}
 
 						//find all other matching actions
-						if ($value['extension'] == $detail_action) {
+						if ($value['extension'] == $detail_action or preg_match('/^'.$value['extension'].'$/', $detail_action)) {
 							if (file_exists($_SERVER["PROJECT_ROOT"]."/app/".$application."/app_languages.php")) {
 								$value['application'] = $application;
 								return $value;
