@@ -1106,6 +1106,11 @@ if (!class_exists('xml_cdr')) {
 						}
 					}
 
+					//ivr menus
+					if ($app['application'] == 'ivr_menus') {
+						$app['status'] = 'routed';
+					}
+
 					//outbound routes
 					if ($this->call_direction == 'outbound') {
 						$app['application'] = 'dialplans';
