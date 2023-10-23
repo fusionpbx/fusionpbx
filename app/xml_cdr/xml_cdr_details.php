@@ -46,73 +46,6 @@
 		$uuid = $_REQUEST["id"];
 	}
 
-//add a function to return the find_app
-	function find_app($destination_array, $detail_action) {
-
-		//add the destinations to the destination array
-		$sql = "select * from v_destinations ";
-		$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
-		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-		$database = new database;
-		$destinations = $database->select($sql, $parameters, 'all');
-		if (!empty($destinations)) {
-			foreach($destinations as $row) {
-				$destination_array['destinations'][$id]['application'] = 'destinations';
-				$destination_array['destinations'][$id]['destination_uuid'] = $row["destination_uuid"];
-				$destination_array['destinations'][$id]['uuid'] = $row["destination_uuid"];
-				$destination_array['destinations'][$id]['dialplan_uuid'] = $row["dialplan_uuid"];
-				$destination_array['destinations'][$id]['destination_type'] = $row["destination_type"];
-				$destination_array['destinations'][$id]['destination_prefix'] = $row["destination_prefix"];
-				$destination_array['destinations'][$id]['destination_number'] = $row["destination_number"];
-				$destination_array['destinations'][$id]['extension'] = $row["destination_prefix"] . $row["destination_number"];
-				$destination_array['destinations'][$id]['destination_trunk_prefix'] = $row["destination_trunk_prefix"];
-				$destination_array['destinations'][$id]['destination_area_code'] = $row["destination_area_code"];
-				$destination_array['destinations'][$id]['context'] = $row["destination_context"];
-				$destination_array['destinations'][$id]['label'] = $row["destination_description"];
-				$destination_array['destinations'][$id]['destination_enabled'] = $row["destination_enabled"];
-				$destination_array['destinations'][$id]['name'] = $row["destination_description"];
-				$destination_array['destinations'][$id]['description'] = $row["destination_description"];
-				//$destination_array[$id]['destination_caller_id_name'] = $row["destination_caller_id_name"];
-				//$destination_array[$id]['destination_caller_id_number'] = $row["destination_caller_id_number"];
-				$id++;
-			}
-		}
-		unset($sql, $parameters, $row);
-
-		$result = '';
-		if (!empty($destination_array)) {
-			foreach($destination_array as $application => $row) {
-				if (!empty($row)) {
-					foreach ($row as $key => $value) {
-						//find matching destinations
-						if ($application == 'destinations') {
-							if ('+'.$value['destination_prefix'].$value['destination_number'] == $detail_action
-								or $value['destination_prefix'].$value['destination_number'] == $detail_action
-								or $value['destination_number'] == $detail_action 
-								or $value['destination_trunk_prefix'].$value['destination_number'] == $detail_action
-								or '+'.$value['destination_prefix'].$value['destination_area_code'].$value['destination_number'] == $detail_action
-								or $value['destination_prefix'].$value['destination_area_code'].$value['destination_number'] == $detail_action
-								or $value['destination_area_code'].$value['destination_number'] == $detail_action) {
-									if (file_exists($_SERVER["PROJECT_ROOT"]."/app/".$application."/app_languages.php")) {
-										$value['application'] = $application;
-										return $value;
-									}
-							}
-						}
-
-						//find all other matching actions
-						if ($value['extension'] == $detail_action or preg_match('/^'.$value['extension'].'$/', $detail_action)) {
-							if (file_exists($_SERVER["PROJECT_ROOT"]."/app/".$application."/app_languages.php")) {
-								$value['application'] = $application;
-								return $value;
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-
 //get the cdr string from the database
 	$sql = "select * from v_xml_cdr ";
 	if (permission_exists('xml_cdr_all')) {
@@ -218,6 +151,7 @@
 
 //build the call flow summary array
 	$xml_cdr = new xml_cdr;
+	$xml_cdr->domain_uuid = $_SESSION['domain_uuid'];
 	$xml_cdr->call_direction = $call_direction;
 	$xml_cdr->billsec = $billsec;
 	if (empty($call_flow)) {
