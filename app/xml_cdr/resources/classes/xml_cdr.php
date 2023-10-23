@@ -1114,11 +1114,13 @@ if (!class_exists('xml_cdr')) {
 
 					//outbound routes
 					if ($this->call_direction == 'outbound') {
-						$app['application'] = 'dialplans';
-						$app['uuid'] = '';
-						$app['status'] = '';
-						$app['name'] = 'Outbound';
-						$app['label'] = 'Outbound';
+						if (empty($app['application'])) {
+							$app['application'] = 'dialplans';
+							$app['uuid'] = '';
+							$app['status'] = '';
+							$app['name'] = 'Outbound';
+							$app['label'] = 'Outbound';
+						}
 					}
 
 					//ring groups
