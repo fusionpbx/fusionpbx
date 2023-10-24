@@ -766,6 +766,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "pin number";
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "status";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "status";
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "hangup_cause";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";

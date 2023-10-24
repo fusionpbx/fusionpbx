@@ -199,6 +199,7 @@ if (!class_exists('xml_cdr')) {
 			$this->fields[] = "conference_member_id";
 			$this->fields[] = "digits_dialed";
 			$this->fields[] = "pin_number";
+			$this->fields[] = "status";
 			$this->fields[] = "hangup_cause";
 			$this->fields[] = "hangup_cause_q850";
 			$this->fields[] = "sip_hangup_disposition";
@@ -249,7 +250,6 @@ if (!class_exists('xml_cdr')) {
 					$database->app_uuid = '4a085c51-7635-ff03-f67b-86e834422848';
 					//$database->domain_uuid = $domain_uuid;
 					$response = $database->save($array, false);
-
 					if ($response['code'] == '200') {
 						//saved to the database successfully delete the database file
 						if (!empty($xml_cdr_dir)) {
@@ -538,6 +538,47 @@ if (!class_exists('xml_cdr')) {
 							$last_bridge = urldecode($bridge);
 						}
 
+					//determine the call status
+						$failed_array = array(
+						"CALL_REJECTED",
+						"CHAN_NOT_IMPLEMENTED",
+						"DESTINATION_OUT_OF_ORDER",
+						"EXCHANGE_ROUTING_ERROR",
+						"INCOMPATIBLE_DESTINATION",
+						"INVALID_NUMBER_FORMAT",
+						"MANDATORY_IE_MISSING",
+						"NETWORK_OUT_OF_ORDER",
+						"NORMAL_TEMPORARY_FAILURE",
+						"NORMAL_UNSPECIFIED",
+						"NO_ROUTE_DESTINATION",
+						"RECOVERY_ON_TIMER_EXPIRE",
+						"REQUESTED_CHAN_UNAVAIL",
+						"SUBSCRIBER_ABSENT",
+						"SYSTEM_SHUTDOWN",
+						"UNALLOCATED_NUMBER"
+						);
+						if ($xml->variables->billsec > 0) {
+							$status = 'answered';
+						}
+						if ($missed_call == 'true') {
+							$status = 'missed';
+						}
+						if (substr($destination_number, 0, 3) == '*99') {
+							$status = 'voicemail';
+						}
+						if ($xml->variables->hangup_cause == 'ORIGINATOR_CANCEL') {
+							$status = 'cancelled';
+						}
+						if ($xml->variables->hangup_cause == 'USER_BUSY') {
+							$status = 'busy';
+						}
+						if (in_array($xml->variables->hangup_cause, $failed_array)) {
+							$status = 'failed';
+						}
+						if (empty($status)) {
+							$status = 'none';
+						}
+
 					//misc
 						$key = 0;
 						$uuid = urldecode($xml->variables->uuid);
@@ -557,6 +598,7 @@ if (!class_exists('xml_cdr')) {
 						//$this->array[$key]['digits_dialed'] = urldecode($xml->variables->digits_dialed);
 						$this->array[$key]['sip_hangup_disposition'] = urldecode($xml->variables->sip_hangup_disposition);
 						$this->array[$key]['pin_number'] = urldecode($xml->variables->pin_number);
+						$this->array[$key]['status'] = $status;
 
 					//time
 						$start_epoch = urldecode($xml->variables->start_epoch);
@@ -568,8 +610,8 @@ if (!class_exists('xml_cdr')) {
 						$end_epoch = urldecode($xml->variables->end_epoch);
 						$this->array[$key]['end_epoch'] = $end_epoch;
 						$this->array[$key]['end_stamp'] = is_numeric($end_epoch) ? date('c', $end_epoch) : null;
-						$this->array[$key]['duration'] = urldecode($xml->variables->duration);
-						$this->array[$key]['mduration'] = urldecode($xml->variables->mduration);
+						$this->array[$key]['duration'] = urldecode($xml->variables->billsec);
+						$this->array[$key]['mduration'] = urldecode($xml->variables->billmsec);
 						$this->array[$key]['billsec'] = urldecode($xml->variables->billsec);
 						$this->array[$key]['billmsec'] = urldecode($xml->variables->billmsec);
 

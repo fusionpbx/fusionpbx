@@ -188,14 +188,46 @@
 	$row_style["1"] = "row_style1";
 
 //set the status
-	if ($billsec > 0) {
-		$status = 'answered';
-	}
-	if ($missed_call == '1') {
-		$status = 'missed';
-	}
-	if (substr($destination_number, 0, 3) == '*99') {
-		$status = 'voicemail';
+	if (empty($status)) {
+		//define an array of failed hangup causes
+		$failed_array = array(
+		"CALL_REJECTED",
+		"CHAN_NOT_IMPLEMENTED",
+		"DESTINATION_OUT_OF_ORDER",
+		"EXCHANGE_ROUTING_ERROR",
+		"INCOMPATIBLE_DESTINATION",
+		"INVALID_NUMBER_FORMAT",
+		"MANDATORY_IE_MISSING",
+		"NETWORK_OUT_OF_ORDER",
+		"NORMAL_TEMPORARY_FAILURE",
+		"NORMAL_UNSPECIFIED",
+		"NO_ROUTE_DESTINATION",
+		"RECOVERY_ON_TIMER_EXPIRE",
+		"REQUESTED_CHAN_UNAVAIL",
+		"SUBSCRIBER_ABSENT",
+		"SYSTEM_SHUTDOWN",
+		"UNALLOCATED_NUMBER"
+		);
+
+		//determine the call status
+		if ($billsec > 0) {
+			$status = 'answered';
+		}
+		if ($missed_call == '1') {
+			$status = 'missed';
+		}
+		if (substr($destination_number, 0, 3) == '*99') {
+			$status = 'voicemail';
+		}
+		if ($hangup_cause == 'ORIGINATOR_CANCEL') {
+			$status = 'cancelled';
+		}
+		if ($hangup_cause == 'USER_BUSY') {
+			$status = 'busy';
+		}
+		if (in_array($hangup_cause, $failed_array)) {
+			$status = 'failed';
+		}
 	}
 
 //build the summary array
