@@ -177,7 +177,7 @@
 		$authenticated = isset($_SESSION['username']) && !empty($_SESSION['username']) ? true : false;
 		$view->assign('authenticated', $authenticated);
 	//domains application path
-		$view->assign('domains_app_path', PROJECT_PATH.(file_exists($_SERVER['DOCUMENT_ROOT'].'/app/domains/domains.php') ? '/app/domains/domains.php' : '/core/domains/domains.php'));
+		$view->assign('domains_app_path', PROJECT_PATH.(file_exists($_SERVER['DOCUMENT_ROOT'].'/app/domains/domains.php') && !permission_exists('domain_all') ? '/app/domains/domains.php' : '/core/domains/domains.php'));
 	//domain count
 		$view->assign('domain_count', is_array($_SESSION['domains']) ? sizeof($_SESSION['domains']) : 0);
 	//domain selector row background colors
