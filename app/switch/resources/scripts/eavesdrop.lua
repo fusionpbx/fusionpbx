@@ -109,7 +109,7 @@
 
 --check the database to get the uuid to eavesdrop on
 	if (session:ready()) then
-		local sql = "select uuid from channels where presence_id = :presence_id ";
+		local sql = "select uuid from channels where presence_id = :presence_id and callstate = 'ACTIVE'";
 		local params = {presence_id = extension.."@"..domain_name};
 		if (debug["sql"]) then
 			freeswitch.consoleLog("notice", "[eavesdrop] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
