@@ -311,7 +311,9 @@
 		echo "<th>".$text['label-end']."</th>\n";
 		echo "<th>".$text['label-duration']."</th>\n";
 		echo "<th align='center'>".$text['label-status']."</th>\n";
-		echo "<th>".$text['label-hangup_cause']."</th>\n";
+		if (permission_exists('xml_cdr_hangup_cause')) {
+			echo "<th>".$text['label-hangup_cause']."</th>\n";
+		}
 		echo "</tr>\n";
 		echo "<tr >\n";
 		echo "	<td valign='top' class='".$row_style[$c]."'><a href='xml_cdr_details.php?id=".urlencode($uuid)."'>".escape($direction)."</a></td>\n";
@@ -346,7 +348,9 @@
 		echo "	<td valign='top' class='".$row_style[$c]."'>".escape(date("Y-m-d H:i:s", (int) $end_epoch))."</td>\n";
 		echo "	<td valign='top' class='".$row_style[$c]."'>".escape(gmdate("G:i:s", (int)$duration))."</td>\n";
 		echo "	<td valign='top' class='".$row_style[$c]."'>".escape($text['label-'.$status])."</td>\n";
-		echo "	<td valign='top' class='".$row_style[$c]."'>".escape($hangup_cause)."</td>\n";
+		if (permission_exists('xml_cdr_hangup_cause')) {
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($hangup_cause)."</td>\n";
+		}
 		echo "</table>";
 		echo "<br /><br />\n";
 	}
@@ -390,197 +394,206 @@
 	echo "<br /><br />\n";
 
 //call stats
-	$c = 0;
-	$row_style["0"] = "row_style0";
-	$row_style["1"] = "row_style1";
-	if (!empty($array["call-stats"]) && is_array($array["call-stats"])) {
-		if (!empty($array["call-stats"]['audio']) && is_array($array["call-stats"]['audio'])) {
-			foreach ($array["call-stats"]['audio'] as $audio_direction => $stat) {
-				echo "<table width='95%' border='0' cellpadding='0' cellspacing='0'>\n";
-				echo "<tr>\n";
-				echo "	<td><b>".$text['label-call-stats'].": ".$audio_direction."</b>&nbsp;</td>\n";
-				echo "	<td>&nbsp;</td>\n";
-				echo "</tr>\n";
-				echo "</table>\n";
-				echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-				echo "<tr>\n";
-				echo "	<th width='30%'>".$text['label-name']."</th>\n";
-				echo "	<th width='70%'>".$text['label-value']."</th>\n";
-				echo "</tr>\n";
-				foreach ($stat as $key => $value) {
-					if (!empty($value) && is_array($value)) {
-						echo "<tr >\n";
-						echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".escape($key)."</td>\n";
-						echo "	<td valign='top' align='left' class='".$row_style[$c]."'>";
-						echo "		<table border='0' cellpadding='0' cellspacing='0'>\n";
-						foreach ($value as $vk => $arrays) {
-							echo "		<tr>\n";
-							echo "			<td valign='top' width='15%' class='".$row_style[$c]."'>".$vk."&nbsp;&nbsp;&nbsp;&nbsp;</td>\n";
-							echo "			<td valign='top'>\n";
-								echo "			<table border='0' cellpadding='0' cellspacing='0'>\n";
-								foreach ($arrays as $k => $v) {
-									echo "			<tr>\n";
-									echo "				<td valign='top' class='".$row_style[$c]."'>".$k."&nbsp;&nbsp;&nbsp;&nbsp;</td>\n";
-									echo "				<td valign='top' class='".$row_style[$c]."'>".$v."</td>\n";
-									echo "			</tr>\n";
-								}
-								echo "			</table>\n";
-								echo "		<td>\n";
-							echo "		</tr>\n";
+	if (permission_exists('xml_cdr_call_stats')) {
+		$c = 0;
+		$row_style["0"] = "row_style0";
+		$row_style["1"] = "row_style1";
+		if (!empty($array["call-stats"]) && is_array($array["call-stats"])) {
+			if (!empty($array["call-stats"]['audio']) && is_array($array["call-stats"]['audio'])) {
+				foreach ($array["call-stats"]['audio'] as $audio_direction => $stat) {
+					echo "<table width='95%' border='0' cellpadding='0' cellspacing='0'>\n";
+					echo "<tr>\n";
+					echo "	<td><b>".$text['label-call-stats'].": ".$audio_direction."</b>&nbsp;</td>\n";
+					echo "	<td>&nbsp;</td>\n";
+					echo "</tr>\n";
+					echo "</table>\n";
+					echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+					echo "<tr>\n";
+					echo "	<th width='30%'>".$text['label-name']."</th>\n";
+					echo "	<th width='70%'>".$text['label-value']."</th>\n";
+					echo "</tr>\n";
+					foreach ($stat as $key => $value) {
+						if (!empty($value) && is_array($value)) {
+							echo "<tr >\n";
+							echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".escape($key)."</td>\n";
+							echo "	<td valign='top' align='left' class='".$row_style[$c]."'>";
+							echo "		<table border='0' cellpadding='0' cellspacing='0'>\n";
+							foreach ($value as $vk => $arrays) {
+								echo "		<tr>\n";
+								echo "			<td valign='top' width='15%' class='".$row_style[$c]."'>".$vk."&nbsp;&nbsp;&nbsp;&nbsp;</td>\n";
+								echo "			<td valign='top'>\n";
+									echo "			<table border='0' cellpadding='0' cellspacing='0'>\n";
+									foreach ($arrays as $k => $v) {
+										echo "			<tr>\n";
+										echo "				<td valign='top' class='".$row_style[$c]."'>".$k."&nbsp;&nbsp;&nbsp;&nbsp;</td>\n";
+										echo "				<td valign='top' class='".$row_style[$c]."'>".$v."</td>\n";
+										echo "			</tr>\n";
+									}
+									echo "			</table>\n";
+									echo "		<td>\n";
+								echo "		</tr>\n";
+							}
+							echo "		</table>\n";
+							echo "	</td>\n";
+							echo "</tr>\n";
 						}
-						echo "		</table>\n";
-						echo "	</td>\n";
-						echo "</tr>\n";
+						else {
+							$value =  urldecode($value);
+							echo "<tr >\n";
+							echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".escape($key)."</td>\n";
+							echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".escape(wordwrap($value,75,"\n", true))."&nbsp;</td>\n";
+							echo "</tr>\n";
+						}
+						$c = $c ? 0 : 1;
 					}
-					else {
-						$value =  urldecode($value);
-						echo "<tr >\n";
-						echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".escape($key)."</td>\n";
-						echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".escape(wordwrap($value,75,"\n", true))."&nbsp;</td>\n";
-						echo "</tr>\n";
-					}
-					$c = $c ? 0 : 1;
+					echo "</table>\n";
+					echo "<br /><br />\n";
 				}
-				echo "</table>\n";
-				echo "<br /><br />\n";
 			}
 		}
 	}
 
 //channel data loop
-	$c = 0;
-	$row_style["0"] = "row_style0";
-	$row_style["1"] = "row_style1";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "<tr>\n";
-	echo "<td align='left'><b>".$text['label-channel']."</b>&nbsp;</td>\n";
-	echo "<td></td>\n";
-	echo "</tr>\n";
-	echo "</table>\n";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "<tr>\n";
-	echo "<th width='30%'>".$text['label-name']."</th>\n";
-	echo "<th width='70%'>".$text['label-value']."</th>\n";
-	echo "</tr>\n";
-	if (is_array($array["channel_data"])) {
-		foreach($array["channel_data"] as $key => $value) {
-			if (!empty($value)) {
+	if (permission_exists('xml_cdr_channel_data')) {
+		$c = 0;
+		$row_style["0"] = "row_style0";
+		$row_style["1"] = "row_style1";
+		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+		echo "<tr>\n";
+		echo "<td align='left'><b>".$text['label-channel']."</b>&nbsp;</td>\n";
+		echo "<td></td>\n";
+		echo "</tr>\n";
+		echo "</table>\n";
+		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+		echo "<tr>\n";
+		echo "<th width='30%'>".$text['label-name']."</th>\n";
+		echo "<th width='70%'>".$text['label-value']."</th>\n";
+		echo "</tr>\n";
+		if (is_array($array["channel_data"])) {
+			foreach($array["channel_data"] as $key => $value) {
+				if (!empty($value)) {
+					$value = urldecode($value);
+					echo "<tr >\n";
+					echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".escape($key)."&nbsp;</td>\n";
+					echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".escape(wordwrap($value,75,"\n", TRUE))."&nbsp;</td>\n";
+					echo "</tr>\n";
+					$c = $c ? 0 : 1;
+				}
+			}
+		}
+		echo "</table>";
+		echo "<br /><br />\n";
+	}
+
+//variable loop
+	if (permission_exists('xml_cdr_variables')) {
+		$c = 0;
+		$row_style["0"] = "row_style0";
+		$row_style["1"] = "row_style1";
+		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+		echo "<tr>\n";
+		echo "	<td align='left'><b>".$text['label-variables']."</b>&nbsp;</td>\n";
+		echo "<td></td>\n";
+		echo "</tr>\n";
+		echo "</table>\n";
+		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+		echo "<tr>\n";
+		echo "<th width='30%'>".$text['label-name']."</th>\n";
+		echo "<th width='70%'>".$text['label-value']."</th>\n";
+		echo "</tr>\n";
+		if (is_array($array["variables"])) {
+			foreach($array["variables"] as $key => $value) {
+				if (is_array($value)) { $value = implode($value); }
 				$value = urldecode($value);
+				if ($key != "digits_dialed" && $key != "dsn") {
+					echo "<tr >\n";
+					echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".escape($key)."</td>\n";
+					if ($key == "bridge_uuid" || $key == "signal_bond") {
+						echo "	<td valign='top' align='left' class='".$row_style[$c]."'>\n";
+						echo "		<a href='xml_cdr_details.php?id=".urlencode($value)."'>".escape($value)."</a>&nbsp;\n";
+						$tmp_dir = $_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day;
+						$tmp_name = '';
+						if (file_exists($tmp_dir.'/'.$value.'.wav')) {
+							$tmp_name = $value.".wav";
+						}
+						else if (file_exists($tmp_dir.'/'.$value.'_1.wav')) {
+							$tmp_name = $value."_1.wav";
+						}
+						else if (file_exists($tmp_dir.'/'.$value.'.mp3')) {
+							$tmp_name = $value.".mp3";
+						}
+						else if (file_exists($tmp_dir.'/'.$value.'_1.mp3')) {
+							$tmp_name = $value."_1.mp3";
+						}
+						if (!empty($tmp_name) && file_exists($_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$tmp_name)) {
+							echo "	<a href=\"javascript:void(0);\" onclick=\"window.open('../recordings/recording_play.php?a=download&type=moh&filename=".base64_encode('archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$tmp_name)."', 'play',' width=420,height=150,menubar=no,status=no,toolbar=no')\">\n";
+							echo "		play";
+							echo "	</a>&nbsp;";
+						}
+						if (!empty($tmp_name) && file_exists($_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$tmp_name)) {
+							echo "	<a href=\"../recordings/recordings.php?a=download&type=rec&t=bin&filename=".base64_encode("archive/".$tmp_year."/".$tmp_month."/".$tmp_day."/".$tmp_name)."\">\n";
+							echo "		download";
+							echo "	</a>";
+						}
+						echo "</td>\n";
+					}
+					else {
+						echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".escape(wordwrap($value,75,"\n", true))."&nbsp;</td>\n";
+					}
+					echo "</tr>\n";
+				}
+				$c = $c ? 0 : 1;
+			}
+		}
+		echo "</table>";
+		echo "<br /><br />\n";
+	}
+
+//application log
+	if (permission_exists('xml_cdr_application_log')) {
+		$c = 0;
+		$row_style["0"] = "row_style0";
+		$row_style["1"] = "row_style1";
+		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+		echo "<tr>\n";
+		echo "<td align='left'><b>".$text['label-application-log']."</b>&nbsp;</td>\n";
+		echo "<td></td>\n";
+		echo "</tr>\n";
+		echo "</table>\n";
+
+		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+		echo "<tr>\n";
+		echo "<th width='30%'>".$text['label-name']."</th>\n";
+		echo "<th width='70%'>".$text['label-data']."</th>\n";
+		echo "</tr>\n";
+
+		//foreach($array["variables"] as $key => $value) {
+		if (is_array($array["app_log"]["application"])) {
+			foreach ($array["app_log"]["application"] as $key=>$row) {
+				//single app
+				if ($key === "@attributes") {
+					$app_name = $row["app_name"];
+					$app_data = urldecode($row["app_data"]);
+				}
+
+				//multiple apps
+				else {
+					$app_name = $row["@attributes"]["app_name"];
+					$app_data = urldecode($row["@attributes"]["app_data"]);
+				}
 				echo "<tr >\n";
-				echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".escape($key)."&nbsp;</td>\n";
-				echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".escape(wordwrap($value,75,"\n", TRUE))."&nbsp;</td>\n";
+				echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".escape($app_name)."&nbsp;</td>\n";
+				echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".escape(wordwrap($app_data,75,"\n", true))."&nbsp;</td>\n";
 				echo "</tr>\n";
 				$c = $c ? 0 : 1;
 			}
 		}
+		echo "</table>";
+		echo "<br /><br />\n";
 	}
-	echo "</table>";
-	echo "<br /><br />\n";
-
-//variable loop
-	$c = 0;
-	$row_style["0"] = "row_style0";
-	$row_style["1"] = "row_style1";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "<tr>\n";
-	echo "	<td align='left'><b>".$text['label-variables']."</b>&nbsp;</td>\n";
-	echo "<td></td>\n";
-	echo "</tr>\n";
-	echo "</table>\n";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "<tr>\n";
-	echo "<th width='30%'>".$text['label-name']."</th>\n";
-	echo "<th width='70%'>".$text['label-value']."</th>\n";
-	echo "</tr>\n";
-	if (is_array($array["variables"])) {
-		foreach($array["variables"] as $key => $value) {
-			if (is_array($value)) { $value = implode($value); }
-			$value = urldecode($value);
-			if ($key != "digits_dialed" && $key != "dsn") {
-				echo "<tr >\n";
-				echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".escape($key)."</td>\n";
-				if ($key == "bridge_uuid" || $key == "signal_bond") {
-					echo "	<td valign='top' align='left' class='".$row_style[$c]."'>\n";
-					echo "		<a href='xml_cdr_details.php?id=".urlencode($value)."'>".escape($value)."</a>&nbsp;\n";
-					$tmp_dir = $_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day;
-					$tmp_name = '';
-					if (file_exists($tmp_dir.'/'.$value.'.wav')) {
-						$tmp_name = $value.".wav";
-					}
-					else if (file_exists($tmp_dir.'/'.$value.'_1.wav')) {
-						$tmp_name = $value."_1.wav";
-					}
-					else if (file_exists($tmp_dir.'/'.$value.'.mp3')) {
-						$tmp_name = $value.".mp3";
-					}
-					else if (file_exists($tmp_dir.'/'.$value.'_1.mp3')) {
-						$tmp_name = $value."_1.mp3";
-					}
-					if (!empty($tmp_name) && file_exists($_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$tmp_name)) {
-						echo "	<a href=\"javascript:void(0);\" onclick=\"window.open('../recordings/recording_play.php?a=download&type=moh&filename=".base64_encode('archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$tmp_name)."', 'play',' width=420,height=150,menubar=no,status=no,toolbar=no')\">\n";
-						echo "		play";
-						echo "	</a>&nbsp;";
-					}
-					if (!empty($tmp_name) && file_exists($_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$tmp_name)) {
-						echo "	<a href=\"../recordings/recordings.php?a=download&type=rec&t=bin&filename=".base64_encode("archive/".$tmp_year."/".$tmp_month."/".$tmp_day."/".$tmp_name)."\">\n";
-						echo "		download";
-						echo "	</a>";
-					}
-					echo "</td>\n";
-				}
-				else {
-					echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".escape(wordwrap($value,75,"\n", true))."&nbsp;</td>\n";
-				}
-				echo "</tr>\n";
-			}
-			$c = $c ? 0 : 1;
-		}
-	}
-	echo "</table>";
-	echo "<br /><br />\n";
-
-//application log
-	$c = 0;
-	$row_style["0"] = "row_style0";
-	$row_style["1"] = "row_style1";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "<tr>\n";
-	echo "<td align='left'><b>".$text['label-application-log']."</b>&nbsp;</td>\n";
-	echo "<td></td>\n";
-	echo "</tr>\n";
-	echo "</table>\n";
-
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "<tr>\n";
-	echo "<th width='30%'>".$text['label-name']."</th>\n";
-	echo "<th width='70%'>".$text['label-data']."</th>\n";
-	echo "</tr>\n";
-
-	//foreach($array["variables"] as $key => $value) {
-	if (is_array($array["app_log"]["application"])) {
-		foreach ($array["app_log"]["application"] as $key=>$row) {
-			//single app
-			if ($key === "@attributes") {
-				$app_name = $row["app_name"];
-				$app_data = urldecode($row["app_data"]);
-			}
-
-			//multiple apps
-			else {
-				$app_name = $row["@attributes"]["app_name"];
-				$app_data = urldecode($row["@attributes"]["app_data"]);
-			}
-			echo "<tr >\n";
-			echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".escape($app_name)."&nbsp;</td>\n";
-			echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".escape(wordwrap($app_data,75,"\n", true))."&nbsp;</td>\n";
-			echo "</tr>\n";
-			$c = $c ? 0 : 1;
-		}
-	}
-	echo "</table>";
-	echo "<br /><br />\n";
 
 //call flow
+	/*
 	$c = 0;
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
@@ -786,6 +799,7 @@
 			echo "</table>";
 		}
 	}
+	*/
 
 //get the footer
 	require_once "resources/footer.php";

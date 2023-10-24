@@ -593,16 +593,16 @@
 		echo "<th class='right hide-md-dn' title=\"".$text['description-tta']."\">".$text['label-tta']."</th>\n";
 		$col_count++;
 	}
-	if (permission_exists('xml_cdr_duration')) {
-		echo "<th class='center hide-sm-dn'>".$text['label-duration']."</th>\n";
-		$col_count++;
-	}
 	if (permission_exists('xml_cdr_pdd')) {
 		echo "<th class='right hide-md-dn' title=\"".$text['description-pdd']."\">".$text['label-pdd']."</th>\n";
 		$col_count++;
 	}
 	if (permission_exists('xml_cdr_mos')) {
 		echo "<th class='center hide-md-dn' title=\"".$text['description-mos']."\">".$text['label-mos']."</th>\n";
+		$col_count++;
+	}
+	if (permission_exists('xml_cdr_duration')) {
+		echo "<th class='center hide-sm-dn'>".$text['label-duration']."</th>\n";
 		$col_count++;
 	}
 	if (permission_exists('xml_cdr_status')) {
@@ -841,21 +841,21 @@
 					if (permission_exists('xml_cdr_tta')) {
 						$content .= "	<td class='middle right hide-md-dn'>".(!empty($row['tta']) && $row['tta'] >= 0 ? $row['tta']."s" : "&nbsp;")."</td>\n";
 					}
-				//duration
-					if (permission_exists('xml_cdr_duration')) {
-						$content .= "	<td class='middle center hide-sm-dn'>".gmdate("G:i:s", $seconds)."</td>\n";
-					}
 				//pdd (post dial delay)
 					if (permission_exists("xml_cdr_pdd")) {
 						$content .= "	<td class='middle right hide-md-dn'>".number_format(escape($row['pdd_ms'])/1000,2)."s</td>\n";
 					}
 				//mos (mean opinion score)
 					if (permission_exists("xml_cdr_mos")) {
-						if(!empty($row['rtp_audio_in_mos'])){
+						if(!empty($row['rtp_audio_in_mos'])) {
 							$title = " title='".$text['label-mos_score-'.round($row['rtp_audio_in_mos'])]."'";
 							$value = $row['rtp_audio_in_mos'];
 						}
 						$content .= "	<td class='middle center hide-md-dn' ".($title ?? '').">".($value ?? '')."</td>\n";
+					}
+				//duration
+					if (permission_exists('xml_cdr_duration')) {
+						$content .= "	<td class='middle center hide-sm-dn'>".gmdate("G:i:s", $seconds)."</td>\n";
 					}
 				//call result/status
 					if (permission_exists("xml_cdr_status")) {
