@@ -148,7 +148,7 @@
 	echo "		<input type='hidden' name='start_stamp_begin' value='".escape($start_stamp_begin ?? '')."'>\n";
 	echo "		<input type='hidden' name='start_stamp_end' value='".escape($start_stamp_end ?? '')."'>\n";
 	echo "		<input type='hidden' name='hangup_cause' value='".escape($hangup_cause ?? '')."'>\n";
-	echo "		<input type='hidden' name='call_result' value='".escape($call_result ?? '')."'>\n";
+	echo "		<input type='hidden' name='status' value='".escape($status ?? '')."'>\n";
 	echo "		<input type='hidden' name='caller_id_number' value='".escape($caller_id_number ?? '')."'>\n";
 	echo "		<input type='hidden' name='caller_destination' value='".escape($caller_destination ?? '')."'>\n";
 	echo "		<input type='hidden' name='extension_uuid' value='".escape($extension_uuid ?? '')."'>\n";
@@ -193,8 +193,8 @@
 		echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'link'=>'xml_cdr.php']);
 	}
 	echo button::create(['type'=>'button','label'=>$text['button-refresh'],'icon'=>'sync-alt','style'=>'margin-left: 15px;','onclick'=>'location.reload(true);']);
-	if (isset($_GET['call_result']) &&  $_GET['call_result'] != 'missed') {
-		echo button::create(['type'=>'button','label'=>$text['button-missed'],'icon'=>'phone-slash','link'=>'?call_result=missed']);
+	if (isset($_GET['status']) &&  $_GET['status'] != 'missed') {
+		echo button::create(['type'=>'button','label'=>$text['button-missed'],'icon'=>'phone-slash','link'=>'?status=missed']);
 	}
 
 	if (permission_exists('xml_cdr_export')) {
@@ -264,13 +264,14 @@
 			echo "			".$text['label-status']."\n";
 			echo "		</div>\n";
 			echo "		<div class='field'>\n";
-			echo "			<select name='call_result' class='formfld'>\n";
+			echo "			<select name='status' class='formfld'>\n";
 			echo "				<option value=''></option>\n";
-			echo "				<option value='answered' ".(($call_result == 'answered') ? 'selected' : null).">".$text['label-answered']."</option>\n";
-			echo "				<option value='missed' ".(($call_result == 'missed') ? 'selected' : null).">".$text['label-missed']."</option>\n";
-			echo "				<option value='voicemail' ".(($call_result == 'voicemail') ? 'selected' : null).">".$text['label-voicemail']."</option>\n";
-			echo "				<option value='cancelled' ".(($call_result == 'cancelled') ? 'selected' : null).">".$text['label-cancelled']."</option>\n";
-			echo "				<option value='failed' ".(($call_result == 'failed') ? 'selected' : null).">".$text['label-failed']."</option>\n";
+			echo "				<option value='answered' ".(($status == 'answered') ? 'selected' : null).">".$text['label-answered']."</option>\n";
+			echo "				<option value='busy' ".(($status == 'busy') ? 'selected' : null).">".$text['label-busy']."</option>\n";
+			echo "				<option value='missed' ".(($status == 'missed') ? 'selected' : null).">".$text['label-missed']."</option>\n";
+			echo "				<option value='voicemail' ".(($status == 'voicemail') ? 'selected' : null).">".$text['label-voicemail']."</option>\n";
+			echo "				<option value='cancelled' ".(($status == 'cancelled') ? 'selected' : null).">".$text['label-cancelled']."</option>\n";
+			echo "				<option value='failed' ".(($status == 'failed') ? 'selected' : null).">".$text['label-failed']."</option>\n";
 			echo "			</select>\n";
 			echo "		</div>\n";
 			echo "	</div>\n";
@@ -625,10 +626,12 @@
 			$theme_cdr_images_exist = (
 				file_exists($theme_image_path."icon_cdr_inbound_answered.png") &&
 				file_exists($theme_image_path."icon_cdr_inbound_voicemail.png") &&
+				file_exists($theme_image_path."icon_cdr_inbound_missed.png") &&
 				file_exists($theme_image_path."icon_cdr_inbound_cancelled.png") &&
 				file_exists($theme_image_path."icon_cdr_inbound_failed.png") &&
 				file_exists($theme_image_path."icon_cdr_outbound_answered.png") &&
 				file_exists($theme_image_path."icon_cdr_outbound_cancelled.png") &&
+				file_exists($theme_image_path."icon_cdr_outbound_busy.png") &&
 				file_exists($theme_image_path."icon_cdr_outbound_failed.png") &&
 				file_exists($theme_image_path."icon_cdr_local_answered.png") &&
 				file_exists($theme_image_path."icon_cdr_local_voicemail.png") &&
@@ -644,6 +647,50 @@
 		//loop through the results
 			$x = 0;
 			foreach ($result as $index => $row) {
+
+				//set the status
+					$status = $row['status'];
+					if (empty($row['status'])) {
+						//define an array of failed hangup causes
+						$failed_array = array(
+						"CALL_REJECTED",
+						"CHAN_NOT_IMPLEMENTED",
+						"DESTINATION_OUT_OF_ORDER",
+						"EXCHANGE_ROUTING_ERROR",
+						"INCOMPATIBLE_DESTINATION",
+						"INVALID_NUMBER_FORMAT",
+						"MANDATORY_IE_MISSING",
+						"NETWORK_OUT_OF_ORDER",
+						"NORMAL_TEMPORARY_FAILURE",
+						"NORMAL_UNSPECIFIED",
+						"NO_ROUTE_DESTINATION",
+						"RECOVERY_ON_TIMER_EXPIRE",
+						"REQUESTED_CHAN_UNAVAIL",
+						"SUBSCRIBER_ABSENT",
+						"SYSTEM_SHUTDOWN",
+						"UNALLOCATED_NUMBER"
+						);
+
+						//determine the call status
+						if ($row['billsec'] > 0) {
+							$status = 'answered';
+						}
+						if ($row['missed_call'] == '1') {
+							$status = 'missed';
+						}
+						if (substr($row['destination_number'], 0, 3) == '*99') {
+							$status = 'voicemail';
+						}
+						if ($row['hangup_cause'] == 'ORIGINATOR_CANCEL') {
+							$status = 'cancelled';
+						}
+						if ($row['hangup_cause'] == 'USER_BUSY') {
+							$status = 'busy';
+						}
+						if (in_array($row['hangup_cause'], $failed_array)) {
+							$status = 'failed';
+						}
+					}
 
 				//clear previous variables
 					unset($record_path, $record_name);
@@ -693,25 +740,13 @@
 					if (permission_exists('xml_cdr_direction')) {
 						$content .= "<td class='middle'>\n";
 						if ($theme_cdr_images_exist) {
-							if ($row['direction'] == 'inbound' || $row['direction'] == 'local') {
-								if ($row['answer_stamp'] != '' && $row['bridge_uuid'] != '') { $call_result = 'answered'; }
-								else if ($row['answer_stamp'] != '' && $row['bridge_uuid'] == '') { $call_result = 'voicemail'; }
-								else if ($row['answer_stamp'] == '' && $row['bridge_uuid'] == '' && $row['sip_hangup_disposition'] != 'send_refuse') { $call_result = 'cancelled'; }
-								else { $call_result = 'failed'; }
-							}
-							else if ($row['direction'] == 'outbound') {
-								if ($row['answer_stamp'] != '' && $row['bridge_uuid'] != '') { $call_result = 'answered'; }
-								else if ($row['hangup_cause'] == 'NORMAL_CLEARING') { $call_result = 'answered'; }
-								else if ($row['answer_stamp'] == '' && $row['bridge_uuid'] != '') { $call_result = 'cancelled'; }
-								else { $call_result = 'failed'; }
-							}
 							if (!empty($row['direction'])) {
-								$image_name = "icon_cdr_" . $row['direction'] . "_" . $call_result;
+								$image_name = "icon_cdr_" . $row['direction'] . "_" . $status;
 								if ($row['leg'] == 'b') {
 									$image_name .= '_b';
 								}
 								$image_name .= ".png";
-								$content .= "<img src='".PROJECT_PATH."/themes/".$_SESSION['domain']['template']['name']."/images/".escape($image_name)."' width='16' style='border: none; cursor: help;' title='".$text['label-'.$row['direction']].": ".$text['label-'.$call_result]. ($row['leg']=='b'?'(b)':'') . "'>\n";
+								$content .= "<img src='".PROJECT_PATH."/themes/".$_SESSION['domain']['template']['name']."/images/".escape($image_name)."' width='16' style='border: none; cursor: help;' title='".$text['label-'.$row['direction']].": ".$text['label-'.$status]. ($row['leg']=='b'?'(b)':'') . "'>\n";
 							}
 						}
 						else { $content .= "&nbsp;"; }
@@ -824,8 +859,8 @@
 					}
 				//call result/status
 					if (permission_exists("xml_cdr_status")) {
-						$content .= "	<td class='middle no-wrap hide-sm-dn'>".ucwords(escape($call_result))."</td>\n";
-					}	
+						$content .= "	<td class='middle no-wrap hide-sm-dn'><a href='".$list_row_url."'>".escape($text['label-'.$status])."</a></td>\n";
+					}
 				//hangup cause
 					if (permission_exists('xml_cdr_hangup_cause')) {
 						$content .= "	<td class='middle no-wrap hide-sm-dn'><a href='".$list_row_url."'>".escape($hangup_cause)."</a></td>\n";

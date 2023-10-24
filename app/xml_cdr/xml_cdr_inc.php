@@ -68,7 +68,7 @@
 		$duration_max = $_REQUEST["duration_max"] ?? '';
 		$billsec = $_REQUEST["billsec"] ?? '';
 		$hangup_cause = $_REQUEST["hangup_cause"] ?? '';
-		$call_result = $_REQUEST["call_result"] ?? '';
+		$status = $_REQUEST["status"] ?? '';
 		$xml_cdr_uuid = $_REQUEST["xml_cdr_uuid"] ?? '';
 		$bleg_uuid = $_REQUEST["bleg_uuid"] ?? '';
 		$accountcode = $_REQUEST["accountcode"] ?? '';
@@ -163,7 +163,7 @@
 	$param .= "&duration_max=".urlencode($duration_max ?? '');
 	$param .= "&billsec=".urlencode($billsec ?? '');
 	$param .= "&hangup_cause=".urlencode($hangup_cause ?? '');
-	$param .= "&call_result=".urlencode($call_result ?? '');
+	$param .= "&status=".urlencode($status ?? '');
 	$param .= "&xml_cdr_uuid=".urlencode($xml_cdr_uuid ?? '');
 	$param .= "&bleg_uuid=".urlencode($bleg_uuid ?? '');
 	$param .= "&accountcode=".urlencode($accountcode ?? '');
@@ -250,7 +250,7 @@
 	$sql .= "to_char(timezone(:time_zone, start_stamp), 'HH12:MI:SS am') as start_time_formatted, \n";
 	$sql .= "c.start_epoch, \n";
 	$sql .= "c.hangup_cause, \n";
-	$sql .= "c.duration, \n";
+	$sql .= "c.billsec as duration, \n";
 	$sql .= "c.billmsec, \n";
 	$sql .= "c.missed_call, \n";
 	$sql .= "c.record_path, \n";
@@ -282,6 +282,7 @@
 	}
 	$sql .= "c.accountcode, \n";
 	$sql .= "c.answer_stamp, \n";
+	$sql .= "c.status, \n";
 	$sql .= "c.sip_hangup_disposition, \n";
 	if (permission_exists("xml_cdr_pdd")) {
 		$sql .= "c.pdd_ms, \n";
@@ -446,11 +447,11 @@
 		}
 	}
 	if (is_numeric($duration_min)) {
-		$sql .= "and duration >= :duration_min \n";
+		$sql .= "and billsec >= :duration_min \n";
 		$parameters['duration_min'] = $duration_min;
 	}
 	if (is_numeric($duration_max)) {
-		$sql .= "and duration <= :duration_max \n";
+		$sql .= "and billsec <= :duration_max \n";
 		$parameters['duration_max'] = $duration_max;
 	}
 	if (!empty($billsec)) {
@@ -466,58 +467,9 @@
 	if (!permission_exists('xml_cdr_lose_race')) {
 		$sql .= "and hangup_cause != 'LOSE_RACE' \n";
 	}
-
-	if (!empty($call_result)) {
-		switch ($call_result) {
-			case 'answered':
-				$sql .= "and (answer_stamp is not null and bridge_uuid is not null) \n";
-				break;
-			case 'voicemail':
-				$sql .= "and (answer_stamp is not null and bridge_uuid is null) \n";
-				break;
-			case 'missed':
-				$sql .= "and missed_call = true \n";
-				break;
-			case 'cancelled':
-				if ($direction == 'inbound' || $direction == 'local' || $call_result == 'missed') {
-					$sql .= "and (( \n";
-					$sql .= "		answer_stamp is null \n";
-					$sql .= "		and bridge_uuid is null \n";
-					$sql .= "		and sip_hangup_disposition <> 'send_refuse' \n";
-					$sql .= "	) \n";
-					$sql .= "	or ( \n";
-					$sql .= "		answer_stamp is not null \n";
-					$sql .= "		and bridge_uuid is null \n";
-					$sql .= "		and voicemail_message = false \n";
-					$sql .= "	)) \n";
-				}
-				else if ($direction == 'outbound') {
-					$sql .= "and (answer_stamp is null and bridge_uuid is not null) ";
-				}
-				else {
-					$sql .= "	and (( \n";
-					$sql .= "		(direction = 'inbound' or direction = 'local') \n";
-					$sql .= "		and answer_stamp is null \n";
-					$sql .= "		and bridge_uuid is null \n";
-					$sql .= "		and sip_hangup_disposition <> 'send_refuse' \n";
-					$sql .= "	) \n";
-					$sql .= "	or ( \n";
-					$sql .= "		direction = 'outbound' \n";
-					$sql .= "		and answer_stamp is null \n";
-					$sql .= "		and bridge_uuid is not null \n";
-					$sql .= "	) \n";
-					$sql .= "	or ( \n";
-					$sql .= "		(direction = 'inbound' or direction = 'local') \n";
-					$sql .= "		and answer_stamp is not null \n";
-					$sql .= "		and bridge_uuid is null \n";
-					$sql .= "		and voicemail_message = false \n";
-					$sql .= "	)) \n";
-				}
-				break;
-			default: 
-				$sql .= "and (answer_stamp is null and bridge_uuid is null and duration = 0) \n";
-				//$sql .= "and (answer_stamp is null and bridge_uuid is null and billsec = 0 and sip_hangup_disposition = 'send_refuse') ";
-		}
+	if (!empty($status)) {
+		$sql .= "and status >= :status \n";
+		$parameters['status'] = $status;
 	}
 	if (!empty($xml_cdr_uuid)) {
 		$sql .= "and xml_cdr_uuid = :xml_cdr_uuid \n";
