@@ -267,6 +267,7 @@
 			echo "			<select name='status' class='formfld'>\n";
 			echo "				<option value=''></option>\n";
 			echo "				<option value='answered' ".(($status == 'answered') ? 'selected' : null).">".$text['label-answered']."</option>\n";
+			echo "				<option value='no_answer' ".(($status == 'no_answer') ? 'selected' : null).">".$text['label-no_answer']."</option>\n";
 			echo "				<option value='busy' ".(($status == 'busy') ? 'selected' : null).">".$text['label-busy']."</option>\n";
 			echo "				<option value='missed' ".(($status == 'missed') ? 'selected' : null).">".$text['label-missed']."</option>\n";
 			echo "				<option value='voicemail' ".(($status == 'voicemail') ? 'selected' : null).">".$text['label-voicemail']."</option>\n";
@@ -625,17 +626,22 @@
 			$theme_image_path = $_SERVER["DOCUMENT_ROOT"]."/themes/".$_SESSION['domain']['template']['name']."/images/";
 			$theme_cdr_images_exist = (
 				file_exists($theme_image_path."icon_cdr_inbound_answered.png") &&
+				file_exists($theme_image_path."icon_cdr_inbound_no_answer.png") &&
 				file_exists($theme_image_path."icon_cdr_inbound_voicemail.png") &&
 				file_exists($theme_image_path."icon_cdr_inbound_missed.png") &&
 				file_exists($theme_image_path."icon_cdr_inbound_cancelled.png") &&
+				file_exists($theme_image_path."icon_cdr_inbound_busy.png") &&
 				file_exists($theme_image_path."icon_cdr_inbound_failed.png") &&
 				file_exists($theme_image_path."icon_cdr_outbound_answered.png") &&
+				file_exists($theme_image_path."icon_cdr_outbound_no_answer.png") &&
 				file_exists($theme_image_path."icon_cdr_outbound_cancelled.png") &&
 				file_exists($theme_image_path."icon_cdr_outbound_busy.png") &&
 				file_exists($theme_image_path."icon_cdr_outbound_failed.png") &&
 				file_exists($theme_image_path."icon_cdr_local_answered.png") &&
+				file_exists($theme_image_path."icon_cdr_local_no_answer.png") &&
 				file_exists($theme_image_path."icon_cdr_local_voicemail.png") &&
 				file_exists($theme_image_path."icon_cdr_local_cancelled.png") &&
+				file_exists($theme_image_path."icon_cdr_local_busy.png") &&
 				file_exists($theme_image_path."icon_cdr_local_failed.png")
 				) ? true : false;
 
@@ -674,6 +680,9 @@
 						//determine the call status
 						if ($row['billsec'] > 0) {
 							$status = 'answered';
+						}
+						if ($row['hangup_cause'] == 'NO_ANSWER') {
+							$status = 'no_answer';
 						}
 						if ($row['missed_call'] == '1') {
 							$status = 'missed';
