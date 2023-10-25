@@ -560,6 +560,9 @@ if (!class_exists('xml_cdr')) {
 						if ($xml->variables->billsec > 0) {
 							$status = 'answered';
 						}
+						if ($xml->variables->hangup_cause == 'NO_ANSWER') {
+							$status = 'no_answer';
+						}
 						if ($missed_call == 'true') {
 							$status = 'missed';
 						}
@@ -574,9 +577,6 @@ if (!class_exists('xml_cdr')) {
 						}
 						if (in_array($xml->variables->hangup_cause, $failed_array)) {
 							$status = 'failed';
-						}
-						if (empty($status)) {
-							$status = 'none';
 						}
 
 					//misc

@@ -213,6 +213,9 @@
 		if ($billsec > 0) {
 			$status = 'answered';
 		}
+		if ($hangup_cause == 'NO_ANSWER') {
+			$status = 'no_answer';
+		}
 		if ($missed_call == '1') {
 			$status = 'missed';
 		}
