@@ -1317,7 +1317,7 @@ if (!class_exists('xml_cdr')) {
 							}
 
 							//find all other matching actions
-							if ($value['extension'] == $detail_action or preg_match('/^'.$value['extension'].'$/', $detail_action)) {
+							if (!empty($value['extension']) && $value['extension'] == $detail_action or preg_match('/^'.preg_quote($value['extension']).'$/', $detail_action)) {
 								if (file_exists($_SERVER["PROJECT_ROOT"]."/app/".$application."/app_languages.php")) {
 									$value['application'] = $application;
 									return $value;
