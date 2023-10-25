@@ -1200,7 +1200,7 @@ if (!class_exists('xml_cdr')) {
 
 					//conference
 					if ($app['application'] == 'conferences') {
-						unset($call_flow_array[count($call_flow_array)]);
+						$skip_row = true;
 					}
 
 					//voicemails
