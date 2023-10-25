@@ -312,11 +312,11 @@
 		echo "<th>".$text['label-destination']."</th>\n";
 		echo "<th>".$text['label-start']."</th>\n";
 		echo "<th>".$text['label-end']."</th>\n";
-		echo "<th>".$text['label-duration']."</th>\n";
-		echo "<th align='center'>".$text['label-status']."</th>\n";
 		if (permission_exists('xml_cdr_hangup_cause')) {
 			echo "<th>".$text['label-hangup_cause']."</th>\n";
 		}
+		echo "<th>".$text['label-duration']."</th>\n";
+		echo "<th align='center'>".$text['label-status']."</th>\n";
 		echo "</tr>\n";
 		echo "<tr >\n";
 		echo "	<td valign='top' class='".$row_style[$c]."'><a href='xml_cdr_details.php?id=".urlencode($uuid)."'>".escape($direction)."</a></td>\n";
@@ -349,11 +349,11 @@
 		echo "	<td valign='top' class='".$row_style[$c]."'>".escape($destination_number)."</td>\n";
 		echo "	<td valign='top' class='".$row_style[$c]."'>".escape(date("Y-m-d H:i:s", (int) $start_epoch))."</td>\n";
 		echo "	<td valign='top' class='".$row_style[$c]."'>".escape(date("Y-m-d H:i:s", (int) $end_epoch))."</td>\n";
-		echo "	<td valign='top' class='".$row_style[$c]."'>".escape(gmdate("G:i:s", (int)$duration))."</td>\n";
-		echo "	<td valign='top' class='".$row_style[$c]."'>".escape($text['label-'.$status])."</td>\n";
 		if (permission_exists('xml_cdr_hangup_cause')) {
 			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($hangup_cause)."</td>\n";
 		}
+		echo "	<td valign='top' class='".$row_style[$c]."'>".escape(gmdate("G:i:s", (int)$duration))."</td>\n";
+		echo "	<td valign='top' class='".$row_style[$c]."'>".escape($text['label-'.$status])."</td>\n";
 		echo "</table>";
 		echo "<br /><br />\n";
 	}
@@ -372,8 +372,8 @@
 	echo "	<th>".$text['label-name']."</th>\n";
 	echo "	<th>".$text['label-start']."</th>\n";
 	echo "	<th>".$text['label-end']."</th>\n";
-	echo "	<th>".$text['label-status']."</th>\n";
 	echo "	<th>".$text['label-duration']."</th>\n";
+	echo "	<th>".$text['label-status']."</th>\n";
 	echo "</tr>\n";
 	$i = 1;
 	foreach ($call_flow_summary as $row) {
@@ -383,8 +383,8 @@
 		echo "	<td valign='top' class='".$row_style[$c]."'><a href=\"".$row["destination_url"]."\">".escape($row["destination_name"])."</a></td>\n";
 		echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row["start_stamp"])."</td>\n";
 		echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row["end_stamp"])."</td>\n";
-		echo "	<td valign='top' class='".$row_style[$c]."'>".escape($text['label-'.$row["destination_status"]])."</td>\n";
 		echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row["duration_formatted"])."</td>\n";
+		echo "	<td valign='top' class='".$row_style[$c]."'>".escape($text['label-'.$row["destination_status"]])."</td>\n";
 		echo "</tr>\n";
 
 		//alternate $c
