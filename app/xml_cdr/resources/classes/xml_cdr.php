@@ -1086,13 +1086,11 @@ if (!class_exists('xml_cdr')) {
 				$i++;
 			}
 
-			//format the times in the call flow array and add the profile duration
+			//format the times in the call flow array
 			$i = 0;
 			foreach ($call_flow_array as $key => $row) {
 				foreach ($row["times"] as $name => $value) {
 					if ($value > 0) {
-						$call_flow_array[$i]["times"]["profile_duration_seconds"] = round(((int) $call_flow_array[$i]["times"]["profile_end_time"])/1000000 - ((int) $call_flow_array[$i]["times"]["profile_created_time"])/1000000);
-						$call_flow_array[$i]["times"]["profile_duration_formatted"] = gmdate("G:i:s", (int) $call_flow_array[$i]["times"]["profile_duration_seconds"]);
 						$call_flow_array[$i]["times"][$name.'stamp'] = date("Y-m-d H:i:s", (int) $value/1000000);
 					}
 				}
@@ -1249,9 +1247,8 @@ if (!class_exists('xml_cdr')) {
 					$call_flow_summary[$x]["end_epoch"] = $profile_end_epoch;
 					$call_flow_summary[$x]["start_stamp"] =  date("Y-m-d H:i:s", $profile_created_epoch);
 					$call_flow_summary[$x]["end_stamp"] =  date("Y-m-d H:i:s", $profile_end_epoch);
-					$call_flow_summary[$x]["duration_seconds"] =  $row['times']['profile_duration_seconds'];
-					$call_flow_summary[$x]["duration_formatted"] =  $row['times']['profile_duration_formatted'];
-
+					$call_flow_summary[$x]["duration_seconds"] =  $profile_end_epoch - $profile_created_epoch;
+					$call_flow_summary[$x]["duration_formatted"] =  gmdate("G:i:s",(int) $call_flow_summary[$x]["duration_seconds"]);
 					unset($app);
 					$x++;
 				}
