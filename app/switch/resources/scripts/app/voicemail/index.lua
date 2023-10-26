@@ -472,7 +472,7 @@
 					dbh:query(sql, params, function(row)
 						message_sum = row["message_sum"];
 					end);
-					if (vm_disk_quota and message_sum and #vm_disk_quota <= #message_sum) then
+					if (vm_disk_quota and message_sum and tonumber(vm_disk_quota) <= tonumber(message_sum)) then
 						--play message mailbox full
 							session:execute("playback", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/voicemail/vm-mailbox_full.wav")
 						--hangup
