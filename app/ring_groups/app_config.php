@@ -35,8 +35,9 @@
 		$apps[$x]['destinations'][$y]['label'] = "ring_groups";
 		$apps[$x]['destinations'][$y]['name'] = "ring_groups";
 		$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '\${domain_uuid}' and ring_group_enabled = 'true' ";
-		$apps[$x]['destinations'][$y]['order_by'] = "ring_group_extension asc";
+		$apps[$x]['destinations'][$y]['order_by'] = "natural_sort(ring_group_extension) asc";
 		$apps[$x]['destinations'][$y]['field']['ring_group_uuid'] = "ring_group_uuid";
+		$apps[$x]['destinations'][$y]['field']['uuid'] = "ring_group_uuid";
 		$apps[$x]['destinations'][$y]['field']['name'] = "ring_group_name";
 		$apps[$x]['destinations'][$y]['field']['destination'] = "ring_group_extension";
 		$apps[$x]['destinations'][$y]['field']['extension'] = "ring_group_extension";
@@ -55,6 +56,7 @@
 		$apps[$x]['permissions'][$y]['menu']['uuid'] = "b30f085f-3ec6-2819-7e62-53dfba5cb8d5";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$apps[$x]['permissions'][$y]['groups'][] = "user";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "ring_group_add";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
@@ -127,6 +129,9 @@
 		$apps[$x]['permissions'][$y]['name'] = "ring_group_cid_number_prefix";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "ring_group_context";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "ring_group_domain";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "ring_group_all";

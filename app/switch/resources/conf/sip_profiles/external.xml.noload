@@ -35,7 +35,7 @@
 		<param name="rtp-timer-name" value="soft"/>
 		<param name="enable-100rel" value="true" enabled="false"/>
 		<param name="disable-srv503" value="true" enabled="false"/>
-		<param name="manage-presence" value="false"/>
+		<param name="manage-presence" value="true"/>
 		<!-- This could be set to "passive" -->
 		<param name="local-network-acl" value="localnet.auto"/>
 		<param name="apply-nat-acl" value="nat.auto"/>

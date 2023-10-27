@@ -57,7 +57,7 @@
 	unset($sql, $parameters);
 
 //setup the event socket connection
-	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+	$fp = event_socket_create();
 
 //get the agents from the database
 	$sql = "select * from v_call_center_agents ";
@@ -207,18 +207,28 @@
 							if (!isset($row['queue_name'])) {
 								if ($agent_status == "Do Not Disturb") {
 									//set the default dnd action
-										$dnd_action = "add";
+									$dnd_action = "add";
+
 									//set the call center status to Logged Out
-										if (is_uuid($row['agent_uuid'])) {
-											$command = "api callcenter_config agent set status ".$row['agent_uuid']." 'Logged Out' ";
-										}
+									if (is_uuid($row['agent_uuid'])) {
+										$command = "api callcenter_config agent set status ".$row['agent_uuid']." 'Logged Out' ";
+										$response = event_socket_request($fp, $command);
+									}
 								}
 								else {
 									if (is_uuid($row['agent_uuid'])) {
+										//set the agent status
 										$command = "api callcenter_config agent set status ".$row['agent_uuid']." '".$agent_status."'";
+										$response = event_socket_request($fp, $command);
+
+										//set the agent state
+										if ($agent_status == 'Available' || $agent_status == 'Logged Out') {
+											$command = "api callcenter_config agent set state ".$row['agent_uuid']." 'Waiting'";
+											$response = event_socket_request($fp, $command);
+										}
 									}
 								}
-								$response = event_socket_request($fp, $command);
+								
 							}
 							//echo $command."\n";
 

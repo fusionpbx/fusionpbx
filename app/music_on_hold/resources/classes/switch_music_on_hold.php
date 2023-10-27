@@ -147,7 +147,7 @@ if (!class_exists('switch_music_on_hold')) {
 
 		public function reload() {
 			//if the handle does not exist create it
-				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+				$fp = event_socket_create();
 			//if the handle still does not exist show an error message
 				if (!$fp) {
 					$msg = "<div align='center'>".$text['message-event-socket']."<br /></div>";

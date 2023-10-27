@@ -85,6 +85,7 @@
 //get variables used to control the order
 	$order_by = $_GET["order_by"] ?? '';
 	$order = $_GET["order"] ?? '';
+	$sort = $order_by == 'conference_extension' ? 'natural' : null;
 
 //add the search term
 	$search = strtolower($_GET["search"] ?? '');
@@ -134,7 +135,7 @@
 
 //get the list
 	$sql = str_replace('count(*)', '*', $sql);
-	$sql .= order_by($order_by, $order);
+	$sql .= order_by($order_by, $order, null, null, $sort);
 	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;
 	$conferences = $database->select($sql, $parameters ?? null, 'all');

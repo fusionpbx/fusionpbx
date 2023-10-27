@@ -747,7 +747,10 @@
 	if ($device_template == "grandstream/wave") {
 		$qr_code_enabled = true;
 	}
-	elseif ($device_template == "linphone/default") {
+	else if ($device_template == "linphone/default") {
+		$qr_code_enabled = true;
+	}
+	else if ($device_template == "sipnetic/default") {
 		$qr_code_enabled = true;
 	}
 	else {
@@ -801,6 +804,34 @@
 				$content .= "<Voicemail>*97</Voicemail>";
 				$content .= "</Account>";
 				$content .= "</AccountConfig>";
+			}
+
+			//build content for sipnetic
+			else if ($device_template == 'sipnetic/default') {
+				switch ($row['sip_transport']) {
+					case 'udp': $sip_transport = 0; break;
+					case 'tls': $sip_transport = 2; break;
+					default: $sip_transport = 1; //tcp
+				}
+				//check custom template provision location
+				if (is_file('/usr/share/fusionpbx/templates/provision/'.$device_template.'/template.csv')) {
+					$template = file_get_contents('/usr/share/fusionpbx/templates/provision/'.$device_template.'/template.csv');
+				}
+				else if (is_file('/var/www/fusionpbx/resources/templates/provision/'.$device_template.'/template.csv')) {
+					$template = file_get_contents('/var/www/fusionpbx/resources/templates/provision/'.$device_template.'/template.csv');
+				}
+				if (!empty($template)) {
+					$template = str_replace('{$server_address}', $outbound_proxy_primary, $template);
+					$template = str_replace('{$user_id}', $row['user_id'], $template);
+					$template = str_replace('{$password}', str_replace(';',';;',$row['password']), $template);
+					$template = str_replace('{$display_name}', ($row['display_name'] ?? $row['user_id']), $template);
+					$template = str_replace('{$auth_id}', ($row['auth_id'] ?? $row['user_id']), $template);
+					$template = str_replace('{$sip_transport}', $sip_transport, $template);
+					$template = str_replace('{$outbound_proxy}', $outbound_proxy_primary, $template);
+					$template = str_replace('{$sip_port}', $row['sip_port'], $template);
+					$content = $template;
+					unset($template);
+				}
 			}
 
 		}
@@ -1685,22 +1716,22 @@
 				}
 
 				echo "<td align='left'>\n";
-				echo "	<input class='formfld' type='text' name='device_keys[".$x."][device_key_value]' style='width: 120px;' maxlength='255' value=\"".escape($row['device_key_value'])."\"/>\n";
+				echo "	<input class='formfld' type='text' name='device_keys[".$x."][device_key_value]' style='width: 220px;' maxlength='255' value=\"".escape($row['device_key_value'])."\"/>\n";
 				echo "</td>\n";
 
 				if (permission_exists('device_key_extension')) {
 					echo "<td align='left'>\n";
-					echo "	<input class='formfld' type='text' name='device_keys[".$x."][device_key_extension]' style='width: 75px;' maxlength='255' value=\"".escape($row['device_key_extension'])."\"/>\n";
+					echo "	<input class='formfld' type='text' name='device_keys[".$x."][device_key_extension]' style='width: 110px;' maxlength='255' value=\"".escape($row['device_key_extension'])."\"/>\n";
 					echo "</td>\n";
 				}
 
 				echo "<td align='left'>\n";
-				echo "	<input class='formfld' type='text' name='device_keys[".$x."][device_key_label]' style='width: 75px;' maxlength='255' value=\"".escape($row['device_key_label'])."\"/>\n";
+				echo "	<input class='formfld' type='text' name='device_keys[".$x."][device_key_label]' style='width: 220px;' maxlength='255' value=\"".escape($row['device_key_label'])."\"/>\n";
 				echo "</td>\n";
 
 				if (permission_exists('device_key_icon')) {
 					echo "<td align='left'>\n";
-					echo "	<input class='formfld' type='text' name='device_keys[".$x."][device_key_icon]' style='width: 75px;' maxlength='255' value=\"".escape($row['device_key_icon'])."\"/>\n";
+					echo "	<input class='formfld' type='text' name='device_keys[".$x."][device_key_icon]' style='width: 110px;' maxlength='255' value=\"".escape($row['device_key_icon'])."\"/>\n";
 					echo "</td>\n";
 				}
 
@@ -1768,11 +1799,11 @@
 				echo "<tr>\n";
 
 				echo "<td align='left'>\n";
-				echo "	<input class='formfld' type='text' name='device_settings[".$x."][device_setting_subcategory]' style='width: 120px;' maxlength='255' value=\"".escape($row['device_setting_subcategory'] ?? '')."\"/>\n";
+				echo "	<input class='formfld' type='text' name='device_settings[".$x."][device_setting_subcategory]' style='width: 220px;' maxlength='255' value=\"".escape($row['device_setting_subcategory'] ?? '')."\"/>\n";
 				echo "</td>\n";
 
 				echo "<td align='left'>\n";
-				echo "	<input class='formfld' type='text' name='device_settings[".$x."][device_setting_value]' style='width: 120px;' maxlength='255' value=\"".escape($row['device_setting_value'])."\"/>\n";
+				echo "	<input class='formfld' type='text' name='device_settings[".$x."][device_setting_value]' style='width: 220px;' maxlength='255' value=\"".escape($row['device_setting_value'])."\"/>\n";
 				echo "</td>\n";
 
 				echo "<td align='left'>\n";
@@ -1783,7 +1814,7 @@
 				echo "</td>\n";
 
 				echo "<td align='left'>\n";
-				echo "	<input class='formfld' type='text' name='device_settings[".$x."][device_setting_description]' style='width: 150px;' maxlength='255' value=\"".escape($row['device_setting_description'])."\"/>\n";
+				echo "	<input class='formfld' type='text' name='device_settings[".$x."][device_setting_description]' style='width: 220px;' maxlength='255' value=\"".escape($row['device_setting_description'])."\"/>\n";
 				echo "</td>\n";
 
 				if (is_array($device_settings) && @sizeof($device_settings) > 1 && permission_exists('device_setting_delete')) {

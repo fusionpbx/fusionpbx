@@ -62,16 +62,18 @@ class event_socket {
 
 		$b = $this->buffer;
 		$content_length = 0;
-		$content = Array();
+		$content = array();
 
 		while (true) {
-			while(($line = $b->read_line()) !== false ) {
-				if ($line == '') {
-					break 2;
+			$line = $b->read_line();
+			if ($line !== false) {
+				if ($line === '') {
+					break;
 				}
-				$kv = explode(':', $line, 2);
-				$content[trim($kv[0])] = trim($kv[1]);
 			}
+
+			list($key, $value) = explode(':', $line, 2);
+			$content[trim($key)] = trim($value);
 
 			if (feof($this->fp)) {
 				break;
@@ -84,7 +86,11 @@ class event_socket {
 		if (array_key_exists('Content-Length', $content)) {
 			$str = $b->read_n($content['Content-Length']);
 			if ($str === false) {
-				while (!feof($this->fp)) {
+				while (true) {
+					if (feof($this->fp)) {
+						break;
+					}
+
 					$buffer = fgets($this->fp, 1024);
 					$b->append($buffer);
 					$str = $b->read_n($content['Content-Length']);
@@ -101,12 +107,33 @@ class event_socket {
 		return $content;
 	}
 
-	public function connect($host, $port, $password) {
-		//set defaults
-		if ($host == '') { $host = '127.0.0.1'; }
-		if ($port == '') { $port = '8021'; }
-		if ($password == '') { $password = 'ClueCon'; }
+	public function connect($host = null, $port = null, $password = null) {
 
+		global $conf;
+
+		//get the database connection settings
+		if (empty($host) && empty($conf['event_socket.ip_address'])) {
+			$host = '127.0.0.1';
+		}
+		if (empty($port) && empty($conf['event_socket.port'])) {
+			$port = '8021';
+		}
+		if (empty($password) && empty($conf['switch.event_socket.password'])) {
+			$password = 'ClueCon';
+		}
+
+		//set the event socket variables
+		if (!empty($conf['switch.event_socket.host'])) {
+			$host = $conf['switch.event_socket.host'];
+		}
+		if (!empty($conf['switch.event_socket.port'])) {
+			$port = $conf['switch.event_socket.port'];
+		}
+		if (!empty($conf['switch.event_socket.password'])) {
+			$password = $conf['switch.event_socket.password'];
+		}
+
+		//open the socket connection
 		$fp = @fsockopen($host, $port, $errno, $errdesc, 3);
 
 		if (!$fp) {
@@ -116,7 +143,7 @@ class event_socket {
 		socket_set_blocking($fp, true);
 		$this->fp = $fp;
 
-		// Wait auth request and send response
+		//wait auth request and send response
 			while (!feof($fp)) {
 				$event = $this->read_event();
 				if(@$event['Content-Type'] == 'auth/request'){
@@ -125,7 +152,7 @@ class event_socket {
 				}
 			}
 
-		// Wait auth response
+		//wait auth response
 			while (!feof($fp)) {
 				$event = $this->read_event();
 				if (@$event['Content-Type'] == 'command/reply') {

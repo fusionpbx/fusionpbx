@@ -18,7 +18,6 @@
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
 	Copyright (C) 2016	All Rights Reserved.
-
 */
 
 /**
@@ -65,16 +64,78 @@ if (!class_exists('permissions')) {
 		 * Check to see if the permission exists
 		 * @var string $permission
 		 */
-		function exists($permission) {
-			//set default false
-				$result = false;
+		public function exists($permission_name) {
+
+			//if run from command line then return true
+			if (defined('STDIN')) {
+				return true;
+			}
+
+			//set permisisons array
+			$permissions = $_SESSION["permissions"];
+
+			//set default to false
+			$result = false;
+
 			//search for the permission
-				if (!empty($_SESSION["permissions"]) && is_array($_SESSION["permissions"]) && isset($_SESSION["permissions"][$permission])) {
-					$result = true;
+			if (!empty($permissions) && !empty($permission_name)) {
+				foreach($permissions as $key => $value) {
+					if ($key == $permission_name) {
+						$result = true;
+						break;
+					}
 				}
+			}
+
 			//return the result
-				return $result;
+			return $result;
 		}
+
+		/**
+		 * get the assigned permissions
+		 * @var array $groups
+		 */
+		public function assigned($domain_uuid, $groups) {
+			//groups not provided return false
+			if (empty($groups)) {
+				return false;
+			}
+
+			//get the permissions assigned to the user through the assigned groups
+			$x = 0;
+			$sql = "select distinct(permission_name) from v_group_permissions ";
+			$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+			foreach ($groups as $field) {
+				if (!empty($field['group_name'])) {
+					$sql_where_or[] = "group_name = :group_name_".$x;
+					$parameters['group_name_'.$x] = $field['group_name'];
+					$x++;
+				}
+			}
+			if (!empty($sql_where_or)) {
+				$sql .= "and (".implode(' or ', $sql_where_or).") ";
+			}
+			$sql .= "and permission_assigned = 'true' ";
+			$parameters['domain_uuid'] = $domain_uuid;
+			$database = new database;
+			$permissions = $database->select($sql, $parameters, 'all');
+			unset($sql, $parameters, $result);
+			return $permissions;
+		}
+
+		/**
+		 * save the assigned permissions to a session
+		 */
+		public function session($domain_uuid, $groups) {
+			$permissions = $this->assigned($domain_uuid, $groups);
+			if (!empty($permissions)) {
+				foreach ($permissions as $row) {
+					$_SESSION['permissions'][$row["permission_name"]] = true;
+					$_SESSION["user"]["permissions"][$row["permission_name"]] = true;
+				}
+			}
+		}
+
 	}
 }
 

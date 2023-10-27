@@ -76,8 +76,9 @@
 	}
 
 //get order and order by
-	$order_by = $_GET["order_by"] ?? '';
-	$order = $_GET["order"] ?? '';
+	$order_by = $_GET["order_by"] ?? 'extension';
+	$order = $_GET["order"] ?? 'asc';
+	$sort = $order_by == 'extension' ? 'natural' : null;
 
 //get total extension count for domain
 	if (isset($_SESSION['limit']['extensions']['numeric'])) {
@@ -103,7 +104,9 @@
 		$sql_search .= "or lower(emergency_caller_id_number) like :search ";
 		$sql_search .= "or lower(directory_first_name) like :search ";
 		$sql_search .= "or lower(directory_last_name) like :search ";
-		$sql_search .= "or lower(call_group) like :search ";
+		if (permission_exists("extension_call_group")) {
+			$sql_search .= "or lower(call_group) like :search ";
+		}
 		$sql_search .= "or lower(user_context) like :search ";
 		$sql_search .= "or lower(enabled) like :search ";
 		$sql_search .= "or lower(description) like :search ";
@@ -134,17 +137,7 @@
 
 //get the extensions
 	$sql = str_replace('count(*)', '*', $sql);
-	if ($order_by == '' || $order_by == 'extension') {
-		if ($db_type == 'pgsql') {
-			$sql .= 'order by natural_sort(extension) '.$order; //function in app_defaults.php
-		}
-		else {
-			$sql .= 'order by extension '.$order;
-		}
-	}
-	else {
-		$sql .= order_by($order_by, $order);
-	}
+	$sql .= order_by($order_by, $order, null, null, $sort);
 	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;
 	$extensions = $database->select($sql, $parameters ?? null, 'all');
@@ -171,7 +164,7 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['header-extensions']." (".$num_rows.")</b></div>\n";
 	echo "	<div class='actions'>\n";
-	if (permission_exists('extension_import') || (!isset($_SESSION['limit']['extensions']['numeric']) || $total_extensions < $_SESSION['limit']['extensions']['numeric'])) {
+	if (permission_exists('extension_import') && (!isset($_SESSION['limit']['extensions']['numeric']) || $total_extensions < $_SESSION['limit']['extensions']['numeric'])) {
 		echo button::create(['type'=>'button','label'=>$text['button-import'],'icon'=>$_SESSION['theme']['button_icon_import'],'link'=>'extension_imports.php']);
 	}
 	if (permission_exists('extension_export')) {
@@ -258,7 +251,9 @@
 	if (permission_exists("outbound_caller_id_name")) {
 		echo th_order_by('outbound_caller_id_name', $text['label-outbound_cid_name'], $order_by, $order, null, "class='hide-sm-dn'");
 	}
-	echo th_order_by('call_group', $text['label-call_group'], $order_by, $order);
+	if (permission_exists("extension_call_group")) {
+		echo th_order_by('call_group', $text['label-call_group'], $order_by, $order);
+	}
 	if (permission_exists("extension_user_context")) {
 		echo th_order_by('user_context', $text['label-user_context'], $order_by, $order);
 	}
@@ -301,7 +296,9 @@
 			if (permission_exists("outbound_caller_id_name")) {
 				echo "	<td class='hide-sm-dn'>".escape($row['outbound_caller_id_name'])."&nbsp;</td>\n";
 			}
-			echo "	<td>".escape($row['call_group'])."&nbsp;</td>\n";
+			if (permission_exists("extension_call_group")) {
+				echo "	<td>".escape($row['call_group'])."&nbsp;</td>\n";
+			}
 			if (permission_exists("extension_user_context")) {
 				echo "	<td>".escape($row['user_context'])."</td>\n";
 			}

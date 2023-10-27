@@ -28,9 +28,9 @@
 	if ($domains_processed == 1) {
 
 		//create the directory
-			if (!empty($_SESSION['switch']['extensions']['dir'])) {
-				if (!is_dir($_SESSION['switch']['extensions']['dir'])) {
-					mkdir($_SESSION['switch']['extensions']['dir'], 0770, false);
+			if (!empty($setting->get('switch','extensions'))) {
+				if (!is_dir($setting->get('switch','extensions'))) {
+					mkdir($setting->get('switch','extensions'), 0770, false);
 				}
 			}
 

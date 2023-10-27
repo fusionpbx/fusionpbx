@@ -284,13 +284,12 @@
 
 				--get the extension from the database
 					if (continue) then
-						local sql = "SELECT e.* FROM v_extensions as e, v_domains as d "
+						local sql = "SELECT e.*, random() FROM v_extensions as e, v_domains as d "
 							.. "WHERE e.domain_uuid = :domain_uuid "
 							.. "AND d.domain_uuid = :domain_uuid "
 							.. "AND d.domain_enabled = 'true' "
 							.. "AND (e.extension = :user or e.number_alias = :user) "
-							.. "AND e.enabled = 'true' "
-							.. "AND (e.extension_type = 'default' or extension_type is null) ";
+							.. "AND e.enabled = 'true' ";
 						local params = {domain_uuid=domain_uuid, user=user};
 						if (debug["sql"]) then
 							freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
@@ -369,6 +368,11 @@
 								forward_user_not_registered_enabled = row.forward_user_not_registered_enabled;
 								forward_user_not_registered_destination = row.forward_user_not_registered_destination;
 								do_not_disturb = row.do_not_disturb;
+
+							--if the extension is virtual set register to false
+								if (row.extension_type == 'virtual') then
+									auth_acl = 'virtual.' .. row.random;
+								end
 
 							-- get the follow me information
 								if (row.follow_me_uuid ~= nil and string.len(row.follow_me_uuid) > 0) then
@@ -531,7 +535,7 @@
 								xml:append([[							<param name="MWI-Account" value="]] ..  xml.sanitize(mwi_account) .. [["/>]]);
 							end
 							if (string.len(auth_acl) > 0) then
-								xml:append([[							<param name="auth-acl" value="]] ..  xml.sanitize(auth_acl) .. [["/>]]);
+								xml:append([[								<param name="auth-acl" value="]] ..  xml.sanitize(auth_acl) .. [["/>]]);
 							end
 							xml:append([[								<param name="dial-string" value="]] .. dial_string .. [["/>]]);
 							xml:append([[								<param name="verto-context" value="]] ..  xml.sanitize(user_context) .. [["/>]]);
@@ -539,6 +543,7 @@
 							xml:append([[								<param name="jsonrpc-allowed-methods" value="verto"/>]]);
 							xml:append([[								<param name="jsonrpc-allowed-event-channels" value="demo,conference,presence"/>]]);
 							xml:append([[								<param name="max-registrations-per-extension" value="]] ..  xml.sanitize(max_registrations) .. [["/>]]);
+
 							for key,row in pairs(extension_settings) do
 								if (row.extension_setting_type == 'param') then
 									xml:append([[								<param name="]].. xml.sanitize(row.extension_setting_name)..[[" value="]].. xml.sanitize(row.extension_setting_value)..[["/>]]);

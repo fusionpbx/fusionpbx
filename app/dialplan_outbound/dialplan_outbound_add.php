@@ -673,7 +673,7 @@
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $dialplan_uuid;
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = 'action';
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = 'set';
-							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = 'continue_on_fail=1,2,3,6,18,21,27,28,31,34,38,41,42,44,58,88,111,403,501,602,607';
+							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = 'continue_on_fail=1,2,3,6,18,21,27,28,31,34,38,41,42,44,58,88,111,403,501,602,607,809';
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $y * 10;
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_enabled'] = 'true';
@@ -1032,6 +1032,7 @@ function type_onchange(dialplan_detail_type) {
 	echo "		<option value=\"freetdm\">freetdm</option>\n";
 	echo "		<option value=\"transfer:\$1 XML \${domain_name}\">transfer</option>\n";
 	echo "		<option value=\"xmpp\">xmpp</option>\n";
+	echo "		<option value=\"hangup\">hangup</option>\n";
 	echo "	</optgroup>\n";
 	echo "</select>\n";
 	echo "<br />\n";
@@ -1092,6 +1093,7 @@ function type_onchange(dialplan_detail_type) {
 	echo "		<option value=\"freetdm\">freetdm</option>\n";
 	echo "		<option value=\"transfer:\$1 XML \${domain_name}\">transfer</option>\n";
 	echo "		<option value=\"xmpp\">xmpp</option>\n";
+	echo "		<option value=\"hangup\">hangup</option>\n";
 	echo "	</optgroup>\n";
 	echo "</select>\n";
 	echo "<br />\n";
@@ -1152,6 +1154,7 @@ function type_onchange(dialplan_detail_type) {
 	echo "		<option value=\"freetdm\">freetdm</option>\n";
 	echo "		<option value=\"transfer:\$1 XML \${domain_name}\">transfer</option>\n";
 	echo "		<option value=\"xmpp\">xmpp</option>\n";
+	echo "		<option value=\"hangup\">hangup</option>\n";
 	echo "	</optgroup>\n";
 	echo "</select>\n";
 	echo "<br />\n";

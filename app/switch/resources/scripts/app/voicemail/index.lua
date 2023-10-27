@@ -72,11 +72,12 @@
 			voicemail_id = session:getVariable("voicemail_id");
 			voicemail_action = session:getVariable("voicemail_action");
 			destination_number = session:getVariable("destination_number");
+			caller_id = session:getVariable("caller_id");
 			caller_id_name = session:getVariable("caller_id_name");
 			caller_id_number = session:getVariable("caller_id_number");
-			current_time_zone = session:getVariable("timezone");
 			effective_caller_id_number = session:getVariable("effective_caller_id_number");
 			effective_caller_id_name = session:getVariable("effective_caller_id_name");
+			current_time_zone = session:getVariable("timezone");
 			voicemail_greeting_number = session:getVariable("voicemail_greeting_number");
 			skip_instructions = session:getVariable("skip_instructions");
 			skip_options = session:getVariable("skip_options");
@@ -92,19 +93,25 @@
 			sip_number_alias = session:getVariable("sip_number_alias");
 			origination_callee_id_name = session:getVariable("origination_callee_id_name");
 
-		--modify caller_id_number if effective_caller_id_number is set
-			if (effective_caller_id_number ~= nil) then
-				caller_id_number = effective_caller_id_number;
-			end
-		--modify caller_id_name if effective_caller_id_name is set
+		--set the caller id name and number
+			--modify caller_id_name if effective_caller_id_name is set
 			if (effective_caller_id_name ~= nil) then
 				caller_id_name = effective_caller_id_name;
 			end
-
-		--set default values
-			if (string.sub(caller_id_number, 1, 1) == "/") then
+			--modify caller_id_number if effective_caller_id_number is set
+			if (effective_caller_id_number ~= nil) then
+				caller_id_number = effective_caller_id_number;
+			end
+			--extract the caller_id_number from caller_id if the caller_id_number is nil
+			if (caller_id_number == nil and caller_id ~= nil) then
+				caller_id_number = string.match(caller_id, '<(%d+)>')
+			end
+			--remove leading forward slash
+			if (caller_id_name ~= nil and string.sub(caller_id_number, 1, 1) == "/") then
 				caller_id_number = string.sub(caller_id_number, 2, -1);
 			end
+
+		--set default values
 			if (not record_silence_threshold) then
 				record_silence_threshold = 300;
 			end
@@ -144,20 +151,28 @@
 
 		--if voicemail_id is non numeric then get the number-alias
 			if (voicemail_id ~= nil) then
-				if (voicemail_id and #voicemail_id == nil) then
+				if (voicemail_id and tonumber(voicemail_id) == nil) then
 					 voicemail_id = api:execute("user_data", voicemail_id .. "@" .. domain_name .. " attr number-alias");
 				end
 			end
 
+		--get settings
+			require "resources.functions.settings";
+			settings = settings(domain_uuid);
+
 		--set the voicemail_dir
-			voicemail_dir = voicemail_dir.."/default/"..domain_name;
+			if (settings['switch'] ~= nil) then
+				if (settings['switch']['voicemail'] ~= nil) then
+					if (settings['switch']['voicemail']['dir'] ~= nil) then
+						voicemail_dir = settings['switch']['voicemail']['dir'].."/default/"..domain_name;
+					end
+				end
+			end
 			if (debug["info"]) then
 				freeswitch.consoleLog("notice", "[voicemail] voicemail_dir: " .. voicemail_dir .. "\n");
 			end
 
 		--settings
-			require "resources.functions.settings";
-			settings = settings(domain_uuid);
 			if (settings['voicemail'] ~= nil) then
 				storage_type = '';
 				if (settings['voicemail']['storage_type'] ~= nil) then
@@ -413,6 +428,17 @@
 					check_password(voicemail_id, password_tries);
 				end
 
+			--get the extension_uuid using the voicemail_id
+				if (voicemail_id ~= nil) then
+					extension_uuid = session:getVariable("extension_uuid");
+					if (extension_uuid == nil and session ~= nil and session:ready()) then
+						extension_uuid = api:execute("user_data", voicemail_id .. "@" .. domain_name .. " attr extension_uuid");
+						if (extension_uuid ~= nil) then
+							session:setVariable("extension_uuid", extension_uuid);
+						end
+					end
+				end
+
 			--send to the main menu
 				timeouts = 0;
 				if (voicemail_tutorial == "true") then
@@ -446,7 +472,7 @@
 					dbh:query(sql, params, function(row)
 						message_sum = row["message_sum"];
 					end);
-					if (vm_disk_quota and message_sum and #vm_disk_quota <= #message_sum) then
+					if (vm_disk_quota and message_sum and tonumber(vm_disk_quota) <= tonumber(message_sum)) then
 						--play message mailbox full
 							session:execute("playback", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/voicemail/vm-mailbox_full.wav")
 						--hangup
@@ -519,7 +545,7 @@
 							end
 							y = y + 1;
 						--save the message to the voicemail messages
-							if (message_length ~= nil and message_length > 2) then
+							if (message_length ~= nil and tonumber(message_length) > 2) then
 								caller_id_name = string.gsub(caller_id_name,"'","''");
 								local sql = {}
 								table.insert(sql, "INSERT INTO v_voicemail_messages ");
@@ -633,12 +659,12 @@
 							end
 
 						--send the message waiting event
-							if (message_length ~= nil and message_length > 2) then
+							if (message_length ~= nil and tonumber(message_length) > 2) then
 								message_waiting(voicemail_id_copy, domain_uuid);
 							end
 
 						--send the email with the voicemail recording attached
-							if (message_length ~= nil and message_length > 2) then
+							if (message_length ~= nil and tonumber(message_length) > 2) then
 								send_email(voicemail_id_copy, voicemail_message_uuid);
 								if (voicemail_to_sms) then
 									send_sms(voicemail_id_copy, voicemail_message_uuid);

@@ -217,9 +217,19 @@
 								foreach ($array['destinations'] as $row) {
 
 									//build the array
-										$actions[0]['destination_app'] = $row['destination_app'];
-										$actions[0]['destination_data'] =  $row['destination_data'];
-										$destination_actions = json_encode($actions);
+										if (!empty($row['destination_actions']) && is_json($row['destination_actions'])) {
+											$destination_actions = $row['destination_actions']; // use json actions
+											$temp = json_decode($row['destination_actions'], true);
+											$row['destination_app'] = $temp[array_key_last($temp)]['destination_app'];
+											$row['destination_data'] = $temp[array_key_last($temp)]['destination_data'];
+											unset($temp);
+										}
+										else if (!empty($row['destination_app']) && !empty($row['destination_data'])) {
+											$actions[0]['destination_app'] = $row['destination_app'];
+											$actions[0]['destination_data'] = $row['destination_data'];
+											$destination_actions = json_encode($actions);
+											unset($actions);
+										}
 
 									//get the values
 										$destination_number = $row['destination_number'];
@@ -241,6 +251,8 @@
 									//add the additional fields
 										$dialplan_uuid = uuid();
 										$array["destinations"][$row_id]['destination_actions'] = $destination_actions;
+										$array["destinations"][$row_id]['destination_app'] = $destination_app;
+										$array["destinations"][$row_id]['destination_data'] = $destination_data;
 										$array["destinations"][$row_id]['destination_type'] = $destination_type;
 										$array["destinations"][$row_id]['destination_record'] = $destination_record;
 										$array["destinations"][$row_id]['destination_context'] = $destination_context;
@@ -274,14 +286,14 @@
 
 									//authorized specific dialplan_detail_type that are safe, sanitize all other values
 										switch ($dialplan_detail_type) {
-										case 'destination_number':
-											break;
-										case '${sip_to_user}':
-											break;
-										case '${sip_req_user}':
-											break;
-										default:
-											$dialplan_detail_type = xml::sanitize($dialplan_detail_type);
+											case 'destination_number':
+												break;
+											case '${sip_to_user}':
+												break;
+											case '${sip_req_user}':
+												break;
+											default:
+												$dialplan_detail_type = xml::sanitize($dialplan_detail_type);
 										}
 
 									//build the xml dialplan
