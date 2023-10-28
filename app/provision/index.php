@@ -476,29 +476,53 @@
 		$cfg_ext = ".cfg";
 		if ($device_vendor === "aastra" && strrpos($file, $cfg_ext, 0) === strlen($file) - strlen($cfg_ext)) {
 			header("Content-Type: text/plain");
-			header("Content-Length: ".strlen($file_contents));
 		}
 		else if ($device_vendor === "yealink" || $device_vendor === "flyingvoice") {
 			header("Content-Type: text/plain");
-			header("Content-Length: ".strval(strlen($file_contents)));
 		}
 		else if ($device_vendor === "snom" && $device_template === "snom/m3") {
 			$file_contents = utf8_decode($file_contents);
 			header("Content-Type: text/plain; charset=iso-8859-1");
-			header("Content-Length: ".strlen($file_contents));
+		}
+		elseif (!empty($file_contents) && is_xml($file_contents)) {
+			header("Content-Type: text/xml; charset=utf-8");
 		}
 		else {
-			if (!empty($file_contents) && is_xml($file_contents)) {
-				header("Content-Type: text/xml; charset=utf-8");
-				header("Content-Length: ".strlen($file_contents));
-			}
-			else {
-				header("Content-Type: text/plain");
-				header("Content-Length: ".strval(strlen($file_contents)));
-			}
+			header("Content-Type: text/plain");
 		}
 	}
-	echo $file_contents;
+
+//send the content
+	$file_size = strlen($file_contents);
+	if (isset($_SERVER['HTTP_RANGE'])) {
+		$ranges = $_SERVER['HTTP_RANGE'];
+		list($unit, $range) = explode('=', $ranges, 2);
+		list($start, $end) = explode('-', $range, 2);
+
+		$start = empty($start) ? 0 : (int)$start;
+		$end = empty($end) ? $file_size - 1 : min((int)$end, $file_size - 1);
+
+		$length = $end - $start + 1;
+
+		//add additional headers
+		header('HTTP/1.1 206 Partial Content');
+		header("Content-Length: $length");
+		header("Content-Range: bytes $start-$end/$file_size");
+
+		//output the requested range from the content variable
+		echo substr($file_contents, $start, $length);
+	}
+	else {
+		//add additional headers
+		header('HTTP/1.1 200 OK');
+		header("Content-Length: $file_size");
+		header('Accept-Ranges: bytes');
+
+		//send the entire content
+		echo $file_contents;
+	}
+
+//close the
 	closelog();
 
 //device logs
@@ -507,3 +531,5 @@
 	}
 
 ?>
+
+
