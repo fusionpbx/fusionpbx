@@ -145,6 +145,9 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-bridges']." (".$num_rows.")</b></div>\n";
 	echo "	<div class='actions'>\n";
+	if (permission_exists('bridge_import')) {
+		echo button::create(['type'=>'button','label'=>$text['button-import'],'icon'=>$_SESSION['theme']['button_icon_import'],'style'=>'margin-right: 15px;','link'=>'bridge_imports.php']);
+	}
 	if (permission_exists('bridge_add')) {
 		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'id'=>'btn_add','link'=>'bridge_edit.php']);
 	}
