@@ -42,21 +42,37 @@ class buffer {
 //print($b->read_line());
 //print($b->read_line());
 
+/**
+ * Subscribes to the event socket of the FreeSWITCH (c) Event Socket Server
+ * @depends buffer::class
+ */
 class event_socket {
 	private $buffer;
 	public $fp;
 
+	/**
+	 * Create a new connection to the socket
+	 * @param resource|false $fp
+	 */
 	public function __construct($fp = false) {
 		$this->buffer = new buffer;
 		$this->fp = $fp;
 	}
 
+	/**
+	 * Ensures a closed connection on destruction of object
+	 */
 	public function __destructor() {
 		$this->close();
 	}
 
+	/**
+	 * Read the event body from the socket
+	 * @return string|false Content body or false if not connected or empty message
+	 * @depends buffer::class
+	 */
 	public function read_event() {
-		if (!$this->fp) {
+		if (!$this->connected()) {
 			return false;
 		}
 
@@ -87,7 +103,7 @@ class event_socket {
 			$str = $b->read_n($content['Content-Length']);
 			if ($str === false) {
 				while (true) {
-					if (feof($this->fp)) {
+					if (!$this->connected()) {
 						break;
 					}
 
@@ -107,31 +123,25 @@ class event_socket {
 		return $content;
 	}
 
+	/**
+	 * Connect to the FreeSWITCH (c) event socket server
+	 * <p>If the configuration is not loaded then the defaults of
+	 * host 127.0.0.1, port of 8021, and default password of ClueCon will be used</p>
+	 * @global array $conf Global configuration used in fusionpbx/config.conf
+	 * @param string $host Host or IP address of FreeSWITCH event socket server. Defaults to 127.0.0.1
+	 * @param string $port Port number of FreeSWITCH event socket server. Defaults to 8021
+	 * @param string $password Password of FreeSWITCH event socket server. Defaults to ClueCon
+	 * @return bool|resource Returns the resource of the connected socket on success or false
+	 */
 	public function connect($host = null, $port = null, $password = null) {
 
 		global $conf;
 
-		//get the database connection settings
-		if (empty($host) && empty($conf['event_socket.ip_address'])) {
-			$host = '127.0.0.1';
-		}
-		if (empty($port) && empty($conf['event_socket.port'])) {
-			$port = '8021';
-		}
-		if (empty($password) && empty($conf['switch.event_socket.password'])) {
-			$password = 'ClueCon';
-		}
-
-		//set the event socket variables
-		if (!empty($conf['switch.event_socket.host'])) {
-			$host = $conf['switch.event_socket.host'];
-		}
-		if (!empty($conf['switch.event_socket.port'])) {
-			$port = $conf['switch.event_socket.port'];
-		}
-		if (!empty($conf['switch.event_socket.password'])) {
-			$password = $conf['switch.event_socket.password'];
-		}
+		//set the event socket variables in the order of
+		//param passed to func, conf setting, old conf setting, default
+		$host = $host ?? $conf['switch.event_socket.host'] ?? $conf['event_socket.ip_address'] ?? '127.0.0.1';
+		$port = $port ?? $conf['switch.event_socket.port'] ?? $conf['event_socket.port'] ?? '8021';
+		$password = $password ?? $conf['switch.event_socket.password'] ?? $conf['event_socket.password'] ?? 'ClueCon';
 
 		//open the socket connection
 		$fp = @fsockopen($host, $port, $errno, $errdesc, 3);
@@ -139,37 +149,42 @@ class event_socket {
 		if (!$fp) {
 			return false;
 		}
+
 		socket_set_timeout($fp, 0, 30000);
 		socket_set_blocking($fp, true);
 		$this->fp = $fp;
 
 		//wait auth request and send response
-			while (!feof($fp)) {
-				$event = $this->read_event();
-				if(@$event['Content-Type'] == 'auth/request'){
-					fputs($fp, "auth $password\n\n");
-					break;
-				}
+		while (!feof($fp)) {
+			$event = $this->read_event();
+			if(($event['Content-Type'] ?? '') === 'auth/request'){
+				fputs($fp, "auth $password\n\n");
+				break;
 			}
+		}
 
 		//wait auth response
-			while (!feof($fp)) {
-				$event = $this->read_event();
-				if (@$event['Content-Type'] == 'command/reply') {
-					if (@$event['Reply-Text'] == '+OK accepted') {
-						return $fp;
-					}
-					$this->fp = false;
-					fclose($fp);
-					return false;
+		while (!feof($fp)) {
+			$event = $this->read_event();
+			if (($event['Content-Type'] ?? '') === 'command/reply') {
+				if (($event['Reply-Text'] ?? '') === '+OK accepted') {
+					return $fp;
 				}
+				$this->fp = false;
+				fclose($fp);
+				return false;
 			}
+		}
 
 		return false;
 	}
 
+	/**
+	 * Tests if connected to the FreeSWITCH Event Socket Server
+	 * @return bool Returns true when connected or false when not connected
+	 */
 	public function connected() {
-		if (!$this->fp) {
+		if (!is_resource($this->fp)) {
 			//not connected to the socket
 			return false;
 		}
@@ -177,14 +192,19 @@ class event_socket {
 			//not connected to the socket
 			return false;
 		}
-		else {
-			//connected to the socket
-			return true;
-		}
+		//connected to the socket
+		return true;
 	}
 
+	/**
+	 * Send a command to the FreeSWITCH Event Socket Server
+	 * <p>Multi-line commands can be sent when separated by '\n'</p>
+	 * @param string $cmd Command to send through the socket
+	 * @return mixed Returns the response from FreeSWITCH or false if not connected
+	 * @depends read_event()
+	 */
 	public function request($cmd) {
-		if (!$this->fp) {
+		if (!$this->connected()) {
 			return false;
 		}
 
@@ -202,17 +222,27 @@ class event_socket {
 		return $event;
 	}
 
+	/**
+	 * Sets the current FreeSWITCH resource returning the old property
+	 * @param resource|bool $fp Sets the current FreeSWITCH resource
+	 * @return mixed Returns the original resource
+	 */
 	public function reset_fp($fp = false){
 		$tmp = $this->fp;
 		$this->fp = $fp;
 		return $tmp;
 	}
 
+	/**
+	 * Closes the socket
+	 */
 	public function close() {
-		if ($this->fp) {
+		//fp is public access so ensure it is a resource before closing it
+		if (is_resource($this->fp)) {
 			fclose($this->fp);
-			$this->fp = false;
 		}
+		//force fp to be false
+		$this->fp = false;
 	}
 }
 
