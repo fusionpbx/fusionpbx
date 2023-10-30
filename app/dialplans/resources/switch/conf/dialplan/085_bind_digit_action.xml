@@ -16,8 +16,12 @@
 	</condition>
 	<condition field="${user_exists}" expression="true"/>
 	<condition field="${from_user_exists}" expression="true">
-		<action application="set" data="bridge_pre_execute_bleg_app=lua"/>
-		<action application="set" data="bridge_pre_execute_bleg_data=bind_digit_bleg.lua ${context}"/>
+		<action application="set" data="bridge_pre_execute_bleg_app=execute_extension"/>
+		<action application="set" data="bridge_pre_execute_bleg_data='m:^:
+		bind_digit_action:local,*1,exec:execute_extension,dx,self,self^
+		bind_digit_action:local,*3,exec:execute_extension,cf,self,self^
+		bind_digit_action:local,*4,exec:execute_extension,att_xfer,self,self' inline"
+		/>
 	</condition>
 </extension>
 
