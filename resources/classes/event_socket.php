@@ -131,9 +131,10 @@ class event_socket {
 	 * @param string $host Host or IP address of FreeSWITCH event socket server. Defaults to 127.0.0.1
 	 * @param string $port Port number of FreeSWITCH event socket server. Defaults to 8021
 	 * @param string $password Password of FreeSWITCH event socket server. Defaults to ClueCon
+	 * @param int $timeout_microseconds Number of microseconds before timeout is triggered on socket
 	 * @return bool|resource Returns the resource of the connected socket on success or false
 	 */
-	public function connect($host = null, $port = null, $password = null) {
+	public function connect($host = null, $port = null, $password = null, $timeout_microseconds = 30000) {
 
 		global $conf;
 
@@ -150,7 +151,7 @@ class event_socket {
 			return false;
 		}
 
-		socket_set_timeout($fp, 0, 30000);
+		socket_set_timeout($fp, 0, $timeout_microseconds);
 		socket_set_blocking($fp, true);
 		$this->fp = $fp;
 
