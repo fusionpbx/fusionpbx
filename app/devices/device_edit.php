@@ -669,13 +669,17 @@
 		$device_vendor = device::get_vendor($device_address ?? null);
 	}
 
-//get the device line info for provision button
-	foreach($device_lines as $row) {
-		if (!empty($row['user_id'])) {
+//get the first device line info (found on the local server) for the provision button
+	foreach ($device_lines as $row) {
+		if (
+			array_key_exists($row['domain_uuid'], $_SESSION['domains']) &&
+			$row['server_address'] == $_SESSION['domains'][$row['domain_uuid']]['domain_name'] &&
+			!empty($row['user_id']) &&
+			!empty($row['server_address'])
+			) {
 			$user_id = $row['user_id'];
-		}
-		if (!empty($row['server_address'])) {
 			$server_address = $row['server_address'];
+			break;
 		}
 	}
 
@@ -944,8 +948,8 @@
 			echo button::create(['type'=>'button','label'=>$text['button-qr_code'],'icon'=>'qrcode','style'=>($button_margin ?? ''),'onclick'=>"fade_in('image-container');"]);
 			unset($button_margin);
 		}
-		else {
-			echo button::create(['type'=>'button','label'=>$text['button-provision'],'icon'=>'fax','style'=>($button_margin ?? ''),'link'=>PROJECT_PATH."/app/devices/cmd.php?cmd=check_sync"."&user=".urlencode($user_id ?? '')."&domain=".urlencode($server_address ?? '')."&agent=".urlencode($device_vendor)]);
+		else if (!empty($user_id) && !empty($server_address)) {
+			echo button::create(['type'=>'button','label'=>$text['button-provision'],'icon'=>'fax','style'=>($button_margin ?? ''),'link'=>PROJECT_PATH."/app/devices/cmd.php?cmd=check_sync&user=".urlencode($user_id ?? '')."&domain=".urlencode($server_address ?? '')."&agent=".urlencode($device_vendor)]);
 			unset($button_margin);
 		}
 		if (permission_exists("device_files")) {
@@ -955,7 +959,7 @@
 				$template_dir = $prov->template_dir;
 				$files = glob($template_dir.'/'.$device_template.'/*');
 			//add file buttons and the file list
-				echo button::create(['type'=>'button','id'=>'button_files','label'=>$text['button-files'],'icon'=>$_SESSION['theme']['button_icon_download'],'onclick'=>'show_files()']);
+				echo button::create(['type'=>'button','id'=>'button_files','label'=>$text['button-files'],'icon'=>$_SESSION['theme']['button_icon_download'],'style'=>($button_margin ?? ''),'onclick'=>'show_files()']);
 				echo 		"<select class='formfld' style='display: none; width: auto;' name='target_file' id='target_file' onchange='download(this.value)'>\n";
 				echo "			<option value=''>".$text['label-download']."</option>\n";
 				foreach ($files as $file) {
@@ -969,9 +973,11 @@
 						echo "		<option value='".basename($file)."'>".$file_name."</option>\n";
 				}
 				echo "		</select>";
+				unset($button_margin);
 		}
 		if (permission_exists('device_add')) {
-			echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'name'=>'btn_copy','onclick'=>"modal_open('modal-copy','new_address');"]);
+			echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'style'=>($button_margin ?? ''),'name'=>'btn_copy','onclick'=>"modal_open('modal-copy','new_address');"]);
+			unset($button_margin);
 		}
 		if (
 			permission_exists('device_delete') ||
@@ -979,7 +985,8 @@
 			permission_exists('device_key_delete') ||
 			permission_exists('device_setting_delete')
 			) {
-			echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'name'=>'btn_delete','onclick'=>"modal_open('modal-delete','btn_delete');"]);
+			echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'style'=>($button_margin ?? ''),'name'=>'btn_delete','onclick'=>"modal_open('modal-delete','btn_delete');"]);
+			unset($button_margin);
 		}
 	}
 	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save','style'=>'margin-left: 15px;','onclick'=>'submit_form();']);
