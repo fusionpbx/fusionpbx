@@ -50,11 +50,13 @@ class event_socket {
 	private $buffer;
 	public $fp;
 
+	private static $socket = null;
+
 	/**
 	 * Create a new connection to the socket
 	 * @param resource|false $fp
 	 */
-	public function __construct($fp = false) {
+	private function __construct($fp = false) {
 		$this->buffer = new buffer;
 		$this->fp = $fp;
 	}
@@ -132,7 +134,7 @@ class event_socket {
 	 * @param string $port Port number of FreeSWITCH event socket server. Defaults to 8021
 	 * @param string $password Password of FreeSWITCH event socket server. Defaults to ClueCon
 	 * @param int $timeout_microseconds Number of microseconds before timeout is triggered on socket
-	 * @return bool|resource Returns the resource of the connected socket on success or false
+	 * @return bool Returns true on success or false if not connected
 	 */
 	public function connect($host = null, $port = null, $password = null, $timeout_microseconds = 30000) {
 
@@ -145,39 +147,37 @@ class event_socket {
 		$password = $password ?? $conf['switch.event_socket.password'] ?? $conf['event_socket.password'] ?? 'ClueCon';
 
 		//open the socket connection
-		$fp = @fsockopen($host, $port, $errno, $errdesc, 3);
+		$this->fp = @fsockopen($host, $port, $errno, $errdesc, 3);
 
-		if (!$fp) {
+		if (!$this->connected()) {
 			return false;
 		}
 
-		socket_set_timeout($fp, 0, $timeout_microseconds);
-		socket_set_blocking($fp, true);
-		$this->fp = $fp;
+		socket_set_timeout($this->fp, 0, $timeout_microseconds);
+		socket_set_blocking($this->fp, true);
 
 		//wait auth request and send response
-		while (!feof($fp)) {
+		while ($this->connected()) {
 			$event = $this->read_event();
 			if(($event['Content-Type'] ?? '') === 'auth/request'){
-				fputs($fp, "auth $password\n\n");
+				fputs($this->fp, "auth $password\n\n");
 				break;
 			}
 		}
 
 		//wait auth response
-		while (!feof($fp)) {
+		while ($this->connected()) {
 			$event = $this->read_event();
 			if (($event['Content-Type'] ?? '') === 'command/reply') {
 				if (($event['Reply-Text'] ?? '') === '+OK accepted') {
-					return $fp;
+					break;
+				} else {
+					$this->close();
 				}
-				$this->fp = false;
-				fclose($fp);
-				return false;
 			}
 		}
 
-		return false;
+		return $this->connected();
 	}
 
 	/**
@@ -224,9 +224,10 @@ class event_socket {
 	}
 
 	/**
-	 * Sets the current FreeSWITCH resource returning the old property
+	 * Sets the current socket resource returning the old
 	 * @param resource|bool $fp Sets the current FreeSWITCH resource
 	 * @return mixed Returns the original resource
+	 * @deprecated since version 5.1
 	 */
 	public function reset_fp($fp = false){
 		$tmp = $this->fp;
@@ -245,27 +246,30 @@ class event_socket {
 		//force fp to be false
 		$this->fp = false;
 	}
-}
 
-/*
-function event_socket_create($host, $port, $password) {
-	$esl = new event_socket;
-	if ($esl->connect($host, $port, $password)) {
-		return $esl->reset_fp();
+	/**
+	 * Create a singleton connected socket to the FreeSWITCH Event Socket Layer
+	 * @global array $conf Global configuration used in config.conf
+	 * @param string $host Host or IP address of FreeSWITCH event socket server. Defaults to 127.0.0.1
+	 * @param string $port Port number of FreeSWITCH event socket server. Defaults to 8021
+	 * @param string $password Password of FreeSWITCH event socket server. Defaults to ClueCon
+	 * @param int $timeout_microseconds Number of microseconds before timeout is triggered on socket
+	 * @return self
+	 */
+	public static function create($host = null, $port = null, $password = null, $timeout_microseconds = 30000): self {
+		//create the event socket object
+		if (self::$socket === null) {
+			self::$socket = new event_socket();
+		}
+		//attempt to connect it
+		if(!self::$socket->connected()) {
+			self::$socket->connect($host, $port, $password, $timeout_microseconds);
+		}
+		return self::$socket;
 	}
-	return false;
 }
 
-function event_socket_request($fp, $cmd) {
-	$esl = new event_socket($fp);
-	$result = $esl->request($cmd);
-	$esl->reset_fp();
-	return $result;
-}
-*/
-
-// $esl = new event_socket;
-// $esl->connect('127.0.0.1', 8021, 'ClueCon');
+// $esl = event_socket::create('127.0.0.1', 8021, 'ClueCon');
 // print($esl->request('api sofia status'));
 
 // $fp = event_socket_create('127.0.0.1', 8021, 'ClueCon');
