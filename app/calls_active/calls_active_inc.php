@@ -52,7 +52,7 @@
 	$switch_cmd = 'show channels as json';
 
 //create the event socket connection
-	$fp = event_socket_create();
+	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 
 //send the event socket command and get the array
 	if ($fp) {
@@ -67,33 +67,27 @@
 			//get the domain
 				if (!empty($row['context']) && $row['context'] != "public" && $row['context'] != "default") {
 					if (substr_count($row['context'], '@') > 0) {
-						$context_array = explode('@', $row['context']);
-						$row['domain_name'] = $context_array[1];
+						$row['domain_name'] = explode('@', $row['context'])[1];
 					}
 					else {
 						$row['domain_name'] = $row['context'];
 					}
 				}
 				else if (substr_count($row['presence_id'], '@') > 0) {
-					$presence_id_array = explode('@', $row['presence_id']);
-					$row['domain_name'] = $presence_id_array[1];
+					$row['domain_name'] = explode('@', $row['presence_id'])[1];
 				}
 			//add the row to the array
 				if (($show == 'all' && permission_exists('call_active_all'))) {
 					$rows[] = $row;
 				}
-				else {
-					if ($row['domain_name'] == $_SESSION['domain_name']) {
-						$rows[] = $row;
-					}
+				elseif ($row['domain_name'] == $_SESSION['domain_name']) {
+					$rows[] = $row;
 				}
 		}
 		unset($results);
 	}
 	$num_rows = @sizeof($rows);
 
-//set the time zone
-	$time_zone = $_SESSION['domain']['time_zone']['name'] ?? date_default_timezone_get();
 
 //if the connnection is available then run it and return the results
 	if (!$fp) {
@@ -183,13 +177,6 @@
 							$$key = $value;
 						}
 
-					//adjust created date and time to time zone
-						if ($time_zone != date_default_timezone_get()) {
-							$date = new DateTime($created, new DateTimeZone(date_default_timezone_get()));
-							$date->setTimeZone(new DateTimeZone($time_zone));
-							$created = $date->format('Y-m-d H:i:s');
-						}
-
 					//get the sip profile
 						$name_array = explode("/", $name);
 						$sip_profile = $name_array[1];
@@ -211,7 +198,7 @@
 						}
 
 					// reduce too long app data
-						if (strlen($application_data) > 512) {
+						if(strlen($application_data) > 512) {
 							$application_data = substr($application_data, 0, 512) . '...';
 						}
 
@@ -224,7 +211,7 @@
 							echo "	</td>\n";
 						}
 						echo "	<td>".escape($sip_profile)."&nbsp;</td>\n";
-						echo "	<td nowrap=\"nowrap\">".escape($created)."&nbsp;</td>\n";
+						echo "	<td>".escape($created)."&nbsp;</td>\n";
 						if ($show == 'all') {
 							echo "	<td>".escape($domain_name)."&nbsp;</td>\n";
 						}
@@ -232,7 +219,7 @@
 						echo "	<td>".escape($cid_name)."&nbsp;</td>\n";
 						echo "	<td>".escape($cid_num)."&nbsp;</td>\n";
 						echo "	<td>".escape($dest)."&nbsp;</td>\n";
-						echo "	<td style=\"max-width:300px; word-wrap:break-word;\">".(!empty($application) ? escape($application).":".escape($application_data) : null)."&nbsp;</td>\n";
+						echo "	<td>".(!empty($application) ? escape($application).":".escape($application_data) : null)."&nbsp;</td>\n";
 						echo "	<td>".escape($read_codec).":".escape($read_rate)." / ".escape($write_codec).":".escape($write_rate)."&nbsp;</td>\n";
 						echo "	<td>".escape($secure)."&nbsp;</td>\n";
 						if (permission_exists('call_active_hangup')) {
@@ -241,6 +228,9 @@
 							echo "	</td>\n";
 						}
 						echo "</tr>\n";
+					
+					//unset the domain name
+						unset($domain_name);
 
 					//increment counter
 						$x++;
