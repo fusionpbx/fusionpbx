@@ -1406,32 +1406,36 @@
 		echo "	</tr>";
 	}
 
-	if (permission_exists('device_profile_edit')) {
-		//device profile
-		$sql = "select * from v_device_profiles ";
-		$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
-		$sql .= "order by device_profile_name asc ";
-		$parameters['domain_uuid'] = $domain_uuid;
-		$database = new database;
-		$result = $database->select($sql, $parameters, 'all');
-		if (is_array($result) && @sizeof($result) != 0) {
-			echo "	<tr>";
-			echo "		<td class='vncell' valign='top'>".$text['label-profile']."</td>";
-			echo "		<td class='vtable' align='left'>";
-			echo "			<select class='formfld' id='device_profile_uuid' name='device_profile_uuid'>\n";
-			echo "				<option value=''></option>\n";
-			foreach($result as $row) {
-				echo "			<option value='".escape($row['device_profile_uuid'])."' ".(!empty($device_profile_uuid) && $row['device_profile_uuid'] == $device_profile_uuid ? "selected='selected'" : null).">".escape($row['device_profile_name'])." ".(($row['domain_uuid'] == '') ? "&nbsp;&nbsp;(".$text['select-global'].")" : null)."</option>\n";
-			}
-			echo "			</select>\n";
-			echo "			<button type='button' class='btn btn-default list_control_icon' id='device_profile_edit' onclick=\"if($('#device_profile_uuid').val() != '') window.location='device_profile_edit.php?id='+$('#device_profile_uuid').val();\"><span class='fas fa-pencil-alt'></span></button>";
-			echo "			<button type='button' class='btn btn-default list_control_icon' onclick=\"window.location='device_profile_edit.php'\"><span class='fas fa-plus'></span></button>";
-			echo "			<br>".$text['description-profile2']."\n";
-			echo "		</td>";
-			echo "	</tr>";
-		}
-		unset($sql, $parameters, $result);
-	}
+        if (permission_exists('device_profile_edit')) {
+                //device profile
+                $sql = "select * from v_device_profiles ";
+                $sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+                $sql .= "order by device_profile_name asc ";
+                $parameters['domain_uuid'] = $domain_uuid;
+                $database = new database;
+                $result = $database->select($sql, $parameters, 'all');
+                if (is_array($result) && @sizeof($result) != 0) {
+                        if (permission_exists('device_profile_select')) {
+                                echo "  <tr>";
+                                echo "          <td class='vncell' valign='top'>".$text['label-profile']."</td>";
+                                echo "          <td class='vtable' align='left'>";
+                                echo "                  <select class='formfld' id='device_profile_uuid' name='device_profile_uuid'>\n";
+                                echo "                          <option value=''></option>\n";
+                                foreach($result as $row) {
+                                        echo "                  <option value='".escape($row['device_profile_uuid'])."' ".(!empty($device_profile_uuid) && $row['device_profile_uuid'] == $device_profile_uuid ? "selected='selected'" : null).">".escape($row['device_profile_name'])." ".(($row['domain_uuid'] == '') ? "&nbsp;&nbsp;(".$text['select-global'].")" : null)."</option>\n";
+                                }
+                                echo "                  </select>\n";
+                        }
+                        if (permission_exists('device_profile_select_edit')) {
+                                        echo "<button type='button' class='btn btn-default list_control_icon' id='device_profile_edit' onclick=\"if($('#device_profile_uuid').val() != '') window.location='device_profile_edit.php?id='+$('#device_profile_uuid').val();\"><span class='fas fa-pencil-alt'></span></button>";
+                                        echo "                  <button type='button' class='btn btn-default list_control_icon' onclick=\"window.location='device_profile_edit.php'\"><span class='fas fa-plus'></span></button>";
+                                        echo "                  <br>".$text['description-profile2']."\n";
+                        }
+                        echo "          </td>";
+                        echo "  </tr>";
+                }
+                unset($sql, $parameters, $result);
+        }
 
 	if (permission_exists('device_key_edit')) {
 
