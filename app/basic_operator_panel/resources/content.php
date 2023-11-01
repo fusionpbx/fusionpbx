@@ -64,9 +64,8 @@ if (!empty($groups)) {
 }
 
 //get the valet info
-$fp = event_socket_create();
-if ($fp) {
-	$valet_info = event_socket_request($fp, 'api valet_info park@'.$_SESSION['domain_name']);
+$valet_info = event_socket::api('valet_info park@'.$_SESSION['domain_name']);
+if ($valet_info !== false) {
 
 	//get an array of the valet call uuid and park numbers
 	if (isset($valet_info)) {
@@ -78,10 +77,10 @@ if ($fp) {
 	//unset($_SESSION['valet']);
 	foreach($valet_matches as $row) {
 		if (!isset($_SESSION['valet']['uuid']['caller_id_name'])) {
-			$_SESSION['valet'][$row[1]]['caller_id_name'] = event_socket_request($fp, 'api uuid_getvar '.$row[1].' caller_id_name');
+			$_SESSION['valet'][$row[1]]['caller_id_name'] = event_socket::api('uuid_getvar '.$row[1].' caller_id_name');
 		}
 		if (!isset($_SESSION['valet']['uuid']['caller_id_number'])) {
-			$_SESSION['valet'][$row[1]]['caller_id_number'] = event_socket_request($fp, 'api uuid_getvar '.$row[1].' caller_id_number');
+			$_SESSION['valet'][$row[1]]['caller_id_number'] = event_socket::api('uuid_getvar '.$row[1].' caller_id_number');
 		}
 	}
 

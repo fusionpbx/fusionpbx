@@ -86,10 +86,12 @@ if (!class_exists('basic_operator_panel')) {
 				}
 
 			//send the command
-				$fp = event_socket_create();
-				if ($fp) {
-					$switch_result = event_socket_request($fp, 'api show channels as json');
+				$switch_result = event_socket::api('show channels as json');
+				if ($switch_result !== false) {
+					$fp = true;
 					$json_array = json_decode($switch_result, true);
+				} else {
+					$fp = false;
 				}
 
 			//build the response
@@ -205,8 +207,10 @@ if (!class_exists('basic_operator_panel')) {
 									if ($fp) {
 										if (is_uuid($field['uuid'])) {
 											$switch_cmd = 'uuid_dump '.$field['uuid'].' json';
-											$dump_result = event_socket_request($fp, 'api '.$switch_cmd);
-											$dump_array = json_decode($dump_result, true);
+											$dump_result = event_socket::api($switch_cmd);
+											if ($dump_result !== false) {
+												$dump_array = json_decode($dump_result, true);
+											}
 											if (is_array($dump_array)) {
 												foreach ($dump_array as $dump_var_name => $dump_var_value) {
 													$array[$x][$dump_var_name] = $dump_var_value;

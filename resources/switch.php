@@ -36,27 +36,32 @@ require_once __DIR__ . "/require.php";
  * @param string $host
  * @param string $port
  * @param string $password
- * @return resource|false
+ * @return true Returns true if successful connection and false if there is a failure
  * @deprecated since version 5.1.11
  */
 function event_socket_create($host = null, $port = null, $password = null) {
 	$esl = event_socket::create($host = null, $port = null, $password = null);
-	return $esl->fp;
+	return ($esl !== false);
 }
 
+/**
+ * Makes a request on the event socket
+ * @param null $fp No longer used
+ * @param string $cmd Command to use
+ * @return string|false Response of the server or false if failed
+ */
 function event_socket_request($fp, $cmd) {
-	$esl = event_socket::create();
-	$result = $esl->request($cmd);
-	return $result;
+	return event_socket::command($cmd);
 }
 
+/**
+ * Makes a request on the event socket
+ * @param type $fp
+ * @param type $cmd
+ * @return type
+ */
 function event_socket_request_cmd($cmd) {
-	$esl = event_socket::create();
-	if (!$esl->connect()) {
-		return false;
-	}
-	$response = $esl->request($cmd);
-	return $response;
+	return event_socket::command($cmd);
 }
 
 function remove_config_from_cache($name) {

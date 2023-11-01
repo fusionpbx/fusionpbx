@@ -56,7 +56,7 @@ class event_socket {
 	 * Create a new connection to the socket
 	 * @param resource|false $fp
 	 */
-	private function __construct($fp = false) {
+	public function __construct($fp = false) {
 		$this->buffer = new buffer;
 		$this->fp = $fp;
 	}
@@ -184,7 +184,7 @@ class event_socket {
 	 * Tests if connected to the FreeSWITCH Event Socket Server
 	 * @return bool Returns true when connected or false when not connected
 	 */
-	public function connected() {
+	public function connected(): bool {
 		if (!is_resource($this->fp)) {
 			//not connected to the socket
 			return false;
@@ -195,6 +195,14 @@ class event_socket {
 		}
 		//connected to the socket
 		return true;
+	}
+
+	/**
+	 * alias of connected
+	 * @return bool
+	 */
+	public function is_connected(): bool {
+		return $this->connected();
 	}
 
 	/**
@@ -248,7 +256,7 @@ class event_socket {
 	}
 
 	/**
-	 * Create a singleton connected socket to the FreeSWITCH Event Socket Layer
+	 * Create uses a singleton design to return a connected socket to the FreeSWITCH Event Socket Layer
 	 * @global array $conf Global configuration used in config.conf
 	 * @param string $host Host or IP address of FreeSWITCH event socket server. Defaults to 127.0.0.1
 	 * @param string $port Port number of FreeSWITCH event socket server. Defaults to 8021
@@ -267,12 +275,36 @@ class event_socket {
 		}
 		return self::$socket;
 	}
+
+	/**
+	 * Sends a command on the socket blocking for a response
+	 * @param string $cmd
+	 * @return string|false Response from server or false if failed
+	 */
+	public static function command(string $cmd) {
+		return self::create()->request($cmd);
+	}
+
+	/**
+	 * Sends an API command on the socket
+	 * @param string $api_cmd
+	 * @return string|false Response from server or false if failed
+	 */
+	public static function api(string $api_cmd) {
+		return self::command('api '.$api_cmd);
+	}
+
+	/**
+	 * Sends an API command to FreeSWITCH using asynchronous (non-blocking) mode
+	 * @param string $cmd API command to send
+	 * @returns string $job_id the Job ID for tracking completion status
+	 */
+	public static function async(string $cmd) {
+		return self::command('bgapi '.$cmd);
+	}
 }
 
 // $esl = event_socket::create('127.0.0.1', 8021, 'ClueCon');
 // print($esl->request('api sofia status'));
-
-// $fp = event_socket_create('127.0.0.1', 8021, 'ClueCon');
-// print(event_socket_request($fp, 'api sofia status'));
 
 ?>

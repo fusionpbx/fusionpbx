@@ -157,12 +157,10 @@
 			$cache->delete("configuration:sofia.conf:".gethostname());
 
 			//create the event socket connection
-			if (!$fp) {
-				$fp = event_socket_create();
-			}
+			$esl = event_socket::create();
 
 			//reload the acl
-			event_socket_request($fp, "api reloadacl");
+			event_socket::async("reloadacl");
 
 			//rescan each sip profile
 			$sql = "select sip_profile_name from v_sip_profiles ";
@@ -171,10 +169,10 @@
 			$sip_profiles = $database->select($sql, null, 'all');
 			if (is_array($sip_profiles)) {
 				foreach ($sip_profiles as $row) {
-					if ($fp) {
+					if ($esl->is_connected()) {
 						$command = "sofia profile '".$row['sip_profile_name']."' rescan";
 						//echo $command."\n";
-						$result = event_socket_request($fp, "api ".$command);
+						$result = event_socket::api($command);
 						//echo $result."\n";
 					}
 				}
