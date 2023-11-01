@@ -4510,7 +4510,7 @@
 		<!-- # MulticastListenAddress (25), KeypadLock (26), GDSOpenDoor (27), EventListPresence (28), Provision (29) -->
 		<!-- # Phonebook(30), Paging(33) -->
 		<!-- Pvalue P323 -->
-		<item name="pks.mpk.{$row.device_key_id}.keyMode">{$key_types[$keys.line.$line.device_key_type]}</item>
+		<item name="pks.mpk.{$row.device_key_id}.keyMode">{$key_types[$keys.memory.$line.device_key_type]}</item>
 
 		<!-- # Account. Account1, Account2, Account3, Account4  -->
 		<!-- Pvalue P301 -->
@@ -4699,7 +4699,7 @@
 		<!-- # MulticastListenAddress (25), KeypadLock (26), GDSOpenDoor (27), EventListPresence (28), Provision (29) -->
 		<!-- # Phonebook(30), Paging(33) -->
 		<!-- Pvalue P23000 -->
-		<item name="pks.ext.{$row.device_key_id}.keyMode">{$key_types[$keys.line.$line.device_key_type]}</item>
+		<item name="pks.ext.{$row.device_key_id}.keyMode">{$key_types[$keys.expansion.$line.device_key_type]}</item>
 
 		<!-- # Account. Account1, Account2, Account3, Account4, Account5, Account6 -->
 		<!-- Pvalue P23001 -->
