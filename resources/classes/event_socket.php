@@ -79,7 +79,6 @@ class event_socket {
 		}
 
 		$b = $this->buffer;
-		$content_length = 0;
 		$content = array();
 
 		while (true) {
