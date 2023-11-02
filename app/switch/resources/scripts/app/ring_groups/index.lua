@@ -198,6 +198,13 @@
 		if (not default_voice) then default_voice = 'callie'; end
 	end
 
+--set hold music
+	if (session:getVariable("hold_music") == nil) then
+		hold_music = '';
+	else
+		hold_music = ",hold_music="..session:getVariable("hold_music");
+	end
+
 --prepare the api object
 	api = freeswitch.API();
 
@@ -817,7 +824,7 @@
 							record_session = ",api_on_answer='uuid_record "..uuid.." start ".. record_path .. "/" .. record_name .. "',record_path='".. record_path .."',record_name="..record_name;
 							session:setVariable("record_path", record_path);
 						else
-							record_session = ""
+							record_session = '';
 						end
 						row.record_session = record_session
 
@@ -827,20 +834,13 @@
 							cmd = "user_data ".. destination_number .."@"..domain_name.." var extension_uuid";
 							extension_uuid = trim(api:executeString(cmd));
 
-							--set hold music
-							if (session:getVariable("hold_music") == nil) then
-								hold_music = '';
-							else
-								hold_music = ",hold_music="..session:getVariable("hold_music");
-							end
-
 							--send to user
 							local dial_string_user = "[sip_invite_domain="..domain_name..",call_direction="..call_direction..",";
 							dial_string_user = dial_string_user .. group_confirm..","..timeout_name.."="..destination_timeout..",";
 							dial_string_user = dial_string_user .. delay_name.."="..destination_delay..",";
 							dial_string_user = dial_string_user .. "dialed_extension=" .. row.destination_number .. ",";
 							dial_string_user = dial_string_user .. "presence_id=" .. row.destination_number .. "@"..domain_name..",";
-							dial_string_user = dial_string_user .. "extension_uuid="..extension_uuid..record_session.."]";
+							dial_string_user = dial_string_user .. "extension_uuid="..extension_uuid..hold_music..record_session.."]";
 							user_contact = api:executeString("sofia_contact */".. row.destination_number .."@" ..domain_name);
 							if (user_contact ~= "error/user_not_registered") then
 								dial_string = dial_string_user .. user_contact;
@@ -925,7 +925,7 @@
 
 		--release dbh before bridge
 				dbh:release();
-				
+
 		--session execute
 			if (session:ready()) then
 				--set the variables
