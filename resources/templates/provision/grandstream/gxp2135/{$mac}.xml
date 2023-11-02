@@ -3174,7 +3174,7 @@
 		<!-- # MPK {$row.device_key_id} -->
 		<!-- ###################################################################################### -->
 		<!-- # Key Mode -->
-		<item name="pks.mpk.{$row.device_key_id}.keyMode">{$key_types[$keys.line.$line.device_key_type]}</item>
+		<item name="pks.mpk.{$row.device_key_id}.keyMode">{$key_types[$keys.memory.$line.device_key_type]}</item>
 
 		<!-- # Account. Account1, Account2, Account3, Account4, Account 5, Account 6  -->
 		<item name="pks.mpk.{$row.device_key_id}.account">{$row.device_key_line}</item>
@@ -3214,6 +3214,11 @@
 		<!-- # Phonebook(30), Paging(33) -->
 		{/literal}
 
+{assign var=key_types value=["none"=>-1,"speed dial"=>0, "blf"=>1, "presence watcher"=>2,
+"eventlist blf"=>3,"speed dial active"=>4,"dial dtmf"=>5,"voicemail"=>6,"call return"=>7,
+"transfer"=>8,"call park"=>9,"intercom"=>10,"ldap search"=>11,"conference"=>12,"multicast paging"=>13,
+"record"=>14,"call log"=>15,"monitored call park"=>16,"menu"=>17]}
+
 {foreach $keys['expansion'] as $row}
 {$line=$row.device_key_id}
 
@@ -3221,7 +3226,7 @@
 		<!-- # EXT MPK {$row.device_key_id} -->
 		<!-- ###################################################################################### -->
 		<!-- # Key Mode -->
-		<item name="pks.ext.{$row.device_key_id}.keyMode">{$key_types[$keys.line.$line.device_key_type]}</item>
+		<item name="pks.ext.{$row.device_key_id}.keyMode">{$key_types[$keys.expansion.$line.device_key_type]}</item>
 
 		<!-- # Account. Account1, Account2, Account3, Account4, Account5, Account6 -->
 		<item name="pks.ext.{$row.device_key_id}.account">{$row.device_key_line}</item>

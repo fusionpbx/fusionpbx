@@ -684,7 +684,7 @@ if (!class_exists('xml_cdr')) {
 						$this->array[$key]['originating_leg_uuid'] = urldecode($xml->variables->originating_leg_uuid);
 
 					//store post dial delay, in milliseconds
-						$this->array[$key]['pdd_ms'] = urldecode($xml->variables->progress_mediamsec) + urldecode($xml->variables->progressmsec);
+						$this->array[$key]['pdd_ms'] = urldecode((int)$xml->variables->progress_mediamsec) + (int)urldecode($xml->variables->progressmsec);
 
 					//get break down the date to year, month and day
 						$start_stamp = urldecode($xml->variables->start_stamp);

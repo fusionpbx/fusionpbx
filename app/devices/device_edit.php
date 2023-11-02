@@ -669,13 +669,17 @@
 		$device_vendor = device::get_vendor($device_address ?? null);
 	}
 
-//get the device line info for provision button
-	foreach($device_lines as $row) {
-		if (!empty($row['user_id'])) {
+//get the first device line info (found on the local server) for the provision button
+	foreach ($device_lines as $row) {
+		if (
+			array_key_exists($row['domain_uuid'], $_SESSION['domains']) &&
+			$row['server_address'] == $_SESSION['domains'][$row['domain_uuid']]['domain_name'] &&
+			!empty($row['user_id']) &&
+			!empty($row['server_address'])
+			) {
 			$user_id = $row['user_id'];
-		}
-		if (!empty($row['server_address'])) {
 			$server_address = $row['server_address'];
+			break;
 		}
 	}
 
@@ -944,8 +948,8 @@
 			echo button::create(['type'=>'button','label'=>$text['button-qr_code'],'icon'=>'qrcode','style'=>($button_margin ?? ''),'onclick'=>"fade_in('image-container');"]);
 			unset($button_margin);
 		}
-		else {
-			echo button::create(['type'=>'button','label'=>$text['button-provision'],'icon'=>'fax','style'=>($button_margin ?? ''),'link'=>PROJECT_PATH."/app/devices/cmd.php?cmd=check_sync"."&user=".urlencode($user_id ?? '')."&domain=".urlencode($server_address ?? '')."&agent=".urlencode($device_vendor)]);
+		else if (!empty($user_id) && !empty($server_address)) {
+			echo button::create(['type'=>'button','label'=>$text['button-provision'],'icon'=>'fax','style'=>($button_margin ?? ''),'link'=>PROJECT_PATH."/app/devices/cmd.php?cmd=check_sync&user=".urlencode($user_id ?? '')."&domain=".urlencode($server_address ?? '')."&agent=".urlencode($device_vendor)]);
 			unset($button_margin);
 		}
 		if (permission_exists("device_files")) {
@@ -955,7 +959,7 @@
 				$template_dir = $prov->template_dir;
 				$files = glob($template_dir.'/'.$device_template.'/*');
 			//add file buttons and the file list
-				echo button::create(['type'=>'button','id'=>'button_files','label'=>$text['button-files'],'icon'=>$_SESSION['theme']['button_icon_download'],'onclick'=>'show_files()']);
+				echo button::create(['type'=>'button','id'=>'button_files','label'=>$text['button-files'],'icon'=>$_SESSION['theme']['button_icon_download'],'style'=>($button_margin ?? ''),'onclick'=>'show_files()']);
 				echo 		"<select class='formfld' style='display: none; width: auto;' name='target_file' id='target_file' onchange='download(this.value)'>\n";
 				echo "			<option value=''>".$text['label-download']."</option>\n";
 				foreach ($files as $file) {
@@ -969,9 +973,11 @@
 						echo "		<option value='".basename($file)."'>".$file_name."</option>\n";
 				}
 				echo "		</select>";
+				unset($button_margin);
 		}
 		if (permission_exists('device_add')) {
-			echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'name'=>'btn_copy','onclick'=>"modal_open('modal-copy','new_address');"]);
+			echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'style'=>($button_margin ?? ''),'name'=>'btn_copy','onclick'=>"modal_open('modal-copy','new_address');"]);
+			unset($button_margin);
 		}
 		if (
 			permission_exists('device_delete') ||
@@ -979,7 +985,8 @@
 			permission_exists('device_key_delete') ||
 			permission_exists('device_setting_delete')
 			) {
-			echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'name'=>'btn_delete','onclick'=>"modal_open('modal-delete','btn_delete');"]);
+			echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'style'=>($button_margin ?? ''),'name'=>'btn_delete','onclick'=>"modal_open('modal-delete','btn_delete');"]);
+			unset($button_margin);
 		}
 	}
 	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save','style'=>'margin-left: 15px;','onclick'=>'submit_form();']);
@@ -1399,31 +1406,43 @@
 		echo "	</tr>";
 	}
 
-	if (permission_exists('device_profile_edit')) {
-		//device profile
+	if (permission_exists('device_profile_view')) {
+
+		//device profiles
 		$sql = "select * from v_device_profiles ";
 		$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 		$sql .= "order by device_profile_name asc ";
 		$parameters['domain_uuid'] = $domain_uuid;
 		$database = new database;
-		$result = $database->select($sql, $parameters, 'all');
-		if (is_array($result) && @sizeof($result) != 0) {
+		$device_profiles = $database->select($sql, $parameters, 'all');
+		if (is_array($device_profiles) && @sizeof($device_profiles) != 0) {
 			echo "	<tr>";
 			echo "		<td class='vncell' valign='top'>".$text['label-profile']."</td>";
 			echo "		<td class='vtable' align='left'>";
-			echo "			<select class='formfld' id='device_profile_uuid' name='device_profile_uuid'>\n";
-			echo "				<option value=''></option>\n";
-			foreach($result as $row) {
-				echo "			<option value='".escape($row['device_profile_uuid'])."' ".(!empty($device_profile_uuid) && $row['device_profile_uuid'] == $device_profile_uuid ? "selected='selected'" : null).">".escape($row['device_profile_name'])." ".(($row['domain_uuid'] == '') ? "&nbsp;&nbsp;(".$text['select-global'].")" : null)."</option>\n";
+			if (permission_exists('device_profile_select')) {
+				echo "			<select class='formfld' id='device_profile_uuid' name='device_profile_uuid'>\n";
+				echo "				<option value=''></option>\n";
+				foreach($device_profiles as $row) {
+					echo "			<option value='".escape($row['device_profile_uuid'])."' ".(!empty($device_profile_uuid) && $row['device_profile_uuid'] == $device_profile_uuid ? "selected='selected'" : null).">".escape($row['device_profile_name'])." ".(($row['domain_uuid'] == '') ? "&nbsp;&nbsp;(".$text['select-global'].")" : null)."</option>\n";
+				}
+				echo "                  </select>\n";
 			}
-			echo "			</select>\n";
-			echo "			<button type='button' class='btn btn-default list_control_icon' id='device_profile_edit' onclick=\"if($('#device_profile_uuid').val() != '') window.location='device_profile_edit.php?id='+$('#device_profile_uuid').val();\"><span class='fas fa-pencil-alt'></span></button>";
-			echo "			<button type='button' class='btn btn-default list_control_icon' onclick=\"window.location='device_profile_edit.php'\"><span class='fas fa-plus'></span></button>";
+			else {
+				foreach($device_profiles as $row) {
+					if ($row['device_profile_uuid'] == $device_profile_uuid) {
+						echo escape($row['device_profile_name']);
+					}
+				}
+			}
+			if (permission_exists('device_profile_edit')) {
+				echo "			<button type='button' class='btn btn-default list_control_icon' id='device_profile_edit' onclick=\"if($('#device_profile_uuid').val() != '') window.location='device_profile_edit.php?id='+$('#device_profile_uuid').val();\"><span class='fas fa-pencil-alt'></span></button>";
+				echo "			<button type='button' class='btn btn-default list_control_icon' onclick=\"window.location='device_profile_edit.php'\"><span class='fas fa-plus'></span></button>";
+			}
 			echo "			<br>".$text['description-profile2']."\n";
 			echo "		</td>";
 			echo "	</tr>";
 		}
-		unset($sql, $parameters, $result);
+		unset($sql, $parameters, $device_profiles);
 	}
 
 	if (permission_exists('device_key_edit')) {

@@ -18,7 +18,11 @@
 <!-- Number: 0,1,2 -->
 <!-- Mandatory -->
 <!-- Reboot required -->
+{if isset($grandstream_ip_address_mode)}
+<P8>{$grandstream_ip_address_mode}</P8>
+{else}
 <P8>0</P8>
+{/if}
 
 <!-- Preferred DNS server -->
 <!-- Mandatory -->
