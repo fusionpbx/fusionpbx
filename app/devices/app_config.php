@@ -304,10 +304,6 @@
                 $apps[$x]['permissions'][$y]['name'] = 'device_profile_select';
                 $apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
                 $apps[$x]['permissions'][$y]['groups'][] = "admin";
-                $y++;
-                $apps[$x]['permissions'][$y]['name'] = 'device_profile_select_edit';
-                $apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
-                $apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = 'device_profile_key_view';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
