@@ -248,7 +248,17 @@ class event_socket {
 	public function close() {
 		//fp is public access so ensure it is a resource before closing it
 		if (is_resource($this->fp)) {
-			fclose($this->fp);
+			try {
+				fclose($this->fp);
+			} catch (\Exception $t) {
+				//report it
+				trigger_error("event_socket failed to close socket", E_USER_WARNING);
+			}
+		} else {
+			//log an error if fp was set to something other than a resource
+			if ($this->fp !== false) {
+				trigger_error("event_socket not a resource", E_USER_ERROR);
+			}
 		}
 		//force fp to be false
 		$this->fp = false;
