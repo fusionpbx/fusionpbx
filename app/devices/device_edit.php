@@ -282,7 +282,7 @@
 					if (permission_exists('device_template')) {
 						$array['devices'][0]['device_template'] = $device_template;
 					}
-					if (permission_exists('device_profile_edit')) {
+					if (permission_exists('device_profile_view')) {
 						$array['devices'][0]['device_profile_uuid'] = is_uuid($device_profile_uuid) ? $device_profile_uuid : null;
 					}
 					if (permission_exists('device_description')) {
