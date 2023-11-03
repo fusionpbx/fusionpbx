@@ -1664,6 +1664,14 @@ else { //default: white
 		padding: 4px 2px;
 		}
 
+	/* firefox only - adjust left padding */
+	@-moz-document url-prefix() {
+		select.txt,
+		select.formfld {
+			padding-left: 6px;
+			}
+		}
+
 	textarea.txt:hover,
 	input[type=text].txt:hover,
 	input[type=number].txt:hover,
