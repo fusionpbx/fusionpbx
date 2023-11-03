@@ -649,6 +649,7 @@ if (!class_exists('domains')) {
 					//get the list of installed apps from the core and mod directories and execute the php code in app_defaults.php
 						$default_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_defaults.php");
 						foreach ($default_list as &$default_path) {
+							//echo $default_path."<br />\n";
 							include($default_path);
 						}
 
@@ -732,7 +733,7 @@ if (!class_exists('domains')) {
 				}
 
 			//build the domains array in the correct order
-				if (is_array($domain_names)) { 
+				if (is_array($domain_names)) {
 					foreach ($domain_names as $dn) {
 						foreach ($result as $row) {
 							if ($row['domain_name'] == $dn) {
@@ -773,7 +774,7 @@ if (!class_exists('domains')) {
 									$_SESSION["domain_name"] = $row["domain_name"];
 								}
 							}
-						}	
+						}
 						$_SESSION['domains'][$row['domain_uuid']] = $row;
 					}
 					unset($domains, $prep_statement);

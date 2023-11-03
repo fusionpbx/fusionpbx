@@ -92,7 +92,7 @@ javascript:void(0);
 		$fp = event_socket_create();
 		if ($fp) {
 			$result = event_socket_request($fp, 'api show application');
-			
+
 			$show_applications = explode("\n\n", $result);
 			$raw_applications = explode("\n", $show_applications[0]);
 			unset($result);
@@ -105,12 +105,12 @@ javascript:void(0);
 					$application = $application_array[0];
 
 					if (
-						$application != "name" 
-						&& $application != "system" 
-						&& $application != "bgsystem" 
-						&& $application != "spawn" 
-						&& $application != "bg_spawn" 
-						&& $application != "spawn_stream" 
+						$application != "name"
+						&& $application != "system"
+						&& $application != "bgsystem"
+						&& $application != "spawn"
+						&& $application != "bg_spawn"
+						&& $application != "spawn_stream"
 						&& stristr($application, "[") != true
 					) {
 						if ($application != $previous_application) {
@@ -275,34 +275,37 @@ javascript:void(0);
 				}
 			}
 
+		//update the dialplan xml by using the array
+			$dialplans = new dialplan;
+			$dialplans->source = "details";
+			$dialplans->destination = "array";
+			$dialplans->uuid = $dialplan_uuid;
+			$dialplans->prepare_details($array);
+			$dialplan_array = $dialplans->xml();
+
+		//add the dialplan xml to the array
+			$array['dialplans'][$x]['dialplan_xml'] = $dialplan_array[$dialplan_uuid];
+
 		//add or update the database
 			$database = new database;
 			$database->app_name = 'dialplans';
 			$database->app_uuid = $app_uuid ?? null;
-			if ( strlen($dialplan_uuid)>0 )
-				$database->uuid($dialplan_uuid);
+			$database->uuid($dialplan_uuid);
 			$database->save($array);
 			unset($array);
 
-		//remove checked dialplan details
-			if (
-				$action == 'update'
-				&& permission_exists('dialplan_detail_delete')
-				&& is_array($dialplan_details_delete)
-				&& @sizeof($dialplan_details_delete) != 0
-				) {
-				$obj = new dialplan;
-				$obj->dialplan_uuid = $dialplan_uuid;
-				$obj->app_uuid = $app_uuid ?? null;
-				$obj->delete_details($dialplan_details_delete);
-			}
-
-		//update the dialplan xml
-			$dialplans = new dialplan;
-			$dialplans->source = "details";
-			$dialplans->destination = "database";
-			$dialplans->uuid = $dialplan_uuid;
-			$dialplans->xml();
+//remove checked dialplan details
+	if (
+		$action == 'update'
+		&& permission_exists('dialplan_detail_delete')
+		&& is_array($dialplan_details_delete)
+		&& @sizeof($dialplan_details_delete) != 0
+		) {
+		$obj = new dialplan;
+		$obj->dialplan_uuid = $dialplan_uuid;
+		$obj->app_uuid = $app_uuid ?? null;
+		$obj->delete_details($dialplan_details_delete);
+	}
 
 		//clear the cache
 			$cache = new cache;
@@ -454,7 +457,7 @@ javascript:void(0);
 					$details[$group][$x]['dialplan_detail_group'] = $group;
 					$details[$group][$x]['dialplan_detail_order'] = $dialplan_detail_order;
 					$details[$group][$x]['dialplan_detail_enabled'] = 'true';
-					
+
 			}
 		}
 	//sort the details array by group number
@@ -1064,3 +1067,4 @@ javascript:void(0);
 	require_once "resources/footer.php";
 
 ?>
+
