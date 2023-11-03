@@ -687,7 +687,7 @@ if (!class_exists('conference_centers')) {
 											$switch_cmd_notice = "conference ".$meeting_uuid[$uuid]."@".$_SESSION['domain_name']." play ".$_SESSION['switch']['sounds']['dir']."/".$default_language."/".$default_dialect."/".$default_voice."/ivr/ivr-recording_started.wav";
 										//execute api commands
 // 											if (!file_exists($recording_dir.'/'.$meeting_uuid[$uuid].'.wav')) {
-												$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+												$fp = event_socket_create();
 												if ($fp) {
 //													$switch_result = event_socket_request($fp, 'api '.$switch_cmd_record);
 													$switch_result = event_socket_request($fp, 'api '.$switch_cmd_notice);

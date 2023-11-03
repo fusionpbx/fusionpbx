@@ -27,8 +27,7 @@
 //process this only one time
 if ($domains_processed == 1) {
 
-	//includes files
-	require 'app/switch/resources/classes/scripts.php';
+	//copy the switch scripts
 	$obj = new scripts;
 	$obj->copy_files();
 

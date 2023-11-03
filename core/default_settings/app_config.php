@@ -303,6 +303,15 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "/core/dashboard/";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Destination after login";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "47b951c9-b339-4733-9104-a979f6e2f551";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "domain";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "setting_value_input_type";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "input";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
+		$y++;
 
 	//schema details
 		$y=0;

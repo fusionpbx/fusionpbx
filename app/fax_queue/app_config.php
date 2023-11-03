@@ -197,7 +197,12 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'fax_command';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['search_by'] = '1';
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the fax command.';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Command used to send the fax.';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'fax_response';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['search_by'] = '1';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Response recieved from sending the fax.';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "insert_date";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'timestamptz';

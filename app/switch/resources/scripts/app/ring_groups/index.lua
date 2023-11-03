@@ -163,7 +163,8 @@
 		context = session:getVariable("context");
 		call_direction = session:getVariable("call_direction");
 		accountcode = session:getVariable("accountcode");
-		local_ip_v4 = session:getVariable("local_ip_v4")
+		local_ip_v4 = session:getVariable("local_ip_v4");
+		verto_enabled = session:getVariable("verto_enabled") or '';
 	end
 
 --set caller id
@@ -195,6 +196,13 @@
 		if (not default_language) then default_language = 'en'; end
 		if (not default_dialect) then default_dialect = 'us'; end
 		if (not default_voice) then default_voice = 'callie'; end
+	end
+
+--set hold music
+	if (session:getVariable("hold_music") == nil) then
+		hold_music = '';
+	else
+		hold_music = ",hold_music="..session:getVariable("hold_music");
 	end
 
 --prepare the api object
@@ -245,14 +253,14 @@
 		record_name = session:getVariable("record_name");
 		record_ext = session:getVariable("record_ext");
 		if (not record_ext) then record_ext = 'wav'; end
-		if (not record_ext) then
+		if (record_name) then
 			record_name = record_name:gsub("${caller_id_name}", caller_id_name);
 			record_name = record_name:gsub("${caller_id_number}", caller_id_number);
 			record_name = record_name:gsub("${sip_from_user}", sip_from_user);
 			record_name = record_name:gsub("${sip_to_user}", sip_to_user);
 			record_name = record_name:gsub("${dialed_user}", ring_group_extension);
 			record_name = record_name:gsub("${record_ext}", record_ext);
-			record_name = record_name:gsub("${domain_name}", record_ext);
+			record_name = record_name:gsub("${domain_name}", domain_name);
 			record_name = record_name:gsub("${destination_number}", destination_number);
 		else
 			record_name = uuid .. "." .. record_ext;
@@ -355,6 +363,7 @@
 					subject = subject:gsub("${ring_group_extension}", ring_group_extension);
 					subject = subject:gsub("${sip_to_user}", ring_group_name);
 					subject = subject:gsub("${dialed_user}", ring_group_extension);
+					subject = subject:gsub("${destination_number}", destination_number);
 					subject = trim(subject);
 					subject = '=?utf-8?B?'..base64.encode(subject)..'?=';
 
@@ -365,6 +374,7 @@
 					body = body:gsub("${ring_group_extension}", ring_group_extension);
 					body = body:gsub("${sip_to_user}", ring_group_name);
 					body = body:gsub("${dialed_user}", ring_group_extension);
+					body = body:gsub("${destination_number}", destination_number);
 					body = body:gsub(" ", "&nbsp;");
 					body = body:gsub("%s+", "");
 					body = body:gsub("&nbsp;", " ");
@@ -812,8 +822,9 @@
 					--record the session
 						if (record_session) then
 							record_session = ",api_on_answer='uuid_record "..uuid.." start ".. record_path .. "/" .. record_name .. "',record_path='".. record_path .."',record_name="..record_name;
+							session:setVariable("record_path", record_path);
 						else
-							record_session = ""
+							record_session = '';
 						end
 						row.record_session = record_session
 
@@ -823,16 +834,20 @@
 							cmd = "user_data ".. destination_number .."@"..domain_name.." var extension_uuid";
 							extension_uuid = trim(api:executeString(cmd));
 
-							--set hold music
-							if (session:getVariable("hold_music") == nil) then
-								hold_music = '';
-							else
-								hold_music = ",hold_music="..session:getVariable("hold_music");
-							end
-
 							--send to user
-							local dial_string_to_user = "[sip_invite_domain="..domain_name..",domain_name="..domain_name..",call_direction="..call_direction..","..group_confirm..""..timeout_name.."="..destination_timeout..","..delay_name.."="..destination_delay..",dialed_extension=" .. row.destination_number .. ",extension_uuid=".. extension_uuid .. row.record_session .. hold_music .."]user/" .. row.destination_number .. "@" .. domain_name;
-							dial_string = dial_string_to_user;
+							local dial_string_user = "[sip_invite_domain="..domain_name..",call_direction="..call_direction..",";
+							dial_string_user = dial_string_user .. group_confirm..","..timeout_name.."="..destination_timeout..",";
+							dial_string_user = dial_string_user .. delay_name.."="..destination_delay..",";
+							dial_string_user = dial_string_user .. "dialed_extension=" .. row.destination_number .. ",";
+							dial_string_user = dial_string_user .. "presence_id=" .. row.destination_number .. "@"..domain_name..",";
+							dial_string_user = dial_string_user .. "extension_uuid="..extension_uuid..hold_music..record_session.."]";
+							user_contact = api:executeString("sofia_contact */".. row.destination_number .."@" ..domain_name);
+							if (user_contact ~= "error/user_not_registered") then
+								dial_string = dial_string_user .. user_contact;
+							end
+							if (verto_enabled == 'true') then
+								dial_string = dial_string .. ","..api:executeString("verto_contact ".. row.destination_number .."@" ..domain_name);
+							end
 						elseif (tonumber(destination_number) == nil) then
 							--sip uri
 							dial_string = "[sip_invite_domain="..domain_name..",domain_name="..domain_name..",call_direction="..call_direction..","..group_confirm..""..timeout_name.."="..destination_timeout..","..delay_name.."="..destination_delay.."]" .. row.destination_number;
@@ -900,6 +915,9 @@
 							end
 						end
 
+					--clear the dial_string variables
+						dial_string = nil;
+
 					--increment the value of x
 						x = x + 1;
 				end
@@ -907,7 +925,7 @@
 
 		--release dbh before bridge
 				dbh:release();
-				
+
 		--session execute
 			if (session:ready()) then
 				--set the variables

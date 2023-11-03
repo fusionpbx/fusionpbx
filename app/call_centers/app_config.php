@@ -35,9 +35,9 @@
 		$apps[$x]['destinations'][$y]['type'] = "sql";
 		$apps[$x]['destinations'][$y]['label'] = "call_centers";
 		$apps[$x]['destinations'][$y]['name'] = "call_centers";
-		$apps[$x]['destinations'][$y]['sql'] = "select queue_name as name, queue_extension as destination, queue_extension as extension, queue_description as  description from v_call_center_queues";
+		$apps[$x]['destinations'][$y]['sql'] = "select call_center_queue_uuid, call_center_queue_uuid as uuid, queue_name as name, queue_extension as destination, queue_extension as extension, queue_description as  description from v_call_center_queues";
 		$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '\${domain_uuid}' ";
-		$apps[$x]['destinations'][$y]['order_by'] = "queue_name asc";
+		$apps[$x]['destinations'][$y]['order_by'] = "natural_sort(queue_extension) asc";
 		$apps[$x]['destinations'][$y]['field']['name'] = "queue_name";
 		$apps[$x]['destinations'][$y]['field']['destination'] = "queue_extension";
 		$apps[$x]['destinations'][$y]['field']['extension'] = "queue_extension";
@@ -181,6 +181,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "user";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Options: user (default)";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "b8f8a95c-0167-4768-8aab-c386f64bdd06";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "call_center";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "refresh";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1500";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the refresh rate in seconds (<=120) or milliseconds (>=500).";
 
 	//cache details
 		$apps[$x]['cache']['key'] = "dialplan.\${domain_name}";

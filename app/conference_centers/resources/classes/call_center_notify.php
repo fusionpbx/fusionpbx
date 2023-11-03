@@ -37,7 +37,7 @@
 		//feature_event method
 		public function send_call_center_notify() {
 
-				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+				$fp = event_socket_create();
 				if ($fp) {
 					//send the event
 						$event = "sendevent PRESENCE_IN\n";

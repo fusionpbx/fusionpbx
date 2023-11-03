@@ -89,7 +89,7 @@ javascript:void(0);
 
 //get the list of applications
 	if (empty($_SESSION['switch']['applications']) || !is_array($_SESSION['switch']['applications'])) {
-		$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+		$fp = event_socket_create();
 		if ($fp) {
 			$result = event_socket_request($fp, 'api show application');
 			

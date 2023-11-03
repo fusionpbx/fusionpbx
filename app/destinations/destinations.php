@@ -42,11 +42,24 @@
 	$language = new text;
 	$text = $language->get();
 
-//get posted data
-	if (!empty($_POST['destinations'])) {
-		$action = $_POST['action'] ?? '';
-		$search = $_POST['search'] ?? '';
-		$destinations = $_POST['destinations'] ?? '';
+//pre-defined variables
+	$action = '';
+	$search = '';
+	$show = '';
+	$destinations = '';
+
+//get http variables
+	if (isset($_REQUEST["action"]) && !empty($_REQUEST["action"])) {
+		$action =  $_REQUEST["action"];
+	}
+	if (isset($_REQUEST["search"]) && !empty($_REQUEST["search"])) {
+		$search =  strtolower($_REQUEST["search"]);
+	}
+	if (isset($_REQUEST["show"]) && !empty($_REQUEST["show"])) {
+		$show =  strtolower($_REQUEST["show"]);
+	}
+	if (isset($_REQUEST["destinations"]) && !empty($_REQUEST["destinations"])) {
+		$destinations =  $_REQUEST["destinations"];
 	}
 
 //process the http post data by action
@@ -110,10 +123,6 @@
 //get variables used to control the order
 	$order_by = $_GET["order_by"] ?? '';
 	$order = $_GET["order"] ?? '';
-
-//get the HTTP variables
-	$search = $_GET["search"] ?? '';
-	$show = $_GET["show"] ?? '';
 
 //set from session variables
 	$list_row_edit_button = !empty($_SESSION['theme']['list_row_edit_button']['boolean']) ? $_SESSION['theme']['list_row_edit_button']['boolean'] : 'false';
@@ -266,7 +275,7 @@
 		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, $param, "class='shrink'");
 	}
 	echo th_order_by('destination_type', $text['label-destination_type'], $order_by, $order, $param, "class='shrink'");
-	echo th_order_by('destination_prefix', $text['label-destination_prefix'], $order_by, $order, $param, "class='shrink'");
+	echo th_order_by('destination_prefix', $text['label-destination_prefix'], $order_by, $order, $param, "class='shrink center'");
 	if (permission_exists('destination_trunk_prefix')) {
 		echo th_order_by('destination_trunk_prefix', $text['label-destination_trunk_prefix'], $order_by, $order, $param, "class='shrink'");
 	}
@@ -300,11 +309,13 @@
 			$destination_data = '';
 
 			//prepare the destination actions
-			$destination_actions = json_decode($row['destination_actions'], true);
-			if (!empty($destination_actions)) {
-				foreach($destination_actions as $action) {
-					$destination_app = $action['destination_app'];
-					$destination_data = $action['destination_data'];
+			if (!empty($row['destination_actions'])) {
+				$destination_actions = json_decode($row['destination_actions'], true);
+				if (!empty($destination_actions)) {
+					foreach ($destination_actions as $action) {
+						$destination_app = $action['destination_app'];
+						$destination_data = $action['destination_data'];
+					}
 				}
 			}
 
@@ -330,9 +341,9 @@
 				}
 				echo "	<td>".escape($domain)."</td>\n";
 			}
-			echo "	<td>".escape($row['destination_type'])."&nbsp;</td>\n";
+			echo "	<td>".escape($text['option-'.$row['destination_type']])."&nbsp;</td>\n";
 
-			echo "	<td>".escape($row['destination_prefix'])."&nbsp;</td>\n";
+			echo "	<td class='center'>".escape($row['destination_prefix'])."&nbsp;</td>\n";
 			if (permission_exists('destination_trunk_prefix')) {
 				echo "	<td>".escape($row['destination_trunk_prefix'])."&nbsp;</td>\n";
 			}

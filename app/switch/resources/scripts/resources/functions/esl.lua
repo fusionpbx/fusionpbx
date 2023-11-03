@@ -34,10 +34,10 @@ local host, port, auth
 
 function EventSocket:__init()
   if not host then
-    local db = Database.new('system')
-    local settings, err = db:first_row("select event_socket_ip_address, event_socket_port, event_socket_password from v_settings")
-    if not settings then return nil, err end
-    host, port, auth = settings.event_socket_ip_address, settings.event_socket_port, settings.event_socket_password
+    require "resources.functions.config";
+    host = event_socket_host;
+    port = event_socket_port;
+    auth = event_socket_password;
   end
 
   return self:_connect(host, port, auth)

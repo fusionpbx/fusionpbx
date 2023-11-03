@@ -17,37 +17,61 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2022
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//add the document root to the include path
-	$config_glob = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	$conf = parse_ini_file($config_glob[0]);
+//find the config.conf file
+	if (file_exists('/usr/local/etc/fusionpbx/config.conf')) {
+		$config_file = '/usr/local/etc/fusionpbx/config.conf';
+	}
+	elseif (file_exists('/etc/fusionpbx/config.conf')) {
+		$config_file = '/etc/fusionpbx/config.conf';
+	}
+	elseif (file_exists(__DIR__ . '/config.php')) {
+		//set a custom config_file variable after the config.php has been validated
+		$file_content = trim(file_get_contents(__DIR__ . '/config.php'));
+		$pattern = '/^<\?php\s+\$config_file\s+=\s+[\'"](.+?)[\'"];\s+\?>$/';
+		if (preg_match($pattern, $file_content, $matches) && file_exists($matches[1])) {
+			$config_file = $matches[1];
+		}
+	}
+
+//config.conf file not found re-direct the request to the install
+	if (empty($config_file)) {
+		header("Location: /core/install/install.php");
+		exit;
+	}
+
+//parse the config.conf file
+	$conf = parse_ini_file($config_file);
+
+//set the include path
 	set_include_path($conf['document.root']);
 
-//config file
-	$config_file = $config_glob[0] ?? '';
+//set document root
+	$_SERVER["DOCUMENT_ROOT"] = substr($conf['document.root'], -1) === '/' ? substr($conf['document.root'], 0, -1) : $conf['document.root'];
 
-//check if the config file exists
-	$config_exists = file_exists($config_file) ? true : false;
+//set project path
+	if (isset($conf['project.path']) && !defined('PROJECT_PATH')) {
+		if (substr($conf['project.path'], 0, 1) === '/') {
+			define("PROJECT_PATH", $conf['project.path']);
+		} else {
+			if (!empty($conf['project.path'])) {
+				define("PROJECT_PATH", '/' . $conf['project.path']);
+			} else {
+				define("PROJECT_PATH", '');
+			}
+		}
+	}
+	$_SERVER["PROJECT_PATH"] = PROJECT_PATH;
 
-//set the server variables and define project path constant
-	$_SERVER["DOCUMENT_ROOT"] = $conf['document.root'];
-	$_SERVER["PROJECT_ROOT"] = $conf['document.root'];
-	$_SERVER["PROJECT_PATH"]  = $conf['project.path'];
-	if (isset($conf['project.path'])) {
-		$_SERVER["PROJECT_ROOT"] = $conf['document.root'].'/'.$conf['project.path'];
-		if (!defined('PROJECT_ROOT')) { define("PROJECT_ROOT", $conf['document.root'].'/'.$conf['project.path']); }
-		if (!defined('PROJECT_PATH')) { define("PROJECT_PATH", $conf['project.path']); }
-	}
-	else {
-		if (!defined('PROJECT_ROOT')) { define("PROJECT_ROOT", $conf['document.root']); }
-		if (!defined('PROJECT_PATH')) { define("PROJECT_PATH", ''); }
-	}
+//set project root using project path
+	if (!defined('PROJECT_ROOT')) { define("PROJECT_ROOT", $conf['document.root'] . PROJECT_PATH); }
+	$_SERVER["PROJECT_ROOT"] = PROJECT_ROOT;
 
 //set the error reporting
 	ini_set('display_errors', '1');
@@ -103,14 +127,16 @@
 	require_once "resources/functions.php";
 	if (is_array($conf) && count($conf) > 0) {
 		require_once "resources/pdo.php";
-		require_once "resources/cidr.php";
+		if (!defined('STDIN')) {
+			require_once "resources/cidr.php";
+		}
 		if (file_exists($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/resources/switch.php")) {
 			require_once "resources/switch.php";
 		}
 	}
 
 //change language on the fly - for translate tool (if available)
-	if (isset($_REQUEST['view_lang_code']) && ($_REQUEST['view_lang_code']) != '') {
+	if (!defined('STDIN') && isset($_REQUEST['view_lang_code']) && ($_REQUEST['view_lang_code']) != '') {
 		$_SESSION['domain']['language']['code'] = $_REQUEST['view_lang_code'];
 	}
 

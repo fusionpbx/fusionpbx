@@ -462,12 +462,6 @@
 			$domain_uuid = $this->domain_uuid;
 			$domain_name = $this->domain_name;
 
-			//get the system settings paths and set them as variables
-				$settings_array = v_settings();
-				foreach ($settings_array as $name => $value) {
-					$$name = $value;
-				}
-
 			//determine the extensions parent directory
 				$extension_parent_dir = realpath($_SESSION['switch']['extensions']['dir']."/..");
 

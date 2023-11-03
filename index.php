@@ -28,18 +28,6 @@
 	ini_set("session.cookie_httponly", True);
 	if (!isset($_SESSION)) { session_start(); }
 
-//if config.conf file does not exist then redirect to the install page
-	if (file_exists("/usr/local/etc/fusionpbx/config.conf")) {
-		//BSD
-	}
-	elseif (file_exists("/etc/fusionpbx/config.conf")) {
-		//Linux
-	}
-	else {
-		header("Location: /core/install/install.php");
-		exit;
-	}
-
 //includes files
 	require_once __DIR__ . "/resources/require.php";
 
@@ -58,7 +46,7 @@
 	}
 	else {
 		//use custom index, if present, otherwise use custom login, if present, otherwise use default login
-		if (file_exists($_SERVER["PROJECT_ROOT"]."/themes/".$_SESSION['domain']['template']['name']."/index.php")) {
+		if (file_exists($_SERVER["PROJECT_ROOT"]."/themes/".($_SESSION['domain']['template']['name'] ?? '')."/index.php")) {
 			require_once "themes/".$_SESSION['domain']['template']['name']."/index.php";
 		}
 		else {

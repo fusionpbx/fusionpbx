@@ -1,6 +1,6 @@
 <?php
 /*-
- * Copyright (c) 2022 Mark J Crane <markjcrane@fusionpbx.com>
+ * Copyright (c) 2022 - 2023 Mark J Crane <markjcrane@fusionpbx.com>
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -207,9 +207,17 @@ if (!class_exists('email')) {
 		 */
 		public function send() {
 
+			//set the domain_uuid if not set
+			if (!isset($this->domain_uuid) && isset($_SESSION)) {
+				$this->domain_uuid = $_SESSION['domain_uuid'];
+			}
+
+			//get the email queue settings
+			$setting = new settings(["domain_uuid" => $this->domain_uuid]);
+
 			//set the send_method if not already set
 			if (!isset($this->method)) {
-				if ($_SESSION['email_queue']['enabled']['boolean'] == 'true') {
+				if ($setting->get('email_queue','enabled') == 'true') {
 					$this->method = 'queue';
 				}
 				else {
@@ -219,11 +227,6 @@ if (!class_exists('email')) {
 
 			//add the email to the queue
 			if ($this->method == 'queue') {
-
-				//set the domain_uuid if not set
-				if (!isset($this->domain_uuid)) {
-					$this->domain_uuid = $_SESSION['domain_uuid'];
-				}
 
 				//add the email_queue_uuid
 				$email_queue_uuid = uuid();
@@ -397,31 +400,31 @@ if (!class_exists('email')) {
 					include_once("resources/phpmailer/class.phpmailer.php");
 					include_once("resources/phpmailer/class.smtp.php");
 
-					//use the session email default settings
-					if (!empty($_SESSION['email']['smtp_hostname']['text'])) {
-						$smtp['hostname'] = $_SESSION['email']['smtp_hostname']['text'];
+					//use the email default settings
+					if (!empty($setting->get('email','smtp_hostname'))) {
+						$smtp['hostname'] = $setting->get('email','smtp_hostname');
 					}
-					$smtp['host'] 		= (strlen($_SESSION['email']['smtp_host']['text']) ? $_SESSION['email']['smtp_host']['text']: '127.0.0.1');
-					if (isset($_SESSION['email']['smtp_port'])) {
-						$smtp['port'] = (int) $_SESSION['email']['smtp_port']['numeric'];
+					$smtp['host'] 		= (!empty($setting->get('email','smtp_host')) ? $setting->get('email','smtp_host'): '127.0.0.1');
+					if (!empty($setting->get('email','smtp_port'))) {
+						$smtp['port'] = (int)$setting->get('email','smtp_port');
 					}
 					else {
 						$smtp['port'] = 0;
 					}
-					$smtp['secure'] 	= $_SESSION['email']['smtp_secure']['text'];
-					$smtp['auth'] 		= $_SESSION['email']['smtp_auth']['text'];
-					$smtp['username'] 	= $_SESSION['email']['smtp_username']['text'];
-					$smtp['password'] 	= $_SESSION['email']['smtp_password']['text'];
-					$smtp['from'] 		= $_SESSION['email']['smtp_from']['text'];
-					$smtp['from_name'] 	= $_SESSION['email']['smtp_from_name']['text'];
-					$smtp['validate_certificate'] = $_SESSION['email']['smtp_validate_certificate']['boolean'];
-					$smtp['crypto_method'] = $_SESSION['email']['smtp_crypto_method']['text'] ?? null;
+					$smtp['secure'] 	= $setting->get('email','smtp_secure');
+					$smtp['auth'] 		= $setting->get('email','smtp_auth');
+					$smtp['username'] 	= $setting->get('email','smtp_username');
+					$smtp['password'] 	= $setting->get('email','smtp_password');
+					$smtp['from'] 		= $setting->get('email','smtp_from');
+					$smtp['from_name'] 	= $setting->get('email','smtp_from_name');
+					$smtp['validate_certificate'] = $setting->get('email','smtp_validate_certificate');
+					$smtp['crypto_method'] = $setting->get('email','smtp_crypto_method') ?? null;
 
-					if (isset($_SESSION['voicemail']['smtp_from']) && !empty($_SESSION['voicemail']['smtp_from']['text'])) {
-						$smtp['from'] = $_SESSION['voicemail']['smtp_from']['text'];
+					if (!empty($setting->get('voicemail','smtp_from')) && !empty($setting->get('voicemail','smtp_from'))) {
+						$smtp['from'] = $setting->get('voicemail','smtp_from');
 					}
-					if (isset($_SESSION['voicemail']['smtp_from_name']) && !empty($_SESSION['voicemail']['smtp_from_name']['text'])) {
-						$smtp['from_name'] = $_SESSION['voicemail']['smtp_from_name']['text'];
+					if (!empty($setting->get('voicemail','smtp_from_name')) && !empty($setting->get('voicemail','smtp_from_name'))) {
+						$smtp['from_name'] = $setting->get('voicemail','smtp_from_name');
 					}
 
 					//override the domain-specific smtp server settings, if any

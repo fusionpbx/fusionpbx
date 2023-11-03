@@ -82,6 +82,8 @@
 		digit_timeout = "5000";
 	end
 
+	session:sleep(1500);
+
 	if (not sound_pin) then
 		sound_pin = sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-please_enter_pin_followed_by_pound.wav";
 	end

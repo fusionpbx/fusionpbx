@@ -31,8 +31,7 @@
 //get the missed calls from call detail records
 	$sql =	"select \n";
 	$sql .=	"	direction, \n";
-	$sql .=	"	start_stamp, \n";
-	$sql .=	"	start_epoch, \n";
+	$sql .= "	to_char(timezone(:time_zone, start_stamp), '".(!empty($_SESSION['domain']['time_format']) && $_SESSION['domain']['time_format']['text'] == '12h' ? "DD Mon HH12:MI am" : "DD Mon HH24:MI")."') as start_date_time, \n";
 	$sql .=	"	caller_id_name, \n";
 	$sql .=	"	caller_id_number, \n";
 	$sql .=	"	answer_stamp \n";
@@ -46,23 +45,29 @@
 	$sql .=	"	) \n";
 	$sql .=	"	and (missed_call = true or bridge_uuid is null) ";
 	$sql .=	"	and hangup_cause <> 'LOSE_RACE' ";
-	if (!empty($assigned_extensions)) {
-		$x = 0;
-		foreach ($assigned_extensions as $assigned_extension_uuid => $assigned_extension) {
-			$sql_where_array[] = "extension_uuid = :assigned_extension_uuid_".$x;
-			$sql_where_array[] = "destination_number = :destination_number_".$x;
-			$parameters['assigned_extension_uuid_'.$x] = $assigned_extension_uuid;
-			$parameters['destination_number_'.$x] = $assigned_extension;
-			$x++;
+	if (!permission_exists('xml_cdr_domain')) {
+		if (!empty($assigned_extensions)) {
+			$x = 0;
+			foreach ($assigned_extensions as $assigned_extension_uuid => $assigned_extension) {
+				$sql_where_array[] = "extension_uuid = :assigned_extension_uuid_".$x;
+				$sql_where_array[] = "destination_number = :destination_number_".$x;
+				$parameters['assigned_extension_uuid_'.$x] = $assigned_extension_uuid;
+				$parameters['destination_number_'.$x] = $assigned_extension;
+				$x++;
+			}
+			if (!empty($sql_where_array)) {
+				$sql .= "and (".implode(' or ', $sql_where_array).") \n";
+			}
+			unset($sql_where_array);
 		}
-		if (!empty($sql_where_array)) {
-			$sql .= "and (".implode(' or ', $sql_where_array).") \n";
+		else {
+			$sql .= "and false \n";
 		}
-		unset($sql_where_array);
 	}
 	$sql .= "and start_epoch > ".(time() - 86400)." \n";
 	$sql .=	"order by \n";
 	$sql .=	"start_epoch desc \n";
+	$parameters['time_zone'] = isset($_SESSION['domain']['time_zone']['name']) ? $_SESSION['domain']['time_zone']['name'] : date_default_timezone_get();
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	if (!isset($database)) { $database = new database; }
 	$result = $database->select($sql, $parameters, 'all');
@@ -141,10 +146,10 @@
 
 		foreach ($result as $index => $row) {
 			if ($index + 1 > $missed_limit) { break; } //only show limit
-			$tmp_year = date("Y", strtotime($row['start_stamp']));
-			$tmp_month = date("M", strtotime($row['start_stamp']));
-			$tmp_day = date("d", strtotime($row['start_stamp']));
-			$tmp_start_epoch = !empty($_SESSION['domain']['time_format']) && $_SESSION['domain']['time_format']['text'] == '12h' ? date("n/j g:ia", $row['start_epoch']) : date("n/j H:i", $row['start_epoch']);
+			$start_date_time = str_replace('/0','/', ltrim($row['start_date_time'], '0'));
+			if (!empty($_SESSION['domain']['time_format']) && $_SESSION['domain']['time_format']['text'] == '12h') {
+				$start_date_time = str_replace(' 0',' ', $start_date_time);
+			}
 			//set click-to-call variables
 			if (permission_exists('click_to_call_call')) {
 				$tr_link = "onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php".
@@ -170,7 +175,7 @@
 			}
 			echo "</td>\n";
 			echo "<td valign='top' class='".$row_style[$c]." hud_text' nowrap='nowrap'><a href='javascript:void(0);' ".(($row['caller_id_name'] != '') ? "title=\"".$row['caller_id_name']."\"" : null).">".((is_numeric($row['caller_id_number'])) ? format_phone($row['caller_id_number']) : $row['caller_id_number'])."</td>\n";
-			echo "<td valign='top' class='".$row_style[$c]." hud_text' nowrap='nowrap'>".$tmp_start_epoch."</td>\n";
+			echo "<td valign='top' class='".$row_style[$c]." hud_text' nowrap='nowrap'>".$start_date_time."</td>\n";
 			echo "</tr>\n";
 			$c = ($c) ? 0 : 1;
 		}

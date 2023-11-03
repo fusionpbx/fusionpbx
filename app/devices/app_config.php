@@ -301,6 +301,10 @@
 		$apps[$x]['permissions'][$y]['name'] = "device_profile_domain";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
+                $apps[$x]['permissions'][$y]['name'] = 'device_profile_select';
+                $apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+                $apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$y++;
 		$apps[$x]['permissions'][$y]['name'] = 'device_profile_key_view';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
@@ -4187,6 +4191,12 @@
 		$y++;
 		$vendors[$y]['uuid'] = "782bc1cc-149f-406f-b8e2-24a2bc484fad";
 		$vendors[$y]['name'] = "linphone";
+		$z=0;
+
+	//sipnetic details
+		$y++;
+		$vendors[$y]['uuid'] = "d3e71b2e-f272-4455-ae46-6ac94bdd75cc";
+		$vendors[$y]['name'] = "sipnetic";
 		$z=0;
 
 ?>

@@ -227,14 +227,14 @@
 					save_gateway_xml();
 
 				//clear the cache
-					$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+					$fp = event_socket_create();
 					$hostname = trim(event_socket_request($fp, 'api switchname'));
 					$cache = new cache;
 					$cache->delete("configuration:sofia.conf:".$hostname);
 
 				//rescan the external profile to look for new or stopped gateways
 					//create the event socket connection
-						$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+						$fp = event_socket_create();
 						$tmp_cmd = 'api sofia profile external rescan';
 						$response = event_socket_request($fp, $tmp_cmd);
 						unset($tmp_cmd);

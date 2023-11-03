@@ -19,7 +19,7 @@
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Caudas";
 	$apps[$x]['menu'][$y]['title']['ro-ro'] = "Cozi";
 	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Очереди";
-	$apps[$x]['menu'][$y]['title']['sv-se'] = "Svansar";
+	$apps[$x]['menu'][$y]['title']['sv-se'] = "Köer";
 	$apps[$x]['menu'][$y]['title']['uk-ua'] = "Клей";
 	$apps[$x]['menu'][$y]['title']['zh-cn'] = "尾巴";
 	$apps[$x]['menu'][$y]['title']['ja-jp'] = "キュー";
