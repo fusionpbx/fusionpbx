@@ -39,8 +39,8 @@
 			unset($sql);
 
 			// migrate phone_type values to phone_label, correct case and make multilingual where appropriate
-			$default_phone_types = ['home', 'work', 'pref', 'voice', 'fax', 'msg', 'cell', 'pager', 'modem', 'car', 'isdn', 'video', 'pcs'];
-			$default_phone_labels = [$text['option-home'], $text['option-work'], 'Pref', 'Voice', $text['option-fax'], $text['option-voicemail'], $text['option-mobile'], $text['option-pager'], 'Modem', 'Car', 'ISDN', 'Video', 'PCS'];
+			$default_phone_types = array('home', 'work', 'pref', 'voice', 'fax', 'msg', 'cell', 'pager', 'modem', 'car', 'isdn', 'video', 'pcs');
+			$default_phone_labels = array($text['option-home'],$text['option-work'], 'Pref', 'Voice', $text['option-fax'], $text['option-voicemail'], $text['option-mobile'], $text['option-pager'], 'Modem', 'Car', 'ISDN', 'Video', 'PCS');
 			foreach ($default_phone_types as $index => $old) {
 				$sql = "update v_contact_phones set phone_label = :phone_label where phone_type = :phone_type ";
 				$parameters['phone_label'] = $default_phone_labels[$index]; //new
