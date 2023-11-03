@@ -90,7 +90,7 @@
 	}
 
 //create an event socket connection
-	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+	$fp = event_socket_create();
 
 //get the call center queue, agent and tiers list
 	if (!$fp) {
@@ -157,8 +157,8 @@
 				echo "<tr class='list-header'>\n";
 				echo "<th>".$text['label-name']."</th>\n";
 				echo "<th>".$text['label-extension']."</th>\n";
-				echo "<th>".$text['label-status']."</th>\n";
-				echo "<th>".$text['label-state']."</th>\n";
+				echo "<th title=\"".$text['description-status']."\">".$text['label-status']."</th>\n";
+				echo "<th title=\"".$text['description-state']."\">".$text['label-state']."</th>\n";
 				echo "<th>".$text['label-status_change']."</th>\n";
 				echo "<th class='center'>".$text['label-missed']."</th>\n";
 				echo "<th class='center'>".$text['label-answered']."</th>\n";

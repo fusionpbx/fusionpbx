@@ -43,8 +43,7 @@
 	$text = $language->get();
 
 //create event socket
-	$socket_ip = $_SESSION['event_socket_ip_address'] != '0.0.0.0' ? $_SESSION['event_socket_ip_address'] : '127.0.0.1';
-	$fp = event_socket_create($socket_ip, $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+	$fp = event_socket_create();
 	if (!$fp) {
 		message::add($text['error-event-socket'], 'negative', 5000);
 	}
@@ -179,15 +178,15 @@
 							}
 						}
 					}
-					$list_row_url = $_SESSION["domain_name"] == $gateway_domain_name ? PROJECT_PATH."/app/gateways/gateway_edit.php?id=".strtolower(escape($row->name)) : null;
+					$list_row_url = !empty($gateway_domain_name) && $_SESSION["domain_name"] == $gateway_domain_name ? PROJECT_PATH."/app/gateways/gateway_edit.php?id=".strtolower(escape($row->name)) : null;
 					echo "<tr class='list-row' href='".$list_row_url."'>\n";
 					echo "	<td>";
-					if ($_SESSION["domain_name"] == $gateway_domain_name) {
+					if (!empty($gateway_domain_name) && $_SESSION["domain_name"] == $gateway_domain_name) {
 						echo "<a class='hide-sm-dn' href='".$list_row_url."'>".escape($gateway_name)."@".escape($gateway_domain_name)."</a>";
 						echo "<a class='hide-md-up' href='".$list_row_url."'>".escape($gateway_name)."@...</a>";
 					}
-					else if ($gateway_domain_name == '') {
-						echo $gateway_name ? escape($gateway_name) : $row->name;
+					else if (empty($gateway_domain_name)) {
+						echo !empty($gateway_name) ? escape($gateway_name) : $row->name;
 					}
 					else {
 						echo escape($gateway_name."@".$gateway_domain_name);
@@ -197,7 +196,7 @@
 					echo "	<td class='hide-sm-dn'>".escape($row->to)."</td>\n";
 					echo "	<td class='no-wrap'>".escape($row->state)."</td>\n";
 					echo "	<td class='center no-link'>";
-					echo button::create(['type'=>'button','class'=>'link','label'=>$text['button-stop'],'link'=>"cmd.php?profile=".urlencode($row->profile)."&gateway=".urlencode(($gateway_uuid ? $gateway_uuid : $row->name))."&action=killgw"]);
+					echo button::create(['type'=>'button','class'=>'link','label'=>$text['button-stop'],'link'=>"cmd.php?profile=".urlencode($row->profile)."&gateway=".urlencode((!empty($gateway_uuid) ? $gateway_uuid : $row->name))."&action=killgw"]);
 					echo "	</td>\n";
 					echo "</tr>\n";
 				}

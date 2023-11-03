@@ -42,17 +42,15 @@ if ($domains_processed == 1) {
 		unset($sql, $device_lines);
 
 	//set label to user_id if the label is null
-		$sql = "select device_line_uuid from v_device_lines ";
+		$sql = "select count(*) from v_device_lines ";
 		$sql .= "where label is null ";
 		$database = new database;
-		$device_lines = $database->select($sql, null, 'all');
-		if (!empty($device_lines)) {
-			foreach($device_lines as $row) {
-				$sql = "update v_device_lines ";
-				$sql .= "set label = user_id ";
-				$sql .= "where label is null ";
-				$database->execute($sql);
-			}
+		$num_rows = $database->select($sql, null, 'column');
+		if ($num_rows == 0) {
+			$sql = "update v_device_lines ";
+			$sql .= "set label = user_id ";
+			$sql .= "where label is null ";
+			$database->execute($sql);
 		}
 
 	//set the device key vendor
@@ -258,7 +256,7 @@ if ($domains_processed == 1) {
 
 		}
 		unset($num_rows);
-	
+
 	//where the device lines label is null set the value to the display name to maintain the original behavior
 		$sql = "update v_device_lines set label = display_name where label is null;\n";
 		$database->execute($sql);

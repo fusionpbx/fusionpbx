@@ -29,8 +29,8 @@
 	if (is_uuid($_GET['email_queue_uuid'])) {
 		$email_queue_uuid = $_GET['email_queue_uuid'];
 		$hostname = urldecode($_GET['hostname']);
-		$debug = $_GET['debug'];
-		$sleep_seconds = $_GET['sleep'];
+		$debug = $_GET['debug'] ?? null;
+		$sleep_seconds = $_GET['sleep'] ?? null;
 	}
 	else {
 		//invalid uuid
@@ -84,7 +84,7 @@
 //create the process id file if the process doesn't exist
 	if (!$pid_exists) {
 		//remove the old pid file
-		if (file_exists($file)) {
+		if (!empty($pid_file) && file_exists($pid_file)) {
 			unlink($pid_file);
 		}
 
@@ -143,9 +143,11 @@
 	}
 	unset($parameters);
 
+//get the email queue settings
+	$setting = new settings(["domain_uuid" => $domain_uuid]);
+
 //get the call center settings
-	$retry_limit = $_SESSION['email_queue']['retry_limit']['numeric'];
-	//$retry_interval = $_SESSION['email_queue']['retry_interval']['numeric'];
+	$retry_limit = $setting->get('email_queue', 'retry_limit');
 
 //set defaults
 	if (empty($email_retry_count)) {
@@ -284,12 +286,25 @@
 	}
 
 //add email settings
-	ksort($_SESSION['email']);
-	foreach ($_SESSION['email'] as $name => $setting) {
-		foreach ($setting as $type => $value) {
-			if ($type == 'uuid') { $uuid = $value; continue; }
-			if ($name == 'smtp_password') { $value = '[REDACTED]'; }
-			$email_settings .= $name.': '.$value."\n";
+	$email_settings = '';
+	$email_setting_array = $setting->get('email');
+	ksort($email_setting_array);
+	foreach ($email_setting_array as $name => $value) {
+		if ($name == 'smtp_password') { $value = '[REDACTED]'; }
+		$email_settings .= $name.': '.$value."\n";
+	}
+
+//parse email and name
+	if (!empty($email_from)) {
+		if (valid_email($email_from)) {
+			$email_from_address = $email_from;
+		}
+		else {
+			$lt_pos = strpos($email_from, '<');
+			if ($lt_pos !== false) {
+				$email_from_address = str_replace('>', '', substr($email_from, $lt_pos + 1));
+				$email_from_name = trim(substr($email_from, 0, $lt_pos));
+			}
 		}
 	}
 
@@ -297,7 +312,9 @@
 	$email = new email;
 	$email->domain_uuid = $domain_uuid;
 	$email->from_address = $email_from_address;
-	$email->from_name = $email_from_name;
+	if (!empty($email_from_name)) {
+		$email->from_name = $email_from_name;
+	}
 	$email->recipients = $email_to;
 	$email->subject = $email_subject;
 	$email->body = $email_body;
@@ -366,7 +383,7 @@
 			$domain_name = $database->select($sql, $parameters, 'column');
 
 			//send the message waiting status
-			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+			$fp = event_socket_create();
 			if ($fp) {
 				//$switch_cmd .= "luarun app.lua voicemail mwi ".$voicemail_id."@".$domain_name;
 				$switch_cmd .= "luarun app/voicemail/resources/scripts/mwi_notify.lua ".$voicemail_id." ".$domain_name." 0 0";

@@ -89,6 +89,7 @@
 //get variables used to control the order
 	$order_by = $_GET["order_by"] ?? '';
 	$order = $_GET["order"] ?? '';
+	$sort = $order_by == 'call_flow_extension' ? 'natural' : null;
 
 //add the search term
 	$search = strtolower($search ?? '');
@@ -131,7 +132,7 @@
 
 //get the list
 	$sql = str_replace('count(*)', '*', $sql ?? '');
-	$sql .= order_by($order_by, $order, 'call_flow_name', 'asc');
+	$sql .= order_by($order_by, $order, 'call_flow_name', 'asc', $sort);
 	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;
 	$call_flows = $database->select($sql, $parameters ?? null, 'all');

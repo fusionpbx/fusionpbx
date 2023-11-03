@@ -112,8 +112,8 @@
 					$schema[$i]['table'] = $table_name;
 					$schema[$i]['parent'] = $parent_name;
 					foreach ($table['fields'] as $row) {
-						if (!empty($row['deprecated']) && $row['deprecated'] !== 'true') {
-							if (!empty($row['name'])) {
+						if (empty($row['deprecated']) || !empty($row['deprecated']) && $row['deprecated'] !== 'true') {
+							if (!empty($row['name']['text'])) {
 								$field_name = $row['name']['text'];
 							}
 							else {
@@ -274,9 +274,9 @@
 			}
 
 		//user selected fields, labels
-			$fields = $_POST['fields'];
+			$fields = $_POST['fields'] ?? [];
 			$labels = $_POST['labels'] ?? [];
-			
+
 		//set the domain_uuid
 			$domain_uuid = $_SESSION['domain_uuid'];
 

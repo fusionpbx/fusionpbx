@@ -3,9 +3,9 @@
 	//application details
 		$apps[$x]['name'] = 'Bridges';
 		$apps[$x]['uuid'] = 'a6a7c4c5-340a-43ce-bcbc-2ed9bab8659d';
-		$apps[$x]['category'] = '';
+		$apps[$x]['category'] = 'switch';
 		$apps[$x]['subcategory'] = '';
-		$apps[$x]['version'] = '';
+		$apps[$x]['version'] = '1.2';
 		$apps[$x]['license'] = 'Mozilla Public License 1.1';
 		$apps[$x]['url'] = 'http://www.fusionpbx.com';
 		$apps[$x]['description']['en-us'] = '';
@@ -36,6 +36,9 @@
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
 		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
 		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'bridge_import';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$y++;
 
 	//destination details
 		$y = 0;
@@ -46,6 +49,7 @@
 		$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '\${domain_uuid}' and bridge_enabled = 'true'";
 		$apps[$x]['destinations'][$y]['order_by'] = "bridge_name asc";
 		$apps[$x]['destinations'][$y]['field']['bridge_uuid'] = "bridge_uuid";
+		$apps[$x]['destinations'][$y]['field']['uuid'] = "bridge_uuid";
 		$apps[$x]['destinations'][$y]['field']['name'] = "bridge_name";
 		$apps[$x]['destinations'][$y]['field']['description'] = "bridge_description";
 		$apps[$x]['destinations'][$y]['field']['destination'] = "bridge_destination";
@@ -116,5 +120,63 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "char(36)";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+
+	//default settings
+		$y=0;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "ebe37151-bbd0-4bf3-9c01-7a831943cb86";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "bridge";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "action";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "array";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = 'user';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "9a64c041-0dcd-4eee-b196-6f300b87dff8";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "bridge";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "action";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "array";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = 'gateway';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "a082511d-cc2f-4b8a-a49c-f505971ef80f";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "bridge";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "action";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "array";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = 'profile';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "f5b659a5-a375-4207-b3d1-cad5b3336f2e";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "bridge";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "action";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "array";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = 'loopback';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "b97e4810-8a04-4305-9cd8-a43c57c71703";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "bridge";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "variable";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "array";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = 'accountcode';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "0d1b5374-9c7a-46a5-9a08-d32fd42d6f06";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "bridge";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "variable";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "array";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = 'effective_caller_id_number';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "bdf5e430-ac50-4a15-b59d-b0c8a78fd410";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "bridge";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "variable";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "array";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = 'call_direction=outbound';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 
 ?>

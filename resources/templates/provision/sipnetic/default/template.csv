@@ -1,0 +1,1 @@
+d={$server_address};u={$user_id};p={$password};n={$display_name};au={$auth_id};R=1;dt={$sip_transport};op={$outbound_proxy}:{$sip_port};exp=120;vm=*97;

@@ -48,9 +48,13 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
-		$apps[$x]['permissions'][$y]['name'] = "device_mac_address";
+		$apps[$x]['permissions'][$y]['name'] = "device_address";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "device_address_uuid";
+		//$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		//$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "device_label";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
@@ -297,6 +301,10 @@
 		$apps[$x]['permissions'][$y]['name'] = "device_profile_domain";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
+                $apps[$x]['permissions'][$y]['name'] = 'device_profile_select';
+                $apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+                $apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$y++;
 		$apps[$x]['permissions'][$y]['name'] = 'device_profile_key_view';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
@@ -411,8 +419,8 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$apps[$x]['db'][$y]['fields'][$z]['deprecated'] = "true";
 		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "device_mac_address";
-		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "phone_mac_address";
+		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "device_address";
+		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "device_mac_address";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
@@ -4178,5 +4186,17 @@
 		$vendors[$y]['functions'][$z]['description'] = "BLF/DTMF";
 		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
+
+	//linphone details
+		$y++;
+		$vendors[$y]['uuid'] = "782bc1cc-149f-406f-b8e2-24a2bc484fad";
+		$vendors[$y]['name'] = "linphone";
+		$z=0;
+
+	//sipnetic details
+		$y++;
+		$vendors[$y]['uuid'] = "d3e71b2e-f272-4455-ae46-6ac94bdd75cc";
+		$vendors[$y]['name'] = "sipnetic";
+		$z=0;
 
 ?>

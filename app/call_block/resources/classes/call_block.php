@@ -76,7 +76,12 @@ if (!class_exists('call_block')) {
 						//get necessary call block details
 							if (is_array($uuids) && @sizeof($uuids) != 0) {
 								$sql = "select ".$this->uuid_prefix."uuid as uuid, call_block_number from v_".$this->table." ";
-								$sql .= "where domain_uuid = :domain_uuid ";
+								$sql .= "where ( ";
+								$sql .= "	domain_uuid = :domain_uuid ";
+								if (permission_exists('call_block_domain')) {
+									$sql .= " or domain_uuid is null ";
+								}
+								$sql .= ") ";
 								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
 								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 								$database = new database;
@@ -93,7 +98,9 @@ if (!class_exists('call_block')) {
 							$x = 0;
 							foreach ($call_block_numbers as $call_block_uuid => $call_block_number) {
 								$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $call_block_uuid;
-								$array[$this->table][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+								if (!permission_exists('call_block_domain')) {
+									$array[$this->table][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+								}
 								$x++;
 							}
 

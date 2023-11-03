@@ -67,25 +67,21 @@
 			//get the domain
 				if (!empty($row['context']) && $row['context'] != "public" && $row['context'] != "default") {
 					if (substr_count($row['context'], '@') > 0) {
-						$context_array = explode('@', $row['context']);
-						$row['domain_name'] = $context_array[1];
+						$row['domain_name'] = explode('@', $row['context'])[1];
 					}
 					else {
 						$row['domain_name'] = $row['context'];
 					}
 				}
 				else if (substr_count($row['presence_id'], '@') > 0) {
-					$presence_id_array = explode('@', $row['presence_id']);
-					$row['domain_name'] = $presence_id_array[1];
+					$row['domain_name'] = explode('@', $row['presence_id'])[1];
 				}
 			//add the row to the array
 				if (($show == 'all' && permission_exists('call_active_all'))) {
 					$rows[] = $row;
 				}
-				else {
-					if ($row['domain_name'] == $_SESSION['domain_name']) {
-						$rows[] = $row;
-					}
+				elseif ($row['domain_name'] == $_SESSION['domain_name']) {
+					$rows[] = $row;
 				}
 		}
 		unset($results);
@@ -232,6 +228,9 @@
 							echo "	</td>\n";
 						}
 						echo "</tr>\n";
+					
+					//unset the domain name
+						unset($domain_name);
 
 					//increment counter
 						$x++;

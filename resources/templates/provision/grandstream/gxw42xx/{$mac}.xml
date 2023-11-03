@@ -18,7 +18,11 @@
 <!-- Number: 0,1,2 -->
 <!-- Mandatory -->
 <!-- Reboot required -->
+{if isset($grandstream_ip_address_mode)}
+<P8>{$grandstream_ip_address_mode}</P8>
+{else}
 <P8>0</P8>
+{/if}
 
 <!-- Preferred DNS server -->
 <!-- Mandatory -->
@@ -273,7 +277,12 @@
 <!-- Periodic Inform Enable 0 - No, 1 - Yes (default is No) -->
 <!-- Number: 0,1 -->
 <!-- Mandatory -->
+{if isset ($grandstream_tr069_periodic_inform_enable)}
+<P4506>{$grandstream_tr069_periodic_inform_enable}</P4506>
+{else}
 <P4506>0</P4506>
+{/if}
+
 
 <!-- Periodic Inform Interval (default is 300) -->
 <!-- String Max Length: 5 -->

@@ -5,7 +5,7 @@
 		$apps[$x]['uuid'] = "e68d9689-2769-e013-28fa-6214bf47fca3";
 		$apps[$x]['category'] = "Switch";
 		$apps[$x]['subcategory'] = "";
-		$apps[$x]['version'] = "1.0";
+		$apps[$x]['version'] = "1.1";
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Used Configure SIP extensions.";
@@ -34,9 +34,9 @@
 		$apps[$x]['destinations'][$y]['type'] = "sql";
 		$apps[$x]['destinations'][$y]['label'] = "extensions";
 		$apps[$x]['destinations'][$y]['name'] = "extensions";
-		$apps[$x]['destinations'][$y]['sql'] = "select extension_uuid, extension, number_alias, user_context as context, description from v_extensions ";
+		$apps[$x]['destinations'][$y]['sql'] = "select extension_uuid, extension_uuid as uuid, extension, number_alias, effective_caller_id_name as name, user_context as context, description from v_extensions ";
 		$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '\${domain_uuid}' and enabled = 'true' ";
-		$apps[$x]['destinations'][$y]['order_by'] = "number_alias, extension asc";
+		$apps[$x]['destinations'][$y]['order_by'] = "natural_sort(number_alias) asc, natural_sort(extension) asc";
 		$apps[$x]['destinations'][$y]['field']['extension_uuid'] = "extension_uuid";
 		$apps[$x]['destinations'][$y]['field']['destination'] = "number_alias,extension";
 		$apps[$x]['destinations'][$y]['field']['extension'] = "number_alias,extension";
@@ -232,7 +232,11 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$apps[$x]['permissions'][$y]['groups'][] = "user"; 
-
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "extension_type";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$apps[$x]['permissions'][$y]['groups'][] = "user";
 
 	//default settings
 		$y=0;
@@ -638,6 +642,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "follow_me_destinations";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "extension_type";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;

@@ -43,12 +43,12 @@ if ($domains_processed == 1) {
 				if ($row['call_center_agent_uuid'] == null && $row['agent_uuid'] != null) {
 					$array['call_center_tiers'][$index]['call_center_agent_uuid'] = $row['agent_uuid'];
 				}
-				if (is_array($array['call_center_tiers'][$index]) && @sizeof($array['call_center_tiers'][$index]) != 0) {
+				if (!empty($array['call_center_tiers'][$index])) {
 					$array['call_center_tiers'][$index]['call_center_tier_uuid'] = $row['call_center_tier_uuid'];
 				}
 			}
 
-			if (is_array($array) && @sizeof($array) != 0) {
+			if (!empty($array)) {
 				$p = new permissions;
 				$p->add('call_center_tier_edit', 'temp');
 
@@ -86,8 +86,8 @@ if ($domains_processed == 1) {
 
 				//add the recording path if needed
 					if ($row['queue_greeting'] != '') {
-						if (file_exists($_SESSION['switch']['recordings']['dir'].'/'.$row['domain_name'].'/'.$row['queue_greeting'])) {
-							$queue_greeting_path = $_SESSION['switch']['recordings']['dir'].'/'.$row['domain_name'].'/'.$row['queue_greeting'];
+						if (file_exists($setting->get('switch','recordings').'/'.$row['domain_name'].'/'.$row['queue_greeting'])) {
+							$queue_greeting_path = $setting->get('switch','recordings').'/'.$row['domain_name'].'/'.$row['queue_greeting'];
 						}
 						else {
 							$queue_greeting_path = trim($row['queue_greeting']);
