@@ -2,7 +2,7 @@
 /*
 	FusionPBX
 	Version: MPL 1.1
-javascript:void(0);
+
 	The contents of this file are subject to the Mozilla Public License Version
 	1.1 (the "License"); you may not use this file except in compliance with
 	the License. You may obtain a copy of the License at
@@ -294,18 +294,13 @@ javascript:void(0);
 			$database->save($array);
 			unset($array);
 
-//remove checked dialplan details
-	if (
-		$action == 'update'
-		&& permission_exists('dialplan_detail_delete')
-		&& is_array($dialplan_details_delete)
-		&& @sizeof($dialplan_details_delete) != 0
-		) {
-		$obj = new dialplan;
-		$obj->dialplan_uuid = $dialplan_uuid;
-		$obj->app_uuid = $app_uuid ?? null;
-		$obj->delete_details($dialplan_details_delete);
-	}
+		//remove checked dialplan details
+			if ($action == 'update' && permission_exists('dialplan_detail_delete') && !empty($dialplan_details_delete)) {
+				$obj = new dialplan;
+				$obj->dialplan_uuid = $dialplan_uuid;
+				$obj->app_uuid = $app_uuid ?? null;
+				$obj->delete_details($dialplan_details_delete);
+			}
 
 		//clear the cache
 			$cache = new cache;
