@@ -39,6 +39,8 @@
     <call_screen_fkeys_on_connected perm="">F_HOLD F_TRANSFER F_CONFERENCE</call_screen_fkeys_on_connected>
     <!-- Updates -->
     <update_policy perm="">{if isset($snom_update_policy)}{$snom_update_policy}{else}auto_update{/if}</update_policy>
+    <firmware perm="R">{$snom_firmware_url}{$snom_firmware_d785}</firmware>
+    <firmware_uxm perm="R">{$snom_firmware_url}{$snom_firmware_uxm}</firmware_uxm>
     <setting_server perm="RW">{if isset($snom_provision_url)}{$snom_provision_url}{else}https://{$domain_name}{$project_path}/app/provision/index.php?mac={$mac}{/if}</setting_server>
     <settings_refresh_timer perm="RW">{if isset($snom_provision_timer_seconds)}{$snom_provision_timer_seconds}{else}0{/if}</settings_refresh_timer>
     <http_client_user perm="">{$http_auth_username}</http_client_user>
@@ -65,6 +67,7 @@
     <user_host idx="{$row.line_number}" perm="R">{$row.server_address}:{$row.sip_port}</user_host>
     <user_outbound idx="{$row.line_number}" perm="R">{if $row.outbound_proxy_primary == ""}{$row.server_address}{else}{$row.outbound_proxy_primary}{/if}:{$row.sip_port};transport={if $row.sip_transport == 'tcp' || $row.sip_transport == 'tls'}{$row.sip_transport}{else}udp{/if},{if $row.outbound_proxy_secondary == ""}{else}{$row.outbound_proxy_secondary}:{$row.sip_port};transport={if $row.sip_transport == 'tcp' || $row.sip_transport == 'tls'}{$row.sip_transport}{else}udp{/if}{/if}</user_outbound>
     <user_expiry idx="{$row.line_number}" perm="R">{$row.register_expires}</user_expiry>
+    <user_shared_line idx="{$row.line_number}" perm="R">{if $row.shared_line == "on"}on{else}off{/if}</user_shared_line>    
     <user_server_type idx="{$row.line_number}" perm="R">Default</user_server_type>
     <user_srtp idx="{$row.line_number}" perm="R">off</user_srtp>
     <user_mailbox idx="{$row.line_number}" perm="R">{$voicemail_number}</user_mailbox>
@@ -78,10 +81,7 @@
     {/foreach}
   </phone-settings>
 
-  <firmware-settings>
-    <firmware perm="R">{$snom_firmware_url}{$snom_firmware_d785}</firmware>
-    <firmware_uxm perm="R">{$snom_firmware_url}{$snom_firmware_uxm}</firmware_uxm>
-  </firmware-settings>
+
 
   <!-- Function Keys. View Key Types here: https://service.snom.com/display/wiki/Function+Key+Types -->
   <functionKeys e="2"> {assign var="maxKeys" value=77 - count($lines)}

@@ -247,6 +247,9 @@
 				--sanitize the agent_contact and allow specific variables
 					agent_contact = xml.sanitize(agent_contact);
 					agent_contact = string.gsub(agent_contact, "{caller_destination}", "${caller_destination}");
+					agent_contact = string.gsub(agent_contact, "{strftime", "${strftime");
+					agent_contact = string.gsub(agent_contact, "{uuid}", "${uuid}");
+					agent_contact = string.gsub(agent_contact, "{record_ext}", "${record_ext}");
 
 				--build the xml string
 					xml:append([[                            <agent ]]);

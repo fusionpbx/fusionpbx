@@ -291,7 +291,7 @@
     <!-- Set $fixed_keys variable below and the rest should work -->
 
 {$fixed_keys=5}
-{if $template == "grandstream/gxp3240"}{$fixed_keys=5}{/if}
+{if $template == "grandstream/gxv3240"}{$fixed_keys=5}{/if}
 <!-- Detected {$template} with {$fixed_keys} fixed keys -->
 {$start_id=1363}
 {assign var=key_types value=["none"=>-1,"line"=>0,"shared line"=>1,"speed dial"=>10, "blf"=>11, "presence watcher"=>12, "eventlist blf"=>13,"speed dial active"=>14,"dial dtmf"=>15,"voicemail"=>16,"call return"=>17,"transfer"=>18,"call park"=>19,"intercom"=>20,"ldap search"=>21,"multicast paging"=>23,"record"=>24,"call log"=>25,"monitored call park"=>26,"menu"=>27]}
@@ -5054,7 +5054,12 @@
 
 <!-- Enable TR-069. 0 - No, 1 - Yes. Default value is 0 -->
 <!-- Number: 0, 1 -->
+{if isset ($grandstream_tr069_enable)}
+<P1409>{$grandstream_tr069_enable}</P1409>
+{else}
 <P1409>0</P1409>
+{/if}
+
 
 <!-- ACS URL -->
 <P4503></P4503>
@@ -5067,7 +5072,12 @@
 
 <!-- Periodic Inform Enable. 0 - No, 1 - Yes. Default value is 0 -->
 <!-- Number: 0, 1 -->
+{if isset ($grandstream_tr069_periodic_inform_enable)}
+<P4506>{$grandstream_tr069_periodic_inform_enable}</P4506>
+{else}
 <P4506>0</P4506>
+{/if}
+
 
 <!-- Periodic Inform Interval (s). Default value is 86400 -->
 <!-- Number: 1 - 4294967295 -->

@@ -147,7 +147,7 @@ if (!class_exists('switch_music_on_hold')) {
 
 		public function reload() {
 			//if the handle does not exist create it
-				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+				$fp = event_socket_create();
 			//if the handle still does not exist show an error message
 				if (!$fp) {
 					$msg = "<div align='center'>".$text['message-event-socket']."<br /></div>";
@@ -208,7 +208,7 @@ if (!class_exists('switch_music_on_hold')) {
 					$file_contents = file_get_contents("/usr/share/examples/fusionpbx/resources/templates/conf/autoload_configs/local_stream.conf.xml");
 				}
 				else {
-					$file_contents = file_get_contents($_SERVER["PROJECT_ROOT"]."/resources/templates/conf/autoload_configs/local_stream.conf.xml");
+					$file_contents = file_get_contents($_SERVER["PROJECT_ROOT"]."/app/switch/resources/conf/autoload_configs/local_stream.conf.xml");
 				}
 			//check where the default music is stored
 				$default_moh_prefix = 'music/default';

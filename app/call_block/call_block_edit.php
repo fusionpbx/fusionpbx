@@ -62,6 +62,7 @@
 //get http post variables and set them to php variables
 	if (!empty($_POST)) {
 		//get the variables from the http post
+		$domain_uuid = permission_exists('call_block_domain') ? $_POST["domain_uuid"] : $_SESSION['domain_uuid'];
 		$call_block_direction = $_POST["call_block_direction"];
 		$extension_uuid = $_POST["extension_uuid"];
 		$call_block_name = $_POST["call_block_name"] ?? null;
@@ -146,10 +147,14 @@
 				//ensure call block is enabled in the dialplan
 					if ($action == "add" || $action == "update") {
 						$sql = "select dialplan_uuid from v_dialplans where true ";
-						$sql .= "and domain_uuid = :domain_uuid ";
+						if (!empty($domain_uuid) && is_uuid($domain_uuid)) {
+							$sql .= "and domain_uuid = :domain_uuid ";
+						}
 						$sql .= "and app_uuid = 'b1b31930-d0ee-4395-a891-04df94599f1f' ";
 						$sql .= "and dialplan_enabled <> 'true' ";
-						$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+						if (!empty($domain_uuid) && is_uuid($domain_uuid)) {
+							$parameters['domain_uuid'] = $domain_uuid;
+						}
 						$database = new database;
 						$rows = $database->select($sql, $parameters);
 
@@ -178,7 +183,7 @@
 				//save the data to the database
 					if ($action == "add") {
 						$array['call_block'][0]['call_block_uuid'] = uuid();
-						$array['call_block'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
+						$array['call_block'][0]['domain_uuid'] = $domain_uuid;
 						$array['call_block'][0]['call_block_direction'] = $call_block_direction;
 						if (!empty($extension_uuid) && is_uuid($extension_uuid)) {
 							$array['call_block'][0]['extension_uuid'] = $extension_uuid;
@@ -205,12 +210,20 @@
 						return;
 					}
 					if ($action == "update") {
-						$sql = "select c.call_block_country_code, c.call_block_number, d.domain_name ";
-						$sql .= "from v_call_block as c ";
-						$sql .= "join v_domains as d on c.domain_uuid = d.domain_uuid ";
-						$sql .= "where c.domain_uuid = :domain_uuid ";
-						$sql .= "and c.call_block_uuid = :call_block_uuid ";
-						$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+						if (!empty($domain_uuid) && is_uuid($domain_uuid)) {
+							$sql = "select c.call_block_country_code, c.call_block_number, d.domain_name ";
+							$sql .= "from v_call_block as c ";
+							$sql .= "join v_domains as d on c.domain_uuid = d.domain_uuid ";
+							$sql .= "where c.domain_uuid = :domain_uuid ";
+							$sql .= "and c.call_block_uuid = :call_block_uuid ";
+							$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+						}
+						else {
+							$sql = "select c.call_block_country_code, c.call_block_number, domain_name as 'global' ";
+							$sql .= "from v_call_block as c ";
+							$sql .= "where c.domain_uuid is null ";
+							$sql .= "and c.call_block_uuid = :call_block_uuid ";
+						}
 						$parameters['call_block_uuid'] = $call_block_uuid;
 						$database = new database;
 						$result = $database->select($sql, $parameters);
@@ -225,7 +238,7 @@
 						unset($sql, $parameters);
 
 						$array['call_block'][0]['call_block_uuid'] = $call_block_uuid;
-						$array['call_block'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
+						$array['call_block'][0]['domain_uuid'] = $domain_uuid;
 						$array['call_block'][0]['call_block_direction'] = $call_block_direction;
 						if (!empty($extension_uuid) && is_uuid($extension_uuid)) {
 							$array['call_block'][0]['extension_uuid'] = $extension_uuid;
@@ -257,13 +270,19 @@
 	if (!empty($_GET) && empty($_POST["persistformvar"])) {
 		$call_block_uuid = $_GET["id"];
 		$sql = "select * from v_call_block ";
-		$sql .= "where domain_uuid = :domain_uuid ";
+		$sql .= "where ( ";
+		$sql .= "	domain_uuid = :domain_uuid ";
+		if (permission_exists('call_block_domain')) {
+			$sql .= "	or domain_uuid is null ";
+		}
+		$sql .= ") ";
 		$sql .= "and call_block_uuid = :call_block_uuid ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$parameters['call_block_uuid'] = $call_block_uuid;
 		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
 		if (!empty($row)) {
+			$domain_uuid = $row["domain_uuid"];
 			$call_block_direction = $row["call_block_direction"];
 			$extension_uuid = $row["extension_uuid"];
 			$call_block_name = $row["call_block_name"];
@@ -283,7 +302,12 @@
 //get the extensions
 	if (permission_exists('call_block_all') || permission_exists('call_block_extension')) {
 		$sql = "select extension_uuid, extension, number_alias, user_context, description from v_extensions ";
-		$sql .= "where domain_uuid = :domain_uuid ";
+		$sql .= "where ( ";
+		$sql .= "	domain_uuid = :domain_uuid ";
+		if (permission_exists('call_block_domain')) {
+			$sql .= "	or domain_uuid is null ";
+		}
+		$sql .= ") ";
 		$sql .= "and enabled = 'true' ";
 		$sql .= "order by extension asc ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
@@ -294,7 +318,12 @@
 //get the ivr's
 if (permission_exists('call_block_all') || permission_exists('call_block_ivr')) {
 	$sql = "select ivr_menu_uuid,ivr_menu_name, ivr_menu_extension, ivr_menu_description from v_ivr_menus ";
-	$sql .= "where domain_uuid = :domain_uuid ";
+	$sql .= "where ( ";
+	$sql .= "	domain_uuid = :domain_uuid ";
+	if (permission_exists('call_block_domain')) {
+		$sql .= "	or domain_uuid is null ";
+	}
+	$sql .= ") ";
 	// $sql .= "and enabled = 'true' ";
 	$sql .= "order by ivr_menu_extension asc ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
@@ -305,7 +334,12 @@ if (permission_exists('call_block_all') || permission_exists('call_block_ivr')) 
 //get the ring groups
 if (permission_exists('call_block_all') || permission_exists('call_block_ring_group')) {
 	$sql = "select ring_group_uuid,ring_group_name, ring_group_extension, ring_group_description from v_ring_groups ";
-	$sql .= "where domain_uuid = :domain_uuid ";
+	$sql .= "where ( ";
+	$sql .= "	domain_uuid = :domain_uuid ";
+	if (permission_exists('call_block_domain')) {
+		$sql .= "	or domain_uuid is null ";
+	}
+	$sql .= ") ";
 	// $sql .= "and ring_group_enabled = 'true' ";
 	$sql .= "order by ring_group_extension asc ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
@@ -316,7 +350,12 @@ if (permission_exists('call_block_all') || permission_exists('call_block_ring_gr
 //get the voicemails
 	$sql = "select voicemail_uuid, voicemail_id, voicemail_description ";
 	$sql .= "from v_voicemails ";
-	$sql .= "where domain_uuid = :domain_uuid ";
+	$sql .= "where ( ";
+	$sql .= "	domain_uuid = :domain_uuid ";
+	if (permission_exists('call_block_domain')) {
+		$sql .= "	or domain_uuid is null ";
+	}
+	$sql .= ") ";
 	$sql .= "and voicemail_enabled = 'true' ";
 	$sql .= "order by voicemail_id asc ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
@@ -506,6 +545,24 @@ if (permission_exists('call_block_all') || permission_exists('call_block_ring_gr
 	echo "\n";
 	echo "</td>\n";
 	echo "</tr>\n";
+
+	if (permission_exists('call_block_domain')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-domain']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "    <select class='formfld' name='domain_uuid'>\n";
+		echo "		<option value=''>".$text['label-global']."</option>\n";
+		foreach ($_SESSION['domains'] as $row) {
+			echo "	<option value='".escape($row['domain_uuid'])."' ".($row['domain_uuid'] == $domain_uuid ? "selected='selected'" : null).">".escape($row['domain_name'])."</option>\n";
+		}
+		echo "    </select>\n";
+		echo "<br />\n";
+		echo $text['description-domain_name']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";

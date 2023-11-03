@@ -56,6 +56,12 @@
 //process the http post data by action
 	if (!empty($action) && is_array($call_recordings) && @sizeof($call_recordings) != 0) {
 		switch ($action) {
+			case 'download':
+				if (permission_exists('call_recording_download')) {
+					$obj = new call_recordings;
+					$obj->download($call_recordings);
+				}
+				break;
 			case 'delete':
 				if (permission_exists('call_recording_delete')) {
 					$obj = new call_recordings;
@@ -171,11 +177,11 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-call_recordings']." </b></div>\n";
 	echo "	<div class='actions'>\n";
-	if (permission_exists('call_recording_download_add') && $call_recordings) {
-		echo button::create(['type'=>'button','label'=>$text['button-download'],'icon'=>$_SESSION['theme']['button_icon_download'],'collapse'=>'hide-xs','onclick'=>"list_action_set('download'); list_form_submit('form_list');"]);
+	if (permission_exists('call_recording_download') && $call_recordings) {
+		echo button::create(['type'=>'button','label'=>$text['button-download'],'icon'=>$_SESSION['theme']['button_icon_download'],'id'=>'btn_download','name'=>'btn_download','style'=>'display: none;','collapse'=>'hide-xs','onclick'=>"list_action_set('download'); list_form_submit('form_list');"]);
 	}
 	if (permission_exists('call_recording_delete') && $call_recordings) {
-		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','name'=>'btn_delete','style'=>'display: none; margin-left: 15px;','collapse'=>'hide-xs','onclick'=>"modal_open('modal-delete','btn_delete');"]);
+		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','name'=>'btn_delete','style'=>'display: none; margin-right: 15px;','collapse'=>'hide-xs','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
 	echo 		"<form id='form_search' class='inline' method='get'>\n";
 	if (permission_exists('call_recording_all')) {
@@ -243,6 +249,9 @@
 	if (is_array($call_recordings) && @sizeof($call_recordings) != 0) {
 		$x = 0;
 		foreach ($call_recordings as $row) {
+			//add padding to the call recording length
+			$call_recording_length_padding = (!empty($row['call_recording_length'])) ? str_pad($row['call_recording_length'], 2, '0', STR_PAD_LEFT) : '';
+
 			//playback progress bar
 			if (permission_exists('call_recording_play')) {
 				echo "<tr class='list-row' id='recording_progress_bar_".escape($row['call_recording_uuid'])."' style='display: none;'><td class='playback_progress_bar_background' style='padding: 0; border: none;' colspan='".$col_count."'><span class='playback_progress_bar' id='recording_progress_".escape($row['call_recording_uuid'])."'></span></td>".(permission_exists('xml_cdr_details') ? "<td class='action-button' style='border-bottom: none !important;'></td>" : null)."</tr>\n";
@@ -285,7 +294,7 @@
 				}
 				echo "	</td>\n";
 			}
-			echo "	<td class='right overflow hide-sm-dn shrink'>".($row['call_recording_length'] <= 59 ? '0:' : null).escape(str_pad($row['call_recording_length'], 2, '0', STR_PAD_LEFT))."</td>\n";
+			echo "	<td class='right overflow hide-sm-dn shrink'>".($row['call_recording_length'] <= 59 ? '0:' : null).escape($call_recording_length_padding)."</td>\n";
 			echo "	<td class='center no-wrap'>".escape($row['call_recording_date_formatted'])." <span class='hide-sm-dn'>".escape($row['call_recording_time_formatted'])."</span></td>\n";
 			echo "	<td class='left hide-sm-dn shrink'>".($row['call_direction'] != '' ? escape($text['label-'.$row['call_direction']]) : null)."</td>\n";
 			if (permission_exists('xml_cdr_details')) {

@@ -58,8 +58,14 @@ if ($domains_processed == 1) {
 				elseif (file_exists('/usr/local/share/fusionpbx/resources/templates/conf/vars.xml')) {
 					$xml_file = '/usr/local/share/fusionpbx/resources/templates/conf/vars.xml';
 				}
+				elseif (file_exists('/usr/local/www/fusionpbx/app/switch/resources/conf/vars.xml')) {
+					$xml_file = '/usr/local/www/fusionpbx/app/switch/resources/conf/vars.xml';
+				}
+				elseif (file_exists('/var/www/fusionpbx/app/switch/resources/conf/vars.xml')) {
+					$xml_file = '/var/www/fusionpbx/app/switch/resources/conf/vars.xml';
+				}
 				else {
-					$xml_file = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/conf/vars.xml';
+					$xml_file = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'app/switch/resources/conf/vars.xml';
 				}
 
 			//load the xml and save it into an array
@@ -96,11 +102,13 @@ if ($domains_processed == 1) {
 				$p->add("var_edit", "temp");
 
 			//execute insert
-				$database = new database;
-				$database->app_name = 'vars';
-				$database->app_uuid = '54e08402-c1b8-0a9d-a30a-f569fc174dd8';
-				$database->save($array, false);
-				$message = $database->message;
+				if (!empty($array)) {
+					$database = new database;
+					$database->app_name = 'vars';
+					$database->app_uuid = '54e08402-c1b8-0a9d-a30a-f569fc174dd8';
+					$database->save($array, false);
+					$message = $database->message;
+				}
 
 			//revoke temporary permissions
 				$p->delete("var_add", "temp");
@@ -112,8 +120,6 @@ if ($domains_processed == 1) {
 		if (!function_exists('set_country_vars')) {
 			function set_country_vars($x) {
 				require "resources/countries.php";
-
-				//$country_iso=$_SESSION['domain']['country']['iso_code'];
 
 				$sql = "select default_setting_value ";
 				$sql .= "from v_default_settings ";

@@ -143,7 +143,7 @@
 <Resync_Random_Delay ua="na">2</Resync_Random_Delay>
 <Resync_At__HHmm_ ua="na"/>
 <Resync_At_Random_Delay ua="na">600</Resync_At_Random_Delay>
-<Resync_Periodic ua="na">3600</Resync_Periodic>
+<Resync_Periodic ua="na">0</Resync_Periodic>
 <Resync_Error_Retry_Delay ua="na">3600</Resync_Error_Retry_Delay>
 <Forced_Resync_Delay ua="na">14400</Forced_Resync_Delay>
 <Resync_From_SIP ua="na">Yes</Resync_From_SIP>
@@ -515,7 +515,7 @@
 <!-- Dial Plan -->
 <Dial_Plan_1_ ua="na">{$spa_dial_plan}</Dial_Plan_1_>
 <Caller_ID_Map_1_ ua="na"/>
-<Enable_URI_Dialing_1_ ua="na">No</Enable_URI_Dialing_1_>
+<Enable_URI_Dialing_1_ ua="na">Yes</Enable_URI_Dialing_1_>
 <Emergency_Number_1_ ua="na"/>
 <!-- General -->
 <Line_Enable_2_ ua="na">Yes</Line_Enable_2_>
@@ -609,7 +609,7 @@
 <!-- Dial Plan -->
 <Dial_Plan_2_ ua="na">{$spa_dial_plan}</Dial_Plan_2_>
 <Caller_ID_Map_2_ ua="na"/>
-<Enable_URI_Dialing_2_ ua="na">No</Enable_URI_Dialing_2_>
+<Enable_URI_Dialing_2_ ua="na">Yes</Enable_URI_Dialing_2_>
 <Emergency_Number_2_ ua="na"/>
 <!-- General -->
 <Line_Enable_3_ ua="na">Yes</Line_Enable_3_>
@@ -703,7 +703,7 @@
 <!-- Dial Plan -->
 <Dial_Plan_3_ ua="na">{$spa_dial_plan}</Dial_Plan_3_>
 <Caller_ID_Map_3_ ua="na"/>
-<Enable_URI_Dialing_3_ ua="na">No</Enable_URI_Dialing_3_>
+<Enable_URI_Dialing_3_ ua="na">Yes</Enable_URI_Dialing_3_>
 <Emergency_Number_3_ ua="na"/>
 <!-- General -->
 <Line_Enable_4_ ua="na">Yes</Line_Enable_4_>
@@ -798,7 +798,7 @@
 <!-- Dial Plan -->
 <Dial_Plan_4_ ua="na">{$spa_dial_plan}</Dial_Plan_4_>
 <Caller_ID_Map_4_ ua="na"/>
-<Enable_URI_Dialing_4_ ua="na">No</Enable_URI_Dialing_4_>
+<Enable_URI_Dialing_4_ ua="na">Yes</Enable_URI_Dialing_4_>
 <Emergency_Number_4_ ua="na"/>
 <!-- General -->
 <Line_Enable_5_ ua="na">Yes</Line_Enable_5_>
@@ -892,7 +892,7 @@
 <!-- Dial Plan -->
 <Dial_Plan_5_ ua="na">{$spa_dial_plan}</Dial_Plan_5_>
 <Caller_ID_Map_5_ ua="na"/>
-<Enable_URI_Dialing_5_ ua="na">No</Enable_URI_Dialing_5_>
+<Enable_URI_Dialing_5_ ua="na">Yes</Enable_URI_Dialing_5_>
 <Emergency_Number_5_ ua="na"/>
 <!-- General -->
 <Line_Enable_6_ ua="na">Yes</Line_Enable_6_>
@@ -986,7 +986,7 @@
 <!-- Dial Plan -->
 <Dial_Plan_6_ ua="na">{$spa_dial_plan}</Dial_Plan_6_>
 <Caller_ID_Map_6_ ua="na"/>
-<Enable_URI_Dialing_6_ ua="na">No</Enable_URI_Dialing_6_>
+<Enable_URI_Dialing_6_ ua="na">Yes</Enable_URI_Dialing_6_>
 <Emergency_Number_6_ ua="na"/>
 <!-- General -->
 <Line_Enable_7_ ua="na">Yes</Line_Enable_7_>
@@ -1079,7 +1079,7 @@
 <!-- Dial Plan -->
 <Dial_Plan_7_ ua="na">{$spa_dial_plan}</Dial_Plan_7_>
 <Caller_ID_Map_7_ ua="na"/>
-<Enable_URI_Dialing_7_ ua="na">No</Enable_URI_Dialing_7_>
+<Enable_URI_Dialing_7_ ua="na">Yes</Enable_URI_Dialing_7_>
 <Emergency_Number_7_ ua="na"/>
 <!-- General -->
 <Line_Enable_8_ ua="na">Yes</Line_Enable_8_>
@@ -1173,7 +1173,7 @@
 <!-- Dial Plan -->
 <Dial_Plan_8_ ua="na">{$spa_dial_plan}</Dial_Plan_8_>
 <Caller_ID_Map_8_ ua="na"/>
-<Enable_URI_Dialing_8_ ua="na">No</Enable_URI_Dialing_8_>
+<Enable_URI_Dialing_8_ ua="na">Yes</Enable_URI_Dialing_8_>
 <Emergency_Number_8_ ua="na"/>
 <!-- General -->
 <Line_Enable_9_ ua="na">Yes</Line_Enable_9_>
@@ -1267,7 +1267,7 @@
 <!-- Dial Plan -->
 <Dial_Plan_9_ ua="na">{$spa_dial_plan}</Dial_Plan_9_>
 <Caller_ID_Map_9_ ua="na"/>
-<Enable_URI_Dialing_9_ ua="na">No</Enable_URI_Dialing_9_>
+<Enable_URI_Dialing_9_ ua="na">Yes</Enable_URI_Dialing_9_>
 <Emergency_Number_9_ ua="na"/>
 <!-- General -->
 <Line_Enable_10_ ua="na">Yes</Line_Enable_10_>
@@ -1361,7 +1361,7 @@
 <!-- Dial Plan -->
 <Dial_Plan_10_ ua="na">{$spa_dial_plan}</Dial_Plan_10_>
 <Caller_ID_Map_10_ ua="na"/>
-<Enable_URI_Dialing_10_ ua="na">No</Enable_URI_Dialing_10_>
+<Enable_URI_Dialing_10_ ua="na">Yes</Enable_URI_Dialing_10_>
 <Emergency_Number_10_ ua="na"/>
 <!-- Hold Reminder -->
 <Hold_Reminder_Timer ua="rw">0</Hold_Reminder_Timer>
