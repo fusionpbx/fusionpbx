@@ -716,7 +716,7 @@
 		$script .= "	tb.name=obj.name;\n";
 		$script .= "	tb.className='formfld';\n";
 		$script .= "	tb.setAttribute('id', '".$destination_id."');\n";
-		$script .= "	tb.setAttribute('style', '".$select_style."');\n";
+		$script .= "	tb.setAttribute('style', 'width: ' + obj.offsetWidth + 'px;');\n";
 		if (!empty($on_change)) {
 			$script .= "	tb.setAttribute('onchange', \"".$on_change."\");\n";
 			$script .= "	tb.setAttribute('onkeyup', \"".$on_change."\");\n";
@@ -751,29 +751,28 @@
 	}
 	echo "<select name='ring_group_greeting' id='ring_group_greeting' class='formfld' style='width: 200px;' ".(permission_exists('recording_play') || permission_exists('recording_download') ? "onchange=\"recording_reset('greeting'); set_playable('greeting', this.value, this.options[this.selectedIndex].parentNode.getAttribute('data-type'));\"" : null).">\n";
 	echo "	<option value=''></option>\n";
-	$found = false;
-	foreach ($sounds as $key => $value) {
-		echo "<optgroup label=".$text['label-'.$key]." data-type='".$key."'>\n";
-		foreach ($value as $row) {
-			if (!empty($ring_group_greeting) && $ring_group_greeting == $row["value"]) {
-				$selected = "selected='selected'";
-				if ($key == 'recordings') {
-					$playable_greeting = '../recordings/recordings.php?action=download&type=rec&filename='.$row["value"];
-				}
-				else if ($key == 'sounds') {
-					$playable_greeting = '../switch/sounds.php?action=download&filename='.$row["value"];
+	$found = $playable_greeting = false;
+	if (!empty($sounds) && is_array($sounds) && @sizeof($sounds) != 0) {
+		foreach ($sounds as $key => $value) {
+			echo "<optgroup label=".$text['label-'.$key]." data-type='".$key."'>\n";
+			foreach ($value as $row) {
+				if (!empty($ring_group_greeting) && $ring_group_greeting == $row["value"]) {
+					$selected = "selected='selected'";
+					if ($key == 'recordings') {
+						$playable_greeting = '../recordings/recordings.php?action=download&type=rec&filename='.$row["value"];
+					}
+					else if ($key == 'sounds') {
+						$playable_greeting = '../switch/sounds.php?action=download&filename='.$row["value"];
+					}
+					$found = true;
 				}
 				else {
-					$playable_greeting = false;
+					unset($selected);
 				}
-				$found = true;
+				echo "	<option value='".escape($row["value"])."' ".($selected ?? '').">".escape($row["name"])."</option>\n";
 			}
-			else {
-				unset($selected);
-			}
-			echo "	<option value='".escape($row["value"])."' ".$selected.">".escape($row["name"])."</option>\n";
+			echo "</optgroup>\n";
 		}
-		echo "</optgroup>\n";
 	}
 	if (if_group("superadmin") && !empty($ring_group_greeting) && !$found) {
 		echo "	<option value='".escape($ring_group_greeting)."' selected='selected'>".escape($ring_group_greeting)."</option>\n";
