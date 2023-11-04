@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2013 - 2019
+	Copyright (C) 2013 - 2023
 	All Rights Reserved.
 
 	Contributor(s):
@@ -51,10 +51,10 @@ if (!class_exists('schema')) {
 				$x=0;
 				foreach ($config_list as &$config_path) {
 					try {
-					    include($config_path);
+						include($config_path);
 					}
 					catch (Exception $e) {
-					    //echo 'Caught exception: ',  $e->getMessage(), "\n";
+						//echo 'Caught exception: ',  $e->getMessage(), "\n";
 					}
 					$x++;
 				}
@@ -614,8 +614,15 @@ if (!class_exists('schema')) {
 								}
 							}
 							else {
+								if ($this->db_table_exists($db_type, $db_name, $row['table']['name'])) {
+									$row['exists'] = "true";
+								}
+								else {
+									$row['exists'] = "false";
+								}
 								$table_name = $row['table']['name'];
 							}
+
 							//check if the table exists
 								if ($row['exists'] == "true") {
 									if (count($row['fields']) > 0) {
@@ -717,16 +724,13 @@ if (!class_exists('schema')) {
 															}
 														}
 													}
-
 											}
 										}
 									}
 								}
-								else {
+								elseif (!is_array($row['table']['name'])) {
 									//create table
-										if (!is_array($row['table']['name'])) {
-											$sql_update .= $this->db_create_table($this->apps, $db_type, $row['table']['name']);
-										}
+									$sql_update .= $this->db_create_table($this->apps, $db_type, $row['table']['name']);
 								}
 						}
 					}
