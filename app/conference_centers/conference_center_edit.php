@@ -234,32 +234,11 @@
 	if (empty($conference_center_enabled)) { $conference_center_enabled = "true"; }
 	if (empty($conference_center_pin_length)) { $conference_center_pin_length = 9; }
 
-//get the recordings
-	$sql = "select recording_name, recording_filename from v_recordings ";
-	$sql .= "where domain_uuid = :domain_uuid ";
-	$sql .= "order by recording_name asc ";
-	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$database = new database;
-	$recordings = $database->select($sql, $parameters ?? null, 'all');
-	unset($sql, $parameters);
-
-//get the phrases
-	$sql = "select * from v_phrases ";
-	$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
-	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$database = new database;
-	$phrases = $database->select($sql, $parameters ?? null, 'all');
-	unset($sql, $parameters);
-
-//get the streams
-	$sql = "select * from v_streams ";
-	$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
-	$sql .= "and stream_enabled = 'true' ";
-	$sql .= "order by stream_name asc ";
-	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$database = new database;
-	$streams = $database->select($sql, $parameters ?? null, 'all');
-	unset($sql, $parameters);
+//get the sounds
+	$sounds = new sounds;
+	$sounds->sound_types = ['recordings','phrases','sounds'];
+	$sounds->full_path = ['recordings'];
+	$audio_files = $sounds->get();
 
 //create token
 	$object = new token;
@@ -272,31 +251,70 @@
 //show the content
 	if (permission_exists('recording_play') || permission_exists('recording_download')) {
 		echo "<script type='text/javascript' language='JavaScript'>\n";
-		echo "	function set_playable(id, greeting_selected, greeting_type) {\n";
-		echo "		file_ext = greeting_selected.split('.').pop();\n";
-		echo "		var audio_file_type = '';\n";
+		echo "	function set_playable(id, audio_selected, audio_type) {\n";
+		echo "		file_ext = audio_selected.split('.').pop();\n";
+		echo "		var mime_type = '';\n";
 		echo "		switch (file_ext) {\n";
-		echo "			case 'wav': audio_file_type = 'audio/wav'; break;\n";
-		echo "			case 'mp3': audio_file_type = 'audio/mpeg'; break;\n";
-		echo "			case 'ogg': audio_file_type = 'audio/ogg'; break;\n";
+		echo "			case 'wav': mime_type = 'audio/wav'; break;\n";
+		echo "			case 'mp3': mime_type = 'audio/mpeg'; break;\n";
+		echo "			case 'ogg': mime_type = 'audio/ogg'; break;\n";
 		echo "		}\n";
-		echo "		if (audio_file_type != '' && (greeting_type == 'recordings' || greeting_type == 'sounds')) {\n";
-		echo "			if (greeting_type == 'recordings') {\n";
-		echo "				if (greeting_selected.includes('/')) {\n";
-		echo "					greeting_selected = greeting_selected.split('/').pop()\n";
+		echo "		if (mime_type != '' && (audio_type == 'recordings' || audio_type == 'sounds')) {\n";
+		echo "			if (audio_type == 'recordings') {\n";
+		echo "				if (audio_selected.includes('/')) {\n";
+		echo "					audio_selected = audio_selected.split('/').pop()\n";
 		echo "				}\n";
-		echo "				$('#recording_audio_' + id).attr('src', '../recordings/recordings.php?action=download&type=rec&filename=' + greeting_selected);\n";
+		echo "				$('#recording_audio_' + id).attr('src', '../recordings/recordings.php?action=download&type=rec&filename=' + audio_selected);\n";
 		echo "			}\n";
-		echo "			else if (greeting_type == 'sounds') {\n";
-		echo "				$('#recording_audio_' + id).attr('src', '../switch/sounds.php?action=download&filename=' + greeting_selected);\n";
+		echo "			else if (audio_type == 'sounds') {\n";
+		echo "				$('#recording_audio_' + id).attr('src', '../switch/sounds.php?action=download&filename=' + audio_selected);\n";
 		echo "			}\n";
-		echo "			$('#recording_audio_' + id).attr('type', audio_file_type);\n";
+		echo "			$('#recording_audio_' + id).attr('type', mime_type);\n";
 		echo "			$('#recording_button_' + id).show();\n";
 		echo "		}\n";
 		echo "		else {\n";
 		echo "			$('#recording_button_' + id).hide();\n";
 		echo "			$('#recording_audio_' + id).attr('src','').attr('type','');\n";
 		echo "		}\n";
+		echo "	}\n";
+		echo "</script>\n";
+	}
+	if (if_group("superadmin")) {
+		echo "<script type='text/javascript' language='JavaScript'>\n";
+		echo "	var objs;\n";
+		echo "	function toggle_select_input(obj, instance_id){\n";
+		echo "		tb=document.createElement('INPUT');\n";
+		echo "		tb.type='text';\n";
+		echo "		tb.name=obj.name;\n";
+		echo "		tb.className='formfld';\n";
+		echo "		tb.setAttribute('id', instance_id);\n";
+		echo "		tb.setAttribute('style', 'width: ' + obj.offsetWidth + 'px;');\n";
+		if (!empty($on_change)) {
+			echo "	tb.setAttribute('onchange', \"".$on_change."\");\n";
+			echo "	tb.setAttribute('onkeyup', \"".$on_change."\");\n";
+		}
+		echo "		tb.value=obj.options[obj.selectedIndex].value;\n";
+		echo "		document.getElementById('btn_select_to_input_' + instance_id).style.display = 'none';\n";
+		echo "		tbb=document.createElement('INPUT');\n";
+		echo "		tbb.setAttribute('class', 'btn');\n";
+		echo "		tbb.setAttribute('style', 'margin-left: 4px;');\n";
+		echo "		tbb.type='button';\n";
+		echo "		tbb.value=$('<div />').html('&#9665;').text();\n";
+		echo "		tbb.objs=[obj,tb,tbb];\n";
+		echo "		tbb.onclick=function(){ replace_element(this.objs, instance_id); }\n";
+		echo "		obj.parentNode.insertBefore(tb,obj);\n";
+		echo "		obj.parentNode.insertBefore(tbb,obj);\n";
+		echo "		obj.parentNode.removeChild(obj);\n";
+		echo "		replace_element(this.objs, instance_id);\n";
+		echo "	}\n";
+		echo "	function replace_element(obj, instance_id){\n";
+		echo "		obj[2].parentNode.insertBefore(obj[0],obj[2]);\n";
+		echo "		obj[0].parentNode.removeChild(obj[1]);\n";
+		echo "		obj[0].parentNode.removeChild(obj[2]);\n";
+		echo "		document.getElementById('btn_select_to_input_' + instance_id).style.display = 'inline';\n";
+		if (!empty($on_change)) {
+			echo "	".$on_change.";\n";
+		}
 		echo "	}\n";
 		echo "</script>\n";
 	}
@@ -343,147 +361,66 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
+	$instance_id = 'conference_center_greeting';
+	$instance_label = 'conference_center_greeting';
+	$instance_value = $conference_center_greeting;
 	echo "<tr>\n";
 	echo "<td class='vncell' rowspan='2' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-conference_center_greeting']."\n";
+	echo "	".$text['label-'.$instance_label]."\n";
 	echo "</td>\n";
-	echo "<td class='vtable playback_progress_bar_background' id='recording_progress_bar_greeting' style='display: none; border-bottom: none; padding-top: 0 !important; padding-bottom: 0 !important;' align='left'><span class='playback_progress_bar' id='recording_progress_greeting'></span></td>\n";
+	echo "<td class='vtable playback_progress_bar_background' id='recording_progress_bar_".$instance_id."' style='display: none; border-bottom: none; padding-top: 0 !important; padding-bottom: 0 !important;' align='left'><span class='playback_progress_bar' id='recording_progress_".$instance_id."'></span></td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
 	echo "<td class='vtable' align='left'>\n";
-	if (if_group("superadmin")) {
-		$destination_id = "conference_center_greeting";
-		$script = "<script>\n";
-		$script .= "var objs;\n";
-		$script .= "\n";
-		$script .= "function changeToInput".$destination_id."(obj){\n";
-		$script .= "	tb=document.createElement('INPUT');\n";
-		$script .= "	tb.type='text';\n";
-		$script .= "	tb.name=obj.name;\n";
-		$script .= "	tb.className='formfld';\n";
-		$script .= "	tb.setAttribute('id', '".$destination_id."');\n";
-		$script .= "	tb.setAttribute('style', 'width: ' + obj.offsetWidth + 'px;');\n";
-		if (!empty($on_change)) {
-			$script .= "	tb.setAttribute('onchange', \"".$on_change."\");\n";
-			$script .= "	tb.setAttribute('onkeyup', \"".$on_change."\");\n";
+	echo "<select name='".$instance_id."' id='".$instance_id."' class='formfld' ".(permission_exists('recording_play') || permission_exists('recording_download') ? "onchange=\"recording_reset('".$instance_id."'); set_playable('".$instance_id."', this.value, this.options[this.selectedIndex].parentNode.getAttribute('data-type'));\"" : null).">\n";
+	echo "	<option value=''></option>\n";
+	$found = $playable = false;
+	if (!empty($audio_files) && is_array($audio_files) && @sizeof($audio_files) != 0) {
+		foreach ($audio_files as $key => $value) {
+			echo "<optgroup label=".$text['label-'.$key]." data-type='".$key."'>\n";
+			foreach ($value as $row) {
+				if (!empty($instance_value) && $instance_value == $row["value"]) {
+					$selected = "selected='selected'";
+					if ($key == 'recordings') {
+						echo "<option value=''>".$sounds->full_path."</option>\n";
+						if (!empty($sounds->full_path) && is_array($sounds->full_path) && in_array('recordings', $sounds->full_path)) {
+							$row["value"] = str_replace($_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/','',$row["value"]);
+						}
+						$playable = '../recordings/recordings.php?action=download&type=rec&filename='.$row["value"];
+					}
+					else if ($key == 'sounds') {
+						$playable = '../switch/sounds.php?action=download&filename='.$row["value"];
+					}
+					$found = true;
+				}
+				else {
+					unset($selected);
+				}
+				echo "	<option value='".escape($row["value"])."' ".($selected ?? '').">".escape($row["name"])."</option>\n";
+			}
+			echo "</optgroup>\n";
 		}
-		$script .= "	tb.value=obj.options[obj.selectedIndex].value;\n";
-		$script .= "	document.getElementById('btn_select_to_input_".$destination_id."').style.display = 'none';\n";
-		$script .= "	tbb=document.createElement('INPUT');\n";
-		$script .= "	tbb.setAttribute('class', 'btn');\n";
-		$script .= "	tbb.setAttribute('style', 'margin-left: 4px;');\n";
-		$script .= "	tbb.type='button';\n";
-		$script .= "	tbb.value=$('<div />').html('&#9665;').text();\n";
-		$script .= "	tbb.objs=[obj,tb,tbb];\n";
-		$script .= "	tbb.onclick=function(){ Replace".$destination_id."(this.objs); }\n";
-		$script .= "	obj.parentNode.insertBefore(tb,obj);\n";
-		$script .= "	obj.parentNode.insertBefore(tbb,obj);\n";
-		$script .= "	obj.parentNode.removeChild(obj);\n";
-		$script .= "	Replace".$destination_id."(this.objs);\n";
-		$script .= "}\n";
-		$script .= "\n";
-		$script .= "function Replace".$destination_id."(obj){\n";
-		$script .= "	obj[2].parentNode.insertBefore(obj[0],obj[2]);\n";
-		$script .= "	obj[0].parentNode.removeChild(obj[1]);\n";
-		$script .= "	obj[0].parentNode.removeChild(obj[2]);\n";
-		$script .= "	document.getElementById('btn_select_to_input_".$destination_id."').style.display = 'inline';\n";
-		if (!empty($on_change)) {
-			$script .= "	".$on_change.";\n";
-		}
-		$script .= "}\n";
-		$script .= "</script>\n";
-		$script .= "\n";
-		echo $script;
 	}
-	echo "	<select name='conference_center_greeting' id='conference_center_greeting' class='formfld' ".(permission_exists('recording_play') || permission_exists('recording_download') ? "onchange=\"recording_reset('greeting'); set_playable('greeting', this.value, this.options[this.selectedIndex].parentNode.getAttribute('data-type'));\"" : null).">\n";
-	echo "		<option value=''></option>\n";
-	$found = $playable_greeting = false;
-	//recordings
-		if (!empty($recordings) && is_array($recordings) && @sizeof($recordings) != 0) {
-			echo "<optgroup label='".$text['label-recordings']."' data-type='recordings'>\n";
-			foreach ($recordings as &$row) {
-				$recording_name = $row["recording_name"];
-				$recording_filename = $row["recording_filename"];
-				$recording_path = $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name'];
-				if (!empty($conference_center_greeting) && $conference_center_greeting == $recording_path."/".$recording_filename) {
-					$selected = "selected='selected'";
-					$playable_greeting = '../recordings/recordings.php?action=download&type=rec&filename='.$recording_filename;
-					$found = true;
-				}
-				else {
-					unset($selected);
-				}
-				echo "	<option value='".escape($recording_path)."/".escape($recording_filename)."' ".($selected ?? '').">".escape($recording_name)."</option>\n";
-			}
-			echo "</optgroup>\n";
-		}
-	//phrases
-		if (!empty($phrases) && is_array($phrases) && @sizeof($phrases) != 0) {
-			echo "<optgroup label='".$text['label-phrases']."' data-type='phrases'>\n";
-			foreach ($phrases as &$row) {
-				if (!empty($conference_center_greeting) && $conference_center_greeting == "phrase:".$row["phrase_uuid"]) {
-					$selected = "selected='selected'";
-					$found = true;
-				}
-				else {
-					unset($selected);
-				}
-				echo "	<option value='phrase:".escape($row["phrase_uuid"])."' ".($selected ?? '').">".escape($row["phrase_name"])."</option>\n";
-			}
-			echo "</optgroup>\n";
-		}
-	//sounds
-		$file = new file;
-		$sound_files = $file->sounds();
-		if (!empty($sound_files) && is_array($sound_files) && @sizeof($sound_files) != 0) {
-			echo "<optgroup label='".$text['label-sounds']."' data-type='sounds'>\n";
-			foreach ($sound_files as $key => $value) {
-				if (!empty($value)) {
-					if (!empty($conference_center_greeting) && substr($conference_center_greeting, 0, 71) == "\$\${sounds_dir}/\${default_language}/\${default_dialect}/\${default_voice}/") {
-						$conference_center_greeting = substr($conference_center_greeting, 71);
-					}
-					if (!empty($conference_center_greeting) && $conference_center_greeting == $value) {
-						$selected = "selected='selected'";
-						$playable_greeting = '../switch/sounds.php?action=download&filename='.$value;
-						$found = true;
-					}
-					else {
-						unset($selected);
-					}
-					echo "	<option value='".escape($value)."' ".($selected ?? '').">".escape($value)."</option>\n";
-				}
-			}
-			echo "</optgroup>\n";
-		}
-	//select
-		if (if_group("superadmin") && !empty($conference_center_greeting) && !$found) {
-			echo "<optgroup label='selected'>\n";
-			if (file_exists($_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$conference_center_greeting)) {
-				echo "		<option value='".$_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".escape($conference_center_greeting)."' selected='selected'>".escape($conference_center_greeting)."</option>\n";
-			}
-			else {
-				echo "		<option value='".escape($conference_center_greeting)."' selected='selected'>".escape($conference_center_greeting)."</option>\n";
-			}
-			echo "</optgroup>\n";
-		}
-		unset($selected);
+	if (if_group("superadmin") && !empty($instance_value) && !$found) {
+		echo "	<option value='".escape($instance_value)."' selected='selected'>".escape($instance_value)."</option>\n";
+	}
+	unset($selected);
 	echo "	</select>\n";
 	if (if_group("superadmin")) {
-		echo "<input type='button' id='btn_select_to_input_".escape($destination_id)."' class='btn' name='' alt='back' onclick='changeToInput".escape($destination_id)."(document.getElementById(\"".escape($destination_id)."\")); this.style.visibility=\"hidden\";' value='&#9665;'>";
-		unset($destination_id);
+		echo "<input type='button' id='btn_select_to_input_".$instance_id."' class='btn' name='' alt='back' onclick='toggle_select_input(document.getElementById(\"".$instance_id."\"), \"".$instance_id."\"); this.style.visibility=\"hidden\";' value='&#9665;'>";
 	}
-	if ((permission_exists('recording_play') || permission_exists('recording_download')) && !empty($playable_greeting)) {
-		switch (pathinfo($playable_greeting, PATHINFO_EXTENSION)) {
-			case 'wav' : $audio_file_type = 'audio/wav'; break;
-			case 'mp3' : $audio_file_type = 'audio/mpeg'; break;
-			case 'ogg' : $audio_file_type = 'audio/ogg'; break;
+	if ((permission_exists('recording_play') || permission_exists('recording_download')) && !empty($playable)) {
+		switch (pathinfo($playable, PATHINFO_EXTENSION)) {
+			case 'wav' : $mime_type = 'audio/wav'; break;
+			case 'mp3' : $mime_type = 'audio/mpeg'; break;
+			case 'ogg' : $mime_type = 'audio/ogg'; break;
 		}
 	}
-	echo "<audio id='recording_audio_greeting' style='display: none;' preload='none' ontimeupdate=\"update_progress('greeting')\" onended=\"recording_reset('greeting');\" src='".($playable_greeting ?? '')."' type='".($audio_file_type ?? '')."'></audio>";
-	echo button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'icon'=>$_SESSION['theme']['button_icon_play'],'id'=>'recording_button_greeting','style'=>'display: '.(!empty($audio_file_type) ? 'inline' : 'none'),'onclick'=>"recording_play('greeting')"]);
-	unset($playable_greeting, $audio_file_type);
-	echo "	<br />\n";
-	echo "	".$text['description-conference_center_greeting']."\n";
+	echo "<audio id='recording_audio_".$instance_id."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".$instance_id."')\" onended=\"recording_reset('".$instance_id."');\" src='".($playable ?? '')."' type='".($mime_type ?? '')."'></audio>";
+	echo button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'icon'=>$_SESSION['theme']['button_icon_play'],'id'=>'recording_button_'.$instance_id,'style'=>'display: '.(!empty($mime_type) ? 'inline' : 'none'),'onclick'=>"recording_play('".$instance_id."')"]);
+	unset($playable, $mime_type);
+	echo "<br />\n";
+	echo $text['description-'.$instance_label]."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
