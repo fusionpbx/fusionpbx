@@ -59,7 +59,7 @@
 		 * @global string[] $conf
 		 */
 		public function load() {
-			if (!$this->exists) {
+			if (!$this->exists()) {
 				return;
 			}
 			//find the config_path
@@ -70,7 +70,12 @@
 
 			//add the document root to the include path
 			$conf = parse_ini_file($config_path);
-			set_include_path($conf['document.root']);
+
+			//set project paths from global $conf
+			$this->set_project_paths();
+
+			//use the globally defined constant for include path
+			set_include_path(PROJECT_ROOT);
 
 			//add the database settings
 			$this->db_type = $conf['database.0.type'] ?? '';
@@ -84,8 +89,6 @@
 			$this->db_path = $conf['database.0.path'] ?? '';
 			$this->db_port = $conf['database.0.port'] ?? '';
 
-			//set project paths from global $conf
-			$this->set_project_paths();
 		}
 
 		/**
