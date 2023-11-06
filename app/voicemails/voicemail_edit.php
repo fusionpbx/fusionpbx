@@ -490,10 +490,10 @@
 //show the content
 	if (permission_exists('voicemail_greeting_play') || permission_exists('voicemail_greeting_download')) {
 		echo "<script type='text/javascript' language='JavaScript'>\n";
-		echo "	function set_playable(id, greeting_selected) {\n";
-		echo "		if (greeting_selected != undefined) {\n";
-		echo "			$('#recording_audio_' + id).attr('src', '../voicemail_greetings/voicemail_greetings.php?id=".escape($voicemail_id)."&a=download&type=rec&uuid=' + greeting_selected);\n";
-		echo "			$('#recording_audio_' + id).attr('type', 'audio/wav');\n";
+		echo "	function set_playable(id, audio_selected, mime_type) {\n";
+		echo "		if (mime_type != undefined && mime_type != '' && audio_selected != undefined) {\n";
+		echo "			$('#recording_audio_' + id).attr('src', '../voicemail_greetings/voicemail_greetings.php?id=".escape($voicemail_id)."&a=download&type=rec&uuid=' + audio_selected);\n";
+		echo "			$('#recording_audio_' + id).attr('type', mime_type);\n";
 		echo "			$('#recording_button_' + id).show();\n";
 		echo "		}\n";
 		echo "		else {\n";
@@ -570,33 +570,35 @@
 	echo "</tr>\n";
 	echo "<tr>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='greeting_id' id='greeting_id' onchange=\"if (this.selectedIndex == 0) { $('#alternate_greeting_id').slideDown(); } else { $('#alternate_greeting_id').slideUp(); } ".(permission_exists('voicemail_greeting_play') || permission_exists('voicemail_greeting_download') ? "recording_reset('greeting'); set_playable('greeting', this.options[this.selectedIndex].getAttribute('data-uuid'));" : null)."\">\n";
+	echo "	<select class='formfld' name='greeting_id' id='greeting_id' onchange=\"if (this.selectedIndex == 0) { $('#alternate_greeting_id').slideDown(); } else { $('#alternate_greeting_id').slideUp(); } ".(permission_exists('voicemail_greeting_play') || permission_exists('voicemail_greeting_download') ? "recording_reset('greeting'); set_playable('greeting', this.options[this.selectedIndex].getAttribute('data-uuid'), this.options[this.selectedIndex].getAttribute('data-mime'));" : null)."\">\n";
 	echo "		<option value=''>".$text['label-default']."</option>\n";
 	echo "		<option value='0' ".(isset($greeting_id) && $greeting_id == "0" ? "selected='selected'" : null).">".$text['label-none']."</option>\n";
-	$playable_greeting = false;
+	$playable = false;
 	if (is_array($greetings) && @sizeof($greetings) != 0) {
 		foreach ($greetings as $greeting) {
 			if (!empty($greeting_id) && $greeting['greeting_id'] == $greeting_id) {
 				$selected = "selected='selected'";
-				$playable_greeting = $greeting['greeting_filename'];
+				$playable = $greeting['greeting_filename'];
 			}
 			else {
 				unset($selected);
 			}
-			echo "<option value='".escape($greeting['greeting_id'])."' ".($selected ?? '')." data-uuid='".$greeting['voicemail_greeting_uuid']."'>".escape($greeting['greeting_name'])."</option>\n";
+			if ((permission_exists('voicemail_greeting_play') || permission_exists('voicemail_greeting_download')) && !empty($greeting['greeting_filename'])) {
+				switch (pathinfo($greeting['greeting_filename'], PATHINFO_EXTENSION)) {
+					case 'wav' : $mime_type = 'audio/wav'; break;
+					case 'mp3' : $mime_type = 'audio/mpeg'; break;
+					case 'ogg' : $mime_type = 'audio/ogg'; break;
+				}
+			}
+			echo "<option value='".escape($greeting['greeting_id'])."' ".($selected ?? '')." data-uuid='".$greeting['voicemail_greeting_uuid']."' data-mime='".$mime_type."'>".escape($greeting['greeting_name'])."</option>\n";
 		}
 	}
 	echo "	</select>\n";
-	if ((permission_exists('voicemail_greeting_play') || permission_exists('voicemail_greeting_download')) && !empty($playable_greeting)) {
-		switch (pathinfo($playable_greeting, PATHINFO_EXTENSION)) {
-			case 'wav' : $audio_file_type = 'audio/wav'; break;
-			case 'mp3' : $audio_file_type = 'audio/mpeg'; break;
-			case 'ogg' : $audio_file_type = 'audio/ogg'; break;
-		}
+	if ((permission_exists('voicemail_greeting_play') || permission_exists('voicemail_greeting_download')) && !empty($playable)) {
+		echo "<audio id='recording_audio_greeting' style='display: none;' preload='none' ontimeupdate=\"update_progress('greeting')\" onended=\"recording_reset('greeting');\" src='../voicemail_greetings/voicemail_greetings.php?id=".escape($voicemail_id)."&a=download&type=rec&uuid=".escape($greetings[$greeting_id]['voicemail_greeting_uuid'])."' type='".($mime_type ?? '')."'></audio>";
+		echo button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'icon'=>$_SESSION['theme']['button_icon_play'],'id'=>'recording_button_greeting','style'=>'display: '.(!empty($mime_type) ? 'inline' : 'none'),'onclick'=>"recording_play('greeting')"]);
+		unset($playable, $mime_type);
 	}
-	echo "<audio id='recording_audio_greeting' style='display: none;' preload='none' ontimeupdate=\"update_progress('greeting')\" onended=\"recording_reset('greeting');\" src='../voicemail_greetings/voicemail_greetings.php?id=".escape($voicemail_id)."&a=download&type=rec&uuid=".escape($greetings[$greeting_id]['voicemail_greeting_uuid'])."' type='".($audio_file_type ?? '')."'></audio>";
-	echo button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'icon'=>$_SESSION['theme']['button_icon_play'],'id'=>'recording_button_greeting','style'=>'display: '.(!empty($audio_file_type) ? 'inline' : 'none'),'onclick'=>"recording_play('greeting')"]);
-	unset($playable_greeting, $audio_file_type);
 	echo "<br />\n";
 	echo $text['description-greeting']."\n";
 	echo "</td>\n";
