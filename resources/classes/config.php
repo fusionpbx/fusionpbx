@@ -7,20 +7,30 @@
 	class config {
 
 		/**
-		 * database variables and config path
+		 * @var string full path and file name of the config.conf
 		 */
-		public $db_type;
-		public $db_name;
-		public $db_username;
-		public $db_password;
-		public $db_sslmode;
-		public $db_host;
-		public $db_path;
-		public $db_port;
-		public $db_secure;
-		public $db_cert_authority;
-		public $config_path;
+		private $file;
+
+		/**
+		 * @var array list of filesystem paths to check for the config.conf and the older config.php
+		 */
 		private $paths_to_check;
+
+		/**
+		 * Allows syncing the conf global database setting array to this object
+		 * @global string $conf
+		 * @param type $name
+		 * @return string
+		 */
+		public function __get($name) {
+			global $conf;
+			if (substr($name, 0, 3) === 'db_') {
+				return $conf['database.0.' . substr($name, 4)];
+			}
+			if ($name === 'config_path') {
+				return $this->file;
+			}
+		}
 
 		/**
 		 * Called when the object is created
@@ -30,7 +40,7 @@
 				$this->paths_to_check = [
 					'/etc/fusionpbx/config.conf',
 					'/usr/local/etc/fusionpbx/config.conf',
-					$_SERVER['PROJECT_ROOT'] . '/resources/config.php',
+					($_SERVER['PROJECT_ROOT'] ?? '/var/www/fusionpbx') . '/resources/config.php',
 					'/etc/fusionpbx/config.php',
 					'/usr/local/etc/fusionpbx/config.php',
 				];
@@ -43,6 +53,19 @@
 		 */
 		public function get() {
 			return $this->load();
+		}
+
+		/**
+		 * Returns the value of the setting cached in memory
+		 * @global array $conf
+		 * @param string $setting
+		 * @return string
+		 */
+		public function value(string $setting): string {
+			global $conf;
+			if (array_key_exists($setting, $conf)) {
+				return $conf[$setting];
+			}
 		}
 
 		/**
@@ -62,19 +85,17 @@
 			if (!$this->exists()) {
 				return;
 			}
-			//find the config_path
-			$config_path = $this->config_path;
 
 			//set the scope of $conf
 			global $conf;
 
-			//add the document root to the include path
-			$conf = parse_ini_file($config_path);
+			//use the global variable to store the copy of the config
+			$conf = parse_ini_file($this->file);
 
 			//set project paths from global $conf
 			$this->set_project_paths();
 
-			//use the globally defined constant for include path
+			//add the document root to the include path
 			set_include_path(PROJECT_ROOT);
 
 			//add the database settings
@@ -125,17 +146,17 @@
 		 * @return string Path of the config file
 		 */
 		public function find() {
-			$this->config_path = '';
+			$this->file = '';
 
 			foreach ($this->paths_to_check as $path) {
 				if (file_exists($path)) {
-					$this->config_path = $path;
+					$this->file = $path;
 					break;
 				}
 			}
 
 			//return the path
-			return $this->config_path;
+			return $this->file;
 		}
 
 		/**
@@ -143,7 +164,7 @@
 		 * @see file_exists()
 		 */
 		public function exists() {
-			return file_exists($this->config_path);
+			return file_exists($this->file);
 		}
 	}
 
