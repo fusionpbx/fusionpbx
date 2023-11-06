@@ -24,6 +24,9 @@
 		 */
 		public function __get($name) {
 			global $conf;
+			if (isset($conf[$name])) {
+				return $conf[$name];
+			}
 			if (substr($name, 0, 3) === 'db_') {
 				return $conf['database.0.' . substr($name, 4)] ?? '';
 			}
