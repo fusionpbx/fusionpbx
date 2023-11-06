@@ -32,6 +32,10 @@
 if (!class_exists('email')) {
 	class email {
 
+		const APP_NAME = 'email';
+		const APP_UUID = '7a4fef67-5bf8-436a-ae25-7e3c03afcf96';
+		const NAME = 'email';
+
 		/**
 		* declare the variables
 		*/
@@ -56,13 +60,13 @@ if (!class_exists('email')) {
 		/**
 		 * called when the object is created
 		 */
-		public function __construct() {
+		public function __construct($priority = 0, $debug_level = 3) {
 			//assign the variables
-			$this->app_name = 'email';
-			$this->name = 'email';
-			$this->app_uuid = '7a4fef67-5bf8-436a-ae25-7e3c03afcf96';
-			$this->priority = 0;
-			$this->debug_level = 3;
+			$this->app_name = self::APP_NAME;
+			$this->app_uuid = self::APP_UUID;
+			$this->name = self::NAME;
+			$this->priority = $priority;
+			$this->debug_level = $debug_level;
 			$this->read_confirmation = false;
 		}
 
