@@ -25,11 +25,12 @@
 		public function __get($name) {
 			global $conf;
 			if (substr($name, 0, 3) === 'db_') {
-				return $conf['database.0.' . substr($name, 4)];
+				return $conf['database.0.' . substr($name, 4)] ?? '';
 			}
 			if ($name === 'config_path') {
 				return $this->file;
 			}
+			return "";
 		}
 
 		/**
