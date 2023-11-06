@@ -95,8 +95,8 @@
 		public function set_project_paths() {
 			global $conf;
 			//set the server variables and define project path constant
-			$_SERVER["DOCUMENT_ROOT"] = $conf['document.root'];
-			$_SERVER["PROJECT_ROOT"] = $conf['document.root'];
+			$_SERVER["DOCUMENT_ROOT"] = $conf['document.root'] ?? '/var/www/fusionpbx';
+			$_SERVER["PROJECT_ROOT"] = $conf['document.root'] ?? '/var/www/fusionpbx';
 			$_SERVER["PROJECT_PATH"] = $conf['project.path'];
 			if (isset($conf['project.path'])) {
 				$_SERVER["PROJECT_ROOT"] = $conf['document.root'] . '/' . $conf['project.path'];
