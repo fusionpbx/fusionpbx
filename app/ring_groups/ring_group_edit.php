@@ -375,13 +375,13 @@
 
 			$y = 0;
 			foreach ($ring_group_destinations as $row) {
-				if (is_uuid($row['ring_group_destination_uuid'])) {
+				if (!empty($row['ring_group_destination_uuid']) && is_uuid($row['ring_group_destination_uuid'])) {
 					$ring_group_destination_uuid = $row['ring_group_destination_uuid'];
 				}
 				else {
 					$ring_group_destination_uuid = uuid();
 				}
-				if ($_SESSION['ring_groups_range_extensions_add']['enabled']['boolean']) {
+				if (!empty($row['destination_number']) && $_SESSION['ring_groups_range_extensions_add']['enabled']['boolean']) {
 					// check the range
 					$output_array = array();
 					preg_match('/[0-9]{1,}-[0-9]{1,}/', $row['destination_number'], $output_array);
@@ -415,19 +415,19 @@
 							$array['ring_groups'][0]["ring_group_destinations"][$y]["destination_delay"] = $row['destination_delay'];
 							$array['ring_groups'][0]["ring_group_destinations"][$y]["destination_timeout"] = $row['destination_timeout'];
 							$array['ring_groups'][0]["ring_group_destinations"][$y]["destination_prompt"] = $row['destination_prompt'];
-							$array['ring_groups'][0]["ring_group_destinations"][$y]["destination_enabled"] = $row['destination_enabled'];
+							$array['ring_groups'][0]["ring_group_destinations"][$y]["destination_enabled"] = $row['destination_enabled'] ?? 'false';
 							$array['ring_groups'][0]["ring_group_destinations"][$y]["domain_uuid"] = $domain_uuid;
 							$y++;
 						}
 					}
-				} elseif (strlen($row['destination_number']) > 0) {
+				} elseif (!empty($row['destination_number']) > 0) {
 					$array["ring_groups"][0]["ring_group_destinations"][$y]["ring_group_uuid"] = $ring_group_uuid;
 					$array['ring_groups'][0]["ring_group_destinations"][$y]["ring_group_destination_uuid"] = $ring_group_destination_uuid;
 					$array['ring_groups'][0]["ring_group_destinations"][$y]["destination_number"] = $row['destination_number'];
 					$array['ring_groups'][0]["ring_group_destinations"][$y]["destination_delay"] = $row['destination_delay'];
 					$array['ring_groups'][0]["ring_group_destinations"][$y]["destination_timeout"] = $row['destination_timeout'];
 					$array['ring_groups'][0]["ring_group_destinations"][$y]["destination_prompt"] = $row['destination_prompt'];
-					$array['ring_groups'][0]["ring_group_destinations"][$y]["destination_enabled"] = $row['destination_enabled'];
+					$array['ring_groups'][0]["ring_group_destinations"][$y]["destination_enabled"] = $row['destination_enabled'] ?? 'false';
 					$array['ring_groups'][0]["ring_group_destinations"][$y]["domain_uuid"] = $domain_uuid;
 				}
 				$y++;
