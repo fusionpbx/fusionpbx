@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2015 - 2022
+	Portions created by the Initial Developer are Copyright (C) 2015-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -71,7 +71,6 @@ if (!empty($result) && @sizeof($result) != 0) {
 		$fax_email_connection_mailbox = $row["fax_email_connection_mailbox"];
 		$fax_email_outbound_subject_tag = $row["fax_email_outbound_subject_tag"];
 		$fax_email_outbound_authorized_senders = strtolower($row["fax_email_outbound_authorized_senders"]);
-		$fax_send_greeting = $row["fax_send_greeting"];
 		$fax_accountcode = $row["accountcode"];
 		$fax_toll_allow = $row["fax_toll_allow"];
 

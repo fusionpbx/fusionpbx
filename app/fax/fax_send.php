@@ -75,7 +75,7 @@ if (!$included) {
 			if (permission_exists('fax_extension_view_domain')) {
 				//show all fax extensions
 				$sql = "select fax_uuid, fax_extension, fax_caller_id_name, fax_caller_id_number, ";
-				$sql .= "fax_toll_allow, accountcode, fax_send_greeting ";
+				$sql .= "fax_toll_allow, accountcode ";
 				$sql .= "from v_fax ";
 				$sql .= "where domain_uuid = :domain_uuid ";
 				$sql .= "and fax_uuid = :fax_uuid ";
@@ -85,7 +85,7 @@ if (!$included) {
 			else {
 				//show only assigned fax extensions
 				$sql = "select f.fax_uuid, f.fax_extension, f.fax_caller_id_name, f.fax_caller_id_number, ";
-				$sql .= "f.fax_toll_allow, f.accountcode, f.fax_send_greeting ";
+				$sql .= "f.fax_toll_allow, f.accountcode ";
 				$sql .= "from v_fax as f, v_fax_users as u ";
 				$sql .= "where f.fax_uuid = u.fax_uuid ";
 				$sql .= "and f.domain_uuid = :domain_uuid ";
@@ -105,7 +105,6 @@ if (!$included) {
 				$fax_caller_id_number = $row["fax_caller_id_number"];
 				$fax_toll_allow = $row["fax_toll_allow"];
 				$fax_accountcode = $row["accountcode"];
-				$fax_send_greeting = $row["fax_send_greeting"];
 			}
 			else {
 				if (!permission_exists('fax_extension_view_domain')) {
