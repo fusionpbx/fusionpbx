@@ -37,6 +37,8 @@
 			const APP_NAME = 'email';
 			const APP_UUID = '7a4fef67-5bf8-436a-ae25-7e3c03afcf96';
 			const NAME = 'email';
+			const METHOD_DIRECT = 1;
+			const METHOD_QUEUE = 2;
 
 			/**
 			 * declare the variables
@@ -44,8 +46,9 @@
 			private $app_name;
 			private $app_uuid;
 			private $name;
+			private $_method;
+
 			public $domain_uuid;
-			public $method;
 			public $recipients;
 			public $subject;
 			public $body;
@@ -57,6 +60,42 @@
 			public $read_confirmation;
 			public $error;
 			public $response;
+
+			public function __get($name) {
+				switch ($name) {
+					case 'method':
+						switch ( $this->_method ) {
+							case self::METHOD_DIRECT:
+								return 'direct';
+							case self::METHOD_QUEUE:
+								return 'queue';
+						}
+						return 0;
+					default:
+						if (property_exists($this, $name)) {
+							return $this->{$name};
+						}
+				}
+			}
+
+			public function __set($name, $value) {
+				switch ($name) {
+					case 'method':
+						switch ($value) {
+							case 'direct':
+								$this->_method = self::METHOD_DIRECT;
+								break;
+							case 'queue':
+								$this->_method = self::METHOD_QUEUE;
+								break;
+						}
+						break;
+					default:
+						if (property_exists($this, $name)) {
+							return $this->{$name};
+						}
+				}
+			}
 
 			/**
 			 * called when the object is created
@@ -75,6 +114,30 @@
 				//set empty arrays
 				$this->attachments = [];
 				$this->recipients = [];
+
+				//assign defaults
+				$this->_method = self::METHOD_DIRECT;
+			}
+
+			/**
+			 * Set the delivery method
+			 * @param int|null $_method email::METHOD_DIRECT or email::METHOD_QUEUE
+			 * @return $this when parameters are passed returns the object otherwise returns the value stored in object
+			 * @throws InvalidArgumentException
+			 */
+			public function method(?int $_method = null) {
+				if (func_num_args() > 0) {
+					switch ( $_method ) {
+						case self::METHOD_DIRECT:
+						case self::METHOD_QUEUE:
+							$this->_method = $_method;
+							break;
+						default:
+							throw new InvalidArgumentException("Method not supported");
+					}
+					return $this;
+				}
+				return $this->_method;
 			}
 
 			/**
@@ -260,16 +323,15 @@
 				$setting = new settings(["domain_uuid" => $this->domain_uuid]);
 
 				//set the send_method if not already set
-				if (!isset($this->method)) {
-					if ($setting->get('email_queue', 'enabled') == 'true') {
-						$this->method = 'queue';
-					} else {
-						$this->method = 'direct';
-					}
+				$queue = $setting->get('email_queue', 'enabled');
+				if ($setting->get('email_queue', 'enabled') == 'true') {
+					$this->_method = self::METHOD_QUEUE;
+				} else {
+					$this->_method = self::METHOD_DIRECT;
 				}
 
 				//add the email to the queue
-				if ($this->method == 'queue') {
+				if ($this->_method == self::METHOD_QUEUE) {
 
 					//add the email_queue_uuid
 					$email_queue_uuid = uuid();
@@ -372,7 +434,7 @@
 				}
 
 				//send the email directly
-				if ($this->method == 'direct') {
+				if ($this->_method == self::METHOD_DIRECT) {
 					/*
 					  RECIPIENTS NOTE:
 
@@ -527,7 +589,9 @@
 							$this->response = ob_get_clean();
 						}
 						//store the error encountered
-						if ($mail !== null) { $this->error = $mail->ErrorInfo; }
+						if ($mail !== null) {
+							$this->error = $mail->ErrorInfo;
+						}
 						//return immediately
 						return false;
 					}
@@ -559,20 +623,20 @@
 					$this->recipients = explode(';', $this->recipients); // convert to array of addresses
 				}
 
-				foreach ($this->recipients as $this->recipient) {
-					if (is_array($this->recipient)) { // check if each recipient has multiple fields
-						if ($this->recipient["address"] != '' && valid_email($this->recipient["address"])) { // check if valid address
-							switch ($this->recipient["delivery"]) {
-								case "cc" : $mail->AddCC($this->recipient["address"], $this->recipient["name"] ?? $this->recipient["address"]);
+				foreach ($this->recipients as $recipient) {
+					if (is_array($recipient)) { // check if each recipient has multiple fields
+						if ($recipient["address"] != '' && valid_email($recipient["address"])) { // check if valid address
+							switch ($recipient["delivery"]) {
+								case "cc" : $mail->AddCC($recipient["address"], $recipient["name"] ?? $recipient["address"]);
 									break;
-								case "bcc" : $mail->AddBCC($this->recipient["address"], $this->recipient["name"] ?? $this->recipient["address"]);
+								case "bcc" : $mail->AddBCC($recipient["address"], $recipient["name"] ?? $recipient["address"]);
 									break;
-								default : $mail->AddAddress($this->recipient["address"], $this->recipient["name"] ?? $this->recipient["address"]);
+								default : $mail->AddAddress($recipient["address"], $recipient["name"] ?? $recipient["address"]);
 							}
 							$address_found = true;
 						}
-					} else if ($this->recipient != '' && valid_email($this->recipient)) { // check if recipient value is simply (only) an address
-						$mail->AddAddress($this->recipient);
+					} else if ($recipient != '' && valid_email($recipient)) { // check if recipient value is simply (only) an address
+						$mail->AddAddress($recipient);
 						$address_found = true;
 					}
 				}
