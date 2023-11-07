@@ -382,11 +382,7 @@
 				if (!empty($instance_value) && $instance_value == $row["value"]) {
 					$selected = "selected='selected'";
 					if ($key == 'recordings') {
-						echo "<option value=''>".$sounds->full_path."</option>\n";
-						if (!empty($sounds->full_path) && is_array($sounds->full_path) && in_array('recordings', $sounds->full_path)) {
-							$row["value"] = str_replace($_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/','',$row["value"]);
-						}
-						$playable = '../recordings/recordings.php?action=download&type=rec&filename='.$row["value"];
+						$playable = '../recordings/recordings.php?action=download&type=rec&filename='.str_replace($_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/','',$row["value"]);
 					}
 					else if ($key == 'sounds') {
 						$playable = '../switch/sounds.php?action=download&filename='.$row["value"];
