@@ -71,7 +71,8 @@ if (!class_exists('email')) {
 		}
 
 		/**
-		 * parse raw emails
+		 * Parse raw emails
+		 * @param string $message
 		 */
 		public function parse($message) {
 			//includes
@@ -431,24 +432,6 @@ if (!class_exists('email')) {
 						$smtp['from_name'] = $setting->get('voicemail','smtp_from_name');
 					}
 
-					//override the domain-specific smtp server settings, if any
-					$sql = "select domain_setting_subcategory, domain_setting_value ";
-					$sql .= "from v_domain_settings ";
-					$sql .= "where domain_uuid = :domain_uuid ";
-					$sql .= "and (domain_setting_category = 'email' or domain_setting_category = 'voicemail') ";
-					$sql .= "and domain_setting_enabled = 'true' ";
-					$parameters['domain_uuid'] = $this->domain_uuid;
-					$database = new database;
-					$result = $database->select($sql, $parameters, 'all');
-					if (is_array($result) && @sizeof($result) != 0) {
-						foreach ($result as $row) {
-							if ($row['domain_setting_value'] != '') {
-								$smtp[str_replace('smtp_','',$row["domain_setting_subcategory"])] = $row['domain_setting_value'];
-							}
-						}
-					}
-					unset($sql, $parameters, $result, $row);
-
 					//value adjustments
 					$smtp['auth']		= ($smtp['auth'] == "true") ? true : false;
 					$smtp['password']	= ($smtp['password'] != '') ? $smtp['password'] : null;
@@ -582,9 +565,6 @@ if (!class_exists('email')) {
 					//send the email
 					$mail_status = $mail->Send();
 
-					//get the output buffer
-					$this->response = ob_get_clean();
-
 					//send the email
 					if (!$mail_status) {
 						if (isset($mail->ErrorInfo) && !empty($mail->ErrorInfo)) {
@@ -596,7 +576,10 @@ if (!class_exists('email')) {
 					//cleanup the mail object
 					$mail->ClearAddresses();
 					$mail->SmtpClose();
-					unset($mail);
+
+					//get the output buffer
+					$this->response = ob_get_clean();
+
 					return true;
 
 				}
