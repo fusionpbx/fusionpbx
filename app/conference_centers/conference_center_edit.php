@@ -379,15 +379,29 @@
 		foreach ($audio_files as $key => $value) {
 			echo "<optgroup label=".$text['label-'.$key]." data-type='".$key."'>\n";
 			foreach ($value as $row) {
-				if (!empty($instance_value) && $instance_value == $row["value"]) {
-					$selected = "selected='selected'";
-					if ($key == 'recordings') {
-						$playable = '../recordings/recordings.php?action=download&type=rec&filename='.str_replace($_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/','',$row["value"]);
+				if ($key == 'recordings') {
+					if (
+						!empty($instance_value) &&
+						($instance_value == $row["value"] || $instance_value == $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name'].'/'.$row["value"]) &&
+						file_exists($_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name'].'/'.pathinfo($row["value"], PATHINFO_BASENAME))
+						) {
+						$selected = "selected='selected'";
+						$playable = '../recordings/recordings.php?action=download&type=rec&filename='.pathinfo($row["value"], PATHINFO_BASENAME);
+						$found = true;
 					}
-					else if ($key == 'sounds') {
+					else {
+						unset($selected);
+					}
+				}
+				else if ($key == 'sounds') {
+					if (!empty($instance_value) && $instance_value == $row["value"]) {
+						$selected = "selected='selected'";
 						$playable = '../switch/sounds.php?action=download&filename='.$row["value"];
+						$found = true;
 					}
-					$found = true;
+					else {
+						unset($selected);
+					}
 				}
 				else {
 					unset($selected);
@@ -405,7 +419,7 @@
 	if (if_group("superadmin")) {
 		echo "<input type='button' id='btn_select_to_input_".$instance_id."' class='btn' name='' alt='back' onclick='toggle_select_input(document.getElementById(\"".$instance_id."\"), \"".$instance_id."\"); this.style.visibility=\"hidden\";' value='&#9665;'>";
 	}
-	if ((permission_exists('recording_play') || permission_exists('recording_download')) && !empty($playable)) {
+	if ((permission_exists('recording_play') || permission_exists('recording_download')) && (!empty($playable) || empty($instance_value))) {
 		switch (pathinfo($playable, PATHINFO_EXTENSION)) {
 			case 'wav' : $mime_type = 'audio/wav'; break;
 			case 'mp3' : $mime_type = 'audio/mpeg'; break;
