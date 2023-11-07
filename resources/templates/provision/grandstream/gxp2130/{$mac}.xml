@@ -2943,10 +2943,11 @@
 		<!-- # Phonebook(30), Paging(33) -->
 		{/literal}
 
-{assign var=key_types value=["none"=>-1,"line"=>0,"shared"=>1,"speed dial"=>10, "blf"=>11, "presence watcher"=>12,
-"eventlist blf"=>13,"speed dial active"=>14,"dial dtmf"=>15,"voicemail"=>16,"call return"=>17,
-"transfer"=>18,"call park"=>19,"intercom"=>20,"ldap search"=>21,"conference"=>22,"multicast paging"=>23,
-"record"=>24,"call log"=>25,"monitored call park"=>26,"menu"=>27]}
+
+{assign var=key_types value=["none"=>-1,"line"=>31,"shared"=>32,"speed dial"=>0, "blf"=>1, "presence watcher"=>2,
+"eventlist blf"=>3,"speed dial active"=>4,"dial dtmf"=>5,"voicemail"=>6,"call return"=>7,
+"transfer"=>8,"call park"=>9,"intercom"=>10,"ldap search"=>11,"conference"=>12,"multicast paging"=>13,
+"record"=>14,"call log"=>15,"monitored call park"=>16,"menu"=>17]}
 
 {foreach $keys['line'] as $row}
 {$line=$row.device_key_id}
@@ -3214,11 +3215,6 @@
 		<!-- # Phonebook(30), Paging(33) -->
 		{/literal}
 
-{assign var=key_types value=["none"=>-1,"speed dial"=>0, "blf"=>1, "presence watcher"=>2,
-"eventlist blf"=>3,"speed dial active"=>4,"dial dtmf"=>5,"voicemail"=>6,"call return"=>7,
-"transfer"=>8,"call park"=>9,"intercom"=>10,"ldap search"=>11,"conference"=>12,"multicast paging"=>13,
-"record"=>14,"call log"=>15,"monitored call park"=>16,"menu"=>17]}
-
 {foreach $keys['expansion'] as $row}
 {$line=$row.device_key_id}
 
@@ -3241,3 +3237,5 @@
 
 	</config>
 </gs_provision>
+
+
