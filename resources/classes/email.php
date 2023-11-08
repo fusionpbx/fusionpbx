@@ -116,7 +116,7 @@
 				$this->recipients = [];
 
 				//assign defaults
-				$this->_method = self::METHOD_DIRECT;
+				$this->_method = null;
 
 				//if the message is given then parse it
 				if (!empty($message)) {
@@ -328,11 +328,12 @@
 				$setting = new settings(["domain_uuid" => $this->domain_uuid]);
 
 				//set the send_method if not already set
-				$queue = $setting->get('email_queue', 'enabled');
-				if ($setting->get('email_queue', 'enabled') == 'true') {
-					$this->_method = self::METHOD_QUEUE;
-				} else {
-					$this->_method = self::METHOD_DIRECT;
+				if ($this->_method === null) {
+					if ($setting->get('email_queue', 'enabled') == 'true') {
+						$this->_method = self::METHOD_QUEUE;
+					} else {
+						$this->_method = self::METHOD_DIRECT;
+					}
 				}
 
 				//add the email to the queue
