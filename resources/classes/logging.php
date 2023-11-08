@@ -61,11 +61,6 @@
 		// write message to the log file
 		private function _write($msg) {
 			// define current time and suppress E_WARNING if using the system TZ settings
-			// (don't forget to set the INI setting date.timezone)
-			$time = @date('[d/M/Y:H:i:s]');
-			// write current time, script name and message to the log file
-			fwrite($this->fp, "$time ({$this->debug_line}: {$this->debug_file}) $msg");
-			$this->clear_debug();
 		}
 
 		private function clear_debug() {
@@ -77,7 +72,11 @@
 
 		public function write($level, $message) {
 			$this->get_backtrace_details();
-			$this->_write("[" . strtoupper($level) . "] $message");
+			// write current time, script name and message to the log file
+			// (don't forget to set the INI setting date.timezone)
+			$time = @date('Y-m-d H:i:s');
+			fwrite($this->fp, "[$time] [$level] [{$this->debug_file}:{$this->debug_line}] $message");
+			$this->clear_debug();
 		}
 
 		public function writeln($level, $message) {
@@ -87,22 +86,22 @@
 
 		public function debug($message) {
 			$this->get_backtrace_details();
-			$this->writeln("debug", $message);
+			$this->writeln("DEBUG", $message);
 		}
 
 		public function info($message) {
 			$this->get_backtrace_details();
-			$this->writeln("info", $message);
+			$this->writeln("INFO", $message);
 		}
 
 		public function warning($message) {
 			$this->get_backtrace_details();
-			$this->writeln("warning", $message);
+			$this->writeln("WARNING", $message);
 		}
 
 		public function error($message) {
 			$this->get_backtrace_details();
-			$this->writeln("error", $message);
+			$this->writeln("ERROR", $message);
 		}
 
 		private function get_backtrace_details() {
@@ -121,6 +120,6 @@
  * Example:
 	$log = new Logging(sys_get_temp_dir() . '/logging.log');
 	$log->writeln("debug", "passed validation");
-	$log->writeln("debug", "pass");
+	$log->debug("pass");
 	$log->warning("variable should not used");
  */
