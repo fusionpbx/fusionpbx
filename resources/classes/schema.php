@@ -331,10 +331,7 @@ if (!class_exists('schema')) {
 					$prep_statement = $this->db->prepare(check_sql($sql));
 					$prep_statement->execute();
 					$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-					if (!$result) {
-						return false;
-					}
-					if (count($result) > 0) {
+					if (!empty($result)) {
 						return true;
 					}
 					else {
@@ -468,7 +465,7 @@ if (!class_exists('schema')) {
 
 		//datatase schema
 			public function schema ($format = '') {
- 
+
  				//set the global variable
 					global $db, $text, $output_format;
 
@@ -548,10 +545,10 @@ if (!class_exists('schema')) {
 
 								//check if the table exists
 									if ($this->db_table_exists($db_type, $db_name, $table_name)) {
-										$apps[$x]['db'][$y]['exists'] = 'true';
+										$this->apps[$x]['db'][$y]['exists'] = 'true';
 									}
 									else {
-										$apps[$x]['db'][$y]['exists'] = 'false';
+										$this->apps[$x]['db'][$y]['exists'] = 'false';
 									}
 								//check if the column exists
 									foreach ($row['fields'] as $z => $field) {
@@ -568,11 +565,11 @@ if (!class_exists('schema')) {
 											if (!empty($field_name)) {
 												if ($this->db_column_exists ($db_type, $db_name, $table_name, $field_name)) {
 													//found
-													$apps[$x]['db'][$y]['fields'][$z]['exists'] = 'true';
+													$this->apps[$x]['db'][$y]['fields'][$z]['exists'] = 'true';
 												}
 												else {
 													//not found
-													$apps[$x]['db'][$y]['fields'][$z]['exists'] = 'false';
+													$this->apps[$x]['db'][$y]['fields'][$z]['exists'] = 'false';
 												}
 											}
 											unset($field_name);
@@ -641,13 +638,18 @@ if (!class_exists('schema')) {
 												//get the field name
 													if (is_array($field['name'])) {
 														$field_name = $field['name']['text'];
-														if (!$this->db_column_exists ($db_type, $db_name, $table_name, $field_name)) {
-															$field['exists'] = "false";
-														}
 													}
 													else {
 														$field_name = $field['name'];
 													}
+
+												//check if the field exists
+												//	if ($this->db_column_exists($db_type, $db_name, $table_name, $field_name)) {
+												//		$field['exists'] = "true";
+												//	}
+												//	else {
+												//		$field['exists'] = "false";
+												//	}
 
 												//add or rename fields
 													if (isset($field['name']['deprecated']) && $this->db_column_exists ($db_type, $db_name, $table_name, $field['name']['deprecated'])) {
@@ -660,7 +662,7 @@ if (!class_exists('schema')) {
 														}
 														if ($db_type == "sqlite") {
 															//a change has been made to the field name
-															$apps[$x]['db'][$y]['rebuild'] = 'true';
+															$this->apps[$x]['db'][$y]['rebuild'] = 'true';
 														}
 													}
 													else {
@@ -720,7 +722,7 @@ if (!class_exists('schema')) {
 															}
 															if ($db_type == "sqlite") {
 																//a change has been made to the field type
-																$apps[$x]['db'][$y]['rebuild'] = 'true';
+																$this->apps[$x]['db'][$y]['rebuild'] = 'true';
 															}
 														}
 													}
@@ -914,3 +916,4 @@ if (!class_exists('schema')) {
 	//print_r($result_array);
 
 ?>
+
