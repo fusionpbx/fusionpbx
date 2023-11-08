@@ -100,7 +100,7 @@
 			/**
 			 * called when the object is created
 			 */
-			public function __construct($priority = 0, $read_confirmation = false, $debug_level = 3) {
+			public function __construct($message = "", $priority = 0, $read_confirmation = false, $debug_level = 3) {
 				//assign the properties using constants for compatibility
 				$this->app_name = self::APP_NAME;
 				$this->app_uuid = self::APP_UUID;
@@ -117,6 +117,11 @@
 
 				//assign defaults
 				$this->_method = self::METHOD_DIRECT;
+
+				//if the message is given then parse it
+				if (!empty($message)) {
+					$this->parse($message);
+				}
 			}
 
 			/**
