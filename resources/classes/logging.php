@@ -116,18 +116,11 @@
 			}
 		}
 
-		/**
-		 * Alias of writeln
-		 * @param type $level
-		 * @param type $message
-		 */
-		public function wln($level, $message) {
-			$this->get_backtrace_details();
-			$this->writeln($level, $message);
-		}
 	}
-
+/*
+ * Example:
 	$log = new Logging(sys_get_temp_dir() . '/logging.log');
 	$log->writeln("debug", "passed validation");
 	$log->writeln("debug", "pass");
 	$log->warning("variable should not used");
+ */
