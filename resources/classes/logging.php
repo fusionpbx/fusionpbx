@@ -8,7 +8,7 @@
 	 * - message is written with the following format: [d/M/Y:H:i:s] (script name) message.
 	 * - log file is closed when the object is destroyed.
 	 */
-	class Logging {
+	class logging {
 
 		// declare log file and file pointer as private properties
 		private $fp;
@@ -118,7 +118,7 @@
 	}
 /*
  * Example:
-	$log = new Logging(sys_get_temp_dir() . '/logging.log');
+	$log = new logging(sys_get_temp_dir() . '/logging.log');
 	$log->writeln("debug", "passed validation");
 	$log->debug("pass");
 	$log->warning("variable should not used");
