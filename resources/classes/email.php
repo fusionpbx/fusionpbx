@@ -316,8 +316,13 @@
 
 			/**
 			 * send emails
+			 * @param int $method Either email::METHOD_QUEUE or email::METHOD_DIRECT sending method
 			 */
-			public function send() {
+			public function send(?int $method = null) {
+				//allow the method to be set in the function call
+				if ($method === null) {
+					$method = $this->_method;
+				}
 
 				//set the domain_uuid if not set
 				if (!isset($this->domain_uuid) && isset($_SESSION)) {
@@ -328,16 +333,16 @@
 				$setting = new settings(["domain_uuid" => $this->domain_uuid]);
 
 				//set the send_method if not already set
-				if ($this->_method === null) {
+				if ($method === null) {
 					if ($setting->get('email_queue', 'enabled') == 'true') {
-						$this->_method = self::METHOD_QUEUE;
+						$method = self::METHOD_QUEUE;
 					} else {
-						$this->_method = self::METHOD_DIRECT;
+						$method = self::METHOD_DIRECT;
 					}
 				}
 
 				//add the email to the queue
-				if ($this->_method == self::METHOD_QUEUE) {
+				if ($method === self::METHOD_QUEUE) {
 
 					//add the email_queue_uuid
 					$email_queue_uuid = uuid();
@@ -440,7 +445,7 @@
 				}
 
 				//send the email directly
-				if ($this->_method == self::METHOD_DIRECT) {
+				if ($method === self::METHOD_DIRECT) {
 					/*
 					  RECIPIENTS NOTE:
 
