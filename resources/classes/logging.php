@@ -20,7 +20,7 @@
 		public function __construct(string $filename_and_path) {
 			//init values
 			$this->clear_debug();
-			
+
 			try {
 				//open file in append mode
 				$this->fp = fopen($filename_and_path, 'a');
@@ -70,13 +70,52 @@
 			$this->debug_class = null;
 		}
 
-		public function write($level, $message) {
+		/**
+		 * Write raw data to the
+		 * @param string $level
+		 * @param string $message
+		 */
+		public function write(string $level, string $message) {
 			$this->get_backtrace_details();
 			// write current time, script name and message to the log file
 			// (don't forget to set the INI setting date.timezone)
 			$time = @date('Y-m-d H:i:s');
-			fwrite($this->fp, "[$time] [$level] [{$this->debug_file}:{$this->debug_line}] $message");
+			$file = $this->debug_file ?? 'file not set';
+			$line = $this->debug_line ?? '0000';
+			fwrite($this->fp, "[$time] [$level] [{$file}:{$line}] $message");
 			$this->clear_debug();
+		}
+
+		public function debug_class(?string $debug_class = null) {
+			if (func_num_args() > 0) {
+				$this->debug_class = $debug_class;
+				return $this;
+			}
+			return $this->debug_class;
+		}
+
+		public function debug_line(?string $debug_line = null) {
+			if (func_num_args() > 0) {
+				$this->debug_line = $debug_line;
+				return $this;
+			}
+			return $this->debug_line;
+		}
+
+		public function debug_func(?string $debug_func = null) {
+			if (func_num_args() > 0) {
+				$this->debug_func = $debug_func;
+				return $this;
+			}
+			return $this->debug_func;
+		}
+
+		public function debug_file(?string $debug_file = null) {
+			if (func_num_args() > 0) {
+				$this->debug_file = $debug_file;
+				return $this;
+			}
+			return $this->debug_file;
 		}
 
 		public function writeln($level, $message) {
@@ -114,12 +153,13 @@
 				$this->debug_class = $debug[$ndx]['class'] ?? '';
 			}
 		}
-
 	}
-/*
+
+	/*
  * Example:
 	$log = new logging(sys_get_temp_dir() . '/logging.log');
 	$log->writeln("debug", "passed validation");
 	$log->debug("pass");
 	$log->warning("variable should not used");
+	$log->debug_file(__FILE__)->debug_line(__LINE__)->write("DEBUG", "Raw message\n");
  */
