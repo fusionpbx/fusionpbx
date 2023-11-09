@@ -39,6 +39,7 @@ if (!class_exists('xml_cdr')) {
 		public $array;
 		public $fields;
 		public $setting;
+		public $domain_uuid;
 		public $call_details;
 		public $call_direction;
 		public $billsec;
@@ -49,7 +50,7 @@ if (!class_exists('xml_cdr')) {
 		/**
 		 * user summary
 		 */
-		public $domain_uuid;
+
 		public $quick_select;
 		public $start_stamp_begin;
 		public $start_stamp_end;
@@ -198,6 +199,7 @@ if (!class_exists('xml_cdr')) {
 			$this->fields[] = "conference_member_id";
 			$this->fields[] = "digits_dialed";
 			$this->fields[] = "pin_number";
+			$this->fields[] = "status";
 			$this->fields[] = "hangup_cause";
 			$this->fields[] = "hangup_cause_q850";
 			$this->fields[] = "sip_hangup_disposition";
@@ -248,7 +250,6 @@ if (!class_exists('xml_cdr')) {
 					$database->app_uuid = '4a085c51-7635-ff03-f67b-86e834422848';
 					//$database->domain_uuid = $domain_uuid;
 					$response = $database->save($array, false);
-
 					if ($response['code'] == '200') {
 						//saved to the database successfully delete the database file
 						if (!empty($xml_cdr_dir)) {
@@ -537,6 +538,47 @@ if (!class_exists('xml_cdr')) {
 							$last_bridge = urldecode($bridge);
 						}
 
+					//determine the call status
+						$failed_array = array(
+						"CALL_REJECTED",
+						"CHAN_NOT_IMPLEMENTED",
+						"DESTINATION_OUT_OF_ORDER",
+						"EXCHANGE_ROUTING_ERROR",
+						"INCOMPATIBLE_DESTINATION",
+						"INVALID_NUMBER_FORMAT",
+						"MANDATORY_IE_MISSING",
+						"NETWORK_OUT_OF_ORDER",
+						"NORMAL_TEMPORARY_FAILURE",
+						"NORMAL_UNSPECIFIED",
+						"NO_ROUTE_DESTINATION",
+						"RECOVERY_ON_TIMER_EXPIRE",
+						"REQUESTED_CHAN_UNAVAIL",
+						"SUBSCRIBER_ABSENT",
+						"SYSTEM_SHUTDOWN",
+						"UNALLOCATED_NUMBER"
+						);
+						if ($xml->variables->billsec > 0) {
+							$status = 'answered';
+						}
+						if ($xml->variables->hangup_cause == 'NO_ANSWER') {
+							$status = 'no_answer';
+						}
+						if ($missed_call == 'true') {
+							$status = 'missed';
+						}
+						if (substr($destination_number, 0, 3) == '*99') {
+							$status = 'voicemail';
+						}
+						if ($xml->variables->hangup_cause == 'ORIGINATOR_CANCEL') {
+							$status = 'cancelled';
+						}
+						if ($xml->variables->hangup_cause == 'USER_BUSY') {
+							$status = 'busy';
+						}
+						if (in_array($xml->variables->hangup_cause, $failed_array)) {
+							$status = 'failed';
+						}
+
 					//misc
 						$key = 0;
 						$uuid = urldecode($xml->variables->uuid);
@@ -556,6 +598,7 @@ if (!class_exists('xml_cdr')) {
 						//$this->array[$key]['digits_dialed'] = urldecode($xml->variables->digits_dialed);
 						$this->array[$key]['sip_hangup_disposition'] = urldecode($xml->variables->sip_hangup_disposition);
 						$this->array[$key]['pin_number'] = urldecode($xml->variables->pin_number);
+						$this->array[$key]['status'] = $status;
 
 					//time
 						$start_epoch = urldecode($xml->variables->start_epoch);
@@ -567,8 +610,8 @@ if (!class_exists('xml_cdr')) {
 						$end_epoch = urldecode($xml->variables->end_epoch);
 						$this->array[$key]['end_epoch'] = $end_epoch;
 						$this->array[$key]['end_stamp'] = is_numeric($end_epoch) ? date('c', $end_epoch) : null;
-						$this->array[$key]['duration'] = urldecode($xml->variables->duration);
-						$this->array[$key]['mduration'] = urldecode($xml->variables->mduration);
+						$this->array[$key]['duration'] = urldecode($xml->variables->billsec);
+						$this->array[$key]['mduration'] = urldecode($xml->variables->billmsec);
 						$this->array[$key]['billsec'] = urldecode($xml->variables->billsec);
 						$this->array[$key]['billmsec'] = urldecode($xml->variables->billmsec);
 
@@ -641,7 +684,7 @@ if (!class_exists('xml_cdr')) {
 						$this->array[$key]['originating_leg_uuid'] = urldecode($xml->variables->originating_leg_uuid);
 
 					//store post dial delay, in milliseconds
-						$this->array[$key]['pdd_ms'] = urldecode($xml->variables->progress_mediamsec) + urldecode($xml->variables->progressmsec);
+						$this->array[$key]['pdd_ms'] = urldecode((int)$xml->variables->progress_mediamsec) + (int)urldecode($xml->variables->progressmsec);
 
 					//get break down the date to year, month and day
 						$start_stamp = urldecode($xml->variables->start_stamp);
@@ -1000,124 +1043,141 @@ if (!class_exists('xml_cdr')) {
 			$destination = new destinations;
 			$destination_array = $destination->get('dialplan');
 
-			//format the times in the call flow array and add the profile duration
+			//add new rows when callee_id_number exists 
+			$new_rows = 0;
+			foreach ($call_flow_array as $key => $row) {
+				if (!empty($row["caller_profile"]["destination_number"]) 
+					and !empty($row["caller_profile"]["callee_id_number"])
+					and $row["caller_profile"]["destination_number"] !== $row["caller_profile"]["callee_id_number"]) {
+						//build the base of the new_row array
+						$new_row["caller_profile"]["destination_number"] = $row["caller_profile"]["callee_id_number"];
+						$new_row["caller_profile"]["caller_id_name"] = $row["caller_profile"]["callee_id_name"];
+						$new_row["caller_profile"]["caller_id_number"] = $row["caller_profile"]["caller_id_number"];
+						$new_row['times']["profile_created_time"] = $row["times"]["profile_created_time"];
+						$new_row['times']["profile_end_time"] = $row["times"]["profile_end_time"];
+
+						//update the times if the transfer_time exists. The order of this is important add new row needs to be set before this code
+						if (isset($row["times"]["transfer_time"]) and $row["times"]["transfer_time"] > 0) {
+							//change the end time for the current row
+							$call_flow_array[$key+$new_rows]["times"]["profile_end_time"] = $row["times"]["transfer_time"];
+
+							//change the created time for the new row
+							$new_row['times']["profile_created_time"] = $row["times"]["transfer_time"];
+						}
+
+						//update the times if the bridged_time exists. The order of this is important add new row needs to be set before this code, and transfer_time needs to be before bridge_time
+						if (isset($row["times"]["bridged_time"]) and $row["times"]["bridged_time"] > 0) {
+							//change the end time for the current row
+							$call_flow_array[$key+$new_rows]["times"]["profile_end_time"] = $row["times"]["bridged_time"];
+
+							//change the created time for the new row
+							$new_row['times']["profile_created_time"] = $row["times"]["bridged_time"];
+						}
+
+						//increment the new row id
+						$new_rows++;
+
+						//insert the new row into the array without overwriting an existing row
+						array_splice($call_flow_array, $key+$new_rows, 0, [$new_row]);
+
+						//clean up
+						unset($new_row);
+				}
+				$i++;
+			}
+
+			//format the times in the call flow array
 			$i = 0;
-			foreach ($call_flow_array as $row) {
+			foreach ($call_flow_array as $key => $row) {
 				foreach ($row["times"] as $name => $value) {
 					if ($value > 0) {
-						$call_flow_array[$i]["times"]["profile_duration_seconds"] = round(((int) $call_flow_array[$i]["times"]["profile_end_time"])/1000000 - ((int) $call_flow_array[$i]["times"]["profile_created_time"])/1000000);
-						$call_flow_array[$i]["times"]["profile_duration_formatted"] = gmdate("G:i:s", (int) $call_flow_array[$i]["times"]["profile_duration_seconds"]);
 						$call_flow_array[$i]["times"][$name.'stamp'] = date("Y-m-d H:i:s", (int) $value/1000000);
 					}
 				}
 				$i++;
 			}
 
-			//add a new row to the call flow array
-			if ($this->call_direction !== 'outbound') {
-				//count the call flow array
-				$id = count($call_flow_array);
-
-				//add a new row
-				$call_flow_array[$id]["caller_profile"]["destination_number"] = $call_flow_array[$id-1]["caller_profile"]["callee_id_number"];
-				$call_flow_array[$id]["caller_profile"]["caller_id_number"] = $call_flow_array[$id-1]["caller_profile"]["caller_id_number"];
-				$call_flow_array[$id]['times']["profile_created_time"] = $call_flow_array[$id-1]["times"]["profile_created_time"];
-				$call_flow_array[$id]['times']["profile_end_time"] = $call_flow_array[$id-1]["times"]["profile_end_time"];
-				$call_flow_array[$id]['times']["profile_duration_seconds"] = $call_flow_array[$id-1]["times"]["profile_duration_seconds"]; 
-				$call_flow_array[$id]['times']["profile_duration_formatted"] = gmdate("G:i:s", (int) $call_flow_array[$id]['times']["profile_duration_seconds"]);
-
-				//update the times if the transfer_time exists. The order of this is important add new row needs to be set before this code
-				if (isset($call_flow_array[$id-1]["times"]["transfer_time"])) {
-					//change the end time for the last row
-					$call_flow_array[$id-1]['times']["profile_end_time"] = $call_flow_array[$id-1]["times"]["transfer_time"];
-					$call_flow_array[$id-1]['times']["profile_duration_seconds"] = (int) $call_flow_array[$id-1]["times"]["profile_end_time"]/1000000 - $call_flow_array[$id-1]["times"]["profile_created_time"]/1000000;
-					$call_flow_array[$id-1]['times']["profile_duration_formatted"] = gmdate("G:i:s", (int) $call_flow_array[$id-1]['times']["profile_duration_seconds"]);
-
-					//change the created time for the new row
-					$call_flow_array[$id]['times']["profile_created_time"] = $call_flow_array[$id-1]["times"]["transfer_time"];
-					$call_flow_array[$id]['times']["profile_duration_seconds"] = (int) $call_flow_array[$id]["times"]["profile_end_time"]/1000000 - $call_flow_array[$id]["times"]["profile_created_time"]/1000000;
-					$call_flow_array[$id]['times']["profile_duration_formatted"] = gmdate("G:i:s", (int) $call_flow_array[$id]['times']["profile_duration_seconds"]);
-				}
-
-				//update the times if the bridged_time exists. The order of this is important add new row needs to be set before this code, and transfer_time needs to be before bridge_time
-				if (isset($call_flow_array[$id-1]["times"]["bridged_time"])) {
-					//change the end time for the last row
-					$call_flow_array[$id-1]['times']["profile_end_time"] = $call_flow_array[$id-1]["times"]["bridged_time"];
-					$call_flow_array[$id-1]['times']["profile_duration_seconds"] = (int) $call_flow_array[$id-1]["times"]["profile_end_time"]/1000000 - $call_flow_array[$id-1]["times"]["profile_created_time"]/1000000;
-					$call_flow_array[$id-1]['times']["profile_duration_formatted"] = gmdate("G:i:s", (int) $call_flow_array[$id-1]['times']["profile_duration_seconds"]);
-
-					//change the created time for the new row
-					$call_flow_array[$id]['times']["profile_created_time"] = $call_flow_array[$id-1]["times"]["bridged_time"];
-					$call_flow_array[$id]['times']["profile_duration_seconds"] = (int) $call_flow_array[$id]["times"]["profile_end_time"]/1000000 - $call_flow_array[$id]["times"]["profile_created_time"]/1000000;
-					$call_flow_array[$id]['times']["profile_duration_formatted"] = gmdate("G:i:s", (int) $call_flow_array[$id]['times']["profile_duration_seconds"]);
-				}
-			}
-
 			//build the call flow summary
-			$x = 0;
+			$x = 0; $skip_row = false;
 			if (!empty($call_flow_array)) {
 				foreach ($call_flow_array as $row) {
+					//skip this row
+					if ($skip_row) {
+						$skip_row = false;
+						continue;
+					}
+
 					//get the application array
 					if (!empty($destination_array) && !empty($row["caller_profile"]["destination_number"])) {
-						$app = find_app($destination_array, urldecode($row["caller_profile"]["destination_number"]));
+						$app = $this->find_app($destination_array, urldecode($row["caller_profile"]["destination_number"]));
 					}
 
 					//call centers
 					if ($app['application'] == 'call_centers') {
 						if (isset($row["caller_profile"]["transfer_source"])) {
-							$app['status'] = 'Answered'; //Out
+							$app['status'] = 'answered'; //Out
 						}
 						else {
-							$app['status'] = 'Waited'; //In
+							$app['status'] = 'waited'; //In
 						}
+					}
+
+					//call flows
+					if ($app['application'] == 'call_flows') {
+						$app['status'] = 'routed';
 					}
 
 					//conferences
 					if ($app['application'] == 'conferences') {
-						$app['status'] = 'Answered';
+						$app['status'] = 'answered';
 					}
 
 					//destinations
 					if ($app['application'] == 'destinations') {
-						$app['status'] = 'Routed';
+						$app['status'] = 'routed';
 					}
 
 					//extensions
 					if ($app['application'] == 'extensions') {
 						if ($this->billsec == 0) {
-							$app['status'] = 'Missed';
+							$app['status'] = 'missed';
 						}
 						else {
-							$app['status'] = 'Answered';
+							$app['status'] = 'answered';
 						}
+					}
+
+					//ivr menus
+					if ($app['application'] == 'ivr_menus') {
+						$app['status'] = 'routed';
 					}
 
 					//outbound routes
 					if ($this->call_direction == 'outbound') {
-						$app['application'] = 'dialplans';
-						$app['uuid'] = '';
-						$app['status'] = '';
-						$app['name'] = 'Outbound';
-						$app['label'] = 'Outbound';
+						if (empty($app['application'])) {
+							$app['application'] = 'dialplans';
+							$app['uuid'] = '';
+							$app['status'] = '';
+							$app['name'] = 'Outbound';
+							$app['label'] = 'Outbound';
+						}
 					}
 
 					//ring groups
 					if ($app['application'] == 'ring_groups') {
-						$app['status'] = 'Waited';
+						$app['status'] = 'waited';
 					}
 
 					//time conditions
 					if ($app['application'] == 'time_conditions') {
-						$app['status'] = 'Routed';
+						$app['status'] = 'routed';
 					}
 
 					//valet park
 					if (!empty($row["caller_profile"]["destination_number"]) 
-						&& (substr($row["caller_profile"]["destination_number"], 0, 4) == 'park'
-							or (substr($row["caller_profile"]["destination_number"], 0, 3) == '*59' 
-							&& strlen($row["caller_profile"]["destination_number"]) == 5))
-						) {
-
+						and (substr($row["caller_profile"]["destination_number"], 0, 4) == 'park'
+						or (substr($row["caller_profile"]["destination_number"], 0, 3) == '*59' 
+						and strlen($row["caller_profile"]["destination_number"]) == 5))) {
 						//add items to the app array
 						$app['application'] = 'dialplans';
 						$app['uuid'] = '46ae6d82-bb83-46a3-901d-33d0724347dd';
@@ -1126,25 +1186,33 @@ if (!class_exists('xml_cdr')) {
 
 						//set the call park status
 						if (strpos($row["caller_profile"]["transfer_source"], 'park+') !== false) {
-							//$app['status'] = 'In '.$row["caller_profile"]["callee_id_name"].' '.$row["caller_profile"]["callee_id_number"];
-							$app['status'] = 'In '.$row["caller_profile"]["callee_id_number"];
 							//$app['status'] = 'In';
+							$app['status'] = 'parked';
+
+							//skip the next row
+							$skip_row = true;
 						}
 						else {
-							//$app['status'] = 'Out '.$row["caller_profile"]["callee_id_name"].' '.$row["caller_profile"]["callee_id_number"];
-							$app['status'] = 'Out '.$row["caller_profile"]["callee_id_number"];
 							//$app['status'] = 'Out';
+							$app['status'] = 'unparked';
 						}
 					}
 
 					//conference
 					if ($app['application'] == 'conferences') {
-						unset($call_flow_array[count($call_flow_array)]);
+						$skip_row = true;
 					}
 
 					//voicemails
 					if ($app['application'] == 'voicemails') {
-						$app['status'] = 'Answered';
+						$app['status'] = 'answered';
+					}
+
+					//debug - add the callee_id_number to the end of the status
+					if (isset($_REQUEST['debug']) && $_REQUEST['debug'] == 'true' && !empty($row["caller_profile"]["destination_number"]) 
+						and !empty($row["caller_profile"]["callee_id_number"])
+						and $row["caller_profile"]["destination_number"] !== $row["caller_profile"]["callee_id_number"]) {
+							$app['status'] .= ' ('.$row["caller_profile"]["callee_id_number"].')';
 					}
 
 					//build the application urls
@@ -1157,7 +1225,7 @@ if (!class_exists('xml_cdr')) {
 
 					//add the application and destination details
 					$language2 = new text;
-					$text2 = $language2->get($_SESSION['domain']['language']['code'], 'app/'.$app['application']);
+					$text2 = $language2->get($this->setting->get('domain', 'language'), 'app/'.$app['application']);
 					$call_flow_summary[$x]["application_name"] = $app['application'];
 					$call_flow_summary[$x]["application_label"] = trim($text2['title-'.$app['application']]);
 					$call_flow_summary[$x]["application_url"] = $application_url;
@@ -1179,9 +1247,8 @@ if (!class_exists('xml_cdr')) {
 					$call_flow_summary[$x]["end_epoch"] = $profile_end_epoch;
 					$call_flow_summary[$x]["start_stamp"] =  date("Y-m-d H:i:s", $profile_created_epoch);
 					$call_flow_summary[$x]["end_stamp"] =  date("Y-m-d H:i:s", $profile_end_epoch);
-					$call_flow_summary[$x]["duration_seconds"] =  $row['times']['profile_duration_seconds'];
-					$call_flow_summary[$x]["duration_formatted"] =  $row['times']['profile_duration_formatted'];
-
+					$call_flow_summary[$x]["duration_seconds"] =  $profile_end_epoch - $profile_created_epoch;
+					$call_flow_summary[$x]["duration_formatted"] =  gmdate("G:i:s",(int) $call_flow_summary[$x]["duration_seconds"]);
 					unset($app);
 					$x++;
 				}
@@ -1191,6 +1258,74 @@ if (!class_exists('xml_cdr')) {
 			//return the call flow summary array
 			return $call_flow_summary;
 		}
+
+	//add a function to return the find_app
+		public function find_app($destination_array, $detail_action) {
+
+			//add the destinations to the destination array
+			$sql = "select * from v_destinations ";
+			$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+			$parameters['domain_uuid'] = $this->domain_uuid;
+			$database = new database;
+			$destinations = $database->select($sql, $parameters, 'all');
+			if (!empty($destinations)) {
+				foreach($destinations as $row) {
+					$destination_array['destinations'][$id]['application'] = 'destinations';
+					$destination_array['destinations'][$id]['destination_uuid'] = $row["destination_uuid"];
+					$destination_array['destinations'][$id]['uuid'] = $row["destination_uuid"];
+					$destination_array['destinations'][$id]['dialplan_uuid'] = $row["dialplan_uuid"];
+					$destination_array['destinations'][$id]['destination_type'] = $row["destination_type"];
+					$destination_array['destinations'][$id]['destination_prefix'] = $row["destination_prefix"];
+					$destination_array['destinations'][$id]['destination_number'] = $row["destination_number"];
+					$destination_array['destinations'][$id]['extension'] = $row["destination_prefix"] . $row["destination_number"];
+					$destination_array['destinations'][$id]['destination_trunk_prefix'] = $row["destination_trunk_prefix"];
+					$destination_array['destinations'][$id]['destination_area_code'] = $row["destination_area_code"];
+					$destination_array['destinations'][$id]['context'] = $row["destination_context"];
+					$destination_array['destinations'][$id]['label'] = $row["destination_description"];
+					$destination_array['destinations'][$id]['destination_enabled'] = $row["destination_enabled"];
+					$destination_array['destinations'][$id]['name'] = $row["destination_description"];
+					$destination_array['destinations'][$id]['description'] = $row["destination_description"];
+					//$destination_array[$id]['destination_caller_id_name'] = $row["destination_caller_id_name"];
+					//$destination_array[$id]['destination_caller_id_number'] = $row["destination_caller_id_number"];
+					$id++;
+				}
+			}
+			unset($sql, $parameters, $row);
+
+			$result = '';
+			if (!empty($destination_array)) {
+				foreach($destination_array as $application => $row) {
+					if (!empty($row)) {
+						foreach ($row as $key => $value) {
+							//find matching destinations
+							if ($application == 'destinations') {
+								if ('+'.$value['destination_prefix'].$value['destination_number'] == $detail_action
+									or $value['destination_prefix'].$value['destination_number'] == $detail_action
+									or $value['destination_number'] == $detail_action 
+									or $value['destination_trunk_prefix'].$value['destination_number'] == $detail_action
+									or '+'.$value['destination_prefix'].$value['destination_area_code'].$value['destination_number'] == $detail_action
+									or $value['destination_prefix'].$value['destination_area_code'].$value['destination_number'] == $detail_action
+									or $value['destination_area_code'].$value['destination_number'] == $detail_action) {
+										if (file_exists($_SERVER["PROJECT_ROOT"]."/app/".$application."/app_languages.php")) {
+											$value['application'] = $application;
+											return $value;
+										}
+								}
+							}
+
+							//find all other matching actions
+							if (!empty($value['extension']) && $value['extension'] == $detail_action or preg_match('/^'.preg_quote($value['extension']).'$/', $detail_action)) {
+								if (file_exists($_SERVER["PROJECT_ROOT"]."/app/".$application."/app_languages.php")) {
+									$value['application'] = $application;
+									return $value;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
 
 		/**
 		 * get xml from the filesystem and save it to the database

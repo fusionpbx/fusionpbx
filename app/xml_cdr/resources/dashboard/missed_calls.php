@@ -31,7 +31,7 @@
 //get the missed calls from call detail records
 	$sql =	"select \n";
 	$sql .=	"	direction, \n";
-	$sql .= "	to_char(timezone(:time_zone, start_stamp), '".(!empty($_SESSION['domain']['time_format']) && $_SESSION['domain']['time_format']['text'] == '12h' ? "MM/DD HH12:MI am" : "MM/DD HH24:MI")."') as start_date_time, \n";
+	$sql .= "	to_char(timezone(:time_zone, start_stamp), '".(!empty($_SESSION['domain']['time_format']) && $_SESSION['domain']['time_format']['text'] == '12h' ? "DD Mon HH12:MI am" : "DD Mon HH24:MI")."') as start_date_time, \n";
 	$sql .=	"	caller_id_name, \n";
 	$sql .=	"	caller_id_number, \n";
 	$sql .=	"	answer_stamp \n";

@@ -54,7 +54,6 @@
 
 //get http post variables and set them to php variables
 	if (!empty($_POST)) {
-//view_array($_POST);
 		$bridge_uuid = $_POST["bridge_uuid"];
 		$bridge_name = $_POST["bridge_name"];
 		$bridge_action = $_POST["bridge_action"];
@@ -219,13 +218,17 @@
 
 //initialize the bridge_variables array from session bridge variables
 	$session_variables = []; $i = 0;
-	foreach($_SESSION['bridge']['variable'] as $variable) {
-		$variable = explode("=", $variable);
-		$session_variables[$i]['name'] = $variable[0];
-		$session_variables[$i]['value'] = $variable[1] ?? '';
-		$session_variables[$i]['label'] = ucwords(str_replace('_', ' ', $variable[0]));
-		$session_variables[$i]['label'] = str_replace('Effective Caller Id', 'Caller ID', $session_variables[$i]['label']);
-		$i++;
+	if (!empty($_SESSION['bridge']['variable'])) {
+		foreach($_SESSION['bridge']['variable'] as $variable) {
+			if (!empty($variable)) {
+				$variable = explode("=", $variable);
+				$session_variables[$i]['name'] = $variable[0];
+				$session_variables[$i]['value'] = $variable[1] ?? '';
+				$session_variables[$i]['label'] = ucwords(str_replace('_', ' ', $variable[0]));
+				$session_variables[$i]['label'] = str_replace('Effective Caller Id', 'Caller ID', $session_variables[$i]['label']);
+				$i++;
+			}
+		}
 	}
 
 //get the bridge variables from the database bridge_destination value
