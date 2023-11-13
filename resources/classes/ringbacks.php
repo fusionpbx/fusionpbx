@@ -99,6 +99,57 @@ if (!class_exists('ringbacks')) {
 					$recordings = new switch_recordings;
 					$this->recordings_list = $recordings->list_recordings();
 				}
+
+				if (is_dir($_SERVER["PROJECT_ROOT"].'/app/streams')) {
+					$sql = "select * from v_streams ";
+					$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+					$sql .= "and stream_enabled = 'true' ";
+					$sql .= "order by stream_name asc ";
+					$parameters['domain_uuid'] = $this->domain_uuid;
+					$database = new database;
+					$streams = $database->select($sql, $parameters, 'all');
+					$this->streams = $streams;
+					unset($sql, $parameters, $streams, $row);
+				}
+		}
+
+		public function valid($value) {
+			foreach($this->ringtones_list as $ringtone_value => $ringtone_name) {
+				if ($value == "\${".$ringtone_value."}") {
+					return true;
+				}
+			}
+
+			foreach($this->tones_list as $tone_value => $tone_name) {
+				if ($value == "\${".$tone_value."}") {
+					return true;
+				}
+			}
+
+			foreach($this->music_list as $row) {
+				$name = '';
+				if (!empty($row['domain_uuid'])) {
+					$name = $row['domain_name'].'/';	
+				}
+				$name .= $row['music_on_hold_name'];
+				if ($value == "local_stream://".$name) {
+					return true;
+				}
+			}
+
+			foreach($this->recordings_list as $recording_value => $recording_name) {
+				if ($value == $recording_value) {
+					return true;
+				}
+			}
+
+			foreach($this->streams as $row) {
+				if ($value == $row['stream_location']) {
+					return true;
+				}
+			}
+
+			return false;
 		}
 
 		public function select($name, $selected) {
@@ -138,22 +189,12 @@ if (!class_exists('ringbacks')) {
 				}
 
 			//streams
-				if (is_dir($_SERVER["PROJECT_ROOT"].'/app/streams')) {
-					$sql = "select * from v_streams ";
-					$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
-					$sql .= "and stream_enabled = 'true' ";
-					$sql .= "order by stream_name asc ";
-					$parameters['domain_uuid'] = $this->domain_uuid;
-					$database = new database;
-					$streams = $database->select($sql, $parameters, 'all');
-					if (!empty($streams)) {
-						$select .= "	<optgroup label='".$text['label-streams']."'>";
-						foreach ($streams as $row) {
-							$select .= "		<option value='".$row['stream_location']."' ".(($selected == $row['stream_location']) ? 'selected="selected"' : null).">".$row['stream_name']."</option>\n";
-						}
-						$select .= "	</optgroup>\n";
+				if (!empty($this->streams)) {
+					$select .= "	<optgroup label='".$text['label-streams']."'>";
+					foreach ($this->streams as $row) {
+						$select .= "		<option value='".$row['stream_location']."' ".(($selected == $row['stream_location']) ? 'selected="selected"' : null).">".$row['stream_name']."</option>\n";
 					}
-					unset($sql, $parameters, $streams, $row);
+					$select .= "	</optgroup>\n";
 				}
 
 			//ringtones
