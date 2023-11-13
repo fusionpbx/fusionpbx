@@ -51,6 +51,9 @@
 //initialize the destinations object
 	$destination = new destinations;
 
+//initialize the ringbacks object
+	$ringbacks = new ringbacks;
+
 //action add or update
 	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"]) || !empty($_REQUEST["ivr_menu_uuid"]) &&  is_uuid($_REQUEST["ivr_menu_uuid"])) {
 		$action = "update";
@@ -291,7 +294,9 @@
 					$array['ivr_menus'][0]["ivr_menu_max_timeouts"] = $ivr_menu_max_timeouts;
 					$array['ivr_menus'][0]["ivr_menu_digit_len"] = $ivr_menu_digit_len;
 					$array['ivr_menus'][0]["ivr_menu_direct_dial"] = $ivr_menu_direct_dial;
-					$array['ivr_menus'][0]["ivr_menu_ringback"] = $ivr_menu_ringback;
+					if (!empty($ivr_menu_ringback) && $ringbacks->valid($ivr_menu_ringback)) {
+						$array['ivr_menus'][0]["ivr_menu_ringback"] = $ivr_menu_ringback;
+					}
 					$array['ivr_menus'][0]["ivr_menu_cid_prefix"] = $ivr_menu_cid_prefix;
 					$array['ivr_menus'][0]["ivr_menu_context"] = $ivr_menu_context;
 					$array['ivr_menus'][0]["ivr_menu_enabled"] = $ivr_menu_enabled;
@@ -340,7 +345,7 @@
 					}
 					$dialplan_xml .= "		<action application=\"sleep\" data=\"1000\"/>\n";
 					$dialplan_xml .= "		<action application=\"set\" data=\"hangup_after_bridge=true\"/>\n";
-					if (!empty($ivr_menu_ringback)) {
+					if (!empty($ivr_menu_ringback) && $ringbacks->valid($ivr_menu_ringback)) {
 						$dialplan_xml .= "		<action application=\"set\" data=\"ringback=".$ivr_menu_ringback."\"/>\n";
 					}
 					if (!empty($ivr_menu_language)) {
@@ -349,7 +354,7 @@
 						$dialplan_xml .= "		<action application=\"set\" data=\"default_dialect=".xml::sanitize($ivr_menu_dialect)."\" inline=\"true\"/>\n";
 						$dialplan_xml .= "		<action application=\"set\" data=\"default_voice=".xml::sanitize($ivr_menu_voice)."\" inline=\"true\"/>\n";
 					}
-					if (!empty($ivr_menu_ringback)) {
+					if (!empty($ivr_menu_ringback) && $ringbacks->valid($ivr_menu_ringback)) {
 						$dialplan_xml .= "		<action application=\"set\" data=\"transfer_ringback=".$ivr_menu_ringback."\"/>\n";
 					}
 					$dialplan_xml .= "		<action application=\"set\" data=\"ivr_menu_uuid=".xml::sanitize($ivr_menu_uuid)."\"/>\n";
@@ -1165,7 +1170,6 @@
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 
-	$ringbacks = new ringbacks;
 	echo $ringbacks->select('ivr_menu_ringback', $ivr_menu_ringback);
 
 	echo "<br />\n";
