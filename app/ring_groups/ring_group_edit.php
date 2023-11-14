@@ -381,7 +381,7 @@
 				else {
 					$ring_group_destination_uuid = uuid();
 				}
-				if (!empty($row['destination_number']) && $_SESSION['ring_groups_range_extensions_add']['enabled']['boolean']) {
+				if (!empty($row['destination_number']) && $_SESSION['ring_group']['destination_range_enabled']['boolean']) {
 					// check the range
 					$output_array = array();
 					preg_match('/[0-9]{1,}-[0-9]{1,}/', $row['destination_number'], $output_array);
