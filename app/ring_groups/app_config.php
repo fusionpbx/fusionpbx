@@ -215,13 +215,13 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "88297698-339d-4971-8019-3f7095ec1f36";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "ring_groups_range_extensions_add";
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "enabled";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "88297698-339d-4971-8019-3f7095ec1f33";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "ring_group";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "destination_range_enabled";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enable or disable the feature of add range of extensions.";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enable or disable the feature to add a range of extensions.";
 
 	//schema details
 		$y=0;
