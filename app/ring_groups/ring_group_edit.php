@@ -381,7 +381,46 @@
 				else {
 					$ring_group_destination_uuid = uuid();
 				}
-				if (!empty($row['destination_number'])) {
+				if (!empty($row['destination_number']) && $_SESSION['ring_group']['destination_range_enabled']['boolean']) {
+					// check the range
+					$output_array = array();
+					preg_match('/[0-9]{1,}-[0-9]{1,}/', $row['destination_number'], $output_array);
+				}
+				if (is_uuid($ring_group_uuid) && count($output_array) > 0) {
+					$ranges = explode('-', $row['destination_number']);
+					$range_first_extension = $ranges[0];
+					$range_second_extension = $ranges[1];
+					if ($range_first_extension <= $range_second_extension) {
+						// select range extension for ring group destintaions
+						$sql = "select DISTINCT ext.extension, ext.extension_uuid from v_extensions as ext ";
+						$sql .= "where ext.domain_uuid = :domain_uuid ";
+						$sql .= "and CAST(coalesce(ext.extension, '0') AS integer) >= :range_first_extension and CAST(coalesce(ext.extension, '0') AS integer) <= :range_second_extension ";
+						$sql .= "and ext.extension NOT IN ";
+						$sql .= "(select DISTINCT asd.destination_number as exten from v_ring_group_destinations as asd ";
+						$sql .= "where asd.ring_group_uuid = :ring_group_uuid ";
+						$sql .= "and asd.domain_uuid = :domain_uuid) ";
+						$sql .= "order by ext.extension asc ";
+						$parameters['domain_uuid'] = $domain_uuid;
+						$parameters['ring_group_uuid'] = $ring_group_uuid;
+						$parameters['range_first_extension'] = $range_first_extension;
+						$parameters['range_second_extension'] = $range_second_extension;
+						$database = new database;
+						$extensions = $database->select($sql, $parameters, 'all');
+						unset($sql, $parameters, $database);
+						// echo var_dump($extensions);
+						foreach ($extensions as $extension) {
+							$array["ring_groups"][0]["ring_group_destinations"][$y]["ring_group_uuid"] = $ring_group_uuid;
+							$array['ring_groups'][0]["ring_group_destinations"][$y]["ring_group_destination_uuid"] = uuid();
+							$array['ring_groups'][0]["ring_group_destinations"][$y]["destination_number"] = $extension['extension'];
+							$array['ring_groups'][0]["ring_group_destinations"][$y]["destination_delay"] = $row['destination_delay'];
+							$array['ring_groups'][0]["ring_group_destinations"][$y]["destination_timeout"] = $row['destination_timeout'];
+							$array['ring_groups'][0]["ring_group_destinations"][$y]["destination_prompt"] = $row['destination_prompt'];
+							$array['ring_groups'][0]["ring_group_destinations"][$y]["destination_enabled"] = $row['destination_enabled'] ?? 'false';
+							$array['ring_groups'][0]["ring_group_destinations"][$y]["domain_uuid"] = $domain_uuid;
+							$y++;
+						}
+					}
+				} elseif (!empty($row['destination_number']) > 0) {
 					$array["ring_groups"][0]["ring_group_destinations"][$y]["ring_group_uuid"] = $ring_group_uuid;
 					$array['ring_groups'][0]["ring_group_destinations"][$y]["ring_group_destination_uuid"] = $ring_group_destination_uuid;
 					$array['ring_groups'][0]["ring_group_destinations"][$y]["destination_number"] = $row['destination_number'];
@@ -392,6 +431,7 @@
 					$array['ring_groups'][0]["ring_group_destinations"][$y]["domain_uuid"] = $domain_uuid;
 				}
 				$y++;
+				unset($output_array, $range_first_extension, $range_second_extension);
 			}
 
 		//build the xml dialplan
