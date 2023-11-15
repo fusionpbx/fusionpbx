@@ -386,7 +386,7 @@
 					$output_array = array();
 					preg_match('/[0-9]{1,}-[0-9]{1,}/', $row['destination_number'], $output_array);
 				}
-				if (is_uuid($ring_group_uuid) && count($output_array) > 0) {
+				if (is_uuid($ring_group_uuid) && !empty($output_array)) {
 					$ranges = explode('-', $row['destination_number']);
 					$range_first_extension = $ranges[0];
 					$range_second_extension = $ranges[1];
