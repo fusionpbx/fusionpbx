@@ -1,6 +1,6 @@
 --      xml_handler.lua
 --      Part of FusionPBX
---      Copyright (C) 2015-2022 Mark J Crane <markjcrane@fusionpbx.com>
+--      Copyright (C) 2015-2023 Mark J Crane <markjcrane@fusionpbx.com>
 --      All rights reserved.
 --
 --      Redistribution and use in source and binary forms, with or without
@@ -25,10 +25,28 @@
 --      POSSIBILITY OF SUCH DAMAGE.
 
 --include functions
-	require "resources.functions.format_ringback"
+require "resources.functions.format_ringback"
 
 --include xml library
 	local Xml = require "resources.functions.xml";
+
+--connect to the database
+	local Database = require "resources.functions.database";
+	dbh = Database.new('system');
+
+--include settings library
+	local Settings = require "resources.functions.lazy_settings"
+
+--create the settings object
+	local settings = Settings.new(dbh, domain_name, domain_uuid);
+
+--check queue
+	queue_login = settings:get('call_center', 'queue_login', 'text');
+	if (queue_login ~= nil and queue_login == 'dynamic') then
+		per_queue_login = true;
+	else
+		per_queue_login = false;
+	end
 
 --get the cache
 	local cache = require "resources.functions.cache"
@@ -42,10 +60,6 @@
 			if (debug["cache"]) then
 				freeswitch.consoleLog("warning", "[xml_handler] " .. cc_cache_key .. " can not be get from the cache: " .. tostring(err) .. "\n");
 			end
-
-		--connect to the database
-			local Database = require "resources.functions.database";
-			dbh = Database.new('system');
 
 		--exits the script if we didn't connect properly
 			assert(dbh:connected());
@@ -278,35 +292,37 @@
 			xml:append([[                    </agents>]]);
 
 		--get the tiers
-			sql = "select t.domain_uuid, d.domain_name, t.call_center_agent_uuid, t.call_center_queue_uuid, q.queue_extension, t.tier_level, t.tier_position ";
-			sql = sql .. "from v_call_center_tiers as t, v_domains as d, v_call_center_queues as q ";
-			sql = sql .. "where d.domain_uuid = t.domain_uuid ";
-			sql = sql .. "and t.call_center_queue_uuid = q.call_center_queue_uuid; ";
-			if (debug["sql"]) then
-				freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");
+			if (not per_queue_login) then
+				sql = "select t.domain_uuid, d.domain_name, t.call_center_agent_uuid, t.call_center_queue_uuid, q.queue_extension, t.tier_level, t.tier_position ";
+				sql = sql .. "from v_call_center_tiers as t, v_domains as d, v_call_center_queues as q ";
+				sql = sql .. "where d.domain_uuid = t.domain_uuid ";
+				sql = sql .. "and t.call_center_queue_uuid = q.call_center_queue_uuid; ";
+				if (debug["sql"]) then
+					freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");
+				end
+				xml:append([[                    <tiers>]]);
+				dbh:query(sql, function(row)
+					--get the values from the database and set as variables
+						domain_uuid = row.domain_uuid;
+						domain_name = row.domain_name;
+						agent_uuid = row.call_center_agent_uuid;
+						queue_uuid = row.call_center_queue_uuid;
+						queue_extension = row.queue_extension;
+						tier_level = row.tier_level;
+						tier_position = row.tier_position;
+					--build the xml
+						xml:append([[                            <tier ]]);
+						xml:append([[                            	agent="]] .. xml.sanitize(agent_uuid) .. [[" ]]);
+						xml:append([[                            	queue="]] .. xml.sanitize(queue_extension) .. [[@]] .. xml.sanitize(domain_name) .. [[" ]]);
+						xml:append([[                            	domain_name="]] .. xml.sanitize(domain_name) .. [[" ]]);
+						--xml:append([[                            	agent_name="]] .. xml.sanitize(agent_name) .. [[" ]]);
+						--xml:append([[                            	queue_name="]] .. xml.sanitize(queue_name) .. [[" ]]);
+						xml:append([[                            	level="]] .. xml.sanitize(tier_level) .. [[" ]]);
+						xml:append([[                            	position="]] .. xml.sanitize(tier_position) .. [[" ]]);
+						xml:append([[                            />]]);
+				end)
+				xml:append([[                    </tiers>]]);
 			end
-			xml:append([[                    <tiers>]]);
-			dbh:query(sql, function(row)
-				--get the values from the database and set as variables
-					domain_uuid = row.domain_uuid;
-					domain_name = row.domain_name;
-					agent_uuid = row.call_center_agent_uuid;
-					queue_uuid = row.call_center_queue_uuid;
-					queue_extension = row.queue_extension;
-					tier_level = row.tier_level;
-					tier_position = row.tier_position;
-				--build the xml
-					xml:append([[                            <tier ]]);
-					xml:append([[                            	agent="]] .. xml.sanitize(agent_uuid) .. [[" ]]);
-					xml:append([[                            	queue="]] .. xml.sanitize(queue_extension) .. [[@]] .. xml.sanitize(domain_name) .. [[" ]]);
-					xml:append([[                            	domain_name="]] .. xml.sanitize(domain_name) .. [[" ]]);
-					--xml:append([[                            	agent_name="]] .. xml.sanitize(agent_name) .. [[" ]]);
-					--xml:append([[                            	queue_name="]] .. xml.sanitize(queue_name) .. [[" ]]);
-					xml:append([[                            	level="]] .. xml.sanitize(tier_level) .. [[" ]]);
-					xml:append([[                            	position="]] .. xml.sanitize(tier_position) .. [[" ]]);
-					xml:append([[                            />]]);
-			end)
-			xml:append([[                    </tiers>]]);
 
 		--close the extension tag if it was left open
 			xml:append([[            </configuration>]]);

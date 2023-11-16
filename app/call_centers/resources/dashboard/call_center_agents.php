@@ -127,15 +127,6 @@
 	$event_socket_str = trim(event_socket_request($fp, 'api '.$switch_cmd));
 	$call_center_tiers = csv_to_named_array($event_socket_str, '|');
 
-//get the call center queues from the database
-	$sql = "select * from v_call_center_queues ";
-	$sql .= "where domain_uuid = :domain_uuid ";
-	$sql .= "order by queue_extension asc ";
-	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$call_center_queues = $database->select($sql, $parameters, 'all');
-	$num_rows = !is_array($call_center_queues) ? 0 : @sizeof($call_center_queues);
-	unset($sql, $parameters);
-
 //get the agents from the database
 	$sql = "select * from v_call_center_agents ";
 	$sql .= "where user_uuid = :user_uuid ";
@@ -148,6 +139,22 @@
 	}
 	unset($sql, $parameters);
 
+//get the call center queues from the database
+	if (!empty($_SESSION['call_center']['queue_login']['text']) && $_SESSION['call_center']['queue_login']['text'] == 'dynamic') {
+		$sql = "select * from v_call_center_queues ";
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$sql .= "and call_center_queue_uuid in ( ";
+		$sql .= "	select call_center_queue_uuid from v_call_center_tiers ";
+		$sql .= "	where call_center_agent_uuid = :call_center_agent_uuid ";
+		$sql .= ") ";
+		$parameters['call_center_agent_uuid'] = $agent['call_center_agent_uuid'];
+		$sql .= "order by queue_extension asc ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$call_center_queues = $database->select($sql, $parameters, 'all');
+		$num_rows = !is_array($call_center_queues) ? 0 : @sizeof($call_center_queues);
+		unset($sql, $parameters);
+	}
+
 //get the agent details from event socket
 	$switch_cmd = 'callcenter_config agent list '.$agent['call_center_agent_uuid'];
 	$event_socket_str = trim(event_socket_request($fp, 'api '.$switch_cmd));
@@ -158,14 +165,16 @@
 
 //update the queue status
 	$x = 0;
-	foreach ($call_center_queues as $queue) {
-		$call_center_queues[$x]['queue_status'] = 'Logged Out';
-		foreach ($call_center_tiers as $tier) {
-			if ($queue['queue_extension'] .'@'. $_SESSION['user']['domain_name'] == $tier['queue'] && $agent['call_center_agent_uuid'] == $tier['agent']) {
-				$call_center_queues[$x]['queue_status'] = $agent['agent_status'];
+	if (is_array($call_center_queues)) {
+		foreach ($call_center_queues as $queue) {
+			$call_center_queues[$x]['queue_status'] = 'Logged Out';
+			foreach ($call_center_tiers as $tier) {
+				if ($queue['queue_extension'] .'@'. $_SESSION['user']['domain_name'] == $tier['queue'] && $agent['call_center_agent_uuid'] == $tier['agent']) {
+					$call_center_queues[$x]['queue_status'] = $agent['agent_status'];
+				}
 			}
+			$x++;
 		}
-		$x++;
 	}
 
 //includes the header
