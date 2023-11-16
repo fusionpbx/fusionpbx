@@ -29,7 +29,7 @@ if (!class_exists('schema')) {
 	class schema {
 
 		//define variables
-			private $db;
+			private $database;
 			public $apps;
 			public $db_type;
 			public $result;
@@ -42,9 +42,7 @@ if (!class_exists('schema')) {
 				require dirname(__DIR__, 2) . "/resources/require.php";
 
 				//connect to the database
-				$database = new database;
-				$database->connect();
-				$this->db = $database->db;
+				$this->database = database::new();
 
 				//get the list of installed apps from the core and mod directories
 				$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_config.php");
@@ -124,16 +122,16 @@ if (!class_exists('schema')) {
 			public function exec() {
 				foreach ($this->result['sql'] as $sql) {
 					//start the sql transaction
-						$this->db->beginTransaction();
+						$this->database->beginTransaction();
 					//execute the sql query
 						try {
-							$this->db->query($sql);
+							$this->database->query($sql);
 						}
 						catch (PDOException $error) {
 							echo "error: " . $error->getMessage() . " sql: $sql<br/>";
 						}
 					//complete the transaction
-						$this->db->commit();
+						$this->database->commit();
 				}
 			}
 
@@ -168,7 +166,7 @@ if (!class_exists('schema')) {
 				}
 
 				if ($sql) {
-					$prep_statement = $this->db->prepare($sql);
+					$prep_statement = $this->database->db->prepare($sql);
 					$prep_statement->execute();
 					$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 					if (!$result) {
@@ -206,7 +204,7 @@ if (!class_exists('schema')) {
 				if ($this->db_type == "mysql") {
 					$sql = "describe ".$table_name.";";
 				}
-				$prep_statement = $this->db->prepare($sql);
+				$prep_statement = $this->database->db->prepare($sql);
 				$prep_statement->execute();
 				return $prep_statement->fetchAll(PDO::FETCH_ASSOC);
 			}
@@ -214,7 +212,7 @@ if (!class_exists('schema')) {
 		//database table exists alternate
 			private function db_table_exists_alternate ($db_type, $table_name) {
 				$sql = "select count(*) from $table_name ";
-				$result = $this->db->query($sql);
+				$result = $this->database->query($sql);
 				if ($result > 0) {
 					return true; //table exists
 				}
@@ -235,7 +233,7 @@ if (!class_exists('schema')) {
 				if ($db_type == "mysql") {
 					$sql .= "SELECT TABLE_NAME FROM information_schema.tables WHERE table_schema = '$db_name' and TABLE_NAME = '$table_name' ";
 				}
-				$prep_statement = $this->db->prepare(check_sql($sql));
+				$prep_statement = $this->database->db->prepare(check_sql($sql));
 				$prep_statement->execute();
 				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 				if (count($result) > 0) {
@@ -268,7 +266,7 @@ if (!class_exists('schema')) {
 				if ($db_type == "mysql") {
 					$sql = "describe ".$table_name.";";
 				}
-				$prep_statement = $this->db->prepare($sql);
+				$prep_statement = $this->database->db->prepare($sql);
 				$prep_statement->execute();
 				return $prep_statement->fetchAll(PDO::FETCH_ASSOC);
 			}
@@ -328,7 +326,7 @@ if (!class_exists('schema')) {
 					$sql = "show columns from $table_name where field = '$column_name' ";
 				}
 				if ($sql) {
-					$prep_statement = $this->db->prepare(check_sql($sql));
+					$prep_statement = $this->database->db->prepare(check_sql($sql));
 					$prep_statement->execute();
 					$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 					if (!empty($result)) {
@@ -467,7 +465,7 @@ if (!class_exists('schema')) {
 			public function schema ($format = '') {
 
  				//set the global variable
-					global $db, $text, $output_format;
+					global $text, $output_format;
 
 					if ($format == '') $format = $output_format;
 
@@ -881,7 +879,7 @@ if (!class_exists('schema')) {
 							foreach($update_array as $sql) {
 								if (strlen(trim($sql))) {
 									try {
-										$this->db->query(trim($sql));
+										$this->database->db->query(trim($sql));
 										if ($format == "text") {
 											$response .= "	$sql;\n";
 										}
