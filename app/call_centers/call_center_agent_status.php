@@ -48,7 +48,7 @@
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$database = new database;
 	$tiers = $database->select($sql, $parameters, 'all');
-	if (empty($tiers)) {
+	if (!empty($_SESSION['call_center']['queue_login']['text']) && $_SESSION['call_center']['queue_login']['text'] == 'dynamic') {
 		$per_queue_login = true;
 	}
 	else {
@@ -358,6 +358,7 @@
 	echo "	<th class='pct-20 hide-sm-dn'>&nbsp;</th>\n";
 	if ($per_queue_login) {
 		echo "	<th class='pct-40'>".$text['label-options']."</th>\n";
+		echo "	<th class='pct-40' style='width=50%;'>&nbsp</th>\n";
 	}
 	echo "</tr>\n";
 
@@ -366,7 +367,7 @@
 		foreach ($agents as $row) {
 			$onclick = "onclick=\"cycle('agents[".$x."][agent_status]');\"";
 			$html = "<tr class='list-row'>\n";
-			$html .= "	<td ".$onclick.">".escape($row['agent_name'])."&nbsp;</td>\n";
+			$html .= "	<td style='vertical-align: top;' ".$onclick.">".escape($row['agent_name'])."&nbsp;</td>\n";
 
 			if (!$per_queue_login) {
 				$html .= "	<td class='no-wrap'>";
@@ -381,7 +382,7 @@
 			$html .= "	<td ".$onclick." class='hide-sm-dn'>&nbsp;</td>\n";
 
 			if ($per_queue_login) {
-				$html .= "	<td class='description'>";
+				$html .= "	<td class='description' style='width: 30%;'>";
 				if (!empty($row['queues'])) {
 					$html .= "	<table class='list' >\n";
 					$html .= "		<tr>\n";
@@ -410,7 +411,8 @@
 							$html .= "			<input type='hidden' name='agents[".$x."][queue_uuid]' value='".escape($queue['call_center_queue_uuid'])."'>\n";
 							$html .= "			<input type='hidden' name='agents[".$x."][agent_uuid]' value='".escape($row['call_center_agent_uuid'])."'>\n";
 							$html .= "			<label style='margin: 0; cursor: pointer; margin-right: 10px;'><input type='radio' name='agents[".$x."][agent_status]' value='Available' ".($queue['queue_status'] == 'Available' ? "checked='checked'" : null).">&nbsp;".$text['option-available']."</label>&nbsp;\n";
-							$html .= "			<label style='margin: 0; cursor: pointer;'><input type='radio' name='agents[".$x."][agent_status]' value='Logged Out' ".($queue['queue_status'] == 'Logged Out' ? "checked='checked'" : null).">&nbsp;".$text['option-logged_out']."</label>\n";
+							$html .= "			<label style='margin: 0; cursor: pointer; margin-right: 10px;'><input type='radio' name='agents[".$x."][agent_status]' value='Logged Out' ".($queue['queue_status'] == 'Logged Out' ? "checked='checked'" : null).">&nbsp;".$text['option-logged_out']."</label>\n";
+							//$html .= "			<label style='margin: 0; cursor: pointer;'><input type='radio' name='agents[".$x."][agent_status]' value='On Break' ".($queue['queue_status'] == 'On Break' ? "checked='checked'" : null).">&nbsp;".$text['option-on_break']."</label>\n";
 							$html .= "		</td>\n";
 							$html .= "	</tr>\n";
 						}
@@ -418,6 +420,7 @@
 					$html .= "	</table>\n";
 				}
 				$html .= "	</td>\n";
+				$html .= "	<td>&nbsp;&nbsp;&nbsp;</td>\n";
 			}
 			$html .= "</tr>\n";
 			if (count($_SESSION['domains']) > 1) {

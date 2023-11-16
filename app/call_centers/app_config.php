@@ -189,6 +189,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1500";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the refresh rate in seconds (<=120) or milliseconds (>=500).";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "ca34cbc0-e071-432e-afd6-b587aa52bd85";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "call_center";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "queue_login";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "static";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Agent queue login options: dynamic, static";
 
 	//cache details
 		$apps[$x]['cache']['key'] = "dialplan.\${domain_name}";
