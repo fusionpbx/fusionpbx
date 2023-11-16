@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2017-2019
+	Portions created by the Initial Developer are Copyright (C) 2017-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -54,38 +54,67 @@
 	$fp = event_socket_create();
 
 //get the http post values and set them as php variables
-	if (count($_POST) > 0) {
+	if (!empty($_POST['agents'])) {
+		$x = 0;
 		foreach ($_POST['agents'] as $row) {
-			if (!empty($row['agent_status'])) {
-				//agent set status
-					if ($fp) {
-						// update the database
-							$array['call_center_agents'][0]['call_center_agent_uuid'] = $row['id'];
-							$array['call_center_agents'][0]['domain_uuid'] = $_SESSION['user']['domain_uuid'];
-							$array['call_center_agents'][0]['agent_status'] = $row['agent_status'];
-							$database->app_name = 'call_centers_dashboard';
-							$database->app_uuid = '95788e50-9500-079e-2807-fd530b0ea370';
-							$database->save($array);
+			//agent set status
+			if ($fp && is_numeric($row['queue_extension']) && is_uuid($row['id'])) {
 
-						//set the call center status
-							$cmd = "api callcenter_config agent set status ".$row['id']." '".$row['agent_status']."'";
-							$response = event_socket_request($fp, $cmd);
-						//set the agent status to available and assign the agent to the queue with the tier
-							if ($row['agent_status'] == 'Available') {
-								//assign the agent to the queue
-								$cmd = "api callcenter_config tier add ".$row['queue_extension']."@".$_SESSION['domain_name']." ".$row['id']." 1 1";
-								$response = event_socket_request($fp, $cmd);
-							}
+				//santize the agent status
+				switch ($row['agent_status']) {
+					case 'Available':
+						$row['agent_status'] = 'Available';
+						break;
+					case 'On Break':
+						$row['agent_status'] = 'On Break';
+						break;
+					case 'Logged Out':
+						$row['agent_status'] = 'Logged Out';
+						break;
+					default:
+						$row['agent_status'] = 'Logged Out';
+				}
 
-						//un-assign the agent from the queue
-							if ($row['agent_status'] == 'Logged Out') {
-								$cmd = "api callcenter_config tier del ".$row['queue_extension']."@".$_SESSION['domain_name']." ".$row['id'];
-								$response = event_socket_request($fp, $cmd);
-							}
-							usleep(200);
-							unset($parameters);
-					}
+				//update the database
+				if ($x == 0) {
+					$array['call_center_agents'][0]['call_center_agent_uuid'] = $row['id'];
+					$array['call_center_agents'][0]['domain_uuid'] = $_SESSION['user']['domain_uuid'];
+					$array['call_center_agents'][0]['agent_status'] = $row['agent_status'];
+					$database->app_name = 'call_centers_dashboard';
+					$database->app_uuid = '95788e50-9500-079e-2807-fd530b0ea370';
+					$result = $database->save($array);
+				}
+
+				//set the call center status
+				if ($x == 0) {
+					$cmd = "api callcenter_config agent set status ".$row['id']." '".$row['agent_status']."'";
+					$response = event_socket_request($fp, $cmd);
+				}
+
+				//set the agent status to available and assign the agent to the queue with the tier
+				if ($row['agent_status'] == 'Available') {
+					//assign the agent to the queue
+					$cmd = "api callcenter_config tier add ".$row['queue_extension']."@".$_SESSION['domain_name']." ".$row['id']." 1 1";
+					$response = event_socket_request($fp, $cmd);
+				}
+
+				//set the agent status to available and assign the agent to the queue with the tier
+				if ($row['agent_status'] == 'On Break') {
+					//assign the agent to the queue
+					$cmd = "api callcenter_config tier add ".$row['queue_extension']."@".$_SESSION['domain_name']." ".$row['id']." 1 1";
+					$response = event_socket_request($fp, $cmd);
+				}
+
+				//un-assign the agent from the queue
+				if ($row['agent_status'] == 'Logged Out') {
+					$cmd = "api callcenter_config tier del ".$row['queue_extension']."@".$_SESSION['domain_name']." ".$row['id'];
+					$response = event_socket_request($fp, $cmd);
+				}
+				usleep(200);
+				unset($parameters);
 			}
+
+			$x++;
 		}
 
 		//redirect
@@ -114,10 +143,18 @@
 	$parameters['user_uuid'] = $_SESSION['user_uuid'];
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$agents = $database->select($sql, $parameters, 'all');
-	if (count($agents) > 0) {
+	if (!empty($agents)) {
 		$agent = $agents[0];
 	}
 	unset($sql, $parameters);
+
+//get the agent details from event socket
+	$switch_cmd = 'callcenter_config agent list '.$agent['call_center_agent_uuid'];
+	$event_socket_str = trim(event_socket_request($fp, 'api '.$switch_cmd));
+	$call_center_agent = csv_to_named_array($event_socket_str, '|');
+
+//set the agent status
+	$agent['agent_status'] = $call_center_agent[1]['status'];
 
 //update the queue status
 	$x = 0;
@@ -170,7 +207,7 @@
 	echo "<tr class='list-header'>\n";
 	echo "	<th>".$text['label-queue_name']."</th>\n";
 	echo "	<th class='shrink'>".$text['label-status']."</th>\n";
-// 	echo "	<th>".$text['label-options']."</th>\n";
+ 	//echo "	<th>".$text['label-options']."</th>\n";
 	echo "</tr>\n";
 
 	if (is_array($call_center_queues) && @sizeof($call_center_queues) != 0) {
@@ -179,14 +216,14 @@
 			$onclick = "onclick=\"cycle('agents[".$x."][agent_status]');\"";
 			echo "<tr class='list-row'>\n";
 			echo "	<td ".$onclick.">".escape($row['queue_name'])."</td>\n";
-// 			echo "	<td>";
-// 			if ($row['queue_status'] == "Available") {
-// 				echo $text['option-available'];
-// 			}
-// 			if ($row['queue_status'] == "Logged Out") {
-// 				echo $text['option-logged_out'];
-// 			}
-// 			echo "	</td>\n";
+ 			//echo "	<td>";
+ 			//if ($row['queue_status'] == "Available") {
+ 			//	echo $text['option-available'];
+ 			//}
+ 			//if ($row['queue_status'] == "Logged Out") {
+ 			//	echo $text['option-logged_out'];
+ 			//}
+ 			//echo "	</td>\n";
 			echo "	<td class='no-wrap right'>\n";
 			echo "		<input type='hidden' name='agents[".$x."][queue_extension]' value='".escape($row['queue_extension'])."'>\n";
 			echo "		<input type='hidden' name='agents[".$x."][agent_name]' value='".escape($agent['agent_name'])."'>\n";
