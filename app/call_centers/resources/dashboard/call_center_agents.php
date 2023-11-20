@@ -82,20 +82,17 @@
 			}
 		}
 
-		//agent status has been changed
-		if ($agent['agent_status'] != $agent_status) {
-			//save the agent_stat change to the database
-			$array['call_center_agents'][0]['call_center_agent_uuid'] = $agent_uuid;
-			$array['call_center_agents'][0]['domain_uuid'] = $_SESSION['user']['domain_uuid'];
-			$array['call_center_agents'][0]['agent_status'] = $agent_status;
-			$database->app_name = 'call_centers_dashboard';
-			$database->app_uuid = '95788e50-9500-079e-2807-fd530b0ea370';
-			$result = $database->save($array);
-	
-			//send the agent status status to mod_call_center
-			$cmd = "api callcenter_config agent set status ".$agent_uuid." '".$agent_status."'";
-			$response = event_socket_request($fp, $cmd);
-		}
+		//save the agent_stat change to the database
+		$array['call_center_agents'][0]['call_center_agent_uuid'] = $agent_uuid;
+		$array['call_center_agents'][0]['domain_uuid'] = $_SESSION['user']['domain_uuid'];
+		$array['call_center_agents'][0]['agent_status'] = $agent_status;
+		$database->app_name = 'call_centers_dashboard';
+		$database->app_uuid = '95788e50-9500-079e-2807-fd530b0ea370';
+		$result = $database->save($array);
+
+		//send the agent status status to mod_call_center
+		$cmd = "api callcenter_config agent set status ".$agent_uuid." '".$agent_status."'";
+		$response = event_socket_request($fp, $cmd);
 
 		//add or delete agents from the queue assigned by the tier
 		foreach ($_POST['agents'] as $row) {
