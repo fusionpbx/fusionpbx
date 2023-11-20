@@ -1287,38 +1287,68 @@ if (!class_exists('xml_cdr')) {
 							$record_path = $row['record_path'];
 						}
 
-						unset ($sql, $parameters, $row);
-						$sql='Select * from archive_recording where xml_cdr_uuid = :xml_cdr_uuid';
-						$parameters['xml_cdr_uuid'] = $uuid;
+                        if (is_array($row) && $row['record_path'] == 'S3') {
+                            $setting=$this->getS3Setting($row['domain_uuid']);
+                                    
+                            $s3 = new \Aws\S3\S3Client([
+                           'region'  => $setting['region'],
+                           'version' => 'latest',
+                           'credentials' => [
+                               'key'    => $setting['key'],
+                               'secret' => $setting['secret']
+                           ]
+                           ]);
 
-						$row = $database->select($sql, $parameters, 'row');
-							if (is_array($row)) {
-								$setting=$this->getS3Setting($row['domain_uuid']);
-								
-								 $s3 = new \Aws\S3\S3Client([
-								'region'  => $setting['region'],
-								'version' => 'latest',
-								'credentials' => [
-									'key'    => $setting['key'],
-									'secret' => $setting['secret']
-								]
-								]);
-								$record_name=substr($row['object_key'],strpos($row['object_key'], "-")+1);
 
-								$response = $s3->doesObjectExist($setting['bucket'], $row['object_key']);
-								if($response){	
-									$cmd = $s3->getCommand('GetObject', [
-										'Bucket' => $setting['bucket'],
-										'Key'    => $row['object_key']
-									]);
-									$request = $s3->createPresignedRequest($cmd, '+30 minutes');
-									$record_file = (string) $request->getUri();
-									$is_s3=true;
-								} 
-								
-							}
-							unset ($sql, $parameters, $row);
-						}
+                           $response = $s3->doesObjectExist($setting['bucket'], $record_name);
+
+                           if($response){	
+                               $cmd = $s3->getCommand('GetObject', [
+                                   'Bucket' => $setting['bucket'],
+                                   'Key'    => $record_name
+                               ]);
+                               $request = $s3->createPresignedRequest($cmd, '+30 minutes');
+                               $record_file = (string) $request->getUri();
+                               $is_s3=true;
+                               $record_name = basename($record_name); 
+                           } 
+
+                        } else {
+                            $sql='Select * from archive_recording where xml_cdr_uuid = :xml_cdr_uuid';
+                            $parameters['xml_cdr_uuid'] = $uuid;
+    
+                            $row = $database->select($sql, $parameters, 'row');
+                                if (is_array($row)) {
+                                    $setting=$this->getS3Setting($row['domain_uuid']);
+                                    
+                                     $s3 = new \Aws\S3\S3Client([
+                                    'region'  => $setting['region'],
+                                    'version' => 'latest',
+                                    'credentials' => [
+                                        'key'    => $setting['key'],
+                                        'secret' => $setting['secret']
+                                    ]
+                                    ]);
+                                    $record_name=substr($row['object_key'],strpos($row['object_key'], "-")+1);
+    
+                                    $response = $s3->doesObjectExist($setting['bucket'], $row['object_key']);
+                                    if($response){	
+                                        $cmd = $s3->getCommand('GetObject', [
+                                            'Bucket' => $setting['bucket'],
+                                            'Key'    => $row['object_key']
+                                        ]);
+                                        $request = $s3->createPresignedRequest($cmd, '+30 minutes');
+                                        $record_file = (string) $request->getUri();
+                                        $is_s3=true;
+                                    } 
+                                    
+                                }
+                            
+                        }
+                        unset ($sql, $parameters, $row);
+
+					
+					}
 
 				//build full path
 					if($record_file==''){

@@ -19,7 +19,6 @@ if(!empty($recording_id)&&!empty($domain_id)){
     
         $sql = "select * from v_domain_settings ";
         $sql .= "where domain_setting_category = 'aws' ";
-        // $sql .= "where domain_uuid = :domain_uuid ";
         $sql .= "and domain_uuid = '".$domain_id."' \n";
         // $parameters['domain_uuid'] = $domain_id;
         //$parameters['domain_uuid'] = $domain_uuid;
@@ -39,9 +38,6 @@ if(!empty($recording_id)&&!empty($domain_id)){
                     $config[getCredentialKey($conf['domain_setting_subcategory'])]=trim($conf['domain_setting_value']);
                 }
 
-            
-    
-            
         }  else {
             $config['driver']='s3';
                 $config['url']='';
@@ -100,41 +96,78 @@ if(!empty($recording_id)&&!empty($domain_id)){
 		}
 		//return htmlspecialchars($string, ENT_QUOTES, 'UTF-8');
 	}
-        
-                        $database = new database;
-                        $sql='Select * from archive_recording where xml_cdr_uuid = :xml_cdr_uuid';
-                        $parameters['xml_cdr_uuid'] = $recording_id;
-                        $rec = $database->select($sql, $parameters, 'row');
+
+    $setting=getS3Setting($domain_id);
+    $s3 = new \Aws\S3\S3Client([
+    'region'  => $setting['region'],
+    'version' => 'latest',
+    'credentials' => [
+        'key'    => $setting['key'],
+        'secret' => $setting['secret']
+    ]
+    ]);
+
+    $database = new database;
+
+    // Check v_xml_cdr table first. New way
+    $sql='Select record_path, record_name from v_xml_cdr where xml_cdr_uuid = :xml_cdr_uuid';
+    $parameters['xml_cdr_uuid'] = $recording_id;
+    $rec = $database->select($sql, $parameters, 'row');
+
+    if (is_array($rec) && $rec['record_path'] == 'S3') {
+        $response = $s3->doesObjectExist($setting['bucket'],$rec['record_name']);
+
+        if($response){	
+            $cmd = $s3->getCommand('GetObject', [
+                'Bucket' => $setting['bucket'],
+                'Key'    => $rec['record_name']
+            ]);
+            $request = $s3->createPresignedRequest($cmd, '+60 minutes');
+            $file_path = (string) $request->getUri();
+        } else {
+            echo json_encode(['success'=>false]);
+            exit;
+        }
+
+        unset ($sql, $parameters, $rec);
+        echo json_encode(['success'=>true,'path'=>$file_path]);
+        exit;
+
+    } 
+
+    // Check archive_recording table if not found in v_xml_cdr. Old way
+    $sql='Select * from archive_recording where xml_cdr_uuid = :xml_cdr_uuid';
+    $parameters['xml_cdr_uuid'] = $recording_id;
+    $rec = $database->select($sql, $parameters, 'row');
+
+    if (is_array($rec)) {
+        $response = $s3->doesObjectExist($setting['bucket'], $rec['object_key']);
+
+        if($response){									
+            $cmd = $s3->getCommand('GetObject', [
+                'Bucket' => $setting['bucket'],
+                'Key'    => $rec['object_key']
+            ]);
+            $request = $s3->createPresignedRequest($cmd, '+60 minutes');
+            $file_path = (string) $request->getUri();
+        } else {
+            echo json_encode(['success'=>false]);
+            exit;
+        }
+
+        unset ($sql, $parameters, $rec);
+        echo json_encode(['success'=>true,'path'=>$file_path]);
+        exit;
+
+    } 
     
-                                if (is_array($rec)) {
-                                	$setting=getS3Setting($domain_id);
-                                	$s3 = new \Aws\S3\S3Client([
-                                	'region'  => $setting['region'],
-                                	'version' => 'latest',
-                                	'credentials' => [
-                                		'key'    => $setting['key'],
-                                		'secret' => $setting['secret']
-                                	]
-                                	]);
+    // If not found in both tables, provide a default file path
+    $file_path='download.php?id='.escape($recording_id).'&t=record';
     
-                                	$response = $s3->doesObjectExist($setting['bucket'], $rec['object_key']);
+    unset ($sql, $parameters, $rec);
     
-                                	if(isset($response)){									
-                                		$cmd = $s3->getCommand('GetObject', [
-                                			'Bucket' => $setting['bucket'],
-                                			'Key'    => $rec['object_key']
-                                		]);
-                                		$request = $s3->createPresignedRequest($cmd, '+60 minutes');
-                                		$file_path = (string) $request->getUri();
-                                	} 
-    
-                                } else {
-                                    $file_path='download.php?id='.escape($recording_id).'&t=record';
-                                }
-                                unset ($sql, $parameters, $rec);
-                                
-                                echo json_encode(['success'=>true,'path'=>$file_path]);
-                                exit;
+    echo json_encode(['success'=>true,'path'=>$file_path]);
+    exit;
     
 } else {
     echo json_encode(['success'=>false]);
