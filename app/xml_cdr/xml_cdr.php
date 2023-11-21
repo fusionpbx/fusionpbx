@@ -161,6 +161,8 @@
 	echo "		<input type='hidden' name='start_epoch' value='".escape($start_epoch ?? '')."'>\n";
 	echo "		<input type='hidden' name='stop_epoch' value='".escape($stop_epoch ?? '')."'>\n";
 	echo "		<input type='hidden' name='duration' value='".escape($duration ?? '')."'>\n";
+	echo "		<input type='hidden' name='duration_min' value='".escape($duration_min ?? '')."'>\n";
+	echo "		<input type='hidden' name='duration_max' value='".escape($duration_max ?? '')."'>\n";
 	echo "		<input type='hidden' name='billsec' value='".escape($billsec ?? '')."'>\n";
 	echo "		<input type='hidden' name='xml_cdr_uuid' value='".escape($xml_cdr_uuid ?? '')."'>\n";
 	echo "		<input type='hidden' name='bleg_uuid' value='".escape($bleg_uuid ?? '')."'>\n";
