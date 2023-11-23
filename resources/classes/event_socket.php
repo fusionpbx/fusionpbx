@@ -70,13 +70,13 @@ class event_socket {
 				if ($line === '') {
 					break;
 				}
-			}
 
-			list($key, $value) = explode(':', $line, 2);
-			if (!empty($key)) {
-				$content[trim($key)] = trim($value);
-			}
+				list($key, $value) = explode(':', $line, 2);
+				if (!empty($key)) {
+					$content[trim($key)] = trim($value);
+				}
 
+			}
 			if (feof($this->fp)) {
 				break;
 			}
