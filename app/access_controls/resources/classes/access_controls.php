@@ -25,8 +25,8 @@
 			public function __construct() {
 
 				//assign private variables
-				$this->app_name = 'access_controls';
-				$this->app_uuid = '1416a250-f6e1-4edc-91a6-5c9b883638fd';
+				$this->app_name = self::name();
+				$this->app_uuid = self::uuid();
 				$this->list_page = 'access_controls.php';
 			}
 
@@ -37,7 +37,7 @@
 
 				//assign private variables
 				$this->permission_prefix = 'access_control_';
-				$this->table = 'access_controls';
+				$this->table = self::name();
 				$this->uuid_prefix = 'access_control_';
 
 				if (permission_exists($this->permission_prefix . 'delete')) {
@@ -166,7 +166,7 @@
 
 				//assign private variables
 				$this->permission_prefix = 'access_control_';
-				$this->table = 'access_controls';
+				$this->table = self::name();
 				$this->uuid_prefix = 'access_control_';
 
 				if (permission_exists($this->permission_prefix . 'add')) {
@@ -322,14 +322,14 @@
 							//insert the name, description
 							$array = [];
 							$access_control_uuid = uuid();
-							$array['access_controls'][0]['access_control_uuid'] = $access_control_uuid;
-							$array['access_controls'][0]['access_control_name'] = $access_control_name;
-							$array['access_controls'][0]['access_control_default'] = $access_control_default;
+							$array[self::name()][0]['access_control_uuid'] = $access_control_uuid;
+							$array[self::name()][0]['access_control_name'] = $access_control_name;
+							$array[self::name()][0]['access_control_default'] = $access_control_default;
 
 							$permissions->add('access_control_add', 'temp');
 
-							$database->app_name = 'access_controls';
-							$database->app_uuid = '1416a250-f6e1-4edc-91a6-5c9b883638fd';
+							$database->app_name = self::name();
+							$database->app_uuid = self::uuid();
 							$database->save($array, false);
 							unset($array);
 
@@ -359,8 +359,8 @@
 
 									$permissions->add('access_control_node_add', 'temp');
 
-									$database->app_name = 'access_controls';
-									$database->app_uuid = '1416a250-f6e1-4edc-91a6-5c9b883638fd';
+									$database->app_name = self::name();
+									$database->app_uuid = self::uuid();
 									$database->save($array, false);
 									unset($array);
 
@@ -422,6 +422,14 @@
 				$sql .= "	select access_control_uuid from v_access_controls ";
 				$sql .= ")";
 				$database->execute($sql);
+			}
+
+			public static function name(): string {
+				return 'access_controls';
+			}
+
+			public static function uuid(): string {
+				return '1416a250-f6e1-4edc-91a6-5c9b883638fd';
 			}
 		}
 
