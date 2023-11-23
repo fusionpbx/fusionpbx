@@ -67,6 +67,11 @@
 			}
 		}
 	}
+
+	if (!isset($conf['project.path']) && !defined('PROJECT_PATH')) {
+		define("PROJECT_PATH", '');
+	}
+
 	$_SERVER["PROJECT_PATH"] = PROJECT_PATH;
 
 //set project root using project path
