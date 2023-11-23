@@ -65,11 +65,12 @@
 		 * @param string $setting
 		 * @return string
 		 */
-		public function value(string $setting): string {
+		public function value(string $setting, string $default = ''): string {
 			global $conf;
 			if (array_key_exists($setting, $conf)) {
 				return $conf[$setting];
 			}
+			return $default;
 		}
 
 		/**
