@@ -28,7 +28,7 @@
 				return $conf[$name];
 			}
 			if (substr($name, 0, 3) === 'db_') {
-				return $conf['database.0.' . substr($name, 4)] ?? '';
+				return $conf['database.0.' . substr($name, 3)] ?? '';
 			}
 			if ($name === 'config_path') {
 				return $this->file;
@@ -104,16 +104,16 @@
 			set_include_path(PROJECT_ROOT);
 
 			//add the database settings
-			$this->db_type = $conf['database.0.type'] ?? '';
-			$this->db_name = $conf['database.0.name'] ?? '';
-			$this->db_username = $conf['database.0.username'] ?? '';
-			$this->db_password = $conf['database.0.password'] ?? '';
-			$this->db_sslmode = $conf['database.0.sslmode'] ?? '';
-			$this->db_secure = $conf['database.0.secure'] ?? '';
-			$this->db_cert_authority = $conf['database.0.db_cert_authority'] ?? '';
-			$this->db_host = $conf['database.0.host'] ?? '';
-			$this->db_path = $conf['database.0.path'] ?? '';
-			$this->db_port = $conf['database.0.port'] ?? '';
+//			$this->db_type = $conf['database.0.type'] ?? '';
+//			$this->db_name = $conf['database.0.name'] ?? '';
+//			$this->db_username = $conf['database.0.username'] ?? '';
+//			$this->db_password = $conf['database.0.password'] ?? '';
+//			$this->db_sslmode = $conf['database.0.sslmode'] ?? '';
+//			$this->db_secure = $conf['database.0.secure'] ?? '';
+//			$this->db_cert_authority = $conf['database.0.db_cert_authority'] ?? '';
+//			$this->db_host = $conf['database.0.host'] ?? '';
+//			$this->db_path = $conf['database.0.path'] ?? '';
+//			$this->db_port = $conf['database.0.port'] ?? '';
 
 		}
 
@@ -126,7 +126,7 @@
 			//set the server variables and define project path constant
 			$_SERVER["DOCUMENT_ROOT"] = $conf['document.root'] ?? '/var/www/fusionpbx';
 			$_SERVER["PROJECT_ROOT"] = $conf['document.root'] ?? '/var/www/fusionpbx';
-			$_SERVER["PROJECT_PATH"] = $conf['project.path'];
+			$_SERVER["PROJECT_PATH"] = $conf['project.path'] ?? '';
 			if (isset($conf['project.path'])) {
 				$_SERVER["PROJECT_ROOT"] = $conf['document.root'] . '/' . $conf['project.path'];
 				if (!defined('PROJECT_ROOT')) {
