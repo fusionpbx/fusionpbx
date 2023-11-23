@@ -32,13 +32,6 @@
 	 */
 	if (!interface_exists('app_menu')) {
 		interface app_menu {
-			public static function menu_category(): string;
-			public static function menu_groups(): array;
-			public static function menu_icon(): string;
-			public static function menu_order(): string;
-			public static function menu_parent_uuid(): string;
-			public static function menu_path(): string;
-			public static function menu_title(): array;
-			public static function menu_uuid(): string;
+			public static function menu(): array;
 		}
 	}

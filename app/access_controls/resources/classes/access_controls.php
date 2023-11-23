@@ -432,62 +432,40 @@
 				return '1416a250-f6e1-4edc-91a6-5c9b883638fd';
 			}
 
-			public static function menu_category(): string {
-				return "internal";
-			}
-
-			public static function menu_groups(): array {
-				return ["superadmin"];
-			}
-
-			public static function menu_icon(): string {
-				return "";
-			}
-
-			public static function menu_order(): string {
-				return "";
-			}
-
-			public static function menu_parent_uuid(): string {
-				return "594d99c5-6128-9c88-ca35-4b33392cec0f";
-			}
-
-			public static function menu_path(): string {
-				return "/app/access_controls/access_controls.php";
-			}
-
-			public static function menu_title(): array {
-				return [
-					'en-us' => "Access Controls",
-					'en-gb' => "Access Controls",
-					'ar-eg' => "عناصر التحكم في الوصول",
-					'de-at' => "Zugriffskontrolle",
-					'de-ch' => "Zugriffskontrollen",
-					'de-de' => "Zugriffskontrolle",
-					'es-cl' => "Controles de acceso",
-					'es-mx' => "Controles de acceso",
-					'fr-ca' => "Contrôles d'accès",
-					'fr-fr' => "Contrôles d'accès",
-					'he-il' => "בקרת גישה",
-					'it-it' => "Controlli Accesso",
-					'nl-nl' => "Toegangs Controle",
-					'pl-pl' => "Kontrola dostępu",
-					'pt-br' => "Controles de Acesso",
-					'pt-pt' => "Controles de Acesso",
-					'ro-ro' => "Controale de acces",
-					'ru-ru' => "Контроль доступа",
-					'uk-ua' => "контроль доступу",
-					'sv-se' => "Åtkomstkontroll",
-					'zh-cn' => "出入控制",
-					'ja-jp' => "アクセス制御",
-					'ja-jp' => "アクセス制御",
-					'ja-jp' => "アクセス制御",
-					'ko-kr' => "액세스 제어"
-				];
-			}
-
-			public static function menu_uuid(): string {
-				return "bd47c972-5498-4541-b44a-d4bbfac69496";
+			public static function menu(): array {
+				$y = 0;
+				$menu = [];
+				$menu[$y]['title']['en-us'] = "Access Controls";
+				$menu[$y]['title']['en-gb'] = "Access Controls";
+				$menu[$y]['title']['ar-eg'] = "عناصر التحكم في الوصول";
+				$menu[$y]['title']['de-at'] = "Zugriffskontrolle";
+				$menu[$y]['title']['de-ch'] = "Zugriffskontrollen";
+				$menu[$y]['title']['de-de'] = "Zugriffskontrolle";
+				$menu[$y]['title']['es-cl'] = "Controles de acceso";
+				$menu[$y]['title']['es-mx'] = "Controles de acceso";
+				$menu[$y]['title']['fr-ca'] = "Contrôles d'accès";
+				$menu[$y]['title']['fr-fr'] = "Contrôles d'accès";
+				$menu[$y]['title']['he-il'] = "בקרת גישה";
+				$menu[$y]['title']['it-it'] = "Controlli Accesso";
+				$menu[$y]['title']['nl-nl'] = "Toegangs Controle";
+				$menu[$y]['title']['pl-pl'] = "Kontrola dostępu";
+				$menu[$y]['title']['pt-br'] = "Controles de Acesso";
+				$menu[$y]['title']['pt-pt'] = "Controles de Acesso";
+				$menu[$y]['title']['ro-ro'] = "Controale de acces";
+				$menu[$y]['title']['ru-ru'] = "Контроль доступа";
+				$menu[$y]['title']['uk-ua'] = "контроль доступу";
+				$menu[$y]['title']['sv-se'] = "Åtkomstkontroll";
+				$menu[$y]['title']['zh-cn'] = "出入控制";
+				$menu[$y]['title']['ja-jp'] = "アクセス制御";
+				$menu[$y]['title']['ko-kr'] = "액세스 제어";
+				$menu[$y]['uuid'] = "bd47c972-5498-4541-b44a-d4bbfac69496";
+				$menu[$y]['parent_uuid'] = "594d99c5-6128-9c88-ca35-4b33392cec0f";
+				$menu[$y]['category'] = "internal";
+				$menu[$y]['icon'] = "";
+				$menu[$y]['path'] = "/app/access_controls/access_controls.php";
+				$menu[$y]['order'] = "";
+				$menu[$y]['groups'][] = "superadmin";
+				return $menu;
 			}
 		}
 
