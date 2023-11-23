@@ -7,7 +7,7 @@
 	 */
 	if (!class_exists('access_controls')) {
 
-		class access_controls implements app_defaults {
+		class access_controls implements app_defaults, app_menu {
 
 			/**
 			 * declare private variables
@@ -287,7 +287,7 @@
 					$xml_dir = $config->value('switch.conf.dir', '/etc/freeswitch') . '/autoload_configs';
 					$xml_file = $xml_dir . "/acl.conf.xml";
 					$root = $config->value('document.root', '/var/www/fusionpbx');
-					$project_path = rtrim($config->value('project.path', ''), '/') . '/' ;
+					$project_path = rtrim($config->value('project.path', ''), '/') . '/';
 					$xml_file_alt = $root . $project_path . '/app/switch/resources/conf/autoload_configs/acl.conf';
 
 					//load the xml and save it into an array
@@ -431,7 +431,62 @@
 			public static function uuid(): string {
 				return '1416a250-f6e1-4edc-91a6-5c9b883638fd';
 			}
+
+			public static function menu_category(): string {
+				return "internal";
+			}
+
+			public static function menu_groups(): array {
+				return ["superadmin"];
+			}
+
+			public static function menu_icon(): string {
+				return "";
+			}
+
+			public static function menu_order(): string {
+				return "";
+			}
+
+			public static function menu_parent_uuid(): string {
+				return "594d99c5-6128-9c88-ca35-4b33392cec0f";
+			}
+
+			public static function menu_path(): string {
+				return "/app/access_controls/access_controls.php";
+			}
+
+			public static function menu_title(): array {
+				return [
+					['en-us'] => "Access Controls",
+					['en-gb'] => "Access Controls",
+					['ar-eg'] => "عناصر التحكم في الوصول",
+					['de-at'] => "Zugriffskontrolle",
+					['de-ch'] => "Zugriffskontrollen",
+					['de-de'] => "Zugriffskontrolle",
+					['es-cl'] => "Controles de acceso",
+					['es-mx'] => "Controles de acceso",
+					['fr-ca'] => "Contrôles d'accès",
+					['fr-fr'] => "Contrôles d'accès",
+					['he-il'] => "בקרת גישה",
+					['it-it'] => "Controlli Accesso",
+					['nl-nl'] => "Toegangs Controle",
+					['pl-pl'] => "Kontrola dostępu",
+					['pt-br'] => "Controles de Acesso",
+					['pt-pt'] => "Controles de Acesso",
+					['ro-ro'] => "Controale de acces",
+					['ru-ru'] => "Контроль доступа",
+					['uk-ua'] => "контроль доступу",
+					['sv-se'] => "Åtkomstkontroll",
+					['zh-cn'] => "出入控制",
+					['ja-jp'] => "アクセス制御",
+					['ko-kr'] => "액세스 제어"
+				];
+			}
+
+			public static function menu_uuid(): string {
+				return "bd47c972-5498-4541-b44a-d4bbfac69496";
+			}
 		}
 
 	}
-?>
