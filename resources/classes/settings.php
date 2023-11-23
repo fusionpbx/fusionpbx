@@ -63,10 +63,12 @@ class settings {
 
 	/**
 	 * get the value
-	 * @param text category
-	 * @param text subcategory
+	 * @param string category Main category of Default Settings
+	 * @param string subcategory Subcategory of Default Settings
+	 * @param string default Pass a default value
+	 * @return string|null Value stored or $default value
 	 */
-	public function get($category = null, $subcategory = null) {
+	public function get(string $category = null, string $subcategory = null, string $default = null): ?string {
 
 		if (empty($category)) {
 			return $this->settings;
@@ -74,9 +76,10 @@ class settings {
 		elseif (empty($subcategory)) {
 			return $this->settings[$category];
 		}
-		else {
+		elseif (!empty($this->settings[$category][$subcategory])) {
 			return $this->settings[$category][$subcategory];
 		}
+		return $default;
 
 	}
 
