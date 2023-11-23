@@ -30,9 +30,11 @@
 	 * 
 	 * @author tim
 	 */
-	interface app_defaults {
-		//TODO: DIC
-		public static function defaults(config $config, settings $settings, database $database, permissions $permissions, cache $cache): void;
-		public static function name(): string;
-		public static function uuid(): string;
+	if (!interface_exists('app_defaults')) {
+		interface app_defaults {
+			//TODO: DIC
+			public static function defaults(config $config, settings $settings, database $database, permissions $permissions, cache $cache): void;
+			public static function name(): string;
+			public static function uuid(): string;
+		}
 	}
