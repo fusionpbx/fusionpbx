@@ -73,7 +73,9 @@ class event_socket {
 			}
 
 			list($key, $value) = explode(':', $line, 2);
-			$content[trim($key)] = trim($value);
+			if (!empty($key)) {
+				$content[trim($key)] = trim($value);
+			}
 
 			if (feof($this->fp)) {
 				break;
