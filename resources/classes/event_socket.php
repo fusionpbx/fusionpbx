@@ -168,6 +168,22 @@ class event_socket {
 		return false;
 	}
 
+	/**
+	 * Alias of connected
+	 */
+	public function is_connected() {
+		return $this->connected();
+	}
+
+	/**
+	 * Sends a prefix of 'api ' to the command
+	 * @depends request
+	 * @return string|false response from the server or false if failed
+	 */
+	public function api(string $cmd) {
+		return $this->request('api ' . $cmd);
+	}
+
 	public function connected() {
 		if (!$this->fp) {
 			//not connected to the socket
