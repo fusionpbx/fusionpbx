@@ -604,59 +604,83 @@ if (!class_exists('domains')) {
 		public function upgrade() {
 
 			//includes files
-				require dirname(__DIR__, 2) . "/resources/require.php";
+			require dirname(__DIR__, 2) . "/resources/require.php";
 
 			//add missing default settings
-				$this->settings();
+			$this->settings();
 
 			//get the variables
-				$config = new config;
-				$config_path = $config->find();
-				$config->get();
+			$config = new config;
+			$config_path = $config->find();
+			$config->get();
 
 			//get the list of installed apps from the core and app directories (note: GLOB_BRACE doesn't work on some systems)
-				$config_list_1 = glob($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/*/*/app_config.php");
-				$config_list_2 = glob($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/*/*/app_menu.php");
-				$config_list = array_merge((array)$config_list_1, (array)$config_list_2);
-				unset($config_list_1,$config_list_2);
-				$x=0;
-				foreach ($config_list as &$config_path) {
-					$app_path = dirname($config_path);
-					$app_path = preg_replace('/\A.*(\/.*\/.*)\z/', '$1', $app_path);
-					include($config_path);
-					$x++;
-				}
+			$config_list_1 = glob($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/*/*/app_config.php");
+			$config_list_2 = glob($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/*/*/app_menu.php");
+			$config_list = array_merge((array)$config_list_1, (array)$config_list_2);
+			unset($config_list_1,$config_list_2);
+			$x=0;
+			foreach ($config_list as &$config_path) {
+				$app_path = dirname($config_path);
+				$app_path = preg_replace('/\A.*(\/.*\/.*)\z/', '$1', $app_path);
+				include($config_path);
+				$x++;
+			}
 
 			//get the domains
-				$sql = "select * from v_domains ";
-				$database = new database;
-				$domains = $database->select($sql, null, 'all');
-				unset($sql);
+			$sql = "select * from v_domains ";
+			$database = new database;
+			$domains = $database->select($sql, null, 'all');
+			unset($sql);
+
+			//create objects outside of loop
+			$config = new config();
+			$config->load();
+			$database = database::new();
+			$permissions = new permissions();
+			$cache = new cache();
+
+			//load new interfaces without autoloader
+			$doc_root = $config->value('document.root', '/var/www/fusionpbx');
+			$interfaces = glob($doc_root. '/resources/interfaces/*.php');
+			foreach ($interfaces as $interface) {
+				require_once $interface;
+			}
 
 			//loop through all domains
-				$domains_processed = 1;
-				foreach ($domains as $domain) {
-					//get the values from database and set them as php variables
-						$domain_uuid = $domain["domain_uuid"];
-						$domain_name = $domain["domain_name"];
+			$domains_processed = 1;
+			foreach ($domains as $domain) {
+				//get the values from database and set them as php variables
+				$domain_uuid = $domain["domain_uuid"];
+				$domain_name = $domain["domain_name"];
 
-					//get the context
-						$context = $domain_name;
+				//create the settings object and load the current domain
+				$setting = new settings(["domain_uuid" => $domain_uuid]);
 
-					//get the email queue settings
-						$setting = new settings(["domain_uuid" => $domain_uuid]);
-
-					//get the list of installed apps from the core and mod directories and execute the php code in app_defaults.php
-						$default_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_defaults.php");
-						foreach ($default_list as &$default_path) {
-							//echo $default_path."<br />\n";
-							include($default_path);
-						}
-
-					//track of the number of domains processed
-						$domains_processed++;
+				//load all classes but don't create objects
+				$app_defaults = glob($doc_root . $config->value('project.path', '') . "/*/*/resources/classes/*.php");
+				foreach ($app_defaults as $app_file) {
+					include_once $app_file;
+					$app = basename($app_file, ".php");
+					//get the list of all interfaces implemented in the app
+					$interfaces = class_implements($app);
+					//find classes implementing the app_defaults interface
+					if ($interfaces !== false && in_array(app_defaults::class, $interfaces)) {
+						//call the app default method
+						$app::defaults($config, $setting, $database, $permissions, $cache);
+					}
 				}
 
+				//get the list of installed apps from the core and mod directories and execute the php code in app_defaults.php
+				$default_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_defaults.php");
+				foreach ($default_list as &$default_path) {
+					//echo $default_path."<br />\n";
+					include($default_path);
+				}
+
+				//track of the number of domains processed
+				$domains_processed++;
+			}
 		} //end upgrade method
 
 		/**
