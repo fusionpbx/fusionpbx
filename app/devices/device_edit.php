@@ -1065,7 +1065,9 @@
 		echo escape(format_device_address($device_address ?? ''));
 	}
 	echo "	<div style='display: none;' id='duplicate_mac_response'></div>\n";
-	echo " ".escape($device_provisioned_ip ?? '')." (<a href='http://".escape($device_provisioned_ip ?? '')."' target='_blank'>http</a>|<a href='https://".escape($device_provisioned_ip ?? '')."' target='_blank'>https</a>)\n";
+	if (!empty($device_provisioned_ip)) {
+		echo " ".escape($device_provisioned_ip ?? '')." (<a href='http://".escape($device_provisioned_ip ?? '')."' target='_blank'>http</a>|<a href='https://".escape($device_provisioned_ip ?? '')."' target='_blank'>https</a>)\n";
+	}
 	echo "</td>\n";
 	echo "</tr>\n";
 
