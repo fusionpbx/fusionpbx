@@ -613,7 +613,7 @@
 	$device_keys[$x]['device_key_category'] = '';
 	$device_keys[$x]['device_key_id'] = '';
 	$device_keys[$x]['device_key_type'] = '';
-	$device_kesy[$x]['device_key_subtype'] = '';
+	$device_keys[$x]['device_key_subtype'] = '';
 	$device_keys[$x]['device_key_line'] = '';
 	$device_keys[$x]['device_key_value'] = '';
 	$device_keys[$x]['device_key_extension'] = '';
