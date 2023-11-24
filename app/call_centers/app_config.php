@@ -197,7 +197,15 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "static";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Agent queue login options: dynamic, static";
-
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "1bdf7b53-356f-4a81-85de-eeed4d26b7c5";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "call_center";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "export_vars";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "array";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "hold_music";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Pass through hold_music variable.";
+	
 	//cache details
 		$apps[$x]['cache']['key'] = "dialplan.\${domain_name}";
 
