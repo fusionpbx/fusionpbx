@@ -1214,16 +1214,6 @@
 				if (empty($row['sip_port'])) { $row['sip_port'] = $_SESSION['provision']['line_sip_port']['numeric']; }
 				if (empty($row['register_expires'])) { $row['register_expires'] = $_SESSION['provision']['line_register_expires']['numeric']; }
 
-			//determine whether to hide the element
-				if (empty($device_line_uuid) || !is_uuid($device_line_uuid)) {
-					$element['hidden'] = false;
-					$element['visibility'] = "visibility:visible;";
-				}
-				else {
-					$element['hidden'] = true;
-					$element['visibility'] = "visibility:hidden;";
-				}
-
 			//add the primary key uuid
 				if (!empty($row['device_line_uuid']) && is_uuid($row['device_line_uuid'])) {
 					echo "	<input name='device_lines[".$x."][device_line_uuid]' type='hidden' value=\"".escape($row['device_line_uuid'])."\"/>\n";
@@ -1537,15 +1527,6 @@
 					}
 					echo "			</tr>\n";
 				}
-			//determine whether to hide the element
-				if (empty($device_key_uuid) || !is_uuid($device_key_uuid)) {
-					$element['hidden'] = false;
-					$element['visibility'] = "visibility:visible;";
-				}
-				else {
-					$element['hidden'] = true;
-					$element['visibility'] = "visibility:hidden;";
-				}
 			//add the primary key uuid
 				if (!empty($row['device_key_uuid']) && is_uuid($row['device_key_uuid'])) {
 					echo "	<input name='device_keys[".$x."][device_key_uuid]' type='hidden' value=\"".escape($row['device_key_uuid'])."\"/>\n";
@@ -1800,15 +1781,6 @@
 
 		$x = 0;
 		foreach ($device_settings as $row) {
-			//determine whether to hide the element
-				if (empty($device_setting_uuid) || !is_uuid($device_setting_uuid)) {
-					$element['hidden'] = false;
-					$element['visibility'] = "visibility:visible;";
-				}
-				else {
-					$element['hidden'] = true;
-					$element['visibility'] = "visibility:hidden;";
-				}
 			//add the primary key uuid
 				if (!empty($row['device_setting_uuid']) && is_uuid($row['device_setting_uuid'])) {
 					echo "	<input name='device_settings[".$x."][device_setting_uuid]' type='hidden' value=\"".escape($row['device_setting_uuid'])."\"/>\n";
