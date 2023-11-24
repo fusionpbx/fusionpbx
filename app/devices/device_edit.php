@@ -610,15 +610,28 @@
 	$device_keys = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
-	$device_keys[$x]['device_key_category'] = '';
-	$device_keys[$x]['device_key_id'] = '';
-	$device_keys[$x]['device_key_type'] = '';
-	$device_keys[$x]['device_key_subtype'] = '';
-	$device_keys[$x]['device_key_line'] = '';
-	$device_keys[$x]['device_key_value'] = '';
-	$device_keys[$x]['device_key_extension'] = '';
-	$device_keys[$x]['device_key_label'] = '';
-	$device_keys[$x]['device_key_icon'] = '';
+//add empty device key row(s)
+	if (!is_uuid($device_uuid)) {
+		$rows = $_SESSION['devices']['key_add_rows']['numeric'] ?? 1;
+		$id = 0;
+	}
+	else {
+		$rows = $_SESSION['devices']['key_edit_rows']['numeric'] ?? 1;
+		$id = count($device_keys) + 1;
+	}
+	for ($x = 0; $x < $rows; $x++) {
+		$device_keys[$id]['device_key_category'] = '';
+		$device_keys[$id]['device_key_id'] = '';
+		$device_keys[$id]['device_key_type'] = '';
+		$device_keys[$id]['device_key_subtype'] = '';
+		$device_keys[$id]['device_key_line'] = '';
+		$device_keys[$id]['device_key_value'] = '';
+		$device_keys[$id]['device_key_extension'] = '';
+		$device_keys[$id]['device_key_label'] = '';
+		$device_keys[$id]['device_key_icon'] = '';
+		$id++;
+	}
+	unset($id);
 
 //get the device vendors
 	$sql = "select name ";
@@ -649,10 +662,23 @@
 	$device_settings = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
-	$device_settings[$x]['device_setting_name'] = '';
-	$device_settings[$x]['device_setting_value'] = '';
-	$device_settings[$x]['enabled'] = '';
-	$device_settings[$x]['device_setting_description'] = '';
+//add empty device setting row(s)
+	if (!is_uuid($device_uuid)) {
+		$rows = $_SESSION['devices']['setting_add_rows']['numeric'] ?? 1;
+		$id = 0;
+	}
+	else {
+		$rows = $_SESSION['devices']['setting_edit_rows']['numeric'] ?? 1;
+		$id = count($device_settings) + 1;
+	}
+	for ($x = 0; $x < $rows; $x++) {
+		$device_settings[$id]['device_setting_name'] = '';
+		$device_settings[$id]['device_setting_value'] = '';
+		$device_settings[$id]['device_setting_enabled'] = '';
+		$device_settings[$id]['device_setting_description'] = '';
+		$id++;
+	}
+	unset($id);
 
 //get the users
 	$sql = "select * from v_users ";
@@ -1480,29 +1506,31 @@
 			}
 			if (is_array($device_keys) && @sizeof($device_keys) > 1 && permission_exists('device_key_delete')) {
 				echo "				<td class='vtable edit_delete_checkbox_all' onmouseover=\"swap_display('delete_label_keys', 'delete_toggle_keys');\" onmouseout=\"swap_display('delete_label_keys', 'delete_toggle_keys');\">\n";
-				echo "					<span id='delete_label_keys'>".$text['label-delete']."</span>\n";
-				echo "					<span id='delete_toggle_keys'><input type='checkbox' id='checkbox_all_keys' name='checkbox_all' onclick=\"edit_all_toggle('keys');\"></span>\n";
+				echo "					<span id='delete_label_keys_".$row['device_key_vendor']."'>".$text['label-delete']."</span>\n";
+				echo "					<span id='delete_toggle_keys_".$row['device_key_vendor']."'><input type='checkbox' id='checkbox_all_keys' name='checkbox_all' onclick=\"edit_all_toggle('keys');\"></span>\n";
 				echo "				</td>\n";
 			}
 			echo "			</tr>\n";
 		}
 
 		$x = 0;
+		$device_keys_generic_header_displayed = false;
 		foreach ($device_keys as $row) {
 			//set the column names
-				if (empty($row['device_key_vendor']) || empty($previous_device_key_vendor) || $previous_device_key_vendor != $row['device_key_vendor']) {
+				if ((empty($row['device_key_vendor']) || empty($previous_device_key_vendor) || $previous_device_key_vendor != $row['device_key_vendor']) && !$device_keys_generic_header_displayed) {
 					echo "			<tr>\n";
 					echo "				<td class='vtable'>".$text['label-device_key_category']."</td>\n";
 					if (permission_exists('device_key_id')) {
 						echo "				<td class='vtable'>".$text['label-device_key_id']."</td>\n";
 					}
 					if ($vendor_count > 1 && !empty($row['device_key_vendor'])) {
-						echo "				<td class='vtable'>".ucwords($row['device_key_vendor'])."</td>\n";
+						echo "				<td class='vtable'><i>".ucwords($row['device_key_vendor'])."</i></td>\n";
 						if ($show_key_subtype) {
 							echo "				<td class='vtable'>".$text['label-device_key_subtype']."</td>\n";
 						}
 					}
 					else {
+						$device_keys_generic_header_displayed = true;
 						echo "				<td class='vtable'>".$text['label-device_key_type']."</td>\n";
 						if ($show_key_subtype) {
 							echo "				<td class='vtable'>".$text['label-device_key_subtype']."</td>\n";
@@ -1519,14 +1547,15 @@
 					if (permission_exists('device_key_icon')) {
 						echo "				<td class='vtable'>".$text['label-device_key_icon']."</td>\n";
 					}
-					if (is_array($device_keys) && @sizeof($device_keys) > 1 && permission_exists('device_key_delete')) {
-						echo "				<td class='vtable edit_delete_checkbox_all' onmouseover=\"swap_display('delete_label_keys', 'delete_toggle_keys');\" onmouseout=\"swap_display('delete_label_keys', 'delete_toggle_keys');\">\n";
-						echo "					<span id='delete_label_keys'>".$text['label-delete']."</span>\n";
-						echo "					<span id='delete_toggle_keys'><input type='checkbox' id='checkbox_all_keys' name='checkbox_all' onclick=\"edit_all_toggle('keys');\"></span>\n";
+					if (is_array($device_keys) && @sizeof($device_keys) > 1 && permission_exists('device_key_delete') && !$device_keys_generic_header_displayed) {
+						echo "				<td class='vtable edit_delete_checkbox_all' onmouseover=\"swap_display('delete_label_keys_".$row['device_key_vendor']."', 'delete_toggle_keys_".$row['device_key_vendor']."');\" onmouseout=\"swap_display('delete_label_keys_".$row['device_key_vendor']."', 'delete_toggle_keys_".$row['device_key_vendor']."');\">\n";
+						echo "					<span id='delete_label_keys_".$row['device_key_vendor']."'>".$text['label-delete']."</span>\n";
+						echo "					<span id='delete_toggle_keys_".$row['device_key_vendor']."'><input type='checkbox' id='checkbox_all_keys_".$row['device_key_vendor']."' name='checkbox_all' onclick=\"edit_all_toggle('keys_".$row['device_key_vendor']."');\"></span>\n";
 						echo "				</td>\n";
 					}
 					echo "			</tr>\n";
 				}
+
 			//add the primary key uuid
 				if (!empty($row['device_key_uuid']) && is_uuid($row['device_key_uuid'])) {
 					echo "	<input name='device_keys[".$x."][device_key_uuid]' type='hidden' value=\"".escape($row['device_key_uuid'])."\"/>\n";
@@ -1590,7 +1619,7 @@
 
 				echo "<input type='hidden' id='key_vendor_".$x."' name='device_keys[".$x."][device_key_vendor]' value=\"".$device_key_vendor."\" />\n";
 
-				echo "<select class='formfld' name='device_keys[".$x."][device_key_type]' id='key_type_".$x."' ".(empty($device_key_vendor) ? "onchange=\"document.getElementById('key_vendor_".$x."').value = this.options[this.selectedIndex].getAttribute('vendor');\"" : null).">\n";
+				echo "<select class='formfld' name='device_keys[".$x."][device_key_type]' id='key_type_".$x."' onchange=\"document.getElementById('key_vendor_".$x."').value = this.options[this.selectedIndex].getAttribute('vendor');\">\n";
 				echo "	<option value=''></option>\n";
 				$previous_vendor = '';
 				$i=0;
@@ -1658,7 +1687,7 @@
 				if (is_array($device_keys) && @sizeof($device_keys) > 1 && permission_exists('device_key_delete')) {
 					if (!empty($row['device_key_uuid']) && is_uuid($row['device_key_uuid'])) {
 						echo "				<td class='vtable' style='text-align: center; padding-bottom: 3px;'>\n";
-						echo "					<input type='checkbox' name='device_keys_delete[".$x."][checked]' value='true' class='chk_delete checkbox_keys' onclick=\"edit_delete_action('keys');\">\n";
+						echo "					<input type='checkbox' name='device_keys_delete[".$x."][checked]' value='true' class='chk_delete checkbox_keys_".$row['device_key_vendor']."' onclick=\"edit_delete_action('keys');\">\n";
 						echo "					<input type='hidden' name='device_keys_delete[".$x."][uuid]' value='".escape($row['device_key_uuid'])."' />\n";
 					}
 					else {
@@ -1682,6 +1711,13 @@
 
 //device settings
 	if (permission_exists('device_setting_edit')) {
+		$device_setting_exists = false;
+		foreach ($device_settings as $row) {
+			if (!empty($row['device_setting_uuid']) && is_uuid($row['device_setting_uuid'])) {
+				$device_setting_exists = true;
+				break;
+			}
+		}
 		echo "	<tr>";
 		echo "		<td class='vncell' valign='top'>".$text['label-settings']."</td>";
 		echo "		<td class='vtable' align='left'>";
@@ -1691,7 +1727,7 @@
 		echo "				<td class='vtable'>".$text['label-device_setting_value']."</td>\n";
 		echo "				<td class='vtable'>".$text['label-enabled']."</td>\n";
 		echo "				<td class='vtable'>".$text['label-device_setting_description']."</td>\n";
-		if (is_array($device_settings) && @sizeof($device_settings) > 1 && permission_exists('device_setting_delete')) {
+		if (is_array($device_settings) && @sizeof($device_settings) > 1 && permission_exists('device_setting_delete') && $device_setting_exists) {
 			echo "				<td class='vtable edit_delete_checkbox_all' onmouseover=\"swap_display('delete_label_settings', 'delete_toggle_settings');\" onmouseout=\"swap_display('delete_label_settings', 'delete_toggle_settings');\">\n";
 			echo "					<span id='delete_label_settings'>".$text['label-delete']."</span>\n";
 			echo "					<span id='delete_toggle_settings'><input type='checkbox' id='checkbox_all_settings' name='checkbox_all' onclick=\"edit_all_toggle('settings');\"></span>\n";
