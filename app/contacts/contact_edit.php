@@ -1512,7 +1512,7 @@ if ($_SESSION['contact']['permissions']['boolean'] == "true") {
 				echo "			<select name='contact_user_uuid' class='formfld' style='width: auto;'>\n";
 				echo "				<option value=''></option>\n";
 				foreach ($users as $field) {
-					if (in_array($field['user_uuid'], array_column($contact_users_assigned, 'user_uuid'))) { continue; } //skip users already assigned
+					if (!empty($contact_users_assigned) && in_array($field['user_uuid'], array_column($contact_users_assigned, 'user_uuid'))) { continue; } //skip users already assigned
 					echo "					<option value='".escape($field['user_uuid'])."'>".escape($field['username'])."</option>\n";
 				}
 				echo "			</select>\n";
