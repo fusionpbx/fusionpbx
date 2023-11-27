@@ -73,7 +73,12 @@
 <user_mailbox idx="1" perm="">{$voicemail_number}</user_mailbox>
 <user_mailbox idx="2" perm=""></user_mailbox>
 <user_mailbox idx="3" perm=""></user_mailbox>
-<user_mailbox idx="4" perm=""></user_mailbox>
+<user_mailbox idx="4" perm=""></user_mailbox> 
+<user_expiry idx="1" perm="">{$user.1.register_expires}</user_expiry>
+<user_expiry idx="2" perm="">{$user.2.register_expires}</user_expiry> 
+<user_expiry idx="3" perm="">{$user.3.register_expires}</user_expiry>
+<user_expiry idx="4" perm="">{$user.4.register_expires}</user_expiry> 
+<user_expiry idx="5" perm="">{$user.5.register_expires}</user_expiry> 
 <user_srtp idx="1" perm="">off</user_srtp>
 <user_realname idx="2" perm="">{$user.2.display_name}</user_realname>
 <user_name idx="2" perm="">{$user.2.user_id}</user_name>

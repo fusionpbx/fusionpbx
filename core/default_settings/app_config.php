@@ -10,24 +10,26 @@
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Default settings that apply to all domains.";
 		$apps[$x]['description']['en-gb'] = "Default settings that apply to all domains.";
-		$apps[$x]['description']['ar-eg'] = "";
+		$apps[$x]['description']['ar-eg'] = "الإعدادات الافتراضية التي تنطبق على كافة المجالات.";
 		$apps[$x]['description']['de-at'] = "Grundlegende Einstellungen die für alle Domänen gültig sind.";
-		$apps[$x]['description']['de-ch'] = "";
+		$apps[$x]['description']['de-ch'] = "Standardeinstellungen, die für alle Domänen gelten.";
 		$apps[$x]['description']['de-de'] = "Grundlegende Einstellungen die für alle Domänen gültig sind.";
+		$apps[$x]['description']['el-gr'] = "Προεπιλεγμένες ρυθμίσεις που ισχύουν για όλους τους τομείς.";
 		$apps[$x]['description']['es-cl'] = "Configuraciones predeterminadas que aplican a todos los dominios.";
-		$apps[$x]['description']['es-mx'] = "";
-		$apps[$x]['description']['fr-ca'] = "";
+		$apps[$x]['description']['es-mx'] = "Configuración predeterminada que se aplica a todos los dominios.";
+		$apps[$x]['description']['fr-ca'] = "Paramètres par défaut qui s'appliquent à tous les domaines.";
 		$apps[$x]['description']['fr-fr'] = "Configurations par défaut applicable à tous les domaines";
-		$apps[$x]['description']['he-il'] = "";
-		$apps[$x]['description']['it-it'] = "";
-		$apps[$x]['description']['nl-nl'] = "";
-		$apps[$x]['description']['pl-pl'] = "";
+		$apps[$x]['description']['he-il'] = "הגדרות ברירת המחדל החלות על כל הדומיינים.";
+		$apps[$x]['description']['it-it'] = "Impostazioni predefinite che si applicano a tutti i domini.";
+		$apps[$x]['description']['nl-nl'] = "Standaardinstellingen die van toepassing zijn op alle domeinen.";
+		$apps[$x]['description']['pl-pl'] = "Domyślne ustawienia dotyczące wszystkich domen.";
 		$apps[$x]['description']['pt-br'] = "Configurações Padrão aplicáveis à todos os domínios";
 		$apps[$x]['description']['pt-pt'] = "Configurações padrão que se aplicam a todos os domínios.";
-		$apps[$x]['description']['ro-ro'] = "";
+		$apps[$x]['description']['ro-ro'] = "Setări implicite care se aplică tuturor domeniilor.";
 		$apps[$x]['description']['ru-ru'] = "Настройки по умолчанию для всех доменов";
-		$apps[$x]['description']['sv-se'] = "";
-		$apps[$x]['description']['uk-ua'] = "";
+		$apps[$x]['description']['sv-se'] = "Standardinställningar som gäller alla domäner.";
+		$apps[$x]['description']['uk-ua'] = "Налаштування за умовчанням, які застосовуються до всіх доменів.";
+		$apps[$x]['description']['tr-tr'] = "Tüm etki alanları için geçerli olan varsayılan ayarlar.";
 
 	//permission details
 		$y=0;
@@ -293,6 +295,23 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "syslog";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Options: syslog, file";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "e2b9406f-37cf-4226-8111-e5d11d0bfd73";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "login";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "destination";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "/core/dashboard/";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Destination after login";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "47b951c9-b339-4733-9104-a979f6e2f551";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "domain";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "setting_value_input_type";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "input";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
+		$y++;
 
 	//schema details
 		$y=0;

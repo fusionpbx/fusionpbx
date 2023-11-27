@@ -17,19 +17,15 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
 
@@ -46,15 +42,21 @@
 	$language = new text;
 	$text = $language->get();
 
+//set additional variables
+	$show = $_GET["show"] ?? '';
+
+//set from session variables
+	$list_row_edit_button = !empty($_SESSION['theme']['list_row_edit_button']['boolean']) ? $_SESSION['theme']['list_row_edit_button']['boolean'] : 'false';
+
 //get posted data
-	if (is_array($_POST['conference_centers'])) {
+	if (!empty($_POST['conference_centers'])) {
 		$action = $_POST['action'];
 		$search = $_POST['search'];
 		$conference_centers = $_POST['conference_centers'];
 	}
 
 //process the http post data by action
-	if ($action != '' && is_array($conference_centers) && @sizeof($conference_centers) != 0) {
+	if (!empty($action) && !empty($conference_centers)) {
 		switch ($action) {
 			/*
 			case 'copy':
@@ -78,17 +80,18 @@
 				break;
 		}
 
-		header('Location: conference_centers.php'.($search != '' ? '?search='.urlencode($search) : null));
+		header('Location: conference_centers.php'.(!empty($search) ? '?search='.urlencode($search) : null));
 		exit;
 	}
 
 //get variables used to control the order
-	$order_by = $_GET["order_by"];
-	$order = $_GET["order"];
+	$order_by = $_GET["order_by"] ?? '';
+	$order = $_GET["order"] ?? '';
+	$sort = $order_by == 'conference_center_extension' ? 'natural' : null;
 
 //add the search term
-	$search = strtolower($_GET["search"]);
-	if (strlen($search) > 0) {
+	$search = strtolower($_GET["search"] ?? '');
+	if (!empty($search)) {
 		$sql_search = "and ( ";
 		$sql_search .= "lower(conference_center_name) like :search ";
 		$sql_search .= "or lower(conference_center_extension) like :search ";
@@ -101,32 +104,32 @@
 //prepare to page the results
 	$sql = "select count(*) from v_conference_centers ";
 	$sql .= "where true ";
-	if ($_GET['show'] != "all" || !permission_exists('conference_center_all')) {
+	if ($show != "all" || !permission_exists('conference_center_all')) {
 		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	}
-	$sql .= $sql_search;
+	$sql .= $sql_search ?? '';
 	$database = new database;
-	$num_rows = $database->select($sql, $parameters, 'column');
+	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 
 //prepare to page the results
-	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$rows_per_page = (!empty($_SESSION['domain']['paging']['numeric'])) ? $_SESSION['domain']['paging']['numeric'] : 50;
 	$param = "&search=".urlencode($search);
-	if ($_GET['show'] == "all" && permission_exists('conference_center_all')) {
+	if ($show == "all" && permission_exists('conference_center_all')) {
 		$param .= "&show=all";
 	}
-	$page = $_GET['page'];
-	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
+	$page = $_GET['page'] ?? '';
+	if (empty($page)) { $page = 0; $_GET['page'] = 0; }
 	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
 	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
 
 //get the list
 	$sql = str_replace('count(*)', '*', $sql);
-	$sql .= order_by($order_by, $order);
+	$sql .= order_by($order_by, $order, null, null, $sort);
 	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;
-	$conference_centers = $database->select($sql, $parameters, 'all');
+	$conference_centers = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 
 //create token
@@ -156,11 +159,11 @@
 	}
 	echo 		"<form id='form_search' class='inline' method='get'>\n";
 	if (permission_exists('conference_center_all')) {
-		if ($_GET['show'] == 'all') {
+		if ($show == 'all') {
 			echo "		<input type='hidden' name='show' value='all'>";
 		}
 		else {
-			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$_SESSION['theme']['button_icon_all'],'link'=>'?type=&show=all'.($search != '' ? "&search=".urlencode($search) : null)]);
+			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$_SESSION['theme']['button_icon_all'],'link'=>'?type=&show=all'.(!empty($search) ? "&search=".urlencode($search) : null)]);
 		}
 	}
 	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=''>";
@@ -192,10 +195,10 @@
 	echo "<tr class='list-header'>\n";
 	if (permission_exists('conference_center_edit') || permission_exists('conference_center_delete')) {
 		echo "	<th class='checkbox'>\n";
-		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".($conference_centers ?: "style='visibility: hidden;'").">\n";
+		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".(!empty($conference_centers) ?: "style='visibility: hidden;'").">\n";
 		echo "	</th>\n";
 	}
-	if ($_GET['show'] == "all" && permission_exists('conference_center_all')) {
+	if ($show == "all" && permission_exists('conference_center_all')) {
 		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, $param, "class='shrink'");
 	}
 	echo th_order_by('conference_center_name', $text['label-conference_center_name'], $order_by, $order);
@@ -204,12 +207,12 @@
 	echo th_order_by('conference_center_pin_length', $text['label-conference_center_pin_length'], $order_by, $order, null, "class='center shrink'");
 	echo th_order_by('conference_center_enabled', $text['label-conference_center_enabled'], $order_by, $order, null, "class='center'");
 	echo th_order_by('conference_center_description', $text['label-conference_center_description'], $order_by, $order, null, "class='hide-sm-dn'");
-	if (permission_exists('conference_center_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+	if (permission_exists('conference_center_edit') && $list_row_edit_button == 'true') {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
 
-	if (is_array($conference_centers) && @sizeof($conference_centers) != 0) {
+	if (!empty($conference_centers)) {
 		$x = 0;
 		foreach ($conference_centers as $row) {
 			if (permission_exists('conference_center_edit')) {
@@ -222,8 +225,8 @@
 				echo "		<input type='hidden' name='conference_centers[$x][uuid]' value='".escape($row['conference_center_uuid'])."' />\n";
 				echo "	</td>\n";
 			}
-			if ($_GET['show'] == "all" && permission_exists('conference_center_all')) {
-				if (strlen($_SESSION['domains'][$row['domain_uuid']]['domain_name']) > 0) {
+			if ($show == "all" && permission_exists('conference_center_all')) {
+				if (!empty($_SESSION['domains'][$row['domain_uuid']]['domain_name'])) {
 					$domain = $_SESSION['domains'][$row['domain_uuid']]['domain_name'];
 				}
 				else {
@@ -233,7 +236,7 @@
 			}
 			echo "	<td><a href='".$list_row_url."' title=\"".$text['button-edit']."\">".escape($row['conference_center_name'])."</a>&nbsp;</td>\n";
 			echo "	<td>".escape($row['conference_center_extension'])."&nbsp;</td>\n";
-			echo "	<td>".escape($row['conference_center_greeting'])."&nbsp;</td>\n";
+			echo "	<td>".escape(str_replace($_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/','',$row['conference_center_greeting']))."&nbsp;</td>\n";
 			echo "	<td class='center'>".escape($row['conference_center_pin_length'])."&nbsp;</td>\n";
 			if (permission_exists('conference_center_edit')) {
 				echo "	<td class='no-link center'>\n";
@@ -245,7 +248,7 @@
 			}
 			echo "	</td>\n";
 			echo "	<td class='description overflow hide-sm-dn'>".escape($row['conference_center_description'])."&nbsp;</td>\n";
-			if (permission_exists('conference_center_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+			if (permission_exists('conference_center_edit') && $list_row_edit_button == 'true') {
 				echo "	<td class='action-button'>";
 				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
 				echo "	</td>\n";

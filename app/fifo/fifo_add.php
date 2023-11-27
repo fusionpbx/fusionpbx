@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2010 - 2020
+	Copyright (C) 2010 - 2023
 	All Rights Reserved.
 
 	Contributor(s):
@@ -25,12 +25,8 @@
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
 
@@ -49,23 +45,23 @@
 
 //get http values and set them as variables
 	if (count($_POST)>0) {
-		$order_by = $_GET["order_by"];
-		$order = $_GET["order"];
+		$order_by = $_GET["order_by"] ?? null;
+		$order = $_GET["order"] ?? null;
 		$extension_name = $_POST["extension_name"];
 		$queue_extension_number = $_POST["queue_extension_number"];
 		$agent_queue_extension_number = $_POST["agent_queue_extension_number"];
 		$agent_login_logout_extension_number = $_POST["agent_login_logout_extension_number"];
 		$dialplan_order = $_POST["dialplan_order"];
-		$pin_number = $_POST["pin_number"];
-		$profile = $_POST["profile"];
-		$flags = $_POST["flags"];
+		$pin_number = $_POST["pin_number"] ?? null;
+		$profile = $_POST["profile"] ?? null;
+		$flags = $_POST["flags"] ?? null;
 		$dialplan_enabled = $_POST["dialplan_enabled"];
 		$dialplan_description = $_POST["dialplan_description"];
-		if (strlen($dialplan_enabled) == 0) { $dialplan_enabled = "true"; } //set default to enabled
+		if (empty($dialplan_enabled)) { $dialplan_enabled = "true"; } //set default to enabled
 	}
 
 //process the HTTP POST
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 
 		//validate the token
 		$token = new token;
@@ -76,10 +72,10 @@
 		}
 
 		//check for all required data
-		if (strlen($domain_uuid) == 0) { $msg .= $text['message-required']."domain_uuid<br>\n"; }
-		if (strlen($extension_name) == 0) { $msg .= $text['message-required'].$text['label-name']."<br>\n"; }
-		if (strlen($queue_extension_number) == 0) { $msg .= $text['message-required'].$text['label-extension']."<br>\n"; }
-		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+		if (empty($domain_uuid)) { $msg .= $text['message-required']."domain_uuid<br>\n"; }
+		if (empty($extension_name)) { $msg .= $text['message-required'].$text['label-name']."<br>\n"; }
+		if (empty($queue_extension_number)) { $msg .= $text['message-required'].$text['label-extension']."<br>\n"; }
+		if (!empty($msg) && empty($_POST["persistformvar"])) {
 			require_once "resources/header.php";
 			require_once "resources/persist_form_var.php";
 			echo "<div align='center'>\n";
@@ -92,7 +88,7 @@
 			return;
 		}
 
-		if (strlen($queue_extension_number) > 0) {
+		if (!empty($queue_extension_number)) {
 			//--------------------------------------------------------
 			//Caller Queue [FIFO in]
 			//<extension name="Queue_Call_In">
@@ -132,7 +128,7 @@
 				$array["dialplan_details"][$y]["dialplan_detail_data"] = '^'.$queue_extension_number.'$';
 				$array["dialplan_details"][$y]["dialplan_detail_inline"] = "";
 				$array["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
-				if ((strlen($agent_queue_extension_number) > 0) || (strlen($agent_login_logout_extension_number) > 0)) {
+				if ((strlen($agent_queue_extension_number) > 0) || (!empty($agent_login_logout_extension_number))) {
 					$array["dialplan_details"][$y]["dialplan_detail_break"] = 'on-true';
 				}
 				$array["dialplan_details"][$y]["dialplan_detail_group"] = '1';
@@ -184,7 +180,7 @@
 		}
 
 		// Caller Queue / Agent Queue
-		if (strlen($agent_queue_extension_number) > 0) {
+		if (!empty($agent_queue_extension_number)) {
 			//--------------------------------------------------------
 			// Agent Queue [FIFO out]
 			//<extension name="Agent_Wait">
@@ -208,7 +204,7 @@
 				$array["dialplan_details"][$y]["dialplan_detail_type"] = "destination_number";
 				$array["dialplan_details"][$y]["dialplan_detail_data"] = '^'.$agent_queue_extension_number.'$';
 				$array["dialplan_details"][$y]["dialplan_detail_inline"] = "";
-				if (strlen($agent_login_logout_extension_number) > 0) {
+				if (!empty($agent_login_logout_extension_number)) {
 					$array["dialplan_details"][$y]["dialplan_detail_break"] = 'on-true';
 				}
 				$array["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
@@ -261,7 +257,7 @@
 		}
 
 		// agent or member login / logout
-		if (strlen($agent_login_logout_extension_number) > 0) {
+		if (!empty($agent_login_logout_extension_number)) {
 			//--------------------------------------------------------
 			// Agent Queue [FIFO login logout]
 			//<extension name="Agent_login_logout">
@@ -451,7 +447,7 @@
 	echo "		".$text['label-name']."\n";
 	echo "	</td>\n";
 	echo "	<td width='70%' class='vtable' align='left'>\n";
-	echo "		<input class='formfld' type='text' name='extension_name' maxlength='255' value=\"$extension_name\" required='required'>\n";
+	echo "		<input class='formfld' type='text' name='extension_name' maxlength='255' value=\"".($extension_name ?? null)."\" required='required'>\n";
 	echo "		<br />\n";
 	echo "		".$text['description-name']."\n";
 	echo "	</td>\n";
@@ -462,9 +458,9 @@
 	echo "	".$text['label-extension']."\n";
 	echo "	</td>\n";
 	echo "	<td class='vtable' align='left'>\n";
-	echo "		<input class='formfld' type='text' name='queue_extension_number' maxlength='255' min='0' step='1' value=\"$queue_extension_number\" required='required'>\n";
+	echo "		<input class='formfld' type='text' name='queue_extension_number' maxlength='255' min='0' step='1' value=\"".($queue_extension_number ?? null)."\" required='required'>\n";
 	echo "		<br />\n";
-	echo "		".$text['description-extension']."\n";
+	echo "		".($text['description-extension'] ?? null)."\n";
 	echo "	</td>\n";
 	echo "	</tr>\n";
 
@@ -474,13 +470,9 @@
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select name='dialplan_order' class='formfld'>\n";
-	$i = 300;
-	while ($i <= 999) {
-		$selected = ($dialplan_order == $i) ? "selected" : null;
-		if (strlen($i) == 1) { echo "<option value='00$i' ".$selected.">00$i</option>\n"; }
-		if (strlen($i) == 2) { echo "<option value='0$i' ".$selected.">0$i</option>\n"; }
-		if (strlen($i) == 3) { echo "<option value='$i' ".$selected.">$i</option>\n"; }
-		$i++;
+	for ($i = 300; $i <= 999; $i++) {
+		$selected = !empty($dialplan_order) && $dialplan_order == $i ? "selected" : null;
+		echo "<option value='".$i."' ".$selected.">".$i."</option>\n";
 	}
 	echo "	</select>\n";
 	echo "	<br />\n";
@@ -492,22 +484,18 @@
 	echo "    ".$text['label-enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <select class='formfld' name='dialplan_enabled'>\n";
-	if ($dialplan_enabled == "true") {
-		echo "    <option value='true' selected='selected' >".$text['option-true']."</option>\n";
+	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
+		echo "	<label class='switch'>\n";
+		echo "		<input type='checkbox' id='dialplan_enabled' name='dialplan_enabled' value='true' checked='checked'>\n";
+		echo "		<span class='slider'></span>\n";
+		echo "	</label>\n";
 	}
 	else {
-		echo "    <option value='true'>".$text['option-true']."</option>\n";
+		echo "	<select class='formfld' id='dialplan_enabled' name='dialplan_enabled'>\n";
+		echo "		<option value='true' ".($dialplan_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($dialplan_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "	</select>\n";
 	}
-	if ($dialplan_enabled == "false") {
-		echo "    <option value='false' selected='selected' >".$text['option-false']."</option>\n";
-	}
-	else {
-		echo "    <option value='false'>".$text['option-false']."</option>\n";
-	}
-	echo "    </select>\n";
-	echo "<br />\n";
-	echo "\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -516,7 +504,7 @@
 	echo "    ".$text['label-description']."\n";
 	echo "</td>\n";
 	echo "<td colspan='4' class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='text' name='dialplan_description' maxlength='255' value=\"$dialplan_description\">\n";
+	echo "    <input class='formfld' type='text' name='dialplan_description' maxlength='255' value=\"".($dialplan_description ?? null)."\">\n";
 	echo "<br />\n";
 	echo "\n";
 	echo "</td>\n";
@@ -535,7 +523,7 @@
 	echo "    ".$text['label-agent_queue_extension']."\n";
 	echo "</td>\n";
 	echo "<td width='70%' class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='text' name='agent_queue_extension_number' maxlength='255' min='0' step='1' value=\"$agent_queue_extension_number\">\n";
+	echo "    <input class='formfld' type='text' name='agent_queue_extension_number' maxlength='255' min='0' step='1' value=\"".($agent_queue_extension_number ?? null)."\">\n";
 	echo "<br />\n";
 	echo $text['description-agent_queue_extension']."\n";
 	echo "</td>\n";
@@ -546,7 +534,7 @@
 	echo "    ".$text['label-agent_loginout_extension']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='text' name='agent_login_logout_extension_number' maxlength='255' min='0' step='1' value=\"$agent_login_logout_extension_number\">\n";
+	echo "    <input class='formfld' type='text' name='agent_login_logout_extension_number' maxlength='255' min='0' step='1' value=\"".($agent_login_logout_extension_number ?? null)."\">\n";
 	echo "<br />\n";
 	echo $text['description-agent_loginout_extension']."\n";
 	echo "</td>\n";
@@ -555,8 +543,8 @@
 	echo "</table>\n";
 	echo "<br><br>\n";
 
-	if ($action == "update") {
-		echo "<input type='hidden' name='dialplan_uuid' value='$dialplan_uuid'>\n";
+	if (!empty($action) && $action == "update") {
+		echo "<input type='hidden' name='dialplan_uuid' value='".($dialplan_uuid ?? null)."'>\n";
 	}
 	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 

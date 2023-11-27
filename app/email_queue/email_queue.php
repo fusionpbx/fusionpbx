@@ -1,11 +1,31 @@
 <?php
+/*
+	FusionPBX
+	Version: MPL 1.1
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
+	The contents of this file are subject to the Mozilla Public License Version
+	1.1 (the "License"); you may not use this file except in compliance with
+	the License. You may obtain a copy of the License at
+	http://www.mozilla.org/MPL/
+
+	Software distributed under the License is distributed on an "AS IS" basis,
+	WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+	for the specific language governing rights and limitations under the
+	License.
+
+	The Original Code is FusionPBX
+
+	The Initial Developer of the Original Code is
+	Mark J Crane <markjcrane@fusionpbx.com>
+	Portions created by the Initial Developer are Copyright (C) 2022-2023
+	the Initial Developer. All Rights Reserved.
+
+	Contributor(s):
+	Mark J Crane <markjcrane@fusionpbx.com>
+*/
 
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
 
@@ -23,14 +43,14 @@
 	$text = $language->get();
 
 //get the http post data
-	if (is_array($_POST['email_queue'])) {
+	if (!empty($_POST['email_queue']) && is_array($_POST['email_queue'])) {
 		$action = $_POST['action'];
 		$search = $_POST['search'];
 		$email_queue = $_POST['email_queue'];
 	}
 
 //process the http post data by action
-	if ($action != '' && is_array($email_queue) && @sizeof($email_queue) != 0) {
+	if (!empty($action) && !empty($email_queue) && is_array($email_queue) && @sizeof($email_queue) != 0) {
 
 		//validate the token
 		$token = new token;
@@ -41,9 +61,10 @@
 		}
 
 		//prepare the array
-		foreach($email_queue as $row) {
+		$x = 0;
+		foreach ($email_queue as $row) {
 			//email class queue uuid
-			$array[$x]['checked'] = $row['checked'];
+			$array[$x]['checked'] = $row['checked'] ?? null;
 			$array[$x]['uuid'] = $row['email_queue_uuid']; 
 
 			// database class uuid
@@ -92,8 +113,8 @@
 	}
 
 //get order and order by
-	$order_by = $_GET["order_by"];
-	$order = $_GET["order"];
+	$order_by = $_GET["order_by"] ?? null;
+	$order = $_GET["order"] ?? null;
 
 //add the search
 	if (isset($_GET["search"])) {
@@ -123,14 +144,15 @@
 	//	$parameters['domain_uuid'] = $domain_uuid;
 	//}
 	$database = new database;
-	$num_rows = $database->select($sql, $parameters, 'column');
+	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 	unset($sql, $parameters);
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
-	$param = $search ? "&search=".$search : null;
-	$param = ($_GET['show'] == 'all' && permission_exists('email_queue_all')) ? "&show=all" : null;
-	$page = is_numeric($_GET['page']) ? $_GET['page'] : 0;
+	$param = !empty($_GET["email_status"]) ? "&email_status=".urlencode($_GET["email_status"]) : null;
+	$param .= !empty($search) ? "&search=".urlencode($search) : null;
+	$param .= !empty($_REQUEST['show']) && $_REQUEST['show'] == 'all' && permission_exists('email_queue_all') ? "&show=all" : null;
+	$page = !empty($_REQUEST['page']) && is_numeric($_REQUEST['page']) ? $_REQUEST['page'] : 0;
 	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
 	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
@@ -175,11 +197,51 @@
 
 //create token
 	$object = new token;
-	$token = $object->create($_SERVER['PHP_SELF']);
+	$token = $object->create('/app/email_queue/email_queue.php');
 
 //additional includes
 	$document['title'] = $text['title-email_queue'];
 	require_once "resources/header.php";
+
+//test result layer
+	echo "<style>\n";
+	echo "	#test_result_layer {\n";
+	echo "		z-index: 999999;\n";
+	echo "		position: absolute;\n";
+	echo "		left: 0px;\n";
+	echo "		top: 0px;\n";
+	echo "		right: 0px;\n";
+	echo "		bottom: 0px;\n";
+	echo "		text-align: center;\n";
+	echo "		vertical-align: middle;\n";
+	echo "		}\n";
+	echo "	#test_result_container {\n";
+	echo "		display: block;\n";
+	echo "		overflow: auto;\n";
+	echo "		background-color: #fff;\n";
+	echo "		padding: 25px 25px;\n";
+	if (http_user_agent('mobile')) {
+		echo "	margin: 0;\n";
+	}
+	else {
+		echo "	margin: auto 10%;\n";
+	}
+	echo "		text-align: left;\n";
+	echo "		-webkit-box-shadow: 0px 1px 20px #888;\n";
+	echo "		-moz-box-shadow: 0px 1px 20px #888;\n";
+	echo "		box-shadow: 0px 1px 20px #888;\n";
+	echo "		}\n";
+	echo "</style>\n";
+
+	echo "<div id='test_result_layer' style='display: none;'>\n";
+	echo "	<table cellpadding='0' cellspacing='0' border='0' width='100%' height='100%'>\n";
+	echo "		<tr>\n";
+	echo "			<td align='center' valign='middle'>\n";
+	echo "				<span id='test_result_container'></span>\n";
+	echo "			</td>\n";
+	echo "		</tr>\n";
+	echo "	</table>\n";
+	echo "</div>\n";
 
 //show the content
 	echo "<div class='action_bar' id='action_bar'>\n";
@@ -194,6 +256,13 @@
 	//if (permission_exists('email_queue_edit') && $email_queue) {
 	//	echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$_SESSION['theme']['button_icon_toggle'],'id'=>'btn_toggle','name'=>'btn_toggle','style'=>'display:none;','onclick'=>"modal_open('modal-toggle','btn_toggle');"]);
 	//}
+	echo 		"<form id='form_test' class='inline' method='post' action='email_test.php' target='_blank'>\n";
+	echo button::create(['label'=>$text['button-test'],'icon'=>'tools','type'=>'button','id'=>'test_button','style'=>'margin-right: 15px;','onclick'=>"$(this).fadeOut(400, function(){ $('span#form_test').fadeIn(400); $('#to').trigger('focus'); });"]);
+	echo "		<span id='form_test' style='display: none;'>\n";
+	echo "			<input type='text' class='txt' style='width: 150px;' name='to' id='to' placeholder='recipient@domain.com'>";
+	echo button::create(['label'=>$text['button-send'],'icon'=>'envelope','type'=>'submit','id'=>'send_button','style'=>'margin-right: 15px;']);
+	echo "		</span>\n";
+	echo "		</form>";
 	if (permission_exists('email_queue_delete') && $email_queue) {
 		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','name'=>'btn_delete','style'=>'display:none;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
@@ -201,24 +270,10 @@
 	echo "		<select class='formfld' name='email_status'>\n";
     echo "			<option value='' selected='selected' disabled hidden>".$text['label-email_status']."...</option>";
 	echo "			<option value=''></option>\n";
-	if (isset($_GET["email_status"]) && $_GET["email_status"] == "waiting") {
-		echo "			<option value='waiting' selected='selected'>".$text['label-waiting']."</option>\n";
-	}
-	else {
-		echo "			<option value='waiting'>".$text['label-waiting']."</option>\n";
-	}
-	if (isset($_GET["email_status"]) && $_GET["email_status"] == "failed") {
-		echo "			<option value='failed' selected='selected'>".$text['label-failed']."</option>\n";
-	}
-	else {
-		echo "			<option value='failed'>".$text['label-failed']."</option>\n";
-	}
-	if (isset($_GET["email_status"]) && $_GET["email_status"] == "sent") {
-		echo "			<option value='sent' selected='selected'>".$text['label-sent']."</option>\n";
-	}
-	else {
-		echo "			<option value='sent'>".$text['label-sent']."</option>\n";
-	}
+	echo "			<option value='waiting' ".(!empty($_GET["email_status"]) && $_GET["email_status"] == "waiting" ? "selected='selected'" : null).">".ucwords($text['label-waiting'])."</option>\n";
+	echo "			<option value='trying' ".(!empty($_GET["email_status"]) && $_GET["email_status"] == "trying" ? "selected='selected'" : null).">".ucwords($text['label-trying'])."</option>\n";
+	echo "			<option value='sent' ".(!empty($_GET["email_status"]) && $_GET["email_status"] == "sent" ? "selected='selected'" : null).">".ucwords($text['label-sent'])."</option>\n";
+	echo "			<option value='failed' ".(!empty($_GET["email_status"]) && $_GET["email_status"] == "failed" ? "selected='selected'" : null).">".ucwords($text['label-failed'])."</option>\n";
 	echo "		</select>\n";
 	//if (permission_exists('email_queue_all')) {
 	//	if ($_GET['show'] == 'all') {
@@ -228,7 +283,7 @@
 	//		echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$_SESSION['theme']['button_icon_all'],'link'=>'?show=all']);
 	//	}
 	//}
-	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" />";
+	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search ?? '')."\" placeholder=\"".$text['label-search']."\" />";
 	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search']);
 	if ($paging_controls_mini != '') {
 		echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>\n";
@@ -250,13 +305,13 @@
 
 	echo "<form id='form_list' method='post'>\n";
 	echo "<input type='hidden' id='action' name='action' value=''>\n";
-	echo "<input type='hidden' name='search' value=\"".escape($search)."\">\n";
+	echo "<input type='hidden' name='search' value=\"".escape($search ?? '')."\">\n";
 
 	echo "<table class='list'>\n";
 	echo "<tr class='list-header'>\n";
 	if (permission_exists('email_queue_add') || permission_exists('email_queue_edit') || permission_exists('email_queue_delete')) {
 		echo "	<th class='checkbox'>\n";
-		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".($email_queue ?: "style='visibility: hidden;'").">\n";
+		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".(empty($email_queue) ? "style='visibility: hidden;'" : null).">\n";
 		echo "	</th>\n";
 	}
 	//if ($_GET['show'] == 'all' && permission_exists('email_queue_all')) {
@@ -269,13 +324,11 @@
 	echo "<th class='shrink hide-md-dn'>".$text['label-email_from']."</th>\n";
 	echo th_order_by('email_to', $text['label-email_to'], $order_by, $order);
 	echo th_order_by('email_subject', $text['label-email_subject'], $order_by, $order);
-	echo "<th class='hide-md-dn'>".$text['label-email_body']."</th>\n";
 	echo th_order_by('email_status', $text['label-email_status'], $order_by, $order);
 	echo th_order_by('email_retry_count', $text['label-email_retry_count'], $order_by, $order);
-	
 	//echo th_order_by('email_action_before', $text['label-email_action_before'], $order_by, $order);
 	echo "<th class='hide-md-dn'>".$text['label-email_action_after']."</th>\n";
-	if (permission_exists('email_queue_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+	if (permission_exists('email_queue_edit') && !empty($_SESSION['theme']['list_row_edit_button']['boolean']) && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
@@ -308,14 +361,14 @@
 			}
 			echo "	<td class='hide-md-dn'>".escape($row['hostname'])."</td>\n";
 			echo "	<td class='shrink hide-md-dn'>".escape($row['email_from'])."</td>\n";
-			echo "	<td>".escape($row['email_to'])."</td>\n";
-			echo "	<td>".iconv_mime_decode($row['email_subject'])."</td>\n";
-			echo "	<td class='hide-md-dn'>".escape($row['email_body'])."</td>\n";
-			echo "	<td>".escape($row['email_status'])."</td>\n";
+			echo "	<td class='overflow' style='width: 20%; max-width: 200px;'>".escape($row['email_to'])."</td>\n";
+			echo "	<td class='overflow' style='width: 30%; max-width: 200px;'>".iconv_mime_decode($row['email_subject'])."</td>\n";
+// 			echo "	<td class='hide-md-dn'>".escape($row['email_body'])."</td>\n";
+			echo "	<td>".ucwords($text['label-'.$row['email_status']])."</td>\n";
 			echo "	<td>".escape($row['email_retry_count'])."</td>\n";
 			//echo "	<td>".escape($row['email_action_before'])."</td>\n";
 			echo "	<td class='hide-md-dn'>".escape($row['email_action_after'])."</td>\n";
-			if (permission_exists('email_queue_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+			if (permission_exists('email_queue_edit') && !empty($_SESSION['theme']['list_row_edit_button']['boolean']) && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
 				echo "	<td class='action-button'>\n";
 				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
 				echo "	</td>\n";
@@ -331,6 +384,30 @@
 	echo "<div align='center'>".$paging_controls."</div>\n";
 	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "</form>\n";
+
+
+//test script
+	echo "<script>\n";
+	echo "	$('#form_test').submit(function(event) {\n";
+	echo "		event.preventDefault();\n";
+	echo "		$.ajax({\n";
+	echo "			url: $(this).attr('action'),\n";
+	echo "			type: $(this).attr('method'),\n";
+	echo "			data: new FormData(this),\n";
+	echo "			processData: false,\n";
+	echo "			contentType: false,\n";
+	echo "			cache: false,\n";
+	echo "			success: function(response){\n";
+	echo "				$('#test_result_container').html(response);\n";
+	echo "				$('#test_result_layer').fadeIn(400);\n";
+	echo "				$('span#form_test').fadeOut(400, function(){\n";
+	echo "					$('#test_button').fadeIn(400);\n";
+	echo "					$('#to').val('');\n";
+	echo "				});\n";
+	echo "			}\n";
+	echo "		});\n";
+	echo "	});\n";
+	echo "</script>\n";
 
 //include the footer
 	require_once "resources/footer.php";

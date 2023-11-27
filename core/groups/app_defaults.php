@@ -37,7 +37,7 @@ if ($domains_processed == 1) {
 		$result = $database->select($sql, null, 'all');
 		if (is_array($result)) {
 			foreach($result as $row) {
-				if (strlen($row['group_name']) > 0) {
+				if (!empty($row['group_name'])) {
 					//get the group_uuid
 						$sql = "select group_uuid from v_groups ";
 						$sql .= "where group_name = :group_name ";
@@ -116,6 +116,7 @@ if ($domains_processed == 1) {
 	//add or update the view
 		$sql = "CREATE VIEW view_groups AS (";
 		$sql .= "	select domain_uuid, group_uuid, group_name, ";
+		$sql .= "	(select domain_name from v_domains where domain_uuid = g.domain_uuid) as domain_name, ";
 		$sql .= "	(select count(*) from v_group_permissions where group_uuid = g.group_uuid) as group_permissions, ";
 		$sql .= "	(select count(*) from v_user_groups where group_uuid = g.group_uuid) as group_members, ";
 		$sql .= "	group_level, group_protected, group_description ";

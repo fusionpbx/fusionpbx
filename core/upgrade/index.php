@@ -27,12 +27,8 @@
 //set a timeout
 	set_time_limit(15*60); //15 minutes
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check the permission
@@ -61,7 +57,7 @@
 		$action = $_POST['action'];
 
 		//run source update
-		if ($action["upgrade_source"] && permission_exists("upgrade_source") && !is_dir("/usr/share/examples/fusionpbx")) {
+		if (!empty($action["upgrade_source"]) && permission_exists("upgrade_source") && !is_dir("/usr/share/examples/fusionpbx")) {
 			$cwd = getcwd();
 			chdir($_SERVER["PROJECT_ROOT"]);
 			exec("git pull 2>&1", $response_source_update);
@@ -69,7 +65,7 @@
 			if (sizeof($response_source_update) > 0) {
 				$_SESSION["response"]["upgrade_source"] = $response_source_update;
 				foreach ($response_source_update as $response_line) {
-					if (substr_count($response_line, "Updating ") > 0 || substr_count($response_line, "Already up-to-date.") > 0) {
+					if (substr_count($response_line, "Updating ") > 0 || substr_count($response_line, "Already up-to-date.") > 0 || substr_count($response_line, "Already up to date.") > 0) {
 						$update_failed = false;
 					}
 					
@@ -89,7 +85,7 @@
 		}
 
 		//load an array of the database schema and compare it with the active database
-		if ($action["upgrade_schema"] && permission_exists("upgrade_schema")) {
+		if (!empty($action["upgrade_schema"]) && permission_exists("upgrade_schema")) {
 			require_once "resources/classes/schema.php";
 			$obj = new schema();
 			if (isset($action["data_types"]) && $action["data_types"] == 'true') {
@@ -100,7 +96,7 @@
 		}
 
 		//process the apps defaults
-		if ($action["app_defaults"] && permission_exists("upgrade_apps")) {
+		if (!empty($action["app_defaults"]) && permission_exists("upgrade_apps")) {
 			require_once "resources/classes/domains.php";
 			$domain = new domains;
 			$domain->upgrade();
@@ -108,7 +104,7 @@
 		}
 
 		//restore defaults of the selected menu
-		if ($action["menu_defaults"] && permission_exists("menu_restore")) {
+		if (!empty($action["menu_defaults"]) && permission_exists("menu_restore")) {
 			$sel_menu = explode('|', check_str($_POST["sel_menu"]));
 			$menu_uuid = $sel_menu[0];
 			$menu_language = $sel_menu[1];
@@ -119,7 +115,7 @@
 		}
 
 		//restore default permissions
-		if ($action["permission_defaults"] && permission_exists("group_edit")) {
+		if (!empty($action["permission_defaults"]) && permission_exists("group_edit")) {
 			$included = true;
 			require_once("core/groups/permissions_default.php");
 			message::add($text['message-upgrade_permissions'], null, $message_timeout);
@@ -133,7 +129,7 @@
 
 //adjust color and initialize step counter
 	$step = 1;
-	$step_color = $_SESSION['theme']['upgrade_step_color']['text'] ? $_SESSION['theme']['upgrade_step_color']['text'] : color_adjust(($_SESSION['theme']['form_table_label_background_color']['text'] != '' ? $_SESSION['theme']['form_table_label_background_color']['text'] : '#e5e9f0'), -0.1);
+	$step_color = isset($_SESSION['theme']['upgrade_step_color']['text']) ? $_SESSION['theme']['upgrade_step_color']['text'] : color_adjust((!empty($_SESSION['theme']['form_table_label_background_color']['text']) ? $_SESSION['theme']['form_table_label_background_color']['text'] : '#e5e9f0'), -0.1);
 	$step_container_style = "width: 30px; height: 30px; border: 2px solid ".$step_color."; border-radius: 50%; float: left; text-align: center; vertical-align: middle;";
 	$step_number_style = "font-size: 150%; font-weight: 600; color: ".$step_color.";";
 
@@ -157,13 +153,13 @@
 
 	if (permission_exists("upgrade_source") && !is_dir("/usr/share/examples/fusionpbx") && is_writeable($_SERVER["PROJECT_ROOT"]."/.git")) {
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-		echo "<tr>\n";
+		echo "<tr onclick=\"document.getElementById('do_source').checked = !document.getElementById('do_source').checked;\">\n";
 		echo "	<td width='30%' class='vncell' style='vertical-align:middle;'>\n";
 		echo "		<div style='".$step_container_style."'><span style='".$step_number_style."'>".$step++."</span></div>";
 		echo "		".$text['label-upgrade_source'];
 		echo "	</td>\n";
-		echo "	<td width='70%' class='vtable' style='height: 50px;'>\n";
-		echo "		<input type='checkbox' name='action[upgrade_source]' id='do_source' value='1'> &nbsp;".$text['description-upgrade_source']."<br />\n";
+		echo "	<td width='70%' class='vtable' style='height: 50px; cursor: pointer;'>\n";
+		echo "		<input type='checkbox' name='action[upgrade_source]' id='do_source' value='1' onclick=\"event.stopPropagation();\"> &nbsp;".$text['description-upgrade_source']."<br />\n";
 
 		// show current git version info
 		chdir($_SERVER["PROJECT_ROOT"]);
@@ -175,7 +171,7 @@
 			echo $text['label-git_branch'].' '.$git_current_branch." \n";
 			//echo $text['label-git_commit'].' '." ";
 			echo "<a href='https://github.com/fusionpbx/fusionpbx/compare/";
-			echo $git_current_commit . "..." . "$git_current_branch' target='_blank'> \n";
+			echo $git_current_commit . "..." . "$git_current_branch' target='_blank' onclick=\"event.stopPropagation();\"> \n";
 			echo $git_current_commit . "</a><br />\n";
 			echo "</a>";
 		}
@@ -187,26 +183,26 @@
 
 	if (permission_exists("upgrade_schema")) {
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-		echo "<tr>\n";
+		echo "<tr onclick=\"document.getElementById('do_schema').checked = !document.getElementById('do_schema').checked; (!document.getElementById('do_schema').checked ? $('#do_data_types').prop('checked', false) : null); $('#tr_data_types').slideToggle('fast');\">\n";
 		echo "	<td width='30%' class='vncell' style='vertical-align:middle;'>\n";
 		echo "		<div style='".$step_container_style."'><span style='".$step_number_style."'>".$step."</span></div>";
 		echo "		".$text['label-upgrade_schema'];
 		echo "	</td>\n";
-		echo "	<td width='70%' class='vtable' style='height: 50px;'>\n";
-		echo "		<input type='checkbox' name='action[upgrade_schema]' id='do_schema' value='1' onchange=\"$('#do_data_types').prop('checked', false); $('#tr_data_types').slideToggle('fast');\"> &nbsp;".$text['description-upgrade_schema']."\n";
+		echo "	<td width='70%' class='vtable' style='height: 50px; cursor: pointer;'>\n";
+		echo "		<input type='checkbox' name='action[upgrade_schema]' id='do_schema' value='1' onclick=\"event.stopPropagation(); $('#tr_data_types').slideToggle('fast'); (!document.getElementById('do_schema').checked ? $('#do_data_types').prop('checked', false) : null);\"> &nbsp;".$text['description-upgrade_schema']."\n";
 		echo "	</td>\n";
 		echo "</tr>\n";
 		echo "</table>\n";
 
 		echo "<div id='tr_data_types' style='display: none;'>\n";
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-		echo "<tr>\n";
+		echo "<tr onclick=\"document.getElementById('do_data_types').checked = !document.getElementById('do_data_types').checked;\">\n";
 		echo "	<td width='30%' class='vncell' style='vertical-align:middle;'>\n";
 		echo "		<div style='".$step_container_style."'><span style='".$step_number_style." letter-spacing: -0.06em;'>".$step++."B</span></div>";
 		echo "		".$text['label-upgrade_data_types'];
 		echo "	</td>\n";
-		echo "	<td width='70%' class='vtable' style='height: 50px;'>\n";
-		echo "		<input type='checkbox' name='action[data_types]' id='do_data_types' value='true'> &nbsp;".$text['description-upgrade_data_types']."\n";
+		echo "	<td width='70%' class='vtable' style='height: 50px; cursor: pointer;'>\n";
+		echo "		<input type='checkbox' name='action[data_types]' id='do_data_types' value='true' onclick=\"event.stopPropagation();\"> &nbsp;".$text['description-upgrade_data_types']."\n";
 		echo "	</td>\n";
 		echo "</tr>\n";
 		echo "</table>\n";
@@ -215,13 +211,13 @@
 
 	if (permission_exists("upgrade_apps")) {
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-		echo "<tr>\n";
+		echo "<tr onclick=\"document.getElementById('do_apps').checked = !document.getElementById('do_apps').checked;\">\n";
 		echo "	<td width='30%' class='vncell' style='vertical-align:middle;'>\n";
 		echo "		<div style='".$step_container_style."'><span style='".$step_number_style."'>".$step++."</span></div>";
 		echo "		".$text['label-upgrade_apps'];
 		echo "	</td>\n";
-		echo "	<td width='70%' class='vtable' style='height: 50px;'>\n";
-		echo "		<input type='checkbox' name='action[app_defaults]' id='do_apps' value='1'> &nbsp;".$text['description-upgrade_apps']."\n";
+		echo "	<td width='70%' class='vtable' style='height: 50px; cursor: pointer;'>\n";
+		echo "		<input type='checkbox' name='action[app_defaults]' id='do_apps' value='1' onclick=\"event.stopPropagation();\"> &nbsp;".$text['description-upgrade_apps']."\n";
 		echo "	</td>\n";
 		echo "</tr>\n";
 		echo "</table>\n";
@@ -229,25 +225,30 @@
 
 	if (permission_exists("menu_restore")) {
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-		echo "<tr>\n";
+		echo "<tr onclick=\"document.getElementById('do_menu').checked = !document.getElementById('do_menu').checked; $('#sel_menu').fadeToggle('fast');\">\n";
 		echo "	<td width='30%' class='vncell' style='vertical-align:middle;'>\n";
 		echo "		<div style='".$step_container_style."'><span style='".$step_number_style."'>".$step++."</span></div>";
 		echo "		".$text['label-upgrade_menu'];
 		echo "	</td>\n";
-		echo "	<td width='70%' class='vtable' style='height: 50px;'>\n";
-		echo 			"<input type='checkbox' name='action[menu_defaults]' id='do_menu' value='1' onchange=\"$('#sel_menu').fadeToggle('fast');\">";
-		echo 			"<select name='sel_menu' id='sel_menu' class='formfld' style='display: none; vertical-align: middle; margin-left: 5px;'>";
-		$sql = "select * from v_menus ";
+		echo "	<td width='70%' class='vtable' style='height: 50px; cursor: pointer;'>\n";
+		echo 		"<input type='checkbox' name='action[menu_defaults]' id='do_menu' value='1' onclick=\"event.stopPropagation(); $('#sel_menu').fadeToggle('fast');\">";
+		echo 		"<select name='sel_menu' id='sel_menu' class='formfld' style='display: none; vertical-align: middle; margin-left: 5px;' onclick=\"event.stopPropagation();\">";
+		$sql = "select * from v_menus order by menu_name asc;";
 		$database = new database;
 		$result = $database->select($sql, null, 'all');
 		if (is_array($result) && sizeof($result) != 0) {
 			foreach ($result as &$row) {
-				echo "<option value='".$row["menu_uuid"]."|".$row["menu_language"]."'>".$row["menu_name"]."</option>";
+				if ($row["menu_name"] == 'default') {
+					echo "<option selected value='".$row["menu_uuid"]."|".$row["menu_language"]."'>".$row["menu_name"]."</option>";
+				}
+				else {
+					echo "<option value='".$row["menu_uuid"]."|".$row["menu_language"]."'>".$row["menu_name"]."</option>";
+				}
 			}
 		}
 		unset ($sql, $result);
-		echo 			"</select>";
-		echo 			" &nbsp;".$text['description-upgrade_menu'];
+		echo 		"</select>";
+		echo 		" &nbsp;".$text['description-upgrade_menu'];
 		echo "	</td>\n";
 		echo "</tr>\n";
 		echo "</table>\n";
@@ -255,13 +256,13 @@
 
 	if (permission_exists("group_edit")) {
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-		echo "<tr>\n";
+		echo "<tr onclick=\"document.getElementById('do_permissions').checked = !document.getElementById('do_permissions').checked;\">\n";
 		echo "	<td width='30%' class='vncell' style='vertical-align:middle;'>\n";
 		echo "		<div style='".$step_container_style."'><span style='".$step_number_style."'>".$step++."</span></div>";
 		echo "		".$text['label-upgrade_permissions'];
 		echo "	</td>\n";
-		echo "	<td width='70%' class='vtable' style='height: 50px;'>\n";
-		echo "		<input type='checkbox' name='action[permission_defaults]' id='do_permissions' value='1'> &nbsp;".$text['description-upgrade_permissions']."\n";
+		echo "	<td width='70%' class='vtable' style='height: 50px; cursor: pointer;'>\n";
+		echo "		<input type='checkbox' name='action[permission_defaults]' id='do_permissions' value='1' onclick=\"event.stopPropagation();\"> &nbsp;".$text['description-upgrade_permissions']."\n";
 		echo "	</td>\n";
 		echo "</tr>\n";
 		echo "</table>\n";

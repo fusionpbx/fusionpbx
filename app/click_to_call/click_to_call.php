@@ -30,12 +30,8 @@
 	James Rose <james.o.rose@gmail.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -97,7 +93,7 @@
 			}
 
 		//create the even socket connection and send the event socket command
-			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+			$fp = event_socket_create();
 			if (!$fp) {
 				//error message
 				echo "<div align='center'><strong>Connection to Event Socket failed.</strong></div>";
@@ -177,7 +173,7 @@
 			}
 			else {
 				//local extension (source) > external number (destination)
-				if (user_exists($src) && strlen($dest_cid_number) == 0) {
+				if (user_exists($src) && empty($dest_cid_number)) {
 					//retrieve outbound caller id from the (source) extension
 					$sql = "select outbound_caller_id_name, outbound_caller_id_number from v_extensions where domain_uuid = :domain_uuid and extension = :src ";
 					$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
@@ -204,7 +200,7 @@
 			unset($destination_common);
 
 		//create the even socket connection and send the event socket command
-			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+			$fp = event_socket_create();
 			if (!$fp) {
 				//error message
 				echo "<div align='center'><strong>Connection to Event Socket failed.</strong></div>";
@@ -431,7 +427,7 @@
 	echo "<tr>\n";
 	echo "	<td colspan='2' align='right'>\n";
 	echo "		<br>";
-	echo "		<input type=\"submit\" class='btn' value=\"".$text['button-call']."\">\n";
+	echo "		<button type='submit' class='btn btn-default'><i class='fas fa-phone fa-lg'></i>&nbsp;&nbsp;&nbsp;".$text['button-call']."</button>\n";
 	echo "	</td>\n";
 	echo "</tr>\n";
 	echo "</table>\n";

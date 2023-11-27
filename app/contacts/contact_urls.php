@@ -24,12 +24,8 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -42,7 +38,7 @@
 	}
 
 //set the uuid
-	if (is_uuid($_GET['id'])) {
+	if (!empty($_GET['id']) && is_uuid($_GET['id'])) {
 		$contact_uuid = $_GET['id'];
 	}
 
@@ -52,13 +48,13 @@
 	$sql .= "and contact_uuid = :contact_uuid ";
 	$sql .= "order by url_primary desc, url_label asc ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$parameters['contact_uuid'] = $contact_uuid;
+	$parameters['contact_uuid'] = $contact_uuid ?? '';
 	$database = new database;
 	$contact_urls = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
 //show if exists
-	if (is_array($contact_urls) && @sizeof($contact_urls) != 0) {
+	if (!empty($contact_urls)) {
 
 		//show the content
 			echo "<div class='action_bar sub shrink'>\n";
@@ -81,7 +77,7 @@
 			}
 			echo "</tr>\n";
 
-			if (is_array($contact_urls) && @sizeof($contact_urls) != 0) {
+			if (!empty($contact_urls)) {
 				$x = 0;
 				foreach ($contact_urls as $row) {
 					if (permission_exists('contact_url_edit')) {

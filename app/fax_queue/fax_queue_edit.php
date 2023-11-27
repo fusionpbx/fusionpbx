@@ -18,16 +18,12 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2022
+	Portions created by the Initial Developer are Copyright (C) 2022-2023
 	the Initial Developer. All Rights Reserved.
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -44,7 +40,7 @@
 	$text = $language->get();
 
 //action add or update
-	if (is_uuid($_REQUEST["id"])) {
+	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
 		$fax_queue_uuid = $_REQUEST["id"];
 		$id = $_REQUEST["id"];
@@ -54,8 +50,8 @@
 	}
 
 //get http post variables and set them to php variables
-	if (is_array($_POST)) {
-		$fax_uuid = $_POST["fax_uuid"];
+	if (!empty($_POST) && is_array($_POST)) {
+		//$fax_uuid = $_POST["fax_uuid"];
 		$fax_date = $_POST["fax_date"];
 		$hostname = $_POST["hostname"];
 		$fax_caller_id_name = $_POST["fax_caller_id_name"];
@@ -66,14 +62,15 @@
 		$fax_file = $_POST["fax_file"];
 		$fax_status = $_POST["fax_status"];
 		$fax_retry_date = $_POST["fax_retry_date"];
-		$fax_notify_date = $_POST["fax_notify_date"];
+		$fax_notify_date = $_POST["fax_notify_date"] ?? null;
 		$fax_retry_count = $_POST["fax_retry_count"];
 		$fax_accountcode = $_POST["fax_accountcode"];
 		$fax_command = $_POST["fax_command"];
+		$fax_response = $_POST["fax_response"];
 	}
 
 //process the user data and save it to the database
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 
 		//validate the token
 			$token = new token;
@@ -84,7 +81,7 @@
 			}
 
 		//process the http post data by submitted action
-			if ($_POST['action'] != '' && strlen($_POST['action']) > 0) {
+			if (!empty($_POST['action'])) {
 
 				//prepare the array(s)
 				//send the array to the database class
@@ -118,21 +115,21 @@
 
 		//check for all required data
 			$msg = '';
-			//if (strlen($fax_uuid) == 0) { $msg .= $text['message-required']." ".$text['label-fax_uuid']."<br>\n"; }
-			if (strlen($fax_date) == 0) { $msg .= $text['message-required']." ".$text['label-fax_date']."<br>\n"; }
-			if (strlen($hostname) == 0) { $msg .= $text['message-required']." ".$text['label-hostname']."<br>\n"; }
-			//if (strlen($fax_caller_id_name) == 0) { $msg .= $text['message-required']." ".$text['label-fax_caller_id_name']."<br>\n"; }
-			//if (strlen($fax_caller_id_number) == 0) { $msg .= $text['message-required']." ".$text['label-fax_caller_id_number']."<br>\n"; }
-			if (strlen($fax_number) == 0) { $msg .= $text['message-required']." ".$text['label-fax_number']."<br>\n"; }
-			//if (strlen($fax_prefix) == 0) { $msg .= $text['message-required']." ".$text['label-fax_prefix']."<br>\n"; }
-			//if (strlen($fax_email_address) == 0) { $msg .= $text['message-required']." ".$text['label-fax_email_address']."<br>\n"; }
-			if (strlen($fax_file) == 0) { $msg .= $text['message-required']." ".$text['label-fax_file']."<br>\n"; }
-			if (strlen($fax_status) == 0) { $msg .= $text['message-required']." ".$text['label-fax_status']."<br>\n"; }
-			//if (strlen($fax_retry_date) == 0) { $msg .= $text['message-required']." ".$text['label-fax_retry_date']."<br>\n"; }
-			//if (strlen($fax_retry_count) == 0) { $msg .= $text['message-required']." ".$text['label-fax_retry_count']."<br>\n"; }
-			//if (strlen($fax_accountcode) == 0) { $msg .= $text['message-required']." ".$text['label-fax_accountcode']."<br>\n"; }
-			//if (strlen($fax_command) == 0) { $msg .= $text['message-required']." ".$text['label-fax_command']."<br>\n"; }
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+			//if (empty($fax_uuid)) { $msg .= $text['message-required']." ".$text['label-fax_uuid']."<br>\n"; }
+			if (empty($fax_date)) { $msg .= $text['message-required']." ".$text['label-fax_date']."<br>\n"; }
+			if (empty($hostname)) { $msg .= $text['message-required']." ".$text['label-hostname']."<br>\n"; }
+			//if (empty($fax_caller_id_name)) { $msg .= $text['message-required']." ".$text['label-fax_caller_id_name']."<br>\n"; }
+			//if (empty($fax_caller_id_number)) { $msg .= $text['message-required']." ".$text['label-fax_caller_id_number']."<br>\n"; }
+			if (empty($fax_number)) { $msg .= $text['message-required']." ".$text['label-fax_number']."<br>\n"; }
+			//if (empty($fax_prefix)) { $msg .= $text['message-required']." ".$text['label-fax_prefix']."<br>\n"; }
+			//if (empty($fax_email_address)) { $msg .= $text['message-required']." ".$text['label-fax_email_address']."<br>\n"; }
+			if (empty($fax_file)) { $msg .= $text['message-required']." ".$text['label-fax_file']."<br>\n"; }
+			if (empty($fax_status)) { $msg .= $text['message-required']." ".$text['label-fax_status']."<br>\n"; }
+			//if (empty($fax_retry_date)) { $msg .= $text['message-required']." ".$text['label-fax_retry_date']."<br>\n"; }
+			//if (empty($fax_retry_count)) { $msg .= $text['message-required']." ".$text['label-fax_retry_count']."<br>\n"; }
+			//if (empty($fax_accountcode)) { $msg .= $text['message-required']." ".$text['label-fax_accountcode']."<br>\n"; }
+			//if (empty($fax_command)) { $msg .= $text['message-required']." ".$text['label-fax_command']."<br>\n"; }
+			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -168,6 +165,7 @@
 			$array['fax_queue'][0]['fax_retry_count'] = $fax_retry_count;
 			$array['fax_queue'][0]['fax_accountcode'] = $fax_accountcode;
 			$array['fax_queue'][0]['fax_command'] = $fax_command;
+			$array['fax_queue'][0]['fax_response'] = $fax_response;
 
 		//save the data
 			$database = new database;
@@ -190,7 +188,7 @@
 	}
 
 //pre-populate the form
-	if (is_array($_GET) && $_POST["persistformvar"] != "true") {
+	if (!empty($_GET) && is_array($_GET) && (empty($_POST["persistformvar"]) || $_POST["persistformvar"] != "true")) {
 		$sql = "select ";
 		$sql .= " fax_uuid, ";
 		$sql .= " fax_date, ";
@@ -206,7 +204,8 @@
 		$sql .= " fax_notify_date, ";
 		$sql .= " fax_retry_count, ";
 		$sql .= " fax_accountcode, ";
-		$sql .= " fax_command ";
+		$sql .= " fax_command, ";
+		$sql .= " fax_response ";
 		$sql .= "from v_fax_queue ";
 		$sql .= "where fax_queue_uuid = :fax_queue_uuid ";
 		//$sql .= "and domain_uuid = :domain_uuid ";
@@ -230,6 +229,7 @@
 			$fax_retry_count = $row["fax_retry_count"];
 			$fax_accountcode = $row["fax_accountcode"];
 			$fax_command = $row["fax_command"];
+			$fax_response = $row["fax_response"];
 		}
 		unset($sql, $parameters, $row);
 	}
@@ -244,7 +244,7 @@
 
 //show the content
 	echo "<form name='frm' id='frm' method='post' action=''>\n";
-	echo "<input class='formfld' type='hidden' name='fax_queue_uuid' value='".escape($fax_queue_uuid)."'>\n";
+	echo "<input class='formfld' type='hidden' name='fax_queue_uuid' value='".escape($fax_queue_uuid ?? '')."'>\n";
 
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-fax_queue']."</b></div>\n";
@@ -293,7 +293,7 @@
 	echo "	".$text['label-fax_date']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "  <input class='formfld' type='text' name='fax_date' maxlength='255' value='".escape($fax_date)."'>\n";
+	echo "  <input class='formfld' type='text' name='fax_date' maxlength='255' value='".escape($fax_date ?? '')."'>\n";
 	echo "<br />\n";
 	echo $text['description-fax_date']."\n";
 	echo "</td>\n";
@@ -304,7 +304,7 @@
 	echo "	".$text['label-hostname']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='hostname' maxlength='255' value='".escape($hostname)."'>\n";
+	echo "	<input class='formfld' type='text' name='hostname' maxlength='255' value='".escape($hostname ?? '')."'>\n";
 	echo "<br />\n";
 	echo $text['description-hostname']."\n";
 	echo "</td>\n";
@@ -315,7 +315,7 @@
 	echo "	".$text['label-fax_caller_id_name']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='fax_caller_id_name' maxlength='255' value='".escape($fax_caller_id_name)."'>\n";
+	echo "	<input class='formfld' type='text' name='fax_caller_id_name' maxlength='255' value='".escape($fax_caller_id_name ?? '')."'>\n";
 	echo "<br />\n";
 	echo $text['description-fax_caller_id_name']."\n";
 	echo "</td>\n";
@@ -326,7 +326,7 @@
 	echo "	".$text['label-fax_caller_id_number']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='fax_caller_id_number' maxlength='255' value='".escape($fax_caller_id_number)."'>\n";
+	echo "	<input class='formfld' type='text' name='fax_caller_id_number' maxlength='255' value='".escape($fax_caller_id_number ?? '')."'>\n";
 	echo "<br />\n";
 	echo $text['description-fax_caller_id_number']."\n";
 	echo "</td>\n";
@@ -337,7 +337,7 @@
 	echo "	".$text['label-fax_number']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='fax_number' maxlength='255' value='".escape($fax_number)."'>\n";
+	echo "	<input class='formfld' type='text' name='fax_number' maxlength='255' value='".escape($fax_number ?? '')."'>\n";
 	echo "<br />\n";
 	echo $text['description-fax_number']."\n";
 	echo "</td>\n";
@@ -348,7 +348,7 @@
 	echo "	".$text['label-fax_prefix']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='fax_prefix' maxlength='255' value='".escape($fax_prefix)."'>\n";
+	echo "	<input class='formfld' type='text' name='fax_prefix' maxlength='255' value='".escape($fax_prefix ?? '')."'>\n";
 	echo "<br />\n";
 	echo $text['description-fax_prefix']."\n";
 	echo "</td>\n";
@@ -359,7 +359,7 @@
 	echo "	".$text['label-fax_email_address']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='fax_email_address' maxlength='255' value='".escape($fax_email_address)."'>\n";
+	echo "	<input class='formfld' type='text' name='fax_email_address' maxlength='255' value='".escape($fax_email_address ?? '')."'>\n";
 	echo "<br />\n";
 	echo $text['description-fax_email_address']."\n";
 	echo "</td>\n";
@@ -370,7 +370,7 @@
 	echo "	".$text['label-fax_file']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='fax_file' maxlength='255' value='".escape($fax_file)."'>\n";
+	echo "	<input class='formfld' type='text' name='fax_file' maxlength='255' value='".escape($fax_file ?? '')."'>\n";
 	echo "<br />\n";
 	echo $text['description-fax_file']."\n";
 	echo "</td>\n";
@@ -381,7 +381,14 @@
 	echo "	".$text['label-fax_status']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='fax_status' maxlength='255' value='".escape($fax_status)."'>\n";
+	echo "	<select class='formfld' name='fax_status'>\n";
+	echo "		<option value='waiting' ".(!empty($fax_status) && $fax_status == 'waiting' ? "selected='selected'" : null).">".ucwords($text['label-waiting'])."</option>\n";
+	echo "		<option value='trying' ".(!empty($fax_status) && $fax_status == 'trying' ? "selected='selected'" : null).">".ucwords($text['label-trying'])."</option>\n";
+	echo "		<option value='sending' ".(!empty($fax_status) && $fax_status == 'sending' ? "selected='selected'" : null).">".ucwords($text['label-sending'])."</option>\n";
+	echo "		<option value='sent' ".(!empty($fax_status) && $fax_status == 'sent' ? "selected='selected'" : null).">".ucwords($text['label-sent'])."</option>\n";
+	echo "		<option value='busy' ".(!empty($fax_status) && $fax_status == 'busy' ? "selected='selected'" : null).">".ucwords($text['label-busy'])."</option>\n";
+	echo "		<option value='failed' ".(!empty($fax_status) && $fax_status == 'failed' ? "selected='selected'" : null).">".ucwords($text['label-failed'])."</option>\n";
+	echo "	</select>\n";
 	echo "<br />\n";
 	echo $text['description-fax_status']."\n";
 	echo "</td>\n";
@@ -392,7 +399,7 @@
 	echo "	".$text['label-fax_retry_date']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "  <input class='formfld' type='text' name='fax_retry_date' maxlength='255' value='".escape($fax_retry_date)."'>\n";
+	echo "  <input class='formfld' type='text' name='fax_retry_date' maxlength='255' value='".escape($fax_retry_date ?? '')."'>\n";
 	echo "<br />\n";
 	echo $text['description-fax_retry_date']."\n";
 	echo "</td>\n";
@@ -403,7 +410,7 @@
 	echo "	".$text['label-fax_notify_date']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "  <input class='formfld' type='text' name='fax_retry_date' maxlength='255' value='".escape($fax_notify_date)."'>\n";
+	echo "  <input class='formfld' type='text' name='fax_retry_date' maxlength='255' value='".escape($fax_notify_date ?? '')."'>\n";
 	echo "<br />\n";
 	echo $text['description-fax_notify_date']."\n";
 	echo "</td>\n";
@@ -414,7 +421,7 @@
 	echo "	".$text['label-fax_retry_count']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "  <input class='formfld' type='text' name='fax_retry_count' maxlength='255' value='".escape($fax_retry_count)."'>\n";
+	echo "  <input class='formfld' type='text' name='fax_retry_count' maxlength='255' value='".escape($fax_retry_count ?? '')."'>\n";
 	echo "<br />\n";
 	echo $text['description-fax_retry_count']."\n";
 	echo "</td>\n";
@@ -425,7 +432,7 @@
 	echo "	".$text['label-fax_accountcode']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='fax_accountcode' maxlength='255' value='".escape($fax_accountcode)."'>\n";
+	echo "	<input class='formfld' type='text' name='fax_accountcode' maxlength='255' value='".escape($fax_accountcode ?? '')."'>\n";
 	echo "<br />\n";
 	echo $text['description-fax_accountcode']."\n";
 	echo "</td>\n";
@@ -436,9 +443,20 @@
 	echo "	".$text['label-fax_command']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<textarea class='formfld' name='fax_command' style='width: 185px; height: 80px;'>".$fax_command."</textarea>\n";
+	echo "	<textarea class='formfld' name='fax_command' style='width: 185px; height: 80px;'>".escape($fax_command ?? '')."</textarea>\n";
 	echo "<br />\n";
 	echo $text['description-fax_command']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-fax_response']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' style='position: relative;' align='left'>\n";
+	echo "	<textarea class='formfld' name='fax_response' style='width: 185px; height: 80px;'>".escape($fax_response ?? '')."</textarea>\n";
+	echo "<br />\n";
+	echo $text['description-fax_response']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 

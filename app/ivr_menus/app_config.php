@@ -35,8 +35,9 @@
 		$apps[$x]['destinations'][$y]['label'] = "ivr_menus";
 		$apps[$x]['destinations'][$y]['name'] = "ivr_menus";
 		$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '\${domain_uuid}' and ivr_menu_enabled = 'true' ";
-		$apps[$x]['destinations'][$y]['order_by'] = "ivr_menu_extension asc";
+		$apps[$x]['destinations'][$y]['order_by'] = "natural_sort(ivr_menu_extension) asc";
 		$apps[$x]['destinations'][$y]['field']['ivr_menu_uuid'] = "ivr_menu_uuid";
+		$apps[$x]['destinations'][$y]['field']['uuid'] = "ivr_menu_uuid";
 		$apps[$x]['destinations'][$y]['field']['name'] = "ivr_menu_name";
 		$apps[$x]['destinations'][$y]['field']['destination'] = "ivr_menu_extension";
 		$apps[$x]['destinations'][$y]['field']['extension'] = "ivr_menu_extension";
@@ -51,7 +52,7 @@
 		$apps[$x]['destinations'][$y]['name'] = "ivr_menus_sub";
 		$apps[$x]['destinations'][$y]['sql'] = "select ivr_menu_name as name, ivr_menu_uuid as uuid from v_ivr_menus ";
 		$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '\${domain_uuid}' and ivr_menu_enabled = 'true' ";
-		$apps[$x]['destinations'][$y]['order_by'] = "ivr_menu_extension asc";
+		$apps[$x]['destinations'][$y]['order_by'] = "natural_sort(ivr_menu_extension) asc";
 		$apps[$x]['destinations'][$y]['field']['name'] = "ivr_menu_name";
 		$apps[$x]['destinations'][$y]['field']['uuid'] = "ivr_menu_uuid";
 		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "menu-sub:\${uuid}";
@@ -205,6 +206,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "3";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "e04151d4-f055-4cc8-a97c-84dac6add3fa";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "ivr_menu";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "answer";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Add answer to IVR Menu dialplan.";
 
 	//cache details
 		$apps[$x]['cache']['key'] = "dialplan.\${ivr_menu_context}";
@@ -468,6 +477,13 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "ivr_menu_option_description";
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "ivr_menu_options_desc";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "ivr_menu_option_enabled";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "boolean";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['toggle'] = ['true','false'];
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "insert_date";

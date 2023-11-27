@@ -25,12 +25,8 @@
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -43,16 +39,16 @@
 	}
 
 //get the uuids
-	if (is_uuid($_REQUEST['id'])) {
+	if (!empty($_REQUEST['id']) && is_uuid($_REQUEST['id'])) {
 		$dialplan_uuid = $_REQUEST['id'];
 	}
-	if (is_uuid($_REQUEST['app_uuid'])) {
+	if (!empty($_REQUEST['app_uuid']) && is_uuid($_REQUEST['app_uuid'])) {
 		$app_uuid = $_REQUEST['app_uuid'];
 	}
-	$dialplan_xml = $_REQUEST['dialplan_xml'];
+	$dialplan_xml = $_REQUEST['dialplan_xml'] ?? '';
 
 //process the HTTP POST
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 
 		//validate the token
 			$token = new token;
@@ -110,7 +106,7 @@
 			}
 
 		//disable xml entities and load the xml object to test if the xml is valid
-			libxml_disable_entity_loader(true);
+			if (PHP_VERSION_ID < 80000) { libxml_disable_entity_loader(true); }
 			preg_match_all('/^\s*<extension.+>(?:[\S\s])+<\/extension>\s*$/mU', $dialplan_xml, $matches);
 			foreach($matches as $match) {
 				$xml = simplexml_load_string($match[0], 'SimpleXMLElement', LIBXML_NOCDATA);
@@ -183,11 +179,11 @@
 	$text = $language->get();
 
 // load editor preferences/defaults
-	$setting_size = $_SESSION["editor"]["font_size"]["text"] != '' ? $_SESSION["editor"]["font_size"]["text"] : '12px';
-	$setting_theme = $_SESSION["editor"]["theme"]["text"] != '' ? $_SESSION["editor"]["theme"]["text"] : 'cobalt';
-	$setting_invisibles = $_SESSION["editor"]["invisibles"]["boolean"] != '' ? $_SESSION["editor"]["invisibles"]["boolean"] : 'false';
-	$setting_indenting = $_SESSION["editor"]["indent_guides"]["boolean"] != '' ? $_SESSION["editor"]["indent_guides"]["boolean"] : 'false';
-	$setting_numbering = $_SESSION["editor"]["line_numbers"]["boolean"] != '' ? $_SESSION["editor"]["line_numbers"]["boolean"] : 'true';
+	$setting_size = !empty($_SESSION["editor"]["font_size"]["text"]) ? $_SESSION["editor"]["font_size"]["text"] : '12px';
+	$setting_theme = !empty($_SESSION["editor"]["theme"]["text"]) ? $_SESSION["editor"]["theme"]["text"] : 'cobalt';
+	$setting_invisibles = isset($_SESSION["editor"]["invisibles"]["boolean"]) && $_SESSION["editor"]["invisibles"]["boolean"] != '' ? $_SESSION["editor"]["invisibles"]["boolean"] : 'false';
+	$setting_indenting = isset($_SESSION["editor"]["indent_guides"]["boolean"]) && $_SESSION["editor"]["indent_guides"]["boolean"] != '' ? $_SESSION["editor"]["indent_guides"]["boolean"] : 'false';
+	$setting_numbering = isset($_SESSION["editor"]["line_numbers"]["boolean"]) && $_SESSION["editor"]["line_numbers"]["boolean"] != '' ? $_SESSION["editor"]["line_numbers"]["boolean"] : 'true';
 
 //create token
 	$object = new token;
@@ -267,7 +263,7 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-dialplan_edit']." XML</b></div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','link'=>'dialplan_edit.php?id='.urlencode($dialplan_uuid).(is_uuid($app_uuid) ? "&app_uuid=".urlencode($app_uuid) : null)]);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','link'=>'dialplan_edit.php?id='.urlencode($dialplan_uuid).(!empty($app_uuid) && is_uuid($app_uuid) ? "&app_uuid=".urlencode($app_uuid) : null)]);
 	echo button::create(['type'=>'button','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save','style'=>'margin-left: 15px;','onclick'=>"set_value(); $('#frm').submit();"]);
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
@@ -351,8 +347,8 @@
 	echo "	<div id='editor'></div>\n";
 	echo "	<br />\n";
 
-	echo "	<input type='hidden' name='app_uuid' value='".escape($app_uuid)."'>\n";
-	echo "	<input type='hidden' name='dialplan_uuid' value='".escape($dialplan_uuid)."'>\n";
+	echo "	<input type='hidden' name='app_uuid' value='".escape($app_uuid ?? null)."'>\n";
+	echo "	<input type='hidden' name='dialplan_uuid' value='".escape($dialplan_uuid ?? null)."'>\n";
 	echo "	<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 
 	echo "</form>\n";

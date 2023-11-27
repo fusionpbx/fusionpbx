@@ -17,24 +17,20 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2022
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//add the document root to the include path
-	$config_glob = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	if (is_array($config_glob) && count($config_glob) > 0) {
-		$config_glob = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-		$conf = parse_ini_file($config_glob[0]);
-		set_include_path($conf['document.root']);
-	}
-	else {
+//include file
+	require dirname(__DIR__, 2) . "/resources/require.php";
+
+//if the config file doesn't exist and the config.php does exist use it to write a new config file
+	if (!$config_exists && file_exists("/etc/fusionpbx/config.php")) {
 		//include the config.php
-		$config_php_glob = glob("{/usr/local/etc,/etc}/fusionpbx/config.php", GLOB_BRACE);
-		include($config_php_glob[0]);
+		include("/etc/fusionpbx/config.php");
 
 		//set the default config file location
 		if (stristr(PHP_OS, 'BSD')) {
@@ -123,15 +119,10 @@
 		if(!$file_handle){ return; }
 		fwrite($file_handle, $conf);
 		fclose($file_handle);
-
-		//set the include path
-		$config_glob = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-		$conf = parse_ini_file($config_glob[0]);
-		set_include_path($conf['document.root']);
 	}
 
 //include files
-	require_once "resources/require.php";
+	require dirname(__DIR__, 2) . "/resources/require.php";
 
 //check the permission
 	if(defined('STDIN')) {
@@ -163,6 +154,11 @@
 //show the upgrade type
 	//echo $upgrade_type."\n";
 
+//get the version of the software
+	if ($upgrade_type == 'version') {
+		echo software::version()."\n";
+	}
+
 //run all app_defaults.php files
 	if ($upgrade_type == 'domains') {
 		require_once "resources/classes/config.php";
@@ -180,7 +176,7 @@
 		if (isset($argv[2]) && $argv[2] == 'data_types') {
 			$obj->data_types = true;
 		}
-		echo $obj->schema($format);
+		echo $obj->schema($format ?? '');
 	}
 
 //restore the default menu
@@ -204,11 +200,15 @@
 		}
 
 		//set the menu back to default
-		if (isset($argv[2]) && (is_null($argv[2]) || $argv[2] == 'default')) {
+		if (!isset($argv[2]) || $argv[2] == 'default') {
 			//restore the menu
 			$included = true;
 			require_once("core/menu/menu_restore_default.php");
 			unset($sel_menu);
+
+			//use upgrade language file
+			$language = new text;
+			$text = $language->get(null, 'core/upgrade');
 
 			//send message to the console
 			echo $text['message-upgrade_menu']."\n";
@@ -217,9 +217,16 @@
 
 //restore the default permissions
 	if ($upgrade_type == 'permissions') {
+		//default the groups in case they are missing
+		(new groups())->defaults();
+
 		//default the permissions
 		$included = true;
 		require_once("core/groups/permissions_default.php");
+
+		//use upgrade language file
+		$language = new text;
+		$text = $language->get(null, 'core/upgrade');
 
 		//send message to the console
 		echo $text['message-upgrade_permissions']."\n";
@@ -246,7 +253,6 @@
 
 		//run all app_defaults.php files
 			$domain = new domains;
-			$domain->display_type = $display_type;
 			$domain->upgrade();
 
 		//show the content

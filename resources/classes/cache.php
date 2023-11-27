@@ -18,16 +18,6 @@ class cache {
 	}
 
 	/**
-	 * Called when there are no references to a particular object
-	 * unset the variables used in the class
-	 */
-	public function __destruct() {
-		foreach ($this as $key => $value) {
-			unset($this->$key);
-		}
-	}
-
-	/**
 	 * Add a specific item in the cache
 	 * @var string $key		the cache id
 	 * @var string $value	string to be cached
@@ -40,7 +30,7 @@ class cache {
 		//save to memcache
 			if ($_SESSION['cache']['method']['text'] == "memcache") {
 				//connect to event socket
-					$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+					$fp = event_socket_create();
 					if ($fp === false) {
 						return false;
 					}
@@ -74,7 +64,7 @@ class cache {
 		//cache method memcache 
 			if ($_SESSION['cache']['method']['text'] == "memcache") {
 				// connect to event socket
-					$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+					$fp = event_socket_create();
 					if ($fp === false) {
 						return false;
 					}
@@ -97,7 +87,7 @@ class cache {
 			}
 
 		//return result
-			return $result;
+			return $result ?? null;
 	}
 
 	/**
@@ -114,9 +104,9 @@ class cache {
 			}
 
 		//cache method memcache 
-			if ($_SESSION['cache']['method']['text'] == "memcache") {
+			if (!empty($_SESSION['cache']['method']['text']) && $_SESSION['cache']['method']['text'] == "memcache") {
 				//connect to event socket
-					$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+					$fp = event_socket_create();
 					if ($fp === false) {
 						return false;
 					}
@@ -138,12 +128,12 @@ class cache {
 			}
 
 		//cache method file
-			if ($_SESSION['cache']['method']['text'] == "file") {
+			if (!empty($_SESSION['cache']['method']['text']) && $_SESSION['cache']['method']['text'] == "file") {
 				//change the delimiter
 					$key = str_replace(":", ".", $key);
 
 				//connect to event socket
-					$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+					$fp = event_socket_create();
 					if ($fp === false) {
 						return false;
 					}
@@ -184,7 +174,7 @@ class cache {
 		//cache method memcache 
 			if ($_SESSION['cache']['method']['text'] == "memcache") {
 				// connect to event socket
-					$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+					$fp = event_socket_create();
 					if ($fp === false) {
 						return false;
 					}
@@ -208,7 +198,7 @@ class cache {
 		//cache method file 
 			if ($_SESSION['cache']['method']['text'] == "file") {
 				// connect to event socket
-					$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+					$fp = event_socket_create();
 					if ($fp === false) {
 						return false;
 					}

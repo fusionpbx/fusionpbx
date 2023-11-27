@@ -17,19 +17,15 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
 
@@ -50,17 +46,17 @@
 	$fax_uuid = $_REQUEST["id"];
 
 //get variables used to control the order
-	$order_by = $_GET["order_by"];
-	$order = $_GET["order"];
+	$order_by = $_GET["order_by"] ?? null;
+	$order = $_GET["order"] ?? null;
 
 //get the http post data
-	if (is_array($_POST['fax_logs'])) {
+	if (!empty($_POST['fax_logs']) && is_array($_POST['fax_logs'])) {
 		$action = $_POST['action'];
 		$fax_logs = $_POST['fax_logs'];
 	}
 
 //process the http post data by action
-	if ($action != '' && is_array($fax_logs) && @sizeof($fax_logs) != 0) {
+	if (!empty($action) && !empty($fax_logs) && is_array($fax_logs) && @sizeof($fax_logs) != 0) {
 		switch ($action) {
 			case 'delete':
 				if (permission_exists('fax_log_delete')) {
@@ -76,13 +72,14 @@
 	}
 
 //add the search string
-	$search = strtolower($_GET["search"]);
-	if (strlen($search) > 0) {
+	$search = strtolower($_GET["search"] ?? '');
+	if (!empty($search)) {
 		$sql_search = " and (";
 		$sql_search .= "	lower(fax_result_text) like :search ";
 		$sql_search .= "	or lower(fax_file) like :search ";
 		$sql_search .= "	or lower(fax_local_station_id) like :search ";
 		$sql_search .= "	or fax_date::text like :search ";
+		$sql_search .= "	or fax_uri::text like :search ";
 		$sql_search .= ") ";
 		$parameters['search'] = '%'.$search.'%';
 	}
@@ -91,7 +88,7 @@
 	$sql = "select count(fax_log_uuid) from v_fax_logs ";
 	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= "and fax_uuid = :fax_uuid ";
-	$sql .= $sql_search;
+	$sql .= $sql_search ?? '';
 	$parameters['domain_uuid'] = $domain_uuid;
 	$parameters['fax_uuid'] = $fax_uuid;
 	$database = new database;
@@ -110,7 +107,7 @@
 //get the list
 	$sql = str_replace('count(fax_log_uuid)', '*', $sql);
 	$sql .= order_by($order_by, $order, 'fax_epoch', 'desc');
-	$sql .= limit_offset($rows_per_page, $offset);
+	$sql .= limit_offset($rows_per_page, $offset ?? 0);
 	$database = new database;
 	$fax_logs = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
@@ -137,7 +134,7 @@
 	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown='list_search_reset();'>";
 	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search','style'=>($search != '' ? 'display: none;' : null)]);
 	echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','link'=>'fax_logs.php?id='.$fax_uuid,'style'=>($search == '' ? 'display: none;' : null)]);
-	if ($paging_controls_mini != '') {
+	if (!empty($paging_controls_mini)) {
 		echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>\n";
 	}
 	echo "		</form>\n";
@@ -160,7 +157,7 @@
 	echo "<tr class='list-header'>\n";
 	if (permission_exists('fax_log_delete')) {
 		echo "	<th class='checkbox'>\n";
-		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle();' ".($fax_logs ?: "style='visibility: hidden;'").">\n";
+		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle();' ".(empty($fax_logs) ? "style='visibility: hidden;'" : null).">\n";
 		echo "	</th>\n";
 	}
 	echo th_order_by('fax_epoch', $text['label-fax_date'], $order_by, $order, null, null, "&id=".$fax_uuid);
@@ -181,7 +178,7 @@
 	//echo th_order_by('fax_retry_sleep', $text['label-fax_retry_sleep'], $order_by, $order);
 	echo th_order_by('fax_uri', $text['label-fax_destination'], $order_by, $order, null, null, "&id=".$fax_uuid);
 	//echo th_order_by('fax_epoch', $text['label-fax_epoch'], $order_by, $order);
-	if ($_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+	if (!empty($_SESSION['theme']['list_row_edit_button']['boolean']) && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
@@ -197,7 +194,7 @@
 				echo "		<input type='hidden' name='fax_logs[$x][uuid]' value='".escape($row['fax_log_uuid'])."' />\n";
 				echo "	</td>\n";
 			}
-			echo "	<td><a href='".$list_row_url."'>".($_SESSION['domain']['time_format']['text'] == '12h' ? date("j M Y g:i:sa", $row['fax_epoch']) : date("j M Y H:i:s", $row['fax_epoch']))."</a>&nbsp;</td>\n";
+			echo "	<td><a href='".$list_row_url."'>".(!empty($_SESSION['domain']['time_format']['text']) && $_SESSION['domain']['time_format']['text'] == '12h' ? date("j M Y g:i:sa", $row['fax_epoch']) : date("j M Y H:i:s", $row['fax_epoch']))."</a>&nbsp;</td>\n";
 			echo "	<td>".$row['fax_success']."&nbsp;</td>\n";
 			echo "	<td>".$row['fax_result_code']."&nbsp;</td>\n";
 			echo "	<td>".$row['fax_result_text']."&nbsp;</td>\n";
@@ -215,7 +212,7 @@
 			//echo "	<td>".$row['fax_retry_sleep']."&nbsp;</td>\n";
 			echo "	<td>".basename($row['fax_uri'])."&nbsp;</td>\n";
 			//echo "	<td>".$row['fax_epoch']."&nbsp;</td>\n";
-			if ($_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+			if (!empty($_SESSION['theme']['list_row_edit_button']['boolean']) && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
 				echo "	<td class='action-button'>\n";
 				echo button::create(['type'=>'button','title'=>$text['button-view'],'icon'=>$_SESSION['theme']['button_icon_view'],'link'=>$list_row_url]);
 				echo "	</td>\n";
@@ -228,7 +225,7 @@
 
 	echo "</table>\n";
 	echo "<br />\n";
-	echo "<div align='center'>".$paging_controls."</div>\n";
+	echo "<div align='center'>".($paging_controls ?? '')."</div>\n";
 	echo "<input type='hidden' name='id' value='".escape($fax_uuid)."'>\n";
 	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "</form>\n";

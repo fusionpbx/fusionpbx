@@ -24,12 +24,8 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -51,15 +47,18 @@
 	$language = new text;
 	$text = $language->get();
 
-//get the http post data
-	if (is_array($_POST['group_members'])) {
-		$action = $_POST['action'];
-		$group_uuid = $_POST['group_uuid'];
-		$group_members = $_POST['group_members'];
-	}
+//get the http data
+	$action = $_REQUEST['action'] ?? '';
+	$group_uuid = $_REQUEST['group_uuid'] ?? '';
+	$group_members = $_REQUEST['group_members'] ?? '';
+
+//set default values
+	$group_name = '';
+	$domain_uuid = '';
+	$list_row_url = '';
 
 //process the http post data by action
-	if ($action != '' && is_array($group_members) && @sizeof($group_members) != 0) {
+	if (!empty($action) && !empty($group_members)) {
 		switch ($action) {
 			case 'delete':
 				if (permission_exists('group_member_delete') && is_uuid($group_uuid)) {
@@ -75,7 +74,6 @@
 	}
 
 //get the group uuid, lookup domain uuid (if any) and name
-	$group_uuid = $_REQUEST['group_uuid'];
 	$sql = "select domain_uuid, group_name from v_groups ";
 	$sql .= "where group_uuid = :group_uuid ";
 	$parameters['group_uuid'] = $group_uuid;
@@ -120,12 +118,16 @@
 	unset($sql, $parameters);
 
 //add group_member to the users array
-	foreach ($users as &$field) {
-		$field['group_member'] = 'false';
-		foreach($user_groups as $row) {
-			if ($row['user_uuid'] == $field['user_uuid']) {
-				$field['group_member'] = 'true';
-				break;
+	if (!empty($users)) {
+		foreach ($users as &$field) {
+			$field['group_member'] = 'false';
+			if (!empty($user_groups)) {
+				foreach($user_groups as $row) {
+					if ($row['user_uuid'] == $field['user_uuid']) {
+						$field['group_member'] = 'true';
+						break;
+					}
+				}
 			}
 		}
 	}
@@ -148,7 +150,7 @@
 	}
 
 	if (permission_exists('group_member_add')) {
-		echo 	"<form class='inline' method='post' action='groupmemberadd.php'>\n";
+		echo 	"<form class='inline' method='post' action='group_member_add.php'>\n";
 		echo "	<select name='user_uuid' class='formfld'>\n";
 		echo "		<option value=''>".$text['label-select']."...</option>\n";
 		foreach ($users as $row) {
@@ -183,7 +185,7 @@
 	echo "<tr class='list-header'>\n";
 	if (permission_exists('group_member_delete')) {
 		echo "	<th class='checkbox'>\n";
-		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle();' ".($user_groups ?: "style='visibility: hidden;'").">\n";
+		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle();' ".(!empty($user_groups) ?: "style='visibility: hidden;'").">\n";
 		echo "	</th>\n";
 	}
 	if (permission_exists('user_all')) {

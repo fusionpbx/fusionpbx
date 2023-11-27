@@ -176,7 +176,12 @@
 <!-- Periodic Inform Enable 0 - No, 1 - Yes (default is No) -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
+{if isset ($grandstream_tr069_periodic_inform_enable)}
+<P4506>{$grandstream_tr069_periodic_inform_enable}</P4506>
+{else}
 <P4506>0</P4506>
+{/if}
+
 
 <!-- Periodic Inform Interval (default is 300) -->
 <!-- Number: 1-99999 -->
@@ -478,17 +483,30 @@
 <!-- Priority 1 -->
 <!-- Number: 100, 101, 102 -->
 <!-- Mandatory -->
+{if isset($grandstream_dtmf_method_1) }
+<P850>{$grandstream_dtmf_method_1}</P850>
+{else}
 <P850>101</P850>
+{/if}
+
 
 <!-- Priority 2 -->
 <!-- Number: 100, 101, 102 -->
 <!-- Mandatory -->
+{if isset($grandstream_dtmf_method_2) }
+<P851>{$grandstream_dtmf_method_1}</P851>
+{else}
 <P851>102</P851>
+{/if}
 
 <!-- Priority 3 -->
 <!-- Number: 100, 101, 102 -->
 <!-- Mandatory -->
+{if isset($grandstream_dtmf_method_3) }
+<P852>{$grandstream_dtmf_method_1}</P852>
+{else}
 <P852>100</P852>
+{/if}
 
 <!-- Disable DTMF Negotiation. 0 - No, 1 - Yes -->
 <!-- Number: 0, 1 -->
@@ -1154,22 +1172,39 @@
 <!-- Priority 1 -->
 <!-- Number: 100, 101, 102 -->
 <!-- Mandatory -->
+{if isset($grandstream_dtmf_method_1) }
+<P860>{$grandstream_dtmf_method_1}</P860>
+{else}
 <P860>101</P860>
+{/if}
+
 
 <!-- Priority 2 -->
 <!-- Number: 100, 101, 102 -->
 <!-- Mandatory -->
+{if isset($grandstream_dtmf_method_2) }
+<P861>{$grandstream_dtmf_method_1}</P861>
+{else}
 <P861>102</P861>
+{/if}
 
 <!-- Priority 3 -->
 <!-- Number: 100, 101, 102 -->
 <!-- Mandatory -->
+{if isset($grandstream_dtmf_method_3) }
+<P862>{$grandstream_dtmf_method_1}</P862>
+{else}
 <P862>100</P862>
+{/if}
 
 <!-- Disable DTMF Negotiation. 0 - No, 1 - Yes -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
+{if isset($grandstream_disable_dtmf_negotiation) }
+<P4826>{$grandstream_disable_dtmf_negotiation}</P4826>
+{else}
 <P4826>0</P4826>
+{/if}
 
 <!-- Send Flash Event. 0 - No, 1 - Yes -->
 <!-- Number: 0, 1 -->

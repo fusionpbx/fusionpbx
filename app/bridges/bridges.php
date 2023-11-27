@@ -24,12 +24,8 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
 
@@ -46,15 +42,22 @@
 	$language = new text;
 	$text = $language->get();
 
+//set additional variables
+	$search = $_GET["search"] ?? '';
+	$show = $_GET["show"] ?? '';
+
+//set from session variables
+	$list_row_edit_button = !empty($_SESSION['theme']['list_row_edit_button']['boolean']) ? $_SESSION['theme']['list_row_edit_button']['boolean'] : 'false';
+
 //get the http post data
-	if (is_array($_POST['bridges'])) {
+	if (!empty($_POST['bridges'])) {
 		$action = $_POST['action'];
 		$search = $_POST['search'];
 		$bridges = $_POST['bridges'];
 	}
 
 //process the http post data by action
-	if ($action != '' && is_array($bridges) && @sizeof($bridges) != 0) {
+	if (!empty($action) && !empty($bridges)) {
 		switch ($action) {
 			case 'copy':
 				if (permission_exists('bridge_add')) {
@@ -76,16 +79,16 @@
 				break;
 		}
 
-		header('Location: bridges.php'.($search != '' ? '?search='.urlencode($search) : null));
+		header('Location: bridges.php'.(!empty($search) ? '?search='.urlencode($search) : null));
 		exit;
 	}
 
 //get order and order by
-	$order_by = $_GET["order_by"];
-	$order = $_GET["order"];
+	$order_by = $_GET["order_by"] ?? '';
+	$order = $_GET["order"] ?? '';
 
 //add the search string
-	if (isset($_GET["search"])) {
+	if (!empty($search)) {
 		$search =  strtolower($_GET["search"]);
 		$sql_search = " (";
 		$sql_search .= "	lower(bridge_name) like :search ";
@@ -98,7 +101,7 @@
 
 //get the count
 	$sql = "select count(bridge_uuid) from v_bridges ";
-	if ($_GET['show'] == "all" && permission_exists('bridge_all')) {
+	if (!empty($show) && $show == "all" && permission_exists('bridge_all')) {
 		if (isset($sql_search)) {
 			$sql .= "where ".$sql_search;
 		}
@@ -111,13 +114,13 @@
 		$parameters['domain_uuid'] = $domain_uuid;
 	}
 	$database = new database;
-	$num_rows = $database->select($sql, $parameters, 'column');
+	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
-	$param = $search ? "&search=".$search : null;
-	$param = ($_GET['show'] == 'all' && permission_exists('bridge_all')) ? "&show=all" : null;
-	$page = is_numeric($_GET['page']) ? $_GET['page'] : 0;
+	$param = !empty($search) ? "&search=".$search : null;
+	$param = (isset($_GET['show']) && $_GET['show'] == 'all' && permission_exists('bridge_all')) ? "&show=all" : null;
+	$page = isset($_GET['page']) && is_numeric($_GET['page']) ? $_GET['page'] : 0;
 	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
 	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
@@ -127,7 +130,7 @@
 	$sql .= order_by($order_by, $order, 'bridge_name', 'asc');
 	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;
-	$bridges = $database->select($sql, $parameters, 'all');
+	$bridges = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 
 //create token
@@ -142,6 +145,9 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-bridges']." (".$num_rows.")</b></div>\n";
 	echo "	<div class='actions'>\n";
+	if (permission_exists('bridge_import')) {
+		echo button::create(['type'=>'button','label'=>$text['button-import'],'icon'=>$_SESSION['theme']['button_icon_import'],'style'=>'margin-right: 15px;','link'=>'bridge_imports.php']);
+	}
 	if (permission_exists('bridge_add')) {
 		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'id'=>'btn_add','link'=>'bridge_edit.php']);
 	}
@@ -156,7 +162,7 @@
 	}
 	echo 		"<form id='form_search' class='inline' method='get'>\n";
 	if (permission_exists('bridge_all')) {
-		if ($_GET['show'] == 'all') {
+		if (isset($show) && $show == 'all') {
 			echo "		<input type='hidden' name='show' value='all'>\n";
 		}
 		else {
@@ -195,22 +201,22 @@
 	echo "<tr class='list-header'>\n";
 	if (permission_exists('bridge_add') || permission_exists('bridge_edit') || permission_exists('bridge_delete')) {
 		echo "	<th class='checkbox'>\n";
-		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".($bridges ?: "style='visibility: hidden;'").">\n";
+		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".(empty($bridges) ? "style='visibility: hidden;'" : null).">\n";
 		echo "	</th>\n";
 	}
-	if ($_GET['show'] == 'all' && permission_exists('bridge_all')) {
+	if (!empty($show) && $show == 'all' && permission_exists('bridge_all')) {
 		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order);
 	}
 	echo th_order_by('bridge_name', $text['label-bridge_name'], $order_by, $order);
 	echo th_order_by('bridge_destination', $text['label-bridge_destination'], $order_by, $order);
 	echo th_order_by('bridge_enabled', $text['label-bridge_enabled'], $order_by, $order, null, "class='center'");
 	echo "	<th class='hide-sm-dn'>".$text['label-bridge_description']."</th>\n";
-	if (permission_exists('bridge_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+	if (permission_exists('bridge_edit') && !empty($list_row_edit_button) && $list_row_edit_button == 'true') {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
 
-	if (is_array($bridges) && @sizeof($bridges) != 0) {
+	if (!empty($bridges)) {
 		$x = 0;
 		foreach ($bridges as $row) {
 			if (permission_exists('bridge_edit')) {
@@ -223,7 +229,7 @@
 				echo "		<input type='hidden' name='bridges[$x][uuid]' value='".escape($row['bridge_uuid'])."' />\n";
 				echo "	</td>\n";
 			}
-			if ($_GET['show'] == 'all' && permission_exists('bridge_all')) {
+			if (!empty($_GET['show']) && $_GET['show'] == 'all' && permission_exists('bridge_all')) {
 				echo "	<td>".escape($_SESSION['domains'][$row['domain_uuid']]['domain_name'])."</td>\n";
 			}
 			echo "	<td>\n";
@@ -245,7 +251,7 @@
 			}
 			echo "	</td>\n";
 			echo "	<td class='description overflow hide-sm-dn'>".escape($row['bridge_description'])."</td>\n";
-			if (permission_exists('bridge_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+			if (permission_exists('bridge_edit') && !empty($list_row_edit_button) && $list_row_edit_button == 'true') {
 				echo "	<td class='action-button'>\n";
 				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
 				echo "	</td>\n";

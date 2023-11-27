@@ -17,19 +17,15 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -45,8 +41,13 @@
 	$language = new text;
 	$text = $language->get();
 
+//add the defaults
+	$phrase_name = '';
+	$phrase_language = '';
+	$phrase_description = '';
+
 //set the action as an add or an update
-	if (is_uuid($_REQUEST["id"])) {
+	if (!empty($_REQUEST["id"])) {
 		$action = "update";
 		$phrase_uuid = $_REQUEST["id"];
 	}
@@ -58,7 +59,7 @@
 	if (count($_POST) > 0) {
 
 		//process the http post data by submitted action
-			if ($_POST['action'] != '' && is_uuid($_POST['phrase_uuid'])) {
+			if (!empty($_POST['action']) && is_uuid($_POST['phrase_uuid'])) {
 				$array[0]['checked'] = 'true';
 				$array[0]['uuid'] = $_POST['phrase_uuid'];
 
@@ -80,9 +81,9 @@
 		}
 		$phrase_name = $_POST["phrase_name"];
 		$phrase_language = $_POST["phrase_language"];
-		$phrase_enabled = $_POST["phrase_enabled"];
+		$phrase_enabled = $_POST["phrase_enabled"] ?? 'false';
 		$phrase_description = $_POST["phrase_description"];
-		$phrase_details_delete = $_POST["phrase_details_delete"];
+		$phrase_details_delete = $_POST["phrase_details_delete"] ?? '';
 
 		//clean the name
 		$phrase_name = str_replace(" ", "_", $phrase_name);
@@ -90,7 +91,7 @@
 	}
 
 //process the changes from the http post
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 	
 		//get the uuid
 			if ($action == "update") {
@@ -107,9 +108,9 @@
 
 		//check for all required data
 			$msg = '';
-			if (strlen($phrase_name) == 0) { $msg .= $text['message-required']." ".$text['label-name']."<br>\n"; }
-			if (strlen($phrase_language) == 0) { $msg .= $text['message-required']." ".$text['label-language']."<br>\n"; }
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+			if (empty($phrase_name)) { $msg .= $text['message-required']." ".$text['label-name']."<br>\n"; }
+			if (empty($phrase_language)) { $msg .= $text['message-required']." ".$text['label-language']."<br>\n"; }
+			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -123,7 +124,7 @@
 			}
 
 		//add the phrase
-			if ($_POST["persistformvar"] != "true") {
+			if (empty($_POST["persistformvar"]) || $_POST["persistformvar"] != "true") {
 				if ($action == "add" && permission_exists('phrase_add')) {
 					//build data array
 						$phrase_uuid = uuid();
@@ -149,11 +150,11 @@
 								$array['phrase_details'][0]['domain_uuid'] = $domain_uuid;
 								$array['phrase_details'][0]['phrase_detail_order'] = $_POST['phrase_detail_order'];
 								$array['phrase_details'][0]['phrase_detail_tag'] = $_POST['phrase_detail_tag'];
-								$array['phrase_details'][0]['phrase_detail_pattern'] = $_POST['phrase_detail_pattern'];
+								$array['phrase_details'][0]['phrase_detail_pattern'] = $_POST['phrase_detail_pattern'] ?? null;
 								$array['phrase_details'][0]['phrase_detail_function'] = $_POST['phrase_detail_function'];
 								$array['phrase_details'][0]['phrase_detail_data'] = $_POST['phrase_detail_data'];
-								$array['phrase_details'][0]['phrase_detail_method'] = $_POST['phrase_detail_method'];
-								$array['phrase_details'][0]['phrase_detail_type'] = $_POST['phrase_detail_type'];
+								$array['phrase_details'][0]['phrase_detail_method'] = $_POST['phrase_detail_method'] ?? null;
+								$array['phrase_details'][0]['phrase_detail_type'] = $_POST['phrase_detail_type'] ?? null;
 								$array['phrase_details'][0]['phrase_detail_group'] = $_POST['phrase_detail_group'];
 							}
 						}
@@ -213,11 +214,11 @@
 								$array['phrase_details'][0]['domain_uuid'] = $domain_uuid;
 								$array['phrase_details'][0]['phrase_detail_order'] = $_POST['phrase_detail_order'];
 								$array['phrase_details'][0]['phrase_detail_tag'] = $_POST['phrase_detail_tag'];
-								$array['phrase_details'][0]['phrase_detail_pattern'] = $_POST['phrase_detail_pattern'];
+								$array['phrase_details'][0]['phrase_detail_pattern'] = $_POST['phrase_detail_pattern'] ?? null;
 								$array['phrase_details'][0]['phrase_detail_function'] = $_POST['phrase_detail_function'];
 								$array['phrase_details'][0]['phrase_detail_data'] = $_POST['phrase_detail_data'];
-								$array['phrase_details'][0]['phrase_detail_method'] = $_POST['phrase_detail_method'];
-								$array['phrase_details'][0]['phrase_detail_type'] = $_POST['phrase_detail_type'];
+								$array['phrase_details'][0]['phrase_detail_method'] = $_POST['phrase_detail_method'] ?? null;
+								$array['phrase_details'][0]['phrase_detail_type'] = $_POST['phrase_detail_type'] ?? null;
 								$array['phrase_details'][0]['phrase_detail_group'] = $_POST['phrase_detail_group'];
 							}
 						}
@@ -265,7 +266,7 @@
 	}
 
 //pre-populate the form
-	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
+	if (count($_GET)>0 && empty($_POST["persistformvar"])) {
 		$phrase_uuid = $_GET["id"];
 		$sql = "select * from v_phrases ";
 		$sql .= "where ( ";
@@ -286,8 +287,11 @@
 		unset($sql, $parameters, $row);
 	}
 
+//set the defaults
+	if (empty($phrase_enabled)) { $phrase_enabled = 'true'; }
+
 //get the phrase details
-	if (is_uuid($phrase_uuid)) {
+	if (!empty($phrase_uuid)) {
 		$sql = "select * from v_phrase_details ";
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$sql .= "and phrase_uuid = :phrase_uuid ";
@@ -346,7 +350,7 @@
 			echo "var opt_group = document.createElement('optgroup');\n";
 			echo "opt_group.label = \"".$text['label-recordings']."\";\n";
 			foreach ($recordings as &$row) {
-				if ($_SESSION['recordings']['storage_type']['text'] == 'base64') {
+				if (!empty($_SESSION['recordings']['storage_type']['text']) && $_SESSION['recordings']['storage_type']['text'] == 'base64') {
 					echo "opt_group.appendChild(new Option(\"".$row["recording_name"]."\", \"\${lua streamfile.lua ".$row["recording_filename"]."}\"));\n";
 				}
 				else {
@@ -363,7 +367,7 @@
 			echo "var opt_group = document.createElement('optgroup');\n";
 			echo "opt_group.label = \"".$text['label-sounds']."\";\n";
 			foreach ($sound_files as $value) {
-				if (strlen($value) > 0) {
+				if (!empty($value)) {
 					echo "opt_group.appendChild(new Option(\"".$value."\", \"".$value."\"));\n";
 				}
 			}
@@ -495,14 +499,14 @@
 	echo "			<td class='vtable'><strong>".$text['label-function']."</strong></td>\n";
 	echo "			<td class='vtable'><strong>".$text['label-action']."</strong></td>\n";
 	echo "			<td class='vtable' style='text-align: center;'><strong>".$text['label-order']."</strong></td>\n";
-	if ($phrase_details) {
+	if (!empty($phrase_details)) {
 		echo "			<td class='vtable edit_delete_checkbox_all' onmouseover=\"swap_display('delete_label_details', 'delete_toggle_details');\" onmouseout=\"swap_display('delete_label_details', 'delete_toggle_details');\">\n";
 		echo "				<span id='delete_label_details'>".$text['label-delete']."</span>\n";
 		echo "				<span id='delete_toggle_details'><input type='checkbox' id='checkbox_all_details' name='checkbox_all' onclick=\"edit_all_toggle('details');\"></span>\n";
 		echo "			</td>\n";
 	}
 	echo "		</tr>\n";
-	if (is_array($phrase_details) && @sizeof($phrase_details) != 0) {
+	if (!empty($phrase_details)) {
 		foreach($phrase_details as $x => $field) {
 			//clean up output for display
 			if ($field['phrase_detail_function'] == 'play-file' && substr($field['phrase_detail_data'], 0, 21) == '${lua streamfile.lua ') {
@@ -582,7 +586,7 @@
 		echo "</td>\n";
 		echo "<td class='vtable'>\n";
 		echo "	<select name='domain_uuid' class='formfld'>\n";
-		if (strlen($domain_uuid) == 0) {
+		if (empty($domain_uuid)) {
 			echo "		<option value='' selected='selected'>".$text['label-global']."</option>\n";
 		}
 		else {
@@ -606,10 +610,18 @@
 	echo "	".$text['label-enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='phrase_enabled'>\n";
-	echo "		<option value='true'>".$text['label-true']."</option>\n";
-	echo "		<option value='false' ".(($phrase_enabled == "false") ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
-	echo "	</select>\n";
+	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
+		echo "	<label class='switch'>\n";
+		echo "		<input type='checkbox' id='phrase_enabled' name='phrase_enabled' value='true' ".($phrase_enabled == 'true' ? "checked='checked'" : null).">\n";
+		echo "		<span class='slider'></span>\n";
+		echo "	</label>\n";
+	}
+	else {
+		echo "	<select class='formfld' id='phrase_enabled' name='phrase_enabled'>\n";
+		echo "		<option value='true' ".($phrase_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($phrase_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "	</select>\n";
+	}
 	echo "	<br />\n";
 	echo $text['description-enabled']."\n";
 	echo "</td>\n";

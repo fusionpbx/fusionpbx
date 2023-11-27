@@ -24,12 +24,8 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -47,19 +43,19 @@
 	$sql .= "and contact_uuid = :contact_uuid ";
 	$sql .= "order by email_primary desc, email_label asc ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$parameters['contact_uuid'] = $contact_uuid;
+	$parameters['contact_uuid'] = $contact_uuid ?? '';
 	$database = new database;
 	$contact_emails = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
 //show if exists
-	if (is_array($contact_emails) && @sizeof($contact_emails) != 0) {
+	if (!empty($contact_emails)) {
 
 		//show the content
 			echo "<div class='grid' style='grid-template-columns: 70px auto;'>\n";
 			$x = 0;
 			foreach ($contact_emails as $row) {
-				echo "<div class='box contact-details-label'>".($row['email_label'] == strtolower($row['email_label']) ? ucwords($row['email_label']) : $row['email_label'])."</div>\n";
+				echo "<div class='box contact-details-label'>".($row['email_label'] == strtolower($row['email_label'] ?? '') ? ucwords($row['email_label'] ?? '') : $row['email_label'])."</div>\n";
 // 				($row['email_primary'] ? "&nbsp;<i class='fas fa-star fa-xs' style='float: right; margin-top: 0.5em; margin-right: -0.5em;' title=\"".$text['label-primary']."\"></i>" : null)."</td>\n";
 				echo "<div class='box'><a href='mailto:".escape($row['email_address'])."'>".escape($row['email_address'])."</a></div>\n";
 				$x++;

@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -25,12 +25,8 @@
 	James Rose <james.o.rose@gmail.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
-//includes fileshp";
-	require_once "resources/require.php";
+//includes files
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -47,23 +43,25 @@
 	$text = $language->get();
 
 //get common submitted data
-	$show = $_REQUEST['show'];
-	$search = $_REQUEST['search'];
-	$profile = $_REQUEST['profile'];
+	if (!empty($_REQUEST)) {
+		$show = $_REQUEST['show'] ?? null;
+		$search = $_REQUEST['search'] ?? null;
+		$profile = $_REQUEST['profile'] ?? null;
+	}
 
 //define query string array
-	if ($show) { $qs['show'] = "&show=".urlencode($show); }
-	if ($search) { $qs['search'] = "&search=".urlencode($search); }
-	if ($profile) { $qs['profile'] = "&profile=".urlencode($profile); }
+	$qs['show'] = !empty($show) ? "&show=".urlencode($show) : null;
+	$qs['search'] = !empty($search) ? "&search=".urlencode($search) : null;
+	$qs['profile'] = !empty($profile) ? "&profile=".urlencode($profile) : null;
 
 //get posted data
-	if (is_array($_POST['registrations'])) {
+	if (!empty($_POST) && is_array($_POST['registrations'])) {
 		$action = $_POST['action'];
 		$registrations = $_POST['registrations'];
 	}
 
 //process posted data
-	if ($action != '' && is_array($registrations) && @sizeof($registrations) != 0) {
+	if (!empty($action) && !empty($registrations) && is_array($registrations) && @sizeof($registrations) != 0) {
 		$obj = new registrations;
 
 		switch ($action) {
@@ -86,8 +84,8 @@
 
 //get the registrations
 	$obj = new registrations;
-	$obj->show = $show;
-	$registrations = $obj->get($profile);
+	$obj->show = $show ?? null;
+	$registrations = $obj->get($profile ?? null);
 
 //order the array
 	require_once "resources/classes/array_order.php";
@@ -98,7 +96,7 @@
 	$num_rows = 0;
 	if (is_array($registrations)) {
 		foreach ($registrations as $row) {
-			$matches = preg_grep("/".$search."/i", $row);
+			$matches = preg_grep("/".($search ?? '')."/i", $row);
 			if ($matches != false) {
 				$num_rows++;
 			}
@@ -126,7 +124,7 @@
 	echo "	<div class='heading'><b>".$text['header-registrations']." (".$num_rows.")</b></div>\n";
 	echo "	<div class='actions'>\n";
 	if (!$reload) {
-		echo button::create(['type'=>'button','label'=>$text['button-refresh'],'icon'=>$_SESSION['theme']['button_icon_refresh'],'link'=>$location.($qs ? '?' : null).$qs['show'].$qs['search'].$qs['profile']]);
+		echo button::create(['type'=>'button','label'=>$text['button-refresh'],'icon'=>$_SESSION['theme']['button_icon_refresh'],'link'=>$location.(!empty($qs) ? '?'.$qs['show'].$qs['search'].$qs['profile'] : null)]);
 	}
 	if ($registrations) {
 		echo button::create(['type'=>'button','label'=>$text['button-unregister'],'title'=>$text['button-unregister'],'icon'=>'user-slash','style'=>'margin-left: 15px;','onclick'=>"modal_open('modal-unregister','btn_unregister');"]);
@@ -135,20 +133,20 @@
 	}
 	echo 		"<form id='form_search' class='inline' method='get'>\n";
 	if (permission_exists('registration_all')) {
-		if ($show == 'all') {
+		if (!empty($show) && $show == 'all') {
 			echo 	"<input type='hidden' name='show' value='".escape($show)."'>";
 			echo button::create(['type'=>'button','label'=>$text['button-show_local'],'icon'=>$_SESSION['theme']['button_icon_all'],'link'=>$location.($qs['search'] || $qs['profile'] ? '?' : null).$qs['search'].$qs['profile']]);
 		}
 		else {
-			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$_SESSION['theme']['button_icon_all'],'link'=>$location.'?show=all'.$qs['search'].$qs['profile']]);
+			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$_SESSION['theme']['button_icon_all'],'link'=>$location.'?show=all'.(!empty($qs) ? $qs['search'].$qs['profile'] : null)]);
 		}
-		if ($profile != '') {
+		if (!empty($profile)) {
 			echo 	"<input type='hidden' name='profile' value='".escape($profile)."'>";
-			echo button::create(['type'=>'button','label'=>$text['button-all_profiles'],'icon'=>'network-wired','style'=>'margin-left: 15px;','link'=>$location.($qs['show'] || $qs['search'] ? '?' : null).$qs['show'].$qs['search']]);
+			echo button::create(['type'=>'button','label'=>$text['button-all_profiles'],'icon'=>'network-wired','style'=>'margin-left: 15px;','link'=>$location.(!empty($qs) && ($qs['show'] || $qs['search']) ? '?'.$qs['show'].$qs['search'] : null)]);
 		}
 	}
 	if (!$reload) {
-		echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=''>";
+		echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search ?? '')."\" placeholder=\"".$text['label-search']."\" onkeydown=''>";
 		echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search']);
 		//echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','link'=>$location.($qs['show'] || $qs['profile'] ? '?' : null).$qs['show'].$qs['profile'],'style'=>($search == '' ? 'display: none;' : null)]);
 	}
@@ -168,13 +166,13 @@
 
 	echo "<form id='form_list' method='post'>\n";
 	echo "<input type='hidden' id='action' name='action' value=''>\n";
-	echo "<input type='hidden' name='search' value=\"".escape($search)."\">\n";
-	echo "<input type='hidden' name='profile' value='".escape($profile)."'>";
+	echo "<input type='hidden' name='search' value=\"".escape($search ?? '')."\">\n";
+	echo "<input type='hidden' name='profile' value='".escape($profile ?? '')."'>";
 
 	echo "<table class='list'>\n";
 	echo "<tr class='list-header'>\n";
 	echo "	<th class='checkbox'>\n";
-	echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle();' ".($registrations ?: "style='visibility: hidden;'").">\n";
+	echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle();' ".(empty($registrations) ? "style='visibility: hidden;'" : null).">\n";
 	echo "	</th>\n";
 	echo "	<th>".$text['label-user']."</th>\n";
 	echo "	<th class='pct-25'>".$text['label-agent']."</th>\n";
@@ -192,7 +190,7 @@
 	if (is_array($registrations) && @sizeof($registrations) != 0) {
 		$x = 0;
 		foreach ($registrations as $row) {
-			$matches = preg_grep('/'.$search.'/i', $row);
+			$matches = preg_grep('/'.($search ?? '').'/i', $row);
 			if ($matches != false) {
 
 				//prepare the user variable
@@ -234,15 +232,15 @@
 				echo "	<td class='hide-md-dn'>".escape($row['host'])."</td>\n";
 				echo "	<td class='' title=\"".escape($row['status'])."\"><span class='cursor-help'>".escape($status)."</span></td>\n";
 				echo "	<td class='hide-md-dn'>".escape($row['ping-time'])."</td>\n";
-				echo "	<td class='hide-md-dn'>".escape($row['sip_profile_name'])."</td>\n";
+				echo "	<td class='hide-md-dn' nowrap='nowrap'>".escape($row['sip_profile_name'])."</td>\n";
 				echo "	<td class='action-button'>\n";
-				if ($_SESSION['registrations']['list_row_button_unregister']['boolean'] == 'true') {
+				if (!empty($_SESSION['registrations']['list_row_button_unregister']['boolean']) && $_SESSION['registrations']['list_row_button_unregister']['boolean'] == 'true') {
 					echo button::create(['type'=>'submit','title'=>$text['button-unregister'],'icon'=>'user-slash fa-fw','style'=>'margin-left: 2px; margin-right: 0;','onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('unregister'); list_form_submit('form_list')"]);
 				}
-				if ($_SESSION['registrations']['list_row_button_provision']['boolean'] == 'true') {
+				if (!empty($_SESSION['registrations']['list_row_button_provision']['boolean']) && $_SESSION['registrations']['list_row_button_provision']['boolean'] == 'true') {
 					echo button::create(['type'=>'submit','title'=>$text['button-provision'],'icon'=>'fax fa-fw','style'=>'margin-left: 2px; margin-right: 0;','onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('provision'); list_form_submit('form_list')"]);
 				}
-				if ($_SESSION['registrations']['list_row_button_reboot']['boolean'] == 'true') {
+				if (!empty($_SESSION['registrations']['list_row_button_reboot']['boolean']) && $_SESSION['registrations']['list_row_button_reboot']['boolean'] == 'true') {
 					echo button::create(['type'=>'submit','title'=>$text['button-reboot'],'icon'=>'power-off fa-fw','style'=>'margin-left: 2px; margin-right: 0;','onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('reboot'); list_form_submit('form_list')"]);
 				}
 				echo 	"</td>\n";
@@ -255,7 +253,7 @@
 
 	echo "</table>\n";
 	echo "<br />\n";
-	echo "<div align='center'>".$paging_controls."</div>\n";
+	echo "<div align='center'>".($paging_controls ?? '')."</div>\n";
 
 	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 

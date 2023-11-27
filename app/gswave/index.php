@@ -17,19 +17,15 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -46,7 +42,7 @@
 	$text = $language->get();
 
 //verify the id is as uuid then set as a variable
-	if (is_uuid($_GET['id'])) {
+	if (!empty($_GET['id']) && is_uuid($_GET['id'])) {
 		$extension_uuid = $_GET['id'];
 	}
 
@@ -56,6 +52,7 @@
 		$sql = "select * from v_extensions ";
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$sql .= "and enabled = 'true' ";
+		$sql .= "and extension_type = 'default' ";
 		$sql .= "order by extension asc ";
 	}
 	else {
@@ -67,6 +64,7 @@
 		$sql .= "and eu.user_uuid = :user_uuid ";
 		$sql .= "and e.domain_uuid = :domain_uuid ";
 		$sql .= "and e.enabled = 'true' ";
+		$sql .= "and e.extension_type = 'default' ";
 		$sql .= "order by e.extension asc ";
 		$parameters['user_uuid'] = $_SESSION['user']['user_uuid'];
 	}
@@ -75,10 +73,10 @@
 	$extensions = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
-	if (is_uuid($extension_uuid) && is_array($extensions) && @sizeof($extensions) != 0) {
+	if (!empty($extension_uuid) && is_uuid($extension_uuid) && !empty($extensions)) {
 
 		//loop through get selected extension
-			if (is_array($extensions) && @sizeof($extensions) != 0) {
+			if (!empty($extensions)) {
 				foreach ($extensions as $extension) {
 					if ($extension['extension_uuid'] == $extension_uuid) {
 						$field = $extension;
@@ -89,7 +87,7 @@
 
 		//get the username
 			$username = $field['extension'];
-			if (isset($field['number_alias']) && strlen($field['number_alias']) > 0) {
+			if (isset($field['number_alias']) && !empty($field['number_alias'])) {
 				$username = $field['number_alias'];
 			}
 
@@ -112,6 +110,7 @@
 			$xml .= "<Voicemail>*97</Voicemail>";
 			$xml .= "</Account>";
 			$xml .= "</AccountConfig>";
+			$qr_data = $xml;
 
 	}
 
@@ -129,7 +128,7 @@
 	echo "	<div class='heading'><b>".$text['title-gswave']."</b></div>\n";
 	echo "	<div class='actions'>\n";
 	echo "		<a href='https://play.google.com/store/apps/details?id=com.grandstream.wave' target='_blank'><img src='/app/gswave/resources/images/google_play.png' style='width: auto; height: 30px;' /></a>";
-	echo "		<a href='https://itunes.apple.com/us/app/grandstream-wave/id1029274043?ls=1&mt=8' target='_blank'><img src='/app/gswave/resources/images/apple_app_store.png' style='width: auto; height: 30px;' /></a>";
+	echo "		<a href='https://apps.apple.com/us/app/grandstream-wave/id1523254549' target='_blank'><img src='/app/gswave/resources/images/apple_app_store.png' style='width: auto; height: 30px;' /></a>";
 	//echo button::create(['type'=>'button','label'=>'Website','icon'=>'globe','style='margin-left: 15px;','link'=>'http://www.grandstream.com/products/ip-voice-telephony/softphone-app/product/grandstream-wave']);
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
@@ -144,7 +143,7 @@
 	echo "	<option value='' >".$text['label-select']."...</option>\n";
 	if (is_array($extensions) && @sizeof($extensions) != 0) {
 		foreach ($extensions as $row) {
-			$selected = $row['extension_uuid'] == $extension_uuid ? "selected='selected'" : null;
+			$selected = !empty($extension_uuid) && $row['extension_uuid'] == $extension_uuid ? "selected='selected'" : null;
 			echo "	<option value='".escape($row['extension_uuid'])."' ".$selected.">".escape($row['extension'])." ".escape($row['number_alias'])." ".escape($row['description'])."</option>\n";
 		}
 	}
@@ -154,8 +153,8 @@
 	echo "<br>\n";
 
 //stream the file
-	if (is_uuid($extension_uuid)) {
-		$xml = html_entity_decode( $xml, ENT_QUOTES, 'UTF-8' );
+	if (!empty($extension_uuid) && is_uuid($extension_uuid)) {
+		$xml = html_entity_decode($xml, ENT_QUOTES, 'UTF-8');
 		
 		require_once 'resources/qr_code/QRErrorCorrectLevel.php';
 		require_once 'resources/qr_code/QRCode.php';
@@ -177,8 +176,21 @@
 	}
 
 //html image
-	if (is_uuid($extension_uuid)) {
+	if (!empty($extension_uuid) && is_uuid($extension_uuid)) {
 		echo "<img src=\"data:image/jpeg;base64,".base64_encode($image)."\" style='margin-top: 30px; padding: 5px; background: white; max-width: 100%;'>\n";
+		//qr data preview
+		if (permission_exists('gswave_xml_view')) {
+			echo "<br><br><br>\n";
+			echo "<button id='btn_show_qr_data' type='button' class='btn btn-link' onclick=\"$('#qr_data').show(); $(this).hide(); $('#btn_hide_qr_data').show();\">Show QR Code Data</button>\n";
+			echo "<button id='btn_hide_qr_data' type='button' class='btn btn-link' style='display: none;' onclick=\"$('#qr_data').hide(); $(this).hide(); $('#btn_show_qr_data').show();\">Hide QR Code Data</button><br>\n";
+			echo "<textarea id='qr_data' spellcheck='false' readonly='readonly' style='margin: 20px auto; border: 1px solid ".($_SESSION['theme']['table_row_border_color']['text'] ?? '#c5d1e5')."; padding: 20px; width: 100%; max-width: 600px; height: 350px; overflow: auto; font-family: monospace; font-size: 12px; background-color: ".($_SESSION['theme']['table_row_background_color_light']['text'] ?? '#fff')."; color: ".($_SESSION['theme']['table_row_text_color']['text'] ?? '#000')."; display: none;'>\n";
+			$dom = new DOMDocument('1.0');
+			$dom->preserveWhiteSpace = true;
+			$dom->formatOutput = true;
+			$dom->loadXML($qr_data);
+			echo $dom->saveXML();
+			echo "</textarea>\n";
+		}
 	}
 
 	echo "</div>\n";

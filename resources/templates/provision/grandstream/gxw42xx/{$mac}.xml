@@ -18,7 +18,11 @@
 <!-- Number: 0,1,2 -->
 <!-- Mandatory -->
 <!-- Reboot required -->
+{if isset($grandstream_ip_address_mode)}
+<P8>{$grandstream_ip_address_mode}</P8>
+{else}
 <P8>0</P8>
+{/if}
 
 <!-- Preferred DNS server -->
 <!-- Mandatory -->
@@ -273,7 +277,12 @@
 <!-- Periodic Inform Enable 0 - No, 1 - Yes (default is No) -->
 <!-- Number: 0,1 -->
 <!-- Mandatory -->
+{if isset ($grandstream_tr069_periodic_inform_enable)}
+<P4506>{$grandstream_tr069_periodic_inform_enable}</P4506>
+{else}
 <P4506>0</P4506>
+{/if}
+
 
 <!-- Periodic Inform Interval (default is 300) -->
 <!-- String Max Length: 5 -->
@@ -796,17 +805,29 @@
 <!-- Priority 1 -->
 <!-- Number: 100 to 102 -->
 <!-- Mandatory -->
+{if isset($grandstream_dtmf_method_1)}
+<P850>{$grandstream_dtmf_method_1}</P850>
+{else}
 <P850>100</P850>
+{/if}
 
 <!-- Preferred DTMF Method 2 -->
 <!-- Number: 100 to 102 -->
 <!-- Mandatory -->
-<P851>100</P851>
+{if isset($grandstream_dtmf_method_2)}
+<P851>{$grandstream_dtmf_method_2}</P851>
+{else}
+<P851>101</P851>
+{/if}
 
 <!-- Preferred DTMF Method 3 -->
 <!-- Number: 100 to 102 -->
 <!-- Mandatory -->
-<P852>100</P852>
+{if isset($grandstream_dtmf_method_3)}
+<P852>{$grandstream_dtmf_method_3}</P852>
+{else}
+<P852>102</P852>
+{/if}
 
 <!-- Disable DTMF Negotiation. 0 - no, 1 - yes -->
 <!-- Number: 0,1 -->
@@ -3276,7 +3297,11 @@
 <P4595>1</P4595>
 {/if}
 
+{if isset($grandstream_offhook_auto_dial_1)}
+<P4210>{$grandstream_offhook_auto_dial_1}</P4210>
+{else}
 <P4210></P4210>
+{/if}
 <P4300>0</P4300>
 
 <P4521>1</P4521>
@@ -3295,7 +3320,11 @@
 <P4596>1</P4596>
 {/if}
 
+{if isset($grandstream_offhook_auto_dial_2)}
+<P4211>{$grandstream_offhook_auto_dial_2}</P4211>
+{else}
 <P4211></P4211>
+{/if}
 <P4301>0</P4301>
 
 <P4522>1</P4522>
@@ -3314,7 +3343,11 @@
 <P4597>1</P4597>
 {/if}
 
+{if isset($grandstream_offhook_auto_dial_3)}
+<P4212>{$grandstream_offhook_auto_dial_3}</P4212>
+{else}
 <P4212></P4212>
+{/if}
 <P4302>0</P4302>
 
 <P4523>1</P4523>
@@ -3333,7 +3366,11 @@
 <P4598>1</P4598>
 {/if}
 
+{if isset($grandstream_offhook_auto_dial_4)}
+<P4213>{$grandstream_offhook_auto_dial_4}</P4213>
+{else}
 <P4213></P4213>
+{/if}
 <P4303>0</P4303>
 
 <P4524>1</P4524>
@@ -3352,7 +3389,11 @@
 <P4599>1</P4599>
 {/if}
 
+{if isset($grandstream_offhook_auto_dial_5)}
+<P4214>{$grandstream_offhook_auto_dial_5}</P4214>
+{else}
 <P4214></P4214>
+{/if}
 <P4304>0</P4304>
 
 <P4525>1</P4525>
@@ -3371,7 +3412,11 @@
 <P4600>1</P4600>
 {/if}
 
+{if isset($grandstream_offhook_auto_dial_6)}
+<P4215>{$grandstream_offhook_auto_dial_6}</P4215>
+{else}
 <P4215></P4215>
+{/if}
 <P4305>0</P4305>
 
 <P4526>1</P4526>
@@ -3390,7 +3435,11 @@
 <P4601>1</P4601>
 {/if}
 
+{if isset($grandstream_offhook_auto_dial_7)}
+<P4216>{$grandstream_offhook_auto_dial_7}</P4216>
+{else}
 <P4216></P4216>
+{/if}
 <P4306>0</P4306>
 
 <P4527>1</P4527>
@@ -3409,7 +3458,11 @@
 <P4602>1</P4602>
 {/if}
 
+{if isset($grandstream_offhook_auto_dial_8)}
+<P4217>{$grandstream_offhook_auto_dial_8}</P4217>
+{else}
 <P4217></P4217>
+{/if}
 <P4307>0</P4307>
 
 <P4528>1</P4528>
@@ -3428,7 +3481,11 @@
 <P4603>1</P4603>
 {/if}
 
+{if isset($grandstream_offhook_auto_dial_9)}
+<P4218>{$grandstream_offhook_auto_dial_9}</P4218>
+{else}
 <P4218></P4218>
+{/if}
 <P4308>0</P4308>
 
 <P4529>1</P4529>
@@ -3447,7 +3504,11 @@
 <P4604>1</P4604>
 {/if}
 
+{if isset($grandstream_offhook_auto_dial_10)}
+<P4219>{$grandstream_offhook_auto_dial_10}</P4219>
+{else}
 <P4219></P4219>
+{/if}
 <P4309>0</P4309>
 
 <P4530>1</P4530>
@@ -3466,7 +3527,11 @@
 <P4605>1</P4605>
 {/if}
 
+{if isset($grandstream_offhook_auto_dial_11)}
+<P4220>{$grandstream_offhook_auto_dial_11}</P4220>
+{else}
 <P4220></P4220>
+{/if}
 <P4310>0</P4310>
 
 <P4531>1</P4531>
@@ -3485,7 +3550,11 @@
 <P4606>1</P4606>
 {/if}
 
+{if isset($grandstream_offhook_auto_dial_12)}
+<P4221>{$grandstream_offhook_auto_dial_12}</P4221>
+{else}
 <P4221></P4221>
+{/if}
 <P4311>0</P4311>
 
 <P4532>1</P4532>
@@ -3504,7 +3573,11 @@
 <P4607>1</P4607>
 {/if}
 
+{if isset($grandstream_offhook_auto_dial_13)}
+<P4222>{$grandstream_offhook_auto_dial_13}</P4222>
+{else}
 <P4222></P4222>
+{/if}
 <P4312>0</P4312>
 
 <P4533>1</P4533>
@@ -3523,7 +3596,11 @@
 <P4608>1</P4608>
 {/if}
 
+{if isset($grandstream_offhook_auto_dial_14)}
+<P4223>{$grandstream_offhook_auto_dial_14}</P4223>
+{else}
 <P4223></P4223>
+{/if}
 <P4313>0</P4313>
 
 <P4534>1</P4534>
@@ -3542,7 +3619,11 @@
 <P4609>1</P4609>
 {/if}
 
+{if isset($grandstream_offhook_auto_dial_15)}
+<P4224>{$grandstream_offhook_auto_dial_15}</P4224>
+{else}
 <P4224></P4224>
+{/if}
 <P4314>0</P4314>
 
 <P4535>1</P4535>
@@ -3561,7 +3642,11 @@
 <P4610>1</P4610>
 {/if}
 
+{if isset($grandstream_offhook_auto_dial_16)}
+<P4225>{$grandstream_offhook_auto_dial_16}</P4225>
+{else}
 <P4225></P4225>
+{/if}
 <P4315>0</P4315>
 
 <P4536>1</P4536>
@@ -3580,7 +3665,11 @@
 <P4611>1</P4611>
 {/if}
 
+{if isset($grandstream_offhook_auto_dial_17)}
+<P4226>{$grandstream_offhook_auto_dial_17}</P4226>
+{else}
 <P4226></P4226>
+{/if}
 <P4316>0</P4316>
 
 <P4537>1</P4537>
@@ -3599,7 +3688,11 @@
 <P4612>1</P4612>
 {/if}
 
+{if isset($grandstream_offhook_auto_dial_18)}
+<P4227>{$grandstream_offhook_auto_dial_18}</P4227>
+{else}
 <P4227></P4227>
+{/if}
 <P4317>0</P4317>
 
 <P4538>1</P4538>
@@ -3618,7 +3711,11 @@
 <P4613>1</P4613>
 {/if}
 
+{if isset($grandstream_offhook_auto_dial_19)}
+<P4228>{$grandstream_offhook_auto_dial_19}</P4228>
+{else}
 <P4228></P4228>
+{/if}
 <P4318>0</P4318>
 
 <P4539>1</P4539>
@@ -3637,7 +3734,11 @@
 <P4614>1</P4614>
 {/if}
 
+{if isset($grandstream_offhook_auto_dial_20)}
+<P4229>{$grandstream_offhook_auto_dial_20}</P4229>
+{else}
 <P4229></P4229>
+{/if}
 <P4319>0</P4319>
 
 <P4540>1</P4540>
@@ -3656,7 +3757,11 @@
 <P4615>1</P4615>
 {/if}
 
+{if isset($grandstream_offhook_auto_dial_21)}
+<P4230>{$grandstream_offhook_auto_dial_21}</P4230>
+{else}
 <P4230></P4230>
+{/if}
 <P4320>0</P4320>
 
 <P4541>1</P4541>
@@ -3675,7 +3780,11 @@
 <P4616>1</P4616>
 {/if}
 
+{if isset($grandstream_offhook_auto_dial_22)}
+<P4231>{$grandstream_offhook_auto_dial_22}</P4231>
+{else}
 <P4231></P4231>
+{/if}
 <P4321>0</P4321>
 
 <P4542>1</P4542>
@@ -3694,7 +3803,11 @@
 <P4617>1</P4617>
 {/if}
 
+{if isset($grandstream_offhook_auto_dial_23)}
+<P4232>{$grandstream_offhook_auto_dial_23}</P4232>
+{else}
 <P4232></P4232>
+{/if}
 <P4322>0</P4322>
 
 <P4543>1</P4543>
@@ -3713,7 +3826,11 @@
 <P4618>1</P4618>
 {/if}
 
+{if isset($grandstream_offhook_auto_dial_24)}
+<P4233>{$grandstream_offhook_auto_dial_24}</P4233>
+{else}
 <P4233></P4233>
+{/if}
 <P4323>0</P4323>
 
 <P4544>1</P4544>
@@ -3732,7 +3849,11 @@
 <P4619>1</P4619>
 {/if}
 
+{if isset($grandstream_offhook_auto_dial_25)}
+<P4800>{$grandstream_offhook_auto_dial_25}</P4800>
+{else}
 <P4800></P4800>
+{/if}
 <P4324>0</P4324>
 
 <P4545>1</P4545>
@@ -3752,7 +3873,11 @@
 <P4620>1</P4620>
 {/if}
 
+{if isset($grandstream_offhook_auto_dial_26)}
+<P4801>{$grandstream_offhook_auto_dial_26}</P4801>
+{else}
 <P4801></P4801>
+{/if}
 <P4325>0</P4325>
 
 <P4546>1</P4546>
@@ -3771,7 +3896,11 @@
 <P4621>1</P4621>
 {/if}
 
+{if isset($grandstream_offhook_auto_dial_27)}
+<P4802>{$grandstream_offhook_auto_dial_27}</P4802>
+{else}
 <P4802></P4802>
+{/if}
 <P4326>0</P4326>
 
 <P4547>1</P4547>
@@ -3790,7 +3919,11 @@
 <P4622>1</P4622>
 {/if}
 
+{if isset($grandstream_offhook_auto_dial_28)}
+<P4803>{$grandstream_offhook_auto_dial_28}</P4803>
+{else}
 <P4803></P4803>
+{/if}
 <P4327>0</P4327>
 
 <P4548>1</P4548>
@@ -3809,7 +3942,11 @@
 <P4623>1</P4623>
 {/if}
 
+{if isset($grandstream_offhook_auto_dial_29)}
+<P4804>{$grandstream_offhook_auto_dial_29}</P4804>
+{else}
 <P4804></P4804>
+{/if}
 <P4328>0</P4328>
 
 <P4549>1</P4549>
@@ -3828,7 +3965,11 @@
 <P4624>1</P4624>
 {/if}
 
+{if isset($grandstream_offhook_auto_dial_30)}
+<P4805>{$grandstream_offhook_auto_dial_30}</P4805>
+{else}
 <P4805></P4805>
+{/if}
 <P4329>0</P4329>
 
 <P4808>1</P4808>
@@ -3847,7 +3988,11 @@
 <P4625>1</P4625>
 {/if}
 
+{if isset($grandstream_offhook_auto_dial_31)}
+<P4806>{$grandstream_offhook_auto_dial_31}</P4806>
+{else}
 <P4806></P4806>
+{/if}
 <P4250>0</P4250>
 
 <P4809>1</P4809>
@@ -3866,7 +4011,11 @@
 <P4626>1</P4626>
 {/if}
 
+{if isset($grandstream_offhook_auto_dial_32)}
+<P4807>{$grandstream_offhook_auto_dial_32}</P4807>
+{else}
 <P4807></P4807>
+{/if}
 <P4251>0</P4251>
 
 <P4810>1</P4810>
@@ -3885,7 +4034,11 @@
 <P21384>1</P21384>
 {/if}
 
+{if isset($grandstream_offhook_auto_dial_33)}
+<P21448>{$grandstream_offhook_auto_dial_33}</P21448>
+{else}
 <P21448></P21448>
+{/if}
 <P21320>0</P21320>
 
 <P21512>1</P21512>
@@ -3904,7 +4057,11 @@
 <P21385>1</P21385>
 {/if}
 
+{if isset($grandstream_offhook_auto_dial_34)}
+<P21449>{$grandstream_offhook_auto_dial_34}</P21449>
+{else}
 <P21449></P21449>
+{/if}
 <P21321>0</P21321>
 
 <P21513>1</P21513>
@@ -3923,7 +4080,11 @@
 <P21386>1</P21386>
 {/if}
 
+{if isset($grandstream_offhook_auto_dial_35)}
+<P21450>{$grandstream_offhook_auto_dial_35}</P21450>
+{else}
 <P21450></P21450>
+{/if}
 <P21322>0</P21322>
 
 <P21514>1</P21514>
@@ -3942,7 +4103,11 @@
 <P21387>1</P21387>
 {/if}
 
+{if isset($grandstream_offhook_auto_dial_36)}
+<P21451>{$grandstream_offhook_auto_dial_36}</P21451>
+{else}
 <P21451></P21451>
+{/if}
 <P21323>0</P21323>
 
 <P21515>1</P21515>
@@ -3961,7 +4126,11 @@
 <P21388>1</P21388>
 {/if}
 
+{if isset($grandstream_offhook_auto_dial_37)}
+<P21452>{$grandstream_offhook_auto_dial_37}</P21452>
+{else}
 <P21452></P21452>
+{/if}
 <P21324>0</P21324>
 
 <P21516>1</P21516>
@@ -3980,7 +4149,11 @@
 <P21389>1</P21389>
 {/if}
 
+{if isset($grandstream_offhook_auto_dial_38)}
+<P21453>{$grandstream_offhook_auto_dial_38}</P21453>
+{else}
 <P21453></P21453>
+{/if}
 <P21325>0</P21325>
 
 <P21517>1</P21517>
@@ -3999,7 +4172,11 @@
 <P21390>1</P21390>
 {/if}
 
+{if isset($grandstream_offhook_auto_dial_39)}
+<P21454>{$grandstream_offhook_auto_dial_39}</P21454>
+{else}
 <P21454></P21454>
+{/if}
 <P21326>0</P21326>
 
 <P21518>1</P21518>
@@ -4018,7 +4195,11 @@
 <P21391>1</P21391>
 {/if}
 
+{if isset($grandstream_offhook_auto_dial_40)}
+<P21455>{$grandstream_offhook_auto_dial_40}</P21455>
+{else}
 <P21455></P21455>
+{/if}
 <P21327>0</P21327>
 
 <P21519>1</P21519>
@@ -4037,7 +4218,11 @@
 <P21392>1</P21392>
 {/if}
 
+{if isset($grandstream_offhook_auto_dial_41)}
+<P21456>{$grandstream_offhook_auto_dial_41}</P21456>
+{else}
 <P21456></P21456>
+{/if}
 <P21328>0</P21328>
 
 <P21520>1</P21520>
@@ -4056,7 +4241,11 @@
 <P21393>1</P21393>
 {/if}
 
+{if isset($grandstream_offhook_auto_dial_42)}
+<P21457>{$grandstream_offhook_auto_dial_42}</P21457>
+{else}
 <P21457></P21457>
+{/if}
 <P21329>0</P21329>
 
 <P21521>1</P21521>
@@ -4075,7 +4264,11 @@
 <P21394>1</P21394>
 {/if}
 
+{if isset($grandstream_offhook_auto_dial_43)}
+<P21458>{$grandstream_offhook_auto_dial_43}</P21458>
+{else}
 <P21458></P21458>
+{/if}
 <P21330>0</P21330>
 
 <P21522>1</P21522>
@@ -4094,7 +4287,11 @@
 <P21395>1</P21395>
 {/if}
 
+{if isset($grandstream_offhook_auto_dial_44)}
+<P21459>{$grandstream_offhook_auto_dial_44}</P21459>
+{else}
 <P21459></P21459>
+{/if}
 <P21331>0</P21331>
 
 <P21523>1</P21523>
@@ -4113,7 +4310,11 @@
 <P21396>1</P21396>
 {/if}
 
+{if isset($grandstream_offhook_auto_dial_45)}
+<P21460>{$grandstream_offhook_auto_dial_45}</P21460>
+{else}
 <P21460></P21460>
+{/if}
 <P21332>0</P21332>
 
 <P21524>1</P21524>
@@ -4132,7 +4333,11 @@
 <P21397>1</P21397>
 {/if}
 
+{if isset($grandstream_offhook_auto_dial_46)}
+<P21461>{$grandstream_offhook_auto_dial_46}</P21461>
+{else}
 <P21461></P21461>
+{/if}
 <P21333>0</P21333>
 
 <P21525>1</P21525>
@@ -4151,7 +4356,11 @@
 <P21398>1</P21398>
 {/if}
 
+{if isset($grandstream_offhook_auto_dial_47)}
+<P21462>{$grandstream_offhook_auto_dial_47}</P21462>
+{else}
 <P21462></P21462>
+{/if}
 <P21334>0</P21334>
 
 <P21526>1</P21526>
@@ -4170,7 +4379,11 @@
 <P21399>1</P21399>
 {/if}
 
+{if isset($grandstream_offhook_auto_dial_48)}
+<P21463>{$grandstream_offhook_auto_dial_48}</P21463>
+{else}
 <P21463></P21463>
+{/if}
 <P21335>0</P21335>
 
 <P21527>1</P21527>

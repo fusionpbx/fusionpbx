@@ -236,7 +236,7 @@
 <P270></P270>
 
 <!-- SIP Server -->
-<P47>{$account.1.server_address}</P47>
+<P47>{$account.1.server_address}:{$account.1.sip_port}</P47>
 
 
 <!-- SIP User ID -->
@@ -674,7 +674,7 @@
 <P417></P417>
 
 <!-- SIP Server -->
-<P402>{$account.2.server_address}</P402>
+<P402>{$account.2.server_address}:{$account.2.sip_port}</P402>
 
 <!-- SIP User ID -->
 <P404>{$account.2.user_id}</P404>
@@ -1097,7 +1097,7 @@
 <P517></P517>
 
 <!-- SIP Server -->
-<P502>{$account.3.server_address}</P502>
+<P502>{$account.3.server_address}:{$account.3.sip_port}</P502>
 
 <!-- SIP User ID -->
 <P504>{$account.3.user_id}</P504>
@@ -1524,7 +1524,7 @@ VNumber: 0, 1, 2. -->
 <P617></P617>
 
 <!-- SIP Server -->
-<P602>{$server_address_4}</P602>
+<P602>{$server_address_4}:{$account.4.sip_port}</P602>
 
 <!-- SIP User ID -->
 <P604>{$user_id_4}</P604>
@@ -3357,7 +3357,12 @@ Account 5 Codec Settings
 
 <!-- Enable TR-069. 0 - No, 1 - Yes. Default value is 0 -->
 <!-- Number: 0, 1 -->
+{if isset ($grandstream_tr069_enable)}
+<P1409>{$grandstream_tr069_enable}</P1409>
+{else}
 <P1409>0</P1409>
+{/if}
+
 
 <!-- ACS URL -->
 <P4503></P4503>
@@ -3370,7 +3375,12 @@ Account 5 Codec Settings
 
 <!-- Periodic Inform Enable. 0 - No, 1 - Yes. Default value is 0 -->
 <!-- Number: 0, 1 -->
+{if isset ($grandstream_tr069_periodic_inform_enable)}
+<P4506>{$grandstream_tr069_periodic_inform_enable}</P4506>
+{else}
 <P4506>0</P4506>
+{/if}
+
 
 <!-- Periodic Inform Interval (s). Default value is 86400 -->
 <!-- Number: 1 - 4294967295 -->

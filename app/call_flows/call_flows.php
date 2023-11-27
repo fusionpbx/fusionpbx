@@ -17,19 +17,15 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/paging.php";
 	require_once "resources/check_auth.php";
 
@@ -46,16 +42,24 @@
 	$language = new text;
 	$text = $language->get();
 
+//set additional variables
+	$show = $_GET["show"] ?? '';
+
+//set from session variables
+	$list_row_edit_button = !empty($_SESSION['theme']['list_row_edit_button']['boolean']) ? $_SESSION['theme']['list_row_edit_button']['boolean'] : 'false';
+
+//get search
+	$search = $_REQUEST['search'] ?? null;
+
 //get posted data
-	if (is_array($_POST['call_flows'])) {
+	if (!empty($_POST['call_flows'])) {
 		$action = $_POST['action'];
-		$search = $_POST['search'];
 		$call_flows = $_POST['call_flows'];
 		$toggle_field = $_POST['toggle_field'];
 	}
 
 //process the http post data by action
-	if ($action != '' && is_array($call_flows) && @sizeof($call_flows) != 0) {
+	if (!empty($action) && !empty($call_flows)) {
 		switch ($action) {
 			case 'copy':
 				if (permission_exists('call_flow_add')) {
@@ -83,12 +87,13 @@
 	}
 
 //get variables used to control the order
-	$order_by = $_GET["order_by"];
-	$order = $_GET["order"];
+	$order_by = $_GET["order_by"] ?? '';
+	$order = $_GET["order"] ?? '';
+	$sort = $order_by == 'call_flow_extension' ? 'natural' : null;
 
 //add the search term
-	$search = strtolower($_GET["search"]);
-	if (strlen($search) > 0) {
+	$search = strtolower($search ?? '');
+	if (!empty($search)) {
 		$sql_search = "and (";
 		$sql_search .= "lower(call_flow_name) like :search ";
 		$sql_search .= "or lower(call_flow_extension) like :search ";
@@ -105,32 +110,32 @@
 //prepare to page the results
 	$sql = "select count(*) from v_call_flows ";
 	$sql .= "where true ";
-	if ($_GET['show'] != "all" || !permission_exists('call_flow_all')) {
+	if ($show != "all" || !permission_exists('call_flow_all')) {
 		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	}
-	$sql .= $sql_search;
+	$sql .= $sql_search ?? '';
 	$database = new database;
-	$num_rows = $database->select($sql, $parameters, 'column');
+	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 
 //prepare to page the results
-	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$rows_per_page = (!empty($_SESSION['domain']['paging']['numeric'])) ? $_SESSION['domain']['paging']['numeric'] : 50;
 	$param = "&search=".urlencode($search);
-	if ($_GET['show'] == "all" && permission_exists('call_flow_all')) {
+	if ($show == "all" && permission_exists('call_flow_all')) {
 		$param .= "&show=all";
 	}
-	$page = $_GET['page'];
-	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
+	$page = $_GET['page'] ?? '';
+	if (empty($page)) { $page = 0; $_GET['page'] = 0; }
 	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
 	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = str_replace('count(*)', '*', $sql);
-	$sql .= order_by($order_by, $order, 'call_flow_name', 'asc');
+	$sql = str_replace('count(*)', '*', $sql ?? '');
+	$sql .= order_by($order_by, $order, 'call_flow_name', 'asc', $sort);
 	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;
-	$call_flows = $database->select($sql, $parameters, 'all');
+	$call_flows = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 
 //create token
@@ -174,7 +179,7 @@
 	}
 	echo 		"<form id='form_search' class='inline' method='get'>\n";
 	if (permission_exists('call_flow_all')) {
-		if ($_GET['show'] == 'all') {
+		if ($show == 'all') {
 			echo "		<input type='hidden' name='show' value='all'>";
 		}
 		else {
@@ -214,10 +219,10 @@
 	echo "<tr class='list-header'>\n";
 	if (permission_exists('call_flow_add') || permission_exists('call_flow_edit') || permission_exists('call_flow_delete')) {
 		echo "	<th class='checkbox'>\n";
-		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".($call_flows ?: "style='visibility: hidden;'").">\n";
+		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".(!empty($call_flows) ?: "style='visibility: hidden;'").">\n";
 		echo "	</th>\n";
 	}
-	if ($_GET['show'] == "all" && permission_exists('call_flow_all')) {
+	if ($show == "all" && permission_exists('call_flow_all')) {
 		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, $param, "class='shrink'");
 	}
 	echo th_order_by('call_flow_name', $text['label-call_flow_name'], $order_by, $order);
@@ -229,12 +234,12 @@
 	}
 	echo th_order_by('call_flow_enabled', $text['label-enabled'], $order_by, $order, null, "class='center'");
 	echo th_order_by('call_flow_description', $text['label-call_flow_description'], $order_by, $order, null, "class='hide-sm-dn'");
-	if (permission_exists('call_flow_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+	if (permission_exists('call_flow_edit') && $list_row_edit_button == 'true') {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
 
-	if (is_array($call_flows)) {
+	if (!empty($call_flows)) {
 		$x = 0;
 		foreach ($call_flows as $row) {
 			if (permission_exists('call_flow_edit')) {
@@ -247,8 +252,8 @@
 				echo "		<input type='hidden' name='call_flows[$x][uuid]' value='".escape($row['call_flow_uuid'])."' />\n";
 				echo "	</td>\n";
 			}
-			if ($_GET['show'] == "all" && permission_exists('call_flow_all')) {
-				if (strlen($_SESSION['domains'][$row['domain_uuid']]['domain_name']) > 0) {
+			if ($show == "all" && permission_exists('call_flow_all')) {
+				if (!empty($_SESSION['domains'][$row['domain_uuid']]['domain_name'])) {
 					$domain = $_SESSION['domains'][$row['domain_uuid']]['domain_name'];
 				}
 				else {
@@ -281,7 +286,7 @@
 				echo escape($row['call_flow_enabled']);
 			}
 			echo "	<td class='description overflow hide-sm-dn'>".escape($row['call_flow_description'])."&nbsp;</td>\n";
-			if (permission_exists('call_flow_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+			if (permission_exists('call_flow_edit') && $list_row_edit_button == 'true') {
 				echo "	<td class='action-button'>";
 				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
 				echo "	</td>\n";

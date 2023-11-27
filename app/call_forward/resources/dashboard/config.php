@@ -1,5 +1,6 @@
 <?php
 
+$x++;
 $array['dashboard'][$x]['dashboard_uuid'] = 'ba60799a-1c40-44a8-80ef-c2be4f4692fb';
 $array['dashboard'][$x]['dashboard_name'] = 'Call Forward';
 $array['dashboard'][$x]['dashboard_path'] = 'app/call_forward/resources/dashboard/call_forward.php';

@@ -1,7 +1,7 @@
 <?php
 /*
 	BSD-2-Clause License
-	Copyright (C) 2022 Mark J Crane <markjcrane@fusionpbx.com>
+	Copyright (C) 2022-2023 Mark J Crane <markjcrane@fusionpbx.com>
 
 	Redistribution and use in source and binary forms, with or without
 	modification, are permitted provided that the following conditions are met:
@@ -23,12 +23,8 @@
 	POSSIBILITY OF SUCH DAMAGE.
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
-//includes files;
-	require_once "resources/require.php";
+//includes files
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
 
@@ -46,14 +42,14 @@
 	$text = $language->get();
 
 //get the http post data
-	if (is_array($_POST['event_guard_logs'])) {
+	if (!empty($_POST['event_guard_logs']) && is_array($_POST['event_guard_logs'])) {
 		$action = $_POST['action'];
 		$search = $_POST['search'];
 		$event_guard_logs = $_POST['event_guard_logs'];
 	}
 
 //process the http post data by action
-	if ($action != '' && is_array($event_guard_logs) && @sizeof($event_guard_logs) != 0) {
+	if (!empty($action) && !empty($event_guard_logs) && is_array($event_guard_logs) && @sizeof($event_guard_logs) != 0) {
 
 		switch ($action) {
 			case 'copy':
@@ -82,12 +78,12 @@
 	}
 
 //get order and order by
-	$order_by = $_GET["order_by"];
-	$order = $_GET["order"];
+	$order_by = $_GET["order_by"] ?? null;
+	$order = $_GET["order"] ?? null;
 
 //add the search
-	if (isset($_GET["search"])) {
-		$search = strtolower($_GET["search"]);
+	if (!empty($_GET["search"])) {
+		$search = $_GET["search"];
 	}
 
 //get the count
@@ -96,27 +92,27 @@
 	$sql .= "where true ";
 	if (isset($search)) {
 		$sql .= "and (";
-		$sql .= "	hostname like :search ";
+		$sql .= "	lower(hostname) like :search ";
 		$sql .= "	or filter like :search ";
 		$sql .= "	or ip_address like :search ";
 		$sql .= "	or extension like :search ";
-		$sql .= "	or user_agent like :search ";
-		$sql .= "	or log_status like :search ";
+		$sql .= "	or lower(user_agent) like :search ";
+		$sql .= "	or lower(log_status) like :search ";
 		$sql .= ") ";
-		$parameters['search'] = '%'.$search.'%';
+		$parameters['search'] = '%'.strtolower($search).'%';
 	}
 	if (isset($_GET["filter"]) && $_GET["filter"] != '') {
 		$sql .= "and filter = :filter ";
 		$parameters['filter'] = $_GET["filter"];
 	}
 	$database = new database;
-	$num_rows = $database->select($sql, $parameters, 'column');
+	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 	unset($sql, $parameters);
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
-	$param = $search ? "&search=".$search : null;
-	$page = is_numeric($_GET['page']) ? $_GET['page'] : 0;
+	$param = !empty($search) ? "&search=".$search : null;
+	$page = !empty($_GET['page']) && is_numeric($_GET['page']) ? $_GET['page'] : 0;
 	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
 	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
@@ -144,25 +140,25 @@
 	$sql .= "log_status ";
 	$sql .= "from v_event_guard_logs ";
 	$sql .= "where true ";
-	if (isset($_GET["search"]) && $_GET["search"] != '') {
+	if (!empty($search)) {
 		$sql .= "and (";
-		$sql .= "	hostname like :search ";
+		$sql .= "	lower(hostname) like :search ";
 		$sql .= "	or filter like :search ";
 		$sql .= "	or ip_address like :search ";
 		$sql .= "	or extension like :search ";
-		$sql .= "	or user_agent like :search ";
-		$sql .= "	or log_status like :search ";
+		$sql .= "	or lower(user_agent) like :search ";
+		$sql .= "	or lower(log_status) like :search ";
 		$sql .= ") ";
-		$parameters['search'] = '%'.$search.'%';
+		$parameters['search'] = '%'.strtolower($search).'%';
 	}
-	if (isset($_GET["filter"]) && $_GET["filter"] != '') {
+	if (!empty($_GET["filter"])) {
 		$sql .= "and filter = :filter ";
 		$parameters['filter'] = $_GET["filter"];
 	}
 	$sql .= order_by($order_by, $order, 'log_date', 'desc');
 	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;
-	$event_guard_logs = $database->select($sql, $parameters, 'all');
+	$event_guard_logs = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 
 //create token
@@ -191,24 +187,14 @@
 	}
 	echo 		"<form id='form_search' class='inline' method='get'>\n";
 	echo "		<select class='formfld' name='filter'>\n";
-    echo "			<option value='' selected='selected' disabled hidden>".$text['label-filter']."...</option>";
-	echo "			<option value=''></option>\n";
-	if (isset($_GET["filter"]) && $_GET["filter"] == "sip-auth-ip") {
-		echo "			<option value='sip-auth-ip' selected='selected'>"."sip-auth-ip"."</option>\n";
-	}
-	else {
-		echo "			<option value='sip-auth-ip'>"."sip-auth-ip"."</option>\n";
-	}
-	if (isset($_GET["filter"]) && $_GET["filter"] == "sip-auth-fail") {
-		echo "			<option value='sip-auth-fail' selected='selected'>"."sip-auth-fail"."</option>\n";
-	}
-	else {
-		echo "			<option value='sip-auth-fail'>"."sip-auth-fail"."</option>\n";
-	}
+    echo "			<option value='' selected='selected' disabled='disabled'>".$text['label-filter']."...</option>";
+	echo "			<option value=''>".$text['label-all']."</option>\n";
+	echo "			<option value='sip-auth-ip' ".(isset($_GET["filter"]) && $_GET["filter"] == "sip-auth-ip" ? "selected='selected'" : null).">".$text['option-ip']."</option>\n";
+	echo "			<option value='sip-auth-fail' ".(isset($_GET["filter"]) && $_GET["filter"] == "sip-auth-fail" ? "selected='selected'" : null).">".$text['option-authentication']."</option>\n";
 	echo "		</select>\n";
-	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown='list_search_reset();'>";
-	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search','style'=>($search != '' ? 'display: none;' : null)]);
-	echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','link'=>'event_guard_logs.php','style'=>($search == '' ? 'display: none;' : null)]);
+	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search ?? '')."\" placeholder=\"".$text['label-search']."\" onkeydown='list_search_reset();'>";
+	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search','style'=>(!empty($search) ? 'display: none;' : null)]);
+	echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','link'=>'event_guard_logs.php','style'=>(empty($search) ? 'display: none;' : null)]);
 	if ($paging_controls_mini != '') {
 		echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>\n";
 	}
@@ -232,24 +218,24 @@
 
 	echo "<form id='form_list' method='post'>\n";
 	echo "<input type='hidden' id='action' name='action' value=''>\n";
-	echo "<input type='hidden' name='search' value=\"".escape($search)."\">\n";
+	echo "<input type='hidden' name='search' value=\"".escape($search ?? '')."\">\n";
 
 	echo "<table class='list'>\n";
 	echo "<tr class='list-header'>\n";
 	if (permission_exists('event_guard_log_add') || permission_exists('event_guard_log_edit') || permission_exists('event_guard_log_delete')) {
 		echo "	<th class='checkbox'>\n";
-		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".($event_guard_logs ?: "style='visibility: hidden;'").">\n";
+		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".(empty($event_guard_logs) ? "style='visibility: hidden;'" : null).">\n";
 		echo "	</th>\n";
 	}
 	echo "<th class='hide-md-dn'>".$text['label-hostname']."</th>\n";
 	echo "<th>".$text['label-date']."</th>\n";
 	echo "<th class='hide-md-dn'>".$text['label-time']."</th>\n";
-	echo th_order_by('filter', $text['label-filter'], $order_by, $order);
+	echo th_order_by('filter', $text['label-filter'], $order_by, $order, null, "style='text-align: center;'");
 	echo th_order_by('ip_address', $text['label-ip_address'], $order_by, $order);
 	echo th_order_by('extension', $text['label-extension'], $order_by, $order);
 	echo "<th class='hide-md-dn'>".$text['label-user_agent']."</th>\n";
 	echo th_order_by('log_status', $text['label-log_status'], $order_by, $order);
-	if (permission_exists('event_guard_log_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+	if (permission_exists('event_guard_log_edit') && !empty($_SESSION['theme']['list_row_edit_button']['boolean']) && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
@@ -277,13 +263,16 @@
 			echo "	</td>\n";
 			echo "	<td><a href='".$list_row_url."' title=\"".$text['button-edit']."\">".escape($row['log_date_formatted'])."</a></td>\n";
 			echo "	<td class='hide-md-dn'><a href='".$list_row_url."' title=\"".$text['button-edit']."\">".escape($row['log_time_formatted'])."</a></td>\n";
-			
-			echo "	<td><a href='".$list_row_url."' title=\"".$text['button-edit']."\">".escape($row['filter'])."</a></td>\n";
+			switch($row['filter']) {
+				case 'sip-auth-ip': $filter = $text['option-ip']; break;
+				case 'sip-auth-fail': $filter = $text['option-authentication']; break;
+			}
+			echo "	<td style='text-align: center;'><a href='".$list_row_url."' title=\"".$text['button-edit']."\">".escape($filter)."</a></td>\n";
 			echo "	<td><a href=\"https://search.arin.net/rdap/?query=".escape($row['ip_address'])."\" target=\"_blank\">".escape($row['ip_address'])."</a></td>\n";
 			echo "	<td>".escape($row['extension'])."</td>\n";
 			echo "	<td class='hide-md-dn'>".escape($row['user_agent'])."</td>\n";
-			echo "	<td>".escape($row['log_status'])."</td>\n";
-			if (permission_exists('event_guard_log_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+			echo "	<td>".escape($text['label-'.$row['log_status']])."</td>\n";
+			if (permission_exists('event_guard_log_edit') && !empty($_SESSION['theme']['list_row_edit_button']['boolean']) && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
 				echo "	<td class='action-button'>\n";
 				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
 				echo "	</td>\n";

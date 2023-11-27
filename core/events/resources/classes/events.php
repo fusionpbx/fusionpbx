@@ -29,9 +29,9 @@ class events {
 	 */
 	public function __construct() {
 		//create the database connection
-			//set the include path
-			$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-			set_include_path(parse_ini_file($conf[0])['document.root']);
+
+			//includes files
+			require_once dirname(__DIR__, 4) . "/resources/require.php";
 
 			//includes files
 			require_once "resources/classes/database.php";
@@ -52,16 +52,6 @@ class events {
 			$this->required['headers'][] = "app_uuid";
 			$this->required['headers'][] = "domain_uuid";
 			$this->required['headers'][] = "user_uuid";
-	}
-
-	/**
-	 * Called when there are no references to a particular object
-	 * unset the variables used in the class
-	 */
-	public function __destruct() {
-		foreach ($this as $key => $value) {
-			unset($this->$key);
-		}
 	}
 
 	/**

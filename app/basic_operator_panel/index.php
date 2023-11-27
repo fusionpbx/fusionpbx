@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -25,12 +25,8 @@
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -101,7 +97,7 @@
 
 				//update the user_status
 					if (is_uuid($call_center_agent_uuid)) {
-						$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+						$fp = event_socket_create();
 						$switch_cmd .= "callcenter_config agent set status ".$call_center_agent_uuid." '".$user_status."'";
 						$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
 					}
@@ -115,7 +111,7 @@
 				//update do not disturb
 					if ($user_status == "Do Not Disturb") {
 						$x = 0;
-						foreach($_SESSION['user']['extension'] as $row) {
+						foreach ($_SESSION['user']['extension'] as $row) {
 							//build the array
 							$array['extensions'][$x]['extension_uuid'] = $row['extension_uuid'];
 							$array['extensions'][$x]['dial_string'] = '!USER_BUSY';
@@ -123,8 +119,10 @@
 
 							//delete extension from the cache
 							$cache = new cache;
-							$cache->delete("directory:".$row['extension']."@".$_SESSION['user']['domain_name']);
-							if(strlen($number_alias) > 0){
+							if (!empty($row['extension'])) {
+								$cache->delete("directory:".$row['extension']."@".$_SESSION['user']['domain_name']);
+							}
+							if (!empty($number_alias)) {
 								$cache->delete("directory:".$row['number_alias']."@".$_SESSION['user']['domain_name']);
 							}
 
@@ -142,8 +140,10 @@
 
 							//delete extension from the cache
 							$cache = new cache;
-							$cache->delete("directory:".$row['extension']."@".$_SESSION['user']['domain_name']);
-							if(strlen($number_alias) > 0){
+							if (!empty($row['extension'])) {
+								$cache->delete("directory:".$row['extension']."@".$_SESSION['user']['domain_name']);
+							}
+							if (!empty($number_alias)) {
 								$cache->delete("directory:".$row['number_alias']."@".$_SESSION['user']['domain_name']);
 							}
 
@@ -168,8 +168,10 @@
 
 				//delete extension from the cache
 					$cache = new cache;
-					$cache->delete("directory:".$extension."@".$this->domain_name);
-					if(strlen($number_alias) > 0){
+					if (!empty($extension)) {
+						$cache->delete("directory:".$extension."@".$this->domain_name);
+					}
+					if (!empty($number_alias)) {
 						$cache->delete("directory:".$number_alias."@".$this->domain_name);
 					}
 			}
@@ -270,8 +272,7 @@ unset($refresh_default);
 		url += '&vd_ext_from=' + document.getElementById('vd_ext_from').value;
 		url += '&vd_ext_to=' + document.getElementById('vd_ext_to').value;
 		url += '&group=' + ((document.getElementById('group')) ? document.getElementById('group').value : '');
-		url += '&extension_filter=' + ((document.getElementById('extension_filter')) ? document.getElementById('extension_filter').value : '');
-		url += '&name_filter=' + ((document.getElementById('name_filter')) ? document.getElementById('name_filter').value : '');
+		url += '&filter=' + ((document.getElementById('search')) ? document.getElementById('search').value : '');
 		url += '&eavesdrop_dest=' + ((document.getElementById('eavesdrop_dest')) ? document.getElementById('eavesdrop_dest').value : '');
 		if (document.getElementById('sort1'))
 			if (document.getElementById('sort1').value == '1') url += '&sort';
@@ -359,8 +360,7 @@ unset($refresh_default);
 			url += '&vd_ext_from=' + document.getElementById('vd_ext_from').value;
 			url += '&vd_ext_to=' + document.getElementById('vd_ext_to').value;
 			url += '&group=' + ((document.getElementById('group')) ? document.getElementById('group').value : '');
-			url += '&extension_filter=' + ((document.getElementById('extension_filter')) ? document.getElementById('extension_filter').value : '');
-			url += '&name_filter=' + ((document.getElementById('name_filter')) ? document.getElementById('name_filter').value : '');
+			url += '&filter=' + ((document.getElementById('search')) ? document.getElementById('search').value : '');
 			url += '&eavesdrop_dest=' + ((document.getElementById('eavesdrop_dest')) ? document.getElementById('eavesdrop_dest').value : '');
 			if (document.getElementById('sort1'))
 				if (document.getElementById('sort1').value == '1') url += '&sort';

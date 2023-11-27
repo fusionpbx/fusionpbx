@@ -2259,7 +2259,12 @@
 <!--  Periodic Inform Enable. 0 - No, 1 - Yes. Default is 0 -->
 <!--  Number: 0, 1 -->
 <!--  Mandatory -->
+    {if isset ($grandstream_tr069_periodic_inform_enable)}
+<P4506>{$grandstream_tr069_periodic_inform_enable}</P4506>
+{else}
 <P4506>0</P4506>
+{/if}
+
 <!--  Periodic Inform Interval -->
 <!--  Number -->
 <P4507>86400</P4507>
@@ -2446,25 +2451,24 @@
 <!--  Use NAT IP. This will enable our SIP client to use this IP in the SIP/SDP message. Example 64.3.153.50 -->
 <!--  String: a-z, A-Z, 0-9, ".", ":" -->
 <P101></P101>
-<!--  STUN server -->
-<!--  String -->
-<P76></P76>
-<!--  Public Mode. 0 - No. 1 - Yes. Default is 0 -->
-<!--  Number: 0, 1 -->
-<!--  Mandatory -->
-{if isset($public_mode) }
-{if $public_mode|strtolower == 'true'}
-<P1345>1</P1345>
-{elseif $public_mode|strtolower == 'yes'}
-<P1345>1</P1345>
-{elseif $public_mode == '1'}
-<P1345>1</P1345>
+
+<!-- # STUN server -->
+<!-- # String -->
+{if isset($grandstream_stun_server) }
+    <P76>{$grandstream_stun_server}</P76>
 {else}
-<P1345>0</P1345>
+    <P76></P76>
 {/if}
+
+<!-- # Public Mode. 0 - No, 1 - Yes. Default is 0 -->
+<!-- # Number: 0, 1 -->
+<!-- # Mandatory -->
+{if isset($grandstream_public_mode) }
+    <P1345>{$grandstream_public_mode}</P1345>
 {else}
-<P1345>0</P1345>
+    <P1345>0</P1345>
 {/if}
+
 <!-- ############################################################################# -->
 <!-- #  Settings/Call Features -->
 <!-- ############################################################################# -->
@@ -3147,3 +3151,4 @@
 <P2986></P2986>
 </config>
 </gs_provision>
+

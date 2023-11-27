@@ -2,12 +2,8 @@
 
 //check the permission
 	if (defined('STDIN')) {
-		//set the include path
-		$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-		set_include_path(parse_ini_file($conf[0])['document.root']);
-
 		//includes files
-		require_once "resources/require.php";
+		require_once  dirname(__DIR__, 4) . "/resources/require.php";
 	}
 	else {
 		exit;
@@ -36,7 +32,7 @@
 	}
 
 //connect to event socket
-	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+	$fp = event_socket_create();
 
 //get the list
 	$sql = "select domain_name, extension, user_context, do_not_disturb, description ";

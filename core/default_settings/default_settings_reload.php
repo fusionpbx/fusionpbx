@@ -17,19 +17,15 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2021
+ Portions created by the Initial Developer are Copyright (C) 2008-2023
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
  Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -46,13 +42,12 @@ $language = new text;
 $text = $language->get();
 
 //set the variables
-$search = $_REQUEST['search'];
-$domain_uuid = $_GET['id'];
+$search = $_REQUEST['search'] ?? '';
+$domain_uuid = $_GET['id'] ?? null;
 
 //reload default settings
 require "resources/classes/domains.php";
 $domain = new domains();
-$domain->db = $db;
 $domain->set();
 
 //add a message

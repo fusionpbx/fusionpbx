@@ -17,19 +17,15 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2008-2018
+	Copyright (C) 2008-2023
 	All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -44,6 +40,31 @@
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
+
+//declare variables
+	$direction = "";
+	$caller_id_name = "";
+	$caller_id_number = "";
+	$destination_number = "";
+	$context = "";
+	$start_stamp_begin = "";
+	$start_stamp_end = "";
+	$answer_stamp_begin = "";
+	$answer_stamp_end = "";
+	$end_stamp_begin = "";
+	$end_stamp_end = "";
+	$duration_min = "";
+	$duration_max = "";
+	$billsec = "";
+	$hangup_cause = "";
+	$xml_cdr_uuid = "";
+	$bridge_uuid = "";
+	$accountcode = "";
+	$read_codec = "";
+	$write_codec = "";
+	$remote_media_ip = "";
+	$network_addr = "";
+	$mos_score = "";
 
 //send the header
 	$document['title'] = $text['title-advanced_search'];
@@ -63,7 +84,7 @@
 	echo "</script>";
 
 //start the html form
-	if ($_GET['redirect'] == 'xml_cdr_statistics') {
+	if (isset($_GET['redirect']) && $_GET['redirect'] == 'xml_cdr_statistics') {
 		echo "<form method='get' action='xml_cdr_statistics.php'>\n";
 	}
 	else {
@@ -139,7 +160,7 @@
 		$result_e = $database->select($sql, $parameters, 'all');
 		if (is_array($result_e) && @sizeof($result_e) != 0) {
 			foreach ($result_e as &$row) {
-				$selected = ($row['extension_uuid'] == $caller_extension_uuid) ? "selected" : null;
+				$selected = (!empty($caller_extension_uuid) && $row['extension_uuid'] == $caller_extension_uuid) ? "selected" : null;
 				echo "			<option value='".escape($row['extension_uuid'])."' ".escape($selected).">".((is_numeric($row['extension'])) ? escape($row['extension']) : escape($row['number_alias'])." (".escape($row['extension']).")")."</option>";
 			}
 		}
@@ -201,7 +222,7 @@
 			echo "	<tr>";
 			echo "		<td class='vncell'>".$text['button-show_all']."</td>";
 			echo "		<td class='vtable'>\n";
-			if (permission_exists('xml_cdr_all') && $_REQUEST['showall'] == "true") {
+			if (permission_exists('xml_cdr_all') && isset($_REQUEST['show']) && $_REQUEST['show'] == "all") {
 				echo "			<input type='checkbox' class='formfld' name='showall' checked='checked' value='true'>";
 			}
 			else {
@@ -252,7 +273,7 @@
 		echo "		<td class='vncell'>".$text['label-network_addr']."</td>";
 		echo "		<td class='vtable'><input type='text' class='formfld' name='network_addr' value='".escape($network_addr)."'></td>";
 		echo "	</tr>";
-		if (is_array($_SESSION['cdr']['field'])) {
+		if (isset($_SESSION['cdr']['field']) && is_array($_SESSION['cdr']['field'])) {
 			foreach ($_SESSION['cdr']['field'] as $field) {
 				$array = explode(",", $field);
 				$field_name = end($array);

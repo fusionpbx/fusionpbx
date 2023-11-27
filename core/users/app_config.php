@@ -5,7 +5,7 @@
 		$apps[$x]['uuid'] = "112124b3-95c2-5352-7e9d-d14c0b88f207";
 		$apps[$x]['category'] = "Core";
 		$apps[$x]['subcategory'] = "";
-		$apps[$x]['version'] = "1.0";
+		$apps[$x]['version'] = "1.1";
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Add, edit, delete, and search for users.";
@@ -61,6 +61,10 @@
 		$apps[$x]['permissions'][$y]['name'] = "user_import";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "user_type";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "user_group_view";
 		$apps[$x]['permissions'][$y]['menu']['uuid'] = "3b4acc6d-827b-f537-bf21-0093d94ffec7";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
@@ -83,6 +87,11 @@
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "view_users";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "user_status";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$apps[$x]['permissions'][$y]['groups'][] = "users";
 
 	//default settings
 		$y=0;
@@ -138,7 +147,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "users";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "password_special";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set whether to require at least one special character in user passwords.";
 		$y++;
@@ -194,6 +203,15 @@
 		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['field'] = "domain_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "contact_uuid";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "char(36)";
+		//$apps[$x]['db'][$y]['fields'][$z]['key']['type'] = "foreign";
+		//$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['table'] = "v_contacts";
+		//$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['field'] = "contact_uuid";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "v_id";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
@@ -212,17 +230,8 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "user_email";
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "user_email";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
-		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = "contact_uuid";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "char(36)";
-		//$apps[$x]['db'][$y]['fields'][$z]['key']['type'] = "foreign";
-		//$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['table'] = "v_contacts";
-		//$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['field'] = "contact_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "user_status";
@@ -240,6 +249,14 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "char(36)";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "user_totp_secret";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "user_type";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "user_enabled";
@@ -455,3 +472,4 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 
 ?>
+

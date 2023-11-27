@@ -69,16 +69,6 @@ if (!class_exists('destinations')) {
 		}
 
 		/**
-		* Called when there are no references to a particular object
-		* unset the variables used in the class
-		*/
-		public function __destruct() {
-			foreach ($this as $key => $value) {
-				unset($this->$key);
-			}
-		}
-
-		/**
 		* Convert destination number to a regular expression
 		* @var string $array destination_prefix, destination_trunk_prefix, destination_area_code, destination_number
 		*/
@@ -103,9 +93,9 @@ if (!class_exists('destinations')) {
 				elseif ((isset($array['destination_prefix']) && isset($array['destination_number'])) || isset($array['destination_number'])) {
 
 					//set the variables
-						$destination_prefix = $array['destination_prefix'];
-						$destination_number = $array['destination_number'];
-						$destination_regex = $array['destination_number'];
+						$destination_prefix = $array['destination_prefix'] ?? null;
+						$destination_number = $array['destination_number'] ?? null;
+						$destination_regex = $array['destination_number'] ?? null;
 
 					//escape the plus
 						if (substr($destination_number, 0, 1) == "+") {
@@ -113,7 +103,7 @@ if (!class_exists('destinations')) {
 						}
 
 					//add prefix
-						if (strlen($destination_prefix) > 0) {
+						if (!empty($destination_prefix)) {
 							$destination_prefix = str_replace("+", "", $destination_prefix);
 							$plus = '\+?';
 							if (strlen($destination_prefix) == 1) {
@@ -173,6 +163,10 @@ if (!class_exists('destinations')) {
 			//set the global variables
 			global $db_type;
 
+			//set defaults
+			$select_style = '';
+			$onchange = '';
+
 			//get the domain_name
 			$sql = "select domain_name from v_domains ";
 			$sql .= "where domain_uuid = :domain_uuid ";
@@ -180,8 +174,11 @@ if (!class_exists('destinations')) {
 			$database = new database;
 			$this->domain_name = $database->select($sql, $parameters, 'column');
 
+			//initialize variable
+			$response = '';
+
 			//create a single destination select list
-			if ($_SESSION['destinations']['select_mode']['text'] == 'default') {
+			if (!empty($_SESSION['destinations']['select_mode']['text']) && $_SESSION['destinations']['select_mode']['text'] == 'default') {
 				//get the destinations
 				if (!is_array($this->destinations)) {
 
@@ -296,7 +293,7 @@ if (!class_exists('destinations')) {
 
 				//add additional
 				if (if_group("superadmin")) {
-					$response = "<script>\n";
+					$response .= "<script>\n";
 					$response .= "var Objs;\n";
 					$response .= "\n";
 					$response .= "function changeToInput".$destination_id."(obj){\n";
@@ -306,7 +303,7 @@ if (!class_exists('destinations')) {
 					$response .= "	tb.className='formfld';\n";
 					$response .= "	tb.setAttribute('id', '".$destination_id."');\n";
 					$response .= "	tb.setAttribute('style', '".$select_style."');\n";
-					if ($onchange != '') {
+					if (!empty($onchange)) {
 						$response .= "	tb.setAttribute('onchange', \"".$onchange."\");\n";
 						$response .= "	tb.setAttribute('onkeyup', \"".$onchange."\");\n";
 					}
@@ -330,7 +327,7 @@ if (!class_exists('destinations')) {
 					$response .= "	obj[0].parentNode.removeChild(obj[1]);\n";
 					$response .= "	obj[0].parentNode.removeChild(obj[2]);\n";
 					$response .= "	document.getElementById('btn_select_to_input_".$destination_id."').style.visibility = 'visible';\n";
-					if ($onchange != '') {
+					if (!empty($onchange)) {
 						$response .= "	".$onchange.";\n";
 					}
 					$response .= "}\n";
@@ -347,7 +344,7 @@ if (!class_exists('destinations')) {
 
 					$name = $row['name'];
 					$label = $row['label'];
-					$destination = $row['field']['destination'];
+					$destination = $row['field']['destination'] ?? '';
 
 					//add multi-lingual support
 					if (file_exists($_SERVER["PROJECT_ROOT"]."/app/".$name."/app_languages.php")) {
@@ -355,7 +352,7 @@ if (!class_exists('destinations')) {
 						$text2 = $language2->get($_SESSION['domain']['language']['code'], 'app/'.$name);
 					}
 
-					if (is_array($row['result']['data']) && count($row['result']['data']) > 0 and strlen($row['select_value'][$destination_type]) > 0) {
+					if (!empty($row['result']['data']) && !empty($row['select_value'][$destination_type])) {
 						$response .= "		<optgroup label='".$text2['title-'.$label]."'>\n";
 						$label2 = $label;
 						foreach ($row['result']['data'] as $data) {
@@ -373,9 +370,9 @@ if (!class_exists('destinations')) {
 									if (strpos($value,',') !== false) {
 										$keys = explode(",", $value);
 										foreach ($keys as $k) {
-											if (strlen($data[$k]) > 0) {
+											if (!empty($data[$k])) {
 												$select_value = str_replace("\${".$key."}", $data[$k], $select_value);
-												if (strlen($data['label']) == 0) {
+												if (empty($data['label'])) {
 													$select_label = str_replace("\${".$key."}", $data[$k], $select_label);
 												}
 												else {
@@ -386,9 +383,9 @@ if (!class_exists('destinations')) {
 										}
 									}
 									else {
-										$select_value = str_replace("\${".$key."}", $data[$key], $select_value);
-										if (strlen($data['label']) == 0) {
-											$select_label = str_replace("\${".$key."}", $data[$key], $select_label);
+										$select_value = str_replace("\${".$key."}", $data[$key] ?? '', $select_value ?? '');
+										if (empty($data['label'])) {
+											$select_label = str_replace("\${".$key."}", $data[$key] ?? '', $select_label ?? '');
 										}
 										else {
 											$label = $data['label'];
@@ -396,7 +393,7 @@ if (!class_exists('destinations')) {
 										}
 									}
 									//application: hangup
-									if (strlen($data['application']) > 0) {
+									if (!empty($data['application'])) {
 										$select_value = str_replace("transfer", $data['application'], $select_value);
 									}
 								}
@@ -418,11 +415,11 @@ if (!class_exists('destinations')) {
 					}
 				}
 				if (!$select_found) {
-					$destination_label = str_replace(":", " ", $destination_value);
+					$destination_label = str_replace(":", " ", $destination_value ?? '');
 					$destination_label = str_replace("menu-exec-app", "", $destination_label);
 					$destination_label = str_replace("transfer", "", $destination_label);
 					$destination_label = str_replace("XML ".$this->domain_name, "", $destination_label);
-					if ($destination_value != '' || $destination_label != '') {
+					if (!empty($destination_value) || !empty($destination_label)) {
 						$response .= "			<option value='".escape($destination_value)."' selected='selected'>".trim($destination_label)."</option>\n";
 					}
 				}
@@ -439,7 +436,7 @@ if (!class_exists('destinations')) {
 				$destination_id = str_replace("]", "", $destination_name);
 				$destination_id = str_replace("[", "_", $destination_id);
 				//$destination_id = preg_replace('/[^a-zA-Z_,.]/', '', $destination_name);
-	
+
 				?>
 				<script type="text/javascript">
 					function get_destinations(id, destination_type, action, search) {
@@ -463,12 +460,12 @@ if (!class_exists('destinations')) {
 
 				//get the destinations
 				$destination = new destinations;
-				if (!isset($_SESSION['destinations']['array'][$destination_type])) {
-					$_SESSION['destinations']['array'][$destination_type] = $destination->get($destination_type);
+				if (!isset($_SESSION['destinations'][$this->domain_uuid]['array'][$destination_type])) {
+					$_SESSION['destinations'][$this->domain_uuid]['array'][$destination_type] = $destination->get($destination_type);
 				}
 
 				//get the destination label
-				foreach($_SESSION['destinations']['array'][$destination_type] as $key => $value) {
+				foreach($_SESSION['destinations'][$this->domain_uuid]['array'][$destination_type] as $key => $value) {
 					foreach($value as $k => $row) {
 						if ($destination_value == $row['destination']) {
 							$destination_key = $key;
@@ -484,11 +481,11 @@ if (!class_exists('destinations')) {
 				//build the destination select list in html
 				$response .= "	<select id='{$destination_id}_type' class='formfld' style='".$select_style."' onchange=\"get_destinations('".$destination_id."', '".$destination_type."', this.value);\">\n";
 				$response .= " 		<option value=''></option>\n";
-				foreach($_SESSION['destinations']['array'][$destination_type] as $key => $value) {
+				foreach($_SESSION['destinations'][$this->domain_uuid]['array'][$destination_type] as $key => $value) {
 					$singular = $this->singular($key);
 					if (permission_exists("{$singular}_destinations")) {
 						//determine if selected
-						$selected = ($key == $destination_key) ? "selected='selected'" : ''; 
+						$selected = (isset($destination_key) && $key == $destination_key) ? "selected='selected'" : '';
 
 						//add multi-lingual support
 						if (file_exists($_SERVER["PROJECT_ROOT"]."/app/".$key."/app_languages.php")) {
@@ -504,12 +501,12 @@ if (!class_exists('destinations')) {
 					}
 				}
 				$response .= "	</select>\n";
-				$response .= "	<select id='".$destination_id."' name='".$destination_name."' class='formfld' style='".$select_style."'>\n";
-				foreach($_SESSION['destinations']['array'][$destination_type] as $key => $value) {
-					if ($key == $destination_key) {
+				$response .= "	<select id='".$destination_id."' name='".$destination_name."' class='formfld' style='".$select_style." min-width: 200px;'>\n";
+				foreach($_SESSION['destinations'][$this->domain_uuid]['array'][$destination_type] as $key => $value) {
+					if (isset($destination_key) && $key == $destination_key) {
 						foreach($value as $k => $row) {
 							$selected = ($row['destination'] == $destination_value) ? "selected='selected'" : '';
-							$uuid = isset($row[$this->singular($key).'_uuid']) ? $row[$this->singular($key).'_uuid'] : $row['uuid'];
+							$uuid = isset($row[$this->singular($key).'_uuid']) ? $row[$this->singular($key).'_uuid'] : ($row['uuid'] ?? '');
 							$response .= "		<option id='{$uuid}' value='".$row['destination']."' $selected>".$row['label']."</option>\n";
 						}
 					}
@@ -519,7 +516,7 @@ if (!class_exists('destinations')) {
 					'type'=>'button',
 					'icon'=>'external-link-alt',
 					'id'=>'btn_dest_go',
-					'title'=>$text['label-edit'],
+					'title'=>$text2['button-edit'],
 					'onclick'=>"let types = document.getElementById('{$destination_id}_type').options; let opts = document.getElementById('{$destination_id}').options; if(opts[opts.selectedIndex].id && opts[opts.selectedIndex].id.length > 0) {window.open('/app/'+types[types.selectedIndex].className+'/'+types[types.selectedIndex].id+'_edit.php?id='+opts[opts.selectedIndex].id, '_blank');}"
 				])."\n";
 
@@ -546,6 +543,10 @@ if (!class_exists('destinations')) {
 
 			//set the global variables
 			global $db_type;
+
+			//set default values
+			$destination_name = '';
+			$destination_id = '';
 
 			//get the domain_name
 			$sql = "select domain_name from v_domains ";
@@ -663,7 +664,7 @@ if (!class_exists('destinations')) {
 
 				$name = $row['name'];
 				$label = $row['label'];
-				$destination = $row['field']['destination'];
+				$destination = $row['field']['destination'] ?? '';
 
 				//add multi-lingual support
 				if (file_exists($_SERVER["PROJECT_ROOT"]."/app/".$name."/app_languages.php")) {
@@ -671,14 +672,14 @@ if (!class_exists('destinations')) {
 					$text2 = $language2->get($_SESSION['domain']['language']['code'], 'app/'.$name);
 				}
 
-				if (is_array($row['result']['data']) && strlen($row['select_value'][$destination_type]) > 0) {
+				if (!empty($row['result']['data']) && !empty($row['select_value'][$destination_type])) {
 					$label2 = $label;
 					foreach ($row['result']['data'] as $data) {
 						$select_value = $row['select_value'][$destination_type];
 						$select_label = $row['select_label'];
 						foreach ($row['field'] as $key => $value) {
-							if ($key == 'destination' and is_array($value)){
-								if ($value['type'] == 'csv') {
+							if (!empty($key) && $key == 'destination' && !empty($value) && is_array($value)){
+								if (!empty($value['type']) && $value['type'] == 'csv') {
 									$array = explode($value['delimiter'], $data[$key]);
 									$select_value = str_replace("\${destination}", $array[0], $select_value);
 									$select_label = str_replace("\${destination}", $array[0], $select_label);
@@ -688,9 +689,9 @@ if (!class_exists('destinations')) {
 								if (strpos($value,',') !== false) {
 									$keys = explode(",", $value);
 									foreach ($keys as $k) {
-										if (strlen($data[$k]) > 0) {
+										if (!empty($data[$k])) {
 											$select_value = str_replace("\${".$key."}", $data[$k], $select_value);
-											if (strlen($data['label']) == 0) {
+											if (empty($data['label'])) {
 												$select_label = str_replace("\${".$key."}", $data[$k], $select_label);
 											}
 											else {
@@ -701,9 +702,9 @@ if (!class_exists('destinations')) {
 									}
 								}
 								else {
-									$select_value = str_replace("\${".$key."}", $data[$key], $select_value);
-									if (strlen($data['label']) == 0) {
-										$select_label = str_replace("\${".$key."}", $data[$key], $select_label);
+									$select_value = str_replace("\${".$key."}", $data[$key] ?? '', $select_value);
+									if (empty($data['label'])) {
+										$select_label = str_replace("\${".$key."}", $data[$key] ?? '', $select_label);
 									}
 									else {
 										$label = $data['label'];
@@ -711,7 +712,7 @@ if (!class_exists('destinations')) {
 									}
 								}
 								//application: hangup
-								if (strlen($data['application']) > 0) {
+								if (!empty($data['application'])) {
 									$select_value = str_replace("transfer", $data['application'], $select_value);
 								}
 							}
@@ -724,7 +725,7 @@ if (!class_exists('destinations')) {
 						$select_label = str_replace("&#9993", 'email-icon', $select_label);
 						$select_label = escape(trim($select_label));
 						$select_label = str_replace('email-icon', '&#9993', $select_label);
-						if ($select_value == $destination_value) { $selected = "selected='selected' "; $select_found = true; } else { $selected = ''; }
+						if (!empty($destination_value) && $select_value == $destination_value) { $selected = "selected='selected' "; $select_found = true; } else { $selected = ''; }
 						if ($label2 == 'destinations') { $select_label = format_phone($select_label); }
 						$array[$label][$select_label] = $select_value;
 					}
@@ -732,7 +733,11 @@ if (!class_exists('destinations')) {
 				}
 			}
 			if (!$select_found) {
-				$destination_label = str_replace(":", " ", $destination_value);
+				$destination_label = $destination_label ?? '';
+				$destination_value = $destination_value ?? '';
+				if(!empty($destination_value)) {
+					$destination_label = str_replace(":", " ", $destination_value);
+				}
 				$destination_label = str_replace("menu-exec-app", "", $destination_label);
 				$destination_label = str_replace("transfer", "", $destination_label);
 				$destination_label = str_replace("XML ".$this->domain_name, "", $destination_label);
@@ -865,7 +870,7 @@ if (!class_exists('destinations')) {
 			}
 
 			//remove special characters from the name
-			$destination_id = str_replace("]", "", $destination_name);
+			$destination_id = str_replace("]", "", $destination_name ?? '');
 			$destination_id = str_replace("[", "_", $destination_id);
 
 			//set default to false
@@ -876,7 +881,7 @@ if (!class_exists('destinations')) {
 
 				$name = $row['name'];
 				$label = $row['label'];
-				$destination = $row['field']['destination'];
+				$destination = $row['field']['destination'] ?? null;
 
 				//add multi-lingual support
 				if (file_exists($_SERVER["PROJECT_ROOT"]."/app/".$name."/app_languages.php")) {
@@ -884,7 +889,7 @@ if (!class_exists('destinations')) {
 					$text2 = $language2->get($_SESSION['domain']['language']['code'], 'app/'.$name);
 				}
 
-				if (is_array($row['result']['data']) && strlen($row['select_value'][$destination_type]) > 0) {
+				if (isset($row['result']) && is_array($row['result']['data']) && !empty($row['select_value'][$destination_type])) {
 					$label2 = $label;
 					foreach ($row['result']['data'] as $data) {
 						$select_value = $row['select_value'][$destination_type];
@@ -902,9 +907,9 @@ if (!class_exists('destinations')) {
 								if (strpos($value,',') !== false) {
 									$keys = explode(",", $value);
 									foreach ($keys as $k) {
-										if (strlen($data[$k]) > 0) {
+										if (!empty($data[$k])) {
 											$select_value = str_replace("\${".$key."}", $data[$k], $select_value);
-											if (strlen($data['label']) == 0) {
+											if (empty($data['label'])) {
 												$select_label = str_replace("\${".$key."}", $data[$k], $select_label);
 											}
 											else {
@@ -915,17 +920,17 @@ if (!class_exists('destinations')) {
 									}
 								}
 								else {
-									$select_value = str_replace("\${".$key."}", $data[$key], $select_value);
-									if (strlen($data['label']) == 0) {
-										$select_label = str_replace("\${".$key."}", $data[$key], $select_label);
+									$select_value = str_replace("\${".$key."}", ($data[$key] ?? ''), $select_value);
+									if (empty($data['label'])) {
+										$select_label = str_replace("\${".$key."}", ($data[$key] ?? ''), $select_label);
 									}
 									else {
-										$label = $data['label'];
+// 										$label = $data['label'];
 										$select_label = str_replace("\${".$key."}", $text2['option-'.$label], $select_label);
 									}
 								}
 								//application: hangup
-								if (strlen($data['application']) > 0) {
+								if (!empty($data['application'])) {
 									$select_value = str_replace("transfer", $data['application'], $select_value);
 								}
 							}
@@ -944,7 +949,7 @@ if (!class_exists('destinations')) {
 						$select_label = str_replace("&#9993", 'email-icon', $select_label);
 						$select_label = escape(trim($select_label));
 						$select_label = str_replace('email-icon', '&#9993', $select_label);
-						if ($select_value == $destination_value) { $selected = "true' "; } else { $selected = 'false'; }
+						if (isset($destination_value) && $select_value == $destination_value) { $selected = "true' "; } else { $selected = 'false'; }
 						if ($label2 == 'destinations') { $select_label = format_phone($select_label); }
 
 						$array[$name][$i] = $data;
@@ -954,8 +959,8 @@ if (!class_exists('destinations')) {
 						//$array[$name][$i]['select_value'] = $select_value;
 						//$array[$name][$i]['selected'] = $selected;
 						$array[$name][$i]['destination'] = $select_value;
-						$array[$name][$i]["extension"] = $data["extension"];
-						
+						$array[$name][$i]["extension"] = $data["extension"] ?? null;
+
 						$i++;
 					}
 
@@ -1034,7 +1039,7 @@ if (!class_exists('destinations')) {
 
 						//build the delete array
 							foreach ($records as $x => $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked'] ) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 
 									//build delete array
 										$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
@@ -1086,8 +1091,8 @@ if (!class_exists('destinations')) {
 									}
 
 								//clear the destinations session array
-									if (isset($_SESSION['destinations']['array'])) {
-										unset($_SESSION['destinations']['array']);
+									if (isset($_SESSION['destinations'][$this->domain_uuid]['array'])) {
+										unset($_SESSION['destinations'][$this->domain_uuid]['array']);
 									}
 
 								//set message

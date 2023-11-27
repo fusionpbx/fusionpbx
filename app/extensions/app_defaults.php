@@ -28,9 +28,9 @@
 	if ($domains_processed == 1) {
 
 		//create the directory
-			if (strlen($_SESSION['switch']['extensions']['dir']) > 0) {
-				if (!is_dir($_SESSION['switch']['extensions']['dir'])) {
-					mkdir($_SESSION['switch']['extensions']['dir'], 0770, false);
+			if (!empty($setting->get('switch','extensions'))) {
+				if (!is_dir($setting->get('switch','extensions'))) {
+					mkdir($setting->get('switch','extensions'), 0770, false);
 				}
 			}
 
@@ -44,7 +44,7 @@
 			if (is_array($extensions) && @sizeof($extensions) != 0) {
 				foreach($extensions as $index => $row) {
 					$name = explode(' ', $row['directory_first_name']);
-					if (strlen($name[1]) > 0) {
+					if (!empty($name[1])) {
 						$array['extensions'][$index]['extension_uuid'] = $row['extension_uuid'];
 						$array['extensions'][$index]['directory_first_name'] = $name[0];
 						$array['extensions'][$index]['directory_last_name'] = $name[1];
@@ -96,6 +96,19 @@
 			$sql = "update v_extensions set dial_string = null where (dial_string = '!USER_BUSY' or dial_string = 'error/user_busy');\n";
 			$database->execute($sql);
 			unset($sql);
+
+		//update the extension_type when the value is null
+			$sql = "select count(*) from v_extensions ";
+			$sql .= "where extension_type is null; ";
+			$database = new database;
+			$num_rows = $database->select($sql, null, 'column');
+			if ($num_rows > 0) {
+				$sql = "update v_extensions ";
+				$sql .= "set extension_type = 'default' ";
+				$sql .= "where extension_type is null;";
+				$database = new database;
+				$database->execute($sql, null);
+			}
 
 	}
 

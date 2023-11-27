@@ -17,19 +17,15 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2022
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -45,7 +41,7 @@
 	$language = new text;
 	$text = $language->get();
 
-//built in str_getcsv requires PHP 5.3 or higher, this function can be used to reproduct the functionality but requirs PHP 5.1.0 or higher
+//built in str_getcsv requires PHP 5.3 or higher, this function can be used to reproduce the functionality but requires PHP 5.1.0 or higher
 	if (!function_exists('str_getcsv')) {
 		function str_getcsv($input, $delimiter = ",", $enclosure = '"', $escape = "\\") {
 			$fp = fopen("php://memory", 'r+');
@@ -61,32 +57,32 @@
 	ini_set('max_execution_time', 7200);
 
 //get the http get values and set them as php variables
-	$action = $_POST["action"];
-	$from_row = $_POST["from_row"];
-	$delimiter = $_POST["data_delimiter"];
-	$enclosure = $_POST["data_enclosure"];
+	$action = $_POST["action"] ?? '';
+	$from_row = $_POST["from_row"] ?? '';
+	$delimiter = $_POST["data_delimiter"] ?? '';
+	$enclosure = $_POST["data_enclosure"] ?? '';
 
 //save the data to the csv file
 	if (isset($_POST['data'])) {
 		$file = $_SESSION['server']['temp']['dir']."/access_control_nodes-".$_SESSION['domain_name'].".csv";
-		file_put_contents($file, $_POST['data']);
-		$_SESSION['file'] = $file;
-	}
-
-//copy the csv file
-	//$_POST['submit'] == "Upload" &&
-	if ( is_uploaded_file($_FILES['ulfile']['tmp_name']) && permission_exists('contact_upload')) {
-		if ($_POST['type'] == 'csv') {
-			move_uploaded_file($_FILES['ulfile']['tmp_name'], $_SESSION['server']['temp']['dir'].'/'.$_FILES['ulfile']['name']);
-			$save_msg = "Uploaded file to ".$_SESSION['server']['temp']['dir']."/". htmlentities($_FILES['ulfile']['name']);
-			//system('chmod -R 744 '.$_SESSION['server']['temp']['dir'].'*');
-			$file = $_SESSION['server']['temp']['dir'].'/'.$_FILES['ulfile']['name'];
+		if (file_put_contents($file, $_POST['data'])) {
 			$_SESSION['file'] = $file;
 		}
 	}
 
+//copy the csv file
+	//$_POST['submit'] == "Upload" &&
+	if (!empty($_FILES['ulfile']['tmp_name']) &&  is_uploaded_file($_FILES['ulfile']['tmp_name']) && permission_exists('access_control_node_add')) {
+		if (!empty($_POST['type']) &&$_POST['type'] == 'csv') {
+			$file = $_SESSION['server']['temp']['dir'].'/'.$_FILES['ulfile']['name'];
+			if (move_uploaded_file($_FILES['ulfile']['tmp_name'], $file)) {
+				$_SESSION['file'] = $file;
+			}
+		}
+	}
+
 //get the schema
-	if (strlen($delimiter) > 0) {
+	if (!empty($delimiter)) {
 		//get the first line
 			$line = fgets(fopen($_SESSION['file'], 'r'));
 			$line_fields = explode($delimiter, $line);
@@ -97,7 +93,12 @@
 			$i = 0;
 			foreach ($apps[0]['db'] as $table) {
 				//get the table name and parent name
-				$table_name = $table["table"]['name'];
+				if (is_array($table["table"]['name'])) {
+					$table_name = $table["table"]['name']['text'];
+				}
+				else {
+					$table_name = $table["table"]['name'];
+				}
 				$parent_name = $table["table"]['parent'];
 
 				//remove the v_ table prefix
@@ -108,10 +109,12 @@
 					$parent_name = substr($parent_name, 2);
 				}
 
+				//filter for specific tables and build the schema array
 				if ($table_name == 'access_control_nodes') {
 					$schema[$i]['table'] = $table_name;
 					$schema[$i]['parent'] = $parent_name;
-					foreach ($table['fields'] as $row) {
+					foreach($table['fields'] as $row) {
+						$row['deprecated'] = $row['deprecated'] ?? '';
 						if ($row['deprecated'] !== 'true') {
 							if (is_array($row['name'])) {
 								$field_name = $row['name']['text'];
@@ -122,13 +125,13 @@
 							$schema[$i]['fields'][] = $field_name;
 						}
 					}
+					$i++;
 				}
-				$i++;
 			}
 	}
 
 //match the column names to the field names
-	if (strlen($delimiter) > 0 && file_exists($_SESSION['file']) && $action != 'import') {
+	if (!empty($delimiter) && file_exists($_SESSION['file']) && $action != 'import') {
 
 		//validate the token
 			$token = new token;
@@ -150,7 +153,7 @@
 			echo "<form name='frmUpload' method='post' enctype='multipart/form-data'>\n";
 
 			echo "<div class='action_bar' id='action_bar'>\n";
-			echo "	<div class='heading'><b>".$text['header-import']."</b></div>\n";
+			echo "	<div class='heading'><b>".$text['label-import']."</b></div>\n";
 			echo "	<div class='actions'>\n";
 			echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'access_control_node_edit.php?id='.$_GET['id']]);
 			echo button::create(['type'=>'submit','label'=>$text['button-import'],'icon'=>$_SESSION['theme']['button_icon_import'],'id'=>'btn_save']);
@@ -164,7 +167,7 @@
 			//loop through the lines and fields
 			$x = 0;
 			foreach ($line_fields as $line_field) {
-				$line_field = trim(trim($line_field), $enclosure);
+				$line_field = preg_replace('#[^a-zA-Z0-9_]#', '', $line_field);
 				echo "<tr>\n";
 				echo "	<td width='30%' class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 				echo $line_field;
@@ -218,7 +221,7 @@
 	}
 
 //upload the csv
-	if (file_exists($_SESSION['file']) && $action == 'import') {
+	if (file_exists($_SESSION['file'] ?? '') && $action == 'import') {
 
 		//validate the token
 			$token = new token;
@@ -229,9 +232,9 @@
 			}
 
 		//user selected fields, labels
-			$fields = $_POST['fields'];
-			$labels = $_POST['labels'];
-			
+			$fields = $_POST['fields'] ?? '';
+			$labels = $_POST['labels'] ?? '';
+
 		//set the domain_uuid
 			$domain_uuid = $_SESSION['domain_uuid'];
 
@@ -294,7 +297,7 @@
 									}
 
 									//build the data array
-									if (strlen($table_name) > 0) {
+									if (!empty($table_name)) {
 										$array[$table_name][$row_id]['access_control_node_uuid'] = uuid();
 										$array[$table_name][$row_id]['access_control_uuid'] = $_GET['id'];
 										$array[$table_name][$row_id][$field_name] = $result[$key];
@@ -314,14 +317,13 @@
 										$database->save($array);
 
 									//clear the array
- 										unset($array);
+										unset($array);
 
 									//set the row id back to 0
 										$row_id = 0;
 								}
 
-						} //if ($from_row <= $row_number)
-						unset($field_count);
+						} //if ($from_row <= $row_id)
 						$row_number++;
 						$row_id++;
 					} //end while
@@ -331,7 +333,7 @@
 					//view_array($array);
 
 				//save to the data
-					if (is_array($array)) {
+					if (!empty($array)) {
 						$database = new database;
 						$database->app_name = 'access_controls';
 						$database->app_uuid = '1416a250-f6e1-4edc-91a6-5c9b883638fd';
@@ -341,7 +343,7 @@
 
 				//send the redirect header
 					header("Location: access_control_edit.php?id=".$_GET['id']);
-					exit;
+					return;
 			}
 	}
 
@@ -350,14 +352,14 @@
 	$token = $object->create($_SERVER['PHP_SELF']);
 
 //include the header
-	$document['title'] = $text['title-import'];
+	$document['title'] = $text['label-import'];
 	require_once "resources/header.php";
 
 //show content
 	echo "<form name='frmUpload' method='post' enctype='multipart/form-data'>\n";
 
 	echo "<div class='action_bar' id='action_bar'>\n";
-	echo "	<div class='heading'><b>".$text['header-import']."</b></div>\n";
+	echo "	<div class='heading'><b>".$text['label-import']."</b></div>\n";
 	echo "	<div class='actions'>\n";
 	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'access_control_edit.php?id='.$_GET['id']]);
 	echo button::create(['type'=>'submit','label'=>$text['button-continue'],'icon'=>$_SESSION['theme']['button_icon_upload'],'id'=>'btn_save']);
@@ -375,7 +377,7 @@
 	echo "    ".$text['label-import_data']."\n";
 	echo "</td>\n";
 	echo "<td width='70%' class='vtable' align='left'>\n";
-	echo "    <textarea name='data' id='data' class='formfld' style='width: 100%; min-height: 150px;' wrap='off'>$data</textarea>\n";
+	echo "    <textarea name='data' id='data' class='formfld' style='width: 100%; min-height: 150px;' wrap='off'></textarea>\n";
 	echo "<br />\n";
 	echo $text['description-import_data']."\n";
 	echo "</td>\n";
@@ -438,8 +440,7 @@
 	echo "</tr>\n";
 
 	echo "</table>\n";
-	echo "<br />\n";
-	echo "<br />\n";
+	echo "<br /><br />\n";
 
 	echo "<input name='type' type='hidden' value='csv'>\n";
 	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";

@@ -24,12 +24,8 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -48,21 +44,21 @@
 //set the http get/post variable(s) to a php variable
 	if (is_uuid($_REQUEST["id"]) && isset($_REQUEST["mac"])) {
 		$device_uuid = $_REQUEST["id"];
-		$device_mac_address = $_REQUEST["mac"];
-		$device_mac_address = preg_replace('#[^a-fA-F0-9./]#', '', $device_mac_address);
+		$device_address = $_REQUEST["mac"];
+		$device_address = preg_replace('#[^a-fA-F0-9./]#', '', $device_address);
 	}
 
 //set the default
 	$save = true;
 
-//check to see if the mac address exists
-	if ($device_mac_address == "" || $device_mac_address == "000000000000") {
+//check to see if the device address exists
+	if ($device_address == "" || $device_address == "000000000000") {
 		//allow duplicates to be used as templaes
 	}
 	else {
 		$sql = "select count(*) from v_devices ";
-		$sql .= "where device_mac_address = :device_mac_address ";
-		$parameters['device_mac_address'] = $device_mac_address;
+		$sql .= "where device_address = :device_address ";
+		$parameters['device_address'] = $device_address;
 		$database = new database;
 		$num_rows = $database->select($sql, $parameters, 'column');
 		if ($num_rows == 0) {
@@ -155,15 +151,15 @@
 		}
 	}
 
-//normalize the mac address
-	if (isset($device_mac_address) && strlen($device_mac_address) > 0) {
-		$device_mac_address = strtolower($device_mac_address);
-		$device_mac_address = preg_replace('#[^a-fA-F0-9./]#', '', $device_mac_address);
+//normalize the device address
+	if (isset($device_address) && !empty($device_address)) {
+		$device_address = strtolower($device_address);
+		$device_address = preg_replace('#[^a-fA-F0-9./]#', '', $device_address);
 	}
 
 //create the device array
 	$device = $devices[0];
-	$device["device_mac_address"] = $device_mac_address;
+	$device["device_address"] = $device_address;
 	$device["device_lines"] = $device_lines;
 	$device["device_keys"] = $device_keys;
 	$device["device_settings"] = $device_settings;

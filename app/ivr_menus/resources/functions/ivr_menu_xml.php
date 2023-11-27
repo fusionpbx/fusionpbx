@@ -91,7 +91,7 @@
 
 					//add each IVR menu to the XML config
 						$tmp = "<include>\n";
-						if (strlen($ivr_menu_description) > 0) {
+						if (!empty($ivr_menu_description)) {
 							$tmp .= "	<!-- $ivr_menu_description -->\n";
 						}
 						if (count($_SESSION["domains"]) > 1) {
@@ -109,13 +109,13 @@
 							$tmp .= "		greet-long=\"".$ivr_menu_greet_long."\"\n";
 						}
 						if (stripos($ivr_menu_greet_short, 'mp3') !== false || stripos($ivr_menu_greet_short, 'wav') !== false) {
-							if (strlen($ivr_menu_greet_short) > 0) {
+							if (!empty($ivr_menu_greet_short)) {
 								$tmp .= "		greet-short=\"".$ivr_menu_greet_short."\"\n";
 							}
 						}
 						else {
 							//not found
-							if (strlen($ivr_menu_greet_short) > 0) {
+							if (!empty($ivr_menu_greet_short)) {
 								$tmp .= "		greet-short=\"".$ivr_menu_greet_short."\"\n";
 							}
 						}
@@ -149,7 +149,7 @@
 								$ivr_menu_option_description = $sub_row["ivr_menu_option_description"];
 
 								$tmp .= "		<entry action=\"$ivr_menu_option_action\" digits=\"$ivr_menu_option_digits\" param=\"$ivr_menu_option_param\"/>";
-								if (strlen($ivr_menu_option_description) == 0) {
+								if (empty($ivr_menu_option_description)) {
 									$tmp .= "\n";
 								}
 								else {

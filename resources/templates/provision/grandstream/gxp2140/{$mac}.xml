@@ -1,5 +1,3 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!-- Grandstream XML Provisioning Configuration -->
 <gs_provision version="1">
 <mac>{$mac|replace:'-':''}</mac>
   <config version="1">
@@ -5847,133 +5845,192 @@
     <!-- # Cannot contain ` or " -->
     <P83></P83>
 
-    <!-- # PPPoE Service Name -->
-    <!-- # String  -->
-    <P269></P269>
+		<!-- Support Rport (RFC 3581) -->
+		<!-- Yes, No -->
+		<item name="account.{$row.line_number}.network.supportRport">Yes</item>
 
-    <!-- ########################################## -->
-    <!-- # Statically Configured -->
-    <!-- ########################################## -->
-    <!-- # IP Address. Ignore if DHCP or PPPoE is used -->
-    <!-- # Number: 0 - 255 -->
-    {if isset($grandstream_ipv4octet_1)}<P9>{$grandstream_ipv4octet_1}</P9>{else}<P9>192</P9>{/if}
+		<!-- Proxy-Require -->
+		<item name="account.{$row.line_number}.network.proxyRequire"/>
 
-    <!-- # Number: 0 - 255 -->
-    {if isset($grandstream_ipv4octet_2)}<P10>{$grandstream_ipv4octet_2}</P10>{else}<P10>168</P10>{/if}
+		<!-- Use SBC -->
+		<!-- Yes, No -->
+		<item name="account.{$row.line_number}.network.sbc.enable">No</item>
 
-    <!-- # Number: 0 - 255 -->
-    {if isset($grandstream_ipv4octet_3)}<P11>{$grandstream_ipv4octet_3}</P11>{else}<P11>1</P11>{/if}
+		<!-- Account 1 SIP Settings -->
+		<!-- Account 1 Basic Settings -->
+		<!-- TEL URI -->
+		<!-- Disabled, UserIsPhone, Enabled -->
+		<item name="account.{$row.line_number}.sip.telUri">Disabled</item>
 
-    <!-- # Number: 0 - 255 -->
-    {if isset($grandstream_ipv4octet_4)}<P12>{$grandstream_ipv4octet_4}</P12>{else}<P12>102</P12>{/if}
+		<!-- SIP Registration -->
+		<!-- Yes, No -->
+		<item name="account.{$row.line_number}.sip.registration">Yes</item>
 
-    <!-- # Subnet mask. Ignore if DHCP or PPPoE is used -->
-    <!-- # Number: 0 - 255 -->
-    {if isset($grandstream_ipv4mask_1)}<P13>{$grandstream_ipv4mask_1}</P13>{else}<P13>255</P13>{/if}
+		<!-- Unregister on Reboot -->
+		<!-- No, Yes, Instance -->
+		<item name="account.{$row.line_number}.sip.unregisterOnReboot">No</item>
 
-    <!-- # Number: 0 - 255 -->
-    {if isset($grandstream_ipv4mask_2)}<P14>{$grandstream_ipv4mask_2}</P14>{else}<P14>255</P14>{/if}
+		<!-- Register Expiration (m) -->
+		<!-- Number: 0 - 64800 -->
+		<item name="account.{$row.line_number}.sip.registerExpiration">15</item>
 
-    <!-- # Number: 0 - 255 -->
-    {if isset($grandstream_ipv4mask_3)}<P15>{$grandstream_ipv4mask_3}</P15>{else}<P15>0</P15>{/if}
+		<!-- Subscribe Expiration (m) -->
+		<!-- Number: 0 - 64800 -->
+		<item name="account.{$row.line_number}.sip.subscribe.expiration">60</item>
 
-    <!-- # Number: 0 - 255 -->
-    {if isset($grandstream_ipv4mask_4)}<P16>{$grandstream_ipv4mask_4}</P16>{else}<P16>0</P16>{/if}
+		<!-- Reregister before Expiration (s)  -->
+		<!-- Number: 0 - 64800 -->
+		<item name="account.{$row.line_number}.sip.registerBeforeExpiration">0</item>
 
-    <!-- # Gateway. Ignore if DHCP or PPPoE is used -->
-    <!-- # Number: 0 - 255 -->
-    {if isset($grandstream_ipv4gw_1)}<P17>{$grandstream_ipv4gw_1}</P17>{else}<P17>192</P17>{/if}
+		<!-- Enable OPTIONS Keep Alive -->
+		<!-- Yes, No -->
+		<item name="account.{$row.line_number}.sip.keepAlive.enable">Yes</item>
 
-    <!-- # Number: 0 - 255 -->
-    {if isset($grandstream_ipv4gw_2)}<P18>{$grandstream_ipv4gw_2}</P18>{else}<P18>168</P18>{/if}
+		<!-- OPTIONS Keep Alive Interval (s)  -->
+		<item name="account.{$row.line_number}.sip.keepAlive.interval">30</item>
 
-    <!-- # Number: 0 - 255 -->
-    {if isset($grandstream_ipv4gw_3)}<P19>{$grandstream_ipv4gw_3}</P19>{else}<P19>2</P19>{/if}
+		<!-- OPTIONS Keep-Alive Max Tries -->
+		<item name="account.{$row.line_number}.sip.keepAlive.maxLost">3</item>
 
-    <!-- # Number: 0 - 255 -->
-    {if isset($grandstream_ipv4gw_4)}<P20>{$grandstream_ipv4gw_4}</P20>{else}<P20>1</P20>{/if}
+		<!-- Local SIP Port -->
+		<item name="account.{$row.line_number}.sip.localPort">{$row.sip_port}</item>
 
-    <!-- # DNS 1 Server. Ignore if DHCP or PPPoE is used -->
-    <!-- # Number: 0 - 255 -->
-    {if isset($grandstream_ipv4dns1_1)}<P21>{$grandstream_ipv4dns1_1}</P21>{else}<P21>0</P21>{/if}
+		<!-- Registration Retry Wait Time (s) -->
+		<item name="account.{$row.line_number}.sip.registrationFailureRetryWaitTime">20</item>
 
-    <!-- # Number: 0 - 255 -->
-    {if isset($grandstream_ipv4dns1_2)}<P22>{$grandstream_ipv4dns1_2}</P22>{else}<P22>0</P22>{/if}
+		<!-- SIP T1 Timeout -->
+		<!-- 0.5 sec - 0.5sec, 1 sec - 1sec, 2 sec - 2sec -->
+		<item name="account.{$row.line_number}.sip.timer.t1">0.5sec</item>
 
-    <!-- # Number: 0 - 255 -->
-    {if isset($grandstream_ipv4dns1_3)}<P23>{$grandstream_ipv4dns1_3}</P23>{else}<P23>0</P23>{/if}
+		<!-- SIP T2 Timeout -->
+		<!-- 2 sec - 2sec, 4 sec - 4sec, 8 sec - 8sec -->
+		<item name="account.{$row.line_number}.sip.timer.t2">4sec</item>
 
-    <!-- # Number: 0 - 255 -->
-    {if isset($grandstream_ipv4dns1_4)}<P24>{$grandstream_ipv4dns1_4}</P24>{else}<P24>0</P24>{/if}
+		<!-- SIP Transport -->
+		<!-- UDP, TCP, Tls Or Tcp -->
+		{if $row.sip_transport == ''}<item name="account.{$row.line_number}.sip.transport">TCP</item>{/if}
+		{if $row.sip_transport == 'UDP'}<item name="account.{$row.line_number}.sip.transport">UDP</item>{/if}
+		{if $row.sip_transport == 'TCP'}<item name="account.{$row.line_number}.sip.transport">TCP</item>{/if}
+		{if $row.sip_transport == 'TLS'}<item name="account.{$row.line_number}.sip.transport">Tls</item>{/if}
 
-    <!-- # DNS 2 Server. Ignore if DHCP or PPPoE is used -->
-    <!-- # Number: 0 - 255 -->
-    {if isset($grandstream_ipv4dns2_1)}<P25>{$grandstream_ipv4dns2_1}</P25>{else}<P25>0</P25>{/if}
+		<!-- SIP Listening Mode -->
+		<!-- Transport_Only, Dual, Dual_BLF_Enforced, Dual_Secured -->
+		<item name="account.{$row.line_number}.sip.listeningMode">Transport_Only</item>
 
-    <!-- # Number: 0 - 255 -->
-    {if isset($grandstream_ipv4dns2_2)}<P26>{$grandstream_ipv4dns2_2}</P26>{else}<P26>0</P26>{/if}
+		<!-- SIP URI Scheme When Using TLS -->
+		<!-- sip, sips -->
+		<item name="account.{$row.line_number}.sip.uriSchemeWhenUsingTls">sips</item>
 
-    <!-- # Number: 0 - 255 -->
-    {if isset($grandstream_ipv4dns2_3)}<P27>{$grandstream_ipv4dns2_3}</P27>{else}<P27>0</P27>{/if}
+		<!-- Use Actual Ephemeral Port in Contact with TCP/TLS -->
+		<!-- No, Yes -->
+		<item name="account.{$row.line_number}.sip.useActualEphemeralPortInContactWithTcpTls">No</item>
 
-    <!-- # Number: 0 - 255 -->
-    {if isset($grandstream_ipv4dns2_4)}<P28>{$grandstream_ipv4dns2_4}</P28>{else}<P28>0</P28>{/if}
+		<!-- Outbound Proxy Mode -->
+		<!-- InRoute, NotInRoute, AlwaysSentTo -->
+		<item name="account.{$row.line_number}.sip.outboundProxy.mode">InRoute</item>
 
-    <!-- # Preferred DNS server.  (if specified). -->
-    <!-- # Number: 0 - 255 -->
-    {if isset($grandstream_ipv4preferdns_1)}<P92>{$grandstream_ipv4preferdns_1}</P92>{else}<P92>0</P92>{/if}
+		<!-- Support SIP Instance ID -->
+		<!-- No, Yes -->
+		<item name="account.{$row.line_number}.sip.supportInstanceId">Yes</item>
 
-    <!-- # Number: 0 - 255 -->
-    {if isset($grandstream_ipv4preferdns_2)}<P93>{$grandstream_ipv4preferdns_2}</P93>{else}<P93>0</P93>{/if}
+		<!-- Subscribe for MWI -->
+		<!-- Yes, No -->
+		<item name="account.{$row.line_number}.sip.subscribe.forMwi">No</item>
 
-    <!-- # Number: 0 - 255 -->
-    {if isset($grandstream_ipv4preferdns_3)}<P94>{$grandstream_ipv4preferdns_3}</P94>{else}<P94>0</P94>{/if}
+		<!-- SUBSCRIBE for Registration -->
+		<!-- Yes, No -->
+		<item name="account.{$row.line_number}.sip.subscribe.forRegistration">No</item>
 
-    <!-- # Number: 0 - 255 -->
-    {if isset($grandstream_ipv4preferdns_4)}<P95>{$grandstream_ipv4preferdns_4}</P95>{else}<P95>0</P95>{/if}
+		<!-- Enable 100rel -->
+		<!-- No, Yes -->
+		<item name="account.{$row.line_number}.sip.header.100rel">No</item>
 
-    <!-- # IPv6 Address type. 0 - Auto Configured, 1 - Statically Configured. Default is 0. -->
-    <!-- # Number: 0, 1 -->
-    <!-- # Mandatory -->
-    <P1419>0</P1419>
+		<!-- Callee ID Display -->
+		<!-- Auto, Disabled, To Header - Header -->
+		<item name="account.{$row.line_number}.sip.calleeIdDisplay">Auto</item>
 
-    <!-- # IPv6 Address type: Statically configured. 0 - Full Static, 1 - Prefix Static -->
-    <!-- # Number: 0, 1 -->
-    <P1426>0</P1426>
+		<!-- Caller ID Display -->
+		<!-- Auto, Disabled, From Header - Header -->
+		<item name="account.{$row.line_number}.sip.callerIdDisplay">Header</item>
 
-    <!-- # Full Static: Static IPv6 Address -->
-    <P1420></P1420>
+		<!-- Add Auth Header On Initial REGISTER -->
+		<!-- Yes, No -->
+		<item name="account.{$row.line_number}.sip.header.authOnInitialRegister">No</item>
 
-    <!-- # Full Static: IPv6 Prefix Length -->
-    <P1421></P1421>
+		<!-- Allow SIP Reset -->
+		<!-- Yes, No -->
+		<item name="account.{$row.line_number}.sip.allowSipReset">No</item>
 
-    <!-- # Prefix Static: IPv6 Prefix (64bits) -->
-    <P1422></P1422>
+		<!-- Ignore Alert-Info header -->
+		<!-- Yes, No -->
+		<item name="account.{$row.line_number}.ring.ignoreSipAlertInfo">No</item>
 
-    <!-- # DNS Server 1 for IPv6 Address -->
-    <!-- # String: a-z, A-Z, 0-9, ".", ":", "[", "]" -->
-    <P1424></P1424>
+		<!-- Account 1 SIP Settings -->
+		<!-- Account 1 Custom SIP Headers -->
+		<!-- Use Privacy Header -->
+		<!-- Default, Yes, No -->
+		<item name="account.{$row.line_number}.sip.header.privacy">Default</item>
 
-    <!-- # DNS Server 2 for IPv6 Address -->
-    <!-- # String: a-z, A-Z, 0-9, ".", ":", "[", "]" -->
-    <P1425></P1425>
+		<!-- Use P-Preferred-Identity Header -->
+		<!-- Default, Yes, No -->
+		<item name="account.{$row.line_number}.sip.header.ppi">Default</item>
 
-    <!-- # Preferred DNS Server for IPv6 Address -->
-    <!-- # String: a-z, A-Z, 0-9, ".", ":", "[", "]" -->
-    <P1423></P1423>
+		<!-- Use X-Grandstream-PBX Header -->
+		<!-- Yes, No -->
+		<item name="account.{$row.line_number}.sip.header.xGrandstream">Yes</item>
 
-    <!-- ############################################################################## -->
-    <!-- ## Network/Advanced Settings                                                ## -->
-    <!-- ############################################################################## -->
+		<!-- Use P-Access-Network-Info Header -->
+		<!-- Yes, No -->
+		<item name="account.{$row.line_number}.sip.header.pani">Yes</item>
 
-    <!-- # 802.1X Mode. 0 - Disable, 1 - EAP-MD5. 2 - EAP-TLS, 3 - EAP-PEAPv0/MSCHAPv2. Default is 0 -->
-    <!-- # Number: 0, 1, 2, 3 -->
-    <!-- # Mandatory -->
-    <P7901>0</P7901>
+		<!-- Use P-Emergency-Info Header -->
+		<!-- Yes, No -->
+		<item name="account.{$row.line_number}.sip.header.pei">Yes</item>
 
-    <!-- # 802.1X Identity. Max length allowed is 64 characters -->
-    <!-- # String -->
-    <P7902></P7902>
+		<!-- Use X-switch-info Header -->
+		<!-- Yes, No -->
+		<item name="account.{$row.line_number}.sip.header.xSwitchInfo">No</item>
+
+		<!-- Use MAC Header -->
+		<!-- No - No, Yes except REGISTER only - YesExceptRegister, Yes to all SIP - YesToAllSip -->
+		<item name="account.{$row.line_number}.sip.header.mac">No</item>
+
+		<!-- Account 1 SIP Settings -->
+		<!-- Account 1 Advanced Features -->
+		<!-- Line-seize Timeout -->
+		<!-- Number: 15 - 60 -->
+		<item name="account.{$row.line_number}.sip.lineSeizeTimeout">15</item>
+
+		<!-- Eventlist BLF URI -->
+		<item name="account.{$row.line_number}.sip.blf.eventlist.uri"/>
+
+		<!-- Auto Provision Eventlists -->
+		<!-- Disabled, BLFEventList, PresenceEventlist -->
+		<item name="account.{$row.line_number}.sip.blf.eventlist.autoProvision">Disabled</item>
+
+		<!-- Conference URI -->
+		<item name="account.{$row.line_number}.sip.conferenceUri"/>
+
+		<!-- Music On Hold URI -->
+		<item name="account.{$row.line_number}.sip.musicOnHoldUri"/>
+
+		<!-- BLF Call-pickup  -->
+		<!-- Auto, Force, Disabled -->
+		<item name="account.{$row.line_number}.sip.blf.callPickup.forcePrefix">Auto</item>
+
+		<!-- BLF Call-pickup Prefix -->
+		<item name="account.{$row.line_number}.sip.blf.callPickup.prefix">**</item>
+
+		<!-- Call Pickup Barge-In Code -->
+		<item name="account.{$row.line_number}.sip.callPickupBargeinCode"/>
+
+		<!-- PUBLISH for Presence -->
+		<!-- Yes, No -->
+		<item name="account.{$row.line_number}.sip.publishForPresence">No</item>
+
+		<!-- Omit charset=UTF-8 in MESSAGE -->
+		<!-- Yes, No -->
+		<item name="account.{$row.line_number}.sip.omitCharsetUtf8InMessage">No</item>
 
     <!-- # MD5 Password. Max length allowed is 64 characters -->
     <!-- # String -->

@@ -17,19 +17,15 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -46,7 +42,7 @@
 	$text = $language->get();
 
 //action add or update
-	if (is_uuid($_REQUEST["id"])) {
+	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
 		$database_uuid = $_REQUEST["id"];
 	}
@@ -78,7 +74,7 @@
 		$database_description = $_POST["database_description"];
 	}
 
-if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
+if (count($_POST)>0 && empty($_POST["persistformvar"])) {
 
 	$msg = '';
 	if ($action == "update") {
@@ -87,7 +83,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	//delete the database
 		if (permission_exists('database_delete')) {
-			if ($_POST['action'] == 'delete' && is_uuid($database_uuid)) {
+			if (!empty($_POST['action']) && $_POST['action'] == 'delete' && is_uuid($database_uuid)) {
 				//prepare
 					$array[0]['checked'] = 'true';
 					$array[0]['uuid'] = $database_uuid;
@@ -109,16 +105,16 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		}
 
 	//check for all required data
-		//if (strlen($database_driver) == 0) { $msg .= $text['message-required'].$text['label-driver']."<br>\n"; }
-		//if (strlen($database_type) == 0) { $msg .= $text['message-required'].$text['label-type']."<br>\n"; }
-		//if (strlen($database_host) == 0) { $msg .= $text['message-required'].$text['label-host']."<br>\n"; }
-		//if (strlen($database_port) == 0) { $msg .= $text['message-required'].$text['label-port']."<br>\n"; }
-		//if (strlen($database_name) == 0) { $msg .= $text['message-required'].$text['label-name']."<br>\n"; }
-		//if (strlen($database_username) == 0) { $msg .= $text['message-required'].$text['label-username']."<br>\n"; }
-		//if (strlen($database_password) == 0) { $msg .= $text['message-required'].$text['label-password']."<br>\n"; }
-		//if (strlen($database_path) == 0) { $msg .= $text['message-required'].$text['label-path']."<br>\n"; }
-		//if (strlen($database_description) == 0) { $msg .= $text['message-required'].$text['label-description']."<br>\n"; }
-		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+		//if (empty($database_driver)) { $msg .= $text['message-required'].$text['label-driver']."<br>\n"; }
+		//if (empty($database_type)) { $msg .= $text['message-required'].$text['label-type']."<br>\n"; }
+		//if (empty($database_host)) { $msg .= $text['message-required'].$text['label-host']."<br>\n"; }
+		//if (empty($database_port)) { $msg .= $text['message-required'].$text['label-port']."<br>\n"; }
+		//if (empty($database_name)) { $msg .= $text['message-required'].$text['label-name']."<br>\n"; }
+		//if (empty($database_username)) { $msg .= $text['message-required'].$text['label-username']."<br>\n"; }
+		//if (empty($database_password)) { $msg .= $text['message-required'].$text['label-password']."<br>\n"; }
+		//if (empty($database_path)) { $msg .= $text['message-required'].$text['label-path']."<br>\n"; }
+		//if (empty($database_description)) { $msg .= $text['message-required'].$text['label-description']."<br>\n"; }
+		if (!empty($msg) && empty($_POST["persistformvar"])) {
 			require_once "resources/header.php";
 			require_once "resources/persist_form_var.php";
 			echo "<div align='center'>\n";
@@ -132,7 +128,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		}
 
 	//add or update the database
-	if ($_POST["persistformvar"] != "true") {
+	if (empty($_POST["persistformvar"])) {
 
 		//begin array
 			$array['databases'][0]['database_driver'] = $database_driver;
@@ -187,7 +183,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 }
 
 //pre-populate the form
-	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
+	if (count($_GET)>0 && empty($_POST["persistformvar"])) {
 		$database_uuid = $_GET["id"];
 		$sql = "select * from v_databases ";
 		$sql .= "where database_uuid = :database_uuid ";

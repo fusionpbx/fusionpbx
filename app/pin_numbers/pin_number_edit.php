@@ -17,19 +17,15 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2016-2020
+	Portions created by the Initial Developer are Copyright (C) 2016-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -62,7 +58,7 @@
 		$description = $_POST["description"];
 	}
 
-if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
+if (count($_POST)>0 && empty($_POST["persistformvar"])) {
 
 	$msg = '';
 	if ($action == "update") {
@@ -78,11 +74,11 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		}
 
 	//check for all required data
-		if (strlen($pin_number) == 0) { $msg .= $text['message-required']." ".$text['label-pin_number']."<br>\n"; }
-		//if (strlen($accountcode) == 0) { $msg .= $text['message-required']." ".$text['label-accountcode']."<br>\n"; }
-		if (strlen($enabled) == 0) { $msg .= $text['message-required']." ".$text['label-enabled']."<br>\n"; }
-		//if (strlen($description) == 0) { $msg .= $text['message-required']." ".$text['label-description']."<br>\n"; }
-		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+		if (empty($pin_number)) { $msg .= $text['message-required']." ".$text['label-pin_number']."<br>\n"; }
+		//if (empty($accountcode)) { $msg .= $text['message-required']." ".$text['label-accountcode']."<br>\n"; }
+		if (empty($enabled)) { $msg .= $text['message-required']." ".$text['label-enabled']."<br>\n"; }
+		//if (empty($description)) { $msg .= $text['message-required']." ".$text['label-description']."<br>\n"; }
+		if (!empty($msg) && empty($_POST["persistformvar"])) {
 			require_once "resources/header.php";
 			require_once "resources/persist_form_var.php";
 			echo "<div align='center'>\n";
@@ -96,7 +92,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		}
 
 	//add or update the database
-		if ($_POST["persistformvar"] != "true") {
+		if (empty($_POST["persistformvar"]) || $_POST["persistformvar"] != "true") {
 			if ($action == "add" && permission_exists('pin_number_add')) {
 				//begin array
 					$pin_number_uuid = uuid();
@@ -134,7 +130,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 }
 
 //pre-populate the form
-	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
+	if (count($_GET) > 0 && (empty($_POST["persistformvar"]) || $_POST["persistformvar"] != "true")) {
 		$pin_number_uuid = $_GET["id"];
 		$sql = "select * from v_pin_numbers ";
 		$sql .= "where domain_uuid = :domain_uuid ";

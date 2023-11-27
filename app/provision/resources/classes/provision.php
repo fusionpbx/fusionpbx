@@ -31,14 +31,18 @@
 		public $domain_uuid;
 		public $domain_name;
 		public $template_dir;
-		public $mac;
+		public $device_address;
+		public $device_template;
 
 		public function __construct() {
 			//set the default template directory
 				if (PHP_OS == "Linux") {
 					//set the default template dir
-						if (strlen($this->template_dir) == 0) {
-							if (file_exists('/etc/fusionpbx/resources/templates/provision')) {
+						if (empty($this->template_dir)) {
+							if (file_exists('/usr/share/fusionpbx/templates/provision')) {
+								$this->template_dir = '/usr/share/fusionpbx/templates/provision';
+							}
+							elseif (file_exists('/etc/fusionpbx/resources/templates/provision')) {
 								$this->template_dir = '/etc/fusionpbx/resources/templates/provision';
 							}
 							else {
@@ -46,19 +50,14 @@
 							}
 						}
 				}
-				else if (PHP_OS == "FreeBSD") {
+				elseif (PHP_OS == "FreeBSD") {
 					//if the FreeBSD port is installed use the following paths by default.
-						if (file_exists('/usr/local/etc/fusionpbx/resources/templates/provision')) {
-							if (strlen($this->template_dir) == 0) {
+						if (empty($this->template_dir)) {
+							if (file_exists('/usr/local/share/fusionpbx/templates/provision')) {
+								$this->template_dir = '/usr/local/share/fusionpbx/templates/provision';
+							}
+							elseif (file_exists('/usr/local/etc/fusionpbx/resources/templates/provision')) {
 								$this->template_dir = '/usr/local/etc/fusionpbx/resources/templates/provision';
-							}
-							else {
-								$this->template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/provision';
-							}
-						}
-						else {
-							if (strlen($this->template_dir) == 0) {
-								$this->template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/provision';
 							}
 							else {
 								$this->template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/provision';
@@ -67,47 +66,41 @@
 				}
 				else if (PHP_OS == "NetBSD") {
 					//set the default template_dir
-						if (strlen($this->template_dir) == 0) {
+						if (empty($this->template_dir)) {
 							$this->template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/provision';
 						}
 				}
 				else if (PHP_OS == "OpenBSD") {
 					//set the default template_dir
-						if (strlen($this->template_dir) == 0) {
+						if (empty($this->template_dir)) {
 							$this->template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/provision';
 						}
 				}
 				else {
 					//set the default template_dir
-						if (strlen($this->template_dir) == 0) {
+						if (empty($this->template_dir)) {
 							$this->template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/provision';
 						}
 				}
 
-			//normalize the mac address
-				if (isset($this->mac)) {
-					$this->mac = strtolower(preg_replace('#[^a-fA-F0-9./]#', '', $this->mac));
+			//normalize the device address
+				if (isset($this->device_address)) {
+					$this->device_address = strtolower(preg_replace('#[^a-fA-F0-9./]#', '', $this->device_address));
 				}
-		}
-
-		public function __destruct() {
-			foreach ($this as $key => $value) {
-				unset($this->$key);
-			}
 		}
 
 		public function get_domain_uuid() {
 			return $this->domain_uuid;
 		}
 
-		//define the function which checks to see if the mac address exists in devices
-		private function mac_exists($mac) {
-			//normalize the mac address
-				$mac = strtolower(preg_replace('#[^a-fA-F0-9./]#', '', $mac));
-			//check in the devices table for a specific mac address
+		//define the function which checks to see if the device address exists in devices
+		private function device_exists($device_address) {
+			//normalize the device address
+				$device_address = strtolower(preg_replace('#[^a-fA-F0-9./]#', '', $device_address));
+			//check in the devices table for a specific device address
 				$sql = "select count(*) from v_devices ";
-				$sql .= "where device_mac_address = :mac ";
-				$parameters['mac'] = $mac;
+				$sql .= "where device_address = :device_address ";
+				$parameters['device_address'] = $device_address;
 				$database = new database;
 				$num_rows = $database->select($sql, $parameters, 'column');
 				if ($num_rows > 0) {
@@ -119,44 +112,44 @@
 				unset($sql, $parameters, $num_rows);
 		}
 
-		//set the mac address in the correct format for the specific vendor
-		public function format_mac($mac, $vendor) {
+		//set the device address in the correct format for the specific vendor
+		public function format_address($device_address, $vendor) {
 			switch (strtolower($vendor)) {
 				case "algo":
-					return strtoupper($mac);
+					return strtoupper($device_address);
 					break;
 				case "aastra":
-					return strtoupper($mac);
+					return strtoupper($device_address);
 					break;
 				case "cisco":
-					return strtoupper($mac);
+					return strtoupper($device_address);
 					break;
 				case "linksys":
-					return strtolower($mac);
+					return strtolower($device_address);
 					break;
 				case "mitel":
-					return strtoupper($mac);
+					return strtoupper($device_address);
 					break;
 				case "polycom":
-					return strtolower($mac);
+					return strtolower($device_address);
 					break;
 				case "snom":
-					return strtolower($mac);
+					return strtolower($device_address);
 					break;
 				case "escene":
-					return strtolower($mac);
+					return strtolower($device_address);
 					break;
 				case "grandstream":
-					return strtolower($mac);
+					return strtolower($device_address);
 					break;
 				case "yealink":
-					return strtolower($mac);
+					return strtolower($device_address);
 					break;
 				case "gigaset":
-					return strtoupper($mac);
+					return strtoupper($device_address);
 					break;
 				default:
-					return strtolower($mac);
+					return strtolower($device_address);
 			}
 		}
 
@@ -219,8 +212,8 @@
 				$x = 0;
 				foreach ($database_contacts as &$row) {
 					$uuid = $row['contact_uuid'];
-					$phone_label = strtolower($row['phone_label']);
-					$contact_category = strtolower($row['contact_category']);
+					$phone_label = strtolower($row['phone_label'] ?? '');
+					$contact_category = strtolower($row['contact_category'] ?? '');
 
 					$contact = array();
 					$contacts[] = &$contact;
@@ -241,7 +234,7 @@
 						$contact['phone_extension']		= $row['phone_extension'];
 					}
 
-					$numbers[$x]['line_number']			= $line['line_number'];
+					$numbers[$x]['line_number']			= $line['line_number'] ?? null;
 					$numbers[$x]['phone_label']			= $phone_label;
 					$numbers[$x]['phone_number']		= $row['phone_number'];
 					$numbers[$x]['phone_extension']		= $row['phone_extension'];
@@ -259,20 +252,20 @@
 		public function render() {
 
 			//debug
-				$debug = $_REQUEST['debug']; // array
+				$debug = $_REQUEST['debug'] ?? ''; // array
 
 			//get the variables
 				$domain_uuid = $this->domain_uuid;
 				$device_template = $this->device_template;
 				$template_dir = $this->template_dir;
-				$mac = $this->mac;
+				$device_address = $this->device_address;
 				$file = $this->file;
 
-			//set the mac address to lower case to be consistent with the database
-				$mac = strtolower($mac);
+			//set the device address to lower case to be consistent with the database
+				$device_address = strtolower($device_address);
 
 			//get the device template
-				//if (strlen($_REQUEST['template']) > 0) {
+				//if (!empty($_REQUEST['template'])) {
 				//	$device_template = $_REQUEST['template'];
 				//	$search = array('..', '/./');
 				//	$device_template = str_replace($search, "", $device_template);
@@ -284,7 +277,7 @@
 				$file = str_replace($search, "", $file);
 
 			//get the domain_name
-				if (strlen($domain_name) == 0) {
+				if (empty($domain_name)) {
 					$sql = "select domain_name from v_domains ";
 					$sql .= "where domain_uuid = :domain_uuid ";
 					$parameters['domain_uuid'] = $domain_uuid;
@@ -301,10 +294,11 @@
 						elseif (isset($val['text'])) { $value = $val['text']; }
 						elseif (isset($val['boolean'])) { $value = $val['boolean']; }
 						elseif (isset($val['numeric'])) { $value = $val['numeric']; }
-						elseif (is_array($val) && !is_uuid($val['uuid'])) { $value = $val; }
+						elseif (isset($val) && is_array($val) && empty($val['uuid'])) { $value = $val; }
 						if (isset($value)) {
 							$value = str_replace('${domain_name}', $domain_name, $value);
-							$value = str_replace('${mac_address}', $mac, $value);
+							$value = str_replace('${mac_address}', $device_address, $value);
+							$value = str_replace('${device_address}', $device_address, $value);
 							$provision[$key] = $value;
 						}
 						unset($value);
@@ -312,22 +306,22 @@
 				}
 
 			//add the http auth password to the array
-				if (is_array($_SESSION['provision']["http_auth_password"])) {
+				if (isset($_SESSION['provision']["http_auth_password"]) && is_array($_SESSION['provision']["http_auth_password"])) {
 					$provision["http_auth_password"] = $_SESSION['provision']["http_auth_password"][0];
 				}
 
-			//check to see if the mac_address exists in devices
-				//if (strlen($_REQUEST['user_id']) == 0 || strlen($_REQUEST['userid']) == 0) {
-					if ($this->mac_exists($mac)) {
+			//check to see if the device_address exists in devices
+				//if (empty($_REQUEST['user_id']) || empty($_REQUEST['userid'])) {
+					if ($this->device_exists($device_address)) {
 
 						//get the device_template
 							$sql = "select * from v_devices ";
-							$sql .= "where device_mac_address = :mac_address ";
+							$sql .= "where device_address = :device_address ";
 							if ($provision['http_domain_filter'] == "true") {
 								$sql  .= "and domain_uuid=:domain_uuid ";
 								$parameters['domain_uuid'] = $domain_uuid;
 							}
-							$parameters['mac_address'] = $mac;
+							$parameters['device_address'] = $device_address;
 							$database = new database;
 							$row = $database->select($sql, $parameters, 'row');
 							unset($parameters);
@@ -347,10 +341,10 @@
 
 								//register that we have seen the device
 									$sql = "update v_devices ";
-									$sql .= "set device_provisioned_date = :device_provisioned_date, device_provisioned_method = :device_provisioned_method, device_provisioned_ip = :device_provisioned_ip ";
-									$sql .= "where domain_uuid = :domain_uuid and device_mac_address = :device_mac_address ";
+									$sql .= "set device_provisioned_date = :device_provisioned_date, device_provisioned_method = :device_provisioned_method, device_provisioned_ip = :device_provisioned_ip, device_provisioned_agent = :device_provisioned_agent ";
+									$sql .= "where domain_uuid = :domain_uuid and device_address = :device_address ";
 									$parameters['domain_uuid'] = $domain_uuid;
-									$parameters['device_mac_address'] = strtolower($mac);
+									$parameters['device_address'] = strtolower($device_address);
 									$parameters['device_provisioned_date'] = 'now()';
 									$parameters['device_provisioned_method'] = (isset($_SERVER["HTTPS"]) ? 'https' : 'http');
 									$parameters['device_provisioned_ip'] = $_SERVER['REMOTE_ADDR'];
@@ -367,7 +361,7 @@
 									$device_user_uuid = $row["device_user_uuid"];
 									$device_model = $row["device_model"];
 									$device_firmware_version = $row["device_firmware_version"];
-									if (strlen($row["device_vendor"]) > 0) {
+									if (!empty($row["device_vendor"])) {
 										$device_vendor = strtolower($row["device_vendor"]);
 									}
 									$device_location = $row["device_location"];
@@ -377,7 +371,7 @@
 							unset($row);
 
 						//find a template that was defined on another phone and use that as the default.
-							if (strlen($device_template) == 0) {
+							if (empty($device_template)) {
 								$sql = "select * from v_devices ";
 								$sql .= "where domain_uuid = :domain_uuid ";
 								$sql .= "and device_enabled = 'true' ";
@@ -385,7 +379,7 @@
 								$parameters['domain_uuid'] = $domain_uuid;
 								$database = new database;
 								$row = $database->select($sql, $parameters, 'row');
-								if (is_array($row) && sizeof($row) != 0) {
+								if (!empty($row) && is_array($row) && sizeof($row) != 0) {
 									$device_label = $row["device_label"];
 									$device_template = $row["device_template"];
 									$device_profile_uuid = $row["device_profile_uuid"];
@@ -529,7 +523,7 @@
 							}
 							unset($templates);
 
-						//mac address does not exist in the table so add it
+						//device address does not exist in the table so add it
 							if ($_SESSION['provision']['auto_insert_enabled']['boolean'] == "true" && is_uuid($domain_uuid)) {
 
 								//get a new primary key
@@ -539,7 +533,7 @@
 								$x = 0;
 								$array['devices'][$x]['domain_uuid'] = $domain_uuid;
 								$array['devices'][$x]['device_uuid'] = $device_uuid;
-								$array['devices'][$x]['device_mac_address'] = $mac;
+								$array['devices'][$x]['device_address'] = $device_address;
 								$array['devices'][$x]['device_vendor'] = $device_vendor;
 								$array['devices'][$x]['device_enabled'] = 'true';
 								$array['devices'][$x]['device_template'] = $device_template;
@@ -554,7 +548,7 @@
 								$database = new database;
 								$database->app_name = 'devices';
 								$database->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
-								if (strlen($device_uuid) > 0) {
+								if (!empty($device_uuid)) {
 									$database->uuid($device_uuid);
 								}
 								$database->save($array);
@@ -602,9 +596,9 @@
 										$device_firmware_version = $row["device_firmware_version"];
 										$device_user_uuid = $row["device_user_uuid"];
 										$device_location = strtolower($row["device_location"]);
-										$device_vendor = strtolower($row["device_vendor"]);
+										//keep the original device_vendor
 										$device_enabled = $row["device_enabled"];
-										//keep the original template
+										//keep the original device_template
 										$device_description = $row["device_description"];
 									}
 								}
@@ -650,7 +644,7 @@
 				}
 
 			//set the template directory
-				if (strlen($provision["template_dir"]) > 0) {
+				if (!empty($provision["template_dir"])) {
 					$template_dir = $provision["template_dir"];
 				}
 
@@ -661,7 +655,7 @@
 
 			//initialize a template object
 				$view = new template();
-				if (strlen($_SESSION['provision']['template_engine']['text']) > 0) {
+				if (!empty($_SESSION['provision']['template_engine']['text'])) {
 					$view->engine = $_SESSION['provision']['template_engine']['text']; //raintpl, smarty, twig
 				}
 				else {
@@ -673,8 +667,8 @@
 
 			//replace the variables in the template in the future loop through all the line numbers to do a replace for each possible line number
 
-				//create a mac address with back slashes for backwards compatability
-					$mac_dash = substr($mac, 0,2).'-'.substr($mac, 2,2).'-'.substr($mac, 4,2).'-'.substr($mac, 6,2).'-'.substr($mac, 8,2).'-'.substr($mac, 10,2);
+				//create a device address with back slashes for backwards compatability
+					//$address_dash = substr($device_address, 0,2).'-'.substr($device_address, 2,2).'-'.substr($device_address, 4,2).'-'.substr($device_address, 6,2).'-'.substr($device_address, 8,2).'-'.substr($device_address, 10,2);
 
 				//get the provisioning information
 					if (is_uuid($device_uuid)) {
@@ -698,6 +692,7 @@
 								$sql .= "profile_key_category as device_key_category, ";
 								$sql .= "profile_key_vendor as device_key_vendor, ";
 								$sql .= "profile_key_type as device_key_type, ";
+								$sql .= "profile_key_subtype as device_key_subtype, ";
 								$sql .= "profile_key_line as device_key_line, ";
 								$sql .= "profile_key_value as device_key_value, ";
 								$sql .= "profile_key_extension as device_key_extension, ";
@@ -856,9 +851,9 @@
 										$sip_port = $row['sip_port'];
 
 									//set defaults
-										if (strlen($register_expires) == 0) { $register_expires = "120"; }
-										if (strlen($sip_transport) == 0) { $sip_transport = "tcp"; }
-										if (strlen($sip_port) == 0) {
+										if (empty($register_expires)) { $register_expires = "120"; }
+										if (empty($sip_transport)) { $sip_transport = "tcp"; }
+										if (empty($sip_port)) {
 											if ($line_number == "" || $line_number == "1") {
 												$sip_port = "5060";
 											}
@@ -947,7 +942,7 @@
 					}
 
 				//get the extensions and add them to the contacts array
-					if (is_uuid($device_uuid) && is_uuid($domain_uuid) && $_SESSION['provision']['contact_extensions']['boolean'] == "true") {
+					if (is_uuid($device_uuid) && is_uuid($domain_uuid) && !empty($_SESSION['provision']['contact_extensions']['boolean']) && $_SESSION['provision']['contact_extensions']['boolean'] == "true") {
 						//get contacts from the database
 							$sql = "select extension_uuid as contact_uuid, directory_first_name, directory_last_name, ";
 							$sql .= "effective_caller_id_name, effective_caller_id_number, ";
@@ -965,11 +960,11 @@
 									//get the contact_uuid
 										$uuid = $row['contact_uuid'];
 									//get the names
-										if (strlen($row['directory_first_name']) > 0) {
+										if (!empty($row['directory_first_name'])) {
 											$contact_name_given = $row['directory_first_name'];
 											$contact_name_family = $row['directory_last_name'];
 										} else {
-											$name_array = explode(" ", $row['effective_caller_id_name']);
+											$name_array = explode(" ", $row['effective_caller_id_name'] ?? '');
 											$contact_name_given = array_shift($name_array);
 											$contact_name_family = trim(implode(' ', $name_array));
 										}
@@ -1015,7 +1010,7 @@
 					$variables['domain_name'] = $domain_name;
 					$variables['user_id'] = $lines[$x]['user_id'];
 					$variables['auth_id'] = $lines[$x]['auth_id'];
-					$variables['extension'] = $lines[$x]['extension'];
+					$variables['extension'] = $lines[$x]['extension'] ?? '';
 					//$variables['password'] = $lines[$x]['password'];
 					$variables['register_expires'] = $lines[$x]['register_expires'];
 					$variables['sip_transport'] = $lines[$x]['sip_transport'];
@@ -1028,9 +1023,9 @@
 
 				//update the device keys by replacing variables with their values
 					foreach($variables as $name => $value) {
-						if (is_array($device_keys)) {
+						if (!empty($device_keys) && is_array($device_keys)) {
 							foreach($device_keys as $k => $field) {
-								if (strlen($field['device_key_uuid']) > 0) {
+								if (!empty($field['device_key_uuid'])) {
 										if (isset($field['device_key_value'])) {
 											$device_keys[$k]['device_key_value'] = str_replace("\${".$name."}", $value, $field['device_key_value']);
 										}
@@ -1067,12 +1062,14 @@
 					}
 
 				//assign the keys array
-					$view->assign("keys", $device_keys);
+					if (!empty($device_keys)) {
+						$view->assign("keys", $device_keys);
+					}
 
 				//set the variables
 					$types = array("line", "memory", "expansion", "programmable");
 					foreach ($types as $type) {
-						if (is_array($device_keys[$type])) {
+						if (!empty($device_keys[$type]) && is_array($device_keys[$type])) {
 							foreach($device_keys[$type] as $row) {
 								//set the variables
 									$device_key_category = $row['device_key_category'];
@@ -1132,7 +1129,7 @@
 									}
 
 								//assign the variables
-									if (strlen($device_key_category) == 0) {
+									if (empty($device_key_category)) {
 										$view->assign("key_id_".$device_key_id, $device_key_id);
 										$view->assign("key_type_".$device_key_id, $device_key_type);
 										$view->assign("key_line_".$device_key_id, $device_key_line);
@@ -1154,11 +1151,11 @@
 						}
 					}
 
-				//set the mac address in the correct format
-					$mac = $this->format_mac($mac, $device_vendor);
+				//set the device address in the correct format
+					$device_address = $this->format_address($device_address, $device_vendor);
 				
 				// set date/time for versioning provisioning templates
-					if (strlen($_SESSION['provision']['version_format']['text']) > 0) {
+					if (!empty($_SESSION['provision']['version_format']['text'])) {
 						$time = date($_SESSION['provision']['version_format']['text']);
 					}
 					else {
@@ -1166,21 +1163,23 @@
 					}
 
 				//replace the variables in the template in the future loop through all the line numbers to do a replace for each possible line number
-					$view->assign("mac" , $mac);
-					$view->assign("time" , $time);
+					$view->assign("device_address", $device_address);
+					$view->assign("address", $device_address);
+					$view->assign("mac", $device_address);
+					$view->assign("time", $time);
 					$view->assign("label", $device_label);
 					$view->assign("device_label", $device_label);
 					$view->assign("firmware_version", $device_firmware_version);
 					$view->assign("domain_name", $domain_name);
 					$view->assign("project_path", PROJECT_PATH);
-					$view->assign("server1_address", $server1_address);
-					$view->assign("proxy1_address", $proxy1_address);
-					$view->assign("user_id",$user_id);
-					$view->assign("password",$password);
-					$view->assign("template",$device_template);
-					$view->assign("location",$device_location);
-					$view->assign("device_location",$device_location);
-					$view->assign("microtime",microtime(true));
+					$view->assign("server1_address", $server1_address ?? '');
+					$view->assign("proxy1_address", $proxy1_address ?? '');
+					$view->assign("user_id", $user_id ?? '');
+					$view->assign("password", $password ?? '');
+					$view->assign("template", $device_template);
+					$view->assign("location", $device_location);
+					$view->assign("device_location", $device_location);
+					$view->assign("microtime", microtime(true));
 
 				//personal ldap password
 					global $laddr_salt;
@@ -1196,7 +1195,7 @@
 
 				//get the time zone
 					$time_zone_name = $_SESSION['domain']['time_zone']['name'];
-					if (strlen($time_zone_name) > 0) {
+					if (!empty($time_zone_name)) {
 						$time_zone_offset_raw = get_time_zone_offset($time_zone_name)/3600;
 						$time_zone_offset_hours = floor($time_zone_offset_raw);
 						$time_zone_offset_minutes = ($time_zone_offset_raw - $time_zone_offset_hours) * 60;
@@ -1231,8 +1230,14 @@
 					}
 
 				//if $file is not provided then look for a default file that exists
-					if (strlen($file) == 0) {
-						if (file_exists($template_dir."/".$device_template ."/{\$mac}")) {
+					if (empty($file)) {
+						if (file_exists($template_dir."/".$device_template ."/{\$address}")) {
+							$file = "{\$address}";
+						}
+						elseif (file_exists($template_dir."/".$device_template ."/{\$address}.xml")) {
+							$file = "{\$address}.xml";
+						}
+						elseif (file_exists($template_dir."/".$device_template ."/{\$mac}")) {
 							$file = "{\$mac}";
 						}
 						elseif (file_exists($template_dir."/".$device_template ."/{\$mac}.xml")) {
@@ -1264,10 +1269,10 @@
 					$file_contents = $view->render($file);
 
 				//log file for testing
-					if ($_SESSION['provision']['debug']['boolean'] == 'true') {
+					if (!empty($_SESSION['provision']['debug']['boolean']) && $_SESSION['provision']['debug']['boolean'] == 'true') {
 						$tmp_file = "/tmp/provisioning_log.txt";
 						$fh = fopen($tmp_file, 'w') or die("can't open file");
-						$tmp_string = $mac."\n";
+						$tmp_string = $device_address."\n";
 						fwrite($fh, $tmp_string);
 						fclose($fh);
 					}
@@ -1294,7 +1299,7 @@
 				}
 
 			//check either we have destination path to write files
-				if (strlen($provision["path"]) == 0) {
+				if (empty($provision["path"])) {
 					return;
 				}
 
@@ -1311,7 +1316,7 @@
 						//get the values from the database and set as variables
 							$domain_uuid = $row["domain_uuid"];
 							$device_uuid = $row["device_uuid"];
-							$device_mac_address = $row["device_mac_address"];
+							$device_address = $row["device_address"];
 							$device_label = $row["device_label"];
 							$device_vendor = strtolower($row["device_vendor"]);
 							$device_model = $row["device_model"];
@@ -1327,7 +1332,7 @@
 
 						//loop through the provision template directory
 							$dir_array = array();
-							if (strlen($device_template) > 0) {
+							if (!empty($device_template)) {
 								$template_path = path_join($this->template_dir, $device_template);
 								$dir_list = opendir($template_path);
 								if ($dir_list) {
@@ -1358,14 +1363,15 @@
 
 									//configure device object
 										$this->domain_uuid = $domain_uuid;
-										$this->mac = $device_mac_address;
+										$this->device_address = $device_address;
 										$this->file = $file_name;
 
-									//format the mac address
-										$mac = $this->format_mac($device_mac_address, $device_vendor);
+									//format the device address
+										$address_formatted = $this->format_address($device_address, $device_vendor);
 
 									//replace {$mac} in the file name
-										$file_name = str_replace("{\$mac}", $mac, $file_name);
+										$file_name = str_replace("{\$mac}", $address_formatted, $file_name);
+										$file_name = str_replace("{\$address}", $address_formatted, $file_name);
 
 									//render and write configuration to file
 										$provision_dir_array = explode(";", $provision["path"]);

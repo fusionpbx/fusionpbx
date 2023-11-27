@@ -17,19 +17,15 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -46,7 +42,7 @@
 	$text = $language->get();
 
 //action add or update
-	if (is_uuid($_REQUEST["id"])) {
+	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
 		$menu_uuid = $_REQUEST["id"];
 	}
@@ -55,15 +51,15 @@
 	}
 
 //get http post variables and set them to php variables
-	if (count($_POST) > 0) {
-		$menu_uuid = $_POST["menu_uuid"];
+	if (!empty($_POST) && count($_POST) > 0) {
+		$menu_uuid = $_POST["menu_uuid"] ?? null;
 		$menu_name = $_POST["menu_name"];
 		$menu_language = $_POST["menu_language"];
 		$menu_description = $_POST["menu_description"];
 	}
 
 //process the http post
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 
 		//validate the token
 			$token = new token;
@@ -75,10 +71,10 @@
 
 		//check for all required data
 			$msg = '';
-			//if (strlen($menu_name) == 0) { $msg .= $text['message-required'].$text['label-name']."<br>\n"; }
-			//if (strlen($menu_language) == 0) { $msg .= $text['message-required'].$text['label-language']."<br>\n"; }
-			//if (strlen($menu_description) == 0) { $msg .= $text['message-required'].$text['label-description']."<br>\n"; }
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+			if (empty($menu_name)) { $msg .= $text['message-required'].$text['label-name']."<br>\n"; }
+			if (empty($menu_language)) { $msg .= $text['message-required'].$text['label-language']."<br>\n"; }
+			//if (empty($menu_description)) { $msg .= $text['message-required'].$text['label-description']."<br>\n"; }
+			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -92,7 +88,7 @@
 			}
 
 		//add or update the database
-		if ($_POST["persistformvar"] != "true") {
+		if (empty($_POST["persistformvar"])) {
 			if ($action == "add") {
 				//create a new unique id
 					$menu_uuid = uuid();
@@ -135,14 +131,14 @@
 	}
 
 //pre-populate the form
-	if (count($_GET) > 0 && is_uuid($_GET["id"]) && $_POST["persistformvar"] != "true") {
+	if (count($_GET) > 0 && is_uuid($_GET["id"]) && empty($_POST["persistformvar"])) {
 		$menu_uuid = $_GET["id"];
 		$sql = "select * from v_menus ";
 		$sql .= "where menu_uuid = :menu_uuid ";
 		$parameters['menu_uuid'] = $menu_uuid;
 		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
-		if (is_array($row) && sizeof($row) != 0) {
+		if (!empty($row)) {
 			$menu_uuid = $row["menu_uuid"];
 			$menu_name = $row["menu_name"];
 			$menu_language = $row["menu_language"];
@@ -166,7 +162,7 @@
 	echo "	<div class='heading'><b>".$text['header-menu']."</b></div>\n";
 	echo "	<div class='actions'>\n";
 	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','collapse'=>'hide-xs','link'=>'menu.php']);
-	echo button::create(['type'=>'button','label'=>$text['button-reload'],'icon'=>$_SESSION['theme']['button_icon_reload'],'collapse'=>'hide-xs','style'=>'margin-left: 15px;','link'=>'menu_reload.php?menu_uuid='.urlencode($menu_uuid).'&menu_language='.urlencode($menu_language)]);
+	echo button::create(['type'=>'button','label'=>$text['button-reload'],'icon'=>$_SESSION['theme']['button_icon_reload'],'collapse'=>'hide-xs','style'=>'margin-left: 15px;','link'=>'menu_reload.php?menu_uuid='.urlencode($menu_uuid ?? '').'&menu_language='.urlencode($menu_language ?? '')]);
 	if (permission_exists('menu_restore') && $action == "update") {
 		echo button::create(['type'=>'button','label'=>$text['button-restore_default'],'icon'=>'undo-alt','collapse'=>'hide-xs','onclick'=>"modal_open('modal-restore','btn_restore');"]);
 	}
@@ -189,7 +185,7 @@
 	echo "	".$text['label-name']."\n";
 	echo "</td>\n";
 	echo "<td width='70%' class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='menu_name' maxlength='255' value=\"".escape($menu_name)."\">\n";
+	echo "	<input class='formfld' type='text' name='menu_name' maxlength='255' value=\"".escape($menu_name ?? '')."\">\n";
 	echo "<br />\n";
 	echo "\n";
 	echo $text['description-name']."</td>\n";
@@ -200,7 +196,7 @@
 	echo "	".$text['label-language']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='menu_language' maxlength='255' value=\"".escape($menu_language)."\">\n";
+	echo "	<input class='formfld' type='text' name='menu_language' maxlength='255' value=\"".escape($menu_language ?? '')."\">\n";
 	echo "<br />\n";
 	echo $text['description-language']."\n";
 	echo "</td>\n";
@@ -211,7 +207,7 @@
 	echo "	".$text['label-description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='menu_description' maxlength='255' value=\"".escape($menu_description)."\">\n";
+	echo "	<input class='formfld' type='text' name='menu_description' maxlength='255' value=\"".escape($menu_description ?? '')."\">\n";
 	echo "<br />\n";
 	echo $text['description-description']."\n";
 	echo "</td>\n";

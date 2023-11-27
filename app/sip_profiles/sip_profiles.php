@@ -17,19 +17,15 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
 
@@ -46,14 +42,20 @@
 	$language = new text;
 	$text = $language->get();
 
+//define the variables
+	$action = '';
+	$search = '';
+	$sip_profiles = '';
+
 //get the http post data
-	if (is_array($_POST['sip_profiles'])) {
+	if (!empty($_POST['sip_profiles'])) {
 		$action = $_POST['action'];
 		$search = $_POST['search'];
 		$sip_profiles = $_POST['sip_profiles'];
 	}
+
 //process the http post data by action
-	if ($action != '' && is_array($sip_profiles) && @sizeof($sip_profiles) != 0) {
+	if (!empty($action) && !empty($sip_profiles) && @sizeof($sip_profiles) != 0) {
 		switch ($action) {
 			case 'toggle':
 				if (permission_exists('sip_profile_edit')) {
@@ -69,9 +71,12 @@
 				break;
 		}
 
-		header('Location: sip_profiles.php'.($search != '' ? '?search='.urlencode($search) : null));
+		header('Location: sip_profiles.php'.(!empty($search) ? '?search='.urlencode($search) : null));
 		exit;
 	}
+
+//set from session variables
+	$list_row_edit_button = !empty($_SESSION['theme']['list_row_edit_button']['boolean']) ? $_SESSION['theme']['list_row_edit_button']['boolean'] : 'false';
 
 //get order and order by
 	if (isset($_GET["order_by"])) {
@@ -80,29 +85,27 @@
 	else {
 		$order_by = 'sip_profile_name';
 	}
-	$order = $_GET["order"];
+	$order = $_GET["order"] ?? '';
 
-//add the search string
-	$search = strtolower($_GET["search"]);
-	if (strlen($search) > 0) {
-		$sql_search = "where (";
-		$sql_search .= "lower(sip_profile_name) like :search ";
-		$sql_search .= "or lower(sip_profile_hostname) like :search ";
-		$sql_search .= "or lower(sip_profile_description) like :search ";
-		$sql_search .= ") ";
+//prepare to page the results
+	$sql = "select count(sip_profile_uuid) ";
+	$sql .= "from v_sip_profiles ";
+	if (!empty($_GET["search"])) {
+		$search = strtolower($_GET["search"]);
+		$sql .= "where (";
+		$sql .= "lower(sip_profile_name) like :search ";
+		$sql .= "or lower(sip_profile_hostname) like :search ";
+		$sql .= "or lower(sip_profile_description) like :search ";
+		$sql .= ") ";
 		$parameters['search'] = '%'.$search.'%';
 	}
-
-//prepare to page the results
-	$sql = "select count(sip_profile_uuid) from v_sip_profiles ";
-	$sql .= $sql_search;
 	$database = new database;
-	$num_rows = $database->select($sql, $parameters, 'column');
+	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 
 //prepare to page the results
-	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$rows_per_page = (!empty($_SESSION['domain']['paging']['numeric'])) ? $_SESSION['domain']['paging']['numeric'] : 50;
 	$param = $search ? "&search=".$search : null;
-	$page = is_numeric($_GET['page']) ? $_GET['page'] : 0;
+	$page = !empty($_GET['page']) ? $_GET['page'] : 0;
 	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
 	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
@@ -112,7 +115,7 @@
 	$sql .= order_by($order_by, $order);
 	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;
-	$sip_profiles = $database->select($sql, $parameters, 'all');
+	$sip_profiles = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 
 //create token
@@ -142,8 +145,8 @@
 	echo 		"<form id='form_search' class='inline' method='get'>\n";
 	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=''>";
 	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search']);
-	//echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','link'=>'sip_profiles.php','style'=>($search == '' ? 'display: none;' : null)]);
-	if ($paging_controls_mini != '') {
+	//echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','link'=>'sip_profiles.php','style'=>(empty($search) ? 'display: none;' : null)]);
+	if (!empty($paging_controls_mini)) {
 		echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>\n";
 	}
 	echo "		</form>\n";
@@ -169,19 +172,19 @@
 	echo "<tr class='list-header'>\n";
 	if (permission_exists('sip_profile_add') || permission_exists('sip_profile_edit') || permission_exists('sip_profile_delete')) {
 		echo "	<th class='checkbox'>\n";
-		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".($sip_profiles ?: "style='visibility: hidden;'").">\n";
+		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".(!empty($sip_profiles) ?: "style='visibility: hidden;'").">\n";
 		echo "	</th>\n";
 	}
 	echo th_order_by('sip_profile_name', $text['label-sip_profile_name'], $order_by, $order);
 	echo th_order_by('sip_profile_hostname', $text['label-sip_profile_hostname'], $order_by, $order);
 	echo th_order_by('sip_profile_enabled', $text['label-sip_profile_enabled'], $order_by, $order, null, "class='center'");
 	echo th_order_by('sip_profile_description', $text['label-sip_profile_description'], $order_by, $order, null, "class='hide-sm-dn pct-70'");
-	if (permission_exists('sip_profile_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+	if (permission_exists('sip_profile_edit') && $list_row_edit_button == 'true') {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
 
-	if (is_array($sip_profiles) && @sizeof($sip_profiles) != 0) {
+	if (!empty($sip_profiles) && @sizeof($sip_profiles) != 0) {
 		$x = 0;
 		foreach ($sip_profiles as $row) {
 			if (permission_exists('sip_profile_edit')) {
@@ -213,7 +216,7 @@
 			}
 			echo "	</td>\n";
 			echo "	<td class='description overflow hide-sm-dn'>".escape($row['sip_profile_description'])."&nbsp;</td>\n";
-			if (permission_exists('sip_profile_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+			if (permission_exists('sip_profile_edit') && $list_row_edit_button == 'true') {
 				echo "	<td class='action-button'>\n";
 				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
 				echo "	</td>\n";

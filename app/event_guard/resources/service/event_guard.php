@@ -1,6 +1,6 @@
 <?php
 /*
-	Copyright (C) 2022 Mark J Crane <markjcrane@fusionpbx.com>
+	Copyright (C) 2022-2023 Mark J Crane <markjcrane@fusionpbx.com>
 
 	Redistribution and use in source and binary forms, with or without
 	modification, are permitted provided that the following conditions are met:
@@ -24,12 +24,8 @@
 
 //check the permission
 	if (defined('STDIN')) {
-		//set the include path
-		$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-		set_include_path(parse_ini_file($conf[0])['document.root']);
-
 		//includes files
-		require_once "resources/require.php";
+		require_once dirname(__DIR__, 4) . "/resources/require.php";
 	}
 	else {
 		//only allow running this from command line
@@ -51,6 +47,7 @@
 	if (isset($_GET['hostname'])) {
 		$hostname = urldecode($_GET['hostname']);
 	}
+	$debug = false;
 	if (isset($_GET['debug'])) {
 		if (is_numeric($_GET['debug'])) {
 			$debug_level = $_GET['debug'];
@@ -68,14 +65,31 @@
 
 //define the firewall command
 	if ($php_os == 'freebsd') {
-		$firewall = 'pf';
+		$firewall_name = 'pf';
+		if (file_exists('/sbin/pfctl')) {
+			$firewall_path = '/sbin/pfctl';
+		}
 	}
 	if ($php_os == 'linux') {
-		$firewall = 'iptables';
+		$firewall_name = 'iptables';
+
+		//find the firewall path
+		if (file_exists('/usr/sbin/iptables')) {
+			$firewall_path = '/usr/sbin';
+		}
+		if (empty($firewall_path) && file_exists('/sbin/iptables')) {
+			$firewall_path = '/sbin';
+		}
+	}
+
+//check if the firewall command was found
+	if (empty($firewall_path)) {
+		echo $firewall_name." command not found\n";
+		exit;
 	}
 
 //add the iptables chains
-	if ($firewall == 'iptables') {
+	if ($firewall_name == 'iptables') {
 		//create a chain array
 		$chains[] = 'sip-auth-ip';
 		$chains[] = 'sip-auth-fail';
@@ -92,20 +106,9 @@
 	//$ip_address = '10.7.0.253';
 	//$result = access_allowed($ip_address);
 
-//get the settings
-	//$setting_name = $_SESSION['category']['subcategory']['text'];
-
-//set the event socket variables
-	$event_socket_ip_address = $_SESSION['event_socket_ip_address'];
-	$event_socket_port = $_SESSION['event_socket_port'];
-	$event_socket_password = $_SESSION['event_socket_password'];
-
-//end the session
-	session_destroy();
-
 //connect to event socket
 	$socket = new event_socket;
-	if (!$socket->connect($event_socket_ip_address, $event_socket_port, $event_socket_password)) {
+	if (!$socket->connect()) {
 		echo "Unable to connect to event socket\n";
 	}
 
@@ -141,7 +144,7 @@
 		//reconnect to event socket
 		if (!$socket->connected()) {
 			//echo "Not connected to even socket\n";
-			if ($socket->connect($event_socket_ip_address, $event_socket_port, $event_socket_password)) {
+			if ($socket->connect()) {
 				$cmd = "event json ALL";
 				$result = $socket->request($cmd);
 				if ($debug) { print_r($result); }
@@ -201,7 +204,7 @@
 					unblock($row['ip_address'], $row['filter']);
 
 					//log the blocked ip address to the syslog
-					openlog("fusionpbx", LOG_PID | LOG_PERROR);
+					openlog("fusionpbx", LOG_PID | LOG_PERROR, LOG_AUTH);
 					syslog(LOG_WARNING, "fusionpbx: unblocked: [ip_address: ".$row['ip_address'].", filter: ".$row['filter'].", to-user: ".$row['extension'].", to-host: ".$row['hostname'].", line: ".__line__."]");
 					closelog();
 
@@ -211,9 +214,10 @@
 					}
 
 					//log the blocked ip address to the database
-					$array['event_guard_logs'][0]['event_guard_log_uuid'] = $row['event_guard_log_uuid'];
-					$array['event_guard_logs'][0]['log_date'] = 'now()';
-					$array['event_guard_logs'][0]['log_status'] = 'unblocked';
+					$array['event_guard_logs'][$x]['event_guard_log_uuid'] = $row['event_guard_log_uuid'];
+					$array['event_guard_logs'][$x]['log_date'] = 'now()';
+					$array['event_guard_logs'][$x]['log_status'] = 'unblocked';
+					$x++;
 				}
 				if (is_array($array)) {
 					$p = new permissions;
@@ -300,8 +304,8 @@
 
 //block an ip address
 	function block($ip_address, $filter, $event) {
-		//set global variables
-		global $firewall;
+		//define the global variables
+		global $firewall_path, $firewall_name;
 
 		//invalid ip address
 		if (!filter_var($ip_address, FILTER_VALIDATE_IP)) {
@@ -309,21 +313,21 @@
 		}
 
 		//run the block command for iptables
-		if ($firewall == 'iptables') {
+		if ($firewall_name == 'iptables') {
 			//example: iptables -I INPUT -s 127.0.0.1 -j DROP
-			$command = 'iptables -I '.$filter.' -s '.$ip_address.' -j DROP';
+			$command = $firewall_path.'/./iptables -I '.$filter.' -s '.$ip_address.' -j DROP';
 			$result = shell($command);
 		}
 
 		//run the block command for pf
-		if ($firewall == 'pf') {
+		if ($firewall_name == 'pf') {
 			//example: pfctl -t sip-auth-ip -T add 127.0.0.5/32
-			$command = 'pfctl -t '.$filter.' -T add '.$ip_address.'/32';
+			$command = $firewall_path.'/pfctl -t '.$filter.' -T add '.$ip_address.'/32';
 			$result = shell($command);
 		}
 
 		//log the blocked ip address to the syslog
-		openlog("fusionpbx", LOG_PID | LOG_PERROR);
+		openlog("fusionpbx", LOG_PID | LOG_PERROR, LOG_AUTH);
 		syslog(LOG_WARNING, "fusionpbx: blocked: [ip_address: ".$ip_address.", filter: ".$filter.", to-user: ".$event['to-user'].", to-host: ".$event['to-host'].", line: ".__line__."]");
 		closelog();
 
@@ -356,8 +360,8 @@
 
 //unblock the ip address
 	function unblock($ip_address, $filter) {
-		//set global variables
-		global $firewall;
+		//define the global variables
+		global $firewall_path, $firewall_name;
 
 		//invalid ip address
 		if (!filter_var($ip_address, FILTER_VALIDATE_IP)) {
@@ -365,22 +369,22 @@
 		}
 
 		//unblock the address
-		if ($firewall == 'iptables') {
-			$command = 'iptables -L '.$filter.' -n --line-numbers | grep "'.$ip_address.' " | cut -d " " -f1';
+		if ($firewall_name == 'iptables') {
+			$command = $firewall_path.'/./iptables -L '.$filter.' -n --line-numbers | grep "'.$ip_address.' " | cut -d " " -f1';
 			$line_number = trim(shell($command));
 			echo "\n". $command . " line ".__line__." result ".$result."\n";
 			if (is_numeric($line_number)) {
 				//$result = shell('iptables -D INPUT '.$line_number);
-				$command = 'iptables -D '.$filter.' '.$line_number;
+				$command = $firewall_path.'/./iptables -D '.$filter.' '.$line_number;
 				$result = shell($command);
 				echo "Unblock address ".$ip_address ." line ".$line_number." command ".$command." result ".$result."\n";
 			}
 		}
 
 		//unblock the address
-		if ($firewall == 'pf') {
+		if ($firewall_name == 'pf') {
 			//example: pfctl -t sip-auth-ip -T delete 127.0.0.5/32
-			$command = 'pfctl -t '.$filter.' -T delete '.$ip_address.'/32';
+			$command = $firewall_path.'/pfctl -t '.$filter.' -T delete '.$ip_address.'/32';
 			$result = shell($command);
 		}
 
@@ -392,8 +396,8 @@
 
 //is the ip address blocked
 	function is_blocked($ip_address) {
-		//set global variables
-		global $firewall;
+		//define the global variables
+		global $firewall_path, $firewall_name;
 
 		//invalid ip address
 		if (!filter_var($ip_address, FILTER_VALIDATE_IP)) {
@@ -401,17 +405,17 @@
 		}
 
 		//determine whether to return true or false
-		if ($firewall == 'iptables') {
+		if ($firewall_name == 'iptables') {
 			//check to see if the address is blocked
-			$command = 'iptables -L -n --line-numbers | grep '.$ip_address;
+			$command = $firewall_path.'/./iptables -L -n --line-numbers | grep '.$ip_address;
 			$result = shell($command);
 			if (strlen($result) > 3) {
 				return true;
 			}
 		}
-		elseif ($firewall == 'pf') {
+		elseif ($firewall_name == 'pf') {
 			//check to see if the address is blocked
-			$command = 'pfctl -t ".$filter." -Ts | grep '.$ip_address;
+			$command = $firewall_path.'/pfctl -t ".$filter." -Ts | grep '.$ip_address;
 			$result = shell($command);
 			if (strlen($result) > 3) {
 				return true;
@@ -586,6 +590,7 @@
 		$sql .= "from v_user_logs ";
 		$sql .= "where remote_address = :remote_address ";
 		$sql .= "and result = 'success' ";
+		$sql .= "and timestamp > NOW() - INTERVAL '8 days' ";
 		$parameters['remote_address'] = $ip_address;  
 		$database = new database;
 		$user_log_count = $database->select($sql, $parameters, 'column');
@@ -645,6 +650,9 @@
 
 //add IP table chains
 	function iptables_chain_add($chain) {
+		//define the global variables
+		global $firewall_path, $firewall_name;
+
 		//if the chain exists return true
 		if (iptables_chain_exists($chain)) {
 			echo "IPtables ".$chain." chain already exists\n";
@@ -655,8 +663,8 @@
 		echo "Add iptables ".$chain." chain\n";
 
 		//add the chain
-		system('iptables --new '.$chain);
-		system('iptables -I INPUT -j '.$chain);
+		system($firewall_path.'/./iptables --new '.$chain);
+		system($firewall_path.'/./iptables -I INPUT -j '.$chain);
 
 		//check if the chain exists
 		if (iptables_chain_exists($chain)) {
@@ -670,7 +678,11 @@
 
 //check if the iptables chain exists
 	function iptables_chain_exists($chain) {
-		$command = "iptables --list INPUT --numeric | grep ".$chain." | awk '{print \$1}' | sed ':a;N;\$!ba;s/\\n/,/g' ";
+		//define the global variables
+		global $firewall_path, $firewall_name;
+
+		//build the command to check if the iptables chain exists
+		$command = $firewall_path."/./iptables --list INPUT --numeric | grep ".$chain." | awk '{print \$1}' | sed ':a;N;\$!ba;s/\\n/,/g' ";
 		//if ($debug) { echo $command."\n"; }
 		$response = shell($command);
 		if (in_array($chain, explode(",", $response))) {

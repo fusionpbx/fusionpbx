@@ -23,6 +23,63 @@ class plugin_ldap {
 	 */
 	function ldap() {
 
+		//show the authentication code view
+			if ($_REQUEST["username"]) {
+
+				//pre-process some settings
+					$settings['theme']['favicon'] = !empty($_SESSION['theme']['favicon']['text']) ? $_SESSION['theme']['favicon']['text'] : PROJECT_PATH.'/themes/default/favicon.ico';
+					$settings['login']['destination'] = !empty($_SESSION['login']['destination']['text']) ? $_SESSION['login']['destination']['text'] : '';
+					$settings['users']['unique'] = !empty($_SESSION['users']['unique']['text']) ? $_SESSION['users']['unique']['text'] : '';
+					$settings['theme']['logo'] = !empty($_SESSION['theme']['logo']['text']) ? $_SESSION['theme']['logo']['text'] : PROJECT_PATH.'/themes/default/images/logo_login.png';
+					$settings['theme']['login_logo_width'] = !empty($_SESSION['theme']['login_logo_width']['text']) ? $_SESSION['theme']['login_logo_width']['text'] : 'auto; max-width: 300px';
+					$settings['theme']['login_logo_height'] = !empty($_SESSION['theme']['login_logo_height']['text']) ? $_SESSION['theme']['login_logo_height']['text'] : 'auto; max-height: 300px';
+
+				//get the domain
+					$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
+					$domain_name = $domain_array[0];
+
+				//temp directory
+					$_SESSION['server']['temp']['dir'] = '/tmp';
+
+				//create token
+					//$object = new token;
+					//$token = $object->create('login');
+
+				//add multi-lingual support
+					$language = new text;
+					$text = $language->get(null, '/core/authentication');
+
+				//initialize a template object
+					$view = new template();
+					$view->engine = 'smarty';
+					$view->template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/core/authentication/resources/views/';
+					$view->cache_dir = $_SESSION['server']['temp']['dir'];
+					$view->init();
+
+				//add translations
+					$view->assign("login_title", $text['button-login']);
+					$view->assign("label_username", $text['label-username']);
+					$view->assign("label_password", $text['label-password']);
+					$view->assign("button_login", $text['button-login']);
+
+				//assign default values to the template
+					$view->assign("project_path", PROJECT_PATH);
+					$view->assign("login_destination_url", $settings['login']['destination']);
+					$view->assign("favicon", $settings['theme']['favicon']);
+					$view->assign("login_logo_width", $settings['theme']['login_logo_width']);
+					$view->assign("login_logo_height", $settings['theme']['login_logo_height']);
+					$view->assign("login_logo_source", $settings['theme']['logo']);
+
+				//add the token name and hash to the view
+					//$view->assign("token_name", $token['name']);
+					//$view->assign("token_hash", $token['hash']);
+
+				//show the views
+					$content = $view->render('login.htm');
+					echo $content;
+					exit;
+			}
+
 		//use ldap to validate the user credentials
 			if (isset($_SESSION["ldap"]["certpath"])) {
 				$s = "LDAPTLS_CERT=" . $_SESSION["ldap"]["certpath"]["text"];
@@ -44,7 +101,7 @@ class plugin_ldap {
 			$user_authorized = false;
 
 		//provide backwards compatability
-			if (strlen($_SESSION["ldap"]["user_dn"]["text"]) > 0) {
+			if (!empty($_SESSION["ldap"]["user_dn"]["text"])) {
 				$_SESSION["ldap"]["user_dn"][] = $_SESSION["ldap"]["user_dn"]["text"];
 			}
 
@@ -55,7 +112,7 @@ class plugin_ldap {
 				//Note: As of 4/16, the call below will fail randomly. PHP debug reports ldap_bind
 				//called below with all arguments '*uninitialized*'. However, the debugger
 				//single-stepping just before the failing call correctly displays all the values.
-				if (strlen($bind_pw) > 0) {
+				if (!empty($bind_pw)) {
 					$bind = ldap_bind($connect, $bind_dn, $bind_pw);
 					if ($bind) {
 						//connected and authorized
@@ -69,16 +126,17 @@ class plugin_ldap {
 			 if ($user_authorized) {
 				$sql = "select * from v_users ";
 				$sql .= "where username = :username ";
-				if ($_SESSION["users"]["unique"]["text"] != "global") {
+				if ($settings['users']['unique'] != "global") {
 					//unique username per domain (not globally unique across system - example: email address)
 					$sql .= "and domain_uuid = :domain_uuid ";
 					$parameters['domain_uuid'] = $this->domain_uuid;
 				}
+				$sql .= "and (user_type = 'default' or user_type is null) ";
 				$parameters['username'] = $this->username;
 				$database = new database;
 				$row = $database->select($sql, $parameters, 'row');
 				if (is_array($row) && @sizeof($row) != 0) {
-					if ($_SESSION["users"]["unique"]["text"] == "global" && $row["domain_uuid"] != $this->domain_uuid) {
+					if ($settings['users']['unique'] == "global" && $row["domain_uuid"] != $this->domain_uuid) {
 						//get the domain uuid
 							$this->domain_uuid = $row["domain_uuid"];
 							$this->domain_name = $_SESSION['domains'][$this->domain_uuid]['domain_name'];
@@ -140,15 +198,15 @@ class plugin_ldap {
 			}
 
 		//result array
-			$result["plugin"] = "ldap";
-			$result["domain_name"] = $this->domain_name;
-			$result["username"] = $this->username;
+			$result["ldap"]["plugin"] = "ldap";
+			$result["ldap"]["domain_name"] = $this->domain_name;
+			$result["ldap"]["username"] = $this->username;
 			if ($this->debug) {
-				$result["password"] = $this->password;
+				$result["ldap"]["password"] = $this->password;
 			}
-			$result["user_uuid"] = $this->user_uuid;
-			$result["domain_uuid"] = $this->domain_uuid;
-			$result["authorized"] = $user_authorized ? 'true' : 'false';
+			$result["ldap"]["user_uuid"] = $this->user_uuid;
+			$result["ldap"]["domain_uuid"] = $this->domain_uuid;
+			$result["ldap"]["authorized"] = $user_authorized ? true : false;
 			return $result;
 	}
 }

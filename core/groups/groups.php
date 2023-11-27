@@ -24,12 +24,8 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
 
@@ -47,11 +43,10 @@
 	$text = $language->get();
 
 //get the http post data
-	if (is_array($_POST['groups'])) {
-		$action = $_POST['action'];
-		$search = $_POST['search'];
-		$groups = $_POST['groups'];
-	}
+	$groups = $_POST['groups'] ?? '';
+	$action = $_POST['action'] ?? '';
+	$search = $_REQUEST["search"] ?? '';
+	$show = $_GET["show"] ?? '';
 
 //process the http post data by action
 	if ($action != '' && is_array($groups) && @sizeof($groups) != 0) {
@@ -81,41 +76,42 @@
 	}
 
 //get order and order by
-	$order_by = $_GET["order_by"];
-	$order = $_GET["order"];
+	$order_by = $_GET["order_by"] ?? '';
+	$order = $_GET["order"] ?? '';
 
 //add the search string
-	if (isset($_GET["search"])) {
-		$search =  strtolower($_GET["search"]);
-		$sql_search = " (";
-		$sql_search .= "	lower(group_name) like :search ";
-		$sql_search .= "	or lower(group_description) like :search ";
-		$sql_search .= ") ";
-		$parameters['search'] = '%'.$search.'%';
+	if (isset($search)) {
+		$search =  strtolower($search);
 	}
 
+//set from session variables
+	$list_row_edit_button = !empty($_SESSION['theme']['list_row_edit_button']['boolean']) ? $_SESSION['theme']['list_row_edit_button']['boolean'] : 'false';
+
 //get the count
-	$sql = "select count(*) from view_groups ";
-	if ($_GET['show'] == "all" && permission_exists('group_all')) {
-		if (isset($sql_search)) {
-			$sql .= "where ".$sql_search;
-		}
+	$sql = "select count(*) from view_groups \n";
+	$sql .= "where true \n";
+	if ($show == 'all' && permission_exists('group_all')) {
+		$sql .= "and (domain_uuid is not null or domain_uuid is null) ";
 	}
 	else {
-		$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
-		if (isset($sql_search)) {
-			$sql .= "and ".$sql_search;
-		}
+		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
 		$parameters['domain_uuid'] = $domain_uuid;
 	}
+	if (!empty($search)) {
+		$sql .= "and ( \n";
+		$sql .= "	lower(group_name) like :search \n";
+		$sql .= "	or lower(group_description) like :search \n";
+		$sql .= ") \n";
+		$parameters['search'] = '%'.$search.'%';
+	}
 	$database = new database;
-	$num_rows = $database->select($sql, $parameters, 'column');
+	$num_rows = $database->select($sql, $parameters ?? '', 'column');
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
 	$param = $search ? "&search=".$search : null;
-	$param = ($_GET['show'] == 'all' && permission_exists('group_all')) ? "&show=all" : null;
-	$page = is_numeric($_GET['page']) ? $_GET['page'] : 0;
+	$param = ($show == 'all' && permission_exists('group_all')) ? "&show=all" : null;
+	$page = !empty($_GET['page']) ? $_GET['page'] : 0;
 	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
 	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
@@ -125,7 +121,7 @@
 	$sql .= order_by($order_by, $order, 'group_name', 'asc');
 	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;
-	$groups = $database->select($sql, $parameters, 'all');
+	$groups = $database->select($sql, $parameters ?? '', 'all');
 	unset($sql, $parameters);
 
 //create token
@@ -156,7 +152,7 @@
 	}
 	echo 		"<form id='form_search' class='inline' method='get'>\n";
 	if (permission_exists('group_all')) {
-		if ($_GET['show'] == 'all') {
+		if ($show == 'all') {
 			echo "		<input type='hidden' name='show' value='all'>\n";
 		}
 		else {
@@ -195,10 +191,10 @@
 	echo "<tr class='list-header'>\n";
 	if (permission_exists('group_add') || permission_exists('group_edit') || permission_exists('group_delete')) {
 		echo "	<th class='checkbox'>\n";
-		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".($groups ?: "style='visibility: hidden;'").">\n";
+		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".(!empty($groups) ?: "style='visibility: hidden;'").">\n";
 		echo "	</th>\n";
 	}
-	if ($_GET['show'] == 'all' && permission_exists('group_all')) {
+	if ($show == 'all' && permission_exists('group_all')) {
 		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order);
 	}
 	echo th_order_by('group_name', $text['label-group_name'], $order_by, $order);
@@ -206,7 +202,7 @@
 	echo th_order_by('group_level', $text['label-group_level'], $order_by, $order, null, "class='center'");
 	echo th_order_by('group_protected', $text['label-group_protected'], $order_by, $order, null, "class='center'");
 	echo "	<th class='pct-30 hide-sm-dn'>".$text['label-group_description']."</th>\n";
-	if (permission_exists('group_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+	if (permission_exists('group_edit') && $list_row_edit_button == 'true') {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
@@ -224,8 +220,8 @@
 				echo "		<input type='hidden' name='groups[$x][uuid]' value='".escape($row['group_uuid'])."' />\n";
 				echo "	</td>\n";
 			}
-			if ($_GET['show'] == 'all' && permission_exists('group_all')) {
-				echo "	<td>".escape($_SESSION['domains'][$row['domain_uuid']]['domain_name'])."</td>\n";
+			if ($show == 'all' && permission_exists('group_all')) {
+echo "	<td>".escape($row['domain_name'])."</td>\n";
 			}
 			echo "	<td>\n";
 			if (permission_exists('group_edit')) {
@@ -248,7 +244,7 @@
 			}
 			echo "	</td>\n";
 			echo "	<td class='description overflow hide-sm-dn'>".escape($row['group_description'])."</td>\n";
-			if (permission_exists('group_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+			if (permission_exists('group_edit') && $list_row_edit_button == 'true') {
 				echo "	<td class='action-button'>\n";
 				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
 				echo "	</td>\n";

@@ -17,19 +17,15 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2022
+	Portions created by the Initial Developer are Copyright (C) 2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 	
 //check permissions
@@ -42,12 +38,12 @@
 	}
 
 //get posted data
-	if (is_array($_POST['search'])) {
+	if (!empty($_POST['search'])) {
 		$search = $_POST['search'];
 	}
 
 //add the search term
-	if (isset($_GET["search"])) {
+	if (!empty($_GET["search"])) {
 		$search = strtolower($_GET["search"]);
 	}
 
@@ -63,22 +59,21 @@
 	//echo "<link rel='stylesheet' type='text/css' href='/resources/fontawesome/css/all.min.css.php'>\n";
 
 //get the list of domains
-	if (permission_exists('domain_all')) {
+	if (permission_exists('domain_all') || permission_exists('domain_select')) {
 		$sql = "select * ";
 		$sql .= "from v_domains ";
 		$sql .= "where true ";
 		$sql .= "and domain_enabled = 'true' \n";
 		if (isset($search)) {
 			$sql .= "	and ( ";
-			$sql .= "		domain_name like :search ";
-			$sql .= "		or domain_description like :search ";
+			$sql .= "		lower(domain_name) like :search ";
+			$sql .= "		or lower(domain_description) like :search ";
 			$sql .= "	) ";
 			$parameters['search'] = '%'.$search.'%';
 		}
 		$sql .= "order by domain_name asc ";
-		$sql .= "limit 300 ";
 		$database = new database;
-		$domains = $database->select($sql, $parameters, 'all');
+		$domains = $database->select($sql, $parameters ?? null, 'all');
 		unset($sql, $parameters);
 	}
 

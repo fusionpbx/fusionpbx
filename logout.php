@@ -24,19 +24,23 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once __DIR__ . "/resources/require.php";
+	
+//use custom logout destination if set otherwise redirect to the index page
+	if (isset($_SESSION["login"]["logout_destination"]["text"])){
+		$logout_destination = $_SESSION["login"]["logout_destination"]["text"];
+	}
+	else {
+		$logout_destination = PROJECT_PATH."/";
+	}
 
 //destroy session
 	session_unset();
 	session_destroy();
 
 //check for login return preference
-	if ($_SESSION["user_uuid"] != '') {
+	if (!empty($_SESSION["user_uuid"])) {
 		if (isset($_SESSION['login']['destination_last']) && ($_SESSION['login']['destination_last']['boolean'] == 'true')) {
 			if ($_SERVER['HTTP_REFERER'] != '') {
 				//convert to relative path
@@ -100,8 +104,8 @@
 		}
 	}
 
-//redirect the user to the index page
-	header("Location: ".PROJECT_PATH."/login.php");
+//redirect the user to the logout page
+	header("Location: ".$logout_destination);
 	exit;
 
 ?>

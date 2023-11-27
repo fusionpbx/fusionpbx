@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2016
+	Portions created by the Initial Developer are Copyright (C) 2016-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -25,12 +25,8 @@
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 
 //check permissions
 	require_once "resources/check_auth.php";
@@ -71,6 +67,7 @@
 	if ($num_rows == 0) {
 
 		//get the vendor array
+			$x = 0;
 			require_once $_SERVER["DOCUMENT_ROOT"].'/'.PROJECT_PATH.'/app/devices/app_config.php';
 
 		//get the groups and create an array to use the name to get the uuid
@@ -87,7 +84,7 @@
 			unset($sql);
 
 		//create insert array
-			$x = 0; $z = 0;
+			$x = $z = 0;
 			foreach ($vendors as $vendor) {
 				//insert the data into the database
 					$device_vendor_uuid = uuid();
@@ -97,31 +94,34 @@
 
 				//add the device vendor functions
 					$y = 0;
-					foreach ($vendor['functions'] as $function) {
-						//add the device vendor function
-							$device_vendor_function_uuid = uuid();
-							$array['device_vendors'][$x]['device_vendor_functions'][$y]['device_vendor_uuid'] = $device_vendor_uuid;
-							$array['device_vendors'][$x]['device_vendor_functions'][$y]['device_vendor_function_uuid'] = $device_vendor_function_uuid;
-							//$array['device_vendors'][$x]['device_vendor_functions'][$y]['label'] = $function['label'];
-							$array['device_vendors'][$x]['device_vendor_functions'][$y]['name'] = $function['name'];
-							$array['device_vendors'][$x]['device_vendor_functions'][$y]['value'] = $function['value'];
-							$array['device_vendors'][$x]['device_vendor_functions'][$y]['enabled'] = 'true';
-							$array['device_vendors'][$x]['device_vendor_functions'][$y]['description'] = $function['description'];
+					if (!empty($vendor['functions']) && is_array($vendor['functions']) && @sizeof($vendor['functions']) != 0) {
+						foreach ($vendor['functions'] as $function) {
+							//add the device vendor function
+								$device_vendor_function_uuid = uuid();
+								$array['device_vendors'][$x]['device_vendor_functions'][$y]['device_vendor_uuid'] = $device_vendor_uuid;
+								$array['device_vendors'][$x]['device_vendor_functions'][$y]['device_vendor_function_uuid'] = $device_vendor_function_uuid;
+								//$array['device_vendors'][$x]['device_vendor_functions'][$y]['label'] = $function['label'];
+								$array['device_vendors'][$x]['device_vendor_functions'][$y]['type'] = $function['type'] ?? null;
+								$array['device_vendors'][$x]['device_vendor_functions'][$y]['subtype'] = $function['subtype'] ?? null;
+								$array['device_vendors'][$x]['device_vendor_functions'][$y]['value'] = $function['value'];
+								$array['device_vendors'][$x]['device_vendor_functions'][$y]['enabled'] = 'true';
+								$array['device_vendors'][$x]['device_vendor_functions'][$y]['description'] = $function['description'] ?? null;
 
-						//add the device vendor function groups
-							if (is_array($function['groups']) && @sizeof($function['groups']) != 0) {
-								foreach ($function['groups'] as $group_name) {
-									$device_vendor_function_group_uuid = uuid();
-									$array['device_vendor_function_groups'][$z]['device_vendor_function_group_uuid'] = $device_vendor_function_group_uuid;
-									$array['device_vendor_function_groups'][$z]['device_vendor_function_uuid'] = $device_vendor_function_uuid;
-									$array['device_vendor_function_groups'][$z]['device_vendor_uuid'] = $device_vendor_uuid;
-									$array['device_vendor_function_groups'][$z]['group_name'] = $group_name;
-									$array['device_vendor_function_groups'][$z]['group_uuid'] = $group_uuids[$group_name];
-									$z++;
+							//add the device vendor function groups
+								if (is_array($function['groups']) && @sizeof($function['groups']) != 0) {
+									foreach ($function['groups'] as $group_name) {
+										$device_vendor_function_group_uuid = uuid();
+										$array['device_vendor_function_groups'][$z]['device_vendor_function_group_uuid'] = $device_vendor_function_group_uuid;
+										$array['device_vendor_function_groups'][$z]['device_vendor_function_uuid'] = $device_vendor_function_uuid;
+										$array['device_vendor_function_groups'][$z]['device_vendor_uuid'] = $device_vendor_uuid;
+										$array['device_vendor_function_groups'][$z]['group_name'] = $group_name;
+										$array['device_vendor_function_groups'][$z]['group_uuid'] = $group_uuids[$group_name];
+										$z++;
+									}
 								}
-							}
-						//increment the device vendor function index
-							$y++;
+							//increment the device vendor function index
+								$y++;
+						}
 					}
 				
 				//increment the devic vendor index

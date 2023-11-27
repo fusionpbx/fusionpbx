@@ -27,16 +27,12 @@
 	POSSIBILITY OF SUCH DAMAGE.
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('call_center_active_view')) {
+	if (permission_exists('call_center_active_options')) {
 		//access granted
 	}
 	else {
@@ -81,6 +77,9 @@
 		case "uuid_transfer":
 			$switch_command = "uuid_transfer ".$uuid." -bleg ".$_SESSION['user']['extension'][0]['user']." XML ".$_SESSION['domain_name'];
 			break;
+		case "uuid_pickup":
+				$switch_command = "uuid_transfer ".$uuid." ".$_SESSION['user']['extension'][0]['user']." XML ".$_SESSION['domain_name'];
+				break;
 		case "bridge":
 			$switch_command = "originate {origination_caller_id_name=".$caller_id_name.",origination_caller_id_number=".$caller_id_number."}user/".$_SESSION['user']['extension'][0]['user']."@".$_SESSION['domain_name']." bridge(user/".$extension."@".$_SESSION['domain_name'].")";
 			break;
@@ -91,7 +90,7 @@
 
 //run the command
 	if (isset($switch_command)) {
-		$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+		$fp = event_socket_create();
 		$response = event_socket_request($fp, 'api '.$switch_command);
 	}
 
@@ -133,9 +132,9 @@
 		}
 
 		//fs cmd
-		if (strlen($switch_cmd) > 0) {
+		if (!empty($switch_cmd)) {
 			//setup the event socket connection
-				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+				$fp = event_socket_create();
 			//ensure the connection exists
 				if ($fp) {
 					//send the command

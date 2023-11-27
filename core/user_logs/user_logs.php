@@ -17,16 +17,12 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018 - 2022
+	Portions created by the Initial Developer are Copyright (C) 2018 - 2023
 	the Initial Developer. All Rights Reserved.
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
 
@@ -44,14 +40,14 @@
 	$text = $language->get();
 
 //get the http post data
-	if (is_array($_POST['user_logs'])) {
+	if (!empty($_POST['user_logs']) && is_array($_POST['user_logs'])) {
 		$action = $_POST['action'];
 		$search = $_POST['search'];
 		$user_logs = $_POST['user_logs'];
 	}
 
 //process the http post data by action
-	if ($action != '' && is_array($user_logs) && @sizeof($user_logs) != 0) {
+	if (!empty($action) && !empty($user_logs) && is_array($user_logs) && @sizeof($user_logs) != 0) {
 
 		//validate the token
 		$token = new token;
@@ -62,10 +58,12 @@
 		}
 
 		//prepare the array
-		foreach($user_logs as $row) {
-			$array['user_logs'][$x]['checked'] = $row['checked'];
-			$array['user_logs'][$x]['user_log_uuid'] = $row['user_log_uuid'];
-			$x++;
+		if (!empty($user_logs)) {
+			foreach ($user_logs as $row) {
+				$array['user_logs'][$x]['checked'] = $row['checked'];
+				$array['user_logs'][$x]['user_log_uuid'] = $row['user_log_uuid'];
+				$x++;
+			}
 		}
 
 		//prepare the database object
@@ -74,10 +72,8 @@
 		$database->app_uuid = '582a13cf-7d75-4ea3-b2d9-60914352d76e';
 
 		//send the array to the database class
-		if ($action == 'delete') {
-			if (permission_exists('user_log_delete')) {
-				$database->delete($array);
-			}
+		if (!empty($action) && $action == 'delete' && permission_exists('user_log_delete')) {
+			$database->delete($array);
 		}
 
 		//redirect the user
@@ -86,27 +82,35 @@
 	}
 
 //get order and order by
-	$order_by = $_GET["order_by"];
-	$order = $_GET["order"];
+	$order_by = $_GET["order_by"] ?? null;
+	$order = $_GET["order"] ?? null;
 
-//add the search
-	if (isset($_GET["search"])) {
+//define the variables
+	$search = '';
+	$show = '';
+
+//add the search variable
+	if (!empty($_GET["search"])) {
 		$search = strtolower($_GET["search"]);
-		$search = htmlspecialchars($search);
+	}
+
+//add the show variable
+	if (!empty($_GET["show"])) {
+		$show = $_GET["show"];
 	}
 
 //get the count
 	$sql = "select count(user_log_uuid) ";
 	$sql .= "from v_user_logs ";
-	if (permission_exists('user_log_all') && $_GET['show'] == 'all') {
+	if (permission_exists('user_log_all') && $show == 'all') {
 		$sql .= "where true ";
 	}
 	else {
-		$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+		$sql .= "where domain_uuid = :domain_uuid ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	}
-	if (isset($search)) {
-		$sql .= "and (";
+	if (!empty($search)) {
+		$sql .= "and ( ";
 		$sql .= "	lower(username) like :search ";
 		$sql .= "	or lower(type) like :search ";
 		$sql .= "	or lower(result) like :search ";
@@ -116,14 +120,14 @@
 		$parameters['search'] = '%'.$search.'%';
 	}
 	$database = new database;
-	$num_rows = $database->select($sql, $parameters, 'column');
+	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 	unset($sql, $parameters);
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
-	$param = $search ? "search=".$search : null;
-	$param .= ($_GET['show'] == 'all' && permission_exists('user_log_all')) ? "&show=all" : null;
-	$page = is_numeric($_GET['page']) ? $_GET['page'] : 0;
+	$param = !empty($search) ? "&search=".$search : null;
+	$param .= (!empty($_GET['page']) && $show == 'all' && permission_exists('user_log_all')) ? "&show=all" : null;
+	$page = !empty($_GET['page']) && is_numeric($_GET['page']) ? $_GET['page'] : 0;
 	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
 	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
@@ -139,25 +143,26 @@
 
 //get the list
 	$sql = "select ";
-	$sql .= "domain_uuid, ";
 	$sql .= "user_log_uuid, ";
-	$sql .= "timestamp, ";
-	$sql .= "to_char(timezone(:time_zone, timestamp), 'DD Mon YYYY') as date_formatted, \n";
-	$sql .= "to_char(timezone(:time_zone, timestamp), 'HH12:MI:SS am') as time_formatted, \n";
+	$sql .= "u.domain_uuid, ";
+	$sql .= "d.domain_name, ";
+	$sql .= "to_char(timezone(:time_zone, timestamp), 'DD Mon YYYY') as date_formatted, ";
+	$sql .= "to_char(timezone(:time_zone, timestamp), 'HH12:MI:SS am') as time_formatted, ";
+	$sql .= "user_uuid, ";
 	$sql .= "username, ";
 	$sql .= "type, ";
 	$sql .= "result, ";
 	$sql .= "remote_address, ";
 	$sql .= "user_agent ";
-	$sql .= "from v_user_logs ";
-	if (permission_exists('user_log_all') && $_GET['show'] == 'all') {
+	$sql .= "from v_user_logs as u, v_domains as d ";
+	if (permission_exists('user_log_all') && $show == 'all') {
 		$sql .= "where true ";
 	}
 	else {
-		$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+		$sql .= "where u.domain_uuid = :domain_uuid ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	}
-	if (isset($search)) {
+	if (!empty($search)) {
 		$sql .= "and ( ";
 		$sql .= "	lower(username) like :search ";
 		$sql .= "	or lower(type) like :search ";
@@ -167,10 +172,11 @@
 		$sql .= ") ";
 		$parameters['search'] = '%'.$search.'%';
 	}
+	$sql .= "and u.domain_uuid = d.domain_uuid ";
 	$sql .= order_by($order_by, $order, 'timestamp', 'desc');
 	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;
-	$user_logs = $database->select($sql, $parameters, 'all');
+	$user_logs = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 
 //create token
@@ -190,7 +196,7 @@
 	}
 	echo 		"<form id='form_search' class='inline' method='get'>\n";
 	if (permission_exists('user_log_all')) {
-		if ($_GET['show'] == 'all') {
+		if ($show == 'all') {
 			echo "		<input type='hidden' name='show' value='all'>\n";
 		}
 		else {
@@ -199,7 +205,6 @@
 	}
 	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=''>";
 	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search']);
-	//echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','link'=>'user_logs.php','style'=>($search == '' ? 'display: none;' : null)]);
 	if ($paging_controls_mini != '') {
 		echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>\n";
 	}
@@ -217,16 +222,16 @@
 
 	echo "<form id='form_list' method='post'>\n";
 	echo "<input type='hidden' id='action' name='action' value=''>\n";
-	echo "<input type='hidden' name='search' value=\"".escape($search)."\">\n";
+	echo "<input type='hidden' name='search' value=\"".escape($search ?? '')."\">\n";
 
 	echo "<table class='list'>\n";
 	echo "<tr class='list-header'>\n";
-	if (permission_exists('user_log_add') || permission_exists('user_log_edit') || permission_exists('user_log_delete')) {
+	if (permission_exists('user_log_delete')) {
 		echo "	<th class='checkbox'>\n";
-		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".($user_logs ?: "style='visibility: hidden;'").">\n";
+		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".empty($user_logs ? "style='visibility: hidden;'" : null).">\n";
 		echo "	</th>\n";
 	}
-	if ($_GET['show'] == 'all' && permission_exists('user_log_all')) {
+	if ($show == 'all' && permission_exists('user_log_all')) {
 		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order);
 	}
 	echo "<th class='left'>".$text['label-date']."</th>\n";
@@ -236,26 +241,20 @@
 	echo th_order_by('result', $text['label-result'], $order_by, $order);
 	echo th_order_by('remote_address', $text['label-remote_address'], $order_by, $order);
 	echo th_order_by('user_agent', $text['label-user_agent'], $order_by, $order);
-	if (permission_exists('user_log_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
-		echo "	<td class='action-button'>&nbsp;</td>\n";
-	}
 	echo "</tr>\n";
 
-	if (is_array($user_logs) && @sizeof($user_logs) != 0) {
+	if (!empty($user_logs) && is_array($user_logs) && @sizeof($user_logs) != 0) {
 		$x = 0;
 		foreach ($user_logs as $row) {
-			if (permission_exists('user_log_edit')) {
-				$list_row_url = "user_log_edit.php?id=".urlencode($row['user_log_uuid']);
-			}
-			echo "<tr class='list-row' href='".$list_row_url."'>\n";
-			if (permission_exists('user_log_add') || permission_exists('user_log_edit') || permission_exists('user_log_delete')) {
+			echo "<tr class='list-row'>\n";
+			if (permission_exists('user_log_delete')) {
 				echo "	<td class='checkbox'>\n";
 				echo "		<input type='checkbox' name='user_logs[$x][checked]' id='checkbox_".$x."' value='true' onclick=\"checkbox_on_change(this); if (!this.checked) { document.getElementById('checkbox_all').checked = false; }\">\n";
 				echo "		<input type='hidden' name='user_logs[$x][user_log_uuid]' value='".escape($row['user_log_uuid'])."' />\n";
 				echo "	</td>\n";
 			}
-			if ($_GET['show'] == 'all' && permission_exists('user_log_all')) {
-				echo "	<td>".escape($_SESSION['domains'][$row['domain_uuid']]['domain_name'])."</td>\n";
+			if ($show == 'all' && permission_exists('user_log_all')) {
+				echo "	<td>".escape($row['domain_name'])."</td>\n";
 			}
 			echo "	<td>".escape($row['date_formatted'])."</td>\n";
 			echo "	<td class='left hide-md-dn'>".escape($row['time_formatted'])."</td>\n";
@@ -264,11 +263,6 @@
 			echo "	<td>".escape($row['result'])."</td>\n";
 			echo "	<td>".escape($row['remote_address'])."</td>\n";
 			echo "	<td>".escape($row['user_agent'])."</td>\n";
-			if (permission_exists('user_log_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
-				echo "	<td class='action-button'>\n";
-				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
-				echo "	</td>\n";
-			}
 			echo "</tr>\n";
 			$x++;
 		}

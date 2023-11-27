@@ -17,19 +17,15 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
 
@@ -47,14 +43,14 @@
 	$text = $language->get();
 
 //get the http post data
-	if (is_array($_POST['time_conditions'])) {
+	if (!empty($_POST['time_conditions']) && is_array($_POST['time_conditions'])) {
 		$action = $_POST['action'];
 		$search = $_POST['search'];
 		$time_conditions = $_POST['time_conditions'];
 	}
 
 //process the http post data by action
-	if ($action != '' && is_array($time_conditions) && @sizeof($time_conditions) != 0) {
+	if (!empty($action) && !empty($time_conditions) && is_array($time_conditions) && @sizeof($time_conditions) != 0) {
 		switch ($action) {
 			case 'copy':
 				if (permission_exists('time_condition_add')) {
@@ -81,55 +77,57 @@
 	}
 
 //get order and order by
-	$order_by = $_GET["order_by"];
-	$order = $_GET["order"];
+	$order_by = $_GET["order_by"] ?? 'dialplan_name';
+	$order = $_GET["order"] ?? 'asc';
+	$sort = $order_by == 'dialplan_number' ? 'natural' : null;
 
-//add the search string
-	$search = strtolower($_GET["search"]);
-	if (strlen($search) > 0) {
-		$sql_search = "and (";
-		$sql_search .= " 	lower(dialplan_context) like :search ";
-		$sql_search .= " 	or lower(dialplan_name) like :search ";
-		$sql_search .= " 	or lower(dialplan_number) like :search ";
-		$sql_search .= " 	or lower(dialplan_continue) like :search ";
-		if (is_numeric($search)) {
-			$sql_search .= " 	or dialplan_order = :search ";
-		}
-		$sql_search .= " 	or lower(dialplan_enabled) like :search ";
-		$sql_search .= " 	or lower(dialplan_description) like :search ";
-		$sql_search .= ") ";
-		$parameters['search'] = '%'.$search.'%';
-	}
+//add the search variable
+	$search = $_GET["search"] ?? '';
+	$show = $_GET["show"] ?? '';
 
 //get the number of rows in the dialplan
 	$sql = "select count(dialplan_uuid) from v_dialplans ";
-	$sql .= "where true ";
-	if ($_GET['show'] != "all" || !permission_exists('time_condition_all')) {
-		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
+	if ($show == "all" && permission_exists('time_condition_all')) {
+		$sql .= "where true ";
+	}
+	else {
+		$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	}
+	if (!empty($search)) {
+		$search = strtolower($search);
+		$sql .= "and (";
+		$sql .= " 	lower(dialplan_context) like :search ";
+		$sql .= " 	or lower(dialplan_name) like :search ";
+		$sql .= " 	or lower(dialplan_number) like :search ";
+		$sql .= " 	or lower(dialplan_continue) like :search ";
+		$sql .= " 	or lower(dialplan_enabled) like :search ";
+		$sql .= " 	or lower(dialplan_description) like :search ";
+		$sql .= ") ";
+		$parameters['search'] = '%'.$search.'%';
+	}
 	$sql .= "and app_uuid = '4b821450-926b-175a-af93-a03c441818b1' ";
-	$sql .= $sql_search;
+	$sql .= $sql_search ?? null;
 	$database = new database;
-	$num_rows = $database->select($sql, $parameters, 'column');
+	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 
 //prepare to page data
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
 	$param = $search ? "&search=".urlencode($search) : null;
-	if ($_GET['show'] == "all" && permission_exists('time_condition_all')) {
+	if (!empty($_GET['show']) && $_GET['show'] == "all" && permission_exists('time_condition_all')) {
 		$param .= "&show=all";
 	}
-	$page = is_numeric($_GET['page']) ? $_GET['page'] : 0;
+	$page = !empty($_GET['page']) && is_numeric($_GET['page']) ? $_GET['page'] : 0;
 	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
 	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
 
 //get the data
 	$sql = str_replace('count(dialplan_uuid)', '*', $sql);
-	$sql .= $order_by != '' ? order_by($order_by, $order) : " order by dialplan_order asc, dialplan_name asc ";
+	$sql .= order_by($order_by, $order, null, null, $sort);
 	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;
-	$dialplans = $database->select($sql, $parameters, 'all');
+	$dialplans = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 
 //create token
@@ -158,7 +156,7 @@
 	}
 	echo 		"<form id='form_search' class='inline' method='get'>\n";
 	if (permission_exists('time_condition_all')) {
-		if ($_GET['show'] == 'all') {
+		if (!empty($_GET['show']) && $_GET['show'] == 'all') {
 			echo "		<input type='hidden' name='show' value='all'>";
 		}
 		else {
@@ -197,10 +195,10 @@
 	echo "<tr class='list-header'>\n";
 	if (permission_exists('time_condition_edit') || permission_exists('time_condition_delete')) {
 		echo "	<th class='checkbox'>\n";
-		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".($dialplans ?: "style='visibility: hidden;'").">\n";
+		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".(empty($dialplans) ? "style='visibility: hidden;'" : null).">\n";
 		echo "	</th>\n";
 	}
-	if ($_GET['show'] == "all" && permission_exists('time_condition_all')) {
+	if (!empty($_GET['show']) && $_GET['show'] == "all" && permission_exists('time_condition_all')) {
 		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, $param, "class='shrink'");
 	}
 	echo th_order_by('dialplan_name', $text['label-name'], $order_by, $order, null, null, ($search != '' ? "search=".$search : null));
@@ -211,7 +209,7 @@
 	echo th_order_by('dialplan_order', $text['label-order'], $order_by, $order, null, "class='center'", ($search != '' ? "search=".$search : null));
 	echo th_order_by('dialplan_enabled', $text['label-enabled'], $order_by, $order, null, "class='center'", ($search != '' ? "search=".$search : null));
 	echo th_order_by('dialplan_description', $text['label-description'], $order_by, $order, null, "class='hide-sm-dn'", ($search != '' ? "search=".$search : null));
-	if (permission_exists('time_condition_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+	if (permission_exists('time_condition_edit') && !empty($_SESSION['theme']['list_row_edit_button']['boolean']) && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
@@ -229,8 +227,8 @@
 				echo "		<input type='hidden' name='time_conditions[$x][uuid]' value='".escape($row['dialplan_uuid'])."' />\n";
 				echo "	</td>\n";
 			}
-			if ($_GET['show'] == "all" && permission_exists('time_condition_all')) {
-				if (strlen($_SESSION['domains'][$row['domain_uuid']]['domain_name']) > 0) {
+			if (!empty($_GET['show']) && $_GET['show'] == "all" && permission_exists('time_condition_all')) {
+				if (!empty($_SESSION['domains'][$row['domain_uuid']]['domain_name'])) {
 					$domain = $_SESSION['domains'][$row['domain_uuid']]['domain_name'];
 				}
 				else {
@@ -261,7 +259,7 @@
 			}
 			echo "	</td>\n";
 			echo "	<td class='description overflow hide-sm-dn'>".$row['dialplan_description']."&nbsp;</td>\n";
-			if (permission_exists('time_condition_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+			if (permission_exists('time_condition_edit') && !empty($_SESSION['theme']['list_row_edit_button']['boolean']) && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
 				echo "	<td class='action-button'>\n";
 				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
 				echo "	</td>\n";

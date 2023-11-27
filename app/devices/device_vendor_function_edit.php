@@ -17,22 +17,25 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2016-2020
+	Portions created by the Initial Developer are Copyright (C) 2016-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
+
+//add multi-lingual support
+	$language = new text;
+	$text = $language->get();
+
+//set the defaults
+	$device_vendor_function_uuid = '';
 
 //delete the group from the menu item
-	if ($_REQUEST["a"] == "delete" && permission_exists("device_vendor_function_delete") && $_REQUEST["id"] != '') {
+	if (!empty($_REQUEST["a"]) && $_REQUEST["a"] == "delete" && permission_exists("device_vendor_function_delete") && !empty($_REQUEST["id"])) {
 		//get the id
 			$device_vendor_function_group_uuid = $_REQUEST["id"];
 			$device_vendor_function_uuid = $_REQUEST["device_vendor_function_uuid"];
@@ -53,7 +56,7 @@
 			$p->delete('device_vendor_function_group_delete', 'temp');
 
 		//redirect the browser
-			message::add($text['message-delete']);
+			message::add($text['message-delete'] ?? '');
 			header("Location: device_vendor_function_edit.php?id=".escape($device_vendor_function_uuid) ."&device_vendor_uuid=".escape($device_vendor_uuid));
 			exit;
 	}
@@ -69,7 +72,7 @@
 	}
 
 //action add or update
-	if (is_uuid($_REQUEST["id"])) {
+	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
 		$device_vendor_function_uuid = $_REQUEST["id"];
 	}
@@ -89,14 +92,15 @@
 //get http post variables and set them to php variables
 	if (count($_POST)>0) {
 		//$label = $_POST["label"];
-		$name = $_POST["name"];
+		$type = $_POST["type"];
+		$subtype = $_POST["subtype"];
 		$value = $_POST["value"];
 		$enabled = $_POST["enabled"];
 		$description = $_POST["description"];
 	}
 
 //process the http variables
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 
 		//get the uuid
 			if ($action == "update") {
@@ -113,12 +117,12 @@
 
 		//check for all required data
 			$msg = '';
-			//if (strlen($label) == 0) { $msg .= $text['message-required']." ".$text['label-label']."<br>\n"; }
-			if (strlen($name) == 0) { $msg .= $text['message-required']." ".$text['label-name']."<br>\n"; }
-			if (strlen($value) == 0) { $msg .= $text['message-required']." ".$text['label-value']."<br>\n"; }
-			if (strlen($enabled) == 0) { $msg .= $text['message-required']." ".$text['label-enabled']."<br>\n"; }
-			//if (strlen($description) == 0) { $msg .= $text['message-required']." ".$text['label-description']."<br>\n"; }
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+			//if (empty($label)) { $msg .= $text['message-required']." ".$text['label-label']."<br>\n"; }
+			if (empty($type)) { $msg .= $text['message-required']." ".$text['label-type']."<br>\n"; }
+			if (empty($value)) { $msg .= $text['message-required']." ".$text['label-value']."<br>\n"; }
+			if (empty($enabled)) { $msg .= $text['message-required']." ".$text['label-enabled']."<br>\n"; }
+			//if (empty($description)) { $msg .= $text['message-required']." ".$text['label-description']."<br>\n"; }
+			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -132,7 +136,7 @@
 			}
 
 		//add or update the database
-			if ($_POST["persistformvar"] != "true") {
+			if (empty($_POST["persistformvar"]) || $_POST["persistformvar"] != "true") {
 
 				//add vendor functions
 					if ($action == "add" && permission_exists('device_vendor_function_add')) {
@@ -149,7 +153,8 @@
 					if (is_array($array) && @sizeof($array) != 0) {
 						$array['device_vendor_functions'][0]['device_vendor_uuid'] = $device_vendor_uuid;
 						//$array['device_vendor_functions'][0]['label'] = $label;
-						$array['device_vendor_functions'][0]['name'] = $name;
+						$array['device_vendor_functions'][0]['type'] = $type;
+						$array['device_vendor_functions'][0]['subtype'] = $subtype;
 						$array['device_vendor_functions'][0]['value'] = $value;
 						$array['device_vendor_functions'][0]['enabled'] = $enabled;
 						$array['device_vendor_functions'][0]['description'] = $description;
@@ -199,8 +204,8 @@
 	}
 
 //pre-populate the form
-	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
-		$device_vendor_function_uuid = $_GET["id"];
+	if (!empty($_GET) && count($_GET) > 0 && (empty($_POST["persistformvar"]) || $_POST["persistformvar"] != "true")) {
+		$device_vendor_function_uuid = $_GET["id"] ?? null;
 		$sql = "select * from v_device_vendor_functions ";
 		$sql .= "where device_vendor_function_uuid = :device_vendor_function_uuid ";
 		$parameters['device_vendor_function_uuid'] = $device_vendor_function_uuid;
@@ -208,7 +213,8 @@
 		$row = $database->select($sql, $parameters, 'row');
 		if (is_array($row) && @sizeof($row) != 0) {
 			//$label = $row["label"];
-			$name = $row["name"];
+			$type = $row["type"];
+			$subtype = $row["subtype"];
 			$value = $row["value"];
 			$enabled = $row["enabled"];
 			$description = $row["description"];
@@ -238,7 +244,7 @@
 //set the assigned_groups array
 	if (is_array($function_groups) && @sizeof($function_groups) != 0) {
 		foreach($function_groups as $field) {
-			if (strlen($field['group_name']) > 0) {
+			if (!empty($field['group_name'])) {
 				$assigned_groups[] = $field['group_uuid'];
 			}
 		}
@@ -246,7 +252,7 @@
 
 //get the groups
 	$sql = "select * from v_groups ";
-	if (is_array($assigned_groups) && @sizeof($assigned_groups) != 0) {
+	if (!empty($assigned_groups) && is_array($assigned_groups) && @sizeof($assigned_groups) != 0) {
 		$sql .= "where ";
 		foreach ($assigned_groups as $index => $group_uuid) {
 			$sql_where[] = 'group_uuid <> :group_uuid_'.$index;
@@ -258,7 +264,7 @@
 	}
 	$sql .= "order by domain_uuid desc, group_name asc ";
 	$database = new database;
-	$groups = $database->select($sql, $parameters, 'all');
+	$groups = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters, $sql_where, $index);
 
 //create token
@@ -285,12 +291,23 @@
 
 	echo "<tr>\n";
 	echo "<td width='30%' class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-name']."\n";
+	echo "	".$text['label-type']."\n";
 	echo "</td>\n";
 	echo "<td width='70%' class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='name' maxlength='255' value=\"".escape($name)."\">\n";
+	echo "	<input class='formfld' type='text' name='type' maxlength='255' value=\"".escape($type ?? '')."\">\n";
 	echo "<br />\n";
-	echo $text['description-name']."\n";
+	echo $text['description-type']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td width='30%' class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-subtype']."\n";
+	echo "</td>\n";
+	echo "<td width='70%' class='vtable' align='left'>\n";
+	echo "	<input class='formfld' type='text' name='subtype' maxlength='255' value=\"".escape($subtype ?? '')."\">\n";
+	echo "<br />\n";
+	echo ($text['description-subtype'] ?? '')."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -299,7 +316,7 @@
 	echo "	".$text['label-value']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='value' maxlength='255' value=\"".escape($value)."\">\n";
+	echo "	<input class='formfld' type='text' name='value' maxlength='255' value=\"".escape($value ?? '')."\">\n";
 	echo "<br />\n";
 	echo $text['description-value']."\n";
 	echo "</td>\n";
@@ -311,7 +328,7 @@
 	if (is_array($function_groups) && @sizeof($function_groups) != 0) {
 		echo "<table cellpadding='0' cellspacing='0' border='0'>\n";
 		foreach ($function_groups as $field) {
-			if (strlen($field['group_name']) > 0) {
+			if (!empty($field['group_name'])) {
 				echo "<tr>\n";
 				echo "	<td class='vtable' style='white-space: nowrap; padding-right: 30px;' nowrap='nowrap'>";
 				echo $field['group_name'].(($field['group_domain_uuid'] != '') ? "@".$_SESSION['domains'][$field['group_domain_uuid']]['domain_name'] : null);
@@ -333,7 +350,7 @@
 		foreach ($groups as $field) {
 			if ($field['group_name'] == "superadmin" && !if_group("superadmin")) { continue; }	//only show the superadmin group to other superadmins
 			if ($field['group_name'] == "admin" && (!if_group("superadmin") && !if_group("admin") )) { continue; }	//only show the admin group to other admins
-			if (!is_array($assigned_groups) || !in_array($field["group_uuid"], $assigned_groups)) {
+			if (empty($assigned_groups) || !is_array($assigned_groups) || !in_array($field["group_uuid"], $assigned_groups)) {
 				echo "	<option value='".escape($field['group_uuid'])."|".escape($field['group_name'])."'>".escape($field['group_name']).(($field['domain_uuid'] != '') ? "@".escape($_SESSION['domains'][$field['domain_uuid']]['domain_name']) : null)."</option>\n";
 			}
 		}
@@ -350,7 +367,7 @@
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='enabled'>\n";
 	echo "		<option value='true'>".$text['label-true']."</option>\n";
-	echo "		<option value='false' ".($enabled == "false" || $enabled == '' ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
+	echo "		<option value='false' ".(empty($enabled) || $enabled == "false" ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
 	echo "	</select>\n";
 	echo "<br />\n";
 	echo $text['description-enabled']."\n";
@@ -362,7 +379,7 @@
 	echo "	".$text['label-description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='description' maxlength='255' value=\"".escape($description)."\">\n";
+	echo "	<input class='formfld' type='text' name='description' maxlength='255' value=\"".escape($description ?? '')."\">\n";
 	echo "<br />\n";
 	echo $text['description-description']."\n";
 	echo "</td>\n";

@@ -17,19 +17,15 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -45,8 +41,18 @@
 	$language = new text;
 	$text = $language->get();
 
+//define the variables
+	$module_label = '';
+	$modules = '';
+	$module_name = '';
+	$module_description = '';
+	$module_category = '';
+	$module_order = '';
+	$module_enabled = '';
+	$module_default_enabled = '';
+
 //determin the action add or update
-	if (is_uuid($_REQUEST["id"])) {
+	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
 		$module_uuid = $_REQUEST["id"];
 	}
@@ -55,18 +61,18 @@
 	}
 
 //set the http post variables to php variables
-	if (count($_POST)>0) {
+	if (!empty($_POST)) {
 		$module_label = $_POST["module_label"];
 		$module_name = $_POST["module_name"];
 		$module_description = $_POST["module_description"];
 		$module_category = $_POST["module_category"];
 		$module_order = $_POST["module_order"];
-		$module_enabled = $_POST["module_enabled"];
-		$module_default_enabled = $_POST["module_default_enabled"];
+		$module_enabled = $_POST["module_enabled"] ?? 'false';
+		$module_default_enabled = $_POST["module_default_enabled"] ?? 'false';
 	}
 
 //process the data
-	if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
+	if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
 		//get the uuid
 			if ($action == "update") {
@@ -83,13 +89,13 @@
 
 		//check for all required data
 			$msg = '';
-			if (strlen($module_label) == 0) { $msg .= $text['message-required'].$text['label-label']."<br>\n"; }
-			if (strlen($module_name) == 0) { $msg .= $text['message-required'].$text['label-module_name']."<br>\n"; }
-			//if (strlen($module_description) == 0) { $msg .= $text['message-required'].$text['label-description']."<br>\n"; }
-			if (strlen($module_category) == 0) { $msg .= $text['message-required'].$text['label-module_category']."<br>\n"; }
-			if (strlen($module_enabled) == 0) { $msg .= $text['message-required'].$text['label-enabled']."<br>\n"; }
-			if (strlen($module_default_enabled) == 0) { $msg .= $text['message-required'].$text['label-default_enabled']."<br>\n"; }
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+			if (empty($module_label)) { $msg .= $text['message-required'].$text['label-label']."<br>\n"; }
+			if (empty($module_name)) { $msg .= $text['message-required'].$text['label-module_name']."<br>\n"; }
+			//if (empty($module_description)) { $msg .= $text['message-required'].$text['label-description']."<br>\n"; }
+			if (empty($module_category)) { $msg .= $text['message-required'].$text['label-module_category']."<br>\n"; }
+			if (empty($module_enabled)) { $msg .= $text['message-required'].$text['label-enabled']."<br>\n"; }
+			if (empty($module_default_enabled)) { $msg .= $text['message-required'].$text['label-default_enabled']."<br>\n"; }
+			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -103,7 +109,7 @@
 			}
 
 		//add or update the database
-			if ($_POST["persistformvar"] != "true") {
+			if (empty($_POST["persistformvar"])) {
 				if ($action == "add" && permission_exists('module_add')) {
 					$module_uuid = uuid();
 					$array['modules'][0]['module_uuid'] = $module_uuid;
@@ -144,7 +150,7 @@
 	}
 
 //pre-populate the form
-	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
+	if (!empty($_GET) && empty($_POST["persistformvar"])) {
 		$module_uuid = $_GET["id"];
 		$sql = "select * from v_modules ";
 		$sql .= "where module_uuid = :module_uuid ";
@@ -162,6 +168,10 @@
 		}
 		unset($sql, $parameters, $row);
 	}
+
+//set the defaults
+	if (empty($module_enabled)) { $module_enabled = 'true'; }
+	if (empty($module_default_enabled)) { $module_default_enabled = 'true'; }
 
 //create token
 	$object = new token;
@@ -233,7 +243,7 @@
 	$field_name = 'module_category';
 	$sql_where_optional = '';
 	$field_current_value = $module_category;
-	echo html_select_other($table_name, $field_name, $sql_where_optional, $field_current_value);
+	echo html_select_other($table_name, $field_name, $sql_where_optional, $field_current_value, $field_name.' asc', $text['label-other']);
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -242,20 +252,18 @@
 	echo "    ".$text['label-enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <select class='formfld' name='module_enabled'>\n";
-	if ($module_enabled == "false") {
-		echo "    <option value='false' SELECTED >".$text['option-false']."</option>\n";
+	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
+		echo "	<label class='switch'>\n";
+		echo "		<input type='checkbox' id='module_enabled' name='module_enabled' value='true' ".($module_enabled == 'true' ? "checked='checked'" : null).">\n";
+		echo "		<span class='slider'></span>\n";
+		echo "	</label>\n";
 	}
 	else {
-		echo "    <option value='false'>".$text['option-false']."</option>\n";
+		echo "	<select class='formfld' id='module_enabled' name='module_enabled'>\n";
+		echo "		<option value='true' ".($module_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($module_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "	</select>\n";
 	}
-	if ($module_enabled == "true") {
-		echo "    <option value='true' SELECTED >".$text['option-true']."</option>\n";
-	}
-	else {
-		echo "    <option value='true'>".$text['option-true']."</option>\n";
-	}
-	echo "    </select>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -264,20 +272,18 @@
 	echo "    ".$text['label-default_enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <select class='formfld' name='module_default_enabled'>\n";
-	if ($module_default_enabled == "false") {
-		echo "    <option value='false' selected='selected'>".$text['option-false']."</option>\n";
+	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
+		echo "	<label class='switch'>\n";
+		echo "		<input type='checkbox' id='module_default_enabled' name='module_default_enabled' value='true' ".($module_default_enabled == 'true' ? "checked='checked'" : null).">\n";
+		echo "		<span class='slider'></span>\n";
+		echo "	</label>\n";
 	}
 	else {
-		echo "    <option value='false'>".$text['option-false']."</option>\n";
+		echo "	<select class='formfld' id='module_default_enabled' name='module_default_enabled'>\n";
+		echo "		<option value='true' ".($module_default_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($module_default_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "	</select>\n";
 	}
-	if ($module_default_enabled == "true") {
-		echo "    <option value='true' selected='selected'>".$text['option-true']."</option>\n";
-	}
-	else {
-		echo "    <option value='true'>".$text['option-true']."</option>\n";
-	}
-	echo "    </select>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 

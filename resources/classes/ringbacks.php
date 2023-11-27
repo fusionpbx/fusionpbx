@@ -30,7 +30,7 @@ if (!class_exists('ringbacks')) {
 
 		//define variables
 		public $domain_uuid;
-		private $ringtones_list;
+		public $ringtones_list;
 		private $tones_list;
 		private $music_list;
 		private $recordings_list;
@@ -51,17 +51,19 @@ if (!class_exists('ringbacks')) {
 				$sql .= "order by var_name asc ";
 				$database = new database;
 				$ringtones = $database->select($sql, null, 'all');
-				if (is_array($ringtones) && @sizeof($ringtones) != 0) {
+				if (!empty($ringtones)) {
 					foreach ($ringtones as $ringtone) {
 						$ringtone = $ringtone['var_name'];
-						$label = $text['label-'.$ringtone];
-						if ($label == "") {
+						if (isset($text['label-'.$ringtone])) {
+							$label = $text['label-'.$ringtone];
+						}
+						else {
 							$label = $ringtone;
 						}
 						$ringtones_list[$ringtone] = $label;
 					}
 				}
-				$this->ringtones_list = $ringtones_list;
+				$this->ringtones_list = $ringtones_list ?? '';
 				unset($sql, $ringtones, $ringtone, $ringtones_list);
 
 			//get the default_ringback label
@@ -97,6 +99,57 @@ if (!class_exists('ringbacks')) {
 					$recordings = new switch_recordings;
 					$this->recordings_list = $recordings->list_recordings();
 				}
+
+				if (is_dir($_SERVER["PROJECT_ROOT"].'/app/streams')) {
+					$sql = "select * from v_streams ";
+					$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+					$sql .= "and stream_enabled = 'true' ";
+					$sql .= "order by stream_name asc ";
+					$parameters['domain_uuid'] = $this->domain_uuid;
+					$database = new database;
+					$streams = $database->select($sql, $parameters, 'all');
+					$this->streams = $streams;
+					unset($sql, $parameters, $streams, $row);
+				}
+		}
+
+		public function valid($value) {
+			foreach($this->ringtones_list as $ringtone_value => $ringtone_name) {
+				if ($value == "\${".$ringtone_value."}") {
+					return true;
+				}
+			}
+
+			foreach($this->tones_list as $tone_value => $tone_name) {
+				if ($value == "\${".$tone_value."}") {
+					return true;
+				}
+			}
+
+			foreach($this->music_list as $row) {
+				$name = '';
+				if (!empty($row['domain_uuid'])) {
+					$name = $row['domain_name'].'/';	
+				}
+				$name .= $row['music_on_hold_name'];
+				if ($value == "local_stream://".$name) {
+					return true;
+				}
+			}
+
+			foreach($this->recordings_list as $recording_value => $recording_name) {
+				if ($value == $recording_value) {
+					return true;
+				}
+			}
+
+			foreach($this->streams as $row) {
+				if ($value == $row['stream_location']) {
+					return true;
+				}
+			}
+
+			return false;
 		}
 
 		public function select($name, $selected) {
@@ -106,15 +159,16 @@ if (!class_exists('ringbacks')) {
 
 			//start the select
 				$select = "<select class='formfld' name='".$name."' id='".$name."' style='width: auto;'>\n";
+				$select .= "		<option value=''></option>\n";
 
 			//music list
-				if (count($this->music_list) > 0) {
+				if (!empty($this->music_list)) {
 					$select .= "	<optgroup label='".$text['label-music_on_hold']."'>\n";
 					$previous_name = '';
 					foreach ($this->music_list as $row) {
 						if ($previous_name != $row['music_on_hold_name']) {
 							$name = '';
-							if (strlen($row['domain_uuid']) > 0) {
+							if (!empty($row['domain_uuid'])) {
 								$name = $row['domain_name'].'/';	
 							}
 							$name .= $row['music_on_hold_name'];
@@ -126,7 +180,7 @@ if (!class_exists('ringbacks')) {
 				}
 
 			//recordings
-				if (is_array($this->recordings_list) && sizeof($this->recordings_list) > 0) {
+				if (!empty($this->recordings_list)) {
 					$select .= "	<optgroup label='".$text['label-recordings']."'>";
 					foreach ($this->recordings_list as $recording_value => $recording_name) {
 						$select .= "		<option value='".$recording_value."' ".(($selected == $recording_value) ? 'selected="selected"' : null).">".$recording_name."</option>\n";
@@ -135,26 +189,16 @@ if (!class_exists('ringbacks')) {
 				}
 
 			//streams
-				if (is_dir($_SERVER["PROJECT_ROOT"].'/app/streams')) {
-					$sql = "select * from v_streams ";
-					$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
-					$sql .= "and stream_enabled = 'true' ";
-					$sql .= "order by stream_name asc ";
-					$parameters['domain_uuid'] = $this->domain_uuid;
-					$database = new database;
-					$streams = $database->select($sql, $parameters, 'all');
-					if (is_array($streams) && @sizeof($streams) != 0) {
-						$select .= "	<optgroup label='".$text['label-streams']."'>";
-						foreach ($streams as $row) {
-							$select .= "		<option value='".$row['stream_location']."' ".(($selected == $row['stream_location']) ? 'selected="selected"' : null).">".$row['stream_name']."</option>\n";
-						}
-						$select .= "	</optgroup>\n";
+				if (!empty($this->streams)) {
+					$select .= "	<optgroup label='".$text['label-streams']."'>";
+					foreach ($this->streams as $row) {
+						$select .= "		<option value='".$row['stream_location']."' ".(($selected == $row['stream_location']) ? 'selected="selected"' : null).">".$row['stream_name']."</option>\n";
 					}
-					unset($sql, $parameters, $streams, $row);
+					$select .= "	</optgroup>\n";
 				}
 
 			//ringtones
-				if (sizeof($this->ringtones_list) > 0) {
+				if (!empty($this->ringtones_list)) {
 					$selected_ringtone = $selected;
 					$selected_ringtone = preg_replace('/\A\${/',"",$selected_ringtone);
 					$selected_ringtone = preg_replace('/}\z/',"",$selected_ringtone);
@@ -170,7 +214,7 @@ if (!class_exists('ringbacks')) {
 				}
 
 			//tones
-				if (sizeof($this->tones_list) > 0) {
+				if (!empty($this->tones_list)) {
 					$selected_tone = $selected;
 					$selected_tone = preg_replace('/\A\${/',"",$selected_tone);
 					$selected_tone = preg_replace('/}\z/',"",$selected_tone);

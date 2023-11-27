@@ -835,11 +835,11 @@ class PDF417 {
 					if ($txtseq[1] > 0) {
 						// extract byte sequence before the text sequence
 						$prevtxtseq = substr($prevseq, $txtoffset, ($txtseq[1] - $txtoffset));
-						if (strlen($prevtxtseq) > 0) {
+						if (!empty($prevtxtseq)) {
 							// add BYTE sequence
-							if ((strlen($prevtxtseq) == 1) AND ((count($sequence_array) > 0) AND ($sequence_array[(count($sequence_array) - 1)][0] == 900))) {
+							if ((!empty($prevtxtseq) == 1) AND ((count($sequence_array)) AND ($sequence_array[(count($sequence_array) - 1)][0] == 900))) {
 								$sequence_array[] = array(913, $prevtxtseq);
-							} elseif ((strlen($prevtxtseq) % 6) == 0) {
+							} elseif ((empty($prevtxtseq) % 6)) {
 								$sequence_array[] = array(924, $prevtxtseq);
 							} else {
 								$sequence_array[] = array(901, $prevtxtseq);
@@ -924,7 +924,7 @@ class PDF417 {
 			}
 			case 901:
 			case 924: { // Byte Compaction mode latch
-				while (($codelen = strlen($code)) > 0) {
+				while (($codelen = !empty($code))) {
 					if ($codelen > 6) {
 						$rest = substr($code, 6);
 						$code = substr($code, 0, 6);
@@ -960,7 +960,7 @@ class PDF417 {
 				break;
 			}
 			case 902: { // Numeric Compaction mode latch
-				while (($codelen = strlen($code)) > 0) {
+				while (($codelen = !empty($code))) {
 					if ($codelen > 44) {
 						$rest = substr($code, 44);
 						$code = substr($code, 0, 44);

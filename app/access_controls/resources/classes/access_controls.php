@@ -31,16 +31,6 @@ if (!class_exists('access_controls')) {
 		}
 
 		/**
-		 * called when there are no references to a particular object
-		 * unset the variables used in the class
-		 */
-		public function __destruct() {
-			foreach ($this as $key => $value) {
-				unset($this->$key);
-			}
-		}
-
-		/**
 		 * delete records
 		 */
 		public function delete($records) {
@@ -97,7 +87,7 @@ if (!class_exists('access_controls')) {
 									$cache->delete("configuration:acl.conf");
 
 								//create the event socket connection
-									$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+									$fp = event_socket_create();
 									if ($fp) {
 										event_socket_request($fp, "api reloadacl");
 									}
@@ -156,7 +146,7 @@ if (!class_exists('access_controls')) {
 									$cache->delete("configuration:acl.conf");
 
 								//create the event socket connection
-									$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+									$fp = event_socket_create();
 									if ($fp) {
 										event_socket_request($fp, "api reloadacl");
 									}
@@ -271,7 +261,7 @@ if (!class_exists('access_controls')) {
 									$cache->delete("configuration:acl.conf");
 
 								//create the event socket connection
-									$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+									$fp = event_socket_create();
 									if ($fp) {
 										event_socket_request($fp, "api reloadacl");
 									}

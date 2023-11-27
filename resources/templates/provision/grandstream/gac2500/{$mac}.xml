@@ -22,7 +22,7 @@
 
     <!--  SIP Server -->
     <!--  String -->
-    <P47>{$account.1.server_address}</P47>
+    <P47>{$account.1.server_address}:{$account.1.sip_port}</P47>
 
     <!-- # SIP User ID -->
     <P35>{$account.1.user_id}</P35>
@@ -4518,7 +4518,12 @@
 
     <!-- # Enable TR-069. 0 - No, 1 - Yes. Default value is 0 -->
     <!-- # Number: 0, 1 -->
-    <P1409>0</P1409>
+    {if isset ($grandstream_tr069_enable)}
+<P1409>{$grandstream_tr069_enable}</P1409>
+{else}
+<P1409>0</P1409>
+{/if}
+
 
     <!-- # ACS URL -->
     <P4503></P4503>
@@ -4531,7 +4536,12 @@
 
     <!-- # Periodic Inform Enable. 0 - No, 1 - Yes. Default value is 0 -->
     <!-- # Number: 0, 1 -->
-    <P4506>0</P4506>
+    {if isset ($grandstream_tr069_periodic_inform_enable)}
+<P4506>{$grandstream_tr069_periodic_inform_enable}</P4506>
+{else}
+<P4506>0</P4506>
+{/if}
+
 
     <!-- # Periodic Inform Interval (s). Default value is 86400 -->
     <!-- # Number: 1 - 4294967295 -->

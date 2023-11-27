@@ -1,11 +1,31 @@
 <?php
+/*
+	FusionPBX
+	Version: MPL 1.1
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
+	The contents of this file are subject to the Mozilla Public License Version
+	1.1 (the "License"); you may not use this file except in compliance with
+	the License. You may obtain a copy of the License at
+	http://www.mozilla.org/MPL/
+
+	Software distributed under the License is distributed on an "AS IS" basis,
+	WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+	for the specific language governing rights and limitations under the
+	License.
+
+	The Original Code is FusionPBX
+
+	The Initial Developer of the Original Code is
+	Mark J Crane <markjcrane@fusionpbx.com>
+	Portions created by the Initial Developer are Copyright (C) 2021-2023
+	the Initial Developer. All Rights Reserved.
+
+	Contributor(s):
+	Mark J Crane <markjcrane@fusionpbx.com>
+*/
 
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -21,26 +41,32 @@
 	$language = new text;
 	$text = $language->get();
 
+//set the defaults
+	$global_setting_name = '';
+	$global_setting_value = '';
+	$global_setting_description = '';
+
 //action add or update
-	if (is_uuid($_REQUEST["id"])) {
+	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
 		$sofia_global_setting_uuid = $_REQUEST["id"];
 		$id = $_REQUEST["id"];
 	}
 	else {
 		$action = "add";
+		$sofia_global_setting_uuid = uuid();
 	}
 
 //get http post variables and set them to php variables
-	if (is_array($_POST)) {
+	if (!empty($_POST)) {
 		$global_setting_name = $_POST["global_setting_name"];
 		$global_setting_value = $_POST["global_setting_value"];
-		$global_setting_enabled = $_POST["global_setting_enabled"];
+		$global_setting_enabled = $_POST["global_setting_enabled"] ?? "false";
 		$global_setting_description = $_POST["global_setting_description"];
 	}
 
 //process the user data and save it to the database
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
 		//validate the token
 			$token = new token;
@@ -51,7 +77,7 @@
 			}
 
 		//process the http post data by submitted action
-			if ($_POST['action'] != '' && strlen($_POST['action']) > 0) {
+			if (!empty($_POST['action']) && !empty($_POST['action'])) {
 
 				//prepare the array(s)
 				//send the array to the database class
@@ -85,11 +111,11 @@
 
 		//check for all required data
 			$msg = '';
-			if (strlen($global_setting_name) == 0) { $msg .= $text['message-required']." ".$text['label-global_setting_name']."<br>\n"; }
-			if (strlen($global_setting_value) == 0) { $msg .= $text['message-required']." ".$text['label-global_setting_value']."<br>\n"; }
-			if (strlen($global_setting_enabled) == 0) { $msg .= $text['message-required']." ".$text['label-global_setting_enabled']."<br>\n"; }
-			//if (strlen($global_setting_description) == 0) { $msg .= $text['message-required']." ".$text['label-global_setting_description']."<br>\n"; }
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+			if (empty($global_setting_name)) { $msg .= $text['message-required']." ".$text['label-global_setting_name']."<br>\n"; }
+			if (empty($global_setting_value)) { $msg .= $text['message-required']." ".$text['label-global_setting_value']."<br>\n"; }
+			if (empty($global_setting_enabled)) { $msg .= $text['message-required']." ".$text['label-global_setting_enabled']."<br>\n"; }
+			//if (empty($global_setting_description)) { $msg .= $text['message-required']." ".$text['label-global_setting_description']."<br>\n"; }
+			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -100,11 +126,6 @@
 				echo "</div>\n";
 				require_once "resources/footer.php";
 				return;
-			}
-
-		//add the sofia_global_setting_uuid
-			if (!is_uuid($_POST["sofia_global_setting_uuid"])) {
-				$sofia_global_setting_uuid = uuid();
 			}
 
 		//prepare the array
@@ -135,7 +156,7 @@
 	}
 
 //pre-populate the form
-	if (is_array($_GET) && $_POST["persistformvar"] != "true") {
+	if (!empty($_GET) && empty($_POST["persistformvar"])) {
 		$sql = "select ";
 		$sql .= " sofia_global_setting_uuid, ";
 		$sql .= " global_setting_name, ";
@@ -155,6 +176,9 @@
 		}
 		unset($sql, $parameters, $row);
 	}
+
+//set the defaults
+	if (empty($global_setting_enabled)) { $global_setting_enabled = 'true'; }
 
 //create token
 	$object = new token;
@@ -226,21 +250,18 @@
 	echo "	".$text['label-global_setting_enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<select class='formfld' name='global_setting_enabled'>\n";
-	echo "		<option value=''></option>\n";
-	if ($global_setting_enabled == "true") {
-		echo "		<option value='true' selected='selected'>".$text['label-true']."</option>\n";
+	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
+		echo "	<label class='switch'>\n";
+		echo "		<input type='checkbox' id='global_setting_enabled' name='global_setting_enabled' value='true' ".(!empty($global_setting_enabled) && $global_setting_enabled == 'true' ? "checked='checked'" : null).">\n";
+		echo "		<span class='slider'></span>\n";
+		echo "	</label>\n";
 	}
 	else {
-		echo "		<option value='true'>".$text['label-true']."</option>\n";
+		echo "	<select class='formfld' name='global_setting_enabled'>\n";
+		echo "		<option value='true' ".($global_setting_enabled == "true" ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
+		echo "		<option value='false' ".($global_setting_enabled == "false" ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
+		echo "	</select>\n";
 	}
-	if ($global_setting_enabled == "false") {
-		echo "		<option value='false' selected='selected'>".$text['label-false']."</option>\n";
-	}
-	else {
-		echo "		<option value='false'>".$text['label-false']."</option>\n";
-	}
-	echo "	</select>\n";
 	echo "<br />\n";
 	echo $text['description-global_setting_enabled']."\n";
 	echo "</td>\n";

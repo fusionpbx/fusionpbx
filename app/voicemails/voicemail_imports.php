@@ -24,12 +24,8 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -61,10 +57,10 @@
 	ini_set('max_execution_time', 7200);
 
 //get the http get values and set them as php variables
-	$action = $_POST["action"];
-	$from_row = $_POST["from_row"];
-	$delimiter = $_POST["data_delimiter"];
-	$enclosure = $_POST["data_enclosure"];
+	$action = $_POST["action"] ?? '';
+	$from_row = $_POST["from_row"] ?? '';
+	$delimiter = $_POST["data_delimiter"] ?? '';
+	$enclosure = $_POST["data_enclosure"] ?? '';
 
 //save the data to the csv file
 	if (isset($_POST['data'])) {
@@ -75,7 +71,7 @@
 
 //copy the csv file
 	//$_POST['submit'] == "Upload" &&
-	if (is_uploaded_file($_FILES['ulfile']['tmp_name']) && permission_exists('voicemail_import')) {
+	if (!empty($_FILES['ulfile']['tmp_name']) && is_uploaded_file($_FILES['ulfile']['tmp_name']) && permission_exists('voicemail_import')) {
 		if ($_POST['type'] == 'csv') {
 			move_uploaded_file($_FILES['ulfile']['tmp_name'], $_SESSION['server']['temp']['dir'].'/'.$_FILES['ulfile']['name']);
 			$save_msg = "Uploaded file to ".$_SESSION['server']['temp']['dir']."/". htmlentities($_FILES['ulfile']['name']);
@@ -87,7 +83,7 @@
 	}
 
 //get the schema
-	if (strlen($delimiter) > 0) {
+	if (!empty($delimiter)) {
 		//get the first line
 			$line = fgets(fopen($_SESSION['file'], 'r'));
 			$line_fields = explode($delimiter, $line);
@@ -108,10 +104,10 @@
 
 				//remove the v_ table prefix
 				if (substr($table_name, 0, 2) == 'v_') {
-						$table_name = substr($table_name, 2);
+					$table_name = substr($table_name, 2);
 				}
 				if (substr($parent_name, 0, 2) == 'v_') {
-						$parent_name = substr($parent_name, 2);
+					$parent_name = substr($parent_name, 2);
 				}
 
 				//filter for specific tables and build the schema array
@@ -119,6 +115,7 @@
 					$schema[$i]['table'] = $table_name;
 					$schema[$i]['parent'] = $parent_name;
 					foreach($table['fields'] as $row) {
+						$row['deprecated'] = $row['deprecated'] ?? '';
 						if ($row['deprecated'] !== 'true') {
 							if (is_array($row['name'])) {
 								$field_name = $row['name']['text'];
@@ -135,7 +132,7 @@
 	}
 
 //match the column names to the field names
-	if (strlen($delimiter) > 0 && file_exists($_SESSION['file']) && $action != 'import') {
+	if (!empty($delimiter) && file_exists($_SESSION['file']) && $action != 'import') {
 
 		//create token
 			$object = new token;
@@ -165,7 +162,7 @@
 			//loop through user columns
 			$x = 0;
 			foreach ($line_fields as $line_field) {
-				$line_field = trim(trim($line_field), $enclosure);
+				$line_field = preg_replace('#[^a-zA-Z0-9_]#', '', $line_field);
 				echo "<tr>\n";
 				echo "	<td width='30%' class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 				//echo "    ".$text['label-zzz']."\n";
@@ -231,7 +228,7 @@
 	}
 
 //upload the csv
-	if (file_exists($_SESSION['file']) && $action == 'import') {
+	if (file_exists($_SESSION['file'] ?? '') && $action == 'import') {
 
 		//validate the token
 			$token = new token;
@@ -285,8 +282,8 @@
 									}
 
 									//build the data array
-									if (strlen($table_name) > 0) {
-										if (strlen($parent) == 0) {
+									if (!empty($table_name)) {
+										if (empty($parent)) {
 											$array[$table_name][$row_id]['domain_uuid'] = $domain_uuid;
 											$array[$table_name][$row_id][$field_name] = $result[$key];
 										}
@@ -320,7 +317,7 @@
 					fclose($handle);
 
 				//save to the data
-					if (is_array($array)) {
+					if (!empty($array) && is_array($array)) {
 						$database = new database;
 						$database->app_name = 'voicemails';
 						$database->app_uuid = 'b523c2d2-64cd-46f1-9520-ca4b4098e044';
@@ -364,7 +361,7 @@
 	echo "    ".$text['label-import_data']."\n";
 	echo "</td>\n";
 	echo "<td width='70%' class='vtable' align='left'>\n";
-	echo "    <textarea name='data' id='data' class='formfld' style='width: 100%; min-height: 150px;' wrap='off'>$data</textarea>\n";
+	echo "    <textarea name='data' id='data' class='formfld' style='width: 100%; min-height: 150px;' wrap='off'></textarea>\n";
 	echo "<br />\n";
 	echo $text['description-import_data']."\n";
 	echo "</td>\n";

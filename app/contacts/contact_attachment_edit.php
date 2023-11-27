@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -25,12 +25,8 @@
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -43,13 +39,13 @@
 	$text = $language->get();
 
 //action add or update
-	$contact_attachment_uuid = $_REQUEST['id'];
-	$contact_uuid = $_REQUEST['contact_uuid'];
+	$contact_attachment_uuid = $_REQUEST['id'] ?? '';
+	$contact_uuid = $_REQUEST['contact_uuid'] ?? '';
 
-	if (is_uuid($contact_attachment_uuid) && is_uuid($contact_uuid)) {
+	if (!empty($contact_attachment_uuid) && !empty($contact_uuid) && is_uuid($contact_attachment_uuid) && is_uuid($contact_uuid)) {
 		$action = 'update';
 	}
-	else if (is_uuid($contact_uuid)) {
+	else if (!empty($contact_uuid) && is_uuid($contact_uuid)) {
 		$action = 'add';
 	}
 	else {
@@ -57,7 +53,7 @@
 	}
 
 //get http post variables and set them to php variables
-	if (is_array($_POST) && sizeof($_POST) != 0) {
+	if (!empty($_POST)) {
 
 		$attachment = $_FILES['attachment'];
 		$attachment_primary = $_POST['attachment_primary'];
@@ -71,7 +67,7 @@
 				exit;
 			}
 
-		if (!is_array($attachment) || sizeof($attachment) == 0) {
+		if (empty($attachment) || sizeof($attachment) == 0) {
 			$attachment_type = strtolower(pathinfo($_POST['attachment_filename'], PATHINFO_EXTENSION));
 		}
 		else {
@@ -87,7 +83,7 @@
 				$parameters['domain_uuid'] = $domain_uuid;
 				$parameters['contact_uuid'] = $contact_uuid;
 				$database = new database;
-				$database->execute($sql, $parameters);
+				$database->execute($sql, $parameters ?? null);
 				unset($sql, $parameters);
 
 				$allowed_primary_attachment = true;
@@ -95,18 +91,18 @@
 
 		//format array
 			$allowed_extensions = array_keys(json_decode($_SESSION['contact']['allowed_attachment_types']['text'], true));
-			$array['contact_attachments'][$index]['contact_attachment_uuid'] = $action == 'update' ? $contact_attachment_uuid : uuid();
-			$array['contact_attachments'][$index]['domain_uuid'] = $_SESSION['domain_uuid'];
-			$array['contact_attachments'][$index]['contact_uuid'] = $contact_uuid;
-			$array['contact_attachments'][$index]['attachment_primary'] = $allowed_primary_attachment ? 1 : 0;
+			$array['contact_attachments'][0]['contact_attachment_uuid'] = $action == 'update' ? $contact_attachment_uuid : uuid();
+			$array['contact_attachments'][0]['domain_uuid'] = $_SESSION['domain_uuid'] ?? '';
+			$array['contact_attachments'][0]['contact_uuid'] = $contact_uuid;
+			$array['contact_attachments'][0]['attachment_primary'] = $allowed_primary_attachment ? 1 : 0;
 			if ($attachment['error'] == '0' && in_array(strtolower(pathinfo($attachment['name'], PATHINFO_EXTENSION)), $allowed_extensions)) {
-				$array['contact_attachments'][$index]['attachment_filename'] = $attachment['name'];
-				$array['contact_attachments'][$index]['attachment_content'] = base64_encode(file_get_contents($attachment['tmp_name']));
+				$array['contact_attachments'][0]['attachment_filename'] = $attachment['name'];
+				$array['contact_attachments'][0]['attachment_content'] = base64_encode(file_get_contents($attachment['tmp_name']));
 			}
-			$array['contact_attachments'][$index]['attachment_description'] = $attachment_description;
+			$array['contact_attachments'][0]['attachment_description'] = $attachment_description;
 			if ($action == 'add') {
-				$array['contact_attachments'][$index]['attachment_uploaded_date'] = 'now()';
-				$array['contact_attachments'][$index]['attachment_uploaded_user_uuid'] = $_SESSION['user_uuid'];
+				$array['contact_attachments'][0]['attachment_uploaded_date'] = 'now()';
+				$array['contact_attachments'][0]['attachment_uploaded_user_uuid'] = $_SESSION['user_uuid'];
 			}
 
 		//save data
@@ -117,14 +113,14 @@
 			unset($array);
 
 		//redirect
-			message::add($text['message-message_'.($action == 'update' ? 'updated' : 'added')]);
+			message::add($text['message-'.($action == 'update' ? 'update' : 'uploaded')]);
 			header('Location: contact_edit.php?id='.$contact_uuid);
 			exit;
 
 	}
 
 //get form data
-	if (is_array($_GET) && sizeof($_GET) != 0) {
+	if (!empty($_GET)) {
 		$sql = "select * from v_contact_attachments ";
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$sql .= "and contact_attachment_uuid = :contact_attachment_uuid ";
@@ -132,7 +128,7 @@
 		$parameters['contact_attachment_uuid'] = $contact_attachment_uuid;
 		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
-		if (is_array($row) && @sizeof($row) != 0) {
+		if (!empty($row)) {
 			$attachment_primary = $row["attachment_primary"];
 			$attachment_filename = $row["attachment_filename"];
 			$attachment_content = $row["attachment_content"];
@@ -180,7 +176,7 @@
 	echo "	".$text['label-attachment']."\n";
 	echo "</td>\n";
 	echo "<td width='70%' class='vtable' align='left'>\n";
-	$attachment_type = strtolower(pathinfo($attachment_filename, PATHINFO_EXTENSION));
+	$attachment_type = strtolower(pathinfo($attachment_filename ?? '', PATHINFO_EXTENSION));
 	if ($action == 'update') {
 		echo "<input type='hidden' name='attachment_filename' value=\"".escape($attachment_filename)."\">\n";
 		if ($attachment_type == 'jpg' || $attachment_type == 'jpeg' || $attachment_type == 'gif' || $attachment_type == 'png') {
@@ -216,7 +212,7 @@
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='attachment_primary' id='attachment_primary'>\n";
 	echo "		<option value='0'>".$text['option-false']."</option>\n";
-	echo "		<option value='1' ".(($attachment_primary) ? "selected" : null).">".$text['option-true']."</option>\n";
+	echo "		<option value='1' ".(!empty($attachment_primary) && $attachment_primary ? "selected" : null).">".$text['option-true']."</option>\n";
 	echo "	</select>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
@@ -226,7 +222,7 @@
 	echo "	".$text['label-attachment_description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='attachment_description' maxlength='255' value=\"".escape($attachment_description)."\">\n";
+	echo "	<input class='formfld' type='text' name='attachment_description' maxlength='255' value=\"".escape($attachment_description ?? '')."\">\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 

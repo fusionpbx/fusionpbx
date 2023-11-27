@@ -12,6 +12,15 @@
 <!-- #  Profile 1  ## -->
 <!-- ################ -->
 
+<!-- # Enable DND Feature. 0 - No, 1 - Yes. Default is 1 -->
+<!-- # Number: 0, 1 -->
+<!-- # Mandatory -->
+{if isset($dnd)}
+<P8446>{$dnd}</P8446>
+{else}
+<P8446>1</P8446>
+{/if}
+
 <!-- ################################# -->
 <!-- #  Profile 1/General Settings  ## -->
 <!-- ################################# -->
@@ -2305,7 +2314,7 @@
 {/if}
 
 {if isset($grandstream_line_3_hanging_group_mode) }
-<P27082>{$grandstream_line_3_hanging_group_mode	}</P27082>
+<P27082>{$grandstream_line_3_hanging_group_mode}</P27082>
 {else}
 <P27082>101</P27082>
 {/if}
@@ -2887,7 +2896,7 @@
 {if isset($grandstream_firmware_path) && isset($firmware_version)}
 <P192>{$grandstream_firmware_path}/dp750/{$firmware_version}</P192>
 {elseif isset($grandstream_firmware_path)}
-<P192>{$grandstream_firmware_path}/dp750</P192>
+{if isset($grandstream_dp750_use_standard_firmware_path)}<P192>{$grandstream_firmware_path}</P192>{else}<P192>{$grandstream_firmware_path}/dp750</P192>{/if}
 {else}
 <P192>{$domain_name}{$project_path}/app/provision</P192>
 {/if}
@@ -3066,7 +3075,11 @@
 <!-- Enable TR-069. 0 - No, 1 - Yes. Default is 0. -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
+{if isset ($grandstream_tr069_enable)}
+<P1409>{$grandstream_tr069_enable}</P1409>
+{else}
 <P1409>0</P1409>
+{/if}
 
 <!-- ACS URL. URL of the TR-069 Auto Configuration Servers (e.g., http://acs.mycompany.com, or IP address). -->
 <!-- String -->
@@ -3083,7 +3096,11 @@
 <!-- Periodic Inform Enable. 0 - No, 1 - Yes. Default is 0 -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
+{if isset ($grandstream_tr069_periodic_inform_enable)}
+<P4506>{$grandstream_tr069_periodic_inform_enable}</P4506>
+{else}
 <P4506>0</P4506>
+{/if}
 
 <!-- Periodic Inform Interval. Default is 300. -->
 <!-- Number -->

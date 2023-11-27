@@ -24,12 +24,8 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -46,7 +42,7 @@
 	$text = $language->get();
 
 //get the HTTP values and set as variables
-	$show = trim($_REQUEST["show"]);
+	$show = trim($_REQUEST["show"] ?? '');
 	if ($show != "all") { $show = ''; }
 
 //include theme config for button images
@@ -69,27 +65,23 @@
 	if (isset($results["rows"])) {
 		foreach ($results["rows"] as &$row) {
 			//get the domain
-				if (strlen($row['context']) > 0 && $row['context'] != "public" && $row['context'] != "default") {
+				if (!empty($row['context']) && $row['context'] != "public" && $row['context'] != "default") {
 					if (substr_count($row['context'], '@') > 0) {
-						$context_array = explode('@', $row['context']);
-						$row['domain_name'] = $context_array[1];
+						$row['domain_name'] = explode('@', $row['context'])[1];
 					}
 					else {
 						$row['domain_name'] = $row['context'];
 					}
 				}
 				else if (substr_count($row['presence_id'], '@') > 0) {
-					$presence_id_array = explode('@', $row['presence_id']);
-					$row['domain_name'] = $presence_id_array[1];
+					$row['domain_name'] = explode('@', $row['presence_id'])[1];
 				}
 			//add the row to the array
 				if (($show == 'all' && permission_exists('call_active_all'))) {
 					$rows[] = $row;
 				}
-				else {
-					if ($row['domain_name'] == $_SESSION['domain_name']) {
-						$rows[] = $row;
-					}
+				elseif ($row['domain_name'] == $_SESSION['domain_name']) {
+					$rows[] = $row;
 				}
 		}
 		unset($results);
@@ -156,7 +148,7 @@
 			echo "<tr class='list-header'>\n";
 			if (permission_exists('call_active_hangup')) {
 				echo "	<th class='checkbox'>\n";
-				echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='if (this.checked) { refresh_stop(); } else { refresh_start(); } list_all_toggle();' ".($rows ?: "style='visibility: hidden;'").">\n";
+				echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='if (this.checked) { refresh_stop(); } else { refresh_start(); } list_all_toggle();' ".(empty($rows) ? "style='visibility: hidden;'" : null).">\n";
 				echo "	</th>\n";
 			}
 			echo "	<th>".$text['label-profile']."</th>\n";
@@ -227,7 +219,7 @@
 						echo "	<td>".escape($cid_name)."&nbsp;</td>\n";
 						echo "	<td>".escape($cid_num)."&nbsp;</td>\n";
 						echo "	<td>".escape($dest)."&nbsp;</td>\n";
-						echo "	<td>".(strlen($application) > 0 ? escape($application).":".escape($application_data) : null)."&nbsp;</td>\n";
+						echo "	<td>".(!empty($application) ? escape($application).":".escape($application_data) : null)."&nbsp;</td>\n";
 						echo "	<td>".escape($read_codec).":".escape($read_rate)." / ".escape($write_codec).":".escape($write_rate)."&nbsp;</td>\n";
 						echo "	<td>".escape($secure)."&nbsp;</td>\n";
 						if (permission_exists('call_active_hangup')) {
@@ -236,6 +228,9 @@
 							echo "	</td>\n";
 						}
 						echo "</tr>\n";
+					
+					//unset the domain name
+						unset($domain_name);
 
 					//increment counter
 						$x++;

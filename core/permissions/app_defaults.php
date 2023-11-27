@@ -18,11 +18,11 @@ if ($domains_processed == 1) {
 	//restore default permissions
 		$x = 0;
 		foreach ($apps as $app) {
-			if (is_array($app['permissions']) && @sizeof($app['permissions']) != 0) {
+			if (!empty($app['permissions'])) {
 				foreach ($app['permissions'] as $app_permission) {
 					//check if the permission is in the database
 					$permission_found = false;
-					if (is_array($database_permissions) && @sizeof($database_permissions) != 0) {
+					if (!empty($database_permissions)) {
 						foreach($database_permissions as $row) {
 							if ($row['permission_name'] == $app_permission['name']) {
 								$permission_found = true;
@@ -44,7 +44,7 @@ if ($domains_processed == 1) {
 		}
 
 	//save the data to the database
-		if (is_array($array) && @sizeof($array)) {
+		if (!empty($array)) {
 			//grant temporary permissions
 				$p = new permissions;
 				$p->add('permission_add', 'temp');

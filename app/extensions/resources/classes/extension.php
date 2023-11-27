@@ -103,16 +103,6 @@ if (!class_exists('extension')) {
 
 		}
 
-		/**
-		 * called when there are no references to a particular object
-		 * unset the variables used in the class
-		 */
-		public function __destruct() {
-			foreach ($this as $key => $value) {
-				unset($this->$key);
-			}
-		}
-
 		public function exists($domain_uuid, $extension) {
 			$sql = "select count(*) from v_extensions ";
 			$sql .= "where domain_uuid = :domain_uuid ";
@@ -221,13 +211,13 @@ if (!class_exists('extension')) {
 					$extension_xml_condensed = false;
 					if (is_array($rows) && @sizeof($rows) != 0) {
 						foreach ($rows as $row) {
-							$call_group = $row['call_group'];
+							$call_group = $row['call_group'] ?? '';
 							$call_group = str_replace(";", ",", $call_group);
 							$tmp_array = explode(",", $call_group);
 							foreach ($tmp_array as &$tmp_call_group) {
 								$tmp_call_group = trim($tmp_call_group);
-								if (strlen($tmp_call_group) > 0) {
-									if (strlen($call_group_array[$tmp_call_group]) == 0) {
+								if (!empty($tmp_call_group)) {
+									if (empty($call_group_array[$tmp_call_group])) {
 										$call_group_array[$tmp_call_group] = $row['extension'];
 									}
 									else {
@@ -249,8 +239,8 @@ if (!class_exists('extension')) {
 								$extension = str_replace(" ", "_", $extension);
 								$extension = preg_replace("/[\*\:\\/\<\>\|\'\"\?]/", "", $extension);
 								$dial_string = $row['dial_string'];
-								if (strlen($dial_string) == 0) {
-									if (strlen($_SESSION['domain']['dial_string']['text']) > 0) {
+								if (empty($dial_string)) {
+									if (!empty($_SESSION['domain']['dial_string']['text'])) {
 										$dial_string = $_SESSION['domain']['dial_string']['text'];
 									}
 									else {
@@ -262,13 +252,13 @@ if (!class_exists('extension')) {
 								$a1_hash = md5($extension.":".$domain_name.":".$password);
 								$vm_a1_hash = md5($extension.":".$domain_name.":".$voicemail_password);
 
-								$xml .= "<include>\n";
+								$xml = "<include>\n";
 								$cidr = '';
-								if (strlen($row['cidr']) > 0) {
+								if (!empty($row['cidr'])) {
 									$cidr = " cidr=\"" . $row['cidr'] . "\"";
 								}
 								$number_alias = '';
-								if (strlen($row['number_alias']) > 0) {
+								if (!empty($row['number_alias'])) {
 									$number_alias = " number-alias=\"".$row['number_alias']."\"";
 								}
 								$xml .= "  <user id=\"".$row['extension']."\"".$cidr."".$number_alias.">\n";
@@ -291,7 +281,7 @@ if (!class_exists('extension')) {
 									default:
 										$xml .= "      <param name=\"vm-enabled\" value=\"true\"/>\n";
 								}
-								if (strlen($row['voicemail_mail_to']) > 0) {
+								if (!empty($row['voicemail_mail_to'])) {
 									$xml .= "      <param name=\"vm-email-all-messages\" value=\"true\"/>\n";
 									switch ($row['voicemail_file']) {
 										case "attach":
@@ -313,13 +303,13 @@ if (!class_exists('extension')) {
 									$xml .= "      <param name=\"vm-mailto\" value=\"" . $row['voicemail_mail_to'] . "\"/>\n";
 								}
 
-								if (strlen($row['mwi_account']) > 0) {
+								if (!empty($row['mwi_account'])) {
 									$xml .= "      <param name=\"MWI-Account\" value=\"" . $row['mwi_account'] . "\"/>\n";
 								}
-								if (strlen($row['auth_acl']) > 0) {
+								if (!empty($row['auth_acl'])) {
 									$xml .= "      <param name=\"auth-acl\" value=\"" . $row['auth_acl'] . "\"/>\n";
 								}
-								if (strlen($row['directory_exten_visible']) > 0) {
+								if (!empty($row['directory_exten_visible'])) {
 									$xml .= "      <param name=\"directory-exten-visible\" value=\"" . $row['directory_exten_visible'] . "\"/>\n";
 								}
 								$xml .= "      <param name=\"dial-string\" value=\"" . $dial_string . "\"/>\n";
@@ -328,66 +318,66 @@ if (!class_exists('extension')) {
 								$xml .= "      <variable name=\"domain_name\" value=\"" . $_SESSION['domain_name'] . "\"/>\n";
 								$xml .= "      <variable name=\"domain_uuid\" value=\"" . $_SESSION['domain_uuid'] . "\"/>\n";
 								$xml .= "      <variable name=\"extension_uuid\" value=\"" . $extension_uuid . "\"/>\n";
-								if (strlen($row['call_group']) > 0) {
+								if (!empty($row['call_group'])) {
 									$xml .= "      <variable name=\"call_group\" value=\"" . $row['call_group'] . "\"/>\n";
 								}
-								if (strlen($row['user_record']) > 0) {
+								if (!empty($row['user_record'])) {
 									$xml .= "      <variable name=\"user_record\" value=\"" . $row['user_record'] . "\"/>\n";
 								}
-								if (strlen($row['hold_music']) > 0) {
+								if (!empty($row['hold_music'])) {
 									$xml .= "      <variable name=\"hold_music\" value=\"" . $row['hold_music'] . "\"/>\n";
 								}
 								$xml .= "      <variable name=\"toll_allow\" value=\"" . $row['toll_allow'] . "\"/>\n";
-								if (strlen($row['call_timeout']) > 0) {
+								if (!empty($row['call_timeout'])) {
 									$xml .= "      <variable name=\"call_timeout\" value=\"" . $row['call_timeout'] . "\"/>\n";
 								}
-								if (strlen($switch_account_code) > 0) {
+								if (!empty($switch_account_code)) {
 									$xml .= "      <variable name=\"accountcode\" value=\"" . $switch_account_code . "\"/>\n";
 								}
 								else {
 									$xml .= "      <variable name=\"accountcode\" value=\"" . $row['accountcode'] . "\"/>\n";
 								}
 								$xml .= "      <variable name=\"user_context\" value=\"" . $row['user_context'] . "\"/>\n";
-								if (strlen($row['effective_caller_id_name']) > 0) {
+								if (!empty($row['effective_caller_id_name'])) {
 									$xml .= "      <variable name=\"effective_caller_id_name\" value=\"" . $row['effective_caller_id_name'] . "\"/>\n";
 								}
-								if (strlen($row['effective_caller_id_number']) > 0) {
+								if (!empty($row['effective_caller_id_number'])) {
 									$xml .= "      <variable name=\"effective_caller_id_number\" value=\"" . $row['effective_caller_id_number'] . "\"/>\n";
 								}
-								if (strlen($row['outbound_caller_id_name']) > 0) {
+								if (!empty($row['outbound_caller_id_name'])) {
 									$xml .= "      <variable name=\"outbound_caller_id_name\" value=\"" . $row['outbound_caller_id_name'] . "\"/>\n";
 								}
-								if (strlen($row['outbound_caller_id_number']) > 0) {
+								if (!empty($row['outbound_caller_id_number'])) {
 									$xml .= "      <variable name=\"outbound_caller_id_number\" value=\"" . $row['outbound_caller_id_number'] . "\"/>\n";
 								}
-								if (strlen($row['emergency_caller_id_name']) > 0) {
+								if (!empty($row['emergency_caller_id_name'])) {
 									$xml .= "      <variable name=\"emergency_caller_id_name\" value=\"" . $row['emergency_caller_id_name'] . "\"/>\n";
 								}
-								if (strlen($row['emergency_caller_id_number']) > 0) {
+								if (!empty($row['emergency_caller_id_number'])) {
 									$xml .= "      <variable name=\"emergency_caller_id_number\" value=\"" . $row['emergency_caller_id_number'] . "\"/>\n";
 								}
-								if (strlen($row['directory_full_name']) > 0) {
+								if (!empty($row['directory_full_name'])) {
 									$xml .= "      <variable name=\"directory_full_name\" value=\"" . $row['directory_full_name'] . "\"/>\n";
 								}
-								if (strlen($row['directory_visible']) > 0) {
+								if (!empty($row['directory_visible'])) {
 									$xml .= "      <variable name=\"directory-visible\" value=\"" . $row['directory_visible'] . "\"/>\n";
 								}
-								if (strlen($row['limit_max']) > 0) {
+								if (!empty($row['limit_max'])) {
 									$xml .= "      <variable name=\"limit_max\" value=\"" . $row['limit_max'] . "\"/>\n";
 								}
 								else {
 									$xml .= "      <variable name=\"limit_max\" value=\"5\"/>\n";
 								}
-								if (strlen($row['limit_destination']) > 0) {
+								if (!empty($row['limit_destination'])) {
 									$xml .= "      <variable name=\"limit_destination\" value=\"" . $row['limit_destination'] . "\"/>\n";
 								}
-								if (strlen($row['sip_force_contact']) > 0) {
+								if (!empty($row['sip_force_contact'])) {
 									$xml .= "      <variable name=\"sip-force-contact\" value=\"" . $row['sip_force_contact'] . "\"/>\n";
 								}
-								if (strlen($row['sip_force_expires']) > 0) {
+								if (!empty($row['sip_force_expires'])) {
 									$xml .= "      <variable name=\"sip-force-expires\" value=\"" . $row['sip_force_expires'] . "\"/>\n";
 								}
-								if (strlen($row['nibble_account']) > 0) {
+								if (!empty($row['nibble_account'])) {
 									$xml .= "      <variable name=\"nibble_account\" value=\"" . $row['nibble_account'] . "\"/>\n";
 								}
 								switch ($row['sip_bypass_media']) {
@@ -401,35 +391,35 @@ if (!class_exists('extension')) {
 											$xml .= "      <variable name=\"proxy_media\" value=\"true\"/>\n";
 											break;
 								}
-								if (strlen($row['absolute_codec_string']) > 0) {
+								if (!empty($row['absolute_codec_string'])) {
 									$xml .= "      <variable name=\"absolute_codec_string\" value=\"" . $row['absolute_codec_string'] . "\"/>\n";
 								}
-								if (strlen($row['forward_all_enabled']) > 0) {
+								if (!empty($row['forward_all_enabled'])) {
 									$xml .= "      <variable name=\"forward_all_enabled\" value=\"" . $row['forward_all_enabled'] . "\"/>\n";
 								}
-								if (strlen($row['forward_all_destination']) > 0) {
+								if (!empty($row['forward_all_destination'])) {
 									$xml .= "      <variable name=\"forward_all_destination\" value=\"" . $row['forward_all_destination'] . "\"/>\n";
 								}
-								if (strlen($row['forward_busy_enabled']) > 0) {
+								if (!empty($row['forward_busy_enabled'])) {
 									$xml .= "      <variable name=\"forward_busy_enabled\" value=\"" . $row['forward_busy_enabled'] . "\"/>\n";
 								}
-								if (strlen($row['forward_busy_destination']) > 0) {
+								if (!empty($row['forward_busy_destination'])) {
 									$xml .= "      <variable name=\"forward_busy_destination\" value=\"" . $row['forward_busy_destination'] . "\"/>\n";
 								}
-								if (strlen($row['forward_no_answer_enabled']) > 0) {
+								if (!empty($row['forward_no_answer_enabled'])) {
 									$xml .= "      <variable name=\"forward_no_answer_enabled\" value=\"" . $row['forward_no_answer_enabled'] . "\"/>\n";
 								}
-								if (strlen($row['forward_no_answer_destination']) > 0) {
+								if (!empty($row['forward_no_answer_destination'])) {
 									$xml .= "      <variable name=\"forward_no_answer_destination\" value=\"" . $row['forward_no_answer_destination'] . "\"/>\n";
 								}
-								if (strlen($row['forward_user_not_registered_enabled']) > 0) {
+								if (!empty($row['forward_user_not_registered_enabled'])) {
 									$xml .= "      <variable name=\"forward_user_not_registered_enabled\" value=\"" . $row['forward_user_not_registered_enabled'] . "\"/>\n";
 								}
-								if (strlen($row['forward_user_not_registered_destination']) > 0) {
+								if (!empty($row['forward_user_not_registered_destination'])) {
 									$xml .= "      <variable name=\"forward_user_not_registered_destination\" value=\"" . $row['forward_user_not_registered_destination'] . "\"/>\n";
 								}
 
-								if (strlen($row['do_not_disturb']) > 0) {
+								if (!empty($row['do_not_disturb'])) {
 									$xml .= "      <variable name=\"do_not_disturb\" value=\"" . $row['do_not_disturb'] . "\"/>\n";
 								}
 								$xml .= "    </variables>\n";
@@ -438,7 +428,7 @@ if (!class_exists('extension')) {
 								if (!is_readable($_SESSION['switch']['extensions']['dir']."/".$row['user_context'])) {
 									mkdir($_SESSION['switch']['extensions']['dir']."/".$row['user_context'], 0770, false);
 								}
-								if (strlen($extension) > 0) {
+								if (!empty($extension)) {
 									$fout = fopen($_SESSION['switch']['extensions']['dir']."/".$row['user_context']."/v_".$extension.".xml","w");
 								}
 								$xml .= "</include>\n";
@@ -506,7 +496,7 @@ if (!class_exists('extension')) {
 					foreach ($call_group_array as $key => $value) {
 						$call_group = trim($key);
 						$extension_list = trim($value);
-						if (strlen($call_group) > 0) {
+						if (!empty($call_group)) {
 							if ($previous_call_group != $call_group) {
 								$xml .= "			<group name=\"$call_group\">\n";
 								$xml .= "				<users>\n";
@@ -533,7 +523,7 @@ if (!class_exists('extension')) {
 					$xml .= "</include>";
 
 				//write the xml file
-					if (is_readable($extension_dir) && strlen($extension_dir) > 0) {
+					if (is_readable($extension_dir) && !empty($extension_dir)) {
 						$fout = fopen($extension_dir."/".$user_context.".xml","w");
 						fwrite($fout, $xml);
 						unset($xml);
@@ -569,7 +559,7 @@ if (!class_exists('extension')) {
 						//build the delete array
 							$y = @sizeof($records) + 1;
 							foreach ($records as $x => $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 
 									//get the extension details
 										$sql = "select extension, number_alias, user_context, follow_me_uuid from v_extensions ";
@@ -672,14 +662,14 @@ if (!class_exists('extension')) {
 									foreach ($extensions as $x => $extension) {
 										$cache = new cache;
 										$cache->delete("directory:".$extension['extension']."@".$extension['user_context']);
-										if (permission_exists('number_alias') && strlen($extension['number_alias']) > 0) {
+										if (permission_exists('number_alias') && !empty($extension['number_alias'])) {
 											$cache->delete("directory:".$extension['number_alias']."@".$extension['user_context']);
 										}
 									}
 									unset($extensions);
 
 								//synchronize configuration
-									if (is_writable($_SESSION['switch']['extensions']['dir'])) {
+									if (!empty($_SESSION['switch']['extensions']['dir']) && is_writable($_SESSION['switch']['extensions']['dir'])) {
 										$this->xml();
 									}
 
@@ -720,7 +710,7 @@ if (!class_exists('extension')) {
 
 						//get current toggle state
 							foreach($records as $x => $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$uuids[] = "'".$record['uuid']."'";
 								}
 							}
@@ -769,12 +759,12 @@ if (!class_exists('extension')) {
 									$p->delete('extension_edit', 'temp');
 
 								//synchronize configuration
-									if (is_writable($_SESSION['switch']['extensions']['dir'])) {
+									if (!empty($_SESSION['switch']['extensions']['dir']) && is_writable($_SESSION['switch']['extensions']['dir'])) {
 										$this->xml();
 									}
 
 								//write the provision files
-									if (strlen($_SESSION['provision']['path']['text']) > 0) {
+									if (!empty($_SESSION['provision']['path']['text'])) {
 										if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/provision')) {
 											$prov = new provision;
 											$prov->domain_uuid = $_SESSION['domain_uuid'];
@@ -786,7 +776,7 @@ if (!class_exists('extension')) {
 									foreach ($extensions as $uuid => $extension) {
 										$cache = new cache;
 										$cache->delete("directory:".$extension['extension']."@".$extension['user_context']);
-										if (permission_exists('number_alias') && strlen($extension['number_alias']) > 0) {
+										if (permission_exists('number_alias') && !empty($extension['number_alias'])) {
 											$cache->delete("directory:".$extension['number_alias']."@".$extension['user_context']);
 										}
 									}

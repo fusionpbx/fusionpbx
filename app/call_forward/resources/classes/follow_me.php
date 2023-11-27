@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2010 - 2019
+	Copyright (C) 2010 - 2023
 	All Rights Reserved.
 
 	Contributor(s):
@@ -84,7 +84,7 @@
 				$array['follow_me'][0]['follow_me_uuid'] = $this->follow_me_uuid;
 				$array['follow_me'][0]['domain_uuid'] = $this->domain_uuid;
 				$array['follow_me'][0]['cid_name_prefix'] = $this->cid_name_prefix;
-				if (strlen($this->cid_number_prefix) > 0) {
+				if (!empty($this->cid_number_prefix)) {
 					$array['follow_me'][0]['cid_number_prefix'] = $this->cid_number_prefix;
 				}
 
@@ -148,7 +148,7 @@
 
 			//build follow me destinations insert array
 				$x = 0;
-				if (strlen($this->destination_data_1) > 0) {
+				if (!empty($this->destination_data_1)) {
 					$array['follow_me_destinations'][$x]['follow_me_destination_uuid'] = uuid();
 					$array['follow_me_destinations'][$x]['domain_uuid'] = $this->domain_uuid;
 					$array['follow_me_destinations'][$x]['follow_me_uuid'] = $this->follow_me_uuid;
@@ -160,7 +160,7 @@
 					$this->destination_order++;
 					$x++;
 				}
-				if (strlen($this->destination_data_2) > 0) {
+				if (!empty($this->destination_data_2)) {
 					$array['follow_me_destinations'][$x]['follow_me_destination_uuid'] = uuid();
 					$array['follow_me_destinations'][$x]['domain_uuid'] = $this->domain_uuid;
 					$array['follow_me_destinations'][$x]['follow_me_uuid'] = $this->follow_me_uuid;
@@ -172,7 +172,7 @@
 					$this->destination_order++;
 					$x++;
 				}
-				if (strlen($this->destination_data_3) > 0) {
+				if (!empty($this->destination_data_3)) {
 					$array['follow_me_destinations'][$x]['follow_me_destination_uuid'] = uuid();
 					$array['follow_me_destinations'][$x]['domain_uuid'] = $this->domain_uuid;
 					$array['follow_me_destinations'][$x]['follow_me_uuid'] = $this->follow_me_uuid;
@@ -184,7 +184,7 @@
 					$this->destination_order++;
 					$x++;
 				}
-				if (strlen($this->destination_data_4) > 0) {
+				if (!empty($this->destination_data_4)) {
 					$array['follow_me_destinations'][$x]['follow_me_destination_uuid'] = uuid();
 					$array['follow_me_destinations'][$x]['domain_uuid'] = $this->domain_uuid;
 					$array['follow_me_destinations'][$x]['follow_me_uuid'] = $this->follow_me_uuid;
@@ -196,7 +196,7 @@
 					$this->destination_order++;
 					$x++;
 				}
-				if (strlen($this->destination_data_5) > 0) {
+				if (!empty($this->destination_data_5)) {
 					$array['follow_me_destinations'][$x]['follow_me_destination_uuid'] = uuid();
 					$array['follow_me_destinations'][$x]['domain_uuid'] = $this->domain_uuid;
 					$array['follow_me_destinations'][$x]['follow_me_uuid'] = $this->follow_me_uuid;
@@ -307,7 +307,7 @@
 
 						//get current toggle state
 							foreach($records as $x => $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$uuids[] = "'".$record['uuid']."'";
 								}
 							}
@@ -353,7 +353,7 @@
 										$extension['state']	== $this->toggle_values[1] //false becoming true
 										&& is_uuid($extension['follow_me_uuid'])
 										) {
-										$sql .= "select count(*) from v_follow_me_destinations where follow_me_uuid = :follow_me_uuid";
+										$sql = "select count(*) from v_follow_me_destinations where follow_me_uuid = :follow_me_uuid";
 										$parameters['follow_me_uuid'] = $extension['follow_me_uuid'];
 										$database = new database;
 										$num_rows = $database->select($sql, $parameters, 'column');
@@ -405,7 +405,7 @@
 									$p->delete('follow_me_edit', 'temp');
 
 								//send feature event notify to the phone
-									if ($_SESSION['device']['feature_sync']['boolean'] == "true") {
+									if (!empty($_SESSION['device']['feature_sync']['boolean']) && $_SESSION['device']['feature_sync']['boolean'] == "true") {
 										foreach ($extensions as $uuid => $extension) {
 											$feature_event_notify = new feature_event_notify;
 											$feature_event_notify->domain_name = $_SESSION['domain_name'];
@@ -425,7 +425,7 @@
 									}
 
 								//synchronize configuration
-									if (is_readable($_SESSION['switch']['extensions']['dir'])) {
+									if (!empty($_SESSION['switch']['extensions']['dir']) && is_readable($_SESSION['switch']['extensions']['dir'])) {
 										require_once "app/extensions/resources/classes/extension.php";
 										$ext = new extension;
 										$ext->xml();

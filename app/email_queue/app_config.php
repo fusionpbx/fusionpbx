@@ -5,7 +5,7 @@
 		$apps[$x]['uuid'] = '5befdf60-a242-445f-91b3-2e9ee3e0ddf7';
 		$apps[$x]['category'] = 'system';
 		$apps[$x]['subcategory'] = 'email';
-		$apps[$x]['version'] = '2.10';
+		$apps[$x]['version'] = '2.11';
 		$apps[$x]['license'] = 'Member';
 		$apps[$x]['url'] = 'http://www.fusionpbx.com';
 		$apps[$x]['description']['en-us'] = '';
@@ -32,9 +32,9 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "email_queue";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "interval";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "120";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "5";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "How often to process the email queue. Default 120 seconds.";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "How often to process the email queue. Default 5 seconds.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "d945ed66-39c1-44eb-b596-49c9399d8018";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "email_queue";
@@ -163,8 +163,8 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['search_by'] = 'true';
 		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = 'email_debug';
-		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = 'email_substatus';
+		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = 'email_response';
+		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = 'email_debug';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		//$apps[$x]['db'][$y]['fields'][$z]['search_by'] = 'true';
 		$z++;
@@ -219,6 +219,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['table'] = 'v_email_queue';
 		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['field'] = 'email_queue_uuid';
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'email_attachment_mime_type';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['search_by'] = '';
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'email_attachment_type';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['search_by'] = '';
@@ -232,6 +236,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['search_by'] = '';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'email_attachment_base64';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['search_by'] = '';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'email_attachment_cid';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['search_by'] = '';
 		$z++;

@@ -17,19 +17,15 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -47,13 +43,13 @@
 	$sql .= "and contact_uuid = :contact_uuid ";
 	$sql .= "order by phone_primary desc, phone_label asc ";
 	$parameters['domain_uuid'] = $domain_uuid;
-	$parameters['contact_uuid'] = $contact_uuid;
+	$parameters['contact_uuid'] = $contact_uuid ?? '';
 	$database = new database;
 	$contact_phones = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
 //show if exists
-	if (is_array($contact_phones) && @sizeof($contact_phones) != 0) {
+	if (!empty($contact_phones)) {
 
 		//javascript function: send_cmd
 			echo "<script type='text/javascript'>\n";
@@ -74,17 +70,17 @@
 			echo "<div class='grid' style='grid-template-columns: 70px 120px auto;'>\n";
 			$x = 0;
 			foreach ($contact_phones as $row) {
-				echo "<div class='box contact-details-label'>".($row['phone_label'] == strtolower($row['phone_label']) ? ucwords($row['phone_label']) : $row['phone_label'])."</div>\n";
+				echo "<div class='box contact-details-label'>".(!empty($row['phone_label']) && $row['phone_label'] == strtolower($row['phone_label']) ? ucwords($row['phone_label']) : $row['phone_label'])."</div>\n";
 // 				($row['phone_primary'] ? "&nbsp;<i class='fas fa-star fa-xs' style='float: right; margin-top: 0.5em; margin-right: -0.5em;' title=\"".$text['label-primary']."\"></i>" : null)."</td>\n";
 				echo "<div class='box'>";
-				echo button::create(['type'=>'button','class'=>'link','label'=>escape(format_phone($row['phone_number'])),'title'=>$text['label-click_to_call'],'onclick'=>"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php?src_cid_name=".urlencode($row['phone_number'])."&src_cid_number=".urlencode($row['phone_number'])."&dest_cid_name=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_name'])."&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number'])."&src=".urlencode($_SESSION['user']['extension'][0]['user'])."&dest=".urlencode($row['phone_number'])."&rec=false&ringback=us-ring&auto_answer=true');"]);
+				echo button::create(['type'=>'button','class'=>'link','label'=>escape(format_phone($row['phone_number'] ?? '')),'title'=>$text['label-click_to_call'],'onclick'=>"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php?src_cid_name=".urlencode($row['phone_number'] ?? '')."&src_cid_number=".urlencode($row['phone_number'] ?? '')."&dest_cid_name=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_name'] ?? '')."&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number'] ?? '')."&src=".urlencode($_SESSION['user']['extension'][0]['user'] ?? '')."&dest=".urlencode($row['phone_number'] ?? '')."&rec=false&ringback=us-ring&auto_answer=true');"]);
 				echo "</div>\n";
 				echo "<div class='box no-wrap'>";
 				if ($row['phone_type_voice']) { $phone_types[] = "<i class='fas fa-phone fa-fw' style='margin-right: 3px;' title=\"".$text['label-voice']."\"></i>"; }
 				if ($row['phone_type_fax']) { $phone_types[] = "<i class='fas fa-fax fa-fw' style='margin-right: 3px;' title=\"".$text['label-fax']."\"></i>"; }
 				if ($row['phone_type_video']) { $phone_types[] = "<i class='fas fa-video fa-fw' style='margin-right: 3px;' title=\"".$text['label-video']."\"></i>"; }
 				if ($row['phone_type_text']) { $phone_types[] = "<i class='fas fa-sms fa-fw' style='margin-right: 3px;' title=\"".$text['label-text']."\"></i>"; }
-				if (is_array($phone_types)) {
+				if (!empty($phone_types)) {
 					echo "	".implode(" ", $phone_types)."\n";
 				}
 				unset($phone_types);

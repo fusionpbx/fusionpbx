@@ -24,12 +24,8 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -41,8 +37,11 @@
 		exit;
 	}
 
+//set from session variables
+	$list_row_edit_button = !empty($_SESSION['theme']['list_row_edit_button']['boolean']) ? $_SESSION['theme']['list_row_edit_button']['boolean'] : 'false';
+
 //set the uuid
-	if (is_uuid($_GET['id'])) {
+	if (!empty($_GET['id']) && is_uuid($_GET['id'])) {
 		$contact_uuid = $_GET['id'];
 	}
 
@@ -54,13 +53,13 @@
 	$sql .= "and ct.contact_uuid = :contact_uuid ";
 	$sql .= "order by ct.time_start desc ";
 	$parameters['domain_uuid'] = $domain_uuid;
-	$parameters['contact_uuid'] = $contact_uuid;
+	$parameters['contact_uuid'] = $contact_uuid ?? '';
 	$database = new database;
 	$contact_times = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
 //show if exists
-	if (is_array($contact_times) && @sizeof($contact_times) != 0) {
+	if (!empty($contact_times)) {
 
 		//show the content
 			echo "<div class='action_bar sub shrink'>\n";
@@ -79,15 +78,15 @@
 			echo "<th class='pct-20'>".$text['label-time_start']."</th>\n";
 			echo "<th class='pct-20'>".$text['label-time_duration']."</th>\n";
 			echo "<th class='pct-40 hide-md-dn'>".$text['label-time_description']."</th>\n";
-			if (permission_exists('contact_time_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+			if (permission_exists('contact_time_edit') && $list_row_edit_button == 'true') {
 				echo "	<td class='action-button'>&nbsp;</td>\n";
 			}
 			echo "</tr>\n";
 
-			if (is_array($contact_times) && @sizeof($contact_times) != 0) {
+			if (!empty($contact_times)) {
 				$x = 0;
 				foreach ($contact_times as $row) {
-					if ($row["time_start"] != '' && $row['time_stop'] != '') {
+					if (!empty($row["time_start"]) && !empty($row['time_stop'])) {
 						$time_start = strtotime($row["time_start"]);
 						$time_stop = strtotime($row['time_stop']);
 						$time = gmdate("H:i:s", ($time_stop - $time_start));
@@ -111,7 +110,7 @@
 					echo "	<td>".$time_start."&nbsp;</td>\n";
 					echo "	<td>".$time."&nbsp;</td>\n";
 					echo "	<td class='description overflow hide-md-dn'>".escape($row['time_description'])."&nbsp;</td>\n";
-					if (permission_exists('contact_time_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+					if (permission_exists('contact_time_edit') && $list_row_edit_button == 'true') {
 						echo "	<td class='action-button'>\n";
 						echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
 						echo "	</td>\n";

@@ -24,12 +24,8 @@
  Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require "resources/require.php";
+	require_once __DIR__ . "/require.php";
 
 //get the contents of xml_cdr.conf.xml
 	$conf_xml_string = file_get_contents($_SESSION['switch']['conf']['dir'].'/autoload_configs/voicemail.conf.xml');
@@ -60,7 +56,7 @@
 //database connection
 	try {
 		unset($db);
-		if (strlen($odbc_dsn) == 0) {
+		if (empty($odbc_dsn)) {
 			$db = new PDO('sqlite:'.$_SESSION['switch']['db']['dir'].'/voicemail_default.db'); //sqlite 3
 		}
 		else {

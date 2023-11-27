@@ -17,16 +17,12 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2018
+ Portions created by the Initial Developer are Copyright (C) 2018-2023
  the Initial Developer. All Rights Reserved.
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -43,7 +39,7 @@
 	$text = $language->get();
 
 //action add or update
-	if (is_uuid($_REQUEST["id"])) {
+	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
 		$email_template_uuid = $_REQUEST["id"];
 	}
@@ -51,8 +47,18 @@
 		$action = "add";
 	}
 
+//set the defaults
+	$template_language = '';
+	$template_category = '';
+	$template_subcategory = '';
+	$template_subject = '';
+	$template_body = '';
+	$template_type = '';
+	$template_enabled = '';
+	$template_description = '';
+
 //get http post variables and set them to php variables
-	if (is_array($_POST)) {
+	if (!empty($_POST)) {
 		$domain_uuid = $_POST["domain_uuid"];
 		$template_language = $_POST["template_language"];
 		$template_category = $_POST["template_category"];
@@ -60,12 +66,12 @@
 		$template_subject = $_POST["template_subject"];
 		$template_body = $_POST["template_body"];
 		$template_type = $_POST["template_type"];
-		$template_enabled = $_POST["template_enabled"];
+		$template_enabled = $_POST["template_enabled"] ?? 'false';
 		$template_description = $_POST["template_description"];
 	}
 
 //process the user data and save it to the database
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
 		//get the uuid from the POST
 			if ($action == "update") {
@@ -82,16 +88,16 @@
 
 		//check for all required data
 			$msg = '';
-			if (strlen($template_language) == 0) { $msg .= $text['message-required']." ".$text['label-template_language']."<br>\n"; }
-			if (strlen($template_category) == 0) { $msg .= $text['message-required']." ".$text['label-template_category']."<br>\n"; }
-			//if (strlen($template_subcategory) == 0) { $msg .= $text['message-required']." ".$text['label-template_subcategory']."<br>\n"; }
-			if (strlen($template_subject) == 0) { $msg .= $text['message-required']." ".$text['label-template_subject']."<br>\n"; }
-			if (strlen($template_body) == 0) { $msg .= $text['message-required']." ".$text['label-template_body']."<br>\n"; }
-			//if (strlen($domain_uuid) == 0) { $msg .= $text['message-required']." ".$text['label-domain_uuid']."<br>\n"; }
-			//if (strlen($template_type) == 0) { $msg .= $text['message-required']." ".$text['label-template_type']."<br>\n"; }
-			if (strlen($template_enabled) == 0) { $msg .= $text['message-required']." ".$text['label-template_enabled']."<br>\n"; }
-			//if (strlen($template_description) == 0) { $msg .= $text['message-required']." ".$text['label-template_description']."<br>\n"; }
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+			if (empty($template_language)) { $msg .= $text['message-required']." ".$text['label-template_language']."<br>\n"; }
+			if (empty($template_category)) { $msg .= $text['message-required']." ".$text['label-template_category']."<br>\n"; }
+			//if (empty($template_subcategory)) { $msg .= $text['message-required']." ".$text['label-template_subcategory']."<br>\n"; }
+			if (empty($template_subject)) { $msg .= $text['message-required']." ".$text['label-template_subject']."<br>\n"; }
+			if (empty($template_body)) { $msg .= $text['message-required']." ".$text['label-template_body']."<br>\n"; }
+			//if (empty($domain_uuid)) { $msg .= $text['message-required']." ".$text['label-domain_uuid']."<br>\n"; }
+			//if (empty($template_type)) { $msg .= $text['message-required']." ".$text['label-template_type']."<br>\n"; }
+			if (empty($template_enabled)) { $msg .= $text['message-required']." ".$text['label-template_enabled']."<br>\n"; }
+			//if (empty($template_description)) { $msg .= $text['message-required']." ".$text['label-template_description']."<br>\n"; }
+			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -105,7 +111,7 @@
 			}
 
 		//add the email_template_uuid
-			if (!is_uuid($_POST["email_template_uuid"])) {
+			if (empty($_POST["email_template_uuid"]) || !is_uuid($_POST["email_template_uuid"])) {
 				$email_template_uuid = uuid();
 			}
 
@@ -125,7 +131,7 @@
 			$database = new database;
 			$database->app_name = 'email_templates';
 			$database->app_uuid = '8173e738-2523-46d5-8943-13883befd2fd';
-			if (strlen($email_template_uuid) > 0) {
+			if (!empty($email_template_uuid)) {
 				$database->uuid($email_template_uuid);
 			}
 			$database->save($array);
@@ -145,7 +151,7 @@
 	}
 
 //pre-populate the form
-	if (is_array($_GET) && $_POST["persistformvar"] != "true") {
+	if (count($_GET)>0 && empty($_POST["persistformvar"])) {
 		$email_template_uuid = $_GET["id"];
 		$sql = "select * from v_email_templates ";
 		$sql .= "where email_template_uuid = :email_template_uuid ";
@@ -154,7 +160,7 @@
 		//$parameters['domain_uuid'] = $domain_uuid;
 		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
-		if (is_array($row) && @sizeof($row) != 0) {
+		if (!empty($row)) {
 			$domain_uuid = $row["domain_uuid"];
 			$template_language = $row["template_language"];
 			$template_category = $row["template_category"];
@@ -168,12 +174,15 @@
 		unset($sql, $parameters, $row);
 	}
 
+//set the defaults
+	if (empty($template_enabled)) { $template_enabled = 'true'; }
+
 //load editor preferences/defaults
-	$setting_size = $_SESSION["editor"]["font_size"]["text"] != '' ? $_SESSION["editor"]["font_size"]["text"] : '12px';
-	$setting_theme = $_SESSION["editor"]["theme"]["text"] != '' ? $_SESSION["editor"]["theme"]["text"] : 'cobalt';
-	$setting_invisibles = $_SESSION["editor"]["invisibles"]["boolean"] != '' ? $_SESSION["editor"]["invisibles"]["boolean"] : 'false';
-	$setting_indenting = $_SESSION["editor"]["indent_guides"]["boolean"] != '' ? $_SESSION["editor"]["indent_guides"]["boolean"] : 'false';
-	$setting_numbering = $_SESSION["editor"]["line_numbers"]["boolean"] != '' ? $_SESSION["editor"]["line_numbers"]["boolean"] : 'true';
+	$setting_size = !empty($_SESSION["editor"]["font_size"]["text"]) ? $_SESSION["editor"]["font_size"]["text"] : '12px';
+	$setting_theme = !empty($_SESSION["editor"]["theme"]["text"]) ? $_SESSION["editor"]["theme"]["text"] : 'cobalt';
+	$setting_invisibles = !empty($_SESSION["editor"]["invisibles"]["boolean"]) ? $_SESSION["editor"]["invisibles"]["boolean"] : 'false';
+	$setting_indenting = !empty($_SESSION["editor"]["indent_guides"]["boolean"]) ? $_SESSION["editor"]["indent_guides"]["boolean"] : 'false';
+	$setting_numbering = !empty($_SESSION["editor"]["line_numbers"]["boolean"]) ? $_SESSION["editor"]["line_numbers"]["boolean"] : 'true';
 
 //create token
 	$object = new token;
@@ -407,7 +416,7 @@
 	}
 	echo "	</select>\n";
 	echo "<br />\n";
-	echo $text['description-domain_uuid']."\n";
+	echo !empty($text['description-domain_uuid'])."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -430,20 +439,18 @@
 	echo "	".$text['label-template_enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<select class='formfld' name='template_enabled'>\n";
-	if ($template_enabled == "true") {
-		echo "		<option value='true' selected='selected'>".$text['label-true']."</option>\n";
+	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
+		echo "	<label class='switch'>\n";
+		echo "		<input type='checkbox' id='template_enabled' name='template_enabled' value='true' ".($template_enabled == 'true' ? "checked='checked'" : null).">\n";
+		echo "		<span class='slider'></span>\n";
+		echo "	</label>\n";
 	}
 	else {
-		echo "		<option value='true'>".$text['label-true']."</option>\n";
+		echo "	<select class='formfld' id='template_enabled' name='template_enabled'>\n";
+		echo "		<option value='true' ".($template_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($template_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "	</select>\n";
 	}
-	if ($template_enabled == "false") {
-		echo "		<option value='false' selected='selected'>".$text['label-false']."</option>\n";
-	}
-	else {
-		echo "		<option value='false'>".$text['label-false']."</option>\n";
-	}
-	echo "	</select>\n";
 	echo "<br />\n";
 	echo $text['description-template_enabled']."\n";
 	echo "</td>\n";

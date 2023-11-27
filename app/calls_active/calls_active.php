@@ -17,19 +17,15 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -46,7 +42,7 @@
 	$text = $language->get();
 
 //get the HTTP values and set as variables
-	$show = trim($_REQUEST["show"]);
+	$show = trim($_REQUEST["show"] ?? '');
 	if ($show != "all") { $show = ''; }
 
 //show the header
@@ -56,7 +52,7 @@
 //load gateways into a session variable
 	$sql = "select gateway_uuid, domain_uuid, gateway from v_gateways where enabled = 'true' ";
 	$database = new database;
-	$gateways = $database->select($sql, $parameters, 'all');
+	$gateways = $database->select($sql, $parameters ?? null, 'all');
 	foreach ($gateways as $row) {
 		$_SESSION['gateways'][$row['gateway_uuid']] = $row['gateway'];
 	}

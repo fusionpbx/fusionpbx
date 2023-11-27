@@ -17,7 +17,8 @@
     <global_missed_counter perm="">on</global_missed_counter>
     <dialnumber_us_format perm="">on</dialnumber_us_format>
     <show_ivr_digits perm="">off</show_ivr_digits>
-    <cw_dialtone perm="">{if isset($snom_dialtone_on_hold)}{$snom_dialtone_on_hold}{else}true{/if}</cw_dialtone>
+    <cw_dialtone perm="">{if isset($snom_dialtone_on_hold)}{$snom_dialtone_on_hold}{else}false{/if}</cw_dialtone>
+    <smartlabel_idle_default perm="PERMISSIONFLAGS">{if isset($snom_smartlabel_idle)}{$snom_smartlabel_idle}{else}short{/if}</smartlabel_idle_default>
     <!-- Ringtones -->
     <alert_internal_ring_text perm="">alert-internal</alert_internal_ring_text>
     <alert_internal_ring_sound perm="">{if isset($snom_alert_internal)}{$snom_alert_internal}{else}Ringer1{/if}</alert_internal_ring_sound>
@@ -34,10 +35,13 @@
     <mwi_dialtone perm="">stutter</mwi_dialtone>
     <enable_rport_rfc3581 perm="RW">on</enable_rport_rfc3581>
     <privacy_in perm="">off</privacy_in>
+    <privacy_out perm="">off</privacy_out>
     <quick_transfer perm="">blind</quick_transfer>
     <call_screen_fkeys_on_connected perm="">F_HOLD F_TRANSFER F_CONFERENCE</call_screen_fkeys_on_connected>
     <!-- Updates -->
     <update_policy perm="">{if isset($snom_update_policy)}{$snom_update_policy}{else}auto_update{/if}</update_policy>
+    <firmware perm="R">{$snom_firmware_url}{$snom_firmware_d735}</firmware>
+    <firmware_uxm perm="R">{$snom_firmware_url}{$snom_firmware_uxm}</firmware_uxm>
     <setting_server perm="RW">{if isset($snom_provision_url)}{$snom_provision_url}{else}https://{$domain_name}{$project_path}/app/provision/index.php?mac={$mac}{/if}</setting_server>
     <settings_refresh_timer perm="RW">{if isset($snom_provision_timer_seconds)}{$snom_provision_timer_seconds}{else}0{/if}</settings_refresh_timer>
     <http_client_user perm="">{$http_auth_username}</http_client_user>
@@ -62,8 +66,9 @@
     <user_name idx="{$row.line_number}" perm="R">{$row.user_id}</user_name>
     <user_pass idx="{$row.line_number}" perm="R">{$row.password}</user_pass>
     <user_host idx="{$row.line_number}" perm="R">{$row.server_address}:{$row.sip_port}</user_host>
-    <user_outbound idx="{$row.line_number}" perm="R">{if $row.outbound_proxy == ""}{$row.server_address}{else}{$row.outbound_proxy}{/if}:{$row.sip_port};transport={if $row.sip_transport == 'tcp' || $row.sip_transport == 'tls'}{$row.sip_transport}{else}udp{/if}</user_outbound>
+    <user_outbound idx="{$row.line_number}" perm="R">{if $row.outbound_proxy_primary == ""}{$row.server_address}{else}{$row.outbound_proxy_primary}{/if}:{$row.sip_port};transport={if $row.sip_transport == 'tcp' || $row.sip_transport == 'tls'}{$row.sip_transport}{else}udp{/if},{if $row.outbound_proxy_secondary == ""}{else}{$row.outbound_proxy_secondary}:{$row.sip_port};transport={if $row.sip_transport == 'tcp' || $row.sip_transport == 'tls'}{$row.sip_transport}{else}udp{/if}{/if}</user_outbound>
     <user_expiry idx="{$row.line_number}" perm="R">{$row.register_expires}</user_expiry>
+    <user_shared_line idx="{$row.line_number}" perm="R">{if $row.shared_line == "on"}on{else}off{/if}</user_shared_line>
     <user_server_type idx="{$row.line_number}" perm="R">Default</user_server_type>
     <user_srtp idx="{$row.line_number}" perm="R">off</user_srtp>
     <user_mailbox idx="{$row.line_number}" perm="R">{$voicemail_number}</user_mailbox>
@@ -75,12 +80,20 @@
     <keepalive_interval idx="{$row.line_number}" perm="R">{if isset($snom_keepalive)}{$snom_keepalive}{else}5{/if}</keepalive_interval>
     {if $row@index eq 11}{break}{/if}
     {/foreach}
+  <led_on perm="">CONNECTED IDLE ON BUSY IN_A_CALL CALLING IN_A_MEETING URGENT_INTERRUPTIONS_ONLY DND UNAVAILABLE ACTIVE INACTIVE BE_RIGHT_BACK AWAY SEIZED CONNECTED ON_HOLD OFFHOOK RINGBACK I-Am-Ready AVAILABLE I-Am-Busy PhoneHasCall PhoneHasMissedCalls</led_on>
+
+<led_red perm="">CONNECTED AWAY INACTIVE BE_RIGHT_BACK KeyConfigActiveBUSY DND_ALL DND_SELF I-Am-Busy IN_A_CALL IN_A_MEETING URGENT_INTERRUPTIONS_ONLY UNAVAILABLE seized_remote alerting_remote active_remote held_remote</led_red>
+
+<led_green perm="">IDLE AVAILABLE AVAILABLE_ON_MOBILE AVAILABLE_AT_DESK I-Am-Ready I-Am-Almost-Ready call_center_status_empty call_center_status_normal call_center_status_exceed seized_local alerting_local active_local held_local call_parked</led_green>
+
+<led_orange perm="">RINGING</led_orange>
+
+<call_screen_fkeys_on_connected perm="">F_HOLD transfer F_CONFERENCE </call_screen_fkeys_on_connected>
+
+<call_screen_fkeys_on_holding perm="">F_LEFT F_RIGHT F_CONF_ON(not:Transfer) F_DIAL(Transfer) F_HOLD transfer(not:Transfer) F_CONTACTPOOL(Holding,Transfer) F_ABS F_DELETE_MSG F_CALLRECORD_CONTROL_ON </call_screen_fkeys_on_holding>
+
   </phone-settings>
 
-  <firmware-settings>
-    <firmware perm="R">{$snom_firmware_url}{$snom_firmware_d735}</firmware>
-    <firmware_uxm perm="R">{$snom_firmware_url}{$snom_firmware_uxm}</firmware_uxm>
-  </firmware-settings>
 
   <!-- Function Keys. View Key Types here: https://service.snom.com/display/wiki/Function+Key+Types -->
   <functionKeys e="2"> {assign var="maxKeys" value=85 - count($lines)}

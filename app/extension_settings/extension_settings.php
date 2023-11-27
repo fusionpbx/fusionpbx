@@ -17,16 +17,12 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2021
+	Portions created by the Initial Developer are Copyright (C) 2021-2023
 	the Initial Developer. All Rights Reserved.
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -42,20 +38,28 @@
 	$language = new text;
 	$text = $language->get();
 
+//set the defaults
+	$search = '';
+	$paging_controls = '';
+	$id = '';
+
+//set from session variables
+	$list_row_edit_button = !empty($_SESSION['theme']['list_row_edit_button']['boolean']) ? $_SESSION['theme']['list_row_edit_button']['boolean'] : 'false';
+
 //get the http post data
-	if (is_array($_POST['extension_settings'])) {
+	if (!empty($_POST['extension_settings'])) {
 		$action = $_POST['action'];
 		$search = $_POST['search'];
 		$extension_settings = $_POST['extension_settings'];
 	}
 
 //action add or update
-	if (is_uuid($_REQUEST["id"])) {
+	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$extension_uuid = $_REQUEST["id"];
 	}
 
 //process the http post data by action
-	if ($action != '' && is_array($extension_settings) && @sizeof($extension_settings) != 0) {
+	if (!empty($action) && !empty($extension_settings)) {
 
 		//validate the token
 		$token = new token;
@@ -94,8 +98,8 @@
 	}
 
 //get order and order by
-	$order_by = $_GET["order_by"];
-	$order = $_GET["order"];
+	$order_by = $_GET["order_by"] ?? '';
+	$order = $_GET["order"] ?? '';
 
 //add the search
 	if (isset($_GET["search"])) {
@@ -150,7 +154,7 @@
 	}
 
 	$sql .= order_by($order_by, $order, 'extension_setting_type', 'asc');
-	$sql .= limit_offset($rows_per_page, $offset);
+	$sql .= limit_offset($rows_per_page ?? null, $offset ?? null);
 	$parameters['extension_uuid'] = $extension_uuid;
 	$parameters['domain_uuid'] = $domain_uuid;
 	$database = new database;
@@ -170,7 +174,7 @@
 	echo "	<div class='heading'><b>".$text['title-extension_settings']." (".$num_rows.")</b></div>\n";
 	echo "	<div class='actions'>\n";
 
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_add','name'=>'btn_add','link'=>'/app/extensions/extension_edit.php?id='.$extension_uuid]);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_add','name'=>'btn_add','style'=>'margin-right: 15px;','link'=>'/app/extensions/extension_edit.php?id='.$extension_uuid]);
 
 	if (permission_exists('extension_setting_add')) {
 		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'id'=>'btn_add','name'=>'btn_add','link'=>'extension_setting_edit.php?extension_uuid='.$extension_uuid]);
@@ -194,9 +198,9 @@
 	//	}
 	//}
 	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown='list_search_reset();'>";
-	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search','style'=>($search != '' ? 'display: none;' : null)]);
-	echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','link'=>'extension_settings.php?id='.$extension_uuid,'style'=>($search == '' ? 'display: none;' : null)]);
-	if ($paging_controls_mini != '') {
+	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search','style'=>(!empty($search) ? 'display: none;' : null)]);
+	echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','link'=>'extension_settings.php?id='.$extension_uuid,'style'=>(empty($search) ? 'display: none;' : null)]);
+	if (!empty($paging_controls_mini)) {
 		echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>\n";
 	}
 	echo "		<input type='hidden' name='id' value='".$extension_uuid."'>\n";
@@ -223,8 +227,14 @@
 	echo "<input type='hidden' name='search' value=\"".escape($search)."\">\n";
 
 	echo "<table class='list'>\n";
-	if (is_array($extension_settings) && @sizeof($extension_settings) != 0) {
+	if (!empty($extension_settings)) {
+		//define the variable
+		$previous_extension_setting_type = '';
+
+		//set the initial value
 		$x = 0;
+
+		//show the extension settings
 		foreach ($extension_settings as $row) {
 			$extension_setting_type = $row['extension_setting_type'];
 			$extension_setting_type = strtolower($extension_setting_type);
@@ -261,7 +271,7 @@
 				echo "	<th class='center'>".$text['label-extension_setting_enabled']."</th>\n";
 
 				echo "	<th class='hide-sm-dn'>".$text['label-extension_setting_description']."</th>\n";
-				if (permission_exists('extension_setting_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+				if (permission_exists('extension_setting_edit') && $list_row_edit_button == 'true') {
 					echo "	<td class='action-button'>&nbsp;</td>\n";
 				}
 				echo "</tr>\n";
@@ -294,7 +304,7 @@
 			}
 			echo "	</td>\n";
 			echo "	<td class='description overflow hide-sm-dn'>".escape($row['extension_setting_description'])."</td>\n";
-			if (permission_exists('extension_setting_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+			if (permission_exists('extension_setting_edit') && $list_row_edit_button == 'true') {
 				echo "	<td class='action-button'>\n";
 				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
 				echo "	</td>\n";
