@@ -42,6 +42,7 @@
 		$apps[$x]['destinations'][$y]['field']['destination'] = "queue_extension";
 		$apps[$x]['destinations'][$y]['field']['extension'] = "queue_extension";
 		$apps[$x]['destinations'][$y]['field']['description'] = "queue_description";
+		$apps[$x]['destinations'][$y]['field']['context'] = "queue_context";
 		$apps[$x]['destinations'][$y]['select_value']['dialplan'] = "transfer:\${destination} XML \${context}";
 		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "menu-exec-app:transfer \${destination} XML \${context}";
 		$apps[$x]['destinations'][$y]['select_label'] = "\${destination} \${name} \${description}";
@@ -64,6 +65,9 @@
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "call_center_queue_delete";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "call_center_queue_context";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "call_center_all";
@@ -205,7 +209,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "hold_music";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Pass through hold_music variable.";
-	
+
 	//cache details
 		$apps[$x]['cache']['key'] = "dialplan.\${domain_name}";
 
@@ -478,6 +482,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "queue_email_address";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "queue_context";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "queue_description";
