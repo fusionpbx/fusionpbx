@@ -67,6 +67,7 @@
 		$z++;
 		$apps[$x]['destinations'][$y]['result']['data'][$z]['name'] = 'company_directory';
 		$apps[$x]['destinations'][$y]['result']['data'][$z]['destination'] = '*732 XML ${context}';
+        */
 
 	//permission details
 		$y=0;
