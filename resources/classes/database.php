@@ -387,12 +387,24 @@
 			 * <p>Database driver must be set before calling connect.</p>
 			 * <p>For types other than sqlite. Execution will stop on failure.</p>
 			 * @depends database::driver Alias of database::type.
-			 *
+			 * @global config $conf Global configuration object
 			 */
 			public function connect() {
+				global $config, $dsn;
+				if ($config === null) {
+					die("Unable to connect");
+				}
 
-				//includes files
-					require dirname(__DIR__, 2) . "/resources/require.php";
+				//dsn will override other settings
+				if (!empty($dsn)) {
+					try {
+						$this->db = new PDO($dsn);
+						return;
+					} catch (Exception $error) {
+						print "error: " . $error->getMessage() . "<br/>";
+						die();
+					}
+				}
 
 				//get the database connection settings
 					//$db_type = $conf['database.0.type'];
@@ -402,28 +414,13 @@
 					//$db_username = $conf['database.0.username'];
 					//$db_password = $conf['database.0.password'];
 
-				//debug info
-					//echo "db type:".$db_type."\n";
-					//echo "db host:".$db_host."\n";
-					//echo "db port:".$db_port."\n";
-					//echo "db name:".$db_name."\n";
-					//echo "db username:".$db_username."\n";
-					//echo "db password:".$db_password."\n";
-					//echo "db path:".$db_path."\n";
-					//echo "</pre>\n";
-
 				//set defaults
 					if (!isset($this->driver) && isset($db_type)) { $this->driver = $db_type; }
 					if (!isset($this->type) && isset($db_type)) { $this->type = $db_type; }
 					if (!isset($this->host) && isset($db_host)) { $this->host = $db_host; }
 					if (!isset($this->port) && isset($db_port)) { $this->port = $db_port; }
 					if (!isset($this->db_name) && isset($db_name)) { $this->db_name = $db_name; }
-					if (!isset($this->db_secure) && isset($db_secure)) {
-						$this->db_secure = $db_secure;
-					}
-					else {
-						$this->db_secure = false;
-					}
+					if (!isset($this->db_secure) && isset($db_secure)) { $this->db_secure = $db_secure; }
 					if (!isset($this->username) && isset($db_username)) { $this->username = $db_username; }
 					if (!isset($this->password) && isset($db_password)) { $this->password = $db_password; }
 					if (!isset($this->path) && isset($db_path)) { $this->path = $db_path; }

@@ -161,7 +161,8 @@ if (!class_exists('destinations')) {
 		public function select($destination_type, $destination_name, $destination_value) {
 
 			//set the global variables
-			global $db_type;
+			global $config;
+			$db_type = $config->value('type', 'pgsql');
 
 			//set defaults
 			$select_style = '';
@@ -542,7 +543,8 @@ if (!class_exists('destinations')) {
 		public function all($destination_type) {
 
 			//set the global variables
-			global $db_type;
+			global $config;
+			$db_type = $config->value('type', 'pgsql');
 
 			//set default values
 			$destination_name = '';
@@ -755,7 +757,8 @@ if (!class_exists('destinations')) {
 		public function get($destination_type) {
 
 			//set the global variables
-			global $db_type;
+			global $config;
+			$db_type = $config->value('type', 'pgsql');
 
 			//get the domain_name
 			$sql = "select domain_name from v_domains ";

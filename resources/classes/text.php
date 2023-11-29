@@ -104,7 +104,7 @@ class text {
 						}
 						else {
 							//fallback to en-us
-							$text[$key] = $value['en-us'];
+							$text[$key] = $value['en-us'] ?? '';
 						}
 					}
 				}

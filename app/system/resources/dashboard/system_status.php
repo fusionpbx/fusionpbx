@@ -156,9 +156,9 @@
 				$c = ($c) ? 0 : 1;
 			}
 		}
-
+		global $config;
 	//db connections
-		switch ($db_type) {
+		switch ($config->db_type) {
 			case 'pgsql':
 				$sql = "select count(*) from pg_stat_activity";
 				break;
