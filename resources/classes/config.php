@@ -2,6 +2,15 @@
 
 	/**
 	 * config class to manage the configuration file
+	 * <p>Basic usage:<br>
+	 * <code>
+	 * $config = new config;
+	 * $config->load();
+	 * $db_name = $config->value('database.0.name', 'fusionpbx');
+	 * $db_path = $config->path();
+	 * $config->save();
+	 * </code>
+	 * </p>
 	 * @author Mark J Crane <markjcrane@fusionpbx.com>
 	 */
 	class config {
@@ -33,6 +42,9 @@
 			if ($name === 'config_path') {
 				return $this->file;
 			}
+			if ($name === 'count') {
+				return $this->lines();
+			}
 			return "";
 		}
 
@@ -60,30 +72,91 @@
 		}
 
 		/**
+		 * Set a value in the config object
+		 * @param string $key Must not contain an '=' character
+		 * @param string $value
+		 */
+		public function set_value(string $key, string $value) {
+			global $conf;
+			if (strpos($key, '=') > 0) {
+				throw new \InvalidArgumentException('Key must not contain an equals character');
+			}
+			$conf[$key] = $value;
+		}
+
+		/**
+		 * Saves to the path provided
+		 * @param string $new_path
+		 * @return bool
+		 */
+		public function save(?string $new_path = null): bool {
+			//set to the current location if needed
+			if ($new_path === null) {
+				$new_path = $this->path();
+			}
+
+			//ensure we are writing to a location
+			if (empty($new_path)) {
+				throw new InvalidArgumentException('Path must not be empty');
+			}
+
+			//ensure the file name is removed from path
+			$path_info = pathinfo($new_path);
+			$path = $path_info['dirname'];
+
+			//set file output stream
+			$ostream = $path . '/config.conf';
+
+			//open file
+			$handle = fopen($ostream, 'w'); //w = Create and open for writing only replace contents
+			if ($handle === false) {
+				throw new \Exception('Unable to open file for writing');
+			}
+
+			//get the config data
+			$data = $this->serialize();
+
+			//write it to the file
+			$bytes = fwrite($ostream, $data);
+
+			//close file
+			fclose($handle);
+
+			//return success if we have managed to write all bytes to the file
+			return $bytes === strlen($data);
+		}
+
+		/**
 		 * Returns the value of the setting cached in memory
 		 * @global array $conf
-		 * @param string $setting
-		 * @return string
+		 * @param string $setting Setting key from the Configuration file
+		 * @param mixed $default Default value if no setting key exists
+		 * @param bool $remove_trailing_slash removes a trailing '/' from a string if it exists before returning the value
+		 * @return mixed returns the setting as a string or a default value from the configuration file
 		 */
-		public function value(string $setting, string $default = ''): string {
+		public function value(string $setting, mixed $default = null, bool $remove_trailing_slash = false) {
 			global $conf;
+			$retval = $default;
+			// make sure it exists
 			if (array_key_exists($setting, $conf)) {
-				return $conf[$setting];
+				//override return value with true value
+				$retval = $conf[$setting];
 			}
-			return $default;
+			// return the retval without trialing slash
+			if ($remove_trailing_slash && gettype($retval) === 'string') {
+				return rtrim($retval, '/');
+			}
+			// return retval as is
+			return $retval;
 		}
 
 		/**
 		 * Load the configuration in to global scoped variables
-		 * @var string $db_type - type of database
-		 * @var string $db_name - name of the database
-		 * @var string $db_username - username to access the database
-		 * @var string $db_password - password to access the database
-		 * @var string $db_host - hostname of the database server
-		 * @var string $db_path - path of the database file
-		 * @var string $db_port - network port to connect to the database
-		 * @var bool $db_secure - whether or not to connect with SSL
-		 * @var string $db_cert_authority - location of certificate authority
+		 * <p>Loads the configuration file if it exists in the paths set in the constructor
+		 * and then defines the <b><code>PROJECT_ROOT</code></b> and <b><code>PROJECT_PATH</code></b>
+		 * taken from the <i>document.root</i> and <i>project.path</i> set in the configuration file.
+		 * If no <i>document.root</i> is found then the <i>/var/www/fusionpbx</i> value is used
+		 * as a default location for the project.</p>
 		 * @global string[] $conf
 		 */
 		public function load() {
@@ -97,24 +170,19 @@
 			//use the global variable to store the copy of the config
 			$conf = parse_ini_file($this->file);
 
-			//set project paths from global $conf
-			$this->set_project_paths();
+			//set project path
+			if (!defined('PROJECT_PATH')) {
+				define('PROJECT_PATH', $this->value('project.path', '', true));
+			}
 
-			//add the document root to the include path
+			//set project root
+			$document_root = $this->value('document.root', '/var/www/fusionpbx', true);
+			if (!defined('PROJECT_ROOT')) {
+				define('PROJECT_ROOT', (empty(PROJECT_PATH) ? $document_root : $document_root . '/' . PROJECT_PATH));
+			}
+
+			//ensure php knows the search path
 			set_include_path(PROJECT_ROOT);
-
-			//add the database settings
-//			$this->db_type = $conf['database.0.type'] ?? '';
-//			$this->db_name = $conf['database.0.name'] ?? '';
-//			$this->db_username = $conf['database.0.username'] ?? '';
-//			$this->db_password = $conf['database.0.password'] ?? '';
-//			$this->db_sslmode = $conf['database.0.sslmode'] ?? '';
-//			$this->db_secure = $conf['database.0.secure'] ?? '';
-//			$this->db_cert_authority = $conf['database.0.db_cert_authority'] ?? '';
-//			$this->db_host = $conf['database.0.host'] ?? '';
-//			$this->db_path = $conf['database.0.path'] ?? '';
-//			$this->db_port = $conf['database.0.port'] ?? '';
-
 		}
 
 		/**
@@ -171,31 +239,62 @@
 		public function exists() {
 			return file_exists($this->file);
 		}
-	}
 
-	/*
-	  $config = new config;
-	  $config_exists = $config->exists();
-	  $config_path = $config->find();
-	  $config->get();
-	  $db_type = $config->db_type;
-	  $db_name = $config->db_name;
-	  $db_username = $config->db_username;
-	  $db_password = $config->db_password;
-	  $db_host = $config->db_host;
-	  $db_path = $config->db_path;
-	  $db_port = $config->db_port;
-	  echo "config_path: ".$config_path."\n";
-	  if ($config_exists) {
-	  echo "config_exists: true\n";
-	  } else {
-	  echo "config_exists: false\n";
-	  }
-	  echo "db_type: ".$db_type."\n";
-	  echo "db_name: ".$db_name."\n";
-	  echo "db_username: ".$db_username."\n";
-	  echo "db_password: ".$db_password."\n";
-	  echo "db_host: ".$db_host."\n";
-	  echo "db_path: ".$db_path."\n";
-	  echo "db_port: ".$db_port."\n";
-	 */
+		/**
+		 * Returns the current path of the config
+		 * @return string
+		 */
+		public function path(): string {
+			return $this->file ?? '';
+		}
+
+		/**
+		 * Returns the number of lines in the config file
+		 * @global string $conf
+		 * @return int number of entries in the config file
+		 */
+		public function lines(): int {
+			global $conf;
+			return count($conf ?? []);
+		}
+
+		/**
+		 * Alias of lines
+		 * @return int
+		 * @see lines
+		 */
+		public function count(): int {
+			return $this->lines();
+		}
+
+		/**
+		 * Returns a section of the config file
+		 * Each line is parsed and returned when the section_name matches the config line before the first '.' (dot).
+		 * @param string $section_name
+		 * @param bool $strip_section_name_from_key
+		 * @return array
+		 */
+		public function section(string $section_name, bool $strip_section_name_from_key = false): array {
+			global $conf;
+			$ret_arr = [];
+			foreach ($conf as $key => $value) {
+				$section = substr(trim($key), 0, strlen($section_name));
+				if ($section === $section_name) {
+					if ($strip_section_name_from_key) {
+						$key = substr($key,strlen($section_name));
+					}
+					$ret_arr[$key] = $value;
+				}
+			}
+			return $ret_arr;
+		}
+
+		public function serialize(): string {
+			global $conf;
+			$sb = "";
+			foreach ($conf as $key => $value) {
+				$sb = "$key = $value\n";
+			}
+			return $sb;
+		}
+	}
