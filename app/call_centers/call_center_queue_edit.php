@@ -116,6 +116,14 @@
 			$queue_email_address = $_POST["queue_email_address"] ?? null;
 			$queue_description = $_POST["queue_description"];
 
+		//set the context for users that do not have the permission
+			if (permission_exists('call_center_queue_context')) {
+				$queue_context = $_POST["queue_context"];
+			}
+			else if ($action == 'add') {
+				$queue_context = $_SESSION['domain_name'];
+			}
+
 		//remove invalid characters
 			$queue_cid_prefix = str_replace(":", "-", $queue_cid_prefix);
 			$queue_cid_prefix = str_replace("\"", "", $queue_cid_prefix);
@@ -316,6 +324,7 @@
 			if (permission_exists('call_center_email_address')) {
 				$array['call_center_queues'][0]['queue_email_address'] = $queue_email_address;
 			}
+			$array['call_center_queues'][0]['queue_context'] = $queue_context;
 			$array['call_center_queues'][0]['queue_description'] = $queue_description;
 			$array['call_center_queues'][0]['call_center_queue_uuid'] = $call_center_queue_uuid;
 			$array['call_center_queues'][0]['dialplan_uuid'] = $dialplan_uuid;
@@ -397,7 +406,9 @@
 			$array['dialplans'][0]["dialplan_uuid"] = $dialplan_uuid;
 			$array['dialplans'][0]["dialplan_name"] = $queue_name;
 			$array['dialplans'][0]["dialplan_number"] = $queue_extension;
-			$array['dialplans'][0]["dialplan_context"] = $_SESSION['domain_name'];
+			if (isset($queue_context)) {
+				$array['dialplans'][0]["dialplan_context"] = $queue_context;
+			}
 			$array['dialplans'][0]["dialplan_continue"] = "false";
 			$array['dialplans'][0]["dialplan_xml"] = $dialplan_xml;
 			$array['dialplans'][0]["dialplan_order"] = "230";
@@ -544,6 +555,7 @@
 				$queue_announce_frequency = $row["queue_announce_frequency"];
 				$queue_cc_exit_keys = $row["queue_cc_exit_keys"];
 				$queue_email_address = $row["queue_email_address"];
+				$queue_context = $row["queue_context"];
 				$queue_description = $row["queue_description"];
 			}
 		}
@@ -617,6 +629,7 @@
 	if (empty($queue_tier_rule_no_agent_no_wait)) { $queue_tier_rule_no_agent_no_wait = "true"; }
 	if (empty($queue_discard_abandoned_after)) { $queue_discard_abandoned_after = "900"; }
 	if (empty($queue_abandoned_resume_allowed)) { $queue_abandoned_resume_allowed = "false"; }
+	if (empty($queue_context)) { $queue_context = $_SESSION['domain_name']; }
 
 //create token
 	$object = new token;
@@ -1366,6 +1379,19 @@
 		echo "  <input class='formfld' type='text' name='queue_email_address' maxlength='255' value='".escape($queue_email_address ?? '')."'>\n";
 		echo "<br />\n";
 		echo $text['description-queue_email_address']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
+
+	if (permission_exists('call_center_queue_context')) {
+		echo "<tr>\n";
+		echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-context']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<input class='formfld' type='text' name='queue_context' maxlength='255' value=\"".escape($queue_context)."\" required='required'>\n";
+		echo "<br />\n";
+		echo $text['description-enter-context']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 	}
