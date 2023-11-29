@@ -324,7 +324,7 @@
 			if (permission_exists('call_center_email_address')) {
 				$array['call_center_queues'][0]['queue_email_address'] = $queue_email_address;
 			}
-			$array['call_center_queues'][0]["queue_context"] = $queue_context;
+			$array['call_center_queues'][0]['queue_context'] = $queue_context;
 			$array['call_center_queues'][0]['queue_description'] = $queue_description;
 			$array['call_center_queues'][0]['call_center_queue_uuid'] = $call_center_queue_uuid;
 			$array['call_center_queues'][0]['dialplan_uuid'] = $dialplan_uuid;
