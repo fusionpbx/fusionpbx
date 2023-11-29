@@ -3,9 +3,9 @@
 $text['title-email_queue']['en-us'] = "Email Queue";
 $text['title-email_queue']['en-gb'] = "Email Queue";
 $text['title-email_queue']['ar-eg'] = "قائمة انتظار البريد الإلكتروني";
-$text['title-email_queue']['de-at'] = "Zurück zur Übersicht";
-$text['title-email_queue']['de-ch'] = "Zurück zur Übersicht";
-$text['title-email_queue']['de-de'] = "Zurück zur Übersicht";
+$text['title-email_queue']['de-at'] = "Email Warteschlange";
+$text['title-email_queue']['de-ch'] = "Email Warteschlange";
+$text['title-email_queue']['de-de'] = "Email Warteschlange";
 $text['title-email_queue']['es-cl'] = "Correo electrónico";
 $text['title-email_queue']['es-mx'] = "Correo electrónico";
 $text['title-email_queue']['fr-ca'] = "File d'attente des e-mails";
