@@ -42,6 +42,7 @@
 		$apps[$x]['destinations'][$y]['field']['destination'] = "conference_extension";
 		$apps[$x]['destinations'][$y]['field']['extension'] = "conference_extension";
 		$apps[$x]['destinations'][$y]['field']['description'] = "conference_description";
+		$apps[$x]['destinations'][$y]['field']['context'] = "conference_context";
 		$apps[$x]['destinations'][$y]['select_value']['dialplan'] = "transfer:\${destination} XML \${context}";
 		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "menu-exec-app:transfer \${destination} XML \${context}";
 		$apps[$x]['destinations'][$y]['select_label'] = "\${destination} \${name} \${description}";
@@ -85,6 +86,9 @@
 		$apps[$x]['permissions'][$y]['name'] = "conference_user_delete";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "conference_context";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "conference_email_address";
 		$y++;
@@ -168,6 +172,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the description.";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "conference_context";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "conference_enabled";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
