@@ -89,7 +89,7 @@
 
 		//$contact_users = $_POST["contact_users"];
 		//$contact_groups = $_POST["contact_groups"];
-		$contact_user_uuid = $_POST["contact_user_uuid"] ?? null;
+		$contact_user_uuid = ($_SESSION['contact']['permissions']['boolean'] == "true") ? ($_POST["contact_user_uuid"] ?? $_SESSION["user_uuid"]) : ($contact_user_uuid = $_POST["contact_user_uuid"] ?? null);
 		$contact_group_uuid = $_POST["contact_group_uuid"] ?? null;
 
 		$contact_phones = $_POST["contact_phones"];
