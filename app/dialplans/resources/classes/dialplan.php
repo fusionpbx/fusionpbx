@@ -1201,7 +1201,7 @@
 
 			}
 
-			public function _defaults() {
+			public function set_defaults() {
 
 				//get the array of xml files and then process thm
 					$xml_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/resources/switch/conf/dialplan/*.xml");
