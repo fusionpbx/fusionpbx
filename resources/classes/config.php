@@ -105,7 +105,7 @@
 				if (self::is_cli()) {
 					$this->migrate();
 				} else {
-					throw new \Exception('Config must be migrated manually. Try running upgrade from the terminal shell.');
+					throw new \cli_required_exception('Config must be migrated manually. Try running upgrade from the terminal shell.');
 				}
 			}
 		}
