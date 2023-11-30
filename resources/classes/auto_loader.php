@@ -42,6 +42,12 @@ class auto_loader {
 				openlog("PHP", LOG_PID | LOG_PERROR, LOG_LOCAL0);
 			}
 
+		//check interfaces as many classes may depend on them
+			if (!$class_found && file_exists(PROJECT_ROOT . '/resources/interfaces/' . $class_name . '.php')) {
+				require_once PROJECT_ROOT . '/resources/interfaces/' . $class_name . '.php';
+				$class_found = true;
+			}
+
 		//find the most relevant class name
 			if (!$class_found && file_exists($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/resources/classes/".$class_name.".php")) {
 				//first priority
