@@ -324,7 +324,7 @@
 			return $sb;
 		}
 
-		public static function new(array $paths_to_check = []): config {
+		public static function new(array $paths_to_check = [], array $names = ['config'], array $extensions = ['conf', 'php']): config {
 			return new config($paths_to_check);
 		}
 
