@@ -26,7 +26,10 @@
 
 //define the dialplan class
 	if (!class_exists('dialplan')) {
-		class dialplan {
+		class dialplan implements app_defaults {
+
+			const APP_NAME = 'dialplans';
+			const APP_UUID = '742714e5-8cdf-32fd-462c-cbe7e3d655db';
 
 			//variables
 			public $domain_uuid;
@@ -86,8 +89,8 @@
 					$this->dialplan_global = false;
 
 				//assign property defaults
-					$this->app_name = 'dialplans';
-					$this->app_uuid = '742714e5-8cdf-32fd-462c-cbe7e3d655db'; //dialplans
+					$this->app_name = self::APP_NAME;
+					$this->app_uuid = self::APP_UUID; //dialplans
 					$this->permission_prefix = 'dialplan_';
 					$this->list_page = 'dialplans.php';
 					$this->table = 'dialplans';
@@ -116,8 +119,8 @@
 
 				//execute insert
 					$database = new database;
-					$database->app_name = 'dialplans';
-					$database->app_uuid = '742714e5-8cdf-32fd-462c-cbe7e3d655db';
+					$database->app_name = self::APP_NAME;
+					$database->app_uuid = self::APP_UUID;
 					$database->save($array);
 					unset($array);
 
@@ -149,8 +152,8 @@
 
 				//execute update
 					$database = new database;
-					$database->app_name = 'dialplans';
-					$database->app_uuid = '742714e5-8cdf-32fd-462c-cbe7e3d655db';
+					$database->app_name = self::APP_NAME;
+					$database->app_uuid = self::APP_UUID;
 					$database->save($array);
 					unset($array);
 
@@ -456,8 +459,8 @@
 							//save the data
 								if (!empty($array)) {
 									//$database = new database;
-									$database->app_name = 'dialplans';
-									$database->app_uuid = '742714e5-8cdf-32fd-462c-cbe7e3d655db';
+									$database->app_name = self::APP_NAME;
+									$database->app_uuid = self::APP_UUID;
 									$database->save($array);
 									unset($array);
 								}
@@ -1064,8 +1067,8 @@
 
 									//execute update
 									$database = new database;
-									$database->app_name = 'dialplans';
-									$database->app_uuid = '742714e5-8cdf-32fd-462c-cbe7e3d655db';
+									$database->app_name = self::APP_NAME;
+									$database->app_uuid = self::APP_UUID;
 									$database->save($array);
 									unset($array);
 
@@ -1078,7 +1081,127 @@
 
 			}
 
-			public function defaults() {
+			/**
+			 * Executed when setting the application defaults in the upgrade menu or cli
+			 * @param config $config
+			 * @param database $database
+			 * @return void
+			 */
+			public static function defaults(config $config, database $database): void {
+
+				//change dialplan context ${domain_name} to global
+				$sql = "update v_dialplan_details set dialplan_detail_group = '0' ";
+				$sql .= "where dialplan_detail_group is null;\n";
+				$database->execute($sql);
+				unset($sql);
+
+				//get the $apps array from the installed apps from the core and mod directories
+
+				//get the list of domains
+				$sql = "select * from v_domains ";
+				$database = new database;
+				$domains = $database->select($sql, null, 'all');
+				unset($sql);
+
+				//dialplan class
+				$dialplan = new dialplan;
+				$dialplan->import($domains);
+
+				//update the dialplan order
+				$sql = "update v_dialplans set dialplan_order = '870' where dialplan_order = '980' and dialplan_name = 'cidlookup';\n";
+				$database->execute($sql);
+				$sql = "update v_dialplans set dialplan_order = '880' where dialplan_order = '990' and dialplan_name = 'call_screen';\n";
+				$database->execute($sql);
+				$sql = "update v_dialplans set dialplan_order = '890' where dialplan_order = '999' and dialplan_name = 'local_extension';\n";
+				$database->execute($sql);
+				unset($sql);
+
+				//set empty strings to null
+				$sql = "update v_device_lines set outbound_proxy_primary = null where outbound_proxy_primary = '';\n";
+				$database->execute($sql);
+				$sql = "update v_device_lines set outbound_proxy_secondary = null where outbound_proxy_secondary = '';\n";
+				$database->execute($sql);
+				unset($sql);
+
+				//change recording_slots to recording_id
+				$sql = "update v_dialplan_details set dialplan_detail_data = 'recording_id=true' ";
+				$sql .= "where dialplan_uuid in (select dialplan_uuid from v_dialplans where app_uuid = '430737df-5385-42d1-b933-22600d3fb79e') ";
+				$sql .= "and dialplan_detail_data = 'recording_slots=true'; \n";
+				$database->execute($sql);
+				$sql = "update v_dialplan_details set dialplan_detail_data = 'recording_id=false' ";
+				$sql .= "where dialplan_uuid in (select dialplan_uuid from v_dialplans where app_uuid = '430737df-5385-42d1-b933-22600d3fb79e') ";
+				$sql .= "and dialplan_detail_data = 'recording_slots=false'; \n";
+				$database->execute($sql);
+				unset($sql);
+
+
+				//additional dialplan upgrade commands
+
+				//add xml for each dialplan where the dialplan xml is empty
+				$sql = "select domain_name ";
+				$sql .= "from v_domains \n";
+				$results = $database->select($sql, null, 'all');
+				if ($results !== false) {
+					foreach ($results as $row) {
+						$dialplans = new dialplan;
+						$dialplans->source = "details";
+						$dialplans->destination = "database";
+						$dialplans->context = $row["domain_name"];
+						$dialplans->is_empty = "dialplan_xml";
+						$array = $dialplans->xml();
+					}
+				}
+				unset($sql, $results);
+				$dialplans = new dialplan;
+				$dialplans->source = "details";
+				$dialplans->destination = "database";
+				$dialplans->is_empty = "dialplan_xml";
+				$array = $dialplans->xml();
+
+				//delete the follow me bridge dialplan
+				$sql = "delete from v_dialplan_details where dialplan_uuid = '8ed73d1f-698f-466c-8a7a-1cf4cd229f7f' ";
+				$database->execute($sql);
+				$sql = "delete from v_dialplans where dialplan_uuid = '8ed73d1f-698f-466c-8a7a-1cf4cd229f7f' ";
+				$database->execute($sql);
+				unset($sql);
+
+				//change dialplan context ${domain_name} to global
+				$sql = "update v_dialplans set dialplan_context = 'global' ";
+				$sql .= "where dialplan_context = '\${domain_name}';\n";
+				$database->execute($sql);
+				unset($sql);
+
+				//update recordings dialplan change recording_id=true to recording_id
+				$sql = "update v_dialplans set dialplan_xml = replace(dialplan_xml, 'recording_id=true','recording_id=') where dialplan_xml like '%recording_id=true%'\n";
+				$database->execute($sql);
+				$sql = "update v_dialplan_details set dialplan_detail_data = 'recording_id='  where dialplan_detail_data = 'recording_id=true'\n";
+				$database->execute($sql);
+				unset($sql);
+
+				//remove origination_callee_id_name from domain-variables dialplan
+				$sql = "select count(*) from v_dialplans ";
+				$sql .= "where dialplan_name = 'domain-variables' ";
+				$sql .= "and dialplan_xml like '%origination_callee_id_name%' ";
+				$num_rows = $database->select($sql, null, 'column');
+				if ($num_rows > 0) {
+					$sql = "update v_dialplan_details set dialplan_detail_data = 'origination_callee_id_name=\${caller_destination}', update_date = now() \n";
+					$sql .= "where dialplan_uuid in (select dialplan_uuid from v_dialplans where dialplan_name = 'domain-variables' or dialplan_name = 'variables') \n";
+					$sql .= "and dialplan_detail_data = 'origination_callee_id_name=\${destination_number}'; \n";
+					$database->execute($sql);
+
+					$sql = "update v_dialplans set dialplan_xml = REPLACE(dialplan_xml, '<action application=\"export\" data=\"origination_callee_id_name=\${destination_number}\"/>', '<action application=\"export\" data=\"origination_callee_id_name=\${caller_destination}\"/>'), update_date = now() \n";
+					$sql .= "where dialplan_uuid in (select dialplan_uuid from v_dialplans where dialplan_name = 'domain-variables' or dialplan_name = 'variables'); \n";
+					$database->execute($sql);
+
+					$sql = "update v_dialplans set dialplan_xml = REPLACE(dialplan_xml, '<action application=\"export\" data=\"origination_callee_id_name=\${destination_number}\" inline=\"true\"/>', '<action application=\"export\" data=\"origination_callee_id_name=\${caller_destination}\" inline=\"true\"/>'), update_date = now() \n";
+					$sql .= "where dialplan_uuid in (select dialplan_uuid from v_dialplans where dialplan_name = 'domain-variables' or dialplan_name = 'variables'); \n";
+					$database->execute($sql);
+				}
+				unset($sql, $num_rows);
+
+			}
+
+			public function _defaults() {
 
 				//get the array of xml files and then process thm
 					$xml_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/resources/switch/conf/dialplan/*.xml");
@@ -1581,7 +1704,17 @@
 						}
 
 				}
-			} //method
+			}
+
+			public static function name(): string {
+				return self::APP_NAME;
+			}
+
+			public static function uuid(): string {
+
+			}
+
+//method
 
 
 		} //class
