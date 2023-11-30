@@ -393,7 +393,7 @@ if (!class_exists('menu')) {
 		 */
 		public function restore() {
 			$apps = [];
-			$this->load_menu_interfaces($apps);
+			//$this->load_menu_interfaces($apps);
 
 			//get the $apps array from the installed apps from the core and mod directories
 			$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_menu.php");
