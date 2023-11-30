@@ -31,11 +31,33 @@
 //allow the config object to be accessed globally
 	global $config;
 
-//create a new configuration object to get/set settings
+//create a new configuration object
 	$config = new config();
 
 //load the configuration
 	$config->load();
+
+//config.conf file not found re-direct the request to the install
+	if (!$config->exists()) {
+		header("Location: /core/install/install.php");
+		exit;
+	}
+
+//scope the config object globally for all apps
+	global $config;
+
+//set the global scoped database variables for backward compatibility
+	$db_type     = $config->value('database.0.type'    , 'pgsql'    );
+	$db_host     = $config->value('database.0.host'    , 'localhost');
+	$db_name     = $config->value('database.0.name'    , 'fusionpbx');
+	$db_port     = $config->value('database.0.port'    , '5432'     );
+	$db_username = $config->value('database.0.username', 'fusionpbx');
+	$db_password = $config->value('database.0.password', ''         );
+	$db_secure   = $config->value('database.0.secure'  , false      );
+	$db_sslmode  = $config->value('database.0.sslmode' , 'prefer'   );
+
+//set project root
+	$_SERVER["PROJECT_ROOT"] = PROJECT_ROOT;
 
 //class auto loader
 	if (!class_exists('auto_loader')) {
