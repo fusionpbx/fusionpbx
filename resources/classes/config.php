@@ -49,7 +49,31 @@
 		}
 
 		/**
-		 * Called when the object is created
+		 * Returns a new <i>config</i> object with PROJECT_ROOT defined.
+		 * <p>The array locations are searched for in order provided by the array upon
+		 * instantiation. If the first match in the array is found matches a config.php
+		 * file, the constructor will try and migrate the config.php to the new config.conf
+		 * file. It is required that the migration process occurs while executing from
+		 * the CLI. For backwards compatibility, the $conf variable is also declared
+		 * global and can be used to access the $conf array that matches the config
+		 * file. However, this is highly discouraged and the value() method should be
+		 * used instead as the $conf global array has been deprecated.<br>
+		 * Example:<br>
+		 * <code>
+		 * $config = config::new()->load();
+		 * </code><br>In this example, the configuration is located and then parsed.</p>
+		 * <p>Notes:<br>
+		 * The PROJECT_ROOT that is defined ensures that the <i><b>PROJECT_PATH</b></i> is included
+		 * in the definition. This means that <b><i>PROJECT_ROOT</i></b> and
+		 * <b><i>$_SERVER['DOCUMENT_ROOT'] . '/' . PROJECT_PATH</i></b> are equivalent and thus,
+		 * <i><b>PROJECT_ROOT</b></i> can now be relied upon for the fully qualified
+		 * path of the project.
+		 * </p>
+		 * @param array $paths_to_check A single dimension array of system paths to check for the config.conf or config.php file
+		 * @param array $names A single dimension array of names that should be searched for the config file. Default is 'config'.
+		 * @param array $extensions A single dimension array of extension types that should be used to search. Default is 'conf' and 'php'.
+		 * @return config Object instance
+		 * @throws Exception Thrown when a migration is attempted and the CLI is not being used for execution
 		 */
 		public function __construct(array $paths_to_check = [], array $names = ['config'], array $extensions = ['conf', 'php']) {
 
@@ -211,7 +235,7 @@
 			//ensure php knows the search path
 			set_include_path(PROJECT_ROOT);
 
-			return $this;
+			return $this->set_db_global_vars();
 		}
 
 		public function set_db_global_vars(): config {
@@ -324,8 +348,43 @@
 			return $sb;
 		}
 
+		/**
+		 * Returns a new <i>config</i> object with PROJECT_ROOT defined.
+		 * <p>The array locations are searched for in order provided by the array upon
+		 * instantiation. If the first match in the array is found matches a config.php
+		 * file, the constructor will try and migrate the config.php to the new config.conf
+		 * file. It is required that the migration process occurs while executing from
+		 * the CLI. For backwards compatibility, the $conf variable is also declared
+		 * global and can be used to access the $conf array that matches the config
+		 * file. However, this is highly discouraged and the value() method should be
+		 * used instead as the $conf global array has been deprecated.<br>
+		 * Example:<br>
+		 * <code>
+		 * $config = config::new()->load();
+		 * </code><br>In this example, the configuration is located and then parsed.
+		 * PROJECT_ROOT and PROJECT_PATH are defined and the now <u>deprecated</u> global variables
+		 * <i>$db_type, $db_host, $db_name, $db_port, $db_username, $db_secure, $db_sslmode</i> are
+		 * set to their corresponding values in the configuration file.</p>
+		 * <p>Notes:<br>
+		 * The PROJECT_ROOT that is defined ensures that the <i><b>PROJECT_PATH</b></i> is included
+		 * in the definition. This means that <b><i>PROJECT_ROOT</i></b> and
+		 * <b><i>$_SERVER['DOCUMENT_ROOT'] . '/' . PROJECT_PATH</i></b> are equivalent and thus,
+		 * <i><b>PROJECT_ROOT</b></i> can now be relied upon for the fully qualified
+		 * path of the project.
+		 * </p>
+		 * @param array $paths_to_check A single dimension array of system paths to check for the config.conf or config.php file
+		 * @param array $names A single dimension array of names that should be searched for the config file. Default is 'config'.
+		 * @param array $extensions A single dimension array of extension types that should be used to search. Default is 'conf' and 'php'.
+		 * @return config Object instance
+		 * @throws Exception Thrown when a migration is attempted and the CLI is not being used for execution.
+		 */
 		public static function new(array $paths_to_check = [], array $names = ['config'], array $extensions = ['conf', 'php']): config {
-			return new config($paths_to_check);
+			try {
+				return new config($paths_to_check, $names, $extensions);
+			} catch (\Exception $e) {
+				//let the caller handle the error
+				throw $e;
+			}
 		}
 
 		/**
