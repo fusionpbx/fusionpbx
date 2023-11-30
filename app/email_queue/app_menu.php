@@ -4,9 +4,9 @@
 	$apps[$x]['menu'][$y]['title']['en-us'] = "Email Queue";
 	$apps[$x]['menu'][$y]['title']['en-gb'] = "Email Queue";
 	$apps[$x]['menu'][$y]['title']['ar-eg'] = "قائمة انتظار البريد الإلكتروني";
-	$apps[$x]['menu'][$y]['title']['de-at'] = "Zurück zur Übersicht";
-	$apps[$x]['menu'][$y]['title']['de-ch'] = "Zurück zur Übersicht";
-	$apps[$x]['menu'][$y]['title']['de-de'] = "Zurück zur Übersicht";
+	$apps[$x]['menu'][$y]['title']['de-at'] = "Email Warteschlange";
+	$apps[$x]['menu'][$y]['title']['de-ch'] = "Email Warteschlange";
+	$apps[$x]['menu'][$y]['title']['de-de'] = "Email Warteschlange";
 	$apps[$x]['menu'][$y]['title']['es-cl'] = "Correo electrónico";
 	$apps[$x]['menu'][$y]['title']['es-mx'] = "Correo electrónico";
 	$apps[$x]['menu'][$y]['title']['fr-ca'] = "Email Queue";
