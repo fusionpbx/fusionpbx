@@ -602,17 +602,14 @@ if (!class_exists('domains')) {
 		 * upgrade application defaults
 		 */
 		public function upgrade() {
+			//scope the now global config class for handling config.conf
+			global $config;
 
 			//includes files
 			require dirname(__DIR__, 2) . "/resources/require.php";
 
 			//add missing default settings
 			$this->settings();
-
-			//get the variables
-			$config = new config;
-			$config_path = $config->find();
-			$config->get();
 
 			//get the list of installed apps from the core and app directories (note: GLOB_BRACE doesn't work on some systems)
 			$config_list_1 = glob($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/*/*/app_config.php");
@@ -634,18 +631,33 @@ if (!class_exists('domains')) {
 			unset($sql);
 
 			//create objects outside of loop
-			$config = new config();
-			$config->load();
 			$database = database::new();
-			$permissions = new permissions();
-			$cache = new cache();
 
 			//load new interfaces without autoloader
-			$doc_root = $config->value('document.root', '/var/www/fusionpbx');
-			$interfaces = glob($doc_root. '/resources/interfaces/*.php');
+			$interfaces = glob(PROJECT_ROOT . '/resources/interfaces/*.php');
 			foreach ($interfaces as $interface) {
 				require_once $interface;
 			}
+
+			//load all classes but don't create objects
+			$app_defaults = glob(PROJECT_ROOT . "/*/*/resources/classes/*.php");
+			foreach ($app_defaults as $app_file) {
+				include_once $app_file;
+				$app = basename($app_file, ".php");
+				//get the list of all interfaces implemented in the app
+				$interfaces = class_implements($app);
+				//find classes implementing the app_defaults interface
+				if ($interfaces !== false && in_array(app_defaults::class, $interfaces)) {
+					//call the app default method
+					$app::defaults($config, $database);
+				}
+			}
+
+			//get the list of installed apps from outside loop
+			//from the core and mod directories and
+			//execute the php code in app_defaults.php
+			//PROJECT_ROOT now includes PROJECT_PATH
+			$default_list = glob(PROJECT_ROOT . "/*/*/app_defaults.php");
 
 			//loop through all domains
 			$domains_processed = 1;
@@ -657,22 +669,6 @@ if (!class_exists('domains')) {
 				//create the settings object and load the current domain
 				$setting = new settings(["domain_uuid" => $domain_uuid]);
 
-				//load all classes but don't create objects
-				$app_defaults = glob($doc_root . $config->value('project.path', '') . "/*/*/resources/classes/*.php");
-				foreach ($app_defaults as $app_file) {
-					include_once $app_file;
-					$app = basename($app_file, ".php");
-					//get the list of all interfaces implemented in the app
-					$interfaces = class_implements($app);
-					//find classes implementing the app_defaults interface
-					if ($interfaces !== false && in_array(app_defaults::class, $interfaces)) {
-						//call the app default method
-						$app::defaults($config, $setting, $database, $permissions, $cache);
-					}
-				}
-
-				//get the list of installed apps from the core and mod directories and execute the php code in app_defaults.php
-				$default_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_defaults.php");
 				foreach ($default_list as &$default_path) {
 					//echo $default_path."<br />\n";
 					include($default_path);
