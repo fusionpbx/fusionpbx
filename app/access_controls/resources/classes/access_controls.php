@@ -273,15 +273,23 @@
 				}
 			}
 
-			public static function defaults(config $config,
-				settings $settings,
-				database $database,
-				permissions $permissions,
-				cache $cache): void {
+			public static function defaults(config $config, database $database): void {
+				//set the default settings
+				$rows = $database->select('select domain_uuid from v_domains', null, 'all');
+				//ensure we can use the database
+				if ($rows === false) {
+					return;
+				}
+				//isolate just the uuids in a list
+				//$uuids = array_map(function ($row) { return $row['domain_uuid']; }, $rows);
+
 				//add the access control list to the database
 				$sql = "select count(*) from v_access_controls ";
 				$num_rows = $database->select($sql, null, 'column');
-				if ($num_rows == 0) {
+				if ($num_rows !== false && $num_rows === 0) {
+					//initialize objects
+					$permissions = new permissions();
+					$cache = new cache();
 
 					//set the directory based on the config file
 					$xml_dir = $config->value('switch.conf.dir', '/etc/freeswitch') . '/autoload_configs';
