@@ -624,34 +624,15 @@ if (!class_exists('domains')) {
 				$x++;
 			}
 
-			//get the domains
-			$sql = "select * from v_domains ";
-			$database = new database;
-			$domains = $database->select($sql, null, 'all');
-			unset($sql);
-
 			//create objects outside of loop
 			$database = database::new();
 
-			//load new interfaces without autoloader
-			$interfaces = glob(PROJECT_ROOT . '/resources/interfaces/*.php');
-			foreach ($interfaces as $interface) {
-				require_once $interface;
-			}
+			$this->run_app_defaults_on_interfaces($database);
 
-			//load all classes but don't create objects
-			$app_defaults = glob(PROJECT_ROOT . "/*/*/resources/classes/*.php");
-			foreach ($app_defaults as $app_file) {
-				include_once $app_file;
-				$app = basename($app_file, ".php");
-				//get the list of all interfaces implemented in the app
-				$interfaces = class_implements($app);
-				//find classes implementing the app_defaults interface
-				if ($interfaces !== false && in_array(app_defaults::class, $interfaces)) {
-					//call the app default method
-					$app::defaults($config, $database);
-				}
-			}
+			//get the domains
+			$sql = "select * from v_domains ";
+			$domains = $database->select($sql, null, 'all');
+			unset($sql);
 
 			//get the list of installed apps from outside loop
 			//from the core and mod directories and
@@ -801,7 +782,27 @@ if (!class_exists('domains')) {
 				}
 		}
 
-	}
+		private function run_app_defaults_on_interfaces(database $database) {
+			global $config;
+
+			//load new interfaces without autoloader
+			require_once PROJECT_ROOT . '/resources/interfaces/app_defaults.php';
+
+			//load all classes but don't create objects
+			$app_defaults = glob(PROJECT_ROOT . "/*/*/resources/classes/*.php");
+			foreach ($app_defaults as $app_file) {
+				include_once $app_file;
+				$classname = basename($app_file, '.php');
+				//file must be named the same as the class name
+				$interfaces = class_implements($classname);
+				//find classes implementing the app_defaults interface
+				if ($interfaces !== false && in_array(app_defaults::class, $interfaces)) {
+					//call the app default method
+					$classname::defaults($config, $database);
+				}
+			}
+		}
+		}
 }
 
 ?>
