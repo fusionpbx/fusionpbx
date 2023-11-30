@@ -9,6 +9,9 @@
 
 		class access_controls implements app_defaults {
 
+			const APP_NAME = 'access_controls';
+			const APP_UUID = '1416a250-f6e1-4edc-91a6-5c9b883638fd';
+			
 			/**
 			 * declare private variables
 			 */
@@ -437,11 +440,11 @@
 			}
 
 			public static function name(): string {
-				return 'access_controls';
+				return self::APP_NAME;
 			}
 
 			public static function uuid(): string {
-				return '1416a250-f6e1-4edc-91a6-5c9b883638fd';
+				return self::APP_UUID;
 			}
 
 		}
