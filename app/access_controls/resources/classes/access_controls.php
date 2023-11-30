@@ -7,7 +7,7 @@
 	 */
 	if (!class_exists('access_controls')) {
 
-		class access_controls implements app_defaults, app_menu {
+		class access_controls implements app_defaults {
 
 			/**
 			 * declare private variables
@@ -432,41 +432,6 @@
 				return '1416a250-f6e1-4edc-91a6-5c9b883638fd';
 			}
 
-			public static function menu(): array {
-				$y = 0;
-				$menu = [];
-				$menu[$y]['title']['en-us'] = "Access Controls";
-				$menu[$y]['title']['en-gb'] = "Access Controls";
-				$menu[$y]['title']['ar-eg'] = "عناصر التحكم في الوصول";
-				$menu[$y]['title']['de-at'] = "Zugriffskontrolle";
-				$menu[$y]['title']['de-ch'] = "Zugriffskontrollen";
-				$menu[$y]['title']['de-de'] = "Zugriffskontrolle";
-				$menu[$y]['title']['es-cl'] = "Controles de acceso";
-				$menu[$y]['title']['es-mx'] = "Controles de acceso";
-				$menu[$y]['title']['fr-ca'] = "Contrôles d'accès";
-				$menu[$y]['title']['fr-fr'] = "Contrôles d'accès";
-				$menu[$y]['title']['he-il'] = "בקרת גישה";
-				$menu[$y]['title']['it-it'] = "Controlli Accesso";
-				$menu[$y]['title']['nl-nl'] = "Toegangs Controle";
-				$menu[$y]['title']['pl-pl'] = "Kontrola dostępu";
-				$menu[$y]['title']['pt-br'] = "Controles de Acesso";
-				$menu[$y]['title']['pt-pt'] = "Controles de Acesso";
-				$menu[$y]['title']['ro-ro'] = "Controale de acces";
-				$menu[$y]['title']['ru-ru'] = "Контроль доступа";
-				$menu[$y]['title']['uk-ua'] = "контроль доступу";
-				$menu[$y]['title']['sv-se'] = "Åtkomstkontroll";
-				$menu[$y]['title']['zh-cn'] = "出入控制";
-				$menu[$y]['title']['ja-jp'] = "アクセス制御";
-				$menu[$y]['title']['ko-kr'] = "액세스 제어";
-				$menu[$y]['uuid'] = "bd47c972-5498-4541-b44a-d4bbfac69496";
-				$menu[$y]['parent_uuid'] = "594d99c5-6128-9c88-ca35-4b33392cec0f";
-				$menu[$y]['category'] = "internal";
-				$menu[$y]['icon'] = "";
-				$menu[$y]['path'] = "/app/access_controls/access_controls.php";
-				$menu[$y]['order'] = "";
-				$menu[$y]['groups'][] = "superadmin";
-				return $menu;
-			}
 		}
 
 	}
