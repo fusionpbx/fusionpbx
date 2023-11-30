@@ -51,23 +51,45 @@
 		/**
 		 * Called when the object is created
 		 */
-		public function __construct(array $paths_to_check = []) {
+		public function __construct(array $paths_to_check = [], array $names = ['config'], array $extensions = ['conf', 'php']) {
+
 			if (empty($paths_to_check)) {
-				$this->paths_to_check = [
-					'/etc/fusionpbx/config.conf',
-					'/usr/local/etc/fusionpbx/config.conf',
-					($_SERVER['PROJECT_ROOT'] ?? '/var/www/fusionpbx') . '/resources/config.php',
-					'/etc/fusionpbx/config.php',
-					'/usr/local/etc/fusionpbx/config.php',
+				$paths_to_check = [
+					'/etc/fusionpbx',
+					'/usr/local/etc/fusionpbx',
+					($_SERVER['PROJECT_ROOT'] ?? '/var/www/fusionpbx') . '/resources'
 				];
 			}
+
+			//initialize object property to an array
+			$this->paths_to_check = [];
+
+			//create an array by combining all possibilities
+			foreach ($paths_to_check as $path) {
+				foreach ($names as $name) {
+					foreach ($extensions as $extension) {
+						$this->paths_to_check[] = "$path/$name.$extension";
+					}
+				}
+			}
+
+			//find the config file
 			$this->find();
+
+			if (!$this->is_conf()) {
+				//allow running from cli only
+				if (self::is_cli()) {
+					$this->migrate();
+				} else {
+					throw new \Exception('Config must be migrated manually. Try running upgrade from the terminal shell.');
+				}
+			}
 		}
 
 		/**
 		 * Alias of load
 		 */
-		public function get() {
+		public function get(): ?config {
 			return $this->load();
 		}
 
@@ -76,20 +98,28 @@
 		 * @param string $key Must not contain an '=' character
 		 * @param string $value
 		 */
-		public function set_value(string $key, string $value) {
+		public function set_value(string $key, string $value): config {
 			global $conf;
 			if (strpos($key, '=') > 0) {
 				throw new \InvalidArgumentException('Key must not contain an equals character');
 			}
 			$conf[$key] = $value;
+			return $this;
 		}
 
 		/**
 		 * Saves to the path provided
+		 * Save method can only be called from the CLI as the config.conf file should be protected
+		 * from writing
 		 * @param string $new_path
 		 * @return bool
 		 */
 		public function save(?string $new_path = null): bool {
+			//prevent running from the web
+			if (!self::is_cli()) {
+				return false;
+			}
+
 			//set to the current location if needed
 			if ($new_path === null) {
 				$new_path = $this->path();
@@ -100,16 +130,12 @@
 				throw new InvalidArgumentException('Path must not be empty');
 			}
 
-			//ensure the file name is removed from path
-			$path_info = pathinfo($new_path);
-			$path = $path_info['dirname'];
-
 			//set file output stream
-			$ostream = $path . '/config.conf';
+			$filename = $this->dirname() . '/config.conf';
 
 			//open file
-			$handle = fopen($ostream, 'w'); //w = Create and open for writing only replace contents
-			if ($handle === false) {
+			$ostream = fopen($filename, 'w'); //w = Create and open for writing only replace contents
+			if ($ostream === false) {
 				throw new \Exception('Unable to open file for writing');
 			}
 
@@ -120,7 +146,7 @@
 			$bytes = fwrite($ostream, $data);
 
 			//close file
-			fclose($handle);
+			fclose($ostream);
 
 			//return success if we have managed to write all bytes to the file
 			return $bytes === strlen($data);
@@ -157,11 +183,12 @@
 		 * taken from the <i>document.root</i> and <i>project.path</i> set in the configuration file.
 		 * If no <i>document.root</i> is found then the <i>/var/www/fusionpbx</i> value is used
 		 * as a default location for the project.</p>
+		 * @return config Returns this object or null if the config file does not exist
 		 * @global string[] $conf
 		 */
-		public function load() {
+		public function load(): ?config {
 			if (!$this->exists()) {
-				return;
+				return null;
 			}
 
 			//set the scope of $conf
@@ -183,34 +210,23 @@
 
 			//ensure php knows the search path
 			set_include_path(PROJECT_ROOT);
+
+			return $this;
 		}
 
-		/**
-		 * Set the project paths from global $conf
-		 * @global string $conf
-		 */
-		public function set_project_paths() {
-			global $conf;
-			//set the server variables and define project path constant
-			$_SERVER["DOCUMENT_ROOT"] = $conf['document.root'] ?? '/var/www/fusionpbx';
-			$_SERVER["PROJECT_ROOT"] = $conf['document.root'] ?? '/var/www/fusionpbx';
-			$_SERVER["PROJECT_PATH"] = $conf['project.path'] ?? '';
-			if (isset($conf['project.path'])) {
-				$_SERVER["PROJECT_ROOT"] = $conf['document.root'] . '/' . $conf['project.path'];
-				if (!defined('PROJECT_ROOT')) {
-					define("PROJECT_ROOT", $conf['document.root'] . '/' . $conf['project.path']);
-				}
-				if (!defined('PROJECT_PATH')) {
-					define("PROJECT_PATH", $conf['project.path']);
-				}
-			} else {
-				if (!defined('PROJECT_ROOT')) {
-					define("PROJECT_ROOT", $conf['document.root']);
-				}
-				if (!defined('PROJECT_PATH')) {
-					define("PROJECT_PATH", '');
-				}
-			}
+		public function set_db_global_vars(): config {
+			global $db_type, $db_host, $db_port, $db_name, $db_username, $db_password;
+			global $db_secure, $db_sslmode;
+			$db_type = $this->value('database.0.type', 'pgsql');
+			$db_host = $this->value('database.0.host', 'localhost');
+			$db_name = $this->value('database.0.name', 'fusionpbx');
+			$db_port = $this->value('database.0.port', '5432');
+			$db_username = $this->value('database.0.username', 'fusionpbx');
+			$db_password = $this->value('database.0.password', '');
+			$db_secure = $this->value('database.0.secure', false);
+			$db_sslmode = $this->value('database.0.sslmode', 'prefer');
+
+			return $this;
 		}
 
 		/**
@@ -218,7 +234,7 @@
 		 * @var string $config_path - full path to the config.php file
 		 * @return string Path of the config file
 		 */
-		public function find() {
+		public function find(): string {
 			$this->file = '';
 
 			foreach ($this->paths_to_check as $path) {
@@ -234,18 +250,28 @@
 
 		/**
 		 * Returns whether the config file exists
+		 * @return bool True if the file exists and false if it does not
 		 * @see file_exists()
 		 */
-		public function exists() {
+		public function exists(): bool {
 			return file_exists($this->file);
 		}
 
 		/**
-		 * Returns the current path of the config
+		 * Returns the full path and file name
 		 * @return string
 		 */
 		public function path(): string {
 			return $this->file ?? '';
+		}
+
+		/**
+		 * Returns the path
+		 * @return string Path of the file
+		 */
+		public function dirname(): string {
+			$file_info = pathinfo($this->file);
+			return $file_info['dirname'] ?? '';
 		}
 
 		/**
@@ -281,7 +307,7 @@
 				$section = substr(trim($key), 0, strlen($section_name));
 				if ($section === $section_name) {
 					if ($strip_section_name_from_key) {
-						$key = substr($key,strlen($section_name));
+						$key = substr($key, strlen($section_name));
 					}
 					$ret_arr[$key] = $value;
 				}
@@ -296,5 +322,87 @@
 				$sb = "$key = $value\n";
 			}
 			return $sb;
+		}
+
+		public static function new(array $paths_to_check = []): config {
+			return new config($paths_to_check);
+		}
+
+		/**
+		 * Tests if the found configuration file is a config.conf file
+		 * @return bool True if config.conf is used otherwise it is false
+		 */
+		public function is_conf(): bool {
+			return (basename($this->file) === 'config.conf');
+		}
+
+		/**
+		 * Migrates the config.php file to a config.conf file
+		 */
+		private function migrate() {
+			$export_config_array = [];
+
+			//get the currently declared variables
+			$vars_orig = get_defined_vars();
+
+			//include the config.php
+			include $this->file;
+
+			// Get all defined variables from the external file
+			$vars_new = get_defined_vars();
+
+			// Get the difference
+			$var_list = @array_diff_assoc($vars_new, $vars_orig);
+
+			// Loop through the variables from the external file and add them to the array if not already defined
+			foreach ($var_list as $variable_name => $variable_value) {
+				//ignore arrays
+				if (is_array($variable_value))
+					continue;
+
+				//rewrite the variable name to use '.' instead of '_'
+				$name = str_replace('_', '.', $variable_name);
+
+				//check for database settings
+				if (substr($name, 0, 3) === 'db.') {
+					$name = 'database.0.' . substr($variable_name, 3);
+				}
+				$export_config_array[$name] = $variable_value;
+
+				//remove variable from declared variables
+				unset($$variable_name);
+			}
+
+			//ensure there is a configuration to save
+			if (count($export_config_array) > 0) {
+				//get the current location of the file
+				$path = $this->dirname();
+
+				//set the new name
+				$new_file = $path . '/config.conf';
+
+				//map variables in to string of key/value pairs
+				$contents = implode("\n", array_map(function ($value, $key) {
+						return "$key = $value";
+					}, $export_config_array, array_keys($export_config_array)));
+
+				//put the contents of the old config.php in to the newly created config.conf
+				file_put_contents($new_file, $contents);
+				//rename old file
+				rename($this->file, $this->file . '.old');
+				//point to the new config file
+				$this->file = $new_file;
+			}
+		}
+
+		//checks if this is running in the cli or from web
+		private static function is_cli(): bool {
+			if (defined('STDIN')) {
+				return true;
+			}
+			if (php_sapi_name() == 'cli' && !isset($_SERVER['HTTP_USER_AGENT']) && is_numeric($_SERVER['argc'])) {
+				return true;
+			}
+			return false;
 		}
 	}
