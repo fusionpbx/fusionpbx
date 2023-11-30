@@ -273,15 +273,19 @@
 				}
 			}
 
+			/**
+			 * Executed when setting the application defaults in the upgrade menu or cli
+			 * @param config $config
+			 * @param database $database
+			 * @return void
+			 */
 			public static function defaults(config $config, database $database): void {
 				//set the default settings
-				$rows = $database->select('select domain_uuid from v_domains', null, 'all');
-				//ensure we can use the database
+				$rows = $database->select('select 1 from v_access_controls');
+				//ensure we can use the database and the table exists
 				if ($rows === false) {
 					return;
 				}
-				//isolate just the uuids in a list
-				//$uuids = array_map(function ($row) { return $row['domain_uuid']; }, $rows);
 
 				//add the access control list to the database
 				$sql = "select count(*) from v_access_controls ";
