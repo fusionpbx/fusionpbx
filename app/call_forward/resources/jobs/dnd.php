@@ -34,6 +34,7 @@
 //use global conf created from require.php
 	global $conf;
 
+//set the event socket connection settings
 	$host = $conf['switch.event_socket.host'] ?? $conf['event_socket.ip_address'] ?? '127.0.0.1';
 	$port = $conf['switch.event_socket.port'] ?? $conf['event_socket.port'] ?? '8021';
 	$pass = $conf['switch.event_socket.password'] ?? $conf['event_socket.password'] ?? 'ClueCon';
