@@ -343,7 +343,7 @@
 									//delete the queue in the switch
 										if ($esl->is_connected()) {
 											foreach ($uuids as $uuid) {
-												$cmd = "callcenter_config queue unload {$call_center_queues[$uuid]['queue_extension']}@{$_SESSION['domain_name']}";
+												$cmd = "callcenter_config queue unload ".$call_center_queues[$uuid]['queue_extension']."@".$_SESSION['domain_name'];
 												$response = event_socket::api($cmd);
 											}
 										}
