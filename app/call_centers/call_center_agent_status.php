@@ -211,19 +211,19 @@
 
 									//set the call center status to Logged Out
 									if (is_uuid($row['agent_uuid'])) {
-										$command = "callcenter_config agent set status {$row['agent_uuid']} 'Logged Out' ";
+										$command = "callcenter_config agent set status ".$row['agent_uuid']." 'Logged Out' ";
 										$response = event_socket::api($command);
 									}
 								}
 								else {
 									if (is_uuid($row['agent_uuid'])) {
 										//set the agent status
-										$command = "callcenter_config agent set status {$row['agent_uuid']} '{$agent_status}'";
+										$command = "callcenter_config agent set status ".$row['agent_uuid']." '".$agent_status."'";
 										$response = event_socket::api($command);
 
 										//set the agent state
 										if ($agent_status == 'Available' || $agent_status == 'Logged Out') {
-											$command = "callcenter_config agent set state {$row['agent_uuid']} 'Waiting'";
+											$command = "callcenter_config agent set state ".$row['agent_uuid']." 'Waiting'";
 											$response = event_socket::api($command);
 										}
 									}
@@ -251,7 +251,7 @@
 
 								//assign the agent to the queue
 								if (is_uuid($row['queue_uuid']) && is_uuid($row['agent_uuid'])) {
-									$command = "callcenter_config tier add {$queue_id} {$row['agent_uuid']} 1 1";
+									$command = "callcenter_config tier add ".$queue_id." ".$row['agent_uuid']." 1 1";
 									$response = event_socket::api($command);
 								}
 							}
@@ -259,7 +259,7 @@
 						//un-assign the agent from the queue
 							if (isset($row['queue_uuid']) && $row['agent_status'] == 'Logged Out') {
 								if (is_uuid($row['queue_uuid']) && is_uuid($row['agent_uuid'])) {
-									$command = "callcenter_config tier del {$queue_id} {$row['agent_uuid']}";
+									$command = "callcenter_config tier del ".$queue_id." ".$row['agent_uuid'];
 									//echo $command."<br />\n";
 									$response = event_socket::api($command);
 								}
