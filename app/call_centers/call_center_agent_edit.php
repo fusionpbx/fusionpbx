@@ -242,15 +242,15 @@
 		//add the agent using event socket
 			if ($esl->connected()) {
 				//add the agent
-					$cmd = 'callcenter_config agent add '.$call_center_agent_uuid.' '.$agent_type;
+					$cmd = "callcenter_config agent add ".$call_center_agent_uuid." '".$agent_type."'";
 					$response = event_socket::api($cmd);
 					usleep(200);
 				//agent set contact
-					$cmd = 'callcenter_config agent set contact '.$call_center_agent_uuid.' '.$agent_contact;
+					$cmd = "callcenter_config agent set contact ".$call_center_agent_uuid." '".$agent_contact."'";
 					$response = event_socket::api($cmd);
 					usleep(200);
 				//agent set status
-					$cmd = 'callcenter_config agent set status '.$call_center_agent_uuid.' '.$agent_status;
+					$cmd = "callcenter_config agent set status ".$call_center_agent_uuid." '".$agent_status."'";
 					$response = event_socket::api($cmd);
 					usleep(200);
 				//agent set reject_delay_time
