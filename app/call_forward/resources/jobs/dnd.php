@@ -4,7 +4,8 @@
 	if (defined('STDIN')) {
 		//includes files
 		require_once dirname(__DIR__, 4) . "/resources/require.php";
-	} else {
+	}
+	else {
 		exit;
 	}
 
@@ -12,6 +13,7 @@
 	set_time_limit(0);
 	//ini_set('max_execution_time',1800); //30 minutes
 	//ini_set('memory_limit', '512M');
+
 //save the arguments to variables
 	$script_name = $argv[0];
 	if (!empty($argv[1])) {
@@ -23,7 +25,8 @@
 		$hostname = urldecode($_GET['hostname']);
 		$debug = $_GET['debug'];
 		$sleep_seconds = $_GET['sleep'];
-	} else {
+	}
+	else {
 		//invalid uuid
 		exit;
 	}
@@ -41,7 +44,7 @@
 //ensure we are connected
 	if ($esl->is_connected()) {
 
-	//get the list
+		//get the list
 		$sql = "select domain_name, extension, user_context, do_not_disturb, description ";
 		$sql .= "from v_extensions as e, v_domains as d ";
 		$sql .= "where do_not_disturb = 'true' ";
@@ -50,8 +53,6 @@
 		$database = new database;
 		$results = $database->select($sql, $parameters, 'all');
 		unset($parameters);
-
-	//view_array($results);
 		foreach ($results as $row) {
 
 			//build the event
@@ -81,7 +82,8 @@
 				print_r($result, false);
 			}
 		}
-	} else {
+	}
+	else {
 		trigger_error("Unable to connect to FreeSWITCH using $host, $port, $password", E_USER_ERROR);
 	}
 
