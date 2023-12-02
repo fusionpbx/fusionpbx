@@ -73,7 +73,7 @@
 		$esl = event_socket::create();
 		if ($esl->is_connected()) {
 			$response = event_socket::api('reloadxml');
-			$response = event_socket::api("callcenter_config queue {$cmd} {$queue_extension}@{$_SESSION['domain_name']}");
+			$response = event_socket::api('callcenter_config queue '.$cmd.' '.$queue_extension.'@'.$_SESSION['domain_name']);
 		}
 		else {
 			$response = '';
