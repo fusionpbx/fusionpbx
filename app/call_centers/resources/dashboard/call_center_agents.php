@@ -68,18 +68,18 @@
 							$database->save($array);
 
 						//set the call center status
-							$cmd = "callcenter_config agent set status {$row['id']} '{$row['agent_status']}'";
+							$cmd = "callcenter_config agent set status ".$row['id']." '".$row['agent_status']."'";
 							$response = event_socket::api($cmd);
 						//set the agent status to available and assign the agent to the queue with the tier
 							if ($row['agent_status'] == 'Available') {
 								//assign the agent to the queue
-								$cmd = "callcenter_config tier add {$row['queue_extension']}@{$_SESSION['domain_name']} {$row['id']} 1 1";
+								$cmd = "callcenter_config tier add ".$row['queue_extension']."@".$_SESSION['domain_name']." ".$row['id']." 1 1";
 								$response = event_socket::api($cmd);
 							}
 
 						//un-assign the agent from the queue
 							if ($row['agent_status'] == 'Logged Out') {
-								$bg_cmd = "callcenter_config tier del {$row['queue_extension']}@{$_SESSION['domain_name']} {$row['id']}";
+								$bg_cmd = "callcenter_config tier del ".$row['queue_extension']."@".$_SESSION['domain_name']." ".$row['id'];
 								$response = event_socket::async($bg_cmd);
 							}
 							usleep(200);
