@@ -253,9 +253,9 @@ $text['description-extension_setting_value']['ko-kr'] = "확장 값을 입력합
 
 $text['label-extension_setting_enabled']['en-us'] = "Enabled";
 $text['label-extension_setting_enabled']['ar-eg'] = "مُتاح";
-$text['label-extension_setting_enabled']['de-at'] = "Ermöglicht";
-$text['label-extension_setting_enabled']['de-ch'] = "Ermöglicht";
-$text['label-extension_setting_enabled']['de-de'] = "Ermöglicht";
+$text['label-extension_setting_enabled']['de-at'] = "Aktiviert";
+$text['label-extension_setting_enabled']['de-ch'] = "Aktiviert";
+$text['label-extension_setting_enabled']['de-de'] = "Aktiviert";
 $text['label-extension_setting_enabled']['es-cl'] = "habilitado";
 $text['label-extension_setting_enabled']['es-mx'] = "habilitado";
 $text['label-extension_setting_enabled']['fr-ca'] = "activé";

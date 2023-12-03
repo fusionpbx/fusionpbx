@@ -861,7 +861,7 @@
 	echo "	</td>\n";
 	echo "	</tr>\n";
 
-	if (isset($_SESSION['user_status_display']) && $_SESSION['user_status_display'] != "false") {
+	if (permission_exists("user_status")) {
 		echo "	<tr>\n";
 		echo "	<td width='20%' class=\"vncell\" valign='top'>\n";
 		echo "		".$text['label-status']."\n";
