@@ -187,8 +187,9 @@
 		}
 
 	//channel count
-		if (isset($fp)) {
-			$tmp = event_socket_request($fp, 'api status');
+		$esl = event_socket::create();
+		if ($esl->is_connected()) {
+			$tmp = event_socket::api('status');
 			$matches = Array();
 			preg_match("/(\d+)\s+session\(s\)\s+\-\speak/", $tmp, $matches);
 			$channels = !empty($matches[1]) ? $matches[1] : 0;
@@ -201,7 +202,7 @@
 		}
 
 	//registration count
-		if (isset($fp) && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/registrations/")) {
+		if ($esl->is_connected() && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/registrations/")) {
 			$registration = new registrations;
 			$registrations = $registration->count();
 			$tr_link = "href='".PROJECT_PATH."/app/registrations/registrations.php'";

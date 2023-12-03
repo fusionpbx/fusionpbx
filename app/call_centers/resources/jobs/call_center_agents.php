@@ -31,11 +31,11 @@
 	}
 
 //connect to event socket
-	$fp = event_socket_create();
+	$esl = event_socket::create();
 
 //get the agent list from event socket
 	$switch_cmd = 'callcenter_config agent list';
-	$event_socket_str = trim(event_socket_request($fp, 'api '.$switch_cmd));
+	$event_socket_str = trim(event_socket::api($switch_cmd));
 	$agent_list = csv_to_named_array($event_socket_str, '|');
 
 //get the agents from the database
@@ -69,7 +69,7 @@
 		}
 
 		//build the event
-		if ($fp) {
+		if ($esl->is_connected()) {
 			$event = "sendevent PRESENCE_IN\n";
 			$event .= "proto: agent\n";
 			$event .= "from: ".$row['agent_name']."@".$row['domain_name']."\n";
@@ -104,15 +104,12 @@
 		}
 
 		//send the event
-		$result = event_socket_request($fp, $event);
+		$result = event_socket::command($event);
 		if (isset($debug)) {
 			print_r($result, false);
 		}
 
 	}
-
-	//close event socket connection
-	fclose($fp);
 
 /*
 * * * * * cd /var/www/fusionpbx && php /var/www/fusionpbx/app/call_centers/resources/jobs/call_center_agents.php

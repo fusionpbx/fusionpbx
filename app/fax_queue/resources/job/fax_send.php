@@ -212,8 +212,8 @@
 	if ($fax_status == 'waiting' || $fax_status == 'trying' || $fax_status == 'busy') {
 
 		//create event socket handle
-			$fp = event_socket_create();
-			if (!$fp) {
+			$esl = event_socket::create();
+			if (!$esl->is_connected()) {
 				echo "Could not connect to event socket.\n";
 				exit;	
 			}
@@ -297,7 +297,7 @@
 				//send the fax and try another route if the fax fails
 				foreach($route_array as $route) {
 					$fax_command  = "originate {" . $dial_string . ",fax_uri=".$route."}" . $route." &txfax('".$fax_file."')";
-					$fax_response = event_socket_request($fp, "api " . $fax_command);
+					$fax_response = event_socket::api($fax_command);
 					$response = str_replace("\n", "", $fax_response);
 					$response = trim(str_replace("+OK", "", $response));
 					if (is_uuid($response)) {
@@ -311,8 +311,7 @@
 						echo "response: ".$response."\n";
 					}
 				}
-				fclose($fp);
-
+				
 				//set the fax file name without the extension
 				$fax_instance_id = pathinfo($fax_file, PATHINFO_FILENAME);
 

@@ -45,10 +45,10 @@ else {
 	if (is_uuid($uuid)) {
 		//show the result
 			if (count($_GET) > 0) {
-				$fp = event_socket_create();
-				if ($fp) {
+				$fp = event_socket::create();
+				if ($fp !== false) {
 					$cmd = "sched_del ".$uuid;
-					$result = event_socket_request($fp, 'api '.$cmd);
+					$result = event_socket::api($cmd);
 					message::add(htmlentities($result));
 				}
 			}
