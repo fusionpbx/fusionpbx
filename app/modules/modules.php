@@ -92,17 +92,10 @@
 	}
 
 //connect to event socket
-	$fp = event_socket_create();
-
-//check connection status
-	$esl_alive = false;
-	if ($fp) {
-		$esl_alive = true;
-		fclose($fp);
-	}
+	$esl = event_socket::create();
 
 //warn if switch not running
-	if (!$fp) {
+	if (!$esl->is_connected()) {
 		message::add($text['error-event-socket'], 'negative', 5000);
 	}
 
@@ -133,7 +126,7 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['header-modules']." (".$module_count.")</b></div>\n";
 	echo "	<div class='actions'>\n";
-	if (permission_exists('module_edit') && $modules && $fp) {
+	if (permission_exists('module_edit') && $modules && $esl->is_connected()) {
 		echo button::create(['type'=>'button','label'=>$text['button-stop'],'icon'=>$_SESSION['theme']['button_icon_stop'],'onclick'=>"modal_open('modal-stop','btn_stop');"]);
 		echo button::create(['type'=>'button','label'=>$text['button-start'],'icon'=>$_SESSION['theme']['button_icon_start'],'onclick'=>"modal_open('modal-start','btn_start');"]);
 	}
@@ -151,7 +144,7 @@
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
 
-	if (permission_exists('module_edit') && !empty($modules) && $fp) {
+	if (permission_exists('module_edit') && !empty($modules) && $esl->is_connected()) {
 		echo modal::create(['id'=>'modal-stop','type'=>'general','message'=>$text['confirm-stop_modules'],'actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_stop','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('stop'); list_form_submit('form_list');"])]);
 		echo modal::create(['id'=>'modal-start','type'=>'general','message'=>$text['confirm-start_modules'],'actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_start','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('start'); list_form_submit('form_list');"])]);
 	}
@@ -171,7 +164,7 @@
 
 	echo "<table class='list'>\n";
 	function write_header($modifier) {
-		global $fp, $text, $modules, $list_row_edit_button;
+		global $text, $modules, $list_row_edit_button;
 		$modifier = str_replace('/', '', $modifier);
 		$modifier = str_replace('  ', ' ', $modifier);
 		$modifier = str_replace(' ', '_', $modifier);
@@ -185,7 +178,8 @@
 		}
 		echo "<th>".$text['label-label']."</th>\n";
 		echo "<th class='hide-xs'>".$text['label-status']."</th>\n";
-		if ($fp) {
+		$esl = event_socket::create();
+		if ($esl->is_connected()) {
 			echo "<th class='center'>".$text['label-action']."</th>\n";
 		}
 		echo "<th class='center'>".$text['label-enabled']."</th>\n";
@@ -229,7 +223,7 @@
 				echo escape($row['module_label']);
 			}
 			echo "	</td>\n";
-			if ($fp) {
+			if ($esl->is_connected()) {
 				if ($module->active($row["module_name"])) {
 					echo "	<td class='hide-xs'>".$text['label-running']."</td>\n";
 					if (permission_exists('module_edit')) {

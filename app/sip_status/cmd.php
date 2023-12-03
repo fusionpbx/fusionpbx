@@ -91,15 +91,15 @@
 	}
 
 //create the event socket connection
-	$fp = event_socket_create();
-	if ($fp) {
+	$esl = event_socket::create();
+	if ($esl->is_connected()) {
 		//if reloadxml then run reloadacl, reloadxml and rescan the external profile for new gateways
 			if (isset($command)) {
 				//clear the apply settings reminder
 					$_SESSION["reload_xml"] = false;
 
 				//run the command
-					$result = rtrim(event_socket_request($fp, 'api '.$command));
+					$result = rtrim(event_socket::api($command));
 			}
 
 		//sofia profile
@@ -109,9 +109,6 @@
 			else if (!empty($result)) {
 				message::add($result, 'alert');
 			}
-
-		//close the connection
-			fclose($fp);
 	}
 
 //redirect the user

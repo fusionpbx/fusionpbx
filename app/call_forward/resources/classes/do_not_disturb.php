@@ -39,10 +39,10 @@
 				if ($this->enabled == "true") {
 					//update the call center status
 						$user_status = "Logged Out";
-						$fp = event_socket_create();
-						if ($fp) {
+						$esl = event_socket::create();
+						if ($esl->is_connected()) {
 							$switch_cmd .= "callcenter_config agent set status ".$_SESSION['username']."@".$this->domain_name." '".$user_status."'";
-							$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
+							$switch_result = event_socket::api($switch_cmd);
 						}
 
 					//update the database user_status

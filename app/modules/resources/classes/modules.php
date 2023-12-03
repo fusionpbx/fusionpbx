@@ -32,7 +32,7 @@ if (!class_exists('modules')) {
 		 * declare public variables
 		 */
 		public $dir;
-		public $fp;
+		public $esl;
 		public $modules;
 		public $msg;
 
@@ -65,9 +65,8 @@ if (!class_exists('modules')) {
 				$this->toggle_values = ['true','false'];
 
 				//get the list of active modules
-				$this->fp = event_socket_create();
-				$cmd = "api show modules as json";
-				$json = event_socket_request($this->fp, $cmd);
+				$this->esl = event_socket::create();
+				$json = $this->esl->api("show modules as json");
 				$this->active_modules = json_decode($json, true);
 		}
 
@@ -884,15 +883,14 @@ if (!class_exists('modules')) {
 
 						if (is_array($modules) && @sizeof($modules) != 0) {
 							//create the event socket connection
-								$fp = event_socket_create();
+								$esl = event_socket::create();
 
-							if ($fp) {
+							if ($esl->is_connected()) {
 								//control modules
 									foreach ($modules as $module_uuid => $module) {
 										if ($module['enabled'] == 'true') {
-											$cmd = 'api '.$action.' '.$module['name'];
 											$responses[$module_uuid]['module'] = $module['name'];
-											$responses[$module_uuid]['message'] = trim(event_socket_request($fp, $cmd));
+											$responses[$module_uuid]['message'] = trim(event_socket::api($action.' '.$module['name']));
 										}
 										else {
 											$responses[$module_uuid]['module'] = $module['name'];
@@ -970,15 +968,14 @@ if (!class_exists('modules')) {
 							if (is_array($array) && @sizeof($array) != 0) {
 
 								//create the event socket connection
-									$fp = event_socket_create();
+									$esl = event_socket::create();
 
 								//stop modules
-									if ($fp) {
+									if ($esl->is_connected()) {
 										foreach ($modules as $module_uuid => $module) {
 											if ($this->active($module['name'])) {
-												$cmd = 'api unload '.$module['name'];
 												$responses[$module_uuid]['module'] = $module['name'];
-												$responses[$module_uuid]['message'] = trim(event_socket_request($fp, $cmd));
+												$responses[$module_uuid]['message'] = trim(event_socket::api('unload '.$module['name']));
 											}
 										}
 									}
@@ -1070,15 +1067,15 @@ if (!class_exists('modules')) {
 									unset($array);
 
 								//create the event socket connection
-									$fp = event_socket_create();
+									$esl = event_socket::create();
 
 								//stop modules if active
-									if ($fp) {
+									if ($esl->is_connected()) {
 										foreach ($modules as $module_uuid => $module) {
 											if ($this->active($module['name'])) {
-												$cmd = 'api unload '.$module['name'];
+												$cmd = 'unload '.$module['name'];
 												$responses[$module_uuid]['module'] = $module['name'];
-												$responses[$module_uuid]['message'] = trim(event_socket_request($fp, $cmd));
+												$responses[$module_uuid]['message'] = trim(event_socket::api($cmd));
 											}
 										}
 									}

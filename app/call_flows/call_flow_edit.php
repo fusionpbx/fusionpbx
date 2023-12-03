@@ -257,8 +257,8 @@
 
 		// Update subscribed endpoints
 		if (!empty($call_flow_feature_code)) {
-			$fp = event_socket_create();
-			if ($fp) {
+			$esl = event_socket::create();
+			if ($esl->is_connected()) {
 				//send the event
 				$event = "sendevent PRESENCE_IN\n";
 				$event .= "proto: flow\n";
@@ -274,8 +274,7 @@
 				} else {
 					$event .= "answer-state: terminated\n";
 				}
-				event_socket_request($fp, $event);
-				fclose($fp);
+				event_socket::command($event);
 			}
 		}
 

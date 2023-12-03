@@ -144,9 +144,9 @@
 		echo "	</td>\n";
 		echo "</tr>\n";
 
-		$fp = event_socket_create();
-		if ($fp) {
-			$switch_version = event_socket_request($fp, 'api version');
+		$esl = event_socket::create();
+		if ($esl->is_connected()) {
+			$switch_version = event_socket::api('version');
 			preg_match("/FreeSWITCH Version (\d+\.\d+\.\d+(?:\.\d+)?).*\(.*?(\d+\w+)\s*\)/", $switch_version, $matches);
 			$switch_version = $matches[1];
 			$switch_bits = $matches[2];
@@ -544,10 +544,10 @@
 		$memcache_fail = false;
 		$mod = new modules;
 		if ($mod -> active("mod_memcache")) {
-			$fp = event_socket_create();
-			if ($fp) {
+			$esl = event_socket::create();
+			if ($esl->is_connected()) {
 				$switch_cmd = "memcache status verbose";
-				$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
+				$switch_result = event_socket::api($switch_cmd);
 				$memcache_lines = preg_split('/\n/', $switch_result);
 				foreach($memcache_lines as $memcache_line) {
 					if (!empty(trim($memcache_line)) > 0 && substr_count($memcache_line, ': ')) {

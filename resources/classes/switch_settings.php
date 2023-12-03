@@ -51,9 +51,8 @@ if (!class_exists('switch_settings')) {
 				}
 
 			//connect to event socket
-				$esl = new event_socket;
-				$esl->connect($this->event_socket_ip_address, $this->event_socket_port, $this->event_socket_password);
-
+				$esl = event_socket::create($this->event_socket_ip_address, $this->event_socket_port, $this->event_socket_password);
+				
 			//run the api command
 				$result = $esl->request('api global_getvar');
 

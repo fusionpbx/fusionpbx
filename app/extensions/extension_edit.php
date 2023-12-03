@@ -780,8 +780,8 @@
 
 				//reload acl if allowed
 					if (permission_exists("extension_cidr")) {
-						$fp = event_socket_create();
-						if ($fp) { event_socket_request($fp, "api reloadacl"); }
+						$esl = event_socket::create();
+						if ($esl->is_connected()) { event_socket::api("reloadacl"); }
 					}
 
 				//check the permissions

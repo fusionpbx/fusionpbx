@@ -42,22 +42,20 @@
 	$rdr = $_GET['rdr'];
 
 //create the event socket connection
-	$fp = event_socket_create();
-	if ($fp) {
+	$esl = event_socket::create();
+	if ($esl->is_connected()) {
 		//reloadxml
 			if ($cmd == "api reloadxml") {
-				message::add(rtrim(event_socket_request($fp, $cmd)), 'alert');
+				message::add(rtrim(event_socket::command($cmd)), 'alert');
 				unset($cmd);
 			}
 
 		//reload mod_translate
 			if ($cmd == "api reload mod_translate") {
-				message::add(rtrim(event_socket_request($fp, $cmd)), 'alert');
+				message::add(rtrim(event_socket::command($cmd)), 'alert');
 				unset($cmd);
 			}
 
-		//close the connection
-			fclose($fp);
 	}
 
 //redirect the user

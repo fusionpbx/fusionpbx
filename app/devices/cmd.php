@@ -65,11 +65,11 @@
 	}
 
 //create the event socket connection
-	$fp = event_socket_create();
-	if ($fp) {
+	$esl = event_socket::create();
+	if ($esl->is_connected()) {
 		// Get the SIP profiles for the user
 		$command = "sofia_contact */{$user}@{$domain_name}";
-		$contact_string = event_socket_request($fp, "api ".$command);
+		$contact_string = event_socket::api($command);
 
 		// The first value in the array will be full matching text, the second one will be the array of profile matches
 		preg_match_all('/sofia\/([^,]+)\/(?:[^,]+)/', $contact_string, $matches);
@@ -93,8 +93,8 @@
 			}
 
 			//send the command
-			$response = event_socket_request($fp, "api {$command}");
-			event_socket_request($fp, "api log notice {$command}");
+			$response = event_socket::api("{$command}");
+			event_socket::api("log notice {$command}");
 
 			//prepare the response
 			$message = $text['message-command_sent'];
@@ -105,9 +105,6 @@
 			//show the response
 			message::add($text['label-event']." ".$message, 'positive', 3500);
 		}
-
-		//close the connection
-		fclose($fp);
 	}
 
 //redirect the user

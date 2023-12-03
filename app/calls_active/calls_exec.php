@@ -58,6 +58,7 @@
 				exit;
 			}
 
+			$calls = [];
 		//verify submitted call uuids
 			if (is_array($_POST['calls']) && @sizeof($_POST['calls']) != 0) {
 				foreach ($_POST['calls'] as $call) {
@@ -71,18 +72,18 @@
 			}
 
 		//iterate through calls
-			if (is_array($calls) && @sizeof($calls) != 0) {
+			if (count($calls) > 0) {
 
 				//setup the event socket connection
-					$fp = event_socket_create();
+					$esl = event_socket::create();
 
 				//execute hangup command
-					foreach ($calls as $call_uuid) {
-						$switch_result = event_socket_request($fp, 'api uuid_kill '.$call_uuid);
+					if ($esl->is_connected()) foreach ($calls as $call_uuid) {
+						event_socket::async("uuid_kill $call_uuid");
 					}
 
 				//set message
-					message::add($text['message-calls_ended'].': '.@sizeof($calls),'positive');
+					message::add($text['message-calls_ended'].': '.count($calls),'positive');
 
 			}
 

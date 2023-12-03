@@ -52,11 +52,11 @@
 	$switch_cmd = 'show channels as json';
 
 //create the event socket connection
-	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+	$esl = event_socket::create();
 
 //send the event socket command and get the array
-	if ($fp) {
-		$json = trim(event_socket_request($fp, 'api '.$switch_cmd));
+	if ($esl->is_connected()) {
+		$json = trim(event_socket::api($switch_cmd));
 		$results = json_decode($json, "true");
 	}
 
@@ -90,7 +90,7 @@
 
 
 //if the connnection is available then run it and return the results
-	if (!$fp) {
+	if (!$esl) {
 
 		$msg = "<div align='center'>".$text['confirm-socket']."<br /></div>";
 		echo "<div align='center'>\n";

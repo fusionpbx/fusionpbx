@@ -90,10 +90,10 @@
 	}
 
 //create an event socket connection
-	$fp = event_socket_create();
+	$esl = event_socket::create();
 
 //get the call center queue, agent and tiers list
-	if (!$fp) {
+	if (!$esl->is_connected()) {
 		$msg = "<div align='center'>Connection to Event Socket failed.<br /></div>";
 		echo "<div align='center'>\n";
 		echo "<table width='40%'>\n";
@@ -117,7 +117,7 @@
 			//send the event socket command and get the response
 				//callcenter_config queue list tiers [queue_name] |
 				$switch_command = 'callcenter_config queue list tiers '.$queue_extension."@".$_SESSION["domain_name"];
-				$event_socket_str = trim(event_socket_request($fp, 'api '.$switch_command));
+				$event_socket_str = trim(event_socket::api($switch_command));
 				$result = str_to_named_array($event_socket_str, '|');
 
 			//prepare the result for array_multisort
@@ -139,7 +139,7 @@
 			//send the event socket command and get the response
 				//callcenter_config queue list agents [queue_name] [status] |
 				$switch_command = 'callcenter_config queue list agents '.$queue_extension."@".$_SESSION["domain_name"];
-				$event_socket_str = trim(event_socket_request($fp, 'api '.$switch_command));
+				$event_socket_str = trim(event_socket::api($switch_command));
 				$agent_result = str_to_named_array($event_socket_str, '|');
 
 			//get the agents from the database
@@ -280,7 +280,7 @@
 				//callcenter_config queue list members [queue_name]
 				if (is_uuid($queue_uuid)) {
 					$switch_command = 'callcenter_config queue list members '.$queue_extension."@".$_SESSION["domain_name"];
-					$event_socket_str = trim(event_socket_request($fp, 'api '.$switch_command));
+					$event_socket_str = trim(event_socket::api($switch_command));
 					$result = str_to_named_array($event_socket_str, '|');
 					if (!is_array($result)) { unset($result); }
 				}

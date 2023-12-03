@@ -70,11 +70,10 @@
 
 //connect to event socket
 	if (isset($queue_extension) && isset($cmd)) {
-		$fp = event_socket_create();
-		if ($fp) {
-			$response = event_socket_request($fp, 'api reloadxml');
-			$response = event_socket_request($fp, 'api callcenter_config queue '.$cmd. ' '.$queue_extension."@".$_SESSION["domain_name"]);
-			fclose($fp);
+		$esl = event_socket::create();
+		if ($esl->is_connected()) {
+			$response = event_socket::api('reloadxml');
+			$response = event_socket::api('callcenter_config queue '.$cmd.' '.$queue_extension.'@'.$_SESSION['domain_name']);
 		}
 		else {
 			$response = '';

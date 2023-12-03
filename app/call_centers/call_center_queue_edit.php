@@ -160,13 +160,13 @@
 
 		//delete the agent from freeswitch
 			//setup the event socket connection
-			$fp = event_socket_create();
+			$esl = event_socket::create();
 			//delete the agent over event socket
-			if ($fp) {
+			if ($esl->is_connected()) {
 				//callcenter_config tier del [queue_name] [agent_name]
 				if (is_numeric($queue_extension) && is_uuid($call_center_agent_uuid)) {
-					$cmd = "api callcenter_config tier del ".$queue_extension."@".$_SESSION['domain_name']." ".$call_center_agent_uuid;
-					$response = event_socket_request($fp, $cmd);
+					$cmd = "callcenter_config tier del ".$queue_extension."@".$_SESSION['domain_name']." ".$call_center_agent_uuid;
+					$response = event_socket::api($cmd);
 				}
 			}
 
@@ -468,9 +468,9 @@
 
 			if (!empty($agent_name)) {
 				//setup the event socket connection
-					$fp = event_socket_create();
+					$esl = event_socket::create();
 				//add the agent using event socket
-					if ($fp) {
+					if ($esl->is_connected()) {
 						/* syntax:
 							callcenter_config tier add [queue_name] [agent_name] [level] [position]
 							callcenter_config tier set state [queue_name] [agent_name] [state]
@@ -479,20 +479,20 @@
 						*/
 						//add the agent
 						if (is_numeric($queue_extension) && is_uuid($call_center_agent_uuid) && is_numeric($tier_level) && is_numeric($tier_position)) {
-							$cmd = "api callcenter_config tier add ".$queue_extension."@".$_SESSION["domain_name"]." ".$call_center_agent_uuid." ".$tier_level." ".$tier_position;
-							$response = event_socket_request($fp, $cmd);
+							$cmd = "callcenter_config tier add ".$queue_extension."@".$_SESSION["domain_name"]." ".$call_center_agent_uuid." ".$tier_level." ".$tier_position;
+							$response = event_socket::api($cmd);
 						}
 						usleep(200);
 						//agent set level
 						if (is_numeric($queue_extension) && is_numeric($tier_level)) {
-							$cmd = "api callcenter_config tier set level ".$queue_extension."@".$_SESSION["domain_name"]." ".$call_center_agent_uuid." ".$tier_level;
-							$response = event_socket_request($fp, $cmd);
+							$cmd = "callcenter_config tier set level ".$queue_extension."@".$_SESSION["domain_name"]." ".$call_center_agent_uuid." ".$tier_level;
+							$response = event_socket::api($cmd);
 						}
 						usleep(200);
 						//agent set position
 						if (is_numeric($queue_extension) && is_numeric($tier_position)) {
-							$cmd = "api callcenter_config tier set position ".$queue_extension."@".$_SESSION["domain_name"]." ".$tier_position;
-							$response = event_socket_request($fp, $cmd);
+							$cmd = "callcenter_config tier set position ".$queue_extension."@".$_SESSION["domain_name"]." ".$tier_position;
+							$response = event_socket::api($cmd);
 						}
 						usleep(200);
 					}

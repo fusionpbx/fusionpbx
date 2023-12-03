@@ -87,10 +87,7 @@ if (!class_exists('access_controls')) {
 									$cache->delete("configuration:acl.conf");
 
 								//create the event socket connection
-									$fp = event_socket_create();
-									if ($fp) {
-										event_socket_request($fp, "api reloadacl");
-									}
+									event_socket::async("reloadacl");
 
 								//set message
 									message::add($text['message-delete']);
@@ -146,10 +143,7 @@ if (!class_exists('access_controls')) {
 									$cache->delete("configuration:acl.conf");
 
 								//create the event socket connection
-									$fp = event_socket_create();
-									if ($fp) {
-										event_socket_request($fp, "api reloadacl");
-									}
+									event_socket::async("reloadacl");
 
 								//set message
 									message::add($text['message-delete']);
@@ -261,10 +255,7 @@ if (!class_exists('access_controls')) {
 									$cache->delete("configuration:acl.conf");
 
 								//create the event socket connection
-									$fp = event_socket_create();
-									if ($fp) {
-										event_socket_request($fp, "api reloadacl");
-									}
+									event_socket::async("reloadacl");
 
 								//set message
 									message::add($text['message-copy']);

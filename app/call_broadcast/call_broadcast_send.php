@@ -130,7 +130,7 @@
 	$broadcast_name = str_replace("'", "", $broadcast_name);
 
 //create the event socket connection
-	$fp = event_socket_create();
+	$fp = event_socket::create();
 
 //get information over event socket
 	if (!$fp) {
@@ -196,11 +196,11 @@
 
 						//if the event socket connection is lost then re-connect
 							if (!$fp) {
-								$fp = event_socket_create();
+								$fp = event_socket::create();
 							}
 
 						//method 1
-							$response = trim(event_socket_request($fp, 'api '.$cmd));
+							$response = trim(event_socket::command($cmd));
 
 						//method 2
 							//cmd_async($_SESSION['switch']['bin']['dir']."/fs_cli -x \"".$cmd."\";");
@@ -216,8 +216,7 @@
 						$count++;
 					}
 				}
-				fclose($fp);
-
+				
 				echo "<div align='center'>\n";
 				echo "<table width='50%'>\n";
 				echo "<tr>\n";

@@ -98,9 +98,9 @@
 					$default_voice = 'callie';
 					$switch_cmd = "conference ".$meeting_uuid."@".$_SESSION['domain_name']." play ".$_SESSION['switch']['sounds']['dir']."/".$default_language."/".$default_dialect."/".$default_voice."/ivr/ivr-recording_started.wav";
 				//connect to event socket
-					$fp = event_socket_create();
-					if ($fp) {
-						$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
+					$esl = event_socket::create();
+					if ($esl) {
+						$switch_result = event_socket::api($switch_cmd);
 					}
 			}
 
@@ -137,12 +137,12 @@
 
 //get conference array
 	$switch_cmd = "conference xml_list";
-	$fp = event_socket_create();
-	if (!$fp) {
-		//connection to even socket failed
+	$esl = event_socket::create();
+	if (!$esl->is_connected()) {
+		trigger_error('Unable to connect to FreeSWITCH', E_USER_WARNING);
 	}
 	else {
-		$xml_str = trim(event_socket_request($fp, 'api '.$switch_cmd));
+		$xml_str = trim(event_socket::api($switch_cmd));
 		try {
 			$xml = new SimpleXMLElement($xml_str, true);
 		}

@@ -74,9 +74,9 @@ Mark J Crane <markjcrane@fusionpbx.com>
 			$web_server = $_SERVER['SERVER_SOFTWARE'];
 
 			// switch version
-			$fp = event_socket_create();
-			if ($fp) {
-				$switch_result = event_socket_request($fp, 'api version');
+			$esl = event_socket::create();
+			if ($esl->is_connected()) {
+				$switch_result = event_socket::api('version');
 			}
 			$switch_ver = trim($switch_result);
 

@@ -338,13 +338,13 @@
 								if (is_array($array) && @sizeof($array) != 0) {
 
 									//setup the event socket connection
-										$fp = event_socket_create();
+										$esl = event_socket::create();
 
 									//delete the queue in the switch
-										if ($fp) {
+										if ($esl->is_connected()) {
 											foreach ($uuids as $uuid) {
-												$cmd = "api callcenter_config queue unload ".$call_center_queues[$uuid]['queue_extension']."@".$_SESSION["domain_name"];
-												$response = event_socket_request($fp, $cmd);
+												$cmd = "callcenter_config queue unload ".$call_center_queues[$uuid]['queue_extension']."@".$_SESSION['domain_name'];
+												$response = event_socket::api($cmd);
 											}
 										}
 
@@ -436,13 +436,12 @@
 								if (is_array($array) && @sizeof($array) != 0) {
 
 									//setup the event socket connection
-										$fp = event_socket_create();
+										$esl = event_socket::create();
 
 									//delete the agent in the switch
-										if ($fp) {
+										if ($esl->is_connected()) {
 											foreach ($uuids as $uuid) {
-												$cmd = "api callcenter_config agent del ".$uuid;
-												$response = event_socket_request($fp, $cmd);
+												event_socket::async("callcenter_config agent del $uuid");
 											}
 										}
 

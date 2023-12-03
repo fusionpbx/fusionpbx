@@ -57,7 +57,7 @@
 	unset($sql, $parameters);
 
 //setup the event socket connection
-	$fp = event_socket_create();
+	$esl = event_socket::create();
 
 //get the agents from the database
 	$sql = "select * from v_call_center_agents ";
@@ -70,12 +70,12 @@
 
 //get the agent list from event socket
 	$switch_cmd = 'callcenter_config agent list';
-	$event_socket_str = trim(event_socket_request($fp, 'api '.$switch_cmd));
+	$event_socket_str = trim(event_socket::api($switch_cmd));
 	$agent_list = csv_to_named_array($event_socket_str, '|');
 
 //get the agent list from event socket
 	$switch_cmd = 'callcenter_config tier list';
-	$event_socket_str = trim(event_socket_request($fp, 'api '.$switch_cmd));
+	$event_socket_str = trim(event_socket::api($switch_cmd));
 	$call_center_tiers = csv_to_named_array($event_socket_str, '|');
 
 //get the call center queues from the database
@@ -100,7 +100,7 @@
 
 			//get the queue list from event socket
 			$switch_cmd = "callcenter_config queue list agents ".$queue_id;
-			$event_socket_str = trim(event_socket_request($fp, 'api '.$switch_cmd));
+			$event_socket_str = trim(event_socket::api($switch_cmd));
 			$queue_list = csv_to_named_array($event_socket_str, '|');
 			$call_center_queues[$x]['queue_list'] = $queue_list;
 			$x++;
@@ -165,7 +165,7 @@
 		foreach($_POST['agents'] as $row) {
 			if (!empty($row['agent_status'])) {
 				//agent set status
-					if ($fp) {
+					if ($esl->is_connected()) {
 						//set the user_status
 							if (!isset($row['queue_name'])) {
 								$array['users'][0]['user_uuid'] = $row['user_uuid'] ?? null;
@@ -211,20 +211,20 @@
 
 									//set the call center status to Logged Out
 									if (is_uuid($row['agent_uuid'])) {
-										$command = "api callcenter_config agent set status ".$row['agent_uuid']." 'Logged Out' ";
-										$response = event_socket_request($fp, $command);
+										$command = "callcenter_config agent set status ".$row['agent_uuid']." 'Logged Out' ";
+										$response = event_socket::api($command);
 									}
 								}
 								else {
 									if (is_uuid($row['agent_uuid'])) {
 										//set the agent status
-										$command = "api callcenter_config agent set status ".$row['agent_uuid']." '".$agent_status."'";
-										$response = event_socket_request($fp, $command);
+										$command = "callcenter_config agent set status ".$row['agent_uuid']." '".$agent_status."'";
+										$response = event_socket::api($command);
 
 										//set the agent state
 										if ($agent_status == 'Available' || $agent_status == 'Logged Out') {
-											$command = "api callcenter_config agent set state ".$row['agent_uuid']." 'Waiting'";
-											$response = event_socket_request($fp, $command);
+											$command = "callcenter_config agent set state ".$row['agent_uuid']." 'Waiting'";
+											$response = event_socket::api($command);
 										}
 									}
 								}
@@ -247,22 +247,21 @@
 							if (isset($row['queue_uuid']) && $row['agent_status'] == 'Available') {
 								//set the call center status
 								//$command = "api callcenter_config agent set status ".$row['agent_name']."@".$_SESSION['domain_name']." '".$row['agent_status']."'";
-								//$response = event_socket_request($fp, $command);
+								//$response = event_socket::command($command);
 
 								//assign the agent to the queue
 								if (is_uuid($row['queue_uuid']) && is_uuid($row['agent_uuid'])) {
-									$command = "api callcenter_config tier add ".$queue_id." ".$row['agent_uuid']." 1 1";
-									//echo $command."<br />\n";
-									$response = event_socket_request($fp, $command);
+									$command = "callcenter_config tier add ".$queue_id." ".$row['agent_uuid']." 1 1";
+									$response = event_socket::api($command);
 								}
 							}
 
 						//un-assign the agent from the queue
 							if (isset($row['queue_uuid']) && $row['agent_status'] == 'Logged Out') {
 								if (is_uuid($row['queue_uuid']) && is_uuid($row['agent_uuid'])) {
-									$command = "api callcenter_config tier del ".$queue_id." ".$row['agent_uuid'];
+									$command = "callcenter_config tier del ".$queue_id." ".$row['agent_uuid'];
 									//echo $command."<br />\n";
-									$response = event_socket_request($fp, $command);
+									$response = event_socket::api($command);
 								}
 							}
 							usleep(200);
