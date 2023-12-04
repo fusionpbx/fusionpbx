@@ -70,15 +70,24 @@
 //define variables
 	if (!isset($_SESSION['template_content'])) { $_SESSION["template_content"] = null; }
 
-// check if the user has been authenticated in Laravel or here
-	if ((isset($_SESSION['LARAVEL_UN']) || strlen($_SESSION['username']) != 0) &&
-	isset($_COOKIE[$_SESSION['cookie_name']])){
-		$_REQUEST["username"] = $_SESSION['LARAVEL_UN'];
-		$_REQUEST["password"] = $_SESSION['LARAVEL_PW'];
+// check if the user has been authenticated
+	if ((isset($_SESSION['authorized']) && $_SESSION['authorized']) && isset($_COOKIE[$_SESSION['cookie_name']])){
 		$_SESSION['login']['destination']['url'] = $_SESSION['redirect_url'];
 		unset($_SESSION['redirect_url']);
-		unset($_SESSION['LARAVEL_UN']);
-		unset($_SESSION['LARAVEL_PW']);
+
+        //get the groups assigned to the user 
+        $group = new groups;
+        $group->session($_SESSION["domain_uuid"], $_SESSION["user_uuid"]);
+
+        //get the permissions assigned to the user through the assigned groups
+        $permission = new permissions;
+        $permission->session($_SESSION["domain_uuid"], $_SESSION["groups"]);
+
+        //reload default settings
+        require "resources/classes/domains.php";
+        $domain = new domains();
+        $domain->set();
+
 	} else {
 		header("Location: ".PROJECT_PATH."/logout");
 		exit;
@@ -92,7 +101,7 @@
 		}
 	}
 
-//if the username is not provided then send to login.php
+//if user is not authorized then send to login.php
 	if (!$_SESSION['authorized']) {
 		$target_path = ($_REQUEST["path"] != '') ? $_REQUEST["path"] : $_SERVER["REQUEST_URI"];
 		header("Location: ".PROJECT_PATH."/login.php?path=".urlencode($target_path));
