@@ -89,14 +89,14 @@
 
 //get the list of applications
 	if (empty($_SESSION['switch']['applications']) || !is_array($_SESSION['switch']['applications'])) {
-		$fp = event_socket_create();
-		if ($fp) {
-			$result = event_socket_request($fp, 'api show application');
-
+		$esl = event_socket::create();
+		if ($esl->is_connected()) {
+			$result = event_socket::api('show application');
+			
 			$show_applications = explode("\n\n", $result);
 			$raw_applications = explode("\n", $show_applications[0]);
 			unset($result);
-			unset($fp);
+			unset($esl);
 
 			$previous_application = null;
 			foreach($raw_applications as $row) {

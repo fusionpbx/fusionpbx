@@ -143,8 +143,8 @@
 			save_gateway_xml();
 
 		//clear the cache
-			$fp = event_socket_create();
-			$hostname = trim(event_socket_request($fp, 'api switchname'));
+			$esl = event_socket::create();
+			$hostname = trim(event_socket::api('switchname'));
 			$cache = new cache;
 			$cache->delete("configuration:sofia.conf:".$hostname);
 

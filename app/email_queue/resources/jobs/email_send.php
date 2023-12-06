@@ -383,11 +383,11 @@
 			$domain_name = $database->select($sql, $parameters, 'column');
 
 			//send the message waiting status
-			$fp = event_socket_create();
-			if ($fp) {
+			$esl = event_socket::create();
+			if ($esl->is_connected()) {
 				//$switch_cmd .= "luarun app.lua voicemail mwi ".$voicemail_id."@".$domain_name;
-				$switch_cmd .= "luarun app/voicemail/resources/scripts/mwi_notify.lua ".$voicemail_id." ".$domain_name." 0 0";
-				$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
+				$switch_cmd .= "luarun app/voicemail/resources/scripts/mwi_notify.lua $voicemail_id $domain_name 0 0";
+				$switch_result = event_socket::api($switch_cmd);
 				echo $switch_cmd."\n";
 			}
 			else {
@@ -517,7 +517,7 @@
 	unset($mail);
 
 //save output to
-	//$fp = fopen(sys_get_temp_dir()."/mailer-app.log", "a");
+	//$esl = fopen(sys_get_temp_dir()."/mailer-app.log", "a");
 
 //prepare the output buffers
 	//ob_end_clean();
@@ -532,7 +532,7 @@
 
 	//ob_end_clean(); //clean the buffer
 
-	//fwrite($fp, $content);
-	//fclose($fp);
+	//fwrite($esl, $content);
+	//fclose($esl);
 
 ?>

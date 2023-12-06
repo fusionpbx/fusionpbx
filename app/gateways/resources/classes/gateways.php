@@ -110,23 +110,23 @@ if (!class_exists('gateways')) {
 
 						if (!empty($gateways) && is_array($gateways) && @sizeof($gateways) != 0) {
 							//create the event socket connection
-							$fp = event_socket_create();
-							if ($fp) {
+							$esl = event_socket::create();
+							if ($esl->is_connected()) {
 								//start gateways
 									foreach ($gateways as $gateway_uuid => $gateway) {
 										if ($gateway['enabled'] == 'true') {
 											//start gateways
 											foreach ($gateways as $gateway_uuid => $gateway) {
 												if ($gateway['enabled'] == 'true') {
-													$cmd = 'api sofia profile '.$gateway['profile'].' startgw '.$gateway_uuid;
+													$cmd = 'sofia profile '.$gateway['profile'].' startgw '.$gateway_uuid;
 													$responses[$gateway_uuid]['gateway'] = $gateway['name'];
-													$responses[$gateway_uuid]['message'] = trim(event_socket_request($fp, $cmd));
+													$responses[$gateway_uuid]['message'] = trim(event_socket::api($cmd));
 												}
 											}
 											//old method used to start gateways
-											//$cmd = 'api sofia profile '.$gateway['profile'].' rescan';
+											//$cmd = 'sofia profile '.$gateway['profile'].' rescan';
 											//$responses[$gateway_uuid]['gateway'] = $gateway['name'];
-											//$responses[$gateway_uuid]['message'] = trim(event_socket_request($fp, $cmd));
+											//$responses[$gateway_uuid]['message'] = trim(event_socket::api($cmd));
 										}
 									}
 
@@ -198,14 +198,14 @@ if (!class_exists('gateways')) {
 
 						if (!empty($gateways) && is_array($gateways) && @sizeof($gateways) != 0) {
 							//create the event socket connection
-							$fp = event_socket_create();
-							if ($fp) {
+							$esl = event_socket::create();
+							if ($esl->is_connected()) {
 								//stop gateways
 									foreach ($gateways as $gateway_uuid => $gateway) {
 										if ($gateway['enabled'] == 'true') {
-											$cmd = 'api sofia profile '.$gateway['profile'].' killgw '.$gateway_uuid;
+											$cmd = 'sofia profile '.$gateway['profile'].' killgw '.$gateway_uuid;
 											$responses[$gateway_uuid]['gateway'] = $gateway['name'];
-											$responses[$gateway_uuid]['message'] = trim(event_socket_request($fp, $cmd));
+											$responses[$gateway_uuid]['message'] = trim(event_socket::api($cmd));
 										}
 									}
 								//set message
@@ -274,9 +274,7 @@ if (!class_exists('gateways')) {
 							}
 
 						//create the event socket connection
-							if (!isset($fp)) {
-								$fp = event_socket_create();
-							}
+							$esl = event_socket::create();
 
 						//loop through gateways
 							$x = 0;
@@ -294,9 +292,9 @@ if (!class_exists('gateways')) {
 									}
 
 								//send the api command to stop the gateway
-									if ($fp) {
-										$cmd = 'api sofia profile '.$gateway['profile'].' killgw '.$gateway_uuid;
-										$response = event_socket_request($fp, $cmd);
+									if ($esl->is_connected()) {
+										$cmd = 'sofia profile '.$gateway['profile'].' killgw '.$gateway_uuid;
+										$response = event_socket::api($cmd);
 										unset($cmd);
 									}
 
@@ -320,20 +318,16 @@ if (!class_exists('gateways')) {
 									save_gateway_xml();
 
 								//clear the cache
-									if (!$fp) {
-										$fp = event_socket_create();
-									}
-									if ($fp) {
-										$hostname = trim(event_socket_request($fp, 'api switchname'));
+									$esl = event_socket::create();
+									if ($esl->is_connected()) {
+										$hostname = trim(event_socket::api('switchname'));
 										$cache = new cache;
 										$cache->delete("configuration:sofia.conf:".$hostname);
 									}
 
 								//rescan the sip profile to look for new or stopped gateways
-									if (!$fp) {
-										$fp = event_socket_create();
-									}
-									if ($fp) {
+									$esl = event_socket::create();
+									if ($esl->is_connected()) {
 										//get distinct profiles from gateways
 											foreach ($gateways as $gateway) {
 												$array[] = $gateway['profile'];
@@ -342,13 +336,8 @@ if (!class_exists('gateways')) {
 
 										//send the api command to rescan each profile
 											foreach ($profiles as $profile) {
-												$cmd = 'api sofia profile '.$profile.' rescan';
-												$response = event_socket_request($fp, $cmd);
+												$response = event_socket::api("sofia profile $profile rescan");
 											}
-											unset($cmd);
-
-										//close the connection
-											fclose($fp);
 									}
 									usleep(1000);
 
@@ -452,18 +441,16 @@ if (!class_exists('gateways')) {
 									save_gateway_xml();
 
 								//clear the cache
-									$fp = event_socket_create();
-									$hostname = trim(event_socket_request($fp, 'api switchname'));
+									$esl = event_socket::create();
+									$hostname = trim(event_socket::api('switchname'));
 									$cache = new cache;
 									$cache->delete("configuration:sofia.conf:".$hostname);
 
 								//create the event socket connection
-									if (!$fp) {
-										$fp = event_socket_create();
-									}
+									$esl = event_socket::create();
 
 								//rescan the sip profile to look for new or stopped gateways
-									if ($fp) {
+									if ($esl->is_connected()) {
 										//get distinct profiles from gateways
 											foreach ($gateways as $gateway) {
 												$array[] = $gateway['profile'];
@@ -472,13 +459,8 @@ if (!class_exists('gateways')) {
 
 										//send the api command to rescan each profile
 											foreach ($profiles as $profile) {
-												$cmd = 'api sofia profile '.$profile.' rescan';
-												$response = event_socket_request($fp, $cmd);
+												event_socket::api("sofia profile $profile rescan");
 											}
-											unset($cmd);
-
-										//close the connection
-											fclose($fp);
 									}
 									usleep(1000);
 
@@ -585,8 +567,8 @@ if (!class_exists('gateways')) {
 									save_gateway_xml();
 
 								//clear the cache
-									$fp = event_socket_create();
-									$hostname = trim(event_socket_request($fp, 'api switchname'));
+									$esl = event_socket::create();
+									$hostname = trim(event_socket::api('switchname'));
 									$cache = new cache;
 									$cache->delete("configuration:sofia.conf:".$hostname);
 

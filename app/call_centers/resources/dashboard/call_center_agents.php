@@ -51,7 +51,7 @@
 	}
 
 //setup the event socket connection
-	$fp = event_socket_create();
+	$esl = event_socket::create();
 
 //get the http post values and set them as php variables
 	if (!empty($_POST['agents'])) {
@@ -91,8 +91,8 @@
 		$result = $database->save($array);
 
 		//send the agent status status to mod_call_center
-		$cmd = "api callcenter_config agent set status ".$agent_uuid." '".$agent_status."'";
-		$response = event_socket_request($fp, $cmd);
+		$cmd = "callcenter_config agent set status ".$agent_uuid." '".$agent_status."'";
+    $response = event_socket::api($cmd);
 
 		//add or delete agents from the queue assigned by the tier
 		foreach ($_POST['agents'] as $row) {
@@ -103,21 +103,21 @@
 				//set the agent status to available and assign the agent to the queue with the tier
 				if ($row['agent_status'] == 'Available') {
 					//assign the agent to the queue
-					$cmd = "api callcenter_config tier add ".$row['queue_extension']."@".$_SESSION['domain_name']." ".$row['id']." 1 1";
-					$response = event_socket_request($fp, $cmd);
+					$cmd = "callcenter_config tier add ".$row['queue_extension']."@".$_SESSION['domain_name']." ".$row['id']." 1 1";
+					$response = event_socket::api($cmd);
 				}
 
 				//set the agent status to available and assign the agent to the queue with the tier
 				if ($row['agent_status'] == 'On Break') {
 					//assign the agent to the queue
-					$cmd = "api callcenter_config tier add ".$row['queue_extension']."@".$_SESSION['domain_name']." ".$row['id']." 1 1";
-					$response = event_socket_request($fp, $cmd);
+					$cmd = "callcenter_config tier add ".$row['queue_extension']."@".$_SESSION['domain_name']." ".$row['id']." 1 1";
+					$response = event_socket::api($cmd);
 				}
 
 				//un-assign the agent from the queue
 				if ($row['agent_status'] == 'Logged Out') {
-					$cmd = "api callcenter_config tier del ".$row['queue_extension']."@".$_SESSION['domain_name']." ".$row['id'];
-					$response = event_socket_request($fp, $cmd);
+					$cmd = "callcenter_config tier del ".$row['queue_extension']."@".$_SESSION['domain_name']." ".$row['id'];
+					$response = event_socket::api($cmd);
 				}
 				
 				//small sleep
@@ -132,7 +132,7 @@
 
 //get the agent list from event socket
 	$switch_cmd = 'callcenter_config tier list';
-	$event_socket_str = trim(event_socket_request($fp, 'api '.$switch_cmd));
+	$event_socket_str = trim(event_socket::api($switch_cmd));
 	$call_center_tiers = csv_to_named_array($event_socket_str, '|');
 
 //get the agents from the database
