@@ -154,8 +154,8 @@ echo "		</td>\n";
 echo "		<td valign='top' align='right' width='50%' nowrap>\n";
 echo "			<table cellpadding='0' cellspacing='0' border='0'>\n";
 echo "				<tr>\n";
-echo "					<td valign='middle' nowrap='nowrap' style='padding-right: 15px' id='refresh_state'>\n";
-echo "						<img src='resources/images/refresh_active.gif' style='width: 16px; height: 16px; border: none; margin-top: 3px; cursor: pointer;' onclick='refresh_stop();' alt=\"".$text['label-refresh_pause']."\" title=\"".$text['label-refresh_pause']."\">\n";
+echo "					<td valign='middle' nowrap='nowrap' style='padding-right: 15px'>\n";
+echo "						<span id='refresh_state'>".button::create(['type'=>'button','title'=>$text['label-refresh_pause'],'icon'=>'sync-alt fa-spin','onclick'=>'refresh_stop()'])."</span>";
 echo "					</td>\n";
 
 if (permission_exists('operator_panel_eavesdrop')) {
@@ -164,8 +164,10 @@ if (permission_exists('operator_panel_eavesdrop')) {
 		echo "				<input type='hidden' id='eavesdrop_dest' value=\"".(($_REQUEST['eavesdrop_dest'] == '') ? $_SESSION['user']['extension'][0]['destination'] : escape($_REQUEST['eavesdrop_dest']))."\">\n";
 		echo "				<img src='resources/images/eavesdrop.png' style='width: 12px; height: 12px; border: none; margin: 0px 5px; cursor: help;' title='".$text['description-eavesdrop_destination']."' align='absmiddle'>\n";
 		echo "				<select class='formfld' style='margin-right: 5px;' align='absmiddle' onchange=\"document.getElementById('eavesdrop_dest').value = this.options[this.selectedIndex].value; refresh_start();\" onfocus='refresh_stop();'>\n";
-		if (is_array($_SESSION['user']['extensions'])) foreach ($_SESSION['user']['extensions'] as $user_extension) {
-			echo "				<option value='".escape($user_extension)."' ".(($_REQUEST['eavesdrop_dest'] == $user_extension) ? "selected" : null).">".escape($user_extension)."</option>\n";
+		if (is_array($_SESSION['user']['extensions'])) {
+			foreach ($_SESSION['user']['extensions'] as $user_extension) {
+				echo "			<option value='".escape($user_extension)."' ".(($_REQUEST['eavesdrop_dest'] == $user_extension) ? "selected" : null).">".escape($user_extension)."</option>\n";
+			}
 		}
 		echo "				</select>\n";
 	}
