@@ -116,7 +116,7 @@
 										is_array($tmp_url) && @sizeof($tmp_url) != 0 &&
 										is_array($tmp_path) && @sizeof($tmp_path) != 0 &&
 										(
-											($tmp_url['scheme'] != '' && $tmp_url['scheme'].'://'.$tmp_url['host'].$tmp_url['path'] == $tmp_path['dirname'].'/'.$tmp_path['filename'].'.'.$tmp_path['extension']) //is url
+											(!empty($tmp_url['scheme']) && $tmp_url['scheme'].'://'.$tmp_url['host'].$tmp_url['path'] == $tmp_path['dirname'].'/'.$tmp_path['filename'].'.'.$tmp_path['extension']) //is url
 											|| $tmp_url['path'] == $tmp_path['dirname'].'/'.$tmp_path['filename'].'.'.$tmp_path['extension'] //is path
 										)) {
 										$settings['theme'][$subcategory] = $setting['text'];
