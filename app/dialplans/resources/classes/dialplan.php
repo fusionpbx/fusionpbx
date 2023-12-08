@@ -596,31 +596,32 @@
 
 			//combines array dialplans and dialplan details arrays to match results from the database
 			public function prepare_details($database_array) {
-
 				$id = 0;
 				foreach($database_array['dialplans'] as $row) {
 					if (!empty($row['dialplan_details'])) {
 						foreach($row['dialplan_details'] as $detail) {
-							$array[$id]['domain_uuid'] = $row['domain_uuid'];
-							$array[$id]['dialplan_uuid'] = $row['dialplan_uuid'];
-							$array[$id]['app_uuid'] = $row['app_uuid'];
-							$array[$id]['dialplan_context'] = $row['dialplan_context'];
-							$array[$id]['dialplan_name'] = $row['dialplan_name'];
-							$array[$id]['dialplan_number'] = $row['dialplan_number'];
-							$array[$id]['dialplan_continue'] = $row['dialplan_continue'];
-							$array[$id]['dialplan_order'] = $row['dialplan_order'];
-							$array[$id]['dialplan_enabled'] = $row['dialplan_enabled'];
-							$array[$id]['dialplan_description'] = $row['dialplan_description'];
-							$array[$id]['dialplan_detail_uuid'] = $detail['dialplan_detail_uuid'];
-							$array[$id]['dialplan_detail_tag'] = $detail['dialplan_detail_tag'];
-							$array[$id]['dialplan_detail_type'] = $detail['dialplan_detail_type'];
-							$array[$id]['dialplan_detail_data'] = $detail['dialplan_detail_data'];
-							$array[$id]['dialplan_detail_break'] = $detail['dialplan_detail_break'];
-							$array[$id]['dialplan_detail_inline'] = $detail['dialplan_detail_inline'];
-							$array[$id]['dialplan_detail_group'] = $detail['dialplan_detail_group'];
-							$array[$id]['dialplan_detail_order'] = $detail['dialplan_detail_order'];
-							$array[$id]['dialplan_detail_enabled'] = $detail['dialplan_detail_enabled'];
-							$id++;
+							if ($detail['dialplan_detail_enabled'] == 'true') {
+								$array[$id]['domain_uuid'] = $row['domain_uuid'];
+								$array[$id]['dialplan_uuid'] = $row['dialplan_uuid'];
+								$array[$id]['app_uuid'] = $row['app_uuid'];
+								$array[$id]['dialplan_context'] = $row['dialplan_context'];
+								$array[$id]['dialplan_name'] = $row['dialplan_name'];
+								$array[$id]['dialplan_number'] = $row['dialplan_number'];
+								$array[$id]['dialplan_continue'] = $row['dialplan_continue'];
+								$array[$id]['dialplan_order'] = $row['dialplan_order'];
+								$array[$id]['dialplan_enabled'] = $row['dialplan_enabled'];
+								$array[$id]['dialplan_description'] = $row['dialplan_description'];
+								$array[$id]['dialplan_detail_uuid'] = $detail['dialplan_detail_uuid'];
+								$array[$id]['dialplan_detail_tag'] = $detail['dialplan_detail_tag'];
+								$array[$id]['dialplan_detail_type'] = $detail['dialplan_detail_type'];
+								$array[$id]['dialplan_detail_data'] = $detail['dialplan_detail_data'];
+								$array[$id]['dialplan_detail_break'] = $detail['dialplan_detail_break'];
+								$array[$id]['dialplan_detail_inline'] = $detail['dialplan_detail_inline'];
+								$array[$id]['dialplan_detail_group'] = $detail['dialplan_detail_group'];
+								$array[$id]['dialplan_detail_order'] = $detail['dialplan_detail_order'];
+								$array[$id]['dialplan_detail_enabled'] = $detail['dialplan_detail_enabled'];
+								$id++;
+							}
 						}
 					}
 				}
@@ -1588,3 +1589,4 @@
 	}
 
 ?>
+
