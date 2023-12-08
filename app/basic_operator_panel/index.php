@@ -349,11 +349,11 @@ unset($refresh_default);
 //refresh controls
 	function refresh_stop() {
 		clearInterval(interval_timer_id);
-		if (document.getElementById('refresh_state')) { document.getElementById('refresh_state').innerHTML = "<img src='resources/images/refresh_paused.png' style='width: 16px; height: 16px; border: none; margin-top: 1px; cursor: pointer;' onclick='refresh_start();' alt=\"<?php echo $text['label-refresh_enable']?>\" title=\"<?php echo $text['label-refresh_enable']?>\">"; }
+		if (document.getElementById('refresh_state')) { document.getElementById('refresh_state').innerHTML = "<?php echo button::create(['type'=>'button','title'=>$text['label-refresh_enable'],'icon'=>'pause','onclick'=>'refresh_start()']); ?>"; }
 	}
 
 	function refresh_start() {
-		if (document.getElementById('refresh_state')) { document.getElementById('refresh_state').innerHTML = "<img src='resources/images/refresh_active.gif' style='width: 16px; height: 16px; border: none; margin-top: 3px; cursor: pointer;' alt=\"<?php echo $text['label-refresh_pause']?>\" title=\"<?php echo $text['label-refresh_pause']?>\">"; }
+		if (document.getElementById('refresh_state')) { document.getElementById('refresh_state').innerHTML = "<?php echo button::create(['type'=>'button','title'=>$text['label-refresh_pause'],'icon'=>'sync-alt fa-spin','onclick'=>'refresh_stop()']); ?>"; }
 		refresh_stop();
 		interval_timer_id = setInterval( function() {
 			url = source_url;
@@ -405,7 +405,7 @@ unset($refresh_default);
 		if (ext != '' && chan_uuid != '') {
 			cmd = get_eavesdrop_cmd(ext, chan_uuid, document.getElementById('eavesdrop_dest').value);
 			if (cmd != '') {
-				send_cmd(cmd)
+				send_cmd(cmd);
 			}
 		}
 	}
@@ -430,7 +430,7 @@ unset($refresh_default);
 		}
 		xmlhttp.open("GET",url,false);
 		xmlhttp.send(null);
-		document.getElementById('cmd_reponse').innerHTML=xmlhttp.responseText;
+		document.getElementById('cmd_response').innerHTML=xmlhttp.responseText;
 	}
 
 //hide/show destination input field
@@ -588,13 +588,9 @@ if (is_array($_SESSION['user']['extension'])) {
 	}
 }
 
-?>
-
-<div id='ajax_reponse'></div>
-<div id='cmd_reponse' style='display: none;'></div>
-<br><br>
-
-<?php
+echo "<div id='ajax_reponse'></div>\n";
+echo "<div id='cmd_response' style='display: none;'></div>\n";
+echo "<br><br>\n";
 
 //include the footer
 	require_once "resources/footer.php";
