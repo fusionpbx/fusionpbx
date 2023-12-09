@@ -116,7 +116,7 @@
 			echo "	<div class='heading'><b>".$text['title']." (".$num_rows.")</b></div>\n";
 			echo "	<div class='actions'>\n";
 			echo "		<span id='refresh_state'>".button::create(['type'=>'button','title'=>$text['label-refresh_pause'],'icon'=>'sync-alt fa-spin','onclick'=>'refresh_stop()'])."</span>";
-			if (permission_exists('call_active_eavesdrop')) {
+			if (permission_exists('call_active_eavesdrop') && !empty($_SESSION['user']['extensions'])) {
 				if (sizeof($_SESSION['user']['extensions']) > 1) {
 					echo "	<input type='hidden' id='eavesdrop_dest' value=\"".(($_REQUEST['eavesdrop_dest'] == '') ? $_SESSION['user']['extension'][0]['destination'] : escape($_REQUEST['eavesdrop_dest']))."\">\n";
 					echo "	<i class='fas fa-headphones' style='margin-left: 15px; cursor: help;' title='".$text['description-eavesdrop_destination']."' align='absmiddle'></i>\n";
@@ -241,7 +241,7 @@
 						if (permission_exists('call_active_eavesdrop') || permission_exists('call_active_hangup')) {
 							echo "	<td class='button right' style='padding-right: 0;'>\n";
 							//eavesdrop
-							if (permission_exists('call_active_eavesdrop') && $callstate == 'ACTIVE' && sizeof($_SESSION['user']['extensions']) > 0 && !in_array($cid_num, $_SESSION['user']['extensions'])) {
+							if (permission_exists('call_active_eavesdrop') && $callstate == 'ACTIVE' && !empty($_SESSION['user']['extensions']) && !in_array($cid_num, $_SESSION['user']['extensions'])) {
 								echo button::create(['type'=>'button','label'=>$text['label-eavesdrop'],'icon'=>'headphones','collapse'=>'hide-lg-dn','onclick'=>"if (confirm('".$text['confirm-eavesdrop']."')) { eavesdrop_call('".escape($cid_num)."','".escape($uuid)."'); } else { this.blur(); return false; }",'onmouseover'=>'refresh_stop()','onmouseout'=>'refresh_start()']);
 							}
 							//hangup
@@ -270,3 +270,4 @@
 	}
 
 ?>
+
