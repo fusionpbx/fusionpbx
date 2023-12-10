@@ -1,14 +1,267 @@
 {
-  "resources/js/app.css": {
-    "file": "assets/app-7cbaa819.css",
-    "src": "resources/js/app.css"
+  "__commonjs-dynamic-modules-302442b1.js": {
+    "file": "assets/_commonjs-dynamic-modules-302442b1.js"
+  },
+  "__commonjsHelpers-de833af9.js": {
+    "file": "assets/_commonjsHelpers-de833af9.js"
+  },
+  "_jquery-f66a0d01.js": {
+    "file": "assets/jquery-f66a0d01.js",
+    "imports": [
+      "__commonjsHelpers-de833af9.js"
+    ]
+  },
+  "_moment-e9e012b5.js": {
+    "file": "assets/moment-e9e012b5.js"
+  },
+  "_select2-09f14948.js": {
+    "file": "assets/select2-09f14948.js",
+    "imports": [
+      "__commonjsHelpers-de833af9.js",
+      "_jquery-f66a0d01.js"
+    ]
+  },
+  "node_modules/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css": {
+    "file": "assets/bootstrap-datepicker.min-fe37ada1.css",
+    "isEntry": true,
+    "src": "node_modules/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css"
+  },
+  "node_modules/bootstrap-timepicker/css/bootstrap-timepicker.min.css": {
+    "file": "assets/bootstrap-timepicker.min-9ecbe5fb.css",
+    "isEntry": true,
+    "src": "node_modules/bootstrap-timepicker/css/bootstrap-timepicker.min.css"
+  },
+  "node_modules/britecharts/dist/css/britecharts.min.css": {
+    "file": "assets/britecharts.min-e0f2fe0f.css",
+    "isEntry": true,
+    "src": "node_modules/britecharts/dist/css/britecharts.min.css"
+  },
+  "node_modules/daterangepicker/daterangepicker.css": {
+    "file": "assets/daterangepicker-60f595b9.css",
+    "isEntry": true,
+    "src": "node_modules/daterangepicker/daterangepicker.css"
+  },
+  "node_modules/jquery-toast-plugin/dist/jquery.toast.min.css": {
+    "file": "assets/jquery.toast.min-a8ab1bcc.css",
+    "isEntry": true,
+    "src": "node_modules/jquery-toast-plugin/dist/jquery.toast.min.css"
+  },
+  "node_modules/select2/dist/css/select2.min.css": {
+    "file": "assets/select2.min-627c9488.css",
+    "isEntry": true,
+    "src": "node_modules/select2/dist/css/select2.min.css"
+  },
+  "resources/fonts/Nunito-Bold.eot": {
+    "file": "assets/Nunito-Bold-8b6a46db.eot",
+    "src": "resources/fonts/Nunito-Bold.eot"
+  },
+  "resources/fonts/Nunito-Bold.svg": {
+    "file": "assets/Nunito-Bold-faae24d5.svg",
+    "src": "resources/fonts/Nunito-Bold.svg"
+  },
+  "resources/fonts/Nunito-Bold.ttf": {
+    "file": "assets/Nunito-Bold-4525fec0.ttf",
+    "src": "resources/fonts/Nunito-Bold.ttf"
+  },
+  "resources/fonts/Nunito-Bold.woff": {
+    "file": "assets/Nunito-Bold-8d61f028.woff",
+    "src": "resources/fonts/Nunito-Bold.woff"
+  },
+  "resources/fonts/Nunito-Light.eot": {
+    "file": "assets/Nunito-Light-de8d35c0.eot",
+    "src": "resources/fonts/Nunito-Light.eot"
+  },
+  "resources/fonts/Nunito-Light.svg": {
+    "file": "assets/Nunito-Light-c3092b09.svg",
+    "src": "resources/fonts/Nunito-Light.svg"
+  },
+  "resources/fonts/Nunito-Light.ttf": {
+    "file": "assets/Nunito-Light-c39b04a9.ttf",
+    "src": "resources/fonts/Nunito-Light.ttf"
+  },
+  "resources/fonts/Nunito-Light.woff": {
+    "file": "assets/Nunito-Light-cb77bc28.woff",
+    "src": "resources/fonts/Nunito-Light.woff"
+  },
+  "resources/fonts/Nunito-Medium.eot": {
+    "file": "assets/Nunito-Medium-8deb016e.eot",
+    "src": "resources/fonts/Nunito-Medium.eot"
+  },
+  "resources/fonts/Nunito-Medium.svg": {
+    "file": "assets/Nunito-Medium-c0f69438.svg",
+    "src": "resources/fonts/Nunito-Medium.svg"
+  },
+  "resources/fonts/Nunito-Medium.ttf": {
+    "file": "assets/Nunito-Medium-48addd72.ttf",
+    "src": "resources/fonts/Nunito-Medium.ttf"
+  },
+  "resources/fonts/Nunito-Medium.woff": {
+    "file": "assets/Nunito-Medium-b91e3b4f.woff",
+    "src": "resources/fonts/Nunito-Medium.woff"
+  },
+  "resources/fonts/Nunito-Regular.eot": {
+    "file": "assets/Nunito-Regular-822d1cec.eot",
+    "src": "resources/fonts/Nunito-Regular.eot"
+  },
+  "resources/fonts/Nunito-Regular.svg": {
+    "file": "assets/Nunito-Regular-2784624b.svg",
+    "src": "resources/fonts/Nunito-Regular.svg"
+  },
+  "resources/fonts/Nunito-Regular.ttf": {
+    "file": "assets/Nunito-Regular-96a2bf79.ttf",
+    "src": "resources/fonts/Nunito-Regular.ttf"
+  },
+  "resources/fonts/Nunito-Regular.woff": {
+    "file": "assets/Nunito-Regular-407923ca.woff",
+    "src": "resources/fonts/Nunito-Regular.woff"
+  },
+  "resources/fonts/Nunito-SemiBold.eot": {
+    "file": "assets/Nunito-SemiBold-99003a9e.eot",
+    "src": "resources/fonts/Nunito-SemiBold.eot"
+  },
+  "resources/fonts/Nunito-SemiBold.svg": {
+    "file": "assets/Nunito-SemiBold-bb9b77b0.svg",
+    "src": "resources/fonts/Nunito-SemiBold.svg"
+  },
+  "resources/fonts/Nunito-SemiBold.ttf": {
+    "file": "assets/Nunito-SemiBold-8ce3a07c.ttf",
+    "src": "resources/fonts/Nunito-SemiBold.ttf"
+  },
+  "resources/fonts/Nunito-SemiBold.woff": {
+    "file": "assets/Nunito-SemiBold-a3678dbb.woff",
+    "src": "resources/fonts/Nunito-SemiBold.woff"
+  },
+  "resources/fonts/materialdesignicons-webfont.eot": {
+    "file": "assets/materialdesignicons-webfont-4de2dae5.eot",
+    "src": "resources/fonts/materialdesignicons-webfont.eot"
+  },
+  "resources/fonts/materialdesignicons-webfont.ttf": {
+    "file": "assets/materialdesignicons-webfont-9e94d4db.ttf",
+    "src": "resources/fonts/materialdesignicons-webfont.ttf"
+  },
+  "resources/fonts/materialdesignicons-webfont.woff": {
+    "file": "assets/materialdesignicons-webfont-04fb6e8b.woff",
+    "src": "resources/fonts/materialdesignicons-webfont.woff"
+  },
+  "resources/fonts/materialdesignicons-webfont.woff2": {
+    "file": "assets/materialdesignicons-webfont-11e3d4ca.woff2",
+    "src": "resources/fonts/materialdesignicons-webfont.woff2"
+  },
+  "resources/fonts/remixicon.eot": {
+    "file": "assets/remixicon-64bb3a0f.eot",
+    "src": "resources/fonts/remixicon.eot"
+  },
+  "resources/fonts/remixicon.svg": {
+    "file": "assets/remixicon-aab59b7b.svg",
+    "src": "resources/fonts/remixicon.svg"
+  },
+  "resources/fonts/remixicon.ttf": {
+    "file": "assets/remixicon-0ac8bc3c.ttf",
+    "src": "resources/fonts/remixicon.ttf"
+  },
+  "resources/fonts/remixicon.woff": {
+    "file": "assets/remixicon-c2dacfbc.woff",
+    "src": "resources/fonts/remixicon.woff"
+  },
+  "resources/fonts/remixicon.woff2": {
+    "file": "assets/remixicon-e61f0d10.woff2",
+    "src": "resources/fonts/remixicon.woff2"
+  },
+  "resources/fonts/unicons.eot": {
+    "file": "assets/unicons-d876e024.eot",
+    "src": "resources/fonts/unicons.eot"
+  },
+  "resources/fonts/unicons.svg": {
+    "file": "assets/unicons-1d558eab.svg",
+    "src": "resources/fonts/unicons.svg"
+  },
+  "resources/fonts/unicons.ttf": {
+    "file": "assets/unicons-ab7e04c5.ttf",
+    "src": "resources/fonts/unicons.ttf"
+  },
+  "resources/fonts/unicons.woff": {
+    "file": "assets/unicons-0c21ced6.woff",
+    "src": "resources/fonts/unicons.woff"
+  },
+  "resources/fonts/unicons.woff2": {
+    "file": "assets/unicons-d7d761b0.woff2",
+    "src": "resources/fonts/unicons.woff2"
   },
   "resources/js/app.js": {
-    "css": [
-      "assets/app-7cbaa819.css"
+    "file": "assets/app-2bf84a05.js",
+    "imports": [
+      "__commonjsHelpers-de833af9.js"
     ],
-    "file": "assets/app-cd986b37.js",
     "isEntry": true,
     "src": "resources/js/app.js"
+  },
+  "resources/js/hyper-config.js": {
+    "file": "assets/hyper-config-14f989c6.js",
+    "isEntry": true,
+    "src": "resources/js/hyper-config.js"
+  },
+  "resources/js/hyper-head.js": {
+    "file": "assets/hyper-head-aebf2867.js",
+    "imports": [
+      "_jquery-f66a0d01.js",
+      "__commonjsHelpers-de833af9.js",
+      "_moment-e9e012b5.js"
+    ],
+    "isEntry": true,
+    "src": "resources/js/hyper-head.js"
+  },
+  "resources/js/hyper-main.js": {
+    "file": "assets/hyper-main-bec4f215.js",
+    "imports": [
+      "_select2-09f14948.js",
+      "_moment-e9e012b5.js",
+      "__commonjsHelpers-de833af9.js",
+      "__commonjs-dynamic-modules-302442b1.js",
+      "_jquery-f66a0d01.js"
+    ],
+    "isEntry": true,
+    "src": "resources/js/hyper-main.js"
+  },
+  "resources/js/hyper-syntax.js": {
+    "file": "assets/hyper-syntax-d4449b08.js",
+    "imports": [
+      "__commonjsHelpers-de833af9.js"
+    ],
+    "isEntry": true,
+    "src": "resources/js/hyper-syntax.js"
+  },
+  "resources/js/ui/component.chat.js": {
+    "file": "assets/component.chat-2bac8885.js",
+    "isEntry": true,
+    "src": "resources/js/ui/component.chat.js"
+  },
+  "resources/js/ui/component.dragula.js": {
+    "file": "assets/component.dragula-b946b6db.js",
+    "imports": [
+      "__commonjsHelpers-de833af9.js",
+      "__commonjs-dynamic-modules-302442b1.js"
+    ],
+    "isEntry": true,
+    "src": "resources/js/ui/component.dragula.js"
+  },
+  "resources/js/ui/component.fileupload.js": {
+    "file": "assets/component.fileupload-303ae86e.js",
+    "imports": [
+      "_select2-09f14948.js",
+      "_jquery-f66a0d01.js",
+      "__commonjsHelpers-de833af9.js"
+    ],
+    "isEntry": true,
+    "src": "resources/js/ui/component.fileupload.js"
+  },
+  "resources/scss/app-modern.scss": {
+    "file": "assets/app-modern-f11162ee.css",
+    "isEntry": true,
+    "src": "resources/scss/app-modern.scss"
+  },
+  "resources/scss/icons.scss": {
+    "file": "assets/icons-f542fb3b.css",
+    "isEntry": true,
+    "src": "resources/scss/icons.scss"
   }
 }
