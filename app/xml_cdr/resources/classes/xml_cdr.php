@@ -135,6 +135,7 @@ if (!class_exists('xml_cdr')) {
 
 			$this->fields[] = "xml_cdr_uuid";
 			$this->fields[] = "domain_uuid";
+			$this->fields[] = "provider_uuid";
 			$this->fields[] = "extension_uuid";
 			$this->fields[] = "sip_call_id";
 			$this->fields[] = "domain_name";
@@ -577,6 +578,11 @@ if (!class_exists('xml_cdr')) {
 						}
 						if (in_array($xml->variables->hangup_cause, $failed_array)) {
 							$status = 'failed';
+						}
+
+					//set the provider id
+						if (isset($xml->variables->provider_uuid)) {
+							$this->array[$key]['provider_uuid'] = urldecode($xml->variables->provider_uuid);
 						}
 
 					//misc
@@ -1043,10 +1049,10 @@ if (!class_exists('xml_cdr')) {
 			$destination = new destinations;
 			$destination_array = $destination->get('dialplan');
 
-			//add new rows when callee_id_number exists 
+			//add new rows when callee_id_number exists
 			$new_rows = 0;
 			foreach ($call_flow_array as $key => $row) {
-				if (!empty($row["caller_profile"]["destination_number"]) 
+				if (!empty($row["caller_profile"]["destination_number"])
 					and !empty($row["caller_profile"]["callee_id_number"])
 					and $row["caller_profile"]["destination_number"] !== $row["caller_profile"]["callee_id_number"]) {
 						//build the base of the new_row array
@@ -1174,9 +1180,9 @@ if (!class_exists('xml_cdr')) {
 					}
 
 					//valet park
-					if (!empty($row["caller_profile"]["destination_number"]) 
+					if (!empty($row["caller_profile"]["destination_number"])
 						and (substr($row["caller_profile"]["destination_number"], 0, 4) == 'park'
-						or (substr($row["caller_profile"]["destination_number"], 0, 3) == '*59' 
+						or (substr($row["caller_profile"]["destination_number"], 0, 3) == '*59'
 						and strlen($row["caller_profile"]["destination_number"]) == 5))) {
 						//add items to the app array
 						$app['application'] = 'dialplans';
@@ -1209,7 +1215,7 @@ if (!class_exists('xml_cdr')) {
 					}
 
 					//debug - add the callee_id_number to the end of the status
-					if (isset($_REQUEST['debug']) && $_REQUEST['debug'] == 'true' && !empty($row["caller_profile"]["destination_number"]) 
+					if (isset($_REQUEST['debug']) && $_REQUEST['debug'] == 'true' && !empty($row["caller_profile"]["destination_number"])
 						and !empty($row["caller_profile"]["callee_id_number"])
 						and $row["caller_profile"]["destination_number"] !== $row["caller_profile"]["callee_id_number"]) {
 							$app['status'] .= ' ('.$row["caller_profile"]["callee_id_number"].')';
@@ -1301,7 +1307,7 @@ if (!class_exists('xml_cdr')) {
 							if ($application == 'destinations') {
 								if ('+'.$value['destination_prefix'].$value['destination_number'] == $detail_action
 									or $value['destination_prefix'].$value['destination_number'] == $detail_action
-									or $value['destination_number'] == $detail_action 
+									or $value['destination_number'] == $detail_action
 									or $value['destination_trunk_prefix'].$value['destination_number'] == $detail_action
 									or '+'.$value['destination_prefix'].$value['destination_area_code'].$value['destination_number'] == $detail_action
 									or $value['destination_prefix'].$value['destination_area_code'].$value['destination_number'] == $detail_action
