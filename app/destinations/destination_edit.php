@@ -486,6 +486,9 @@
 										$dialplan["dialplan_xml"] .= "		<action application=\"export\" data=\"call_direction=inbound\" inline=\"true\"/>\n";
 										$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"domain_uuid=".$_SESSION['domain_uuid']."\" inline=\"true\"/>\n";
 										$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"domain_name=".$_SESSION['domain_name']."\" inline=\"true\"/>\n";
+										if (!empty($provider_uuid)) {
+											$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"provider_uuid=".xml::sanitize($provider_uuid)."\" inline=\"true\"/>\n";
+										}
 										if (isset($row['condition_app']) && !empty($row['condition_app'])) {
 											if ($destination->valid($row['condition_app'].':'.$row['condition_data'])) {
 												$dialplan["dialplan_xml"] .= "		<action application=\"".xml::sanitize($row['condition_app'])."\" data=\"".xml::sanitize($row['condition_data'])."\"/>\n";
@@ -499,6 +502,9 @@
 								$dialplan["dialplan_xml"] .= "		<action application=\"export\" data=\"call_direction=inbound\" inline=\"true\"/>\n";
 								$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"domain_uuid=".$_SESSION['domain_uuid']."\" inline=\"true\"/>\n";
 								$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"domain_name=".$_SESSION['domain_name']."\" inline=\"true\"/>\n";
+								if (!empty($provider_uuid)) {
+									$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"provider_uuid=".xml::sanitize($provider_uuid)."\" inline=\"true\"/>\n";
+								}
 
 								//add this only if using application bridge
 								if (!empty($destination_app) && $destination_app == 'bridge') {
