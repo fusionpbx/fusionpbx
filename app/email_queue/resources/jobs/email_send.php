@@ -180,7 +180,7 @@
 		//$voicemail_description = $row["voicemail_description"];
 		//$voicemail_name_base64 = $row["voicemail_name_base64"];
 		//$voicemail_tutorial = $row["voicemail_tutorial"];
-		echo "transcribe enabled: ".$voicemail_transcription_enabled."\n";
+		
 	}
 	unset($parameters);
 
@@ -222,6 +222,9 @@
 			}
 
 			if (isset($transcribe_enabled) && $transcribe_enabled === 'true' && isset($voicemail_transcription_enabled) && $voicemail_transcription_enabled === 'true') {
+				//debug message  
+				echo "transcribe enabled: true\n";
+
 				//transcribe the attachment
 				require $_SERVER['DOCUMENT_ROOT']."/app/email_queue/resources/functions/transcribe.php";
 				if ($email_attachment_type == 'wav' || $email_attachment_type == 'mp3') {
@@ -234,10 +237,11 @@
 					$transcribe_message = $field['message'];
 				}
 
-				//echo "email_body before: ".$email_body."\n";
+				//prepare the email body
 				$email_body = str_replace('${message_text}', $transcribe_message, $email_body);
 			}
 			else {
+				//prepare the email body
 				$email_body = str_replace('${message_text}', '', $email_body);
 			}
 
