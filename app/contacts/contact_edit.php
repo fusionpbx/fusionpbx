@@ -336,11 +336,23 @@
 
 			$y = 0;
 			if (isset($contact_user_uuid)) {
-				$array['contacts'][0]['contact_users'][$y]['domain_uuid'] = $_SESSION['domain_uuid'];
-				$array['contacts'][0]['contact_users'][$y]['contact_user_uuid'] = uuid();
-				$array['contacts'][0]['contact_users'][$y]['contact_uuid'] = $contact_uuid;
-				$array['contacts'][0]['contact_users'][$y]['user_uuid'] = $contact_user_uuid;
-				$y++;
+				$sql = "select contact_uuid from v_contact_users ";
+				$sql .= "where contact_uuid = :contact_uuid ";
+				$sql .= "and user_uuid = :user_uuid ";
+				$parameters['contact_uuid'] = $contact_uuid;
+				$parameters['user_uuid'] = $contact_user_uuid;
+				$database = new database;
+				$users = $database->select($sql, $parameters, 'all');
+				unset($sql, $parameters);
+
+				if (is_array($users) === false || count($users) === 0)
+				{
+						$array['contacts'][0]['contact_users'][$y]['domain_uuid'] = $_SESSION['domain_uuid'];
+						$array['contacts'][0]['contact_users'][$y]['contact_user_uuid'] = uuid();
+						$array['contacts'][0]['contact_users'][$y]['contact_uuid'] = $contact_uuid;
+						$array['contacts'][0]['contact_users'][$y]['user_uuid'] = $contact_user_uuid;
+						$y++;
+				}
 			}
 
 			$y = 0;
