@@ -245,7 +245,7 @@
     "src": "resources/js/ui/component.dragula.js"
   },
   "resources/js/ui/component.fileupload.js": {
-    "file": "assets/component.fileupload-303ae86e.js",
+    "file": "assets/component.fileupload-9f71d63f.js",
     "imports": [
       "_select2-09f14948.js",
       "_jquery-f66a0d01.js",
@@ -253,6 +253,11 @@
     ],
     "isEntry": true,
     "src": "resources/js/ui/component.fileupload.js"
+  },
+  "resources/js/ui/component.toastr.js": {
+    "file": "assets/component.toastr-9e76f0f0.js",
+    "isEntry": true,
+    "src": "resources/js/ui/component.toastr.js"
   },
   "resources/scss/app-modern.scss": {
     "file": "assets/app-modern-f11162ee.css",
