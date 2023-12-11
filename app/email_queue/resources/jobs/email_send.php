@@ -147,6 +147,7 @@
 
 //get the call center settings
 	$retry_limit = $setting->get('email_queue', 'retry_limit');
+	$transcribe_enabled = $setting->get('voicemail', 'transcribe_enabled');
 
 //set defaults
 	if (empty($email_retry_count)) {
@@ -220,7 +221,7 @@
 				}
 			}
 
-			if (isset($voicemail_transcription_enabled) && $voicemail_transcription_enabled === 'true') {
+			if (isset($transcribe_enabled) && $transcribe_enabled === 'true' && isset($voicemail_transcription_enabled) && $voicemail_transcription_enabled === 'true') {
 				//transcribe the attachment
 				require $_SERVER['DOCUMENT_ROOT']."/app/email_queue/resources/functions/transcribe.php";
 				if ($email_attachment_type == 'wav' || $email_attachment_type == 'mp3') {
