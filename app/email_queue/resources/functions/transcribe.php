@@ -164,27 +164,31 @@ if (!function_exists('transcribe')) {
 					//ob_end_clean();
 
 					//run the command
-					$http_response = shell_exec($command);
-
-					//validate the json
-					$ob = json_decode($http_response);
-					if($ob === null) {
-						echo "invalid json\n";
-						return false;
+					if (!empty($command)) {
+						$http_response = shell_exec($command);
 					}
 
-					$message = '';
-					$json = json_decode($http_response, true);
-					//echo "json; ".$json."\n";
-					foreach($json['results'] as $row) {
-						$message .= $row['alternatives'][0]['transcript'];
+					//validate the json
+					if (!empty($http_response)) {
+						$ob = json_decode($http_response);
+						if($ob === null) {
+							echo "invalid json\n";
+							return false;
+						}
+
+						$json = json_decode($http_response, true);
+						//echo "json; ".$json."\n";
+						$message = '';
+						foreach($json['results'] as $row) {
+							$message .= $row['alternatives'][0]['transcript'];
+						}
 					}
 
 					//build the response
 					$array['provider'] = $transcribe_provider;
 					$array['language'] = $transcribe_language;
-					$array['command'] = $command;
-					$array['message'] = $message;
+					$array['command'] = $command ?? '';
+					$array['message'] = $message ?? '';
 					//print_r($array);
 
 					return $array;
