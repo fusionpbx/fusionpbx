@@ -25,12 +25,8 @@
 	James Rose <james.o.rose@gmail.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -57,7 +53,7 @@
 	}
 
 //set a default file size
-	if (!isset($_POST['size']) || strlen($_POST['size']) == 0) {
+	if (!isset($_POST['size']) || empty($_POST['size'])) {
 		$_POST['size'] = "32";
 	}
 
@@ -94,7 +90,7 @@
 				}
 			}
 			if (isset($filename) && file_exists($filename)) {
-				session_cache_limiter('public');
+				@session_cache_limiter('public');
 				$fd = fopen($filename, "rb");
 				header("Content-Type: binary/octet-stream");
 				header("Content-Length: " . filesize($filename));
@@ -200,12 +196,15 @@
 		$array_filter[6]['type'] = 'bold';
 		$array_filter[6]['font'] = 'monospace';
 
-		$file_size = filesize($log_file);
+		$file_size = 0;
+		if (file_exists($log_file)) {
+			$file_size = filesize($log_file);
+		}
 
 		/*
 		// removed: duplicate of above
 		if (isset($_POST['submit'])) {
-			if (strlen($_POST['size']) == 0) { $_POST['size'] = "32"; }
+			if (empty($_POST['size'])) { $_POST['size'] = "32"; }
 		}
 		*/
 
@@ -219,7 +218,7 @@
 			else {
 				$user_file_size = $_POST['size'] * 1024;
 			}
-			if (strlen($_REQUEST['filter']) > 0) {
+			if (!empty($_REQUEST['filter'])) {
 				$filter = $_REQUEST['filter'];
 			}
 		}
@@ -248,7 +247,7 @@
 				else {
 					//open the file
 					$byte_count ='0';
-					if ($file) {
+					if (!empty($file)) {
 						fseek($file, 0);
 					}
 					echo "<br>".$text['label-open_file']."<br>";
@@ -272,7 +271,7 @@
 
 		//start processing
 		$byte_count = 0;
-		if ($file) {
+		if (!empty($file)) {
 			while(!feof($file)) {
 				$log_line = escape(fgets($file));
 				$byte_count++;
@@ -320,7 +319,7 @@
 		else {
 			$adj_index = 1;
 		}
-		if (is_array($array_output)) {
+		if (!empty($array_output) && is_array($array_output)) {
 			foreach ($array_output as $index => $line) {
 				$line_num = "";
 				if ($line != "<span style='color: #fff; font-family: monospace;'></span><br>") {
@@ -342,7 +341,7 @@
 	require_once "resources/footer.php";
 
 //close the file
-	if ($file) {
+	if (!empty($file)) {
 		fclose($file);
 	}
 

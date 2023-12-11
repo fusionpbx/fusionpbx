@@ -17,19 +17,15 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -45,7 +41,7 @@
 	$cmd = $_GET['cmd'];
 
 //pre-populate the form
-	if (is_array($_GET) && is_uuid($_GET["id"]) && $_POST["persistformvar"] != "true") {
+	if (!empty($_GET) && is_array($_GET) && is_uuid($_GET["id"]) && (empty($_POST["persistformvar"]) || $_POST["persistformvar"] != "true")) {
 		$call_center_queue_uuid = $_GET["id"];
 		$sql = "select queue_extension from v_call_center_queues ";
 		$sql .= "where domain_uuid = :domain_uuid ";
@@ -74,11 +70,10 @@
 
 //connect to event socket
 	if (isset($queue_extension) && isset($cmd)) {
-		$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-		if ($fp) {
-			$response = event_socket_request($fp, 'api reloadxml');
-			$response = event_socket_request($fp, 'api callcenter_config queue '.$cmd. ' '.$queue_extension."@".$_SESSION["domain_name"]);
-			fclose($fp);
+		$esl = event_socket::create();
+		if ($esl->is_connected()) {
+			$response = event_socket::api('reloadxml');
+			$response = event_socket::api('callcenter_config queue '.$cmd.' '.$queue_extension.'@'.$_SESSION['domain_name']);
 		}
 		else {
 			$response = '';

@@ -42,11 +42,11 @@
 
 	//feature_event method		
 		public function send_notify() {
-			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-			if ($fp) {
+			$esl = event_socket::create();
+			if ($esl->is_connected()) {
 				// Get the SIP profiles for the extension
 				$command = "sofia_contact */{$this->extension}@{$this->domain_name}";
-				$contact_string = event_socket_request($fp, "api ".$command);
+				$contact_string = event_socket::api($command);
 				// The first value in the array will be full matching text, the second one will be the array of profile matches
 				preg_match_all('/sofia\/([^,]+)\/(?:[^,]+)/', $contact_string, $matches);
 				if (sizeof($matches) != 2 || sizeof($matches[1]) < 1) {
@@ -72,12 +72,11 @@
 					$event .= "forward_no_answer: " . $this->forward_no_answer_destination . "\n";
 					$event .= "doNotDisturbOn: " . $this->do_not_disturb . "\n";
 					$event .= "ringCount: " . $this->ring_count . "\n";
-					event_socket_request($fp, $event);
+					event_socket::command($event);
 				}
-				fclose($fp);
 			}
 		} //function
-	
+
 	} //class
 
 ?>

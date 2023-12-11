@@ -24,12 +24,8 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -46,7 +42,7 @@
 	$text = $language->get();
 
 //action add or update
-	if (is_uuid($_REQUEST["id"])) {
+	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
 		$contact_note_uuid = $_REQUEST["id"];
 	}
@@ -55,19 +51,19 @@
 	}
 
 //get the primary id for the contact
-	if (is_uuid($_GET["contact_uuid"])) {
+	if (!empty($_GET["contact_uuid"]) && is_uuid($_GET["contact_uuid"])) {
 		$contact_uuid = $_GET["contact_uuid"];
 	}
 
 //get http post variables and set them to php variables
-	if (count($_POST)>0) {
+	if (!empty($_POST)) {
 		$contact_note = $_POST["contact_note"];
-		$last_mod_date = $_POST["last_mod_date"];
-		$last_mod_user = $_POST["last_mod_user"];
+		$last_mod_date = $_POST["last_mod_date"] ?? null;
+		$last_mod_user = $_POST["last_mod_user"] ?? null;
 	}
 
 //process the form data
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
 		//get the primary id for the contact note
 			if ($action == "update") {
@@ -84,7 +80,7 @@
 
 		//check for all required data
 			$msg = '';
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -98,7 +94,7 @@
 			}
 
 		//add or update the database
-			if ($_POST["persistformvar"] != "true") {
+			if (empty($_POST["persistformvar"])) {
 
 				//update last modified
 					$array['contacts'][0]['contact_uuid'] = $contact_uuid;
@@ -133,7 +129,7 @@
 					}
 
 				//execute
-					if (is_array($array) && @sizeof($array) != 0) {
+					if (!empty($array)) {
 						$array['contact_notes'][0]['contact_uuid'] = $contact_uuid;
 						$array['contact_notes'][0]['domain_uuid'] = $domain_uuid;
 						$array['contact_notes'][0]['contact_note'] = $contact_note;
@@ -155,8 +151,8 @@
 	}
 
 //pre-populate the form
-	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
-		$contact_note_uuid = $_GET["id"];
+	if (!empty($_GET) && empty($_POST["persistformvar"])) {
+		$contact_note_uuid = $_GET["id"] ?? '';
 		$sql = "select * from v_contact_notes ";
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$sql .= "and contact_note_uuid = :contact_note_uuid ";
@@ -164,7 +160,7 @@
 		$parameters['contact_note_uuid'] = $contact_note_uuid;
 		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
-		if (is_array($row) && @sizeof($row) != 0) {
+		if (!empty($row)) {
 			$contact_note = $row["contact_note"];
 			$last_mod_date = $row["last_mod_date"];
 			$last_mod_user = $row["last_mod_user"];
@@ -211,7 +207,7 @@
 	echo "	".$text['label-contact_note']."\n";
 	echo "</td>\n";
 	echo "<td width='70%' class='vtable' align='left'>\n";
-	echo "  <textarea class='formfld' name='contact_note' style='min-width: 100%; height: 400px;'>".$contact_note."</textarea>\n";
+	echo "  <textarea class='formfld' name='contact_note' style='min-width: 100%; height: 400px;'>".escape($contact_note ?? '')."</textarea>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 

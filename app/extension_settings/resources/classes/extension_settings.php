@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2021
+	Portions created by the Initial Developer are Copyright (C) 2021-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -62,16 +62,6 @@ if (!class_exists('extension_settings')) {
 		}
 
 		/**
-		 * called when there are no references to a particular object
-		 * unset the variables used in the class
-		 */
-		public function __destruct() {
-			foreach ($this as $key => $value) {
-				unset($this->$key);
-			}
-		}
-
-		/**
 		 * delete rows from the database
 		 */
 		public function delete($records) {
@@ -95,7 +85,7 @@ if (!class_exists('extension_settings')) {
 							$x = 0;
 							foreach ($records as $record) {
 								//add to the array
-									if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+									if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 										$array[$this->table][$x][$this->name.'_uuid'] = $record['uuid'];
 										$array[$this->table][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
 									}
@@ -152,8 +142,8 @@ if (!class_exists('extension_settings')) {
 				//toggle the checked records
 					if (is_array($records) && @sizeof($records) != 0) {
 						//get current toggle state
-							foreach($records as $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+							foreach ($records as $record) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$uuids[] = "'".$record['uuid']."'";
 								}
 							}
@@ -233,8 +223,8 @@ if (!class_exists('extension_settings')) {
 					if (is_array($records) && @sizeof($records) != 0) {
 
 						//get checked records
-							foreach($records as $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+							foreach ($records as $record) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$uuids[] = "'".$record['uuid']."'";
 								}
 							}
@@ -248,17 +238,17 @@ if (!class_exists('extension_settings')) {
 								$database = new database;
 								$rows = $database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
-									$x = 0;
-									foreach ($rows as $row) {
+									foreach ($rows as $x => $row) {
+// 										var_dump($row); exit;
+
 										//copy data
 											$array[$this->table][$x] = $row;
 
-										//add copy to the description
+										//overwrite
 											$array[$this->table][$x][$this->name.'_uuid'] = uuid();
-											$array[$this->table][$x][$this->description_field] = trim($row[$this->description_field]).' ('.$text['label-copy'].')';
+											$array[$this->table][$x][$this->name.'_enabled'] = $row['extension_setting_enabled'] === true ? 'true' : 'false';
+											$array[$this->table][$x][$this->description_field] = trim($row[$this->description_field] ?? '').' ('.$text['label-copy'].')';
 
-										//increment the id
-											$x++;
 									}
 								}
 								unset($sql, $parameters, $rows, $row);

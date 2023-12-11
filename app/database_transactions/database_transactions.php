@@ -17,19 +17,15 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2016 - 2022
+	Portions created by the Initial Developer are Copyright (C) 2016 - 2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
 
@@ -46,13 +42,23 @@
 	$language = new text;
 	$text = $language->get();
 
+//set default values
+	$search = '';
+	$user_uuid = '';
+
 //get variables used to control the order
-	$order_by = $_GET["order_by"];
-	$order = $_GET["order"];
+	$order_by = $_GET["order_by"] ?? '';
+	$order = $_GET["order"] ?? '';
+
+//set from session variables
+	$list_row_edit_button = !empty($_SESSION['theme']['list_row_edit_button']['boolean']) ? $_SESSION['theme']['list_row_edit_button']['boolean'] : 'false';
+	$button_icon_view = !empty($_SESSION['theme']['button_icon_view']) ? $_SESSION['theme']['button_icon_view'] : '';
 
 //add the user filter and search term
-	$user_uuid = $_GET['user_uuid'];
-	if (isset($_GET["search"]) && $_GET["search"] != '') {
+	if (!empty($_GET["user_uuid"])) {
+		$user_uuid = $_GET['user_uuid'];
+	}
+	if (!empty($_GET["search"])) {
 		$search = strtolower($_GET["search"]);
 	}
 
@@ -62,11 +68,11 @@
 	$sql .= "left outer join v_domains as d using (domain_uuid) ";
 	$sql .= "left outer join v_users as u using (user_uuid) ";
 	$sql .= "where t.domain_uuid = :domain_uuid ";
-	if (is_uuid($user_uuid)) {
+	if (!empty($user_uuid)) {
 		$sql .= "and t.user_uuid = :user_uuid ";
 		$parameters['user_uuid'] = $user_uuid;
 	}
-	if (isset($search)) {
+	if (!empty($search)) {
 		$sql .= "and (";
 		$sql .= "	lower(t.app_name) like :search ";
 		$sql .= "	or lower(t.transaction_code) like :search ";
@@ -85,10 +91,9 @@
 	unset($parameters);
 
 //prepare to page the results
-	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$rows_per_page = (!empty($_SESSION['domain']['paging']['numeric'])) ? $_SESSION['domain']['paging']['numeric'] : 50;
 	$param = "search=".$search;
-	$page = $_GET['page'];
-	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
+	$page = empty($_GET['page']) ? $page = 0 : $page = $_GET['page'];
 	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
 	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
@@ -101,11 +106,11 @@
 	$sql .= "left outer join v_domains as d using (domain_uuid) ";
 	$sql .= "left outer join v_users as u using (user_uuid) ";
 	$sql .= "where t.domain_uuid = :domain_uuid ";
-	if (is_uuid($user_uuid)) {
+	if (!empty($user_uuid)) {
 		$sql .= "and t.user_uuid = :user_uuid ";
 		$parameters['user_uuid'] = $user_uuid;
 	}
-	if (isset($search)) {
+	if (!empty($search)) {
 		$sql .= "and (";
 		$sql .= "	lower(t.app_name) like :search ";
 		$sql .= "	or lower(t.transaction_code) like :search ";
@@ -132,7 +137,7 @@
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$database = new database;
 	$rows = $database->select($sql, $parameters, 'all');
-	if (is_array($rows) && @sizeof($rows) != 0) {
+	if (!empty($rows)) {
 		foreach ($rows as $row) {
 			$users[$row['user_uuid']] = $row['username'];
 		}
@@ -161,7 +166,7 @@
 	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=''>";
 	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search']);
 	//echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','onclick'=>"document.getElementById('search').value = ''; document.getElementById('form_search').submit();",'style'=>(!$search ? 'display: none;' : null)]);
-	if ($paging_controls_mini != '') {
+	if (!empty($paging_controls_mini)) {
 		echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>";
 	}
 	echo "		</form>\n";
@@ -181,19 +186,16 @@
 	echo th_order_by('transaction_address', $text['label-transaction_address'], $order_by, $order);
 	echo th_order_by('transaction_type', $text['label-transaction_type'], $order_by, $order);
 	echo th_order_by('transaction_date', $text['label-transaction_date'], $order_by, $order);
-	//echo th_order_by('transaction_old', $text['label-transaction_old'], $order_by, $order);
-	//echo th_order_by('transaction_new', $text['label-transaction_new'], $order_by, $order);
-	//echo th_order_by('transaction_result', $text['label-transaction_result'], $order_by, $order);
-	if (permission_exists('database_transaction_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+	if (permission_exists('database_transaction_edit') && !empty($list_row_edit_button) && $list_row_edit_button == 'true') {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
 
-	if (is_array($result)) {
+	if (!empty($result)) {
 		$x = 0;
 		foreach($result as $row) {
 			if (permission_exists('database_transaction_edit')) {
-				$list_row_url = "database_transaction_edit.php?id=".urlencode($row['database_transaction_uuid']).($page != '' ? "&page=".urlencode($page) : null).($search != '' ? "&search=".urlencode($search) : null);
+				$list_row_url = "database_transaction_edit.php?id=".urlencode($row['database_transaction_uuid']).(!empty($page) ? "&page=".urlencode($page) : null).(!empty($search) ? "&search=".urlencode($search) : null);
 			}
 			echo "<tr class='list-row' href='".$list_row_url."'>\n";
 			echo "	<td>".escape($row['domain_name'])."&nbsp;</td>\n";
@@ -203,11 +205,8 @@
 			echo "	<td>".escape($row['transaction_address'])."&nbsp;</td>\n";
 			echo "	<td>".escape($row['transaction_type'])."&nbsp;</td>\n";
 			echo "	<td>".escape($row['transaction_date'])."&nbsp;</td>\n";
-			//echo "	<td>".escape($row['transaction_old']."&nbsp;</td>\n";
-			//echo "	<td>".escape($row['transaction_new']."&nbsp;</td>\n";
-			//echo "	<td>".escape($row['transaction_result']."&nbsp;</td>\n";
-			if (permission_exists('database_transaction_edit')) {
-				echo "	<td class='action-button'>";
+			if (permission_exists('database_transaction_edit') && !empty($list_row_edit_button) && $list_row_edit_button == 'true') {
+				echo "	<td class='action-button'>\n";
 				echo button::create(['type'=>'button','title'=>$text['button-view'],'icon'=>$_SESSION['theme']['button_icon_view'],'link'=>$list_row_url]);
 				echo "	</td>\n";
 			}

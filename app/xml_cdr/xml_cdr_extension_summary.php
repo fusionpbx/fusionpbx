@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -25,12 +25,8 @@
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //permisisions
@@ -47,23 +43,27 @@
 	$text = $language->get();
 
 //retrieve submitted data
-	$quick_select = $_REQUEST['quick_select'];
-	$start_stamp_begin = $_REQUEST['start_stamp_begin'];
-	$start_stamp_end = $_REQUEST['start_stamp_end'];
-	$include_internal = $_REQUEST['include_internal'];
-	$quick_select = sizeof($_REQUEST) == 0 ? 3 : $quick_select; //set default
+	if (!empty($_REQUEST)) {
+		$quick_select = $_REQUEST['quick_select'];
+		$start_stamp_begin = $_REQUEST['start_stamp_begin'];
+		$start_stamp_end = $_REQUEST['start_stamp_end'];
+		$include_internal = $_REQUEST['include_internal'];
+	}
+	else {
+		$quick_select = 3; //set default
+	}
 
 //get the summary
 	$cdr = new xml_cdr;
 	$cdr->domain_uuid = $_SESSION['domain_uuid'];
 	$cdr->quick_select = $quick_select;
-	$cdr->start_stamp_begin = $start_stamp_begin;
-	$cdr->start_stamp_end = $start_stamp_end;
-	$cdr->include_internal = $include_internal;
+	$cdr->start_stamp_begin = $start_stamp_begin ?? null;
+	$cdr->start_stamp_end = $start_stamp_end ?? null;
+	$cdr->include_internal = $include_internal ?? null;
 	$summary = $cdr->user_summary();
 
 //set the http header
-	if ($_REQUEST['type'] == "csv") {
+	if (!empty($_REQUEST['type']) && $_REQUEST['type'] == "csv") {
 
 		//set the headers
 			header('Content-type: application/octet-binary');
@@ -119,7 +119,7 @@
 	if (permission_exists('xml_cdr_extension_summary_all') && $_GET['show'] != 'all') {
 		echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$_SESSION['theme']['button_icon_all'],'collapse'=>'hide-sm-dn','link'=>'xml_cdr_extension_summary.php?show=all']);
 	}
-	echo button::create(['type'=>'button','label'=>$text['button-download_csv'],'icon'=>$_SESSION['theme']['button_icon_download'],'collapse'=>'hide-sm-dn','link'=>'xml_cdr_extension_summary.php?'.(strlen($_SERVER["QUERY_STRING"]) > 0 ? $_SERVER["QUERY_STRING"].'&' : null).'type=csv']);
+	echo button::create(['type'=>'button','label'=>$text['button-download_csv'],'icon'=>$_SESSION['theme']['button_icon_download'],'collapse'=>'hide-sm-dn','link'=>'xml_cdr_extension_summary.php?'.(!empty($_SERVER["QUERY_STRING"]) ? $_SERVER["QUERY_STRING"].'&' : null).'type=csv']);
 	echo button::create(['type'=>'button','label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'collapse'=>'hide-xs','style'=>'margin-left: 15px;','link'=>'xml_cdr_extension_summary.php']);
 	echo button::create(['type'=>'button','label'=>$text['button-update'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save','collapse'=>'hide-xs','onclick'=>"document.getElementById('frm').submit();"]);
 	echo "	</div>\n";
@@ -151,10 +151,22 @@
 
 		echo "	<div class='form_set'>\n";
 		echo "		<div class='label'>\n";
+		echo "			".$text['label-include_internal']."\n";
+		echo "		</div>\n";
+		echo "		<div class='field'>\n";
+		echo "			<select class='formfld' name='include_internal' id='include_internal'>\n";
+		echo "				<option value='0'>".$text['option-false']."</option>\n";
+		echo "				<option value='1' ".((!empty($include_internal) && $include_internal == 1) ? "selected" : null).">".$text['option-true']."</option>\n";
+		echo "			</select>\n";
+		echo "		</div>\n";
+		echo "	</div>\n";
+
+		echo "	<div class='form_set'>\n";
+		echo "		<div class='label'>\n";
 		echo "			".$text['label-start_date_time']."\n";
 		echo "		</div>\n";
 		echo "		<div class='field'>\n";
-		echo "			<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#start_stamp_begin' onblur=\"$(this).datetimepicker('hide');\" style='min-width: 115px; width: 115px; max-width: 115px;' name='start_stamp_begin' id='start_stamp_begin' placeholder='".$text['label-from']."' value='".escape($start_stamp_begin)."'>\n";
+		echo "			<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#start_stamp_begin' onblur=\"$(this).datetimepicker('hide');\" style='min-width: 115px; width: 115px; max-width: 115px;' name='start_stamp_begin' id='start_stamp_begin' placeholder='".$text['label-from']."' value='".escape($start_stamp_begin ?? '')."'>\n";
 		echo "		</div>\n";
 		echo "	</div>\n";
 
@@ -163,25 +175,13 @@
 		echo "			".$text['label-end_date_time']."\n";
 		echo "		</div>\n";
 		echo "		<div class='field'>\n";
-		echo "			<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#start_stamp_end' onblur=\"$(this).datetimepicker('hide');\" style='min-width: 115px; width: 115px; max-width: 115px;' name='start_stamp_end' id='start_stamp_end' placeholder='".$text['label-to']."' value='".escape($start_stamp_end)."'>\n";
-		echo "		</div>\n";
-		echo "	</div>\n";
-
-		echo "	<div class='form_set'>\n";
-		echo "		<div class='label'>\n";
-		echo "			".$text['label-include_internal']."\n";
-		echo "		</div>\n";
-		echo "		<div class='field'>\n";
-		echo "			<select class='formfld' name='include_internal' id='include_internal'>\n";
-		echo "				<option value='0'>".$text['option-false']."</option>\n";
-		echo "				<option value='1' ".(($include_internal == 1) ? "selected" : null).">".$text['option-true']."</option>\n";
-		echo "			</select>\n";
+		echo "			<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#start_stamp_end' onblur=\"$(this).datetimepicker('hide');\" style='min-width: 115px; width: 115px; max-width: 115px;' name='start_stamp_end' id='start_stamp_end' placeholder='".$text['label-to']."' value='".escape($start_stamp_end ?? '')."'>\n";
 		echo "		</div>\n";
 		echo "	</div>\n";
 
 		echo "</div>\n";
 
-		if (permission_exists('xml_cdr_extension_summary_all') && $_GET['show'] == 'all') {
+		if (!empty($_GET['show']) && $_GET['show'] == 'all' && permission_exists('xml_cdr_extension_summary_all')) {
 			echo "<input type='hidden' name='show' value='all'>";
 		}
 
@@ -191,7 +191,7 @@
 //show the results
 	echo "<table class='list'>\n";
 	echo "	<tr class='list-header'>\n";
-	if ($_GET['show'] === "all" && permission_exists('xml_cdr_extension_summary_all')) {
+	if (!empty($_GET['show']) && $_GET['show'] === "all" && permission_exists('xml_cdr_extension_summary_all')) {
 		echo "		<th>".$text['label-domain']."</th>\n";
 	}
 	echo "		<th>".$text['label-extension']."</th>\n";
@@ -213,7 +213,7 @@
 	if (is_array($summary)) {
 		foreach ($summary as $key => $row) {
 			echo "<tr class='list-row'>\n";
-			if ($_GET['show'] === "all" && permission_exists('xml_cdr_extension_summary_all')) {
+			if (!empty($_GET['show']) && $_GET['show'] === "all" && permission_exists('xml_cdr_extension_summary_all')) {
 				echo "	<td>".escape($row['domain_name'])."</td>\n";
 			}
 			echo "	<td>".escape($row['extension'])."</td>\n";

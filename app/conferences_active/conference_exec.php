@@ -27,7 +27,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2022
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -36,12 +36,8 @@
 
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
-//includes
-	require_once "resources/require.php";
+//includes files
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -57,10 +53,10 @@
 	if (count($_GET) > 0) {
 		$cmd = trim($_GET["cmd"]);
 		$name = trim($_GET["name"]);
-		$uuid = trim($_GET["uuid"]);
+		$uuid = trim($_GET["uuid"] ?? '');
 		$data = trim($_GET["data"]);
-		$id = trim($_GET["id"]);
-		$direction = trim($_GET["direction"]);
+		$id = trim($_GET["id"] ?? '');
+		$direction = trim($_GET["direction"] ?? '');
 	}
 
 //authorized commands
@@ -73,7 +69,7 @@
 	}
 
 //get the conference name
-	if (isset($name) && strlen($name) > 0) {
+	if (isset($name) && !empty($name)) {
 		$name_array = explode('@', $name);
 		$name = $name_array[0];
 	}
@@ -151,9 +147,9 @@
 	}
 
 //define an alternative kick all
-	function conference_end($fp, $name) {
+	function conference_end($name) {
 		$switch_cmd = "conference '".$name."' xml_list";
-		$xml_str = trim(event_socket_request($fp, 'api '.$switch_cmd));
+		$xml_str = trim(event_socket::api($switch_cmd));
 		try {
 			$xml = new SimpleXMLElement($xml_str);
 		}
@@ -165,7 +161,7 @@
 		foreach ($xml->conference->members->member as $row) {
 			$uuid = (string)$row->uuid;
 			if (is_uuid($uuid)) {
-				$switch_result = event_socket_request($fp, 'api uuid_kill '.$uuid);
+				$switch_result = event_socket::api("uuid_kill $uuid");
 			}
 			if ($x < 1) {
 				usleep(500000); //500000 = 0.5 seconds
@@ -182,76 +178,76 @@
 
 //execute the command
 	if (count($_GET) > 0) {
-		if (strlen($cmd) > 0) {
+		if (!empty($cmd)) {
 			//prepare the switch cmd
 				$switch_cmd = $cmd . " ";
 				$switch_cmd .= $name . " ";
 				$switch_cmd .= $data . " ";
-				if ($id && strlen($id) > 0) {
+				if ($id && !empty($id)) {
 					$switch_cmd .= " ".$id;
 				}
 
 			//connect to event socket
-				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-				if ($fp) {
+				$esl = event_socket::create();
+				if ($esl->is_connected()) {
 					if ($data == "energy") {
 						//conference 3001-example-domain.org energy 103
-						$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
+						$switch_result = event_socket::api($switch_cmd);
 						$result_array = explode("=",$switch_result);
 						$tmp_value = $result_array[1];
 						if ($direction == "up") { $tmp_value = $tmp_value + 100; }
 						if ($direction == "down") { $tmp_value = $tmp_value - 100; }
 						//echo "energy $tmp_value<br />\n";
-						$switch_result = event_socket_request($fp, 'api '.$switch_cmd.' '.$tmp_value);
+						$switch_result = event_socket::api("$switch_cmd $tmp_value");
 					}
 					elseif ($data == "volume_in") {
-						$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
+						$switch_result = event_socket::api($switch_cmd);
 						$result_array = explode("=",$switch_result);
 						$tmp_value = $result_array[1];
 						if ($direction == "up") { $tmp_value = $tmp_value + 1; }
 						if ($direction == "down") { $tmp_value = $tmp_value - 1; }
 						//echo "volume $tmp_value<br />\n";
-						$switch_result = event_socket_request($fp, 'api '.$switch_cmd.' '.$tmp_value);
+						$switch_result = event_socket::api($switch_cmd.' '.$tmp_value);
 					}
 					elseif ($data == "volume_out") {
-						$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
+						$switch_result = event_socket::api($switch_cmd);
 						$result_array = explode("=",$switch_result);
 						$tmp_value = $result_array[1];
 						if ($direction == "up") { $tmp_value = $tmp_value + 1; }
 						if ($direction == "down") { $tmp_value = $tmp_value - 1; }
 						//echo "volume $tmp_value<br />\n";
-						$switch_result = event_socket_request($fp, 'api '.$switch_cmd.' '.$tmp_value);
+						$switch_result = event_socket::api($switch_cmd.' '.$tmp_value);
 					}
 					elseif ($data == "record") {
 						$recording_dir = $_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/archive/'.date("Y").'/'.date("M").'/'.date("d");
-						$switch_cmd .= $recording_dir."/".$uuid.".wav";
-						if (!file_exists($recording_dir."/".$uuid.".wav")) {
-							$switch_result = event_socket_request($fp, "api ".$switch_cmd);
+						$switch_cmd .= $recording_dir."/{$uuid}.wav";
+						if (!file_exists($switch_cmd)) {
+							$switch_result = event_socket::api($switch_cmd);
 						}
 					}
 					elseif ($data == "norecord") {
 						//stop recording and rename the file
 						$recording_dir = $_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/archive/'.date("Y").'/'.date("M").'/'.date("d");
 						$switch_cmd .= $recording_dir."/".$uuid.".wav";
-						$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
+						$switch_result = event_socket::api($switch_cmd);
 					}
 					elseif ($data == "kick") {
-						$switch_result = event_socket_request($fp, 'api uuid_kill '.$uuid);
+						$switch_result = event_socket::api("uuid_kill $uuid");
 					}
 					elseif ($data == "kick all") {
-						//$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
-						conference_end($fp, $name);
+						//$switch_result = event_socket::api($switch_cmd);
+						conference_end($name);
 					}
 					elseif ($data == "mute" || $data == "unmute" || $data == "mute non_moderator" || $data == "unmute non_moderator") {
-						$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
+						$switch_result = event_socket::api($switch_cmd);
 						$switch_cmd = "uuid_setvar ".$uuid. " hand_raised false";
-						event_socket_request($fp, 'api '.$switch_cmd);
+						event_socket::api($switch_cmd);
 					}
 					elseif ($data == "deaf" || $data == "undeaf" ) {
-						$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
+						$switch_result = event_socket::api($switch_cmd);
 					}
 					elseif ($data == "lock" || $data == "unlock" ) {
-						$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
+						$switch_result = event_socket::api($switch_cmd);
 					}
 					//echo "command: ".$switch_cmd." result: ".$switch_result."<br\n>";
 				}

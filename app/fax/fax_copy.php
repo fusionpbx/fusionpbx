@@ -24,12 +24,8 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
 
@@ -105,7 +101,7 @@
 			$array['fax'][0]['fax_pin_number'] = $fax_pin_number;
 			$array['fax'][0]['fax_caller_id_name'] = $fax_caller_id_name;
 			$array['fax'][0]['fax_caller_id_number'] = $fax_caller_id_number;
-			if (strlen($fax_forward_number) > 0) {
+			if (!empty($fax_forward_number)) {
 				$array['fax'][0]['fax_forward_number'] = $fax_forward_number;
 			}
 			$array['fax'][0]['fax_description'] = $fax_description;

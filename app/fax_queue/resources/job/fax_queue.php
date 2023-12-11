@@ -2,12 +2,8 @@
 
 //includes
 	if (defined('STDIN')) {
-		//set the include path
-		$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-		set_include_path(parse_ini_file($conf[0])['document.root']);
-
 		//includes files
-		require_once "resources/require.php";
+		require_once  dirname(__DIR__, 4) . "/resources/require.php";
 	}
 	else {
 		exit;
@@ -60,20 +56,31 @@
 		return $exists;
 	}
 
+//get the email queue settings
+	$setting = new settings(["category" => "fax_queue"]);
+
+//set the fax queue interval
+	if (!empty($setting->get('fax_queue', 'interval'))) {
+		$fax_queue_interval = $setting->get('fax_queue', 'interval');
+	}
+	else {
+		$fax_queue_interval = '30';
+	}
+
 //set the fax queue limit
-	if (isset($_SESSION['fax_queue']['limit']['numeric'])) {
-		$fax_queue_limit = $_SESSION['fax_queue']['limit']['numeric'];
+	if (!empty($setting->get('fax_queue', 'limit'))) {
+		$fax_queue_limit = $setting->get('fax_queue', 'limit');
 	}
 	else {
 		$fax_queue_limit = '30';
 	}
-	if (isset($_SESSION['fax_queue']['debug']['boolean'])) {
-		$debug = $_SESSION['fax_queue']['debug']['boolean'];
+	if (!empty($setting->get('fax_queue', 'debug'))) {
+		$debug = $setting->get('fax_queue', 'debug');
 	}
 
 //set the fax queue retry interval
-	if (isset($_SESSION['fax_queue']['retry_interval']['numeric'])) {
-		$fax_retry_interval = $_SESSION['fax_queue']['retry_interval']['numeric'];
+	if (!empty($setting->get('fax_queue', 'retry_interval'))) {
+		$fax_retry_interval = $setting->get('fax_queue', 'retry_interval');
 	}
 	else {
 		$fax_retry_interval = '180';

@@ -17,19 +17,15 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -54,7 +50,7 @@
 	}
 
 //process the http post data by submitted action
-	if ($_POST['action'] != '' && is_uuid($fax_log_uuid) && is_uuid($fax_uuid)) {
+	if (!empty($_POST['action']) && !empty($fax_log_uuid) && is_uuid($fax_log_uuid) && is_uuid($fax_uuid)) {
 		$array[0]['checked'] = 'true';
 		$array[0]['uuid'] = $fax_log_uuid;
 
@@ -73,7 +69,7 @@
 	}
 
 //pre-populate the form
-	if (is_uuid($fax_log_uuid) && is_uuid($fax_uuid)) {
+	if (!empty($fax_log_uuid) && is_uuid($fax_log_uuid) && !empty($fax_uuid) && is_uuid($fax_uuid)) {
 		$sql = "select * from v_fax_logs ";
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$sql .= "and fax_log_uuid = :fax_log_uuid ";

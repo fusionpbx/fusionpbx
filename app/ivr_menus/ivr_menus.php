@@ -24,12 +24,8 @@
 	Mark J. Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
 
@@ -46,15 +42,20 @@
 	$language = new text;
 	$text = $language->get();
 
+//define defaults
+	$action = '';
+	$search = '';
+	$ivr_menus = '';
+
 //get posted data
-	if (is_array($_POST['ivr_menus'])) {
+	if (!empty($_POST['ivr_menus'])) {
 		$action = $_POST['action'];
 		$search = $_POST['search'];
 		$ivr_menus = $_POST['ivr_menus'];
 	}
 
 //process the http post data by action
-	if ($action != '' && is_array($ivr_menus) && @sizeof($ivr_menus) != 0) {
+	if (!empty($action) && is_array($ivr_menus) && @sizeof($ivr_menus) != 0) {
 		switch ($action) {
 			case 'copy':
 				if (permission_exists('ivr_menu_add')) {
@@ -76,62 +77,78 @@
 				break;
 		}
 
-		header('Location: ivr_menus.php'.($search != '' ? '?search='.urlencode($search) : null));
+		header('Location: ivr_menus.php'.(!empty($search) ? '?search='.urlencode($search) : null));
 		exit;
 	}
 
 //get order and order by
-	$order_by = $_GET["order_by"];
-	$order = $_GET["order"];
+	$order_by = $_GET["order_by"] ?? '';
+	$order = $_GET["order"] ?? '';
+	$sort = $order_by == 'ivr_menu_extension' ? 'natural' : null;
 
-//add the search term
-	$search = strtolower($_GET["search"]);
-	if (strlen($search) > 0) {
-		$sql_search = "and (";
-		$sql_search .= "lower(ivr_menu_name) like :search ";
-		$sql_search .= "or lower(ivr_menu_extension) like :search ";
-		$sql_search .= "or lower(ivr_menu_enabled) like :search ";
-		$sql_search .= "or lower(ivr_menu_description) like :search ";
-		$sql_search .= ")";
-		$parameters['search'] = '%'.$search.'%';
-	}
+//add the search variable
+	$search = $_GET["search"] ?? '';
+	$show = $_GET["show"] ?? '';
 
+//set from session variables
+	$list_row_edit_button = !empty($_SESSION['theme']['list_row_edit_button']['boolean']) ? $_SESSION['theme']['list_row_edit_button']['boolean'] : 'false';
 
 //prepare to page the results
 	$sql = "select count(*) from v_ivr_menus ";
-	$sql .= "where true ";
-	if ($_GET['show'] != "all" || !permission_exists('ivr_menu_all')) {
-		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
+	if ($show == "all" && permission_exists('ivr_menu_all')) {
+		$sql .= "where true ";
+	}
+	else {
+		$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	}
-	$database = new database;
-	$total_ivr_menus = $database->select($sql, $parameters, 'column');
-	$num_rows = $total_ivr_menus;
-
-//prepare to page the results
-	if ($sql_search) {
-		$sql .= $sql_search;
-		$database = new database;
-		$num_rows = $database->select($sql, $parameters, 'column');
+	if (!empty($search)) {
+		$search = strtolower($search);
+		$sql .= "and (";
+		$sql .= "	lower(ivr_menu_name) like :search ";
+		$sql .= "	or lower(ivr_menu_extension) like :search ";
+		$sql .= "	or lower(ivr_menu_enabled) like :search ";
+		$sql .= "	or lower(ivr_menu_description) like :search ";
+		$sql .= ")";
+		$parameters['search'] = '%'.$search.'%';
 	}
+	$database = new database;
+	$num_rows = $database->select($sql, $parameters ?? '', 'column');
 
 //prepare to page the results
-	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$rows_per_page = (!empty($_SESSION['domain']['paging']['numeric'])) ? $_SESSION['domain']['paging']['numeric'] : 50;
 	$param = "&search=".urlencode($search);
-	if ($_GET['show'] == "all" && permission_exists('ivr_menu_all')) {
+	if ($show == "all" && permission_exists('ivr_menu_all')) {
 		$param .= "&show=all";
 	}
-	$page = is_numeric($_GET['page']) ? $_GET['page'] : 0;
+	$page = !empty($_GET['page']) ? $_GET['page'] : 0;
 	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
 	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = str_replace('count(*)', '*', $sql);
-	$sql .= order_by($order_by, $order, 'ivr_menu_name', 'asc');
+	$sql = "select * from v_ivr_menus ";
+	if ($show == "all" && permission_exists('ivr_menu_all')) {
+		$sql .= "where true ";
+	}
+	else {
+		$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	}
+	if (!empty($search)) {
+		$search = strtolower($search);
+		$sql .= "and (";
+		$sql .= "	lower(ivr_menu_name) like :search ";
+		$sql .= "	or lower(ivr_menu_extension) like :search ";
+		$sql .= "	or lower(ivr_menu_enabled) like :search ";
+		$sql .= "	or lower(ivr_menu_description) like :search ";
+		$sql .= ")";
+		$parameters['search'] = '%'.$search.'%';
+	}
+	$sql .= order_by($order_by, $order, 'ivr_menu_name', 'asc', $sort);
 	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;
-	$ivr_menus = $database->select($sql, $parameters, 'all');
+	$ivr_menus = $database->select($sql, $parameters ?? '', 'all');
 	unset($sql, $parameters);
 
 //create token
@@ -146,10 +163,10 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-ivr_menus']." (".$num_rows.")</b></div>\n";
 	echo "	<div class='actions'>\n";
-	if (permission_exists('ivr_menu_add') && (!is_numeric($_SESSION['limit']['ivr_menus']['numeric']) || $total_ivr_menus < $_SESSION['limit']['ivr_menus']['numeric'])) {
+	if (permission_exists('ivr_menu_add') && (empty($_SESSION['limit']['ivr_menus']['numeric']) || $num_rows < $_SESSION['limit']['ivr_menus']['numeric'])) {
 		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'id'=>'btn_add','link'=>'ivr_menu_edit.php']);
 	}
-	if (permission_exists('ivr_menu_add') && $ivr_menus && (!is_numeric($_SESSION['limit']['ivr_menus']['numeric']) || $total_ivr_menus < $_SESSION['limit']['ivr_menus']['numeric'])) {
+	if (permission_exists('ivr_menu_add') && $ivr_menus && (empty($_SESSION['limit']['ivr_menus']['numeric']) || $num_rows < $_SESSION['limit']['ivr_menus']['numeric'])) {
 		echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'id'=>'btn_copy','name'=>'btn_copy','style'=>'display: none;','onclick'=>"modal_open('modal-copy','btn_copy');"]);
 	}
 	if (permission_exists('ivr_menu_edit') && $ivr_menus) {
@@ -160,7 +177,7 @@
 	}
 	echo 		"<form id='form_search' class='inline' method='get'>\n";
 	if (permission_exists('ivr_menu_all')) {
-		if ($_GET['show'] == 'all') {
+		if ($show == 'all') {
 			echo "		<input type='hidden' name='show' value='all'>";
 		}
 		else {
@@ -199,22 +216,22 @@
 	echo "<tr class='list-header'>\n";
 	if (permission_exists('ivr_menu_add') || permission_exists('ivr_menu_edit') || permission_exists('ivr_menu_delete')) {
 		echo "	<th class='checkbox'>\n";
-		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".($ivr_menus ?: "style='visibility: hidden;'").">\n";
+		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".(!empty($ivr_menus) ?: "style='visibility: hidden;'").">\n";
 		echo "	</th>\n";
 	}
-	if ($_GET['show'] == "all" && permission_exists('ivr_menu_all')) {
+	if ($show == "all" && permission_exists('ivr_menu_all')) {
 		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, $param, "class='shrink'");
 	}
 	echo th_order_by('ivr_menu_name', $text['label-name'], $order_by, $order);
 	echo th_order_by('ivr_menu_extension', $text['label-extension'], $order_by, $order);
 	echo th_order_by('ivr_menu_enabled', $text['label-enabled'], $order_by, $order, null, "class='center'");
 	echo th_order_by('ivr_menu_description', $text['label-description'], $order_by, $order, null, "class='hide-sm-dn'");
-	if (permission_exists('ivr_menu_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+	if (permission_exists('ivr_menu_edit') && $list_row_edit_button == 'true') {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
 
-	if (is_array($ivr_menus) && @sizeof($ivr_menus) != 0) {
+	if (!empty($ivr_menus)) {
 		$x = 0;
 		foreach($ivr_menus as $row) {
 			if (permission_exists('ivr_menu_edit')) {
@@ -227,8 +244,8 @@
 				echo "		<input type='hidden' name='ivr_menus[$x][uuid]' value='".escape($row['ivr_menu_uuid'])."' />\n";
 				echo "	</td>\n";
 			}
-			if ($_GET['show'] == "all" && permission_exists('ivr_menu_all')) {
-				if (strlen($_SESSION['domains'][$row['domain_uuid']]['domain_name']) > 0) {
+			if ($show == "all" && permission_exists('ivr_menu_all')) {
+				if (!empty($_SESSION['domains'][$row['domain_uuid']]['domain_name'])) {
 					$domain = $_SESSION['domains'][$row['domain_uuid']]['domain_name'];
 				}
 				else {
@@ -255,7 +272,7 @@
 			}
 			echo "	</td>\n";
 			echo "	<td class='description overflow hide-sm-dn'>".escape($row['ivr_menu_description'])."&nbsp;</td>\n";
-			if (permission_exists('ivr_menu_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+			if (permission_exists('ivr_menu_edit') && $list_row_edit_button == 'true') {
 				echo "	<td class='action-button'>";
 				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
 				echo "	</td>\n";

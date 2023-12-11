@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2016-2021
+	Portions created by the Initial Developer are Copyright (C) 2016-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -56,16 +56,6 @@ if (!class_exists('groups')) {
 		}
 
 		/**
-		 * called when there are no references to a particular object
-		 * unset the variables used in the class
-		 */
-		public function __destruct() {
-			foreach ($this as $key => $value) {
-				unset($this->$key);
-			}
-		}
-
-		/**
 		 * delete rows from the database
 		 */
 		public function delete($records) {
@@ -92,7 +82,7 @@ if (!class_exists('groups')) {
 					if (is_array($records) && @sizeof($records) != 0) {
 						//build array of checked records
 							foreach ($records as $x => $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$array[$this->table][$x][$this->name.'_uuid'] = $record['uuid'];
 									$array['group_permissions'][$x][$this->name.'_uuid'] = $record['uuid'];
 								}
@@ -147,7 +137,7 @@ if (!class_exists('groups')) {
 					if (is_array($records) && @sizeof($records) != 0) {
 						//build array of checked records
 							foreach ($records as $x => $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$array[$this->table][$x]['user_uuid'] = $record['uuid'];
 									$array[$this->table][$x]['group_uuid'] = $this->group_uuid;
 								}
@@ -207,7 +197,7 @@ if (!class_exists('groups')) {
 					if (is_array($records) && @sizeof($records) != 0) {
 						//get current toggle state
 							foreach($records as $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$uuids[] = "'".$record['uuid']."'";
 								}
 							}
@@ -282,7 +272,7 @@ if (!class_exists('groups')) {
 
 						//get checked records
 							foreach($records as $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$uuids[] = "'".$record['uuid']."'";
 								}
 							}
@@ -399,6 +389,14 @@ if (!class_exists('groups')) {
 					$x++;
 					$array['groups'][$x]['group_uuid'] = uuid();
 					$array['groups'][$x]['domain_uuid'] = null;
+					$array['groups'][$x]['group_name'] = 'fax';
+					$array['groups'][$x]['group_level'] = '20';
+					$array['groups'][$x]['group_description'] = 'Fax User Group';
+					$array['groups'][$x]['group_protected'] = 'false';
+					$group_uuids[$array['groups'][$x]['group_name']] = $array['groups'][$x]['group_uuid'];
+					$x++;
+					$array['groups'][$x]['group_uuid'] = uuid();
+					$array['groups'][$x]['domain_uuid'] = null;
 					$array['groups'][$x]['group_name'] = 'public';
 					$array['groups'][$x]['group_level'] = '10';
 					$array['groups'][$x]['group_description'] = 'Public Group';
@@ -472,6 +470,56 @@ if (!class_exists('groups')) {
 				}
 		}
 
+		/**
+		 * get the groups assigned to the user
+		 */
+		public function assigned($domain_uuid, $user_uuid) {
+			$sql = "select ";
+			$sql .= "u.user_group_uuid, ";
+			$sql .= "u.domain_uuid, ";
+			$sql .= "u.user_uuid, ";
+			$sql .= "u.group_uuid, ";
+			$sql .= "g.group_name, ";
+			$sql .= "g.group_level ";
+			$sql .= "from ";
+			$sql .= "v_user_groups as u, ";
+			$sql .= "v_groups as g ";
+			$sql .= "where u.domain_uuid = :domain_uuid ";
+			$sql .= "and u.user_uuid = :user_uuid ";
+			$sql .= "and u.group_uuid = g.group_uuid ";
+			$parameters['domain_uuid'] = $domain_uuid;
+			$parameters['user_uuid'] = $user_uuid;
+			$database = new database;
+			$groups = $database->select($sql, $parameters, 'all');
+			unset($sql, $parameters);
+			if (!empty($groups)) {
+				return $groups;
+			}
+			else {
+				return false;
+			}
+		}
+
+		/**
+		 * add the assigned groups the session array
+		 */
+		public function session($domain_uuid, $user_uuid) {
+			//get the groups
+			$groups = $this->assigned($domain_uuid, $user_uuid);
+
+			//set the groups in the session
+			$_SESSION["groups"] = $groups;
+			$_SESSION["user"]["groups"] = $groups;
+
+			//get the users group level
+			$_SESSION["user"]["group_level"] = 0;
+			foreach ($_SESSION['user']['groups'] as $row) {
+				if ($_SESSION["user"]["group_level"] < $row['group_level']) {
+					$_SESSION["user"]["group_level"] = $row['group_level'];
+				}
+			}
+
+		}
 	}
 }
 

@@ -36,10 +36,7 @@ if (!class_exists('presence')) {
 		 * @var string $presence_id
 		 */
 		public function active($presence_id) {
-			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-			$cmd = 'show calls as json';
-			$json = event_socket_request($fp, 'api '.$cmd);
-			unset($fp);
+			$json = event_socket::api('show calls as json');
 			$call_array = json_decode($json, true);
 			if (isset($call_array['rows'])) {
 				$x = 0;
@@ -65,10 +62,7 @@ if (!class_exists('presence')) {
 		 * show presence
 		 */
 		public function show() {
-			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-			$cmd = 'show calls as json';
-			$json = event_socket_request($fp, 'api '.$cmd);
-			unset($fp);
+			$json = event_socket::api('show calls as json');
 			$call_array = json_decode($json, true);
 			if (isset($call_array['rows'])) {
 				$x = 0;

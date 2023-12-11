@@ -25,11 +25,8 @@
  Raymond Chandler <intralanman@gmail.com>
  */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
+	require_once __DIR__ . "/require.php";
 	require_once "resources/functions.php";
 
 //set defaults
@@ -107,13 +104,13 @@ if (!function_exists('get_db_field_names')) {
 if ($db_type == "sqlite") {
 
 	//set the document_root
-		if (strlen($document_root) == 0) {
+		if (empty($document_root)) {
 			$document_root = $_SERVER["DOCUMENT_ROOT"];
 		}
 
 	//prepare the database connection
-		if (strlen($db_name) == 0) {
-			//if (strlen($_SERVER["SERVER_NAME"]) == 0) { $_SERVER["SERVER_NAME"] = "http://localhost"; }
+		if (empty($db_name)) {
+			//if (empty($_SERVER["SERVER_NAME"])) { $_SERVER["SERVER_NAME"] = "http://localhost"; }
 			$server_name = $_SERVER["SERVER_NAME"];
 			$server_name = str_replace ("www.", "", $server_name);
 			//$server_name = str_replace (".", "_", $server_name);
@@ -220,12 +217,12 @@ if ($db_type == "mysql") {
 				//$mysql_connection = mysqli_connect($db_host, $db_username, $db_password,$db_name) or die("Error " . mysqli_error($link));
 			}
 		//mysql pdo connection
-			if (strlen($db_host) == 0 && strlen($db_port) == 0) {
+			if (strlen($db_host) == 0 && empty($db_port)) {
 				//if both host and port are empty use the unix socket
 				$db = new PDO("mysql:host=$db_host;unix_socket=/var/run/mysqld/mysqld.sock;dbname=$db_name;charset=utf8;", $db_username, $db_password);
 			}
 			else {
-				if (strlen($db_port) == 0) {
+				if (empty($db_port)) {
 					//leave out port if it is empty
 					$db = new PDO("mysql:host=$db_host;dbname=$db_name;charset=utf8;", $db_username, $db_password, array(
 					PDO::ATTR_ERRMODE,
@@ -252,8 +249,8 @@ if ($db_type == "pgsql") {
 		if (!isset($db_secure)) {
 			$db_secure = false;
 		}
-		if (strlen($db_host) > 0) {
-			if (strlen($db_port) == 0) { $db_port = "5432"; }
+		if (!empty($db_host)) {
+			if (empty($db_port)) { $db_port = "5432"; }
 			if ($db_secure == true) {
 				$db = new PDO("pgsql:host=$db_host port=$db_port dbname=$db_name user=$db_username password=$db_password sslmode=verify-ca sslrootcert=$db_cert_authority");
 			}
@@ -281,84 +278,5 @@ if ($db_type == "odbc") {
 		die();
 	}
 } //end if db_type pgsql
-
-//get the domain list
-	if (!is_array($_SESSION['domains']) or !isset($_SESSION["domain_uuid"])) {
-
-		//get the domain
-			$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
-
-		//get the domains from the database
-			$sql = "select * from v_domains";
-			$prep_statement = $db->prepare($sql);
-			$prep_statement->execute();
-			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-			foreach($result as $row) {
-				$domain_names[] = $row['domain_name'];
-			}
-			unset($prep_statement);
-
-		//put the domains in natural order
-			if (is_array($domain_names)) {
-				natsort($domain_names);
-			}
-
-		//build the domains array in the correct order
-			if (is_array($domain_names)) { 
-				foreach ($domain_names as $dn) {
-					foreach ($result as $row) {
-						if ($row['domain_name'] == $dn) {
-							$domains[] = $row;
-						}
-					}
-				}
-				unset($result);
-			}
-
-			if (is_array($domains)) {
-				foreach($domains as $row) {
-					if (!isset($_SESSION['username'])) {
-						if (count($domains) == 1) {
-							$_SESSION["domain_uuid"] = $row["domain_uuid"];
-							$_SESSION["domain_name"] = $row['domain_name'];
-						}
-						else {
-							if ($row['domain_name'] == $domain_array[0] || $row['domain_name'] == 'www.'.$domain_array[0]) {
-								$_SESSION["domain_uuid"] = $row["domain_uuid"];
-								$_SESSION["domain_name"] = $row["domain_name"];
-							}
-						}
-					}	
-					$_SESSION['domains'][$row['domain_uuid']] = $row;
-				}
-				unset($domains, $prep_statement);
-			}
-	}
-
-//get the software name
-	if (!isset($_SESSION["software_name"])) {
-		$sql = "select * from v_software ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		if ($prep_statement) {
-			$prep_statement->execute();
-			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-			$_SESSION["software_name"] = $row['software_name'];
-		}
-		unset($prep_statement, $result);
-	}
-
-//set the setting arrays
-	if (!isset($_SESSION['domain']['menu'])) {
-		$domain = new domains();
-		$domain->set();
-	}
-
-//set the domain_uuid variable from the session
-	if (strlen($_SESSION["domain_uuid"]) > 0) {
-		$domain_uuid = $_SESSION["domain_uuid"];
-	}
-	else {
-		$domain_uuid = uuid();
-	}
 
 ?>

@@ -25,12 +25,8 @@
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -46,8 +42,15 @@
 	$language = new text;
 	$text = $language->get();
 
+//set the defaults
+	$url_label = '';
+	$url_label_custom = '';
+	$url_address = '';
+	$url_primary = '';
+	$url_description = '';
+
 //action add or update
-	if (is_uuid($_REQUEST["id"])) {
+	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
 		$contact_url_uuid = $_REQUEST["id"];
 	}
@@ -56,12 +59,12 @@
 	}
 
 //get the contact uuid
-	if (is_uuid($_GET["contact_uuid"])) {
+	if (!empty($_GET["contact_uuid"]) && is_uuid($_GET["contact_uuid"])) {
 		$contact_uuid = $_GET["contact_uuid"];
 	}
 
 //get http post variables and set them to php variables
-	if (count($_POST) > 0) {
+	if (!empty($_POST)) {
 		$url_label = $_POST["url_label"];
 		$url_label_custom = $_POST["url_label_custom"];
 		$url_address = $_POST["url_address"];
@@ -69,11 +72,11 @@
 		$url_description = $_POST["url_description"];
 
 		//use custom label if set
-		$url_label = $url_label_custom != '' ? $url_label_custom : $url_label;
+		$url_label = !empty($url_label_custom) ? $url_label_custom : $url_label;
 	}
 
 //process the form data
-	if (is_array($_POST) && @sizeof($_POST) != 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
 		//set the uuid
 			if ($action == "update") {
@@ -90,7 +93,7 @@
 
 		//check for all required data
 			$msg = '';
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -104,7 +107,7 @@
 			}
 
 		//add or update the database
-			if ($_POST["persistformvar"] != "true") {
+			if (empty($_POST["persistformvar"])) {
 
 				//update last modified
 				$array['contacts'][0]['contact_uuid'] = $contact_uuid;
@@ -131,7 +134,7 @@
 					$parameters['domain_uuid'] = $domain_uuid;
 					$parameters['contact_uuid'] = $contact_uuid;
 					$database = new database;
-					$database->execute($sql, $parameters);
+					$database->execute($sql, $parameters ?? null);
 					unset($sql, $parameters);
 				}
 
@@ -148,7 +151,7 @@
 					message::add($text['message-update']);
 				}
 
-				if (is_array($array) && @sizeof($array) != 0) {
+				if (!empty($array)) {
 					$array['contact_urls'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
 					$array['contact_urls'][0]['contact_uuid'] = $contact_uuid;
 					$array['contact_urls'][0]['url_label'] = $url_label;
@@ -170,8 +173,8 @@
 	}
 
 //pre-populate the form
-	if (is_array($_GET) && @sizeof($_GET) != 0 && $_POST["persistformvar"] != "true") {
-		$contact_url_uuid = $_GET["id"];
+	if (!empty($_GET) && empty($_POST["persistformvar"])) {
+		$contact_url_uuid = $_GET["id"] ?? '';
 		$sql = "select * from v_contact_urls ";
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$sql .= "and contact_url_uuid = :contact_url_uuid ";
@@ -179,7 +182,7 @@
 		$parameters['contact_url_uuid'] = $contact_url_uuid;
 		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
-		if (is_array($row) && @sizeof($row) != 0) {
+		if (!empty($row)) {
 			$url_label = $row["url_label"];
 			$url_address = $row["url_address"];
 			$url_primary = $row["url_primary"];
@@ -225,7 +228,7 @@
 	}
 	echo "	</div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'contact_edit.php?id='.urlencode($contact_uuid)]);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'contact_edit.php?id='.urlencode($contact_uuid ?? '')]);
 	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save']);
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
@@ -246,7 +249,7 @@
 	echo "	".$text['label-url_label']."\n";
 	echo "</td>\n";
 	echo "<td width='70%' class='vtable' align='left'>\n";
-	if (is_array($_SESSION["contact"]["url_label"])) {
+	if (!empty($_SESSION["contact"]["url_label"])) {
 		sort($_SESSION["contact"]["url_label"]);
 		foreach($_SESSION["contact"]["url_label"] as $row) {
 			$url_label_options[] = "<option value='".$row."' ".(($row == $url_label) ? "selected='selected'" : null).">".$row."</option>";
@@ -259,18 +262,18 @@
 		$default_labels[] = $text['option-personal'];
 		$default_labels[] = $text['option-other'];
 		foreach ($default_labels as $default_label) {
-			$url_label_options[] = "<option value='".$default_label."' ".$selected[$default_label].">".$default_label."</option>";
+			$url_label_options[] = "<option value='".$default_label."' ".!empty($selected[$default_label]).">".$default_label."</option>";
 		}
 		$url_label_found = (in_array($url_label, $default_labels)) ? true : false;
 	}
-	echo "	<select class='formfld' ".((!$url_label_found && $url_label != '') ? "style='display: none;'" : null)." name='url_label' id='url_label' onchange=\"getElementById('url_label_custom').value='';\">\n";
+	echo "	<select class='formfld' ".((!empty($url_label) && !$url_label_found) ? "style='display: none;'" : null)." name='url_label' id='url_label' onchange=\"getElementById('url_label_custom').value='';\">\n";
 	echo "		<option value=''></option>\n";
-	echo 		(is_array($url_label_options)) ? implode("\n", $url_label_options) : null;
+	echo 		(!empty($url_label_options)) ? implode("\n", $url_label_options) : null;
 	echo "	</select>\n";
-	echo "	<input type='text' class='formfld' ".(($url_label_found || $url_label == '') ? "style='display: none;'" : null)." name='url_label_custom' id='url_label_custom' value=\"".((!$url_label_found) ? htmlentities($url_label) : null)."\">\n";
+	echo "	<input type='text' class='formfld' ".((empty($url_label) || $url_label_found) ? "style='display: none;'" : null)." name='url_label_custom' id='url_label_custom' value=\"".((!$url_label_found) ? htmlentities($url_label ?? '') : null)."\">\n";
 	echo "	<input type='button' id='btn_toggle_label' class='btn' alt='".$text['button-back']."' value='&#9665;' onclick=\"toggle_custom('url_label');\">\n";
 	echo "<br />\n";
-	echo $text['description-url_label']."\n";
+	echo !empty($text['description-url_label'])."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -281,7 +284,7 @@
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='url' name='url_address' maxlength='255' value=\"".escape($url_address)."\" placeholder='http://...'>\n";
 	echo "<br />\n";
-	echo $text['description-url_address']."\n";
+	echo !empty($text['description-url_address'])."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -306,14 +309,14 @@
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='url_description' maxlength='255' value=\"".escape($url_description)."\">\n";
 	echo "<br />\n";
-	echo $text['description-url_description']."\n";
+	echo !empty($text['description-url_description'])."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "</table>";
 	echo "<br><br>";
 
-	echo "<input type='hidden' name='contact_uuid' value='".escape($contact_uuid)."'>\n";
+	echo "<input type='hidden' name='contact_uuid' value='".escape($contact_uuid ?? '')."'>\n";
 	if ($action == "update") {
 		echo "<input type='hidden' name='contact_url_uuid' value='".escape($contact_url_uuid)."'>\n";
 	}

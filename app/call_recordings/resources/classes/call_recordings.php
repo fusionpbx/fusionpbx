@@ -1,4 +1,28 @@
 <?php
+/*
+	FusionPBX
+	Version: MPL 1.1
+
+	The contents of this file are subject to the Mozilla Public License Version
+	1.1 (the "License"); you may not use this file except in compliance with
+	the License. You may obtain a copy of the License at
+	http://www.mozilla.org/MPL/
+
+	Software distributed under the License is distributed on an "AS IS" basis,
+	WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+	for the specific language governing rights and limitations under the
+	License.
+
+	The Original Code is FusionPBX
+
+	The Initial Developer of the Original Code is
+	Mark J Crane <markjcrane@fusionpbx.com>
+	Portions created by the Initial Developer are Copyright (C) 2018 - 2023
+	the Initial Developer. All Rights Reserved.
+
+	Contributor(s):
+	Mark J Crane <markjcrane@fusionpbx.com>
+*/
 
 /**
  * call_recordings class
@@ -34,16 +58,6 @@ if (!class_exists('call_recordings')) {
 		}
 
 		/**
-		 * called when there are no references to a particular object
-		 * unset the variables used in the class
-		 */
-		public function __destruct() {
-			foreach ($this as $key => $value) {
-				unset($this->$key);
-			}
-		}
-
-		/**
 		 * delete rows from the database
 		 */
 		public function delete($records) {
@@ -67,7 +81,7 @@ if (!class_exists('call_recordings')) {
 							$x = 0;
 							foreach ($records as $record) {
 								//add to the array
-									if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+									if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 										//get the information to delete
 											$sql = "select call_recording_name, call_recording_path ";
 											$sql .= "from view_call_recordings ";
@@ -122,72 +136,147 @@ if (!class_exists('call_recordings')) {
 		/**
 		 * download the recordings
 		 */
-		public function download() {
+		public function download($records = null) {
 			if (permission_exists('call_recording_play') || permission_exists('call_recording_download')) {
 
-				//get call recording from database
-					if (is_uuid($this->recording_uuid)) {
-						$sql = "select call_recording_name, call_recording_path ";
-						if ($_SESSION['call_recordings']['storage_type']['text'] == 'base64' && $row['call_recording_base64'] != '') {
-							$sql = ", call_recording_base64 ";
+				//single recording
+				if (empty($records) || !is_array($records) || @sizeof($records) == 0) {
+
+					//get call recording from database
+						if (is_uuid($this->recording_uuid)) {
+							$sql = "select call_recording_name, call_recording_path ";
+							if (!empty($_SESSION['call_recordings']['storage_type']['text']) && $_SESSION['call_recordings']['storage_type']['text'] == 'base64' && !empty($row['call_recording_base64'])) {
+								$sql = ", call_recording_base64 ";
+							}
+							$sql .= "from view_call_recordings ";
+							$sql .= "where call_recording_uuid = :call_recording_uuid ";
+							$parameters['call_recording_uuid'] = $this->recording_uuid;
+							$database = new database;
+							$row = $database->select($sql, $parameters, 'row');
+							if (is_array($row) && @sizeof($row) != 0) {
+								$call_recording_name = $row['call_recording_name'];
+								$call_recording_path = $row['call_recording_path'];
+								if (!empty($_SESSION['call_recordings']['storage_type']['text']) && $_SESSION['call_recordings']['storage_type']['text'] == 'base64' && !empty($row['call_recording_base64'])) {
+									file_put_contents($call_recording_path.'/'.$call_recording_name, base64_decode($row['call_recording_base64']));
+								}
+							}
+							unset($sql, $parameters, $row);
 						}
-						$sql .= "from view_call_recordings ";
-						$sql .= "where call_recording_uuid = :call_recording_uuid ";
-						$parameters['call_recording_uuid'] = $this->recording_uuid;
-						$database = new database;
-						$row = $database->select($sql, $parameters, 'row');
-						if (is_array($row) && @sizeof($row) != 0) {
-							$call_recording_name = $row['call_recording_name'];
-							$call_recording_path = $row['call_recording_path'];
-							if ($_SESSION['call_recordings']['storage_type']['text'] == 'base64' && $row['call_recording_base64'] != '') {
-								file_put_contents($path.'/'.$call_recording_name, base64_decode($row['call_recording_base64']));
+
+					//build full path
+						$full_recording_path = $call_recording_path.'/'.$call_recording_name;
+
+					//download the file
+						if ($full_recording_path != '/' && file_exists($full_recording_path)) {
+							ob_clean();
+							$fd = fopen($full_recording_path, "rb");
+							if ($this->binary) {
+								header("Content-Type: application/force-download");
+								header("Content-Type: application/octet-stream");
+								header("Content-Type: application/download");
+								header("Content-Description: File Transfer");
+							}
+							else {
+								$file_ext = pathinfo($call_recording_name, PATHINFO_EXTENSION);
+								switch ($file_ext) {
+									case "wav" : header("Content-Type: audio/x-wav"); break;
+									case "mp3" : header("Content-Type: audio/mpeg"); break;
+									case "ogg" : header("Content-Type: audio/ogg"); break;
+								}
+							}
+							header('Content-Disposition: attachment; filename="'.$call_recording_name.'"');
+							header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
+							header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
+							if ($this->binary) {
+								header("Content-Length: ".filesize($full_recording_path));
+							}
+							ob_clean();
+
+							//content-range
+							if (isset($_SERVER['HTTP_RANGE']) && !$this->binary)  {
+								$this->range_download($full_recording_path);
+							}
+
+							fpassthru($fd);
+						}
+
+					//if base64, remove temp recording file
+						if (!empty($_SESSION['call_recordings']['storage_type']['text']) && $_SESSION['call_recordings']['storage_type']['text'] == 'base64' && !empty($row['call_recording_base64'])) {
+							@unlink($full_recording_path);
+						}
+
+				}
+
+				//multiple recordings
+				else {
+
+					//add multi-lingual support
+						$language = new text;
+						$text = $language->get();
+
+					//validate the token
+						$token = new token;
+						if (!$token->validate($_SERVER['PHP_SELF'])) {
+							message::add($text['message-invalid_token'],'negative');
+							header('Location: '.$this->location);
+							exit;
+						}
+
+					//drop unchecked records
+						foreach ($records as $i => $record) {
+							if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								$uuids[] = $record['uuid'];
 							}
 						}
-						unset($sql, $parameters, $row);
-					}
+						unset($records, $record);
 
-				//set the path for the directory
-					$default_path = $_SESSION['switch']['call_recordings']['dir']."/".$_SESSION['domain_name'];
-
-				//build full path
-					$full_recording_path = $call_recording_path.'/'.$call_recording_name;
-
-				//download the file
-					if (file_exists($full_recording_path)) {
-						//content-range
-						if (isset($_SERVER['HTTP_RANGE']) && !$this->binary)  {
-							$this->range_download($full_recording_path);
+					//get data for recordings
+						if (!empty($uuids) && is_array($uuids) && @sizeof($uuids) != 0) {
+							$sql = "select call_recording_name, call_recording_path ";
+							if (!empty($_SESSION['call_recordings']['storage_type']['text']) && $_SESSION['call_recordings']['storage_type']['text'] == 'base64' && $row['call_recording_base64'] != '') {
+								$sql = ", call_recording_base64 ";
+							}
+							$sql .= "from view_call_recordings ";
+							$sql .= "where call_recording_uuid in ('".implode("','", $uuids)."') ";
+							$database = new database;
+							$rows = $database->select($sql, null, 'all');
+							if (!empty($rows) && is_array($rows) && @sizeof($rows) != 0) {
+								foreach ($rows as $row) {
+									$call_recording_name = $row['call_recording_name'];
+									$call_recording_path = $row['call_recording_path'];
+									if (!empty($_SESSION['call_recordings']['storage_type']['text']) && $_SESSION['call_recordings']['storage_type']['text'] == 'base64' && !empty($row['call_recording_base64'])) {
+										file_put_contents($call_recording_path.'/'.$call_recording_name, base64_decode($row['call_recording_base64']));
+									}
+									if (file_exists($call_recording_path.'/'.$call_recording_name)) {
+										$full_recording_paths[] = $call_recording_path.'/'.$call_recording_name;
+									}
+								}
+							}
+							unset($sql, $rows, $row);
 						}
-						ob_clean();
-						$fd = fopen($full_recording_path, "rb");
-						if ($this->binary) {
-							header("Content-Type: application/force-download");
-							header("Content-Type: application/octet-stream");
-							header("Content-Type: application/download");
+
+					//compress the recordings
+						if (!empty($full_recording_paths) && is_array($full_recording_paths) && @sizeof($full_recording_paths) != 0) {
+							header("Content-Type: application/x-zip");
 							header("Content-Description: File Transfer");
+							header('Content-Disposition: attachment; filename="call_recordings.zip"');
+							header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
+							header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
+							passthru("zip -qj - ".implode(' ', $full_recording_paths));
 						}
-						else {
-							$file_ext = pathinfo($call_recording_name, PATHINFO_EXTENSION);
-							switch ($file_ext) {
-								case "wav" : header("Content-Type: audio/x-wav"); break;
-								case "mp3" : header("Content-Type: audio/mpeg"); break;
-								case "ogg" : header("Content-Type: audio/ogg"); break;
+
+
+					//if base64, remove temp recording file
+						if (!empty($_SESSION['call_recordings']['storage_type']['text']) && $_SESSION['call_recordings']['storage_type']['text'] == 'base64' && !empty($row['call_recording_base64'])) {
+							foreach ($full_recording_paths as $full_recording_path) {
+								@unlink($full_recording_path);
 							}
 						}
-						header('Content-Disposition: attachment; filename="'.$call_recording_name.'"');
-						header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
-						header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
-						if ($this->binary) {
-							header("Content-Length: ".filesize($full_recording_path));
-						}
-						ob_clean();
-						fpassthru($fd);
-					}
 
-				//if base64, remove temp recording file
-					if ($_SESSION['call_recordings']['storage_type']['text'] == 'base64' && $row['call_recording_base64'] != '') {
-						@unlink($full_recording_path);
-					}
+						exit;
+
+				}
+
 			}
 
 		} //method
@@ -214,7 +303,7 @@ if (!class_exists('call_recordings')) {
 			* (mediatype = mimetype)
 			* as well as a boundry header to indicate the various chunks of data.
 			*/
-			header("Accept-Ranges: 0-$length");
+			header("Accept-Ranges: 0-".$length);
 			// header('Accept-Ranges: bytes');
 			// multipart/byteranges
 			// http://www.w3.org/Protocols/rfc2616/rfc2616-sec19.html#sec19.2
@@ -237,7 +326,7 @@ if (!class_exists('call_recordings')) {
 				// If the range starts with an '-' we start from the beginning
 				// If not, we forward the file pointer
 				// And make sure to get the end byte if spesified
-				if ($range0 == '-') {
+				if ($range[0] == '-') {
 					// The n-number of the last bytes is requested
 					$c_start = $size - substr($range, 1);
 				}

@@ -45,16 +45,6 @@ if (!class_exists('basic_operator_panel')) {
 		}
 
 		/**
-		 * Called when there are no references to a particular object
-		 * unset the variables used in the class
-		 */
-		public function __destruct() {
-			foreach ($this as $key => $value) {
-				unset($this->$key);
-			}
-		}
-
-		/**
 		 * Get the call activity
 		 */
 		public function call_activity() {
@@ -67,7 +57,6 @@ if (!class_exists('basic_operator_panel')) {
 				$sql .= "e.extension, ";
 				$sql .= "e.number_alias, ";
 				$sql .= "e.effective_caller_id_name, ";
-				$sql .= "lower(e.effective_caller_id_name) as filter_name, ";
 				$sql .= "e.effective_caller_id_number, ";
 				$sql .= "e.call_group, ";
 				$sql .= "e.description, ";
@@ -97,10 +86,12 @@ if (!class_exists('basic_operator_panel')) {
 				}
 
 			//send the command
-				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-				if ($fp) {
-					$switch_result = event_socket_request($fp, 'api show channels as json');
+				$switch_result = event_socket::api('show channels as json');
+				if ($switch_result !== false) {
+					$fp = true;
 					$json_array = json_decode($switch_result, true);
+				} else {
+					$fp = false;
 				}
 
 			//build the response
@@ -108,7 +99,7 @@ if (!class_exists('basic_operator_panel')) {
 				if (isset($extensions)) {
 					foreach($extensions as &$row) {
 						$user = $row['extension'];
-						if (strlen($row['number_alias']) >0 ) {
+						if (!empty($row['number_alias'])) {
 							$user = $row['number_alias'];
 						}
 
@@ -156,7 +147,7 @@ if (!class_exists('basic_operator_panel')) {
 									$presence_id = $field['presence_id'];
 									$presence = explode("@", $presence_id);
 									$presence_id = $presence[0];
-									$presence_domain = $presence[1];
+									$presence_domain = $presence[1] ?? '';
 									if ($user == $presence_id) {
 										if ($presence_domain == $_SESSION['domain_name']) {
 											$found = true;
@@ -216,8 +207,10 @@ if (!class_exists('basic_operator_panel')) {
 									if ($fp) {
 										if (is_uuid($field['uuid'])) {
 											$switch_cmd = 'uuid_dump '.$field['uuid'].' json';
-											$dump_result = event_socket_request($fp, 'api '.$switch_cmd);
-											$dump_array = json_decode($dump_result, true);
+											$dump_result = event_socket::api($switch_cmd);
+											if ($dump_result !== false) {
+												$dump_array = json_decode($dump_result, true);
+											}
 											if (is_array($dump_array)) {
 												foreach ($dump_array as $dump_var_name => $dump_var_value) {
 													$array[$x][$dump_var_name] = $dump_var_value;

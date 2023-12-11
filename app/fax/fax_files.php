@@ -17,19 +17,15 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018-2022
+	Portions created by the Initial Developer are Copyright (C) 2018-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
 
@@ -47,11 +43,11 @@
 	$text = $language->get();
 
 //get variables used to control the order
-	$order_by = $_REQUEST["order_by"];
-	$order = $_REQUEST["order"];
+	$order_by = $_REQUEST["order_by"] ?? null;
+	$order = $_REQUEST["order"] ?? null;
 
 //get the http post data
-	if (is_array($_POST['fax_files'])) {
+	if (!empty($_POST['fax_files']) && is_array($_POST['fax_files'])) {
 		$action = $_POST['action'];
 		$fax_uuid = $_POST['fax_uuid'];
 		$box = $_POST['box'];
@@ -59,7 +55,7 @@
 	}
 
 //process the http post data by action
-	if ($action != '' && is_array($fax_files) && @sizeof($fax_files) != 0) {
+	if (!empty($action) && !empty($fax_files) && is_array($fax_files) && @sizeof($fax_files) != 0) {
 		switch ($action) {
 			case 'delete':
 				if (permission_exists('fax_file_delete')) {
@@ -76,7 +72,7 @@
 	}
 
 //get fax extension
-	if (is_uuid($_GET["id"])) {
+	if (!empty($_GET["id"]) && is_uuid($_GET["id"])) {
 		$fax_uuid = $_GET["id"];
 		if (permission_exists('fax_extension_view_domain')) {
 			//show all fax extensions
@@ -114,10 +110,12 @@
 	}
 
 //set the fax directory
-	$fax_dir = $_SESSION['switch']['storage']['dir'].'/fax/'.$_SESSION['domain_name'];
+	if (!empty($_SESSION['switch']['storage']['dir'])) {
+		$fax_dir = $_SESSION['switch']['storage']['dir'].'/fax/'.$_SESSION['domain_name'];
+	}
 
 //download the fax
-	if ($_GET['a'] == "download") {
+	if (isset($fax_dir) && !empty($_GET['a']) && $_GET['a'] == "download") {
 
 		//sanitize the values that are used in the file name and path
 		$fax_extension = preg_replace('/[^0-9]/', '', $_GET['ext']);
@@ -136,7 +134,7 @@
 		}
 
 		//add the headers and stream the file
-		if (strlen($download_filename) > 0) {
+		if (!empty($download_filename)) {
 			$fd = fopen($download_filename, "rb");
 			if ($_GET['t'] == "bin") {
 				header("Content-Type: application/force-download");
@@ -172,14 +170,14 @@
 	}
 
 //get the fax extension
-	if (strlen($fax_extension) > 0) {
+	if (isset($fax_dir) && !empty($fax_extension)) {
 		//set the fax directories. example /usr/local/freeswitch/storage/fax/329/inbox
 			$dir_fax_inbox = $fax_dir.'/'.$fax_extension.'/inbox';
 			$dir_fax_sent = $fax_dir.'/'.$fax_extension.'/sent';
 			$dir_fax_temp = $fax_dir.'/'.$fax_extension.'/temp';
 
 		//make sure the directories exist
-			if (!is_dir($_SESSION['switch']['storage']['dir'])) {
+			if (!empty($_SESSION['switch']['storage']['dir']) && !is_dir($_SESSION['switch']['storage']['dir'])) {
 				mkdir($_SESSION['switch']['storage']['dir'], 0770, false);
 			}
 			if (!is_dir($fax_dir.'/'.$fax_extension)) {
@@ -215,8 +213,8 @@
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
-	$param = "&id=".$fax_uuid."&box=".$_GET['box']."&order_by=".$_GET['order_by']."&order=".$_GET['order'];
-	$page = is_numeric($_GET['page']) ? $_GET['page'] : 0;
+	$param = "&id=".$fax_uuid."&box=".$_GET['box'].(!empty($_GET['order_by']) ? "&order_by=".$_GET['order_by'] : null).(!empty($_GET['order']) ? "&order=".$_GET['order'] : null);
+	$page = !empty($_GET['page']) && is_numeric($_GET['page']) ? $_GET['page'] : 0;
 	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
 	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
@@ -314,17 +312,19 @@
 	echo "<tr class='list-header'>\n";
 	if (permission_exists('fax_file_delete')) {
 		echo "	<th class='checkbox'>\n";
-		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle();' ".($fax_files ?: "style='visibility: hidden;'").">\n";
+		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle();' ".(empty($fax_files) ? "style='visibility: hidden;'" : null).">\n";
 		echo "	</th>\n";
 	}
-	echo th_order_by('fax_caller_id_name', $text['label-fax_caller_id_name'], $order_by, $order, "&id=".$fax_uuid."&box=".$_GET['box']."&page=".$_GET['page']);
-	echo th_order_by('fax_caller_id_number', $text['label-fax_caller_id_number'], $order_by, $order, "&id=".$fax_uuid."&box=".$_GET['box']."&page=".$_GET['page']);
+	echo th_order_by('fax_caller_id_name', $text['label-fax_caller_id_name'], $order_by, $order, "&id=".$fax_uuid."&box=".$_GET['box']."&page=".$page);
+	echo th_order_by('fax_caller_id_number', $text['label-fax_caller_id_number'], $order_by, $order, "&id=".$fax_uuid."&box=".$_GET['box']."&page=".$page);
 	if ($_REQUEST['box'] == 'sent') {
-		echo th_order_by('fax_destination', $text['label-fax_destination'], $order_by, $order, "&id=".$fax_uuid."&box=".$_GET['box']."&page=".$_GET['page']);
+		echo th_order_by('fax_destination', $text['label-fax_destination'], $order_by, $order, "&id=".$fax_uuid."&box=".$_GET['box']."&page=".$page);
 	}
-	echo "<th>".$text['table-file']."</th>\n";
+	if (permission_exists('fax_download_view')) {
+		echo "<th>".$text['table-file']."</th>\n";
+	}
 	echo "<th width='10%'>".$text['table-view']."</th>\n";
-	echo th_order_by('fax_date', $text['label-fax_date'], $order_by, $order, "&id=".$fax_uuid."&box=".$_GET['box']."&page=".$_GET['page']);
+	echo th_order_by('fax_date', $text['label-fax_date'], $order_by, $order, "&id=".$fax_uuid."&box=".$_GET['box']."&page=".$page);
 	echo "</tr>\n";
 
 	if (is_array($fax_files) && @sizeof($fax_files) != 0) {
@@ -337,7 +337,7 @@
 			$file_ext = $row['fax_file_type'];
 
 			//decode the base64
-			if (strlen($row['fax_base64']) > 0) {
+			if (!empty($row['fax_base64'])) {
 				if ($_REQUEST['box'] == 'inbox' && permission_exists('fax_inbox_view')) {
 					if (!file_exists($dir_fax_inbox.'/'.$file)) {
 						file_put_contents($dir_fax_inbox.'/'.$file, base64_decode($row['fax_base64']));
@@ -363,20 +363,24 @@
 					$dir_fax = $dir_fax_sent;
 				}
 			}
-			if ($dir_fax != '') {
+			if (!empty($dir_fax)) {
+				//change the working directory
 				chdir($dir_fax);
+
 				//get fax resolution (ppi, W & H)
-					$resp = exec("tiffinfo ".$file_name.".tif | grep 'Resolution:'");
-					$resp_array = explode(' ', trim($resp));
-					$ppi_w = (int) $resp_array[1];
-					$ppi_h = (int) $resp_array[2];
-					unset($resp_array);
-					$gs_r = $ppi_w.'x'.$ppi_h; //used by ghostscript
+				$resp = exec("tiffinfo ".$file_name.".tif | grep 'Resolution:'");
+				$resp_array = explode(' ', trim($resp));
+				$ppi_w = (int) $resp_array[1];
+				$ppi_h = (int) $resp_array[2];
+				unset($resp_array);
+				$gs_r = $ppi_w.'x'.$ppi_h; //used by ghostscript
+
 				//get page dimensions/size (pixels/inches, W & H)
-					$resp = exec("tiffinfo ".$file_name.".tif | grep 'Image Width:'");
-					$resp_array = explode(' ', trim($resp));
-					$pix_w = $resp_array[2];
-					$pix_h = $resp_array[5];
+				$response = exec("tiffinfo ".$file_name.".tif | grep 'Image Width:'");
+				if (!empty($response)) {
+					$response_array = explode(' ', trim($response));
+					$pix_w = $response_array[2];
+					$pix_h = $response_array[5];
 					unset($resp_array);
 					$gs_g = $pix_w.'x'.$pix_h; //used by ghostscript
 					$page_width = $pix_w / $ppi_w;
@@ -396,13 +400,16 @@
 						$page_height = 11.7;
 						$page_size = 'a4';
 					}
-				//generate pdf from tif
+
+					//generate pdf from tif
 					$cmd_tif2pdf = "tiff2pdf -u i -p ".$page_size." -w ".$page_width." -l ".$page_height." -f -o ".$dir_fax.'/'.$file_name.".pdf ".$dir_fax.'/'.$file_name.".tif";
 					exec($cmd_tif2pdf);
 					//echo $cmd_tif2pdf."<br >\n";
+				}
+
 				//clean up temporary files, if any
-					if (file_exists($dir_fax_temp.'/'.$file_name.'.pdf')) { @unlink($dir_fax_temp.'/'.$file_name.'.pdf'); }
-					if (file_exists($dir_fax_temp.'/'.$file_name.'.tif')) { @unlink($dir_fax_temp.'/'.$file_name.'.tif'); }
+				if (file_exists($dir_fax_temp.'/'.$file_name.'.pdf')) { @unlink($dir_fax_temp.'/'.$file_name.'.pdf'); }
+				if (file_exists($dir_fax_temp.'/'.$file_name.'.tif')) { @unlink($dir_fax_temp.'/'.$file_name.'.tif'); }
 			}
 
 			if ($_REQUEST['box'] == 'inbox' && permission_exists('fax_inbox_view')) {
@@ -423,7 +430,9 @@
 			if ($_REQUEST['box'] == 'sent') {
 				echo "	<td>".escape(format_phone($row['fax_destination']))."&nbsp;</td>\n";
 			}
-			echo "  <td><a href='".$list_row_url."'>".$file_name."</a></td>\n";
+			if (permission_exists('fax_download_view')) {
+				echo "  <td><a href='".$list_row_url."'>".$file_name."</a></td>\n";
+			}
 			echo "  <td class='no-link'>\n";
 			if ($_REQUEST['box'] == 'inbox') {
 				$dir_fax = $dir_fax_inbox;

@@ -17,19 +17,15 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
 
@@ -46,15 +42,21 @@
 	$language = new text;
 	$text = $language->get();
 
+//set additional variables
+	$show = $_GET["show"] ?? '';
+
+//set from session variables
+	$list_row_edit_button = !empty($_SESSION['theme']['list_row_edit_button']['boolean']) ? $_SESSION['theme']['list_row_edit_button']['boolean'] : 'false';
+
 //get posted data
-	if (is_array($_POST['contacts'])) {
+	if (!empty($_POST['contacts'])) {
 		$action = $_POST['action'];
 		$search = $_POST['search'];
 		$contacts = $_POST['contacts'];
 	}
 
 //process the http post data by action
-	if ($action != '' && is_array($contacts) && @sizeof($contacts) != 0) {
+	if (!empty($action) && !empty($contacts)) {
 		switch ($action) {
 			case 'delete':
 				if (permission_exists('contact_delete')) {
@@ -64,7 +66,7 @@
 				break;
 		}
 
-		header('Location: contacts.php'.($search != '' ? '?search='.urlencode($search) : null));
+		header('Location: contacts.php'.(!empty($search) ? '?search='.urlencode($search) : null));
 		exit;
 	}
 
@@ -90,14 +92,14 @@
 		$sql .= "	contact_uuid in ( ";
 		$sql .= "		select contact_uuid from v_contact_groups ";
 		$sql .= "		where ";
-		if (is_array($user_group_uuids) && @sizeof($user_group_uuids) != 0) {
+		if (!empty($user_group_uuids)) {
 			foreach ($user_group_uuids as $index => $user_group_uuid) {
 				if (is_uuid($user_group_uuid)) {
 					$sql_where_or[] = "group_uuid = :group_uuid_".$index;
 					$parameters['group_uuid_'.$index] = $user_group_uuid;
 				}
 			}
-			if (is_array($sql_where_or) && @sizeof($sql_where_or) != 0) {
+			if (!empty($sql_where_or)) {
 				$sql .= " ( ".implode(' or ', $sql_where_or)." ) ";
 			}
 			unset($sql_where_or, $index, $user_group_uuid);
@@ -113,10 +115,10 @@
 		$sql .= ") ";
 	}
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$parameters['group_uuid'] = $_SESSION['group_uuid'];
+	$parameters['group_uuid'] = $_SESSION['group_uuid'] ?? '';
 	$database = new database;
 	$result = $database->select($sql, $parameters, 'all');
-	if (is_array($result) && @sizeof($result) != 0) {
+	if (!empty($result)) {
 		foreach($result as $row) {
 			$contact_sync_sources[$row['contact_uuid']][] = $row['contact_setting_value'];
 		}
@@ -124,21 +126,21 @@
 	unset($sql, $parameters, $result);
 
 //get variables used to control the order
-	$order_by = $_GET["order_by"];
-	$order = $_GET["order"];
+	$order_by = $_GET["order_by"] ?? '';
+	$order = $_GET["order"] ?? '';
 
 //add the search term
-	$search = strtolower($_GET["search"]);
-	if (strlen($search) > 0) {
+	$search = strtolower($_GET["search"] ?? '');
+	if (!empty($search)) {
 		if (is_numeric($search)) {
-			$sql_search .= "and contact_uuid in ( ";
+			$sql_search = "and contact_uuid in ( ";
 			$sql_search .= "	select contact_uuid from v_contact_phones ";
 			$sql_search .= "	where phone_number like :search ";
 			$sql_search .= ") ";
 		}
 		else {
 			//open container
-				$sql_search .= "and ( ";
+				$sql_search = "and ( ";
 			//search contact
 				$sql_search .= "contact_uuid in ( ";
 				$sql_search .= "	select contact_uuid from v_contacts ";
@@ -186,7 +188,7 @@
 	$sql = "select count(*) ";
 	$sql .= "from v_contacts as c ";
 	$sql .= "where true ";
-	if ($_GET['show'] != "all" || !permission_exists('contact_all')) {
+	if ($show != "all" || !permission_exists('contact_all')) {
 		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	}
@@ -195,14 +197,14 @@
 		$sql .= "	contact_uuid in ( ";
 		$sql .= "		select contact_uuid from v_contact_groups ";
 		$sql .= "		where ";
-		if (is_array($user_group_uuids) && @sizeof($user_group_uuids) != 0) {
+		if (!empty($user_group_uuids)) {
 			foreach ($user_group_uuids as $index => $user_group_uuid) {
 				if (is_uuid($user_group_uuid)) {
 					$sql_where_or[] = "group_uuid = :group_uuid_".$index;
 					$parameters['group_uuid_'.$index] = $user_group_uuid;
 				}
 			}
-			if (is_array($sql_where_or) && @sizeof($sql_where_or) != 0) {
+			if (!empty($sql_where_or)) {
 				$sql .= " ( ".implode(' or ', $sql_where_or)." ) ";
 			}
 			unset($sql_where_or, $index, $user_group_uuid);
@@ -218,18 +220,18 @@
 		$sql .= ") ";
 		$parameters['user_uuid'] = $_SESSION['user_uuid'];
 	}
-	$sql .= $sql_search;
+	$sql .= $sql_search ?? '';
 	$database = new database;
-	$num_rows = $database->select($sql, $parameters, 'column');
+	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 
 //prepare to page the results
-	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$rows_per_page = (!empty($_SESSION['domain']['paging']['numeric'])) ? $_SESSION['domain']['paging']['numeric'] : 50;
 	$param = "&search=".urlencode($search);
-	if ($_GET['show'] == "all" && permission_exists('contact_all')) {
+	if ($show == "all" && permission_exists('contact_all')) {
 		$param .= "&show=all";
 	}
-	$page = $_GET['page'];
-	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
+	$page = $_GET['page'] ?? '';
+	if (empty($page)) { $page = 0; $_GET['page'] = 0; }
 	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page); //bottom
 	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true); //top
 	$offset = $rows_per_page * $page;
@@ -239,7 +241,7 @@
 	$sql .= "(select a.contact_attachment_uuid from v_contact_attachments as a where a.contact_uuid = c.contact_uuid and a.attachment_primary = 1) as contact_attachment_uuid ";
 	$sql .= "from v_contacts as c ";
 	$sql .= "where true ";
-	if ($_GET['show'] != "all" || !permission_exists('contact_all')) {
+	if ($show != "all" || !permission_exists('contact_all')) {
 		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	}
@@ -248,14 +250,14 @@
 		$sql .= "	contact_uuid in ( ";
 		$sql .= "		select contact_uuid from v_contact_groups ";
 		$sql .= "		where ";
-		if (is_array($user_group_uuids) && @sizeof($user_group_uuids) != 0) {
+		if (!empty($user_group_uuids)) {
 			foreach ($user_group_uuids as $index => $user_group_uuid) {
 				if (is_uuid($user_group_uuid)) {
 					$sql_where_or[] = "group_uuid = :group_uuid_".$index;
 					$parameters['group_uuid_'.$index] = $user_group_uuid;
 				}
 			}
-			if (is_array($sql_where_or) && @sizeof($sql_where_or) != 0) {
+			if (!empty($sql_where_or)) {
 				$sql .= " ( ".implode(' or ', $sql_where_or)." ) ";
 			}
 			unset($sql_where_or, $index, $user_group_uuid);
@@ -271,15 +273,15 @@
 		$sql .= ") ";
 		$parameters['user_uuid'] = $_SESSION['user_uuid'];
 	}
-	$sql .= $sql_search;
+	$sql .= $sql_search ?? '';
 	$database = new database;
-	if ($order_by != '') {
+	if (!empty($order_by)) {
 		$sql .= order_by($order_by, $order);
 		$sql .= ", contact_organization asc ";
 	}
 	else {
-		$contact_default_sort_column = $_SESSION['contacts']['default_sort_column']['text'] != '' ? $_SESSION['contacts']['default_sort_column']['text'] : "last_mod_date";
-		$contact_default_sort_order = $_SESSION['contacts']['default_sort_order']['text'] != '' ? $_SESSION['contacts']['default_sort_order']['text'] : "desc";
+		$contact_default_sort_column = !empty($_SESSION['contacts']['default_sort_column']['text']) ? $_SESSION['contacts']['default_sort_column']['text'] : "last_mod_date";
+		$contact_default_sort_order = !empty($_SESSION['contacts']['default_sort_order']['text']) ? $_SESSION['contacts']['default_sort_order']['text'] : "desc";
 
 		$sql .= order_by($contact_default_sort_column, $contact_default_sort_order);
 		if ($db_type == "pgsql") {
@@ -288,7 +290,7 @@
 	}
 	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;
-	$contacts = $database->select($sql, $parameters, 'all');
+	$contacts = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 
 //create token
@@ -329,17 +331,17 @@
 	}
 	echo 		"<form id='form_search' class='inline' method='get'>\n";
 	if (permission_exists('contact_all')) {
-		if ($_GET['show'] == 'all') {
+		if ($show == 'all') {
 			echo "		<input type='hidden' name='show' value='all'>";
 		}
 		else {
-			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$_SESSION['theme']['button_icon_all'],'link'=>'?type=&show=all'.($search != '' ? "&search=".urlencode($search) : null)]);
+			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$_SESSION['theme']['button_icon_all'],'link'=>'?type=&show=all'.(!empty($search) ? "&search=".urlencode($search) : null)]);
 		}
 	}
 	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=''>";
 	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search','collapse'=>'hide-sm-dn']);
 	//echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','collapse'=>'hide-sm-dn','link'=>'contacts.php','style'=>($search == '' ? 'display: none;' : null)]);
-	if ($paging_controls_mini != '') {
+	if (!empty($paging_controls_mini)) {
 		echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>";
 	}
 	echo "		</form>\n";
@@ -362,10 +364,10 @@
 	echo "<tr class='list-header'>\n";
 	if (permission_exists('contact_delete')) {
 		echo "	<th class='checkbox'>\n";
-		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".($contacts ?: "style='visibility: hidden;'").">\n";
+		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".(!empty($contacts) ?: "style='visibility: hidden;'").">\n";
 		echo "	</th>\n";
 	}
-	if ($_GET['show'] == "all" && permission_exists('contact_all')) {
+	if ($show == "all" && permission_exists('contact_all')) {
 		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, $param, "class='shrink'");
 	}
 	echo th_order_by('contact_type', $text['label-contact_type'], $order_by, $order);
@@ -377,12 +379,12 @@
 	echo th_order_by('contact_title', $text['label-contact_title'], $order_by, $order, null, "class='hide-sm-dn'");
 	echo th_order_by('contact_role', $text['label-contact_role'], $order_by, $order, null, "class='hide-sm-dn'");
 	echo "<th class='shrink hide-sm-dn'>&nbsp;</th>\n";
-	if ($_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+	if ($list_row_edit_button == 'true') {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
 
-	if (is_array($contacts) && @sizeof($contacts) != 0) {
+	if (!empty($contacts)) {
 		$x = 0;
 		foreach($contacts as $row) {
 			$list_row_url = "contact_view.php?id=".urlencode($row['contact_uuid'])."&query_string=".urlencode($_SERVER["QUERY_STRING"]);
@@ -393,8 +395,8 @@
 				echo "		<input type='hidden' name='contacts[$x][uuid]' value='".escape($row['contact_uuid'])."' />\n";
 				echo "	</td>\n";
 			}
-			if ($_GET['show'] == "all" && permission_exists('contact_all')) {
-				if (strlen($_SESSION['domains'][$row['domain_uuid']]['domain_name']) > 0) {
+			if ($show == "all" && permission_exists('contact_all')) {
+				if (!empty($_SESSION['domains'][$row['domain_uuid']]['domain_name'])) {
 					$domain = $_SESSION['domains'][$row['domain_uuid']]['domain_name'];
 				}
 				else {
@@ -415,7 +417,7 @@
 			echo "	<td class='overflow hide-sm-dn'>".escape($row['contact_title'])."&nbsp;</td>\n";
 			echo "	<td class='overflow hide-sm-dn'>".escape($row['contact_role'])."&nbsp;</td>\n";
 			echo "	<td class='hide-sm-dn'>";
-			if (is_array($contact_sync_sources[$row['contact_uuid']]) && @sizeof($contact_sync_sources[$row['contact_uuid']]) != 0) {
+			if (!empty($contact_sync_sources[$row['contact_uuid']])) {
 				foreach ($contact_sync_sources[$row['contact_uuid']] as $contact_sync_source) {
 					switch ($contact_sync_source) {
 						case 'google': echo "<img src='resources/images/icon_gcontacts.png' style='width: 21px; height: 21px; border: none; padding-left: 2px;' alt='".$text['label-contact_google']."'>"; break;
@@ -426,7 +428,7 @@
 				echo "&nbsp;";
 			}
 			echo "	</td>\n";
-			if ($_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+			if ($list_row_edit_button == 'true') {
 				echo "	<td class='action-button'>";
 				echo button::create(['type'=>'button','title'=>$text['button-view'],'icon'=>$_SESSION['theme']['button_icon_view'],'link'=>$list_row_url]);
 				echo "	</td>\n";

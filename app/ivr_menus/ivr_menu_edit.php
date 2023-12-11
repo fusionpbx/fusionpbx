@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -25,12 +25,8 @@
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -46,14 +42,23 @@
 	$language = new text;
 	$text = $language->get();
 
+//set the defaults
+	$ivr_menu_name = '';
+	$ivr_menu_extension = '';
+	$ivr_menu_cid_prefix = '';
+	$ivr_menu_description = '';
+
 //initialize the destinations object
 	$destination = new destinations;
 
+//initialize the ringbacks object
+	$ringbacks = new ringbacks;
+
 //action add or update
-	if (is_uuid($_REQUEST["id"]) || is_uuid($_REQUEST["ivr_menu_uuid"])) {
+	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"]) || !empty($_REQUEST["ivr_menu_uuid"]) &&  is_uuid($_REQUEST["ivr_menu_uuid"])) {
 		$action = "update";
 		$ivr_menu_uuid = $_REQUEST["id"];
-		if (is_uuid($_REQUEST["ivr_menu_uuid"])) {
+		if (!empty($_REQUEST["ivr_menu_uuid"])) {
 			$ivr_menu_uuid = $_REQUEST["ivr_menu_uuid"];
 		}
 	}
@@ -62,7 +67,7 @@
 	}
 
 //get total ivr menu count from the database, check limit, if defined
-	if (is_numeric($_SESSION['limit']['ivr_menus']['numeric'])) {
+	if (!empty($_SESSION['limit']['ivr_menus']['numeric'])) {
 		$sql = "select count(*) as num_rows from v_ivr_menus where domain_uuid = :domain_uuid ";
 		$parameters['domain_uuid'] = $domain_uuid;
 		$database = new database;
@@ -77,10 +82,10 @@
 	}
 
 //get http post values and set them to php variables
-	if (count($_POST) > 0) {
+	if (!empty($_POST)) {
 
 		//process the http post data by submitted action
-			if ($_POST['action'] != '' && is_uuid($_POST['ivr_menu_uuid'])) {
+			if (!empty($_POST['action']) && is_uuid($_POST['ivr_menu_uuid'])) {
 				$array[0]['checked'] = 'true';
 				$array[0]['uuid'] = $_POST['ivr_menu_uuid'];
 
@@ -113,7 +118,7 @@
 			$ivr_menu_options = $_POST["ivr_menu_options"];
 			$ivr_menu_invalid_sound = $_POST["ivr_menu_invalid_sound"];
 			$ivr_menu_exit_sound = $_POST["ivr_menu_exit_sound"];
-			$ivr_menu_pin_number = $_POST["ivr_menu_pin_number"];
+			$ivr_menu_pin_number = $_POST["ivr_menu_pin_number"] ?? '';
 			$ivr_menu_confirm_macro = $_POST["ivr_menu_confirm_macro"];
 			$ivr_menu_confirm_key = $_POST["ivr_menu_confirm_key"];
 			$ivr_menu_tts_engine = $_POST["ivr_menu_tts_engine"];
@@ -127,10 +132,10 @@
 			$ivr_menu_direct_dial = $_POST["ivr_menu_direct_dial"];
 			$ivr_menu_ringback = $_POST["ivr_menu_ringback"];
 			$ivr_menu_cid_prefix = $_POST["ivr_menu_cid_prefix"];
-			$ivr_menu_enabled = $_POST["ivr_menu_enabled"] ?: 'false';
+			$ivr_menu_enabled = $_POST["ivr_menu_enabled"] ?? 'false';
 			$ivr_menu_description = $_POST["ivr_menu_description"];
-			$ivr_menu_options_delete = $_POST["ivr_menu_options_delete"];
-			$dialplan_uuid = $_POST["dialplan_uuid"];
+			$ivr_menu_options_delete = $_POST["ivr_menu_options_delete"] ?? null;
+			$dialplan_uuid = $_POST["dialplan_uuid"] ?? null;
 
 		//set the context for users that do not have the permission
 			if (permission_exists('ivr_menu_context')) {
@@ -148,13 +153,13 @@
 			$ivr_menu_exit_data = join(':', $timeout_action_array);
 
 		//set the default ivr_menu_option_action
-			if (strlen($ivr_menu_option_action) == 0) {
+			if (empty($ivr_menu_option_action)) {
 				$ivr_menu_option_action = "menu-exec-app";
 			}
 	}
 
 //process the http data
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
 		//set the domain_uuid
 			if (permission_exists('ivr_menu_domain')) {
@@ -173,7 +178,7 @@
 				$parameters['ivr_menu_uuid'] = $ivr_menu_uuid;
 				$database = new database;
 				$row = $database->select($sql, $parameters, 'row');
-				if (is_array($row) && @sizeof($row) != 0) {
+				if (!empty($row)) {
 					if (!permission_exists('ivr_menu_domain')) {
 						$domain_uuid = $row["domain_uuid"];
 					}
@@ -194,28 +199,28 @@
 
 		//check for all required data
 			$msg = '';
-			if (strlen($ivr_menu_name) == 0) { $msg .= $text['message-required'].$text['label-name']."<br>\n"; }
-			if (strlen($ivr_menu_extension) == 0) { $msg .= $text['message-required'].$text['label-extension']."<br>\n"; }
-			if (strlen($ivr_menu_greet_long) == 0) { $msg .= $text['message-required'].$text['label-greet_long']."<br>\n"; }
-			//if (strlen($ivr_menu_greet_short) == 0) { $msg .= $text['message-required'].$text['label-greet_short']."<br>\n"; }
-			//if (strlen($ivr_menu_invalid_sound) == 0) { $msg .= $text['message-required'].$text['label-invalid_sound']."<br>\n"; }
-			//if (strlen($ivr_menu_exit_sound) == 0) { $msg .= $text['message-required'].$text['label-exit_sound']."<br>\n"; }
-			//if (strlen($ivr_menu_confirm_macro) == 0) { $msg .= $text['message-required'].$text['label-comfirm_macro']."<br>\n"; }
-			//if (strlen($ivr_menu_confirm_key) == 0) { $msg .= $text['message-required'].$text['label-comfirm_key']."<br>\n"; }
-			//if (strlen($ivr_menu_tts_engine) == 0) { $msg .= $text['message-required'].$text['label-tts_engine']."<br>\n"; }
-			//if (strlen($ivr_menu_tts_voice) == 0) { $msg .= $text['message-required'].$text['label-tts_voice']."<br>\n"; }
-			if (strlen($ivr_menu_confirm_attempts) == 0) { $msg .= $text['message-required'].$text['label-comfirm_attempts']."<br>\n"; }
-			if (strlen($ivr_menu_timeout) == 0) { $msg .= $text['message-required'].$text['label-timeout']."<br>\n"; }
-			//if (strlen($ivr_menu_exit_app) == 0) { $msg .= $text['message-required'].$text['label-exit_action']."<br>\n"; }
-			if (strlen($ivr_menu_inter_digit_timeout) == 0) { $msg .= $text['message-required'].$text['label-inter_digit_timeout']."<br>\n"; }
-			if (strlen($ivr_menu_max_failures) == 0) { $msg .= $text['message-required'].$text['label-max_failures']."<br>\n"; }
-			if (strlen($ivr_menu_max_timeouts) == 0) { $msg .= $text['message-required'].$text['label-max_timeouts']."<br>\n"; }
-			if (strlen($ivr_menu_digit_len) == 0) { $msg .= $text['message-required'].$text['label-digit_length']."<br>\n"; }
-			if (strlen($ivr_menu_direct_dial) == 0) { $msg .= $text['message-required'].$text['label-direct_dial']."<br>\n"; }
-			//if (strlen($ivr_menu_ringback) == 0) { $msg .= $text['message-required'].$text['label-ring_back']."<br>\n"; }
-			
-			//if (strlen($ivr_menu_description) == 0) { $msg .= $text['message-required'].$text['label-description']."<br>\n"; }
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+			if (empty($ivr_menu_name)) { $msg .= $text['message-required'].$text['label-name']."<br>\n"; }
+			if (empty($ivr_menu_extension)) { $msg .= $text['message-required'].$text['label-extension']."<br>\n"; }
+			if (empty($ivr_menu_greet_long)) { $msg .= $text['message-required'].$text['label-greet_long']."<br>\n"; }
+			//if (empty($ivr_menu_greet_short)) { $msg .= $text['message-required'].$text['label-greet_short']."<br>\n"; }
+			//if (empty($ivr_menu_invalid_sound)) { $msg .= $text['message-required'].$text['label-invalid_sound']."<br>\n"; }
+			//if (empty($ivr_menu_exit_sound)) { $msg .= $text['message-required'].$text['label-exit_sound']."<br>\n"; }
+			//if (empty($ivr_menu_confirm_macro)) { $msg .= $text['message-required'].$text['label-comfirm_macro']."<br>\n"; }
+			//if (empty($ivr_menu_confirm_key)) { $msg .= $text['message-required'].$text['label-comfirm_key']."<br>\n"; }
+			//if (empty($ivr_menu_tts_engine)) { $msg .= $text['message-required'].$text['label-tts_engine']."<br>\n"; }
+			//if (empty($ivr_menu_tts_voice)) { $msg .= $text['message-required'].$text['label-tts_voice']."<br>\n"; }
+			if (empty($ivr_menu_confirm_attempts)) { $msg .= $text['message-required'].$text['label-comfirm_attempts']."<br>\n"; }
+			if (empty($ivr_menu_timeout)) { $msg .= $text['message-required'].$text['label-timeout']."<br>\n"; }
+			//if (empty($ivr_menu_exit_app)) { $msg .= $text['message-required'].$text['label-exit_action']."<br>\n"; }
+			if (empty($ivr_menu_inter_digit_timeout)) { $msg .= $text['message-required'].$text['label-inter_digit_timeout']."<br>\n"; }
+			if (empty($ivr_menu_max_failures)) { $msg .= $text['message-required'].$text['label-max_failures']."<br>\n"; }
+			if (empty($ivr_menu_max_timeouts)) { $msg .= $text['message-required'].$text['label-max_timeouts']."<br>\n"; }
+			if (empty($ivr_menu_digit_len)) { $msg .= $text['message-required'].$text['label-digit_length']."<br>\n"; }
+			if (empty($ivr_menu_direct_dial)) { $msg .= $text['message-required'].$text['label-direct_dial']."<br>\n"; }
+			//if (empty($ivr_menu_ringback)) { $msg .= $text['message-required'].$text['label-ring_back']."<br>\n"; }
+
+			//if (empty($ivr_menu_description)) { $msg .= $text['message-required'].$text['label-description']."<br>\n"; }
+			if (!empty($msg) && !empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -229,10 +234,10 @@
 			}
 
 		//add or update the database
-			if ($_POST["persistformvar"] != "true") {
+			if (empty($_POST["persistformvar"])) {
 
 				//used for debugging
-					if ($_POST["debug"] == "true") {
+					if (!empty($_POST["debug"]) && $_POST["debug"] == "true") {
 						unset($_POST["debug"]);
 						echo "<pre>\n";
 						print_r($_POST);
@@ -252,9 +257,9 @@
 
 				//seperate the language components into language, dialect and voice
 					$language_array = explode("/",$ivr_menu_language);
-					$ivr_menu_language = $language_array[0];
-					$ivr_menu_dialect = $language_array[1];
-					$ivr_menu_voice = $language_array[2];
+					$ivr_menu_language = $language_array[0] ?? 'en';
+					$ivr_menu_dialect = $language_array[1] ?? 'us';
+					$ivr_menu_voice = $language_array[2] ?? 'callie';
 
 				//prepare the array
 					$array['ivr_menus'][0]["ivr_menu_uuid"] = $ivr_menu_uuid;
@@ -289,21 +294,23 @@
 					$array['ivr_menus'][0]["ivr_menu_max_timeouts"] = $ivr_menu_max_timeouts;
 					$array['ivr_menus'][0]["ivr_menu_digit_len"] = $ivr_menu_digit_len;
 					$array['ivr_menus'][0]["ivr_menu_direct_dial"] = $ivr_menu_direct_dial;
-					$array['ivr_menus'][0]["ivr_menu_ringback"] = $ivr_menu_ringback;
+					if (!empty($ivr_menu_ringback) && $ringbacks->valid($ivr_menu_ringback)) {
+						$array['ivr_menus'][0]["ivr_menu_ringback"] = $ivr_menu_ringback;
+					}
 					$array['ivr_menus'][0]["ivr_menu_cid_prefix"] = $ivr_menu_cid_prefix;
 					$array['ivr_menus'][0]["ivr_menu_context"] = $ivr_menu_context;
 					$array['ivr_menus'][0]["ivr_menu_enabled"] = $ivr_menu_enabled;
 					$array['ivr_menus'][0]["ivr_menu_description"] = $ivr_menu_description;
 					$y = 0;
 					foreach ($ivr_menu_options as $row) {
-						if (strlen($row['ivr_menu_option_digits']) > 0) {
-							if (is_uuid($row['ivr_menu_option_uuid'])) {
+						if (isset($row['ivr_menu_option_digits']) && $row['ivr_menu_option_digits'] != '') {
+							if (!empty($row['ivr_menu_option_uuid']) && is_uuid($row['ivr_menu_option_uuid'])) {
 								$ivr_menu_option_uuid = $row['ivr_menu_option_uuid'];
 							}
 							else {
 								$ivr_menu_option_uuid = uuid();
 							}
-							if (is_numeric($row["ivr_menu_option_param"])) {
+							if (isset($row["ivr_menu_option_param"]) && is_numeric($row["ivr_menu_option_param"])) {
 								//add the ivr menu syntax
 								$ivr_menu_option_action = "menu-exec-app";
 								$ivr_menu_option_param = "transfer ".$row["ivr_menu_option_param"]." XML ".$ivr_menu_context;
@@ -324,7 +331,7 @@
 							}
 							$array['ivr_menus'][0]['ivr_menu_options'][$y]["ivr_menu_option_order"] = $row["ivr_menu_option_order"];
 							$array['ivr_menus'][0]['ivr_menu_options'][$y]["ivr_menu_option_description"] = $row["ivr_menu_option_description"];
-							$array['ivr_menus'][0]["ivr_menu_options"][$y]["ivr_menu_option_enabled"] = $row['ivr_menu_option_enabled'] ?: 'false';
+							$array['ivr_menus'][0]["ivr_menu_options"][$y]["ivr_menu_option_enabled"] = !empty($row['ivr_menu_option_enabled']) ?? 'false';
 							$y++;
 						}
 					}
@@ -338,32 +345,32 @@
 					}
 					$dialplan_xml .= "		<action application=\"sleep\" data=\"1000\"/>\n";
 					$dialplan_xml .= "		<action application=\"set\" data=\"hangup_after_bridge=true\"/>\n";
-					if (strlen($ivr_menu_ringback) > 0) {
+					if (!empty($ivr_menu_ringback) && $ringbacks->valid($ivr_menu_ringback)) {
 						$dialplan_xml .= "		<action application=\"set\" data=\"ringback=".$ivr_menu_ringback."\"/>\n";
 					}
-					if (strlen($ivr_menu_language) > 0) {
+					if (!empty($ivr_menu_language)) {
 						$dialplan_xml .= "		<action application=\"set\" data=\"sound_prefix=\$\${sounds_dir}/".xml::sanitize($ivr_menu_language)."/".xml::sanitize($ivr_menu_dialect)."/".xml::sanitize($ivr_menu_voice)."\" inline=\"true\"/>\n";
 						$dialplan_xml .= "		<action application=\"set\" data=\"default_language=".xml::sanitize($ivr_menu_language)."\" inline=\"true\"/>\n";
 						$dialplan_xml .= "		<action application=\"set\" data=\"default_dialect=".xml::sanitize($ivr_menu_dialect)."\" inline=\"true\"/>\n";
 						$dialplan_xml .= "		<action application=\"set\" data=\"default_voice=".xml::sanitize($ivr_menu_voice)."\" inline=\"true\"/>\n";
 					}
-					if (strlen($ivr_menu_ringback) > 0) {
+					if (!empty($ivr_menu_ringback) && $ringbacks->valid($ivr_menu_ringback)) {
 						$dialplan_xml .= "		<action application=\"set\" data=\"transfer_ringback=".$ivr_menu_ringback."\"/>\n";
 					}
 					$dialplan_xml .= "		<action application=\"set\" data=\"ivr_menu_uuid=".xml::sanitize($ivr_menu_uuid)."\"/>\n";
 
-					if ($_SESSION['ivr_menu']['application']['text'] == "lua") {
+					if (!empty($_SESSION['ivr_menu']['application']['text']) && $_SESSION['ivr_menu']['application']['text'] == "lua") {
 						$dialplan_xml .= "		<action application=\"lua\" data=\"ivr_menu.lua\"/>\n";
 					}
 					else {
-						if (strlen($ivr_menu_cid_prefix) > 0) {
+						if (!empty($ivr_menu_cid_prefix)) {
 							$dialplan_xml .= "		<action application=\"set\" data=\"caller_id_name=".xml::sanitize($ivr_menu_cid_prefix)."#\${caller_id_name}\"/>\n";
 							$dialplan_xml .= "		<action application=\"set\" data=\"effective_caller_id_name=\${caller_id_name}\"/>\n";
 						}
 						$dialplan_xml .= "		<action application=\"ivr\" data=\"".xml::sanitize($ivr_menu_uuid)."\"/>\n";
 					}
 
-					if (strlen($ivr_menu_exit_app) > 0) {
+					if (!empty($ivr_menu_exit_app)) {
 						$dialplan_xml .= "		<action application=\"".xml::sanitize($ivr_menu_exit_app)."\" data=\"".xml::sanitize($ivr_menu_exit_data)."\"/>\n";
 					}
 					$dialplan_xml .= "	</condition>\n";
@@ -408,8 +415,7 @@
 					if (
 						$action == 'update'
 						&& permission_exists('ivr_menu_option_delete')
-						&& is_array($ivr_menu_options_delete)
-						&& @sizeof($ivr_menu_options_delete) != 0
+						&& !empty($ivr_menu_options_delete)
 						) {
 						$obj = new ivr_menu;
 						$obj->ivr_menu_uuid = $ivr_menu_uuid;
@@ -436,8 +442,10 @@
 					$parameters['ivr_menu_parent_uuid'] = $ivr_menu_parent_uuid;
 					$database = new database;
 					$parent_uuids = $database->select($sql, $parameters, "all");
-					foreach ($parent_uuids as $x => $row) {
-						$cache->delete("configuration:ivr.conf:".$row['ivr_menu_parent_uuid']);
+					if (!empty($parent_uuids)) {
+						foreach ($parent_uuids as $x => $row) {
+							$cache->delete("configuration:ivr.conf:".$row['ivr_menu_parent_uuid']);
+						}
 					}
 				//set the add message
 					if ($action == "add" && permission_exists('ivr_menu_add')) {
@@ -457,13 +465,13 @@
 	}
 
 //pre-populate the form
-	if (!is_uuid($ivr_menu_uuid)) { $ivr_menu_uuid = $_REQUEST["id"]; }
-	if (is_uuid($ivr_menu_uuid) && $_POST["persistformvar"] != "true") {
+	if (empty($ivr_menu_uuid)) { $ivr_menu_uuid = $_REQUEST["id"] ?? null; }
+	if (!empty($ivr_menu_uuid) && is_uuid($ivr_menu_uuid) && empty($_POST["persistformvar"])) {
 		$ivr = new ivr_menu;
 		$ivr->domain_uuid = $_SESSION["domain_uuid"];
 		$ivr->ivr_menu_uuid = $ivr_menu_uuid;
 		$ivr_menus = $ivr->find();
-		if (is_array($ivr_menus)) {
+		if (!empty($ivr_menus)) {
 			foreach ($ivr_menus as &$row) {
 				$dialplan_uuid = $row["dialplan_uuid"];
 				$ivr_menu_name = $row["ivr_menu_name"];
@@ -499,7 +507,7 @@
 				//replace the dash with a space
 				$ivr_menu_name = str_replace("-", " ", $ivr_menu_name);
 
-				if (strlen($ivr_menu_exit_app) > 0) {
+				if (!empty($ivr_menu_exit_app)) {
 					$ivr_menu_exit_action = $ivr_menu_exit_app.":".$ivr_menu_exit_data;
 				}
 			}
@@ -507,11 +515,18 @@
 		unset($ivr_menus, $row);
 	}
 
+//set defaults
+	$ivr_menu_language = $ivr_menu_language ?? '';
+	$ivr_menu_dialect = $ivr_menu_dialect ?? '';
+	$ivr_menu_voice = $ivr_menu_voice ?? '';
+	$select_style = $select_style ?? '';
+	$onkeyup = $onkeyup ?? '';
+	
 //get the ivr menu options
 	$sql = "select * from v_ivr_menu_options ";
 	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= "and ivr_menu_uuid = :ivr_menu_uuid ";
-	$sql .= "order by ivr_menu_option_digits, ivr_menu_option_order asc ";
+	$sql .= "order by ivr_menu_option_order, ivr_menu_option_digits asc ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$parameters['ivr_menu_uuid'] = $ivr_menu_uuid;
 	$database = new database;
@@ -549,48 +564,48 @@
 	}
 
 //set the defaults
-	if (strlen($ivr_menu_timeout) == 0) { $ivr_menu_timeout = '3000'; }
-	if (strlen($ivr_menu_ringback) == 0) { $ivr_menu_ringback = 'local_stream://default'; }
-	if (strlen($ivr_menu_invalid_sound) == 0) { $ivr_menu_invalid_sound = 'ivr/ivr-that_was_an_invalid_entry.wav'; }
-	//if (strlen($ivr_menu_confirm_key) == 0) { $ivr_menu_confirm_key = '#'; }
-	if (strlen($ivr_menu_tts_engine) == 0) { $ivr_menu_tts_engine = 'flite'; }
-	if (strlen($ivr_menu_tts_voice) == 0) { $ivr_menu_tts_voice = 'rms'; }
-	if (strlen($ivr_menu_confirm_attempts) == 0) { 
-		if (strlen($_SESSION['ivr_menu']['confirm_attempts']['numeric']) > 0) {
+	if (empty($ivr_menu_timeout)) { $ivr_menu_timeout = '3000'; }
+	if (empty($ivr_menu_ringback)) { $ivr_menu_ringback = 'local_stream://default'; }
+	if (empty($ivr_menu_invalid_sound)) { $ivr_menu_invalid_sound = 'ivr/ivr-that_was_an_invalid_entry.wav'; }
+	//if (empty($ivr_menu_confirm_key)) { $ivr_menu_confirm_key = '#'; }
+	if (empty($ivr_menu_tts_engine)) { $ivr_menu_tts_engine = 'flite'; }
+	if (empty($ivr_menu_tts_voice)) { $ivr_menu_tts_voice = 'rms'; }
+	if (empty($ivr_menu_confirm_attempts)) {
+		if (!empty($_SESSION['ivr_menu']['confirm_attempts']['numeric'])) {
 			$ivr_menu_confirm_attempts = $_SESSION['ivr_menu']['confirm_attempts']['numeric'];
 		}
 		else {
 			$ivr_menu_confirm_attempts = '1';
 		}
 	}
-	if (strlen($ivr_menu_inter_digit_timeout) == 0) { 
-		if (strlen($_SESSION['ivr_menu']['inter_digit_timeout']['numeric']) > 0) {
+	if (empty($ivr_menu_inter_digit_timeout)) {
+		if (!empty($_SESSION['ivr_menu']['inter_digit_timeout']['numeric'])) {
 			$ivr_menu_inter_digit_timeout = $_SESSION['ivr_menu']['inter_digit_timeout']['numeric'];
 		}
 		else {
 			$ivr_menu_inter_digit_timeout = '2000'; 
 		}
 	}
-	if (strlen($ivr_menu_max_failures) == 0) { 
-		if (strlen($_SESSION['ivr_menu']['max_failures']['numeric']) > 0) {
+	if (empty($ivr_menu_max_failures)) {
+		if (!empty($_SESSION['ivr_menu']['max_failures']['numeric'])) {
 			$ivr_menu_max_failures = $_SESSION['ivr_menu']['max_failures']['numeric'];
 		}
 		else {
 			$ivr_menu_max_failures = '1'; 
 		}
 	}
-	if (strlen($ivr_menu_max_timeouts) == 0) { 
-		if (strlen($_SESSION['ivr_menu']['max_timeouts']['numeric']) > 0) {
+	if (empty($ivr_menu_max_timeouts)) {
+		if (!empty($_SESSION['ivr_menu']['max_timeouts']['numeric'])) {
 			$ivr_menu_max_timeouts = $_SESSION['ivr_menu']['max_timeouts']['numeric'];
 		}
 		else {
 			$ivr_menu_max_timeouts = '1'; 
 		}
 	}
-	if (strlen($ivr_menu_digit_len) == 0) { $ivr_menu_digit_len = '5'; }
-	if (strlen($ivr_menu_direct_dial) == 0) { $ivr_menu_direct_dial = 'false'; }
+	if (empty($ivr_menu_digit_len)) { $ivr_menu_digit_len = '5'; }
+	if (empty($ivr_menu_direct_dial)) { $ivr_menu_direct_dial = 'false'; }
 	if (!isset($ivr_menu_context)) { $ivr_menu_context = $_SESSION['domain_name']; }
-	if (strlen($ivr_menu_enabled) == 0) { $ivr_menu_enabled = 'true'; }
+	if (empty($ivr_menu_enabled)) { $ivr_menu_enabled = 'true'; }
 	if (!isset($ivr_menu_exit_action)) { $ivr_menu_exit_action = ''; }
 
 //get installed languages
@@ -601,32 +616,21 @@
 		if (count($path_array) <> 3 || strlen($path_array[0]) <> 2 || strlen($path_array[1]) <> 2) {
 			unset($language_paths[$key]);
 		}
-		$language_paths[$key] = str_replace($_SESSION["switch"]['sounds']['dir']."/","",$language_paths[$key]);
-		if (strlen($language_paths[$key]) == 0) {
+		$language_paths[$key] = str_replace($_SESSION["switch"]['sounds']['dir']."/","",$language_paths[$key] ?? '');
+		if (empty($language_paths[$key])) {
 			unset($language_paths[$key]);
 		}
 	}
 
-//get the recordings
-	$sql = "select recording_name, recording_filename from v_recordings ";
-	$sql .= "where domain_uuid = :domain_uuid ";
-	$sql .= "order by recording_name asc ";
-	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$database = new database;
-	$recordings = $database->select($sql, $parameters, 'all');
-	unset($sql, $parameters);
+//get the sounds
+	$sounds = new sounds;
+	$sounds->sound_types = ['miscellaneous','recordings','phrases'];
+	$audio_files[0] = $sounds->get();
+	unset($sounds);
 
-//get the phrases
-	$sql = "select * from v_phrases ";
-	$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
-	$parameters['domain_uuid'] = $domain_uuid;
-	$database = new database;
-	$phrases = $database->select($sql, $parameters, 'all');
-	unset($sql, $parameters);
-
-//get the sound files
-	$file = new file;
-	$sound_files = $file->sounds($ivr_menu_language, $ivr_menu_dialect, $ivr_menu_voice);
+	$sounds = new sounds;
+	$audio_files[1] = $sounds->get();
+	unset($sounds);
 
 //create token
 	$object = new token;
@@ -637,12 +641,82 @@
 	require_once "resources/header.php";
 
 //show the content
-	echo "<script type=\"text/javascript\" language=\"JavaScript\">\n";
+	echo "<script type='text/javascript' language='JavaScript'>\n";
 	echo "	function show_advanced_config() {\n";
 	echo "		$('#show_advanced_box').slideToggle();\n";
 	echo "		$('#show_advanced').slideToggle();\n";
 	echo "	}\n";
-	echo "</script>";
+	echo "</script>\n";
+
+	if (permission_exists('recording_play') || permission_exists('recording_download')) {
+		echo "<script type='text/javascript' language='JavaScript'>\n";
+		echo "	function set_playable(id, audio_selected, audio_type) {\n";
+		echo "		file_ext = audio_selected.split('.').pop();\n";
+		echo "		var mime_type = '';\n";
+		echo "		switch (file_ext) {\n";
+		echo "			case 'wav': mime_type = 'audio/wav'; break;\n";
+		echo "			case 'mp3': mime_type = 'audio/mpeg'; break;\n";
+		echo "			case 'ogg': mime_type = 'audio/ogg'; break;\n";
+		echo "		}\n";
+		echo "		if (mime_type != '' && (audio_type == 'recordings' || audio_type == 'sounds')) {\n";
+		echo "			if (audio_type == 'recordings') {\n";
+		echo "				if (audio_selected.includes('/')) {\n";
+		echo "					audio_selected = audio_selected.split('/').pop()\n";
+		echo "				}\n";
+		echo "				$('#recording_audio_' + id).attr('src', '../recordings/recordings.php?action=download&type=rec&filename=' + audio_selected);\n";
+		echo "			}\n";
+		echo "			else if (audio_type == 'sounds') {\n";
+		echo "				$('#recording_audio_' + id).attr('src', '../switch/sounds.php?action=download&filename=' + audio_selected);\n";
+		echo "			}\n";
+		echo "			$('#recording_audio_' + id).attr('type', mime_type);\n";
+		echo "			$('#recording_button_' + id).show();\n";
+		echo "		}\n";
+		echo "		else {\n";
+		echo "			$('#recording_button_' + id).hide();\n";
+		echo "			$('#recording_audio_' + id).attr('src','').attr('type','');\n";
+		echo "		}\n";
+		echo "	}\n";
+		echo "</script>\n";
+	}
+	if (if_group("superadmin")) {
+		echo "<script type='text/javascript' language='JavaScript'>\n";
+		echo "	var objs;\n";
+		echo "	function toggle_select_input(obj, instance_id){\n";
+		echo "		tb=document.createElement('INPUT');\n";
+		echo "		tb.type='text';\n";
+		echo "		tb.name=obj.name;\n";
+		echo "		tb.className='formfld';\n";
+		echo "		tb.setAttribute('id', instance_id);\n";
+		echo "		tb.setAttribute('style', 'width: ' + obj.offsetWidth + 'px;');\n";
+		if (!empty($on_change)) {
+			echo "	tb.setAttribute('onchange', \"".$on_change."\");\n";
+			echo "	tb.setAttribute('onkeyup', \"".$on_change."\");\n";
+		}
+		echo "		tb.value=obj.options[obj.selectedIndex].value;\n";
+		echo "		document.getElementById('btn_select_to_input_' + instance_id).style.display = 'none';\n";
+		echo "		tbb=document.createElement('INPUT');\n";
+		echo "		tbb.setAttribute('class', 'btn');\n";
+		echo "		tbb.setAttribute('style', 'margin-left: 4px;');\n";
+		echo "		tbb.type='button';\n";
+		echo "		tbb.value=$('<div />').html('&#9665;').text();\n";
+		echo "		tbb.objs=[obj,tb,tbb];\n";
+		echo "		tbb.onclick=function(){ replace_element(this.objs, instance_id); }\n";
+		echo "		obj.parentNode.insertBefore(tb,obj);\n";
+		echo "		obj.parentNode.insertBefore(tbb,obj);\n";
+		echo "		obj.parentNode.removeChild(obj);\n";
+		echo "		replace_element(this.objs, instance_id);\n";
+		echo "	}\n";
+		echo "	function replace_element(obj, instance_id){\n";
+		echo "		obj[2].parentNode.insertBefore(obj[0],obj[2]);\n";
+		echo "		obj[0].parentNode.removeChild(obj[1]);\n";
+		echo "		obj[0].parentNode.removeChild(obj[2]);\n";
+		echo "		document.getElementById('btn_select_to_input_' + instance_id).style.display = 'inline';\n";
+		if (!empty($on_change)) {
+			echo "	".$on_change.";\n";
+		}
+		echo "	}\n";
+		echo "</script>\n";
+	}
 
 	echo "<form name='frm' id='frm' method='post'>\n";
 
@@ -651,14 +725,13 @@
 	echo "	<div class='actions'>\n";
 	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','link'=>'ivr_menus.php']);
 	if ($action == "update") {
-		$button_margin = 'margin-left: 15px;';
-		if (permission_exists('ivr_menu_add') && (!is_numeric($_SESSION['limit']['ivr_menus']['numeric']) || $total_ivr_menus < $_SESSION['limit']['ivr_menus']['numeric'])) {
+		if (permission_exists('ivr_menu_add') && (empty($_SESSION['limit']['ivr_menus']['numeric']) || $total_ivr_menus < $_SESSION['limit']['ivr_menus']['numeric'])) {
+			$button_margin = 'margin-left: 15px;';
 			echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'name'=>'btn_copy','style'=>$button_margin,'onclick'=>"modal_open('modal-copy','btn_copy');"]);
-			unset($button_margin);
 		}
 		if (permission_exists('ivr_menu_delete') || permission_exists('ivr_menu_option_delete')) {
+			$button_margin = 'margin-left: 0px;';
 			echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'name'=>'btn_delete','style'=>$button_margin,'onclick'=>"modal_open('modal-delete','btn_delete');"]);
-			unset($button_margin);
 		}
 	}
 	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save','style'=>'margin-left: 15px']);
@@ -667,7 +740,7 @@
 	echo "</div>\n";
 
 	if ($action == "update") {
-		if (permission_exists('ivr_menu_add') && (!is_numeric($_SESSION['limit']['ivr_menus']['numeric']) || $total_ivr_menus < $_SESSION['limit']['ivr_menus']['numeric'])) {
+		if (permission_exists('ivr_menu_add') && (empty($_SESSION['limit']['ivr_menus']['numeric']) || $total_ivr_menus < $_SESSION['limit']['ivr_menus']['numeric'])) {
 			echo modal::create(['id'=>'modal-copy','type'=>'copy','actions'=>button::create(['type'=>'submit','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_copy','style'=>'float: right; margin-left: 15px;','collapse'=>'never','name'=>'action','value'=>'copy','onclick'=>"modal_close();"])]);
 		}
 		if (permission_exists('ivr_menu_delete') || permission_exists('ivr_menu_option_delete')) {
@@ -706,13 +779,15 @@
 	echo "		<td class='vtable'>";
 	echo "<select name=\"ivr_menu_parent_uuid\" class='formfld'>\n";
 	echo "<option value=\"\"></option>\n";
-	foreach($ivr_menus as $field) {
-		if ($field['ivr_menu_uuid'] != $ivr_menu_uuid) {
-			if ($ivr_menu_parent_uuid == $field['ivr_menu_uuid']) {
-				echo "<option value='".escape($field['ivr_menu_uuid'])."' selected='selected'>".escape($field['ivr_menu_name'])."</option>\n";
-			}
-			else {
-				echo "<option value='".escape($field['ivr_menu_uuid'])."'>".escape($field['ivr_menu_name'])."</option>\n";
+	if (!empty($ivr_menus)) {
+		foreach($ivr_menus as $field) {
+			if ($field['ivr_menu_uuid'] != $ivr_menu_uuid) {
+				if (!empty($ivr_menu_parent_uuid) && $ivr_menu_parent_uuid == $field['ivr_menu_uuid']) {
+					echo "<option value='".escape($field['ivr_menu_uuid'])."' selected='selected'>".escape($field['ivr_menu_name'])."</option>\n";
+				}
+				else {
+					echo "<option value='".escape($field['ivr_menu_uuid'])."'>".escape($field['ivr_menu_name'])."</option>\n";
+				}
 			}
 		}
 	}
@@ -727,303 +802,169 @@
 	echo "<td class='vtable' align='left'>\n";
 	echo "  <select class='formfld' type='text' name='ivr_menu_language'>\n";
 	echo "		<option></option>\n";
-	if (strlen($ivr_menu_language) > 0) {
+	if (!empty($ivr_menu_language) && !empty($ivr_menu_dialect) && !empty($ivr_menu_voice)) {
 		$language_formatted = $ivr_menu_language."-".$ivr_menu_dialect." ".$ivr_menu_voice;
 		echo "		<option value='".escape($ivr_menu_language.'/'.$ivr_menu_dialect.'/'.$ivr_menu_voice)."' selected='selected'>".escape($language_formatted)."</option>\n";
 	}
-	foreach ($language_paths as $key => $language_variables) {
-		$language_variables = explode ('/',$language_paths[$key]);
-		$language = $language_variables[0];
-		$dialect = $language_variables[1];
-		$voice = $language_variables[2];
-		if ($language_formatted <> $language.'-'.$dialect.' '.$voice) {
-			echo "		<option value='".$language."/".$dialect."/".$voice."'>".$language."-".$dialect." ".$voice."</option>\n";
+	if (!empty($language_paths)) {
+		foreach ($language_paths as $key => $language_variables) {
+			$language_variables = explode('/',$language_paths[$key]);
+			$language = $language_variables[0];
+			$dialect = $language_variables[1];
+			$voice = $language_variables[2];
+			if (empty($language_formatted) || $language_formatted != $language.'-'.$dialect.' '.$voice) {
+				echo "		<option value='".$language."/".$dialect."/".$voice."'>".$language."-".$dialect." ".$voice."</option>\n";
+			}
 		}
 	}
 	echo "<br />\n";
-	echo $text['description-language']."\n";
+	//echo $text['description-language']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
+	$instance_id = 'ivr_menu_greet_long';
+	$instance_label = 'greet_long';
+	$instance_value = $ivr_menu_greet_long;
 	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "	".$text['label-greet_long']."\n";
+	echo "<td class='vncell' rowspan='2' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-'.$instance_label]."\n";
 	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	if (if_group("superadmin")) {
-		$destination_id = "ivr_menu_greet_long";
-		$script = "<script>\n";
-		$script .= "var objs;\n";
-		$script .= "\n";
-		$script .= "function changeToInput".$destination_id."(obj){\n";
-		$script .= "	tb=document.createElement('INPUT');\n";
-		$script .= "	tb.type='text';\n";
-		$script .= "	tb.name=obj.name;\n";
-		$script .= "	tb.className='formfld';\n";
-		$script .= "	tb.setAttribute('id', '".$destination_id."');\n";
-		$script .= "	tb.setAttribute('style', '".$select_style."');\n";
-		if ($on_change != '') {
-			$script .= "	tb.setAttribute('onchange', \"".$on_change."\");\n";
-			$script .= "	tb.setAttribute('onkeyup', \"".$on_change."\");\n";
-		}
-		$script .= "	tb.value=obj.options[obj.selectedIndex].value;\n";
-		$script .= "	document.getElementById('btn_select_to_input_".$destination_id."').style.visibility = 'hidden';\n";
-		$script .= "	tbb=document.createElement('INPUT');\n";
-		$script .= "	tbb.setAttribute('class', 'btn');\n";
-		$script .= "	tbb.setAttribute('style', 'margin-left: 4px;');\n";
-		$script .= "	tbb.type='button';\n";
-		$script .= "	tbb.value=$('<div />').html('&#9665;').text();\n";
-		$script .= "	tbb.objs=[obj,tb,tbb];\n";
-		$script .= "	tbb.onclick=function(){ Replace".$destination_id."(this.objs); }\n";
-		$script .= "	obj.parentNode.insertBefore(tb,obj);\n";
-		$script .= "	obj.parentNode.insertBefore(tbb,obj);\n";
-		$script .= "	obj.parentNode.removeChild(obj);\n";
-		$script .= "	Replace".$destination_id."(this.objs);\n";
-		$script .= "}\n";
-		$script .= "\n";
-		$script .= "function Replace".$destination_id."(obj){\n";
-		$script .= "	obj[2].parentNode.insertBefore(obj[0],obj[2]);\n";
-		$script .= "	obj[0].parentNode.removeChild(obj[1]);\n";
-		$script .= "	obj[0].parentNode.removeChild(obj[2]);\n";
-		$script .= "	document.getElementById('btn_select_to_input_".$destination_id."').style.visibility = 'visible';\n";
-		if ($on_change != '') {
-			$script .= "	".$on_change.";\n";
-		}
-		$script .= "}\n";
-		$script .= "</script>\n";
-		$script .= "\n";
-		echo $script;
-	}
-	echo "<select name='ivr_menu_greet_long' id='ivr_menu_greet_long' class='formfld'>\n";
-	echo "	<option></option>\n";
-	//misc optgroup
-		if (if_group("superadmin")) {
-			echo "<optgroup label='Misc'>\n";
-			echo "	<option value='say:'>say:</option>\n";
-			echo "	<option value='tone_stream:'>tone_stream:</option>\n";
-			echo "</optgroup>\n";
-		}
-	//recordings
-		$tmp_selected = false;
-		if (is_array($recordings)) {
-			echo "<optgroup label='Recordings'>\n";
-			foreach ($recordings as &$row) {
-				$recording_name = $row["recording_name"];
-				$recording_filename = $row["recording_filename"];
-				if ($ivr_menu_greet_long == $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$recording_filename && strlen($ivr_menu_greet_long) > 0) {
-					$tmp_selected = true;
-					echo "	<option value='".escape($_SESSION['switch']['recordings']['dir'])."/".escape($_SESSION['domain_name'])."/".escape($recording_filename)."' selected='selected'>".escape($recording_name)."</option>\n";
-				}
-				else if ($ivr_menu_greet_long == $recording_filename && strlen($ivr_menu_greet_long) > 0) {
-					$tmp_selected = true;
-					echo "	<option value='".escape($recording_filename)."' selected='selected'>".escape($recording_name)."</option>\n";
-				}
-				else {
-					echo "	<option value='".escape($recording_filename)."'>".escape($recording_name)."</option>\n";
-				}
-			}
-			echo "</optgroup>\n";
-		}
-	//phrases
-		if (is_array($phrases)) {
-			echo "<optgroup label='Phrases'>\n";
-			foreach ($phrases as &$row) {
-				if ($ivr_menu_greet_long == "phrase:".$row["phrase_uuid"]) {
-					$tmp_selected = true;
-					echo "	<option value='phrase:".escape($row["phrase_uuid"])."' selected='selected'>".escape($row["phrase_name"])."</option>\n";
-				}
-				else {
-					echo "	<option value='phrase:".escape($row["phrase_uuid"])."'>".escape($row["phrase_name"])."</option>\n";
-				}
-			}
-			echo "</optgroup>\n";
-		}
-	//sounds
-		/*
-		if (is_array($sound_files)) {
-			echo "<optgroup label='Sounds'>\n";
-			foreach ($sound_files as $value) {
-				if (strlen($value) > 0) {
-					if (substr($ivr_menu_greet_long, 0, 71) == "\$\${sounds_dir}/\${default_language}/\${default_dialect}/\${default_voice}/") {
-						$ivr_menu_greet_long = substr($ivr_menu_greet_long, 71);
-					}
-					if ($ivr_menu_greet_long == $value) {
-						$tmp_selected = true;
-						echo "	<option value='".escape($value)."' selected='selected'>".escape($value)."</option>\n";
-					}
-					else {
-						echo "	<option value='".escape($value)."'>".escape($value)."</option>\n";
-					}
-				}
-			}
-			echo "</optgroup>\n";
-		}
-		*/
-	//select
-		if (if_group("superadmin")) {
-			if (!$tmp_selected && strlen($ivr_menu_greet_long) > 0) {
-				echo "<optgroup label='Selected'>\n";
-				if (file_exists($_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$ivr_menu_greet_long)) {
-					echo "	<option value='".escape($_SESSION['switch']['recordings']['dir'])."/".escape($_SESSION['domain_name'])."/".escape($ivr_menu_greet_long)."' selected='selected'>".escape($ivr_menu_greet_long)."</option>\n";
-				}
-				else if (substr($ivr_menu_greet_long, -3) == "wav" || substr($ivr_menu_greet_long, -3) == "mp3") {
-					echo "	<option value='".escape($ivr_menu_greet_long)."' selected='selected'>".escape($ivr_menu_greet_long)."</option>\n";
-				}
-				else {
-					echo "	<option value='".escape($ivr_menu_greet_long)."' selected='selected'>".escape($ivr_menu_greet_long)."</option>\n";
-				}
-				echo "</optgroup>\n";
-			}
-			unset($tmp_selected);
-		}
-	echo "	</select>\n";
-	if (if_group("superadmin")) {
-		echo "<input type='button' id='btn_select_to_input_".escape($destination_id)."' class='btn' name='' alt='back' onclick='changeToInput".escape($destination_id)."(document.getElementById(\"".escape($destination_id)."\"));this.style.visibility = \"hidden\";' value='&#9665;'>";
-		unset($destination_id);
-	}
-	echo "	<br />\n";
-	echo $text['description-greet_long']."\n";
-	echo "</td>\n";
+	echo "<td class='vtable playback_progress_bar_background' id='recording_progress_bar_".$instance_id."' style='display: none; border-bottom: none; padding-top: 0 !important; padding-bottom: 0 !important;' align='left'><span class='playback_progress_bar' id='recording_progress_".$instance_id."'></span></td>\n";
 	echo "</tr>\n";
-
 	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	".$text['label-greet_short']."\n";
-	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	if (if_group("superadmin")) {
-		$destination_id = "ivr_menu_greet_short";
-		$script = "<script>\n";
-		$script .= "var objs;\n";
-		$script .= "\n";
-		$script .= "function changeToInput".$destination_id."(obj){\n";
-		$script .= "	tb=document.createElement('INPUT');\n";
-		$script .= "	tb.type='text';\n";
-		$script .= "	tb.name=obj.name;\n";
-		$script .= "	tb.className='formfld';\n";
-		$script .= "	tb.setAttribute('id', '".$destination_id."');\n";
-		$script .= "	tb.setAttribute('style', '".$select_style."');\n";
-		if ($on_change != '') {
-			$script .= "	tb.setAttribute('onchange', \"".$on_change."\");\n";
-			$script .= "	tb.setAttribute('onkeyup', \"".$on_change."\");\n";
-		}
-		$script .= "	tb.value=obj.options[obj.selectedIndex].value;\n";
-		$script .= "	document.getElementById('btn_select_to_input_".$destination_id."').style.visibility = 'hidden';\n";
-		$script .= "	tbb=document.createElement('INPUT');\n";
-		$script .= "	tbb.setAttribute('class', 'btn');\n";
-		$script .= "	tbb.setAttribute('style', 'margin-left: 4px;');\n";
-		$script .= "	tbb.type='button';\n";
-		$script .= "	tbb.value=$('<div />').html('&#9665;').text();\n";
-		$script .= "	tbb.objs=[obj,tb,tbb];\n";
-		$script .= "	tbb.onclick=function(){ Replace".$destination_id."(this.objs); }\n";
-		$script .= "	obj.parentNode.insertBefore(tb,obj);\n";
-		$script .= "	obj.parentNode.insertBefore(tbb,obj);\n";
-		$script .= "	obj.parentNode.removeChild(obj);\n";
-		$script .= "	Replace".$destination_id."(this.objs);\n";
-		$script .= "}\n";
-		$script .= "\n";
-		$script .= "function Replace".$destination_id."(obj){\n";
-		$script .= "	obj[2].parentNode.insertBefore(obj[0],obj[2]);\n";
-		$script .= "	obj[0].parentNode.removeChild(obj[1]);\n";
-		$script .= "	obj[0].parentNode.removeChild(obj[2]);\n";
-		$script .= "	document.getElementById('btn_select_to_input_".$destination_id."').style.visibility = 'visible';\n";
-		if ($on_change != '') {
-			$script .= "	".$on_change.";\n";
-		}
-		$script .= "}\n";
-		$script .= "</script>\n";
-		$script .= "\n";
-		echo $script;
-	}
-	echo "<select name='ivr_menu_greet_short' id='ivr_menu_greet_short' class='formfld'>\n";
-	echo "	<option></option>\n";
-	//misc
-		if (if_group("superadmin")) {
-			echo "<optgroup label='Misc'>\n";
-			echo "	<option value='say:'>say:</option>\n";
-			echo "	<option value='tone_stream:'>tone_stream:</option>\n";
-			echo "</optgroup>\n";
-		}
-	//recordings
-		$tmp_selected = false;
-		if (is_array($recordings)) {
-			echo "<optgroup label='Recordings'>\n";
-			foreach ($recordings as &$row) {
-				$recording_name = $row["recording_name"];
-				$recording_filename = $row["recording_filename"];
-				if ($ivr_menu_greet_short == $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".escape($recording_filename) && strlen($ivr_menu_greet_short) > 0) {
-					$tmp_selected = true;
-					echo "	<option value='".$_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".escape($recording_filename)."' selected='selected'>".escape($recording_name)."</option>\n";
-				}
-				else if ($ivr_menu_greet_short == $recording_filename && strlen($ivr_menu_greet_short) > 0) {
-					$tmp_selected = true;
-					echo "	<option value='".escape($recording_filename)."' selected='selected'>".escape($recording_name)."</option>\n";
-				}
-				else {
-					echo "	<option value='".escape($recording_filename)."'>".escape($recording_name)."</option>\n";
-				}
-			}
-			echo "</optgroup>\n";
-		}
-	//phrases
-		if (is_array($phrases)) {
-			echo "<optgroup label='Phrases'>\n";
-			foreach ($phrases as &$row) {
-				if ($ivr_menu_greet_short == "phrase:".$row["phrase_uuid"]) {
-					$tmp_selected = true;
-					echo "	<option value='phrase:".escape($row["phrase_uuid"])."' selected='selected'>".escape($row["phrase_name"])."</option>\n";
-				}
-				else {
-					echo "	<option value='phrase:".escape($row["phrase_uuid"])."'>".escape($row["phrase_name"])."</option>\n";
-				}
-			}
-			echo "</optgroup>\n";
-		}
-	//sounds
-		/*
-		if (is_array($sound_files)) {
-			echo "<optgroup label='Sounds'>\n";
-			foreach ($sound_files as $value) {
-				if (strlen($value) > 0) {
-					if (substr($ivr_menu_greet_short, 0, 71) == "\$\${sounds_dir}/\${default_language}/\${default_dialect}/\${default_voice}/") {
-						$ivr_menu_greet_short = substr($ivr_menu_greet_short, 71);
-					}
-					if ($ivr_menu_greet_short == $value) {
-						$tmp_selected = true;
-						echo "	<option value='".escape($value)."' selected='selected'>".escape($value)."</option>\n";
+	echo "<select name='".$instance_id."' id='".$instance_id."' class='formfld' ".(permission_exists('recording_play') || permission_exists('recording_download') ? "onchange=\"recording_reset('".$instance_id."'); set_playable('".$instance_id."', this.value, this.options[this.selectedIndex].parentNode.getAttribute('data-type'));\"" : null).">\n";
+	echo "	<option value=''></option>\n";
+	$found = $playable = false;
+	if (!empty($audio_files[0]) && is_array($audio_files[0]) && @sizeof($audio_files[0]) != 0) {
+		foreach ($audio_files[0] as $key => $value) {
+			echo "<optgroup label=".$text['label-'.$key]." data-type='".$key."'>\n";
+			foreach ($value as $row) {
+				if ($key == 'recordings') {
+					if (
+						!empty($instance_value) &&
+						($instance_value == $row["value"] || $instance_value == $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name'].'/'.$row["value"]) &&
+						file_exists($_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name'].'/'.pathinfo($row["value"], PATHINFO_BASENAME))
+						) {
+						$selected = "selected='selected'";
+						$playable = '../recordings/recordings.php?action=download&type=rec&filename='.pathinfo($row["value"], PATHINFO_BASENAME);
+						$found = true;
 					}
 					else {
-						echo "	<option value='".escape($value)."'>".escape($value)."</option>\n";
+						unset($selected);
 					}
 				}
+				else if ($key == 'sounds') {
+					if (!empty($instance_value) && $instance_value == $row["value"]) {
+						$selected = "selected='selected'";
+						$playable = '../switch/sounds.php?action=download&filename='.$row["value"];
+						$found = true;
+					}
+					else {
+						unset($selected);
+					}
+				}
+				else {
+					unset($selected);
+				}
+				echo "	<option value='".escape($row["value"])."' ".($selected ?? '').">".escape($row["name"])."</option>\n";
 			}
 			echo "</optgroup>\n";
 		}
-		*/
-	//select
-		if (if_group("superadmin")) {
-			if (!$tmp_selected && strlen($ivr_menu_greet_short) > 0) {
-				echo "<optgroup label='Selected'>\n";
-				if (file_exists($_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$ivr_menu_greet_short)) {
-					echo "	<option value='".$_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$ivr_menu_greet_short."' selected='selected'>".escape($ivr_menu_greet_short)."</option>\n";
-				}
-				else if (substr($ivr_menu_greet_short, -3) == "wav" || substr($ivr_menu_greet_short, -3) == "mp3") {
-					echo "	<option value='".escape($ivr_menu_greet_short)."' selected='selected'>".escape($ivr_menu_greet_short)."</option>\n";
-				}
-				else {
-					echo "	<option value='".escape($ivr_menu_greet_short)."' selected='selected'>".escape($ivr_menu_greet_short)."</option>\n";
-				}
-				echo "</optgroup>\n";
-			}
-			unset($tmp_selected);
-		}
+	}
+	if (if_group("superadmin") && !empty($instance_value) && !$found) {
+		echo "	<option value='".escape($instance_value)."' selected='selected'>".escape($instance_value)."</option>\n";
+	}
+	unset($selected);
 	echo "	</select>\n";
 	if (if_group("superadmin")) {
-		echo "<input type='button' id='btn_select_to_input_".escape($destination_id)."' class='btn' name='' alt='back' onclick='changeToInput".escape($destination_id)."(document.getElementById(\"".escape($destination_id)."\"));this.style.visibility = \"hidden\";' value='&#9665;'>";
-		unset($destination_id);
+		echo "<input type='button' id='btn_select_to_input_".$instance_id."' class='btn' name='' alt='back' onclick='toggle_select_input(document.getElementById(\"".$instance_id."\"), \"".$instance_id."\"); this.style.visibility=\"hidden\";' value='&#9665;'>";
+	}
+	if ((permission_exists('recording_play') || permission_exists('recording_download')) && (!empty($playable) || empty($instance_value))) {
+		switch (pathinfo($playable, PATHINFO_EXTENSION)) {
+			case 'wav' : $mime_type = 'audio/wav'; break;
+			case 'mp3' : $mime_type = 'audio/mpeg'; break;
+			case 'ogg' : $mime_type = 'audio/ogg'; break;
+		}
+		echo "<audio id='recording_audio_".$instance_id."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".$instance_id."')\" onended=\"recording_reset('".$instance_id."');\" src='".($playable ?? '')."' type='".($mime_type ?? '')."'></audio>";
+		echo button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'icon'=>$_SESSION['theme']['button_icon_play'],'id'=>'recording_button_'.$instance_id,'style'=>'display: '.(!empty($mime_type) ? 'inline' : 'none'),'onclick'=>"recording_play('".$instance_id."')"]);
+		unset($playable, $mime_type);
 	}
 	echo "<br />\n";
-	echo $text['description-greet_short']."\n";
+	echo $text['description-'.$instance_label]."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	$instance_id = 'ivr_menu_greet_short';
+	$instance_label = 'greet_short';
+	$instance_value = $ivr_menu_greet_short;
+	echo "<tr>\n";
+	echo "<td class='vncell' rowspan='2' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-'.$instance_label]."\n";
+	echo "</td>\n";
+	echo "<td class='vtable playback_progress_bar_background' id='recording_progress_bar_".$instance_id."' style='display: none; border-bottom: none; padding-top: 0 !important; padding-bottom: 0 !important;' align='left'><span class='playback_progress_bar' id='recording_progress_".$instance_id."'></span></td>\n";
+	echo "</tr>\n";
+	echo "<tr>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "<select name='".$instance_id."' id='".$instance_id."' class='formfld' ".(permission_exists('recording_play') || permission_exists('recording_download') ? "onchange=\"recording_reset('".$instance_id."'); set_playable('".$instance_id."', this.value, this.options[this.selectedIndex].parentNode.getAttribute('data-type'));\"" : null).">\n";
+	echo "	<option value=''></option>\n";
+	$found = $playable = false;
+	if (!empty($audio_files[0]) && is_array($audio_files[0]) && @sizeof($audio_files[0]) != 0) {
+		foreach ($audio_files[0] as $key => $value) {
+			echo "<optgroup label=".$text['label-'.$key]." data-type='".$key."'>\n";
+			foreach ($value as $row) {
+				if ($key == 'recordings') {
+					if (
+						!empty($instance_value) &&
+						($instance_value == $row["value"] || $instance_value == $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name'].'/'.$row["value"]) &&
+						file_exists($_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name'].'/'.pathinfo($row["value"], PATHINFO_BASENAME))
+						) {
+						$selected = "selected='selected'";
+						$playable = '../recordings/recordings.php?action=download&type=rec&filename='.pathinfo($row["value"], PATHINFO_BASENAME);
+						$found = true;
+					}
+					else {
+						unset($selected);
+					}
+				}
+				else if ($key == 'sounds') {
+					if (!empty($instance_value) && $instance_value == $row["value"]) {
+						$selected = "selected='selected'";
+						$playable = '../switch/sounds.php?action=download&filename='.$row["value"];
+						$found = true;
+					}
+					else {
+						unset($selected);
+					}
+				}
+				else {
+					unset($selected);
+				}
+				echo "	<option value='".escape($row["value"])."' ".($selected ?? '').">".escape($row["name"])."</option>\n";
+			}
+			echo "</optgroup>\n";
+		}
+	}
+	if (if_group("superadmin") && !empty($instance_value) && !$found) {
+		echo "	<option value='".escape($instance_value)."' selected='selected'>".escape($instance_value)."</option>\n";
+	}
+	unset($selected);
+	echo "	</select>\n";
+	if (if_group("superadmin")) {
+		echo "<input type='button' id='btn_select_to_input_".$instance_id."' class='btn' name='' alt='back' onclick='toggle_select_input(document.getElementById(\"".$instance_id."\"), \"".$instance_id."\"); this.style.visibility=\"hidden\";' value='&#9665;'>";
+	}
+	if ((permission_exists('recording_play') || permission_exists('recording_download')) && (!empty($playable) || empty($instance_value))) {
+		switch (pathinfo($playable, PATHINFO_EXTENSION)) {
+			case 'wav' : $mime_type = 'audio/wav'; break;
+			case 'mp3' : $mime_type = 'audio/mpeg'; break;
+			case 'ogg' : $mime_type = 'audio/ogg'; break;
+		}
+		echo "<audio id='recording_audio_".$instance_id."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".$instance_id."')\" onended=\"recording_reset('".$instance_id."');\" src='".($playable ?? '')."' type='".($mime_type ?? '')."'></audio>";
+		echo button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'icon'=>$_SESSION['theme']['button_icon_play'],'id'=>'recording_button_'.$instance_id,'style'=>'display: '.(!empty($mime_type) ? 'inline' : 'none'),'onclick'=>"recording_play('".$instance_id."')"]);
+		unset($playable, $mime_type);
+	}
+	echo "<br />\n";
+	echo $text['description-'.$instance_label]."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -1044,17 +985,17 @@
 		echo "					</td>\n";
 	}
 	echo "				</tr>\n";
-	if (is_array($ivr_menu_options)) {
+	if (!empty($ivr_menu_options)) {
 		$x = 0;
 		foreach($ivr_menu_options as $field) {
 
 			//add the primary key uuid
-			if (strlen($field['ivr_menu_option_uuid']) > 0) {
+			if (!empty($field['ivr_menu_option_uuid'])) {
 				echo "	<input name='ivr_menu_options[".$x."][ivr_menu_option_uuid]' type='hidden' value=\"".escape($field['ivr_menu_option_uuid'])."\">\n";
 			}
 
 			echo "<td class='formfld' align='center'>\n";
-			if (!is_uuid($field['ivr_menu_option_uuid'])) { // new record
+			if (empty($field['ivr_menu_option_uuid'])) { // new record
 				if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
 					$onkeyup = "onkeyup=\"document.getElementById('ivr_menu_options_".$x."_ivr_menu_option_enabled').checked = (this.value != '' ? true : false);\""; // switch
 				}
@@ -1067,7 +1008,7 @@
 
 			echo "<td class='formfld' align='left' nowrap='nowrap'>\n";
 			$destination_action = '';
-			if (strlen($field['ivr_menu_option_action'].$field['ivr_menu_option_param']) > 0) {
+			if (!empty($field['ivr_menu_option_action'].$field['ivr_menu_option_param'])) {
 				$destination_action = $field['ivr_menu_option_action'].':'.$field['ivr_menu_option_param'];
 			} else { $destination_action = ''; }
 			echo $destination->select('ivr', 'ivr_menu_options['.$x.'][ivr_menu_option_param]', $destination_action);
@@ -1107,12 +1048,12 @@
 			else {
 				echo "	<select class='formfld' id='ivr_menu_options_".$x."_ivr_menu_option_enabled' name='ivr_menu_options[".$x."][ivr_menu_option_enabled]'>\n";
 				echo "		<option value='false'>".$text['option-false']."</option>\n";
-				echo "		<option value='true' ".($field['ivr_menu_option_enabled'] == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+				echo "		<option value='true' ".(!empty($field['ivr_menu_option_enabled']) && $field['ivr_menu_option_enabled'] == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
 				echo "	</select>\n";
 			}
 			echo "</td>\n";
 			if ($show_option_delete && permission_exists('ivr_menu_option_delete')) {
-				if (is_uuid($field['ivr_menu_option_uuid'])) {
+				if (!empty($field['ivr_menu_option_uuid']) && is_uuid($field['ivr_menu_option_uuid'])) {
 					echo "<td class='vtable' style='text-align: center; padding-bottom: 3px;'>";
 					echo "	<input type='checkbox' name='ivr_menu_options_delete[".$x."][checked]' value='true' class='chk_delete checkbox_options' onclick=\"edit_delete_action('options');\">\n";
 					echo "	<input type='hidden' name='ivr_menu_options_delete[".$x."][uuid]' value='".escape($field['ivr_menu_option_uuid'])."' />\n";
@@ -1229,7 +1170,6 @@
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 
-	$ringbacks = new ringbacks;
 	echo $ringbacks->select('ivr_menu_ringback', $ivr_menu_ringback);
 
 	echo "<br />\n";
@@ -1249,7 +1189,8 @@
 	echo "</tr>\n";
 	echo "</table>\n";
 
-	//--- begin: show_advanced -----------------------
+	//--- begin: advanced -----------------------
+
 		echo "	<div id=\"show_advanced_box\">\n";
 		echo "		<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
 		echo "		<tr>\n";
@@ -1264,180 +1205,149 @@
 		echo "	<div id=\"show_advanced\" style=\"display:none\">\n";
 		echo "	<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
 
+		$instance_id = 'ivr_menu_invalid_sound';
+		$instance_label = 'invalid_sound';
+		$instance_value = $ivr_menu_invalid_sound;
 		echo "<tr>\n";
-		echo "<td width=\"30%\" class='vncell' valign='top' align='left' nowrap>\n";
-		echo "	".$text['label-invalid_sound']."\n";
+		echo "<td width='30%' class='vncell' rowspan='2' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-'.$instance_label]."\n";
 		echo "</td>\n";
-		echo "<td width=\"70%\" class='vtable' align='left'>\n";
-		echo "<select name='ivr_menu_invalid_sound' class='formfld' style='width: 350px;' ".((if_group("superadmin")) ? "onchange='changeToInput(this);'" : null).">\n";
-		//misc optgroup
-			if (if_group("superadmin")) {
-				echo "<optgroup label='Misc'>\n";
-				echo "	<option value='phrase:'>phrase:</option>\n";
-				echo "	<option value='say:'>say:</option>\n";
-				echo "	<option value='tone_stream:'>tone_stream:</option>\n";
-				echo "</optgroup>\n";
-			}
-		//recordings
-			$tmp_selected = false;
-			if (is_array($recordings)) {
-				echo "<optgroup label='Recordings'>\n";
-				foreach ($recordings as &$row) {
-					$recording_name = $row["recording_name"];
-					$recording_filename = $row["recording_filename"];
-					if ($ivr_menu_invalid_sound == $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$recording_filename && strlen($ivr_menu_invalid_sound) > 0) {
-						$tmp_selected = true;
-						echo "	<option value='".escape($_SESSION['switch']['recordings']['dir'])."/".escape($_SESSION['domain_name'])."/".escape($recording_filename)."' selected='selected'>".escape($recording_name)."</option>\n";
-					}
-					else if ($ivr_menu_invalid_sound == $recording_filename && strlen($ivr_menu_invalid_sound) > 0) {
-						$tmp_selected = true;
-						echo "	<option value='".escape($recording_filename)."' selected='selected'>".escape($recording_name)."</option>\n";
-					}
-					else {
-						echo "	<option value='".escape($recording_filename)."'>".escape($recording_name)."</option>\n";
-					}
-				}
-				echo "</optgroup>\n";
-			}
-		//phrases
-			if (is_array($phrases)) {
-				echo "<optgroup label='Phrases'>\n";
-				foreach ($phrases as &$row) {
-					if ($ivr_menu_invalid_sound == "phrase:".$row["phrase_uuid"]) {
-						$tmp_selected = true;
-						echo "	<option value='phrase:".escape($row["phrase_uuid"])."' selected='selected'>".escape($row["phrase_name"])."</option>\n";
-					}
-					else {
-						echo "	<option value='phrase:".escape($row["phrase_uuid"])."'>".escape($row["phrase_name"])."</option>\n";
-					}
-				}
-				echo "</optgroup>\n";
-			}
-		//sounds
-			if (is_array($sound_files)) {
-				echo "<optgroup label='Sounds'>\n";
-				foreach ($sound_files as $value) {
-					if (strlen($value) > 0) {
-						if (substr($ivr_menu_invalid_sound, 0, 71) == "\$\${sounds_dir}/\${default_language}/\${default_dialect}/\${default_voice}/") {
-							$ivr_menu_invalid_sound = substr($ivr_menu_invalid_sound, 71);
-						}
-						if ($ivr_menu_invalid_sound == $value) {
-							$tmp_selected = true;
-							echo "	<option value='".escape($value)."' selected='selected'>".escape($value)."</option>\n";
+		echo "<td width='70%'class='vtable playback_progress_bar_background' id='recording_progress_bar_".$instance_id."' style='display: none; border-bottom: none; padding-top: 0 !important; padding-bottom: 0 !important;' align='left'><span class='playback_progress_bar' id='recording_progress_".$instance_id."'></span></td>\n";
+		echo "</tr>\n";
+		echo "<tr>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "<select name='".$instance_id."' id='".$instance_id."' class='formfld' ".(permission_exists('recording_play') || permission_exists('recording_download') ? "onchange=\"recording_reset('".$instance_id."'); set_playable('".$instance_id."', this.value, this.options[this.selectedIndex].parentNode.getAttribute('data-type'));\"" : null).">\n";
+		echo "	<option value=''></option>\n";
+		$found = $playable = false;
+		if (!empty($audio_files[1]) && is_array($audio_files[1]) && @sizeof($audio_files[1]) != 0) {
+			foreach ($audio_files[1] as $key => $value) {
+				echo "<optgroup label=".$text['label-'.$key]." data-type='".$key."'>\n";
+				foreach ($value as $row) {
+					if ($key == 'recordings') {
+						if (
+							!empty($instance_value) &&
+							($instance_value == $row["value"] || $instance_value == $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name'].'/'.$row["value"]) &&
+							file_exists($_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name'].'/'.pathinfo($row["value"], PATHINFO_BASENAME))
+							) {
+							$selected = "selected='selected'";
+							$playable = '../recordings/recordings.php?action=download&type=rec&filename='.pathinfo($row["value"], PATHINFO_BASENAME);
+							$found = true;
 						}
 						else {
-							echo "	<option value='".escape($value)."'>".escape($value)."</option>\n";
+							unset($selected);
 						}
 					}
+					else if ($key == 'sounds') {
+						if (!empty($instance_value) && $instance_value == $row["value"]) {
+							$selected = "selected='selected'";
+							$playable = '../switch/sounds.php?action=download&filename='.$row["value"];
+							$found = true;
+						}
+						else {
+							unset($selected);
+						}
+					}
+					else {
+						unset($selected);
+					}
+					echo "	<option value='".escape($row["value"])."' ".($selected ?? '').">".escape($row["name"])."</option>\n";
 				}
 				echo "</optgroup>\n";
 			}
-		//select
-			if (if_group("superadmin")) {
-				if (!$tmp_selected && strlen($ivr_menu_invalid_sound) > 0) {
-					echo "<optgroup label='Selected'>\n";
-					if (file_exists($_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$ivr_menu_invalid_sound)) {
-						echo "	<option value='".escape($_SESSION['switch']['recordings']['dir'])."/".escape($_SESSION['domain_name'])."/".escape($ivr_menu_invalid_sound)."' selected='selected'>".escape($ivr_menu_invalid_sound)."</option>\n";
-					}
-					else if (substr($ivr_menu_invalid_sound, -3) == "wav" || substr($ivr_menu_invalid_sound, -3) == "mp3") {
-						echo "	<option value='".escape($ivr_menu_invalid_sound)."' selected='selected'>".escape($ivr_menu_invalid_sound)."</option>\n";
-					}
-					echo "</optgroup>\n";
-				}
-				unset($tmp_selected);
+		}
+		if (if_group("superadmin") && !empty($instance_value) && !$found) {
+			echo "	<option value='".escape($instance_value)."' selected='selected'>".escape($instance_value)."</option>\n";
+		}
+		unset($selected);
+		echo "	</select>\n";
+		if (if_group("superadmin")) {
+			echo "<input type='button' id='btn_select_to_input_".$instance_id."' class='btn' name='' alt='back' onclick='toggle_select_input(document.getElementById(\"".$instance_id."\"), \"".$instance_id."\"); this.style.visibility=\"hidden\";' value='&#9665;'>";
+		}
+		if ((permission_exists('recording_play') || permission_exists('recording_download')) && (!empty($playable) || empty($instance_value))) {
+			switch (pathinfo($playable, PATHINFO_EXTENSION)) {
+				case 'wav' : $mime_type = 'audio/wav'; break;
+				case 'mp3' : $mime_type = 'audio/mpeg'; break;
+				case 'ogg' : $mime_type = 'audio/ogg'; break;
 			}
-		echo "</select>\n";
+			echo "<audio id='recording_audio_".$instance_id."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".$instance_id."')\" onended=\"recording_reset('".$instance_id."');\" src='".($playable ?? '')."' type='".($mime_type ?? '')."'></audio>";
+			echo button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'icon'=>$_SESSION['theme']['button_icon_play'],'id'=>'recording_button_'.$instance_id,'style'=>'display: '.(!empty($mime_type) ? 'inline' : 'none'),'onclick'=>"recording_play('".$instance_id."')"]);
+			unset($playable, $mime_type);
+		}
 		echo "<br />\n";
-		echo $text['description-invalid_sound']."\n";
+		echo $text['description-'.$instance_label]."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 
+		$instance_id = 'ivr_menu_exit_sound';
+		$instance_label = 'exit_sound';
+		$instance_value = $ivr_menu_exit_sound;
 		echo "<tr>\n";
-		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-		echo "	".$text['label-exit_sound']."\n";
+		echo "<td class='vncell' rowspan='2' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-'.$instance_label]."\n";
 		echo "</td>\n";
+		echo "<td class='vtable playback_progress_bar_background' id='recording_progress_bar_".$instance_id."' style='display: none; border-bottom: none; padding-top: 0 !important; padding-bottom: 0 !important;' align='left'><span class='playback_progress_bar' id='recording_progress_".$instance_id."'></span></td>\n";
+		echo "</tr>\n";
+		echo "<tr>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "<select name='ivr_menu_exit_sound' class='formfld' style='width: 350px;' ".((if_group("superadmin")) ? "onchange='changeToInput(this);'" : null).">\n";
+		echo "<select name='".$instance_id."' id='".$instance_id."' class='formfld' ".(permission_exists('recording_play') || permission_exists('recording_download') ? "onchange=\"recording_reset('".$instance_id."'); set_playable('".$instance_id."', this.value, this.options[this.selectedIndex].parentNode.getAttribute('data-type'));\"" : null).">\n";
 		echo "	<option value=''></option>\n";
-		//misc optgroup
-			if (if_group("superadmin")) {
-				echo "<optgroup label='Misc'>\n";
-				echo "	<option value='phrase:'>phrase:</option>\n";
-				echo "	<option value='say:'>say:</option>\n";
-				echo "	<option value='tone_stream:'>tone_stream:</option>\n";
-				echo "</optgroup>\n";
-			}
-		//recordings
-			$tmp_selected = false;
-			if (is_array($recordings)) {
-				echo "<optgroup label='Recordings'>\n";
-				foreach ($recordings as &$row) {
-					$recording_name = $row["recording_name"];
-					$recording_filename = $row["recording_filename"];
-					if ($ivr_menu_exit_sound == $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$recording_filename && strlen($ivr_menu_exit_sound) > 0) {
-						$tmp_selected = true;
-						echo "	<option value='".escape($_SESSION['switch']['recordings']['dir'])."/".escape($_SESSION['domain_name'])."/".escape($recording_filename)."' selected='selected'>".escape($recording_name)."</option>\n";
-					}
-					else if ($ivr_menu_exit_sound == $recording_filename && strlen($ivr_menu_exit_sound) > 0) {
-						$tmp_selected = true;
-						echo "	<option value='".escape($recording_filename)."' selected='selected'>".escape($recording_name)."</option>\n";
-					}
-					else {
-						echo "	<option value='".escape($recording_filename)."'>".escape($recording_name)."</option>\n";
-					}
-				}
-				echo "</optgroup>\n";
-			}
-		//phrases
-			if (is_array($phrases)) {
-				echo "<optgroup label='Phrases'>\n";
-				foreach ($phrases as &$row) {
-					if ($ivr_menu_exit_sound == "phrase:".$row["phrase_uuid"]) {
-						$tmp_selected = true;
-						echo "	<option value='phrase:".escape($row["phrase_uuid"])."' selected='selected'>".escape($row["phrase_name"])."</option>\n";
-					}
-					else {
-						echo "	<option value='phrase:".escape($row["phrase_uuid"])."'>".escape($row["phrase_name"])."</option>\n";
-					}
-				}
-				echo "</optgroup>\n";
-			}
-		//sounds
-			if (is_array($sound_files)) {
-				echo "<optgroup label='Sounds'>\n";
-				foreach ($sound_files as $value) {
-					if (strlen($value) > 0) {
-						if (substr($ivr_menu_exit_sound, 0, 71) == "\$\${sounds_dir}/\${default_language}/\${default_dialect}/\${default_voice}/") {
-							$ivr_menu_exit_sound = substr($ivr_menu_exit_sound, 71);
-						}
-						if ($ivr_menu_exit_sound == $value) {
-							$tmp_selected = true;
-							echo "	<option value='".escape($value)."' selected='selected'>".escape($value)."</option>\n";
+		$found = $playable = false;
+		if (!empty($audio_files[1]) && is_array($audio_files[1]) && @sizeof($audio_files[1]) != 0) {
+			foreach ($audio_files[1] as $key => $value) {
+				echo "<optgroup label=".$text['label-'.$key]." data-type='".$key."'>\n";
+				foreach ($value as $row) {
+					if ($key == 'recordings') {
+						if (
+							!empty($instance_value) &&
+							($instance_value == $row["value"] || $instance_value == $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name'].'/'.$row["value"]) &&
+							file_exists($_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name'].'/'.pathinfo($row["value"], PATHINFO_BASENAME))
+							) {
+							$selected = "selected='selected'";
+							$playable = '../recordings/recordings.php?action=download&type=rec&filename='.pathinfo($row["value"], PATHINFO_BASENAME);
+							$found = true;
 						}
 						else {
-							echo "	<option value='".escape($value)."'>".escape($value)."</option>\n";
+							unset($selected);
 						}
 					}
+					else if ($key == 'sounds') {
+						if (!empty($instance_value) && $instance_value == $row["value"]) {
+							$selected = "selected='selected'";
+							$playable = '../switch/sounds.php?action=download&filename='.$row["value"];
+							$found = true;
+						}
+						else {
+							unset($selected);
+						}
+					}
+					else {
+						unset($selected);
+					}
+					echo "	<option value='".escape($row["value"])."' ".($selected ?? '').">".escape($row["name"])."</option>\n";
 				}
 				echo "</optgroup>\n";
 			}
-		//select
-			if (if_group("superadmin")) {
-				if (!$tmp_selected && strlen($ivr_menu_exit_sound) > 0) {
-					echo "<optgroup label='Selected'>\n";
-					if (file_exists($_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$ivr_menu_exit_sound)) {
-						echo "	<option value='".escape($_SESSION['switch']['recordings']['dir'])."/".escape($_SESSION['domain_name'])."/".escape($ivr_menu_exit_sound)."' selected='selected'>".escape($ivr_menu_exit_sound)."</option>\n";
-					}
-					else if (substr($ivr_menu_exit_sound, -3) == "wav" || substr($ivr_menu_exit_sound, -3) == "mp3") {
-						echo "	<option value='".escape($ivr_menu_exit_sound)."' selected='selected'>".escape($ivr_menu_exit_sound)."</option>\n";
-					}
-					echo "</optgroup>\n";
-				}
-				unset($tmp_selected);
+		}
+		if (if_group("superadmin") && !empty($instance_value) && !$found) {
+			echo "	<option value='".escape($instance_value)."' selected='selected'>".escape($instance_value)."</option>\n";
+		}
+		unset($selected);
+		echo "	</select>\n";
+		if (if_group("superadmin")) {
+			echo "<input type='button' id='btn_select_to_input_".$instance_id."' class='btn' name='' alt='back' onclick='toggle_select_input(document.getElementById(\"".$instance_id."\"), \"".$instance_id."\"); this.style.visibility=\"hidden\";' value='&#9665;'>";
+		}
+		if ((permission_exists('recording_play') || permission_exists('recording_download')) && (!empty($playable) || empty($instance_value))) {
+			switch (pathinfo($playable, PATHINFO_EXTENSION)) {
+				case 'wav' : $mime_type = 'audio/wav'; break;
+				case 'mp3' : $mime_type = 'audio/mpeg'; break;
+				case 'ogg' : $mime_type = 'audio/ogg'; break;
 			}
-		echo "</select>\n";
+			echo "<audio id='recording_audio_".$instance_id."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".$instance_id."')\" onended=\"recording_reset('".$instance_id."');\" src='".($playable ?? '')."' type='".($mime_type ?? '')."'></audio>";
+			echo button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'icon'=>$_SESSION['theme']['button_icon_play'],'id'=>'recording_button_'.$instance_id,'style'=>'display: '.(!empty($mime_type) ? 'inline' : 'none'),'onclick'=>"recording_play('".$instance_id."')"]);
+			unset($playable, $mime_type);
+		}
 		echo "<br />\n";
-		echo $text['description-exit_sound']."\n";
+		echo $text['description-'.$instance_label]."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 
@@ -1446,7 +1356,7 @@
 		echo "	".$text['label-pin_number']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<input class='formfld' type='text' name='ivr_menu_pin_number' maxlength='255' value=\"".escape($ivr_menu_pin_number)."\">\n";
+		echo "	<input class='formfld' type='text' name='ivr_menu_pin_number' maxlength='255' value=\"".escape($ivr_menu_pin_number ?? '')."\">\n";
 		echo "<br />\n";
 		echo $text['description-pin_number']."\n";
 		echo "</td>\n";
@@ -1457,7 +1367,7 @@
 		echo "	".$text['label-comfirm_macro']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<input class='formfld' type='text' name='ivr_menu_confirm_macro' maxlength='255' value=\"".escape($ivr_menu_confirm_macro)."\">\n";
+		echo "	<input class='formfld' type='text' name='ivr_menu_confirm_macro' maxlength='255' value=\"".escape($ivr_menu_confirm_macro ?? '')."\">\n";
 		echo "<br />\n";
 		echo $text['description-comfirm_macro']."\n";
 		echo "</td>\n";
@@ -1468,7 +1378,7 @@
 		echo "	".$text['label-comfirm_key']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<input class='formfld' type='text' name='ivr_menu_confirm_key' maxlength='255' value=\"".escape($ivr_menu_confirm_key)."\">\n";
+		echo "	<input class='formfld' type='text' name='ivr_menu_confirm_key' maxlength='255' value=\"".escape($ivr_menu_confirm_key ?? '')."\">\n";
 		echo "<br />\n";
 		echo $text['description-comfirm_key']."\n";
 		echo "</td>\n";
@@ -1576,7 +1486,7 @@
 		echo "	</table>\n";
 		echo "	</div>";
 
-	//--- end: show_advanced -----------------------
+	//--- end: advanced -----------------------
 
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	if (permission_exists('ivr_menu_context')) {
@@ -1638,5 +1548,4 @@
 
 //include the footer
 	require_once "resources/footer.php";
-
 ?>

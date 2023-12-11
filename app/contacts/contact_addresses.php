@@ -24,12 +24,8 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -41,8 +37,11 @@
 		exit;
 	}
 
+//set from session variables
+	$list_row_edit_button = !empty($_SESSION['theme']['list_row_edit_button']['boolean']) ? $_SESSION['theme']['list_row_edit_button']['boolean'] : 'false';
+
 //set the uuid
-	if (is_uuid($_GET['id'])) {
+	if (!empty($_GET['id']) && is_uuid($_GET['id'])) {
 		$contact_uuid = $_GET['id'];
 	}
 
@@ -52,17 +51,17 @@
 	$sql .= "and contact_uuid = :contact_uuid ";
 	$sql .= "order by address_primary desc, address_label asc ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$parameters['contact_uuid'] = $contact_uuid;
+	$parameters['contact_uuid'] = $contact_uuid ?? '';
 	$database = new database;
 	$contact_addresses = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
 //show if exists
-	if (is_array($contact_addresses) && @sizeof($contact_addresses) != 0) {
+	if (!empty($contact_addresses)) {
 
 		//show the content
 			echo "<div class='action_bar sub shrink'>\n";
-			echo "	<div class='heading'><b>".$text['label-addresses']."</b></div>\n";
+			echo "	<div class='heading'><b>".!empty($text['label-addresses'])."</b></div>\n";
 			echo "	<div style='clear: both;'></div>\n";
 			echo "</div>\n";
 
@@ -70,21 +69,21 @@
 			echo "<tr class='list-header'>\n";
 			if (permission_exists('contact_address_delete')) {
 				echo "	<th class='checkbox'>\n";
-				echo "		<input type='checkbox' id='checkbox_all_addresses' name='checkbox_all' onclick=\"edit_all_toggle('addresses');\" ".($contact_addresses ?: "style='visibility: hidden;'").">\n";
+				echo "		<input type='checkbox' id='checkbox_all_addresses' name='checkbox_all' onclick=\"edit_all_toggle('addresses');\" ".(!empty($contact_addresses) ?: "style='visibility: hidden;'").">\n";
 				echo "	</th>\n";
 			}
-			echo "<th class='pct-15'>".$text['label-address_label']."</th>\n";
-			echo "<th>".$text['label-address_address']."</th>\n";
-			echo "<th>".$text['label-address_locality'].", ".$text['label-address_region']."</th>\n";
-			echo "<th class='center'>".$text['label-address_country']."</th>\n";
+			echo "<th class='pct-15'>".!empty($text['label-address_label'])."</th>\n";
+			echo "<th>".!empty($text['label-address_address'])."</th>\n";
+			echo "<th>".!empty($text['label-address_locality']).", ".!empty($text['label-address_region'])."</th>\n";
+			echo "<th class='center'>".!empty($text['label-address_country'])."</th>\n";
 			echo "<th class='shrink'>&nbsp;</th>\n";
-			echo "<th class='hide-md-dn'>".$text['label-address_description']."</th>\n";
-			if (permission_exists('contact_address_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+			echo "<th class='hide-md-dn'>".!empty($text['label-address_description'])."</th>\n";
+			if (permission_exists('contact_address_edit') && $list_row_edit_button == 'true') {
 				echo "	<td class='action-button'>&nbsp;</td>\n";
 			}
 			echo "</tr>\n";
 
-			if (is_array($contact_addresses) && @sizeof($contact_addresses) != 0) {
+			if (!empty($contact_addresses)) {
 				$x = 0;
 				foreach ($contact_addresses as $row) {
 					$map_query = $row['address_street']." ".$row['address_extended'].", ".$row['address_locality'].", ".$row['address_region'].", ".$row['address_region'].", ".$row['address_postal_code'];
@@ -99,13 +98,13 @@
 						echo "	</td>\n";
 					}
 					echo "	<td>".escape($row['address_label'])." ".($row['address_primary'] ? "&nbsp;<i class='fas fa-star fa-xs' style='float: right; margin-top: 0.5em; margin-right: -0.5em;' title=\"".$text['label-primary']."\"></i>" : null)."</td>\n";
-					$address = escape($row['address_street']).($row['address_extended'] != '' ? " ".escape($row['address_extended']) : null);
+					$address = escape($row['address_street']).(!empty($row['address_extended']) ? " ".escape($row['address_extended']) : null);
 					echo "	<td class='pct-25 overflow no-wrap'><a href='".$list_row_url."'>".$address."</a>&nbsp;</td>\n";
-					echo "	<td class='no-wrap'>".escape($row['address_locality']).(($row['address_locality'] != '' && $row['address_region'] != '') ? ", " : null).escape($row['address_region'])."&nbsp;</td>\n";
+					echo "	<td class='no-wrap'>".escape($row['address_locality']).((!empty($row['address_locality']) && !empty($row['address_region'])) ? ", " : null).escape($row['address_region'])."&nbsp;</td>\n";
 					echo "	<td class='center'>".escape($row['address_country'])."&nbsp;</td>\n";
-					echo "	<td class='button no-link'><a href=\"http://maps.google.com/maps?q=".urlencode($map_query)."&hl=en\" target=\"_blank\"><img src='resources/images/icon_gmaps.png' style='width: 21px; height: 21px; alt='".$text['label-google_map']."' title='".$text['label-google_map']."'></a></td>\n";
+					echo "	<td class='button no-link'><a href=\"http://maps.google.com/maps?q=".urlencode($map_query)."&hl=en\" target=\"_blank\"><img src='resources/images/icon_gmaps.png' style='width: 21px; height: 21px; alt='".!empty($text['label-google_map'])."' title='".!empty($text['label-google_map'])."'></a></td>\n";
 					echo "	<td class='description overflow hide-md-dn'>".escape($row['address_description'])."&nbsp;</td>\n";
-					if (permission_exists('contact_address_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+					if (permission_exists('contact_address_edit') && $list_row_edit_button == 'true') {
 						echo "	<td class='action-button'>\n";
 						echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
 						echo "	</td>\n";

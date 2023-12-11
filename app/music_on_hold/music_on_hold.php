@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -25,12 +25,8 @@
 	James Rose <james.o.rose@gmail.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -46,10 +42,14 @@
 	$language = new text;
 	$text = $language->get();
 
+//add additional variables
+	$search = $_GET["search"] ?? '';
+	$show = $_GET['show'] ?? '';
+
 //get the music_on_hold array
 	$sql = "select * from v_music_on_hold ";
 	$sql .= "where true ";
-	if ($_GET['show'] != "all" || !permission_exists('music_on_hold_all')) {
+	if ($show != "all" || !permission_exists('music_on_hold_all')) {
 		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	}
@@ -58,17 +58,17 @@
 	}
 	$sql .= "order by domain_uuid desc, music_on_hold_name asc, music_on_hold_rate asc";
 	$database = new database;
-	$streams = $database->select($sql, $parameters, 'all');
+	$streams = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 
 //get the http post data
-	if (is_array($_POST['moh'])) {
+	if (!empty($_POST['moh'])) {
 		$action = $_POST['action'];
 		$moh = $_POST['moh'];
 	}
 
 //process the http post data by action
-	if ($action != '' && is_array($moh) && @sizeof($moh) != 0) {
+	if (!empty($action) && !empty($moh)) {
 		switch ($action) {
 			case 'delete':
 				if (permission_exists('music_on_hold_delete')) {
@@ -82,11 +82,15 @@
 		exit;
 	}
 
+//get order and order by and sanitize the values
+	$order_by = $_GET["order_by"] ?? '';
+	$order = $_GET["order"] ?? '';
+
 //download music on hold file
-	if ($_GET['action'] == "download"
+	if (!empty($_GET['action']) 
+		&& $_GET['action'] == "download"
 		&& is_uuid($_GET['id'])
-		&& is_array($streams)
-		&& @sizeof($streams) != 0) {
+		&& !empty($streams)) {
 
 		//get the uuid
 			$stream_uuid = $_GET['id'];
@@ -115,13 +119,9 @@
 
 		//download the file
 			if (file_exists($stream_full_path)) {
-				//content-range
-				if (isset($_SERVER['HTTP_RANGE']) && $_GET['t'] != "bin")  {
-					range_download($stream_full_path);
-				}
 
 				$fd = fopen($stream_full_path, "rb");
-				if ($_GET['t'] == "bin") {
+				if (!empty($_GET['t']) && $_GET['t'] == "bin") {
 					header("Content-Type: application/force-download");
 					header("Content-Type: application/octet-stream");
 					header("Content-Type: application/download");
@@ -138,18 +138,24 @@
 				header('Content-Disposition: attachment; filename="'.$stream_file.'"');
 				header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
 				header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
-				if ($_GET['t'] == "bin") {
+				if (!empty($_GET['t']) && $_GET['t'] == "bin") {
 					header("Content-Length: ".filesize($stream_full_path));
 				}
 				ob_clean();
+
+				//content-range
+				if (isset($_SERVER['HTTP_RANGE']) && (empty($_GET['t']) || $_GET['t'] != "bin"))  {
+					range_download($stream_full_path);
+				}
+
 				fpassthru($fd);
 			}
 			exit;
 	}
 
 //upload music on hold file
-	if ($_POST['action'] == 'upload'
-		&& is_array($_FILES)
+	if (!empty($_POST['action']) && $_POST['action'] == 'upload'
+		&& !empty($_FILES)
 		&& is_uploaded_file($_FILES['file']['tmp_name'])
 		) {
 
@@ -162,7 +168,7 @@
 			}
 
 		//determine name
-			if ($_POST['name_new'] != '') {
+			if (!empty($_POST['name_new'])) {
 				//set the action
 					$action = 'add';
 				//get the stream_name
@@ -174,7 +180,7 @@
 				//get the stream uuid
 					$stream_uuid = $_POST['name'];
 				//find the matching stream
-					if (is_array($streams) && @sizeof($streams) != 0) {
+					if (!empty($streams) && @sizeof($streams) != 0) {
 						foreach ($streams as $row) {
 							if ($stream_uuid == $row['music_on_hold_uuid']) {
 								//set the action
@@ -237,7 +243,7 @@
 
 				//find whether the path already exists
 					$stream_new_name = true;
-					if (is_array($streams) && @sizeof($streams) != 0) {
+					if (!empty($streams) && @sizeof($streams) != 0) {
 						foreach ($streams as $row) {
 							$alternate_path = str_replace('$${sounds_dir}', $_SESSION['switch']['sounds']['dir'], $row['music_on_hold_path']);
 							if ($stream_path == $row['music_on_hold_path'] || $stream_path == $alternate_path) {
@@ -364,7 +370,7 @@
 	echo "	<div class='heading'><b>".$text['title-music_on_hold']."</b></div>\n";
 	echo "	<div class='actions'>\n";
 	if (permission_exists('music_on_hold_add')) {
-		$modify_add_action = !is_array($streams) || @sizeof($streams) == 0 ? "name_mode('new'); $('#btn_select').hide();" : null; //hide categories select box when none exist
+		$modify_add_action = empty($streams) || @sizeof($streams) == 0 ? "name_mode('new'); $('#btn_select').hide();" : null; //hide categories select box when none exist
 		echo 	"<form id='form_upload' class='inline' method='post' enctype='multipart/form-data'>\n";
 		echo 	"<input name='action' type='hidden' value='upload'>\n";
 		echo 	"<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
@@ -372,16 +378,16 @@
 		echo 	"<span id='form_upload' style='display: none;'>";
 		echo button::create(['label'=>$text['button-cancel'],'icon'=>$_SESSION['theme']['button_icon_cancel'],'type'=>'button','id'=>'btn_upload_cancel','onclick'=>"$('span#form_upload').fadeOut(250, function(){ name_mode('select'); document.getElementById('form_upload').reset(); $('#btn_add').fadeIn(250) });"]);
 		//name (category)
-			echo 	"<select name='name' id='name_select' class='formfld' style='width: auto;'>\n";
+			echo 	"<select name='name' id='name_select' class='formfld' style='width: auto; margin: 0;'>\n";
 			echo "		<option value='' selected='selected' disabled='disabled'>".$text['label-category']."</option>\n";
 
 			if (permission_exists('music_on_hold_domain')) {
 				echo "	<optgroup label='".$text['option-global']."'>\n";
-				if (is_array($streams) && @sizeof($streams) != 0) {
+				if (!empty($streams) && @sizeof($streams) != 0) {
 					foreach ($streams as $row) {
-						if (strlen($row['domain_uuid']) == 0) {
-							if (strlen($row['music_on_hold_rate']) == 0) { $option_name = $row['music_on_hold_name']; }
-							if (strlen($row['music_on_hold_rate']) > 0) { $option_name = $row['music_on_hold_name'] .'/'.$row['music_on_hold_rate']; }
+						if (empty($row['domain_uuid'])) {
+							if (empty($row['music_on_hold_rate'])) { $option_name = $row['music_on_hold_name']; }
+							if (!empty($row['music_on_hold_rate'])) { $option_name = $row['music_on_hold_name'] .'/'.$row['music_on_hold_rate']; }
 							echo "	<option value='".escape($row['music_on_hold_uuid'])."'>".escape($option_name)."</option>\n";
 						}
 					}
@@ -389,7 +395,7 @@
 				echo "	</optgroup>\n";
 			}
 			$local_found = false;
-			if (is_array($streams) && @sizeof($streams) != 0) {
+			if (!empty($streams) && @sizeof($streams) != 0) {
 				foreach ($streams as $row) {
 					if (is_uuid($row['domain_uuid'])) {
 						$local_found = true;
@@ -401,11 +407,11 @@
 				if (permission_exists('music_on_hold_domain')) {
 					echo "	<optgroup label='".$text['option-local']."'>\n";
 				}
-				if (is_array($streams) && @sizeof($streams) != 0) {
+				if (!empty($streams) && @sizeof($streams) != 0) {
 					foreach ($streams as $row) {
-						if (strlen($row['domain_uuid']) > 0) {
-							if (strlen($row['music_on_hold_rate']) == 0) { $option_name = $row['music_on_hold_name']; }
-							if (strlen($row['music_on_hold_rate']) > 0) { $option_name = $row['music_on_hold_name'] .'/'.$row['music_on_hold_rate']; }
+						if (!empty($row['domain_uuid'])) {
+							if (empty($row['music_on_hold_rate'])) { $option_name = $row['music_on_hold_name']; }
+							if (!empty($row['music_on_hold_rate'])) { $option_name = $row['music_on_hold_name'] .'/'.$row['music_on_hold_rate']; }
 							echo "	<option value='".escape($row['music_on_hold_uuid'])."'>".escape($option_name)."</option>\n";
 						}
 					}
@@ -415,19 +421,19 @@
 				}
 			}
 			echo "	</select>";
-			echo 	"<input class='formfld' style='width: 100px; display: none;' type='text' name='name_new' id='name_new' maxlength='255' placeholder=\"".$text['label-category']."\" value=''>";
+			echo 	"<input class='formfld' style='width: 100px; margin: 0; display: none;' type='text' name='name_new' id='name_new' maxlength='255' placeholder=\"".$text['label-category']."\" value=''>";
 		//rate
-			echo 	"<select id='rate' name='rate' class='formfld' style='display: none; width: auto;'>\n";
+			echo 	"<select id='rate' name='rate' class='formfld' style='display: none; width: auto; margin: 0;'>\n";
 			echo "		<option value=''>".$text['option-default']."</option>\n";
 			echo "		<option value='8000'>8 kHz</option>\n";
 			echo "		<option value='16000'>16 kHz</option>\n";
 			echo "		<option value='32000'>32 kHz</option>\n";
 			echo "		<option value='48000'>48 kHz</option>\n";
 			echo 	"</select>";
-			echo button::create(['type'=>'button','title'=>$text['label-new'],'icon'=>$_SESSION['theme']['button_icon_add'],'id'=>'btn_new','onclick'=>"name_mode('new');"]);
+			echo button::create(['type'=>'button','title'=>!empty($text['label-new']),'icon'=>$_SESSION['theme']['button_icon_add'],'id'=>'btn_new','onclick'=>"name_mode('new');"]);
 			echo button::create(['type'=>'button','title'=>$text['label-select'],'icon'=>'list','id'=>'btn_select','style'=>'display: none;','onclick'=>"name_mode('select');"]);
 		//file
-			echo 	"<input type='text' class='txt' style='width: 100px; cursor: pointer;' id='filename' placeholder='Select...' onclick=\"document.getElementById('file').click(); this.blur();\" onfocus='this.blur();'>";
+			echo 	"<input type='text' class='txt' style='width: 100px; cursor: pointer; margin: 0;' id='filename' placeholder='Select...' onclick=\"document.getElementById('file').click(); this.blur();\" onfocus='this.blur();'>";
 			echo 	"<input type='file' id='file' name='file' style='display: none;' accept='.wav,.mp3,.ogg' onchange=\"document.getElementById('filename').value = this.files.item(0).name; check_file_type(this);\">";
 		//submit
 			$margin_right = permission_exists('music_on_hold_delete') ? 'margin-right: 15px;' : null;
@@ -436,11 +442,11 @@
 		echo 	"</form>";
 	}
 	if (permission_exists('music_on_hold_all')) {
-		if ($_GET['show'] == 'all') {
+		if ($show == 'all') {
 			echo "		<input type='hidden' name='show' value='all'>";
 		}
 		else {
-			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$_SESSION['theme']['button_icon_all'],'link'=>'?type=&show=all'.($search != '' ? "&search=".urlencode($search) : null)]);
+			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$_SESSION['theme']['button_icon_all'],'link'=>'?type=&show=all'.(!empty($search) ? "&search=".urlencode($search) : null)]);
 		}
 	}
 	if (permission_exists('music_on_hold_delete') && $streams) {
@@ -461,7 +467,7 @@
 	echo "<input type='hidden' id='action' name='action' value=''>\n";
 
 //show the array of data
-	if (is_array($streams) && @sizeof($streams) != 0) {
+	if (!empty($streams) && @sizeof($streams) != 0) {
 		$previous_name = '';
 
 		//loop through the array
@@ -478,7 +484,7 @@
 					}
 
 				//determine if rate was set to auto or not
-					$auto_rate = strlen($music_on_hold_rate) == 0 ? true : false;
+					$auto_rate = empty($music_on_hold_rate) ? true : false;
 
 				//determine icons to show
 					$stream_icons = array();
@@ -493,7 +499,7 @@
 						$stream_icons[$i]['title'] = $text['label-shuffle'];
 						$i++;
 					}
-					if ($row['music_on_hold_chime_list'] != '') {
+					if (!empty($row['music_on_hold_chime_list'])) {
 						$stream_icons[$i]['icon'] = 'fa-bell';
 						$stream_icons[$i]['title'] = $text['label-chime_list'].': '.$row['music_on_hold_chime_list'];
 						$i++;
@@ -504,9 +510,10 @@
 						$stream_icons[$i]['margin'] = 6;
 						$i++;
 					}
-					if (is_array($stream_icons) && sizeof($stream_icons) > 0) {
+					if (!empty($stream_icons)) {
+						$icons = '';
 						foreach ($stream_icons as $stream_icon) {
-							$icons .= "<span class='fas ".$stream_icon['icon']." icon_body' title='".escape($stream_icon['title'])."' style='width: 12px; height: 12px; margin-left: ".($stream_icon['margin'] != '' ? $stream_icon['margin'] : 8)."px; vertical-align: text-top; cursor: help;'></span>";
+							$icons .= "<span class='fas ".$stream_icon['icon']." icon_body' title='".escape($stream_icon['title'])."' style='width: 12px; height: 12px; margin-left: ".(!empty($stream_icon['margin']) ? $stream_icon['margin'] : 8)."px; vertical-align: text-top; cursor: help;'></span>";
 						}
 					}
 
@@ -520,7 +527,7 @@
 					}
 
 				//get the music on hold path and files
-					$stream_path = str_replace("\$\${sounds_dir}",$_SESSION['switch']['sounds']['dir'], $row['music_on_hold_path']);
+					$stream_path = str_replace("\$\${sounds_dir}",$_SESSION['switch']['sounds']['dir'] ?? '', $row['music_on_hold_path']);
 					if (file_exists($stream_path)) {
 						$stream_files = array_merge(glob($stream_path.'/*.wav'), glob($stream_path.'/*.mp3'), glob($stream_path.'/*.ogg'));
 					}
@@ -534,8 +541,8 @@
 						echo "		<input type='hidden' id='checkbox_all_".$row['music_on_hold_uuid']."_hidden' name='moh[".$row['music_on_hold_uuid']."][checked]'>\n";
 						echo "	</th>\n";
 					}
-					if ($_GET['show'] == "all" && permission_exists('music_on_hold_all')) {
-						echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, $param, "class='shrink'");
+					if ($show == "all" && permission_exists('music_on_hold_all')) {
+						echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, $param ?? null, "class='shrink'");
 					}
 					echo "		<th class='pct-50'>".$stream_details."</th>\n";
 					echo "		<th class='center shrink'>".$text['label-tools']."</th>\n";
@@ -545,7 +552,7 @@
 					unset($stream_icons, $icons);
 
 				//list the stream files
-					if (is_array($stream_files) && @sizeof($stream_files) != 0) {
+					if (!empty($stream_files)) {
 						foreach ($stream_files as $stream_file_path) {
 							$row_uuid = uuid();
 							$stream_file = pathinfo($stream_file_path, PATHINFO_BASENAME);
@@ -568,8 +575,8 @@
 								echo "		<input type='hidden' name='moh[".$row['music_on_hold_uuid']."][$x][file_name]' value=\"".escape($stream_file)."\" />\n";
 								echo "	</td>\n";
 							}
-							if ($_GET['show'] == "all" && permission_exists('music_on_hold_all')) {
-								if (strlen($_SESSION['domains'][$row['domain_uuid']]['domain_name']) > 0) {
+							if ($show == "all" && permission_exists('music_on_hold_all')) {
+								if (!empty($_SESSION['domains'][$row['domain_uuid']]['domain_name'])) {
 									$domain = $_SESSION['domains'][$row['domain_uuid']]['domain_name'];
 								}
 								else {
@@ -650,7 +657,7 @@
 			// If the range starts with an '-' we start from the beginning
 			// If not, we forward the file pointer
 			// And make sure to get the end byte if spesified
-			if ($range0 == '-') {
+			if (!empty($range0) && $range0 == '-') {
 				// The n-number of the last bytes is requested
 				$c_start = $size - substr($range, 1);
 			}

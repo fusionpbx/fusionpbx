@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2015 - 2021
+	Copyright (C) 2015 - 2023
 	All Rights Reserved.
 
 	Contributor(s):
@@ -60,16 +60,6 @@
 				//assign private variables
 					$this->app_name = 'call_center';
 					$this->app_uuid = '95788e50-9500-079e-2807-fd530b0ea370';
-			}
-
-			/**
-			 * Called when there are no references to a particular object
-			 * unset the variables used in the class
-			 */
-			public function __destruct() {
-				foreach ($this as $key => $value) {
-					unset($this->$key);
-				}
 			}
 
 			/**
@@ -156,7 +146,7 @@
 					$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $y * 10;
 					$y++;
 
-					if (strlen($this->queue_cid_prefix) > 0) {
+					if (!empty($this->queue_cid_prefix)) {
 						$dialplan["dialplan_details"][$y]["domain_uuid"] = $this->domain_uuid;
 						$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
 						$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "set";
@@ -166,7 +156,7 @@
 						$y++;
 					}
 
-					if (strlen($this->queue_greeting) > 0) {
+					if (!empty($this->queue_greeting)) {
 						$dialplan["dialplan_details"][$y]["domain_uuid"] = $this->domain_uuid;
 						$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
 						$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "sleep";
@@ -176,7 +166,7 @@
 						$y++;
 					}
 
-					if (strlen($this->queue_greeting) > 0) {
+					if (!empty($this->queue_greeting)) {
 						$dialplan["dialplan_details"][$y]["domain_uuid"] = $this->domain_uuid;
 						$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
 						$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "playback";
@@ -186,7 +176,7 @@
 						$y++;
 					}
 
-					if (strlen($this->queue_cc_exit_keys) > 0) {
+					if (!empty($this->queue_cc_exit_keys)) {
 						$dialplan["dialplan_details"][$y]["domain_uuid"] = $this->domain_uuid;
 						$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
 						$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "set";
@@ -204,7 +194,7 @@
 					$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $y * 10;
 					$y++;
 
-					if (strlen($this->queue_timeout_action) > 0) {
+					if (!empty($this->queue_timeout_action)) {
 						$action_array = explode(":",$this->queue_timeout_action);
 						$dialplan["dialplan_details"][$y]["domain_uuid"] = $this->domain_uuid;
 						$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
@@ -304,8 +294,8 @@
 
 							//filter out unchecked, build where clause for below
 								foreach ($records as $x => $record) {
-									if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
-										$uuids[] = "'".$record['uuid']."'";
+									if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
+										$uuids[] = $record['uuid'];
 									}
 								}
 
@@ -313,7 +303,7 @@
 								if (is_array($uuids) && @sizeof($uuids) != 0) {
 									$sql = "select ".$this->uuid_prefix."uuid as uuid, dialplan_uuid, queue_name, queue_extension from v_".$this->table." ";
 									$sql .= "where domain_uuid = :domain_uuid ";
-									$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
+									$sql .= "and ".$this->uuid_prefix."uuid in ('".implode("','", $uuids)."') ";
 									$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 									$database = new database;
 									$rows = $database->select($sql, $parameters, 'all');
@@ -348,13 +338,13 @@
 								if (is_array($array) && @sizeof($array) != 0) {
 
 									//setup the event socket connection
-										$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+										$esl = event_socket::create();
 
 									//delete the queue in the switch
-										if ($fp) {
+										if ($esl->is_connected()) {
 											foreach ($uuids as $uuid) {
-												$cmd = "api callcenter_config queue unload ".$call_center_queues[$uuid]['queue_extension']."@".$_SESSION["domin_name"];
-												$response = event_socket_request($fp, $cmd);
+												$cmd = "callcenter_config queue unload ".$call_center_queues[$uuid]['queue_extension']."@".$_SESSION['domain_name'];
+												$response = event_socket::api($cmd);
 											}
 										}
 
@@ -427,7 +417,7 @@
 
 							//filter out unchecked
 								foreach ($records as $x => $record) {
-									if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+									if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 										$uuids[] = $record['uuid'];
 									}
 								}
@@ -446,13 +436,12 @@
 								if (is_array($array) && @sizeof($array) != 0) {
 
 									//setup the event socket connection
-										$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+										$esl = event_socket::create();
 
 									//delete the agent in the switch
-										if ($fp) {
+										if ($esl->is_connected()) {
 											foreach ($uuids as $uuid) {
-												$cmd = "api callcenter_config agent del ".$uuid;
-												$response = event_socket_request($fp, $cmd);
+												event_socket::async("callcenter_config agent del $uuid");
 											}
 										}
 
@@ -513,8 +502,8 @@
 
 							//get checked records
 								foreach ($records as $x => $record) {
-									if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
-										$uuids[] = "'".$record['uuid']."'";
+									if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
+										$uuids[] = $record['uuid'];
 									}
 								}
 
@@ -523,7 +512,7 @@
 
 									//primary table
 										$sql = "select * from v_".$this->table." ";
-										$sql .= "where ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
+										$sql .= "where ".$this->uuid_prefix."uuid in ('".implode("','", $uuids)."') ";
 										$database = new database;
 										$rows = $database->select($sql, $parameters, 'all');
 										if (is_array($rows) && @sizeof($rows) != 0) {

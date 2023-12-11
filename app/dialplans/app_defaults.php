@@ -24,6 +24,15 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
+//update dialplan details when group is null set to 0
+	if ($domains_processed == 1) {
+		//change dialplan context ${domain_name} to global
+		$sql = "update v_dialplan_details set dialplan_detail_group = '0' ";
+		$sql .= "where dialplan_detail_group is null;\n";
+		$database->execute($sql);
+		unset($sql);
+	}
+
 //get the $apps array from the installed apps from the core and mod directories
 	if ($domains_processed == 1) {
 
@@ -68,7 +77,7 @@
 		unset($sql);
 	}
 
-//additional dialplan upgrade commands 
+//additional dialplan upgrade commands
 	if ($domains_processed == 1) {
 		//add xml for each dialplan where the dialplan xml is empty
 		$sql = "select domain_name ";
@@ -112,13 +121,36 @@
 		$sql = "update v_dialplan_details set dialplan_detail_data = 'recording_id='  where dialplan_detail_data = 'recording_id=true'\n";
 		$database->execute($sql);
 		unset($sql);
+	}
 
+//remove origination_callee_id_name from domain-variables dialplan
+	if ($domains_processed == 1) {
+		$sql = "select count(*) from v_dialplans ";
+		$sql .= "where dialplan_name = 'domain-variables' ";
+		$sql .= "and dialplan_xml like '%origination_callee_id_name%' ";
+		$database = new database;
+		$num_rows = $database->select($sql, null, 'column');
+		if ($num_rows > 0) {
+			$sql = "update v_dialplan_details set dialplan_detail_data = 'origination_callee_id_name=\${caller_destination}', update_date = now() \n";
+			$sql .= "where dialplan_uuid in (select dialplan_uuid from v_dialplans where dialplan_name = 'domain-variables' or dialplan_name = 'variables') \n";
+			$sql .= "and dialplan_detail_data = 'origination_callee_id_name=\${destination_number}'; \n";
+			$database->execute($sql);
+
+			$sql = "update v_dialplans set dialplan_xml = REPLACE(dialplan_xml, '<action application=\"export\" data=\"origination_callee_id_name=\${destination_number}\"/>', '<action application=\"export\" data=\"origination_callee_id_name=\${caller_destination}\"/>'), update_date = now() \n";
+			$sql .= "where dialplan_uuid in (select dialplan_uuid from v_dialplans where dialplan_name = 'domain-variables' or dialplan_name = 'variables'); \n";
+			$database->execute($sql);
+
+			$sql = "update v_dialplans set dialplan_xml = REPLACE(dialplan_xml, '<action application=\"export\" data=\"origination_callee_id_name=\${destination_number}\" inline=\"true\"/>', '<action application=\"export\" data=\"origination_callee_id_name=\${caller_destination}\" inline=\"true\"/>'), update_date = now() \n";
+			$sql .= "where dialplan_uuid in (select dialplan_uuid from v_dialplans where dialplan_name = 'domain-variables' or dialplan_name = 'variables'); \n";
+			$database->execute($sql);
+		}
+		unset($sql, $num_rows);
 	}
 
 //add not found dialplan to inbound routes
 	/*
 	if ($domains_processed == 1) {
-		if (is_readable($_SESSION['switch']['dialplan']['dir'])) {
+		if (is_readable($setting->get('switch','dialplan'))) {
 			$sql = "select count(*) from v_dialplans ";
 			$sql .= "where dialplan_uuid = 'ea5339de-1982-46ca-9695-c35176165314' ";
 			$database = new database;

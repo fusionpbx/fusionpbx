@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2022
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -25,21 +25,16 @@
 	James Rose <james.o.rose@gmail.com>
 */
 
-$output_type = "file"; //file or console
+//file or console
+	$output_type = "file"; 
 
-if (defined('STDIN')) {
-	//get the document root php file must be executed with the full path
-		$document_root = str_replace("\\", "/", $_SERVER["PHP_SELF"]);
-		$document_root = str_replace("\\", "/", $_SERVER["PHP_SELF"]);
-		preg_match("/^(.*)\/secure\/.*$/", $document_root, $matches);
-		$document_root = $matches[1];
-	//set the include path
-		set_include_path($document_root);
-		$_SERVER["DOCUMENT_ROOT"] = $document_root;
-		//echo "$document_root is document_root\n";
-}
+//only allow command line
+	if (!defined('STDIN')) {
+		exit;
+	}
 
-$IS_WINDOWS = stristr(PHP_OS, 'WIN') ? true : false;
+//determine if windows is true or false
+	$IS_WINDOWS = stristr(PHP_OS, 'WIN') ? true : false;
 
 if (!function_exists('exec_in_dir')) {
 	function exec_in_dir($dir, $cmd, &$ok) {
@@ -76,7 +71,7 @@ if (!function_exists('path_join')) {
 
 		$prefix = null;
 		foreach($paths as &$path) {
-			if ($prefix === null && strlen($path) > 0) {
+			if ($prefix === null && !empty($path)) {
 				if (substr($path, 0, 1) == '/') $prefix = '/';
 				else $prefix = '';
 			}
@@ -204,18 +199,14 @@ if (!function_exists('fax_split_dtmf')) {
 	}
 }
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__) . "/resources/require.php";
 	include "resources/classes/event_socket.php";
 	include "resources/phpmailer/class.phpmailer.php";
 	include "resources/phpmailer/class.smtp.php"; // optional, gets called from within class.phpmailer.php if not already loaded
 
 //set php ini values
-	ini_set(max_execution_time,900); //15 minutes
+	ini_set('max_execution_time', 900); //15 minutes
 	ini_set('memory_limit', '96M');
 
 //start the to cache the output
@@ -306,7 +297,6 @@ if (!function_exists('fax_split_dtmf')) {
 				$_SESSION["domain_name"] = $domain_name;
 			//set the setting arrays
 				$domain = new domains();
-				$domain->db = $db;
 				$domain->set();
 		}
 	}
@@ -315,10 +305,10 @@ if (!function_exists('fax_split_dtmf')) {
 //prepare smtp server settings
 	$email_from_address = $_SESSION['email']['smtp_from']['text'];
 	$email_from_name = $_SESSION['email']['smtp_from_name']['text'];
-	if (isset($_SESSION['fax']['smtp_from']['text']) && strlen($_SESSION['fax']['smtp_from']['text']) > 0) {
+	if (isset($_SESSION['fax']['smtp_from']['text']) && !empty($_SESSION['fax']['smtp_from']['text'])) {
 		$email_from_address = $_SESSION['fax']['smtp_from']['text'];
 	}
-	if (isset($_SESSION['fax']['smtp_from_name']['text']) && strlen($_SESSION['fax']['smtp_from_name']['text']) > 0) {
+	if (isset($_SESSION['fax']['smtp_from_name']['text']) && !empty($_SESSION['fax']['smtp_from_name']['text'])) {
 		$email_from_name = $_SESSION['fax']['smtp_from_name']['text'];
 	}
 
@@ -381,12 +371,11 @@ if (!function_exists('fax_split_dtmf')) {
 			$fax_forward_number = $fax_prefix.$tmp[0];
 		}
 
-		if (isset($fax_forward_number) && strlen($fax_forward_number) > 0) {
+		if (isset($fax_forward_number) && !empty($fax_forward_number)) {
 			//show info
 				echo "fax_forward_number: $fax_forward_number\n";
 
 			//add fax to the fax queue or send it directly
-			if ($_SESSION['fax_queue']['enabled']['boolean'] == 'true') {
 				//build an array to add the fax to the queue
 				$array['fax_queue'][0]['fax_queue_uuid'] = uuid();
 				$array['fax_queue'][0]['domain_uuid'] = $domain_uuid;
@@ -418,94 +407,12 @@ if (!function_exists('fax_split_dtmf')) {
 				
 				//add message to show in the browser
 				message::add($text['confirm-queued']);
-			}
-			else {
-				fax_split_dtmf($fax_forward_number, $fax_dtmf);
 
-				$fax_send_mode = $_SESSION['fax']['send_mode']['text'];
-				if (strlen($fax_send_mode) == 0) {
-					$fax_send_mode = 'direct';
-				}
-
-				$route_array = outbound_route_to_bridge($domain_uuid, $fax_forward_number);
-				if (count($route_array) == 0) {
-					//send the internal call to the registered extension
-						$fax_uri = "user/".escapeshellarg($fax_forward_number)."@".escapeshellarg($domain_name);
-						$fax_variables = "";
-				}
-				else {
-					//send the external call
-						$fax_uri = $route_array[0];
-						$fax_variables = "";
-						foreach($_SESSION['fax']['variable'] as $variable) {
-							$fax_variables .= escapeshellarg($variable).",";
-						}
-				}
-
-				//build the dial string
-				$dial_string = "absolute_codec_string='PCMU,PCMA',";
-				$dial_string .= "accountcode='"                  . escapeshellarg($fax_accountcode)         . "',";
-				$dial_string .= "sip_h_X-accountcode='"          . escapeshellarg($fax_accountcode)         . "',";
-				$dial_string .= "domain_uuid="                   . escapeshellarg($domain_uuid)             . ",";
-				$dial_string .= "domain_name="                   . escapeshellarg($domain_name)             . ",";
-				$dial_string .= "origination_caller_id_name='"   . escapeshellarg($fax_caller_id_name)      . "',";
-				$dial_string .= "origination_caller_id_number='" . escapeshellarg($fax_caller_id_number)    . "',";
-				$dial_string .= "fax_ident='"                    . escapeshellarg($fax_caller_id_number)    . "',";
-				$dial_string .= "fax_header='"                   . escapeshellarg($fax_caller_id_name)      . "',";
-				$dial_string .= "fax_file='"                     . escapeshellarg($fax_file)                . "',";
-
-				if ($fax_send_mode != 'queue') {
-					//add more ot the dial string
-						$dial_string .= $fax_variables;
-						$dial_string .= "mailto_address='"     . escapeshellarg($mail_to_address)   . "',";
-						$dial_string .= "mailfrom_address='"   . escapeshellarg($mail_from_address) . "',";
-						$dial_string .= "fax_uri="             . escapeshellarg($fax_uri)  . ",";
-						$dial_string .= "fax_retry_attempts=1" . ",";
-						$dial_string .= "fax_retry_limit=20"   . ",";
-						$dial_string .= "fax_retry_sleep=180"  . ",";
-						$dial_string .= "fax_verbose=true"     . ",";
-						$dial_string .= "fax_use_ecm=off"      . ",";
-						$dial_string .= "api_hangup_hook='lua fax_retry.lua'";
-						$dial_string = "{" . $dial_string . "}" . escapeshellarg($fax_uri)." &txfax('".escapeshellarg($fax_file)."')";
-
-					//get the event socket information
-						$sql = "select * from v_settings ";
-						$database = new database;
-						$row = $database->select($sql, $parameters, 'row');
-						if (is_array($row) && @sizeof($row) != 0) {
-							$event_socket_ip_address = $row["event_socket_ip_address"];
-							$event_socket_port = $row["event_socket_port"];
-							$event_socket_password = $row["event_socket_password"];
-						}
-						unset($sql);
-
-					//create the event socket connection
-						$fp = event_socket_create($event_socket_ip_address, $event_socket_port, $event_socket_password);
-
-					//send the command with event socket
-						if ($fp) {
-							//prepare the fax originate command
-								$cmd = "api originate ".$dial_string;
-							//send info to the log
-								echo "fax forward\n";
-								echo $cmd."\n";
-							//send the command to event socket
-								$response = event_socket_request($fp, $cmd);
-								$response = str_replace("\n", "", $response);
-							//send info to the log
-								echo "response: ".$response."\n";
-							//get the uuid
-								$uuid = str_replace("+OK ", "", $response);
-							//close event socket
-								fclose($fp);
-						}
-				}
-			}
 		}
 	}
 
 //send the email
-	if (strlen($fax_email) > 0 && file_exists($fax_file)) {
+	if (!empty($fax_email) && file_exists($fax_file)) {
 
 		//get the language code
 			$language_code = $_SESSION['domain']['language']['code'];
@@ -519,7 +426,7 @@ if (!function_exists('fax_split_dtmf')) {
 			}
 
 		//get the email template from the database
-			if (isset($fax_email) && strlen($fax_email) > 0) {
+			if (isset($fax_email) && !empty($fax_email)) {
 				$sql = "select template_subject, template_body from v_email_templates ";
 				$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 				$sql .= "and template_language = :template_language ";
@@ -565,9 +472,9 @@ if (!function_exists('fax_split_dtmf')) {
 			//echo "<hr />\n";
 
 		//send the email
-			if (isset($fax_email) && strlen($fax_email) > 0) {
+			if (isset($fax_email) && !empty($fax_email)) {
 				//add the attachment
-				if (strlen($fax_file_name) > 0) {
+				if (!empty($fax_file_name)) {
 					$email_attachments[0]['type'] = 'file';
 					if ($pdf_file && file_exists($pdf_file)) {
 						$email_attachments[0]['name'] = $fax_file_name.'.pdf';
@@ -606,33 +513,6 @@ if (!function_exists('fax_split_dtmf')) {
 				echo "Message sent!";
 				$email_status='ok';
 			}
-	}
-
-//when sending an email the following files are created:
-	//     /usr/local/freeswitch/storage/fax
-	//        emailed_faxes.log - this is a log of all the faxes we have successfully emailed.  (note that we need to work out how to rotate this log)
-	//        failed_fax_emails.log - this is a log of all the faxes we have failed to email.  This log is in the form of instructions that we can re-execute in order to retry.
-	//            Whenever this exists there should be an at job present to run it sometime in the next 3 minutes (check with atq).  If we succeed in sending the messages
-	//            this file will be removed.
-	//     /tmp
-	//        fax_email_retry.sh - this is the renamed failed_fax_emails.log and is created only at the point in time that we are trying to re-send the emails.  Note however
-	//            that this will continue to exist even if we succeed as we do not delete it when finished.
-	//        failed_fax_emails.sh - this is created when we have a email we need to re-send.  At the time it is created, an at job is created to execute it in 3 minutes time,
-	//            this allows us to try sending the email again at that time.  If the file exists but there is no at job this is because there are no longer any emails queued
-	//            as we have successfully sent them all.
-	if ($_SESSION['fax_queue']['enabled']['boolean'] != 'true' && strlen($fax_email) > 0 && file_exists($fax_file)) {
-		if (stristr(PHP_OS, 'WIN')) {
-			//not compatible with windows
-		}
-		else {
-			$fax_to_email_queue_dir = $_SESSION['switch']['storage']['dir']."/fax";
-			if ($email_status == 'ok') {
-				//log the success
-					$fp = fopen($fax_to_email_queue_dir."/emailed_faxes.log", "a");
-					fwrite($fp, $fax_file_name." received on ".$fax_extension." emailed to ".$fax_email." ".$fax_messages."\n");
-					fclose($fp);
-			}
-		}
 	}
 
 //open the file for writing

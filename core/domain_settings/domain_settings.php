@@ -1,35 +1,31 @@
 <?php
 /*
- FusionPBX
- Version: MPL 1.1
+	FusionPBX
+	Version: MPL 1.1
 
- The contents of this file are subject to the Mozilla Public License Version
- 1.1 (the "License"); you may not use this file except in compliance with
- the License. You may obtain a copy of the License at
- http://www.mozilla.org/MPL/
+	The contents of this file are subject to the Mozilla Public License Version
+	1.1 (the "License"); you may not use this file except in compliance with
+	the License. You may obtain a copy of the License at
+	http://www.mozilla.org/MPL/
 
- Software distributed under the License is distributed on an "AS IS" basis,
- WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- for the specific language governing rights and limitations under the
- License.
+	Software distributed under the License is distributed on an "AS IS" basis,
+	WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+	for the specific language governing rights and limitations under the
+	License.
 
- The Original Code is FusionPBX
+	The Original Code is FusionPBX
 
- The Initial Developer of the Original Code is
- Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2020
- the Initial Developer. All Rights Reserved.
+	The Initial Developer of the Original Code is
+	Mark J Crane <markjcrane@fusionpbx.com>
+	Portions created by the Initial Developer are Copyright (C) 2008 - 2023
+	the Initial Developer. All Rights Reserved.
 
- Contributor(s):
- Mark J Crane <markjcrane@fusionpbx.com>
+	Contributor(s):
+	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -46,19 +42,26 @@
 	$text = $language->get();
 
 //get the domain_uuid
-	if (is_uuid($_GET['id'])) {
+	if (!empty($_GET['id']) && is_uuid($_GET['id'])) {
 		$domain_uuid = $_GET['id'];
 	}
 
+//set additional variables
+	//$search = !empty($_GET["search"]) ? $_GET["search"] : '';
+	$show = !empty($_GET["show"]) ? $_GET["show"] : '';
+
+//set from session variables
+	$list_row_edit_button = !empty($_SESSION['theme']['list_row_edit_button']['boolean']) ? $_SESSION['theme']['list_row_edit_button']['boolean'] : 'false';
+
 //get the http post data
-	if ($_POST['action'] != '') {
-		$action = $_POST['action'];
-		$domain_uuid = $_POST['domain_uuid'];
-		$domain_settings = $_POST['domain_settings'];
-		$domain_uuid_target = $_POST['domain_uuid_target'];
+	if (!empty($_POST['action'])) {
+		$action = $_POST['action'] ?? '';
+		$domain_uuid = $_POST['domain_uuid'] ?? '';
+		$domain_settings = $_POST['domain_settings'] ?? '';
+		$domain_uuid_target = $_POST['domain_uuid_target'] ?? '';
 
 		//process the http post data by action
-			if (is_array($domain_settings) && @sizeof($domain_settings) != 0) {
+			if (!empty($domain_settings)) {
 				switch ($action) {
 					case 'copy':
 						if (permission_exists('domain_setting_add') && permission_exists('domain_select') && count($_SESSION['domains']) > 1) {
@@ -90,9 +93,9 @@
 			exit;
 	}
 
-//get the variables
-	$order_by = $_GET["order_by"];
-	$order = $_GET["order"];
+//get order and order by and sanitize the values
+	$order_by = $_GET["order_by"] ?? '';
+	$order =  $_GET["order"] ?? '';
 
 //get the domain_name
 	$sql = "select domain_name from v_domains ";
@@ -121,7 +124,7 @@
 	}
 	$parameters['domain_uuid'] = $domain_uuid;
 	$database = new database;
-	$domain_settings = $database->select($sql, $parameters, 'all');
+	$domain_settings = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 
 //create token
@@ -133,12 +136,7 @@
 	require_once "resources/header.php";
 
 //copy settings javascript
-	if (
-		permission_exists("domain_select") &&
-		permission_exists("domain_setting_add") &&
-		is_array($_SESSION['domains']) &&
-		@sizeof($_SESSION['domains']) > 1
-		) {
+	if (permission_exists("domain_select") && permission_exists("domain_setting_add") && !empty($_SESSION['domains'])) {
 		echo "<script language='javascript' type='text/javascript'>\n";
 		echo "	var fade_speed = 400;\n";
 		echo "	function show_domains() {\n";
@@ -177,6 +175,7 @@
 		echo button::create(['type'=>'button','label'=>$text['button-copy'],'id'=>'btn_copy','icon'=>$_SESSION['theme']['button_icon_copy'],'id'=>'btn_copy','onclick'=>'show_domains();']);
 		echo button::create(['type'=>'button','label'=>$text['button-cancel'],'id'=>'btn_copy_cancel','icon'=>$_SESSION['theme']['button_icon_cancel'],'style'=>'display: none;','onclick'=>'hide_domains();']);
 		echo 	"<select class='formfld' style='display: none; width: auto;' id='target_domain' onchange=\"document.getElementById('domain_uuid_target').value = this.options[this.selectedIndex].value;\">\n";
+		echo "		<option value='".$domain_uuid."'>(".$text['label-duplicate'].")</option>\n";
 		echo "		<option value='' selected='selected' disabled='disabled'>".$text['label-domain']."...</option>\n";
 		foreach ($_SESSION['domains'] as $domain) {
 			if ($domain['domain_uuid'] == $domain_uuid) { continue; }
@@ -216,7 +215,10 @@
 	echo "<input type='hidden' name='domain_uuid_target' id='domain_uuid_target' value=''>\n";
 
 	echo "<table class='list'>\n";
-	if (is_array($domain_settings) && @sizeof($domain_settings) != 0) {
+	if (!empty($domain_settings)) {
+		//define the variable
+		$previous_domain_setting_category = '';
+
 		$x = 0;
 		foreach ($domain_settings as $row) {
 			$domain_setting_category = strtolower($row['domain_setting_category']);
@@ -234,7 +236,7 @@
 			}
 
 			if ($previous_domain_setting_category != $row['domain_setting_category']) {
-				if ($previous_domain_setting_category != '') {
+				if (!empty($previous_domain_setting_category)) {
 					echo "</table>\n";
 
 					echo "<br>\n";
@@ -248,7 +250,7 @@
 					echo "		<input type='checkbox' id='checkbox_all_".$domain_setting_category."' name='checkbox_all' onclick=\"list_all_toggle('".$domain_setting_category."');\">\n";
 					echo "	</th>\n";
 				}
-				if ($_GET['show'] == 'all' && permission_exists('domain_setting_all')) {
+				if ($show == 'all' && permission_exists('domain_setting_all')) {
 					echo th_order_by('domain_name', $text['label-domain'], $order_by, $order);
 				}
 				echo th_order_by('domain_setting_subcategory', $text['label-subcategory'], $order_by, $order, null, "class='pct-35'");
@@ -256,7 +258,7 @@
 				echo th_order_by('domain_setting_value', $text['label-value'], $order_by, $order, null, "class='pct-30'");
 				echo th_order_by('domain_setting_enabled', $text['label-enabled'], $order_by, $order, null, "class='center'");
 				echo "	<th class='pct-25 hide-sm-dn'>".$text['label-description']."</th>\n";
-				if (permission_exists('domain_setting_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+				if (permission_exists('domain_setting_edit') && $list_row_edit_button == 'true') {
 					echo "	<td class='action-button'>&nbsp;</td>\n";
 				}
 				echo "</tr>\n";
@@ -291,7 +293,7 @@
 				$parameters['menu_uuid'] = $row['domain_setting_value'];
 				$database = new database;
 				$sub_result = $database->select($sql, $parameters, 'all');
-				if (is_array($sub_result) && sizeof($sub_result) != 0) {
+				if (!empty($sub_result)) {
 					foreach ($sub_result as &$sub_row) {
 						echo escape($sub_row["menu_language"])." - ".escape($sub_row["menu_name"])."\n";
 					}
@@ -362,7 +364,19 @@
 				echo "		".$text['label-'.$row['domain_setting_value']]."\n";
 			}
 			else {
-				echo "		".escape($row['domain_setting_value'])."\n";
+				if (!empty($row['domain_setting_value']) && substr_count($row['domain_setting_value'], "\n") > 0) {
+					$lines = explode("\n", $row['domain_setting_value']);
+					if (!empty($lines) && is_array($lines) && @sizeof($lines) != 0) {
+						foreach ($lines as $i => $line) {
+							$lines[$i] = escape($line);
+						}
+						echo implode("<i class='fas fa-level-down-alt fa-rotate-90 fa-xs ml-2 mr-5' style='opacity: 0.3;'></i>", $lines);
+					}
+					unset($lines, $line);
+				}
+				else {
+					echo escape($row['domain_setting_value'])."\n";
+				}
 			}
 			echo "	</td>\n";
 			if (permission_exists('domain_setting_edit')) {
@@ -375,7 +389,7 @@
 			}
 			echo "	</td>\n";
 			echo "	<td class='description overflow hide-sm-dn' title=\"".escape($row['domain_setting_description'])."\">".escape($row['domain_setting_description'])."&nbsp;</td>\n";
-			if (permission_exists('domain_setting_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+			if (permission_exists('domain_setting_edit') && $list_row_edit_button == 'true') {
 				echo "	<td class='action-button'>\n";
 				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
 				echo "	</td>\n";

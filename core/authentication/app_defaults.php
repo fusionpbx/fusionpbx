@@ -1,4 +1,4 @@
- <?php
+<?php
 
 
 //add fax email templates
@@ -11,7 +11,7 @@
 		$array['email_templates'][$x]['template_category'] = 'authentication';
 		$array['email_templates'][$x]['template_subcategory'] = 'email';
 		$array['email_templates'][$x]['template_subject'] = 'Authentication Code';
-		$array['email_templates'][$x]['template_body'] .= "<html>\n";
+		$array['email_templates'][$x]['template_body'] = "<html>\n";
 		$array['email_templates'][$x]['template_body'] .= "	<body>\n";
 		$array['email_templates'][$x]['template_body'] .= "		<br />\n";
 		$array['email_templates'][$x]['template_body'] .= "		<br><strong>Security Code</strong><br><br>\n";
@@ -23,17 +23,36 @@
 		$array['email_templates'][$x]['template_type'] = "html";
 		$array['email_templates'][$x]['template_enabled'] = "true";
 		$x++;
+
 		$array['email_templates'][$x]['email_template_uuid'] = '9a9e3b5f-c439-47da-a901-90dcd340d101';
 		$array['email_templates'][$x]['template_language'] = 'en-gb';
 		$array['email_templates'][$x]['template_category'] = 'authentication';
 		$array['email_templates'][$x]['template_subcategory'] = 'email';
 		$array['email_templates'][$x]['template_subject'] = 'Authentication Code';
-		$array['email_templates'][$x]['template_body'] .= "<html>\n";
+		$array['email_templates'][$x]['template_body'] = "<html>\n";
 		$array['email_templates'][$x]['template_body'] .= "	<body>\n";
 		$array['email_templates'][$x]['template_body'] .= "		<br />\n";
 		$array['email_templates'][$x]['template_body'] .= "		<br><strong>Security Code</strong><br><br>\n";
 		$array['email_templates'][$x]['template_body'] .= "		Use the following code to verify your identity.<br>\n";
 		$array['email_templates'][$x]['template_body'] .= "		Authentication Code: \${auth_code}<br>\n";
+		$array['email_templates'][$x]['template_body'] .= "		<br />\n";
+		$array['email_templates'][$x]['template_body'] .= "	</body>\n";
+		$array['email_templates'][$x]['template_body'] .= "</html>\n";
+		$array['email_templates'][$x]['template_type'] = "html";
+		$array['email_templates'][$x]['template_enabled'] = "true";
+		$x++;
+
+		$array['email_templates'][$x]['email_template_uuid'] = '3595f4b9-8593-41ae-b463-a57b0c23d1af';
+		$array['email_templates'][$x]['template_language'] = 'de-de';
+		$array['email_templates'][$x]['template_category'] = 'authentication';
+		$array['email_templates'][$x]['template_subcategory'] = 'email';
+		$array['email_templates'][$x]['template_subject'] = 'Authentifizierungscode';
+		$array['email_templates'][$x]['template_body'] = "<html>\n";
+		$array['email_templates'][$x]['template_body'] .= "	<body>\n";
+		$array['email_templates'][$x]['template_body'] .= "		<br />\n";
+		$array['email_templates'][$x]['template_body'] .= "		<br><strong>Sicherheitscode</strong><br><br>\n";
+		$array['email_templates'][$x]['template_body'] .= "		Benutzen Sie den folgenden Sicherheitscode um Ihre Identität zu bestätigen.<br>\n";
+		$array['email_templates'][$x]['template_body'] .= "		Sicherheitscode: \${auth_code}<br>\n";
 		$array['email_templates'][$x]['template_body'] .= "		<br />\n";
 		$array['email_templates'][$x]['template_body'] .= "	</body>\n";
 		$array['email_templates'][$x]['template_body'] .= "</html>\n";
@@ -49,7 +68,7 @@
 		}
 
 		//add the email templates to the database
-		if (is_array($uuids) && @sizeof($uuids) != 0) {
+		if (!empty($uuids)) {
 			$sql = "select * from v_email_templates where ";
 			foreach ($uuids as $index => $uuid) {
 				$sql_where[] = "email_template_uuid = :email_template_uuid_".$index;
@@ -74,7 +93,7 @@
 		}
 
 		//add the missing email templates
-		if (is_array($array['email_templates']) && @sizeof($array['email_templates']) != 0) {
+		if (!empty($array['email_templates'])) {
 			//add the temporary permission
 			$p = new permissions;
 			$p->add("email_template_add", 'temp');
@@ -93,7 +112,9 @@
 		}
 
 		//remove the array
-		unset($array);
+		if (!empty($array)) {
+			unset($array);
+		}
 
 	}
 

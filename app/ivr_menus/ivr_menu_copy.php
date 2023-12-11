@@ -24,12 +24,8 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
 
@@ -122,13 +118,13 @@
 			$dialplan_xml .= "		<action application=\"set\" data=\"ringback=".xml::sanitize($ivr_menu_ringback)."\"/>\n";
 			$dialplan_xml .= "		<action application=\"set\" data=\"transfer_ringback=".xml::sanitize($ivr_menu_ringback)."\"/>\n";
 			$dialplan_xml .= "		<action application=\"set\" data=\"presence_id=".xml::sanitize($ivr_menu_extension)."@".$_SESSION['domain_name']."\"/>\n";
-			if (strlen($ivr_menu_language) > 0) {
+			if (!empty($ivr_menu_language)) {
 				$dialplan_xml .= "		<action application=\"set\" data=\"default_language=".xml::sanitize($ivr_menu_language)."\" inline=\"true\"/>\n";
 				$dialplan_xml .= "		<action application=\"set\" data=\"default_dialect=".xml::sanitize($ivr_menu_dialect)."\" inline=\"true\"/>\n";
 				$dialplan_xml .= "		<action application=\"set\" data=\"default_voice=".xml::sanitize($ivr_menu_voice)."\" inline=\"true\"/>\n";
 			}
 			$dialplan_xml .= "		<action application=\"set\" data=\"ivr_menu_uuid=".xml::sanitize($ivr_menu_uuid)."\"/>\n";
-			if (strlen($ivr_menu_cid_prefix) > 0) {
+			if (!empty($ivr_menu_cid_prefix)) {
 				$dialplan_xml .= "		<action application=\"set\" data=\"caller_id_name=".xml::sanitize($ivr_menu_cid_prefix)."#\${caller_id_name}\"/>\n";
 				$dialplan_xml .= "		<action application=\"set\" data=\"effective_caller_id_name=\${caller_id_name}\"/>\n";
 			}

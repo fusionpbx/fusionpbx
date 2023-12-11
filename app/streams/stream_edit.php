@@ -17,16 +17,12 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018-2020
+	Portions created by the Initial Developer are Copyright (C) 2018-2023
 	the Initial Developer. All Rights Reserved.
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -42,8 +38,14 @@
 	$language = new text;
 	$text = $language->get();
 
+//set the defaults
+	$stream_name = '';
+	$stream_location = '';
+	$stream_description = '';
+	$stream_uuid = '';
+
 //action add or update
-	if (is_uuid($_REQUEST["id"])) {
+	if (!empty($_REQUEST["id"])) {
 		$action = "update";
 		$stream_uuid = $_REQUEST["id"];
 		$id = $_REQUEST["id"];
@@ -58,12 +60,12 @@
 		$stream_uuid = $_POST["stream_uuid"];
 		$stream_name = $_POST["stream_name"];
 		$stream_location = $_POST["stream_location"];
-		$stream_enabled = $_POST["stream_enabled"] ?: 'false';
+		$stream_enabled = $_POST["stream_enabled"] ?? 'false';
 		$stream_description = $_POST["stream_description"];
 	}
 
 //process the user data and save it to the database
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 
 		//get the uuid from the POST
 			if ($action == "update") {
@@ -80,12 +82,12 @@
 
 		//check for all required data
 			$msg = '';
-			if (strlen($stream_name) == 0) { $msg .= $text['message-required']." ".$text['label-stream_name']."<br>\n"; }
-			if (strlen($stream_location) == 0) { $msg .= $text['message-required']." ".$text['label-stream_location']."<br>\n"; }
-			if (strlen($stream_enabled) == 0) { $msg .= $text['message-required']." ".$text['label-stream_enabled']."<br>\n"; }
-			//if (strlen($domain_uuid) == 0) { $msg .= $text['message-required']." ".$text['label-domain_uuid']."<br>\n"; }
-			//if (strlen($stream_description) == 0) { $msg .= $text['message-required']." ".$text['label-stream_description']."<br>\n"; }
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+			if (empty($stream_name)) { $msg .= $text['message-required']." ".$text['label-stream_name']."<br>\n"; }
+			if (empty($stream_location)) { $msg .= $text['message-required']." ".$text['label-stream_location']."<br>\n"; }
+			if (empty($stream_enabled)) { $msg .= $text['message-required']." ".$text['label-stream_enabled']."<br>\n"; }
+			//if (empty($domain_uuid)) { $msg .= $text['message-required']." ".$text['label-domain_uuid']."<br>\n"; }
+			//if (empty($stream_description)) { $msg .= $text['message-required']." ".$text['label-stream_description']."<br>\n"; }
+			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -99,7 +101,7 @@
 			}
 
 		//add the stream_uuid
-			if (strlen($_POST["stream_uuid"]) == 0) {
+			if (empty($_POST["stream_uuid"])) {
 				$stream_uuid = uuid();
 			}
 
@@ -137,7 +139,7 @@
 	}
 
 //pre-populate the form
-	if (is_array($_GET) && $_POST["persistformvar"] != "true") {
+	if (!empty($_GET) && (empty($_POST["persistformvar"]) || $_POST["persistformvar"] != "true")) {
 		$stream_uuid = $_GET["id"];
 		$sql = "select * from v_streams ";
 		$sql .= "where stream_uuid = :stream_uuid ";
@@ -155,7 +157,7 @@
 	}
 
 //set the defaults
-	if (strlen($stream_enabled) == 0) { $stream_enabled = 'true'; }
+	if (empty($stream_enabled)) { $stream_enabled = 'true'; }
 
 //need stream_all permission to edit a global stream
 	if (!permission_exists('stream_all') && $domain_uuid == null) {
@@ -236,7 +238,7 @@
 		echo "</td>\n";
 		echo "<td class='vtable' style='position: relative;' align='left'>\n";
 		echo "	<select class='formfld' name='domain_uuid'>\n";
-		if (strlen($domain_uuid) == 0) {
+		if (empty($domain_uuid)) {
 			echo "		<option value='' selected='selected'>".$text['label-global']."</option>\n";
 		}
 		else {
@@ -252,7 +254,7 @@
 		}
 		echo "	</select>\n";
 		echo "<br />\n";
-		echo $text['description-domain_uuid']."\n";
+		echo !empty($text['description-domain_uuid'])."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 	}

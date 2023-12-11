@@ -2,14 +2,7 @@
 
 //check the permission
 	if (defined('STDIN')) {
-		$document_root = str_replace("\\", "/", $_SERVER["PHP_SELF"]);
-		preg_match("/^(.*)\/app\/.*$/", $document_root, $matches);
-		if (isset($matches[1])) {
-			$document_root = $matches[1];
-			set_include_path($document_root);
-			$_SERVER["DOCUMENT_ROOT"] = $document_root;
-		}
-		require_once "resources/require.php";
+		require_once  dirname(__DIR__, 4) . "/resources/require.php";
 	}
 	else {
 		exit;
@@ -38,11 +31,11 @@
 	}
 
 //connect to event socket
-	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+	$esl = event_socket::create();
 
 //get the agent list from event socket
 	$switch_cmd = 'callcenter_config agent list';
-	$event_socket_str = trim(event_socket_request($fp, 'api '.$switch_cmd));
+	$event_socket_str = trim(event_socket::api($switch_cmd));
 	$agent_list = csv_to_named_array($event_socket_str, '|');
 
 //get the agents from the database
@@ -76,11 +69,24 @@
 		}
 
 		//build the event
-		if ($fp) {
+		if ($esl->is_connected()) {
 			$event = "sendevent PRESENCE_IN\n";
 			$event .= "proto: agent\n";
 			$event .= "from: ".$row['agent_name']."@".$row['domain_name']."\n";
 			$event .= "login: ".$row['agent_name']."@".$row['domain_name']."\n";
+			$event .= "status: Active (1 waiting)\n";
+			$event .= "rpid: unknown\n";
+			$event .= "event_type: presence\n";
+			$event .= "alt_event_type: dialog\n";
+			$event .= "event_count: 1\n";
+			$event .= "unique-id: ".uuid()."\n";
+			$event .= "Presence-Call-Direction: outbound\n";
+			$event .= "answer-state: ".$answer_state."\n";
+
+			$event = "sendevent PRESENCE_IN\n";
+			$event .= "proto: agent\n";
+			$event .= "from: ".$row['agent_id']."@".$row['domain_name']."\n";
+			$event .= "login: ".$row['agent_id']."@".$row['domain_name']."\n";
 			$event .= "status: Active (1 waiting)\n";
 			$event .= "rpid: unknown\n";
 			$event .= "event_type: presence\n";
@@ -98,15 +104,12 @@
 		}
 
 		//send the event
-		$result = event_socket_request($fp, $event);
+		$result = event_socket::command($event);
 		if (isset($debug)) {
 			print_r($result, false);
 		}
 
 	}
-
-	//close event socket connection
-	fclose($fp);
 
 /*
 * * * * * cd /var/www/fusionpbx && php /var/www/fusionpbx/app/call_centers/resources/jobs/call_center_agents.php

@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -26,12 +26,13 @@
 
 function persistformvar($form_array) {
 	// Remember Form Input Values
-	if (is_array($form_array)) {
-		$content .= "<form method='post' action='".escape($_SERVER["HTTP_REFERER"])."' target='_self'>\n";
-		foreach($form_array as $key => $val) {
+	$content = '';
+	if (!empty($form_array)) {
+		$content .= "<form method='post' action='".escape($_SERVER["HTTP_REFERER"] ?? '')."' target='_self'>\n";
+		foreach ($form_array as $key => $val) {
 			if ($key == "XID" || $key == "ACT" || $key == "RET") continue;
 			if ($key != "persistform") { //clears the persistform value
-				$content .= "	<input type='hidden' name='".escape($key)."' value='".escape($val)."' />\n";
+				$content .= "	<input type='hidden' name='".escape($key ?? '')."' value='".(!is_array($val) ? escape($val ?? '') : null)."' />\n";
 			}
 		}
 		$content .= "	<input type='hidden' name='persistformvar' value='true' />\n"; //sets persistform to yes

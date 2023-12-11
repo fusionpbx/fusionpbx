@@ -24,12 +24,8 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
 
@@ -46,15 +42,19 @@
 	$language = new text;
 	$text = $language->get();
 
+//define the variables
+	$action = '';
+	$search = '';
+
 //get posted data
-	if (is_array($_POST['vars'])) {
-		$action = $_POST['action'];
-		$search = $_POST['search'];
-		$vars = $_POST['vars'];
+	if (!empty($_POST['vars'])) {
+		$action = $_POST['action'] ?? '';
+		$search = $_POST['search'] ?? '';
+		$vars = $_POST['vars'] ?? '';
 	}
 
 //process the http post data by action
-	if ($action != '' && is_array($vars) && @sizeof($vars) != 0) {
+	if (!empty($action)) {
 		switch ($action) {
 			case 'copy':
 				if (permission_exists('var_add')) {
@@ -81,44 +81,56 @@
 	}
 
 //get order and order by
-	$order_by = $_GET["order_by"];
-	$order = $_GET["order"];
+	$order_by = $_GET["order_by"] ?? '';
+	$order = $_GET["order"] ?? '';
 
-//add the search string
-	$search = strtolower($_GET["search"]);
-	if (strlen($search) > 0) {
-		$sql_search = "where (";
-		$sql_search .= "	lower(var_category) like :search ";
-		$sql_search .= "	or lower(var_name) like :search ";
-		$sql_search .= "	or lower(var_value) like :search ";
-		$sql_search .= "	or lower(var_hostname) like :search ";
-		$sql_search .= "	or lower(var_enabled) like :search ";
-		$sql_search .= "	or lower(var_description) like :search ";
-		$sql_search .= ") ";
-		$parameters['search'] = '%'.$search.'%';
-	}
+//set from session variables
+	$list_row_edit_button = !empty($_SESSION['theme']['list_row_edit_button']['boolean']) ? $_SESSION['theme']['list_row_edit_button']['boolean'] : 'false';
 
 //get the count
 	$sql = "select count(var_uuid) from v_vars ";
-	$sql .= $sql_search;
+	if (!empty($_GET["search"])) {
+		$search = strtolower($_GET["search"]);
+		$sql .= "where (";
+		$sql .= "	lower(var_category) like :search ";
+		$sql .= "	or lower(var_name) like :search ";
+		$sql .= "	or lower(var_value) like :search ";
+		$sql .= "	or lower(var_hostname) like :search ";
+		$sql .= "	or lower(var_enabled) like :search ";
+		$sql .= "	or lower(var_description) like :search ";
+		$sql .= ") ";
+		$parameters['search'] = '%'.$search.'%';
+	}
 	$database = new database;
-	$num_rows = $database->select($sql, $parameters, 'column');
+	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
 	$param = $search ? "&search=".$search : null;
 	$param = $order_by ? "&order_by=".$order_by."&order=".$order : null;
-	$page = is_numeric($_GET['page']) ? $_GET['page'] : 0;
+	$page = empty($_GET['page']) ? $page = 0 : $page = $_GET['page'];
 	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
 	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = str_replace('count(var_uuid)', '*', $sql);
+	$sql = "select * from v_vars ";
+	if (!empty($_GET["search"])) {
+		$search = strtolower($_GET["search"]);
+		$sql .= "where (";
+		$sql .= "	lower(var_category) like :search ";
+		$sql .= "	or lower(var_name) like :search ";
+		$sql .= "	or lower(var_value) like :search ";
+		$sql .= "	or lower(var_hostname) like :search ";
+		$sql .= "	or lower(var_enabled) like :search ";
+		$sql .= "	or lower(var_description) like :search ";
+		$sql .= ") ";
+		$parameters['search'] = '%'.$search.'%';
+	}
 	$sql .= $order_by != '' ? order_by($order_by, $order) : " order by var_category, var_order asc, var_name asc ";
 	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;
-	$vars = $database->select($sql, $parameters, 'all');
+	$vars = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql);
 
 //create token
@@ -176,7 +188,7 @@
 
 	echo "<table class='list'>\n";
 	function write_header($modifier) {
-		global $text, $order_by, $order, $vars;
+		global $text, $order_by, $order, $vars, $list_row_edit_button;
 		$modifier = str_replace('/', '', $modifier);
 		$modifier = str_replace('  ', ' ', $modifier);
 		$modifier = str_replace(' ', '_', $modifier);
@@ -186,7 +198,7 @@
 		echo "<tr class='list-header'>\n";
 		if (permission_exists('var_edit') || permission_exists('var_delete')) {
 			echo "	<th class='checkbox'>\n";
-			echo "		<input type='checkbox' id='checkbox_all_".$modifier."' name='checkbox_all' onclick=\"list_all_toggle('".$modifier."'); checkbox_on_change(this);\" ".($vars ?: "style='visibility: hidden;'").">\n";
+			echo "		<input type='checkbox' id='checkbox_all_".$modifier."' name='checkbox_all' onclick=\"list_all_toggle('".$modifier."'); checkbox_on_change(this);\" ".(!empty($vars) ?: "style='visibility: hidden;'").">\n";
 			echo "	</th>\n";
 		}
 		echo th_order_by('var_name', $text['label-name'], $order_by, $order, null, "class='pct-30'");
@@ -194,12 +206,12 @@
 		echo th_order_by('var_hostname', $text['label-hostname'], $order_by, $order, null, "class='hide-sm-dn'");
 		echo th_order_by('var_enabled', $text['label-enabled'], $order_by, $order, null, "class='center'");
 		echo "<th class='hide-sm-dn'>".$text['label-description']."</th>\n";
-		if (permission_exists('var_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+		if (permission_exists('var_edit') && $list_row_edit_button == 'true') {
 			echo "<td class='action-button'>&nbsp;</td>\n";
 		}
 		echo "</tr>\n";
 	}
-	if (is_array($vars) && @sizeof($vars) != 0) {
+	if (!empty($vars)) {
 		$previous_category = '';
 		foreach ($vars as $x => $row) {
 			//write category and column headings
@@ -245,8 +257,8 @@
 				echo $text['label-'.$row['var_enabled']];
 			}
 			echo "	</td>\n";
-			echo "	<td class='description overflow hide-sm-dn'>".escape(base64_decode($row['var_description']))."</td>\n";
-			if (permission_exists('var_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+			echo "	<td class='description overflow hide-sm-dn'>".escape($row['var_description'] ?? '')."</td>\n";
+			if (permission_exists('var_edit') && $list_row_edit_button == 'true') {
 				echo "	<td class='action-button'>\n";
 				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
 				echo "	</td>\n";
@@ -258,7 +270,6 @@
 			$x++;
 		}
 	}
-	unset($vars);
 
 	echo "</table>\n";
 	echo "<br />\n";

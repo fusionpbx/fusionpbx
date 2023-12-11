@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -25,12 +25,8 @@
 	Lewis Hallam <lewishallam80@gmail.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 
 //check permissions
 	require_once "resources/check_auth.php";
@@ -46,8 +42,20 @@
 	$language = new text;
 	$text = $language->get();
 
+//set the defaults
+	$call_flow_sound = '';
+	$call_flow_alternate_sound = '';
+	$call_flow_name = '';
+	$call_flow_extension = '';
+	$call_flow_feature_code = '';
+	$call_flow_pin_number = '';
+	$call_flow_label = '';
+	$call_flow_alternate_label = '';
+	$call_flow_description = '';
+	$call_flow_status = '';
+
 //action add or update
-	if (is_uuid($_REQUEST["id"])) {
+	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
 		$call_flow_uuid = $_REQUEST["id"];
 	}
@@ -59,11 +67,11 @@
 	$destination = new destinations;
 
 //get http post variables and set them to php variables
-	if (count($_POST) > 0) {
+	if (!empty($_POST)) {
 
 		//set the variables from the http values
-			$call_flow_uuid = $_POST["call_flow_uuid"];
-			$dialplan_uuid = $_POST["dialplan_uuid"];
+			$call_flow_uuid = $_POST["call_flow_uuid"] ?? null;
+			$dialplan_uuid = $_POST["dialplan_uuid"] ?? null;
 			$call_flow_name = $_POST["call_flow_name"];
 			$call_flow_extension = $_POST["call_flow_extension"];
 			$call_flow_feature_code = $_POST["call_flow_feature_code"];
@@ -76,7 +84,7 @@
 			$call_flow_alternate_sound = $_POST["call_flow_alternate_sound"];
 			$call_flow_alternate_destination = $_POST["call_flow_alternate_destination"];
 			$call_flow_context = $_POST["call_flow_context"];
-			$call_flow_enabled = $_POST["call_flow_enabled"] ?: 'false';
+			$call_flow_enabled = $_POST["call_flow_enabled"] ?? 'false';
 			$call_flow_description = $_POST["call_flow_description"];
 
 		//seperate the action and the param
@@ -91,7 +99,7 @@
 	}
 
 //process the user data and save it to the database
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
 		//get the uuid from the POST
 			if ($action == "update") {
@@ -108,25 +116,25 @@
 
 		//check for all required data
 			$msg = '';
-			//if (strlen($domain_uuid) == 0) { $msg .= $text['message-required']." ".$text['label-domain_uuid']."<br>\n"; }
-			//if (strlen($call_flow_uuid) == 0) { $msg .= $text['message-required']." ".$text['label-call_flow_uuid']."<br>\n"; }
-			//if (strlen($dialplan_uuid) == 0) { $msg .= $text['message-required']." ".$text['label-dialplan_uuid']."<br>\n"; }
-			//if (strlen($call_flow_name) == 0) { $msg .= $text['message-required']." ".$text['label-call_flow_name']."<br>\n"; }
-			if (strlen($call_flow_extension) == 0) { $msg .= $text['message-required']." ".$text['label-call_flow_extension']."<br>\n"; }
-			if (strlen($call_flow_feature_code) == 0) { $msg .= $text['message-required']." ".$text['label-call_flow_feature_code']."<br>\n"; }
-			//if (strlen($call_flow_context) == 0) { $msg .= $text['message-required']." ".$text['label-call_flow_context']."<br>\n"; }
-			//if (strlen($call_flow_status) == 0) { $msg .= $text['message-required']." ".$text['label-call_flow_status']."<br>\n"; }
-			//if (strlen($call_flow_pin_number) == 0) { $msg .= $text['message-required']." ".$text['label-call_flow_pin_number']."<br>\n"; }
-			//if (strlen($call_flow_label) == 0) { $msg .= $text['message-required']." ".$text['label-call_flow_label']."<br>\n"; }
-			//if (strlen($call_flow_sound) == 0) { $msg .= $text['message-required']." ".$text['label-call_flow_sound']."<br>\n"; }
-			if (strlen($call_flow_app) == 0) { $msg .= $text['message-required']." ".$text['label-call_flow_app']."<br>\n"; }
-			if (strlen($call_flow_data) == 0) { $msg .= $text['message-required']." ".$text['label-call_flow_data']."<br>\n"; }
-			//if (strlen($call_flow_alternate_label) == 0) { $msg .= $text['message-required']." ".$text['label-call_flow_alternate_label']."<br>\n"; }
-			//if (strlen($call_flow_alternate_sound) == 0) { $msg .= $text['message-required']." ".$text['label-call_flow_alternate_sound']."<br>\n"; }
-			//if (strlen($call_flow_alternate_app) == 0) { $msg .= $text['message-required']." ".$text['label-call_flow_alternate_app']."<br>\n"; }
-			//if (strlen($call_flow_alternate_data) == 0) { $msg .= $text['message-required']." ".$text['label-call_flow_alternate_data']."<br>\n"; }
-			//if (strlen($call_flow_description) == 0) { $msg .= $text['message-required']." ".$text['label-call_flow_description']."<br>\n"; }
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+			//if (empty($domain_uuid)) { $msg .= $text['message-required']." ".$text['label-domain_uuid']."<br>\n"; }
+			//if (empty($call_flow_uuid)) { $msg .= $text['message-required']." ".$text['label-call_flow_uuid']."<br>\n"; }
+			//if (empty($dialplan_uuid)) { $msg .= $text['message-required']." ".$text['label-dialplan_uuid']."<br>\n"; }
+			//if (empty($call_flow_name)) { $msg .= $text['message-required']." ".$text['label-call_flow_name']."<br>\n"; }
+			if (empty($call_flow_extension)) { $msg .= $text['message-required']." ".$text['label-call_flow_extension']."<br>\n"; }
+			//if (empty($call_flow_feature_code)) { $msg .= $text['message-required']." ".$text['label-call_flow_feature_code']."<br>\n"; }
+			//if (empty($call_flow_context)) { $msg .= $text['message-required']." ".$text['label-call_flow_context']."<br>\n"; }
+			//if (empty($call_flow_status)) { $msg .= $text['message-required']." ".$text['label-call_flow_status']."<br>\n"; }
+			//if (empty($call_flow_pin_number)) { $msg .= $text['message-required']." ".$text['label-call_flow_pin_number']."<br>\n"; }
+			//if (empty($call_flow_label)) { $msg .= $text['message-required']." ".$text['label-call_flow_label']."<br>\n"; }
+			//if (empty($call_flow_sound)) { $msg .= $text['message-required']." ".$text['label-call_flow_sound']."<br>\n"; }
+			if (empty($call_flow_app)) { $msg .= $text['message-required']." ".($text['label-call_flow_app'] ?? '')."<br>\n"; }
+			if (empty($call_flow_data)) { $msg .= $text['message-required']." ".($text['label-call_flow_data'] ?? '')."<br>\n"; }
+			//if (empty($call_flow_alternate_label)) { $msg .= $text['message-required']." ".$text['label-call_flow_alternate_label']."<br>\n"; }
+			//if (empty($call_flow_alternate_sound)) { $msg .= $text['message-required']." ".$text['label-call_flow_alternate_sound']."<br>\n"; }
+			//if (empty($call_flow_alternate_app)) { $msg .= $text['message-required']." ".$text['label-call_flow_alternate_app']."<br>\n"; }
+			//if (empty($call_flow_alternate_data)) { $msg .= $text['message-required']." ".$text['label-call_flow_alternate_data']."<br>\n"; }
+			//if (empty($call_flow_description)) { $msg .= $text['message-required']." ".$text['label-call_flow_description']."<br>\n"; }
+			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -140,12 +148,12 @@
 			}
 
 		//add the call_flow_uuid
-			if (!is_uuid($call_flow_uuid)) {
+			if (empty($call_flow_uuid)) {
 				$call_flow_uuid = uuid();
 			}
 
 		//add the dialplan_uuid
-			if (!is_uuid($dialplan_uuid)) {
+			if (empty($dialplan_uuid)) {
 				$dialplan_uuid = uuid();
 			}
 
@@ -173,13 +181,15 @@
 
 		//build the xml dialplan
 			$dialplan_xml = "<extension name=\"".xml::sanitize($call_flow_name)."\" continue=\"\" uuid=\"".xml::sanitize($dialplan_uuid)."\">\n";
-			$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".xml::sanitize($destination_feature)."$\" break=\"on-true\">\n";
-			$dialplan_xml .= "		<action application=\"answer\" data=\"\"/>\n";
-			$dialplan_xml .= "		<action application=\"sleep\" data=\"200\"/>\n";
-			$dialplan_xml .= "		<action application=\"set\" data=\"feature_code=true\"/>\n";
-			$dialplan_xml .= "		<action application=\"set\" data=\"call_flow_uuid=".xml::sanitize($call_flow_uuid)."\"/>\n";
-			$dialplan_xml .= "		<action application=\"lua\" data=\"call_flow.lua\"/>\n";
-			$dialplan_xml .= "	</condition>\n";
+			if (!empty($call_flow_feature_code)) {
+				$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".xml::sanitize($destination_feature)."$\" break=\"on-true\">\n";
+				$dialplan_xml .= "		<action application=\"answer\" data=\"\"/>\n";
+				$dialplan_xml .= "		<action application=\"sleep\" data=\"200\"/>\n";
+				$dialplan_xml .= "		<action application=\"set\" data=\"feature_code=true\"/>\n";
+				$dialplan_xml .= "		<action application=\"set\" data=\"call_flow_uuid=".xml::sanitize($call_flow_uuid)."\"/>\n";
+				$dialplan_xml .= "		<action application=\"lua\" data=\"call_flow.lua\"/>\n";
+				$dialplan_xml .= "	</condition>\n";
+			}
 			$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".xml::sanitize($destination_extension)."$\">\n";
 			$dialplan_xml .= "		<action application=\"set\" data=\"call_flow_uuid=".xml::sanitize($call_flow_uuid)."\"/>\n";
 			$dialplan_xml .= "		<action application=\"lua\" data=\"call_flow.lua\"/>\n";
@@ -235,7 +245,7 @@
 			$database = new database;
 			$database->app_name = 'call_flows';
 			$database->app_uuid = 'b1b70f85-6b42-429b-8c5a-60c8b02b7d14';
-			if (strlen($call_flow_uuid) > 0) {
+			if (!empty($call_flow_uuid)) {
 				$database->uuid($call_flow_uuid);
 			}
 			$database->save($array);
@@ -246,9 +256,10 @@
 			$p->delete("dialplan_edit", "temp");
 
 		// Update subscribed endpoints
-		$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-		if ($fp) {
-			//send the event
+		if (!empty($call_flow_feature_code)) {
+			$esl = event_socket::create();
+			if ($esl->is_connected()) {
+				//send the event
 				$event = "sendevent PRESENCE_IN\n";
 				$event .= "proto: flow\n";
 				$event .= "event_type: presence\n";
@@ -263,11 +274,8 @@
 				} else {
 					$event .= "answer-state: terminated\n";
 				}
-
-				event_socket_request($fp, $event);
-				//echo $event."<br />";
-			fclose($fp);
-
+				event_socket::command($event);
+			}
 		}
 
 		//debug info
@@ -299,10 +307,10 @@
 				header("Location: call_flows.php");
 				return;
 			}
-	} //(is_array($_POST) && strlen($_POST["persistformvar"]) == 0)
+	} //(is_array($_POST) && empty($_POST["persistformvar"]))
 
 //pre-populate the form
-	if (is_array($_GET) && $_POST["persistformvar"] != "true") {
+	if (!empty($_GET) && empty($_POST["persistformvar"])) {
 		$call_flow_uuid = $_GET["id"];
 		$sql = "select * from v_call_flows ";
 		$sql .= "where domain_uuid = :domain_uuid ";
@@ -352,158 +360,16 @@
 	}
 
 //set the context for users that are not in the superadmin group
-	if (strlen($call_flow_context) == 0) {
+	if (empty($call_flow_context)) {
 		$call_flow_context = $_SESSION['domain_name'];
 	}
 
 //set the defaults
-	if (strlen($call_flow_enabled) == 0) { $call_flow_enabled = 'true'; }
+	if (empty($call_flow_enabled)) { $call_flow_enabled = 'true'; }
 
-//get the recordings
-	$sql = "select recording_name, recording_filename from v_recordings ";
-	$sql .= "where domain_uuid = :domain_uuid ";
-	$sql .= "order by recording_name asc ";
-	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$database = new database;
-	$recordings = $database->select($sql, $parameters, 'all');
-	unset($parameters, $sql);
-
-	if (if_group("superadmin")) {
-		echo "<script>\n";
-		echo "var Objs;\n";
-		echo "\n";
-		echo "function changeToInput(obj){\n";
-		echo "	tb=document.createElement('INPUT');\n";
-		echo "	tb.type='text';\n";
-		echo "	tb.name=obj.name;\n";
-		echo "	tb.setAttribute('class', 'formfld');\n";
-		//echo "	tb.setAttribute('style', 'width: 380px;');\n";
-		echo "	tb.value=obj.options[obj.selectedIndex].value;\n";
-		echo "	tbb=document.createElement('INPUT');\n";
-		echo "	tbb.setAttribute('class', 'btn');\n";
-		echo "	tbb.setAttribute('style', 'margin-left: 4px;');\n";
-		echo "	tbb.type='button';\n";
-		echo "	tbb.value=$('<div />').html('&#9665;').text();\n";
-		echo "	tbb.objs=[obj,tb,tbb];\n";
-		echo "	tbb.onclick=function(){ Replace(this.objs); }\n";
-		echo "	obj.parentNode.insertBefore(tb,obj);\n";
-		echo "	obj.parentNode.insertBefore(tbb,obj);\n";
-		echo "	obj.parentNode.removeChild(obj);\n";
-		echo "}\n";
-		echo "\n";
-		echo "function Replace(obj){\n";
-		echo "	obj[2].parentNode.insertBefore(obj[0],obj[2]);\n";
-		echo "	obj[0].parentNode.removeChild(obj[1]);\n";
-		echo "	obj[0].parentNode.removeChild(obj[2]);\n";
-		echo "}\n";
-		echo "</script>\n";
-		echo "\n";
-	}
-
-	function sound_select_list($var, $name, $description_name, $load_sound=false) {
-		global $text, $recordings, $db;
-
-		echo "<tr>\n";
-		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-		echo "	".$text['label-' . $description_name]."\n";
-		echo "</td>\n";
-		echo "<td class='vtable' align='left'>\n";
-
-		echo "<select name='".escape($name)."' class='formfld' ".((if_group("superadmin")) ? "onchange='changeToInput(this);'" : null).">\n";
-		echo "	<option value=''></option>\n";
-		//misc optgroup
-			if (if_group("superadmin")) {
-				echo "<optgroup label=".$text['miscellaneous'].">\n";
-				echo "	<option value='say:'>say:</option>\n";
-				echo "	<option value='tone_stream:'>tone_stream:</option>\n";
-				echo "</optgroup>\n";
-			}
-		//recordings
-			$tmp_selected = false;
-			if (count($recordings) > 0) {
-				echo "<optgroup label=".$text['recordings'].">\n";
-				foreach ($recordings as &$row) {
-					$recording_name = $row["recording_name"];
-					$recording_filename = $row["recording_filename"];
-					if ($var == $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$recording_filename && strlen($var) > 0) {
-						$tmp_selected = true;
-						echo "	<option value='".$_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".escape($recording_filename)."' selected='selected'>".escape($recording_name)."</option>\n";
-					}
-					else if ($var == $recording_filename && strlen($var) > 0) {
-						$tmp_selected = true;
-						echo "	<option value='".escape($recording_filename)."' selected='selected'>".escape($recording_name)."</option>\n";
-					}
-					else {
-						echo "	<option value='".escape($recording_filename)."'>".escape($recording_name)."</option>\n";
-					}
-				}
-				echo "</optgroup>\n";
-			}
-		//phrases
-			$sql = "select * from v_phrases where domain_uuid = :domain_uuid ";
-			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-			$database = new database;
-			$result = $database->select($sql, $parameters, 'all');
-			unset($parameters, $sql);
-			if (is_array($result)) {
-				echo "<optgroup label='Phrases'>\n";
-				foreach ($result as &$row) {
-					if ($var == "phrase:".$row["phrase_uuid"]) {
-						$tmp_selected = true;
-						echo "	<option value='phrase:".escape($row["phrase_uuid"])."' selected='selected'>".escape($row["phrase_name"])."</option>\n";
-					}
-					else {
-						echo "	<option value='phrase:".escape($row["phrase_uuid"])."'>".escape($row["phrase_name"])."</option>\n";
-					}
-				}
-				echo "</optgroup>\n";
-			}
-		//sounds
-			if ($load_sound) {
-				$file = new file;
-				$sound_files = $file->sounds();
-				if (is_array($sound_files)) {
-					echo "<optgroup label=".$text["sounds"].">\n";
-					foreach ($sound_files as $value) {
-						if (strlen($value) > 0) {
-							if (substr($var, 0, 71) == "\$\${sounds_dir}/\${default_language}/\${default_dialect}/\${default_voice}/") {
-								$var = substr($var, 71);
-							}
-							if ($var == $value) {
-								$tmp_selected = true;
-								echo "	<option value='".escape($value)."' selected='selected'>".escape($value)."</option>\n";
-							}
-							else {
-								echo "	<option value='".escape($value)."'>".escape($value)."</option>\n";
-							}
-						}
-					}
-					echo "</optgroup>\n";
-				}
-			}
-		//select
-			if (if_group("superadmin")) {
-				if (!$tmp_selected && strlen($var) > 0) {
-					echo "<optgroup label='Selected'>\n";
-					if (file_exists($_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$var)) {
-						echo "	<option value='".$_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".escape($var)."' selected='selected'>".escape($var)."</option>\n";
-					}
-					else if (substr($var, -3) == "wav" || substr($var, -3) == "mp3") {
-						echo "	<option value='".escape($var)."' selected='selected'>".escape($var)."</option>\n";
-					}
-					else {
-						echo "	<option value='".escape($var)."' selected='selected'>".escape($var)."</option>\n";
-					}
-					echo "</optgroup>\n";
-				}
-				unset($tmp_selected);
-			}
-		echo "	</select>\n";
-		echo "	<br />\n";
-		echo $text['description-' . $description_name]."\n";
-		echo "</td>\n";
-		echo "</tr>\n";
-	}
+//get the sounds
+	$sounds = new sounds;
+	$audio_files = $sounds->get();
 
 //create token
 	$object = new token;
@@ -514,6 +380,73 @@
 	require_once "resources/header.php";
 
 //show the content
+	if (permission_exists('recording_play') || permission_exists('recording_download')) {
+		echo "<script type='text/javascript' language='JavaScript'>\n";
+		echo "	function set_playable(id, audio_selected, audio_type) {\n";
+		echo "		file_ext = audio_selected.split('.').pop();\n";
+		echo "		var mime_type = '';\n";
+		echo "		switch (file_ext) {\n";
+		echo "			case 'wav': mime_type = 'audio/wav'; break;\n";
+		echo "			case 'mp3': mime_type = 'audio/mpeg'; break;\n";
+		echo "			case 'ogg': mime_type = 'audio/ogg'; break;\n";
+		echo "		}\n";
+		echo "		if (mime_type != '' && (audio_type == 'recordings' || audio_type == 'sounds')) {\n";
+		echo "			if (audio_type == 'recordings') {\n";
+		echo "				$('#recording_audio_' + id).attr('src', '../recordings/recordings.php?action=download&type=rec&filename=' + audio_selected);\n";
+		echo "			}\n";
+		echo "			else if (audio_type == 'sounds') {\n";
+		echo "				$('#recording_audio_' + id).attr('src', '../switch/sounds.php?action=download&filename=' + audio_selected);\n";
+		echo "			}\n";
+		echo "			$('#recording_audio_' + id).attr('type', mime_type);\n";
+		echo "			$('#recording_button_' + id).show();\n";
+		echo "		}\n";
+		echo "		else {\n";
+		echo "			$('#recording_button_' + id).hide();\n";
+		echo "			$('#recording_audio_' + id).attr('src','').attr('type','');\n";
+		echo "		}\n";
+		echo "	}\n";
+		echo "</script>\n";
+	}
+	if (if_group("superadmin")) {
+		echo "<script type='text/javascript' language='JavaScript'>\n";
+		echo "	var objs;\n";
+		echo "	function toggle_select_input(obj, instance_id){\n";
+		echo "		tb=document.createElement('INPUT');\n";
+		echo "		tb.type='text';\n";
+		echo "		tb.name=obj.name;\n";
+		echo "		tb.className='formfld';\n";
+		echo "		tb.setAttribute('id', instance_id);\n";
+		echo "		tb.setAttribute('style', 'width: ' + obj.offsetWidth + 'px;');\n";
+		if (!empty($on_change)) {
+			echo "	tb.setAttribute('onchange', \"".$on_change."\");\n";
+			echo "	tb.setAttribute('onkeyup', \"".$on_change."\");\n";
+		}
+		echo "		tb.value=obj.options[obj.selectedIndex].value;\n";
+		echo "		document.getElementById('btn_select_to_input_' + instance_id).style.display = 'none';\n";
+		echo "		tbb=document.createElement('INPUT');\n";
+		echo "		tbb.setAttribute('class', 'btn');\n";
+		echo "		tbb.setAttribute('style', 'margin-left: 4px;');\n";
+		echo "		tbb.type='button';\n";
+		echo "		tbb.value=$('<div />').html('&#9665;').text();\n";
+		echo "		tbb.objs=[obj,tb,tbb];\n";
+		echo "		tbb.onclick=function(){ replace_element(this.objs, instance_id); }\n";
+		echo "		obj.parentNode.insertBefore(tb,obj);\n";
+		echo "		obj.parentNode.insertBefore(tbb,obj);\n";
+		echo "		obj.parentNode.removeChild(obj);\n";
+		echo "		replace_element(this.objs, instance_id);\n";
+		echo "	}\n";
+		echo "	function replace_element(obj, instance_id){\n";
+		echo "		obj[2].parentNode.insertBefore(obj[0],obj[2]);\n";
+		echo "		obj[0].parentNode.removeChild(obj[1]);\n";
+		echo "		obj[0].parentNode.removeChild(obj[2]);\n";
+		echo "		document.getElementById('btn_select_to_input_' + instance_id).style.display = 'inline';\n";
+		if (!empty($on_change)) {
+			echo "	".$on_change.";\n";
+		}
+		echo "	}\n";
+		echo "</script>\n";
+	}
+
 	echo "<form name='frm' id='frm' method='post'>\n";
 
 	echo "<div class='action_bar' id='action_bar'>\n";
@@ -550,7 +483,7 @@
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-call_flow_feature_code']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
@@ -568,7 +501,7 @@
 	echo "	<select class='formfld' name='call_flow_status'>\n";
 	echo "	<option value=''></option>\n";
 	if ($call_flow_status == "true") {
-		if (strlen($call_flow_label) > 0) {
+		if (!empty($call_flow_label)) {
 			echo "	<option value='true' selected='selected'>".escape($call_flow_label)."</option>\n";
 		}
 		else {
@@ -576,7 +509,7 @@
 		}
 	}
 	else {
-		if (strlen($call_flow_label) > 0) {
+		if (!empty($call_flow_label)) {
 			echo "	<option value='true'>".escape($call_flow_label)."</option>\n";
 		}
 		else {
@@ -584,7 +517,7 @@
 		}
 	}
 	if ($call_flow_status == "false") {
-		if (strlen($call_flow_alternate_label) > 0) {
+		if (!empty($call_flow_alternate_label)) {
 			echo "	<option value='false' selected='selected'>".escape($call_flow_alternate_label)."</option>\n";
 		}
 		else {
@@ -592,7 +525,7 @@
 		}
 	}
 	else {
-		if (strlen($call_flow_alternate_label) > 0) {
+		if (!empty($call_flow_alternate_label)) {
 			echo "	<option value='false'>".escape($call_flow_alternate_label)."</option>\n";
 		}
 		else {
@@ -623,33 +556,91 @@
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='call_flow_label' maxlength='255' value=\"".escape($call_flow_label)."\">\n";
 	echo "<br />\n";
-	echo $text['description-call_flow_label']."\n";
+	echo !empty($text['description-call_flow_label'])."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	sound_select_list($call_flow_sound, 'call_flow_sound', 'call_flow_sound', true);
-
-	/*
+	$instance_id = 'call_flow_sound';
+	$instance_label = 'call_flow_sound';
+	$instance_value = $call_flow_sound;
 	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-call_flow_sound']."\n";
+	echo "<td class='vncell' rowspan='2' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-'.$instance_label]."\n";
 	echo "</td>\n";
+	echo "<td class='vtable playback_progress_bar_background' id='recording_progress_bar_".$instance_id."' style='display: none; border-bottom: none; padding-top: 0 !important; padding-bottom: 0 !important;' align='left'><span class='playback_progress_bar' id='recording_progress_".$instance_id."'></span></td>\n";
+	echo "</tr>\n";
+	echo "<tr>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='call_flow_sound' maxlength='255' value=\"".escape($call_flow_sound)."\">\n";
+	echo "<select name='".$instance_id."' id='".$instance_id."' class='formfld' ".(permission_exists('recording_play') || permission_exists('recording_download') ? "onchange=\"recording_reset('".$instance_id."'); set_playable('".$instance_id."', this.value, this.options[this.selectedIndex].parentNode.getAttribute('data-type'));\"" : null).">\n";
+	echo "	<option value=''></option>\n";
+	$found = $playable = false;
+	if (!empty($audio_files) && is_array($audio_files) && @sizeof($audio_files) != 0) {
+		foreach ($audio_files as $key => $value) {
+			echo "<optgroup label=".$text['label-'.$key]." data-type='".$key."'>\n";
+			foreach ($value as $row) {
+				if ($key == 'recordings') {
+					if (
+						!empty($instance_value) &&
+						($instance_value == $row["value"] || $instance_value == $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name'].'/'.$row["value"]) &&
+						file_exists($_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name'].'/'.pathinfo($row["value"], PATHINFO_BASENAME))
+						) {
+						$selected = "selected='selected'";
+						$playable = '../recordings/recordings.php?action=download&type=rec&filename='.pathinfo($row["value"], PATHINFO_BASENAME);
+						$found = true;
+					}
+					else {
+						unset($selected);
+					}
+				}
+				else if ($key == 'sounds') {
+					if (!empty($instance_value) && $instance_value == $row["value"]) {
+						$selected = "selected='selected'";
+						$playable = '../switch/sounds.php?action=download&filename='.$row["value"];
+						$found = true;
+					}
+					else {
+						unset($selected);
+					}
+				}
+				else {
+					unset($selected);
+				}
+				echo "	<option value='".escape($row["value"])."' ".($selected ?? '').">".escape($row["name"])."</option>\n";
+			}
+			echo "</optgroup>\n";
+		}
+	}
+	if (if_group("superadmin") && !empty($instance_value) && !$found) {
+		echo "	<option value='".escape($instance_value)."' selected='selected'>".escape($instance_value)."</option>\n";
+	}
+	unset($selected);
+	echo "	</select>\n";
+	if (if_group("superadmin")) {
+		echo "<input type='button' id='btn_select_to_input_".$instance_id."' class='btn' name='' alt='back' onclick='toggle_select_input(document.getElementById(\"".$instance_id."\"), \"".$instance_id."\"); this.style.visibility=\"hidden\";' value='&#9665;'>";
+	}
+	if ((permission_exists('recording_play') || permission_exists('recording_download')) && !empty($playable)) {
+		switch (pathinfo($playable, PATHINFO_EXTENSION)) {
+			case 'wav' : $mime_type = 'audio/wav'; break;
+			case 'mp3' : $mime_type = 'audio/mpeg'; break;
+			case 'ogg' : $mime_type = 'audio/ogg'; break;
+		}
+		echo "<audio id='recording_audio_".$instance_id."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".$instance_id."')\" onended=\"recording_reset('".$instance_id."');\" src='".($playable ?? '')."' type='".($mime_type ?? '')."'></audio>";
+		echo button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'icon'=>$_SESSION['theme']['button_icon_play'],'id'=>'recording_button_'.$instance_id,'style'=>'display: '.(!empty($mime_type) ? 'inline' : 'none'),'onclick'=>"recording_play('".$instance_id."')"]);
+		unset($playable, $mime_type);
+	}
 	echo "<br />\n";
-	echo $text['description-call_flow_sound']."\n";
+	echo $text['description-'.$instance_label]."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
-	*/
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-call_flow_destination']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	$select_value = '';
 	//set the selected value
-	if (strlen($call_flow_app.$call_flow_data) > 0) {
+	$select_value = '';
+	if (!empty($call_flow_app) && !empty($call_flow_data)) {
 		$select_value = $call_flow_app.':'.$call_flow_data;
 	}
 	//show the destination list
@@ -671,28 +662,86 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	sound_select_list($call_flow_alternate_sound, 'call_flow_alternate_sound', 'call_flow_alternate_sound', true);
-
-	/*
+	$instance_id = 'call_flow_alternate_sound';
+	$instance_label = 'call_flow_alternate_sound';
+	$instance_value = $call_flow_alternate_sound;
 	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-call_flow_alternate_sound']."\n";
+	echo "<td class='vncell' rowspan='2' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-'.$instance_label]."\n";
 	echo "</td>\n";
+	echo "<td class='vtable playback_progress_bar_background' id='recording_progress_bar_".$instance_id."' style='display: none; border-bottom: none; padding-top: 0 !important; padding-bottom: 0 !important;' align='left'><span class='playback_progress_bar' id='recording_progress_".$instance_id."'></span></td>\n";
+	echo "</tr>\n";
+	echo "<tr>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='call_flow_alternate_sound' maxlength='255' value=\"".escape($call_flow_alternate_sound)."\">\n";
+	echo "<select name='".$instance_id."' id='".$instance_id."' class='formfld' ".(permission_exists('recording_play') || permission_exists('recording_download') ? "onchange=\"recording_reset('".$instance_id."'); set_playable('".$instance_id."', this.value, this.options[this.selectedIndex].parentNode.getAttribute('data-type'));\"" : null).">\n";
+	echo "	<option value=''></option>\n";
+	$found = $playable = false;
+	if (!empty($audio_files) && is_array($audio_files) && @sizeof($audio_files) != 0) {
+		foreach ($audio_files as $key => $value) {
+			echo "<optgroup label=".$text['label-'.$key]." data-type='".$key."'>\n";
+			foreach ($value as $row) {
+				if ($key == 'recordings') {
+					if (
+						!empty($instance_value) &&
+						($instance_value == $row["value"] || $instance_value == $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name'].'/'.$row["value"]) &&
+						file_exists($_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name'].'/'.pathinfo($row["value"], PATHINFO_BASENAME))
+						) {
+						$selected = "selected='selected'";
+						$playable = '../recordings/recordings.php?action=download&type=rec&filename='.pathinfo($row["value"], PATHINFO_BASENAME);
+						$found = true;
+					}
+					else {
+						unset($selected);
+					}
+				}
+				else if ($key == 'sounds') {
+					if (!empty($instance_value) && $instance_value == $row["value"]) {
+						$selected = "selected='selected'";
+						$playable = '../switch/sounds.php?action=download&filename='.$row["value"];
+						$found = true;
+					}
+					else {
+						unset($selected);
+					}
+				}
+				else {
+					unset($selected);
+				}
+				echo "	<option value='".escape($row["value"])."' ".($selected ?? '').">".escape($row["name"])."</option>\n";
+			}
+			echo "</optgroup>\n";
+		}
+	}
+	if (if_group("superadmin") && !empty($instance_value) && !$found) {
+		echo "	<option value='".escape($instance_value)."' selected='selected'>".escape($instance_value)."</option>\n";
+	}
+	unset($selected);
+	echo "	</select>\n";
+	if (if_group("superadmin")) {
+		echo "<input type='button' id='btn_select_to_input_".$instance_id."' class='btn' name='' alt='back' onclick='toggle_select_input(document.getElementById(\"".$instance_id."\"), \"".$instance_id."\"); this.style.visibility=\"hidden\";' value='&#9665;'>";
+	}
+	if ((permission_exists('recording_play') || permission_exists('recording_download')) && (!empty($playable) || empty($instance_value))) {
+		switch (pathinfo($playable, PATHINFO_EXTENSION)) {
+			case 'wav' : $mime_type = 'audio/wav'; break;
+			case 'mp3' : $mime_type = 'audio/mpeg'; break;
+			case 'ogg' : $mime_type = 'audio/ogg'; break;
+		}
+		echo "<audio id='recording_audio_".$instance_id."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".$instance_id."')\" onended=\"recording_reset('".$instance_id."');\" src='".($playable ?? '')."' type='".($mime_type ?? '')."'></audio>";
+		echo button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'icon'=>$_SESSION['theme']['button_icon_play'],'id'=>'recording_button_'.$instance_id,'style'=>'display: '.(!empty($mime_type) ? 'inline' : 'none'),'onclick'=>"recording_play('".$instance_id."')"]);
+		unset($playable, $mime_type);
+	}
 	echo "<br />\n";
-	echo $text['description-call_flow_alternate_sound']."\n";
+	echo $text['description-'.$instance_label]."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
-	*/
 
 	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-call_flow_alternate_destination']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	$select_value = '';
-	if (strlen($call_flow_alternate_app.$call_flow_alternate_data) > 0) {
+	if (!empty($call_flow_alternate_app) && !empty($call_flow_alternate_data)) {
 		$select_value = $call_flow_alternate_app.':'.$call_flow_alternate_data;
 	}
 	echo $destination->select('dialplan', 'call_flow_alternate_destination', $select_value);
@@ -739,7 +788,7 @@
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='call_flow_description' maxlength='255' value=\"".escape($call_flow_description)."\">\n";
 	echo "<br />\n";
-	echo $text['description-call_flow_description']."\n";
+	echo !empty($text['description-call_flow_description'])."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 

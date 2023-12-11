@@ -24,12 +24,8 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 	
 //check permissions
@@ -42,12 +38,12 @@
 	}
 
 //get posted data
-	if (is_array($_POST['search'])) {
+	if (!empty($_POST['search'])) {
 		$search = $_POST['search'];
 	}
 
 //add the search term
-	if (isset($_GET["search"])) {
+	if (!empty($_GET["search"])) {
 		$search = strtolower($_GET["search"]);
 	}
 
@@ -77,7 +73,7 @@
 		}
 		$sql .= "order by domain_name asc ";
 		$database = new database;
-		$domains = $database->select($sql, $parameters, 'all');
+		$domains = $database->select($sql, $parameters ?? null, 'all');
 		unset($sql, $parameters);
 	}
 

@@ -1,11 +1,7 @@
 <?php
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once  dirname(__DIR__, 4) . "/resources/require.php";
 
 //check permisions
 	require_once "resources/check_auth.php";
@@ -32,10 +28,9 @@
 
 //get the voicemail
 	$vm = new voicemail;
-	$vm->db = $db;
 	$vm->domain_uuid = $_SESSION['domain_uuid'];
-	$vm->order_by = $order_by;
-	$vm->order = $order;
+	$vm->order_by = $order_by ?? null;
+	$vm->order = $order ?? null;
 	$voicemails = $vm->messages();
 
 //sum total and new
@@ -120,7 +115,7 @@
 			if (is_uuid($voicemail_uuid)) {
 				$tr_link = "href='".PROJECT_PATH."/app/voicemails/voicemail_messages.php?id=".(permission_exists('voicemail_view') ? $voicemail_uuid : $row['ext'])."'";
 				echo "<tr ".$tr_link." style='cursor: pointer;'>";
-				echo "	<td class='".$row_style[$c]." hud_text'><a href='".PROJECT_PATH."/app/voicemails/voicemail_messages.php?id=".(permission_exists('voicemail_view') ? $voicemail_uuid : $row['ext'])."'>".$row['ext']."</a></td>";
+				echo "	<td class='".$row_style[$c]." hud_text'><a href='".PROJECT_PATH."/app/voicemails/voicemail_messages.php?id=".(permission_exists('voicemail_view') ? $voicemail_uuid : $row['ext'])."&back=".urlencode($_SERVER["REQUEST_URI"])."'>".$row['ext']."</a></td>";
 				echo "	<td class='".$row_style[$c]." hud_text' style='text-align: center;'>".$row['new']."</td>";
 				echo "	<td class='".$row_style[$c]." hud_text' style='text-align: center;'>".$row['total']."</td>";
 				echo "</tr>";
@@ -134,7 +129,7 @@
 		echo "<br />".$text['label-no_voicemail_assigned'];
 	}
 	echo "</div>";
-	$n++;
+	//$n++;
 	
 	echo "<span class='hud_expander' onclick=\"$('#hud_voicemail_details').slideToggle('fast');\"><span class='fas fa-ellipsis-h'></span></span>";
 	echo "</div>\n";

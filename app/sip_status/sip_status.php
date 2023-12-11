@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -25,12 +25,8 @@
 	James Rose <james.o.rose@gmail.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -47,9 +43,8 @@
 	$text = $language->get();
 
 //create event socket
-	$socket_ip = $_SESSION['event_socket_ip_address'] != '0.0.0.0' ? $_SESSION['event_socket_ip_address'] : '127.0.0.1';
-	$fp = event_socket_create($socket_ip, $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-	if (!$fp) {
+	$esl = event_socket::create();
+	if (!$esl->is_connected()) {
 		message::add($text['error-event-socket'], 'negative', 5000);
 	}
 
@@ -62,12 +57,12 @@
 	unset($sql);
 
 //get the sip profiles
-	if ($fp) {
-		$hostname = trim(event_socket_request($fp, 'api switchname'));
+	if ($esl->is_connected()) {
+		$hostname = trim(event_socket::api('switchname'));
 	}
 	$sql = "select sip_profile_uuid, sip_profile_name from v_sip_profiles ";
 	$sql .= "where sip_profile_enabled = 'true' ";
-	if ($hostname) {
+	if (!empty($hostname)) {
 		$sql .= "and (sip_profile_hostname = :sip_profile_hostname ";
 		$sql .= "or sip_profile_hostname = '' ";
 		$sql .= "or sip_profile_hostname is null) ";
@@ -75,8 +70,8 @@
 	}
 	$sql .= "order by sip_profile_name asc ";
 	$database = new database;
-	$rows = $database->select($sql, $parameters, 'all');
-	if (is_array($rows) && @sizeof($rows) != 0) {
+	$rows = $database->select($sql, $parameters ?? null, 'all');
+	if (!empty($rows)) {
 		foreach ($rows as $row) {
 			$sip_profiles[$row['sip_profile_name']] = $row['sip_profile_uuid'];
 		}
@@ -85,8 +80,8 @@
 
 //get status
 	try {
-		$cmd = "api sofia xmlstatus";
-		$xml_response = trim(event_socket_request($fp, $cmd));
+		$cmd = "sofia xmlstatus";
+		$xml_response = trim(event_socket::api($cmd));
 		if ($xml_response) {
 			$xml = new SimpleXMLElement($xml_response);
 		}
@@ -96,8 +91,8 @@
 		message::add($message, 'negative', 5000);
 	}
 	try {
-		$cmd = "api sofia xmlstatus gateway";
-		$xml_response = trim(event_socket_request($fp, $cmd));
+		$cmd = "sofia xmlstatus gateway";
+		$xml_response = trim(event_socket::api($cmd));
 		if ($xml_response) {
 			$xml_gateways = new SimpleXMLElement($xml_response);
 		}
@@ -146,13 +141,11 @@
 		echo "</tr>\n";
 
 		//profiles
-			if ($xml->profile) {
+			if (!empty($xml) && $xml->profile) {
 				foreach ($xml->profile as $row) {
 					unset($list_row_url);
 					$profile_name = (string) $row->name;
-					if (is_uuid($sip_profiles[$profile_name]) && permission_exists('sip_profile_edit')) {
-						$list_row_url = PROJECT_PATH."/app/sip_profiles/sip_profile_edit.php?id=".$sip_profiles[$profile_name];
-					}
+					$list_row_url = is_uuid($sip_profiles[$profile_name]) && permission_exists('sip_profile_edit') ? PROJECT_PATH."/app/sip_profiles/sip_profile_edit.php?id=".$sip_profiles[$profile_name] : null;
 					echo "<tr class='list-row' href='".$list_row_url."'>\n";
 					echo "	<td>";
 					if ($list_row_url) {
@@ -171,7 +164,7 @@
 			}
 
 		//gateways
-			if ($xml_gateways->gateway) {
+			if (!empty($xml_gateways) && $xml_gateways->gateway) {
 				foreach ($xml_gateways->gateway as $row) {
 					unset($gateway_name, $gateway_domain_name, $list_row_url);
 
@@ -185,17 +178,15 @@
 							}
 						}
 					}
-					if ($_SESSION["domain_name"] == $gateway_domain_name) {
-						$list_row_url = PROJECT_PATH."/app/gateways/gateway_edit.php?id=".strtolower(escape($row->name));
-					}
+					$list_row_url = !empty($gateway_domain_name) && $_SESSION["domain_name"] == $gateway_domain_name ? PROJECT_PATH."/app/gateways/gateway_edit.php?id=".strtolower(escape($row->name)) : null;
 					echo "<tr class='list-row' href='".$list_row_url."'>\n";
 					echo "	<td>";
-					if ($_SESSION["domain_name"] == $gateway_domain_name) {
+					if (!empty($gateway_domain_name) && $_SESSION["domain_name"] == $gateway_domain_name) {
 						echo "<a class='hide-sm-dn' href='".$list_row_url."'>".escape($gateway_name)."@".escape($gateway_domain_name)."</a>";
 						echo "<a class='hide-md-up' href='".$list_row_url."'>".escape($gateway_name)."@...</a>";
 					}
-					else if ($gateway_domain_name == '') {
-						echo $gateway_name ? escape($gateway_name) : $row->name;
+					else if (empty($gateway_domain_name)) {
+						echo !empty($gateway_name) ? escape($gateway_name) : $row->name;
 					}
 					else {
 						echo escape($gateway_name."@".$gateway_domain_name);
@@ -205,14 +196,14 @@
 					echo "	<td class='hide-sm-dn'>".escape($row->to)."</td>\n";
 					echo "	<td class='no-wrap'>".escape($row->state)."</td>\n";
 					echo "	<td class='center no-link'>";
-					echo button::create(['type'=>'button','class'=>'link','label'=>$text['button-stop'],'link'=>"cmd.php?profile=".urlencode($row->profile)."&gateway=".urlencode(($gateway_uuid ? $gateway_uuid : $row->name))."&action=killgw"]);
+					echo button::create(['type'=>'button','class'=>'link','label'=>$text['button-stop'],'link'=>"cmd.php?profile=".urlencode($row->profile)."&gateway=".urlencode((!empty($gateway_uuid) ? $gateway_uuid : $row->name))."&action=killgw"]);
 					echo "	</td>\n";
 					echo "</tr>\n";
 				}
 			}
 
 		//aliases
-			if ($xml->alias) {
+			if (!empty($xml) && $xml->alias) {
 				foreach ($xml->alias as $row) {
 					echo "<tr class='list-row'>\n";
 					echo "	<td>".escape($row->name)."</td>\n";
@@ -230,10 +221,9 @@
 	}
 
 //sofia status profile
-	if ($fp && permission_exists('system_status_sofia_status_profile')) {
+	if ($esl && permission_exists('system_status_sofia_status_profile')) {
 		foreach ($sip_profiles as $sip_profile_name => $sip_profile_uuid) {
-			$cmd = "api sofia xmlstatus profile ".$sip_profile_name."";
-			$xml_response = trim(event_socket_request($fp, $cmd));
+			$xml_response = trim(event_socket::api("sofia xmlstatus profile $sip_profile_name"));
 			if ($xml_response == "Invalid Profile!") {
 				$xml_response = "<error_msg>Invalid Profile!</error_msg>";
 				$profile_state = 'stopped';
@@ -318,16 +308,14 @@
 	}
 
 //status
-	if ($fp && permission_exists('sip_status_switch_status')) {
-		$cmd = "api status";
-		$response = event_socket_request($fp, $cmd);
+	if ($esl->is_connected() && permission_exists('sip_status_switch_status')) {
+		$response = event_socket::api("status");
 		echo "<b><a href='javascript:void(0);' onclick=\"$('#status').slideToggle();\">".$text['title-status']."</a></b>\n";
 		echo "<div id='status' style='margin-top: 20px; font-size: 9pt;'>";
 		echo "<pre>";
 		echo trim(escape($response));
 		echo "</pre>\n";
 		echo "</div>";
-		fclose($fp);
 	}
 
 //include the footer

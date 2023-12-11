@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -25,12 +25,8 @@
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 	
 //check permissions
@@ -46,8 +42,22 @@
 	$language = new text;
 	$text = $language->get();
 
+//set the defaults
+	$phone_label = '';
+	$phone_label_custom = '';
+	$phone_type_voice = '';
+	$phone_type_fax = '';
+	$phone_type_video = '';
+	$phone_type_text = '';
+	$phone_speed_dial = '';
+	$phone_country_code = '';
+	$phone_number = '';
+	$phone_extension = '';
+	$phone_primary = '';
+	$phone_description = '';
+
 //action add or update
-	if (is_uuid($_REQUEST["id"])) {
+	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
 		$contact_phone_uuid = $_REQUEST["id"];
 	}
@@ -56,18 +66,18 @@
 	}
 
 //get the uuid
-	if (is_uuid($_GET["contact_uuid"])) {
+	if (!empty($_GET["contact_uuid"]) && is_uuid($_GET["contact_uuid"])) {
 		$contact_uuid = $_GET["contact_uuid"];
 	}
 
 //get http post variables and set them to php variables
-	if (is_array($_POST) && @sizeof($_POST) != 0) {
+	if (!empty($_POST)) {
 		$phone_label = $_POST["phone_label"];
 		$phone_label_custom = $_POST["phone_label_custom"];
-		$phone_type_voice = $_POST["phone_type_voice"];
-		$phone_type_fax = $_POST["phone_type_fax"];
-		$phone_type_video = $_POST["phone_type_video"];
-		$phone_type_text = $_POST["phone_type_text"];
+		$phone_type_voice = $_POST["phone_type_voice"] ?? null;
+		$phone_type_fax = $_POST["phone_type_fax"] ?? null;
+		$phone_type_video = $_POST["phone_type_video"] ?? null;
+		$phone_type_text = $_POST["phone_type_text"] ?? null;
 		$phone_speed_dial = $_POST["phone_speed_dial"];
 		$phone_country_code = $_POST["phone_country_code"];
 		$phone_number = $_POST["phone_number"];
@@ -83,7 +93,7 @@
 	}
 
 //process the form data
-	if (is_array($_POST) && @sizeof($_POST) != 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
 		//set thge uuid
 			if ($action == "update") {
@@ -100,7 +110,7 @@
 
 		//check for all required data
 			$msg = '';
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -114,7 +124,7 @@
 			}
 
 		//add or update the database
-			if ($_POST["persistformvar"] != "true") {
+			if (empty($_POST["persistformvar"])) {
 
 				//update last modified
 					$array['contacts'][0]['contact_uuid'] = $contact_uuid;
@@ -161,7 +171,7 @@
 					}
 
 				//execute
-					if (is_array($array) && @sizeof($array) != 0) {
+					if (!empty($array)) {
 						$array['contact_phones'][0]['contact_uuid'] = $contact_uuid;
 						$array['contact_phones'][0]['domain_uuid'] = $domain_uuid;
 						$array['contact_phones'][0]['phone_label'] = $phone_label;
@@ -191,8 +201,8 @@
 	}
 
 //pre-populate the form
-	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
-		$contact_phone_uuid = $_GET["id"];
+	if (!empty($_GET) && empty($_POST["persistformvar"])) {
+		$contact_phone_uuid = $_GET["id"] ?? '';
 		$sql = "select * from v_contact_phones ";
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$sql .= "and contact_phone_uuid = :contact_phone_uuid ";
@@ -200,7 +210,7 @@
 		$parameters['contact_phone_uuid'] = $contact_phone_uuid;
 		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
-		if (is_array($row) && @sizeof($row) != 0) {
+		if (!empty($row)) {
 			$phone_label = $row["phone_label"];
 			$phone_type_voice = $row["phone_type_voice"];
 			$phone_type_fax = $row["phone_type_fax"];
@@ -266,7 +276,7 @@
 	echo "	".$text['label-phone_label']."\n";
 	echo "</td>\n";
 	echo "<td width='70%' class='vtable' align='left'>\n";
-	if (is_array($_SESSION["contact"]["phone_label"])) {
+	if (!empty($_SESSION["contact"]["phone_label"])) {
 		sort($_SESSION["contact"]["phone_label"]);
 		foreach($_SESSION["contact"]["phone_label"] as $row) {
 			$phone_label_options[] = "<option value='".$row."' ".(($row == $phone_label) ? "selected='selected'" : null).">".$row."</option>";
@@ -285,15 +295,15 @@
 		$default_labels[] = $text['option-text'];
 		$default_labels[] = $text['option-other'];
 		foreach ($default_labels as $default_label) {
-			$phone_label_options[] = "<option value='".$default_label."' ".$selected[$default_label].">".$default_label."</option>";
+			$phone_label_options[] = "<option value='".$default_label."' ".!empty($selected[$default_label]).">".$default_label."</option>";
 		}
-		$phone_label_found = (in_array($phone_label, $default_labels)) ? true : false;
+		$phone_label_found = (in_array(!empty($phone_label), $default_labels)) ? true : false;
 	}
-	echo "	<select class='formfld' ".((!$phone_label_found && $phone_label != '') ? "style='display: none;'" : null)." name='phone_label' id='phone_label' onchange=\"getElementById('phone_label_custom').value='';\">\n";
+	echo "	<select class='formfld' ".((!empty($phone_label) && !$phone_label_found) ? "style='display: none;'" : null)." name='phone_label' id='phone_label' onchange=\"getElementById('phone_label_custom').value='';\">\n";
 	echo "		<option value=''></option>\n";
-	echo 		(is_array($phone_label_options)) ? implode("\n", $phone_label_options) : null;
+	echo 		(!empty($phone_label_options)) ? implode("\n", $phone_label_options) : null;
 	echo "	</select>\n";
-	echo "	<input type='text' class='formfld' ".(($phone_label_found || $phone_label == '') ? "style='display: none;'" : null)." name='phone_label_custom' id='phone_label_custom' value=\"".((!$phone_label_found) ? htmlentities($phone_label) : null)."\">\n";
+	echo "	<input type='text' class='formfld' ".((empty($phone_label) || $phone_label_found) ? "style='display: none;'" : null)." name='phone_label_custom' id='phone_label_custom' value=\"".((!$phone_label_found) ? htmlentities($phone_label ?? '') : null)."\">\n";
 	echo "	<input type='button' id='btn_toggle_type' class='btn' alt='".$text['button-back']."' value='&#9665;' onclick=\"toggle_custom('phone_label');\">\n";
 	echo "<br />\n";
 	echo $text['description-phone_label']."\n";

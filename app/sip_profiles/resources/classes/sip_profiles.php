@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2019
+ Portions created by the Initial Developer are Copyright (C) 2008-2023
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -63,16 +63,6 @@ if (!class_exists('sip_profiles')) {
 		}
 
 		/**
-		 * called when there are no references to a particular object
-		 * unset the variables used in the class
-		 */
-		public function __destruct() {
-			foreach ($this as $key => $value) {
-				unset($this->$key);
-			}
-		}
-
-		/**
 		 * delete records
 		 */
 		public function delete($records) {
@@ -95,7 +85,7 @@ if (!class_exists('sip_profiles')) {
 
 						//filter out unchecked sip profiles, build where clause for below
 							foreach ($records as $x => $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$uuids[] = "'".$record['uuid']."'";
 								}
 							}
@@ -104,7 +94,7 @@ if (!class_exists('sip_profiles')) {
 							$sql = "select ".$this->uuid_prefix."uuid as uuid, sip_profile_name, sip_profile_hostname from v_".$this->table." ";
 							$sql .= "where ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
 							$database = new database;
-							$rows = $database->select($sql, $parameters, 'all');
+							$rows = $database->select($sql, $parameters ?? null, 'all');
 							if (is_array($rows) && @sizeof($rows) != 0) {
 								foreach ($rows as $row) {
 									$sip_profiles[$row['uuid']]['name'] = $row['sip_profile_name'];
@@ -164,9 +154,9 @@ if (!class_exists('sip_profiles')) {
 										}
 									}
 									if ($empty_hostname) {
-										$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-										if ($fp) {
-											$hostnames[] = event_socket_request($fp, 'api switchname');
+										$esl = event_socket::create();
+										if ($esl->is_connected()) {
+											$hostnames[] = event_socket::api('switchname');
 										}
 									}
 
@@ -213,14 +203,14 @@ if (!class_exists('sip_profiles')) {
 
 						//filter out unchecked sip profiles, build the delete array
 							foreach ($records as $x => $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
 									$array[$this->table][$x]['sip_profile_uuid'] = $this->sip_profile_uuid;
 								}
 							}
 
 						//get necessary sip profile details
-							if (is_uuid($this->sip_profile_uuid)) {
+							if (!empty($this->sip_profile_uuid) && is_uuid($this->sip_profile_uuid)) {
 								$sql = "select sip_profile_hostname from v_sip_profiles ";
 								$sql .= "where sip_profile_uuid = :sip_profile_uuid ";
 								$parameters['sip_profile_uuid'] = $this->sip_profile_uuid;
@@ -230,7 +220,7 @@ if (!class_exists('sip_profiles')) {
 							}
 
 						//delete the checked rows
-							if (is_array($array) && @sizeof($array) != 0) {
+							if (!empty($array) && @sizeof($array) != 0) {
 
 								//execute delete
 									$database = new database;
@@ -246,15 +236,15 @@ if (!class_exists('sip_profiles')) {
 									$_SESSION["reload_xml"] = true;
 
 								//get system hostname if necessary
-									if ($sip_profile_hostname == '') {
-										$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-										if ($fp) {
-											$sip_profile_hostname[] = event_socket_request($fp, 'api switchname');
+									if (empty($sip_profile_hostname)) {
+										$esl = event_socket::create();
+										if ($esl->is_connected()) {
+											$sip_profile_hostname = event_socket::api('switchname');
 										}
 									}
 
 								//clear the cache
-									if ($sip_profile_hostname != '') {
+									if (!empty($sip_profile_hostname)) {
 										$cache = new cache;
 										$cache->delete("configuration:sofia.conf:".$sip_profile_hostname);
 									}
@@ -287,18 +277,18 @@ if (!class_exists('sip_profiles')) {
 					}
 
 				//delete multiple records
-					if (is_array($records) && @sizeof($records) != 0) {
+					if (!empty($records) && @sizeof($records) != 0) {
 
 						//filter out unchecked sip profiles, build the delete array
 							foreach ($records as $x => $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
 									$array[$this->table][$x]['sip_profile_uuid'] = $this->sip_profile_uuid;
 								}
 							}
 
 						//get necessary sip profile details
-							if (is_uuid($this->sip_profile_uuid)) {
+							if (!empty($this->sip_profile_uuid) && is_uuid($this->sip_profile_uuid)) {
 								$sql = "select sip_profile_hostname from v_sip_profiles ";
 								$sql .= "where sip_profile_uuid = :sip_profile_uuid ";
 								$parameters['sip_profile_uuid'] = $this->sip_profile_uuid;
@@ -308,7 +298,7 @@ if (!class_exists('sip_profiles')) {
 							}
 
 						//delete the checked rows
-							if (is_array($array) && @sizeof($array) != 0) {
+							if (!empty($array) && @sizeof($array) != 0) {
 
 								//execute delete
 									$database = new database;
@@ -324,15 +314,15 @@ if (!class_exists('sip_profiles')) {
 									$_SESSION["reload_xml"] = true;
 
 								//get system hostname if necessary
-									if ($sip_profile_hostname == '') {
-										$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-										if ($fp) {
-											$sip_profile_hostname[] = event_socket_request($fp, 'api switchname');
+									if (empty($sip_profile_hostname)) {
+										$esl = event_socket::create();
+										if ($esl->is_connected()) {
+											$sip_profile_hostname = event_socket::api('switchname');
 										}
 									}
 
 								//clear the cache
-									if ($sip_profile_hostname != '') {
+									if (!empty($sip_profile_hostname)) {
 										$cache = new cache;
 										$cache->delete("configuration:sofia.conf:".$sip_profile_hostname);
 									}
@@ -366,15 +356,15 @@ if (!class_exists('sip_profiles')) {
 
 						//get current toggle state
 							foreach ($records as $x => $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$uuids[] = "'".$record['uuid']."'";
 								}
 							}
-							if (is_array($uuids) && @sizeof($uuids) != 0) {
+							if (!empty($uuids) && @sizeof($uuids) != 0) {
 								$sql = "select ".$this->uuid_prefix."uuid as uuid, ".$this->toggle_field." as toggle, sip_profile_hostname from v_".$this->table." ";
 								$sql .= "where ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
 								$database = new database;
-								$rows = $database->select($sql, $parameters, 'all');
+								$rows = $database->select($sql, $parameters ?? null, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
 										$sip_profiles[$row['uuid']]['state'] = $row['toggle'];
@@ -393,7 +383,7 @@ if (!class_exists('sip_profiles')) {
 							}
 
 						//save the changes
-							if (is_array($array) && @sizeof($array) != 0) {
+							if (!empty($array) && @sizeof($array) != 0) {
 
 								//save the array
 									$database = new database;
@@ -413,14 +403,14 @@ if (!class_exists('sip_profiles')) {
 										}
 									}
 									if ($empty_hostname) {
-										$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-										if ($fp) {
-											$hostnames[] = event_socket_request($fp, 'api switchname');
+										$esl = event_socket::create();
+										if ($esl->is_connected()) {
+											$hostnames[] = event_socket::api('switchname');
 										}
 									}
 
 								//clear the cache
-									if (is_array($hostnames) && @sizeof($hostnames) != 0) {
+									if (!empty($hostnames) && @sizeof($hostnames) != 0) {
 										$hostnames = array_unique($hostnames);
 										$cache = new cache;
 										foreach ($hostnames as $hostname) {

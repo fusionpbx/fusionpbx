@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2010 - 2016
+	Copyright (C) 2010 - 2023
 	All Rights Reserved.
 
 	Contributor(s):
@@ -39,10 +39,10 @@
 				if ($this->enabled == "true") {
 					//update the call center status
 						$user_status = "Logged Out";
-						$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-						if ($fp) {
+						$esl = event_socket::create();
+						if ($esl->is_connected()) {
 							$switch_cmd .= "callcenter_config agent set status ".$_SESSION['username']."@".$this->domain_name." '".$user_status."'";
-							$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
+							$switch_result = event_socket::api($switch_cmd);
 						}
 
 					//update the database user_status
@@ -79,8 +79,8 @@
 					if (is_uuid($this->extension_uuid)) {
 						$this->extension_uuid = $row["extension_uuid"];
 					}
-					if (strlen($this->extension) == 0) {
-						if (strlen($row["number_alias"]) == 0) {
+					if (empty($this->extension)) {
+						if (empty($row["number_alias"])) {
 							$this->extension = $row["extension"];
 						}
 						else {
@@ -111,7 +111,7 @@
 			//delete extension from the cache
 				$cache = new cache;
 				$cache->delete("directory:".$this->extension."@".$this->domain_name);
-				if(strlen($this->number_alias) > 0){
+				if(!empty($this->number_alias)){
 					$cache->delete("directory:".$this->number_alias."@".$this->domain_name);
 				}
 
@@ -163,7 +163,7 @@
 
 						//get current toggle state
 							foreach($records as $x => $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$uuids[] = "'".$record['uuid']."'";
 								}
 							}
@@ -240,7 +240,7 @@
 									$p->delete('extension_edit', 'temp');
 
 								//send feature event notify to the phone
-									if ($_SESSION['device']['feature_sync']['boolean'] == "true") {
+									if (!empty($_SESSION['device']['feature_sync']['boolean']) && $_SESSION['device']['feature_sync']['boolean'] == "true") {
 										foreach ($extensions as $uuid => $extension) {
 											$feature_event_notify = new feature_event_notify;
 											$feature_event_notify->domain_name = $_SESSION['domain_name'];
@@ -260,7 +260,7 @@
 									}
 
 								//synchronize configuration
-									if (is_readable($_SESSION['switch']['extensions']['dir'])) {
+									if (!empty($_SESSION['switch']['extensions']['dir']) && is_readable($_SESSION['switch']['extensions']['dir'])) {
 										require_once "app/extensions/resources/classes/extension.php";
 										$ext = new extension;
 										$ext->xml();

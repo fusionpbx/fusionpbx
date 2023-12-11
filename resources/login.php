@@ -24,12 +24,8 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once __DIR__ . "/require.php";
 
 //add multi-lingual support
 	$language = new text;
@@ -251,17 +247,17 @@
 
 //santize the login destination url and set a default value
 	if (isset($_SESSION['login']['destination']['text'])) {
-		$destination_path = parse_url($_SESSION['login']['destination']['text'])['path'];
-		$destination_query = parse_url($_SESSION['login']['destination']['text'])['query'];
+		$destination_path = parse_url($_SESSION['login']['destination']['text'])['path'] ?? '';
+		$destination_query = parse_url($_SESSION['login']['destination']['text'])['query'] ?? '';
 		$destination_path = preg_replace('#[^a-zA-Z0-9_\-\./]#', '', $destination_path);
 		$destination_query = preg_replace('#[^a-zA-Z0-9_\-\./&=]#', '', $destination_query);
-		$_SESSION['login']['destination']['text'] = (strlen($destination_query) > 0) ? $destination_path.'?'.$destination_query : $destination_path;
+		$_SESSION['login']['destination']['text'] = (!empty($destination_query)) ? $destination_path.'?'.$destination_query : $destination_path;
 	}
 	else {
 		$_SESSION['login']['destination']['text'] = PROJECT_PATH."/core/dashboard/";
 	}
 
-	if (strlen($_REQUEST['path']) > 0) {
+	if (!empty($_REQUEST['path'])) {
 		$_SESSION['redirect_path'] = $_REQUEST['path'];
 	}
 

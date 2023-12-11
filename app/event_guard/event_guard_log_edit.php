@@ -1,6 +1,6 @@
 <?php
 /*
-	Copyright (C) 2022 Mark J Crane <markjcrane@fusionpbx.com>
+	Copyright (C) 2022-2023 Mark J Crane <markjcrane@fusionpbx.com>
 	Redistribution and use in source and binary forms, with or without
 	modification, are permitted provided that the following conditions are met:
 	1. Redistributions of source code must retain the above copyright notice,
@@ -20,12 +20,8 @@
 	POSSIBILITY OF SUCH DAMAGE.
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -52,7 +48,7 @@
 	}
 
 //get http post variables and set them to php variables
-	if (is_array($_POST)) {
+	if (!empty($_POST) && is_array($_POST)) {
 		$hostname = $_POST["hostname"];
 		$log_date = $_POST["log_date"];
 		$filter = $_POST["filter"];
@@ -63,7 +59,7 @@
 	}
 
 //process the user data and save it to the database
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 
 		//validate the token
 			$token = new token;
@@ -74,7 +70,7 @@
 			}
 
 		//process the http post data by submitted action
-			if ($_POST['action'] != '' && strlen($_POST['action']) > 0) {
+			if (!empty($_POST['action'])) {
 
 				//prepare the array(s)
 				//send the array to the database class
@@ -108,14 +104,14 @@
 
 		//check for all required data
 			$msg = '';
-			if (strlen($hostname) == 0) { $msg .= $text['message-required']." ".$text['label-hostname']."<br>\n"; }
-			if (strlen($log_date) == 0) { $msg .= $text['message-required']." ".$text['label-log_date']."<br>\n"; }
-			if (strlen($filter) == 0) { $msg .= $text['message-required']." ".$text['label-filter']."<br>\n"; }
-			if (strlen($ip_address) == 0) { $msg .= $text['message-required']." ".$text['label-ip_address']."<br>\n"; }
-			if (strlen($extension) == 0) { $msg .= $text['message-required']." ".$text['label-extension']."<br>\n"; }
-			//if (strlen($user_agent) == 0) { $msg .= $text['message-required']." ".$text['label-user_agent']."<br>\n"; }
-			if (strlen($log_status) == 0) { $msg .= $text['message-required']." ".$text['label-log_status']."<br>\n"; }
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+			if (empty($hostname)) { $msg .= $text['message-required']." ".$text['label-hostname']."<br>\n"; }
+			if (empty($log_date)) { $msg .= $text['message-required']." ".$text['label-log_date']."<br>\n"; }
+			if (empty($filter)) { $msg .= $text['message-required']." ".$text['label-filter']."<br>\n"; }
+			if (empty($ip_address)) { $msg .= $text['message-required']." ".$text['label-ip_address']."<br>\n"; }
+			if (empty($extension)) { $msg .= $text['message-required']." ".$text['label-extension']."<br>\n"; }
+			//if (empty($user_agent)) { $msg .= $text['message-required']." ".$text['label-user_agent']."<br>\n"; }
+			if (empty($log_status)) { $msg .= $text['message-required']." ".$text['label-log_status']."<br>\n"; }
+			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -164,7 +160,7 @@
 	}
 
 //pre-populate the form
-	if (is_array($_GET) && $_POST["persistformvar"] != "true") {
+	if (!empty($_GET) && is_array($_GET) && (empty($_POST["persistformvar"]) || $_POST["persistformvar"] != "true")) {
 		$sql = "select ";
 		$sql .= " event_guard_log_uuid, ";
 		$sql .= " hostname, ";

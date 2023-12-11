@@ -24,12 +24,8 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
-//includes filesp";
-	require_once "resources/require.php";
+//includes files
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -61,8 +57,8 @@
 
 	$switch_cmd = 'fifo list_verbose '.$fifo_name.'';
 	
-	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-	if (!$fp) {
+	$esl = event_socket::create();
+	if (!$esl->is_connected()) {
 		$msg = "<div align='center'>Connection to Event Socket failed.<br /></div>";
 		echo "<div align='center'>\n";
 		echo "<table width='40%'>\n";
@@ -77,7 +73,7 @@
 	}
 	else {
 		//send the api command over event socket
-			$xml_str = trim(event_socket_request($fp, 'api '.$switch_cmd));
+			$xml_str = trim(event_socket::api($switch_cmd));
 
 		//parse the response as xml
 			try {
@@ -183,7 +179,7 @@
 					$fifo_timestamp = urldecode($row->cdr->variables->fifo_timestamp);
 					$fifo_time = strtotime($fifo_timestamp);
 					$fifo_duration = time() - $fifo_time;
-					$fifo_duration_formatted = str_pad(intval(intval($fifo_duration/3600)),2,"0",STR_PAD_LEFT).":" . str_pad(intval(($fifo_duration / 60) % 60),2,"0",STR_PAD_LEFT).":" . str_pad(intval($fifo_duration % 60),2,"0",STR_PAD_LEFT) ;
+					$fifo_duration_formatted = sprintf('%02d:%02d:%02d', floor($fifo_duration / 3600), floor(floor($fifo_duration / 60) % 60), $fifo_duration % 60);
 
 					echo "<tr>\n";
 					echo "<td valign='top' class='".$row_style[$c]."'>".escape($username)." &nbsp;</td>\n";

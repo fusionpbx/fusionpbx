@@ -10,24 +10,24 @@
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Manage a single domain or multiple domains for multi-tenant.";
 		$apps[$x]['description']['en-gb'] = "Manage a single domain or multiple domains for multi-tenant.";
-		$apps[$x]['description']['ar-eg'] = "";
+		$apps[$x]['description']['ar-eg'] = "إدارة مجال واحد أو مجالات متعددة للمستأجرين المتعددين.";
 		$apps[$x]['description']['de-at'] = "Verwalte eine einzelne Domäne oder mehrere Domänen für Multi-Mandanten.";
-		$apps[$x]['description']['de-ch'] = "";
+		$apps[$x]['description']['de-ch'] = "Verwalten Sie eine einzelne Domäne oder mehrere Domänen für mehrere Mandanten.";
 		$apps[$x]['description']['de-de'] = "Verwalte eine einzelne Domäne oder mehrere Domänen für Multi-Mandanten.";
 		$apps[$x]['description']['es-cl'] = "Administre un único dominio o múltiples dominios";
-		$apps[$x]['description']['es-mx'] = "";
-		$apps[$x]['description']['fr-ca'] = "";
+		$apps[$x]['description']['es-mx'] = "Administre un solo dominio o múltiples dominios para múltiples inquilinos.";
+		$apps[$x]['description']['fr-ca'] = "Gérez un domaine unique ou plusieurs domaines pour le multi-locataire.";
 		$apps[$x]['description']['fr-fr'] = "Gestion d'un domaine ou plusieurs dans le cas d'un système multi-parties.";
-		$apps[$x]['description']['he-il'] = "";
-		$apps[$x]['description']['it-it'] = "";
-		$apps[$x]['description']['nl-nl'] = "";
-		$apps[$x]['description']['pl-pl'] = "";
+		$apps[$x]['description']['he-il'] = "נהל דומיין בודד או מספר דומיינים עבור ריבוי דיירים.";
+		$apps[$x]['description']['it-it'] = "Gestisci un singolo dominio o più domini per multi-tenant.";
+		$apps[$x]['description']['nl-nl'] = "Beheer een enkel domein of meerdere domeinen voor meerdere huurders.";
+		$apps[$x]['description']['pl-pl'] = "Zarządzaj pojedynczą domeną lub wieloma domenami dla wielu dzierżawców.";
 		$apps[$x]['description']['pt-br'] = "Gerencie um único ou múltiplos domínios para multi-locatários";
 		$apps[$x]['description']['pt-pt'] = "Gerir um único domínio ou vários domínios para multi-tenant.";
-		$apps[$x]['description']['ro-ro'] = "";
+		$apps[$x]['description']['ro-ro'] = "Gestionați un singur domeniu sau mai multe domenii pentru multi-locatari.";
 		$apps[$x]['description']['ru-ru'] = "Управление одним доменом или несколькими доменами для нескольких пользователей";
-		$apps[$x]['description']['sv-se'] = "";
-		$apps[$x]['description']['uk-ua'] = "";
+		$apps[$x]['description']['sv-se'] = "Hantera en enda domän eller flera domäner för flera hyresgäster.";
+		$apps[$x]['description']['uk-ua'] = "Керуйте одним або декількома доменами для кількох орендарів.";
 
 	//permission details
 		$y=0;
@@ -66,12 +66,6 @@
 		$apps[$x]['db'][$y]['table']['name'] = "v_domains";
 		$apps[$x]['db'][$y]['table']['parent'] = "";
 		$z=0;	
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = "id";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "serial";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "integer";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "INT NOT NULL AUTO_INCREMENT";
-		$apps[$x]['db'][$y]['fields'][$z]['deprecated'] = "true";
-		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "domain_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
@@ -126,5 +120,6 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "char(36)";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+
 
 ?>

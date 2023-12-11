@@ -162,13 +162,13 @@
 						$array['extensions'][0]['auth_acl'] = $auth_acl;
 						$array['extensions'][0]['cidr'] = $cidr;
 						$array['extensions'][0]['sip_force_contact'] = $sip_force_contact;
-						if (strlen($sip_force_expires) > 0) {
+						if (!empty($sip_force_expires)) {
 							$array['extensions'][0]['sip_force_expires'] = $sip_force_expires;
 						}
-						if (strlen($nibble_account) > 0) {
+						if (!empty($nibble_account)) {
 							$array['extensions'][0]['nibble_account'] = $nibble_account;
 						}
-						if (strlen($mwi_account) > 0) {
+						if (!empty($mwi_account)) {
 							if (strpos($mwi_account, '@') === false) {
 								$mwi_account .= count($_SESSION["domains"]) > 1 ? "@".$domain_name : "@\$\${domain}";
 							}
@@ -234,13 +234,13 @@
 			//$user_list_array = explode("|", $user_list);
 			//foreach($user_list_array as $tmp_user){
 			//	$user_password = generate_password();
-			//	if (strlen($tmp_user) > 0) {
+			//	if (!empty($tmp_user)) {
 			//		user_add($tmp_user, $user_password, $user_email);
 			//	}
 			//}
 			//unset($tmp_user);
 
-			if (strlen($password) == 0) {
+			if (empty($password)) {
 				$password = generate_password();
 			}
 
@@ -250,7 +250,7 @@
 				$array['extensions'][0]['number_alias'] = $number_alias;
 				$array['extensions'][0]['password'] = $password;
 				$array['extensions'][0]['provisioning_list'] = $provisioning_list;
-				$array['extensions'][0]['vm_password'] = strlen($vm_password) > 0 ? $vm_password : 'user-choose';
+				$array['extensions'][0]['vm_password'] = !empty($vm_password) ? $vm_password : 'user-choose';
 				$array['extensions'][0]['accountcode'] = $accountcode;
 				$array['extensions'][0]['effective_caller_id_name'] = $effective_caller_id_name;
 				$array['extensions'][0]['effective_caller_id_number'] = $effective_caller_id_number;
@@ -269,9 +269,9 @@
 				$array['extensions'][0]['auth_acl'] = $auth_acl;
 				$array['extensions'][0]['cidr'] = $cidr;
 				$array['extensions'][0]['sip_force_contact'] = $sip_force_contact;
-				$array['extensions'][0]['sip_force_expires'] = strlen($sip_force_expires) > 0 ? $sip_force_expires : null;
-				$array['extensions'][0]['nibble_account'] = strlen($nibble_account) > 0 ? $nibble_account : null;
-				if (strlen($mwi_account) > 0) {
+				$array['extensions'][0]['sip_force_expires'] = !empty($sip_force_expires) ? $sip_force_expires : null;
+				$array['extensions'][0]['nibble_account'] = !empty($nibble_account) ? $nibble_account : null;
+				if (!empty($mwi_account)) {
 					if (strpos($mwi_account, '@') === false) {
 						$mwi_account .= count($_SESSION["domains"]) > 1 ? "@".$domain_name : "@\$\${domain}";
 					}
@@ -462,12 +462,6 @@
 			$domain_uuid = $this->domain_uuid;
 			$domain_name = $this->domain_name;
 
-			//get the system settings paths and set them as variables
-				$settings_array = v_settings();
-				foreach ($settings_array as $name => $value) {
-					$$name = $value;
-				}
-
 			//determine the extensions parent directory
 				$extension_parent_dir = realpath($_SESSION['switch']['extensions']['dir']."/..");
 
@@ -508,8 +502,8 @@
 					$call_group = str_replace(";", ",", $call_group);
 					$tmp_array = explode(",", $call_group);
 					foreach ($tmp_array as &$tmp_call_group) {
-						if (strlen($tmp_call_group) > 0) {
-							if (strlen($call_group_array[$tmp_call_group]) == 0) {
+						if (!empty($tmp_call_group)) {
+							if (empty($call_group_array[$tmp_call_group])) {
 								$call_group_array[$tmp_call_group] = $row['extension'];
 							}
 							else {
@@ -599,7 +593,7 @@
 				foreach ($call_group_array as $key => $value) {
 					$call_group = $key;
 					$extension_list = $value;
-					if (strlen($call_group) > 0) {
+					if (!empty($call_group)) {
 						if ($previous_call_group != $call_group) {
 							$xml .= "			<group name=\"$call_group\">\n";
 							$xml .= "				<users>\n";

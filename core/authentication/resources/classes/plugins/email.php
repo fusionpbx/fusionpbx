@@ -1,4 +1,28 @@
 <?php
+/*
+	FusionPBX
+	Version: MPL 1.1
+
+	The contents of this file are subject to the Mozilla Public License Version
+	1.1 (the "License"); you may not use this file except in compliance with
+	the License. You may obtain a copy of the License at
+	http://www.mozilla.org/MPL/
+
+	Software distributed under the License is distributed on an "AS IS" basis,
+	WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+	for the specific language governing rights and limitations under the
+	License.
+
+	The Original Code is FusionPBX
+
+	The Initial Developer of the Original Code is
+	Mark J Crane <markjcrane@fusionpbx.com>
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
+	the Initial Developer. All Rights Reserved.
+
+	Contributor(s):
+	Mark J Crane <markjcrane@fusionpbx.com>
+*/
 
 /**
  * plugin_email
@@ -17,6 +41,7 @@ class plugin_email {
 	public $user_uuid;
 	public $user_email;
 	public $contact_uuid;
+	public $debug;
 
 	/**
 	 * time based one time password with email
@@ -24,35 +49,19 @@ class plugin_email {
 	 */
 	function email() {
 
+			//pre-process some settings
+			$settings['theme']['favicon'] = !empty($_SESSION['theme']['favicon']['text']) ? $_SESSION['theme']['favicon']['text'] : PROJECT_PATH.'/themes/default/favicon.ico';
+			$settings['login']['destination'] = !empty($_SESSION['login']['destination']['text']) ? $_SESSION['login']['destination']['text'] : '';
+			$settings['users']['unique'] = !empty($_SESSION['users']['unique']['text']) ? $_SESSION['users']['unique']['text'] : '';
+			$settings['theme']['logo'] = !empty($_SESSION['theme']['logo']['text']) ? $_SESSION['theme']['logo']['text'] : PROJECT_PATH.'/themes/default/images/logo_login.png';
+			$settings['theme']['login_logo_width'] = !empty($_SESSION['theme']['login_logo_width']['text']) ? $_SESSION['theme']['login_logo_width']['text'] : 'auto; max-width: 300px';
+			$settings['theme']['login_logo_height'] = !empty($_SESSION['theme']['login_logo_height']['text']) ? $_SESSION['theme']['login_logo_height']['text'] : 'auto; max-height: 300px';
+			$settings['theme']['message_delay'] = isset($_SESSION['theme']['message_delay']) ? 1000 * (float) $_SESSION['theme']['message_delay'] : 3000;
+
 			//set a default template
 			$_SESSION['domain']['template']['name'] = 'default';
 			$_SESSION['theme']['menu_brand_image']['text'] = PROJECT_PATH.'/themes/default/images/logo.png';
 			$_SESSION['theme']['menu_brand_type']['text'] = 'image';
-
-			//login logo source
-			if (isset($_SESSION['theme']['logo_login']['text']) && $_SESSION['theme']['logo_login']['text'] != '') {
-				$login_logo_source = $_SESSION['theme']['logo_login']['text'];
-			}
-			else if (isset($_SESSION['theme']['logo']['text']) && $_SESSION['theme']['logo']['text'] != '') {
-				$login_logo_source = $_SESSION['theme']['logo']['text'];
-			}
-			else {
-				$login_logo_source = PROJECT_PATH.'/themes/default/images/logo_login.png';
-			}
-
-			//login logo dimensions
-			if (isset($_SESSION['theme']['login_logo_width']['text']) && $_SESSION['theme']['login_logo_width']['text'] != '') {
-				$login_logo_width = $_SESSION['theme']['login_logo_width']['text'];
-			}
-			else {
-				$login_logo_width = 'auto; max-width: 300px';
-			}
-			if (isset($_SESSION['theme']['login_logo_height']['text']) && $_SESSION['theme']['login_logo_height']['text'] != '') {
-				$login_logo_height = $_SESSION['theme']['login_logo_height']['text'];
-			}
-			else {
-				$login_logo_height = 'auto; max-height: 300px';
-			}
 
 			//get the domain
 			$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
@@ -82,12 +91,19 @@ class plugin_email {
 				$view->init();
 
 				//assign default values to the template
+				$view->assign("project_path", PROJECT_PATH);
+				$view->assign("login_destination_url", $settings['login']['destination']);
+				$view->assign("favicon", $settings['theme']['favicon']);
 				$view->assign("login_title", $text['label-username']);
 				$view->assign("login_username", $text['label-username']);
-				$view->assign("login_logo_width", $login_logo_width);
-				$view->assign("login_logo_height", $login_logo_height);
-				$view->assign("login_logo_source", $login_logo_source);
+				$view->assign("login_logo_width", $settings['theme']['login_logo_width']);
+				$view->assign("login_logo_height", $settings['theme']['login_logo_height']);
+				$view->assign("login_logo_source", $settings['theme']['logo']);
 				$view->assign("button_login", $text['button-login']);
+				$view->assign("message_delay", $settings['theme']['message_delay']);
+
+				//messages
+				$view->assign('messages', message::html(true, '		'));
 
 				//show the views
 				$content = $view->render('username.htm');
@@ -107,19 +123,23 @@ class plugin_email {
 				//get the user details
 				$sql = "select user_uuid, username, user_email, contact_uuid \n";
 				$sql .= "from v_users\n";
-				$sql .= "where username = :username\n";
-				if ($_SESSION["users"]["unique"]["text"] != "global") {
+				$sql .= "where (\n";
+				$sql .= "	username = :username\n";
+				$sql .= "	or user_email = :username\n";
+				$sql .= ")\n";
+				if ($settings['users']['unique'] != "global") {
 					//unique username per domain (not globally unique across system - example: email address)
 					$sql .= "and domain_uuid = :domain_uuid ";
 					$parameters['domain_uuid'] = $_SESSION["domain_uuid"];
 				}
+				$sql .= "and (user_type = 'default' or user_type is null) ";
 				$parameters['username'] = $_REQUEST['username'];
 				$database = new database;
 				$row = $database->select($sql, $parameters, 'row');
 				unset($parameters);
 
 				//set class variables
-				//if (strlen($row["user_email"]) > 0) {
+				//if (!empty($row["user_email"])) {
 				//	$this->user_uuid = $row['user_uuid'];
 				//	$this->user_email = $row['user_email'];
 				//	$this->contact_uuid = $row['contact_uuid'];
@@ -131,8 +151,32 @@ class plugin_email {
 				$_SESSION["user_email"] = $row['user_email'];
 				$_SESSION["contact_uuid"] = $row["contact_uuid"];
 
+				//user not found
+				if (empty($row) || !is_array($row) || @sizeof($row) == 0) {
+					//clear submitted usernames
+					unset($this->username, $_SESSION['username'], $_REQUEST['username'], $_POST['username']);
+
+					//clear authentication session
+					unset($_SESSION['authentication']);
+
+					//build the result array
+					$result["plugin"] = "email";
+					$result["domain_uuid"] = $_SESSION["domain_uuid"];
+					$result["domain_name"] = $_SESSION["domain_name"];
+					$result["authorized"] = false;
+
+					//retun the array
+					return $result;
+				}
+
 				//user email not found
-				if (strlen($row["user_email"]) == 0) {
+				else if (empty($row["user_email"])) {
+					//clear submitted usernames
+					unset($this->username, $_SESSION['username'], $_REQUEST['username'], $_POST['username']);
+
+					//clear authentication session
+					unset($_SESSION['authentication']);
+
 					//build the result array
 					$result["plugin"] = "email";
 					$result["domain_name"] = $_SESSION["domain_name"];
@@ -153,8 +197,8 @@ class plugin_email {
 				$_SESSION["user"]["authentication"]["email"]["code"] = generate_password(6, 1);
 				$_SESSION["user"]["authentication"]["email"]["epoch"] = time();
 
-				////$_SESSION["authentication_address"] = $_SERVER['REMOTE_ADDR'];
-				////$_SESSION["authentication_date"] = 'now()';
+				//$_SESSION["authentication_address"] = $_SERVER['REMOTE_ADDR'];
+				//$_SESSION["authentication_date"] = 'now()';
 
 				//set the authentication code
 				//$sql = "update v_users \n";
@@ -177,7 +221,7 @@ class plugin_email {
 
 				//get the language code
 				$language_code = $_SESSION['domain']['language']['code'];
-			
+
 				//get the email template from the database
 				$sql = "select template_subject, template_body ";
 				$sql .= "from v_email_templates ";
@@ -209,17 +253,58 @@ class plugin_email {
 				$email_from_address = $_SESSION['email']['smtp_from']['text'];
 				$email_from_name = $_SESSION['email']['smtp_from_name']['text'];
 
-				//send email - direct
-				$email = new email;
-				$email->recipients = $_SESSION["user_email"];
-				$email->subject = $email_subject;
-				$email->body = $email_body;
-				$email->from_address = $email_from_address;
-				$email->from_name = $email_from_name;
-				//$email->attachments = $email_attachments;
-				$email->debug_level = 0;
-				$email->method = 'direct';
-				$sent = $email->send();
+				//get the email send mode options: direct or email_queue
+				$email_send_mode = $_SESSION['authentication']['email_send_mode']['text'] ?? 'email_queue';
+
+				//send the email
+				if ($email_send_mode == 'email_queue') {
+					//set the variables
+					$email_queue_uuid = uuid();
+					$email_uuid = uuid();
+					$hostname = gethostname();
+
+					//add the temporary permissions
+					$p = new permissions;
+					$p->add("email_queue_add", 'temp');
+					$p->add("email_queue_edit", 'temp');
+
+					$array['email_queue'][0]["email_queue_uuid"] = $email_queue_uuid;
+					$array['email_queue'][0]["domain_uuid"] = $_SESSION["domain_uuid"];
+					$array['email_queue'][0]["hostname"] = $hostname;
+					$array['email_queue'][0]["email_date"] = 'now()';
+					$array['email_queue'][0]["email_from"] = $email_from_address;
+					$array['email_queue'][0]["email_to"] = $_SESSION["user_email"];
+					$array['email_queue'][0]["email_subject"] = $email_subject;
+					$array['email_queue'][0]["email_body"] = $email_body;
+					$array['email_queue'][0]["email_status"] = 'waiting';
+					$array['email_queue'][0]["email_retry_count"] = 3;
+					$array['email_queue'][0]["email_uuid"] = $email_uuid;
+					$array['email_queue'][0]["email_action_before"] = null;
+					$array['email_queue'][0]["email_action_after"] = null;
+					$database = new database;
+					$database->app_name = 'email queue';
+					$database->app_uuid = '5befdf60-a242-445f-91b3-2e9ee3e0ddf7';
+					$database->save($array);
+					$err = $database->message;
+					unset($array);
+
+					//remove the temporary permission
+					$p->delete("email_queue_add", 'temp');
+					$p->delete("email_queue_edit", 'temp');
+				}
+				else {
+					//send email - direct
+					$email = new email;
+					$email->recipients = $_SESSION["user_email"];
+					$email->subject = $email_subject;
+					$email->body = $email_body;
+					$email->from_address = $email_from_address;
+					$email->from_name = $email_from_name;
+					//$email->attachments = $email_attachments;
+					$email->debug_level = 0;
+					$email->method = 'direct';
+					$sent = $email->send();
+				}
 
 				//debug informations
 				//$email_response = $email->response;
@@ -255,18 +340,24 @@ class plugin_email {
 				$view->init();
 
 				//assign default values to the template
+				$view->assign("project_path", PROJECT_PATH);
+				$view->assign("login_destination_url", $settings['login']['destination']);
+				$view->assign("favicon", $settings['theme']['favicon']);
 				$view->assign("login_title", $text['label-verify']);
 				$view->assign("login_email_description", $text['label-email_description']);
 				$view->assign("login_authentication_code", $text['label-authentication_code']);
-				$view->assign("login_logo_width", $login_logo_width);
-				$view->assign("login_logo_height", $login_logo_height);
-				$view->assign("login_logo_source", $login_logo_source);
+				$view->assign("login_logo_width", $settings['theme']['login_logo_width']);
+				$view->assign("login_logo_height", $settings['theme']['login_logo_height']);
+				$view->assign("login_logo_source", $settings['theme']['logo']);
 				$view->assign("button_verify", $text['label-verify']);
+				$view->assign("message_delay", $settings['theme']['message_delay']);
+				if (!empty($_SESSION['username'])) {
+					$view->assign("username", $_SESSION['username']);
+					$view->assign("button_cancel", $text['button-cancel']);
+				}
 
-				//debug information
-				//echo "<pre>\n";
-				//print_r($text);
-				//echo "</pre>\n";
+				//messages
+				$view->assign('messages', message::html(true, '		'));
 
 				//show the views
 				$content = $view->render('email.htm');
@@ -278,7 +369,7 @@ class plugin_email {
 			if (isset($_POST['authentication_code'])) {
 
 				//check if the authentication code has expired. if expired return false
-				if ($_SESSION["user"]["authentication"]["email"]["epoch"] + 3 > time()) {
+				if (!empty($_SESSION["user"]) && $_SESSION["user"]["authentication"]["email"]["epoch"] + 3 > time()) {
 					//authentication code expired
 					$result["plugin"] = "email";
 					$result["domain_name"] = $_SESSION["domain_name"];
@@ -291,10 +382,13 @@ class plugin_email {
 				}
 
 				//get the user details
-				$sql = "select user_uuid, user_email, contact_uuid, user_email_secret\n";
+				$sql = "select user_uuid, user_email, contact_uuid\n";
 				$sql .= "from v_users\n";
-				$sql .= "where username = :username\n";
-				if ($_SESSION["users"]["unique"]["text"] != "global") {
+				$sql .= "where (\n";
+				$sql .= "	username = :username\n";
+				$sql .= "	or user_email = :username\n";
+				$sql .= ")\n";
+				if ($settings['users']['unique'] != "global") {
 					//unique username per domain (not globally unique across system - example: email address)
 					$sql .= "and domain_uuid = :domain_uuid ";
 					$parameters['domain_uuid'] = $_SESSION["domain_uuid"];
@@ -305,23 +399,30 @@ class plugin_email {
 				$this->user_uuid = $row['user_uuid'];
 				$this->user_email = $row['user_email'];
 				$this->contact_uuid = $row['contact_uuid'];
-				$this->user_email_secret = $row['user_email_secret'];
 				unset($parameters);
+				/*
+				echo 'session code = '.$_SESSION["user"]["authentication"]["email"]["code"].'<br>';
+				echo 'post code = '.$_POST['authentication_code'].'<br>';
+				exit;
+				*/
 
 				//validate the code
-				if ($_SESSION["user"]["authentication"]["email"]["code"] === $_POST['authentication_code']) {
+				if (!empty($_SESSION["user"]) && $_SESSION["user"]["authentication"]["email"]["code"] === $_POST['authentication_code']) {
 					$auth_valid = true;
 				}
 				else {
 					$auth_valid = false;
 				}
 
+				//clear posted authentication code
+				unset($_POST['authentication_code']);
+
 				//get the user details
 				if ($auth_valid) {
 					//get user data from the database
 					$sql = "select user_uuid, username, user_email, contact_uuid from v_users ";
 					$sql .= "where user_uuid = :user_uuid ";
-					if ($_SESSION["users"]["unique"]["text"] != "global") {
+					if ($settings['users']['unique'] != "global") {
 						//unique username per domain (not globally unique across system - example: email address)
 						$sql .= "and domain_uuid = :domain_uuid ";
 						$parameters['domain_uuid'] = $_SESSION["domain_uuid"];
@@ -329,7 +430,6 @@ class plugin_email {
 					$parameters['user_uuid'] = $_SESSION["user_uuid"];
 					$database = new database;
 					$row = $database->select($sql, $parameters, 'row');
-					//view_array($row);
 					unset($parameters);
 
 					//set a few session variables
@@ -338,18 +438,25 @@ class plugin_email {
 					//$_SESSION["contact_uuid"] = $row["contact_uuid"];
 				}
 				else {
-					//destroy session
-					session_unset();
-					session_destroy();
-					//$_SESSION['authentication']['plugin']
-					//send http 403
-					header('HTTP/1.0 403 Forbidden', true, 403);
+// 					//destroy session
+// 					session_unset();
+// 					session_destroy();
+// 					//$_SESSION['authentication']['plugin']
+// 					//send http 403
+// 					header('HTTP/1.0 403 Forbidden', true, 403);
+//
+// 					//redirect to the root of the website
+// 					header("Location: ".PROJECT_PATH."/");
+//
+// 					//exit the code
+// 					exit();
 
-					//redirect to the root of the website
-					header("Location: ".PROJECT_PATH."/");
+					//clear submitted usernames
+					unset($this->username, $_SESSION['username'], $_REQUEST['username'], $_POST['username']);
 
-					//exit the code
-					exit();
+					//clear authentication session
+					unset($_SESSION['authentication']);
+
 				}
 
 				/*
@@ -381,6 +488,13 @@ class plugin_email {
 				$result["domain_uuid"] = $_SESSION["domain_uuid"];
 				$result["contact_uuid"] = $_SESSION["contact_uuid"];
 				$result["authorized"] = $auth_valid ? true : false;
+
+				//add the failed login to user logs
+				if (!$auth_valid) {
+					user_logs::add($result);
+				}
+
+				//retun the array
 				return $result;
 
 				//$_SESSION['authentication']['plugin']['email']['plugin'] = "email";

@@ -23,12 +23,9 @@
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
 
 //includes files
-require_once "resources/require.php";
+require_once dirname(__DIR__, 2) . "/resources/require.php";
 require_once "resources/check_auth.php";
 if (permission_exists('call_broadcast_send')) {
 	//access granted
@@ -48,10 +45,10 @@ else {
 	if (is_uuid($uuid)) {
 		//show the result
 			if (count($_GET) > 0) {
-				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-				if ($fp) {
+				$fp = event_socket::create();
+				if ($fp !== false) {
 					$cmd = "sched_del ".$uuid;
-					$result = event_socket_request($fp, 'api '.$cmd);
+					$result = event_socket::api($cmd);
 					message::add(htmlentities($result));
 				}
 			}

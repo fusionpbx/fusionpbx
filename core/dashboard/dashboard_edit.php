@@ -18,16 +18,12 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2021
+	Portions created by the Initial Developer are Copyright (C) 2021-2023
 	the Initial Developer. All Rights Reserved.
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -43,8 +39,19 @@
 	$language = new text;
 	$text = $language->get();
 
+//set the defaults
+	$dashboard_name = '';
+	$dashboard_path = '';
+	$dashboard_groups = [];
+	$dashboard_column_span = '';
+	$dashboard_details_state = '';
+	$dashboard_order = '';
+	$dashboard_enabled = 'false';
+	$dashboard_description = '';
+	$dashboard_uuid = '';
+
 //action add or update
-	if (is_uuid($_REQUEST["id"])) {
+	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
 		$dashboard_uuid = $_REQUEST["id"];
 		$id = $_REQUEST["id"];
@@ -54,19 +61,19 @@
 	}
 
 //get http post variables and set them to php variables
-	if (count($_REQUEST) > 0) {
-		$dashboard_name = $_POST["dashboard_name"];
-		$dashboard_path = $_POST["dashboard_path"];
-		$dashboard_groups = $_POST["dashboard_groups"];
-		$dashboard_column_span = $_POST["dashboard_column_span"];
-		$dashboard_details_state = $_POST["dashboard_details_state"];
-		$dashboard_order = $_POST["dashboard_order"];
-		$dashboard_enabled = $_POST["dashboard_enabled"] ?: 'false';
-		$dashboard_description = $_POST["dashboard_description"];
+	if (!empty($_POST)) {
+		$dashboard_name = $_POST["dashboard_name"] ?? '';
+		$dashboard_path = $_POST["dashboard_path"] ?? '';
+		$dashboard_groups = $_POST["dashboard_groups"] ?? '';
+		$dashboard_column_span = $_POST["dashboard_column_span"] ?? '';
+		$dashboard_details_state = $_POST["dashboard_details_state"] ?? '';
+		$dashboard_order = $_POST["dashboard_order"] ?? '';
+		$dashboard_enabled = $_POST["dashboard_enabled"] ?? 'false';
+		$dashboard_description = $_POST["dashboard_description"] ?? '';
 	}
 
 //delete the group from the sub table
-	if ($_REQUEST["a"] == "delete" && permission_exists("dashboard_group_delete") && is_uuid($_GET["dashboard_group_uuid"]) && is_uuid($_GET["dashboard_uuid"])) {
+	if (isset($_REQUEST["a"]) && $_REQUEST["a"] == "delete" && permission_exists("dashboard_group_delete") && is_uuid($_GET["dashboard_group_uuid"]) && is_uuid($_GET["dashboard_uuid"])) {
 		//get the uuid
 			$dashboard_group_uuid = $_GET["dashboard_group_uuid"];
 			$dashboard_uuid = $_GET["dashboard_uuid"];
@@ -84,7 +91,7 @@
 	}
 
 //process the user data and save it to the database
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 		//validate the token
 			$token = new token;
 			if (!$token->validate($_SERVER['PHP_SELF'])) {
@@ -94,7 +101,7 @@
 			}
 
 		//process the http post data by submitted action
-			if ($_POST['action'] != '' && strlen($_POST['action']) > 0) {
+			if (!empty($_POST['action'])) {
 
 				//prepare the array(s)
 				//send the array to the database class
@@ -128,13 +135,13 @@
 
 		//check for all required data
 			$msg = '';
-			//if (strlen($dashboard_name) == 0) { $msg .= $text['message-required']." ".$text['label-dashboard_name']."<br>\n"; }
-			//if (strlen($dashboard_path) == 0) { $msg .= $text['message-required']." ".$text['label-dashboard_path']."<br>\n"; }
-			//if (strlen($dashboard_groups) == 0) { $msg .= $text['message-required']." ".$text['label-dashboard_groups']."<br>\n"; }
-			//if (strlen($dashboard_order) == 0) { $msg .= $text['message-required']." ".$text['label-dashboard_order']."<br>\n"; }
-			//if (strlen($dashboard_enabled) == 0) { $msg .= $text['message-required']." ".$text['label-dashboard_enabled']."<br>\n"; }
-			//if (strlen($dashboard_description) == 0) { $msg .= $text['message-required']." ".$text['label-dashboard_description']."<br>\n"; }
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+			//if (empty($dashboard_name)) { $msg .= $text['message-required']." ".$text['label-dashboard_name']."<br>\n"; }
+			//if (empty($dashboard_path)) { $msg .= $text['message-required']." ".$text['label-dashboard_path']."<br>\n"; }
+			//if (empty($dashboard_groups)) { $msg .= $text['message-required']." ".$text['label-dashboard_groups']."<br>\n"; }
+			//if (empty($dashboard_order)) { $msg .= $text['message-required']." ".$text['label-dashboard_order']."<br>\n"; }
+			//if (empty($dashboard_enabled)) { $msg .= $text['message-required']." ".$text['label-dashboard_enabled']."<br>\n"; }
+			//if (empty($dashboard_description)) { $msg .= $text['message-required']." ".$text['label-dashboard_description']."<br>\n"; }
+			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -196,7 +203,7 @@
 	}
 
 //pre-populate the form
-	if (is_array($_GET) && $_POST["persistformvar"] != "true") {
+	if (empty($_POST["persistformvar"])) {
 		$sql = "select ";
 		$sql .= " dashboard_uuid, ";
 		$sql .= " dashboard_name, ";
@@ -214,18 +221,17 @@
 		if (is_array($row) && @sizeof($row) != 0) {
 			$dashboard_name = $row["dashboard_name"];
 			$dashboard_path = $row["dashboard_path"];
-			$dashboard_groups = $row["dashboard_groups"];
 			$dashboard_column_span = $row["dashboard_column_span"];
 			$dashboard_details_state = $row["dashboard_details_state"];
 			$dashboard_order = $row["dashboard_order"];
-			$dashboard_enabled = $row["dashboard_enabled"] ?: 'false';
+			$dashboard_enabled = $row["dashboard_enabled"] ?? 'false';
 			$dashboard_description = $row["dashboard_description"];
 		}
 		unset($sql, $parameters, $row);
 	}
 
 //get the child data
-	if (is_uuid($dashboard_uuid)) {
+	if (!empty($dashboard_uuid) && is_uuid($dashboard_uuid)) {
 		$sql = "select ";
 		$sql .= " dashboard_group_uuid, ";
 		$sql .= " group_uuid ";
@@ -238,7 +244,7 @@
 	}
 
 //add the $dashboard_group_uuid
-	if (!is_uuid($dashboard_group_uuid)) {
+	if (empty($dashboard_group_uuid) || !empty($dashboard_group_uuid) && !is_uuid($dashboard_group_uuid)) {
 		$dashboard_group_uuid = uuid();
 	}
 
@@ -265,7 +271,7 @@
 	$sql = "select * from v_dashboard_groups as x, v_groups as g ";
 	$sql .= "where x.dashboard_uuid = :dashboard_uuid ";
 	$sql .= "and x.group_uuid = g.group_uuid ";
-	$parameters['dashboard_uuid'] = $dashboard_uuid;
+	$parameters['dashboard_uuid'] = $dashboard_uuid ?? '';
 	$database = new database;
 	$dashboard_groups = $database->select($sql, $parameters, 'all');
 	unset ($sql, $parameters);
@@ -283,7 +289,7 @@
 	if (is_array($dashboard_groups) && sizeof($dashboard_groups) != 0) {
 		$assigned_groups = array();
 		foreach ($dashboard_groups as $field) {
-			if (strlen($field['group_name']) > 0) {
+			if (!empty($field['group_name'])) {
 				if (is_uuid($field['group_uuid'])) {
 					$assigned_groups[] = $field['group_uuid'];
 				}
@@ -312,10 +318,10 @@
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
 
-	echo $text['title_description-dashboard']."\n";
+	//echo $text['title_description-dashboard']."\n";
 	echo "<br /><br />\n";
 
-	if ($action == 'update') {
+	if (!empty($action) && $action == 'update') {
 		if (permission_exists('dashboard_add')) {
 			echo modal::create(['id'=>'modal-copy','type'=>'copy','actions'=>button::create(['type'=>'submit','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_copy','style'=>'float: right; margin-left: 15px;','collapse'=>'never','name'=>'action','value'=>'copy','onclick'=>"modal_close();"])]);
 		}
@@ -356,10 +362,10 @@
 	if (is_array($dashboard_groups) && sizeof($dashboard_groups) != 0) {
 		echo "<table cellpadding='0' cellspacing='0' border='0'>\n";
 		foreach($dashboard_groups as $field) {
-			if (strlen($field['group_name']) > 0) {
+			if (!empty($field['group_name'])) {
 				echo "<tr>\n";
 				echo "	<td class='vtable' style='white-space: nowrap; padding-right: 30px;' nowrap='nowrap'>\n";
-				echo $field['group_name'].(($field['group_domain_uuid'] != '') ? "@".$_SESSION['domains'][$field['group_domain_uuid']]['domain_name'] : null);
+				echo $field['group_name'].((!empty($field['group_domain_uuid'])) ? "@".$_SESSION['domains'][$field['group_domain_uuid']]['domain_name'] : null);
 				echo "	</td>\n";
 				if (permission_exists('dashboard_group_delete') || if_group("superadmin")) {
 					echo "	<td class='list_control_icons' style='width: 25px;'>\n";
@@ -371,14 +377,14 @@
 		}
 		echo "</table>\n";
 	}
-	if (is_array($groups)) {
-		echo "<br />\n";
+	if (!empty($groups) && is_array($groups)) {
+		if (!empty($dashboard_groups)) { echo "<br />\n"; }
 		echo "<select name='dashboard_groups[0][group_uuid]' class='formfld' style='width: auto; margin-right: 3px;'>\n";
 		echo "	<option value=''></option>\n";
-		foreach($groups as $row) {
-			if ($field['group_level'] <= $_SESSION['user']['group_level']) {
-				if (!in_array($row["group_uuid"], $assigned_groups)) {
-					echo "	<option value='".$row['group_uuid']."'>".$row['group_name'].(($row['domain_uuid'] != '') ? "@".$_SESSION['domains'][$row['domain_uuid']]['domain_name'] : null)."</option>\n";
+		foreach ($groups as $row) {
+			if ((!empty($field['group_level']) && $field['group_level'] <= $_SESSION['user']['group_level']) || empty($field['group_level'])) {
+				if (empty($assigned_groups) || !in_array($row["group_uuid"], $assigned_groups)) {
+					echo "	<option value='".$row['group_uuid']."'>".$row['group_name'].(!empty($row['domain_uuid']) ? "@".$_SESSION['domains'][$row['domain_uuid']]['domain_name'] : null)."</option>\n";
 				}
 			}
 		}

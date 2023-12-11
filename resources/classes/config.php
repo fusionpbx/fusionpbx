@@ -16,6 +16,7 @@ class config {
 	public $db_name;
 	public $db_username;
 	public $db_password;
+	public $db_sslmode;
 	public $db_host;
 	public $db_path;
 	public $db_port;
@@ -31,17 +32,7 @@ class config {
 	}
 
 	/**
-	 * Called when there are no references to a particular object
-	 * unset the variables used in the class
-	 */
-	public function __destruct() {
-		foreach ($this as $key => $value) {
-			unset($this->$key);
-		}
-	}
-
-	/**
-	 * Determine whether the config.php exists
+	 * Determine whether the config file exists
 	 * @var string $db_type - type of database
 	 * @var string $db_name - name of the database
 	 * @var string $db_username - username to access the database
@@ -53,19 +44,42 @@ class config {
 	 * @var string $db_cert_authority - location of certificate authority
 	 */
 	public function get() {
-		$this->find();
-		if ($this->exists()) {
-			require $this->config_path;
-			$this->db_type = $db_type;
-			$this->db_name = $db_name;
-			$this->db_username = $db_username;
-			$this->db_password = $db_password;
-			$this->db_secure = $db_secure;
-			$this->db_cert_authority = $db_cert_authority;
-			$this->db_host = $db_host;
-			$this->db_path = $db_path;
-			$this->db_port = $db_port;
+		//find the config_path
+		$config_path = $this->find();
+
+		//add the document root to the include path
+		$conf = parse_ini_file($config_path);
+		set_include_path($conf['document.root']);
+
+		//check if the config file exists
+		$config_exists = file_exists($config_path) ? true : false;
+		
+		//set the server variables and define project path constant
+		$_SERVER["DOCUMENT_ROOT"] = $conf['document.root'];
+		$_SERVER["PROJECT_ROOT"] = $conf['document.root'];
+		$_SERVER["PROJECT_PATH"]  = $conf['project.path'];
+		if (isset($conf['project.path'])) {
+			$_SERVER["PROJECT_ROOT"] = $conf['document.root'].'/'.$conf['project.path'];
+			if (!defined('PROJECT_ROOT')) { define("PROJECT_ROOT", $conf['document.root'].'/'.$conf['project.path']); }
+			if (!defined('PROJECT_PATH')) { define("PROJECT_PATH", $conf['project.path']); }
 		}
+		else {
+			if (!defined('PROJECT_ROOT')) { define("PROJECT_ROOT", $conf['document.root']); }
+			if (!defined('PROJECT_PATH')) { define("PROJECT_PATH", ''); }
+		}
+
+		//add the database settings
+		$this->db_type = $conf['database.0.type'];
+		$this->db_name = $conf['database.0.name'];
+		$this->db_username = $conf['database.0.username'];
+		$this->db_password = $conf['database.0.password'];
+		$this->db_sslmode = $conf['database.0.sslmode'] ?? '';
+		$this->db_secure = $conf['database.0.secure'] ?? '';
+		$this->db_cert_authority = $conf['database.0.db_cert_authority'] ?? '';
+		$this->db_host = $conf['database.0.host'];
+		$this->db_path = $conf['database.0.path'] ?? '';
+		$this->db_port = $conf['database.0.port'];
+
 	}
 
 	/**
@@ -73,33 +87,37 @@ class config {
 	 * @var string $config_path - full path to the config.php file
 	 */
 	public function find() {
-		//set the include path
-			$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-			set_include_path(parse_ini_file($conf[0])['document.root']);
 
-		//includes files
-			require_once "resources/require.php";
-		// find the file
-			if (file_exists($_SERVER["PROJECT_ROOT"]."/resources/config.php")) {
+		//find the file
+			if (file_exists("/etc/fusionpbx/config.conf")) {
+				$this->config_path = "/etc/fusionpbx/config.conf";
+			}
+			elseif (file_exists("/usr/local/etc/fusionpbx/config.conf")) {
+				$this->config_path = "/usr/local/etc/fusionpbx/config.conf";
+			}
+			elseif (file_exists($_SERVER["PROJECT_ROOT"]."/resources/config.php")) {
 				$this->config_path = $_SERVER["PROJECT_ROOT"]."/resources/config.php";
-			} elseif (file_exists("/etc/fusionpbx/config.php")) {
+			}
+			elseif (file_exists("/etc/fusionpbx/config.php")) {
 				$this->config_path = "/etc/fusionpbx/config.php";
-			} elseif (file_exists("/usr/local/etc/fusionpbx/config.php")) {
+			}
+			elseif (file_exists("/usr/local/etc/fusionpbx/config.php")) {
 				$this->config_path = "/usr/local/etc/fusionpbx/config.php";
 			}
 			else {
 				$this->config_path = '';
 			}
+
 		//return the path
 			return $this->config_path;
 	}
 
 	/**
-	 * Determine whether the config.php exists
+	 * Determine whether the config file exists
 	 */
 	public function exists() {
 		$this->find();
-		if (strlen($this->config_path) > 0) {
+		if (!empty($this->config_path)) {
 			return true;
 		}
 		else {

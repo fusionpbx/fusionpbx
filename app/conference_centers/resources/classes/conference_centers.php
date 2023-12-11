@@ -17,7 +17,7 @@ The Original Code is FusionPBX
 
 The Initial Developer of the Original Code is
 Mark J Crane <markjcrane@fusionpbx.com>
-Portions created by the Initial Developer are Copyright (C) 2008-2021
+Portions created by the Initial Developer are Copyright (C) 2008-2023
 the Initial Developer. All Rights Reserved.
 
 Contributor(s):
@@ -69,16 +69,6 @@ if (!class_exists('conference_centers')) {
 		}
 
 		/**
-		 * Called when there are no references to a particular object
-		 * unset the variables used in the class
-		 */
-		public function __destruct() {
-			foreach ($this as $key => $value) {
-				unset($this->$key);
-			}
-		}
-
-		/**
 		 * count the conference rooms
 		 */
 		public function room_count() {
@@ -120,7 +110,7 @@ if (!class_exists('conference_centers')) {
 				$order = $this->order;
 
 			//validate order by
-				if (strlen($order_by) > 0) {
+				if (!empty($order_by)) {
 					$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', $order_by);
 				}
 
@@ -156,15 +146,22 @@ if (!class_exists('conference_centers')) {
 					$sql .= "and u.user_uuid = :user_uuid ";
 					$parameters['user_uuid'] = $_SESSION["user_uuid"];
 				}
-				//if (is_numeric($this->search)) {
-				//	$sql .= "and p.member_pin = '".$this->search."' ";
-				//	$parameters['domain_uuid'] = $this->domain_uuid;
-				//}
+				if (!empty($this->search)) {
+					$sql .= "and (";
+					$sql .= "lower(r.conference_room_name) like :search or ";
+					$sql .= "lower(r.moderator_pin) like :search or ";
+					$sql .= "lower(r.participant_pin) like :search or ";
+					$sql .= "lower(r.account_code) like :search or ";
+					$sql .= "lower(r.description) like :search ";
+					$sql .= ") ";
+					$parameters['search'] = '%'.strtolower($this->search).'%';
+					$parameters['domain_uuid'] = $this->domain_uuid;
+				}
 				if (isset($this->created_by)) {
 					$sql .= "and r.created_by = :created_by ";
 					$parameters['created_by'] = $this->created_by;
 				}
-				if (strlen($this->order_by) == 0) {
+				if (empty($this->order_by)) {
 					$sql .= "order by r.description, r.conference_room_uuid asc ";
 				}
 				else {
@@ -177,7 +174,7 @@ if (!class_exists('conference_centers')) {
 				$database = new database;
 				$conference_rooms = $database->select($sql, $parameters, 'all');
 
-				if (is_array($conference_rooms)) {
+				if (!empty($conference_rooms)) {
 					$x = 0;
 					foreach($conference_rooms as $row) {
 						//increment the array index
@@ -197,8 +194,8 @@ if (!class_exists('conference_centers')) {
 							$result[$x]["record"] = $row["record"];
 							$result[$x]["sounds"] = $row["sounds"];
 							$result[$x]["profile"] = $row["profile"];
-							$result[$x]["conference_room_user_uuid"] = $row["conference_room_user_uuid"];
-							$result[$x]["user_uuid"] = $row["user_uuid"];
+							$result[$x]["conference_room_user_uuid"] = $row["conference_room_user_uuid"] ?? null;
+							$result[$x]["user_uuid"] = $row["user_uuid"] ?? null;
 							$result[$x]["moderator_pin"] = $row["moderator_pin"];
 							$result[$x]["participant_pin"] = $row["participant_pin"];
 							$result[$x]["created"] = $row["created"];
@@ -210,7 +207,7 @@ if (!class_exists('conference_centers')) {
 					}
 				}
 				unset($sql, $parameters, $conference_rooms);
-				return $result;
+				return $result ?? null;
 		}
 
 		/**
@@ -322,11 +319,11 @@ if (!class_exists('conference_centers')) {
 					}
 
 				//delete multiple records
-					if (is_array($records) && @sizeof($records) != 0) {
+					if (!empty($records)) {
 
 						//build the delete array
 							foreach ($records as $x => $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 
 									//get the dialplan uuid
 										$sql = "select dialplan_uuid from v_conference_centers ";
@@ -349,7 +346,7 @@ if (!class_exists('conference_centers')) {
 							}
 
 						//delete the checked rows
-							if (is_array($array) && @sizeof($array) != 0) {
+							if (!empty($array)) {
 
 								//grant temporary permissions
 									$p = new permissions;
@@ -410,11 +407,11 @@ if (!class_exists('conference_centers')) {
 					}
 
 				//delete multiple records
-					if (is_array($records) && @sizeof($records) != 0) {
+					if (!empty($records)) {
 
 						//build the delete array
 							foreach ($records as $x => $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 
 									//create array
 										$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
@@ -425,7 +422,7 @@ if (!class_exists('conference_centers')) {
 							}
 
 						//delete the checked rows
-							if (is_array($array) && @sizeof($array) != 0) {
+							if (!empty($array)) {
 
 								//grant temporary permissions
 									$p = new permissions;
@@ -474,7 +471,7 @@ if (!class_exists('conference_centers')) {
 					}
 
 				//delete multiple records
-					if (is_array($records) && @sizeof($records) != 0) {
+					if (!empty($records)) {
 
 						//build the delete array
 							foreach ($records as $x => $record) {
@@ -489,7 +486,7 @@ if (!class_exists('conference_centers')) {
 							}
 
 						//delete the checked rows
-							if (is_array($array) && @sizeof($array) != 0) {
+							if (!empty($array)) {
 
 								//grant temporary permissions
 									$p = new permissions;
@@ -543,22 +540,22 @@ if (!class_exists('conference_centers')) {
 					}
 
 				//toggle the checked records
-					if (is_array($records) && @sizeof($records) != 0) {
+					if (!empty($records)) {
 
 						//get current toggle state
 							foreach($records as $x => $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$uuids[] = "'".$record['uuid']."'";
 								}
 							}
-							if (is_array($uuids) && @sizeof($uuids) != 0) {
+							if (!empty($uuids)) {
 								$sql = "select ".$this->uuid_prefix."uuid as uuid, ".$this->toggle_field." as toggle, dialplan_uuid from v_".$this->table." ";
 								$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
 								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 								$database = new database;
 								$rows = $database->select($sql, $parameters, 'all');
-								if (is_array($rows) && @sizeof($rows) != 0) {
+								if (!empty($rows)) {
 									foreach ($rows as $row) {
 										$conference_centers[$row['uuid']]['state'] = $row['toggle'];
 										$conference_centers[$row['uuid']]['dialplan_uuid'] = $row['dialplan_uuid'];
@@ -578,7 +575,7 @@ if (!class_exists('conference_centers')) {
 							}
 
 						//save the changes
-							if (is_array($array) && @sizeof($array) != 0) {
+							if (!empty($array)) {
 
 								//grant temporary permissions
 									$p = new permissions;
@@ -640,7 +637,7 @@ if (!class_exists('conference_centers')) {
 					}
 
 				//toggle the checked records
-					if (is_array($records) && @sizeof($records) != 0) {
+					if (!empty($records)) {
 
 						//validate submitted toggle field
 							if (!in_array($this->toggle_field, ['record','wait_mod','announce_name','announce_count','announce_recording','mute','sounds','enabled'])) {
@@ -650,21 +647,21 @@ if (!class_exists('conference_centers')) {
 
 						//get current toggle state
 							foreach($records as $x => $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$uuids[$x] = "'".$record['uuid']."'";
-									if (($this->toggle_field == 'record' || $this->toggle_field == 'enabled') && is_uuid($record['meeting_uuid'])) {
+									if (($this->toggle_field == 'record' || $this->toggle_field == 'enabled') && !empty($record['meeting_uuid']) && is_uuid($record['meeting_uuid'])) {
 										$meeting_uuid[$record['uuid']] = $record['meeting_uuid'];
 									}
 								}
 							}
-							if (is_array($uuids) && @sizeof($uuids) != 0) {
+							if (!empty($uuids)) {
 								$sql = "select ".$this->uuid_prefix."uuid as uuid, ".$this->toggle_field." as toggle from v_".$this->table." ";
 								$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
 								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 								$database = new database;
 								$rows = $database->select($sql, $parameters, 'all');
-								if (is_array($rows) && @sizeof($rows) != 0) {
+								if (!empty($rows)) {
 									foreach ($rows as $row) {
 										$states[$row['uuid']] = $row['toggle'];
 									}
@@ -690,10 +687,10 @@ if (!class_exists('conference_centers')) {
 											$switch_cmd_notice = "conference ".$meeting_uuid[$uuid]."@".$_SESSION['domain_name']." play ".$_SESSION['switch']['sounds']['dir']."/".$default_language."/".$default_dialect."/".$default_voice."/ivr/ivr-recording_started.wav";
 										//execute api commands
 // 											if (!file_exists($recording_dir.'/'.$meeting_uuid[$uuid].'.wav')) {
-												$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-												if ($fp) {
-//													$switch_result = event_socket_request($fp, 'api '.$switch_cmd_record);
-													$switch_result = event_socket_request($fp, 'api '.$switch_cmd_notice);
+												$esl = event_socket::create();
+												if ($esl->is_connected()) {
+//													$switch_result = event_socket::api($switch_cmd_record);
+													$switch_result = event_socket::api($switch_cmd_notice);
 												}
 // 											}
 									}
@@ -702,7 +699,7 @@ if (!class_exists('conference_centers')) {
 							}
 
 						//save the changes
-							if (is_array($array) && @sizeof($array) != 0) {
+							if (!empty($array)) {
 
 								//save the array
 									$database = new database;
@@ -748,24 +745,24 @@ if (!class_exists('conference_centers')) {
 					}
 
 				//copy the checked records
-					if (is_array($records) && @sizeof($records) != 0) {
+					if (!empty($records)) {
 
 						//get checked records
 							foreach($records as $x => $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$uuids[] = "'".$record['uuid']."'";
 								}
 							}
 
 						//create insert array from existing data
-							if (is_array($uuids) && @sizeof($uuids) != 0) {
+							if (!empty($uuids)) {
 								$sql = "select * from v_".$this->table." ";
 								$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
 								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 								$database = new database;
 								$rows = $database->select($sql, $parameters, 'all');
-								if (is_array($rows) && @sizeof($rows) != 0) {
+								if (!empty($rows)) {
 									foreach ($rows as $x => $row) {
 
 										//copy data
@@ -781,7 +778,7 @@ if (!class_exists('conference_centers')) {
 							}
 
 						//save the changes and set the message
-							if (is_array($array) && @sizeof($array) != 0) {
+							if (!empty($array)) {
 
 								//save the array
 									$database = new database;

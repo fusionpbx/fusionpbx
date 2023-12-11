@@ -40,7 +40,7 @@ if ($domains_processed == 1) {
 		$sql .= "where greeting_id is null ";
 		$database = new database;
 		$result = $database->select($sql, null, 'all');
-		if (is_array($result) && @sizeof($result) != 0) {
+		if (!empty($result)) {
 			foreach ($result as $x => &$row) {
 				$voicemail_greeting_uuid = $row['voicemail_greeting_uuid'];
 				$greeting_id = preg_replace('{\D}', '', $row['greeting_filename']);
@@ -49,7 +49,7 @@ if ($domains_processed == 1) {
 				$array['voicemail_greetings'][$x]['greeting_id'] = $greeting_id;
 				unset($voicemail_greeting_uuid, $greeting_id);
 			}
-			if (is_array($array) && @sizeof($array) != 0) {
+			if (!empty($array)) {
 				//grant temporary permissions
 					$p = new permissions;
 					$p->add('voicemail_greeting_edit', 'temp');
@@ -66,7 +66,7 @@ if ($domains_processed == 1) {
 		unset($sql, $result, $x, $row);
 
 	//if base64, populate from existing greeting files, then remove
-		if ($_SESSION['voicemail']['storage_type']['text'] == 'base64') {
+		if (!empty($_SESSION['voicemail']['storage_type']['text']) && $_SESSION['voicemail']['storage_type']['text'] == 'base64') {
 			//get greetings without base64 in db
 				$sql = "select voicemail_greeting_uuid, domain_uuid, voicemail_id, greeting_filename ";
 				$sql .= "from v_voicemail_greetings ";
@@ -74,7 +74,7 @@ if ($domains_processed == 1) {
 				$sql .= "or greeting_base64 = '' ";
 				$database = new database;
 				$result = $database->select($sql, null, 'all');
-				if (is_array($result) && @sizeof($result) != 0) {
+				if (!empty($result)) {
 					foreach ($result as $x => &$row) {
 						$voicemail_greeting_uuid = $row['voicemail_greeting_uuid'];
 						$greeting_domain_uuid = $row['domain_uuid'];
@@ -91,7 +91,7 @@ if ($domains_processed == 1) {
 									@unlink($greeting_directory.'/'.$greeting_filename);
 							}
 					}
-					if (is_array($array) && @sizeof($array) != 0) {
+					if (!empty($array)) {
 						//grant temporary permissions
 							$p = new permissions;
 							$p->add('voicemail_greeting_edit', 'temp');
@@ -109,7 +109,7 @@ if ($domains_processed == 1) {
 		}
 
 	//if not base64, decode to local files, remove base64 data from db
-		else if ($_SESSION['voicemail']['storage_type']['text'] != 'base64') {
+		else if (empty($_SESSION['voicemail']['storage_type']['text']) || $_SESSION['voicemail']['storage_type']['text'] != 'base64') {
 			//get greetings with base64 in db
 				$sql = "select voicemail_greeting_uuid, domain_uuid, voicemail_id, greeting_filename, greeting_base64 ";
 				$sql .= "from v_voicemail_greetings ";
@@ -118,31 +118,38 @@ if ($domains_processed == 1) {
 				$result = $database->select($sql, null, 'all');
 				if (is_array($result) && @sizeof($result) != 0) {
 					foreach ($result as $x => &$row) {
-						$voicemail_greeting_uuid = $row['voicemail_greeting_uuid'];
-						$greeting_domain_uuid = $row['domain_uuid'];
-						$voicemail_id = $row['voicemail_id'];
-						$greeting_filename = $row['greeting_filename'];
-						$greeting_base64 = $row['greeting_base64'];
+						//set variables
+							$voicemail_greeting_uuid = $row['voicemail_greeting_uuid'];
+							$greeting_domain_uuid = $row['domain_uuid'];
+							$voicemail_id = $row['voicemail_id'];
+							$greeting_filename = $row['greeting_filename'];
+							$greeting_base64 = $row['greeting_base64'];
+
 						//set greeting directory
 							$greeting_directory = $_SESSION['switch']['storage']['dir'].'/voicemail/default/'.$_SESSION['domains'][$greeting_domain_uuid]['domain_name'].'/'.$voicemail_id;
+
 						//remove local file, if any
 							@unlink($greeting_directory.'/'.$greeting_filename);
+
 						//build update array
 							$array['voicemail_greetings'][$x]['voicemail_greeting_uuid'] = $voicemail_greeting_uuid;
 							$array['voicemail_greetings'][$x]['greeting_base64'] = null;
+
 						//decode base64, save to local file
 							file_put_contents($greeting_directory.'/'.$greeting_filename, base64_decode($greeting_base64));
 					}
-					if (is_array($array) && @sizeof($array) != 0) {
+					if (!empty($array)) {
 						//grant temporary permissions
 							$p = new permissions;
 							$p->add('voicemail_greeting_edit', 'temp');
+
 						//execute update
 							$database = new database;
 							$database->app_name = 'voicemail_greetings';
 							$database->app_uuid = 'e4b4fbee-9e4d-8e46-3810-91ba663db0c2';
 							$database->save($array, false);
 							unset($array);
+
 						//revoke temporary permissions
 							$p->delete('voicemail_greeting_edit', 'temp');
 					}

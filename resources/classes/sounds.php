@@ -11,22 +11,14 @@ class sounds {
 	* Called when the object is created
 	*/
 	public $domain_uuid;
+	public $sound_types;
+	public $full_path;
 
 	/**
 	* Class constructor
 	*/
 	public function __construct() {
 
-	}
-
-	/**
-	 * Called when there are no references to a particular object
-	 * unset the variables used in the class
-	 */
-	public function __destruct() {
-		foreach ($this as $key => $value) {
-			unset($this->$key);
-		}
 	}
 
 	/**
@@ -37,16 +29,18 @@ class sounds {
 	public function get() {
 
 		//miscellaneous
-			$x = 0;
-			if (if_group("superadmin")) {
-				$array['miscellaneous'][$x]['name'] = "say";
-				$array['miscellaneous'][$x]['value'] = "say:";
-				$x++;
-				$array['miscellaneous'][$x]['name'] = "tone_stream";
-				$array['miscellaneous'][$x]['value'] = "tone_stream:";
+			if (empty($this->sound_types) || (is_array($this->sound_types) && in_array('miscellaneous', $this->sound_types))) {
+				$x = 0;
+				if (if_group("superadmin")) {
+					$array['miscellaneous'][$x]['name'] = "say";
+					$array['miscellaneous'][$x]['value'] = "say:";
+					$x++;
+					$array['miscellaneous'][$x]['name'] = "tone_stream";
+					$array['miscellaneous'][$x]['value'] = "tone_stream:";
+				}
 			}
 		//recordings
-			if (file_exists($_SERVER["PROJECT_ROOT"]."/app/phrases/app_config.php")) {
+			if ((empty($this->sound_types) || (is_array($this->sound_types) && in_array('recordings', $this->sound_types))) && file_exists($_SERVER["PROJECT_ROOT"]."/app/recordings/app_config.php")) {
 				$sql = "select recording_name, recording_filename from v_recordings ";
 				$sql .= "where domain_uuid = :domain_uuid ";
 				$sql .= "order by recording_name asc ";
@@ -57,15 +51,16 @@ class sounds {
 					foreach ($recordings as &$row) {
 						$recording_name = $row["recording_name"];
 						$recording_filename = $row["recording_filename"];
+						$recording_path = !empty($this->full_path) && is_array($this->full_path) && in_array('recordings', $this->full_path) ? $_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/' : null;
 						$array['recordings'][$x]['name'] = $recording_name;
-						$array['recordings'][$x]['value'] = $recording_filename;
+						$array['recordings'][$x]['value'] = $recording_path.$recording_filename;
 						$x++;
 					}
 				}
 				unset($sql, $parameters, $recordings, $row);
 			}
 		//phrases
-			if (file_exists($_SERVER["PROJECT_ROOT"]."/app/phrases/app_config.php")) {
+			if ((empty($this->sound_types) || (is_array($this->sound_types) && in_array('phrases', $this->sound_types))) && file_exists($_SERVER["PROJECT_ROOT"]."/app/phrases/app_config.php")) {
 				$sql = "select * from v_phrases ";
 				$sql .= "where domain_uuid = :domain_uuid ";
 				$parameters['domain_uuid'] = $_SESSION["domain_uuid"];
@@ -81,7 +76,7 @@ class sounds {
 				unset($sql, $parameters, $phrases, $row);
 			}
 		//sounds
-			if (file_exists($_SERVER["PROJECT_ROOT"]."/app/phrases/app_config.php")) {
+			if ((empty($this->sound_types) || (is_array($this->sound_types) && in_array('sounds', $this->sound_types))) && file_exists($_SERVER["PROJECT_ROOT"]."/app/phrases/app_config.php")) {
 				$file = new file;
 				$sound_files = $file->sounds();
 				if (is_array($sound_files) && @sizeof($sound_files) != 0) {

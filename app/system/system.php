@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -25,12 +25,8 @@
 	James Rose <james.o.rose@gmail.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -119,7 +115,8 @@
 				rtrim($git_origin);
 				$git_origin = preg_replace('/\.git$/','',$git_origin);
 				$git_status = shell_exec($git_exe.' --git-dir='.$git_path.' status | grep "Your branch"');
-				rtrim($git_status);
+				if(!empty($git_status))
+					rtrim($git_status);
 				$git_age = shell_exec($git_exe.' --git-dir='.$git_path.' log --pretty=format:%at "HEAD^!"');
 				rtrim($git_age);
 				$git_date = DateTime::createFromFormat('U', $git_age);
@@ -147,9 +144,9 @@
 		echo "	</td>\n";
 		echo "</tr>\n";
 
-		$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-		if ($fp) {
-			$switch_version = event_socket_request($fp, 'api version');
+		$esl = event_socket::create();
+		if ($esl->is_connected()) {
+			$switch_version = event_socket::api('version');
 			preg_match("/FreeSWITCH Version (\d+\.\d+\.\d+(?:\.\d+)?).*\(.*?(\d+\w+)\s*\)/", $switch_version, $matches);
 			$switch_version = $matches[1];
 			$switch_bits = $matches[2];
@@ -160,8 +157,8 @@
 			echo "	<td class=\"row_style1\">$switch_version ($switch_bits)</td>\n";
 			echo "</tr>\n";
 			preg_match("/\(git\s*(.*?)\s*\d+\w+\s*\)/", $switch_version, $matches);
-			$switch_git_info = $matches[1];
-			if(strlen($switch_git_info) > 0){
+			$switch_git_info = $matches[1] ?? null;
+			if(!empty($switch_git_info)){
 				echo "<tr>\n";
 				echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
 				echo "		".$text['label-switch']." ".$text['label-git_info']."\n";
@@ -199,7 +196,7 @@
 			echo "-->\n";
 		}
 		
-		if (strlen($os_name) > 0) {
+		if (!empty($os_name)) {
 			echo "<tr>\n";
 			echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
 			echo "		".$text['label-os']." \n";
@@ -209,7 +206,7 @@
 			echo "	</td>\n";
 			echo "</tr>\n";
 		}
-		if (strlen($os_version) > 0) {
+		if (!empty($os_version)) {
 			echo "<tr>\n";
 			echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
 			echo "		".$text['label-version']." \n";
@@ -219,7 +216,7 @@
 			echo "	</td>\n";
 			echo "</tr>\n";
 		}
-		if (strlen($os_kernel) > 0) {
+		if (!empty($os_kernel)) {
 			echo "<tr>\n";
 			echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
 			echo "		".$text['label-kernel']." \n";
@@ -234,7 +231,7 @@
 		echo "<!--\n";
 		$tmp_result = shell_exec('uptime');
 		echo "-->\n";
-		if (strlen($tmp_result) > 0) {
+		if (!empty($tmp_result)) {
 			echo "<tr>\n";
 			echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
 			echo "		Uptime\n";
@@ -265,7 +262,7 @@
 			$shell_cmd = 'free -hw';
 			$shell_result = shell_exec($shell_cmd);
 			echo "-->\n";
-			if (strlen($shell_result) > 0) {
+			if (!empty($shell_result)) {
 				echo "<table width=\"100%\" border=\"0\" cellpadding=\"7\" cellspacing=\"0\">\n";
 				echo "<tr>\n";
 				echo "	<th colspan='2' align='left' valign='top'>".$text['title-mem']."</th>\n";
@@ -292,7 +289,7 @@
 			$shell_cmd = 'sysctl vm.vmtotal';
 			$shell_result = shell_exec($shell_cmd);
 			echo "-->\n";
-			if (strlen($shell_result) > 0) {
+			if (!empty($shell_result)) {
 				echo "<table width=\"100%\" border=\"0\" cellpadding=\"7\" cellspacing=\"0\">\n";
 				echo "<tr>\n";
 				echo "	<th colspan='2' align='left' valign='top'>".$text['title-mem']."</th>\n";
@@ -324,7 +321,7 @@
 			$system = $res->ItemIndex(0);
 			$shell_result = round($system->TotalPhysicalMemory / 1024 /1024, 0);
 			echo "-->\n";
-			if (strlen($shell_result) > 0) {
+			if (!empty($shell_result)) {
 				echo "<table width=\"100%\" border=\"0\" cellpadding=\"7\" cellspacing=\"0\">\n";
 				echo "<tr>\n";
 				echo "	<th class='th' colspan='2' align='left'>".$text['Physical Memory']."</th>\n";
@@ -352,7 +349,7 @@
 			$shell_cmd = "ps -e -o pcpu,cpu,nice,state,cputime,args --sort pcpu | sed '/^ 0.0 /d'";
 			$shell_result = shell_exec($shell_cmd);
 			echo "-->\n";
-			if (strlen($shell_result) > 0) {
+			if (!empty($shell_result)) {
 				echo "<table width=\"100%\" border=\"0\" cellpadding=\"7\" cellspacing=\"0\">\n";
 				echo "<tr>\n";
 				echo "	<th class='th' colspan='2' align='left' valign='top'>".$text['title-cpu']."</th>\n";
@@ -387,7 +384,7 @@
 			$shell_cmd = 'top';
 			$shell_result = shell_exec($shell_cmd);
 			echo "-->\n";
-			if (strlen($shell_result) > 0) {
+			if (!empty($shell_result)) {
 				echo "<table width=\"100%\" border=\"0\" cellpadding=\"7\" cellspacing=\"0\">\n";
 				echo "<tr>\n";
 				echo "	<th class='th' colspan='2' align='left' valign='top'>".$text['title-cpu']."</th>\n";
@@ -547,13 +544,13 @@
 		$memcache_fail = false;
 		$mod = new modules;
 		if ($mod -> active("mod_memcache")) {
-			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-			if ($fp) {
+			$esl = event_socket::create();
+			if ($esl->is_connected()) {
 				$switch_cmd = "memcache status verbose";
-				$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
+				$switch_result = event_socket::api($switch_cmd);
 				$memcache_lines = preg_split('/\n/', $switch_result);
 				foreach($memcache_lines as $memcache_line) {
-					if (strlen(trim($memcache_line)) > 0 && substr_count($memcache_line, ': ') > 0) {
+					if (!empty(trim($memcache_line)) > 0 && substr_count($memcache_line, ': ')) {
 						$memcache_temp = explode(': ', $memcache_line);
 						$memcache_status[$memcache_temp[0]] = $memcache_temp[1];
 					}

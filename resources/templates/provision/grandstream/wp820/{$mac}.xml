@@ -376,17 +376,29 @@
 <!-- # Send DTMF: In-audio. 0 - No, 1 - Yes. Default is 0 -->
 <!-- # Number: 0, 1 -->
 <!-- # Mandatory -->
-<P2401>0</P2401>
+{if isset($grandstream_senddtmf_inaudio) }    	
+<P2301>{$grandstream_senddtmf_inaudio}</P2301>	
+{else}	
+<P2301>0</P2301>	
+{/if}
 
 <!-- # Send DTMF: Via RTP (RFC2833). 0 - No, 1 - Yes. Default is 1 -->
 <!-- # Number: 0, 1 -->
 <!-- # Mandatory -->
-<P2402>1</P2402>
+{if isset($grandstream_senddtmf_rtp) }    	
+<P2302>{$grandstream_senddtmf_rtp}</P2302>	
+{else}	
+<P2302>1</P2302>	
+{/if}
 
 <!-- # Send DTMF: Via SIP INFO. 0 - No, 1 - Yes. Default is 0 -->
 <!-- # Number: 0, 1 -->
 <!-- # Mandatory -->
-<P2403>0</P2403>
+{if isset($grandstream_senddtmf_sipinfo) }    	
+<P2303>{$grandstream_senddtmf_sipinfo}</P2303>	
+{else}	
+<P2303>0</P2303>	
+{/if}
 
 <!-- # DTMF Payload Type. Default is 101 -->
 <!-- # Number: 96 - 127 -->
@@ -1030,27 +1042,27 @@
 <!-- # Number: 0, 1 -->
 <!-- # Mandatory -->
 {if isset($grandstream_senddtmf_inaudio) }    
-    <P2301>{$grandstream_senddtmf_inaudio}</P2301>
+    <P2401>{$grandstream_senddtmf_inaudio}</P2401>
 {else}
-    <P2301>0</P2301>
+    <P2401>0</P2401>
 {/if}
 
 <!-- # Send DTMF: Via RTP (RFC2833). 0 - No, 1 - Yes. Default is 1 -->
 <!-- # Number: 0, 1 -->
 <!-- # Mandatory -->
 {if isset($grandstream_senddtmf_rtp) }    
-    <P2302>{$grandstream_senddtmf_rtp}</P2302>
+    <P2402>{$grandstream_senddtmf_rtp}</P2402>
 {else}
-    <P2302>1</P2302>
+    <P2402>1</P2402>
 {/if}
 
 <!-- # Send DTMF: Via SIP INFO. 0 - No, 1 - Yes. Default is 0 -->
 <!-- # Number: 0, 1 -->
 <!-- # Mandatory -->
 {if isset($grandstream_senddtmf_sipinfo) }    
-    <P2303>{$grandstream_senddtmf_sipinfo}</P2303>
+    <P2403>{$grandstream_senddtmf_sipinfo}</P2403>
 {else}
-    <P2303>0</P2303>
+    <P2403>0</P2403>
 {/if}
 
 <!-- # DTMF Payload Type. Default is 101 -->
@@ -1339,7 +1351,7 @@
 <!-- # Use Random Port. 0 - No, 1 - Yes. Default is 0 -->
 <!-- # Number: 0, 1 -->
 <!-- # Mandatory -->
-<P78>0</P78>
+<P78>1</P78>
 
 <!-- # Disable in-call DTMF display. 0 - No, 1 - Yes. Default is 0 -->
 <!-- # Number: 0, 1 -->
@@ -1838,20 +1850,25 @@
 
 <!-- # Vendor Class ID (Option 60) -->
 <!-- # String -->
-<P148>Grandstream WP800</P148>
+<!-- <P148>Grandstream WP800</P148> -->
 
 <!-- #################################################################### -->
 <!-- # Network Settings/Wi-Fi Settings/Wi-Fi Roaming                   ## -->
 <!-- #################################################################### -->
-<!-- # Scan interval with good signal -->
-<!-- # P22230 -->
+<!-- # Scan interval with good signal Default is 5 Range 5 - 600 -->	
+{if isset($grandstream_wifi_roam_scan_interval_good)}	
+<P22230>{$grandstream_wifi_roam_scan_interval_good}</P22230>	
+{/if}
 
-<!-- # Scan interval with poor signal -->
-<!-- # P22231 -->
-
-<!-- # Roaming signal threshold -->
-<!-- # Number: -30 - 100 -->
-<!-- # P22232 -->
+<!-- # Scan interval with poor signal Default is 600 (or 5 for aggressive) Range 5 - 600 -->	
+{if isset($grandstream_wifi_roam_scan_interval_poor)}	
+<P22231>{$grandstream_wifi_roam_scan_interval_poor}</P22231>	
+{/if}	
+<!-- # Roaming signal threshold -->	
+<!-- # Number: -100 - -30 Default is -70 -->	
+{if isset($grandstream_wifi_roam_signal_threshold)}	
+<P22232>{$grandstream_wifi_roam_signal_threshold}</P22232>	
+{/if}
 
 <!-- #################################################################### -->
 <!-- # Network Settings/OpenVPN® Settings                              ## -->
@@ -2268,7 +2285,12 @@
 
 <!-- # Periodic Inform Enable. 0 - No, 1 - Yes. Default is 0. -->
 <!-- # Number: 0, 1 -->
+{if isset ($grandstream_tr069_periodic_inform_enable)}
+<P4506>{$grandstream_tr069_periodic_inform_enable}</P4506>
+{else}
 <P4506>0</P4506>
+{/if}
+
 
 <!-- # Periodic Inform Interval. Default is 86400. -->
 <!-- # Number -->
@@ -2284,7 +2306,7 @@
 
 <!-- # Connection Request Port.  -->
 <!-- # Number -->
-<P4518></P4518>
+<P4518>7547</P4518>
 
 <!-- # CPE Cert File -->
 <!-- # String -->

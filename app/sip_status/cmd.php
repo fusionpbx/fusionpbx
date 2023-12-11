@@ -24,12 +24,8 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -42,9 +38,9 @@
 	}
 
 //set the variables
-	$profile = $_GET['profile'];
+	$profile = $_GET['profile'] ?? null;
 	$action = $_GET['action'];
-	$gateway = $_GET['gateway'];
+	$gateway = $_GET['gateway'] ?? null;
 
 //validate the sip profile name
 	$sql = "select sip_profile_name from v_sip_profiles ";
@@ -55,7 +51,7 @@
 	unset($sql, $parameters);
 
 //validate the gateway
-	if (is_uuid($_GET['gateway'])) {
+	if (!empty($_GET['gateway']) && is_uuid($_GET['gateway'])) {
 		$gateway_name = $_GET['gateway'];
 	}
 
@@ -95,27 +91,24 @@
 	}
 
 //create the event socket connection
-	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-	if ($fp) {
+	$esl = event_socket::create();
+	if ($esl->is_connected()) {
 		//if reloadxml then run reloadacl, reloadxml and rescan the external profile for new gateways
 			if (isset($command)) {
 				//clear the apply settings reminder
 					$_SESSION["reload_xml"] = false;
 
 				//run the command
-					$result = rtrim(event_socket_request($fp, 'api '.$command));
+					$result = rtrim(event_socket::api($command));
 			}
 
 		//sofia profile
 			if (isset($profile) && strlen($profile)) {
 				message::add('<strong>'.$profile.'</strong> '.$result, 'alert', 3000);
 			}
-			else {
+			else if (!empty($result)) {
 				message::add($result, 'alert');
 			}
-
-		//close the connection
-			fclose($fp);
 	}
 
 //redirect the user

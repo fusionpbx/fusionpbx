@@ -1,11 +1,7 @@
 <?php
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 4) . "/resources/require.php";
 
 //check permisions
 	require_once "resources/check_auth.php";
@@ -30,19 +26,19 @@
 	$row_style["1"] = "row_style1";
 
 //connect to event socket
-	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+	$esl = event_socket::create();
 
 //switch version
-	if (permission_exists('switch_version') && $fp) {
-		$switch_version = event_socket_request($fp, 'api version');
+	if (permission_exists('switch_version') && $esl->is_connected()) {
+		$switch_version = event_socket::api('version');
 		preg_match("/FreeSWITCH Version (\d+\.\d+\.\d+(?:\.\d+)?).*\(.*?(\d+\w+)\s*\)/", $switch_version, $matches);
 		$switch_version = $matches[1];
 		$switch_bits = $matches[2];
 	}
 
 //switch uptime
-	if (permission_exists('switch_uptime') && $fp) {
-		$tmp = event_socket_request($fp, 'api status');
+	if (permission_exists('switch_uptime') && $esl->is_connected()) {
+		$tmp = event_socket::api('status');
 		$tmp = explode("\n", $tmp);
 		$tmp = $tmp[0];
 		$tmp = explode(' ', $tmp);
@@ -57,8 +53,10 @@
 	}
 
 //channel count
-	if (permission_exists('switch_channels') && $fp) {
-		$tmp = event_socket_request($fp, 'api status');
+	$channels = '';
+	$tr_link_channels = '';
+	if (permission_exists('switch_channels') && $esl->is_connected()) {
+		$tmp = event_socket::api('status');
 		$matches = Array();
 		preg_match("/(\d+)\s+session\(s\)\s+\-\speak/", $tmp, $matches);
 		$channels = $matches[1] ? $matches[1] : 0;
@@ -68,6 +66,7 @@
 	}
 
 //registration count
+	$registrations = '';
 	if (permission_exists('switch_registrations') && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/registrations/")) {
 		$registration = new registrations;
 		if (permission_exists("registration_all")) {
@@ -129,7 +128,7 @@
 	echo "</tr>\n";
 
 	//switch version
-	if (permission_exists('switch_version') && $switch_version != '') {
+	if (permission_exists('switch_version') && !empty($switch_version)) {
 		echo "<tr class='tr_link' ".$tr_link_sip_status.">\n";
 		echo "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-switch']."</td>\n";
 		echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'><a ".$tr_link_sip_status.">".$switch_version." (".$switch_bits.")</a></td>\n";
@@ -138,7 +137,7 @@
 	}
 
 	//switch uptime
-	if (permission_exists('switch_uptime') && $uptime != '') {
+	if (permission_exists('switch_uptime') && !empty($uptime)) {
 		echo "<tr class='tr_link' ".$tr_link_sip_status.">\n";
 		echo "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-switch_uptime']."</td>\n";
 		echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'><a ".$tr_link_sip_status.">".$uptime."</a></td>\n";
@@ -166,7 +165,7 @@
 
 	echo "</table>\n";
 	echo "</div>";
-	$n++;
+	//$n++;
 
 	echo "<span class='hud_expander' onclick=\"$('#hud_switch_status_details').slideToggle('fast');\"><span class='fas fa-ellipsis-h'></span></span>";
 	echo "</div>\n";

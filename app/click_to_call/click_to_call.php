@@ -30,12 +30,8 @@
 	James Rose <james.o.rose@gmail.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -97,124 +93,120 @@
 			}
 
 		//create the even socket connection and send the event socket command
-			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-			if (!$fp) {
-				//error message
-				echo "<div align='center'><strong>Connection to Event Socket failed.</strong></div>";
-			}
+			$esl = event_socket::create();
+			if ($esl->is_connected()) {
 
-		//set call uuid
-			$origination_uuid = trim(event_socket_request($fp, "api create_uuid"));
+				//set call uuid
+				$origination_uuid = trim(event_socket::api("create_uuid"));
 
-		//add record path and name
-			if ($rec == "true") {
-				$record_path = $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/archive/".date("Y")."/".date("M")."/".date("d");
-				if (isset($_SESSION['recordings']['extension']['text'])) {
-					$record_extension = $_SESSION['recordings']['extension']['text'];
-				}
-				else {
-					$record_extension = 'wav';
-				}
-				if (isset($_SESSION['recordings']['template']['text'])) {
-					//${year}${month}${day}-${caller_id_number}-${caller_destination}-${uuid}.${record_extension}
-					$record_name = $_SESSION['recordings']['template']['text'];
-					$record_name = str_replace('${year}', date("Y"), $record_name);
-					$record_name = str_replace('${month}', date("M"), $record_name);
-					$record_name = str_replace('${day}', date("d"), $record_name);
-					$record_name = str_replace('${source}', $src, $record_name);
-					$record_name = str_replace('${caller_id_name}', $src_cid_name, $record_name);
-					$record_name = str_replace('${caller_id_number}', $src_cid_number, $record_name);
-					$record_name = str_replace('${caller_destination}', $dest, $record_name);
-					$record_name = str_replace('${destination}', $dest, $record_name);
-					$record_name = str_replace('${uuid}', $origination_uuid, $record_name);
-					$record_name = str_replace('${record_extension}', $record_extension, $record_name);
-				}
-				else {
-					$record_name = $origination_uuid.'.'.$record_extension;
-				}
-			}
-
-		//determine call direction
-			$dir = (user_exists($dest)) ? 'local' : 'outbound';
-
-		//define a leg - set source to display the defined caller id name and number
-			$source_common = "{";
-			$source_common .= "click_to_call=true";
-			$source_common .= ",origination_caller_id_name='".$src_cid_name."'";
-			$source_common .= ",origination_caller_id_number=".$src_cid_number;
-			$source_common .= ",instant_ringback=true";
-			$source_common .= ",ringback=".$ringback_value;
-			$source_common .= ",presence_id=".$src."@".$_SESSION['domains'][$domain_uuid]['domain_name'];
-			$source_common .= ",call_direction=".$dir;
-			if ($rec == "true") {
-				$source_common .= ",record_path='".$record_path."'";
-				$source_common .= ",record_name='".$record_name."'";
-			}
-
-			if (user_exists($src)) {
-				//source is a local extension
-				$source = $source_common.$sip_auto_answer.
-					",domain_uuid=".$domain_uuid.
-					",domain_name=".$_SESSION['domains'][$domain_uuid]['domain_name']."}user/".$src."@".$_SESSION['domains'][$domain_uuid]['domain_name'];
-			}
-			else {
-				//source is an external number
-				$bridge_array = outbound_route_to_bridge($_SESSION['domain_uuid'], $src);
-				$source = $source_common."}".$bridge_array[0];
-			}
-			unset($source_common);
-
-		//define b leg - set destination to display the defined caller id name and number
-			$destination_common = " &bridge({origination_caller_id_name='".$dest_cid_name."',origination_caller_id_number=".$dest_cid_number;
-			if (user_exists($dest)) {
-				//destination is a local extension
-				if (strpbrk($dest, '@') != FALSE) { //sip-uri
-					$switch_cmd = $destination_common.",call_direction=outbound}sofia/external/".$dest.")";
-				}
-				else { //not sip-uri
-					$switch_cmd = " &transfer('".$dest." XML ".$context."')";
-				}
-			}
-			else {
-				//local extension (source) > external number (destination)
-				if (user_exists($src) && strlen($dest_cid_number) == 0) {
-					//retrieve outbound caller id from the (source) extension
-					$sql = "select outbound_caller_id_name, outbound_caller_id_number from v_extensions where domain_uuid = :domain_uuid and extension = :src ";
-					$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-					$parameters['src'] = $src;
-					$database = new database;
-					$result = $database->select($sql, $parameters, 'all');
-					foreach ($result as &$row) {
-						$dest_cid_name = $row["outbound_caller_id_name"];
-						$dest_cid_number = $row["outbound_caller_id_number"];
-						break; //limit to 1 row
+				//add record path and name
+				if ($rec == "true") {
+					$record_path = $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/archive/".date("Y")."/".date("M")."/".date("d");
+					if (isset($_SESSION['recordings']['extension']['text'])) {
+						$record_extension = $_SESSION['recordings']['extension']['text'];
+					}
+					else {
+						$record_extension = 'wav';
+					}
+					if (isset($_SESSION['recordings']['template']['text'])) {
+						//${year}${month}${day}-${caller_id_number}-${caller_destination}-${uuid}.${record_extension}
+						$record_name = $_SESSION['recordings']['template']['text'];
+						$record_name = str_replace('${year}', date("Y"), $record_name);
+						$record_name = str_replace('${month}', date("M"), $record_name);
+						$record_name = str_replace('${day}', date("d"), $record_name);
+						$record_name = str_replace('${source}', $src, $record_name);
+						$record_name = str_replace('${caller_id_name}', $src_cid_name, $record_name);
+						$record_name = str_replace('${caller_id_number}', $src_cid_number, $record_name);
+						$record_name = str_replace('${caller_destination}', $dest, $record_name);
+						$record_name = str_replace('${destination}', $dest, $record_name);
+						$record_name = str_replace('${uuid}', $origination_uuid, $record_name);
+						$record_name = str_replace('${record_extension}', $record_extension, $record_name);
+					}
+					else {
+						$record_name = $origination_uuid.'.'.$record_extension;
 					}
 				}
-				if (permission_exists('click_to_call_call')) {
+
+				//determine call direction
+				$dir = (user_exists($dest)) ? 'local' : 'outbound';
+
+				//define a leg - set source to display the defined caller id name and number
+				$source_common = "{";
+				$source_common .= "click_to_call=true";
+				$source_common .= ",origination_caller_id_name='".$src_cid_name."'";
+				$source_common .= ",origination_caller_id_number=".$src_cid_number;
+				$source_common .= ",instant_ringback=true";
+				$source_common .= ",ringback=".$ringback_value;
+				$source_common .= ",presence_id=".$src."@".$_SESSION['domains'][$domain_uuid]['domain_name'];
+				$source_common .= ",call_direction=".$dir;
+				if ($rec == "true") {
+					$source_common .= ",record_path='".$record_path."'";
+					$source_common .= ",record_name='".$record_name."'";
+				}
+
+				if (user_exists($src)) {
+					//source is a local extension
+					$source = $source_common.$sip_auto_answer.
+						",domain_uuid=".$domain_uuid.
+						",domain_name=".$_SESSION['domains'][$domain_uuid]['domain_name']."}user/".$src."@".$_SESSION['domains'][$domain_uuid]['domain_name'];
+				}
+				else {
+					//source is an external number
+					$bridge_array = outbound_route_to_bridge($_SESSION['domain_uuid'], $src);
+					$source = $source_common."}".$bridge_array[0];
+				}
+				unset($source_common);
+
+				//define b leg - set destination to display the defined caller id name and number
+				$destination_common = " &bridge({origination_caller_id_name='".$dest_cid_name."',origination_caller_id_number=".$dest_cid_number;
+				if (user_exists($dest)) {
+					//destination is a local extension
 					if (strpbrk($dest, '@') != FALSE) { //sip-uri
 						$switch_cmd = $destination_common.",call_direction=outbound}sofia/external/".$dest.")";
 					}
 					else { //not sip-uri
-						$bridge_array = outbound_route_to_bridge($_SESSION['domain_uuid'], $dest);
-						//$switch_cmd = $destination_common."}".$bridge_array[0].")";  // wouldn't set cdr destination correctly, so below used instead
 						$switch_cmd = " &transfer('".$dest." XML ".$context."')";
 					}
 				}
-			}
-			unset($destination_common);
-
-		//create the even socket connection and send the event socket command
-			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-			if (!$fp) {
+				else {
+					//local extension (source) > external number (destination)
+					if (user_exists($src) && empty($dest_cid_number)) {
+						//retrieve outbound caller id from the (source) extension
+						$sql = "select outbound_caller_id_name, outbound_caller_id_number from v_extensions where domain_uuid = :domain_uuid and extension = :src ";
+						$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+						$parameters['src'] = $src;
+						$database = new database;
+						$result = $database->select($sql, $parameters, 'all');
+						foreach ($result as &$row) {
+							$dest_cid_name = $row["outbound_caller_id_name"];
+							$dest_cid_number = $row["outbound_caller_id_number"];
+							break; //limit to 1 row
+						}
+					}
+					if (permission_exists('click_to_call_call')) {
+						if (strpbrk($dest, '@') != FALSE) { //sip-uri
+							$switch_cmd = $destination_common.",call_direction=outbound}sofia/external/".$dest.")";
+						}
+						else { //not sip-uri
+							$bridge_array = outbound_route_to_bridge($_SESSION['domain_uuid'], $dest);
+							//$switch_cmd = $destination_common."}".$bridge_array[0].")";  // wouldn't set cdr destination correctly, so below used instead
+							$switch_cmd = " &transfer('".$dest." XML ".$context."')";
+						}
+					}
+				}
+				unset($destination_common);
+			} else {
 				//error message
 				echo "<div align='center'><strong>Connection to Event Socket failed.</strong></div>";
 			}
-			else {
+
+		//ensure we are still connected and send the event socket command
+			if ($esl->is_connected()) {
 				//display the last command
-					$switch_cmd = "api originate ".$source.$switch_cmd;
+					$switch_cmd = "originate ".$source.$switch_cmd;
 					echo "<div align='center'><strong>".escape($src)." has called ".escape($dest)."</strong></div>\n";
 				//show the command result
-				$result = trim(event_socket_request($fp, $switch_cmd));
+				$result = trim(event_socket::api($switch_cmd));
 				if (substr($result, 0,3) == "+OK") {
 					//$uuid = substr($result, 4);
 					if ($rec == "true") {
@@ -222,12 +214,15 @@
 							date_default_timezone_set($_SESSION['time_zone']['system']);
 						//create the api record command and send it over event socket
 							if (is_uuid($origination_uuid) && file_exists($record_path)) {
-								$switch_cmd = "api uuid_record ".$origination_uuid." start ".$record_path."/".$record_name;
+								$switch_cmd = "uuid_record $origination_uuid start $record_path/$record_name";
 							}
-							$result2 = trim(event_socket_request($fp, $switch_cmd));
+							$result2 = trim(event_socket::api($switch_cmd));
 					}
 				}
 				echo "<div align='center'><br />".escape($result)."<br /><br /></div>\n";
+			} else {
+				//error message
+				echo "<div align='center'><strong>Connection to Event Socket failed.</strong></div>";
 			}
 	}
 
@@ -431,7 +426,7 @@
 	echo "<tr>\n";
 	echo "	<td colspan='2' align='right'>\n";
 	echo "		<br>";
-	echo "		<input type=\"submit\" class='btn' value=\"".$text['button-call']."\">\n";
+	echo "		<button type='submit' class='btn btn-default'><i class='fas fa-phone fa-lg'></i>&nbsp;&nbsp;&nbsp;".$text['button-call']."</button>\n";
 	echo "	</td>\n";
 	echo "</tr>\n";
 	echo "</table>\n";

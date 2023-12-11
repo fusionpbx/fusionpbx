@@ -34,9 +34,9 @@
 		$array['email_templates'][$x]['template_category'] = 'voicemail';
 		$array['email_templates'][$x]['template_subcategory'] = 'default';
 		$array['email_templates'][$x]['template_subject'] = 'Sprachnachricht von ${caller_id_name} <${caller_id_number}> ${message_duration}';
-		$array['email_templates'][$x]['template_body'] .= "<html>\n";
+		$array['email_templates'][$x]['template_body'] = "<html>\n";
 		$array['email_templates'][$x]['template_body'] .= "<body>\n";
-		$array['email_templates'][$x]['template_body'] = "Neue Sprachnachricht<br />\n";
+		$array['email_templates'][$x]['template_body'] .= "Neue Sprachnachricht<br />\n";
 		$array['email_templates'][$x]['template_body'] .= "<br />\n";
 		$array['email_templates'][$x]['template_body'] .= "Nebenstelle \${voicemail_name_formatted}<br />\n";
 		$array['email_templates'][$x]['template_body'] .= "Anrufer <a href=\"tel:\${caller_id_number}\">\${caller_id_number}</a><br />\n";
@@ -48,6 +48,7 @@
 		$array['email_templates'][$x]['template_enabled'] = 'true';
 		$array['email_templates'][$x]['template_description'] = '';
 		$x++;
+
 		$array['email_templates'][$x]['email_template_uuid'] = '861e6e04-92fe-4bfb-a983-f29b3a5c07cf';
 		$array['email_templates'][$x]['template_language'] = 'de-at';
 		$array['email_templates'][$x]['template_category'] = 'voicemail';
@@ -69,9 +70,9 @@
 		$array['email_templates'][$x]['template_category'] = 'voicemail';
 		$array['email_templates'][$x]['template_subcategory'] = 'default';
 		$array['email_templates'][$x]['template_subject'] = 'Sprachnachricht von ${caller_id_name} <${caller_id_number}> ${message_duration}';
-		$array['email_templates'][$x]['template_body'] .= "<html>\n";
+		$array['email_templates'][$x]['template_body'] = "<html>\n";
 		$array['email_templates'][$x]['template_body'] .= "<body>\n";
-		$array['email_templates'][$x]['template_body'] = "Neue Sprachnachricht<br />\n";
+		$array['email_templates'][$x]['template_body'] .= "Neue Sprachnachricht<br />\n";
 		$array['email_templates'][$x]['template_body'] .= "<br />\n";
 		$array['email_templates'][$x]['template_body'] .= "Nebenstelle \${voicemail_name_formatted}<br />\n";
 		$array['email_templates'][$x]['template_body'] .= "Anrufer <a href=\"tel:\${caller_id_number}\">\${caller_id_number}</a><br />\n";
@@ -83,6 +84,7 @@
 		$array['email_templates'][$x]['template_enabled'] = 'true';
 		$array['email_templates'][$x]['template_description'] = '';
 		$x++;
+
 		$array['email_templates'][$x]['email_template_uuid'] = 'f45935f0-7dc1-4b92-9bd7-7b35121a3ca7';
 		$array['email_templates'][$x]['template_language'] = 'de-de';
 		$array['email_templates'][$x]['template_category'] = 'voicemail';
@@ -99,12 +101,27 @@
 		$array['email_templates'][$x]['template_description'] = '';
 		$x++;
 
+		$array['email_templates'][$x]['email_template_uuid'] = '74fc9686-55fd-44a3-8a0a-283d786dab6f';
+		$array['email_templates'][$x]['template_language'] = 'de-de';
+		$array['email_templates'][$x]['template_category'] = 'missed';
+		$array['email_templates'][$x]['template_subcategory'] = 'default';
+		$array['email_templates'][$x]['template_subject'] = 'Verpasster Anruf von ${caller_id_name} <${caller_id_number}>';
+		$array['email_templates'][$x]['template_body'] = "<html>\n";
+		$array['email_templates'][$x]['template_body'] .= "<body>\n";
+		$array['email_templates'][$x]['template_body'] .= "Verpasster Anruf von \${caller_id_name} <<a href=\"tel:\${caller_id_number}\">\${caller_id_number}</a>> an \${sip_to_user} Nebenstelle \${dialed_user}\n";
+		$array['email_templates'][$x]['template_body'] .= "</body>\n";
+		$array['email_templates'][$x]['template_body'] .= "</html>\n";
+		$array['email_templates'][$x]['template_type'] = 'html';
+		$array['email_templates'][$x]['template_enabled'] = 'true';
+		$array['email_templates'][$x]['template_description'] = '';
+		$x++;
+
 		$array['email_templates'][$x]['email_template_uuid'] = '62d1e7ef-c423-4ac6-be9e-c0e2adbbb60d';
 		$array['email_templates'][$x]['template_language'] = 'en-gb';
 		$array['email_templates'][$x]['template_category'] = 'voicemail';
 		$array['email_templates'][$x]['template_subcategory'] = 'default';
 		$array['email_templates'][$x]['template_subject'] = 'Voicemail from ${caller_id_name} <${caller_id_number}> ${message_duration}';
-		$array['email_templates'][$x]['template_body'] .= "<html>\n";
+		$array['email_templates'][$x]['template_body'] = "<html>\n";
 		$array['email_templates'][$x]['template_body'] .= "<body>\n";
 		$array['email_templates'][$x]['template_body'] .= "From \${caller_id_name} <a href=\"tel:\${caller_id_number}\">\${caller_id_number}</a><br />\n";
 		$array['email_templates'][$x]['template_body'] .= "<br />\n";
@@ -118,6 +135,7 @@
 		$array['email_templates'][$x]['template_enabled'] = 'true';
 		$array['email_templates'][$x]['template_description'] = '';
 		$x++;
+
 		$array['email_templates'][$x]['email_template_uuid'] = 'defb880a-e368-4862-b946-a5244871af55';
 		$array['email_templates'][$x]['template_language'] = 'en-gb';
 		$array['email_templates'][$x]['template_category'] = 'voicemail';
@@ -139,7 +157,7 @@
 		$array['email_templates'][$x]['template_category'] = 'voicemail';
 		$array['email_templates'][$x]['template_subcategory'] = 'transcription';
 		$array['email_templates'][$x]['template_subject'] = 'Voicemail from ${caller_id_name} <${caller_id_number}> ${message_duration}';
-		$array['email_templates'][$x]['template_body'] .= "<html>\n";
+		$array['email_templates'][$x]['template_body'] = "<html>\n";
 		$array['email_templates'][$x]['template_body'] .= "<body>\n";
 		$array['email_templates'][$x]['template_body'] .= "Voicemail from \${caller_id_name} <a href=\"tel:\${caller_id_number}\">\${caller_id_number}</a><br />\n";
 		$array['email_templates'][$x]['template_body'] .= "<br />\n";
@@ -156,6 +174,7 @@
 		$array['email_templates'][$x]['template_enabled'] = 'true';
 		$array['email_templates'][$x]['template_description'] = '';
 		$x++;
+
 		$array['email_templates'][$x]['email_template_uuid'] = 'c5f3ae42-a5af-4bb7-80a3-480cfe90fb49';
 		$array['email_templates'][$x]['template_language'] = 'en-gb';
 		$array['email_templates'][$x]['template_category'] = 'voicemail';
@@ -180,7 +199,7 @@
 		$array['email_templates'][$x]['template_category'] = 'voicemail';
 		$array['email_templates'][$x]['template_subcategory'] = 'default';
 		$array['email_templates'][$x]['template_subject'] = 'Voicemail from ${caller_id_name} <${caller_id_number}> ${message_duration}';
-		$array['email_templates'][$x]['template_body'] .= "<html>\n";
+		$array['email_templates'][$x]['template_body'] = "<html>\n";
 		$array['email_templates'][$x]['template_body'] .= "<body>\n";
 		$array['email_templates'][$x]['template_body'] .= "Voicemail from \${caller_id_name} <a href=\"tel:\${caller_id_number}\">\${caller_id_number}</a><br />\n";
 		$array['email_templates'][$x]['template_body'] .= "<br />\n";
@@ -194,6 +213,7 @@
 		$array['email_templates'][$x]['template_enabled'] = 'true';
 		$array['email_templates'][$x]['template_description'] = '';
 		$x++;
+
 		$array['email_templates'][$x]['email_template_uuid'] = '56bb3416-53fc-4a3d-936d-9e3ba869081d';
 		$array['email_templates'][$x]['template_language'] = 'en-us';
 		$array['email_templates'][$x]['template_category'] = 'voicemail';
@@ -215,7 +235,7 @@
 		$array['email_templates'][$x]['template_category'] = 'voicemail';
 		$array['email_templates'][$x]['template_subcategory'] = 'transcription';
 		$array['email_templates'][$x]['template_subject'] = 'Voicemail from ${caller_id_name} <${caller_id_number}> ${message_duration}';
-		$array['email_templates'][$x]['template_body'] .= "<html>\n";
+		$array['email_templates'][$x]['template_body'] = "<html>\n";
 		$array['email_templates'][$x]['template_body'] .= "<body>\n";
 		$array['email_templates'][$x]['template_body'] .= "Voicemail from \${caller_id_name} <a href=\"tel:\${caller_id_number}\">\${caller_id_number}</a><br />\n";
 		$array['email_templates'][$x]['template_body'] .= "<br />\n";
@@ -232,6 +252,7 @@
 		$array['email_templates'][$x]['template_enabled'] = 'true';
 		$array['email_templates'][$x]['template_description'] = '';
 		$x++;
+
 		$array['email_templates'][$x]['email_template_uuid'] = 'c8f14f37-4998-41a2-9c7b-7e810c77c570';
 		$array['email_templates'][$x]['template_language'] = 'en-us';
 		$array['email_templates'][$x]['template_category'] = 'voicemail';
@@ -256,15 +277,16 @@
 		$array['email_templates'][$x]['template_category'] = 'missed';
 		$array['email_templates'][$x]['template_subcategory'] = 'default';
 		$array['email_templates'][$x]['template_subject'] = 'Missed Call from ${caller_id_name} <${caller_id_number}>';
-		$array['email_templates'][$x]['template_body'] .= "<html>\n";
+		$array['email_templates'][$x]['template_body'] = "<html>\n";
 		$array['email_templates'][$x]['template_body'] .= "<body>\n";
-		$array['email_templates'][$x]['template_body'] = "Missed Call from \${caller_id_name} &lt;<a href=\"tel:\${caller_id_number}\">\${caller_id_number}</a>&gt; to \${sip_to_user} ext \${dialed_user}\n";
+		$array['email_templates'][$x]['template_body'] .= "Missed Call from \${caller_id_name} &lt;<a href=\"tel:\${caller_id_number}\">\${caller_id_number}</a>&gt; to \${sip_to_user} ext \${dialed_user}\n";
 		$array['email_templates'][$x]['template_body'] .= "</body>\n";
 		$array['email_templates'][$x]['template_body'] .= "</html>\n";
 		$array['email_templates'][$x]['template_type'] = 'html';
 		$array['email_templates'][$x]['template_enabled'] = 'true';
 		$array['email_templates'][$x]['template_description'] = '';
 		$x++;
+
 		$array['email_templates'][$x]['email_template_uuid'] = '890626c4-907b-44ad-9cf6-02d0b0a2379d';
 		$array['email_templates'][$x]['template_language'] = 'en-us';
 		$array['email_templates'][$x]['template_category'] = 'missed';
@@ -281,7 +303,7 @@
 		$array['email_templates'][$x]['template_category'] = 'missed';
 		$array['email_templates'][$x]['template_subcategory'] = 'default';
 		$array['email_templates'][$x]['template_subject'] = 'Missed Call from ${caller_id_name} <${caller_id_number}>';
-		$array['email_templates'][$x]['template_body'] .= "<html>\n";
+		$array['email_templates'][$x]['template_body'] = "<html>\n";
 		$array['email_templates'][$x]['template_body'] .= "<body>\n";
 		$array['email_templates'][$x]['template_body'] .= "Missed Call from \${caller_id_name} &lt;<a href=\"tel:\${caller_id_number}\">\${caller_id_number}</a>&gt; to \${sip_to_user} ext \${dialed_user}\n";
 		$array['email_templates'][$x]['template_body'] .= "</body>\n";
@@ -290,12 +312,13 @@
 		$array['email_templates'][$x]['template_enabled'] = 'true';
 		$array['email_templates'][$x]['template_description'] = '';
 		$x++;
+
 		$array['email_templates'][$x]['email_template_uuid'] = 'a1b11ded-831f-4b81-8a23-fce866196508';
 		$array['email_templates'][$x]['template_language'] = 'en-gb';
 		$array['email_templates'][$x]['template_category'] = 'missed';
 		$array['email_templates'][$x]['template_subcategory'] = 'default';
 		$array['email_templates'][$x]['template_subject'] = 'Missed Call from ${caller_id_name} <${caller_id_number}>';
-		$array['email_templates'][$x]['template_body'] .= "Missed Call from \${caller_id_name} &lt;\${caller_id_number}&gt; to \${sip_to_user} ext \${dialed_user}\n";
+		$array['email_templates'][$x]['template_body'] = "Missed Call from \${caller_id_name} &lt;\${caller_id_number}&gt; to \${sip_to_user} ext \${dialed_user}\n";
 		$array['email_templates'][$x]['template_type'] = 'text';
 		$array['email_templates'][$x]['template_enabled'] = 'false';
 		$array['email_templates'][$x]['template_description'] = '';
@@ -306,7 +329,7 @@
 		$array['email_templates'][$x]['template_category'] = 'voicemail';
 		$array['email_templates'][$x]['template_subcategory'] = 'default';
 		$array['email_templates'][$x]['template_subject'] = 'Messagerie vocale à partir de ${caller_id_name} <${caller_id_number}> ${message_duration}';
-		$array['email_templates'][$x]['template_body'] .= "<html>\n";
+		$array['email_templates'][$x]['template_body'] = "<html>\n";
 		$array['email_templates'][$x]['template_body'] .= "<body>\n";
 		$array['email_templates'][$x]['template_body'] .= "Messagerie vocale à partir de \${caller_id_name} <a href=\"tel:\${caller_id_number}\">\${caller_id_number}</a><br />\n";
 		$array['email_templates'][$x]['template_body'] .= "<br />\n";
@@ -320,6 +343,7 @@
 		$array['email_templates'][$x]['template_enabled'] = 'true';
 		$array['email_templates'][$x]['template_description'] = '';
 		$x++;
+
 		$array['email_templates'][$x]['email_template_uuid'] = 'd3971eb3-757e-4501-8469-9d59738db821';
 		$array['email_templates'][$x]['template_language'] = 'fr-ca';
 		$array['email_templates'][$x]['template_category'] = 'voicemail';
@@ -335,12 +359,13 @@
 		$array['email_templates'][$x]['template_enabled'] = 'false';
 		$array['email_templates'][$x]['template_description'] = '';
 		$x++;
+
 		$array['email_templates'][$x]['email_template_uuid'] = 'ca96d814-cf5e-4dca-91ab-0150c2c6c36a';
 		$array['email_templates'][$x]['template_language'] = 'fr-ca';
 		$array['email_templates'][$x]['template_category'] = 'missed';
 		$array['email_templates'][$x]['template_subcategory'] = 'default';
 		$array['email_templates'][$x]['template_subject'] = 'Appel manqué de ${caller_id_name} <${caller_id_number}>';
-		$array['email_templates'][$x]['template_body'] .= "<html>\n";
+		$array['email_templates'][$x]['template_body'] = "<html>\n";
 		$array['email_templates'][$x]['template_body'] .= "<body>\n";
 		$array['email_templates'][$x]['template_body'] .= "Appel manqué de \${caller_id_name} &lt;<a href=\"tel:\${caller_id_number}\">\${caller_id_number}</a>&gt; À \${sip_to_user} ext \${dialed_user}\n";
 		$array['email_templates'][$x]['template_body'] .= "</body>\n";
@@ -349,23 +374,24 @@
 		$array['email_templates'][$x]['template_enabled'] = 'true';
 		$array['email_templates'][$x]['template_description'] = '';
 		$x++;
+
 		$array['email_templates'][$x]['email_template_uuid'] = '5c57bd40-0479-49ba-945a-c675cd96dc8c';
 		$array['email_templates'][$x]['template_language'] = 'fr-ca';
 		$array['email_templates'][$x]['template_category'] = 'missed';
 		$array['email_templates'][$x]['template_subcategory'] = 'default';
 		$array['email_templates'][$x]['template_subject'] = 'Appel manqué de ${caller_id_name} <${caller_id_number}>';
-		$array['email_templates'][$x]['template_body'] .= "Appel manqué de \${caller_id_name} &lt;\${caller_id_number}&gt; À \${sip_to_user} ext \${dialed_user}\n";
+		$array['email_templates'][$x]['template_body'] = "Appel manqué de \${caller_id_name} &lt;\${caller_id_number}&gt; À \${sip_to_user} ext \${dialed_user}\n";
 		$array['email_templates'][$x]['template_type'] = 'text';
 		$array['email_templates'][$x]['template_enabled'] = 'false';
 		$array['email_templates'][$x]['template_description'] = '';
-
 		$x++;
+
 		$array['email_templates'][$x]['email_template_uuid'] = 'b1eefbfc-c008-4c82-b93f-6a6df237aeaa';
 		$array['email_templates'][$x]['template_language'] = 'en-us';
 		$array['email_templates'][$x]['template_category'] = 'fax';
 		$array['email_templates'][$x]['template_subcategory'] = 'success_default';
 		$array['email_templates'][$x]['template_subject'] = 'Subject, Fax to: ${number_dialed} SENT';
-		$array['email_templates'][$x]['template_body'] .= "<html>\n";
+		$array['email_templates'][$x]['template_body'] = "<html>\n";
 		$array['email_templates'][$x]['template_body'] .= "<body>\n";
 		$array['email_templates'][$x]['template_body'] .= "We are happy to report the fax was sent successfully. It has been attached for your records.\n";
 		$array['email_templates'][$x]['template_body'] .= "</body>\n";
@@ -374,12 +400,13 @@
 		$array['email_templates'][$x]['template_enabled'] = 'true';
 		$array['email_templates'][$x]['template_description'] = '';
 		$x++;
+
 		$array['email_templates'][$x]['email_template_uuid'] = '48ce4fef-e6bd-4be6-9c76-1590e8498408';
 		$array['email_templates'][$x]['template_language'] = 'en-us';
 		$array['email_templates'][$x]['template_category'] = 'fax';
 		$array['email_templates'][$x]['template_subcategory'] = 'fail_default';
 		$array['email_templates'][$x]['template_subject'] = 'Fax to: ${number_dialed} has Failed';
-		$array['email_templates'][$x]['template_body'] .= "<html>\n";
+		$array['email_templates'][$x]['template_body'] = "<html>\n";
 		$array['email_templates'][$x]['template_body'] .= "<body>\n";
 		$array['email_templates'][$x]['template_body'] .= "We are sorry the fax failed to go through. It has been attached. Please check the number \${number_dialed}, and if it was correct you might consider emailing it instead.\n";
 		$array['email_templates'][$x]['template_body'] .= "</body>\n";
@@ -388,12 +415,13 @@
 		$array['email_templates'][$x]['template_enabled'] = 'true';
 		$array['email_templates'][$x]['template_description'] = '';
 		$x++;
+
 		$array['email_templates'][$x]['email_template_uuid'] = 'd64d9a03-affd-4dbf-ba04-5ad5accae4d9';
 		$array['email_templates'][$x]['template_language'] = 'en-us';
 		$array['email_templates'][$x]['template_category'] = 'fax';
 		$array['email_templates'][$x]['template_subcategory'] = 'fail_busy';
 		$array['email_templates'][$x]['template_subject'] = 'Fax to: ${number_dialed} was Busy';
-		$array['email_templates'][$x]['template_body'] .= "<html>\n";
+		$array['email_templates'][$x]['template_body'] = "<html>\n";
 		$array['email_templates'][$x]['template_body'] .= "<body>\n";
 		$array['email_templates'][$x]['template_body'] .= "We tried sending, but the call was busy \${fax_busy_attempts} of those times.\n";
 		$array['email_templates'][$x]['template_body'] .= "</body>\n";
@@ -402,12 +430,13 @@
 		$array['email_templates'][$x]['template_enabled'] = 'true';
 		$array['email_templates'][$x]['template_description'] = '';
 		$x++;
+
 		$array['email_templates'][$x]['email_template_uuid'] = '29729743-28bc-4f7b-88e1-0bdf6ff33cce';
 		$array['email_templates'][$x]['template_language'] = 'en-us';
 		$array['email_templates'][$x]['template_category'] = 'fax';
 		$array['email_templates'][$x]['template_subcategory'] = 'fail_invalid';
 		$array['email_templates'][$x]['template_subject'] = 'Fax to: ${number_dialed} was Invalid';
-		$array['email_templates'][$x]['template_body'] .= "<html>\n";
+		$array['email_templates'][$x]['template_body'] = "<html>\n";
 		$array['email_templates'][$x]['template_body'] .= "<body>\n";
 		$array['email_templates'][$x]['template_body'] .= "We tried sending, but the number entered was not a working phone number.\n";
 		$array['email_templates'][$x]['template_body'] .= "</body>\n";
@@ -415,14 +444,14 @@
 		$array['email_templates'][$x]['template_type'] = 'html';
 		$array['email_templates'][$x]['template_enabled'] = 'true';
 		$array['email_templates'][$x]['template_description'] = '';
-
 		$x++;
+
 		$array['email_templates'][$x]['email_template_uuid'] = '297a3e32-125d-4e21-a528-17edc0d50829';
 		$array['email_templates'][$x]['template_language'] = 'en-gb';
 		$array['email_templates'][$x]['template_category'] = 'fax';
 		$array['email_templates'][$x]['template_subcategory'] = 'success_default';
 		$array['email_templates'][$x]['template_subject'] = 'Subject, Fax to: ${number_dialed} SENT';
-		$array['email_templates'][$x]['template_body'] .= "<html>\n";
+		$array['email_templates'][$x]['template_body'] = "<html>\n";
 		$array['email_templates'][$x]['template_body'] .= "<body>\n";
 		$array['email_templates'][$x]['template_body'] .= "We are happy to report the fax was sent successfully. It has been attached for your records.\n";
 		$array['email_templates'][$x]['template_body'] .= "</body>\n";
@@ -431,12 +460,13 @@
 		$array['email_templates'][$x]['template_enabled'] = 'true';
 		$array['email_templates'][$x]['template_description'] = '';
 		$x++;
+
 		$array['email_templates'][$x]['email_template_uuid'] = '420d56d8-6cc5-484a-961e-da02ae0646a5';
 		$array['email_templates'][$x]['template_language'] = 'en-gb';
 		$array['email_templates'][$x]['template_category'] = 'fax';
 		$array['email_templates'][$x]['template_subcategory'] = 'fail_default';
 		$array['email_templates'][$x]['template_subject'] = 'Fax to: ${number_dialed} has Failed';
-		$array['email_templates'][$x]['template_body'] .= "<html>\n";
+		$array['email_templates'][$x]['template_body'] = "<html>\n";
 		$array['email_templates'][$x]['template_body'] .= "<body>\n";
 		$array['email_templates'][$x]['template_body'] .= "We are sorry the fax failed to go through. It has been attached. Please check the number \${number_dialed}, and if it was correct you might consider emailing it instead.\n";
 		$array['email_templates'][$x]['template_body'] .= "</body>\n";
@@ -445,12 +475,13 @@
 		$array['email_templates'][$x]['template_enabled'] = 'true';
 		$array['email_templates'][$x]['template_description'] = '';
 		$x++;
+
 		$array['email_templates'][$x]['email_template_uuid'] = '3899a9f2-96f2-4778-8f77-9962e4bc7ec8';
 		$array['email_templates'][$x]['template_language'] = 'en-gb';
 		$array['email_templates'][$x]['template_category'] = 'fax';
 		$array['email_templates'][$x]['template_subcategory'] = 'fail_busy';
 		$array['email_templates'][$x]['template_subject'] = 'Fax to: ${number_dialed} was Busy';
-		$array['email_templates'][$x]['template_body'] .= "<html>\n";
+		$array['email_templates'][$x]['template_body'] = "<html>\n";
 		$array['email_templates'][$x]['template_body'] .= "<body>\n";
 		$array['email_templates'][$x]['template_body'] .= "We tried sending, but the call was busy \${fax_busy_attempts} of those times.\n";
 		$array['email_templates'][$x]['template_body'] .= "</body>\n";
@@ -459,12 +490,13 @@
 		$array['email_templates'][$x]['template_enabled'] = 'true';
 		$array['email_templates'][$x]['template_description'] = '';
 		$x++;
+
 		$array['email_templates'][$x]['email_template_uuid'] = '307499c6-f390-446e-884a-3b5d7554771b';
 		$array['email_templates'][$x]['template_language'] = 'en-gb';
 		$array['email_templates'][$x]['template_category'] = 'fax';
 		$array['email_templates'][$x]['template_subcategory'] = 'fail_invalid';
 		$array['email_templates'][$x]['template_subject'] = 'Fax to: ${number_dialed} was Invalid';
-		$array['email_templates'][$x]['template_body'] .= "<html>\n";
+		$array['email_templates'][$x]['template_body'] = "<html>\n";
 		$array['email_templates'][$x]['template_body'] .= "<body>\n";
 		$array['email_templates'][$x]['template_body'] .= "We tried sending, but the number entered was not a working phone number.\n";
 		$array['email_templates'][$x]['template_body'] .= "</body>\n";
@@ -482,7 +514,7 @@
 		}
 
 		//add the email templates to the database
-		if (is_array($uuids) && @sizeof($uuids) != 0) {
+		if (!empty($uuids)) {
 			$sql = "select * from v_email_templates where ";
 			foreach ($uuids as $index => $uuid) {
 				$sql_where[] = "email_template_uuid = :email_template_uuid_".$index;
@@ -507,7 +539,7 @@
 		}
 
 		//add the missing email templates
-		if (is_array($array['email_templates']) && @sizeof($array['email_templates']) != 0) {
+		if (!empty($array['email_templates'])) {
 			//add the temporary permission
 			$p = new permissions;
 			$p->add("email_template_add", 'temp');
@@ -526,7 +558,9 @@
 		}
 
 		//remove the array
-		unset($array);
+		if (!empty($array)) {
+			unset($array);
+		}
 
 	}
 

@@ -24,12 +24,8 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
 
@@ -46,12 +42,25 @@
 	$language = new text;
 	$text = $language->get();
 
+
+//define the variables
+	$action = '';
+	$search = '';
+	$modules = '';
+
 //get posted data
-	if (is_array($_POST['modules'])) {
-		$action = $_POST['action'];
-		$search = $_POST['search'];
+	if (!empty($_POST['modules'])) {
 		$modules = $_POST['modules'];
 	}
+	if (!empty($_POST['action'])) {
+		$action = $_POST['action'];
+	}
+	if (!empty($_POST['search'])) {
+		$search = $_POST['search'];
+	}
+
+//set from session variables
+	$list_row_edit_button = !empty($_SESSION['theme']['list_row_edit_button']['boolean']) ? $_SESSION['theme']['list_row_edit_button']['boolean'] : 'false';
 
 //process the http post data by action
 	if ($action != '' && is_array($modules) && @sizeof($modules) != 0) {
@@ -83,23 +92,15 @@
 	}
 
 //connect to event socket
-	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-
-//check connection status
-	$esl_alive = false;
-	if ($fp) {
-		$esl_alive = true;
-		fclose($fp);
-	}
+	$esl = event_socket::create();
 
 //warn if switch not running
-	if (!$fp) {
+	if (!$esl->is_connected()) {
 		message::add($text['error-event-socket'], 'negative', 5000);
 	}
 
 //use the module class to get the list of modules from the db and add any missing modules
 	$module = new modules;
-	$module->db = $db;
 	$module->dir = $_SESSION['switch']['mod']['dir'];
 	$module->get_modules();
 	$modules = $module->modules;
@@ -125,7 +126,7 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['header-modules']." (".$module_count.")</b></div>\n";
 	echo "	<div class='actions'>\n";
-	if (permission_exists('module_edit') && $modules && $fp) {
+	if (permission_exists('module_edit') && $modules && $esl->is_connected()) {
 		echo button::create(['type'=>'button','label'=>$text['button-stop'],'icon'=>$_SESSION['theme']['button_icon_stop'],'onclick'=>"modal_open('modal-stop','btn_stop');"]);
 		echo button::create(['type'=>'button','label'=>$text['button-start'],'icon'=>$_SESSION['theme']['button_icon_start'],'onclick'=>"modal_open('modal-start','btn_start');"]);
 	}
@@ -143,7 +144,7 @@
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
 
-	if (permission_exists('module_edit') && $modules && $fp) {
+	if (permission_exists('module_edit') && !empty($modules) && $esl->is_connected()) {
 		echo modal::create(['id'=>'modal-stop','type'=>'general','message'=>$text['confirm-stop_modules'],'actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_stop','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('stop'); list_form_submit('form_list');"])]);
 		echo modal::create(['id'=>'modal-start','type'=>'general','message'=>$text['confirm-start_modules'],'actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_start','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('start'); list_form_submit('form_list');"])]);
 	}
@@ -163,7 +164,7 @@
 
 	echo "<table class='list'>\n";
 	function write_header($modifier) {
-		global $fp, $text, $modules;
+		global $text, $modules, $list_row_edit_button;
 		$modifier = str_replace('/', '', $modifier);
 		$modifier = str_replace('  ', ' ', $modifier);
 		$modifier = str_replace(' ', '_', $modifier);
@@ -172,17 +173,18 @@
 		echo "<tr class='list-header'>\n";
 		if (permission_exists('module_edit') || permission_exists('module_delete')) {
 			echo "	<th class='checkbox'>\n";
-			echo "		<input type='checkbox' id='checkbox_all_".$modifier."' name='checkbox_all' onclick=\"list_all_toggle('".$modifier."'); checkbox_on_change(this);\" ".($modules ?: "style='visibility: hidden;'").">\n";
+			echo "		<input type='checkbox' id='checkbox_all_".$modifier."' name='checkbox_all' onclick=\"list_all_toggle('".$modifier."'); checkbox_on_change(this);\" ".(!empty($modules) ?: "style='visibility: hidden;'").">\n";
 			echo "	</th>\n";
 		}
 		echo "<th>".$text['label-label']."</th>\n";
 		echo "<th class='hide-xs'>".$text['label-status']."</th>\n";
-		if ($fp) {
+		$esl = event_socket::create();
+		if ($esl->is_connected()) {
 			echo "<th class='center'>".$text['label-action']."</th>\n";
 		}
 		echo "<th class='center'>".$text['label-enabled']."</th>\n";
 		echo "<th class='hide-sm-dn' style='min-width: 40%;'>".$text['label-description']."</th>\n";
-		if (permission_exists('module_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+		if (permission_exists('module_edit') && $list_row_edit_button == 'true') {
 			echo "<td class='action-button'>&nbsp;</td>\n";
 		}
 		echo "</tr>\n";
@@ -221,7 +223,7 @@
 				echo escape($row['module_label']);
 			}
 			echo "	</td>\n";
-			if ($fp) {
+			if ($esl->is_connected()) {
 				if ($module->active($row["module_name"])) {
 					echo "	<td class='hide-xs'>".$text['label-running']."</td>\n";
 					if (permission_exists('module_edit')) {
@@ -232,7 +234,7 @@
 				}
 				else {
 					echo "	<td class='hide-xs'>\n";
-					echo $row['module_enabled'] == 'true' ? "<strong style='color: red;'>".$text['label-stopped']."</strong>" : $text['label-stopped']." ".escape($notice);
+					echo $row['module_enabled'] == 'true' ? "<strong style='color: red;'>".$text['label-stopped']."</strong>" : $text['label-stopped']." ".escape($notice ?? null);
 					echo "	</td>\n";
 					if (permission_exists('module_edit')) {
 						echo "	<td class='no-link center'>";
@@ -254,7 +256,7 @@
 			}
 			echo "	</td>\n";
 			echo "	<td class='description overflow hide-sm-dn'>".escape($row["module_description"])."&nbsp;</td>\n";
-			if (permission_exists('module_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+			if (permission_exists('module_edit') && $list_row_edit_button == 'true') {
 				echo "	<td class='action-button'>";
 				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
 				echo "	</td>\n";

@@ -24,12 +24,8 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once  dirname(__DIR__, 4) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permisions
@@ -54,12 +50,16 @@
 	unset($hud_stat);
 
 //domain limits
-	if (is_array($_SESSION['limit']) && sizeof($_SESSION['limit']) > 0) {
+	if (!empty($_SESSION['limit']) && sizeof($_SESSION['limit']) > 0) {
 
 		//set the row style
 			$c = 0;
 			$row_style["0"] = "row_style0";
 			$row_style["1"] = "row_style1";
+
+		//set default values
+			if (!isset($_SESSION['limit']['extensions']['numeric'])) { $_SESSION['limit']['extensions']['numeric'] = 0; }
+			if (!isset($_SESSION['limit']['destinations']['numeric'])) { $_SESSION['limit']['destinations']['numeric'] = 0; }
 
 		//caller id
 			echo "<div class='hud_box'>\n";
@@ -226,7 +226,7 @@
 
 			echo "</table>\n";
 			echo "</div>";
-			$n++;
+			//$n++;
 
 			echo "<span class='hud_expander' onclick=\"$('#hud_domain_limits_details').slideToggle('fast');\"><span class='fas fa-ellipsis-h'></span></span>";
 			echo "</div>\n";

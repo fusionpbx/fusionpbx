@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2010-2019
+ Portions created by the Initial Developer are Copyright (C) 2010-2023
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -63,16 +63,6 @@ if (!class_exists('ring_groups')) {
 		}
 
 		/**
-		 * called when there are no references to a particular object
-		 * unset the variables used in the class
-		 */
-		public function __destruct() {
-			foreach ($this as $key => $value) {
-				unset($this->$key);
-			}
-		}
-
-		/**
 		 * delete records
 		 */
 		public function delete($records) {
@@ -95,7 +85,7 @@ if (!class_exists('ring_groups')) {
 
 						//filter out unchecked ring groups, build where clause for below
 							foreach ($records as $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$uuids[] = "'".$record['uuid']."'";
 								}
 							}
@@ -205,13 +195,13 @@ if (!class_exists('ring_groups')) {
 
 						//filter out unchecked ring groups, build where clause for below
 							foreach ($records as $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$uuids[] = $record['uuid'];
 								}
 							}
 
 						//get ring group context
-							if (is_array($uuids) && @sizeof($uuids) != 0) {
+							if (!empty($uuids) && is_array($uuids) && @sizeof($uuids) != 0) {
 								$sql = "select ring_group_context from v_ring_groups ";
 								$sql .= "where domain_uuid = :domain_uuid ";
 								$sql .= "and ring_group_uuid = :ring_group_uuid ";
@@ -223,7 +213,7 @@ if (!class_exists('ring_groups')) {
 							}
 
 						//build the delete array
-							if (is_array($uuids) && @sizeof($uuids) != 0) {
+							if (!empty($uuids) && is_array($uuids) && @sizeof($uuids) != 0) {
 								$x = 0;
 								foreach ($uuids as $uuid) {
 									$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $uuid;
@@ -233,7 +223,7 @@ if (!class_exists('ring_groups')) {
 							}
 
 						//delete the checked rows
-							if (is_array($array) && @sizeof($array) != 0) {
+							if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
 
 								//execute delete
 									$database = new database;
@@ -279,8 +269,8 @@ if (!class_exists('ring_groups')) {
 					if (is_array($records) && @sizeof($records) != 0) {
 
 						//get current toggle state
-							foreach($records as $x => $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+							foreach ($records as $x => $record) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$uuids[] = "'".$record['uuid']."'";
 								}
 							}
@@ -376,8 +366,8 @@ if (!class_exists('ring_groups')) {
 					if (is_array($records) && @sizeof($records) != 0) {
 
 						//get checked records
-							foreach($records as $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+							foreach ($records as $record) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$uuids[] = "'".$record['uuid']."'";
 								}
 							}

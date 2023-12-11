@@ -3569,12 +3569,21 @@
 
 <!-- # STUN server -->
 <!-- # String -->
-<P76></P76>
+{if isset($grandstream_stun_server) }
+    <P76>{$grandstream_stun_server}</P76>
+{else}
+    <P76></P76>
+{/if}
 
 <!-- # Public Mode. 0 - No, 1 - Yes. Default is 0 -->
 <!-- # Number: 0, 1 -->
 <!-- # Mandatory -->
-<P1345>0</P1345>
+{if isset($grandstream_public_mode) }
+    <P1345>{$grandstream_public_mode}</P1345>
+{else}
+    <P1345>0</P1345>
+{/if}
+
 <!-- ############################################################################## -->
 <!-- ##  Settings/Call Features -->
 <!-- ############################################################################## -->
@@ -6277,7 +6286,12 @@
 <!-- # Periodic Inform Enable. 0 - No, 1 - Yes. Default is 0 -->
 <!-- # Number: 0, 1 -->
 <!-- # Mandatory -->
+{if isset ($grandstream_tr069_periodic_inform_enable)}
+<P4506>{$grandstream_tr069_periodic_inform_enable}</P4506>
+{else}
 <P4506>0</P4506>
+{/if}
+
 
 <!-- # Periodic Inform Interval. Default is 86400. -->
 <!-- # Number -->

@@ -1,6 +1,6 @@
 <?php
 /*-
- * Copyright (c) 2022 Mark J Crane <markjcrane@fusionpbx.com>
+ * Copyright (c) 2022 - 2023 Mark J Crane <markjcrane@fusionpbx.com>
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -64,16 +64,6 @@ if (!class_exists('email')) {
 			$this->priority = 0;
 			$this->debug_level = 3;
 			$this->read_confirmation = false;
-		}
-
-		/**
-		 * called when there are no references to a particular object
-		 * unset the variables used in the class
-		 */
-		public function __destruct() {
-			foreach ($this as $key => $value) {
-				unset($this->$key);
-			}
 		}
 
 		/**
@@ -172,7 +162,7 @@ if (!class_exists('email')) {
 					$body_part = $parts_array["BodyPart"];
 					$body_length = $parts_array["BodyLength"];
 
-					if (strlen($file) > 0) {
+					if (!empty($file)) {
 						//get the file information
 							$file_ext = pathinfo($file, PATHINFO_EXTENSION);
 							$file_name = substr($file, 0, (strlen($file) - strlen($file_ext))-1 );
@@ -217,9 +207,17 @@ if (!class_exists('email')) {
 		 */
 		public function send() {
 
+			//set the domain_uuid if not set
+			if (!isset($this->domain_uuid) && isset($_SESSION)) {
+				$this->domain_uuid = $_SESSION['domain_uuid'];
+			}
+
+			//get the email queue settings
+			$setting = new settings(["domain_uuid" => $this->domain_uuid]);
+
 			//set the send_method if not already set
 			if (!isset($this->method)) {
-				if ($_SESSION['email_queue']['enabled']['boolean'] == 'true') {
+				if ($setting->get('email_queue','enabled') == 'true') {
 					$this->method = 'queue';
 				}
 				else {
@@ -229,11 +227,6 @@ if (!class_exists('email')) {
 
 			//add the email to the queue
 			if ($this->method == 'queue') {
-
-				//set the domain_uuid if not set
-				if (!isset($this->domain_uuid)) {
-					$this->domain_uuid = $_SESSION['domain_uuid'];
-				}
 
 				//add the email_queue_uuid
 				$email_queue_uuid = uuid();
@@ -407,31 +400,31 @@ if (!class_exists('email')) {
 					include_once("resources/phpmailer/class.phpmailer.php");
 					include_once("resources/phpmailer/class.smtp.php");
 
-					//use the session email default settings
-					if ($_SESSION['email']['smtp_hostname']['text'] != '') { 
-						$smtp['hostname'] = $_SESSION['email']['smtp_hostname']['text'];
+					//use the email default settings
+					if (!empty($setting->get('email','smtp_hostname'))) {
+						$smtp['hostname'] = $setting->get('email','smtp_hostname');
 					}
-					$smtp['host'] 		= (strlen($_SESSION['email']['smtp_host']['text']) ? $_SESSION['email']['smtp_host']['text']: '127.0.0.1');
-					if (isset($_SESSION['email']['smtp_port'])) {
-						$smtp['port'] = (int) $_SESSION['email']['smtp_port']['numeric'];
+					$smtp['host'] 		= (!empty($setting->get('email','smtp_host')) ? $setting->get('email','smtp_host'): '127.0.0.1');
+					if (!empty($setting->get('email','smtp_port'))) {
+						$smtp['port'] = (int)$setting->get('email','smtp_port');
 					}
 					else {
 						$smtp['port'] = 0;
 					}
-					$smtp['secure'] 	= $_SESSION['email']['smtp_secure']['text'];
-					$smtp['auth'] 		= $_SESSION['email']['smtp_auth']['text'];
-					$smtp['username'] 	= $_SESSION['email']['smtp_username']['text'];
-					$smtp['password'] 	= $_SESSION['email']['smtp_password']['text'];
-					$smtp['from'] 		= $_SESSION['email']['smtp_from']['text'];
-					$smtp['from_name'] 	= $_SESSION['email']['smtp_from_name']['text'];
-					$smtp['validate_certificate'] = $_SESSION['email']['smtp_validate_certificate']['boolean'];
-					$smtp['crypto_method'] = $_SESSION['email']['smtp_crypto_method']['text'];
+					$smtp['secure'] 	= $setting->get('email','smtp_secure');
+					$smtp['auth'] 		= $setting->get('email','smtp_auth');
+					$smtp['username'] 	= $setting->get('email','smtp_username');
+					$smtp['password'] 	= $setting->get('email','smtp_password');
+					$smtp['from'] 		= $setting->get('email','smtp_from');
+					$smtp['from_name'] 	= $setting->get('email','smtp_from_name');
+					$smtp['validate_certificate'] = $setting->get('email','smtp_validate_certificate');
+					$smtp['crypto_method'] = $setting->get('email','smtp_crypto_method') ?? null;
 
-					if (isset($_SESSION['voicemail']['smtp_from']) && strlen($_SESSION['voicemail']['smtp_from']['text']) > 0) {
-						$smtp['from'] = $_SESSION['voicemail']['smtp_from']['text'];
+					if (!empty($setting->get('voicemail','smtp_from')) && !empty($setting->get('voicemail','smtp_from'))) {
+						$smtp['from'] = $setting->get('voicemail','smtp_from');
 					}
-					if (isset($_SESSION['voicemail']['smtp_from_name']) && strlen($_SESSION['voicemail']['smtp_from_name']['text']) > 0) {
-						$smtp['from_name'] = $_SESSION['voicemail']['smtp_from_name']['text'];
+					if (!empty($setting->get('voicemail','smtp_from_name')) && !empty($setting->get('voicemail','smtp_from_name'))) {
+						$smtp['from_name'] = $setting->get('voicemail','smtp_from_name');
 					}
 
 					//override the domain-specific smtp server settings, if any
@@ -461,7 +454,7 @@ if (!class_exists('email')) {
 					//create the email object and set general settings
 					$mail = new PHPMailer();
 					$mail->IsSMTP();
-					if ($smtp['hostname'] != '') {
+					if (!empty($smtp['hostname'])) {
 						$mail->Hostname = $smtp['hostname'];
 					}
 					$mail->Host = $smtp['host'];
@@ -479,7 +472,7 @@ if (!class_exists('email')) {
 					}
 
 					$smtp_secure = true;
-					if ($smtp['secure']  == "") {
+					if ($smtp['secure'] == "") {
 						$mail->SMTPSecure = 'none';
 						$mail->SMTPAutoTLS = false;
 						$smtp_secure = false;
@@ -590,7 +583,7 @@ if (!class_exists('email')) {
 
 					//send the email
 					if (!$mail_status) {
-						if (isset($mail->ErrorInfo) && strlen($mail->ErrorInfo) > 0) {
+						if (isset($mail->ErrorInfo) && !empty($mail->ErrorInfo)) {
 							$this->error = $mail->ErrorInfo;
 						}
 						return false;

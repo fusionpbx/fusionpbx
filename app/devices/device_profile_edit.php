@@ -17,18 +17,14 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2020 - 2022 All Rights Reserved.
+	Copyright (C) 2020-2023 All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 
 //check permissions
 	require_once "resources/check_auth.php";
@@ -55,10 +51,10 @@
 	}
 
 //process the user data and save it to the database
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 
 		//process the http post data by submitted action
-			if ($_POST['action'] != '' && is_uuid($_POST['device_profile_uuid'])) {
+			if (!empty($_POST['action']) && is_uuid($_POST['device_profile_uuid'])) {
 				$array[0]['checked'] = 'true';
 				$array[0]['uuid'] = $_POST['device_profile_uuid'];
 
@@ -80,10 +76,10 @@
 			$device_profile_name = $_POST["device_profile_name"];
 			$device_profile_keys = $_POST["device_profile_keys"];
 			$device_profile_settings = $_POST["device_profile_settings"];
-			$device_profile_enabled = $_POST["device_profile_enabled"] ?: 'false';
+			$device_profile_enabled = $_POST["device_profile_enabled"] ?? 'false';
 			$device_profile_description = $_POST["device_profile_description"];
-			$device_profile_keys_delete = $_POST["device_profile_keys_delete"];
-			$device_profile_settings_delete = $_POST["device_profile_settings_delete"];
+			$device_profile_keys_delete = $_POST["device_profile_keys_delete"] ?? null;
+			$device_profile_settings_delete = $_POST["device_profile_settings_delete"] ?? null;
 
 		//set the domain_uuid for users that do not have the permission
 			if (permission_exists('device_profile_domain')) {
@@ -115,13 +111,13 @@
 
 		//check for all required data
 			$msg = '';
-			if (strlen($device_profile_name) == 0) { $msg .= $text['message-required']." ".$text['label-device_profile_name']."<br>\n"; }
-			//if (strlen($device_profile_keys) == 0) { $msg .= $text['message-required']." ".$text['label-device_profile_keys']."<br>\n"; }
-			//if (strlen($device_profile_settings) == 0) { $msg .= $text['message-required']." ".$text['label-device_profile_settings']."<br>\n"; }
-			//if (strlen($domain_uuid) == 0) { $msg .= $text['message-required']." ".$text['label-domain_uuid']."<br>\n"; }
-			if (strlen($device_profile_enabled) == 0) { $msg .= $text['message-required']." ".$text['label-device_profile_enabled']."<br>\n"; }
-			//if (strlen($device_profile_description) == 0) { $msg .= $text['message-required']." ".$text['label-device_profile_description']."<br>\n"; }
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+			if (empty($device_profile_name)) { $msg .= $text['message-required']." ".$text['label-device_profile_name']."<br>\n"; }
+			//if (empty($device_profile_keys)) { $msg .= $text['message-required']." ".$text['label-device_profile_keys']."<br>\n"; }
+			//if (empty($device_profile_settings)) { $msg .= $text['message-required']." ".$text['label-device_profile_settings']."<br>\n"; }
+			//if (empty($domain_uuid)) { $msg .= $text['message-required']." ".$text['label-domain_uuid']."<br>\n"; }
+			if (empty($device_profile_enabled)) { $msg .= $text['message-required']." ".$text['label-device_profile_enabled']."<br>\n"; }
+			//if (empty($device_profile_description)) { $msg .= $text['message-required']." ".$text['label-device_profile_description']."<br>\n"; }
+			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -135,7 +131,7 @@
 			}
 
 		//add the device_profile_uuid
-			if (strlen($_POST["device_profile_uuid"]) == 0) {
+			if (empty($_POST["device_profile_uuid"])) {
 				$device_profile_uuid = uuid();
 			}
 
@@ -147,7 +143,7 @@
 			$array['device_profiles'][0]["device_profile_description"] = $device_profile_description;
 			$y = 0;
 			foreach ($device_profile_keys as $row) {
-				if (strlen($row['profile_key_vendor']) > 0 && strlen($row['profile_key_id']) > 0) {
+				if (strlen($row['profile_key_vendor']) > 0 && !empty($row['profile_key_id'])) {
 					$array['device_profiles'][0]['device_profile_keys'][$y]["domain_uuid"] = $domain_uuid;
 					$array['device_profiles'][0]['device_profile_keys'][$y]["device_profile_key_uuid"] = $row["device_profile_key_uuid"];
 					$array['device_profiles'][0]['device_profile_keys'][$y]["profile_key_category"] = $row["profile_key_category"];
@@ -159,17 +155,17 @@
 					}
 					$array['device_profiles'][0]['device_profile_keys'][$y]["profile_key_line"] = $row["profile_key_line"];
 					$array['device_profiles'][0]['device_profile_keys'][$y]["profile_key_value"] = $row["profile_key_value"];
-					$array['device_profiles'][0]['device_profile_keys'][$y]["profile_key_extension"] = $row["profile_key_extension"];
+					$array['device_profiles'][0]['device_profile_keys'][$y]["profile_key_extension"] = $row["profile_key_extension"] ?? null;
 					$array['device_profiles'][0]['device_profile_keys'][$y]["profile_key_protected"] = $row["profile_key_protected"];
 					$array['device_profiles'][0]['device_profile_keys'][$y]["profile_key_label"] = $row["profile_key_label"];
-					$array['device_profiles'][0]['device_profile_keys'][$y]["profile_key_icon"] = $row["profile_key_icon"];
+					$array['device_profiles'][0]['device_profile_keys'][$y]["profile_key_icon"] = $row["profile_key_icon"] ?? null;
 					$y++;
 				}
 			}
 			$y = 0;
 			if (permission_exists("device_profile_setting_edit")) {
 				foreach ($device_profile_settings as $row) {
-					if (strlen($row['profile_setting_name']) > 0 && strlen($row['profile_setting_enabled']) > 0) {
+					if (strlen($row['profile_setting_name']) > 0 && !empty($row['profile_setting_enabled'])) {
 						$array['device_profiles'][0]['device_profile_settings'][$y]["domain_uuid"] = $domain_uuid;
 						$array['device_profiles'][0]['device_profile_settings'][$y]["device_profile_setting_uuid"] = $row["device_profile_setting_uuid"];
 						$array['device_profiles'][0]['device_profile_settings'][$y]["profile_setting_name"] = $row["profile_setting_name"];
@@ -225,7 +221,7 @@
 	}
 
 //pre-populate the form
-	if (is_array($_GET) && $_POST["persistformvar"] != "true") {
+	if (!empty($_GET) && is_array($_GET) && (empty($_POST["persistformvar"]) || $_POST["persistformvar"] != "true")) {
 		$device_profile_uuid = $_GET["id"];
 		$sql = "select * from v_device_profiles ";
 		$sql .= "where device_profile_uuid = :device_profile_uuid ";
@@ -237,8 +233,8 @@
 		foreach ($result as &$row) {
 			$domain_uuid = $row["domain_uuid"];
 			$device_profile_name = $row["device_profile_name"];
-			$device_profile_keys = $row["device_profile_keys"];
-			$device_profile_settings = $row["device_profile_settings"];
+			$device_profile_keys = $row["device_profile_keys"] ?? null;
+			$device_profile_settings = $row["device_profile_settings"] ?? null;
 			$device_profile_enabled = $row["device_profile_enabled"];
 			$device_profile_description = $row["device_profile_description"];
 		}
@@ -246,10 +242,10 @@
 	}
 
 //set the defaults
-	if (strlen($device_profile_enabled) == 0) { $device_profile_enabled = 'true'; }
+	if (empty($device_profile_enabled)) { $device_profile_enabled = 'true'; }
 
 //get the child data
-	if (strlen($device_profile_uuid) > 0) {
+	if (!empty($device_profile_uuid)) {
 		$sql = "select * from v_device_profile_keys ";
 		$sql .= "where device_profile_uuid = :device_profile_uuid ";
 		//$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
@@ -276,7 +272,8 @@
 
 //get the vendor count
 	$vendor_count = 0;
-	if (is_array($device_profile_keys) && @sizeof($device_profile_keys) != 0) {
+	if (!empty($device_profile_keys) && is_array($device_profile_keys) && @sizeof($device_profile_keys) != 0) {
+		$previous_vendor = '';
 		foreach($device_profile_keys as $row) {
 			if ($previous_vendor != $row['profile_key_vendor']) {
 				$previous_vendor = $row['profile_key_vendor'];
@@ -287,7 +284,7 @@
 
 //determine whether to show the key_subtype
 	$show_key_subtype = false;
-	if (is_array($device_profile_keys) && @sizeof($device_profile_keys) != 0) {
+	if (!empty($device_profile_keys) && is_array($device_profile_keys) && @sizeof($device_profile_keys) != 0) {
 		foreach($device_profile_keys as $row) {
 			if ($row['profile_key_vendor'] == 'fanvil') {
 				$show_key_subtype = true;
@@ -316,22 +313,22 @@
 	unset($sql);
 
 //add the $device_profile_key_uuid
-	if (strlen($device_profile_key_uuid) == 0) {
+	if (empty($device_profile_key_uuid)) {
 		$device_profile_key_uuid = uuid();
 	}
 
 //add an empty row
-	if (!is_array($device_profile_keys) || count($device_profile_keys) == 0) {
+	if (empty($device_profile_keys) || !is_array($device_profile_keys) || count($device_profile_keys) == 0) {
 		$rows = $_SESSION['devices']['profile_key_add_rows']['numeric'];
 		$id = 0;
 	}
-	if (is_array($device_profile_keys) && count($device_profile_keys) > 0) {
+	if (!empty($device_profile_keys) && is_array($device_profile_keys) && count($device_profile_keys) > 0) {
 		$rows = $_SESSION['devices']['profile_key_edit_rows']['numeric'];
 		$id = count($device_profile_keys)+1;
 	}
 	for ($x = 0; $x < $rows; $x++) {
 		$device_profile_keys[$id]['domain_uuid'] = $domain_uuid;
-		$device_profile_keys[$id]['device_profile_uuid'] = $device_profile_uuid;
+		$device_profile_keys[$id]['device_profile_uuid'] = $device_profile_uuid ?? null;
 		$device_profile_keys[$id]['device_profile_key_uuid'] = '';
 		$device_profile_keys[$id]['profile_key_category'] = '';
 		$device_profile_keys[$id]['profile_key_id'] = '';
@@ -348,7 +345,7 @@
 	}
 
 //get the child data
-	if (strlen($device_profile_uuid) > 0) {
+	if (!empty($device_profile_uuid)) {
 		$sql = "select * from v_device_profile_settings ";
 		$sql .= "where device_profile_uuid = :device_profile_uuid ";
 		//$sql .= "and domain_uuid = '".$domain_uuid."' ";
@@ -361,14 +358,14 @@
 	}
 
 //add the $device_profile_setting_uuid
-	if (strlen($device_profile_setting_uuid) == 0) {
+	if (empty($device_profile_setting_uuid)) {
 		$device_profile_setting_uuid = uuid();
 	}
 
 //add an empty row
-	$x = is_array($device_profile_settings) ? count($device_profile_settings) : 0;
+	$x = !empty($device_profile_settings) && is_array($device_profile_settings) ? count($device_profile_settings) : 0;
 	$device_profile_settings[$x]['domain_uuid'] = $domain_uuid;
-	$device_profile_settings[$x]['device_profile_uuid'] = $device_profile_uuid;
+	$device_profile_settings[$x]['device_profile_uuid'] = $device_profile_uuid ?? null;
 	$device_profile_settings[$x]['device_profile_setting_uuid'] = '';
 	$device_profile_settings[$x]['profile_setting_name'] = '';
 	$device_profile_settings[$x]['profile_setting_value'] = '';
@@ -376,7 +373,7 @@
 	$device_profile_settings[$x]['profile_setting_description'] = '';
 
 //filter the uuid
-	if (!is_uuid($device_profile_uuid)) {
+	if (empty($device_profile_uuid) || !is_uuid($device_profile_uuid)) {
 		$device_profile_uuid = null;
 	}
 
@@ -398,7 +395,7 @@
 	if ($action == 'update') {
 		$button_margin = 'margin-left: 15px;';
 		if (permission_exists('device_profile_add')) {
-			echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'name'=>'btn_copy','style'=>$button_margin,'onclick'=>"modal_open('modal-copy','btn_copy');"]);
+			echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'name'=>'btn_copy','style'=>($button_margin ?? null),'onclick'=>"modal_open('modal-copy','btn_copy');"]);
 			unset($button_margin);
 		}
 		if (
@@ -406,7 +403,7 @@
 			permission_exists('device_profile_key_delete') ||
 			permission_exists('device_profile_setting_delete')
 			) {
-			echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'name'=>'btn_delete','style'=>$button_margin,'onclick'=>"modal_open('modal-delete','btn_delete');"]);
+			echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'name'=>'btn_delete','style'=>($button_margin ?? null),'onclick'=>"modal_open('modal-delete','btn_delete');"]);
 			unset($button_margin);
 		}
 	}
@@ -437,9 +434,9 @@
 	echo "	".$text['label-device_profile_name']."\n";
 	echo "</td>\n";
 	echo "<td width='70%' class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='device_profile_name' maxlength='255' value='".escape($device_profile_name)."'>\n";
+	echo "	<input class='formfld' type='text' name='device_profile_name' maxlength='255' value='".escape($device_profile_name ?? '')."'>\n";
 	echo "<br />\n";
-	echo $text['description-device_profile_name']."\n";
+	echo ($text['description-device_profile_name'] ?? '')."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -479,6 +476,9 @@
 		echo "		</tr>\n";
 	}
 
+	//define the previous profile key vendor
+	$previous_profile_key_vendor = null;
+
 	$x = 0;
 	foreach($device_profile_keys as $row) {
 
@@ -514,7 +514,7 @@
 			if (permission_exists('device_key_icon')) {
 				echo "			<td class='vtable'>".$text['label-device_key_icon']."</td>\n";
 			}
-			if (is_array($device_profile_keys) && @sizeof($device_profile_keys) > 1 && is_uuid($row["device_profile_key_uuid"]) && permission_exists('device_profile_key_delete')) {
+			if (!empty($device_profile_keys) && is_array($device_profile_keys) && @sizeof($device_profile_keys) > 1 && is_uuid($row["device_profile_key_uuid"]) && permission_exists('device_profile_key_delete')) {
 				echo "				<td class='vtable edit_delete_checkbox_all' onmouseover=\"swap_display('delete_label_keys_".$device_vendor."', 'delete_toggle_keys_".$device_vendor."');\" onmouseout=\"swap_display('delete_label_keys_".$device_vendor."', 'delete_toggle_keys_".$device_vendor."');\">\n";
 				echo "					<span id='delete_label_keys_".$device_vendor."'>".$text['label-delete']."</span>\n";
 				echo "					<span id='delete_toggle_keys_".$device_vendor."'><input type='checkbox' id='checkbox_all_keys_".$device_vendor."' name='checkbox_all' onclick=\"edit_all_toggle('keys_".$device_vendor."');\"></span>\n";
@@ -536,7 +536,7 @@
 		}
 		echo "					<option value='programmable' ".($row['profile_key_category'] == "programmable" ? "selected='selected'" : null).">".$text['label-programmable']."</option>\n";
 		if ($row['profile_key_vendor'] !== "polycom") { 
-			if (strlen($row['profile_key_vendor']) == 0) {
+			if (empty($row['profile_key_vendor'])) {
 				echo "					<option value='expansion' ".($row['profile_key_category'] == "expansion" ? "selected='selected'" : null).">".$text['label-expansion']."</option>\n";
 				echo "					<option value='expansion-1' ".($row['profile_key_category'] == "expansion-1" ? "selected='selected'" : null).">".$text['label-expansion']." 1</option>\n";
 				echo "					<option value='expansion-2' ".($row['profile_key_category'] == "expansion-2" ? "selected='selected'" : null).">".$text['label-expansion']." 2</option>\n";
@@ -577,7 +577,7 @@
 			if ($row['profile_key_vendor'] == $vendor['name']) {
 				$selected = "selected='selected'";
 			}
-			if (strlen($vendor['name']) > 0) {
+			if (!empty($vendor['name'])) {
 				echo "					<option value='".escape($vendor['name'])."' $selected >".escape(ucwords($vendor['name']))."</option>\n";
 			}
 		}
@@ -591,7 +591,7 @@
 		$previous_vendor = '';
 		$i = 0;
 		foreach ($vendor_functions as $function) {
-			if (strlen($row['profile_key_vendor']) == 0 && $function['vendor_name'] != $previous_vendor) {
+			if (empty($row['profile_key_vendor']) && $function['vendor_name'] != $previous_vendor) {
 				if ($i > 0) { echo "	</optgroup>\n"; }
 				echo "					<optgroup label='".escape(ucwords($function['vendor_name']))."'>\n";
 			}
@@ -599,16 +599,16 @@
 			if ($row['profile_key_vendor'] == $function['vendor_name'] && $row['profile_key_type'] == $function['value']) {
 				$selected = "selected='selected'";
 			}
-			if (strlen($row['profile_key_vendor']) == 0) {
-				echo "					<option value='".escape($function['value'])."' vendor='".escape($function['vendor_name'])."' $selected >".$text['label-'.$function['type']]."</option>\n";
+			if (empty($row['profile_key_vendor'])) {
+				echo "					<option value='".escape($function['value'])."' vendor='".escape($function['vendor_name'])."' $selected >".($text['label-'.$function['type'] ?? ''] ?? $function['value'])."</option>\n";
 			}
-			if (strlen($row['profile_key_vendor']) > 0 && $row['profile_key_vendor'] == $function['vendor_name']) {
-				echo "					<option value='".escape($function['value'])."' vendor='".escape($function['vendor_name'])."' $selected >".$text['label-'.$function['type']]."</option>\n";
+			if (!empty($row['profile_key_vendor']) && $row['profile_key_vendor'] == $function['vendor_name']) {
+				echo "					<option value='".escape($function['value'])."' vendor='".escape($function['vendor_name'])."' $selected >".($text['label-'.$function['type'] ?? ''] ?? $function['value'])."</option>\n";
 			}
 			$previous_vendor = $function['vendor_name'];
 			$i++;
 		}
-		if (strlen($row['profile_key_vendor']) == 0) {
+		if (empty($row['profile_key_vendor'])) {
 			echo "					</optgroup>\n";
 		}
 		echo "				</select>\n";
@@ -674,7 +674,7 @@
 	}
 	echo "	</table>\n";
 	echo "<br />\n";
-	echo $text['description-profile_key_icon']."\n";
+	echo ($text['description-profile_key_icon'] ?? '')."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -734,7 +734,7 @@
 		}
 		echo "	</table>\n";
 		echo "<br />\n";
-		echo $text['description-profile_setting_description']."\n";
+		echo ($text['description-profile_setting_description'] ?? '')."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 	}
@@ -752,7 +752,7 @@
 		}
 		echo "	</select>\n";
 		echo "<br />\n";
-		echo $text['description-domain_uuid']."\n";
+		echo ($text['description-domain_uuid'] ?? '')."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 	}
@@ -775,7 +775,7 @@
 		echo "	</select>\n";
 	}
 	echo "<br />\n";
-	echo $text['description-device_profile_enabled']."\n";
+	echo ($text['description-device_profile_enabled'] ?? '')."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -784,9 +784,9 @@
 	echo "	".$text['label-device_profile_description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='device_profile_description' maxlength='255' value='".escape($device_profile_description)."'>\n";
+	echo "	<input class='formfld' type='text' name='device_profile_description' maxlength='255' value='".escape($device_profile_description ?? '')."'>\n";
 	echo "<br />\n";
-	echo $text['description-device_profile_description']."\n";
+	echo ($text['description-device_profile_description'] ?? '')."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 

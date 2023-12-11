@@ -24,12 +24,8 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -41,19 +37,22 @@
 		exit;
 	}
 
+//set from session variables
+	$list_row_edit_button = !empty($_SESSION['theme']['list_row_edit_button']['boolean']) ? $_SESSION['theme']['list_row_edit_button']['boolean'] : 'false';
+
 //get the contact list
 	$sql = "select * from v_contact_emails ";
 	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= "and contact_uuid = :contact_uuid ";
 	$sql .= "order by email_primary desc, email_label asc ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$parameters['contact_uuid'] = $contact_uuid;
+	$parameters['contact_uuid'] = $contact_uuid ?? '';
 	$database = new database;
 	$contact_emails = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
 //show if exists
-	if (is_array($contact_emails) && @sizeof($contact_emails) != 0) {
+	if (!empty($contact_emails)) {
 
 		//show the content
 			echo "<div class='action_bar sub shrink'>\n";
@@ -65,18 +64,18 @@
 			echo "<tr class='list-header'>\n";
 			if (permission_exists('contact_email_delete')) {
 				echo "	<th class='checkbox'>\n";
-				echo "		<input type='checkbox' id='checkbox_all_emails' name='checkbox_all' onclick=\"edit_all_toggle('emails');\" ".($contact_emails ?: "style='visibility: hidden;'").">\n";
+				echo "		<input type='checkbox' id='checkbox_all_emails' name='checkbox_all' onclick=\"edit_all_toggle('emails');\" ".(!empty($contact_emails) ?: "style='visibility: hidden;'").">\n";
 				echo "	</th>\n";
 			}
 			echo "<th class='pct-15'>".$text['label-email_label']."</th>\n";
 			echo "<th>".$text['label-email_address']."</th>\n";
 			echo "<th class='hide-md-dn'>".$text['label-email_description']."</th>\n";
-			if (permission_exists('contact_email_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+			if (permission_exists('contact_email_edit') && $list_row_edit_button == 'true') {
 				echo "	<td class='action-button'>&nbsp;</td>\n";
 			}
 			echo "</tr>\n";
 
-			if (is_array($contact_emails) && @sizeof($contact_emails) != 0) {
+			if (!empty($contact_emails)) {
 				$x = 0;
 				foreach ($contact_emails as $row) {
 					if (permission_exists('contact_email_edit')) {
@@ -92,7 +91,7 @@
 					echo "	<td>".escape($row['email_label'])." ".($row['email_primary'] ? "&nbsp;<i class='fas fa-star fa-xs' style='float: right; margin-top: 0.5em; margin-right: -0.5em;' title=\"".$text['label-primary']."\"></i>" : null)."</td>\n";
 					echo "	<td class='no-link'><a href='mailto:".escape($row['email_address'])."'>".escape($row['email_address'])."</a>&nbsp;</td>\n";
 					echo "	<td class='description overflow hide-md-dn'>".escape($row['email_description'])."&nbsp;</td>\n";
-					if (permission_exists('contact_email_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+					if (permission_exists('contact_email_edit') && $list_row_edit_button == 'true') {
 						echo "	<td class='action-button'>\n";
 						echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
 						echo "	</td>\n";

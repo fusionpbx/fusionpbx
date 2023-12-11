@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2019
+ Portions created by the Initial Developer are Copyright (C) 2008-2023
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -28,6 +28,8 @@
 if (!class_exists('contacts')) {
 	class contacts {
 
+		const APP_NAME = "contacts";
+		const APP_UUID = "04481e0e-a478-c559-adad-52bd4174574c";
 		/**
 		 * declare private variables
 		 */
@@ -49,8 +51,8 @@ if (!class_exists('contacts')) {
 		public function __construct() {
 
 			//assign private variables
-				$this->app_name = 'contacts';
-				$this->app_uuid = '04481e0e-a478-c559-adad-52bd4174574c';
+				$this->app_name = self::APP_NAME;
+				$this->app_uuid = self::APP_UUID;
 				$this->permission_prefix = 'contact_';
 				$this->list_page = 'contacts.php';
 				$this->tables[] = 'contact_addresses';
@@ -67,16 +69,6 @@ if (!class_exists('contacts')) {
 				$this->tables[] = 'contacts';
 				$this->uuid_prefix = 'contact_';
 
-		}
-
-		/**
-		 * called when there are no references to a particular object
-		 * unset the variables used in the class
-		 */
-		public function __destruct() {
-			foreach ($this as $key => $value) {
-				unset($this->$key);
-			}
 		}
 
 		/**
@@ -102,7 +94,7 @@ if (!class_exists('contacts')) {
 
 						//build the delete array
 							foreach ($records as $x => $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									if (is_array($this->tables) && @sizeof($this->tables) != 0) {
 										foreach ($this->tables as $table) {
 											$array[$table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
@@ -216,7 +208,7 @@ if (!class_exists('contacts')) {
 						//filter out unchecked ivr menu options, build delete array
 							$x = 0;
 							foreach ($records as $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
 									$array[$this->table][$x]['contact_uuid'] = $this->contact_uuid;
 									$x++;
@@ -263,7 +255,7 @@ if (!class_exists('contacts')) {
 						//filter out unchecked ivr menu options, build delete array
 							$x = 0;
 							foreach ($records as $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
 									$array[$this->table][$x]['contact_uuid'] = $this->contact_uuid;
 									$x++;

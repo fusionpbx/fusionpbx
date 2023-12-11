@@ -17,19 +17,15 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -47,7 +43,7 @@
 
 //additional includes
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
-	$archive_request = $_POST['archive_request'] == 'true' ? true : false;
+	$archive_request = isset($_POST['archive_request']) && $_POST['archive_request'] == 'true' ? true : false;
 	require_once "xml_cdr_inc.php";
 
 //get the format
@@ -57,7 +53,7 @@
 	if (permission_exists('xml_cdr_export_csv') && $export_format == 'csv') {
 
 		//define file name
-			if ($_GET['show'] == 'all' && permission_exists('xml_cdr_all')) {
+			if ($_REQUEST['show'] == 'all' && permission_exists('xml_cdr_all')) {
 				$csv_filename = "cdr_".date("Ymd_His").".csv";
 			}
 			else {
@@ -72,11 +68,32 @@
 			$z = 0;
 			foreach ($result[0] as $key => $val) {
 				if ($key != "xml" && $key != "json") {
-					if ($z == 0) {
-						echo '"'.$key.'"';
+					$echo = true;
+					switch ($key) {
+						case 'direction': if (!permission_exists('xml_cdr_direction')) { $echo = false; } break;
+						case 'extension': if (!permission_exists('xml_cdr_extension')) { $echo = false; } break;
+						case 'caller_id_name': if (!permission_exists('xml_cdr_caller_id_name')) { $echo = false; } break;
+						case 'caller_id_number': if (!permission_exists('xml_cdr_caller_id_number')) { $echo = false; } break;
+						case 'caller_destination': if (!permission_exists('xml_cdr_caller_destination')) { $echo = false; } break;
+						case 'destination_number': if (!permission_exists('xml_cdr_destination')) { $echo = false; } break;
+						case 'answer_stamp':
+						case 'start_stamp':
+						case 'end_stamp':
+						case 'start_date_formatted':
+						case 'start_time_formatted':
+						case 'start_epoch': if (!permission_exists('xml_cdr_start')) { $echo = false; } break;
+						case 'tta': if (!permission_exists('xml_cdr_tta')) { $echo = false; } break;
+						case 'duration':
+						case 'billsec':
+						case 'billmsec': if (!permission_exists('xml_cdr_duration')) { $echo = false; } break;
+						case 'pdd_ms': if (!permission_exists('xml_cdr_pdd')) { $echo = false; } break;
+						case 'rtp_audio_in_mos': if (!permission_exists('xml_cdr_mos')) { $echo = false; } break;
+						case 'hangup_cause': if (!permission_exists('xml_cdr_hangup_cause')) { $echo = false; } break;
+						case 'record_path':
+						case 'record_name': if (!permission_exists('xml_cdr_recording')) { $echo = false; } break;
 					}
-					else {
-						echo ',"'.$key.'"';
+					if ($echo) {
+						echo ($z == 0 ? null : ',').'"'.$key.'"';
 					}
 				}
 				$z++;
@@ -89,18 +106,39 @@
 				$z = 0;
 				foreach ($result[0] as $key => $val) {
 					if ($key != "xml" && $key != "json") {
-						if ($z == 0) {
-							echo '"'.$result[$x][$key].'"';
+						$echo = true;
+						switch ($key) {
+							case 'direction': if (!permission_exists('xml_cdr_direction')) { $echo = false; } break;
+							case 'extension': if (!permission_exists('xml_cdr_extension')) { $echo = false; } break;
+							case 'caller_id_name': if (!permission_exists('xml_cdr_caller_id_name')) { $echo = false; } break;
+							case 'caller_id_number': if (!permission_exists('xml_cdr_caller_id_number')) { $echo = false; } break;
+							case 'caller_destination': if (!permission_exists('xml_cdr_caller_destination')) { $echo = false; } break;
+							case 'destination_number': if (!permission_exists('xml_cdr_destination')) { $echo = false; } break;
+							case 'answer_stamp':
+							case 'start_stamp':
+							case 'end_stamp':
+							case 'start_date_formatted':
+							case 'start_time_formatted':
+							case 'start_epoch': if (!permission_exists('xml_cdr_start')) { $echo = false; } break;
+							case 'tta': if (!permission_exists('xml_cdr_tta')) { $echo = false; } break;
+							case 'duration':
+							case 'billsec':
+							case 'billmsec': if (!permission_exists('xml_cdr_duration')) { $echo = false; } break;
+							case 'pdd_ms': if (!permission_exists('xml_cdr_pdd')) { $echo = false; } break;
+							case 'rtp_audio_in_mos': if (!permission_exists('xml_cdr_mos')) { $echo = false; } break;
+							case 'hangup_cause': if (!permission_exists('xml_cdr_hangup_cause')) { $echo = false; } break;
+							case 'record_path':
+							case 'record_name': if (!permission_exists('xml_cdr_recording')) { $echo = false; } break;
 						}
-						else {
-							echo ',"'.$result[$x][$key].'"';
+						if ($echo) {
+							echo ($z == 0 ? null : ',').'"'.$result[$x][$key].'"';
 						}
 					}
 					$z++;
 				}
 				echo "\n";
 				++$x;
-				if ($x > ($result_count-1)) {
+				if ($x > ($result_count - 1)) {
 					break;
 				}
 			}
@@ -141,25 +179,61 @@
 		//add new page
 		$pdf->AddPage('L', array($page_width, $page_height));
 
-		//set the number of columns
-		$columns = 12;
+		//initialize columns and colspan variables
+		$columns = $colspan_line_totals_averages = 0;
 
 		//write the table column headers
 		$data_start = '<table cellpadding="0" cellspacing="0" border="0" width="100%">';
 		$data_end = '</table>';
 
 		$data_head = '<tr>';
-		$data_head .= '<td width="5%"><b>'.$text['label-direction'].'</b></td>';
-		$data_head .= '<td width="9%"><b>'.$text['label-caller_id_name'].'</b></td>';
-		$data_head .= '<td width="9%"><b>'.$text['label-caller_id_number'].'</b></td>';
-		$data_head .= '<td width="9%"><b>'.$text['label-destination'].'</b></td>';
-		$data_head .= '<td width="10%" nowrap="nowrap"><b>'.$text['label-start'].'</b></td>';
-		$data_head .= '<td width="3%" align="right"><b>'.$text['label-tta'].'</b></td>';
-		$data_head .= '<td width="8%" align="right"><b>'.$text['label-duration'].'</b></td>';
-		$data_head .= '<td width="8%" align="right"><b>'.$text['label-billsec'].'</b></td>';
-		$data_head .= '<td width="5%" align="right"><b>'."PDD".'</b></td>';
-		$data_head .= '<td width="5%" align="center"><b>'."MOS".'</b></td>';
-		if (is_array($_SESSION['cdr']['field'])) {
+		if (permission_exists('xml_cdr_direction')) {
+			$data_head .= '<td width="6%"><b>'.$text['label-direction'].'</b></td>';
+			$columns++;
+		}
+		if (permission_exists('xml_cdr_extension')) {
+			$data_head .= '<td width="4%"><b>'.$text['label-ext'].'</b></td>';
+			$columns++;
+		}
+		if (permission_exists('xml_cdr_caller_id_name')) {
+			$data_head .= '<td width="12%"><b>'.$text['label-caller_id_name'].'</b></td>';
+			$columns++;
+		}
+		if (permission_exists('xml_cdr_caller_id_number')) {
+			$data_head .= '<td width="9%"><b>'.$text['label-caller_id_number'].'</b></td>';
+			$columns++;
+		}
+		if (permission_exists('xml_cdr_caller_destination')) {
+			$data_head .= '<td width="9%"><b>'.$text['label-caller_destination'].'</b></td>';
+			$columns++;
+		}
+		if (permission_exists('xml_cdr_destination')) {
+			$data_head .= '<td width="9%"><b>'.$text['label-destination'].'</b></td>';
+			$columns++;
+		}
+		if (permission_exists('xml_cdr_start')) {
+			$data_head .= '<td width="12%" nowrap="nowrap"><b>'.$text['label-start'].'</b></td>';
+			$columns++;
+		}
+		$colspan_line_totals_averages = $columns - 1;
+		if (permission_exists('xml_cdr_tta')) {
+			$data_head .= '<td width="3%" align="right"><b>'.$text['label-tta'].'</b></td>';
+			$columns++;
+		}
+		if (permission_exists('xml_cdr_duration')) {
+			$data_head .= '<td width="6%" align="right"><b>'.$text['label-duration'].'</b></td>';
+			$columns += 2;
+			$data_head .= '<td width="7%" align="right"><b>'.$text['label-billsec'].'</b></td>';
+		}
+		if (permission_exists('xml_cdr_pdd')) {
+			$data_head .= '<td width="5%" align="right"><b>'.$text['label-pdd'].'</b></td>';
+			$columns++;
+		}
+		if (permission_exists('xml_cdr_mos')) {
+			$data_head .= '<td width="5%" align="center"><b>'.$text['label-mos'].'</b></td>';
+			$columns++;
+		}
+		if (!empty($_SESSION['cdr']['field']) && is_array($_SESSION['cdr']['field'])) {
 			foreach ($_SESSION['cdr']['field'] as $field) {
 				$array = explode(",", $field);
 				$field_name = end($array);
@@ -168,13 +242,17 @@
 				if ($field_name != "destination_number") {
 					$data_head .= '<td width="10%" align="left"><b>'.$field_label.'</b></td>';
 				}
-				$columns = $columns + 1;
+				$columns++;
 			}
 		}
-		$data_head .= '<td width="1%"></td>';
-		$data_head .= '<td width="10%"><b>'.$text['label-hangup_cause'].'</b></td>';
+		if (permission_exists('xml_cdr_hangup_cause')) {
+			$data_head .= '<td width="10%"><b>'.$text['label-hangup_cause'].'</b></td>';
+			$columns++;
+		}
 		$data_head .= '</tr>';
-		$data_head .= '<tr><td colspan="'.$columns.'"><hr></td></tr>';
+		if ($columns != 0) {
+			$data_head .= '<tr><td colspan="'.$columns.'"><hr></td></tr>';
+		}
 
 		//initialize total variables
 		$total['duration'] = 0;
@@ -185,36 +263,53 @@
 
 		//write the row cells
 		$z = 0; // total counter
+		$z_mos = 0; // total with mos counter
 		$p = 0; // per page counter
-		if (sizeof($result) > 0) {
+		if (sizeof($result) > 0 && $columns != 0) {
 			foreach ($result as $cdr_num => $fields) {
-				$data_body[$p] .= '<tr>';
-				$data_body[$p] .= '<td>'.$text['label-'.$fields['direction']].'</td>';
-				$data_body[$p] .= '<td>'.$fields['caller_id_name'].'</td>';
-				$data_body[$p] .= '<td>'.$fields['caller_id_number'].'</td>';
-				$data_body[$p] .= '<td>'.format_phone($fields['destination_number']).'</td>';
-				$data_body[$p] .= '<td>'.$fields['start_stamp'].'</td>';
-				$total['tta'] += ($fields['tta'] > 0) ? $fields['tta'] : 0;
-				$data_body[$p] .= '<td align="right">'.(($fields['tta'] >= 0) ? $fields['tta'].'s' : null).'</td>';
-				$seconds = ($fields['hangup_cause'] == "ORIGINATOR_CANCEL") ? $fields['duration'] : round(($fields['billmsec'] / 1000), 0, PHP_ROUND_HALF_UP);
-				$total['duration'] += $seconds;
-				$data_body[$p] .= '<td align="right">'.gmdate("G:i:s", $seconds).'</td>';
-				$total['billmsec'] += $fields['billmsec'];
-				$data_body[$p] .= '<td align="right">'.number_format(round($fields['billmsec'] / 1000, 2), 2).'s</td>';
-				$data_body[$p] .= '<td align="right">';
+				$data_body[$p] = '<tr>';
+				if (permission_exists('xml_cdr_direction')) {
+					$data_body[$p] .= '<td>'.$text['label-'.$fields['direction']].'</td>';
+				}
+				if (permission_exists('xml_cdr_extension')) {
+					$data_body[$p] .= '<td>'.$fields['extension'].'</td>';
+				}
+				if (permission_exists('xml_cdr_caller_id_name')) {
+					$data_body[$p] .= '<td>'.$fields['caller_id_name'].'</td>';
+				}
+				if (permission_exists('xml_cdr_caller_id_number')) {
+					$data_body[$p] .= '<td>'.$fields['caller_id_number'].'</td>';
+				}
+				if (permission_exists('xml_cdr_caller_destination')) {
+					$data_body[$p] .= '<td>'.format_phone($fields['caller_destination']).'</td>';
+				}
+				if (permission_exists('xml_cdr_destination')) {
+					$data_body[$p] .= '<td>'.format_phone($fields['destination_number']).'</td>';
+				}
+				if (permission_exists('xml_cdr_start')) {
+					$data_body[$p] .= '<td>'.$fields['start_stamp'].'</td>';
+				}
+				if (permission_exists('xml_cdr_tta')) {
+					$total['tta'] += ($fields['tta'] > 0) ? $fields['tta'] : 0;
+					$data_body[$p] .= '<td align="right">'.(($fields['tta'] >= 0) ? $fields['tta'].'s' : null).'</td>';
+				}
+				if (permission_exists('xml_cdr_duration')) {
+					$seconds = ($fields['hangup_cause'] == "ORIGINATOR_CANCEL") ? $fields['duration'] : round(($fields['billmsec'] / 1000), 0, PHP_ROUND_HALF_UP);
+					$total['duration'] += $seconds;
+					$data_body[$p] .= '<td align="right">'.gmdate("G:i:s", $seconds).'</td>';
+					$total['billmsec'] += $fields['billmsec'];
+					$data_body[$p] .= '<td align="right">'.number_format(round($fields['billmsec'] / 1000, 2), 2).'s</td>';
+				}
 				if (permission_exists("xml_cdr_pdd")) {
 					$total['pdd_ms'] += $fields['pdd_ms'];
-					$data_body[$p] .= number_format(round($fields['pdd_ms'] / 1000, 2), 2).'s';
+					$data_body[$p] .= '<td align="right">'.number_format(round($fields['pdd_ms'] / 1000, 2), 2).'s</td>';
 				}
-				$data_body[$p] .= '</td>';
-				$data_body[$p] .= '<td align="center">';
-				if (permission_exists("xml_cdr_mos")) {
+				if (permission_exists('xml_cdr_mos')) {
 					$total['rtp_audio_in_mos'] += $fields['rtp_audio_in_mos'];
-					$data_body[$p] .= (strlen($total['rtp_audio_in_mos']) > 0) ? $fields['rtp_audio_in_mos'] : null;
+					$data_body[$p] .= '<td align="center">'.($fields['rtp_audio_in_mos'] ?? '').'</td>';
+					if (!empty($fields['rtp_audio_in_mos']) && is_numeric($fields['rtp_audio_in_mos'])) { $z_mos++; }
 				}
-				$data_body[$p] .= '</td>';
-
-				if (is_array($_SESSION['cdr']['field'])) {
+				if (!empty($_SESSION['cdr']['field']) && is_array($_SESSION['cdr']['field'])) {
 					foreach ($_SESSION['cdr']['field'] as $field) {
 						$array = explode(",", $field);
 						$field_name = end($array);
@@ -228,8 +323,9 @@
 					}
 				}
 
-				$data_body[$p] .= '<td>&nbsp;</td>';
-				$data_body[$p] .= '<td>'.ucwords(strtolower(str_replace("_", " ", $fields['hangup_cause']))).'</td>';
+				if (permission_exists('xml_cdr_hangup_cause')) {
+					$data_body[$p] .= '<td>'.ucwords(strtolower(str_replace("_", " ", $fields['hangup_cause']))).'</td>';
+				}
 				$data_body[$p] .= '</tr>';
 
 				$z++;
@@ -255,38 +351,61 @@
 
 		}
 
-		//write divider
-		$data_footer = '<tr><td colspan="'.$columns.'"></td></tr>';
+		if ($columns != 0) {
 
-		//write totals
-		$data_footer .= '<tr>';
-		$data_footer .= '<td><b>'.$text['label-total'].'</b></td>';
-		$data_footer .= '<td>'.$z.'</td>';
-		$data_footer .= '<td colspan="3"></td>';
-		$data_footer .= '<td align="right"><b>'.number_format(round($total['tta'], 1), 0).'s</b></td>';
-		$data_footer .= '<td align="right"><b>'.gmdate("G:i:s", $total['duration']).'</b></td>';
-		$data_footer .= '<td align="right"><b>'.gmdate("G:i:s", round($total['billmsec'] / 1000, 0)).'</b></td>';
-		$data_footer .= '<td align="right"><b>'.number_format(round(($total['pdd_ms'] / 1000), 2), 2).'s</b></td>';
-		$data_footer .= '<td colspan="2"></td>';
-		$data_footer .= '</tr>';
+			//write divider
+			$data_footer = '<tr><td colspan="'.$columns.'"></td></tr>';
 
-		//write divider
-		$data_footer .= '<tr><td colspan="'.$columns.'"><hr></td></tr>';
+			//write totals
+			$data_footer .= '<tr>';
+			$data_footer .= '<td><b>'.$text['label-total'].'</b></td>';
+			$data_footer .= '<td colspan="'.$colspan_line_totals_averages.'">'.$z.'</td>';
+			if (permission_exists('xml_cdr_tta')) {
+				$data_footer .= '<td align="right"><b>'.number_format(round($total['tta'], 1), 0).'s</b></td>';
+			}
+			if (permission_exists('xml_cdr_duration')) {
+				$data_footer .= '<td align="right"><b>'.gmdate("G:i:s", $total['duration']).'</b></td>';
+				$data_footer .= '<td align="right"><b>'.gmdate("G:i:s", round($total['billmsec'] / 1000, 0)).'</b></td>';
+			}
+			if (permission_exists("xml_cdr_pdd")) {
+				$data_footer .= '<td align="right"><b>'.number_format(round(($total['pdd_ms'] / 1000), 2), 2).'s</b></td>';
+			}
+			if (permission_exists('xml_cdr_mos')) {
+				$data_footer .= '<td></td>';
+			}
+			if (permission_exists('xml_cdr_hangup_cause')) {
+				$data_footer .= '<td></td>';
+			}
+			$data_footer .= '</tr>';
 
-		//write averages
-		$data_footer .= '<tr>';
-		$data_footer .= '<td><b>'.$text['label-average'].'</b></td>';
-		$data_footer .= '<td colspan="4"></td>';
-		$data_footer .= '<td align="right"><b>'.round(($total['tta'] / $z), 1).'</b></td>';
-		$data_footer .= '<td align="right"><b>'.gmdate("G:i:s", ($total['duration'] / $z)).'</b></td>';
-		$data_footer .= '<td align="right"><b>'.gmdate("G:i:s", round($total['billmsec'] / $z / 1000, 0)).'</b></td>';
-		$data_footer .= '<td align="right"><b>'.number_format(round(($total['pdd_ms'] / $z / 1000), 2), 2).'s</b></td>';
-		$data_footer .= '<td align="right"><b>'.round(($total['rtp_audio_in_mos'] / $z), 2).'</b></td>';
-		$data_footer .= '<td></td>';
-		$data_footer .= '</tr>';
+			$data_footer .= '<tr><td colspan="'.$columns.'"><hr></td></tr>';
 
-		//write divider
-		$data_footer .= '<tr><td colspan="'.$columns.'"><hr></td></tr>';
+			//write averages
+			$data_footer .= '<tr>';
+			$data_footer .= '<td><b>'.$text['label-average'].'</b></td>';
+			$data_footer .= '<td colspan="'.$colspan_line_totals_averages.'"></td>';
+			if (permission_exists('xml_cdr_tta')) {
+				$data_footer .= '<td align="right"><b>'.round(($total['tta'] / $z), 1).'</b></td>';
+			}
+			if (permission_exists('xml_cdr_duration')) {
+				$data_footer .= '<td align="right"><b>'.gmdate("G:i:s", floor($total['duration'] / $z)).'</b></td>';
+				$data_footer .= '<td align="right"><b>'.gmdate("G:i:s", round($total['billmsec'] / $z / 1000, 0)).'</b></td>';
+			}
+			if (permission_exists("xml_cdr_pdd")) {
+				$data_footer .= '<td align="right"><b>'.number_format(round(($total['pdd_ms'] / $z / 1000), 2), 2).'s</b></td>';
+			}
+			if (permission_exists('xml_cdr_mos')) {
+				$data_footer .= '<td align="center"><b>'.round(($total['rtp_audio_in_mos'] / $z_mos), 2).'</b></td>';
+			}
+			if (permission_exists('xml_cdr_hangup_cause')) {
+				$data_footer .= '<td></td>';
+			}
+			$data_footer .= '</tr>';
+
+			//write divider
+			$data_footer .= '<tr><td colspan="'.$columns.'"><hr></td></tr>';
+
+		}
 
 		//add last page
 		if ($p >= 55) {
@@ -302,7 +421,12 @@
 		unset($data_body_chunk);
 
 		//define file name
-		$pdf_filename = "cdr_".$_SESSION['domain_name']."_".date("Ymd_His").".pdf";
+		if ($_REQUEST['show'] == 'all' && permission_exists('xml_cdr_all')) {
+			$pdf_filename = "cdr_".date("Ymd_His").".pdf";
+		}
+		else {
+			$pdf_filename = "cdr_".$_SESSION['domain_name']."_".date("Ymd_His").".pdf";
+		}
 
 		header("Content-Type: application/force-download");
 		header("Content-Type: application/octet-stream");

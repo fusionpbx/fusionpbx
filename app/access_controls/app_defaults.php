@@ -34,9 +34,9 @@
 		if ($num_rows == 0) {
 
 			//set the directory
-				$xml_dir = $_SESSION["switch"]["conf"]["dir"].'/autoload_configs';
+				$xml_dir = $setting->get('switch','conf').'/autoload_configs';
 				$xml_file = $xml_dir."/acl.conf.xml";
-				$xml_file_alt = $_SERVER["DOCUMENT_ROOT"].'/'.PROJECT_PATH.'/resources/templates/conf/autoload_configs/acl.conf';
+				$xml_file_alt = $_SERVER["DOCUMENT_ROOT"].'/'.PROJECT_PATH.'/app/switch/resources/conf/autoload_configs/acl.conf';
 
 			//load the xml and save it into an array
 				if (file_exists($xml_file)) {
@@ -54,7 +54,6 @@
 					$xml_string .= "			<node type=\"allow\" cidr=\"192.168.0.0/16\"/>\n";
 					$xml_string .= "		</list>\n";
 					$xml_string .= "		<list name=\"providers\" default=\"deny\">\n";
-					//$xml_string .= "			<node type=\"allow\" domain=\"".$_SESSION['domain_name']."\"/>\n";
 					$xml_string .= "		</list>\n";
 					$xml_string .= "	</network-lists>\n";
 					$xml_string .= "</configuration>\n";
@@ -88,7 +87,7 @@
 						$p->delete('access_control_add', 'temp');
 
 					//normalize the array - needed because the array is inconsistent when there is only one row vs multiple
-					if (strlen($list['node']['@attributes']['type']) > 0) {
+					if (!empty($list['node']['@attributes']['type'])) {
 						$list['node'][]['@attributes'] = $list['node']['@attributes'];
 						unset($list['node']['@attributes']);
 					}
@@ -158,12 +157,10 @@
 			$cache->delete("configuration:sofia.conf:".gethostname());
 
 			//create the event socket connection
-			if (!$fp) {
-				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-			}
+			$esl = event_socket::create();
 
 			//reload the acl
-			event_socket_request($fp, "api reloadacl");
+			event_socket::async("reloadacl");
 
 			//rescan each sip profile
 			$sql = "select sip_profile_name from v_sip_profiles ";
@@ -172,10 +169,10 @@
 			$sip_profiles = $database->select($sql, null, 'all');
 			if (is_array($sip_profiles)) {
 				foreach ($sip_profiles as $row) {
-					if ($fp) {
+					if ($esl->is_connected()) {
 						$command = "sofia profile '".$row['sip_profile_name']."' rescan";
 						//echo $command."\n";
-						$result = event_socket_request($fp, "api ".$command);
+						$result = event_socket::api($command);
 						//echo $result."\n";
 					}
 				}
