@@ -299,9 +299,9 @@ $text['description-extension_setting_enabled']['ko-kr'] = "활성화된 확장�
 
 $text['label-extension_setting_description']['en-us'] = "Description";
 $text['label-extension_setting_description']['ar-eg'] = "الوصف";
-$text['label-extension_setting_description']['de-at'] = "Warenbezeichnung";
-$text['label-extension_setting_description']['de-ch'] = "Warenbezeichnung";
-$text['label-extension_setting_description']['de-de'] = "Warenbezeichnung";
+$text['label-extension_setting_description']['de-at'] = "Beschreibung";
+$text['label-extension_setting_description']['de-ch'] = "Beschreibung";
+$text['label-extension_setting_description']['de-de'] = "Beschreibung";
 $text['label-extension_setting_description']['es-cl'] = "Descripción";
 $text['label-extension_setting_description']['es-mx'] = "Descripción";
 $text['label-extension_setting_description']['fr-ca'] = "description";
