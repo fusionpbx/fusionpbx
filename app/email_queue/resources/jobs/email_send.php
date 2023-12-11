@@ -11,7 +11,6 @@
 
 //include files
 	include "resources/classes/permissions.php";
-	require $_SERVER['DOCUMENT_ROOT']."/app/email_queue/resources/functions/transcribe.php";
 
 //increase limits
 	set_time_limit(0);
@@ -221,8 +220,9 @@
 				}
 			}
 
-			if (isset($voicemail_transcription_enabled) && $voicemail_transcription_enabled == 'true') {
+			if (isset($voicemail_transcription_enabled) && $voicemail_transcription_enabled === 'true') {
 				//transcribe the attachment
+				require $_SERVER['DOCUMENT_ROOT']."/app/email_queue/resources/functions/transcribe.php";
 				if ($email_attachment_type == 'wav' || $email_attachment_type == 'mp3') {
 					$field = transcribe($email_attachment_path, $email_attachment_name, $email_attachment_type);
 					echo "transcribe path: ".$email_attachment_path."\n";
@@ -536,3 +536,4 @@
 	//fclose($esl);
 
 ?>
+
