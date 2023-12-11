@@ -3,9 +3,9 @@
 	//application details
 		$apps[$x]['name'] = 'Bridges';
 		$apps[$x]['uuid'] = 'a6a7c4c5-340a-43ce-bcbc-2ed9bab8659d';
-		$apps[$x]['category'] = '';
+		$apps[$x]['category'] = 'switch';
 		$apps[$x]['subcategory'] = '';
-		$apps[$x]['version'] = '';
+		$apps[$x]['version'] = '1.2';
 		$apps[$x]['license'] = 'Mozilla Public License 1.1';
 		$apps[$x]['url'] = 'http://www.fusionpbx.com';
 		$apps[$x]['description']['en-us'] = '';
@@ -35,6 +35,9 @@
 		$apps[$x]['permissions'][$y]['name'] = 'bridge_destinations';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
 		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'bridge_import';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
 		$y++;
 
 	//destination details

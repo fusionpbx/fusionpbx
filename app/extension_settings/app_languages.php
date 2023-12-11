@@ -253,9 +253,9 @@ $text['description-extension_setting_value']['ko-kr'] = "확장 값을 입력합
 
 $text['label-extension_setting_enabled']['en-us'] = "Enabled";
 $text['label-extension_setting_enabled']['ar-eg'] = "مُتاح";
-$text['label-extension_setting_enabled']['de-at'] = "Ermöglicht";
-$text['label-extension_setting_enabled']['de-ch'] = "Ermöglicht";
-$text['label-extension_setting_enabled']['de-de'] = "Ermöglicht";
+$text['label-extension_setting_enabled']['de-at'] = "Aktiviert";
+$text['label-extension_setting_enabled']['de-ch'] = "Aktiviert";
+$text['label-extension_setting_enabled']['de-de'] = "Aktiviert";
 $text['label-extension_setting_enabled']['es-cl'] = "habilitado";
 $text['label-extension_setting_enabled']['es-mx'] = "habilitado";
 $text['label-extension_setting_enabled']['fr-ca'] = "activé";
@@ -299,9 +299,9 @@ $text['description-extension_setting_enabled']['ko-kr'] = "활성화된 확장�
 
 $text['label-extension_setting_description']['en-us'] = "Description";
 $text['label-extension_setting_description']['ar-eg'] = "الوصف";
-$text['label-extension_setting_description']['de-at'] = "Warenbezeichnung";
-$text['label-extension_setting_description']['de-ch'] = "Warenbezeichnung";
-$text['label-extension_setting_description']['de-de'] = "Warenbezeichnung";
+$text['label-extension_setting_description']['de-at'] = "Beschreibung";
+$text['label-extension_setting_description']['de-ch'] = "Beschreibung";
+$text['label-extension_setting_description']['de-de'] = "Beschreibung";
 $text['label-extension_setting_description']['es-cl'] = "Descripción";
 $text['label-extension_setting_description']['es-mx'] = "Descripción";
 $text['label-extension_setting_description']['fr-ca'] = "description";

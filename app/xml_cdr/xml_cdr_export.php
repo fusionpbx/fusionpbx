@@ -226,11 +226,11 @@
 			$data_head .= '<td width="7%" align="right"><b>'.$text['label-billsec'].'</b></td>';
 		}
 		if (permission_exists('xml_cdr_pdd')) {
-			$data_head .= '<td width="5%" align="right"><b>PDD</b></td>';
+			$data_head .= '<td width="5%" align="right"><b>'.$text['label-pdd'].'</b></td>';
 			$columns++;
 		}
 		if (permission_exists('xml_cdr_mos')) {
-			$data_head .= '<td width="5%" align="center"><b>MOS</b></td>';
+			$data_head .= '<td width="5%" align="center"><b>'.$text['label-mos'].'</b></td>';
 			$columns++;
 		}
 		if (!empty($_SESSION['cdr']['field']) && is_array($_SESSION['cdr']['field'])) {
@@ -425,7 +425,7 @@
 			$pdf_filename = "cdr_".date("Ymd_His").".pdf";
 		}
 		else {
-			$pdf_filename = "cdr_".$_SESSION['domain_name']."_".date("Ymd_His").".csv";
+			$pdf_filename = "cdr_".$_SESSION['domain_name']."_".date("Ymd_His").".pdf";
 		}
 
 		header("Content-Type: application/force-download");

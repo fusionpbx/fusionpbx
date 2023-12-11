@@ -61,9 +61,10 @@
 	?>
 	<script type="text/javascript">
 	//define refresh function, initial start
-		var refresh = 1980;
+ 		var refresh = 1980;
 		var source_url = 'calls_active_inc.php?';
 		var timer_id;
+
 		<?php
 		if ($show == 'all') {
 			echo "source_url = source_url + '&show=all';";
@@ -72,9 +73,11 @@
 			echo "source_url = source_url + '&debug';";
 		}
 		?>
-		var ajax_get = function () {
+		function ajax_get() {
+			url = source_url + '&eavesdrop_dest=' + ((document.getElementById('eavesdrop_dest')) ? document.getElementById('eavesdrop_dest').value : '');
 			$.ajax({
-				url: source_url, success: function(response){
+				url: url,
+				success: function(response){
 					$("#ajax_reponse").html(response);
 				}
 			});
@@ -87,7 +90,7 @@
 		function refresh_stop() {
 			clearTimeout(timer_id);
 			//document.getElementById('refresh_state').innerHTML = "<img src='resources/images/refresh_paused.png' style='width: 16px; height: 16px; border: none; margin-top: 1px; margin-right: 20px; cursor: pointer;' onclick='refresh_start();' alt=\"<?php echo $text['label-refresh_enable']?>\" title=\"<?php echo $text['label-refresh_enable']?>\">";
-			document.getElementById('refresh_state').innerHTML = "<?php echo button::create(['type'=>'button','title'=>$text['label-refresh_pause'],'icon'=>'pause','onclick'=>'refresh_start()']); ?>";
+			document.getElementById('refresh_state').innerHTML = "<?php echo button::create(['type'=>'button','title'=>$text['label-refresh_enable'],'icon'=>'pause','onclick'=>'refresh_start()']); ?>";
 		}
 
 		function refresh_start() {
@@ -96,10 +99,48 @@
 			ajax_get();
 		}
 
+	//eavesdrop call
+		function eavesdrop_call(ext, chan_uuid) {
+			if (ext != '' && chan_uuid != '') {
+				cmd = get_eavesdrop_cmd(ext, chan_uuid, document.getElementById('eavesdrop_dest').value);
+				if (cmd != '') {
+					send_cmd(cmd);
+				}
+			}
+		}
+
+		function get_eavesdrop_cmd(ext, chan_uuid, destination) {
+			url = "calls_exec.php?action=eavesdrop&ext=" + ext + "&chan_uuid=" + chan_uuid + "&destination=" + destination;
+			return url;
+		}
+
+	//used by eavesdrop function
+		function send_cmd(url) {
+			if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
+				xmlhttp=new XMLHttpRequest();
+			}
+			else {// code for IE6, IE5
+				xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+			}
+			xmlhttp.open("GET",url,false);
+			xmlhttp.send(null);
+			document.getElementById('cmd_response').innerHTML=xmlhttp.responseText;
+		}
+
 	</script>
 
 <?php
+
+//create simple array of users own extensions
+unset($_SESSION['user']['extensions']);
+if (is_array($_SESSION['user']['extension'])) {
+	foreach ($_SESSION['user']['extension'] as $assigned_extensions) {
+		$_SESSION['user']['extensions'][] = $assigned_extensions['user'];
+	}
+}
+
 echo "<div id='ajax_reponse'></div>\n";
+echo "<div id='cmd_response' style='display: none;'></div>\n";
 echo "<div id='time_stamp' style='visibility:hidden'>".date('Y-m-d-s')."</div>\n";
 echo "<br><br><br>";
 
@@ -118,4 +159,5 @@ require_once "resources/footer.php";
 		return escape(cmd);
 	}
 */
+
 ?>

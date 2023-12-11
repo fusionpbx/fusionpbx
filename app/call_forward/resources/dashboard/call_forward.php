@@ -22,23 +22,29 @@
 	$language = new text;
 	$text = $language->get($_SESSION['domain']['language']['code'], 'app/call_forward');
 
+//extensions link
+	$extension_link = '#';
+	if (permission_exists('extension_view')) {
+		$extension_link = PROJECT_PATH."/app/extensions/extensions.php";
+	}
+	$call_forward_link = PROJECT_PATH."/app/call_forward/call_forward.php";
+
 //set the row style
 	$c = 0;
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
 
 //get data
-	$sql = "
-		select
-			extension_uuid,
-			extension,
-			forward_all_enabled,
-			forward_all_destination,
-			follow_me_enabled,
-			follow_me_uuid,
-			do_not_disturb
-		from
-			v_extensions ";
+	$sql = "select ";
+	$sql .= "extension_uuid,";
+	$sql .= "extension, ";
+	$sql .= "forward_all_enabled, ";
+	$sql .= "forward_all_destination, ";
+	$sql .= "follow_me_enabled, ";
+	$sql .= "follow_me_uuid, ";
+	$sql .= "do_not_disturb ";
+	$sql .= "from ";
+	$sql .= "v_extensions ";
 	if (!empty($_GET['show']) && $_GET['show'] == "all" && permission_exists('call_forward_all')) {
 		$sql .= "where true ";
 	}
@@ -181,19 +187,17 @@
 	echo "<div class='hud_details hud_box' id='hud_call_forward_details'>";
 	echo "<table class='tr_hover' width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 	echo "<tr style='position: -webkit-sticky; position: sticky; z-index: 5; top: 0;'>\n";
-	echo "<th class='hud_heading'>".$text['label-extension']."</th>\n";
+	echo "<th class='hud_heading'><a href='".$extension_link."'>".$text['label-extension']."</a></th>\n";
 	if (permission_exists('call_forward')) {
-		echo "	<th class='hud_heading' style='text-align: center;'>".$text['label-call_forward']."</th>\n";
+		echo "	<th class='hud_heading' style='text-align: center;'><a href='".$call_forward_link."'>".$text['label-call_forward']."</a></th>\n";
 	}
 	if (permission_exists('follow_me')) {
-		echo "	<th class='hud_heading' style='text-align: center;'>".$text['label-follow_me']."</th>\n";
+		echo "	<th class='hud_heading' style='text-align: center;'><a href='".$call_forward_link."'>".$text['label-follow_me']."</a></th>\n";
 	}
 	if (permission_exists('do_not_disturb')) {
-		echo "	<th class='hud_heading' style='text-align: center;'>".$text['label-dnd']."</th>\n";
+		echo "	<th class='hud_heading' style='text-align: center;'><a href='".$call_forward_link."'>".$text['label-dnd']."</a></th>\n";
 	}
 	echo "</tr>\n";
-
-// data
 	if (is_array($extensions) && @sizeof($extensions) != 0) {
 		foreach ($extensions as $row) {
 			$tr_link = PROJECT_PATH."/app/call_forward/call_forward_edit.php?id=".$row['extension_uuid'];

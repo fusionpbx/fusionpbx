@@ -33,7 +33,7 @@
 		select
 			direction,
 			start_stamp,
-			to_char(timezone(:time_zone, start_stamp), '".(!empty($_SESSION['domain']['time_format']) && $_SESSION['domain']['time_format']['text'] == '12h' ? "MM/DD HH12:MI am" : "MM/DD HH24:MI")."') as start_date_time,
+			to_char(timezone(:time_zone, start_stamp), '".(!empty($_SESSION['domain']['time_format']) && $_SESSION['domain']['time_format']['text'] == '12h' ? "DD Mon HH12:MI am" : "DD Mon HH24:MI")."') as start_date_time,
 			caller_id_name,
 			caller_id_number,
 			destination_number,

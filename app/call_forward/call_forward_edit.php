@@ -399,9 +399,7 @@
 					$cmd .= "answer-state: confirmed\n";
 
 					//send the event
-					$fp = event_socket_create();
-					$switch_result = event_socket_request($fp, $cmd);
-					unset($fp);
+					$switch_result = event_socket::command($cmd);
 				}
 				else {
 					$presence = new presence;
@@ -421,9 +419,7 @@
 						$cmd .= "answer-state: terminated\n";
 
 						//send the event
-						$fp = event_socket_create();
-						$switch_result = event_socket_request($fp, $cmd);
-						unset($fp);
+						$switch_result = event_socket::command($cmd);
 					}
 				}
 			}
@@ -548,7 +544,7 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-call_forward']."</b></div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','link'=>'call_forward.php']);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','onclick'=>'history.back();']);
 	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save','style'=>'margin-left: 15px;']);
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";

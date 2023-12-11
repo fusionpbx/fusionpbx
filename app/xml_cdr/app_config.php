@@ -444,14 +444,6 @@
 		$apps[$x]['db'][$y]['table']['name'] = "v_xml_cdr";
 		$apps[$x]['db'][$y]['table']['parent'] = "";
 		$z=0;
-		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "id";
-		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "xml_cdr_id";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "serial";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "integer";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "INT NOT NULL AUTO_INCREMENT";
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
-		$apps[$x]['db'][$y]['fields'][$z]['deprecated'] = "true";
-		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "xml_cdr_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
@@ -467,6 +459,15 @@
 		$apps[$x]['db'][$y]['fields'][$z]['key']['type'] = "foreign";
 		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['table'] = "v_domains";
 		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['field'] = "domain_uuid";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "provider_uuid";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "char(36)";
+		$apps[$x]['db'][$y]['fields'][$z]['key']['type'] = "foreign";
+		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['table'] = "v_providers";
+		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['field'] = "provider_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "extension_uuid";
@@ -837,3 +838,4 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 
 ?>
+

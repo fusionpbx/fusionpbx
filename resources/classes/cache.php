@@ -30,17 +30,15 @@ class cache {
 		//save to memcache
 			if ($_SESSION['cache']['method']['text'] == "memcache") {
 				//connect to event socket
-					$fp = event_socket_create();
-					if ($fp === false) {
+					$esl = event_socket::create();
+					if ($esl === false) {
 						return false;
 					}
 
 				//run the memcache
 					$command = "memcache set ".$key." ".$value;
-					$result = event_socket_request($fp, 'api '.$command);
+					$result = event_socket::api($command);
 
-				//close event socket
-					fclose($fp);
 			}
 
 		//save to the file cache
@@ -64,8 +62,8 @@ class cache {
 		//cache method memcache 
 			if ($_SESSION['cache']['method']['text'] == "memcache") {
 				// connect to event socket
-					$fp = event_socket_create();
-					if ($fp === false) {
+					$esl = event_socket::create();
+					if (!$esl->is_connected()) {
 						return false;
 					}
 
@@ -73,10 +71,8 @@ class cache {
 
 				//run the memcache
 					$command = "memcache get ".$key;
-					$result = event_socket_request($fp, 'api '.$command);
+					$result = event_socket::api($command);
 
-				//close event socket
-					fclose($fp);
 			}
 
 		//get the file cache
@@ -106,8 +102,8 @@ class cache {
 		//cache method memcache 
 			if (!empty($_SESSION['cache']['method']['text']) && $_SESSION['cache']['method']['text'] == "memcache") {
 				//connect to event socket
-					$fp = event_socket_create();
-					if ($fp === false) {
+					$esl = event_socket::create();
+					if ($esl === false) {
 						return false;
 					}
 
@@ -117,14 +113,12 @@ class cache {
 					$event .= "Event-Subclass: fusion::memcache\n";
 					$event .= "API-Command: memcache\n";
 					$event .= "API-Command-Argument: delete ".$key."\n";
-					event_socket_request($fp, $event);
+					event_socket::command($event);
 
 				//run the memcache
 					$command = "memcache delete ".$key;
-					$result = event_socket_request($fp, 'api '.$command);
+					$result = event_socket::api($command);
 
-				//close event socket
-					fclose($fp);
 			}
 
 		//cache method file
@@ -133,8 +127,8 @@ class cache {
 					$key = str_replace(":", ".", $key);
 
 				//connect to event socket
-					$fp = event_socket_create();
-					if ($fp === false) {
+					$esl = event_socket::create();
+					if ($esl === false) {
 						return false;
 					}
 
@@ -144,7 +138,7 @@ class cache {
 					$event .= "Event-Subclass: fusion::file\n";
 					$event .= "API-Command: cache\n";
 					$event .= "API-Command-Argument: delete ".$key."\n";
-					event_socket_request($fp, $event);
+					event_socket::command($event);
 
 				//remove the local files
 					foreach (glob($_SESSION['cache']['location']['text'] . "/" . $key) as $file) {
@@ -174,8 +168,8 @@ class cache {
 		//cache method memcache 
 			if ($_SESSION['cache']['method']['text'] == "memcache") {
 				// connect to event socket
-					$fp = event_socket_create();
-					if ($fp === false) {
+					$esl = event_socket::create();
+					if ($esl === false) {
 						return false;
 					}
 
@@ -185,21 +179,19 @@ class cache {
 					$event .= "Event-Subclass: fusion::memcache\n";
 					$event .= "API-Command: memcache\n";
 					$event .= "API-Command-Argument: flush\n";
-					event_socket_request($fp, $event);
+					event_socket::command($event);
 
 				//run the memcache
 					$command = "memcache flush";
-					$result = event_socket_request($fp, 'api '.$command);
+					$result = event_socket::api($command);
 
-				//close event socket
-					fclose($fp);
 			}
 
 		//cache method file 
 			if ($_SESSION['cache']['method']['text'] == "file") {
 				// connect to event socket
-					$fp = event_socket_create();
-					if ($fp === false) {
+					$esl = event_socket::create();
+					if ($esl === false) {
 						return false;
 					}
 
@@ -209,7 +201,7 @@ class cache {
 					$event .= "Event-Subclass: fusion::file\n";
 					$event .= "API-Command: cache\n";
 					$event .= "API-Command-Argument: flush\n";
-					event_socket_request($fp, $event);
+					event_socket::command($event);
 
 				//remove the cache
 					recursive_delete($_SESSION['cache']['location']['text']);
