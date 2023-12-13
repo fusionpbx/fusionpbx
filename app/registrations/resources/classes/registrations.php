@@ -165,9 +165,14 @@ if (!class_exists('registrations')) {
 											}
 											$registrations[$id]['lan-ip'] = $lan_ip;
 										}
+										else if (preg_match('/real=\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/', $row['contact'] ?? '', $ip_match)) {
+											//get ip address for snom phones
+											$lan_ip = str_replace('real=', '', $ip_match[0]);
+											$registrations[$id]['lan-ip'] = $lan_ip;
+										}
 										else if (preg_match('/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/', $row['contact'] ?? '', $ip_match)) {
 											$lan_ip = preg_replace('/_/', '.', $ip_match[0]);
-											$registrations[$id]['lan-ip'] = "$lan_ip";
+											$registrations[$id]['lan-ip'] = $lan_ip;
 										}
 										else {
 											$registrations[$id]['lan-ip'] = '';
