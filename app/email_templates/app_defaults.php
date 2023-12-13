@@ -505,46 +505,45 @@
 		$array['email_templates'][$x]['template_enabled'] = 'true';
 		$array['email_templates'][$x]['template_description'] = '';
 		$x++;
-		
+
 		$array['email_templates'][$x]['email_template_uuid'] = '814c08da-78ff-11ee-b73f-005056a27559';
-                $array['email_templates'][$x]['template_language'] = 'en-gb';
-                $array['email_templates'][$x]['template_category'] = 'plugin';
-                $array['email_templates'][$x]['template_subcategory'] = 'emergency';
-                $array['email_templates'][$x]['template_subject'] = '911 Emergency Call';
-                $array['email_templates'][$x]['template_body'] = "<html>\n";
-                $array['email_templates'][$x]['template_body'] .= "<body>\n";
-                $array['email_templates'][$x]['template_body'] .= "From \${caller_id_name} <a href=\"tel:\${caller_id_number}\">\${caller_id_number}</a><br />\n";
-                $array['email_templates'][$x]['template_body'] .= "<br />\n";
-                $array['email_templates'][$x]['template_body'] .= "Emergency Name \${emergency_caller_id_name}"<br />\n";
-                $array['email_templates'][$x]['template_body'] .= "Emergency Name \${emergency_caller_id_number}"<br />\n";
-                $array['email_templates'][$x]['template_body'] .= "Received \${message_date}<br />\n";
-                $array['email_templates'][$x]['template_body'] .= "Event \${event}<br />\n";
-                $array['email_templates'][$x]['template_body'] .= "</body>\n";
-                $array['email_templates'][$x]['template_body'] .= "</html>\n";
-                $array['email_templates'][$x]['template_type'] = 'html';
-                $array['email_templates'][$x]['template_enabled'] = 'true';
-                $array['email_templates'][$x]['template_description'] = '';
-                $x++;
+		$array['email_templates'][$x]['template_language'] = 'en-gb';
+		$array['email_templates'][$x]['template_category'] = 'plugin';
+		$array['email_templates'][$x]['template_subcategory'] = 'emergency';
+		$array['email_templates'][$x]['template_subject'] = '911 Emergency Call';
+		$array['email_templates'][$x]['template_body'] = "<html>\n";
+		$array['email_templates'][$x]['template_body'] .= "<body>\n";
+		$array['email_templates'][$x]['template_body'] .= "From \${caller_id_name} <a href=\"tel:\${caller_id_number}\">\${caller_id_number}</a><br />\n";
+		$array['email_templates'][$x]['template_body'] .= "<br />\n";
+		$array['email_templates'][$x]['template_body'] .= "Emergency Name \${emergency_caller_id_name}<br />\n";
+		$array['email_templates'][$x]['template_body'] .= "Emergency Name \${emergency_caller_id_number}<br />\n";
+		$array['email_templates'][$x]['template_body'] .= "Received \${message_date}<br />\n";
+		$array['email_templates'][$x]['template_body'] .= "Event \${event}<br />\n";
+		$array['email_templates'][$x]['template_body'] .= "</body>\n";
+		$array['email_templates'][$x]['template_body'] .= "</html>\n";
+		$array['email_templates'][$x]['template_type'] = 'html';
+		$array['email_templates'][$x]['template_enabled'] = 'true';
+		$array['email_templates'][$x]['template_description'] = '';
+		$x++;
 
-                $array['email_templates'][$x]['email_template_uuid'] = '8928e8d4-78ff-11ee-ac06-005056a27559';
-                $array['email_templates'][$x]['template_language'] = 'en-us';
-                $array['email_templates'][$x]['template_category'] = 'plugin';
-                $array['email_templates'][$x]['template_subcategory'] = 'emergency';
-                $array['email_templates'][$x]['template_subject'] = '911 Emergency Call';
-                $array['email_templates'][$x]['template_body'] = "<html>\n";
-                $array['email_templates'][$x]['template_body'] .= "<body>\n";
-                $array['email_templates'][$x]['template_body'] .= "From \${caller_id_name} <a href=\"tel:\${caller_id_number}\">\${caller_id_number}</a><br />\n";
-                $array['email_templates'][$x]['template_body'] .= "<br />\n";
-                $array['email_templates'][$x]['template_body'] .= "Emergency Name \${emergency_caller_id_name}"<br />\n";
-                array['email_templates'][$x]['template_body'] .= "Emergency Name \${emergency_caller_id_number}"<br />\n";
-                $array['email_templates'][$x]['template_body'] .= "Received \${message_date}<br />\n";
-                $array['email_templates'][$x]['template_body'] .= "Event \${event}<br />\n";
-                $array['email_templates'][$x]['template_body'] .= "</body>\n";
-                $array['email_templates'][$x]['template_body'] .= "</html>\n";
-                $array['email_templates'][$x]['template_type'] = 'html';
-                $array['email_templates'][$x]['template_enabled'] = 'true';
-                $array['email_templates'][$x]['template_description'] = '';
-
+		$array['email_templates'][$x]['email_template_uuid'] = '8928e8d4-78ff-11ee-ac06-005056a27559';
+		$array['email_templates'][$x]['template_language'] = 'en-us';
+		$array['email_templates'][$x]['template_category'] = 'plugin';
+		$array['email_templates'][$x]['template_subcategory'] = 'emergency';
+		$array['email_templates'][$x]['template_subject'] = '911 Emergency Call';
+		$array['email_templates'][$x]['template_body'] = "<html>\n";
+		$array['email_templates'][$x]['template_body'] .= "<body>\n";
+		$array['email_templates'][$x]['template_body'] .= "From \${caller_id_name} <a href=\"tel:\${caller_id_number}\">\${caller_id_number}</a><br />\n";
+		$array['email_templates'][$x]['template_body'] .= "<br />\n";
+		$array['email_templates'][$x]['template_body'] .= "Emergency Name \${emergency_caller_id_name}<br />\n";
+		$array['email_templates'][$x]['template_body'] .= "Emergency Name \${emergency_caller_id_number}<br />\n";
+		$array['email_templates'][$x]['template_body'] .= "Received \${message_date}<br />\n";
+		$array['email_templates'][$x]['template_body'] .= "Event \${event}<br />\n";
+		$array['email_templates'][$x]['template_body'] .= "</body>\n";
+		$array['email_templates'][$x]['template_body'] .= "</html>\n";
+		$array['email_templates'][$x]['template_type'] = 'html';
+		$array['email_templates'][$x]['template_enabled'] = 'true';
+		$array['email_templates'][$x]['template_description'] = '';
 
 		//build array of email template uuids
 		foreach ($array['email_templates'] as $row) {
