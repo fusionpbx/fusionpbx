@@ -67,10 +67,10 @@
 
 		<?php
 		if ($show == 'all') {
-			echo "&source_url = source_url + '&show=all';";
+			echo "source_url = source_url + '&show=all';";
 		}
 		if (isset($_REQUEST["debug"])) {
-			echo "&source_url = source_url + '&debug';";
+			echo "source_url = source_url + '&debug';";
 		}
 		?>
 		function ajax_get() {

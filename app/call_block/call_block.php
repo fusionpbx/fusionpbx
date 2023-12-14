@@ -23,7 +23,7 @@
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 
-	The original Call Block was written by Gerrit Visser <gerrit308@gmail.com> 
+	The original Call Block was written by Gerrit Visser <gerrit308@gmail.com>
 	All of it has been rewritten over years.
 */
 
@@ -91,6 +91,14 @@
 		$search = strtolower($_GET["search"]);
 	}
 
+//set the time zone
+	if (isset($_SESSION['domain']['time_zone']['name'])) {
+		$time_zone = $_SESSION['domain']['time_zone']['name'];
+	}
+	else {
+		$time_zone = date_default_timezone_get();
+	}
+
 //prepare to page the results
 	$sql = "select count(*) from view_call_block ";
 	$sql .= "where true ";
@@ -146,8 +154,19 @@
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = "select * from view_call_block ";
+	$sql = "select domain_uuid, call_block_uuid, call_block_direction, extension_uuid, call_block_name, ";
+	$sql .= " call_block_country_code, call_block_number, extension, number_alias, call_block_count, ";
+	$sql .= " to_char(timezone(:time_zone, insert_date), 'DD Mon YYYY') as date_formatted, \n";
+	if (date(!empty($_SESSION['domain']['time_format']['text']) == '12h')) {
+		$sql .= " to_char(timezone(:time_zone, insert_date), 'HH12:MI:SS am') as time_formatted, \n";
+	}
+	else {
+		$sql .= " to_char(timezone(:time_zone, insert_date), 'HH24:MI:SS am') as time_formatted, \n";
+	}
+	$sql .= " call_block_enabled, call_block_description, insert_date, insert_user, update_date, update_user ";
+	$sql .= "from view_call_block ";
 	$sql .= "where true ";
+	$parameters['time_zone'] = $time_zone;
 	if ($show == "all" && permission_exists('call_block_all')) {
 		//$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
 		//$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
@@ -279,7 +298,7 @@
 	echo th_order_by('call_block_count', $text['label-count'], $order_by, $order, '', "class='center hide-sm-dn'");
 	echo th_order_by('call_block_action', $text['label-action'], $order_by, $order);
 	echo th_order_by('call_block_enabled', $text['label-enabled'], $order_by, $order, null, "class='center'");
-	echo th_order_by('date_added', $text['label-date-added'], $order_by, $order, null, "class='shrink no-wrap'");
+	echo th_order_by('insert_date', $text['label-date-added'], $order_by, $order, null, "class='shrink no-wrap'");
 	echo "<th class='hide-md-dn pct-20'>".$text['label-description']."</th>\n";
 	if (permission_exists('call_block_edit') && $list_row_edit_button == 'true') {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
@@ -359,7 +378,7 @@
 				echo $text['label-'.$row['call_block_enabled']];
 			}
 			echo "	</td>\n";
-			echo "	<td class='no-wrap'>".date('j M Y', $row['date_added'])." <span class='hide-sm-dn'>".date((!empty($_SESSION['domain']['time_format']['text']) == '12h' ? 'h:i:s a' : 'H:i:s'), $row['date_added'])."</span></td>\n";
+			echo "	<td class='no-wrap'>".$row['date_formatted']." <span class='hide-sm-dn'>".$row['time_formatted']."</span></td>\n";
 			echo "	<td class='description overflow hide-md-dn'>".escape($row['call_block_description'])."</td>\n";
 			if (permission_exists('call_block_edit') && $list_row_edit_button == 'true') {
 				echo "	<td class='action-button'>";
