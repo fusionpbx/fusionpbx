@@ -401,10 +401,10 @@ if (!function_exists('transcribe')) {
 				}
 
 			}
-		// todo: big lack of error checking with the rest of this..
+		// todo: add error checking
 		//		return array('message' => "Missing valid transcribe_provider";
 
 	}
 }
+	
 ?>
-
