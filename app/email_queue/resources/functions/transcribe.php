@@ -336,8 +336,6 @@ if (!function_exists('transcribe')) {
 					$api_voice_model = "whisper-1";
 				}
 
-
-
 				if (isset($api_key) && $api_key != '') {
 
 					$full_file_name = $file_path.'/'.$file_name ;
