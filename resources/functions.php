@@ -839,6 +839,11 @@
 		return sprintf('%02d:%02d:%02d', $hours, $minutes, $seconds);
 	}
 
+//format seconds
+	function format_seconds($seconds) {
+	    return gmdate("H:i:s", $seconds);
+	}
+
 //browser detection without browscap.ini dependency
 	function http_user_agent($info = '') {
 
