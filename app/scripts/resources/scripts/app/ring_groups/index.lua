@@ -178,11 +178,6 @@
 		call_direction = "local";
 	end
 
---set ring ready
---	if (session:ready()) then
---		session:execute("ring_ready", "");
---	end
-
 --define additional variables
 	external = "false";
 
