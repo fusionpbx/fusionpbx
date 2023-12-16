@@ -154,7 +154,7 @@
 	echo "<form name='frm' id='frm' method='post'>\n";
 
 	echo "<div class='action_bar' id='action_bar'>\n";
-	echo "	<div class='heading'><b>{$text['header-upgrade']}</b></div>\n";
+	echo "	<div class='heading'><b>".$text['header-upgrade']."</b></div>\n";
 	echo "	<div class='actions'>\n";
 	echo button::create(['type'=>'submit','label'=>$text['button-upgrade_execute'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save','collapse'=>'never']);
 	echo "	</div>\n";
@@ -168,7 +168,7 @@
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "<tr onclick=\"document.getElementById('do_source').checked = !document.getElementById('do_source').checked;\">\n";
 		echo "	<td width='30%' class='vncell' style='vertical-align:middle;'>\n";
-		echo "		<div style='{$step_container_style}'><span style='{$step_number_style}'>{$step}</span></div>";
+		echo "		<div style='".$step_container_style."'><span style='".$step_number_style."'>".$step."</span></div>";
 		echo "		".$text['label-upgrade_source'];
 		echo "	</td>\n";
 		echo "	<td width='70%' class='vtable' style='height: 50px; cursor: pointer;'>\n";
@@ -202,11 +202,11 @@
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "<tr>\n";
 		echo "	<td width='30%' class='vncell' style='vertical-align:middle;'>\n";
-		echo "		<div style='{$step_container_style}'><span style='{$step_number_style}'>{$step}</span></div>";
-		echo "		{$text['label-update_apps']}";
+		echo "		<div style='".$step_container_style."'><span style='".$step_number_style."'>".$step."</span></div>";
+		echo "		".$text['label-update_apps'];
 		echo "	</td>\n";
 		echo "	<td width='70%' class='vtable' style='height: 50px;'>\n";
-		echo "		<input type='checkbox' name='action[update_apps]' id='do_apps' value='1' onchange=\"$('#do_update_apps').prop('checked', false); $('#tr_app_updates').slideToggle('fast');\"> &nbsp;{$text['description-update_apps']}\n";
+		echo "		<input type='checkbox' name='action[update_apps]' id='do_apps' value='1' onchange=\"$('#do_update_apps').prop('checked', false); $('#tr_app_updates').slideToggle('fast');\"> &nbsp;".$text['description-update_apps']."\n";
 		echo "</a>";
 		echo "	</td>\n";
 		echo "</tr>\n";
@@ -217,7 +217,7 @@
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "<tr>\n";
 		echo "	<td width='30%' class='vncell' style='vertical-align:middle;'>\n";
-		echo "		<div style='{$step_container_style}'><span style='{$step_number_style}'>{$step}B</span></div>";
+		echo "		<div style='".$step_container_style."'><span style='".$step_number_style."'>".$step."B</span></div>";
 		echo "		Apps";
 		echo "	</td>\n";
 		echo "	<td width='70%' class='vtable' style='height: 50px;'>\n";
@@ -237,10 +237,10 @@
 
 			$app_label = ucfirst($app);
 
-			echo "		<input type='checkbox' name='app_list[]' id='do_apps' value='{$app}'> &nbsp;{$app_label}<br />\n";
-			echo $text['label-git_branch']." {$repo_info['branch']} \n";
-			echo "<a href='{$repo_info['url']}/compare/";
-			echo $repo_info['commit'] . "...{$repo_info['branch']} 'target='_blank'> \n";
+			echo "		<input type='checkbox' name='app_list[]' id='do_apps' value='".$app."'> &nbsp;".$app_label."<br />\n";
+			echo $text['label-git_branch']." ".$repo_info['branch']."\n";
+			echo "<a href='".$repo_info['url']."/compare/";
+			echo $repo_info['commit'] . "...".$repo_info['branch']." 'target='_blank'> \n";
 			echo $repo_info['commit'] . "</a><br />\n";
 			echo "</a>";
 			
@@ -259,7 +259,7 @@
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "<tr onclick=\"document.getElementById('do_schema').checked = !document.getElementById('do_schema').checked; (!document.getElementById('do_schema').checked ? $('#do_data_types').prop('checked', false) : null); $('#tr_data_types').slideToggle('fast');\">\n";
 		echo "	<td width='30%' class='vncell' style='vertical-align:middle;'>\n";
-		echo "		<div style='{$step_container_style}'><span style='{$step_number_style}'>{$step}</span></div>";
+		echo "		<div style='".$step_container_style."'><span style='".$step_number_style."'>".$step."</span></div>";
 		echo "		".$text['label-upgrade_schema'];
 		echo "	</td>\n";
 		echo "	<td width='70%' class='vtable' style='height: 50px; cursor: pointer;'>\n";
@@ -272,7 +272,7 @@
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "<tr onclick=\"document.getElementById('do_data_types').checked = !document.getElementById('do_data_types').checked;\">\n";
 		echo "	<td width='30%' class='vncell' style='vertical-align:middle;'>\n";
-		echo "		<div style='{$step_container_style}'><span style='{$step_number_style} letter-spacing: -0.06em;'>{$step}B</span></div>";
+		echo "		<div style='".$step_container_style."'><span style='".$step_number_style." letter-spacing: -0.06em;'>".$step."B</span></div>";
 		echo "		".$text['label-upgrade_data_types'];
 		echo "	</td>\n";
 		echo "	<td width='70%' class='vtable' style='height: 50px; cursor: pointer;'>\n";
@@ -288,7 +288,7 @@
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "<tr onclick=\"document.getElementById('do_apps').checked = !document.getElementById('do_apps').checked;\">\n";
 		echo "	<td width='30%' class='vncell' style='vertical-align:middle;'>\n";
-		echo "		<div style='{$step_container_style}'><span style='{$step_number_style}'>{$step}</span></div>";
+		echo "		<div style='".$step_container_style."'><span style='".$step_number_style."'>".$step."</span></div>";
 		echo "		".$text['label-upgrade_apps'];
 		echo "	</td>\n";
 		echo "	<td width='70%' class='vtable' style='height: 50px; cursor: pointer;'>\n";
@@ -303,7 +303,7 @@
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "<tr onclick=\"document.getElementById('do_menu').checked = !document.getElementById('do_menu').checked; $('#sel_menu').fadeToggle('fast');\">\n";
 		echo "	<td width='30%' class='vncell' style='vertical-align:middle;'>\n";
-		echo "		<div style='{$step_container_style}'><span style='{$step_number_style}'>{$step}</span></div>";
+		echo "		<div style='".$step_container_style."'><span style='".$step_number_style."'>".$step."</span></div>";
 		echo "		".$text['label-upgrade_menu'];
 		echo "	</td>\n";
 		echo "	<td width='70%' class='vtable' style='height: 50px; cursor: pointer;'>\n";
@@ -335,7 +335,7 @@
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "<tr onclick=\"document.getElementById('do_permissions').checked = !document.getElementById('do_permissions').checked;\">\n";
 		echo "	<td width='30%' class='vncell' style='vertical-align:middle;'>\n";
-		echo "		<div style='{$step_container_style}'><span style='{$step_number_style}'>{$step}</span></div>";
+		echo "		<div style='".$step_container_style."'><span style='".$step_number_style."'>".$step."</span></div>";
 		echo "		".$text['label-upgrade_permissions'];
 		echo "	</td>\n";
 		echo "	<td width='70%' class='vtable' style='height: 50px; cursor: pointer;'>\n";
@@ -351,7 +351,7 @@
 	echo "<br /><br />";
 	if (!empty($_SESSION["response"]) && is_array($_SESSION["response"])) {
 		foreach($_SESSION["response"] as $part => $response){
-			echo "<b>{$text["label-results"]} - {$text["label-${part}"]}";
+			echo "<b>".$text["label-results"]." - ".$text["label-${part}"];
 			echo "</b><br /><br />";
 			if ($part == "update_apps") {
 				echo "<pre>";
