@@ -144,16 +144,31 @@
 	$sql .= "	and user_id = e.extension ";
 	$sql .= "	limit 1 ";
 	$sql .= ") AS device_uuid, ";
-	$sql .= "( ";
-	$sql .= "	select device_address ";
-	$sql .= "	from v_devices ";
-	$sql .= "	where device_uuid in ( ";
-	$sql .= "		select device_uuid ";
-	$sql .= "		from v_device_lines ";
-	$sql .= "		where extension_uuid = e.extension_uuid ";
-	$sql .= "		and user_id = e.extension ";
-	$sql .= "		limit 1) ";
-	$sql .= ") AS device_address ";
+	if (permission_exists("extension_device_address")) {
+		$sql .= "( ";
+		$sql .= "	select device_address ";
+		$sql .= "	from v_devices ";
+		$sql .= "	where device_uuid in ( ";
+		$sql .= "		select device_uuid ";
+		$sql .= "		from v_device_lines ";
+		$sql .= "		where extension_uuid = e.extension_uuid ";
+		$sql .= "		and user_id = e.extension ";
+		$sql .= "		limit 1) ";
+		$sql .= ") AS device_address, ";
+	}
+	if (permission_exists("extension_device_template")) {
+		$sql .= "( ";
+		$sql .= "	select device_template ";
+		$sql .= "	from v_devices ";
+		$sql .= "	where device_uuid in ( ";
+		$sql .= "		select device_uuid ";
+		$sql .= "		from v_device_lines ";
+		$sql .= "		where extension_uuid = e.extension_uuid ";
+		$sql .= "		and user_id = e.extension ";
+		$sql .= "		limit 1) ";
+		$sql .= ") AS device_template, ";
+	}
+	$sql .= "true as true ";
 	$sql .= "from v_extensions as e ";
 	$sql .= "where true ";
 	if (!(!empty($_GET['show']) && $_GET['show'] == "all" && permission_exists('extension_all'))) {
@@ -295,11 +310,17 @@
 	if (permission_exists("outbound_caller_id_name")) {
 		echo th_order_by('outbound_caller_id_name', $text['label-outbound_cid_name'], $order_by, $order, null, "class='hide-sm-dn'");
 	}
+	if (permission_exists("outbound_caller_id_number")) {
+		echo th_order_by('outbound_caller_id_number', $text['label-outbound_cid_number'], $order_by, $order, null, "class='hide-md-dn'");
+	}
 	if (permission_exists("extension_call_group")) {
 		echo th_order_by('call_group', $text['label-call_group'], $order_by, $order);
 	}
-	if (permission_exists("extension_address")) {
-		echo th_order_by('extension_address', $text['label-device_address'], $order_by, $order);
+	if (permission_exists("extension_device_address")) {
+		echo th_order_by('device_address', $text['label-device_address'], $order_by, $order, null, "class='hide-md-dn'");
+	}
+	if (permission_exists("extension_device_template")) {
+		echo th_order_by('device_template', $text['label-device_template'], $order_by, $order, null, "class='hide-md-dn'");
 	}
 	if (permission_exists("extension_user_context")) {
 		echo th_order_by('user_context', $text['label-user_context'], $order_by, $order);
@@ -343,11 +364,17 @@
 			if (permission_exists("outbound_caller_id_name")) {
 				echo "	<td class='hide-sm-dn'>".escape($row['outbound_caller_id_name'])."&nbsp;</td>\n";
 			}
+			if (permission_exists("outbound_caller_id_number")) {
+				echo "	<td class='hide-md-dn'>".escape($row['outbound_caller_id_number'])."&nbsp;</td>\n";
+			}
 			if (permission_exists("extension_call_group")) {
 				echo "	<td>".escape($row['call_group'])."&nbsp;</td>\n";
 			}
-			if (permission_exists("extension_address")) {
-					echo "	<td class='device_address'><a href='" . PROJECT_PATH . "/app/devices/device_edit.php?id=".escape($row['device_uuid'])."'>".escape($row['device_address'])."</td>\n";
+			if (permission_exists("extension_device_address")) {
+				echo "	<td class='hide-md-dn'><a href='" . PROJECT_PATH . "/app/devices/device_edit.php?id=".escape($row['device_uuid'])."'>".escape($row['device_address'])."</td>\n";
+			}
+			if (permission_exists("extension_device_template")) {
+				echo "	<td class='hide-md-dn'><a href='" . PROJECT_PATH . "/app/devices/device_edit.php?id=".escape($row['device_uuid'])."'>".escape($row['device_template'])."</td>\n";
 			}
 			if (permission_exists("extension_user_context")) {
 				echo "	<td>".escape($row['user_context'])."</td>\n";
@@ -410,3 +437,6 @@
 	require_once "resources/footer.php";
 
 ?>
+
+
+
