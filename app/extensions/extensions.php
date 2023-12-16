@@ -254,6 +254,9 @@
 	if (permission_exists("extension_call_group")) {
 		echo th_order_by('call_group', $text['label-call_group'], $order_by, $order);
 	}
+	if (permission_exists("extension_address")) {
+		echo th_order_by('extension_address', $text['label-device_address'], $order_by, $order);
+	}
 	if (permission_exists("extension_user_context")) {
 		echo th_order_by('user_context', $text['label-user_context'], $order_by, $order);
 	}
@@ -268,6 +271,26 @@
 	echo "</tr>\n";
 
 	if (is_array($extensions) && @sizeof($extensions) != 0) {
+		if (permission_exists("extension_address")) {
+        	// get all device list 
+			$sql = "    select l.user_id, l.domain_uuid, d.device_address, d.device_template, d.device_description, l.device_line_uuid, l.device_uuid, l.line_number   ";
+			$sql .= "    from v_device_lines as l, v_devices as d   ";
+			$sql .= "    where l.device_uuid = d.device_uuid   ";
+			if (!($_GET['show'] == "all" && permission_exists('extension_all'))) {
+				$sql.= "    and l.domain_uuid = :domain_uuid   ";
+			}
+			$sql .= "    order by l.line_number, d.device_address asc   ";
+			if (!($_GET['show'] == "all" && permission_exists('extension_all'))) {
+				$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+			}
+			$database = new database;
+			if ($_GET['show'] == "all" && permission_exists('extension_all')) {
+				$device_lines = $database->select($sql, 'all');
+			} else {
+				$device_lines = $database->select($sql, $parameters, 'all');
+			}
+        	unset($sql, $parameters, $database);
+		}
 		$x = 0;
 		foreach($extensions as $row) {
 			if (permission_exists('extension_edit')) {
@@ -298,6 +321,16 @@
 			}
 			if (permission_exists("extension_call_group")) {
 				echo "	<td>".escape($row['call_group'])."&nbsp;</td>\n";
+			}
+			if (permission_exists("extension_address")) {
+				$filtered = array_filter($device_lines, function ($elem) use ($row) {
+					return ($elem['user_id'] == $row['extension'] || $elem['user_id'] == $row['number_alias']) && $row['domain_uuid'] == $elem['domain_uuid'];
+				});
+				if (count($filtered)) {
+					echo "	<td class='device_address'><a href='" . PROJECT_PATH . "/app/devices/device_edit.php?id=" . escape(array_pop(array_reverse($filtered))['device_uuid']) . "'>" . escape(array_pop(array_reverse($filtered))['device_address']) . " " . ((count($filtered) - 1) > 0 ? " (+" . (count($filtered) - 1) . ")" : "") . "</td>\n";
+				} else {
+					echo "    <td> - </td>";
+				}
 			}
 			if (permission_exists("extension_user_context")) {
 				echo "	<td>".escape($row['user_context'])."</td>\n";
