@@ -184,7 +184,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "execute ring_ready to send 180 ringing to calling party";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Add ring_ready in the dialplan to send 180 ringing to calling party";
 
 	//schema details
 		$y=0;
