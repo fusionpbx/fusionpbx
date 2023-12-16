@@ -231,17 +231,22 @@
 		$apps[$x]['permissions'][$y]['name'] = "extension_hold_music";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
-		$apps[$x]['permissions'][$y]['groups'][] = "user"; 
+		$apps[$x]['permissions'][$y]['groups'][] = "user";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "extension_type";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$apps[$x]['permissions'][$y]['groups'][] = "user";
 		$y++;
-		$apps[$x]['permissions'][$y]['name'] = "extension_address";
+		$apps[$x]['permissions'][$y]['name'] = "extension_device_address";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
-		$apps[$x]['permissions'][$y]['groups'][] = "user"; 
+		$apps[$x]['permissions'][$y]['groups'][] = "user";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "extension_device_template";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$apps[$x]['permissions'][$y]['groups'][] = "user";
 
 	//default settings
 		$y=0;
@@ -747,3 +752,4 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 
 ?>
+

@@ -1135,8 +1135,8 @@ $text['label-outbound_caller_id_name']['zh-cn'] = "出站来电显示名称";
 $text['label-outbound_caller_id_name']['ja-jp'] = "発信者ID名";
 $text['label-outbound_caller_id_name']['ko-kr'] = "아웃바운드 발신자 ID 이름";
 
-$text['label-outbound_cid_name']['en-us'] = "Outbound CID Name";
-$text['label-outbound_cid_name']['en-gb'] = "Outbound CID Name";
+$text['label-outbound_cid_name']['en-us'] = "Outbound Name";
+$text['label-outbound_cid_name']['en-gb'] = "Outbound Name";
 $text['label-outbound_cid_name']['ar-eg'] = "خارج النطاق الاسم";
 $text['label-outbound_cid_name']['de-at'] = "Ausgehende Anruferkennung (Name)";
 $text['label-outbound_cid_name']['de-ch'] = "Ausgehende Anruferkennung (Name)";
@@ -1158,6 +1158,30 @@ $text['label-outbound_cid_name']['uk-ua'] = "Вихідний CID Ім'я";
 $text['label-outbound_cid_name']['zh-cn'] = "出站 CID 名称";
 $text['label-outbound_cid_name']['ja-jp'] = "アウトバウンド CID 名";
 $text['label-outbound_cid_name']['ko-kr'] = "아웃바운드 CID 이름";
+
+$text['label-outbound_cid_number']['en-us'] = "Outbound Number";
+$text['label-outbound_cid_number']['en-gb'] = "Outbound Number";
+$text['label-outbound_cid_number']['ar-eg'] = "خارج النطاق الاسم";
+$text['label-outbound_cid_number']['de-at'] = "Ausgehende Anruferkennung (Number)";
+$text['label-outbound_cid_number']['de-ch'] = "Ausgehende Anruferkennung (Number)";
+$text['label-outbound_cid_number']['de-de'] = "Ausgehende Anruferkennung (Number)";
+$text['label-outbound_cid_number']['es-cl'] = "Nombre de Caller ID Saliente";
+$text['label-outbound_cid_number']['es-mx'] = "Nombre de Caller ID Saliente";
+$text['label-outbound_cid_number']['fr-ca'] = "Nom de l'appelant sortant";
+$text['label-outbound_cid_number']['fr-fr'] = "Nom de l'appelant sortant";
+$text['label-outbound_cid_number']['he-il'] = "שם CID יוצא";
+$text['label-outbound_cid_number']['it-it'] = "ID Nome Chiamante Esterno";
+$text['label-outbound_cid_number']['nl-nl'] = "Uitgaand CID Naam";
+$text['label-outbound_cid_number']['pl-pl'] = "Nazwa prezentowana w rozmowach wychodzacych";
+$text['label-outbound_cid_number']['pt-br'] = "Nome do ID de Saída";
+$text['label-outbound_cid_number']['pt-pt'] = "Nome público";
+$text['label-outbound_cid_number']['ro-ro'] = "Nume CID de ieșire";
+$text['label-outbound_cid_number']['ru-ru'] = "Идентификатор (Caller ID) имени вызывающего абонента";
+$text['label-outbound_cid_number']['sv-se'] = "Utgående Namnpresentation";
+$text['label-outbound_cid_number']['uk-ua'] = "Вихідний CID Ім'я";
+$text['label-outbound_cid_number']['zh-cn'] = "出站 CID 名称";
+$text['label-outbound_cid_number']['ja-jp'] = "アウトバウンド CID 名";
+$text['label-outbound_cid_number']['ko-kr'] = "아웃바운드 CID 이름";
 
 $text['label-number_alias']['en-us'] = "Number Alias";
 $text['label-number_alias']['en-gb'] = "Number Alias";
@@ -3554,3 +3578,4 @@ $text['button-call_forward']['ja-jp'] = "電話転送";
 $text['button-call_forward']['ko-kr'] = "착신 전환";
 
 ?>
+
