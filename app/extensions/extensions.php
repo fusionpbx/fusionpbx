@@ -92,35 +92,35 @@
 
 //add the search term
 	$search = strtolower($_GET["search"] ?? '');
-	if (!empty($search)) {
-		$sql_search = " and ( ";
-		$sql_search .= "lower(extension) like :search ";
-		$sql_search .= "or lower(number_alias) like :search ";
-		$sql_search .= "or lower(effective_caller_id_name) like :search ";
-		$sql_search .= "or lower(effective_caller_id_number) like :search ";
-		$sql_search .= "or lower(outbound_caller_id_name) like :search ";
-		$sql_search .= "or lower(outbound_caller_id_number) like :search ";
-		$sql_search .= "or lower(emergency_caller_id_name) like :search ";
-		$sql_search .= "or lower(emergency_caller_id_number) like :search ";
-		$sql_search .= "or lower(directory_first_name) like :search ";
-		$sql_search .= "or lower(directory_last_name) like :search ";
-		if (permission_exists("extension_call_group")) {
-			$sql_search .= "or lower(call_group) like :search ";
-		}
-		$sql_search .= "or lower(user_context) like :search ";
-		$sql_search .= "or lower(enabled) like :search ";
-		$sql_search .= "or lower(description) like :search ";
-		$sql_search .= ") ";
-		$parameters['search'] = '%'.$search.'%';
-	}
 
 //get total extension count
-	$sql = "select count(*) from v_extensions where true ";
+	$sql = "select count(*) from v_extensions ";
+	$sql .= "where true ";
 	if (!(!empty($_GET['show']) && $_GET['show'] == "all" && permission_exists('extension_all'))) {
 		$sql .= "and domain_uuid = :domain_uuid ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	}
-	$sql .= $sql_search ?? '';
+	if (!empty($search)) {
+		$sql .= "and ( ";
+		$sql .= " lower(extension) like :search ";
+		$sql .= " or lower(number_alias) like :search ";
+		$sql .= " or lower(effective_caller_id_name) like :search ";
+		$sql .= " or lower(effective_caller_id_number) like :search ";
+		$sql .= " or lower(outbound_caller_id_name) like :search ";
+		$sql .= " or lower(outbound_caller_id_number) like :search ";
+		$sql .= " or lower(emergency_caller_id_name) like :search ";
+		$sql .= " or lower(emergency_caller_id_number) like :search ";
+		$sql .= " or lower(directory_first_name) like :search ";
+		$sql .= " or lower(directory_last_name) like :search ";
+		if (permission_exists("extension_call_group")) {
+			$sql .= " or lower(call_group) like :search ";
+		}
+		$sql .= " or lower(user_context) like :search ";
+		$sql .= " or lower(enabled) like :search ";
+		$sql .= " or lower(description) like :search ";
+		$sql .= ") ";
+		$parameters['search'] = '%'.$search.'%';
+	}
 	$database = new database;
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 
@@ -136,7 +136,51 @@
 	$offset = $rows_per_page * $page;
 
 //get the extensions
-	$sql = str_replace('count(*)', '*', $sql);
+	$sql = "select e.*, ";
+	$sql .= "( ";
+	$sql .= "	select device_uuid ";
+	$sql .= "	from v_device_lines ";
+	$sql .= "	where extension_uuid = e.extension_uuid ";
+	$sql .= "	and user_id = e.extension ";
+	$sql .= "	limit 1 ";
+	$sql .= ") AS device_uuid, ";
+	$sql .= "( ";
+	$sql .= "	select device_address ";
+	$sql .= "	from v_devices ";
+	$sql .= "	where device_uuid in ( ";
+	$sql .= "		select device_uuid ";
+	$sql .= "		from v_device_lines ";
+	$sql .= "		where extension_uuid = e.extension_uuid ";
+	$sql .= "		and user_id = e.extension ";
+	$sql .= "		limit 1) ";
+	$sql .= ") AS device_address ";
+	$sql .= "from v_extensions as e ";
+	$sql .= "where true ";
+	if (!(!empty($_GET['show']) && $_GET['show'] == "all" && permission_exists('extension_all'))) {
+		$sql .= "and domain_uuid = :domain_uuid ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	}
+	if (!empty($search)) {
+		$sql .= "and ( ";
+		$sql .= " lower(extension) like :search ";
+		$sql .= " or lower(number_alias) like :search ";
+		$sql .= " or lower(effective_caller_id_name) like :search ";
+		$sql .= " or lower(effective_caller_id_number) like :search ";
+		$sql .= " or lower(outbound_caller_id_name) like :search ";
+		$sql .= " or lower(outbound_caller_id_number) like :search ";
+		$sql .= " or lower(emergency_caller_id_name) like :search ";
+		$sql .= " or lower(emergency_caller_id_number) like :search ";
+		$sql .= " or lower(directory_first_name) like :search ";
+		$sql .= " or lower(directory_last_name) like :search ";
+		if (permission_exists("extension_call_group")) {
+			$sql .= " or lower(call_group) like :search ";
+		}
+		$sql .= " or lower(user_context) like :search ";
+		$sql .= " or lower(enabled) like :search ";
+		$sql .= " or lower(description) like :search ";
+		$sql .= ") ";
+		$parameters['search'] = '%'.$search.'%';
+	}
 	$sql .= order_by($order_by, $order, null, null, $sort);
 	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;
@@ -271,26 +315,6 @@
 	echo "</tr>\n";
 
 	if (is_array($extensions) && @sizeof($extensions) != 0) {
-		if (permission_exists("extension_address")) {
-        	// get all device list 
-			$sql = "    select l.user_id, l.domain_uuid, d.device_address, d.device_template, d.device_description, l.device_line_uuid, l.device_uuid, l.line_number   ";
-			$sql .= "    from v_device_lines as l, v_devices as d   ";
-			$sql .= "    where l.device_uuid = d.device_uuid   ";
-			if (!($_GET['show'] == "all" && permission_exists('extension_all'))) {
-				$sql.= "    and l.domain_uuid = :domain_uuid   ";
-			}
-			$sql .= "    order by l.line_number, d.device_address asc   ";
-			if (!($_GET['show'] == "all" && permission_exists('extension_all'))) {
-				$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-			}
-			$database = new database;
-			if ($_GET['show'] == "all" && permission_exists('extension_all')) {
-				$device_lines = $database->select($sql, 'all');
-			} else {
-				$device_lines = $database->select($sql, $parameters, 'all');
-			}
-        	unset($sql, $parameters, $database);
-		}
 		$x = 0;
 		foreach($extensions as $row) {
 			if (permission_exists('extension_edit')) {
@@ -323,14 +347,7 @@
 				echo "	<td>".escape($row['call_group'])."&nbsp;</td>\n";
 			}
 			if (permission_exists("extension_address")) {
-				$filtered = array_filter($device_lines, function ($elem) use ($row) {
-					return ($elem['user_id'] == $row['extension'] || $elem['user_id'] == $row['number_alias']) && $row['domain_uuid'] == $elem['domain_uuid'];
-				});
-				if (count($filtered)) {
-					echo "	<td class='device_address'><a href='" . PROJECT_PATH . "/app/devices/device_edit.php?id=" . escape(array_pop(array_reverse($filtered))['device_uuid']) . "'>" . escape(array_pop(array_reverse($filtered))['device_address']) . " " . ((count($filtered) - 1) > 0 ? " (+" . (count($filtered) - 1) . ")" : "") . "</td>\n";
-				} else {
-					echo "    <td> - </td>";
-				}
+					echo "	<td class='device_address'><a href='" . PROJECT_PATH . "/app/devices/device_edit.php?id=".escape($row['device_uuid'])."'>".escape($row['device_address'])."</td>\n";
 			}
 			if (permission_exists("extension_user_context")) {
 				echo "	<td>".escape($row['user_context'])."</td>\n";
