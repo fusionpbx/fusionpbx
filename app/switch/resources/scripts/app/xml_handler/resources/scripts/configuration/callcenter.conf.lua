@@ -124,6 +124,9 @@ require "resources.functions.format_ringback"
 					queue_record_template = string.gsub(queue_record_template, "{strftime", "${strftime");
 					queue_record_template = string.gsub(queue_record_template, "{uuid}", "${uuid}");
 					queue_record_template = string.gsub(queue_record_template, "{record_ext}", "${record_ext}");
+					queue_record_template = string.gsub(queue_record_template, "{caller_id_number}", "${caller_id_number}");
+					queue_record_template = string.gsub(queue_record_template, "{sip_from_user}", "${sip_from_user}");
+					queue_record_template = string.gsub(queue_record_template, "{sip_to_user}", "${sip_to_user}");
 
 				--start the xml
 					xml:append([[                            <queue name="]] .. xml.sanitize(queue_extension) .. [[@]] .. xml.sanitize(domain_name) .. [[" label="]] .. xml.sanitize(queue_name) .. [[@]] .. xml.sanitize(domain_name) .. [[">]]);
