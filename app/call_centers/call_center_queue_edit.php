@@ -649,6 +649,14 @@
 		$call_center_queue_uuid = null;
 	}
 
+//set the record_template
+	if (empty($_SESSION['call_center']['record_name']['text'])) {
+		$record_template = $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/archive/\${strftime(%Y)}/\${strftime(%b)}/\${strftime(%d)}/\${uuid}.\${record_ext}";
+	}
+	else {
+		$record_template = $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/archive/".$_SESSION['call_center']['record_name']['text'];
+	}
+
 //show the content
 	if (permission_exists('recording_play') || permission_exists('recording_download')) {
 		echo "<script type='text/javascript' language='JavaScript'>\n";
@@ -1001,15 +1009,9 @@
 	echo "	".$text['label-record_template']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	if (empty($_SESSION['call_center']['record_name']['text'])) {
-		$record_template = $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/archive/\${strftime(%Y)}/\${strftime(%b)}/\${strftime(%d)}/\${uuid}.\${record_ext}";
-	}
-	else {
-		$record_template = $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/archive/".$_SESSION['call_center']['record_name']['text'];
-	}
 	echo "	<select class='formfld' name='queue_record_template'>\n";
 	if (!empty($queue_record_template)) {
-		echo "	<option value='".escape($queue_record_template)."' selected='selected' >".$text['option-true']."</option>\n";
+		echo "	<option value='".escape($record_template)."' selected='selected' >".$text['option-true']."</option>\n";
 	}
 	else {
 		echo "	<option value='".escape($record_template)."'>".$text['option-true']."</option>\n";
