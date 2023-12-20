@@ -479,38 +479,36 @@ if (!class_exists('xml_cdr')) {
 							//marked as missed
 							$missed_call = $xml->variables->missed_call;
 						}
-						elseif (isset($xml->variables->fax_success)) {
+						if (isset($xml->variables->fax_success)) {
 							//fax server
 							$missed_call = 'false';
 						}
-						elseif ($xml->variables->hangup_cause == 'LOSE_RACE') {
+						if (isset($xml->variables->hangup_cause) && $xml->variables->hangup_cause == 'LOSE_RACE') {
 							//ring group or multi destination bridge statement
 							$missed_call = 'false';
 						}
-						elseif ($xml->variables->hangup_cause == 'NO_ANSWER' && isset($xml->variables->originating_leg_uuid)) {
+						if (isset($xml->variables->hangup_cause) && $xml->variables->hangup_cause == 'NO_ANSWER' && isset($xml->variables->originating_leg_uuid)) {
 							//ring group or multi destination bridge statement
 							$missed_call = 'false';
 						}
-						elseif (substr($xml->variables->destination_number, 0, 3) == '*99') {
+						if (isset($xml->variables->destination_number) && substr($xml->variables->destination_number, 0, 3) == '*99') {
 							//voicemail
 							$missed_call = 'true';
 						}
-						elseif (isset($xml->variables->voicemail_message) && $xml->variables->voicemail_message == true) {
+						if (isset($xml->variables->voicemail_message) && $xml->variables->voicemail_message == true) {
 							//voicemail
 							$missed_call = 'true';
 						}
-						elseif (isset($xml->variables->billsec) && $xml->variables->billsec > 0) {
+						if (isset($xml->variables->billsec) && $xml->variables->billsec > 0) {
 							//answered call
 							$missed_call = 'false';
 						}
-						elseif (isset($xml->variables->cc_side) && $xml->variables->cc_side == 'agent') {
+						if (isset($xml->variables->cc_side) && $xml->variables->cc_side == 'agent') {
 							//call center
 							$missed_call = 'false';
 						}
-						elseif (isset($xml->variables->cc_side) 
-							&& $xml->variables->cc_side == 'member' 
-							&& isset($xml->variables->cc_cause) 
-							&& $xml->variables->cc_cause == 'cancel') {
+						if (isset($xml->variables->cc_side) && $xml->variables->cc_side == 'member' 
+							&& isset($xml->variables->cc_cause) && $xml->variables->cc_cause == 'cancel') {
 							//call center
 							$missed_call = 'true';
 						}
