@@ -507,8 +507,11 @@ if (!class_exists('xml_cdr')) {
 							//call center
 							$missed_call = 'false';
 						}
-						else {
-							//missed call
+						elseif (isset($xml->variables->cc_side) 
+							&& $xml->variables->cc_side == 'member' 
+							&& isset($xml->variables->cc_cause) 
+							&& $xml->variables->cc_cause == 'cancel') {
+							//call center
 							$missed_call = 'true';
 						}
 
