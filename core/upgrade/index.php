@@ -58,29 +58,45 @@
 
 		//run source update
 		if (!empty($action["upgrade_source"]) && permission_exists("upgrade_source") && !is_dir("/usr/share/examples/fusionpbx")) {
-			$cwd = getcwd();
-			chdir($_SERVER["PROJECT_ROOT"]);
-			exec("git pull 2>&1", $response_source_update);
-			$update_failed = true;
-			if (sizeof($response_source_update) > 0) {
-				$_SESSION["response"]["upgrade_source"] = $response_source_update;
-				foreach ($response_source_update as $response_line) {
-					if (substr_count($response_line, "Updating ") > 0 || substr_count($response_line, "Already up-to-date.") > 0 || substr_count($response_line, "Already up to date.") > 0) {
-						$update_failed = false;
-					}
-					
-					if (substr_count($response_line, "error") > 0) {
-						$update_failed = true;
-						break;
-					}
-				}
-			}
-			chdir($cwd);
-			if ($update_failed) {
-				message::add($text['message-upgrade_source_failed'], 'negative', $message_timeout);
+
+			$project_update_status = git_pull($_SERVER["PROJECT_ROOT"]);
+
+			$_SESSION["response"]["upgrade_source"] = $project_update_status['message'];
+
+			if (!empty($project_update_status['result'])) {
+				message::add($text['message-upgrade_source'], null, $message_timeout);
 			}
 			else {
+				message::add($text['message-upgrade_source_failed'], 'negative', $message_timeout);
+			}
+		}
+
+		//run app source updates
+		if (!empty($action["update_apps"]) && permission_exists("upgrade_source")) {
+			$app_updates = $_POST['app_list'];
+
+			$updateable_repos = git_find_repos($_SERVER["PROJECT_ROOT"]."/app");
+
+			if (is_array($app_updates)) {
+				$apps_updated = true;
+				foreach ($updateable_repos as $repo => $apps) {
+					if (array_search(basename($repo), $app_updates) !== false) {
+						$git_result = git_pull($repo);
+						$_SESSION["response"]["update_apps"][basename($repo)] = $git_result['message'];
+					}
+
+					if (!$git_result['result']) {
+						$apps_updated = false;
+					}
+
+				}
+			}
+
+			if ($apps_updated) {
 				message::add($text['message-upgrade_source'], null, $message_timeout);
+			}
+			else {
+				message::add($text['message-upgrade_source_failed'], 'negative', $message_timeout);
 			}
 		}
 
@@ -155,7 +171,7 @@
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "<tr onclick=\"document.getElementById('do_source').checked = !document.getElementById('do_source').checked;\">\n";
 		echo "	<td width='30%' class='vncell' style='vertical-align:middle;'>\n";
-		echo "		<div style='".$step_container_style."'><span style='".$step_number_style."'>".$step++."</span></div>";
+		echo "		<div style='".$step_container_style."'><span style='".$step_number_style."'>".$step."</span></div>";
 		echo "		".$text['label-upgrade_source'];
 		echo "	</td>\n";
 		echo "	<td width='70%' class='vtable' style='height: 50px; cursor: pointer;'>\n";
@@ -179,6 +195,68 @@
 		echo "	</td>\n";
 		echo "</tr>\n";
 		echo "</table>\n";
+
+		$step++;
+
+		// find and show apps
+
+		$updateable_repos = git_find_repos($_SERVER["PROJECT_ROOT"]."/app");
+
+		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+		echo "<tr onclick=\"document.getElementById('do_apps').checked = !document.getElementById('do_apps').checked; $('#tr_app_updates').slideToggle('fast');\">\n";
+		echo "	<td width='30%' class='vncell' style='vertical-align:middle;'>\n";
+		echo "		<div style='".$step_container_style."'><span style='".$step_number_style."'>".$step."</span></div>";
+		echo "		".$text['label-update_apps'];
+		echo "	</td>\n";
+		echo "	<td width='70%' class='vtable' style='height: 50px; cursor: pointer;'>\n";
+		echo "		<input type='checkbox' name='action[update_apps]' id='do_apps' value='1' onclick=\"event.stopPropagation(); $('#tr_app_updates').slideToggle('fast');\"> &nbsp;".$text['description-update_apps']."\n";
+		echo "</a>";
+		echo "	</td>\n";
+		echo "</tr>\n";
+		echo "</table>\n";
+
+
+		echo "<div id='tr_app_updates' style='display: none;'>\n";
+		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+		echo "<tr>\n";
+		echo "	<td width='30%' class='vncell' style='vertical-align:middle;'>\n";
+		echo "		<div style='".$step_container_style."'><span style='".$step_number_style."'>".$step."B</span></div>";
+		echo "		Apps";
+		echo "	</td>\n";
+		echo "	<td width='70%' class='vtable' style='height: 50px;'>\n";
+
+
+
+		foreach ($updateable_repos as $repo => $apps) {
+			$repo_info = git_repo_info($repo);
+
+			$repo_name = basename($repo);
+
+			if (!$repo_info) {
+				continue;
+			}
+
+			// if (!is_writeable($repo_info['path']."/.git")) {
+			// 	continue;
+			// }
+
+			echo "		<input type='checkbox' name='app_list[]' id='do_apps' value='".$repo_name."'> &nbsp;".$repo_name."<br />\n";
+			echo $text['label-git_branch']." ".$repo_info['branch']."\n";
+			echo "<a href='".$repo_info['url']."/compare/";
+			echo $repo_info['commit'] . "...".$repo_info['branch']." 'target='_blank'> \n";
+			echo $repo_info['commit'] . "</a><br />\n";
+			echo "Apps: ".implode(", ",$apps)."<br />\n";
+			echo "</a>";
+			
+
+		}
+
+		echo "	</td>\n";
+		echo "</tr>\n";
+		echo "</table>\n";
+		echo "</div>\n";
+
+		$step++;
 	}
 
 	if (permission_exists("upgrade_schema")) {
@@ -198,7 +276,7 @@
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "<tr onclick=\"document.getElementById('do_data_types').checked = !document.getElementById('do_data_types').checked;\">\n";
 		echo "	<td width='30%' class='vncell' style='vertical-align:middle;'>\n";
-		echo "		<div style='".$step_container_style."'><span style='".$step_number_style." letter-spacing: -0.06em;'>".$step++."B</span></div>";
+		echo "		<div style='".$step_container_style."'><span style='".$step_number_style." letter-spacing: -0.06em;'>".$step."B</span></div>";
 		echo "		".$text['label-upgrade_data_types'];
 		echo "	</td>\n";
 		echo "	<td width='70%' class='vtable' style='height: 50px; cursor: pointer;'>\n";
@@ -207,13 +285,14 @@
 		echo "</tr>\n";
 		echo "</table>\n";
 		echo "</div>\n";
+		$step++;
 	}
 
 	if (permission_exists("upgrade_apps")) {
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "<tr onclick=\"document.getElementById('do_apps').checked = !document.getElementById('do_apps').checked;\">\n";
 		echo "	<td width='30%' class='vncell' style='vertical-align:middle;'>\n";
-		echo "		<div style='".$step_container_style."'><span style='".$step_number_style."'>".$step++."</span></div>";
+		echo "		<div style='".$step_container_style."'><span style='".$step_number_style."'>".$step."</span></div>";
 		echo "		".$text['label-upgrade_apps'];
 		echo "	</td>\n";
 		echo "	<td width='70%' class='vtable' style='height: 50px; cursor: pointer;'>\n";
@@ -221,13 +300,14 @@
 		echo "	</td>\n";
 		echo "</tr>\n";
 		echo "</table>\n";
+		$step++;
 	}
 
 	if (permission_exists("menu_restore")) {
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "<tr onclick=\"document.getElementById('do_menu').checked = !document.getElementById('do_menu').checked; $('#sel_menu').fadeToggle('fast');\">\n";
 		echo "	<td width='30%' class='vncell' style='vertical-align:middle;'>\n";
-		echo "		<div style='".$step_container_style."'><span style='".$step_number_style."'>".$step++."</span></div>";
+		echo "		<div style='".$step_container_style."'><span style='".$step_number_style."'>".$step."</span></div>";
 		echo "		".$text['label-upgrade_menu'];
 		echo "	</td>\n";
 		echo "	<td width='70%' class='vtable' style='height: 50px; cursor: pointer;'>\n";
@@ -252,13 +332,14 @@
 		echo "	</td>\n";
 		echo "</tr>\n";
 		echo "</table>\n";
+		$step++;
 	}
 
 	if (permission_exists("group_edit")) {
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "<tr onclick=\"document.getElementById('do_permissions').checked = !document.getElementById('do_permissions').checked;\">\n";
 		echo "	<td width='30%' class='vncell' style='vertical-align:middle;'>\n";
-		echo "		<div style='".$step_container_style."'><span style='".$step_number_style."'>".$step++."</span></div>";
+		echo "		<div style='".$step_container_style."'><span style='".$step_number_style."'>".$step."</span></div>";
 		echo "		".$text['label-upgrade_permissions'];
 		echo "	</td>\n";
 		echo "	<td width='70%' class='vtable' style='height: 50px; cursor: pointer;'>\n";
@@ -266,6 +347,7 @@
 		echo "	</td>\n";
 		echo "</tr>\n";
 		echo "</table>\n";
+		$step++;
 	}
 
 	echo "</form>\n";
@@ -273,9 +355,18 @@
 	echo "<br /><br />";
 	if (!empty($_SESSION["response"]) && is_array($_SESSION["response"])) {
 		foreach($_SESSION["response"] as $part => $response){
-			echo "<b>". $text["label-results"]." - ".$text["label-${part}"]."</b>";
-			echo "<br /><br />";
-			if (is_array($response)) {
+			echo "<b>".$text["label-results"]." - ".$text["label-${part}"];
+			echo "</b><br /><br />";
+			if ($part == "update_apps") {
+				echo "<pre>";
+				foreach ($response as $app_name => $app_response) {
+					foreach ($app_response as $response_line) {
+						echo $app_name.": ".htmlspecialchars($response_line) . "\n";
+					}
+				}
+				echo "</pre>";
+			}
+			elseif (is_array($response)) {
 				echo "<pre>";
 				echo implode("\n", $response);
 				echo "</pre>";
