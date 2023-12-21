@@ -197,16 +197,16 @@
 
 		// find and show apps
 
-		$updateable_apps = git_find_repos($_SERVER["PROJECT_ROOT"]."/app");
+		$updateable_repos = git_find_repos($_SERVER["PROJECT_ROOT"]."/app");
 
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-		echo "<tr>\n";
+		echo "<tr onclick=\"document.getElementById('do_apps').checked = !document.getElementById('do_apps').checked; $('#tr_app_updates').slideToggle('fast');\">\n";
 		echo "	<td width='30%' class='vncell' style='vertical-align:middle;'>\n";
 		echo "		<div style='".$step_container_style."'><span style='".$step_number_style."'>".$step."</span></div>";
 		echo "		".$text['label-update_apps'];
 		echo "	</td>\n";
-		echo "	<td width='70%' class='vtable' style='height: 50px;'>\n";
-		echo "		<input type='checkbox' name='action[update_apps]' id='do_apps' value='1' onchange=\"$('#do_update_apps').prop('checked', false); $('#tr_app_updates').slideToggle('fast');\"> &nbsp;".$text['description-update_apps']."\n";
+		echo "	<td width='70%' class='vtable' style='height: 50px; cursor: pointer;'>\n";
+		echo "		<input type='checkbox' name='action[update_apps]' id='do_apps' value='1' onclick=\"event.stopPropagation(); $('#tr_app_updates').slideToggle('fast');\"> &nbsp;".$text['description-update_apps']."\n";
 		echo "</a>";
 		echo "	</td>\n";
 		echo "</tr>\n";
@@ -224,8 +224,10 @@
 
 
 
-		foreach ($updateable_apps as $app) {
-			$repo_info = git_repo_info($_SERVER["PROJECT_ROOT"] . "/app/" . $app);
+		foreach ($updateable_repos as $repo => $apps) {
+			$repo_info = git_repo_info($repo);
+
+			$repo_name = basename($repo);
 
 			if (!$repo_info) {
 				continue;
@@ -235,13 +237,12 @@
 				continue;
 			}
 
-			$app_label = ucfirst($app);
-
-			echo "		<input type='checkbox' name='app_list[]' id='do_apps' value='".$app."'> &nbsp;".$app_label."<br />\n";
+			echo "		<input type='checkbox' name='app_list[]' id='do_apps' value='".$repo_name."'> &nbsp;".$repo_name."<br />\n";
 			echo $text['label-git_branch']." ".$repo_info['branch']."\n";
 			echo "<a href='".$repo_info['url']."/compare/";
 			echo $repo_info['commit'] . "...".$repo_info['branch']." 'target='_blank'> \n";
 			echo $repo_info['commit'] . "</a><br />\n";
+			echo "Apps: ".implode(", ",$apps)."<br />\n";
 			echo "</a>";
 			
 

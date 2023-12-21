@@ -2299,7 +2299,7 @@ if (!function_exists('git_pull')) {
 
 		$cwd = getcwd();
 		chdir($path);
-		exec("git pull 2>&1", $response_source_update);
+		exec("GIT_SSH_COMMAND='ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no' git pull 2>&1", $response_source_update);
 
 		$update_status = false;
 
@@ -2329,12 +2329,12 @@ if (!function_exists('git_pull')) {
 if (!function_exists('is_git_repo')) {
 	function is_git_repo($path) {
 		if(!is_dir($path)) {return false;}
-		$cwd = getcwd();
+		$cwd = $_SERVER["PROJECT_ROOT"];
 		chdir($path);
-		exec("git rev-parse --show-cdup", $git_repo, $git_repo_response);
+		exec("git rev-parse --show-toplevel", $git_repo, $git_repo_response);
 		chdir($cwd);
-		if (strlen($git_repo[0]) == 0 && $git_repo_response == 0) {
-			return true;
+		if (($git_repo[0]) != $cwd && $git_repo_response == 0) {
+			return $git_repo[0];
 		}
 		return false;
 	}
@@ -2386,12 +2386,12 @@ if (!function_exists('git_find_repos')) {
 		$apps = scandir($path);
 		$git_repos = array();
 		foreach ($apps as $app) {
-			if (is_git_repo($path."/".$app)) {
-				$git_repos[] = $app;
+			$git_repo_name = is_git_repo($path."/".$app);
+			if ($git_repo_name != false && !empty($git_repo_name)) {
+				$git_repos[$git_repo_name][] = $app;
 			}
+			unset($git_repo_name);
 		}
-		//remove hidden and special results
-		$git_repos = array_diff($git_repos, array('..', '.'));
 		return $git_repos;
 	}
 }

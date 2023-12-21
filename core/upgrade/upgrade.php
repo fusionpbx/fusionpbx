@@ -294,12 +294,12 @@
 		if (!is_array($app_list)) {
 			exit;
 		}
-		$updates = array();
-		foreach ($app_list as $app) {
-			$path = $_SERVER["PROJECT_ROOT"] . "/app/" . $app;
+		print_r($app_list);exit;
+		foreach ($app_list as $repo => $apps) {
+			$path = $repo;
 			$git_result = git_pull($path);
 			foreach ($git_result['message'] as $response_line) {
-				echo $app_name . ": " . $response_line . "\n";
+				echo $repo . ": " . $response_line . "\n";
 			}
 		}
 	}
