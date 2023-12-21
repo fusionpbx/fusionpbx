@@ -2292,4 +2292,107 @@
 		}
 
 	}
+
+//git pull
+if (!function_exists('git_pull')) {
+	function git_pull($path) {
+
+		$cwd = getcwd();
+		chdir($path);
+		exec("GIT_SSH_COMMAND='ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no' git pull 2>&1", $response_source_update);
+
+		$update_status = false;
+
+		if (sizeof($response_source_update) == 0) {
+			return array('result' => false, 'message' => null);
+		}
+
+		foreach ($response_source_update as $response_line) {
+			if (substr_count($response_line, "Updating ") > 0 || substr_count($response_line, "Already up to date.") > 0) {
+				$update_status = true;
+			}
+
+			if (substr_count($response_line, "error") > 0) {
+				$update_status = false;
+				break;
+			}
+		}
+		chdir($cwd);
+
+		return array('result' => $update_status,
+				'message' => $response_source_update);
+
+	}
+}
+
+//git is repository
+if (!function_exists('is_git_repo')) {
+	function is_git_repo($path) {
+		if(!is_dir($path)) {return false;}
+		$cwd = $_SERVER["PROJECT_ROOT"];
+		chdir($path);
+		exec("git rev-parse --show-toplevel", $git_repo, $git_repo_response);
+		chdir($cwd);
+		if (($git_repo[0]) != $cwd && $git_repo_response == 0) {
+			return $git_repo[0];
+		}
+		return false;
+	}
+}
+
+//git repo version information
+if (!function_exists('git_repo_info')) {
+	function git_repo_info($path) {
+
+		if(!is_dir($path)) {
+			return false;
+		}
+
+		$cwd = getcwd();
+		chdir($path);
+
+		//get current branch
+		exec("git rev-parse --abbrev-ref HEAD 2>&1", $git_branch, $git_branch_return);
+		$repo['branch'] = $git_branch[0];
+
+		//get current commit id
+		exec("git log --pretty=format:'%H' -n 1 2>&1", $git_commit, $git_commit_return);
+		$repo['commit'] = $git_commit[0];
+
+		//get remote origin url for updates
+		exec("git config --get remote.origin.url", $git_url);
+		$repo['url'] = preg_replace('/\.git$/', '', $git_url[0] );
+
+		$repo['path'] = $path;
+
+		//to-do detect remote over ssh and reformat to equivalent https url
+
+		chdir($cwd);
+
+		if (!$git_branch_return && !$git_commit_return && $git_url) {
+			return $repo;
+		}
+		else {
+			return false;
+		}
+
+	}
+}
+
+
+//git locate app repositories
+if (!function_exists('git_find_repos')) {
+	function git_find_repos($path) {
+		$apps = scandir($path);
+		$git_repos = array();
+		foreach ($apps as $app) {
+			$git_repo_name = is_git_repo($path."/".$app);
+			if ($git_repo_name != false && !empty($git_repo_name)) {
+				$git_repos[$git_repo_name][] = $app;
+			}
+			unset($git_repo_name);
+		}
+		return $git_repos;
+	}
+}
 ?>
