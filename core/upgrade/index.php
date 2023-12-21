@@ -75,12 +75,15 @@
 		if (!empty($action["update_apps"]) && permission_exists("upgrade_source")) {
 			$app_updates = $_POST['app_list'];
 
+			$updateable_repos = git_find_repos($_SERVER["PROJECT_ROOT"]."/app");
+
 			if (is_array($app_updates)) {
 				$apps_updated = true;
-				foreach ($app_updates as $app) {
-					$path = $_SERVER["PROJECT_ROOT"] . "/app/" . $app;
-					$git_result = git_pull($path);
-					$_SESSION["response"]["update_apps"][$app] = $git_result['message'];
+				foreach ($updateable_repos as $repo => $apps) {
+					if (array_search(basename($repo), $app_updates) !== false) {
+						$git_result = git_pull($repo);
+						$_SESSION["response"]["update_apps"][basename($repo)] = $git_result['message'];
+					}
 
 					if (!$git_result['result']) {
 						$apps_updated = false;
@@ -233,9 +236,9 @@
 				continue;
 			}
 
-			if (!is_writeable($repo_info['path']."/.git")) {
-				continue;
-			}
+			// if (!is_writeable($repo_info['path']."/.git")) {
+			// 	continue;
+			// }
 
 			echo "		<input type='checkbox' name='app_list[]' id='do_apps' value='".$repo_name."'> &nbsp;".$repo_name."<br />\n";
 			echo $text['label-git_branch']." ".$repo_info['branch']."\n";
