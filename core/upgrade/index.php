@@ -167,9 +167,9 @@
 	if (permission_exists("upgrade_source") && !is_dir("/usr/share/examples/fusionpbx") && is_writeable($_SERVER["PROJECT_ROOT"]."/.git")) {
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "<tr onclick=\"document.getElementById('do_source').checked = !document.getElementById('do_source').checked; (!document.getElementById('do_source').checked ? $('.do_optional_app').prop('checked', false) : null); $('#tr_optional_apps').slideToggle('fast');\">\n";
-		echo "	<td width='30%' class='vncellreq' style='vertical-align:middle;'>\n";
+		echo "	<td width='30%' class='vncellreq' style='vertical-align: middle;'>\n";
 		echo "		<div style='".$step_container_style."'><span style='".$step_number_style."'>".$step."</span></div>";
-		echo "		".$text['label-upgrade_source']."\n";
+		echo "		<div class='mt-1'>".$text['label-upgrade_source']."</div>\n";
 		echo "	</td>\n";
 		echo "	<td width='70%' class='vtable' style='height: 50px; cursor: pointer;'>\n";
 		echo "		<input type='checkbox' name='action[upgrade_source]' id='do_source' value='1' onclick=\"event.stopPropagation(); $('#tr_optional_apps').slideToggle('fast'); (!document.getElementById('do_source').checked ? $('.do_optional_app').prop('checked', false) : null);\"> &nbsp;".$text['description-upgrade_source']."<br />\n";
@@ -210,7 +210,7 @@
 			if (!$repo_info) { continue; }
 			echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 			echo "<tr onclick=\"if (document.getElementById('do_".$app['app']."')) { document.getElementById('do_".$app['app']."').checked = !document.getElementById('do_".$app['app']."').checked; }\">\n";
-			echo "	<td width='30%' class='vncell' style='vertical-align: top;'>\n";
+			echo "	<td width='30%' class='vncell' style='vertical-align: middle;'>\n";
 			echo "		".$app['name']."\n";
 			echo "	</td>\n";
 			echo "	<td width='70%' class='vtable' style='height: 50px; cursor: ".($pull_method == 'http' ? "pointer;'" : "help;' title=\"".$text['message-upgrade_manually'].": ".$repo_info['url']."\"").">\n";
@@ -232,9 +232,9 @@
 	if (permission_exists("upgrade_schema")) {
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "<tr onclick=\"document.getElementById('do_schema').checked = !document.getElementById('do_schema').checked; (!document.getElementById('do_schema').checked ? $('#do_data_types').prop('checked', false) : null); $('#tr_data_types').slideToggle('fast');\">\n";
-		echo "	<td width='30%' class='vncellreq' style='vertical-align:middle;'>\n";
+		echo "	<td width='30%' class='vncellreq' style='vertical-align: middle;'>\n";
 		echo "		<div style='".$step_container_style."'><span style='".$step_number_style."'>".$step."</span></div>";
-		echo "		".$text['label-upgrade_schema'];
+		echo "		<div class='mt-1'>".$text['label-upgrade_schema']."</div>\n";
 		echo "	</td>\n";
 		echo "	<td width='70%' class='vtable' style='height: 50px; cursor: pointer;'>\n";
 		echo "		<input type='checkbox' name='action[upgrade_schema]' id='do_schema' value='1' onclick=\"event.stopPropagation(); $('#tr_data_types').slideToggle('fast'); (!document.getElementById('do_schema').checked ? $('#do_data_types').prop('checked', false) : null);\"> &nbsp;".$text['description-upgrade_schema']."\n";
@@ -245,7 +245,7 @@
 		echo "<div id='tr_data_types' style='display: none;'>\n";
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "<tr onclick=\"document.getElementById('do_data_types').checked = !document.getElementById('do_data_types').checked;\">\n";
-		echo "	<td width='30%' class='vncell' style='vertical-align:middle;'>\n";
+		echo "	<td width='30%' class='vncell' style='vertical-align: middle;'>\n";
 		echo "		".$text['label-upgrade_data_types'];
 		echo "	</td>\n";
 		echo "	<td width='70%' class='vtable' style='height: 50px; cursor: pointer;'>\n";
@@ -260,9 +260,9 @@
 	if (permission_exists("upgrade_apps")) {
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "<tr onclick=\"document.getElementById('do_apps').checked = !document.getElementById('do_apps').checked;\">\n";
-		echo "	<td width='30%' class='vncellreq' style='vertical-align:middle;'>\n";
+		echo "	<td width='30%' class='vncellreq' style='vertical-align: middle;'>\n";
 		echo "		<div style='".$step_container_style."'><span style='".$step_number_style."'>".$step."</span></div>";
-		echo "		".$text['label-upgrade_apps'];
+		echo "		<div class='mt-1'>".$text['label-upgrade_apps']."</div>\n";
 		echo "	</td>\n";
 		echo "	<td width='70%' class='vtable' style='height: 50px; cursor: pointer;'>\n";
 		echo "		<input type='checkbox' name='action[app_defaults]' id='do_apps' value='1' onclick=\"event.stopPropagation();\"> &nbsp;".$text['description-upgrade_apps']."\n";
@@ -275,9 +275,9 @@
 	if (permission_exists("menu_restore")) {
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "<tr onclick=\"document.getElementById('do_menu').checked = !document.getElementById('do_menu').checked; $('#sel_menu').fadeToggle('fast');\">\n";
-		echo "	<td width='30%' class='vncellreq' style='vertical-align:middle;'>\n";
+		echo "	<td width='30%' class='vncellreq' style='vertical-align: middle;'>\n";
 		echo "		<div style='".$step_container_style."'><span style='".$step_number_style."'>".$step."</span></div>";
-		echo "		".$text['label-upgrade_menu'];
+		echo "		<div class='mt-1'>".$text['label-upgrade_menu']."</div>\n";
 		echo "	</td>\n";
 		echo "	<td width='70%' class='vtable' style='height: 50px; cursor: pointer;'>\n";
 		echo 		"<input type='checkbox' name='action[menu_defaults]' id='do_menu' value='1' onclick=\"event.stopPropagation(); $('#sel_menu').fadeToggle('fast');\">";
@@ -307,9 +307,9 @@
 	if (permission_exists("group_edit")) {
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "<tr onclick=\"document.getElementById('do_permissions').checked = !document.getElementById('do_permissions').checked;\">\n";
-		echo "	<td width='30%' class='vncellreq' style='vertical-align:middle;'>\n";
+		echo "	<td width='30%' class='vncellreq' style='vertical-align: middle;'>\n";
 		echo "		<div style='".$step_container_style."'><span style='".$step_number_style."'>".$step."</span></div>";
-		echo "		".$text['label-upgrade_permissions'];
+		echo "		<div class='mt-1'>".$text['label-upgrade_permissions']."</div>\n";
 		echo "	</td>\n";
 		echo "	<td width='70%' class='vtable' style='height: 50px; cursor: pointer;'>\n";
 		echo "		<input type='checkbox' name='action[permission_defaults]' id='do_permissions' value='1' onclick=\"event.stopPropagation();\"> &nbsp;".$text['description-upgrade_permissions']."\n";
