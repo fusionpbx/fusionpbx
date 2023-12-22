@@ -2273,7 +2273,7 @@
 
 	}
 
-// User exists
+//user exists
 	if (!function_exists('user_exists')) {
 
 		function user_exists($login, $domain_name = null) {
@@ -2379,7 +2379,6 @@ if (!function_exists('git_repo_info')) {
 	}
 }
 
-
 //git locate app repositories
 if (!function_exists('git_find_repos')) {
 	function git_find_repos($path) {
@@ -2395,4 +2394,5 @@ if (!function_exists('git_find_repos')) {
 		return $git_repos;
 	}
 }
+
 ?>
