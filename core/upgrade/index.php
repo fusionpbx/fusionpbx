@@ -192,38 +192,49 @@
 		//find and show optional apps with repos
 		$updateable_repos = git_find_repos($_SERVER["PROJECT_ROOT"]."/app");
 		if (!empty($updateable_repos) && is_array($updateable_repos) && @sizeof($updateable_repos) != 0) {
-			foreach ($updateable_repos as $app_path => $repo) {
-				$x = 0;
-				include $app_path.'/app_config.php';
-				$updateable_repos[$app_path]['app'] = $repo[0];
-				$updateable_repos[$app_path]['name'] = $apps[$x]['name'];
-				$updateable_repos[$app_path]['uuid'] = $apps[$x]['uuid'];
-				$updateable_repos[$app_path]['version'] = $apps[$x]['version'];
-				$updateable_repos[$app_path]['description'] = $apps[$x]['description'][$_SESSION['domain']['language']['code']];
-				unset($apps, $updateable_repos[$app_path][0]);
+			foreach ($updateable_repos as $repo_path => $app_list) {
+				foreach ($app_list as $key => $app) {
+					$x = 0;
+					$app_path = $_SERVER["PROJECT_ROOT"]."/app/".$app;
+					include $app_path.'/app_config.php';
+					$app_info['app'] = $app;
+					$app_info['name'] = $apps[$x]['name'];
+					$app_info['uuid'] = $apps[$x]['uuid'];
+					$app_info['version'] = $apps[$x]['version'];
+					$app_info['description'] = $apps[$x]['description'][$_SESSION['domain']['language']['code']];
+
+					$updateable_repos[$repo_path][] = $app_info;
+					unset($apps,$updateable_repos[$repo_path][$key]);
+				}
 			}
 		}
 		echo "<div id='tr_optional_apps' style='display: none;'>\n";
-		foreach ($updateable_repos as $repo => $app) {
+		foreach ($updateable_repos as $repo => $app_list) {
 			$repo_info = git_repo_info($repo);
 			$pull_method = substr($repo_info['url'], 0, 4) == 'http' ? 'http' : 'ssh';
 			if (!$repo_info) { continue; }
-			echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-			echo "<tr onclick=\"if (document.getElementById('do_".$app['app']."')) { document.getElementById('do_".$app['app']."').checked = !document.getElementById('do_".$app['app']."').checked; }\">\n";
-			echo "	<td width='30%' class='vncell' style='vertical-align: middle;'>\n";
-			echo "		".$app['name']."\n";
-			echo "	</td>\n";
-			echo "	<td width='70%' class='vtable' style='height: 50px; cursor: ".($pull_method == 'http' ? "pointer;'" : "help;' title=\"".$text['message-upgrade_manually'].": ".$repo_info['url']."\"").">\n";
-			if ($pull_method == 'http') {
-				echo "	<input type='checkbox' name='action[optional_apps][]' class='do_optional_app' id='do_".$app['app']."' value='".$app['app']."' onclick=\"event.stopPropagation();\"> &nbsp;".$app['description']."<br />\n";
-			}
-			else {
-				echo "	<i class='fas fa-ban mr-3' style='opacity: 0.4;'></i> &nbsp;".$app['description']."<br>\n";
-			}
-			echo "		<span style='font-weight: 600;'>".$app['version']."</span>&nbsp;&nbsp;<i><a href='".str_replace(['git@','.com:'],['https://','.com/'], $repo_info['url'])."/compare/".$repo_info['commit']."...".$repo_info['branch']." 'target='_blank' title='".$repo_info['commit']."'>".$repo_info['branch']."</i></a>\n";
-			echo "	</td>\n";
-			echo "</tr>\n";
-			echo "</table>\n";
+
+				echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+				echo "<tr onclick=\"if (document.getElementById('do_".$repo."')) { document.getElementById('do_".$repo."').checked = !document.getElementById('do_".$repo."').checked; }\">\n";
+				echo "	<td title=".$repo." width='30%' class='vncell' style='vertical-align: middle;'>\n";
+				echo "		".basename($repo)."\n";
+				echo "	</td>\n";
+				echo "	<td width='70%' class='vtable' style='height: 50px; cursor: ".($pull_method == 'http' ? "pointer;'" : "help;' title=\"".$text['message-upgrade_manually'].": ".$repo_info['url']."\"").">\n";
+
+				if ($pull_method == 'http') {
+					echo "	<input type='checkbox' name='action[optional_apps][]' class='do_optional_app' id='do_".$repo."' value='".basename($repo)."' onclick=\"event.stopPropagation();\">";
+				}
+				else {
+					echo "	<i class='fas fa-ban mr-3' style='opacity: 0.4;'></i> ";
+				}
+				echo "		&nbsp;&nbsp;<i><a href='".str_replace(['git@','.com:'],['https://','.com/'], $repo_info['url'])."/compare/".$repo_info['commit']."...".$repo_info['branch']." 'target='_blank' title='".$repo_info['commit']."'>".$repo_info['branch']."</i></a><br/>\n";
+
+				foreach ($app_list as $app) {
+				echo " &nbsp;".$app['name']." <span style='font-weight: 600;'>".$app['version']."</span>".": ".$app['description']."<br />\n";
+				}
+				echo "	</td>\n";
+				echo "</tr>\n";
+				echo "</table>\n";
 		}
 		echo "</div>\n";
 		$step++;
