@@ -507,7 +507,7 @@ if (!class_exists('xml_cdr')) {
 							//call center
 							$missed_call = 'false';
 						}
-						if (isset($xml->variables->cc_side) && $xml->variables->cc_side == 'member' 
+						if (isset($xml->variables->cc_side) && $xml->variables->cc_side == 'member'
 							&& isset($xml->variables->cc_cause) && $xml->variables->cc_cause == 'cancel') {
 							//call center
 							$missed_call = 'true';
@@ -578,6 +578,9 @@ if (!class_exists('xml_cdr')) {
 							$status = 'busy';
 						}
 						if (in_array($xml->variables->hangup_cause, $failed_array)) {
+							$status = 'failed';
+						}
+						if (!isset($status) && in_array($xml->variables->last_bridge_hangup_cause, $failed_array)) {
 							$status = 'failed';
 						}
 
@@ -1992,3 +1995,4 @@ if (!class_exists('xml_cdr')) {
 }
 
 ?>
+
