@@ -583,6 +583,12 @@ if (!class_exists('xml_cdr')) {
 						if (!isset($status) && in_array($xml->variables->last_bridge_hangup_cause, $failed_array)) {
 							$status = 'failed';
 						}
+						if ($xml->variables->cc_side == 'agent' && $xml->variables->billsec == 0) {
+							$status = 'no_answer';
+						}
+						if (!isset($status)  && $xml->variables->billsec == 0) {
+							$status = 'no_answer';
+						}
 
 					//set the provider id
 						if (isset($xml->variables->provider_uuid)) {
