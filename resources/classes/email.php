@@ -415,17 +415,10 @@ if (!class_exists('email')) {
 					$smtp['auth'] 		= $setting->get('email','smtp_auth');
 					$smtp['username'] 	= $setting->get('email','smtp_username');
 					$smtp['password'] 	= $setting->get('email','smtp_password');
-					$smtp['from'] 		= $setting->get('email','smtp_from');
-					$smtp['from_name'] 	= $setting->get('email','smtp_from_name');
+					$smtp['from'] 		= $setting->get('voicemail','smtp_from') ?? $setting->get('email','smtp_from');
+					$smtp['from_name'] 	= $setting->get('voicemail','smtp_from_name') ?? $setting->get('email','smtp_from_name');
 					$smtp['validate_certificate'] = $setting->get('email','smtp_validate_certificate');
 					$smtp['crypto_method'] = $setting->get('email','smtp_crypto_method') ?? null;
-
-					if (!empty($setting->get('voicemail','smtp_from')) && !empty($setting->get('voicemail','smtp_from'))) {
-						$smtp['from'] = $setting->get('voicemail','smtp_from');
-					}
-					if (!empty($setting->get('voicemail','smtp_from_name')) && !empty($setting->get('voicemail','smtp_from_name'))) {
-						$smtp['from_name'] = $setting->get('voicemail','smtp_from_name');
-					}
 
 					//override the domain-specific smtp server settings, if any
 					$sql = "select domain_setting_subcategory, domain_setting_value ";
