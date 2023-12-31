@@ -114,7 +114,7 @@ if(!empty($recording_id)&&!empty($domain_id)){
     $parameters['xml_cdr_uuid'] = $recording_id;
     $rec = $database->select($sql, $parameters, 'row');
 
-    if (is_array($rec) && $rec['record_path'] == 'S3') {
+    if (is_array($rec) && $rec['record_path'] == 'S3' && $rec['record_name'] != '') {
         $response = $s3->doesObjectExist($setting['bucket'],$rec['record_name']);
 
         if($response){	
