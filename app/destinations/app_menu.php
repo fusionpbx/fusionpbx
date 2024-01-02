@@ -33,5 +33,37 @@
 	$apps[$x]['menu'][$y]['groups'][] = "superadmin";
 	$apps[$x]['menu'][$y]['groups'][] = "admin";
 	$y++;
-
+	$apps[$x]['menu'][$y]['title']['en-us'] = "Destination Summary";
+	$apps[$x]['menu'][$y]['title']['en-gb'] = "Destination Summary";
+	$apps[$x]['menu'][$y]['title']['ar-eg'] = "";
+	$apps[$x]['menu'][$y]['title']['de-at'] = "";
+	$apps[$x]['menu'][$y]['title']['de-de'] = "";
+	$apps[$x]['menu'][$y]['title']['es-cl'] = "";
+	$apps[$x]['menu'][$y]['title']['es-mx'] = "";
+	$apps[$x]['menu'][$y]['title']['fr-ca'] = "";
+	$apps[$x]['menu'][$y]['title']['fr-fr'] = "";
+	$apps[$x]['menu'][$y]['title']['he-il'] = "";
+	$apps[$x]['menu'][$y]['title']['it-it'] = "";
+	$apps[$x]['menu'][$y]['title']['nl-nl'] = "";
+	$apps[$x]['menu'][$y]['title']['pl-pl'] = "";
+	$apps[$x]['menu'][$y]['title']['pt-br'] = "";
+	$apps[$x]['menu'][$y]['title']['pt-pt'] = "";
+	$apps[$x]['menu'][$y]['title']['ro-ro'] = "";
+	$apps[$x]['menu'][$y]['title']['ru-ru'] = "";
+	$apps[$x]['menu'][$y]['title']['sv-se'] = "";
+	$apps[$x]['menu'][$y]['title']['uk-ua'] = "";
+	$apps[$x]['menu'][$y]['title']['zh-cn'] = "";
+	$apps[$x]['menu'][$y]['title']['ja-jp'] = "";
+	$apps[$x]['menu'][$y]['title']['ko-kr'] = "";
+	$apps[$x]['menu'][$y]['uuid'] = "47f7b1a4-1ea2-4068-8e14-b1c13c489bd2";
+	$apps[$x]['menu'][$y]['parent_uuid'] = "0438b504-8613-7887-c420-c837ffb20cb1";
+	$apps[$x]['menu'][$y]['category'] = "internal";
+	$apps[$x]['menu'][$y]['icon'] = "";
+	$apps[$x]['menu'][$y]['path'] = "/app/destinations/destination_summary.php";
+	$apps[$x]['menu'][$y]['order'] = "";
+	$apps[$x]['menu'][$y]['groups'][] = "admin";
+	$apps[$x]['menu'][$y]['groups'][] = "superadmin";
+	$y++;
 ?>
+
+
