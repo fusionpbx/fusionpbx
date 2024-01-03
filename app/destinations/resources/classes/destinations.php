@@ -59,6 +59,9 @@ if (!class_exists('destinations')) {
 					$this->domain_uuid = $_SESSION['domain_uuid'];
 				}
 
+			//get the email queue settings
+				$this->setting = new settings();
+
 			//assign private variables
 				$this->app_name = 'destinations';
 				$this->app_uuid = '5ec89622-b19c-3559-64f0-afde802ab139';
@@ -1104,6 +1107,150 @@ if (!class_exists('destinations')) {
 					}
 			}
 		} //method
+
+
+		/**
+		 * destination summary returns an array
+		 */
+		public function destination_summary() {
+
+			//set the time zone
+				if (!empty($this->setting->get('domain', 'time_zone'))) {
+					$time_zone = $this->setting->get('domain', 'time_zone');
+				}
+				else {
+					$time_zone = date_default_timezone_get();
+				}
+
+			//build the date range
+				if ((!empty($this->start_stamp_begin) && strlen($this->start_stamp_begin) > 0) || !empty($this->start_stamp_end)) {
+					unset($this->quick_select);
+					if (strlen($this->start_stamp_begin) > 0 && !empty($this->start_stamp_end)) {
+						$sql_date_range = " and start_stamp between :start_stamp_begin::timestamptz and :start_stamp_end::timestamptz \n";
+						$parameters['start_stamp_begin'] = $this->start_stamp_begin.':00.000 '.$time_zone;
+						$parameters['start_stamp_end'] = $this->start_stamp_end.':59.999 '.$time_zone;
+					}
+					else {
+						if (!empty($this->start_stamp_begin)) {
+							$sql_date_range = "and start_stamp >= :start_stamp_begin::timestamptz \n";
+							$parameters['start_stamp_begin'] = $this->start_stamp_begin.':00.000 '.$time_zone;
+						}
+						if (!empty($this->start_stamp_end)) {
+							$sql_date_range .= "and start_stamp <= :start_stamp_end::timestamptz \n";
+							$parameters['start_stamp_end'] = $this->start_stamp_end.':59.999 '.$time_zone;
+						}
+					}
+				}
+				else {
+					switch ($this->quick_select) {
+						case 1: $sql_date_range = "and start_stamp >= '".date('Y-m-d H:i:s.000', strtotime("-1 week"))." ".$time_zone."'::timestamptz \n"; break; //last 7 days
+						case 2: $sql_date_range = "and start_stamp >= '".date('Y-m-d H:i:s.000', strtotime("-1 hour"))." ".$time_zone."'::timestamptz \n"; break; //last hour
+						case 3: $sql_date_range = "and start_stamp >= '".date('Y-m-d')." "."00:00:00.000 ".$time_zone."'::timestamptz \n"; break; //today
+						case 4: $sql_date_range = "and start_stamp between '".date('Y-m-d',strtotime("-1 day"))." "."00:00:00.000 ".$time_zone."'::timestamptz and '".date('Y-m-d',strtotime("-1 day"))." "."23:59:59.999 ".$time_zone."'::timestamptz \n"; break; //yesterday
+						case 5: $sql_date_range = "and start_stamp >= '".date('Y-m-d',strtotime("this week"))." "."00:00:00.000 ".$time_zone."' \n"; break; //this week
+						case 6: $sql_date_range = "and start_stamp >= '".date('Y-m-')."01 "."00:00:00.000 ".$time_zone."'::timestamptz \n"; break; //this month
+						case 7: $sql_date_range = "and start_stamp >= '".date('Y-')."01-01 "."00:00:00.000 ".$time_zone."'::timestamptz \n"; break; //this year
+					}
+				}
+
+			//calculate the summary data
+				$sql = "select \n";
+				$sql .= "d.domain_uuid, \n";
+				$sql .= "n.domain_name, \n";
+				$sql .= "d.destination_uuid, \n";
+				$sql .= "d.dialplan_uuid, \n";
+				$sql .= "d.destination_type, \n";
+				$sql .= "d.destination_prefix, \n";
+				$sql .= "d.destination_number, \n";
+
+				//total_calls
+				$sql .= "count(*) \n";
+				$sql .= "filter ( \n";
+				$sql .= " where caller_destination in (d.destination_number, concat(d.destination_prefix, d.destination_number),  concat('+', d.destination_prefix, d.destination_number)) \n";
+				$sql .= ") \n";
+				$sql .= "as total_calls, \n";
+
+				//answered_calls
+				$sql .= "count(*) \n";
+				$sql .= "filter ( \n";
+				$sql .= " where caller_destination in (d.destination_number, concat(d.destination_prefix, d.destination_number),  concat('+', d.destination_prefix, d.destination_number)) \n";
+				$sql .= " and billsec > 0 \n";
+				$sql .= ") \n";
+				$sql .= "as answered_calls, \n";
+
+				//unique_callers
+				$sql .= "count(distinct(c.caller_id_name)) \n";
+				$sql .= "filter ( \n";
+				$sql .= " where caller_destination in (d.destination_number, concat(d.destination_prefix, d.destination_number),  concat('+', d.destination_prefix, d.destination_number)) \n";
+				$sql .= " and billsec > 0 \n";
+				$sql .= ") \n";
+				$sql .= "as unique_callers, \n";
+
+				//total_seconds
+				$sql .= "sum(billsec) \n";
+				$sql .= "filter ( \n";
+				$sql .= " where caller_destination in (d.destination_number, concat(d.destination_prefix, d.destination_number),  concat('+', d.destination_prefix, d.destination_number)) \n";
+				$sql .= " and billsec > 0 \n";
+				$sql .= ") \n";
+				$sql .= "as total_seconds, \n";
+
+				$sql .= "d.destination_description \n";
+
+				$sql .= "from v_destinations as d, v_domains as n, \n";
+				$sql .= "( select \n";
+				$sql .= " domain_uuid, \n";
+				$sql .= " extension_uuid, \n";
+				$sql .= " caller_id_name, \n";
+				$sql .= " caller_id_number, \n";
+				$sql .= " caller_destination, \n";
+				$sql .= " destination_number, \n";
+				$sql .= " missed_call, \n";
+				$sql .= " answer_stamp, \n";
+				$sql .= " bridge_uuid, \n";
+				$sql .= " direction, \n";
+				$sql .= " start_stamp, \n";
+				$sql .= " hangup_cause, \n";
+				$sql .= " originating_leg_uuid, \n";
+				$sql .= " billsec, \n";
+				$sql .= " cc_side, \n";
+				$sql .= " sip_hangup_disposition \n";
+				$sql .= " from v_xml_cdr \n";
+				if (!(!empty($_GET['show']) && $_GET['show'] === 'all' && permission_exists('destination_summary_all'))) {
+					$sql .= " where domain_uuid = :domain_uuid \n";
+				}
+				else {
+					$sql .= " where true \n";
+				}
+				$sql .= " and direction = 'inbound' \n";
+				$sql .= " and caller_destination is not null \n";
+				$sql .= $sql_date_range;
+				$sql .= ") as c \n";
+
+				$sql .= "where \n";
+				$sql .= "d.domain_uuid = n.domain_uuid \n";
+				if (!(!empty($_GET['show']) && $_GET['show'] === 'all' && permission_exists('destination_summary_all'))) {
+					$sql .= "and d.domain_uuid = :domain_uuid \n";
+				}
+				$sql .= "and destination_type = 'inbound' \n";
+				$sql .= "and destination_enabled = 'true' \n";
+				$sql .= "group by d.domain_uuid, d.destination_uuid, d.dialplan_uuid, n.domain_name, d.destination_type, d.destination_prefix, d.destination_number \n";
+				$sql .= "order by destination_number asc \n";
+				if (!(!empty($_GET['show']) && $_GET['show'] === 'all' && permission_exists('destination_summary_all'))) {
+					$parameters['domain_uuid'] = $this->domain_uuid;
+				}
+
+				$database = new database;
+				$summary = $database->select($sql, $parameters, 'all');
+				unset($parameters);
+
+				//if (!empty($this->start_stamp_begin) && !empty($this->start_stamp_end)) {
+				//	view_array($summary);
+				//}
+
+			//return the array
+				return $summary;
+		}
+
 
 		/**
 		* define singular function to convert a word in english to singular
