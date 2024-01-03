@@ -156,6 +156,7 @@
 //get the list
 	$sql = "select domain_uuid, call_block_uuid, call_block_direction, extension_uuid, call_block_name, ";
 	$sql .= " call_block_country_code, call_block_number, extension, number_alias, call_block_count, ";
+	$sql .= " call_block_app, call_block_data, ";
 	$sql .= " to_char(timezone(:time_zone, insert_date), 'DD Mon YYYY') as date_formatted, \n";
 	if (date(!empty($_SESSION['domain']['time_format']['text']) == '12h')) {
 		$sql .= " to_char(timezone(:time_zone, insert_date), 'HH12:MI:SS am') as time_formatted, \n";
