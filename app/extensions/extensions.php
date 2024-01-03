@@ -151,8 +151,9 @@
 		$sql .= "	where device_uuid in ( ";
 		$sql .= "		select device_uuid ";
 		$sql .= "		from v_device_lines ";
-		$sql .= "		where extension_uuid = e.extension_uuid ";
+		$sql .= "		where domain_uuid = e.domain_uuid ";
 		$sql .= "		and user_id = e.extension ";
+		$sql .= "		and server_address = e.user_context ";
 		$sql .= "		limit 1) ";
 		$sql .= ") AS device_address, ";
 	}
@@ -163,8 +164,9 @@
 		$sql .= "	where device_uuid in ( ";
 		$sql .= "		select device_uuid ";
 		$sql .= "		from v_device_lines ";
-		$sql .= "		where extension_uuid = e.extension_uuid ";
+		$sql .= "		where domain_uuid = e.domain_uuid ";
 		$sql .= "		and user_id = e.extension ";
+		$sql .= "		and server_address = e.user_context ";
 		$sql .= "		limit 1) ";
 		$sql .= ") AS device_template, ";
 	}
