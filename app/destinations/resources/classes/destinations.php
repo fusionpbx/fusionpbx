@@ -1179,7 +1179,7 @@ if (!class_exists('destinations')) {
 				$sql .= "as answered_calls, \n";
 
 				//unique_callers
-				$sql .= "count(distinct(c.caller_id_name)) \n";
+				$sql .= "count(distinct(c.caller_id_number)) \n";
 				$sql .= "filter ( \n";
 				$sql .= " where caller_destination in (d.destination_number, concat(d.destination_prefix, d.destination_number),  concat('+', d.destination_prefix, d.destination_number)) \n";
 				$sql .= " and billsec > 0 \n";
