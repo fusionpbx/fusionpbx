@@ -283,9 +283,22 @@
 						body = body .. '</body></html>';
 					end
 
+				--get the smtp from address and name
+					smtp_from = settings:get('voicemail', 'smtp_from', 'text');
+					smtp_from_name = settings:get('voicemail', 'smtp_from_name', 'text');
+					if (smtp_from == nil) then
+						smtp_from = settings:get('email', 'smtp_from', 'text');
+					end
+					if (smtp_from_name == nil) then
+						smtp_from_name = settings:get('email', 'smtp_from_name', 'text');
+					end
+					if (smtp_from_name ~= nil) then
+						smtp_from = smtp_from_name.."<"..smtp_from..">";
+					end
+
 				--send the email
 					send_mail(headers,
-						nil,
+						smtp_from,
 						voicemail_mail_to,
 						{subject, body},
 						(voicemail_file == "attach") and file
