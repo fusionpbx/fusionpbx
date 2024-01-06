@@ -140,7 +140,7 @@
 	$remote_media_ip = urldecode($array["variables"]["remote_media_ip"] ?? '');
 	$hangup_cause = urldecode($array["variables"]["hangup_cause"]);
 	$hangup_cause_q850 = urldecode($array["variables"]["hangup_cause_q850"]);
-	$network_address = urldecode($array["variables"]["network_address"]);
+	$network_address = urldecode((string)$array["variables"]["network_address"]);
 	$outbound_caller_id_name = urldecode($array["variables"]["outbound_caller_id_name"]);
 	$outbound_caller_id_number = urldecode($array["variables"]["outbound_caller_id_number"]);
 
