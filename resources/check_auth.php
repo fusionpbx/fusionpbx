@@ -75,18 +75,21 @@
 		$_SESSION['login']['destination']['url'] = $_SESSION['redirect_url'];
 		unset($_SESSION['redirect_url']);
 
-        //get the groups assigned to the user 
-        $group = new groups;
-        $group->session($_SESSION["domain_uuid"], $_SESSION["user_uuid"]);
+        //get the groups assigned to the user
+        if (!isset($_SESSION["groups"]) || count($_SESSION["groups"]) ==0){
+            $group = new groups;
+            $group->session($_SESSION["domain_uuid"], $_SESSION["user_uuid"]);
+            
+            //get the permissions assigned to the user through the assigned groups
+            $permission = new permissions;
+            $permission->session($_SESSION["domain_uuid"], $_SESSION["groups"]);
 
-        //get the permissions assigned to the user through the assigned groups
-        $permission = new permissions;
-        $permission->session($_SESSION["domain_uuid"], $_SESSION["groups"]);
+            //reload default settings
+            require "resources/classes/domains.php";
+            $domain = new domains();
+            $domain->set();
+        }
 
-        //reload default settings
-        require "resources/classes/domains.php";
-        $domain = new domains();
-        $domain->set();
 
 	} else {
 		header("Location: ".PROJECT_PATH."/logout");
