@@ -45,10 +45,10 @@ if (!class_exists('email')) {
 		public $subject;
 		public $body;
 		public $from_address;
-		public $from_name; 
+		public $from_name;
 		public $priority;
-		public $debug_level; 
-		public $attachments; 
+		public $debug_level;
+		public $attachments;
 		public $read_confirmation;
 		public $error;
 		public $response;
@@ -126,7 +126,7 @@ if (!class_exists('email')) {
 						if (substr($body_content_type, 0, 9) == "text/html") {
 							$this->body = $row["Body"];
 						}
-						if (substr($body_content_type, 0, 10) == "text/plain") { 
+						if (substr($body_content_type, 0, 10) == "text/plain") {
 							$body_plain = $row["Body"];
 							$this->body = $body_plain;
 						}
@@ -156,7 +156,7 @@ if (!class_exists('email')) {
 					//testfax.tif
 					$file = $parts_array["FileName"];
 
-					//inline	
+					//inline
 					$filedisposition = $parts_array["FileDisposition"];
 
 					$body_part = $parts_array["BodyPart"];
@@ -193,7 +193,7 @@ if (!class_exists('email')) {
 							$this->attachments[$x]['type'] = 'string';
 							$this->attachments[$x]['name'] = $file;
 							$this->attachments[$x]['value'] = $parts_array["Body"];
-						
+
 						//increment the id
 							$x++;
 					}
@@ -231,12 +231,18 @@ if (!class_exists('email')) {
 				//add the email_queue_uuid
 				$email_queue_uuid = uuid();
 
+				//add the from name if it exists
+				$email_from = $this->from_address;
+				if (!empty($this->from_name)) {
+					$email_from = $this->from_name.'<'.$email_from.'>';
+				}
+
 				//prepare the array
 				$array['email_queue'][0]['email_queue_uuid'] = $email_queue_uuid;
 				$array['email_queue'][0]['domain_uuid'] = $this->domain_uuid;
 				$array['email_queue'][0]['hostname'] = gethostname();
 				$array['email_queue'][0]['email_date'] = 'now()';
-				$array['email_queue'][0]['email_from'] = $this->from_address;
+				$array['email_queue'][0]['email_from'] = $email_from;
 				$array['email_queue'][0]['email_to'] = $this->recipients;
 				$array['email_queue'][0]['email_subject'] = $this->subject;
 				$array['email_queue'][0]['email_body'] = $this->body;
@@ -620,3 +626,4 @@ $sent = $email->send();
 */
 
 ?>
+

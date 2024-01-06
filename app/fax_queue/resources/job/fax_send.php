@@ -89,7 +89,7 @@
 		//check to see if the process is running
 		if (file_exists($file)) {
 			$pid = file_get_contents($file);
-			if (posix_getsid($pid) === false) { 
+			if (posix_getsid($pid) === false) {
 				//process is not running
 				$exists = false;
 			}
@@ -175,13 +175,23 @@
 	$setting = new settings(["domain_uuid" => $domain_uuid]);
 
 //prepare the smtp from and from name variables
-	$email_from = $setting->get('email','smtp_from');
-	$email_from_name = $setting->get('email','smtp_from_name');
-	if (!empty($setting->get('fax','smtp_from'))) {
-		$email_from = $setting->get('fax','smtp_from');
+	//$email_from = $setting->get('email','smtp_from');
+	//$email_from_name = $setting->get('email','smtp_from_name');
+	//if (!empty($setting->get('fax','smtp_from'))) {
+	//	$email_from = $setting->get('fax','smtp_from');
+	//}
+	//if (!empty($setting->get('fax','smtp_from_name'))) {
+	//	$email_from_name = $setting->get('fax','smtp_from_name');
+	//}
+
+//prepare the smtp from and from name variables
+	$email_from = $setting->get('fax','smtp_from');
+	$email_from_name = $setting->get('fax','smtp_from_name');
+	if (!empty($email_from)) {
+		$email_from = $setting->get('email','smtp_from');
 	}
-	if (!empty($setting->get('fax','smtp_from_name'))) {
-		$email_from_name = $setting->get('fax','smtp_from_name');
+	if (!empty($email_from_name)) {
+		$email_from_name = $setting->get('email','smtp_from_name');
 	}
 
 //prepare the variables to send the fax
@@ -215,7 +225,7 @@
 			$fp = event_socket_create();
 			if (!$fp) {
 				echo "Could not connect to event socket.\n";
-				exit;	
+				exit;
 			}
 
 		//fax options, first attempt use the fax variables from settings
@@ -284,7 +294,7 @@
 			$dial_string .= "fax_queue_uuid="      . $fax_queue_uuid. ",";
 			$dial_string .= "mailto_address='"     . $fax_email_address   . "',";
 			$dial_string .= "mailfrom_address='"   . $email_from_address . "',";
-			$dial_string .= "fax_retry_attempts="  . $fax_retry_count  . ",";  
+			$dial_string .= "fax_retry_attempts="  . $fax_retry_count  . ",";
 			$dial_string .= "fax_retry_limit="     . $retry_limit  . ",";
 			//$dial_string .= "fax_retry_sleep=180,";
 			$dial_string .= "fax_verbose=true,";
@@ -411,11 +421,11 @@
 				$fax_file_basename = $path_info['basename'];
 				$fax_file_filename = $path_info['filename'];
 				$fax_file_extension = $path_info['extension'];
-				
+
 				//set the fax file pdf and tif files
 				$fax_file_tif = path_join($fax_file_dirname, $fax_file_filename . '.' . $fax_file_extension);
 				$fax_file_pdf = path_join($fax_file_dirname, $fax_file_filename . '.pdf');
-				
+
 				if (file_exists($fax_file_pdf)) {
 					$fax_file_name = $fax_file_filename . '.pdf';
 				}
@@ -458,7 +468,7 @@
 				$email_subject = str_replace('${fax_messages}', $fax_messages, $email_subject);
 				$email_subject = str_replace('${fax_file_warning}', $fax_file_warning, $email_subject);
 				$email_subject = str_replace('${fax_subject_tag}', $fax_email_inbound_subject_tag, $email_subject);
-				
+
 				$email_subject = str_replace('${fax_success}', $fax_success, $email_subject);
 				$email_subject = str_replace('${fax_result_code}', $fax_result_code, $email_subject);
 				$email_subject = str_replace('${fax_result_text}', $fax_result_text, $email_subject);
@@ -473,7 +483,7 @@
 				$email_subject = str_replace('${fax_date}', date('Y-m-d H:i:s', $fax_epoch), $email_subject);
 				$email_subject = str_replace('${fax_duration}', $fax_duration, $email_subject);
 				$email_subject = str_replace('${fax_duration_formatted}', $fax_duration_formatted, $email_subject);
-				
+
 				//replace variables in email body
 				$email_body = str_replace('${domain_name}', $domain_uuid, $email_body);
 				$email_body = str_replace('${number_dialed}', $fax_number, $email_body);
@@ -482,7 +492,7 @@
 				$email_body = str_replace('${fax_messages}', $fax_messages, $email_body);
 				$email_body = str_replace('${fax_file_warning}', $fax_file_warning, $email_body);
 				$email_body = str_replace('${fax_subject_tag}', $fax_email_inbound_subject_tag, $email_body);
-				
+
 				$email_body = str_replace('${fax_success}', $fax_success, $email_body);
 				$email_body = str_replace('${fax_result_code}', $fax_result_code, $email_body);
 				$email_body = str_replace('${fax_result_text}', $fax_result_text, $email_body);
@@ -597,3 +607,4 @@
 	//echo "Body: ".$email_body."\n";
 
 ?>
+
