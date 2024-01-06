@@ -175,13 +175,13 @@
 	$setting = new settings(["domain_uuid" => $domain_uuid]);
 
 //prepare the smtp from and from name variables
-	$email_from = $setting->get('email','smtp_from');
-	$email_from_name = $setting->get('email','smtp_from_name');
-	if (!empty($setting->get('fax','smtp_from'))) {
-		$email_from = $setting->get('fax','smtp_from');
+	$email_from = $setting->get('fax','smtp_from');
+	$email_from_name = $setting->get('fax','smtp_from_name');
+	if (!empty($email_from)) {
+		$email_from = $setting->get('email','smtp_from');
 	}
-	if (!empty($setting->get('fax','smtp_from_name'))) {
-		$email_from_name = $setting->get('fax','smtp_from_name');
+	if (!empty($email_from_name)) {
+		$email_from_name = $setting->get('email','smtp_from_name');
 	}
 
 //prepare the variables to send the fax
@@ -311,7 +311,7 @@
 						echo "response: ".$response."\n";
 					}
 				}
-				
+
 				//set the fax file name without the extension
 				$fax_instance_id = pathinfo($fax_file, PATHINFO_FILENAME);
 
