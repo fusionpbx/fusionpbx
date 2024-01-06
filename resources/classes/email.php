@@ -231,12 +231,18 @@ if (!class_exists('email')) {
 				//add the email_queue_uuid
 				$email_queue_uuid = uuid();
 
+				//set the email from address and name
+				$email_from = $this->from_address;
+				if (!empty($this->from_name)) {
+					$email_from = $this->from_name.'<'.$email_from.'>';
+				}
+
 				//prepare the array
 				$array['email_queue'][0]['email_queue_uuid'] = $email_queue_uuid;
 				$array['email_queue'][0]['domain_uuid'] = $this->domain_uuid;
 				$array['email_queue'][0]['hostname'] = gethostname();
 				$array['email_queue'][0]['email_date'] = 'now()';
-				$array['email_queue'][0]['email_from'] = $this->from_address;
+				$array['email_queue'][0]['email_from'] = $email_from;
 				$array['email_queue'][0]['email_to'] = $this->recipients;
 				$array['email_queue'][0]['email_subject'] = $this->subject;
 				$array['email_queue'][0]['email_body'] = $this->body;
