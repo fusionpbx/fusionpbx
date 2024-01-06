@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -25,9 +25,8 @@
 	James Rose <james.o.rose@gmail.com>
 */
 
-//includes
-	include "root.php";
-	require_once "resources/require.php";
+//includes files
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -53,27 +52,30 @@
 		$htmlfilelist = '';
 		$dirlist = opendir($dir);
 		$dir_array = array();
-		if($dirlist !== false) while (false !== ($file = readdir($dirlist))) {
-			if ($file != "." AND $file != ".."){
-				$newpath = $dir.'/'.$file;
-				$level = explode('/',$newpath);
-				if (
-					substr(strtolower($newpath), -4) == ".svn" ||
-					substr(strtolower($newpath), -4) == ".git" ||
-					substr(strtolower($newpath), -3) == ".db" ||
-					substr(strtolower($newpath), -4) == ".jpg" ||
-					substr(strtolower($newpath), -4) == ".gif" ||
-					substr(strtolower($newpath), -4) == ".png" ||
-					substr(strtolower($newpath), -4) == ".ico" ||
-					substr(strtolower($newpath), -4) == ".ttf"
-					){
-					//ignore certain files (and folders)
+		if($dirlist !== false) {
+			$x = 0;
+			while (false !== ($file = readdir($dirlist))) {
+				if ($file != "." AND $file != ".."){
+					$newpath = $dir.'/'.$file;
+					$level = explode('/',$newpath);
+					if (
+						substr(strtolower($newpath), -4) == ".svn" ||
+						substr(strtolower($newpath), -4) == ".git" ||
+						substr(strtolower($newpath), -3) == ".db" ||
+						substr(strtolower($newpath), -4) == ".jpg" ||
+						substr(strtolower($newpath), -4) == ".gif" ||
+						substr(strtolower($newpath), -4) == ".png" ||
+						substr(strtolower($newpath), -4) == ".ico" ||
+						substr(strtolower($newpath), -4) == ".ttf"
+						){
+						//ignore certain files (and folders)
+					}
+					else {
+						$dir_array[] = $newpath;
+					}
+					if ($x > 1000) { break; };
+					$x++;
 				}
-				else {
-					$dir_array[] = $newpath;
-				}
-				if ($x > 1000) { break; };
-				$x++;
 			}
 		}
 
@@ -214,26 +216,42 @@ if (!isset($_SESSION)) { session_start(); }
 		case 'provision':
 			switch (PHP_OS) {
 				case "Linux":
-					if (file_exists('/etc/fusionpbx/resources/templates/provision')) {
+					if (file_exists('/usr/share/fusionpbx/templates/provision')) {
+						$edit_directory = '/usr/share/fusionpbx/templates/provision';
+					}
+					elseif (file_exists('/etc/fusionpbx/resources/templates/provision')) {
 						$edit_directory = '/etc/fusionpbx/resources/templates/provision';
 					}
 					else {
-						$edit_directory = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/";
+						$edit_directory = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision";
 					}
 					break;
 				case "FreeBSD":
-					if (file_exists('/usr/local/etc/fusionpbx/resources/templates/provision')) {
-						$edit_directory = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/";
+					if (file_exists('/usr/local/share/fusionpbx/templates/provision')) {
+						$edit_directory = '/usr/share/fusionpbx/templates/provision';
+					}
+					elseif (file_exists('/usr/local/etc/fusionpbx/resources/templates/provision')) {
+						$edit_directory = '/usr/local/etc/fusionpbx/resources/templates/provision';
 					}
 					else {
-						$edit_directory = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/";
+						$edit_directory = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision";
 					}
 					break;
 				case "NetBSD":
-					$edit_directory = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/";
+					if (file_exists('/usr/local/share/fusionpbx/templates/provision')) {
+						$edit_directory = '/usr/share/fusionpbx/templates/provision';
+					}
+					else {
+						$edit_directory = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision";
+					}
 					break;
 				case "OpenBSD":
-					$edit_directory = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/";
+					if (file_exists('/usr/local/share/fusionpbx/templates/provision')) {
+						$edit_directory = '/usr/share/fusionpbx/templates/provision';
+					}
+					else {
+						$edit_directory = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision";
+					}
 					break;
 				default:
 					$edit_directory = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/";

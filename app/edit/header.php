@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -26,14 +26,15 @@
 */
 
 //add multi-lingual support
-	$language = new text;
-	$text = $language->get();
+$language = new text;
+$text = $language->get();
 
-echo "<html>";
-echo "<head>";
-echo "<title>".$title."</title>";
-//echo "<link href='style.css' rel='stylesheet' type='text/css'>";
-echo "<style type='text/css'>";
+echo "<html>\n";
+echo "<head>\n";
+//echo "<title>".$title."</title>\n";
+//echo "<link rel='icon' href='".$favicon."'>\n";
+//echo "<link href='style.css' rel='stylesheet' type='text/css'>\n";
+echo "<style type='text/css'>\n";
 echo "<!--\n";
 
 echo "th {\n";
@@ -67,7 +68,7 @@ echo "    width: 100%;\n";
 echo "}\n";
 
 echo "//-->\n";
-echo "</style>";
+echo "</style>\n";
 
 
 echo "<SCRIPT language=\"JavaScript\">\n";
@@ -80,9 +81,9 @@ echo "      window.location=url;\n";
 echo " }\n";
 echo "}\n";
 echo "//-->\n";
-echo "</SCRIPT>";
-echo "</head>";
-echo "<body style='margin: 0; padding: 5px;'>";
-echo "<div align='center'>";
+echo "</SCRIPT>\n";
+echo "</head>\n";
+echo "<body style='margin: 0; padding: 5px;'>\n";
+echo "<div align='center'>\n";
 
 ?>

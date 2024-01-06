@@ -17,16 +17,15 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//includes
-	include "root.php";
-	require_once "resources/require.php";
+//includes files
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -47,10 +46,10 @@
 		$clip_uuid = $_POST["id"];
 		$clip_name = $_POST["clip_name"];
 		$clip_folder = $_POST["clip_folder"];
-		$clip_text_start = $_POST["clip_text_start"];
-		$clip_text_end = $_POST["clip_text_end"];
-		$clip_desc = $_POST["clip_desc"];
-		$clip_order = $_POST["clip_order"];
+		$clip_text_start = empty($_POST["clip_text_start"]) ? '' : $_POST["clip_text_start"];
+		$clip_text_end = empty($_POST["clip_text_end"]) ? '' : $_POST["clip_text_end"];
+		$clip_desc = empty($_POST["clip_desc"]) ? '' : $_POST["clip_desc"];
+		$clip_order = empty($_POST["clip_order"]) ? '0' : $_POST["clip_order"];
 
 		//no slashes
 		$clip_name = str_replace('/', '|', $clip_name);

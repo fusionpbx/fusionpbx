@@ -17,16 +17,16 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 	James Rose <james.o.rose@gmail.com>
 */
-//includes
-	include "root.php";
-	require_once "resources/require.php";
+
+//includes files
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -70,18 +70,18 @@
 	}
 
 //load editor preferences/defaults
-	$setting_size = ($_SESSION["editor"]["font_size"]["text"] != '') ? $_SESSION["editor"]["font_size"]["text"] : '12px';
-	$setting_theme = ($_SESSION["editor"]["theme"]["text"] != '') ? $_SESSION["editor"]["theme"]["text"] : 'cobalt';
-	$setting_invisibles = ($_SESSION["editor"]["invisibles"]["boolean"] != '') ? $_SESSION["editor"]["invisibles"]["boolean"] : 'false';
-	$setting_indenting = ($_SESSION["editor"]["indent_guides"]["boolean"] != '') ? $_SESSION["editor"]["indent_guides"]["boolean"] : 'false';
-	$setting_numbering = ($_SESSION["editor"]["line_numbers"]["boolean"] != '') ? $_SESSION["editor"]["line_numbers"]["boolean"] : 'true';
+	$setting_size = !empty($_SESSION["editor"]["font_size"]["text"]) ? $_SESSION["editor"]["font_size"]["text"] : '12px';
+	$setting_theme = !empty($_SESSION["editor"]["theme"]["text"]) ? $_SESSION["editor"]["theme"]["text"] : 'cobalt';
+	$setting_invisibles = !empty($_SESSION["editor"]["invisibles"]["boolean"]) ? $_SESSION["editor"]["invisibles"]["boolean"] : 'false';
+	$setting_indenting = !empty($_SESSION["editor"]["indent_guides"]["boolean"]) ? $_SESSION["editor"]["indent_guides"]["boolean"] : 'false';
+	$setting_numbering = !empty($_SESSION["editor"]["line_numbers"]["boolean"]) ? $_SESSION["editor"]["line_numbers"]["boolean"] : 'true';
 
 //get and then set the favicon
 	if (isset($_SESSION['theme']['favicon']['text'])){
 		$favicon = $_SESSION['theme']['favicon']['text'];
 	}
 	else {
-		$favicon = $project_path .'/themes/default/favicon.ico';
+		$favicon = PROJECT_ROOT .'/themes/default/favicon.ico';
 	}
 
 //create a token
@@ -102,7 +102,7 @@
 	<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
 	<title><?php echo $title; ?></title>
 	<link rel="icon" type="image/x-icon" href="<?php echo $favicon; ?>">
-	<script language="JavaScript" type="text/javascript" src="<?php echo PROJECT_PATH; ?>/resources/jquery/jquery-3.4.1.min.js"></script>
+	<script language="JavaScript" type="text/javascript" src="<?php echo PROJECT_PATH; ?>/resources/jquery/jquery-3.6.1.min.js"></script>
 	<script src='https://code.jquery.com/jquery-migrate-3.1.0.js'></script>
 	<script language="JavaScript" type="text/javascript">
 		function submit_check() {

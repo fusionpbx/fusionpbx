@@ -17,16 +17,15 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//includes
-	include "root.php";
-	require_once "resources/require.php";
+//includes files
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -53,28 +52,44 @@
 		case 'provision':
 			switch (PHP_OS) {
 				case "Linux":
-					if (file_exists('/etc/fusionpbx/resources/templates/provision')) {
+					if (file_exists('/usr/share/fusionpbx/templates/provision')) {
+						$edit_directory = '/usr/share/fusionpbx/templates/provision';
+					}
+					elseif (file_exists('/etc/fusionpbx/resources/templates/provision')) {
 						$edit_directory = '/etc/fusionpbx/resources/templates/provision';
 					}
 					else {
-						$edit_directory = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/";
+						$edit_directory = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision";
 					}
 					break;
 				case "FreeBSD":
-					if (file_exists('/usr/local/etc/fusionpbx/resources/templates/provision')) {
-						$edit_directory = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/";
+					if (file_exists('/usr/local/share/fusionpbx/templates/provision')) {
+						$edit_directory = '/usr/share/fusionpbx/templates/provision';
+					}
+					elseif (file_exists('/usr/local/etc/fusionpbx/resources/templates/provision')) {
+						$edit_directory = '/usr/local/etc/fusionpbx/resources/templates/provision';
 					}
 					else {
-						$edit_directory = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/";
+						$edit_directory = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision";
 					}
 					break;
 				case "NetBSD":
-					$edit_directory = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/";
+					if (file_exists('/usr/local/share/fusionpbx/templates/provision')) {
+						$edit_directory = '/usr/share/fusionpbx/templates/provision';
+					}
+					else {
+						$edit_directory = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision";
+					}
 					break;
 				case "OpenBSD":
-					$edit_directory = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/";
+					if (file_exists('/usr/local/share/fusionpbx/templates/provision')) {
+						$edit_directory = '/usr/share/fusionpbx/templates/provision';
+					}
+					else {
+						$edit_directory = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision";
+					}
 					break;
-				default:
+				default:	
 					$edit_directory = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/";
 			}
 			break;
@@ -82,7 +97,7 @@
 			$edit_directory = $_SESSION['switch']['conf']['dir'];
 			break;
 	}
-	if (!isset($edit_directory)) {
+	if (!isset($edit_directory) && is_array($_SESSION['editor']['path'])) {
 		foreach ($_SESSION['editor']['path'] as $path) {
 			if ($_SESSION["app"]["edit"]["dir"] == $path) {
 				$edit_directory = $path;

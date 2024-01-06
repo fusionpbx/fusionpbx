@@ -17,16 +17,16 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 	James Rose <james.o.rose@gmail.com>
 */
-//includes
-	include "root.php";
-	require_once "resources/require.php";
+
+//includes files
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -142,7 +142,7 @@
 	echo "</script>";
 
 // keyboard shortcut bindings
-	echo "<script language='JavaScript' type='text/javascript' src='".PROJECT_PATH."/resources/jquery/jquery-3.4.1.min.js'></script>\n";
+	echo "<script language='JavaScript' type='text/javascript' src='".PROJECT_PATH."/resources/jquery/jquery-3.6.1.min.js'></script>\n";
 	echo "<script src='https://code.jquery.com/jquery-migrate-3.1.0.js'></script>\n";
 
 //save file
@@ -162,17 +162,19 @@
 	echo "<body style='margin: 0; padding: 5px;' onfocus='blur();'>\n";
 
 	echo "<div style='text-align: left; padding-top: 3px;'>\n";
-	echo "<div style='padding-bottom: 3px;'><a href='javascript:void(0);' onclick=\"window.open('clip_options.php?id=".urlencode($row['id'])."','clipwin','left=20,top=20,width=310,height=350,toolbar=0,resizable=0');\" style='text-decoration:none; cursor: pointer;' title=\"".$text['label-clip-library']."\"><img src='resources/images/icon_gear.png' border='0' align='absmiddle' style='margin: 0px 2px 4px -1px;'>".$text['label-clip-library']."</a></div>\n";
+	echo "<div style='padding-bottom: 3px;'><a href='javascript:void(0);' onclick=\"window.open('clip_options.php','clipwin','left=20,top=20,width=310,height=350,toolbar=0,resizable=0');\" style='text-decoration:none; cursor: pointer;' title=\"".$text['label-clip-library']."\"><img src='resources/images/icon_gear.png' border='0' align='absmiddle' style='margin: 0px 2px 4px -1px;'>".$text['label-clip-library']."</a></div>\n";
 
 	$sql = "select * from v_clips order by clip_folder asc, clip_name asc";
 	$database = new database;
 	$result = $database->select($sql, null, 'all');
 	unset($sql);
 
-	if (is_array($result) && @sizeof($result) != 0) {
+	if (!empty($result) && is_array($result) && @sizeof($result) != 0) {
 		$master_array = array();
 		foreach ($result as $row) {
-			$clip_folder = rtrim($row['clip_folder'], '/');
+			if (!empty($row['clip_folder'])) {
+				$clip_folder = rtrim($row['clip_folder'], '/');
+			}
 			$clip_folder .= '/'.$row['clip_name'];
 
 			$parts = explode('/', $clip_folder);
@@ -194,28 +196,27 @@
 		}
 		unset($result, $row);
 
-		function parse_array($arr) {
-			if (is_array($arr)) {
-				//folder/clip
-				foreach ($arr as $name => $sub_arr) {
-					if ($name != $sub_arr['name']) {
-						//folder
-						echo "<a onclick='Toggle(this);' style='display: block; cursor: pointer; text-decoration: none;'><img src='resources/images/icon_folder.png' border='none' align='absmiddle' style='margin: 1px 2px 3px 0px;'>".$name."</a>";
-						echo "<div style='display: none; padding-left: 16px;'>\n";
-						parse_array($sub_arr);
-						echo "</div>\n";
-					}
-					else {
+		function parse_array($array) {
+			if (!empty(is_array($array)) && is_array($array)) {
+				foreach ($array as $folder_name => $clips) {
+					//folder
+					echo "<a onclick='Toggle(this);' style='display: block; cursor: pointer; text-decoration: none;'><img src='resources/images/icon_folder.png' border='none' align='absmiddle' style='margin: 1px 2px 3px 0px;'>".$folder_name."</a>";
+					echo "<div style='display: none; padding-left: 16px;'>\n";
+
+					//clips
+					foreach($clips as $row) {
 						//clip
 						echo "<div style='white-space: nowrap;'>\n";
-						echo "<a href='javascript:void(0);' onclick=\"parent.insert_clip(document.getElementById('before_".$sub_arr['uuid']."').value, document.getElementById('after_".$sub_arr['uuid']."').value);\">";
+						echo "<a href='javascript:void(0);' onclick=\"parent.insert_clip(document.getElementById('before_".$row['uuid']."').value, document.getElementById('after_".$row['uuid']."').value);\">";
 						echo "<img src='resources/images/icon_file.png' border='0' align='absmiddle' style='margin: 1px 2px 3px -1px;'>";
-						echo escape($sub_arr['name']);
+						echo escape($row['name']);
 						echo "</a>\n";
-						echo "<textarea style='display: none' id='before_".$sub_arr['uuid']."'>".$sub_arr['before']."</textarea>\n";
-						echo "<textarea style='display: none' id='after_".$sub_arr['uuid']."'>".$sub_arr['after']."</textarea>\n";
+						echo "<textarea style='display: none' id='before_".$row['uuid']."'>".$row['before']."</textarea>\n";
+						echo "<textarea style='display: none' id='after_".$row['uuid']."'>".$row['after']."</textarea>\n";
 						echo "</div>\n";
 					}
+					
+					echo "</div>\n";
 				}
 			}
 		}

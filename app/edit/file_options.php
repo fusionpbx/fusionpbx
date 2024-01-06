@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -25,9 +25,8 @@
 	James Rose <james.o.rose@gmail.com>
 */
 
-//includes
-	include "root.php";
-	require_once "resources/require.php";
+//includes files
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -48,9 +47,9 @@
 	require_once "header.php";
 
 //set the variables
-	$file = $_GET["file"];
+	$file = (empty($_GET["file"])) ? '' : $_GET["file"];
 	$file = str_replace ("\\", "/", $file);
-	$folder = $_GET["folder"];
+	$folder = (empty($_GET["folder"])) ? '' : $_GET["folder"];
 	$folder = str_replace ($file, "", $folder);
 	$urlpath = str_replace ($_SERVER["DOCUMENT_ROOT"], "", $folder);
 

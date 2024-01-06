@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -25,9 +25,8 @@
 	James Rose <james.o.rose@gmail.com>
 */
 
-//includes
-	include "root.php";
-	require_once "resources/require.php";
+//includes files
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -66,26 +65,42 @@
 		case 'provision':
 			switch (PHP_OS) {
 				case "Linux":
-					if (file_exists('/etc/fusionpbx/resources/templates/provision')) {
+					if (file_exists('/usr/share/fusionpbx/templates/provision')) {
+						$edit_directory = '/usr/share/fusionpbx/templates/provision';
+					}
+					elseif (file_exists('/etc/fusionpbx/resources/templates/provision')) {
 						$edit_directory = '/etc/fusionpbx/resources/templates/provision';
 					}
 					else {
-						$edit_directory = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/";
+						$edit_directory = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision";
 					}
 					break;
 				case "FreeBSD":
-					if (file_exists('/usr/local/etc/fusionpbx/resources/templates/provision')) {
-						$edit_directory = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/";
+					if (file_exists('/usr/local/share/fusionpbx/templates/provision')) {
+						$edit_directory = '/usr/share/fusionpbx/templates/provision';
+					}
+					elseif (file_exists('/usr/local/etc/fusionpbx/resources/templates/provision')) {
+						$edit_directory = '/usr/local/etc/fusionpbx/resources/templates/provision';
 					}
 					else {
-						$edit_directory = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/";
+						$edit_directory = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision";
 					}
 					break;
 				case "NetBSD":
-					$edit_directory = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/";
+					if (file_exists('/usr/local/share/fusionpbx/templates/provision')) {
+						$edit_directory = '/usr/share/fusionpbx/templates/provision';
+					}
+					else {
+						$edit_directory = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision";
+					}
 					break;
 				case "OpenBSD":
-					$edit_directory = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/";
+					if (file_exists('/usr/local/share/fusionpbx/templates/provision')) {
+						$edit_directory = '/usr/share/fusionpbx/templates/provision';
+					}
+					else {
+						$edit_directory = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision";
+					}
 					break;
 				default:
 					$edit_directory = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/";
@@ -95,7 +110,7 @@
 			$edit_directory = $_SESSION['switch']['conf']['dir'];
 			break;
 	}
-	if (!isset($edit_directory)) {
+	if (!isset($edit_directory) && is_array($_SESSION['editor']['path'])) {
 		foreach ($_SESSION['editor']['path'] as $path) {
 			if ($_SESSION["app"]["edit"]["dir"] == $path) {
 				$edit_directory = $path;
@@ -124,11 +139,25 @@
 					$file_path = str_replace ('//', '/', $file_path);
 					$file_path = str_replace ("\\", "/", $file_path);
 					if (file_exists($file_path)) {
+						//create a file handle
 						$handle = fopen($file_path, 'wb');
 						if (!$handle) {
 							throw new Exception('Write Failed - Check File Owner & Permissions');
 						}
-						fwrite($handle, $_POST["content"]);
+
+						//build a array of the content
+						$lines = explode("\n", str_replace ("\r\n", "\n", $_POST["content"]));
+
+						//remove trailing spaces
+						$file_content = '';
+						foreach ($lines as $line) {
+							$file_content .= rtrim($line) . "\n";
+						}
+
+						//save the file
+						fwrite($handle, $file_content);
+
+						//close the file handle
 						fclose($handle);
 					}
 
@@ -146,3 +175,4 @@
 	}
 
 ?>
+

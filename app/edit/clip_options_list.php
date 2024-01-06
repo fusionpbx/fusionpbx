@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -25,9 +25,8 @@
 	James Rose <james.o.rose@gmail.com>
 */
 
-//includes
-	include "root.php";
-	require_once "resources/require.php";
+//includes files
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -152,28 +151,27 @@
 			$master_array = array_merge_recursive($master_array, $folders);
 		}
 
-		function parse_array($arr) {
-			if (is_array($arr)) {
-				//folder/clip
-				foreach ($arr as $name => $sub_arr) {
-					if ($name != $sub_arr['name']) {
-						//folder
-						echo "<a onclick='Toggle(this);' style='display: block; cursor: pointer; text-decoration: none;'><img src='resources/images/icon_folder.png' border='none' align='absmiddle' style='margin: 1px 2px 3px 0px;'>".escape($name)."</a>";
-						echo "<div style='display: none; padding-left: 16px;'>\n";
-						parse_array($sub_arr);
-						echo "</div>\n";
-					}
-					else {
+		function parse_array($array) {
+			if (is_array($array)) {
+				foreach ($array as $folder_name => $clips) {
+					//folder
+					echo "<a onclick='Toggle(this);' style='display: block; cursor: pointer; text-decoration: none;'><img src='resources/images/icon_folder.png' border='none' align='absmiddle' style='margin: 1px 2px 3px 0px;'>".$folder_name."</a>";
+					echo "<div style='display: none; padding-left: 16px;'>\n";
+
+					//clips
+					foreach($clips as $row) {
 						//clip
 						echo "<div style='white-space: nowrap;'>\n";
-						echo "<a href='javascript:void(0);' onclick=\"parent.document.getElementById('clip_uuid').value='".$sub_arr['uuid']."'; parent.document.getElementById('clip_name').value='".$sub_arr['name']."';\">";
+						echo "<a href='javascript:void(0);' onclick=\"parent.document.getElementById('clip_uuid').value='".$row['uuid']."'; parent.document.getElementById('clip_name').value='".$row['name']."';\">";
 						echo "<img src='resources/images/icon_file.png' border='0' align='absmiddle' style='margin: 1px 2px 3px -1px;'>";
-						echo escape($sub_arr['name']);
-						echO "</a>\n";
-						echo "<textarea style='display: none' id='before_".$sub_arr['uuid']."'>".$sub_arr['before']."</textarea>\n";
-						echo "<textarea style='display: none' id='after_".$sub_arr['uuid']."'>".$sub_arr['after']."</textarea>\n";
+						echo escape($row['name']);
+						echo "</a>\n";
+						echo "<textarea style='display: none' id='before_".$row['uuid']."'>".$row['before']."</textarea>\n";
+						echo "<textarea style='display: none' id='after_".$row['uuid']."'>".$row['after']."</textarea>\n";
 						echo "</div>\n";
 					}
+					
+					echo "</div>\n";
 				}
 			}
 		}
