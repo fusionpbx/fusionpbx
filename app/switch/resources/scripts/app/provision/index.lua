@@ -58,9 +58,11 @@
 --get the variables
 	action = session:getVariable("action");
 	reboot = session:getVariable("reboot");
+	authorized = session:getVariable("authorized");
 
 --set defaults
 	if (not reboot) then reboot = 'true'; end
+	if (not authorized) then authorized = 'false'; end
 
 --set the sounds path for the language, dialect and voice
 	default_language = session:getVariable("default_language");
@@ -77,22 +79,18 @@
 	--user_id = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-please_enter_extension_followed_by_pound.wav", "", "\\d+");
 
 --get the user password
-	min_digits = 2;
-	max_digits = 20;
-	password = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", "phrase:voicemail_enter_pass:#", "", "\\d+");
-	--password = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-please_enter_pin_followed_by_pound.wav", "", "\\d+");
+	if (authorized == 'false') then
+		min_digits = 2;
+		max_digits = 20;
+		password = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", "phrase:voicemail_enter_pass:#", "", "\\d+");
+		--password = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-please_enter_pin_followed_by_pound.wav", "", "\\d+");
+	end
 
 --get the user and domain name from the user argv user@domain
-	sip_from_uri = session:getVariable("sip_from_uri");
-	user_table = explode("@",sip_from_uri);
-	domain_table = explode(":",user_table[2]);
-	user = user_table[1];
-	domain = domain_table[1];
+	user = session:getVariable("sip_from_user");
+	domain = session:getVariable("sip_from_host");
 
 --show the phone that will be overridden
-	if (sip_from_uri ~= nil) then
-		freeswitch.consoleLog("NOTICE", "[provision] sip_from_uri: ".. sip_from_uri .. "\n");
-	end
 	if (user ~= nil) then
 		freeswitch.consoleLog("NOTICE", "[provision] user: ".. user .. "\n");
 	end
@@ -118,8 +116,7 @@
 	end
 
 --get the alternate device uuid using the device username and password
-	authorized = 'false';
-	if (user_id ~= nil and password ~= nil and domain_uuid ~= nil) then
+	if (authorized == 'false' and user_id ~= nil and password ~= nil and domain_uuid ~= nil) then
 		local sql = [[SELECT device_uuid FROM v_devices ]];
 		sql = sql .. [[WHERE device_username = :user_id ]];
 		sql = sql .. [[AND device_password = :password ]]
