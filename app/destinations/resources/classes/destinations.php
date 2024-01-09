@@ -190,10 +190,10 @@ if (!class_exists('destinations')) {
 					$x = 0;
 					foreach ($config_list as &$config_path) {
 						try {
-						    include($config_path);
+							include($config_path);
 						}
 						catch (Exception $e) {
-						    //echo 'Caught exception: ',  $e->getMessage(), "\n";
+							//echo 'Caught exception: ',  $e->getMessage(), "\n";
 						}
 						$x++;
 					}
@@ -1167,6 +1167,7 @@ if (!class_exists('destinations')) {
 				$sql .= "count(*) \n";
 				$sql .= "filter ( \n";
 				$sql .= " where caller_destination in (d.destination_number, concat(d.destination_prefix, d.destination_number),  concat('+', d.destination_prefix, d.destination_number)) \n";
+				$sql .= " and (cc_side is null or cc_side <> 'agent') \n"; //include regular calls and call center calls while excluding calls directly to agents
 				$sql .= ") \n";
 				$sql .= "as total_calls, \n";
 
@@ -1238,7 +1239,6 @@ if (!class_exists('destinations')) {
 				if (!(!empty($_GET['show']) && $_GET['show'] === 'all' && permission_exists('destination_summary_all'))) {
 					$parameters['domain_uuid'] = $this->domain_uuid;
 				}
-
 				$database = new database;
 				$summary = $database->select($sql, $parameters, 'all');
 				unset($parameters);
