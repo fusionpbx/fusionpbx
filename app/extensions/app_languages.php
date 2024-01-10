@@ -2314,6 +2314,30 @@ $text['label-extension_only']['zh-cn'] = "仅限分机";
 $text['label-extension_only']['ja-jp'] = "内線のみ";
 $text['label-extension_only']['ko-kr'] = "내선 전용";
 
+$text['label-language']['en-us'] = "Language";
+$text['label-language']['en-gb'] = "Language";
+$text['label-language']['ar-eg'] = "اللغة";
+$text['label-language']['de-at'] = "Sprache";
+$text['label-language']['de-ch'] = "Sprache";
+$text['label-language']['de-de'] = "Sprache";
+$text['label-language']['es-cl'] = "Idioma";
+$text['label-language']['es-mx'] = "Idioma";
+$text['label-language']['fr-ca'] = "Langue";
+$text['label-language']['fr-fr'] = "Langue";
+$text['label-language']['he-il'] = "שפה";
+$text['label-language']['it-it'] = "Lingua";
+$text['label-language']['nl-nl'] = "Taal";
+$text['label-language']['pl-pl'] = "Język";
+$text['label-language']['pt-br'] = "Língua";
+$text['label-language']['pt-pt'] = "Língua";
+$text['label-language']['ro-ro'] = "Limba";
+$text['label-language']['ru-ru'] = "Язык";
+$text['label-language']['sv-se'] = "Språk";
+$text['label-language']['uk-ua'] = "Українська";
+$text['label-language']['zh-cn'] = "语言";
+$text['label-language']['ja-jp'] = "言語";
+$text['label-language']['ko-kr'] = "언어";
+
 $text['label-extension_type']['en-us'] = "Type";
 $text['label-extension_type']['ar-eg'] = "النوع";
 $text['label-extension_type']['de-at'] = "Art";
@@ -3847,4 +3871,3 @@ $text['button-call_forward']['ja-jp'] = "電話転送";
 $text['button-call_forward']['ko-kr'] = "착신 전환";
 
 ?>
-
