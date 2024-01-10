@@ -69,8 +69,7 @@
 
 //define variables
 	if (!isset($_SESSION['template_content'])) { $_SESSION["template_content"] = null; }
-    print_r($_SESSION["menu"]);
-    // exit();
+
 // check if the user has been authenticated
 	if ((isset($_SESSION['authorized']) && $_SESSION['authorized']) && isset($_COOKIE[$_SESSION['cookie_name']])){
 		$_SESSION['login']['destination']['url'] = $_SESSION['redirect_url'];
