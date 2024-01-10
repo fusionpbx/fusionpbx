@@ -2099,7 +2099,7 @@
 			$dir = !empty($dir) && strtolower($dir) == 'desc' ? 'desc' : 'asc';
 			if (!empty($col)) {
 				if ($sort == 'natural' && $db_type == "pgsql") {
-					return $order_by . 'natural_sort(' . $col . ') ' . $dir . ' ';
+					return $order_by . 'natural_sort(' . $col . '::text) ' . $dir . ' ';
 				} else {
 					return $order_by . $col . ' ' . $dir . ' ';
 				}
@@ -2114,7 +2114,7 @@
 					}
 				} else {
 					if ($sort == 'natural' && $db_type == "pgsql") {
-						return $order_by . 'natural_sort(' . $col_default . ') ' . $dir_default . ' ';
+						return $order_by . 'natural_sort(' . $col_default . '::text) ' . $dir_default . ' ';
 					} else {
 						return $order_by . $col_default . ' ' . $dir_default . ' ';
 					}
