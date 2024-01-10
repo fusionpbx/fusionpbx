@@ -1,11 +1,7 @@
 <?php
 
-//set the include path
-$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-include "resources/require.php";
+require_once dirname(__DIR__, 2) . "/resources/require.php";
 
 ob_start('ob_gzhandler');
 header('Content-type: text/css; charset: UTF-8');
@@ -140,6 +136,9 @@ $input_shadow_outer_color_focus = isset($_SESSION['theme']['input_shadow_outer_c
 $input_border_radius = $_SESSION['theme']['input_border_radius']['text'] ?? null;
 $input_border_color_hover = $_SESSION['theme']['input_border_color_hover']['text'] ?? '#c0c0c0';
 $input_border_color_focus = $_SESSION['theme']['input_border_color_focus']['text'] ?? '#c0c0c0';
+$login_text_color = $_SESSION['theme']['login_text_color']['text'] ?? '#282828';
+$login_text_size = $_SESSION['theme']['login_text_size']['text'] ?? '12px';
+$login_text_font = $_SESSION['theme']['login_text_font']['text'] ?? 'Arial';
 $login_input_text_font = $_SESSION['theme']['login_input_text_font']['text'] ?? $input_text_font;
 $login_input_text_size = $_SESSION['theme']['login_input_text_size']['text'] ?? $input_text_size;
 $login_input_text_color = $_SESSION['theme']['login_input_text_color']['text'] ?? $input_text_color;
@@ -620,8 +619,16 @@ else { //default: white
 		<?php unset($br); ?>
 		}
 
+	/* sub menu container (multiple columns) */
+	@media(min-width: 576px) {
+		ul.navbar-nav > li.nav-item > ul.dropdown-menu.multi-column {
+			width: 330px;
+			}
+		}
+
 	/* sub menu item */
-	ul.navbar-nav > li.nav-item > ul.dropdown-menu > li.nav-item > a.nav-link {
+	ul.navbar-nav > li.nav-item > ul.dropdown-menu > li.nav-item > a.nav-link,
+	ul.navbar-nav > li.nav-item > ul.dropdown-menu.multi-column > div.row > div > ul.multi-column-dropdown > li.nav-item > a.nav-link {
 		font-family: <?=$menu_sub_text_font?>;
 		color: <?=$menu_sub_text_color?>;
 		font-size: <?=$menu_sub_text_size?>;
@@ -629,9 +636,17 @@ else { //default: white
 		padding: 3px 14px !important;
 		}
 
+	ul.navbar-nav > li.nav-item > ul.dropdown-menu.multi-column > div.row > div > ul.multi-column-dropdown {
+		list-style-type: none;
+		padding-left: 0;
+		}
+
 	ul.navbar-nav > li.nav-item > ul.dropdown-menu > li.nav-item > a.nav-link:hover,
 	ul.navbar-nav > li.nav-item > ul.dropdown-menu > li.nav-item > a.nav-link:focus,
-	ul.navbar-nav > li.nav-item > ul.dropdown-menu > li.nav-item > a.nav-link:active {
+	ul.navbar-nav > li.nav-item > ul.dropdown-menu > li.nav-item > a.nav-link:active,
+	ul.navbar-nav > li.nav-item > ul.dropdown-menu.multi-column > div.row > div > ul.multi-column-dropdown > li.nav-item > a.nav-link:hover,
+	ul.navbar-nav > li.nav-item > ul.dropdown-menu.multi-column > div.row > div > ul.multi-column-dropdown > li.nav-item > a.nav-link:focus,
+	ul.navbar-nav > li.nav-item > ul.dropdown-menu.multi-column > div.row > div > ul.multi-column-dropdown > li.nav-item > a.nav-link:active {
 		color: <?=$menu_sub_text_color_hover?>;
 		background: <?=$menu_sub_background_color_hover?>;
 		outline: none;
@@ -1459,6 +1474,13 @@ else { //default: white
 		text-decoration: none;
 		}
 
+	.login_text {
+		color: <?=$login_text_color?> !important;
+		font-size: <?=$login_text_size?>;
+		font-family: <?=$login_text_font?>;
+		text-decoration: none;
+		}
+
 	<?php
 	//determine body padding & margins (overides on main_content style below) based on menu selection
 		switch ($menu_style) {
@@ -1640,6 +1662,14 @@ else { //default: white
 	select.txt,
 	select.formfld {
 		padding: 4px 2px;
+		}
+
+	/* firefox only - adjust left padding */
+	@-moz-document url-prefix() {
+		select.txt,
+		select.formfld {
+			padding-left: 6px;
+			}
 		}
 
 	textarea.txt:hover,
@@ -1836,6 +1866,7 @@ else { //default: white
 		box-shadow: 0 0 3px 0px rgba(255,0,0,0.9);
 		}
 
+	td.vtable.playback_progress_bar_background,
 	table.list tr.list-row td.playback_progress_bar_background {
 		padding: 0;
 		border-bottom: none;
@@ -3265,6 +3296,13 @@ else { //default: white
 	.modal-actions {
 		display: block;
 		text-align: left;
+		}
+
+/* ACE EDITOR *******************************************************************/
+
+	div#editor {
+		resize: vertical;
+		overflow: auto;
 		}
 
 <?php

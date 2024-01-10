@@ -24,12 +24,8 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -340,6 +336,11 @@
 			if ($contact_nickname) {
 				echo "<div class='box contact-details-label'>".$text['label-contact_nickname']."</div>\n";
 				echo "<div class='box'>\"".escape($contact_nickname)."\"</div>\n";
+			}
+		//name
+			if ($contact_name_given) {
+				echo "<div class='box contact-details-label'>".$text['label-name']."</div>\n";
+				echo "<div class='box'>".escape($contact_name_given).(!empty($contact_name_family) ? ' '.escape($contact_name_family) : null)."</div>\n";
 			}
 		//contact type
 			if ($contact_type) {

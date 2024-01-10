@@ -3,14 +3,17 @@
 if (!function_exists('transcribe')) {
 	function transcribe ($file_path, $file_name, $file_extension) {
 
+		//get the email queue settings
+			$setting = new settings(['category' => 'voicemail']);
+
 		//transcription variables
-			$transcribe_provider = $_SESSION['voicemail']['transcribe_provider']['text'];
-			$transcribe_language = $_SESSION['voicemail']['transcribe_language']['text'];
+			$transcribe_provider = $setting->get('voicemail', 'transcribe_provider');
+			$transcribe_language = $setting->get('voicemail', 'transcribe_language');
 
 		//transcribe - watson
 			if ($transcribe_provider == 'watson') {
-				$api_key = $_SESSION['voicemail']['watson_key']['text'];
-				$api_url = $_SESSION['voicemail']['watson_url']['text'];
+				$api_key = $setting->get('voicemail', 'watson_key');
+				$api_url = $setting->get('voicemail', 'watson_url');
 
 				if ($file_extension == "mp3") {
 					$content_type = 'audio/mp3';
@@ -117,16 +120,16 @@ if (!function_exists('transcribe')) {
 
 		//transcribe - google
 			if ($transcribe_provider == 'google') {
-				$api_key = $_SESSION['voicemail']['google_key']['text'];
-				$api_url = $_SESSION['voicemail']['google_url']['text'];
-				$transcribe_language = $_SESSION['voicemail']['transcribe_language']['text'];
-				$transcribe_alternate_language = $_SESSION['voicemail']['transcribe_alternate_language']['text'];
+				$api_key = $setting->get('voicemail', 'google_key');
+				$api_url = $setting->get('voicemail', 'google_url');
+				$transcribe_language =  $setting->get('voicemail', 'transcribe_language');
+				$transcribe_alternate_language = $setting->get('voicemail', 'transcribe_alternate_language');
 
 				if (!isset($transcribe_language) && empty($transcribe_language)) {
-					$transcribe_language = 'en-Us';
+					$transcribe_language = 'en-US';
 				}
 				if (!isset($transcribe_alternate_language) && empty($transcribe_alternate_language)) {
-					$transcribe_alternate_language = 'es-Us';
+					$transcribe_alternate_language = 'es-US';
 				}
 				if ($file_extension == "mp3") {
 					$content_type = 'audio/mp3';
@@ -139,11 +142,21 @@ if (!function_exists('transcribe')) {
 					//$command = "curl -X POST -silent -u \"apikey:".$api_key."\" --header \"Content-type: ".$content_type."\" --data-binary @".$file_path."/".$file_name." \"".$api_url."\"";
 					//echo "command: ".$command."\n";
 
-					$command = "sox ".$file_path."/".$file_name." ".$file_path."/".$file_name.".flac trim 0 00:59 ";
-					$command .= "&& echo \"{ 'config': { 'languageCode': '".$transcribe_language."', 'enableWordTimeOffsets': false , 'enableAutomaticPunctuation': true , 'alternativeLanguageCodes': '".$transcribe_alternate_language."' }, 'audio': { 'content': '`base64 -w 0 ".$file_path."/".$file_name.".flac`' } }\" ";
-					$command .= "| curl -X POST -H \"Content-Type: application/json\" -d @- ".$api_url.":recognize?key=".$api_key." ";
-					$command .= "&& rm -f ".$file_path."/".$file_name.".flac";
-					echo $command."\n";
+					//version 1
+					if (substr($api_url, 0, 32) == 'https://speech.googleapis.com/v1') {
+						$command = "sox ".$file_path."/".$file_name." ".$file_path."/".$file_name.".flac trim 0 00:59 ";
+						$command .= "&& echo \"{ 'config': { 'languageCode': '".$transcribe_language."', 'enableWordTimeOffsets': false , 'enableAutomaticPunctuation': true , 'alternativeLanguageCodes': '".$transcribe_alternate_language."' }, 'audio': { 'content': '`base64 -w 0 ".$file_path."/".$file_name.".flac`' } }\" ";
+						$command .= "| curl -X POST -H \"Content-Type: application/json\" -d @- ".$api_url.":recognize?key=".$api_key." ";
+						$command .= "&& rm -f ".$file_path."/".$file_name.".flac";
+						echo $command."\n";
+					}
+
+					//version 2
+					if (substr($api_url, 0, 32) == 'https://speech.googleapis.com/v2') {
+						$command = "echo \"{ 'config': { 'auto_decoding_config': {}, 'language_codes': ['".$transcribe_language."'], 'model': 'long' }, 'content': '`base64 -w 0 ".$file_path."/".$file_name."`' } \" ";
+						$command .= "| curl -X POST -H \"Content-Type: application/json\" -H \"Authorization: Bearer \$(gcloud auth application-default print-access-token)\" -d @- ".$api_url;
+						echo $command."\n";
+					}
 
 					//ob_start();
 					//$result = passthru($command);
@@ -151,27 +164,31 @@ if (!function_exists('transcribe')) {
 					//ob_end_clean();
 
 					//run the command
-					$http_response = shell_exec($command);
-
-					//validate the json
-					$ob = json_decode($http_response);
-					if($ob === null) {
-						echo "invalid json\n";
-						return false;
+					if (!empty($command)) {
+						$http_response = shell_exec($command);
 					}
 
-					$message = '';
-					$json = json_decode($http_response, true);
-					//echo "json; ".$json."\n";
-					foreach($json['results'] as $row) {
-						$message .= $row['alternatives'][0]['transcript'];
+					//validate the json
+					if (!empty($http_response)) {
+						$ob = json_decode($http_response);
+						if($ob === null) {
+							echo "invalid json\n";
+							return false;
+						}
+
+						$json = json_decode($http_response, true);
+						//echo "json; ".$json."\n";
+						$message = '';
+						foreach($json['results'] as $row) {
+							$message .= $row['alternatives'][0]['transcript'];
+						}
 					}
 
 					//build the response
 					$array['provider'] = $transcribe_provider;
 					$array['language'] = $transcribe_language;
-					$array['command'] = $command;
-					$array['message'] = $message;
+					$array['command'] = $command ?? '';
+					$array['message'] = $message ?? '';
 					//print_r($array);
 
 					return $array;
@@ -180,8 +197,8 @@ if (!function_exists('transcribe')) {
 
 		//transcribe - azure
 			if ($transcribe_provider == 'azure') {
-				$api_key = $_SESSION['voicemail']['azure_key']['text'];
-				$api_url = $_SESSION['voicemail']['azure_server_region']['text'];
+				$api_key = $setting->get('voicemail', 'azure_key');
+				$api_url = $setting->get('voicemail', 'azure_server_region');
 
 				if (empty($transcribe_language)) {
 					$transcribe_language = 'en-US';
@@ -226,8 +243,8 @@ if (!function_exists('transcribe')) {
 			// transcribe - custom
 			// Works with self-hostable transcription service at https://github.com/AccelerateNetworks/an-transcriptions
 			if ($transcribe_provider == 'custom') {
-				$api_key = $_SESSION['voicemail']['api_key']['text'];
-				$api_url = $_SESSION['voicemail']['transcription_server']['text'];
+				$api_key = $setting->get('voicemail', 'api_key');
+				$api_url = $setting->get('voicemail', 'transcription_server');
 
 				if (empty($transcribe_language)) {
 					$transcribe_language = 'en-US';
@@ -301,7 +318,91 @@ if (!function_exists('transcribe')) {
 				return $array;
 			}
 
+		//transcribe - openai
+		// settings:
+		//		openai_key (required)
+		//		openai_url
+		//		openai_model
+			if ($transcribe_provider == 'openai') {
+				$api_key = $setting->get('voicemail', 'openai_key');
+				$api_url = $setting->get('voicemail', 'openai_url');
+				$api_voice_model = $setting->get('voicemail', 'openai_model');
+
+				if (empty($api_url)) {
+					$api_url = "https://api.openai.com/v1/audio/transcriptions";
+				}
+
+				if (empty($api_voice_model)) {
+					$api_voice_model = "whisper-1";
+				}
+
+				if (isset($api_key) && $api_key != '') {
+
+					$full_file_name = $file_path.'/'.$file_name ;
+
+					//check if the file exists
+					if (!file_exists($full_file_name)) {
+						echo "file not found ".$full_file_name;
+						exit;
+					}
+
+					//start output buffer
+					ob_start();  
+					$out = fopen('php://output', 'w');
+
+					//create the curl resource
+					$ch = curl_init();
+
+					$post_data = array(
+						'model'=>$api_voice_model,
+						'file'=>curl_file_create($full_file_name)
+					);
+
+					//set the curl options
+					curl_setopt_array($ch, array(
+						CURLOPT_URL =>$api_url,
+						CURLOPT_RETURNTRANSFER => true,
+						CURLOPT_SSL_VERIFYPEER => TRUE,
+						CURLOPT_HTTPHEADER => array('Authorization: Bearer '.$api_key),
+						CURLOPT_POSTFIELDS => $post_data,
+
+					));
+
+					// //add verbose for debugging
+					// curl_setopt($ch, CURLOPT_VERBOSE, true);
+					curl_setopt($ch, CURLOPT_STDERR, $out);
+
+					//execute the curl with the options
+					$http_content = curl_exec($ch);
+									
+					//return the error
+					if (curl_errno($ch)) {
+						echo 'Error:' . curl_error($ch);
+					}
+
+					//close the curl resource
+					curl_close($ch);
+
+					//show the debug information
+					fclose($out);
+					$debug = ob_get_clean();
+					echo $debug;
+
+					
+					$ob = json_decode($http_content, true);
+					
+					$message = $ob['text'];
+					return array(
+						'provider' => $transcribe_provider,
+						'message' => $message
+					);
+				}
+
+			}
+		// todo: add error checking
+		//		return array('message' => "Missing valid transcribe_provider";
+
 	}
 }
-
+	
 ?>

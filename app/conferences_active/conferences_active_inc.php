@@ -25,12 +25,8 @@
 	James Rose <james.o.rose@gmail.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -47,8 +43,8 @@
 	$text = $language->get();
 
 //show content
-	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-	if (!$fp) {
+	$fp = event_socket::create();
+	if (!$fp->is_connected()) {
 		$msg = "<div align='center'>".$text['message-connection']."<br /></div>";
 		echo "<div align='center'>\n";
 		echo "<table width='40%'>\n";
@@ -62,7 +58,7 @@
 		echo "</div>\n";
 	}
 	else {
-		$xml_string = trim(event_socket_request($fp, 'api conference xml_list'));
+		$xml_string = trim(event_socket::api('conference xml_list'));
 		try {
 			$xml = new SimpleXMLElement($xml_string);
 		}

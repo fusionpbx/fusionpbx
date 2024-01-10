@@ -32,7 +32,7 @@ if (!class_exists('modules')) {
 		 * declare public variables
 		 */
 		public $dir;
-		public $fp;
+		public $esl;
 		public $modules;
 		public $msg;
 
@@ -47,6 +47,7 @@ if (!class_exists('modules')) {
 		private $uuid_prefix;
 		private $toggle_field;
 		private $toggle_values;
+		private $active_modules;
 
 		/**
 		 * called when the object is created
@@ -63,6 +64,10 @@ if (!class_exists('modules')) {
 				$this->toggle_field = 'module_enabled';
 				$this->toggle_values = ['true','false'];
 
+				//get the list of active modules
+				$this->esl = event_socket::create();
+				$json = $this->esl->api("show modules as json");
+				$this->active_modules = json_decode($json, true);
 		}
 
 		//get the additional information about a specific module
@@ -681,22 +686,17 @@ if (!class_exists('modules')) {
 
 		//check the status of the module
 			public function active($name) {
-				if (!$this->fp) {
-					$this->fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+				foreach ($this->active_modules['rows'] as $row) {
+					if ($row['ikey'] === $name) {
+						return true;
+					}
 				}
-				if ($this->fp) {
-					$cmd = "api module_exists ".$name;
-					$response = trim(event_socket_request($this->fp, $cmd));
-					return $response == "true" ? true : false;
-				}
-				else {
-					return false;
-				}
+				return false;
 			}
 
 		//get the list of modules
 			public function get_modules() {
-				$sql = " select * from v_modules ";
+				$sql = "select * from v_modules ";
 				$sql .= "order by module_category,  module_label";
 				$database = new database;
 				$this->modules = $database->select($sql, null, 'all');
@@ -799,7 +799,7 @@ if (!class_exists('modules')) {
 					$xml .= "	</modules>\n";
 					$xml .= "</configuration>";
 
-					if (file_exists($_SESSION['switch']['conf']['dir'].'/autoload_configs')) {
+					if (is_writable($_SESSION['switch']['conf']['dir'].'/autoload_configs/modules.conf.xml')) {
 						$fout = fopen($_SESSION['switch']['conf']['dir']."/autoload_configs/modules.conf.xml","w");
 						fwrite($fout, $xml);
 						unset($xml);
@@ -883,15 +883,14 @@ if (!class_exists('modules')) {
 
 						if (is_array($modules) && @sizeof($modules) != 0) {
 							//create the event socket connection
-								$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+								$esl = event_socket::create();
 
-							if ($fp) {
+							if ($esl->is_connected()) {
 								//control modules
 									foreach ($modules as $module_uuid => $module) {
 										if ($module['enabled'] == 'true') {
-											$cmd = 'api '.$action.' '.$module['name'];
 											$responses[$module_uuid]['module'] = $module['name'];
-											$responses[$module_uuid]['message'] = trim(event_socket_request($fp, $cmd));
+											$responses[$module_uuid]['message'] = trim(event_socket::api($action.' '.$module['name']));
 										}
 										else {
 											$responses[$module_uuid]['module'] = $module['name'];
@@ -969,15 +968,14 @@ if (!class_exists('modules')) {
 							if (is_array($array) && @sizeof($array) != 0) {
 
 								//create the event socket connection
-									$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+									$esl = event_socket::create();
 
 								//stop modules
-									if ($fp) {
+									if ($esl->is_connected()) {
 										foreach ($modules as $module_uuid => $module) {
 											if ($this->active($module['name'])) {
-												$cmd = 'api unload '.$module['name'];
 												$responses[$module_uuid]['module'] = $module['name'];
-												$responses[$module_uuid]['message'] = trim(event_socket_request($fp, $cmd));
+												$responses[$module_uuid]['message'] = trim(event_socket::api('unload '.$module['name']));
 											}
 										}
 									}
@@ -1069,15 +1067,15 @@ if (!class_exists('modules')) {
 									unset($array);
 
 								//create the event socket connection
-									$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+									$esl = event_socket::create();
 
 								//stop modules if active
-									if ($fp) {
+									if ($esl->is_connected()) {
 										foreach ($modules as $module_uuid => $module) {
 											if ($this->active($module['name'])) {
-												$cmd = 'api unload '.$module['name'];
+												$cmd = 'unload '.$module['name'];
 												$responses[$module_uuid]['module'] = $module['name'];
-												$responses[$module_uuid]['message'] = trim(event_socket_request($fp, $cmd));
+												$responses[$module_uuid]['message'] = trim(event_socket::api($cmd));
 											}
 										}
 									}

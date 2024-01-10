@@ -24,28 +24,12 @@
 	Mark J. Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //start the session
 	ini_set("session.cookie_httponly", True);
 	if (!isset($_SESSION)) { session_start(); }
 
-//if config.conf file does not exist then redirect to the install page
-	if (file_exists("/usr/local/etc/fusionpbx/config.conf")) {
-		//BSD
-	}
-	elseif (file_exists("/etc/fusionpbx/config.conf")) {
-		//Linux
-	}
-	else {
-		header("Location: /core/install/install.php");
-		exit;
-	}
-
-//adds multiple includes
-	require_once "resources/require.php";
+//includes files
+	require_once __DIR__ . "/resources/require.php";
 
 //if logged in, redirect to login destination
 	if (isset($_SESSION["username"])) {
@@ -62,11 +46,12 @@
 	}
 	else {
 		//use custom index, if present, otherwise use custom login, if present, otherwise use default login
-		if (file_exists($_SERVER["PROJECT_ROOT"]."/themes/".$_SESSION['domain']['template']['name']."/index.php")) {
+		if (file_exists($_SERVER["PROJECT_ROOT"]."/themes/".($_SESSION['domain']['template']['name'] ?? '')."/index.php")) {
 			require_once "themes/".$_SESSION['domain']['template']['name']."/index.php";
 		}
 		else {
-			header("Location: ".PROJECT_PATH."/core/dashboard/");
+			//login prompt
+			header("Location: ".PROJECT_PATH."/login.php");
 		}
 	}
 

@@ -25,12 +25,8 @@
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
 
@@ -56,8 +52,15 @@
 	$language = new text;
 	$text = $language->get();
 
+//set the defaults
+	$dialplan_uuid = '';
+	$dialplan_name = '';
+	$dialplan_number = '';
+	$hostname = '';
+	$dialplan_description = '';
+
 //set the action as an add or an update
-	if (is_uuid($_GET["id"])) {
+	if (!empty($_GET["id"]) && (is_uuid($_GET["id"]))) {
 		$action = "update";
 		$dialplan_uuid = $_GET["id"];
 	}
@@ -79,21 +82,21 @@
 		$dialplan_continue = $_POST["dialplan_continue"] != '' ? $_POST["dialplan_continue"] : 'false';
 		$dialplan_details = $_POST["dialplan_details"] ?? null;
 		$dialplan_context = $_POST["dialplan_context"];
-		$dialplan_enabled = $_POST["dialplan_enabled"];
+		$dialplan_enabled = $_POST["dialplan_enabled"] ?? 'false';
 		$dialplan_description = $_POST["dialplan_description"];
 		$dialplan_details_delete = $_POST["dialplan_details_delete"] ?? null;
 	}
 
 //get the list of applications
 	if (empty($_SESSION['switch']['applications']) || !is_array($_SESSION['switch']['applications'])) {
-		$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-		if ($fp) {
-			$result = event_socket_request($fp, 'api show application');
+		$esl = event_socket::create();
+		if ($esl->is_connected()) {
+			$result = event_socket::api('show application');
 			
 			$show_applications = explode("\n\n", $result);
 			$raw_applications = explode("\n", $show_applications[0]);
 			unset($result);
-			unset($fp);
+			unset($esl);
 
 			$previous_application = null;
 			foreach($raw_applications as $row) {
@@ -102,12 +105,12 @@
 					$application = $application_array[0];
 
 					if (
-						$application != "name" 
-						&& $application != "system" 
-						&& $application != "bgsystem" 
-						&& $application != "spawn" 
-						&& $application != "bg_spawn" 
-						&& $application != "spawn_stream" 
+						$application != "name"
+						&& $application != "system"
+						&& $application != "bgsystem"
+						&& $application != "spawn"
+						&& $application != "bg_spawn"
+						&& $application != "spawn_stream"
 						&& stristr($application, "[") != true
 					) {
 						if ($application != $previous_application) {
@@ -237,7 +240,7 @@
 			$array['dialplans'][$x]['dialplan_context'] = $_POST["dialplan_context"];
 			$array['dialplans'][$x]['dialplan_continue'] = $_POST["dialplan_continue"];
 			$array['dialplans'][$x]['dialplan_order'] = $_POST["dialplan_order"];
-			$array['dialplans'][$x]['dialplan_enabled'] = $_POST["dialplan_enabled"];
+			$array['dialplans'][$x]['dialplan_enabled'] = $_POST["dialplan_enabled"] ?? 'false';
 			$array['dialplans'][$x]['dialplan_description'] = $_POST["dialplan_description"];
 			$y = 0;
 			if (!empty($_POST["dialplan_details"]) && is_array($_POST["dialplan_details"])) {
@@ -272,34 +275,32 @@
 				}
 			}
 
+		//update the dialplan xml by using the array
+			$dialplans = new dialplan;
+			$dialplans->source = "details";
+			$dialplans->destination = "array";
+			$dialplans->uuid = $dialplan_uuid;
+			$dialplans->prepare_details($array);
+			$dialplan_array = $dialplans->xml();
+
+		//add the dialplan xml to the array
+			$array['dialplans'][$x]['dialplan_xml'] = $dialplan_array[$dialplan_uuid];
+
 		//add or update the database
 			$database = new database;
 			$database->app_name = 'dialplans';
 			$database->app_uuid = $app_uuid ?? null;
-			if ( strlen($dialplan_uuid)>0 )
-				$database->uuid($dialplan_uuid);
+			$database->uuid($dialplan_uuid);
 			$database->save($array);
 			unset($array);
 
 		//remove checked dialplan details
-			if (
-				$action == 'update'
-				&& permission_exists('dialplan_detail_delete')
-				&& is_array($dialplan_details_delete)
-				&& @sizeof($dialplan_details_delete) != 0
-				) {
+			if ($action == 'update' && permission_exists('dialplan_detail_delete') && !empty($dialplan_details_delete)) {
 				$obj = new dialplan;
 				$obj->dialplan_uuid = $dialplan_uuid;
 				$obj->app_uuid = $app_uuid ?? null;
 				$obj->delete_details($dialplan_details_delete);
 			}
-
-		//update the dialplan xml
-			$dialplans = new dialplan;
-			$dialplans->source = "details";
-			$dialplans->destination = "database";
-			$dialplans->uuid = $dialplan_uuid;
-			$dialplans->xml();
 
 		//clear the cache
 			$cache = new cache;
@@ -451,7 +452,7 @@
 					$details[$group][$x]['dialplan_detail_group'] = $group;
 					$details[$group][$x]['dialplan_detail_order'] = $dialplan_detail_order;
 					$details[$group][$x]['dialplan_detail_enabled'] = 'true';
-					
+
 			}
 		}
 	//sort the details array by group number
@@ -717,21 +718,19 @@
 	echo "	<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-enabled']."\n";
 	echo "	</td>\n";
-	echo "	<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='dialplan_enabled'>\n";
-	if ($dialplan_enabled == "true") {
-		echo "		<option value='true' selected='selected'>".$text['option-true']."</option>\n";
+	echo "	<td class='vtable' style='position: relative;' align='left'>\n";
+	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
+		echo "	<label class='switch'>\n";
+		echo "		<input type='checkbox' id='dialplan_enabled' name='dialplan_enabled' value='true' ".(!empty($dialplan_enabled) && $dialplan_enabled == 'true' ? "checked='checked'" : null).">\n";
+		echo "		<span class='slider'></span>\n";
+		echo "	</label>\n";
 	}
 	else {
-		echo "		<option value='true'>".$text['option-true']."</option>\n";
+		echo "	<select class='formfld' id='dialplan_enabled' name='dialplan_enabled'>\n";
+		echo "		<option value='true' ".($dialplan_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($dialplan_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "	</select>\n";
 	}
-	if ($dialplan_enabled == "false") {
-		echo "		<option value='false' selected='selected'>".$text['option-false']."</option>\n";
-	}
-	else {
-		echo "		<option value='false'>".$text['option-false']."</option>\n";
-	}
-	echo "		</select>\n";
 	echo "	</td>\n";
 	echo "	</tr>\n";
 
@@ -1063,3 +1062,4 @@
 	require_once "resources/footer.php";
 
 ?>
+

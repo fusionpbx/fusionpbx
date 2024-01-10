@@ -25,7 +25,6 @@
 	sreis
 */
 
-
 /**
  * domains class
  *
@@ -513,27 +512,30 @@ if (!class_exists('domains')) {
 							unset($_SESSION[$category][$subcategory]);
 						}
 					}
+
 					//set the enabled settings as a session
 					foreach ($result as $row) {
-						$name = $row['domain_setting_name'];
-						$category = $row['domain_setting_category'];
-						$subcategory = $row['domain_setting_subcategory'];
-						if (empty($subcategory)) {
-							//$$category[$name] = $row['domain_setting_value'];
-							if ($name == "array") {
-								$_SESSION[$category][] = $row['domain_setting_value'];
+						if ($row['domain_setting_enabled'] == 'true') {
+							$name = $row['domain_setting_name'];
+							$category = $row['domain_setting_category'];
+							$subcategory = $row['domain_setting_subcategory'];
+							if (empty($subcategory)) {
+								//$$category[$name] = $row['domain_setting_value'];
+								if ($name == "array") {
+									$_SESSION[$category][] = $row['domain_setting_value'];
+								}
+								else {
+									$_SESSION[$category][$name] = $row['domain_setting_value'];
+								}
 							}
 							else {
-								$_SESSION[$category][$name] = $row['domain_setting_value'];
-							}
-						}
-						else {
-							//$$category[$subcategory][$name] = $row['domain_setting_value'];
-							if ($name == "array") {
-								$_SESSION[$category][$subcategory][] = $row['domain_setting_value'];
-							}
-							else {
-								$_SESSION[$category][$subcategory][$name] = $row['domain_setting_value'];
+								//$$category[$subcategory][$name] = $row['domain_setting_value'];
+								if ($name == "array") {
+									$_SESSION[$category][$subcategory][] = $row['domain_setting_value'];
+								}
+								else {
+									$_SESSION[$category][$subcategory][$name] = $row['domain_setting_value'];
+								}
 							}
 						}
 					}
@@ -601,20 +603,16 @@ if (!class_exists('domains')) {
 		 */
 		public function upgrade() {
 
+			//includes files
+				require dirname(__DIR__, 2) . "/resources/require.php";
+
+			//add missing default settings
+				$this->settings();
+
 			//get the variables
 				$config = new config;
 				$config_path = $config->find();
 				$config->get();
-
-			//set the include path
-				$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-				set_include_path(parse_ini_file($conf[0])['document.root']);
-
-			//includes files
-				include "resources/require.php";
-
-			//check for default settings
-				$this->settings();
 
 			//get the list of installed apps from the core and app directories (note: GLOB_BRACE doesn't work on some systems)
 				$config_list_1 = glob($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/*/*/app_config.php");
@@ -635,39 +633,6 @@ if (!class_exists('domains')) {
 				$domains = $database->select($sql, null, 'all');
 				unset($sql);
 
-			//get the domain_settings
-				$sql = "select * from v_domain_settings ";
-				$sql .= "where domain_setting_enabled = 'true' ";
-				$database = new database;
-				$domain_settings = $database->select($sql, null, 'all');
-				unset($sql);
-
-			//get the default settings
-				$sql = "select * from v_default_settings ";
-				$sql .= "where default_setting_enabled = 'true' ";
-				$sql .= "and default_setting_category <> 'switch' ";
-				$database = new database;
-				$database_default_settings = $database->select($sql, null, 'all');
-				unset($sql);
-
-			//get the domain_uuid
-				if (is_array($domains)) {
-					foreach($domains as $row) {
-						if (count($domains) == 1) {
-							$_SESSION["domain_uuid"] = $row["domain_uuid"];
-							$_SESSION["domain_name"] = $row['domain_name'];
-						}
-						else {
-							if (!empty($domain_array[0]) && (lower_case($row['domain_name']) == lower_case($domain_array[0] ?? '') || lower_case($row['domain_name']) == lower_case('www.'.$domain_array[0] ?? ''))) {
-								$_SESSION["domain_uuid"] = $row["domain_uuid"];
-								$_SESSION["domain_name"] = $row['domain_name'];
-							}
-							$_SESSION['domains'][$row['domain_uuid']]['domain_uuid'] = $row['domain_uuid'];
-							$_SESSION['domains'][$row['domain_uuid']]['domain_name'] = $row['domain_name'];
-						}
-					}
-				}
-
 			//loop through all domains
 				$domains_processed = 1;
 				foreach ($domains as $domain) {
@@ -678,69 +643,19 @@ if (!class_exists('domains')) {
 					//get the context
 						$context = $domain_name;
 
-					//get the default settings - this needs to be done to reset the session values back to the defaults for each domain in the loop
-						foreach($database_default_settings as $row) {
-							$name = $row['default_setting_name'];
-							$category = $row['default_setting_category'];
-							$subcategory = $row['default_setting_subcategory'];
-							if (empty($subcategory)) {
-								if (!isset($_SESSION[$category])) {
-									$_SESSION[$category] = [];
-								}
-								if ($name == "array") {
-									$_SESSION[$category][] = $row['default_setting_value'];
-								}
-								else {
-									$_SESSION[$category][$name] = $row['default_setting_value'];
-								}
-							}
-							else {
-								if (!isset($_SESSION[$category])) {
-									$_SESSION[$category] = [];
-								}
-								if (!isset($_SESSION[$category][$subcategory])) {
-									$_SESSION[$category][$subcategory] = [];
-								}
-								if ($name == "array") {
-									$_SESSION[$category][$subcategory][] = $row['default_setting_value'];
-								}
-								else {
-									$_SESSION[$category][$subcategory]['uuid'] = $row['default_setting_uuid'];
-									$_SESSION[$category][$subcategory][$name] = $row['default_setting_value'];
-								}
-							}
-						}
-
-					//get the domains settings for the current domain
-						foreach($domain_settings as $row) {
-							if ($row['domain_uuid'] == $domain_uuid) {
-								$name = $row['domain_setting_name'];
-								$category = $row['domain_setting_category'];
-								$subcategory = $row['domain_setting_subcategory'];
-								if (empty($subcategory)) {
-									//$$category[$name] = $row['domain_setting_value'];
-									$_SESSION[$category][$name] = $row['domain_setting_value'];
-								}
-								else {
-									//$$category[$subcategory][$name] = $row['domain_setting_value'];
-									$_SESSION[$category][$subcategory][$name] = $row['domain_setting_value'];
-								}
-							}
-						}
+					//get the email queue settings
+						$setting = new settings(["domain_uuid" => $domain_uuid]);
 
 					//get the list of installed apps from the core and mod directories and execute the php code in app_defaults.php
 						$default_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_defaults.php");
 						foreach ($default_list as &$default_path) {
+							//echo $default_path."<br />\n";
 							include($default_path);
 						}
 
 					//track of the number of domains processed
 						$domains_processed++;
 				}
-
-			//clear the session variables
-				unset($_SESSION['domain']);
-				unset($_SESSION['switch']);
 
 		} //end upgrade method
 
@@ -751,7 +666,7 @@ if (!class_exists('domains')) {
 		public function settings() {
 
 			//includes files
-				include "resources/require.php";
+				require dirname(__DIR__, 2) . "/resources/require.php";
 
 			//get an array of the default settings UUIDs
 				$sql = "select * from v_default_settings ";
@@ -800,6 +715,72 @@ if (!class_exists('domains')) {
 				}
 
 		} //end settings method
+
+		/**
+		 * get a domain list
+		 */
+		public function all() {
+			//get the domains from the database
+				$database = new database;
+				if ($database->table_exists('v_domains')) {
+					$sql = "select * from v_domains order by domain_name asc;";
+					$database = new database;
+					$result = $database->select($sql, null, 'all');
+					foreach($result as $row) {
+						$domain_names[] = $row['domain_name'];
+					}
+					unset($prep_statement);
+				}
+
+			//build the domains array in the correct order
+				if (is_array($domain_names)) {
+					foreach ($domain_names as $dn) {
+						foreach ($result as $row) {
+							if ($row['domain_name'] == $dn) {
+								$domains[] = $row;
+							}
+						}
+					}
+					unset($result);
+				}
+
+			//return the domains array
+				return $domains;
+		}
+
+		/**
+		 * get a domain list
+		 */
+		public function session() {
+			//get the list of domains
+				$domains = $this->all();
+
+			//get the domain
+				$domain_array = explode(":", $_SERVER["HTTP_HOST"] ?? '');
+
+			//set domain_name and domain_uuid and update domains array with domain_uuid as the key
+				if (!empty($domains) && is_array($domains)) {
+					foreach($domains as $row) {
+						if (!isset($_SESSION['username'])) {
+							if (!empty($domains) && count($domains) == 1) {
+								$domain_uuid = $row["domain_uuid"];
+								$domain_name = $row['domain_name'];
+								$_SESSION["domain_uuid"] = $row["domain_uuid"];
+								$_SESSION["domain_name"] = $row['domain_name'];
+							}
+							else {
+								if ($row['domain_name'] == $domain_array[0] || $row['domain_name'] == 'www.'.$domain_array[0]) {
+									$_SESSION["domain_uuid"] = $row["domain_uuid"];
+									$_SESSION["domain_name"] = $row["domain_name"];
+								}
+							}
+						}
+						$_SESSION['domains'][$row['domain_uuid']] = $row;
+					}
+					unset($domains, $prep_statement);
+				}
+		}
+
 	}
 }
 

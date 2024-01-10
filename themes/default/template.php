@@ -743,7 +743,7 @@
 				$('[id*=recording_button]').not('[id*=recording_button_'+recording_id+']').html("<span class='{/literal}{$settings.theme.button_icon_play}{literal} fa-fw'></span>");
 				$('[id*=recording_progress_bar]').not('[id*=recording_progress_bar_'+recording_id+']').css('display', 'none');
 
-				$('audio').each(function(){$('#menu_side_container').width()
+				$('audio').each(function(){
 					if ($(this).get(0) != recording_audio) {
 						$(this).get(0).pause(); //stop playing
 						$(this).get(0).currentTime = 0; //reset time
@@ -850,27 +850,18 @@
 			btn_copy = document.getElementById("btn_copy");
 			btn_toggle = document.getElementById("btn_toggle");
 			btn_delete = document.getElementById("btn_delete");
+			btn_download = document.getElementById("btn_download");
 			if (checked == true) {
-				if (btn_copy) {
-					btn_copy.style.display = "inline";
-				}
-				if (btn_toggle) {
-					btn_toggle.style.display = "inline";
-				}
-				if (btn_delete) {
-					btn_delete.style.display = "inline";
-				}
+				if (btn_copy) { btn_copy.style.display = "inline"; }
+				if (btn_toggle) { btn_toggle.style.display = "inline"; }
+				if (btn_delete) { btn_delete.style.display = "inline"; }
+				if (btn_download) { btn_download.style.display = "inline"; }
 			}
 		 	else {
-				if (btn_copy) {
-					btn_copy.style.display = "none";
-				}
-				if (btn_toggle) {
-					btn_toggle.style.display = "none";
-				}
-				if (btn_delete) {
-					btn_delete.style.display = "none";
-				}
+				if (btn_copy) { btn_copy.style.display = "none"; }
+				if (btn_toggle) { btn_toggle.style.display = "none"; }
+				if (btn_delete) { btn_delete.style.display = "none"; }
+				if (btn_download) { btn_download.style.display = "none"; }
 		 	}
 		}
 		{/literal}
@@ -908,7 +899,7 @@
 		function list_self_check(checkbox_id) {
 			var inputs = document.getElementsByTagName('input');
 			for (var i = 0, max = inputs.length; i < max; i++) {
-				if (inputs[i].type === 'checkbox') {
+				if (inputs[i].type === 'checkbox' && inputs[i].name.search['enabled'] == -1) {
 					inputs[i].checked = false;
 				}
 			}

@@ -60,27 +60,38 @@ if (!class_exists('registrations')) {
 				$id = 0;
 
 			//create the event socket connection
-				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+				$esl = event_socket::create();
 
 			//get the default settings
 				$sql = "select sip_profile_name from v_sip_profiles ";
 				$sql .= "where sip_profile_enabled = 'true' ";
-				if ($profile != 'all' && $profile != '') {
+				if (!empty($profile) && $profile != 'all') {
 					$sql .= "and sip_profile_name = :sip_profile_name ";
 					$parameters['sip_profile_name'] = $profile;
 				}
 				$sql .= "and sip_profile_enabled = 'true' ";
 				$database = new database;
 				$sip_profiles = $database->select($sql, $parameters ?? null, 'all');
-				if (is_array($sip_profiles) && @sizeof($sip_profiles) != 0) {
+				if (!empty($sip_profiles) && @sizeof($sip_profiles) != 0) {
 					foreach ($sip_profiles as $field) {
 
 						//get sofia status profile information including registrations
 							$cmd = "api sofia xmlstatus profile '".$field['sip_profile_name']."' reg";
-							$xml_response = trim(event_socket_request($fp, $cmd));
+							$xml_response = trim(event_socket::command($cmd));
+
+						//show an error message
+							if ($xml_response == "Invalid Profile!") { 
+								//add multi-lingual support
+								$language = new text;
+								$text = $language->get(null, '/app/registrations');
+
+								//show the error message
+								$xml_response = "<error_msg>".escape($text['label-message'])."</error_msg>"; 
+							}
+
+						//santize the XML
 							if (function_exists('iconv')) { $xml_response = iconv("utf-8", "utf-8//IGNORE", $xml_response); }
 							$xml_response = preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/u', '', $xml_response);
-							if ($xml_response == "Invalid Profile!") { $xml_response = "<error_msg>".!empty($text['label-message'])."</error_msg>"; }
 							$xml_response = str_replace("<profile-info>", "<profile_info>", $xml_response);
 							$xml_response = str_replace("</profile-info>", "</profile_info>", $xml_response);
 							$xml_response = str_replace("&lt;", "", $xml_response);
@@ -142,21 +153,26 @@ if (!class_exists('registrations')) {
 										if (isset($call_id_array[1])) {
 											$agent = $row['agent'];
 											$lan_ip = $call_id_array[1];
-											if (false !== stripos($agent, 'grandstream')) {
+											if (!empty($agent) && false !== stripos($agent, 'grandstream')) {
 												$lan_ip = str_ireplace(
 													array('A','B','C','D','E','F','G','H','I','J'),
 													array('0','1','2','3','4','5','6','7','8','9'),
 													$lan_ip);
 											}
-											elseif (1 === preg_match('/\ACL750A/', $agent)) {
+											elseif (!empty($agent) && 1 === preg_match('/\ACL750A/', $agent)) {
 												//required for GIGASET Sculpture CL750A puts _ in it's lan ip account
 												$lan_ip = preg_replace('/_/', '.', $lan_ip);
 											}
 											$registrations[$id]['lan-ip'] = $lan_ip;
 										}
+										else if (preg_match('/real=\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/', $row['contact'] ?? '', $ip_match)) {
+											//get ip address for snom phones
+											$lan_ip = str_replace('real=', '', $ip_match[0]);
+											$registrations[$id]['lan-ip'] = $lan_ip;
+										}
 										else if (preg_match('/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/', $row['contact'] ?? '', $ip_match)) {
 											$lan_ip = preg_replace('/_/', '.', $ip_match[0]);
-											$registrations[$id]['lan-ip'] = "$lan_ip";
+											$registrations[$id]['lan-ip'] = $lan_ip;
 										}
 										else {
 											$registrations[$id]['lan-ip'] = '';
@@ -242,11 +258,7 @@ if (!class_exists('registrations')) {
 				//filter out unchecked registrations
 					if (is_array($records) && @sizeof($records) != 0) {
 						foreach($records as $record) {
-							if (
-								$record['checked'] == 'true' &&
-								$record['user'] != '' &&
-								$record['profile'] != ''
-								) {
+							if ($record['checked'] == 'true' && !empty($record['user']) && !empty($record['profile'])) {
 								$registrations[] = $record;
 							}
 						}
@@ -262,16 +274,16 @@ if (!class_exists('registrations')) {
 							unset($sql);
 
 						//create the event socket connection
-							$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+							$esl = event_socket::create();
 
 						//loop through registrations
-							if ($fp) {
+							if ($esl->is_connected()) {
 								//check if registrations exist
 								if (is_array($registrations)) {
 									foreach ($registrations as $registration) {
 
 										//validate the submitted profile
-											if ($registration['profile'] != '' && is_array($sip_profiles) && @sizeof($sip_profiles) != 0) {
+											if (!empty($registration['profile']) && is_array($sip_profiles) && @sizeof($sip_profiles) != 0) {
 												foreach ($sip_profiles as $field) {
 													if ($field['name'] == $registration['profile']) {
 														$profile = $registration['profile'];
@@ -285,22 +297,22 @@ if (!class_exists('registrations')) {
 											}
 
 										//validate the submitted user
-											if ($registration['user'] != '') {
+											if (!empty($registration['user'])) {
 												$user = preg_replace('#[^a-zA-Z0-9_\-\.\@]#', '', $registration['user']);
 											}
 
 										//validate the submitted host
-											if ($registration['host'] != '') {
+											if (!empty($registration['host'])) {
 												$host = preg_replace('#[^a-zA-Z0-9_\-\.]#', '', $registration['host']);
 											}
 
 										//lookup vendor by agent
-											if ($registration['agent'] != '') {
+											if (!empty($registration['agent'])) {
 												$vendor = device::get_vendor_by_agent($registration['agent']);
 											}
 
 										//prepare the api command
-											if ($profile && $user) {
+											if (!empty($profile) && $user) {
 												switch ($action) {
 													case 'unregister':
 														$command = "sofia profile ".$profile." flush_inbound_reg ".$user." reboot";
@@ -325,9 +337,9 @@ if (!class_exists('registrations')) {
 											}
 
 										//send the api command
-											if ($command && $fp) {
-												$response_api[$registration['user']]['command'] = event_socket_request($fp, "api ".$command);
-												$response_api[$registration['user']]['log'] = event_socket_request($fp, "api log notice ".$command);
+											if (!empty($command) && $esl->is_connected()) {
+												$response_api[$registration['user']]['command'] = event_socket::api($command);
+												$response_api[$registration['user']]['log'] = event_socket::api("log notice $command");
 											}
 
 									}

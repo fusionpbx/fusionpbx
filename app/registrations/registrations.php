@@ -25,12 +25,8 @@
 	James Rose <james.o.rose@gmail.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
-//includes fileshp";
-	require_once "resources/require.php";
+//includes files
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -236,7 +232,7 @@
 				echo "	<td class='hide-md-dn'>".escape($row['host'])."</td>\n";
 				echo "	<td class='' title=\"".escape($row['status'])."\"><span class='cursor-help'>".escape($status)."</span></td>\n";
 				echo "	<td class='hide-md-dn'>".escape($row['ping-time'])."</td>\n";
-				echo "	<td class='hide-md-dn'>".escape($row['sip_profile_name'])."</td>\n";
+				echo "	<td class='hide-md-dn' nowrap='nowrap'>".escape($row['sip_profile_name'])."</td>\n";
 				echo "	<td class='action-button'>\n";
 				if (!empty($_SESSION['registrations']['list_row_button_unregister']['boolean']) && $_SESSION['registrations']['list_row_button_unregister']['boolean'] == 'true') {
 					echo button::create(['type'=>'submit','title'=>$text['button-unregister'],'icon'=>'user-slash fa-fw','style'=>'margin-left: 2px; margin-right: 0;','onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('unregister'); list_form_submit('form_list')"]);

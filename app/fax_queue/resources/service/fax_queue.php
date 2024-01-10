@@ -1,17 +1,12 @@
 <?php
 
-//add the document root to the include path
-	if (defined('STDIN')) {
-		$config_glob = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-		$conf = parse_ini_file($config_glob[0]);
-		set_include_path($conf['document.root']);
-	}
-	else {
+//run from command line only
+	if (!defined('STDIN')) {
 		exit;
 	}
 
 //includes files
-	require_once "resources/require.php";
+	require_once  dirname(__DIR__, 4) . "/resources/require.php";
 	require_once "resources/pdo.php";
 	include "resources/classes/permissions.php";
 
@@ -109,28 +104,31 @@
 		file_put_contents($pid_file, getmypid());
 	}
 
+//get the fax queue settings
+	$setting = new settings(["category" => "fax_queue"]);
+
 //set the fax queue interval
-	if (isset($_SESSION['fax_queue']['interval']['numeric'])) {
-		$fax_queue_interval = $_SESSION['fax_queue']['interval']['numeric'];
+	if (!empty($setting->get('fax_queue', 'interval'))) {
+		$fax_queue_interval = $setting->get('fax_queue', 'interval');
 	}
 	else {
 		$fax_queue_interval = '30';
 	}
 
 //set the fax queue limit
-	if (isset($_SESSION['fax_queue']['limit']['numeric'])) {
-		$fax_queue_limit = $_SESSION['fax_queue']['limit']['numeric'];
+	if (!empty($setting->get('fax_queue', 'limit'))) {
+		$fax_queue_limit = $setting->get('fax_queue', 'limit');
 	}
 	else {
 		$fax_queue_limit = '30';
 	}
-	if (isset($_SESSION['fax_queue']['debug']['boolean'])) {
-		$debug = $_SESSION['fax_queue']['debug']['boolean'];
+	if (!empty($setting->get('fax_queue', 'debug'))) {
+		$debug = $setting->get('fax_queue', 'debug');
 	}
 
 //set the fax queue retry interval
-	if (isset($_SESSION['fax_queue']['retry_interval']['numeric'])) {
-		$fax_retry_interval = $_SESSION['fax_queue']['retry_interval']['numeric'];
+	if (!empty($setting->get('fax_queue', 'retry_interval'))) {
+		$fax_retry_interval = $setting->get('fax_queue', 'retry_interval');
 	}
 	else {
 		$fax_retry_interval = '180';
@@ -139,7 +137,7 @@
 //change the working directory
 	chdir($_SERVER['DOCUMENT_ROOT']);
 
-//get the messages waiting in the email queue
+//get the messages waiting in the fax queue
 	while (true) {
 
 		//get the fax messages that are waiting to send

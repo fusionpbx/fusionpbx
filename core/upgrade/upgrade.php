@@ -24,17 +24,13 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//add the document root to the include path
-	$config_glob = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	if (is_array($config_glob) && count($config_glob) > 0) {
-		$config_glob = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-		$conf = parse_ini_file($config_glob[0]);
-		set_include_path($conf['document.root']);
-	}
-	else {
+//include file
+	require dirname(__DIR__, 2) . "/resources/require.php";
+
+//if the config file doesn't exist and the config.php does exist use it to write a new config file
+	if (!$config_exists && file_exists("/etc/fusionpbx/config.php")) {
 		//include the config.php
-		$config_php_glob = glob("{/usr/local/etc,/etc}/fusionpbx/config.php", GLOB_BRACE);
-		include($config_php_glob[0]);
+		include("/etc/fusionpbx/config.php");
 
 		//set the default config file location
 		if (stristr(PHP_OS, 'BSD')) {
@@ -123,15 +119,10 @@
 		if(!$file_handle){ return; }
 		fwrite($file_handle, $conf);
 		fclose($file_handle);
-
-		//set the include path
-		$config_glob = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-		$conf = parse_ini_file($config_glob[0]);
-		set_include_path($conf['document.root']);
 	}
 
 //include files
-	require_once "resources/require.php";
+	require dirname(__DIR__, 2) . "/resources/require.php";
 
 //check the permission
 	if(defined('STDIN')) {
@@ -293,6 +284,24 @@
 			if ($display_type == "html") {
 				require_once "resources/footer.php";
 			}
+	}
+
+//upgrade optional apps
+	if ($upgrade_type == 'apps') {
+
+		$app_list = git_find_repos($_SERVER["PROJECT_ROOT"]."/app");
+
+		if (!is_array($app_list)) {
+			exit;
+		}
+		print_r($app_list);exit;
+		foreach ($app_list as $repo => $apps) {
+			$path = $repo;
+			$git_result = git_pull($path);
+			foreach ($git_result['message'] as $response_line) {
+				echo $repo . ": " . $response_line . "\n";
+			}
+		}
 	}
 
 ?>

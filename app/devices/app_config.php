@@ -48,9 +48,13 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
-		$apps[$x]['permissions'][$y]['name'] = "device_mac_address";
+		$apps[$x]['permissions'][$y]['name'] = "device_address";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "device_address_uuid";
+		//$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		//$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "device_label";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
@@ -297,6 +301,10 @@
 		$apps[$x]['permissions'][$y]['name'] = "device_profile_domain";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'device_profile_select';
+        $apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+        $apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$y++;
 		$apps[$x]['permissions'][$y]['name'] = 'device_profile_key_view';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
@@ -351,6 +359,38 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "32d5f9b1-a90a-4c02-825d-528884e6205c";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "devices";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "key_add_rows";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "10";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "850a6141-2e28-4d2c-9193-f11964d555a3";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "devices";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "key_edit_rows";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "3";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "17e7c02f-71cb-44c0-905b-42efcc3a72ab";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "devices";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "setting_add_rows";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "10";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "0a7896d0-40cd-4f7d-aa5f-8bd179d65f8a";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "devices";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "setting_edit_rows";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "3";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "3d847335-be0a-4130-9c38-0f1d906f3eea";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "devices";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "profile_key_add_rows";
@@ -372,14 +412,6 @@
 		$apps[$x]['db'][$y]['table']['name'] = "v_devices";
 		$apps[$x]['db'][$y]['table']['parent'] = "";
 		$z=0;
-		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "id";
-		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "hardware_device_id";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "serial";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "integer";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "INT NOT NULL AUTO_INCREMENT";
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
-		$apps[$x]['db'][$y]['fields'][$z]['deprecated'] = "true";
-		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "device_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "hardware_device_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
@@ -406,13 +438,8 @@
 		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['field'] = "device_profile_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = "v_id";
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
-		$apps[$x]['db'][$y]['fields'][$z]['deprecated'] = "true";
-		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "device_mac_address";
-		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "phone_mac_address";
+		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "device_address";
+		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "device_mac_address";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
@@ -4178,5 +4205,17 @@
 		$vendors[$y]['functions'][$z]['description'] = "BLF/DTMF";
 		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
+
+	//linphone details
+		$y++;
+		$vendors[$y]['uuid'] = "782bc1cc-149f-406f-b8e2-24a2bc484fad";
+		$vendors[$y]['name'] = "linphone";
+		$z=0;
+
+	//sipnetic details
+		$y++;
+		$vendors[$y]['uuid'] = "d3e71b2e-f272-4455-ae46-6ac94bdd75cc";
+		$vendors[$y]['name'] = "sipnetic";
+		$z=0;
 
 ?>

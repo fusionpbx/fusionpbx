@@ -24,12 +24,8 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 
 //add multi-lingual support
 	$language = new text;
@@ -73,7 +69,7 @@
 				echo "	<table cellpadding='0' cellspacing='0' border='0' width='100%' height='100%'>\n";
 				echo "		<tr>\n";
 				echo "			<td align='center' valign='middle'>\n";
-				echo "				<img src=\"data:".$content_type.";base64,".$attachment['attachment_content']."\" style='width: auto; max-width: 95%; height: auto; max-height: 800px; box-shadow: 0px 1px 20px #888; background-color: #fff; cursor: pointer;' onclick=\"$('#contact_attachment_layer').fadeOut(200);\" oncontextmenu=\"window.open('contact_attachment.php?id=".$contact_attachment_uuid."&action=download'); return false;\" title=\"".$text['message-click_close_save']."\">\n";
+				echo "				<img src=\"data:".$content_type.";base64,".$attachment['attachment_content']."\" style='width: auto; max-width: 95%; height: auto; max-height: 800px; box-shadow: 0px 1px 20px #888; background-color: #fff; cursor: pointer;' onclick=\"$('#contact_attachment_layer').fadeOut(200);\" oncontextmenu=\"window.open('contact_attachment.php?id=".$contact_attachment_uuid."&action=download'); return false;\" title=\"\">\n";
 				echo "			</td>\n";
 				echo "		</tr>\n";
 				echo "	</table>\n";

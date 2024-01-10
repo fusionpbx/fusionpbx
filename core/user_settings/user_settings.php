@@ -24,12 +24,8 @@
  Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
 
@@ -339,7 +335,19 @@
 				echo "		".$text['label-'.$row['user_setting_value']]."\n";
 			}
 			else {
-				echo "		".escape($row['user_setting_value'])."\n";
+				if (!empty($row['user_setting_value']) && substr_count($row['user_setting_value'], "\n") > 0) {
+					$lines = explode("\n", $row['user_setting_value']);
+					if (!empty($lines) && is_array($lines) && @sizeof($lines) != 0) {
+						foreach ($lines as $i => $line) {
+							$lines[$i] = escape($line);
+						}
+						echo implode("<i class='fas fa-level-down-alt fa-rotate-90 fa-xs ml-2 mr-5' style='opacity: 0.3;'></i>", $lines);
+					}
+					unset($lines, $line);
+				}
+				else {
+					echo escape($row['user_setting_value'])."\n";
+				}
 			}
 			echo "	</td>\n";
 			if (permission_exists('user_setting_edit')) {

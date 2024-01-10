@@ -24,12 +24,8 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -75,6 +71,14 @@
 		$conference_order = $_POST["conference_order"];
 		$conference_description = $_POST["conference_description"];
 		$conference_enabled = $_POST["conference_enabled"] ?? 'false';
+
+		//set the context for users that do not have the permission
+		if (permission_exists('conference_context')) {
+			$conference_context = $_POST["conference_context"];
+		}
+		else if ($action == 'add') {
+			$conference_context = $_SESSION['domain_name'];
+		}
 
 		//sanitize the conference name
 		$conference_name = preg_replace("/[^A-Za-z0-9\- ]/", "", $conference_name);
@@ -203,6 +207,7 @@
 					}
 					$array['conferences'][0]['conference_order'] = $conference_order;
 					$array['conferences'][0]['conference_description'] = $conference_description;
+					$array['conferences'][0]['conference_context'] = $conference_context;
 					$array['conferences'][0]['conference_enabled'] = $conference_enabled;
 
 				//conference pin number
@@ -224,11 +229,13 @@
 					$array['dialplans'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
 					$array['dialplans'][0]['dialplan_name'] = $conference_name;
 					$array['dialplans'][0]['dialplan_number'] = $conference_extension;
+					if (isset($conference_context)) {
+						$array['dialplans'][0]["dialplan_context"] = $conference_context;
+					}
 					$array['dialplans'][0]['app_uuid'] = 'b81412e8-7253-91f4-e48e-42fc2c9a38d9';
 					$array['dialplans'][0]['dialplan_xml'] = $dialplan_xml;
 					$array['dialplans'][0]['dialplan_continue'] = 'false';
 					$array['dialplans'][0]['dialplan_order'] = '333';
-					$array['dialplans'][0]['dialplan_context'] = $_SESSION['domain_name'];
 					$array['dialplans'][0]['dialplan_enabled'] = $conference_enabled;
 					$array['dialplans'][0]['dialplan_description'] = $conference_description;
 
@@ -299,6 +306,7 @@
 			$conference_account_code = $row["conference_account_code"];
 			$conference_order = $row["conference_order"];
 			$conference_description = $row["conference_description"];
+			$conference_context = $row["conference_context"];
 			$conference_enabled = $row["conference_enabled"];
 			$conference_name = str_replace("-", " ", $conference_name);
 		}
@@ -306,6 +314,7 @@
 	}
 
 //set the defaults
+	if (empty($conference_context)) { $conference_context = $_SESSION['domain_name']; }
 	if (empty($conference_enabled)) { $conference_enabled = 'true'; }
 
 //get the conference profiles
@@ -527,6 +536,19 @@
 	echo "".$text['description-order']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
+
+	if (permission_exists('conference_context')) {
+		echo "<tr>\n";
+		echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-context']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<input class='formfld' type='text' name='conference_context' maxlength='255' value=\"".escape($conference_context)."\" required='required'>\n";
+		echo "<br />\n";
+		echo $text['description-enter-context']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";

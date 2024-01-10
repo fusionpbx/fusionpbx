@@ -24,12 +24,8 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -322,7 +318,8 @@
 								if ($cond_var == 'time-of-day') {
 									$cond_var = 'minute-of-day';
 									$array_cond_start = explode(':', $cond_start);
-									$cond_start = ($array_cond_start[0] * 60) + $array_cond_start[1];
+									//adjust time one minute later to account for freeswitch one minute early on start condition behavior.
+									$cond_start = ($array_cond_start[0] * 60) + $array_cond_start[1] + 1;
 									if ($cond_stop != '') {
 										$array_cond_stop = explode(':', $cond_stop);
 										$cond_stop = ($array_cond_stop[0] * 60) + $array_cond_stop[1];
@@ -585,7 +582,7 @@
 				foreach ($dialplan_details as $i => $row) {
 					if ($row['dialplan_detail_tag'] == 'action' && $row['dialplan_detail_type'] == 'set' && strpos($row['dialplan_detail_data'], 'preset=') === 0) {
 						$preset_name = explode('=',$row['dialplan_detail_data'])[1];
-						if (in_array($preset_name, $valid_presets)) {
+						if (!empty($valid_presets) && in_array($preset_name, $valid_presets)) {
 							$dialplan_detail_group_preset[$row['dialplan_detail_group']] = $preset_name;
 						}
 						else {
@@ -1038,6 +1035,10 @@ if ($action == 'update') {
 						//convert minute-of-day to time-of-day values
 						if ($cond_var == 'minute-of-day') {
 							$cond_var = 'time-of-day';
+
+							//adjust time one minute earlier to account for freeswitch one minute early on start condition behavior.
+							$cond_val_start = $cond_val_start - 1;
+							
 							$cond_val_start = number_pad(floor($cond_val_start / 60),2).":".number_pad(fmod($cond_val_start, 60),2);
 							if ($cond_val_stop != '') {
 								$cond_val_stop = number_pad(floor($cond_val_stop / 60),2).":".number_pad(fmod($cond_val_stop, 60),2);

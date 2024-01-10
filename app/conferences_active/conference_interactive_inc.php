@@ -25,12 +25,8 @@
 	James Rose <james.o.rose@gmail.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -47,22 +43,26 @@
 	$text = $language->get();
 
 //get the http get or post and set it as php variables
-	if (is_numeric($_REQUEST["c"])) {
+	if (!empty($_REQUEST["c"]) && is_numeric($_REQUEST["c"])) {
 		$conference_id = $_REQUEST["c"];
 	}
-	elseif (is_uuid($_REQUEST["c"])) {
+	elseif (!empty($_REQUEST["c"]) && is_uuid($_REQUEST["c"])) {
 		$conference_id = $_REQUEST["c"];
+	}
+	else {
+		//exit if the conference id is invalid
+		exit;
 	}
 
 //replace the space with underscore
-	$conference_name = !empty($conference_id).'@'.$_SESSION['domain_name'];
+	$conference_name = $conference_id.'@'.$_SESSION['domain_name'];
 
 //create the conference list command
 	$switch_cmd = "conference '".$conference_name."' xml_list";
 
 //connect to event socket, send the command and process the results
-	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-	if (!$fp) {
+	$esl = event_socket::create();
+	if (!$esl->is_connected()) {
 		$msg = "<div align='center'>".$text['message-connection']."<br /></div>";
 		echo "<div align='center'>\n";
 		echo "<table width='40%'>\n";
@@ -77,7 +77,7 @@
 	}
 	else {
 		//show the content
-		$xml_str = trim(event_socket_request($fp, 'api '.$switch_cmd));
+		$xml_str = trim(event_socket::api($switch_cmd));
 		if (substr($xml_str, -9) == "not found") {
 			$valid_xml = false;
 		}
@@ -188,7 +188,7 @@
 				$caller_id_name = urldecode($caller_id_name);
 				$caller_id_number = $row->caller_id_number;
 				$switch_cmd = "uuid_getvar ".$uuid. " hand_raised";
-				$hand_raised = (trim(event_socket_request($fp, 'api '.$switch_cmd)) == "true") ? "true" : "false";
+				$hand_raised = (trim(event_socket::api($switch_cmd)) == "true") ? "true" : "false";
 				//format secondsfloor(floor($fifo_duration / 60) % 60)
 				$join_time_formatted = sprintf('%02d:%02d:%02d', floor($join_time / 3600), floor(floor($join_time / 60) % 60), $join_time % 60);
 				$last_talking_formatted = sprintf('%02d:%02d:%02d', floor($last_talking / 3600), floor(floor($last_talking / 60) % 60), $last_talking % 60);

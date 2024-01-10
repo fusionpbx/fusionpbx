@@ -24,12 +24,8 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
 
@@ -81,8 +77,9 @@
 	}
 
 //get order and order by
-	$order_by = $_GET["order_by"] ?? null;
-	$order = $_GET["order"] ?? null;
+	$order_by = $_GET["order_by"] ?? 'dialplan_name';
+	$order = $_GET["order"] ?? 'asc';
+	$sort = $order_by == 'dialplan_number' ? 'natural' : null;
 
 //add the search variable
 	$search = $_GET["search"] ?? '';
@@ -127,7 +124,7 @@
 
 //get the data
 	$sql = str_replace('count(dialplan_uuid)', '*', $sql);
-	$sql .= $order_by != '' ? order_by($order_by, $order) : " order by dialplan_order asc, dialplan_name asc ";
+	$sql .= order_by($order_by, $order, null, null, $sort);
 	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;
 	$dialplans = $database->select($sql, $parameters ?? null, 'all');

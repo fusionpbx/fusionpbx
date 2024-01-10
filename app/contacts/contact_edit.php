@@ -21,12 +21,8 @@
 	the Initial Developer. All Rights Reserved.
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -59,7 +55,7 @@
 	$contact_attachments = [];
 
 //set from session variables
-	$body_text_color = !empty($_SESSION['theme']['body_text_color']) ? $_SESSION['theme']['body_text_color'] : 'false';
+	$body_text_color = !empty($_SESSION['theme']['body_text_color']['text']) ? $_SESSION['theme']['body_text_color']['text'] : 'false';
 
 //action add or update
 	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
@@ -93,7 +89,7 @@
 
 		//$contact_users = $_POST["contact_users"];
 		//$contact_groups = $_POST["contact_groups"];
-		$contact_user_uuid = $_POST["contact_user_uuid"] ?? null;
+		$contact_user_uuid = ($_SESSION['contact']['permissions']['boolean'] == "true") ? ($_POST["contact_user_uuid"] ?? $_SESSION["user_uuid"]) : ($contact_user_uuid = $_POST["contact_user_uuid"] ?? null);
 		$contact_group_uuid = $_POST["contact_group_uuid"] ?? null;
 
 		$contact_phones = $_POST["contact_phones"];
@@ -340,11 +336,23 @@
 
 			$y = 0;
 			if (isset($contact_user_uuid)) {
-				$array['contacts'][0]['contact_users'][$y]['domain_uuid'] = $_SESSION['domain_uuid'];
-				$array['contacts'][0]['contact_users'][$y]['contact_user_uuid'] = uuid();
-				$array['contacts'][0]['contact_users'][$y]['contact_uuid'] = $contact_uuid;
-				$array['contacts'][0]['contact_users'][$y]['user_uuid'] = $contact_user_uuid;
-				$y++;
+				$sql = "select contact_uuid from v_contact_users ";
+				$sql .= "where contact_uuid = :contact_uuid ";
+				$sql .= "and user_uuid = :user_uuid ";
+				$parameters['contact_uuid'] = $contact_uuid;
+				$parameters['user_uuid'] = $contact_user_uuid;
+				$database = new database;
+				$users = $database->select($sql, $parameters, 'all');
+				unset($sql, $parameters);
+
+				if (is_array($users) === false || count($users) === 0)
+				{
+						$array['contacts'][0]['contact_users'][$y]['domain_uuid'] = $_SESSION['domain_uuid'];
+						$array['contacts'][0]['contact_users'][$y]['contact_user_uuid'] = uuid();
+						$array['contacts'][0]['contact_users'][$y]['contact_uuid'] = $contact_uuid;
+						$array['contacts'][0]['contact_users'][$y]['user_uuid'] = $contact_user_uuid;
+						$y++;
+				}
 			}
 
 			$y = 0;
@@ -1516,7 +1524,7 @@ if ($_SESSION['contact']['permissions']['boolean'] == "true") {
 				echo "			<select name='contact_user_uuid' class='formfld' style='width: auto;'>\n";
 				echo "				<option value=''></option>\n";
 				foreach ($users as $field) {
-					if (in_array($field['user_uuid'], array_column($contact_users_assigned, 'user_uuid'))) { continue; } //skip users already assigned
+					if (!empty($contact_users_assigned) && in_array($field['user_uuid'], array_column($contact_users_assigned, 'user_uuid'))) { continue; } //skip users already assigned
 					echo "					<option value='".escape($field['user_uuid'])."'>".escape($field['username'])."</option>\n";
 				}
 				echo "			</select>\n";
@@ -1646,6 +1654,7 @@ if (permission_exists('contact_phone_view')) {
 		$call .= "&ringback=us-ring";
 		$call .= "&auto_answer=true";
 		$call .= "');";
+
 		echo "				<a href='' onclick=\"".$call."\">\n";
 		echo "					<i class='fas fa-phone fa-fw' style='color: ".$body_text_color."; float: left; margin-top: 7px; margin-left: 7px;' title=\"".urlencode($row['phone_number'] ?? '')."\"></i>\n";
 		echo "				</a>\n";

@@ -26,69 +26,42 @@
 	Riccardo Granchi <riccardo.granchi@nems.it>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
+//includes files
+require_once __DIR__ . "/require.php";
 
-//includes files";
-	require_once "resources/require.php";
-
-//get the event socket information
-	if (file_exists($_SERVER["PROJECT_ROOT"]."/app/settings/app_config.php")) {
-		if ((! isset($_SESSION['event_socket_ip_address'])) or empty($_SESSION['event_socket_ip_address'])) {
-			$sql = "select * from v_settings ";
-			$database = new database;
-			$row = $database->select($sql, null, 'row');
-			if (!empty($row)) {
-				$_SESSION['event_socket_ip_address'] = $row["event_socket_ip_address"];
-				$_SESSION['event_socket_port'] = $row["event_socket_port"];
-				$_SESSION['event_socket_password'] = $row["event_socket_password"];
-			}
-			unset($sql, $row);
-		}
-	}
-
-function event_socket_create($host, $port, $password) {
-	$esl = new event_socket;
-	if ($esl->connect($host, $port, $password)) {
-		return $esl->reset_fp();
-	}
-	return false;
+/**
+ * Returns an fp connector from an event socket.
+ * This has been replaced with event_socket::create() method and using the
+ * socket directly is preferred.
+ * @param string $host
+ * @param string $port
+ * @param string $password
+ * @return true Returns true if successful connection and false if there is a failure
+ * @deprecated since version 5.1.11
+ */
+function event_socket_create($host = null, $port = null, $password = null) {
+	$esl = event_socket::create($host = null, $port = null, $password = null);
+	return ($esl !== false);
 }
 
+/**
+ * Makes a request on the event socket
+ * @param null $fp No longer used
+ * @param string $cmd Command to use
+ * @return string|false Response of the server or false if failed
+ */
 function event_socket_request($fp, $cmd) {
-	$esl = new event_socket($fp);
-	$result = $esl->request($cmd);
-	$esl->reset_fp();
-	return $result;
+	return event_socket::command($cmd);
 }
 
+/**
+ * Makes a request on the event socket
+ * @param type $fp
+ * @param type $cmd
+ * @return type
+ */
 function event_socket_request_cmd($cmd) {
-	//get the database connection
-	require_once "resources/classes/database.php";
-	$database = new database;
-	$database->connect();
-	$db = $database->db;
-
-	if (file_exists($_SERVER["PROJECT_ROOT"]."/app/settings/app_config.php")) {
-		$sql = "select * from v_settings ";
-		$database = new database;
-		$row = $database->select($sql, null, 'row');
-		if (!empty($row)) {
-			$event_socket_ip_address = $row["event_socket_ip_address"];
-			$event_socket_port = $row["event_socket_port"];
-			$event_socket_password = $row["event_socket_password"];
-		}
-		unset($sql, $row);
-	}
-
-	$esl = new event_socket;
-	if (!$esl->connect($event_socket_ip_address, $event_socket_port, $event_socket_password)) {
-		return false;
-	}
-	$response = $esl->request($cmd);
-	$esl->close();
-	return $response;
+	return event_socket::command($cmd);
 }
 
 function remove_config_from_cache($name) {
@@ -119,71 +92,6 @@ function ListFiles($dir) {
 		closedir($dh);
 		return $files;
 	}
-}
-
-function save_setting_xml() {
-	global $domain_uuid, $host, $config;
-
-	$sql = "select * from v_settings ";
-	$database = new database;
-	$row = $database->select($sql, null, 'row');
-	if (!empty($row) && !empty($_SESSION['switch']['conf']['dir'])) {
-		//event_socket.conf.xml
-		$event_socket_ip_address = $row['event_socket_ip_address'];
-		if (empty($event_socket_ip_address)) { $event_socket_ip_address = '127.0.0.1'; }
-		$fout = fopen($_SESSION['switch']['conf']['dir']."/autoload_configs/event_socket.conf.xml","w");
-		$xml = "<configuration name=\"event_socket.conf\" description=\"Socket Client\">\n";
-		$xml .= "  <settings>\n";
-		$xml .= "    <param name=\"listen-ip\" value=\"" . $event_socket_ip_address . "\"/>\n";
-		$xml .= "    <param name=\"listen-port\" value=\"" . $row['event_socket_port'] . "\"/>\n";
-		$xml .= "    <param name=\"password\" value=\"" . $row['event_socket_password'] . "\"/>\n";
-		if (!empty($row['event_socket_acl'])) {
-			$xml .= "    <param name=\"apply-inbound-acl\" value=\"" . $row['event_socket_acl'] . "\"/>\n";
-		}
-		$xml .= "  </settings>\n";
-		$xml .= "</configuration>";
-		fwrite($fout, $xml);
-		unset($xml, $event_socket_password);
-		fclose($fout);
-
-		//xml_rpc.conf.xml
-		$fout = fopen($_SESSION['switch']['conf']['dir']."/autoload_configs/xml_rpc.conf.xml","w");
-		$xml = "<configuration name=\"xml_rpc.conf\" description=\"XML RPC\">\n";
-		$xml .= "  <settings>\n";
-		$xml .= "    <!-- The port where you want to run the http service (default 8080) -->\n";
-		$xml .= "    <param name=\"http-port\" value=\"" . $row['xml_rpc_http_port'] . "\"/>\n";
-		$xml .= "    <!-- if all 3 of the following params exist all http traffic will require auth -->\n";
-		$xml .= "    <param name=\"auth-realm\" value=\"" . $row['xml_rpc_auth_realm'] . "\"/>\n";
-		$xml .= "    <param name=\"auth-user\" value=\"" . $row['xml_rpc_auth_user'] . "\"/>\n";
-		$xml .= "    <param name=\"auth-pass\" value=\"" . $row['xml_rpc_auth_pass'] . "\"/>\n";
-		$xml .= "  </settings>\n";
-		$xml .= "</configuration>\n";
-		fwrite($fout, $xml);
-		unset($xml);
-		fclose($fout);
-
-		//shout.conf.xml
-		$fout = fopen($_SESSION['switch']['conf']['dir']."/autoload_configs/shout.conf.xml","w");
-		$xml = "<configuration name=\"shout.conf\" description=\"mod shout config\">\n";
-		$xml .= "  <settings>\n";
-		$xml .= "    <!-- Don't change these unless you are insane -->\n";
-		$xml .= "    <param name=\"decoder\" value=\"" . $row['mod_shout_decoder'] . "\"/>\n";
-		$xml .= "    <param name=\"volume\" value=\"" . $row['mod_shout_volume'] . "\"/>\n";
-		$xml .= "    <!--<param name=\"outscale\" value=\"8192\"/>-->\n";
-		$xml .= "  </settings>\n";
-		$xml .= "</configuration>";
-		fwrite($fout, $xml);
-		unset($xml);
-		fclose($fout);
-	}
-	unset($sql, $row);
-
-	//apply settings
-		$_SESSION["reload_xml"] = true;
-
-	//$cmd = "api reloadxml";
-	//event_socket_request_cmd($cmd);
-	//unset($cmd);
 }
 
 function filename_safe($filename) {
@@ -380,9 +288,6 @@ function save_var_xml() {
 				if ($row['var_category'] != 'Provision') {
 					if ($prev_var_category != $row['var_category']) {
 						$xml .= "\n<!-- ".$row['var_category']." -->\n";
-						if (!empty($row["var_description"])) {
-							$xml .= "<!-- ".base64_decode($row['var_description'])." -->\n";
-						}
 					}
 					if (empty($row['var_command'])) { $row['var_command'] = 'set'; }
 					if ($row['var_category'] == 'Exec-Set') { $row['var_command'] = 'exec-set'; }
@@ -447,12 +352,12 @@ function outbound_route_to_bridge($domain_uuid, $destination_number, array $chan
 	$sql .= "and (hostname = :hostname or hostname is null) ";
 	$sql .= "and d.app_uuid = '8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3' ";
 	$sql .= "and d.dialplan_enabled = 'true' ";
+	$sql .= "and (dd.dialplan_detail_enabled = 'true' or dd.dialplan_detail_enabled is null) ";
 	$sql .= "order by d.domain_uuid,  d.dialplan_order, dd.dialplan_detail_order ";
 	$parameters['hostname'] = $hostname;
 	$database = new database;
 	$result = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
-
 	if (!empty($result)) {
 		foreach ($result as &$row) {
 			$dialplan_uuid = $row["dialplan_uuid"];
@@ -497,7 +402,7 @@ function outbound_route_to_bridge($domain_uuid, $destination_number, array $chan
 					}
 				}
 			}
-		
+
 			if (!in_array('false', $condition_match)) {
 				foreach ($dialplan as &$dialplan_details) {
 					$dialplan_detail_data = $dialplan_details['dialplan_detail_data'] ?? '';
@@ -517,8 +422,8 @@ function outbound_route_to_bridge($domain_uuid, $destination_number, array $chan
 						$x++;
 					}
 				}
-				
-				if ($dialplan["dialplan_continue"] == "false") {
+
+				if (!empty($bridge_array) && $dialplan["dialplan_continue"] == "false") {
 					break;
 				}
 			}
@@ -836,7 +741,7 @@ if (!function_exists('save_call_center_xml')) {
 						$path = "/usr/share/examples/fusionpbx/resources/templates/conf";
 					}
 					else {
-						$path = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/conf";
+						$path = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/switch/resources/conf";
 					}
 
 				//get the contents of the template
@@ -873,7 +778,7 @@ if (!function_exists('switch_conf_xml')) {
 				$path = "/usr/share/examples/fusionpbx/resources/templates/conf";
 			}
 			else {
-				$path = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/conf";
+				$path = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/switch/resources/conf";
 			}
 			$file_contents = file_get_contents($path."/autoload_configs/switch.conf.xml");
 
@@ -930,7 +835,7 @@ if (!function_exists('xml_cdr_conf_xml')) {
 				$path = "/usr/share/examples/fusionpbx/resources/templates/conf";
 			}
 			else {
-				$path = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/conf";
+				$path = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/switch/resources/conf";
 			}
 			$file_contents = file_get_contents($path."/autoload_configs/xml_cdr.conf.xml");
 
@@ -948,7 +853,8 @@ if (!function_exists('xml_cdr_conf_xml')) {
 			unset ($v_pass);
 
 		//write the XML config file
-			$fout = fopen($_SESSION['switch']['conf']['dir']."/autoload_configs/xml_cdr.conf.xml","w");
+			$switch_configuration_dir = !empty($_SESSION['switch']['conf']['dir']) ? $_SESSION['switch']['conf']['dir'] : '/etc/freeswitch';
+			$fout = fopen($switch_configuration_dir . "/autoload_configs/xml_cdr.conf.xml","w");
 			fwrite($fout, $file_contents);
 			fclose($fout);
 

@@ -24,12 +24,8 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -95,15 +91,15 @@
 	}
 
 //create the event socket connection
-	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-	if ($fp) {
+	$esl = event_socket::create();
+	if ($esl->is_connected()) {
 		//if reloadxml then run reloadacl, reloadxml and rescan the external profile for new gateways
 			if (isset($command)) {
 				//clear the apply settings reminder
 					$_SESSION["reload_xml"] = false;
 
 				//run the command
-					$result = rtrim(event_socket_request($fp, 'api '.$command));
+					$result = rtrim(event_socket::api($command));
 			}
 
 		//sofia profile
@@ -113,9 +109,6 @@
 			else if (!empty($result)) {
 				message::add($result, 'alert');
 			}
-
-		//close the connection
-			fclose($fp);
 	}
 
 //redirect the user

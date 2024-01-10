@@ -24,12 +24,8 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
 
@@ -83,6 +79,7 @@
 //get http variables and set as php variables
 	$order_by = $_GET["order_by"] ?? '';
 	$order = $_GET["order"] ?? '';
+	$sort = $order_by == 'queue_extension' ? 'natural' : null;
 
 //add the search term
 	$search = strtolower($_GET["search"] ?? '');
@@ -121,7 +118,7 @@
 
 //get the list
 	$sql = str_replace('count(*)', '*', $sql ?? '');
-	$sql .= order_by($order_by, $order, 'queue_name', 'asc');
+	$sql .= order_by($order_by, $order, 'queue_name', 'asc', $sort);
 	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;
 	$result = $database->select($sql, $parameters ?? null, 'all');

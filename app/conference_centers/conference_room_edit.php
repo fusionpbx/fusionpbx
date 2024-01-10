@@ -25,12 +25,8 @@
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -145,9 +141,9 @@
 			$default_voice = 'callie';
 			$switch_cmd = "conference ".$conference_room_uuid."@".$_SESSION['domain_name']." play ".$_SESSION['switch']['sounds']['dir']."/".$default_language."/".$default_dialect."/".$default_voice."/ivr/ivr-recording_started.wav";
 		//connect to event socket
-			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-			if ($fp) {
-				$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
+			$esl = event_socket::create();
+			if ($esl->is_connected()) {
+				$switch_result = event_socket::api($switch_cmd);
 			}
 	}
 
@@ -391,7 +387,7 @@
 						}
 						$array['conference_rooms'][0]['moderator_pin'] = $moderator_pin;
 						$array['conference_rooms'][0]['participant_pin'] = $participant_pin;
-						if (!empty($max_members)) {
+						if (isset($max_members)) {
 							$array['conference_rooms'][0]['max_members'] = $max_members;
 						}
 						$array['conference_rooms'][0]['start_datetime'] = $start_datetime;

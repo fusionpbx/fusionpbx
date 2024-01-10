@@ -1,11 +1,7 @@
 <?php
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once  dirname(__DIR__, 4) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permisions
@@ -37,7 +33,7 @@
 		select
 			direction,
 			start_stamp,
-			start_epoch,
+			to_char(timezone(:time_zone, start_stamp), '".(!empty($_SESSION['domain']['time_format']) && $_SESSION['domain']['time_format']['text'] == '12h' ? "DD Mon HH12:MI am" : "DD Mon HH24:MI")."') as start_date_time,
 			caller_id_name,
 			caller_id_number,
 			destination_number,
@@ -48,28 +44,34 @@
 			v_xml_cdr
 		where
 			domain_uuid = :domain_uuid ";
-			if (!empty($assigned_extensions)) {
-				$x = 0;
-				foreach ($assigned_extensions as $assigned_extension_uuid => $assigned_extension) {
-					$sql_where_array[] = "extension_uuid = :extension_uuid_".$x;
-					$sql_where_array[] = "caller_id_number = :caller_id_number_".$x;
-					$sql_where_array[] = "destination_number = :destination_number_1_".$x;
-					$sql_where_array[] = "destination_number = :destination_number_2_".$x;
-					$parameters['extension_uuid_'.$x] = $assigned_extension_uuid;
-					$parameters['caller_id_number_'.$x] = $assigned_extension;
-					$parameters['destination_number_1_'.$x] = $assigned_extension;
-					$parameters['destination_number_2_'.$x] = '*99'.$assigned_extension;
-					$x++;
+			if (!permission_exists('xml_cdr_domain')) {
+				if (!empty($assigned_extensions)) {
+					$x = 0;
+					foreach ($assigned_extensions as $assigned_extension_uuid => $assigned_extension) {
+						$sql_where_array[] = "extension_uuid = :extension_uuid_".$x;
+						$sql_where_array[] = "caller_id_number = :caller_id_number_".$x;
+						$sql_where_array[] = "destination_number = :destination_number_1_".$x;
+						$sql_where_array[] = "destination_number = :destination_number_2_".$x;
+						$parameters['extension_uuid_'.$x] = $assigned_extension_uuid;
+						$parameters['caller_id_number_'.$x] = $assigned_extension;
+						$parameters['destination_number_1_'.$x] = $assigned_extension;
+						$parameters['destination_number_2_'.$x] = '*99'.$assigned_extension;
+						$x++;
+					}
+					if (!empty($sql_where_array)) {
+						$sql .= "and (".implode(' or ', $sql_where_array).") ";
+					}
+					unset($sql_where_array);
 				}
-				if (!empty($sql_where_array)) {
-					$sql .= "and (".implode(' or ', $sql_where_array).") ";
+				else {
+					$sql .= "and false \n";
 				}
-				unset($sql_where_array);
 			}
 			$sql .= "
 			and start_epoch > ".(time() - 86400)."
 		order by
 			start_epoch desc";
+	$parameters['time_zone'] = isset($_SESSION['domain']['time_zone']['name']) ? $_SESSION['domain']['time_zone']['name'] : date_default_timezone_get();
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	if (!isset($database)) { $database = new database; }
 	$result = $database->select($sql, $parameters, 'all');
@@ -155,10 +157,10 @@
 
 		foreach ($result as $index => $row) {
 			if ($index + 1 > $recent_limit) { break; } //only show limit
-			$tmp_year = date("Y", strtotime($row['start_stamp']));
-			$tmp_month = date("M", strtotime($row['start_stamp']));
-			$tmp_day = date("d", strtotime($row['start_stamp']));
-			$tmp_start_epoch = !empty($_SESSION['domain']['time_format']) && $_SESSION['domain']['time_format']['text'] == '12h' ? date("n/j g:ia", $row['start_epoch']) : date("n/j H:i", $row['start_epoch']);
+			$start_date_time = str_replace('/0','/', ltrim($row['start_date_time'], '0'));
+			if (!empty($_SESSION['domain']['time_format']) && $_SESSION['domain']['time_format']['text'] == '12h') {
+				$start_date_time = str_replace(' 0',' ', $start_date_time);
+			}
 
 			//determine name
 				$cdr_name = ($row['direction'] == 'inbound' || ($row['direction'] == 'local' && !empty($assigned_extensions) && is_array($assigned_extensions) && in_array($row['destination_number'], $assigned_extensions))) ? $row['caller_id_name'] : $row['destination_number'];
@@ -207,7 +209,7 @@
 				}
 				echo "</td>\n";
 				echo "<td valign='top' class='".$row_style[$c]." hud_text' nowrap='nowrap'><a href='javascript:void(0);' ".(!empty($cdr_name) ? "title=\"".$cdr_name."\"" : null).">".($cdr_number ?? '')."</a></td>\n";
-				echo "<td valign='top' class='".$row_style[$c]." hud_text' nowrap='nowrap'>".$tmp_start_epoch."</td>\n";
+				echo "<td valign='top' class='".$row_style[$c]." hud_text' nowrap='nowrap'>".$start_date_time."</td>\n";
 			echo "</tr>\n";
 
 			unset($cdr_name, $cdr_number);

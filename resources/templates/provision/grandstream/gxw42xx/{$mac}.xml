@@ -18,7 +18,11 @@
 <!-- Number: 0,1,2 -->
 <!-- Mandatory -->
 <!-- Reboot required -->
+{if isset($grandstream_ip_address_mode)}
+<P8>{$grandstream_ip_address_mode}</P8>
+{else}
 <P8>0</P8>
+{/if}
 
 <!-- Preferred DNS server -->
 <!-- Mandatory -->
@@ -273,7 +277,12 @@
 <!-- Periodic Inform Enable 0 - No, 1 - Yes (default is No) -->
 <!-- Number: 0,1 -->
 <!-- Mandatory -->
+{if isset ($grandstream_tr069_periodic_inform_enable)}
+<P4506>{$grandstream_tr069_periodic_inform_enable}</P4506>
+{else}
 <P4506>0</P4506>
+{/if}
+
 
 <!-- Periodic Inform Interval (default is 300) -->
 <!-- String Max Length: 5 -->
@@ -800,7 +809,7 @@
 <P850>{$grandstream_dtmf_method_1}</P850>
 {else}
 <P850>100</P850>
-{endif}
+{/if}
 
 <!-- Preferred DTMF Method 2 -->
 <!-- Number: 100 to 102 -->
@@ -809,7 +818,7 @@
 <P851>{$grandstream_dtmf_method_2}</P851>
 {else}
 <P851>101</P851>
-{endif}
+{/if}
 
 <!-- Preferred DTMF Method 3 -->
 <!-- Number: 100 to 102 -->
@@ -818,7 +827,7 @@
 <P852>{$grandstream_dtmf_method_3}</P852>
 {else}
 <P852>102</P852>
-{endif}
+{/if}
 
 <!-- Disable DTMF Negotiation. 0 - no, 1 - yes -->
 <!-- Number: 0,1 -->

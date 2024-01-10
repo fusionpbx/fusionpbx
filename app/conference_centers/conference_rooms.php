@@ -24,12 +24,8 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
 
@@ -102,9 +98,9 @@
 					$default_voice = 'callie';
 					$switch_cmd = "conference ".$meeting_uuid."@".$_SESSION['domain_name']." play ".$_SESSION['switch']['sounds']['dir']."/".$default_language."/".$default_dialect."/".$default_voice."/ivr/ivr-recording_started.wav";
 				//connect to event socket
-					$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-					if ($fp) {
-						$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
+					$esl = event_socket::create();
+					if ($esl) {
+						$switch_result = event_socket::api($switch_cmd);
 					}
 			}
 
@@ -141,12 +137,12 @@
 
 //get conference array
 	$switch_cmd = "conference xml_list";
-	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-	if (!$fp) {
-		//connection to even socket failed
+	$esl = event_socket::create();
+	if (!$esl->is_connected()) {
+		trigger_error('Unable to connect to FreeSWITCH', E_USER_WARNING);
 	}
 	else {
-		$xml_str = trim(event_socket_request($fp, 'api '.$switch_cmd));
+		$xml_str = trim(event_socket::api($switch_cmd));
 		try {
 			$xml = new SimpleXMLElement($xml_str, true);
 		}

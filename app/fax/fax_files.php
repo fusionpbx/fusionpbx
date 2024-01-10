@@ -24,12 +24,8 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
 
@@ -368,19 +364,23 @@
 				}
 			}
 			if (!empty($dir_fax)) {
+				//change the working directory
 				chdir($dir_fax);
+
 				//get fax resolution (ppi, W & H)
-					$resp = exec("tiffinfo ".$file_name.".tif | grep 'Resolution:'");
-					$resp_array = explode(' ', trim($resp));
-					$ppi_w = (int) $resp_array[1];
-					$ppi_h = (int) $resp_array[2];
-					unset($resp_array);
-					$gs_r = $ppi_w.'x'.$ppi_h; //used by ghostscript
+				$resp = exec("tiffinfo ".$file_name.".tif | grep 'Resolution:'");
+				$resp_array = explode(' ', trim($resp));
+				$ppi_w = (int) $resp_array[1];
+				$ppi_h = (int) $resp_array[2];
+				unset($resp_array);
+				$gs_r = $ppi_w.'x'.$ppi_h; //used by ghostscript
+
 				//get page dimensions/size (pixels/inches, W & H)
-					$resp = exec("tiffinfo ".$file_name.".tif | grep 'Image Width:'");
-					$resp_array = explode(' ', trim($resp));
-					$pix_w = $resp_array[2];
-					$pix_h = $resp_array[5];
+				$response = exec("tiffinfo ".$file_name.".tif | grep 'Image Width:'");
+				if (!empty($response)) {
+					$response_array = explode(' ', trim($response));
+					$pix_w = $response_array[2];
+					$pix_h = $response_array[5];
 					unset($resp_array);
 					$gs_g = $pix_w.'x'.$pix_h; //used by ghostscript
 					$page_width = $pix_w / $ppi_w;
@@ -400,13 +400,16 @@
 						$page_height = 11.7;
 						$page_size = 'a4';
 					}
-				//generate pdf from tif
+
+					//generate pdf from tif
 					$cmd_tif2pdf = "tiff2pdf -u i -p ".$page_size." -w ".$page_width." -l ".$page_height." -f -o ".$dir_fax.'/'.$file_name.".pdf ".$dir_fax.'/'.$file_name.".tif";
 					exec($cmd_tif2pdf);
 					//echo $cmd_tif2pdf."<br >\n";
+				}
+
 				//clean up temporary files, if any
-					if (file_exists($dir_fax_temp.'/'.$file_name.'.pdf')) { @unlink($dir_fax_temp.'/'.$file_name.'.pdf'); }
-					if (file_exists($dir_fax_temp.'/'.$file_name.'.tif')) { @unlink($dir_fax_temp.'/'.$file_name.'.tif'); }
+				if (file_exists($dir_fax_temp.'/'.$file_name.'.pdf')) { @unlink($dir_fax_temp.'/'.$file_name.'.pdf'); }
+				if (file_exists($dir_fax_temp.'/'.$file_name.'.tif')) { @unlink($dir_fax_temp.'/'.$file_name.'.tif'); }
 			}
 
 			if ($_REQUEST['box'] == 'inbox' && permission_exists('fax_inbox_view')) {

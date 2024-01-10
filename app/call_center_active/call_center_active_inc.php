@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2021
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -25,12 +25,8 @@
 	James Rose <james.o.rose@gmail.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -94,10 +90,10 @@
 	}
 
 //create an event socket connection
-	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+	$esl = event_socket::create();
 
 //get the call center queue, agent and tiers list
-	if (!$fp) {
+	if (!$esl->is_connected()) {
 		$msg = "<div align='center'>Connection to Event Socket failed.<br /></div>";
 		echo "<div align='center'>\n";
 		echo "<table width='40%'>\n";
@@ -121,7 +117,7 @@
 			//send the event socket command and get the response
 				//callcenter_config queue list tiers [queue_name] |
 				$switch_command = 'callcenter_config queue list tiers '.$queue_extension."@".$_SESSION["domain_name"];
-				$event_socket_str = trim(event_socket_request($fp, 'api '.$switch_command));
+				$event_socket_str = trim(event_socket::api($switch_command));
 				$result = str_to_named_array($event_socket_str, '|');
 
 			//prepare the result for array_multisort
@@ -143,7 +139,7 @@
 			//send the event socket command and get the response
 				//callcenter_config queue list agents [queue_name] [status] |
 				$switch_command = 'callcenter_config queue list agents '.$queue_extension."@".$_SESSION["domain_name"];
-				$event_socket_str = trim(event_socket_request($fp, 'api '.$switch_command));
+				$event_socket_str = trim(event_socket::api($switch_command));
 				$agent_result = str_to_named_array($event_socket_str, '|');
 
 			//get the agents from the database
@@ -161,9 +157,10 @@
 				echo "<tr class='list-header'>\n";
 				echo "<th>".$text['label-name']."</th>\n";
 				echo "<th>".$text['label-extension']."</th>\n";
-				echo "<th>".$text['label-status']."</th>\n";
-				echo "<th>".$text['label-state']."</th>\n";
+				echo "<th title=\"".$text['description-status']."\">".$text['label-status']."</th>\n";
+				echo "<th title=\"".$text['description-state']."\">".$text['label-state']."</th>\n";
 				echo "<th>".$text['label-status_change']."</th>\n";
+				echo "<th>".$text['label-last_bridge_end']."</th>\n";
 				echo "<th class='center'>".$text['label-missed']."</th>\n";
 				echo "<th class='center'>".$text['label-answered']."</th>\n";
 				echo "<th>".$text['label-tier_state']."</th>\n";
@@ -222,13 +219,9 @@
 									$talk_time = $agent_row['talk_time'];
 									$ready_time = $agent_row['ready_time'];
 
-									$last_status_change_seconds = time() - $last_status_change;
-									$last_status_change_length_hour = floor($last_status_change_seconds/3600);
-									$last_status_change_length_min = floor($last_status_change_seconds/60 - ($last_status_change_length_hour * 60));
-									$last_status_change_length_sec = $last_status_change_seconds - (($last_status_change_length_hour * 3600) + ($last_status_change_length_min * 60));
-									$last_status_change_length_min = sprintf("%02d", $last_status_change_length_min);
-									$last_status_change_length_sec = sprintf("%02d", $last_status_change_length_sec);
-									$last_status_change_length = $last_status_change_length_hour.':'.$last_status_change_length_min.':'.$last_status_change_length_sec;
+									//format the seconds to hh:mm:ss
+									$last_status_change_length = format_seconds(time() - $last_status_change);
+									$last_bridge_end_length = format_seconds(time() - $last_bridge_end);
 
 									if (permission_exists('call_center_agent_edit')) {
 										$list_row_url = "../call_centers/call_center_agent_edit.php?id=".$agent_uuid;
@@ -247,6 +240,7 @@
 									echo "<td>".escape($status)."</td>\n";
 									echo "<td>".escape($state)."</td>\n";
 									echo "<td>".escape($last_status_change_length)."</td>\n";
+									echo "<td>".escape($last_bridge_end_length)."</td>\n";
 									echo "<td class='center'>".escape($no_answer_count)."</td>\n";
 									echo "<td class='center'>".escape($calls_answered)."</td>\n";
 									echo "<td>".escape($tier_state)."</td>\n";
@@ -284,7 +278,7 @@
 				//callcenter_config queue list members [queue_name]
 				if (is_uuid($queue_uuid)) {
 					$switch_command = 'callcenter_config queue list members '.$queue_extension."@".$_SESSION["domain_name"];
-					$event_socket_str = trim(event_socket_request($fp, 'api '.$switch_command));
+					$event_socket_str = trim(event_socket::api($switch_command));
 					$result = str_to_named_array($event_socket_str, '|');
 					if (!is_array($result)) { unset($result); }
 				}

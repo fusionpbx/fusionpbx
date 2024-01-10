@@ -24,12 +24,8 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
-//includes files;
-	require_once "resources/require.php";
+//includes files
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -339,13 +335,14 @@
 		unset($sql, $parameters, $row);
 	}
 
-//get the the menu items
+//get the the menu item parents
 	$sql = "select * from v_menu_items ";
 	$sql .= "where menu_uuid = :menu_uuid ";
-	$sql .= "order by menu_item_title asc ";
+	$sql .= "and menu_item_parent_uuid is null ";
+	$sql .= "order by menu_item_order asc ";
 	$parameters['menu_uuid'] = $menu_uuid;
 	$database = new database;
-	$menu_items = $database->select($sql, $parameters, 'all');
+	$menu_item_parents = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
 //get the assigned groups
@@ -479,18 +476,17 @@
 	echo "	<tr>";
 	echo "		<td class='vncell'>".$text['label-parent_menu']."</td>";
 	echo "		<td class='vtable'>";
-	echo "<select name=\"menu_item_parent_uuid\" class='formfld'>\n";
-	echo "<option value=\"\"></option>\n";
-	foreach($menu_items as $field) {
-			if ($menu_item_parent_uuid == $field['menu_item_uuid']) {
-				echo "<option value='".escape($field['menu_item_uuid'])."' selected>".escape($field['menu_item_title'])."</option>\n";
-			}
-			else {
-				echo "<option value='".escape($field['menu_item_uuid'])."'>".escape($field['menu_item_title'])."</option>\n";
-			}
+	echo "			<select name=\"menu_item_parent_uuid\" class='formfld'>\n";
+	echo "			<option value=\"\"></option>\n";
+	foreach ($menu_item_parents as $field) {
+		if ($field['menu_item_uuid'] == $menu_item_parent_uuid) {
+			echo "			<option value='".escape($field['menu_item_uuid'])."' selected>".escape($field['menu_item_title'])."</option>\n";
+		}
+		else {
+			echo "			<option value='".escape($field['menu_item_uuid'])."'>".escape($field['menu_item_title'])."</option>\n";
+		}
 	}
-	echo "</select>";
-	unset($sql, $result);
+	echo "			</select>";
 	echo "		</td>";
 	echo "	</tr>";
 

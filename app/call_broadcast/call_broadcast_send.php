@@ -25,12 +25,8 @@
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //chec permissions
@@ -134,7 +130,7 @@
 	$broadcast_name = str_replace("'", "", $broadcast_name);
 
 //create the event socket connection
-	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+	$fp = event_socket::create();
 
 //get information over event socket
 	if (!$fp) {
@@ -200,11 +196,11 @@
 
 						//if the event socket connection is lost then re-connect
 							if (!$fp) {
-								$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+								$fp = event_socket::create();
 							}
 
 						//method 1
-							$response = trim(event_socket_request($fp, 'api '.$cmd));
+							$response = trim(event_socket::command($cmd));
 
 						//method 2
 							//cmd_async($_SESSION['switch']['bin']['dir']."/fs_cli -x \"".$cmd."\";");
@@ -220,8 +216,7 @@
 						$count++;
 					}
 				}
-				fclose($fp);
-
+				
 				echo "<div align='center'>\n";
 				echo "<table width='50%'>\n";
 				echo "<tr>\n";

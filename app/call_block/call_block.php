@@ -23,16 +23,12 @@
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 
-	The original Call Block was written by Gerrit Visser <gerrit308@gmail.com> 
+	The original Call Block was written by Gerrit Visser <gerrit308@gmail.com>
 	All of it has been rewritten over years.
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
 
@@ -95,6 +91,14 @@
 		$search = strtolower($_GET["search"]);
 	}
 
+//set the time zone
+	if (isset($_SESSION['domain']['time_zone']['name'])) {
+		$time_zone = $_SESSION['domain']['time_zone']['name'];
+	}
+	else {
+		$time_zone = date_default_timezone_get();
+	}
+
 //prepare to page the results
 	$sql = "select count(*) from view_call_block ";
 	$sql .= "where true ";
@@ -103,7 +107,12 @@
 		//$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	}
 	else {
-		$sql .= "and (domain_uuid = :domain_uuid) ";
+		$sql .= "and ( ";
+		$sql .= "	domain_uuid = :domain_uuid ";
+		if (permission_exists('call_block_domain')) {
+			$sql .= "	or domain_uuid is null ";
+		}
+		$sql .= ") ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	}
 	if (!permission_exists('call_block_all') && !empty($_SESSION['user']['extension'])) {
@@ -145,14 +154,31 @@
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = "select * from view_call_block ";
+	$sql = "select domain_uuid, call_block_uuid, call_block_direction, extension_uuid, call_block_name, ";
+	$sql .= " call_block_country_code, call_block_number, extension, number_alias, call_block_count, ";
+	$sql .= " call_block_app, call_block_data, ";
+	$sql .= " to_char(timezone(:time_zone, insert_date), 'DD Mon YYYY') as date_formatted, \n";
+	if (date(!empty($_SESSION['domain']['time_format']['text']) == '12h')) {
+		$sql .= " to_char(timezone(:time_zone, insert_date), 'HH12:MI:SS am') as time_formatted, \n";
+	}
+	else {
+		$sql .= " to_char(timezone(:time_zone, insert_date), 'HH24:MI:SS am') as time_formatted, \n";
+	}
+	$sql .= " call_block_enabled, call_block_description, insert_date, insert_user, update_date, update_user ";
+	$sql .= "from view_call_block ";
 	$sql .= "where true ";
+	$parameters['time_zone'] = $time_zone;
 	if ($show == "all" && permission_exists('call_block_all')) {
 		//$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
 		//$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	}
 	else {
-		$sql .= "and (domain_uuid = :domain_uuid) ";
+		$sql .= "and ( ";
+		$sql .= "	domain_uuid = :domain_uuid ";
+		if (permission_exists('call_block_domain')) {
+			$sql .= "	or domain_uuid is null ";
+		}
+		$sql .= ") ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	}
 	if (!permission_exists('call_block_all') && !empty($_SESSION['user']['extension']) && count($_SESSION['user']['extension']) > 0) {
@@ -177,11 +203,19 @@
 		$sql .= ") ";
 		$parameters['search'] = '%'.$search.'%';
 	}
-	$sql .= order_by($order_by, $order, ['call_block_country_code','call_block_number']);
+	$sql .= order_by($order_by, $order, ['domain_uuid','call_block_country_code','call_block_number']);
 	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;
 	$result = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
+
+//determine if any global
+	$global_call_blocks = false;
+	if (permission_exists('call_block_domain') && !empty($result) && is_array($result) && @sizeof($result) != 0) {
+		foreach ($result as $row) {
+			if (!is_uuid($row['domain_uuid'])) { $global_call_blocks = true; break; }
+		}
+	}
 
 //create token
 	$object = new token;
@@ -254,6 +288,9 @@
 	if ($show == 'all' && permission_exists('domain_all')) {
 		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order);
 	}
+	else if (permission_exists('call_block_domain') && $global_call_blocks) {
+		echo th_order_by('domain_uuid', $text['label-domain'], $order_by, $order, null, "style='width: 1%;' class='center'");
+	}
 	echo th_order_by('call_block_direction', $text['label-direction'], $order_by, $order, null, "style='width: 1%;' class='center'");
 	echo th_order_by('extension', $text['label-extension'], $order_by, $order, null, "class='center'");
 	echo th_order_by('call_block_name', $text['label-name'], $order_by, $order);
@@ -262,7 +299,7 @@
 	echo th_order_by('call_block_count', $text['label-count'], $order_by, $order, '', "class='center hide-sm-dn'");
 	echo th_order_by('call_block_action', $text['label-action'], $order_by, $order);
 	echo th_order_by('call_block_enabled', $text['label-enabled'], $order_by, $order, null, "class='center'");
-	echo th_order_by('date_added', $text['label-date-added'], $order_by, $order, null, "class='shrink no-wrap'");
+	echo th_order_by('insert_date', $text['label-date-added'], $order_by, $order, null, "class='shrink no-wrap'");
 	echo "<th class='hide-md-dn pct-20'>".$text['label-description']."</th>\n";
 	if (permission_exists('call_block_edit') && $list_row_edit_button == 'true') {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
@@ -271,7 +308,7 @@
 
 	if (!empty($result)) {
 		$x = 0;
-		foreach($result as $row) {
+		foreach ($result as $row) {
 			if (permission_exists('call_block_edit')) {
 				$list_row_url = "call_block_edit.php?id=".urlencode($row['call_block_uuid']);
 			}
@@ -283,7 +320,22 @@
 				echo "	</td>\n";
 			}
 			if (!empty($show) && $show == 'all' && permission_exists('domain_all')) {
-				echo "	<td>".escape($_SESSION['domains'][$row['domain_uuid']]['domain_name'])."</td>\n";
+				if (!empty($row['domain_uuid']) && is_uuid($row['domain_uuid'])) {
+					echo "	<td>".escape($_SESSION['domains'][$row['domain_uuid']]['domain_name'])."</td>\n";
+				}
+				else {
+					echo "	<td>".$text['label-global']."</td>\n";
+				}
+			}
+			else if ($global_call_blocks) {
+				if (permission_exists('call_block_domain') && !is_uuid($row['domain_uuid'])) {
+					echo "	<td>".$text['label-global'];
+				}
+				else {
+					echo "	<td class='overflow'>";
+					echo escape($_SESSION['domains'][$row['domain_uuid']]['domain_name']);
+				}
+				echo "</td>\n";
 			}
 			echo "	<td class='center'>";
 			switch ($row['call_block_direction']) {
@@ -327,7 +379,7 @@
 				echo $text['label-'.$row['call_block_enabled']];
 			}
 			echo "	</td>\n";
-			echo "	<td class='no-wrap'>".date('j M Y', $row['date_added'])." <span class='hide-sm-dn'>".date((!empty($_SESSION['domain']['time_format']['text']) == '12h' ? 'h:i:s a' : 'H:i:s'), $row['date_added'])."</span></td>\n";
+			echo "	<td class='no-wrap'>".$row['date_formatted']." <span class='hide-sm-dn'>".$row['time_formatted']."</span></td>\n";
 			echo "	<td class='description overflow hide-md-dn'>".escape($row['call_block_description'])."</td>\n";
 			if (permission_exists('call_block_edit') && $list_row_edit_button == 'true') {
 				echo "	<td class='action-button'>";

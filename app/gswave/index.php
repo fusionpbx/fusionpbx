@@ -24,12 +24,8 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -56,6 +52,7 @@
 		$sql = "select * from v_extensions ";
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$sql .= "and enabled = 'true' ";
+		$sql .= "and extension_type = 'default' ";
 		$sql .= "order by extension asc ";
 	}
 	else {
@@ -67,6 +64,7 @@
 		$sql .= "and eu.user_uuid = :user_uuid ";
 		$sql .= "and e.domain_uuid = :domain_uuid ";
 		$sql .= "and e.enabled = 'true' ";
+		$sql .= "and e.extension_type = 'default' ";
 		$sql .= "order by e.extension asc ";
 		$parameters['user_uuid'] = $_SESSION['user']['user_uuid'];
 	}

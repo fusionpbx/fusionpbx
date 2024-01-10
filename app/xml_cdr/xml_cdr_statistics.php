@@ -24,12 +24,8 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "xml_cdr_statistics_inc.php";
 
@@ -279,13 +275,13 @@
 //show the results
 	echo "<table class='list'>\n";
 	echo "<tr class='list-header'>\n";
-	echo "	<th>".$text['table-hours']."</th>\n";
-	echo "	<th>".$text['table-date']."</th>\n";
-	echo "	<th class='no-wrap'>".$text['table-time']."</th>\n";
+	echo "	<th>".$text['label-hours']."</th>\n";
+	echo "	<th>".$text['label-date']."</th>\n";
+	echo "	<th class='no-wrap'>".$text['label-time']."</th>\n";
 	echo "	<th>Volume</th>\n";
-	echo "	<th>".$text['table-minutes']."</th>\n";
-	echo "	<th>".$text['table-calls-per-minute']."</th>\n";
-	echo "	<th class='center'>".$text['table-missed']."</th>\n";
+	echo "	<th>".$text['label-minutes']."</th>\n";
+	echo "	<th>".$text['label-calls-per-minute']."</th>\n";
+	echo "	<th class='center'>".$text['label-missed']."</th>\n";
 	echo "	<th>ASR</th>\n";
 	echo "	<th title='".$text['description-aloc']."'>".$text['label-aloc']."</th>\n";
 	echo "</tr>\n";
@@ -305,13 +301,13 @@
 			echo "	</td>\n";
 			echo "</tr>\n";
 			echo "<tr class='list-header'>\n";
-			echo "	<th class='no-wrap'>".$text['table-days']."</th>\n";
-			echo "	<th class='no-wrap'>".$text['table-date']."</th>\n";
-			echo "	<th class='no-wrap'>".$text['table-time']."</th>\n";
+			echo "	<th class='no-wrap'>".$text['label-days']."</th>\n";
+			echo "	<th class='no-wrap'>".$text['label-date']."</th>\n";
+			echo "	<th class='no-wrap'>".$text['label-time']."</th>\n";
 			echo "	<th>Volume</th>\n";
-			echo "	<th>".$text['table-minutes']."</th>\n";
-			echo "	<th class='no-wrap'>".$text['table-calls-per-minute']."</th>\n";
-			echo "	<th class='center'>".$text['table-missed']."</th>\n";
+			echo "	<th>".$text['label-minutes']."</th>\n";
+			echo "	<th class='no-wrap'>".$text['label-calls-per-minute']."</th>\n";
+			echo "	<th class='center'>".$text['label-missed']."</th>\n";
 			echo "	<th>ASR</th>\n";
 			echo "	<th>ALOC</th>\n";
 			echo "</tr>\n";

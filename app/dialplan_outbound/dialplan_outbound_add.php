@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2022
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -28,12 +28,8 @@
 	Andrew Colin <andrewd.colin@gmail.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
 
@@ -102,7 +98,7 @@
 			if ($gateway_type == "gateway") {
 				$gateway_array = explode(":",$gateway);
 				$gateway_uuid = $gateway_array[0];
-				$gateway_name = $gateway_array[1];
+				$gateway_name = $gateway_array[1] ?? null;
 			}
 			else {
 				$gateway_name = '';
@@ -175,10 +171,8 @@
 				$gateway_3_name = '';
 			}
 		//set additional variables
-			$dialplan_enabled = $_POST["dialplan_enabled"];
+			$dialplan_enabled = $_POST["dialplan_enabled"] ?? 'true';
 			$dialplan_description = $_POST["dialplan_description"];
-		//set default to enabled
-			if (empty($dialplan_enabled)) { $dialplan_enabled = "true"; }
 	}
 
 //process the http form values
@@ -193,6 +187,7 @@
 			}
 
 		//check for all required data
+			$msg = '';
 			if (empty($gateway)) { $msg .= $text['message-provide'].": ".$text['label-gateway-name']."<br>\n"; }
 			//if (empty($gateway_2)) { $msg .= "Please provide: Alternat 1<br>\n"; }
 			//if (empty($gateway_3)) { $msg .= "Please provide: Alternat 2<br>\n"; }
@@ -253,7 +248,7 @@
 							$label = $text['label-north_america_intl'];
 							$abbrv = "011.9-17d";
 							break;
-						case "^\+?1?((?:264|268|242|246|441|284|345|767|809|829|849|473|658|876|664|787|939|869|758|784|721|868|649|340|684|671|670|808)\d{7})$":
+						case "^(?:\+1|1)((?:264|268|242|246|441|284|345|767|809|829|849|473|658|876|664|787|939|869|758|784|721|868|649|340|684|671|670|808)\d{7})$":
 							$label = $text['label-north_america_islands'];
 							$abbrv = "011.9-17d";
 							break;
@@ -305,7 +300,7 @@
 							$label = $text['label-9d.12-20'];
 							$abbrv = "9.12-20";
 							break;
-						case "^1?(8(00|33|44|55|66|77|88)[2-9]\d{6})$":
+						case "^(?:\+1|1)?(8(00|33|44|55|66|77|88)[2-9]\d{6})$":
 							$label = $text['label-800'];
 							$abbrv = "800";
 							break;
@@ -618,6 +613,7 @@
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = 'set';
 							if ($dialplan_expression == '(^911$|^933$)') {
 								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = 'effective_caller_id_number=${emergency_caller_id_number}';
+								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = 'call_date=${strftime(%d-%b-%Y %r)}';
 							}
 							else {
 								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = 'effective_caller_id_number=${outbound_caller_id_number}';
@@ -633,7 +629,7 @@
 								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $dialplan_uuid;
 								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = 'action';
 								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = 'lua';
-								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = "email.lua \${email_to} \${email_from} '' 'Emergency Call' '\${sip_from_user}@\${domain_name} has called 911 emergency'";
+								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = "app.lua emergency 1";
 								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $y * 10;
 								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
 								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_enabled'] = 'false';
@@ -678,7 +674,7 @@
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $dialplan_uuid;
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = 'action';
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = 'set';
-							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = 'continue_on_fail=1,2,3,6,18,21,27,28,31,34,38,41,42,44,58,88,111,403,501,602,607';
+							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = 'continue_on_fail=1,2,3,6,18,21,27,28,31,34,38,41,42,44,58,88,111,403,501,602,607,809';
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $y * 10;
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_enabled'] = 'true';
@@ -1037,6 +1033,7 @@ function type_onchange(dialplan_detail_type) {
 	echo "		<option value=\"freetdm\">freetdm</option>\n";
 	echo "		<option value=\"transfer:\$1 XML \${domain_name}\">transfer</option>\n";
 	echo "		<option value=\"xmpp\">xmpp</option>\n";
+	echo "		<option value=\"hangup\">hangup</option>\n";
 	echo "	</optgroup>\n";
 	echo "</select>\n";
 	echo "<br />\n";
@@ -1097,6 +1094,7 @@ function type_onchange(dialplan_detail_type) {
 	echo "		<option value=\"freetdm\">freetdm</option>\n";
 	echo "		<option value=\"transfer:\$1 XML \${domain_name}\">transfer</option>\n";
 	echo "		<option value=\"xmpp\">xmpp</option>\n";
+	echo "		<option value=\"hangup\">hangup</option>\n";
 	echo "	</optgroup>\n";
 	echo "</select>\n";
 	echo "<br />\n";
@@ -1157,6 +1155,7 @@ function type_onchange(dialplan_detail_type) {
 	echo "		<option value=\"freetdm\">freetdm</option>\n";
 	echo "		<option value=\"transfer:\$1 XML \${domain_name}\">transfer</option>\n";
 	echo "		<option value=\"xmpp\">xmpp</option>\n";
+	echo "		<option value=\"hangup\">hangup</option>\n";
 	echo "	</optgroup>\n";
 	echo "</select>\n";
 	echo "<br />\n";
@@ -1191,9 +1190,9 @@ function type_onchange(dialplan_detail_type) {
 	echo "	<option value='^(\\d{9})\$'>".$text['label-9d']."</option>\n";
 	echo "	<option value='^(\\d{10})\$'>".$text['label-10d']."</option>\n";
 	echo "	<option value='^\+?(\\d{11})\$'>".$text['label-11d']."</option>\n";
-	echo "	<option value='^\+?1?([2-9]\\d{2}[2-9]\\d{2}\\d{4})\$'>".$text['label-north_america']."</option>\n";
+	echo "	<option value='^(?:\+1|1)?([2-9]\\d{2}[2-9]\\d{2}\\d{4})\$'>".$text['label-north_america']."</option>\n";
 	echo "	<option value='^(011\\d{9,17})\$'>".$text['label-north_america_intl']."</option>\n";
-	echo "	<option value='^\+?1?((?:264|268|242|246|441|284|345|767|809|829|849|473|658|876|664|787|939|869|758|784|721|868|649|340|684|671|670|808)\d{7})\$'>".$text['label-north_america_islands']."</option>\n";
+	echo "	<option value='^(?:\+1|1)?((?:264|268|242|246|441|284|345|767|809|829|849|473|658|876|664|787|939|869|758|784|721|868|649|340|684|671|670|808)\d{7})\$'>".$text['label-north_america_islands']."</option>\n";
 	echo "	<option value='^(00\\d{9,17})\$'>".$text['label-europe_intl']."</option>\n";
 	echo "	<option value='^(\\d{12,20})\$'>".$text['label-intl']."</option>\n";
 	echo "	<option value='^(311)\$'>".$text['label-311']."</option>\n";
@@ -1201,7 +1200,7 @@ function type_onchange(dialplan_detail_type) {
 	echo "	<option value='^(711)\$'>".$text['label-711']."</option>\n";
 	echo "	<option value='(^911\$|^933\$)'>".$text['label-911']."</option>\n";
 	echo "  <option value='(^988\$)'>".$text['label-988']."</option>\n";
-	echo "	<option value='^1?(8(00|33|44|55|66|77|88)[2-9]\\d{6})\$'>".$text['label-800']."</option>\n";
+	echo "	<option value='^(?:\+1|1)?(8(00|33|44|55|66|77|88)[2-9]\\d{6})\$'>".$text['label-800']."</option>\n";
 	echo "	<option value='^0118835100\d{8}\$'>".$text['label-inum']."</option>\n";
 	echo "	<option value='^9(\\d{2})\$'>".$text['label-9d2']."</option>\n";
 	echo "	<option value='^9(\\d{3})\$'>".$text['label-9d3']."</option>\n";
@@ -1309,22 +1308,19 @@ function type_onchange(dialplan_detail_type) {
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
 	echo "	".$text['label-enabled']."\n";
 	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='dialplan_enabled'>\n";
-	//echo "	<option value=''></option>\n";
-	if (!empty($dialplan_enabled) && $dialplan_enabled == "true") {
-		echo "	<option value='true' selected='selected'>".$text['label-true']."</option>\n";
+	echo "<td class='vtable' style='position: relative;' align='left'>\n";
+	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
+		echo "	<label class='switch'>\n";
+		echo "		<input type='checkbox' id='dialplan_enabled' name='dialplan_enabled' value='true' ".(!empty($dialplan_enabled) && $dialplan_enabled == 'true' ? "checked='checked'" : null).">\n";
+		echo "		<span class='slider'></span>\n";
+		echo "	</label>\n";
 	}
 	else {
-		echo "	<option value='true'>".$text['label-true']."</option>\n";
+		echo "	<select class='formfld' id='dialplan_enabled' name='dialplan_enabled'>\n";
+		echo "		<option value='true' ".($dialplan_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($dialplan_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "	</select>\n";
 	}
-	if (!empty($dialplan_enabled) && $dialplan_enabled == "false") {
-		echo "	<option value='false' selected='selected'>".$text['label-false']."</option>\n";
-	}
-	else {
-		echo "	<option value='false'>".$text['label-false']."</option>\n";
-	}
-	echo "	</select>\n";
 	echo "<br />\n";
 	echo $text['description-enabled']."\n";
 	echo "</td>\n";

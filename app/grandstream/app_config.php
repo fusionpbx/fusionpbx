@@ -846,6 +846,22 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Show Keys Label. 1 - Show, 2 - Hide, 0 - Toggle. Default is 0";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "deef7015-8460-4e02-b986-3f2f2d804c76";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_tr069_enable";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enable tr-069 provisioning for grandstream devices 0-disable, 1-enable";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "bad2bcef-4117-4aa3-ad29-ffd2b6b832aa";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_tr069_periodic_inform_enable";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "enables the periodic enform enable interval 0-disable, 1-enable";
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "13d088f2-5d1b-47bf-a9b5-e7fdc24faeec";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_missed_call_log";
@@ -1125,5 +1141,6 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Public Mode. 0 - No, 1 - Yes. Default is 0";
+		$y++;
 
 ?>

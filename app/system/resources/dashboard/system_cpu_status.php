@@ -1,11 +1,7 @@
 <?php
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 4) . "/resources/require.php";
 
 //check permisions
 	require_once "resources/check_auth.php";
@@ -38,11 +34,11 @@
 			if (is_numeric($value)) { $percent_cpu = $percent_cpu + $value; }
 		}
 		if (stristr(PHP_OS, 'BSD')) {
-			$result = system("dmesg | grep -i --max-count 1 CPUs | sed 's/[^0-9]*//g'");
+			$result = shell_exec("dmesg | grep -i --max-count 1 CPUs | sed 's/[^0-9]*//g'");
 			$cpu_cores = trim($result);
 		}
 		if (stristr(PHP_OS, 'Linux')) {
-			$result = trim(shell_exec("grep -P '^processor' /proc/cpuinfo"));
+			$result = @trim(shell_exec("grep -P '^processor' /proc/cpuinfo"));
 			$cpu_cores = count(explode("\n", $result));
 		}
 		if ($cpu_cores > 1) { $percent_cpu = $percent_cpu / $cpu_cores; }

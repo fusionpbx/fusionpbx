@@ -40,10 +40,15 @@
 				elseif (file_exists('/usr/local/share/fusionpbx/resources/templates/conf/sip_profiles')) {
 					$sip_profile_dir = '/usr/local/share/fusionpbx/resources/templates/conf/sip_profiles/*.xml.noload';
 				}
-				else {
-					$sip_profile_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/conf/sip_profiles/*.xml.noload';
+				elseif (file_exists('/usr/local/www/fusionpbx/app/switch/resources/conf/sip_profiles')) {
+					$sip_profile_dir = '/usr/local/www/fusionpbx/app/switch/resources/conf/sip_profiles/*.xml.noload';
 				}
-
+				elseif (file_exists('/var/www/fusionpbx/app/switch/resources/conf/sip_profiles')) {
+					$sip_profile_dir = '/var/www/fusionpbx/app/switch/resources/conf/sip_profiles/*.xml.noload';
+				}
+				else {
+					$sip_profile_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/switch/resources/conf/sip_profiles/*.xml.noload';
+				}
 				$xml_files = glob($sip_profile_dir);
 				foreach ($xml_files as $x => &$xml_file) {
 					//load the sip profile xml and save it into an array
@@ -114,7 +119,7 @@
 				}
 
 				//execute inserts
-					if (is_array($array) && @sizeof($array) != 0) {
+					if (!empty($array)) {
 						//grant temporary permissions
 							$p = new permissions;
 							$p->add('sip_profile_add', 'temp');
@@ -137,8 +142,6 @@
 				//save the sip profile xml
 					save_sip_profile_xml();
 
-				//apply settings reminder
-					$_SESSION["reload_xml"] = true;
 			}
 
 
@@ -155,10 +158,15 @@
 				elseif (file_exists('/usr/local/share/fusionpbx/resources/templates/conf/sip_profiles')) {
 					$sip_profile_dir = '/usr/local/share/fusionpbx/resources/templates/conf/sip_profiles/*.xml.noload';
 				}
-				else {
-					$sip_profile_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/conf/sip_profiles/*.xml.noload';
+				elseif (file_exists('/usr/local/www/fusionpbx/app/switch/resources/conf/sip_profiles')) {
+					$sip_profile_dir = '/usr/local/www/fusionpbx/app/switch/resources/conf/sip_profiles/*.xml.noload';
 				}
-
+				elseif (file_exists('/var/www/fusionpbx/app/switch/resources/conf/sip_profiles')) {
+					$sip_profile_dir = '/var/www/fusionpbx/app/switch/resources/conf/sip_profiles/*.xml.noload';
+				}
+				else {
+					$sip_profile_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/switch/resources/conf/sip_profiles/*.xml.noload';
+				}
 				$xml_files = glob($sip_profile_dir);
 				foreach ($xml_files as $x => &$xml_file) {
 					//load the sip profile xml and save it into an array
@@ -192,7 +200,7 @@
 				}
 
 				//execute inserts
-					if (is_array($array) && @sizeof($array) != 0) {
+					if (!empty($array)) {
 						//grant temporary permissions
 							$p = new permissions;
 							$p->add('sip_profile_domain_add', 'temp');
@@ -211,8 +219,6 @@
 				//save the sip profile xml
 					save_sip_profile_xml();
 
-				//apply settings reminder
-					$_SESSION["reload_xml"] = true;
 			}
 
 

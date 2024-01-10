@@ -26,6 +26,17 @@
 
 if ($domains_processed == 1) {
 
+	//add the domain_name as the context
+		$sql = "UPDATE v_call_center_queues as c ";
+		$sql .= "SET queue_context = ( ";
+		$sql .= "	SELECT domain_name FROM v_domains as d ";
+		$sql .= "	WHERE d.domain_uuid = c.domain_uuid ";
+		$sql .= ") ";
+		$sql .= "WHERE queue_context is null; ";
+		$database = new database;
+		$database->execute($sql);
+		unset($sql);
+
 	//list the missing call center queue and agent uuids
 		$sql = "select t.call_center_tier_uuid, t.call_center_queue_uuid, t.call_center_agent_uuid, t.queue_name, t.agent_name, d.domain_name, ";
 		$sql .= "(select call_center_queue_uuid from v_call_center_queues where replace(queue_name, ' ', '-') = t.queue_name and domain_uuid = t.domain_uuid) as queue_uuid, ";
@@ -43,12 +54,12 @@ if ($domains_processed == 1) {
 				if ($row['call_center_agent_uuid'] == null && $row['agent_uuid'] != null) {
 					$array['call_center_tiers'][$index]['call_center_agent_uuid'] = $row['agent_uuid'];
 				}
-				if (is_array($array['call_center_tiers'][$index]) && @sizeof($array['call_center_tiers'][$index]) != 0) {
+				if (!empty($array['call_center_tiers'][$index])) {
 					$array['call_center_tiers'][$index]['call_center_tier_uuid'] = $row['call_center_tier_uuid'];
 				}
 			}
 
-			if (is_array($array) && @sizeof($array) != 0) {
+			if (!empty($array)) {
 				$p = new permissions;
 				$p->add('call_center_tier_edit', 'temp');
 
@@ -86,8 +97,8 @@ if ($domains_processed == 1) {
 
 				//add the recording path if needed
 					if ($row['queue_greeting'] != '') {
-						if (file_exists($_SESSION['switch']['recordings']['dir'].'/'.$row['domain_name'].'/'.$row['queue_greeting'])) {
-							$queue_greeting_path = $_SESSION['switch']['recordings']['dir'].'/'.$row['domain_name'].'/'.$row['queue_greeting'];
+						if (file_exists($setting->get('switch','recordings').'/'.$row['domain_name'].'/'.$row['queue_greeting'])) {
+							$queue_greeting_path = $setting->get('switch','recordings').'/'.$row['domain_name'].'/'.$row['queue_greeting'];
 						}
 						else {
 							$queue_greeting_path = trim($row['queue_greeting']);

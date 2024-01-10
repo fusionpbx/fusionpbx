@@ -25,12 +25,8 @@
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -242,37 +238,37 @@
 
 	//add the agent
 		//setup the event socket connection
-			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+			$esl = event_socket::create();
 		//add the agent using event socket
-			if ($fp) {
+			if ($esl->connected()) {
 				//add the agent
-					$cmd = "api callcenter_config agent add ".$call_center_agent_uuid." ".$agent_type;
-					$response = event_socket_request($fp, $cmd);
+					$cmd = "callcenter_config agent add ".$call_center_agent_uuid." '".$agent_type."'";
+					$response = event_socket::api($cmd);
 					usleep(200);
 				//agent set contact
-					$cmd = "api callcenter_config agent set contact ".$call_center_agent_uuid." ".$agent_contact;
-					$response = event_socket_request($fp, $cmd);
+					$cmd = "callcenter_config agent set contact ".$call_center_agent_uuid." '".$agent_contact."'";
+					$response = event_socket::api($cmd);
 					usleep(200);
 				//agent set status
-					$cmd = "api callcenter_config agent set status ".$call_center_agent_uuid." '".$agent_status."'";
-					$response = event_socket_request($fp, $cmd);
+					$cmd = "callcenter_config agent set status ".$call_center_agent_uuid." '".$agent_status."'";
+					$response = event_socket::api($cmd);
 					usleep(200);
 				//agent set reject_delay_time
-					$cmd = "api callcenter_config agent set reject_delay_time ".$call_center_agent_uuid." ".$agent_reject_delay_time;
-					$response = event_socket_request($fp, $cmd);
+					$cmd = 'callcenter_config agent set reject_delay_time '.$call_center_agent_uuid.' '. $agent_reject_delay_time;
+					$response = event_socket::api($cmd);
 					usleep(200);
 				//agent set busy_delay_time
-					$cmd = "api callcenter_config agent set busy_delay_time ".$call_center_agent_uuid." ".$agent_busy_delay_time;
-					$response = event_socket_request($fp, $cmd);
+					$cmd = 'callcenter_config agent set busy_delay_time '.$call_center_agent_uuid.' '.$agent_busy_delay_time;
+					$response = event_socket::api($cmd);
 				//agent set no_answer_delay_time
-					$cmd = "api callcenter_config agent set no_answer_delay_time ".$call_center_agent_uuid." ".$agent_no_answer_delay_time;
-					$response = event_socket_request($fp, $cmd);
+					$cmd = 'callcenter_config agent set no_answer_delay_time '.$call_center_agent_uuid.' '.$agent_no_answer_delay_time;
+					$response = event_socket::api($cmd);
 				//agent set max_no_answer
-					$cmd = "api callcenter_config agent set max_no_answer ".$call_center_agent_uuid." ".$agent_max_no_answer;
-					$response = event_socket_request($fp, $cmd);
+					$cmd = 'callcenter_config agent set max_no_answer '.$call_center_agent_uuid.' '.$agent_max_no_answer;
+					$response = event_socket::api($cmd);
 				//agent set wrap_up_time
-					$cmd = "api callcenter_config agent set wrap_up_time ".$call_center_agent_uuid." ".$agent_wrap_up_time;
-					$response = event_socket_request($fp, $cmd);
+					$cmd = 'callcenter_config agent set wrap_up_time '.$call_center_agent_uuid.' '.$agent_wrap_up_time;
+					$response = event_socket::api($cmd);
 			}
 
 		//redirect the user

@@ -21,12 +21,8 @@
 	the Initial Developer. All Rights Reserved.
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
 
@@ -59,7 +55,7 @@
 	}
 
 //process the http post data by action
-	if (!empty($action) && !empty($fax_queue) && is_array($fax_queue) && @sizeof($fax_queue) != 0) {
+	if (!empty($action) && !empty($fax_queue) && !empty($fax_queue)) {
 
 		switch ($action) {
 			case 'copy':
@@ -83,7 +79,7 @@
 		}
 
 		//redirect the user
-		header('Location: fax_queue.php'.($search != '' ? '?search='.urlencode($search) : null));
+		header('Location: fax_queue.php'.(!empty($search) ? '?search='.urlencode($search) : null));
 		exit;
 	}
 
@@ -134,7 +130,7 @@
 		$sql .= ") ";
 		$parameters['search'] = '%'.$search.'%';
 	}
-	if (isset($_GET["fax_status"]) && $_GET["fax_status"] != '') {
+	if (isset($_GET["fax_status"]) && !empty($_GET["fax_status"])) {
 		$sql .= "and q.fax_status = :fax_status \n";
 		$parameters['fax_status'] = $_GET["fax_status"];
 	}
@@ -143,7 +139,7 @@
 	unset($sql, $parameters);
 
 //prepare to page the results
-	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$rows_per_page = (!empty($_SESSION['domain']['paging']['numeric'])) ? $_SESSION['domain']['paging']['numeric'] : 50;
 	$param = !empty($search) ? "&search=".$search : null;
 	$param = (!empty($_GET['show']) && $_GET['show'] == 'all' && permission_exists('fax_queue_all')) ? "&show=all" : null;
 	$page = !empty($_GET['page']) && is_numeric($_GET['page']) ? $_GET['page'] : 0;
@@ -211,7 +207,7 @@
 		$sql .= ") ";
 		$parameters['search'] = '%'.$search.'%';
 	}
-	if (isset($_GET["fax_status"]) && $_GET["fax_status"] != '') {
+	if (isset($_GET["fax_status"]) && !empty($_GET["fax_status"])) {
 		$sql .= "and q.fax_status = :fax_status \n";
 		$parameters['fax_status'] = $_GET["fax_status"];
 	}
@@ -267,7 +263,7 @@
 	echo "		</select>\n";
 	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search ?? '')."\" placeholder=\"".$text['label-search']."\" />";
 	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search']);
-	if ($paging_controls_mini != '') {
+	if (!empty($paging_controls_mini)) {
 		echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>\n";
 	}
 	echo "		</form>\n";
@@ -318,7 +314,7 @@
 	}
 	echo "</tr>\n";
 
-	if (is_array($fax_queue) && @sizeof($fax_queue) != 0) {
+	if (!empty($fax_queue)) {
 		$x = 0;
 		foreach ($fax_queue as $row) {
 			if (permission_exists('fax_queue_edit')) {
@@ -340,7 +336,7 @@
 			echo "	<td class='hide-md-dn'>".escape($row['fax_caller_id_name'])."</td>\n";
 			echo "	<td>".escape($row['fax_caller_id_number'])."</td>\n";
 			echo "	<td>".escape($row['fax_number'])."</td>\n";
-			echo "	<td>".escape(str_replace(',', ' ', $row['fax_email_address']))."</td>\n";
+			echo "	<td>".escape(str_replace(',', ' ', $row['fax_email_address'] ?? ''))."</td>\n";
 // 			echo "	<td>".escape($row['fax_file'])."</td>\n";
 			echo "	<td>".ucwords($text['label-'.$row['fax_status']])."</td>\n";
 			echo "	<td>".escape($row['fax_retry_date_formatted'])." ".escape($row['fax_retry_time_formatted'])."</td>\n";

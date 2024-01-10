@@ -24,12 +24,8 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+    require_once __DIR__ . "/require.php";
 
 //if reloadxml then run the command
 	if (permission_exists('dialplan_edit') && isset($_SESSION["reload_xml"])) {
@@ -39,9 +35,9 @@
 			}
 			else {
 				//create the event socket connection
-					$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+					$esl = event_socket::create();
 				//reload the access control list this also runs reloadxml
-					$response = event_socket_request($fp, 'api reloadxml');
+					$response = event_socket::api('reloadxml');
 					$_SESSION["reload_xml"] = '';
 					unset($_SESSION["reload_xml"]);
 					usleep(500);

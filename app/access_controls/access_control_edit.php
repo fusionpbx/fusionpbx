@@ -21,12 +21,8 @@
 	the Initial Developer. All Rights Reserved.
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -122,10 +118,7 @@
 					$cache->delete("configuration:acl.conf");
 
 					//create the event socket connection
-					$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-					if ($fp) {
-						event_socket_request($fp, "api reloadacl");
-					}
+					event_socket::api("reloadacl");
 
 					//redirect the user
 					header('Location: access_control_edit.php?id='.$id);
@@ -208,10 +201,7 @@
 			$cache->delete("configuration:acl.conf");
 
 		//create the event socket connection
-			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-			if ($fp) {
-				event_socket_request($fp, "api reloadacl");
-			}
+			event_socket::async("reloadacl");
 
 		//redirect the user
 			if (isset($action)) {

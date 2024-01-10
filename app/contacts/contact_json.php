@@ -24,12 +24,8 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -44,13 +40,6 @@
 //set additional variables
 	$show = $_GET["show"] ?? '';
 
-//get posted data
-	if (!empty($_POST['contacts'])) {
-		$action = $_POST['action'];
-		$search = $_POST['search'];
-		$name = $_POST['name'];
-	}
-
 //retrieve current user's assigned groups (uuids)
 	foreach ($_SESSION['groups'] as $group_data) {
 		$user_group_uuids[] = $group_data['group_uuid'];
@@ -60,7 +49,7 @@
 	$user_group_uuids[] = $_SESSION["user_uuid"];
 
 //add the search term
-	if (isset($search)) {
+	if (!empty($_GET["search"])) {
 		$search = strtolower($_GET["search"]);
 	}
 

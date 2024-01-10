@@ -22,12 +22,8 @@
 	the Initial Developer. All Rights Reserved.
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -70,6 +66,7 @@
 		$fax_retry_count = $_POST["fax_retry_count"];
 		$fax_accountcode = $_POST["fax_accountcode"];
 		$fax_command = $_POST["fax_command"];
+		$fax_response = $_POST["fax_response"];
 	}
 
 //process the user data and save it to the database
@@ -168,6 +165,7 @@
 			$array['fax_queue'][0]['fax_retry_count'] = $fax_retry_count;
 			$array['fax_queue'][0]['fax_accountcode'] = $fax_accountcode;
 			$array['fax_queue'][0]['fax_command'] = $fax_command;
+			$array['fax_queue'][0]['fax_response'] = $fax_response;
 
 		//save the data
 			$database = new database;
@@ -206,7 +204,8 @@
 		$sql .= " fax_notify_date, ";
 		$sql .= " fax_retry_count, ";
 		$sql .= " fax_accountcode, ";
-		$sql .= " fax_command ";
+		$sql .= " fax_command, ";
+		$sql .= " fax_response ";
 		$sql .= "from v_fax_queue ";
 		$sql .= "where fax_queue_uuid = :fax_queue_uuid ";
 		//$sql .= "and domain_uuid = :domain_uuid ";
@@ -230,6 +229,7 @@
 			$fax_retry_count = $row["fax_retry_count"];
 			$fax_accountcode = $row["fax_accountcode"];
 			$fax_command = $row["fax_command"];
+			$fax_response = $row["fax_response"];
 		}
 		unset($sql, $parameters, $row);
 	}
@@ -443,9 +443,20 @@
 	echo "	".$text['label-fax_command']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<textarea class='formfld' name='fax_command' style='width: 185px; height: 80px;'>".($fax_command ?? '')."</textarea>\n";
+	echo "	<textarea class='formfld' name='fax_command' style='width: 185px; height: 80px;'>".escape($fax_command ?? '')."</textarea>\n";
 	echo "<br />\n";
 	echo $text['description-fax_command']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-fax_response']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' style='position: relative;' align='left'>\n";
+	echo "	<textarea class='formfld' name='fax_response' style='width: 185px; height: 80px;'>".escape($fax_response ?? '')."</textarea>\n";
+	echo "<br />\n";
+	echo $text['description-fax_response']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 

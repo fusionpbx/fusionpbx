@@ -2,16 +2,14 @@
 
 //check the permission
 	if (defined('STDIN')) {
-		//set the include path
-		$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-		set_include_path(parse_ini_file($conf[0])['document.root']);
+		//includes files
+		require_once dirname(__DIR__, 4) . "/resources/require.php";
 	}
 	else {
 		exit;
 	}
 
 //includes files
-	require_once "resources/require.php";
 	require_once "resources/pdo.php";
 	include "resources/classes/permissions.php";
 	require $_SERVER['DOCUMENT_ROOT']."/app/email_queue/resources/functions/transcribe.php";
@@ -72,8 +70,11 @@
 		exit;
 	}
 
+//get the email queue settings
+	$setting = new settings(["category" => "email_queue"]);
+
 //email queue enabled
-	if ($_SESSION['email_queue']['enabled']['boolean'] != 'true') {
+	if ($setting->get('email_queue', 'enabled') != 'true') {
 		echo "Email Queue is disabled in Default Settings\n";
 		exit;
 	}
@@ -102,20 +103,20 @@
 	}
 
 //get the call center settings
-	$interval = $_SESSION['email_queue']['interval']['numeric'];
+	$interval = $setting->get('email_queue', 'interval');
 
 //set the defaults
 	if (!is_numeric($interval)) { $interval = 30; }
 
 //set the email queue limit
-	if (isset($_SESSION['email_queue']['limit']['numeric'])) {
-		$email_queue_limit = $_SESSION['email_queue']['limit']['numeric'];
+	if (!empty($setting->get('email_queue', 'limit'))) {
+		$email_queue_limit = $setting->get('email_queue', 'limit');
 	}
 	else {
 		$email_queue_limit = '30';
 	}
-	if (isset($_SESSION['email_queue']['debug']['boolean'])) {
-		$debug = $_SESSION['email_queue']['debug']['boolean'];
+	if (!empty($setting->get('email_queue', 'debug'))) {
+		$debug = $setting->get('email_queue', 'debug');
 	}
 
 //get the messages waiting in the email queue

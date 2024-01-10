@@ -24,12 +24,8 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
 
@@ -130,7 +126,7 @@
 	}
 	if (!empty($search)) {
 		$sql .= "(";
-		$sql .= "	lower(d.device_mac_address) like :search ";
+		$sql .= "	lower(d.device_address) like :search ";
 		$sql .= "	or lower(d.device_label) like :search ";
 		$sql .= "	or lower(d.device_vendor) like :search ";
 		$sql .= "	or lower(d.device_enabled) like :search ";
@@ -216,7 +212,7 @@
 	}
 	if (!empty($search)) {
 		$sql .= "and (";
-		$sql .= "	lower(d.device_mac_address) like :search ";
+		$sql .= "	lower(d.device_address) like :search ";
 		$sql .= "	or lower(d.device_label) like :search ";
 		$sql .= "	or lower(d.device_vendor) like :search ";
 		$sql .= "	or lower(d.device_enabled) like :search ";
@@ -365,7 +361,7 @@
 	if (!empty($_GET['show']) && $_GET['show'] == "all" && permission_exists('device_all')) {
 		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, null, null, $param);
 	}
-	echo th_order_by('device_mac_address', $text['label-device_mac_address'], $order_by, $order, null, null, $param ?? null);
+	echo th_order_by('device_address', $text['label-device_address'], $order_by, $order, null, null, $param ?? null);
 	echo th_order_by('device_label', $text['label-device_label'], $order_by, $order, null, null, $param ?? null);
 	if ($device_alternate) {
 		echo th_order_by('device_template', $text['label-device_uuid_alternate'], $order_by, $order, null, null, $param ?? null);
@@ -417,7 +413,7 @@
 				echo "	<td>".escape($_SESSION['domains'][$row['domain_uuid']]['domain_name'])."</td>\n";
 			}
 			echo "	<td class='no-wrap'>";
-			echo permission_exists('device_edit') ? "<a href='".$list_row_url."'>".escape(format_mac($row['device_mac_address']))."</a>" : escape(format_mac($row['device_mac_address']));
+			echo permission_exists('device_edit') ? "<a href='".$list_row_url."'>".escape(format_device_address($row['device_address']))."</a>" : escape(format_device_address($row['device_address']));
 			echo "	</td>\n";
 			echo "	<td>".escape($row['device_label'])."&nbsp;</td>\n";
 			if ($device_alternate) {

@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2016
+	Portions created by the Initial Developer are Copyright (C) 2016 - 2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -27,13 +27,13 @@
 if ($domains_processed == 1) {
 
 	//set the directory
-		if (is_array($_SESSION["switch"]["conf"])) {
-			$xml_dir = $_SESSION["switch"]["conf"]["dir"].'/autoload_configs';
+		if (!empty($setting->get('switch','conf'))) {
+			$xml_dir = $setting->get('switch','conf').'/autoload_configs';
 			$xml_file = $xml_dir."/local_stream.conf";
 		}
 
 	//rename the file
-		if (is_array($_SESSION["switch"]["conf"])) {
+		if (!empty($setting->get('switch','conf'))) {
 			if (file_exists($xml_dir.'/local_stream.conf.xml')) {
 				rename($xml_dir.'/local_stream.conf', $xml_dir.'/'.$xml_file);
 			}
@@ -43,7 +43,7 @@ if ($domains_processed == 1) {
 		}
 
 	//add the music_on_hold list to the database
-		if (is_array($_SESSION["switch"]["conf"])) {
+		if (!empty($setting->get('switch','conf'))) {
 			$sql = "select count(music_on_hold_uuid) from v_music_on_hold; ";
 			$database = new database;
 			$num_rows = $database->select($sql, null, 'column');
@@ -52,7 +52,7 @@ if ($domains_processed == 1) {
 			if ($num_rows == 0) {
 
 				//set the alternate directory
-					$xml_file_alt = $_SERVER["DOCUMENT_ROOT"].'/'.PROJECT_PATH.'/resources/templates/conf/autoload_configs/local_stream.conf';
+					$xml_file_alt = $_SERVER["DOCUMENT_ROOT"].'/'.PROJECT_PATH.'/app/switch/resources/conf/autoload_configs/local_stream.conf';
 
 				//load the xml and save it into an array
 					if (file_exists($xml_file)) {
