@@ -280,7 +280,9 @@
 			$sql .= $field.", \n";
 		}
 	}
-	$sql .= "c.accountcode, \n";
+	if (permission_exists('xml_cdr_account_code')) {
+		$sql .= "c.accountcode, \n";
+	}
 	$sql .= "c.answer_stamp, \n";
 	$sql .= "c.status, \n";
 	$sql .= "c.sip_hangup_disposition, \n";
@@ -479,7 +481,7 @@
 		$sql .= "and bleg_uuid = :bleg_uuid \n";
 		$parameters['bleg_uuid'] = $bleg_uuid;
 	}
-	if (!empty($accountcode)) {
+	if (permission_exists('xml_cdr_account_code') && !empty($accountcode)) {
 		$sql .= "and c.accountcode = :accountcode \n";
 		$parameters['accountcode'] = $accountcode;
 	}

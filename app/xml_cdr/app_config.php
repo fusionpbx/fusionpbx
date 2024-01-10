@@ -236,6 +236,8 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "xml_cdr_extension_summary_all";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "xml_cdr_account_code";
 
 	//default settings
 		$y=0;

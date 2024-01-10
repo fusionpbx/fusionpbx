@@ -573,6 +573,10 @@
 		echo "<th class='center'>".$text['label-recording']."</th>\n";
 		$col_count++;
 	}
+	if (permission_exists('xml_cdr_account_code')) {
+		echo "<th class='left'>".$text['label-accountcode']."</th>\n";
+		$col_count++;
+	}
 	if (permission_exists('xml_cdr_custom_fields')) {
 		if (isset($_SESSION['cdr']['field']) && is_array($_SESSION['cdr']['field']) && @sizeof($_SESSION['cdr']['field'])) {
 			foreach ($_SESSION['cdr']['field'] as $field) {
@@ -833,6 +837,12 @@
 						else {
 							$content .= "	<td>&nbsp;</td>\n";
 						}
+					}
+				//account code
+					if (permission_exists('xml_cdr_account_code')) {
+						$content .= "	<td class='middle no-link no-wrap'>";
+						$content .= 		$row['accountcode'];
+						$content .= "	</td>\n";
 					}
 				//custom cdr fields
 					if (permission_exists('xml_cdr_custom_fields')) {

@@ -211,6 +211,10 @@
 			$data_head .= '<td width="9%"><b>'.$text['label-destination'].'</b></td>';
 			$columns++;
 		}
+		if (permission_exists('xml_cdr_account_code')) {
+			$data_head .= '<td width="12%" nowrap="nowrap"><b>'.$text['label-accountcode'].'</b></td>';
+			$columns++;
+		}
 		if (permission_exists('xml_cdr_start')) {
 			$data_head .= '<td width="12%" nowrap="nowrap"><b>'.$text['label-start'].'</b></td>';
 			$columns++;
@@ -285,6 +289,9 @@
 				}
 				if (permission_exists('xml_cdr_destination')) {
 					$data_body[$p] .= '<td>'.format_phone($fields['destination_number']).'</td>';
+				}
+				if (permission_exists('xml_cdr_account_code')) {
+					$data_body[$p] .= '<td>'.$fields['accountcode'].'</td>';
 				}
 				if (permission_exists('xml_cdr_start')) {
 					$data_body[$p] .= '<td>'.$fields['start_stamp'].'</td>';

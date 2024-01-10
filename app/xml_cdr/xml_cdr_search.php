@@ -253,10 +253,12 @@
 		echo "		<td class='vncell'>".$text['label-bridge_uuid']."</td>";
 		echo "		<td class='vtable'><input type='text' class='formfld' name='bleg_uuid' value='".escape($bridge_uuid)."'></td>";
 		echo "	</tr>";
-		echo "	<tr>";
-		echo "		<td class='vncell'>".$text['label-accountcode']."</td>";
-		echo "		<td class='vtable'><input type='text' class='formfld' name='accountcode' value='".escape($accountcode)."'></td>";
-		echo "	</tr>";
+		if (permission_exists('xml_cdr_account_code')) {
+			echo "	<tr>";
+			echo "		<td class='vncell'>".$text['label-accountcode']."</td>";
+			echo "		<td class='vtable'><input type='text' class='formfld' name='accountcode' value='".escape($accountcode)."'></td>";
+			echo "	</tr>";
+		}
 		echo "	<tr>";
 		echo "		<td class='vncell'>".$text['label-read_codec']."</td>";
 		echo "		<td class='vtable'><input type='text' class='formfld' name='read_codec' value='".escape($read_codec)."'></td>";
