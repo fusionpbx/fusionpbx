@@ -1,0 +1,7 @@
+<extension name="default_language" number="" context="${domain_name}" continue="true" app_uuid="7aeb5e2d-8ee7-4ea6-b6d7-e93096c2fe4f" enabled="false" order="75">
+	<condition field="${default_language}" expression="^$" break="never">
+		<action application="set" data="default_language=en" inline="true"/>
+    <action application="set" data="default_dialect=us" inline="true"/>
+    <action application="set" data="default_voice=callie" inline="true"/>
+	</condition>
+</extension>
