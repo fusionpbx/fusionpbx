@@ -157,6 +157,9 @@ class settings {
 				$subcategory = $row['default_setting_subcategory'];
 				if (empty($subcategory)) {
 					if ($name == "array") {
+						if (!isset($this->settings[$category]) || !is_array($this->settings[$category])) {
+							$this->settings[$category] = array();
+						}
 						$this->settings[$category][] = $row['default_setting_value'];
 					}
 					else {
@@ -165,6 +168,9 @@ class settings {
 				}
 				else {
 					if ($name == "array") {
+						if (!isset($this->settings[$category][$subcategory]) || !is_array($this->settings[$category][$subcategory])) {
+							$this->settings[$category][$subcategory] = array();
+						}
 						$this->settings[$category][$subcategory][] = $row['default_setting_value'];
 					}
 					else {
