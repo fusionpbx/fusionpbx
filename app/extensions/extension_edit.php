@@ -430,10 +430,10 @@
 									}
 
 								//seperate the language components into language, dialect and voice
-									$language_array = explode("/",$ivr_menu_language);
-									$ivr_menu_language = $language_array[0] ?? 'en';
-									$ivr_menu_dialect = $language_array[1] ?? 'us';
-									$ivr_menu_voice = $language_array[2] ?? 'callie';
+									$language_array = explode("/",$extension_language);
+									$extension_language = $language_array[0] ?? 'en';
+									$extension_dialect = $language_array[1] ?? 'us';
+									$extension_voice = $language_array[2] ?? 'callie';
 
 								//create the data array
 									$array["extensions"][$i]["domain_uuid"] = $domain_uuid;
@@ -542,9 +542,9 @@
 										}
 									}
 									if (permission_exists('extension_language')) {
-										$array['ivr_menus'][0]["extension_language"] = $extension_language;
-										$array['ivr_menus'][0]["extension_dialect"] = $extension_dialect;
-										$array['ivr_menus'][0]["extension_voice"] = $extension_voice;
+										$array['extensions'][0]["extension_language"] = $extension_language;
+										$array['extensions'][0]["extension_dialect"] = $extension_dialect;
+										$array['extensions'][0]["extension_voice"] = $extension_voice;
 									}
 									if (permission_exists('extension_type')) {
 										$array["extensions"][$i]["extension_type"] = $extension_type;
@@ -903,6 +903,9 @@
 			$absolute_codec_string = $row["absolute_codec_string"];
 			$force_ping = $row["force_ping"];
 			$dial_string = $row["dial_string"];
+			$extension_language = $row["extension_language"];
+			$extension_voice = $row["extension_voice"];
+			$extension_dialect = $row["extension_dialect"];
 			$extension_type = $row["extension_type"];
 			$enabled = $row["enabled"];
 			$description = $row["description"];
