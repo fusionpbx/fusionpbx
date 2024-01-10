@@ -69,7 +69,8 @@
 
 //define variables
 	if (!isset($_SESSION['template_content'])) { $_SESSION["template_content"] = null; }
-
+    print_r($_SESSION["menu"]);
+    // exit();
 // check if the user has been authenticated
 	if ((isset($_SESSION['authorized']) && $_SESSION['authorized']) && isset($_COOKIE[$_SESSION['cookie_name']])){
 		$_SESSION['login']['destination']['url'] = $_SESSION['redirect_url'];
@@ -78,11 +79,11 @@
         //get the groups assigned to the user
         if (!isset($_SESSION["groups"]) || count($_SESSION["groups"]) ==0){
             $group = new groups;
-            $group->session($_SESSION["domain_uuid"], $_SESSION["user_uuid"]);
+            $group->session($_SESSION['user']['domain_uuid'], $_SESSION["user_uuid"]);
             
             //get the permissions assigned to the user through the assigned groups
             $permission = new permissions;
-            $permission->session($_SESSION["domain_uuid"], $_SESSION["groups"]);
+            $permission->session($_SESSION['user']['domain_uuid'], $_SESSION["groups"]);
 
             //reload default settings
             require "resources/classes/domains.php";
