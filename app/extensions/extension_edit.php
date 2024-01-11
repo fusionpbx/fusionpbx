@@ -2030,7 +2030,7 @@
 			}
 		}
 		echo "<br />\n";
-		//echo $text['description-language']."\n";
+		echo $text['description-language']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 	}
