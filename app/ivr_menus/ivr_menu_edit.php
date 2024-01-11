@@ -817,6 +817,7 @@
 			}
 		}
 	}
+	echo "  </select>\n";
 	echo "<br />\n";
 	echo $text['description-language']."\n";
 	echo "</td>\n";
