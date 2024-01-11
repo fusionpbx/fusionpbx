@@ -685,13 +685,13 @@
 								xml:append([[								<variable name="do_not_disturb" value="]] .. xml.sanitize(do_not_disturb) .. [["/>]]);
 							end
 							if (extension_language ~= nil) and (string.len(extension_language) > 0) then
-								xml:append([[								<variable name="extension_language" value="]] ..  xml.sanitize(extension_language) .. [["/>]]);
+								xml:append([[								<variable name="default_language" value="]] ..  xml.sanitize(extension_language) .. [["/>]]);
 							end
 							if (extension_dialect ~= nil) and (string.len(extension_dialect) > 0) then
-								xml:append([[								<variable name="extension_dialect" value="]] ..  xml.sanitize(extension_dialect) .. [["/>]]);
+								xml:append([[								<variable name="default_dialect" value="]] ..  xml.sanitize(extension_dialect) .. [["/>]]);
 							end
 							if (extension_voice ~= nil) and (string.len(extension_voice) > 0) then
-								xml:append([[								<variable name="extension_voice" value="]] ..  xml.sanitize(extension_voice) .. [["/>]]);
+								xml:append([[								<variable name="default_voice" value="]] ..  xml.sanitize(extension_voice) .. [["/>]]);
 							end
 							xml:append([[								<variable name="record_stereo" value="true"/>]]);
 							xml:append([[								<variable name="transfer_fallback_extension" value="operator"/>]]);
