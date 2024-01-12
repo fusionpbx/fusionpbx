@@ -552,6 +552,24 @@
 						{/literal}
 					{/if}
 
+				//key: [left] / [right], audio playback: rewind / fast-forward
+					{literal}
+					if (
+						e.which == 39 &&
+						!(e.target.tagName == 'INPUT' && e.target.type == 'text') &&
+						e.target.tagName != 'TEXTAREA'
+						) {
+						recording_fast_forward();
+					}
+					if (
+						e.which == 37 &&
+						!(e.target.tagName == 'INPUT' && e.target.type == 'text') &&
+						e.target.tagName != 'TEXTAREA'
+						) {
+						recording_rewind();
+					}
+					{/literal}
+
 		//keydown end
 			{literal}
 			});
@@ -726,7 +744,7 @@
 
 	//audio playback functions
 		{literal}
-		var recording_audio, audio_clock;
+		var recording_audio, audio_clock, recording_id_playing;
 
 		function recording_play(recording_id) {
 			if (document.getElementById('recording_progress_bar_'+recording_id)) {
@@ -737,6 +755,7 @@
 			if (recording_audio.paused) {
 				recording_audio.volume = 1;
 				recording_audio.play();
+				recording_id_playing = recording_id;
 				document.getElementById('recording_button_'+recording_id).innerHTML = "<span class='{/literal}{$settings.theme.button_icon_pause}{literal} fa-fw'></span>";
 				audio_clock = setInterval(function () { update_progress(recording_id); }, 20);
 
@@ -752,6 +771,7 @@
 			}
 			else {
 				recording_audio.pause();
+				recording_id_playing = '';
 				document.getElementById('recording_button_'+recording_id).innerHTML = "<span class='{/literal}{$settings.theme.button_icon_play}{literal} fa-fw'></span>";
 				clearInterval(audio_clock);
 			}
@@ -777,14 +797,31 @@
 			recording_audio = document.getElementById('recording_audio_'+recording_id);
 			var recording_progress = document.getElementById('recording_progress_'+recording_id);
 			var value = 0;
-			if (recording_audio.currentTime > 0) {
+			if (recording_audio != null && recording_audio.currentTime > 0) {
 				value = (100 / recording_audio.duration) * recording_audio.currentTime;
 			}
-			recording_progress.style.marginLeft = value + '%';
-			if (parseInt(recording_audio.duration) > 30) { //seconds
+			if (recording_progress) {
+				recording_progress.style.marginLeft = value + '%';
+			}
+			if (recording_audio != null && parseInt(recording_audio.duration) > 30) { //seconds
 				clearInterval(audio_clock);
 			}
 		}
+
+		function recording_fast_forward() {
+			if (recording_audio) {
+				recording_audio.currentTime += 5;
+				update_progress(recording_id_playing);
+			}
+		}
+
+		function recording_rewind() {
+			if (recording_audio) {
+				recording_audio.currentTime -= 5;
+				update_progress(recording_id_playing);
+			}
+		}
+
 		{/literal}
 
 	//handle action bar style on scroll
