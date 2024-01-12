@@ -73,6 +73,7 @@ if ( session:ready() ) then
 		destination_number = session:getVariable("destination_number");
 		pin_number = session:getVariable("pin_number");
 		domain_name = session:getVariable("domain_name");
+		domain_uuid = session:getVariable("domain_uuid");
 		sounds_dir = session:getVariable("sounds_dir");
 		destinations = session:getVariable("destinations");
 		rtp_secure_media = session:getVariable("rtp_secure_media");
@@ -124,6 +125,21 @@ if ( session:ready() ) then
 			rtp_secure_media = 'false';
 		end
 
+	--setup the database connection
+		local Database = require "resources.functions.database";
+		local db = dbh or Database.new('system');
+
+	--load lazy settings library
+		local Settings = require "resources.functions.lazy_settings";
+
+	--get the recordings settings
+		local settings = Settings.new(db, domain_name, domain_uuid, nil);
+
+	--set the recordings variables
+		recording_max_length = settings:get('recordings', 'recording_max_length', 'numeric') or 90;
+		silence_threshold = settings:get('recordings', 'recording_silence_threshold', 'numeric') or 200;
+		silence_seconds = settings:get('recordings', 'recording_silence_seconds', 'numeric') or 3;
+
 	--define the conference name
 		local conference_profile = "page";
 		local conference_name = "page-"..destination_number.."@"..domain_name;
@@ -163,29 +179,33 @@ if ( session:ready() ) then
 						return ''
 					end
 				end
+
 			--sleep
 				session:sleep(500);
+
 			--set variables for page recording
 				recording_dir = '/tmp/';
 				filename = "page-"..destination_number.."@"..domain_name..".wav";
 				recording_filename = string.format('%s%s', recording_dir, filename);
-				max_len_secs = 20;
-				silence_threshold = 500;
-				silence_secs = 1;
 				dtmf_entered = 0;
 				silence_triggered = 0;
-			
+
 			--ask user to record
 				session:execute("playback", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/voicemail/vm-record_message.wav")
 				session:streamFile("tone_stream://L=1;%(1000, 0, 640)");
+
 			--set callback function for when a user clicks DTMF
 				session:setInputCallback('onInputCBF', '');
+
 			--time before starting the recording
 				startUTCTime = os.time(os.date('!*t'));
+
 			--record the page message
-				silence_triggered = session:recordFile(recording_filename, max_len_secs, silence_threshold, silence_secs);
+				silence_triggered = session:recordFile(recording_filename, recording_max_length, silence_threshold, silence_seconds);
+
 			--time after starting the recording
 				endUTCTime = os.time(os.date('!*t'));
+
 			--total recording time
 				recording_length = endUTCTime - startUTCTime;
 		end
@@ -236,7 +256,6 @@ if ( session:ready() ) then
 	--originate the calls
 		destination_count = 0;
 		if (delay ~= "true" or (dtmf_entered == 1 or silence_triggered == 1)) then
-			
 
 			for index,value in pairs(destination_table) do
 				for destination in each_number(value) do
@@ -285,8 +304,8 @@ if ( session:ready() ) then
 				end
 			end
 		end
+
 	--send main call to the conference room
-		
 		if (destination_count > 0) then
 			--set moderator flag
 				if (session:getVariable("moderator") == "true") then
@@ -294,9 +313,9 @@ if ( session:ready() ) then
 				else
 					moderator_flag = "";
 				end
+
 			--check if delay is true
 				if (delay == "true" and (dtmf_entered == 1 or silence_triggered == 1)) then
-						
 					--play the recorded file into the page/conference. Need to wait for the page/conference to actually be started before we can end it.
 						response = api:executeString("sched_api +2 none conference "..conference_name.." play "..recording_filename);
 
@@ -306,11 +325,9 @@ if ( session:ready() ) then
 					--join the moderator into the page
 						session:execute("conference", conference_bridge.."+flags{endconf,mintwo"..moderator_flag.."}");
 				end
-			
 		else
 			--error tone due to no destinations
 				session:execute("playback", "tone_stream://%(500,500,480,620);loops=3");
 		end
-		
 
 end
