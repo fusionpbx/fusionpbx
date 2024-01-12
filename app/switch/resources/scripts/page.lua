@@ -25,176 +25,218 @@
 --	POSSIBILITY OF SUCH DAMAGE.
 
 --set default settings
-	pin_number = "";
-	max_tries = "3";
-	digit_timeout = "3000";
+pin_number = "";
+max_tries = "3";
+digit_timeout = "3000";
 
 --define the trim function
-	require "resources.functions.trim";
+require "resources.functions.trim";
 
 --define the explode function
-	require "resources.functions.explode";
+require "resources.functions.explode";
 
 --define the split function
-	require "resources.functions.split";
+require "resources.functions.split";
 
 --iterator over numbers.
-	local function each_number(value)
-		local begin_value, end_value = split_first(value, "-", true)
-		if (not end_value) or (begin_value == end_value) then
-			return function()
-				local result = begin_value
-				begin_value = nil
-				return result
-			end
-		end
-
-		if string.find(begin_value, "^0") then
-			assert(#begin_value == #end_value, "number in range with leading `0` should have same length")
-		end
-
-		local number_length = ("." .. tostring(#begin_value))
-		begin_value, end_value = tonumber(begin_value), tonumber(end_value)
-		assert(begin_value and end_value and (begin_value <= end_value), "Invalid range: " .. value)
-
+local function each_number(value)
+	local begin_value, end_value = split_first(value, "-", true)
+	if (not end_value) or (begin_value == end_value) then
 		return function()
-			value, begin_value = begin_value, begin_value + 1
-			if value > end_value then return end
-			return string.format("%" .. number_length .. "d", value)
+			local result = begin_value
+			begin_value = nil
+			return result
 		end
 	end
 
+	if string.find(begin_value, "^0") then
+		assert(#begin_value == #end_value, "number in range with leading `0` should have same length")
+	end
+
+	local number_length = ("." .. tostring(#begin_value))
+	begin_value, end_value = tonumber(begin_value), tonumber(end_value)
+	assert(begin_value and end_value and (begin_value <= end_value), "Invalid range: " .. value)
+
+	return function()
+		value, begin_value = begin_value, begin_value + 1
+		if value > end_value then return end
+		return string.format("%" .. number_length .. "d", value)
+	end
+end
+
 --make sure the session is ready
-	if ( session:ready() ) then
-		--answer the call
-			session:answer();
+if ( session:ready() ) then
+	--answer the call
+		session:answer();
 
-		--get the dialplan variables and set them as local variables
-			destination_number = session:getVariable("destination_number");
-			pin_number = session:getVariable("pin_number");
-			domain_name = session:getVariable("domain_name");
-			sounds_dir = session:getVariable("sounds_dir");
-			destinations = session:getVariable("destinations");
-			rtp_secure_media = session:getVariable("rtp_secure_media");
-			if (destinations == nil) then
-				destinations = session:getVariable("extension_list");
-			end
-			destination_table = explode(",",destinations);
-			caller_id_name = session:getVariable("caller_id_name");
-			caller_id_number = session:getVariable("caller_id_number");
-			sip_from_user = session:getVariable("sip_from_user");
-			mute = session:getVariable("mute");
+	--get the dialplan variables and set them as local variables
+		destination_number = session:getVariable("destination_number");
+		pin_number = session:getVariable("pin_number");
+		domain_name = session:getVariable("domain_name");
+		sounds_dir = session:getVariable("sounds_dir");
+		destinations = session:getVariable("destinations");
+		rtp_secure_media = session:getVariable("rtp_secure_media");
+		if (destinations == nil) then
+			destinations = session:getVariable("extension_list");
+		end
+		destination_table = explode(",",destinations);
+		caller_id_name = session:getVariable("caller_id_name");
+		caller_id_number = session:getVariable("caller_id_number");
+		sip_from_user = session:getVariable("sip_from_user");
+		mute = session:getVariable("mute");
+		delay = session:getVariable("delay");
 
-		--determine whether to check if the destination is available
-			check_destination_status = session:getVariable("check_destination_status");
-			if (not check_destination_status) then check_destination_status = 'false'; end
+	--determine whether to check if the destination is available
+		check_destination_status = session:getVariable("check_destination_status");
+		if (not check_destination_status) then check_destination_status = 'false'; end
 
-		--set the type of auto answer
-			auto_answer = session:getVariable("auto_answer");
-			if (not auto_answer) then auto_answer = 'call_info'; end
-			if (auto_answer == 'call_info') then
-				auto_answer = "sip_h_Call-Info=<sip:"..domain_name..">;answer-after=0";
-			end
-			if (auto_answer == 'sip_auto_answer') then
-				auto_answer = "sip_auto_answer=true";
-			end
+	--set the type of auto answer
+		auto_answer = session:getVariable("auto_answer");
+		if (not auto_answer) then auto_answer = 'call_info'; end
+		if (auto_answer == 'call_info') then
+			auto_answer = "sip_h_Call-Info=<sip:"..domain_name..">;answer-after=0";
+		end
+		if (auto_answer == 'sip_auto_answer') then
+			auto_answer = "sip_auto_answer=true";
+		end
 
-		--set sip header Alert-Info
-			alert_info = session:getVariable("alert_info");
-			if (not alert_info) then alert_info = 'ring_answer'; end
-			if (alert_info == 'auto_answer') then
-				alert_info = "sip_h_Alert-Info='Auto Answer'";
-			elseif (alert_info == 'ring_answer') then
-				alert_info = "sip_h_Alert-Info='Ring Answer'";
-			else
-				alert_info = "sip_h_Alert-Info='"..alert_info.."'";
-			end
+	--set sip header Alert-Info
+		alert_info = session:getVariable("alert_info");
+		if (not alert_info) then alert_info = 'ring_answer'; end
+		if (alert_info == 'auto_answer') then
+			alert_info = "sip_h_Alert-Info='Auto Answer'";
+		elseif (alert_info == 'ring_answer') then
+			alert_info = "sip_h_Alert-Info='Ring Answer'";
+		else
+			alert_info = "sip_h_Alert-Info='"..alert_info.."'";
+		end
 
-		--set the sounds path for the language, dialect and voice
-			default_language = session:getVariable("default_language");
-			default_dialect = session:getVariable("default_dialect");
-			default_voice = session:getVariable("default_voice");
-			if (not default_language) then default_language = 'en'; end
-			if (not default_dialect) then default_dialect = 'us'; end
-			if (not default_voice) then default_voice = 'callie'; end
+	--set the sounds path for the language, dialect and voice
+		default_language = session:getVariable("default_language");
+		default_dialect = session:getVariable("default_dialect");
+		default_voice = session:getVariable("default_voice");
+		if (not default_language) then default_language = 'en'; end
+		if (not default_dialect) then default_dialect = 'us'; end
+		if (not default_voice) then default_voice = 'callie'; end
 
-		--set rtp_secure_media to an empty string if not provided.
-			if (rtp_secure_media == nil) then
-				rtp_secure_media = 'false';
-			end
+	--set rtp_secure_media to an empty string if not provided.
+		if (rtp_secure_media == nil) then
+			rtp_secure_media = 'false';
+		end
 
-		--define the conference name
-			local conference_profile = "page";
-			local conference_name = "page-"..destination_number.."@"..domain_name;
-			local conference_bridge = conference_name.."@"..conference_profile;
+	--define the conference name
+		local conference_profile = "page";
+		local conference_name = "page-"..destination_number.."@"..domain_name;
+		local conference_bridge = conference_name.."@"..conference_profile;
 
-		--set the caller id
-			if (caller_id_name) then
-				--caller id name provided do nothing
-			else
-				effective_caller_id_name = session:getVariable("effective_caller_id_name");
-				caller_id_name = effective_caller_id_name;
-			end
+	--set the caller id
+		if (caller_id_name) then
+			--caller id name provided do nothing
+		else
+			effective_caller_id_name = session:getVariable("effective_caller_id_name");
+			caller_id_name = effective_caller_id_name;
+		end
 
-			if (caller_id_number) then
-				--caller id number provided do nothing
-			else
-				effective_caller_id_number = session:getVariable("effective_caller_id_number");
-				caller_id_number = effective_caller_id_number;
-			end
+		if (caller_id_number) then
+			--caller id number provided do nothing
+		else
+			effective_caller_id_number = session:getVariable("effective_caller_id_number");
+			caller_id_number = effective_caller_id_number;
+		end
 
-		--set conference flags
-			if (mute == "true") then
-				flags = "flags{mute}";
-			else
-				flags = "flags{}";
-			end
+	--set conference flags
+		if (mute == "true") then
+			flags = "flags{mute}";
+		else
+			flags = "flags{}";
+		end
 
-		--if the pin number is provided then require it
-			if (pin_number) then
-				--sleep
-					session:sleep(500);
-
-				--get the user pin number
-					min_digits = 2;
-					max_digits = 20;
-					digits = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", "phrase:voicemail_enter_pass:#", "", "\\d+");
-
-				--validate the user pin number
-					pin_number_table = explode(",",pin_number);
-					for index,pin_number in pairs(pin_number_table) do
-						if (digits == pin_number) then
-							--set the variable to true
-								auth = true;
-							--set the authorized pin number that was used
-								session:setVariable("pin_number", pin_number);
-							--end the loop
-								break;
-						end
+	--if annouce delay is active then prompt for recording
+		if (delay == "true") then
+			--callback function for the delayed recording
+				function onInputCBF(s, _type, obj, arg)
+					local k, v = nil, nil
+					if (_type == "dtmf") then
+						dtmf_entered = 1; --set this variable to know that the user entered DTMF
+						return 'break'
+					else
+						return ''
 					end
+				end
+			--sleep
+				session:sleep(500);
+			--set variables for page recording
+				recording_dir = '/tmp/';
+				filename = "page-"..destination_number.."@"..domain_name..".wav";
+				recording_filename = string.format('%s%s', recording_dir, filename);
+				max_len_secs = 20;
+				silence_threshold = 500;
+				silence_secs = 1;
+				dtmf_entered = 0;
+				silence_triggered = 0;
+			
+			--ask user to record
+				session:execute("playback", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/voicemail/vm-record_message.wav")
+				session:streamFile("tone_stream://L=1;%(1000, 0, 640)");
+			--set callback function for when a user clicks DTMF
+				session:setInputCallback('onInputCBF', '');
+			--time before starting the recording
+				startUTCTime = os.time(os.date('!*t'));
+			--record the page message
+				silence_triggered = session:recordFile(recording_filename, max_len_secs, silence_threshold, silence_secs);
+			--time after starting the recording
+				endUTCTime = os.time(os.date('!*t'));
+			--total recording time
+				recording_length = endUTCTime - startUTCTime;
+		end
 
-				--if not authorized play a message and then hangup
-					if (not auth) then
-						session:streamFile("phrase:voicemail_fail_auth:#");
-						session:hangup("NORMAL_CLEARING");
-						return;
+	--if the pin number is provided then require it
+		if (pin_number) then
+			--sleep
+				session:sleep(500);
+
+			--get the user pin number
+				min_digits = 2;
+				max_digits = 20;
+				digits = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", "phrase:voicemail_enter_pass:#", "", "\\d+");
+
+			--validate the user pin number
+				pin_number_table = explode(",",pin_number);
+				for index,pin_number in pairs(pin_number_table) do
+					if (digits == pin_number) then
+						--set the variable to true
+							auth = true;
+						--set the authorized pin number that was used
+							session:setVariable("pin_number", pin_number);
+						--end the loop
+							break;
 					end
-			end
+				end
 
-		--log the destinations
-			freeswitch.consoleLog("NOTICE", "[page] destinations "..destinations.." available\n");
+			--if not authorized play a message and then hangup
+				if (not auth) then
+					session:streamFile("phrase:voicemail_fail_auth:#");
+					session:hangup("NORMAL_CLEARING");
+					return;
+				end
+		end
 
-		--create the api object
-			api = freeswitch.API();
+	--log the destinations
+		freeswitch.consoleLog("NOTICE", "[page] destinations "..destinations.." available\n");
 
-		--get the channels
-			if (check_destination_status == 'true') then
-				cmd_string = "show channels";
-				channel_result = api:executeString(cmd_string);
-			end
+	--create the api object
+		api = freeswitch.API();
 
-		--originate the calls
-			destination_count = 0;
+	--get the channels
+		if (check_destination_status == 'true') then
+			cmd_string = "show channels";
+			channel_result = api:executeString(cmd_string);
+		end
+
+	--originate the calls
+		destination_count = 0;
+		if (delay ~= "true" or (dtmf_entered == 1 or silence_triggered == 1)) then
+			
 
 			for index,value in pairs(destination_table) do
 				for destination in each_number(value) do
@@ -242,17 +284,33 @@
 					end
 				end
 			end
-
-		--send main call to the conference room
-			if (destination_count > 0) then
+		end
+	--send main call to the conference room
+		
+		if (destination_count > 0) then
+			--set moderator flag
 				if (session:getVariable("moderator") == "true") then
 					moderator_flag = ",moderator";
 				else
 					moderator_flag = "";
 				end
-				session:execute("conference", conference_bridge.."+flags{endconf,mintwo"..moderator_flag.."}");
-			else
-				session:execute("playback", "tone_stream://%(500,500,480,620);loops=3");
-			end
+			--check if delay is true
+				if (delay == "true" and (dtmf_entered == 1 or silence_triggered == 1)) then
+						
+					--play the recorded file into the page/conference. Need to wait for the page/conference to actually be started before we can end it.
+						response = api:executeString("sched_api +2 none conference "..conference_name.." play "..recording_filename);
 
-	end
+					--wait for recording to finish then end page/conference
+						response = api:executeString("sched_api +"..tostring(recording_length+4).." none conference "..conference_name.." hup all");
+				else
+					--join the moderator into the page
+						session:execute("conference", conference_bridge.."+flags{endconf,mintwo"..moderator_flag.."}");
+				end
+			
+		else
+			--error tone due to no destinations
+				session:execute("playback", "tone_stream://%(500,500,480,620);loops=3");
+		end
+		
+
+end
