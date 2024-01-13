@@ -22,6 +22,7 @@
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
+	Tony Fernandez <tfernandez@smartip.ca>
 */
 
 //includes files
@@ -536,12 +537,12 @@
 		$sql .= "and (cc_side is null or cc_side != 'agent') \n";
 	}
 	//call center queue search for member or agent
-	if (!empty($cc_side)) {
+	if (!empty($cc_side) && permission_exists('xml_cdr_cc_side')) {
 		$sql .= "and cc_side = :cc_side \n";
 		$parameters['cc_side'] = $cc_side;
 	}
 	//show specific call center queue
-	if (!empty($call_center_queue_uuid)) {
+	if (!empty($call_center_queue_uuid) && permission_exists('xml_cdr_call_center_queue_uuid')) {
 		$sql .= "and call_center_queue_uuid = :call_center_queue_uuid \n";
 		$parameters['call_center_queue_uuid'] = $call_center_queue_uuid;
 	}
