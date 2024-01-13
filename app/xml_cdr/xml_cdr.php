@@ -503,7 +503,7 @@
 			echo "		</div>\n";
 			echo "	</div>\n";
 			
-			if (permission_exists('xml_cdr_custom_fields')) {
+			if (permission_exists('xml_cdr_call_center_queue_uuid')) {
 				$sql = "select call_center_queue_uuid, queue_name, queue_extension from v_call_center_queues ";
 				$sql .= "where domain_uuid = :domain_uuid ";
 				$sql .= "order by queue_extension asc ";
