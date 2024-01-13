@@ -238,6 +238,16 @@
 		$apps[$x]['permissions'][$y]['name'] = "xml_cdr_extension_summary_all";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "xml_cdr_account_code";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "xml_cdr_cc_side";
+		$apps[$x]['permissions'][$y]['groups'][] = "user";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "xml_cdr_call_center_queue_uuid";
+		$apps[$x]['permissions'][$y]['groups'][] = "user";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 
 	//default settings
 		$y=0;
