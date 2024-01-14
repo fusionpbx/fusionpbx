@@ -110,11 +110,11 @@
 	else {
 		//show only assigned fax extensions
 		$sql = trim($sql);
-		$sql .= "from v_fax_queue as q, v_domains as d, v_users as k \n"; //Modified Line
+		$sql .= "from v_fax_queue as q, v_domains as d, v_users as u \n";
 		$sql .= "where q.domain_uuid = d.domain_uuid \n";
-		$sql .= "and q.insert_user = k.user_uuid \n";
+		$sql .= "and q.insert_user = u.user_uuid \n";
 		$sql .= "and q.domain_uuid = :domain_uuid \n";
-		$sql .= "and k.user_uuid = :user_uuid \n"; //New Line
+		$sql .= "and u.user_uuid = :user_uuid \n";
 		$parameters['domain_uuid'] = $domain_uuid;
 		$parameters['user_uuid'] = $_SESSION['user_uuid'];
 	}
@@ -125,7 +125,7 @@
 		$sql .= "	or lower(q.fax_caller_id_number) like :search \n";
 		$sql .= "	or lower(q.fax_number) like :search \n";
 		$sql .= "	or lower(q.fax_email_address) like :search \n";
-		$sql .= "	or lower(q.insert_user) like :search \n"; //New Line
+		$sql .= "	or lower(q.insert_user) like :search \n";
 		$sql .= "	or lower(q.fax_file) like :search \n";
 		$sql .= "	or lower(q.fax_status) like :search \n";
 		$sql .= "	or lower(q.fax_accountcode) like :search \n";
@@ -164,7 +164,7 @@
 	$sql .= "q.fax_number, ";
 	$sql .= "q.fax_prefix, ";
 	$sql .= "q.fax_email_address, ";
-	$sql .= "k.username as insert_user, "; // New Line
+	$sql .= "u.username as insert_user, ";
 	$sql .= "q.fax_file, ";
 	$sql .= "q.fax_status, ";
 	$sql .= "q.fax_retry_date, ";
@@ -177,7 +177,7 @@
 	$sql .= "q.fax_accountcode, ";
 	$sql .= "q.fax_command ";
 	$sql .= "FROM v_fax_queue AS q ";
-	$sql .= "JOIN v_users AS k ON q.insert_user = k.user_uuid "; // Modified Line
+	$sql .= "JOIN v_users AS u ON q.insert_user = u.user_uuid ";
 	$sql .= "JOIN v_domains AS d ON q.domain_uuid = d.domain_uuid ";
 
 	if (!empty($_GET['show']) && $_GET['show'] == "all" && permission_exists('fax_queue_all')) {
@@ -192,7 +192,7 @@
 	else {
 		// show only assigned fax extensions
 		$sql .= "WHERE q.domain_uuid = :domain_uuid ";
-		$sql .= "AND k.user_uuid = :user_uuid "; //New Line
+		$sql .= "AND u.user_uuid = :user_uuid ";
 		$parameters['domain_uuid'] = $domain_uuid;
 		$parameters['user_uuid'] = $_SESSION['user_uuid'];
 	}
@@ -204,7 +204,7 @@
 		$sql .= "	OR LOWER(q.fax_caller_id_number) LIKE :search ";
 		$sql .= "	OR LOWER(q.fax_number) LIKE :search ";
 		$sql .= "	OR LOWER(q.fax_email_address) LIKE :search ";
-		$sql .= "	OR LOWER(k.username) LIKE :search "; // New Line
+		$sql .= "	OR LOWER(u.username) LIKE :search ";
 		$sql .= "	OR LOWER(q.fax_file) LIKE :search ";
 		$sql .= "	OR LOWER(q.fax_status) LIKE :search ";
 		$sql .= "	OR LOWER(q.fax_accountcode) LIKE :search ";
@@ -309,7 +309,7 @@
 	echo th_order_by('fax_caller_id_number', $text['label-fax_caller_id_number'], $order_by, $order);
 	echo th_order_by('fax_number', $text['label-fax_number'], $order_by, $order);
 	echo th_order_by('fax_email_address', $text['label-fax_email_address'], $order_by, $order);
-	echo th_order_by('insert_user', $text['label-Insert_user'], $order_by, $order); //New Line
+	echo th_order_by('insert_user', $text['label-insert_user'], $order_by, $order);
 //	echo th_order_by('fax_file', $text['label-fax_file'], $order_by, $order);
 	echo th_order_by('fax_status', $text['label-fax_status'], $order_by, $order);
 	echo th_order_by('fax_retry_date', $text['label-fax_retry_date'], $order_by, $order);
