@@ -1,29 +1,5 @@
 <?php
 
-$text['label-Insert_user']['en-us'] = "User";
-$text['label-Insert_user']['en-gb'] = "User";
-$text['label-Insert_user']['ar-eg'] = "مستخدم";
-$text['label-Insert_user']['de-at'] = "Benutzer";
-$text['label-Insert_user']['de-ch'] = "Benutzer";
-$text['label-Insert_user']['de-de'] = "Benutzer";
-$text['label-Insert_user']['es-cl'] = "Usuario";
-$text['label-Insert_user']['es-mx'] = "Usuario";
-$text['label-Insert_user']['fr-ca'] = "Utilisateur";
-$text['label-Insert_user']['fr-fr'] = "Utilisateur";
-$text['label-Insert_user']['he-il'] = "משתמש";
-$text['label-Insert_user']['it-it'] = "";
-$text['label-Insert_user']['nl-nl'] = "Utente";
-$text['label-Insert_user']['pl-pl'] = "Użytkownik";
-$text['label-Insert_user']['pt-br'] = "Usuário";
-$text['label-Insert_user']['pt-pt'] = "Utilizado";
-$text['label-Insert_user']['ro-ro'] = "Utilizator";
-$text['label-Insert_user']['ru-ru'] = "Пользователь";
-$text['label-Insert_user']['sv-se'] = "Användare";
-$text['label-Insert_user']['uk-ua'] = "Користувач";
-$text['label-Insert_user']['zh-cn'] = "用户";
-$text['label-Insert_user']['ja-jp'] = "ユーザー";
-$text['label-Insert_user']['ko-kr'] = "사용자";
-
 $text['title-fax_queue']['en-us'] = "FAX Queue";
 $text['title-fax_queue']['en-gb'] = "FAX Queue";
 $text['title-fax_queue']['ar-eg'] = "الفاكس";
@@ -455,6 +431,30 @@ $text['description-fax_email_address']['uk-ua'] = "Введіть адресу �
 $text['description-fax_email_address']['zh-cn'] = "输入传真电子邮件地址。";
 $text['description-fax_email_address']['ja-jp'] = "FAXのメールアドレスを入力します。";
 $text['description-fax_email_address']['ko-kr'] = "팩스 이메일 주소를 입력합니다.";
+
+$text['label-insert_user']['en-us'] = "User";
+$text['label-insert_user']['en-gb'] = "User";
+$text['label-insert_user']['ar-eg'] = "مستخدم";
+$text['label-insert_user']['de-at'] = "Benutzer";
+$text['label-insert_user']['de-ch'] = "Benutzer";
+$text['label-insert_user']['de-de'] = "Benutzer";
+$text['label-insert_user']['es-cl'] = "Usuario";
+$text['label-insert_user']['es-mx'] = "Usuario";
+$text['label-insert_user']['fr-ca'] = "Utilisateur";
+$text['label-insert_user']['fr-fr'] = "Utilisateur";
+$text['label-insert_user']['he-il'] = "משתמש";
+$text['label-insert_user']['it-it'] = "";
+$text['label-insert_user']['nl-nl'] = "Utente";
+$text['label-insert_user']['pl-pl'] = "Użytkownik";
+$text['label-insert_user']['pt-br'] = "Usuário";
+$text['label-insert_user']['pt-pt'] = "Utilizado";
+$text['label-insert_user']['ro-ro'] = "Utilizator";
+$text['label-insert_user']['ru-ru'] = "Пользователь";
+$text['label-insert_user']['sv-se'] = "Användare";
+$text['label-insert_user']['uk-ua'] = "Користувач";
+$text['label-insert_user']['zh-cn'] = "用户";
+$text['label-insert_user']['ja-jp'] = "ユーザー";
+$text['label-insert_user']['ko-kr'] = "사용자";
 
 $text['label-fax_file']['en-us'] = "File";
 $text['label-fax_file']['en-gb'] = "File";
