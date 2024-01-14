@@ -181,35 +181,35 @@
 	$sql .= "JOIN v_domains AS d ON q.domain_uuid = d.domain_uuid ";
 
 	if (!empty($_GET['show']) && $_GET['show'] == "all" && permission_exists('fax_queue_all')) {
-			// show faxes for all domains
-			$sql .= "WHERE true ";
+		// show faxes for all domains
+		$sql .= "WHERE true ";
 	}
 	elseif (permission_exists('fax_queue_domain')) {
-			// show faxes for one domain
-			$sql .= "WHERE q.domain_uuid = :domain_uuid ";
-			$parameters['domain_uuid'] = $domain_uuid;
+		// show faxes for one domain
+		$sql .= "WHERE q.domain_uuid = :domain_uuid ";
+		$parameters['domain_uuid'] = $domain_uuid;
 	}
 	else {
-			// show only assigned fax extensions
-			$sql .= "WHERE q.domain_uuid = :domain_uuid ";
-			$sql .= "AND k.user_uuid = :user_uuid "; //New Line
-			$parameters['domain_uuid'] = $domain_uuid;
-			$parameters['user_uuid'] = $_SESSION['user_uuid'];
+		// show only assigned fax extensions
+		$sql .= "WHERE q.domain_uuid = :domain_uuid ";
+		$sql .= "AND k.user_uuid = :user_uuid "; //New Line
+		$parameters['domain_uuid'] = $domain_uuid;
+		$parameters['user_uuid'] = $_SESSION['user_uuid'];
 	}
 
 	if (isset($search)) {
-			$sql .= "AND (";
-			$sql .= "	LOWER(q.hostname) LIKE :search ";
-			$sql .= "	OR LOWER(q.fax_caller_id_name) LIKE :search ";
-			$sql .= "	OR LOWER(q.fax_caller_id_number) LIKE :search ";
-			$sql .= "	OR LOWER(q.fax_number) LIKE :search ";
-			$sql .= "	OR LOWER(q.fax_email_address) LIKE :search ";
-			$sql .= "	OR LOWER(k.username) LIKE :search "; // New Line
-			$sql .= "	OR LOWER(q.fax_file) LIKE :search ";
-			$sql .= "	OR LOWER(q.fax_status) LIKE :search ";
-			$sql .= "	OR LOWER(q.fax_accountcode) LIKE :search ";
-			$sql .= ") ";
-			$parameters['search'] = '%' . $search . '%';
+		$sql .= "AND (";
+		$sql .= "	LOWER(q.hostname) LIKE :search ";
+		$sql .= "	OR LOWER(q.fax_caller_id_name) LIKE :search ";
+		$sql .= "	OR LOWER(q.fax_caller_id_number) LIKE :search ";
+		$sql .= "	OR LOWER(q.fax_number) LIKE :search ";
+		$sql .= "	OR LOWER(q.fax_email_address) LIKE :search ";
+		$sql .= "	OR LOWER(k.username) LIKE :search "; // New Line
+		$sql .= "	OR LOWER(q.fax_file) LIKE :search ";
+		$sql .= "	OR LOWER(q.fax_status) LIKE :search ";
+		$sql .= "	OR LOWER(q.fax_accountcode) LIKE :search ";
+		$sql .= ") ";
+		$parameters['search'] = '%' . $search . '%';
 	}
 
 	if (isset($_GET["fax_status"]) && !empty($_GET["fax_status"])) {
