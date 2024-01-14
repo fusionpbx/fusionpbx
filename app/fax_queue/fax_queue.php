@@ -120,15 +120,15 @@
 	}
 	if (isset($search)) {
 		$sql .= "and (\n";
-		$sql .= "	 lower(q.hostname) like :search \n";
-		$sql .= "	 or lower(q.fax_caller_id_name) like :search \n";
-		$sql .= "	 or lower(q.fax_caller_id_number) like :search \n";
-		$sql .= "	 or lower(q.fax_number) like :search \n";
-		$sql .= "	 or lower(q.fax_email_address) like :search \n";
-		$sql .= "	 or lower(q.insert_user) like :search \n"; //New Line
-		$sql .= "	 or lower(q.fax_file) like :search \n";
-		$sql .= "	 or lower(q.fax_status) like :search \n";
-		$sql .= "	 or lower(q.fax_accountcode) like :search \n";
+		$sql .= "	lower(q.hostname) like :search \n";
+		$sql .= "	or lower(q.fax_caller_id_name) like :search \n";
+		$sql .= "	or lower(q.fax_caller_id_number) like :search \n";
+		$sql .= "	or lower(q.fax_number) like :search \n";
+		$sql .= "	or lower(q.fax_email_address) like :search \n";
+		$sql .= "	or lower(q.insert_user) like :search \n"; //New Line
+		$sql .= "	or lower(q.fax_file) like :search \n";
+		$sql .= "	or lower(q.fax_status) like :search \n";
+		$sql .= "	or lower(q.fax_accountcode) like :search \n";
 		$sql .= ") ";
 		$parameters['search'] = '%'.$search.'%';
 	}
@@ -199,15 +199,15 @@
 
 	if (isset($search)) {
 			$sql .= "AND (";
-			$sql .= "	 LOWER(q.hostname) LIKE :search ";
-			$sql .= "	 OR LOWER(q.fax_caller_id_name) LIKE :search ";
-			$sql .= "	 OR LOWER(q.fax_caller_id_number) LIKE :search ";
-			$sql .= "	 OR LOWER(q.fax_number) LIKE :search ";
-			$sql .= "	 OR LOWER(q.fax_email_address) LIKE :search ";
-			$sql .= "	 OR LOWER(k.username) LIKE :search "; // New Line
-			$sql .= "	 OR LOWER(q.fax_file) LIKE :search ";
-			$sql .= "	 OR LOWER(q.fax_status) LIKE :search ";
-			$sql .= "	 OR LOWER(q.fax_accountcode) LIKE :search ";
+			$sql .= "	LOWER(q.hostname) LIKE :search ";
+			$sql .= "	OR LOWER(q.fax_caller_id_name) LIKE :search ";
+			$sql .= "	OR LOWER(q.fax_caller_id_number) LIKE :search ";
+			$sql .= "	OR LOWER(q.fax_number) LIKE :search ";
+			$sql .= "	OR LOWER(q.fax_email_address) LIKE :search ";
+			$sql .= "	OR LOWER(k.username) LIKE :search "; // New Line
+			$sql .= "	OR LOWER(q.fax_file) LIKE :search ";
+			$sql .= "	OR LOWER(q.fax_status) LIKE :search ";
+			$sql .= "	OR LOWER(q.fax_accountcode) LIKE :search ";
 			$sql .= ") ";
 			$parameters['search'] = '%' . $search . '%';
 	}
