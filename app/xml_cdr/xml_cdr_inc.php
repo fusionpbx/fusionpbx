@@ -542,7 +542,7 @@
 		$parameters['cc_side'] = $cc_side;
 	}
 	//show specific call center queue
-	if (!empty($call_center_queue_uuid) && permission_exists('xml_cdr_call_center_queue_uuid')) {
+	if (!empty($call_center_queue_uuid) && permission_exists('xml_cdr_call_center_queues')) {
 		$sql .= "and call_center_queue_uuid = :call_center_queue_uuid \n";
 		$parameters['call_center_queue_uuid'] = $call_center_queue_uuid;
 	}
