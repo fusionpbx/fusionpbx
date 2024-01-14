@@ -81,6 +81,29 @@
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);
 
+//get the extensions
+	if (permission_exists('xml_cdr_search_extension')) {
+		$sql = "select extension_uuid, extension, number_alias from v_extensions ";
+		$sql .= "where domain_uuid = :domain_uuid ";
+		if (!permission_exists('xml_cdr_domain') && is_array($extension_uuids) && @sizeof($extension_uuids != 0)) {
+			$sql .= "and extension_uuid in ('".implode("','",$extension_uuids)."') "; //only show the user their extensions
+		}
+		$sql .= "order by extension asc, number_alias asc ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$database = new database;
+		$extensions = $database->select($sql, $parameters, 'all');
+	}
+
+//get the call center queues
+	if (permission_exists('xml_cdr_search_call_center_queues')) {
+		$sql = "select call_center_queue_uuid, queue_name, queue_extension from v_call_center_queues ";
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$sql .= "order by queue_extension asc ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$database = new database;
+		$call_center_queues = $database->select($sql, $parameters, 'all');
+	}
+
 //include the header
 	if ($archive_request) {
 		$document['title'] = $text['title-call_detail_records_archive'];
@@ -281,15 +304,6 @@
 			echo "	</div>\n";
 		}
 		if (permission_exists('xml_cdr_search_extension')) {
-			$sql = "select extension_uuid, extension, number_alias from v_extensions ";
-			$sql .= "where domain_uuid = :domain_uuid ";
-			if (!permission_exists('xml_cdr_domain') && is_array($extension_uuids) && @sizeof($extension_uuids != 0)) {
-				$sql .= "and extension_uuid in ('".implode("','",$extension_uuids)."') "; //only show the user their extensions
-			}
-			$sql .= "order by extension asc, number_alias asc ";
-			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-			$database = new database;
-			$result_e = $database->select($sql, $parameters, 'all');
 			echo "	<div class='form_set'>\n";
 			echo "		<div class='label'>\n";
 			echo "			".$text['label-extension']."\n";
@@ -297,8 +311,8 @@
 			echo "		<div class='field'>\n";
 			echo "			<select class='formfld' name='extension_uuid' id='extension_uuid'>\n";
 			echo "				<option value=''></option>";
-			if (is_array($result_e) && @sizeof($result_e) != 0) {
-				foreach ($result_e as &$row) {
+			if (is_array($extensions) && @sizeof($extensions) != 0) {
+				foreach ($extensions as &$row) {
 					$selected = ($row['extension_uuid'] == $extension_uuid) ? "selected" : null;
 					echo "		<option value='".escape($row['extension_uuid'])."' ".escape($selected).">".((is_numeric($row['extension'])) ? escape($row['extension']) : escape($row['number_alias'])." (".escape($row['extension']).")")."</option>";
 				}
@@ -306,7 +320,7 @@
 			echo "			</select>\n";
 			echo "		</div>\n";
 			echo "	</div>\n";
-			unset($sql, $parameters, $result_e, $row, $selected);
+			unset($sql, $parameters, $extensions, $row, $selected);
 		}
 		if (permission_exists('xml_cdr_search_caller_id')) {
 			echo "	<div class='form_set'>\n";
@@ -504,22 +518,16 @@
 			echo "		</div>\n";
 			echo "	</div>\n";
 			
-			if (permission_exists('xml_cdr_call_center_queue_uuid')) {
-				$sql = "select call_center_queue_uuid, queue_name, queue_extension from v_call_center_queues ";
-				$sql .= "where domain_uuid = :domain_uuid ";
-				$sql .= "order by queue_extension asc ";
-				$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-				$database = new database;
-				$result_cc = $database->select($sql, $parameters, 'all');
+			if (permission_exists('xml_cdr_search_call_center_queues')) {
 				echo "	<div class='form_set'>\n";
 				echo "		<div class='label'>\n";
-				echo "			".$text['label-cc-queue']."\n";
+				echo "			".$text['label-call_center_queue']."\n";
 				echo "		</div>\n";
 				echo "		<div class='field'>\n";
 				echo "			<select class='formfld' name='call_center_queue_uuid' id='call_center_queue_uuid'>\n";
 				echo "				<option value=''></option>";
-				if (is_array($result_cc) && @sizeof($result_cc) != 0) {
-					foreach ($result_cc as &$row) {
+				if (is_array($call_center_queues) && @sizeof($call_center_queues) != 0) {
+					foreach ($call_center_queues as &$row) {
 						$selected = ($row['call_center_queue_uuid'] == $call_center_queue_uuid) ? "selected" : null;
 						echo "		<option value='".escape($row['call_center_queue_uuid'])."' ".escape($selected).">".((is_numeric($row['queue_extension'])) ? escape($row['queue_extension']." (".$row['queue_name'].")") : escape($row['queue_extension'])." (".escape($row['queue_extension']).")")."</option>";
 					}
@@ -527,7 +535,7 @@
 				echo "			</select>\n";
 				echo "		</div>\n";
 				echo "	</div>\n";
-				unset($sql, $parameters, $result_cc, $row, $selected);
+				unset($sql, $parameters, $call_center_queues, $row, $selected);
 			}
 		}
 
