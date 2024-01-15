@@ -87,6 +87,27 @@ if ( session:ready() ) then
 		mute = session:getVariable("mute");
 		delay = session:getVariable("delay");
 
+	--if the call is transferred then return the call backe to the referred by user
+		referred_by = session:getVariable("sip_h_Referred-By");
+		if (referred_by ~= nil) then
+			--get the uuid of the call
+				uuid = session:getVariable("uuid");
+
+			--find the referred by user
+				referred_by_user = referred_by:match("<sip:(%d+)@");
+
+			--log the destinations
+				freeswitch.consoleLog("NOTICE", "[page] referred_by ".. referred_by ..", user "..referred_by_user.." call was tranferred\n");
+
+			--create the api object
+				api = freeswitch.API();
+				cmd_string = "uuid_transfer "..uuid.." "..referred_by_user;
+				channel_result = api:executeString(cmd_string);
+		end
+
+--referredy by is nill
+if (referred_by == nil) then
+
 	--determine whether to check if the destination is available
 		check_destination_status = session:getVariable("check_destination_status");
 		if (not check_destination_status) then check_destination_status = 'false'; end
@@ -329,5 +350,6 @@ if ( session:ready() ) then
 			--error tone due to no destinations
 				session:execute("playback", "tone_stream://%(500,500,480,620);loops=3");
 		end
-
 end
+end
+
