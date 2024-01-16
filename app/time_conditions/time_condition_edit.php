@@ -974,9 +974,20 @@ echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
 echo "	".$text['label-extension']."\n";
 echo "</td>\n";
 echo "<td class='vtable' align='left'>\n";
-echo "	<input class='formfld' type='text' name='dialplan_number' id='dialplan_number' maxlength='255' value=\"".escape($dialplan_number ?? null)."\">\n";
+if (!empty($_SESSION['ranges']['time_condition_range']['text'])) {
+	echo "	<input class='formfld' type='text' name='dialplan_number' id='dialplan_number' maxlength='255' value=\"".escape($dialplan_number ?? null).
+	"\" required='required' placeholder='".$_SESSION['ranges']['time_condition_range']['text']."'>\n";
+}
+else {
+	echo "	<input class='formfld' type='text' name='dialplan_number' id='dialplan_number' maxlength='255' value=\"".escape($dialplan_number ?? null)."\">\n";
+}
 echo "	<br />\n";
-echo "	".$text['description-extension']."<br />\n";
+if (!empty($_SESSION['ranges']['time_condition_range']['text'])) {
+	echo "	".$text['description-extension']."<br />(ex: ".$_SESSION['ranges']['time_condition_range']['text'].")\n";
+}
+else {
+	echo "	".$text['description-extension']."<br />\n";
+}
 echo "</td>\n";
 echo "</tr>\n";
 

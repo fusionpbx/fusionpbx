@@ -773,9 +773,19 @@
 	echo "	".$text['label-extension']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='number' name='queue_extension' maxlength='255' min='0' step='1' value=\"".escape($queue_extension)."\" required='required'>\n";
+	if (!empty($_SESSION['ranges']['call_center_queue_range']['text'])) {
+		echo "	<input class='formfld' type='number' name='queue_extension' maxlength='255' min='0' step='1' value=\"".escape($queue_extension)."\" required='required' placeholder='".$_SESSION['ranges']['call_center_queue_range']['text']."'>\n";
+	}
+	else {
+		echo "	<input class='formfld' type='number' name='queue_extension' maxlength='255' min='0' step='1' value=\"".escape($queue_extension)."\" required='required'>\n";
+	}
 	echo "<br />\n";
-	echo $text['description-extension']."\n";
+	if (!empty($_SESSION['ranges']['call_center_queue_range']['text'])) {
+		echo $text['description-extension']."<br />(ex: ".$_SESSION['ranges']['call_center_queue_range']['text'].")\n";
+	}
+	else {
+		echo $text['description-extension']."\n";
+	}
 	echo "</td>\n";
 	echo "</tr>\n";
 

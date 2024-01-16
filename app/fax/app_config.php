@@ -419,6 +419,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "dd945d20-0e7d-40d9-8512-641e230c76d3";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "ranges";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "fax_range";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "4xxx";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the suggested extension range(s) for fax servers";
 
 	//schema details
 		$y=0;
