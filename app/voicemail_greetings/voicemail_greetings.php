@@ -209,7 +209,7 @@
 			$array['voicemail_greetings'][$x]['greeting_filename'] = $file_name;
 			$array['voicemail_greetings'][$x]['greeting_description'] = '';
 			if (!empty($_SESSION['voicemail']['storage_type']['text']) && $_SESSION['voicemail']['storage_type']['text'] == 'base64') {
-				$array['voicemail_greetings'][$x]['greeting_base64'] = base64_encode(file_get_contents($greeting_dir.'/'.$file));
+				$array['voicemail_greetings'][$x]['greeting_base64'] = base64_encode(file_get_contents($greeting_dir.'/'.$file_name));
 			}
 
 			//save the array
