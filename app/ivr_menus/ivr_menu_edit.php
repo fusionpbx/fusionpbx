@@ -768,9 +768,20 @@
 	echo "	".$text['label-extension']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "  <input class='formfld' type='text' name='ivr_menu_extension' maxlength='255' value='".escape($ivr_menu_extension)."' required='required'>\n";
+	if (!empty($_SESSION['ranges']['ivr_range']['text'])) {
+		echo "  <input class='formfld' type='text' name='ivr_menu_extension' maxlength='255' value='".escape($ivr_menu_extension)."' required='required' placeholder='".$_SESSION['ranges']['ivr_range']['text']."'>\n";
+	}
+	else {
+		echo "  <input class='formfld' type='text' name='ivr_menu_extension' maxlength='255' value='".escape($ivr_menu_extension)."' required='required'>\n";
+	}
 	echo "<br />\n";
-	echo $text['description-extension']."\n";
+	
+	if (!empty($_SESSION['ranges']['ivr_range']['text'])) {
+		echo $text['description-extension']."<br />(ex: ".$_SESSION['ranges']['ivr_range']['text'].")\n";
+	}
+	else {
+		echo $text['description-extension']."\n";
+	}
 	echo "</td>\n";
 	echo "</tr>\n";
 
