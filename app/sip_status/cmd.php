@@ -82,6 +82,9 @@
 			break;
 		case "start":
 			$command = "sofia profile '".$profile_name."' start";
+			//ensure there are no stuck ports before trying to start the profile
+			force_close_port($profile_port);
+			force_close_port($profile_tls_port);
 			break;
 		case "stop":
 			$command = "sofia profile '".$profile_name."' stop";
