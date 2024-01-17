@@ -1082,4 +1082,56 @@ if(!function_exists('win_find_php')) {
 	}
 }
 
+/**
+ * Forces a port to close using the debugger tool.
+ * Linux OSes do not have an easy mechanism for closing a port already in use. This uses a debugger tool
+ * to connect to the running freeswitch process and close the port internally using debug symbols. This
+ * function requires freeswitch to be compiled with the --enable-debug flag.
+ * @param string $port
+ * @return void
+ */
+function force_close_port(string $port): void {
+	//ensure we can execute cli tools needed
+	if (PHP_OS !== 'Linux' || PHP_OS !== 'FreeBSD') {
+		return;
+	}
+
+	//get the pid of freeswitch
+	$pid = exec('pidof freeswitch');
+
+	//ensure it is numeric before proceeding
+	if (!is_numeric($pid)) {
+		return;
+	}
+
+	//get a list of the current connections owned by freeswitch
+	$connections = "";
+	exec("lsof -np {$pid} | grep TCP", $connections);
+	exec("lsof -np {$pid} | grep UDP", $connections);
+
+	//iterate over all the current ports
+	foreach ($connections as $conn) {
+		//seperate in to fields removing empty ones
+		$fields = array_values(array_filter(explode(" ", $conn), function ($value) {
+			if (!empty($value)) return true;
+			else return false;
+		}));
+		//remove letter from id
+		$id = substr($fields[3], 0, strlen($fields[3]) - 1);
+		//get the address and port parts
+		$elements = explode(":", $fields[8]);
+		//get the port from last element as IPv6 can have more than one ':'
+		$p = array_pop($elements);
+		//check for lsof renaming port 5060 to sip
+		if (!is_numeric($p) && $p == "sip") {
+			$p = "5060";
+		}
+		//check for matching port
+		if ($p == $port) {
+			//execute debugger to close the open connection
+			exec("gdb -p {$pid} -batch 'call close({$id})' -batch 'quit'");
+		}
+	}
+}
+
 ?>
