@@ -514,7 +514,7 @@
 								}
 
 								if (!empty($destination_cid_name_prefix)) {
-									$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"effective_caller_id_name=".xml::sanitize($destination_cid_name_prefix)."#\${caller_id_name}\" inline=\"false\"/>\n";
+									$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"effective_caller_id_name=".xml::sanitize($destination_cid_name_prefix)."#\${caller_id_name}\" inline=\"true\"/>\n";
 								}
 								if (!empty($destination_record) && $destination_record == 'true') {
 									$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"record_path=\${recordings_dir}/\${domain_name}/archive/\${strftime(%Y)}/\${strftime(%b)}/\${strftime(%d)}\" inline=\"true\"/>\n";
@@ -735,7 +735,7 @@
 											$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
 											$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "set";
 											$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "effective_caller_id_name=".$destination_cid_name_prefix."#\${caller_id_name}";
-											$dialplan["dialplan_details"][$y]["dialplan_detail_inline"] = "false";
+											$dialplan["dialplan_details"][$y]["dialplan_detail_inline"] = "true";
 											$dialplan["dialplan_details"][$y]["dialplan_detail_group"] = $dialplan_detail_group;
 											$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
 											$y++;
