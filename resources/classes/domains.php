@@ -81,7 +81,6 @@ if (!class_exists('domains')) {
 				//delete multiple records
 					if (is_array($records) && @sizeof($records) != 0) {
 						//build the delete array
-							$d = 0;
 							foreach ($records as $record) {
 								//add to the array
 									if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
@@ -144,9 +143,9 @@ if (!class_exists('domains')) {
 												if (isset($app['db'])) foreach ($app['db'] as $row) {
 													if (is_array($row['table']['name'])) {
 														$table_name = $row['table']['name']['text'];
-														echo "<pre>";
-														print_r($table_name);
-														echo "<pre>\n";
+														if (defined('STDIN')) {
+															echo "<pre>".print_r($table_name, 1)."<pre>\n";
+														}
 													}
 													else {
 														$table_name = $row['table']['name'];
@@ -255,16 +254,11 @@ if (!class_exists('domains')) {
 										//apply settings reminder
 											$_SESSION["reload_xml"] = true;
 
-										//clear the domains session array to update it
-											unset($_SESSION["domains"]);
-											unset($_SESSION['domain']);
-											unset($_SESSION['switch']);
+										//remove the domain from domains session array
+											unset($_SESSION["domains"][$id]);
 
-										//remove the domain and save to transactions
-											$domain_array['domains'][$d]['domain_uuid'] = $id;
-
-										//increment the id
-											$d++;
+										//add domain uuid to array for deletion below
+											$domain_array['domains'][] = ['domain_uuid'=>$id];
 									}
 							}
 
@@ -275,10 +269,12 @@ if (!class_exists('domains')) {
 									$database->app_name = $this->app_name;
 									$database->app_uuid = $this->app_uuid;
 									$database->delete($domain_array);
-									unset($array);
 
 								//set message
 									message::add($text['message-delete']);
+
+								//reload default/domain settings
+									$this->set();
 							}
 							unset($records);
 					}
