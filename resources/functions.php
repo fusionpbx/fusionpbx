@@ -2333,7 +2333,7 @@ if (!function_exists('is_git_repo')) {
 		chdir($path);
 		exec("git rev-parse --show-toplevel", $git_repo, $git_repo_response);
 		chdir($cwd);
-		if (($git_repo[0]) != $cwd && $git_repo_response == 0) {
+		if ((is_array($git_repo) && count($git_repo) > 0) && ($git_repo[0] != $cwd) && $git_repo_response == 0) {
 			return $git_repo[0];
 		}
 		return false;
