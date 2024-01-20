@@ -46,96 +46,96 @@ end
 
 local find_call_flow do
 
-local find_call_flow_sql = [[select t1.call_flow_uuid, t1.call_flow_status
-from v_call_flows t1 inner join v_domains t2 on t1.domain_uuid = t2.domain_uuid
-where t2.domain_name = :domain_name and (t1.call_flow_feature_code = :feature_code
-or t1.call_flow_feature_code = :short_feature_code)
-]]
+	local find_call_flow_sql = [[select t1.call_flow_uuid, t1.call_flow_status
+	from v_call_flows t1 inner join v_domains t2 on t1.domain_uuid = t2.domain_uuid
+	where t2.domain_name = :domain_name and (t1.call_flow_feature_code = :feature_code
+	or t1.call_flow_feature_code = :short_feature_code)
+	]]
 
-function find_call_flow(user)
-	local ext, domain_name = split_first(user, '@', true)
-	local _, short = split_first(ext, '+', true)
-	if not domain_name then return end
-	local dbh = Database.new('system')
-	if not dbh then return end
-	local row = dbh:first_row(find_call_flow_sql, {
-		domain_name = domain_name, feature_code = ext, short_feature_code = short
-	})
-	dbh:release()
-	if not row then return end
-	return row.call_flow_uuid, row.call_flow_status
-end
+	function find_call_flow(user)
+		local ext, domain_name = split_first(user, '@', true)
+		local _, short = split_first(ext, '+', true)
+		if not domain_name then return end
+		local dbh = Database.new('system')
+		if not dbh then return end
+		local row = dbh:first_row(find_call_flow_sql, {
+			domain_name = domain_name, feature_code = ext, short_feature_code = short
+		})
+		dbh:release()
+		if not row then return end
+		return row.call_flow_uuid, row.call_flow_status
+	end
 
 end
 
 local find_dnd do
 
-local find_dnd_sql = [[select t1.do_not_disturb
-from v_extensions t1 inner join v_domains t2 on t1.domain_uuid = t2.domain_uuid
-where t2.domain_name = :domain_name and (t1.extension = :extension or t1.number_alias=:extension)]]
-
-find_dnd = function(user)
-	local ext, domain_name = split_first(user, '@', true)
-	if not domain_name then return end
-	local dbh = Database.new('system')
-	if not dbh then return end
-	local dnd = dbh:first_value(find_dnd_sql, {domain_name = domain_name, extension = ext})
-	dbh:release()
-	return dnd
-end
+	local find_dnd_sql = [[select t1.do_not_disturb
+	from v_extensions t1 inner join v_domains t2 on t1.domain_uuid = t2.domain_uuid
+	where t2.domain_name = :domain_name and (t1.extension = :extension or t1.number_alias=:extension)]]
+	
+	find_dnd = function(user)
+		local ext, domain_name = split_first(user, '@', true)
+		if not domain_name then return end
+		local dbh = Database.new('system')
+		if not dbh then return end
+		local dnd = dbh:first_value(find_dnd_sql, {domain_name = domain_name, extension = ext})
+		dbh:release()
+		return dnd
+	end
 
 end
 
 local find_call_forward do
 
-local find_call_forward_sql = [[select t1.forward_all_destination, t1.forward_all_enabled
-from v_extensions t1 inner join v_domains t2 on t1.domain_uuid = t2.domain_uuid
-where t2.domain_name = :domain_name and (t1.extension = :extension or t1.number_alias=:extension)]]
-
-find_call_forward = function(user)
-	local ext, domain_name, number = split_first(user, '@', true)
-	if not domain_name then return end
-	ext, number = split_first(ext, '/', true)
-	local dbh = Database.new('system')
-	if not dbh then return end
-	local row = dbh:first_row(find_call_forward_sql, {domain_name = domain_name, extension = ext})
-	dbh:release()
-	if not (row and row.forward_all_enabled) then return end
-	if row.forward_all_enabled ~= 'true' then return 'false' end
-	if number then
-		return number == row.forward_all_destination and 'true' or 'false',
-			row.forward_all_destination
+	local find_call_forward_sql = [[select t1.forward_all_destination, t1.forward_all_enabled
+	from v_extensions t1 inner join v_domains t2 on t1.domain_uuid = t2.domain_uuid
+	where t2.domain_name = :domain_name and (t1.extension = :extension or t1.number_alias=:extension)]]
+	
+	find_call_forward = function(user)
+		local ext, domain_name, number = split_first(user, '@', true)
+		if not domain_name then return end
+		ext, number = split_first(ext, '/', true)
+		local dbh = Database.new('system')
+		if not dbh then return end
+		local row = dbh:first_row(find_call_forward_sql, {domain_name = domain_name, extension = ext})
+		dbh:release()
+		if not (row and row.forward_all_enabled) then return end
+		if row.forward_all_enabled ~= 'true' then return 'false' end
+		if number then
+			return number == row.forward_all_destination and 'true' or 'false',
+				row.forward_all_destination
+		end
+		return 'true', row.forward_all_destination
 	end
-	return 'true', row.forward_all_destination
-end
 
 end
 
 local find_agent_status do
 
-local find_agent_uuid_sql = [[select t1.call_center_agent_uuid
-from v_call_center_agents t1 inner join v_domains t2 on t1.domain_uuid = t2.domain_uuid
-where t2.domain_name = :domain_name and t1.agent_name = :agent_name
-]]
-
-function find_agent_status(user)
-	local agent_name, domain_name = split_first(user, '@', true)
-	local _, short = split_first(agent_name, '+', true)
-	if not domain_name then return end
-	local dbh = Database.new('system')
-	if not dbh then return end
-	local row = dbh:first_row(find_agent_uuid_sql, {
-		domain_name = domain_name, agent_name = agent_name
-	})
-	dbh:release()
-	if not row then return end
-	if row.call_center_agent_uuid then
-		local cmd = "callcenter_config agent get status "..row.call_center_agent_uuid.."";
-		freeswitch.consoleLog("notice", "[user status][login] "..cmd.."\n");
-		user_status = trim(api:executeString(cmd));
+	local find_agent_uuid_sql = [[select t1.call_center_agent_uuid
+	from v_call_center_agents t1 inner join v_domains t2 on t1.domain_uuid = t2.domain_uuid
+	where t2.domain_name = :domain_name and t1.agent_name = :agent_name
+	]]
+	
+	function find_agent_status(user)
+		local agent_name, domain_name = split_first(user, '@', true)
+		local _, short = split_first(agent_name, '+', true)
+		if not domain_name then return end
+		local dbh = Database.new('system')
+		if not dbh then return end
+		local row = dbh:first_row(find_agent_uuid_sql, {
+			domain_name = domain_name, agent_name = agent_name
+		})
+		dbh:release()
+		if not row then return end
+		if row.call_center_agent_uuid then
+			local cmd = "callcenter_config agent get status "..row.call_center_agent_uuid.."";
+			freeswitch.consoleLog("notice", "[user status][login] "..cmd.."\n");
+			user_status = trim(api:executeString(cmd));
+		end
+		return row.call_center_agent_uuid, user_status
 	end
-	return row.call_center_agent_uuid, user_status
-end
 
 end
 
