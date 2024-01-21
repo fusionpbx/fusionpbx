@@ -67,7 +67,7 @@
 
 		//set the headers
 			header('Content-type: application/octet-binary');
-			header('Content-Disposition: attachment; filename=user-summary.csv');
+			header('Content-Disposition: attachment; filename=destination-summary.csv');
 
 		//show the column names on the first line
 			$z = 0;
@@ -116,11 +116,11 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-destination_summary']."</b></div>\n";
 	echo "	<div class='actions'>\n";
-	if (permission_exists('xml_cdr_extension_summary_all') && $_GET['show'] != 'all') {
-		echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$_SESSION['theme']['button_icon_all'],'collapse'=>'hide-sm-dn','link'=>'xml_cdr_extension_summary.php?show=all']);
+	if (permission_exists('destination_summary_all') && $_GET['show'] != 'all') {
+		echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$_SESSION['theme']['button_icon_all'],'collapse'=>'hide-sm-dn','link'=>'destination_summary.php?show=all']);
 	}
-	echo button::create(['type'=>'button','label'=>$text['button-download_csv'],'icon'=>$_SESSION['theme']['button_icon_download'],'collapse'=>'hide-sm-dn','link'=>'xml_cdr_extension_summary.php?'.(!empty($_SERVER["QUERY_STRING"]) ? $_SERVER["QUERY_STRING"].'&' : null).'type=csv']);
-	echo button::create(['type'=>'button','label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'collapse'=>'hide-xs','style'=>'margin-left: 15px;','link'=>'xml_cdr_extension_summary.php']);
+	echo button::create(['type'=>'button','label'=>$text['button-download_csv'],'icon'=>$_SESSION['theme']['button_icon_download'],'collapse'=>'hide-sm-dn','link'=>'destination_summary.php?'.(!empty($_SERVER["QUERY_STRING"]) ? $_SERVER["QUERY_STRING"].'&' : null).'type=csv']);
+	echo button::create(['type'=>'button','label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'collapse'=>'hide-xs','style'=>'margin-left: 15px;','link'=>'destination_summary.php']);
 	echo button::create(['type'=>'button','label'=>$text['button-update'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save','collapse'=>'hide-xs','onclick'=>"document.getElementById('frm').submit();"]);
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
@@ -181,7 +181,7 @@
 
 		echo "</div>\n";
 
-		if (!empty($_GET['show']) && $_GET['show'] == 'all' && permission_exists('xml_cdr_extension_summary_all')) {
+		if (!empty($_GET['show']) && $_GET['show'] == 'all' && permission_exists('destination_summary_all')) {
 			echo "<input type='hidden' name='show' value='all'>";
 		}
 
@@ -191,7 +191,7 @@
 //show the results
 	echo "<table class='list'>\n";
 	echo "	<tr class='list-header'>\n";
-	if (!empty($_GET['show']) && $_GET['show'] === "all" && permission_exists('xml_cdr_extension_summary_all')) {
+	if (!empty($_GET['show']) && $_GET['show'] === "all" && permission_exists('destination_summary_all')) {
 		echo "		<th>".$text['label-domain']."</th>\n";
 	}
 	echo "		<th>".$text['label-destination_number']."</th>\n";
@@ -208,7 +208,7 @@
 	if (is_array($summary)) {
 		foreach ($summary as $key => $row) {
 			echo "<tr class='list-row'>\n";
-			if (!empty($_GET['show']) && $_GET['show'] === "all" && permission_exists('xml_cdr_extension_summary_all')) {
+			if (!empty($_GET['show']) && $_GET['show'] === "all" && permission_exists('destination_summary_all')) {
 				echo "	<td>".escape($row['domain_name'])."</td>\n";
 			}
 			echo "	<td>".escape($row['destination_number'])."</td>\n";
