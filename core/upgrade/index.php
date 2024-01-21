@@ -214,27 +214,27 @@
 			$pull_method = substr($repo_info['url'], 0, 4) == 'http' ? 'http' : 'ssh';
 			if (!$repo_info) { continue; }
 
-				echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-				echo "<tr onclick=\"if (document.getElementById('do_".$repo."')) { document.getElementById('do_".$repo."').checked = !document.getElementById('do_".$repo."').checked; }\">\n";
-				echo "	<td title=".$repo." width='30%' class='vncell' style='vertical-align: middle;'>\n";
-				echo "		".basename($repo)."\n";
-				echo "	</td>\n";
-				echo "	<td width='70%' class='vtable' style='height: 50px; cursor: ".($pull_method == 'http' ? "pointer;'" : "help;' title=\"".$text['message-upgrade_manually'].": ".$repo_info['url']."\"").">\n";
+			echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+			echo "<tr onclick=\"if (document.getElementById('do_".$repo."')) { document.getElementById('do_".$repo."').checked = !document.getElementById('do_".$repo."').checked; }\">\n";
+			echo "	<td title=".$repo." width='30%' class='vncell' style='vertical-align: middle;'>\n";
+			echo "		".basename($repo)."\n";
+			echo "	</td>\n";
+			echo "	<td width='70%' class='vtable' style='height: 50px; cursor: ".($pull_method == 'http' ? "pointer;'" : "help;' title=\"".$text['message-upgrade_manually'].": ".$repo_info['url']."\"").">\n";
 
-				if ($pull_method == 'http') {
-					echo "	<input type='checkbox' name='action[optional_apps][]' class='do_optional_app' id='do_".$repo."' value='".basename($repo)."' onclick=\"event.stopPropagation();\">";
-				}
-				else {
-					echo "	<i class='fas fa-ban mr-3' style='opacity: 0.4;'></i> ";
-				}
-				echo "		&nbsp;&nbsp;<i><a href='".str_replace(['git@','.com:'],['https://','.com/'], $repo_info['url'])."/compare/".$repo_info['commit']."...".$repo_info['branch']." 'target='_blank' title='".$repo_info['commit']."'>".$repo_info['branch']."</i></a><br/>\n";
+			if ($pull_method == 'http') {
+				echo "	<input type='checkbox' name='action[optional_apps][]' class='do_optional_app' id='do_".$repo."' value='".basename($repo)."' onclick=\"event.stopPropagation();\">";
+			}
+			else {
+				echo "	<i class='fas fa-ban mr-3' style='opacity: 0.4;'></i> ";
+			}
+			echo "		&nbsp;&nbsp;<i><a href='".str_replace(['git@','.com:'],['https://','.com/'], $repo_info['url'])."/compare/".$repo_info['commit']."...".$repo_info['branch']." 'target='_blank' title='".$repo_info['commit']."'>".$repo_info['branch']."</i></a><br/>\n";
 
-				foreach ($app_list as $app) {
+			foreach ($app_list as $app) {
 				echo " &nbsp;".$app['name']." <span style='font-weight: 600;'>".$app['version']."</span>".": ".$app['description']."<br />\n";
-				}
-				echo "	</td>\n";
-				echo "</tr>\n";
-				echo "</table>\n";
+			}
+			echo "	</td>\n";
+			echo "</tr>\n";
+			echo "</table>\n";
 		}
 		echo "</div>\n";
 		$step++;
