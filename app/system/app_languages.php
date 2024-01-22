@@ -771,4 +771,10 @@ $text['header-sys-status']['zh-cn'] = "系统状况";
 $text['header-sys-status']['ja-jp'] = "システムステータス";
 $text['header-sys-status']['ko-kr'] = "시스템 상태";
 
+$text['title-support']['en-us'] = 'Support Information';
+$text['title-support']['en-gb'] = 'Support Information';
+
+$text['title-json']['en-us'] = 'JSON';
+$text['title-json']['en-gb'] = 'JSON';
+
 ?>

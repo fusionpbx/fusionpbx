@@ -543,7 +543,7 @@
 
 		$memcache_fail = false;
 		$mod = new modules;
-		if ($mod -> active("mod_memcache")) {
+		if ($mod->active("mod_memcache")) {
 			$esl = event_socket::create();
 			if ($esl->is_connected()) {
 				$switch_cmd = "memcache status verbose";
@@ -581,6 +581,23 @@
 		echo "</table>\n";
 		echo "<br /><br />\n";
 	}
+
+//include system information function
+	include __DIR__ . '/system_information.php';
+	$system_information = system_information();
+	echo "<table width=\"100%\" border=\"0\" cellpadding=\"7\" cellspacing=\"0\">\n";
+	echo "  <tr>\n";
+	echo "	  <th class='th' colspan='2' align='left'>".$text['title-support']."</th>\n";
+	echo "  </tr>\n";
+	echo "<tr>\n";
+	echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
+	echo "		".$text['title-json']." \n";
+	echo "	</td>\n";
+	echo "	<td class=\"row_style1\">\n";
+	echo "		". json_encode($system_information)."<br>\n";
+	echo "	</td>\n";
+	echo "</tr>\n";
+	echo "</table>\n";
 
 //include the footer
 	require_once "resources/footer.php";
