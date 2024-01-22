@@ -229,6 +229,9 @@ class authentication {
 					$_SESSION["user_uuid"] = $result["user_uuid"];
 					$_SESSION["context"] = $result['domain_name'];
 
+				//used to validate the session
+					$_SESSION["user_hash"] = hash('sha256', $_SERVER['REMOTE_ADDR'].$_SERVER['HTTP_USER_AGENT']);
+
 				//user session array
 					$_SESSION["user"]["domain_uuid"] = $result["domain_uuid"];
 					$_SESSION["user"]["domain_name"] = $result["domain_name"];
@@ -236,7 +239,7 @@ class authentication {
 					$_SESSION["user"]["username"] = $result["username"];
 					$_SESSION["user"]["contact_uuid"] = $result["contact_uuid"];
 
-				//get the groups assigned to the user 
+				//get the groups assigned to the user
 					$group = new groups;
 					$group->session($result["domain_uuid"], $result["user_uuid"]);
 
