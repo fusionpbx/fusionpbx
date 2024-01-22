@@ -45,10 +45,10 @@ if (!class_exists('email')) {
 		public $subject;
 		public $body;
 		public $from_address;
-		public $from_name;
+		public $from_name; 
 		public $priority;
-		public $debug_level;
-		public $attachments;
+		public $debug_level; 
+		public $attachments; 
 		public $read_confirmation;
 		public $error;
 		public $response;
@@ -126,7 +126,7 @@ if (!class_exists('email')) {
 						if (substr($body_content_type, 0, 9) == "text/html") {
 							$this->body = $row["Body"];
 						}
-						if (substr($body_content_type, 0, 10) == "text/plain") {
+						if (substr($body_content_type, 0, 10) == "text/plain") { 
 							$body_plain = $row["Body"];
 							$this->body = $body_plain;
 						}
@@ -156,7 +156,7 @@ if (!class_exists('email')) {
 					//testfax.tif
 					$file = $parts_array["FileName"];
 
-					//inline
+					//inline	
 					$filedisposition = $parts_array["FileDisposition"];
 
 					$body_part = $parts_array["BodyPart"];
@@ -193,7 +193,7 @@ if (!class_exists('email')) {
 							$this->attachments[$x]['type'] = 'string';
 							$this->attachments[$x]['name'] = $file;
 							$this->attachments[$x]['value'] = $parts_array["Body"];
-
+						
 						//increment the id
 							$x++;
 					}
@@ -231,7 +231,7 @@ if (!class_exists('email')) {
 				//add the email_queue_uuid
 				$email_queue_uuid = uuid();
 
-				//add the from name if it exists
+				//set the email from address and name
 				$email_from = $this->from_address;
 				if (!empty($this->from_name)) {
 					$email_from = $this->from_name.'<'.$email_from.'>';
@@ -421,17 +421,10 @@ if (!class_exists('email')) {
 					$smtp['auth'] 		= $setting->get('email','smtp_auth');
 					$smtp['username'] 	= $setting->get('email','smtp_username');
 					$smtp['password'] 	= $setting->get('email','smtp_password');
-					$smtp['from'] 		= $setting->get('email','smtp_from');
-					$smtp['from_name'] 	= $setting->get('email','smtp_from_name');
+					$smtp['from'] 		= $setting->get('voicemail','smtp_from') ?? $setting->get('email','smtp_from');
+					$smtp['from_name'] 	= $setting->get('voicemail','smtp_from_name') ?? $setting->get('email','smtp_from_name');
 					$smtp['validate_certificate'] = $setting->get('email','smtp_validate_certificate');
 					$smtp['crypto_method'] = $setting->get('email','smtp_crypto_method') ?? null;
-
-					if (!empty($setting->get('voicemail','smtp_from')) && !empty($setting->get('voicemail','smtp_from'))) {
-						$smtp['from'] = $setting->get('voicemail','smtp_from');
-					}
-					if (!empty($setting->get('voicemail','smtp_from_name')) && !empty($setting->get('voicemail','smtp_from_name'))) {
-						$smtp['from_name'] = $setting->get('voicemail','smtp_from_name');
-					}
 
 					//override the domain-specific smtp server settings, if any
 					$sql = "select domain_setting_subcategory, domain_setting_value ";
@@ -626,4 +619,3 @@ $sent = $email->send();
 */
 
 ?>
-
