@@ -777,4 +777,7 @@ $text['title-support']['en-gb'] = 'Support Information';
 $text['title-json']['en-us'] = 'JSON';
 $text['title-json']['en-gb'] = 'JSON';
 
+$text['title-copy_to_clipboard']['en-us'] = 'Copy to Clipboard';
+$text['title-copy_to_clipboard']['en-gb'] = 'Copy to Clipboard';
+
 ?>

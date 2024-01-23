@@ -584,17 +584,18 @@
 
 //include system information function
 	include __DIR__ . '/system_information.php';
-	$system_information = system_information();
+	$system_information = json_encode(system_information());
+	echo "<script src='resources/javascript/copy_to_clipboard.js'></script>";
 	echo "<table width=\"100%\" border=\"0\" cellpadding=\"7\" cellspacing=\"0\">\n";
 	echo "  <tr>\n";
 	echo "	  <th class='th' colspan='2' align='left'>".$text['title-support']."</th>\n";
 	echo "  </tr>\n";
 	echo "<tr>\n";
 	echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
-	echo "		".$text['title-json']." \n";
+	echo '		<button type="button" id="btn_copy" alt="Copy" title="Copy" onclick="copyToClipboard()" class="btn btn-default " style="margin-left: 15px; "><span class="fas fa-regular fa-clipboard"></span><span class="button-label  pad">' . $text['title-copy_to_clipboard'] . '</span></button>'." \n";
 	echo "	</td>\n";
 	echo "	<td class=\"row_style1\">\n";
-	echo "		". json_encode($system_information)."<br>\n";
+	echo "		<span id='system_information' name='system_information'>". $system_information."</span>\n";
 	echo "	</td>\n";
 	echo "</tr>\n";
 	echo "</table>\n";
