@@ -82,10 +82,6 @@
 	//	Windows
 	//
 
-//includes files
-	require_once dirname(__DIR__, 2) . "/resources/require.php";
-	require_once "resources/check_auth.php";
-
 //system information
 	function system_information(): array {
 		global $db_type;
