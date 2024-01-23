@@ -47,7 +47,7 @@
 
 //additional includes
 	require_once "resources/header.php";
-	require_once __DIR__ . '/resources/functions/system_information.php';
+	require_once 'app/system/resources/functions/system_information.php';
 
 //Load an array of system information
 	$system_information = system_information();
