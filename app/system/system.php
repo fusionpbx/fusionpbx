@@ -373,14 +373,14 @@
 	echo "<script src='resources/javascript/copy_to_clipboard.js'></script>";
 	echo "<table width=\"100%\" border=\"0\" cellpadding=\"7\" cellspacing=\"0\">\n";
 	echo "  <tr>\n";
-	echo "	  <th class='th' colspan='2' align='left'>".$text['title-support']."</th>\n";
+	echo "	  <th class='th' colspan='2' align='left'>".$text['label-support']."</th>\n";
 	echo "  </tr>\n";
 	echo "<tr>\n";
 	echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
-	echo '		<button type="button" id="btn_copy" alt="Copy" title="Copy" onclick="copy_to_clipboard()" class="btn btn-default " style="margin-left: 15px; "><span class="fas fa-regular fa-clipboard"></span><span class="button-label  pad">' . $text['title-copy_to_clipboard'] . '</span></button>'." \n";
+	echo "		<button type='button' id='btn_copy' alt='".$text['label-copy']."' title="" onclick="copy_to_clipboard()" class="btn btn-default " style="margin-left: 15px; "><span class="fas fa-regular fa-clipboard"></span><span class="button-label  pad">' . $text['title-copy_to_clipboard'] . '</span></button>'." \n";
 	echo "	</td>\n";
 	echo "	<td class=\"row_style1\">\n";
-	echo "		<span id='system_information' name='system_information'>". json_encode($system_information)."</span>\n";
+	echo "		<span id='system_information' name='system_information'>". json_encode($system_information, JSON_PRETTY_PRINT)."</span>\n";
 	echo "	</td>\n";
 	echo "</tr>\n";
 	echo "</table>\n";
