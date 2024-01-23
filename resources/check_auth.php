@@ -78,7 +78,7 @@
 //validate the session address
 	if ($_SESSION['authorized'] && $_SESSION["user_hash"] !== hash('sha256', $_SERVER['REMOTE_ADDR'].$_SERVER['HTTP_USER_AGENT'])) {
 		session_destroy();
-		header("Location: ".PROJECT_PATH."/?path=".urlencode($target_path));
+		header("Location: ".PROJECT_PATH."/logout.php");
 	}
 
 //if the session is not authorized then verify the identity
