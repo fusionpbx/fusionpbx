@@ -72,6 +72,7 @@
 	$dialplan_number = '';
 	$hostname = '';
 	$dialplan_description = '';
+
 //ensure this is always an array
 	$marked_for_deletion = [];
 
