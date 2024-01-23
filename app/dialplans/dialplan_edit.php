@@ -102,10 +102,12 @@
 		$dialplan_enabled = $_POST["dialplan_enabled"] ?? 'false';
 		$dialplan_description = $_POST["dialplan_description"];
 		$dialplan_details_delete = $_POST["dialplan_details_delete"] ?? null;
-		if (!empty($dialplan_details_delete)) foreach ($dialplan_details_delete as $dialplan_detail) {
-			//check if it is marked for deletion
-			if (($dialplan_detail['checked'] ?? false) == 'true') {
-				$marked_for_deletion[$dialplan_detail['uuid']] = $dialplan_detail['uuid'];
+		if (!empty($dialplan_details_delete)) {
+			foreach ($dialplan_details_delete as $dialplan_detail) {
+				//check if it is marked for deletion
+				if (($dialplan_detail['checked'] ?? false) == 'true') {
+					$marked_for_deletion[$dialplan_detail['uuid']] = $dialplan_detail['uuid'];
+				}
 			}
 		}
 	}
