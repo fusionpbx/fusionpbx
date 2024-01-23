@@ -592,7 +592,7 @@
 	echo "  </tr>\n";
 	echo "<tr>\n";
 	echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
-	echo '		<button type="button" id="btn_copy" alt="Copy" title="Copy" onclick="copyToClipboard()" class="btn btn-default " style="margin-left: 15px; "><span class="fas fa-regular fa-clipboard"></span><span class="button-label  pad">' . $text['title-copy_to_clipboard'] . '</span></button>'." \n";
+	echo '		<button type="button" id="btn_copy" alt="Copy" title="Copy" onclick="copy_to_clipboard()" class="btn btn-default " style="margin-left: 15px; "><span class="fas fa-regular fa-clipboard"></span><span class="button-label  pad">' . $text['title-copy_to_clipboard'] . '</span></button>'." \n";
 	echo "	</td>\n";
 	echo "	<td class=\"row_style1\">\n";
 	echo "		<span id='system_information' name='system_information'>". $system_information."</span>\n";
