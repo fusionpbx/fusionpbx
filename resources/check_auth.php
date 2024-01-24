@@ -75,8 +75,18 @@
 		$_SESSION['authorized'] = false;
 	}
 
-//validate the session address
-	if ($_SESSION['authorized'] && $_SESSION["user_hash"] !== hash('sha256', $_SERVER['REMOTE_ADDR'].$_SERVER['HTTP_USER_AGENT'])) {
+//session validate: use HTTP_USER_AGENT as a default value
+	if (!isset($conf['session.validate'])) {
+		$conf['session.validate'][] = 'HTTP_USER_AGENT';
+	}
+
+//session validate: prepare the server array
+	foreach($conf['session.validate'] as $name) {
+		$server_array[$name] = $_SERVER[$name];
+	}
+
+//session validate: check to see if the session is valid
+	if ($_SESSION['authorized'] && $_SESSION["user_hash"] !== hash('sha256', implode($server_array))) {
 		session_destroy();
 		header("Location: ".PROJECT_PATH."/logout.php");
 	}
