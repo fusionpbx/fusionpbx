@@ -103,26 +103,12 @@
 		echo "</script>\n";
 
 		echo "<style>\n";
-
-		echo "	img.control {\n";
-		echo "		cursor: pointer;\n";
-		echo "		width: auto;\n";
-		echo "		height: 23px;\n";
-		echo "		border: none;\n";
-		echo "		opacity: 0.5;\n";
-		echo "		}\n";
-
-		echo "	img.control:hover {\n";
-		echo "		opacity: 1.0;\n";
-		echo "		}\n";
-
 		echo "	div#editor {\n";
 		echo "		text-align: left;\n";
 		echo "		width: 100%;\n";
 		echo "		height: 300px;\n";
 		echo "		font-size: 12px;\n";
 		echo "		}\n";
-
 		echo "</style>\n";
 	}
 
@@ -464,12 +450,12 @@
 		echo "		<div id='editor'></div>\n";
 		echo "		<table cellpadding='0' cellspacing='0' border='0' style='float: right; padding-top: 5px;'>\n";
 		echo "			<tr>\n";
-		echo "				<td valign='middle' style='padding-left: 6px;'><img src='resources/images/icon_numbering.png' title='Toggle Line Numbers' class='control' onclick=\"toggle_option('numbering');\"></td>\n";
-		echo "				<td valign='middle' style='padding-left: 6px;'><img src='resources/images/icon_invisibles.png' title='Toggle Invisibles' class='control' onclick=\"toggle_option('invisibles');\"></td>\n";
-		echo "				<td valign='middle' style='padding-left: 6px;'><img src='resources/images/icon_indenting.png' title='Toggle Indent Guides' class='control' onclick=\"toggle_option('indenting');\"></td>\n";
-		echo "				<td valign='middle' style='padding-left: 6px;'><img src='resources/images/icon_replace.png' title='Show Find/Replace [Ctrl+H]' class='control' onclick=\"editor.execCommand('replace');\"></td>\n";
-		echo "				<td valign='middle' style='padding-left: 6px;'><img src='resources/images/icon_goto.png' title='Show Go To Line' class='control' onclick=\"editor.execCommand('gotoline');\"></td>\n";
-		echo "				<td valign='middle' style='padding-left: 4px;'>\n";
+		echo "				<td valign='middle' style='padding-left: 6px;'><i class='fas fa-list-ul fa-lg ace_control' title=\"".$text['label-toggle_line_numbers']."\" onclick=\"toggle_option('numbering');\"></i></td>\n";
+		echo "				<td valign='middle' style='padding-left: 6px;'><i class='fas fa-eye-slash fa-lg ace_control' title=\"".$text['label-toggle_invisibles']."\" onclick=\"toggle_option('invisibles');\"></i></td>\n";
+		echo "				<td valign='middle' style='padding-left: 6px;'><i class='fas fa-indent fa-lg ace_control' title=\"".$text['label-toggle_indent_guides']."\" onclick=\"toggle_option('indenting');\"></i></td>\n";
+		echo "				<td valign='middle' style='padding-left: 6px;'><i class='fas fa-search fa-lg ace_control' title=\"".$text['label-find_replace']."\" onclick=\"editor.execCommand('replace');\"></i></td>\n";
+		echo "				<td valign='middle' style='padding-left: 6px;'><i class='fas fa-chevron-down fa-lg ace_control' title=\"".$text['label-go_to_line']."\" onclick=\"editor.execCommand('gotoline');\"></i></td>\n";
+		echo "				<td valign='middle' style='padding-left: 15px;'>\n";
 		echo "					<select id='size' class='formfld' onchange=\"document.getElementById('editor').style.fontSize = this.options[this.selectedIndex].value; focus_editor();\">\n";
 		$sizes = explode(',','9px,10px,11px,12px,14px,16px,18px,20px');
 		if (!in_array($setting_size, $sizes)) {
