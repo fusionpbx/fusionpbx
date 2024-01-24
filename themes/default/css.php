@@ -3305,6 +3305,16 @@ else { //default: white
 		overflow: auto;
 		}
 
+	i.ace_control {
+		cursor: pointer;
+		margin-right: 5px;
+		opacity: 0.5;
+		}
+
+	i.ace_control:hover {
+		opacity: 1.0;
+		}
+
 <?php
 
 //output custom css
