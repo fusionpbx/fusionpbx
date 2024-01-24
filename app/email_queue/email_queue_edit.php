@@ -62,6 +62,7 @@
 		$email_retry_count = $_POST["email_retry_count"];
 		//$email_action_before = $_POST["email_action_before"];
 		$email_action_after = $_POST["email_action_after"];
+		$email_response = $_POST["email_response"];
 	}
 
 //process the user data and save it to the database
@@ -186,6 +187,7 @@
 			$array['email_queue'][0]['email_retry_count'] = $email_retry_count;
 			//$array['email_queue'][0]['email_action_before'] = $email_action_before;
 			$array['email_queue'][0]['email_action_after'] = $email_action_after;
+			$array['email_queue'][0]['email_response'] = $email_response;
 
 		//save the data
 			$database = new database;
