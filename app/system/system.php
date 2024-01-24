@@ -377,7 +377,7 @@
 	echo "  </tr>\n";
 	echo "<tr>\n";
 	echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
-	echo "		<button type='button' id='btn_copy' alt='".$text['label-copy']."' title="" onclick="copy_to_clipboard()" class="btn btn-default " style="margin-left: 15px; "><span class="fas fa-regular fa-clipboard"></span><span class="button-label  pad">' . $text['title-copy_to_clipboard'] . '</span></button>'." \n";
+	echo "		<button type='button' id='btn_copy' alt='".$text['label-copy']."' title='' onclick='copy_to_clipboard()' class='btn btn-default' style='margin-left: 15px;'><span class='fas fa-regular fa-clipboard'></span><span class='button-label pad'>" . $text['title-copy_to_clipboard'] . "</span></button>\n";
 	echo "	</td>\n";
 	echo "	<td class=\"row_style1\">\n";
 	echo "		<span id='system_information' name='system_information'>". json_encode($system_information, JSON_PRETTY_PRINT)."</span>\n";
