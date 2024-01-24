@@ -819,28 +819,4 @@ $text['label-json']['zh-cn'] = "JSON";
 $text['label-json']['ja-jp'] = "JSON";
 $text['label-json']['ko-kr'] = "JSON";
 
-$text['label-copy_to_clipboard']['en-us'] = "Copy to Clipboard";
-$text['label-copy_to_clipboard']['en-gb'] = "Copy to Clipboard";
-$text['label-copy_to_clipboard']['ar-eg'] = "";
-$text['label-copy_to_clipboard']['de-at'] = "";
-$text['label-copy_to_clipboard']['de-ch'] = "";
-$text['label-copy_to_clipboard']['de-de'] = "";
-$text['label-copy_to_clipboard']['es-cl'] = "";
-$text['label-copy_to_clipboard']['es-mx'] = "";
-$text['label-copy_to_clipboard']['fr-ca'] = "";
-$text['label-copy_to_clipboard']['fr-fr'] = "";
-$text['label-copy_to_clipboard']['he-il'] = "";
-$text['label-copy_to_clipboard']['it-it'] = "";
-$text['label-copy_to_clipboard']['nl-nl'] = "";
-$text['label-copy_to_clipboard']['pl-pl'] = "";
-$text['label-copy_to_clipboard']['pt-br'] = "";
-$text['label-copy_to_clipboard']['pt-pt'] = "";
-$text['label-copy_to_clipboard']['ro-ro'] = "";
-$text['label-copy_to_clipboard']['ru-ru'] = "";
-$text['label-copy_to_clipboard']['sv-se'] = "";
-$text['label-copy_to_clipboard']['uk-ua'] = "";
-$text['label-copy_to_clipboard']['zh-cn'] = "";
-$text['label-copy_to_clipboard']['ja-jp'] = "";
-$text['label-copy_to_clipboard']['ko-kr'] = "";
-
 ?>
