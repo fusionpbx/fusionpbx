@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2022-2023
+	Portions created by the Initial Developer are Copyright (C) 2022-2024
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -392,16 +392,18 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-email_response']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<textarea class='formfld' style='width: 450px; height: 100px;' name='email_response'>".$email_response."</textarea>\n";
-	echo "<br />\n";
-	echo ($text['description-email_response'] ?? '')."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
+	if ($_SESSION['email_queue']['save_response']['boolean'] == 'true') {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-email_response']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' style='position: relative;' align='left'>\n";
+		echo "	<textarea class='formfld' style='width: 450px; height: 100px;' name='email_response'>".$email_response."</textarea>\n";
+		echo "<br />\n";
+		echo ($text['description-email_response'] ?? '')."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
 
 	echo "</table>";
 	echo "<br /><br />";
