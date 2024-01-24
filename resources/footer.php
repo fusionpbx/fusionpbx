@@ -160,12 +160,6 @@
 		if (isset($_SESSION['theme']['title']['text']) && $_SESSION['theme']['title']['text'] != '') {
 			$document_title = $_SESSION['theme']['title']['text'];
 		}
-		else if (isset($_SESSION['software_name'])) {
-			$document_title = $_SESSION['software_name'];
-		}
-		else {
-			$document_title = 'FusionPBX';
-		}
 		$document_title = (!empty($document['title']) ? $document['title'].' - ' : null).($document_title ?? '');
 		$view->assign('document_title', $document_title);
 	//domain selector control
