@@ -153,9 +153,10 @@
 	unset($parameters);
 
 //get the email queue settings
-	$setting = new settings();
+	$setting = new settings(["domain_uuid" => $domain_uuid]);
 	$smtp_from = $setting->get('email', 'smtp_from');
 	$smtp_from_name = $setting->get('email', 'smtp_from');
+	$save_response = $setting->get('email_queue', 'save_response');
 
 //debug information
 	if (!empty($debug) && $debug == 'true') {
@@ -178,7 +179,7 @@
 		$message .= "smtp_from needs to be set in Default Settings\n";
 	}
 	if (!is_array($email_array)) {
-		$message .= "emails_address\n";
+		$message .= "email_address\n";
 	}
 	if (empty($smtp_from)) {
 		$message .= "template_category\n";
@@ -259,3 +260,4 @@
 	}
 
 ?>
+
