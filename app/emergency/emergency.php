@@ -143,12 +143,12 @@ $object = new token;
 $token = $object->create($_SERVER['PHP_SELF']);
 
 //additional includes
-$document['title'] = 'Emergency Logs';
+$document['title'] = $text['title-emergency-logs'];
 require_once "resources/header.php";
 
 //show the content
 echo "<div class='action_bar' id='action_bar'>\n";
-echo "	<div class='heading'><b>Emergency Logs (".$num_rows.")</b></div>\n";
+echo "	<div class='heading'><b>".$text['title-emergency-logs']." (".$num_rows.")</b></div>\n";
 echo "	<div class='actions'>\n";
 if ($emergency_logs) {
 	echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','name'=>'btn_delete','style'=>'display:none;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
@@ -181,10 +181,10 @@ echo "<br /><br />\n";
 
 echo "<table class='list'>\n";
 echo "<tr class='list-header'>\n";
-echo "<th class='left'>Time</th>\n";
-echo "<th class='left'>Date</th>\n";
-echo "<th class='left'>Extension</th>\n";
-echo "<th class='left'>Event</th>\n";
+echo "<th class='left'>".$text['lable-emergency-time']."</th>\n";
+echo "<th class='left'>".$text['lable-emergency-date']."</th>\n";
+echo "<th class='left'>".$text['lable-emergency-extension']."</th>\n";
+echo "<th class='left'>".$text['lable-emergency-event']."</th>\n";
 echo "</tr>\n";
 
 if (!empty($emergency_logs) && is_array($emergency_logs) && @sizeof($emergency_logs) != 0) {
