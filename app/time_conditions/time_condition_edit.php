@@ -777,8 +777,8 @@
 					case 'mon': //month names
 						<?php
 						for ($m = 1; $m <= 12; $m++) {
-							echo "sel_start.options[sel_start.options.length] = new Option('".date('F', strtotime('2015-'.number_pad($m,2).'-01'))."', ".$m.");\n";
-							echo "sel_stop.options[sel_stop.options.length] = new Option('".date('F', strtotime('2015-'.number_pad($m,2).'-01'))."', ".$m.");\n";
+							echo "sel_start.options[sel_start.options.length] = new Option('".$text[strtolower(date('F', strtotime('2015-'.$m.'-01')))]."', ".$m.");\n";
+							echo "sel_stop.options[sel_stop.options.length] = new Option('".$text[strtolower(date('F', strtotime('2015-'.$m.'-01')))]."', ".$m.");\n";
 						}
 						?>
 						break;
@@ -800,8 +800,8 @@
 					case 'wday': //week days
 						<?php
 						for ($d = 1; $d <= 7; $d++) {
-							echo "sel_start.options[sel_start.options.length] = new Option('".date('l', strtotime('Sunday +'.($d-1).' days'))."', ".$d.");\n";
-							echo "sel_stop.options[sel_stop.options.length] = new Option('".date('l', strtotime('Sunday +'.($d-1).' days'))."', ".$d.");\n";
+							echo "sel_start.options[sel_start.options.length] = new Option('".$text[strtolower(date('l', strtotime('Sunday +'.($d-1).' days')))]."', ".$d.");\n";
+							echo "sel_stop.options[sel_stop.options.length] = new Option('".$text[strtolower(date('l', strtotime('Sunday +'.($d-1).' days')))]."', ".$d.");\n";
 						}
 						?>
 						break;
