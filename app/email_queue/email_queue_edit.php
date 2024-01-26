@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2022-2023
+	Portions created by the Initial Developer are Copyright (C) 2022-2024
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -62,6 +62,7 @@
 		$email_retry_count = $_POST["email_retry_count"];
 		//$email_action_before = $_POST["email_action_before"];
 		$email_action_after = $_POST["email_action_after"];
+		$email_response = $_POST["email_response"];
 	}
 
 //process the user data and save it to the database
@@ -186,6 +187,7 @@
 			$array['email_queue'][0]['email_retry_count'] = $email_retry_count;
 			//$array['email_queue'][0]['email_action_before'] = $email_action_before;
 			$array['email_queue'][0]['email_action_after'] = $email_action_after;
+			$array['email_queue'][0]['email_response'] = $email_response;
 
 		//save the data
 			$database = new database;
@@ -231,6 +233,13 @@
 		unset($sql, $parameters, $row);
 	}
 
+//load editor preferences/defaults
+	$setting_size = !empty($_SESSION["editor"]["font_size"]["text"]) ? $_SESSION["editor"]["font_size"]["text"] : '12px';
+	$setting_theme = !empty($_SESSION["editor"]["theme"]["text"]) ? $_SESSION["editor"]["theme"]["text"] : 'cobalt';
+	$setting_invisibles = !empty($_SESSION["editor"]["invisibles"]["boolean"]) ? $_SESSION["editor"]["invisibles"]["boolean"] : 'false';
+	$setting_indenting = !empty($_SESSION["editor"]["indent_guides"]["boolean"]) ? $_SESSION["editor"]["indent_guides"]["boolean"] : 'false';
+	$setting_numbering = !empty($_SESSION["editor"]["line_numbers"]["boolean"]) ? $_SESSION["editor"]["line_numbers"]["boolean"] : 'true';
+
 //create token
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);
@@ -238,6 +247,54 @@
 //show the header
 	$document['title'] = $text['title-email_queue'];
 	require_once "resources/header.php";
+
+	echo "<script language='JavaScript' type='text/javascript'>\n";
+
+	echo "	function toggle_option(opt) {\n";
+	echo "		switch (opt) {\n";
+	echo "			case 'numbering':\n";
+	echo "				toggle_option_do('showLineNumbers');\n";
+	echo "				toggle_option_do('fadeFoldWidgets');\n";
+	echo "				break;\n";
+	echo "			case 'invisibles':\n";
+	echo "				toggle_option_do('showInvisibles');\n";
+	echo "				break;\n";
+	echo "			case 'indenting':\n";
+	echo "				toggle_option_do('displayIndentGuides');\n";
+	echo "				break;\n";
+	echo "		}\n";
+	echo "		focus_editor();\n";
+	echo "	}\n";
+
+	echo "	function toggle_option_do(opt_name) {\n";
+	echo "		var opt_val = editor.getOption(opt_name);\n";
+	echo "		editor.setOption(opt_name, ((opt_val) ? false : true));\n";
+	echo "	}\n";
+
+	echo "	function focus_editor() {\n";
+	echo "		editor.focus();\n";
+	echo "	}\n";
+
+	//copy the value from the editor on submit
+	echo "	function set_value() {\n";
+	echo "		$('#email_body').val(editor.session.getValue());\n";
+	echo "	}\n";
+
+	//load editor value from hidden textarea
+	echo "	function load_value() {\n";
+	echo "		editor.session.setValue($('#email_body').val());";
+	echo "	}\n";
+
+	echo "</script>\n";
+
+	echo "<style>\n";
+	echo "	div#editor {\n";
+	echo "		text-align: left;\n";
+	echo "		width: 100%;\n";
+	echo "		height: 300px;\n";
+	echo "		font-size: 12px;\n";
+	echo "		}\n";
+	echo "</style>\n";
 
 //show the content
 	echo "<form name='frm' id='frm' method='post' action=''>\n";
@@ -335,7 +392,77 @@
 	echo "	".$text['label-email_body']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<textarea class='formfld' style='width: 450px; height: 100px;' name='email_body'>".$email_body."</textarea>\n";
+	echo "	<textarea class='formfld' name='email_body' id='email_body' style='display: none;'>".$email_body."</textarea>\n";
+	echo "	<div id='editor'></div>\n";
+	echo "	<table cellpadding='0' cellspacing='0' border='0' style='float: right; padding-top: 5px;'>\n";
+	echo "		<tr>\n";
+	echo "			<td valign='middle' style='padding-left: 6px;'><i class='fas fa-list-ul fa-lg ace_control' title=\"".$text['label-toggle_line_numbers']."\" onclick=\"toggle_option('numbering');\"></i></td>\n";
+	echo "			<td valign='middle' style='padding-left: 6px;'><i class='fas fa-eye-slash fa-lg ace_control' title=\"".$text['label-toggle_invisibles']."\" onclick=\"toggle_option('invisibles');\"></i></td>\n";
+	echo "			<td valign='middle' style='padding-left: 6px;'><i class='fas fa-indent fa-lg ace_control' title=\"".$text['label-toggle_indent_guides']."\" onclick=\"toggle_option('indenting');\"></i></td>\n";
+	echo "			<td valign='middle' style='padding-left: 6px;'><i class='fas fa-search fa-lg ace_control' title=\"".$text['label-find_replace']."\" onclick=\"editor.execCommand('replace');\"></i></td>\n";
+	echo "			<td valign='middle' style='padding-left: 6px;'><i class='fas fa-chevron-down fa-lg ace_control' title=\"".$text['label-go_to_line']."\" onclick=\"editor.execCommand('gotoline');\"></i></td>\n";
+	echo "			<td valign='middle' style='padding-left: 15px;'>\n";
+	echo "				<select id='size' class='formfld' onchange=\"document.getElementById('editor').style.fontSize = this.options[this.selectedIndex].value; focus_editor();\">\n";
+	$sizes = explode(',','9px,10px,11px,12px,14px,16px,18px,20px');
+	if (!in_array($setting_size, $sizes)) {
+		echo "				<option value='".$setting_size."'>".escape($setting_size)."</option>\n";
+		echo "				<option value='' disabled='disabled'></option>\n";
+	}
+	foreach ($sizes as $size) {
+		$selected = $size == $setting_size ? 'selected' : null;
+		echo "				<option value='".$size."' ".$selected.">".escape($size)."</option>\n";
+	}
+	echo "				</select>\n";
+	echo "			</td>\n";
+	echo "			<td valign='middle' style='padding-left: 4px; padding-right: 0px;'>\n";
+	$themes['Light']['chrome']= 'Chrome';
+	$themes['Light']['clouds']= 'Clouds';
+	$themes['Light']['crimson_editor']= 'Crimson Editor';
+	$themes['Light']['dawn']= 'Dawn';
+	$themes['Light']['dreamweaver']= 'Dreamweaver';
+	$themes['Light']['eclipse']= 'Eclipse';
+	$themes['Light']['github']= 'GitHub';
+	$themes['Light']['iplastic']= 'IPlastic';
+	$themes['Light']['solarized_light']= 'Solarized Light';
+	$themes['Light']['textmate']= 'TextMate';
+	$themes['Light']['tomorrow']= 'Tomorrow';
+	$themes['Light']['xcode']= 'XCode';
+	$themes['Light']['kuroir']= 'Kuroir';
+	$themes['Light']['katzenmilch']= 'KatzenMilch';
+	$themes['Light']['sqlserver']= 'SQL Server';
+	$themes['Dark']['ambiance']= 'Ambiance';
+	$themes['Dark']['chaos']= 'Chaos';
+	$themes['Dark']['clouds_midnight']= 'Clouds Midnight';
+	$themes['Dark']['cobalt']= 'Cobalt';
+	$themes['Dark']['idle_fingers']= 'idle Fingers';
+	$themes['Dark']['kr_theme']= 'krTheme';
+	$themes['Dark']['merbivore']= 'Merbivore';
+	$themes['Dark']['merbivore_soft']= 'Merbivore Soft';
+	$themes['Dark']['mono_industrial']= 'Mono Industrial';
+	$themes['Dark']['monokai']= 'Monokai';
+	$themes['Dark']['pastel_on_dark']= 'Pastel on dark';
+	$themes['Dark']['solarized_dark']= 'Solarized Dark';
+	$themes['Dark']['terminal']= 'Terminal';
+	$themes['Dark']['tomorrow_night']= 'Tomorrow Night';
+	$themes['Dark']['tomorrow_night_blue']= 'Tomorrow Night Blue';
+	$themes['Dark']['tomorrow_night_bright']= 'Tomorrow Night Bright';
+	$themes['Dark']['tomorrow_night_eighties']= 'Tomorrow Night 80s';
+	$themes['Dark']['twilight']= 'Twilight';
+	$themes['Dark']['vibrant_ink']= 'Vibrant Ink';
+	echo "				<select id='theme' class='formfld' onchange=\"editor.setTheme('ace/theme/' + this.options[this.selectedIndex].value); focus_editor();\">\n";
+	foreach ($themes as $optgroup => $theme) {
+		echo "				<optgroup label='".$optgroup."'>\n";
+		foreach ($theme as $value => $label) {
+			$selected = strtolower($label) == strtolower($setting_theme) ? 'selected' : null;
+			echo "				<option value='".$value."' ".$selected.">".escape($label)."</option>\n";
+		}
+		echo "				</optgroup>\n";
+	}
+
+	echo "				</select>\n";
+	echo "			</td>\n";
+	echo "		</tr>\n";
+	echo "	</table>\n";
 	echo "<br />\n";
 	echo $text['description-email_body']."\n";
 	echo "</td>\n";
@@ -390,16 +517,18 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-email_response']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<textarea class='formfld' style='width: 450px; height: 100px;' name='email_response'>".$email_response."</textarea>\n";
-	echo "<br />\n";
-	echo ($text['description-email_response'] ?? '')."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
+	if ($_SESSION['email_queue']['save_response']['boolean'] == 'true') {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-email_response']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' style='position: relative;' align='left'>\n";
+		echo "	<textarea class='formfld' style='width: 450px; height: 100px;' name='email_response'>".$email_response."</textarea>\n";
+		echo "<br />\n";
+		echo ($text['description-email_response'] ?? '')."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
 
 	echo "</table>";
 	echo "<br /><br />";
@@ -407,6 +536,40 @@
 	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 
 	echo "</form>";
+
+
+	echo "<script type='text/javascript' src='".PROJECT_PATH."/resources/ace/ace.js' charset='utf-8'></script>\n";
+	echo "<script type='text/javascript'>\n";
+
+//load editor
+	echo "	var editor = ace.edit('editor');\n";
+	echo "	editor.setOptions({\n";
+	echo "		mode: 'ace/mode/html',\n";
+	echo "		theme: 'ace/theme/'+document.getElementById('theme').options[document.getElementById('theme').selectedIndex].value,\n";
+	echo "		selectionStyle: 'text',\n";
+	echo "		cursorStyle: 'smooth',\n";
+	echo "		showInvisibles: ".$setting_invisibles.",\n";
+	echo "		displayIndentGuides: ".$setting_indenting.",\n";
+	echo "		showLineNumbers: ".$setting_numbering.",\n";
+	echo "		showGutter: true,\n";
+	echo "		scrollPastEnd: true,\n";
+	echo "		fadeFoldWidgets: ".$setting_numbering.",\n";
+	echo "		showPrintMargin: false,\n";
+	echo "		highlightGutterLine: false,\n";
+	echo "		useSoftTabs: false\n";
+	echo "		});\n";
+	echo "	document.getElementById('editor').style.fontSize='".$setting_size."';\n";
+	echo "	focus_editor();\n";
+
+//load value into editor
+	echo "	load_value();\n";
+
+//remove certain keyboard shortcuts
+	echo "	editor.commands.bindKey('Ctrl-T', null);\n"; //disable transpose letters - prefer new browser tab
+	echo "	editor.commands.bindKey('Ctrl-F', null);\n"; //disable find - control broken with bootstrap
+	echo "	editor.commands.bindKey('Ctrl-H', null);\n"; //disable replace - control broken with bootstrap
+
+	echo "</script>\n";
 
 //include the footer
 	require_once "resources/footer.php";

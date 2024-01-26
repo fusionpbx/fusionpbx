@@ -35,7 +35,9 @@
     <enable_rport_rfc3581 perm="RW">on</enable_rport_rfc3581>
     <privacy_in perm="">off</privacy_in>
     <privacy_out perm="">off</privacy_out>
-    <quick_transfer perm="">blind</quick_transfer>
+    <quick_transfer perm="">{if isset($snom_quick_transfer)}{$snom_quick_transfer}{else}new_call{/if}</quick_transfer>
+    <transfer_dialing_on_transfer perm="">{if isset($snom_transfer_dialing_on_transfer)}{$snom_transfer_dialing_on_transfer}{else}blind{/if}</transfer_dialing_on_transfer>
+    <transfer_dialing_on_other perm="">{if isset($snom_transfer_dialing_on_other)}{$snom_transfer_dialing_on_other}{else}blind{/if}</transfer_dialing_on_other>
     <call_screen_fkeys_on_connected perm="">F_HOLD F_TRANSFER F_CONFERENCE</call_screen_fkeys_on_connected>
     <!-- Updates -->
     <update_policy perm="">{if isset($snom_update_policy)}{$snom_update_policy}{else}auto_update{/if}</update_policy>
