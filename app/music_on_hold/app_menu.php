@@ -5,7 +5,9 @@
 	$apps[$x]['menu'][$y]['title']['en-gb'] = "Music on Hold";
 	$apps[$x]['menu'][$y]['title']['ar-eg'] = "الموسيقى متوقفة";
 	$apps[$x]['menu'][$y]['title']['de-at'] = "Wartemusik";
+	$apps[$x]['menu'][$y]['title']['de-ch'] = "Wartemusik";
 	$apps[$x]['menu'][$y]['title']['de-de'] = "Wartemusik";
+	$apps[$x]['menu'][$y]['title']['el-gr'] = "Μουσική σε αναμονή";
 	$apps[$x]['menu'][$y]['title']['es-cl'] = "Música en espera";
 	$apps[$x]['menu'][$y]['title']['es-mx'] = "Música en Hold";
 	$apps[$x]['menu'][$y]['title']['fr-ca'] = "Musique sur Hold";
@@ -20,6 +22,7 @@
 	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Музыка на удержании";
 	$apps[$x]['menu'][$y]['title']['sv-se'] = "Väntmusik";
 	$apps[$x]['menu'][$y]['title']['uk-ua'] = "Музика на утриманні";
+	$apps[$x]['menu'][$y]['title']['tr-tr'] = "Beklemedeki Müzik";
 	$apps[$x]['menu'][$y]['title']['zh-cn'] = "保留音乐";
 	$apps[$x]['menu'][$y]['title']['ja-jp'] = "保留音";
 	$apps[$x]['menu'][$y]['title']['ko-kr'] = "음악 보류";
