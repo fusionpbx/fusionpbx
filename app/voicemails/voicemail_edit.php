@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2023
+ Portions created by the Initial Developer are Copyright (C) 2008-2024
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -281,6 +281,16 @@
 						unset($_SESSION['destinations']['array']);
 					}
 
+				//delete record name if requested
+					if (
+						$_POST['recorded_name'] == 1 and
+						!empty($_SESSION['switch']['storage']['dir']) &&
+						file_exists($_SESSION['switch']['storage']['dir'].'/voicemail/default/'.$_SESSION['domain_name'].'/'.$voicemail_id.'/recorded_name.wav') &&
+						(permission_exists('voicemail_greeting_play') || permission_exists('voicemail_greeting_download'))
+						) {
+						@unlink($_SESSION['switch']['storage']['dir'].'/voicemail/default/'.$_SESSION['domain_name'].'/'.$voicemail_id.'/recorded_name.wav');
+					}
+
 				//set message
 					if ($action == "add" && permission_exists('voicemail_add')) {
 						message::add($text['message-add']);
@@ -301,7 +311,7 @@
 	}
 
 //pre-populate the form
-	if (!empty($_GET)&& is_uuid($_GET["id"]) && empty($_POST["persistformvar"])) {
+	if (!empty($_GET) && is_uuid($_GET["id"]) && empty($_POST["persistformvar"])) {
 		$voicemail_uuid = $_GET["id"];
 		$sql = "select * from v_voicemails ";
 		$sql .= "where domain_uuid = :domain_uuid ";
@@ -561,7 +571,29 @@
 	echo $text['description-voicemail_tutorial']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
-	
+
+	if (
+		!empty($_SESSION['switch']['storage']['dir']) &&
+		file_exists($_SESSION['switch']['storage']['dir'].'/voicemail/default/'.$_SESSION['domain_name'].'/'.$voicemail_id.'/recorded_name.wav') &&
+		(permission_exists('voicemail_greeting_play') || permission_exists('voicemail_greeting_download'))
+		) {
+		echo "<tr>\n";
+		echo "<td class='vncell' rowspan='2' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-recorded_name']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable playback_progress_bar_background' id='recording_progress_bar_recorded_name' style='display: none; border-bottom: none; padding-top: 0 !important; padding-bottom: 0 !important;' align='left'><span class='playback_progress_bar'  id='recording_progress_recorded_name'></span></td>\n";
+		echo "</tr>\n";
+		echo "<tr>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "<audio id='recording_audio_recorded_name' style='display: none;' preload='none' ontimeupdate=\"update_progress('recorded_name')\" onended=\"recording_reset('recorded_name');\" src='voicemail_name.php?id=".escape($voicemail_id)."' type='audio/x-wav'></audio>";
+		echo button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'icon'=>$_SESSION['theme']['button_icon_play'],'id'=>'recording_button_recorded_name','style'=>'display: inline-block; margin-right: 15px; margin-top: -2px;','onclick'=>"recording_play('recorded_name')"]);
+		echo "<input type='checkbox' name='recorded_name' id='recorded_name' value='1'><label for='recorded_name' style='display: inline-block; padding-top: 4px; padding-left: 5px;'>".$text['label-delete']."</label>";
+		echo "<br />\n";
+		echo $text['description-recorded_name']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
+
 	echo "<tr>\n";
 	echo "<td class='vncell' rowspan='2' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-greeting']."\n";
