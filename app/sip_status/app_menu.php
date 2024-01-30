@@ -7,6 +7,7 @@
 	$apps[$x]['menu'][$y]['title']['de-at'] = "SIP Status";
 	$apps[$x]['menu'][$y]['title']['de-ch'] = "SIP Status";
 	$apps[$x]['menu'][$y]['title']['de-de'] = "SIP Status";
+	$apps[$x]['menu'][$y]['title']['el-gr'] = "Κατάσταση SIP";
 	$apps[$x]['menu'][$y]['title']['es-cl'] = "Estado de SIP";
 	$apps[$x]['menu'][$y]['title']['es-mx'] = "SIP Situación";
 	$apps[$x]['menu'][$y]['title']['fr-ca'] = "SIP État";
@@ -21,6 +22,7 @@
 	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Статус SIP";
 	$apps[$x]['menu'][$y]['title']['sv-se'] = "SIP Status";
 	$apps[$x]['menu'][$y]['title']['uk-ua'] = "Стан SIP";
+	$apps[$x]['menu'][$y]['title']['tr-tr'] = "SIP Durumu";
 	$apps[$x]['menu'][$y]['title']['zh-cn'] = "SIP 现况";
 	$apps[$x]['menu'][$y]['title']['ja-jp'] = "SIP ステータス";
 	$apps[$x]['menu'][$y]['title']['ko-kr'] = "SIP 상태";

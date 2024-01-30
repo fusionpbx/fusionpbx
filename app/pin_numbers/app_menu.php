@@ -7,6 +7,7 @@
 	$apps[$x]['menu'][$y]['title']['de-at'] = "PIN Nummern";
 	$apps[$x]['menu'][$y]['title']['de-ch'] = "PIN Nummern";
 	$apps[$x]['menu'][$y]['title']['de-de'] = "PIN Nummern";
+	$apps[$x]['menu'][$y]['title']['el-gr'] = "Αριθμοί PIN";
 	$apps[$x]['menu'][$y]['title']['es-cl'] = "Números de PIN";
 	$apps[$x]['menu'][$y]['title']['es-mx'] = "Números de PIN";
 	$apps[$x]['menu'][$y]['title']['fr-ca'] = "Numéros PIN";
@@ -21,6 +22,7 @@
 	$apps[$x]['menu'][$y]['title']['ru-ru'] = "PIN коды";
 	$apps[$x]['menu'][$y]['title']['sv-se'] = "PIN-nummer";
 	$apps[$x]['menu'][$y]['title']['uk-ua'] = "PIN Кількість";
+	$apps[$x]['menu'][$y]['title']['tr-tr'] = "PIN Numaraları";
 	$apps[$x]['menu'][$y]['title']['zh-cn'] = "密码";
 	$apps[$x]['menu'][$y]['title']['ja-jp'] = "暗証番号";
 	$apps[$x]['menu'][$y]['title']['ko-kr'] = "PIN 번호";

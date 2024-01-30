@@ -22,6 +22,7 @@
 	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Поток";
 	$apps[$x]['menu'][$y]['title']['sv-se'] = "Strömmar";
 	$apps[$x]['menu'][$y]['title']['uk-ua'] = "Потоки";
+	$apps[$x]['menu'][$y]['title']['tr-tr'] = "Canlı Yayınlar";
 	$apps[$x]['menu'][$y]['title']['zh-cn'] = "溪流";
 	$apps[$x]['menu'][$y]['title']['ja-jp'] = "ストリーム";
 	$apps[$x]['menu'][$y]['title']['ko-kr'] = "스트림";

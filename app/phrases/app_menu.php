@@ -5,7 +5,9 @@
 	$apps[$x]['menu'][$y]['title']['en-gb'] = "Phrases";
 	$apps[$x]['menu'][$y]['title']['ar-eg'] = "الصيغة";
 	$apps[$x]['menu'][$y]['title']['de-at'] = "Phrasen";
+	$apps[$x]['menu'][$y]['title']['de-ch'] = "Phrasen";
 	$apps[$x]['menu'][$y]['title']['de-de'] = "Phrasen";
+	$apps[$x]['menu'][$y]['title']['el-gr'] = "φράσεις";
 	$apps[$x]['menu'][$y]['title']['es-cl'] = "Grabaciones";
 	$apps[$x]['menu'][$y]['title']['es-mx'] = "Frases";
 	$apps[$x]['menu'][$y]['title']['fr-ca'] = "Phrases";
@@ -20,6 +22,7 @@
 	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Фразы";
 	$apps[$x]['menu'][$y]['title']['sv-se'] = "Fraser";
 	$apps[$x]['menu'][$y]['title']['uk-ua'] = "Фрази";
+	$apps[$x]['menu'][$y]['title']['tr-tr'] = "Cümleler";
 	$apps[$x]['menu'][$y]['title']['zh-cn'] = "短语";
 	$apps[$x]['menu'][$y]['title']['ja-jp'] = "フレーズ";
 	$apps[$x]['menu'][$y]['title']['ko-kr'] = "실없는 말";
