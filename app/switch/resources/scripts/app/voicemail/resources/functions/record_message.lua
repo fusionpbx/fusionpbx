@@ -1,5 +1,5 @@
 --	Part of FusionPBX
---	Copyright (C) 2013-2023 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2013-2024 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -58,8 +58,8 @@
 	function record_message()
 
 		--set the variables
-			local db = dbh or Database.new('system')
-			local settings = Settings.new(db, domain_name, domain_uuid)
+			local db = dbh or Database.new('system');
+			local settings = Settings.new(db, domain_name, domain_uuid);
 			local message_max_length = settings:get('voicemail', 'message_max_length', 'numeric') or 300;
 			local message_silence_threshold = settings:get('voicemail', 'message_silence_threshold', 'numeric') or 200;
 			local message_silence_seconds = settings:get('voicemail', 'message_silence_seconds', 'numeric') or 3;
@@ -77,11 +77,14 @@
 
 		--check voicemail recording instructions setting
 			if (skip_instructions == nil) then
-				if (voicemail_recording_instructions == 'true') then
-					skip_instructions = 'false';
-				elseif (voicemail_recording_instructions == 'false') then
+				if (voicemail_recording_instructions == 'false') then
 					skip_instructions = 'true';
+				else
+					skip_instructions = 'false';
 				end
+				channel_variable_skip_instructions_exists = 'false';
+			else
+				channel_variable_skip_instructions_exists = 'true';
 			end
 
 		--record your message at the tone press any key or stop talking to end the recording
@@ -92,7 +95,7 @@
 					dtmf_digits = session:playAndGetDigits(0, 1, 1, 500, "#", "phrase:voicemail_record_message", "", "\\d+");
 				end
 			end
-		
+
 		--voicemail ivr options
 			if (session:ready()) then
 				if (dtmf_digits == nil) then
@@ -240,7 +243,7 @@
 							else
 								--send information to the console
 								freeswitch.consoleLog("notice", "neither mod_shout or lame found, defaulting to wav\n");
-								
+
 								--use wav format
 								vm_message_ext = "wav";
 							end
@@ -277,20 +280,22 @@
 				end
 			end
 
-		--check voicemail recording options setting
-			if (skip_instructions == nil) then
+		--check voicemail recording options setting (let channel variable take priority over options setting in database)
+			if (channel_variable_skip_instructions_exists == 'true') then
 				if (skip_options == nil) then
-					if (voicemail_recording_options == 'true') then
-						skip_options = 'false';
-					elseif (voicemail_recording_options == 'false') then
-						skip_options = 'true';
-					end
+					skip_options = skip_instructions;
 				end
 			else
-				skip_options = skip_instructions;
+				if (skip_options == nil) then
+					if (voicemail_recording_options == 'false') then
+						skip_options = 'true';
+					else
+						skip_options = 'false';
+					end
+				end
 			end
 
-		--options press 1 to listen to the recording, press 2 to save the recording, press 3 to re-record
+		--option to play, save, re-record or delete the message
 			if (session:ready()) then
 				if (skip_options == "true") then
 					--save the message

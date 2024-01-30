@@ -1,5 +1,5 @@
 --	Part of FusionPBX
---	Copyright (C) 2013 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2013-2024 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -97,7 +97,7 @@
 					--	end
 					--end
 
-				--option to play, save, and re-record the greeting
+				--option to play, save, re-record or delete the greeting
 					if (session:ready()) then
 						timeouts = 0;
 						record_menu("greeting", voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".tmp.wav", greeting_id, menu);
