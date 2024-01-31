@@ -120,9 +120,9 @@
         <action function="play-file" data="voicemail/vm-rerecord.wav"/>
         <action function="play-file" data="voicemail/vm-press.wav"/>
         <action function="say" data="$3" method="pronounced" type="name_spelled"/>
-<!--        <action function="play-file" data="voicemail/vm-delete_recording.wav"/>
+        <action function="play-file" data="voicemail/vm-delete_recording.wav"/>
         <action function="play-file" data="voicemail/vm-press.wav"/>
-        <action function="say" data="$4" method="pronounced" type="name_spelled"/>-->
+        <action function="say" data="$4" method="pronounced" type="name_spelled"/>
       </match>
     </input>
   </macro>
