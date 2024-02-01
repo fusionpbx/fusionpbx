@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2014-2021
+	Copyright (C) 2014-2023
 	All Rights Reserved.
 
 	Contributor(s):
@@ -417,7 +417,7 @@
 							$templates['snom370-SIP'] = 'snom/370';
 							$templates['snom820-SIP'] = 'snom/820';
 							$templates['snom-m3-SIP'] = 'snom/m3';
-							
+
 							$templates['Fanvil X6'] = 'fanvil/x6';
 							$templates['Fanvil i30'] = 'fanvil/i30';
 
@@ -514,7 +514,7 @@
 							$templates['Flyingvoice FIP15G'] = 'flyingvoice/fip15g';
 							$templates['Flyingvoice FIP16'] = 'flyingvoice/fip16';
 							$templates['Flyingvoice FIP16PLUS'] = 'flyingvoice/fip16plus';
-							
+
 							foreach ($templates as $key=>$value){
 								if(stripos($_SERVER['HTTP_USER_AGENT'],$key)!== false) {
 									$device_template = $value;
@@ -892,7 +892,7 @@
 								if (is_uuid($device_user_uuid) && $_SESSION['provision']['contact_groups']['boolean'] == "true") {
 									$this->contact_append($contacts, $line, $domain_uuid, $device_user_uuid, 'groups');
 								}
-	
+
 							//get the contacts assigned to the user and add to the contacts array
 								if (is_uuid($device_user_uuid) && $_SESSION['provision']['contact_users']['boolean'] == "true") {
 									$this->contact_append($contacts, $line, $domain_uuid, $device_user_uuid, 'users');
@@ -983,6 +983,8 @@
 					$variables['outbound_proxy_primary'] = $lines[$x]['outbound_proxy_primary'];
 					$variables['outbound_proxy_secondary'] = $lines[$x]['outbound_proxy_secondary'];
 					$variables['display_name'] = $lines[$x]['display_name'];
+					$variables['location'] = $device_location;
+					$variables['description'] = $device_description;
 
 				//update the device keys by replacing variables with their values
 					foreach($variables as $name => $value) {
@@ -1116,7 +1118,7 @@
 
 				//set the device address in the correct format
 					$device_address = $this->format_address($device_address, $device_vendor);
-				
+
 				// set date/time for versioning provisioning templates
 					if (!empty($_SESSION['provision']['version_format']['text'])) {
 						$time = date($_SESSION['provision']['version_format']['text']);
@@ -1379,3 +1381,4 @@
 	} //end provision class
 
 ?>
+
