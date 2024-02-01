@@ -1,5 +1,5 @@
 --	Part of FusionPBX
---	Copyright (C) 2013 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2013-2024 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -41,7 +41,7 @@
 				max_len_seconds = 30;
 				silence_threshold = 30;
 				silence_seconds = 5;
-			
+
 			--make sure the voicemail directory exists
 				mkdir(voicemail_dir.."/"..voicemail_id);
 
@@ -93,7 +93,7 @@
 			--play the name
 				--session:streamFile(voicemail_dir.."/"..voicemail_id.."/recorded_name.wav");
 
-			--option to play, save, and re-record the name
+			--option to play, save, re-record or delete the name
 				if (session:ready()) then
 					timeouts = 0;
 					record_menu("name", voicemail_dir.."/"..voicemail_id.."/recorded_name.wav",nil, menu);
