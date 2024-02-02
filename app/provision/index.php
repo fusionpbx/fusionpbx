@@ -324,114 +324,119 @@
 		}
 	}
 
-//http authentication - digest
-	if (!empty($provision["http_auth_username"]) && empty($provision["http_auth_type"])) { $provision["http_auth_type"] = "digest"; }
-	if (!empty($provision["http_auth_username"]) && $provision["http_auth_type"] === "digest" && !empty($provision["http_auth_enabled"]) && $provision["http_auth_enabled"] === "true") {
-		//function to parse the http auth header
-			function http_digest_parse($txt) {
-				//protect against missing data
-				$needed_parts = array('nonce'=>1, 'nc'=>1, 'cnonce'=>1, 'qop'=>1, 'username'=>1, 'uri'=>1, 'response'=>1);
-				$data = array();
-				$keys = implode('|', array_keys($needed_parts));
-				preg_match_all('@('.$keys.')=(?:([\'"])([^\2]+?)\2|([^\s,]+))@', $txt, $matches, PREG_SET_ORDER);
-				foreach ($matches as $m) {
-					$data[$m[1]] = $m[3] ? $m[3] : $m[4];
-					unset($needed_parts[$m[1]]);
-				}
-				return $needed_parts ? false : $data;
+//if not logged in with permission, require authentcation
+	if (!permission_exists("device_files")) {
+
+		//http authentication - digest
+			if (!empty($provision["http_auth_username"]) && empty($provision["http_auth_type"])) { $provision["http_auth_type"] = "digest"; }
+			if (!empty($provision["http_auth_username"]) && $provision["http_auth_type"] === "digest" && !empty($provision["http_auth_enabled"]) && $provision["http_auth_enabled"] === "true") {
+				//function to parse the http auth header
+					function http_digest_parse($txt) {
+						//protect against missing data
+						$needed_parts = array('nonce'=>1, 'nc'=>1, 'cnonce'=>1, 'qop'=>1, 'username'=>1, 'uri'=>1, 'response'=>1);
+						$data = array();
+						$keys = implode('|', array_keys($needed_parts));
+						preg_match_all('@('.$keys.')=(?:([\'"])([^\2]+?)\2|([^\s,]+))@', $txt, $matches, PREG_SET_ORDER);
+						foreach ($matches as $m) {
+							$data[$m[1]] = $m[3] ? $m[3] : $m[4];
+							unset($needed_parts[$m[1]]);
+						}
+						return $needed_parts ? false : $data;
+					}
+		
+				//function to request digest authentication
+					function http_digest_request($realm) {
+						header('HTTP/1.1 401 Authorization Required');
+						header('WWW-Authenticate: Digest realm="'.$realm.'", qop="auth", nonce="'.uniqid().'", opaque="'.md5($realm).'"');
+						header("Content-Type: text/html");
+						$content = 'Authorization Cancelled';
+						header("Content-Length: ".strval(strlen($content)));
+						echo $content;
+						die();
+					}
+		
+				//set the realm
+					$realm = $_SESSION['domain_name'];
+		
+				//request authentication
+					if (empty($_SERVER['PHP_AUTH_DIGEST'])) {
+						http_digest_request($realm);
+					}
+		
+				//check for valid digest authentication details
+					if (isset($provision["http_auth_username"]) > 0 && strlen($provision["http_auth_username"])) {
+						if (!($data = http_digest_parse($_SERVER['PHP_AUTH_DIGEST'])) || ($data['username'] != $provision["http_auth_username"])) {
+							header('HTTP/1.1 401 Unauthorized');
+							header("Content-Type: text/html");
+							$content = 'Unauthorized '.$__line__;
+							header("Content-Length: ".strval(strlen($content)));
+							echo $content;
+							exit;
+						}
+					}
+		
+				//generate the valid response
+					$authorized = false;
+					if (!$authorized && is_array($_SESSION['provision']["http_auth_password"])) {
+						foreach ($_SESSION['provision']["http_auth_password"] as $password) {
+							$A1 = md5($provision["http_auth_username"].':'.$realm.':'.$password);
+							$A2 = md5($_SERVER['REQUEST_METHOD'].':'.$data['uri']);
+							$valid_response = md5($A1.':'.$data['nonce'].':'.$data['nc'].':'.$data['cnonce'].':'.$data['qop'].':'.$A2);
+							if ($data['response'] == $valid_response) {
+								$authorized = true;
+								break;
+							}
+						}
+						unset($password);
+					}
+					if (!$authorized) {
+						header('HTTP/1.0 401 Unauthorized');
+						header("Content-Type: text/html");
+						$content = 'Unauthorized '.$__line__;
+						header("Content-Length: ".strval(strlen($content)));
+						echo $content;
+						exit;
+					}
 			}
-
-		//function to request digest authentication
-			function http_digest_request($realm) {
-				header('HTTP/1.1 401 Authorization Required');
-				header('WWW-Authenticate: Digest realm="'.$realm.'", qop="auth", nonce="'.uniqid().'", opaque="'.md5($realm).'"');
-				header("Content-Type: text/html");
-				$content = 'Authorization Cancelled';
-				header("Content-Length: ".strval(strlen($content)));
-				echo $content;
-				die();
-			}
-
-		//set the realm
-			$realm = $_SESSION['domain_name'];
-
-		//request authentication
-			if (empty($_SERVER['PHP_AUTH_DIGEST'])) {
-				http_digest_request($realm);
-			}
-
-		//check for valid digest authentication details
-			if (isset($provision["http_auth_username"]) > 0 && strlen($provision["http_auth_username"])) {
-				if (!($data = http_digest_parse($_SERVER['PHP_AUTH_DIGEST'])) || ($data['username'] != $provision["http_auth_username"])) {
-					header('HTTP/1.1 401 Unauthorized');
+		
+		//http authentication - basic
+			if (!empty($provision["http_auth_username"]) && $provision["http_auth_type"] === "basic" && $provision["http_auth_enabled"] === "true") {
+				if (!isset($_SERVER['PHP_AUTH_USER'])) {
+					header('WWW-Authenticate: Basic realm="'.$_SESSION['domain_name'].'"');
+					header('HTTP/1.0 401 Authorization Required');
 					header("Content-Type: text/html");
-					$content = 'Unauthorized '.$__line__;
+					$content = 'Authorization Required';
 					header("Content-Length: ".strval(strlen($content)));
 					echo $content;
 					exit;
 				}
-			}
-
-		//generate the valid response
-			$authorized = false;
-			if (!$authorized && is_array($_SESSION['provision']["http_auth_password"])) {
-				foreach ($_SESSION['provision']["http_auth_password"] as $password) {
-					$A1 = md5($provision["http_auth_username"].':'.$realm.':'.$password);
-					$A2 = md5($_SERVER['REQUEST_METHOD'].':'.$data['uri']);
-					$valid_response = md5($A1.':'.$data['nonce'].':'.$data['nc'].':'.$data['cnonce'].':'.$data['qop'].':'.$A2);
-					if ($data['response'] == $valid_response) {
-						$authorized = true;
-						break;
+				else {
+					$authorized = false;
+					if (is_array($_SESSION['provision']["http_auth_password"])) {
+						foreach ($_SESSION['provision']["http_auth_password"] as $password) {
+							if ($_SERVER['PHP_AUTH_PW'] == $password) {
+								$authorized = true;
+								break;
+							}
+						}
+						unset($password);
+					}
+					if (!$authorized) {
+						//access denied
+						syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempt but failed http basic authentication for ".check_str($_REQUEST['mac']));
+						header('HTTP/1.0 401 Unauthorized');
+						header('WWW-Authenticate: Basic realm="'.$_SESSION['domain_name'].'"');
+						unset($_SERVER['PHP_AUTH_USER'],$_SERVER['PHP_AUTH_PW']);
+						$content = 'Unauthorized';
+						header("Content-Length: ".strval(strlen($content)));
+						echo $content;
+						exit;
 					}
 				}
-				unset($password);
 			}
-			if (!$authorized) {
-				header('HTTP/1.0 401 Unauthorized');
-				header("Content-Type: text/html");
-				$content = 'Unauthorized '.$__line__;
-				header("Content-Length: ".strval(strlen($content)));
-				echo $content;
-				exit;
-			}
-	}
 
-//http authentication - basic
-	if (!empty($provision["http_auth_username"]) && $provision["http_auth_type"] === "basic" && $provision["http_auth_enabled"] === "true") {
-		if (!isset($_SERVER['PHP_AUTH_USER'])) {
-			header('WWW-Authenticate: Basic realm="'.$_SESSION['domain_name'].'"');
-			header('HTTP/1.0 401 Authorization Required');
-			header("Content-Type: text/html");
-			$content = 'Authorization Required';
-			header("Content-Length: ".strval(strlen($content)));
-			echo $content;
-			exit;
-		}
-		else {
-			$authorized = false;
-			if (is_array($_SESSION['provision']["http_auth_password"])) {
-				foreach ($_SESSION['provision']["http_auth_password"] as $password) {
-					if ($_SERVER['PHP_AUTH_PW'] == $password) {
-						$authorized = true;
-						break;
-					}
-				}
-				unset($password);
-			}
-			if (!$authorized) {
-				//access denied
-				syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempt but failed http basic authentication for ".check_str($_REQUEST['mac']));
-				header('HTTP/1.0 401 Unauthorized');
-				header('WWW-Authenticate: Basic realm="'.$_SESSION['domain_name'].'"');
-				unset($_SERVER['PHP_AUTH_USER'],$_SERVER['PHP_AUTH_PW']);
-				$content = 'Unauthorized';
-				header("Content-Length: ".strval(strlen($content)));
-				echo $content;
-				exit;
-			}
-		}
 	}
-
+		
 //if password was defined in the system -> variables page then require the password.
 	if (!empty($provision['password'])) {
 		//deny access if the password doesn't match
