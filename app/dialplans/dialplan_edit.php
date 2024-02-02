@@ -48,6 +48,20 @@
 		exit;
 	}
 
+//declared functions
+	/**
+	 * Checks if a dialplan detail record is marked for deletion
+	 * @param string $uuid UUID of the dialplan detail record
+	 * @param array $deleted_details array of dialplan detail records marked for deletion
+	 * @return bool Returns true if user has permission and dialplan detail is marked for deletion
+	 */
+	function marked_for_deletion(string $uuid, array $deleted_details): bool {
+		if (permission_exists('dialplan_detail_delete')) {
+			return array_key_exists($uuid, $deleted_details);
+		}
+		return false;
+	}
+
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
@@ -58,6 +72,9 @@
 	$dialplan_number = '';
 	$hostname = '';
 	$dialplan_description = '';
+
+//ensure this is always an array
+	$marked_for_deletion = [];
 
 //set the action as an add or an update
 	if (!empty($_GET["id"]) && (is_uuid($_GET["id"]))) {
@@ -79,12 +96,20 @@
 		$dialplan_name = $_POST["dialplan_name"];
 		$dialplan_number = $_POST["dialplan_number"];
 		$dialplan_order = $_POST["dialplan_order"];
-		$dialplan_continue = $_POST["dialplan_continue"] != '' ? $_POST["dialplan_continue"] : 'false';
+		$dialplan_continue = $_POST["dialplan_continue"] ?? 'false';
 		$dialplan_details = $_POST["dialplan_details"] ?? null;
 		$dialplan_context = $_POST["dialplan_context"];
 		$dialplan_enabled = $_POST["dialplan_enabled"] ?? 'false';
 		$dialplan_description = $_POST["dialplan_description"];
 		$dialplan_details_delete = $_POST["dialplan_details_delete"] ?? null;
+		if (!empty($dialplan_details_delete)) {
+			foreach ($dialplan_details_delete as $dialplan_detail) {
+				//check if it is marked for deletion
+				if (($dialplan_detail['checked'] ?? false) == 'true') {
+					$marked_for_deletion[$dialplan_detail['uuid']] = $dialplan_detail['uuid'];
+				}
+			}
+		}
 	}
 
 //get the list of applications
@@ -245,7 +270,7 @@
 			$y = 0;
 			if (!empty($_POST["dialplan_details"]) && is_array($_POST["dialplan_details"])) {
 				foreach ($_POST["dialplan_details"] as $row) {
-					if (!empty($row["dialplan_detail_tag"])) {
+					if (!empty($row["dialplan_detail_tag"]) && !marked_for_deletion($row['dialplan_detail_uuid'] ?? '', $marked_for_deletion)) {
 						if (!empty($row["dialplan_detail_uuid"])) {
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_uuid'] = $row["dialplan_detail_uuid"];
 						}
