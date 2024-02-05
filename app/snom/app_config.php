@@ -334,5 +334,13 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "New dialtone when the hold is pressed.";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "10d7e528-d3ca-495c-bfdc-7969d3235601";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "snom_provision_timer_seconds";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "If a value greater than 0 is set (=number of seconds) the phone configuration will be requested from the setting server after the time has elapsed.";
 
 ?>
