@@ -103,6 +103,11 @@
 		return $exists;
 	}
 
+//escape single quote with a back slash and single quote
+	function escape_quote($value) {
+		return str_replace("'", "\'", $value);
+	}
+
 //check to see if the process exists
 	$pid_exists = process_exists($pid_file);
 
@@ -246,15 +251,15 @@
 
 		//define the fax file
 			$common_variables = '';
-			$common_variables = "accountcode='"                  . $fax_accountcode         . "',";
-			$common_variables .= "sip_h_accountcode='"          . $fax_accountcode         . "',";
-			$common_variables .= "domain_uuid="                  . $domain_uuid             . ",";
-			$common_variables .= "domain_name="                  . $domain_name             . ",";
-			$common_variables .= "origination_caller_id_name='"   . $fax_caller_id_name      . "',";
-			$common_variables .= "origination_caller_id_number='" . $fax_caller_id_number    . "',";
-			$common_variables .= "fax_ident='"                    . $fax_caller_id_number    . "',";
-			$common_variables .= "fax_header='"                   . $fax_caller_id_name      . "',";
-			$common_variables .= "fax_file='"                     . $fax_file                . "',";
+			$common_variables = "accountcode='"                  . escape_quote($fax_accountcode) . "',";
+			$common_variables .= "sip_h_accountcode='"           . escape_quote($fax_accountcode) . "',";
+			$common_variables .= "domain_uuid="                  . $domain_uuid . ",";
+			$common_variables .= "domain_name="                  . $domain_name . ",";
+			$common_variables .= "origination_caller_id_name='"  . escape_quote($fax_caller_id_name) . "',";
+			$common_variables .= "origination_caller_id_number=" . $fax_caller_id_number . ",";
+			$common_variables .= "fax_ident='"                    . escape_quote($fax_caller_id_number) . "',";
+			$common_variables .= "fax_header='"                   . escape_quote($fax_caller_id_name) . "',";
+			$common_variables .= "fax_file='"                     . escape_quote($fax_file) . "',";
 
 		//extract fax_dtmf from the fax number
 			fax_split_dtmf($fax_number, $fax_dtmf);
