@@ -177,7 +177,7 @@
 	unset($sql, $parameters);
 
 //get the domain_name and domain_uuid
-	if ($_SESSION['provision']['http_domain_filter']['boolean'] == "true") {
+	if (empty($domain_uuid)) {
 		//get the domain_name
 			$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
 			$domain_name = $domain_array[0];
@@ -531,5 +531,3 @@
 	}
 
 ?>
-
-
