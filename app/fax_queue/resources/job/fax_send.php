@@ -103,9 +103,14 @@
 		return $exists;
 	}
 
-//escape single quote with a back slash and single quote
+//remove single quote
 	function escape_quote($value) {
-		return str_replace("'", "\'", $value);
+		if (!empty($value)) {
+			return str_replace("'", "", $value);
+		}
+		else {
+			return false;
+		}
 	}
 
 //check to see if the process exists
