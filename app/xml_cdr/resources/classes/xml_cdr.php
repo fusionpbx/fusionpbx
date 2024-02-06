@@ -479,6 +479,14 @@ if (!class_exists('xml_cdr')) {
 							//marked as missed
 							$missed_call = $xml->variables->missed_call;
 						}
+						if (isset($xml->variables->billsec) && $xml->variables->billsec > 0) {
+							//answered call
+							$missed_call = 'false';
+						}
+						if (isset($xml->variables->cc_side) && $xml->variables->cc_side == 'agent') {
+							//call center
+							$missed_call = 'false';
+						}
 						if (isset($xml->variables->fax_success)) {
 							//fax server
 							$missed_call = 'false';
@@ -495,17 +503,9 @@ if (!class_exists('xml_cdr')) {
 							//voicemail
 							$missed_call = 'true';
 						}
-						if (isset($xml->variables->voicemail_message) && $xml->variables->voicemail_message == true) {
+						if (isset($xml->variables->voicemail_answer_stamp) && !empty($xml->variables->voicemail_answer_stamp)) {
 							//voicemail
 							$missed_call = 'true';
-						}
-						if (isset($xml->variables->billsec) && $xml->variables->billsec > 0) {
-							//answered call
-							$missed_call = 'false';
-						}
-						if (isset($xml->variables->cc_side) && $xml->variables->cc_side == 'agent') {
-							//call center
-							$missed_call = 'false';
 						}
 						if (isset($xml->variables->cc_side) && $xml->variables->cc_side == 'member'
 							&& isset($xml->variables->cc_cause) && $xml->variables->cc_cause == 'cancel') {
@@ -569,6 +569,12 @@ if (!class_exists('xml_cdr')) {
 							$status = 'missed';
 						}
 						if (substr($destination_number, 0, 3) == '*99') {
+							$status = 'voicemail';
+						}
+						if (isset($xml->variables->voicemail_answer_stamp)) {
+							$status = 'voicemail';
+						}
+						if (isset($xml->variables->voicemail_id)) {
 							$status = 'voicemail';
 						}
 						if ($xml->variables->hangup_cause == 'ORIGINATOR_CANCEL') {
@@ -675,7 +681,7 @@ if (!class_exists('xml_cdr')) {
 						$this->array[$key]['last_arg'] = urldecode($xml->variables->last_arg);
 
 					//voicemail message success
-						if ($xml->variables->voicemail_action == "save" && $xml->variables->voicemail_message_seconds > 0){
+						if (!empty($xml->variables->voicemail_answer_stamp) && $xml->variables->voicemail_message_seconds > 0){
 							$this->array[$key]['voicemail_message'] = "true";
 						}
 						else { //if ($xml->variables->voicemail_action == "save") {
@@ -1221,7 +1227,7 @@ if (!class_exists('xml_cdr')) {
 
 					//voicemails
 					if ($app['application'] == 'voicemails') {
-						$app['status'] = 'answered';
+						$app['status'] = 'voicemail';
 					}
 
 					//debug - add the callee_id_number to the end of the status
