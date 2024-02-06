@@ -452,6 +452,9 @@
 	$prov->file = $file;
 	$file_contents = $prov->render();
 
+//clean the output buffer
+	ob_clean();
+
 //deliver the customized config over HTTP/HTTPS
 	//need to make sure content-type is correct
 	if (!empty($_REQUEST['content_type']) && $_REQUEST['content_type'] == 'application/octet-stream') {
