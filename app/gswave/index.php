@@ -127,7 +127,7 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-gswave']."</b></div>\n";
 	echo "	<div class='actions'>\n";
-	echo "		<a href='https://play.google.com/store/apps/details?id=com.grandstream.wave' target='_blank'><img src='/app/gswave/resources/images/google_play.png' style='width: auto; height: 30px;' /></a>";
+	echo "		<a href='https://play.google.com/store/apps/details?id=com.grandstream.ucm' target='_blank'><img src='/app/gswave/resources/images/google_play.png' style='width: auto; height: 30px;' /></a>";
 	echo "		<a href='https://apps.apple.com/us/app/grandstream-wave/id1523254549' target='_blank'><img src='/app/gswave/resources/images/apple_app_store.png' style='width: auto; height: 30px;' /></a>";
 	//echo button::create(['type'=>'button','label'=>'Website','icon'=>'globe','style='margin-left: 15px;','link'=>'http://www.grandstream.com/products/ip-voice-telephony/softphone-app/product/grandstream-wave']);
 	echo "	</div>\n";
