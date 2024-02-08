@@ -645,8 +645,8 @@
 
 			//execute delete
 				$database = new database;
-				$database->app_name = 'voicemails';
-				$database->app_uuid = 'b523c2d2-64cd-46f1-9520-ca4b4098e044';
+				$database->app_name = $this->app_name;
+				$database->app_name = $this->app_uuid;
 				$database->delete($array);
 				unset($array);
 
@@ -685,8 +685,8 @@
 
 			//execute update
 				$database = new database;
-				$database->app_name = 'voicemails';
-				$database->app_uuid = 'b523c2d2-64cd-46f1-9520-ca4b4098e044';
+				$database->app_name = $this->app_name;
+				$database->app_name = $this->app_uuid;
 				$database->save($array);
 				unset($array);
 
@@ -717,8 +717,8 @@
 
 			//execute update
 				$database = new database;
-				$database->app_name = 'voicemails';
-				$database->app_uuid = 'b523c2d2-64cd-46f1-9520-ca4b4098e044';
+				$database->app_name = $this->app_name;
+				$database->app_name = $this->app_uuid;
 				$database->save($array);
 				unset($array);
 
