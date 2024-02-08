@@ -245,7 +245,7 @@
 											$feature_event_notify = new feature_event_notify;
 											$feature_event_notify->domain_name = $_SESSION['domain_name'];
 											$feature_event_notify->extension = $extension['extension'];
-											$feature_event_notify->do_not_disturb = $extension['do_not_disturb'];
+											$feature_event_notify->do_not_disturb = $extension['do_not_disturb'] == "true" ? "false" : "true";
 											$feature_event_notify->ring_count = ceil($extension['call_timeout'] / 6);
 											$feature_event_notify->forward_all_enabled = $extension['forward_all_enabled'];
 											$feature_event_notify->forward_busy_enabled = $extension['forward_busy_enabled'];
