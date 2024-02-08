@@ -474,7 +474,7 @@
 <Enable_Broadsoft_Hoteling_1_ ua="na">No</Enable_Broadsoft_Hoteling_1_>
 <Hoteling_Subscription_Expires_1_ ua="na">3600</Hoteling_Subscription_Expires_1_>
 <!-- Proxy and Registration -->
-<Proxy_1_ ua="na">{$domain_name}</Proxy_1_>
+<Proxy_1_ ua="na">{$account.1.server_address}</Proxy_1_>
 <Outbound_Proxy_1_ ua="na">{$account.1.outbound_proxy_primary}</Outbound_Proxy_1_>
 <Alternate_Proxy_1_ ua="na"/>
 <Alternate_Outbound_Proxy_1_ ua="na"/>
