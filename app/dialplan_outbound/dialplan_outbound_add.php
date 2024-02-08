@@ -613,7 +613,6 @@
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = 'set';
 							if ($dialplan_expression == '(^911$|^933$)') {
 								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = 'effective_caller_id_number=${emergency_caller_id_number}';
-								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = 'call_date=${strftime(%d-%b-%Y %r)}';
 							}
 							else {
 								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = 'effective_caller_id_number=${outbound_caller_id_number}';
@@ -623,6 +622,16 @@
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_enabled'] = 'true';
 
 							if ($dialplan_expression == '(^911$|^933$)') {
+								$y++;
+								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_uuid'] = uuid();
+								$array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = $_SESSION['domain_uuid'];
+								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $dialplan_uuid;
+								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = 'action';
+								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = 'set';
+								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = 'call_date=${strftime(%d-%b-%Y %r)}';
+								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $y * 10;
+								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
+								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_enabled'] = 'false';
 								$y++;
 								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_uuid'] = uuid();
 								$array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = $_SESSION['domain_uuid'];

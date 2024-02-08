@@ -25,14 +25,14 @@
 */
 
 /**
- * switch class provides methods for copying scripts
+ * switch class provides methods for copying switch_files
  *
  * @method string correct_path
- * @method string copy_files
- * @method string write_config
+ * @method string copy_scripts
+ * @method string copy_languages
  */
-if (!class_exists('scripts')) {
-	class scripts {
+if (!class_exists('switch_files')) {
+	class switch_files {
 
 		/**
 		 * Called when the object is created
@@ -58,7 +58,7 @@ if (!class_exists('scripts')) {
 		/**
 		 * Copy the switch scripts to the switch directory
 		 */
-		public function copy_files() {
+		public function copy_scripts() {
 
 			//include files
 			require dirname(__DIR__, 4) . "/resources/require.php";
@@ -81,11 +81,8 @@ if (!class_exists('scripts')) {
 			if (file_exists($conf['switch.scripts.dir'])) {
 				$destination_directory = $conf['switch.scripts.dir'];
 			}
-			elseif (file_exists('/usr/share/examples/fusionpbx/scripts')) {
-				$destination_directory = '/usr/share/examples/fusionpbx/scripts';
-			}
-			elseif (file_exists('/usr/local/share/freeswitch/scripts')) {
-				$destination_directory = '/usr/local/share/freeswitch/scripts';
+			elseif (file_exists('/etc/freeswitch/scripts')) {
+				$destination_directory = '/etc/freeswitch/scripts';
 			}
 			elseif (file_exists('/usr/local/freeswitch/scripts')) {
 				$destination_directory = '/usr/local/freeswitch/scripts';
@@ -112,6 +109,54 @@ if (!class_exists('scripts')) {
 
 		}
 
+
+		/**
+		 * Copy the switch languages to the switch directory
+		 */
+		public function copy_languages() {
+
+			//include files
+			require dirname(__DIR__, 4) . "/resources/require.php";
+
+			//get the source directory
+			if (file_exists('/usr/share/examples/freeswitch/conf/languages')) {
+				$source_directory = '/usr/share/examples/fusionpbx/conf/languages';
+			}
+			elseif (file_exists('/usr/local/www/fusionpbx/app/switch/resources/conf/languages')) {
+				$source_directory = '/usr/local/www/fusionpbx/app/switch/resources/conf/languages';
+			}
+			elseif (file_exists('/var/www/fusionpbx/app/switch/resources/conf/languages')) {
+				$source_directory = '/var/www/fusionpbx/app/switch/resources/conf/languages';
+			}
+			else {
+				$source_directory = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/switch/resources/conf/languages';
+			}
+
+			//get the destination directory
+			if (file_exists($conf['switch.scripts.dir'])) {
+				$destination_directory = $conf['switch.conf.dir'].'/languages';
+			}
+			elseif (file_exists('/etc/freeswitch/languages')) {
+				$destination_directory = '/usr/local/share/freeswitch/languages';
+			}
+			elseif (file_exists('/usr/local/freeswitch/conf/languages')) {
+				$destination_directory = '/usr/local/freeswitch/conf/languages';
+			}
+
+			//copy the languages directory
+			if (!empty($source_directory) && is_readable($source_directory)) {
+				//copy the main languages
+				recursive_copy($source_directory, $destination_directory);
+				unset($source_directory);
+			}
+			else {
+				throw new Exception("Cannot read from '$source_directory' to get the scripts");
+			}
+			chmod($destination_directory, 0775);
+			unset($destination_directory);
+
+		}
+
 	}
 }
 
@@ -119,8 +164,9 @@ if (!class_exists('scripts')) {
 //example use
 
 //update config.lua
-	$obj = new switch;
-	$obj->copy_files();
+	$obj = new app_switch;
+	$obj->copy_scripts();
+	$obj->copy_languages();
 */
 
 ?>
