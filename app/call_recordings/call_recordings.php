@@ -230,16 +230,16 @@
 		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, $param, "class='shrink'");
 	}
 	echo th_order_by('caller_id_name', $text['label-caller_id_name'], $order_by, $order, null, "class='hide-sm-dn shrink'");
-	echo th_order_by('caller_id_number', $text['label-caller_id_number'], $order_by, $order, null, "class='pct-10'");
+	echo th_order_by('caller_id_number', $text['label-caller_id_number'], $order_by, $order, null, "class='pct-20'");
 	echo th_order_by('caller_destination', $text['label-caller_destination'], $order_by, $order, null, "class='hide-sm-dn shrink'");
-	echo th_order_by('destination_number', $text['label-destination_number'], $order_by, $order, null, "class='hide-sm-dn shrink'");
-	echo th_order_by('call_recording_name', $text['label-call_recording_name'], $order_by, $order, null, "class='pct-40 hide-sm-dn'");
+	echo th_order_by('destination_number', $text['label-destination_number'], $order_by, $order, null, "class='pct-20 shrink'");
+	echo th_order_by('call_recording_name', $text['label-call_recording_name'], $order_by, $order, null, "class='pct-30 hide-sm-dn'");
 	if (permission_exists('call_recording_play') || permission_exists('call_recording_download')) {
 		echo "<th class='shrink center'>".$text['label-recording']."</th>\n";
 		$col_count++;
 	}
 	echo th_order_by('call_recording_length', $text['label-call_recording_length'], $order_by, $order, null, "class='right hide-sm-dn shrink'");
-	echo th_order_by('call_recording_date', $text['label-call_recording_date'], $order_by, $order, null, "class='center'");
+	echo th_order_by('call_recording_date', $text['label-call_recording_date'], $order_by, $order, null, "class='pct-30 center'");
 	echo th_order_by('call_direction', $text['label-call_direction'], $order_by, $order, null, "class='hide-sm-dn shrink'");
 	if (permission_exists('xml_cdr_details')) {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
@@ -254,7 +254,7 @@
 
 			//playback progress bar
 			if (permission_exists('call_recording_play')) {
-				echo "<tr class='list-row' id='recording_progress_bar_".escape($row['call_recording_uuid'])."' style='display: none;'><td class='playback_progress_bar_background' style='padding: 0; border: none;' colspan='".$col_count."'><span class='playback_progress_bar' id='recording_progress_".escape($row['call_recording_uuid'])."'></span></td>".(permission_exists('xml_cdr_details') ? "<td class='action-button' style='border-bottom: none !important;'></td>" : null)."</tr>\n";
+				echo "<tr class='list-row' id='recording_progress_bar_".escape($row['call_recording_uuid'])."' style='display: none;' onclick=\"recording_play('".escape($row['call_recording_uuid'])."')\"><td id='playback_progress_bar_background_".escape($row['call_recording_uuid'])."' class='playback_progress_bar_background' colspan='".$col_count."'><span class='playback_progress_bar' id='recording_progress_".escape($row['call_recording_uuid'])."'></span></td>".(permission_exists('xml_cdr_details') ? "<td class='action-button' style='border-bottom: none !important;'></td>" : null)."</tr>\n";
 				echo "<tr class='list-row' style='display: none;'><td></td></tr>\n"; // dummy row to maintain alternating background color
 			}
 			if (permission_exists('call_recording_play')) {
@@ -273,8 +273,8 @@
 			echo "	<td class='hide-sm-dn shrink'>".escape($row['caller_id_name'])."</td>\n";
 			echo "	<td class='overflow'>".escape($row['caller_id_number'])."</td>\n";
 			echo "	<td class='overflow hide-sm-dn shrink'>".escape($row['caller_destination'])."</td>\n";
-			echo "	<td class='overflow hide-sm-dn shrink'>".escape($row['destination_number'])."</td>\n";
-			echo "	<td class='hide-sm-dn nowrap'>".escape($row['call_recording_name'])."</td>\n";
+			echo "	<td class='overflow shrink'>".escape($row['destination_number'])."</td>\n";
+			echo "	<td class='overflow hide-sm-dn nowrap'>".escape($row['call_recording_name'])."</td>\n";
 			if (permission_exists('call_recording_play') || permission_exists('call_recording_download')) {
 				echo "	<td class='middle button center no-link no-wrap'>";
 				if (file_exists($row['call_recording_path'].'/'.$row['call_recording_name'])) {
@@ -295,7 +295,7 @@
 				echo "	</td>\n";
 			}
 			echo "	<td class='right overflow hide-sm-dn shrink'>".($row['call_recording_length'] <= 59 ? '0:' : null).escape($call_recording_length_padding)."</td>\n";
-			echo "	<td class='center no-wrap'>".escape($row['call_recording_date_formatted'])." <span class='hide-sm-dn'>".escape($row['call_recording_time_formatted'])."</span></td>\n";
+			echo "	<td class='overflow center no-wrap'>".escape($row['call_recording_date_formatted'])." <span class='hide-sm-dn'>".escape($row['call_recording_time_formatted'])."</span></td>\n";
 			echo "	<td class='left hide-sm-dn shrink'>".($row['call_direction'] != '' ? escape($text['label-'.$row['call_direction']]) : null)."</td>\n";
 			if (permission_exists('xml_cdr_details')) {
 				echo "	<td class='action-button'>\n";
