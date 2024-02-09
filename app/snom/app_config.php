@@ -345,7 +345,7 @@
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "32324f5e-e476-48e3-b658-b5d6e08337cb";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "snom_dhcp_perm";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "snom_dhcp";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "on";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
