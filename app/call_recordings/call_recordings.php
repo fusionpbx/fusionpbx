@@ -227,19 +227,19 @@
 		$col_count++;
 	}
 	if ($show == "all" && permission_exists('call_recording_all')) {
-		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, $param, "class='shrink'");
+		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, $param, "class='hide-sm-dn shrink'");
 	}
-	echo th_order_by('caller_id_name', $text['label-caller_id_name'], $order_by, $order, null, "class='hide-sm-dn shrink'");
-	echo th_order_by('caller_id_number', $text['label-caller_id_number'], $order_by, $order, null, "class='pct-20'");
-	echo th_order_by('caller_destination', $text['label-caller_destination'], $order_by, $order, null, "class='hide-sm-dn shrink'");
-	echo th_order_by('destination_number', $text['label-destination_number'], $order_by, $order, null, "class='pct-20 shrink'");
-	echo th_order_by('call_recording_name', $text['label-call_recording_name'], $order_by, $order, null, "class='pct-30 hide-sm-dn'");
+	echo th_order_by('caller_id_name', $text['label-caller_id_name'], $order_by, $order, null, "class='hide-sm-dn'");
+	echo th_order_by('caller_id_number', $text['label-caller_id_number'], $order_by, $order, null, "class='pct-15'");
+	echo th_order_by('caller_destination', $text['label-caller_destination'], $order_by, $order, null, "class='pct-10 hide-sm-dn'");
+	echo th_order_by('destination_number', $text['label-destination_number'], $order_by, $order, null, "class='pct-10'");
+	echo th_order_by('call_recording_name', $text['label-call_recording_name'], $order_by, $order, null, "class='pct-20 hide-sm-dn'");
 	if (permission_exists('call_recording_play') || permission_exists('call_recording_download')) {
 		echo "<th class='shrink center'>".$text['label-recording']."</th>\n";
 		$col_count++;
 	}
 	echo th_order_by('call_recording_length', $text['label-call_recording_length'], $order_by, $order, null, "class='right hide-sm-dn shrink'");
-	echo th_order_by('call_recording_date', $text['label-call_recording_date'], $order_by, $order, null, "class='pct-30 center'");
+	echo th_order_by('call_recording_date', $text['label-call_recording_date'], $order_by, $order, null, "class='pct-20 center'");
 	echo th_order_by('call_direction', $text['label-call_direction'], $order_by, $order, null, "class='hide-sm-dn shrink'");
 	if (permission_exists('xml_cdr_details')) {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
@@ -271,9 +271,9 @@
 				echo "	<td class='overflow hide-sm-dn shrink'>".escape($row['domain_name'])."</td>\n";
 			}
 			echo "	<td class='hide-sm-dn shrink'>".escape($row['caller_id_name'])."</td>\n";
-			echo "	<td class='overflow'>".escape($row['caller_id_number'])."</td>\n";
-			echo "	<td class='overflow hide-sm-dn shrink'>".escape($row['caller_destination'])."</td>\n";
-			echo "	<td class='overflow shrink'>".escape($row['destination_number'])."</td>\n";
+			echo "	<td class='shrink'>".escape($row['caller_id_number'])."</td>\n";
+			echo "	<td class='hide-sm-dn shrink'>".escape($row['caller_destination'])."</td>\n";
+			echo "	<td class='shrink'>".escape($row['destination_number'])."</td>\n";
 			echo "	<td class='overflow hide-sm-dn nowrap'>".escape($row['call_recording_name'])."</td>\n";
 			if (permission_exists('call_recording_play') || permission_exists('call_recording_download')) {
 				echo "	<td class='middle button center no-link no-wrap'>";
