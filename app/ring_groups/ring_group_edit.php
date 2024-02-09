@@ -201,6 +201,7 @@
 			$ring_group_timeout_app = array_shift($ring_group_timeout_array);
 			$ring_group_timeout_data = join(':', $ring_group_timeout_array);
 			$destination_number = $_POST["destination_number"] ?? null;
+			$destination_description = $_POST["destination_description"] ?? null;
 			$destination_delay = $_POST["destination_delay"] ?? null;
 			$destination_timeout = $_POST["destination_timeout"] ?? null;
 			$destination_prompt = $_POST["destination_prompt"] ?? null;
@@ -412,6 +413,7 @@
 							$array["ring_groups"][0]["ring_group_destinations"][$y]["ring_group_uuid"] = $ring_group_uuid;
 							$array['ring_groups'][0]["ring_group_destinations"][$y]["ring_group_destination_uuid"] = uuid();
 							$array['ring_groups'][0]["ring_group_destinations"][$y]["destination_number"] = $extension['extension'];
+							$array['ring_groups'][0]["ring_group_destinations"][$y]["destination_description"] = $row['destination_description'];
 							$array['ring_groups'][0]["ring_group_destinations"][$y]["destination_delay"] = $row['destination_delay'];
 							$array['ring_groups'][0]["ring_group_destinations"][$y]["destination_timeout"] = $row['destination_timeout'];
 							$array['ring_groups'][0]["ring_group_destinations"][$y]["destination_prompt"] = $row['destination_prompt'];
@@ -424,6 +426,7 @@
 					$array["ring_groups"][0]["ring_group_destinations"][$y]["ring_group_uuid"] = $ring_group_uuid;
 					$array['ring_groups'][0]["ring_group_destinations"][$y]["ring_group_destination_uuid"] = $ring_group_destination_uuid;
 					$array['ring_groups'][0]["ring_group_destinations"][$y]["destination_number"] = $row['destination_number'];
+					$array['ring_groups'][0]["ring_group_destinations"][$y]["destination_description"] = $row['destination_description'];
 					$array['ring_groups'][0]["ring_group_destinations"][$y]["destination_delay"] = $row['destination_delay'];
 					$array['ring_groups'][0]["ring_group_destinations"][$y]["destination_timeout"] = $row['destination_timeout'];
 					$array['ring_groups'][0]["ring_group_destinations"][$y]["destination_prompt"] = $row['destination_prompt'];
@@ -873,6 +876,7 @@
 	echo "			<table border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "				<tr>\n";
 	echo "					<td class='vtable'>".$text['label-destination_number']."</td>\n";
+	echo "					<td class='vtable'>".$text['label-destination_description']."</td>\n";
 	echo "					<td class='vtable' id='destination_delayorder'>";
 	echo 						($ring_group_strategy == 'sequence' || $ring_group_strategy == 'rollover') ? $text['label-destination_order'] : $text['label-destination_delay'];
 	echo "					</td>\n";
@@ -890,6 +894,7 @@
 	echo "				</tr>\n";
 	$x = 0;
 	foreach ($ring_group_destinations as $row) {
+		if (empty($row['destination_description'])) { $row['destination_description'] = ""; }
 		if (empty($row['destination_delay'])) { $row['destination_delay'] = "0"; }
 		if (empty($row['destination_timeout'])) { $row['destination_timeout'] = "30"; }
 
@@ -908,6 +913,9 @@
 			}
 		}
 		echo "					<input type=\"text\" name=\"ring_group_destinations[".$x."][destination_number]\" class=\"formfld\" value=\"".escape($row['destination_number'])."\" ".$onkeyup.">\n";
+		echo "				</td>\n";
+		echo "				<td class='formfld'>\n";
+		echo "					<input type=\"text\" name=\"ring_group_destinations[".$x."][destination_description]\" class=\"formfld\" value=\"".escape($row['destination_description'])."\">\n";
 		echo "				</td>\n";
 		echo "				<td class='formfld'>\n";
 		echo "					<select name='ring_group_destinations[".$x."][destination_delay]' class='formfld' style='width:55px'>\n";
