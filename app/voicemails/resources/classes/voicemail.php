@@ -929,7 +929,6 @@
 				flush(); // Free up memory. Otherwise large files will trigger PHP's memory limit.
 			}
 
-			fclose($fp);
 		}
 
 
