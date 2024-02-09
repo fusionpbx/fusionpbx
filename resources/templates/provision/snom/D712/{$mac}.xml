@@ -8,7 +8,7 @@
     <ntp_server perm="">{if isset($snom_ntp_server)}{$snom_ntp_server}{else}0.pool.ntp.org{/if}</ntp_server>
     <ntp_refresh_timer perm="">3600</ntp_refresh_timer>
     <timezone perm="">{$snom_time_zone}</timezone>
-    <dhcp perm="R">on</dhcp>
+    {if isset($snom_dhcp)}<dhcp perm="R">{$snom_dhcp}</dhcp>{/if}
     <phone_name perm="R">snomD712-{substr($mac, -6)}</phone_name>
     <dim_timer perm="">20</dim_timer>
     <backlight perm="">15</backlight>
