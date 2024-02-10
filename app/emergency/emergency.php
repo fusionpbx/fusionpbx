@@ -137,6 +137,7 @@ if (!empty($search)) {
 	$sql .= ") ";
 	$parameters['search'] = '%'.$search.'%';
 }
+$sql .= "order by insert_date desc ";
 $sql .= limit_offset($rows_per_page, $offset);
 $parameters['time_zone'] = $time_zone;
 $database = new database;
