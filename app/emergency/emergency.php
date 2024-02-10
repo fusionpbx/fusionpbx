@@ -78,9 +78,8 @@ if (!empty($_GET["show"])) {
 	$show = $_GET["show"];
 }
 
-
 //get the count
-$sql = "select count(log_uuid) ";
+$sql = "select count(emergency_log_uuid) ";
 $sql .= "from v_emergency_logs ";
 if ($show == 'all') {
 	$sql .= "where true ";
@@ -117,7 +116,13 @@ else {
 }
 
 //get the list
-$sql = "select * ";
+$sql = "select emergency_log_uuid, ";
+$sql .= "domain_uuid, ";
+$sql .= "extension, ";
+$sql .= "event,  ";
+$sql .= "to_char(timezone(:time_zone, insert_date), 'DD Mon YYYY') as date_formatted, ";
+$sql .= "to_char(timezone(:time_zone, insert_date), 'HH12:MI:SS am') as time_formatted, ";
+$sql .= "insert_date ";
 $sql .= "from v_emergency_logs ";
 if ($show == 'all') {
 	$sql .= "where true ";
@@ -133,7 +138,7 @@ if (!empty($search)) {
 	$parameters['search'] = '%'.$search.'%';
 }
 $sql .= limit_offset($rows_per_page, $offset);
-
+$parameters['time_zone'] = $time_zone;
 $database = new database;
 $emergency_logs = $database->select($sql, $parameters ?? null, 'all');
 unset($sql, $parameters);
@@ -143,12 +148,12 @@ $object = new token;
 $token = $object->create($_SERVER['PHP_SELF']);
 
 //additional includes
-$document['title'] = $text['title-emergency-logs'];
+$document['title'] = $text['title-emergency_logs'];
 require_once "resources/header.php";
 
 //show the content
 echo "<div class='action_bar' id='action_bar'>\n";
-echo "	<div class='heading'><b>".$text['title-emergency-logs']." (".$num_rows.")</b></div>\n";
+echo "	<div class='heading'><b>".$text['title-emergency_logs']." (".$num_rows.")</b></div>\n";
 echo "	<div class='actions'>\n";
 if ($emergency_logs) {
 	echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','name'=>'btn_delete','style'=>'display:none;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
@@ -181,18 +186,18 @@ echo "<br /><br />\n";
 
 echo "<table class='list'>\n";
 echo "<tr class='list-header'>\n";
-echo "<th class='left'>".$text['lable-emergency-time']."</th>\n";
-echo "<th class='left'>".$text['lable-emergency-date']."</th>\n";
-echo "<th class='left'>".$text['lable-emergency-extension']."</th>\n";
-echo "<th class='left'>".$text['lable-emergency-event']."</th>\n";
+echo "<th class='left'>".$text['lable-emergency_time']."</th>\n";
+echo "<th class='left'>".$text['lable-emergency_date']."</th>\n";
+echo "<th class='left'>".$text['lable-emergency_extension']."</th>\n";
+echo "<th class='left'>".$text['lable-emergency_event']."</th>\n";
 echo "</tr>\n";
 
 if (!empty($emergency_logs) && is_array($emergency_logs) && @sizeof($emergency_logs) != 0) {
 	$x = 0;
 	foreach ($emergency_logs as $row) {
 		echo "<tr class='list-row'>\n";
-		echo "	<td>".escape($row['time'])."</td>\n";
-		echo "	<td>".escape($row['date'])."</td>\n";
+		echo "	<td>".escape($row['time_formatted'])."</td>\n";
+		echo "	<td>".escape($row['date_formatted'])."</td>\n";
 		echo "	<td>".escape($row['extension'])."</td>\n";
 		echo "	<td>".escape($row['event'])."</td>\n";
 		echo "</tr>\n";
