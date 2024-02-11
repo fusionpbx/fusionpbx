@@ -22,6 +22,7 @@
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
+	Tony Fernandez <tfernandez@smartip.ca>
 */
 
 //includes files
@@ -82,6 +83,8 @@
 		$recording = $_REQUEST['recording'] ?? '';
 		$order_by = $_REQUEST["order_by"] ?? '';
 		$order = $_REQUEST["order"] ?? '';
+		$cc_side = $_REQUEST["cc_side"] ?? '';
+		$call_center_queue_uuid = $_REQUEST["call_center_queue_uuid"] ?? '';
 		if (isset($_SESSION['cdr']['field']) && is_array($_SESSION['cdr']['field'])) {
 			foreach ($_SESSION['cdr']['field'] as $field) {
 				$array = explode(",", $field);
@@ -177,6 +180,9 @@
 	$param .= "&tta_min=".urlencode($tta_min ?? '');
 	$param .= "&tta_max=".urlencode($tta_max ?? '');
 	$param .= "&recording=".urlencode($recording ?? '');
+	$param .= "&cc_side=".urlencode($cc_side ?? '');
+	$param .= "&call_center_queue_uuid=".urlencode($call_center_queue_uuid ?? '');
+
 	if (isset($_SESSION['cdr']['field']) && is_array($_SESSION['cdr']['field'])) {
 		foreach ($_SESSION['cdr']['field'] as $field) {
 			$array = explode(",", $field);
@@ -280,7 +286,9 @@
 			$sql .= $field.", \n";
 		}
 	}
-	$sql .= "c.accountcode, \n";
+	if (permission_exists('xml_cdr_account_code')) {
+		$sql .= "c.accountcode, \n";
+	}
 	$sql .= "c.answer_stamp, \n";
 	$sql .= "c.status, \n";
 	$sql .= "c.sip_hangup_disposition, \n";
@@ -479,7 +487,7 @@
 		$sql .= "and bleg_uuid = :bleg_uuid \n";
 		$parameters['bleg_uuid'] = $bleg_uuid;
 	}
-	if (!empty($accountcode)) {
+	if (permission_exists('xml_cdr_account_code') && !empty($accountcode)) {
 		$sql .= "and c.accountcode = :accountcode \n";
 		$parameters['accountcode'] = $accountcode;
 	}
@@ -527,6 +535,16 @@
 	//show agent originated legs only to those with the permission
 	if (!permission_exists('xml_cdr_cc_agent_leg')) {
 		$sql .= "and (cc_side is null or cc_side != 'agent') \n";
+	}
+	//call center queue search for member or agent
+	if (!empty($cc_side) && permission_exists('xml_cdr_cc_side')) {
+		$sql .= "and cc_side = :cc_side \n";
+		$parameters['cc_side'] = $cc_side;
+	}
+	//show specific call center queue
+	if (!empty($call_center_queue_uuid) && permission_exists('xml_cdr_call_center_queues')) {
+		$sql .= "and call_center_queue_uuid = :call_center_queue_uuid \n";
+		$parameters['call_center_queue_uuid'] = $call_center_queue_uuid;
 	}
 	//end where
 	if (!empty($order_by)) {

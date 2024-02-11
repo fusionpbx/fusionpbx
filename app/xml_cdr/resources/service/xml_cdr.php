@@ -163,6 +163,13 @@
 					//parse the xml and insert the data into the db
 					$cdr->xml_array($i, $leg, $call_details);
 				}
+
+				//limit the number of records process at one time
+				if ($i == 100) {
+					break;
+				}
+
+				//increment the value
 				$i++;
 			}
 		}

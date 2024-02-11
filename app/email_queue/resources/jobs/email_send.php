@@ -145,9 +145,10 @@
 //get the email queue settings
 	$setting = new settings(["domain_uuid" => $domain_uuid]);
 
-//get the call center settings
+//get the email settings
 	$retry_limit = $setting->get('email_queue', 'retry_limit');
 	$transcribe_enabled = $setting->get('voicemail', 'transcribe_enabled');
+	$save_response = $setting->get('email_queue', 'save_response');
 
 //set defaults
 	if (empty($email_retry_count)) {
@@ -180,7 +181,6 @@
 		//$voicemail_description = $row["voicemail_description"];
 		//$voicemail_name_base64 = $row["voicemail_name_base64"];
 		//$voicemail_tutorial = $row["voicemail_tutorial"];
-		
 	}
 	unset($parameters);
 
@@ -222,7 +222,7 @@
 			}
 
 			if (isset($transcribe_enabled) && $transcribe_enabled === 'true' && isset($voicemail_transcription_enabled) && $voicemail_transcription_enabled === 'true') {
-				//debug message  
+				//debug message
 				echo "transcribe enabled: true\n";
 
 				//transcribe the attachment
@@ -336,20 +336,17 @@
 		//set the email status to sent
 		$sql = "update v_email_queue ";
 		$sql .= "set email_status = 'sent', ";
-		//$sql .= "set email_status = 'waiting' "; //debug
 		if (isset($transcribe_message)) {
 			$sql .= "email_transcription = :email_transcription, ";
+			$parameters['email_transcription'] = $transcribe_message;
 		}
-		$sql .= "email_response = :email_response, ";
+		if (isset($save_response) && $save_response == 'true') {
+			$sql .= "email_response = :email_response, ";
+			$parameters['email_response'] = $email_settings."\n".$email_response;
+		}
 		$sql .= "update_date = now() ";
 		$sql .= "where email_queue_uuid = :email_queue_uuid; ";
 		$parameters['email_queue_uuid'] = $email_queue_uuid;
-		$parameters['email_response'] = $email_settings."\n".$email_response;
-		if (isset($transcribe_message)) {
-			$parameters['email_transcription'] = $transcribe_message;
-		}
-		//echo $sql."\n";
-		//print_r($parameters);
 		$database = new database;
 		$database->execute($sql, $parameters);
 		unset($parameters);

@@ -169,11 +169,14 @@ class authentication {
 // 			}
 // 			$result["authorized"] = $authorized;
 
-		//add user logs
+		//add the result to the user logs
 			user_logs::add($result);
 
 		//user is authorized - get user settings, check user cidr
 			if ($authorized) {
+
+				//regenerate the session on login
+					session_regenerate_id(true);
 
 				//set a session variable to indicate authorized is set to true
 					$_SESSION['authorized'] = true;
@@ -229,6 +232,16 @@ class authentication {
 					$_SESSION["user_uuid"] = $result["user_uuid"];
 					$_SESSION["context"] = $result['domain_name'];
 
+				//build the session server array to validate the session
+					global $conf;
+					if (!isset($conf['session.validate'])) { $conf['session.validate'][] = 'HTTP_USER_AGENT'; }
+					foreach($conf['session.validate'] as $name) {
+						$server_array[$name] = $_SERVER[$name];
+					}
+
+				//save the user hash to be used in validate the session
+					$_SESSION["user_hash"] = hash('sha256', implode($server_array));
+
 				//user session array
 					$_SESSION["user"]["domain_uuid"] = $result["domain_uuid"];
 					$_SESSION["user"]["domain_name"] = $result["domain_name"];
@@ -236,7 +249,7 @@ class authentication {
 					$_SESSION["user"]["username"] = $result["username"];
 					$_SESSION["user"]["contact_uuid"] = $result["contact_uuid"];
 
-				//get the groups assigned to the user 
+				//get the groups assigned to the user
 					$group = new groups;
 					$group->session($result["domain_uuid"], $result["user_uuid"]);
 
