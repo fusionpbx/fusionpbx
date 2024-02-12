@@ -19,6 +19,16 @@
 		$apps[$x]['description']['pt-pt'] = '';
 		$apps[$x]['description']['pt-br'] = '';
 
+	//default settings
+		$y=0;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "9317ddfd-6cb1-4294-9c57-4061dde66fe4;
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "dialplan";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "emergency_email_address";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Email address used to send emergency call notifications.";
+
 	//permission details
 		$y=0;
 		$apps[$x]['permissions'][$y]['name'] = "emergency_logs_view";
