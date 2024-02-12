@@ -262,6 +262,11 @@
 		//$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		//$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		//$apps[$x]['permissions'][$y]['groups'][] = "fax";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "fax_email";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$apps[$x]['permissions'][$y]['groups'][] = "fax";
 
 	//default settings
 		$y=0;
