@@ -2031,10 +2031,10 @@
     <P4507>86400</P4507>
     <!-- Connection Request Username -->
     <!-- String: a-z, A-Z, 0-9 -->
-    <P4511></P4511>
+    <P4511>{$mac|replace:'-':''|upper}</P4511>
     <!-- Connection Request Password	 -->
     <!-- String: a-z, A-Z, 0-9 -->
-    <P4512></P4512>
+    <P4512>{$mac|replace:'-':''|upper}</P4512>
     <!-- Connection Request Port. Default is 0. -->
     <!-- Number -->
     <P4518>0</P4518>
