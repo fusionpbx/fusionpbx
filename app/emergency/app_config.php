@@ -21,7 +21,7 @@
 
 	//default settings
 		$y=0;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "9317ddfd-6cb1-4294-9c57-4061dde66fe4;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "9317ddfd-6cb1-4294-9c57-4061dde66fe4";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "dialplan";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "emergency_email_address";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
