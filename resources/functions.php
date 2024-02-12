@@ -1135,25 +1135,55 @@
 //function to convert hexidecimal color value to rgb string/array value
 	if (!function_exists('hex_to_rgb')) {
 
-		function hex_to_rgb($hex, $delim = '') {
+		function hex_to_rgb($hex, $delim = null, $include_alpha = false, $alpha = 1) {
 			$hex = str_replace("#", "", $hex);
 
 			if (strlen($hex) == 3) {
 				$r = hexdec(substr($hex, 0, 1) . substr($hex, 0, 1));
 				$g = hexdec(substr($hex, 1, 1) . substr($hex, 1, 1));
 				$b = hexdec(substr($hex, 2, 1) . substr($hex, 2, 1));
-			} else {
+			}
+			else {
 				$r = hexdec(substr($hex, 0, 2));
 				$g = hexdec(substr($hex, 2, 2));
 				$b = hexdec(substr($hex, 4, 2));
 			}
 			$rgb = array($r, $g, $b);
+			if ($include_alpha) { $rgb[] = $alpha; }
 
 			if (!empty($delim)) {
 				return implode($delim, $rgb); // return rgb delimited string
-			} else {
+			}
+			else {
 				return $rgb; // return array of rgb values
 			}
+		}
+
+	}
+
+//function to convert a hex or rgb/a color to an rgba array
+	if (!function_exists('color_to_rgba_array')) {
+
+		function color_to_rgba_array($string, $alpha = null) {
+			if (!empty($string)) {
+				if (strpos($string, '#') === 0) { //is hex
+					return hex_to_rgb($string, null, true, $alpha);
+				}
+				else if (strpos($string, 'rgb') === 0) { //is rgb/a
+					$string = str_replace(['rgba(','rgb(',')'], '', $string); //values to csv
+					$array = explode(',', $string); //create array
+					if (!empty($array)) {
+						if (@sizeof($array) == 3) { //add alpha
+							$array[] = $alpha ?? 1;
+						}
+						else if (@sizeof($array) == 4 && !empty($alpha)) { //replace alpha
+							$array[3] = $alpha;
+						}
+					}
+					return !empty($array) && is_array($array) ? $array : false;
+				}
+			}
+			return false;
 		}
 
 	}

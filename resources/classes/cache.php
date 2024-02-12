@@ -1,20 +1,42 @@
 <?php
 
+
 /**
- * cache class provides an abstracted cache
- *
- * @method string set
- * @method string get
- * @method string delete
- * @method string flush
+ * Provides an abstracted cache
  */
 class cache {
+	private $settings;
+	private $syslog;
+	private $location;
+	private $method;
 
 	/**
 	 * Called when the object is created
 	 */
-	public function __construct() {
-		//place holder
+	public function __construct(settings $settings = null) {
+		//set defaults
+		if ($settings === null) {
+			$settings = new settings();
+		}
+
+		//get the settings
+		$this->settings = $settings;
+		$this->method = $this->setting('method');
+		$this->syslog = $this->setting('syslog');
+		$this->location = $this->setting('location');
+		if (empty($this->method)) {
+			$this->method = 'file';
+		}
+		if (empty($this->syslog)) {
+			$this->syslog = 'false';
+		}
+		if (empty($this->location)) {
+			$this->location = '/var/cache/fusionpbx';
+		}
+	}
+
+	private function setting($subcategory) {
+		return $this->settings->get('cache', $subcategory);
 	}
 
 	/**
@@ -28,7 +50,7 @@ class cache {
 			$key = str_replace(":", ".", $key);
 
 		//save to memcache
-			if ($_SESSION['cache']['method']['text'] == "memcache") {
+			if ($this->method === "memcache") {
 				//connect to event socket
 					$esl = event_socket::create();
 					if ($esl === false) {
@@ -42,8 +64,8 @@ class cache {
 			}
 
 		//save to the file cache
-			if ($_SESSION['cache']['method']['text'] == "file") {
-				$result = file_put_contents($_SESSION['cache']['location']['text'] . "/" . $key, $value);
+			if ($this->method === "file") {
+				$result = file_put_contents($this->location . "/" . $key, $value);
 			}
 
 		//return result
@@ -59,8 +81,8 @@ class cache {
 		//change the delimiter
 			$key = str_replace(":", ".", $key);
 
-		//cache method memcache 
-			if ($_SESSION['cache']['method']['text'] == "memcache") {
+		//cache method memcache
+			if ($this->method === "memcache") {
 				// connect to event socket
 					$esl = event_socket::create();
 					if (!$esl->is_connected()) {
@@ -76,9 +98,9 @@ class cache {
 			}
 
 		//get the file cache
-			if ($_SESSION['cache']['method']['text'] == "file") {
-				if (file_exists($_SESSION['cache']['location']['text'] . "/" . $key)) {
-					$result = file_get_contents($_SESSION['cache']['location']['text'] . "/" . $key);
+			if ($this->method === "file") {
+				if (file_exists($this->location . "/" . $key)) {
+					$result = file_get_contents($this->location . "/" . $key);
 				}
 			}
 
@@ -93,14 +115,14 @@ class cache {
 	public function delete($key) {
 
 		//debug information
-			if (isset($_SESSION['cache']['syslog']['boolean']) && $_SESSION['cache']['syslog']['boolean'] == "true") {
+			if ($this->syslog === "true") {
 				openlog("fusionpbx", LOG_PID | LOG_PERROR, LOG_USER);
 				syslog(LOG_WARNING, "debug: cache: [key: ".$key.", script: ".$_SERVER['SCRIPT_NAME'].", line: ".__line__."]");
 				closelog();
 			}
 
-		//cache method memcache 
-			if (!empty($_SESSION['cache']['method']['text']) && $_SESSION['cache']['method']['text'] == "memcache") {
+		//cache method memcache
+			if ($this->method === "memcache") {
 				//connect to event socket
 					$esl = event_socket::create();
 					if ($esl === false) {
@@ -122,7 +144,7 @@ class cache {
 			}
 
 		//cache method file
-			if (!empty($_SESSION['cache']['method']['text']) && $_SESSION['cache']['method']['text'] == "file") {
+			if ($this->method === "file") {
 				//change the delimiter
 					$key = str_replace(":", ".", $key);
 
@@ -141,7 +163,7 @@ class cache {
 					event_socket::command($event);
 
 				//remove the local files
-					foreach (glob($_SESSION['cache']['location']['text'] . "/" . $key) as $file) {
+					foreach (glob($this->location . "/" . $key) as $file) {
 						if (file_exists($file)) {
 							unlink($file);
 						}
@@ -159,14 +181,14 @@ class cache {
 	public function flush() {
 
 		//debug information
-			if (isset($_SESSION['cache']['syslog']['boolean']) && $_SESSION['cache']['syslog']['boolean'] == "true") {
+			if ($this->syslog === "true") {
 				openlog("fusionpbx", LOG_PID | LOG_PERROR, LOG_USER);
 				syslog(LOG_WARNING, "debug: cache: [flush: all, script: ".$_SERVER['SCRIPT_NAME'].", line: ".__line__."]");
 				closelog();
 			}
 
-		//cache method memcache 
-			if ($_SESSION['cache']['method']['text'] == "memcache") {
+		//cache method memcache
+			if ($this->method === "memcache") {
 				// connect to event socket
 					$esl = event_socket::create();
 					if ($esl === false) {
@@ -187,8 +209,8 @@ class cache {
 
 			}
 
-		//cache method file 
-			if ($_SESSION['cache']['method']['text'] == "file") {
+		//cache method file
+			if ($this->method === "file") {
 				// connect to event socket
 					$esl = event_socket::create();
 					if ($esl === false) {
@@ -204,7 +226,7 @@ class cache {
 					event_socket::command($event);
 
 				//remove the cache
-					recursive_delete($_SESSION['cache']['location']['text']);
+					recursive_delete($this->location);
 
 				//set message
 					$result = '+OK cache flushed';
