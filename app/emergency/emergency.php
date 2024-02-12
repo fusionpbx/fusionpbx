@@ -187,10 +187,10 @@ echo "<br /><br />\n";
 
 echo "<table class='list'>\n";
 echo "<tr class='list-header'>\n";
-echo "<th class='left'>".$text['lable-emergency_time']."</th>\n";
-echo "<th class='left'>".$text['lable-emergency_date']."</th>\n";
-echo "<th class='left'>".$text['lable-emergency_extension']."</th>\n";
-echo "<th class='left'>".$text['lable-emergency_event']."</th>\n";
+echo "<th class='left'>".$text['label-emergency_time']."</th>\n";
+echo "<th class='left'>".$text['label-emergency_date']."</th>\n";
+echo "<th class='left'>".$text['label-emergency_extension']."</th>\n";
+echo "<th class='left'>".$text['label-emergency_event']."</th>\n";
 echo "</tr>\n";
 
 if (!empty($emergency_logs) && is_array($emergency_logs) && @sizeof($emergency_logs) != 0) {
