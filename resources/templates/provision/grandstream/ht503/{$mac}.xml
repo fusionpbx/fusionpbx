@@ -273,11 +273,11 @@
 
 <!--  Conncetion Request Username -->
 <!--  String -->
-<P4511></P4511>
+<P4511>{$mac|replace:'-':''|upper}</P4511>
 
 <!--  Connection Request Password -->
 <!--  String -->
-<P4512></P4512>
+<P4512>{$mac|replace:'-':''|upper}</P4512>
 
 <!--  Connection Request Port (default is 7547) -->
 <!--  String -->

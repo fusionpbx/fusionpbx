@@ -196,11 +196,11 @@
 
 <!-- Connection Request Username -->
 <!-- String -->
-<P4511></P4511>
+<P4511>{$mac|replace:'-':''|upper}</P4511>
 
 <!-- Connection Request Password -->
 <!-- String -->
-<P4512></P4512>
+<P4512>{$mac|replace:'-':''|upper}</P4512>
 
 <!-- CPE SSL Certificate -->
 <P8220></P8220>

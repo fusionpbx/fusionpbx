@@ -290,12 +290,12 @@
 
 <!-- Conncetion Request Username -->
 <!-- String Max Length: 64 -->
-<P4511></P4511>
+<P4511>{$mac|replace:'-':''|upper}</P4511>
 
 <!-- Connection Request Password -->
 <!-- String Max Length: 64 -->
 <!-- Mandatory -->
-<P4512></P4512>
+<P4512>{$mac|replace:'-':''|upper}</P4512>
 
 
 <!-- Maintenance-Security Settings -->
