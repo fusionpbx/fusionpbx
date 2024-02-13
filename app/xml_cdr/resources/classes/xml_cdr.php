@@ -29,9 +29,6 @@
  *
  * @method boolean add
  */
-require 'aws/aws-autoloader.php';
-use Aws\S3\S3Client;
-use Aws\Common\Enum\Region;
 if (!class_exists('xml_cdr')) {
 	class xml_cdr {
 
@@ -138,6 +135,7 @@ if (!class_exists('xml_cdr')) {
 
 			$this->fields[] = "xml_cdr_uuid";
 			$this->fields[] = "domain_uuid";
+			$this->fields[] = "provider_uuid";
 			$this->fields[] = "extension_uuid";
 			$this->fields[] = "sip_call_id";
 			$this->fields[] = "domain_name";
@@ -476,10 +474,18 @@ if (!class_exists('xml_cdr')) {
 							$caller_destination = urldecode($xml->variables->dialed_user);
 						}
 
-                    //set the missed calls
+					//set missed calls
 						if (isset($xml->variables->missed_call)) {
 							//marked as missed
 							$missed_call = $xml->variables->missed_call;
+						}
+						if (isset($xml->variables->billsec) && $xml->variables->billsec > 0) {
+							//answered call
+							$missed_call = 'false';
+						}
+						if (isset($xml->variables->cc_side) && $xml->variables->cc_side == 'agent') {
+							//call center
+							$missed_call = 'false';
 						}
 						if (isset($xml->variables->fax_success)) {
 							//fax server
@@ -497,26 +503,15 @@ if (!class_exists('xml_cdr')) {
 							//voicemail
 							$missed_call = 'true';
 						}
-						if (isset($xml->variables->voicemail_message) && $xml->variables->voicemail_message == true) {
+						if (isset($xml->variables->voicemail_answer_stamp) && !empty($xml->variables->voicemail_answer_stamp)) {
 							//voicemail
 							$missed_call = 'true';
 						}
-						if (isset($xml->variables->billsec) && $xml->variables->billsec > 0) {
-							//answered call
-							$missed_call = 'false';
-						}
-						if (isset($xml->variables->cc_side) && $xml->variables->cc_side == 'agent') {
-							//call center
-							$missed_call = 'false';
-						}
-						if (isset($xml->variables->cc_side) && $xml->variables->cc_side == 'member' 
+						if (isset($xml->variables->cc_side) && $xml->variables->cc_side == 'member'
 							&& isset($xml->variables->cc_cause) && $xml->variables->cc_cause == 'cancel') {
 							//call center
 							$missed_call = 'true';
-						}      
-
-
-
+						}
 
 					//read the bridge statement variables
 						if (isset($xml->variables->last_app)) {
@@ -576,6 +571,12 @@ if (!class_exists('xml_cdr')) {
 						if (substr($destination_number, 0, 3) == '*99') {
 							$status = 'voicemail';
 						}
+						if (isset($xml->variables->voicemail_answer_stamp)) {
+							$status = 'voicemail';
+						}
+						if (isset($xml->variables->voicemail_id)) {
+							$status = 'voicemail';
+						}
 						if ($xml->variables->hangup_cause == 'ORIGINATOR_CANCEL') {
 							$status = 'cancelled';
 						}
@@ -584,6 +585,20 @@ if (!class_exists('xml_cdr')) {
 						}
 						if (in_array($xml->variables->hangup_cause, $failed_array)) {
 							$status = 'failed';
+						}
+						if (!isset($status) && in_array($xml->variables->last_bridge_hangup_cause, $failed_array)) {
+							$status = 'failed';
+						}
+						if ($xml->variables->cc_side == 'agent' && $xml->variables->billsec == 0) {
+							$status = 'no_answer';
+						}
+						if (!isset($status)  && $xml->variables->billsec == 0) {
+							$status = 'no_answer';
+						}
+
+					//set the provider id
+						if (isset($xml->variables->provider_uuid)) {
+							$this->array[$key]['provider_uuid'] = urldecode($xml->variables->provider_uuid);
 						}
 
 					//misc
@@ -666,7 +681,7 @@ if (!class_exists('xml_cdr')) {
 						$this->array[$key]['last_arg'] = urldecode($xml->variables->last_arg);
 
 					//voicemail message success
-						if ($xml->variables->voicemail_action == "save" && $xml->variables->voicemail_message_seconds > 0){
+						if (!empty($xml->variables->voicemail_answer_stamp) && $xml->variables->voicemail_message_seconds > 0){
 							$this->array[$key]['voicemail_message'] = "true";
 						}
 						else { //if ($xml->variables->voicemail_action == "save") {
@@ -1050,10 +1065,10 @@ if (!class_exists('xml_cdr')) {
 			$destination = new destinations;
 			$destination_array = $destination->get('dialplan');
 
-			//add new rows when callee_id_number exists 
+			//add new rows when callee_id_number exists
 			$new_rows = 0;
 			foreach ($call_flow_array as $key => $row) {
-				if (!empty($row["caller_profile"]["destination_number"]) 
+				if (!empty($row["caller_profile"]["destination_number"])
 					and !empty($row["caller_profile"]["callee_id_number"])
 					and $row["caller_profile"]["destination_number"] !== $row["caller_profile"]["callee_id_number"]) {
 						//build the base of the new_row array
@@ -1181,9 +1196,9 @@ if (!class_exists('xml_cdr')) {
 					}
 
 					//valet park
-					if (!empty($row["caller_profile"]["destination_number"]) 
+					if (!empty($row["caller_profile"]["destination_number"])
 						and (substr($row["caller_profile"]["destination_number"], 0, 4) == 'park'
-						or (substr($row["caller_profile"]["destination_number"], 0, 3) == '*59' 
+						or (substr($row["caller_profile"]["destination_number"], 0, 3) == '*59'
 						and strlen($row["caller_profile"]["destination_number"]) == 5))) {
 						//add items to the app array
 						$app['application'] = 'dialplans';
@@ -1212,11 +1227,11 @@ if (!class_exists('xml_cdr')) {
 
 					//voicemails
 					if ($app['application'] == 'voicemails') {
-						$app['status'] = 'answered';
+						$app['status'] = 'voicemail';
 					}
 
 					//debug - add the callee_id_number to the end of the status
-					if (isset($_REQUEST['debug']) && $_REQUEST['debug'] == 'true' && !empty($row["caller_profile"]["destination_number"]) 
+					if (isset($_REQUEST['debug']) && $_REQUEST['debug'] == 'true' && !empty($row["caller_profile"]["destination_number"])
 						and !empty($row["caller_profile"]["callee_id_number"])
 						and $row["caller_profile"]["destination_number"] !== $row["caller_profile"]["callee_id_number"]) {
 							$app['status'] .= ' ('.$row["caller_profile"]["callee_id_number"].')';
@@ -1308,7 +1323,7 @@ if (!class_exists('xml_cdr')) {
 							if ($application == 'destinations') {
 								if ('+'.$value['destination_prefix'].$value['destination_number'] == $detail_action
 									or $value['destination_prefix'].$value['destination_number'] == $detail_action
-									or $value['destination_number'] == $detail_action 
+									or $value['destination_number'] == $detail_action
 									or $value['destination_trunk_prefix'].$value['destination_number'] == $detail_action
 									or '+'.$value['destination_prefix'].$value['destination_area_code'].$value['destination_number'] == $detail_action
 									or $value['destination_prefix'].$value['destination_area_code'].$value['destination_number'] == $detail_action
@@ -1746,125 +1761,9 @@ if (!class_exists('xml_cdr')) {
 		 * download the recordings
 		 */
 		public function download($uuid) {
-			if (permission_exists('xml_cdr_view')) {
-				$is_s3=false;
-				$record_file='';
-				//get call recording from database
-					if (is_uuid($uuid)) {
-						$sql = "select record_name, record_path from v_xml_cdr ";
-						$sql .= "where xml_cdr_uuid = :xml_cdr_uuid ";
-						//$sql .= "and domain_uuid = '".$domain_uuid."' \n";
-						$parameters['xml_cdr_uuid'] = $uuid;
-						//$parameters['domain_uuid'] = $domain_uuid;
-						$database = new database;
-						$row = $database->select($sql, $parameters, 'row');
-						if (is_array($row)) {
-							$record_name = $row['record_name'];
-							$record_path = $row['record_path'];
-						}
-
-                        if (is_array($row) && $row['record_path'] == 'S3') {
-                            $setting=$this->getS3Setting($row['domain_uuid']);
-                                    
-                            $s3 = new \Aws\S3\S3Client([
-                           'region'  => $setting['region'],
-                           'version' => 'latest',
-                           'credentials' => [
-                               'key'    => $setting['key'],
-                               'secret' => $setting['secret']
-                           ]
-                           ]);
-
-
-                           $response = $s3->doesObjectExist($setting['bucket'], $record_name);
-
-                           if($response){	
-                               $cmd = $s3->getCommand('GetObject', [
-                                   'Bucket' => $setting['bucket'],
-                                   'Key'    => $record_name
-                               ]);
-                               $request = $s3->createPresignedRequest($cmd, '+30 minutes');
-                               $record_file = (string) $request->getUri();
-                               $is_s3=true;
-                               $record_name = basename($record_name); 
-                           } 
-
-                        } else {
-                            $sql='Select * from archive_recording where xml_cdr_uuid = :xml_cdr_uuid';
-                            $parameters['xml_cdr_uuid'] = $uuid;
-    
-                            $row = $database->select($sql, $parameters, 'row');
-                                if (is_array($row)) {
-                                    $setting=$this->getS3Setting($row['domain_uuid']);
-                                    
-                                     $s3 = new \Aws\S3\S3Client([
-                                    'region'  => $setting['region'],
-                                    'version' => 'latest',
-                                    'credentials' => [
-                                        'key'    => $setting['key'],
-                                        'secret' => $setting['secret']
-                                    ]
-                                    ]);
-                                    $record_name=substr($row['object_key'],strpos($row['object_key'], "-")+1);
-    
-                                    $response = $s3->doesObjectExist($setting['bucket'], $row['object_key']);
-                                    if($response){	
-                                        $cmd = $s3->getCommand('GetObject', [
-                                            'Bucket' => $setting['bucket'],
-                                            'Key'    => $row['object_key']
-                                        ]);
-                                        $request = $s3->createPresignedRequest($cmd, '+30 minutes');
-                                        $record_file = (string) $request->getUri();
-                                        $is_s3=true;
-                                    } 
-                                    
-                                }
-                            
-                        }
-                        unset ($sql, $parameters, $row);
-
-					
-					}
-
-				//build full path
-					if($record_file==''){
-						$record_file = $record_path.'/'.$record_name;
-					}
-				//download the file
-					if (file_exists($record_file) || $is_s3) {
-						//content-range
-						if (isset($_SERVER['HTTP_RANGE']) && $_GET['t'] != "bin" )  {
-							$this->range_download($record_file);
-						}
-						ob_clean();
-						$fd = fopen($record_file, "rb");
-						if ($_GET['t'] == "bin") {
-
-							header("Content-Type: application/force-download");
-							header("Content-Type: application/octet-stream");
-							header("Content-Type: application/download");
-							header("Content-Description: File Transfer");
-						}
-						else {
-							
-
-							$file_ext = pathinfo($record_name, PATHINFO_EXTENSION);
-							switch ($file_ext) {
-								case "wav" : header("Content-Type: audio/x-wav"); break;
-								case "mp3" : header("Content-Type: audio/mpeg"); break;
-								case "ogg" : header("Content-Type: audio/ogg"); break;
-							}
-						}
-						$record_name = preg_replace('#[^a-zA-Z0-9_\-\.]#', '', $record_name);
-						header('Content-Disposition: attachment; filename="'.$record_name.'"');
-						header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
-						header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
-						if ($_GET['t'] == "bin") {
-							header("Content-Length: ".filesize($record_file));
-						}
-						ob_clean();
-						fpassthru($fd);
-					}
+			if (!permission_exists('xml_cdr_view')) {
+				echo "permission denied";
+				return;
 			}
 
 			//get call recording from database
@@ -2103,80 +2002,6 @@ if (!class_exists('xml_cdr')) {
 
 			unset($records);
 		} //method
-		
-function getS3Setting($domain_id){
-
-        $config=[];
-
-		
-		$sql = "select * from v_domain_settings ";
-		$sql .= "where domain_setting_category = 'aws' ";
-		// $sql .= "where domain_uuid = :domain_uuid ";
-		$sql .= "and domain_uuid = '".$domain_id."' \n";
-		// $parameters['domain_uuid'] = $domain_id;
-		//$parameters['domain_uuid'] = $domain_uuid;
-		$database = new database;
-		$row = $database->select($sql);
-		// $row = $database->select($sql);
-	
-		if (is_array($row) && count($row)>0) {
-			$config['driver']='s3';
-			$config['url']='';
-			$config['endpoint']='';
-			$config['region']='us-west-2';
-			$config['use_path_style_endpoint']=false;
-		
-				foreach($row as $conf){
-					$config[$this->getCredentialKey($conf['domain_setting_subcategory'])]=trim($conf['domain_setting_value']);
-				}
-			
-
-			
-    	}  else {
-			$config['driver']='s3';
-				$config['url']='';
-				$config['endpoint']='';
-				$config['region']='us-west-2';
-				$config['use_path_style_endpoint']=false;
-			
-				$config=$this->getDefaultS3Configuration();
-				
-			}
-			unset ($sql, $parameters, $row);
-			
-			$setting['default']='s3';
-			$setting['disks']['s3']=$config;
-			
-			return $config;
-
-      }
-       function getDefaultS3Configuration(){
-
-		$sql = "select * from v_default_settings ";
-		$sql .= "where default_setting_category = 'aws' ";
-		$database = new database;
-		$default_credentials = $database->select($sql);
-		
-        $config=[];
-        foreach($default_credentials as $d_conf){
-            $config[$this->getCredentialKey($d_conf['default_setting_subcategory'])]=$d_conf['default_setting_value'];
-        }
-        return $config;
-    }
-	function getCredentialKey($string){
-       switch($string){
-        case 'region':
-            return 'region';
-        case 'secret_key':
-            return 'secret';
-        case 'bucket_name':
-            return 'bucket';
-        case 'access_key':
-            return 'key';
-        default:
-            return $string;
-       }
-    }
 
 	} //class
 }
