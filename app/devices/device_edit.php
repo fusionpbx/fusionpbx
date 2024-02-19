@@ -851,7 +851,7 @@
 					$template = file_get_contents('/var/www/fusionpbx/resources/templates/provision/'.$device_template.'/template.csv');
 				}
 				if (!empty($template)) {
-					$template = str_replace('{$server_address}', $outbound_proxy_primary, $template);
+					$template = str_replace('{$server_address}', $row['server_address'], $template);
 					$template = str_replace('{$user_id}', $row['user_id'], $template);
 					$template = str_replace('{$password}', str_replace(';',';;',$row['password']), $template);
 					$template = str_replace('{$display_name}', ($row['display_name'] ?? $row['user_id']), $template);
