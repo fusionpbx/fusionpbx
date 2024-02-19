@@ -200,7 +200,7 @@
 							}
 
 						//method 1
-							$response = trim(event_socket::command($cmd));
+							$response = event_socket::command($cmd);
 
 						//method 2
 							//cmd_async($_SESSION['switch']['bin']['dir']."/fs_cli -x \"".$cmd."\";");
