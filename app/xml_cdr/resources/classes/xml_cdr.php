@@ -574,9 +574,6 @@ if (!class_exists('xml_cdr')) {
 						if (isset($xml->variables->voicemail_answer_stamp)) {
 							$status = 'voicemail';
 						}
-						if (isset($xml->variables->voicemail_id)) {
-							$status = 'voicemail';
-						}
 						if ($xml->variables->hangup_cause == 'ORIGINATOR_CANCEL') {
 							$status = 'cancelled';
 						}
