@@ -173,7 +173,7 @@
 		<!-- Register Expiration (m) -->
 		<!-- Number: 0 - 64800 -->
 		<!-- Pvalue P32 -->
-		<item name="account.{$row.line_number}.sip.registerExpiration">{$account.{$row.line_number}.register_expires}</item>
+		<item name="account.{$row.line_number}.sip.registerExpiration">15</item>
 
 		<!-- Subscribe Expiration (m) -->
 		<!-- Number: 0 - 64800 -->
@@ -903,21 +903,21 @@
 
 		<!-- DND Call Feature On -->
 		<!-- Pvalue P2344 -->
-		<item name="account.{$row.line_number}.featureCodes.dndOn">*78</item>
+		<item name="account.{$row.line_number}.featureCodes.dndOn"></item>
 
 		<!-- DND Call Feature Off  -->
 		<!-- Pvalue P2345 -->
-		<item name="account.{$row.line_number}.featureCodes.dndOff">*79</item>
+		<item name="account.{$row.line_number}.featureCodes.dndOff"></item>
 
 		<!-- #Call Forward Unconditionally (All) - On -->
 		<!-- # String -->
 		<!-- Pvalue P26013 -->
-		<item name="account.{$row.line_number}.featureCodes.callForwardUnconditionallyOn">*72</item>
+		<item name="account.{$row.line_number}.featureCodes.callForwardUnconditionallyOn"></item>
 
 		<!-- #Call Forward Unconditionally (All) - Off -->
 		<!-- # String -->
 		<!-- Pvalue P26014 -->
-		<item name="account.{$row.line_number}.featureCodes.callForwardUnconditionallyOff">*73</item>
+		<item name="account.{$row.line_number}.featureCodes.callForwardUnconditionallyOff"></item>
 
 		<!-- #Call Forward Unconditionally (All) - Target -->
 		<!-- # String -->
@@ -3997,7 +3997,7 @@
 
 		<!-- # Use Programmable Keys in Screensaver. 0 - No, 1 - Yes, 2 - LED only -->
 		<!-- Pvalue P22363 -->
-		<item name="lcd.screensaver.useProgrammableKeys">1</item>
+		<item name="lcd.screensaver.useProgrammableKeys">0</item>
 
 		<!-- # Screensaver Source.  Default, USB, Download.  -->
 		<!-- Pvalue P6759 -->
@@ -4427,14 +4427,14 @@
 		<!-- # Virtual Multi-Purpose Keys (VPKs) -->
 		<!-- # Note: 1. Fixed VPKs can only be edited. Adding or deleting Fixed VPK is not allowed. -->
 		<!-- #       2. Even if a Dynamic VPK has mode set to None, it should be added in sequence. Skipping one will remove everything after that VPK.  -->
-		<!-- #       3. For GRP2650 -->
-		<!-- #       4. For GRP2670/GRP2636 -->
-		<!-- #       5. For GRP2624/34 -->
-		<!-- #       6. For GRP2616  -->
-		<!-- #       7. For GRP2615 -->
-		<!-- #       8. For GRP2614 -->
-		<!-- #       9. For GRP2613 -->
-		<!-- #       10. For GRP2612 -->
+		<!-- #       3. For GRP2650 --> 
+		<!-- #       4. For GRP2670/GRP2636 --> 
+		<!-- #       5. For GRP2624/34 --> 
+		<!-- #       6. For GRP2616  --> 
+		<!-- #       7. For GRP2615 --> 
+		<!-- #       8. For GRP2614 --> 
+		<!-- #       9. For GRP2613 --> 
+		<!-- #       10. For GRP2612 --> 
 		<!-- ###################################################################################### -->
 
 		<!-- # Key Mode for line VPK. -->
@@ -4471,7 +4471,7 @@
 
 		<!-- # Account. 0 - Account1, 1 - Account2, 2 - Account3, 3 - Account4 -->
 		<!-- Pvalue # P1364 -->
-		<item name="pks.vpk.{$row.device_key_id}.account">Account{if $row.device_key_line == '0'}.{else}{$row.device_key_line}{/if}</item> -->
+		<item name="pks.vpk.{$row.device_key_id}.account">{$row.device_key_line}</item> -->
 
 		<!-- # Description. Max length allowed is 32 characters. -->
 		<!-- # String -->
@@ -4492,12 +4492,13 @@
 
 		<!-- ###################################################################################### -->
 		<!-- ## Programmable Keys/Physical Multi-Purpose Keys
-		<!-- # Note: 1. For GRP2634 -->
-		<!-- #       2. For GRP2614/GRP2616/GRP2636 -->
+		<!-- # Note: 1. For GRP2634 --> 
+		<!-- #       2. For GRP2614/GRP2616/GRP2636 --> 
 		<!-- ###################################################################################### -->
 
 {foreach $keys['memory'] as $row}
 {$line=$row.device_key_id}
+
 		<!-- ###################################################################################### -->
 		<!-- # VPK {$row.device_key_id}  -->
 		<!-- ###################################################################################### -->
@@ -4509,11 +4510,11 @@
 		<!-- # MulticastListenAddress (25), KeypadLock (26), GDSOpenDoor (27), EventListPresence (28), Provision (29) -->
 		<!-- # Phonebook(30), Paging(33) -->
 		<!-- Pvalue P323 -->
-		<item name="pks.mpk.{$row.device_key_id}.keyMode">{$key_types[$keys.memory.$line.device_key_type]}</item>
+		<item name="pks.mpk.{$row.device_key_id}.keyMode">{$key_types[$keys.line.$line.device_key_type]}</item>
 
 		<!-- # Account. Account1, Account2, Account3, Account4  -->
 		<!-- Pvalue P301 -->
-		<item name="pks.mpk.{$row.device_key_id}.account">Account{if $row.device_key_line == '0'}.{else}{$row.device_key_line}{/if}</item>
+		<item name="pks.mpk.{$row.device_key_id}.account">{$row.device_key_line}</item>
 
 		<!-- MPK Description -->
 		<!-- Pvalue P302 -->
@@ -4521,7 +4522,7 @@
 
 		<!-- MPK Value -->
 		<!-- Pvalue P303 -->
-		<item name="pks.mpk.{$row.device_key_id}.value">{$row.device_key_value}</item>
+		<item name="pks.mpk.{$row.device_key_id}.value"></item>
 
 {/foreach}
 
@@ -4698,11 +4699,11 @@
 		<!-- # MulticastListenAddress (25), KeypadLock (26), GDSOpenDoor (27), EventListPresence (28), Provision (29) -->
 		<!-- # Phonebook(30), Paging(33) -->
 		<!-- Pvalue P23000 -->
-		<item name="pks.ext.{$row.device_key_id}.keyMode">{$key_types[$keys.expansion.$line.device_key_type]}</item>
+		<item name="pks.ext.{$row.device_key_id}.keyMode">{$key_types[$keys.line.$line.device_key_type]}</item>
 
 		<!-- # Account. Account1, Account2, Account3, Account4, Account5, Account6 -->
 		<!-- Pvalue P23001 -->
-		<item name="pks.ext.{$row.device_key_id}.account">Account{if $row.device_key_line == '0'}.{else}{$row.device_key_line}{/if}</item>
+		<item name="pks.ext.{$row.device_key_id}.account">{$row.device_key_line}</item>
 
 		<!-- # Description -->
 		<!-- Pvalue P23002 -->
