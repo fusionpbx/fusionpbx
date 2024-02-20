@@ -684,18 +684,18 @@
 		<item name="account.{$line}.featureCodes.callFeatures">No</item>
 
 		<!-- DND Call Feature On -->
-		<item name="account.{$line}.featureCodes.dndOn"></item>
+		<item name="account.{$line}.featureCodes.dndOn">*78</item>
 
 		<!-- DND Call Feature Off  -->
-		<item name="account.{$line}.featureCodes.dndOff"></item>
+		<item name="account.{$line}.featureCodes.dndOff">*79</item>
 
 		<!-- #Call Forward Unconditionally (All) - On -->
 		<!-- # String -->
-		<item name="account.{$line}.featureCodes.callForwardUnconditionallyOn"></item>
+		<item name="account.{$line}.featureCodes.callForwardUnconditionallyOn">*72</item>
 
 		<!-- #Call Forward Unconditionally (All) - Off -->
 		<!-- # String -->
-		<item name="account.{$line}.featureCodes.callForwardUnconditionallyOff"></item>
+		<item name="account.{$line}.featureCodes.callForwardUnconditionallyOff">*73</item>
 
 		<!-- #Call Forward Unconditionally (All) - Target -->
 		<!-- # String -->
