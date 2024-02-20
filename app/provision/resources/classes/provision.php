@@ -826,7 +826,7 @@
 										}
 
 									//convert seconds to minutes for grandstream
-										if ($device_vendor == 'grandstream') {
+										if ($device_vendor == 'grandstream' && $register_expires >= 60) {
 											$register_expires = round($register_expires / 60);
 										}
 
