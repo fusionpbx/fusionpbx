@@ -184,7 +184,7 @@
 	unset($sql, $parameters, $result, $num_rows, $index, $row);
 
 	echo "</table>\n";
-	echo "<span style='display: block; margin: 6px 0 7px 0;'><a href='".PROJECT_PATH."/app/xml_cdr/xml_cdr.php?call_result=missed'>".$text['label-view_all']."</a></span>\n";
+	echo "<span style='display: block; margin: 6px 0 7px 0;'><a href='".PROJECT_PATH."/app/xml_cdr/xml_cdr.php?status=missed'>".$text['label-view_all']."</a></span>\n";
 	echo "</div>";
 	//$n++;
 
