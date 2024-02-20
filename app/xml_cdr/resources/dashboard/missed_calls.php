@@ -30,6 +30,7 @@
 
 //get the missed calls from call detail records
 	$sql =	"select \n";
+	$sql .= "	status, \n";
 	$sql .=	"	direction, \n";
 	$sql .= "	to_char(timezone(:time_zone, start_stamp), '".(!empty($_SESSION['domain']['time_format']) && $_SESSION['domain']['time_format']['text'] == '12h' ? "DD Mon HH12:MI am" : "DD Mon HH24:MI")."') as start_date_time, \n";
 	$sql .=	"	caller_id_name, \n";
@@ -43,7 +44,7 @@
 	$sql .=	"		direction = 'inbound' \n";
 	$sql .=	"		or direction = 'local' \n";
 	$sql .=	"	) \n";
-	$sql .=	"	and (missed_call = true or bridge_uuid is null) ";
+	$sql .=	"	and (status = 'missed') ";
 	$sql .=	"	and hangup_cause <> 'LOSE_RACE' ";
 	if (!permission_exists('xml_cdr_domain')) {
 		if (!empty($assigned_extensions)) {
@@ -168,7 +169,7 @@
 			echo "<tr ".$tr_link.">\n";
 			echo "<td valign='middle' class='".$row_style[$c]."' style='cursor: help; padding: 0 0 0 6px;'>\n";
 			if ($theme_cdr_images_exist) {
-				$call_result = ($row['answer_stamp'] != '') ? 'voicemail' : 'cancelled';
+				$call_result = $row['status'];
 				if (isset($row['direction'])) {
 					echo "	<img src='".PROJECT_PATH."/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_".$row['direction']."_".$call_result.".png' width='16' style='border: none;' title='".$text['label-'.$row['direction']].": ".$text['label-'.$call_result]."'>\n";
 				}
