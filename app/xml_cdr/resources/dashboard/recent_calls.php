@@ -28,12 +28,19 @@
 //if also viewing system status, show more recent calls (more room avaialble)
 	$recent_limit = isset($selected_blocks) && is_array($selected_blocks) && in_array('counts', $selected_blocks) ? 10 : 5;
 
+//set the sql time format
+	$sql_time_format = 'DD Mon HH12:MI am';
+	if (!empty($_SESSION['domain']['time_format']['text'])) {
+		$sql_time_format = $_SESSION['domain']['time_format']['text'] == '12h' ? "DD Mon HH12:MI am" : "DD Mon HH24:MI";
+	}
+
 //get the recent calls from call detail records
 	$sql = "
 		select
+			status,
 			direction,
 			start_stamp,
-			to_char(timezone(:time_zone, start_stamp), '".(!empty($_SESSION['domain']['time_format']) && $_SESSION['domain']['time_format']['text'] == '12h' ? "DD Mon HH12:MI am" : "DD Mon HH24:MI")."') as start_date_time,
+			to_char(timezone(:time_zone, start_stamp), '".$sql_time_format."') as start_date_time,
 			caller_id_name,
 			caller_id_number,
 			destination_number,
@@ -49,13 +56,7 @@
 					$x = 0;
 					foreach ($assigned_extensions as $assigned_extension_uuid => $assigned_extension) {
 						$sql_where_array[] = "extension_uuid = :extension_uuid_".$x;
-						$sql_where_array[] = "caller_id_number = :caller_id_number_".$x;
-						$sql_where_array[] = "destination_number = :destination_number_1_".$x;
-						$sql_where_array[] = "destination_number = :destination_number_2_".$x;
 						$parameters['extension_uuid_'.$x] = $assigned_extension_uuid;
-						$parameters['caller_id_number_'.$x] = $assigned_extension;
-						$parameters['destination_number_1_'.$x] = $assigned_extension;
-						$parameters['destination_number_2_'.$x] = '*99'.$assigned_extension;
 						$x++;
 					}
 					if (!empty($sql_where_array)) {
@@ -67,10 +68,10 @@
 					$sql .= "and false \n";
 				}
 			}
-			$sql .= "
-			and start_epoch > ".(time() - 86400)."
-		order by
-			start_epoch desc";
+	$sql .= "and start_epoch > ".(time() - 86400)." ";
+	$sql .= "order by start_epoch desc ";
+	$sql .= "limit :recent_limit ";
+	$parameters['recent_limit'] = $recent_limit;
 	$parameters['time_zone'] = isset($_SESSION['domain']['time_zone']['name']) ? $_SESSION['domain']['time_zone']['name'] : date_default_timezone_get();
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	if (!isset($database)) { $database = new database; }
@@ -156,7 +157,6 @@
 			) ? true : false;
 
 		foreach ($result as $index => $row) {
-			if ($index + 1 > $recent_limit) { break; } //only show limit
 			$start_date_time = str_replace('/0','/', ltrim($row['start_date_time'], '0'));
 			if (!empty($_SESSION['domain']['time_format']) && $_SESSION['domain']['time_format']['text'] == '12h') {
 				$start_date_time = str_replace(' 0',' ', $start_date_time);
@@ -192,17 +192,7 @@
 			//determine call result and appropriate icon
 				echo "<td valign='middle' class='".$row_style[$c]."' style='cursor: help; padding: 0 0 0 6px;'>\n";
 				if ($theme_cdr_images_exist) {
-					if ($row['direction'] == 'inbound' || $row['direction'] == 'local') {
-						if ($row['answer_stamp'] != '' && $row['bridge_uuid'] != '') { $call_result = 'answered'; }
-						else if ($row['answer_stamp'] != '' && $row['bridge_uuid'] == '') { $call_result = 'voicemail'; }
-						else if ($row['answer_stamp'] == '' && $row['bridge_uuid'] == '' && $row['sip_hangup_disposition'] != 'send_refuse') { $call_result = 'cancelled'; }
-						else { $call_result = 'failed'; }
-					}
-					else if ($row['direction'] == 'outbound') {
-						if ($row['answer_stamp'] != '' && $row['bridge_uuid'] != '') { $call_result = 'answered'; }
-						else if ($row['answer_stamp'] == '' && $row['bridge_uuid'] != '') { $call_result = 'cancelled'; }
-						else { $call_result = 'failed'; }
-					}
+					$call_result = $row['status'];
 					if (isset($row['direction'])) {
 						echo "<img src='".PROJECT_PATH."/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_".$row['direction']."_".$call_result.".png' width='16' style='border: none;' title='".$text['label-'.$row['direction']].": ".$text['label-'.$call_result]."'>\n";
 					}
@@ -221,7 +211,6 @@
 	echo "</table>\n";
 	echo "<span style='display: block; margin: 6px 0 7px 0;'><a href='".PROJECT_PATH."/app/xml_cdr/xml_cdr.php'>".$text['label-view_all']."</a></span>\n";
 	echo "</div>";
-	//$n++;
 
 	echo "<span class='hud_expander' onclick=\"$('#hud_recent_calls_details').slideToggle('fast');\"><span class='fas fa-ellipsis-h'></span></span>";
 	echo "</div>\n";
