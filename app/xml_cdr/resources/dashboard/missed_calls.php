@@ -74,6 +74,8 @@
 	$sql .= "and start_epoch > ".(time() - 86400)." \n";
 	$sql .=	"order by \n";
 	$sql .=	"start_epoch desc \n";
+	$sql .=	"limit :missed_limit \n";
+	$parameters['missed_limit'] = $missed_limit;
 	$parameters['time_zone'] = isset($_SESSION['domain']['time_zone']['name']) ? $_SESSION['domain']['time_zone']['name'] : date_default_timezone_get();
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	if (!isset($database)) { $database = new database; }
@@ -152,7 +154,6 @@
 			) ? true : false;
 
 		foreach ($result as $index => $row) {
-			if ($index + 1 > $missed_limit) { break; } //only show limit
 			$start_date_time = str_replace('/0','/', ltrim($row['start_date_time'], '0'));
 			if (!empty($_SESSION['domain']['time_format']) && $_SESSION['domain']['time_format']['text'] == '12h') {
 				$start_date_time = str_replace(' 0',' ', $start_date_time);
