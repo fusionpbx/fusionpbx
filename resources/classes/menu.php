@@ -332,12 +332,20 @@ if (!class_exists('menu')) {
 				unset($sql, $parameters);
 
 			//remove existing unprotected menu items
-				$sql  = "delete from v_menu_items ";
-				$sql .= "where menu_uuid = :menu_uuid ";
-				$sql .= "and ( ";
-				$sql .= "	menu_item_protected <> 'true' ";
-				$sql .= "	or menu_item_protected is null ";
+				$sql = "with recursive protected_rows as ( ";
+				$sql .= "select mi.menu_item_uuid, mi.menu_item_parent_uuid ";
+				$sql .= "from v_menu_items mi ";
+				$sql .= "where ";
+				$sql .= "	mi.menu_item_protected = 'true' ";
+				$sql .= "and ";
+				$sql .= "	mi.menu_uuid = :menu_uuid ";
+				$sql .= " union ";
+				$sql .= "select t.menu_item_uuid, t.menu_item_parent_uuid ";
+				$sql .= "from v_menu_items t ";
+				$sql .= "join protected_rows pr on t.menu_item_parent_uuid = pr.menu_item_uuid ";
 				$sql .= ") ";
+			    $sql .= "delete from v_menu_items ";
+			    $sql .= "where menu_item_uuid not in (select menu_item_uuid from protected_rows)";
 				$parameters['menu_uuid'] = $this->menu_uuid;
 				$database = new database;
 				$database->execute($sql, $parameters);
