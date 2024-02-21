@@ -367,7 +367,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "db521639-5c26-4cba-acc7-e8d6fe86657c";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "extensions";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "extension";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "call_timeout";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "30";
