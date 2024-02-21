@@ -84,6 +84,7 @@
 	foreach($conf['session.validate'] as $name) {
 		$server_array[$name] = $_SERVER[$name];
 	}
+	unset($name);
 
 //session validate: check to see if the session is valid
 	if ($_SESSION['authorized'] && $_SESSION["user_hash"] !== hash('sha256', implode($server_array))) {
