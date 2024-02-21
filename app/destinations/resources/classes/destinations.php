@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2017 - 2022
+	Portions created by the Initial Developer are Copyright (C) 2017 - 2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -462,13 +462,10 @@ if (!class_exists('destinations')) {
 				<?php
 
 				//get the destinations
-				$destination = new destinations;
-				if (!isset($_SESSION['destinations'][$this->domain_uuid]['array'][$destination_type])) {
-					$_SESSION['destinations'][$this->domain_uuid]['array'][$destination_type] = $destination->get($destination_type);
-				}
+				$destinations = $this->get($destination_type);
 
 				//get the destination label
-				foreach($_SESSION['destinations'][$this->domain_uuid]['array'][$destination_type] as $key => $value) {
+				foreach($destinations as $key => $value) {
 					foreach($value as $k => $row) {
 						if ($destination_value == $row['destination']) {
 							$destination_key = $key;
@@ -484,7 +481,7 @@ if (!class_exists('destinations')) {
 				//build the destination select list in html
 				$response .= "	<select id='{$destination_id}_type' class='formfld' style='".$select_style."' onchange=\"get_destinations('".$destination_id."', '".$destination_type."', this.value);\">\n";
 				$response .= " 		<option value=''></option>\n";
-				foreach($_SESSION['destinations'][$this->domain_uuid]['array'][$destination_type] as $key => $value) {
+				foreach($destinations as $key => $value) {
 					$singular = $this->singular($key);
 					if (permission_exists("{$singular}_destinations")) {
 						//determine if selected
@@ -505,7 +502,7 @@ if (!class_exists('destinations')) {
 				}
 				$response .= "	</select>\n";
 				$response .= "	<select id='".$destination_id."' name='".$destination_name."' class='formfld' style='".$select_style." min-width: 200px;'>\n";
-				foreach($_SESSION['destinations'][$this->domain_uuid]['array'][$destination_type] as $key => $value) {
+				foreach($destinations as $key => $value) {
 					if (isset($destination_key) && $key == $destination_key) {
 						foreach($value as $k => $row) {
 							$selected = ($row['destination'] == $destination_value) ? "selected='selected'" : '';
@@ -547,6 +544,9 @@ if (!class_exists('destinations')) {
 			//set the global variables
 			global $db_type;
 
+			//connect to the database
+			$database = new database;
+
 			//set default values
 			$destination_name = '';
 			$destination_id = '';
@@ -555,7 +555,6 @@ if (!class_exists('destinations')) {
 			$sql = "select domain_name from v_domains ";
 			$sql .= "where domain_uuid = :domain_uuid ";
 			$parameters['domain_uuid'] = $this->domain_uuid;
-			$database = new database;
 			$this->domain_name = $database->select($sql, $parameters, 'column');
 
 			//get the destinations
@@ -566,10 +565,10 @@ if (!class_exists('destinations')) {
 				$x = 0;
 				foreach ($config_list as &$config_path) {
 					try {
-					    include($config_path);
+						include($config_path);
 					}
 					catch (Exception $e) {
-					    //echo 'Caught exception: ',  $e->getMessage(), "\n";
+						//echo 'Caught exception: ',  $e->getMessage(), "\n";
 					}
 					$x++;
 				}
@@ -620,7 +619,6 @@ if (!class_exists('destinations')) {
 						}
 						$sql .= "order by ".trim($row['order_by']);
 						$sql = str_replace("\${domain_uuid}", $this->domain_uuid, $sql);
-						$database = new database;
 						$result = $database->select($sql, null, 'all');
 
 						$this->destinations[$x]['result']['sql'] = $sql;
@@ -760,11 +758,13 @@ if (!class_exists('destinations')) {
 			//set the global variables
 			global $db_type;
 
+			//connect to the database
+			$database = new database;
+
 			//get the domain_name
 			$sql = "select domain_name from v_domains ";
 			$sql .= "where domain_uuid = :domain_uuid ";
 			$parameters['domain_uuid'] = $this->domain_uuid;
-			$database = new database;
 			$this->domain_name = $database->select($sql, $parameters, 'column');
 
 			//get the destinations
@@ -830,7 +830,6 @@ if (!class_exists('destinations')) {
 						}
 						$sql .= "order by ".trim($row['order_by']);
 						$sql = str_replace("\${domain_uuid}", $this->domain_uuid, $sql);
-						$database = new database;
 						$result = $database->select($sql, null, 'all');
 
 						$this->destinations[$x]['result']['sql'] = $sql;
@@ -892,7 +891,7 @@ if (!class_exists('destinations')) {
 					$text2 = $language2->get($_SESSION['domain']['language']['code'], 'app/'.$name);
 				}
 
-				if (isset($row['result']) && is_array($row['result']['data']) && !empty($row['select_value'][$destination_type])) {
+				if (isset($row['result']) && isset($row['result']['data'][0]) && !empty($row['select_value'][$destination_type])) {
 					$label2 = $label;
 					foreach ($row['result']['data'] as $data) {
 						$select_value = $row['select_value'][$destination_type];
@@ -916,7 +915,6 @@ if (!class_exists('destinations')) {
 												$select_label = str_replace("\${".$key."}", $data[$k], $select_label);
 											}
 											else {
-												$label = $data['label'];
 												$select_label = str_replace("\${".$key."}", $text2['option-'.$label], $select_label);
 											}
 										}
@@ -928,7 +926,6 @@ if (!class_exists('destinations')) {
 										$select_label = str_replace("\${".$key."}", ($data[$key] ?? ''), $select_label);
 									}
 									else {
-// 										$label = $data['label'];
 										$select_label = str_replace("\${".$key."}", $text2['option-'.$label], $select_label);
 									}
 								}
@@ -966,9 +963,18 @@ if (!class_exists('destinations')) {
 
 						$i++;
 					}
-
 					unset($text);
 				}
+				//else {
+				//	//add all main destination categories to the array
+				//	if (!empty($row['select_value']) && !empty($row['select_value'][$destination_type])) {
+				//		//add to the destination array if a matching destination type is found
+				//		$array[$name] = [];
+				//	}
+				//	else {
+				//		$array[$name] = [];
+				//	}
+				//}
 			}
 
 			if (!$selected) {
