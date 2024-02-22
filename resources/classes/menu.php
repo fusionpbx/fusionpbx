@@ -298,34 +298,36 @@ if (!class_exists('menu')) {
 		 */
 		public function delete_unprotected() {
 			//remove existing menu languages
-				$sql  = "delete from v_menu_languages ";
-				$sql .= "where menu_uuid = :menu_uuid ";
-				$sql .= "and menu_item_uuid in ( ";
-				$sql .= "	select menu_item_uuid ";
-				$sql .= "	from v_menu_items ";
-				$sql .= "	where menu_uuid = :menu_uuid ";
-				$sql .= "	and ( ";
-				$sql .= " 		menu_item_protected <> 'true' ";
-				$sql .= "		or menu_item_protected is null ";
-				$sql .= "	) ";
+				$sql = "with recursive protected_rows as ( ";
+				$sql .= "	select mi.menu_item_uuid, mi.menu_item_parent_uuid from v_menu_items mi ";
+				$sql .= "	where mi.menu_item_protected = 'true' ";
+				$sql .= "	and ";
+				$sql .= "	mi.menu_uuid = :menu_uuid ";
+				$sql .= "union ";
+				$sql .= "	select t.menu_item_uuid, t.menu_item_parent_uuid ";
+				$sql .= "	from v_menu_items t ";
+				$sql .= "	join protected_rows pr on t.menu_item_parent_uuid = pr.menu_item_uuid ";
 				$sql .= ") ";
+				$sql .= "delete from v_menu_languages ";
+				$sql .= "where menu_item_uuid not in (select menu_item_uuid from protected_rows);";
 				$parameters['menu_uuid'] = $this->menu_uuid;
 				$database = new database;
 				$database->execute($sql, $parameters);
 				unset($sql, $parameters);
 
 			//remove existing unprotected menu item groups
-				$sql = "delete from v_menu_item_groups ";
-				$sql .= "where menu_uuid = :menu_uuid ";
-				$sql .= "and menu_item_uuid in ( ";
-				$sql .= "	select menu_item_uuid ";
-				$sql .= "	from v_menu_items ";
-				$sql .= "	where menu_uuid = :menu_uuid ";
-				$sql .= "	and ( ";
-				$sql .= " 		menu_item_protected <> 'true' ";
-				$sql .= "		or menu_item_protected is null ";
-				$sql .= "	) ";
+				$sql = "with recursive protected_rows as ( ";
+				$sql .= "	select mi.menu_item_uuid, mi.menu_item_parent_uuid from v_menu_items mi ";
+				$sql .= "	where mi.menu_item_protected = 'true' ";
+				$sql .= "	and ";
+				$sql .= "	mi.menu_uuid = :menu_uuid ";
+				$sql .= "union ";
+				$sql .= "	select t.menu_item_uuid, t.menu_item_parent_uuid ";
+				$sql .= "	from v_menu_items t ";
+				$sql .= "	join protected_rows pr on t.menu_item_parent_uuid = pr.menu_item_uuid ";
 				$sql .= ") ";
+				$sql .= "delete from v_menu_item_groups ";
+				$sql .= "where menu_item_uuid not in (select menu_item_uuid from protected_rows);";
 				$parameters['menu_uuid'] = $this->menu_uuid;
 				$database = new database;
 				$database->execute($sql, $parameters);
@@ -333,16 +335,16 @@ if (!class_exists('menu')) {
 
 			//remove existing unprotected menu items
 				$sql = "with recursive protected_rows as ( ";
-				$sql .= "select mi.menu_item_uuid, mi.menu_item_parent_uuid ";
-				$sql .= "from v_menu_items mi ";
-				$sql .= "where ";
-				$sql .= "	mi.menu_item_protected = 'true' ";
-				$sql .= "and ";
-				$sql .= "	mi.menu_uuid = :menu_uuid ";
+				$sql .= "	select mi.menu_item_uuid, mi.menu_item_parent_uuid ";
+				$sql .= "	from v_menu_items mi ";
+				$sql .= "	where ";
+				$sql .= "		mi.menu_item_protected = 'true' ";
+				$sql .= "	and ";
+				$sql .= "		mi.menu_uuid = :menu_uuid ";
 				$sql .= " union ";
-				$sql .= "select t.menu_item_uuid, t.menu_item_parent_uuid ";
-				$sql .= "from v_menu_items t ";
-				$sql .= "join protected_rows pr on t.menu_item_parent_uuid = pr.menu_item_uuid ";
+				$sql .= "	select t.menu_item_uuid, t.menu_item_parent_uuid ";
+				$sql .= "	from v_menu_items t ";
+				$sql .= "	join protected_rows pr on t.menu_item_parent_uuid = pr.menu_item_uuid ";
 				$sql .= ") ";
 			    $sql .= "delete from v_menu_items ";
 			    $sql .= "where menu_item_uuid not in (select menu_item_uuid from protected_rows)";
@@ -356,6 +358,11 @@ if (!class_exists('menu')) {
 		 * restore the menu
 		 */
 		public function restore() {
+			// holds the app config for each app_menu.php file loaded
+			global $apps;
+
+			//increments the array in app_menu
+			global $y;
 
 			//get the $apps array from the installed apps from the core and mod directories
 				$config_list = glob($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/*/*/app_menu.php");
@@ -402,6 +409,7 @@ if (!class_exists('menu')) {
 			//use the app array to restore the default menu
 				if (is_array($apps)) {
 					$x = 0;
+					$array = [];
 					foreach ($apps as $row) {
 						if (is_array($row['menu'])) {
 							foreach ($row['menu'] as $menu) {
@@ -470,7 +478,7 @@ if (!class_exists('menu')) {
 												$x++;
 										}
 									}
-									unset($field, $parameters, $num_rows);
+									unset($parameters);
 
 								//set the menu languages
 									if (!$menu_item_exists && is_array($language->languages)) {
@@ -495,7 +503,7 @@ if (!class_exists('menu')) {
 							}
 						}
 					}
-					if (is_array($array) && @sizeof($array) != 0) {
+					if (count($array) > 0) {
 						//grant temporary permissions
 							$p = new permissions;
 							$p->add('menu_item_add', 'temp');
@@ -521,7 +529,7 @@ if (!class_exists('menu')) {
 				$sql .= "where domain_uuid is null ";
 				$database = new database;
 				$result = $database->select($sql, null, 'all');
-				if (is_array($result) && @sizeof($result) != 0) {
+				if ($result !== false) {
 					foreach ($result as $row) {
 						$group_uuids[$row['group_name']] = $row['group_uuid'];
 					}
@@ -531,6 +539,7 @@ if (!class_exists('menu')) {
 			//if there are no groups listed in v_menu_item_groups under menu_item_uuid then add the default groups
 				if (is_array($apps)) {
 					$x = 0;
+					$array = [];
 					foreach($apps as $app) {
 						if (is_array($apps)) {
 							foreach ($app['menu'] as $sub_row) {
@@ -563,7 +572,7 @@ if (!class_exists('menu')) {
 						}
 					}
 
-					if (is_array($array) && @sizeof($array) != 0) {
+					if (count($array) > 0) {
 						//grant temporary permissions
 							$p = new permissions;
 							$p->add('menu_item_group_add', 'temp');
