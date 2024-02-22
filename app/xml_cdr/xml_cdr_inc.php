@@ -482,7 +482,7 @@
 		$sql .= "and hangup_cause != 'LOSE_RACE' \n";
 	}
 	if (!empty($status)) {
-		$sql .= "and status >= :status \n";
+		$sql .= "and status = :status \n";
 		$parameters['status'] = $status;
 	}
 	if (!empty($xml_cdr_uuid)) {
