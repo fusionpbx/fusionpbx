@@ -187,10 +187,10 @@
 //prepare the smtp from and from name variables
 	$email_from = $setting->get('fax','smtp_from');
 	$email_from_name = $setting->get('fax','smtp_from_name');
-	if (!empty($email_from)) {
+	if (empty($email_from)) {
 		$email_from = $setting->get('email','smtp_from');
 	}
-	if (!empty($email_from_name)) {
+	if (empty($email_from_name)) {
 		$email_from_name = $setting->get('email','smtp_from_name');
 	}
 
