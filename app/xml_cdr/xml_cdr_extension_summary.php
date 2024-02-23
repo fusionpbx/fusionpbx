@@ -200,6 +200,7 @@
 	}
 	echo "		<th class='center'>".$text['label-answered']."</th>\n";
 	echo "		<th class='center'>".$text['label-missed']."</th>\n";
+	echo "		<th class='center'>".$text['label-voicemail']."</th>\n";
 	echo "		<th class='center'>".$text['label-no_answer']."</th>\n";
 	echo "		<th class='center'>".$text['label-busy']."</th>\n";
 	echo "		<th class='center' title='".$text['description-aloc']."'>".$text['label-aloc']."</th>\n";
@@ -222,6 +223,7 @@
 			}
 			echo "	<td class='center'>".escape($row['answered'])."&nbsp;</td>\n";
 			echo "	<td class='center'>".escape($row['missed'])."&nbsp;</td>\n";
+			echo "	<td class='center'>".escape($row['voicemail'])."&nbsp;</td>\n";
 			echo "	<td class='center'>".escape($row['no_answer'])."&nbsp;</td>\n";
 			echo "	<td class='center'>".escape($row['busy'])."&nbsp;</td>\n";
 			echo "  <td class='center'>".format_hours($row['aloc'])."&nbsp;</td>\n";
@@ -241,3 +243,4 @@
 	require_once "resources/footer.php";
 
 ?>
+
