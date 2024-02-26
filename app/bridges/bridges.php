@@ -126,7 +126,21 @@
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = str_replace('count(bridge_uuid)', '*', $sql);
+	$sql = "select d.domain_name, b.bridge_name, b.bridge_destination, bridge_enabled, bridge_description ";
+	$sql .= "from v_bridges as b, v_domains as d ";
+	$sql .= "where b.domain_uuid = d.domain_uuid ";
+	if (!empty($show) && $show == "all" && permission_exists('bridge_all')) {
+		if (isset($sql_search)) {
+			$sql .= "and ".$sql_search;
+		}
+	}
+	else {
+		$sql .= "and (b.domain_uuid = :domain_uuid or b.domain_uuid is null) ";
+		if (isset($sql_search)) {
+			$sql .= "and ".$sql_search;
+		}
+		$parameters['domain_uuid'] = $domain_uuid;
+	}
 	$sql .= order_by($order_by, $order, 'bridge_name', 'asc');
 	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;
@@ -230,7 +244,7 @@
 				echo "	</td>\n";
 			}
 			if (!empty($_GET['show']) && $_GET['show'] == 'all' && permission_exists('bridge_all')) {
-				echo "	<td>".escape($_SESSION['domains'][$row['domain_uuid']]['domain_name'])."</td>\n";
+				echo "	<td>".escape($row['domain_name'])."</td>\n";
 			}
 			echo "	<td>\n";
 			if (permission_exists('bridge_edit')) {
