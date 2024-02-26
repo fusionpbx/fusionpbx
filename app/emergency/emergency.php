@@ -25,6 +25,11 @@ if (!empty($_POST['emergency_logs']) && is_array($_POST['emergency_logs'])) {
 	$emergency_logs = $_POST['emergency_logs'];
 }
 
+//prepare the database object
+$database = new database;
+$database->app_name = 'emergency_logs';
+$database->app_uuid = 'de63b1ae-7750-11ee-b3a5-005056a27559';
+
 //process the http post data by action
 if (!empty($action) && !empty($emergency_logs) && is_array($emergency_logs) && @sizeof($emergency_logs) != 0) {
 
@@ -44,11 +49,6 @@ if (!empty($action) && !empty($emergency_logs) && is_array($emergency_logs) && @
 			$x++;
 		}
 	}
-
-	//prepare the database object
-	$database = new database;
-	$database->app_name = 'emergency_logs';
-	$database->app_uuid = 'de63b1ae-7750-11ee-b3a5-005056a27559';
 
 	//send the array to the database class
 	if (!empty($action) && $action == 'delete') {
@@ -94,7 +94,6 @@ if (!empty($search)) {
 	$sql .= ") ";
 	$parameters['search'] = '%'.$search.'%';
 }
-$database = new database;
 $num_rows = $database->select($sql, $parameters ?? null, 'column');
 unset($sql, $parameters);
 
@@ -140,7 +139,6 @@ if (!empty($search)) {
 $sql .= "order by insert_date desc ";
 $sql .= limit_offset($rows_per_page, $offset);
 $parameters['time_zone'] = $time_zone;
-$database = new database;
 $emergency_logs = $database->select($sql, $parameters ?? null, 'all');
 unset($sql, $parameters);
 
@@ -187,6 +185,9 @@ echo "<br /><br />\n";
 
 echo "<table class='list'>\n";
 echo "<tr class='list-header'>\n";
+if (!empty($show) && $show == 'all' && permission_exists('emergency_logs_view_all')) {
+	echo th_order_by('domain_name', $text['label-domain'], $order_by, $order);
+}
 echo "<th class='left'>".$text['label-emergency_time']."</th>\n";
 echo "<th class='left'>".$text['label-emergency_date']."</th>\n";
 echo "<th class='left'>".$text['label-emergency_extension']."</th>\n";
@@ -197,6 +198,9 @@ if (!empty($emergency_logs) && is_array($emergency_logs) && @sizeof($emergency_l
 	$x = 0;
 	foreach ($emergency_logs as $row) {
 		echo "<tr class='list-row'>\n";
+		if (!empty($_GET['show']) && $_GET['show'] == 'all' && permission_exists('emergency_logs_view_all')) {
+			echo "	<td>".escape($_SESSION['domains'][$row['domain_uuid']]['domain_name'])."</td>\n";
+		}
 		echo "	<td>".escape($row['time_formatted'])."</td>\n";
 		echo "	<td>".escape($row['date_formatted'])."</td>\n";
 		echo "	<td>".escape($row['extension'])."</td>\n";
