@@ -430,7 +430,7 @@ if (is_array($activity)) {
 		}
 
 		//build the list of extensions
-		$block = "<div id='".escape($extension)."' class='".$style."' ".(($_GET['vd_ext_from'] == $extension || $_GET['vd_ext_to'] == $extension) ? "style='border-style: dotted;'" : null)." ".((!empty($ext_state) && $ext_state != 'active' && $ext_state != 'ringing') ? "ondrop='drop(event, this.id);' ondragover='allowDrop(event, this.id);' ondragleave='discardDrop(event, this.id);'" : null).">"; // DRAG TO
+		$block = "<div id='".escape($extension)."' class='".$style."' ".(($_GET['vd_ext_from'] == $extension || $_GET['vd_ext_to'] == $extension) ? "style='border-style: dotted;'" : null)." ".(((empty($ext_state) || $ext_state != 'active') && $ext_state != 'ringing') ? "ondrop='drop(event, this.id);' ondragover='allowDrop(event, this.id);' ondragleave='discardDrop(event, this.id);'" : null).">"; // DRAG TO
 		$block .= "<table class='".$style."'>\n";
 		$block .= "	<tr>\n";
 		$block .= "		<td class='op_ext_icon'>\n";
