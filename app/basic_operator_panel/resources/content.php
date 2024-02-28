@@ -342,7 +342,7 @@ if (is_array($activity)) {
 		}
 		else {
 			//unregistered extension
-			if (!empty($_SESSION['operator_panel']['$css_class']['boolean']) && $_SESSION['operator_panel']['$css_class']['boolean'] == 'true') {
+			if (!empty($_SESSION['operator_panel']['show_unregistered']['boolean']) && $_SESSION['operator_panel']['show_unregistered']['boolean'] == 'true') {
 				$css_class = "ur_ext";
 			}
 			else {
