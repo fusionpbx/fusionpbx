@@ -11,9 +11,6 @@ class config {
 	// The internal array that holds the configuration in the config.conf file
 	private $configuration;
 
-	// Reports if the configuration is found in the same directory as the framework then this is set to true
-	private $within_framework;
-
 	/**
 	 * Loads the framework configuration file
 	 */
@@ -21,7 +18,6 @@ class config {
 
 		//initialize object variables to empty values
 		$this->configuration = [];
-		$this->deprecated = false;
 		$this->file = '';
 
 		//locate the conf file
@@ -38,9 +34,6 @@ class config {
 
 		//set the server variables
 		$this->define_project_paths();
-
-		//check if the configuration is stored in the framework structure
-		$this->within_framework = strpos(dirname(__DIR__, 2), $this->file) !== false;
 	}
 
 	/**
