@@ -79,11 +79,11 @@ class config {
 	 * @return string configuration
 	 */
 	public function __toString(): string {
-		$sb = "";
+		$string_builder = "";
 		foreach ($this->configuration as $key => $value) {
-			$sb .= "$key = '$value'\n";
+			$string_builder .= "$key = '$value'\n";
 		}
-		return $sb;
+		return $string_builder;
 	}
 
 	// loads the config.conf file
