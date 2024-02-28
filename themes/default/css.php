@@ -2339,7 +2339,7 @@ else { //default: white
 		cursor: default;
 		}
 
-	div.off_ext {
+	div.ur_ext {
 		position: relative;
 		float: left;
 		width: 235px;
@@ -2359,20 +2359,20 @@ else { //default: white
 		opacity: 0.5;
 		}
 		
-		div.off_ext:after {
-			position: absolute;
-			content: "";
-			z-index: 10;
-			-moz-border-radius: 5px;
-			-webkit-border-radius: 5px;
-			border-radius: 5px;
-			display: block;
-			height: 100%;
-			top: 0;
-			left: 0;
-			right: 0;
-			background: <?=$form_table_field_background_color?>;
-			opacity: 0.5;
+	div.ur_ext:after {
+		position: absolute;
+		content: "";
+		z-index: 10;
+		-moz-border-radius: 5px;
+		-webkit-border-radius: 5px;
+		border-radius: 5px;
+		display: block;
+		height: 100%;
+		top: 0;
+		left: 0;
+		right: 0;
+		background: <?=$form_table_field_background_color?>;
+		opacity: 0.5;
 		}
 
 	div.op_state_active {
@@ -2393,7 +2393,7 @@ else { //default: white
 		border-color: #B9A6FC;
 		}
 
-	table.op_ext, table.off_ext {
+	table.op_ext, table.ur_ext {
 		width: 100%;
 		height: 70px;
 		-moz-border-radius: 5px;

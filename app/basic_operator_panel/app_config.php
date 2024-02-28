@@ -75,6 +75,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set if extensions are grouped by call_group when viewing all extensions.";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "0d3b16b0-5cd6-4d0e-8b58-967972362ef8";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "operator_panel";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "show_unregistered";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set whether unregistered extensions are displayed or not.";
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "a9ccd174-5ae1-4f90-8ee2-b79a183a04f8";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "operator_panel_main_background_color";
