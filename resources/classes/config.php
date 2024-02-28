@@ -37,6 +37,44 @@ class config {
 	}
 
 	/**
+	 * Implement backwards compatibility for previously public properties
+	 * @param string $property
+	 * @return mixed
+	 */
+	public function __get(string $property) {
+		switch($property) {
+			case 'db_type':
+				return $this->get('database.0.type');
+			case 'db_path':
+				return $this->get('database.0.path', '');
+			case 'db_host':
+				return $this->get('database.0.host');
+			case 'db_port':
+				return $this->get('database.0.port');
+			case 'db_name':
+				return $this->get('database.0.name');
+			case 'db_sslmode':
+				return $this->get('database.0.sslmode', 'prefer');
+			case 'db_cert_authority':
+				return $this->get('database.0.cert_authority', '');
+			case 'db_secure':
+				return $this->get('database.0.secure', 'false');
+			case 'db_username':
+				return $this->get('database.0.username');
+			case 'db_password':
+				return $this->get('database.0.password');
+			case 'config_path':
+				return $this->path();
+			default:
+				if (property_exists($this, $property)) {
+					return $this->{$property};
+				} else {
+					throw new InvalidArgumentException("Property does not exist");
+				}
+		}
+	}
+
+	/**
 	 * Returns the string representation of the configuration file
 	 * @return string configuration
 	 */
@@ -51,11 +89,34 @@ class config {
 	// loads the config.conf file
 	private function load() {
 
-		//use native php parsing function
-		$conf = parse_ini_file($this->file);
+		//check if include is needed
+		if (substr($this->file, 0, -4) === '.php') {
+			//allow global variables to be set in the old config.php file
+			global $db_type, $db_host, $db_port, $db_name, $db_username, $db_password, $db_path;
 
-		//save the loaded and parsed conf file to the object
-		$this->configuration = $conf;
+			//load the config.php file
+			require_once $this->file;
+
+			//convert the old properties to the new standard
+			$this->configuration['database.0.type'] = $db_type;
+			$this->configuration['database.0.path'] = $db_path;
+			$this->configuration['database.0.host'] = $db_host;
+			$this->configuration['database.0.port'] = $db_port;
+			$this->configuration['database.0.name'] = $db_name;
+			$this->configuration['database.0.username'] = $db_username;
+			$this->configuration['database.0.password'] = $db_password;
+			$this->configuration['database.0.sslmode'] = 'prefer';
+
+			//remove from the global namespace
+			unset($db_type, $db_host, $db_port, $db_name, $db_username, $db_password);
+
+		} else {
+			//use native php parsing function
+			$conf_arr = parse_ini_file($this->file);
+
+			//save the loaded and parsed conf file to the object
+			$this->configuration = $conf_arr;
+		}
 
 	}
 
@@ -164,7 +225,16 @@ echo "Config path: " . $config->path() . "\n";
 echo "Config file: " . $config->filename() . "\n";
 echo "Full path and filename: " . $config->path_and_filename() . "\n";
 
-// use current style configuration options
+// show old style configuration options
+echo "db_type: ".$config->db_type."\n";
+echo "db_name: ".$config->db_name."\n";
+echo "db_username: ".$config->db_username."\n";
+echo "db_password: ".$config->db_password."\n";
+echo "db_host: ".$config->db_host."\n";
+echo "db_path: ".$config->db_path."\n";
+echo "db_port: ".$config->db_port."\n";
+
+// use current style configuration options even on old config.php
 echo "database.0.type: " . $config->get('database.0.type') . "\n";
 
 // use a default value
