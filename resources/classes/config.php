@@ -23,8 +23,8 @@ class config {
 		//locate the conf file
 		$this->find();
 
-		//check if the config file exists
-		if (!$this->exists()) {
+		//check if the config file was found
+		if (empty($this->file)) {
 			//unable to load config.conf so throw an exception
 			throw new Exception("Unable to find config path");
 		}
@@ -106,18 +106,6 @@ class config {
 		// use the current web directory to find it as a last resort
 		elseif (file_exists(dirname(__DIR__, 2) . "/resources/config.php")) {
 			$this->file = "/var/www/fusionpbx/resources/config.php";
-		}
-	}
-
-	/**
-	 * Determine whether the config file exists
-	 */
-	public function exists() {
-		if (!empty($this->file)) {
-			return true;
-		}
-		else {
-			return false;
 		}
 	}
 
