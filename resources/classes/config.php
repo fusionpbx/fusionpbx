@@ -11,9 +11,6 @@ class config {
 	// The internal array that holds the configuration in the config.conf file
 	private $configuration;
 
-	// Reports if a config.php file is found then this will be set to true
-	private $deprecated;
-
 	// Reports if the configuration is found in the same directory as the framework then this is set to true
 	private $within_framework;
 
@@ -186,26 +183,14 @@ class config {
 		}
 		elseif (file_exists("/etc/fusionpbx/config.php")) {
 			$this->file = "/etc/fusionpbx/config.php";
-			$this->deprecated = true;
 		}
 		elseif (file_exists("/usr/local/etc/fusionpbx/config.php")) {
 			$this->file = "/usr/local/etc/fusionpbx/config.php";
-			$this->deprecated = true;
 		}
 		// use the current web directory to find it as a last resort
 		elseif (file_exists(dirname(__DIR__, 2) . "/resources/config.php")) {
 			$this->file = "/var/www/fusionpbx/resources/config.php";
-			$this->deprecated = true;
 		}
-	}
-
-	/**
-	 * Returns true if the configuration was found to be using a .php extension instead of the
-	 * config.conf configuration
-	 * @return bool
-	 */
-	public function compatibility_enabled(): bool {
-		return $this->deprecated;
 	}
 
 	/**
@@ -276,17 +261,13 @@ class config {
 
 }
 
-
+/*
 //Examples:
 //~~~~~~~~
 $config = new config;
 echo "Config path: " . $config->path() . "\n";
 echo "Config file: " . $config->filename() . "\n";
 echo "Full path and filename: " . $config->path_and_filename() . "\n";
-echo "Compatibility Mode: " . $config->compatibility_enabled() ? 'true' : 'false';
-if ($config->compatibility_enabled()) {
-	//do something to create a new one or notify user
-}
 
 // show old style configuration options
 echo "db_type: ".$config->db_type."\n";
