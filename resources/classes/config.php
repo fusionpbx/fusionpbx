@@ -72,68 +72,13 @@ class config {
 		return $sb;
 	}
 
-	// loads the config.conf file or provides a backward compatibility layer if a config.php file was used
+	// loads the config.conf file
 	private function load() {
 
-		//check for deprecated version so we can use 'require' instead
-		if ($this->deprecated) {
-			//allow global variables to be set in the old config.php file
-			global $db_type, $db_host, $db_port, $db_name, $db_username, $db_password;
-
-			//load the config.php file
-			require_once $this->file;
-
-			//convert the old properties to the new standard
-//			$this->configuration['#database system settings'] = '';
-			$this->configuration['database.0.type'] = $db_type;
-			$this->configuration['database.0.host'] = $db_host;
-			$this->configuration['database.0.port'] = $db_port;
-			$this->configuration['database.0.name'] = $db_name;
-			$this->configuration['database.0.username'] = $db_username;
-			$this->configuration['database.0.password'] = $db_password;
-			$this->configuration['database.0.sslmode'] = 'prefer';
-
-			//remove from the global namespace
-			unset($db_type, $db_host, $db_port, $db_name, $db_username, $db_password);
-
-			//set defaults for the new config.conf file
-//			$this->configuration['#database switch settings'] = '';
-			$this->configuration['database.1.type'] = 'sqlite';
-			$this->configuration['database.1.path'] = '/var/lib/freeswitch/db';
-			$this->configuration['database.1.name'] = 'core.db';
-//			$this->configuration['#general settings'] = '';
-			$this->configuration['document.root'] = '/var/www/fusionpbx';
-			$this->configuration['project.path'] = '';
-			$this->configuration['temp.dir'] = '/tmp';
-			$this->configuration['php.dir'] = PHP_BINDIR;
-			$this->configuration['php.bin'] = basename(PHP_BINARY);
-//			$this->configuration['#cache settings'] = '';
-			$this->configuration['cache.method'] = 'file';
-			$this->configuration['cache.location'] = '/var/cache/fusionpbx';
-			$this->configuration['cache.settings'] = 'true';
-//			$this->configuration['#switch settings'] = '';
-			$this->configuration['switch.conf.dir'] = '/etc/freeswitch';
-			$this->configuration['switch.sounds.dir'] = '/usr/share/freeswitch/sounds';
-			$this->configuration['switch.database.dir'] = '/var/lib/freeswitch/db';
-			$this->configuration['switch.recordings.dir'] = '/var/lib/freeswitch/recordings';
-			$this->configuration['switch.storage.dir'] = '/var/lib/freeswitch/storage';
-			$this->configuration['switch.voicemail.dir'] = '/var/lib/freeswitch/storage/voicemail';
-			$this->configuration['switch.scripts.dir'] = '/usr/share/freeswitch/scripts';
-			$this->configuration['switch.event_socket.host'] = 'fs';
-			$this->configuration['switch.event_socket.port'] = '8021';
-			$this->configuration['switch.event_socket.password'] = 'ClueCon';
-//			$this->configuration['#switch xml'] = '';
-			$this->configuration['xml_handler.fs_path'] = 'false';
-			$this->configuration['xml_handler.reg_as_number_alias'] = 'false';
-			$this->configuration['xml_handler.number_as_presence_id']  =' true';
-//			$this->configuration['#error reporting hide show all errors except notices and warnings'] = '';
-			$this->configuration['error.reporting'] = 'none';
-		} else {
-			//use native php parsing function
-			$conf = parse_ini_file($this->file);
-			//save the loaded and parsed conf file to the object
-			$this->configuration = $conf;
-		}
+		//use native php parsing function
+		$conf = parse_ini_file($this->file);
+		//save the loaded and parsed conf file to the object
+		$this->configuration = $conf;
 
 	}
 
