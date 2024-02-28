@@ -137,6 +137,7 @@ class config {
 
 	}
 
+	// set project paths if not already defined
 	private function define_project_paths() {
 		// Load the document root
 		$doc_root = $this->get('document.root', '/var/www/fusionpbx');
