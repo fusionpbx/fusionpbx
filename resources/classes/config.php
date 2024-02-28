@@ -237,11 +237,11 @@ class config {
 	}
 
 	/**
-	 * Returns the path fully resolved of any symlinks and the file name
+	 * Returns the path and the file name
 	 * @return string
 	 */
 	public function path_and_filename(): string {
-		return realpath($this->path()) . '/' . $this->filename();
+		return $this->path() . '/' . $this->filename();
 	}
 
 	/**
