@@ -37,30 +37,6 @@ class config {
 	}
 
 	/**
-	 * Implement backwards compatibility for db_* configuration values
-	 * @param string $property
-	 * @return mixed
-	 */
-	public function __get(string $property) {
-		switch($property) {
-			case 'db_type':
-				return $this->get('database.0.type');
-			case 'db_host':
-				return $this->get('database.0.host');
-			case 'db_port':
-				return $this->get('database.0.port');
-			case 'db_name':
-				return $this->get('database.0.name');
-			case 'db_username':
-				return $this->get('database.0.username');
-			case 'db_password':
-				return $this->get('database.0.password');
-			case 'config_path':
-				return $this->path();
-		}
-	}
-
-	/**
 	 * Returns the string representation of the configuration file
 	 * @return string configuration
 	 */
@@ -77,6 +53,7 @@ class config {
 
 		//use native php parsing function
 		$conf = parse_ini_file($this->file);
+
 		//save the loaded and parsed conf file to the object
 		$this->configuration = $conf;
 
@@ -145,15 +122,6 @@ class config {
 	}
 
 	/**
-	 * Returns true if the configuration was found within the same directory structure as the framework or false
-	 * if the configuration file was found outside of the framework directory structure
-	 * @return bool true if the configuration was found in the framework false otherwise
-	 */
-	public function exists_in_framework(): bool {
-		return $this->within_framework;
-	}
-
-	/**
 	 * Get a configuration value using a key in the configuration file
 	 * @param string $key key to match
 	 * @param string $default_value if no matching key is found, then this value will be returned
@@ -207,15 +175,6 @@ $config = new config;
 echo "Config path: " . $config->path() . "\n";
 echo "Config file: " . $config->filename() . "\n";
 echo "Full path and filename: " . $config->path_and_filename() . "\n";
-
-// show old style configuration options
-echo "db_type: ".$config->db_type."\n";
-echo "db_name: ".$config->db_name."\n";
-echo "db_username: ".$config->db_username."\n";
-echo "db_password: ".$config->db_password."\n";
-echo "db_host: ".$config->db_host."\n";
-echo "db_path: ".$config->db_path."\n";
-echo "db_port: ".$config->db_port."\n";
 
 // use current style configuration options
 echo "database.0.type: " . $config->get('database.0.type') . "\n";
