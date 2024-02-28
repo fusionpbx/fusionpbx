@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2023
+	Portions created by the Initial Developer are Copyright (C) 2008-2024
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -338,10 +338,16 @@ if (is_array($activity)) {
 		}
 		if ($found_count > 0) {	
 			//determine block style by state (if any) and register status
-			$style = !empty($ext_state) ? "op_ext op_state_".$ext_state : "op_ext";
+			$css_class = !empty($ext_state) ? "op_ext op_state_".$ext_state : "op_ext";
 		}
 		else {
-			$style = "off_ext";	
+			//unregistered extension
+			if (!empty($_SESSION['operator_panel']['$css_class']['boolean']) && $_SESSION['operator_panel']['$css_class']['boolean'] == 'true') {
+				$css_class = "ur_ext";
+			}
+			else {
+				continue;
+			}
 		}
 		unset($extension_number, $found_count, $array);
 
@@ -430,15 +436,15 @@ if (is_array($activity)) {
 		}
 
 		//build the list of extensions
-		$block = "<div id='".escape($extension)."' class='".$style."' ".(($_GET['vd_ext_from'] == $extension || $_GET['vd_ext_to'] == $extension) ? "style='border-style: dotted;'" : null)." ".(((empty($ext_state) || $ext_state != 'active') && $ext_state != 'ringing') ? "ondrop='drop(event, this.id);' ondragover='allowDrop(event, this.id);' ondragleave='discardDrop(event, this.id);'" : null).">"; // DRAG TO
-		$block .= "<table class='".$style."'>\n";
+		$block = "<div id='".escape($extension)."' class='".$css_class."' ".(($_GET['vd_ext_from'] == $extension || $_GET['vd_ext_to'] == $extension) ? "style='border-style: dotted;'" : null)." ".(((empty($ext_state) || $ext_state != 'active') && $ext_state != 'ringing') ? "ondrop='drop(event, this.id);' ondragover='allowDrop(event, this.id);' ondragleave='discardDrop(event, this.id);'" : null).">"; // DRAG TO
+		$block .= "<table class='".$css_class."'>\n";
 		$block .= "	<tr>\n";
 		$block .= "		<td class='op_ext_icon'>\n";
 		$block .= "			<span name='".escape($extension)."'>\n"; // DRAG FROM
 		$block .= 				"<img id='".escape($call_identifier)."' class='op_ext_icon' src='resources/images/status_".$status_icon.".png' title='".$status_hover."' ".(($draggable) ? "draggable='true' ondragstart=\"drag(event, this.parentNode.getAttribute('name'));\" onclick=\"virtual_drag('".escape($call_identifier)."', '".escape($extension)."');\"" : "onfocus='this.blur();' draggable='false' style='cursor: not-allowed;'").">\n";
 		$block .= 			"</span>\n";
 		$block .= "		</td>\n";
-		$block .= "		<td class='op_ext_info ".$style."'>\n";
+		$block .= "		<td class='op_ext_info ".$css_class."'>\n";
 		if ($dir_icon ?? '') {
 			$block .= "			<img src='resources/images/".$dir_icon.".png' align='right' style='margin-top: 3px; margin-right: 1px; width: 12px; height: 12px; cursor: help;' draggable='false' alt=\"".$text['label-call_direction']."\" title=\"".$text['label-call_direction']."\">\n";
 		}
@@ -554,19 +560,19 @@ if (sizeof($user_extensions) > 0) {
 		foreach ($valet_array as $row) {
 			$extension = $row['extension'];
 			$ext_state = 'active';
-			$style = "op_ext op_valet_park_active";
+			$css_class = "op_ext op_valet_park_active";
 			$draggable = false;
 
 			//build the list of park extensions
-			$valet_block .= "<div id='".escape($extension)."' class='".$style."' ".(($_GET['vd_ext_from'] == $extension || $_GET['vd_ext_to'] == $extension) ? "style='border-style: dotted;'" : null)." ondrop='drop(event, this.id);' ondragover='allowDrop(event, this.id);' ondragleave='discardDrop(event, this.id);'>\n"; // DRAG TO
-			$valet_block .= "<table class='".$style."'>\n";
+			$valet_block .= "<div id='".escape($extension)."' class='".$css_class."' ".(($_GET['vd_ext_from'] == $extension || $_GET['vd_ext_to'] == $extension) ? "style='border-style: dotted;'" : null)." ondrop='drop(event, this.id);' ondragover='allowDrop(event, this.id);' ondragleave='discardDrop(event, this.id);'>\n"; // DRAG TO
+			$valet_block .= "<table class='".$css_class."'>\n";
 			$valet_block .= "	<tr>\n";
 			$valet_block .= "		<td class='op_ext_icon'>\n";
 			$valet_block .= "			<span name='".escape($extension)."'>"; // DRAG FROM
 			$valet_block .= 				"<img id='".escape($call_identifier)."' class='op_ext_icon' src='resources/images/status_".$status_icon.".png' title='".$status_hover."' ".(($draggable) ? "draggable='true' ondragstart=\"drag(event, this.parentNode.getAttribute('name'));\" onclick=\"virtual_drag('".escape($call_identifier)."', '".escape($extension)."');\"" : "onfocus='this.blur();' draggable='false' style='cursor: not-allowed;'").">\n";
 			$valet_block .= 			"</span>\n";
 			$valet_block .= "		</td>\n";
-			$valet_block .= "		<td class='op_ext_info ".$style."'>\n";
+			$valet_block .= "		<td class='op_ext_info ".$css_class."'>\n";
 			if ($dir_icon != '') {
 				$valet_block .= "			<img src='resources/images/".$dir_icon.".png' align='right' style='margin-top: 3px; margin-right: 1px; width: 12px; height: 12px; cursor: help;' draggable='false' alt=\"".$text['label-call_direction']."\" title=\"".$text['label-call_direction']."\">\n";
 			}
