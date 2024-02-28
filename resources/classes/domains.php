@@ -605,10 +605,19 @@ if (!class_exists('domains')) {
 			//add missing default settings
 				$this->settings();
 
-			//get the variables
+			//set the global variables for app_defaults that require it to function correctly
 				$config = new config;
-				$config_path = $config->find();
-				$config->get();
+				global $db_name, $db_type, $db_host, $db_port, $db_username, $db_password, $db_path;
+				global $db_cert_authority, $db_sslmode;
+				$db_type = $config->get('database.0.type');
+				$db_path = $config->get('database.0.path');
+				$db_host = $config->get('database.0.host');
+				$db_port = $config->get('database.0.port');
+				$db_name = $config->get('database.0.name');
+				$db_sslmode = $config->get('database.0.sslmode', 'prefer');
+				$db_cert_authority = $config->get('database.0.cert_authority', '');
+				$db_username = $config->get('database.0.username');
+				$db_password = $config->get('database.0.password');
 
 			//get the list of installed apps from the core and app directories (note: GLOB_BRACE doesn't work on some systems)
 				$config_list_1 = glob($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/*/*/app_config.php");
