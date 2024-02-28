@@ -469,19 +469,19 @@ if (!class_exists('schema')) {
 
 					if ($format == '') $format = $output_format;
 
-				//get the db variables
-					//require_once "resources/classes/config.php";
+				//set the global variables for app_defaults that require it to function correctly
 					//$config = new config;
-					//$config_exists = $config->exists();
-					//$config_path = $config->find();
-					//$config->get();
-					//$db_type = $config->db_type;
-					//$db_name = $config->db_name;
-					//$db_username = $config->db_username;
-					//$db_password = $config->db_password;
-					//$db_host = $config->db_host;
-					//$db_path = $config->db_path;
-					//$db_port = $config->db_port;
+					//global $db_name, $db_type, $db_host, $db_port, $db_username, $db_password, $db_path;
+					//global $db_cert_authority, $db_sslmode;
+					//$db_type = $config->get('database.0.type');
+					//$db_path = $config->get('database.0.path');
+					//$db_host = $config->get('database.0.host');
+					//$db_port = $config->get('database.0.port');
+					//$db_name = $config->get('database.0.name');
+					//$db_sslmode = $config->get('database.0.sslmode', 'prefer');
+					//$db_cert_authority = $config->get('database.0.cert_authority', '');
+					//$db_username = $config->get('database.0.username');
+					//$db_password = $config->get('database.0.password');
 
 				//includes files
 					require dirname(__DIR__, 2) . "/resources/require.php";
