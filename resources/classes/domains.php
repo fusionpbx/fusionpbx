@@ -606,9 +606,9 @@ if (!class_exists('domains')) {
 				$this->settings();
 
 			//set the global variables for app_defaults that require it to function correctly
-				$config = new config;
+				$config = config::load();
 				global $db_name, $db_type, $db_host, $db_port, $db_username, $db_password, $db_path;
-				global $db_cert_authority, $db_sslmode;
+				global $db_sslmode, $db_secure, $db_cert_authority;
 				$db_type = $config->get('database.0.type');
 				$db_path = $config->get('database.0.path');
 				$db_host = $config->get('database.0.host');
@@ -616,6 +616,7 @@ if (!class_exists('domains')) {
 				$db_name = $config->get('database.0.name');
 				$db_sslmode = $config->get('database.0.sslmode', 'prefer');
 				$db_cert_authority = $config->get('database.0.cert_authority', '');
+				$db_secure = $config->get('database.0.secure', 'false');
 				$db_username = $config->get('database.0.username');
 				$db_password = $config->get('database.0.password');
 

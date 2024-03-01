@@ -3,18 +3,19 @@
 /**
  * config class loads configuration from the filesystem
  */
-class config {
+final class config {
 
 	// Full path and filename of config.conf
 	private $file;
 
 	// The internal array that holds the configuration in the config.conf file
 	private $configuration;
+	public static $config = null;
 
 	/**
 	 * Loads the framework configuration file
 	 */
-	public function __construct() {
+	private function __construct() {
 
 		//initialize object variables to empty values
 		$this->configuration = [];
@@ -26,11 +27,11 @@ class config {
 		//check if the config file was found
 		if (empty($this->file)) {
 			//unable to load config.conf so throw an exception
-			throw new Exception("Unable to find config path");
+			throw new config_file_not_found();
 		}
 
 		//load the conf file
-		$this->load();
+		$this->_load();
 
 		//set the server variables
 		$this->define_project_paths();
@@ -87,28 +88,57 @@ class config {
 	}
 
 	// loads the config.conf file
-	private function load() {
+	private function _load() {
 
 		//check if include is needed
 		if (substr($this->file, 0, -4) === '.php') {
 			//allow global variables to be set in the old config.php file
 			global $db_type, $db_host, $db_port, $db_name, $db_username, $db_password, $db_path;
+			global $db_sslmode, $db_secure, $db_cert_authority;
 
 			//load the config.php file
 			require_once $this->file;
 
 			//convert the old properties to the new standard
-			$this->configuration['database.0.type'] = $db_type;
-			$this->configuration['database.0.path'] = $db_path;
-			$this->configuration['database.0.host'] = $db_host;
-			$this->configuration['database.0.port'] = $db_port;
-			$this->configuration['database.0.name'] = $db_name;
-			$this->configuration['database.0.username'] = $db_username;
-			$this->configuration['database.0.password'] = $db_password;
-			$this->configuration['database.0.sslmode'] = 'prefer';
+			if (isset($db_type)) {
+				$this->configuration['database.0.type'] = $db_type;
+			} else {
+				$this->configuration['database.0.type'] = 'pgsql';
+			}
+			if (isset($db_path)) {
+				$this->configuration['database.0.path'] = $db_path;
+			} else {
+				$this->configuration['database.0.path'] = '';
+			}
+			if (isset($db_host)) {
+				$this->configuration['database.0.host'] = $db_host;
+			}
+			if (isset($db_port)) {
+				$this->configuration['database.0.port'] = $db_port;
+			}
+			if (isset($db_name)) {
+				$this->configuration['database.0.name'] = $db_name;
+			}
+			if (isset($db_username)) {
+				$this->configuration['database.0.username'] = $db_username;
+			}
+			if (isset($db_password)) {
+				$this->configuration['database.0.password'] = $db_password;
+			}
+			if (isset($db_sslmode)) {
+				$this->configuration['database.0.sslmode'] = $db_sslmode;
+			} else {
+				$this->configuration['database.0.sslmode'] = 'prefer';
+			}
+			if (isset($db_secure)) {
+				$this->configuration['database.0.secure'] = $db_secure;
+			}
+			if (isset($db_cert_authority)) {
+				$this->configuration['database.0.cert_authority'] = $db_cert_authority;
+			}
 
 			//remove from the global namespace
-			unset($db_type, $db_host, $db_port, $db_name, $db_username, $db_password);
+			unset($db_type, $db_host, $db_port, $db_name, $db_username, $db_password, $db_sslmode, $db_secure, $db_cert_authority);
 
 		} else {
 			//use native php parsing function
@@ -215,6 +245,16 @@ class config {
 		return $this->configuration;
 	}
 
+	/**
+	 * Ensures the configuration file is loaded only once
+	 * @return config
+	 */
+	public static function load(): config {
+		if (self::$config === null) {
+			self::$config = new config();
+		}
+		return self::$config;
+	}
 }
 
 /*
