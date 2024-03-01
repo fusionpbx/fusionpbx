@@ -479,6 +479,11 @@ if (!class_exists('xml_cdr')) {
 							//marked as missed
 							$missed_call = $xml->variables->missed_call;
 						}
+						if (isset($call_direction) && $call_direction == 'inbound' 
+							&& isset($xml->variables->hangup_cause) 
+							&& $xml->variables->hangup_cause == 'ORIGINATOR_CANCEL') {
+							$missed_call = 'true';
+						}
 						if (isset($xml->variables->billsec) && $xml->variables->billsec > 0) {
 							//answered call
 							$missed_call = 'false';
