@@ -894,6 +894,21 @@ if (!class_exists('schema')) {
 							unset ($sql_update, $sql);
 						}
 
+				//refresh each postgresql subscription with its publication
+					if ($db_type == "pgsql") {
+						//get the list of postgresql subscriptions
+						$sql = "select subname from pg_subscription; ";
+						$pg_subscriptions = $this->database->select($sql, null, 'all');
+						unset($sql, $parameters);
+
+						//refresh each subscription publication
+						foreach ($pg_subscriptions as $row) {
+							$sql = "ALTER SUBSCRIPTION ".$row['subname']." REFRESH PUBLICATION;";
+							$response .= $sql;
+							$this->database->execute($sql);
+						}
+					}
+
 				//handle response
 					//if ($output == "echo") {
 					//	echo $response;
@@ -914,4 +929,3 @@ if (!class_exists('schema')) {
 	//print_r($result_array);
 
 ?>
-
