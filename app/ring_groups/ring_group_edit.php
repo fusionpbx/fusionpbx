@@ -876,7 +876,7 @@
 	echo "			<table border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "				<tr>\n";
 	echo "					<td class='vtable'>".$text['label-destination_number']."</td>\n";
-	echo "					<td class='vtable'>".$text['label-destination_description']."</td>\n";
+	
 	echo "					<td class='vtable' id='destination_delayorder'>";
 	echo 						($ring_group_strategy == 'sequence' || $ring_group_strategy == 'rollover') ? $text['label-destination_order'] : $text['label-destination_delay'];
 	echo "					</td>\n";
@@ -884,6 +884,7 @@
 	if (permission_exists('ring_group_prompt')) {
 		echo "				<td class='vtable'>".$text['label-destination_prompt']."</td>\n";
 	}
+	echo "					<td class='vtable'>".$text['label-destination_description']."</td>\n";
 	echo "					<td class='vtable'>".$text['label-destination_enabled']."</td>\n";
 	if ($show_destination_delete && permission_exists('ring_group_destination_delete')) {
 		echo "					<td class='vtable edit_delete_checkbox_all' onmouseover=\"swap_display('delete_label_destinations', 'delete_toggle_destinations');\" onmouseout=\"swap_display('delete_label_destinations', 'delete_toggle_destinations');\">\n";
@@ -913,9 +914,6 @@
 			}
 		}
 		echo "					<input type=\"text\" name=\"ring_group_destinations[".$x."][destination_number]\" class=\"formfld\" value=\"".escape($row['destination_number'])."\" ".$onkeyup.">\n";
-		echo "				</td>\n";
-		echo "				<td class='formfld'>\n";
-		echo "					<input type=\"text\" name=\"ring_group_destinations[".$x."][destination_description]\" class=\"formfld\" value=\"".escape($row['destination_description'])."\">\n";
 		echo "				</td>\n";
 		echo "				<td class='formfld'>\n";
 		echo "					<select name='ring_group_destinations[".$x."][destination_delay]' class='formfld' style='width:55px'>\n";
@@ -955,6 +953,9 @@
 			echo "				</select>\n";
 			echo "			</td>\n";
 		}
+		echo "				<td class='formfld'>\n";
+		echo "					<input type=\"text\" name=\"ring_group_destinations[".$x."][destination_description]\" class=\"formfld\" value=\"".escape($row['destination_description'])."\">\n";
+		echo "				</td>\n";
 		echo "				<td class='formfld'>\n";
 		// switch
 		if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
