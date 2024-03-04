@@ -1197,9 +1197,17 @@ if ($action == 'update') {
 									echo "<script>\n";
 									echo "	condition_id = add_condition(".$preset_group_id.",'preset');\n";
 									echo "	$('#variable_".$preset_group_id."_' + condition_id + ' option[value=\"".$preset_variable."\"]').prop('selected', true);\n";
-									echo "	load_value_fields(".$preset_group_id.", condition_id, '".$preset_variable."');\n";
-									echo "	$('#value_".$preset_group_id."_' + condition_id + '_start option[value=\"".$preset_value_start."\"]').prop('selected', true);\n";
-									echo "	$('#value_".$preset_group_id."_' + condition_id + '_stop option[value=\"".$preset_value_stop."\"]').prop('selected', true);\n";
+									if ($preset_variable == 'date-time') {
+										echo "	change_to_input(document.getElementById('value_".$preset_group_id."_' + condition_id + '_start'));\n";
+										echo "	change_to_input(document.getElementById('value_".$preset_group_id."_' + condition_id + '_stop'));\n";
+										echo "	$('#value_".$preset_group_id."_' + condition_id + '_start').val('".$preset_value_start."');\n";
+										echo "	$('#value_".$preset_group_id."_' + condition_id + '_stop').val('".$preset_value_stop."');\n";
+									}
+									else {
+										echo "	load_value_fields(".$preset_group_id.", condition_id, '".$preset_variable."');\n";
+										echo "	$('#value_".$preset_group_id."_' + condition_id + '_start option[value=\"".$preset_value_start."\"]').prop('selected', true);\n";
+										echo "	$('#value_".$preset_group_id."_' + condition_id + '_stop option[value=\"".$preset_value_stop."\"]').prop('selected', true);\n";
+									}
 									echo "</script>\n\n";
 								}
 							}
