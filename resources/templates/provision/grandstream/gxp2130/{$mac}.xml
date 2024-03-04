@@ -136,7 +136,7 @@
 
 		<!-- Register Expiration (m) -->
 		<!-- Number: 0 - 64800 -->
-		<item name="account.{$row.line_number}.sip.registerExpiration">15</item>
+		<item name="account.{$row.line_number}.sip.registerExpiration">{$row.register_expires}</item>
 
 		<!-- Subscribe Expiration (m) -->
 		<!-- Number: 0 - 64800 -->
@@ -668,18 +668,18 @@
 		<item name="account.{$row.line_number}.featureCodes.callFeatures">Yes</item>
 
 		<!-- DND Call Feature On -->
-		<item name="account.{$row.line_number}.featureCodes.dndOn"/>
+		<item name="account.{$row.line_number}.featureCodes.dndOn"/>*78</item>
 
 		<!-- DND Call Feature Off  -->
-		<item name="account.{$row.line_number}.featureCodes.dndOff"/>
+		<item name="account.{$row.line_number}.featureCodes.dndOff"/>*79</item>
 
 		<!-- #Call Forward Always - On -->
 		<!-- # String -->
-		<item name="account.{$row.line_number}.featureCodes.callForwardUnconditionallyOn"/>
+		<item name="account.{$row.line_number}.featureCodes.callForwardUnconditionallyOn"/>*72</item>
 
 		<!-- #Call Forward Always - Off -->
 		<!-- # String -->
-		<item name="account.{$row.line_number}.featureCodes.callForwardUnconditionallyOff"/>
+		<item name="account.{$row.line_number}.featureCodes.callForwardUnconditionallyOff"/>*73</item>
 
 		<!-- #Call Forward Always- Target -->
 		<!-- # String -->
@@ -3274,4 +3274,3 @@
 
 	</config>
 </gs_provision>
-
