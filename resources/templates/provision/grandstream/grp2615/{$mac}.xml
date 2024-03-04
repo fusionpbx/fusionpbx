@@ -173,8 +173,8 @@
 		<!-- Register Expiration (m) -->
 		<!-- Number: 0 - 64800 -->
 		<!-- Pvalue P32 -->
-		<item name="account.{$row.line_number}.sip.registerExpiration">15</item>
-
+		<item name="account.{$row.line_number}.sip.registerExpiration">{$row.register_expires}</item>
+	
 		<!-- Subscribe Expiration (m) -->
 		<!-- Number: 0 - 64800 -->
 		<!-- Pvalue P26051 -->
