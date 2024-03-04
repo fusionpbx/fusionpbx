@@ -200,9 +200,9 @@
 
 --set hold music
 	if (session:getVariable("hold_music") == nil) then
-		hold_music = '';
+		default_hold_music = '';
 	else
-		hold_music = ",hold_music="..session:getVariable("hold_music");
+		default_hold_music = session:getVariable("hold_music");
 	end
 
 --prepare the api object
@@ -834,13 +834,25 @@
 							cmd = "user_data ".. destination_number .."@"..domain_name.." var extension_uuid";
 							extension_uuid = trim(api:executeString(cmd));
 
+							--get the hold music
+							cmd = "user_data ".. destination_number .."@"..domain_name.." var hold_music";
+							user_hold_music = trim(api:executeString(cmd));
+							if (user_hold_music ~= nil) and (string.len(user_hold_music) > 0) then
+								hold_music = user_hold_music;
+							else 
+								hold_music = default_hold_music
+							end
+
 							--send to user
 							local dial_string_user = "[sip_invite_domain="..domain_name..",call_direction="..call_direction..",";
 							dial_string_user = dial_string_user .. group_confirm..","..timeout_name.."="..destination_timeout..",";
 							dial_string_user = dial_string_user .. delay_name.."="..destination_delay..",";
 							dial_string_user = dial_string_user .. "dialed_extension=" .. row.destination_number .. ",";
+							if (hold_music ~= nil) and (string.len(hold_music) > 0) then
+								dial_string_user = dial_string_user .. "hold_music=" .. hold_music .. ",";
+							end
 							dial_string_user = dial_string_user .. "presence_id=" .. row.destination_number .. "@"..domain_name..",";
-							dial_string_user = dial_string_user .. "extension_uuid="..extension_uuid..hold_music..record_session.."]";
+							dial_string_user = dial_string_user .. "extension_uuid="..extension_uuid..record_session.."]";
 							user_contact = api:executeString("sofia_contact */".. row.destination_number .."@" ..domain_name);
 							if (user_contact ~= "error/user_not_registered") then
 								dial_string = dial_string_user .. user_contact;

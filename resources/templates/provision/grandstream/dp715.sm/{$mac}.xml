@@ -162,10 +162,10 @@
 <P4507>300</P4507>
 
 <!-- Connection Request Username -->
-<P4511></P4511>
+<P4511>{$mac|replace:'-':''|upper}</P4511>
 
 <!-- Connection Request Password -->
-<P4512></P4512>
+<P4512>{$mac|replace:'-':''|upper}</P4512>
 
 <!--CPE SSL Certificate -->
 <!--P8220= -->

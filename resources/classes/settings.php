@@ -66,7 +66,7 @@ class settings {
 	 * @param text category
 	 * @param text subcategory
 	 */
-	public function get($category = null, $subcategory = null) {
+	public function get(string $category = null, string $subcategory = null, mixed $default_value = null): mixed {
 
 		if (empty($category)) {
 			return $this->settings;
@@ -75,7 +75,7 @@ class settings {
 			return $this->settings[$category];
 		}
 		else {
-			return $this->settings[$category][$subcategory];
+			return $this->settings[$category][$subcategory] ?? $default_value;
 		}
 
 	}
