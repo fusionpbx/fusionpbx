@@ -2950,6 +2950,7 @@
 
 {foreach $keys['line'] as $row}
 {$line=$row.device_key_id}
+	{if $row.device_key_id < 9}
 		<!-- ###################################################################################### -->
 		<!-- # VPK {$row.device_key_id}  -->
 		<!-- ###################################################################################### -->
@@ -2970,7 +2971,39 @@
 
 		<!-- # Locked: uncheck, check.  -->
 		<!--<item name="pks.vpk.{$row.device_key_id}.lockMode"></item>-->
+	{/if}
+{/foreach}
 
+		<!-- # Key Mode for dynamic VPK. -->
+{assign var=key_types value=["none"=>-1,"speed dial"=>0, "blf"=>1, "presence watcher"=>2,
+"eventlist blf"=>3,"speed dial active"=>4,"dial dtmf"=>5,"voicemail"=>6,"call return"=>7,
+"transfer"=>8,"call park"=>9,"intercom"=>10,"ldap search"=>11,"conference"=>12,"multicast paging"=>13,
+"record"=>14,"call log"=>15,"monitored call park"=>16,"menu"=>17]}
+
+{foreach $keys['line'] as $row}
+{$line=$row.device_key_id}
+	{if $row.device_key_id > 8}
+		<!-- ###################################################################################### -->
+		<!-- # VPK {$row.device_key_id}  -->
+		<!-- ###################################################################################### -->
+		<!-- # Key Mode  -->
+		<item name="pks.vpk.{$row.device_key_id}.keyMode">{$key_types[$keys.line.$line.device_key_type]}</item>
+		<!--<item name="pks.vpk.{$row.device_key_id}.keyMode">-1</item>-->
+
+		<!-- # Account. 0 - Account1, 1 - Account2, 2 - Account3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+		<item name="pks.vpk.{$row.device_key_id}.account">{$row.device_key_line}</item>
+
+		<!-- # Description. Max length allowed is 32 characters. -->
+		<!-- # String -->
+		<item name="pks.vpk.{$row.device_key_id}.description">{$row.device_key_label}</item>
+
+		<!-- # Value. Max length allowed is 64 characters. -->
+		<!-- # String -->
+		<item name="pks.vpk.{$row.device_key_id}.value">{$row.device_key_value}</item>
+
+		<!-- # Locked: uncheck, check.  -->
+		<!--<item name="pks.vpk.{$row.device_key_id}.lockMode"></item>-->
+	{/if}
 {/foreach}
 
 		<!-- ############################################################################## -->
