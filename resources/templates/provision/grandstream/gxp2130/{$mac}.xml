@@ -657,7 +657,7 @@
 
 		<!-- # Custom Alert-Info for Auto Answer. -->
 		<!-- # String -->
-		<item name="account.{$row.line_number}.intercom.customCallInfoForAutoAnswer"/></item>
+		<item name="account.{$row.line_number}.intercom.customCallInfoForAutoAnswer"/>
 
 		<!-- ############################################################### -->
 		<!-- # Account 1/Feature Codes -->
@@ -683,31 +683,31 @@
 
 		<!-- #Call Forward Always- Target -->
 		<!-- # String -->
-		<item name="account.{$row.line_number}.featureCodes.callForwardUnconditionallyTarget"/></item>
+		<item name="account.{$row.line_number}.featureCodes.callForwardUnconditionallyTarget"/>
 
 		<!-- #Call Forward Busy - On -->
 		<!-- # String -->
-		<item name="account.{$row.line_number}.featureCodes.callForwardBusyOn"/></item>
+		<item name="account.{$row.line_number}.featureCodes.callForwardBusyOn"/>
 
 		<!-- #Call Forward Busy - Off -->
 		<!-- # String -->
-		<item name="account.{$row.line_number}.featureCodes.callForwardBusyOff"/></item>
+		<item name="account.{$row.line_number}.featureCodes.callForwardBusyOff"/>
 
 		<!-- #Call Forward Busy - Target -->
 		<!-- # String -->
-		<item name="account.{$row.line_number}.featureCodes.callForwardBusyTarget"/></item>
+		<item name="account.{$row.line_number}.featureCodes.callForwardBusyTarget"/>
 
 		<!-- #Call Forward No Answer - On -->
 		<!-- #String -->
-		<item name="account.{$row.line_number}.featureCodes.callForwardDelayedOn"/></item>
+		<item name="account.{$row.line_number}.featureCodes.callForwardDelayedOn"/>
 
 		<!-- #Call Forward No Answer - Off -->
 		<!-- #String -->
-		<item name="account.{$row.line_number}.featureCodes.callForwardDelayedOff"/></item>
+		<item name="account.{$row.line_number}.featureCodes.callForwardDelayedOff"/>
 
 		<!-- #Call Forward No Answer - Target -->
 		<!-- #String -->
-		<item name="account.{$row.line_number}.featureCodes.callForwardDelayedTarget"/></item>
+		<item name="account.{$row.line_number}.featureCodes.callForwardDelayedTarget"/>
 
 		<!-- #Delayed Call Forward Wait Time (in seconds). Default is 12 -->
 		<!-- #Number: 1 - 120 -->
@@ -2943,14 +2943,14 @@
 		<!-- # Phonebook(30), Paging(33) -->
 		{/literal}
 
-
-{assign var=key_types value=["none"=>-1, "speed dial"=>0, "blf"=>1, "presence watcher"=>2,
-"eventlist blf"=>3,"speed dial active"=>4,"dial dtmf"=>5,"voicemail"=>6,"call return"=>7,
-"transfer"=>8,"call park"=>9,"intercom"=>10,"ldap search"=>11,"conference"=>12,"multicast paging"=>13,
-"record"=>14,"call log"=>15,"monitored call park"=>16,"menu"=>17]}
+{assign var=key_types value=["none"=>-1,"line"=>0,"shared"=>1,"speed dial"=>10, "blf"=>11, "presence watcher"=>12,
+"eventlist blf"=>13,"speed dial active"=>14,"dial dtmf"=>15,"voicemail"=>16,"call return"=>17,
+"transfer"=>18,"call park"=>19,"intercom"=>20,"ldap search"=>21,"conference"=>22,"multicast paging"=>23,
+"record"=>24,"call log"=>25,"monitored call park"=>26,"menu"=>27]}
 
 {foreach $keys['line'] as $row}
 {$line=$row.device_key_id}
+	{if $row.device_key_id < 4}
 		<!-- ###################################################################################### -->
 		<!-- # VPK {$row.device_key_id}  -->
 		<!-- ###################################################################################### -->
@@ -2971,7 +2971,39 @@
 
 		<!-- # Locked: uncheck, check.  -->
 		<!--<item name="pks.vpk.{$row.device_key_id}.lockMode"></item>-->
+	{/if}
+{/foreach}
 
+		<!-- # Key Mode for dynamic VPK. -->
+{assign var=key_types value=["none"=>-1,"speed dial"=>0, "blf"=>1, "presence watcher"=>2,
+"eventlist blf"=>3,"speed dial active"=>4,"dial dtmf"=>5,"voicemail"=>6,"call return"=>7,
+"transfer"=>8,"call park"=>9,"intercom"=>10,"ldap search"=>11,"conference"=>12,"multicast paging"=>13,
+"record"=>14,"call log"=>15,"monitored call park"=>16,"menu"=>17]}
+
+{foreach $keys['line'] as $row}
+{$line=$row.device_key_id}
+	{if $row.device_key_id > 3}
+		<!-- ###################################################################################### -->
+		<!-- # VPK {$row.device_key_id}  -->
+		<!-- ###################################################################################### -->
+		<!-- # Key Mode  -->
+		<item name="pks.vpk.{$row.device_key_id}.keyMode">{$key_types[$keys.line.$line.device_key_type]}</item>
+		<!--<item name="pks.vpk.{$row.device_key_id}.keyMode">-1</item>-->
+
+		<!-- # Account. 0 - Account1, 1 - Account2, 2 - Account3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+		<item name="pks.vpk.{$row.device_key_id}.account">{$row.device_key_line}</item>
+
+		<!-- # Description. Max length allowed is 32 characters. -->
+		<!-- # String -->
+		<item name="pks.vpk.{$row.device_key_id}.description">{$row.device_key_label}</item>
+
+		<!-- # Value. Max length allowed is 64 characters. -->
+		<!-- # String -->
+		<item name="pks.vpk.{$row.device_key_id}.value">{$row.device_key_value}</item>
+
+		<!-- # Locked: uncheck, check.  -->
+		<!--<item name="pks.vpk.{$row.device_key_id}.lockMode"></item>-->
+	{/if}
 {/foreach}
 
 		<!-- ############################################################################## -->
@@ -3215,6 +3247,11 @@
 		<!-- # Phonebook(30), Paging(33) -->
 		{/literal}
 
+{assign var=key_types value=["none"=>-1,"speed dial"=>0, "blf"=>1, "presence watcher"=>2,
+"eventlist blf"=>3,"speed dial active"=>4,"dial dtmf"=>5,"voicemail"=>6,"call return"=>7,
+"transfer"=>8,"call park"=>9,"intercom"=>10,"ldap search"=>11,"conference"=>12,"multicast paging"=>13,
+"record"=>14,"call log"=>15,"monitored call park"=>16,"menu"=>17]}
+
 {foreach $keys['expansion'] as $row}
 {$line=$row.device_key_id}
 
@@ -3237,11 +3274,3 @@
 
 	</config>
 </gs_provision>
-
-
-
-
-
-
-
-
