@@ -223,6 +223,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enable or disable the feature to add a range of extensions.";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "d25c1e2b-4098-408e-959b-c789ba4691e1";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "ring_group";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "diversion_enabled";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enable or disable the adding diversion header for external destinations.";
 
 	//schema details
 		$y=0;
