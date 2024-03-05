@@ -1788,7 +1788,7 @@
 		echo "</td>\n";
 		echo "</tr>\n";
 
-		if (permission_exists('voicemail_transcription_enabled')) {
+		if (permission_exists('voicemail_transcription_enabled') && ($_SESSION['voicemail']['transcribe_enabled']['boolean'] ?? '') == "true") {
 			echo "<tr>\n";
 			echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 			echo "	".$text['label-voicemail_transcription_enabled']."\n";
