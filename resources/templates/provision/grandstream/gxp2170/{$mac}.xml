@@ -107,7 +107,11 @@
 
 		<!-- NAT Traversal -->
 		<!-- No, STUN, KeepAlive, UPnP, Auto, VPN -->
+		{if isset($grandstream_nat_traversal)}
+		<item name="account.{$row.line_number}.network.natTraversal">{$grandstream_nat_traversal}</item>
+		{else}
 		<item name="account.{$row.line_number}.network.natTraversal">Auto</item>
+		{/if}
 
 		<!-- Support Rport (RFC 3581) -->
 		<!-- Yes, No -->
@@ -575,61 +579,61 @@
 		<item name="account.{$row.line_number}.ring.match.1.callerId"/>
 
 		<!-- Distinctive Ring Tone -->
-		<item name="account.{$row.line_number}.ring.match.1.ringtone">5</item>
+		<item name="account.{$row.line_number}.ring.match.1.ringtone">{$grandstream_distinctive_ringtone_1}</item>
 
 		<!-- Match Incoming Caller ID. Matching Rule 2 -->
 		<item name="account.{$row.line_number}.ring.match.2.callerId"/>
 
 		<!-- Distinctive Ring Tone -->
-		<item name="account.{$row.line_number}.ring.match.2.ringtone">5</item>
+		<item name="account.{$row.line_number}.ring.match.2.ringtone">{$grandstream_distinctive_ringtone_2}</item>
 
 		<!-- Match Incoming Caller ID. Matching Rule 3 -->
 		<item name="account.{$row.line_number}.ring.match.3.callerId"/>
 
 		<!-- Distinctive Ring Tone -->
-		<item name="account.{$row.line_number}.ring.match.3.ringtone">5</item>
+		<item name="account.{$row.line_number}.ring.match.3.ringtone">{$grandstream_distinctive_ringtone_3}</item>
 
 		<!-- Match Incoming Caller ID. Matching Rule 4 -->
 		<item name="account.{$row.line_number}.ring.match.4.callerId"/>
 
 		<!-- Distinctive Ring Tone -->
-		<item name="account.{$row.line_number}.ring.match.4.ringtone">5</item>
+		<item name="account.{$row.line_number}.ring.match.4.ringtone">{$grandstream_distinctive_ringtone_4}</item>
 
 		<!-- Match Incoming Caller ID. Matching Rule 5 -->
 		<item name="account.{$row.line_number}.ring.match.5.callerId"/>
 
 		<!-- Distinctive Ring Tone -->
-		<item name="account.{$row.line_number}.ring.match.5.ringtone">5</item>
+		<item name="account.{$row.line_number}.ring.match.5.ringtone">{$grandstream_distinctive_ringtone_5}</item>
 
 		<!-- Match Incoming Caller ID. Matching Rule 6 -->
 		<item name="account.{$row.line_number}.ring.match.6.callerId"/>
 
 		<!-- Distinctive Ring Tone -->
-		<item name="account.{$row.line_number}.ring.match.6.ringtone">5</item>
+		<item name="account.{$row.line_number}.ring.match.6.ringtone">{$grandstream_distinctive_ringtone_6}</item>
 
 		<!-- Match Incoming Caller ID. Matching Rule 7 -->
 		<item name="account.{$row.line_number}.ring.match.7.callerId"/>
 
 		<!-- Distinctive Ring Tone -->
-		<item name="account.{$row.line_number}.ring.match.7.ringtone">5</item>
+		<item name="account.{$row.line_number}.ring.match.7.ringtone">{$grandstream_distinctive_ringtone_7}</item>
 
 		<!-- Match Incoming Caller ID. Matching Rule 8 -->
 		<item name="account.{$row.line_number}.ring.match.8.callerId"/>
 
 		<!-- Distinctive Ring Tone -->
-		<item name="account.{$row.line_number}.ring.match.8.ringtone">5</item>
+		<item name="account.{$row.line_number}.ring.match.8.ringtone">{$grandstream_distinctive_ringtone_8}</item>
 
 		<!-- Match Incoming Caller ID. Matching Rule 9 -->
 		<item name="account.{$row.line_number}.ring.match.9.callerId"/>
 
 		<!-- Distinctive Ring Tone -->
-		<item name="account.{$row.line_number}.ring.match.9.ringtone">5</item>
+		<item name="account.{$row.line_number}.ring.match.9.ringtone">{$grandstream_distinctive_ringtone_9}</item>
 
 		<!-- Match Incoming Caller ID. Matching Rule 10 -->
 		<item name="account.{$row.line_number}.ring.match.10.callerId"/>
 
 		<!-- Distinctive Ring Tone -->
-		<item name="account.{$row.line_number}.ring.match.10.ringtone">5</item>
+		<item name="account.{$row.line_number}.ring.match.10.ringtone">{$grandstream_distinctive_ringtone_10}</item>
 
 		<!-- Ring Timeout -->
 		<!-- Number: 10 - 300 -->
@@ -903,12 +907,13 @@
 
 		<!-- # Enable Manual VLAN Configuration. Yes or No. -->
 		<!-- # Mandatory -->
-		<item name="network.port.eth.1.vlan.enable">Yes</item>
+		<item name="network.port.eth.1.vlan.enable">{if isset($grandstream_lan_port_vlan)}Yes{else}No{/if}</item>
+
 
 		<!-- # Layer 2 QoS. 802.1Q/VLAN Tag (VLAN classification for RTP). Default is 0 -->
 		<!-- Layer 2 QoS 802.1Q/VLAN Tag (Ethernet) -->
 		<!-- Number: 0 - 4095 -->
-		<item name="network.port.eth.1.vlan.tag">0</item>
+		<item name="network.port.eth.1.vlan.tag">{$grandstream_lan_port_vlan}</item>
 
 		<!-- 802.1p Priority Value (Ethernet) -->
 		<!-- Number: 0 - 7 -->
@@ -916,10 +921,14 @@
 
 		<!-- PC Port Mode -->
 		<!-- Enabled, Disabled, Mirrored -->
-		<item name="network.port.pc.mode">Enabled</item>
+		{if isset($grandstream_pc_mode)}
+		<item name="network.port.pc.mode">{if isset($grandstream_pc_mode)}{$grandstream_pc_mode}{/if}</item>
+		{else}
+		<item name="network.port.pc.mode">{if isset($grandstream_pc_port_vlan)}Enabled{else}Disabled{/if}</item>
+		{/if}
 
 		<!-- PC Port VLAN Tag  -->
-		<item name="network.port.pc.vlan.tag">0</item>
+		<item name="network.port.pc.vlan.tag">{$grandstream_pc_port_vlan}</item>
 
 		<!-- PC Port Priority Value -->
 		<item name="network.port.pc.vlan.priority">0</item>
@@ -1614,7 +1623,11 @@
 		<item name="sip.userNatIp"/>
 
 		<!-- STUN Server -->
-		<item name="network.stunServer"/>
+		{if isset($grandstream_stun_server) }
+		<item name="network.stunServer">{$grandstream_stun_server}</item>
+		{else}
+		<item name="network.stunServer"></item>
+		{/if}
 
 		<!-- # Delay Registration. Default is 0. -->
 		<!-- # Number: 0 - 90 -->
@@ -2424,13 +2437,25 @@
 		<!-- ##  Settings/Preferences / Audio Control -->
 		<!-- ############################################################################## -->
 		<!-- # HEADSET Key Mode. DefaultMode, ToggleHeadsetOrSpeaker. -->
+		{if isset($grandstream_headset_key_mode)}
+		<item name="audio.headset.keyMode">{$grandstream_headset_key_mode}</item>
+		{else}
 		<item name="audio.headset.keyMode">DefaultMode</item>
+		{/if}
 
 		<!-- # Headset Type. Normal, PlantronicsEHS. -->
+		{if isset($grandstream_headset_ringtone)}
+		<item name="audio.headset.ehs.ringtone">{$grandstream_headset_ringtone}</item>
+		{else}
 		<item name="audio.headset.ehs.ringtone">Normal</item>
+		{/if}
 
 		<!-- # EHS Headset Ringtone. Normal, PlantronicsEHS. -->
+		{if isset($grandstream_headset_type)}
+		<item name="audio.headset.type">{$grandstream_headset_type}</item>
+		{else}
 		<item name="audio.headset.type">Normal</item>
+		{/if}
 
 		<!-- # Always Ring Speaker. -->
 		<!-- No - 0, Yes,both - 1, Yes,speaker only - 2 -->
@@ -2444,10 +2469,18 @@
 		<item name="audio.headset.txGain">0</item>
 
 		<!-- # Headset RX gain(dB). 1 - -6, 0 - 0, 2 - +6. Default is 0 -->
+		{if isset($grandstream_headset_rx_gain)}
+		<item name="audio.headset.rxGain">{$grandstream_headset_rx_gain}</item>
+		{else}
 		<item name="audio.headset.rxGain">0</item>
+		{/if}
 
 		<!-- # Handset TX gain(dB). 1 - -6, 0 - 0, 2 - +6. Default is 0 -->
+		{if isset($grandstream_headset_tx_gain)}
+		<item name="audio.handset.txGain">{$grandstream_headset_tx_gain}</item>
+		{else}
 		<item name="audio.handset.txGain">0</item>
+		{/if}
 
 		<!-- ############################################################################## -->
 		<!-- ##  Settings/Preferences / Date and Time -->
@@ -2620,10 +2653,14 @@
 
 		<!-- # Screensaver Settings -->
 		<!-- # Screensaver. No, Yes,  OnIfNoVPKIsActive. -->
+		{if isset($grandstream_screensaver_enable)}
+		<item name="lcd.screensaver.enable">{$grandstream_screensaver_enable}</item>
+		{else}
 		<item name="lcd.screensaver.enable">OnIfNoVPKIsActive</item>
+		{/if}
 
 		<!-- # Screensaver Source.  Default, USB, Download.  -->
-		<item name="lcd.screensaver.source"/>
+		<item name="lcd.screensaver.source">{$grandstream_screensaver_source}</item>
 
 		<!-- # Show Date and Time. Yes or No -->
 		<item name="lcd.screensaver.showDateTime">Yes</item>
