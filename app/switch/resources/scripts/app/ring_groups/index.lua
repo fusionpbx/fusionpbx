@@ -149,6 +149,7 @@ log = require "resources.functions.log".ring_group
 		sip_to_user = session:getVariable("sip_to_user");
 		caller_id_name = session:getVariable("caller_id_name");
 		caller_id_number = session:getVariable("caller_id_number");
+		original_caller_id_number = session:getVariable("caller_id_number");
 		outbound_caller_id_name = session:getVariable("outbound_caller_id_name");
 		outbound_caller_id_number = session:getVariable("outbound_caller_id_number");
 		effective_caller_id_name = session:getVariable("effective_caller_id_name");
@@ -852,7 +853,7 @@ log = require "resources.functions.log".ring_group
 							dial_string_user = dial_string_user .. group_confirm..","..timeout_name.."="..destination_timeout..",";
 							dial_string_user = dial_string_user .. delay_name.."="..destination_delay..",";
 							dial_string_user = dial_string_user .. "dialed_extension=" .. row.destination_number .. ",";
-if (hold_music ~= nil) and (string.len(hold_music) > 0) then
+							if (hold_music ~= nil) and (string.len(hold_music) > 0) then
 								dial_string_user = dial_string_user .. "hold_music=" .. hold_music .. ",";
 							end
 							dial_string_user = dial_string_user .. "presence_id=" .. row.destination_number .. "@"..domain_name..",";
@@ -907,14 +908,8 @@ if (hold_music ~= nil) and (string.len(hold_music) > 0) then
 
 							--set the diversion header
 								local diversion_enabled = settings:get('ring_group', 'diversion_enabled', 'boolean') or 'false';
-								if (diversion_enabled == 'true') then
-									if (caller_is_local == 'true' and outbound_caller_id_number ~= nil) then
-										diversion_caller_id = outbound_caller_id_number;
-									end
-									if (ring_group_caller_id_number ~= nil and ring_group_caller_id_number ~= '') then
-										diversion_caller_id = ring_group_caller_id_number;
-									end
-									diversion_header = "sip_h_Diversion=<sip:"..diversion_caller_id.."@"..domain_name..">;reason=unconditional,";
+								if (diversion_enabled == 'true' and original_caller_id_number ~= nil) then
+									diversion_header = "sip_h_Diversion=<sip:"..original_caller_id_number.."@"..domain_name..">;reason=unconditional,";
 								else
 									diversion_header = '';
 								end
