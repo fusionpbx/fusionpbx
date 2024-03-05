@@ -63,10 +63,11 @@ class settings {
 
 	/**
 	 * get the value
-	 * @param text category
-	 * @param text subcategory
+	 * @param string category
+	 * @param string subcategory
+	 * @param mixed allows default value returned if category and subcategory not found
 	 */
-	public function get(string $category = null, string $subcategory = null, mixed $default_value = null): mixed {
+	public function get(string $category = null, string $subcategory = null, $default_value = null) {
 
 		if (empty($category)) {
 			return $this->settings;
