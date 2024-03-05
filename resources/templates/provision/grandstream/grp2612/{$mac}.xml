@@ -138,7 +138,11 @@
 		<!-- NAT Traversal -->
 		<!-- No, STUN, KeepAlive, UPnP, Auto, VPN -->
 		<!-- Pvalue P52 -->
+		{if isset($grandstream_nat_traversal)}
+		<item name="account.{$row.line_number}.network.natTraversal">{$grandstream_nat_traversal}</item>
+		{else}
 		<item name="account.{$row.line_number}.network.natTraversal">Auto</item>
+		{/if}		
 
 		<!-- Support Rport (RFC 3581) -->
 		<!-- Yes, No -->
@@ -784,7 +788,7 @@
 
 		<!-- Distinctive Ring Tone -->
 		<!-- Pvalue P1489 -->
-		<item name="account.{$row.line_number}.ring.match.1.ringtone">5</item>
+		<item name="account.{$row.line_number}.ring.match.1.ringtone">{$grandstream_distinctive_ringtone_1}</item>
 
 		<!-- Match Incoming Caller ID. Matching Rule 2 -->
 		<!-- Pvalue P1490 -->
@@ -792,7 +796,7 @@
 
 		<!-- Distinctive Ring Tone -->
 		<!-- Pvalue P1491 -->
-		<item name="account.{$row.line_number}.ring.match.2.ringtone">5</item>
+		<item name="account.{$row.line_number}.ring.match.2.ringtone">{$grandstream_distinctive_ringtone_2}</item>
 
 		<!-- Match Incoming Caller ID. Matching Rule 3 -->
 		<!-- Pvalue P1492 -->
@@ -800,7 +804,7 @@
 
 		<!-- Distinctive Ring Tone -->
 		<!-- Pvalue P1493 -->
-		<item name="account.{$row.line_number}.ring.match.3.ringtone">5</item>
+		<item name="account.{$row.line_number}.ring.match.3.ringtone">{$grandstream_distinctive_ringtone_3}</item>
 
 		<!-- Match Incoming Caller ID. Matching Rule 4 -->
 		<!-- Pvalue P6716 -->
@@ -808,7 +812,7 @@
 
 		<!-- Distinctive Ring Tone -->
 		<!-- Pvalue P6717 -->
-		<item name="account.{$row.line_number}.ring.match.4.ringtone">5</item>
+		<item name="account.{$row.line_number}.ring.match.4.ringtone">{$grandstream_distinctive_ringtone_4}</item>
 
 		<!-- Match Incoming Caller ID. Matching Rule 5 -->
 		<!-- Pvalue P6718 -->
@@ -816,7 +820,7 @@
 
 		<!-- Distinctive Ring Tone -->
 		<!-- Pvalue P6719 -->
-		<item name="account.{$row.line_number}.ring.match.5.ringtone">5</item>
+		<item name="account.{$row.line_number}.ring.match.5.ringtone">{$grandstream_distinctive_ringtone_5}</item>
 
 		<!-- Match Incoming Caller ID. Matching Rule 6 -->
 		<!-- Pvalue P6720 -->
@@ -824,7 +828,7 @@
 
 		<!-- Distinctive Ring Tone -->
 		<!-- Pvalue P6721 -->
-		<item name="account.{$row.line_number}.ring.match.6.ringtone">5</item>
+		<item name="account.{$row.line_number}.ring.match.6.ringtone">{$grandstream_distinctive_ringtone_6}</item>
 
 		<!-- Match Incoming Caller ID. Matching Rule 7 -->
 		<!-- Pvalue P26064 -->
@@ -832,7 +836,7 @@
 
 		<!-- Distinctive Ring Tone -->
 		<!-- Pvalue P26065 -->
-		<item name="account.{$row.line_number}.ring.match.7.ringtone">5</item>
+		<item name="account.{$row.line_number}.ring.match.7.ringtone">{$grandstream_distinctive_ringtone_7}</item>
 
 		<!-- Match Incoming Caller ID. Matching Rule 8 -->
 		<!-- Pvalue P26066 -->
@@ -840,7 +844,7 @@
 
 		<!-- Distinctive Ring Tone -->
 		<!-- Pvalue P26067 -->
-		<item name="account.{$row.line_number}.ring.match.8.ringtone">5</item>
+		<item name="account.{$row.line_number}.ring.match.8.ringtone">{$grandstream_distinctive_ringtone_8}</item>
 
 		<!-- Match Incoming Caller ID. Matching Rule 9 -->
 		<!-- Pvalue P26068 -->
@@ -848,7 +852,7 @@
 
 		<!-- Distinctive Ring Tone -->
 		<!-- Pvalue P26069 -->
-		<item name="account.{$row.line_number}.ring.match.9.ringtone">5</item>
+		<item name="account.{$row.line_number}.ring.match.9.ringtone">{$grandstream_distinctive_ringtone_9}</item>
 
 		<!-- Match Incoming Caller ID. Matching Rule 10 -->
 		<!-- Pvalue P26096 -->
@@ -856,7 +860,7 @@
 
 		<!-- Distinctive Ring Tone -->
 		<!-- Pvalue P26097 -->
-		<item name="account.{$row.line_number}.ring.match.10.ringtone">5</item>
+		<item name="account.{$row.line_number}.ring.match.10.ringtone">{$grandstream_distinctive_ringtone_10}</item>
 
 		<!-- Ring Timeout -->
 		<!-- Number: 10 - 300 -->
@@ -1201,13 +1205,13 @@
 		<!-- # Enable Manual VLAN Configuration. Yes or No. -->
 		<!-- # Mandatory -->
 		<!-- Pvalue P22174 -->
-		<item name="network.port.eth.1.vlan.enable">Yes</item>
+		<item name="network.port.eth.1.vlan.enable">{if isset($grandstream_lan_port_vlan)}Yes{else}No{/if}</item>
 
 		<!-- # Layer 2 QoS. 802.1Q/VLAN Tag (VLAN classification for RTP). Default is 0 -->
 		<!-- Layer 2 QoS 802.1Q/VLAN Tag (Ethernet) -->
 		<!-- Number: 0 - 4095 -->
 		<!-- Pvalue P51 -->
-		<item name="network.port.eth.1.vlan.tag">0</item>
+		<item name="network.port.eth.1.vlan.tag">{$grandstream_lan_port_vlan}</item>
 
 		<!-- 802.1p Priority Value (Ethernet) -->
 		<!-- Number: 0 - 7 -->
@@ -1217,11 +1221,15 @@
 		<!-- PC Port Mode -->
 		<!-- Enabled, Disabled, Mirrored -->
 		<!-- Pvalue P1348 -->
-		<item name="network.port.pc.mode">Enabled</item>
+		{if isset($grandstream_pc_mode)}
+		<item name="network.port.pc.mode">{if isset($grandstream_pc_mode)}{$grandstream_pc_mode}{/if}</item>
+		{else}
+		<item name="network.port.pc.mode">{if isset($grandstream_pc_port_vlan)}Enabled{else}Disabled{/if}</item>
+		{/if}
 
 		<!-- PC Port VLAN Tag  -->
 		<!-- Pvalue P229 -->
-		<item name="network.port.pc.vlan.tag">0</item>
+		<item name="network.port.pc.vlan.tag">{$grandstream_pc_port_vlan}</item>
 
 		<!-- PC Port Priority Value -->
 		<!-- Pvalue P230 -->
@@ -2498,7 +2506,11 @@
 
 		<!-- STUN Server -->
 		<!-- Pvalue P76 -->
+		{if isset($grandstream_stun_server) }
+		<item name="network.stunServer">{$grandstream_stun_server}</item>
+		{else}
 		<item name="network.stunServer"></item>
+		{/if}
 
 		<!-- # Delay Registration. Default is 0. -->
 		<!-- # Number: 0 - 90 -->
@@ -3674,15 +3686,27 @@
 
 		<!-- # HEADSET Key Mode. DefaultMode, ToggleHeadsetOrSpeaker. -->
 		<!-- Pvalue P1312 -->
+		{if isset($grandstream_headset_key_mode)}
+		<item name="audio.headset.keyMode">{$grandstream_headset_key_mode}</item>
+		{else}
 		<item name="audio.headset.keyMode">DefaultMode</item>
+		{/if}
 
 		<!-- # Headset Type. Normal, PlantronicsEHS. -->
 		<!-- Pvalue P1487 -->
+		{if isset($grandstream_headset_ringtone)}
+		<item name="audio.headset.ehs.ringtone">{$grandstream_headset_ringtone}</item>
+		{else}
 		<item name="audio.headset.ehs.ringtone">Normal</item>
+		{/if}
 
 		<!-- # EHS Headset Ringtone. Normal, PlantronicsEHS. -->
 		<!-- Pvalue P6779 -->
+		{if isset($grandstream_headset_type)}
+		<item name="audio.headset.type">{$grandstream_headset_type}</item>
+		{else}
 		<item name="audio.headset.type">Normal</item>
+		{/if}
 
 		<!-- # Always Ring Speaker. -->
 		<!-- No - 0, Yes,both - 1, Yes,speaker only - 2 -->
@@ -3701,11 +3725,19 @@
 
 		<!-- # Headset TX gain(dB). 1 - -6, 0 - 0, 2 - +6. Default is 0 -->
 		<!-- Pvalue P1301 -->
-		<item name="audio.headset.txGain">0</item>
+		{if isset($grandstream_headset_tx_gain)}
+		<item name="audio.handset.txGain">{$grandstream_headset_tx_gain}</item>
+		{else}
+		<item name="audio.handset.txGain">0</item>
+		{/if}
 
 		<!-- # Headset RX gain(dB). 1 - -6, 0 - 0, 2 - +6. Default is 0 -->
 		<!-- Pvalue P1302 -->
+		{if isset($grandstream_headset_rx_gain)}
+		<item name="audio.headset.rxGain">{$grandstream_headset_rx_gain}</item>
+		{else}
 		<item name="audio.headset.rxGain">0</item>
+		{/if}
 
 		<!-- # Handset Noise Shield 2.0. -->
 		<!-- No - Disable, HighShielding - 1, SoftShielding - 2 -->
@@ -3993,7 +4025,11 @@
 		<!-- # Screensaver Settings -->
 		<!-- # Screensaver. No, Yes,  OnIfNoVPKIsActive. -->
 		<!-- Pvalue P2918 -->
+		{if isset($grandstream_screensaver_enable)}
+		<item name="lcd.screensaver.enable">{$grandstream_screensaver_enable}</item>
+		{else}
 		<item name="lcd.screensaver.enable">OnIfNoVPKIsActive</item>
+		{/if}
 
 		<!-- # Use Programmable Keys in Screensaver. 0 - No, 1 - Yes, 2 - LED only -->
 		<!-- Pvalue P22363 -->
@@ -4001,7 +4037,7 @@
 
 		<!-- # Screensaver Source.  Default, USB, Download.  -->
 		<!-- Pvalue P6759 -->
-		<item name="lcd.screensaver.source"></item>
+		<item name="lcd.screensaver.source">{$grandstream_screensaver_source}</item>
 
 		<!-- # Show Date and Time. Yes or No -->
 		<!-- Pvalue P8441 -->
