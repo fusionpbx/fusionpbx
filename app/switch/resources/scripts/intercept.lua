@@ -294,12 +294,12 @@
 			local is_child
 			dbh:query(sql, params, function(row)
 				--for key, val in pairs(row) do
-				-- 	log.notice("row "..key.." "..val);
+				--	log.notice("row "..key.." "..val);
 				--end
 				--log.notice("-----------------------");
 				is_child = (row.uuid == row.call_uuid)
 				uuid = row.uuid;
-				if (row.call_uuid) then
+				if (row.call_uuid ~= nil) then
 					uuid = row.call_uuid;
 				end
 				call_hostname = row.hostname;
@@ -389,4 +389,3 @@
 		--cmd = "originate user/1007@voip.example.com &intercept("..uuid..")";
 		--api = freeswitch.API();
 		--result = api:executeString(cmd);
-
