@@ -380,7 +380,7 @@
 		if (permission_exists('xml_cdr_negotiated_codec')) {
 			echo "	<div class='form_set'>\n";
 			echo "		<div class='label'>\n";
-			echo "			".$text['label-codec']."\n";
+			echo "			".$text['label-codecs']."\n";
 			echo "		</div>\n";
 			echo "		<div class='field no-wrap'>\n";
 			echo "			<input type='text' class='formfld' style='min-width: 115px; width: 115px;' name='read_codec' id='read_codec' value='".escape($read_codec)."' placeholder=\"".$text['label-codec_read']."\">\n";
@@ -645,7 +645,7 @@
 		$col_count += 2;
 	}
 	if (permission_exists('xml_cdr_negotiated_codec')) {
-		echo "<th class='center shrink'>".$text['label-codec']."</th>\n";
+		echo "<th class='center shrink'>".$text['label-codecs']."</th>\n";
 		$col_count++;
 	}
 	if (permission_exists('xml_cdr_tta')) {
