@@ -54,7 +54,7 @@
 	end
 
 --get the hostname
-	local hostname = trim(api:execute("switchname", ""));
+	local hostname = trim(api:execute("hostname", ""));
 
 -- redirect call to another box
 	local function make_proxy_call(destination, call_hostname)
@@ -286,7 +286,7 @@
 				params[param_name] = extension.."@"..domain_name;
 			end
 			sql = sql .. ") ";
-			sql = sql .. "AND call_uuid IS NOT NULL ";
+			--sql = sql .. "AND call_uuid IS NOT NULL ";
 			sql = sql .. "ORDER BY created_epoch DESC LIMIT 1 ";
 			if (debug["sql"]) then
 				log.noticef("SQL: %s; params: %s", sql, json.encode(params));
@@ -294,14 +294,17 @@
 			local is_child
 			dbh:query(sql, params, function(row)
 				--for key, val in pairs(row) do
-			 	--	log.notice("row "..key.." "..val);
+				-- 	log.notice("row "..key.." "..val);
 				--end
 				--log.notice("-----------------------");
 				is_child = (row.uuid == row.call_uuid)
-				uuid = row.call_uuid;
+				uuid = row.uuid;
+				if (row.call_uuid) then
+					uuid = row.call_uuid;
+				end
 				call_hostname = row.hostname;
 			end);
-			--log.notice("uuid: "..uuid);
+
 			--log.notice("call_hostname: "..call_hostname);
 			if is_child then
 				-- we need intercept `parent` call e.g. call in FIFO/CallCenter Queue
@@ -348,6 +351,7 @@
 	if (uuid ~= nil) then
 		if (session:getVariable("billmsec") == nil) then
 			if (hostname == call_hostname) then
+				log.noticef("intercept `%s`.", uuid)
 				session:execute("intercept", uuid);
 			else
 				session:execute("export", "sip_h_X-intercept_uuid="..uuid);
@@ -385,3 +389,4 @@
 		--cmd = "originate user/1007@voip.example.com &intercept("..uuid..")";
 		--api = freeswitch.API();
 		--result = api:executeString(cmd);
+
