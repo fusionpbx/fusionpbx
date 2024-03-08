@@ -3146,8 +3146,8 @@ $text['description-fax_result_code']['zh-cn'] = "传真结果代码。";
 $text['description-fax_result_code']['ja-jp'] = "ファックス結果コード。";
 $text['description-fax_result_code']['ko-kr'] = "팩스 결과 코드.";
 
-$text['description-fax_prefix']['en-us'] = "Enter a prefix to be used when sending a fax.";
-$text['description-fax_prefix']['en-gb'] = "Enter a prefix to be used when sending a fax.";
+$text['description-fax_prefix']['en-us'] = "Enter a prefix to be used when sending a fax. Used to direct the call to a specific outbound route.";
+$text['description-fax_prefix']['en-gb'] = "Enter a prefix to be used when sending a fax. Used to direct the call to a specific outbound route.";
 $text['description-fax_prefix']['ar-eg'] = "أدخل المفترس الذي سيستخدم عند إرسال الفاكس";
 $text['description-fax_prefix']['de-at'] = "Geben Sie ein Präfix an, das bei ausgehenden Faxen gewählt werden soll.";
 $text['description-fax_prefix']['de-ch'] = "Geben Sie ein Präfix an, das bei ausgehenden Faxen gewählt werden soll.";
