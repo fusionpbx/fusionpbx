@@ -467,7 +467,7 @@ if (!class_exists('destinations')) {
 
 				//include the javascript contents in the reponse
 				$response .= "<script type='text/javascript'>\n";
-				$response .= file_get_contents('../javascript/destinations.js');
+				$response .= file_get_contents(__DIR__ . '/../javascript/destinations.js');
 				$response .= "</script>\n";
 
 				//get the destinations
