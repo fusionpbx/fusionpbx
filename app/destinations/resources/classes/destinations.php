@@ -478,7 +478,7 @@ if (!class_exists('destinations')) {
 						if ($destination_value == $row['destination']) {
 							$destination_key = $key;
 							$destination_label = $row['label'];
-							break;
+							break 2;
 						}
 					}
 				}
