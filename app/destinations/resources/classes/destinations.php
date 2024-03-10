@@ -38,6 +38,7 @@ if (!class_exists('destinations')) {
 		*/
 		public $destinations;
 		public $domain_uuid;
+		public $user_uuid;
 
 		/**
 		* declare private variables
@@ -49,26 +50,36 @@ if (!class_exists('destinations')) {
 		private $list_page;
 		private $table;
 		private $uuid_prefix;
+		private $settings;
+		private $database;
 
 		/**
 		* Called when the object is created
 		*/
-		public function __construct() {
-			//set the domain details
-				if (is_null($this->domain_uuid)) {
-					$this->domain_uuid = $_SESSION['domain_uuid'];
-				}
-
-			//get the email queue settings
-				$this->setting = new settings();
+		public function __construct(string $domain_uuid = null, string $user_uuid = null) {
+			//set defaults
+			$this->domain_uuid = $domain_uuid ?? $_SESSION['domain_uuid'] ?? '';
+			$this->user_uuid = $user_uuid ?? $_SESSION['user_uuid'] ?? '';
+			$this->destinations = [];
 
 			//assign private variables
-				$this->app_name = 'destinations';
-				$this->app_uuid = '5ec89622-b19c-3559-64f0-afde802ab139';
-				$this->permission_prefix = 'destination_';
-				$this->list_page = 'destinations.php';
-				$this->table = 'destinations';
-				$this->uuid_prefix = 'destination_';
+			$this->app_name = 'destinations';
+			$this->app_uuid = '5ec89622-b19c-3559-64f0-afde802ab139';
+			$this->permission_prefix = 'destination_';
+			$this->list_page = 'destinations.php';
+			$this->table = 'destinations';
+			$this->uuid_prefix = 'destination_';
+
+			//create a database connection
+			$this->database = new database();
+
+			//set database to the destinations app for transaction recording
+			$this->database->app_name = $this->app_name;
+			$this->database->app_uuid = $this->app_uuid;
+
+			//get the settings
+			$this->settings = new settings(['domain_uuid' => $this->domain_uuid, 'user_uuid' => $this->user_uuid]);
+
 		}
 
 		/**
@@ -154,14 +165,17 @@ if (!class_exists('destinations')) {
 
 		}
 
-
 		/**
-		* Build the destination select list
-		* @var string $destination_type can be ivr, dialplan, call_center_contact or bridge
-		* @var string $destination_name - current name
-		* @var string $destination_value - current value
-		*/
-		public function select($destination_type, $destination_name, $destination_value) {
+		 * Build the destination HTML select list
+		 * @global type $db_type
+		 * @global type $apps
+		 * @param string $destination_type Can be <i>ivr</i>, <i>dialplan</i>, <i>call_center_contact</i> or <i>bridge</i>
+		 * @param string $destination_name Current name
+		 * @param string $destination_value Current value
+		 * @param string ...$filter_on  When supplied, filters out all other dialplan destinations except the ones specified
+		 * @return string
+		 */
+		public function select(string $destination_type, string $destination_name, string $destination_value, string ...$filter_on) {
 
 			//set the global variables
 			global $db_type;
@@ -174,34 +188,47 @@ if (!class_exists('destinations')) {
 			$sql = "select domain_name from v_domains ";
 			$sql .= "where domain_uuid = :domain_uuid ";
 			$parameters['domain_uuid'] = $this->domain_uuid;
-			$database = new database;
+			$database = $this->database;
 			$this->domain_name = $database->select($sql, $parameters, 'column');
 
 			//initialize variable
 			$response = '';
 
+			//get the select mode
+			$select_mode = $this->settings->get('destinations', 'select_mode', 'default');
+
 			//create a single destination select list
-			if (!empty($_SESSION['destinations']['select_mode']['text']) && $_SESSION['destinations']['select_mode']['text'] == 'default') {
+			if ($select_mode === 'default') {
 				//get the destinations
-				if (!is_array($this->destinations)) {
+				if (empty($this->destinations) || count($this->destinations) === 0) {
 
 					//get the array from the app_config.php files
+					global $apps;
 					$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_config.php");
-					$x = 0;
-					foreach ($config_list as &$config_path) {
+					foreach ($config_list as $x => &$config_path) {
 						try {
 							include($config_path);
 						}
 						catch (Exception $e) {
 							//echo 'Caught exception: ',  $e->getMessage(), "\n";
 						}
-						$x++;
 					}
-					$i = 0;
+
 					foreach ($apps as $x => &$app) {
-						if (isset($app['destinations'])) foreach ($app['destinations'] as &$row) {
-							if (permission_exists($this->singular($row["name"])."_destinations")) {
-								$this->destinations[] = $row;
+						if (isset($app['destinations'])) {
+							//for loop is specified twice so filters doesn't have to be checked on each iteration
+							if (!empty($filter_on)) {
+								foreach ($app['destinations'] as &$row) {
+									if (array_search($row['name'], $filter_on) !== false  && permission_exists($this->singular($row["name"]) . "_destinations")) {
+										$this->destinations[] = $row;
+									}
+								}
+							} else {
+								foreach ($app['destinations'] as &$row) {
+									if (permission_exists($this->singular($row["name"]) . "_destinations")) {
+										$this->destinations[] = $row;
+									}
+								}
 							}
 						}
 					}
@@ -246,7 +273,7 @@ if (!class_exists('destinations')) {
 								}
 								$sql .= "order by ".trim($row['order_by']);
 								$sql = str_replace("\${domain_uuid}", $this->domain_uuid, $sql);
-								$database = new database;
+								$database = $this->database;
 								$result = $database->select($sql, null, 'all');
 
 								$this->destinations[$x]['result']['sql'] = $sql;
@@ -259,43 +286,44 @@ if (!class_exists('destinations')) {
 						}
 					}
 
-					$this->destinations[$x]['type'] = 'array';
-					$this->destinations[$x]['label'] = 'other';
-					$this->destinations[$x]['name'] = 'dialplans';
-					$this->destinations[$x]['field']['name'] = "name";
-					$this->destinations[$x]['field']['destination'] = "destination";
-					$this->destinations[$x]['select_value']['dialplan'] = "transfer:\${destination}";
-					$this->destinations[$x]['select_value']['ivr'] = "menu-exec-app:transfer \${destination}";
-					$this->destinations[$x]['select_label'] = "\${name}";
-					$y = 0;
-					$this->destinations[$x]['result']['data'][$y]['label'] = 'check_voicemail';
-					$this->destinations[$x]['result']['data'][$y]['name'] = '*98';
-					$this->destinations[$x]['result']['data'][$y]['destination'] = '*98 XML ${context}';
-					$y++;
-					$this->destinations[$x]['result']['data'][$y]['label'] = 'company_directory';
-					$this->destinations[$x]['result']['data'][$y]['name'] = '*411';
-					$this->destinations[$x]['result']['data'][$y]['destination'] = '*411 XML ${context}';
-					$y++;
-					$this->destinations[$x]['result']['data'][$y]['label'] = 'hangup';
-					$this->destinations[$x]['result']['data'][$y]['name'] = 'hangup';
-					$this->destinations[$x]['result']['data'][$y]['application'] = 'hangup';
-					$this->destinations[$x]['result']['data'][$y]['destination'] = '';
-					$y++;
-					$this->destinations[$x]['result']['data'][$y]['label'] = 'record';
-					$this->destinations[$x]['result']['data'][$y]['name'] = '*732';
-					$this->destinations[$x]['result']['data'][$y]['destination'] = '*732 XML ${context}';
-					$y++;
+					//ensure these are not filtered out before including them
+					if (!empty($filter_on) && array_search('dialplans', $filter_on) !== false) {
+						$this->destinations[$x]['type'] = 'array';
+						$this->destinations[$x]['label'] = 'other';
+						$this->destinations[$x]['name'] = 'dialplans';
+						$this->destinations[$x]['field']['name'] = "name";
+						$this->destinations[$x]['field']['destination'] = "destination";
+						$this->destinations[$x]['select_value']['dialplan'] = "transfer:\${destination}";
+						$this->destinations[$x]['select_value']['ivr'] = "menu-exec-app:transfer \${destination}";
+						$this->destinations[$x]['select_label'] = "\${name}";
+						$y = 0;
+						$this->destinations[$x]['result']['data'][$y]['label'] = 'check_voicemail';
+						$this->destinations[$x]['result']['data'][$y]['name'] = '*98';
+						$this->destinations[$x]['result']['data'][$y]['destination'] = '*98 XML ${context}';
+						$y++;
+						$this->destinations[$x]['result']['data'][$y]['label'] = 'company_directory';
+						$this->destinations[$x]['result']['data'][$y]['name'] = '*411';
+						$this->destinations[$x]['result']['data'][$y]['destination'] = '*411 XML ${context}';
+						$y++;
+						$this->destinations[$x]['result']['data'][$y]['label'] = 'hangup';
+						$this->destinations[$x]['result']['data'][$y]['name'] = 'hangup';
+						$this->destinations[$x]['result']['data'][$y]['application'] = 'hangup';
+						$this->destinations[$x]['result']['data'][$y]['destination'] = '';
+						$y++;
+						$this->destinations[$x]['result']['data'][$y]['label'] = 'record';
+						$this->destinations[$x]['result']['data'][$y]['name'] = '*732';
+						$this->destinations[$x]['result']['data'][$y]['destination'] = '*732 XML ${context}';
+					}
 				}
 
-				//remove special characters from the name
-				$destination_id = str_replace("]", "", $destination_name);
-				$destination_id = str_replace("[", "_", $destination_id);
+				//replace '[' with '_' and remove ']' from the name
+				$destination_id = str_replace(["[", "]"],["_"], $destination_name);
 
 				//set the css style
 				$select_style = 'width: 200px;';
 
 				//add additional
-				if (if_group("superadmin")) {
+				if (permission_exists("dialplan_detail_edit")) {
 					$response .= "<script>\n";
 					$response .= "var Objs;\n";
 					$response .= "\n";
@@ -414,7 +442,6 @@ if (!class_exists('destinations')) {
 							$response .= "			<option value='".escape($select_value)."' ".$selected.">".$select_label."</option>\n";
 						}
 						$response .= "		</optgroup>\n";
-						unset($text);
 					}
 				}
 				if (!$select_found) {
@@ -427,39 +454,21 @@ if (!class_exists('destinations')) {
 					}
 				}
 				$response .= "	</select>\n";
-				if (if_group("superadmin")) {
+				if (permission_exists("dialplan_detail_edit")) {
 					$response .= "<input type='button' id='btn_select_to_input_".$destination_id."' class='btn' name='' alt='back' onclick='changeToInput".$destination_id."(document.getElementById(\"".$destination_id."\"));this.style.visibility = \"hidden\";' value='&#9665;'>";
 				}
 			}
 
 			//create a dynamic destination select list
-			if ($_SESSION['destinations']['select_mode']['text'] == 'dynamic') {
+			if ($select_mode === 'dynamic') {
 
-				//remove special characters from the name
-				$destination_id = str_replace("]", "", $destination_name);
-				$destination_id = str_replace("[", "_", $destination_id);
-				//$destination_id = preg_replace('/[^a-zA-Z_,.]/', '', $destination_name);
+				//replace '[' with '_' and remove ']' from the name
+				$destination_id = str_replace(["[", "]"],["_"], $destination_name);
 
-				?>
-				<script type="text/javascript">
-					function get_destinations(id, destination_type, action, search) {
-						//alert(action);
-						var xhttp = new XMLHttpRequest();
-						xhttp.onreadystatechange = function() {
-							if (this.readyState == 4 && this.status == 200) {
-								document.getElementById(id).innerHTML = this.responseText;
-							}
-						};
-						if (action) {
-							xhttp.open("GET", "/app/destinations/resources/destinations.php?destination_type="+destination_type+"&action="+action, true);
-						}
-						else {
-							xhttp.open("GET", "/app/destinations/resources/destinations.php?destination_type="+destination_type, true);
-						}
-						xhttp.send();
-					}
-				</script>
-				<?php
+				//include the javascript contents in the reponse
+				$response .= "<script type='text/javascript'>\n";
+				$response .= file_get_contents('../javascript/destinations.js');
+				$response .= "</script>\n";
 
 				//get the destinations
 				$destinations = $this->get($destination_type);
@@ -545,11 +554,10 @@ if (!class_exists('destinations')) {
 			global $db_type;
 
 			//connect to the database
-			$database = new database;
+			$database = $this->database;
 
 			//set default values
 			$destination_name = '';
-			$destination_id = '';
 
 			//get the domain_name
 			$sql = "select domain_name from v_domains ";
@@ -654,9 +662,8 @@ if (!class_exists('destinations')) {
 				$y++;
 			}
 
-			//remove special characters from the name
-			$destination_id = str_replace("]", "", $destination_name);
-			$destination_id = str_replace("[", "_", $destination_id);
+			//replace '[' with '_' and remove ']' from the name
+			$destination_id = str_replace(["[", "]"],["_"], $destination_name);
 
 			//set default to false
 			$select_found = false;
@@ -759,7 +766,7 @@ if (!class_exists('destinations')) {
 			global $db_type;
 
 			//connect to the database
-			$database = new database;
+			$database = $this->database;
 
 			//get the domain_name
 			$sql = "select domain_name from v_domains ";
@@ -1057,7 +1064,7 @@ if (!class_exists('destinations')) {
 										$sql = "select dialplan_uuid, destination_context from v_destinations ";
 										$sql .= "where destination_uuid = :destination_uuid ";
 										$parameters['destination_uuid'] = $record['uuid'];
-										$database = new database;
+										$database = $this->database;
 										$row = $database->select($sql, $parameters, 'row');
 										unset($sql, $parameters);
 
@@ -1080,9 +1087,7 @@ if (!class_exists('destinations')) {
 									$p->add('dialplan_detail_delete', 'temp');
 
 								//execute delete
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
+									$database = $this->database;
 									$database->delete($array);
 									unset($array);
 
@@ -1121,8 +1126,8 @@ if (!class_exists('destinations')) {
 		public function destination_summary() {
 
 			//set the time zone
-				if (!empty($this->setting->get('domain', 'time_zone'))) {
-					$time_zone = $this->setting->get('domain', 'time_zone');
+				if (!empty($this->settings->get('domain', 'time_zone'))) {
+					$time_zone = $this->settings->get('domain', 'time_zone');
 				}
 				else {
 					$time_zone = date_default_timezone_get();
@@ -1245,7 +1250,7 @@ if (!class_exists('destinations')) {
 				if (!(!empty($_GET['show']) && $_GET['show'] === 'all' && permission_exists('destination_summary_all'))) {
 					$parameters['domain_uuid'] = $this->domain_uuid;
 				}
-				$database = new database;
+				$database = $this->database;
 				$summary = $database->select($sql, $parameters, 'all');
 				unset($parameters);
 
