@@ -566,7 +566,7 @@ if (!class_exists('destinations')) {
 			$this->domain_name = $database->select($sql, $parameters, 'column');
 
 			//get the destinations
-			if (!is_array($this->destinations)) {
+			if (count($this->destinations) === 0) {
 
 				//get the array from the app_config.php files
 				$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_config.php");
@@ -775,7 +775,7 @@ if (!class_exists('destinations')) {
 			$this->domain_name = $database->select($sql, $parameters, 'column');
 
 			//get the destinations
-			if (!is_array($this->destinations)) {
+			if (count($this->destinations) === 0) {
 
 				//get the array from the app_config.php files
 				$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_config.php");
