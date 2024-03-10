@@ -487,7 +487,7 @@ if (!class_exists('destinations')) {
 				$language2 = new text;
 
 				//build the destination select list in html
-				$response .= "	<select id='{$destination_id}_type' class='formfld' style='".$select_style."' onchange=\"get_destinations('".$destination_id."', '".$destination_type."', this.value);\">\n";
+				$response .= "	<select id='{$destination_id}_type' class='formfld' style='{$select_style}' onchange=\"get_destinations('{$destination_id}', '{$destination_type}', this.value);\">\n";
 				$response .= " 		<option value=''></option>\n";
 				foreach($destinations as $key => $value) {
 					$singular = $this->singular($key);
