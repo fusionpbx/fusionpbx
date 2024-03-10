@@ -171,10 +171,10 @@ if (!class_exists('destinations')) {
 		 * @param string $destination_type Can be <i>ivr</i>, <i>dialplan</i>, <i>call_center_contact</i> or <i>bridge</i>
 		 * @param string $destination_name Current name
 		 * @param string $destination_value Current value
-		 * @param string ...$filter_on  When supplied, filters out all other dialplan destinations except the ones specified
+		 * @param string ...$permitted_dialplans  When supplied, filters out all other dialplan destinations except the ones specified
 		 * @return string
 		 */
-		public function select(string $destination_type, string $destination_name, string $destination_value, string ...$filter_on) {
+		public function select(string $destination_type, string $destination_name, string $destination_value, string ...$permitted_dialplans) {
 
 			//set the global variables
 			global $db_type;
@@ -216,9 +216,9 @@ if (!class_exists('destinations')) {
 					foreach ($apps as $x => &$app) {
 						if (isset($app['destinations'])) {
 							//for loop is specified twice so filters doesn't have to be checked on each iteration
-							if (!empty($filter_on)) {
+							if (!empty($permitted_dialplans)) {
 								foreach ($app['destinations'] as &$row) {
-									if (array_search($row['name'], $filter_on) !== false  && permission_exists($this->singular($row["name"]) . "_destinations")) {
+									if (array_search($row['name'], $permitted_dialplans) !== false  && permission_exists($this->singular($row["name"]) . "_destinations")) {
 										$this->destinations[] = $row;
 									}
 								}
@@ -286,7 +286,7 @@ if (!class_exists('destinations')) {
 					}
 
 					//ensure these are not filtered out before including them
-					if (!empty($filter_on) && array_search('dialplans', $filter_on) !== false) {
+					if (!empty($permitted_dialplans) && array_search('dialplans', $permitted_dialplans) !== false) {
 						$this->destinations[$x]['type'] = 'array';
 						$this->destinations[$x]['label'] = 'other';
 						$this->destinations[$x]['name'] = 'dialplans';
@@ -491,7 +491,8 @@ if (!class_exists('destinations')) {
 				$response .= " 		<option value=''></option>\n";
 				foreach($destinations as $key => $value) {
 					$singular = $this->singular($key);
-					if (permission_exists("{$singular}_destinations")) {
+					$permitted = (empty($permitted_dialplans) || array_search($key, $permitted_dialplans) !== false) && permission_exists("{$singular}_destinations");
+					if ($permitted) {
 						//determine if selected
 						$selected = (isset($destination_key) && $key == $destination_key) ? "selected='selected'" : '';
 
