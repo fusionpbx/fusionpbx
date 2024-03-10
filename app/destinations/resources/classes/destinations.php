@@ -168,7 +168,6 @@ if (!class_exists('destinations')) {
 		/**
 		 * Build the destination HTML select list
 		 * @global type $db_type
-		 * @global type $apps
 		 * @param string $destination_type Can be <i>ivr</i>, <i>dialplan</i>, <i>call_center_contact</i> or <i>bridge</i>
 		 * @param string $destination_name Current name
 		 * @param string $destination_value Current value
