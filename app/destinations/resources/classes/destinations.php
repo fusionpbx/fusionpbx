@@ -53,7 +53,6 @@ if (!class_exists('destinations')) {
 		/**
 		* declare private variables
 		*/
-		private $domain_name;
 		private $app_name;
 		private $app_uuid;
 		private $permission_prefix;
