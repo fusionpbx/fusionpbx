@@ -26,6 +26,19 @@
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 
+function transform_destination_numbers(array &$destinations) {
+	if (!empty($destinations)) {
+		foreach ($destinations as $key => $destination) {
+			if (!empty($destination['destination_number'])) {
+				$matches = [];
+				$number = $destination['destination_number'];
+				preg_match('/\b(\d+)\b/', $number, $matches);
+				$destinations[$key]['destination_number'] = $matches[0];
+			}
+		}
+	}
+}
+
 //includes files
 	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
@@ -182,7 +195,9 @@
 			$ring_group_extension = $_POST["ring_group_extension"];
 			$ring_group_greeting = $_POST["ring_group_greeting"];
 			$ring_group_strategy = $_POST["ring_group_strategy"];
-			$ring_group_destinations = $_POST["ring_group_destinations"];
+			$ring_group_destinations = $_POST["ring_group_destinations"] ?? [];
+			// transform all destinations to be using a number only and not a "transfer:" syntax
+			transform_destination_numbers($ring_group_destinations);
 			$ring_group_timeout_action = $_POST["ring_group_timeout_action"];
 			$ring_group_call_timeout = $_POST["ring_group_call_timeout"];
 			$ring_group_caller_id_name = $_POST["ring_group_caller_id_name"];
@@ -918,17 +933,21 @@
 				$onkeyup = "onkeyup=\"document.getElementById('ring_group_destinations_".$x."_destination_enabled').value = (this.value != '' ? true : false);\""; // select
 			}
 		}
+		if (!isset($row['destination_number'])) {
+			$row['destination_number'] = '';
+		}
 		//check if the setting is enabled
 		if ($setting->get('destinations','ring_group_select_mode', 'false') === 'true') {
-			if (!is_numeric($row['destination_number']) || substr($row['destination_number'] ?? '', 0, 9) === 'transfer' || $row['destination_number'] === ':') {
-				$select_destination_number = $row['destination_number'];
-			} elseif (is_numeric($row['destination_number'])) {
-				$select_destination_number = "transfer:".$row['destination_number']." XML ".$destination->domain_name;
-			} else {
-				$select_destination_number = $row['destination_number'];
-			}
-			echo $destination->select('dialplan', "ring_group_destinations[$x][destination_number]", $select_destination_number ?? '', ['extensions']);
-		} else {
+			// isolate the extension number
+			$matches = [];
+			preg_match('/\b(\d+)\b/', $row['destination_number'], $matches);
+			// put extension number to transfer syntax
+			$select_destination_number = "transfer:" . $matches[0] . " XML " . $destination->domain_name;
+			//display select box
+			echo $destination->select('dialplan', "ring_group_destinations[$x][destination_number]", $select_destination_number ?? '', ['extensions', 'destinations']);
+		}
+		//standard text input box is required
+		else {
 			echo "					<input type=\"text\" name=\"ring_group_destinations[".$x."][destination_number]\" class=\"formfld\" value=\"".escape($row['destination_number'])."\" ".$onkeyup.">\n";
 		}
 		echo "				</td>\n";

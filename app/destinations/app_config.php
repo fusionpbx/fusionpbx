@@ -204,6 +204,13 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Options: default, dynamic";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "1c686ba4-b6d4-4982-ab9b-f604c1fad589";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "destinations";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "ring_group_select_mode";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Allows the drop-down box to be used for choosing an extension in ring groups";
 
 	//cache details
 		$apps[$x]['cache']['key'] = "dialplan.\${destination_context}";
