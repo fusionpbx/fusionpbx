@@ -70,6 +70,9 @@ function transform_destination_numbers(array &$destinations) {
 	$ring_group_forward_toll_allow = '';
 	$ring_group_description = '';
 	$onkeyup = '';
+	$database = new database();
+	$database->app_name = 'ring_groups';
+	$database->app_uuid = '1d61fb65-1eec-bc73-a6ee-a6203b4fe6f2';
 
 //initialize the settings object with domain and user
 	$domain_uuid = $_SESSION['domain_uuid'] ?? '';
@@ -83,7 +86,6 @@ function transform_destination_numbers(array &$destinations) {
 	$sql = "select count(*) from v_ring_groups ";
 	$sql .= "where domain_uuid = :domain_uuid ";
 	$parameters['domain_uuid'] = $domain_uuid;
-	$database = new database;
 	$total_ring_groups = $database->select($sql, $parameters ?? null, 'column');
 	unset($sql, $parameters);
 
@@ -102,7 +104,6 @@ function transform_destination_numbers(array &$destinations) {
 			$sql = "select domain_uuid from v_ring_groups ";
 			$sql .= "where ring_group_uuid = :ring_group_uuid ";
 			$parameters['ring_group_uuid'] = $ring_group_uuid;
-			$database = new database;
 			$domain_uuid = $database->select($sql, $parameters, 'column');
 			unset($sql, $parameters);
 		}
@@ -131,9 +132,6 @@ function transform_destination_numbers(array &$destinations) {
 			$p = new permissions;
 			$p->add('ring_group_user_delete', 'temp');
 		//execute delete
-			$database = new database;
-			$database->app_name = 'ring_groups';
-			$database->app_uuid = '1d61fb65-1eec-bc73-a6ee-a6203b4fe6f2';
 			$database->delete($array);
 			unset($array);
 		//revoke temporary permissions
@@ -151,7 +149,6 @@ function transform_destination_numbers(array &$destinations) {
 			$sql = "select count(*) from v_ring_groups ";
 			$sql .= "where domain_uuid = :domain_uuid ";
 			$parameters['domain_uuid'] = $domain_uuid;
-			$database = new database;
 			$total_ring_groups = $database->select($sql, $parameters, 'column');
 			unset($sql, $parameters);
 
@@ -250,9 +247,6 @@ function transform_destination_numbers(array &$destinations) {
 			$p = new permissions;
 			$p->add('ring_group_user_add', 'temp');
 		//execute delete
-			$database = new database;
-			$database->app_name = 'ring_groups';
-			$database->app_uuid = '1d61fb65-1eec-bc73-a6ee-a6203b4fe6f2';
 			$database->save($array);
 			unset($array);
 		//revoke temporary permissions
@@ -425,7 +419,6 @@ function transform_destination_numbers(array &$destinations) {
 						$parameters['ring_group_uuid'] = $ring_group_uuid;
 						$parameters['range_first_extension'] = $range_first_extension;
 						$parameters['range_second_extension'] = $range_second_extension;
-						$database = new database;
 						$extensions = $database->select($sql, $parameters, 'all');
 						unset($sql, $parameters, $database);
 						// echo var_dump($extensions);
@@ -487,9 +480,6 @@ function transform_destination_numbers(array &$destinations) {
 			$p->add("dialplan_edit", "temp");
 
 		//save to the data
-			$database = new database;
-			$database->app_name = 'ring_groups';
-			$database->app_uuid = '1d61fb65-1eec-bc73-a6ee-a6203b4fe6f2';
 			$database->save($array);
 			$message = $database->message;
 
@@ -541,7 +531,6 @@ function transform_destination_numbers(array &$destinations) {
 		$sql = "select * from v_ring_groups ";
 		$sql .= "where ring_group_uuid = :ring_group_uuid ";
 		$parameters['ring_group_uuid'] = $ring_group_uuid;
-		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
 		if (is_array($row) && @sizeof($row) != 0) {
 			$domain_uuid = $row["domain_uuid"];
@@ -599,7 +588,6 @@ function transform_destination_numbers(array &$destinations) {
 		$sql .= "order by destination_delay, destination_number asc ";
 		$parameters['domain_uuid'] = $domain_uuid;
 		$parameters['ring_group_uuid'] = $ring_group_uuid;
-		$database = new database;
 		$ring_group_destinations = $database->select($sql, $parameters, 'all');
 		unset($sql, $parameters);
 	}
@@ -634,7 +622,6 @@ function transform_destination_numbers(array &$destinations) {
 		$sql .= "order by u.username asc ";
 		$parameters['domain_uuid'] = $domain_uuid;
 		$parameters['ring_group_uuid'] = $ring_group_uuid;
-		$database = new database;
 		$ring_group_users = $database->select($sql, $parameters, 'all');
 		unset($sql, $parameters);
 	}
@@ -645,7 +632,6 @@ function transform_destination_numbers(array &$destinations) {
 	$sql .= "and user_enabled = 'true' ";
 	$sql .= "order by username asc ";
 	$parameters['domain_uuid'] = $domain_uuid;
-	$database = new database;
 	$users = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
