@@ -28,7 +28,7 @@
 	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
-//check permissions 
+//check permissions
 	if (permission_exists('xml_cdr_details')) {
 		//access granted
 	}
@@ -73,6 +73,64 @@
 		$direction = trim($row["direction"]);
 		$call_direction = trim($row["direction"]);
 		$status = trim($row["status"]);
+	}
+	unset($sql, $parameters, $row);
+
+//get the cdr json from the database
+	if (empty($json_string)) {
+		$sql = "select * from v_xml_cdr_json ";
+		if (permission_exists('xml_cdr_all')) {
+			$sql .= "where xml_cdr_uuid  = :xml_cdr_uuid ";
+		}
+		else {
+			$sql .= "where xml_cdr_uuid  = :xml_cdr_uuid ";
+			$sql .= "and domain_uuid = :domain_uuid ";
+			$parameters['domain_uuid'] = $domain_uuid;
+		}
+		$parameters['xml_cdr_uuid'] = $uuid;
+		$database = new database;
+		$row = $database->select($sql, $parameters, 'row');
+		if (!empty($row) && is_array($row) && @sizeof($row) != 0) {
+			$json_string = trim($row["json"]);
+		}
+		unset($sql, $parameters, $row);
+	}
+
+//get the cdr flow from the database
+	if (empty($call_flow)) {
+		$sql = "select * from v_xml_cdr_flow ";
+		if (permission_exists('xml_cdr_all')) {
+			$sql .= "where xml_cdr_uuid  = :xml_cdr_uuid ";
+		}
+		else {
+			$sql .= "where xml_cdr_uuid  = :xml_cdr_uuid ";
+			$sql .= "and domain_uuid = :domain_uuid ";
+			$parameters['domain_uuid'] = $domain_uuid;
+		}
+		$parameters['xml_cdr_uuid'] = $uuid;
+		$database = new database;
+		$row = $database->select($sql, $parameters, 'row');
+		if (!empty($row) && is_array($row) && @sizeof($row) != 0) {
+			$call_flow = trim($row["call_flow"]);
+		}
+		unset($sql, $parameters, $row);
+	}
+
+//get the cdr log from the database
+	$sql = "select * from v_xml_cdr_logs ";
+	if (permission_exists('xml_cdr_all')) {
+		$sql .= "where xml_cdr_uuid  = :xml_cdr_uuid ";
+	}
+	else {
+		$sql .= "where xml_cdr_uuid  = :xml_cdr_uuid ";
+		$sql .= "and domain_uuid = :domain_uuid ";
+		$parameters['domain_uuid'] = $domain_uuid;
+	}
+	$parameters['xml_cdr_uuid'] = $uuid;
+	$database = new database;
+	$row = $database->select($sql, $parameters, 'row');
+	if (!empty($row) && is_array($row) && @sizeof($row) != 0) {
+		$log_content = $row["log_content"];
 	}
 	unset($sql, $parameters, $row);
 
@@ -262,7 +320,10 @@
 	echo "<tr>\n";
 	echo "<td width='30%' align='left' valign='top' nowrap='nowrap'><b>".$text['title2']."</b></td>\n";
 	echo "<td width='70%' align='right' valign='top'>\n";
-	echo "	<input type='button' class='btn' name='' alt='back' onclick=\"window.location='xml_cdr.php".(!empty($_SESSION['xml_cdr']['last_query']) ? "?".urlencode($_SESSION['xml_cdr']['last_query']) : null)."'\" value='".$text['button-back']."'>\n";
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'style'=>'margin-left: 15px;','link'=>'xml_cdr.php'.(!empty($_SESSION['xml_cdr']['last_query']) ? '?'.urlencode($_SESSION['xml_cdr']['last_query']) : null)]);
+	if (isset($log_content) && !empty($log_content)) {
+		echo button::create(['type'=>'button','label'=>$text['button-call_log'],'icon'=>$_SESSION['theme']['button_icon_search'],'style'=>'margin-left: 15px;','link'=>'xml_cdr_log.php?id='.$uuid]);
+	}
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
