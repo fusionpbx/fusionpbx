@@ -37,38 +37,63 @@ if (!class_exists('destinations')) {
 		* destinations array
 		*/
 		public $destinations;
+
+		/**
+		 * domain_uuid
+		 * @var string must be a valid uuid
+		 */
 		public $domain_uuid;
+
+		/**
+		 * user_uuid
+		 * @var string must be a valid uuid
+		 */
 		public $user_uuid;
 
 		/**
 		* declare private variables
 		*/
+		const APP_NAME = 'destinations';
+		const APP_UUID = '5ec89622-b19c-3559-64f0-afde802ab139';
+		const PERMISSION_PREFIX = 'destination_';
+		const LIST_PAGE = 'destinations.php';
+		const TABLE = 'destinations';
+		const UUID_PREFIX = 'destination_';
+
+		/**
+		 * Domain name used to filter settings
+		 * @var string
+		 */
 		private $domain_name;
-		private $app_name;
-		private $app_uuid;
-		private $permission_prefix;
-		private $list_page;
-		private $table;
-		private $uuid_prefix;
+
+		/**
+		 * Settings object used to fetch database settings once during object creation
+		 * @var settings object
+		 */
 		private $settings;
+
+		/**
+		 * Database object created once during object creation
+		 * @var database
+		 */
 		private $database;
 
 		/**
-		* Called when the object is created
-		*/
-		public function __construct(string $domain_uuid = null, string $user_uuid = null) {
+		 * Initializes the settings object and creates a new database object and connection
+		 * The properties of app_name and app_uuid are filled in on the database object
+		 * for tracking all changes made by this object.
+		 * If no domain_uuid or user_uuid are supplied the object will pull this information from the current session. If
+		 * the session is not available the default settings are used.
+		 * @param string|null $domain_uuid The domain_uuid is optional but can be supplied to override the currently selected domain
+		 * @param string|null $user_uuid The user_uuid is optional but can be supplied to override the currently logged in user
+		 * @depends settings object This is auto-created during startup
+		 * @depends database object This is auto-created during startup
+		 */
+		public function __construct(?string $domain_uuid = null, ?string $user_uuid = null) {
 			//set defaults
 			$this->domain_uuid = $domain_uuid ?? $_SESSION['domain_uuid'] ?? '';
 			$this->user_uuid = $user_uuid ?? $_SESSION['user_uuid'] ?? '';
 			$this->destinations = [];
-
-			//assign private variables
-			$this->app_name = 'destinations';
-			$this->app_uuid = '5ec89622-b19c-3559-64f0-afde802ab139';
-			$this->permission_prefix = 'destination_';
-			$this->list_page = 'destinations.php';
-			$this->table = 'destinations';
-			$this->uuid_prefix = 'destination_';
 
 			//create a database connection
 			$this->database = new database();
@@ -78,6 +103,8 @@ if (!class_exists('destinations')) {
 			$this->database->app_uuid = $this->app_uuid;
 
 			//get the settings
+			//if the domain_uuid and user_uuid are filled in then this will return the settings for the
+			//current user or current domain
 			$this->settings = new settings(['domain_uuid' => $this->domain_uuid, 'user_uuid' => $this->user_uuid]);
 
 		}
@@ -171,10 +198,10 @@ if (!class_exists('destinations')) {
 		 * @param string $destination_type Can be <i>ivr</i>, <i>dialplan</i>, <i>call_center_contact</i> or <i>bridge</i>
 		 * @param string $destination_name Current name
 		 * @param string $destination_value Current value
-		 * @param array $permitted_dialplans  When supplied, filters out all other dialplan destinations except the ones specified
+		 * @param array $filter_dialplans Optional. When supplied, filters out all other dialplan destinations except the ones specified
 		 * @return string
 		 */
-		public function select(string $destination_type, string $destination_name, string $destination_value, array $permitted_dialplans = []) {
+		public function select(string $destination_type, string $destination_name, string $destination_value, array $filter_dialplans = []) {
 
 			//set the global variables
 			global $db_type;
@@ -216,9 +243,9 @@ if (!class_exists('destinations')) {
 					foreach ($apps as $x => &$app) {
 						if (isset($app['destinations'])) {
 							//for loop is specified twice so filters doesn't have to be checked on each iteration
-							if (!empty($permitted_dialplans)) {
+							if (!empty($filter_dialplans)) {
 								foreach ($app['destinations'] as &$row) {
-									if (array_search($row['name'], $permitted_dialplans) !== false  && permission_exists($this->singular($row["name"]) . "_destinations")) {
+									if (array_search($row['name'], $filter_dialplans) !== false  && permission_exists($this->singular($row["name"]) . "_destinations")) {
 										$this->destinations[] = $row;
 									}
 								}
@@ -286,7 +313,7 @@ if (!class_exists('destinations')) {
 					}
 
 					//ensure these are not filtered out before including them
-					if (!empty($permitted_dialplans) && array_search('dialplans', $permitted_dialplans) !== false) {
+					if (!empty($filter_dialplans) && array_search('dialplans', $filter_dialplans) !== false) {
 						$this->destinations[$x]['type'] = 'array';
 						$this->destinations[$x]['label'] = 'other';
 						$this->destinations[$x]['name'] = 'dialplans';
@@ -466,7 +493,7 @@ if (!class_exists('destinations')) {
 
 				//include the javascript contents in the reponse
 				$response .= "<script type='text/javascript'>\n";
-				$response .= file_get_contents(__DIR__ . '/../javascript/destinations.js');
+				$response .= file_get_contents(__DIR__ . '/../scripts/destinations.js');
 				$response .= "</script>\n";
 
 				//get the destinations
@@ -491,7 +518,7 @@ if (!class_exists('destinations')) {
 				$response .= " 		<option value=''></option>\n";
 				foreach($destinations as $key => $value) {
 					$singular = $this->singular($key);
-					$permitted = (empty($permitted_dialplans) || array_search($key, $permitted_dialplans) !== false) && permission_exists("{$singular}_destinations");
+					$permitted = (empty($filter_dialplans) || (array_search($key, $filter_dialplans) !== false) && permission_exists("{$singular}_destinations"));
 					if ($permitted) {
 						//determine if selected
 						$selected = (isset($destination_key) && $key == $destination_key) ? "selected='selected'" : '';
