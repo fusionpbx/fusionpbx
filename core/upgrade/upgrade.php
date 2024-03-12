@@ -45,6 +45,8 @@
 			$storage_dir = '/var/lib/freeswitch/storage';
 			$voicemail_dir = '/var/lib/freeswitch/storage/voicemail';
 			$scripts_dir = '/usr/share/freeswitch/scripts';
+			$php_dir = PHP_BINDIR;
+			$cache_location = '/var/cache/fusionpbx';
 		}
 		if (stristr(PHP_OS, 'Linux')) {
 			$config_path = '/etc/fusionpbx/';
@@ -58,6 +60,24 @@
 			$storage_dir = '/var/lib/freeswitch/storage';
 			$voicemail_dir = '/var/lib/freeswitch/storage/voicemail';
 			$scripts_dir = '/usr/share/freeswitch/scripts';
+			$php_dir = PHP_BINDIR;
+			$cache_location = '/var/cache/fusionpbx';
+		}
+		if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+			$system_drive = getenv('SystemDrive');
+			$config_path = $system_drive . DIRECTORY_SEPARATOR . 'ProgramData' . DIRECTORY_SEPARATOR . 'fusionpbx' ;
+			$config_file = $config_path.DIRECTORY_SEPARATOR.'config.conf';
+			$document_root = $_SERVER["DOCUMENT_ROOT"];
+
+			$conf_dir = $_SERVER['ProgramFiles'].DIRECTORY_SEPARATOR.'freeswitch'.DIRECTORY_SEPARATOR.'conf';
+			$sounds_dir = $_SERVER['ProgramFiles'].DIRECTORY_SEPARATOR.'freeswitch'.DIRECTORY_SEPARATOR.'sounds';
+			$database_dir = $_SERVER['ProgramFiles'].DIRECTORY_SEPARATOR.'freeswitch'.DIRECTORY_SEPARATOR.'db';
+			$recordings_dir = $_SERVER['ProgramFiles'].DIRECTORY_SEPARATOR.'freeswitch'.DIRECTORY_SEPARATOR.'recordings';
+			$storage_dir = $_SERVER['ProgramFiles'].DIRECTORY_SEPARATOR.'freeswitch'.DIRECTORY_SEPARATOR.'storage';
+			$voicemail_dir = $_SERVER['ProgramFiles'].DIRECTORY_SEPARATOR.'freeswitch'.DIRECTORY_SEPARATOR.'voicemail';
+			$scripts_dir = $_SERVER['ProgramFiles'].DIRECTORY_SEPARATOR.'freeswitch'.DIRECTORY_SEPARATOR.'scripts';
+			$php_dir = dirname(PHP_BINARY);
+			$cache_location = dirname($_SERVER['DOCUMENT_ROOT']).DIRECTORY_SEPARATOR.'cache'.DIRECTORY_SEPARATOR.'fusionpbx';
 		}
 
 		//make the config directory
@@ -89,12 +109,12 @@
 		$conf .= "document.root = ".$document_root."\n";
 		$conf .= "project.path =\n";
 		$conf .= "temp.dir = /tmp\n";
-		$conf .= "php.dir = ".PHP_BINDIR."\n";
+		$conf .= "php.dir = ".$php_dir."\n";
 		$conf .= "php.bin = php\n";
 		$conf .= "\n";
 		$conf .= "#cache settings\n";
 		$conf .= "cache.method = file\n";
-		$conf .= "cache.location = /var/cache/fusionpbx\n";
+		$conf .= "cache.location = ".$cache_location."\n";
 		$conf .= "cache.settings = true\n";
 		$conf .= "\n";
 		$conf .= "#switch settings\n";
