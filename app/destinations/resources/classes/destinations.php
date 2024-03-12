@@ -53,12 +53,13 @@ if (!class_exists('destinations')) {
 		/**
 		* declare private variables
 		*/
-		const APP_NAME = 'destinations';
-		const APP_UUID = '5ec89622-b19c-3559-64f0-afde802ab139';
-		const PERMISSION_PREFIX = 'destination_';
-		const LIST_PAGE = 'destinations.php';
-		const TABLE = 'destinations';
-		const UUID_PREFIX = 'destination_';
+		private $domain_name;
+		private $app_name;
+		private $app_uuid;
+		private $permission_prefix;
+		private $list_page;
+		private $table;
+		private $uuid_prefix;
 
 		/**
 		 * Domain name used to filter settings
@@ -90,6 +91,14 @@ if (!class_exists('destinations')) {
 		 * @depends database object This is auto-created during startup
 		 */
 		public function __construct(array $params = []) {
+			//assign private variables
+			$this->app_name = 'destinations';
+			$this->app_uuid = '5ec89622-b19c-3559-64f0-afde802ab139';
+			$this->permission_prefix = 'destination_';
+			$this->list_page = 'destinations.php';
+			$this->table = 'destinations';
+			$this->uuid_prefix = 'destination_';
+
 			if (isset($params['domain_uuid'])) { $domain_uuid = $params['domain_uuid']; }
 			if (isset($params['user_uuid'])) { $user_uuid = $params['user_uuid']; }
 			if (isset($params['settings'])) { $settings = $params['settings']; }
