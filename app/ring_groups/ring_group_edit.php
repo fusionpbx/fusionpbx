@@ -79,8 +79,9 @@ function transform_destination_numbers(array &$destinations) {
 	$user_uuid = $_SESSION['user_uuid'] ?? '';
 	$setting = new settings(['domain_uuid' => $domain_uuid, 'user_uuid' => $user_uuid]);
 
-//initialize the destinations object with the settings object so we don't re-read the database
+//initialize the destinations objects with the settings object so we don't re-read the database
 	$destination = new destinations(['settings' => $setting, 'domain_uuid' => $domain_uuid, 'user_uuid' => $user_uuid]);
+	$timeout_destination = new destinations(['settings' => $setting, 'domain_uuid' => $domain_uuid, 'user_uuid' => $user_uuid]);
 
 //get total domain ring group count
 	$sql = "select count(*) from v_ring_groups ";
@@ -1019,7 +1020,7 @@ function transform_destination_numbers(array &$destinations) {
 	echo "	".$text['label-timeout_destination']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo $destination->select('dialplan', 'ring_group_timeout_action', $ring_group_timeout_action ?? '');
+	echo $timeout_destination->select('dialplan', 'ring_group_timeout_action', $ring_group_timeout_action ?? '');
 	echo "	<br />\n";
 	echo "	".$text['description-timeout_destination']."\n";
 	echo "</td>\n";
