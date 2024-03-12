@@ -386,6 +386,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Options: horizontal, vertical";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "29d1b0c5-bad7-492f-9517-409ad4912f6f";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "cdr";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "call_log_enabled";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enable or disable adding call logs to the database.";
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "9d6ba316-a954-476b-9d8c-4520c3c69d2c";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "dashboard";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "missed_calls_chart_main_background_color";
