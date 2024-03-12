@@ -58,8 +58,13 @@
 	$ring_group_description = '';
 	$onkeyup = '';
 
-//initialize the destinations object
-	$destination = new destinations;
+//initialize the settings object with domain and user
+	$domain_uuid = $_SESSION['domain_uuid'] ?? '';
+	$user_uuid = $_SESSION['user_uuid'] ?? '';
+	$setting = new settings(['domain_uuid' => $domain_uuid, 'user_uuid' => $user_uuid]);
+
+//initialize the destinations object with the settings object so we don't re-read the database
+	$destination = new destinations(['settings' => $setting, 'domain_uuid' => $domain_uuid, 'user_uuid' => $user_uuid]);
 
 //get total domain ring group count
 	$sql = "select count(*) from v_ring_groups ";
@@ -913,8 +918,19 @@
 				$onkeyup = "onkeyup=\"document.getElementById('ring_group_destinations_".$x."_destination_enabled').value = (this.value != '' ? true : false);\""; // select
 			}
 		}
-		echo $destination->select('dialplan', "ring_group_destinations[$x][destination_number]", $row['destination_number'] ?? '', ['extensions']);
-		//echo "					<input type=\"text\" name=\"ring_group_destinations[".$x."][destination_number]\" class=\"formfld\" value=\"".escape($row['destination_number'])."\" ".$onkeyup.">\n";
+		//check if the setting is enabled
+		if ($setting->get('destinations','ring_group_select_mode', 'false') === 'true') {
+			if (!is_numeric($row['destination_number']) || substr($row['destination_number'] ?? '', 0, 9) === 'transfer' || $row['destination_number'] === ':') {
+				$select_destination_number = $row['destination_number'];
+			} elseif (is_numeric($row['destination_number'])) {
+				$select_destination_number = "transfer:".$row['destination_number']." XML ".$destination->domain_name;
+			} else {
+				$select_destination_number = $row['destination_number'];
+			}
+			echo $destination->select('dialplan', "ring_group_destinations[$x][destination_number]", $select_destination_number ?? '', ['extensions']);
+		} else {
+			echo "					<input type=\"text\" name=\"ring_group_destinations[".$x."][destination_number]\" class=\"formfld\" value=\"".escape($row['destination_number'])."\" ".$onkeyup.">\n";
+		}
 		echo "				</td>\n";
 		echo "				<td class='formfld'>\n";
 		echo "					<select name='ring_group_destinations[".$x."][destination_delay]' class='formfld' style='width:55px'>\n";
