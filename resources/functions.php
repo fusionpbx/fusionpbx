@@ -275,10 +275,6 @@
 	if (!function_exists('if_group')) {
 
 		function if_group($group) {
-			// Create a warning for tracing deprecated function
-			$backtrace = debug_backtrace();
-			$calling_function = $backtrace[0]['file'];
-			trigger_error('use of deprecated function if_group call from ' . $calling_function, E_USER_DEPRECATED);
 			//set default false
 			$result = false;
 			//search for the permission
