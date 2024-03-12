@@ -257,13 +257,13 @@ if (!class_exists('destinations')) {
 							//for loop is specified twice so filters doesn't have to be checked on each iteration
 							if (!empty($filter_dialplans)) {
 								foreach ($app['destinations'] as &$row) {
-									if (array_search($row['name'], $filter_dialplans) !== false  && permission_exists($this->singular($row["name"]) . "_destinations")) {
+									if (array_search($row['name'], $filter_dialplans) !== false  && permission_exists(self::singular($row["name"]) . "_destinations")) {
 										$this->destinations[] = $row;
 									}
 								}
 							} else {
 								foreach ($app['destinations'] as &$row) {
-									if (permission_exists($this->singular($row["name"]) . "_destinations")) {
+									if (permission_exists(self::singular($row["name"]) . "_destinations")) {
 										$this->destinations[] = $row;
 									}
 								}
@@ -529,7 +529,7 @@ if (!class_exists('destinations')) {
 				$response .= "	<select id='{$destination_id}_type' class='formfld' style='{$select_style}' onchange=\"get_destinations('{$destination_id}', '{$destination_type}', this.value);\">\n";
 				$response .= " 		<option value=''></option>\n";
 				foreach($destinations as $key => $value) {
-					$singular = $this->singular($key);
+					$singular = self::singular($key);
 					$permitted = (empty($filter_dialplans) || (array_search($key, $filter_dialplans) !== false) && permission_exists("{$singular}_destinations"));
 					if ($permitted) {
 						//determine if selected
@@ -553,7 +553,7 @@ if (!class_exists('destinations')) {
 					if (isset($destination_key) && $key == $destination_key) {
 						foreach($value as $k => $row) {
 							$selected = ($row['destination'] == $destination_value) ? "selected='selected'" : '';
-							$uuid = isset($row[$this->singular($key).'_uuid']) ? $row[$this->singular($key).'_uuid'] : ($row['uuid'] ?? '');
+							$uuid = isset($row[self::singular($key).'_uuid']) ? $row[self::singular($key).'_uuid'] : ($row['uuid'] ?? '');
 							$response .= "		<option id='{$uuid}' value='".$row['destination']."' $selected>".$row['label']."</option>\n";
 						}
 					}
@@ -1292,7 +1292,7 @@ if (!class_exists('destinations')) {
 		/**
 		* define singular function to convert a word in english to singular
 		*/
-		public function singular($word) {
+		public static function singular($word) {
 			//"-es" is used for words that end in "-x", "-s", "-z", "-sh", "-ch" in which case you add
 			if (substr($word, -2) == "es") {
 				if (substr($word, -4) == "sses") { // eg. 'addresses' to 'address'
