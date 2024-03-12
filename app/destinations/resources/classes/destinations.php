@@ -64,7 +64,7 @@ if (!class_exists('destinations')) {
 		 * Domain name used to filter settings
 		 * @var string
 		 */
-		private $domain_name;
+		public $domain_name;
 
 		/**
 		 * Settings object used to fetch database settings once during object creation
@@ -89,7 +89,11 @@ if (!class_exists('destinations')) {
 		 * @depends settings object This is auto-created during startup
 		 * @depends database object This is auto-created during startup
 		 */
-		public function __construct(?string $domain_uuid = null, ?string $user_uuid = null) {
+		public function __construct(array $params = []) {
+			if (isset($params['domain_uuid'])) { $domain_uuid = $params['domain_uuid']; }
+			if (isset($params['user_uuid'])) { $user_uuid = $params['user_uuid']; }
+			if (isset($params['settings'])) { $settings = $params['settings']; }
+
 			//set defaults
 			$this->domain_uuid = $domain_uuid ?? $_SESSION['domain_uuid'] ?? '';
 			$this->user_uuid = $user_uuid ?? $_SESSION['user_uuid'] ?? '';
@@ -105,8 +109,14 @@ if (!class_exists('destinations')) {
 			//get the settings
 			//if the domain_uuid and user_uuid are filled in then this will return the settings for the
 			//current user or current domain
-			$this->settings = new settings(['domain_uuid' => $this->domain_uuid, 'user_uuid' => $this->user_uuid]);
+			$this->settings = $settings ?? new settings(['domain_uuid' => $this->domain_uuid, 'user_uuid' => $this->user_uuid]);
 
+			//get the domain_name
+			$sql = "select domain_name from v_domains ";
+			$sql .= "where domain_uuid = :domain_uuid ";
+			$parameters['domain_uuid'] = $this->domain_uuid;
+			$database = $this->database;
+			$this->domain_name = $database->select($sql, $parameters, 'column');
 		}
 
 		/**
@@ -209,13 +219,6 @@ if (!class_exists('destinations')) {
 			//set defaults
 			$select_style = '';
 			$onchange = '';
-
-			//get the domain_name
-			$sql = "select domain_name from v_domains ";
-			$sql .= "where domain_uuid = :domain_uuid ";
-			$parameters['domain_uuid'] = $this->domain_uuid;
-			$database = $this->database;
-			$this->domain_name = $database->select($sql, $parameters, 'column');
 
 			//initialize variable
 			$response = '';
@@ -585,12 +588,6 @@ if (!class_exists('destinations')) {
 			//set default values
 			$destination_name = '';
 
-			//get the domain_name
-			$sql = "select domain_name from v_domains ";
-			$sql .= "where domain_uuid = :domain_uuid ";
-			$parameters['domain_uuid'] = $this->domain_uuid;
-			$this->domain_name = $database->select($sql, $parameters, 'column');
-
 			//get the destinations
 			if (count($this->destinations) === 0) {
 
@@ -793,12 +790,6 @@ if (!class_exists('destinations')) {
 
 			//connect to the database
 			$database = $this->database;
-
-			//get the domain_name
-			$sql = "select domain_name from v_domains ";
-			$sql .= "where domain_uuid = :domain_uuid ";
-			$parameters['domain_uuid'] = $this->domain_uuid;
-			$this->domain_name = $database->select($sql, $parameters, 'column');
 
 			//get the destinations
 			if (count($this->destinations) === 0) {
