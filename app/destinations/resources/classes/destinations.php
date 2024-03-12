@@ -171,10 +171,10 @@ if (!class_exists('destinations')) {
 		 * @param string $destination_type Can be <i>ivr</i>, <i>dialplan</i>, <i>call_center_contact</i> or <i>bridge</i>
 		 * @param string $destination_name Current name
 		 * @param string $destination_value Current value
-		 * @param string ...$permitted_dialplans  When supplied, filters out all other dialplan destinations except the ones specified
+		 * @param array $permitted_dialplans  When supplied, filters out all other dialplan destinations except the ones specified
 		 * @return string
 		 */
-		public function select(string $destination_type, string $destination_name, string $destination_value, string ...$permitted_dialplans) {
+		public function select(string $destination_type, string $destination_name, string $destination_value, array $permitted_dialplans = []) {
 
 			//set the global variables
 			global $db_type;

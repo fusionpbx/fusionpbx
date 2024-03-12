@@ -913,7 +913,7 @@
 				$onkeyup = "onkeyup=\"document.getElementById('ring_group_destinations_".$x."_destination_enabled').value = (this.value != '' ? true : false);\""; // select
 			}
 		}
-		echo $destination->select('dialplan', "ring_group_destinations[$x][destination_number]", $row['destination_number'] ?? '', 'extensions');
+		echo $destination->select('dialplan', "ring_group_destinations[$x][destination_number]", $row['destination_number'] ?? '', ['extensions']);
 		//echo "					<input type=\"text\" name=\"ring_group_destinations[".$x."][destination_number]\" class=\"formfld\" value=\"".escape($row['destination_number'])."\" ".$onkeyup.">\n";
 		echo "				</td>\n";
 		echo "				<td class='formfld'>\n";
