@@ -117,22 +117,24 @@
 	}
 
 //get the cdr log from the database
-	$sql = "select * from v_xml_cdr_logs ";
-	if (permission_exists('xml_cdr_all')) {
-		$sql .= "where xml_cdr_uuid  = :xml_cdr_uuid ";
+	if ($_SESSION['cdr']['call_log_enabled']['boolean'] == 'true') {
+		$sql = "select * from v_xml_cdr_logs ";
+		if (permission_exists('xml_cdr_all')) {
+			$sql .= "where xml_cdr_uuid  = :xml_cdr_uuid ";
+		}
+		else {
+			$sql .= "where xml_cdr_uuid  = :xml_cdr_uuid ";
+			$sql .= "and domain_uuid = :domain_uuid ";
+			$parameters['domain_uuid'] = $domain_uuid;
+		}
+		$parameters['xml_cdr_uuid'] = $uuid;
+		$database = new database;
+		$row = $database->select($sql, $parameters, 'row');
+		if (!empty($row) && is_array($row) && @sizeof($row) != 0) {
+			$log_content = $row["log_content"];
+		}
+		unset($sql, $parameters, $row);
 	}
-	else {
-		$sql .= "where xml_cdr_uuid  = :xml_cdr_uuid ";
-		$sql .= "and domain_uuid = :domain_uuid ";
-		$parameters['domain_uuid'] = $domain_uuid;
-	}
-	$parameters['xml_cdr_uuid'] = $uuid;
-	$database = new database;
-	$row = $database->select($sql, $parameters, 'row');
-	if (!empty($row) && is_array($row) && @sizeof($row) != 0) {
-		$log_content = $row["log_content"];
-	}
-	unset($sql, $parameters, $row);
 
 //get the format
 	if (!empty($xml_string)) {
@@ -321,7 +323,7 @@
 	echo "<td width='30%' align='left' valign='top' nowrap='nowrap'><b>".$text['title2']."</b></td>\n";
 	echo "<td width='70%' align='right' valign='top'>\n";
 	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'style'=>'margin-left: 15px;','link'=>'xml_cdr.php'.(!empty($_SESSION['xml_cdr']['last_query']) ? '?'.urlencode($_SESSION['xml_cdr']['last_query']) : null)]);
-	if (isset($log_content) && !empty($log_content)) {
+	if ($_SESSION['cdr']['call_log_enabled']['boolean'] == 'true' && isset($log_content) && !empty($log_content)) {
 		echo button::create(['type'=>'button','label'=>$text['button-call_log'],'icon'=>$_SESSION['theme']['button_icon_search'],'style'=>'margin-left: 15px;','link'=>'xml_cdr_log.php?id='.$uuid]);
 	}
 	echo "</td>\n";

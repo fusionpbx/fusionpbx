@@ -963,7 +963,7 @@ if (!class_exists('xml_cdr')) {
 						}
 
 					//save the call log to the database
-						if (!empty($this->setting->get('switch', 'log')) && $this->setting->get('cdr', 'storage') == "db") {
+						if ($this->setting->get('cdr', 'call_log_enabled') == 'true' && !empty($this->setting->get('switch', 'log')) && $this->setting->get('cdr', 'storage') == "db") {
 							//get the log content
 							$log_content = '';
 							$handle = @fopen($this->setting->get('switch', 'log').'/freeswitch.log', "r");
@@ -2034,8 +2034,3 @@ if (!class_exists('xml_cdr')) {
 }
 
 ?>
-
-
-
-
-
