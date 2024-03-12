@@ -384,7 +384,7 @@ function transform_destination_numbers(array &$destinations) {
 			$array["ring_groups"][0]["ring_group_enabled"] = $ring_group_enabled;
 			$array["ring_groups"][0]["ring_group_description"] = $ring_group_description;
 			$array["ring_groups"][0]["dialplan_uuid"] = $dialplan_uuid;
-			if ($destination->valid($ring_group_timeout_app.':'.$ring_group_timeout_data)) {
+			if ($timeout_destination->valid($ring_group_timeout_action)) {
 				$array["ring_groups"][0]["ring_group_timeout_app"] = $ring_group_timeout_app;
 				$array["ring_groups"][0]["ring_group_timeout_data"] = $ring_group_timeout_data;
 			}

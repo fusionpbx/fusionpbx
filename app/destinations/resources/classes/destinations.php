@@ -79,15 +79,18 @@ if (!class_exists('destinations')) {
 		private $database;
 
 		/**
-		 * Initializes the settings object and creates a new database object and connection
-		 * The properties of app_name and app_uuid are filled in on the database object
-		 * for tracking all changes made by this object.
-		 * If no domain_uuid or user_uuid are supplied the object will pull this information from the current session. If
-		 * the session is not available the default settings are used.
-		 * @param string|null $domain_uuid The domain_uuid is optional but can be supplied to override the currently selected domain
-		 * @param string|null $user_uuid The user_uuid is optional but can be supplied to override the currently logged in user
-		 * @depends settings object This is auto-created during startup
-		 * @depends database object This is auto-created during startup
+		 * Initializes the object with optional params as key/value pairs for the settings.
+		 * Optional key / value pairs in which the values can be <i>domain_uuid</i>, <i>user_uuid</i>, <i>settings</i>,
+		 * and <i>database</i>. The domain_uuid is optional but can be supplied to override the currently selected domain in the
+		 * _SESSION global. The user_uuid is optional but can be supplied to override the currently logged in user. The settings
+		 * object can be supplied as to not re-read already parsed database values. The database object can be supplied as to not
+		 * create a new connection to the database. However, the app_uuid and app_name within the database object will be overridden
+		 * with the name and uuid of this object for transactions that are recorded in the database transactions table. If no
+		 * domain_uuid or user_uuid are supplied the object will pull this information from the current session. If the session is
+		 * not available only the default settings are used.
+		 * @param array $params Optional key/value pairs
+		 * @depends settings object This is auto-created during startup if not supplied
+		 * @depends database object This is auto-created during startup if not supplied
 		 */
 		public function __construct(array $params = []) {
 			//assign private variables
@@ -101,6 +104,7 @@ if (!class_exists('destinations')) {
 			if (isset($params['domain_uuid'])) { $domain_uuid = $params['domain_uuid']; }
 			if (isset($params['user_uuid'])) { $user_uuid = $params['user_uuid']; }
 			if (isset($params['settings'])) { $settings = $params['settings']; }
+			if (isset($params['database'])) { $database = $params['database']; }
 
 			//set defaults
 			$this->domain_uuid = $domain_uuid ?? $_SESSION['domain_uuid'] ?? '';
@@ -108,7 +112,7 @@ if (!class_exists('destinations')) {
 			$this->destinations = [];
 
 			//create a database connection
-			$this->database = new database();
+			$this->database = $database ?? new database();
 
 			//set database to the destinations app for transaction recording
 			$this->database->app_name = $this->app_name;
@@ -324,7 +328,8 @@ if (!class_exists('destinations')) {
 					}
 
 					//ensure these are not filtered out before including them
-					if (!empty($filter_dialplans) && array_search('dialplans', $filter_dialplans) !== false) {
+					$permitted = (empty($filter_dialplans) || (array_search($key, $filter_dialplans) !== false) && permission_exists("{$singular}_destinations"));
+					if ($permitted) {
 						$this->destinations[$x]['type'] = 'array';
 						$this->destinations[$x]['label'] = 'other';
 						$this->destinations[$x]['name'] = 'dialplans';
@@ -360,7 +365,7 @@ if (!class_exists('destinations')) {
 				$select_style = 'width: 200px;';
 
 				//add additional
-				if (permission_exists("dialplan_detail_edit")) {
+				if (permission_exists("dialplan_edit")) {
 					$response .= "<script>\n";
 					$response .= "var Objs;\n";
 					$response .= "\n";
@@ -451,13 +456,15 @@ if (!class_exists('destinations')) {
 										}
 									}
 									else {
-										$select_value = str_replace("\${".$key."}", $data[$key] ?? '', $select_value ?? '');
-										if (empty($data['label'])) {
-											$select_label = str_replace("\${".$key."}", $data[$key] ?? '', $select_label ?? '');
-										}
-										else {
-											$label = $data['label'];
-											$select_label = str_replace("\${".$key."}", $text2['option-'.$label], $select_label);
+										if (array_key_exists($key, $data)) {
+											$select_value = str_replace("\${".$key."}", $data[$key], $select_value ?? '');
+											if (empty($data['label'])) {
+												$select_label = str_replace("\${".$key."}", $data[$key], $select_label ?? '');
+											}
+											else {
+												$label = $data['label'];
+												$select_label = str_replace("\${".$key."}", $text2['option-'.$label], $select_label);
+											}
 										}
 									}
 									//application: hangup
@@ -491,7 +498,7 @@ if (!class_exists('destinations')) {
 					}
 				}
 				$response .= "	</select>\n";
-				if (permission_exists("dialplan_detail_edit")) {
+				if (permission_exists("dialplan_edit")) {
 					$response .= "<input type='button' id='btn_select_to_input_".$destination_id."' class='btn' name='' alt='back' onclick='changeToInput".$destination_id."(document.getElementById(\"".$destination_id."\"));this.style.visibility = \"hidden\";' value='&#9665;'>";
 				}
 			}
@@ -595,6 +602,7 @@ if (!class_exists('destinations')) {
 
 			//set default values
 			$destination_name = '';
+			$destination_id = '';
 
 			//get the destinations
 			if (count($this->destinations) === 0) {
@@ -693,8 +701,9 @@ if (!class_exists('destinations')) {
 				$y++;
 			}
 
-			//replace '[' with '_' and remove ']' from the name
-			$destination_id = str_replace(["[", "]"],["_"], $destination_name);
+			//remove special characters from the name
+			$destination_id = str_replace("]", "", $destination_name);
+			$destination_id = str_replace("[", "_", $destination_id);
 
 			//set default to false
 			$select_found = false;
