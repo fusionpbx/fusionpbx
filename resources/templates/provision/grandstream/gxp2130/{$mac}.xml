@@ -33,12 +33,12 @@
 
 		<!-- SIP Server -->
 		{if isset($row.server_address_primary)}
-		<item name="account.{$row.line_number}.sip.server.1.address">{$row.server_address_primary}</item>
+		<item name="account.{$row.line_number}.sip.server.1.address">{$row.server_address_primary}:{$row.sip_port}</item>
 		{else}
-		<item name="account.{$row.line_number}.sip.server.1.address">{$row.server_address}</item>
+		<item name="account.{$row.line_number}.sip.server.1.address">{$row.server_address}:{$row.sip_port}</item>
 		{/if}
 		<!-- Secondary SIP Server -->
-		<item name="account.{$row.line_number}.sip.server.2.address">{$row.server_address_secondary}</item>
+		<item name="account.{$row.line_number}.sip.server.2.address">{$row.server_address_secondary}:{$row.sip_port}</item>
 
 		<!-- Outbound Proxy -->
 		{if $row.sip_transport != 'dns srv' && isset($row.outbound_proxy_primary)}
@@ -56,9 +56,9 @@
 
 		<!-- BLF Server -->
 		{if isset($row.server_address_primary)}
-		<item name="account.{$row.line_number}.sip.blf.server">{$row.server_address_primary}</item>
+		<item name="account.{$row.line_number}.sip.blf.server">{$row.server_address_primary}:{$row.sip_port}</item>
 		{else}
-		<item name="account.{$row.line_number}.sip.blf.server">{$row.server_address}</item>
+		<item name="account.{$row.line_number}.sip.blf.server">{$row.server_address}:{$row.sip_port}</item>
 		{/if}
 
 		<!-- SIP User ID -->
@@ -576,61 +576,61 @@
 		<item name="account.{$row.line_number}.ring.ringtone">5</item>
 
 		<!-- Matching Incoming Caller ID. Matching Rule 1 -->
-		<item name="account.{$row.line_number}.ring.match.1.callerId"/>
+		<item name="account.{$row.line_number}.ring.match.1.callerId">{$grandstream_distinctive_ringtone_name_1}</item>
 
 		<!-- Distinctive Ring Tone -->
 		<item name="account.{$row.line_number}.ring.match.1.ringtone">{$grandstream_distinctive_ringtone_1}</item>
 
 		<!-- Match Incoming Caller ID. Matching Rule 2 -->
-		<item name="account.{$row.line_number}.ring.match.2.callerId"/>
+		<item name="account.{$row.line_number}.ring.match.2.callerId">{$grandstream_distinctive_ringtone_name_2}</item>
 
 		<!-- Distinctive Ring Tone -->
 		<item name="account.{$row.line_number}.ring.match.2.ringtone">{$grandstream_distinctive_ringtone_2}</item>
 
 		<!-- Match Incoming Caller ID. Matching Rule 3 -->
-		<item name="account.{$row.line_number}.ring.match.3.callerId"/>
+		<item name="account.{$row.line_number}.ring.match.3.callerId">{$grandstream_distinctive_ringtone_name_3}</item>
 
 		<!-- Distinctive Ring Tone -->
 		<item name="account.{$row.line_number}.ring.match.3.ringtone">{$grandstream_distinctive_ringtone_3}</item>
 
 		<!-- Match Incoming Caller ID. Matching Rule 4 -->
-		<item name="account.{$row.line_number}.ring.match.4.callerId"/>
+		<item name="account.{$row.line_number}.ring.match.4.callerId">{$grandstream_distinctive_ringtone_name_4}</item>
 
 		<!-- Distinctive Ring Tone -->
 		<item name="account.{$row.line_number}.ring.match.4.ringtone">{$grandstream_distinctive_ringtone_4}</item>
 
 		<!-- Match Incoming Caller ID. Matching Rule 5 -->
-		<item name="account.{$row.line_number}.ring.match.5.callerId"/>
+		<item name="account.{$row.line_number}.ring.match.5.callerId">{$grandstream_distinctive_ringtone_name_5}</item>
 
 		<!-- Distinctive Ring Tone -->
 		<item name="account.{$row.line_number}.ring.match.5.ringtone">{$grandstream_distinctive_ringtone_5}</item>
 
 		<!-- Match Incoming Caller ID. Matching Rule 6 -->
-		<item name="account.{$row.line_number}.ring.match.6.callerId"/>
+		<item name="account.{$row.line_number}.ring.match.6.callerId">{$grandstream_distinctive_ringtone_name_6}</item>
 
 		<!-- Distinctive Ring Tone -->
 		<item name="account.{$row.line_number}.ring.match.6.ringtone">{$grandstream_distinctive_ringtone_6}</item>
 
 		<!-- Match Incoming Caller ID. Matching Rule 7 -->
-		<item name="account.{$row.line_number}.ring.match.7.callerId"/>
+		<item name="account.{$row.line_number}.ring.match.7.callerId">{$grandstream_distinctive_ringtone_name_7}</item>
 
 		<!-- Distinctive Ring Tone -->
 		<item name="account.{$row.line_number}.ring.match.7.ringtone">{$grandstream_distinctive_ringtone_7}</item>
 
 		<!-- Match Incoming Caller ID. Matching Rule 8 -->
-		<item name="account.{$row.line_number}.ring.match.8.callerId"/>
+		<item name="account.{$row.line_number}.ring.match.8.callerId">{$grandstream_distinctive_ringtone_name_8}</item>
 
 		<!-- Distinctive Ring Tone -->
 		<item name="account.{$row.line_number}.ring.match.8.ringtone">{$grandstream_distinctive_ringtone_8}</item>
 
 		<!-- Match Incoming Caller ID. Matching Rule 9 -->
-		<item name="account.{$row.line_number}.ring.match.9.callerId"/>
+		<item name="account.{$row.line_number}.ring.match.9.callerId">{$grandstream_distinctive_ringtone_name_9}</item>
 
 		<!-- Distinctive Ring Tone -->
 		<item name="account.{$row.line_number}.ring.match.9.ringtone">{$grandstream_distinctive_ringtone_9}</item>
 
 		<!-- Match Incoming Caller ID. Matching Rule 10 -->
-		<item name="account.{$row.line_number}.ring.match.10.callerId"/>
+		<item name="account.{$row.line_number}.ring.match.10.callerId">{$grandstream_distinctive_ringtone_name_10}</item>
 
 		<!-- Distinctive Ring Tone -->
 		<item name="account.{$row.line_number}.ring.match.10.ringtone">{$grandstream_distinctive_ringtone_10}</item>
@@ -669,7 +669,7 @@
 		<!-- #Enable Local Call Features. Default is Yes -->
 		<!-- #Mandatory -->
 		<!-- No, Yes -->
-		<item name="account.{$row.line_number}.featureCodes.callFeatures">Yes</item>
+		<item name="account.{$row.line_number}.featureCodes.callFeatures">No</item>
 
 		<!-- DND Call Feature On -->
 		<item name="account.{$row.line_number}.featureCodes.dndOn">*78</item>
@@ -907,7 +907,7 @@
 
 		<!-- # Enable Manual VLAN Configuration. Yes or No. -->
 		<!-- # Mandatory -->
-		<item name="network.port.eth.1.vlan.enable">{if isset($grandstream_lan_port_vlan)}Yes{else}No{/if}</item>
+		<item name="network.port.eth.1.vlan.enable">{if $grandstream_lan_port_vlan == '0'}No{else}Yes{/if}</item>
 
 		<!-- # Layer 2 QoS. 802.1Q/VLAN Tag (VLAN classification for RTP). Default is 0 -->
 		<!-- Layer 2 QoS 802.1Q/VLAN Tag (Ethernet) -->
@@ -921,7 +921,7 @@
 		<!-- PC Port Mode -->
 		<!-- Enabled, Disabled, Mirrored -->
 		{if isset($grandstream_pc_mode)}
-		<item name="network.port.pc.mode">{if isset($grandstream_pc_mode)}{$grandstream_pc_mode}{/if}</item>
+		<item name="network.port.pc.mode">{if isset($grandstream_pc_mode)}{$grandstream_pc_mode}{else}Enabled{/if}</item>
 		{else}
 		<item name="network.port.pc.mode">{if isset($grandstream_pc_port_vlan)}Enabled{else}Disabled{/if}</item>
 		{/if}
@@ -2204,7 +2204,7 @@
 		<item name="sip.showError">Yes</item>
 
 		<!-- # Enable Missed Call Notification. Yes or No -->
-		<item name="features.history.missedCallNotification">Yes</item>
+		<item name="features.history.missedCallNotification">{$grandstream_missed_call_notification}</item>
 
 		<!-- # Enable Call Completion Service. Yes or No -->
 		<item name="call.dial.callComplete.enable"/>
