@@ -210,7 +210,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Allows the drop-down box to be used for choosing an ring group destinations";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Allows the drop-down box to be used for selecting ring group destinations.";
 
 	//cache details
 		$apps[$x]['cache']['key'] = "dialplan.\${destination_context}";
