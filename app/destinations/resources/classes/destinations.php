@@ -246,13 +246,15 @@ if (!class_exists('destinations')) {
 					//get the array from the app_config.php files
 					global $apps;
 					$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_config.php");
-					foreach ($config_list as $x => &$config_path) {
+					$x = 0;
+					foreach ($config_list as &$config_path) {
 						try {
 							include($config_path);
 						}
 						catch (Exception $e) {
 							//echo 'Caught exception: ',  $e->getMessage(), "\n";
 						}
+						$x++;
 					}
 
 					foreach ($apps as $x => &$app) {
