@@ -220,10 +220,10 @@ if (!class_exists('destinations')) {
 		 * @param string $destination_type Can be <i>ivr</i>, <i>dialplan</i>, <i>call_center_contact</i> or <i>bridge</i>
 		 * @param string $destination_name Current name
 		 * @param string $destination_value Current value
-		 * @param array $filter_dialplans Optional. When supplied, filters out all other dialplan destinations except the ones specified
+		 * @param array $filter_applications Optional. When supplied, filters out all other dialplan destinations except the ones specified
 		 * @return string
 		 */
-		public function select(string $destination_type, string $destination_name, string $destination_value, array $filter_dialplans = []) {
+		public function select(string $destination_type, string $destination_name, string $destination_value, array $filter_applications = []) {
 
 			//set the global variables
 			global $db_type;
@@ -258,9 +258,9 @@ if (!class_exists('destinations')) {
 					foreach ($apps as $x => &$app) {
 						if (isset($app['destinations'])) {
 							//for loop is specified twice so filters doesn't have to be checked on each iteration
-							if (!empty($filter_dialplans)) {
+							if (!empty($filter_applications)) {
 								foreach ($app['destinations'] as &$row) {
-									if (array_search($row['name'], $filter_dialplans) !== false  && permission_exists(self::singular($row["name"]) . "_destinations")) {
+									if (array_search($row['name'], $filter_applications) !== false  && permission_exists(self::singular($row["name"]) . "_destinations")) {
 										$this->destinations[] = $row;
 									}
 								}
@@ -328,7 +328,7 @@ if (!class_exists('destinations')) {
 					}
 
 					//ensure these are not filtered out before including them
-					$permitted = (empty($filter_dialplans) || (array_search($key, $filter_dialplans) !== false) && permission_exists("{$singular}_destinations"));
+					$permitted = (empty($filter_applications) || (array_search($key, $filter_applications) !== false) && permission_exists("{$singular}_destinations"));
 					if ($permitted) {
 						$this->destinations[$x]['type'] = 'array';
 						$this->destinations[$x]['label'] = 'other';
@@ -536,7 +536,7 @@ if (!class_exists('destinations')) {
 				$response .= " 		<option value=''></option>\n";
 				foreach($destinations as $key => $value) {
 					$singular = self::singular($key);
-					$permitted = (empty($filter_dialplans) || (array_search($key, $filter_dialplans) !== false) && permission_exists("{$singular}_destinations"));
+					$permitted = (empty($filter_applications) || (array_search($key, $filter_applications) !== false) && permission_exists("{$singular}_destinations"));
 					if ($permitted) {
 						//determine if selected
 						$selected = (isset($destination_key) && $key == $destination_key) ? "selected='selected'" : '';
