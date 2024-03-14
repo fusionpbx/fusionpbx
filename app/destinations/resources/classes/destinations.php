@@ -358,7 +358,7 @@ if (!class_exists('destinations')) {
 					}
 				}
 
-				//replace '[' with '_' and remove ']' from the name
+				//remove special characters from the name
 				$destination_id = str_replace("]", "", $destination_name);
 				$destination_id = str_replace("[", "_", $destination_id);
 
