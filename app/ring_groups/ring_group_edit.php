@@ -70,6 +70,8 @@ function transform_destination_numbers(array &$destinations) {
 	$ring_group_forward_toll_allow = '';
 	$ring_group_description = '';
 	$onkeyup = '';
+
+//initialize the database object
 	$database = new database();
 	$database->app_name = 'ring_groups';
 	$database->app_uuid = '1d61fb65-1eec-bc73-a6ee-a6203b4fe6f2';
@@ -83,7 +85,7 @@ function transform_destination_numbers(array &$destinations) {
 	$destination = new destinations(['settings' => $setting, 'domain_uuid' => $domain_uuid, 'user_uuid' => $user_uuid]);
 	$timeout_destination = new destinations(['settings' => $setting, 'domain_uuid' => $domain_uuid, 'user_uuid' => $user_uuid]);
 
-//get total domain ring group count
+//get the total domain ring group count
 	$sql = "select count(*) from v_ring_groups ";
 	$sql .= "where domain_uuid = :domain_uuid ";
 	$parameters['domain_uuid'] = $domain_uuid;
