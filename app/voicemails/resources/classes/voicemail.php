@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2023
+ Portions created by the Initial Developer are Copyright (C) 2008-2024
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -747,7 +747,7 @@
 			$path = ($_SESSION['switch']['voicemail']['dir'] ?? $_SESSION['switch']['voicemail']).'/default/'.$_SESSION['domain_name'].'/'.$this->voicemail_id;
 
 			//prepare base64 content from db, if enabled
-			if (!empty($_SESSION['voicemail']['storage_type']['text']) && $_SESSION['voicemail']['storage_type']['text'] == 'base64') {
+			if ((!empty($_SESSION['voicemail']['storage_type']['text']) && $_SESSION['voicemail']['storage_type']['text'] == 'base64') || (!empty($_SESSION['voicemail']['storage_type']) && $_SESSION['voicemail']['storage_type'] == 'base64')) {
 				$sql = "select message_base64 ";
 				$sql .= "from ";
 				$sql .= "v_voicemail_messages as m, ";
@@ -833,7 +833,7 @@
 			fpassthru($fd);
 
 			//if base64, remove temp file
-			if (!empty($_SESSION['voicemail']['storage_type']['text']) && $_SESSION['voicemail']['storage_type']['text'] == 'base64') {
+			if ((!empty($_SESSION['voicemail']['storage_type']['text']) && $_SESSION['voicemail']['storage_type']['text'] == 'base64') || (!empty($_SESSION['voicemail']['storage_type']) && $_SESSION['voicemail']['storage_type'] == 'base64')) {
 				@unlink($path.'/msg_'.$this->voicemail_message_uuid.'.'.$file_ext);
 			}
 
