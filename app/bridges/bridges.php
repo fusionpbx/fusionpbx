@@ -126,7 +126,7 @@
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = "select d.domain_name, b.bridge_name, b.bridge_destination, bridge_enabled, bridge_description ";
+	$sql = "select b.bridge_uuid, d.domain_name, b.bridge_name, b.bridge_destination, bridge_enabled, bridge_description ";
 	$sql .= "from v_bridges as b, v_domains as d ";
 	$sql .= "where b.domain_uuid = d.domain_uuid ";
 	if (!empty($show) && $show == "all" && permission_exists('bridge_all')) {
