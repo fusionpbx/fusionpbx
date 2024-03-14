@@ -260,7 +260,7 @@
 						elseif (voicemail_file == "link") then
 							body = body:gsub("${message}", "<a href='"..link_address.."/app/voicemails/voicemail_messages.php?action=download&id="..id.."&voicemail_uuid="..db_voicemail_uuid.."&uuid="..uuid.."&t=bin'>"..text['label-download'].."</a>");
 						else
-							body = body:gsub("${message}", "<a href='"..link_address.."/app/voicemails/voicemail_messages.php?action=autoplay&id="..db_voicemail_uuid.."&uuid="..uuid.."'>"..text['label-listen'].."</a>");
+							body = body:gsub("${message}", "<a href='"..link_address.."/app/voicemails/voicemail_messages.php?action=autoplay&id="..db_voicemail_uuid.."&uuid="..uuid.."&vm="..id.."'>"..text['label-listen'].."</a>");
 						end
 						--body = body:gsub(" ", "&nbsp;");
 						--body = body:gsub("%s+", "");
@@ -278,7 +278,7 @@
 						elseif (voicemail_file == "link") then
 							body = body .. "<br><a href='"..link_address.."/app/voicemails/voicemail_messages.php?action=download&id="..id.."&voicemail_uuid="..db_voicemail_uuid.."&uuid="..uuid.."&t=bin'>"..text['label-download'].."</a>";
 						else
-							body = body .. "<br><a href='"..link_address.."/app/voicemails/voicemail_messages.php?action=autoplay&id="..db_voicemail_uuid.."&uuid="..uuid.."'>"..text['label-listen'].."</a>";
+							body = body .. "<br><a href='"..link_address.."/app/voicemails/voicemail_messages.php?action=autoplay&id="..db_voicemail_uuid.."&uuid="..uuid.."&vm="..id.."'>"..text['label-listen'].."</a>";
 						end
 						body = body .. '</body></html>';
 					end

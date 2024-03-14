@@ -366,7 +366,7 @@
 
 //autoplay message
 	if (!empty($_REQUEST["action"]) && $_REQUEST["action"] == "autoplay" && !empty($_REQUEST["uuid"]) && is_uuid($_REQUEST["uuid"])) {
-		echo "<script>recording_play('".$_REQUEST["uuid"]."');</script>";
+		echo "<script>recording_play('".$_REQUEST["uuid"]."','".$_REQUEST['vm']."|".$_REQUEST['id']."','message');</script>";
 	}
 
 //unbold new message rows when clicked/played/downloaded
