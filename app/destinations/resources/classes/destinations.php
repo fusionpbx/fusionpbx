@@ -507,8 +507,10 @@ if (!class_exists('destinations')) {
 			//create a dynamic destination select list
 			if ($select_mode === 'dynamic') {
 
-				//replace '[' with '_' and remove ']' from the name
-				$destination_id = str_replace(["[", "]"],["_"], $destination_name);
+				//remove special characters from the name
+				$destination_id = str_replace("]", "", $destination_name);
+				$destination_id = str_replace("[", "_", $destination_id);
+				//$destination_id = preg_replace('/[^a-zA-Z_,.]/', '', $destination_name);
 
 				//include the javascript contents in the reponse
 				$response .= "<script type='text/javascript'>\n";
