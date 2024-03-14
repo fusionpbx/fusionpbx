@@ -744,7 +744,7 @@
 			$this->message_saved();
 
 			//set source folder path
-			$path = $_SESSION['switch']['voicemail']['dir'].'/default/'.$_SESSION['domain_name'].'/'.$this->voicemail_id;
+			$path = ($_SESSION['switch']['voicemail']['dir'] ?? $_SESSION['switch']['voicemail']).'/default/'.$_SESSION['domain_name'].'/'.$this->voicemail_id;
 
 			//prepare base64 content from db, if enabled
 			if (!empty($_SESSION['voicemail']['storage_type']['text']) && $_SESSION['voicemail']['storage_type']['text'] == 'base64') {

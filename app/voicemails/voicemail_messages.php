@@ -35,6 +35,19 @@
 		&& !empty($_REQUEST["uuid"]) && is_uuid($_REQUEST["uuid"])
 		&& !empty($_REQUEST["voicemail_uuid"]) && is_uuid($_REQUEST["voicemail_uuid"])
 		) {
+		//if domain uuid not set (due to direct vm download using emailed link, etc), load settings into session based on domain in url
+		if ((empty($_SESSION['domain_uuid']) || !is_uuid($_SESSION['domain_uuid'])) && !empty($_SERVER['HTTP_HOST'])) {
+			$sql = 'select domain_uuid from v_domains where domain_name = :domain_name';
+			$parameters['domain_name'] = $_SERVER['HTTP_HOST'];
+			$database = new database;
+			$domain_uuid = $database->select($sql, $parameters, 'column');
+			if (is_uuid($domain_uuid)) {
+				$settings = new settings(['domain_uuid'=>$domain_uuid]);
+				$_SESSION = $settings->get();
+				$_SESSION['domain_uuid'] = $domain_uuid;
+				$_SESSION['domain_name'] = $_SERVER['HTTP_HOST'];
+			}
+		}
 		$voicemail = new voicemail;
 		$voicemail->domain_uuid = $_SESSION['domain_uuid'];
 		$voicemail->type = $_REQUEST['t'] ?? null;
