@@ -359,7 +359,8 @@ if (!class_exists('destinations')) {
 				}
 
 				//replace '[' with '_' and remove ']' from the name
-				$destination_id = str_replace(["[", "]"],["_"], $destination_name);
+				$destination_id = str_replace("]", "", $destination_name);
+				$destination_id = str_replace("[", "_", $destination_id);
 
 				//set the css style
 				$select_style = 'width: 200px;';
