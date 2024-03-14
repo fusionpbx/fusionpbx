@@ -257,16 +257,17 @@ if (!class_exists('destinations')) {
 						$x++;
 					}
 
-					foreach ($apps as $x => &$app) {
+					foreach ($apps as &$app) {
 						if (isset($app['destinations'])) {
-							//for loop is specified twice so filters doesn't have to be checked on each iteration
+							//for loop is specified twice so filters don't have to be checked on each iteration
 							if (!empty($filter_applications)) {
 								foreach ($app['destinations'] as &$row) {
 									if (array_search($row['name'], $filter_applications) !== false  && permission_exists(self::singular($row["name"]) . "_destinations")) {
 										$this->destinations[] = $row;
 									}
 								}
-							} else {
+							}
+							else {
 								foreach ($app['destinations'] as &$row) {
 									if (permission_exists(self::singular($row["name"]) . "_destinations")) {
 										$this->destinations[] = $row;
@@ -275,6 +276,7 @@ if (!class_exists('destinations')) {
 							}
 						}
 					}
+
 					//put the array in order
 					if ($this->destinations !== null && is_array($this->destinations)) {
 						foreach ($this->destinations as $row) {
