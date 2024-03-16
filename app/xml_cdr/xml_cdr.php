@@ -377,7 +377,7 @@
 			echo "		</div>\n";
 			echo "	</div>\n";
 		}
-		if (permission_exists('xml_cdr_negotiated_codec')) {
+		if (permission_exists('xml_cdr_codecs')) {
 			echo "	<div class='form_set'>\n";
 			echo "		<div class='label'>\n";
 			echo "			".$text['label-codecs']."\n";
@@ -644,7 +644,7 @@
 		echo "<th class='center shrink hide-md-dn'>".$text['label-time']."</th>\n";
 		$col_count += 2;
 	}
-	if (permission_exists('xml_cdr_negotiated_codec')) {
+	if (permission_exists('xml_cdr_codecs')) {
 		echo "<th class='center shrink'>".$text['label-codecs']."</th>\n";
 		$col_count++;
 	}
@@ -914,7 +914,7 @@
 						$content .= "	<td class='middle right no-wrap hide-md-dn'>".$row['start_time_formatted']."</td>\n";
 					}
 				//codec
-					if (permission_exists('xml_cdr_negotiated_codec')) {
+					if (permission_exists('xml_cdr_codecs')) {
 						$content .= "	<td class='middle right no-wrap'>".($row['read_codec'] ?? '').' / '.($row['write_codec'] ?? '')."</td>\n";
 					}
 				//tta (time to answer)
