@@ -43,6 +43,9 @@
 //create the waveform file
 	if (!empty($_GET['id']) && !empty($_GET['type'])) {
 
+		//generate random number
+		$rand = rand(0000,9999);
+
 		//determine type and get audio file path
 		switch ($_GET['type']) {
 
@@ -60,7 +63,14 @@
 					$path = $_SESSION['switch']['voicemail']['dir'].'/default/'.$_SESSION['domain_name'].'/'.$voicemail_id;
 
 					//prepare base64 content from db, if enabled
-					if (is_uuid($voicemail_id) && is_uuid($voicemail_uuid) && !empty($_SESSION['voicemail']['storage_type']['text']) && $_SESSION['voicemail']['storage_type']['text'] == 'base64') {
+					if (
+						is_numeric($voicemail_id) &&
+						is_uuid($voicemail_uuid) &&
+						is_uuid($_GET['id']) &&
+						!empty($_SESSION['voicemail']['storage_type']['text']) &&
+						$_SESSION['voicemail']['storage_type']['text'] == 'base64'
+						) {
+
 						$sql = "select message_base64 ";
 						$sql .= "from ";
 						$sql .= "v_voicemail_messages as m, ";
@@ -77,11 +87,11 @@
 						$parameters['voicemail_message_uuid'] = $_GET['id'];
 						$database = new database;
 						$message_base64 = $database->select($sql, $parameters, 'column');
-						if ($message_base64 != '') {
+						if (!empty($message_base64)) {
 							$message_decoded = base64_decode($message_base64);
-							file_put_contents($path.'/msg_'.$_GET['id'].'.ext', $message_decoded);
+							file_put_contents($path.'/waveform_'.$_GET['id'].'_'.$rand.'.ext', $message_decoded);
 							$finfo = finfo_open(FILEINFO_MIME_TYPE); //determine mime type (requires PHP >= 5.3.0, must be manually enabled on Windows)
-							$file_mime = finfo_file($finfo, $path.'/msg_'.$_GET['id'].'.ext');
+							$file_mime = finfo_file($finfo, $path.'/waveform_'.$_GET['id'].'_'.$rand.'.ext');
 							finfo_close($finfo);
 							switch ($file_mime) {
 								case 'audio/x-wav':
@@ -93,17 +103,17 @@
 									$file_ext = 'mp3';
 									break;
 							}
-							rename($path.'/msg_'.$_GET['id'].'.ext', $path.'/msg_'.$_GET['id'].'.'.$file_ext);
+							rename($path.'/waveform_'.$_GET['id'].'_'.$rand.'.ext', $path.'/waveform_'.$_GET['id'].'_'.$rand.'.'.$file_ext);
 						}
 						unset($sql, $parameters, $message_base64, $message_decoded);
 					}
 
-					//prepare and stream the file
-					if (file_exists($path.'/msg_'.$_GET['id'].'.wav')) {
-						$full_file_path = $path.'/msg_'.$_GET['id'].'.wav';
+					//prepare full file path
+					if (file_exists($path.'/waveform_'.$_GET['id'].'_'.$rand.'.wav')) {
+						$full_file_path = $path.'/waveform_'.$_GET['id'].'_'.$rand.'.wav';
 					}
-					else if (file_exists($path.'/msg_'.$_GET['id'].'.mp3')) {
-						$full_file_path = $path.'/msg_'.$_GET['id'].'.mp3';
+					else if (file_exists($path.'/waveform_'.$_GET['id'].'_'.$rand.'.mp3')) {
+						$full_file_path = $path.'/waveform_'.$_GET['id'].'_'.$rand.'.mp3';
 					}
 
 				}
@@ -182,7 +192,7 @@
 		if (file_exists($full_file_path)) {
 
 			//temporary waveform image filename
-			$temp_filename = 'waveform_'.$_GET['id'].'_'.rand(0000,9999).'.png';
+			$temp_filename = 'waveform_'.$_GET['id'].'_'.$rand.'.png';
 
 			//create temporary waveform image, if doesn't exist
 			if (file_exists($temp_filename)) {
@@ -225,12 +235,12 @@
 
 		}
 
-		//if base64, remove temp file
+		//if base64, remove temp audio file
 		switch ($_GET['type']) {
 
 			case 'message':
 				if (!empty($_SESSION['voicemail']['storage_type']['text']) && $_SESSION['voicemail']['storage_type']['text'] == 'base64') {
-					@unlink($path.'/msg_'.$_GET['id'].'.'.$file_ext);
+					@unlink($path.'/waveform_'.$_GET['id'].'_'.$rand.'.'.$file_ext);
 				}
 				break;
 
