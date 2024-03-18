@@ -130,17 +130,17 @@
 <Insert_VIA_rport ua="na">{$spa_insert_via_rport}</Insert_VIA_rport>
 <Substitute_VIA_Addr ua="na">No</Substitute_VIA_Addr>
 <Send_Resp_To_Src_Port ua="na">No</Send_Resp_To_Src_Port>
-<STUN_Enable ua="na">No</STUN_Enable>
+<STUN_Enable ua="na">{if isset($stun_server)}Yes{else}No{/if}</STUN_Enable>
 <STUN_Test_Enable ua="na">No</STUN_Test_Enable>
-<STUN_Server ua="na"/>
+<STUN_Server ua="na">{$stun_server}</STUN_Server>
 <EXT_IP ua="na"/>
 <EXT_RTP_Port_Min ua="na">0</EXT_RTP_Port_Min>
-<NAT_Keep_Alive_Intvl ua="na">15</NAT_Keep_Alive_Intvl>
+<NAT_Keep_Alive_Intvl ua="na">90</NAT_Keep_Alive_Intvl>
 <Redirect_Keep_Alive ua="na">No</Redirect_Keep_Alive>
 <!-- Configuration Profile -->
 <Provision_Enable ua="na">Yes</Provision_Enable>
 <Resync_On_Reset ua="na">Yes</Resync_On_Reset>
-<Resync_Random_Delay ua="na">2</Resync_Random_Delay>
+<Resync_Random_Delay ua="na">1</Resync_Random_Delay>
 <Resync_At__HHmm_ ua="na"/>
 <Resync_At_Random_Delay ua="na">600</Resync_At_Random_Delay>
 <Resync_Periodic ua="na">0</Resync_Periodic>
@@ -174,7 +174,7 @@
 <Log_Upgrade_Success_Msg ua="na">$PN $MAC -- Successful upgrade $SCHEME://$SERVIP:$PORT$PATH -- $ERR</Log_Upgrade_Success_Msg>
 <Log_Upgrade_Failure_Msg ua="na">$PN $MAC -- Upgrade failed: $ERR</Log_Upgrade_Failure_Msg>
 <!-- CA Settings -->
-<Custom_CA_Rule ua="na"/>
+<Custom_CA_Rule ua="na">{$cisco_custom_ca_rule}</Custom_CA_Rule>
 <!-- HTTP Settings -->
 <HTTP_User_Agent_Name ua="na">$VERSION ($MA)</HTTP_User_Agent_Name>
 <!-- Problem Report Tool -->
@@ -475,7 +475,11 @@
 <Hoteling_Subscription_Expires_1_ ua="na">3600</Hoteling_Subscription_Expires_1_>
 <!-- Proxy and Registration -->
 <Proxy_1_ ua="na">{$account.1.server_address}</Proxy_1_>
+{if isset($account.1.outbound_proxy_primary)}
 <Outbound_Proxy_1_ ua="na">{$account.1.outbound_proxy_primary}</Outbound_Proxy_1_>
+{else}
+<Outbound_Proxy_1_ ua="na">{$account.1.server_address}</Outbound_Proxy_1_>
+{/if}
 <Alternate_Proxy_1_ ua="na"/>
 <Alternate_Outbound_Proxy_1_ ua="na"/>
 <Use_OB_Proxy_In_Dialog_1_ ua="na">Yes</Use_OB_Proxy_In_Dialog_1_>
@@ -1446,7 +1450,7 @@
 <Call_Pickup_Audio_Notification ua="na">No</Call_Pickup_Audio_Notification>
 <Attendant_Console_LCD_Brightness ua="na">12</Attendant_Console_LCD_Brightness>
 <BXfer_To_Starcode_Enable ua="na">No</BXfer_To_Starcode_Enable>
-<BXfer_On_Speed_Dial_Enable ua="na">No</BXfer_On_Speed_Dial_Enable>
+<BXfer_On_Speed_Dial_Enable ua="na">Yes</BXfer_On_Speed_Dial_Enable>
 <BLF_Label_Display_Mode ua="na">Name</BLF_Label_Display_Mode>
 <!-- Unit 1 -->
 {foreach $keys["expansion"] as $row}

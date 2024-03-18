@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2023
+ Portions created by the Initial Developer are Copyright (C) 2008-2024
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -35,26 +35,38 @@
 		&& !empty($_REQUEST["uuid"]) && is_uuid($_REQUEST["uuid"])
 		&& !empty($_REQUEST["voicemail_uuid"]) && is_uuid($_REQUEST["voicemail_uuid"])
 		) {
-		//if domain uuid not set (due to direct vm download using emailed link, etc), load settings into session based on domain in url
-		if ((empty($_SESSION['domain_uuid']) || !is_uuid($_SESSION['domain_uuid'])) && !empty($_SERVER['HTTP_HOST'])) {
-			$sql = 'select domain_uuid from v_domains where domain_name = :domain_name';
-			$parameters['domain_name'] = $_SERVER['HTTP_HOST'];
+		//set domain uuid and domain name from session, if defined
+		if (!empty($_SESSION['domain_uuid']) && is_uuid($_SESSION['domain_uuid']) && !empty($_SESSION['domain_name'])) {
+			$domain_uuid = $_SESSION['domain_uuid'];
+			$domain_name = $_SESSION['domain_name'];
+		}
+		//session not available (due to direct vm download using emailed link, or otherwise), set domain uuid and name from database
+		else {
+			$sql = "select d.domain_uuid, d.domain_name ";
+			$sql .= "from v_voicemail_messages as vm ";
+			$sql .= "left join v_domains as d on vm.domain_uuid = d.domain_uuid ";
+			$sql .= "where vm.voicemail_message_uuid = :voicemail_message_uuid ";
+			$sql .= "and vm.voicemail_uuid = :voicemail_uuid ";
+			$sql .= "and vm.domain_uuid = d.domain_uuid ";
+			$parameters['voicemail_message_uuid'] = $_REQUEST["uuid"];
+			$parameters['voicemail_uuid'] = $_REQUEST["voicemail_uuid"];
 			$database = new database;
-			$domain_uuid = $database->select($sql, $parameters, 'column');
-			if (is_uuid($domain_uuid)) {
-				$settings = new settings(['domain_uuid'=>$domain_uuid]);
-				$_SESSION = $settings->get();
-				$_SESSION['domain_uuid'] = $domain_uuid;
-				$_SESSION['domain_name'] = $_SERVER['HTTP_HOST'];
+			$result = $database->select($sql, $parameters, 'row');
+			if ($result !== false) {
+				$domain_uuid = $result['domain_uuid'];
+				$domain_name = $result['domain_name'];
 			}
 		}
-		$voicemail = new voicemail;
-		$voicemail->domain_uuid = $_SESSION['domain_uuid'];
+		//load settings
+		$settings = new settings(['domain_uuid'=>$domain_uuid]);
+
+		$voicemail = new voicemail(['settings'=>$settings]);
+		$voicemail->domain_uuid = $domain_uuid;
 		$voicemail->type = $_REQUEST['t'] ?? null;
 		$voicemail->voicemail_id = $_REQUEST['id'];
 		$voicemail->voicemail_uuid = $_REQUEST['voicemail_uuid'];
 		$voicemail->voicemail_message_uuid = $_REQUEST['uuid'];
-		if(!$voicemail->message_download()) {
+		if (!$voicemail->message_download($domain_name)) {
 			echo "unable to download voicemail";
 		}
 		unset($voicemail);

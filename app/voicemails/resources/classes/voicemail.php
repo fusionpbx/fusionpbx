@@ -51,7 +51,13 @@
 		private $toggle_field;
 		private $toggle_values;
 
-		public function __construct() {
+		/**
+		 * pulls in settings object
+		 * @var settings settings object
+		 */
+		private $settings;
+
+		public function __construct(array $params = []) {
 
 			//assign private variables
 				$this->app_name = 'voicemail';
@@ -63,8 +69,16 @@
 				$this->toggle_field = 'voicemail_enabled';
 				$this->toggle_values = ['true','false'];
 
+			//assign the settings object
+				if (isset($params['settings'])) {
+					$this->settings = $params['settings'];
+				}
+				else {
+					$this->settings = new settings();
+				}
+
 			//set the domain_uuid if not provided
-				if (empty($this->domain_uuid)) {
+				if (empty($this->domain_uuid) || !is_uuid($this->domain_uuid)) {
 					$this->domain_uuid = $_SESSION['domain_uuid'];
 				}
 
@@ -729,7 +743,16 @@
 				$this->message_waiting();
 		}
 
-		public function message_download() {
+		/**
+		 * download the voicemail message
+		 * @param string domain_name if domain name is not passed, then will be used from the session variable (if available) to generate the voicemail file path
+		 */
+		public function message_download(string $domain_name = '') {
+
+			//check domain name
+			if (empty($domain_name)) {
+				$domain_name = $_SESSION['domain_name'] ?? '';
+			}
 
 			//check if for valid input
 			if (!is_numeric($this->voicemail_id)
@@ -744,10 +767,10 @@
 			$this->message_saved();
 
 			//set source folder path
-			$path = ($_SESSION['switch']['voicemail']['dir'] ?? $_SESSION['switch']['voicemail']).'/default/'.$_SESSION['domain_name'].'/'.$this->voicemail_id;
+			$path = realpath($this->settings->get('switch','voicemail','/var/lib/freeswitch/storage/voicemail').'/default/'.$domain_name).'/'.$this->voicemail_id;
 
 			//prepare base64 content from db, if enabled
-			if ((!empty($_SESSION['voicemail']['storage_type']['text']) && $_SESSION['voicemail']['storage_type']['text'] == 'base64') || (!empty($_SESSION['voicemail']['storage_type']) && $_SESSION['voicemail']['storage_type'] == 'base64')) {
+			if ($this->settings->get('voicemail','storage_type','') == 'base64') {
 				$sql = "select message_base64 ";
 				$sql .= "from ";
 				$sql .= "v_voicemail_messages as m, ";
@@ -788,13 +811,15 @@
 			//prepare and stream the file
 			if (file_exists($path.'/msg_'.$this->voicemail_message_uuid.'.wav')) {
 				$file_path = $path.'/msg_'.$this->voicemail_message_uuid.'.wav';
-			} else if (file_exists($path.'/msg_'.$this->voicemail_message_uuid.'.mp3')) {
+			}
+			else if (file_exists($path.'/msg_'.$this->voicemail_message_uuid.'.mp3')) {
 				$file_path = $path.'/msg_'.$this->voicemail_message_uuid.'.mp3';
-			} else {
+			}
+			else {
 				return false;
 			}
 
-			if ($file_path == '') {
+			if (empty($file_path)) {
 				return false;
 			}
 
@@ -806,16 +831,17 @@
 				header("Content-Description: File Transfer");
 				$file_ext = pathinfo($file_path, PATHINFO_EXTENSION);
 				switch ($file_ext) {
-					case "wav" : header('Content-Disposition: attachment; filename="msg_'.$this->voicemail_message_uuid.'.wav"'); break;
-					case "mp3" : header('Content-Disposition: attachment; filename="msg_'.$this->voicemail_message_uuid.'.mp3"'); break;
-					case "ogg" : header('Content-Disposition: attachment; filename="msg_'.$this->voicemail_message_uuid.'.ogg"'); break;
+					case "wav": header('Content-Disposition: attachment; filename="msg_'.$this->voicemail_message_uuid.'.wav"'); break;
+					case "mp3": header('Content-Disposition: attachment; filename="msg_'.$this->voicemail_message_uuid.'.mp3"'); break;
+					case "ogg": header('Content-Disposition: attachment; filename="msg_'.$this->voicemail_message_uuid.'.ogg"'); break;
 				}
-			} else {
+			}
+			else {
 				$file_ext = pathinfo($file_path, PATHINFO_EXTENSION);
 				switch ($file_ext) {
-					case "wav" : header("Content-Type: audio/x-wav"); break;
-					case "mp3" : header("Content-Type: audio/mpeg"); break;
-					case "ogg" : header("Content-Type: audio/ogg"); break;
+					case "wav": header("Content-Type: audio/x-wav"); break;
+					case "mp3": header("Content-Type: audio/mpeg"); break;
+					case "ogg": header("Content-Type: audio/ogg"); break;
 				}
 			}
 			header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
@@ -833,7 +859,7 @@
 			fpassthru($fd);
 
 			//if base64, remove temp file
-			if ((!empty($_SESSION['voicemail']['storage_type']['text']) && $_SESSION['voicemail']['storage_type']['text'] == 'base64') || (!empty($_SESSION['voicemail']['storage_type']) && $_SESSION['voicemail']['storage_type'] == 'base64')) {
+			if ($this->settings->get('voicemail','storage_type','') == 'base64') {
 				@unlink($path.'/msg_'.$this->voicemail_message_uuid.'.'.$file_ext);
 			}
 

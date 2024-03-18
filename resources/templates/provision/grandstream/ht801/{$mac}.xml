@@ -1390,12 +1390,24 @@
     <!-- # Disable Line Echo Canceller (LEC).  0 - No, 1 - Yes -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P824>0</P824>
+    {if isset($grandstream_line_echo_canceller)} 
+        <P824>{$grandstream_line_echo_canceller}</P824>
+    {elseif isset($grandstream_line_1_echo_canceller)} 
+        <P824>{$grandstream_line_1_echo_canceller}</P824>
+    {else}
+        <P824>0</P824>
+    {/if}
 
     <!-- # Disable Network Echo Suppressor.  0 - No, 1 - Yes -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P4441>0</P4441>
+    {if isset($grandstream_line_echo_suppressor)} 
+        <P4441>{$grandstream_line_echo_suppressor}</P4441>
+    {elseif isset($grandstream_line_1_echo_suppressor)} 
+        <P4441>{$grandstream_line_1_echo_suppressor}</P4441>
+    {else}
+        <P4441>0</P4441>
+    {/if}
 
     <!-- # Outgoing Call Duration Limit.  (0-180 minutes, default is 0 (No Limit)) -->
     <!-- # Number: 0~180 -->
@@ -1692,12 +1704,24 @@
     <!-- # Disable Line Echo Canceller (LEC).  0 - No, 1 - Yes -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P825>0</P825>
+   {if isset($grandstream_line_echo_canceller)} 
+        <P825>{$grandstream_line_echo_canceller}</P825>
+    {elseif isset($grandstream_line_2_echo_canceller)} 
+        <P825>{$grandstream_line_2_echo_canceller}</P825>
+    {else}
+        <P825>0</P825>
+    {/if}
 
     <!-- # Disable Network Echo Suppressor.  0 - No, 1 - Yes -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P4442>0</P4442>
+    {if isset($grandstream_line_echo_suppressor)} 
+        <P4442>{$grandstream_line_echo_suppressor}</P4442>
+    {elseif isset($grandstream_line_2_echo_suppressor)} 
+        <P4442>{$grandstream_line_2_echo_suppressor}</P4442>
+    {else}
+        <P4442>0</P4442>
+    {/if}
 
     <!-- # Outgoing Call Duration Limit.  (0-180 minutes, default is 0 (No Limit)) -->
     <!-- # Number: 0~180 -->

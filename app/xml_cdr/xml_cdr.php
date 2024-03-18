@@ -51,6 +51,8 @@
 	$paging_controls_mini = '';
 	$paging_controls = null;
 	$order_by = "";
+	$read_codec = '';
+	$write_codec = '';
 	if(!isset($_REQUEST['show'])) {
 		//set to show only this domain
 		$_REQUEST['show'] = 'domain';
@@ -375,6 +377,17 @@
 			echo "		</div>\n";
 			echo "	</div>\n";
 		}
+		if (permission_exists('xml_cdr_codecs')) {
+			echo "	<div class='form_set'>\n";
+			echo "		<div class='label'>\n";
+			echo "			".$text['label-codecs']."\n";
+			echo "		</div>\n";
+			echo "		<div class='field no-wrap'>\n";
+			echo "			<input type='text' class='formfld' style='min-width: 115px; width: 115px;' name='read_codec' id='read_codec' value='".escape($read_codec)."' placeholder=\"".$text['label-codec_read']."\">\n";
+			echo "			<input type='text' class='formfld' style='min-width: 115px; width: 115px;' name='write_codec' id='write_codec' value='".escape($write_codec)."' placeholder=\"".$text['label-codec_write']."\">\n";
+			echo "		</div>\n";
+			echo "	</div>\n";
+		}
 		if (permission_exists('xml_cdr_search_tta')) {
 			echo "	<div class='form_set'>\n";
 			echo "		<div class='label'>\n";
@@ -517,7 +530,7 @@
 			echo "			</select>\n";
 			echo "		</div>\n";
 			echo "	</div>\n";
-			
+
 			if (permission_exists('xml_cdr_search_call_center_queues')) {
 				echo "	<div class='form_set'>\n";
 				echo "		<div class='label'>\n";
@@ -630,6 +643,10 @@
 		echo "<th class='center shrink'>".$text['label-date']."</th>\n";
 		echo "<th class='center shrink hide-md-dn'>".$text['label-time']."</th>\n";
 		$col_count += 2;
+	}
+	if (permission_exists('xml_cdr_codecs')) {
+		echo "<th class='center shrink'>".$text['label-codecs']."</th>\n";
+		$col_count++;
 	}
 	if (permission_exists('xml_cdr_tta')) {
 		echo "<th class='right hide-md-dn' title=\"".$text['description-tta']."\">".$text['label-tta']."</th>\n";
@@ -896,6 +913,10 @@
 						$content .= "	<td class='middle right no-wrap'>".$row['start_date_formatted']."</td>\n";
 						$content .= "	<td class='middle right no-wrap hide-md-dn'>".$row['start_time_formatted']."</td>\n";
 					}
+				//codec
+					if (permission_exists('xml_cdr_codecs')) {
+						$content .= "	<td class='middle right no-wrap'>".($row['read_codec'] ?? '').' / '.($row['write_codec'] ?? '')."</td>\n";
+					}
 				//tta (time to answer)
 					if (permission_exists('xml_cdr_tta')) {
 						$content .= "	<td class='middle right hide-md-dn'>".(!empty($row['tta']) && $row['tta'] >= 0 ? $row['tta']."s" : "&nbsp;")."</td>\n";
@@ -918,7 +939,7 @@
 					}
 				//call result/status
 					if (permission_exists("xml_cdr_status")) {
-						$content .= "	<td class='middle no-wrap hide-sm-dn'><a href='".$list_row_url."'>".escape($text['label-'.$status])."</a></td>\n";
+						$content .= "	<td class='middle no-wrap hide-sm-dn'><a href='".$list_row_url."'>".escape($text['label-'.$status] ?? '')."</a></td>\n";
 					}
 				//hangup cause
 					if (permission_exists('xml_cdr_hangup_cause')) {
