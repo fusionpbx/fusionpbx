@@ -630,6 +630,7 @@
 	if (empty($queue_discard_abandoned_after)) { $queue_discard_abandoned_after = "900"; }
 	if (empty($queue_abandoned_resume_allowed)) { $queue_abandoned_resume_allowed = "false"; }
 	if (empty($queue_context)) { $queue_context = $_SESSION['domain_name']; }
+	if (empty($_SESSION['ranges']['call_center_queue_range']['text'])) { $extension_placeholder = '' } else { $extension_placeholder = $_SESSION['ranges']['call_center_queue_range']['text']; }
 
 //create token
 	$object = new token;
@@ -773,12 +774,7 @@
 	echo "	".$text['label-extension']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	if (!empty($_SESSION['ranges']['call_center_queue_range']['text'])) {
-		echo "	<input class='formfld' type='number' name='queue_extension' maxlength='255' min='0' step='1' value=\"".escape($queue_extension)."\" required='required' placeholder='".$_SESSION['ranges']['call_center_queue_range']['text']."'>\n";
-	}
-	else {
-		echo "	<input class='formfld' type='number' name='queue_extension' maxlength='255' min='0' step='1' value=\"".escape($queue_extension)."\" required='required'>\n";
-	}
+	echo "	<input class='formfld' type='number' name='queue_extension' maxlength='255' min='0' step='1' value=\"".escape($queue_extension)."\" required='required' placeholder='".$extension_placeholder."'>\n";
 	echo "<br />\n";
 	if (!empty($_SESSION['ranges']['call_center_queue_range']['text'])) {
 		echo $text['description-extension']."<br />(ex: ".$_SESSION['ranges']['call_center_queue_range']['text'].")\n";
