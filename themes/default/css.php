@@ -274,6 +274,9 @@ $modal_close_background_color_hover = $_SESSION['theme']['modal_close_background
 $modal_message_color = $_SESSION['theme']['modal_message_color']['text'] ?? '#444';
 $modal_message_alignment = $_SESSION['theme']['modal_message_alignment']['text'] ?? 'left';
 $modal_message_margin = $_SESSION['theme']['modal_message_margin']['text'] ?? '0 0 20px 0';
+$audio_player_indicator_color = $_SESSION['theme']['audio_player_indicator_color']['text'] ?? '#b90004';
+$audio_player_waveform_enabled = $_SESSION['theme']['audio_player_waveform_enabled']['boolean'] ?? 'false';
+$audio_player_waveform_height = $_SESSION['theme']['audio_player_waveform_height']['text'] ?? '70px';
 $custom_css_code = $_SESSION['theme']['custom_css_code']['text'] ?? null;
 
 /***********************************************************************************************************************************************/
@@ -1852,24 +1855,31 @@ else { //default: white
 		}
 
 	span.playback_progress_bar {
-		background-color: #b90004;
-		width: 17px;
-		height: 4px;
-		margin-bottom: 3px;
+		background-color: <?=$audio_player_indicator_color?>;
+		<?php if ($audio_player_waveform_enabled === 'true') { ?>
+			width: 2px;
+			height: <?=$audio_player_waveform_height?>;
+			margin-bottom: 0;
+			border-radius: 0;
+		<?php } else { ?>
+			width: 17px;
+			height: 4px;
+			margin-bottom: 3px;
+			border-radius: 0 0 6px 6px;
+		<?php } ?>
 		display: block;
 		-moz-border-radius: 0 0 6px 6px;
 		-webkit-border-radius: 0 0 6px 6px;
 		-khtml-border-radius: 0 0 6px 6px;
-		border-radius: 0 0 6px 6px;
-		-webkit-box-shadow: 0 0 3px 0px rgba(255,0,0,0.9);
-		-moz-box-shadow: 0 0 3px 0px rgba(255,0,0,0.9);
-		box-shadow: 0 0 3px 0px rgba(255,0,0,0.9);
+		-webkit-box-shadow: 0 0 3px 0px rgba(<?=hex_to_rgb($audio_player_indicator_color,',',true,0.8)?>);
+		-moz-box-shadow: 0 0 3px 0px rgba(<?=hex_to_rgb($audio_player_indicator_color,',',true,0.8)?>);
+		box-shadow: 0 0 3px 0px rgba(<?=hex_to_rgb($audio_player_indicator_color,',',true,0.8)?>);
 		}
 
 	td.vtable.playback_progress_bar_background,
 	table.list tr.list-row td.playback_progress_bar_background {
 		padding: 0;
-		border-bottom: none;
+		border: none;
 		background-image: -ms-linear-gradient(top, rgba(0,0,0,0.10) 0%, transparent 100%);
 		background-image: -moz-linear-gradient(top, rgba(0,0,0,0.10) 0%, transparent 100%);
 		background-image: -o-linear-gradient(top, rgba(0,0,0,0.10) 0%, transparent 100%);
@@ -1877,6 +1887,12 @@ else { //default: white
 		background-image: -webkit-linear-gradient(top, rgba(0,0,0,0.10) 0%, transparent 100%);
 		background-image: linear-gradient(to bottom, rgba(0,0,0,0.10) 0%, transparent 100%);
 		overflow: hidden;
+		<?php if ($audio_player_waveform_enabled === 'true') { ?>
+			padding-bottom: 3px;
+			background-size: 100% 100%;
+			background-repeat: no-repeat;
+			cursor: pointer;
+		<?php } ?>
 		}
 
 	div.pwstrength_progress {
@@ -2323,7 +2339,7 @@ else { //default: white
 		cursor: default;
 		}
 
-	div.off_ext {
+	div.ur_ext {
 		position: relative;
 		float: left;
 		width: 235px;
@@ -2343,20 +2359,20 @@ else { //default: white
 		opacity: 0.5;
 		}
 		
-		div.off_ext:after {
-			position: absolute;
-			content: "";
-			z-index: 10;
-			-moz-border-radius: 5px;
-			-webkit-border-radius: 5px;
-			border-radius: 5px;
-			display: block;
-			height: 100%;
-			top: 0;
-			left: 0;
-			right: 0;
-			background: <?=$form_table_field_background_color?>;
-			opacity: 0.5;
+	div.ur_ext:after {
+		position: absolute;
+		content: "";
+		z-index: 10;
+		-moz-border-radius: 5px;
+		-webkit-border-radius: 5px;
+		border-radius: 5px;
+		display: block;
+		height: 100%;
+		top: 0;
+		left: 0;
+		right: 0;
+		background: <?=$form_table_field_background_color?>;
+		opacity: 0.5;
 		}
 
 	div.op_state_active {
@@ -2377,7 +2393,7 @@ else { //default: white
 		border-color: #B9A6FC;
 		}
 
-	table.op_ext, table.off_ext {
+	table.op_ext, table.ur_ext {
 		width: 100%;
 		height: 70px;
 		-moz-border-radius: 5px;
@@ -3303,6 +3319,16 @@ else { //default: white
 	div#editor {
 		resize: vertical;
 		overflow: auto;
+		}
+
+	i.ace_control {
+		cursor: pointer;
+		margin-right: 5px;
+		opacity: 0.5;
+		}
+
+	i.ace_control:hover {
+		opacity: 1.0;
 		}
 
 <?php

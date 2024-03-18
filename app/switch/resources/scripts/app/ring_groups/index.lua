@@ -28,7 +28,7 @@
 --  Gill Abada <gill.abada@gmail.com>
 
 --include the log
-	log = require "resources.functions.log".ring_group
+log = require "resources.functions.log".ring_group
 
 --connect to the database
 	local Database = require "resources.functions.database";
@@ -149,6 +149,7 @@
 		sip_to_user = session:getVariable("sip_to_user");
 		caller_id_name = session:getVariable("caller_id_name");
 		caller_id_number = session:getVariable("caller_id_number");
+		original_caller_id_number = session:getVariable("caller_id_number");
 		outbound_caller_id_name = session:getVariable("outbound_caller_id_name");
 		outbound_caller_id_number = session:getVariable("outbound_caller_id_number");
 		effective_caller_id_name = session:getVariable("effective_caller_id_name");
@@ -200,9 +201,9 @@
 
 --set hold music
 	if (session:getVariable("hold_music") == nil) then
-		hold_music = '';
+		default_hold_music = '';
 	else
-		hold_music = ",hold_music="..session:getVariable("hold_music");
+		default_hold_music = session:getVariable("hold_music");
 	end
 
 --prepare the api object
@@ -243,6 +244,10 @@
 		missed_call_app = row["ring_group_missed_call_app"];
 		missed_call_data = row["ring_group_missed_call_data"];
 	end);
+
+--create the settings object
+	local Settings = require "resources.functions.lazy_settings";
+	local settings = Settings.new(dbh, domain_name, domain_uuid);
 
 --prepare the recording path
 	record_path = recordings_dir .. "/" .. domain_name .. "/archive/" .. os.date("%Y/%b/%d");
@@ -355,7 +360,7 @@
 					caller_id_name = caller_id_name:gsub([["]], "&#34;");
 					caller_id_number = caller_id_number:gsub("'", "&#39;");
 					caller_id_number = caller_id_number:gsub([["]], "&#34;");
-			
+
 				--prepare the subject
 					subject = subject:gsub("${caller_id_name}", caller_id_name);
 					subject = subject:gsub("${caller_id_number}", caller_id_number);
@@ -492,8 +497,8 @@
 						WHEN r.ring_group_strategy <> 'enterprise'
 							THEN d.destination_delay
 					END as destination_delay,
-					r.ring_group_caller_id_name, r.ring_group_caller_id_number, 
-					r.ring_group_cid_name_prefix, r.ring_group_cid_number_prefix, 
+					r.ring_group_caller_id_name, r.ring_group_caller_id_number,
+					r.ring_group_cid_name_prefix, r.ring_group_cid_number_prefix,
 					r.ring_group_timeout_data, r.ring_group_ringback
 				FROM
 					v_ring_groups as r, v_ring_group_destinations as d
@@ -834,13 +839,25 @@
 							cmd = "user_data ".. destination_number .."@"..domain_name.." var extension_uuid";
 							extension_uuid = trim(api:executeString(cmd));
 
+							--get the hold music
+							cmd = "user_data ".. destination_number .."@"..domain_name.." var hold_music";
+							user_hold_music = trim(api:executeString(cmd));
+							if (user_hold_music ~= nil) and (string.len(user_hold_music) > 0) then
+								hold_music = user_hold_music;
+							else 
+								hold_music = default_hold_music
+							end
+
 							--send to user
 							local dial_string_user = "[sip_invite_domain="..domain_name..",call_direction="..call_direction..",";
 							dial_string_user = dial_string_user .. group_confirm..","..timeout_name.."="..destination_timeout..",";
 							dial_string_user = dial_string_user .. delay_name.."="..destination_delay..",";
 							dial_string_user = dial_string_user .. "dialed_extension=" .. row.destination_number .. ",";
+							if (hold_music ~= nil) and (string.len(hold_music) > 0) then
+								dial_string_user = dial_string_user .. "hold_music=" .. hold_music .. ",";
+							end
 							dial_string_user = dial_string_user .. "presence_id=" .. row.destination_number .. "@"..domain_name..",";
-							dial_string_user = dial_string_user .. "extension_uuid="..extension_uuid..hold_music..record_session.."]";
+							dial_string_user = dial_string_user .. "extension_uuid="..extension_uuid..record_session.."]";
 							user_contact = api:executeString("sofia_contact */".. row.destination_number .."@" ..domain_name);
 							if (user_contact ~= "error/user_not_registered") then
 								dial_string = dial_string_user .. user_contact;
@@ -853,7 +870,7 @@
 							dial_string = "[sip_invite_domain="..domain_name..",domain_name="..domain_name..",call_direction="..call_direction..","..group_confirm..""..timeout_name.."="..destination_timeout..","..delay_name.."="..destination_delay.."]" .. row.destination_number;
 						else
 							--external number
-								-- have to double destination_delay here due a FS bug requiring a 50% delay value for internal externsions, but not external calls. 
+								-- have to double destination_delay here due a FS bug requiring a 50% delay value for internal externsions, but not external calls.
 								--destination_delay = destination_delay * 2;
 
 								route_bridge = 'loopback/'..destination_number;
@@ -889,8 +906,16 @@
 									caller_id = caller_id .. ",origination_caller_id_number="..ring_group_caller_id_number..",";
 								end
 
+							--set the diversion header
+								local diversion_enabled = settings:get('ring_group', 'diversion_enabled', 'boolean') or 'false';
+								if (diversion_enabled == 'true' and original_caller_id_number ~= nil) then
+									diversion_header = "sip_h_Diversion=<sip:"..original_caller_id_number.."@"..domain_name..">;reason=unconditional,";
+								else
+									diversion_header = '';
+								end
+
 							--set the destination dial string
-								dial_string = "[toll_allow=".. toll_allow ..",".. caller_id ..",sip_invite_domain="..domain_name..",domain_name="..domain_name..",domain_uuid="..domain_uuid..",call_direction="..call_direction..","..group_confirm..""..timeout_name.."="..destination_timeout..","..delay_name.."="..destination_delay.."]"..route_bridge
+								dial_string = "["..diversion_header.."toll_allow=".. toll_allow ..",".. caller_id ..",sip_invite_domain="..domain_name..",domain_name="..domain_name..",domain_uuid="..domain_uuid..",call_direction="..call_direction..","..group_confirm..""..timeout_name.."="..destination_timeout..","..delay_name.."="..destination_delay.."]"..route_bridge
 						end
 
 					--add a delimiter between destinations
@@ -1021,9 +1046,9 @@
 								session:setVariable("presence_id", ring_group_extension.."@"..domain_name);
 								send_presence(uuid, ring_group_extension.."@"..domain_name, "early");
 							end
-							
+
 							session:execute("bridge", app_data);
-							
+
 							--set the presence to terminated and unset presence_id
 							if (session:getVariable("ring_group_send_presence") == "true") then
 								session:setVariable("presence_id", "");

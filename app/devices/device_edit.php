@@ -851,7 +851,7 @@
 					$template = file_get_contents('/var/www/fusionpbx/resources/templates/provision/'.$device_template.'/template.csv');
 				}
 				if (!empty($template)) {
-					$template = str_replace('{$server_address}', $outbound_proxy_primary, $template);
+					$template = str_replace('{$server_address}', $row['server_address'], $template);
 					$template = str_replace('{$user_id}', $row['user_id'], $template);
 					$template = str_replace('{$password}', str_replace(';',';;',$row['password']), $template);
 					$template = str_replace('{$display_name}', ($row['display_name'] ?? $row['user_id']), $template);
@@ -1239,7 +1239,7 @@
 					if (empty($row['server_address'])) { $row['server_address'] = $_SESSION['domain_name']; }
 				}
 				if (empty($row['sip_transport'])) { $row['sip_transport'] = $_SESSION['provision']['line_sip_transport']['text']; }
-				if (empty($row['sip_port'])) { $row['sip_port'] = $_SESSION['provision']['line_sip_port']['numeric']; }
+				if (!isset($row['sip_port'])) { $row['sip_port'] = $_SESSION['provision']['line_sip_port']['numeric']; } //used !isset to support a value of 0 as empty the empty function considers a value of 0 as empty.
 				if (empty($row['register_expires'])) { $row['register_expires'] = $_SESSION['provision']['line_register_expires']['numeric']; }
 
 			//add the primary key uuid

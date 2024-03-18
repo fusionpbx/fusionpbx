@@ -61,6 +61,10 @@
 		$apps[$x]['permissions'][$y]['menu']['uuid'] = "5243e0d2-0e8b-277a-912e-9d8b5fcdb41d";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "system_view_support";
+		$apps[$x]['permissions'][$y]['menu']['uuid'] = "7497ade1-b6f4-473d-9859-92c957c36503";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "software_add";
 		//$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;

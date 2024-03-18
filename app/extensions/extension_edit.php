@@ -1068,7 +1068,7 @@
 	if (empty($accountcode)) { $accountcode = get_accountcode(); }
 	if (empty($limit_max)) { $limit_max = '5'; }
 	if (empty($limit_destination)) { $limit_destination = '!USER_BUSY'; }
-	if (empty($call_timeout)) { $call_timeout = '30'; }
+	if (empty($call_timeout)) { $call_timeout = $_SESSION['extension']['call_timeout']['numeric'] ?? 30; }
 	if (empty($call_screen_enabled)) { $call_screen_enabled = 'false'; }
 	if (empty($user_record)) { $user_record = $_SESSION['extension']['user_record_default']['text']; }
 	if (empty($voicemail_transcription_enabled)) { $voicemail_transcription_enabled = $_SESSION['voicemail']['transcription_enabled_default']['boolean']; }
@@ -1798,7 +1798,7 @@
 		echo "</td>\n";
 		echo "</tr>\n";
 
-		if (permission_exists('voicemail_transcription_enabled')) {
+		if (permission_exists('voicemail_transcription_enabled') && ($_SESSION['voicemail']['transcribe_enabled']['boolean'] ?? '') == "true") {
 			echo "<tr>\n";
 			echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 			echo "	".$text['label-voicemail_transcription_enabled']."\n";

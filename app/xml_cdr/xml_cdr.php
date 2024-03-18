@@ -51,6 +51,8 @@
 	$paging_controls_mini = '';
 	$paging_controls = null;
 	$order_by = "";
+	$read_codec = '';
+	$write_codec = '';
 	if(!isset($_REQUEST['show'])) {
 		//set to show only this domain
 		$_REQUEST['show'] = 'domain';
@@ -375,6 +377,17 @@
 			echo "		</div>\n";
 			echo "	</div>\n";
 		}
+		if (permission_exists('xml_cdr_codecs')) {
+			echo "	<div class='form_set'>\n";
+			echo "		<div class='label'>\n";
+			echo "			".$text['label-codecs']."\n";
+			echo "		</div>\n";
+			echo "		<div class='field no-wrap'>\n";
+			echo "			<input type='text' class='formfld' style='min-width: 115px; width: 115px;' name='read_codec' id='read_codec' value='".escape($read_codec)."' placeholder=\"".$text['label-codec_read']."\">\n";
+			echo "			<input type='text' class='formfld' style='min-width: 115px; width: 115px;' name='write_codec' id='write_codec' value='".escape($write_codec)."' placeholder=\"".$text['label-codec_write']."\">\n";
+			echo "		</div>\n";
+			echo "	</div>\n";
+		}
 		if (permission_exists('xml_cdr_search_tta')) {
 			echo "	<div class='form_set'>\n";
 			echo "		<div class='label'>\n";
@@ -517,7 +530,7 @@
 			echo "			</select>\n";
 			echo "		</div>\n";
 			echo "	</div>\n";
-			
+
 			if (permission_exists('xml_cdr_search_call_center_queues')) {
 				echo "	<div class='form_set'>\n";
 				echo "		<div class='label'>\n";
@@ -630,6 +643,10 @@
 		echo "<th class='center shrink'>".$text['label-date']."</th>\n";
 		echo "<th class='center shrink hide-md-dn'>".$text['label-time']."</th>\n";
 		$col_count += 2;
+	}
+	if (permission_exists('xml_cdr_codecs')) {
+		echo "<th class='center shrink'>".$text['label-codecs']."</th>\n";
+		$col_count++;
 	}
 	if (permission_exists('xml_cdr_tta')) {
 		echo "<th class='right hide-md-dn' title=\"".$text['description-tta']."\">".$text['label-tta']."</th>\n";
@@ -751,8 +768,8 @@
 					$hangup_cause = strtolower($hangup_cause);
 					$hangup_cause = ucwords($hangup_cause);
 
-				//if call cancelled, show the ring time, not the bill time.
-					$seconds = $row['hangup_cause'] == "ORIGINATOR_CANCEL" ? $row['duration'] : round(($row['billmsec'] / 1000), 0, PHP_ROUND_HALF_UP);
+				//get the duration if null use 0
+					$duration = $row['duration'] ?? 0;
 
 				//determine recording properties
 					if (!empty($row['record_path']) && !empty($row['record_name']) && permission_exists('xml_cdr_recording') && (permission_exists('xml_cdr_recording_play') || permission_exists('xml_cdr_recording_download'))) {
@@ -772,7 +789,7 @@
 
 				//recording playback
 					if (permission_exists('xml_cdr_recording_play')) {
-						$content .= "<tr class='list-row' id='recording_progress_bar_".$row['xml_cdr_uuid']."' style='display: none;'><td class='playback_progress_bar_background' style='padding: 0; border-bottom: none; overflow: hidden;' colspan='".$col_count."'><span class='playback_progress_bar' id='recording_progress_".$row['xml_cdr_uuid']."'></span></td></tr>\n";
+						$content .= "<tr class='list-row' id='recording_progress_bar_".$row['xml_cdr_uuid']."' style='display: none;' onclick=\"recording_play('".escape($row['xml_cdr_uuid'])."')\"><td id='playback_progress_bar_background_".escape($row['xml_cdr_uuid'])."' class='playback_progress_bar_background' colspan='".$col_count."'><span class='playback_progress_bar' id='recording_progress_".$row['xml_cdr_uuid']."'></span></td></tr>\n";
 						$content .= "<tr class='list-row' style='display: none;'><td></td></tr>\n"; // dummy row to maintain alternating background color
 					}
 					if (permission_exists('xml_cdr_details')) {
@@ -896,6 +913,10 @@
 						$content .= "	<td class='middle right no-wrap'>".$row['start_date_formatted']."</td>\n";
 						$content .= "	<td class='middle right no-wrap hide-md-dn'>".$row['start_time_formatted']."</td>\n";
 					}
+				//codec
+					if (permission_exists('xml_cdr_codecs')) {
+						$content .= "	<td class='middle right no-wrap'>".($row['read_codec'] ?? '').' / '.($row['write_codec'] ?? '')."</td>\n";
+					}
 				//tta (time to answer)
 					if (permission_exists('xml_cdr_tta')) {
 						$content .= "	<td class='middle right hide-md-dn'>".(!empty($row['tta']) && $row['tta'] >= 0 ? $row['tta']."s" : "&nbsp;")."</td>\n";
@@ -906,7 +927,7 @@
 					}
 				//mos (mean opinion score)
 					if (permission_exists("xml_cdr_mos")) {
-						if(!empty($row['rtp_audio_in_mos'])) {
+						if(!empty($row['rtp_audio_in_mos']) && is_numeric($row['rtp_audio_in_mos'])) {
 							$title = " title='".$text['label-mos_score-'.round($row['rtp_audio_in_mos'])]."'";
 							$value = $row['rtp_audio_in_mos'];
 						}
@@ -914,11 +935,11 @@
 					}
 				//duration
 					if (permission_exists('xml_cdr_duration')) {
-						$content .= "	<td class='middle center hide-sm-dn'>".gmdate("G:i:s", $seconds)."</td>\n";
+						$content .= "	<td class='middle center hide-sm-dn'>".gmdate("G:i:s", $duration)."</td>\n";
 					}
 				//call result/status
 					if (permission_exists("xml_cdr_status")) {
-						$content .= "	<td class='middle no-wrap hide-sm-dn'><a href='".$list_row_url."'>".escape($text['label-'.$status])."</a></td>\n";
+						$content .= "	<td class='middle no-wrap hide-sm-dn'><a href='".$list_row_url."'>".escape($text['label-'.$status] ?? '')."</a></td>\n";
 					}
 				//hangup cause
 					if (permission_exists('xml_cdr_hangup_cause')) {
