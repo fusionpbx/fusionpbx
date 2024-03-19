@@ -72,3 +72,10 @@ function autoloader_search_paths($class_name, $search_paths): string {
 	}
 	return "";
 }
+
+/* Example Usage:
+	require_once __DIR__ . '/auto_loader.php';
+	$database = new database();
+	$config = new config();
+	$xml_cdr = new xml_cdr();
+ //*/
