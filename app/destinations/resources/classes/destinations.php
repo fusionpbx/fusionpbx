@@ -1341,8 +1341,25 @@ if (!class_exists('destinations')) {
 			else {
 				return rtrim($word, "s");
 			}
-		} //method
+		}
 
+		/**
+		 * Transforms an array of destination number with the syntax of "transfer: 100 XML localhost" to just "100"
+		 * The destinations array should be passed in from the select array that is returned in a POST request
+		 * @param array $destinations
+		 */
+		public static function transform_destination_numbers(array &$destinations) {
+			if (!empty($destinations)) {
+				foreach ($destinations as $key => $destination) {
+					if (!empty($destination['destination_number'])) {
+						$matches = [];
+						$number = $destination['destination_number'];
+						preg_match('/\b(\d+)\b/', $number, $matches);
+						$destinations[$key]['destination_number'] = $matches[0];
+					}
+				}
+			}
+		}
 	} //class
 }
 /*
