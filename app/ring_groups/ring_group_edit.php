@@ -26,19 +26,6 @@
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 
-function transform_destination_numbers(array &$destinations) {
-	if (!empty($destinations)) {
-		foreach ($destinations as $key => $destination) {
-			if (!empty($destination['destination_number'])) {
-				$matches = [];
-				$number = $destination['destination_number'];
-				preg_match('/\b(\d+)\b/', $number, $matches);
-				$destinations[$key]['destination_number'] = $matches[0];
-			}
-		}
-	}
-}
-
 //includes files
 	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
@@ -197,7 +184,7 @@ function transform_destination_numbers(array &$destinations) {
 			$ring_group_strategy = $_POST["ring_group_strategy"];
 			$ring_group_destinations = $_POST["ring_group_destinations"] ?? [];
 			// transform all destinations to be using a number only and not a "transfer:" syntax
-			transform_destination_numbers($ring_group_destinations);
+			destinations::transform_destination_numbers($ring_group_destinations);
 			$ring_group_timeout_action = $_POST["ring_group_timeout_action"];
 			$ring_group_call_timeout = $_POST["ring_group_call_timeout"];
 			$ring_group_caller_id_name = $_POST["ring_group_caller_id_name"];
