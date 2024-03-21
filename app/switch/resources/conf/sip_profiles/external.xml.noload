@@ -54,7 +54,7 @@
 		<param name="force-register-db-domain" value="$${domain}" enabled="false"/>
 		<!-- ************************************************* -->
 
-		<!--<param name="aggressive-nat-detection" value="true"/>-->
+		<param name="aggressive-nat-detection" value="false" enabled="false"/>
 		<param name="inbound-codec-negotiation" value="generous"/>
 		<param name="nonce-ttl" value="60"/>
 		<param name="auth-calls" value="true"/>
