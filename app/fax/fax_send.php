@@ -473,6 +473,7 @@ if (!function_exists('fax_split_dtmf')) {
 
 			//field labels
 			$pdf->SetFont($pdf_font, "B", 12);
+			$pdf->Text($x + 0.5, $y + 1.7, strtoupper($text['label-fax_date']).":");
 			if ($fax_recipient != '' || sizeof($fax_numbers) > 0) {
 				$pdf->Text($x + 0.5, $y + 2.0, strtoupper($text['label-fax-recipient']).":");
 			}
@@ -488,6 +489,8 @@ if (!function_exists('fax_split_dtmf')) {
 
 			//field values
 			$pdf->SetFont($pdf_font, "", 12);
+			$pdf->SetXY($x + 2.0, $y + 1.65);
+			$pdf->Write(0.3, date("F j, Y g:i A"));
 			$pdf->SetXY($x + 2.0, $y + 1.95);
 			if ($fax_recipient != '') {
 				$pdf->Write(0.3, $fax_recipient);
