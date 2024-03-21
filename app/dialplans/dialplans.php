@@ -219,7 +219,12 @@
 		$sql .= "where true ";
 	}
 	else {
-		$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+		if (if_group("superadmin")) {
+			$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+		}
+		else {
+			$sql .= "where (domain_uuid = :domain_uuid) ";
+		}
 		$parameters['domain_uuid'] = $domain_uuid;
 	}
 	if (!is_uuid($app_uuid)) {
