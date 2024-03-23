@@ -25,7 +25,7 @@
     <alert_external_ring_sound perm="">{if isset($snom_alert_external)}{$snom_alert_external}{else}Ringer1{/if}</alert_external_ring_sound>
     <alert_group_ring_text perm="">alert-group</alert_group_ring_text>
     <alert_group_ring_sound perm="">{if isset($snom_alert_group)}{$snom_alert_group}{else}Ringer1{/if}</alert_group_ring_sound>
-    <!-- Wallpaper (___x___px PNG)-->
+    <!-- Wallpaper (1280x720px PNG)-->
     <custom_bg_image_url perm="">{if isset($snom_wallpaper_url_d815)}{$snom_wallpaper_url_d815}{else}{$snom_wallpaper_url}{/if}</custom_bg_image_url>
     <!-- Expansion Mod (___x___px PNG <2MB) -->
     <expansion_module_background_image perm="">{if isset($snom_exp_wallpaper_url_d815)}{$snom_exp_wallpaper_url_d815}{else}{$snom_exp_wallpaper_url}{/if}</expansion_module_background_image>
