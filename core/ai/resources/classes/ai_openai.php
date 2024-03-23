@@ -22,15 +22,11 @@ if (!class_exists('ai_openai')) {
 		/**
 		 * called when the object is created
 		 */
-		public function __construct($setting) {
-			//make the setting object
-			if (!$setting) {
-				$setting = new settings();
-			}
+		public function __construct($settings) {
 
 			//build the setting object and get the recording path
-			$this->transcribe_key = $setting->get('audio', 'transcribe_key');
-			$this->speech_key = $setting->get('audio', 'speech_key');
+			$this->transcribe_key = $settings->get('ai', 'transcribe_key');
+			$this->speech_key = $settings->get('ai', 'speech_key');
 
 		}
 
@@ -50,8 +46,106 @@ if (!class_exists('ai_openai')) {
 			$this->voice = $audio_voice;
 		}
 
+		public function set_language(string $audio_language) {
+			$this->language = $audio_language;
+		}
+
+		public function set_translate(string $audio_translate) {
+			$this->translate = $audio_translate;
+		}
+
 		public function set_message(string $audio_message) {
 			$this->message = $audio_message;
+		}
+
+		public function get_language_enabled() : bool {
+			//return the whether engine is handles languages
+			return false;
+		}
+
+		public function get_translate_enabled() : bool {
+			//return the whether engine is able to translate
+			return false;
+		}
+
+		public function get_voices() : array {
+			$voices = array(
+				"alloy",
+				"echo",
+				"fable",
+				"nova",
+				"onyx",
+				"shimmer"
+			);
+
+			//return the languages array
+			return $voices;
+		}
+
+		public function get_languages() : array {
+			//create the languages array
+			$languages = array(
+				"af" => "Afrikaans",
+				"ar" => "Arabic",
+				"hy" => "Armenian",
+				"az" => "Azerbaijani",
+				"be" => "Belarusian",
+				"bs" => "Bosnian",
+				"bg" => "Bulgarian",
+				"ca" => "Catalan",
+				"zh" => "Chinese",
+				"hr" => "Croatian",
+				"cs" => "Czech",
+				"da" => "Danish",
+				"nl" => "Dutch",
+				"en" => "English",
+				"et" => "Estonian",
+				"fi" => "Finnish",
+				"fr" => "French",
+				"gl" => "Galician",
+				"de" => "German",
+				"el" => "Greek",
+				"he" => "Hebrew",
+				"hi" => "Hindi",
+				"hu" => "Hungarian",
+				"is" => "Icelandic",
+				"id" => "Indonesian",
+				"it" => "Italian",
+				"ja" => "Japanese",
+				"kn" => "Kannada",
+				"kk" => "Kazakh",
+				"ko" => "Korean",
+				"lv" => "Latvian",
+				"lt" => "Lithuanian",
+				"mk" => "Macedonian",
+				"ms" => "Malay",
+				"mr" => "Marathi",
+				"mi" => "Maori",
+				"ne" => "Nepali",
+				"no" => "Norwegian",
+				"fa" => "Persian",
+				"pl" => "Polish",
+				"pt" => "Portuguese",
+				"ro" => "Romanian",
+				"ru" => "Russian",
+				"sr" => "Serbian",
+				"sk" => "Slovak",
+				"sl" => "Slovenian",
+				"es" => "Spanish",
+				"sw" => "Swahili",
+				"sv" => "Swedish",
+				"tl" => "Tagalog",
+				"ta" => "Tamil",
+				"th" => "Thai",
+				"tr" => "Turkish",
+				"uk" => "Ukrainian",
+				"ur" => "Urdu",
+				"vi" => "Vietnamese",
+				"cy" => "Welsh"
+			);
+
+			//return the languages array
+			return $languages;
 		}
 
 		/**
@@ -69,12 +163,16 @@ if (!class_exists('ai_openai')) {
 			];
 
 			// Set the request data format, wav, mp3, opus
-			$data = [
-				'model' => 'tts-1-hd',
-				'input' => $this->message,
-				'voice' => $this->voice,
-				'response_format' => 'wav'
-			];
+			$data['model'] = 'tts-1-hd';
+			$data['input'] = $this->message;
+			$data['voice'] = $this->voice;
+			$data['response_format'] = 'wav';
+			if (isset($this->language)) {
+				$data['language'] = $this->language;
+			}
+			if (isset($this->translate)) {
+				$data['task'] = 'translate';
+			}
 
 			// initialize curl handle
 			$ch = curl_init($url);
@@ -123,11 +221,9 @@ if (!class_exists('ai_openai')) {
 			));
 
 			// set the POST data
-			$post_data = array(
-				'file' => new CURLFile($this->path.'/'.$this->filename),
-				'model' => 'whisper-1',
-				'response_format' => 'text'
-			);
+			$post_data['file'] = new CURLFile($this->path.'/'.$this->filename);
+			$post_data['model'] = 'whisper-1';
+			$post_data['response_format'] = 'text';
 			curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
 
 			// return the response as a string instead of outputting it directly
