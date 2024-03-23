@@ -25,7 +25,7 @@
 */
 
 //includes files
-    require_once __DIR__ . "/require.php";
+	require_once __DIR__ . "/require.php";
 
 //set variables if not set
 	//if (!isset($_SESSION["template_content"])) { $_SESSION["template_content"] = null; }
@@ -119,7 +119,7 @@
 											(!empty($tmp_url['scheme']) && $tmp_url['scheme'].'://'.$tmp_url['host'].$tmp_url['path'] == $tmp_path['dirname'].'/'.$tmp_path['filename'].'.'.$tmp_path['extension']) //is url
 											|| $tmp_url['path'] == $tmp_path['dirname'].'/'.$tmp_path['filename'].'.'.$tmp_path['extension'] //is path
 										)) {
-										$settings['theme'][$subcategory] = $setting['text'];
+										$settings_array['theme'][$subcategory] = $setting['text'];
 									}
 									unset($tmp_url, $tmp_path);
 								}
@@ -127,34 +127,34 @@
 						//otherwise
 							default:
 								if (isset($setting['text']) && $setting['text'] != '') {
-									$settings['theme'][$subcategory] = str_replace('&lowbar;','_',escape($setting['text']));
+									$settings_array['theme'][$subcategory] = str_replace('&lowbar;','_',escape($setting['text']));
 								}
 								else if (isset($setting['numeric']) && is_numeric($setting['numeric'])) {
-									$settings['theme'][$subcategory] = $setting['numeric'];
+									$settings_array['theme'][$subcategory] = $setting['numeric'];
 								}
 								else if (isset($setting['boolean'])) {
-									$settings['theme'][$subcategory] = $setting['boolean'] == 'true' ? true : false;
+									$settings_array['theme'][$subcategory] = $setting['boolean'] == 'true' ? true : false;
 								}
 								else {
-									$settings['theme'][$subcategory] = escape($setting);
+									$settings_array['theme'][$subcategory] = escape($setting);
 								}
 					}
 				}
 
 			//pre-process some settings
-				$settings['theme']['favicon'] = !empty($settings['theme']['favicon']) ? $settings['theme']['favicon'] : PROJECT_PATH.'/themes/default/favicon.ico';
-				$settings['theme']['font_loader_version'] = !empty($settings['theme']['font_loader_version']) ? urlencode($settings['theme']['font_loader_version']) : '1';
-				$settings['theme']['message_delay'] = isset($settings['theme']['message_delay']) ? 1000 * (float) $settings['theme']['message_delay'] : 3000;
-				$settings['theme']['menu_side_width_contracted'] = isset($settings['theme']['menu_side_width_contracted']) ? $settings['theme']['menu_side_width_contracted'] : '60';
-				$settings['theme']['menu_side_width_expanded'] = isset($settings['theme']['menu_side_width_expanded']) ? $settings['theme']['menu_side_width_expanded'] : '225';
-				$settings['theme']['menu_side_toggle_hover_delay_expand'] = isset($settings['theme']['menu_side_toggle_hover_delay_expand']) ? $settings['theme']['menu_side_toggle_hover_delay_expand'] : '300';
-				$settings['theme']['menu_side_toggle_hover_delay_contract'] = isset($settings['theme']['menu_side_toggle_hover_delay_contract']) ? $settings['theme']['menu_side_toggle_hover_delay_contract'] : '1000';
-				$settings['theme']['menu_style'] = !empty($settings['theme']['menu_style']) ? $settings['theme']['menu_style'] : 'fixed';
-				$settings['theme']['menu_position'] = isset($settings['theme']['menu_position']) ? $settings['theme']['menu_position'] : 'top';
-				$settings['theme']['footer'] = isset($settings['theme']['footer']) ? $settings['theme']['footer'] : '&copy; '.$text['theme-label-copyright'].' 2008 - '.date('Y')." <a href='http://www.fusionpbx.com' class='footer' target='_blank'>fusionpbx.com</a> ".$text['theme-label-all_rights_reserved'];
+				$settings_array['theme']['favicon'] = !empty($settings_array['theme']['favicon']) ? $settings_array['theme']['favicon'] : PROJECT_PATH.'/themes/default/favicon.ico';
+				$settings_array['theme']['font_loader_version'] = !empty($settings_array['theme']['font_loader_version']) ? urlencode($settings_array['theme']['font_loader_version']) : '1';
+				$settings_array['theme']['message_delay'] = isset($settings_array['theme']['message_delay']) ? 1000 * (float) $settings_array['theme']['message_delay'] : 3000;
+				$settings_array['theme']['menu_side_width_contracted'] = isset($settings_array['theme']['menu_side_width_contracted']) ? $settings_array['theme']['menu_side_width_contracted'] : '60';
+				$settings_array['theme']['menu_side_width_expanded'] = isset($settings_array['theme']['menu_side_width_expanded']) ? $settings_array['theme']['menu_side_width_expanded'] : '225';
+				$settings_array['theme']['menu_side_toggle_hover_delay_expand'] = isset($settings_array['theme']['menu_side_toggle_hover_delay_expand']) ? $settings_array['theme']['menu_side_toggle_hover_delay_expand'] : '300';
+				$settings_array['theme']['menu_side_toggle_hover_delay_contract'] = isset($settings_array['theme']['menu_side_toggle_hover_delay_contract']) ? $settings_array['theme']['menu_side_toggle_hover_delay_contract'] : '1000';
+				$settings_array['theme']['menu_style'] = !empty($settings_array['theme']['menu_style']) ? $settings_array['theme']['menu_style'] : 'fixed';
+				$settings_array['theme']['menu_position'] = isset($settings_array['theme']['menu_position']) ? $settings_array['theme']['menu_position'] : 'top';
+				$settings_array['theme']['footer'] = isset($settings_array['theme']['footer']) ? $settings_array['theme']['footer'] : '&copy; '.$text['theme-label-copyright'].' 2008 - '.date('Y')." <a href='http://www.fusionpbx.com' class='footer' target='_blank'>fusionpbx.com</a> ".$text['theme-label-all_rights_reserved'];
 
 			//assign the setings
-				$view->assign('settings', $settings);
+				$view->assign('settings', $settings_array);
 		}
 	//document title
 		if (isset($_SESSION['theme']['title']['text']) && $_SESSION['theme']['title']['text'] != '') {
