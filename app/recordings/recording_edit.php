@@ -42,6 +42,12 @@
 	$language = new text;
 	$text = $language->get();
 
+//set defaults
+	$recording_name = '';
+	$recording_message = '';
+	$recording_description = '';
+	$recording_uuid = '';
+
 //add the settings object
 	$settings = new settings(["domain_uuid" => $_SESSION['domain_uuid'], "user_uuid" => $_SESSION['user_uuid']]);
 	$speech_enabled = $settings->get('ai', 'speech_enabled', 'false');
