@@ -380,6 +380,9 @@
 		}
 	}
 
+//set the default value for speech
+	$speech_enabled = !empty($_SESSION['ai']['speech_enabled']['boolean']) && !empty($_SESSION['ai']['speech_engine']['text']);
+
 //create token
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);
