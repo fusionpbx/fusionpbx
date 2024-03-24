@@ -44,11 +44,13 @@
 
 //add the settings object
 	$settings = new settings(["domain_uuid" => $_SESSION['domain_uuid'], "user_uuid" => $_SESSION['user_uuid']]);
-	$speech_enabled = $settings->get('ai', 'speech_enabled');
+	$speech_enabled = $settings->get('ai', 'speech_enabled', 'false');
+	$speech_engine = $settings->get('ai', 'speech_engine', '');
 	$transcribe_enabled = $settings->get('ai', 'transcribe_enabled');
+	$transcribe_engine = $settings->get('ai', 'transcribe_engine');
 
 //add the audio object and get the voices and languages arrays
-	if ($speech_enabled == 'true' || $transcribe_enabled == 'true') {
+	if (($speech_enabled == 'true' && !empty($speech_engine)) || ($transcribe_enabled == 'true' && !empty($transcribe_engine))) {
 		$ai = new ai($settings);
 		$voices = $ai->get_voices();
 		$translate_enabled = false;
