@@ -490,8 +490,8 @@
 
 									//save to the data
 										$database = new database;
-										$database->app_name = 'destinations';
-										$database->app_uuid = '5ec89622-b19c-3559-64f0-afde802ab139';
+										$database->app_name = destinations::APP_NAME;
+										$database->app_uuid = destinations::APP_UUID;
 										$database->save($array);
 										//$message = $database->message;
 
@@ -511,8 +511,8 @@
 				//save to the data
 					if (!empty($array) && is_array($array)) {
 						$database = new database;
-						$database->app_name = 'destinations';
-						$database->app_uuid = '5ec89622-b19c-3559-64f0-afde802ab139';
+						$database->app_name = destinations::APP_NAME;
+						$database->app_uuid = destinations::APP_UUID;
 						$database->save($array);
 						$message = $database->message;
 					}
