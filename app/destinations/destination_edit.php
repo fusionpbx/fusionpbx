@@ -1,4 +1,3 @@
-
 <?php
 /*
 	FusionPBX
@@ -2032,4 +2031,3 @@
 	require_once "resources/footer.php";
 
 ?>
-
