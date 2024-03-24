@@ -43,7 +43,7 @@
 	$text = $language->get();
 
 //add the settings object
-	$settings = new settings(["domain_uuid" => $SESSION['domain_uuid']]);
+	$settings = new settings(["domain_uuid" => $_SESSION['domain_uuid'], "user_uuid" => $_SESSION['user_uuid']]);
 	$speech_enabled = $settings->get('ai', 'speech_enabled');
 	$transcribe_enabled = $settings->get('ai', 'transcribe_enabled');
 
