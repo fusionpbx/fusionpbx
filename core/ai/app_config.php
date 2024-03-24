@@ -23,8 +23,8 @@
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "e7a77c36-92d1-4fb6-9db3-4f62866dbaf2";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "ai";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "speech_engine";
-		$apps[$x]['default_settings'][$y]['default_setting_name'] = "openai";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "openai";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Text to Speech";
 		$y++;
@@ -47,8 +47,8 @@
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "72b9feeb-b21c-4dad-ad26-dde86955d87b";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "ai";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "transcribe_engine";
-		$apps[$x]['default_settings'][$y]['default_setting_name'] = "openai";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "openai";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Speech to Text";
 		$y++;
