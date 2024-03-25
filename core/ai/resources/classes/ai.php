@@ -66,9 +66,9 @@ if (!class_exists('ai')) {
 		}
 
 		/**
-		 * get_translate_enabled - get whether the engine can do translations
+		 * is_translate_enabled - get whether the engine can do translations
 		 */
-		public function get_translate_enabled() : bool {
+		public function is_translate_enabled() : bool {
 
 			//set the class interface to use the _template suffix
 			$classname = 'ai_'.$this->speech_engine;
@@ -77,13 +77,13 @@ if (!class_exists('ai')) {
 			$object = new $classname($this->settings);
 
 			//return the translate_enabled
-			return $object->get_translate_enabled();
+			return $object->is_translate_enabled();
 		}
 
 		/**
-		 * get_language_enabled - get whether the engine allows to set the language
+		 * is_language_enabled - get whether the engine allows to set the language
 		 */
-		public function get_language_enabled() : bool {
+		public function is_language_enabled() : bool {
 
 			//set the class interface to use the _template suffix
 			$classname = 'ai_'.$this->speech_engine;
@@ -92,7 +92,7 @@ if (!class_exists('ai')) {
 			$object = new $classname($this->settings);
 
 			//return the language_enabled
-			return $object->get_language_enabled();
+			return $object->is_language_enabled();
 		}
 
 		/**
@@ -147,14 +147,14 @@ if (!class_exists('ai')) {
 				//set the class interface to use the _template suffix
 				$classname = 'ai_'.$this->transcribe_engine;
 
-				//load the class
-				//require_once $classname . '.php';
-
 				//create the object
 				$object = new $classname($this->settings);
+
 				//ensure the class has implemented the audio_interface interface
 				if ($object instanceof ai_transcribe) {
-					$object->set_language($this->audio_language);
+					if ($object->is_language_enabled() && !empty($this->audio_language)) {
+						$object->set_language($this->audio_language);
+					}
 					$object->set_path($this->audio_path);
 					$object->set_filename($this->audio_filename);
 					return $object->transcribe();
