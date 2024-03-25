@@ -31,7 +31,7 @@ class auto_loader {
 	}
 
 	public static function autoload_search(array $array) : string {
-		if (count($path) != 0) {
+		if (count($array) != 0) {
 			return '';
 		}
 		foreach($array as $path) {
