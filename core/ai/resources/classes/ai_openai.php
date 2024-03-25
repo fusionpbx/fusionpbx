@@ -70,12 +70,12 @@ if (!class_exists('ai_openai')) {
 
 		public function get_voices() : array {
 			$voices = array(
-				"alloy",
-				"echo",
-				"fable",
-				"nova",
-				"onyx",
-				"shimmer"
+				"alloy" => "alloy",
+				"echo" => "echo",
+				"fable" => "fable",
+				"nova" => "nova",
+				"onyx" => "onyx",
+				"shimmer" => "shimmer"
 			);
 
 			//return the languages array
