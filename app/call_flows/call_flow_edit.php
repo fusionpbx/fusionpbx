@@ -476,9 +476,19 @@
 	echo "	".$text['label-call_flow_extension']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='call_flow_extension' maxlength='255' value=\"".escape($call_flow_extension)."\">\n";
+	if (!empty($_SESSION['ranges']['call_flow_range']['text'])) {
+		echo "	<input class='formfld' type='text' name='call_flow_extension' maxlength='255' value=\"".escape($call_flow_extension)."\" required='required' placeholder='".$_SESSION['ranges']['call_flow_range']['text']."'>\n";
+	}
+	else {
+		echo "	<input class='formfld' type='text' name='call_flow_extension' maxlength='255' value=\"".escape($call_flow_extension)."\" required='required'>\n";
+	}
 	echo "<br />\n";
-	echo $text['description-call_flow_extension']."\n";
+	if (!empty($_SESSION['ranges']['call_flow_range']['text'])) {
+		echo $text['description-call_flow_extension']."<br />(ex: ".$_SESSION['ranges']['call_flow_range']['text'].")\n";
+	}
+	else {
+		echo $text['description-call_flow_extension']."\n";
+	}
 	echo "</td>\n";
 	echo "</tr>\n";
 

@@ -1166,10 +1166,20 @@
 	echo "</td>\n";
 	echo "<td width='70%' class='vtable' align='left'>\n";
 	if ($action == "add" || permission_exists("extension_extension")) {
-		echo "    <input class='formfld' type='text' name='extension' autocomplete='new-password' maxlength='255' value=\"".escape($extension ?? '')."\" required='required'>\n";
+		if (!empty($_SESSION['ranges']['extension_range']['text'])) {
+			echo "    <input class='formfld' type='text' name='extension' autocomplete='new-password' maxlength='255' value=\"" . escape($extension ?? '') . "\" required='required' placeholder='".$_SESSION['ranges']['extension_range']['text']."'>\n";
+		}
+		else {
+			echo "    <input class='formfld' type='text' name='extension' autocomplete='new-password' maxlength='255' value=\"".escape($extension ?? '')."\" required='required'>\n";
+		}
 		echo "    <input type='text' style='display: none;' disabled='disabled'>\n"; //help defeat browser auto-fill
 		echo "<br />\n";
-		echo $text['description-extension']."\n";
+		if (!empty($_SESSION['ranges']['extension_range']['text'])) {
+			echo $text['description-extension'] . "<br />(ex: " . $_SESSION['ranges']['extension_range']['text'] . ")\n";
+		}
+		else {
+			echo $text['description-extension']."\n";
+		}
 	}
 	else {
 		echo escape($extension);

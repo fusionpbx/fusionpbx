@@ -355,9 +355,19 @@
 	echo "	".$text['label-conference_center_extension']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='conference_center_extension' maxlength='255' value=\"".escape($conference_center_extension)."\">\n";
+	if (!empty($_SESSION['ranges']['conference_center_range']['text'])) {
+		echo "	<input class='formfld' type='text' name='conference_center_extension' maxlength='255' value=\"".escape($conference_center_extension)."\" required='required' placeholder='".$_SESSION['ranges']['conference_center_range']['text']."'>\n";
+	}
+	else {
+		echo "	<input class='formfld' type='text' name='conference_center_extension' maxlength='255' value=\"".escape($conference_center_extension)."\" required='required'>\n";
+	}
 	echo "<br />\n";
-	echo $text['description-conference_center_extension']."\n";
+	if (!empty($_SESSION['ranges']['conference_center_range']['text'])) {
+		echo $text['description-conference_center_extension']."<br />(ex: ".$_SESSION['ranges']['conference_center_range']['text'].")\n";
+	}
+	else {
+		echo $text['description-conference_center_extension']."\n";
+	}
 	echo "</td>\n";
 	echo "</tr>\n";
 
