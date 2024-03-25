@@ -30,8 +30,8 @@ class auto_loader {
 		spl_autoload_register(array($this, 'loader'));
 	}
 
-	public static function autoload_search($array) : string {
-		if (!is_array($array) && count($path) != 0) {
+	public static function autoload_search(array $array) : string {
+		if ($array && count($path) != 0) {
 			return '';
 		}
 		foreach($array as $path) {
@@ -54,13 +54,16 @@ class auto_loader {
 		//sanitize the class name
 		$class_name = preg_replace('[^a-zA-Z0-9_]', '', $class_name);
 
+		$project_root = dirname(__DIR__, 2);
+
 		//use glob for a more extensive search for the classes (note: GLOB_BRACE doesn't work on some systems)
 		if (!class_exists($class_name)) {
 			//build the search path array
-			$search_path[] = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/resources/classes/".$class_name.".php");
-			$search_path[] = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/resources/interfaces/".$class_name.".php");
-			$search_path[] = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/resources/classes/".$class_name.".php");
-			$search_path[] = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/resources/interfaces/".$class_name.".php");
+			$search_path = [];
+			$search_path[] = glob($project_root . "/resources/classes/".$class_name.".php");
+			$search_path[] = glob($project_root . "/resources/interfaces/".$class_name.".php");
+			$search_path[] = glob($project_root . "/*/*/resources/classes/".$class_name.".php");
+			$search_path[] = glob($project_root . "/*/*/resources/interfaces/".$class_name.".php");
 
 			//find the path
 			$path = self::autoload_search($search_path);
@@ -84,5 +87,7 @@ class auto_loader {
 		return false;
 	}
 }
+
+new autoloader();
 
 ?>
