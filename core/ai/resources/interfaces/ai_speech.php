@@ -9,7 +9,7 @@ if (!interface_exists('ai_speech')) {
 		public function set_voice(string $audio_voice);
 		public function set_message(string $audio_message);
 		public function get_voices() : array;
-		public function get_language_enabled() : bool;
+		public function is_language_enabled() : bool;
 		public function set_language(string $audio_language);
 		public function get_languages() : array;
 		public function speech() : bool;

@@ -58,12 +58,12 @@ if (!class_exists('ai_openai')) {
 			$this->message = $audio_message;
 		}
 
-		public function get_language_enabled() : bool {
+		public function is_language_enabled() : bool {
 			//return the whether engine is handles languages
 			return false;
 		}
 
-		public function get_translate_enabled() : bool {
+		public function is_translate_enabled() : bool {
 			//return the whether engine is able to translate
 			return false;
 		}
