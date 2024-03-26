@@ -16,11 +16,16 @@
 
 	  The Original Code is FusionPBX
 
-	Contributor(s):
-	Mark J Crane <markjcrane@fusionpbx.com>
-	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
-    Tim Fry <tim.fry@hotmail.com>
-*/
+	  The Initial Developer of the Original Code is
+	  Mark J Crane <markjcrane@fusionpbx.com>
+	  Portions created by the Initial Developer are Copyright (C) 2008-2022
+	  the Initial Developer. All Rights Reserved.
+
+	  Contributor(s):
+	  Mark J Crane <markjcrane@fusionpbx.com>
+	  Tim Fry <tim.fry@hotmail.com>
+	  Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
+	*/
 
 	if (!function_exists('str_starts_with')) {
 		/**
