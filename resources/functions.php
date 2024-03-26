@@ -23,8 +23,36 @@
 
 	  Contributor(s):
 	  Mark J Crane <markjcrane@fusionpbx.com>
+	  Tim Fry <tim.fry@hotmail.com>
 	  Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
-	 */
+	*/
+
+	if (!function_exists('str_starts_with')) {
+		/**
+		 * Checks if a string starts with a given substring
+		 * <p>Performs a case-sensitive check indicating if <b>haystack</b> begins with <b>needle</b>.</p>
+		 * @param string $haystack The string to search in.
+		 * @param string $needle The substring to search for in the <b>haystack</b>.
+		 * @return bool Returns <i>true</i> if <b>haystack</b> begins with <b>needle</b>, <i>false</i> otherwise
+		 * @link https://www.php.net/manual/en/function.str-starts-with.php Official PHP documentation
+		 */
+		function str_starts_with(string $haystack, string $needle): bool {
+			return substr_compare($haystack, $needle, 0, strlen($needle)) === 0;
+		}
+	}
+
+	if (!function_exists('str_ends_with')) {
+		/**
+		 * Checks if a string ends with a given substring
+		 * <p>Performs a case-sensitive check indicating if <b>haystack</b> ends with <b>needle</b>.</p>
+		 * @param string $haystack The string to search in.
+		 * @param string $needle The substring to search for in the <b>haystack</b>.
+		 * @return bool Returns <i>true</i> if <b>haystack</b> ends with <b>needle</b>, <i>false</i> otherwise.
+		 */
+		function str_ends_with(string $haystack, string $needle): bool {
+			return substr_compare($haystack, $needle, -1*strlen($needle)) === 0;
+		}
+	}
 
 	if (!function_exists('mb_strtoupper')) {
 
