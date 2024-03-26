@@ -22,6 +22,7 @@
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
+	Tony Fernandez <tfernandez@smartip.ca>
 */
 
 //includes files
@@ -66,6 +67,24 @@
 	$network_addr = "";
 	$mos_score = "";
 
+//get the list of extensions
+	$sql = "select extension_uuid, extension, number_alias from v_extensions ";
+	$sql .= "where domain_uuid = :domain_uuid ";
+	$sql .= "order by extension asc, number_alias asc ";
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$database = new database;
+	$extensions = $database->select($sql, $parameters, 'all');
+
+//get the list of call center queues
+	if (permission_exists('xml_cdr_call_center_queue')) {
+		$sql = "select call_center_queue_uuid, queue_name, queue_extension from v_call_center_queues ";
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$sql .= "order by queue_extension asc ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$database = new database;
+		$call_center_queues = $database->select($sql, $parameters, 'all');
+	}
+
 //send the header
 	$document['title'] = $text['title-advanced_search'];
 	require_once "resources/header.php";
@@ -90,7 +109,7 @@
 	else {
 		echo "<form method='get' action='xml_cdr.php'>\n";
 	}
-	
+
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-advanced_search']."</b></div>\n";
 	echo "	<div class='actions'>\n";
@@ -103,7 +122,7 @@
 	echo "<table cellpadding='0' cellspacing='0' border='0' width='100%'>\n";
 	echo "	<tr>\n";
 	echo "		<td width='50%' style='vertical-align: top;'>\n";
-	
+
 		echo "<table width='100%' cellpadding='0' cellspacing='0'>\n";
 		echo "	<tr>\n";
 		echo "		<td width='30%' class='vncell' valign='top' nowrap='nowrap'>\n";
@@ -152,19 +171,13 @@
 		echo "		<td class='vtable'>";
 		echo "			<select class='formfld' name='extension_uuid' id='extension_uuid'>\n";
 		echo "				<option value=''></option>";
-		$sql = "select extension_uuid, extension, number_alias from v_extensions ";
-		$sql .= "where domain_uuid = :domain_uuid ";
-		$sql .= "order by extension asc, number_alias asc ";
-		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-		$database = new database;
-		$result_e = $database->select($sql, $parameters, 'all');
-		if (is_array($result_e) && @sizeof($result_e) != 0) {
-			foreach ($result_e as &$row) {
+		if (is_array($extensions) && @sizeof($extensions) != 0) {
+			foreach ($extensions as &$row) {
 				$selected = (!empty($caller_extension_uuid) && $row['extension_uuid'] == $caller_extension_uuid) ? "selected" : null;
 				echo "			<option value='".escape($row['extension_uuid'])."' ".escape($selected).">".((is_numeric($row['extension'])) ? escape($row['extension']) : escape($row['number_alias'])." (".escape($row['extension']).")")."</option>";
 			}
 		}
-		unset($sql, $parameters, $result_e, $row, $selected);
+		unset($sql, $parameters, $extensions, $row, $selected);
 		echo "			</select>\n";
 		echo "			<input type='text' class='formfld' style='display: none;' name='caller_id_number' id='caller_id_number' value='".escape($caller_id_number)."'>\n";
 		echo "			<input type='button' id='btn_toggle_source' class='btn' name='' alt='".$text['button-back']."' value='&#9665;' onclick=\"toggle('source');\">\n";
@@ -253,10 +266,12 @@
 		echo "		<td class='vncell'>".$text['label-bridge_uuid']."</td>";
 		echo "		<td class='vtable'><input type='text' class='formfld' name='bleg_uuid' value='".escape($bridge_uuid)."'></td>";
 		echo "	</tr>";
-		echo "	<tr>";
-		echo "		<td class='vncell'>".$text['label-accountcode']."</td>";
-		echo "		<td class='vtable'><input type='text' class='formfld' name='accountcode' value='".escape($accountcode)."'></td>";
-		echo "	</tr>";
+		if (permission_exists('xml_cdr_account_code')) {
+			echo "	<tr>";
+			echo "		<td class='vncell'>".$text['label-accountcode']."</td>";
+			echo "		<td class='vtable'><input type='text' class='formfld' name='accountcode' value='".escape($accountcode)."'></td>";
+			echo "	</tr>";
+		}
 		echo "	<tr>";
 		echo "		<td class='vncell'>".$text['label-read_codec']."</td>";
 		echo "		<td class='vtable'><input type='text' class='formfld' name='read_codec' value='".escape($read_codec)."'></td>";
@@ -302,6 +317,24 @@
 		echo "			<input type='text' class='formfld' name='mos_score' value='".escape($mos_score)."'>\n";
 		echo "		</td>";
 		echo "	</tr>\n";
+
+		if (permission_exists('xml_cdr_search_call_center_queues')) {
+			echo "	<tr>";
+			echo "		<td class='vncell'>".$text['label-call_center_queue']."</td>";
+			echo "		<td class='vtable'>";
+			echo "			<select class='formfld' name='call_center_queue_uuid' id='call_center_queue_uuid'>\n";
+			echo "				<option value=''></option>";
+			if (is_array($call_center_queues) && @sizeof($call_center_queues) != 0) {
+				foreach ($call_center_queues as &$row) {
+					$selected = ($row['call_center_queue_uuid'] == $call_center_queue_uuid) ? "selected" : null;
+					echo "		<option value='".escape($row['call_center_queue_uuid'])."' ".escape($selected).">".((is_numeric($row['queue_extension'])) ? escape($row['queue_extension']." (".$row['queue_name'].")") : escape($row['queue_extension'])." (".escape($row['queue_extension']).")")."</option>";
+				}
+			}
+			echo "			</select>\n";
+			echo "		</td>";
+			echo "	</tr>\n";
+			unset($sql, $parameters, $call_center_queues, $row, $selected);
+		}
 
 		echo "</table>\n";
 	

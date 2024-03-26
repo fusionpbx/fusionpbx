@@ -29,29 +29,39 @@
 //includes files
 require_once __DIR__ . "/require.php";
 
+/**
+ * Returns an fp connector from an event socket.
+ * This has been replaced with event_socket::create() method and using the
+ * socket directly is preferred.
+ * @param string $host
+ * @param string $port
+ * @param string $password
+ * @return true Returns true if successful connection and false if there is a failure
+ * @deprecated since version 5.1.11
+ */
 function event_socket_create($host = null, $port = null, $password = null) {
-	$esl = new event_socket;
-	if ($esl->connect($host, $port, $password)) {
-		return $esl->reset_fp();
-	}
-	return false;
+	$esl = event_socket::create($host = null, $port = null, $password = null);
+	return ($esl !== false);
 }
 
+/**
+ * Makes a request on the event socket
+ * @param null $fp No longer used
+ * @param string $cmd Command to use
+ * @return string|false Response of the server or false if failed
+ */
 function event_socket_request($fp, $cmd) {
-	$esl = new event_socket($fp);
-	$result = $esl->request($cmd);
-	$esl->reset_fp();
-	return $result;
+	return event_socket::command($cmd);
 }
 
+/**
+ * Makes a request on the event socket
+ * @param type $fp
+ * @param type $cmd
+ * @return type
+ */
 function event_socket_request_cmd($cmd) {
-	$esl = new event_socket;
-	if (!$esl->connect()) {
-		return false;
-	}
-	$response = $esl->request($cmd);
-	$esl->close();
-	return $response;
+	return event_socket::command($cmd);
 }
 
 function remove_config_from_cache($name) {
@@ -1069,6 +1079,58 @@ if(!function_exists('win_find_php')) {
 		$php_bin = win_find_php_by_phprc($bin_name);
 		if($php_bin) return $php_bin;
 		return false;
+	}
+}
+
+/**
+ * Forces a port to close using the debugger tool.
+ * Linux OSes do not have an easy mechanism for closing a port already in use. This uses a debugger tool
+ * to connect to the running freeswitch process and close the port internally using debug symbols. This
+ * function requires freeswitch to be compiled with the --enable-debug flag.
+ * @param string $port
+ * @return void
+ */
+function force_close_port(string $port): void {
+	//ensure we can execute cli tools needed
+	if (PHP_OS !== 'Linux' || PHP_OS !== 'FreeBSD') {
+		return;
+	}
+
+	//get the pid of freeswitch
+	$pid = exec('pidof freeswitch');
+
+	//ensure it is numeric before proceeding
+	if (!is_numeric($pid)) {
+		return;
+	}
+
+	//get a list of the current connections owned by freeswitch
+	$connections = "";
+	exec("lsof -np {$pid} | grep TCP", $connections);
+	exec("lsof -np {$pid} | grep UDP", $connections);
+
+	//iterate over all the current ports
+	foreach ($connections as $conn) {
+		//seperate in to fields removing empty ones
+		$fields = array_values(array_filter(explode(" ", $conn), function ($value) {
+			if (!empty($value)) return true;
+			else return false;
+		}));
+		//remove letter from id
+		$id = substr($fields[3], 0, strlen($fields[3]) - 1);
+		//get the address and port parts
+		$elements = explode(":", $fields[8]);
+		//get the port from last element as IPv6 can have more than one ':'
+		$p = array_pop($elements);
+		//check for lsof renaming port 5060 to sip
+		if (!is_numeric($p) && $p == "sip") {
+			$p = "5060";
+		}
+		//check for matching port
+		if ($p == $port) {
+			//execute debugger to close the open connection
+			exec("gdb -p {$pid} -batch 'call close({$id})' -batch 'quit'");
+		}
 	}
 }
 

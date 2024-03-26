@@ -12,7 +12,8 @@
 		<action application="set" data="outbound_caller_id_number=${user_data ${destination_number}@${domain_name} var outbound_caller_id_number}" inline="true" enabled="false"/>
 		<action application="set" data="outbound_caller_id_name=${caller_id_name}" inline="true" enabled="true"/>
 		<action application="set" data="outbound_caller_id_number=${caller_id_number}" inline="true" enabled="true"/>
-		<action application="set" data="sip_h_Diversion=&lt;sip:${caller_destination}@${external_sip_ip}:5060&gt;;reason=unconditional" enabled="false"/>
+		<action application="set" data="origination_caller_id_number=${caller_destination}" inline="true" enabled="false"/>
+		<action application="set" data="sip_h_Diversion=&lt;sip:${caller_id_number}@${domain_name}&gt;;reason=unconditional" enabled="false"/>
 		<action application="transfer" data="${forward_all_destination} XML ${domain_name}" enabled="true"/>
 	</condition>
 </extension>

@@ -23,6 +23,7 @@
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
+	Tony Fernandez <tfernandez@smartip.ca>
 */
 
 //includes files
@@ -50,6 +51,8 @@
 	$paging_controls_mini = '';
 	$paging_controls = null;
 	$order_by = "";
+	$read_codec = '';
+	$write_codec = '';
 	if(!isset($_REQUEST['show'])) {
 		//set to show only this domain
 		$_REQUEST['show'] = 'domain';
@@ -79,6 +82,29 @@
 //create token
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);
+
+//get the extensions
+	if (permission_exists('xml_cdr_search_extension')) {
+		$sql = "select extension_uuid, extension, number_alias from v_extensions ";
+		$sql .= "where domain_uuid = :domain_uuid ";
+		if (!permission_exists('xml_cdr_domain') && is_array($extension_uuids) && @sizeof($extension_uuids != 0)) {
+			$sql .= "and extension_uuid in ('".implode("','",$extension_uuids)."') "; //only show the user their extensions
+		}
+		$sql .= "order by extension asc, number_alias asc ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$database = new database;
+		$extensions = $database->select($sql, $parameters, 'all');
+	}
+
+//get the call center queues
+	if (permission_exists('xml_cdr_search_call_center_queues')) {
+		$sql = "select call_center_queue_uuid, queue_name, queue_extension from v_call_center_queues ";
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$sql .= "order by queue_extension asc ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$database = new database;
+		$call_center_queues = $database->select($sql, $parameters, 'all');
+	}
 
 //include the header
 	if ($archive_request) {
@@ -161,6 +187,8 @@
 	echo "		<input type='hidden' name='start_epoch' value='".escape($start_epoch ?? '')."'>\n";
 	echo "		<input type='hidden' name='stop_epoch' value='".escape($stop_epoch ?? '')."'>\n";
 	echo "		<input type='hidden' name='duration' value='".escape($duration ?? '')."'>\n";
+	echo "		<input type='hidden' name='duration_min' value='".escape($duration_min ?? '')."'>\n";
+	echo "		<input type='hidden' name='duration_max' value='".escape($duration_max ?? '')."'>\n";
 	echo "		<input type='hidden' name='billsec' value='".escape($billsec ?? '')."'>\n";
 	echo "		<input type='hidden' name='xml_cdr_uuid' value='".escape($xml_cdr_uuid ?? '')."'>\n";
 	echo "		<input type='hidden' name='bleg_uuid' value='".escape($bleg_uuid ?? '')."'>\n";
@@ -278,15 +306,6 @@
 			echo "	</div>\n";
 		}
 		if (permission_exists('xml_cdr_search_extension')) {
-			$sql = "select extension_uuid, extension, number_alias from v_extensions ";
-			$sql .= "where domain_uuid = :domain_uuid ";
-			if (!permission_exists('xml_cdr_domain') && is_array($extension_uuids) && @sizeof($extension_uuids != 0)) {
-				$sql .= "and extension_uuid in ('".implode("','",$extension_uuids)."') "; //only show the user their extensions
-			}
-			$sql .= "order by extension asc, number_alias asc ";
-			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-			$database = new database;
-			$result_e = $database->select($sql, $parameters, 'all');
 			echo "	<div class='form_set'>\n";
 			echo "		<div class='label'>\n";
 			echo "			".$text['label-extension']."\n";
@@ -294,8 +313,8 @@
 			echo "		<div class='field'>\n";
 			echo "			<select class='formfld' name='extension_uuid' id='extension_uuid'>\n";
 			echo "				<option value=''></option>";
-			if (is_array($result_e) && @sizeof($result_e) != 0) {
-				foreach ($result_e as &$row) {
+			if (is_array($extensions) && @sizeof($extensions) != 0) {
+				foreach ($extensions as &$row) {
 					$selected = ($row['extension_uuid'] == $extension_uuid) ? "selected" : null;
 					echo "		<option value='".escape($row['extension_uuid'])."' ".escape($selected).">".((is_numeric($row['extension'])) ? escape($row['extension']) : escape($row['number_alias'])." (".escape($row['extension']).")")."</option>";
 				}
@@ -303,7 +322,7 @@
 			echo "			</select>\n";
 			echo "		</div>\n";
 			echo "	</div>\n";
-			unset($sql, $parameters, $result_e, $row, $selected);
+			unset($sql, $parameters, $extensions, $row, $selected);
 		}
 		if (permission_exists('xml_cdr_search_caller_id')) {
 			echo "	<div class='form_set'>\n";
@@ -355,6 +374,17 @@
 			echo "		</div>\n";
 			echo "		<div class='field'>\n";
 			echo "			<input type='text' class='formfld' name='destination_number' id='destination_number' value='".escape($destination_number ?? '')."'>\n";
+			echo "		</div>\n";
+			echo "	</div>\n";
+		}
+		if (permission_exists('xml_cdr_codecs')) {
+			echo "	<div class='form_set'>\n";
+			echo "		<div class='label'>\n";
+			echo "			".$text['label-codecs']."\n";
+			echo "		</div>\n";
+			echo "		<div class='field no-wrap'>\n";
+			echo "			<input type='text' class='formfld' style='min-width: 115px; width: 115px;' name='read_codec' id='read_codec' value='".escape($read_codec)."' placeholder=\"".$text['label-codec_read']."\">\n";
+			echo "			<input type='text' class='formfld' style='min-width: 115px; width: 115px;' name='write_codec' id='write_codec' value='".escape($write_codec)."' placeholder=\"".$text['label-codec_write']."\">\n";
 			echo "		</div>\n";
 			echo "	</div>\n";
 		}
@@ -500,6 +530,26 @@
 			echo "			</select>\n";
 			echo "		</div>\n";
 			echo "	</div>\n";
+
+			if (permission_exists('xml_cdr_search_call_center_queues')) {
+				echo "	<div class='form_set'>\n";
+				echo "		<div class='label'>\n";
+				echo "			".$text['label-call_center_queue']."\n";
+				echo "		</div>\n";
+				echo "		<div class='field'>\n";
+				echo "			<select class='formfld' name='call_center_queue_uuid' id='call_center_queue_uuid'>\n";
+				echo "				<option value=''></option>";
+				if (is_array($call_center_queues) && @sizeof($call_center_queues) != 0) {
+					foreach ($call_center_queues as &$row) {
+						$selected = ($row['call_center_queue_uuid'] == $call_center_queue_uuid) ? "selected" : null;
+						echo "		<option value='".escape($row['call_center_queue_uuid'])."' ".escape($selected).">".((is_numeric($row['queue_extension'])) ? escape($row['queue_extension']." (".$row['queue_name'].")") : escape($row['queue_extension'])." (".escape($row['queue_extension']).")")."</option>";
+					}
+				}
+				echo "			</select>\n";
+				echo "		</div>\n";
+				echo "	</div>\n";
+				unset($sql, $parameters, $call_center_queues, $row, $selected);
+			}
 		}
 
 		echo "</div>\n";
@@ -571,6 +621,10 @@
 		echo "<th class='center'>".$text['label-recording']."</th>\n";
 		$col_count++;
 	}
+	if (permission_exists('xml_cdr_account_code')) {
+		echo "<th class='left'>".$text['label-accountcode']."</th>\n";
+		$col_count++;
+	}
 	if (permission_exists('xml_cdr_custom_fields')) {
 		if (isset($_SESSION['cdr']['field']) && is_array($_SESSION['cdr']['field']) && @sizeof($_SESSION['cdr']['field'])) {
 			foreach ($_SESSION['cdr']['field'] as $field) {
@@ -589,6 +643,10 @@
 		echo "<th class='center shrink'>".$text['label-date']."</th>\n";
 		echo "<th class='center shrink hide-md-dn'>".$text['label-time']."</th>\n";
 		$col_count += 2;
+	}
+	if (permission_exists('xml_cdr_codecs')) {
+		echo "<th class='center shrink'>".$text['label-codecs']."</th>\n";
+		$col_count++;
 	}
 	if (permission_exists('xml_cdr_tta')) {
 		echo "<th class='right hide-md-dn' title=\"".$text['description-tta']."\">".$text['label-tta']."</th>\n";
@@ -710,8 +768,8 @@
 					$hangup_cause = strtolower($hangup_cause);
 					$hangup_cause = ucwords($hangup_cause);
 
-				//if call cancelled, show the ring time, not the bill time.
-					$seconds = $row['hangup_cause'] == "ORIGINATOR_CANCEL" ? $row['duration'] : round(($row['billmsec'] / 1000), 0, PHP_ROUND_HALF_UP);
+				//get the duration if null use 0
+					$duration = $row['duration'] ?? 0;
 
 				//determine recording properties
 					if (!empty($row['record_path']) && !empty($row['record_name']) && permission_exists('xml_cdr_recording') && (permission_exists('xml_cdr_recording_play') || permission_exists('xml_cdr_recording_download'))) {
@@ -731,7 +789,7 @@
 
 				//recording playback
 					if (permission_exists('xml_cdr_recording_play')) {
-						$content .= "<tr class='list-row' id='recording_progress_bar_".$row['xml_cdr_uuid']."' style='display: none;'><td class='playback_progress_bar_background' style='padding: 0; border-bottom: none; overflow: hidden;' colspan='".$col_count."'><span class='playback_progress_bar' id='recording_progress_".$row['xml_cdr_uuid']."'></span></td></tr>\n";
+						$content .= "<tr class='list-row' id='recording_progress_bar_".$row['xml_cdr_uuid']."' style='display: none;' onclick=\"recording_play('".escape($row['xml_cdr_uuid'])."')\"><td id='playback_progress_bar_background_".escape($row['xml_cdr_uuid'])."' class='playback_progress_bar_background' colspan='".$col_count."'><span class='playback_progress_bar' id='recording_progress_".$row['xml_cdr_uuid']."'></span></td></tr>\n";
 						$content .= "<tr class='list-row' style='display: none;'><td></td></tr>\n"; // dummy row to maintain alternating background color
 					}
 					if (permission_exists('xml_cdr_details')) {
@@ -755,7 +813,10 @@
 									$image_name .= '_b';
 								}
 								$image_name .= ".png";
-								$content .= "<img src='".PROJECT_PATH."/themes/".$_SESSION['domain']['template']['name']."/images/".escape($image_name)."' width='16' style='border: none; cursor: help;' title='".$text['label-'.$row['direction']].": ".$text['label-'.$status]. ($row['leg']=='b'?'(b)':'') . "'>\n";
+								if (file_exists($theme_image_path.$image_name)) {
+									$content .= "<img src='".PROJECT_PATH."/themes/".$_SESSION['domain']['template']['name']."/images/".escape($image_name)."' width='16' style='border: none; cursor: help;' title='".$text['label-'.$row['direction']].": ".$text['label-'.$status]. ($row['leg']=='b'?'(b)':'') . "'>\n";
+								}
+								else { $content .= "&nbsp;"; }
 							}
 						}
 						else { $content .= "&nbsp;"; }
@@ -829,6 +890,12 @@
 							$content .= "	<td>&nbsp;</td>\n";
 						}
 					}
+				//account code
+					if (permission_exists('xml_cdr_account_code')) {
+						$content .= "	<td class='middle no-link no-wrap'>";
+						$content .= 		$row['accountcode'];
+						$content .= "	</td>\n";
+					}
 				//custom cdr fields
 					if (permission_exists('xml_cdr_custom_fields')) {
 						if (!empty($_SESSION['cdr']['field']) && is_array($_SESSION['cdr']['field'])) {
@@ -846,6 +913,10 @@
 						$content .= "	<td class='middle right no-wrap'>".$row['start_date_formatted']."</td>\n";
 						$content .= "	<td class='middle right no-wrap hide-md-dn'>".$row['start_time_formatted']."</td>\n";
 					}
+				//codec
+					if (permission_exists('xml_cdr_codecs')) {
+						$content .= "	<td class='middle right no-wrap'>".($row['read_codec'] ?? '').' / '.($row['write_codec'] ?? '')."</td>\n";
+					}
 				//tta (time to answer)
 					if (permission_exists('xml_cdr_tta')) {
 						$content .= "	<td class='middle right hide-md-dn'>".(!empty($row['tta']) && $row['tta'] >= 0 ? $row['tta']."s" : "&nbsp;")."</td>\n";
@@ -856,7 +927,7 @@
 					}
 				//mos (mean opinion score)
 					if (permission_exists("xml_cdr_mos")) {
-						if(!empty($row['rtp_audio_in_mos'])) {
+						if(!empty($row['rtp_audio_in_mos']) && is_numeric($row['rtp_audio_in_mos'])) {
 							$title = " title='".$text['label-mos_score-'.round($row['rtp_audio_in_mos'])]."'";
 							$value = $row['rtp_audio_in_mos'];
 						}
@@ -864,11 +935,11 @@
 					}
 				//duration
 					if (permission_exists('xml_cdr_duration')) {
-						$content .= "	<td class='middle center hide-sm-dn'>".gmdate("G:i:s", $seconds)."</td>\n";
+						$content .= "	<td class='middle center hide-sm-dn'>".gmdate("G:i:s", $duration)."</td>\n";
 					}
 				//call result/status
 					if (permission_exists("xml_cdr_status")) {
-						$content .= "	<td class='middle no-wrap hide-sm-dn'><a href='".$list_row_url."'>".escape($text['label-'.$status])."</a></td>\n";
+						$content .= "	<td class='middle no-wrap hide-sm-dn'><a href='".$list_row_url."'>".escape($text['label-'.$status] ?? '')."</a></td>\n";
 					}
 				//hangup cause
 					if (permission_exists('xml_cdr_hangup_cause')) {

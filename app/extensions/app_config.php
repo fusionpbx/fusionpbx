@@ -231,9 +231,23 @@
 		$apps[$x]['permissions'][$y]['name'] = "extension_hold_music";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
-		$apps[$x]['permissions'][$y]['groups'][] = "user"; 
+		$apps[$x]['permissions'][$y]['groups'][] = "user";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "extension_language";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "extension_type";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$apps[$x]['permissions'][$y]['groups'][] = "user";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "extension_device_address";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$apps[$x]['permissions'][$y]['groups'][] = "user";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "extension_device_template";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$apps[$x]['permissions'][$y]['groups'][] = "user";
@@ -351,6 +365,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "db521639-5c26-4cba-acc7-e8d6fe86657c";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "extension";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "call_timeout";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "30";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the ring time (delay in seconds) before sending a call to voicemail";
 
 	//cache details
 		$apps[$x]['cache']['key'] = "directory.\${extension}@\${domain_name}";
@@ -360,14 +382,6 @@
 		$apps[$x]['db'][$y]['table']['name'] = "v_extensions";
 		$apps[$x]['db'][$y]['table']['parent'] = "";
 		$z=0;
-		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "id";
-		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "extension_id";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "serial";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "integer";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "INT NOT NULL AUTO_INCREMENT";
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
-		$apps[$x]['db'][$y]['fields'][$z]['deprecated'] = "true";
-		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "extension_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
@@ -383,11 +397,6 @@
 		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['table'] = "v_domains";
 		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['field'] = "domain_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
-		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = "v_id";
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
-		$apps[$x]['db'][$y]['fields'][$z]['deprecated'] = "true";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "extension";
 		$apps[$x]['db'][$y]['fields'][$z]['uuid'] = "15607400-7d58-475d-8f4e-7ffb858aa3e7";
@@ -645,6 +654,18 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "extension_language";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "extension_dialect";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "extension_voice";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "extension_type";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
@@ -696,14 +717,6 @@
 		$apps[$x]['db'][$y]['table']['name'] = "v_extension_users";
 		$apps[$x]['db'][$y]['table']['parent'] = "v_extensions";
 		$z=0;
-		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "id";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "char(36)";
-		$apps[$x]['db'][$y]['fields'][$z]['key']['type'] = "primary";
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
-		$apps[$x]['db'][$y]['fields'][$z]['deprecated'] = "true";
-		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "extension_user_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
@@ -763,3 +776,4 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 
 ?>
+

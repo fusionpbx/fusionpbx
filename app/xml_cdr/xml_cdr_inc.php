@@ -22,6 +22,7 @@
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
+	Tony Fernandez <tfernandez@smartip.ca>
 */
 
 //includes files
@@ -82,6 +83,8 @@
 		$recording = $_REQUEST['recording'] ?? '';
 		$order_by = $_REQUEST["order_by"] ?? '';
 		$order = $_REQUEST["order"] ?? '';
+		$cc_side = $_REQUEST["cc_side"] ?? '';
+		$call_center_queue_uuid = $_REQUEST["call_center_queue_uuid"] ?? '';
 		if (isset($_SESSION['cdr']['field']) && is_array($_SESSION['cdr']['field'])) {
 			foreach ($_SESSION['cdr']['field'] as $field) {
 				$array = explode(",", $field);
@@ -177,6 +180,9 @@
 	$param .= "&tta_min=".urlencode($tta_min ?? '');
 	$param .= "&tta_max=".urlencode($tta_max ?? '');
 	$param .= "&recording=".urlencode($recording ?? '');
+	$param .= "&cc_side=".urlencode($cc_side ?? '');
+	$param .= "&call_center_queue_uuid=".urlencode($call_center_queue_uuid ?? '');
+
 	if (isset($_SESSION['cdr']['field']) && is_array($_SESSION['cdr']['field'])) {
 		foreach ($_SESSION['cdr']['field'] as $field) {
 			$array = explode(",", $field);
@@ -223,7 +229,7 @@
 
 //prepare to page the results
 	//$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50; //set on the page that includes this page
-	if (empty($_GET['page']) || (!empty($_GET['page']) && !is_numeric($_GET['page']))) { 
+	if (empty($_GET['page']) || (!empty($_GET['page']) && !is_numeric($_GET['page']))) {
 		$_GET['page'] = 0;
 	}
 	//ensure page is within bounds of integer
@@ -239,6 +245,12 @@
 	}
 	$parameters['time_zone'] = $time_zone;
 
+//set the sql time format
+	$sql_time_format = 'HH12:MI am';
+	if (!empty($_SESSION['domain']['time_format']['text'])) {
+		$sql_time_format = $_SESSION['domain']['time_format']['text'] == '12h' ? "HH12:MI am" : "HH24:MI";
+	}
+
 //get the results from the db
 	$sql = "select \n";
 	$sql .= "c.domain_uuid, \n";
@@ -247,7 +259,7 @@
 	$sql .= "c.start_stamp, \n";
 	$sql .= "c.end_stamp, \n";
 	$sql .= "to_char(timezone(:time_zone, start_stamp), 'DD Mon YYYY') as start_date_formatted, \n";
-	$sql .= "to_char(timezone(:time_zone, start_stamp), 'HH12:MI:SS am') as start_time_formatted, \n";
+	$sql .= "to_char(timezone(:time_zone, start_stamp), '".$sql_time_format."') as start_time_formatted, \n";
 	$sql .= "c.start_epoch, \n";
 	$sql .= "c.hangup_cause, \n";
 	$sql .= "c.billsec as duration, \n";
@@ -265,6 +277,8 @@
 	$sql .= "c.source_number, \n";
 	$sql .= "c.destination_number, \n";
 	$sql .= "c.leg, \n";
+	$sql .= "c.read_codec, \n";
+	$sql .= "c.write_codec, \n";
 	$sql .= "c.cc_side, \n";
 	//$sql .= "(c.xml is not null or c.json is not null) as raw_data_exists, \n";
 	//$sql .= "c.json, \n";
@@ -280,7 +294,9 @@
 			$sql .= $field.", \n";
 		}
 	}
-	$sql .= "c.accountcode, \n";
+	if (permission_exists('xml_cdr_account_code')) {
+		$sql .= "c.accountcode, \n";
+	}
 	$sql .= "c.answer_stamp, \n";
 	$sql .= "c.status, \n";
 	$sql .= "c.sip_hangup_disposition, \n";
@@ -468,7 +484,7 @@
 		$sql .= "and hangup_cause != 'LOSE_RACE' \n";
 	}
 	if (!empty($status)) {
-		$sql .= "and status >= :status \n";
+		$sql .= "and status = :status \n";
 		$parameters['status'] = $status;
 	}
 	if (!empty($xml_cdr_uuid)) {
@@ -479,7 +495,7 @@
 		$sql .= "and bleg_uuid = :bleg_uuid \n";
 		$parameters['bleg_uuid'] = $bleg_uuid;
 	}
-	if (!empty($accountcode)) {
+	if (permission_exists('xml_cdr_account_code') && !empty($accountcode)) {
 		$sql .= "and c.accountcode = :accountcode \n";
 		$parameters['accountcode'] = $accountcode;
 	}
@@ -527,6 +543,16 @@
 	//show agent originated legs only to those with the permission
 	if (!permission_exists('xml_cdr_cc_agent_leg')) {
 		$sql .= "and (cc_side is null or cc_side != 'agent') \n";
+	}
+	//call center queue search for member or agent
+	if (!empty($cc_side) && permission_exists('xml_cdr_cc_side')) {
+		$sql .= "and cc_side = :cc_side \n";
+		$parameters['cc_side'] = $cc_side;
+	}
+	//show specific call center queue
+	if (!empty($call_center_queue_uuid) && permission_exists('xml_cdr_call_center_queues')) {
+		$sql .= "and call_center_queue_uuid = :call_center_queue_uuid \n";
+		$parameters['call_center_queue_uuid'] = $call_center_queue_uuid;
 	}
 	//end where
 	if (!empty($order_by)) {

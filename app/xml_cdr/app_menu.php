@@ -5,7 +5,9 @@
 	$apps[$x]['menu'][$y]['title']['en-gb'] = "Call Detail Records";
 	$apps[$x]['menu'][$y]['title']['ar-eg'] = "سجلات تفاصيل المكالمات";
 	$apps[$x]['menu'][$y]['title']['de-at'] = "Meine Gespräche";
+	$apps[$x]['menu'][$y]['title']['de-ch'] = "Meine Gespräche";
 	$apps[$x]['menu'][$y]['title']['de-de'] = "Meine Gespräche";
+	$apps[$x]['menu'][$y]['title']['el-gr'] = "Αρχεία λεπτομερειών κλήσεων";
 	$apps[$x]['menu'][$y]['title']['es-cl'] = "Registro de detalle de llamada";
 	$apps[$x]['menu'][$y]['title']['es-mx'] = "Call Detail Records";
 	$apps[$x]['menu'][$y]['title']['fr-ca'] = "Call Detail Records";
@@ -20,6 +22,7 @@
 	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Детализация вызовов";
 	$apps[$x]['menu'][$y]['title']['sv-se'] = "Detaljerad Samtalsinformation";
 	$apps[$x]['menu'][$y]['title']['uk-ua'] = "Деталізація дзвінків";
+	$apps[$x]['menu'][$y]['title']['tr-tr'] = "Çağrı Detay Kayıtları";
 	$apps[$x]['menu'][$y]['title']['zh-cn'] = "通话详情记录";
 	$apps[$x]['menu'][$y]['title']['ja-jp'] = "通話詳細記録";
 	$apps[$x]['menu'][$y]['title']['ko-kr'] = "통화 내역 기록";

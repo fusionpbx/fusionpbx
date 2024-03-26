@@ -104,7 +104,7 @@
 		file_put_contents($pid_file, getmypid());
 	}
 
-//get the email queue settings
+//get the fax queue settings
 	$setting = new settings(["category" => "fax_queue"]);
 
 //set the fax queue interval
@@ -137,7 +137,7 @@
 //change the working directory
 	chdir($_SERVER['DOCUMENT_ROOT']);
 
-//get the messages waiting in the email queue
+//get the messages waiting in the fax queue
 	while (true) {
 
 		//get the fax messages that are waiting to send

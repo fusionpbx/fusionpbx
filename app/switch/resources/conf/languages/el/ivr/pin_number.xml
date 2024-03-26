@@ -1,0 +1,16 @@
+<include>
+	<macro name="pin_number_start">
+    	<input>
+    		<match>
+    			<action function="play-file" data="voicemail/vm-continue.wav" />
+    		</match>
+    	</input>
+    </macro>
+    <macro name="pin_number_enter_extension">
+    	<input>
+    		<match>
+    			<action function="play-file" data="ivr/ivr-please_enter_extension_followed_by_pound.wav" />
+    		</match>
+    	</input>
+    </macro>
+</include>

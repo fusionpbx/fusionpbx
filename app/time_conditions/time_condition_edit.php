@@ -777,8 +777,8 @@
 					case 'mon': //month names
 						<?php
 						for ($m = 1; $m <= 12; $m++) {
-							echo "sel_start.options[sel_start.options.length] = new Option('".date('F', strtotime('2015-'.number_pad($m,2).'-01'))."', ".$m.");\n";
-							echo "sel_stop.options[sel_stop.options.length] = new Option('".date('F', strtotime('2015-'.number_pad($m,2).'-01'))."', ".$m.");\n";
+							echo "sel_start.options[sel_start.options.length] = new Option('".$text[strtolower(date('F', strtotime('2015-'.$m.'-01')))]."', ".$m.");\n";
+							echo "sel_stop.options[sel_stop.options.length] = new Option('".$text[strtolower(date('F', strtotime('2015-'.$m.'-01')))]."', ".$m.");\n";
 						}
 						?>
 						break;
@@ -800,8 +800,8 @@
 					case 'wday': //week days
 						<?php
 						for ($d = 1; $d <= 7; $d++) {
-							echo "sel_start.options[sel_start.options.length] = new Option('".date('l', strtotime('Sunday +'.($d-1).' days'))."', ".$d.");\n";
-							echo "sel_stop.options[sel_stop.options.length] = new Option('".date('l', strtotime('Sunday +'.($d-1).' days'))."', ".$d.");\n";
+							echo "sel_start.options[sel_start.options.length] = new Option('".$text[strtolower(date('l', strtotime('Sunday +'.($d-1).' days')))]."', ".$d.");\n";
+							echo "sel_stop.options[sel_stop.options.length] = new Option('".$text[strtolower(date('l', strtotime('Sunday +'.($d-1).' days')))]."', ".$d.");\n";
 						}
 						?>
 						break;
@@ -821,24 +821,48 @@
 						break;
 
 					case 'hour': //hours of day
-						for (h = 0; h <= 23; h++) {
-							sel_start.options[sel_start.options.length] = new Option(((h != 0) ? ((h >= 12) ? ((h == 12) ? h : (h - 12)) + ' PM' : h + ' AM') : '12 AM'), h);
-							sel_stop.options[sel_stop.options.length] = new Option(((h != 0) ? ((h >= 12) ? ((h == 12) ? h : (h - 12)) + ' PM' : h + ' AM') : '12 AM'), h);
+						<?php
+						if ( $_SESSION['domain']['time_format']['text'] =="24h") {
+						
+							for ($h = 0; $h <= 23; $h++) {
+								echo "sel_start.options[sel_start.options.length] = new Option(".$h.", ".$h.");\n";
+								echo "sel_stop.options[sel_stop.options.length] = new Option(".$h.", ".$h.");\n";
+							}
+
+						} else {
+
+							for ($h = 0; $h <= 23; $h++) {
+								echo "sel_start.options[sel_start.options.length] = new Option(((".$h." != 0) ? ((".$h." >= 12) ? ((".$h." == 12) ? ".$h." : (".$h." - 12)) + ' PM' : ".$h." + ' AM') : '12 AM'), ".$h.");\n";
+								echo "sel_stop.options[sel_stop.options.length] = new Option(((".$h." != 0) ? ((".$h." >= 12) ? ((".$h." == 12) ? ".$h." : (".$h." - 12)) + ' PM' : ".$h." + ' AM') : '12 AM'), ".$h.");\n";
+							}
 						}
+						?>
 						break;
 
 					case 'time-of-day': //time of day
-						for (h = 0; h <= 23; h++) {
-							for (m = 0; m <= 59; m += 1) {
-								sel_start.options[sel_start.options.length] = new Option(((h != 0) ? ((h >= 12) ? ((h == 12) ? h : (h - 12)) + ':' + pad(m, 2) + ' PM' : h + ':' + pad(m, 2) + ' AM') : '12:' + pad(m, 2) + ' AM'), pad(h, 2) + ':' + pad(m, 2));
-								sel_stop.options[sel_stop.options.length] = new Option(((h != 0) ? ((h >= 12) ? ((h == 12) ? h : (h - 12)) + ':' + pad(m, 2) + ' PM' : h + ':' + pad(m, 2) + ' AM') : '12:' + pad(m, 2) + ' AM'), pad(h, 2)  + ':' + pad(m, 2));
+						<?php
+						if ( $_SESSION['domain']['time_format']['text'] =="24h") {
+
+							for ($h = 0; $h <= 23; $h++) {
+								for ($m = 0; $m <= 59; $m++) {
+									echo "sel_start.options[sel_start.options.length] = new Option(('0'+'".$h."').slice(-2)+':'+('0'+'".$m."').slice(-2),pad('".$h."', 2)  + ':' + pad(".$m.", 2));\n";
+									echo "sel_stop.options[sel_stop.options.length] = new Option(('0'+'".$h."').slice(-2)+':'+('0'+'".$m."').slice(-2),pad('".$h."', 2)  + ':' + pad(".$m.", 2));\n";
+								}
 							}
+
+						} else {
+							for ($h = 0; $h <= 23; $h++) {
+								for ($m = 0; $m <= 59; $m++) {
+									echo "sel_start.options[sel_start.options.length] = new Option(((".$h." != 0) ? ((".$h." >= 12) ? ((".$h." == 12) ? ".$h." : (".$h." - 12)) + ':' + pad(".$m.", 2) + ' PM' : ".$h." + ':' + pad(".$m.", 2) + ' AM') : '12:' + pad(".$m.", 2) + ' AM'), pad(".$h.", 2) + ':' + pad(".$m.", 2));\n";
+									echo "sel_stop.options[sel_stop.options.length] = new Option(((".$h." != 0) ? ((".$h." >= 12) ? ((".$h." == 12) ? ".$h." : (".$h." - 12)) + ':' + pad(".$m.", 2) + ' PM' : ".$h." + ':' + pad(".$m.", 2) + ' AM') : '12:' + pad(".$m.", 2) + ' AM'), pad(".$h.", 2) + ':' + pad(".$m.", 2));\n";
+								}
+						}
 						}
 						//h = 23;
 						//m = 59;
 						//sel_stop.options[sel_stop.options.length] = new Option(((h != 0) ? ((h >= 12) ? ((h == 12) ? h : (h - 12)) + ':' + pad(m, 2) + ' PM' : h + ':' + pad(m, 2) + ' AM') : '12:' + pad(m, 2) + ' AM'), pad(h, 2)  + ':' + pad(m, 2));
+						?>
 						break;
-
 				}
 
 			}
@@ -1173,9 +1197,17 @@ if ($action == 'update') {
 									echo "<script>\n";
 									echo "	condition_id = add_condition(".$preset_group_id.",'preset');\n";
 									echo "	$('#variable_".$preset_group_id."_' + condition_id + ' option[value=\"".$preset_variable."\"]').prop('selected', true);\n";
-									echo "	load_value_fields(".$preset_group_id.", condition_id, '".$preset_variable."');\n";
-									echo "	$('#value_".$preset_group_id."_' + condition_id + '_start option[value=\"".$preset_value_start."\"]').prop('selected', true);\n";
-									echo "	$('#value_".$preset_group_id."_' + condition_id + '_stop option[value=\"".$preset_value_stop."\"]').prop('selected', true);\n";
+									if ($preset_variable == 'date-time') {
+										echo "	change_to_input(document.getElementById('value_".$preset_group_id."_' + condition_id + '_start'));\n";
+										echo "	change_to_input(document.getElementById('value_".$preset_group_id."_' + condition_id + '_stop'));\n";
+										echo "	$('#value_".$preset_group_id."_' + condition_id + '_start').val('".$preset_value_start."');\n";
+										echo "	$('#value_".$preset_group_id."_' + condition_id + '_stop').val('".$preset_value_stop."');\n";
+									}
+									else {
+										echo "	load_value_fields(".$preset_group_id.", condition_id, '".$preset_variable."');\n";
+										echo "	$('#value_".$preset_group_id."_' + condition_id + '_start option[value=\"".$preset_value_start."\"]').prop('selected', true);\n";
+										echo "	$('#value_".$preset_group_id."_' + condition_id + '_stop option[value=\"".$preset_value_stop."\"]').prop('selected', true);\n";
+									}
 									echo "</script>\n\n";
 								}
 							}

@@ -60,7 +60,7 @@ if (!class_exists('registrations')) {
 				$id = 0;
 
 			//create the event socket connection
-				$fp = event_socket_create();
+				$esl = event_socket::create();
 
 			//get the default settings
 				$sql = "select sip_profile_name from v_sip_profiles ";
@@ -77,7 +77,7 @@ if (!class_exists('registrations')) {
 
 						//get sofia status profile information including registrations
 							$cmd = "api sofia xmlstatus profile '".$field['sip_profile_name']."' reg";
-							$xml_response = trim(event_socket_request($fp, $cmd));
+							$xml_response = trim(event_socket::command($cmd));
 
 						//show an error message
 							if ($xml_response == "Invalid Profile!") { 
@@ -165,9 +165,14 @@ if (!class_exists('registrations')) {
 											}
 											$registrations[$id]['lan-ip'] = $lan_ip;
 										}
+										else if (preg_match('/real=\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/', $row['contact'] ?? '', $ip_match)) {
+											//get ip address for snom phones
+											$lan_ip = str_replace('real=', '', $ip_match[0]);
+											$registrations[$id]['lan-ip'] = $lan_ip;
+										}
 										else if (preg_match('/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/', $row['contact'] ?? '', $ip_match)) {
 											$lan_ip = preg_replace('/_/', '.', $ip_match[0]);
-											$registrations[$id]['lan-ip'] = "$lan_ip";
+											$registrations[$id]['lan-ip'] = $lan_ip;
 										}
 										else {
 											$registrations[$id]['lan-ip'] = '';
@@ -269,10 +274,10 @@ if (!class_exists('registrations')) {
 							unset($sql);
 
 						//create the event socket connection
-							$fp = event_socket_create();
+							$esl = event_socket::create();
 
 						//loop through registrations
-							if ($fp) {
+							if ($esl->is_connected()) {
 								//check if registrations exist
 								if (is_array($registrations)) {
 									foreach ($registrations as $registration) {
@@ -332,9 +337,9 @@ if (!class_exists('registrations')) {
 											}
 
 										//send the api command
-											if (!empty($command) && $fp) {
-												$response_api[$registration['user']]['command'] = event_socket_request($fp, "api ".$command);
-												$response_api[$registration['user']]['log'] = event_socket_request($fp, "api log notice ".$command);
+											if (!empty($command) && $esl->is_connected()) {
+												$response_api[$registration['user']]['command'] = event_socket::api($command);
+												$response_api[$registration['user']]['log'] = event_socket::api("log notice $command");
 											}
 
 									}

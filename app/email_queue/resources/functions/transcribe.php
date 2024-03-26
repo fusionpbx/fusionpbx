@@ -164,27 +164,31 @@ if (!function_exists('transcribe')) {
 					//ob_end_clean();
 
 					//run the command
-					$http_response = shell_exec($command);
-
-					//validate the json
-					$ob = json_decode($http_response);
-					if($ob === null) {
-						echo "invalid json\n";
-						return false;
+					if (!empty($command)) {
+						$http_response = shell_exec($command);
 					}
 
-					$message = '';
-					$json = json_decode($http_response, true);
-					//echo "json; ".$json."\n";
-					foreach($json['results'] as $row) {
-						$message .= $row['alternatives'][0]['transcript'];
+					//validate the json
+					if (!empty($http_response)) {
+						$ob = json_decode($http_response);
+						if($ob === null) {
+							echo "invalid json\n";
+							return false;
+						}
+
+						$json = json_decode($http_response, true);
+						//echo "json; ".$json."\n";
+						$message = '';
+						foreach($json['results'] as $row) {
+							$message .= $row['alternatives'][0]['transcript'];
+						}
 					}
 
 					//build the response
 					$array['provider'] = $transcribe_provider;
 					$array['language'] = $transcribe_language;
-					$array['command'] = $command;
-					$array['message'] = $message;
+					$array['command'] = $command ?? '';
+					$array['message'] = $message ?? '';
 					//print_r($array);
 
 					return $array;
@@ -314,7 +318,91 @@ if (!function_exists('transcribe')) {
 				return $array;
 			}
 
+		//transcribe - openai
+		// settings:
+		//		openai_key (required)
+		//		openai_url
+		//		openai_model
+			if ($transcribe_provider == 'openai') {
+				$api_key = $setting->get('voicemail', 'openai_key');
+				$api_url = $setting->get('voicemail', 'openai_url');
+				$api_voice_model = $setting->get('voicemail', 'openai_model');
+
+				if (empty($api_url)) {
+					$api_url = "https://api.openai.com/v1/audio/transcriptions";
+				}
+
+				if (empty($api_voice_model)) {
+					$api_voice_model = "whisper-1";
+				}
+
+				if (isset($api_key) && $api_key != '') {
+
+					$full_file_name = $file_path.'/'.$file_name ;
+
+					//check if the file exists
+					if (!file_exists($full_file_name)) {
+						echo "file not found ".$full_file_name;
+						exit;
+					}
+
+					//start output buffer
+					ob_start();  
+					$out = fopen('php://output', 'w');
+
+					//create the curl resource
+					$ch = curl_init();
+
+					$post_data = array(
+						'model'=>$api_voice_model,
+						'file'=>curl_file_create($full_file_name)
+					);
+
+					//set the curl options
+					curl_setopt_array($ch, array(
+						CURLOPT_URL =>$api_url,
+						CURLOPT_RETURNTRANSFER => true,
+						CURLOPT_SSL_VERIFYPEER => TRUE,
+						CURLOPT_HTTPHEADER => array('Authorization: Bearer '.$api_key),
+						CURLOPT_POSTFIELDS => $post_data,
+
+					));
+
+					// //add verbose for debugging
+					// curl_setopt($ch, CURLOPT_VERBOSE, true);
+					curl_setopt($ch, CURLOPT_STDERR, $out);
+
+					//execute the curl with the options
+					$http_content = curl_exec($ch);
+									
+					//return the error
+					if (curl_errno($ch)) {
+						echo 'Error:' . curl_error($ch);
+					}
+
+					//close the curl resource
+					curl_close($ch);
+
+					//show the debug information
+					fclose($out);
+					$debug = ob_get_clean();
+					echo $debug;
+
+					
+					$ob = json_decode($http_content, true);
+					
+					$message = $ob['text'];
+					return array(
+						'provider' => $transcribe_provider,
+						'message' => $message
+					);
+				}
+
+			}
+		// todo: add error checking
+		//		return array('message' => "Missing valid transcribe_provider";
+
 	}
 }
-
+	
 ?>

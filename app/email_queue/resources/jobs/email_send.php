@@ -11,7 +11,6 @@
 
 //include files
 	include "resources/classes/permissions.php";
-	require $_SERVER['DOCUMENT_ROOT']."/app/email_queue/resources/functions/transcribe.php";
 
 //increase limits
 	set_time_limit(0);
@@ -146,8 +145,10 @@
 //get the email queue settings
 	$setting = new settings(["domain_uuid" => $domain_uuid]);
 
-//get the call center settings
+//get the email settings
 	$retry_limit = $setting->get('email_queue', 'retry_limit');
+	$transcribe_enabled = $setting->get('voicemail', 'transcribe_enabled');
+	$save_response = $setting->get('email_queue', 'save_response');
 
 //set defaults
 	if (empty($email_retry_count)) {
@@ -180,7 +181,6 @@
 		//$voicemail_description = $row["voicemail_description"];
 		//$voicemail_name_base64 = $row["voicemail_name_base64"];
 		//$voicemail_tutorial = $row["voicemail_tutorial"];
-		echo "transcribe enabled: ".$voicemail_transcription_enabled."\n";
 	}
 	unset($parameters);
 
@@ -221,8 +221,12 @@
 				}
 			}
 
-			if (isset($voicemail_transcription_enabled) && $voicemail_transcription_enabled == 'true') {
+			if (isset($transcribe_enabled) && $transcribe_enabled === 'true' && isset($voicemail_transcription_enabled) && $voicemail_transcription_enabled === 'true') {
+				//debug message
+				echo "transcribe enabled: true\n";
+
 				//transcribe the attachment
+				require $_SERVER['DOCUMENT_ROOT']."/app/email_queue/resources/functions/transcribe.php";
 				if ($email_attachment_type == 'wav' || $email_attachment_type == 'mp3') {
 					$field = transcribe($email_attachment_path, $email_attachment_name, $email_attachment_type);
 					echo "transcribe path: ".$email_attachment_path."\n";
@@ -233,10 +237,11 @@
 					$transcribe_message = $field['message'];
 				}
 
-				//echo "email_body before: ".$email_body."\n";
+				//prepare the email body
 				$email_body = str_replace('${message_text}', $transcribe_message, $email_body);
 			}
 			else {
+				//prepare the email body
 				$email_body = str_replace('${message_text}', '', $email_body);
 			}
 
@@ -331,20 +336,17 @@
 		//set the email status to sent
 		$sql = "update v_email_queue ";
 		$sql .= "set email_status = 'sent', ";
-		//$sql .= "set email_status = 'waiting' "; //debug
 		if (isset($transcribe_message)) {
 			$sql .= "email_transcription = :email_transcription, ";
+			$parameters['email_transcription'] = $transcribe_message;
 		}
-		$sql .= "email_response = :email_response, ";
+		if (isset($save_response) && $save_response == 'true') {
+			$sql .= "email_response = :email_response, ";
+			$parameters['email_response'] = $email_settings."\n".$email_response;
+		}
 		$sql .= "update_date = now() ";
 		$sql .= "where email_queue_uuid = :email_queue_uuid; ";
 		$parameters['email_queue_uuid'] = $email_queue_uuid;
-		$parameters['email_response'] = $email_settings."\n".$email_response;
-		if (isset($transcribe_message)) {
-			$parameters['email_transcription'] = $transcribe_message;
-		}
-		//echo $sql."\n";
-		//print_r($parameters);
 		$database = new database;
 		$database->execute($sql, $parameters);
 		unset($parameters);
@@ -383,11 +385,11 @@
 			$domain_name = $database->select($sql, $parameters, 'column');
 
 			//send the message waiting status
-			$fp = event_socket_create();
-			if ($fp) {
+			$esl = event_socket::create();
+			if ($esl->is_connected()) {
 				//$switch_cmd .= "luarun app.lua voicemail mwi ".$voicemail_id."@".$domain_name;
-				$switch_cmd .= "luarun app/voicemail/resources/scripts/mwi_notify.lua ".$voicemail_id." ".$domain_name." 0 0";
-				$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
+				$switch_cmd .= "luarun app/voicemail/resources/scripts/mwi_notify.lua $voicemail_id $domain_name 0 0";
+				$switch_result = event_socket::api($switch_cmd);
 				echo $switch_cmd."\n";
 			}
 			else {
@@ -517,7 +519,7 @@
 	unset($mail);
 
 //save output to
-	//$fp = fopen(sys_get_temp_dir()."/mailer-app.log", "a");
+	//$esl = fopen(sys_get_temp_dir()."/mailer-app.log", "a");
 
 //prepare the output buffers
 	//ob_end_clean();
@@ -532,7 +534,8 @@
 
 	//ob_end_clean(); //clean the buffer
 
-	//fwrite($fp, $content);
-	//fclose($fp);
+	//fwrite($esl, $content);
+	//fclose($esl);
 
 ?>
+

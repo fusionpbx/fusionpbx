@@ -40,18 +40,11 @@
 //set the variables
 	$search = $_REQUEST['search'] ?? '';
 
-//create event socket connection
-	$fp = event_socket_create();
-	if ($fp) {
-		//run the command
-			$result = rtrim(event_socket_request($fp, 'api reloadacl'));
+//run the command
+	$result = rtrim(event_socket::api('reloadacl'));
 
-		//add message
-			message::add($result, 'alert');
-
-		//close the connection
-			fclose($fp);
-	}
+//add message
+	message::add($result, 'alert');
 
 //redirect
 	$search = preg_replace('#[^a-zA-Z0-9_\-\.]# ', '', $search);

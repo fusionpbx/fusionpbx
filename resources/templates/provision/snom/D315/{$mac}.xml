@@ -8,7 +8,7 @@
     <ntp_server perm="">{if isset($snom_ntp_server)}{$snom_ntp_server}{else}0.pool.ntp.org{/if}</ntp_server>
     <ntp_refresh_timer perm="">3600</ntp_refresh_timer>
     <timezone perm="">{$snom_time_zone}</timezone>
-    <dhcp perm="R">on</dhcp>
+    {if isset($snom_dhcp)}<dhcp perm="R">{$snom_dhcp}</dhcp>{/if}
     <phone_name perm="R">snomD345-{substr($mac, -6)}</phone_name>
     <dim_timer perm="">20</dim_timer>
     <backlight perm="">15</backlight>
@@ -31,7 +31,9 @@
     <enable_rport_rfc3581 perm="RW">on</enable_rport_rfc3581>
     <privacy_in perm="">off</privacy_in>
     <privacy_out perm="">off</privacy_out>
-    <quick_transfer perm="">blind</quick_transfer>
+    <quick_transfer perm="">{if isset($snom_quick_transfer)}{$snom_quick_transfer}{else}new_call{/if}</quick_transfer>
+    <transfer_dialing_on_transfer perm="">{if isset($snom_transfer_dialing_on_transfer)}{$snom_transfer_dialing_on_transfer}{else}blind{/if}</transfer_dialing_on_transfer>
+    <transfer_dialing_on_other perm="">{if isset($snom_transfer_dialing_on_other)}{$snom_transfer_dialing_on_other}{else}blind{/if}</transfer_dialing_on_other>
     <call_screen_fkeys_on_connected perm="">F_HOLD F_TRANSFER F_CONFERENCE</call_screen_fkeys_on_connected>
     <!-- Updates -->
     <update_policy perm="">{if isset($snom_update_policy)}{$snom_update_policy}{else}auto_update{/if}</update_policy>

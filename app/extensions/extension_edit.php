@@ -132,9 +132,13 @@
 			$absolute_codec_string = $_POST["absolute_codec_string"];
 			$force_ping = $_POST["force_ping"];
 			$dial_string = $_POST["dial_string"];
+			$extension_language = $_POST["extension_language"];
 			$extension_type = $_POST["extension_type"];
 			$enabled = $_POST["enabled"] ?? 'false';
 			$description = $_POST["description"];
+
+			//set defaults
+			$extension_language = $extension_language ?? '';
 
 			//outbound caller id number - only allow numeric and +
 			if (!empty($outbound_caller_id_number)) {
@@ -157,7 +161,7 @@
 				else{
 					$subnet = 32;
 				}
-				
+
 				if(($addr = inet_pton($ipaddr)) !== false){
 					$ips[] = $ipaddr.'/'.$subnet;
 				}
@@ -425,6 +429,12 @@
 										$password = generate_password($password_length, $password_strength);
 									}
 
+								//seperate the language components into language, dialect and voice
+									$language_array = explode("/",$extension_language);
+									$extension_language = $language_array[0] ?? 'en';
+									$extension_dialect = $language_array[1] ?? 'us';
+									$extension_voice = $language_array[2] ?? 'callie';
+
 								//create the data array
 									$array["extensions"][$i]["domain_uuid"] = $domain_uuid;
 									$array["extensions"][$i]["extension_uuid"] = $extension_uuid;
@@ -530,6 +540,11 @@
 										if (permission_exists('extension_dial_string')) {
 											$array["extensions"][$i]["dial_string"] = $dial_string;
 										}
+									}
+									if (permission_exists('extension_language')) {
+										$array['extensions'][0]["extension_language"] = $extension_language;
+										$array['extensions'][0]["extension_dialect"] = $extension_dialect;
+										$array['extensions'][0]["extension_voice"] = $extension_voice;
 									}
 									if (permission_exists('extension_type')) {
 										$array["extensions"][$i]["extension_type"] = $extension_type;
@@ -780,8 +795,8 @@
 
 				//reload acl if allowed
 					if (permission_exists("extension_cidr")) {
-						$fp = event_socket_create();
-						if ($fp) { event_socket_request($fp, "api reloadacl"); }
+						$esl = event_socket::create();
+						if ($esl->is_connected()) { event_socket::api("reloadacl"); }
 					}
 
 				//check the permissions
@@ -888,6 +903,9 @@
 			$absolute_codec_string = $row["absolute_codec_string"];
 			$force_ping = $row["force_ping"];
 			$dial_string = $row["dial_string"];
+			$extension_language = $row["extension_language"];
+			$extension_voice = $row["extension_voice"];
+			$extension_dialect = $row["extension_dialect"];
 			$extension_type = $row["extension_type"];
 			$enabled = $row["enabled"];
 			$description = $row["description"];
@@ -930,11 +948,13 @@
 	$sql = "select d.device_address, d.device_template, d.device_description, l.device_line_uuid, l.device_uuid, l.line_number ";
 	$sql .= "from v_device_lines as l, v_devices as d ";
 	$sql .= "where (l.user_id = :user_id_1 or l.user_id = :user_id_2)";
+	$sql .= "and l.password = :password ";
 	$sql .= "and l.domain_uuid = :domain_uuid ";
 	$sql .= "and l.device_uuid = d.device_uuid ";
 	$sql .= "order by l.line_number, d.device_address asc ";
 	$parameters['user_id_1'] = $extension ?? null;
 	$parameters['user_id_2'] = $number_alias ?? null;
+	$parameters['password'] = $password ?? null;
 	$parameters['domain_uuid'] = $domain_uuid;
 	$database = new database;
 	$device_lines = $database->select($sql, $parameters, 'all');
@@ -1028,13 +1048,27 @@
 //change toll allow delimiter
 	$toll_allow = str_replace(':',',', $toll_allow ?? '');
 
+//get installed languages
+	$language_paths = glob($_SESSION["switch"]['sounds']['dir']."/*/*/*");
+	foreach ($language_paths as $key => $path) {
+		$path = str_replace($_SESSION["switch"]['sounds']['dir'].'/', "", $path);
+		$path_array = explode('/', $path);
+		if (count($path_array) <> 3 || strlen($path_array[0]) <> 2 || strlen($path_array[1]) <> 2) {
+			unset($language_paths[$key]);
+		}
+		$language_paths[$key] = str_replace($_SESSION["switch"]['sounds']['dir']."/","",$language_paths[$key] ?? '');
+		if (empty($language_paths[$key])) {
+			unset($language_paths[$key]);
+		}
+	}
+
 //set the defaults
 	if (empty($user_context)) { $user_context = $_SESSION['domain_name']; }
 	if (empty($max_registrations)) { $max_registrations = $_SESSION['extension']['max_registrations']['numeric'] ?? ''; }
 	if (empty($accountcode)) { $accountcode = get_accountcode(); }
 	if (empty($limit_max)) { $limit_max = '5'; }
 	if (empty($limit_destination)) { $limit_destination = '!USER_BUSY'; }
-	if (empty($call_timeout)) { $call_timeout = '30'; }
+	if (empty($call_timeout)) { $call_timeout = $_SESSION['extension']['call_timeout']['numeric'] ?? 30; }
 	if (empty($call_screen_enabled)) { $call_screen_enabled = 'false'; }
 	if (empty($user_record)) { $user_record = $_SESSION['extension']['user_record_default']['text']; }
 	if (empty($voicemail_transcription_enabled)) { $voicemail_transcription_enabled = $_SESSION['voicemail']['transcription_enabled_default']['boolean']; }
@@ -1271,7 +1305,7 @@
 			echo "    <br />\n";
 			echo "    ".$text['description-accountcode']."\n";
 			echo "</td>\n";
-			echo "</tr>\n";	
+			echo "</tr>\n";
 	}
 
 	if (permission_exists('device_edit') && (empty($extension_type) || $extension_type != 'virtual')) {
@@ -1754,7 +1788,7 @@
 		echo "</td>\n";
 		echo "</tr>\n";
 
-		if (permission_exists('voicemail_transcription_enabled')) {
+		if (permission_exists('voicemail_transcription_enabled') && ($_SESSION['voicemail']['transcribe_enabled']['boolean'] ?? '') == "true") {
 			echo "<tr>\n";
 			echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 			echo "	".$text['label-voicemail_transcription_enabled']."\n";
@@ -1968,6 +2002,36 @@
 		echo $moh->select('hold_music', $hold_music ?? '', $options);
 		echo "	<br />\n";
 		echo $text['description-hold_music']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
+	
+	if (permission_exists('extension_language')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+		echo "	".$text['label-language']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "  <select class='formfld' type='text' name='extension_language'>\n";
+		echo "		<option></option>\n";
+		if (!empty($extension_language) && !empty($extension_dialect) && !empty($extension_voice)) {
+			$language_formatted = $extension_language."-".$extension_dialect." ".$extension_voice;
+			echo "		<option value='".escape($extension_language.'/'.$extension_dialect.'/'.$extension_voice)."' selected='selected'>".escape($language_formatted)."</option>\n";
+		}
+		if (!empty($language_paths)) {
+			foreach ($language_paths as $key => $language_variables) {
+				$language_variables = explode('/',$language_paths[$key]);
+				$language = $language_variables[0];
+				$dialect = $language_variables[1];
+				$voice = $language_variables[2];
+				if (empty($language_formatted) || $language_formatted != $language.'-'.$dialect.' '.$voice) {
+					echo "		<option value='".$language."/".$dialect."/".$voice."'>".$language."-".$dialect." ".$voice."</option>\n";
+				}
+			}
+		}
+		echo "  </select>\n";
+		echo "<br />\n";
+		echo $text['description-language']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 	}

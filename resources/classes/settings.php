@@ -63,10 +63,11 @@ class settings {
 
 	/**
 	 * get the value
-	 * @param text category
-	 * @param text subcategory
+	 * @param string category
+	 * @param string subcategory
+	 * @param mixed allows default value returned if category and subcategory not found
 	 */
-	public function get($category = null, $subcategory = null) {
+	public function get(string $category = null, string $subcategory = null, $default_value = null) {
 
 		if (empty($category)) {
 			return $this->settings;
@@ -75,7 +76,7 @@ class settings {
 			return $this->settings[$category];
 		}
 		else {
-			return $this->settings[$category][$subcategory];
+			return $this->settings[$category][$subcategory] ?? $default_value;
 		}
 
 	}
@@ -157,6 +158,9 @@ class settings {
 				$subcategory = $row['default_setting_subcategory'];
 				if (empty($subcategory)) {
 					if ($name == "array") {
+						if (!isset($this->settings[$category]) || !is_array($this->settings[$category])) {
+							$this->settings[$category] = array();
+						}
 						$this->settings[$category][] = $row['default_setting_value'];
 					}
 					else {
@@ -165,6 +169,9 @@ class settings {
 				}
 				else {
 					if ($name == "array") {
+						if (!isset($this->settings[$category][$subcategory]) || !is_array($this->settings[$category][$subcategory])) {
+							$this->settings[$category][$subcategory] = array();
+						}
 						$this->settings[$category][$subcategory][] = $row['default_setting_value'];
 					}
 					else {
@@ -195,6 +202,9 @@ class settings {
 				$subcategory = $row['domain_setting_subcategory'];
 				if (empty($subcategory)) {
 					if ($name == "array") {
+						if (!isset($this->settings[$category]) || !is_array($this->settings[$category])) {
+						    $this->settings[$category] = array();
+						}
 						$this->settings[$category][] = $row['domain_setting_value'];
 					}
 					else {
@@ -203,6 +213,9 @@ class settings {
 				}
 				else {
 					if ($name == "array") {
+						if (!isset($this->settings[$category][$subcategory]) || !is_array($this->settings[$category][$subcategory])) {
+						    $this->settings[$category][$subcategory] = array();
+						}
 						$this->settings[$category][$subcategory][] = $row['domain_setting_value'];
 					}
 					else {

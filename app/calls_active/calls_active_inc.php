@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -52,11 +52,11 @@
 	$switch_cmd = 'show channels as json';
 
 //create the event socket connection
-	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+	$esl = event_socket::create();
 
 //send the event socket command and get the array
-	if ($fp) {
-		$json = trim(event_socket_request($fp, 'api '.$switch_cmd));
+	if ($esl->is_connected()) {
+		$json = trim(event_socket::api($switch_cmd));
 		$results = json_decode($json, "true");
 	}
 
@@ -90,7 +90,7 @@
 
 
 //if the connnection is available then run it and return the results
-	if (!$fp) {
+	if (!$esl) {
 
 		$msg = "<div align='center'>".$text['confirm-socket']."<br /></div>";
 		echo "<div align='center'>\n";
@@ -116,6 +116,22 @@
 			echo "	<div class='heading'><b>".$text['title']." (".$num_rows.")</b></div>\n";
 			echo "	<div class='actions'>\n";
 			echo "		<span id='refresh_state'>".button::create(['type'=>'button','title'=>$text['label-refresh_pause'],'icon'=>'sync-alt fa-spin','onclick'=>'refresh_stop()'])."</span>";
+			if (permission_exists('call_active_eavesdrop') && !empty($_SESSION['user']['extensions'])) {
+				if (sizeof($_SESSION['user']['extensions']) > 1) {
+					echo "	<input type='hidden' id='eavesdrop_dest' value=\"".(($_REQUEST['eavesdrop_dest'] == '') ? $_SESSION['user']['extension'][0]['destination'] : escape($_REQUEST['eavesdrop_dest']))."\">\n";
+					echo "	<i class='fas fa-headphones' style='margin-left: 15px; cursor: help;' title='".$text['description-eavesdrop_destination']."' align='absmiddle'></i>\n";
+					echo "	<select class='formfld' style='margin-right: 5px;' align='absmiddle' onchange=\"document.getElementById('eavesdrop_dest').value = this.options[this.selectedIndex].value; refresh_start();\" onfocus='refresh_stop();'>\n";
+					if (is_array($_SESSION['user']['extensions'])) {
+						foreach ($_SESSION['user']['extensions'] as $user_extension) {
+							echo "	<option value='".escape($user_extension)."' ".(($_REQUEST['eavesdrop_dest'] == $user_extension) ? "selected" : null).">".escape($user_extension)."</option>\n";
+						}
+					}
+					echo "	</select>\n";
+				}
+				else if (sizeof($_SESSION['user']['extensions']) == 1) {
+					echo "	<input type='hidden' id='eavesdrop_dest' value=\"".escape($_SESSION['user']['extension'][0]['destination'])."\">\n";
+				}
+			}
 			if (permission_exists('call_active_hangup') && $rows) {
 				echo button::create(['type'=>'button','label'=>$text['label-hangup'],'icon'=>'phone-slash','id'=>'btn_delete','onclick'=>"refresh_stop(); modal_open('modal-hangup','btn_hangup');"]);
 			}
@@ -163,8 +179,8 @@
 			echo "	<th>".$text['label-app']."</th>\n";
 			echo "	<th>".$text['label-codec']."</th>\n";
 			echo "	<th>".$text['label-secure']."</th>\n";
-			if (permission_exists('call_active_hangup')) {
-				echo "	<td class='action-button'>&nbsp;</td>\n";
+			if (permission_exists('call_active_eavesdrop') || permission_exists('call_active_hangup')) {
+				echo "	<th>&nbsp;</th>\n";
 			}
 			echo "</tr>\n";
 
@@ -222,13 +238,20 @@
 						echo "	<td>".(!empty($application) ? escape($application).":".escape($application_data) : null)."&nbsp;</td>\n";
 						echo "	<td>".escape($read_codec).":".escape($read_rate)." / ".escape($write_codec).":".escape($write_rate)."&nbsp;</td>\n";
 						echo "	<td>".escape($secure)."&nbsp;</td>\n";
-						if (permission_exists('call_active_hangup')) {
-							echo "	<td class='action-button'>";
-							echo button::create(['type'=>'button','title'=>$text['label-hangup'],'icon'=>'phone-slash','onclick'=>"if (confirm('".$text['confirm-hangup']."')) { list_self_check('checkbox_".$x."'); list_action_set('hangup'); list_form_submit('form_list'); } else { this.blur(); return false; }",'onmouseover'=>'refresh_stop()','onmouseout'=>'refresh_start()']);
-							echo "	</td>\n";
+						if (permission_exists('call_active_eavesdrop') || permission_exists('call_active_hangup')) {
+							echo "	<td class='button right' style='padding-right: 0;'>\n";
+							//eavesdrop
+							if (permission_exists('call_active_eavesdrop') && $callstate == 'ACTIVE' && !empty($_SESSION['user']['extensions']) && !in_array($cid_num, $_SESSION['user']['extensions'])) {
+								echo button::create(['type'=>'button','label'=>$text['label-eavesdrop'],'icon'=>'headphones','collapse'=>'hide-lg-dn','onclick'=>"if (confirm('".$text['confirm-eavesdrop']."')) { eavesdrop_call('".escape($cid_num)."','".escape($uuid)."'); } else { this.blur(); return false; }",'onmouseover'=>'refresh_stop()','onmouseout'=>'refresh_start()']);
+							}
+							//hangup
+							if (permission_exists('call_active_hangup')) {
+								echo button::create(['type'=>'button','label'=>$text['label-hangup'],'icon'=>'phone-slash','collapse'=>'hide-lg-dn','onclick'=>"if (confirm('".$text['confirm-hangup']."')) { list_self_check('checkbox_".$x."'); list_action_set('hangup'); list_form_submit('form_list'); } else { this.blur(); return false; }",'onmouseover'=>'refresh_stop()','onmouseout'=>'refresh_start()']);
+							}
+							echo "</td>\n";
 						}
 						echo "</tr>\n";
-					
+
 					//unset the domain name
 						unset($domain_name);
 
@@ -247,3 +270,4 @@
 	}
 
 ?>
+

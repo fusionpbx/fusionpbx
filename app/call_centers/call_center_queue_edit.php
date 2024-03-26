@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2023
+	Portions created by the Initial Developer are Copyright (C) 2008-2024
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -116,6 +116,14 @@
 			$queue_email_address = $_POST["queue_email_address"] ?? null;
 			$queue_description = $_POST["queue_description"];
 
+		//set the context for users that do not have the permission
+			if (permission_exists('call_center_queue_context')) {
+				$queue_context = $_POST["queue_context"];
+			}
+			else if ($action == 'add') {
+				$queue_context = $_SESSION['domain_name'];
+			}
+
 		//remove invalid characters
 			$queue_cid_prefix = str_replace(":", "-", $queue_cid_prefix);
 			$queue_cid_prefix = str_replace("\"", "", $queue_cid_prefix);
@@ -152,13 +160,13 @@
 
 		//delete the agent from freeswitch
 			//setup the event socket connection
-			$fp = event_socket_create();
+			$esl = event_socket::create();
 			//delete the agent over event socket
-			if ($fp) {
+			if ($esl->is_connected()) {
 				//callcenter_config tier del [queue_name] [agent_name]
 				if (is_numeric($queue_extension) && is_uuid($call_center_agent_uuid)) {
-					$cmd = "api callcenter_config tier del ".$queue_extension."@".$_SESSION['domain_name']." ".$call_center_agent_uuid;
-					$response = event_socket_request($fp, $cmd);
+					$cmd = "callcenter_config tier del ".$queue_extension."@".$_SESSION['domain_name']." ".$call_center_agent_uuid;
+					$response = event_socket::api($cmd);
 				}
 			}
 
@@ -187,7 +195,7 @@
 			if ($action == "update") {
 				$call_center_queue_uuid = $_POST["call_center_queue_uuid"];
 			}
-	
+
 		//validate the token
 			$token = new token;
 			if (!$token->validate($_SERVER['PHP_SELF'])) {
@@ -316,11 +324,12 @@
 			if (permission_exists('call_center_email_address')) {
 				$array['call_center_queues'][0]['queue_email_address'] = $queue_email_address;
 			}
+			$array['call_center_queues'][0]['queue_context'] = $queue_context;
 			$array['call_center_queues'][0]['queue_description'] = $queue_description;
 			$array['call_center_queues'][0]['call_center_queue_uuid'] = $call_center_queue_uuid;
 			$array['call_center_queues'][0]['dialplan_uuid'] = $dialplan_uuid;
 			$array['call_center_queues'][0]['domain_uuid'] = $domain_uuid;
-			
+
 			$y = 0;
 			if (!empty($_POST["call_center_tiers"])) {
 				foreach ($_POST["call_center_tiers"] as $row) {
@@ -397,7 +406,9 @@
 			$array['dialplans'][0]["dialplan_uuid"] = $dialplan_uuid;
 			$array['dialplans'][0]["dialplan_name"] = $queue_name;
 			$array['dialplans'][0]["dialplan_number"] = $queue_extension;
-			$array['dialplans'][0]["dialplan_context"] = $_SESSION['domain_name'];
+			if (isset($queue_context)) {
+				$array['dialplans'][0]["dialplan_context"] = $queue_context;
+			}
 			$array['dialplans'][0]["dialplan_continue"] = "false";
 			$array['dialplans'][0]["dialplan_xml"] = $dialplan_xml;
 			$array['dialplans'][0]["dialplan_order"] = "230";
@@ -457,9 +468,9 @@
 
 			if (!empty($agent_name)) {
 				//setup the event socket connection
-					$fp = event_socket_create();
+					$esl = event_socket::create();
 				//add the agent using event socket
-					if ($fp) {
+					if ($esl->is_connected()) {
 						/* syntax:
 							callcenter_config tier add [queue_name] [agent_name] [level] [position]
 							callcenter_config tier set state [queue_name] [agent_name] [state]
@@ -468,20 +479,20 @@
 						*/
 						//add the agent
 						if (is_numeric($queue_extension) && is_uuid($call_center_agent_uuid) && is_numeric($tier_level) && is_numeric($tier_position)) {
-							$cmd = "api callcenter_config tier add ".$queue_extension."@".$_SESSION["domain_name"]." ".$call_center_agent_uuid." ".$tier_level." ".$tier_position;
-							$response = event_socket_request($fp, $cmd);
+							$cmd = "callcenter_config tier add ".$queue_extension."@".$_SESSION["domain_name"]." ".$call_center_agent_uuid." ".$tier_level." ".$tier_position;
+							$response = event_socket::api($cmd);
 						}
 						usleep(200);
 						//agent set level
 						if (is_numeric($queue_extension) && is_numeric($tier_level)) {
-							$cmd = "api callcenter_config tier set level ".$queue_extension."@".$_SESSION["domain_name"]." ".$call_center_agent_uuid." ".$tier_level;
-							$response = event_socket_request($fp, $cmd);
+							$cmd = "callcenter_config tier set level ".$queue_extension."@".$_SESSION["domain_name"]." ".$call_center_agent_uuid." ".$tier_level;
+							$response = event_socket::api($cmd);
 						}
 						usleep(200);
 						//agent set position
 						if (is_numeric($queue_extension) && is_numeric($tier_position)) {
-							$cmd = "api callcenter_config tier set position ".$queue_extension."@".$_SESSION["domain_name"]." ".$tier_position;
-							$response = event_socket_request($fp, $cmd);
+							$cmd = "callcenter_config tier set position ".$queue_extension."@".$_SESSION["domain_name"]." ".$tier_position;
+							$response = event_socket::api($cmd);
 						}
 						usleep(200);
 					}
@@ -544,6 +555,7 @@
 				$queue_announce_frequency = $row["queue_announce_frequency"];
 				$queue_cc_exit_keys = $row["queue_cc_exit_keys"];
 				$queue_email_address = $row["queue_email_address"];
+				$queue_context = $row["queue_context"];
 				$queue_description = $row["queue_description"];
 			}
 		}
@@ -617,6 +629,7 @@
 	if (empty($queue_tier_rule_no_agent_no_wait)) { $queue_tier_rule_no_agent_no_wait = "true"; }
 	if (empty($queue_discard_abandoned_after)) { $queue_discard_abandoned_after = "900"; }
 	if (empty($queue_abandoned_resume_allowed)) { $queue_abandoned_resume_allowed = "false"; }
+	if (empty($queue_context)) { $queue_context = $_SESSION['domain_name']; }
 
 //create token
 	$object = new token;
@@ -634,6 +647,14 @@
 //only allow a uuid
 	if (empty($call_center_queue_uuid)) {
 		$call_center_queue_uuid = null;
+	}
+
+//set the record_template
+	if (empty($_SESSION['call_center']['record_name']['text'])) {
+		$record_template = $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/archive/\${strftime(%Y)}/\${strftime(%b)}/\${strftime(%d)}/\${uuid}.\${record_ext}";
+	}
+	else {
+		$record_template = $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/archive/".$_SESSION['call_center']['record_name']['text'];
 	}
 
 //show the content
@@ -765,7 +786,7 @@
 	echo "<td class='vncell' rowspan='2' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-'.$instance_label]."\n";
 	echo "</td>\n";
-	echo "<td class='vtable playback_progress_bar_background' id='recording_progress_bar_".$instance_id."' style='display: none; border-bottom: none; padding-top: 0 !important; padding-bottom: 0 !important;' align='left'><span class='playback_progress_bar' id='recording_progress_".$instance_id."'></span></td>\n";
+	echo "<td class='vtable playback_progress_bar_background' id='recording_progress_bar_".$instance_id."' onclick=\"recording_play('".$instance_id."', document.getElementById('".$instance_id."').value, document.getElementById('".$instance_id."').options[document.getElementById('".$instance_id."').selectedIndex].parentNode.getAttribute('data-type'));\" style='display: none; border-bottom: none; padding-top: 0 !important; padding-bottom: 0 !important;' align='left'><span class='playback_progress_bar' id='recording_progress_".$instance_id."'></span></td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
 	echo "<td class='vtable' align='left'>\n";
@@ -823,7 +844,7 @@
 			case 'ogg' : $mime_type = 'audio/ogg'; break;
 		}
 		echo "<audio id='recording_audio_".$instance_id."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".$instance_id."')\" onended=\"recording_reset('".$instance_id."');\" src='".($playable ?? '')."' type='".($mime_type ?? '')."'></audio>";
-		echo button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'icon'=>$_SESSION['theme']['button_icon_play'],'id'=>'recording_button_'.$instance_id,'style'=>'display: '.(!empty($mime_type) ? 'inline' : 'none'),'onclick'=>"recording_play('".$instance_id."')"]);
+		echo button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'icon'=>$_SESSION['theme']['button_icon_play'],'id'=>'recording_button_'.$instance_id,'style'=>'display: '.(!empty($mime_type) ? 'inline' : 'none'),'onclick'=>"recording_play('".$instance_id."', document.getElementById('".$instance_id."').value, document.getElementById('".$instance_id."').options[document.getElementById('".$instance_id."').selectedIndex].parentNode.getAttribute('data-type'))"]);
 		unset($playable, $mime_type);
 	}
 	echo "<br />\n";
@@ -988,10 +1009,9 @@
 	echo "	".$text['label-record_template']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	$record_template = $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/archive/\${strftime(%Y)}/\${strftime(%b)}/\${strftime(%d)}/\${uuid}.\${record_ext}";
 	echo "	<select class='formfld' name='queue_record_template'>\n";
 	if (!empty($queue_record_template)) {
-		echo "	<option value='".escape($queue_record_template)."' selected='selected' >".$text['option-true']."</option>\n";
+		echo "	<option value='".escape($record_template)."' selected='selected' >".$text['option-true']."</option>\n";
 	}
 	else {
 		echo "	<option value='".escape($record_template)."'>".$text['option-true']."</option>\n";
@@ -1266,7 +1286,7 @@
 		echo "<td class='vncell' rowspan='2' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-'.$instance_label]."\n";
 		echo "</td>\n";
-		echo "<td class='vtable playback_progress_bar_background' id='recording_progress_bar_".$instance_id."' style='display: none; border-bottom: none; padding-top: 0 !important; padding-bottom: 0 !important;' align='left'><span class='playback_progress_bar' id='recording_progress_".$instance_id."'></span></td>\n";
+		echo "<td class='vtable playback_progress_bar_background' id='recording_progress_bar_".$instance_id."' onclick=\"recording_play('".$instance_id."', document.getElementById('".$instance_id."').value, document.getElementById('".$instance_id."').options[document.getElementById('".$instance_id."').selectedIndex].parentNode.getAttribute('data-type'));\" style='display: none; border-bottom: none; padding-top: 0 !important; padding-bottom: 0 !important;' align='left'><span class='playback_progress_bar' id='recording_progress_".$instance_id."'></span></td>\n";
 		echo "</tr>\n";
 		echo "<tr>\n";
 		echo "<td class='vtable' align='left'>\n";
@@ -1324,7 +1344,7 @@
 				case 'ogg' : $mime_type = 'audio/ogg'; break;
 			}
 			echo "<audio id='recording_audio_".$instance_id."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".$instance_id."')\" onended=\"recording_reset('".$instance_id."');\" src='".($playable ?? '')."' type='".($mime_type ?? '')."'></audio>";
-			echo button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'icon'=>$_SESSION['theme']['button_icon_play'],'id'=>'recording_button_'.$instance_id,'style'=>'display: '.(!empty($mime_type) ? 'inline' : 'none'),'onclick'=>"recording_play('".$instance_id."')"]);
+			echo button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'icon'=>$_SESSION['theme']['button_icon_play'],'id'=>'recording_button_'.$instance_id,'style'=>'display: '.(!empty($mime_type) ? 'inline' : 'none'),'onclick'=>"recording_play('".$instance_id."', document.getElementById('".$instance_id."').value, document.getElementById('".$instance_id."').options[document.getElementById('".$instance_id."').selectedIndex].parentNode.getAttribute('data-type'))"]);
 			unset($playable, $mime_type);
 		}
 		echo "<br />\n";
@@ -1366,6 +1386,19 @@
 		echo "  <input class='formfld' type='text' name='queue_email_address' maxlength='255' value='".escape($queue_email_address ?? '')."'>\n";
 		echo "<br />\n";
 		echo $text['description-queue_email_address']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
+
+	if (permission_exists('call_center_queue_context')) {
+		echo "<tr>\n";
+		echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-context']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<input class='formfld' type='text' name='queue_context' maxlength='255' value=\"".escape($queue_context)."\" required='required'>\n";
+		echo "<br />\n";
+		echo $text['description-enter-context']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 	}

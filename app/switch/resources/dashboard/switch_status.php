@@ -26,19 +26,19 @@
 	$row_style["1"] = "row_style1";
 
 //connect to event socket
-	$fp = event_socket_create();
+	$esl = event_socket::create();
 
 //switch version
-	if (permission_exists('switch_version') && $fp) {
-		$switch_version = event_socket_request($fp, 'api version');
+	if (permission_exists('switch_version') && $esl->is_connected()) {
+		$switch_version = event_socket::api('version');
 		preg_match("/FreeSWITCH Version (\d+\.\d+\.\d+(?:\.\d+)?).*\(.*?(\d+\w+)\s*\)/", $switch_version, $matches);
 		$switch_version = $matches[1];
 		$switch_bits = $matches[2];
 	}
 
 //switch uptime
-	if (permission_exists('switch_uptime') && $fp) {
-		$tmp = event_socket_request($fp, 'api status');
+	if (permission_exists('switch_uptime') && $esl->is_connected()) {
+		$tmp = event_socket::api('status');
 		$tmp = explode("\n", $tmp);
 		$tmp = $tmp[0];
 		$tmp = explode(' ', $tmp);
@@ -55,8 +55,8 @@
 //channel count
 	$channels = '';
 	$tr_link_channels = '';
-	if (permission_exists('switch_channels') && $fp) {
-		$tmp = event_socket_request($fp, 'api status');
+	if (permission_exists('switch_channels') && $esl->is_connected()) {
+		$tmp = event_socket::api('status');
 		$matches = Array();
 		preg_match("/(\d+)\s+session\(s\)\s+\-\speak/", $tmp, $matches);
 		$channels = $matches[1] ? $matches[1] : 0;

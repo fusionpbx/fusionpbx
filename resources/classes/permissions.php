@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2016	All Rights Reserved.
+	Copyright (C) 2016 - 2023	All Rights Reserved.
 */
 
 /**
@@ -101,19 +101,21 @@ if (!class_exists('permissions')) {
 				return false;
 			}
 
-			//get the permissions assigned to the user through the assigned groups
+			//prepare the parameters
 			$x = 0;
-			$sql = "select distinct(permission_name) from v_group_permissions ";
-			$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 			foreach ($groups as $field) {
 				if (!empty($field['group_name'])) {
-					$sql_where_or[] = "group_name = :group_name_".$x;
+					$parameter_names[] = ":group_name_".$x;
 					$parameters['group_name_'.$x] = $field['group_name'];
 					$x++;
 				}
 			}
-			if (!empty($sql_where_or)) {
-				$sql .= "and (".implode(' or ', $sql_where_or).") ";
+
+			//get the permissions assigned to the user through the assigned groups
+			$sql = "select distinct(permission_name) from v_group_permissions ";
+			$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+			if (is_array($parameter_names) && @sizeof($parameter_names) != 0) {
+				$sql .= "and group_name in (".implode(", ", $parameter_names).") \n";
 			}
 			$sql .= "and permission_assigned = 'true' ";
 			$parameters['domain_uuid'] = $domain_uuid;
