@@ -356,7 +356,7 @@ if (!class_exists('destinations')) {
 					}
 
 					if (!empty($row['result']['data']) && !empty($row['select_value'][$destination_type])) {
-						$response .= "		<optgroup label='".$text2['title-'.$label]."'>\n";
+						$response .= "		<optgroup label='".$text2['title-'.$name]."'>\n";
 						$label2 = $label;
 						foreach ($row['result']['data'] as $data) {
 							$select_value = $row['select_value'][$destination_type];
