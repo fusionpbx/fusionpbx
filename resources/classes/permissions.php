@@ -46,7 +46,7 @@ if (!class_exists('permissions')) {
 		 * @var string $permission
 		 */
 		public function delete($permission, $type) {
-			if ($this->exists($permission)) {
+			if ($this->exists($permission) && !empty($_SESSION["permissions"][$permission])) {
 				if ($type === "temp") {
 					if ($_SESSION["permissions"][$permission] === "temp") {
 						unset($_SESSION["permissions"][$permission]);
