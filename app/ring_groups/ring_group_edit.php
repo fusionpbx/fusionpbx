@@ -58,14 +58,24 @@
 	$ring_group_description = '';
 	$onkeyup = '';
 
-//initialize the destinations object
-	$destination = new destinations;
+//initialize the database object
+	$database = new database();
+	$database->app_name = 'ring_groups';
+	$database->app_uuid = '1d61fb65-1eec-bc73-a6ee-a6203b4fe6f2';
 
-//get total domain ring group count
+//initialize the settings object with domain and user
+	$domain_uuid = $_SESSION['domain_uuid'] ?? '';
+	$user_uuid = $_SESSION['user_uuid'] ?? '';
+	$setting = new settings(['domain_uuid' => $domain_uuid, 'user_uuid' => $user_uuid]);
+
+//initialize the destinations objects with the settings object so we don't re-read the database
+	$destination = new destinations(['settings' => $setting, 'domain_uuid' => $domain_uuid, 'user_uuid' => $user_uuid]);
+	$timeout_destination = new destinations(['settings' => $setting, 'domain_uuid' => $domain_uuid, 'user_uuid' => $user_uuid]);
+
+//get the total domain ring group count
 	$sql = "select count(*) from v_ring_groups ";
 	$sql .= "where domain_uuid = :domain_uuid ";
 	$parameters['domain_uuid'] = $domain_uuid;
-	$database = new database;
 	$total_ring_groups = $database->select($sql, $parameters ?? null, 'column');
 	unset($sql, $parameters);
 
@@ -84,7 +94,6 @@
 			$sql = "select domain_uuid from v_ring_groups ";
 			$sql .= "where ring_group_uuid = :ring_group_uuid ";
 			$parameters['ring_group_uuid'] = $ring_group_uuid;
-			$database = new database;
 			$domain_uuid = $database->select($sql, $parameters, 'column');
 			unset($sql, $parameters);
 		}
@@ -113,9 +122,6 @@
 			$p = new permissions;
 			$p->add('ring_group_user_delete', 'temp');
 		//execute delete
-			$database = new database;
-			$database->app_name = 'ring_groups';
-			$database->app_uuid = '1d61fb65-1eec-bc73-a6ee-a6203b4fe6f2';
 			$database->delete($array);
 			unset($array);
 		//revoke temporary permissions
@@ -133,7 +139,6 @@
 			$sql = "select count(*) from v_ring_groups ";
 			$sql .= "where domain_uuid = :domain_uuid ";
 			$parameters['domain_uuid'] = $domain_uuid;
-			$database = new database;
 			$total_ring_groups = $database->select($sql, $parameters, 'column');
 			unset($sql, $parameters);
 
@@ -177,7 +182,9 @@
 			$ring_group_extension = $_POST["ring_group_extension"];
 			$ring_group_greeting = $_POST["ring_group_greeting"];
 			$ring_group_strategy = $_POST["ring_group_strategy"];
-			$ring_group_destinations = $_POST["ring_group_destinations"];
+			$ring_group_destinations = $_POST["ring_group_destinations"] ?? [];
+			// transform all destinations to be using a number only and not a "transfer:" syntax
+			destinations::transform_destination_numbers($ring_group_destinations);
 			$ring_group_timeout_action = $_POST["ring_group_timeout_action"];
 			$ring_group_call_timeout = $_POST["ring_group_call_timeout"];
 			$ring_group_caller_id_name = $_POST["ring_group_caller_id_name"];
@@ -230,9 +237,6 @@
 			$p = new permissions;
 			$p->add('ring_group_user_add', 'temp');
 		//execute delete
-			$database = new database;
-			$database->app_name = 'ring_groups';
-			$database->app_uuid = '1d61fb65-1eec-bc73-a6ee-a6203b4fe6f2';
 			$database->save($array);
 			unset($array);
 		//revoke temporary permissions
@@ -369,7 +373,7 @@
 			$array["ring_groups"][0]["ring_group_enabled"] = $ring_group_enabled;
 			$array["ring_groups"][0]["ring_group_description"] = $ring_group_description;
 			$array["ring_groups"][0]["dialplan_uuid"] = $dialplan_uuid;
-			if ($destination->valid($ring_group_timeout_app.':'.$ring_group_timeout_data)) {
+			if ($timeout_destination->valid($ring_group_timeout_action)) {
 				$array["ring_groups"][0]["ring_group_timeout_app"] = $ring_group_timeout_app;
 				$array["ring_groups"][0]["ring_group_timeout_data"] = $ring_group_timeout_data;
 			}
@@ -405,7 +409,6 @@
 						$parameters['ring_group_uuid'] = $ring_group_uuid;
 						$parameters['range_first_extension'] = $range_first_extension;
 						$parameters['range_second_extension'] = $range_second_extension;
-						$database = new database;
 						$extensions = $database->select($sql, $parameters, 'all');
 						unset($sql, $parameters, $database);
 						// echo var_dump($extensions);
@@ -467,9 +470,6 @@
 			$p->add("dialplan_edit", "temp");
 
 		//save to the data
-			$database = new database;
-			$database->app_name = 'ring_groups';
-			$database->app_uuid = '1d61fb65-1eec-bc73-a6ee-a6203b4fe6f2';
 			$database->save($array);
 			$message = $database->message;
 
@@ -521,7 +521,6 @@
 		$sql = "select * from v_ring_groups ";
 		$sql .= "where ring_group_uuid = :ring_group_uuid ";
 		$parameters['ring_group_uuid'] = $ring_group_uuid;
-		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
 		if (is_array($row) && @sizeof($row) != 0) {
 			$domain_uuid = $row["domain_uuid"];
@@ -579,7 +578,6 @@
 		$sql .= "order by destination_delay, destination_number asc ";
 		$parameters['domain_uuid'] = $domain_uuid;
 		$parameters['ring_group_uuid'] = $ring_group_uuid;
-		$database = new database;
 		$ring_group_destinations = $database->select($sql, $parameters, 'all');
 		unset($sql, $parameters);
 	}
@@ -614,7 +612,6 @@
 		$sql .= "order by u.username asc ";
 		$parameters['domain_uuid'] = $domain_uuid;
 		$parameters['ring_group_uuid'] = $ring_group_uuid;
-		$database = new database;
 		$ring_group_users = $database->select($sql, $parameters, 'all');
 		unset($sql, $parameters);
 	}
@@ -625,7 +622,6 @@
 	$sql .= "and user_enabled = 'true' ";
 	$sql .= "order by username asc ";
 	$parameters['domain_uuid'] = $domain_uuid;
-	$database = new database;
 	$users = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
@@ -913,7 +909,23 @@
 				$onkeyup = "onkeyup=\"document.getElementById('ring_group_destinations_".$x."_destination_enabled').value = (this.value != '' ? true : false);\""; // select
 			}
 		}
-		echo "					<input type=\"text\" name=\"ring_group_destinations[".$x."][destination_number]\" class=\"formfld\" value=\"".escape($row['destination_number'])."\" ".$onkeyup.">\n";
+		if (!isset($row['destination_number'])) {
+			$row['destination_number'] = '';
+		}
+		//check if the setting is enabled
+		if ($setting->get('destinations','ring_group_select_mode', 'false') === 'true') {
+			// isolate the extension number
+			$matches = [];
+			preg_match('/\b(\d+)\b/', $row['destination_number'], $matches);
+			// put extension number to transfer syntax
+			$select_destination_number = "transfer:" . $matches[0] . " XML " . $destination->domain_name;
+			//display select box
+			echo $destination->select('dialplan', "ring_group_destinations[$x][destination_number]", $select_destination_number ?? '', ['extensions', 'destinations']);
+		}
+		//standard text input box is required
+		else {
+			echo "					<input type=\"text\" name=\"ring_group_destinations[".$x."][destination_number]\" class=\"formfld\" value=\"".escape($row['destination_number'])."\" ".$onkeyup.">\n";
+		}
 		echo "				</td>\n";
 		echo "				<td class='formfld'>\n";
 		echo "					<select name='ring_group_destinations[".$x."][destination_delay]' class='formfld' style='width:55px'>\n";
@@ -997,7 +1009,7 @@
 	echo "	".$text['label-timeout_destination']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo $destination->select('dialplan', 'ring_group_timeout_action', $ring_group_timeout_action ?? '');
+	echo $timeout_destination->select('dialplan', 'ring_group_timeout_action', $ring_group_timeout_action ?? '');
 	echo "	<br />\n";
 	echo "	".$text['description-timeout_destination']."\n";
 	echo "</td>\n";
