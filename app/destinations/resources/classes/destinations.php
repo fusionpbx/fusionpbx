@@ -49,6 +49,7 @@ if (!class_exists('destinations')) {
 		private $list_page;
 		private $table;
 		private $uuid_prefix;
+		private $settings;
 
 		/**
 		* Called when the object is created
@@ -60,7 +61,7 @@ if (!class_exists('destinations')) {
 				}
 
 			//get the email queue settings
-				$this->setting = new settings();
+				$this->settings = new settings();
 
 			//assign private variables
 				$this->app_name = 'destinations';
@@ -1121,8 +1122,8 @@ if (!class_exists('destinations')) {
 		public function destination_summary() {
 
 			//set the time zone
-				if (!empty($this->setting->get('domain', 'time_zone'))) {
-					$time_zone = $this->setting->get('domain', 'time_zone');
+				if (!empty($this->settings->get('domain', 'time_zone'))) {
+					$time_zone = $this->settings->get('domain', 'time_zone');
 				}
 				else {
 					$time_zone = date_default_timezone_get();
