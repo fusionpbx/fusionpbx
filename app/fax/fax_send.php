@@ -1107,12 +1107,15 @@ if (!$included) {
 		echo "</tr>\n";
 
 		if (permission_exists('fax_subject')) {
+			$cover_subject_required = $setting->get('fax','cover_subject_required') ?? '';
+			$class = ($cover_subject_required == 'true') ? 'vncellreq' : 'vncell';
+			$required = ($cover_subject_required == 'true') ? 'required' : '';
 			echo "<tr>\n";
-			echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+			echo "<td class='".$class."' valign='top' align='left' nowrap>\n";
 			echo "	".$text['label-fax-subject']."\n";
 			echo "</td>\n";
 			echo "<td class='vtable' align='left'>\n";
-			echo "	<input type='text' name='fax_subject' class='formfld' style='' value=''>\n";
+			echo "	<input type='text' name='fax_subject' class='formfld' ".$required." style='' value=''>\n";
 			echo "	<br />\n";
 			echo "	".$text['description-fax-subject']."\n";
 			echo "</td>\n";
@@ -1120,12 +1123,15 @@ if (!$included) {
 		}
 
 		if (permission_exists('fax_message')) {
+			$cover_message_required = $setting->get('fax','cover_message_required') ?? '';
+			$class = ($cover_message_required == 'true') ? 'vncellreq' : 'vncell';
+			$required = ($cover_message_required == 'true') ? 'required' : '';
 			echo "<tr>\n";
-			echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+			echo "<td class='".$class."' valign='top' align='left' nowrap>\n";
 			echo "		".$text['label-fax-message']."\n";
 			echo "</td>\n";
 			echo "<td class='vtable' align='left'>\n";
-			echo "	<textarea type='text' name='fax_message' class='formfld' style='width: 65%; height: 175px;'></textarea>\n";
+			echo "	<textarea type='text' name='fax_message' class='formfld' ".$required." style='width: 65%; height: 175px;'></textarea>\n";
 			echo "<br />\n";
 			echo "	".$text['description-fax-message']."\n";
 			echo "</td>\n";
