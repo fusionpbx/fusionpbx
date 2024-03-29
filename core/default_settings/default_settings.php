@@ -492,7 +492,7 @@
 			else if ($category == 'theme' && $subcategory == 'custom_css_code' && $name == 'text') {
 				echo "		[...]\n";
 			}
-			else if ($subcategory == 'password' || substr_count($subcategory, '_password') > 0 || $category == "login" && $subcategory == "password_reset_key" && $name == "text" || substr_count($subcategory, '_secret') > 0) {
+			else if ($subcategory == 'password' || substr_count($subcategory, '_password') > 0 || substr_count($subcategory, '_key') > 0 || substr_count($subcategory, '_secret') > 0) {
 				echo "		".str_repeat('*', strlen($row['default_setting_value'] ?? ''));
 			}
 			else if ($category == 'theme' && $subcategory == 'button_icons' && $name == 'text') {
