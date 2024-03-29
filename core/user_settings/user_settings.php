@@ -297,7 +297,7 @@
 				) {
 				echo "		".$text['label-'.escape($row['user_setting_value'])];
 			}
-			else if ($subcategory == 'password' || substr_count($subcategory, '_password') > 0 || $category == "login" && $subcategory == "password_reset_key" && $name == "text") {
+			else if ($subcategory == 'password' || substr_count($subcategory, '_password') > 0 || substr_count($subcategory, '_key') || substr_count($subcategory, '_secret') > 0) {
 				echo "		".str_repeat('*', strlen(escape($row['user_setting_value'])));
 			}
 			else if ($category == 'theme' && $subcategory == 'button_icons' && $name == 'text') {
