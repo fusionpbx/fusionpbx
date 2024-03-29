@@ -36,7 +36,7 @@ class curl {
 	private $ch;
 	private $response;
 	private $error;
-	private $httpCode;
+	private $http_code;
 
 	public function __construct($url = null, $options = []) {
 		$this->ch = curl_init($url);
@@ -50,17 +50,17 @@ class curl {
 	 * @param type $value
 	 * @return $this
 	 */
-	public function setOption($option, $value) {
+	public function set_option($option, $value) {
 		curl_setopt($this->ch, $option, $value);
 		return $this; // Allow chaining
 	}
 
-	public function setUrl($url) {
+	public function set_url($url) {
 		curl_setopt($this->ch, CURLOPT_URL, $url);
 		return $this; // Allow chaining
 	}
 
-	public function setHeaders(array $headers) {
+	public function set_headers(array $headers) {
 		curl_setopt($this->ch, CURLOPT_HTTPHEADER, $headers);
 		return $this; // Allow chaining
 	}
@@ -68,7 +68,7 @@ class curl {
 	public function get() {
 		$this->response = curl_exec($this->ch);
 		$this->error = curl_error($this->ch);
-		$this->httpCode = curl_getinfo($this->ch, CURLINFO_HTTP_CODE);
+		$this->http_code = curl_getinfo($this->ch, CURLINFO_HTTP_CODE);
 		return $this->response;
 	}
 
@@ -78,16 +78,16 @@ class curl {
 		return $this->get(); // Reuse get() method for simplicity
 	}
 
-	public function getResponse() {
+	public function get_response() {
 		return $this->response;
 	}
 
-	public function getError() {
+	public function get_error() {
 		return $this->error;
 	}
 
-	public function getHttpCode() {
-		return $this->httpCode;
+	public function get_http_code() {
+		return $this->http_code;
 	}
 
 	public function __destruct() {

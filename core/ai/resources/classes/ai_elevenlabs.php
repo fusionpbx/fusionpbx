@@ -98,10 +98,10 @@ class ai_elevenlabs implements ai_speech {
 		$http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 		curl_close($ch);
 //		$curl = new curl('https://api.elevenlabs.io/v1/text-to-speech/' . $this->voice);
-//		$response = $curl->setHeaders($headers)->post($encoded_message);
-//		$error = $curl->getError();
-//		$http_code = $curl->getHttpCode();
-//		if ($curl->getHttpCode() == 200) {
+//		$response = $curl->set_headers($headers)->post($encoded_message);
+//		$error = $curl->get_error();
+//		$http_code = $curl->get_http_code();
+//		if ($curl->get_http_code() == 200) {
 		if ($http_code == 200) {
 			file_put_contents($this->path . '/' . $this->filename, $response);
 			return true;
