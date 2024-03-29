@@ -2500,7 +2500,7 @@
 																}
 																catch(PDOException $e) {
 																	$retval = false;
-																	if ($message["code"] = "200") {
+																	if ($message["code"] == "200") {
 																		$message["message"] = "Bad Request";
 																		$message["code"] = "400";
 																	}
@@ -2650,7 +2650,7 @@
 															}
 															catch(PDOException $e) {
 																$retval = false;
-																if ($message["code"] = "200") {
+																if ($message["code"] == "200") {
 																	$message["message"] = "Bad Request";
 																	$message["code"] = "400";
 																}
