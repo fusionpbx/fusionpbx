@@ -27,6 +27,7 @@ if (!class_exists('ai')) {
 		public $audio_path;
 		public $audio_filename;
 		public $audio_format;
+		public $audio_model;
 		public $audio_voice;
 		public $audio_language;
 		public $audio_message;
@@ -63,6 +64,21 @@ if (!class_exists('ai')) {
 
 			//return the voices array
 			return $object->get_voices();
+		}
+
+		/**
+		 * get_voices - get the list voices
+		 */
+		public function get_models() : array {
+
+			//set the class interface to use the _template suffix
+			$classname = 'ai_'.$this->speech_engine;
+
+			//create the object
+			$object = new $classname($this->settings);
+
+			//return the voices array
+			return $object->get_models();
 		}
 
 		/**
@@ -127,6 +143,7 @@ if (!class_exists('ai')) {
 					$object->set_filename($this->audio_filename);
 					$object->set_format($this->audio_format);
 					$object->set_voice($this->audio_voice);
+					$object->set_model($this->audio_model);
 					//$object->set_language($this->audio_language);
 					//$object->set_translate($this->audio_translate);
 					$object->set_message($this->audio_message);
