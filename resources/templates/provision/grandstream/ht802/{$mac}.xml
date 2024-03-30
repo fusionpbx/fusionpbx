@@ -230,7 +230,7 @@
 
 
     <!-- # ACS URL -->
-    <!-- #P4503= -->
+    {if isset($grandstream_acs_url)}<P4503>{$grandstream_acs_url}</P4503>{else}<P4503></P4503>{/if}
 
     <!-- # ACS Username -->
     <!-- # String -->

@@ -911,6 +911,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "enables the periodic enform enable interval 0-disable, 1-enable";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "1e47d882-0c0d-4cf3-8fa2-a51c8c5cd879";  
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";  
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_acs_url";  
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";  
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "https://acs.gdms.cloud";  
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";  
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "URL for grandstream GDMS ACS URL";  
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "13d088f2-5d1b-47bf-a9b5-e7fdc24faeec";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_missed_call_log";
