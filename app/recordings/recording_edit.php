@@ -149,11 +149,6 @@
 			$recording_uuid = uuid();
 		}
 
-		//set the default voice
-		if (empty($recording_voice)) {
-			$recording_voice = 'alloy';
-		}
-
 		//set the default value
 		if (empty($recording_model)) {
 			$recording_model = $settings->get('ai', 'speech_model', '');
