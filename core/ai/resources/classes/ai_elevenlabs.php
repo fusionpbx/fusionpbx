@@ -27,9 +27,8 @@
  */
 
 /**
- * Description of ai_elevenlabs
+ * ai_elevenlabs class
  *
- * @author tim
  */
 class ai_elevenlabs implements ai_speech {
 
