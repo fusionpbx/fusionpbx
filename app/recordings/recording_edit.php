@@ -73,7 +73,6 @@
 
 //get the form value and set to php variables
 	if (!empty($_POST)) {
-
 		$recording_filename = $_POST["recording_filename"];
 		$recording_filename_original = $_POST["recording_filename_original"];
 		$recording_name = $_POST["recording_name"];
@@ -91,7 +90,7 @@
 		$recording_filename = str_replace("\\", '', $recording_filename);
 		$recording_filename = str_replace('/', '', $recording_filename);
 		$recording_filename = str_replace('..', '', $recording_filename);
-		$recording_filename = str_replace(' ', '_', $recording_filename);
+		$recording_filename = str_replace(' ', '-', $recording_filename);
 		$recording_filename = str_replace("'", '', $recording_filename);
 		$recording_name = str_replace("'", '', $recording_name);
 	}
@@ -172,6 +171,11 @@
 				//create the file name
 				if (empty($recording_filename)) {
 					$recording_filename = $recording_name.'.'.$recording_format;
+					$recording_filename = str_replace("\\", '', $recording_filename);
+					$recording_filename = str_replace('/', '', $recording_filename);
+					$recording_filename = str_replace('..', '', $recording_filename);
+					$recording_filename = str_replace(' ', '-', $recording_filename);
+					$recording_filename = str_replace("'", '', $recording_filename);
 				}
 
 				//text to audio - make a new audio file from the message
@@ -300,6 +304,15 @@
 		echo "    ".$text['label-voice']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
+
+//foreach($voices as $key => $voice) {
+//	if (gettype($key) === "integer") {
+//		echo "		<option value='".escape($key)."' ".(($key == $recording_voice) ? "selected='selected'" : null).">".escape($voice)."</option>\n";
+//	} else {
+//		echo "		<option value='".escape($key)."' ".(($key == $recording_voice) ? "selected='selected'" : null).">".escape($voice)."</option>\n";
+//	}
+//}
+
 		if (!empty($voices)) {
 			echo "	<select class='formfld' name='recording_voice'>\n";
 			echo "		<option value=''></option>\n";
