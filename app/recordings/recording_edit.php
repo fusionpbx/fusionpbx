@@ -59,6 +59,7 @@
 	if (($speech_enabled == 'true' && !empty($speech_engine)) || ($transcribe_enabled == 'true' && !empty($transcribe_engine))) {
 		$ai = new ai($settings);
 		$voices = $ai->get_voices();
+		$models = $ai->get_models();
 		$translate_enabled = false;
 		$language_enabled = false;
 		//$translate_enabled = $ai->get_translate_enabled();
@@ -77,6 +78,7 @@
 		$recording_filename_original = $_POST["recording_filename_original"];
 		$recording_name = $_POST["recording_name"];
 		$recording_voice = $_POST["recording_voice"];
+		$recording_model = $_POST["recording_model"];
 		$recording_language = $_POST["recording_language"];
 		//$translate = $_POST["translate"];
 		$recording_message = $_POST["recording_message"];
@@ -152,6 +154,11 @@
 			$recording_voice = 'alloy';
 		}
 
+		//set the default value
+		if (empty($recording_model)) {
+			$recording_model = $settings->get('ai', 'speech_model', '');
+		}
+
 		//set the recording format
 		if (empty($recording_format)) {
 			$recording_format = 'wav';
@@ -183,6 +190,7 @@
 					$ai->audio_path = $recording_path;
 					$ai->audio_filename = $recording_filename;
 					$ai->audio_format = $recording_format;
+					$ai->audio_model = $recording_model ?? '';
 					$ai->audio_voice = $recording_voice;
 					//$ai->audio_language = $recording_language;
 					//$ai->audio_translate = $translate;
@@ -299,6 +307,28 @@
 	}
 
 	if ($speech_enabled == 'true' || $transcribe_enabled == 'true') {
+		//models
+		if (!empty($models)) {
+			echo "<tr>\n";
+			echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+			echo "    ".$text['label-model']."\n";
+			echo "</td>\n";
+			echo "<td class='vtable' align='left'>\n";
+			echo "	<select class='formfld' name='recording_model'>\n";
+			echo "		<option value=''></option>\n";
+			foreach($models as $model_id => $model_name) {
+				echo "		<option value='".escape($model_id)."' ".(($model_id == $recording_model) ? "selected='selected'" : '').">".escape($model_name)."</option>\n";
+			}
+			echo "	</select>\n";
+		}
+		else {
+			echo "		<input class='formfld' type='hidden' name='recording_model' maxlength='255' value=''>\n";
+		}
+		echo "<br />\n";
+		echo $text['description-model']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+		//voices
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
 		echo "    ".$text['label-voice']."\n";
@@ -316,8 +346,12 @@
 		if (!empty($voices)) {
 			echo "	<select class='formfld' name='recording_voice'>\n";
 			echo "		<option value=''></option>\n";
-			foreach($voices as $voice) {
-				echo "		<option value='".escape($voice)."' ".(($voice == $recording_voice) ? "selected='selected'" : null).">".escape($voice)."</option>\n";
+			foreach($voices as $key => $voice) {
+				if (gettype($key) === "integer") {
+					echo "		<option value='".escape($voice)."' ".(($voice == $recording_voice) ? "selected='selected'" : null).">".escape($voice)."</option>\n";
+				} else {
+					echo "		<option value='".escape($key)."' ".(($voice == $recording_voice) ? "selected='selected'" : null).">".escape($voice)."</option>\n";
+				}
 			}
 			echo "	</select>\n";
 		}
