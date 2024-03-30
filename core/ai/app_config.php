@@ -16,7 +16,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "ai";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "speech_enabled";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Text to Speech";
 		$y++;
@@ -40,7 +40,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "ai";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "transcribe_enabled";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Speech to Text";
 		$y++;
