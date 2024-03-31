@@ -1,5 +1,6 @@
 <?php
 
+
  /**
  * ai class
  *
@@ -18,6 +19,7 @@ if (!class_exists('ai_openai')) {
 		private $format;
 		private $voice;
 		private $message;
+		private $model;
 
 		/**
 		 * called when the object is created
@@ -162,7 +164,7 @@ if (!class_exists('ai_openai')) {
 				'Content-Type: application/json'
 			];
 
-			// Set the request data format, wav, mp3, opus
+			// set the http data
 			$data['model'] = 'tts-1-hd';
 			$data['input'] = $this->message;
 			$data['voice'] = $this->voice;
@@ -249,6 +251,21 @@ if (!class_exists('ai_openai')) {
 				return trim($this->message);
 			}
 		}
+
+		public function set_model(string $model): void {
+			if (array_key_exists($model, $this->get_models())) {
+				$this->model = $model;
+			} else {
+				throw new \Exception('Model does not exist');
+			}
+		}
+
+		public function get_models(): array {
+			return [
+				'tts-1-hd' => 'tts-1-hd'
+			];
+		}
+
 
 	}
 }
