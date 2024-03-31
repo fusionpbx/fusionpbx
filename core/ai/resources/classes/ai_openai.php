@@ -255,8 +255,6 @@ if (!class_exists('ai_openai')) {
 		public function set_model(string $model): void {
 			if (array_key_exists($model, $this->get_models())) {
 				$this->model = $model;
-			} else {
-				throw new \Exception('Model does not exist');
 			}
 		}
 
@@ -265,7 +263,6 @@ if (!class_exists('ai_openai')) {
 				'tts-1-hd' => 'tts-1-hd'
 			];
 		}
-
 
 	}
 }
