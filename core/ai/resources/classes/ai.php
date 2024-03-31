@@ -143,7 +143,7 @@ if (!class_exists('ai')) {
 					$object->set_filename($this->audio_filename);
 					$object->set_format($this->audio_format);
 					$object->set_voice($this->audio_voice);
-					$object->set_model($this->audio_model);
+					//$object->set_model($this->audio_model);
 					//$object->set_language($this->audio_language);
 					//$object->set_translate($this->audio_translate);
 					$object->set_message($this->audio_message);
