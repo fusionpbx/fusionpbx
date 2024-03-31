@@ -59,7 +59,7 @@
 	if (($speech_enabled == 'true' && !empty($speech_engine)) || ($transcribe_enabled == 'true' && !empty($transcribe_engine))) {
 		$ai = new ai($settings);
 		$voices = $ai->get_voices();
-		$models = $ai->get_models();
+		//$models = $ai->get_models();
 		$translate_enabled = false;
 		$language_enabled = false;
 		//$translate_enabled = $ai->get_translate_enabled();
@@ -150,9 +150,9 @@
 		}
 
 		//set the default value
-		if (empty($recording_model)) {
-			$recording_model = $settings->get('ai', 'speech_model', '');
-		}
+		//if (empty($recording_model)) {
+		//	$recording_model = $settings->get('ai', 'speech_model', '');
+		//}
 
 		//set the recording format
 		if (empty($recording_format)) {
@@ -185,7 +185,7 @@
 					$ai->audio_path = $recording_path;
 					$ai->audio_filename = $recording_filename;
 					$ai->audio_format = $recording_format;
-					$ai->audio_model = $recording_model ?? '';
+					//$ai->audio_model = $recording_model ?? '';
 					$ai->audio_voice = $recording_voice;
 					//$ai->audio_language = $recording_language;
 					//$ai->audio_translate = $translate;
