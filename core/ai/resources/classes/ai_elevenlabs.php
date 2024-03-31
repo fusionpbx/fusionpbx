@@ -1,30 +1,5 @@
 <?php
 
-/*
-  FusionPBX
-  Version: MPL 1.1
-
-  The contents of this file are subject to the Mozilla Public License Version
-  1.1 (the "License"); you may not use this file except in compliance with
-  the License. You may obtain a copy of the License at
-  http://www.mozilla.org/MPL/
-
-  Software distributed under the License is distributed on an "AS IS" basis,
-  WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
-  for the specific language governing rights and limitations under the
-  License.
-
-  The Original Code is FusionPBX
-
-  The Initial Developer of the Original Code is
-  Mark J Crane <markjcrane@fusionpbx.com>
-  Portions created by the Initial Developer are Copyright (C) 2008-2018
-  the Initial Developer. All Rights Reserved.
-
-  Contributor(s):
-  Mark J Crane <markjcrane@fusionpbx.com>
-  Tim Fry <tim.fry@hotmail.com>
- */
 
 /**
  * ai_elevenlabs class
@@ -74,46 +49,88 @@ class ai_elevenlabs implements ai_speech {
 	}
 
 	public function speech(): bool {
-		$model_id = $this->model;
-		$ch = curl_init('https://api.elevenlabs.io/v1/text-to-speech/' . $this->voice);
-		$headers = [
-			'Content-Type: application/json',
-			"xi-api-key: $this->speech_key",
-		];
-		$encoded_message = json_encode([
-			'model_id' => $model_id,
-			'text' => $this->message,
-			'voice_settings' => [
-				'similarity_boost' => 1,
-				'stability' => 1,
-			],
-		]);
+
+		//get the model automatically
+		$model_id = $this->get_model();
+
+		// set the request URL
+		$url = 'https://api.elevenlabs.io/v1/text-to-speech/' . $this->voice;
+
+		// set the request headers
+		$headers[] = 'Content-Type: application/json';
+		$headers[] = 'xi-api-key: '.$this->speech_key;
+
+		// set the http data
+		$data['model_id'] = $model_id;
+		$data['text'] = $this->message;
+		//$data['pronunciation_dictionary_locators'][0]['pronunciation_dictionary_id'];
+		//$data['pronunciation_dictionary_locators'][0]['version_id'];
+		$data['voice_settings']['similarity_boost'] = 1;
+		$data['voice_settings']['stability'] = 1;
+		$data['voice_settings']['style'] = 0;
+		$data['voice_settings']['use_speaker_boost'] = 'true';
+
+		// initialize curl handle
+		$ch = curl_init($url);
+
+		// set the curl options
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 		curl_setopt($ch, CURLOPT_POST, true);
-		curl_setopt($ch, CURLOPT_POSTFIELDS, $encoded_message);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+
+		// run the curl request and get the response
 		$response = curl_exec($ch);
+
+		// get the errors
 		$error = curl_error($ch);
+
+		// get the http code
 		$http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+		// close the handle
 		curl_close($ch);
-//		$curl = new curl('https://api.elevenlabs.io/v1/text-to-speech/' . $this->voice);
-//		$response = $curl->set_headers($headers)->post($encoded_message);
-//		$error = $curl->get_error();
-//		$http_code = $curl->get_http_code();
-//		if ($curl->get_http_code() == 200) {
+
+		// show the result when there is an error
+		if ($http_code != 200) {
+			echo "error ".$error."\n";
+			echo "http_code ".$http_code."\n";
+			if (strlen($response) < 500) {
+				view_array(json_decode($response, true));
+			}
+			exit;
+		}
+
+		// save the audio file
 		if ($http_code == 200) {
-			file_put_contents($this->path . '/' . $this->filename, $response);
+			file_put_contents($this->path.'/'.$this->filename, $response);
 			return true;
 		}
 		return false;
+
+		//$curl = new curl('https://api.elevenlabs.io/v1/text-to-speech/' . $this->voice);
+		//$response = $curl->set_headers($headers)->post(json_encode($data));
+		//$error = $curl->get_error();
+		//$http_code = $curl->get_http_code();
+		//if ($curl->get_http_code() == 200) {
+		//save the audio
+		//if ($http_code == 200) {
+		//	file_put_contents($this->path . '/' . $this->filename, $response);
+		//	return true;
+		//}
+		//return false;
 	}
 
 	public function is_language_enabled(): bool {
 		return false;
 	}
 
+	public function is_model_enabled(): bool {
+		return false;
+	}
+
 	public function get_languages(): array {
-		return ['english' => 'English'];
+		return ['en' => 'English'];
 	}
 
 	public function get_voices(): array {
@@ -167,13 +184,49 @@ class ai_elevenlabs implements ai_speech {
 	public function set_model(string $model): void {
 		if (array_key_exists($model, $this->get_models())) {
 			$this->model = $model;
-		} else {
-			throw new \Exception('Model does not exist');
 		}
+	}
+
+	public function get_model() {
+
+			//if the voice is not set return the default model
+			if (empty($this->voice)) {
+				return 'eleven_monolingual_v1';
+			}
+
+			//get the voices and automatically find the model
+			$url = 'https://api.elevenlabs.io/v1/voices';
+			$headers = [
+				'Content-Type: application/json',
+				"xi-api-key: $this->speech_key",
+			];
+			$curl = curl_init();
+			curl_setopt_array($curl, [
+				CURLOPT_URL => $url,
+				CURLOPT_RETURNTRANSFER => true,
+				CURLOPT_ENCODING => "",
+				CURLOPT_MAXREDIRS => 10,
+				CURLOPT_TIMEOUT => 30,
+				CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+				CURLOPT_CUSTOMREQUEST => "GET",
+			]);
+			$response = curl_exec($curl);
+			$error = curl_error($curl);
+			curl_close($curl);
+			if (!empty($response)) {
+				$json_array = json_decode($response, true);
+				foreach($json_array['voices'] as $row) {
+					if ($this->voice == $row['voice_id'] && !empty($row['high_quality_base_model_ids'][0])) {
+						return $row['high_quality_base_model_ids'][0];
+					}
+				}
+				return 'eleven_monolingual_v1';
+			}
 	}
 
 	public function get_models(): array {
 		return [
+			'eleven_monolingual_v1' => 'Default',
 			'eleven_turbo_v1' => 'Eleven Turbo v1',
 			'eleven_turbo_v2' => 'Eleven Turbo v2',
 			'eleven_multilingual_v1' => 'Eleven Multilingual v1',
@@ -181,3 +234,5 @@ class ai_elevenlabs implements ai_speech {
 		];
 	}
 }
+
+?>
