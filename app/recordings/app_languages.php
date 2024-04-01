@@ -520,8 +520,8 @@ $text['label-model']['zh-cn'] = "";
 $text['label-model']['ja-jp'] = "";
 $text['label-model']['ko-kr'] = "";
 
-$text['description-model']['en-us'] = "Model the engine will use.";
-$text['description-model']['en-gb'] = "Model the engine will use.";
+$text['description-model']['en-us'] = "Select the model that is used to make the recording.";
+$text['description-model']['en-gb'] = "Select the model that is used to make the recording.";
 $text['description-model']['ar-eg'] = "";
 $text['description-model']['de-at'] = "";
 $text['description-model']['de-ch'] = "";
@@ -572,8 +572,8 @@ $text['label-voice']['zh-cn'] = "";
 $text['label-voice']['ja-jp'] = "";
 $text['label-voice']['ko-kr'] = "";
 
-$text['description-voice']['en-us'] = "The recording voice.";
-$text['description-voice']['en-gb'] = "The recording voice.";
+$text['description-voice']['en-us'] = "Select the voice that is used to make the recording.";
+$text['description-voice']['en-gb'] = "Select the voice that is used to make the recording.";
 $text['description-voice']['ar-eg'] = "";
 $text['description-voice']['de-at'] = "";
 $text['description-voice']['de-ch'] = "";
