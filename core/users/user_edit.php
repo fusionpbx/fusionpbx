@@ -571,6 +571,22 @@
 					$call_center_agent_uuid = $database->select($sql, $parameters, 'column');
 					unset($sql, $parameters);
 
+				//validate the user status
+					switch ($user_status) {
+						case "Available" :
+							break;
+						case "Available (On Demand)" :
+							break;
+						case "On Break" :
+							break;
+						case "Do Not Disturb" :
+							break;
+						case "Logged Out" :
+							break;
+						default :
+							$user_status = '';
+					}
+
 				//update the user_status
 					if (isset($call_center_agent_uuid) && is_uuid($call_center_agent_uuid) && !empty($user_status)) {
 						$esl = event_socket::create();
@@ -867,8 +883,7 @@
 		echo "		".$text['label-status']."\n";
 		echo "	</td>\n";
 		echo "	<td class=\"vtable\">\n";
-		$cmd = "'".PROJECT_PATH."/app/calls_active/v_calls_exec.php?cmd=callcenter_config+agent+set+status+".escape($username)."@".$_SESSION['domains'][$domain_uuid]['domain_name']."+'+this.value";
-		echo "		<select id='user_status' name='user_status' class='formfld' style='' onchange=\"send_cmd($cmd);\">\n";
+		echo "		<select id='user_status' name='user_status' class='formfld' style=''>\n";
 		echo "			<option value=''></option>\n";
 		echo "			<option value='Available' ".(($user_status == "Available") ? "selected='selected'" : null).">".$text['option-available']."</option>\n";
 		echo "			<option value='Available (On Demand)' ".(($user_status == "Available (On Demand)") ? "selected='selected'" : null).">".$text['option-available_on_demand']."</option>\n";
@@ -1092,7 +1107,7 @@
 					document.getElementById('api_key').style.display = 'inline';
 					document.getElementById('button-api_key_hide').style.display = 'inline';
 					document.getElementById('button-api_key_view').style.display = 'none';"]);
-				
+
 			echo button::create(['type'=>'button',
 				'label'=>$text['button-hide'],
 				'id'=>'button-api_key_hide',
