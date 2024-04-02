@@ -35,6 +35,7 @@ if (!class_exists('ringbacks')) {
 		private $music_list;
 		private $recordings_list;
 		private $default_ringback_label;
+		private $streams;
 		
 		//class constructor
 		public function __construct() {
