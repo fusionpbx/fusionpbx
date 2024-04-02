@@ -54,14 +54,16 @@ if (!class_exists('destinations')) {
 		/**
 		* Called when the object is created
 		*/
-		public function __construct() {
+		public function __construct($settings = null) {
 			//set the domain details
 				if (is_null($this->domain_uuid)) {
 					$this->domain_uuid = $_SESSION['domain_uuid'];
 				}
 
 			//get the email queue settings
-				$this->settings = new settings();
+				if (!isset($settings)) {
+					$this->settings = new settings();
+				}
 
 			//assign private variables
 				$this->app_name = 'destinations';
