@@ -219,7 +219,12 @@
 		$sql .= "where true ";
 	}
 	else {
-		$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+		$sql .= "where (";
+		$sql .= "	domain_uuid = :domain_uuid ";
+		if (permission_exists('dialplan_global')) {
+			$sql .= "	or domain_uuid is null ";
+		}
+		$sql .= ") ";
 		$parameters['domain_uuid'] = $domain_uuid;
 	}
 	if (!is_uuid($app_uuid)) {
@@ -244,12 +249,12 @@
 	}
 	if (!empty($search)) {
 		$sql .= "and (";
-		$sql .= " 	lower(dialplan_context) like :search ";
-		$sql .= " 	or lower(dialplan_name) like :search ";
-		$sql .= " 	or lower(dialplan_number) like :search ";
-		$sql .= " 	or lower(dialplan_continue) like :search ";
-		$sql .= " 	or lower(dialplan_enabled) like :search ";
-		$sql .= " 	or lower(dialplan_description) like :search ";
+		$sql .= "	lower(dialplan_context) like :search ";
+		$sql .= "	or lower(dialplan_name) like :search ";
+		$sql .= "	or lower(dialplan_number) like :search ";
+		$sql .= "	or lower(dialplan_continue) like :search ";
+		$sql .= "	or lower(dialplan_enabled) like :search ";
+		$sql .= "	or lower(dialplan_description) like :search ";
 		if (is_numeric($search)) {
 			$sql .= " 	or dialplan_order = :search_numeric ";
 			$parameters['search_numeric'] = $search;
