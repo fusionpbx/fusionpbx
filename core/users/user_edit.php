@@ -154,6 +154,22 @@
 				exit;
 			}
 
+		//validate the user status
+			switch ($user_status) {
+				case "Available" :
+					break;
+				case "Available (On Demand)" :
+					break;
+				case "On Break" :
+					break;
+				case "Do Not Disturb" :
+					break;
+				case "Logged Out" :
+					break;
+				default :
+					$user_status = '';
+			}
+
 		//check required values
 			if (empty($username)) {
 				$invalid[] = $text['label-username'];
@@ -570,22 +586,6 @@
 					$database = new database;
 					$call_center_agent_uuid = $database->select($sql, $parameters, 'column');
 					unset($sql, $parameters);
-
-				//validate the user status
-					switch ($user_status) {
-						case "Available" :
-							break;
-						case "Available (On Demand)" :
-							break;
-						case "On Break" :
-							break;
-						case "Do Not Disturb" :
-							break;
-						case "Logged Out" :
-							break;
-						default :
-							$user_status = '';
-					}
 
 				//update the user_status
 					if (isset($call_center_agent_uuid) && is_uuid($call_center_agent_uuid) && !empty($user_status)) {
