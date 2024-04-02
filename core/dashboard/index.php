@@ -174,8 +174,8 @@
 	<?php
 
 // determine initial state all button to display
+	$expanded_all = true;
 	if (is_array($dashboard) && @sizeof($dashboard) != 0) {
-		$expanded_all = true;
 		foreach ($dashboard as $row) {
 			if ($row['dashboard_details_state'] == 'contracted' || $row['dashboard_details_state'] == 'hidden') { $expanded_all = false; }
 		}
@@ -290,8 +290,7 @@
   .col-num { grid-column: span 2; }
 	<?php
 		foreach($dashboard as $row) {
-			$dashboard_name = strtolower($row['dashboard_name']);
-			$dashboard_name = str_replace(" ", "_", $dashboard_name);
+			$dashboard_name = str_replace(" ", "_", strtolower($row['dashboard_name']));
 			$dashboard_column_span = $row['dashboard_column_span'];
 			if (is_numeric($dashboard_column_span)) {
 				echo "#".$dashboard_name." {\n";
