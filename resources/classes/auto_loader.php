@@ -27,7 +27,7 @@
 class auto_loader {
 
 	public function __construct() {
-		spl_autoload_register(array($this, 'loader'));
+		spl_autoload_register(array(self::class, 'loader'));
 	}
 
 	public static function autoload_search($array) : string {
@@ -49,7 +49,7 @@ class auto_loader {
 		return '';
 	}
 
-	private function loader($class_name) : bool {
+	public static function loader($class_name) : bool {
 
 		//sanitize the class name
 		$class_name = preg_replace('[^a-zA-Z0-9_]', '', $class_name);
