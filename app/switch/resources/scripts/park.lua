@@ -25,18 +25,19 @@
 
 --exits the script if we didn't connect properly
 	assert(dbh:connected());
+
 --get the session variables
-	sounds_dir = session:getVariable("sounds_dir");
-	park_direction = session:getVariable("park_direction");
-	uuid = session:getVariable("uuid");
-	domain_name = session:getVariable("domain_name");
-	park_extension = session:getVariable("park_extension");
-	park_range = session:getVariable("park_range");
-	park_announce = session:getVariable("park_announce");
-	park_timeout_type = session:getVariable("park_timeout_type");
-	park_timeout_destination = session:getVariable("park_timeout_destination");
-	park_timeout_seconds = session:getVariable("park_timeout_seconds");
-	park_music = session:getVariable("park_music");
+	sounds_dir = session:getVariable("sounds_dir") or '';
+	park_direction = session:getVariable("park_direction") or '';
+	uuid = session:getVariable("uuid") or '';
+	domain_name = session:getVariable("domain_name") or '';
+	park_extension = session:getVariable("park_extension") or '';
+	park_range = session:getVariable("park_range") or '';
+	park_announce = session:getVariable("park_announce") or '';
+	park_timeout_type = session:getVariable("park_timeout_type") or '';
+	park_timeout_destination = session:getVariable("park_timeout_destination") or '';
+	park_timeout_seconds = session:getVariable("park_timeout_seconds") or '';
+	park_music = session:getVariable("park_music") or '';
 
 --define the trim function
 	require "resources.functions.trim";
@@ -188,9 +189,8 @@
 						result = api:executeString(cmd);
 				else
 					context = session:getVariable("context");
-					caller_id_number = session:getVariable("caller_id_number");
-					dialed_extension = session:getVariable("dialed_extension");
-					dialed_user = session:getVariable("dialed_user");
+					caller_id_number = session:getVariable("caller_id_number") or '';
+					dialed_extension = session:getVariable("dialed_extension") or '';
 					cmd = "user_exists id ".. caller_id_number .." "..domain_name;
 					if (api:executeString(cmd) == "true") then
 						--bridge the current call to the call that is parked
@@ -221,7 +221,7 @@
 							result = trim(api:executeString(cmd));
 					else
 						--transfer the call back to the callee
-							session:execute("transfer", dialed_user .." XML "..context);
+							session:execute("transfer", dialed_extension .." XML "..context);
 					end
 				end
 
