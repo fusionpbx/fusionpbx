@@ -645,8 +645,8 @@ if (!class_exists('xml_cdr')) {
 						if ($xml->variables->cc_member_uuid == '_undef_') { $xml->variables->cc_member_uuid = ''; }
 						if ($xml->variables->cc_member_session_uuid == '_undef_') { $xml->variables->cc_member_session_uuid = ''; }
 						if ($xml->variables->cc_agent_uuid == '_undef_') { $xml->variables->cc_agent_uuid = ''; }
-						if ($xml->variables->call_center_queue_uuid == '_undef_') { $xml->variables->call_center_queue_uuid = ''; }
-						if ($xml->variables->cc_queue_joined_epoch == '_undef_') { $xml->variables->cc_queue_joined_epoch = ''; }
+						if ( ($xml->variables->call_center_queue_uuid == '_undef_') || ( (!is_uuid($xml->variables->call_center_queue_uuid) ) ) ) { $xml->variables->call_center_queue_uuid = ''; }
+						if ( ($xml->variables->cc_queue_joined_epoch == '_undef_') || ( (!is_numeric($xml->variables->cc_queue_joined_epoch) ) ) ) { $xml->variables->cc_queue_joined_epoch = ''; }
 						$this->array[$key][0]['cc_side'] = urldecode($xml->variables->cc_side);
 						$this->array[$key][0]['cc_member_uuid'] = urldecode($xml->variables->cc_member_uuid);
 						$this->array[$key][0]['cc_queue'] = urldecode($xml->variables->cc_queue);
