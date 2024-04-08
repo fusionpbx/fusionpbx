@@ -2,6 +2,11 @@
 
 if (!function_exists('transcribe')) {
 	function transcribe ($file_path, $file_name, $file_extension) {
+		//check if the file exists
+			if (!file_exists($file_path.'/'.$file_name)) {
+				echo "file not found ".$file_path.'/'.$file_name;
+				exit;
+			}
 
 		//get the email queue settings
 			$setting = new settings(['category' => 'voicemail']);
@@ -23,13 +28,6 @@ if (!function_exists('transcribe')) {
 				}
 
 				if (isset($api_key) && $api_key != '') {
-
-					//check if the file exists
-					if (!file_exists($file_path.'/'.$file_name)) {
-						echo "file not found ".$file_path.'/'.$file_name;
-						exit;
-					}
-
 					//start output buffer
 					ob_start();  
 					$out = fopen('php://output', 'w');
@@ -122,6 +120,7 @@ if (!function_exists('transcribe')) {
 			if ($transcribe_provider == 'google') {
 				$api_key = $setting->get('voicemail', 'google_key');
 				$api_url = $setting->get('voicemail', 'google_url');
+				$application_credentials = $setting->get('voicemail', 'google_application_credentials');
 				$transcribe_language =  $setting->get('voicemail', 'transcribe_language');
 				$transcribe_alternate_language = $setting->get('voicemail', 'transcribe_alternate_language');
 
@@ -137,62 +136,61 @@ if (!function_exists('transcribe')) {
 				if ($file_extension == "wav") {
 					$content_type = 'audio/wav';
 				}
-
-				if (isset($api_key) && $api_key != '') {
-					//$command = "curl -X POST -silent -u \"apikey:".$api_key."\" --header \"Content-type: ".$content_type."\" --data-binary @".$file_path."/".$file_name." \"".$api_url."\"";
-					//echo "command: ".$command."\n";
-
-					//version 1
-					if (substr($api_url, 0, 32) == 'https://speech.googleapis.com/v1') {
+				
+				//version 1
+				if (substr($api_url, 0, 32) == 'https://speech.googleapis.com/v1') {
+					if (isset($api_key) && $api_key != '') {
 						$command = "sox ".$file_path."/".$file_name." ".$file_path."/".$file_name.".flac trim 0 00:59 ";
 						$command .= "&& echo \"{ 'config': { 'languageCode': '".$transcribe_language."', 'enableWordTimeOffsets': false , 'enableAutomaticPunctuation': true , 'alternativeLanguageCodes': '".$transcribe_alternate_language."' }, 'audio': { 'content': '`base64 -w 0 ".$file_path."/".$file_name.".flac`' } }\" ";
 						$command .= "| curl -X POST -H \"Content-Type: application/json\" -d @- ".$api_url.":recognize?key=".$api_key." ";
 						$command .= "&& rm -f ".$file_path."/".$file_name.".flac";
 						echo $command."\n";
 					}
-
-					//version 2
-					if (substr($api_url, 0, 32) == 'https://speech.googleapis.com/v2') {
-						$command = "echo \"{ 'config': { 'auto_decoding_config': {}, 'language_codes': ['".$transcribe_language."'], 'model': 'long' }, 'content': '`base64 -w 0 ".$file_path."/".$file_name."`' } \" ";
-						$command .= "| curl -X POST -H \"Content-Type: application/json\" -H \"Authorization: Bearer \$(gcloud auth application-default print-access-token)\" -d @- ".$api_url;
-						echo $command."\n";
-					}
-
-					//ob_start();
-					//$result = passthru($command);
-					//$json_result = ob_get_contents();
-					//ob_end_clean();
-
-					//run the command
-					if (!empty($command)) {
-						$http_response = shell_exec($command);
-					}
-
-					//validate the json
-					if (!empty($http_response)) {
-						$ob = json_decode($http_response);
-						if($ob === null) {
-							echo "invalid json\n";
-							return false;
-						}
-
-						$json = json_decode($http_response, true);
-						//echo "json; ".$json."\n";
-						$message = '';
-						foreach($json['results'] as $row) {
-							$message .= $row['alternatives'][0]['transcript'];
-						}
-					}
-
-					//build the response
-					$array['provider'] = $transcribe_provider;
-					$array['language'] = $transcribe_language;
-					$array['command'] = $command ?? '';
-					$array['message'] = $message ?? '';
-					//print_r($array);
-
-					return $array;
 				}
+				//version 2
+				elseif (substr($api_url, 0, 32) == 'https://speech.googleapis.com/v2') {
+					if (!empty(($application_credentials))) {
+						putenv("GOOGLE_APPLICATION_CREDENTIALS=".$application_credentials);
+					}
+					$command = "echo \"{ 'config': { 'auto_decoding_config': {}, 'language_codes': ['".$transcribe_language."'], 'model': 'long' }, 'content': '`base64 -w 0 ".$file_path."/".$file_name."`' } \" ";
+					$command .= "| curl -X POST -H \"Content-Type: application/json\" -H \"Authorization: Bearer \$(gcloud auth application-default print-access-token)\" -d @- ".$api_url;
+					echo $command."\n";
+				}
+
+				//ob_start();
+				//$result = passthru($command);
+				//$json_result = ob_get_contents();
+				//ob_end_clean();
+
+				//run the command
+				if (!empty($command)) {
+					$http_response = shell_exec($command);
+				}
+
+				//validate the json
+				if (!empty($http_response)) {
+					$ob = json_decode($http_response);
+					if($ob === null) {
+						echo "invalid json\n";
+						return false;
+					}
+
+					$json = json_decode($http_response, true);
+					//echo "json; ".$json."\n";
+					$message = '';
+					foreach($json['results'] as $row) {
+						$message .= $row['alternatives'][0]['transcript'];
+					}
+				}
+
+				//build the response
+				$array['provider'] = $transcribe_provider;
+				$array['language'] = $transcribe_language;
+				$array['command'] = $command ?? '';
+				$array['message'] = $message ?? '';
+				//print_r($array);
+
+				return $array;
 			}
 
 		//transcribe - azure
@@ -339,12 +337,6 @@ if (!function_exists('transcribe')) {
 				if (isset($api_key) && $api_key != '') {
 
 					$full_file_name = $file_path.'/'.$file_name ;
-
-					//check if the file exists
-					if (!file_exists($full_file_name)) {
-						echo "file not found ".$full_file_name;
-						exit;
-					}
 
 					//start output buffer
 					ob_start();  
