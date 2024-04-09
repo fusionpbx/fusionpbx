@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2016-2023
+	Portions created by the Initial Developer are Copyright (C) 2016-2024
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -645,28 +645,43 @@ if (!class_exists('xml_cdr')) {
 						if ($xml->variables->cc_member_uuid == '_undef_') { $xml->variables->cc_member_uuid = ''; }
 						if ($xml->variables->cc_member_session_uuid == '_undef_') { $xml->variables->cc_member_session_uuid = ''; }
 						if ($xml->variables->cc_agent_uuid == '_undef_') { $xml->variables->cc_agent_uuid = ''; }
-						if ( ($xml->variables->call_center_queue_uuid == '_undef_') || ( (!is_uuid($xml->variables->call_center_queue_uuid) ) ) ) { $xml->variables->call_center_queue_uuid = ''; }
-						if ( ($xml->variables->cc_queue_joined_epoch == '_undef_') || ( (!is_numeric($xml->variables->cc_queue_joined_epoch) ) ) ) { $xml->variables->cc_queue_joined_epoch = ''; }
+						if ($xml->variables->call_center_queue_uuid == '_undef_') { $xml->variables->call_center_queue_uuid = ''; }
+						if ($xml->variables->cc_queue_joined_epoch == '_undef_') { $xml->variables->cc_queue_joined_epoch = ''; }
+						if (!empty($xml->variables->call_center_queue_uuid) && is_uuid(urldecode($xml->variables->call_center_queue_uuid))) {
+							$this->array[$key][0]['call_center_queue_uuid'] = urldecode($xml->variables->call_center_queue_uuid);
+						}
 						$this->array[$key][0]['cc_side'] = urldecode($xml->variables->cc_side);
-						$this->array[$key][0]['cc_member_uuid'] = urldecode($xml->variables->cc_member_uuid);
+						if (!empty($xml->variables->cc_member_uuid) && is_uuid(urldecode($xml->variables->cc_member_uuid))) {
+							$this->array[$key][0]['cc_member_uuid'] = urldecode($xml->variables->cc_member_uuid);
+						}
 						$this->array[$key][0]['cc_queue'] = urldecode($xml->variables->cc_queue);
-						$this->array[$key][0]['cc_member_session_uuid'] = urldecode($xml->variables->cc_member_session_uuid);
-						$this->array[$key][0]['cc_agent_uuid'] = urldecode($xml->variables->cc_agent_uuid);
+						if (!empty($xml->variables->cc_member_session_uuid) && is_uuid(urldecode($xml->variables->cc_member_session_uuid))) {
+							$this->array[$key][0]['cc_member_session_uuid'] = urldecode($xml->variables->cc_member_session_uuid);
+						}
+						if (!empty($xml->variables->cc_agent_uuid) && is_uuid(urldecode($xml->variables->cc_agent_uuid))) {
+							$this->array[$key][0]['cc_agent_uuid'] = urldecode($xml->variables->cc_agent_uuid);
+						}
 						$this->array[$key][0]['cc_agent'] = urldecode($xml->variables->cc_agent);
 						$this->array[$key][0]['cc_agent_type'] = urldecode($xml->variables->cc_agent_type);
 						$this->array[$key][0]['cc_agent_bridged'] = urldecode($xml->variables->cc_agent_bridged);
-						$this->array[$key][0]['cc_queue_joined_epoch'] = urldecode($xml->variables->cc_queue_joined_epoch);
-						$this->array[$key][0]['cc_queue_answered_epoch'] = urldecode($xml->variables->cc_queue_answered_epoch);
-						$this->array[$key][0]['cc_queue_terminated_epoch'] = urldecode($xml->variables->cc_queue_terminated_epoch);
-						$this->array[$key][0]['cc_queue_canceled_epoch'] = urldecode($xml->variables->cc_queue_canceled_epoch);
+						if (!empty($xml->variables->cc_queue_joined_epoch) && is_numeric($xml->variables->cc_queue_joined_epoch)) {
+							$this->array[$key][0]['cc_queue_joined_epoch'] = urldecode($xml->variables->cc_queue_joined_epoch);
+						}
+						if (!empty($xml->variables->cc_queue_answered_epoch) && is_numeric($xml->variables->cc_queue_answered_epoch)) {
+							$this->array[$key][0]['cc_queue_answered_epoch'] = urldecode($xml->variables->cc_queue_answered_epoch);
+						}
+						if (!empty($xml->variables->cc_queue_terminated_epoch) && is_numeric($xml->variables->cc_queue_terminated_epoch)) {
+							$this->array[$key][0]['cc_queue_terminated_epoch'] = urldecode($xml->variables->cc_queue_terminated_epoch);
+						}
+						if (!empty($xml->variables->cc_queue_canceled_epoch) && is_numeric($xml->variables->cc_queue_canceled_epoch)) {
+							$this->array[$key][0]['cc_queue_canceled_epoch'] = urldecode($xml->variables->cc_queue_canceled_epoch);
+						}
 						$this->array[$key][0]['cc_cancel_reason'] = urldecode($xml->variables->cc_cancel_reason);
 						$this->array[$key][0]['cc_cause'] = urldecode($xml->variables->cc_cause);
 						$this->array[$key][0]['waitsec'] = urldecode($xml->variables->waitsec);
 						if (urldecode($xml->variables->cc_side) == 'agent') {
 							$this->array[$key][0]['direction'] = 'inbound';
 						}
-						$this->array[$key][0]['cc_queue'] = urldecode($xml->variables->cc_queue);
-						$this->array[$key][0]['call_center_queue_uuid'] = urldecode($xml->variables->call_center_queue_uuid);
 
 					//set the provider id
 						if (isset($xml->variables->provider_uuid)) {
