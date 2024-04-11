@@ -98,43 +98,42 @@
 //get the count
 	$sql = "select count(fax_queue_uuid) ";
 	$sql .= "from v_fax_queue as q ";
+	$sql .= "LEFT JOIN v_users AS u ON q.insert_user = u.user_uuid ";
 	if (!empty($_GET['show']) && $_GET['show'] == "all" && permission_exists('fax_queue_all')) {
-		//show faxes for all domains
-		$sql .= "where true ";
+		// show faxes for all domains
+		$sql .= "WHERE true ";
 	}
 	elseif (permission_exists('fax_queue_domain')) {
-		//show faxes for one domain
-		$sql .= "where q.domain_uuid = :domain_uuid ";
+		// show faxes for one domain
+		$sql .= "WHERE q.domain_uuid = :domain_uuid ";
 		$parameters['domain_uuid'] = $domain_uuid;
 	}
 	else {
-		//show only assigned fax extensions
-		$sql = trim($sql);
-		$sql .= "from v_fax_queue as q, v_domains as d, v_users as u \n";
-		$sql .= "where q.domain_uuid = d.domain_uuid \n";
-		$sql .= "and q.insert_user = u.user_uuid \n";
-		$sql .= "and q.domain_uuid = :domain_uuid \n";
-		$sql .= "and u.user_uuid = :user_uuid \n";
+		// show only assigned fax extensions
+		$sql .= "WHERE q.domain_uuid = :domain_uuid ";
+		$sql .= "AND u.user_uuid = :user_uuid ";
 		$parameters['domain_uuid'] = $domain_uuid;
 		$parameters['user_uuid'] = $_SESSION['user_uuid'];
 	}
+
 	if (isset($search)) {
-		$sql .= "and (\n";
-		$sql .= "	lower(q.hostname) like :search \n";
-		$sql .= "	or lower(q.fax_caller_id_name) like :search \n";
-		$sql .= "	or lower(q.fax_caller_id_number) like :search \n";
-		$sql .= "	or lower(q.fax_number) like :search \n";
-		$sql .= "	or lower(q.fax_email_address) like :search \n";
-		$sql .= "	or lower(q.insert_user) like :search \n";
-		$sql .= "	or lower(q.fax_file) like :search \n";
-		$sql .= "	or lower(q.fax_status) like :search \n";
-		$sql .= "	or lower(q.fax_accountcode) like :search \n";
+		$sql .= "AND (";
+		$sql .= "	LOWER(q.hostname) LIKE :search ";
+		$sql .= "	OR LOWER(q.fax_caller_id_name) LIKE :search ";
+		$sql .= "	OR LOWER(q.fax_caller_id_number) LIKE :search ";
+		$sql .= "	OR LOWER(q.fax_number) LIKE :search ";
+		$sql .= "	OR LOWER(q.fax_email_address) LIKE :search ";
+		$sql .= "	OR LOWER(u.username) LIKE :search ";
+		$sql .= "	OR LOWER(q.fax_file) LIKE :search ";
+		$sql .= "	OR LOWER(q.fax_status) LIKE :search ";
+		$sql .= "	OR LOWER(q.fax_accountcode) LIKE :search ";
 		$sql .= ") ";
-		$parameters['search'] = '%'.$search.'%';
+		$parameters['search'] = '%' . $search . '%';
 	}
+
 	if (isset($_GET["fax_status"]) && !empty($_GET["fax_status"])) {
-		$sql .= "and q.fax_status = :fax_status \n";
-		$parameters['fax_status'] = $_GET["fax_status"];
+			$sql .= "AND q.fax_status = :fax_status ";
+			$parameters['fax_status'] = $_GET["fax_status"];
 	}
 	$database = new database;
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
@@ -177,7 +176,7 @@
 	$sql .= "q.fax_accountcode, ";
 	$sql .= "q.fax_command ";
 	$sql .= "FROM v_fax_queue AS q ";
-	$sql .= "JOIN v_users AS u ON q.insert_user = u.user_uuid ";
+	$sql .= "LEFT JOIN v_users AS u ON q.insert_user = u.user_uuid ";
 	$sql .= "JOIN v_domains AS d ON q.domain_uuid = d.domain_uuid ";
 
 	if (!empty($_GET['show']) && $_GET['show'] == "all" && permission_exists('fax_queue_all')) {
