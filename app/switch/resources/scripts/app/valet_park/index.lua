@@ -1,4 +1,4 @@
---	valet_park/index.lua
+--
 --	Part of FusionPBX
 --	Copyright (C) 2024 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
@@ -37,14 +37,13 @@ if ( session:ready() ) then
 		domain_uuid = session:getVariable("domain_uuid") or '';
 		uuid = session:getVariable("uuid") or '';
 		context = session:getVariable("context") or '';
-		valet_park_auto = session:getVariable("valet_park_auto") or '';
-		valet_park_display = session:getVariable("valet_park_display") or '';
+		valet_parking_auto = session:getVariable("valet_parking_auto") or '';
+		valet_parking_display = session:getVariable("valet_parking_display") or '';
 		valet_announce_slot = session:getVariable("valet_announce_slot") or '';
-		valet_park_timeout = session:getVariable("valet_park_timeout") or '';
 end
 
---auto park when valet_park_auto value to in
-if (valet_park_auto == 'in') then
+--auto park when valet_parking_auto value to in
+if (valet_parking_auto == 'in') then
 
 	--get the the valet park current details
 	if (session:ready()) then
@@ -66,7 +65,7 @@ if (valet_park_auto == 'in') then
 	freeswitch.consoleLog("NOTICE", "[valet park] destination_number *"..destination_number.."\n");
 
 	--update the phone display - requires attended transfer
-	if (valet_park_display == 'true') then
+	if (valet_parking_display == 'enable') then
 		--send the display update
 		api:executeString("uuid_display "..uuid.." 'parked in *"..destination_number.."'"); --session:get_uuid()
 
@@ -75,7 +74,7 @@ if (valet_park_auto == 'in') then
 	end
 
 	--announce the park extension
-	if (valet_announce_slot ~= 'false') then
+	if (valet_announce_slot ~= 'disable') then
 			session:execute("say", "en name_spelled iterated *"..destination_number);
 	end
 
