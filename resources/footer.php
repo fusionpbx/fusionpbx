@@ -289,6 +289,10 @@
 	echo $output;
 	unset($output);
 
+//check database compare status
+if (permission_exists('check_compare_db')) {
+	require_once $_SERVER['DOCUMENT_ROOT']."/app/check_compare_db/index.php";
+}
 //$statsauth = "a3az349x2bf3fdfa8dbt7x34fas5X";
 //require_once "stats/stat_sadd.php";
 

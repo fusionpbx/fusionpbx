@@ -3331,6 +3331,68 @@ else { //default: white
 		opacity: 1.0;
 		}
 
+/* Check Database Compare Status **/
+	.check-compare {
+		padding: 0rem 0.5rem
+	}
+
+	.check-compare i {
+		padding: 0rem 0.6rem;
+   		display: flex;
+   		flex-direction: column;
+		-webkit-transition: all 1.0s;
+    	transition: all 1.0s;	
+		animation: higthlines 4s linear infinite;
+    	animation-delay: 3000ms;
+	}
+
+	.check-yellow {
+		color: #c1b849;
+	}
+
+	.check-red {
+		color: #f12c2c;
+	}
+
+	.check-green {
+		color: #23a704;
+	}
+
+	@keyframes higthlines {
+      0% {
+		filter: saturate(1.0);
+		filter: blur(0px);
+		opacity: 1;
+      }
+	  47% {
+		transform: rotate(0deg);
+		filter: blur(0px);
+		-webbkit-transform: rotate(0deg);
+	  }
+	  50% {
+		transform: rotate(-180deg);
+		-webbkit-transform: rotate(-180deg);
+		filter: saturate(2.2);
+		filter: blur(2px);
+		opacity: 0.6;
+      }
+	  54% {
+		transform: rotate(-360deg);
+		-webbkit-transform: rotate(-360deg);
+	  }
+	  100% {
+        transform: translateY(0px);
+		filter: saturate(1.0);
+		filter: blur(0px);
+		opacity: 1;
+      }
+    }
+	.header_messages_note {
+		font-size: 10pt;
+		color: #fff;
+	}
+/* ******************************************/
+
 <?php
 
 //output custom css
