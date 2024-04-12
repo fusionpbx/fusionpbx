@@ -37,17 +37,18 @@ if ( session:ready() ) then
 		domain_uuid = session:getVariable("domain_uuid") or '';
 		uuid = session:getVariable("uuid") or '';
 		context = session:getVariable("context") or '';
-		valet_parking_auto = session:getVariable("valet_parking_auto") or '';
+		caller_id_number = session:getVariable("caller_id_number") or '';
+		valet_parking_direction = session:getVariable("valet_parking_direction") or '';
 		valet_parking_display = session:getVariable("valet_parking_display") or '';
 		valet_announce_slot = session:getVariable("valet_announce_slot") or '';
 end
 
---auto park when valet_parking_auto value to in
-if (valet_parking_auto == 'in') then
+--auto park when direction set to in
+if (valet_parking_direction == 'in') then
 
 	--get the the valet park current details
 	if (session:ready()) then
-		command = "valet_info park@"..domain_name;
+		command = "valet_info park@"..context;
 		valet_info_result = api:executeString(command);
 	end
 
@@ -62,7 +63,7 @@ if (valet_parking_auto == 'in') then
 	end
 
 	--log the destinations
-	freeswitch.consoleLog("NOTICE", "[valet park] destination_number *"..destination_number.."\n");
+	freeswitch.consoleLog("NOTICE", "[valet park] "..caller_id_number.."@"..context.." destination_number *"..destination_number.."\n");
 
 	--update the phone display - requires attended transfer
 	if (valet_parking_display == 'enable') then
@@ -74,15 +75,13 @@ if (valet_parking_auto == 'in') then
 	end
 
 	--announce the park extension
-	if (valet_announce_slot ~= 'disable') then
-			session:execute("say", "en name_spelled iterated *"..destination_number);
+	if (valet_announce_slot == 'enable') then
+		session:execute("say", "en name_spelled iterated *"..destination_number);
 	end
 
 	--transfer the call to the available parking lot
 	if (session:ready()) then
-		--uuid_transfer,<uuid> [-bleg|-both] <dest-exten> [<dialplan>] [<context>],Transfer a session,mod_commands
-		command = 'uuid_transfer '..uuid..' -bleg *'..destination_number..' XML '..context;
-		response = api:executeString(command);
+		session:execute("valet_park", "park@"..context.." *"..destination_number);
 	end
 
 end
