@@ -47,24 +47,34 @@
 	$recording_message = '';
 	$recording_description = '';
 	$recording_uuid = '';
+	$translate_enabled = false;
+	$language_enabled = false;
+
 
 //add the settings object
 	$settings = new settings(["domain_uuid" => $_SESSION['domain_uuid'], "user_uuid" => $_SESSION['user_uuid']]);
-	$speech_enabled = $settings->get('ai', 'speech_enabled', 'false');
-	$speech_engine = $settings->get('ai', 'speech_engine', '');
-	$transcribe_enabled = $settings->get('ai', 'transcribe_enabled');
-	$transcribe_engine = $settings->get('ai', 'transcribe_engine');
+	$speech_enabled = $settings->get('speech', 'enabled', 'false');
+	$speech_engine = $settings->get('speech', 'engine', '');
+	$transcribe_enabled = $settings->get('transcribe', 'enabled', 'false');
+	$transcribe_engine = $settings->get('transcribe', 'engine', '');
 
-//add the audio object and get the voices and languages arrays
-	if (($speech_enabled == 'true' && !empty($speech_engine)) || ($transcribe_enabled == 'true' && !empty($transcribe_engine))) {
-		$ai = new ai($settings);
-		$voices = $ai->get_voices();
-		//$models = $ai->get_models();
-		$translate_enabled = false;
-		$language_enabled = false;
-		//$translate_enabled = $ai->get_translate_enabled();
-		//$language_enabled = $ai->get_language_enabled();
-		//$languages = $ai->get_languages();
+//add the speech object and get the voices and languages arrays
+	if ($speech_enabled == 'true' && !empty($speech_engine)) {
+		$speech = new speech($settings);
+		$voices = $speech->get_voices();
+		//$speech_models = $speech->get_models();
+		//$translate_enabled = $speech->get_translate_enabled();
+		//$language_enabled = $speech->get_language_enabled();
+		//$languages = $speech->get_languages();
+	}
+
+//add the transcribe object and get the languages arrays
+	if ($transcribe_enabled == 'true' && !empty($transcribe_engine)) {
+		$transcribe = new transcribe($settings);
+		//$transcribe_models = $transcribe->get_models();
+		//$translate_enabled = $transcribe->get_translate_enabled();
+		//$language_enabled = $transcribe->get_language_enabled();
+		//$languages = $transcribe->get_languages();
 	}
 
 //get recording id
@@ -151,7 +161,7 @@
 
 		//set the default value
 		//if (empty($recording_model)) {
-		//	$recording_model = $settings->get('ai', 'speech_model', '');
+		//	$recording_model = $settings->get('speech', 'model', '');
 		//}
 
 		//set the recording format
@@ -182,22 +192,22 @@
 
 				//text to audio - make a new audio file from the message
 				if ($speech_enabled == 'true' && !empty($recording_voice) && !empty($recording_message)) {
-					$ai->audio_path = $recording_path;
-					$ai->audio_filename = $recording_filename;
-					$ai->audio_format = $recording_format;
-					//$ai->audio_model = $recording_model ?? '';
-					$ai->audio_voice = $recording_voice;
-					//$ai->audio_language = $recording_language;
-					//$ai->audio_translate = $translate;
-					$ai->audio_message = $recording_message;
-					$ai->speech();
+					$speech->audio_path = $recording_path;
+					$speech->audio_filename = $recording_filename;
+					$speech->audio_format = $recording_format;
+					//$speech->audio_model = $recording_model ?? '';
+					$speech->audio_voice = $recording_voice;
+					//$speech->audio_language = $recording_language;
+					//$speech->audio_translate = $translate;
+					$speech->audio_message = $recording_message;
+					$speech->speech();
 				}
 
 				//audio to text - get the transcription from the audio file
 				if ($transcribe_enabled == 'true' && empty($recording_message)) {
-					$ai->audio_path = $recording_path;
-					$ai->audio_filename = $recording_filename;
-					$recording_message = $ai->transcribe();
+					$transcribe->audio_path = $recording_path;
+					$transcribe->audio_filename = $recording_filename;
+					$recording_message = $transcribe->transcribe();
 				}
 
 				//build array
@@ -329,15 +339,6 @@
 		echo "    ".$text['label-voice']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-
-//foreach($voices as $key => $voice) {
-//	if (gettype($key) === "integer") {
-//		echo "		<option value='".escape($key)."' ".(($key == $recording_voice) ? "selected='selected'" : null).">".escape($voice)."</option>\n";
-//	} else {
-//		echo "		<option value='".escape($key)."' ".(($key == $recording_voice) ? "selected='selected'" : null).">".escape($voice)."</option>\n";
-//	}
-//}
-
 		if (!empty($voices)) {
 			echo "	<select class='formfld' name='recording_voice'>\n";
 			echo "		<option value=''></option>\n";
