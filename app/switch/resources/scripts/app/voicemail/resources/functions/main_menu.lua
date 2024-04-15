@@ -51,7 +51,7 @@
 					dbh:query(sql, params, function(row)
 						new_messages = row["new_messages"];
 					end);
-					dtmf_digits = session:playAndGetDigits(0, 1, 1, 300, "#", "phrase:voicemail_message_count:" .. new_messages .. ":new", "", "\\d+");
+					dtmf_digits = session:playAndGetDigits(0, 1, 1, 300, "#", "phrase:voicemail_new_message_count:" .. new_messages .. ":new", "", "\\d+");
 				end
 			--saved voicemail count
 				if (session:ready()) then
@@ -67,7 +67,7 @@
 						dbh:query(sql, params, function(row)
 							saved_messages = row["saved_messages"];
 						end);
-						dtmf_digits = session:playAndGetDigits(0, 1, 1, 300, "#", "phrase:voicemail_message_count:" .. saved_messages .. ":saved", "", "\\d+");
+						dtmf_digits = session:playAndGetDigits(0, 1, 1, 300, "#", "phrase:voicemail_saved_message_count:" .. saved_messages .. ":saved", "", "\\d+");
 					end
 				end
 
