@@ -142,7 +142,6 @@
 	echo "<script>\n";
 	echo "	var chart_text_font = 'arial';\n";
 	echo "	var chart_text_size = '".$_SESSION['dashboard']['chart_text_size']['text']."';\n";
-	echo "	var chart_text_color;\n";
 	echo "	var chart_cutout = '75%';\n";
 	echo "</script>\n";
 
