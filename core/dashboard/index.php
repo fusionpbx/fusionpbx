@@ -72,7 +72,8 @@
 	$sql .= "dashboard_uuid, \n";
 	$sql .= "dashboard_name, \n";
 	$sql .= "dashboard_path, \n";
-	$sql .= "dashboard_text_color, \n";
+	$sql .= "dashboard_heading_text_color, \n";
+	$sql .= "dashboard_number_text_color, \n";
 	$sql .= "dashboard_column_span, \n";
 	$sql .= "dashboard_details_state, \n";
 	$sql .= "dashboard_order, \n";
@@ -141,7 +142,7 @@
 //chart variables
 	echo "<script>\n";
 	echo "	var chart_text_font = 'arial';\n";
-	echo "	var chart_text_size = '".$_SESSION['dashboard']['chart_text_size']['text']."';\n";
+	echo "	var chart_text_size = '".$_SESSION['dashboard']['number_text_size']['text']."';\n";
 	echo "	var chart_cutout = '75%';\n";
 	echo "</script>\n";
 

@@ -72,10 +72,20 @@
 		$apps[$x]['db'][$y]['fields'][$z]['search_by'] = '';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the dashboard path.';
 		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'dashboard_text_color';
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'dashboard_background_color';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['search_by'] = '';
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the dashboard text color.';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the dashboard background color.';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'dashboard_heading_text_color';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['search_by'] = '';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the heading text color.';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'dashboard_number_text_color';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['search_by'] = '';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the number text color.';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'dashboard_column_span';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'numeric';
@@ -178,19 +188,27 @@
 
 	//default settings
 		$y=0;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "8e44f758-e2ec-41e0-aa81-464fefb3bdb3";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "3f5e015e-4688-4b98-a1d6-3de2132e291a";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "dashboard";
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "chart_text_size";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "heading_text_color";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "30";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "#444444";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "6e797ac7-31bc-497c-88e3-c41fc12e7e45";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "6ff33ad9-4c4b-4bd9-a897-13646766aba2";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "dashboard";
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "chart_text_color";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "number_text_color";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "#444444";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "1dfdac89-488b-4194-b031-081dc910d4ed";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "dashboard";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "number_text_size";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "30";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 

@@ -71,8 +71,8 @@
 							circumference: 180,
 							rotation: 270,
 							plugins: {
-								chart_counter_2: {
-									chart_text: '<?php echo $percent_disk_usage; ?>'
+								chart_number_2: {
+									text: '<?php echo $percent_disk_usage; ?>'
 								},
 								legend: {
 									display: false
@@ -80,19 +80,19 @@
 								title: {
 									display: true,
 									text: '<?php echo $text['label-disk_usage']; ?>',
-									color: '<?php echo $row['dashboard_text_color'] ?? $_SESSION['dashboard']['chart_text_color']['text']; ?>'
+									color: '<?php echo $row['dashboard_heading_text_color'] ?? $_SESSION['dashboard']['chart_heading_text_color']['text']; ?>'
 								}
 							}
 						},
 						plugins: [{
-							id: 'chart_counter_2',
+							id: 'chart_number_2',
 							beforeDraw(chart, args, options){
 								const {ctx, chartArea: {top, right, bottom, left, width, height} } = chart;
 								ctx.font = (chart_text_size - 7) + 'px ' + chart_text_font;
 								ctx.textBaseline = 'middle';
 								ctx.textAlign = 'center';
-								ctx.fillStyle = '<?php echo $row['dashboard_text_color'] ?? $_SESSION['dashboard']['chart_text_color']['text']; ?>';
-								ctx.fillText(options.chart_text + '%', width / 2, top + (height / 2) + 35);
+								ctx.fillStyle = '<?php echo $row['dashboard_number_text_color'] ?? $_SESSION['dashboard']['number_text_color']['text']; ?>';
+								ctx.fillText(options.text + '%', width / 2, top + (height / 2) + 35);
 								ctx.save();
 							}
 						}]
