@@ -42,15 +42,6 @@
 			</div>
 
 			<script>
-				var system_status_chart_background_color;
-				if ('<?php echo $percent_disk_usage; ?>' <= 80) {
-					system_status_chart_background_color = '<?php echo $_SESSION['dashboard']['disk_usage_chart_main_background_color'][0]; ?>';
-				} else if ('<?php echo $percent_disk_usage; ?>' <= 90) {
-					system_status_chart_background_color = '<?php echo $_SESSION['dashboard']['disk_usage_chart_main_background_color'][1]; ?>';
-				} else if ('<?php echo $percent_disk_usage; ?>' > 90) {
-					system_status_chart_background_color = '<?php echo $_SESSION['dashboard']['disk_usage_chart_main_background_color'][2]; ?>';
-				}
-
 				const system_status_chart = new Chart(
 					document.getElementById('system_status_chart').getContext('2d'),
 					{
@@ -58,10 +49,20 @@
 						data: {
 							datasets: [{
 								data: ['<?php echo $percent_disk_usage; ?>', 100 - '<?php echo $percent_disk_usage; ?>'],
-								backgroundColor: [system_status_chart_background_color,
-								'<?php echo $_SESSION['dashboard']['disk_usage_chart_sub_background_color']['text']; ?>'],
+								backgroundColor: [
+									<?php
+									if ($percent_disk_usage <= 80) {
+										echo "'".$_SESSION['dashboard']['disk_usage_chart_main_background_color'][0]."',\n";
+									} else if ($percent_disk_usage <= 90) {
+										echo "'".$_SESSION['dashboard']['disk_usage_chart_main_background_color'][1]."',\n";
+									} else if ($percent_disk_usage > 90) {
+										echo "'".$_SESSION['dashboard']['disk_usage_chart_main_background_color'][2]."',\n";
+									}
+									?>
+									'<?php echo $_SESSION['dashboard']['disk_usage_chart_sub_background_color']['text']; ?>'
+								],
 								borderColor: '<?php echo $_SESSION['dashboard']['disk_usage_chart_border_color']['text']; ?>',
-								borderWidth: '<?php echo $_SESSION['dashboard']['disk_usage_chart_border_width']['text']; ?>',
+								borderWidth: '<?php echo $_SESSION['dashboard']['disk_usage_chart_border_width']['text']; ?>'
 							}]
 						},
 						options: {
