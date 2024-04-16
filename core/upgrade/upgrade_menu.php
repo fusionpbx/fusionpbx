@@ -96,13 +96,12 @@ function show_software_version() {
 
 function do_upgrade_code() {
 	//assume failed
-	$result_code = 1; //0=success, non-zero=failed
+	$result = ['result' => false, 'message' => 'Failed'];
 	//global $conf;
 	if (defined('PROJECT_ROOT')) {
-		chdir(PROJECT_ROOT);
-		system('git pull', $result_code);
+		return git_pull(PROJECT_ROOT);
 	}
-	return $result_code;
+	return $result;
 }
 
 //run all app_defaults.php files
