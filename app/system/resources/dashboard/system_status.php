@@ -79,11 +79,23 @@
 								},
 								title: {
 									display: true,
-									text: '<?php echo $text['label-disk_usage']; ?>'
+									text: '<?php echo $text['label-disk_usage']; ?>',
+									color: '<?php echo $row['dashboard_text_color'] ?? $_SESSION['dashboard']['chart_text_color']['text']; ?>'
 								}
 							}
 						},
-						plugins: [chart_counter_2],
+						plugins: [{
+							id: 'chart_counter_2',
+							beforeDraw(chart, args, options){
+								const {ctx, chartArea: {top, right, bottom, left, width, height} } = chart;
+								ctx.font = (chart_text_size - 7) + 'px ' + chart_text_font;
+								ctx.textBaseline = 'middle';
+								ctx.textAlign = 'center';
+								ctx.fillStyle = '<?php echo $row['dashboard_text_color'] ?? $_SESSION['dashboard']['chart_text_color']['text']; ?>';
+								ctx.fillText(options.chart_text + '%', width / 2, top + (height / 2) + 35);
+								ctx.save();
+							}
+						}]
 					}
 				);
 			</script>

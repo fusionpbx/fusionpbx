@@ -72,6 +72,7 @@
 	$sql .= "dashboard_uuid, \n";
 	$sql .= "dashboard_name, \n";
 	$sql .= "dashboard_path, \n";
+	$sql .= "dashboard_text_color, \n";
 	$sql .= "dashboard_column_span, \n";
 	$sql .= "dashboard_details_state, \n";
 	$sql .= "dashboard_order, \n";
@@ -138,40 +139,12 @@
 	echo "<script src='/resources/chartjs/chart.min.js'></script>";
 
 //chart variables
-	?>
-	<script>
-		var chart_text_font = 'arial';
-		var chart_text_size = '<?php echo $_SESSION['dashboard']['chart_text_size']['text']; ?>';
-		var chart_text_color = '<?php echo $_SESSION['dashboard']['chart_text_color']['text']; ?>';
-		var chart_cutout = '75%';
-
-		const chart_counter = {
-			id: 'chart_counter',
-			beforeDraw(chart, args, options){
-				const {ctx, chartArea: {top, right, bottom, left, width, height} } = chart;
-				ctx.font = chart_text_size + 'px ' + chart_text_font;
-				ctx.textBaseline = 'middle';
-				ctx.textAlign = 'center';
-				ctx.fillStyle = chart_text_color;
-				ctx.fillText(options.chart_text, width / 2, top + (height / 2));
-				ctx.save();
-			}
-		};
-
-		const chart_counter_2 = {
-			id: 'chart_counter_2',
-			beforeDraw(chart, args, options){
-				const {ctx, chartArea: {top, right, bottom, left, width, height} } = chart;
-				ctx.font = (chart_text_size - 7) + 'px ' + chart_text_font;
-				ctx.textBaseline = 'middle';
-				ctx.textAlign = 'center';
-				ctx.fillStyle = chart_text_color;
-				ctx.fillText(options.chart_text + '%', width / 2, top + (height / 2) + 35);
-				ctx.save();
-			}
-		};
-	</script>
-	<?php
+	echo "<script>\n";
+	echo "	var chart_text_font = 'arial';\n";
+	echo "	var chart_text_size = '".$_SESSION['dashboard']['chart_text_size']['text']."';\n";
+	echo "	var chart_text_color;\n";
+	echo "	var chart_cutout = '75%';\n";
+	echo "</script>\n";
 
 // determine initial state all button to display
 	$expanded_all = true;

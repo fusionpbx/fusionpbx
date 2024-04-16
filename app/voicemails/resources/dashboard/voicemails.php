@@ -18,7 +18,7 @@
 	$text = $language->get($_SESSION['domain']['language']['code'], 'core/user_settings');
 
 //used for missed and recent calls
-	$theme_image_path = $_SERVER["DOCUMENT_ROOT"]."/themes/".$_SESSION['domain']['template']['name']."/images/"; 
+	$theme_image_path = $_SERVER["DOCUMENT_ROOT"]."/themes/".$_SESSION['domain']['template']['name']."/images/";
 
 //voicemail
 	echo "<div class='hud_box'>\n";
@@ -67,7 +67,7 @@
 					datasets: [{
 						data: ['<?php echo $messages['new']; ?>', 0.00001],
 						backgroundColor: [
-							'<?php echo $_SESSION['dashboard']['new_messages_chart_main_background_color']['text']; ?>', 
+							'<?php echo $_SESSION['dashboard']['new_messages_chart_main_background_color']['text']; ?>',
 							'<?php echo $_SESSION['dashboard']['new_messages_chart_sub_background_color']['text']; ?>'
 						],
 						borderColor: '<?php echo $_SESSION['dashboard']['new_messages_chart_border_color']['text']; ?>',
@@ -80,7 +80,7 @@
 					maintainAspectRatio: false,
 					plugins: {
 						chart_counter: {
-							chart_text: '<?php echo $messages['new']; ?>',
+							chart_text: '<?php echo $messages['new']; ?>'
 						},
 						legend: {
 							display: false
@@ -88,11 +88,22 @@
 						title: {
 							display: true,
 							text: '<?php echo $text['label-new_messages']; ?>',
-							fontFamily: chart_text_font
+							color: '<?php echo $row['dashboard_text_color'] ?? $_SESSION['dashboard']['chart_text_color']['text']; ?>'
 						}
 					}
 				},
-				plugins: [chart_counter],
+				plugins: [{
+					id: 'chart_counter',
+					beforeDraw(chart, args, options){
+						const {ctx, chartArea: {top, right, bottom, left, width, height} } = chart;
+						ctx.font = chart_text_size + 'px ' + chart_text_font;
+						ctx.textBaseline = 'middle';
+						ctx.textAlign = 'center';
+						ctx.fillStyle = '<?php echo $row['dashboard_text_color'] ?? $_SESSION['dashboard']['chart_text_color']['text']; ?>';
+						ctx.fillText(options.chart_text, width / 2, top + (height / 2));
+						ctx.save();
+					}
+				}]
 			}
 		);
 	</script>
@@ -130,7 +141,7 @@
 	}
 	echo "</div>";
 	//$n++;
-	
+
 	echo "<span class='hud_expander' onclick=\"$('#hud_voicemail_details').slideToggle('fast');\"><span class='fas fa-ellipsis-h'></span></span>";
 	echo "</div>\n";
 

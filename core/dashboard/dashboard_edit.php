@@ -43,6 +43,7 @@
 	$dashboard_name = '';
 	$dashboard_path = '';
 	$dashboard_groups = [];
+	$dashboard_text_color = '';
 	$dashboard_column_span = '';
 	$dashboard_details_state = '';
 	$dashboard_order = '';
@@ -65,6 +66,7 @@
 		$dashboard_name = $_POST["dashboard_name"] ?? '';
 		$dashboard_path = $_POST["dashboard_path"] ?? '';
 		$dashboard_groups = $_POST["dashboard_groups"] ?? '';
+		$dashboard_text_color = $_POST["dashboard_text_color"] ?? '';
 		$dashboard_column_span = $_POST["dashboard_column_span"] ?? '';
 		$dashboard_details_state = $_POST["dashboard_details_state"] ?? '';
 		$dashboard_order = $_POST["dashboard_order"] ?? '';
@@ -163,6 +165,7 @@
 			$array['dashboard'][0]['dashboard_uuid'] = $dashboard_uuid;
 			$array['dashboard'][0]['dashboard_name'] = $dashboard_name;
 			$array['dashboard'][0]['dashboard_path'] = $dashboard_path;
+			$array['dashboard'][0]['dashboard_text_color'] = $dashboard_text_color;
 			$array['dashboard'][0]['dashboard_column_span'] = $dashboard_column_span;
 			$array['dashboard'][0]['dashboard_details_state'] = $dashboard_details_state;
 			$array['dashboard'][0]['dashboard_order'] = $dashboard_order;
@@ -208,6 +211,7 @@
 		$sql .= " dashboard_uuid, ";
 		$sql .= " dashboard_name, ";
 		$sql .= " dashboard_path, ";
+		$sql .= " dashboard_text_color, ";
 		$sql .= " dashboard_column_span, ";
 		$sql .= " dashboard_details_state, ";
 		$sql .= " dashboard_order, ";
@@ -221,6 +225,7 @@
 		if (is_array($row) && @sizeof($row) != 0) {
 			$dashboard_name = $row["dashboard_name"];
 			$dashboard_path = $row["dashboard_path"];
+			$dashboard_text_color = $row["dashboard_text_color"];
 			$dashboard_column_span = $row["dashboard_column_span"];
 			$dashboard_details_state = $row["dashboard_details_state"];
 			$dashboard_order = $row["dashboard_order"];
@@ -393,6 +398,17 @@
 	}
 	echo "<br />\n";
 	echo $text['description-dashboard_groups']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo $text['label-dashboard_text_color']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' style='position: relative;' align='left'>\n";
+	echo "	<input type='text' class='formfld colorpicker'name='dashboard_text_color' value='".escape($dashboard_text_color)."'>\n";
+	echo "<br />\n";
+	echo $text['description-dashboard_text_color']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 

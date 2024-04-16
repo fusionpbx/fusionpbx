@@ -5,10 +5,10 @@
 
 //check permisions
 	require_once "resources/check_auth.php";
-	if (permission_exists("switch_version") 
-		|| permission_exists("switch_uptime") 
-		|| permission_exists("switch_channels") 
-		|| permission_exists("switch_registrations") 
+	if (permission_exists("switch_version")
+		|| permission_exists("switch_uptime")
+		|| permission_exists("switch_channels")
+		|| permission_exists("switch_registrations")
 		||  permission_exists("registration_all")) {
 		//access granted
 	}
@@ -109,11 +109,23 @@
 						},
 						title: {
 							display: true,
-							text: '<?php echo $text['label-switch_status']; ?>'
+							text: '<?php echo $text['label-switch_status']; ?>',
+							color: '<?php echo $row['dashboard_text_color'] ?? $_SESSION['dashboard']['chart_text_color']['text']; ?>'
 						}
 					}
 				},
-				plugins: [chart_counter],
+				plugins: [{
+					id: 'chart_counter',
+					beforeDraw(chart, args, options){
+						const {ctx, chartArea: {top, right, bottom, left, width, height} } = chart;
+						ctx.font = chart_text_size + 'px ' + chart_text_font;
+						ctx.textBaseline = 'middle';
+						ctx.textAlign = 'center';
+						ctx.fillStyle = '<?php echo $row['dashboard_text_color'] ?? $_SESSION['dashboard']['chart_text_color']['text']; ?>';
+						ctx.fillText(options.chart_text, width / 2, top + (height / 2));
+						ctx.save();
+					}
+				}]
 			}
 		);
 	</script>

@@ -231,7 +231,7 @@
 		$sql .= "FROM v_voicemail_messages WHERE domain_uuid = :domain_uuid ";
 		$parameters["domain_uuid"] = $_SESSION['domain_uuid'];
 		$result = $database->select($sql, $parameters, 'all');
-		
+
 		if (is_array($result) && sizeof($result) != 0) {
 			foreach ($result as $row) {
 				$stats['domain']['messages']['total'] = $row['total'];
@@ -239,11 +239,11 @@
 			}
 		}
 		unset($sql, $result, $parameters);
-		
+
 		$sql = "SELECT count(*) total, count(*) FILTER(WHERE message_status IS DISTINCT FROM 'saved') AS new ";
 		$sql .= "FROM v_voicemail_messages ";
 		$result = $database->select($sql, null, 'all');
-		
+
 		if (is_array($result) && sizeof($result) != 0) {
 			foreach ($result as $row) {
 				$stats['system']['messages']['total'] = $row['total'];
@@ -330,16 +330,29 @@
 								reverse: true,
 								labels: {
 									usePointStyle: true,
-									pointStyle: 'rect'
+									pointStyle: 'rect',
+									color: '<?php echo $row['dashboard_text_color'] ?? $_SESSION['dashboard']['chart_text_color']['text']; ?>'
 								}
 							},
 							title: {
 								display: true,
-								text: '<?php echo $text['label-system_counts']; ?>'
+								text: '<?php echo $text['label-system_counts']; ?>',
+								color: '<?php echo $row['dashboard_text_color'] ?? $_SESSION['dashboard']['chart_text_color']['text']; ?>'
 							}
 						}
 					},
-					plugins: [chart_counter],
+					plugins: [{
+						id: 'chart_counter',
+						beforeDraw(chart, args, options){
+							const {ctx, chartArea: {top, right, bottom, left, width, height} } = chart;
+							ctx.font = chart_text_size + 'px ' + chart_text_font;
+							ctx.textBaseline = 'middle';
+							ctx.textAlign = 'center';
+							ctx.fillStyle = '<?php echo $row['dashboard_text_color'] ?? $_SESSION['dashboard']['chart_text_color']['text']; ?>';
+							ctx.fillText(options.chart_text, width / 2, top + (height / 2));
+							ctx.save();
+						}
+					}]
 				}
 			);
 		</script>
