@@ -170,7 +170,7 @@
 	echo "						labels: {\n";
 	echo "							usePointStyle: true,\n";
 	echo "							pointStyle: 'rect',\n";
-	echo "							color: '".($row['dashboard_text_color'] ?? $_SESSION['dashboard']['chart_text_color']['text'])."'\n";
+	echo "							color: '".($row['dashboard_heading_text_color'] ?? $_SESSION['dashboard']['heading_text_color']['text'])."'\n";
 	echo "						}\n";
 	echo "					},\n";
 	echo "					title: {\n";
