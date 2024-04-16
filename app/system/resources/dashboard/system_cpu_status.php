@@ -57,15 +57,6 @@
 	</div>
 
 	<script>
-		var system_cpu_status_chart_background_color;
-		if ('<?php echo $percent_cpu; ?>' <= 60) {
-			system_cpu_status_chart_background_color = '<?php echo $_SESSION['dashboard']['cpu_usage_chart_main_background_color'][0]; ?>';
-		} else if ('<?php echo $percent_cpu; ?>' <= 80) {
-			system_cpu_status_chart_background_color = '<?php echo $_SESSION['dashboard']['cpu_usage_chart_main_background_color'][1]; ?>';
-		} else if ('<?php echo $percent_cpu; ?>' > 80) {
-			system_cpu_status_chart_background_color = '<?php echo $_SESSION['dashboard']['cpu_usage_chart_main_background_color'][2]; ?>';
-		}
-
 		const system_cpu_status_chart = new Chart(
 			document.getElementById('system_cpu_status_chart').getContext('2d'),
 			{
@@ -74,7 +65,15 @@
 					datasets: [{
 						data: ['<?php echo $percent_cpu; ?>', 100 - '<?php echo $percent_cpu; ?>'],
 						backgroundColor: [
-							system_cpu_status_chart_background_color,
+							<?php
+							if ($percent_cpu <= 60) {
+								echo "'".$_SESSION['dashboard']['cpu_usage_chart_main_background_color'][0]."',\n";
+							} else if ($percent_cpu <= 80) {
+								echo "'".$_SESSION['dashboard']['cpu_usage_chart_main_background_color'][1]."',\n";
+							} else if ($percent_cpu > 80) {
+								echo "'".$_SESSION['dashboard']['cpu_usage_chart_main_background_color'][2]."',\n";
+							}
+							?>
 							'<?php echo $_SESSION['dashboard']['cpu_usage_chart_sub_background_color']['text']; ?>'
 						],
 						borderColor: '<?php echo $_SESSION['dashboard']['cpu_usage_chart_border_color']['text']; ?>',
@@ -90,7 +89,7 @@
 						},
 						tooltip: {
 							yAlign: 'bottom',
-							displayColors: false
+							displayColors: false,
 						},
 						title: {
 							text: '<?php echo $text['label-cpu_usage']; ?>',
