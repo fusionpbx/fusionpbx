@@ -331,13 +331,13 @@
 								labels: {
 									usePointStyle: true,
 									pointStyle: 'rect',
-									color: '<?php echo $row['dashboard_text_color'] ?? $_SESSION['dashboard']['chart_text_color']['text']; ?>'
+									color: '<?php echo $row['dashboard_heading_text_color'] ?? $_SESSION['dashboard']['heading_text_color']['text']; ?>'
 								}
 							},
 							title: {
 								display: true,
 								text: '<?php echo $text['label-system_counts']; ?>',
-								color: '<?php echo $row['dashboard_heading_text_color'] ?? $_SESSION['dashboard']['chart_heading_text_color']['text']; ?>'
+								color: '<?php echo $row['dashboard_heading_text_color'] ?? $_SESSION['dashboard']['heading_text_color']['text']; ?>'
 							}
 						}
 					},
