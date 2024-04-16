@@ -79,29 +79,22 @@
 						],
 						borderColor: '<?php echo $_SESSION['dashboard']['cpu_usage_chart_border_color']['text']; ?>',
 						borderWidth: '<?php echo $_SESSION['dashboard']['cpu_usage_chart_border_width']['text']; ?>',
-						cutout: chart_cutout
 					}]
 				},
 				options: {
-					responsive: true,
-					maintainAspectRatio: false,
 					circumference: 180,
 					rotation: 270,
 					plugins: {
 						chart_number_2: {
 							text: '<?php echo $percent_cpu; ?>'
 						},
-						legend: {
-							display: false,
-						},
 						tooltip: {
 							yAlign: 'bottom',
-							displayColors: false,
+							displayColors: false
 						},
 						title: {
-							display: true,
 							text: '<?php echo $text['label-cpu_usage']; ?>',
-							color: '<?php echo $row['dashboard_heading_text_color'] ?? $_SESSION['dashboard']['chart_heading_text_color']['text']; ?>'
+							color: '<?php echo $row['dashboard_heading_text_color'] ?? $_SESSION['dashboard']['heading_text_color']['text']; ?>'
 						}
 					}
 				},

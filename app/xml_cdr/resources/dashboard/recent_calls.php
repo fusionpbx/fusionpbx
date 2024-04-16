@@ -106,23 +106,16 @@
 						],
 						borderColor: '<?php echo $_SESSION['dashboard']['recent_calls_chart_border_color']['text']; ?>',
 						borderWidth: '<?php echo $_SESSION['dashboard']['recent_calls_chart_border_width']['text']; ?>',
-						cutout: chart_cutout
 					}]
 				},
 				options: {
-					responsive: true,
-					maintainAspectRatio: false,
 					plugins: {
 						chart_number: {
 							text: '<?php echo $num_rows; ?>'
 						},
-						legend: {
-							display: false
-						},
 						title: {
-							display: true,
 							text: '<?php echo $text['label-recent_calls']; ?>',
-							color: '<?php echo $row['dashboard_heading_text_color'] ?? $_SESSION['dashboard']['chart_heading_text_color']['text']; ?>'
+							color: '<?php echo $row['dashboard_heading_text_color'] ?? $_SESSION['dashboard']['heading_text_color']['text']; ?>'
 						}
 					}
 				},

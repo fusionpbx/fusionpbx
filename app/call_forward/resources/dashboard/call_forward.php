@@ -154,17 +154,15 @@
 	echo "					],\n";
 	echo "					borderColor: '".$_SESSION['dashboard']['call_forward_chart_border_color']['text']."',\n";
 	echo "					borderWidth: '".$_SESSION['dashboard']['call_forward_chart_border_width']['text']."',\n";
-	echo "					cutout: chart_cutout,\n";
 	echo "				}]\n";
 	echo "			},\n";
 	echo "			options: {\n";
-	echo "				responsive: true,\n";
-	echo "				maintainAspectRatio: false,\n";
 	echo "				plugins: {\n";
 	echo "					chart_number: {\n";
 	echo "						text: '".$stats['call_forward']."'\n";
 	echo "					},\n";
 	echo "					legend: {\n";
+	echo "						display: true,\n";
 	echo "						position: 'right',\n";
 	echo "						reverse: true,\n";
 	echo "						labels: {\n";
@@ -174,7 +172,6 @@
 	echo "						}\n";
 	echo "					},\n";
 	echo "					title: {\n";
-	echo "						display: true,\n";
 	echo "						text: '".$text['header-call_forward']."',\n";
 	echo "						color: '".($row['dashboard_heading_text_color'] ?? $_SESSION['dashboard']['heading_text_color']['text'])."'\n";
 	echo "					}\n";

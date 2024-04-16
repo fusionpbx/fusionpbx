@@ -73,21 +73,14 @@
 						],
 						borderColor: '<?php echo $_SESSION['dashboard']['new_messages_chart_border_color']['text']; ?>',
 						borderWidth: '<?php echo $_SESSION['dashboard']['new_messages_chart_border_width']['text']; ?>',
-						cutout: chart_cutout
 					}]
 				},
 				options: {
-					responsive: true,
-					maintainAspectRatio: false,
 					plugins: {
 						chart_number: {
 							text: '<?php echo $messages['new']; ?>'
 						},
-						legend: {
-							display: false
-						},
 						title: {
-							display: true,
 							text: '<?php echo $text['label-new_messages']; ?>',
 							color: '<?php echo $row['dashboard_heading_text_color'] ?? $_SESSION['dashboard']['chart_heading_text_color']['text']; ?>'
 						}

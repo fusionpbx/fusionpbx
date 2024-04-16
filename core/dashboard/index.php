@@ -143,7 +143,11 @@
 	echo "<script>\n";
 	echo "	var chart_text_font = 'arial';\n";
 	echo "	var chart_text_size = '".$_SESSION['dashboard']['number_text_size']['text']."';\n";
-	echo "	var chart_cutout = '75%';\n";
+	echo "	Chart.defaults.responsive = true;\n";
+	echo "	Chart.defaults.maintainAspectRatio = false;\n";
+	echo "	Chart.defaults.plugins.legend.display = false;\n";
+	echo "	Chart.defaults.plugins.title.display = true;\n";
+	echo "	Chart.overrides.doughnut.cutout = '75%';\n";
 	echo "</script>\n";
 
 // determine initial state all button to display

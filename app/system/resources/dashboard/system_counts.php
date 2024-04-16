@@ -315,17 +315,15 @@
 							],
 							borderColor: '<?php echo $_SESSION['dashboard']['system_counts_chart_border_color']['text']; ?>',
 							borderWidth: '<?php echo $_SESSION['dashboard']['system_counts_chart_border_width']['text']; ?>',
-							cutout: chart_cutout
 						}]
 					},
 					options: {
-					responsive: true,
-						maintainAspectRatio: false,
 						plugins: {
 							chart_number: {
 								text: '<?php echo $domain_total; ?>'
 							},
 							legend: {
+								display: true,
 								position: 'right',
 								reverse: true,
 								labels: {
@@ -335,7 +333,6 @@
 								}
 							},
 							title: {
-								display: true,
 								text: '<?php echo $text['label-system_counts']; ?>',
 								color: '<?php echo $row['dashboard_heading_text_color'] ?? $_SESSION['dashboard']['heading_text_color']['text']; ?>'
 							}
