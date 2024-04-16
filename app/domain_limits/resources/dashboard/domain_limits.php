@@ -158,7 +158,6 @@
 			echo "					title: {\n";
 			echo "						display: true,\n";
 			echo "						text: '".$text['label-domain_limits']."',\n";
-			echo "						fontFamily: chart_text_font,\n";
 			echo "						color: '".($row['dashboard_text_color'] ?? $_SESSION['dashboard']['chart_text_color']['text'])."'\n";
 			echo "					}\n";
 			echo "				}\n";
