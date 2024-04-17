@@ -129,6 +129,9 @@
 	$language = new text;
 	$text = $language->get();
 
+//add the settings object
+	$settings = new settings(["domain_uuid" => $_SESSION['domain_uuid'], "user_uuid" => $_SESSION['user_uuid']]);
+
 //load the header
 	$document['title'] = $text['title-dashboard'];
 	require_once "resources/header.php";
@@ -142,7 +145,7 @@
 //chart variables
 	echo "<script>\n";
 	echo "	var chart_text_font = 'arial';\n";
-	echo "	var chart_text_size = '".$_SESSION['dashboard']['number_text_size']['text']."';\n";
+	echo "	var chart_text_size = 30;\n";
 	echo "	Chart.defaults.responsive = true;\n";
 	echo "	Chart.defaults.maintainAspectRatio = false;\n";
 	echo "	Chart.defaults.plugins.legend.display = false;\n";
@@ -300,8 +303,8 @@
 	foreach($dashboard as $row) {
 		$dashboard_name = strtolower($row['dashboard_name']);
 		$dashboard_name = str_replace(" ", "_", $dashboard_name);
-		$dashboard_heading_text_color = $row['dashboard_heading_text_color'] ?? $_SESSION['dashboard']['heading_text_color']['text'];
-		$dashboard_number_text_color = $row['dashboard_number_text_color'] ?? $_SESSION['dashboard']['number_text_color']['text'];
+		$dashboard_heading_text_color = $row['dashboard_heading_text_color'] ?? $settings->get('theme', 'dashboard_heading_text_color');
+		$dashboard_number_text_color = $row['dashboard_heading_text_color'] ?? $settings->get('theme', 'dashboard_number_text_color');
 		echo "<div class='widget' id='".$dashboard_name."' draggable='false'>\n";
 			include($row['dashboard_path']);
 		echo "</div>\n";
