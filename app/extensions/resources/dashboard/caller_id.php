@@ -230,7 +230,7 @@
 			echo "					ctx.font = chart_text_size + 'px ' + chart_text_font;\n";
 			echo "					ctx.textBaseline = 'middle';\n";
 			echo "					ctx.textAlign = 'center';\n";
-			echo "					ctx.fillStyle = '".($row['dashboard_number_text_color'] ?? $_SESSION['dashboard']['number_text_color']['text'])."'\n";
+			echo "					ctx.fillStyle = '".($row['dashboard_number_text_color'] ?? $_SESSION['dashboard']['number_text_color']['text'])."';\n";
 			echo "					ctx.fillText(options.text, width / 2, top + (height / 2));\n";
 			echo "					ctx.save();\n";
 			echo "				}\n";
