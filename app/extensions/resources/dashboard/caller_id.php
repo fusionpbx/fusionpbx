@@ -199,7 +199,7 @@
 			echo "						'".$_SESSION['dashboard']['caller_id_chart_color_undefined']['text']."',\n";
 			echo "					],\n";
 			echo "					borderColor: '".$_SESSION['dashboard']['caller_id_chart_border_color']['text']."',\n";
-			echo "					borderWidth: '".$_SESSION['dashboard']['caller_id_chart_border_width']['text']."',\n";
+			echo "					borderWidth: '".$_SESSION['dashboard']['caller_id_chart_border_width']['text']."'\n";
 			echo "				}]\n";
 			echo "			},\n";
 			echo "			options: {\n";
@@ -214,12 +214,12 @@
 			echo "						labels: {\n";
 			echo "							usePointStyle: true,\n";
 			echo "							pointStyle: 'rect',\n";
-			echo "							color: '".($row['dashboard_heading_text_color'] ?? $_SESSION['dashboard']['heading_text_color']['text'])."'\n";
+			echo "							color: '".$dashboard_heading_text_color."'\n";
 			echo "						}\n";
 			echo "					},\n";
 			echo "					title: {\n";
 			echo "						text: '".$text['label-caller_id_number']."',\n";
-			echo "						color: '".($row['dashboard_heading_text_color'] ?? $_SESSION['dashboard']['heading_text_color']['text'])."'\n";
+			echo "						color: '".$dashboard_heading_text_color."'\n";
 			echo "					}\n";
 			echo "				}\n";
 			echo "			},\n";
@@ -230,7 +230,7 @@
 			echo "					ctx.font = chart_text_size + 'px ' + chart_text_font;\n";
 			echo "					ctx.textBaseline = 'middle';\n";
 			echo "					ctx.textAlign = 'center';\n";
-			echo "					ctx.fillStyle = '".($row['dashboard_number_text_color'] ?? $_SESSION['dashboard']['number_text_color']['text'])."';\n";
+			echo "					ctx.fillStyle = '".$dashboard_number_text_color."';\n";
 			echo "					ctx.fillText(options.text, width / 2, top + (height / 2));\n";
 			echo "					ctx.save();\n";
 			echo "				}\n";
