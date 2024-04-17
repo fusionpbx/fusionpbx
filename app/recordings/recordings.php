@@ -39,7 +39,7 @@
 
 //add the settings object
 	$settings = new settings(["domain_uuid" => $_SESSION['domain_uuid'], "user_uuid" => $_SESSION['user_uuid']]);
-	$speech_enabled = $settings->get('ai', 'speech_enabled');
+	$speech_enabled = $settings->get('speech', 'enabled');
 
 //set additional variables
 	$action = $_REQUEST["action"] ?? '';
@@ -383,9 +383,6 @@
 			unset($sql, $parameters);
 		}
 	}
-
-//set the default value for speech
-	$speech_enabled = !empty($_SESSION['ai']['speech_enabled']['boolean']) && !empty($_SESSION['ai']['speech_engine']['text']);
 
 //create token
 	$object = new token;
