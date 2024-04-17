@@ -72,11 +72,6 @@
 		$apps[$x]['db'][$y]['fields'][$z]['search_by'] = '';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the dashboard path.';
 		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'dashboard_background_color';
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
-		$apps[$x]['db'][$y]['fields'][$z]['search_by'] = '';
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the dashboard background color.';
-		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'dashboard_heading_text_color';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['search_by'] = '';
