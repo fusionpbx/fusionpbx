@@ -300,6 +300,8 @@
 	foreach($dashboard as $row) {
 		$dashboard_name = strtolower($row['dashboard_name']);
 		$dashboard_name = str_replace(" ", "_", $dashboard_name);
+		$dashboard_heading_text_color = $row['dashboard_heading_text_color'] ?? $_SESSION['dashboard']['heading_text_color']['text'];
+		$dashboard_number_text_color = $row['dashboard_number_text_color'] ?? $_SESSION['dashboard']['number_text_color']['text'];
 		echo "<div class='widget' id='".$dashboard_name."' draggable='false'>\n";
 			include($row['dashboard_path']);
 		echo "</div>\n";
