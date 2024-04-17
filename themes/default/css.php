@@ -2358,7 +2358,7 @@ else { //default: white
 		cursor: not-allowed;
 		opacity: 0.5;
 		}
-
+		
 	div.ur_ext:after {
 		position: absolute;
 		content: "";
