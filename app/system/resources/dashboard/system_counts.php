@@ -231,7 +231,7 @@
 		$sql .= "FROM v_voicemail_messages WHERE domain_uuid = :domain_uuid ";
 		$parameters["domain_uuid"] = $_SESSION['domain_uuid'];
 		$result = $database->select($sql, $parameters, 'all');
-		
+
 		if (is_array($result) && sizeof($result) != 0) {
 			foreach ($result as $row) {
 				$stats['domain']['messages']['total'] = $row['total'];
@@ -239,11 +239,11 @@
 			}
 		}
 		unset($sql, $result, $parameters);
-		
+
 		$sql = "SELECT count(*) total, count(*) FILTER(WHERE message_status IS DISTINCT FROM 'saved') AS new ";
 		$sql .= "FROM v_voicemail_messages ";
 		$result = $database->select($sql, null, 'all');
-		
+
 		if (is_array($result) && sizeof($result) != 0) {
 			foreach ($result as $row) {
 				$stats['system']['messages']['total'] = $row['total'];
@@ -315,31 +315,41 @@
 							],
 							borderColor: '<?php echo $_SESSION['dashboard']['system_counts_chart_border_color']['text']; ?>',
 							borderWidth: '<?php echo $_SESSION['dashboard']['system_counts_chart_border_width']['text']; ?>',
-							cutout: chart_cutout
 						}]
 					},
 					options: {
-					responsive: true,
-						maintainAspectRatio: false,
 						plugins: {
-							chart_counter: {
-								chart_text: '<?php echo $domain_total; ?>'
+							chart_number: {
+								text: '<?php echo $domain_total; ?>'
 							},
 							legend: {
+								display: true,
 								position: 'right',
 								reverse: true,
 								labels: {
 									usePointStyle: true,
-									pointStyle: 'rect'
+									pointStyle: 'rect',
+									color: '<?php echo $dashboard_heading_text_color; ?>'
 								}
 							},
 							title: {
-								display: true,
-								text: '<?php echo $text['label-system_counts']; ?>'
+								text: '<?php echo $text['label-system_counts']; ?>',
+								color: '<?php echo $dashboard_heading_text_color; ?>'
 							}
 						}
 					},
-					plugins: [chart_counter],
+					plugins: [{
+						id: 'chart_number',
+						beforeDraw(chart, args, options){
+							const {ctx, chartArea: {top, right, bottom, left, width, height} } = chart;
+							ctx.font = chart_text_size + 'px ' + chart_text_font;
+							ctx.textBaseline = 'middle';
+							ctx.textAlign = 'center';
+							ctx.fillStyle = '<?php echo $dashboard_number_text_color; ?>';
+							ctx.fillText(options.text, width / 2, top + (height / 2));
+							ctx.save();
+						}
+					}]
 				}
 			);
 		</script>

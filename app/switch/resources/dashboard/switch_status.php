@@ -5,10 +5,10 @@
 
 //check permisions
 	require_once "resources/check_auth.php";
-	if (permission_exists("switch_version") 
-		|| permission_exists("switch_uptime") 
-		|| permission_exists("switch_channels") 
-		|| permission_exists("switch_registrations") 
+	if (permission_exists("switch_version")
+		|| permission_exists("switch_uptime")
+		|| permission_exists("switch_channels")
+		|| permission_exists("switch_registrations")
 		||  permission_exists("registration_all")) {
 		//access granted
 	}
@@ -93,27 +93,32 @@
 						backgroundColor: ['<?php echo $_SESSION['dashboard']['switch_status_chart_main_background_color']['text']; ?>',
 						'<?php echo $_SESSION['dashboard']['switch_status_chart_sub_background_color']['text']; ?>'],
 						borderColor: '<?php echo $_SESSION['dashboard']['switch_status_chart_border_color']['text']; ?>',
-						borderWidth: '<?php echo $_SESSION['dashboard']['switch_status_chart_border_width']['text']; ?>',
-						cutout: chart_cutout
+						borderWidth: '<?php echo $_SESSION['dashboard']['switch_status_chart_border_width']['text']; ?>'
 					}]
 				},
 				options: {
-					responsive: true,
-					maintainAspectRatio: false,
 					plugins: {
-						chart_counter: {
-							chart_text: '<?php echo $registrations; ?>'
-						},
-						legend: {
-							display: false
+						chart_number: {
+							text: '<?php echo $registrations; ?>'
 						},
 						title: {
-							display: true,
-							text: '<?php echo $text['label-switch_status']; ?>'
+							text: '<?php echo $text['label-switch_status']; ?>',
+							color: '<?php echo $dashboard_heading_text_color; ?>'
 						}
 					}
 				},
-				plugins: [chart_counter],
+				plugins: [{
+					id: 'chart_number',
+					beforeDraw(chart, args, options){
+						const {ctx, chartArea: {top, right, bottom, left, width, height} } = chart;
+						ctx.font = chart_text_size + 'px ' + chart_text_font;
+						ctx.textBaseline = 'middle';
+						ctx.textAlign = 'center';
+						ctx.fillStyle = '<?php echo $dashboard_number_text_color; ?>';
+						ctx.fillText(options.text, width / 2, top + (height / 2));
+						ctx.save();
+					}
+				}]
 			}
 		);
 	</script>

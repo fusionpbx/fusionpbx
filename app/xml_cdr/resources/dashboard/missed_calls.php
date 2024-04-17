@@ -110,26 +110,31 @@
 						],
 						borderColor: '<?php echo $_SESSION['dashboard']['missed_calls_chart_border_color']['text']; ?>',
 						borderWidth: '<?php echo $_SESSION['dashboard']['missed_calls_chart_border_width']['text']; ?>',
-						cutout: chart_cutout
 					}]
 				},
 				options: {
-					responsive: true,
-					maintainAspectRatio: false,
 					plugins: {
-						chart_counter: {
-							chart_text: '<?php echo $num_rows; ?>'
-						},
-						legend: {
-							display: false
+						chart_number: {
+							text: '<?php echo $num_rows; ?>'
 						},
 						title: {
-							display: true,
-							text: '<?php echo $text['label-missed_calls']; ?>'
+							text: '<?php echo $text['label-missed_calls']; ?>',
+							color: '<?php echo $dashboard_heading_text_color; ?>'
 						}
 					}
 				},
-				plugins: [chart_counter],
+				plugins: [{
+					id: 'chart_number',
+					beforeDraw(chart, args, options){
+						const {ctx, chartArea: {top, right, bottom, left, width, height} } = chart;
+						ctx.font = chart_text_size + 'px ' + chart_text_font;
+						ctx.textBaseline = 'middle';
+						ctx.textAlign = 'center';
+						ctx.fillStyle = '<?php echo $dashboard_number_text_color; ?>';
+						ctx.fillText(options.text, width / 2, top + (height / 2));
+						ctx.save();
+					}
+				}]
 			}
 		);
 	</script>
