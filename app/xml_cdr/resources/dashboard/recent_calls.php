@@ -105,7 +105,7 @@
 							'<?php echo $_SESSION['dashboard']['recent_calls_chart_sub_background_color']['text']; ?>'
 						],
 						borderColor: '<?php echo $_SESSION['dashboard']['recent_calls_chart_border_color']['text']; ?>',
-						borderWidth: '<?php echo $_SESSION['dashboard']['recent_calls_chart_border_width']['text']; ?>',
+						borderWidth: '<?php echo $_SESSION['dashboard']['recent_calls_chart_border_width']['text']; ?>'
 					}]
 				},
 				options: {
@@ -115,7 +115,7 @@
 						},
 						title: {
 							text: '<?php echo $text['label-recent_calls']; ?>',
-							color: '<?php echo $row['dashboard_heading_text_color'] ?? $_SESSION['dashboard']['heading_text_color']['text']; ?>'
+							color: '<?php echo $dashboard_heading_text_color; ?>'
 						}
 					}
 				},
@@ -126,7 +126,7 @@
 						ctx.font = chart_text_size + 'px ' + chart_text_font;
 						ctx.textBaseline = 'middle';
 						ctx.textAlign = 'center';
-						ctx.fillStyle = '<?php echo $row['dashboard_number_text_color'] ?? $_SESSION['dashboard']['number_text_color']['text']; ?>';
+						ctx.fillStyle = '<?php echo $dashboard_number_text_color; ?>';
 						ctx.fillText(options.text, width / 2, top + (height / 2));
 						ctx.save();
 					}
