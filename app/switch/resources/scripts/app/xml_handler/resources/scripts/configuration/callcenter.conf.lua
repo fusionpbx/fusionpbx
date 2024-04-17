@@ -67,6 +67,9 @@ require "resources.functions.format_ringback"
 		--get the variables
 			dsn = freeswitch.getGlobalVariable("dsn") or ''
 			dsn_callcenter = freeswitch.getGlobalVariable("dsn_callcenter") or ''
+			if #dsn_callcenter > 0 then
+				dsn_callcenter = freeswitch.getGlobalVariable("dsn_call_center") or ''
+			end
 
 		--start the xml array
 			local xml = Xml:new();
