@@ -124,7 +124,7 @@
 		echo "				'".$text['label-call_forward'].": ".$stats['call_forward']."',\n";
 	}
 	echo "					'".$text['label-active'].": ".$stats['active']."',\n";
-	echo "					],\n";
+	echo "				],\n";
 	echo "				datasets: [{\n";
 	echo "					data: [\n";
 	if (permission_exists('do_not_disturb')) {
@@ -138,7 +138,7 @@
 	}
 	echo "						'".$stats['active']."',\n";
 	echo "						0.00001,\n";
-	echo "						],\n";
+	echo "					],\n";
 	echo "					backgroundColor: [\n";
 	if (permission_exists('do_not_disturb')) {
 		echo "					'".$_SESSION['dashboard']['call_forward_chart_color_do_not_disturb']['text']."',\n";
@@ -168,12 +168,12 @@
 	echo "						labels: {\n";
 	echo "							usePointStyle: true,\n";
 	echo "							pointStyle: 'rect',\n";
-	echo "							color: '".($row['dashboard_heading_text_color'] ?? $_SESSION['dashboard']['heading_text_color']['text'])."'\n";
+	echo "							color: '".$dashboard_heading_text_color."'\n";
 	echo "						}\n";
 	echo "					},\n";
 	echo "					title: {\n";
 	echo "						text: '".$text['header-call_forward']."',\n";
-	echo "						color: '".($row['dashboard_heading_text_color'] ?? $_SESSION['dashboard']['heading_text_color']['text'])."'\n";
+	echo "						color: '".$dashboard_heading_text_color."'\n";
 	echo "					}\n";
 	echo "				}\n";
 	echo "			},\n";
@@ -184,7 +184,7 @@
 	echo "					ctx.font = chart_text_size + 'px ' + chart_text_font;\n";
 	echo "					ctx.textBaseline = 'middle';\n";
 	echo "					ctx.textAlign = 'center';\n";
-	echo "					ctx.fillStyle = '".($row['dashboard_number_text_color'] ?? $_SESSION['dashboard']['number_text_color']['text'])."';\n";
+	echo "					ctx.fillStyle = '".$dashboard_number_text_color."';\n";
 	echo "					ctx.fillText(options.text, width / 2, top + (height / 2));\n";
 	echo "					ctx.save();\n";
 	echo "				}\n";
