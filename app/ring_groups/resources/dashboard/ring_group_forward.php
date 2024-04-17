@@ -198,7 +198,6 @@
 	echo "						}\n";
 	echo "					},\n";
 	echo "					title: {\n";
-	echo "						display: true,\n";
 	echo "						text: '".$text['header-ring-group-forward']."',\n";
 	echo "						color: '".($row['dashboard_heading_text_color'] ?? $_SESSION['dashboard']['heading_text_color']['text'])."'\n";
 	echo "					}\n";
