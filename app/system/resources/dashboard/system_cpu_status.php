@@ -47,7 +47,7 @@
 		//uptime
 		$result = shell_exec('uptime');
 		$load_average = sys_getloadavg();
-		
+
 	}
 
 //add half doughnut chart
@@ -57,15 +57,6 @@
 	</div>
 
 	<script>
-		var system_cpu_status_chart_background_color;
-		if ('<?php echo $percent_cpu; ?>' <= 60) {
-			system_cpu_status_chart_background_color = '<?php echo $_SESSION['dashboard']['cpu_usage_chart_main_background_color'][0]; ?>';
-		} else if ('<?php echo $percent_cpu; ?>' <= 80) {
-			system_cpu_status_chart_background_color = '<?php echo $_SESSION['dashboard']['cpu_usage_chart_main_background_color'][1]; ?>';
-		} else if ('<?php echo $percent_cpu; ?>' > 80) {
-			system_cpu_status_chart_background_color = '<?php echo $_SESSION['dashboard']['cpu_usage_chart_main_background_color'][2]; ?>';
-		}
-
 		const system_cpu_status_chart = new Chart(
 			document.getElementById('system_cpu_status_chart').getContext('2d'),
 			{
@@ -74,37 +65,50 @@
 					datasets: [{
 						data: ['<?php echo $percent_cpu; ?>', 100 - '<?php echo $percent_cpu; ?>'],
 						backgroundColor: [
-							system_cpu_status_chart_background_color,
+							<?php
+							if ($percent_cpu <= 60) {
+								echo "'".$_SESSION['dashboard']['cpu_usage_chart_main_background_color'][0]."',\n";
+							} else if ($percent_cpu <= 80) {
+								echo "'".$_SESSION['dashboard']['cpu_usage_chart_main_background_color'][1]."',\n";
+							} else if ($percent_cpu > 80) {
+								echo "'".$_SESSION['dashboard']['cpu_usage_chart_main_background_color'][2]."',\n";
+							}
+							?>
 							'<?php echo $_SESSION['dashboard']['cpu_usage_chart_sub_background_color']['text']; ?>'
 						],
 						borderColor: '<?php echo $_SESSION['dashboard']['cpu_usage_chart_border_color']['text']; ?>',
-						borderWidth: '<?php echo $_SESSION['dashboard']['cpu_usage_chart_border_width']['text']; ?>',
-						cutout: chart_cutout
+						borderWidth: '<?php echo $_SESSION['dashboard']['cpu_usage_chart_border_width']['text']; ?>'
 					}]
 				},
 				options: {
-					responsive: true,
-					maintainAspectRatio: false,
 					circumference: 180,
 					rotation: 270,
 					plugins: {
-						chart_counter_2: {
-							chart_text: '<?php echo $percent_cpu; ?>'
-						},
-						legend: {
-							display: false,
+						chart_number_2: {
+							text: '<?php echo $percent_cpu; ?>'
 						},
 						tooltip: {
 							yAlign: 'bottom',
 							displayColors: false,
 						},
 						title: {
-							display: true,
-							text: '<?php echo $text['label-cpu_usage']; ?>'
+							text: '<?php echo $text['label-cpu_usage']; ?>',
+							color: '<?php echo $dashboard_heading_text_color; ?>'
 						}
 					}
 				},
-				plugins: [chart_counter_2],
+				plugins: [{
+					id: 'chart_number_2',
+					beforeDraw(chart, args, options){
+						const {ctx, chartArea: {top, right, bottom, left, width, height} } = chart;
+						ctx.font = (chart_text_size - 7) + 'px ' + chart_text_font;
+						ctx.textBaseline = 'middle';
+						ctx.textAlign = 'center';
+						ctx.fillStyle = '<?php echo $dashboard_number_text_color; ?>';
+						ctx.fillText(options.text + '%', width / 2, top + (height / 2) + 35);
+						ctx.save();
+					}
+				}]
 			}
 		);
 	</script>
