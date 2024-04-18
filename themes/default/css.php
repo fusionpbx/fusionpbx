@@ -2583,6 +2583,7 @@ else { //default: white
 		line-height: <?php echo ($line_height_number > 0) ? str_replace($font_size_number, $line_height_number, $font_size) : '26.25pt'; ?>;
 		text-align: center;
 		background: <?=$dashboard_heading_background_color?>;
+		border-bottom: 1px solid <?php echo color_adjust($dashboard_heading_background_color, 0.2); ?>;
 		overflow: hidden;
 		}
 
@@ -2616,6 +2617,7 @@ else { //default: white
 		line-height: <?php echo ($line_height_number > 0) ? str_replace($font_size_number, $line_height_number, $font_size) : '77pt'; ?>;
 		font-weight: normal;
 		background: <?=$dashboard_number_background_color?>;
+		border-top: 1px solid <?php echo color_adjust($dashboard_number_background_color, 0.2); ?>;
 		overflow: hidden;
 		<?php
 		/*
