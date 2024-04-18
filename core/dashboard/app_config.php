@@ -72,6 +72,11 @@
 		$apps[$x]['db'][$y]['fields'][$z]['search_by'] = '';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the dashboard path.';
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'dashboard_chart_type';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['search_by'] = '';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the chart type.';
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'dashboard_heading_text_color';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['search_by'] = '';

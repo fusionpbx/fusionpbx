@@ -213,20 +213,20 @@ $dashboard_detail_background_color_center = $_SESSION['theme']['dashboard_detail
 $dashboard_border_radius = $_SESSION['theme']['dashboard_border_radius']['text'] ?? '5px';
 $dashboard_border_color = $_SESSION['theme']['dashboard_border_color']['text'] ?? '#dbe0ea';
 $dashboard_border_color_hover = $_SESSION['theme']['dashboard_border_color_hover']['text'] ?? '#cbd3e1';
-$dashboard_heading_text_color = $_SESSION['theme']['dashboard_heading_text_color']['text'] ?? '#fff';
-$dashboard_heading_text_color_hover = $_SESSION['theme']['dashboard_heading_text_color_hover']['text'] ?? '#fff';
-$dashboard_heading_text_size = $_SESSION['theme']['dashboard_heading_text_size']['text'] ?? '12pt';
-$dashboard_heading_text_font = $_SESSION['theme']['dashboard_heading_text_font']['text'] ?? 'Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif';
-$dashboard_heading_text_shadow_color = $_SESSION['theme']['dashboard_heading_text_shadow_color']['text'] ?? '#000';
-$dashboard_heading_background_color = $_SESSION['theme']['dashboard_heading_background_color']['text'] ?? '#8e96a5';
+$dashboard_heading_text_color = $_SESSION['theme']['dashboard_heading_text_color']['text'] ?? '#444';
+$dashboard_heading_text_color_hover = $_SESSION['theme']['dashboard_heading_text_color_hover']['text'] ?? '';
+$dashboard_heading_text_size = $_SESSION['theme']['dashboard_heading_text_size']['text'] ?? '13px';
+$dashboard_heading_text_font = $_SESSION['theme']['dashboard_heading_text_font']['text'] ?? 'Arial, Calibri, Candara, Segoe, "Segoe UI", Optima, sans-serif';
+$dashboard_heading_text_shadow_color = $_SESSION['theme']['dashboard_heading_text_shadow_color']['text'] ?? 'rgba(0,0,0,0)';
+$dashboard_heading_background_color = $_SESSION['theme']['dashboard_heading_background_color']['text'] ?? '';
 $dashboard_heading_background_color_hover = $_SESSION['theme']['dashboard_heading_background_color_hover']['text'] ?? color_adjust($dashboard_heading_background_color, 0.03);
-$dashboard_number_text_color = $_SESSION['theme']['dashboard_number_text_color']['text'] ?? '#fff';
-$dashboard_number_text_color_hover = $_SESSION['theme']['dashboard_number_text_color_hover']['text'] ?? '#fff';
-$dashboard_number_text_font = $_SESSION['theme']['dashboard_number_text_font']['text'] ?? 'Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif';
-$dashboard_number_text_size = $_SESSION['theme']['dashboard_number_text_size']['text'] ?? '60pt';
-$dashboard_number_text_shadow_color = $_SESSION['theme']['dashboard_number_text_shadow_color']['text'] ?? '#737983';
-$dashboard_number_text_shadow_color_hover = $_SESSION['theme']['dashboard_number_text_shadow_color_hover']['text'] ?? '#737983';
-$dashboard_number_background_color = $_SESSION['theme']['dashboard_number_background_color']['text'] ?? '#a4aebf';
+$dashboard_number_text_color = $_SESSION['theme']['dashboard_number_text_color']['text'] ?? '#444';
+$dashboard_number_text_color_hover = $_SESSION['theme']['dashboard_number_text_color_hover']['text'] ?? '';
+$dashboard_number_text_font = $_SESSION['theme']['dashboard_number_text_font']['text'] ?? 'Arial, Calibri, Candara, Segoe, "Segoe UI", Optima, sans-serif';
+$dashboard_number_text_size = $_SESSION['theme']['dashboard_number_text_size']['text'] ?? '100px';
+$dashboard_number_text_shadow_color = $_SESSION['theme']['dashboard_number_text_shadow_color']['text'] ?? 'rgba(0,0,0,0)';
+$dashboard_number_text_shadow_color_hover = $_SESSION['theme']['dashboard_number_text_shadow_color_hover']['text'] ?? 'rgba(0,0,0,0)';
+$dashboard_number_background_color = $_SESSION['theme']['dashboard_number_background_color']['text'] ?? '';
 $dashboard_number_background_color_hover = $_SESSION['theme']['dashboard_number_background_color_hover']['text'] ?? color_adjust($dashboard_number_background_color, 0.03);
 $dashboard_number_title_text_color = $_SESSION['theme']['dashboard_number_title_text_color']['text'] ?? '#fff';
 $dashboard_number_title_text_size = $_SESSION['theme']['dashboard_number_title_text_size']['text'] ?? '14px';
@@ -2358,7 +2358,7 @@ else { //default: white
 		cursor: not-allowed;
 		opacity: 0.5;
 		}
-		
+
 	div.ur_ext:after {
 		position: absolute;
 		content: "";
@@ -2568,6 +2568,7 @@ else { //default: white
 		letter-spacing: -0.02em;
 		color: <?=$dashboard_heading_text_color?>;
 		font-size: <?=$dashboard_heading_text_size?>;
+		font-weight: bold;
 		<?php
 		//calculate line height based on font size
 		$font_size = strtolower($dashboard_heading_text_size);
@@ -2619,6 +2620,7 @@ else { //default: white
 		border-top: 1px solid <?php echo color_adjust($dashboard_number_background_color, 0.2); ?>;
 		overflow: hidden;
 		<?php
+		/*
 		//calculate font padding
 		$font_size = strtolower($dashboard_heading_text_size);
 		$tmp = str_replace(' ', '', $font_size);
@@ -2628,9 +2630,14 @@ else { //default: white
 		$tmp = str_replace('%', '', $tmp);
 		$font_size_number = $tmp;
 		$padding_top_bottom = (int) floor((100-$tmp) * 0.25);
+		*/
 		?>
+		<!--
 		padding-top: <?php echo $padding_top_bottom.'px' ?>;
 		padding-bottom: <?php echo $padding_top_bottom.'px' ?>;
+		-->
+		padding-top: 5px;
+		padding-bottom: 10px;
 		}
 
 	span.hud_stat:hover {

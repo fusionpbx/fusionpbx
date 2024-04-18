@@ -72,6 +72,7 @@
 	$sql .= "dashboard_uuid, \n";
 	$sql .= "dashboard_name, \n";
 	$sql .= "dashboard_path, \n";
+	$sql .= "dashboard_chart_type, \n";
 	$sql .= "dashboard_heading_text_color, \n";
 	$sql .= "dashboard_number_text_color, \n";
 	$sql .= "dashboard_column_span, \n";
@@ -149,7 +150,6 @@
 	echo "	Chart.defaults.responsive = true;\n";
 	echo "	Chart.defaults.maintainAspectRatio = false;\n";
 	echo "	Chart.defaults.plugins.legend.display = false;\n";
-	echo "	Chart.defaults.plugins.title.display = true;\n";
 	echo "	Chart.overrides.doughnut.cutout = '75%';\n";
 	echo "</script>\n";
 
@@ -303,6 +303,7 @@
 	foreach($dashboard as $row) {
 		$dashboard_name = strtolower($row['dashboard_name']);
 		$dashboard_name = str_replace(" ", "_", $dashboard_name);
+		$dashboard_chart_type = $row['dashboard_chart_type'] ?? 'doughnut';
 		$dashboard_heading_text_color = $row['dashboard_heading_text_color'] ?? $settings->get('theme', 'dashboard_heading_text_color');
 		$dashboard_number_text_color = $row['dashboard_heading_text_color'] ?? $settings->get('theme', 'dashboard_number_text_color');
 		echo "<div class='widget' id='".$dashboard_name."' draggable='false'>\n";

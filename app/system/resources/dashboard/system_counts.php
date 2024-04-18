@@ -294,66 +294,70 @@
 
 	echo "<div class='hud_box'>\n";
 	if ($show_stat) {
-		//add doughnut chart
-		?>
-		<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 20px;' onclick="$('#hud_system_counts_details').slideToggle('fast');">
-			<div style='width: 250px; height: 175px;'><canvas id='system_counts_chart'></canvas></div>
-		</div>
 
-		<script>
-			const system_counts_chart = new Chart(
-				document.getElementById('system_counts_chart').getContext('2d'),
-				{
-					type: 'doughnut',
-					data: {
-						labels: ['<?php echo $text['label-active']; ?>: <?php echo $domain_active; ?>', '<?php echo $text['label-inactive']; ?>: <?php echo $domain_inactive; ?>'],
-						datasets: [{
-							data: ['<?php echo $domain_active; ?>', '<?php echo $domain_inactive; ?>'],
-							backgroundColor: [
-								'<?php echo $_SESSION['dashboard']['system_counts_chart_main_background_color']['text']; ?>',
-								'<?php echo $_SESSION['dashboard']['system_counts_chart_sub_background_color']['text']; ?>'
-							],
-							borderColor: '<?php echo $_SESSION['dashboard']['system_counts_chart_border_color']['text']; ?>',
-							borderWidth: '<?php echo $_SESSION['dashboard']['system_counts_chart_border_width']['text']; ?>',
-						}]
-					},
-					options: {
-						plugins: {
-							chart_number: {
-								text: '<?php echo $domain_total; ?>'
-							},
-							legend: {
-								display: true,
-								position: 'right',
-								reverse: true,
-								labels: {
-									usePointStyle: true,
-									pointStyle: 'rect',
-									color: '<?php echo $dashboard_heading_text_color; ?>'
+		echo "<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 20px;' onclick=\"$('#hud_system_counts_details').slideToggle('fast');\">\n";
+		echo "	<span class='hud_title' style='color: ".$dashboard_heading_text_color.";' onclick=\"document.location.href='".PROJECT_PATH."/app/system/system.php'\">".$text['label-system_counts']."</span>\n";
+
+		if ($dashboard_chart_type == "doughnut") {
+			//add doughnut chart
+			?>
+			<div style='height: 143px;'><canvas id='system_counts_chart'></canvas></div>
+
+			<script>
+				const system_counts_chart = new Chart(
+					document.getElementById('system_counts_chart').getContext('2d'),
+					{
+						type: 'doughnut',
+						data: {
+							labels: ['<?php echo $text['label-active']; ?>: <?php echo $domain_active; ?>', '<?php echo $text['label-inactive']; ?>: <?php echo $domain_inactive; ?>'],
+							datasets: [{
+								data: ['<?php echo $domain_active; ?>', '<?php echo $domain_inactive; ?>'],
+								backgroundColor: [
+									'<?php echo $_SESSION['dashboard']['system_counts_chart_main_background_color']['text']; ?>',
+									'<?php echo $_SESSION['dashboard']['system_counts_chart_sub_background_color']['text']; ?>'
+								],
+								borderColor: '<?php echo $_SESSION['dashboard']['system_counts_chart_border_color']['text']; ?>',
+								borderWidth: '<?php echo $_SESSION['dashboard']['system_counts_chart_border_width']['text']; ?>',
+							}]
+						},
+						options: {
+							plugins: {
+								chart_number: {
+									text: '<?php echo $domain_total; ?>'
+								},
+								legend: {
+									display: true,
+									position: 'right',
+									reverse: true,
+									labels: {
+										usePointStyle: true,
+										pointStyle: 'rect',
+										color: '<?php echo $dashboard_heading_text_color; ?>'
+									}
 								}
-							},
-							title: {
-								text: '<?php echo $text['label-system_counts']; ?>',
-								color: '<?php echo $dashboard_heading_text_color; ?>'
 							}
-						}
-					},
-					plugins: [{
-						id: 'chart_number',
-						beforeDraw(chart, args, options){
-							const {ctx, chartArea: {top, right, bottom, left, width, height} } = chart;
-							ctx.font = chart_text_size + 'px ' + chart_text_font;
-							ctx.textBaseline = 'middle';
-							ctx.textAlign = 'center';
-							ctx.fillStyle = '<?php echo $dashboard_number_text_color; ?>';
-							ctx.fillText(options.text, width / 2, top + (height / 2));
-							ctx.save();
-						}
-					}]
-				}
-			);
-		</script>
-		<?php
+						},
+						plugins: [{
+							id: 'chart_number',
+							beforeDraw(chart, args, options){
+								const {ctx, chartArea: {top, right, bottom, left, width, height} } = chart;
+								ctx.font = chart_text_size + 'px ' + chart_text_font;
+								ctx.textBaseline = 'middle';
+								ctx.textAlign = 'center';
+								ctx.fillStyle = '<?php echo $dashboard_number_text_color; ?>';
+								ctx.fillText(options.text, width / 2, top + (height / 2));
+								ctx.save();
+							}
+						}]
+					}
+				);
+			</script>
+			<?php
+		}
+		if ($dashboard_chart_type == "none") {
+			echo "	<span class='hud_stat' style='color: ".$dashboard_number_text_color.";'>".$domain_total."</span>";
+		}
+		echo "	</div>\n";
 	}
 
 	echo "<div class='hud_details hud_box' id='hud_system_counts_details'>";
