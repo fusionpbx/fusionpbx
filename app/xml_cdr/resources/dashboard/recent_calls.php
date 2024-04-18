@@ -86,7 +86,7 @@
 //recent calls
 	echo "<div class='hud_box'>\n";
 
-	echo "	<div style='display: block; flex-wrap: wrap; justify-content: center; padding-bottom: 20px;' onclick=\"$('#hud_recent_calls_details').slideToggle('fast');\">\n";
+	echo "	<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 20px;' onclick=\"$('#hud_recent_calls_details').slideToggle('fast');\">\n";
 	echo "		<span class='hud_title' style='color: ".$dashboard_heading_text_color.";' onclick=\"document.location.href='".PROJECT_PATH."/app/xml_cdr/xml_cdr.php';\">".$text['label-recent_calls']."</span>\n";
 
 	if ($dashboard_chart_type == "doughnut") {
