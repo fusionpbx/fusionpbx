@@ -950,8 +950,8 @@ $text['description-upgrade_source']['ko-kr'] = "저장소에서 Fusionpbx 소스
 // $text['description-update_apps']['ja-jp'] = "オプションのアプリのソース ファイルをリポジトリから更新します。";
 // $text['description-update_apps']['ko-kr'] = "리포지토리에서 선택적 앱 소스 파일을 업데이트합니다.";
 
-$text['description-all_applications']['en-us'] = "All Applications";
-$text['description-all_applications']['en-gb'] = "All Applications";
+$text['description-all_applications']['en-us'] = "Update all source files";
+$text['description-all_applications']['en-gb'] = "Update all source files";
 $text['description-all_applications']['ar-eg'] = "جميع التطبيقات";
 $text['description-all_applications']['de-at'] = "Alle Anwendungen";
 $text['description-all_applications']['de-ch'] = "Alle Anwendungen";
