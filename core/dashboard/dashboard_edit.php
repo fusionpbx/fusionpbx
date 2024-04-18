@@ -410,7 +410,7 @@
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo $text['label-dashboard_chart_type']."chart type\n";
+	echo $text['label-dashboard_chart_type']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
 	echo "	<select name='dashboard_chart_type' class='formfld'>\n";
