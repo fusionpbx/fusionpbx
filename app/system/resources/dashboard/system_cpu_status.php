@@ -56,7 +56,7 @@
 
 	if ($dashboard_chart_type == "doughnut") {
 		?>
-		<div style='height: 143px; padding-bottom: 22px;'><canvas id='system_cpu_status_chart'></canvas></div>
+		<div style='width: 175px; height: 143px;'><canvas id='system_cpu_status_chart'></canvas></div>
 
 		<script>
 			const system_cpu_status_chart = new Chart(
