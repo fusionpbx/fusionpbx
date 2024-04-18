@@ -2617,6 +2617,23 @@ else { //default: white
 		font-weight: normal;
 		background: <?=$dashboard_number_background_color?>;
 		overflow: hidden;
+		<?php
+		/*
+		//calculate font padding
+		$font_size = strtolower($dashboard_heading_text_size);
+		$tmp = str_replace(' ', '', $font_size);
+		$tmp = str_replace('pt', '', $tmp);
+		$tmp = str_replace('px', '', $tmp);
+		$tmp = str_replace('em', '', $tmp);
+		$tmp = str_replace('%', '', $tmp);
+		$font_size_number = $tmp;
+		$padding_top_bottom = (int) floor((100-$tmp) * 0.25);
+		*/
+		?>
+		<!--
+		padding-top: <?php echo $padding_top_bottom.'px' ?>;
+		padding-bottom: <?php echo $padding_top_bottom.'px' ?>;
+		-->
 		padding-top: 5px;
 		padding-bottom: 10px;
 		}
