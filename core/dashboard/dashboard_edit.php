@@ -415,16 +415,16 @@
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
 	echo "	<select name='dashboard_chart_type' class='formfld'>\n";
 	if ($dashboard_chart_type == "doughnut") {
-		echo "		<option value='doughnut' selected='selected'>".$text['option-doughnut']."</option>\n";
+		echo "		<option value='doughnut' selected='selected'>".$text['label-doughnut']."</option>\n";
 	}
 	else {
-		echo "		<option value='doughnut'>".$text['option-doughnut']."</option>\n";
+		echo "		<option value='doughnut'>".$text['label-doughnut']."</option>\n";
 	}
 	if ($dashboard_chart_type == "none") {
-		echo "		<option value='none' selected='selected'>".$text['option-none']."</option>\n";
+		echo "		<option value='none' selected='selected'>".$text['label-none']."</option>\n";
 	}
 	else {
-		echo "		<option value='none'>".$text['option-none']."</option>\n";
+		echo "		<option value='none'>".$text['label-none']."</option>\n";
 	}
 	echo "	</select>\n";
 	echo "<br />\n";
