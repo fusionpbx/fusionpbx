@@ -152,72 +152,80 @@
 
 //ring group forward
 	echo "<div class='hud_box'>\n";
+		
+	echo "	<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 20px;' onclick=\"$('#hud_ring_group_forward_details').slideToggle('fast');\">\n";
+	echo "		<span class='hud_title' style='color: ".$dashboard_heading_text_color.";'>".$text['header-ring-group-forward']."</span>\n";
+
 
 //doughnut chart
-	echo "<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 20px;' onclick=\"$('#hud_ring_group_forward_details').slideToggle('fast');\">\n";
-	echo "	<div style='width: 275px; height: 175px;'><canvas id='ring_group_forward_chart'></canvas></div>\n";
-	echo "</div>\n";
-
-	echo "<script>\n";
-	echo "	const ring_group_forward_chart = new Chart(\n";
-	echo "		document.getElementById('ring_group_forward_chart').getContext('2d'),\n";
-	echo "		{\n";
-	echo "			type: 'doughnut',\n";
-	echo "			data: {\n";
-	echo "				labels: [\n";
-	echo "					'".$text['label-active'].": ".$stats['active']."',\n";
-	echo "					'".$text['label-forwarding'].": ".$stats['forwarding']."',\n";
-	echo "				],\n";
-	echo "				datasets: [{\n";
-	echo "					data: [\n";
-	echo "						'".$stats['active']."',\n";
-	echo "						'".$stats['forwarding']."',\n";
-	echo "						0.00001,\n";
-	echo "					],\n";
-	echo "					backgroundColor: [\n";
-	echo "						'".$_SESSION['dashboard']['ring_group_forward_chart_color_active']['text']."',\n";
-	echo "						'".$_SESSION['dashboard']['ring_group_forward_chart_color_forwarding']['text']."',\n";
-	echo "					],\n";
-	echo "					borderColor: '".$_SESSION['dashboard']['ring_group_forward_chart_border_color']['text']."',\n";
-	echo "					borderWidth: '".$_SESSION['dashboard']['ring_group_forward_chart_border_width']['text']."',\n";
-	echo "				}]\n";
-	echo "			},\n";
-	echo "			options: {\n";
-	echo "				plugins: {\n";
-	echo "					chart_number: {\n";
-	echo "						text: '".$stats['forwarding']."'\n";
-	echo "					},\n";
-	echo "					legend: {\n";
-	echo "						display: true,\n";
-	echo "						position: 'right',\n";
-	echo "						reverse: true,\n";
-	echo "						labels: {\n";
-	echo "							usePointStyle: true,\n";
-	echo "							pointStyle: 'rect',\n";
-	echo "							color: '".$dashboard_heading_text_color."'\n";
-	echo "						}\n";
-	echo "					},\n";
-	echo "					title: {\n";
-	echo "						text: '".$text['header-ring-group-forward']."',\n";
-	echo "						color: '".$dashboard_heading_text_color."'\n";
-	echo "					}\n";
-	echo "				}\n";
-	echo "			},\n";
-	echo "			plugins: [{\n";
-	echo "				id: 'chart_number',\n";
-	echo "				beforeDraw(chart, args, options){\n";
-	echo "					const {ctx, chartArea: {top, right, bottom, left, width, height} } = chart;\n";
-	echo "					ctx.font = chart_text_size + 'px ' + chart_text_font;\n";
-	echo "					ctx.textBaseline = 'middle';\n";
-	echo "					ctx.textAlign = 'center';\n";
-	echo "					ctx.fillStyle = '".$dashboard_number_text_color."';\n";
-	echo "					ctx.fillText(options.text, width / 2, top + (height / 2));\n";
-	echo "					ctx.save();\n";
-	echo "				}\n";
-	echo "			}]\n";
-	echo "		}\n";
-	echo "	);\n";
-	echo "</script>\n";
+	if ($dashboard_chart_type == "doughnut") {
+		echo "	<div style='width: 275px; height: 143px;'><canvas id='ring_group_forward_chart'></canvas></div>\n";
+	
+		echo "<script>\n";
+		echo "	const ring_group_forward_chart = new Chart(\n";
+		echo "		document.getElementById('ring_group_forward_chart').getContext('2d'),\n";
+		echo "		{\n";
+		echo "			type: 'doughnut',\n";
+		echo "			data: {\n";
+		echo "				labels: [\n";
+		echo "					'".$text['label-active'].": ".$stats['active']."',\n";
+		echo "					'".$text['label-forwarding'].": ".$stats['forwarding']."',\n";
+		echo "				],\n";
+		echo "				datasets: [{\n";
+		echo "					data: [\n";
+		echo "						'".$stats['active']."',\n";
+		echo "						'".$stats['forwarding']."',\n";
+		echo "						0.00001,\n";
+		echo "					],\n";
+		echo "					backgroundColor: [\n";
+		echo "						'".$_SESSION['dashboard']['ring_group_forward_chart_color_active']['text']."',\n";
+		echo "						'".$_SESSION['dashboard']['ring_group_forward_chart_color_forwarding']['text']."',\n";
+		echo "					],\n";
+		echo "					borderColor: '".$_SESSION['dashboard']['ring_group_forward_chart_border_color']['text']."',\n";
+		echo "					borderWidth: '".$_SESSION['dashboard']['ring_group_forward_chart_border_width']['text']."',\n";
+		echo "				}]\n";
+		echo "			},\n";
+		echo "			options: {\n";
+		echo "				plugins: {\n";
+		echo "					chart_number: {\n";
+		echo "						text: '".$stats['forwarding']."'\n";
+		echo "					},\n";
+		echo "					legend: {\n";
+		echo "						display: true,\n";
+		echo "						position: 'right',\n";
+		echo "						reverse: true,\n";
+		echo "						labels: {\n";
+		echo "							usePointStyle: true,\n";
+		echo "							pointStyle: 'rect',\n";
+		echo "							color: '".$dashboard_heading_text_color."'\n";
+		echo "						}\n";
+		echo "					},\n";
+		echo "					title: {\n";
+		echo "						text: '".$text['header-ring-group-forward']."',\n";
+		echo "						color: '".$dashboard_heading_text_color."'\n";
+		echo "					}\n";
+		echo "				}\n";
+		echo "			},\n";
+		echo "			plugins: [{\n";
+		echo "				id: 'chart_number',\n";
+		echo "				beforeDraw(chart, args, options){\n";
+		echo "					const {ctx, chartArea: {top, right, bottom, left, width, height} } = chart;\n";
+		echo "					ctx.font = chart_text_size + 'px ' + chart_text_font;\n";
+		echo "					ctx.textBaseline = 'middle';\n";
+		echo "					ctx.textAlign = 'center';\n";
+		echo "					ctx.fillStyle = '".$dashboard_number_text_color."';\n";
+		echo "					ctx.fillText(options.text, width / 2, top + (height / 2));\n";
+		echo "					ctx.save();\n";
+		echo "				}\n";
+		echo "			}]\n";
+		echo "		}\n";
+		echo "	);\n";
+		echo "</script>\n";
+	}
+	if ($dashboard_chart_type == "none") {
+		echo "	<span class='hud_stat' style='color: ".$dashboard_number_text_color.";'>".$stats['forwarding']."</span>";
+	}
+	echo "	</div>\n";
 
 //details
 	if (permission_exists('ring_group_forward')) {
