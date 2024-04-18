@@ -75,10 +75,10 @@
 			if (count($calls) > 0) {
 
 				//setup the event socket connection
-					$esl = event_socket::create();
+					$event_socket = event_socket::create();
 
 				//execute hangup command
-					if ($esl->is_connected()) foreach ($calls as $call_uuid) {
+					if ($event_socket->is_connected()) foreach ($calls as $call_uuid) {
 						event_socket::async("uuid_kill ".$call_uuid);
 					}
 
