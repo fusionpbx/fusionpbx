@@ -52,56 +52,58 @@
 		}
 	}
 
+	echo "	<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 20px;' onclick=\"$('#hud_voicemail_details').slideToggle('fast');\">\n";
+	echo "		<span class='hud_title' style='color: ".$dashboard_heading_text_color.";' onclick=\"document.location.href='".PROJECT_PATH."/app/voicemails/voicemail_messages.php'\">".$text['label-new_messages']."</span>";
 
-//add doughnut chart
-	?>
-	<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 20px;' onclick="$('#hud_voicemail_details').slideToggle('fast');">
-		<canvas id='new_messages_chart' width='175px' height='175px'></canvas>
-	</div>
+	if ($dashboard_chart_type == "doughnut") {
+		//add doughnut chart
+		?>
+		<div style='height: 143px;'><canvas id='new_messages_chart'></canvas></div>
 
-	<script>
-		const new_messages_chart = new Chart(
-			document.getElementById('new_messages_chart').getContext('2d'),
-			{
-				type: 'doughnut',
-				data: {
-					datasets: [{
-						data: ['<?php echo $messages['new']; ?>', 0.00001],
-						backgroundColor: [
-							'<?php echo $_SESSION['dashboard']['new_messages_chart_main_background_color']['text']; ?>',
-							'<?php echo $_SESSION['dashboard']['new_messages_chart_sub_background_color']['text']; ?>'
-						],
-						borderColor: '<?php echo $_SESSION['dashboard']['new_messages_chart_border_color']['text']; ?>',
-						borderWidth: '<?php echo $_SESSION['dashboard']['new_messages_chart_border_width']['text']; ?>',
-					}]
-				},
-				options: {
-					plugins: {
-						chart_number: {
-							text: '<?php echo $messages['new']; ?>'
-						},
-						title: {
-							text: '<?php echo $text['label-new_messages']; ?>',
-							color: '<?php echo $dashboard_heading_text_color; ?>'
+		<script>
+			const new_messages_chart = new Chart(
+				document.getElementById('new_messages_chart').getContext('2d'),
+				{
+					type: 'doughnut',
+					data: {
+						datasets: [{
+							data: ['<?php echo $messages['new']; ?>', 0.00001],
+							backgroundColor: [
+								'<?php echo $_SESSION['dashboard']['new_messages_chart_main_background_color']['text']; ?>',
+								'<?php echo $_SESSION['dashboard']['new_messages_chart_sub_background_color']['text']; ?>'
+							],
+							borderColor: '<?php echo $_SESSION['dashboard']['new_messages_chart_border_color']['text']; ?>',
+							borderWidth: '<?php echo $_SESSION['dashboard']['new_messages_chart_border_width']['text']; ?>',
+						}]
+					},
+					options: {
+						plugins: {
+							chart_number: {
+								text: '<?php echo $messages['new']; ?>'
+							}
 						}
-					}
-				},
-				plugins: [{
-					id: 'chart_number',
-					beforeDraw(chart, args, options){
-						const {ctx, chartArea: {top, right, bottom, left, width, height} } = chart;
-						ctx.font = chart_text_size + 'px ' + chart_text_font;
-						ctx.textBaseline = 'middle';
-						ctx.textAlign = 'center';
-						ctx.fillStyle = '<?php echo $dashboard_number_text_color; ?>';
-						ctx.fillText(options.text, width / 2, top + (height / 2));
-						ctx.save();
-					}
-				}]
-			}
-		);
-	</script>
-	<?php
+					},
+					plugins: [{
+						id: 'chart_number',
+						beforeDraw(chart, args, options){
+							const {ctx, chartArea: {top, right, bottom, left, width, height} } = chart;
+							ctx.font = chart_text_size + 'px ' + chart_text_font;
+							ctx.textBaseline = 'middle';
+							ctx.textAlign = 'center';
+							ctx.fillStyle = '<?php echo $dashboard_number_text_color; ?>';
+							ctx.fillText(options.text, width / 2, top + (height / 2));
+							ctx.save();
+						}
+					}]
+				}
+			);
+		</script>
+		<?php
+	}
+	if ($dashboard_chart_type == "none") {
+		echo "	<span class='hud_stat' style='color: ".$dashboard_number_text_color.";' onclick=\"$('#hud_voicemail_details').slideToggle('fast');\">".$messages['new']."</span>";
+	}
+	echo "	</div>\n";
 
 	echo "<div class='hud_details hud_box' id='hud_voicemail_details'>";
 	if (sizeof($voicemails) > 0) {
