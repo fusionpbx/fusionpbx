@@ -150,7 +150,6 @@
 	echo "	Chart.defaults.responsive = true;\n";
 	echo "	Chart.defaults.maintainAspectRatio = false;\n";
 	echo "	Chart.defaults.plugins.legend.display = false;\n";
-	echo "	Chart.defaults.plugins.title.display = true;\n";
 	echo "	Chart.overrides.doughnut.cutout = '75%';\n";
 	echo "</script>\n";
 
