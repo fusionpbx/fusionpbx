@@ -303,7 +303,7 @@
 	foreach($dashboard as $row) {
 		$dashboard_name = strtolower($row['dashboard_name']);
 		$dashboard_name = str_replace(" ", "_", $dashboard_name);
-		$dashboard_chart_type = $row['dashboard_chart_type'];
+		$dashboard_chart_type = $row['dashboard_chart_type'] ?? 'doughnut';
 		$dashboard_heading_text_color = $row['dashboard_heading_text_color'] ?? $settings->get('theme', 'dashboard_heading_text_color');
 		$dashboard_number_text_color = $row['dashboard_heading_text_color'] ?? $settings->get('theme', 'dashboard_number_text_color');
 		echo "<div class='widget' id='".$dashboard_name."' draggable='false'>\n";
