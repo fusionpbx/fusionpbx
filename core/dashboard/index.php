@@ -72,6 +72,7 @@
 	$sql .= "dashboard_uuid, \n";
 	$sql .= "dashboard_name, \n";
 	$sql .= "dashboard_path, \n";
+	$sql .= "dashboard_chart_type, \n";
 	$sql .= "dashboard_heading_text_color, \n";
 	$sql .= "dashboard_number_text_color, \n";
 	$sql .= "dashboard_column_span, \n";
@@ -303,6 +304,7 @@
 	foreach($dashboard as $row) {
 		$dashboard_name = strtolower($row['dashboard_name']);
 		$dashboard_name = str_replace(" ", "_", $dashboard_name);
+		$dashboard_chart_type = $row['dashboard_chart_type'];
 		$dashboard_heading_text_color = $row['dashboard_heading_text_color'] ?? $settings->get('theme', 'dashboard_heading_text_color');
 		$dashboard_number_text_color = $row['dashboard_heading_text_color'] ?? $settings->get('theme', 'dashboard_number_text_color');
 		echo "<div class='widget' id='".$dashboard_name."' draggable='false'>\n";
