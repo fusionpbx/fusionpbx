@@ -173,71 +173,74 @@
 		//caller id
 			echo "<div class='hud_box'>\n";
 
-		//doughnut chart
-			echo "<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 20px;' onclick=\"$('#hud_caller_id_details').slideToggle('fast');\">\n";
-			echo "	<div style='width: 275px; height: 175px;'><canvas id='caller_id_chart'></canvas></div>\n";
-			echo "</div>\n";
+			echo "	<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 20px;' onclick=\"$('#hud_caller_id_details').slideToggle('fast');\">\n";
+			echo "		<span class='hud_title' style='color: ".$dashboard_heading_text_color.";'>".$text['label-caller_id_number']."</span>\n";
 
-			echo "<script>\n";
-			echo "	const caller_id_chart = new Chart(\n";
-			echo "		document.getElementById('caller_id_chart').getContext('2d'),\n";
-			echo "		{\n";
-			echo "			type: 'doughnut',\n";
-			echo "			data: {\n";
-			echo "				labels: [\n";
-			echo "					'".$text['label-defined'].": ".$stats['defined']."',\n";
-			echo "					'".$text['label-undefined'].": ".$stats['undefined']."',\n";
-			echo "					],\n";
-			echo "				datasets: [{\n";
-			echo "					data: [\n";
-			echo "						'".$stats['defined']."',\n";
-			echo "						'".$stats['undefined']."',\n";
-			echo "						0.00001,\n";
-			echo "						],\n";
-			echo "					backgroundColor: [\n";
-			echo "						'".$_SESSION['dashboard']['caller_id_chart_color_defined']['text']."',\n";
-			echo "						'".$_SESSION['dashboard']['caller_id_chart_color_undefined']['text']."',\n";
-			echo "					],\n";
-			echo "					borderColor: '".$_SESSION['dashboard']['caller_id_chart_border_color']['text']."',\n";
-			echo "					borderWidth: '".$_SESSION['dashboard']['caller_id_chart_border_width']['text']."'\n";
-			echo "				}]\n";
-			echo "			},\n";
-			echo "			options: {\n";
-			echo "				plugins: {\n";
-			echo "					chart_number: {\n";
-			echo "						text: '".$stats['undefined']."'\n";
-			echo "					},\n";
-			echo "					legend: {\n";
-			echo "						display: true,\n";
-			echo "						position: 'right',\n";
-			echo "						reverse: true,\n";
-			echo "						labels: {\n";
-			echo "							usePointStyle: true,\n";
-			echo "							pointStyle: 'rect',\n";
-			echo "							color: '".$dashboard_heading_text_color."'\n";
-			echo "						}\n";
-			echo "					},\n";
-			echo "					title: {\n";
-			echo "						text: '".$text['label-caller_id_number']."',\n";
-			echo "						color: '".$dashboard_heading_text_color."'\n";
-			echo "					}\n";
-			echo "				}\n";
-			echo "			},\n";
-			echo "			plugins: [{\n";
-			echo "				id: 'chart_number',\n";
-			echo "				beforeDraw(chart, args, options){\n";
-			echo "					const {ctx, chartArea: {top, right, bottom, left, width, height} } = chart;\n";
-			echo "					ctx.font = chart_text_size + 'px ' + chart_text_font;\n";
-			echo "					ctx.textBaseline = 'middle';\n";
-			echo "					ctx.textAlign = 'center';\n";
-			echo "					ctx.fillStyle = '".$dashboard_number_text_color."';\n";
-			echo "					ctx.fillText(options.text, width / 2, top + (height / 2));\n";
-			echo "					ctx.save();\n";
-			echo "				}\n";
-			echo "			}]\n";
-			echo "		}\n";
-			echo "	);\n";
-			echo "</script>\n";
+		//doughnut chart
+			if ($dashboard_chart_type == "doughnut") {
+				echo "<div style='width: 275px; height: 143px;'><canvas id='caller_id_chart'></canvas></div>\n";
+
+				echo "<script>\n";
+				echo "	const caller_id_chart = new Chart(\n";
+				echo "		document.getElementById('caller_id_chart').getContext('2d'),\n";
+				echo "		{\n";
+				echo "			type: 'doughnut',\n";
+				echo "			data: {\n";
+				echo "				labels: [\n";
+				echo "					'".$text['label-defined'].": ".$stats['defined']."',\n";
+				echo "					'".$text['label-undefined'].": ".$stats['undefined']."',\n";
+				echo "					],\n";
+				echo "				datasets: [{\n";
+				echo "					data: [\n";
+				echo "						'".$stats['defined']."',\n";
+				echo "						'".$stats['undefined']."',\n";
+				echo "						0.00001,\n";
+				echo "						],\n";
+				echo "					backgroundColor: [\n";
+				echo "						'".$_SESSION['dashboard']['caller_id_chart_color_defined']['text']."',\n";
+				echo "						'".$_SESSION['dashboard']['caller_id_chart_color_undefined']['text']."',\n";
+				echo "					],\n";
+				echo "					borderColor: '".$_SESSION['dashboard']['caller_id_chart_border_color']['text']."',\n";
+				echo "					borderWidth: '".$_SESSION['dashboard']['caller_id_chart_border_width']['text']."'\n";
+				echo "				}]\n";
+				echo "			},\n";
+				echo "			options: {\n";
+				echo "				plugins: {\n";
+				echo "					chart_number: {\n";
+				echo "						text: '".$stats['undefined']."'\n";
+				echo "					},\n";
+				echo "					legend: {\n";
+				echo "						display: true,\n";
+				echo "						position: 'right',\n";
+				echo "						reverse: true,\n";
+				echo "						labels: {\n";
+				echo "							usePointStyle: true,\n";
+				echo "							pointStyle: 'rect',\n";
+				echo "							color: '".$dashboard_heading_text_color."'\n";
+				echo "						}\n";
+				echo "					}\n";
+				echo "				}\n";
+				echo "			},\n";
+				echo "			plugins: [{\n";
+				echo "				id: 'chart_number',\n";
+				echo "				beforeDraw(chart, args, options){\n";
+				echo "					const {ctx, chartArea: {top, right, bottom, left, width, height} } = chart;\n";
+				echo "					ctx.font = chart_text_size + 'px ' + chart_text_font;\n";
+				echo "					ctx.textBaseline = 'middle';\n";
+				echo "					ctx.textAlign = 'center';\n";
+				echo "					ctx.fillStyle = '".$dashboard_number_text_color."';\n";
+				echo "					ctx.fillText(options.text, width / 2, top + (height / 2));\n";
+				echo "					ctx.save();\n";
+				echo "				}\n";
+				echo "			}]\n";
+				echo "		}\n";
+				echo "	);\n";
+				echo "</script>\n";
+			}
+			if ($dashboard_chart_type == "none") {
+				echo "	<span class='hud_stat' style='color: ".$dashboard_number_text_color.";'>".$stats['undefined']."</span>";
+			}
+			echo "	</div>\n";
 
 		//details
 			echo "<form id='form_list_caller_id' method='post' action='".PROJECT_PATH."/app/extensions/resources/dashboard/caller_id.php'>\n";
