@@ -233,6 +233,15 @@
 			public $domain_uuid;
 
 			/**
+			 * <p>Stores the user UUID making the request.</p>
+			 * <p>This is defaulted to the Session domain UUID.</p>
+			 * @access public
+			 * @uses $_SESSION['user_uuid'] <br>Default value upon object creation
+			 * @var string Domain UUID making request.
+			 */	
+			public $user_uuid;
+
+			/**
 			 * <p>Message for the query results.</p>
 			 * @var array Contains the message array after a query
 			 * @access private
@@ -242,9 +251,21 @@
 			/**
 			 * Called when the object is created
 			 */
-			public function __construct() {
-				if (!isset($this->domain_uuid) && isset($_SESSION['domain_uuid'])) {
+			public function __construct(array $params = []) {
+				//set the domain_uuid
+				if (is_uuid($params['domain_uuid'])) {
+					$this->domain_uuid = $domain_uuid;
+				}
+				elseif (is_uuid($_SESSION['domain_uuid'])) {
 					$this->domain_uuid = $_SESSION['domain_uuid'];
+				}
+
+				//set the user_uuid
+				if (is_uuid($params['user_uuid'])) {
+					$this->user_uuid = $user_uuid;
+				}
+				elseif (is_uuid($_SESSION['user_uuid'])) {
+					$this->user_uuid = $_SESSION['user_uuid'];
 				}
 			}
 
@@ -1301,9 +1322,6 @@
 				//set the action if not set
 					$transaction_type = 'delete';
 
-				//get the UUIDs
-					$user_uuid = $_SESSION['user_uuid'] ?? null;
-
 				//log the transaction results
 					if (file_exists($_SERVER["PROJECT_ROOT"]."/app/database_transactions/app_config.php")) {
 						$sql = "insert into ".self::TABLE_PREFIX."database_transactions ";
@@ -1312,7 +1330,7 @@
 						if (isset($this->domain_uuid) && is_uuid($this->domain_uuid)) {
 							$sql .= "domain_uuid, ";
 						}
-						if (isset($user_uuid) && is_uuid($user_uuid)) {
+						if (isset($this->user_uuid) && is_uuid($this->user_uuid)) {
 							$sql .= "user_uuid, ";
 						}
 						if (isset($this->app_uuid) && is_uuid($this->app_uuid)) {
@@ -1335,7 +1353,7 @@
 						if (isset($this->domain_uuid) && is_uuid($this->domain_uuid)) {
 							$sql .= "'".$this->domain_uuid."', ";
 						}
-						if (isset($user_uuid) && is_uuid($user_uuid)) {
+						if (isset($this->user_uuid) && is_uuid($this->user_uuid)) {
 							$sql .= ":user_uuid, ";
 						}
 						if (isset($this->app_uuid) && is_uuid($this->app_uuid)) {
@@ -1363,8 +1381,8 @@
 						$sql .= ":transaction_result ";
 						$sql .= ")";
 						$statement = $this->db->prepare($sql);
-						if (isset($user_uuid) && is_uuid($user_uuid)) {
-							$statement->bindParam(':user_uuid', $user_uuid);
+						if (isset($this->user_uuid) && is_uuid($this->user_uuid)) {
+							$statement->bindParam(':user_uuid', $this->user_uuid);
 						}
 						if (isset($this->app_uuid) && is_uuid($this->app_uuid)) {
 							$statement->bindParam(':app_uuid', $this->app_uuid);
@@ -2163,7 +2181,7 @@
 															}
 															elseif ($array_value === "user_uuid()") {
 																$sql .= ':'.$array_key.", ";
-																$params[$array_key] = $_SESSION['user_uuid'] ?? null;
+																$params[$array_key] = $this->user_uuid ?? null;
 															}
 															elseif ($array_value === "remote_address()") {
 																$sql .= ':'.$array_key.", ";
@@ -2183,7 +2201,7 @@
 											$sql .= ");";
 
 											//add insert user parameter
-											$params['insert_user'] = $_SESSION['user_uuid'] ?? null;
+											$params['insert_user'] = $this->user_uuid ?? null;
 
 											//set the error mode
 											$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -2262,7 +2280,7 @@
 														}
 														elseif ($array_value === "user_uuid()") {
 															$sql .= $array_key." = :".$array_key.", ";
-															$params[$array_key] = $_SESSION['user_uuid'] ?? null;
+															$params[$array_key] = $this->user_uuid ?? null;
 														}
 														elseif ($array_value === "remote_address()") {
 															$sql .= $array_key." = :".$array_key.", ";
@@ -2279,14 +2297,14 @@
 											//add the modified date and user
 											$sql .= "update_date = now(), ";
 											$sql .= "update_user = :update_user ";
-											$params['update_user'] = $_SESSION['user_uuid'] ?? null;
+											$params['update_user'] = $this->user_uuid ?? null;
 
 											//add the where with the parent name and value
 											$sql .= "WHERE ".$parent_key_name." = '".$parent_key_value."'; ";
 											$sql = str_replace(", WHERE", " WHERE", $sql);
 
 											//add update user parameter
-											$params['update_user'] = $_SESSION['user_uuid'] ?? null;
+											$params['update_user'] = $this->user_uuid ?? null;
 
 											//set the error mode
 											$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -2448,7 +2466,7 @@
 																			}
 																			elseif ($v === "user_uuid()") {
 																				$sql .= $k." = :".$k.", ";
-																				$params[$k] = $_SESSION['user_uuid'] ?? null;
+																				$params[$k] = $this->user_uuid ?? null;
 																			}
 																			elseif ($v === "remote_address()") {
 																				$sql .= $k." = :".$k.", ";
@@ -2465,7 +2483,7 @@
 																//add the modified date and user
 																$sql .= "update_date = now(), ";
 																$sql .= "update_user = :update_user ";
-																$params['update_user'] = $_SESSION['user_uuid'] ?? null;
+																$params['update_user'] = $this->user_uuid ?? null;
 
 																//add the where with the parent name and value
 																$sql .= "WHERE ".$parent_key_name." = '".$parent_key_value."' ";
@@ -2596,7 +2614,7 @@
 																			}
 																			elseif ($v === "user_uuid()") {
 																				$sql .= ':'.$k.", ";
-																				$params[$k] = $_SESSION['user_uuid'] ?? null;
+																				$params[$k] = $this->user_uuid ?? null;
 																			}
 																			elseif ($v === "remote_address()") {
 																				$sql .= ':'.$k.", ";
@@ -2621,7 +2639,7 @@
 															$sql .= ");";
 
 															//add insert user parameter
-															$params['insert_user'] = $_SESSION['user_uuid'] ?? null;
+															$params['insert_user'] = $this->user_uuid ?? null;
 
 															//set the error mode
 															$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -2707,9 +2725,6 @@
 						$transaction_type = $action;
 					}
 
-				//get the UUIDs
-					$user_uuid = $_SESSION['user_uuid'] ?? null;
-
 				//log the transaction results
 					if ($transaction_save && file_exists($_SERVER["PROJECT_ROOT"]."/app/database_transactions/app_config.php")) {
 						try {
@@ -2717,7 +2732,7 @@
 							$sql .= "(";
 							$sql .= "database_transaction_uuid, ";
 							$sql .= "domain_uuid, ";
-							if (isset($user_uuid) && is_uuid($user_uuid)) {
+							if (isset($this->user_uuid) && is_uuid($this->user_uuid)) {
 								$sql .= "user_uuid, ";
 							}
 							if (isset($this->app_uuid) && is_uuid($this->app_uuid)) {
@@ -2743,7 +2758,7 @@
 							else {
 								$sql .= "'".$this->domain_uuid."', ";
 							}
-							if (isset($user_uuid) && is_uuid($user_uuid)) {
+							if (isset($this->user_uuid) && is_uuid($this->user_uuid)) {
 								$sql .= ":user_uuid, ";
 							}
 							if (isset($this->app_uuid) && is_uuid($this->app_uuid)) {
@@ -2771,8 +2786,8 @@
 							$sql .= ":transaction_result ";
 							$sql .= ")";
 							$statement = $this->db->prepare($sql);
-							if (isset($user_uuid) && is_uuid($user_uuid)) {
-								$statement->bindParam(':user_uuid', $user_uuid);
+							if (isset($this->user_uuid) && is_uuid($this->user_uuid)) {
+								$statement->bindParam(':user_uuid', $this->user_uuid);
 							}
 							if (isset($this->app_uuid) && is_uuid($this->app_uuid)) {
 								$statement->bindParam(':app_uuid', $this->app_uuid);
