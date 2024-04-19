@@ -101,7 +101,7 @@
 		<?php
 	}
 	if ($dashboard_chart_type == "none") {
-		echo "	<span class='hud_stat' style='color: ".$dashboard_number_text_color.";' onclick=\"$('#hud_voicemail_details').slideToggle('fast');\">".$messages['new']."</span>";
+		echo "	<span class='hud_stat' style='color: ".$dashboard_number_text_color.";'>".$messages['new']."</span>";
 	}
 	echo "	</div>\n";
 
