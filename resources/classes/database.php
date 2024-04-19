@@ -208,6 +208,14 @@
 			private $result;
 
 			/**
+			 * Stores the application built from the app_config files.
+			 * @var array
+			 * @see $apps
+			 * @access private
+			 */
+			private static $apps = [];
+
+			/**
 			 * Stores the application name making the request.
 			 * @var string App name making database request.
 			 * @see $app_uuid
@@ -227,7 +235,7 @@
 			 * <p>Stores the domain UUID making the request.</p>
 			 * <p>This is defaulted to the Session domain UUID.</p>
 			 * @access public
-			 * @uses $_SESSION['domain_uuid'] <br>Default value upon object creation
+			 * @uses $this->domain_uuid <br>Default value upon object creation
 			 * @var string Domain UUID making request.
 			 */
 			public $domain_uuid;
@@ -236,9 +244,9 @@
 			 * <p>Stores the user UUID making the request.</p>
 			 * <p>This is defaulted to the Session domain UUID.</p>
 			 * @access public
-			 * @uses $_SESSION['user_uuid'] <br>Default value upon object creation
+			 * @uses $this->user_uuid <br>Default value upon object creation
 			 * @var string Domain UUID making request.
-			 */	
+			 */
 			public $user_uuid;
 
 			/**
@@ -253,18 +261,18 @@
 			 */
 			public function __construct(array $params = []) {
 				//set the domain_uuid
-				if (is_uuid($params['domain_uuid'])) {
+				if (isset($params['domain_uuid']) && is_uuid($params['domain_uuid'])) {
 					$this->domain_uuid = $domain_uuid;
 				}
-				elseif (is_uuid($_SESSION['domain_uuid'])) {
+				elseif (isset($_SESSION['domain_uuid']) && is_uuid($_SESSION['domain_uuid'])) {
 					$this->domain_uuid = $_SESSION['domain_uuid'];
 				}
 
 				//set the user_uuid
-				if (is_uuid($params['user_uuid'])) {
+				if (isset($params['user_uuid']) && is_uuid($params['user_uuid'])) {
 					$this->user_uuid = $user_uuid;
 				}
-				elseif (is_uuid($_SESSION['user_uuid'])) {
+				elseif (isset($_SESSION['user_uuid']) && is_uuid($_SESSION['user_uuid'])) {
 					$this->user_uuid = $_SESSION['user_uuid'];
 				}
 			}
@@ -911,7 +919,7 @@
 						return false;
 					}
 			}
-    
+
 			public function add() {
 				//connect to the database if needed
 					if (!$this->db) {
@@ -1971,28 +1979,26 @@
 					unset($array);
 
 					//get the $apps array from the installed apps from the core and mod directories
-					if (empty($_SESSION['apps']) || !is_array($_SESSION['apps'])) {
+					if (count(self::$apps) == 0) {
 						self::get_apps();
 					}
 
 					//search through all fields to see if toggle field exists
-					if (is_array($_SESSION['apps'])) {
-						foreach ($_SESSION['apps'] as $x => $app) {
-							if (!empty($app['db']) && is_array($app['db'])) {
-								foreach ($app['db'] as $y => $row) {
-									if (is_array($row['table']['name'])) {
-										$table_name = $row['table']['name']['text'];
-									}
-									else {
-										$table_name = $row['table']['name'];
-									}
-									if ($table_name === self::TABLE_PREFIX.$parent_name) {
-										if (is_array($row['fields'])) {
-											foreach ($row['fields'] as $field) {
-												if (isset($field['toggle'])) {
-													$toggle_field = $field['name'];
-													$toggle_values = $field['toggle'];
-												}
+					foreach (self::$apps as $x => $app) {
+						if (!empty($app['db']) && is_array($app['db'])) {
+							foreach ($app['db'] as $y => $row) {
+								if (is_array($row['table']['name'])) {
+									$table_name = $row['table']['name']['text'];
+								}
+								else {
+									$table_name = $row['table']['name'];
+								}
+								if ($table_name === self::TABLE_PREFIX.$parent_name) {
+									if (is_array($row['fields'])) {
+										foreach ($row['fields'] as $field) {
+											if (isset($field['toggle'])) {
+												$toggle_field = $field['name'];
+												$toggle_values = $field['toggle'];
 											}
 										}
 									}
@@ -2859,7 +2865,7 @@
 			}
 
 			/**
-			 * Gets the $apps array from the installed apps from the core and mod directories and writes it to $_SESSION['apps'] overwriting previous values.
+			 * Gets the $apps array from the installed apps from the core and mod directories and writes it to self::$apps overwriting previous values.
 			 * @uses $_SERVER['DOCUMENT_ROOT'] Global variable
 			 * @uses PROJECT_PATH Global variable
 			 * @return null Does not return any values
@@ -2875,7 +2881,7 @@
 							$x++;
 						}
 					}
-					$_SESSION['apps'] = $apps;
+					self::$apps = $apps;
 			}
 
 			/**
@@ -2900,41 +2906,38 @@
 			/**
 			 * Searches through all fields to see if domain_uuid exists
 			 * @param string $name
-			 * @uses $_SESSION['apps'] directly
+			 * @uses self::$apps directly
 			 * @return boolean <b>true</b> on success and <b>false</b> on failure
 			 * @see database::get_apps()
 			 */
 			public static function domain_uuid_exists($name) {
 				//get the $apps array from the installed apps from the core and mod directories
-					if (!is_array($_SESSION['apps'])) {
+					if (count(self::$apps) == 0) {
 						self::get_apps();
 					}
 
 				//search through all fields to see if domain_uuid exists
-					$apps = $_SESSION['apps'];
-					if (is_array($apps)) {
-						foreach ($apps as $x => &$app) {
-							if (is_array($app['db'])) {
-								foreach ($app['db'] as $y => &$row) {
-									if (is_array($row['table']['name'])) {
-										$table_name = $row['table']['name']['text'];
-									}
-									else {
-										$table_name = $row['table']['name'];
-									}
-									if ($table_name === self::TABLE_PREFIX.$name) {
-										if (is_array($row['fields'])) {
-											foreach ($row['fields'] as $field) {
-												if ($field['name'] == "domain_uuid") {
-													return true;
-												}
-											} //foreach
-										} //is array
-									}
-								} //foreach
-							} //is array
-						} //foreach
-					} //is array
+					foreach (self::$apps as $x => &$app) {
+						if (is_array($app['db'])) {
+							foreach ($app['db'] as $y => &$row) {
+								if (is_array($row['table']['name'])) {
+									$table_name = $row['table']['name']['text'];
+								}
+								else {
+									$table_name = $row['table']['name'];
+								}
+								if ($table_name === self::TABLE_PREFIX.$name) {
+									if (is_array($row['fields'])) {
+										foreach ($row['fields'] as $field) {
+											if ($field['name'] == "domain_uuid") {
+												return true;
+											}
+										} //foreach
+									} //is array
+								}
+							} //foreach
+						} //is array
+					} //foreach
 
 				//not found
 					return false;
