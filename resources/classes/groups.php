@@ -37,22 +37,70 @@ if (!class_exists('groups')) {
 		/**
 		* declare the variables
 		*/
+		private $database;
 		private $app_name;
 		private $app_uuid;
+		public  $group_uuid;
+		private $groups;
+		public  $group_level;
 		private $name;
 		private $table;
 		private $toggle_field;
 		private $toggle_values;
 		private $location;
-		public  $group_uuid;
 
 		/**
 		 * called when the object is created
 		 */
-		public function __construct() {
+		public function __construct($database = null, $domain_uuid = null, $user_uuid = null) {
 			//assign the variables
-				$this->app_name = 'groups';
-				$this->app_uuid = '2caf27b0-540a-43d5-bb9b-c9871a1e4f84';
+			$this->app_name = 'groups';
+			$this->app_uuid = '2caf27b0-540a-43d5-bb9b-c9871a1e4f84';
+
+			//handle the database object
+			if (isset($database)) {
+				$this->database = $database;
+			}
+			else {
+				$this->database = new database;
+			}
+
+
+			//set the application name and uuid
+			$this->database->app_name = $this->app_name;
+			$this->database->app_uuid = $this->app_uuid;
+
+			//set the domain_uuid
+			if (is_uuid($domain_uuid)) {
+				$this->domain_uuid = $domain_uuid;
+			}
+
+			//set the user_uuid
+			if (is_uuid($user_uuid)) {
+				$this->user_uuid = $user_uuid;
+			}
+
+			//get the list of groups the user is a member of
+			if (is_uuid($domain_uuid) && is_uuid($user_uuid)) {
+				//get the groups and save them to the groups variable
+				$this->groups = $this->assigned();
+
+				//get the users group level
+				$group_level = 0;
+				foreach ($this->groups as $row) {
+					if ($this->group_level < $row['group_level']) {
+						$this->group_level = $row['group_level'];
+					}
+				}
+			}
+		}
+
+		/**
+		 * get the list of groups the user is assigned to
+		 */
+		public function get_groups() {
+			//return the groups
+			return $this->groups;
 		}
 
 		/**
@@ -473,7 +521,7 @@ if (!class_exists('groups')) {
 		/**
 		 * get the groups assigned to the user
 		 */
-		public function assigned($domain_uuid, $user_uuid) {
+		public function assigned() {
 			$sql = "select ";
 			$sql .= "u.user_group_uuid, ";
 			$sql .= "u.domain_uuid, ";
@@ -487,8 +535,8 @@ if (!class_exists('groups')) {
 			$sql .= "where u.domain_uuid = :domain_uuid ";
 			$sql .= "and u.user_uuid = :user_uuid ";
 			$sql .= "and u.group_uuid = g.group_uuid ";
-			$parameters['domain_uuid'] = $domain_uuid;
-			$parameters['user_uuid'] = $user_uuid;
+			$parameters['domain_uuid'] = $this->domain_uuid;
+			$parameters['user_uuid'] = $this->user_uuid;
 			$database = new database;
 			$groups = $database->select($sql, $parameters, 'all');
 			unset($sql, $parameters);
@@ -496,29 +544,17 @@ if (!class_exists('groups')) {
 				return $groups;
 			}
 			else {
-				return false;
+				return [];
 			}
 		}
 
 		/**
-		 * add the assigned groups the session array
+		 * add the assigned groups to the session array
 		 */
-		public function session($domain_uuid, $user_uuid) {
-			//get the groups
-			$groups = $this->assigned($domain_uuid, $user_uuid);
-
-			//set the groups in the session
-			$_SESSION["groups"] = $groups;
-			$_SESSION["user"]["groups"] = $groups;
-
-			//get the users group level
-			$_SESSION["user"]["group_level"] = 0;
-			foreach ($_SESSION['user']['groups'] as $row) {
-				if ($_SESSION["user"]["group_level"] < $row['group_level']) {
-					$_SESSION["user"]["group_level"] = $row['group_level'];
-				}
-			}
-
+		public function session() {
+			$_SESSION["groups"] = $this->groups;
+			$_SESSION["user"]["groups"] = $this->groups;
+			$_SESSION["user"]["group_level"] = $this->group_level;
 		}
 	}
 }
