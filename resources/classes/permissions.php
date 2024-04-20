@@ -30,6 +30,56 @@
 if (!class_exists('permissions')) {
 	class permissions {
 
+		private $database;
+		private $domain_uuid;
+		private $groups;
+		private $permissions;
+
+		/**
+		 * called when the object is created
+		 */
+		public function __construct($database = null, $domain_uuid = null, $user_uuid = null) {
+
+			//handle the database object
+			if (isset($database)) {
+				$this->database = $database;
+			}
+			else {
+				$this->database = new database;
+			}
+
+			//set the domain_uuid
+			if (is_uuid($domain_uuid)) {
+				$this->domain_uuid = $domain_uuid;
+			}
+			elseif (isset($_SESSION['domain_uuid']) && is_uuid($_SESSION['domain_uuid'])) {
+				$this->domain_uuid = $_SESSION['domain_uuid'];
+			}
+
+			//set the user_uuid
+			if (is_uuid($user_uuid)) {
+				$this->user_uuid = $user_uuid;
+			}
+			elseif (isset($_SESSION['user_uuid']) && is_uuid($_SESSION['user_uuid'])) {
+				$this->user_uuid = $_SESSION['user_uuid'];
+			}
+
+			//create the groups object
+			$group = new groups($this->database, $this->domain_uuid, $this->user_uuid);
+			$this->groups = $group->assigned();
+
+			//get the list of groups assigned to the user
+			$this->permissions = $this->assigned();
+
+		}
+
+		/**
+		 * get the array of permissions
+		 */
+		public function get_permissions() {
+			return $this->permissions;
+		}
+
 		/**
 		 * Add the permission
 		 * @var string $permission
@@ -95,15 +145,10 @@ if (!class_exists('permissions')) {
 		 * get the assigned permissions
 		 * @var array $groups
 		 */
-		public function assigned($domain_uuid, $groups) {
-			//groups not provided return false
-			if (empty($groups)) {
-				return false;
-			}
-
+		public function assigned() {
 			//prepare the parameters
 			$x = 0;
-			foreach ($groups as $field) {
+			foreach ($this->groups as $field) {
 				if (!empty($field['group_name'])) {
 					$parameter_names[] = ":group_name_".$x;
 					$parameters['group_name_'.$x] = $field['group_name'];
@@ -118,7 +163,7 @@ if (!class_exists('permissions')) {
 				$sql .= "and group_name in (".implode(", ", $parameter_names).") \n";
 			}
 			$sql .= "and permission_assigned = 'true' ";
-			$parameters['domain_uuid'] = $domain_uuid;
+			$parameters['domain_uuid'] = $this->domain_uuid;
 			$database = new database;
 			$permissions = $database->select($sql, $parameters, 'all');
 			unset($sql, $parameters, $result);
@@ -128,10 +173,9 @@ if (!class_exists('permissions')) {
 		/**
 		 * save the assigned permissions to a session
 		 */
-		public function session($domain_uuid, $groups) {
-			$permissions = $this->assigned($domain_uuid, $groups);
-			if (!empty($permissions)) {
-				foreach ($permissions as $row) {
+		public function session() {
+			if (!empty($this->permissions)) {
+				foreach ($this->permissions as $row) {
 					$_SESSION['permissions'][$row["permission_name"]] = true;
 					$_SESSION["user"]["permissions"][$row["permission_name"]] = true;
 				}
