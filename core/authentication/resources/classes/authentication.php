@@ -256,6 +256,11 @@ class authentication {
 					$_SESSION["user"]["username"] = $result["username"];
 					$_SESSION["user"]["contact_uuid"] = $result["contact_uuid"];
 
+				//empty the  permissions
+					if (isset($_SESSION['permissions'])) {
+						unset($_SESSION['permissions']);
+					}
+
 				//get the groups assigned to the user
 					$group = new groups($this->database, $result["domain_uuid"], $result["user_uuid"]);
 					$groups = $group->get_groups();
