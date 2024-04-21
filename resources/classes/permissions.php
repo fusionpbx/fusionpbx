@@ -64,13 +64,18 @@ if (!class_exists('permissions')) {
 				$this->user_uuid = $_SESSION['user_uuid'];
 			}
 
-			//create the groups object
-			$group = new groups($this->database, $this->domain_uuid, $this->user_uuid);
-			$this->groups = $group->assigned();
+			//get the permissions
+			if (isset($_SESSION['permissions'])) {
+				$this->permissions = $_SESSION['permissions'];
+			}
+			else {
+				//create the groups object
+				$group = new groups($this->database, $this->domain_uuid, $this->user_uuid);
+				$this->groups = $group->assigned();
 
-			//get the list of groups assigned to the user
-			$this->permissions = $this->assigned();
-
+				//get the list of groups assigned to the user
+				$this->permissions = $this->assigned();
+			}
 		}
 
 		/**
@@ -121,15 +126,12 @@ if (!class_exists('permissions')) {
 				return true;
 			}
 
-			//set permisisons array
-			$permissions = $_SESSION["permissions"];
-
 			//set default to false
 			$result = false;
 
 			//search for the permission
-			if (!empty($permissions) && !empty($permission_name)) {
-				foreach($permissions as $key => $value) {
+			if (!empty($this->permissions) && !empty($permission_name)) {
+				foreach($this->permissions as $key => $value) {
 					if ($key == $permission_name) {
 						$result = true;
 						break;
