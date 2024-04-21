@@ -52,7 +52,7 @@ if (!class_exists('groups')) {
 		/**
 		 * called when the object is created
 		 */
-		public function __construct($database = null, $domain_uuid = null, $user_uuid = null) {
+		public function __construct(database $database = null, $domain_uuid = null, $user_uuid = null) {
 			//assign the variables
 			$this->app_name = 'groups';
 			$this->app_uuid = '2caf27b0-540a-43d5-bb9b-c9871a1e4f84';
@@ -144,10 +144,7 @@ if (!class_exists('groups')) {
 									$p->add('group_permission_delete', 'temp');
 
 								//execute delete
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->delete($array);
+									$this->database->delete($array);
 									unset($array);
 
 								//revoke temporary permissions
@@ -199,10 +196,7 @@ if (!class_exists('groups')) {
 									$p->add('user_group_delete', 'temp');
 
 								//execute delete
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->delete($array);
+									$this->database->delete($array);
 									unset($array);
 
 								//revoke temporary permissions
@@ -254,8 +248,7 @@ if (!class_exists('groups')) {
 								$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 								$sql .= "and ".$this->name."_uuid in (".implode(', ', $uuids).") ";
 								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-								$database = new database;
-								$rows = $database->select($sql, $parameters, 'all');
+								$rows = $this->database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
 										$states[$row['uuid']] = $row['toggle'];
@@ -278,10 +271,7 @@ if (!class_exists('groups')) {
 						//save the changes
 							if (is_array($array) && @sizeof($array) != 0) {
 								//save the array
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->save($array);
+									$this->database->save($array);
 									unset($array);
 
 								//set message
@@ -333,8 +323,7 @@ if (!class_exists('groups')) {
 									$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 									$sql .= "and ".$this->name."_uuid in (".implode(', ', $uuids).") ";
 									$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-									$database = new database;
-									$rows = $database->select($sql, $parameters, 'all');
+									$rows = $this->database->select($sql, $parameters, 'all');
 									if (is_array($rows) && @sizeof($rows) != 0) {
 										$y = 0;
 										foreach ($rows as $x => $row) {
@@ -350,8 +339,7 @@ if (!class_exists('groups')) {
 											//permissions sub table
 												$sql_2 = "select * from v_group_permissions where group_uuid = :group_uuid";
 												$parameters_2['group_uuid'] = $row['group_uuid'];
-												$database = new database;
-												$rows_2 = $database->select($sql_2, $parameters_2, 'all');
+												$rows_2 = $this->database->select($sql_2, $parameters_2, 'all');
 												if (is_array($rows_2) && @sizeof($rows_2) != 0) {
 													foreach ($rows_2 as $row_2) {
 
@@ -376,10 +364,7 @@ if (!class_exists('groups')) {
 						//save the changes and set the message
 							if (is_array($array) && @sizeof($array) != 0) {
 								//save the array
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->save($array);
+									$this->database->save($array);
 									unset($array);
 
 								//set message
@@ -399,8 +384,7 @@ if (!class_exists('groups')) {
 			//if the are no groups add the default groups
 				$sql = "select * from v_groups ";
 				$sql .= "where domain_uuid is null ";
-				$database = new database;
-				$result = $database->select($sql, null, 'all');
+				$result = $this->database->select($sql, null, 'all');
 				if (count($result) == 0) {
 					$x = 0;
 					$array['groups'][$x]['group_uuid'] = uuid();
@@ -457,10 +441,7 @@ if (!class_exists('groups')) {
 					$p->add("group_edit", "temp");
 
 					//save the data to the database
-					$database = new database;
-					$database->app_name = $this->app_name;
-					$database->app_uuid = $this->app_uuid;
-					$database->save($array);
+					$this->database->save($array);
 					unset($array);
 
 					//remove the temporary permission
@@ -472,8 +453,7 @@ if (!class_exists('groups')) {
 			//if there are no permissions listed in v_group_permissions then set the default permissions
 				$sql = "select count(*) from v_group_permissions ";
 				$sql .= "where domain_uuid is null ";
-				$database = new database;
-				$num_rows = $database->select($sql, null, 'column');
+				$num_rows = $this->database->select($sql, null, 'column');
 				if ($num_rows == 0) {
 					//build the apps array
 					$config_list = glob($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/*/*/app_config.php");
@@ -506,10 +486,7 @@ if (!class_exists('groups')) {
 					$p->add("group_permission_edit", "temp");
 
 					//save the data to the database
-					$database = new database;
-					$database->app_name = $this->app_name;
-					$database->app_uuid = $this->app_uuid;
-					$database->save($array);
+					$this->database->save($array);
 					unset($array);
 
 					//remove the temporary permission
@@ -537,8 +514,7 @@ if (!class_exists('groups')) {
 			$sql .= "and u.group_uuid = g.group_uuid ";
 			$parameters['domain_uuid'] = $this->domain_uuid;
 			$parameters['user_uuid'] = $this->user_uuid;
-			$database = new database;
-			$groups = $database->select($sql, $parameters, 'all');
+			$groups = $this->database->select($sql, $parameters, 'all');
 			unset($sql, $parameters);
 			if (!empty($groups)) {
 				return $groups;
