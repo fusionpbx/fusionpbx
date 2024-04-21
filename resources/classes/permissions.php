@@ -70,8 +70,8 @@ if (!class_exists('permissions')) {
 			}
 			else {
 				//create the groups object
-				$group = new groups($this->database, $this->domain_uuid, $this->user_uuid);
-				$this->groups = $group->assigned();
+				$groups = new groups($this->database, $this->domain_uuid, $this->user_uuid);
+				$this->groups = $groups->assigned();
 
 				//get the list of groups assigned to the user
 				$this->permissions = $this->assigned();
