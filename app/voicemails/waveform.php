@@ -110,10 +110,28 @@
 
 					//prepare full file path
 					if (file_exists($path.'/waveform_'.$_GET['id'].'_'.$rand.'.wav')) {
+						$file_ext = 'wav';
 						$full_file_path = $path.'/waveform_'.$_GET['id'].'_'.$rand.'.wav';
 					}
 					else if (file_exists($path.'/waveform_'.$_GET['id'].'_'.$rand.'.mp3')) {
+						$file_ext = 'mp3';
 						$full_file_path = $path.'/waveform_'.$_GET['id'].'_'.$rand.'.mp3';
+					}
+					else {
+						if (file_exists($path.'/msg_'.$_GET['id'].'.wav')) {
+							copy($path.'/msg_'.$_GET['id'].'.wav', $path.'/waveform_'.$_GET['id'].'_'.$rand.'.wav');
+							if (file_exists($path.'/waveform_'.$_GET['id'].'_'.$rand.'.wav')) {
+								$file_ext = 'wav';
+								$full_file_path = $path.'/waveform_'.$_GET['id'].'_'.$rand.'.wav';
+							}
+						}
+						else if (file_exists($path.'/msg_'.$_GET['id'].'.mp3')) {
+							copy($path.'/msg_'.$_GET['id'].'.mp3', $path.'/waveform_'.$_GET['id'].'_'.$rand.'.mp3');
+							if (file_exists($path.'/waveform_'.$_GET['id'].'_'.$rand.'.mp3')) {
+								$file_ext = 'mp3';
+								$full_file_path = $path.'/waveform_'.$_GET['id'].'_'.$rand.'.mp3';
+							}
+						}
 					}
 
 				}
@@ -239,7 +257,7 @@
 		switch ($_GET['type']) {
 
 			case 'message':
-				if (!empty($_SESSION['voicemail']['storage_type']['text']) && $_SESSION['voicemail']['storage_type']['text'] == 'base64') {
+				if (file_exists($path.'/waveform_'.$_GET['id'].'_'.$rand.'.'.$file_ext)) {
 					@unlink($path.'/waveform_'.$_GET['id'].'_'.$rand.'.'.$file_ext);
 				}
 				break;
