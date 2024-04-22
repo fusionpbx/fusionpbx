@@ -68,6 +68,7 @@
 					$sql .= "and false \n";
 				}
 			}
+	$sql .= "and hangup_cause <> 'LOSE_RACE' ";
 	$sql .= "and start_epoch > ".(time() - 86400)." ";
 	$sql .= "order by start_epoch desc ";
 	$sql .= "limit :recent_limit ";
