@@ -41,10 +41,13 @@ $settings = new settings(['database' => $database]);
 //get the language code from global defaults
 $language_code = $settings->get('domain', 'language');
 
+//get the software name
+$software_name = $settings->get('theme', 'title');
+
 //set the scope for text to be used in any function
 global $text, $display_type;
 
-//internationalization
+//add multi-lingual support
 $language = new text;
 $text = $language->get($language_code, 'core/upgrade');
 
@@ -56,7 +59,7 @@ show_upgrade_menu();
 
 function show_upgrade_menu() {
 	global $text;
-//		error_reporting(E_ALL);
+	//error_reporting(E_ALL);
 	$line = str_repeat('-', strlen($text['title-cli_upgrade']) + 2);
 	while (true) {
 		echo "\n";
@@ -66,7 +69,7 @@ function show_upgrade_menu() {
 		echo "version: "; show_software_version();
 		echo "\n";
 		echo "1) {$text['label-upgrade_source']} - {$text['description-update_all_source_files']}\n";
-		echo "  1a) " . software::NAME . " - Update Main Software Only \n";
+		echo "  1a) " . $software_name . " - Update Main Software Only \n";
 		echo "  1b) {$text['label-update_external_repositories']} - {$text['description-repositories']}\n";
 		echo "2) {$text['label-schema']} - {$text['description-upgrade_schema']}\n";
 		echo "  2b) {$text['label-upgrade_data_types']} - {$text['description-upgrade_data_types']}\n";
