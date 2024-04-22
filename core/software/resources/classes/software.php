@@ -7,7 +7,8 @@
  */
 if (!class_exists('software')) {
 	class software {
-
+		const NAME = 'FusionPBX';
+		
 		/**
 		 * version
 		 */
