@@ -43,8 +43,8 @@ function show_upgrade_menu() {
 		echo "+------------------+\n";
 		echo "\n";
 		echo "1) Update FusionPBX\n";
-		echo "2) Domains\n";
-		echo "3) Schema\n";
+		echo "2) Schema\n";
+		echo "3) App Defaults\n";
 		echo "4) Menus\n";
 		echo "5) Permissions\n";
 		echo "6) All of the above\n";
@@ -59,10 +59,10 @@ function show_upgrade_menu() {
 				do_upgrade_code();
 				break;
 			case 2:
-				do_upgrade_domains();
+				do_upgrade_schema();
 				break;
 			case 3:
-				do_upgrade_schema();
+				do_upgrade_domains();
 				break;
 			case 4:
 				do_upgrade_menu();
