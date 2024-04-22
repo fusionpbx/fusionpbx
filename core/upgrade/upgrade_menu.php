@@ -43,7 +43,7 @@ function show_upgrade_menu() {
 		echo "+------------------+\n";
 		echo "\n";
 		echo "1) Update FusionPBX\n";
-		echo "2) Domains\n";
+		echo "2) App Defaults\n";
 		echo "3) Schema\n";
 		echo "4) Menus\n";
 		echo "5) Permissions\n";
