@@ -32,34 +32,71 @@ defined('STDIN') or die('Unauthorized');
 //include files
 require_once dirname(__DIR__, 2) . "/resources/require.php";
 
+//create a database connection using default config
+$database = new database();
+
+//load global defaults
+$settings = new settings(['database' => $database]);
+
+//get the language code from global defaults
+$language_code = $settings->get('domain', 'language');
+
+//get the software name
+$software_name = $settings->get('theme', 'title');
+
+//set the scope for text to be used in any function
+global $text, $display_type;
+
+//add multi-lingual support
+$language = new text;
+$text = $language->get($language_code, 'core/upgrade');
+
+//output to text type instead of html
+$display_type = 'text';
+
+//run
 show_upgrade_menu();
 
 function show_upgrade_menu() {
-//		error_reporting(E_ALL);
+	global $text;
+	//error_reporting(E_ALL);
+	$line = str_repeat('-', strlen($text['title-cli_upgrade']) + 2);
 	while (true) {
 		echo "\n";
-		echo "+------------------+\n";
-		echo "| Set Default Menu |\n";
-		echo "+------------------+\n";
+		echo "+{$line}+\n";
+		echo "| {$text['title-cli_upgrade']} |\n";
+		echo "+{$line}+\n";
+		echo "version: "; show_software_version();
 		echo "\n";
-		echo "1) Update FusionPBX\n";
-		echo "2) Schema\n";
-		echo "3) App Defaults\n";
-		echo "4) Menus\n";
-		echo "5) Permissions\n";
-		echo "6) All of the above\n";
-		echo "7) Validate schema data types\n";
-		echo "8) Show current version\n";
-		echo "9) Exit\n";
+		echo "1) {$text['label-upgrade_source']} - {$text['description-update_all_source_files']}\n";
+		echo "  1a) " . $software_name . " - Update Main Software Only \n";
+		echo "  1b) {$text['label-update_external_repositories']} - {$text['description-repositories']}\n";
+		echo "2) {$text['label-schema']} - {$text['description-upgrade_schema']}\n";
+		echo "  2b) {$text['label-upgrade_data_types']} - {$text['description-upgrade_data_types']}\n";
+		echo "3) {$text['label-upgrade_apps']} - {$text['description-upgrade_apps']}\n";
+		echo "4) {$text['label-upgrade_menu']} - {$text['description-upgrade_menu']}\n";
+		echo "5) {$text['label-upgrade_permissions']} - {$text['description-upgrade_permissions']}\n";
+		echo "6) {$text['label-all_of_the_above']} - {$text['description-all_of_the_above']}\n";
+		echo "0) Exit\n";
 		echo "\n";
 		echo "Choice: ";
 		$choice = readline();
 		switch ($choice) {
 			case 1:
 				do_upgrade_code();
+				do_upgrade_code_submodules();
+				break;
+			case '1a':
+				do_upgrade_code();
+				break;
+			case '1b':
+				do_upgrade_code_submodules();
 				break;
 			case 2:
 				do_upgrade_schema();
+				break;
+			case '2b':
+				do_upgrade_schema(true);
 				break;
 			case 3:
 				do_upgrade_domains();
@@ -77,13 +114,9 @@ function show_upgrade_menu() {
 				do_upgrade_permissions();
 				do_upgrade_menu();
 				break;
-			case 7:
-				do_upgrade_schema(true);
-				break;
 			case 8:
-				show_software_version();
 				break;
-			case 9:
+			case 0:
 				exit();
 		}
 	}
@@ -102,6 +135,30 @@ function do_upgrade_code() {
 		return git_pull(PROJECT_ROOT);
 	}
 	return $result;
+}
+
+function do_upgrade_code_submodules() {
+	global $text;
+	$updateable_repos = git_find_repos(dirname(__DIR__, 2)."/app");
+
+	$messages = [];
+	foreach ($updateable_repos as $repo => $apps) {
+		$git_result = git_pull($repo);
+		if ($git_result['result']) {
+			$messages[$repo] = $text['message-optional_apps_upgrade_source'] . " " . $git_result['message'];
+		}
+		else {
+			if (is_array($git_result['message'])) {
+				$message = "ERROR:\n" . implode(' ', $git_result['message']);
+			} else {
+				$message = $git_result['message'];
+			}
+			$messages[$repo] = $text['message-optional_apps_upgrade_source_failed'] . " " . $message;
+		}
+	}
+	foreach ($messages as $repo => $message) {
+		echo "$repo: $message\n";
+	}
 }
 
 //run all app_defaults.php files

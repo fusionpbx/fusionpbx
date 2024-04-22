@@ -2362,6 +2362,7 @@ if (!function_exists('git_pull')) {
 		$update_status = false;
 
 		if (sizeof($response_source_update) == 0) {
+			chdir($cwd);
 			return array('result' => false, 'message' => null);
 		}
 

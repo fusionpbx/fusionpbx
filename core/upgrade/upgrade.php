@@ -151,8 +151,11 @@
 		}
 	}
 
-//show the upgrade type
-	//echo $upgrade_type."\n";
+//check for upgrade menu option first
+	if ($upgrade_type == 'menu') {
+		require __DIR__ . '/upgrade_menu.php';
+		exit();
+	}
 
 //get the version of the software
 	if ($upgrade_type == 'version') {
@@ -180,7 +183,7 @@
 	}
 
 //restore the default menu
-	if ($upgrade_type == 'menu') {
+	if ($upgrade_type == 'menus') {
 
 		//get the menu uuid and language
 		$sql = "select menu_uuid, menu_language from v_menus ";
