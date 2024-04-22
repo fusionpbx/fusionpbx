@@ -1,7 +1,7 @@
 <?php
 
 /*
-* user class - use to store user groups, permissions and other values
+* user class - used to store user groups, permissions, and other values
 */
 class user {
 
@@ -15,7 +15,7 @@ class user {
 	public  $user_email;
 	public  $contact_uuid;
 
-	public function __construct(database $database, $domain_uuid = null, $user_uuid = null) {
+	public function __construct(database $database, $domain_uuid, $user_uuid) {
 
 		//set the database variable
 		$this->database = $database;
