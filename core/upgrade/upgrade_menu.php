@@ -58,7 +58,7 @@ $display_type = 'text';
 show_upgrade_menu();
 
 function show_upgrade_menu() {
-	global $text;
+	global $text, $software_name;
 	//error_reporting(E_ALL);
 	$line = str_repeat('-', strlen($text['title-cli_upgrade']) + 2);
 	while (true) {
