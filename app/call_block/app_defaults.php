@@ -48,4 +48,5 @@ if ($domains_processed == 1) {
 		unset($sql);
 
 }
+
 ?>
