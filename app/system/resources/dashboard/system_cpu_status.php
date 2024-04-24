@@ -51,8 +51,8 @@
 	}
 
 //add half doughnut chart
-	echo "	<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 20px;' onclick=\"$('#hud_system_cpu_status_details').slideToggle('fast');\">\n";
-	echo "		<span class='hud_title' style='color: ".$dashboard_heading_text_color.";' onclick=\"document.location.href='".PROJECT_PATH."/app/system/system.php'\">".$text['label-cpu_usage']."</span>\n";
+	echo "<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 20px; background-color: ".$dashboard_number_background_color.";' onclick=\"$('#hud_system_cpu_status_details').slideToggle('fast');\">\n";
+	echo "	<span class='hud_title' style='background-color: ".$dashboard_heading_background_color."; color: ".$dashboard_heading_text_color.";' onclick=\"document.location.href='".PROJECT_PATH."/app/system/system.php'\">".$text['label-cpu_usage']."</span>\n";
 
 	if ($dashboard_chart_type == "doughnut") {
 		?>
@@ -99,7 +99,7 @@
 						id: 'chart_number_2',
 						beforeDraw(chart, args, options){
 							const {ctx, chartArea: {top, right, bottom, left, width, height} } = chart;
-							ctx.font = (chart_text_size - 7) + 'px ' + chart_text_font;
+							ctx.font = chart_text_size + ' ' + chart_text_font;
 							ctx.textBaseline = 'middle';
 							ctx.textAlign = 'center';
 							ctx.fillStyle = '<?php echo $dashboard_number_text_color; ?>';
@@ -113,9 +113,9 @@
 		<?php
 	}
 	if ($dashboard_chart_type == "none") {
-		echo "	<span class='hud_stat' style='color: ".$dashboard_number_text_color.";'>".round($percent_cpu)."%</span>";
+		echo "<span class='hud_stat' style='color: ".$dashboard_number_text_color.";'>".round($percent_cpu)."%</span>";
 	}
-	echo "	</div>\n";
+	echo "</div>\n";
 
 //show the content
 	echo "<div class='hud_details hud_box' id='hud_system_cpu_status_details'>";

@@ -110,12 +110,12 @@
 				$hud_stat_title = $text['label-destinations'];
 			}
 
-			echo "	<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 20px;' onclick=\"$('#hud_domain_limits_details').slideToggle('fast');\">\n";
-			echo "		<span class='hud_title' style='color: ".$dashboard_heading_text_color.";'>".$text['label-domain_limits']."</span>\n";
+			echo "	<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 13px; background-color: ".$dashboard_number_background_color.";' onclick=\"$('#hud_domain_limits_details').slideToggle('fast');\">\n";
+			echo "		<span class='hud_title' style='background-color: ".$dashboard_heading_background_color."; color: ".$dashboard_heading_text_color.";'>".$text['label-domain_limits']."</span>\n";
 
 		//doughnut chart
 			if ($dashboard_chart_type == "doughnut") {
-				echo "<div style='width: 275px; height: 143px;'><canvas id='domain_limits_chart'></canvas></div>\n";
+				echo "<div style='width: 275px; height: 150px; padding-top: 7px;'><canvas id='domain_limits_chart'></canvas></div>\n";
 
 				echo "<script>\n";
 				echo "	const domain_limits_chart = new Chart(\n";
@@ -161,7 +161,7 @@
 				echo "				id: 'chart_number',\n";
 				echo "				beforeDraw(chart, args, options){\n";
 				echo "						const {ctx, chartArea: {top, right, bottom, left, width, height} } = chart;\n";
-				echo "						ctx.font = chart_text_size + 'px ' + chart_text_font;\n";
+				echo "						ctx.font = chart_text_size + ' ' + chart_text_font;\n";
 				echo "						ctx.textBaseline = 'middle';\n";
 				echo "						ctx.textAlign = 'center';\n";
 				echo "						ctx.fillStyle = '".$dashboard_number_text_color."';\n";
@@ -174,7 +174,7 @@
 				echo "</script>\n";
 			}
 			if ($dashboard_chart_type == "none") {
-				echo "	<span class='hud_stat' style='color: ".$dashboard_number_text_color.";'>".$hud_stat_used."</span>";
+				echo "	<span class='hud_stat' style='color: ".$dashboard_number_text_color."; padding-bottom: 27px;'>".$hud_stat_used."</span>";
 			}
 			echo "	</div>\n";
 

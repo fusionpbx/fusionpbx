@@ -90,13 +90,13 @@
 //missed calls
 	echo "<div class='hud_box'>\n";
 
-	echo "	<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 20px;' onclick=\"$('#hud_missed_calls_details').slideToggle('fast');\">\n";
-	echo "		<span class='hud_title' style='color: ".$dashboard_heading_text_color.";' onclick=\"document.location.href='".PROJECT_PATH."/app/xml_cdr/xml_cdr.php?call_result=missed'\">".$text['label-missed_calls']."</span>";
+	echo "<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 13px; background-color: ".$dashboard_number_background_color.";' onclick=\"$('#hud_missed_calls_details').slideToggle('fast');\">\n";
+	echo "	<span class='hud_title' style='background-color: ".$dashboard_heading_background_color."; color: ".$dashboard_heading_text_color.";' onclick=\"document.location.href='".PROJECT_PATH."/app/xml_cdr/xml_cdr.php?call_result=missed'\">".$text['label-missed_calls']."</span>";
 
 	if ($dashboard_chart_type == "doughnut") {
 		//add doughnut chart
 		?>
-		<div style='height: 143px;'><canvas id='missed_calls_chart'></canvas></div>
+		<div style='height: 150px; padding-top: 7px;'><canvas id='missed_calls_chart'></canvas></div>
 
 		<script>
 			const missed_calls_chart = new Chart(
@@ -125,7 +125,7 @@
 						id: 'chart_number',
 						beforeDraw(chart, args, options){
 							const {ctx, chartArea: {top, right, bottom, left, width, height} } = chart;
-							ctx.font = chart_text_size + 'px ' + chart_text_font;
+							ctx.font = chart_text_size + ' ' + chart_text_font;
 							ctx.textBaseline = 'middle';
 							ctx.textAlign = 'center';
 							ctx.fillStyle = '<?php echo $dashboard_number_text_color; ?>';
@@ -139,9 +139,9 @@
 		<?php
 	}
 	if ($dashboard_chart_type == "none") {
-		echo "	<span class='hud_stat' style='color: ".$dashboard_number_text_color.";'>".$num_rows."</span>";
+		echo "<span class='hud_stat' style='padding-bottom: 27px; color: ".$dashboard_number_text_color.";' onclick=\"$('#hud_missed_calls_details').slideToggle('fast');\">".$num_rows."</span>";
 	}
-	echo "	</div>\n";
+	echo "</div>\n";
 
 	echo "<div class='hud_details hud_box' id='hud_missed_calls_details'>";
 	echo "<table class='tr_hover' width='100%' cellpadding='0' cellspacing='0' border='0'>\n";

@@ -76,13 +76,13 @@
 		$registrations = $registration->count();
 	}
 
-	echo "<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 20px;' onclick=\"$('#hud_switch_status_details').slideToggle('fast');\">\n";
-	echo "	<span class='hud_title' style='color: ".$dashboard_heading_text_color.";'>".$text['label-switch_status']."</span>\n";
+	echo "<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 13px; background-color: ".$dashboard_number_background_color.";' onclick=\"$('#hud_switch_status_details').slideToggle('fast');\">\n";
+	echo "	<span class='hud_title' style='background-color: ".$dashboard_heading_background_color."; color: ".$dashboard_heading_text_color.";'>".$text['label-switch_status']."</span>\n";
 
 	if ($dashboard_chart_type == "doughnut") {
 		//add doughnut chart
 		?>
-		<div style='height: 143px;'><canvas id='switch_status_chart'></canvas></div>
+		<div style='height: 150px; padding-top: 7px;'><canvas id='switch_status_chart'></canvas></div>
 
 		<script>
 			const switch_status_chart = new Chart(
@@ -109,7 +109,7 @@
 						id: 'chart_number',
 						beforeDraw(chart, args, options){
 							const {ctx, chartArea: {top, right, bottom, left, width, height} } = chart;
-							ctx.font = chart_text_size + 'px ' + chart_text_font;
+							ctx.font = chart_text_size + ' ' + chart_text_font;
 							ctx.textBaseline = 'middle';
 							ctx.textAlign = 'center';
 							ctx.fillStyle = '<?php echo $dashboard_number_text_color; ?>';
@@ -123,7 +123,7 @@
 		<?php
 	}
 	if ($dashboard_chart_type == "none") {
-		echo "	<span class='hud_stat' style='color: ".$dashboard_number_text_color.";'>".$registrations."</span>";
+		echo "	<span class='hud_stat' style='padding-bottom: 27px; color: ".$dashboard_number_text_color.";'>".$registrations."</span>";
 	}
 	echo "	</div>\n";
 

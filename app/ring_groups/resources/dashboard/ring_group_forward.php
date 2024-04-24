@@ -152,15 +152,15 @@
 
 //ring group forward
 	echo "<div class='hud_box'>\n";
-		
-	echo "	<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 20px;' onclick=\"$('#hud_ring_group_forward_details').slideToggle('fast');\">\n";
-	echo "		<span class='hud_title' style='color: ".$dashboard_heading_text_color.";'>".$text['header-ring-group-forward']."</span>\n";
+
+	echo "	<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 13px; background-color: ".$dashboard_number_background_color.";' onclick=\"$('#hud_ring_group_forward_details').slideToggle('fast');\">\n";
+	echo "		<span class='hud_title' style='background-color: ".$dashboard_heading_background_color."; color: ".$dashboard_heading_text_color.";'>".$text['header-ring-group-forward']."</span>\n";
 
 
 //doughnut chart
 	if ($dashboard_chart_type == "doughnut") {
-		echo "	<div style='width: 275px; height: 143px;'><canvas id='ring_group_forward_chart'></canvas></div>\n";
-	
+		echo "	<div style='width: 275px; height: 150px; padding-top: 7px;'><canvas id='ring_group_forward_chart'></canvas></div>\n";
+
 		echo "<script>\n";
 		echo "	const ring_group_forward_chart = new Chart(\n";
 		echo "		document.getElementById('ring_group_forward_chart').getContext('2d'),\n";
@@ -210,7 +210,7 @@
 		echo "				id: 'chart_number',\n";
 		echo "				beforeDraw(chart, args, options){\n";
 		echo "					const {ctx, chartArea: {top, right, bottom, left, width, height} } = chart;\n";
-		echo "					ctx.font = chart_text_size + 'px ' + chart_text_font;\n";
+		echo "					ctx.font = chart_text_size + ' ' + chart_text_font;\n";
 		echo "					ctx.textBaseline = 'middle';\n";
 		echo "					ctx.textAlign = 'center';\n";
 		echo "					ctx.fillStyle = '".$dashboard_number_text_color."';\n";
@@ -223,7 +223,7 @@
 		echo "</script>\n";
 	}
 	if ($dashboard_chart_type == "none") {
-		echo "	<span class='hud_stat' style='color: ".$dashboard_number_text_color.";'>".$stats['forwarding']."</span>";
+		echo "	<span class='hud_stat' style='color: ".$dashboard_number_text_color."; padding-bottom: 27px;'>".$stats['forwarding']."</span>";
 	}
 	echo "	</div>\n";
 
