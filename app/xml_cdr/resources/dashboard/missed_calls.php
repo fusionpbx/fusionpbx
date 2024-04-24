@@ -139,7 +139,7 @@
 		<?php
 	}
 	if ($dashboard_chart_type == "none") {
-		echo "<span class='hud_stat' style='padding-bottom: 27px; color: ".$dashboard_number_text_color.";' onclick=\"$('#hud_missed_calls_details').slideToggle('fast');\">".$num_rows."</span>";
+		echo "<span class='hud_stat' style='padding-bottom: 27px; color: ".$dashboard_number_text_color.";'>".$num_rows."</span>";
 	}
 	echo "</div>\n";
 
