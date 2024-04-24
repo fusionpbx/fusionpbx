@@ -52,13 +52,13 @@
 		}
 	}
 
-	echo "	<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 20px;' onclick=\"$('#hud_voicemail_details').slideToggle('fast');\">\n";
-	echo "		<span class='hud_title' style='color: ".$dashboard_heading_text_color.";' onclick=\"document.location.href='".PROJECT_PATH."/app/voicemails/voicemail_messages.php'\">".$text['label-new_messages']."</span>";
+	echo "<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 13px; background-color: ".$dashboard_number_background_color.";' onclick=\"$('#hud_voicemail_details').slideToggle('fast');\">\n";
+	echo "	<span class='hud_title' style='background-color: ".$dashboard_heading_background_color."; color: ".$dashboard_heading_text_color.";' onclick=\"document.location.href='".PROJECT_PATH."/app/voicemails/voicemail_messages.php'\">".$text['label-new_messages']."</span>";
 
 	if ($dashboard_chart_type == "doughnut") {
 		//add doughnut chart
 		?>
-		<div style='height: 143px;'><canvas id='new_messages_chart'></canvas></div>
+		<div style='width: 150px; height: 150px; padding-top: 7px;'><canvas id='new_messages_chart'></canvas></div>
 
 		<script>
 			const new_messages_chart = new Chart(
@@ -87,7 +87,7 @@
 						id: 'chart_number',
 						beforeDraw(chart, args, options){
 							const {ctx, chartArea: {top, right, bottom, left, width, height} } = chart;
-							ctx.font = chart_text_size + 'px ' + chart_text_font;
+							ctx.font = chart_text_size + ' ' + chart_text_font;
 							ctx.textBaseline = 'middle';
 							ctx.textAlign = 'center';
 							ctx.fillStyle = '<?php echo $dashboard_number_text_color; ?>';
@@ -101,9 +101,9 @@
 		<?php
 	}
 	if ($dashboard_chart_type == "none") {
-		echo "	<span class='hud_stat' style='color: ".$dashboard_number_text_color.";'>".$messages['new']."</span>";
+		echo "	<span class='hud_stat' style='padding-bottom: 27px; color: ".$dashboard_number_text_color.";'>".$messages['new']."</span>";
 	}
-	echo "	</div>\n";
+	echo "</div>\n";
 
 	echo "<div class='hud_details hud_box' id='hud_voicemail_details'>";
 	if (sizeof($voicemails) > 0) {

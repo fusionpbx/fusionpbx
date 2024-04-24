@@ -73,7 +73,9 @@
 	$sql .= "dashboard_name, \n";
 	$sql .= "dashboard_path, \n";
 	$sql .= "dashboard_chart_type, \n";
+	$sql .= "dashboard_heading_background_color, \n";
 	$sql .= "dashboard_heading_text_color, \n";
+	$sql .= "dashboard_number_background_color, \n";
 	$sql .= "dashboard_number_text_color, \n";
 	$sql .= "dashboard_column_span, \n";
 	$sql .= "dashboard_details_state, \n";
@@ -145,8 +147,8 @@
 
 //chart variables
 	echo "<script>\n";
-	echo "	var chart_text_font = 'arial';\n";
-	echo "	var chart_text_size = 30;\n";
+	echo "	var chart_text_font = '".($settings->get('theme', 'dashboard_number_text_font') ?? 'arial')."';\n";
+	echo "	var chart_text_size = '30px';\n";
 	echo "	Chart.defaults.responsive = true;\n";
 	echo "	Chart.defaults.maintainAspectRatio = false;\n";
 	echo "	Chart.defaults.plugins.legend.display = false;\n";
@@ -304,8 +306,10 @@
 		$dashboard_name = strtolower($row['dashboard_name']);
 		$dashboard_name = str_replace(" ", "_", $dashboard_name);
 		$dashboard_chart_type = $row['dashboard_chart_type'] ?? 'doughnut';
+		$dashboard_heading_background_color = $row['dashboard_heading_background_color'] ?? $settings->get('theme', 'dashboard_heading_background_color');
 		$dashboard_heading_text_color = $row['dashboard_heading_text_color'] ?? $settings->get('theme', 'dashboard_heading_text_color');
-		$dashboard_number_text_color = $row['dashboard_heading_text_color'] ?? $settings->get('theme', 'dashboard_number_text_color');
+		$dashboard_number_background_color = $row['dashboard_number_background_color'] ?? $settings->get('theme', 'dashboard_number_background_color');
+		$dashboard_number_text_color = $row['dashboard_number_text_color'] ?? $settings->get('theme', 'dashboard_number_text_color');
 		echo "<div class='widget' id='".$dashboard_name."' draggable='false'>\n";
 			include($row['dashboard_path']);
 		echo "</div>\n";
