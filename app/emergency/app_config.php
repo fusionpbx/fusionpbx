@@ -7,7 +7,7 @@
 		$apps[$x]['subcategory'] = '';
 		$apps[$x]['version'] = '1.0.1';
 		$apps[$x]['license'] = 'Mozilla Public License 1.1';
-		$apps[$x]['contact_url'] = 'http://austen-it.com';
+		$apps[$x]['contact_url'] = '';
 		$apps[$x]['description']['en-us'] = '';
 		$apps[$x]['description']['es-mx'] = '';
 		$apps[$x]['description']['de'] = '';
@@ -21,9 +21,9 @@
 
 	//default settings
 		$y=0;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "9317ddfd-6cb1-4294-9c57-4061dde66fe4";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "dialplan";
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "emergency_email_address";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "995d09b6-c37b-4eda-a458-5740b955206f";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "emergency";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "email_address";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
