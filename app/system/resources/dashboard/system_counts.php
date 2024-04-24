@@ -355,7 +355,7 @@
 			<?php
 		}
 		if ($dashboard_chart_type == "none") {
-			echo "	<span class='hud_stat' style='color: ".$dashboard_number_text_color.";'>".$domain_total."</span>";
+			echo "	<span class='hud_stat' style='padding-bottom: 27px; color: ".$dashboard_number_text_color.";'>".$domain_total."</span>";
 		}
 		echo "	</div>\n";
 	}
