@@ -51,7 +51,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "snom_firmware_d862";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "snomD862-10.1.170.11.bin";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "10.1.175.10/bin/snomD862-10.1.175.10-SIP-r.swu";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the D862 firmware";
 		$y++;
@@ -59,7 +59,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "snom_firmware_d865";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "snomD865-10.1.170.11.bin";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "10.1.175.10/bin/snomD865-10.1.175.10-SIP-r.swu";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the D865 firmware";
 		$y++;
@@ -67,7 +67,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "snom_firmware_d815";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "snomD815-10.1.170.11.bin";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "10.1.175.10/bin/snomD815-10.1.175.10-SIP-r.swu";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the D815 firmware";
 		$y++;
@@ -75,7 +75,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "snom_firmware_d812";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "snomD812-10.1.170.11.bin";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "10.1.175.10/bin/snomD812-10.1.175.10-SIP-r.swu";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the D812 firmware";
 		$y++;
