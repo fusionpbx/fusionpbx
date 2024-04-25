@@ -41,9 +41,9 @@
 
 //set the defaults
 	$dashboard_name = '';
-	$dashboard_path = '';
-$dashboard_url = '';
-$dashboard_icon = '';
+	$dashboard_path = 'core/dashboard/resources/dashboard/icon.php';
+	$dashboard_url = '';
+	$dashboard_icon = '';
 	$dashboard_groups = [];
 	$dashboard_column_span = '';
 	$dashboard_details_state = '';
@@ -66,8 +66,8 @@ $dashboard_icon = '';
 	if (!empty($_POST)) {
 		$dashboard_name = $_POST["dashboard_name"] ?? '';
 		$dashboard_path = $_POST["dashboard_path"] ?? '';
-$dashboard_icon = $_POST["dashboard_icon"] ?? '';
-$dashboard_url = $_POST["dashboard_url"] ?? '';
+		$dashboard_icon = $_POST["dashboard_icon"] ?? '';
+		$dashboard_url = $_POST["dashboard_url"] ?? '';
 		$dashboard_groups = $_POST["dashboard_groups"] ?? '';
 		$dashboard_chart_type = $_POST["dashboard_chart_type"] ?? '';
 		$dashboard_heading_background_color = $_POST["dashboard_heading_background_color"] ?? '';
@@ -172,10 +172,8 @@ $dashboard_url = $_POST["dashboard_url"] ?? '';
 			$array['dashboard'][0]['dashboard_uuid'] = $dashboard_uuid;
 			$array['dashboard'][0]['dashboard_name'] = $dashboard_name;
 			$array['dashboard'][0]['dashboard_path'] = $dashboard_path;
-
-$array['dashboard'][0]['dashboard_icon'] = $dashboard_icon;
-$array['dashboard'][0]['dashboard_url'] = $dashboard_url;
-
+			$array['dashboard'][0]['dashboard_icon'] = $dashboard_icon;
+			$array['dashboard'][0]['dashboard_url'] = $dashboard_url;
 			$array['dashboard'][0]['dashboard_chart_type'] = $dashboard_chart_type;
 			$array['dashboard'][0]['dashboard_heading_background_color'] = $dashboard_heading_background_color;
 			$array['dashboard'][0]['dashboard_heading_text_color'] = $dashboard_heading_text_color;
@@ -226,10 +224,8 @@ $array['dashboard'][0]['dashboard_url'] = $dashboard_url;
 		$sql .= " dashboard_uuid, ";
 		$sql .= " dashboard_name, ";
 		$sql .= " dashboard_path, ";
-
-$sql .= " dashboard_icon, ";
-$sql .= " dashboard_url, ";
-
+		$sql .= " dashboard_icon, ";
+		$sql .= " dashboard_url, ";
 		$sql .= " dashboard_chart_type, ";
 		$sql .= " dashboard_heading_background_color, ";
 		$sql .= " dashboard_heading_text_color, ";
@@ -248,10 +244,8 @@ $sql .= " dashboard_url, ";
 		if (is_array($row) && @sizeof($row) != 0) {
 			$dashboard_name = $row["dashboard_name"];
 			$dashboard_path = $row["dashboard_path"];
-
 			$dashboard_icon = $row["dashboard_icon"];
 			$dashboard_url = $row["dashboard_url"];
-
 			$dashboard_chart_type = $row["dashboard_chart_type"];
 			$dashboard_heading_background_color = $row["dashboard_heading_background_color"];
 			$dashboard_heading_text_color = $row["dashboard_heading_text_color"];
@@ -389,62 +383,60 @@ $sql .= " dashboard_url, ";
 	echo $text['description-dashboard_path']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
-
-echo "<tr>\n";
-echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-echo "	".$text['label-link']."\n";
-echo "</td>\n";
-echo "<td class='vtable' style='position: relative;' align='left'>\n";
-echo "	<input class='formfld' type='text' name='dashboard_url' maxlength='255' value='".escape($dashboard_url)."'>\n";
-echo "<br />\n";
-echo $text['description-dashboard_url']."\n";
-echo "</td>\n";
-echo "</tr>\n";
-
-echo "	<tr>";
-echo "		<td class='vncell'>".$text['label-icon']."</td>";
-echo "		<td class='vtable' style='vertical-align: bottom;'>";
-if (file_exists($_SERVER["PROJECT_ROOT"].'/resources/fontawesome/fas_icons.php')) {
-	include 'resources/fontawesome/fas_icons.php';
-	if (is_array($font_awesome_solid_icons) && @sizeof($font_awesome_solid_icons) != 0) {
-		// rebuild and sort array
-		foreach ($font_awesome_solid_icons as $i => $icon_class) {
-			$icon_label = str_replace('fa-', '', $icon_class);
-			$icon_label = str_replace('-', ' ', $icon_label);
-			$icon_label = ucwords($icon_label);
-			$icons[$icon_class] = $icon_label;
+	
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-link']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' style='position: relative;' align='left'>\n";
+	echo "	<input class='formfld' type='text' name='dashboard_url' maxlength='255' value='".escape($dashboard_url)."'>\n";
+	echo "<br />\n";
+	echo $text['description-dashboard_url']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+	
+	echo "	<tr>";
+	echo "		<td class='vncell'>".$text['label-icon']."</td>";
+	echo "		<td class='vtable' style='vertical-align: bottom;'>";
+	if (file_exists($_SERVER["PROJECT_ROOT"].'/resources/fontawesome/fas_icons.php')) {
+		include 'resources/fontawesome/fas_icons.php';
+		if (is_array($font_awesome_solid_icons) && @sizeof($font_awesome_solid_icons) != 0) {
+			// rebuild and sort array
+			foreach ($font_awesome_solid_icons as $i => $icon_class) {
+				$icon_label = str_replace('fa-', '', $icon_class);
+				$icon_label = str_replace('-', ' ', $icon_label);
+				$icon_label = ucwords($icon_label);
+				$icons[$icon_class] = $icon_label;
+			}
+			asort($icons, SORT_STRING);
+			echo "<table cellpadding='0' cellspacing='0' border='0'>\n";
+			echo "	<tr>\n";
+			echo "		<td>\n";
+			echo "			<select class='formfld' name='dashboard_icon' id='dashboard_icon' onchange=\"$('#icons').slideUp(); $('#grid_icon').fadeIn();\">\n";
+			echo "				<option value=''></option>\n";
+			foreach ($icons as $icon_class => $icon_label) {
+				$selected = ($dashboard_icon == $icon_class) ? "selected" : null;
+				echo "			<option value='".escape($icon_class)."' ".$selected.">".escape($icon_label)."</option>\n";
+			}
+			echo "			</select>\n";
+			echo "		</td>\n";
+			echo "		<td style='padding: 0 0 0 5px;'>\n";
+			echo "			<button id='grid_icon' type='button' class='btn btn-default list_control_icon' style='font-size: 15px; padding-top: 1px; padding-left: 3px;' onclick=\"$('#icons').fadeIn(); $(this).fadeOut();\"><span class='fas fa-th'></span></button>";
+			echo "		</td>\n";
+			echo "	</tr>\n";
+			echo "</table>\n";
+			echo "<div id='icons' style='clear: both; display: none; margin-top: 8px; padding-top: 10px; color: #000; max-height: 400px; overflow: auto;'>\n";
+			foreach ($icons as $icon_class => $icon_label) {
+				echo "<span class='fas ".escape($icon_class)." fa-fw' style='font-size: 24px; float: left; margin: 0 8px 8px 0; cursor: pointer; opacity: 0.3;' title='".escape($icon_label)."' onclick=\"$('#dashboard_icon').val('".escape($icon_class)."'); $('#icons').slideUp(); $('#grid_icon').fadeIn();\" onmouseover=\"this.style.opacity='1';\" onmouseout=\"this.style.opacity='0.3';\"></span>\n";
+			}
+			echo "</div>";
 		}
-		asort($icons, SORT_STRING);
-		echo "<table cellpadding='0' cellspacing='0' border='0'>\n";
-		echo "	<tr>\n";
-		echo "		<td>\n";
-		echo "			<select class='formfld' name='dashboard_icon' id='dashboard_icon' onchange=\"$('#icons').slideUp(); $('#grid_icon').fadeIn();\">\n";
-		echo "				<option value=''></option>\n";
-		foreach ($icons as $icon_class => $icon_label) {
-			$selected = ($dashboard_icon == $icon_class) ? "selected" : null;
-			echo "			<option value='".escape($icon_class)."' ".$selected.">".escape($icon_label)."</option>\n";
-		}
-		echo "			</select>\n";
-		echo "		</td>\n";
-		echo "		<td style='padding: 0 0 0 5px;'>\n";
-		echo "			<button id='grid_icon' type='button' class='btn btn-default list_control_icon' style='font-size: 15px; padding-top: 1px; padding-left: 3px;' onclick=\"$('#icons').fadeIn(); $(this).fadeOut();\"><span class='fas fa-th'></span></button>";
-		echo "		</td>\n";
-		echo "	</tr>\n";
-		echo "</table>\n";
-		echo "<div id='icons' style='clear: both; display: none; margin-top: 8px; padding-top: 10px; color: #000; max-height: 400px; overflow: auto;'>\n";
-		foreach ($icons as $icon_class => $icon_label) {
-			echo "<span class='fas ".escape($icon_class)." fa-fw' style='font-size: 24px; float: left; margin: 0 8px 8px 0; cursor: pointer; opacity: 0.3;' title='".escape($icon_label)."' onclick=\"$('#dashboard_icon').val('".escape($icon_class)."'); $('#icons').slideUp(); $('#grid_icon').fadeIn();\" onmouseover=\"this.style.opacity='1';\" onmouseout=\"this.style.opacity='0.3';\"></span>\n";
-		}
-		echo "</div>";
 	}
-}
-else {
-	echo "		<input type='text' class='formfld' name='dashboard_icon' value='".escape($dashboard_icon)."'>";
-}
-echo "		</td>";
-echo "	</tr>";
-
-
+	else {
+		echo "		<input type='text' class='formfld' name='dashboard_icon' value='".escape($dashboard_icon)."'>";
+	}
+	echo "		</td>";
+	echo "	</tr>";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
