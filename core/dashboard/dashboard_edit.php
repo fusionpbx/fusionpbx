@@ -488,7 +488,17 @@ echo "	</tr>";
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	if ($dashboard_path != "app/devices/resources/dashboard/device_keys.php" || $dashboard_path != "app/call_centers/resources/dashboard/call_center_agents.php") {
+	if ($dashboard_path == "app/voicemails/resources/dashboard/voicemails.php" ||
+		$dashboard_path == "app/xml_cdr/resources/dashboard/missed_calls.php" ||
+		$dashboard_path == "app/xml_cdr/resources/dashboard/recent_calls.php" ||
+		$dashboard_path == "app/system/resources/dashboard/system_status.php" ||
+		$dashboard_path == "app/system/resources/dashboard/system_cpu_status.php" ||
+		$dashboard_path == "app/system/resources/dashboard/system_counts.php" ||
+		$dashboard_path == "app/switch/resources/dashboard/switch_status.php" ||
+		$dashboard_path == "app/domain_limits/resources/dashboard/domain_limits.php" ||
+		$dashboard_path == "app/call_forward/resources/dashboard/call_forward.php" ||
+		$dashboard_path == "app/ring_groups/resources/dashboard/ring_group_forward.php" ||
+		$dashboard_path == "app/extensions/resources/dashboard/caller_id.php") {
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo $text['label-dashboard_chart_type']."\n";
@@ -512,51 +522,51 @@ echo "	</tr>";
 		echo $text['description-dashboard_chart_type']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
-
-		echo "<tr>\n";
-		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-		echo $text['label-dashboard_heading_background_color']."\n";
-		echo "</td>\n";
-		echo "<td class='vtable' style='position: relative;' align='left'>\n";
-		echo "	<input type='text' class='formfld colorpicker' name='dashboard_heading_background_color' value='".escape($dashboard_heading_background_color)."'>\n";
-		echo "<br />\n";
-		echo $text['description-dashboard_heading_background_color']."\n";
-		echo "</td>\n";
-		echo "</tr>\n";
-
-		echo "<tr>\n";
-		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-		echo $text['label-dashboard_heading_text_color']."\n";
-		echo "</td>\n";
-		echo "<td class='vtable' style='position: relative;' align='left'>\n";
-		echo "	<input type='text' class='formfld colorpicker' name='dashboard_heading_text_color' value='".escape($dashboard_heading_text_color)."'>\n";
-		echo "<br />\n";
-		echo $text['description-dashboard_heading_text_color']."\n";
-		echo "</td>\n";
-		echo "</tr>\n";
-
-		echo "<tr>\n";
-		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-		echo $text['label-dashboard_number_background_color']."\n";
-		echo "</td>\n";
-		echo "<td class='vtable' style='position: relative;' align='left'>\n";
-		echo "	<input type='text' class='formfld colorpicker' name='dashboard_number_background_color' value='".escape($dashboard_number_background_color)."'>\n";
-		echo "<br />\n";
-		echo $text['description-dashboard_number_background_color']."\n";
-		echo "</td>\n";
-		echo "</tr>\n";
-
-		echo "<tr>\n";
-		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-		echo $text['label-dashboard_number_text_color']."\n";
-		echo "</td>\n";
-		echo "<td class='vtable' style='position: relative;' align='left'>\n";
-		echo "	<input type='text' class='formfld colorpicker' name='dashboard_number_text_color' value='".escape($dashboard_number_text_color)."'>\n";
-		echo "<br />\n";
-		echo $text['description-dashboard_number_text_color']."\n";
-		echo "</td>\n";
-		echo "</tr>\n";
 	}
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo $text['label-dashboard_heading_background_color']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' style='position: relative;' align='left'>\n";
+	echo "	<input type='text' class='formfld colorpicker' name='dashboard_heading_background_color' value='".escape($dashboard_heading_background_color)."'>\n";
+	echo "<br />\n";
+	echo $text['description-dashboard_heading_background_color']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo $text['label-dashboard_heading_text_color']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' style='position: relative;' align='left'>\n";
+	echo "	<input type='text' class='formfld colorpicker' name='dashboard_heading_text_color' value='".escape($dashboard_heading_text_color)."'>\n";
+	echo "<br />\n";
+	echo $text['description-dashboard_heading_text_color']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo $text['label-dashboard_number_background_color']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' style='position: relative;' align='left'>\n";
+	echo "	<input type='text' class='formfld colorpicker' name='dashboard_number_background_color' value='".escape($dashboard_number_background_color)."'>\n";
+	echo "<br />\n";
+	echo $text['description-dashboard_number_background_color']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo $text['label-dashboard_number_text_color']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' style='position: relative;' align='left'>\n";
+	echo "	<input type='text' class='formfld colorpicker' name='dashboard_number_text_color' value='".escape($dashboard_number_text_color)."'>\n";
+	echo "<br />\n";
+	echo $text['description-dashboard_number_text_color']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
@@ -582,6 +592,12 @@ echo "	</tr>";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
 	echo "	<select name='dashboard_details_state' class='formfld'>\n";
+	if ($dashboard_details_state == "hidden") {
+		echo "		<option value='hidden' selected='selected'>".$text['option-hidden']."</option>\n";
+	}
+	else {
+		echo "		<option value='hidden'>".$text['option-hidden']."</option>\n";
+	}
 	if ($dashboard_details_state == "expanded") {
 		echo "		<option value='expanded' selected='selected'>".$text['option-expanded']."</option>\n";
 	}
@@ -593,12 +609,6 @@ echo "	</tr>";
 	}
 	else {
 		echo "		<option value='contracted'>".$text['option-contracted']."</option>\n";
-	}
-	if ($dashboard_details_state == "hidden") {
-		echo "		<option value='hidden' selected='selected'>".$text['option-hidden']."</option>\n";
-	}
-	else {
-		echo "		<option value='hidden'>".$text['option-hidden']."</option>\n";
 	}
 	echo "	</select>\n";
 	echo "<br />\n";
