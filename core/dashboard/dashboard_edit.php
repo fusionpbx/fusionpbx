@@ -584,12 +584,6 @@
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
 	echo "	<select name='dashboard_details_state' class='formfld'>\n";
-	if ($dashboard_details_state == "hidden") {
-		echo "		<option value='hidden' selected='selected'>".$text['option-hidden']."</option>\n";
-	}
-	else {
-		echo "		<option value='hidden'>".$text['option-hidden']."</option>\n";
-	}
 	if ($dashboard_details_state == "expanded") {
 		echo "		<option value='expanded' selected='selected'>".$text['option-expanded']."</option>\n";
 	}
