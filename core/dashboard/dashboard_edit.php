@@ -602,6 +602,18 @@
 	else {
 		echo "		<option value='contracted'>".$text['option-contracted']."</option>\n";
 	}
+	if ($dashboard_details_state == "hidden") {
+		echo "		<option value='hidden' selected='selected'>".$text['option-hidden']."</option>\n";
+	}
+	else {
+		echo "		<option value='hidden'>".$text['option-hidden']."</option>\n";
+	}
+	if ($dashboard_details_state == "disabled" || empty($dashboard_details_state)) {
+		echo "		<option value='disabled' selected='selected'>".$text['label-disabled']."</option>\n";
+	}
+	else {
+		echo "		<option value='disabled'>".$text['label-disabled']."</option>\n";
+	}
 	echo "	</select>\n";
 	echo "<br />\n";
 	echo $text['description-dashboard_details_state']."\n";
