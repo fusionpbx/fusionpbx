@@ -773,19 +773,9 @@
 	echo "	".$text['label-extension']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	if (!empty($_SESSION['ranges']['ring_group_range']['text'])) {
-		echo "	<input class='formfld' type='text' name='ring_group_extension' maxlength='255' value=\"".escape($ring_group_extension)."\" required='required' placeholder='".$_SESSION['ranges']['ring_group_range']['text']."'>\n";
-	}
-	else {
-		echo "	<input class='formfld' type='text' name='ring_group_extension' maxlength='255' value=\"".escape($ring_group_extension)."\" required='required'>\n";
-	}
+	echo "	<input class='formfld' type='text' name='ring_group_extension' maxlength='255' value=\"".escape($ring_group_extension)."\" required='required' placeholder='".$_SESSION['ranges']['ring_group_range']['text'] ?? ''."'>\n";
 	echo "<br />\n";
-	if (!empty($_SESSION['ranges']['ring_group_range']['text'])) {
-		echo $text['description-extension']."<br />(ex: ".$_SESSION['ranges']['ring_group_range']['text'].")\n";
-	}
-	else {
-		echo $text['description-extension']."\n";
-	}
+	echo $text['description-extension']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
