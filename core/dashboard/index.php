@@ -321,6 +321,7 @@
 		$dashboard_heading_text_color = $row['dashboard_heading_text_color'] ?? $settings->get('theme', 'dashboard_heading_text_color');
 		$dashboard_number_background_color = $row['dashboard_number_background_color'] ?? $settings->get('theme', 'dashboard_number_background_color');
 		$dashboard_number_text_color = $row['dashboard_number_text_color'] ?? $settings->get('theme', 'dashboard_number_text_color');
+		$dashboard_details_state = $row['dashboard_details_state'];
 		echo "<div class='widget' id='".str_replace(" ", "_", strtolower($dashboard_name))."' draggable='false'>\n";
 		include($row['dashboard_path']);
 		echo "</div>\n";
