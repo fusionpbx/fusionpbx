@@ -163,7 +163,7 @@
 	$expanded_all = true;
 	if (is_array($dashboard) && @sizeof($dashboard) != 0) {
 		foreach ($dashboard as $row) {
-			if ($row['dashboard_details_state'] == 'contracted' || $row['dashboard_details_state'] == 'hidden') { $expanded_all = false; }
+			if ($row['dashboard_details_state'] == 'contracted' || $row['dashboard_details_state'] == 'hidden' || $row['dashboard_details_state'] == 'disabled') { $expanded_all = false; }
 		}
 	}
 
@@ -261,6 +261,12 @@
 				echo "}\n";
 			}
 			if ($row['dashboard_details_state'] == "hidden") {
+				echo "#".$dashboard_name." .hud_box .hud_expander, \n";
+				echo "#".$dashboard_name." .hud_box .hud_details {\n";
+				echo "	display: none;\n";
+				echo "}\n";
+			}
+			if ($row['dashboard_details_state'] == "disabled") {
 				echo "#".$dashboard_name." .hud_box .hud_expander, \n";
 				echo "#".$dashboard_name." .hud_box .hud_details {\n";
 				echo "	display: none;\n";
