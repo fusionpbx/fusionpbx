@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2022-2023
+	Portions created by the Initial Developer are Copyright (C) 2022-2024
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -72,6 +72,8 @@
 	$sql .= "dashboard_uuid, \n";
 	$sql .= "dashboard_name, \n";
 	$sql .= "dashboard_path, \n";
+	$sql .= "dashboard_url, \n";
+	$sql .= "dashboard_icon, \n";
 	$sql .= "dashboard_chart_type, \n";
 	$sql .= "dashboard_heading_background_color, \n";
 	$sql .= "dashboard_heading_text_color, \n";
@@ -108,6 +110,8 @@
 					if ($widget == $dashboard_name) {
 						$dashboard_order = $dashboard_order + 10;
 						$array['dashboard'][$x]['dashboard_name'] = $row['dashboard_name'];
+						$array['dashboard'][$x]['dashboard_url'] = $row['dashboard_url'];
+						$array['dashboard'][$x]['dashboard_icon'] = $row['dashboard_icon'];
 						$array['dashboard'][$x]['dashboard_uuid'] = $row['dashboard_uuid'];
 						$array['dashboard'][$x]['dashboard_order'] = $dashboard_order;
 						$x++;
@@ -303,15 +307,16 @@
 	echo "<div class='widgets' id='widgets' style='padding: 0 5px;'>\n";
 	$x = 0;
 	foreach($dashboard as $row) {
-		$dashboard_name = strtolower($row['dashboard_name']);
-		$dashboard_name = str_replace(" ", "_", $dashboard_name);
+		$dashboard_name = $row['dashboard_name'];
+		$dashboard_icon = $row['dashboard_icon'] ?? '';
+		$dashboard_url  = $row['dashboard_url'] ?? '';
 		$dashboard_chart_type = $row['dashboard_chart_type'] ?? 'doughnut';
 		$dashboard_heading_background_color = $row['dashboard_heading_background_color'] ?? $settings->get('theme', 'dashboard_heading_background_color');
 		$dashboard_heading_text_color = $row['dashboard_heading_text_color'] ?? $settings->get('theme', 'dashboard_heading_text_color');
 		$dashboard_number_background_color = $row['dashboard_number_background_color'] ?? $settings->get('theme', 'dashboard_number_background_color');
 		$dashboard_number_text_color = $row['dashboard_number_text_color'] ?? $settings->get('theme', 'dashboard_number_text_color');
-		echo "<div class='widget' id='".$dashboard_name."' draggable='false'>\n";
-			include($row['dashboard_path']);
+		echo "<div class='widget' id='".str_replace(" ", "_", strtolower($dashboard_name))."' draggable='false'>\n";
+		include($row['dashboard_path']);
 		echo "</div>\n";
 		$x++;
 	}
