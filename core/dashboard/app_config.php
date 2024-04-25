@@ -72,6 +72,18 @@
 		$apps[$x]['db'][$y]['fields'][$z]['search_by'] = '';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the dashboard path.';
 		$z++;
+
+$apps[$x]['db'][$y]['fields'][$z]['name'] = 'dashboard_url';
+$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+$apps[$x]['db'][$y]['fields'][$z]['search_by'] = '';
+$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the dashboard url.';
+$z++;
+$apps[$x]['db'][$y]['fields'][$z]['name'] = 'dashboard_icon';
+$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+$apps[$x]['db'][$y]['fields'][$z]['search_by'] = '';
+$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the dashboard icon.';
+$z++;
+
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'dashboard_chart_type';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['search_by'] = '';
