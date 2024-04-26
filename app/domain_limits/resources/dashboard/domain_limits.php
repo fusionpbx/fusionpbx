@@ -110,7 +110,7 @@
 				$hud_stat_title = $text['label-destinations'];
 			}
 
-			echo "	<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 13px; background-color: ".$dashboard_number_background_color.";' onclick=\"$('#hud_domain_limits_details').slideToggle('fast');\">\n";
+			echo "	<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 13px; background-color: ".$dashboard_number_background_color.";' ".($dashboard_details_state == "disabled" ?: "onclick=\"$('#hud_domain_limits_details').slideToggle('fast');\"").">\n";
 			echo "		<span class='hud_title' style='background-color: ".$dashboard_heading_background_color."; color: ".$dashboard_heading_text_color.";'>".$text['label-domain_limits']."</span>\n";
 
 		//doughnut chart
