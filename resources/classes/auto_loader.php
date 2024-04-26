@@ -56,11 +56,14 @@ class auto_loader {
 
 		//use glob for a more extensive search for the classes (note: GLOB_BRACE doesn't work on some systems)
 		if (!class_exists($class_name)) {
+			//set project path using magic dir constant
+			$project_path = dirname(__DIR__, 2);
+
 			//build the search path array
-			$search_path[] = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/resources/classes/".$class_name.".php");
-			$search_path[] = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/resources/interfaces/".$class_name.".php");
-			$search_path[] = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/resources/classes/".$class_name.".php");
-			$search_path[] = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/resources/interfaces/".$class_name.".php");
+			$search_path[] = glob($project_path . "/resources/classes/".$class_name.".php");
+			$search_path[] = glob($project_path . "/resources/interfaces/".$class_name.".php");
+			$search_path[] = glob($project_path . "/*/*/resources/classes/".$class_name.".php");
+			$search_path[] = glob($project_path . "/*/*/resources/interfaces/".$class_name.".php");
 
 			//find the path
 			$path = self::autoload_search($search_path);
