@@ -37,7 +37,7 @@
 		if (!empty($percent_disk_usage)) {
 
 			//add half doughnut chart
-			echo "	<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 20px; background-color: ".$dashboard_number_background_color.";' onclick=\"$('#hud_system_status_details').slideToggle('fast');\">\n";
+			echo "	<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 20px; background-color: ".$dashboard_number_background_color.";' ".($dashboard_details_state == "disabled" ?: "onclick=\"$('#hud_system_status_details').slideToggle('fast');\"").">\n";
 			echo "		<span class='hud_title' style='background-color: ".$dashboard_heading_background_color."; color: ".$dashboard_heading_text_color.";' onclick=\"document.location.href='".PROJECT_PATH."/app/system/system.php'\">".$text['label-disk_usage']."</span>\n";
 
 			if ($dashboard_chart_type == "doughnut") {

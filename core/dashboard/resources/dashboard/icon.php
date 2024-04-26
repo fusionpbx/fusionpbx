@@ -11,7 +11,7 @@
 //dashboard icon
 	echo "<div class='hud_box'>\n";
 
-	echo "<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 13px; background-color: ".$dashboard_number_background_color.";' onclick=\"$('#hud_icon_details').slideToggle('fast');\">\n";
+	echo "<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 13px; background-color: ".$dashboard_number_background_color.";' ".($row['dashboard_details_state'] == "disabled" ?: "onclick=\"$('#hud_icon_details').slideToggle('fast');\"").">\n";
 	echo "	<span class='hud_title' style='background-color: ".$dashboard_heading_background_color."; color: ".$dashboard_heading_text_color.";' onclick=\"document.location.href='".$dashboard_url."'\">". $dashboard_name . "</span>"; // (isset($text['label-'.$dashboard_name])) ? $text['label-'.$dashboard_name] : $dashboard_name
 	echo "	<a href='".$dashboard_url."'><span class='hud_stat' style='height: 150px; padding-bottom: 27px; color: ".$dashboard_number_text_color.";'><i class=\"fas ".$dashboard_icon."\" style=\"color: ".$dashboard_number_text_color."; font-size: 0.8em;\"></i></span></a>\n";
 	echo "</div>\n";
