@@ -630,7 +630,7 @@
 	if (empty($queue_discard_abandoned_after)) { $queue_discard_abandoned_after = "900"; }
 	if (empty($queue_abandoned_resume_allowed)) { $queue_abandoned_resume_allowed = "false"; }
 	if (empty($queue_context)) { $queue_context = $_SESSION['domain_name']; }
-	if (empty($_SESSION['ranges']['call_center_queue_range']['text'])) { $extension_placeholder = '' } else { $extension_placeholder = $_SESSION['ranges']['call_center_queue_range']['text']; }
+	if (empty($_SESSION['call_center']['extension_range']['text'])) { $extension_placeholder = '' } else { $extension_placeholder = $_SESSION['call_center']['extension_range']['text']; }
 
 //create token
 	$object = new token;
