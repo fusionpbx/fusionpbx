@@ -60,7 +60,7 @@ final class config {
 	}
 
 	/**
-	 * Magic method to allow backwards compatibility for variables such as db_type.
+	 * Magic method to allow backward compatibility for variables such as db_type.
 	 * <p>This will allow using config object with the syntax of:<br>
 	 * $config = new config();<br>
 	 * $db_type = $config->db_type;<br></p>
@@ -112,7 +112,7 @@ final class config {
 				if (property_exists($this, $name)) {
 					return $this->{$name};
 				}
-				elseif (array_key_exists($name, $this->configuration)){
+				elseif (array_key_exists($name, $this->configuration)) {
 					return $this->configuration[$name];
 				}
 		}
@@ -183,13 +183,10 @@ final class config {
 
 			//remove from the global namespace
 			unset($db_type, $db_host, $db_port, $db_name, $db_username, $db_password, $db_sslmode, $db_secure, $db_cert_authority);
-
-		} else {
-			//use native php parsing function
-			$conf_arr = parse_ini_file($this->file);
-
+		} 
+		else {
 			//save the loaded and parsed conf file to the object
-			$this->configuration = $conf_arr;
+			$this->configuration = parse_ini_file($this->file);
 		}
 
 	}
