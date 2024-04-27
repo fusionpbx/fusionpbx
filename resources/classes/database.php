@@ -273,31 +273,31 @@
 			 * @param array $params Optional
 			 */
 			public function __construct(array $params = []) {
-					if (isset($params['config'])) {
-						$config = $params['config'];
-					}
-					else {
-						$config = new config();
-					}
+				if (isset($params['config'])) {
+					$config = $params['config'];
+				}
+				else {
+					$config = new config();
+				}
 
-					//driver and type point to the same value
-					$this->driver = $config->get('database.0.type', 'pgsql');
-					$this->driver = $config->get('database.0.type', 'pgsql');
-					$this->type = $config->get('database.0.type', 'pgsql');
-					$this->host = $config->get('database.0.host', '127.0.0.1');
-					$this->port = $config->get('database.0.port', '5432');
-					$this->username = $config->get('database.0.username', 'fusionpbx');
-					$this->password = $config->get('database.0.password', 'fusionpbx');
-					$this->db_name = $config->get('database.0.name', 'fusionpbx');
-					$this->db_secure = $config->get('database.0.secure', '');
-					$this->db_cert_authority = $config->get('database.0.cert_authority', '');
-					$this->ssl_mode = $config->get('database.0.ssl_mode', '');
+				//driver and type point to the same value
+				$this->driver = $config->get('database.0.type', 'pgsql');
+				$this->driver = $config->get('database.0.type', 'pgsql');
+				$this->type = $config->get('database.0.type', 'pgsql');
+				$this->host = $config->get('database.0.host', '127.0.0.1');
+				$this->port = $config->get('database.0.port', '5432');
+				$this->username = $config->get('database.0.username', 'fusionpbx');
+				$this->password = $config->get('database.0.password', 'fusionpbx');
+				$this->db_name = $config->get('database.0.name', 'fusionpbx');
+				$this->db_secure = $config->get('database.0.secure', '');
+				$this->db_cert_authority = $config->get('database.0.cert_authority', '');
+				$this->ssl_mode = $config->get('database.0.ssl_mode', '');
 
-					//save the reference to the single instance of the config to this object
-					$this->config = $config;
+				//save the reference to the single instance of the config to this object
+				$this->config = $config;
 
-					//connect to the database now
-					$this->connect();
+				//connect to the database now
+				$this->connect();
 
 				if (!isset($this->domain_uuid) && isset($_SESSION['domain_uuid'])) {
 					$this->domain_uuid = $_SESSION['domain_uuid'];
