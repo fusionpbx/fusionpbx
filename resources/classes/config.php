@@ -222,7 +222,9 @@ final class config {
 	 * @var string $config_path - full path to the config.php file
 	 */
 	public static function find(): string {
+		//define the file variable
 		$file = "";
+
 		//find the file
 		if (file_exists("/etc/fusionpbx/config.conf")) {
 			$file = "/etc/fusionpbx/config.conf";
@@ -236,8 +238,8 @@ final class config {
 		elseif (file_exists("/usr/local/etc/fusionpbx/config.php")) {
 			$file = "/usr/local/etc/fusionpbx/config.php";
 		}
-		// use the current web directory to find it as a last resort
 		elseif (file_exists(dirname(__DIR__, 2) . "/resources/config.php")) {
+			//use the current web directory to find it as a last resort
 			$file = "/var/www/fusionpbx/resources/config.php";
 		}
 		return $file;
