@@ -151,7 +151,7 @@
 		}
 	}
 
-//check for upgrade menu option first
+//check for the upgrade menu option first
 	if ($upgrade_type == 'menu') {
 		require __DIR__ . '/upgrade_menu.php';
 		exit();
@@ -290,7 +290,7 @@
 	}
 
 //upgrade optional apps
-	if ($upgrade_type == 'apps') {
+	if ($upgrade_type == 'repos') {
 
 		$app_list = git_find_repos($_SERVER["PROJECT_ROOT"]."/app");
 
