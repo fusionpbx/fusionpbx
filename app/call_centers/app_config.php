@@ -220,8 +220,8 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Custom name for call recording. Options: \${record_ext}, \${sip_from_user}, \${sip_to_user}, \${caller_id_number}, \${uuid}";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "4c939d81-7192-4d9a-b7c4-76695a005d4f";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "ranges";
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "call_center_queue_range";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "call_center";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "extension_range";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "6xxx";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
