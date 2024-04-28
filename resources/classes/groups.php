@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2016-2023
+	Portions created by the Initial Developer are Copyright (C) 2016-2024
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -48,6 +48,8 @@ if (!class_exists('groups')) {
 		private $toggle_field;
 		private $toggle_values;
 		private $location;
+		private $user_uuid;
+		private $domain_uuid;
 
 		/**
 		 * called when the object is created
@@ -65,7 +67,6 @@ if (!class_exists('groups')) {
 				$this->database = new database;
 			}
 
-
 			//set the application name and uuid
 			$this->database->app_name = $this->app_name;
 			$this->database->app_uuid = $this->app_uuid;
@@ -81,7 +82,7 @@ if (!class_exists('groups')) {
 			}
 
 			//get the list of groups the user is a member of
-			if (is_uuid($domain_uuid) && is_uuid($user_uuid)) {
+			if (!empty($domain_uuid) && !empty($user_uuid)) {
 				//get the groups and save them to the groups variable
 				$this->groups = $this->assigned();
 
