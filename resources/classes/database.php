@@ -272,7 +272,7 @@
 			 * Singleton type class
 			 * @var database
 			 */
-			private $database;
+			private static $database;
 
 			/**
 			 * Called when the object is created
@@ -3080,9 +3080,9 @@
 		 * @see database::__construct()
 		 * @see database::connect()
 		 */
-		public static function new() {
-			if (self::$database === null)
-				self::$database = new database();
+		public static function new(array $params = []) {
+			if (self::$database === null) {
+				self::$database = new database($params);
 				self::$database->connect();
 			}
 			return self::$database;
