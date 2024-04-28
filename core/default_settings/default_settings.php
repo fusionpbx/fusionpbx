@@ -124,7 +124,7 @@
 		$sql .= "lower(default_setting_category) = :default_setting_category ";
 		$parameters['default_setting_category'] = strtolower($default_setting_category);
 	}
-	$database = new database;
+	$database = database::new();
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 
 //get the list
@@ -148,7 +148,6 @@
 	}
 	$sql .= order_by($order_by, $order, 'default_setting_category, default_setting_subcategory, default_setting_order', 'asc');
 	//$sql .= limit_offset($rows_per_page, $offset ?? '');  //$offset is always null
-	$database = new database;
 	$default_settings = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 
@@ -173,7 +172,6 @@
 	$sql .= ") as quantity ";
 	$sql .= "from v_default_settings as d1 ";
 	$sql .= "order by d1.default_setting_category asc ";
-	$database = new database;
 	$rows = $database->select($sql, $parameters ?? null, 'all');
 	if (!empty($rows) && @sizeof($rows) != 0) {
 		foreach ($rows as $row) {
@@ -462,7 +460,6 @@
 				$sql = "select * from v_menus ";
 				$sql .= "where menu_uuid = :menu_uuid ";
 				$parameters['menu_uuid'] = $row['default_setting_value'];
-				$database = new database;
 				$sub_result = $database->select($sql, $parameters ?? null, 'all');
 				foreach ($sub_result as &$sub_row) {
 					echo $sub_row["menu_language"]." - ".$sub_row["menu_name"]."\n";

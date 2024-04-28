@@ -607,8 +607,7 @@ if (!class_exists('domains')) {
 
 			//get the variables
 				$config = new config;
-				$config_path = $config->find();
-				$config->get();
+				$config_path = $config->config_file;
 
 			//get the list of installed apps from the core and app directories (note: GLOB_BRACE doesn't work on some systems)
 				$config_list_1 = glob($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/*/*/app_config.php");
