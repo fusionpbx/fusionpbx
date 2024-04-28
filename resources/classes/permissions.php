@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2016 - 2023	All Rights Reserved.
+	Copyright (C) 2016 - 2024	All Rights Reserved.
 */
 
 /**
@@ -32,6 +32,7 @@ if (!class_exists('permissions')) {
 
 		private $database;
 		private $domain_uuid;
+		private $user_uuid;
 		private $groups;
 		private $permissions;
 
@@ -49,7 +50,7 @@ if (!class_exists('permissions')) {
 			}
 
 			//set the domain_uuid
-			if (is_uuid($domain_uuid)) {
+			if (!empty($domain_uuid) && is_uuid($domain_uuid)) {
 				$this->domain_uuid = $domain_uuid;
 			}
 			elseif (isset($_SESSION['domain_uuid']) && is_uuid($_SESSION['domain_uuid'])) {
@@ -57,7 +58,7 @@ if (!class_exists('permissions')) {
 			}
 
 			//set the user_uuid
-			if (is_uuid($user_uuid)) {
+			if (!empty($user_uuid) && is_uuid($user_uuid)) {
 				$this->user_uuid = $user_uuid;
 			}
 			elseif (isset($_SESSION['user_uuid']) && is_uuid($_SESSION['user_uuid'])) {
@@ -148,6 +149,9 @@ if (!class_exists('permissions')) {
 		 * @var array $groups
 		 */
 		public function assigned() {
+			//define the array
+			$parameter_names = [];
+
 			//prepare the parameters
 			$x = 0;
 			foreach ($this->groups as $field) {
