@@ -367,7 +367,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "f5650002-e150-438c-8983-1379cf2cd04f";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "ranges";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "extension";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "extension_range";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1xxx";
