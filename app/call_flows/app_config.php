@@ -94,8 +94,8 @@
 	//default settings
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "425b6aed-5039-490a-ba31-e49aa57b5902";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "ranges";
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "call_flow_range";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "call_flows";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "extension_range";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "30-59";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
