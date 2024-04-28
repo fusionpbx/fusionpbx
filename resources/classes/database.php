@@ -257,23 +257,60 @@
 			public $message;
 
 			/**
+			 * Config object used to get the database connection params
+			 * @var config
+			 */
+			private $config;
+
+			/**
+			 * SSL Mode used to connect to the database
+			 * @var string prefer or verify-ca. Default is 'prefer'
+			 */
+			public $ssl_mode;
+
+			/**
+			 * Singleton type class
+			 * @var database
+			 */
+			private $database;
+
+			/**
 			 * Called when the object is created
+			 * @param array $params Optional
 			 */
 			public function __construct(array $params = []) {
-				//set the domain_uuid
-				if (isset($params['domain_uuid']) && is_uuid($params['domain_uuid'])) {
-					$this->domain_uuid = $domain_uuid;
+				if (isset($params['config'])) {
+					$config = $params['config'];
 				}
-				elseif (isset($_SESSION['domain_uuid']) && is_uuid($_SESSION['domain_uuid'])) {
-					$this->domain_uuid = $_SESSION['domain_uuid'];
+				else {
+					$config = new config();
 				}
 
-				//set the user_uuid
-				if (isset($params['user_uuid']) && is_uuid($params['user_uuid'])) {
-					$this->user_uuid = $user_uuid;
+				//driver and type point to the same value
+				$this->driver = $config->get('database.0.type', 'pgsql');
+				$this->driver = $config->get('database.0.type', 'pgsql');
+				$this->type = $config->get('database.0.type', 'pgsql');
+				$this->host = $config->get('database.0.host', '127.0.0.1');
+				$this->port = $config->get('database.0.port', '5432');
+				$this->username = $config->get('database.0.username', 'fusionpbx');
+				$this->password = $config->get('database.0.password', 'fusionpbx');
+				$this->db_name = $config->get('database.0.name', 'fusionpbx');
+				$this->db_secure = $config->get('database.0.secure', '');
+				$this->db_cert_authority = $config->get('database.0.cert_authority', '');
+				$this->ssl_mode = $config->get('database.0.ssl_mode', '');
+
+				//save the reference to the single instance of the config to this object
+				$this->config = $config;
+
+				//connect to the database now
+				$this->connect();
+
+				if (!isset($this->domain_uuid) && isset($_SESSION['domain_uuid'])) {
+					$this->domain_uuid = $_SESSION['domain_uuid'];
 				}
-				elseif (isset($_SESSION['user_uuid']) && is_uuid($_SESSION['user_uuid'])) {
-					$this->user_uuid = $_SESSION['user_uuid'];
+				//allow passed domain_uuid in the constructor to override the session domain
+				if (isset($params['domain_uuid'])) {
+					$this->domain_uuid = $params['domain_uuid'];
 				}
 			}
 
@@ -420,9 +457,6 @@
 			 */
 			public function connect() {
 
-				//includes files
-					require dirname(__DIR__, 2) . "/resources/require.php";
-
 				//get the database connection settings
 					//$db_type = $conf['database.0.type'];
 					//$db_host = $conf['database.0.host'];
@@ -523,7 +557,7 @@
 						if (!empty($this->host)) {
 							if (empty($this->port)) { $this->port = "5432"; }
 							if ($this->db_secure === true) {
-								$this->db = new PDO("pgsql:host=$this->host port=$this->port dbname=$this->db_name user=$this->username password=$this->password sslmode=verify-ca sslrootcert=$this->db_cert_authority");
+								$this->db = new PDO("pgsql:host=$this->host port=$this->port dbname=$this->db_name user=$this->username password=$this->password sslmode=$this->ssl_mode sslrootcert=$this->db_cert_authority");
 							}
 							else {
 								$this->db = new PDO("pgsql:host=$this->host port=$this->port dbname=$this->db_name user=$this->username password=$this->password");
@@ -669,8 +703,12 @@
 
 				//if unable to connect to the database
 				if (!$this->db) {
+					$backtrace = debug_backtrace();
 					echo "Connection Failed<br />\n";
 					echo "line number ".__line__."<br />\n";
+					echo "<pre>";
+					print_r($backtrace);
+					echo "</pre>";
 					exit;
 				}
 
@@ -3043,9 +3081,11 @@
 		 * @see database::connect()
 		 */
 		public static function new() {
-			$db = new database();
-			$db->connect();
-			return $db;
+			if (self::$database === null)
+				self::$database = new database();
+				self::$database->connect();
+			}
+			return self::$database;
 		}
 
 		} //class database
