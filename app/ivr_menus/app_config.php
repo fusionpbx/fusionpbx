@@ -219,8 +219,8 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Add answer to IVR Menu dialplan.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "4f38d1d6-0d7f-4793-bf37-670b19951500";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "ranges";
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "ivr_range";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "ivr_menu";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "extension_range";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "3xxx";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
