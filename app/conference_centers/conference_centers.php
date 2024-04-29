@@ -136,6 +136,12 @@
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);
 
+//update the array to show only the greeting file name
+	$x = 0;
+	foreach ($conference_centers as &$row) {
+		$row['conference_center_greeting'] = basename($row['conference_center_greeting'] ?? '');
+	}
+
 //include the header
 	$document['title'] = $text['title-conference_centers'];
 	require_once "resources/header.php";
@@ -236,7 +242,7 @@
 			}
 			echo "	<td><a href='".$list_row_url."' title=\"".$text['button-edit']."\">".escape($row['conference_center_name'])."</a>&nbsp;</td>\n";
 			echo "	<td>".escape($row['conference_center_extension'])."&nbsp;</td>\n";
-			echo "	<td>".escape(str_replace($_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/','',$row['conference_center_greeting']))."&nbsp;</td>\n";
+			echo "	<td>".escape($row['conference_center_greeting'])."&nbsp;</td>\n";
 			echo "	<td class='center'>".escape($row['conference_center_pin_length'])."&nbsp;</td>\n";
 			if (permission_exists('conference_center_edit')) {
 				echo "	<td class='no-link center'>\n";
