@@ -225,8 +225,8 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enable or disable the feature to add a range of extensions.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "b8fbc27a-e44d-4b27-879f-33ba50e24647";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "ranges";
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "ring_group_range";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "ring_group";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "extension_range";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "5xxx";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
