@@ -395,8 +395,8 @@
 
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "c73fa4f6-aed5-49a3-8726-4c1d94847302";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "ranges";
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "time_condition_range";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "time_conditions";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "extension_range";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "2xxx";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
