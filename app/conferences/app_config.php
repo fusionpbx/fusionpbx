@@ -103,8 +103,8 @@
 	//default settings
 		$y=0;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "dbc34323-28ca-45b2-a3e1-b74f8ed54b7c";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "ranges";
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "conference_range";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "conference";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "extension_range";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "8xxx";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
