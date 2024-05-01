@@ -330,10 +330,27 @@ if (!class_exists('xml_cdr')) {
 					return false;
 				}
 
+			//skip call detail records for calls blocked by call block
+				if (isset($xml->variables->call_block) && !empty($this->setting->get('call_block', 'save_call_detail_record'))) {
+					if ($xml->variables->call_block == 'true' && $this->setting->get('call_block', 'save_call_detail_record') == 'false') {
+						//delete the xml cdr file
+						if (!empty($this->setting->get('switch', 'log'))) {
+							$xml_cdr_dir = $this->setting->get('switch', 'log').'/xml_cdr';
+							if (file_exists($xml_cdr_dir.'/'.$this->file)) {
+								unlink($xml_cdr_dir.'/'.$this->file);
+							}
+						}
+
+						//return without saving
+						return false;
+					}
+				}
+
 			//check for duplicate call uuid's
 				$duplicate_uuid = false;
 				$uuid = urldecode($xml->variables->uuid);
 				if ($uuid != null && is_uuid($uuid)) {
+					//check for duplicates
 					$sql = "select count(xml_cdr_uuid) ";
 					$sql .= "from v_xml_cdr ";
 					$sql .= "where xml_cdr_uuid = :xml_cdr_uuid ";
@@ -350,6 +367,9 @@ if (!class_exists('xml_cdr')) {
 								unlink($xml_cdr_dir.'/'.$this->file);
 							}
 						}
+
+						//return without saving
+						return false;
 					}
 					unset($sql, $parameters);
 				}
@@ -364,7 +384,7 @@ if (!class_exists('xml_cdr')) {
 					$accountcode = urldecode($xml->variables->accountcode);
 				}
 
-			//process data if the call detail record is not a duplicate
+			//process call detail record data
 				if ($duplicate_uuid == false && is_uuid($uuid)) {
 
 					//get the caller ID from call flow caller profile

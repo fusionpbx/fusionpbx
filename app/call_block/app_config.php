@@ -39,6 +39,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "50";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Number of recent calls to show.";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "47914bd9-e1c0-4e3d-87e0-41f95d58ce98";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "call_block";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "save_call_detail_record";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Choose whether to save the call detail record when the call is blocked.";
 
 	//permission details
 		$y=0;
