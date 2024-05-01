@@ -44,7 +44,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "call_block";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "save_call_detail_record";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Choose whether to save the call detail record when the call is blocked.";
 
