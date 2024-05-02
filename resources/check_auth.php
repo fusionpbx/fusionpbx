@@ -76,7 +76,7 @@
 		unset($_SESSION['redirect_url']);
 
         //get the groups assigned to the user
-        if (!isset($_SESSION["groups"]) || count($_SESSION["groups"]) ==0){
+        if (!isset($_SESSION["groups"]) || !is_array($_SESSION["groups"]) || count($_SESSION["groups"]) == 0){
             $group = new groups;
             $group->session($_SESSION['user']['domain_uuid'], $_SESSION["user_uuid"]);
             
