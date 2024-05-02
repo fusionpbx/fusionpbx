@@ -279,6 +279,8 @@
 			 * @param array $params Optional
 			 */
 			public function __construct(array $params = []) {
+
+				//handle the config object
 				if (isset($params['config'])) {
 					$config = $params['config'];
 				}
@@ -305,9 +307,11 @@
 				//connect to the database now
 				$this->connect();
 
+				//use the session domain_uuid
 				if (!isset($this->domain_uuid) && isset($_SESSION['domain_uuid'])) {
 					$this->domain_uuid = $_SESSION['domain_uuid'];
 				}
+
 				//allow passed domain_uuid in the constructor to override the session domain
 				if (isset($params['domain_uuid'])) {
 					$this->domain_uuid = $params['domain_uuid'];
