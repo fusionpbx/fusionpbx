@@ -1174,7 +1174,6 @@ if (!class_exists('xml_cdr')) {
 						//clean up
 						unset($new_row);
 				}
-				$i++;
 			}
 
 			//format the times in the call flow array
@@ -1182,7 +1181,7 @@ if (!class_exists('xml_cdr')) {
 			foreach ($call_flow_array as $key => $row) {
 				foreach ($row["times"] as $name => $value) {
 					if ($value > 0) {
-						$call_flow_array[$i]["times"][$name.'stamp'] = date("Y-m-d H:i:s", (int) $value/1000000);
+						$call_flow_array[$i]["times"][$name.'stamp'] = date("Y-m-d H:i:s", round((float) $value / 1000000, 0));
 					}
 				}
 				$i++;
@@ -1265,10 +1264,16 @@ if (!class_exists('xml_cdr')) {
 					}
 
 					//valet park
-					if (!empty($row["caller_profile"]["destination_number"])
-						and (substr($row["caller_profile"]["destination_number"], 0, 4) == 'park'
-						or (substr($row["caller_profile"]["destination_number"], 0, 3) == '*59'
-						and strlen($row["caller_profile"]["destination_number"]) == 5))) {
+					if (
+						!empty($row["caller_profile"]["destination_number"])
+						&& (
+							substr($row["caller_profile"]["destination_number"], 0, 4) == 'park'
+							|| (
+								substr($row["caller_profile"]["destination_number"], 0, 3) == '*59'
+								&& strlen($row["caller_profile"]["destination_number"]) > 3
+							)
+						)
+						) {
 						//add items to the app array
 						$app['application'] = 'dialplans';
 						$app['uuid'] = '46ae6d82-bb83-46a3-901d-33d0724347dd';
@@ -1359,25 +1364,26 @@ if (!class_exists('xml_cdr')) {
 			$parameters['domain_uuid'] = $this->domain_uuid;
 			$destinations = $this->database->select($sql, $parameters, 'all');
 			if (!empty($destinations)) {
+				$i = 0;
 				foreach($destinations as $row) {
-					$destination_array['destinations'][$id]['application'] = 'destinations';
-					$destination_array['destinations'][$id]['destination_uuid'] = $row["destination_uuid"];
-					$destination_array['destinations'][$id]['uuid'] = $row["destination_uuid"];
-					$destination_array['destinations'][$id]['dialplan_uuid'] = $row["dialplan_uuid"];
-					$destination_array['destinations'][$id]['destination_type'] = $row["destination_type"];
-					$destination_array['destinations'][$id]['destination_prefix'] = $row["destination_prefix"];
-					$destination_array['destinations'][$id]['destination_number'] = $row["destination_number"];
-					$destination_array['destinations'][$id]['extension'] = $row["destination_prefix"] . $row["destination_number"];
-					$destination_array['destinations'][$id]['destination_trunk_prefix'] = $row["destination_trunk_prefix"];
-					$destination_array['destinations'][$id]['destination_area_code'] = $row["destination_area_code"];
-					$destination_array['destinations'][$id]['context'] = $row["destination_context"];
-					$destination_array['destinations'][$id]['label'] = $row["destination_description"];
-					$destination_array['destinations'][$id]['destination_enabled'] = $row["destination_enabled"];
-					$destination_array['destinations'][$id]['name'] = $row["destination_description"];
-					$destination_array['destinations'][$id]['description'] = $row["destination_description"];
-					//$destination_array[$id]['destination_caller_id_name'] = $row["destination_caller_id_name"];
-					//$destination_array[$id]['destination_caller_id_number'] = $row["destination_caller_id_number"];
-					$id++;
+					$destination_array['destinations'][$i]['application'] = 'destinations';
+					$destination_array['destinations'][$i]['destination_uuid'] = $row["destination_uuid"];
+					$destination_array['destinations'][$i]['uuid'] = $row["destination_uuid"];
+					$destination_array['destinations'][$i]['dialplan_uuid'] = $row["dialplan_uuid"];
+					$destination_array['destinations'][$i]['destination_type'] = $row["destination_type"];
+					$destination_array['destinations'][$i]['destination_prefix'] = $row["destination_prefix"];
+					$destination_array['destinations'][$i]['destination_number'] = $row["destination_number"];
+					$destination_array['destinations'][$i]['extension'] = $row["destination_prefix"] . $row["destination_number"];
+					$destination_array['destinations'][$i]['destination_trunk_prefix'] = $row["destination_trunk_prefix"];
+					$destination_array['destinations'][$i]['destination_area_code'] = $row["destination_area_code"];
+					$destination_array['destinations'][$i]['context'] = $row["destination_context"];
+					$destination_array['destinations'][$i]['label'] = $row["destination_description"];
+					$destination_array['destinations'][$i]['destination_enabled'] = $row["destination_enabled"];
+					$destination_array['destinations'][$i]['name'] = $row["destination_description"];
+					$destination_array['destinations'][$i]['description'] = $row["destination_description"];
+					//$destination_array[$i]['destination_caller_id_name'] = $row["destination_caller_id_name"];
+					//$destination_array[$i]['destination_caller_id_number'] = $row["destination_caller_id_number"];
+					$i++;
 				}
 			}
 			unset($sql, $parameters, $row);
@@ -1389,13 +1395,13 @@ if (!class_exists('xml_cdr')) {
 						foreach ($row as $key => $value) {
 							//find matching destinations
 							if ($application == 'destinations') {
-								if ('+'.$value['destination_prefix'].$value['destination_number'] == $detail_action
-									or $value['destination_prefix'].$value['destination_number'] == $detail_action
-									or $value['destination_number'] == $detail_action
-									or $value['destination_trunk_prefix'].$value['destination_number'] == $detail_action
-									or '+'.$value['destination_prefix'].$value['destination_area_code'].$value['destination_number'] == $detail_action
-									or $value['destination_prefix'].$value['destination_area_code'].$value['destination_number'] == $detail_action
-									or $value['destination_area_code'].$value['destination_number'] == $detail_action) {
+								if ('+'.($value['destination_prefix'] ?? '').$value['destination_number'] == $detail_action
+									|| ($value['destination_prefix'] ?? '').$value['destination_number'] == $detail_action
+									|| $value['destination_number'] == $detail_action
+									|| ($value['destination_trunk_prefix'] ?? '').$value['destination_number'] == $detail_action
+									|| '+'.($value['destination_prefix'] ?? '').($value['destination_area_code'] ?? '').$value['destination_number'] == $detail_action
+									|| ($value['destination_prefix'] ?? '').($value['destination_area_code'] ?? '').$value['destination_number'] == $detail_action
+									|| ($value['destination_area_code'] ?? '').$value['destination_number'] == $detail_action) {
 										if (file_exists($_SERVER["PROJECT_ROOT"]."/app/".$application."/app_languages.php")) {
 											$value['application'] = $application;
 											return $value;
@@ -1404,7 +1410,7 @@ if (!class_exists('xml_cdr')) {
 							}
 
 							//find all other matching actions
-							if (!empty($value['extension']) && $value['extension'] == $detail_action or preg_match('/^'.preg_quote($value['extension']).'$/', $detail_action)) {
+							if (!empty($value['extension']) && $value['extension'] == $detail_action || preg_match('/^'.preg_quote($value['extension'] ?? '').'$/', $detail_action)) {
 								if (file_exists($_SERVER["PROJECT_ROOT"]."/app/".$application."/app_languages.php")) {
 									$value['application'] = $application;
 									return $value;
