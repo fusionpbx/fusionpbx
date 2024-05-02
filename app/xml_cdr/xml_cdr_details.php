@@ -60,19 +60,19 @@
 	$database = new database;
 	$row = $database->select($sql, $parameters, 'row');
 	if (!empty($row) && is_array($row) && @sizeof($row) != 0) {
-		$caller_id_name = trim($row["caller_id_name"]);
-		$caller_id_number = trim($row["caller_id_number"]);
-		$caller_destination = trim($row["caller_destination"]);
-		$destination_number = trim($row["destination_number"]);
-		$duration = trim($row["billsec"]);
-		$missed_call = trim($row["missed_call"]);
-		$start_stamp = trim($row["start_stamp"]);
+		$caller_id_name = trim($row["caller_id_name"] ?? '');
+		$caller_id_number = trim($row["caller_id_number"] ?? '');
+		$caller_destination = trim($row["caller_destination"] ?? '');
+		$destination_number = trim($row["destination_number"] ?? '');
+		$duration = trim($row["billsec"] ?? '');
+		$missed_call = trim($row["missed_call"] ?? '');
+		$start_stamp = trim($row["start_stamp"] ?? '');
 		$xml_string = trim($row["xml"] ?? '');
-		$json_string = trim($row["json"]);
-		$call_flow = trim($row["call_flow"]);
-		$direction = trim($row["direction"]);
-		$call_direction = trim($row["direction"]);
-		$status = trim($row["status"]);
+		$json_string = trim($row["json"] ?? '');
+		$call_flow = trim($row["call_flow"] ?? '');
+		$direction = trim($row["direction"] ?? '');
+		$call_direction = trim($row["direction"] ?? '');
+		$status = trim($row["status"] ?? '');
 	}
 	unset($sql, $parameters, $row);
 
@@ -91,7 +91,7 @@
 		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
 		if (!empty($row) && is_array($row) && @sizeof($row) != 0) {
-			$json_string = trim($row["json"]);
+			$json_string = trim($row["json"] ?? '');
 		}
 		unset($sql, $parameters, $row);
 	}
@@ -111,7 +111,7 @@
 		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
 		if (!empty($row) && is_array($row) && @sizeof($row) != 0) {
-			$call_flow = trim($row["call_flow"]);
+			$call_flow = trim($row["call_flow"] ?? '');
 		}
 		unset($sql, $parameters, $row);
 	}
@@ -200,9 +200,9 @@
 	$remote_media_ip = urldecode($array["variables"]["remote_media_ip"] ?? '');
 	$hangup_cause = urldecode($array["variables"]["hangup_cause"]);
 	$hangup_cause_q850 = urldecode($array["variables"]["hangup_cause_q850"]);
-	$network_address = urldecode((string)$array["variables"]["network_address"]);
-	$outbound_caller_id_name = urldecode($array["variables"]["outbound_caller_id_name"]);
-	$outbound_caller_id_number = urldecode($array["variables"]["outbound_caller_id_number"]);
+	$network_address = urldecode($array["variables"]["network_address"] ?? '');
+	$outbound_caller_id_name = urldecode($array["variables"]["outbound_caller_id_name"] ?? '');
+	$outbound_caller_id_number = urldecode($array["variables"]["outbound_caller_id_number"] ?? '');
 
 //set the time zone
 	if (isset($_SESSION['domain']['time_zone']['name'])) {
