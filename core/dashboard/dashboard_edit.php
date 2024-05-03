@@ -70,6 +70,8 @@
 		$dashboard_url = $_POST["dashboard_url"] ?? '';
 		$dashboard_groups = $_POST["dashboard_groups"] ?? '';
 		$dashboard_chart_type = $_POST["dashboard_chart_type"] ?? '';
+		$dashboard_background_color_edge = $_POST["dashboard_background_color_edge"] ?? '';
+		$dashboard_background_color_center = $_POST["dashboard_background_color_center"] ?? '';
 		$dashboard_heading_background_color = $_POST["dashboard_heading_background_color"] ?? '';
 		$dashboard_heading_text_color = $_POST["dashboard_heading_text_color"] ?? '';
 		$dashboard_number_background_color = $_POST["dashboard_number_background_color"] ?? '';
@@ -175,6 +177,8 @@
 			$array['dashboard'][0]['dashboard_icon'] = $dashboard_icon;
 			$array['dashboard'][0]['dashboard_url'] = $dashboard_url;
 			$array['dashboard'][0]['dashboard_chart_type'] = $dashboard_chart_type;
+			$array['dashboard'][0]['dashboard_background_color_edge'] = $dashboard_background_color_edge;
+			$array['dashboard'][0]['dashboard_background_color_center'] = $dashboard_background_color_center;
 			$array['dashboard'][0]['dashboard_heading_background_color'] = $dashboard_heading_background_color;
 			$array['dashboard'][0]['dashboard_heading_text_color'] = $dashboard_heading_text_color;
 			$array['dashboard'][0]['dashboard_number_background_color'] = $dashboard_number_background_color;
@@ -227,6 +231,8 @@
 		$sql .= " dashboard_icon, ";
 		$sql .= " dashboard_url, ";
 		$sql .= " dashboard_chart_type, ";
+		$sql .= " dashboard_background_color_edge, ";
+		$sql .= " dashboard_background_color_center, ";
 		$sql .= " dashboard_heading_background_color, ";
 		$sql .= " dashboard_heading_text_color, ";
 		$sql .= " dashboard_number_background_color, ";
@@ -247,6 +253,8 @@
 			$dashboard_icon = $row["dashboard_icon"];
 			$dashboard_url = $row["dashboard_url"];
 			$dashboard_chart_type = $row["dashboard_chart_type"];
+			$dashboard_background_color_edge = $row["dashboard_background_color_edge"];
+			$dashboard_background_color_center = $row["dashboard_background_color_center"];
 			$dashboard_heading_background_color = $row["dashboard_heading_background_color"];
 			$dashboard_heading_text_color = $row["dashboard_heading_text_color"];
 			$dashboard_number_background_color = $row["dashboard_number_background_color"];
@@ -383,7 +391,7 @@
 	echo $text['description-dashboard_path']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
-	
+
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-link']."\n";
@@ -394,7 +402,7 @@
 	echo $text['description-dashboard_url']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
-	
+
 	echo "	<tr>";
 	echo "		<td class='vncell'>".$text['label-icon']."</td>";
 	echo "		<td class='vtable' style='vertical-align: bottom;'>";
@@ -515,6 +523,28 @@
 		echo "</td>\n";
 		echo "</tr>\n";
 	}
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo $text['label-dashboard_background_color_edge']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' style='position: relative;' align='left'>\n";
+	echo "	<input type='text' class='formfld colorpicker' name='dashboard_background_color_edge' value='".escape($dashboard_background_color_edge ?? '#edf1f7')."'>\n";
+	echo "<br />\n";
+	echo $text['description-dashboard_background_color_edge']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo $text['label-dashboard_background_color_center']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' style='position: relative;' align='left'>\n";
+	echo "	<input type='text' class='formfld colorpicker' name='dashboard_background_color_center' value='".escape($dashboard_background_color_center ?? '#f9fbfe')."'>\n";
+	echo "<br />\n";
+	echo $text['description-dashboard_background_color_center']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
