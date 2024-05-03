@@ -276,11 +276,7 @@
 			$route_array = outbound_route_to_bridge($domain_uuid, $fax_prefix . $fax_number, $channel_variables);
 			if (count($route_array) == 0) {
 				//send the internal call to the registered extension
-				$fax_uri = "user/".$fax_number."@".$domain_name;
-			}
-			else {
-				//send the external call
-				$fax_uri = $route_array[0];
+				$route_array[] = "user/".$fax_number."@".$domain_name;
 			}
 
 		//set the origination uuid
