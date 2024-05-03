@@ -18,7 +18,7 @@
 	$text = $language->get($_SESSION['domain']['language']['code'], 'app/system');
 
 //system cpu status
-	echo "<div class='hud_box'>\n";
+	echo "<div class='hud_box' style='".$hud_box_style."'>\n";
 
 //set the row style class names
 	$c = 0;
@@ -50,10 +50,11 @@
 
 	}
 
-//add half doughnut chart
-	echo "<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 20px; background-color: ".$dashboard_number_background_color.";' ".($dashboard_details_state == "disabled" ?: "onclick=\"$('#hud_system_cpu_status_details').slideToggle('fast');\"").">\n";
-	echo "	<span class='hud_title' style='background-color: ".$dashboard_heading_background_color."; color: ".$dashboard_heading_text_color.";' onclick=\"document.location.href='".PROJECT_PATH."/app/system/system.php'\">".$text['label-cpu_usage']."</span>\n";
+//show the content
+	echo "<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 20px; background-color: ".$dashboard_number_background_color.";' ".($dashboard_details_state == "disabled" ?: "onclick=\"$('#hud_system_cpu_status_details').slideToggle('fast'); toggle_grid_row_end('".$dashboard_name."')\"").">\n";
+	echo "	<span class='hud_title' style='".$hud_title_style."' onclick=\"document.location.href='".PROJECT_PATH."/app/system/system.php'\">".$text['label-cpu_usage']."</span>\n";
 
+//add half doughnut chart
 	if ($dashboard_chart_type == "doughnut") {
 		?>
 		<div style='width: 175px; height: 143px;'><canvas id='system_cpu_status_chart'></canvas></div>
@@ -117,55 +118,56 @@
 	}
 	echo "</div>\n";
 
-//show the content
-	echo "<div class='hud_details hud_box' id='hud_system_cpu_status_details'>";
-	echo "<table class='tr_hover' width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
-	echo "<tr>\n";
-	echo "<th class='hud_heading' width='50%'>".$text['label-name']."</th>\n";
-	echo "<th class='hud_heading' style='text-align: right;'>".$text['label-value']."</th>\n";
-	echo "</tr>\n";
+	if ($dashboard_details_state != 'disabled') {
+		echo "<div class='hud_details hud_box' id='hud_system_cpu_status_details'>";
+		echo "<table class='tr_hover' width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
+		echo "<tr>\n";
+		echo "<th class='hud_heading' width='50%'>".$text['label-name']."</th>\n";
+		echo "<th class='hud_heading' style='text-align: right;'>".$text['label-value']."</th>\n";
+		echo "</tr>\n";
 
-	if (PHP_OS == 'FreeBSD' || PHP_OS == 'Linux') {
-		if (!empty($percent_cpu)) {
+		if (PHP_OS == 'FreeBSD' || PHP_OS == 'Linux') {
+			if (!empty($percent_cpu)) {
+				echo "<tr class='tr_link_void'>\n";
+				echo "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-cpu_usage']."</td>\n";
+				echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'>".$percent_cpu."%</td>\n";
+				echo "</tr>\n";
+				$c = ($c) ? 0 : 1;
+			}
+
+			if (!empty($cpu_cores)) {
+				echo "<tr class='tr_link_void'>\n";
+				echo "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-cpu_cores']."</td>\n";
+				echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'>".$cpu_cores."</td>\n";
+				echo "</tr>\n";
+				$c = ($c) ? 0 : 1;
+			}
+
 			echo "<tr class='tr_link_void'>\n";
-			echo "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-cpu_usage']."</td>\n";
-			echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'>".$percent_cpu."%</td>\n";
+			echo "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-load_average']." (1)</td>\n";
+			echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'>".$load_average[0]."</td>\n";
+			echo "</tr>\n";
+			$c = ($c) ? 0 : 1;
+
+			echo "<tr class='tr_link_void'>\n";
+			echo "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-load_average']." (5)</td>\n";
+			echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'>".$load_average[1]."</td>\n";
+			echo "</tr>\n";
+			$c = ($c) ? 0 : 1;
+
+			echo "<tr class='tr_link_void'>\n";
+			echo "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-load_average']." (15)</td>\n";
+			echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'>".$load_average[2]."</td>\n";
 			echo "</tr>\n";
 			$c = ($c) ? 0 : 1;
 		}
 
-		if (!empty($cpu_cores)) {
-			echo "<tr class='tr_link_void'>\n";
-			echo "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-cpu_cores']."</td>\n";
-			echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'>".$cpu_cores."</td>\n";
-			echo "</tr>\n";
-			$c = ($c) ? 0 : 1;
-		}
+		echo "</table>\n";
+		echo "</div>";
+		//$n++;
 
-		echo "<tr class='tr_link_void'>\n";
-		echo "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-load_average']." (1)</td>\n";
-		echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'>".$load_average[0]."</td>\n";
-		echo "</tr>\n";
-		$c = ($c) ? 0 : 1;
-
-		echo "<tr class='tr_link_void'>\n";
-		echo "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-load_average']." (5)</td>\n";
-		echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'>".$load_average[1]."</td>\n";
-		echo "</tr>\n";
-		$c = ($c) ? 0 : 1;
-
-		echo "<tr class='tr_link_void'>\n";
-		echo "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-load_average']." (15)</td>\n";
-		echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'>".$load_average[2]."</td>\n";
-		echo "</tr>\n";
-		$c = ($c) ? 0 : 1;
+		echo "<span class='hud_expander' onclick=\"$('#hud_system_cpu_status_details').slideToggle('fast'); toggle_grid_row_end('".$dashboard_name."')\"><span class='fas fa-ellipsis-h'></span></span>";
 	}
-
-	echo "</table>\n";
-	echo "</div>";
-	//$n++;
-
-	echo "<span class='hud_expander' onclick=\"$('#hud_system_cpu_status_details').slideToggle('fast');\"><span class='fas fa-ellipsis-h'></span></span>";
 	echo "</div>\n";
 
 ?>
