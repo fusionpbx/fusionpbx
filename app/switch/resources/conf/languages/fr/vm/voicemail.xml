@@ -48,9 +48,6 @@
         <action function="play-file" data="voicemail/vm-save_recording.wav"/>
         <action function="play-file" data="voicemail/vm-press.wav"/>
         <action function="say" data="$2" method="pronounced" type="name_spelled"/>
-        <action function="play-file" data="voicemail/vm-message_envelope.wav"/>
-        <action function="play-file" data="voicemail/vm-press.wav"/>
-        <action function="say" data="$3" method="pronounced" type="name_spelled"/>
         <action function="play-file" data="voicemail/vm-return_call.wav"/>
         <action function="play-file" data="voicemail/vm-press.wav"/>
         <action function="say" data="$4" method="pronounced" type="name_spelled"/>

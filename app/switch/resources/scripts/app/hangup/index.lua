@@ -91,7 +91,7 @@
 					subject = subject:gsub("${caller_id_name}", caller_id_name);
 					subject = subject:gsub("${caller_id_number}", caller_id_number);
 					subject = subject:gsub("${sip_to_user}", sip_to_user);
-					subject = subject:gsub("${dialed_user}", dialed_user);
+					subject = subject:gsub("${dialed_user}", sip_to_user);
 					subject = trim(subject);
 					subject = '=?utf-8?B?'..base64.encode(subject)..'?=';
 
@@ -99,7 +99,7 @@
 					body = body:gsub("${caller_id_name}", caller_id_name);
 					body = body:gsub("${caller_id_number}", caller_id_number);
 					body = body:gsub("${sip_to_user}", sip_to_user);
-					body = body:gsub("${dialed_user}", dialed_user);
+					body = body:gsub("${dialed_user}", sip_to_user);
 					body = body:gsub(" ", "&nbsp;");
 					body = body:gsub("%s+", "");
 					body = body:gsub("&nbsp;", " ");
@@ -129,13 +129,12 @@
 	originate_disposition = env:getHeader("originate_disposition");
 	originate_causes = env:getHeader("originate_causes");
 	uuid = env:getHeader("uuid");
-	domain_uuid = env:getHeader("domain_uuid");
-	domain_name = env:getHeader("domain_name");
-	sip_to_user = env:getHeader("sip_to_user");
-	dialed_user = env:getHeader("dialed_user");
-	missed_call_app = env:getHeader("missed_call_app");
-	missed_call_data = env:getHeader("missed_call_data");
-	call_direction = env:getHeader("call_direction");
+	domain_uuid = env:getHeader("domain_uuid") or '';
+	domain_name = env:getHeader("domain_name") or '';
+	sip_to_user = env:getHeader("sip_to_user") or '';
+	missed_call_app = env:getHeader("missed_call_app") or '';
+	missed_call_data = env:getHeader("missed_call_data") or '';
+	call_direction = env:getHeader("call_direction") or '';
 
 -- get the Caller ID
 	caller_id_name = env:getHeader("caller_id_name");

@@ -18,7 +18,7 @@
 	$text = $language->get($_SESSION['domain']['language']['code'], 'core/user_settings');
 
 //used for missed and recent calls
-	$theme_image_path = $_SERVER["DOCUMENT_ROOT"]."/themes/".$_SESSION['domain']['template']['name']."/images/"; 
+	$theme_image_path = $_SERVER["DOCUMENT_ROOT"]."/themes/".$_SESSION['domain']['template']['name']."/images/";
 
 //voicemail
 	echo "<div class='hud_box'>\n";
@@ -52,51 +52,58 @@
 		}
 	}
 
-//add doughnut chart
-	?>
-	<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 20px;' onclick="$('#hud_voicemail_details').slideToggle('fast');">
-		<canvas id='new_messages_chart' width='175px' height='175px'></canvas>
-	</div>
+	echo "<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 13px; background-color: ".$dashboard_number_background_color.";' ".($dashboard_details_state == "disabled" ?: "onclick=\"$('#hud_voicemail_details').slideToggle('fast');\"").">\n";
+	echo "	<span class='hud_title' style='background-color: ".$dashboard_heading_background_color."; color: ".$dashboard_heading_text_color.";' onclick=\"document.location.href='".PROJECT_PATH."/app/voicemails/voicemail_messages.php'\">".$text['label-new_messages']."</span>";
 
-	<script>
-		const new_messages_chart = new Chart(
-			document.getElementById('new_messages_chart').getContext('2d'),
-			{
-				type: 'doughnut',
-				data: {
-					datasets: [{
-						data: ['<?php echo $messages['new']; ?>', 0.00001],
-						backgroundColor: [
-							'<?php echo $_SESSION['dashboard']['new_messages_chart_main_background_color']['text']; ?>', 
-							'<?php echo $_SESSION['dashboard']['new_messages_chart_sub_background_color']['text']; ?>'
-						],
-						borderColor: '<?php echo $_SESSION['dashboard']['new_messages_chart_border_color']['text']; ?>',
-						borderWidth: '<?php echo $_SESSION['dashboard']['new_messages_chart_border_width']['text']; ?>',
-						cutout: chart_cutout
-					}]
-				},
-				options: {
-					responsive: true,
-					maintainAspectRatio: false,
-					plugins: {
-						chart_counter: {
-							chart_text: '<?php echo $messages['new']; ?>',
-						},
-						legend: {
-							display: false
-						},
-						title: {
-							display: true,
-							text: '<?php echo $text['label-new_messages']; ?>',
-							fontFamily: chart_text_font
+	if ($dashboard_chart_type == "doughnut") {
+		//add doughnut chart
+		?>
+		<div style='width: 150px; height: 150px; padding-top: 7px;'><canvas id='new_messages_chart'></canvas></div>
+
+		<script>
+			const new_messages_chart = new Chart(
+				document.getElementById('new_messages_chart').getContext('2d'),
+				{
+					type: 'doughnut',
+					data: {
+						datasets: [{
+							data: ['<?php echo $messages['new']; ?>', 0.00001],
+							backgroundColor: [
+								'<?php echo $_SESSION['dashboard']['new_messages_chart_main_background_color']['text']; ?>',
+								'<?php echo $_SESSION['dashboard']['new_messages_chart_sub_background_color']['text']; ?>'
+							],
+							borderColor: '<?php echo $_SESSION['dashboard']['new_messages_chart_border_color']['text']; ?>',
+							borderWidth: '<?php echo $_SESSION['dashboard']['new_messages_chart_border_width']['text']; ?>',
+						}]
+					},
+					options: {
+						plugins: {
+							chart_number: {
+								text: '<?php echo $messages['new']; ?>'
+							}
 						}
-					}
-				},
-				plugins: [chart_counter],
-			}
-		);
-	</script>
-	<?php
+					},
+					plugins: [{
+						id: 'chart_number',
+						beforeDraw(chart, args, options){
+							const {ctx, chartArea: {top, right, bottom, left, width, height} } = chart;
+							ctx.font = chart_text_size + ' ' + chart_text_font;
+							ctx.textBaseline = 'middle';
+							ctx.textAlign = 'center';
+							ctx.fillStyle = '<?php echo $dashboard_number_text_color; ?>';
+							ctx.fillText(options.text, width / 2, top + (height / 2));
+							ctx.save();
+						}
+					}]
+				}
+			);
+		</script>
+		<?php
+	}
+	if ($dashboard_chart_type == "none") {
+		echo "	<span class='hud_stat' style='padding-bottom: 27px; color: ".$dashboard_number_text_color.";'>".$messages['new']."</span>";
+	}
+	echo "</div>\n";
 
 	echo "<div class='hud_details hud_box' id='hud_voicemail_details'>";
 	if (sizeof($voicemails) > 0) {
@@ -130,7 +137,7 @@
 	}
 	echo "</div>";
 	//$n++;
-	
+
 	echo "<span class='hud_expander' onclick=\"$('#hud_voicemail_details').slideToggle('fast');\"><span class='fas fa-ellipsis-h'></span></span>";
 	echo "</div>\n";
 

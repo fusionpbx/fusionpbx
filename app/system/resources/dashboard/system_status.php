@@ -35,59 +35,69 @@
 		}
 
 		if (!empty($percent_disk_usage)) {
+
 			//add half doughnut chart
-			?>
-			<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 20px;' onclick="$('#hud_system_status_details').slideToggle('fast');">
-				<div><canvas id='system_status_chart' width='175px' height='175px'></canvas></div>
-			</div>
+			echo "	<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 20px; background-color: ".$dashboard_number_background_color.";' ".($dashboard_details_state == "disabled" ?: "onclick=\"$('#hud_system_status_details').slideToggle('fast');\"").">\n";
+			echo "		<span class='hud_title' style='background-color: ".$dashboard_heading_background_color."; color: ".$dashboard_heading_text_color.";' onclick=\"document.location.href='".PROJECT_PATH."/app/system/system.php'\">".$text['label-disk_usage']."</span>\n";
 
-			<script>
-				var system_status_chart_background_color;
-				if ('<?php echo $percent_disk_usage; ?>' <= 80) {
-					system_status_chart_background_color = '<?php echo $_SESSION['dashboard']['disk_usage_chart_main_background_color'][0]; ?>';
-				} else if ('<?php echo $percent_disk_usage; ?>' <= 90) {
-					system_status_chart_background_color = '<?php echo $_SESSION['dashboard']['disk_usage_chart_main_background_color'][1]; ?>';
-				} else if ('<?php echo $percent_disk_usage; ?>' > 90) {
-					system_status_chart_background_color = '<?php echo $_SESSION['dashboard']['disk_usage_chart_main_background_color'][2]; ?>';
-				}
+			if ($dashboard_chart_type == "doughnut") {
+				?>
+				<div style='width: 175px; height: 143px;'><canvas id='system_status_chart'></canvas></div>
 
-				const system_status_chart = new Chart(
-					document.getElementById('system_status_chart').getContext('2d'),
-					{
-						type: 'doughnut',
-						data: {
-							datasets: [{
-								data: ['<?php echo $percent_disk_usage; ?>', 100 - '<?php echo $percent_disk_usage; ?>'],
-								backgroundColor: [system_status_chart_background_color,
-								'<?php echo $_SESSION['dashboard']['disk_usage_chart_sub_background_color']['text']; ?>'],
-								borderColor: '<?php echo $_SESSION['dashboard']['disk_usage_chart_border_color']['text']; ?>',
-								borderWidth: '<?php echo $_SESSION['dashboard']['disk_usage_chart_border_width']['text']; ?>',
-								cutout: chart_cutout
-							}]
-						},
-						options: {
-							responsive: true,
-							maintainAspectRatio: false,
-							circumference: 180,
-							rotation: 270,
-							plugins: {
-								chart_counter_2: {
-									chart_text: '<?php echo $percent_disk_usage; ?>'
-								},
-								legend: {
-									display: false
-								},
-								title: {
-									display: true,
-									text: '<?php echo $text['label-disk_usage']; ?>'
+				<script>
+					const system_status_chart = new Chart(
+						document.getElementById('system_status_chart').getContext('2d'),
+						{
+							type: 'doughnut',
+							data: {
+								datasets: [{
+									data: ['<?php echo $percent_disk_usage; ?>', 100 - '<?php echo $percent_disk_usage; ?>'],
+									backgroundColor: [
+										<?php
+										if ($percent_disk_usage <= 80) {
+											echo "'".$_SESSION['dashboard']['disk_usage_chart_main_background_color'][0]."',\n";
+										} else if ($percent_disk_usage <= 90) {
+											echo "'".$_SESSION['dashboard']['disk_usage_chart_main_background_color'][1]."',\n";
+										} else if ($percent_disk_usage > 90) {
+											echo "'".$_SESSION['dashboard']['disk_usage_chart_main_background_color'][2]."',\n";
+										}
+										?>
+										'<?php echo $_SESSION['dashboard']['disk_usage_chart_sub_background_color']['text']; ?>'
+									],
+									borderColor: '<?php echo $_SESSION['dashboard']['disk_usage_chart_border_color']['text']; ?>',
+									borderWidth: '<?php echo $_SESSION['dashboard']['disk_usage_chart_border_width']['text']; ?>'
+								}]
+							},
+							options: {
+								circumference: 180,
+								rotation: 270,
+								plugins: {
+									chart_number_2: {
+										text: '<?php echo round($percent_disk_usage); ?>'
+									}
 								}
-							}
-						},
-						plugins: [chart_counter_2],
-					}
-				);
-			</script>
-			<?php
+							},
+							plugins: [{
+								id: 'chart_number_2',
+								beforeDraw(chart, args, options){
+									const {ctx, chartArea: {top, right, bottom, left, width, height} } = chart;
+									ctx.font = chart_text_size + ' ' + chart_text_font;
+									ctx.textBaseline = 'middle';
+									ctx.textAlign = 'center';
+									ctx.fillStyle = '<?php echo $dashboard_number_text_color; ?>';
+									ctx.fillText(options.text + '%', width / 2, top + (height / 2) + 35);
+									ctx.save();
+								}
+							}]
+						}
+					);
+				</script>
+				<?php
+			}
+			if ($dashboard_chart_type == "none") {
+				echo "	<span class='hud_stat' style='color: ".$dashboard_number_text_color.";'>".round($percent_disk_usage)."%</span>";
+			}
+			echo "	</div>\n";
 		}
 	}
 

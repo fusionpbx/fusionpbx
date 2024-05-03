@@ -18,7 +18,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2021-2023
+	Portions created by the Initial Developer are Copyright (C) 2021-2024
 	the Initial Developer. All Rights Reserved.
 */
 
@@ -41,7 +41,9 @@
 
 //set the defaults
 	$dashboard_name = '';
-	$dashboard_path = '';
+	$dashboard_path = 'core/dashboard/resources/dashboard/icon.php';
+	$dashboard_url = '';
+	$dashboard_icon = '';
 	$dashboard_groups = [];
 	$dashboard_column_span = '';
 	$dashboard_details_state = '';
@@ -64,7 +66,14 @@
 	if (!empty($_POST)) {
 		$dashboard_name = $_POST["dashboard_name"] ?? '';
 		$dashboard_path = $_POST["dashboard_path"] ?? '';
+		$dashboard_icon = $_POST["dashboard_icon"] ?? '';
+		$dashboard_url = $_POST["dashboard_url"] ?? '';
 		$dashboard_groups = $_POST["dashboard_groups"] ?? '';
+		$dashboard_chart_type = $_POST["dashboard_chart_type"] ?? '';
+		$dashboard_heading_background_color = $_POST["dashboard_heading_background_color"] ?? '';
+		$dashboard_heading_text_color = $_POST["dashboard_heading_text_color"] ?? '';
+		$dashboard_number_background_color = $_POST["dashboard_number_background_color"] ?? '';
+		$dashboard_number_text_color = $_POST["dashboard_number_text_color"] ?? '';
 		$dashboard_column_span = $_POST["dashboard_column_span"] ?? '';
 		$dashboard_details_state = $_POST["dashboard_details_state"] ?? '';
 		$dashboard_order = $_POST["dashboard_order"] ?? '';
@@ -163,6 +172,13 @@
 			$array['dashboard'][0]['dashboard_uuid'] = $dashboard_uuid;
 			$array['dashboard'][0]['dashboard_name'] = $dashboard_name;
 			$array['dashboard'][0]['dashboard_path'] = $dashboard_path;
+			$array['dashboard'][0]['dashboard_icon'] = $dashboard_icon;
+			$array['dashboard'][0]['dashboard_url'] = $dashboard_url;
+			$array['dashboard'][0]['dashboard_chart_type'] = $dashboard_chart_type;
+			$array['dashboard'][0]['dashboard_heading_background_color'] = $dashboard_heading_background_color;
+			$array['dashboard'][0]['dashboard_heading_text_color'] = $dashboard_heading_text_color;
+			$array['dashboard'][0]['dashboard_number_background_color'] = $dashboard_number_background_color;
+			$array['dashboard'][0]['dashboard_number_text_color'] = $dashboard_number_text_color;
 			$array['dashboard'][0]['dashboard_column_span'] = $dashboard_column_span;
 			$array['dashboard'][0]['dashboard_details_state'] = $dashboard_details_state;
 			$array['dashboard'][0]['dashboard_order'] = $dashboard_order;
@@ -208,6 +224,13 @@
 		$sql .= " dashboard_uuid, ";
 		$sql .= " dashboard_name, ";
 		$sql .= " dashboard_path, ";
+		$sql .= " dashboard_icon, ";
+		$sql .= " dashboard_url, ";
+		$sql .= " dashboard_chart_type, ";
+		$sql .= " dashboard_heading_background_color, ";
+		$sql .= " dashboard_heading_text_color, ";
+		$sql .= " dashboard_number_background_color, ";
+		$sql .= " dashboard_number_text_color, ";
 		$sql .= " dashboard_column_span, ";
 		$sql .= " dashboard_details_state, ";
 		$sql .= " dashboard_order, ";
@@ -221,6 +244,13 @@
 		if (is_array($row) && @sizeof($row) != 0) {
 			$dashboard_name = $row["dashboard_name"];
 			$dashboard_path = $row["dashboard_path"];
+			$dashboard_icon = $row["dashboard_icon"];
+			$dashboard_url = $row["dashboard_url"];
+			$dashboard_chart_type = $row["dashboard_chart_type"];
+			$dashboard_heading_background_color = $row["dashboard_heading_background_color"];
+			$dashboard_heading_text_color = $row["dashboard_heading_text_color"];
+			$dashboard_number_background_color = $row["dashboard_number_background_color"];
+			$dashboard_number_text_color = $row["dashboard_number_text_color"];
 			$dashboard_column_span = $row["dashboard_column_span"];
 			$dashboard_details_state = $row["dashboard_details_state"];
 			$dashboard_order = $row["dashboard_order"];
@@ -353,6 +383,60 @@
 	echo $text['description-dashboard_path']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
+	
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-link']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' style='position: relative;' align='left'>\n";
+	echo "	<input class='formfld' type='text' name='dashboard_url' maxlength='255' value='".escape($dashboard_url)."'>\n";
+	echo "<br />\n";
+	echo $text['description-dashboard_url']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+	
+	echo "	<tr>";
+	echo "		<td class='vncell'>".$text['label-icon']."</td>";
+	echo "		<td class='vtable' style='vertical-align: bottom;'>";
+	if (file_exists($_SERVER["PROJECT_ROOT"].'/resources/fontawesome/fas_icons.php')) {
+		include 'resources/fontawesome/fas_icons.php';
+		if (is_array($font_awesome_solid_icons) && @sizeof($font_awesome_solid_icons) != 0) {
+			// rebuild and sort array
+			foreach ($font_awesome_solid_icons as $i => $icon_class) {
+				$icon_label = str_replace('fa-', '', $icon_class);
+				$icon_label = str_replace('-', ' ', $icon_label);
+				$icon_label = ucwords($icon_label);
+				$icons[$icon_class] = $icon_label;
+			}
+			asort($icons, SORT_STRING);
+			echo "<table cellpadding='0' cellspacing='0' border='0'>\n";
+			echo "	<tr>\n";
+			echo "		<td>\n";
+			echo "			<select class='formfld' name='dashboard_icon' id='dashboard_icon' onchange=\"$('#icons').slideUp(); $('#grid_icon').fadeIn();\">\n";
+			echo "				<option value=''></option>\n";
+			foreach ($icons as $icon_class => $icon_label) {
+				$selected = ($dashboard_icon == $icon_class) ? "selected" : null;
+				echo "			<option value='".escape($icon_class)."' ".$selected.">".escape($icon_label)."</option>\n";
+			}
+			echo "			</select>\n";
+			echo "		</td>\n";
+			echo "		<td style='padding: 0 0 0 5px;'>\n";
+			echo "			<button id='grid_icon' type='button' class='btn btn-default list_control_icon' style='font-size: 15px; padding-top: 1px; padding-left: 3px;' onclick=\"$('#icons').fadeIn(); $(this).fadeOut();\"><span class='fas fa-th'></span></button>";
+			echo "		</td>\n";
+			echo "	</tr>\n";
+			echo "</table>\n";
+			echo "<div id='icons' style='clear: both; display: none; margin-top: 8px; padding-top: 10px; color: #000; max-height: 400px; overflow: auto;'>\n";
+			foreach ($icons as $icon_class => $icon_label) {
+				echo "<span class='fas ".escape($icon_class)." fa-fw' style='font-size: 24px; float: left; margin: 0 8px 8px 0; cursor: pointer; opacity: 0.3;' title='".escape($icon_label)."' onclick=\"$('#dashboard_icon').val('".escape($icon_class)."'); $('#icons').slideUp(); $('#grid_icon').fadeIn();\" onmouseover=\"this.style.opacity='1';\" onmouseout=\"this.style.opacity='0.3';\"></span>\n";
+			}
+			echo "</div>";
+		}
+	}
+	else {
+		echo "		<input type='text' class='formfld' name='dashboard_icon' value='".escape($dashboard_icon)."'>";
+	}
+	echo "		</td>";
+	echo "	</tr>";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
@@ -393,6 +477,86 @@
 	}
 	echo "<br />\n";
 	echo $text['description-dashboard_groups']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	if ($dashboard_path == "app/voicemails/resources/dashboard/voicemails.php" ||
+		$dashboard_path == "app/xml_cdr/resources/dashboard/missed_calls.php" ||
+		$dashboard_path == "app/xml_cdr/resources/dashboard/recent_calls.php" ||
+		$dashboard_path == "app/system/resources/dashboard/system_status.php" ||
+		$dashboard_path == "app/system/resources/dashboard/system_cpu_status.php" ||
+		$dashboard_path == "app/system/resources/dashboard/system_counts.php" ||
+		$dashboard_path == "app/switch/resources/dashboard/switch_status.php" ||
+		$dashboard_path == "app/domain_limits/resources/dashboard/domain_limits.php" ||
+		$dashboard_path == "app/call_forward/resources/dashboard/call_forward.php" ||
+		$dashboard_path == "app/ring_groups/resources/dashboard/ring_group_forward.php" ||
+		$dashboard_path == "app/extensions/resources/dashboard/caller_id.php") {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo $text['label-dashboard_chart_type']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' style='position: relative;' align='left'>\n";
+		echo "	<select name='dashboard_chart_type' class='formfld'>\n";
+		if ($dashboard_chart_type == "doughnut") {
+			echo "		<option value='doughnut' selected='selected'>".$text['label-doughnut']."</option>\n";
+		}
+		else {
+			echo "		<option value='doughnut'>".$text['label-doughnut']."</option>\n";
+		}
+		if ($dashboard_chart_type == "none") {
+			echo "		<option value='none' selected='selected'>".$text['label-none']."</option>\n";
+		}
+		else {
+			echo "		<option value='none'>".$text['label-none']."</option>\n";
+		}
+		echo "	</select>\n";
+		echo "<br />\n";
+		echo $text['description-dashboard_chart_type']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo $text['label-dashboard_heading_background_color']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' style='position: relative;' align='left'>\n";
+	echo "	<input type='text' class='formfld colorpicker' name='dashboard_heading_background_color' value='".escape($dashboard_heading_background_color)."'>\n";
+	echo "<br />\n";
+	echo $text['description-dashboard_heading_background_color']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo $text['label-dashboard_heading_text_color']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' style='position: relative;' align='left'>\n";
+	echo "	<input type='text' class='formfld colorpicker' name='dashboard_heading_text_color' value='".escape($dashboard_heading_text_color)."'>\n";
+	echo "<br />\n";
+	echo $text['description-dashboard_heading_text_color']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo $text['label-dashboard_number_background_color']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' style='position: relative;' align='left'>\n";
+	echo "	<input type='text' class='formfld colorpicker' name='dashboard_number_background_color' value='".escape($dashboard_number_background_color)."'>\n";
+	echo "<br />\n";
+	echo $text['description-dashboard_number_background_color']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo $text['label-dashboard_number_text_color']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' style='position: relative;' align='left'>\n";
+	echo "	<input type='text' class='formfld colorpicker' name='dashboard_number_text_color' value='".escape($dashboard_number_text_color)."'>\n";
+	echo "<br />\n";
+	echo $text['description-dashboard_number_text_color']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -437,6 +601,12 @@
 	}
 	else {
 		echo "		<option value='hidden'>".$text['option-hidden']."</option>\n";
+	}
+	if ($dashboard_details_state == "disabled" || empty($dashboard_details_state)) {
+		echo "		<option value='disabled' selected='selected'>".$text['label-disabled']."</option>\n";
+	}
+	else {
+		echo "		<option value='disabled'>".$text['label-disabled']."</option>\n";
 	}
 	echo "	</select>\n";
 	echo "<br />\n";

@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2023
+	Portions created by the Initial Developer are Copyright (C) 2008-2024
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -133,12 +133,32 @@
 			require_once("core/groups/permissions_default.php");
 			message::add($text['message-upgrade_permissions'], null, $message_timeout);
 		}
-		
+
 		//redirect the browser
 		header("Location: ".PROJECT_PATH."/core/upgrade/index.php");
 		exit;
 
 	}
+
+//find optional apps with repos
+	$updateable_repos = git_find_repos($_SERVER["PROJECT_ROOT"]."/app");
+	if (!empty($updateable_repos) && is_array($updateable_repos) && @sizeof($updateable_repos) != 0) {
+		foreach ($updateable_repos as $app_path => $repo) {
+			$x = 0;
+			include $app_path.'/app_config.php';
+			$updateable_repos[$app_path]['app'] = $repo[0];
+			$updateable_repos[$app_path]['name'] = $apps[$x]['name'];
+			$updateable_repos[$app_path]['uuid'] = $apps[$x]['uuid'];
+			$updateable_repos[$app_path]['version'] = $apps[$x]['version'];
+			$updateable_repos[$app_path]['description'] = $apps[$x]['description'][$_SESSION['domain']['language']['code']];
+			unset($apps, $updateable_repos[$app_path][0]);
+		}
+	}
+
+//count upgradeable repos including + main repo
+	$repos_count = 0;
+	if (is_array($updateable_repos)) { $repos_count = @sizeof($updateable_repos); }
+	$repos_count++;
 
 //adjust color and initialize step counter
 	$step = 1;
@@ -160,27 +180,46 @@
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
-
 	echo $text['description-upgrade'];
 	echo "<br /><br />";
 
 	if (permission_exists("upgrade_source") && !is_dir("/usr/share/examples/fusionpbx") && is_writeable($_SERVER["PROJECT_ROOT"]."/.git")) {
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-		echo "<tr onclick=\"document.getElementById('do_source').checked = !document.getElementById('do_source').checked; (!document.getElementById('do_source').checked ? $('.do_optional_app').prop('checked', false) : null); $('#tr_optional_apps').slideToggle('fast');\">\n";
+		echo "<tr onclick=\"$('#tr_applications').slideToggle('fast');\">\n";
 		echo "	<td width='30%' class='vncellreq' style='vertical-align: middle;'>\n";
 		echo "		<div style='".$step_container_style."'><span style='".$step_number_style."'>".$step."</span></div>";
 		echo "		<div class='mt-1'>".$text['label-upgrade_source']."</div>\n";
 		echo "	</td>\n";
 		echo "	<td width='70%' class='vtable' style='height: 50px; cursor: pointer;'>\n";
-		echo "		<input type='checkbox' name='action[upgrade_source]' id='do_source' value='1' onclick=\"event.stopPropagation(); $('#tr_optional_apps').slideToggle('fast'); (!document.getElementById('do_source').checked ? $('.do_optional_app').prop('checked', false) : null);\"> &nbsp;".$text['description-upgrade_source']."<br />\n";
+		echo "		<div style='float: left; clear: both;'>\n";
+		echo "			<input type='checkbox' id='view_source_code_options' onclick=\"event.stopPropagation(); if (!$(this).prop('checked')) { $('#do_source').prop('checked', false); $('.do_optional_app').prop('checked', false); } else { $('#tr_applications').slideDown('fast'); $('#do_source').prop('checked', true); $('.do_optional_app').prop('checked', true); }\">\n";
+		echo "		</div>\n";
+		echo "		<div style='overflow: hidden;'>\n";
+		echo "			<span onclick=\"event.stopPropagation(); $('#tr_applications').slideToggle('fast');\">&nbsp;&nbsp;".$text['description-update_all_source_files']." (".$repos_count.")</span>\n";
+		echo "		</div>\n";
+		echo "	</td>\n";
+		echo "</tr>\n";
+		echo "</table>\n";
+
+		echo "<div id='tr_applications' style='display: none;'>\n";
+
+		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+		echo "<tr onclick=\"if (document.getElementById('do_source')) { document.getElementById('do_source').checked = !document.getElementById('do_source').checked; if (document.getElementById('do_source').checked == false) { document.getElementById('view_source_code_options').checked = false; } }\">\n";
+		echo "	<td width='30%' class='vncell' style='vertical-align: middle;'>\n";
+		echo "		".(isset($_SESSION['theme']['title']['text'])  ?$_SESSION['theme']['title']['text'] : 'FusionPBX')."\n";
+		echo "	</td>\n";
+		echo "	<td width='70%' class='vtable' style='height: 50px; cursor: pointer;'>\n";
+		echo "		<input type='checkbox' name='action[upgrade_source]' id='do_source' value='1' onclick=\"event.stopPropagation(); if (this.checked == false) { document.getElementById('view_source_code_options').checked = false; }\">\n";
+		echo "		&nbsp;".$text['description-upgrade_source']."<br />\n";
 		//show current git version info
 		chdir($_SERVER["PROJECT_ROOT"]);
 		exec("git rev-parse --abbrev-ref HEAD 2>&1", $git_current_branch, $branch_return_value);
 		$git_current_branch = $git_current_branch[0];
 		exec("git log --pretty=format:'%H' -n 1 2>&1", $git_current_commit, $commit_return_value);
 		$git_current_commit = $git_current_commit[0];
+
 		if (!is_numeric($git_current_branch)) {
-			echo "	<span style='font-weight: 600;'>".software::version()."</span>&nbsp;\n";
+			echo "	<span style='font-weight: 600;'>".software::version()."</span>\n";
 		}
 		if ($branch_return_value == 0 && $commit_return_value == 0) {
 			echo "	<a href='https://github.com/fusionpbx/fusionpbx/compare/".$git_current_commit."...".$git_current_branch."' target='_blank' title='".$git_current_commit."' onclick=\"event.stopPropagation();\"><i>".$git_current_branch."</i></a>";
@@ -189,36 +228,21 @@
 		echo "</tr>\n";
 		echo "</table>\n";
 
-		//find and show optional apps with repos
-		$updateable_repos = git_find_repos($_SERVER["PROJECT_ROOT"]."/app");
-		if (!empty($updateable_repos) && is_array($updateable_repos) && @sizeof($updateable_repos) != 0) {
-			foreach ($updateable_repos as $app_path => $repo) {
-				$x = 0;
-				include $app_path.'/app_config.php';
-				$updateable_repos[$app_path]['app'] = $repo[0];
-				$updateable_repos[$app_path]['name'] = $apps[$x]['name'];
-				$updateable_repos[$app_path]['uuid'] = $apps[$x]['uuid'];
-				$updateable_repos[$app_path]['version'] = $apps[$x]['version'];
-				$updateable_repos[$app_path]['description'] = $apps[$x]['description'][$_SESSION['domain']['language']['code']];
-				unset($apps, $updateable_repos[$app_path][0]);
-			}
-		}
-		echo "<div id='tr_optional_apps' style='display: none;'>\n";
 		foreach ($updateable_repos as $repo => $app) {
 			$repo_info = git_repo_info($repo);
 			$pull_method = substr($repo_info['url'], 0, 4) == 'http' ? 'http' : 'ssh';
 			if (!$repo_info) { continue; }
 			echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-			echo "<tr onclick=\"if (document.getElementById('do_".$app['app']."')) { document.getElementById('do_".$app['app']."').checked = !document.getElementById('do_".$app['app']."').checked; }\">\n";
+			echo "<tr onclick=\"if (document.getElementById('do_".$app['app']."')) { document.getElementById('do_".$app['app']."').checked = !document.getElementById('do_".$app['app']."').checked; if (document.getElementById('do_".$app['app']."').checked == false) { document.getElementById('view_source_code_options').checked = false; } }\">\n";
 			echo "	<td width='30%' class='vncell' style='vertical-align: middle;'>\n";
 			echo "		".$app['name']."\n";
 			echo "	</td>\n";
 			echo "	<td width='70%' class='vtable' style='height: 50px; cursor: ".($pull_method == 'http' ? "pointer;'" : "help;' title=\"".$text['message-upgrade_manually'].": ".$repo_info['url']."\"").">\n";
 			if ($pull_method == 'http') {
-				echo "	<input type='checkbox' name='action[optional_apps][]' class='do_optional_app' id='do_".$app['app']."' value='".$app['app']."' onclick=\"event.stopPropagation();\"> &nbsp;".$app['description']."<br />\n";
+				echo "	<input type='checkbox' name='action[optional_apps][]' class='do_optional_app' id='do_".$app['app']."' value='".$app['app']."' onclick=\"event.stopPropagation(); if (this.checked == false) { document.getElementById('view_source_code_options').checked = false; }\"> &nbsp;".$app['description']."<br />\n";
 			}
 			else {
-				echo "	<i class='fas fa-ban mr-3' style='opacity: 0.4;'></i> &nbsp;".$app['description']."<br>\n";
+				echo "	<i class='fas fa-ban mr-3' style='opacity: 0.3; margin: 0 1px;'></i> ".$app['description']."<br>\n";
 			}
 			echo "		<span style='font-weight: 600;'>".$app['version']."</span>&nbsp;&nbsp;<i><a href='".str_replace(['git@','.com:'],['https://','.com/'], $repo_info['url'])."/compare/".$repo_info['commit']."...".$repo_info['branch']." 'target='_blank' title='".$repo_info['commit']."'>".$repo_info['branch']."</i></a>\n";
 			echo "	</td>\n";
@@ -226,6 +250,7 @@
 			echo "</table>\n";
 		}
 		echo "</div>\n";
+
 		$step++;
 	}
 

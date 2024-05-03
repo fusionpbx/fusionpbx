@@ -635,7 +635,7 @@
 	echo "		</td>";
 	echo "	</tr>";
 
-	if (if_group("superadmin") || if_group("admin")) {
+	if (permission_exists('conference_room_edit')) {
 		echo "	<tr>";
 		echo "		<td class='vncell' valign='top'>".$text['label-users']."</td>";
 		echo "		<td class='vtable' align='left'>";

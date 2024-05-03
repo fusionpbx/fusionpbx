@@ -426,7 +426,8 @@
 					$cache = new cache;
 					$cache->delete("dialplan:".$_SESSION["context"]);
 					$cache->delete("configuration:ivr.conf:".$ivr_menu_uuid);
-					//get all ivr parent menus
+
+				//get all ivr parent menus
 					$sql = "with recursive ivr_menus as ( ";
 					$sql .="	select ivr_menu_parent_uuid ";
 					$sql .="	 from v_ivr_menus ";

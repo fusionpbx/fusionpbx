@@ -33,6 +33,11 @@
 	$language = new text;
 	$text = $language->get();
 
+//create a single database object
+	$database = new database;
+	$database->app_name = 'users';
+	$database->app_uuid = '112124b3-95c2-5352-7e9d-d14c0b88f207';
+
 //get user uuid
 	if (!empty($_REQUEST["id"]) && ((is_uuid($_REQUEST["id"]) && permission_exists('user_edit')) || (is_uuid($_REQUEST["id"]) && $_REQUEST["id"] == $_SESSION['user_uuid']))) {
 		$user_uuid = $_REQUEST["id"];
@@ -54,7 +59,6 @@
 		$sql .= "from v_users ";
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-		$database = new database;
 		$num_rows = $database->select($sql, $parameters, 'column');
 		unset($sql, $parameters);
 
@@ -87,9 +91,6 @@
 			$p = new permissions;
 			$p->add('user_group_delete', 'temp');
 
-			$database = new database;
-			$database->app_name = 'users';
-			$database->app_uuid = '112124b3-95c2-5352-7e9d-d14c0b88f207';
 			$database->delete($array);
 			unset($array);
 
@@ -154,6 +155,22 @@
 				exit;
 			}
 
+		//validate the user status
+			switch ($user_status) {
+				case "Available" :
+					break;
+				case "Available (On Demand)" :
+					break;
+				case "On Break" :
+					break;
+				case "Do Not Disturb" :
+					break;
+				case "Logged Out" :
+					break;
+				default :
+					$user_status = '';
+			}
+
 		//check required values
 			if (empty($username)) {
 				$invalid[] = $text['label-username'];
@@ -183,7 +200,6 @@
 					$parameters['domain_uuid'] = $domain_uuid;
 				}
 				$parameters['username'] = $username;
-				$database = new database;
 				$num_rows = $database->select($sql, $parameters, 'column');
 				if ($num_rows > 0) {
 					message::add($text['message-username_exists'], 'negative', 7500);
@@ -260,7 +276,6 @@
 			$sql .= "and user_setting_subcategory = 'language' ";
 			$sql .= "and user_uuid = :user_uuid ";
 			$parameters['user_uuid'] = $user_uuid;
-			$database = new database;
 			$row = $database->select($sql, $parameters, 'row');
 			if (!empty($user_language) && (empty($row) || (!empty($row['user_setting_uuid']) && !is_uuid($row['user_setting_uuid'])))) {
 				//add user setting to array for insert
@@ -283,9 +298,6 @@
 					$p = new permissions;
 					$p->add('user_setting_delete', 'temp');
 
-					$database = new database;
-					$database->app_name = 'users';
-					$database->app_uuid = '112124b3-95c2-5352-7e9d-d14c0b88f207';
 					$database->delete($array_delete);
 					unset($array_delete);
 
@@ -312,7 +324,6 @@
 			$sql .= "and user_setting_subcategory = 'time_zone' ";
 			$sql .= "and user_uuid = :user_uuid ";
 			$parameters['user_uuid'] = $user_uuid;
-			$database = new database;
 			$row = $database->select($sql, $parameters, 'row');
 			if (!empty($user_time_zone) && (empty($row) || (!empty($row['user_setting_uuid']) && !is_uuid($row['user_setting_uuid'])))) {
 				//add user setting to array for insert
@@ -335,9 +346,6 @@
 					$p = new permissions;
 					$p->add('user_setting_delete', 'temp');
 
-					$database = new database;
-					$database->app_name = 'users';
-					$database->app_uuid = '112124b3-95c2-5352-7e9d-d14c0b88f207';
 					$database->delete($array_delete);
 					unset($array_delete);
 
@@ -365,7 +373,6 @@
 				$sql .= "and user_setting_subcategory = 'key' ";
 				$sql .= "and user_uuid = :user_uuid ";
 				$parameters['user_uuid'] = $user_uuid;
-				$database = new database;
 				$row = $database->select($sql, $parameters, 'row');
 				if (!empty($message_key) && (empty($row) || (!empty($row['user_setting_uuid']) && !is_uuid($row['user_setting_uuid'])))) {
 					//add user setting to array for insert
@@ -388,9 +395,6 @@
 						$p = new permissions;
 						$p->add('user_setting_delete', 'temp');
 
-						$database = new database;
-						$database->app_name = 'users';
-						$database->app_uuid = '112124b3-95c2-5352-7e9d-d14c0b88f207';
 						$database->delete($array_delete);
 						unset($array_delete);
 
@@ -424,7 +428,6 @@
 				$sql .= "and group_uuid = :group_uuid ";
 				$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 				$parameters['group_uuid'] = $group_uuid;
-				$database = new database;
 				$row = $database->select($sql, $parameters, 'row');
 				if ($row['group_level'] <= $_SESSION['user']['group_level']) {
 					$array['user_groups'][$n]['user_group_uuid'] = uuid();
@@ -443,7 +446,6 @@
 					$sql = "select user_group_uuid from v_user_groups ";
 					$sql .= "where user_uuid = :user_uuid ";
 					$parameters['user_uuid'] = $user_uuid;
-					$database = new database;
 					$result = $database->select($sql, $parameters, 'all');
 					if (is_array($result)) {
 						foreach ($result as $row) {
@@ -458,7 +460,6 @@
 					$sql = "select user_setting_uuid from v_user_settings ";
 					$sql .= "where user_uuid = :user_uuid ";
 					$parameters['user_uuid'] = $user_uuid;
-					$database = new database;
 					$result = $database->select($sql, $parameters);
 					if (is_array($result)) {
 						foreach ($result as $row) {
@@ -478,7 +479,6 @@
 					$sql .= ") ";
 					$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 					$parameters['user_uuid'] = $user_uuid;
-					$database = new database;
 					$database->execute($sql, $parameters);
 					unset($sql, $parameters);
 			}
@@ -547,9 +547,6 @@
 			$p->add('user_group_add', 'temp');
 
 		//save the data
-			$database = new database;
-			$database->app_name = 'users';
-			$database->app_uuid = '112124b3-95c2-5352-7e9d-d14c0b88f207';
 			$database->save($array);
 			//$message = $database->message;
 
@@ -567,7 +564,6 @@
 					$sql .= "and user_uuid = :user_uuid ";
 					$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 					$parameters['user_uuid'] = $user_uuid;
-					$database = new database;
 					$call_center_agent_uuid = $database->select($sql, $parameters, 'column');
 					unset($sql, $parameters);
 
@@ -616,7 +612,6 @@
 					$parameters['domain_uuid'] = $domain_uuid;
 				}
 				$parameters['user_uuid'] = $user_uuid;
-				$database = new database;
 				$row = $database->select($sql, $parameters, 'row');
 				if (is_array($row) && sizeof($row) > 0) {
 					$domain_uuid = $row["domain_uuid"];
@@ -644,7 +639,6 @@
 				$sql .= "where user_uuid = :user_uuid ";
 				$sql .= "and user_setting_enabled = 'true' ";
 				$parameters['user_uuid'] = $user_uuid;
-				$database = new database;
 				$result = $database->select($sql, $parameters, 'all');
 				if (is_array($result)) {
 					foreach($result as $row) {
@@ -810,7 +804,6 @@
 	echo "		<option value=''></option>\n";
 	//get all language codes from database
 	$sql = "select * from v_languages order by language asc ";
-	$database = new database;
 	$languages = $database->select($sql, null, 'all');
 	if (!empty($languages) && is_array($languages) && sizeof($languages) != 0) {
 		foreach ($languages as $row) {
@@ -867,8 +860,7 @@
 		echo "		".$text['label-status']."\n";
 		echo "	</td>\n";
 		echo "	<td class=\"vtable\">\n";
-		$cmd = "'".PROJECT_PATH."/app/calls_active/v_calls_exec.php?cmd=callcenter_config+agent+set+status+".escape($username)."@".$_SESSION['domains'][$domain_uuid]['domain_name']."+'+this.value";
-		echo "		<select id='user_status' name='user_status' class='formfld' style='' onchange=\"send_cmd($cmd);\">\n";
+		echo "		<select id='user_status' name='user_status' class='formfld' style=''>\n";
 		echo "			<option value=''></option>\n";
 		echo "			<option value='Available' ".(($user_status == "Available") ? "selected='selected'" : null).">".$text['option-available']."</option>\n";
 		echo "			<option value='Available (On Demand)' ".(($user_status == "Available (On Demand)") ? "selected='selected'" : null).">".$text['option-available_on_demand']."</option>\n";
@@ -915,7 +907,6 @@
 		$sql .= "lower(c.contact_name_given) asc, ";
 		$sql .= "lower(c.contact_nickname) asc ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-		$database = new database;
 		$contacts = $database->select($sql, $parameters, 'all');
 		unset($parameters);
 		echo "<select name=\"contact_uuid\" id=\"contact_uuid\" class=\"formfld\">\n";
@@ -976,7 +967,6 @@
 		$sql .= "	g.group_name asc ";
 		$parameters['domain_uuid'] = $domain_uuid;
 		$parameters['user_uuid'] = $user_uuid;
-		$database = new database;
 		$user_groups = $database->select($sql, $parameters, 'all');
 		if (is_array($user_groups)) {
 			echo "<table cellpadding='0' cellspacing='0' border='0'>\n";
@@ -1008,7 +998,6 @@
 		}
 		$sql .= "order by domain_uuid desc, group_name asc ";
 		$parameters['domain_uuid'] = $domain_uuid;
-		$database = new database;
 		$groups = $database->select($sql, $parameters, 'all');
 		if (is_array($groups)) {
 			if (isset($assigned_groups)) { echo "<br />\n"; }
@@ -1092,7 +1081,7 @@
 					document.getElementById('api_key').style.display = 'inline';
 					document.getElementById('button-api_key_hide').style.display = 'inline';
 					document.getElementById('button-api_key_view').style.display = 'none';"]);
-				
+
 			echo button::create(['type'=>'button',
 				'label'=>$text['button-hide'],
 				'id'=>'button-api_key_hide',

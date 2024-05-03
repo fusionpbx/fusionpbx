@@ -39,7 +39,7 @@
 
 //add the settings object
 	$settings = new settings(["domain_uuid" => $_SESSION['domain_uuid'], "user_uuid" => $_SESSION['user_uuid']]);
-	$speech_enabled = $settings->get('ai', 'speech_enabled');
+	$speech_enabled = $settings->get('speech', 'enabled');
 
 //set additional variables
 	$action = $_REQUEST["action"] ?? '';
@@ -502,7 +502,7 @@
 		foreach ($recordings as $row) {
 			//playback progress bar
 			if (permission_exists('recording_play')) {
-				echo "<tr class='list-row' id='recording_progress_bar_".escape($row['recording_uuid'])."' onclick=\"recording_play('".escape($row['voicemail_greeting_uuid'])."')\" style='display: none;'><td id='playback_progress_bar_background_".escape($row['recording_uuid'])."' class='playback_progress_bar_background' style='padding: 0; border: none;' colspan='".$col_count."'><span class='playback_progress_bar' id='recording_progress_".escape($row['recording_uuid'])."'></span></td><td class='description hide-sm-dn' style='border-bottom: none !important;'></td></tr>\n";
+				echo "<tr class='list-row' id='recording_progress_bar_".escape($row['recording_uuid'])."' onclick=\"recording_play('".escape($row['voicemail_greeting_uuid'] ?? '')."')\" style='display: none;'><td id='playback_progress_bar_background_".escape($row['recording_uuid'])."' class='playback_progress_bar_background' style='padding: 0; border: none;' colspan='".$col_count."'><span class='playback_progress_bar' id='recording_progress_".escape($row['recording_uuid'])."'></span></td><td class='description hide-sm-dn' style='border-bottom: none !important;'></td></tr>\n";
 				echo "<tr class='list-row' style='display: none;'><td></td></tr>\n"; // dummy row to maintain alternating background color
 			}
 			if (permission_exists('recording_edit')) {

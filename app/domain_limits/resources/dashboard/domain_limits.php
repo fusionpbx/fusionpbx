@@ -110,62 +110,73 @@
 				$hud_stat_title = $text['label-destinations'];
 			}
 
-		//doughnut chart
-			echo "<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 20px;' onclick=\"$('#hud_domain_limits_details').slideToggle('fast');\">\n";
-			echo "	<div style='width: 275px; height: 175px;'><canvas id='domain_limits_chart'></canvas></div>\n";
-			echo "</div>\n";
+			echo "	<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 13px; background-color: ".$dashboard_number_background_color.";' ".($dashboard_details_state == "disabled" ?: "onclick=\"$('#hud_domain_limits_details').slideToggle('fast');\"").">\n";
+			echo "		<span class='hud_title' style='background-color: ".$dashboard_heading_background_color."; color: ".$dashboard_heading_text_color.";'>".$text['label-domain_limits']."</span>\n";
 
-			echo "<script>\n";
-			echo "	const domain_limits_chart = new Chart(\n";
-			echo "		document.getElementById('domain_limits_chart').getContext('2d'),\n";
-			echo "		{\n";
-			echo "			type: 'doughnut',\n";
-			echo "			data: {\n";
-			echo "				labels: [\n";
-			echo "					'".$hud_stat_title.": ".$hud_stat_used."',\n";
-			echo "					'".$text['label-remaining'].": ".$hud_stat_remaining."',\n";
-			echo "					],\n";
-			echo "				datasets: [{\n";
-			echo "					data: [\n";
-			echo "						'".$hud_stat_used."',\n";
-			echo "						'".$hud_stat_remaining."',\n";
-			echo "						0.00001,\n";
-			echo "						],\n";
-			echo "					backgroundColor: [\n";
-			echo "						'".$_SESSION['dashboard']['domain_limits_chart_color_used']['text']."',\n";
-			echo "						'".$_SESSION['dashboard']['domain_limits_chart_color_remaining']['text']."',\n";
-			echo "					],\n";
-			echo "					borderColor: '".$_SESSION['dashboard']['domain_limits_chart_border_color']['text']."',\n";
-			echo "					borderWidth: '".$_SESSION['dashboard']['domain_limits_chart_border_width']['text']."',\n";
-			echo "					cutout: chart_cutout,\n";
-			echo "				}]\n";
-			echo "			},\n";
-			echo "			options: {\n";
-			echo "				responsive: true,\n";
-			echo "				maintainAspectRatio: false,\n";
-			echo "				plugins: {\n";
-			echo "					chart_counter: {\n";
-			echo "						chart_text: '".$hud_stat_used."'\n";
-			echo "					},\n";
-			echo "					legend: {\n";
-			echo "						position: 'right',\n";
-			echo "						reverse: false,\n";
-			echo "						labels: {\n";
-			echo "							usePointStyle: true,\n";
-			echo "							pointStyle: 'rect'\n";
-			echo "						}\n";
-			echo "					},\n";
-			echo "					title: {\n";
-			echo "						display: true,\n";
-			echo "						text: '".$text['label-domain_limits']."',\n";
-			echo "						fontFamily: chart_text_font\n";
-			echo "					}\n";
-			echo "				}\n";
-			echo "			},\n";
-			echo "			plugins: [chart_counter],\n";
-			echo "		}\n";
-			echo "	);\n";
-			echo "</script>\n";
+		//doughnut chart
+			if ($dashboard_chart_type == "doughnut") {
+				echo "<div style='width: 275px; height: 150px; padding-top: 7px;'><canvas id='domain_limits_chart'></canvas></div>\n";
+
+				echo "<script>\n";
+				echo "	const domain_limits_chart = new Chart(\n";
+				echo "		document.getElementById('domain_limits_chart').getContext('2d'),\n";
+				echo "		{\n";
+				echo "			type: 'doughnut',\n";
+				echo "			data: {\n";
+				echo "				labels: [\n";
+				echo "					'".$hud_stat_title.": ".$hud_stat_used."',\n";
+				echo "					'".$text['label-remaining'].": ".$hud_stat_remaining."',\n";
+				echo "					],\n";
+				echo "				datasets: [{\n";
+				echo "					data: [\n";
+				echo "						'".$hud_stat_used."',\n";
+				echo "						'".$hud_stat_remaining."',\n";
+				echo "						0.00001,\n";
+				echo "						],\n";
+				echo "					backgroundColor: [\n";
+				echo "						'".$_SESSION['dashboard']['domain_limits_chart_color_used']['text']."',\n";
+				echo "						'".$_SESSION['dashboard']['domain_limits_chart_color_remaining']['text']."',\n";
+				echo "					],\n";
+				echo "					borderColor: '".$_SESSION['dashboard']['domain_limits_chart_border_color']['text']."',\n";
+				echo "					borderWidth: '".$_SESSION['dashboard']['domain_limits_chart_border_width']['text']."',\n";
+				echo "				}]\n";
+				echo "			},\n";
+				echo "			options: {\n";
+				echo "				plugins: {\n";
+				echo "					chart_number: {\n";
+				echo "						text: '".$hud_stat_used."'\n";
+				echo "					},\n";
+				echo "					legend: {\n";
+				echo "						display: true,\n";
+				echo "						position: 'right',\n";
+				echo "						reverse: false,\n";
+				echo "						labels: {\n";
+				echo "							usePointStyle: true,\n";
+				echo "							pointStyle: 'rect'\n";
+				echo "						}\n";
+				echo "					}\n";
+				echo "				}\n";
+				echo "			},\n";
+				echo "			plugins: [{\n";
+				echo "				id: 'chart_number',\n";
+				echo "				beforeDraw(chart, args, options){\n";
+				echo "						const {ctx, chartArea: {top, right, bottom, left, width, height} } = chart;\n";
+				echo "						ctx.font = chart_text_size + ' ' + chart_text_font;\n";
+				echo "						ctx.textBaseline = 'middle';\n";
+				echo "						ctx.textAlign = 'center';\n";
+				echo "						ctx.fillStyle = '".$dashboard_number_text_color."';\n";
+				echo "						ctx.fillText(options.text, width / 2, top + (height / 2));\n";
+				echo "						ctx.save();\n";
+				echo "				}\n";
+				echo "			}]\n";
+				echo "		}\n";
+				echo "	);\n";
+				echo "</script>\n";
+			}
+			if ($dashboard_chart_type == "none") {
+				echo "	<span class='hud_stat' style='color: ".$dashboard_number_text_color."; padding-bottom: 27px;'>".$hud_stat_used."</span>";
+			}
+			echo "	</div>\n";
 
 		//details
 			echo "<div class='hud_details hud_box' id='hud_domain_limits_details'>";

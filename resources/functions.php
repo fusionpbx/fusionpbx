@@ -306,7 +306,7 @@
 			//set default false
 			$result = false;
 			//search for the permission
-			if (count($_SESSION["groups"]) > 0) {
+			if (isset($_SESSION['groups']) && count($_SESSION["groups"]) > 0) {
 				foreach ($_SESSION["groups"] as $row) {
 					if ($row['group_name'] == $group) {
 						$result = true;
@@ -324,7 +324,8 @@
 	if (!function_exists('permission_exists')) {
 
 		function permission_exists($permission_name, $operator = 'or') {
-			$permission = new permissions;
+			$database = database::new();
+			$permission = new permissions($database);
 			return $permission->exists($permission_name);
 		}
 
@@ -2362,6 +2363,7 @@ if (!function_exists('git_pull')) {
 		$update_status = false;
 
 		if (sizeof($response_source_update) == 0) {
+			chdir($cwd);
 			return array('result' => false, 'message' => null);
 		}
 

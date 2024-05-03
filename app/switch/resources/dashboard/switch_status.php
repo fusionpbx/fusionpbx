@@ -5,10 +5,10 @@
 
 //check permisions
 	require_once "resources/check_auth.php";
-	if (permission_exists("switch_version") 
-		|| permission_exists("switch_uptime") 
-		|| permission_exists("switch_channels") 
-		|| permission_exists("switch_registrations") 
+	if (permission_exists("switch_version")
+		|| permission_exists("switch_uptime")
+		|| permission_exists("switch_channels")
+		|| permission_exists("switch_registrations")
 		||  permission_exists("registration_all")) {
 		//access granted
 	}
@@ -76,48 +76,56 @@
 		$registrations = $registration->count();
 	}
 
-//add doughnut chart
-	?>
-	<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 20px;' onclick="$('#hud_switch_status_details').slideToggle('fast');">
-		<canvas id='switch_status_chart' width='175px' height='175px'></canvas>
-	</div>
+	echo "<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 13px; background-color: ".$dashboard_number_background_color.";' ".($dashboard_details_state == "disabled" ?: "onclick=\"$('#hud_switch_status_details').slideToggle('fast');\"").">\n";
+	echo "	<span class='hud_title' style='background-color: ".$dashboard_heading_background_color."; color: ".$dashboard_heading_text_color.";'>".$text['label-switch_status']."</span>\n";
 
-	<script>
-		const switch_status_chart = new Chart(
-			document.getElementById('switch_status_chart').getContext('2d'),
-			{
-				type: 'doughnut',
-				data: {
-					datasets: [{
-						data: ['<?php echo $registrations; ?>', 0.00001],
-						backgroundColor: ['<?php echo $_SESSION['dashboard']['switch_status_chart_main_background_color']['text']; ?>',
-						'<?php echo $_SESSION['dashboard']['switch_status_chart_sub_background_color']['text']; ?>'],
-						borderColor: '<?php echo $_SESSION['dashboard']['switch_status_chart_border_color']['text']; ?>',
-						borderWidth: '<?php echo $_SESSION['dashboard']['switch_status_chart_border_width']['text']; ?>',
-						cutout: chart_cutout
-					}]
-				},
-				options: {
-					responsive: true,
-					maintainAspectRatio: false,
-					plugins: {
-						chart_counter: {
-							chart_text: '<?php echo $registrations; ?>'
-						},
-						legend: {
-							display: false
-						},
-						title: {
-							display: true,
-							text: '<?php echo $text['label-switch_status']; ?>'
+	if ($dashboard_chart_type == "doughnut") {
+		//add doughnut chart
+		?>
+		<div style='height: 150px; padding-top: 7px;'><canvas id='switch_status_chart'></canvas></div>
+
+		<script>
+			const switch_status_chart = new Chart(
+				document.getElementById('switch_status_chart').getContext('2d'),
+				{
+					type: 'doughnut',
+					data: {
+						datasets: [{
+							data: ['<?php echo $registrations; ?>', 0.00001],
+							backgroundColor: ['<?php echo $_SESSION['dashboard']['switch_status_chart_main_background_color']['text']; ?>',
+							'<?php echo $_SESSION['dashboard']['switch_status_chart_sub_background_color']['text']; ?>'],
+							borderColor: '<?php echo $_SESSION['dashboard']['switch_status_chart_border_color']['text']; ?>',
+							borderWidth: '<?php echo $_SESSION['dashboard']['switch_status_chart_border_width']['text']; ?>'
+						}]
+					},
+					options: {
+						plugins: {
+							chart_number: {
+								text: '<?php echo $registrations; ?>'
+							}
 						}
-					}
-				},
-				plugins: [chart_counter],
-			}
-		);
-	</script>
-	<?php
+					},
+					plugins: [{
+						id: 'chart_number',
+						beforeDraw(chart, args, options){
+							const {ctx, chartArea: {top, right, bottom, left, width, height} } = chart;
+							ctx.font = chart_text_size + ' ' + chart_text_font;
+							ctx.textBaseline = 'middle';
+							ctx.textAlign = 'center';
+							ctx.fillStyle = '<?php echo $dashboard_number_text_color; ?>';
+							ctx.fillText(options.text, width / 2, top + (height / 2));
+							ctx.save();
+						}
+					}]
+				}
+			);
+		</script>
+		<?php
+	}
+	if ($dashboard_chart_type == "none") {
+		echo "	<span class='hud_stat' style='padding-bottom: 27px; color: ".$dashboard_number_text_color.";'>".$registrations."</span>";
+	}
+	echo "	</div>\n";
 
 //show the content
 	echo "<div class='hud_details hud_box' id='hud_switch_status_details'>";
