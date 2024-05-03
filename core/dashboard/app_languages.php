@@ -364,8 +364,8 @@ $text['label-dashboard_background_color_edge']['zh-cn'] = "";
 $text['label-dashboard_background_color_edge']['ja-jp'] = "";
 $text['label-dashboard_background_color_edge']['ko-kr'] = "";
 
-$text['description-dashboard_background_color_edge']['en-us'] = "Enter the edge gradient dashboard background color";
-$text['description-dashboard_background_color_edge']['en-gb'] = "Enter the edge gradient dashboard background color";
+$text['description-dashboard_background_color_edge']['en-us'] = "Enter the edge gradient dashboard background color.";
+$text['description-dashboard_background_color_edge']['en-gb'] = "Enter the edge gradient dashboard background color.";
 $text['description-dashboard_background_color_edge']['ar-eg'] = "";
 $text['description-dashboard_background_color_edge']['de-at'] = "";
 $text['description-dashboard_background_color_edge']['de-ch'] = "";
@@ -416,8 +416,8 @@ $text['label-dashboard_background_color_center']['zh-cn'] = "";
 $text['label-dashboard_background_color_center']['ja-jp'] = "";
 $text['label-dashboard_background_color_center']['ko-kr'] = "";
 
-$text['description-dashboard_background_color_center']['en-us'] = "Enter the center gradient dashboard background color";
-$text['description-dashboard_background_color_center']['en-gb'] = "Enter the center gradient dashboard background color";
+$text['description-dashboard_background_color_center']['en-us'] = "Enter the center gradient dashboard background color.";
+$text['description-dashboard_background_color_center']['en-gb'] = "Enter the center gradient dashboard background color.";
 $text['description-dashboard_background_color_center']['ar-eg'] = "";
 $text['description-dashboard_background_color_center']['de-at'] = "";
 $text['description-dashboard_background_color_center']['de-ch'] = "";
@@ -468,8 +468,8 @@ $text['label-dashboard_heading_background_color']['zh-cn'] = "";
 $text['label-dashboard_heading_background_color']['ja-jp'] = "";
 $text['label-dashboard_heading_background_color']['ko-kr'] = "";
 
-$text['description-dashboard_heading_background_color']['en-us'] = "Enter the dashboard widget heading background color";
-$text['description-dashboard_heading_background_color']['en-gb'] = "Enter the dashboard widget heading background color";
+$text['description-dashboard_heading_background_color']['en-us'] = "Enter the dashboard widget heading background color.";
+$text['description-dashboard_heading_background_color']['en-gb'] = "Enter the dashboard widget heading background color.";
 $text['description-dashboard_heading_background_color']['ar-eg'] = "";
 $text['description-dashboard_heading_background_color']['de-at'] = "";
 $text['description-dashboard_heading_background_color']['de-ch'] = "";
