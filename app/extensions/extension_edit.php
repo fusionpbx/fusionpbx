@@ -1066,7 +1066,7 @@
 	if (empty($user_context)) { $user_context = $_SESSION['domain_name']; }
 	if (empty($max_registrations)) { $max_registrations = $_SESSION['extension']['max_registrations']['numeric'] ?? ''; }
 	if (empty($accountcode)) { $accountcode = get_accountcode(); }
-	if (empty($limit_max)) { $limit_max = '5'; }
+	if (empty($limit_max)) { $limit_max = $_SESSION['extension']['concurrent_outbound_limit']['numeric'] ?? 5; }
 	if (empty($limit_destination)) { $limit_destination = '!USER_BUSY'; }
 	if (empty($call_timeout)) { $call_timeout = $_SESSION['extension']['call_timeout']['numeric'] ?? 30; }
 	if (empty($call_screen_enabled)) { $call_screen_enabled = 'false'; }
