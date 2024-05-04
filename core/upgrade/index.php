@@ -50,6 +50,26 @@
 //set a default message_timeout
 	$message_timeout = 4*1000;
 
+//find optional apps with repos
+	$updateable_repos = git_find_repos($_SERVER["PROJECT_ROOT"]."/app");
+	if (!empty($updateable_repos) && is_array($updateable_repos) && @sizeof($updateable_repos) != 0) {
+		foreach ($updateable_repos as $app_path => $repo) {
+			$x = 0;
+			include $app_path.'/app_config.php';
+			$updateable_repos[$app_path]['app'] = $repo[0];
+			$updateable_repos[$app_path]['name'] = $apps[$x]['name'];
+			$updateable_repos[$app_path]['uuid'] = $apps[$x]['uuid'];
+			$updateable_repos[$app_path]['version'] = $apps[$x]['version'];
+			$updateable_repos[$app_path]['description'] = $apps[$x]['description'][$_SESSION['domain']['language']['code']];
+			unset($apps, $updateable_repos[$app_path][0]);
+		}
+	}
+
+//count upgradeable repos including + main repo
+	$repos_count = 0;
+	if (is_array($updateable_repos)) { $repos_count = @sizeof($updateable_repos); }
+	$repos_count++;
+
 //process the http post
 	if (!empty($_POST) && @sizeof($_POST) > 0) {
 
@@ -74,20 +94,18 @@
 		//run optional app source updates
 		if (!empty($action["optional_apps"]) && permission_exists("upgrade_source")) {
 
-			$updateable_repos = git_find_repos($_SERVER["PROJECT_ROOT"]."/app");
-
 			$apps_updated = $apps_failed = 0;
 			if (is_array($action["optional_apps"])) {
-				foreach ($updateable_repos as $repo => $apps) {
-					if (array_search(basename($repo), $action["optional_apps"]) !== false) {
-						$git_result = git_pull($repo);
-						if ($git_result['result']) {
-							$_SESSION["response"]["optional_apps"][basename($repo)] = $git_result['message'];
+				foreach ($updateable_repos as $app_path => $app_details) {
+					if (array_search(basename($app_path), $action["optional_apps"]) !== false) {
+						$git_result = git_pull($app_path);
+						if (!empty($git_result['result'])) {
 							$apps_updated++;
 						}
 						else {
 							$apps_failed++;
 						}
+						$_SESSION["response"]["optional_apps"][$app_details['name']] = $git_result['message'];
 					}
 				}
 			}
@@ -139,26 +157,6 @@
 		exit;
 
 	}
-
-//find optional apps with repos
-	$updateable_repos = git_find_repos($_SERVER["PROJECT_ROOT"]."/app");
-	if (!empty($updateable_repos) && is_array($updateable_repos) && @sizeof($updateable_repos) != 0) {
-		foreach ($updateable_repos as $app_path => $repo) {
-			$x = 0;
-			include $app_path.'/app_config.php';
-			$updateable_repos[$app_path]['app'] = $repo[0];
-			$updateable_repos[$app_path]['name'] = $apps[$x]['name'];
-			$updateable_repos[$app_path]['uuid'] = $apps[$x]['uuid'];
-			$updateable_repos[$app_path]['version'] = $apps[$x]['version'];
-			$updateable_repos[$app_path]['description'] = $apps[$x]['description'][$_SESSION['domain']['language']['code']];
-			unset($apps, $updateable_repos[$app_path][0]);
-		}
-	}
-
-//count upgradeable repos including + main repo
-	$repos_count = 0;
-	if (is_array($updateable_repos)) { $repos_count = @sizeof($updateable_repos); }
-	$repos_count++;
 
 //process the http get (source preview)
 	if (!empty($_GET['preview'])) {
@@ -449,17 +447,34 @@
 			if ($part == "optional_apps") {
 				foreach ($response as $app_name => $app_response) {
 					echo "<strong>".$app_name."</strong><br>\n";
-					echo "<pre>\n";
+					$error_found = false;
+					foreach ($app_response as $l => $response_line) {
+						if (substr_count($response_line, 'error: ') != 0) {
+							$error_found = true;
+							$app_response[$l] = str_replace('error:', 'Error:', $response_line);
+						}
+					}
+					if ($error_found) { $error_style = 'color: red;'; }
+					echo "<pre".(!empty($error_style) ? " style='".$error_style."'" : null).">\n";
 					foreach ($app_response as $response_line) {
 						echo htmlspecialchars($response_line) . "\n";
 					}
 					echo "</pre>\n";
+					unset($error_found, $error_style);
 				}
 			}
-			elseif (is_array($response)) {
-				echo "<pre>";
+			else if (is_array($response)) {
+				foreach ($response as $l => $response_line) {
+					if (substr_count($response_line, 'error: ') != 0) {
+						$error_found = true;
+						$response[$l] = str_replace('error:', 'Error:', $response_line);
+					}
+				}
+				if ($error_found) { $error_style = 'color: red;'; }
+				echo "<pre".(!empty($error_style) ? " style='".$error_style."'" : null).">\n";
 				echo implode("\n", $response);
 				echo "</pre>";
+				unset($error_found, $error_style);
 			}
 			else {
 				echo $response;
