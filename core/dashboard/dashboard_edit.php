@@ -168,6 +168,19 @@
 				$dashboard_uuid = uuid();
 			}
 
+		//remove empty values and convert to json
+			if (!empty($dashboard_number_background_color)) {
+				if (is_array($dashboard_number_background_color)) {
+					$dashboard_number_background_color = array_filter($dashboard_number_background_color);
+					if (count($dashboard_number_background_color) > 0) {
+						$dashboard_number_background_color = json_encode($dashboard_number_background_color);
+					}
+					else {
+						$dashboard_number_background_color = '';
+					}
+				}
+			}
+
 		//prepare the array
 			$array['dashboard'][0]['dashboard_uuid'] = $dashboard_uuid;
 			$array['dashboard'][0]['dashboard_name'] = $dashboard_name;
@@ -194,7 +207,7 @@
 					}
 				}
 			}
-
+//view_array($array);
 		//save the data
 			$database = new database;
 			$database->app_name = 'dashboard';
@@ -276,6 +289,11 @@
 //add the $dashboard_group_uuid
 	if (empty($dashboard_group_uuid) || !empty($dashboard_group_uuid) && !is_uuid($dashboard_group_uuid)) {
 		$dashboard_group_uuid = uuid();
+	}
+
+//convert the json to an array
+	if (!empty($dashboard_number_background_color) && is_json($dashboard_number_background_color)) {
+		$dashboard_number_background_color = json_decode($dashboard_number_background_color, true);
 	}
 
 //add a default value to $dashboard_details_state
@@ -391,10 +409,11 @@
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='dashboard_url' maxlength='255' value='".escape($dashboard_url)."'>\n";
 	echo "<br />\n";
-	echo $text['description-dashboard_url']."\n";
+	echo $text['description-dashboard_url'] ?? '';
+	echo "\n";
 	echo "</td>\n";
 	echo "</tr>\n";
-	
+
 	echo "	<tr>";
 	echo "		<td class='vncell'>".$text['label-icon']."</td>";
 	echo "		<td class='vtable' style='vertical-align: bottom;'>";
@@ -521,7 +540,7 @@
 	echo $text['label-dashboard_heading_background_color']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<input type='text' class='formfld colorpicker' name='dashboard_heading_background_color' value='".escape($dashboard_heading_background_color)."'>\n";
+	echo "	<input type='text' class='formfld colorpicker' name='dashboard_heading_background_color' value='".escape($dashboard_heading_background_color)."'><br />\n";
 	echo "<br />\n";
 	echo $text['description-dashboard_heading_background_color']."\n";
 	echo "</td>\n";
@@ -543,6 +562,18 @@
 	echo $text['label-dashboard_number_background_color']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
+	/*
+	if (!empty($dashboard_number_background_color)) {
+		if (is_array($dashboard_number_background_color)) {
+			foreach($dashboard_number_background_color as $background_color) {
+				echo "	<input type='text' class='formfld colorpicker' name='dashboard_number_background_color[]' value='".escape($background_color)."'>\n";
+			}
+		}
+	}
+	if (empty($dashboard_number_background_color) || count($dashboard_number_background_color) < 2) {
+		echo "	<input type='text' class='formfld colorpicker' name='dashboard_number_background_color[]' value=''>\n";
+	}
+	*/
 	echo "	<input type='text' class='formfld colorpicker' name='dashboard_number_background_color' value='".escape($dashboard_number_background_color)."'>\n";
 	echo "<br />\n";
 	echo $text['description-dashboard_number_background_color']."\n";
