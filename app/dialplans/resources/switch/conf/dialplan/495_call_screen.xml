@@ -1,7 +1,7 @@
 <extension name="call_screen" number="[ext]" context="${domain_name}" continue="true" app_uuid="b26a08a5-a062-42ca-b90f-d47f905dd876" order="495">
 	<condition field="${call_screen_enabled}" expression="^true$"/>
 	<condition field="${call_direction}" expression="^inbound$">
-		<action application="set" data="call_screen_file=/tmp/${domain_name}-${caller_id_number}.${record_ext}" inline="true"/>
+		<action application="set" data="call_screen_file=/tmp/${domain_name}-call_screen-${uuid}.${record_ext}" inline="true"/>
 		<action application="answer"/>
 		<action application="sleep" data="1000"/>
 		<action application="phrase" data="voicemail_record_name"/>
