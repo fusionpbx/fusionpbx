@@ -143,12 +143,12 @@
 	unset($parameters);
 
 //get the email queue settings
-	$setting = new settings(["domain_uuid" => $domain_uuid]);
+	$settings = new settings(["domain_uuid" => $domain_uuid]);
 
 //get the email settings
-	$retry_limit = $setting->get('email_queue', 'retry_limit');
-	$transcribe_enabled = $setting->get('voicemail', 'transcribe_enabled');
-	$save_response = $setting->get('email_queue', 'save_response');
+	$retry_limit = $settings->get('email_queue', 'retry_limit');
+	$transcribe_enabled = $settings->get('transcribe', 'enabled');
+	$save_response = $settings->get('email_queue', 'save_response');
 
 //set defaults
 	if (empty($email_retry_count)) {
@@ -225,17 +225,21 @@
 				//debug message
 				echo "transcribe enabled: true\n";
 
-				//transcribe the attachment
-				require $_SERVER['DOCUMENT_ROOT']."/app/email_queue/resources/functions/transcribe.php";
-				if ($email_attachment_type == 'wav' || $email_attachment_type == 'mp3') {
-					$field = transcribe($email_attachment_path, $email_attachment_name, $email_attachment_type);
-					echo "transcribe path: ".$email_attachment_path."\n";
-					echo "transcribe name: ".$email_attachment_name."\n";
-					echo "transcribe type: ".$email_attachment_type."\n";
-					echo "transcribe command: ".$field['command']."\n";
-					echo "transcribe message: ".$field['message']."\n";
-					$transcribe_message = $field['message'];
+				//add the settings object
+				$transcribe_engine = $settings->get('transcribe', 'engine', '');
+
+				//add the transcribe object and get the languages arrays
+				if (!empty($transcribe_engine)) {
+					$transcribe = new transcribe($settings);
 				}
+
+				//transcribe the voicemail recording
+				$transcribe->audio_path = $email_attachment_path;
+				$transcribe->audio_filename = $email_attachment_name;
+				$transcribe_message = $transcribe->transcribe();
+				echo "transcribe path: ".$email_attachment_path."\n";
+				echo "transcribe name: ".$email_attachment_name."\n";
+				echo "transcribe message: ".$transcribe_message."\n";
 
 				//prepare the email body
 				$email_body = str_replace('${message_text}', $transcribe_message, $email_body);
@@ -292,11 +296,18 @@
 
 //add email settings
 	$email_settings = '';
-	$email_setting_array = $setting->get('email');
+	$email_setting_array = $settings->get('email');
 	ksort($email_setting_array);
 	foreach ($email_setting_array as $name => $value) {
 		if ($name == 'smtp_password') { $value = '[REDACTED]'; }
-		$email_settings .= $name.': '.$value."\n";
+		if (is_array($value)) {
+			foreach($value as $sub_value) {
+				$email_settings .= $name.': '.$sub_value."\n";
+			}
+		}
+		else {
+			$email_settings .= $name.': '.$value."\n";
+		}
 	}
 
 //parse email and name
