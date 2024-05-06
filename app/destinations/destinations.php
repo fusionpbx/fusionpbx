@@ -241,7 +241,8 @@
 
 //update the array to add the actions
 	if (!$show == "all") {
-		foreach ($destinations as &$row) {
+		$x = 0;
+		foreach ($destinations as $row) {
 			if (!empty($row['destination_actions'])) {
 				//prepare the destination actions
 				if (!empty(json_decode($row['destination_actions'], true))) {
@@ -252,14 +253,15 @@
 
 				//add the actions to the array
 				$actions = action_name($destination_array, $destination_app_data);
-				$row['actions'] = (!empty($actions)) ? implode(', ', $actions) : '';
+				$destinations[$x]['actions'] = (!empty($actions)) ? implode(', ', $actions) : '';
 
 				//empty the array before the next iteration
 				unset($destination_app_data);
 			}
 			else {
-				$row['actions'] = '';
+				$destinations[$x]['actions'] = '';
 			}
+			$x++;
 		}
 	}
 
