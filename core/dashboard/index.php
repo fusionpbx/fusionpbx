@@ -75,12 +75,11 @@
 	$sql .= "dashboard_url, \n";
 	$sql .= "dashboard_icon, \n";
 	$sql .= "dashboard_chart_type, \n";
-	$sql .= "dashboard_background_color_edge, \n";
-	$sql .= "dashboard_background_color_center, \n";
-	$sql .= "dashboard_heading_background_color, \n";
 	$sql .= "dashboard_heading_text_color, \n";
-	$sql .= "dashboard_number_background_color, \n";
+	$sql .= "dashboard_heading_background_color, \n";
 	$sql .= "dashboard_number_text_color, \n";
+	$sql .= "dashboard_background_color, \n";
+	$sql .= "dashboard_detail_background_color, \n";
 	$sql .= "dashboard_column_span, \n";
 	$sql .= "dashboard_details_state, \n";
 	$sql .= "dashboard_order, \n";
@@ -222,14 +221,42 @@
   grid-gap: 1rem;
 }
 
+/* Dashboard settings */
+<?php
+	foreach($dashboard as $row) {
+		$dashboard_name = str_replace(" ", "_", strtolower($row['dashboard_name']));
+		$background_color = json_decode($row['dashboard_background_color'], true);
+		$detail_background_color = json_decode($row['dashboard_detail_background_color'], true);
+		echo "#".$dashboard_name." .hud_box .hud_header {";
+		echo "	display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 20px;";
+		echo "	background: ".$background_color[0].";";
+		echo "	background-image: linear-gradient(to right, ".$background_color[1]." 0%, ".$background_color[0]." 30%, ".$background_color[0]." 70%, ".$background_color[1]." 100%);";
+		echo "}";
+		echo "#".$dashboard_name." .hud_box .hud_title {";
+		echo "	color: ".$row['dashboard_heading_text_color'].";";
+		echo "	background-color: ".$row['dashboard_heading_background_color'].";";
+		echo "}";
+		echo "#".$dashboard_name." .hud_box .hud_chart {";
+		echo "	height: 150px;";
+		echo "}";
+		echo "#".$dashboard_name." .hud_box .hud_stat {";
+		echo "	color: ".$row['dashboard_number_text_color'].";";
+		echo "}";
+		echo "#".$dashboard_name." .hud_box .hud_details {";
+		echo "	background: ".$detail_background_color[0].";";
+		echo "	background-image: linear-gradient(to right, ".$detail_background_color[1]." 0%, ".$detail_background_color[0]." 30%, ".$detail_background_color[0]." 70%, ".$detail_background_color[1]." 100%);";
+		echo "}";
+	}
+
+?>
+
 /* Screen smaller than 575px? 1 columns */
 @media (max-width: 575px) {
   .widgets { grid-template-columns: repeat(1, minmax(100px, 1fr)); }
   .col-num { grid-column: span 1; }
 	<?php
 		foreach($dashboard as $row) {
-			$dashboard_name = strtolower($row['dashboard_name']);
-			$dashboard_name = str_replace(" ", "_", $dashboard_name);
+			$dashboard_name = str_replace(" ", "_", strtolower($row['dashboard_name']));
 			if (isset($dashboard_column_span) && is_numeric($dashboard_column_span)) {
 				echo "#".$dashboard_name." {\n";
 				echo "	grid-column: span 1;\n";
@@ -245,8 +272,7 @@
   .col-num { grid-column: span 2; }
 	<?php
 		foreach($dashboard as $row) {
-			$dashboard_name = strtolower($row['dashboard_name']);
-			$dashboard_name = str_replace(" ", "_", $dashboard_name);
+			$dashboard_name = str_replace(" ", "_", strtolower($row['dashboard_name']));
 			$dashboard_column_span = $row['dashboard_column_span'] ?? 1;
 			if (is_numeric($dashboard_column_span)) {
 				echo "#".$dashboard_name." {\n";
@@ -308,7 +334,6 @@
 function toggle_grid_row_end(dashboard_name) {
 	var widget = document.getElementById(dashboard_name);
 	var current_row_end = widget.style.gridRowEnd;
-
 	widget.style.gridRowEnd = (current_row_end == 'span 2') ? 'span 5' : 'span 2';
 }
 </script>
@@ -323,26 +348,6 @@ function toggle_grid_row_end(dashboard_name) {
 		$dashboard_icon = $row['dashboard_icon'] ?? '';
 		$dashboard_url  = $row['dashboard_url'] ?? '';
 		$dashboard_chart_type = $row['dashboard_chart_type'] ?? 'doughnut';
-
-		$dashboard_background_color_edge = $row['dashboard_background_color_edge'] ?? $settings->get('theme', 'dashboard_background_color_edge') ?? '#edf1f7';
-		$dashboard_background_color_center = $row['dashboard_background_color_center'] ?? $settings->get('theme', 'dashboard_background_color_center') ?? '#f9fbfe';
-		$color_edge = $dashboard_background_color_edge;
-		$color_center = $dashboard_background_color_center;
-		$hud_box_style = "background: ".$color_center.";";
-		$hud_box_style .= "background-image: -ms-linear-gradient(left, ".$color_edge." 0%, ".$color_center." 30%, ".$color_center." 70%, ".$color_edge." 100%);";
-		$hud_box_style .= "background-image: -moz-linear-gradient(left, ".$color_edge." 0%, ".$color_center." 30%, ".$color_center." 70%, ".$color_edge." 100%);";
-		$hud_box_style .= "background-image: -o-linear-gradient(left, ".$color_edge." 0%, ".$color_center." 30%, ".$color_center." 70%, ".$color_edge." 100%);";
-		$hud_box_style .= "background-image: -webkit-gradient(linear, left, right, color-stop(0, ".$color_edge."), color-stop(0.30, ".$color_center."), color-stop(0.70, ".$color_center."), color-stop(1, ".$color_edge."));";
-		$hud_box_style .= "background-image: -webkit-linear-gradient(left, ".$color_edge." 0%, ".$color_center." 30%, ".$color_center." 70%, ".$color_edge." 100%);";
-		$hud_box_style .= "background-image: linear-gradient(to right, ".$color_edge." 0%, ".$color_center." 30%, ".$color_center." 70%, ".$color_edge." 100%);";
-		unset($color_edge, $color_center);
-
-		$dashboard_heading_background_color = $row['dashboard_heading_background_color'] ?? $settings->get('theme', 'dashboard_heading_background_color');
-		$dashboard_heading_text_color = $row['dashboard_heading_text_color'] ?? $settings->get('theme', 'dashboard_heading_text_color');
-		$hud_title_style = "background: ".$dashboard_heading_background_color.";";
-		$hud_title_style .= "color: ".$dashboard_heading_text_color.";";
-		$dashboard_number_background_color = $row['dashboard_number_background_color'] ?? $settings->get('theme', 'dashboard_number_background_color');
-		$dashboard_number_text_color = $row['dashboard_number_text_color'] ?? $settings->get('theme', 'dashboard_number_text_color');
 		$dashboard_details_state = $row['dashboard_details_state'];
 		$grid_row_end = ($dashboard_details_state == "expanded" || empty($dashboard_details_state)) ? "grid-row-end: span 5;" : "grid-row-end: span 2;";
 
