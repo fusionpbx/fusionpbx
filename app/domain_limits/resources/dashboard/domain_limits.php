@@ -62,7 +62,7 @@
 			if (!isset($_SESSION['limit']['destinations']['numeric'])) { $_SESSION['limit']['destinations']['numeric'] = 0; }
 
 		//caller id
-			echo "<div class='hud_box' style='".$hud_box_style."'>\n";
+			echo "<div class='hud_box'>\n";
 
 		//determine stats
 			if (permission_exists('user_view')) {
@@ -110,12 +110,12 @@
 				$hud_stat_title = $text['label-destinations'];
 			}
 
-			echo "	<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 13px; background-color: ".$dashboard_number_background_color.";' ".($dashboard_details_state == "disabled" ?: "onclick=\"$('#hud_domain_limits_details').slideToggle('fast'); toggle_grid_row_end('".$dashboard_name."')\"").">\n";
-			echo "		<span class='hud_title' style='".$hud_title_style."'>".$text['label-domain_limits']."</span>\n";
+			echo "	<div class='hud_container' ".($dashboard_details_state == "disabled" ?: "onclick=\"$('#hud_domain_limits_details').slideToggle('fast'); toggle_grid_row_end('".$dashboard_name."')\"").">\n";
+			echo "		<span class='hud_title'>".$text['label-domain_limits']."</span>\n";
 
 		//doughnut chart
 			if ($dashboard_chart_type == "doughnut") {
-				echo "<div style='width: 275px; height: 150px; padding-top: 7px;'><canvas id='domain_limits_chart'></canvas></div>\n";
+				echo "<div class='hud_chart' style='width: 275px;><canvas id='domain_limits_chart'></canvas></div>\n";
 
 				echo "<script>\n";
 				echo "	const domain_limits_chart = new Chart(\n";
@@ -174,7 +174,7 @@
 				echo "</script>\n";
 			}
 			if ($dashboard_chart_type == "none") {
-				echo "	<span class='hud_stat' style='color: ".$dashboard_number_text_color."; padding-bottom: 27px;'>".$hud_stat_used."</span>";
+				echo "	<span class='hud_stat'>".$hud_stat_used."</span>";
 			}
 			echo "	</div>\n";
 
