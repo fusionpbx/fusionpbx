@@ -292,16 +292,16 @@
 		$show_stat = false;
 	}
 
-	echo "<div class='hud_box' style='".$hud_box_style."'>\n";
+	echo "<div class='hud_box'>\n";
 	if ($show_stat) {
 
-		echo "<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 13px; background-color: ".$dashboard_number_background_color.";' ".($dashboard_details_state == "disabled" ?: "onclick=\"$('#hud_system_counts_details').slideToggle('fast'); toggle_grid_row_end('".$dashboard_name."')\"").">\n";
-		echo "	<span class='hud_title' style='".$hud_title_style."' onclick=\"document.location.href='".PROJECT_PATH."/app/system/system.php'\">".$text['label-system_counts']."</span>\n";
+		echo "<div class='hud_container' ".($dashboard_details_state == "disabled" ?: "onclick=\"$('#hud_system_counts_details').slideToggle('fast'); toggle_grid_row_end('".$dashboard_name."')\"").">\n";
+		echo "	<span class='hud_title' onclick=\"document.location.href='".PROJECT_PATH."/app/system/system.php'\">".$text['label-system_counts']."</span>\n";
 
 		if ($dashboard_chart_type == "doughnut") {
 			//add doughnut chart
 			?>
-			<div style='height: 150px; padding-top: 7px;'><canvas id='system_counts_chart'></canvas></div>
+			<div class='hud_chart'><canvas id='system_counts_chart'></canvas></div>
 
 			<script>
 				const system_counts_chart = new Chart(
@@ -355,7 +355,7 @@
 			<?php
 		}
 		if ($dashboard_chart_type == "none") {
-			echo "	<span class='hud_stat' style='color: ".$dashboard_number_text_color."; padding-bottom: 27px;'>".$domain_total."</span>";
+			echo "	<span class='hud_stat'>".$domain_total."</span>";
 		}
 		echo "	</div>\n";
 	}
