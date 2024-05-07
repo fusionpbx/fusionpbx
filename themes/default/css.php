@@ -2588,9 +2588,9 @@ else { //default: white
 		}
 
 	span.hud_title:hover {
-		color: <?=$dashboard_heading_text_color_hover?> !important;
-		text-shadow: 0px 1px 2px <?=$dashboard_heading_text_shadow_color?> !important;
-		background: <?=$dashboard_heading_background_color_hover?> !important;
+		color: <?=$dashboard_heading_text_color_hover?>;
+		text-shadow: 0px 1px 2px <?=$dashboard_heading_text_shadow_color?>;
+		background: <?=$dashboard_heading_background_color_hover?>;
 		cursor: pointer;
 		}
 
