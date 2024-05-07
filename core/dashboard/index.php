@@ -283,7 +283,7 @@ span.hud_stat { padding-bottom: 27px; }
 	<?php
 		foreach($dashboard as $row) {
 			$dashboard_name = str_replace(" ", "_", strtolower($row['dashboard_name']));
-			$dashboard_column_span = $row['dashboard_column_span'] ?? 1;
+			$dashboard_column_span = $row['dashboard_column_span'];
 			if (is_numeric($dashboard_column_span)) {
 				echo "#".$dashboard_name." {\n";
 				echo "	grid-column: span ".$dashboard_column_span.";\n";
@@ -317,7 +317,7 @@ span.hud_stat { padding-bottom: 27px; }
 	<?php
 		foreach($dashboard as $row) {
 			$dashboard_name = str_replace(" ", "_", strtolower($row['dashboard_name']));
-			$dashboard_column_span = $row['dashboard_column_span'] ?? 1;
+			$dashboard_column_span = $row['dashboard_column_span'];
 			if (is_numeric($dashboard_column_span)) {
 				echo "#".$dashboard_name." {\n";
 				echo "	grid-column: span ".$dashboard_column_span.";\n";
