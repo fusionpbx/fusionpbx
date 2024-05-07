@@ -103,12 +103,12 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the number text color.';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'dashboard_background_color';
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'array';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['search_by'] = '';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the background color.';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'dashboard_detail_background_color';
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'array';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['search_by'] = '';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the detail background color.';
 		$z++;
