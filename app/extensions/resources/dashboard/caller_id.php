@@ -171,14 +171,14 @@
 			$token = $object->create($_SERVER["DOCUMENT_ROOT"].'/extensions/resources/dashboard/caller_id.php');
 
 		//caller id
-			echo "<div class='hud_box' style='".$hud_box_style."'>\n";
+			echo "<div class='hud_box'>\n";
 
-			echo "	<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 13px; background-color: ".$dashboard_number_background_color.";' ".($dashboard_details_state == "disabled" ?: "onclick=\"$('#hud_caller_id_details').slideToggle('fast'); toggle_grid_row_end('".$dashboard_name."')\"").">\n";
-			echo "		<span class='hud_title' style='".$hud_title_style."'>".$text['label-caller_id_number']."</span>\n";
+			echo "	<div class='hud_container'  ".($dashboard_details_state == "disabled" ?: "onclick=\"$('#hud_caller_id_details').slideToggle('fast'); toggle_grid_row_end('".$dashboard_name."')\"").">\n";
+			echo "		<span class='hud_title'>".$text['label-caller_id_number']."</span>\n";
 
 		//doughnut chart
 			if ($dashboard_chart_type == "doughnut") {
-				echo "<div style='width: 275px; height: 150px; padding-top: 7px;'><canvas id='caller_id_chart'></canvas></div>\n";
+				echo "<div class='hud_chart' style='width: 275px;'><canvas id='caller_id_chart'></canvas></div>\n";
 
 				echo "<script>\n";
 				echo "	const caller_id_chart = new Chart(\n";
@@ -238,7 +238,7 @@
 				echo "</script>\n";
 			}
 			if ($dashboard_chart_type == "none") {
-				echo "	<span class='hud_stat' style='color: ".$dashboard_number_text_color."; padding-bottom: 27px;'>".$stats['undefined']."</span>";
+				echo "	<span class='hud_stat'>".$stats['undefined']."</span>";
 			}
 			echo "	</div>\n";
 
