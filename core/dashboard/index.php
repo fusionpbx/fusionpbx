@@ -233,7 +233,6 @@ div.hud_chart {
   padding-top: 7px;
 }
 
-span.hud_stat { padding-bottom: 27px; }
 
 /* Dashboard settings */
 <?php
