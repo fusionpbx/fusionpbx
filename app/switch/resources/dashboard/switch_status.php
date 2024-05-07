@@ -18,7 +18,7 @@
 	$text = $language->get($_SESSION['domain']['language']['code'], 'app/switch');
 
 //switch status
-	echo "<div class='hud_box' style='".$hud_box_style."'>\n";
+	echo "<div class='hud_box'>\n";
 
 //set the row style class names
 	$c = 0;
@@ -77,13 +77,13 @@
 	}
 
 //show the content
-	echo "<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 13px; background-color: ".$dashboard_number_background_color.";' ".($dashboard_details_state == "disabled" ?: "onclick=\"$('#hud_switch_status_details').slideToggle('fast'); toggle_grid_row_end('".$dashboard_name."')\"").">\n";
-	echo "	<span class='hud_title' style='".$hud_title_style."'>".$text['label-switch_status']."</span>\n";
+	echo "<div class='hud_container' ".($dashboard_details_state == "disabled" ?: "onclick=\"$('#hud_switch_status_details').slideToggle('fast'); toggle_grid_row_end('".$dashboard_name."')\"").">\n";
+	echo "	<span class='hud_title'>".$text['label-switch_status']."</span>\n";
 
 	if ($dashboard_chart_type == "doughnut") {
 		//add doughnut chart
 		?>
-		<div style='height: 150px; padding-top: 7px;'><canvas id='switch_status_chart'></canvas></div>
+		<div class='hud_chart'><canvas id='switch_status_chart'></canvas></div>
 
 		<script>
 			const switch_status_chart = new Chart(
@@ -124,7 +124,7 @@
 		<?php
 	}
 	if ($dashboard_chart_type == "none") {
-		echo "	<span class='hud_stat' style='padding-bottom: 27px; color: ".$dashboard_number_text_color.";'>".$registrations."</span>";
+		echo "	<span class='hud_stat'>".$registrations."</span>";
 	}
 	echo "	</div>\n";
 
