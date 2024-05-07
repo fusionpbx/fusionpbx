@@ -21,7 +21,7 @@
 	$theme_image_path = $_SERVER["DOCUMENT_ROOT"]."/themes/".$_SESSION['domain']['template']['name']."/images/";
 
 //voicemail
-	echo "<div class='hud_box' style='".$hud_box_style."'>\n";
+	echo "<div class='hud_box'>\n";
 
 //required class
 	require_once "app/voicemails/resources/classes/voicemail.php";
@@ -52,13 +52,13 @@
 		}
 	}
 
-	echo "<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 13px; background-color: ".$dashboard_number_background_color.";' ".($dashboard_details_state == "disabled" ?: "onclick=\"$('#hud_voicemail_details').slideToggle('fast'); toggle_grid_row_end('".$dashboard_name."')\"").">\n";
-	echo "	<span class='hud_title' style='".$hud_title_style."' onclick=\"document.location.href='".PROJECT_PATH."/app/voicemails/voicemail_messages.php'\">".$text['label-new_messages']."</span>";
+	echo "<div class='hud_container' ".($dashboard_details_state == "disabled" ?: "onclick=\"$('#hud_voicemail_details').slideToggle('fast'); toggle_grid_row_end('".$dashboard_name."')\"").">\n";
+	echo "	<span class='hud_title' onclick=\"document.location.href='".PROJECT_PATH."/app/voicemails/voicemail_messages.php'\">".$text['label-new_messages']."</span>";
 
 	if ($dashboard_chart_type == "doughnut") {
 		//add doughnut chart
 		?>
-		<div style='width: 150px; height: 150px; padding-top: 7px;'><canvas id='new_messages_chart'></canvas></div>
+		<div class='hud_chart'><canvas id='new_messages_chart'></canvas></div>
 
 		<script>
 			const new_messages_chart = new Chart(
@@ -101,7 +101,7 @@
 		<?php
 	}
 	if ($dashboard_chart_type == "none") {
-		echo "	<span class='hud_stat' style='padding-bottom: 27px; color: ".$dashboard_number_text_color.";'>".$messages['new']."</span>";
+		echo "	<span class='hud_stat'>".$messages['new']."</span>";
 	}
 	echo "</div>\n";
 
