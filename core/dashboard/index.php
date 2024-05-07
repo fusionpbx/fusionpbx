@@ -221,23 +221,31 @@
   grid-gap: 1rem;
 }
 
+div.hud_container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding-bottom: 13px;
+}
+
+div.hud_chart {
+  height: 150px;
+  padding-top: 7px;
+}
+
 /* Dashboard settings */
 <?php
 	foreach($dashboard as $row) {
 		$dashboard_name = str_replace(" ", "_", strtolower($row['dashboard_name']));
 		$background_color = json_decode($row['dashboard_background_color'], true);
 		$detail_background_color = json_decode($row['dashboard_detail_background_color'], true);
-		echo "#".$dashboard_name." .hud_box .hud_header {";
-		echo "	display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 20px;";
+		echo "#".$dashboard_name." .hud_box .hud_container {";
 		echo "	background: ".$background_color[0].";";
 		echo "	background-image: linear-gradient(to right, ".$background_color[1]." 0%, ".$background_color[0]." 30%, ".$background_color[0]." 70%, ".$background_color[1]." 100%);";
 		echo "}";
 		echo "#".$dashboard_name." .hud_box .hud_title {";
 		echo "	color: ".$row['dashboard_heading_text_color'].";";
 		echo "	background-color: ".$row['dashboard_heading_background_color'].";";
-		echo "}";
-		echo "#".$dashboard_name." .hud_box .hud_chart {";
-		echo "	height: 150px;";
 		echo "}";
 		echo "#".$dashboard_name." .hud_box .hud_stat {";
 		echo "	color: ".$row['dashboard_number_text_color'].";";
@@ -348,6 +356,7 @@ function toggle_grid_row_end(dashboard_name) {
 		$dashboard_icon = $row['dashboard_icon'] ?? '';
 		$dashboard_url  = $row['dashboard_url'] ?? '';
 		$dashboard_chart_type = $row['dashboard_chart_type'] ?? 'doughnut';
+		$dashboard_number_text_color = $row['dashboard_number_text_color'] ?? $settings->get('theme', 'dashboard_number_text_color');
 		$dashboard_details_state = $row['dashboard_details_state'];
 		$grid_row_end = ($dashboard_details_state == "expanded" || empty($dashboard_details_state)) ? "grid-row-end: span 5;" : "grid-row-end: span 2;";
 
