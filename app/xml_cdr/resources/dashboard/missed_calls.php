@@ -88,15 +88,15 @@
 	$row_style["1"] = "row_style1";
 
 //missed calls
-	echo "<div class='hud_box' style='".$hud_box_style."'>\n";
+	echo "<div class='hud_box'>\n";
 
-	echo "<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 13px; background-color: ".$dashboard_number_background_color.";' ".($dashboard_details_state == "disabled" ?: "onclick=\"$('#hud_missed_calls_details').slideToggle('fast'); toggle_grid_row_end('".$dashboard_name."')\"").">\n";
-	echo "	<span class='hud_title' style='".$hud_title_style."' onclick=\"document.location.href='".PROJECT_PATH."/app/xml_cdr/xml_cdr.php?call_result=missed'\">".$text['label-missed_calls']."</span>";
+	echo "<div class='hud_container' ".($dashboard_details_state == "disabled" ?: "onclick=\"$('#hud_missed_calls_details').slideToggle('fast'); toggle_grid_row_end('".$dashboard_name."')\"").">\n";
+	echo "	<span class='hud_title' onclick=\"document.location.href='".PROJECT_PATH."/app/xml_cdr/xml_cdr.php?call_result=missed'\">".$text['label-missed_calls']."</span>";
 
 	if ($dashboard_chart_type == "doughnut") {
 		//add doughnut chart
 		?>
-		<div style='height: 150px; padding-top: 7px;'><canvas id='missed_calls_chart'></canvas></div>
+		<div class='hud_chart'><canvas id='missed_calls_chart'></canvas></div>
 
 		<script>
 			const missed_calls_chart = new Chart(
@@ -139,7 +139,7 @@
 		<?php
 	}
 	if ($dashboard_chart_type == "none") {
-		echo "<span class='hud_stat' style='padding-bottom: 27px; color: ".$dashboard_number_text_color.";'>".$num_rows."</span>";
+		echo "<span class='hud_stat'>".$num_rows."</span>";
 	}
 	echo "</div>\n";
 
