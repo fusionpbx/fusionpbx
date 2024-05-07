@@ -42,7 +42,7 @@
 
 			if ($dashboard_chart_type == "doughnut") {
 				?>
-				<div class='hud_chart' style='width: 175px; height: 143px;'><canvas id='system_status_chart'></canvas></div>
+				<div class='hud_chart' style='width: 175px;'><canvas id='system_status_chart'></canvas></div>
 
 				<script>
 					const system_status_chart = new Chart(
