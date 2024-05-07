@@ -11,7 +11,7 @@
 //dashboard icon
 	echo "<div class='hud_box'>\n";
 
-	echo "<div class='hud_header' ".($row['dashboard_details_state'] == "disabled" ?: "onclick=\"$('#hud_icon_details').slideToggle('fast');\"").">\n";
+	echo "<div class='hud_container' ".($row['dashboard_details_state'] == "disabled" ?: "onclick=\"$('#hud_icon_details').slideToggle('fast');\"").">\n";
 	echo "	<span class='hud_title' onclick=\"document.location.href='".$dashboard_url."'\">".$dashboard_name."</span>"; // (isset($text['label-'.$dashboard_name])) ? $text['label-'.$dashboard_name] : $dashboard_name
 	echo "	<a href='".$dashboard_url."'><span class='hud_stat'><i class=\"fas ".$dashboard_icon."\" style=\"font-size: 0.8em;\"></i></span></a>\n";
 	echo "</div>\n";
