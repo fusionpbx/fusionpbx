@@ -2630,7 +2630,7 @@ else { //default: white
 		$font_size_number = $tmp;
 		$padding_top_bottom = (int) floor((100-$tmp) * 0.25);
 		?>
-		padding-top: <?php echo ($padding_top_bottom + 7).'px' ?>;
+		padding-top: <?php echo $padding_top_bottom.'px' ?>;
 		padding-bottom: <?php echo $padding_top_bottom.'px' ?>;
 		}
 
