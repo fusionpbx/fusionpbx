@@ -18,7 +18,7 @@
 	$text = $language->get($_SESSION['domain']['language']['code'], 'app/system');
 
 //system cpu status
-	echo "<div class='hud_box' style='".$hud_box_style."'>\n";
+	echo "<div class='hud_box'>\n";
 
 //set the row style class names
 	$c = 0;
@@ -51,13 +51,13 @@
 	}
 
 //show the content
-	echo "<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 20px; background-color: ".$dashboard_number_background_color.";' ".($dashboard_details_state == "disabled" ?: "onclick=\"$('#hud_system_cpu_status_details').slideToggle('fast'); toggle_grid_row_end('".$dashboard_name."')\"").">\n";
-	echo "	<span class='hud_title' style='".$hud_title_style."' onclick=\"document.location.href='".PROJECT_PATH."/app/system/system.php'\">".$text['label-cpu_usage']."</span>\n";
+	echo "<div class='hud_container' ".($dashboard_details_state == "disabled" ?: "onclick=\"$('#hud_system_cpu_status_details').slideToggle('fast'); toggle_grid_row_end('".$dashboard_name."')\"").">\n";
+	echo "	<span class='hud_title' onclick=\"document.location.href='".PROJECT_PATH."/app/system/system.php'\">".$text['label-cpu_usage']."</span>\n";
 
 //add half doughnut chart
 	if ($dashboard_chart_type == "doughnut") {
 		?>
-		<div style='width: 175px; height: 143px;'><canvas id='system_cpu_status_chart'></canvas></div>
+		<div class='hud_chart' style='width: 175px; height: 143px;'><canvas id='system_cpu_status_chart'></canvas></div>
 
 		<script>
 			const system_cpu_status_chart = new Chart(
@@ -114,7 +114,7 @@
 		<?php
 	}
 	if ($dashboard_chart_type == "none") {
-		echo "<span class='hud_stat' style='color: ".$dashboard_number_text_color.";'>".round($percent_cpu)."%</span>";
+		echo "<span class='hud_stat'>".round($percent_cpu)."%</span>";
 	}
 	echo "</div>\n";
 
