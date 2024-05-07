@@ -570,7 +570,7 @@
 	echo $text['label-dashboard_heading_background_color']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<input type='text' class='formfld colorpicker' name='dashboard_heading_background_color' value='".escape($dashboard_heading_background_color)."'><br />\n";
+	echo "	<input type='text' class='formfld colorpicker' name='dashboard_heading_background_color' value='".escape($dashboard_heading_background_color)."'>\n";
 	echo "<br />\n";
 	echo $text['description-dashboard_heading_background_color']."\n";
 	echo "</td>\n";
@@ -600,8 +600,8 @@
 		}
 	}
 	if (empty($dashboard_background_color) || count($dashboard_background_color) < 2) {
-		echo "	<input id='second_input' style='display: none;' type='text' class='formfld colorpicker' name='dashboard_background_color[]' value='".escape($dashboard_background_color)."'>\n";
 		echo "	<input type='text' class='formfld colorpicker' name='dashboard_background_color[]' value='' onclick=\"document.getElementById('second_input').style.display = 'block';\">\n";
+		echo "	<input id='second_input' style='display: none;' type='text' class='formfld colorpicker' name='dashboard_background_color[]'>\n";
 	}
 	echo "<br />\n";
 	echo $text['description-dashboard_background_color']."\n";
@@ -621,8 +621,8 @@
 		}
 	}
 	if (empty($dashboard_detail_background_color) || count($dashboard_detail_background_color) < 2) {
-		echo "	<input id='detail_second_input' style='display: none;' type='text' class='formfld colorpicker' name='dashboard_detail_background_color[]' value='".escape($dashboard_detail_background_color)."'>\n";
 		echo "	<input type='text' class='formfld colorpicker' name='dashboard_detail_background_color[]' value='' onclick=\"document.getElementById('detail_second_input').style.display = 'block';\">\n";
+		echo "	<input id='detail_second_input' style='display: none;' type='text' class='formfld colorpicker' name='dashboard_detail_background_color[]'>\n";
 	}
 	echo "<br />\n";
 	echo $text['description-dashboard_detail_background_color']."\n";
