@@ -18,7 +18,7 @@
 	$text = $language->get($_SESSION['domain']['language']['code'], 'core/user_settings');
 
 //system status
-	echo "<div class='hud_box' style='".$hud_box_style."'>\n";
+	echo "<div class='hud_box'>\n";
 
 	$c = 0;
 	$row_style["0"] = "row_style0";
@@ -37,12 +37,12 @@
 		if (!empty($percent_disk_usage)) {
 
 			//add half doughnut chart
-			echo "	<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 20px; background-color: ".$dashboard_number_background_color.";' ".($dashboard_details_state == "disabled" ?: "onclick=\"$('#hud_system_status_details').slideToggle('fast'); toggle_grid_row_end('".$dashboard_name."')\"").">\n";
-			echo "		<span class='hud_title' style='".$hud_title_style."' onclick=\"document.location.href='".PROJECT_PATH."/app/system/system.php'\">".$text['label-disk_usage']."</span>\n";
+			echo "	<div class='hud_container' ".($dashboard_details_state == "disabled" ?: "onclick=\"$('#hud_system_status_details').slideToggle('fast'); toggle_grid_row_end('".$dashboard_name."')\"").">\n";
+			echo "		<span class='hud_title' onclick=\"document.location.href='".PROJECT_PATH."/app/system/system.php'\">".$text['label-disk_usage']."</span>\n";
 
 			if ($dashboard_chart_type == "doughnut") {
 				?>
-				<div style='width: 175px; height: 143px;'><canvas id='system_status_chart'></canvas></div>
+				<div class='hud_chart' style='width: 175px; height: 143px;'><canvas id='system_status_chart'></canvas></div>
 
 				<script>
 					const system_status_chart = new Chart(
@@ -95,7 +95,7 @@
 				<?php
 			}
 			if ($dashboard_chart_type == "none") {
-				echo "	<span class='hud_stat' style='color: ".$dashboard_number_text_color.";'>".round($percent_disk_usage)."%</span>";
+				echo "	<span class='hud_stat'>".round($percent_disk_usage)."%</span>";
 			}
 			echo "	</div>\n";
 		}
