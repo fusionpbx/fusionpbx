@@ -115,7 +115,7 @@
 
 		//doughnut chart
 			if ($dashboard_chart_type == "doughnut") {
-				echo "<div class='hud_chart' style='width: 275px';><canvas id='domain_limits_chart'></canvas></div>\n";
+				echo "<div class='hud_chart' style='width: 275px;'><canvas id='domain_limits_chart'></canvas></div>\n";
 
 				echo "<script>\n";
 				echo "	const domain_limits_chart = new Chart(\n";
@@ -134,11 +134,11 @@
 				echo "						0.00001,\n";
 				echo "						],\n";
 				echo "					backgroundColor: [\n";
-				echo "						'".$_SESSION['dashboard']['domain_limits_chart_color_used']['text']."',\n";
-				echo "						'".$_SESSION['dashboard']['domain_limits_chart_color_remaining']['text']."',\n";
+				echo "						'".($settings->get('theme', 'dashboard_domain_limits_chart_color_used') ?? '#03c04a')."',\n";
+				echo "						'".($settings->get('theme', 'dashboard_domain_limits_chart_color_remaining') ?? '#d4d4d4')."'\n";
 				echo "					],\n";
-				echo "					borderColor: '".$_SESSION['dashboard']['domain_limits_chart_border_color']['text']."',\n";
-				echo "					borderWidth: '".$_SESSION['dashboard']['domain_limits_chart_border_width']['text']."',\n";
+				echo "					borderColor: '".$settings->get('theme', 'dashboard_chart_border_color')."',\n";
+				echo "					borderWidth: '".$settings->get('theme', 'dashboard_chart_border_width')."'\n";
 				echo "				}]\n";
 				echo "			},\n";
 				echo "			options: {\n";

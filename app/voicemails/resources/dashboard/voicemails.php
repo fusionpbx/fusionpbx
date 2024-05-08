@@ -69,11 +69,11 @@
 						datasets: [{
 							data: ['<?php echo $messages['new']; ?>', 0.00001],
 							backgroundColor: [
-								'<?php echo $_SESSION['dashboard']['new_messages_chart_main_background_color']['text']; ?>',
-								'<?php echo $_SESSION['dashboard']['new_messages_chart_sub_background_color']['text']; ?>'
+								'<?php echo ($settings->get('theme', 'dashboard_missed_calls_chart_main_color') ?? '#ff9933'); ?>',
+								'<?php echo ($settings->get('theme', 'dashboard_missed_calls_chart_sub_color') ?? '#d4d4d4'); ?>'
 							],
-							borderColor: '<?php echo $_SESSION['dashboard']['new_messages_chart_border_color']['text']; ?>',
-							borderWidth: '<?php echo $_SESSION['dashboard']['new_messages_chart_border_width']['text']; ?>',
+							borderColor: '<?php echo $settings->get('theme', 'dashboard_chart_border_color'); ?>',
+							borderWidth: '<?php echo $settings->get('theme', 'dashboard_chart_border_width'); ?>',
 						}]
 					},
 					options: {

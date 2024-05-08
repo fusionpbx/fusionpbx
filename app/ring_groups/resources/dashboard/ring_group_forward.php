@@ -177,11 +177,11 @@
 		echo "						0.00001,\n";
 		echo "					],\n";
 		echo "					backgroundColor: [\n";
-		echo "						'".$_SESSION['dashboard']['ring_group_forward_chart_color_active']['text']."',\n";
-		echo "						'".$_SESSION['dashboard']['ring_group_forward_chart_color_forwarding']['text']."',\n";
+		echo "						'".($settings->get('theme', 'dashboard_ring_group_forward_chart_color_active') ?? '#d4d4d4')."',\n";
+		echo "						'".($settings->get('theme', 'dashboard_ring_group_forward_chart_color_forwarding') ?? '#ea4c46')."'\n";
 		echo "					],\n";
-		echo "					borderColor: '".$_SESSION['dashboard']['ring_group_forward_chart_border_color']['text']."',\n";
-		echo "					borderWidth: '".$_SESSION['dashboard']['ring_group_forward_chart_border_width']['text']."',\n";
+		echo "					borderColor: '".$settings->get('theme', 'dashboard_chart_border_color')."',\n";
+		echo "					borderWidth: '".$settings->get('theme', 'dashboard_chart_border_width')."'\n";
 		echo "				}]\n";
 		echo "			},\n";
 		echo "			options: {\n";

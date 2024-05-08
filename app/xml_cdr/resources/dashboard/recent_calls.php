@@ -105,11 +105,11 @@
 						datasets: [{
 							data: ['<?php echo $num_rows; ?>', 0.00001],
 							backgroundColor: [
-								'<?php echo $_SESSION['dashboard']['recent_calls_chart_main_background_color']['text']; ?>',
-								'<?php echo $_SESSION['dashboard']['recent_calls_chart_sub_background_color']['text']; ?>'
+								'<?php echo ($settings->get('theme', 'dashboard_recent_calls_chart_main_color') ?? '#2a9df4'); ?>',
+								'<?php echo ($settings->get('theme', 'dashboard_recent_calls_chart_sub_color') ?? '#d4d4d4'); ?>'
 							],
-							borderColor: '<?php echo $_SESSION['dashboard']['recent_calls_chart_border_color']['text']; ?>',
-							borderWidth: '<?php echo $_SESSION['dashboard']['recent_calls_chart_border_width']['text']; ?>'
+							borderColor: '<?php echo $settings->get('theme', 'dashboard_chart_border_color'); ?>',
+							borderWidth: '<?php echo $settings->get('theme', 'dashboard_chart_border_width'); ?>',
 						}]
 					},
 					options: {

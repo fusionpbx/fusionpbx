@@ -50,36 +50,20 @@
 
 	//default settings
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "9ff1ed88-76ba-4648-a082-d53f64947d08";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "dashboard";
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "switch_status_chart_main_background_color";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "15ab0540-c281-4793-baf9-3a2f6dc909c5";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "dashboard_switch_status_chart_main_color";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "#2a9df4";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "7d7ba6e6-1616-4082-9f20-774e8ef673c9";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "dashboard";
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "switch_status_chart_sub_background_color";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "1e4db354-27d7-45e1-9513-ef5e23f66335";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "dashboard_switch_status_chart_sub_color";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "#d4d4d4";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
-		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "cad4fdf1-2eb5-4669-8215-2b3dbee5d124";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "dashboard";
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "switch_status_chart_border_color";
-		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "rgba(0,0,0,0)";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
-		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "206d91d0-1ee2-46f3-a30b-977ad49b84cb";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "dashboard";
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "switch_status_chart_border_width";
-		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
 
