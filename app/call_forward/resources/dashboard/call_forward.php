@@ -143,16 +143,16 @@
 		echo "					],\n";
 		echo "					backgroundColor: [\n";
 		if (permission_exists('do_not_disturb')) {
-			echo "					'".settings->get('theme', 'dashboard_call_forward_chart_color_do_not_disturb')."',\n";
+			echo "					'".$settings->get('theme', 'dashboard_call_forward_chart_color_do_not_disturb')."',\n";
 		}
 		if (permission_exists('follow_me')) {
-			echo "					'".settings->get('theme', 'dashboard_call_forward_chart_color_follow_me')."',\n";
+			echo "					'".$settings->get('theme', 'dashboard_call_forward_chart_color_follow_me')."',\n";
 		}
 		if (permission_exists('call_forward')) {
-			echo "					'".settings->get('theme', 'dashboard_call_forward_chart_color_call_forward')."',\n";
+			echo "					'".$settings->get('theme', 'dashboard_call_forward_chart_color_call_forward')."',\n";
 		}
-		echo "						'".settings->get('theme', 'dashboard_call_forward_chart_color_active')."',\n";
-		echo "						'".settings->get('theme', 'dashboard_call_forward_chart_color_active')."',\n";
+		echo "						'".$settings->get('theme', 'dashboard_call_forward_chart_color_active')."',\n";
+		echo "						'".$settings->get('theme', 'dashboard_call_forward_chart_color_active')."'\n";
 		echo "					],\n";
 		echo "					borderColor: '".$settings->get('theme', 'dashboard_chart_border_color')."',\n";
 		echo "					borderWidth: '".$settings->get('theme', 'dashboard_chart_border_width')."'\n";
