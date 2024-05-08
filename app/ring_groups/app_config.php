@@ -16,7 +16,7 @@
 		$apps[$x]['description']['de-de'] = "Ein Werkzeug um mehrere Nebenstellen anzurufen.";
 		$apps[$x]['description']['es-cl'] = "Una herramienta para llamar a múltiples extensiones";
 		$apps[$x]['description']['es-mx'] = "";
-		$apps[$x]['description']['fr-ca'] = "Outil pour appeler plusieurs extensions"; 
+		$apps[$x]['description']['fr-ca'] = "Outil pour appeler plusieurs extensions";
 		$apps[$x]['description']['fr-fr'] = "Outil pour appeler plusieurs extensions.";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
@@ -189,7 +189,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "dashboard_ring_group_forward_chart_color_forwarding";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "#ea4c46";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "5e511af3-671f-45dd-9a0d-945637abd5fb";
@@ -197,7 +197,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "dashboard_ring_group_forward_chart_color_active";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "#d4d4d4";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "88297698-339d-4971-8019-3f7095ec1f33";
