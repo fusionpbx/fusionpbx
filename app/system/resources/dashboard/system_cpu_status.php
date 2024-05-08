@@ -70,14 +70,14 @@
 							backgroundColor: [
 								<?php
 								if ($percent_cpu <= 60) {
-									echo "'".$settings->get('theme', 'dashboard_cpu_usage_chart_main_color')[0]."',\n";
+									echo "'".($settings->get('theme', 'dashboard_cpu_usage_chart_main_color')[0] ?? '#03c04a')."',\n";
 								} else if ($percent_cpu <= 80) {
-									echo "'".$settings->get('theme', 'dashboard_cpu_usage_chart_main_color')[1]."',\n";
+									echo "'".($settings->get('theme', 'dashboard_cpu_usage_chart_main_color')[1] ?? '#ff9933')."',\n";
 								} else if ($percent_cpu > 80) {
-									echo "'".$settings->get('theme', 'dashboard_cpu_usage_chart_main_color')[2]."',\n";
+									echo "'".($settings->get('theme', 'dashboard_cpu_usage_chart_main_color')[2] ?? '#ea4c46')."',\n";
 								}
 								?>
-								'<?php echo$settings->get('theme', 'dashboard_cpu_usage_chart_sub_color'); ?>'
+								'<?php echo ($settings->get('theme', 'dashboard_cpu_usage_chart_sub_color') ?? '#d4d4d4'); ?>'
 							],
 							borderColor: '<?php echo $settings->get('theme', 'dashboard_chart_border_color'); ?>',
 							borderWidth: '<?php echo $settings->get('theme', 'dashboard_chart_border_width'); ?>',
