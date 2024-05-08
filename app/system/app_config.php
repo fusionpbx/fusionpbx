@@ -81,7 +81,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "dashboard_system_counts_chart_main_color";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "#2a9df4";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "333fc545-5983-46fc-a0bb-55aba59fe75a";
@@ -89,7 +89,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "dashboard_system_counts_chart_sub_color";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "#d4d4d4";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "1f19c516-20e9-4b30-91e9-cb1fecc45632";
@@ -97,7 +97,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "dashboard_cpu_usage_chart_main_color";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "array";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "#03c04a";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_order'] = "10";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
@@ -106,7 +106,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "dashboard_cpu_usage_chart_main_color";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "array";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "#ff9933";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_order'] = "20";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
@@ -115,7 +115,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "dashboard_cpu_usage_chart_main_color";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "array";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "#ea4c46";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_order'] = "30";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
@@ -124,7 +124,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "dashboard_cpu_usage_chart_sub_color";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "#d4d4d4";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "119d7d1a-ef5d-462d-b2f1-c8f23dc9d766";
@@ -132,7 +132,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "dashboard_disk_usage_chart_main_color";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "array";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "#03c04a";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_order'] = "10";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
@@ -141,7 +141,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "dashboard_disk_usage_chart_main_color";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "array";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "#ff9933";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_order'] = "20";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
@@ -150,7 +150,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "dashboard_disk_usage_chart_main_color";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "array";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "#ea4c46";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_order'] = "30";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
@@ -159,7 +159,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "dashboard_disk_usage_chart_sub_color";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "#d4d4d4";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 
 ?>
