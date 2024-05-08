@@ -197,11 +197,11 @@
 				echo "						0.00001,\n";
 				echo "						],\n";
 				echo "					backgroundColor: [\n";
-				echo "						'".$_SESSION['dashboard']['caller_id_chart_color_defined']['text']."',\n";
-				echo "						'".$_SESSION['dashboard']['caller_id_chart_color_undefined']['text']."',\n";
+				echo "						'".($settings->get('theme', 'dashboard_caller_id_chart_color_defined') ?? '#d4d4d4')."',\n";
+				echo "						'".($settings->get('theme', 'dashboard_caller_id_chart_color_undefined') ?? '#ea4c46')."'\n";
 				echo "					],\n";
-				echo "					borderColor: '".$_SESSION['dashboard']['caller_id_chart_border_color']['text']."',\n";
-				echo "					borderWidth: '".$_SESSION['dashboard']['caller_id_chart_border_width']['text']."'\n";
+				echo "					borderColor: '".$settings->get('theme', 'dashboard_chart_border_color')."',\n";
+				echo "					borderWidth: '".$settings->get('theme', 'dashboard_chart_border_width')."'\n";
 				echo "				}]\n";
 				echo "			},\n";
 				echo "			options: {\n";
