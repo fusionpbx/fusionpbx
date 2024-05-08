@@ -134,8 +134,8 @@
 				echo "						0.00001,\n";
 				echo "						],\n";
 				echo "					backgroundColor: [\n";
-				echo "						'".$settings->get('theme', 'dashboard_domain_limits_chart_color_used')."',\n";
-				echo "						'".$settings->get('theme', 'dashboard_domain_limits_chart_color_remaining')."'\n";
+				echo "						'".($settings->get('theme', 'dashboard_domain_limits_chart_color_used') ?? '#03c04a')."',\n";
+				echo "						'".($settings->get('theme', 'dashboard_domain_limits_chart_color_remaining') ?? '#d4d4d4')."'\n";
 				echo "					],\n";
 				echo "					borderColor: '".$settings->get('theme', 'dashboard_chart_border_color')."',\n";
 				echo "					borderWidth: '".$settings->get('theme', 'dashboard_chart_border_width')."'\n";
