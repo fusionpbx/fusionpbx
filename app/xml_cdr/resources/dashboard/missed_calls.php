@@ -107,8 +107,8 @@
 						datasets: [{
 							data: ['<?php echo $num_rows; ?>', 0.00001],
 							backgroundColor: [
-								'<?php echo $settings->get('theme', 'dashboard_missed_calls_chart_main_color'); ?>',
-								'<?php echo $settings->get('theme', 'dashboard_missed_calls_chart_sub_color'); ?>'
+								'<?php echo ($settings->get('theme', 'dashboard_missed_calls_chart_main_color') ?? '#ea4c46'); ?>',
+								'<?php echo ($settings->get('theme', 'dashboard_missed_calls_chart_sub_color') ?? '#d4d4d4'); ?>'
 							],
 							borderColor: '<?php echo $settings->get('theme', 'dashboard_chart_border_color'); ?>',
 							borderWidth: '<?php echo $settings->get('theme', 'dashboard_chart_border_width'); ?>',
