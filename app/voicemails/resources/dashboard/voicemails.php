@@ -52,13 +52,13 @@
 		}
 	}
 
-	echo "<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 13px; background-color: ".$dashboard_number_background_color.";' ".($dashboard_details_state == "disabled" ?: "onclick=\"$('#hud_voicemail_details').slideToggle('fast');\"").">\n";
-	echo "	<span class='hud_title' style='background-color: ".$dashboard_heading_background_color."; color: ".$dashboard_heading_text_color.";' onclick=\"document.location.href='".PROJECT_PATH."/app/voicemails/voicemail_messages.php'\">".$text['label-new_messages']."</span>";
+	echo "<div class='hud_container' ".($dashboard_details_state == "disabled" ?: "onclick=\"$('#hud_voicemail_details').slideToggle('fast'); toggle_grid_row_end('".$dashboard_name."')\"").">\n";
+	echo "	<span class='hud_title' onclick=\"document.location.href='".PROJECT_PATH."/app/voicemails/voicemail_messages.php'\">".$text['label-new_messages']."</span>";
 
 	if ($dashboard_chart_type == "doughnut") {
 		//add doughnut chart
 		?>
-		<div style='width: 150px; height: 150px; padding-top: 7px;'><canvas id='new_messages_chart'></canvas></div>
+		<div class='hud_chart'><canvas id='new_messages_chart'></canvas></div>
 
 		<script>
 			const new_messages_chart = new Chart(
@@ -101,44 +101,47 @@
 		<?php
 	}
 	if ($dashboard_chart_type == "none") {
-		echo "	<span class='hud_stat' style='padding-bottom: 27px; color: ".$dashboard_number_text_color.";'>".$messages['new']."</span>";
+		echo "	<span class='hud_stat'>".$messages['new']."</span>";
 	}
 	echo "</div>\n";
 
-	echo "<div class='hud_details hud_box' id='hud_voicemail_details'>";
-	if (sizeof($voicemails) > 0) {
-		echo "<table class='tr_hover' cellpadding='2' cellspacing='0' border='0' width='100%'>";
-		echo "<tr>";
-		echo "	<th class='hud_heading' width='50%'>".$text['label-voicemail']."</th>";
-		echo "	<th class='hud_heading' style='text-align: center;' width='50%'>".$text['label-new']."</th>";
-		echo "	<th class='hud_heading' style='text-align: center;'>".$text['label-total']."</th>";
-		echo "</tr>";
+	if ($dashboard_details_state != 'disabled') {
+		echo "<div class='hud_details hud_box' id='hud_voicemail_details'>";
+		if (sizeof($voicemails) > 0) {
+			echo "<table class='tr_hover' cellpadding='2' cellspacing='0' border='0' width='100%'>";
+			echo "<tr>";
+			echo "	<th class='hud_heading' width='50%'>".$text['label-voicemail']."</th>";
+			echo "	<th class='hud_heading' style='text-align: center;' width='50%'>".$text['label-new']."</th>";
+			echo "	<th class='hud_heading' style='text-align: center;'>".$text['label-total']."</th>";
+			echo "</tr>";
 
-		$c = 0;
-		$row_style["0"] = "row_style0";
-		$row_style["1"] = "row_style1";
+			$c = 0;
+			$row_style["0"] = "row_style0";
+			$row_style["1"] = "row_style1";
 
-		foreach ($messages as $voicemail_uuid => $row) {
-			if (is_uuid($voicemail_uuid)) {
-				$tr_link = "href='".PROJECT_PATH."/app/voicemails/voicemail_messages.php?id=".(permission_exists('voicemail_view') ? $voicemail_uuid : $row['ext'])."'";
-				echo "<tr ".$tr_link." style='cursor: pointer;'>";
-				echo "	<td class='".$row_style[$c]." hud_text'><a href='".PROJECT_PATH."/app/voicemails/voicemail_messages.php?id=".(permission_exists('voicemail_view') ? $voicemail_uuid : $row['ext'])."&back=".urlencode($_SERVER["REQUEST_URI"])."'>".$row['ext']."</a></td>";
-				echo "	<td class='".$row_style[$c]." hud_text' style='text-align: center;'>".$row['new']."</td>";
-				echo "	<td class='".$row_style[$c]." hud_text' style='text-align: center;'>".$row['total']."</td>";
-				echo "</tr>";
-				$c = ($c) ? 0 : 1;
+			foreach ($messages as $voicemail_uuid => $row) {
+				if (is_uuid($voicemail_uuid)) {
+					$tr_link = "href='".PROJECT_PATH."/app/voicemails/voicemail_messages.php?id=".(permission_exists('voicemail_view') ? $voicemail_uuid : $row['ext'])."'";
+					echo "<tr ".$tr_link." style='cursor: pointer;'>";
+					echo "	<td class='".$row_style[$c]." hud_text'><a href='".PROJECT_PATH."/app/voicemails/voicemail_messages.php?id=".(permission_exists('voicemail_view') ? $voicemail_uuid : $row['ext'])."&back=".urlencode($_SERVER["REQUEST_URI"])."'>".$row['ext']."</a></td>";
+					echo "	<td class='".$row_style[$c]." hud_text' style='text-align: center;'>".$row['new']."</td>";
+					echo "	<td class='".$row_style[$c]." hud_text' style='text-align: center;'>".$row['total']."</td>";
+					echo "</tr>";
+					$c = ($c) ? 0 : 1;
+				}
 			}
+
+			echo "</table>";
 		}
+		else {
+			echo "<br />".$text['label-no_voicemail_assigned'];
+		}
+		echo "</div>";
+		//$n++;
 
-		echo "</table>";
+		echo "<span class='hud_expander' onclick=\"$('#hud_voicemail_details').slideToggle('fast'); toggle_grid_row_end('".$dashboard_name."')\"><span class='fas fa-ellipsis-h'></span></span>";
 	}
-	else {
-		echo "<br />".$text['label-no_voicemail_assigned'];
-	}
-	echo "</div>";
-	//$n++;
 
-	echo "<span class='hud_expander' onclick=\"$('#hud_voicemail_details').slideToggle('fast');\"><span class='fas fa-ellipsis-h'></span></span>";
 	echo "</div>\n";
 
 ?>

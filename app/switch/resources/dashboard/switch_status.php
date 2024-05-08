@@ -76,13 +76,14 @@
 		$registrations = $registration->count();
 	}
 
-	echo "<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 13px; background-color: ".$dashboard_number_background_color.";' ".($dashboard_details_state == "disabled" ?: "onclick=\"$('#hud_switch_status_details').slideToggle('fast');\"").">\n";
-	echo "	<span class='hud_title' style='background-color: ".$dashboard_heading_background_color."; color: ".$dashboard_heading_text_color.";'>".$text['label-switch_status']."</span>\n";
+//show the content
+	echo "<div class='hud_container' ".($dashboard_details_state == "disabled" ?: "onclick=\"$('#hud_switch_status_details').slideToggle('fast'); toggle_grid_row_end('".$dashboard_name."')\"").">\n";
+	echo "	<span class='hud_title'>".$text['label-switch_status']."</span>\n";
 
 	if ($dashboard_chart_type == "doughnut") {
 		//add doughnut chart
 		?>
-		<div style='height: 150px; padding-top: 7px;'><canvas id='switch_status_chart'></canvas></div>
+		<div class='hud_chart'><canvas id='switch_status_chart'></canvas></div>
 
 		<script>
 			const switch_status_chart = new Chart(
@@ -123,59 +124,60 @@
 		<?php
 	}
 	if ($dashboard_chart_type == "none") {
-		echo "	<span class='hud_stat' style='padding-bottom: 27px; color: ".$dashboard_number_text_color.";'>".$registrations."</span>";
+		echo "	<span class='hud_stat'>".$registrations."</span>";
 	}
 	echo "	</div>\n";
 
-//show the content
-	echo "<div class='hud_details hud_box' id='hud_switch_status_details'>";
-	echo "<table class='tr_hover' width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
-	echo "<tr>\n";
-	echo "<th class='hud_heading' width='50%'>".$text['label-name']."</th>\n";
-	echo "<th class='hud_heading' style='text-align: right;'>".$text['label-value']."</th>\n";
-	echo "</tr>\n";
-
-	//switch version
-	if (permission_exists('switch_version') && !empty($switch_version)) {
-		echo "<tr class='tr_link' ".$tr_link_sip_status.">\n";
-		echo "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-switch']."</td>\n";
-		echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'><a ".$tr_link_sip_status.">".$switch_version." (".$switch_bits.")</a></td>\n";
+	if ($dashboard_details_state != 'disabled') {
+		echo "<div class='hud_details hud_box' id='hud_switch_status_details'>";
+		echo "<table class='tr_hover' width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
+		echo "<tr>\n";
+		echo "<th class='hud_heading' width='50%'>".$text['label-name']."</th>\n";
+		echo "<th class='hud_heading' style='text-align: right;'>".$text['label-value']."</th>\n";
 		echo "</tr>\n";
-		$c = ($c) ? 0 : 1;
+
+		//switch version
+		if (permission_exists('switch_version') && !empty($switch_version)) {
+			echo "<tr class='tr_link' ".$tr_link_sip_status.">\n";
+			echo "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-switch']."</td>\n";
+			echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'><a ".$tr_link_sip_status.">".$switch_version." (".$switch_bits.")</a></td>\n";
+			echo "</tr>\n";
+			$c = ($c) ? 0 : 1;
+		}
+
+		//switch uptime
+		if (permission_exists('switch_uptime') && !empty($uptime)) {
+			echo "<tr class='tr_link' ".$tr_link_sip_status.">\n";
+			echo "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-switch_uptime']."</td>\n";
+			echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'><a ".$tr_link_sip_status.">".$uptime."</a></td>\n";
+			echo "</tr>\n";
+			$c = ($c) ? 0 : 1;
+		}
+
+		//switch channels
+		if (permission_exists('switch_channels')) {
+			echo "<tr class='tr_link' ".$tr_link_channels.">\n";
+			echo "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-channels']."</td>\n";
+			echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'><a ".$tr_link_channels.">".$channels."</a></td>\n";
+			echo "</tr>\n";
+			$c = ($c) ? 0 : 1;
+		}
+
+		//switch registrations
+		if (permission_exists('switch_registrations')) {
+			echo "<tr class='tr_link' ".$tr_link_registrations.">\n";
+			echo "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-registrations']."</td>\n";
+			echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'><a ".$tr_link_registrations.">".$registrations."</a></td>\n";
+			echo "</tr>\n";
+			$c = ($c) ? 0 : 1;
+		}
+
+		echo "</table>\n";
+		echo "</div>";
+		//$n++;
+
+		echo "<span class='hud_expander' onclick=\"$('#hud_switch_status_details').slideToggle('fast'); toggle_grid_row_end('".$dashboard_name."')\"><span class='fas fa-ellipsis-h'></span></span>";
 	}
-
-	//switch uptime
-	if (permission_exists('switch_uptime') && !empty($uptime)) {
-		echo "<tr class='tr_link' ".$tr_link_sip_status.">\n";
-		echo "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-switch_uptime']."</td>\n";
-		echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'><a ".$tr_link_sip_status.">".$uptime."</a></td>\n";
-		echo "</tr>\n";
-		$c = ($c) ? 0 : 1;
-	}
-
-	//switch channels
-	if (permission_exists('switch_channels')) {
-		echo "<tr class='tr_link' ".$tr_link_channels.">\n";
-		echo "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-channels']."</td>\n";
-		echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'><a ".$tr_link_channels.">".$channels."</a></td>\n";
-		echo "</tr>\n";
-		$c = ($c) ? 0 : 1;
-	}
-
-	//switch registrations
-	if (permission_exists('switch_registrations')) {
-		echo "<tr class='tr_link' ".$tr_link_registrations.">\n";
-		echo "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-registrations']."</td>\n";
-		echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'><a ".$tr_link_registrations.">".$registrations."</a></td>\n";
-		echo "</tr>\n";
-		$c = ($c) ? 0 : 1;
-	}
-
-	echo "</table>\n";
-	echo "</div>";
-	//$n++;
-
-	echo "<span class='hud_expander' onclick=\"$('#hud_switch_status_details').slideToggle('fast');\"><span class='fas fa-ellipsis-h'></span></span>";
 	echo "</div>\n";
 
 ?>

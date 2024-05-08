@@ -75,10 +75,11 @@
 	$sql .= "dashboard_url, \n";
 	$sql .= "dashboard_icon, \n";
 	$sql .= "dashboard_chart_type, \n";
-	$sql .= "dashboard_heading_background_color, \n";
 	$sql .= "dashboard_heading_text_color, \n";
-	$sql .= "dashboard_number_background_color, \n";
+	$sql .= "dashboard_heading_background_color, \n";
 	$sql .= "dashboard_number_text_color, \n";
+	$sql .= "dashboard_background_color, \n";
+	$sql .= "dashboard_detail_background_color, \n";
 	$sql .= "dashboard_column_span, \n";
 	$sql .= "dashboard_details_state, \n";
 	$sql .= "dashboard_order, \n";
@@ -218,8 +219,46 @@
   margin: 0 auto;
   display: grid;
   grid-gap: 1rem;
-  grid-column: auto;
 }
+
+div.hud_container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding-bottom: 13px;
+}
+
+div.hud_chart {
+  height: 150px;
+  padding-top: 7px;
+}
+
+span.hud_stat { padding-bottom: 27px; }
+
+/* Dashboard settings */
+<?php
+	foreach($dashboard as $row) {
+		$dashboard_name = str_replace(" ", "_", strtolower($row['dashboard_name']));
+		$background_color = json_decode($row['dashboard_background_color'], true);
+		$detail_background_color = json_decode($row['dashboard_detail_background_color'], true);
+		echo "#".$dashboard_name." .hud_box .hud_container {";
+		echo "	background: ".$background_color[0].";";
+		echo "	background-image: linear-gradient(to right, ".$background_color[1]." 0%, ".$background_color[0]." 30%, ".$background_color[0]." 70%, ".$background_color[1]." 100%);";
+		echo "}";
+		echo "#".$dashboard_name." .hud_box .hud_title {";
+		echo "	color: ".$row['dashboard_heading_text_color'].";";
+		echo "	background-color: ".$row['dashboard_heading_background_color'].";";
+		echo "}";
+		echo "#".$dashboard_name." .hud_box .hud_stat {";
+		echo "	color: ".$row['dashboard_number_text_color'].";";
+		echo "}";
+		echo "#".$dashboard_name." .hud_box .hud_details {";
+		echo "	background: ".$detail_background_color[0].";";
+		echo "	background-image: linear-gradient(to right, ".$detail_background_color[1]." 0%, ".$detail_background_color[0]." 30%, ".$detail_background_color[0]." 70%, ".$detail_background_color[1]." 100%);";
+		echo "}";
+	}
+
+?>
 
 /* Screen smaller than 575px? 1 columns */
 @media (max-width: 575px) {
@@ -227,8 +266,7 @@
   .col-num { grid-column: span 1; }
 	<?php
 		foreach($dashboard as $row) {
-			$dashboard_name = strtolower($row['dashboard_name']);
-			$dashboard_name = str_replace(" ", "_", $dashboard_name);
+			$dashboard_name = str_replace(" ", "_", strtolower($row['dashboard_name']));
 			if (isset($dashboard_column_span) && is_numeric($dashboard_column_span)) {
 				echo "#".$dashboard_name." {\n";
 				echo "	grid-column: span 1;\n";
@@ -244,13 +282,9 @@
   .col-num { grid-column: span 2; }
 	<?php
 		foreach($dashboard as $row) {
-			$dashboard_name = strtolower($row['dashboard_name']);
-			$dashboard_name = str_replace(" ", "_", $dashboard_name);
-			$dashboard_column_span = 1;
+			$dashboard_name = str_replace(" ", "_", strtolower($row['dashboard_name']));
+			$dashboard_column_span = $row['dashboard_column_span'];
 			if (is_numeric($dashboard_column_span)) {
-				if ($row['dashboard_column_span'] > 2) {
-					$dashboard_column_span = 2;
-				}
 				echo "#".$dashboard_name." {\n";
 				echo "	grid-column: span ".$dashboard_column_span.";\n";
 				echo "}\n";
@@ -304,8 +338,15 @@
   .widgets { grid-template-columns: repeat(5, minmax(100px, 1fr)); }
   .col-num { grid-column: span 2; }
 }
-
 </style>
+
+<script>
+function toggle_grid_row_end(dashboard_name) {
+	var widget = document.getElementById(dashboard_name);
+	var current_row_end = widget.style.gridRowEnd;
+	widget.style.gridRowEnd = (current_row_end == 'span 2') ? 'span 5' : 'span 2';
+}
+</script>
 
 <?php
 
@@ -313,16 +354,15 @@
 	echo "<div class='widgets' id='widgets' style='padding: 0 5px;'>\n";
 	$x = 0;
 	foreach($dashboard as $row) {
-		$dashboard_name = $row['dashboard_name'];
+		$dashboard_name = str_replace(" ", "_", strtolower($row['dashboard_name']));
 		$dashboard_icon = $row['dashboard_icon'] ?? '';
 		$dashboard_url  = $row['dashboard_url'] ?? '';
 		$dashboard_chart_type = $row['dashboard_chart_type'] ?? 'doughnut';
-		$dashboard_heading_background_color = $row['dashboard_heading_background_color'] ?? $settings->get('theme', 'dashboard_heading_background_color');
-		$dashboard_heading_text_color = $row['dashboard_heading_text_color'] ?? $settings->get('theme', 'dashboard_heading_text_color');
-		$dashboard_number_background_color = $row['dashboard_number_background_color'] ?? $settings->get('theme', 'dashboard_number_background_color');
 		$dashboard_number_text_color = $row['dashboard_number_text_color'] ?? $settings->get('theme', 'dashboard_number_text_color');
 		$dashboard_details_state = $row['dashboard_details_state'];
-		echo "<div class='widget' id='".str_replace(" ", "_", strtolower($dashboard_name))."' draggable='false'>\n";
+		$grid_row_end = ($dashboard_details_state == "expanded" || empty($dashboard_details_state)) ? "grid-row-end: span 5;" : "grid-row-end: span 2;";
+
+		echo "<div class='widget' style='".$grid_row_end."' id='".$dashboard_name."' draggable='false'>\n";
 		include($row['dashboard_path']);
 		echo "</div>\n";
 		$x++;
