@@ -119,9 +119,9 @@
 						--xml:append([[						<X-PRE-PROCESS cmd="include" data="]] .. xml.sanitize(sip_profile_name) .. [[/*.xml"/>]]);
 
 						--get the gateways
-							sql = "select * from v_gateways ";
+							sql = "select * from v_gateways g LEFT JOIN v_domains d using(domain_uuid) ";
 							sql = sql .. "where profile = :profile ";
-							sql = sql .. "and enabled = 'true' ";
+							sql = sql .. "and g.enabled = 'true' and d.domain_enabled is distinct from 'false' ";
 							sql = sql .. "and (hostname = :hostname or hostname is null or hostname = '') ";
 							local params = {profile = sip_profile_name, hostname = hostname};
 							if (debug["sql"]) then
@@ -218,6 +218,12 @@
 								xml:append([[							<variables>]]);
 								if (string.len(field.sip_cid_type) > 0) then
 									xml:append([[								<variable name="sip_cid_type" value="]] .. xml.sanitize(field.sip_cid_type) .. [["/>]]);
+								end
+								if (string.len(field.domain_name) > 0) then
+									xml:append([[								<variable name="domain_name" value="]] .. xml.sanitize(field.domain_name) .. [["/>]]);
+								end
+								if (string.len(field.domain_uuid) > 0) then
+									xml:append([[								<variable name="domain_uuid" value="]] .. xml.sanitize(field.domain_uuid) .. [["/>]]);
 								end
 								xml:append([[							</variables>]]);
 								xml:append([[						</gateway>]]);
