@@ -400,7 +400,7 @@
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "2d90b6c5-4dba-4712-b087-d4f870c5af0c";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "dashboard_missed_calls_chart_main_background_color";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "dashboard_missed_calls_chart_main_color";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "#ea4c46";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
@@ -408,7 +408,7 @@
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "4b45ed54-63d0-4ef6-b950-39a2671ea1f0";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "dashboard_missed_calls_chart_sub_background_color";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "dashboard_missed_calls_chart_sub_color";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "#d4d4d4";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
@@ -416,7 +416,7 @@
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "d907f927-77aa-4548-8f7e-a20860531c31";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "dashboard_recent_calls_chart_main_background_color";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "dashboard_recent_calls_chart_main_color";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "#2a9df4";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
@@ -424,7 +424,7 @@
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "a9d5a760-4cac-4e69-87b1-9f338fc2317c";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "dashboard_recent_calls_chart_sub_background_color";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "dashboard_recent_calls_chart_sub_color";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "#d4d4d4";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
