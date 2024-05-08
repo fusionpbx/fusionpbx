@@ -313,8 +313,8 @@
 							datasets: [{
 								data: ['<?php echo $domain_active; ?>', '<?php echo $domain_inactive; ?>'],
 								backgroundColor: [
-									'<?php echo $settings->get('theme', 'dashboard_system_counts_chart_main_color'); ?>',
-									'<?php echo $settings->get('theme', 'dashboard_system_counts_chart_sub_color'); ?>'
+									'<?php echo ($settings->get('theme', 'dashboard_system_counts_chart_main_color') ?? '#2a9df4'); ?>',
+									'<?php echo ($settings->get('theme', 'dashboard_system_counts_chart_sub_color') ?? '#d4d4d4'); ?>'
 								],
 								borderColor: '<?php echo $settings->get('theme', 'dashboard_chart_border_color'); ?>',
 								borderWidth: '<?php echo $settings->get('theme', 'dashboard_chart_border_width'); ?>',
