@@ -1039,6 +1039,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the shadow color (and opacity) of the Dashboard block number title.";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "1fda5e52-d27a-45ac-b8ff-705347bc753c";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "dashboard_chart_text_size";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "30px";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the size of the Dashboard chart number.";
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "caa50bb2-3db8-4c4d-9172-b60fa015a909";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "dashboard_detail_heading_text_size";
