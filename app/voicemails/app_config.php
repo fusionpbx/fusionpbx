@@ -372,7 +372,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "dashboard_new_messages_chart_main_color";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "#ff9933";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "ec7b134d-622b-4f1e-bdae-faca40300b90";
@@ -380,7 +380,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "dashboard_new_messages_chart_sub_color";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "#d4d4d4";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 
 	//schema details
