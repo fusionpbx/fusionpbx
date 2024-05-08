@@ -110,12 +110,12 @@
 				$hud_stat_title = $text['label-destinations'];
 			}
 
-			echo "	<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 13px; background-color: ".$dashboard_number_background_color.";' ".($dashboard_details_state == "disabled" ?: "onclick=\"$('#hud_domain_limits_details').slideToggle('fast');\"").">\n";
-			echo "		<span class='hud_title' style='background-color: ".$dashboard_heading_background_color."; color: ".$dashboard_heading_text_color.";'>".$text['label-domain_limits']."</span>\n";
+			echo "	<div class='hud_container' ".($dashboard_details_state == "disabled" ?: "onclick=\"$('#hud_domain_limits_details').slideToggle('fast'); toggle_grid_row_end('".$dashboard_name."')\"").">\n";
+			echo "		<span class='hud_title'>".$text['label-domain_limits']."</span>\n";
 
 		//doughnut chart
 			if ($dashboard_chart_type == "doughnut") {
-				echo "<div style='width: 275px; height: 150px; padding-top: 7px;'><canvas id='domain_limits_chart'></canvas></div>\n";
+				echo "<div class='hud_chart' style='width: 275px';><canvas id='domain_limits_chart'></canvas></div>\n";
 
 				echo "<script>\n";
 				echo "	const domain_limits_chart = new Chart(\n";
@@ -174,72 +174,74 @@
 				echo "</script>\n";
 			}
 			if ($dashboard_chart_type == "none") {
-				echo "	<span class='hud_stat' style='color: ".$dashboard_number_text_color."; padding-bottom: 27px;'>".$hud_stat_used."</span>";
+				echo "	<span class='hud_stat'>".$hud_stat_used."</span>";
 			}
 			echo "	</div>\n";
 
 		//details
-			echo "<div class='hud_details hud_box' id='hud_domain_limits_details'>";
+			if ($dashboard_details_state != 'disabled') {
+				echo "<div class='hud_details hud_box' id='hud_domain_limits_details'>";
 
-			echo "<table class='tr_hover' width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
-			echo "<tr style='position: -webkit-sticky; position: sticky; z-index: 5; top: 0;'>\n";
-			echo "<th class='hud_heading' width='50%'>".$text['label-feature']."</th>\n";
-			echo "<th class='hud_heading' width='50%' style='text-align: center;'>".$text['label-used']."</th>\n";
-			echo "<th class='hud_heading' style='text-align: center;'>".$text['label-total']."</th>\n";
-			echo "</tr>\n";
-
-		//data
-			foreach ($_SESSION['limit'] as $category => $value) {
-				$used = $usage[$category];
-				$limit = $value['numeric'];
-				switch ($category) {
-					case 'users':
-						if (!permission_exists('user_view')) { continue 2; }
-						$url = '/core/users/users.php';
-						break;
-					case 'call_center_queues':
-						if (!permission_exists('call_center_active_view')) { continue 2; }
-						$url = '/app/call_centers/call_center_queues.php';
-						break;
-					case 'destinations':
-						if (!permission_exists('destination_view')) { continue 2; }
-						$url = '/app/destinations/destinations.php';
-						break;
-					case 'devices':
-						if (!permission_exists('device_view')) { continue 2; }
-						$url = '/app/devices/devices.php';
-						break;
-					case 'extensions':
-						if (!permission_exists('extension_view')) { continue 2; }
-						$url = '/app/extensions/extensions.php';
-						break;
-					case 'gateways':
-						if (!permission_exists('gateway_view')) { continue 2; }
-						$url = '/app/gateways/gateways.php';
-						break;
-					case 'ivr_menus':
-						if (!permission_exists('ivr_menu_view')) { continue 2; }
-						$url = '/app/ivr_menus/ivr_menus.php';
-						break;
-					case 'ring_groups':
-						if (!permission_exists('ring_group_view')) { continue 2; }
-						$url = '/app/ring_groups/ring_groups.php';
-						break;
-				}
-				$tr_link = "href='".PROJECT_PATH.$url."'";
-				echo "<tr ".$tr_link." style='cursor: pointer;'>\n";
-				echo "<td valign='top' class='".$row_style[$c]." hud_text'><a ".$tr_link.">".$text['label-'.$category]."</a></td>\n";
-				echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$used."</td>\n";
-				echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$limit."</td>\n";
+				echo "<table class='tr_hover' width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
+				echo "<tr style='position: -webkit-sticky; position: sticky; z-index: 5; top: 0;'>\n";
+				echo "<th class='hud_heading' width='50%'>".$text['label-feature']."</th>\n";
+				echo "<th class='hud_heading' width='50%' style='text-align: center;'>".$text['label-used']."</th>\n";
+				echo "<th class='hud_heading' style='text-align: center;'>".$text['label-total']."</th>\n";
 				echo "</tr>\n";
-				$c = ($c) ? 0 : 1;
+
+			//data
+				foreach ($_SESSION['limit'] as $category => $value) {
+					$used = $usage[$category];
+					$limit = $value['numeric'];
+					switch ($category) {
+						case 'users':
+							if (!permission_exists('user_view')) { continue 2; }
+							$url = '/core/users/users.php';
+							break;
+						case 'call_center_queues':
+							if (!permission_exists('call_center_active_view')) { continue 2; }
+							$url = '/app/call_centers/call_center_queues.php';
+							break;
+						case 'destinations':
+							if (!permission_exists('destination_view')) { continue 2; }
+							$url = '/app/destinations/destinations.php';
+							break;
+						case 'devices':
+							if (!permission_exists('device_view')) { continue 2; }
+							$url = '/app/devices/devices.php';
+							break;
+						case 'extensions':
+							if (!permission_exists('extension_view')) { continue 2; }
+							$url = '/app/extensions/extensions.php';
+							break;
+						case 'gateways':
+							if (!permission_exists('gateway_view')) { continue 2; }
+							$url = '/app/gateways/gateways.php';
+							break;
+						case 'ivr_menus':
+							if (!permission_exists('ivr_menu_view')) { continue 2; }
+							$url = '/app/ivr_menus/ivr_menus.php';
+							break;
+						case 'ring_groups':
+							if (!permission_exists('ring_group_view')) { continue 2; }
+							$url = '/app/ring_groups/ring_groups.php';
+							break;
+					}
+					$tr_link = "href='".PROJECT_PATH.$url."'";
+					echo "<tr ".$tr_link." style='cursor: pointer;'>\n";
+					echo "<td valign='top' class='".$row_style[$c]." hud_text'><a ".$tr_link.">".$text['label-'.$category]."</a></td>\n";
+					echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$used."</td>\n";
+					echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$limit."</td>\n";
+					echo "</tr>\n";
+					$c = ($c) ? 0 : 1;
+				}
+
+				echo "</table>\n";
+				echo "</div>";
+				//$n++;
+
+				echo "<span class='hud_expander' onclick=\"$('#hud_domain_limits_details').slideToggle('fast'); toggle_grid_row_end('".$dashboard_name."')\"><span class='fas fa-ellipsis-h'></span></span>";
 			}
-
-			echo "</table>\n";
-			echo "</div>";
-			//$n++;
-
-			echo "<span class='hud_expander' onclick=\"$('#hud_domain_limits_details').slideToggle('fast');\"><span class='fas fa-ellipsis-h'></span></span>";
 			echo "</div>\n";
 	}
 

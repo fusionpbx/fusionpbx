@@ -2631,7 +2631,7 @@ else { //default: white
 		$padding_top_bottom = (int) floor((100-$tmp) * 0.25);
 		?>
 		padding-top: <?php echo $padding_top_bottom.'px' ?>;
-		padding-bottom: <?php echo ($padding_top_bottom).'px' ?>;
+		padding-bottom: <?php echo $padding_top_bottom.'px' ?>;
 		}
 
 	span.hud_stat:hover {

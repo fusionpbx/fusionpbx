@@ -295,13 +295,13 @@
 	echo "<div class='hud_box'>\n";
 	if ($show_stat) {
 
-		echo "<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 13px; background-color: ".$dashboard_number_background_color.";' ".($dashboard_details_state == "disabled" ?: "onclick=\"$('#hud_system_counts_details').slideToggle('fast');\"").">\n";
-		echo "	<span class='hud_title' style='background-color: ".$dashboard_heading_background_color."; color: ".$dashboard_heading_text_color.";' onclick=\"document.location.href='".PROJECT_PATH."/app/system/system.php'\">".$text['label-system_counts']."</span>\n";
+		echo "<div class='hud_container' ".($dashboard_details_state == "disabled" ?: "onclick=\"$('#hud_system_counts_details').slideToggle('fast'); toggle_grid_row_end('".$dashboard_name."')\"").">\n";
+		echo "	<span class='hud_title' onclick=\"document.location.href='".PROJECT_PATH."/app/system/system.php'\">".$text['label-system_counts']."</span>\n";
 
 		if ($dashboard_chart_type == "doughnut") {
 			//add doughnut chart
 			?>
-			<div style='height: 150px; padding-top: 7px;'><canvas id='system_counts_chart'></canvas></div>
+			<div class='hud_chart'><canvas id='system_counts_chart'></canvas></div>
 
 			<script>
 				const system_counts_chart = new Chart(
@@ -355,150 +355,152 @@
 			<?php
 		}
 		if ($dashboard_chart_type == "none") {
-			echo "	<span class='hud_stat' style='color: ".$dashboard_number_text_color."; padding-bottom: 27px;'>".$domain_total."</span>";
+			echo "	<span class='hud_stat'>".$domain_total."</span>";
 		}
 		echo "	</div>\n";
 	}
 
-	echo "<div class='hud_details hud_box' id='hud_system_counts_details'>";
-	echo "<table class='tr_hover' width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
-	echo "<tr>\n";
-	echo "<th class='hud_heading' width='50%'>".$text['label-item']."</th>\n";
-	echo "<th class='hud_heading' width='50%' style='text-align: center; padding-left: 0; padding-right: 0;'>".$text['label-disabled']."</th>\n";
-	echo "<th class='hud_heading' style='text-align: center;'>".$text['label-total']."</th>\n";
-	echo "</tr>\n";
+	if ($dashboard_details_state != 'disabled') {
+		echo "<div class='hud_details hud_box' id='hud_system_counts_details'>";
+		echo "<table class='tr_hover' width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
+		echo "<tr>\n";
+		echo "<th class='hud_heading' width='50%'>".$text['label-item']."</th>\n";
+		echo "<th class='hud_heading' width='50%' style='text-align: center; padding-left: 0; padding-right: 0;'>".$text['label-disabled']."</th>\n";
+		echo "<th class='hud_heading' style='text-align: center;'>".$text['label-total']."</th>\n";
+		echo "</tr>\n";
 
-	//domains
-		if (permission_exists('domain_view')) {
-			$tr_link = "href='".PROJECT_PATH."/core/domains/domains.php'";
-			echo "<tr ".$tr_link.">\n";
-			echo "<td valign='top' class='".$row_style[$c]." hud_text'><a ".$tr_link.">".$text['label-domains']."</a></td>\n";
-			echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats[$scope]['domains']['disabled']."</td>\n";
-			echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats[$scope]['domains']['total']."</td>\n";
-			echo "</tr>\n";
-			$c = ($c) ? 0 : 1;
-		}
+		//domains
+			if (permission_exists('domain_view')) {
+				$tr_link = "href='".PROJECT_PATH."/core/domains/domains.php'";
+				echo "<tr ".$tr_link.">\n";
+				echo "<td valign='top' class='".$row_style[$c]." hud_text'><a ".$tr_link.">".$text['label-domains']."</a></td>\n";
+				echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats[$scope]['domains']['disabled']."</td>\n";
+				echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats[$scope]['domains']['total']."</td>\n";
+				echo "</tr>\n";
+				$c = ($c) ? 0 : 1;
+			}
 
-	//devices
-		if (permission_exists('device_view') && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/devices/")) {
-			$tr_link = "href='".PROJECT_PATH."/app/devices/devices.php'";
-			echo "<tr ".$tr_link.">\n";
-			echo "<td valign='top' class='".$row_style[$c]." hud_text'><a ".$tr_link.">".$text['label-devices']."</a></td>\n";
-			echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats[$scope]['devices']['disabled']."</td>\n";
-			echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats[$scope]['devices']['total']."</td>\n";
-			echo "</tr>\n";
-			$c = ($c) ? 0 : 1;
-		}
+		//devices
+			if (permission_exists('device_view') && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/devices/")) {
+				$tr_link = "href='".PROJECT_PATH."/app/devices/devices.php'";
+				echo "<tr ".$tr_link.">\n";
+				echo "<td valign='top' class='".$row_style[$c]." hud_text'><a ".$tr_link.">".$text['label-devices']."</a></td>\n";
+				echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats[$scope]['devices']['disabled']."</td>\n";
+				echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats[$scope]['devices']['total']."</td>\n";
+				echo "</tr>\n";
+				$c = ($c) ? 0 : 1;
+			}
 
-	//extensions
-		if (permission_exists('extension_view') && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/extensions/")) {
-			$tr_link = "href='".PROJECT_PATH."/app/extensions/extensions.php'";
-			echo "<tr ".$tr_link.">\n";
-			echo "<td valign='top' class='".$row_style[$c]." hud_text'><a ".$tr_link.">".$text['label-extensions']."</a></td>\n";
-			echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats[$scope]['extensions']['disabled']."</td>\n";
-			echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats[$scope]['extensions']['total']."</td>\n";
-			echo "</tr>\n";
-			$c = ($c) ? 0 : 1;
-		}
+		//extensions
+			if (permission_exists('extension_view') && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/extensions/")) {
+				$tr_link = "href='".PROJECT_PATH."/app/extensions/extensions.php'";
+				echo "<tr ".$tr_link.">\n";
+				echo "<td valign='top' class='".$row_style[$c]." hud_text'><a ".$tr_link.">".$text['label-extensions']."</a></td>\n";
+				echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats[$scope]['extensions']['disabled']."</td>\n";
+				echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats[$scope]['extensions']['total']."</td>\n";
+				echo "</tr>\n";
+				$c = ($c) ? 0 : 1;
+			}
 
-	//gateways
-		if (permission_exists('gateway_view') && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/gateways/")) {
-			$tr_link = "href='".PROJECT_PATH."/app/gateways/gateways.php'";
-			echo "<tr ".$tr_link.">\n";
-			echo "<td valign='top' class='".$row_style[$c]." hud_text'><a ".$tr_link.">".$text['label-gateways']."</a></td>\n";
-			echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats[$scope]['gateways']['disabled']."</td>\n";
-			echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats[$scope]['gateways']['total']."</td>\n";
-			echo "</tr>\n";
-			$c = ($c) ? 0 : 1;
-		}
+		//gateways
+			if (permission_exists('gateway_view') && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/gateways/")) {
+				$tr_link = "href='".PROJECT_PATH."/app/gateways/gateways.php'";
+				echo "<tr ".$tr_link.">\n";
+				echo "<td valign='top' class='".$row_style[$c]." hud_text'><a ".$tr_link.">".$text['label-gateways']."</a></td>\n";
+				echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats[$scope]['gateways']['disabled']."</td>\n";
+				echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats[$scope]['gateways']['total']."</td>\n";
+				echo "</tr>\n";
+				$c = ($c) ? 0 : 1;
+			}
 
-	//users
-		if ((permission_exists('user_view') || if_group("superadmin")) && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/core/users/")) {
-			$tr_link = "href='".PROJECT_PATH."/core/users/users.php'";
-			echo "<tr ".$tr_link.">\n";
-			echo "<td valign='top' class='".$row_style[$c]." hud_text'><a ".$tr_link.">".$text['label-users']."</a></td>\n";
-			echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats[$scope]['users']['disabled']."</td>\n";
-			echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats[$scope]['users']['total']."</td>\n";
-			echo "</tr>\n";
-			$c = ($c) ? 0 : 1;
-		}
+		//users
+			if ((permission_exists('user_view') || if_group("superadmin")) && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/core/users/")) {
+				$tr_link = "href='".PROJECT_PATH."/core/users/users.php'";
+				echo "<tr ".$tr_link.">\n";
+				echo "<td valign='top' class='".$row_style[$c]." hud_text'><a ".$tr_link.">".$text['label-users']."</a></td>\n";
+				echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats[$scope]['users']['disabled']."</td>\n";
+				echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats[$scope]['users']['total']."</td>\n";
+				echo "</tr>\n";
+				$c = ($c) ? 0 : 1;
+			}
 
-	//destinations
-		if (permission_exists('destination_view') && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/destinations/")) {
-			$tr_link = "href='".PROJECT_PATH."/app/destinations/destinations.php'";
-			echo "<tr ".$tr_link.">\n";
-			echo "<td valign='top' class='".$row_style[$c]." hud_text'><a ".$tr_link.">".$text['label-destinations']."</a></td>\n";
-			echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats[$scope]['destinations']['disabled']."</td>\n";
-			echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats[$scope]['destinations']['total']."</td>\n";
-			echo "</tr>\n";
-			$c = ($c) ? 0 : 1;
-		}
+		//destinations
+			if (permission_exists('destination_view') && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/destinations/")) {
+				$tr_link = "href='".PROJECT_PATH."/app/destinations/destinations.php'";
+				echo "<tr ".$tr_link.">\n";
+				echo "<td valign='top' class='".$row_style[$c]." hud_text'><a ".$tr_link.">".$text['label-destinations']."</a></td>\n";
+				echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats[$scope]['destinations']['disabled']."</td>\n";
+				echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats[$scope]['destinations']['total']."</td>\n";
+				echo "</tr>\n";
+				$c = ($c) ? 0 : 1;
+			}
 
-	//call center queues
-		if (permission_exists('call_center_active_view') && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/call_centers/")) {
-			$tr_link = "href='".PROJECT_PATH."/app/call_centers/call_center_queues.php'";
-			echo "<tr ".$tr_link.">\n";
-			echo "<td valign='top' class='".$row_style[$c]." hud_text'><a ".$tr_link.">".$text['label-call_center_queues']."</a></td>\n";
-			echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats[$scope]['call_center_queues']['disabled']."</td>\n";
-			echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats[$scope]['call_center_queues']['total']."</td>\n";
-			echo "</tr>\n";
-			$c = ($c) ? 0 : 1;
-		}
+		//call center queues
+			if (permission_exists('call_center_active_view') && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/call_centers/")) {
+				$tr_link = "href='".PROJECT_PATH."/app/call_centers/call_center_queues.php'";
+				echo "<tr ".$tr_link.">\n";
+				echo "<td valign='top' class='".$row_style[$c]." hud_text'><a ".$tr_link.">".$text['label-call_center_queues']."</a></td>\n";
+				echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats[$scope]['call_center_queues']['disabled']."</td>\n";
+				echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats[$scope]['call_center_queues']['total']."</td>\n";
+				echo "</tr>\n";
+				$c = ($c) ? 0 : 1;
+			}
 
-	//ivr menus
-		if (permission_exists('ivr_menu_view') && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/ivr_menus/")) {
-			$tr_link = "href='".PROJECT_PATH."/app/ivr_menus/ivr_menus.php'";
-			echo "<tr ".$tr_link.">\n";
-			echo "<td valign='top' class='".$row_style[$c]." hud_text'><a ".$tr_link.">".$text['label-ivr_menus']."</a></td>\n";
-			echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats[$scope]['ivr_menus']['disabled']."</td>\n";
-			echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats[$scope]['ivr_menus']['total']."</td>\n";
-			echo "</tr>\n";
-			$c = ($c) ? 0 : 1;
-		}
+		//ivr menus
+			if (permission_exists('ivr_menu_view') && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/ivr_menus/")) {
+				$tr_link = "href='".PROJECT_PATH."/app/ivr_menus/ivr_menus.php'";
+				echo "<tr ".$tr_link.">\n";
+				echo "<td valign='top' class='".$row_style[$c]." hud_text'><a ".$tr_link.">".$text['label-ivr_menus']."</a></td>\n";
+				echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats[$scope]['ivr_menus']['disabled']."</td>\n";
+				echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats[$scope]['ivr_menus']['total']."</td>\n";
+				echo "</tr>\n";
+				$c = ($c) ? 0 : 1;
+			}
 
-	//ring groups
-		if (permission_exists('ring_group_view') && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/ring_groups/")) {
-			$tr_link = "href='".PROJECT_PATH."/app/ring_groups/ring_groups.php'";
-			echo "<tr ".$tr_link.">\n";
-			echo "<td valign='top' class='".$row_style[$c]." hud_text'><a ".$tr_link.">".$text['label-ring_groups']."</a></td>\n";
-			echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats[$scope]['ring_groups']['disabled']."</td>\n";
-			echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats[$scope]['ring_groups']['total']."</td>\n";
-			echo "</tr>\n";
-			$c = ($c) ? 0 : 1;
-		}
+		//ring groups
+			if (permission_exists('ring_group_view') && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/ring_groups/")) {
+				$tr_link = "href='".PROJECT_PATH."/app/ring_groups/ring_groups.php'";
+				echo "<tr ".$tr_link.">\n";
+				echo "<td valign='top' class='".$row_style[$c]." hud_text'><a ".$tr_link.">".$text['label-ring_groups']."</a></td>\n";
+				echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats[$scope]['ring_groups']['disabled']."</td>\n";
+				echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats[$scope]['ring_groups']['total']."</td>\n";
+				echo "</tr>\n";
+				$c = ($c) ? 0 : 1;
+			}
 
-	//voicemails
-		if (permission_exists('voicemail_view') && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/voicemails/")) {
-			$tr_link = "href='".PROJECT_PATH."/app/voicemails/voicemails.php'";
-			echo "<tr ".$tr_link.">\n";
-			echo "<td valign='top' class='".$row_style[$c]." hud_text'><a ".$tr_link.">".$text['label-voicemail']."</a></td>\n";
-			echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats[$scope]['voicemails']['disabled']."</td>\n";
-			echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats[$scope]['voicemails']['total']."</td>\n";
-			echo "</tr>\n";
-			$c = ($c) ? 0 : 1;
-		}
+		//voicemails
+			if (permission_exists('voicemail_view') && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/voicemails/")) {
+				$tr_link = "href='".PROJECT_PATH."/app/voicemails/voicemails.php'";
+				echo "<tr ".$tr_link.">\n";
+				echo "<td valign='top' class='".$row_style[$c]." hud_text'><a ".$tr_link.">".$text['label-voicemail']."</a></td>\n";
+				echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats[$scope]['voicemails']['disabled']."</td>\n";
+				echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats[$scope]['voicemails']['total']."</td>\n";
+				echo "</tr>\n";
+				$c = ($c) ? 0 : 1;
+			}
 
-	//messages
-		if (permission_exists('voicemail_message_view') && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/voicemails/")) {
-			echo "<tr>\n";
-			echo "<th class='hud_heading' width='50%'>".$text['label-item']."</th>\n";
-			echo "<th class='hud_heading' width='50%' style='text-align: center; padding-left: 0; padding-right: 0;'>".$text['label-new']."</th>\n";
-			echo "<th class='hud_heading' style='text-align: center;'>".$text['label-total']."</th>\n";
-			echo "</tr>\n";
+		//messages
+			if (permission_exists('voicemail_message_view') && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/voicemails/")) {
+				echo "<tr>\n";
+				echo "<th class='hud_heading' width='50%'>".$text['label-item']."</th>\n";
+				echo "<th class='hud_heading' width='50%' style='text-align: center; padding-left: 0; padding-right: 0;'>".$text['label-new']."</th>\n";
+				echo "<th class='hud_heading' style='text-align: center;'>".$text['label-total']."</th>\n";
+				echo "</tr>\n";
 
-			$tr_link = "href='".PROJECT_PATH."/app/voicemails/voicemails.php'";
-			echo "<tr ".$tr_link.">\n";
-			echo "<td valign='top' class='".$row_style[$c]." hud_text'><a ".$tr_link.">".$text['label-messages']."</a></td>\n";
-			echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats[$scope]['messages']['new']."</td>\n";
-			echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats[$scope]['messages']['total']."</td>\n";
-			echo "</tr>\n";
-			$c = ($c) ? 0 : 1;
-		}
+				$tr_link = "href='".PROJECT_PATH."/app/voicemails/voicemails.php'";
+				echo "<tr ".$tr_link.">\n";
+				echo "<td valign='top' class='".$row_style[$c]." hud_text'><a ".$tr_link.">".$text['label-messages']."</a></td>\n";
+				echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats[$scope]['messages']['new']."</td>\n";
+				echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats[$scope]['messages']['total']."</td>\n";
+				echo "</tr>\n";
+				$c = ($c) ? 0 : 1;
+			}
 
-	echo "</table>\n";
-	echo "</div>";
-	//$n++;
+		echo "</table>\n";
+		echo "</div>";
+		//$n++;
 
-	echo "<span class='hud_expander' onclick=\"$('#hud_system_counts_details').slideToggle('fast');\"><span class='fas fa-ellipsis-h'></span></span>\n";
+		echo "<span class='hud_expander' onclick=\"$('#hud_system_counts_details').slideToggle('fast'); toggle_grid_row_end('".$dashboard_name."')\"><span class='fas fa-ellipsis-h'></span></span>\n";
+	}
 	echo "</div>\n";
 ?>
