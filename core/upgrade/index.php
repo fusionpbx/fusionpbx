@@ -50,6 +50,26 @@
 //set a default message_timeout
 	$message_timeout = 4*1000;
 
+//find optional apps with repos
+	$updateable_repos = git_find_repos($_SERVER["PROJECT_ROOT"]."/app");
+	if (!empty($updateable_repos) && is_array($updateable_repos) && @sizeof($updateable_repos) != 0) {
+		foreach ($updateable_repos as $app_path => $repo) {
+			$x = 0;
+			include $app_path.'/app_config.php';
+			$updateable_repos[$app_path]['app'] = $repo[0];
+			$updateable_repos[$app_path]['name'] = $apps[$x]['name'];
+			$updateable_repos[$app_path]['uuid'] = $apps[$x]['uuid'];
+			$updateable_repos[$app_path]['version'] = $apps[$x]['version'];
+			$updateable_repos[$app_path]['description'] = $apps[$x]['description'][$_SESSION['domain']['language']['code']];
+			unset($apps, $updateable_repos[$app_path][0]);
+		}
+	}
+
+//count upgradeable repos including + main repo
+	$repos_count = 0;
+	if (is_array($updateable_repos)) { $repos_count = @sizeof($updateable_repos); }
+	$repos_count++;
+
 //process the http post
 	if (!empty($_POST) && @sizeof($_POST) > 0) {
 
@@ -74,20 +94,18 @@
 		//run optional app source updates
 		if (!empty($action["optional_apps"]) && permission_exists("upgrade_source")) {
 
-			$updateable_repos = git_find_repos($_SERVER["PROJECT_ROOT"]."/app");
-
 			$apps_updated = $apps_failed = 0;
 			if (is_array($action["optional_apps"])) {
-				foreach ($updateable_repos as $repo => $apps) {
-					if (array_search(basename($repo), $action["optional_apps"]) !== false) {
-						$git_result = git_pull($repo);
-						if ($git_result['result']) {
-							$_SESSION["response"]["optional_apps"][basename($repo)] = $git_result['message'];
+				foreach ($updateable_repos as $app_path => $app_details) {
+					if (array_search(basename($app_path), $action["optional_apps"]) !== false) {
+						$git_result = git_pull($app_path);
+						if (!empty($git_result['result'])) {
 							$apps_updated++;
 						}
 						else {
 							$apps_failed++;
 						}
+						$_SESSION["response"]["optional_apps"][$app_details['name']] = $git_result['message'];
 					}
 				}
 			}
@@ -140,25 +158,56 @@
 
 	}
 
-//find optional apps with repos
-	$updateable_repos = git_find_repos($_SERVER["PROJECT_ROOT"]."/app");
-	if (!empty($updateable_repos) && is_array($updateable_repos) && @sizeof($updateable_repos) != 0) {
-		foreach ($updateable_repos as $app_path => $repo) {
-			$x = 0;
-			include $app_path.'/app_config.php';
-			$updateable_repos[$app_path]['app'] = $repo[0];
-			$updateable_repos[$app_path]['name'] = $apps[$x]['name'];
-			$updateable_repos[$app_path]['uuid'] = $apps[$x]['uuid'];
-			$updateable_repos[$app_path]['version'] = $apps[$x]['version'];
-			$updateable_repos[$app_path]['description'] = $apps[$x]['description'][$_SESSION['domain']['language']['code']];
-			unset($apps, $updateable_repos[$app_path][0]);
+//process the http get (source preview)
+	if (!empty($_GET['preview'])) {
+		if (!empty($updateable_repos)) {
+			foreach ($updateable_repos as $app_path => $app) {
+				$repo_info = git_repo_info($app_path);
+				if (empty($repo_info)) { continue; }
+				$source_code[$app['app']] = $app_path;
+			}
+		}
+		if ($_GET['preview'] == 'core') {
+			$command = 'cd '.$_SERVER['PROJECT_ROOT'].' && git fetch && git diff --name-only @ @{u}';
+		}
+		else if (array_key_exists($_GET['preview'], $source_code)) {
+			$command = 'cd '.$source_code[$_GET['preview']].' && git fetch && git diff --name-only @ @{u}';
+		}
+		if (!empty($command)) {
+			$response = explode(PHP_EOL, shell_exec($command));
+			// simplify response
+			if (!empty($response)) {
+				foreach ($response as $l => $line) {
+					if (empty($line)) { unset($response[$l]); }
+					if (substr($line, 0, 8) == 'remote: ') { unset($response[$l]); }
+					if (substr($line, 0, 8) == 'remote: ') { unset($response[$l]); }
+					if (substr($line, 0, 19) == 'Unpacking objects: ') { unset($response[$l]); }
+					if (substr($line, 0, 5) == 'From ') { unset($response[$l]); }
+					if (substr($line, 0, 3) == '   ') { unset($response[$l]); }
+				}
+			}
+			echo "<button type='button' class='btn btn-default' style='float: right;' onclick=\"$('#source_preview_layer').fadeOut(200);\">".$text['button-close']."</button>\n";
+			echo "<b>".$text['header-source_code_upgrade_preview']."</b>\n";
+			echo "<br><br>\n";
+			if (!empty($response) && is_array($response)) {
+				echo str_replace('APP_NAME', (!empty($_GET['title']) ? "<strong>".$_GET['title']."</strong>" : null), $text['description-source_code_changes_found']);
+				echo "<br><br><br>\n";
+				echo "<div style='width: 100%; max-height: 250px; overflow: auto; border: 1px solid ".($_SESSION['theme']['table_row_border_color']['text'] ?? '#c5d1e5')."; padding: 12px 15px; background-color: ".($_SESSION['theme']['table_row_background_color_light']['text'] ?? '#fff')."; font-family: monospace; font-size: 85%; color: green;'>\n";
+				if (!empty($response) && is_array($response)) {
+					echo implode("<br>\n<hr style='margin: 3px 0;'>\n", $response);
+				}
+				echo "</div>\n";
+			}
+			else {
+				echo str_replace('APP_NAME', (!empty($_GET['title']) ? "<strong>".$_GET['title']."</strong>" : null), $text['description-source_code_no_changes_found']);
+			}
+			echo "<br><br>\n";
+			echo "<center>\n";
+			echo "	<button type='button' class='btn btn-default' style='margin-top: 15px;' onclick=\"$('#source_preview_layer').fadeOut(200);\">".$text['button-close']."</button>\n";
+			echo "</center>\n";
+			exit;
 		}
 	}
-
-//count upgradeable repos including + main repo
-	$repos_count = 0;
-	if (is_array($updateable_repos)) { $repos_count = @sizeof($updateable_repos); }
-	$repos_count++;
 
 //adjust color and initialize step counter
 	$step = 1;
@@ -169,6 +218,46 @@
 //include the header and set the title
 	$document['title'] = $text['title-upgrade'];
 	require_once "resources/header.php";
+
+//source preview layer
+	echo "<style>\n";
+	echo "	#source_preview_layer {\n";
+	echo "		z-index: 999999;\n";
+	echo "		position: absolute;\n";
+	echo "		left: 0px;\n";
+	echo "		top: 0px;\n";
+	echo "		right: 0px;\n";
+	echo "		bottom: 0px;\n";
+	echo "		text-align: center;\n";
+	echo "		vertical-align: middle;\n";
+	echo "		}\n";
+	echo "	#source_preview_container {\n";
+	echo "		display: block;\n";
+	echo "		overflow: auto;\n";
+	echo "		background-color: #fff;\n";
+	echo "		padding: 25px 25px;\n";
+	if (http_user_agent('mobile')) {
+		echo "	margin: 0;\n";
+	}
+	else {
+		echo "	margin: auto 10%;\n";
+	}
+	echo "		text-align: left;\n";
+	echo "		-webkit-box-shadow: 0px 1px 20px #888;\n";
+	echo "		-moz-box-shadow: 0px 1px 20px #888;\n";
+	echo "		box-shadow: 0px 1px 20px #888;\n";
+	echo "		}\n";
+	echo "</style>\n";
+
+	echo "<div id='source_preview_layer' style='display: none;'>\n";
+	echo "	<table cellpadding='0' cellspacing='0' border='0' width='100%' height='100%'>\n";
+	echo "		<tr>\n";
+	echo "			<td align='center' valign='middle'>\n";
+	echo "				<span id='source_preview_container'></span>\n";
+	echo "			</td>\n";
+	echo "		</tr>\n";
+	echo "	</table>\n";
+	echo "</div>\n";
 
 //show the content
 	echo "<form name='frm' id='frm' method='post'>\n";
@@ -206,7 +295,7 @@
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "<tr onclick=\"if (document.getElementById('do_source')) { document.getElementById('do_source').checked = !document.getElementById('do_source').checked; if (document.getElementById('do_source').checked == false) { document.getElementById('view_source_code_options').checked = false; } }\">\n";
 		echo "	<td width='30%' class='vncell' style='vertical-align: middle;'>\n";
-		echo "		".(isset($_SESSION['theme']['title']['text'])  ?$_SESSION['theme']['title']['text'] : 'FusionPBX')."\n";
+		echo "		".(isset($_SESSION['theme']['title']['text']) ? $_SESSION['theme']['title']['text'] : 'FusionPBX')."\n";
 		echo "	</td>\n";
 		echo "	<td width='70%' class='vtable' style='height: 50px; cursor: pointer;'>\n";
 		echo "		<input type='checkbox' name='action[upgrade_source]' id='do_source' value='1' onclick=\"event.stopPropagation(); if (this.checked == false) { document.getElementById('view_source_code_options').checked = false; }\">\n";
@@ -223,31 +312,35 @@
 		}
 		if ($branch_return_value == 0 && $commit_return_value == 0) {
 			echo "	<a href='https://github.com/fusionpbx/fusionpbx/compare/".$git_current_commit."...".$git_current_branch."' target='_blank' title='".$git_current_commit."' onclick=\"event.stopPropagation();\"><i>".$git_current_branch."</i></a>";
+			echo "&nbsp;&nbsp;<button type='button' class='btn btn-link btn-xs' onclick=\"event.stopPropagation(); source_preview('core','".(isset($_SESSION['theme']['title']['text']) ? $_SESSION['theme']['title']['text'] : 'FusionPBX')."');\">".$text['button-preview']."</button>\n";
 		}
 		echo "	</td>\n";
 		echo "</tr>\n";
 		echo "</table>\n";
 
-		foreach ($updateable_repos as $repo => $app) {
-			$repo_info = git_repo_info($repo);
-			$pull_method = substr($repo_info['url'], 0, 4) == 'http' ? 'http' : 'ssh';
-			if (!$repo_info) { continue; }
-			echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-			echo "<tr onclick=\"if (document.getElementById('do_".$app['app']."')) { document.getElementById('do_".$app['app']."').checked = !document.getElementById('do_".$app['app']."').checked; if (document.getElementById('do_".$app['app']."').checked == false) { document.getElementById('view_source_code_options').checked = false; } }\">\n";
-			echo "	<td width='30%' class='vncell' style='vertical-align: middle;'>\n";
-			echo "		".$app['name']."\n";
-			echo "	</td>\n";
-			echo "	<td width='70%' class='vtable' style='height: 50px; cursor: ".($pull_method == 'http' ? "pointer;'" : "help;' title=\"".$text['message-upgrade_manually'].": ".$repo_info['url']."\"").">\n";
-			if ($pull_method == 'http') {
-				echo "	<input type='checkbox' name='action[optional_apps][]' class='do_optional_app' id='do_".$app['app']."' value='".$app['app']."' onclick=\"event.stopPropagation(); if (this.checked == false) { document.getElementById('view_source_code_options').checked = false; }\"> &nbsp;".$app['description']."<br />\n";
+		if (!empty($updateable_repos) && is_array($updateable_repos)) {
+			foreach ($updateable_repos as $app_path => $app) {
+				$repo_info = git_repo_info($app_path);
+				$pull_method = substr($repo_info['url'], 0, 4) == 'http' ? 'http' : 'ssh';
+				if (empty($repo_info)) { continue; }
+				echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+				echo "<tr onclick=\"if (document.getElementById('do_".$app['app']."')) { document.getElementById('do_".$app['app']."').checked = !document.getElementById('do_".$app['app']."').checked; if (document.getElementById('do_".$app['app']."').checked == false) { document.getElementById('view_source_code_options').checked = false; } }\">\n";
+				echo "	<td width='30%' class='vncell' style='vertical-align: middle;'>\n";
+				echo "		".$app['name']."\n";
+				echo "	</td>\n";
+				echo "	<td width='70%' class='vtable' style='height: 50px; cursor: ".($pull_method == 'http' ? "pointer;'" : "help;' title=\"".$text['message-upgrade_manually'].": ".$repo_info['url']."\"").">\n";
+				if ($pull_method == 'http') {
+					echo "	<input type='checkbox' name='action[optional_apps][]' class='do_optional_app' id='do_".$app['app']."' value='".$app['app']."' onclick=\"event.stopPropagation(); if (this.checked == false) { document.getElementById('view_source_code_options').checked = false; }\"> &nbsp;".$app['description']."<br />\n";
+				}
+				else {
+					echo "	<i class='fas fa-ban mr-3' style='opacity: 0.3; margin: 0 1px;'></i> ".$app['description']."<br>\n";
+				}
+				echo "		<span style='font-weight: 600;'>".$app['version']."</span>&nbsp;&nbsp;<i><a href='".str_replace(['git@','.com:'],['https://','.com/'], $repo_info['url'])."/compare/".$repo_info['commit']."...".$repo_info['branch']." 'target='_blank' title='".$repo_info['commit']."'>".$repo_info['branch']."</i></a>\n";
+				echo "		&nbsp;&nbsp;<button type='button' class='btn btn-link btn-xs' onclick=\"event.stopPropagation(); source_preview('".$app['app']."','".$app['name']."');\">".$text['button-preview']."</button>\n";
+				echo "	</td>\n";
+				echo "</tr>\n";
+				echo "</table>\n";
 			}
-			else {
-				echo "	<i class='fas fa-ban mr-3' style='opacity: 0.3; margin: 0 1px;'></i> ".$app['description']."<br>\n";
-			}
-			echo "		<span style='font-weight: 600;'>".$app['version']."</span>&nbsp;&nbsp;<i><a href='".str_replace(['git@','.com:'],['https://','.com/'], $repo_info['url'])."/compare/".$repo_info['commit']."...".$repo_info['branch']." 'target='_blank' title='".$repo_info['commit']."'>".$repo_info['branch']."</i></a>\n";
-			echo "	</td>\n";
-			echo "</tr>\n";
-			echo "</table>\n";
 		}
 		echo "</div>\n";
 
@@ -354,17 +447,34 @@
 			if ($part == "optional_apps") {
 				foreach ($response as $app_name => $app_response) {
 					echo "<strong>".$app_name."</strong><br>\n";
-					echo "<pre>\n";
+					$error_found = false;
+					foreach ($app_response as $l => $response_line) {
+						if (substr_count($response_line, 'error: ') != 0) {
+							$error_found = true;
+							$app_response[$l] = str_replace('error:', 'Error:', $response_line);
+						}
+					}
+					if ($error_found) { $error_style = 'color: red;'; }
+					echo "<pre".(!empty($error_style) ? " style='".$error_style."'" : null).">\n";
 					foreach ($app_response as $response_line) {
 						echo htmlspecialchars($response_line) . "\n";
 					}
 					echo "</pre>\n";
+					unset($error_found, $error_style);
 				}
 			}
-			elseif (is_array($response)) {
-				echo "<pre>";
+			else if (is_array($response)) {
+				foreach ($response as $l => $response_line) {
+					if (substr_count($response_line, 'error: ') != 0) {
+						$error_found = true;
+						$response[$l] = str_replace('error:', 'Error:', $response_line);
+					}
+				}
+				if ($error_found) { $error_style = 'color: red;'; }
+				echo "<pre".(!empty($error_style) ? " style='".$error_style."'" : null).">\n";
 				echo implode("\n", $response);
 				echo "</pre>";
+				unset($error_found, $error_style);
 			}
 			else {
 				echo $response;
@@ -373,6 +483,23 @@
 		}
 		unset($_SESSION["response"]);
 	}
+
+//source preview script
+	echo "<script>\n";
+	echo "function source_preview(source, title) {\n";
+	echo "	$.ajax({\n";
+	echo "		url: '".$_SERVER['PHP_SELF']."?preview=' + source + '&title=' + title,\n";
+	echo "		type: 'get',\n";
+	echo "		processData: false,\n";
+	echo "		contentType: false,\n";
+	echo "		cache: false,\n";
+	echo "		success: function(response){\n";
+	echo "			$('#source_preview_container').html(response);\n";
+	echo "			$('#source_preview_layer').fadeIn(400);\n";
+	echo "		}\n";
+	echo "	});\n";
+	echo "}\n";
+	echo "</script>\n";
 
 //include the footer
 	require_once "resources/footer.php";

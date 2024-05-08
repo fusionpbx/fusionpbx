@@ -220,7 +220,7 @@
 					}
 				}
 			}
-
+//view_array($array);
 		//save the data
 			$database = new database;
 			$database->app_name = 'dashboard';
@@ -570,7 +570,7 @@
 	echo $text['label-dashboard_heading_background_color']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<input type='text' class='formfld colorpicker' name='dashboard_heading_background_color' value='".escape($dashboard_heading_background_color)."'>\n";
+	echo "	<input type='text' class='formfld colorpicker' name='dashboard_heading_background_color' value='".escape($dashboard_heading_background_color)."'><br />\n";
 	echo "<br />\n";
 	echo $text['description-dashboard_heading_background_color']."\n";
 	echo "</td>\n";
