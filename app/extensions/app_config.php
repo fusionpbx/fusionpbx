@@ -339,7 +339,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "dashboard_caller_id_chart_color_undefined";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "#ea4c46";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "c3255107-4038-44fc-9c49-f60c9b8cd8ed";
@@ -347,7 +347,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "dashboard_caller_id_chart_color_defined";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "#d4d4d4";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "db521639-5c26-4cba-acc7-e8d6fe86657c";
@@ -355,7 +355,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "call_timeout";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "30";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the ring time (delay in seconds) before sending a call to voicemail";
 
 	//cache details
