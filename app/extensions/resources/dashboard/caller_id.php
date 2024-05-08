@@ -197,8 +197,8 @@
 				echo "						0.00001,\n";
 				echo "						],\n";
 				echo "					backgroundColor: [\n";
-				echo "						'".$settings->get('theme', 'dashboard_caller_id_chart_color_defined')."',\n";
-				echo "						'".$settings->get('theme', 'dashboard_caller_id_chart_color_undefined')."'\n";
+				echo "						'".($settings->get('theme', 'dashboard_caller_id_chart_color_defined') ?? '#d4d4d4')."',\n";
+				echo "						'".($settings->get('theme', 'dashboard_caller_id_chart_color_undefined') ?? '#ea4c46')."'\n";
 				echo "					],\n";
 				echo "					borderColor: '".$settings->get('theme', 'dashboard_chart_border_color')."',\n";
 				echo "					borderWidth: '".$settings->get('theme', 'dashboard_chart_border_width')."'\n";
