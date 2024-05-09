@@ -354,15 +354,15 @@ function toggle_grid_row_end(dashboard_name) {
 	echo "<div class='widgets' id='widgets' style='padding: 0 5px;'>\n";
 	$x = 0;
 	foreach($dashboard as $row) {
-		$dashboard_name = str_replace(" ", "_", strtolower($row['dashboard_name']));
+		$dashboard_name = $row['dashboard_name'];
 		$dashboard_icon = $row['dashboard_icon'] ?? '';
 		$dashboard_url  = $row['dashboard_url'] ?? '';
-		$dashboard_chart_type = $row['dashboard_chart_type'] ?? ($dashboard_name == 'new_messages' || $dashboard_name == 'missed_calls' || $dashboard_name == 'recent_calls') ? 'none' : 'doughnut';
+		$dashboard_chart_type = $row['dashboard_chart_type'] ?? ($dashboard_name == 'New Messages' || $dashboard_name == 'Missed Valls' || $dashboard_name == 'Recent Calls') ? 'none' : 'doughnut';
 		$dashboard_number_text_color = $row['dashboard_number_text_color'] ?? $settings->get('theme', 'dashboard_number_text_color');
 		$dashboard_details_state = $row['dashboard_details_state'];
 		$grid_row_end = ($dashboard_details_state == "expanded" || empty($dashboard_details_state)) ? "grid-row-end: span 5;" : "grid-row-end: span 2;";
 
-		echo "<div class='widget' style='".$grid_row_end."' id='".$dashboard_name."' draggable='false'>\n";
+		echo "<div class='widget' style='".$grid_row_end."' id='".str_replace(" ", "_", strtolower($row['dashboard_name']))."' draggable='false'>\n";
 		include($row['dashboard_path']);
 		echo "</div>\n";
 		$x++;
