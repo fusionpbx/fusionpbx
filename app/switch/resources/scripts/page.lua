@@ -110,7 +110,7 @@ if (referred_by == nil) then
 
 	--determine whether to check if the destination is available
 		check_destination_status = session:getVariable("check_destination_status");
-		if (not check_destination_status) then check_destination_status = 'false'; end
+		if (not check_destination_status) then check_destination_status = 'true'; end
 
 	--set the type of auto answer
 		auto_answer = session:getVariable("auto_answer");

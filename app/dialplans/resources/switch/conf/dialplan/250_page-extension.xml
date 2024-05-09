@@ -3,6 +3,7 @@
 		<action application="set" data="destinations=$1"/>
 		<action application="set" data="pin_number={v_pin_number}"/>
 		<action application="set" data="mute=true"/>
+		<action application="set" data="check_destination_status=false" enabled="false"/>
 		<action application="set" data="moderator=false" />
 		<action application="lua" data="page.lua"/>
 	</condition>
