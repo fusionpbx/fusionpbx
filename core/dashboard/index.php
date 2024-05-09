@@ -342,7 +342,7 @@ span.hud_stat { padding-bottom: 27px; }
 
 <script>
 function toggle_grid_row_end(dashboard_name) {
-	var widget = document.getElementById(dashboard_name);
+	var widget = document.getElementById(dashboard_name.toLowerCase().replace(/ /g, "_"));
 	var current_row_end = widget.style.gridRowEnd;
 	widget.style.gridRowEnd = (current_row_end == 'span 2') ? 'span 5' : 'span 2';
 }
