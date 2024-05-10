@@ -1045,7 +1045,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "30px";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the size of the Dashboard chart number.";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the text size of the Dashboard chart number.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "caa50bb2-3db8-4c4d-9172-b60fa015a909";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
