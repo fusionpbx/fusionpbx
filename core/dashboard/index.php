@@ -154,10 +154,10 @@
 	echo "<script>\n";
 	echo "	var chart_text_font = '".($settings->get('theme', 'dashboard_number_text_font') ?? 'arial')."';\n";
 	echo "	var chart_text_size = '".($settings->get('theme', 'dashboard_chart_text_size') ?? '30px')."';\n";
+	echo "	Chart.overrides.doughnut.cutout = '".($settings->get('theme', 'dashboard_chart_cutout') ?? '75%')."';\n";
 	echo "	Chart.defaults.responsive = true;\n";
 	echo "	Chart.defaults.maintainAspectRatio = false;\n";
 	echo "	Chart.defaults.plugins.legend.display = false;\n";
-	echo "	Chart.overrides.doughnut.cutout = '75%';\n";
 	echo "</script>\n";
 
 // determine initial state all button to display
@@ -257,7 +257,6 @@ span.hud_stat { padding-bottom: 27px; }
 		echo "	background-image: linear-gradient(to right, ".$detail_background_color[1]." 0%, ".$detail_background_color[0]." 30%, ".$detail_background_color[0]." 70%, ".$detail_background_color[1]." 100%);";
 		echo "}";
 	}
-
 ?>
 
 /* Screen smaller than 575px? 1 columns */
@@ -294,13 +293,7 @@ span.hud_stat { padding-bottom: 27px; }
 				echo "	display: none;\n";
 				echo "}\n";
 			}
-			if ($row['dashboard_details_state'] == "hidden") {
-				echo "#".$dashboard_name." .hud_box .hud_expander, \n";
-				echo "#".$dashboard_name." .hud_box .hud_details {\n";
-				echo "	display: none;\n";
-				echo "}\n";
-			}
-			if ($row['dashboard_details_state'] == "disabled") {
+			if ($row['dashboard_details_state'] == "hidden" || $row['dashboard_details_state'] == "disabled") {
 				echo "#".$dashboard_name." .hud_box .hud_expander, \n";
 				echo "#".$dashboard_name." .hud_box .hud_details {\n";
 				echo "	display: none;\n";
@@ -357,7 +350,7 @@ function toggle_grid_row_end(dashboard_name) {
 		$dashboard_name = $row['dashboard_name'];
 		$dashboard_icon = $row['dashboard_icon'] ?? '';
 		$dashboard_url  = $row['dashboard_url'] ?? '';
-		$dashboard_chart_type = $row['dashboard_chart_type'] ?? ($dashboard_name != "New Messages" && $dashboard_name != "Missed Calls" && $dashboard_name != "Recent Calls") ? 'doughnut' : 'none';
+		$dashboard_chart_type = $row['dashboard_chart_type'] ?? 'doughnut';
 		$dashboard_heading_text_color = $row['dashboard_heading_text_color'] ?? $settings->get('theme', 'dashboard_heading_text_color');
 		$dashboard_number_text_color = $row['dashboard_number_text_color'] ?? $settings->get('theme', 'dashboard_number_text_color');
 		$dashboard_details_state = $row['dashboard_details_state'];
