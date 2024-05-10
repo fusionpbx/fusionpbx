@@ -1047,6 +1047,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the text size of the Dashboard chart number.";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "093ed58c-7a8c-43e9-8ea0-c895dbed0750";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "dashboard_chart_cutout";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "75%";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the thickness of Dashboard doughnut charts in chart cutout percentage.";
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "caa50bb2-3db8-4c4d-9172-b60fa015a909";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "dashboard_detail_heading_text_size";
