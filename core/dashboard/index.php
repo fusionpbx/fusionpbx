@@ -358,6 +358,7 @@ function toggle_grid_row_end(dashboard_name) {
 		$dashboard_icon = $row['dashboard_icon'] ?? '';
 		$dashboard_url  = $row['dashboard_url'] ?? '';
 		$dashboard_chart_type = $row['dashboard_chart_type'] ?? ($dashboard_name != "New Messages" && $dashboard_name != "Missed Calls" && $dashboard_name != "Recent Calls") ? 'doughnut' : 'none';
+		$dashboard_heading_text_color = $row['dashboard_heading_text_color'] ?? $settings->get('theme', 'dashboard_heading_text_color');
 		$dashboard_number_text_color = $row['dashboard_number_text_color'] ?? $settings->get('theme', 'dashboard_number_text_color');
 		$dashboard_details_state = $row['dashboard_details_state'];
 		$grid_row_end = ($dashboard_details_state == "expanded" || empty($dashboard_details_state)) ? "grid-row-end: span 5;" : "grid-row-end: span 2;";
