@@ -273,7 +273,7 @@
 			$dashboard_path = $row["dashboard_path"];
 			$dashboard_icon = $row["dashboard_icon"];
 			$dashboard_url = $row["dashboard_url"];
-			$dashboard_chart_type = $row["dashboard_chart_type"];
+			$dashboard_chart_type = $row["dashboard_chart_type"] ?? ($dashboard_name != "New Messages" && $dashboard_name != "Missed Calls" && $dashboard_name != "Recent Calls") ? 'doughnut' : 'none';
 			$dashboard_heading_text_color = $row["dashboard_heading_text_color"];
 			$dashboard_heading_background_color = $row["dashboard_heading_background_color"];
 			$dashboard_number_text_color = $row["dashboard_number_text_color"];
