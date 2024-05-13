@@ -74,7 +74,7 @@
 	if (!empty($_POST) && @sizeof($_POST) > 0) {
 
 		//get the action options: source, schema, app_defaults, menu_defaults, permisisons
-		$action = $_POST['action'];
+		$action = $_POST['action'] ?? null;
 
 		//run source update
 		if (!empty($action["upgrade_source"]) && permission_exists("upgrade_source") && !is_dir("/usr/share/examples/fusionpbx")) {

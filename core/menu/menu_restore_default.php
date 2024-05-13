@@ -61,7 +61,7 @@
 
 //get the menu array and save it to the session
 	$menu = new menu;
-	$menu->menu_uuid = $_SESSION['domain']['menu']['uuid'];
+	$menu->menu_uuid = $_SESSION['domain']['menu']['uuid'] ?? null;
 	$_SESSION['menu']['array'] = $menu->menu_array();
 	unset($menu);
 
