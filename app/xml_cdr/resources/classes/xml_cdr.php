@@ -1203,7 +1203,7 @@ if (!class_exists('xml_cdr')) {
 					}
 
 					//call centers
-					if ($app['application'] == 'call_centers') {
+					if (!empty($app['application']) && $app['application'] == 'call_centers') {
 						if (isset($row["caller_profile"]["transfer_source"])) {
 							$app['status'] = 'answered'; //Out
 						}
@@ -1213,22 +1213,22 @@ if (!class_exists('xml_cdr')) {
 					}
 
 					//call flows
-					if ($app['application'] == 'call_flows') {
+					if (!empty($app['application']) && $app['application'] == 'call_flows') {
 						$app['status'] = 'routed';
 					}
 
 					//conferences
-					if ($app['application'] == 'conferences') {
+					if (!empty($app['application']) && $app['application'] == 'conferences') {
 						$app['status'] = 'answered';
 					}
 
 					//destinations
-					if ($app['application'] == 'destinations') {
+					if (!empty($app['application']) && $app['application'] == 'destinations') {
 						$app['status'] = 'routed';
 					}
 
 					//extensions
-					if ($app['application'] == 'extensions') {
+					if (!empty($app['application']) && $app['application'] == 'extensions') {
 						if ($this->billsec == 0) {
 							$app['status'] = 'missed';
 						}
@@ -1238,7 +1238,7 @@ if (!class_exists('xml_cdr')) {
 					}
 
 					//ivr menus
-					if ($app['application'] == 'ivr_menus') {
+					if (!empty($app['application']) && $app['application'] == 'ivr_menus') {
 						$app['status'] = 'routed';
 					}
 
@@ -1254,12 +1254,12 @@ if (!class_exists('xml_cdr')) {
 					}
 
 					//ring groups
-					if ($app['application'] == 'ring_groups') {
+					if (!empty($app['application']) && $app['application'] == 'ring_groups') {
 						$app['status'] = 'waited';
 					}
 
 					//time conditions
-					if ($app['application'] == 'time_conditions') {
+					if (!empty($app['application']) && $app['application'] == 'time_conditions') {
 						$app['status'] = 'routed';
 					}
 
@@ -1295,12 +1295,12 @@ if (!class_exists('xml_cdr')) {
 					}
 
 					//conference
-					if ($app['application'] == 'conferences') {
+					if (!empty($app['application']) && $app['application'] == 'conferences') {
 						$skip_row = true;
 					}
 
 					//voicemails
-					if ($app['application'] == 'voicemails') {
+					if (!empty($app['application']) && $app['application'] == 'voicemails') {
 						$app['status'] = 'voicemail';
 					}
 
@@ -1331,7 +1331,7 @@ if (!class_exists('xml_cdr')) {
 					$call_flow_summary[$x]["destination_number"] = $row["caller_profile"]["destination_number"];
 					$call_flow_summary[$x]["destination_label"] = $app['label'];
 					$call_flow_summary[$x]["destination_status"] = $app['status'];
-					$call_flow_summary[$x]["destination_description"] = $app['description'];
+					$call_flow_summary[$x]["destination_description"] = $app['description'] ?? '';
 					//$call_flow_summary[$x]["application"] = $app;
 
 					//set the start and epoch

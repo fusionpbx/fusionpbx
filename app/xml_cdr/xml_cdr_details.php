@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2023
+	Portions created by the Initial Developer are Copyright (C) 2008-2024
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -447,7 +447,7 @@
 		echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row["start_stamp"])."</td>\n";
 		echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row["end_stamp"])."</td>\n";
 		echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row["duration_formatted"])."</td>\n";
-		echo "	<td valign='top' class='".$row_style[$c]."'>".escape($text['label-'.$row["destination_status"]])."</td>\n";
+		echo "	<td valign='top' class='".$row_style[$c]."'>".escape($text['label-'.$row["destination_status"]] ?? '')."</td>\n";
 		echo "</tr>\n";
 
 		//alternate $c
@@ -489,11 +489,13 @@
 								echo "			<td valign='top' width='15%' class='".$row_style[$c]."'>".$vk."&nbsp;&nbsp;&nbsp;&nbsp;</td>\n";
 								echo "			<td valign='top'>\n";
 									echo "			<table border='0' cellpadding='0' cellspacing='0'>\n";
-									foreach ($arrays as $k => $v) {
-										echo "			<tr>\n";
-										echo "				<td valign='top' class='".$row_style[$c]."'>".$k."&nbsp;&nbsp;&nbsp;&nbsp;</td>\n";
-										echo "				<td valign='top' class='".$row_style[$c]."'>".$v."</td>\n";
-										echo "			</tr>\n";
+									if (!empty($arrays) && is_array($arrays)) {
+										foreach ($arrays as $k => $v) {
+											echo "			<tr>\n";
+											echo "				<td valign='top' class='".$row_style[$c]."'>".$k."&nbsp;&nbsp;&nbsp;&nbsp;</td>\n";
+											echo "				<td valign='top' class='".$row_style[$c]."'>".$v."</td>\n";
+											echo "			</tr>\n";
+										}
 									}
 									echo "			</table>\n";
 									echo "		<td>\n";
