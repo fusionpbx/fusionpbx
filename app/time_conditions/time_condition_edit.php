@@ -73,7 +73,7 @@
 		$dialplan_number = $_POST["dialplan_number"];
 		$dialplan_order = $_POST["dialplan_order"];
 
-		$dialplan_anti_action = $_POST["dialplan_anti_action"];
+		$dialplan_anti_action = $_POST["dialplan_anti_action"] ?? '';
 		$dialplan_anti_action_array = explode(":", $dialplan_anti_action);
 		$dialplan_anti_action_app = array_shift($dialplan_anti_action_array);
 		$dialplan_anti_action_data = join(':', $dialplan_anti_action_array);
@@ -272,7 +272,7 @@
 			if (is_array($_REQUEST['variable'])) {
 				foreach ($_REQUEST['variable'] as $group_id => $meh) {
 					if (
-						(!empty($_REQUEST['preset']) && is_array($_REQUEST['preset']) && in_array($group_id, $_REQUEST['preset']) && $_REQUEST['dialplan_action'][$group_id] == '' && $_REQUEST['default_preset_action'] == '' && $_REQUEST['dialplan_anti_action'] == '') ||
+						(!empty($_REQUEST['preset']) && is_array($_REQUEST['preset']) && in_array($group_id, $_REQUEST['preset']) && empty($_REQUEST['dialplan_action'][$group_id]) && empty($_REQUEST['default_preset_action']) && empty($_REQUEST['dialplan_anti_action'])) ||
 						((empty($_REQUEST['preset']) || !is_array($_REQUEST['preset']) || !in_array($group_id, $_REQUEST['preset'])) && $_REQUEST['dialplan_action'][$group_id] == '')
 						) {
 						unset($_REQUEST['variable'][$group_id]);
