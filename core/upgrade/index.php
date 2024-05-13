@@ -444,6 +444,7 @@
 		foreach($_SESSION["response"] as $part => $response){
 			echo "<b>".$text["label-results"]." - ".$text["label-${part}"];
 			echo "</b><br /><br />";
+			$error_found = false;
 			if ($part == "optional_apps") {
 				foreach ($response as $app_name => $app_response) {
 					echo "<strong>".$app_name."</strong><br>\n";
