@@ -68,7 +68,9 @@
 //redirect
 	if(!defined('STDIN')) {
 		//show a message to the user
-		message::add($text['message-restore']);
+		if (empty($included) || !$included) {
+			message::add($text['message-restore']);
+		}
 		header("Location: ".PROJECT_PATH."/core/menu/menu_edit.php?id=".urlencode($menu_uuid));
 		return;
 	}
