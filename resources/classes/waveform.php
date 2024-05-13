@@ -172,11 +172,11 @@ class Waveform
 			$x = $i / 2 / self::$linesPerPixel;
 			if (self::$singlePhase ?? false) {
 				$max = max($lines1[$i], $lines1[$i + 1]);
-				imageline($img, $x, $center1, $x, $center1 - $max * $center1, $colorA ?? $color);
+				@imageline($img, $x, $center1, $x, $center1 - $max * $center1, $colorA ?? $color);
 			} else {
 				$min = $lines1[$i];
 				$max = $lines1[$i + 1];
-				imageline($img, $x, $center1 - $min * $center1, $x, $center1 - $max * $center1, $colorA ?? $color);
+				@imageline($img, $x, $center1 - $min * $center1, $x, $center1 - $max * $center1, $colorA ?? $color);
 			}
 		}
 		// Drawing channel 2
@@ -185,27 +185,27 @@ class Waveform
 			if (self::$singlePhase ?? false) {
 				$max = max($lines2[$i], $lines2[$i + 1]);
 				if ($singleAxis) {
-					imageline($img, $x, $center1, $x, $center1 + $max * $center2, $colorB ?? $color);
+					@imageline($img, $x, $center1, $x, $center1 + $max * $center2, $colorB ?? $color);
 				} else {
-					imageline($img, $x, $center2, $x, $center2 - $max * $center1, $colorB ?? $color);
+					@imageline($img, $x, $center2, $x, $center2 - $max * $center1, $colorB ?? $color);
 				}
 			} else {
 				if ($singleAxis) {
 					$min = $lines2[$i];
 					$max = $lines2[$i + 1];
-					imageline($img, $x, $center1 - $min * $center1, $x, $center1 - $max * $center1, $colorB ?? $color);
+					@imageline($img, $x, $center1 - $min * $center1, $x, $center1 - $max * $center1, $colorB ?? $color);
 				} else {
 					$min = $lines2[$i];
 					$max = $lines2[$i + 1];
-					imageline($img, $x, $center2 - $min * $center1, $x, $center2 - $max * $center1, $colorB ?? $color);
+					@imageline($img, $x, $center2 - $min * $center1, $x, $center2 - $max * $center1, $colorB ?? $color);
 				}
 			}
 		}
 
 		// Axis
-		imageline($img, 0, $center1, $width - 1, $center1, $axis);
+		@imageline($img, 0, $center1, $width - 1, $center1, $axis);
 		if ($center2 !== null) {
-			imageline($img, 0, $center2, $width - 1, $center2, $axis);
+			@imageline($img, 0, $center2, $width - 1, $center2, $axis);
 		}
 
 		if ($filename == 'base64') {
