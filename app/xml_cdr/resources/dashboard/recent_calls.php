@@ -90,7 +90,7 @@
 	echo "<div class='hud_container' ".($dashboard_details_state == "disabled" ?: "onclick=\"$('#hud_recent_calls_details').slideToggle('fast'); toggle_grid_row_end('".$dashboard_name."')\"").">\n";
 	echo "	<span class='hud_title' onclick=\"document.location.href='".PROJECT_PATH."/app/xml_cdr/xml_cdr.php';\">".$text['label-recent_calls']."</span>\n";
 
-	if ($dashboard_chart_type == "doughnut") {
+	if ($row['dashboard_chart_type'] == "doughnut") {
 		//add doughnut chart
 		?>
 
@@ -136,7 +136,7 @@
 		</script>
 		<?php
 	}
-	if ($dashboard_chart_type == "none") {
+	if ($row['dashboard_chart_type'] == "none" || !isset($row['dashboard_chart_type'])) {
 		echo "<span class='hud_stat'>".$num_rows."</span>";
 	}
 	echo "</div>\n";

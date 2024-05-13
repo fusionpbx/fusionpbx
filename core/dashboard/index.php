@@ -153,11 +153,11 @@
 //chart variables
 	echo "<script>\n";
 	echo "	var chart_text_font = '".($settings->get('theme', 'dashboard_number_text_font') ?? 'arial')."';\n";
-	echo "	var chart_text_size = '30px';\n";
+	echo "	var chart_text_size = '".($settings->get('theme', 'dashboard_chart_text_size') ?? '30px')."';\n";
+	echo "	Chart.overrides.doughnut.cutout = '".($settings->get('theme', 'dashboard_chart_cutout') ?? '75%')."';\n";
 	echo "	Chart.defaults.responsive = true;\n";
 	echo "	Chart.defaults.maintainAspectRatio = false;\n";
 	echo "	Chart.defaults.plugins.legend.display = false;\n";
-	echo "	Chart.overrides.doughnut.cutout = '75%';\n";
 	echo "</script>\n";
 
 // determine initial state all button to display
@@ -257,7 +257,6 @@ span.hud_stat { padding-bottom: 27px; }
 		echo "	background-image: linear-gradient(to right, ".$detail_background_color[1]." 0%, ".$detail_background_color[0]." 30%, ".$detail_background_color[0]." 70%, ".$detail_background_color[1]." 100%);";
 		echo "}";
 	}
-
 ?>
 
 /* Screen smaller than 575px? 1 columns */
@@ -294,13 +293,7 @@ span.hud_stat { padding-bottom: 27px; }
 				echo "	display: none;\n";
 				echo "}\n";
 			}
-			if ($row['dashboard_details_state'] == "hidden") {
-				echo "#".$dashboard_name." .hud_box .hud_expander, \n";
-				echo "#".$dashboard_name." .hud_box .hud_details {\n";
-				echo "	display: none;\n";
-				echo "}\n";
-			}
-			if ($row['dashboard_details_state'] == "disabled") {
+			if ($row['dashboard_details_state'] == "hidden" || $row['dashboard_details_state'] == "disabled") {
 				echo "#".$dashboard_name." .hud_box .hud_expander, \n";
 				echo "#".$dashboard_name." .hud_box .hud_details {\n";
 				echo "	display: none;\n";
@@ -342,7 +335,7 @@ span.hud_stat { padding-bottom: 27px; }
 
 <script>
 function toggle_grid_row_end(dashboard_name) {
-	var widget = document.getElementById(dashboard_name);
+	var widget = document.getElementById(dashboard_name.toLowerCase().replace(/ /g, "_"));
 	var current_row_end = widget.style.gridRowEnd;
 	widget.style.gridRowEnd = (current_row_end == 'span 2') ? 'span 5' : 'span 2';
 }
@@ -354,15 +347,16 @@ function toggle_grid_row_end(dashboard_name) {
 	echo "<div class='widgets' id='widgets' style='padding: 0 5px;'>\n";
 	$x = 0;
 	foreach($dashboard as $row) {
-		$dashboard_name = str_replace(" ", "_", strtolower($row['dashboard_name']));
+		$dashboard_name = $row['dashboard_name'];
 		$dashboard_icon = $row['dashboard_icon'] ?? '';
 		$dashboard_url  = $row['dashboard_url'] ?? '';
 		$dashboard_chart_type = $row['dashboard_chart_type'] ?? 'doughnut';
+		$dashboard_heading_text_color = $row['dashboard_heading_text_color'] ?? $settings->get('theme', 'dashboard_heading_text_color');
 		$dashboard_number_text_color = $row['dashboard_number_text_color'] ?? $settings->get('theme', 'dashboard_number_text_color');
 		$dashboard_details_state = $row['dashboard_details_state'];
 		$grid_row_end = ($dashboard_details_state == "expanded" || empty($dashboard_details_state)) ? "grid-row-end: span 5;" : "grid-row-end: span 2;";
 
-		echo "<div class='widget' style='".$grid_row_end."' id='".$dashboard_name."' draggable='false'>\n";
+		echo "<div class='widget' style='".$grid_row_end."' id='".str_replace(" ", "_", strtolower($row['dashboard_name']))."' draggable='false'>\n";
 		include($row['dashboard_path']);
 		echo "</div>\n";
 		$x++;
