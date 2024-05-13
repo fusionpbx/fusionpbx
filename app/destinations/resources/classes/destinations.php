@@ -34,10 +34,13 @@ if (!class_exists('destinations')) {
 	class destinations {
 
 		/**
-		* destinations array
+		* declare public variables
 		*/
 		public $destinations;
 		public $domain_uuid;
+		public $start_stamp_begin;
+		public $start_stamp_end;
+		public $quick_select;
 
 		/**
 		* declare private variables
@@ -1132,7 +1135,7 @@ if (!class_exists('destinations')) {
 				}
 
 			//build the date range
-				if ((!empty($this->start_stamp_begin) && strlen($this->start_stamp_begin) > 0) || !empty($this->start_stamp_end)) {
+				if (!empty($this->start_stamp_begin) || !empty($this->start_stamp_end)) {
 					unset($this->quick_select);
 					if (strlen($this->start_stamp_begin) > 0 && !empty($this->start_stamp_end)) {
 						$sql_date_range = " and start_stamp between :start_stamp_begin::timestamptz and :start_stamp_end::timestamptz \n";
