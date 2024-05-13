@@ -756,7 +756,7 @@ if (!class_exists('menu')) {
 				$sql .= "and menu_item_uuid is not null ";
 				$sql .= ") ";
 				$sql .= "order by i.menu_item_order asc ";
-				$parameters['menu_language'] = $_SESSION['domain']['language']['code'];
+				$parameters['menu_language'] = $_SESSION['domain']['language']['code'] ?? null;
 				$parameters['menu_uuid'] = $this->menu_uuid;
 				$database = new database;
 				$result = $database->select($sql, $parameters, 'all');

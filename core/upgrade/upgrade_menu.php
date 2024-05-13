@@ -111,8 +111,8 @@ function show_upgrade_menu() {
 				do_upgrade_code();
 				do_upgrade_schema();
 				do_upgrade_domains();
-				do_upgrade_permissions();
 				do_upgrade_menu();
+				do_upgrade_permissions();
 				break;
 			case 8:
 				break;
@@ -132,9 +132,13 @@ function do_upgrade_code() {
 	$result = ['result' => false, 'message' => 'Failed'];
 	//global $conf;
 	if (defined('PROJECT_ROOT')) {
-		return git_pull(PROJECT_ROOT);
+		$result = git_pull(PROJECT_ROOT);
+		if (!empty($result['message']) && is_array($result['message'])) {
+			echo implode("\n", $result['message']);
+			echo "\n";
+		}
 	}
-	return $result;
+	return;
 }
 
 function do_upgrade_code_submodules() {
@@ -145,19 +149,19 @@ function do_upgrade_code_submodules() {
 	foreach ($updateable_repos as $repo => $apps) {
 		$git_result = git_pull($repo);
 		if ($git_result['result']) {
-			$messages[$repo] = $text['message-optional_apps_upgrade_source'] . " " . $git_result['message'];
+			$messages[$repo] = $text['message-optional_apps_upgrade_source_cli'] . (!empty($git_result['message']) && is_array($git_result['message']) ? ' - '.implode("\n", $git_result['message']) : '');
 		}
 		else {
-			if (is_array($git_result['message'])) {
-				$message = "ERROR:\n" . implode(' ', $git_result['message']);
+			if (!empty($git_result['message']) && is_array($git_result['message'])) {
+				$message = "ERROR:\n" . implode("\n", $git_result['message']);
 			} else {
 				$message = $git_result['message'];
 			}
-			$messages[$repo] = $text['message-optional_apps_upgrade_source_failed'] . " " . $message;
+			$messages[$repo] = $text['message-optional_apps_upgrade_source_failed_cli'] . " - " . $message;
 		}
 	}
 	foreach ($messages as $repo => $message) {
-		echo "$repo: $message\n";
+		echo $repo.": ".$message."\n";
 	}
 }
 
@@ -200,7 +204,7 @@ function do_upgrade_menu() {
 	}
 
 	//set the menu back to default
-	if (isset($argv[2]) && (is_null($argv[2]) || $argv[2] == 'default')) {
+	if (!isset($argv[2]) || $argv[2] == 'default') {
 		//restore the menu
 		$included = true;
 		require_once dirname(__DIR__, 2) . "/core/menu/menu_restore_default.php";

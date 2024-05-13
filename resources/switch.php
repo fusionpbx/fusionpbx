@@ -255,7 +255,7 @@ function save_gateway_xml() {
 }
 
 function save_var_xml() {
-	if (is_array($_SESSION['switch']['conf'])) {
+	if (!empty($_SESSION['switch']['conf']) && is_array($_SESSION['switch']['conf'])) {
 		global $config, $domain_uuid;
 
 		//skip this function if the conf directory is empty

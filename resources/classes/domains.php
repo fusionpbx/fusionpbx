@@ -599,6 +599,10 @@ if (!class_exists('domains')) {
 		 */
 		public function upgrade() {
 
+			//add multi-lingual support
+				$language = new text;
+				$text = $language->get(null, 'core/upgrade');
+
 			//includes files
 				require dirname(__DIR__, 2) . "/resources/require.php";
 
@@ -650,6 +654,13 @@ if (!class_exists('domains')) {
 
 					//track of the number of domains processed
 						$domains_processed++;
+				}
+
+			//output result
+				if (defined('STDIN')) {
+					if ($domains_processed > 1) {
+						echo $text['message-upgrade_apps']."\n";
+					}
 				}
 
 		} //end upgrade method

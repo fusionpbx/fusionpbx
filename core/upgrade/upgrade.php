@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2023
+	Portions created by the Initial Developer are Copyright (C) 2008-2024
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -28,7 +28,7 @@
 	require dirname(__DIR__, 2) . "/resources/require.php";
 
 //if the config file doesn't exist and the config.php does exist use it to write a new config file
-	if (!$config_exists && file_exists("/etc/fusionpbx/config.php")) {
+	if (isset($config_exists) && !$config_exists && file_exists("/etc/fusionpbx/config.php")) {
 		//include the config.php
 		include("/etc/fusionpbx/config.php");
 
