@@ -44,9 +44,11 @@
 
 //retrieve submitted data
 	if (!empty($_REQUEST)) {
-		$quick_select = $_REQUEST['quick_select'];
-		$start_stamp_begin = $_REQUEST['start_stamp_begin'];
-		$start_stamp_end = $_REQUEST['start_stamp_end'];
+		$quick_select = $_REQUEST['quick_select'] ?? '';
+		if (empty($quick_select)) {
+			$start_stamp_begin = $_REQUEST['start_stamp_begin'] ?? '';
+			$start_stamp_end = $_REQUEST['start_stamp_end'] ?? '';
+		}
 		//$include_internal = $_REQUEST['include_internal'];
 	}
 	else {
@@ -56,9 +58,13 @@
 //get the summary
 	$destination = new destinations;
 	$destination->domain_uuid = $_SESSION['domain_uuid'];
-	$destination->quick_select = $quick_select;
-	$destination->start_stamp_begin = $start_stamp_begin ?? null;
-	$destination->start_stamp_end = $start_stamp_end ?? null;
+	if (!empty($quick_select)) {
+		$destination->quick_select = $quick_select;
+	}
+	else {
+		$destination->start_stamp_begin = $start_stamp_begin ?? '';
+		$destination->start_stamp_end = $start_stamp_end ?? '';
+	}
 	//$destination->include_internal = $include_internal ?? null;
 	$summary = $destination->destination_summary();
 
@@ -71,32 +77,36 @@
 
 		//show the column names on the first line
 			$z = 0;
-			foreach($summary[1] as $key => $val) {
-				if ($z == 0) {
-					echo '"'.$key.'"';
-				}
-				else {
-					echo ',"'.$key.'"';
-				}
-				$z++;
-			}
-			echo "\n";
-
-		//add the values to the csv
-			$x = 0;
-			foreach($summary as $users) {
-				$z = 0;
-				foreach($users as $key => $val) {
+			if (!empty($summary) && is_array($summary)) {
+				foreach ($summary[1] as $key => $val) {
 					if ($z == 0) {
-						echo '"'.$summary[$x][$key].'"';
+						echo '"'.$key.'"';
 					}
 					else {
-						echo ',"'.$summary[$x][$key].'"';
+						echo ',"'.$key.'"';
 					}
 					$z++;
 				}
 				echo "\n";
-				$x++;
+			}
+
+		//add the values to the csv
+			$x = 0;
+			if (!empty($summary) && is_array($summary)) {
+				foreach ($summary as $users) {
+					$z = 0;
+					foreach ($users as $key => $val) {
+						if ($z == 0) {
+							echo '"'.$summary[$x][$key].'"';
+						}
+						else {
+							echo ',"'.$summary[$x][$key].'"';
+						}
+						$z++;
+					}
+					echo "\n";
+					$x++;
+				}
 			}
 			exit;
 	}
@@ -138,13 +148,13 @@
 		echo "		<div class='field'>\n";
 		echo "			<select class='formfld' name='quick_select' id='quick_select' onchange=\"if (this.selectedIndex != 0) { document.getElementById('start_stamp_begin').value = ''; document.getElementById('start_stamp_end').value = ''; document.getElementById('frm').submit(); }\">\n";
 		echo "				<option value=''></option>\n";
-		echo "				<option value='1' ".(($quick_select == 1) ? "selected='selected'" : null).">".$text['option-last_seven_days']."</option>\n";
-		echo "				<option value='2' ".(($quick_select == 2) ? "selected='selected'" : null).">".$text['option-last_hour']."</option>\n";
-		echo "				<option value='3' ".(($quick_select == 3) ? "selected='selected'" : null).">".$text['option-today']."</option>\n";
-		echo "				<option value='4' ".(($quick_select == 4) ? "selected='selected'" : null).">".$text['option-yesterday']."</option>\n";
-		echo "				<option value='5' ".(($quick_select == 5) ? "selected='selected'" : null).">".$text['option-this_week']."</option>\n";
-		echo "				<option value='6' ".(($quick_select == 6) ? "selected='selected'" : null).">".$text['option-this_month']."</option>\n";
-		echo "				<option value='7' ".(($quick_select == 7) ? "selected='selected'" : null).">".$text['option-this_year']."</option>\n";
+		echo "				<option value='1' ".($quick_select == 1 ? "selected='selected'" : null).">".$text['option-last_seven_days']."</option>\n";
+		echo "				<option value='2' ".($quick_select == 2 ? "selected='selected'" : null).">".$text['option-last_hour']."</option>\n";
+		echo "				<option value='3' ".($quick_select == 3 ? "selected='selected'" : null).">".$text['option-today']."</option>\n";
+		echo "				<option value='4' ".($quick_select == 4 ? "selected='selected'" : null).">".$text['option-yesterday']."</option>\n";
+		echo "				<option value='5' ".($quick_select == 5 ? "selected='selected'" : null).">".$text['option-this_week']."</option>\n";
+		echo "				<option value='6' ".($quick_select == 6 ? "selected='selected'" : null).">".$text['option-this_month']."</option>\n";
+		echo "				<option value='7' ".($quick_select == 7 ? "selected='selected'" : null).">".$text['option-this_year']."</option>\n";
 		echo "			</select>\n";
 		echo "		</div>\n";
 		echo "	</div>\n";
@@ -205,7 +215,7 @@
 	echo "		<th class='hide-sm-dn'>".$text['label-description']."</th>\n";
 	echo "	</tr>\n";
 
-	if (is_array($summary)) {
+	if (!empty($summary) && is_array($summary)) {
 		foreach ($summary as $key => $row) {
 			echo "<tr class='list-row'>\n";
 			if (!empty($_GET['show']) && $_GET['show'] === "all" && permission_exists('destination_summary_all')) {
