@@ -1233,7 +1233,7 @@ if (!class_exists('destinations')) {
 				}
 				$sql .= " and direction = 'inbound' \n";
 				$sql .= " and caller_destination is not null \n";
-				$sql .= $sql_date_range;
+				$sql .= $sql_date_range ?? '';
 				$sql .= ") as c \n";
 
 				$sql .= "where \n";
