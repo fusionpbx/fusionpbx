@@ -98,7 +98,7 @@
 				//update the user_status
 					if (is_uuid($call_center_agent_uuid)) {
 						$esl = event_socket::create();
-						$switch_cmd .= "callcenter_config agent set status ".$call_center_agent_uuid." '".$user_status."'";
+						$switch_cmd = "callcenter_config agent set status ".$call_center_agent_uuid." '".$user_status."'";
 						$switch_result = event_socket::api($switch_cmd);
 					}
 

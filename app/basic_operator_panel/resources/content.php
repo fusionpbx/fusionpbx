@@ -229,7 +229,7 @@ if (is_array($activity)) {
 		unset($block);
 
 		//filter by group, if defined
-		if ($_REQUEST['group'] != '' && substr_count($ext['call_group'], $_REQUEST['group']) == 0 && !in_array($extension, $_SESSION['user']['extensions'])) { continue; }
+		if ($_REQUEST['group'] != '' && substr_count($ext['call_group'] ?? '', $_REQUEST['group']) == 0 && !in_array($extension, $_SESSION['user']['extensions'])) { continue; }
 
 		//filter by extension or name, if defined
 		if (!empty($_REQUEST['filter'])) {
@@ -355,7 +355,7 @@ if (is_array($activity)) {
 		if ($ext['uuid'] == $ext['call_uuid'] && empty($ext['variable_bridge_uuid'])) { // transfer an outbound internal call
 			$call_identifier = $activity[$call_number ?? null]['uuid'] ?? null;
 		}
-		else if (($ext['variable_call_direction'] == 'outbound' || $ext['variable_call_direction'] == 'local') && $ext['variable_bridge_uuid'] != '') { // transfer an outbound external call
+		else if ((!empty($ext['variable_call_direction']) && ($ext['variable_call_direction'] == 'outbound' || $ext['variable_call_direction'] == 'local')) && !empty($ext['variable_bridge_uuid'])) { // transfer an outbound external call
 			$call_identifier = $ext['variable_bridge_uuid'];
 		}
 		else {
@@ -436,7 +436,7 @@ if (is_array($activity)) {
 		}
 
 		//build the list of extensions
-		$block = "<div id='".escape($extension)."' class='".$css_class."' ".(($_GET['vd_ext_from'] == $extension || $_GET['vd_ext_to'] == $extension) ? "style='border-style: dotted;'" : null)." ".(((empty($ext_state) || $ext_state != 'active') && $ext_state != 'ringing') ? "ondrop='drop(event, this.id);' ondragover='allowDrop(event, this.id);' ondragleave='discardDrop(event, this.id);'" : null).">"; // DRAG TO
+		$block = "<div id='".escape($extension)."' class='".$css_class."' ".(($_GET['vd_ext_from'] == $extension || $_GET['vd_ext_to'] == $extension) ? "style='border-style: dotted;'" : null)." ".(empty($ext_state) || ($ext_state != 'active' && $ext_state != 'ringing') ? "ondrop='drop(event, this.id);' ondragover='allowDrop(event, this.id);' ondragleave='discardDrop(event, this.id);'" : null).">"; // DRAG TO
 		$block .= "<table class='".$css_class."'>\n";
 		$block .= "	<tr>\n";
 		$block .= "		<td class='op_ext_icon'>\n";
