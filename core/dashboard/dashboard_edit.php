@@ -44,11 +44,14 @@
 	$dashboard_path = 'core/dashboard/resources/dashboard/icon.php';
 	$dashboard_url = '';
 	$dashboard_icon = '';
+	$dashboard_heading_text_color = '';
+	$dashboard_heading_background_color = '';
+	$dashboard_number_text_color = '';
 	$dashboard_groups = [];
 	$dashboard_column_span = '';
 	$dashboard_details_state = '';
 	$dashboard_order = '';
-	$dashboard_enabled = 'false';
+	$dashboard_enabled = $row["dashboard_enabled"] ?? 'true';
 	$dashboard_description = '';
 	$dashboard_uuid = '';
 
@@ -317,6 +320,17 @@
 //add a default value to $dashboard_details_state
 	if (!isset($dashboard_details_state)) {
 		$dashboard_details_state = "expanded";
+	}
+
+//add a default value to $dashboard_chart_type
+	if (!isset($dashboard_chart_type) && $dashboard_path == 'app/voicemails/resources/dashboard/voicemails.php') {
+		$dashboard_chart_type = "none";
+	}
+	if (!isset($dashboard_chart_type) && $dashboard_path == 'app/xml_cdr/resources/dashboard/missed_calls.php') {
+		$dashboard_chart_type = "none";
+	}
+	if (!isset($dashboard_chart_type) && $dashboard_path == 'app/xml_cdr/resources/dashboard/recent_calls.php') {
+		$dashboard_chart_type = "none";
 	}
 
 //add an empty row
