@@ -82,7 +82,7 @@
     <keepalive_interval idx="{$row.line_number}" perm="R">{if isset($snom_keepalive)}{$snom_keepalive}{else}5{/if}</keepalive_interval>
     {if $row@index eq 11}{break}{/if}
     {/foreach}
-  <led_on perm="">CONNECTED IDLE ON BUSY IN_A_CALL CALLING IN_A_MEETING URGENT_INTERRUPTIONS_ONLY DND UNAVAILABLE ACTIVE INACTIVE BE_RIGHT_BACK AWAY SEIZED CONNECTED ON_HOLD OFFHOOK RINGBACK I-Am-Ready AVAILABLE I-Am-Busy PhoneHasCall PhoneHasMissedCalls</led_on>
+  <led_on perm="">ON IN_A_CALL CALLING IN_A_MEETING URGENT_INTERRUPTIONS_ONLY BUSY I-Am-Busy DND_ALL DND_SELF ACTIVE INACTIVE BE_RIGHT_BACK SEIZED CONNECTED ON_HOLD OFFHOOK RINGBACK I-Am-Ready AWAY AVAILABLE AVAILABLE_ON_MOBILE AVAILABLE_AT_DESK call_center_status_empty AudioIsMuted AudioDeviceIsHeadsetRTP AudioDeviceIsSpeakerRTP AudioDeviceIsHeadsetMulticast AudioDeviceIsSpeakerMulticast HeadsetIsActiveNoAudio AudioDeviceIsHeadsetRinging AudioDeviceIsSpeakerRinging AudioDeviceIsHeadsetDialtone AudioDeviceIsSpeakerDialtone AudioDeviceIsHeadsetDTMF AudioDeviceIsSpeakerDTMF AudioDeviceIsHeadsetRingback AudioDeviceIsSpeakerRingback AudioDeviceIsHeadsetMisc AudioDeviceIsSpeakerMisc CurrentIdentityIsDnd PhoneHasCall PhoneHasMissedCalls CurrentIdentityHasVoiceMessages PhoneHasVoiceMessages seized_local seized_remote active_local active_remote dialog_dnd</led_on>
 
 <led_red perm="">CONNECTED AWAY INACTIVE BE_RIGHT_BACK KeyConfigActiveBUSY DND_ALL DND_SELF I-Am-Busy IN_A_CALL IN_A_MEETING URGENT_INTERRUPTIONS_ONLY UNAVAILABLE seized_remote alerting_remote active_remote held_remote</led_red>
 
