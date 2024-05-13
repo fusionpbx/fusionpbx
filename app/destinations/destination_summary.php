@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2023
+	Portions created by the Initial Developer are Copyright (C) 2023-2024
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -47,7 +47,7 @@
 		$quick_select = $_REQUEST['quick_select'];
 		$start_stamp_begin = $_REQUEST['start_stamp_begin'];
 		$start_stamp_end = $_REQUEST['start_stamp_end'];
-		$include_internal = $_REQUEST['include_internal'];
+		//$include_internal = $_REQUEST['include_internal'];
 	}
 	else {
 		$quick_select = 3; //set default
@@ -59,7 +59,7 @@
 	$destination->quick_select = $quick_select;
 	$destination->start_stamp_begin = $start_stamp_begin ?? null;
 	$destination->start_stamp_end = $start_stamp_end ?? null;
-	$destination->include_internal = $include_internal ?? null;
+	//$destination->include_internal = $include_internal ?? null;
 	$summary = $destination->destination_summary();
 
 //set the http header
