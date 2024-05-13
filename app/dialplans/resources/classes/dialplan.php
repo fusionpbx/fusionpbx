@@ -826,8 +826,8 @@
 													$xml .= "</extension>\n";
 												}
 
-												//add to the dialplanss
-												$dialplans[$previous_dialplan_uuid] = $xml;
+												//add to the dialplans
+												$dialplans[$previous_dialplan_uuid] = $xml ?? '';
 												$xml = '';
 
 												$dialplan_tag_status = "closed";
@@ -1039,7 +1039,7 @@
 
 						//set the xml array and then concatenate the array to a string
 							//$xml .= "		</context>\n";
-							///$xml .= "	</section>\n";
+							//$xml .= "	</section>\n";
 							//$xml .= "</document>\n";
 
 					} //end if source = details
