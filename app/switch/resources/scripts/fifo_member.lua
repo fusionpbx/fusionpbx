@@ -78,7 +78,7 @@ end
 
 --press 1 to login and 2 to logout
 if (session:ready()) then
-	menu_selection = session:playAndGetDigits(1, 1, max_tries, digit_timeout, "#", "phrase:agent-status:#", "", "\\d+");
+	menu_selection = session:playAndGetDigits(1, 1, max_tries, digit_timeout, "#", "phrase:agent_status:#", "", "\\d+");
 	freeswitch.consoleLog("NOTICE", "menu_selection: "..menu_selection.."\n");
 	if (menu_selection == "1") then
 		session:execute("set", "fifo_member_add_result=${fifo_member(add "..queue_name.." {fifo_member_wait=nowait}user/"..user_name.." "..fifo_simo.." "..fifo_timeout.." "..fifo_lag.."} )"); --simo timeout lag
