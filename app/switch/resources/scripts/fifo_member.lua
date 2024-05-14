@@ -16,21 +16,21 @@
 --
 --	The Initial Developer of the Original Code is
 --	Mark J Crane <markjcrane@fusionpbx.com>
---	Copyright (C) 2010
+--	Copyright (C) 2010-2024
 --	All Rights Reserved.
 --
 --	Contributor(s):
 --	Mark J Crane <markjcrane@fusionpbx.com>
 
+--define variables
 sounds_dir = "";
 pin_number = "";
 max_tries = "3";
 digit_timeout = "3000";
 
-
-if ( session:ready() ) then
+--get the session variables
+if (session:ready()) then
 	session:answer();
-	--session:execute("info", "");
 	user_name = session:getVariable("user_name");
 	pin_number = session:getVariable("pin_number");
 	sounds_dir = session:getVariable("sounds_dir");
@@ -38,84 +38,59 @@ if ( session:ready() ) then
 	fifo_simo = session:getVariable("fifo_simo");
 	fifo_timeout = session:getVariable("fifo_timeout");
 	fifo_lag = session:getVariable("fifo_lag");
+end
 
-	--pin_number = "1234"; --for testing
-	--queue_name = "5900@voip.fusionpbx.com";
-	--fifo_simo = 1;
-	--fifo_timeout = 10;
-	--fifo_lag = 10;
+--sleep
+if (session:ready()) then
+	session:sleep(500);
+end
 
-	if (pin_number) then
-			--sleep
-				session:sleep(500);
+--check the pin number when a value is set
+if (session:ready() and pin_number) then
+	--get the user pin number
+	min_digits = 2;
+	max_digits = 20;
+	digits = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", "phrase:voicemail_enter_pass:#", "", "\\d+");
 
-			--get the user pin number
-				min_digits = 2;
-				max_digits = 20;
-				digits = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", "phrase:voicemail_enter_pass:#", "", "\\d+");
-
-			--validate the user pin number
-				pin_number_table = explode(",",pin_number);
-				for index,pin_number in pairs(pin_number_table) do
-					if (digits == pin_number) then
-						--set the variable to true
-							auth = true;
-						--set the authorized pin number that was used
-							session:setVariable("pin_number", pin_number);
-						--end the loop
-							break;
-					end
-				end		if (digits == pin_number) then
+	--validate the user pin number
+	pin_number_table = explode(",",pin_number);
+	for index,pin_number in pairs(pin_number_table) do
+		if (digits == pin_number) then
 			--pin is correct
+			auth = true;
 
-			--press 1 to login and 2 to logout
-				menu_selection = session:playAndGetDigits(1, 1, max_tries, digit_timeout, "#", "ivr/ivr-enter_destination_telephone_number.wav", "", "\\d+");
-				freeswitch.consoleLog("NOTICE", "menu_selection: "..menu_selection.."\n");
-				if (menu_selection == "1") then
-					session:execute("set", "fifo_member_add_result=${fifo_member(add "..queue_name.." {fifo_member_wait=nowait}user/"..user_name.." "..fifo_simo.." "..fifo_timeout.." "..fifo_lag.."} )"); --simo timeout lag
-					fifo_member_add_result = session:getVariable("fifo_member_add_result");
-					freeswitch.consoleLog("NOTICE", "fifo_member_add_result: "..fifo_member_add_result.."\n");
-					session:streamFile("ivr/ivr-you_are_now_logged_in.wav");
-				end
-				if (menu_selection == "2") then
-					session:execute("set", "fifo_member_del_result=${fifo_member(del "..queue_name.." {fifo_member_wait=nowait}user/"..user_name.."} )");
-					session:streamFile("ivr/ivr-you_are_now_logged_out.wav");
-				end
+			--set the authorized pin number that was used
+			session:setVariable("pin_number", pin_number);
 
-			--wait for the file to be written before proceeding
-				--	session:sleep(1000);
+			--sleep
+			session:sleep(500);
 
-			--hangup
-				session:hangup();
-
+			--end the loop
+			break;
 		else
-			--auth failed
-				session:streamFile("phrase:voicemail_fail_auth:#");
-				session:hangup("NORMAL_CLEARING");
-				return;
+			--pin is not valid
+			session:streamFile("phrase:voicemail_fail_auth:#");
+			session:hangup("NORMAL_CLEARING");
+			return;
 		end
-	else
-
-		--pin number is not required
-
-		--press 1 to login and 2 to logout
-			menu_selection = session:playAndGetDigits(1, 1, max_tries, digit_timeout, "#", "ivr/ivr-enter_destination_telephone_number.wav", "", "\\d+");
-			freeswitch.consoleLog("NOTICE", "menu_selection: "..menu_selection.."\n");
-			if (menu_selection == "1") then
-				session:execute("set", "fifo_member_add_result=${fifo_member(add "..queue_name.." {fifo_member_wait=nowait}user/"..user_name.." "..fifo_simo.." "..fifo_timeout.." "..fifo_lag.."} )"); --simo timeout lag
-				fifo_member_add_result = session:getVariable("fifo_member_add_result");
-				freeswitch.consoleLog("NOTICE", "fifo_member_add_result: "..fifo_member_add_result.."\n");
-				session:streamFile("ivr/ivr-you_are_now_logged_in.wav");
-			end
-			if (menu_selection == "2") then
-				session:execute("set", "fifo_member_del_result=${fifo_member(del "..queue_name.." {fifo_member_wait=nowait}user/"..user_name.."} )");
-				session:streamFile("ivr/ivr-you_are_now_logged_out.wav");
-			end
-
-		--wait for the file to be written before proceeding
-			--session:sleep(1000);
-
-		--hangup
-			session:hangup();
 	end
+end
+
+--press 1 to login and 2 to logout
+if (session:ready()) then
+	menu_selection = session:playAndGetDigits(1, 1, max_tries, digit_timeout, "#", "phrase:agent-status:#", "", "\\d+");
+	freeswitch.consoleLog("NOTICE", "menu_selection: "..menu_selection.."\n");
+	if (menu_selection == "1") then
+		session:execute("set", "fifo_member_add_result=${fifo_member(add "..queue_name.." {fifo_member_wait=nowait}user/"..user_name.." "..fifo_simo.." "..fifo_timeout.." "..fifo_lag.."} )"); --simo timeout lag
+		fifo_member_add_result = session:getVariable("fifo_member_add_result");
+		freeswitch.consoleLog("NOTICE", "fifo_member_add_result: "..fifo_member_add_result.."\n");
+		session:streamFile("ivr/ivr-you_are_now_logged_in.wav");
+	end
+	if (menu_selection == "2") then
+		session:execute("set", "fifo_member_del_result=${fifo_member(del "..queue_name.." {fifo_member_wait=nowait}user/"..user_name.."} )");
+		session:streamFile("ivr/ivr-you_are_now_logged_out.wav");
+	end
+
+	--hangup
+	session:hangup();
 end
