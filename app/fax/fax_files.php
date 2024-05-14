@@ -38,6 +38,9 @@
 		exit;
 	}
 
+//create the database object
+	$database = new database;
+
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
@@ -76,7 +79,8 @@
 		$fax_uuid = $_GET["id"];
 		if (permission_exists('fax_extension_view_domain')) {
 			//show all fax extensions
-			$sql = "select fax_name, fax_extension from v_fax ";
+			$sql = "select fax_name, fax_extension ";
+			$sql .= "from v_fax ";
 			$sql .= "where domain_uuid = :domain_uuid ";
 			$sql .= "and fax_uuid = :fax_uuid ";
 			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
@@ -84,7 +88,8 @@
 		}
 		else {
 			//show only assigned fax extensions
-			$sql = "select fax_name, fax_extension from v_fax as f, v_fax_users as u ";
+			$sql = "select fax_name, fax_extension ";
+			$sql .= "from v_fax as f, v_fax_users as u ";
 			$sql .= "where f.fax_uuid = u.fax_uuid ";
 			$sql .= "and f.domain_uuid = :domain_uuid ";
 			$sql .= "and f.fax_uuid = :fax_uuid ";
@@ -93,7 +98,6 @@
 			$parameters['fax_uuid'] = $fax_uuid;
 			$parameters['user_uuid'] = $_SESSION['user_uuid'];
 		}
-		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
 		if (is_array($row) && @sizeof($row) != 0) {
 			//set database fields as variables
@@ -207,7 +211,6 @@
 	}
 	$parameters['fax_uuid'] = $fax_uuid;
 	$parameters['domain_uuid'] = $domain_uuid;
-	$database = new database;
 	$num_rows = $database->select($sql, $parameters, 'column');
 	unset($sql, $parameters);
 
@@ -260,7 +263,6 @@
 	$parameters['domain_uuid'] = $domain_uuid;
 	$sql .= order_by($order_by, $order, 'fax_date', 'desc');
 	$sql .= limit_offset($rows_per_page, $offset);
-	$database = new database;
 	$fax_files = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
@@ -454,7 +456,6 @@
 			$x++;
 		}
 	}
-	unset($fax_files);
 
 	echo "</table>\n";
 	echo "<br />\n";
