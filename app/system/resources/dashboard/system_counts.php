@@ -301,7 +301,7 @@
 		if ($dashboard_chart_type == "doughnut") {
 			//add doughnut chart
 			?>
-			<div class='hud_chart'><canvas id='system_counts_chart'></canvas></div>
+			<div class='hud_chart' style='width: 250px;'><canvas id='system_counts_chart'></canvas></div>
 
 			<script>
 				const system_counts_chart = new Chart(
