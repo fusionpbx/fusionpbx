@@ -426,10 +426,10 @@ if (!class_exists('xml_cdr')) {
 						}
 
 					//if intercept is used then update use the last sent callee id name and number
-						if ($xml->variables->last_app == 'intercept' && !empty($xml->variables->last_sent_callee_id_name)) {
+						if (isset($xml->variables->last_app) && $xml->variables->last_app == 'intercept' && !empty($xml->variables->last_sent_callee_id_name)) {
 							$caller_id_name = urldecode($xml->variables->last_sent_callee_id_name);
 						}
-						if ($xml->variables->last_app == 'intercept' && !empty($xml->variables->last_sent_callee_id_number)) {
+						if (isset($xml->variables->last_app) && $xml->variables->last_app == 'intercept' && !empty($xml->variables->last_sent_callee_id_number)) {
 							$caller_id_number = urldecode($xml->variables->last_sent_callee_id_number);
 						}
 
