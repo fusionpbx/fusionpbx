@@ -638,7 +638,9 @@
 	}
 	if (empty($dashboard_detail_background_color) || count($dashboard_detail_background_color) < 2) {
 		echo "	<input type='text' class='formfld colorpicker' name='dashboard_detail_background_color[]' value='' onclick=\"document.getElementById('detail_second_input').style.display = 'block';\">\n";
-		echo "	<input id='detail_second_input' style='display: none;' type='text' class='formfld colorpicker' name='dashboard_detail_background_color[]'>\n";
+		if (empty($dashboard_background_color)) {
+			echo "	<input id='detail_second_input' style='display: none;' type='text' class='formfld colorpicker' name='dashboard_detail_background_color[]'>\n";
+		}
 	}
 	echo "<br />\n";
 	echo $text['description-dashboard_detail_background_color']."\n";
