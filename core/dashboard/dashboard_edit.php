@@ -615,7 +615,9 @@
 	}
 	if (empty($dashboard_background_color) || count($dashboard_background_color) < 2) {
 		echo "	<input type='text' class='formfld colorpicker' name='dashboard_background_color[]' value='' onclick=\"document.getElementById('second_input').style.display = 'block';\">\n";
-		echo "	<input id='second_input' style='display: none;' type='text' class='formfld colorpicker' name='dashboard_background_color[]'>\n";
+		if (empty($dashboard_background_color)) {
+			echo "	<input id='second_input' style='display: none;' type='text' class='formfld colorpicker' name='dashboard_background_color[]'>\n";
+		}
 	}
 	echo "<br />\n";
 	echo $text['description-dashboard_background_color']."\n";
