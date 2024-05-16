@@ -1,0 +1,5 @@
+<extension name="check-suspended" context="${domain_name}" continue="true" app_uuid="a68852ff-22de-4648-b6c7-335047eaebb6" destination="false" order="21">
+	<condition>
+		<action application="lua" data="check_billing_suspension.lua"/>
+	</condition>
+</extension>
