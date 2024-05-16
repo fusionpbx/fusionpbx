@@ -357,6 +357,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "30";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the ring time (delay in seconds) before sending a call to voicemail";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "dad8148d-e96b-45a3-973d-2746bed389a8";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "extension";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "concurrent_outbound_limit";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "5";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the maximum number of concurrent outbound calls allowed";
 
 	//cache details
 		$apps[$x]['cache']['key'] = "directory.\${extension}@\${domain_name}";
