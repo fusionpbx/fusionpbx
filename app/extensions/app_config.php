@@ -292,7 +292,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set whether to require at least one lowecase letter in extension passwords.";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set whether to require at least one lowercase letter in extension passwords.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "256b0d87-a43e-4618-b96b-541e191879c7";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "extension";
@@ -358,9 +358,9 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the ring time (delay in seconds) before sending a call to voicemail";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "dad8148d-e96b-45a3-973d-2746bed389a8";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "ed1833a1-8dd5-4ca7-8a78-b5329e909841";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "extension";
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "concurrent_outbound_limit";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "limit_max";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "5";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
