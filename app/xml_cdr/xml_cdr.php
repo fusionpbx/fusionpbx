@@ -238,7 +238,7 @@
 		echo "		</select>";
 	}
 	if (!$archive_request && permission_exists('xml_cdr_delete')) {
-		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'name'=>'btn_delete','onclick'=>"modal_open('modal-delete','btn_delete');"]);
+		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','name'=>'btn_delete','style'=>'display: none;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
 	if (permission_exists('xml_cdr_all') && $_REQUEST['show'] !== 'all') {
 		echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$_SESSION['theme']['button_icon_all'],'link'=>'?show=all']);
@@ -583,7 +583,7 @@
 	$col_count = 0;
 	if (!$archive_request && permission_exists('xml_cdr_delete')) {
 		echo "	<th class='checkbox'>\n";
-		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle();' ".(empty($result) ? "style='visibility: hidden;'" : null).">\n";
+		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".(empty($result) ? "style='visibility: hidden;'" : null).">\n";
 		echo "	</th>\n";
 		$col_count++;
 	}
@@ -798,7 +798,7 @@
 					$content .= "<tr class='list-row' href='".$list_row_url."'>\n";
 					if (!$archive_request && permission_exists('xml_cdr_delete')) {
 						$content .= "	<td class='checkbox middle'>\n";
-						$content .= "		<input type='checkbox' name='xml_cdrs[$x][checked]' id='checkbox_".$x."' value='true' onclick=\"if (!this.checked) { document.getElementById('checkbox_all').checked = false; }\">\n";
+						$content .= "		<input type='checkbox' name='xml_cdrs[$x][checked]' id='checkbox_".$x."' value='true' onclick=\"checkbox_on_change(this); if (!this.checked) { document.getElementById('checkbox_all').checked = false; }\">\n";
 						$content .= "		<input type='hidden' name='xml_cdrs[$x][uuid]' value='".escape($row['xml_cdr_uuid'])."' />\n";
 						$content .= "	</td>\n";
 					}
