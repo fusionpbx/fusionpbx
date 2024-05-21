@@ -41,6 +41,11 @@
 	$language = new text;
 	$text = $language->get();
 
+//add the settings object
+	$settings = new settings(["domain_uuid" => $_SESSION['domain_uuid'], "user_uuid" => $_SESSION['user_uuid']]);
+	$transcribe_enabled = $settings->get('transcribe', 'enabled', 'false');
+	$transcribe_engine = $settings->get('transcribe', 'engine', '');
+
 //get the http values and set them to a variable
 	if (is_uuid($_REQUEST["id"])) {
 		$uuid = $_REQUEST["id"];
@@ -72,9 +77,61 @@
 		$call_flow = trim($row["call_flow"] ?? '');
 		$direction = trim($row["direction"] ?? '');
 		$call_direction = trim($row["direction"] ?? '');
+		$record_path = trim($row["record_path"] ?? '');
+		$record_name = trim($row["record_name"] ?? '');
+		$record_transcription = trim($row["record_transcription"] ?? '');
 		$status = trim($row["status"] ?? '');
 	}
 	unset($sql, $parameters, $row);
+
+//transcribe, if enabled
+	if (
+		!empty($_GET['action']) &&
+		$_GET['action'] == 'transcribe' &&
+		$transcribe_enabled == 'true' &&
+		!empty($transcribe_engine) &&
+		empty($record_transcription) &&
+		!empty($record_path) &&
+		!empty($record_name) &&
+		file_exists($record_path.'/'.$record_name)
+		) {
+		//add the transcribe object
+			$transcribe = new transcribe($settings);
+		//audio to text - get the transcription from the audio file
+			$transcribe->audio_path = $record_path;
+			$transcribe->audio_filename = $record_name;
+			$record_transcription = $transcribe->transcribe();
+		//build call recording data array
+			if (!empty($record_transcription)) {
+				$array['xml_cdr'][0]['xml_cdr_uuid'] = $uuid;
+				$array['xml_cdr'][0]['record_transcription'] = $record_transcription;
+			}
+		//update the checked rows
+			if (is_array($array) && @sizeof($array) != 0) {
+
+				//add temporary permissions
+					$p = new permissions;
+					$p->add('xml_cdr_edit', 'temp');
+
+				//remove record_path, record_name and record_length
+					$database = new database;
+					$database->app_name = 'xml_cdr';
+					$database->app_uuid = '4a085c51-7635-ff03-f67b-86e834422848';
+					$database->save($array, false);
+					$message = $database->message;
+					unset($array);
+
+				//remove the temporary permissions
+					$p->delete('xml_cdr_edit', 'temp');
+
+				//set message
+					message::add($text['message-audio_transcribed']);
+
+			}
+		//redirect
+			header('Location: '.$_SERVER['PHP_SELF'].'?id='.$uuid);
+			exit;
+	}
 
 //get the cdr json from the database
 	if (empty($json_string)) {
@@ -320,11 +377,14 @@
 //page title and description
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo "<td width='30%' align='left' valign='top' nowrap='nowrap'><b>".$text['title2']."</b></td>\n";
+	echo "<td width='30%' align='left' valign='top' nowrap='nowrap'><b>".$text['title2']."</b><br><br></td>\n";
 	echo "<td width='70%' align='right' valign='top'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'style'=>'margin-left: 15px;','link'=>'xml_cdr.php'.(!empty($_SESSION['xml_cdr']['last_query']) ? '?'.urlencode($_SESSION['xml_cdr']['last_query']) : null)]);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'link'=>'xml_cdr.php'.(!empty($_SESSION['xml_cdr']['last_query']) ? '?'.urlencode($_SESSION['xml_cdr']['last_query']) : null)]);
 	if ($_SESSION['cdr']['call_log_enabled']['boolean'] == 'true' && isset($log_content) && !empty($log_content)) {
 		echo button::create(['type'=>'button','label'=>$text['button-call_log'],'icon'=>$_SESSION['theme']['button_icon_search'],'style'=>'margin-left: 15px;','link'=>'xml_cdr_log.php?id='.$uuid]);
+	}
+	if ($transcribe_enabled == 'true' && !empty($transcribe_engine) && empty($record_transcription)) {
+		echo button::create(['type'=>'button','label'=>$text['button-transcribe'],'icon'=>'quote-right','id'=>'btn_transcribe','name'=>'btn_transcribe','collapse'=>'hide-xs','style'=>'margin-left: 15px;','onclick'=>"window.location.href='?id=".$uuid."&action=transcribe';"]);
 	}
 	echo "</td>\n";
 	echo "</tr>\n";
@@ -458,6 +518,20 @@
 	}
 	echo "</table>";
 	echo "<br /><br />\n";
+
+//transcription, if enabled
+	if ($transcribe_enabled == 'true' && !empty($transcribe_engine) && !empty($record_transcription)) {
+		echo "<b>".$text['label-transcription']."</b><br>\n";
+		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+		echo "<tr>\n";
+		echo "	<th>".$text['label-text']."</th>\n";
+		echo "</tr>\n";
+		echo "<tr >\n";
+		echo "	<td valign='top' class='".$row_style[0]."'>".escape($record_transcription)."</td>\n";
+		echo "</tr>\n";
+		echo "</table>";
+		echo "<br /><br />\n";
+	}
 
 //call stats
 	if (permission_exists('xml_cdr_call_stats')) {
