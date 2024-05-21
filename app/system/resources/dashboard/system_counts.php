@@ -354,7 +354,7 @@
 			</script>
 			<?php
 		}
-		if ($dashboard_chart_type == "none") {
+		if ($dashboard_chart_type == "number") {
 			echo "	<span class='hud_stat'>".$domain_total."</span>";
 		}
 		echo "	</div>\n";
