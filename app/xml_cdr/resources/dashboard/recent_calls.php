@@ -136,7 +136,7 @@
 		</script>
 		<?php
 	}
-	if ($row['dashboard_chart_type'] == "none" || !isset($row['dashboard_chart_type'])) {
+	if ($row['dashboard_chart_type'] == "number" || !isset($row['dashboard_chart_type'])) {
 		echo "<span class='hud_stat'>".$num_rows."</span>";
 	}
 	echo "</div>\n";
