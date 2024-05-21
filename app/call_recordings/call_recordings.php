@@ -42,6 +42,11 @@
 	$language = new text;
 	$text = $language->get();
 
+//add the settings object
+	$settings = new settings(["domain_uuid" => $_SESSION['domain_uuid'], "user_uuid" => $_SESSION['user_uuid']]);
+	$transcribe_enabled = $settings->get('transcribe', 'enabled', 'false');
+	$transcribe_engine = $settings->get('transcribe', 'engine', '');
+
 //set additional variables
 	$search = $_GET["search"] ?? '';
 	$show = $_GET["show"] ?? '';
@@ -60,6 +65,12 @@
 				if (permission_exists('call_recording_download')) {
 					$obj = new call_recordings;
 					$obj->download($call_recordings);
+				}
+				break;
+			case 'transcribe':
+				if (permission_exists('call_recording_download')) {
+					$obj = new call_recordings;
+					$obj->transcribe($call_recordings);
 				}
 				break;
 			case 'delete':
@@ -119,7 +130,7 @@
 
 //get the list
 	$sql = "select r.domain_uuid, d.domain_name, r.call_recording_uuid, r.call_direction, ";
-	$sql .= "r.call_recording_name, r.call_recording_path, r.call_recording_length, ";
+	$sql .= "r.call_recording_name, r.call_recording_path, r.call_recording_transcription, r.call_recording_length, ";
 	$sql .= "r.caller_id_name, r.caller_id_number, r.caller_destination, r.destination_number, ";
 	$sql .= "to_char(timezone(:time_zone, r.call_recording_date), 'DD Mon YYYY') as call_recording_date_formatted, \n";
 	$sql .= "to_char(timezone(:time_zone, r.call_recording_date), 'HH12:MI:SS am') as call_recording_time_formatted \n";
@@ -149,6 +160,14 @@
 	$call_recordings = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 
+//detect if any transcriptions available
+	if ($transcribe_enabled == 'true' && !empty($transcribe_engine) && !empty($call_recordings) && is_array($call_recordings)) {
+		$transcriptions_exists = false;
+		foreach ($call_recordings as $row) {
+			if (!empty($row['call_recording_transcription'])) { $transcriptions_exists = true; }
+		}
+	}
+
 //count the results
 	$result_count = is_array($call_recordings) ? sizeof($call_recordings) : 0;
 
@@ -177,10 +196,13 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-call_recordings']." </b></div>\n";
 	echo "	<div class='actions'>\n";
-	if (permission_exists('call_recording_download') && $call_recordings) {
+	if (permission_exists('call_recording_download') && !empty($call_recordings)) {
 		echo button::create(['type'=>'button','label'=>$text['button-download'],'icon'=>$_SESSION['theme']['button_icon_download'],'id'=>'btn_download','name'=>'btn_download','style'=>'display: none;','collapse'=>'hide-xs','onclick'=>"list_action_set('download'); list_form_submit('form_list');"]);
 	}
-	if (permission_exists('call_recording_delete') && $call_recordings) {
+	if ($transcribe_enabled == 'true' && !empty($transcribe_engine) && !empty($call_recordings)) {
+		echo button::create(['type'=>'button','label'=>$text['button-transcribe'],'icon'=>'quote-right','id'=>'btn_transcribe','name'=>'btn_transcribe','style'=>'display: none;','collapse'=>'hide-xs','onclick'=>"list_action_set('transcribe'); list_form_submit('form_list');"]);
+	}
+	if (permission_exists('call_recording_delete') && !empty($call_recordings)) {
 		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','name'=>'btn_delete','style'=>'display: none; margin-right: 15px;','collapse'=>'hide-xs','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
 	echo 		"<form id='form_search' class='inline' method='get'>\n";
@@ -203,7 +225,7 @@
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
 
-	if (permission_exists('call_recording_delete') && $call_recordings) {
+	if (permission_exists('call_recording_delete') && !empty($call_recordings)) {
 		echo modal::create(['id'=>'modal-delete','type'=>'delete','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_delete','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('delete'); list_form_submit('form_list');"])]);
 	}
 
@@ -291,6 +313,9 @@
 					if (permission_exists('call_recording_download')) {
 						echo button::create(['type'=>'button','title'=>$text['label-download'],'icon'=>$_SESSION['theme']['button_icon_download'],'link'=>'download.php?id='.urlencode($row['call_recording_uuid']).'&binary']);
 					}
+					if ($transcribe_enabled == 'true' && !empty($transcribe_engine) && $transcriptions_exists === true) {
+						echo button::create(['type'=>'button','title'=>$text['label-transcription'],'icon'=>'quote-right','style'=>(empty($row['call_recording_transcription']) ? 'visibility:hidden;' : null),'onclick'=>"document.getElementById('transcription_".$row['call_recording_uuid']."').style.display = document.getElementById('transcription_".$row['call_recording_uuid']."').style.display == 'none' ? 'table-row' : 'none'; this.blur(); return false;"]);
+					}
 				}
 				echo "	</td>\n";
 			}
@@ -303,6 +328,15 @@
 				echo "	</td>\n";
 			}
 			echo "</tr>\n";
+			if ($transcribe_enabled == 'true' && !empty($transcribe_engine) && !empty($row['call_recording_transcription'])) {
+				echo "<tr style='display: none;'><td></td></tr>\n"; // dummy row to maintain same background color for transcription row
+				echo "<tr id='transcription_".$row['call_recording_uuid']."' class='list-row' style='display: none;'>\n";
+				echo "	<td style='padding: 10px 20px 15px 20px;' colspan='".$col_count."'>\n";
+				echo "		<strong style='display: inline-block; font-size: 90%; margin-bottom: 10px;'>".$text['label-transcription']."...</strong><br />\n";
+				echo 		escape($row['call_recording_transcription'])."\n";
+				echo "	</td>\n";
+				echo "</tr>\n";
+			}
 			$x++;
 		}
 		unset($call_recordings);

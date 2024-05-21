@@ -134,6 +134,96 @@ if (!class_exists('call_recordings')) {
 		}
 
 		/**
+		 * transcribe call recordings
+		 */
+		public function transcribe($records) {
+			if (permission_exists($this->name.'_view')) {
+				//add multi-lingual support
+					$language = new text;
+					$text = $language->get();
+
+				//validate the token
+					$token = new token;
+					if (!$token->validate($_SERVER['PHP_SELF'])) {
+						message::add($text['message-invalid_token'],'negative');
+						header('Location: '.$this->location);
+						exit;
+					}
+
+				//add the settings object
+					$settings = new settings(["domain_uuid" => $_SESSION['domain_uuid'], "user_uuid" => $_SESSION['user_uuid']]);
+					$transcribe_enabled = $settings->get('transcribe', 'enabled', 'false');
+					$transcribe_engine = $settings->get('transcribe', 'engine', '');
+
+				//transcribe multiple recordings
+					if ($transcribe_enabled == 'true' && !empty($transcribe_engine) && is_array($records) && @sizeof($records) != 0) {
+						//add the transcribe object
+							$transcribe = new transcribe($settings);
+
+						//build the array
+							$x = 0;
+							foreach ($records as $record) {
+								//add to the array
+									if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
+
+										//get the call recording file name and path
+											$sql = "select call_recording_name, call_recording_path ";
+											$sql .= "from view_call_recordings ";
+											$sql .= "where call_recording_uuid = :call_recording_uuid ";
+											$sql .= "and call_recording_transcription is null ";
+											$parameters['call_recording_uuid'] = $record['uuid'];
+											$database = new database;
+											$field = $database->select($sql, $parameters, 'row');
+											if (
+												is_array($field) &&
+												@sizeof($field) != 0 &&
+												file_exists($field['call_recording_path'].'/'.$field['call_recording_name'])
+												) {
+												//audio to text - get the transcription from the audio file
+													$transcribe->audio_path = $field['call_recording_path'];
+													$transcribe->audio_filename = $field['call_recording_name'];
+													$record_transcription = $transcribe->transcribe();
+												//build call recording data array
+													if (!empty($record_transcription)) {
+														$array['xml_cdr'][$x]['xml_cdr_uuid'] = $record['uuid'];
+														$array['xml_cdr'][$x]['record_transcription'] = $record_transcription;
+													}
+												//increment the id
+													$x++;
+											}
+											unset($sql, $parameters, $field);
+
+									}
+							}
+
+						//update the checked rows
+							if (is_array($array) && @sizeof($array) != 0) {
+
+								//add temporary permissions
+									$p = new permissions;
+									$p->add('xml_cdr_edit', 'temp');
+
+								//remove record_path, record_name and record_length
+									$database = new database;
+									$database->app_name = 'xml_cdr';
+									$database->app_uuid = '4a085c51-7635-ff03-f67b-86e834422848';
+									$database->save($array, false);
+									$message = $database->message;
+									unset($array);
+
+								//remove the temporary permissions
+									$p->delete('xml_cdr_edit', 'temp');
+
+								//set message
+									message::add($text['message-audio_transcribed']);
+
+							}
+							unset($records);
+					}
+			}
+		}
+
+		/**
 		 * download the recordings
 		 */
 		public function download($records = null) {
