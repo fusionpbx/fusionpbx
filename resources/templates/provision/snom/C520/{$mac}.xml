@@ -106,21 +106,6 @@
         <ldap_firstname_attribute></ldap_firstname_attribute>
         <ldap_lastname_attribute></ldap_lastname_attribute>
         <ldap_check_certificate>0</ldap_check_certificate>
-        <xml>
-            {foreach $contacts as $row}
-            <idx id="{$row@index}">
-                <name></name>
-                <uri></uri>
-                <call_lookup_enable>0</call_lookup_enable>
-                <contact_entry_tag>{$row.contact_name_given} {$row.contact_name_family}</contact_entry_tag>
-                <first_name_tag>{$row.contact_name_given}</first_name_tag>
-                <last_name_tag>{$row.contact_name_family}</last_name_tag>
-                <work_number_tag>{if $row.category == "extensions"}{$row.phone_extension}{else}{$row.phone_number}{/if}</work_number_tag>
-                <mobile_number_tag></mobile_number_tag>
-                <other_number_tag></other_number_tag>
-            </idx>
-            {/foreach}
-        </xml>
     </remoteDir>
 
     <sip_account>
