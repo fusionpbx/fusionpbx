@@ -94,7 +94,7 @@
 				</script>
 				<?php
 			}
-			if ($dashboard_chart_type == "none") {
+			if ($dashboard_chart_type == "number") {
 				echo "	<span class='hud_stat'>".round($percent_disk_usage)."%</span>";
 			}
 			echo "	</div>\n";
