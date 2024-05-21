@@ -113,7 +113,7 @@
 		</script>
 		<?php
 	}
-	if ($dashboard_chart_type == "none") {
+	if ($dashboard_chart_type == "number") {
 		echo "<span class='hud_stat'>".round($percent_cpu)."%</span>";
 	}
 	echo "</div>\n";
