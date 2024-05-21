@@ -221,7 +221,7 @@
 		echo "	);\n";
 		echo "</script>\n";
 	}
-	if ($dashboard_chart_type == "none") {
+	if ($dashboard_chart_type == "number") {
 		echo "	<span class='hud_stat'>".$stats['forwarding']."</span>";
 	}
 	echo "	</div>\n";
