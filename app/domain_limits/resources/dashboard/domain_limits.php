@@ -173,7 +173,7 @@
 				echo "	);\n";
 				echo "</script>\n";
 			}
-			if ($dashboard_chart_type == "none") {
+			if ($dashboard_chart_type == "number") {
 				echo "	<span class='hud_stat'>".$hud_stat_used."</span>";
 			}
 			echo "	</div>\n";
