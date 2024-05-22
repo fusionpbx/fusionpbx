@@ -32,7 +32,7 @@ Summary
 
 Dialplan
 
-	<extension name="call_control" continue="false" uuid="44d59f86-7637-4f76-8a5e-cf2c2e49b9a3">
+	<extension name="call_control" continue="false" uuid="3f239929-634a-4931-b2b2-137773934a32">
 		<condition field="destination_number" expression="^\*33$">
 			<action application="set" data="pin_number="/>
 			<action application="set" data="audio_prompt=ivr/ivr-call_control.wav"/>
