@@ -26,26 +26,29 @@
 
 --[[
 
-Summary: 
-Used to enable or disable calling based on the call group.
+Summary
 
-Dialplan:
+	Used to enable or disable calling based on the call group.
 
-<extension name="call_control" continue="false" uuid="44d59f86-7637-4f76-8a5e-cf2c2e49b9a3">
-	<condition field="destination_number" expression="^\*33$">
-		<action application="set" data="pin_number="/>
-		<action application="set" data="audio_prompt=phrase:agent_status:#"/>
-		<action application="set" data="target_group=support"/>
-		<action application="lua" data="app.lua call_control"/>
-	</condition>
-</extension>
+Dialplan
 
-Audio Prompt:
+	<extension name="call_control" continue="false" uuid="44d59f86-7637-4f76-8a5e-cf2c2e49b9a3">
+		<condition field="destination_number" expression="^\*33$">
+			<action application="set" data="pin_number="/>
+			<action application="set" data="audio_prompt=ivr/ivr-call_control.wav"/>
+			<action application="set" data="target_group=support"/>
+			<action application="set" data="context_enabled=domain"/>
+			<action application="set" data="context_disabled=limit"/>
+			<action application="lua" data="app.lua call_control"/>
+		</condition>
+	</extension>
 
-The audio prompt variable can be a phrase or a sound file placed in the sounds directory.
+Audio Prompt
 
-audio_prompt=phrase:agent_status:#
-ivr/ivr-call_control.wav
+	The audio prompt variable can be a phrase or a sound file placed in the sounds directory.
+
+	audio_prompt=phrase:agent_status:#
+	ivr/ivr-call_control.wav
 
 ]]
 
@@ -84,6 +87,8 @@ if (session:ready()) then
 	domain_name = session:getVariable("domain_name");
 	domain_uuid = session:getVariable("domain_uuid");
 	sounds_dir = session:getVariable("sounds_dir");
+	context_enabled = session:getVariable("context_enabled");
+	context_disabled = session:getVariable("context_disabled");
 
 	--set the sounds path for the language, dialect and voice
 	default_language = session:getVariable("default_language");
@@ -96,6 +101,13 @@ if (not audio_prompt) then audio_prompt = 'phrase:agent_status:#'; end
 if (not default_language) then default_language = 'en'; end
 if (not default_dialect) then default_dialect = 'us'; end
 if (not default_voice) then default_voice = 'callie'; end
+if (not context_enabled) then context_enabled = 'domain'; end
+if (not context_disabled) then context_disabled = 'limit'; end
+
+--if domain is set then use the domain name
+if (context_enabled == 'domain' or context_enabled == 'domain_name') then
+	context_enabled = domain_name;
+end
 
 --if the pin number is provided then require it
 if (pin_number) then
@@ -132,7 +144,6 @@ end
 
 --get the user pin number
 pressed_digit = session:playAndGetDigits(1, 1, 1, digit_timeout, "#", audio_prompt, "", "\\d+");
---pressed_digit = session:playAndGetDigits(1, 1, 1, digit_timeout, "#", "phrase:"..audio_prompt..":#", "", "\\d+");
 
 --update the database and flush the cache
 if (session:ready() and pressed_digit) then
@@ -142,18 +153,31 @@ if (session:ready() and pressed_digit) then
 
 	--allow calling
 	if (pressed_digit == '1') then
-		context = domain_name;
+		call_control = 'enabled';
+		user_context = context_enabled;
 		call_display = 'Calls Enabled';
+		session:setVariable("call_control", 'enabled');
 	end
 
 	--block calling
 	if (pressed_digit == '2') then
-		context = 'blocked@'.. domain_name;
+		call_control = 'disabled';
+		user_context = context_disabled .. '@'.. domain_name;
 		call_display = 'Call Disabled';
 	end
 
+	--add channel variables for call detail records
+	session:setVariable("call_control_context", user_context);
+	session:setVariable("call_control_group", target_group);
+	if (call_control == 'enabled') then
+		session:setVariable("call_control_status", 'enabled');
+	end
+	if (call_control == 'disabled') then
+		session:setVariable("call_control_status", 'disabled');
+	end
+
 	--log the destinations
-	freeswitch.consoleLog("NOTICE", "[call_control] context "..context.."\n");
+	freeswitch.consoleLog("NOTICE", "[call_control] context "..user_context.."\n");
 
 	--update the extensions in the call group
 	local sql = "update v_extensions set ";
@@ -161,7 +185,7 @@ if (session:ready() and pressed_digit) then
 	sql = sql .. "where domain_uuid = :domain_uuid ";
 	sql = sql .. "and call_group = :call_group ";
 	local params = {
-		user_context = context;
+		user_context = user_context;
 		domain_uuid = domain_uuid;
 		call_group = target_group;
 	}
@@ -187,4 +211,3 @@ if (session:ready()) then
 	session:sleep(2000);
 	audio_file = "tone_stream://%(200,0,500,600,700)"
 end
-
