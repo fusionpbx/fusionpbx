@@ -262,11 +262,14 @@ if (!empty($result) && @sizeof($result) != 0) {
 
 					//reset variables
 					unset($fax_numbers);
-				}
 
-				//delete email
-				if (imap_delete($connection, $email_id, FT_UID)) {
-					imap_expunge($connection);
+					//delete email
+					if (imap_delete($connection, $email_id, FT_UID)) {
+						imap_expunge($connection);
+					}
+				}
+				else {
+					//unauthorized sender
 				}
 			}
 			unset($authorized_senders);
