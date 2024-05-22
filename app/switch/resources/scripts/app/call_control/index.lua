@@ -162,7 +162,7 @@ if (session:ready() and pressed_digit) then
 	--block calling
 	if (pressed_digit == '2') then
 		call_control = 'disabled';
-		user_context = context_disabled .. '@'.. domain_name;
+		user_context = context_disabled;
 		call_display = 'Call Disabled';
 	end
 
@@ -211,3 +211,4 @@ if (session:ready()) then
 	session:sleep(2000);
 	audio_file = "tone_stream://%(200,0,500,600,700)"
 end
+
