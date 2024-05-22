@@ -182,6 +182,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the D120 firmware";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "ad583d79-3965-4c59-9e6d-6dea8ce28bbd";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "snom_firmware_c520";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "c520/C520-WiMi-1.2.0.6-0.img";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the C520 firmware";
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "0435781d-19e7-4a37-bcd2-c2e568867863";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "snom_firmware_pa1";
