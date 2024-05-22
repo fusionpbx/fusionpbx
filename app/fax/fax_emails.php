@@ -267,7 +267,8 @@ if (!empty($result) && @sizeof($result) != 0) {
 					if (imap_delete($connection, $email_id, FT_UID)) {
 						imap_expunge($connection);
 					}
-				} else {
+				}
+				else {
 					//unauthorized sender
 				}
 			}
