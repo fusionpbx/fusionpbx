@@ -256,6 +256,7 @@
 	$sql .= "c.domain_uuid, \n";
 	$sql .= "c.sip_call_id, \n";
 	$sql .= "e.extension, \n";
+	$sql .= "e.effective_caller_id_name as extension_name, \n";
 	$sql .= "c.start_stamp, \n";
 	$sql .= "c.end_stamp, \n";
 	$sql .= "to_char(timezone(:time_zone, start_stamp), 'DD Mon YYYY') as start_date_formatted, \n";
