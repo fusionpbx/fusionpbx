@@ -594,7 +594,7 @@
 		$col_count++;
 	}
 	if (permission_exists('xml_cdr_extension')) {
-		echo "<th class='shrink'>".$text['label-ext']."</th>\n";
+		echo "<th class='shrink'>".$text['label-extension']."</th>\n";
 		$col_count++;
 	}
 	if (permission_exists('xml_cdr_all') && $_REQUEST['show'] == "all") {
@@ -824,7 +824,7 @@
 					}
 				//extension
 					if (permission_exists('xml_cdr_extension')) {
-						$content .= "	<td class='middle'>".$row['extension']."</td>\n";
+						$content .= "	<td class='middle'>".$row['extension']." ".escape($row['extension_name'])."</td>\n";
 					}
 				//domain name
 					if (permission_exists('xml_cdr_all') && $_REQUEST['show'] == "all") {
