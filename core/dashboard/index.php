@@ -299,6 +299,14 @@ span.hud_stat { padding-bottom: 27px; }
 				echo "	display: none;\n";
 				echo "}\n";
 			}
+			if (!isset($row['dashboard_details_state']) && $dashboard_name == "new_messages" ||
+				!isset($row['dashboard_details_state']) && $dashboard_name == "missed_calls" ||
+				!isset($row['dashboard_details_state']) && $dashboard_name == "recent_calls") {
+				echo "#".$dashboard_name." .hud_box .hud_expander, \n";
+				echo "#".$dashboard_name." .hud_box .hud_details {\n";
+				echo "	display: none;\n";
+				echo "}\n";
+			}
 		}
 	?>
 }
@@ -354,7 +362,7 @@ function toggle_grid_row_end(dashboard_name) {
 		$dashboard_heading_text_color = $row['dashboard_heading_text_color'] ?? $settings->get('theme', 'dashboard_heading_text_color');
 		$dashboard_number_text_color = $row['dashboard_number_text_color'] ?? $settings->get('theme', 'dashboard_number_text_color');
 		$dashboard_details_state = $row['dashboard_details_state'];
-		$grid_row_end = ($dashboard_details_state == "expanded" || empty($dashboard_details_state)) ? "grid-row-end: span 5;" : "grid-row-end: span 2;";
+		$grid_row_end = (!isset($dashboard_details_state) && $dashboard_name == "New Messages" || !isset($dashboard_details_state) && $dashboard_name == "Missed Calls" || !isset($dashboard_details_state) && $dashboard_name == "Recent Calls" ? "grid-row-end: span 2;" : ($dashboard_details_state == "expanded" || empty($dashboard_details_state) ? "grid-row-end: span 5;" : "grid-row-end: span 2;"));
 
 		echo "<div class='widget' style='".$grid_row_end."' id='".str_replace(" ", "_", strtolower($row['dashboard_name']))."' draggable='false'>\n";
 		include($row['dashboard_path']);
