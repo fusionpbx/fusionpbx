@@ -333,6 +333,17 @@
 		$dashboard_chart_type = "number";
 	}
 
+//add a default value to $dashboard_details_state
+	if (!isset($row['dashboard_details_state']) && $dashboard_path == 'app/voicemails/resources/dashboard/voicemails.php') {
+		$dashboard_details_state = "hidden";
+	}
+	if (!isset($row['dashboard_details_state']) && $dashboard_path == 'app/xml_cdr/resources/dashboard/missed_calls.php') {
+		$dashboard_details_state = "hidden";
+	}
+	if (!isset($row['dashboard_details_state']) && $dashboard_path == 'app/xml_cdr/resources/dashboard/recent_calls.php') {
+		$dashboard_details_state = "hidden";
+	}
+
 //add an empty row
 	$x = is_array($dashboard_groups) ? count($dashboard_groups) : 0;
 	$dashboard_groups[$x]['dashboard_uuid'] = $dashboard_uuid;
