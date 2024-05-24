@@ -2,7 +2,7 @@
 <file>
     <contact>
         <directory>
-            <overwrite>https://{if isset($http_auth_username)}{$http_auth_username}:{$http_auth_password}@{/if}{$domain_name}{$project_path}/app/provision/snomDir-{$mac}.xml</overwrite>
+            <overwrite>https://{if isset($http_auth_username)}{$http_auth_username}:{$http_auth_password}@{/if}{$domain_name}{$project_path}/app/provision/{$mac}/directory.xml</overwrite>
         </directory>
     </contact>
 </file>
