@@ -6,6 +6,15 @@
         </directory>
     </contact>
 </file>
+<profile>
+    <admin>
+        <access_password>{$admin_password}</access_password>
+    </admin>
+    <user>
+        <access_password>{$admin_password}</access_password>
+    </user>
+</profile>
+
 <settings>
     <call_settings>
         <account>
