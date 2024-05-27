@@ -3047,7 +3047,11 @@ Account 5 Codec Settings
 
 
 <!-- Assign NTP Server Address -->
-<P30>us.pool.ntp.org</P30>
+{if isset($ntp_server_primary)}
+<P30>{$ntp_server_primary}</P30>
+{else}
+<P30>pool.ntp.org</P30>
+{/if}
 
 <!-- DHCP Option 42 override NTP server. 0 - No, 1 - Yes. Default value is 1 -->
 <!-- When set to Yes (1), it will override the configured NTP server -->
