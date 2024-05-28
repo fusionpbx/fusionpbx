@@ -391,7 +391,7 @@ if (!class_exists('xml_cdr')) {
 						unset($i);
 
 					//get the caller ID from variables
-						if (!isset($caller_id_number) && isset($xml->variables->caller_id_name)) {
+						if (!isset($caller_id_name) && isset($xml->variables->caller_id_name)) {
 							$caller_id_name = urldecode($xml->variables->caller_id_name);
 						}
 						if (!isset($caller_id_number) && isset($xml->variables->caller_id_number)) {
@@ -399,6 +399,9 @@ if (!class_exists('xml_cdr')) {
 						}
 						if (!isset($caller_id_number) && isset($xml->variables->sip_from_user)) {
 							$caller_id_number = urldecode($xml->variables->sip_from_user);
+						}
+                        if (isset($xml->variables->effective_caller_id_name)) {
+							$caller_id_name = urldecode($xml->variables->effective_caller_id_name);
 						}
 
 					//if the origination caller id name and number are set then use them
@@ -410,21 +413,21 @@ if (!class_exists('xml_cdr')) {
 						}
 
 					//if the call is outbound use the external caller ID
-						if (isset($xml->variables->effective_caller_id_name)) {
+                        if (urldecode($call_direction) == 'outbound' && isset($xml->variables->effective_caller_id_name)) {
 							$caller_id_name = urldecode($xml->variables->effective_caller_id_name);
-						}
-
-						if (isset($xml->variables->origination_caller_id_name)) {
-							$caller_id_name = urldecode($xml->variables->origination_caller_id_name);
-						}
-
-						if (isset($xml->variables->origination_caller_id_number)) {
-							$caller_id_number = urldecode($xml->variables->origination_caller_id_number);
 						}
 
 						if (urldecode($call_direction) == 'outbound' && isset($xml->variables->effective_caller_id_number)) {
 							$caller_id_number = urldecode($xml->variables->effective_caller_id_number);
 						}
+
+                    //if intercept is used then update use the last sent callee id name and number
+                        if (isset($xml->variables->last_app) && $xml->variables->last_app == 'intercept' && !empty($xml->variables->last_sent_callee_id_name)) {
+                            $caller_id_name = urldecode($xml->variables->last_sent_callee_id_name);
+                        }
+                        if (isset($xml->variables->last_app) && $xml->variables->last_app == 'intercept' && !empty($xml->variables->last_sent_callee_id_number)) {
+                            $caller_id_number = urldecode($xml->variables->last_sent_callee_id_number);
+                        }
 
 					//if the sip_from_domain and domain_name are not the same then original call direction was inbound
 						//when an inbound call is forward the call_direction is set to inbound and then updated to outbound
@@ -478,6 +481,11 @@ if (!class_exists('xml_cdr')) {
 						if (isset($xml->variables->missed_call)) {
 							//marked as missed
 							$missed_call = $xml->variables->missed_call;
+						}
+                        if (isset($call_direction) && $call_direction == 'inbound' 
+							&& isset($xml->variables->hangup_cause) 
+							&& $xml->variables->hangup_cause == 'ORIGINATOR_CANCEL') {
+							$missed_call = 'true';
 						}
 						if (isset($xml->variables->billsec) && $xml->variables->billsec > 0) {
 							//answered call
@@ -574,9 +582,6 @@ if (!class_exists('xml_cdr')) {
 						if (isset($xml->variables->voicemail_answer_stamp)) {
 							$status = 'voicemail';
 						}
-						if (isset($xml->variables->voicemail_id)) {
-							$status = 'voicemail';
-						}
 						if ($xml->variables->hangup_cause == 'ORIGINATOR_CANCEL') {
 							$status = 'cancelled';
 						}
@@ -650,31 +655,59 @@ if (!class_exists('xml_cdr')) {
 						$this->array[$key]['direction'] = urldecode($call_direction);
 
 					//call center
-						if ($xml->variables->cc_member_uuid == '_undef_') { $xml->variables->cc_member_uuid = ''; }
-						if ($xml->variables->cc_member_session_uuid == '_undef_') { $xml->variables->cc_member_session_uuid = ''; }
-						if ($xml->variables->cc_agent_uuid == '_undef_') { $xml->variables->cc_agent_uuid = ''; }
-						if ($xml->variables->call_center_queue_uuid == '_undef_') { $xml->variables->call_center_queue_uuid = ''; }
-						if ($xml->variables->cc_queue_joined_epoch == '_undef_') { $xml->variables->cc_queue_joined_epoch = ''; }
-						$this->array[$key]['cc_side'] = urldecode($xml->variables->cc_side);
-						$this->array[$key]['cc_member_uuid'] = urldecode($xml->variables->cc_member_uuid);
-						$this->array[$key]['cc_queue'] = urldecode($xml->variables->cc_queue);
-						$this->array[$key]['cc_member_session_uuid'] = urldecode($xml->variables->cc_member_session_uuid);
-						$this->array[$key]['cc_agent_uuid'] = urldecode($xml->variables->cc_agent_uuid);
-						$this->array[$key]['cc_agent'] = urldecode($xml->variables->cc_agent);
-						$this->array[$key]['cc_agent_type'] = urldecode($xml->variables->cc_agent_type);
-						$this->array[$key]['cc_agent_bridged'] = urldecode($xml->variables->cc_agent_bridged);
-						$this->array[$key]['cc_queue_joined_epoch'] = urldecode($xml->variables->cc_queue_joined_epoch);
-						$this->array[$key]['cc_queue_answered_epoch'] = urldecode($xml->variables->cc_queue_answered_epoch);
-						$this->array[$key]['cc_queue_terminated_epoch'] = urldecode($xml->variables->cc_queue_terminated_epoch);
-						$this->array[$key]['cc_queue_canceled_epoch'] = urldecode($xml->variables->cc_queue_canceled_epoch);
-						$this->array[$key]['cc_cancel_reason'] = urldecode($xml->variables->cc_cancel_reason);
-						$this->array[$key]['cc_cause'] = urldecode($xml->variables->cc_cause);
-						$this->array[$key]['waitsec'] = urldecode($xml->variables->waitsec);
-						if (urldecode($xml->variables->cc_side) == 'agent') {
-							$this->array[$key]['direction'] = 'inbound';
-						}
-						$this->array[$key]['cc_queue'] = urldecode($xml->variables->cc_queue);
-						$this->array[$key]['call_center_queue_uuid'] = urldecode($xml->variables->call_center_queue_uuid);
+                    if ($xml->variables->cc_member_uuid == '_undef_') { $xml->variables->cc_member_uuid = ''; }
+                    if ($xml->variables->cc_member_session_uuid == '_undef_') { $xml->variables->cc_member_session_uuid = ''; }
+                    if ($xml->variables->cc_agent_uuid == '_undef_') { $xml->variables->cc_agent_uuid = ''; }
+                    if ($xml->variables->call_center_queue_uuid == '_undef_') { $xml->variables->call_center_queue_uuid = ''; }
+                    if ($xml->variables->cc_queue_joined_epoch == '_undef_') { $xml->variables->cc_queue_joined_epoch = ''; }
+                    $this->array[$key][0]['cc_side'] = urldecode($xml->variables->cc_side);
+                    if (!empty($xml->variables->cc_member_uuid) && is_uuid(urldecode($xml->variables->cc_member_uuid))) {
+                        $this->array[$key][0]['cc_member_uuid'] = urldecode($xml->variables->cc_member_uuid);
+                    }
+                    $this->array[$key][0]['cc_queue'] = urldecode($xml->variables->cc_queue);
+                    if (!empty($xml->variables->cc_member_session_uuid) && is_uuid(urldecode($xml->variables->cc_member_session_uuid))) {
+                        $this->array[$key][0]['cc_member_session_uuid'] = urldecode($xml->variables->cc_member_session_uuid);
+                    }
+                    if (!empty($xml->variables->call_center_queue_uuid) && is_uuid(urldecode($xml->variables->call_center_queue_uuid))) {
+                        $call_center_queue_uuid = urldecode($xml->variables->call_center_queue_uuid);
+                    }
+                    if (empty($call_center_queue_uuid) && !empty($xml->variables->cc_queue)) {
+                        $sql = "select call_center_queue_uuid from v_call_center_queues ";
+                        $sql .= "where domain_uuid = :domain_uuid ";
+                        $sql .= "and queue_extension = :queue_extension ";
+                        $parameters['domain_uuid'] = $domain_uuid;
+                        $parameters['queue_extension'] = explode("@", $xml->variables->cc_queue)[0];
+                        $database = new database;
+                        $call_center_queue_uuid = $database->select($sql, $parameters, 'column');
+                        unset($parameters);
+                    }
+                    if (!empty($call_center_queue_uuid) && is_uuid($call_center_queue_uuid)) {
+                        $this->array[$key][0]['call_center_queue_uuid'] = $call_center_queue_uuid;
+                    }
+                    if (!empty($xml->variables->cc_agent_uuid) && is_uuid(urldecode($xml->variables->cc_agent_uuid))) {
+                        $this->array[$key][0]['cc_agent_uuid'] = urldecode($xml->variables->cc_agent_uuid);
+                    }
+                    $this->array[$key][0]['cc_agent'] = urldecode($xml->variables->cc_agent);
+                    $this->array[$key][0]['cc_agent_type'] = urldecode($xml->variables->cc_agent_type);
+                    $this->array[$key][0]['cc_agent_bridged'] = urldecode($xml->variables->cc_agent_bridged);
+                    if (!empty($xml->variables->cc_queue_joined_epoch) && is_numeric($xml->variables->cc_queue_joined_epoch)) {
+                        $this->array[$key][0]['cc_queue_joined_epoch'] = urldecode($xml->variables->cc_queue_joined_epoch);
+                    }
+                    if (!empty($xml->variables->cc_queue_answered_epoch) && is_numeric($xml->variables->cc_queue_answered_epoch)) {
+                        $this->array[$key][0]['cc_queue_answered_epoch'] = urldecode($xml->variables->cc_queue_answered_epoch);
+                    }
+                    if (!empty($xml->variables->cc_queue_terminated_epoch) && is_numeric($xml->variables->cc_queue_terminated_epoch)) {
+                        $this->array[$key][0]['cc_queue_terminated_epoch'] = urldecode($xml->variables->cc_queue_terminated_epoch);
+                    }
+                    if (!empty($xml->variables->cc_queue_canceled_epoch) && is_numeric($xml->variables->cc_queue_canceled_epoch)) {
+                        $this->array[$key][0]['cc_queue_canceled_epoch'] = urldecode($xml->variables->cc_queue_canceled_epoch);
+                    }
+                    $this->array[$key][0]['cc_cancel_reason'] = urldecode($xml->variables->cc_cancel_reason);
+                    $this->array[$key][0]['cc_cause'] = urldecode($xml->variables->cc_cause);
+                    $this->array[$key][0]['waitsec'] = urldecode($xml->variables->waitsec);
+                    if (urldecode($xml->variables->cc_side) == 'agent') {
+                        $this->array[$key][0]['direction'] = 'inbound';
+                    }
 
 					//app info
 						$this->array[$key]['last_app'] = urldecode($xml->variables->last_app);
@@ -1105,7 +1138,6 @@ if (!class_exists('xml_cdr')) {
 						//clean up
 						unset($new_row);
 				}
-				$i++;
 			}
 
 			//format the times in the call flow array
@@ -1113,7 +1145,7 @@ if (!class_exists('xml_cdr')) {
 			foreach ($call_flow_array as $key => $row) {
 				foreach ($row["times"] as $name => $value) {
 					if ($value > 0) {
-						$call_flow_array[$i]["times"][$name.'stamp'] = date("Y-m-d H:i:s", (int) $value/1000000);
+						$call_flow_array[$i]["times"][$name.'stamp'] = date("Y-m-d H:i:s", round((float) $value / 1000000, 0));
 					}
 				}
 				$i++;
@@ -1135,7 +1167,7 @@ if (!class_exists('xml_cdr')) {
 					}
 
 					//call centers
-					if ($app['application'] == 'call_centers') {
+					if (!empty($app['application']) && $app['application'] == 'call_centers') {
 						if (isset($row["caller_profile"]["transfer_source"])) {
 							$app['status'] = 'answered'; //Out
 						}
@@ -1145,22 +1177,22 @@ if (!class_exists('xml_cdr')) {
 					}
 
 					//call flows
-					if ($app['application'] == 'call_flows') {
+					if (!empty($app['application']) && $app['application'] == 'call_flows') {
 						$app['status'] = 'routed';
 					}
 
 					//conferences
-					if ($app['application'] == 'conferences') {
+					if (!empty($app['application']) && $app['application'] == 'conferences') {
 						$app['status'] = 'answered';
 					}
 
 					//destinations
-					if ($app['application'] == 'destinations') {
+					if (!empty($app['application']) && $app['application'] == 'destinations') {
 						$app['status'] = 'routed';
 					}
 
 					//extensions
-					if ($app['application'] == 'extensions') {
+					if (!empty($app['application']) && $app['application'] == 'extensions') {
 						if ($this->billsec == 0) {
 							$app['status'] = 'missed';
 						}
@@ -1170,7 +1202,7 @@ if (!class_exists('xml_cdr')) {
 					}
 
 					//ivr menus
-					if ($app['application'] == 'ivr_menus') {
+					if (!empty($app['application']) && $app['application'] == 'ivr_menus') {
 						$app['status'] = 'routed';
 					}
 
@@ -1186,20 +1218,26 @@ if (!class_exists('xml_cdr')) {
 					}
 
 					//ring groups
-					if ($app['application'] == 'ring_groups') {
+					if (!empty($app['application']) && $app['application'] == 'ring_groups') {
 						$app['status'] = 'waited';
 					}
 
 					//time conditions
-					if ($app['application'] == 'time_conditions') {
+					if (!empty($app['application']) && $app['application'] == 'time_conditions') {
 						$app['status'] = 'routed';
 					}
 
 					//valet park
-					if (!empty($row["caller_profile"]["destination_number"])
-						and (substr($row["caller_profile"]["destination_number"], 0, 4) == 'park'
-						or (substr($row["caller_profile"]["destination_number"], 0, 3) == '*59'
-						and strlen($row["caller_profile"]["destination_number"]) == 5))) {
+                    if (
+						!empty($row["caller_profile"]["destination_number"])
+						&& (
+							substr($row["caller_profile"]["destination_number"], 0, 4) == 'park'
+							|| (
+								substr($row["caller_profile"]["destination_number"], 0, 3) == '*59'
+								&& strlen($row["caller_profile"]["destination_number"]) > 3
+							)
+						)
+						) {
 						//add items to the app array
 						$app['application'] = 'dialplans';
 						$app['uuid'] = '46ae6d82-bb83-46a3-901d-33d0724347dd';
@@ -1221,43 +1259,46 @@ if (!class_exists('xml_cdr')) {
 					}
 
 					//conference
-					if ($app['application'] == 'conferences') {
+					if (!empty($app['application']) && $app['application'] == 'conferences') {
 						$skip_row = true;
 					}
 
 					//voicemails
-					if ($app['application'] == 'voicemails') {
+					if (!empty($app['application']) && $app['application'] == 'voicemails') {
 						$app['status'] = 'voicemail';
 					}
 
 					//debug - add the callee_id_number to the end of the status
-					if (isset($_REQUEST['debug']) && $_REQUEST['debug'] == 'true' && !empty($row["caller_profile"]["destination_number"])
-						and !empty($row["caller_profile"]["callee_id_number"])
-						and $row["caller_profile"]["destination_number"] !== $row["caller_profile"]["callee_id_number"]) {
+					if (
+						isset($_REQUEST['debug']) && $_REQUEST['debug'] == 'true'
+						&& !empty($row["caller_profile"]["destination_number"])
+						&& !empty($row["caller_profile"]["callee_id_number"])
+						&& $row["caller_profile"]["destination_number"] !== $row["caller_profile"]["callee_id_number"]
+						) {
 							$app['status'] .= ' ('.$row["caller_profile"]["callee_id_number"].')';
 					}
 
 					//build the application urls
-					$destination_url = "/app/".$app['application']."/".$destination->singular($app['application'])."_edit.php?id=".$app["uuid"];
-					$application_url = "/app/".$app['application']."/".$app['application'].".php";
-					if ($app['application'] == 'call_centers') {
-						$destination_url = "/app/".$app['application']."/".$destination->singular($app['application'])."_queue_edit.php?id=".$app['uuid'];
-						$application_url = "/app/".$app['application']."/".$destination->singular($app['application'])."_queues.php";
+					$destination_url = "/app/".($app['application'] ?? '')."/".$destination->singular($app['application'] ?? '')."_edit.php?id=".($app["uuid"] ?? '');
+					$application_url = "/app/".($app['application'] ?? '')."/".($app['application'] ?? '').".php";
+					if (!empty($app['application']) && $app['application'] == 'call_centers') {
+						$destination_url = "/app/".($app['application'] ?? '')."/".$destination->singular($app['application'] ?? '')."_queue_edit.php?id=".($app["uuid"] ?? '');
+						$application_url = "/app/".($app['application'] ?? '')."/".$destination->singular($app['application'] ?? '')."_queues.php";
 					}
 
 					//add the application and destination details
 					$language2 = new text;
-					$text2 = $language2->get($this->setting->get('domain', 'language'), 'app/'.$app['application']);
-					$call_flow_summary[$x]["application_name"] = $app['application'];
-					$call_flow_summary[$x]["application_label"] = trim($text2['title-'.$app['application']]);
+					$text2 = $language2->get($this->setting->get('domain', 'language'), 'app/'.($app['application'] ?? ''));
+					$call_flow_summary[$x]["application_name"] = ($app['application'] ?? '');
+					$call_flow_summary[$x]["application_label"] = trim($text2['title-'.($app['application'] ?? '')] ?? '');
 					$call_flow_summary[$x]["application_url"] = $application_url;
-					$call_flow_summary[$x]["destination_uuid"] = $app['uuid'];
-					$call_flow_summary[$x]["destination_name"] = $app['name'];
+					$call_flow_summary[$x]["destination_uuid"] = ($app["uuid"] ?? '');
+					$call_flow_summary[$x]["destination_name"] = ($app['name'] ?? '');
 					$call_flow_summary[$x]["destination_url"] = $destination_url;
 					$call_flow_summary[$x]["destination_number"] = $row["caller_profile"]["destination_number"];
-					$call_flow_summary[$x]["destination_label"] = $app['label'];
-					$call_flow_summary[$x]["destination_status"] = $app['status'];
-					$call_flow_summary[$x]["destination_description"] = $app['description'];
+					$call_flow_summary[$x]["destination_label"] = ($app['label'] ?? '');
+					$call_flow_summary[$x]["destination_status"] = ($app['status'] ?? '');
+					$call_flow_summary[$x]["destination_description"] = $app['description'] ?? '';
 					//$call_flow_summary[$x]["application"] = $app;
 
 					//set the start and epoch
@@ -1291,25 +1332,26 @@ if (!class_exists('xml_cdr')) {
 			$database = new database;
 			$destinations = $database->select($sql, $parameters, 'all');
 			if (!empty($destinations)) {
+                $i = 0;
 				foreach($destinations as $row) {
-					$destination_array['destinations'][$id]['application'] = 'destinations';
-					$destination_array['destinations'][$id]['destination_uuid'] = $row["destination_uuid"];
-					$destination_array['destinations'][$id]['uuid'] = $row["destination_uuid"];
-					$destination_array['destinations'][$id]['dialplan_uuid'] = $row["dialplan_uuid"];
-					$destination_array['destinations'][$id]['destination_type'] = $row["destination_type"];
-					$destination_array['destinations'][$id]['destination_prefix'] = $row["destination_prefix"];
-					$destination_array['destinations'][$id]['destination_number'] = $row["destination_number"];
-					$destination_array['destinations'][$id]['extension'] = $row["destination_prefix"] . $row["destination_number"];
-					$destination_array['destinations'][$id]['destination_trunk_prefix'] = $row["destination_trunk_prefix"];
-					$destination_array['destinations'][$id]['destination_area_code'] = $row["destination_area_code"];
-					$destination_array['destinations'][$id]['context'] = $row["destination_context"];
-					$destination_array['destinations'][$id]['label'] = $row["destination_description"];
-					$destination_array['destinations'][$id]['destination_enabled'] = $row["destination_enabled"];
-					$destination_array['destinations'][$id]['name'] = $row["destination_description"];
-					$destination_array['destinations'][$id]['description'] = $row["destination_description"];
-					//$destination_array[$id]['destination_caller_id_name'] = $row["destination_caller_id_name"];
-					//$destination_array[$id]['destination_caller_id_number'] = $row["destination_caller_id_number"];
-					$id++;
+                    $destination_array['destinations'][$i]['application'] = 'destinations';
+					$destination_array['destinations'][$i]['destination_uuid'] = $row["destination_uuid"];
+					$destination_array['destinations'][$i]['uuid'] = $row["destination_uuid"];
+					$destination_array['destinations'][$i]['dialplan_uuid'] = $row["dialplan_uuid"];
+					$destination_array['destinations'][$i]['destination_type'] = $row["destination_type"];
+					$destination_array['destinations'][$i]['destination_prefix'] = $row["destination_prefix"];
+					$destination_array['destinations'][$i]['destination_number'] = $row["destination_number"];
+					$destination_array['destinations'][$i]['extension'] = $row["destination_prefix"] . $row["destination_number"];
+					$destination_array['destinations'][$i]['destination_trunk_prefix'] = $row["destination_trunk_prefix"];
+					$destination_array['destinations'][$i]['destination_area_code'] = $row["destination_area_code"];
+					$destination_array['destinations'][$i]['context'] = $row["destination_context"];
+					$destination_array['destinations'][$i]['label'] = $row["destination_description"];
+					$destination_array['destinations'][$i]['destination_enabled'] = $row["destination_enabled"];
+					$destination_array['destinations'][$i]['name'] = $row["destination_description"];
+					$destination_array['destinations'][$i]['description'] = $row["destination_description"];
+					//$destination_array[$i]['destination_caller_id_name'] = $row["destination_caller_id_name"];
+					//$destination_array[$i]['destination_caller_id_number'] = $row["destination_caller_id_number"];
+					$i++;
 				}
 			}
 			unset($sql, $parameters, $row);
@@ -1321,22 +1363,22 @@ if (!class_exists('xml_cdr')) {
 						foreach ($row as $key => $value) {
 							//find matching destinations
 							if ($application == 'destinations') {
-								if ('+'.$value['destination_prefix'].$value['destination_number'] == $detail_action
-									or $value['destination_prefix'].$value['destination_number'] == $detail_action
-									or $value['destination_number'] == $detail_action
-									or $value['destination_trunk_prefix'].$value['destination_number'] == $detail_action
-									or '+'.$value['destination_prefix'].$value['destination_area_code'].$value['destination_number'] == $detail_action
-									or $value['destination_prefix'].$value['destination_area_code'].$value['destination_number'] == $detail_action
-									or $value['destination_area_code'].$value['destination_number'] == $detail_action) {
-										if (file_exists($_SERVER["PROJECT_ROOT"]."/app/".$application."/app_languages.php")) {
-											$value['application'] = $application;
-											return $value;
-										}
+                                if ('+'.($value['destination_prefix'] ?? '').$value['destination_number'] == $detail_action
+                                || ($value['destination_prefix'] ?? '').$value['destination_number'] == $detail_action
+                                || $value['destination_number'] == $detail_action
+                                || ($value['destination_trunk_prefix'] ?? '').$value['destination_number'] == $detail_action
+                                || '+'.($value['destination_prefix'] ?? '').($value['destination_area_code'] ?? '').$value['destination_number'] == $detail_action
+                                || ($value['destination_prefix'] ?? '').($value['destination_area_code'] ?? '').$value['destination_number'] == $detail_action
+                                || ($value['destination_area_code'] ?? '').$value['destination_number'] == $detail_action) {
+                                    if (file_exists($_SERVER["PROJECT_ROOT"]."/app/".$application."/app_languages.php")) {
+                                        $value['application'] = $application;
+                                        return $value;
+                                    }
 								}
 							}
 
 							//find all other matching actions
-							if (!empty($value['extension']) && $value['extension'] == $detail_action or preg_match('/^'.preg_quote($value['extension']).'$/', $detail_action)) {
+							if (!empty($value['extension']) && $value['extension'] == $detail_action || preg_match('/^'.preg_quote($value['extension'] ?? '').'$/', $detail_action)) {
 								if (file_exists($_SERVER["PROJECT_ROOT"]."/app/".$application."/app_languages.php")) {
 									$value['application'] = $application;
 									return $value;
