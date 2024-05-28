@@ -40,6 +40,17 @@ if (session:ready()) then
 	fifo_lag = session:getVariable("fifo_lag");
 end
 
+--set default values
+if (fifo_simo == nil) then
+	fifo_simo = '';	
+end
+if (fifo_timeout == nil) then
+	fifo_timeout = '';	
+end
+if (fifo_lag == nil) then
+	fifo_lag = '';	
+end
+
 --sleep
 if (session:ready()) then
 	session:sleep(500);
