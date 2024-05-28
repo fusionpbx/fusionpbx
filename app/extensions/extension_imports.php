@@ -289,8 +289,8 @@
 										$result[$key] = preg_replace('{\D}', '', $result[$key]);
 									}
 
-									//set the extension enabled to lower case
-									if ($field_name == 'enabled') {
+									//set various fields to lower case
+									if (in_array($field_name, array('enabled','directory_visible','directory_exten_visible','call_screen_enabled','user_record'))) {
 										$result[$key] = strtolower($result[$key]);
 									}
 
