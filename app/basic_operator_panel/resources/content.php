@@ -319,7 +319,7 @@ if (is_array($activity)) {
 				$ext_state = 'held';
 			}
 			$dir_icon = 'inbound';
-			$call_name = $activity[$ext['cid_num']]['effective_caller_id_name'];
+			$call_name = $activity[$ext['cid_num']]['effective_caller_id_name'] ?? '';
 			$call_number = format_phone($ext['cid_num']);
 		}
 		else {
