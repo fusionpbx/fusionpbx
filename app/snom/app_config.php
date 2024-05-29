@@ -389,5 +389,12 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "on";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Force enabling or disabling DHCP. (on=Enabled or off=Disabled)";
-
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "f0ba65c1-95b6-4fe5-b376-bdde9e19cab7";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "snom_answer_after_policy";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "not_busy";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "The setting to auto-answer calls that have the Alert-Info SIP header. More info can be found here: https://service.snom.com/display/wiki/answer_after_policy";
 ?>
