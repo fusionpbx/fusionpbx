@@ -72,7 +72,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "group_extensions";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set if extensions are grouped by call_group when viewing all extensions.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "0d3b16b0-5cd6-4d0e-8b58-967972362ef8";
