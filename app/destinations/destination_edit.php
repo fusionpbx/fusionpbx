@@ -640,11 +640,11 @@
 												$dialplan["dialplan_details"][$y]["domain_uuid"] = $domain_uuid;
 												$dialplan["dialplan_details"][$y]["dialplan_uuid"] = $dialplan_uuid;
 												$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "regex";
-												if ($row['condition_field'] == 'caller_id_number_prefix'){
+												if ($row['condition_field'] == 'caller_id_number_prefix') {
 													$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = 'caller_id_number';
 													$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = '^'.$condition_expression;
 												}
-												else{
+												else {
 													$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = $row['condition_field'];
 													$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = '^'.$condition_expression.'$'; 
 												}
