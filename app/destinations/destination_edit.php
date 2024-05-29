@@ -127,7 +127,7 @@
 				$i=0;
 				foreach($destination_conditions as $row) {
 					if (isset($row['condition_expression']) && !empty($row['condition_expression'])) {
-						if ($row['condition_field'] == 'caller_id_number' || $row['condition_field'] == 'caller_id_number_startswith') {
+						if ($row['condition_field'] == 'caller_id_number' || $row['condition_field'] == 'caller_id_number_prefix') {
 							$row['condition_expression'] = preg_replace('#[^\+0-9\*]#', '', $row['condition_expression']);
 							$action_array = explode(":", $row['condition_action'], 2);
 							$conditions[$i]['condition_field'] = $row['condition_field'];
@@ -483,7 +483,7 @@
 										}
 										$dialplan["dialplan_xml"] .= "	<condition regex=\"all\" break=\"never\">\n";
 										$dialplan["dialplan_xml"] .= "		<regex field=\"".$dialplan_detail_type."\" expression=\"".xml::sanitize($destination_number_regex)."\"/>\n";
-										if ($row['condition_field'] == 'caller_id_number_startswith'){
+										if ($row['condition_field'] == 'caller_id_number_prefix'){
 											$dialplan["dialplan_xml"] .= "		<regex field=\"caller_id_number\" expression=\"^".xml::sanitize($condition_expression)."\"/>\n";
 										}
 										else{
@@ -640,7 +640,7 @@
 												$dialplan["dialplan_details"][$y]["domain_uuid"] = $domain_uuid;
 												$dialplan["dialplan_details"][$y]["dialplan_uuid"] = $dialplan_uuid;
 												$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "regex";
-												if ($row['condition_field'] == 'caller_id_number_startswith'){
+												if ($row['condition_field'] == 'caller_id_number_prefix'){
 													$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = 'caller_id_number';
 													$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = '^'.$condition_expression;
 												}
@@ -1674,11 +1674,11 @@
 				else {
 					echo "		<option value=\"caller_id_number\">".$text['option-caller_id_number']."</option>\n";
 				}
-				if ($row['condition_field'] == 'caller_id_number_startswith') {
-					echo "		<option value=\"caller_id_number_startswith\" selected='selected'>".$text['option-caller_id_number_startswith']."</option>\n";
+				if ($row['condition_field'] == 'caller_id_number_prefix') {
+					echo "		<option value=\"caller_id_number_prefix\" selected='selected'>".$text['option-caller_id_number_prefix']."</option>\n";
 				}
 				else {
-					echo "		<option value=\"caller_id_number_startswith\">".$text['option-caller_id_number_startswith']."</option>\n";
+					echo "		<option value=\"caller_id_number_prefix\">".$text['option-caller_id_number_prefix']."</option>\n";
 				}
 				echo "	</select>\n";
 				echo "	<input class='formfld' type='text' name=\"destination_conditions[$x][condition_expression]\" id='destination_conditions' maxlength='255' value=\"".escape($row['condition_expression'] ?? '')."\">\n";
