@@ -60,7 +60,7 @@ if (is_array($activity)) {
 }
 if (!empty($groups)) {
 	$groups = array_unique($groups);
-	sort($groups); 
+	sort($groups);
 }
 
 //get the valet info
@@ -242,6 +242,11 @@ if (is_array($activity)) {
 				) { continue; }
 		}
 
+		//set the default values
+		$call_name = '';
+		$call_number = '';
+		$dir_icon = '';
+
 		//check if feature code being called
 		$format_number = (!empty($ext['dest']) && substr($ext['dest'], 0, 1) == '*') ? false : true;
 
@@ -293,14 +298,20 @@ if (is_array($activity)) {
 		else if ($ext['state'] == 'CS_EXCHANGE_MEDIA' && $ext['callstate'] == 'ACTIVE' && $ext['direction'] == 'inbound') {
 			//valet park
 			$ext_state = 'active';
+			if (!empty($ext['dest'])) {
+				if (!empty($activity[$ext['dest']])) {
 					$call_name = $activity[$ext['dest']]['effective_caller_id_name'];
-					$call_number = format_phone($ext['dest']);
+				}
+			}
+			$call_number = format_phone($ext['dest']);
 		}
 		else if ($ext['state'] == 'CS_SOFT_EXECUTE' && $ext['callstate'] == 'ACTIVE' && $ext['direction'] == 'outbound') {
 			//valet park
 			$ext_state = 'active';
-					$call_name = $activity[$ext['dest']]['effective_caller_id_name'];
-					$call_number = format_phone($ext['dest']);
+			if (empty($ext['dest']) && empty($activity[$ext['dest']])) {
+				$call_name = $activity[$ext['dest'] ?? '']['effective_caller_id_name'];
+			}
+			$call_number = format_phone($ext['dest'] ?? '');
 		}
 		else if ($ext['state'] == 'CS_CONSUME_MEDIA' || $ext['state'] == 'CS_EXCHANGE_MEDIA') {
 			if ($ext['state'] == 'CS_CONSUME_MEDIA' && $ext['callstate'] == 'RINGING' && $ext['direction'] == 'outbound') {
@@ -336,7 +347,7 @@ if (is_array($activity)) {
 				}
 			}
 		}
-		if ($found_count > 0) {	
+		if ($found_count > 0) {
 			//determine block style by state (if any) and register status
 			$css_class = !empty($ext_state) ? "op_ext op_state_".$ext_state : "op_ext";
 		}
@@ -481,7 +492,7 @@ if (is_array($activity)) {
 				if (empty($ext['variable_bridge_uuid']) && $ext_state == 'ringing') {
 					$call_identifier_hangup_uuid = $ext['uuid'];
 				}
-				else if ($dir_icon == 'outbound') {
+				elseif ($dir_icon == 'outbound') {
 					$call_identifier_hangup_uuid = $ext['uuid'];
 				}
 				else {
@@ -648,11 +659,10 @@ if (sizeof($user_extensions) > 0) {
 if (sizeof($grouped_extensions) > 0) {
 	//alphabetical order
 	ksort($grouped_extensions);
-	
+
 	//loop through the groups
 	foreach ($grouped_extensions as $group => $extensions) {
 		echo "<div class=\"heading\"><strong>".ucwords(escape($group))."</strong></div>\n";
-		echo "<br><br>\n";
 		echo "<table width='100%'><tr><td>\n";
 		foreach ($extensions as $ext_block) {
 			echo $ext_block;
@@ -663,8 +673,7 @@ if (sizeof($grouped_extensions) > 0) {
 
 //show the other extensions
 if (sizeof($other_extensions) > 0) {
-	echo "<div class=\"heading\"><strong>".$text['label-other_extensions']."</strong></div>\n";
-	echo "<br><br>\n";
+	//echo "<div class=\"heading\"><strong>".$text['label-other_extensions']."</strong></div>\n";
 	echo "<table width='100%'><tr><td>\n";
 	foreach ($other_extensions as $ext_block) {
 		echo $ext_block;
