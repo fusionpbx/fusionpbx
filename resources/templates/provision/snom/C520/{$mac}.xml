@@ -1,4 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
+<file>
+    <contact>
+        <directory>
+            <overwrite>https://{if isset($http_auth_username)}{$http_auth_username}:{$http_auth_password}@{/if}{$domain_name}{$project_path}/app/provision/{$mac}/directory.xml</overwrite>
+        </directory>
+    </contact>
+</file>
+<profile>
+    <admin>
+        <access_password>{$admin_password}</access_password>
+    </admin>
+    <user>
+        <access_password>{$admin_password}</access_password>
+    </user>
+</profile>
+
 <settings>
     <call_settings>
         <account>
