@@ -290,7 +290,7 @@
 									}
 
 									//set various fields to lower case
-									if (in_array($field_name, array('enabled','directory_visible','directory_exten_visible','call_screen_enabled','user_record'))) {
+									if (in_array($field_name, array('enabled','directory_visible','directory_exten_visible','call_screen_enabled','user_record','do_not_disturb','forward_all_enabled','forward_busy_enabled','forward_no_answer_enabled','forward_user_not_registered_enabled'))) {
 										$result[$key] = strtolower($result[$key]);
 									}
 
