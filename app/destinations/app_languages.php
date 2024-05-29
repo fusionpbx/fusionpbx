@@ -1119,8 +1119,8 @@ $text['option-caller_id_number']['zh-cn'] = "来电显示号码";
 $text['option-caller_id_number']['ja-jp'] = "発信者番号";
 $text['option-caller_id_number']['ko-kr'] = "발신자 ID 번호";
 
-$text['option-caller_id_number_startswith']['en-us'] = "Caller ID Number (Starts With)";
-$text['option-caller_id_number_startswith']['en-gb'] = "Caller ID Number (Starts With)";
+$text['option-caller_id_number_startswith']['en-us'] = "Caller ID Number (Prefix)";
+$text['option-caller_id_number_startswith']['en-gb'] = "Caller ID Number (Prefix)";
 $text['option-caller_id_number_startswith']['ar-eg'] = "(ابدا ب) رقم المتصل";
 $text['option-caller_id_number_startswith']['de-at'] = "Anruferkennung (Nummer) (Beginnt mit)";
 $text['option-caller_id_number_startswith']['de-ch'] = "Anruferkennung (Nummer) (Beginnt mit)";
