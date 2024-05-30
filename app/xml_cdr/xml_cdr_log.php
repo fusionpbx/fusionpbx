@@ -43,8 +43,8 @@
 	$text = $language->get();
 
 //get the ID
-	$xml_cdr_uuid = $_GET['id'];
-	$action = $_GET['a'];
+	$xml_cdr_uuid = $_GET['id'] ?? '';
+	$action = $_GET['a'] ?? '';
 
 //get the cdr json from the database
 	$sql = "select * from v_xml_cdr_logs ";
