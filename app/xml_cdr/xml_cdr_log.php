@@ -188,7 +188,7 @@
 	}
 
 	// output according to ordinal selected
-	if ($_POST['sort'] == 'desc') {
+	if (isset($_POST['sort']) && $_POST['sort'] == 'desc') {
 		$array_output = array_reverse($array_output);
 		$adj_index = 0;
 	}
@@ -199,7 +199,7 @@
 		foreach ($array_output as $index => $line) {
 			$line_num = "";
 			if ($line != "<span style='color: #fff; font-family: monospace;'></span><br>") {
-				if ($_POST['line_number']) {
+				if (isset($_POST['line_number']) && $_POST['line_number']) {
 					$line_num = "<span style='font-family: courier; color: #aaa; font-size: 10px;'>".($index + $adj_index)."&nbsp;&nbsp;&nbsp;</span>";
 				}
 				echo $line_num." ".$line;
