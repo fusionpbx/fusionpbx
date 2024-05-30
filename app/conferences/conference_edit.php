@@ -405,7 +405,7 @@
 	echo "	".$text['label-extension']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='conference_extension' maxlength='255' value=\"".escape($conference_extension)."\">\n";
+	echo "	<input class='formfld' type='text' name='conference_extension' maxlength='255' value=\"".escape($conference_extension)."\" required='required' placeholder='".$_SESSION['conference']['extension_range']['text'] ?? ''."'>\n";
 	echo "<br />\n";
 	echo "".$text['description-extension']."\n";
 	echo "</td>\n";
