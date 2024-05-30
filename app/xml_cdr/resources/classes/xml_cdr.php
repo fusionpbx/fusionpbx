@@ -654,10 +654,6 @@ if (!class_exists('xml_cdr')) {
 					//store the call direction
 						$this->array[$key]['direction'] = urldecode($call_direction);
 
-                        openlog('FusionPBX', LOG_NDELAY, LOG_USER);
-                        syslog(LOG_WARNING, 'DEXTER: ' . $xml->variables->call_center_queue_uuid);
-                        closelog();
-
 					//call center
                     if ($xml->variables->cc_member_uuid == '_undef_') { $xml->variables->cc_member_uuid = ''; }
                     if ($xml->variables->cc_member_session_uuid == '_undef_') { $xml->variables->cc_member_session_uuid = ''; }
