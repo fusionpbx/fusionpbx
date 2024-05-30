@@ -544,10 +544,16 @@ log = require "resources.functions.log".ring_group
 				cmd = "user_exists id ".. destination_number .." "..domain_name;
 				user_exists = api:executeString(cmd);
 
-				--cmd = "user_exists id ".. destination_number .." "..leg_domain_name;
+				--cmd = "user_exists id ".. destination_number .." "..domain_name;
 				if (user_exists == "true") then
 					--add user_exists true or false to the row array
 						row['user_exists'] = "true";
+
+					--handle number alias
+						cmd = "user_data ".. destination_number .."@" ..domain_name.." attr id";
+						destination_number = api:executeString(cmd);
+						row['destination_number'] = destination_number
+
 					--handle do_not_disturb
 						cmd = "user_data ".. destination_number .."@" ..leg_domain_name.." var do_not_disturb";
 						if (api:executeString(cmd) ~= "true") then
@@ -558,6 +564,7 @@ log = require "resources.functions.log".ring_group
 					--set the values
 						external = "true";
 						row['user_exists'] = "false";
+
 					--add the row to the destinations array
 						destinations[x] = row;
 				end
