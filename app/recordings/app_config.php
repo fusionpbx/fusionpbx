@@ -136,7 +136,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "recordings";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "recording_password";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = generate_password((is_numeric($_SESSION['voicemail']['password_length']['numeric']) ? $_SESSION['voicemail']['password_length']['numeric'] : 8), 1);
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = generate_password(!empty($_SESSION['voicemail']['password_length']['numeric']) && is_numeric($_SESSION['voicemail']['password_length']['numeric']) ? $_SESSION['voicemail']['password_length']['numeric'] : 8, 1);
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the password required to create a recording (overrides recordings dialplan).";
 
@@ -174,6 +174,11 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "recording_name";
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "recordingname";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "recording_message";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";

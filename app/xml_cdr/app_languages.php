@@ -3818,4 +3818,30 @@ $text['label-codec_write']['uk-ua'] = "";
 $text['label-codec_write']['zh-cn'] = "";
 $text['label-codec_write']['ja-jp'] = "";
 $text['label-codec_write']['ko-kr'] = "";
+
+$text['label-text']['en-us'] = "Text";
+$text['label-text']['en-gb'] = "Text";
+$text['label-text']['ar-eg'] = "نص";
+$text['label-text']['de-at'] = "Text";
+$text['label-text']['de-ch'] = "Text";
+$text['label-text']['de-de'] = "Text";
+$text['label-text']['el-gr'] = "Κείμενο";
+$text['label-text']['es-cl'] = "Texto";
+$text['label-text']['es-mx'] = "Texto";
+$text['label-text']['fr-ca'] = "Texte";
+$text['label-text']['fr-fr'] = "Texte";
+$text['label-text']['he-il'] = "טֶקסט";
+$text['label-text']['it-it'] = "Testo";
+$text['label-text']['nl-nl'] = "Tekst";
+$text['label-text']['pl-pl'] = "Tekst";
+$text['label-text']['pt-br'] = "Texto";
+$text['label-text']['pt-pt'] = "Texto";
+$text['label-text']['ro-ro'] = "Text";
+$text['label-text']['ru-ru'] = "Текст";
+$text['label-text']['sv-se'] = "Text";
+$text['label-text']['uk-ua'] = "текст";
+$text['label-text']['zh-cn'] = "文本";
+$text['label-text']['ja-jp'] = "文章";
+$text['label-text']['ko-kr'] = "텍스트";
+
 ?>

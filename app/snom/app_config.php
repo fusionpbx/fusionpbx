@@ -51,7 +51,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "snom_firmware_d862";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "snomD862-10.1.170.11.bin";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "10.1.175.10/bin/snomD862-10.1.175.10-SIP-r.swu";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the D862 firmware";
 		$y++;
@@ -59,7 +59,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "snom_firmware_d865";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "snomD865-10.1.170.11.bin";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "10.1.175.10/bin/snomD865-10.1.175.10-SIP-r.swu";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the D865 firmware";
 		$y++;
@@ -67,7 +67,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "snom_firmware_d815";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "snomD815-10.1.170.11.bin";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "10.1.175.10/bin/snomD815-10.1.175.10-SIP-r.swu";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the D815 firmware";
 		$y++;
@@ -75,7 +75,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "snom_firmware_d812";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "snomD812-10.1.170.11.bin";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "10.1.175.10/bin/snomD812-10.1.175.10-SIP-r.swu";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the D812 firmware";
 		$y++;
@@ -83,7 +83,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "snom_firmware_d785";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "snomD785-10.1.42.14.bin";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "10.1.175.10/bin/snomD785-10.1.175.10-SIP-r.bin";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the D785 firmware";
 		$y++;
@@ -91,7 +91,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "snom_firmware_d765";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "snomD765-10.1.42.14.bin";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "10.1.175.10/bin/snomD765-10.1.175.10-SIP-r.bin";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the D765 firmware";
 		$y++;
@@ -99,7 +99,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "snom_firmware_d745";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "snomD745-10.1.42.14.bin";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "10.1.175.10/bin/snomD745-10.1.175.10-SIP-r.bin";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the D745 firmware";
 		$y++;
@@ -107,7 +107,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "snom_firmware_d735";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "snomD735-10.1.42.14.bin";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "10.1.175.10/bin/snomD735-10.1.175.10-SIP-r.bin";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the D735 firmware";
 		$y++;
@@ -115,7 +115,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "snom_firmware_d725";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "snomD725-10.1.42.14.bin";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "10.1.175.10/bin/snomD725-10.1.175.10-SIP-r.bin";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the D725 firmware";
 		$y++;
@@ -123,21 +123,21 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "snom_firmware_d717";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "snomD717-10.1.42.14.bin";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "10.1.175.10/bin/snomD717-10.1.175.10-SIP-r.bin";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the D717 firmware";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "9945b058-f366-11e9-a713-2a2ae2dbcce4";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "snom_firmware_d7175";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "snom_firmware_d715";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "snomD715-10.1.42.14.bin";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "10.1.175.10/bin/snomD715-10.1.175.10-SIP-r.bin";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the D715 firmware";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "9945b6f2-f366-11e9-a713-2a2ae2dbcce4";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "snom_firmware_d712";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "10.1.175.10/bin/snomD712-10.1.175.10-SIP-r.bin";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "snomD712-10.1.42.14.bin";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
@@ -147,14 +147,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "snom_firmware_d385";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "snomD385-10.1.42.14.bin";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "10.1.175.10/bin/snomD385-10.1.175.10-SIP-r.bin";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the D385 firmware";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "9945b97c-f366-11e9-a713-2a2ae2dbcce4";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "snom_firmware_d375";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "snomD375-10.1.42.14.bin";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "10.1.175.10/bin/snomD375-10.1.175.10-SIP-r.bin";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the D375 firmware";
 		$y++;
@@ -162,7 +162,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "snom_firmware_d345";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "snomD345-10.1.42.14.bin";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "10.1.175.10/bin/snomD345-10.1.175.10-SIP-r.bin";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the D345 firmware";
 		$y++;
@@ -170,7 +170,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "snom_firmware_d315";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "snomD315-10.1.42.14.bin";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "10.1.175.10/bin/snomD315-10.1.175.10-SIP-r.bin";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the D315 firmware";
 		$y++;
@@ -181,6 +181,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "snomD120-10.1.42.14.bin";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the D120 firmware";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "ad583d79-3965-4c59-9e6d-6dea8ce28bbd";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "snom_firmware_c520";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "c520/C520-WiMi-1.2.0.6-0.img";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the C520 firmware";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "0435781d-19e7-4a37-bcd2-c2e568867863";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
@@ -381,5 +389,12 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "on";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Force enabling or disabling DHCP. (on=Enabled or off=Disabled)";
-
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "f0ba65c1-95b6-4fe5-b376-bdde9e19cab7";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "snom_answer_after_policy";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "not_busy";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "The setting to auto-answer calls that have the Alert-Info SIP header. More info can be found here: https://service.snom.com/display/wiki/answer_after_policy";
 ?>

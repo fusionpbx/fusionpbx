@@ -283,7 +283,7 @@
 
 				//delete record name if requested
 					if (
-						$_POST['recorded_name'] == 1 and
+						(!empty($_POST['recorded_name']) && $_POST['recorded_name'] == 1) &&
 						!empty($_SESSION['switch']['storage']['dir']) &&
 						file_exists($_SESSION['switch']['storage']['dir'].'/voicemail/default/'.$_SESSION['domain_name'].'/'.$voicemail_id.'/recorded_name.wav') &&
 						(permission_exists('voicemail_greeting_play') || permission_exists('voicemail_greeting_download'))
@@ -598,7 +598,7 @@
 	echo "<td class='vncell' rowspan='2' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-greeting']."\n";
 	echo "</td>\n";
-	echo "<td class='vtable playback_progress_bar_background' id='recording_progress_bar_greeting' onclick=\"recording_play('greeting','".escape($voicemail_id).'|'.escape($greetings[$greeting_id]['voicemail_greeting_uuid'])."','greeting')\" style='display: none; border-bottom: none; padding-top: 0 !important; padding-bottom: 0 !important;' align='left'><span class='playback_progress_bar' id='recording_progress_greeting'></span></td>\n";
+	echo "<td class='vtable playback_progress_bar_background' id='recording_progress_bar_greeting' onclick=\"recording_play('greeting','".escape($voicemail_id).'|'.escape($greetings[($greeting_id ?? '')]['voicemail_greeting_uuid'] ?? '')."','greeting')\" style='display: none; border-bottom: none; padding-top: 0 !important; padding-bottom: 0 !important;' align='left'><span class='playback_progress_bar' id='recording_progress_greeting'></span></td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
 	echo "<td class='vtable' align='left'>\n";
@@ -606,7 +606,7 @@
 	echo "		<option value=''>".$text['label-default']."</option>\n";
 	echo "		<option value='0' ".(isset($greeting_id) && $greeting_id == "0" ? "selected='selected'" : null).">".$text['label-none']."</option>\n";
 	$playable = false;
-	if (is_array($greetings) && @sizeof($greetings) != 0) {
+	if (!empty($greetings) && is_array($greetings)) {
 		foreach ($greetings as $greeting) {
 			if (!empty($greeting_id) && $greeting['greeting_id'] == $greeting_id) {
 				$selected = "selected='selected'";
@@ -627,8 +627,8 @@
 	}
 	echo "	</select>\n";
 	if ((permission_exists('voicemail_greeting_play') || permission_exists('voicemail_greeting_download')) && (!empty($playable) || empty($greeting_id))) {
-		echo "<audio id='recording_audio_greeting' style='display: none;' preload='none' ontimeupdate=\"update_progress('greeting')\" onended=\"recording_reset('greeting');\" src='../voicemail_greetings/voicemail_greetings.php?id=".escape($voicemail_id)."&a=download&type=rec&uuid=".escape($greetings[$greeting_id]['voicemail_greeting_uuid'])."' type='".($mime_type ?? '')."'></audio>";
-		echo button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'icon'=>$_SESSION['theme']['button_icon_play'],'id'=>'recording_button_greeting','style'=>'display: '.(!empty($greeting_id) ? 'inline' : 'none'),'onclick'=>"recording_play('greeting','".escape($voicemail_id).'|'.escape($greetings[$greeting_id]['voicemail_greeting_uuid'])."','greeting')"]);
+		echo "<audio id='recording_audio_greeting' style='display: none;' preload='none' ontimeupdate=\"update_progress('greeting')\" onended=\"recording_reset('greeting');\" src='../voicemail_greetings/voicemail_greetings.php?id=".escape($voicemail_id)."&a=download&type=rec&uuid=".escape($greetings[($greeting_id ?? '')]['voicemail_greeting_uuid'] ?? '')."' type='".($mime_type ?? '')."'></audio>";
+		echo button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'icon'=>$_SESSION['theme']['button_icon_play'],'id'=>'recording_button_greeting','style'=>'display: '.(!empty($greeting_id) ? 'inline' : 'none'),'onclick'=>"recording_play('greeting','".escape($voicemail_id).'|'.escape($greetings[($greeting_id ?? '')]['voicemail_greeting_uuid'] ?? '')."','greeting')"]);
 		unset($playable, $mime_type);
 	}
 	echo "<br />\n";

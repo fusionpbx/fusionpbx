@@ -100,11 +100,15 @@ class text {
 				if (is_array($text)) {
 					foreach ($text as $key => $value) {
 						if (isset($value[$language_code]) && !empty($value[$language_code])) {
+							//use the selected language
 							$text[$key] = $value[$language_code];
 						}
-						else {
+						elseif (isset($value['en-us'])) {
 							//fallback to en-us
 							$text[$key] = $value['en-us'];
+						}
+						else {
+							$text[$key] = '';
 						}
 					}
 				}

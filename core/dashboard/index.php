@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2022-2023
+	Portions created by the Initial Developer are Copyright (C) 2022-2024
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -72,6 +72,14 @@
 	$sql .= "dashboard_uuid, \n";
 	$sql .= "dashboard_name, \n";
 	$sql .= "dashboard_path, \n";
+	$sql .= "dashboard_url, \n";
+	$sql .= "dashboard_icon, \n";
+	$sql .= "dashboard_chart_type, \n";
+	$sql .= "dashboard_heading_text_color, \n";
+	$sql .= "dashboard_heading_background_color, \n";
+	$sql .= "dashboard_number_text_color, \n";
+	$sql .= "dashboard_background_color, \n";
+	$sql .= "dashboard_detail_background_color, \n";
 	$sql .= "dashboard_column_span, \n";
 	$sql .= "dashboard_details_state, \n";
 	$sql .= "dashboard_order, \n";
@@ -103,6 +111,8 @@
 					if ($widget == $dashboard_name) {
 						$dashboard_order = $dashboard_order + 10;
 						$array['dashboard'][$x]['dashboard_name'] = $row['dashboard_name'];
+						$array['dashboard'][$x]['dashboard_url'] = $row['dashboard_url'];
+						$array['dashboard'][$x]['dashboard_icon'] = $row['dashboard_icon'];
 						$array['dashboard'][$x]['dashboard_uuid'] = $row['dashboard_uuid'];
 						$array['dashboard'][$x]['dashboard_order'] = $dashboard_order;
 						$x++;
@@ -127,6 +137,9 @@
 	$language = new text;
 	$text = $language->get();
 
+//add the settings object
+	$settings = new settings(["domain_uuid" => $_SESSION['domain_uuid'], "user_uuid" => $_SESSION['user_uuid']]);
+
 //load the header
 	$document['title'] = $text['title-dashboard'];
 	require_once "resources/header.php";
@@ -138,46 +151,20 @@
 	echo "<script src='/resources/chartjs/chart.min.js'></script>";
 
 //chart variables
-	?>
-	<script>
-		var chart_text_font = 'arial';
-		var chart_text_size = '<?php echo $_SESSION['dashboard']['chart_text_size']['text']; ?>';
-		var chart_text_color = '<?php echo $_SESSION['dashboard']['chart_text_color']['text']; ?>';
-		var chart_cutout = '75%';
-
-		const chart_counter = {
-			id: 'chart_counter',
-			beforeDraw(chart, args, options){
-				const {ctx, chartArea: {top, right, bottom, left, width, height} } = chart;
-				ctx.font = chart_text_size + 'px ' + chart_text_font;
-				ctx.textBaseline = 'middle';
-				ctx.textAlign = 'center';
-				ctx.fillStyle = chart_text_color;
-				ctx.fillText(options.chart_text, width / 2, top + (height / 2));
-				ctx.save();
-			}
-		};
-
-		const chart_counter_2 = {
-			id: 'chart_counter_2',
-			beforeDraw(chart, args, options){
-				const {ctx, chartArea: {top, right, bottom, left, width, height} } = chart;
-				ctx.font = (chart_text_size - 7) + 'px ' + chart_text_font;
-				ctx.textBaseline = 'middle';
-				ctx.textAlign = 'center';
-				ctx.fillStyle = chart_text_color;
-				ctx.fillText(options.chart_text + '%', width / 2, top + (height / 2) + 35);
-				ctx.save();
-			}
-		};
-	</script>
-	<?php
+	echo "<script>\n";
+	echo "	var chart_text_font = '".($settings->get('theme', 'dashboard_number_text_font') ?? 'arial')."';\n";
+	echo "	var chart_text_size = '".($settings->get('theme', 'dashboard_chart_text_size') ?? '30px')."';\n";
+	echo "	Chart.overrides.doughnut.cutout = '".($settings->get('theme', 'dashboard_chart_cutout') ?? '75%')."';\n";
+	echo "	Chart.defaults.responsive = true;\n";
+	echo "	Chart.defaults.maintainAspectRatio = false;\n";
+	echo "	Chart.defaults.plugins.legend.display = false;\n";
+	echo "</script>\n";
 
 // determine initial state all button to display
+	$expanded_all = true;
 	if (is_array($dashboard) && @sizeof($dashboard) != 0) {
-		$expanded_all = true;
 		foreach ($dashboard as $row) {
-			if ($row['dashboard_details_state'] == 'contracted' || $row['dashboard_details_state'] == 'hidden') { $expanded_all = false; }
+			if ($row['dashboard_details_state'] == 'contracted' || $row['dashboard_details_state'] == 'hidden' || $row['dashboard_details_state'] == 'disabled') { $expanded_all = false; }
 		}
 	}
 
@@ -208,9 +195,9 @@
 	echo "</form>\n";
 
 //display login message
-	if (if_group("superadmin") && isset($_SESSION['login']['message']['text']) && $_SESSION['login']['message']['text'] != '') {
-		echo "<div class='login_message' width='100%'><b>".$text['login-message_attention']."</b>&nbsp;&nbsp;".$_SESSION['login']['message']['text']."&nbsp;&nbsp;(<a href='?msg=dismiss'>".$text['login-message_dismiss']."</a>)</div>\n";
-	}
+	//if (if_group("superadmin") && isset($_SESSION['login']['message']['text']) && $_SESSION['login']['message']['text'] != '') {
+	//	echo "<div class='login_message' width='100%'><b>".$text['login-message_attention']."</b>&nbsp;&nbsp;".$_SESSION['login']['message']['text']."&nbsp;&nbsp;(<a href='?msg=dismiss'>".$text['login-message_dismiss']."</a>)</div>\n";
+	//}
 
 ?>
 
@@ -232,8 +219,45 @@
   margin: 0 auto;
   display: grid;
   grid-gap: 1rem;
-  grid-column: auto;
 }
+
+div.hud_container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding-bottom: 13px;
+}
+
+div.hud_chart {
+  height: 150px;
+  padding-top: 7px;
+}
+
+span.hud_stat { padding-bottom: 27px; }
+
+/* Dashboard settings */
+<?php
+	foreach($dashboard as $row) {
+		$dashboard_name = str_replace(" ", "_", strtolower($row['dashboard_name']));
+		$background_color = json_decode($row['dashboard_background_color'], true);
+		$detail_background_color = json_decode($row['dashboard_detail_background_color'], true);
+		echo "#".$dashboard_name." .hud_box .hud_container {";
+		echo "	background: ".$background_color[0].";";
+		echo "	background-image: linear-gradient(to right, ".$background_color[1]." 0%, ".$background_color[0]." 30%, ".$background_color[0]." 70%, ".$background_color[1]." 100%);";
+		echo "}";
+		echo "#".$dashboard_name." .hud_box .hud_title {";
+		echo "	color: ".$row['dashboard_heading_text_color'].";";
+		echo "	background-color: ".$row['dashboard_heading_background_color'].";";
+		echo "}";
+		echo "#".$dashboard_name." .hud_box .hud_stat {";
+		echo "	color: ".$row['dashboard_number_text_color'].";";
+		echo "}";
+		echo "#".$dashboard_name." .hud_box .hud_details {";
+		echo "	background: ".$detail_background_color[0].";";
+		echo "	background-image: linear-gradient(to right, ".$detail_background_color[1]." 0%, ".$detail_background_color[0]." 30%, ".$detail_background_color[0]." 70%, ".$detail_background_color[1]." 100%);";
+		echo "}";
+	}
+?>
 
 /* Screen smaller than 575px? 1 columns */
 @media (max-width: 575px) {
@@ -241,8 +265,7 @@
   .col-num { grid-column: span 1; }
 	<?php
 		foreach($dashboard as $row) {
-			$dashboard_name = strtolower($row['dashboard_name']);
-			$dashboard_name = str_replace(" ", "_", $dashboard_name);
+			$dashboard_name = str_replace(" ", "_", strtolower($row['dashboard_name']));
 			if (isset($dashboard_column_span) && is_numeric($dashboard_column_span)) {
 				echo "#".$dashboard_name." {\n";
 				echo "	grid-column: span 1;\n";
@@ -258,13 +281,9 @@
   .col-num { grid-column: span 2; }
 	<?php
 		foreach($dashboard as $row) {
-			$dashboard_name = strtolower($row['dashboard_name']);
-			$dashboard_name = str_replace(" ", "_", $dashboard_name);
-			$dashboard_column_span = 1;
+			$dashboard_name = str_replace(" ", "_", strtolower($row['dashboard_name']));
+			$dashboard_column_span = $row['dashboard_column_span'];
 			if (is_numeric($dashboard_column_span)) {
-				if ($row['dashboard_column_span'] > 2) {
-					$dashboard_column_span = 2;
-				}
 				echo "#".$dashboard_name." {\n";
 				echo "	grid-column: span ".$dashboard_column_span.";\n";
 				echo "}\n";
@@ -274,7 +293,7 @@
 				echo "	display: none;\n";
 				echo "}\n";
 			}
-			if ($row['dashboard_details_state'] == "hidden") {
+			if ($row['dashboard_details_state'] == "hidden" || $row['dashboard_details_state'] == "disabled") {
 				echo "#".$dashboard_name." .hud_box .hud_expander, \n";
 				echo "#".$dashboard_name." .hud_box .hud_details {\n";
 				echo "	display: none;\n";
@@ -290,8 +309,7 @@
   .col-num { grid-column: span 2; }
 	<?php
 		foreach($dashboard as $row) {
-			$dashboard_name = strtolower($row['dashboard_name']);
-			$dashboard_name = str_replace(" ", "_", $dashboard_name);
+			$dashboard_name = str_replace(" ", "_", strtolower($row['dashboard_name']));
 			$dashboard_column_span = $row['dashboard_column_span'];
 			if (is_numeric($dashboard_column_span)) {
 				echo "#".$dashboard_name." {\n";
@@ -313,8 +331,15 @@
   .widgets { grid-template-columns: repeat(5, minmax(100px, 1fr)); }
   .col-num { grid-column: span 2; }
 }
-
 </style>
+
+<script>
+function toggle_grid_row_end(dashboard_name) {
+	var widget = document.getElementById(dashboard_name.toLowerCase().replace(/ /g, "_"));
+	var current_row_end = widget.style.gridRowEnd;
+	widget.style.gridRowEnd = (current_row_end == 'span 2') ? 'span 5' : 'span 2';
+}
+</script>
 
 <?php
 
@@ -322,10 +347,17 @@
 	echo "<div class='widgets' id='widgets' style='padding: 0 5px;'>\n";
 	$x = 0;
 	foreach($dashboard as $row) {
-		$dashboard_name = strtolower($row['dashboard_name']);
-		$dashboard_name = str_replace(" ", "_", $dashboard_name);
-		echo "<div class='widget' id='".$dashboard_name."' draggable='false'>\n";
-			include($row['dashboard_path']);
+		$dashboard_name = $row['dashboard_name'];
+		$dashboard_icon = $row['dashboard_icon'] ?? '';
+		$dashboard_url  = $row['dashboard_url'] ?? '';
+		$dashboard_chart_type = $row['dashboard_chart_type'] ?? 'doughnut';
+		$dashboard_heading_text_color = $row['dashboard_heading_text_color'] ?? $settings->get('theme', 'dashboard_heading_text_color');
+		$dashboard_number_text_color = $row['dashboard_number_text_color'] ?? $settings->get('theme', 'dashboard_number_text_color');
+		$dashboard_details_state = $row['dashboard_details_state'];
+		$grid_row_end = ($dashboard_details_state == "expanded" || empty($dashboard_details_state)) ? "grid-row-end: span 5;" : "grid-row-end: span 2;";
+
+		echo "<div class='widget' style='".$grid_row_end."' id='".str_replace(" ", "_", strtolower($row['dashboard_name']))."' draggable='false'>\n";
+		include($row['dashboard_path']);
 		echo "</div>\n";
 		$x++;
 	}

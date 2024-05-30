@@ -37,6 +37,10 @@
 	$language = new text;
 	$text = $language->get();
 
+//add the settings object
+	$settings = new settings(["domain_uuid" => $_SESSION['domain_uuid'], "user_uuid" => $_SESSION['user_uuid']]);
+	$speech_enabled = $settings->get('speech', 'enabled');
+
 //set additional variables
 	$action = $_REQUEST["action"] ?? '';
 	$search = $_REQUEST["search"] ?? '';
@@ -402,12 +406,16 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-recordings']." (".$num_rows.")</b></div>\n";
 	echo "	<div class='actions'>\n";
+	if (permission_exists('recording_add') && $speech_enabled == 'true') {
+		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'id'=>'btn_add','link'=>'recording_edit.php']);
+	}
 	if (permission_exists('recording_upload')) {
 		echo 	"<form id='form_upload' class='inline' method='post' enctype='multipart/form-data'>\n";
 		echo 	"<input name='action' type='hidden' value='upload'>\n";
 		echo 	"<input name='type' type='hidden' value='rec'>\n";
 		echo 	"<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
-		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'id'=>'btn_add','onclick'=>"$(this).fadeOut(250, function(){ $('span#form_upload').fadeIn(250); document.getElementById('ulfile').click(); });"]);
+
+		echo button::create(['type'=>'button','label'=>$text['button-upload'],'icon'=>$_SESSION['theme']['button_icon_add'],'id'=>'btn_add','onclick'=>"$(this).fadeOut(250, function(){ $('span#form_upload').fadeIn(250); document.getElementById('ulfile').click(); });"]);
 		echo 	"<span id='form_upload' style='display: none;'>";
 		echo button::create(['label'=>$text['button-cancel'],'icon'=>$_SESSION['theme']['button_icon_cancel'],'type'=>'button','id'=>'btn_upload_cancel','onclick'=>"$('span#form_upload').fadeOut(250, function(){ document.getElementById('form_upload').reset(); $('#btn_add').fadeIn(250) });"]);
 		echo 		"<input type='text' class='txt' style='width: 100px; cursor: pointer;' id='filename' placeholder='Select...' onclick=\"document.getElementById('ulfile').click(); this.blur();\" onfocus='this.blur();'>";
@@ -494,7 +502,7 @@
 		foreach ($recordings as $row) {
 			//playback progress bar
 			if (permission_exists('recording_play')) {
-				echo "<tr class='list-row' id='recording_progress_bar_".escape($row['recording_uuid'])."' onclick=\"recording_play('".escape($row['voicemail_greeting_uuid'])."')\" style='display: none;'><td id='playback_progress_bar_background_".escape($row['recording_uuid'])."' class='playback_progress_bar_background' style='padding: 0; border: none;' colspan='".$col_count."'><span class='playback_progress_bar' id='recording_progress_".escape($row['recording_uuid'])."'></span></td><td class='description hide-sm-dn' style='border-bottom: none !important;'></td></tr>\n";
+				echo "<tr class='list-row' id='recording_progress_bar_".escape($row['recording_uuid'])."' onclick=\"recording_play('".escape($row['voicemail_greeting_uuid'] ?? '')."')\" style='display: none;'><td id='playback_progress_bar_background_".escape($row['recording_uuid'])."' class='playback_progress_bar_background' style='padding: 0; border: none;' colspan='".$col_count."'><span class='playback_progress_bar' id='recording_progress_".escape($row['recording_uuid'])."'></span></td><td class='description hide-sm-dn' style='border-bottom: none !important;'></td></tr>\n";
 				echo "<tr class='list-row' style='display: none;'><td></td></tr>\n"; // dummy row to maintain alternating background color
 			}
 			if (permission_exists('recording_edit')) {

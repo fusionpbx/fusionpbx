@@ -123,7 +123,9 @@
 	}
 
 //additional includes
-	require_once "resources/php.php";
+	if (!defined('STDIN')) {
+		require_once "resources/php.php";
+	}
 	require_once "resources/functions.php";
 	if (is_array($conf) && count($conf) > 0) {
 		require_once "resources/pdo.php";

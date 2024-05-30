@@ -42,8 +42,8 @@
 	$text = $language->get($_SESSION['domain']['language']['code'], 'app/call_centers');
 
 //get http variables and set as php variables
-	$order_by = $_GET["order_by"];
-	$order = $_GET["order"];
+	$order_by = $_GET["order_by"] ?? null;
+	$order = $_GET["order"] ?? null;
 
 //connect to the database
 	if (!isset($database)) {
@@ -119,7 +119,7 @@
 					$cmd = "callcenter_config tier del ".$row['queue_extension']."@".$_SESSION['domain_name']." ".$row['id'];
 					$response = event_socket::api($cmd);
 				}
-				
+
 				//small sleep
 				usleep(200);
 			}
@@ -164,8 +164,8 @@
 	}
 
 //get the agent details from event socket
-	$switch_cmd = 'callcenter_config agent list '.$agent['call_center_agent_uuid'];
-	$event_socket_str = trim(event_socket_request($fp, 'api '.$switch_cmd));
+	$switch_cmd = 'callcenter_config agent list '.($agent['call_center_agent_uuid'] ?? null);
+	$event_socket_str = trim(event_socket_request($fp ?? null, 'api '.$switch_cmd));
 	$call_center_agent = csv_to_named_array($event_socket_str, '|');
 
 //set the agent status
@@ -173,7 +173,7 @@
 
 //update the queue status
 	$x = 0;
-	if (is_array($call_center_queues)) {
+	if (!empty($call_center_queues) && is_array($call_center_queues)) {
 		foreach ($call_center_queues as $queue) {
 			$call_center_queues[$x]['queue_status'] = 'Logged Out';
 			foreach ($call_center_tiers as $tier) {
@@ -228,7 +228,7 @@
 	//echo "				radio_checked_value = 'Logged Out';\n";
 	//echo "			}\n";
 	echo "			if (radio_button.checked) { console.log('checked: '+radio_button.value) }\n";
-	echo "			if (radio_button.value === 'Available' && agent_status === 'Available') {\n"; // radio_checked_value == 'On Break' && 
+	echo "			if (radio_button.value === 'Available' && agent_status === 'Available') {\n"; // radio_checked_value == 'On Break' &&
 	//echo "				radio_button.checked = true;\n";
 	//echo "				radio_button.value = 'Available';\n";
 	//echo "				radio_button[agent_status]\"]:checked').value == 'On Break';\n";
@@ -236,7 +236,7 @@
 	//echo "				console.log('need to change status On Break to Available');\n";
 	//echo "				console.log('---');\n";
 	echo "			}\n";
-	echo "			if (radio_button.value === 'On Break' && agent_status === 'On Break') {\n"; // radio_checked_value == 'Available' && 
+	echo "			if (radio_button.value === 'On Break' && agent_status === 'On Break') {\n"; // radio_checked_value == 'Available' &&
 	//echo "				radio_button.checked = true;\n";
 	//echo "				radio_button.value = 'On Break';\n";
 	//echo "				radio_button[agent_status]\"]:checked').value == 'On Break';\n";
@@ -259,7 +259,7 @@
 
 //show the content
 	echo "<div class='action_bar sub'>\n";
-	echo "	<div class='heading'><b>".$text['header-call_center_queues'].($agent['agent_name'] != '' ? "&nbsp;&nbsp;&nbsp;</b> Agent: <strong>".$agent['agent_name']."</strong>" : "</b>")."</div>\n";
+	echo "	<div class='heading'><b>".$text['header-call_center_queues'].(!empty($agent['agent_name']) ? "&nbsp;&nbsp;&nbsp;</b> Agent: <strong>".$agent['agent_name']."</strong>" : "</b>")."</div>\n";
 	echo "	<div class='actions'>\n";
 	echo button::create(['type'=>'button','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'collapse'=>false,'onclick'=>"document.getElementById('form_list_call_center_agent_dashboard').submit();"]);
 	echo "	</div>\n";
@@ -274,7 +274,7 @@
 	echo "	<th class='shrink'>".$text['label-status']."</th>\n";
 	echo "</tr>\n";
 
-	if (is_array($call_center_queues) && @sizeof($call_center_queues) != 0) {
+	if (!empty($call_center_queues) && is_array($call_center_queues) && @sizeof($call_center_queues) != 0) {
 		$x = 0;
 		foreach ($call_center_queues as $row) {
 			$onclick = "onclick=\"cycle('agents[".$x."][agent_status]');\"";

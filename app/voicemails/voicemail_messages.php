@@ -85,6 +85,11 @@
 		exit;
 	}
 
+//add the settings object
+	$settings = new settings(["domain_uuid" => $_SESSION['domain_uuid'], "user_uuid" => $_SESSION['user_uuid']]);
+	$transcribe_enabled = $settings->get('transcribe', 'enabled', 'false');
+	$transcribe_engine = $settings->get('transcribe', 'engine', '');
+
 //set the back button url
 	$_SESSION['back'][$_SERVER['PHP_SELF']] = !empty($_GET['back']) ? urldecode($_GET['back']) : ($_SESSION['back'][$_SERVER['PHP_SELF']] ?? PROJECT_PATH.'/app/voicemails/voicemails.php');
 
@@ -125,12 +130,45 @@
 
 		//handle action
 			switch ($action) {
+				case 'mark_saved':
+					//transcribe voicemail message
+						$voicemail = new voicemail;
+						$voicemail->domain_uuid = $_SESSION['domain_uuid'];
+						$voicemail->voicemail_uuid = $voicemail_messages[0]['voicemail_uuid'];
+						$voicemail->voicemail_message_uuid = $voicemail_messages[0]['uuid'];
+						$voicemail->message_saved();
+					// no return, exit
+					exit;
+				case 'transcribe':
+					if ($transcribe_enabled == 'true' && !empty($transcribe_engine) && is_array($voicemail_messages) && @sizeof($voicemail_messages) != 0) {
+						$messages_transcribed = 0;
+						foreach ($voicemail_messages as $voicemail_message) {
+							if (!empty($voicemail_message['checked']) && $voicemail_message['checked'] == 'true' && is_uuid($voicemail_message['uuid']) && is_uuid($voicemail_message['voicemail_uuid'])) {
+								//transcribe voicemail message
+									$voicemail = new voicemail;
+									$voicemail->domain_uuid = $_SESSION['domain_uuid'];
+									$voicemail->voicemail_uuid = $voicemail_message['voicemail_uuid'];
+									$voicemail->voicemail_message_uuid = $voicemail_message['uuid'];
+									$result = $voicemail->message_transcribe();
+									unset($voicemail);
+								//increment counter
+									if ($result == true) {
+										$messages_transcribed++;
+									}
+							}
+						}
+						//set message
+							if ($messages_transcribed != 0) {
+								message::add($text['message-audio_transcribed'].': '.$messages_transcribed);
+							}
+					}
+					break;
 				case 'toggle':
 					if (is_array($voicemail_messages) && @sizeof($voicemail_messages) != 0) {
 						$messages_toggled = 0;
 						foreach ($voicemail_messages as $voicemail_message) {
 							if (!empty($voicemail_message['checked']) && $voicemail_message['checked'] == 'true' && is_uuid($voicemail_message['uuid']) && is_uuid($voicemail_message['voicemail_uuid'])) {
-								//delete voicemail message
+								//toggle voicemail message
 									$voicemail = new voicemail;
 									$voicemail->domain_uuid = $_SESSION['domain_uuid'];
 									$voicemail->voicemail_uuid = $voicemail_message['voicemail_uuid'];
@@ -204,15 +242,19 @@
 	$vm->order = $order;
 	$voicemails = $vm->messages();
 
-//count messages
+//count messages and detect if any transcriptions available
 	$new_messages = $num_rows = 0;
-	if (is_array($voicemails) && @sizeof($voicemails) != 0) {
+	$transcriptions_exists = false;
+	if (!empty($voicemails) && is_array($voicemails)) {
 		foreach ($voicemails as $voicemail) {
-			if (is_array($voicemail['messages'])) {
+			if (!empty($voicemail['messages']) && is_array($voicemail['messages'])) {
 				$num_rows += sizeof($voicemail['messages']);
 				foreach ($voicemail['messages'] as $message) {
 					if ($message['message_status'] != 'saved') {
 						$new_messages++;
+					}
+					if ($transcribe_enabled == 'true' && !empty($transcribe_engine) && !empty($message['message_transcription'])) {
+						$transcriptions_exists = true;
 					}
 				}
 			}
@@ -232,11 +274,17 @@
 	echo "	<div class='heading'><b>".$text['title-voicemail_messages']." (".$num_rows.")</b></div>\n";
 	echo "	<div class='actions'>\n";
 	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','link'=>$_SESSION['back'][$_SERVER['PHP_SELF']]]);
+	$margin_left = false;
+	if ($transcribe_enabled == 'true' && !empty($transcribe_engine) && $num_rows) {
+		echo button::create(['type'=>'button','label'=>$text['button-transcribe'],'icon'=>'quote-right','id'=>'btn_transcribe','name'=>'btn_transcribe','collapse'=>'hide-xs','style'=>'display: none; margin-left: 15px;','onclick'=>"list_action_set('transcribe'); list_form_submit('form_list');"]);
+		$margin_left = true;
+	}
 	if ($num_rows) {
-		echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$_SESSION['theme']['button_icon_toggle'],'id'=>'btn_toggle','name'=>'btn_toggle','collapse'=>'hide-xs','style'=>'margin-left: 15px; display: none;','onclick'=>"modal_open('modal-toggle','btn_toggle');"]);
+		echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$_SESSION['theme']['button_icon_toggle'],'id'=>'btn_toggle','name'=>'btn_toggle','collapse'=>'hide-xs','style'=>'display: none;'.(!$margin_left ? 'margin-left: 15px;' : null),'onclick'=>"modal_open('modal-toggle','btn_toggle');"]);
+		$margin_left = true;
 	}
 	if (permission_exists('voicemail_message_delete') && $num_rows) {
-		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','name'=>'btn_delete','collapse'=>'hide-xs','style'=>'display: none;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
+		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','name'=>'btn_delete','collapse'=>'hide-xs','style'=>'display: none;'.(!$margin_left ? 'margin-left: 15px;' : null),'onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
@@ -337,8 +385,11 @@
 					echo 		"<audio id='recording_audio_".escape($row['voicemail_message_uuid'])."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".escape($row['voicemail_message_uuid'])."')\" onended=\"recording_reset('".escape($row['voicemail_message_uuid'])."');\" src='voicemail_messages.php?action=download&id=".urlencode($row['voicemail_id'])."&voicemail_uuid=".urlencode($row['voicemail_uuid'])."&uuid=".urlencode($row['voicemail_message_uuid'])."&r=".uuid()."'></audio>";
 					echo button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'icon'=>$_SESSION['theme']['button_icon_play'],'id'=>'recording_button_'.escape($row['voicemail_message_uuid']),'onclick'=>"recording_play('".escape($row['voicemail_message_uuid'])."','".$row['voicemail_id'].'|'.$row['voicemail_uuid']."','message');"]);
 					echo button::create(['type'=>'button','title'=>$text['label-download'],'icon'=>$_SESSION['theme']['button_icon_download'],'link'=>"voicemail_messages.php?action=download&id=".urlencode($row['voicemail_id'])."&voicemail_uuid=".escape($row['voicemail_uuid'])."&uuid=".escape($row['voicemail_message_uuid'])."&t=bin&r=".uuid(),'onclick'=>"$(this).closest('tr').children('td').css('font-weight','normal');"]);
-					if (!empty($_SESSION['voicemail']['transcribe_enabled']['boolean']) && $_SESSION['voicemail']['transcribe_enabled']['boolean'] == 'true' && $row['message_transcription'] != '') {
-						echo button::create(['type'=>'button','title'=>$text['label-transcription'],'icon'=>'quote-right','onclick'=>"document.getElementById('transcription_".$row['voicemail_message_uuid']."').style.display = document.getElementById('transcription_".$row['voicemail_message_uuid']."').style.display == 'none' ? 'table-row' : 'none'; this.blur(); return false;"]);
+					if (
+						(!empty($_SESSION['voicemail']['transcribe_enabled']['boolean']) && $_SESSION['voicemail']['transcribe_enabled']['boolean'] == 'true' && !empty($row['message_transcription'])) ||
+						($transcribe_enabled == 'true' && !empty($transcribe_engine) && $transcriptions_exists === true)
+						) {
+						echo button::create(['type'=>'button','title'=>$text['label-transcription'],'icon'=>'quote-right','style'=>(empty($row['message_transcription']) ? 'visibility:hidden;' : null),'onclick'=>(!empty($bold) ? "mark_saved('".$row['voicemail_message_uuid']."', '".$row['voicemail_uuid']."');" : null)."document.getElementById('transcription_".$row['voicemail_message_uuid']."').style.display = document.getElementById('transcription_".$row['voicemail_message_uuid']."').style.display == 'none' ? 'table-row' : 'none'; this.blur(); return false;"]);
 					}
 					echo "	</td>\n";
 					echo "	<td class='right no-wrap hide-xs' style='".$bold."'>".escape($row['message_length_label'])."</td>\n";
@@ -346,7 +397,10 @@
 						echo "	<td class='right no-wrap hide-sm-dn' style='".$bold."'>".escape($row['file_size_label'])."</td>\n";
 					}
 					echo "</tr>\n";
-					if (!empty($_SESSION['voicemail']['transcribe_enabled']['boolean']) && $_SESSION['voicemail']['transcribe_enabled']['boolean'] == 'true' && !empty($row['message_transcription'])) {
+					if (
+						(!empty($_SESSION['voicemail']['transcribe_enabled']['boolean']) && $_SESSION['voicemail']['transcribe_enabled']['boolean'] == 'true' && !empty($row['message_transcription'])) ||
+						($transcribe_enabled == 'true' && !empty($transcribe_engine) && $transcriptions_exists === true)
+						) {
 						echo "<tr style='display: none;'><td></td></tr>\n"; // dummy row to maintain same background color for transcription row
 						echo "<tr id='transcription_".$row['voicemail_message_uuid']."' class='list-row' style='display: none;'>\n";
 						echo "	<td style='padding: 10px 20px 15px 20px;' colspan='".$col_count."'>\n";
@@ -394,6 +448,17 @@
 	echo "		});\n";
 	echo "	});\n";
 	echo "</script>\n";
+
+//if viewing transcription, mark message as read/saved
+	if ($transcriptions_exists) {
+		echo "<script>\n";
+		echo "	function mark_saved(voicemail_message_uuid, voicemail_uuid) {\n";
+		echo "		const url = '".basename($_SERVER['PHP_SELF'])."';\n";
+		echo "		const params = { action: 'mark_saved', voicemail_messages: { 0: { uuid: voicemail_message_uuid, voicemail_uuid: voicemail_uuid, }, }, '".$token['name']."': '".$token['hash']."', };\n";
+		echo "		$.post(url, params);\n";
+		echo "	}\n";
+		echo "</script>\n";
+	}
 
 //include the footer
 	require_once "resources/footer.php";

@@ -35,6 +35,7 @@ require_once "resources/classes/text.php";
 $sql = "select * from v_fax ";
 $sql .= "where fax_email_connection_host <> '' ";
 $sql .= "and fax_email_connection_host is not null ";
+$sql .= "and fax_email_outbound_subject_tag is not null ";
 $database = new database;
 $result = $database->select($sql, null, 'all');
 unset($sql);
@@ -261,11 +262,14 @@ if (!empty($result) && @sizeof($result) != 0) {
 
 					//reset variables
 					unset($fax_numbers);
-				}
 
-				//delete email
-				if (imap_delete($connection, $email_id, FT_UID)) {
-					imap_expunge($connection);
+					//delete email
+					if (imap_delete($connection, $email_id, FT_UID)) {
+						imap_expunge($connection);
+					}
+				}
+				else {
+					//unauthorized sender
 				}
 			}
 			unset($authorized_senders);

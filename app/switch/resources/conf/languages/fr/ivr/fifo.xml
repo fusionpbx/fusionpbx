@@ -1,0 +1,17 @@
+<include>
+	<macro name="agent_status">
+		<input pattern="(.*)">
+			<match>
+				<action function="execute" data="sleep(500)"/>
+				<action function="play-file" data="ivr/ivr-to_log_in.wav"/>
+				<action function="play-file" data="voicemail/vm-press.wav"/>
+				<action function="play-file" data="digits/1.wav"/>
+				<action function="execute" data="sleep(100)"/>
+				<action function="play-file" data="ivr/ivr-to_log_out.wav"/>
+				<action function="play-file" data="voicemail/vm-press.wav"/>
+				<action function="play-file" data="digits/2.wav"/>
+				<action function="execute" data="sleep(2000)"/>
+			</match>
+		</input>
+	</macro>
+</include>

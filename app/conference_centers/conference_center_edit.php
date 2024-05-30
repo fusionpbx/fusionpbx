@@ -54,6 +54,7 @@
 	$conference_center_name = '';
 	$conference_center_extension = '';
 	$conference_center_description = '';
+	$conference_center_greeting = '';
 
 //process the user data and save it to the database
 	if (!empty($_POST) && empty($_POST["persistformvar"])) {

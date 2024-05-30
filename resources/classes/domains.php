@@ -599,6 +599,10 @@ if (!class_exists('domains')) {
 		 */
 		public function upgrade() {
 
+			//add multi-lingual support
+				$language = new text;
+				$text = $language->get(null, 'core/upgrade');
+
 			//includes files
 				require dirname(__DIR__, 2) . "/resources/require.php";
 
@@ -607,8 +611,7 @@ if (!class_exists('domains')) {
 
 			//get the variables
 				$config = new config;
-				$config_path = $config->find();
-				$config->get();
+				$config_path = $config->config_file;
 
 			//get the list of installed apps from the core and app directories (note: GLOB_BRACE doesn't work on some systems)
 				$config_list_1 = glob($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/*/*/app_config.php");
@@ -651,6 +654,13 @@ if (!class_exists('domains')) {
 
 					//track of the number of domains processed
 						$domains_processed++;
+				}
+
+			//output result
+				if (defined('STDIN')) {
+					if ($domains_processed > 1) {
+						echo $text['message-upgrade_apps']."\n";
+					}
 				}
 
 		} //end upgrade method
