@@ -217,6 +217,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Request the account ID.";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "d93351de-8446-47ee-acdb-05cf340b8803";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "conference_center";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "extension_range";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "200-299";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the suggested extension range(s) for conference centers";
 
 	//cache details
 		$apps[$x]['cache']['key'] = "dialplan.\${domain_name}";
