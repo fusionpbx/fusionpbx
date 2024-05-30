@@ -398,7 +398,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "time_conditions";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "extension_range";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "2xxx";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "800-899";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the suggested extension range(s) for time conditions";
 
