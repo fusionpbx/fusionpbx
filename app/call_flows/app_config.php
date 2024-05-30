@@ -97,7 +97,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "call_flow";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "extension_range";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "30-59";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "30-39";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the suggested extension range(s) for call flows";
 
