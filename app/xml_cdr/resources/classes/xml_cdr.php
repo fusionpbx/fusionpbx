@@ -654,59 +654,66 @@ if (!class_exists('xml_cdr')) {
 					//store the call direction
 						$this->array[$key]['direction'] = urldecode($call_direction);
 
+                        openlog('FusionPBX', LOG_NDELAY, LOG_USER);
+                        syslog(LOG_WARNING, 'DEXTER: ' . $xml->variables->call_center_queue_uuid);
+                        closelog();
+
 					//call center
                     if ($xml->variables->cc_member_uuid == '_undef_') { $xml->variables->cc_member_uuid = ''; }
                     if ($xml->variables->cc_member_session_uuid == '_undef_') { $xml->variables->cc_member_session_uuid = ''; }
                     if ($xml->variables->cc_agent_uuid == '_undef_') { $xml->variables->cc_agent_uuid = ''; }
                     if ($xml->variables->call_center_queue_uuid == '_undef_') { $xml->variables->call_center_queue_uuid = ''; }
                     if ($xml->variables->cc_queue_joined_epoch == '_undef_') { $xml->variables->cc_queue_joined_epoch = ''; }
-                    $this->array[$key][0]['cc_side'] = urldecode($xml->variables->cc_side);
-                    if (!empty($xml->variables->cc_member_uuid) && is_uuid(urldecode($xml->variables->cc_member_uuid))) {
-                        $this->array[$key][0]['cc_member_uuid'] = urldecode($xml->variables->cc_member_uuid);
+                    $this->array[$key]['cc_side'] = urldecode($xml->variables->cc_side);
+                    if (isset($xml->variables->cc_member_uuid) && is_uuid(urldecode($xml->variables->cc_member_uuid))) {
+                        $this->array[$key]['cc_member_uuid'] = urldecode($xml->variables->cc_member_uuid);
                     }
-                    $this->array[$key][0]['cc_queue'] = urldecode($xml->variables->cc_queue);
-                    if (!empty($xml->variables->cc_member_session_uuid) && is_uuid(urldecode($xml->variables->cc_member_session_uuid))) {
-                        $this->array[$key][0]['cc_member_session_uuid'] = urldecode($xml->variables->cc_member_session_uuid);
+                    $this->array[$key]['cc_queue'] = urldecode($xml->variables->cc_queue);
+
+                    if (isset($xml->variables->cc_member_session_uuid) && is_uuid(urldecode($xml->variables->cc_member_session_uuid))) {
+                        $this->array[$key]['cc_member_session_uuid'] = urldecode($xml->variables->cc_member_session_uuid);
                     }
-                    if (!empty($xml->variables->call_center_queue_uuid) && is_uuid(urldecode($xml->variables->call_center_queue_uuid))) {
+
+                    if (isset($xml->variables->call_center_queue_uuid) && is_uuid(urldecode($xml->variables->call_center_queue_uuid))) {
                         $call_center_queue_uuid = urldecode($xml->variables->call_center_queue_uuid);
                     }
-                    if (empty($call_center_queue_uuid) && !empty($xml->variables->cc_queue)) {
+                    if (!isset($call_center_queue_uuid) && isset($xml->variables->cc_queue)) {
                         $sql = "select call_center_queue_uuid from v_call_center_queues ";
                         $sql .= "where domain_uuid = :domain_uuid ";
                         $sql .= "and queue_extension = :queue_extension ";
                         $parameters['domain_uuid'] = $domain_uuid;
-                        $parameters['queue_extension'] = explode("@", $xml->variables->cc_queue)[0];
+                        $parameters['queue_extension'] = explode("@", $xml->variables->cc_queue);
                         $database = new database;
                         $call_center_queue_uuid = $database->select($sql, $parameters, 'column');
                         unset($parameters);
                     }
-                    if (!empty($call_center_queue_uuid) && is_uuid($call_center_queue_uuid)) {
-                        $this->array[$key][0]['call_center_queue_uuid'] = $call_center_queue_uuid;
+                    if (isset($call_center_queue_uuid) && is_uuid($call_center_queue_uuid)) {
+                        $this->array[$key]['call_center_queue_uuid'] = $call_center_queue_uuid;
                     }
-                    if (!empty($xml->variables->cc_agent_uuid) && is_uuid(urldecode($xml->variables->cc_agent_uuid))) {
-                        $this->array[$key][0]['cc_agent_uuid'] = urldecode($xml->variables->cc_agent_uuid);
+                    if (isset($xml->variables->cc_agent_uuid) && is_uuid(urldecode($xml->variables->cc_agent_uuid))) {
+                        $this->array[$key]['cc_agent_uuid'] = urldecode($xml->variables->cc_agent_uuid);
                     }
-                    $this->array[$key][0]['cc_agent'] = urldecode($xml->variables->cc_agent);
-                    $this->array[$key][0]['cc_agent_type'] = urldecode($xml->variables->cc_agent_type);
-                    $this->array[$key][0]['cc_agent_bridged'] = urldecode($xml->variables->cc_agent_bridged);
-                    if (!empty($xml->variables->cc_queue_joined_epoch) && is_numeric($xml->variables->cc_queue_joined_epoch)) {
-                        $this->array[$key][0]['cc_queue_joined_epoch'] = urldecode($xml->variables->cc_queue_joined_epoch);
+                    $this->array[$key]['cc_agent'] = urldecode($xml->variables->cc_agent);
+                    $this->array[$key]['cc_agent_type'] = urldecode($xml->variables->cc_agent_type);
+                    $this->array[$key]['cc_agent_bridged'] = urldecode($xml->variables->cc_agent_bridged);
+                    if (isset($xml->variables->cc_queue_joined_epoch)) {
+                        $this->array[$key]['cc_queue_joined_epoch'] = urldecode($xml->variables->cc_queue_joined_epoch);
                     }
-                    if (!empty($xml->variables->cc_queue_answered_epoch) && is_numeric($xml->variables->cc_queue_answered_epoch)) {
-                        $this->array[$key][0]['cc_queue_answered_epoch'] = urldecode($xml->variables->cc_queue_answered_epoch);
+                    if (isset($xml->variables->cc_queue_answered_epoch)) {
+                        $this->array[$key]['cc_queue_answered_epoch'] = urldecode($xml->variables->cc_queue_answered_epoch);
                     }
-                    if (!empty($xml->variables->cc_queue_terminated_epoch) && is_numeric($xml->variables->cc_queue_terminated_epoch)) {
-                        $this->array[$key][0]['cc_queue_terminated_epoch'] = urldecode($xml->variables->cc_queue_terminated_epoch);
+                    if (isset($xml->variables->cc_queue_terminated_epoch)) {
+                        $this->array[$key]['cc_queue_terminated_epoch'] = urldecode($xml->variables->cc_queue_terminated_epoch);
                     }
-                    if (!empty($xml->variables->cc_queue_canceled_epoch) && is_numeric($xml->variables->cc_queue_canceled_epoch)) {
-                        $this->array[$key][0]['cc_queue_canceled_epoch'] = urldecode($xml->variables->cc_queue_canceled_epoch);
+                    if (isset($xml->variables->cc_queue_canceled_epoch)) {
+                        $this->array[$key]['cc_queue_canceled_epoch'] = urldecode($xml->variables->cc_queue_canceled_epoch);
                     }
-                    $this->array[$key][0]['cc_cancel_reason'] = urldecode($xml->variables->cc_cancel_reason);
-                    $this->array[$key][0]['cc_cause'] = urldecode($xml->variables->cc_cause);
-                    $this->array[$key][0]['waitsec'] = urldecode($xml->variables->waitsec);
+
+                    $this->array[$key]['cc_cancel_reason'] = urldecode($xml->variables->cc_cancel_reason);
+                    $this->array[$key]['cc_cause'] = urldecode($xml->variables->cc_cause);
+                    $this->array[$key]['waitsec'] = urldecode($xml->variables->waitsec);
                     if (urldecode($xml->variables->cc_side) == 'agent') {
-                        $this->array[$key][0]['direction'] = 'inbound';
+                        $this->array[$key]['direction'] = 'inbound';
                     }
 
 					//app info
