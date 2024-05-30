@@ -622,7 +622,7 @@ if (!class_exists('xml_cdr')) {
 						$this->array[$key]['accountcode'] = urldecode($accountcode);
 						$this->array[$key]['default_language'] = urldecode($xml->variables->default_language);
 						$this->array[$key]['bridge_uuid'] = urldecode($xml->variables->bridge_uuid) ?: $last_bridge;
-						//$this->array[$key]['digits_dialed'] = urldecode($xml->variables->digits_dialed);
+						$this->array[$key]['digits_dialed'] = urldecode($xml->variables->digits_dialed);
 						$this->array[$key]['sip_hangup_disposition'] = urldecode($xml->variables->sip_hangup_disposition);
 						$this->array[$key]['pin_number'] = urldecode($xml->variables->pin_number);
 						$this->array[$key]['status'] = $status;
