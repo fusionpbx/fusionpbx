@@ -228,7 +228,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "ring_group";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "extension_range";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "5xxx";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "700-799";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the suggested extension range(s) for ring groups";
 		$y++;
