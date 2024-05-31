@@ -1166,7 +1166,7 @@
 	echo "</td>\n";
 	echo "<td width='70%' class='vtable' align='left'>\n";
 	if ($action == "add" || permission_exists("extension_extension")) {
-		echo "    <input class='formfld' type='text' name='extension' autocomplete='new-password' maxlength='255' value=\"".escape($extension ?? '')."\" required='required' placeholder='".$_SESSION['extension']['extension_range']['text'] ?? ''."'>\n";
+		echo "    <input class='formfld' type='text' name='extension' autocomplete='new-password' maxlength='255' value=\"".escape($extension ?? '')."\" required='required' placeholder=\"".($_SESSION['extension']['extension_range']['text'] ?? '')."\">\n";
 		echo "    <input type='text' style='display: none;' disabled='disabled'>\n"; //help defeat browser auto-fill
 		echo "<br />\n";
 		echo $text['description-extension']."\n";

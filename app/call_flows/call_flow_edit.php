@@ -476,7 +476,7 @@
 	echo "	".$text['label-call_flow_extension']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='call_flow_extension' maxlength='255' value=\"".escape($call_flow_extension)."\" required='required' placeholder='".$_SESSION['call_flow']['extension_range']['text'] ?? ''."'>\n";
+	echo "	<input class='formfld' type='text' name='call_flow_extension' maxlength='255' value=\"".escape($call_flow_extension)."\" required='required' placeholder=\"".($_SESSION['call_flow']['extension_range']['text'] ?? '')."\">\n";
 	echo "<br />\n";
 	echo $text['description-call_flow_extension']."\n";
 	echo "</td>\n";

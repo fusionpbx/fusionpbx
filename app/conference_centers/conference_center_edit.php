@@ -356,7 +356,7 @@
 	echo "	".$text['label-conference_center_extension']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='conference_center_extension' maxlength='255' value=\"".escape($conference_center_extension)."\" required='required' placeholder='".$_SESSION['conference_center']['extension_range']['text'] ?? ''."'>\n";
+	echo "	<input class='formfld' type='text' name='conference_center_extension' maxlength='255' value=\"".escape($conference_center_extension)."\" required='required' placeholder=\"".($_SESSION['conference_center']['extension_range']['text'] ?? '')."\">\n";
 	echo "<br />\n";
 	echo $text['description-conference_center_extension']."\n";
 	echo "</td>\n";
