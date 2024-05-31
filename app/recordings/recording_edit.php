@@ -325,14 +325,15 @@
 				echo "		<option value='".escape($model_id)."' ".(($model_id == $recording_model) ? "selected='selected'" : '').">".escape($model_name)."</option>\n";
 			}
 			echo "	</select>\n";
+			echo "<br />\n";
+			echo $text['description-model']."\n";
+			echo "</td>\n";
+			echo "</tr>\n";
 		}
 		else {
-			echo "		<input class='formfld' type='hidden' name='recording_model' maxlength='255' value=''>\n";
+			echo "<input class='formfld' type='hidden' name='recording_model' maxlength='255' value=''>\n";
 		}
-		echo "<br />\n";
-		echo $text['description-model']."\n";
-		echo "</td>\n";
-		echo "</tr>\n";
+
 		//voices
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
