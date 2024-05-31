@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2020
+ Portions created by the Initial Developer are Copyright (C) 2008-2024
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -175,6 +175,22 @@
 		unset($sql, $parameters, $voicemails_count_tmp);
 	}
 
+//get vm greeting count for each mailbox
+	if (permission_exists('voicemail_greeting_view')) {
+		$sql = "select voicemail_id, count(greeting_id) as greeting_count ";
+		$sql .= "from v_voicemail_greetings where domain_uuid = :domain_uuid";
+		$sql .= " group by voicemail_id";
+		$parameters['domain_uuid'] = $domain_uuid;
+		$database = new database;
+		$voicemail_greetings_count_tmp = $database->select($sql, $parameters, 'all');
+
+		$voicemail_greetings_count = array();
+		foreach ($voicemail_greetings_count_tmp as &$row) {
+			$voicemail_greetings_count[$row['voicemail_id']] = $row['greeting_count'];
+		}
+		unset($sql, $parameters, $voicemail_greetings_count_tmp);
+	}
+
 //create token
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);
@@ -300,7 +316,7 @@
 			if (permission_exists('voicemail_message_view') || permission_exists('voicemail_greeting_view')) {
 				echo "	<td class='no-link no-wrap'>\n";
 				if (permission_exists('voicemail_greeting_view')) {
-					echo "	<a href='".PROJECT_PATH."/app/voicemail_greetings/voicemail_greetings.php?id=".$row['voicemail_id']."&back=".urlencode($_SERVER["REQUEST_URI"])."' style='margin-right: 15px;'>".$text['label-greetings']."</a>\n";
+					echo "	<a href='".PROJECT_PATH."/app/voicemail_greetings/voicemail_greetings.php?id=".$row['voicemail_id']."&back=".urlencode($_SERVER["REQUEST_URI"])."' style='margin-right: 15px;'>".$text['label-greetings']." (".($voicemail_greetings_count[$row['voicemail_id']] ?? 0).")</a>\n";
 				}
 				if (permission_exists('voicemail_message_view')) {
 					$tmp_voicemail_string = (array_key_exists($row['voicemail_uuid'], $voicemails_count)) ? " (" . $voicemails_count[$row['voicemail_uuid']] . ")" : " (0)";
