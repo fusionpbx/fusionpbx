@@ -272,7 +272,7 @@
 	echo "	<div class='heading'><b>".$text['title-edit']."</b></div>\n";
 	echo "	<div class='actions'>\n";
 	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'recordings.php']);
-	if (permission_exists('recording_delete')) {
+	if (permission_exists('recording_delete') && !empty($recording_uuid) && is_uuid($recording_uuid)) {
 		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'name'=>'btn_delete','style'=>'margin-right: 15px;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
 	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save']);
@@ -433,7 +433,9 @@
 	echo "</table>";
 	echo "<br /><br />";
 
-	echo "<input type='hidden' name='recording_uuid' value='".escape($recording_uuid)."'>\n";
+	if (!empty($recording_uuid) && is_uuid($recording_uuid)) {
+		echo "<input type='hidden' name='recording_uuid' value='".escape($recording_uuid)."'>\n";
+	}
 	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 
 	echo "</form>";
