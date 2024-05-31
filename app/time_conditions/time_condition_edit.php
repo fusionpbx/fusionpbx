@@ -1029,7 +1029,7 @@ function add_custom_condition($destination, $group_id, $dialplan_action = '') {
 	//$destination = new destinations;
 	echo $destination->select('dialplan', 'dialplan_action['.$group_id.']', $dialplan_action);
 	echo "						</td>\n";
-	echo "						<td width='100%'><input class='formfld' style='margin-left: 5px;' type='text' name='group_".$group_id."' id='group_".$group_id."' maxlength='255' value=\"".$group_id."\"></td>\n";
+	echo "						<td><input class='formfld' style='margin-left: 5px; max-width: 50px; text-align: center;' type='text' name='group_".$group_id."' id='group_".$group_id."' maxlength='6' value=\"".$group_id."\"></td>\n";
 	echo "					</tr>";
 	echo "				</table>\n";
 	echo "			</td>\n";
