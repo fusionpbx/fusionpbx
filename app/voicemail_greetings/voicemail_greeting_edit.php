@@ -153,6 +153,7 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 		$parameters['voicemail_id'] = $voicemail_id;
 		$database = new database;
 		$rows = $database->select($sql, $parameters, 'all');
+		$greeting_ids = array();
 		if (!empty($rows) && is_array($rows)) {
 			foreach ($rows as $row) {
 				$greeting_ids[] = $row['greeting_id'];
