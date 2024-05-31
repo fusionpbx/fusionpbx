@@ -998,7 +998,7 @@ echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
 echo "	".$text['label-extension']."\n";
 echo "</td>\n";
 echo "<td class='vtable' align='left'>\n";
-echo "	<input class='formfld' type='text' name='dialplan_number' id='dialplan_number' maxlength='255' value=\"".escape($dialplan_number ?? null)."\" required='required' placeholder='".$_SESSION['time_conditions']['extension_range']['text'] ?? ''."'>\n";
+echo "	<input class='formfld' type='text' name='dialplan_number' id='dialplan_number' maxlength='255' value=\"".escape($dialplan_number ?? null)."\" required='required' placeholder=\"".($_SESSION['time_conditions']['extension_range']['text'] ?? '')."\">\n";
 echo "	<br />\n";
 echo "	".$text['description-extension']."<br />\n";
 echo "</td>\n";
