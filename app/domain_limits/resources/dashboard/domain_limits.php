@@ -114,7 +114,7 @@
 			echo "		<span class='hud_title'>".$text['label-domain_limits']."</span>\n";
 
 		//doughnut chart
-			if ($dashboard_chart_type == "doughnut") {
+			if (!isset($dashboard_chart_type) || $dashboard_chart_type == "doughnut") {
 				echo "<div class='hud_chart' style='width: 275px;'><canvas id='domain_limits_chart'></canvas></div>\n";
 
 				echo "<script>\n";
@@ -173,7 +173,7 @@
 				echo "	);\n";
 				echo "</script>\n";
 			}
-			if ($dashboard_chart_type == "none") {
+			if ($dashboard_chart_type == "number") {
 				echo "	<span class='hud_stat'>".$hud_stat_used."</span>";
 			}
 			echo "	</div>\n";

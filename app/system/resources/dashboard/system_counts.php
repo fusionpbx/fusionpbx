@@ -298,7 +298,7 @@
 		echo "<div class='hud_container' ".($dashboard_details_state == "disabled" ?: "onclick=\"$('#hud_system_counts_details').slideToggle('fast'); toggle_grid_row_end('".$dashboard_name."')\"").">\n";
 		echo "	<span class='hud_title' onclick=\"document.location.href='".PROJECT_PATH."/app/system/system.php'\">".$text['label-system_counts']."</span>\n";
 
-		if ($dashboard_chart_type == "doughnut") {
+		if (!isset($dashboard_chart_type) || $dashboard_chart_type == "doughnut") {
 			//add doughnut chart
 			?>
 			<div class='hud_chart' style='width: 250px;'><canvas id='system_counts_chart'></canvas></div>
@@ -354,7 +354,7 @@
 			</script>
 			<?php
 		}
-		if ($dashboard_chart_type == "none") {
+		if ($dashboard_chart_type == "number") {
 			echo "	<span class='hud_stat'>".$domain_total."</span>";
 		}
 		echo "	</div>\n";

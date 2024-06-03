@@ -93,7 +93,7 @@
 	echo "<div class='hud_container' ".($dashboard_details_state == "disabled" ?: "onclick=\"$('#hud_missed_calls_details').slideToggle('fast'); toggle_grid_row_end('".$dashboard_name."')\"").">\n";
 	echo "	<span class='hud_title' onclick=\"document.location.href='".PROJECT_PATH."/app/xml_cdr/xml_cdr.php?call_result=missed'\">".$text['label-missed_calls']."</span>";
 
-	if ($row['dashboard_chart_type'] == "doughnut") {
+	if ($dashboard_chart_type == "doughnut") {
 		//add doughnut chart
 		?>
 		<div class='hud_chart'><canvas id='missed_calls_chart'></canvas></div>
@@ -138,7 +138,7 @@
 		</script>
 		<?php
 	}
-	if ($row['dashboard_chart_type'] == "none" || !isset($row['dashboard_chart_type'])) {
+	if (!isset($dashboard_chart_type) || $dashboard_chart_type == "number") {
 		echo "<span class='hud_stat'>".$num_rows."</span>";
 	}
 	echo "</div>\n";
