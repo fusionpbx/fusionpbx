@@ -40,7 +40,7 @@
 			echo "	<div class='hud_container' ".($dashboard_details_state == "disabled" ?: "onclick=\"$('#hud_system_status_details').slideToggle('fast'); toggle_grid_row_end('".$dashboard_name."')\"").">\n";
 			echo "		<span class='hud_title' onclick=\"document.location.href='".PROJECT_PATH."/app/system/system.php'\">".$text['label-disk_usage']."</span>\n";
 
-			if ($dashboard_chart_type == "doughnut") {
+			if ($dashboard_chart_type == "doughnut" || !isset($dashboard_chart_type)) {
 				?>
 				<div class='hud_chart' style='width: 175px;'><canvas id='system_status_chart'></canvas></div>
 
