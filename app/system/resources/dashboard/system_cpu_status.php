@@ -55,7 +55,7 @@
 	echo "	<span class='hud_title' onclick=\"document.location.href='".PROJECT_PATH."/app/system/system.php'\">".$text['label-cpu_usage']."</span>\n";
 
 //add half doughnut chart
-	if ($dashboard_chart_type == "doughnut" || !isset($dashboard_chart_type)) {
+	if (!isset($dashboard_chart_type) || $dashboard_chart_type == "doughnut") {
 		?>
 		<div class='hud_chart' style='width: 175px;'><canvas id='system_cpu_status_chart'></canvas></div>
 
