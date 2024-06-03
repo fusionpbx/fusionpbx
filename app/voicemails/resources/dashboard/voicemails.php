@@ -55,7 +55,7 @@
 	echo "<div class='hud_container' ".($dashboard_details_state == "disabled" ?: "onclick=\"$('#hud_voicemail_details').slideToggle('fast'); toggle_grid_row_end('".$dashboard_name."')\"").">\n";
 	echo "	<span class='hud_title' onclick=\"document.location.href='".PROJECT_PATH."/app/voicemails/voicemail_messages.php'\">".$text['label-new_messages']."</span>";
 
-	if ($row['dashboard_chart_type'] == "doughnut") {
+	if ($dashboard_chart_type == "doughnut") {
 		//add doughnut chart
 		?>
 		<div class='hud_chart'><canvas id='new_messages_chart'></canvas></div>
@@ -100,7 +100,7 @@
 		</script>
 		<?php
 	}
-	if ($row['dashboard_chart_type'] == "number" || !isset($row['dashboard_chart_type'])) {
+	if ($dashboard_chart_type == "number" || !isset($dashboard_chart_type)) {
 		echo "	<span class='hud_stat'>".$messages['new']."</span>";
 	}
 	echo "</div>\n";
