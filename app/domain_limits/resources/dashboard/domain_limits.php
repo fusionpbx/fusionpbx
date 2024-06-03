@@ -114,7 +114,7 @@
 			echo "		<span class='hud_title'>".$text['label-domain_limits']."</span>\n";
 
 		//doughnut chart
-			if ($dashboard_chart_type == "doughnut" || !isset($dashboard_chart_type)) {
+			if (!isset($dashboard_chart_type) || $dashboard_chart_type == "doughnut") {
 				echo "<div class='hud_chart' style='width: 275px;'><canvas id='domain_limits_chart'></canvas></div>\n";
 
 				echo "<script>\n";
