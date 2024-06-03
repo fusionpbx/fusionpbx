@@ -480,7 +480,11 @@
 
     <!-- # NTP Server -->
     <!-- # Server address -->
-    <P30>us.pool.ntp.org</P30>
+    {if isset($ntp_server_primary)}
+	<P30>{$ntp_server_primary}</P30>
+	{else}
+	<P30>pool.ntp.org</P30>
+	{/if}
 
     <!-- # Allow DHCP Option 42 to override NTP server. 0 - No, 1 - Yes. Default is No. -->
     <!-- # When set to Yes(1), it will override the configured NTP server. -->

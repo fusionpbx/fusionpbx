@@ -1,84 +1,147 @@
 <?php
 
 /**
- * settings class
- * 
+ * settings class is used to load settings using hierarchical overriding
+ *
+ * The settings are loaded from the database tables default_settings, domain_settings, and user_settings in that order with
+ * each setting overriding the setting from the previous table.
+ *
+ * @access public
+ * @author Mark Crane <mark@fusionpbx.com>
  */
 class settings {
 
+	/**
+	 * Set in the constructor. String used to load a specific domain. Must be a value domain UUID before sending to the constructor.
+	 * @var string
+	 */
 	private $domain_uuid;
+
+	/**
+	 * Set in the constructor. String used to load a specific user. Must be a valid user UUID before sending to the constructor.
+	 * @var string
+	 */
 	private $user_uuid;
+
+	/**
+	 * Set in the constructor. String used for loading a specific device UUID
+	 * @var string
+	 */
 	private $device_uuid;
+
+	/**
+	 * Set in the constructor. String used for loading device profile
+	 * @var string
+	 */
 	private $device_profile_uuid;
+
+	/**
+	 * Set in the constructor. Current category set to load
+	 * @var string
+	 */
 	private $category;
+
+	/**
+	 * Internal array structure that is populated from the database
+	 * @var array Array of settings loaded from Default Settings
+	 */
 	private $settings;
+
+	/**
+	 * Set in the constructor. Must be a database object and cannot be null.
+	 * @var database Database Object
+	 */
 	private $database;
 
 	/**
-	 * Called when the object is created
+	 * Create a settings object using key/value pairs in the $setting_array.
+	 *
+	 * Valid values are: database, domain_uuid, user_uuid, device_uuid, device_profile_uuid, and category.
 	 * @param array setting_array
 	 * @depends database::new()
+	 * @access public
 	 */
 	public function __construct($setting_array = []) {
 
 		//open a database connection
-		$this->database = database::new();
+		if (empty($setting_array['database'])) {
+			$this->database = database::new();
+		} else {
+			$this->database = $setting_array['database'];
+		}
+
+		//trap passing a PDO object instead of the required database object
+		if (!($this->database instanceof database)) {
+			//should never happen but will trap it here just-in-case
+			throw new \InvalidArgumentException("Database object passed in settings class constructor is not a valid database object");
+		}
 
 		//set the values from the array
 		$this->domain_uuid = $setting_array['domain_uuid'] ?? null;
 		$this->user_uuid = $setting_array['user_uuid'] ?? null;
-		$this->device_uuid = $setting_array['device_uuid'] ?? null;
 		$this->device_profile_uuid = $setting_array['device_profile_uuid'] ?? null;
+		$this->device_uuid = $setting_array['device_uuid'] ?? null;
 		$this->category = $setting_array['category'] ?? null;
+
+		$this->reload();
+	}
+
+	/**
+	 * Returns the database object used in the settings
+	 * @return database Object
+	 */
+	public function database(): database {
+		return $this->database;
+	}
+
+	/**
+	 * Reloads the settings from the database
+	 */
+	public function reload() {
+		$this->settings = [];
 
 		//set the default settings
 		$this->default_settings();
 
-		//set the domains settings
-		//if (file_exists($_SERVER["PROJECT_ROOT"]."/app/domains/app_config.php")) {
-		//	include "app/domains/resources/settings.php";
-		//}
-
 		//set the domain settings
 		if (!empty($this->domain_uuid)) {
 			$this->domain_settings();
+
+			//set the user settings only when the domain_uuid was set
+			if (!empty($this->user_uuid)) {
+				$this->user_settings();
+			}
+
+			//set the device profile settings
+			if (!empty($this->device_profile_uuid)) {
+				$this->device_profile_settings();
+			}
+
+			//set the device settings
+			if (!empty($this->device_uuid)) {
+				$this->device_settings();
+			}
 		}
-
-		//set the user settings
-		if (!empty($this->user_uuid)) {
-			$this->user_settings();
-		}
-
-		//debug show the settings
-		//print_r($this->settings);
-
-		//add settings to the session array
-		//if (!defined('STDIN') && !empty($this->settings)) {
-		//	foreach($this->settings as $key => $row) {
-		//		$_SESSION[$key] = $row;
-		//	}
-		//}
-
 	}
 
 	/**
-	 * get the value
-	 * @param string category
-	 * @param string subcategory
-	 * @param mixed allows default value returned if category and subcategory not found
+	 * Get the value utilizing the hierarchical overriding technique
+	 * @param string $category Returns all settings when empty or the default value if the settings array is null
+	 * @param string $subcategory Returns the array of category items when empty or the default value if the category array is null
+	 * @param mixed $default_value allows default value returned if category and subcategory not found
 	 */
 	public function get(string $category = null, string $subcategory = null, $default_value = null) {
 
+		//incremental refinement from all settings to a single setting
 		if (empty($category)) {
-			return $this->settings;
+			return $this->settings ?? $default_value;
 		}
 		elseif (empty($subcategory)) {
-			return $this->settings[$category];
+			return $this->settings[$category] ?? $default_value;
 		}
 		else {
 			return $this->settings[$category][$subcategory] ?? $default_value;
 		}
-
 	}
 
 	/**
@@ -93,6 +156,7 @@ class settings {
 	 * @param string $description (optional) Description. Default is empty string.
 	 */
 	public function set(string $table_prefix, string $uuid, string $category, string $subcategory, string $type = 'text', string $value = "", bool $enabled = true, string $description = "") {
+
 		//set the table name
 		$table_name = $table_prefix.'_settings';
 
@@ -113,6 +177,7 @@ class settings {
 		if(!is_uuid($uuid)) {
 			$uuid = uuid();
 		}
+
 		//build the array
 		$record[$table_name][0][$table_prefix.'_setting_uuid'       ] = $uuid;
 		$record[$table_name][0][$table_prefix.'_setting_category'   ] = $category;
@@ -137,8 +202,8 @@ class settings {
 	}
 
 	/**
-	 * set the default settings
-	 * 
+	 * Update the internal settings array with the default settings from the database
+	 * @access private
 	 */
 	private function default_settings() {
 
@@ -183,9 +248,9 @@ class settings {
 		unset($sql, $result, $row);
 	}
 
-
 	/**
-	 * set the domain settings
+	 * Update the internal settings array with the domain settings from the database
+	 * @access private
 	 */
 	private function domain_settings() {
 
@@ -225,12 +290,12 @@ class settings {
 			}
 		}
 		unset($result, $row);
-
 	}
 
-
 	/**
-	 * set the user settings
+	 * Update the internal settings array with the user settings from the database
+	 * @access private
+	 * @depends $this->domain_uuid
 	 */
 	private function user_settings() {
 
@@ -268,9 +333,59 @@ class settings {
 				}
 			}
 		}
-
 	}
 
+	/**
+	 * Update the internal settings array with the device profile settings from the database
+	 * @access private
+	 * @depends $this->domain_uuid
+	 */
+	private function device_profile_settings() {
+
+		//get the device profile settings
+		$sql = "select profile_setting_name, profile_setting_value from v_device_profile_settings"
+			. " where device_profile_uuid = :device_profile_uuid"
+			. " and domain_uuid = :domain_uuid"
+			. " and profile_setting_enabled = 'true'"
+		;
+		$params = [];
+		$params['device_profile_uuid'] = $this->device_profile_uuid;
+		$params['domain_uuid'] = $this->domain_uuid;
+		$result = $this->database->select($sql, $params, 'all');
+		if (!empty($result)) {
+			foreach ($result as $row) {
+				$name = $row['profile_setting_name'];
+				$value = $row['profile_setting_value'];
+				$this->settings[$name] = $value;
+			}
+		}
+	}
+
+	/**
+	 * Update the internal settings array with the device settings from the database
+	 * @access private
+	 * @depends $this->domain_uuid
+	 */
+	private function device_settings() {
+
+		//get the device settings
+		$sql = "select device_setting_subcategory, device_setting_value from v_device_settings"
+			. " where device_setting_uuid = :device_uuid"
+			. " and domain_uuid = :domain_uuid"
+			. " and device_setting_enabled = 'true'"
+		;
+		$params = [];
+		$params['device_uuid'] = $this->device_uuid;
+		$params['domain_uuid'] = $this->domain_uuid;
+		$result = $this->database->select($sql, $params, 'all');
+		if (!empty($result)) {
+			foreach ($result as $row) {
+				$name = $row['device_setting_subcategory'];
+				$value = $row['device_setting_value'] ?? null;
+				$this->settings[$name] = $value;
+			}
+		}
+	}
 }
 
 ?>
