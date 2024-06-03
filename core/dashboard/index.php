@@ -358,7 +358,7 @@ function toggle_grid_row_end(dashboard_name) {
 		$dashboard_name = $row['dashboard_name'];
 		$dashboard_icon = $row['dashboard_icon'] ?? '';
 		$dashboard_url  = $row['dashboard_url'] ?? '';
-		$dashboard_chart_type = $row['dashboard_chart_type'] ?? 'doughnut';
+		$dashboard_chart_type = $row['dashboard_chart_type'];
 		$dashboard_heading_text_color = $row['dashboard_heading_text_color'] ?? $settings->get('theme', 'dashboard_heading_text_color');
 		$dashboard_number_text_color = $row['dashboard_number_text_color'] ?? $settings->get('theme', 'dashboard_number_text_color');
 		$dashboard_details_state = $row['dashboard_details_state'];
