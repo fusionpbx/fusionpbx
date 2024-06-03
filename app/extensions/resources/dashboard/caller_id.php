@@ -177,7 +177,7 @@
 			echo "		<span class='hud_title'>".$text['label-caller_id_number']."</span>\n";
 
 		//doughnut chart
-			if ($dashboard_chart_type == "doughnut") {
+			if ($dashboard_chart_type == "doughnut" || !isset($dashboard_chart_type)) {
 				echo "<div class='hud_chart' style='width: 275px;'><canvas id='caller_id_chart'></canvas></div>\n";
 
 				echo "<script>\n";
