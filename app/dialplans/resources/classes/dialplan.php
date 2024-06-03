@@ -596,6 +596,7 @@
 
 			//combines array dialplans and dialplan details arrays to match results from the database
 			public function prepare_details($database_array) {
+				$array = [];
 				$id = 0;
 				foreach($database_array['dialplans'] as $row) {
 					if (!empty($row['dialplan_details'])) {
@@ -625,6 +626,10 @@
 						}
 					}
 				}
+				//sort the dataset by group and then by order before returning the values
+				$dialplan_detail_group = array_column($array, 'dialplan_detail_group');
+				$dialplan_detail_order = array_column($array, 'dialplan_detail_order');
+				array_multisort($dialplan_detail_group, SORT_ASC, $dialplan_detail_order, SORT_ASC, $array);
 				$this->dialplan_details = $array;
 			}
 
