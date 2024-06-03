@@ -80,7 +80,7 @@
 	echo "<div class='hud_container' ".($dashboard_details_state == "disabled" ?: "onclick=\"$('#hud_switch_status_details').slideToggle('fast'); toggle_grid_row_end('".$dashboard_name."')\"").">\n";
 	echo "	<span class='hud_title'>".$text['label-switch_status']."</span>\n";
 
-	if ($dashboard_chart_type == "doughnut") {
+	if ($dashboard_chart_type == "doughnut" || !isset($dashboard_chart_type)) {
 		//add doughnut chart
 		?>
 		<div class='hud_chart'><canvas id='switch_status_chart'></canvas></div>
