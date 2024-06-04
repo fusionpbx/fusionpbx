@@ -397,4 +397,12 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "not_busy";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "The setting to auto-answer calls that have the Alert-Info SIP header. More info can be found here: https://service.snom.com/display/wiki/answer_after_policy";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "ba9bd041-343f-4253-9cba-8b0f0835675f";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "snom_emergency_numbers";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "911 112 110 999";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "These are the numbers that the phone will understand as emergency numbers. This means they can be dialled on the phone even if the phone is locked. Valid values are space separated. More info can be found here: https://service.snom.com/display/wiki/keyboard_lock_emergency";
 ?>
