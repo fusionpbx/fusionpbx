@@ -83,6 +83,11 @@ if (!class_exists('install')) {
 				break;
 			}
 
+			//common settings for all operating systems
+			$event_socket_host = "127.0.0.1";
+			$event_socket_port = "8021";
+			$event_socket_password = "ClueCon";
+
 			//end the script if the config path is not set
 			if (!isset($config_path)) {
 				$this->message = "Config file path not found\n";
@@ -137,6 +142,9 @@ if (!class_exists('install')) {
 			$conf .= "switch.storage.dir = ".$storage_dir."\n";
 			$conf .= "switch.voicemail.dir = ".$voicemail_dir."\n";
 			$conf .= "switch.scripts.dir = ".$scripts_dir."\n";
+			$conf .= "switch.event_socket.host = $event_socket_host\n";
+			$conf .= "switch.event_socket.port = $event_socket_port\n";
+			$conf .= "switch.event_socket.password = $event_socket_password\n";
 			$conf .= "\n";
 			$conf .= "#switch xml handler\n";
 			$conf .= "xml_handler.fs_path = false\n";
