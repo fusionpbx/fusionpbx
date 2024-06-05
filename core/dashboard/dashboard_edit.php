@@ -318,7 +318,7 @@
 	}
 
 //add a default value to $dashboard_details_state
-	if (!isset($row['dashboard_details_state']) && in_array($dashboard_path, ['app/voicemails/resources/dashboard/voicemails.php', 'app/xml_cdr/resources/dashboard/missed_calls.php', 'app/xml_cdr/resources/dashboard/recent_calls.php'])) {
+	if (!isset($dashboard_details_state) && in_array($dashboard_path, ['app/voicemails/resources/dashboard/voicemails.php', 'app/xml_cdr/resources/dashboard/missed_calls.php', 'app/xml_cdr/resources/dashboard/recent_calls.php'])) {
 		$dashboard_details_state = "hidden";
 	}
 	if (!isset($dashboard_details_state)) {
