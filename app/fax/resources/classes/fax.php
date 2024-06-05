@@ -40,7 +40,8 @@ if (!class_exists('fax')) {
 		public $fax_forward_number;
 		public $destination_number;
 		public $box;
-		private $forward_prefix;
+		public $order_by;
+		public $order;
 
 		/**
 		* declare private variables
@@ -53,6 +54,7 @@ if (!class_exists('fax')) {
 		private $uuid_prefix;
 		private $toggle_field;
 		private $toggle_values;
+		private $forward_prefix;
 
 		/**
 		* Called when the object is created
@@ -653,6 +655,71 @@ if (!class_exists('fax')) {
 
 			}
 		} //method
+
+		/**
+		 * toggle read/unread
+		 */
+		public function fax_file_toggle($records) {
+
+			if (permission_exists('fax_file_edit')) {
+
+				//add multi-lingual support
+					$language = new text;
+					$text = $language->get();
+
+				//validate the token
+					$token = new token;
+					if (!$token->validate($_SERVER['PHP_SELF'])) {
+						message::add($text['message-invalid_token'],'negative');
+						header('Location: fax_files.php?order_by='.urlencode($this->order_by).'&order='.urlencode($this->order).'&id='.urlencode($this->fax_uuid).'&box='.urlencode($this->box));
+						exit;
+					}
+
+				//toggle multiple records
+					if (is_array($records) && @sizeof($records) != 0) {
+
+						//filter out unchecked fax files, build the toggle array
+							$fax_files_toggled = 0;
+							foreach ($records as $x => $record) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
+									//get current read state
+									$sql = "select read_date from v_fax_files where fax_file_uuid = :fax_file_uuid";
+									$parameters['fax_file_uuid'] = $record['uuid'];
+									$database = new database;
+									$read_date = $database->select($sql, $parameters, 'column');
+									unset($sql, $parameters);
+
+									//toggle read state
+									$array['fax_files'][$x]['fax_file_uuid'] = $record['uuid'];
+									$array['fax_files'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+									$array['fax_files'][$x]['read_date'] = empty($read_date) ? 'now()' : null;
+									$fax_files_toggled++;
+								}
+							}
+							unset($records);
+
+						//update the checked rows
+							if (!empty($array) && is_array($array)) {
+
+								//execute save
+									$database = new database;
+									$database->app_name = $this->app_name;
+									$database->app_uuid = $this->app_uuid;
+									$database->save($array);
+									unset($array);
+
+								//return toggled count
+									return $fax_files_toggled;
+
+							}
+
+					}
+
+				//return none
+					return 0;
+			}
+
+		}
 
 	} //class
 }
