@@ -824,7 +824,7 @@
 					}
 				//extension
 					if (permission_exists('xml_cdr_extension')) {
-						$content .= "	<td class='middle'>".$row['extension']." ".escape($row['extension_name'])."</td>\n";
+						$content .= "	<td class='middle' nowrap='nowrap'>".$row['extension']." ".escape($row['extension_name'])."</td>\n";
 					}
 				//domain name
 					if (permission_exists('xml_cdr_all') && $_REQUEST['show'] == "all") {
