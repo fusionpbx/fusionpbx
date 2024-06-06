@@ -119,6 +119,13 @@
 				sql = sql .. "			or call_block_number = :call_block_number \n";
 				sql = sql .. "		) \n";
 				sql = sql .. "	) \n";
+				sql = sql .. "	or (\n";
+				sql = sql .. "		call_block_name is null \n";
+				sql = sql .. "		and ( \n";
+				sql = sql .. "			:call_block_number like concat('+', call_block_country_code, call_block_number, '%') \n";
+				sql = sql .. "			or :call_block_number like concat(call_block_country_code, call_block_number, '%') \n";
+				sql = sql .. "		) \n";
+				sql = sql .. "	) \n";
 				sql = sql .. "	or (call_block_name = :call_block_name and call_block_number is null) \n";
 				sql = sql .. ") \n";
 				if (extension_uuid == nil) then
