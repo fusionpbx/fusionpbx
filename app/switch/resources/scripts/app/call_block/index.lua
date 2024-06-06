@@ -124,6 +124,7 @@
 				sql = sql .. "		and ( \n";
 				sql = sql .. "			:call_block_number like concat('+', call_block_country_code, call_block_number, '%') \n";
 				sql = sql .. "			or :call_block_number like concat(call_block_country_code, call_block_number, '%') \n";
+				sql = sql .. "			or :call_block_number like concat(call_block_number, '%') \n";
 				sql = sql .. "		) \n";
 				sql = sql .. "	) \n";
 				sql = sql .. "	or (call_block_name = :call_block_name and call_block_number is null) \n";
