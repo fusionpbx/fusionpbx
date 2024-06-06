@@ -637,8 +637,8 @@ if (!class_exists('xml_cdr')) {
 						$end_epoch = urldecode($xml->variables->end_epoch);
 						$this->array[$key]['end_epoch'] = $end_epoch;
 						$this->array[$key]['end_stamp'] = is_numeric($end_epoch) ? date('c', $end_epoch) : null;
-						$this->array[$key]['duration'] = urldecode($xml->variables->billsec);
-						$this->array[$key]['mduration'] = urldecode($xml->variables->billmsec);
+						$this->array[$key]['duration'] = urldecode($xml->variables->duration);
+						$this->array[$key]['mduration'] = urldecode($xml->variables->mduration);
 						$this->array[$key]['billsec'] = urldecode($xml->variables->billsec);
 						$this->array[$key]['billmsec'] = urldecode($xml->variables->billmsec);
 
