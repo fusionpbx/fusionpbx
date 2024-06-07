@@ -229,7 +229,7 @@
 	$order_by = $_GET["order_by"] ?? '';
 	$order = $_GET["order"] ?? '';
 
-//get the voicemail
+//prepare to page the results
 	$vm = new voicemail;
 	$vm->domain_uuid = $_SESSION['domain_uuid'];
 	if (!empty($voicemail_uuid) && is_uuid($voicemail_uuid)) {
@@ -238,8 +238,30 @@
 	else if (!empty($voicemail_id) && is_numeric($voicemail_id)) {
 		$vm->voicemail_id = $voicemail_id;
 	}
+	$voicemails = $vm->messages();
+	$num_rows = 0;
+	if (!empty($voicemails) && is_array($voicemails)) {
+		foreach ($voicemails as $voicemail) {
+			if (!empty($voicemail['messages']) && is_array($voicemail['messages'])) {
+				$num_rows += @sizeof($voicemail['messages']);
+			}
+		}
+	}
+	$total_rows = $num_rows;
+
+//prepare to page the results
+	$rows_per_page = $_SESSION['domain']['paging']['numeric'] != '' ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$page = empty($_GET['page']) ? 0 : $_GET['page'];
+	$param = 'id='.urlencode($_REQUEST['id']).'&back='.$_SESSION['back'][$_SERVER['PHP_SELF']];
+	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
+	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
+	$offset = $rows_per_page * $page;
+	unset($num_rows);
+
+//get the voicemail
 	$vm->order_by = $order_by;
 	$vm->order = $order;
+	$vm->offset = $offset;
 	$voicemails = $vm->messages();
 
 //count messages and detect if any transcriptions available
@@ -271,7 +293,7 @@
 
 //show the content
 	echo "<div class='action_bar' id='action_bar'>\n";
-	echo "	<div class='heading'><b>".$text['title-voicemail_messages']." (".$num_rows.")</b></div>\n";
+	echo "	<div class='heading'><b>".$text['title-voicemail_messages']." (".$total_rows.")</b></div>\n";
 	echo "	<div class='actions'>\n";
 	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','link'=>$_SESSION['back'][$_SERVER['PHP_SELF']]]);
 	$margin_left = false;
@@ -285,6 +307,9 @@
 	}
 	if (permission_exists('voicemail_message_delete') && $num_rows) {
 		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','name'=>'btn_delete','collapse'=>'hide-xs','style'=>'display: none;'.(!$margin_left ? 'margin-left: 15px;' : null),'onclick'=>"modal_open('modal-delete','btn_delete');"]);
+	}
+	if (!empty($paging_controls_mini)) {
+		echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>\n";
 	}
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
@@ -421,6 +446,7 @@
 		}
 		echo "</table>\n";
 		echo "<br />\n";
+		echo "<div align='center'>".$paging_controls."</div>\n";
 		echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 		echo "</form>\n";
 
