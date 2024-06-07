@@ -37,6 +37,7 @@
 		public $voicemail_message_uuid;
 		public $order_by;
 		public $order;
+		public $offset;
 		public $type;
 
 		/**
@@ -252,6 +253,12 @@
 				}
 				else {
 					$sql .= "order by v.voicemail_id, m.".$this->order_by." ".$this->order." ";
+				}
+				//if paging offset defined, apply it along with rows per page
+				if (isset($this->offset)) {
+					$rows_per_page = $_SESSION['domain']['paging']['numeric'] != '' ? $_SESSION['domain']['paging']['numeric'] : 50;
+					$offset = isset($this->offset) && is_numeric($this->offset) ? $this->offset : 0;
+					$sql .= limit_offset($rows_per_page, $offset);
 				}
 				$parameters['domain_uuid'] = $this->domain_uuid;
 				$parameters['time_zone'] = $time_zone;
