@@ -453,6 +453,14 @@
 			}
 
 			/**
+			 * Returns the config object used to create this database object
+			 * @return config Config object
+			 */
+			public function config(): config {
+				return $this->config;
+			}
+
+			/**
 			 * <p>Connect to the database.</p>
 			 * <p>Database driver must be set before calling connect.</p>
 			 * <p>For types other than sqlite. Execution will stop on failure.</p>
