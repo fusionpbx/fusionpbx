@@ -16,7 +16,7 @@
 	echo "	<a href='".$dashboard_url."'><span class='hud_stat'><i class=\"fas ".$dashboard_icon."\" style=\"font-size: 0.8em;\"></i></span></a>\n";
 	echo "</div>\n";
 
-	if ($dashboard_detail_state != "disabled") {
+	if (empty($dashboard_detail_state) || $dashboard_detail_state != "disabled") {
 		echo "<div class='hud_details hud_box' id='hud_icon_details'>";
 		echo "<table class='tr_hover' width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 		echo "<tr>\n";
