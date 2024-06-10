@@ -357,7 +357,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Transcription enabled default value.";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Use this setting to determine if extensions and voicemails are to have transcription enabled by default. FusionPBX ships with this disabled by default meaning that by default extensions and users do not have transcription enabled.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "5d9a1f93-e163-4c05-a975-bd1e5a045660";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "voicemail";
