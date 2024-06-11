@@ -359,14 +359,6 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Transcription enabled default value.";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "5d9a1f93-e163-4c05-a975-bd1e5a045660";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "voicemail";
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "transcribe_enabled";
-		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Transcription enabled default false.";
-		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "52f15a2d-d6c8-4a66-8f57-0ac176cfff17";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "dashboard_new_messages_chart_main_color";
