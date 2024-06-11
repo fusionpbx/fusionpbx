@@ -746,9 +746,11 @@ log = require "resources.functions.log".ring_group
 						user_exists = api:executeString(cmd);
 
 					--set ringback
-						ring_group_ringback = format_ringback(ring_group_ringback);
-						session:setVariable("ringback", ring_group_ringback);
-						session:setVariable("transfer_ringback", ring_group_ringback);
+						if (ring_group_ringback and string.len(ring_group_ringback) > 0) then
+							ring_group_ringback = format_ringback(ring_group_ringback);
+							session:setVariable("ringback", ring_group_ringback);
+							session:setVariable("transfer_ringback", ring_group_ringback);
+						end
 
 					--set the timeout if there is only one destination
 						if (#destinations == 1) then
