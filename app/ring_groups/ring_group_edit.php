@@ -585,9 +585,6 @@
 //set the defaults
 	$destination_delay_max = $_SESSION['ring_group']['destination_delay_max']['numeric'];
 	$destination_timeout_max = $_SESSION['ring_group']['destination_timeout_max']['numeric'];
-	if (empty($ring_group_ringback)) {
-		$ring_group_ringback = '${us-ring}';
-	}
 	if (empty($ring_group_call_timeout)) {
 		$ring_group_call_timeout = '30';
 	}
