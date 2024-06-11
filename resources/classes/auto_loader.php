@@ -62,8 +62,10 @@ class auto_loader {
 			//build the search path array
 			$search_path[] = glob($project_path . "/resources/classes/".$class_name.".php");
 			$search_path[] = glob($project_path . "/resources/interfaces/".$class_name.".php");
+			$search_path[] = glob($project_path . "/resources/traits/".$class_name.".php");
 			$search_path[] = glob($project_path . "/*/*/resources/classes/".$class_name.".php");
 			$search_path[] = glob($project_path . "/*/*/resources/interfaces/".$class_name.".php");
+			$search_path[] = glob($project_path . "/*/*/resources/traits/".$class_name.".php");
 
 			//find the path
 			$path = self::autoload_search($search_path);
