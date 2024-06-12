@@ -1,0 +1,6 @@
+<extension name="default_ringback" number="" context="${domain_name}" continue="true" app_uuid="cd92ba0c-3f7e-494d-83d3-44cdc3ef4289" global="true" enabled="false" order="70">
+	<condition field="${ringback}" expression="^$">
+		<action application="set" data="ringback=${us-ring}" inline="true"/>
+		<action application="set" data="transfer_ringback=${us-ring}" inline="true"/>
+	</condition>
+</extension>
