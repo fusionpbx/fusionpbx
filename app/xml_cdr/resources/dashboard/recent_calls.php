@@ -87,7 +87,7 @@
 //recent calls
 	echo "<div class='hud_box'>\n";
 
-	echo "<div class='hud_container' ".($dashboard_details_state == "disabled" ?: "onclick=\"$('#hud_recent_calls_details').slideToggle('fast'); toggle_grid_row_end('".$dashboard_name."')\"").">\n";
+	echo "<div class='hud_content' ".($dashboard_details_state == "disabled" ?: "onclick=\"$('#hud_recent_calls_details').slideToggle('fast'); toggle_grid_row_end('".$dashboard_name."')\"").">\n";
 	echo "	<span class='hud_title' onclick=\"document.location.href='".PROJECT_PATH."/app/xml_cdr/xml_cdr.php';\">".$text['label-recent_calls']."</span>\n";
 
 	if ($dashboard_chart_type == "doughnut") {

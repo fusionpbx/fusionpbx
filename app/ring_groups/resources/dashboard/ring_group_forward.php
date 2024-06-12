@@ -153,7 +153,7 @@
 //ring group forward
 	echo "<div class='hud_box'>\n";
 
-	echo "	<div class='hud_container' ".($dashboard_details_state == "disabled" ?: "onclick=\"$('#hud_ring_group_forward_details').slideToggle('fast'); toggle_grid_row_end('".$dashboard_name."')\"").">\n";
+	echo "	<div class='hud_content' ".($dashboard_details_state == "disabled" ?: "onclick=\"$('#hud_ring_group_forward_details').slideToggle('fast'); toggle_grid_row_end('".$dashboard_name."')\"").">\n";
 	echo "		<span class='hud_title'>".$text['header-ring-group-forward']."</span>\n";
 
 //doughnut chart
