@@ -4313,4 +4313,10 @@
 		$vendors[$y]['name'] = "sipnetic";
 		$z=0;
 
+	//acrobits details
+		$y++;
+		$vendors[$y]['uuid'] = "9c616373-99fb-4f7d-8713-d5b1da9aaef3";
+		$vendors[$y]['name'] = "acrobits";
+		$z=0;
+
 ?>
