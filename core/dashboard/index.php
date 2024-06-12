@@ -260,25 +260,33 @@ div.hud_chart {
 		echo "	background-image: linear-gradient(to right, ".$detail_background_color[1]." 0%, ".$detail_background_color[0]." 30%, ".$detail_background_color[0]." 70%, ".$detail_background_color[1]." 100%);";
 		echo "}";
 
-		if ($dashboard_row_span == 1) {
-			echo "#".$dashboard_name." .hud_content {\n";
-			echo "	height: 89.5px;\n";
-			echo "}\n";
-			echo "#".$dashboard_name." .hud_stat {\n";
-			echo "	line-height: 0.1;\n";
-			echo "	font-size: 30pt;\n";
-			echo "}\n";
-			echo "#".$dashboard_name." .hud_chart {\n";
-			echo "	height: 50px;\n";
-			echo "}\n";
-			echo "#".$dashboard_name." div.hud_content .fas {\n";
-			echo "	line-height: 0.1;\n";
-			echo "	font-size: 30pt;\n";
-			echo "}\n";
-		} else {
-			echo "#".$dashboard_name." .hud_content {\n";
-			echo "	height: 195px;\n";
-			echo "}\n";
+		switch ($dashboard_row_span) {
+			case 1:
+				echo "#".$dashboard_name." .hud_content {\n";
+				echo "	height: 89.5px;\n";
+				echo "}\n";
+				echo "#".$dashboard_name." .hud_stat {\n";
+				echo "	line-height: 0.1;\n";
+				echo "	font-size: 30pt;\n";
+				echo "}\n";
+				echo "#".$dashboard_name." .hud_chart {\n";
+				echo "	height: 50px;\n";
+				echo "}\n";
+				echo "#".$dashboard_name." div.hud_content .fas {\n";
+				echo "	line-height: 0.1;\n";
+				echo "	font-size: 30pt;\n";
+				echo "}\n";
+				break;
+			case 2:
+				echo "#".$dashboard_name." .hud_content {\n";
+				echo "	height: 195px;\n";
+				echo "}\n";
+				break;
+			case 3:
+				echo "#".$dashboard_name." .hud_content {\n";
+				echo "	height: 300.5px;\n";
+				echo "}\n";
+				break;
 		}
 	}
 ?>
