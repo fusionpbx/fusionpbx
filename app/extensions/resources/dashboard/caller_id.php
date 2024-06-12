@@ -173,7 +173,7 @@
 		//caller id
 			echo "<div class='hud_box'>\n";
 
-			echo "	<div class='hud_container'  ".($dashboard_details_state == "disabled" ?: "onclick=\"$('#hud_caller_id_details').slideToggle('fast'); toggle_grid_row_end('".$dashboard_name."')\"").">\n";
+			echo "	<div class='hud_content'  ".($dashboard_details_state == "disabled" ?: "onclick=\"$('#hud_caller_id_details').slideToggle('fast'); toggle_grid_row_end('".$dashboard_name."')\"").">\n";
 			echo "		<span class='hud_title'>".$text['label-caller_id_number']."</span>\n";
 
 		//doughnut chart

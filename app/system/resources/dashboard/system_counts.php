@@ -295,7 +295,7 @@
 	echo "<div class='hud_box'>\n";
 	if ($show_stat) {
 
-		echo "<div class='hud_container' ".($dashboard_details_state == "disabled" ?: "onclick=\"$('#hud_system_counts_details').slideToggle('fast'); toggle_grid_row_end('".$dashboard_name."')\"").">\n";
+		echo "<div class='hud_content' ".($dashboard_details_state == "disabled" ?: "onclick=\"$('#hud_system_counts_details').slideToggle('fast'); toggle_grid_row_end('".$dashboard_name."')\"").">\n";
 		echo "	<span class='hud_title' onclick=\"document.location.href='".PROJECT_PATH."/app/system/system.php'\">".$text['label-system_counts']."</span>\n";
 
 		if (!isset($dashboard_chart_type) || $dashboard_chart_type == "doughnut") {

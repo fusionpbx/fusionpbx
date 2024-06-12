@@ -102,7 +102,7 @@
 //begin widget
 	echo "<div class='hud_box'>\n";
 
-	echo "	<div class='hud_container' ".($dashboard_details_state == "disabled" ?: "onclick=\"$('#hud_call_forward_details').slideToggle('fast'); toggle_grid_row_end('".$dashboard_name."')\"").">\n";
+	echo "	<div class='hud_content' ".($dashboard_details_state == "disabled" ?: "onclick=\"$('#hud_call_forward_details').slideToggle('fast'); toggle_grid_row_end('".$dashboard_name."')\"").">\n";
 	echo "		<span class='hud_title'>".$text['header-call_forward']."</span>\n";
 
 //doughnut chart

@@ -49,6 +49,7 @@
 	$dashboard_number_text_color = '';
 	$dashboard_groups = [];
 	$dashboard_column_span = '';
+	$dashboard_row_span = '';
 	$dashboard_details_state = '';
 	$dashboard_order = '';
 	$dashboard_enabled = $row["dashboard_enabled"] ?? 'true';
@@ -79,6 +80,7 @@
 		$dashboard_background_color = $_POST["dashboard_background_color"] ?? '';
 		$dashboard_detail_background_color = $_POST["dashboard_detail_background_color"] ?? '';
 		$dashboard_column_span = $_POST["dashboard_column_span"] ?? '';
+		$dashboard_row_span = $_POST["dashboard_row_span"] ?? '';
 		$dashboard_details_state = $_POST["dashboard_details_state"] ?? '';
 		$dashboard_order = $_POST["dashboard_order"] ?? '';
 		$dashboard_enabled = $_POST["dashboard_enabled"] ?? 'false';
@@ -209,6 +211,7 @@
 			$array['dashboard'][0]['dashboard_background_color'] = $dashboard_background_color;
 			$array['dashboard'][0]['dashboard_detail_background_color'] = $dashboard_detail_background_color;
 			$array['dashboard'][0]['dashboard_column_span'] = $dashboard_column_span;
+			$array['dashboard'][0]['dashboard_row_span'] = $dashboard_row_span;
 			$array['dashboard'][0]['dashboard_details_state'] = $dashboard_details_state;
 			$array['dashboard'][0]['dashboard_order'] = $dashboard_order;
 			$array['dashboard'][0]['dashboard_enabled'] = $dashboard_enabled;
@@ -262,6 +265,7 @@
 		$sql .= " dashboard_background_color, ";
 		$sql .= " dashboard_detail_background_color, ";
 		$sql .= " dashboard_column_span, ";
+		$sql .= " dashboard_row_span, ";
 		$sql .= " dashboard_details_state, ";
 		$sql .= " dashboard_order, ";
 		$sql .= " dashboard_enabled, ";
@@ -283,6 +287,7 @@
 			$dashboard_background_color = $row["dashboard_background_color"];
 			$dashboard_detail_background_color = $row["dashboard_detail_background_color"];
 			$dashboard_column_span = $row["dashboard_column_span"];
+			$dashboard_row_span = $row["dashboard_row_span"];
 			$dashboard_details_state = $row["dashboard_details_state"];
 			$dashboard_order = $row["dashboard_order"];
 			$dashboard_enabled = $row["dashboard_enabled"] ?? 'false';
@@ -317,6 +322,11 @@
 		$dashboard_detail_background_color = json_decode($dashboard_detail_background_color, true);
 	}
 
+//add a default value to $dashboard_chart_type
+	if (!isset($dashboard_chart_type) && in_array($dashboard_path, ['app/voicemails/resources/dashboard/voicemails.php', 'app/xml_cdr/resources/dashboard/missed_calls.php', 'app/xml_cdr/resources/dashboard/recent_calls.php'])) {
+		$dashboard_chart_type = "number";
+	}
+
 //add a default value to $dashboard_details_state
 	if (!isset($dashboard_details_state) && in_array($dashboard_path, ['app/voicemails/resources/dashboard/voicemails.php', 'app/xml_cdr/resources/dashboard/missed_calls.php', 'app/xml_cdr/resources/dashboard/recent_calls.php'])) {
 		$dashboard_details_state = "hidden";
@@ -325,9 +335,12 @@
 		$dashboard_details_state = "expanded";
 	}
 
-//add a default value to $dashboard_chart_type
-	if (!isset($dashboard_chart_type) && in_array($dashboard_path, ['app/voicemails/resources/dashboard/voicemails.php', 'app/xml_cdr/resources/dashboard/missed_calls.php', 'app/xml_cdr/resources/dashboard/recent_calls.php'])) {
-		$dashboard_chart_type = "number";
+//add a default value to $dashboard_row_span
+	if (!isset($dashboard_row_span) && in_array($dashboard_path, ['app/voicemails/resources/dashboard/voicemails.php', 'app/xml_cdr/resources/dashboard/missed_calls.php', 'app/xml_cdr/resources/dashboard/recent_calls.php'])) {
+		$dashboard_row_span = 1;
+	}
+	if (empty($dashboard_row_span)) {
+		$dashboard_row_span = 2;
 	}
 
 //add an empty row
@@ -539,7 +552,8 @@
 		$dashboard_path == "app/domain_limits/resources/dashboard/domain_limits.php" ||
 		$dashboard_path == "app/call_forward/resources/dashboard/call_forward.php" ||
 		$dashboard_path == "app/ring_groups/resources/dashboard/ring_group_forward.php" ||
-		$dashboard_path == "app/extensions/resources/dashboard/caller_id.php") {
+		$dashboard_path == "app/extensions/resources/dashboard/caller_id.php" ||
+		$dashboard_path == "app/maintenance/resources/dashboard/maintenance.php") {
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo $text['label-dashboard_chart_type']."\n";
@@ -651,7 +665,7 @@
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
 	echo "	<select name='dashboard_column_span' class='formfld'>\n";
 	$i=1;
-	while ($i<=5) {
+	while ($i<=3) {
 		$selected = ($i == $dashboard_column_span) ? "selected" : null;
 		echo "		<option value='$i' ".$selected.">$i</option>\n";
 		$i++;
@@ -659,6 +673,24 @@
 	echo "	</select>\n";
 	echo "<br />\n";
 	echo $text['description-dashboard_column_span']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-dashboard_row_span']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' style='position: relative;' align='left'>\n";
+	echo "	<select name='dashboard_row_span' class='formfld'>\n";
+	$i=1;
+	while ($i<=3) {
+		$selected = ($i == $dashboard_row_span) ? "selected" : null;
+		echo "		<option value='$i' ".$selected.">$i</option>\n";
+		$i++;
+	}
+	echo "	</select>\n";
+	echo "<br />\n";
+	echo $text['description-dashboard_row_span']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
