@@ -195,7 +195,7 @@
 		echo button::create(['type'=>'button','label'=>$text['button-settings'],'icon'=>$_SESSION['theme']['button_icon_add'],'id'=>'btn_add','name'=>'btn_add','link'=>'dashboard.php']);
 	}
 	echo "	</div>\n";
-	echo "	<div style='clear: both; text-align: left;'>".$text['description-dashboard']."</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
 	echo "<input type='hidden' id='widget_order' name='widget_order' value='' />\n";
 	echo "</form>\n";
