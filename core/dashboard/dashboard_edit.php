@@ -42,8 +42,12 @@
 //set the defaults
 	$dashboard_name = '';
 	$dashboard_path = 'core/dashboard/resources/dashboard/icon.php';
-	$dashboard_url = '';
+// 	$dashboard_path = '';
 	$dashboard_icon = '';
+	$dashboard_url = '';
+	$dashboard_target = 'self';
+	$dashboard_content = '';
+	$dashboard_content_details = '';
 	$dashboard_heading_text_color = '';
 	$dashboard_heading_background_color = '';
 	$dashboard_number_text_color = '';
@@ -72,6 +76,9 @@
 		$dashboard_path = $_POST["dashboard_path"] ?? '';
 		$dashboard_icon = $_POST["dashboard_icon"] ?? '';
 		$dashboard_url = $_POST["dashboard_url"] ?? '';
+		$dashboard_target = $_POST["dashboard_target"] ?? 'self';
+		$dashboard_content = $_POST["dashboard_content"] ?? '';
+		$dashboard_content_details = $_POST["dashboard_content_details"] ?? '';
 		$dashboard_groups = $_POST["dashboard_groups"] ?? '';
 		$dashboard_chart_type = $_POST["dashboard_chart_type"] ?? '';
 		$dashboard_heading_text_color = $_POST["dashboard_heading_text_color"] ?? '';
@@ -204,6 +211,9 @@
 			$array['dashboard'][0]['dashboard_path'] = $dashboard_path;
 			$array['dashboard'][0]['dashboard_icon'] = $dashboard_icon;
 			$array['dashboard'][0]['dashboard_url'] = $dashboard_url;
+			$array['dashboard'][0]['dashboard_target'] = $dashboard_target;
+			$array['dashboard'][0]['dashboard_content'] = $dashboard_content;
+			$array['dashboard'][0]['dashboard_content_details'] = $dashboard_content_details;
 			$array['dashboard'][0]['dashboard_chart_type'] = $dashboard_chart_type;
 			$array['dashboard'][0]['dashboard_heading_text_color'] = $dashboard_heading_text_color;
 			$array['dashboard'][0]['dashboard_heading_background_color'] = $dashboard_heading_background_color;
@@ -226,7 +236,7 @@
 					}
 				}
 			}
-//view_array($array);
+
 		//save the data
 			$database = new database;
 			$database->app_name = 'dashboard';
@@ -258,6 +268,9 @@
 		$sql .= " dashboard_path, ";
 		$sql .= " dashboard_icon, ";
 		$sql .= " dashboard_url, ";
+		$sql .= " dashboard_target, ";
+		$sql .= " dashboard_content, ";
+		$sql .= " dashboard_content_details, ";
 		$sql .= " dashboard_chart_type, ";
 		$sql .= " dashboard_heading_text_color, ";
 		$sql .= " dashboard_heading_background_color, ";
@@ -280,6 +293,9 @@
 			$dashboard_path = $row["dashboard_path"];
 			$dashboard_icon = $row["dashboard_icon"];
 			$dashboard_url = $row["dashboard_url"];
+			$dashboard_target = $row["dashboard_target"];
+			$dashboard_content = $row["dashboard_content"];
+			$dashboard_content_details = $row["dashboard_content_details"];
 			$dashboard_chart_type = $row["dashboard_chart_type"];
 			$dashboard_heading_text_color = $row["dashboard_heading_text_color"];
 			$dashboard_heading_background_color = $row["dashboard_heading_background_color"];
@@ -387,8 +403,26 @@
 		}
 	}
 
+// adjust form by type entered
+	echo "<script>\n";
+	echo "	function adjust_form() {\n";
+	echo "		if ($('#dashboard_path').val() == 'core/dashboard/resources/dashboard/icon.php') {\n";
+	echo "			$('.type_content').hide();\n";
+	echo "			$('.type_icon').show();\n";
+	echo "		}\n";
+	echo "		else if ($('#dashboard_path').val() == 'core/dashboard/resources/dashboard/content.php') {\n";
+	echo "			$('.type_icon').hide();\n";
+	echo "			$('.type_content').show();\n";
+	echo "		}\n";
+	echo "		else {\n";
+	echo "			$('.type_icon, .type_content').hide();\n";
+	echo "			$('.type_chart').show();\n";
+	echo "		}\n";
+	echo "	}\n";
+	echo "</script>\n";
+
 //show the content
-	echo "<form name='frm' id='frm' method='post' action=''>\n";
+	echo "<form name='frm' id='frm' method='post'>\n";
 	echo "<input class='formfld' type='hidden' name='dashboard_uuid' value='".escape($dashboard_uuid)."'>\n";
 
 	echo "<div class='action_bar' id='action_bar'>\n";
@@ -423,11 +457,11 @@
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "<td width='30%' class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo $text['label-dashboard_name'] ?? '';
 	echo "\n";
 	echo "</td>\n";
-	echo "<td class='vtable' style='position: relative;' align='left'>\n";
+	echo "<td width='70%' class='vtable' style='position: relative;' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='dashboard_name' maxlength='255' value='".escape($dashboard_name)."'>\n";
 	echo "<br />\n";
 	echo $text['description-dashboard_name']."\n";
@@ -439,66 +473,118 @@
 	echo "	".$text['label-dashboard_path']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='dashboard_path' maxlength='255' value='".escape($dashboard_path)."'>\n";
+	echo "	<input class='formfld' type='text' name='dashboard_path' id='dashboard_path' maxlength='255' value='".escape($dashboard_path)."' onblur=\"adjust_form();\">\n";
 	echo "<br />\n";
 	echo $text['description-dashboard_path']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-link']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='dashboard_url' maxlength='255' value='".escape($dashboard_url)."'>\n";
-	echo "<br />\n";
-	echo $text['description-dashboard_url'] ?? '';
-	echo "\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "	<tr>";
-	echo "		<td class='vncell'>".$text['label-icon']."</td>";
-	echo "		<td class='vtable' style='vertical-align: bottom;'>";
-	if (file_exists($_SERVER["PROJECT_ROOT"].'/resources/fontawesome/fas_icons.php')) {
-		include 'resources/fontawesome/fas_icons.php';
-		if (is_array($font_awesome_solid_icons) && @sizeof($font_awesome_solid_icons) != 0) {
-			// rebuild and sort array
-			foreach ($font_awesome_solid_icons as $i => $icon_class) {
-				$icon_label = str_replace('fa-', '', $icon_class);
-				$icon_label = str_replace('-', ' ', $icon_label);
-				$icon_label = ucwords($icon_label);
-				$icons[$icon_class] = $icon_label;
+	if (
+		$action == "add" ||
+		$dashboard_path == "core/dashboard/resources/dashboard/icon.php"
+		) {
+		echo "	<tr class='type_icon' ".($dashboard_path != 'core/dashboard/resources/dashboard/icon.php' ? "style='display: none;'" : null).">";
+		echo "		<td class='vncell'>".$text['label-icon']."</td>";
+		echo "		<td class='vtable' style='vertical-align: bottom;'>";
+		if (file_exists($_SERVER["PROJECT_ROOT"].'/resources/fontawesome/fas_icons.php')) {
+			include 'resources/fontawesome/fas_icons.php';
+			if (is_array($font_awesome_solid_icons) && @sizeof($font_awesome_solid_icons) != 0) {
+				// rebuild and sort array
+				foreach ($font_awesome_solid_icons as $i => $icon_class) {
+					$icon_label = str_replace('fa-', '', $icon_class);
+					$icon_label = str_replace('-', ' ', $icon_label);
+					$icon_label = ucwords($icon_label);
+					$icons[$icon_class] = $icon_label;
+				}
+				asort($icons, SORT_STRING);
+				echo "<table cellpadding='0' cellspacing='0' border='0'>\n";
+				echo "	<tr>\n";
+				echo "		<td>\n";
+				echo "			<select class='formfld' name='dashboard_icon' id='dashboard_icon' onchange=\"$('#icons').slideUp(); $('#grid_icon').fadeIn();\">\n";
+				echo "				<option value=''></option>\n";
+				foreach ($icons as $icon_class => $icon_label) {
+					$selected = ($dashboard_icon == $icon_class) ? "selected" : null;
+					echo "			<option value='".escape($icon_class)."' ".$selected.">".escape($icon_label)."</option>\n";
+				}
+				echo "			</select>\n";
+				echo "		</td>\n";
+				echo "		<td style='padding: 0 0 0 5px;'>\n";
+				echo "			<button id='grid_icon' type='button' class='btn btn-default list_control_icon' style='font-size: 15px; padding-top: 1px; padding-left: 3px;' onclick=\"$('#icons').fadeIn(); $(this).fadeOut();\"><span class='fas fa-th'></span></button>";
+				echo "		</td>\n";
+				echo "	</tr>\n";
+				echo "</table>\n";
+				echo "<div id='icons' style='clear: both; display: none; margin-top: 8px; padding-top: 10px; color: #000; max-height: 400px; overflow: auto;'>\n";
+				foreach ($icons as $icon_class => $icon_label) {
+					echo "<span class='fas ".escape($icon_class)." fa-fw' style='font-size: 24px; float: left; margin: 0 8px 8px 0; cursor: pointer; opacity: 0.3;' title='".escape($icon_label)."' onclick=\"$('#dashboard_icon').val('".escape($icon_class)."'); $('#icons').slideUp(); $('#grid_icon').fadeIn();\" onmouseover=\"this.style.opacity='1';\" onmouseout=\"this.style.opacity='0.3';\"></span>\n";
+				}
+				echo "</div>";
 			}
-			asort($icons, SORT_STRING);
-			echo "<table cellpadding='0' cellspacing='0' border='0'>\n";
-			echo "	<tr>\n";
-			echo "		<td>\n";
-			echo "			<select class='formfld' name='dashboard_icon' id='dashboard_icon' onchange=\"$('#icons').slideUp(); $('#grid_icon').fadeIn();\">\n";
-			echo "				<option value=''></option>\n";
-			foreach ($icons as $icon_class => $icon_label) {
-				$selected = ($dashboard_icon == $icon_class) ? "selected" : null;
-				echo "			<option value='".escape($icon_class)."' ".$selected.">".escape($icon_label)."</option>\n";
-			}
-			echo "			</select>\n";
-			echo "		</td>\n";
-			echo "		<td style='padding: 0 0 0 5px;'>\n";
-			echo "			<button id='grid_icon' type='button' class='btn btn-default list_control_icon' style='font-size: 15px; padding-top: 1px; padding-left: 3px;' onclick=\"$('#icons').fadeIn(); $(this).fadeOut();\"><span class='fas fa-th'></span></button>";
-			echo "		</td>\n";
-			echo "	</tr>\n";
-			echo "</table>\n";
-			echo "<div id='icons' style='clear: both; display: none; margin-top: 8px; padding-top: 10px; color: #000; max-height: 400px; overflow: auto;'>\n";
-			foreach ($icons as $icon_class => $icon_label) {
-				echo "<span class='fas ".escape($icon_class)." fa-fw' style='font-size: 24px; float: left; margin: 0 8px 8px 0; cursor: pointer; opacity: 0.3;' title='".escape($icon_label)."' onclick=\"$('#dashboard_icon').val('".escape($icon_class)."'); $('#icons').slideUp(); $('#grid_icon').fadeIn();\" onmouseover=\"this.style.opacity='1';\" onmouseout=\"this.style.opacity='0.3';\"></span>\n";
-			}
-			echo "</div>";
 		}
+		else {
+			echo "		<input type='text' class='formfld' name='dashboard_icon' value='".escape($dashboard_icon)."'>";
+		}
+		echo "		</td>";
+		echo "	</tr>";
+
+		echo "<tr class='type_icon' ".($dashboard_path != 'core/dashboard/resources/dashboard/icon.php' ? "style='display: none;'" : null).">\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-link']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<input class='formfld' type='text' name='dashboard_url' maxlength='255' value='".escape($dashboard_url)."'>\n";
+		echo "<br />\n";
+		echo $text['description-dashboard_url'] ?? '';
+		echo "\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+
+		echo "<tr class='type_icon' ".($dashboard_path != 'core/dashboard/resources/dashboard/icon.php' ? "class='type_icon' style='display: none;'" : null).">\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo $text['label-target']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<select name='dashboard_target' class='formfld'>\n";
+		echo "		<option value='self'>".$text['label-current_window_tab']."</option>\n";
+		echo "		<option value='new' ".(!empty($dashboard_target) && $dashboard_target == 'new' ? "selected='selected'" : null).">".$text['label-new_window_tab']."</option>\n";
+		echo "	</select>\n";
+		echo "<br />\n";
+		echo $text['description-dashboard_target']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
 	}
-	else {
-		echo "		<input type='text' class='formfld' name='dashboard_icon' value='".escape($dashboard_icon)."'>";
+
+	if (
+		$action == "add" ||
+		$dashboard_path == "core/dashboard/resources/dashboard/content.php"
+		) {
+		echo "<tr class='type_content' ".($dashboard_path != 'core/dashboard/resources/dashboard/content.php' ? "style='display: none;'" : null).">\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-content']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<textarea class='formfld' style='height: 100px;' name='dashboard_content'>".$dashboard_content."</textarea>\n";
+		echo "<br />\n";
+		echo $text['description-dashboard_content']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
 	}
-	echo "		</td>";
-	echo "	</tr>";
+
+	if (
+		$action == "add" ||
+		$dashboard_path == "core/dashboard/resources/dashboard/content.php" ||
+		$dashboard_path == "core/dashboard/resources/dashboard/icon.php"
+		) {
+		echo "<tr class='type_icon type_content' ".($dashboard_path != 'core/dashboard/resources/dashboard/content.php' && $dashboard_path != 'core/dashboard/resources/dashboard/icon.php' ? "style='display: none;'" : null).">\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-details']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<textarea class='formfld' style='height: 100px;' name='dashboard_content_details'>".$dashboard_content_details."</textarea>\n";
+		echo "<br />\n";
+		echo $text['description-dashboard_content_details']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
@@ -542,7 +628,9 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	if ($dashboard_path == "app/voicemails/resources/dashboard/voicemails.php" ||
+	if (
+		$action == "add" ||
+		$dashboard_path == "app/voicemails/resources/dashboard/voicemails.php" ||
 		$dashboard_path == "app/xml_cdr/resources/dashboard/missed_calls.php" ||
 		$dashboard_path == "app/xml_cdr/resources/dashboard/recent_calls.php" ||
 		$dashboard_path == "app/system/resources/dashboard/system_status.php" ||
@@ -553,25 +641,16 @@
 		$dashboard_path == "app/call_forward/resources/dashboard/call_forward.php" ||
 		$dashboard_path == "app/ring_groups/resources/dashboard/ring_group_forward.php" ||
 		$dashboard_path == "app/extensions/resources/dashboard/caller_id.php" ||
-		$dashboard_path == "app/maintenance/resources/dashboard/maintenance.php") {
-		echo "<tr>\n";
+		$dashboard_path == "app/maintenance/resources/dashboard/maintenance.php"
+		) {
+		echo "<tr class='type_chart' ".($action == "add" ? "style='display: none;'" : null).">\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo $text['label-dashboard_chart_type']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' style='position: relative;' align='left'>\n";
 		echo "	<select name='dashboard_chart_type' class='formfld'>\n";
-		if ($dashboard_chart_type == "doughnut") {
-			echo "		<option value='doughnut' selected='selected'>".$text['label-doughnut']."</option>\n";
-		}
-		else {
-			echo "		<option value='doughnut'>".$text['label-doughnut']."</option>\n";
-		}
-		if ($dashboard_chart_type == "number") {
-			echo "		<option value='number' selected='selected'>".$text['label-number']."</option>\n";
-		}
-		else {
-			echo "		<option value='number'>".$text['label-number']."</option>\n";
-		}
+		echo "		<option value='doughnut'>".$text['label-doughnut']."</option>\n";
+		echo "		<option value='number' ".(!empty($dashboard_chart_type) && $dashboard_chart_type == "number" ? "selected='selected'" : null).">".$text['label-number']."</option>\n";
 		echo "	</select>\n";
 		echo "<br />\n";
 		echo $text['description-dashboard_chart_type']."\n";
@@ -665,7 +744,7 @@
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
 	echo "	<select name='dashboard_column_span' class='formfld'>\n";
 	$i=1;
-	while ($i<=3) {
+	while ($i <= 3) {
 		$selected = ($i == $dashboard_column_span) ? "selected" : null;
 		echo "		<option value='$i' ".$selected.">$i</option>\n";
 		$i++;
@@ -683,7 +762,7 @@
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
 	echo "	<select name='dashboard_row_span' class='formfld'>\n";
 	$i=1;
-	while ($i<=3) {
+	while ($i <= 3) {
 		$selected = ($i == $dashboard_row_span) ? "selected" : null;
 		echo "		<option value='$i' ".$selected.">$i</option>\n";
 		$i++;
@@ -700,30 +779,10 @@
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
 	echo "	<select name='dashboard_details_state' class='formfld'>\n";
-	if ($dashboard_details_state == "expanded") {
-		echo "		<option value='expanded' selected='selected'>".$text['option-expanded']."</option>\n";
-	}
-	else {
-		echo "		<option value='expanded'>".$text['option-expanded']."</option>\n";
-	}
-	if ($dashboard_details_state == "contracted") {
-		echo "		<option value='contracted' selected='selected'>".$text['option-contracted']."</option>\n";
-	}
-	else {
-		echo "		<option value='contracted'>".$text['option-contracted']."</option>\n";
-	}
-	if ($dashboard_details_state == "hidden") {
-		echo "		<option value='hidden' selected='selected'>".$text['option-hidden']."</option>\n";
-	}
-	else {
-		echo "		<option value='hidden'>".$text['option-hidden']."</option>\n";
-	}
-	if ($dashboard_details_state == "disabled" || empty($dashboard_details_state)) {
-		echo "		<option value='disabled' selected='selected'>".$text['label-disabled']."</option>\n";
-	}
-	else {
-		echo "		<option value='disabled'>".$text['label-disabled']."</option>\n";
-	}
+	echo "		<option value='expanded'>".$text['option-expanded']."</option>\n";
+	echo "		<option value='contracted' ".($dashboard_details_state == "contracted" ? "selected='selected'" : null).">".$text['option-contracted']."</option>\n";
+	echo "		<option value='hidden' ".($dashboard_details_state == "hidden" ? "selected='selected'" : null).">".$text['option-hidden']."</option>\n";
+	echo "		<option value='disabled' ".($dashboard_details_state == "disabled" || empty($dashboard_details_state) ? "selected='selected'" : null).">".$text['label-disabled']."</option>\n";
 	echo "	</select>\n";
 	echo "<br />\n";
 	echo $text['description-dashboard_details_state']."\n";
