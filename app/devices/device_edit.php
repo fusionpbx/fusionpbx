@@ -783,6 +783,9 @@
 	else if ($device_template == "sipnetic/default") {
 		$qr_code_enabled = true;
 	}
+	else if ($device_template == "acrobits/default") {
+		$qr_code_enabled = true;
+	}
 	else {
 		$qr_code_enabled = false;
 	}
@@ -861,6 +864,30 @@
 					$template = str_replace('{$sip_port}', $row['sip_port'], $template);
 					$content = $template;
 					unset($template);
+				}
+			}
+			//build content for acrobits
+			else if ($device_template == 'acrobits/default') {
+				//check custom template provision location
+				if (is_file('/usr/share/fusionpbx/templates/provision/'.$device_template.'/qr_template.txt')) {
+					$template = file_get_contents('/usr/share/fusionpbx/templates/provision/'.$device_template.'/qr_template.txt');
+				}
+				else if (is_file('/var/www/fusionpbx/resources/templates/provision/'.$device_template.'/qr_template.txt')) {
+					$template = file_get_contents('/var/www/fusionpbx/resources/templates/provision/'.$device_template.'/qr_template.txt');
+				}
+
+				//get the provision settings
+					$provision = new settings(["category" => "provision"]);
+					$acrobits_code = $provision->get('provision', 'acrobits_code');
+				
+				if (!empty($template) && isset($acrobits_code)) {
+					$template = str_replace('{$server_address}', $row['server_address'], $template);
+					$template = str_replace('{$user_id}', urlencode($row['user_id']), $template);
+					$template = str_replace('{$password}', urlencode(str_replace(';',';;',$row['password'])), $template);
+					$template = str_replace('{$code}', $acrobits_code, $template);
+					$content = trim($template, "\r\n");
+					unset($template);
+					unset($acrobits_code);
 				}
 			}
 
