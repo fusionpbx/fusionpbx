@@ -28,7 +28,7 @@
 	$apps[$x]['menu'][$y]['parent_uuid'] = "fd29e39c-c936-f5fc-8e2b-611681b266b5";
 	$apps[$x]['menu'][$y]['category'] = "internal";
 	$apps[$x]['menu'][$y]['icon'] = "";
-	$apps[$x]['menu'][$y]['path'] = "/app/dialplans/dialplans.php?app_uuid=16589224-c876-aeb3-f59f-523a1c0801f7";
+	$apps[$x]['menu'][$y]['path'] = "/app/fifo/fifo.php";
 	$apps[$x]['menu'][$y]['order'] = "";
 	$apps[$x]['menu'][$y]['groups'][] = "admin";
 	$apps[$x]['menu'][$y]['groups'][] = "superadmin";
