@@ -261,12 +261,29 @@
 
 		//redirect the user
 			if (isset($action)) {
+
+				//apply settings reminder
+				$_SESSION["reload_xml"] = true;
+
+				//clear the cache
+				$cache = new cache;
+				$cache->delete("dialplan:".$_SESSION['domain_name']);
+
+				//clear the destinations session array
+				if (isset($_SESSION['destinations']['array'])) {
+					unset($_SESSION['destinations']['array']);
+				}
+
+				//set the message
 				if ($action == "add") {
-					$_SESSION["message"] = $text['message-add'];
+					//save the message to a session variable
+						message::add($text['message-add']);
 				}
 				if ($action == "update") {
-					$_SESSION["message"] = $text['message-update'];
+					//save the message to a session variable
+						message::add($text['message-update']);
 				}
+
 				//header('Location: fifo.php');
 				header('Location: fifo_edit.php?id='.urlencode($fifo_uuid));
 				return;
