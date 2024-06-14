@@ -1029,6 +1029,49 @@
 
 		}
 
+		/**
+		 * Removes old entries for in the database voicemails table
+		 * see {@link https://github.com/fusionpbx/fusionpbx-app-maintenance/} FusionPBX Maintenance App
+		 * @param settings $settings Settings object
+		 * @return void
+		 */
+		public static function database_maintenance(settings $settings): void {
+			//set table name for query
+			//$table = self::TABLE;
+			$table = 'voicemail_messages';
+			//get a database connection
+			$database = $settings->database();
+			//get a list of domains
+			$domains = maintenance::get_domains($database);
+			foreach ($domains as $uuid => $name) {
+				//get domain settings
+				$domain_settings = new settings(['database' => $database, 'domain_uuid' => $uuid]);
+				//ensure we have a retention day
+				$retention_days = $domain_settings->get('maintenance', 'voicemail_database_retention_days', '');
+				if (!empty($retention_days) && is_numeric($retention_days)) {
+					//clear out old records
+					$sql = "delete from v_{$table} WHERE to_timestamp(created_epoch) < NOW() - INTERVAL '{$retention_days} days'"
+					. " and domain_uuid = '{$uuid}'";
+					$database->execute($sql);
+					if ($database->message['code'] === 200) {
+						maintenance_service::log_write(self::class, "Successfully removed voicemail entries from $name", $uuid);
+					} else {
+						maintenance_service::log_write(self::class, "Unable to remove records for domain $name", $uuid, maintenance_service::LOG_ERROR);
+					}
+				}
+			}
+			//clear out any null domain_uuid entries
+			$sql = "delete from v_{$table} WHERE to_timestamp(created_epoch) < NOW() - INTERVAL '{$retention_days} days'"
+					. " and domain_uuid is null";
+			$database->execute($sql);
+			if ($database->message['code'] === 200) {
+				maintenance_service::log_write(self::class, "Successfully removed voicemail entries from $name", $uuid);
+			} else {
+				maintenance_service::log_write(self::class, "Unable to remove records for domain $name", $uuid, maintenance_service::LOG_ERROR);
+			}
+			//ensure logs are saved
+			maintenance_service::log_flush();
+		}
 
 	}
 
