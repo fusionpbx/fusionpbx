@@ -67,42 +67,24 @@
 			exit;
 		}
 
-		//prepare the array
-		if (!empty($fifo)) {
-			foreach ($fifo as $row) {
-				$array['fifo'][$x]['checked'] = $row['checked'];
-				$array['fifo'][$x]['fifo_uuid'] = $row['fifo_uuid'];
-				$array['fifo'][$x]['fifo_enabled'] = $row['fifo_enabled'];
-				$x++;
-			}
-		}
-
-		//prepare the database object
-		$database = new database;
-		$database->app_name = 'fifo';
-		$database->app_uuid = '16589224-c876-aeb3-f59f-523a1c0801f7';
-
 		//send the array to the database class
 		switch ($action) {
-			case 'copy':
-				if (permission_exists('fifo_add')) {
-					$database->copy($array);
-					//$obj = new fifo;
-					//$obj->copy($fifo);
-				}
-				break;
+// 			case 'copy':
+// 				if (permission_exists('fifo_add')) {
+// 					$obj = new fifo;
+// 					$obj->copy($fifo);
+// 				}
+// 				break;
 			case 'toggle':
 				if (permission_exists('fifo_edit')) {
-					$database->toggle($array);
-					//$obj = new fifo;
-					//$obj->toggle($fifo);
+					$obj = new fifo;
+					$obj->toggle($fifo);
 				}
 				break;
 			case 'delete':
 				if (permission_exists('fifo_delete')) {
-					$database->delete($array);
-					//$obj = new fifo;
-					//$obj->delete($fifo);
+					$obj = new fifo;
+					$obj->delete($fifo);
 				}
 				break;
 		}
@@ -213,9 +195,9 @@
 	if (permission_exists('fifo_add')) {
 		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'id'=>'btn_add','name'=>'btn_add','link'=>'fifo_edit.php']);
 	}
-	if (permission_exists('fifo_add') && $fifo) {
-		echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'id'=>'btn_copy','name'=>'btn_copy','style'=>'display:none;','onclick'=>"modal_open('modal-copy','btn_copy');"]);
-	}
+// 	if (permission_exists('fifo_add') && $fifo) {
+// 		echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'id'=>'btn_copy','name'=>'btn_copy','style'=>'display:none;','onclick'=>"modal_open('modal-copy','btn_copy');"]);
+// 	}
 	if (permission_exists('fifo_edit') && $fifo) {
 		echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$_SESSION['theme']['button_icon_toggle'],'id'=>'btn_toggle','name'=>'btn_toggle','style'=>'display:none;','onclick'=>"modal_open('modal-toggle','btn_toggle');"]);
 	}
@@ -241,9 +223,9 @@
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
 
-	if (permission_exists('fifo_add') && $fifo) {
-		echo modal::create(['id'=>'modal-copy','type'=>'copy','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_copy','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('copy'); list_form_submit('form_list');"])]);
-	}
+// 	if (permission_exists('fifo_add') && $fifo) {
+// 		echo modal::create(['id'=>'modal-copy','type'=>'copy','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_copy','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('copy'); list_form_submit('form_list');"])]);
+// 	}
 	if (permission_exists('fifo_edit') && $fifo) {
 		echo modal::create(['id'=>'modal-toggle','type'=>'toggle','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_toggle','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('toggle'); list_form_submit('form_list');"])]);
 	}
@@ -290,7 +272,7 @@
 			if (permission_exists('fifo_add') || permission_exists('fifo_edit') || permission_exists('fifo_delete')) {
 				echo "	<td class='checkbox'>\n";
 				echo "		<input type='checkbox' name='fifo[$x][checked]' id='checkbox_".$x."' value='true' onclick=\"checkbox_on_change(this); if (!this.checked) { document.getElementById('checkbox_all').checked = false; }\">\n";
-				echo "		<input type='hidden' name='fifo[$x][fifo_uuid]' value='".escape($row['fifo_uuid'])."' />\n";
+				echo "		<input type='hidden' name='fifo[$x][uuid]' value='".escape($row['fifo_uuid'])."' />\n";
 				echo "	</td>\n";
 			}
 			if ($show == 'all' && permission_exists('fifo_all')) {

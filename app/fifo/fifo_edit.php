@@ -55,7 +55,7 @@
 	$input_toggle_style = $settings->get('theme', 'input_toggle_style', 'switch round');
 
 //action add or update
-	if (is_uuid($_REQUEST["id"])) {
+	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
 		$fifo_uuid = $_REQUEST["id"];
 		$id = $_REQUEST["id"];
@@ -75,7 +75,7 @@
 		$fifo_music = $_POST["fifo_music"];
 		$domain_uuid = $_POST["domain_uuid"];
 		$fifo_order = $_POST["fifo_order"];
-		$fifo_enabled = $_POST["fifo_enabled"];
+		$fifo_enabled = $_POST["fifo_enabled"] ?? 'false';
 		$fifo_description = $_POST["fifo_description"];
 	}
 
@@ -91,7 +91,7 @@
 			}
 
 		//process the http post data by submitted action
-			if ($_POST['action'] != '' && strlen($_POST['action']) > 0) {
+			if (!empty($_POST['action']) && $_POST['action'] != '' && strlen($_POST['action']) > 0) {
 
 				//prepare the array(s)
 				$x = 0;
@@ -146,7 +146,7 @@
 			if (strlen($fifo_order) == 0) { $msg .= $text['message-required']." ".$text['label-fifo_order']."<br>\n"; }
 			//if (strlen($fifo_enabled) == 0) { $msg .= $text['message-required']." ".$text['label-fifo_enabled']."<br>\n"; }
 			//if (strlen($fifo_description) == 0) { $msg .= $text['message-required']." ".$text['label-fifo_description']."<br>\n"; }
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+			if (strlen($msg) > 0 && (empty($_POST["persistformvar"]) || strlen($_POST["persistformvar"]) == 0)) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -160,9 +160,7 @@
 			}
 
 		//add the fifo_uuid
-			if (!is_uuid($_POST["fifo_uuid"])) {
-				$fifo_uuid = uuid();
-			}
+			$fifo_uuid = !empty($_POST["fifo_uuid"]) && is_uuid($_POST["fifo_uuid"]) ? $_POST["fifo_uuid"] : uuid();
 
 		//add a uuid to dialplan_uuid if it is empty
 			if (empty($dialplan_uuid) && !is_uuid($dialplan_uuid)) {
@@ -191,13 +189,14 @@
 			$y = 0;
 			if (is_array($fifo_members)) {
 				foreach ($fifo_members as $row) {
-					if (strlen($row['member_contact']) > 0) {
+					if (!empty($row['member_contact']) && strlen($row['member_contact']) > 0) {
 						$array['fifo'][0]['fifo_members'][$y]['fifo_member_uuid'] = $row["fifo_member_uuid"];
+						$array['fifo'][0]['fifo_members'][$y]['domain_uuid'] = $_SESSION['domain_uuid'];
 						$array['fifo'][0]['fifo_members'][$y]['member_contact'] = $row["member_contact"];
 						$array['fifo'][0]['fifo_members'][$y]['member_call_timeout'] = $row["member_call_timeout"];
 						//$array['fifo'][0]['fifo_members'][$y]['member_simultaneous'] = $row["member_simultaneous"];
 						$array['fifo'][0]['fifo_members'][$y]['member_wrap_up_time'] = $row["member_wrap_up_time"];
-						$array['fifo'][0]['fifo_members'][$y]['member_enabled'] = $row["member_enabled"];
+						$array['fifo'][0]['fifo_members'][$y]['member_enabled'] = $row["member_enabled"] ?? 'false';
 						$y++;
 					}
 				}
@@ -294,7 +293,7 @@
 	}
 
 //pre-populate the form
-	if (is_array($_GET) && $_POST["persistformvar"] != "true") {
+	if (!empty($_GET) && is_array($_GET) && (empty($_POST["persistformvar"]) || $_POST["persistformvar"] != "true")) {
 		$sql = "select ";
 		$sql .= " dialplan_uuid, ";
 		$sql .= " fifo_uuid, ";
@@ -330,9 +329,11 @@
 	}
 
 //get the child data
-	if (is_uuid($fifo_uuid)) {
+	if (!empty($fifo_uuid) && is_uuid($fifo_uuid)) {
 		$sql = "select ";
 		$sql .= " fifo_member_uuid, ";
+		$sql .= " domain_uuid, ";
+		$sql .= " fifo_uuid, ";
 		$sql .= " member_contact, ";
 		$sql .= " member_call_timeout, ";
 		//$sql .= " member_simultaneous, ";
@@ -347,19 +348,23 @@
 		$fifo_members = $database->select($sql, $parameters, 'all');
 		unset ($sql, $parameters);
 	}
+	else {
+		$fifo_members = [];
+		$fifo_uuid = uuid();
+	}
 
 //add a uuid to dialplan_uuid if it is empty
-	if (empty($dialplan_uuid) && !is_uuid($dialplan_uuid)) {
+	if (empty($dialplan_uuid) || !is_uuid($dialplan_uuid)) {
 		$dialplan_uuid = uuid();
 	}
 
 //add the $fifo_member_uuid
-	if (!is_uuid($fifo_member_uuid)) {
+	if (empty($fifo_member_uuid) || !is_uuid($fifo_member_uuid)) {
 		$fifo_member_uuid = uuid();
 	}
 
 //add an empty row
-	$x = is_array($fifo_members) ? count($fifo_members) : 0;
+	$x = isset($fifo_members) && is_array($fifo_members) ? sizeof($fifo_members) : 0;
 	$fifo_members[$x]['domain_uuid'] = $_SESSION['domain_uuid'];
 	$fifo_members[$x]['fifo_uuid'] = $fifo_uuid;
 	$fifo_members[$x]['fifo_member_uuid'] = uuid();
@@ -396,14 +401,14 @@
 	echo "	<div class='heading'><b>".$text['title-fifo']."</b></div>\n";
 	echo "	<div class='actions'>\n";
 	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$button_icon_back,'id'=>'btn_back','collapse'=>'hide-xs','style'=>'margin-right: 15px;','link'=>'fifo.php']);
-	if ($action == 'update') {
-		if (permission_exists('fifo_member_add')) {
-			echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$button_icon_copy,'id'=>'btn_copy','name'=>'btn_copy','style'=>'display: none;','onclick'=>"modal_open('modal-copy','btn_copy');"]);
-		}
-		if (permission_exists('fifo_member_delete')) {
-			echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$button_icon_delete,'id'=>'btn_delete','name'=>'btn_delete','style'=>'display: none; margin-right: 15px;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
-		}
-	}
+// 	if ($action == 'update') {
+// 		if (permission_exists('fifo_member_add')) {
+// 			echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$button_icon_copy,'id'=>'btn_copy','name'=>'btn_copy','style'=>'display: none;','onclick'=>"modal_open('modal-copy','btn_copy');"]);
+// 		}
+// 		if (permission_exists('fifo_member_delete')) {
+// 			echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$button_icon_delete,'id'=>'btn_delete','name'=>'btn_delete','style'=>'display: none; margin-right: 15px;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
+// 		}
+// 	}
 	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$button_icon_save,'id'=>'btn_save','collapse'=>'hide-xs']);
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
@@ -412,14 +417,14 @@
 	echo $text['title_description-fifo']."\n";
 	echo "<br /><br />\n";
 
-	if ($action == 'update') {
-		if (permission_exists('fifo_add')) {
-			echo modal::create(['id'=>'modal-copy','type'=>'copy','actions'=>button::create(['type'=>'submit','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_copy','style'=>'float: right; margin-left: 15px;','collapse'=>'never','name'=>'action','value'=>'copy','onclick'=>"modal_close();"])]);
-		}
-		if (permission_exists('fifo_delete')) {
-			echo modal::create(['id'=>'modal-delete','type'=>'delete','actions'=>button::create(['type'=>'submit','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_delete','style'=>'float: right; margin-left: 15px;','collapse'=>'never','name'=>'action','value'=>'delete','onclick'=>"modal_close();"])]);
-		}
-	}
+// 	if ($action == 'update') {
+// 		if (permission_exists('fifo_add')) {
+// 			echo modal::create(['id'=>'modal-copy','type'=>'copy','actions'=>button::create(['type'=>'submit','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_copy','style'=>'float: right; margin-left: 15px;','collapse'=>'never','name'=>'action','value'=>'copy','onclick'=>"modal_close();"])]);
+// 		}
+// 		if (permission_exists('fifo_delete')) {
+// 			echo modal::create(['id'=>'modal-delete','type'=>'delete','actions'=>button::create(['type'=>'submit','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_delete','style'=>'float: right; margin-left: 15px;','collapse'=>'never','name'=>'action','value'=>'delete','onclick'=>"modal_close();"])]);
+// 		}
+// 	}
 
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
@@ -428,7 +433,7 @@
 	echo "	".$text['label-fifo_name']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='fifo_name' maxlength='255' value='".escape($fifo_name)."'>\n";
+	echo "	<input class='formfld' type='text' name='fifo_name' maxlength='255' value='".escape($fifo_name ?? '')."'>\n";
 	echo "<br />\n";
 	echo $text['description-fifo_name']."\n";
 	echo "</td>\n";
@@ -439,7 +444,7 @@
 	echo "	".$text['label-fifo_extension']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='fifo_extension' maxlength='255' value='".escape($fifo_extension)."'>\n";
+	echo "	<input class='formfld' type='text' name='fifo_extension' maxlength='255' value='".escape($fifo_extension ?? '')."'>\n";
 	echo "<br />\n";
 	echo $text['description-fifo_extension']."\n";
 	echo "</td>\n";
@@ -450,7 +455,7 @@
 	echo "	".$text['label-fifo_agent_status']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='fifo_agent_status' maxlength='255' value='".escape($fifo_agent_status)."'>\n";
+	echo "	<input class='formfld' type='text' name='fifo_agent_status' maxlength='255' value='".escape($fifo_agent_status ?? '')."'>\n";
 	echo "<br />\n";
 	echo $text['description-fifo_agent_status']."\n";
 	echo "</td>\n";
@@ -461,7 +466,7 @@
 	echo "	".$text['label-fifo_agent_queue']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='fifo_agent_queue' maxlength='255' value='".escape($fifo_agent_queue)."'>\n";
+	echo "	<input class='formfld' type='text' name='fifo_agent_queue' maxlength='255' value='".escape($fifo_agent_queue ?? '')."'>\n";
 	echo "<br />\n";
 	echo $text['description-fifo_agent_queue']."\n";
 	echo "</td>\n";
@@ -553,7 +558,7 @@
 	//echo "	<input class='formfld' type='text' name='fifo_music' maxlength='255' value='".escape($fifo_music)."'>\n";
 
 	$ringbacks = new ringbacks;
-	echo $ringbacks->select('fifo_music', $fifo_music);
+	echo $ringbacks->select('fifo_music', $fifo_music ?? null);
 
 	echo "<br />\n";
 	echo $text['description-fifo_music']."\n";
@@ -582,7 +587,7 @@
 	}
 	echo "	</select>\n";
 	echo "<br />\n";
-	echo $text['description-domain_uuid']."\n";
+	echo ($text['description-domain_uuid'] ?? '')."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -619,7 +624,7 @@
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
 	if (substr($input_toggle_style, 0, 6) == 'switch') {
 		echo "	<label class='switch'>\n";
-		echo "		<input type='checkbox' id='fifo_enabled' name='fifo_enabled' value='true' ".($fifo_enabled == 'true' ? "checked='checked'" : null).">\n";
+		echo "		<input type='checkbox' id='fifo_enabled' name='fifo_enabled' value='true' ".(!empty($fifo_enabled) && $fifo_enabled == 'true' ? "checked='checked'" : null).">\n";
 		echo "		<span class='slider'></span>\n";
 		echo "	</label>\n";
 	}
@@ -639,7 +644,7 @@
 	echo "	".$text['label-fifo_description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<textarea class='formfld' name='fifo_description' style='width: 185px; height: 80px;'>".$fifo_description."</textarea>\n";
+	echo "	<textarea class='formfld' name='fifo_description' style='width: 185px; height: 80px;'>".($fifo_description ?? '')."</textarea>\n";
 	echo "<br />\n";
 	echo $text['description-fifo_description']."\n";
 	echo "</td>\n";
@@ -657,4 +662,3 @@
 	require_once "resources/footer.php";
 
 ?>
-
