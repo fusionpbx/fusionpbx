@@ -1073,6 +1073,32 @@
 			maintenance_service::log_flush();
 		}
 
+		public static function filesystem_maintenance(settings $settings): void {
+			//get a list of domains
+			$domains = maintenance::get_domains($settings->database());
+			foreach ($domains as $domain_uuid => $domain_name) {
+				$domain_settings = new settings(['database' => $settings->database(), 'domain_uuid' => $domain_uuid]);
+				$voicemail_location = $domain_settings->get('switch', 'voicemail', '/var/lib/freeswitch/storage/voicemail') . '/default';
+				$retention_days = $domain_settings->get('maintenance', 'voicemail_filesystem_retention_days', '');
+				if (!empty($retention_days)) {
+					$mp3_files = glob("$voicemail_location/$domain_name/*/msg_*.mp3");
+					$wav_files = glob("$voicemail_location/$domain_name/*/msg_*.wav");
+					$domain_voicemail_files = array_merge($mp3_files, $wav_files);
+					foreach ($domain_voicemail_files as $file) {
+						if (maintenance_service::days_since_created($file) > $retention_days) {
+							if (unlink($file)) {
+								maintenance_service::log_write(self::class, "Removed $file from voicemails", $domain_uuid);
+							} else {
+								maintenance_service::log_write(self::class, "Unable to remove $file", $domain_uuid, maintenance_service::LOG_ERROR);
+							}
+						}
+					}
+				} else {
+					maintenance_service::log_write(self::class, "Retention days not set or not a valid number", $domain_uuid, maintenance_service::LOG_ERROR);
+				}
+			}
+		}
+
 	}
 
 //example voicemail messages
