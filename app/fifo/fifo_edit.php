@@ -212,17 +212,20 @@
 				//build the xml dialplan
 				$dialplan_xml = "<extension name=\"".xml::sanitize($fifo_name)."\" continue=\"false\" uuid=\"".xml::sanitize($dialplan_uuid)."\">\n";
 				$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".xml::sanitize($fifo_extension)."\$\" break=\"on-true\">\n";
+				$dialplan_xml .= "		<action application=\"set\" data=\"fifo_uuid=".$fifo_uuid."\" inline=\"true\"/>\n";
 				$dialplan_xml .= "		<action application=\"set\" data=\"fifo_music=".$fifo_music."\" inline=\"true\"/>\n";
 				$dialplan_xml .= "		<action application=\"answer\" data=\"\"/>\n";
 				$dialplan_xml .= "		<action application=\"fifo\" data=\"$queue_name in\"/>\n";
 				$dialplan_xml .= "	</condition>\n";
 				$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".$fifo_agent_status_xml."\$\" break=\"on-true\">\n";
-				$dialplan_xml .= "		<action application=\"set\" data=\"queue_name=$queue_name\" inline=\"true\"/>\n";
+				$dialplan_xml .= "		<action application=\"set\" data=\"fifo_uuid=".$fifo_uuid."\" inline=\"true\"/>\n";
+				$dialplan_xml .= "		<action application=\"set\" data=\"fifo_name=$queue_name\" inline=\"true\"/>\n";
 				$dialplan_xml .= "		<action application=\"set\" data=\"user_name=\${caller_id_number}@\${domain_name}\" inline=\"true\"/>\n";
 				$dialplan_xml .= "		<action application=\"set\" data=\"pin_number=\" inline=\"true\"/>\n";
-				$dialplan_xml .= "		<action application=\"lua\" data=\"fifo_member.lua\"/>\n";
+				$dialplan_xml .= "		<action application=\"lua\" data=\"app/fifo/resources/scripts/member.lua\"/>\n";
 				$dialplan_xml .= "	</condition>\n";
 				$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".$fifo_agent_queue_xml."\$\" break=\"on-true\">\n";
+				$dialplan_xml .= "		<action application=\"set\" data=\"fifo_uuid=".$fifo_uuid."\" inline=\"true\"/>\n";
 				$dialplan_xml .= "		<action application=\"set\" data=\"fifo_music=".$fifo_music."\" inline=\"true\"/>\n";
 				$dialplan_xml .= "		<action application=\"answer\" data=\"\"/>\n";
 				$dialplan_xml .= "		<action application=\"fifo\" data=\"$queue_name out wait\"/>\n";
@@ -231,7 +234,7 @@
 
 				//start building the dialplan array
 				$y=0;
-				$array["dialplans"][$y]["domain_uuid"] = $domain_uuid;
+				$array["dialplans"][$y]["domain_uuid"] = $_SESSION['domain_uuid'];
 				$array["dialplans"][$y]["dialplan_uuid"] = $dialplan_uuid;
 				$array["dialplans"][$y]["app_uuid"] = $app_uuid;
 				$array["dialplans"][$y]["dialplan_name"] = $fifo_name;
@@ -654,3 +657,4 @@
 	require_once "resources/footer.php";
 
 ?>
+
