@@ -56,9 +56,22 @@ if ($domains_processed == 1) {
 				$array['dashboard'][$x]['dashboard_uuid'] = $row['dashboard_uuid'];
 				$array['dashboard'][$x]['dashboard_name'] = $row['dashboard_name'];
 				$array['dashboard'][$x]['dashboard_path'] = $row['dashboard_path'];
+				$array['dashboard'][$x]['dashboard_column_span'] = $row['dashboard_column_span'] ?? 1;
+				$array['dashboard'][$x]['dashboard_row_span'] = $row['dashboard_row_span'] ?? 2;
 				$array['dashboard'][$x]['dashboard_order'] = $row['dashboard_order'];
 				$array['dashboard'][$x]['dashboard_enabled'] = $row['dashboard_enabled'];
 				$array['dashboard'][$x]['dashboard_description'] = $row['dashboard_description'];
+				if (!empty($row['dashboard_details_state'])) { $array['dashboard'][$x]['dashboard_details_state'] = $row['dashboard_details_state']; }
+				if (!empty($row['dashboard_heading_text_color'])) { $array['dashboard'][$x]['dashboard_heading_text_color'] = $row['dashboard_heading_text_color']; }
+				if (!empty($row['dashboard_number_text_color'])) { $array['dashboard'][$x]['dashboard_number_text_color'] = $row['dashboard_number_text_color']; }
+				if (!empty($row['dashboard_icon'])) { $array['dashboard'][$x]['dashboard_icon'] = $row['dashboard_icon']; }
+				if (!empty($row['dashboard_url'])) { $array['dashboard'][$x]['dashboard_url'] = $row['dashboard_url']; }
+				if (!empty($row['dashboard_target'])) { $array['dashboard'][$x]['dashboard_target'] = $row['dashboard_target']; }
+				if (!empty($row['dashboard_heading_background_color'])) { $array['dashboard'][$x]['dashboard_heading_background_color'] = $row['dashboard_heading_background_color']; }
+				if (!empty($row['dashboard_background_color'])) { $array['dashboard'][$x]['dashboard_background_color'] = $row['dashboard_background_color']; }
+				if (!empty($row['dashboard_detail_background_color'])) { $array['dashboard'][$x]['dashboard_detail_background_color'] = $row['dashboard_detail_background_color']; }
+				if (!empty($row['dashboard_content'])) { $array['dashboard'][$x]['dashboard_content'] = $row['dashboard_content']; }
+				if (!empty($row['dashboard_content_details'])) { $array['dashboard'][$x]['dashboard_content_details'] = $row['dashboard_content_details']; }
 				$y = 0;
 				if (!empty($row['dashboard_groups'])) {
 					foreach ($row['dashboard_groups'] as $row) {
