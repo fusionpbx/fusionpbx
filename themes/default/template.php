@@ -1089,7 +1089,7 @@
 
 				//add new options from the json results
 				for (var i=0; i < obj.length; i++) {
-					
+
 					//get the variables
 					domain_uuid = obj[i].domain_uuid;
 					domain_name = obj[i].domain_name;
@@ -1114,7 +1114,7 @@
 						div.style.background = '{$domain_selector_background_color_2}';
 					}
 
-					//set the active domain style 
+					//set the active domain style
 					if ('{$domain_uuid}' == obj[i].domain_uuid) {
 						div.style.background = '{$domain_active_background_color}';
 						div.style.fontWeight = 'bold';
@@ -1160,6 +1160,13 @@
 
 </head>
 <body>
+
+	{*//video background *}
+	{if !empty($settings.theme.background_video)}
+		<video id="background-video" autoplay muted poster=" onloadstart="this.playbackRate = 1;">
+			<source src="{$settings.theme.background_video}" type="video/mp4">
+		</video>
+	{/if}
 
 	{*//message container *}
 		<div id='message_container'></div>
@@ -1222,3 +1229,4 @@
 
 </body>
 </html>
+
