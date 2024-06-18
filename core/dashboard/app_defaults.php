@@ -72,6 +72,17 @@ if ($domains_processed == 1) {
 				if (!empty($row['dashboard_detail_background_color'])) { $array['dashboard'][$x]['dashboard_detail_background_color'] = $row['dashboard_detail_background_color']; }
 				if (!empty($row['dashboard_content'])) { $array['dashboard'][$x]['dashboard_content'] = $row['dashboard_content']; }
 				if (!empty($row['dashboard_content_details'])) { $array['dashboard'][$x]['dashboard_content_details'] = $row['dashboard_content_details']; }
+				if (in_array($row['dashboard_path'], ['app/voicemails/resources/dashboard/voicemails.php', 'app/xml_cdr/resources/dashboard/missed_calls.php', 'app/xml_cdr/resources/dashboard/recent_calls.php'])) {
+					if (!isset($row['dashboard_chart_type'])) {
+						$array['dashboard'][$x]['dashboard_chart_type'] = "number";
+					}
+					if (!isset($row['dashboard_row_span'])) {
+						$array['dashboard'][$x]['dashboard_row_span'] = $row['dashboard_row_span'] ?? 1;
+					}
+					if (!isset($row['dashboard_details_state'])) {
+						$array['dashboard'][$x]['dashboard_details_state'] = "hidden";
+					}
+				}
 				$y = 0;
 				if (!empty($row['dashboard_groups'])) {
 					foreach ($row['dashboard_groups'] as $row) {
