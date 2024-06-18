@@ -338,26 +338,16 @@
 		$dashboard_detail_background_color = json_decode($dashboard_detail_background_color, true);
 	}
 
-//add a default value to $dashboard_chart_type
-	if (!isset($dashboard_chart_type) && in_array($dashboard_path, ['app/voicemails/resources/dashboard/voicemails.php', 'app/xml_cdr/resources/dashboard/missed_calls.php', 'app/xml_cdr/resources/dashboard/recent_calls.php'])) {
-		$dashboard_chart_type = "number";
-	}
-
 //add a default value to $dashboard_details_state
-	if (!isset($dashboard_details_state) && in_array($dashboard_path, ['app/voicemails/resources/dashboard/voicemails.php', 'app/xml_cdr/resources/dashboard/missed_calls.php', 'app/xml_cdr/resources/dashboard/recent_calls.php'])) {
-		$dashboard_details_state = "hidden";
-	}
 	if (!isset($dashboard_details_state)) {
 		$dashboard_details_state = "expanded";
 	}
 
 //add a default value to $dashboard_row_span
-	if (!isset($dashboard_row_span) && in_array($dashboard_path, ['app/voicemails/resources/dashboard/voicemails.php', 'app/xml_cdr/resources/dashboard/missed_calls.php', 'app/xml_cdr/resources/dashboard/recent_calls.php'])) {
-		$dashboard_row_span = 1;
-	}
 	if (empty($dashboard_row_span)) {
 		$dashboard_row_span = 2;
 	}
+
 
 //add an empty row
 	$x = is_array($dashboard_groups) ? count($dashboard_groups) : 0;
