@@ -311,6 +311,12 @@ foreach ($dashboard as $row) {
 				echo "	grid-column: span 1;\n";
 				echo "}\n";
 			}
+			if ($row['dashboard_details_state'] == "hidden" || $row['dashboard_details_state'] == "disabled") {
+				echo "#".$dashboard_name." .hud_box .hud_expander, \n";
+				echo "#".$dashboard_name." .hud_box .hud_details {\n";
+				echo "	display: none;\n";
+				echo "}\n";
+			}
 		}
 	?>
 }
