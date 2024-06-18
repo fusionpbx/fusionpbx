@@ -1163,7 +1163,7 @@
 
 	{*//video background *}
 	{if !empty($settings.theme.background_video)}
-		<video id="background-video" autoplay muted poster=" onloadstart="this.playbackRate = 1;">
+		<video id="background-video" autoplay muted poster="" onloadstart="this.playbackRate = 1; this.pause();">
 			<source src="{$settings.theme.background_video}" type="video/mp4">
 		</video>
 	{/if}
@@ -1229,4 +1229,3 @@
 
 </body>
 </html>
-
