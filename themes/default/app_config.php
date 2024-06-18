@@ -63,6 +63,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set a secondary background color, for a gradient effect.";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "3f9e9e72-b998-4ebd-bb45-725c49126fc2";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "background_video";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "array";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "/themes/default/videos/backgrounds/video.mp4";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the value with the full path and file name.";
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "18a0c698-738e-4d88-a592-115dde20730f";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "header_user_visible";

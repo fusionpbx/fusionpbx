@@ -1,7 +1,7 @@
 <?php
 
 /**
- * plugin_ldap 
+ * plugin_ldap
  *
  * @method ldap checks a local or remote ldap database to authenticate the user
  */
@@ -33,6 +33,7 @@ class plugin_ldap {
 					$settings['theme']['logo'] = !empty($_SESSION['theme']['logo']['text']) ? $_SESSION['theme']['logo']['text'] : PROJECT_PATH.'/themes/default/images/logo_login.png';
 					$settings['theme']['login_logo_width'] = !empty($_SESSION['theme']['login_logo_width']['text']) ? $_SESSION['theme']['login_logo_width']['text'] : 'auto; max-width: 300px';
 					$settings['theme']['login_logo_height'] = !empty($_SESSION['theme']['login_logo_height']['text']) ? $_SESSION['theme']['login_logo_height']['text'] : 'auto; max-height: 300px';
+					$settings['theme']['background_video'] = isset($_SESSION['theme']['background_video'][0]) ? $_SESSION['theme']['background_video'][0] : null;
 
 				//get the domain
 					$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
@@ -69,6 +70,7 @@ class plugin_ldap {
 					$view->assign("login_logo_width", $settings['theme']['login_logo_width']);
 					$view->assign("login_logo_height", $settings['theme']['login_logo_height']);
 					$view->assign("login_logo_source", $settings['theme']['logo']);
+					$view->assign("background_video", $settings['theme']['background_video']);
 
 				//add the token name and hash to the view
 					//$view->assign("token_name", $token['name']);

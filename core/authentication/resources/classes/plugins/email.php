@@ -57,6 +57,7 @@ class plugin_email {
 			$settings['theme']['login_logo_width'] = !empty($_SESSION['theme']['login_logo_width']['text']) ? $_SESSION['theme']['login_logo_width']['text'] : 'auto; max-width: 300px';
 			$settings['theme']['login_logo_height'] = !empty($_SESSION['theme']['login_logo_height']['text']) ? $_SESSION['theme']['login_logo_height']['text'] : 'auto; max-height: 300px';
 			$settings['theme']['message_delay'] = isset($_SESSION['theme']['message_delay']) ? 1000 * (float) $_SESSION['theme']['message_delay'] : 3000;
+			$settings['theme']['background_video'] = isset($_SESSION['theme']['background_video'][0]) ? $_SESSION['theme']['background_video'][0] : null;
 
 			//set a default template
 			$_SESSION['domain']['template']['name'] = 'default';
@@ -101,6 +102,7 @@ class plugin_email {
 				$view->assign("login_logo_source", $settings['theme']['logo']);
 				$view->assign("button_login", $text['button-login']);
 				$view->assign("message_delay", $settings['theme']['message_delay']);
+				$view->assign("background_video", $settings['theme']['background_video']);
 
 				//messages
 				$view->assign('messages', message::html(true, '		'));
