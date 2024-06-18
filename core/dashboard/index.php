@@ -344,12 +344,6 @@ foreach ($dashboard as $row) {
 				echo "	display: none;\n";
 				echo "}\n";
 			}
-			if (!isset($row['dashboard_details_state']) && in_array($dashboard_name, ["new_messages", "missed_calls", "recent_calls"])) {
-				echo "#".$dashboard_name." .hud_box .hud_expander, \n";
-				echo "#".$dashboard_name." .hud_box .hud_details {\n";
-				echo "	display: none;\n";
-				echo "}\n";
-			}
 		}
 	?>
 }
@@ -412,7 +406,7 @@ function toggle_grid_row_end(dashboard_name) {
 		$dashboard_target  = $row['dashboard_target'] ?? '';
 		$dashboard_content  = $row['dashboard_content'] ?? '';
 		$dashboard_content_details  = $row['dashboard_content_details'] ?? '';
-		$dashboard_chart_type = $row['dashboard_chart_type'];
+		$dashboard_chart_type = $row['dashboard_chart_type'] ?? "doughnut";
 		$dashboard_heading_text_color = $row['dashboard_heading_text_color'] ?? $settings->get('theme', 'dashboard_heading_text_color');
 		$dashboard_number_text_color = $row['dashboard_number_text_color'] ?? $settings->get('theme', 'dashboard_number_text_color');
 		$dashboard_details_state = $row['dashboard_details_state'] ?? "expanded";
