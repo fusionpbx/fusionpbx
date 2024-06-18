@@ -357,7 +357,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Transcription enabled default value.";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Define the transcription default value for new voicemails boxes.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "52f15a2d-d6c8-4a66-8f57-0ac176cfff17";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
