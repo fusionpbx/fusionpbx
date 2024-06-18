@@ -410,7 +410,7 @@ function toggle_grid_row_end(dashboard_name) {
 		$dashboard_heading_text_color = $row['dashboard_heading_text_color'] ?? $settings->get('theme', 'dashboard_heading_text_color');
 		$dashboard_number_text_color = $row['dashboard_number_text_color'] ?? $settings->get('theme', 'dashboard_number_text_color');
 		$dashboard_details_state = $row['dashboard_details_state'] ?? "expanded";
-		$dashboard_row_span = $row['dashboard_row_span'];
+		$dashboard_row_span = $row['dashboard_row_span'] ?? 2;
 		if ($dashboard_details_state == "expanded") {
 			$dashboard_row_span += 3;
 		}
