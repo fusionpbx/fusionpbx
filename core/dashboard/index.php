@@ -244,7 +244,7 @@ div.hud_chart {
 foreach ($dashboard as $row) {
 	$dashboard_name = trim(preg_replace("/[^a-z]/", '_', strtolower($row['dashboard_name'])),'_');
 	if (!empty($row['dashboard_background_color'])) {
-		$background_color =  json_decode($row['dashboard_background_color'], true);
+		$background_color = json_decode($row['dashboard_background_color'], true);
 		echo "#".$dashboard_name." .hud_box .hud_content {\n";
 		echo "	background: ".$background_color[0].";\n";
 		echo "	background-image: linear-gradient(to right, ".$background_color[1]." 0%, ".$background_color[0]." 30%, ".$background_color[0]." 70%, ".$background_color[1]." 100%);\n";
@@ -268,11 +268,7 @@ foreach ($dashboard as $row) {
 		echo "	background-image: linear-gradient(to right, ".$detail_background_color[1]." 0%, ".$detail_background_color[0]." 30%, ".$detail_background_color[0]." 70%, ".$detail_background_color[1]." 100%);\n";
 		echo "}\n";
 	}
-	$dashboard_row_span = $row['dashboard_row_span'] ?? 2;
-	if (!isset($row['dashboard_row_span']) && in_array($dashboard_name, ["new_messages", "missed_calls", "recent_calls"])) {
-		$dashboard_row_span = 1;
-	}
-	switch ($dashboard_row_span) {
+	switch ($row['dashboard_row_span']) {
 		case 1:
 			echo "#".$dashboard_name." .hud_content {\n";
 			echo "	height: 89.5px;\n";
@@ -310,7 +306,7 @@ foreach ($dashboard as $row) {
 	<?php
 		foreach ($dashboard as $row) {
 			$dashboard_name = trim(preg_replace("/[^a-z]/", '_', strtolower($row['dashboard_name'])),'_');
-			if (isset($dashboard_column_span) && is_numeric($dashboard_column_span)) {
+			if (isset($row['dashboard_column_span']) && is_numeric($row['dashboard_column_span'])) {
 				echo "#".$dashboard_name." {\n";
 				echo "	grid-column: span 1;\n";
 				echo "}\n";
@@ -326,10 +322,9 @@ foreach ($dashboard as $row) {
 	<?php
 		foreach ($dashboard as $row) {
 			$dashboard_name = trim(preg_replace("/[^a-z]/", '_', strtolower($row['dashboard_name'])),'_');
-			$dashboard_column_span = $row['dashboard_column_span'];
-			if (is_numeric($dashboard_column_span)) {
+			if (is_numeric($row['dashboard_column_span'])) {
 				echo "#".$dashboard_name." {\n";
-				echo "	grid-column: span ".$dashboard_column_span.";\n";
+				echo "	grid-column: span ".$row['dashboard_column_span'].";\n";
 				echo "}\n";
 			}
 			if ($row['dashboard_details_state'] == "contracted") {
@@ -343,9 +338,7 @@ foreach ($dashboard as $row) {
 				echo "	display: none;\n";
 				echo "}\n";
 			}
-			if (!isset($row['dashboard_details_state']) && $dashboard_name == "new_messages" ||
-				!isset($row['dashboard_details_state']) && $dashboard_name == "missed_calls" ||
-				!isset($row['dashboard_details_state']) && $dashboard_name == "recent_calls") {
+			if (!isset($row['dashboard_details_state']) && in_array($dashboard_name, ["new_messages", "missed_calls", "recent_calls"])) {
 				echo "#".$dashboard_name." .hud_box .hud_expander, \n";
 				echo "#".$dashboard_name." .hud_box .hud_details {\n";
 				echo "	display: none;\n";
@@ -362,10 +355,9 @@ foreach ($dashboard as $row) {
 	<?php
 		foreach ($dashboard as $row) {
 			$dashboard_name = trim(preg_replace("/[^a-z]/", '_', strtolower($row['dashboard_name'])),'_');
-			$dashboard_column_span = $row['dashboard_column_span'];
-			if (is_numeric($dashboard_column_span)) {
+			if (is_numeric($row['dashboard_column_span'])) {
 				echo "#".$dashboard_name." {\n";
-				echo "	grid-column: span ".$dashboard_column_span.";\n";
+				echo "	grid-column: span ".$row['dashboard_column_span'].";\n";
 				echo "}\n";
 			}
 		}
@@ -418,15 +410,9 @@ function toggle_grid_row_end(dashboard_name) {
 		$dashboard_heading_text_color = $row['dashboard_heading_text_color'] ?? $settings->get('theme', 'dashboard_heading_text_color');
 		$dashboard_number_text_color = $row['dashboard_number_text_color'] ?? $settings->get('theme', 'dashboard_number_text_color');
 		$dashboard_details_state = $row['dashboard_details_state'] ?? "expanded";
-		$dashboard_row_span = $row['dashboard_row_span'] ?? 2;
-		if (!isset($row['dashboard_details_state']) && in_array($dashboard_name, ["New Messages", "Missed Calls", "Recent Calls"])) {
-			$dashboard_details_state = "hidden";
-		}
+		$dashboard_row_span = $row['dashboard_row_span'];
 		if ($dashboard_details_state == "expanded") {
 			$dashboard_row_span += 3;
-		}
-		if (!isset($row['dashboard_row_span']) && !isset($row['dashboard_details_state']) && in_array($dashboard_name, ["New Messages", "Missed Calls", "Recent Calls"])) {
-			$dashboard_row_span = 1;
 		}
 
 		echo "<div class='widget' style='grid-row-end: span ".$dashboard_row_span.";' data-state='".$dashboard_details_state."' id='".trim(preg_replace("/[^a-z]/", '_', strtolower($dashboard_name)),'_')."' draggable='false'>\n";
