@@ -22,6 +22,7 @@
     <answer_after_policy perm="">{if isset($snom_answer_after_policy)}{$snom_answer_after_policy}{else}off{/if}</answer_after_policy>
     <keyboard_lock_emergency perm="R">{if isset($snom_emergency_numbers)}{$snom_emergency_numbers}{else}911 112 110 999{/if}</keyboard_lock_emergency>
     <status_msgs_that_are_blocked perm="R">{if isset($snom_emergency_numbers)}EmergencyCallNumbersMisconfigured{/if}</status_msgs_that_are_blocked>
+    <ui_theme perm="RW">{if isset($snom_ui_theme)}{$snom_ui_theme}{/if}</ui_theme>
     <!-- Ringtones -->
     <alert_internal_ring_text perm="">alert-internal</alert_internal_ring_text>
     <alert_internal_ring_sound perm="">{if isset($snom_alert_internal)}{$snom_alert_internal}{else}Ringer1{/if}</alert_internal_ring_sound>

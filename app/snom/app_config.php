@@ -405,4 +405,12 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "911 112 110 999";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "These are the numbers that the phone will understand as emergency numbers. This means they can be dialled on the phone even if the phone is locked. Valid values are space separated. More info can be found here: https://service.snom.com/display/wiki/keyboard_lock_emergency";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "b6c3d142-1374-41b8-a947-05d69285f7d3";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "snom_ui_theme";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "Dark";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "The UI theme defines the appearance of the phone UI on phones with color display with predefined color settings and depending on the theme a background image. Possible options are: Light, Dark, Colorful, Industrial";
 ?>
