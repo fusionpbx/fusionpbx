@@ -36,6 +36,8 @@
 	$file_count = 0;
 	$row_count = 0;
 	$device_template = '';
+	$database = database::new(); //use an existing connection if possible
+	$active_domains = domains::get_list($database);
 
 //define PHP variables from the HTTP values
 	if (isset($_REQUEST['address'])) {
@@ -165,129 +167,21 @@
 	$sql .= "where device_address = :device_address ";
 	$sql .= "and d.domain_uuid = n.domain_uuid; ";
 	$parameters['device_address'] = $device_address;
-	$database = new database;
 	$row = $database->select($sql, $parameters, 'row');
 	if (is_array($row)) {
 		$device_uuid = $row['device_uuid'];
 		$domain_uuid = $row['domain_uuid'];
 		$domain_name = $row['domain_name'];
 		$device_vendor = $row['device_vendor'];
-		$_SESSION['domain_uuid'] = $domain_uuid;
 	}
 	unset($sql, $parameters);
 
 //get the domain_name and domain_uuid
 	if (empty($domain_uuid)) {
 		//get the domain_name
-			$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
-			$domain_name = $domain_array[0];
-
-		//get the domain_uuid
-			$sql = "select domain_uuid from v_domains ";
-			$sql .= "where domain_name = :domain_name ";
-			$parameters['domain_name'] = $domain_name;
-			$database = new database;
-			$domain_uuid = $database->select($sql, $parameters, 'column');
-			unset($sql, $parameters);
-	}
-
-//get the default settings
-	$sql = "select * from v_default_settings ";
-	$sql .= "where default_setting_enabled = 'true' ";
-	$sql .= "order by default_setting_order asc ";
-	$database = new database;
-	$result = $database->select($sql, null, 'all');
-	//unset the previous settings
-	if (is_array($result) && @sizeof($result) != 0) {
-		foreach ($result as $row) {
-			unset($_SESSION[$row['default_setting_category']]);
-		}
-		//set the settings as a session
-		foreach ($result as $row) {
-			$name = $row['default_setting_name'];
-			$category = $row['default_setting_category'];
-			$subcategory = $row['default_setting_subcategory'];
-			if (empty($subcategory)) {
-				if ($name == "array") {
-					$_SESSION[$category][] = $row['default_setting_value'];
-				}
-				else {
-					$_SESSION[$category][$name] = $row['default_setting_value'];
-				}
-			}
-			else {
-				if ($name == "array") {
-					$_SESSION[$category][$subcategory][] = $row['default_setting_value'];
-				}
-				else {
-					$_SESSION[$category][$subcategory]['uuid'] = $row['default_setting_uuid'];
-					$_SESSION[$category][$subcategory][$name] = $row['default_setting_value'];
-				}
-			}
-		}
-	}
-	unset($sql, $result, $row);
-
-//get the domains settings
-	if (is_uuid($domain_uuid)) {
-		$sql = "select * from v_domain_settings ";
-		$sql .= "where domain_uuid = :domain_uuid ";
-		$sql .= "and domain_setting_enabled = 'true' ";
-		$sql .= "order by domain_setting_order asc ";
-		$parameters['domain_uuid'] = $domain_uuid;
-		$database = new database;
-		$result = $database->select($sql, $parameters, 'all');
-		//unset the arrays that domains are overriding
-		if (is_array($result) && @sizeof($result) != 0) {
-			foreach ($result as $row) {
-				$name = $row['domain_setting_name'];
-				$category = $row['domain_setting_category'];
-				$subcategory = $row['domain_setting_subcategory'];
-				if ($name == "array") {
-					unset($_SESSION[$category][$subcategory]);
-				}
-			}
-			//set the settings as a session
-			foreach ($result as $row) {
-				$name = $row['domain_setting_name'];
-				$category = $row['domain_setting_category'];
-				$subcategory = $row['domain_setting_subcategory'];
-				if (empty($subcategory)) {
-					//$$category[$name] = $row['domain_setting_value'];
-					if ($name == "array") {
-						$_SESSION[$category][] = $row['domain_setting_value'];
-					}
-					else {
-						$_SESSION[$category][$name] = $row['domain_setting_value'];
-					}
-				}
-				else {
-					//$$category[$subcategory][$name] = $row['domain_setting_value'];
-					if ($name == "array") {
-						$_SESSION[$category][$subcategory][] = $row['domain_setting_value'];
-					}
-					else {
-						$_SESSION[$category][$subcategory][$name] = $row['domain_setting_value'];
-					}
-				}
-			}
-		}
-	}
-
-//build the provision array
-	foreach($_SESSION['provision'] as $key=>$val) {
-		if (!empty($val['var'])) { $value = $val['var']; }
-		if (!empty($val['text'])) { $value = $val['text']; }
-		if (!empty($val['boolean'])) { $value = $val['boolean']; }
-		if (!empty($val['numeric'])) { $value = $val['numeric']; }
-		if (!empty($value)) { $provision[$key] = $value; }
-		unset($value);
-	}
-
-//check if provisioning has been enabled
-	if ($provision["enabled"] != "true") {
-		syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempt but provisioning is not enabled for ".escape($_REQUEST['mac']));
-		http_error('404');
+		$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
+		$domain_name = $domain_array[0];
+		$domain_uuid = array_search($domain_name, $active_domains);
 	}
 
 //send a request to a remote server to validate the MAC address and secret
@@ -304,15 +198,22 @@
 		$device_vendor = device::get_vendor($device_address);
 	}
 
-//keep backwards compatibility
-	if (!empty($_SESSION['provision']["cidr"]["text"])) {
-		$_SESSION['provision']["cidr"][] = $_SESSION['provision']["cidr"]["text"];
+//use settings object instead of session
+	$settings = new settings(['database' => $database, 'domain_uuid' => $domain_uuid]);
+
+//check if provisioning has been enabled
+	if ($settings->get('provision', 'enabled', 'false') !== "true") {
+		syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempt but provisioning is not enabled for ".escape($_REQUEST['mac']));
+		http_error('404');
 	}
 
+//keep backwards compatibility
+	$provision_cidrs = $settings->get('provision','cidr', []);
+
 //check the cidr range
-	if (!empty($_SESSION['provision']["cidr"]) && is_array($_SESSION['provision']["cidr"])) {
+	if (!empty($provision_cidrs)) {
 		$found = false;
-		foreach($_SESSION['provision']["cidr"] as $cidr) {
+		foreach($provision_cidrs as $cidr) {
 			if (check_cidr($cidr, $_SERVER['REMOTE_ADDR'])) {
 				$found = true;
 				break;
@@ -324,82 +225,87 @@
 		}
 	}
 
+//get all provision settings
+	$provision = $settings->get('provision', null, []);
+	$auth_passwords = $settings->get('provision', 'http_auth_password', []);
+
 //http authentication - digest
 	if (!empty($provision["http_auth_username"]) && empty($provision["http_auth_type"])) { $provision["http_auth_type"] = "digest"; }
 	if (!empty($provision["http_auth_username"]) && $provision["http_auth_type"] === "digest" && !empty($provision["http_auth_enabled"]) && $provision["http_auth_enabled"] === "true") {
 		//function to parse the http auth header
-			function http_digest_parse($txt) {
-				//protect against missing data
-				$needed_parts = array('nonce'=>1, 'nc'=>1, 'cnonce'=>1, 'qop'=>1, 'username'=>1, 'uri'=>1, 'response'=>1);
-				$data = array();
-				$keys = implode('|', array_keys($needed_parts));
-				preg_match_all('@('.$keys.')=(?:([\'"])([^\2]+?)\2|([^\s,]+))@', $txt, $matches, PREG_SET_ORDER);
-				foreach ($matches as $m) {
-					$data[$m[1]] = $m[3] ? $m[3] : $m[4];
-					unset($needed_parts[$m[1]]);
-				}
-				return $needed_parts ? false : $data;
+		function http_digest_parse($txt) {
+			//protect against missing data
+			$needed_parts = array('nonce'=>1, 'nc'=>1, 'cnonce'=>1, 'qop'=>1, 'username'=>1, 'uri'=>1, 'response'=>1);
+			$data = array();
+			$keys = implode('|', array_keys($needed_parts));
+			preg_match_all('@('.$keys.')=(?:([\'"])([^\2]+?)\2|([^\s,]+))@', $txt, $matches, PREG_SET_ORDER);
+			foreach ($matches as $m) {
+				$data[$m[1]] = $m[3] ? $m[3] : $m[4];
+				unset($needed_parts[$m[1]]);
 			}
+			return $needed_parts ? false : $data;
+		}
 
 		//function to request digest authentication
-			function http_digest_request($realm) {
-				header('HTTP/1.1 401 Authorization Required');
-				header('WWW-Authenticate: Digest realm="'.$realm.'", qop="auth", nonce="'.uniqid().'", opaque="'.md5($realm).'"');
-				header("Content-Type: text/html");
-				$content = 'Authorization Cancelled';
-				header("Content-Length: ".strval(strlen($content)));
-				echo $content;
-				die();
-			}
+		function http_digest_request($realm) {
+			header('HTTP/1.1 401 Authorization Required');
+			header('WWW-Authenticate: Digest realm="'.$realm.'", qop="auth", nonce="'.uniqid().'", opaque="'.md5($realm).'"');
+			header("Content-Type: text/html");
+			$content = 'Authorization Cancelled';
+			header("Content-Length: ".strval(strlen($content)));
+			echo $content;
+			die();
+		}
 
 		//set the realm
-			$realm = $_SESSION['domain_name'];
+		$realm = $domain_name;
 
 		//request authentication
-			if (empty($_SERVER['PHP_AUTH_DIGEST'])) {
-				http_digest_request($realm);
-			}
+		if (empty($_SERVER['PHP_AUTH_DIGEST'])) {
+			http_digest_request($realm);
+		}
 
 		//check for valid digest authentication details
-			if (isset($provision["http_auth_username"]) > 0 && strlen($provision["http_auth_username"])) {
-				if (!($data = http_digest_parse($_SERVER['PHP_AUTH_DIGEST'])) || ($data['username'] != $provision["http_auth_username"])) {
-					header('HTTP/1.1 401 Unauthorized');
-					header("Content-Type: text/html");
-					$content = 'Unauthorized '.$__line__;
-					header("Content-Length: ".strval(strlen($content)));
-					echo $content;
-					exit;
-				}
-			}
-
-		//generate the valid response
-			$authorized = false;
-			if (!$authorized && is_array($_SESSION['provision']["http_auth_password"])) {
-				foreach ($_SESSION['provision']["http_auth_password"] as $password) {
-					$A1 = md5($provision["http_auth_username"].':'.$realm.':'.$password);
-					$A2 = md5($_SERVER['REQUEST_METHOD'].':'.$data['uri']);
-					$valid_response = md5($A1.':'.$data['nonce'].':'.$data['nc'].':'.$data['cnonce'].':'.$data['qop'].':'.$A2);
-					if ($data['response'] == $valid_response) {
-						$authorized = true;
-						break;
-					}
-				}
-				unset($password);
-			}
-			if (!$authorized) {
-				header('HTTP/1.0 401 Unauthorized');
+		if (isset($provision["http_auth_username"]) && strlen($provision["http_auth_username"]) > 0) {
+			if (!($data = http_digest_parse($_SERVER['PHP_AUTH_DIGEST'])) || ($data['username'] != $provision["http_auth_username"])) {
+				header('HTTP/1.1 401 Unauthorized');
 				header("Content-Type: text/html");
 				$content = 'Unauthorized '.$__line__;
 				header("Content-Length: ".strval(strlen($content)));
 				echo $content;
 				exit;
 			}
+		}
+
+		//generate the valid response
+		$authorized = false;
+		$auth_passwords = $settings->get('provision', 'http_auth_password', []);
+		if (!$authorized && is_array($auth_passwords)) {
+			foreach ($auth_passwords as $password) {
+				$A1 = md5($provision["http_auth_username"].':'.$realm.':'.$password);
+				$A2 = md5($_SERVER['REQUEST_METHOD'].':'.$data['uri']);
+				$valid_response = md5($A1.':'.$data['nonce'].':'.$data['nc'].':'.$data['cnonce'].':'.$data['qop'].':'.$A2);
+				if ($data['response'] == $valid_response) {
+					$authorized = true;
+					break;
+				}
+			}
+			unset($password);
+		}
+		if (!$authorized) {
+			header('HTTP/1.0 401 Unauthorized');
+			header("Content-Type: text/html");
+			$content = 'Unauthorized '.$__line__;
+			header("Content-Length: ".strval(strlen($content)));
+			echo $content;
+			exit;
+		}
 	}
 
 //http authentication - basic
 	if (!empty($provision["http_auth_username"]) && $provision["http_auth_type"] === "basic" && $provision["http_auth_enabled"] === "true") {
 		if (!isset($_SERVER['PHP_AUTH_USER'])) {
-			header('WWW-Authenticate: Basic realm="'.$_SESSION['domain_name'].'"');
+			header('WWW-Authenticate: Basic realm="'.$domain_name.'"');
 			header('HTTP/1.0 401 Authorization Required');
 			header("Content-Type: text/html");
 			$content = 'Authorization Required';
@@ -409,20 +315,19 @@
 		}
 		else {
 			$authorized = false;
-			if (is_array($_SESSION['provision']["http_auth_password"])) {
-				foreach ($_SESSION['provision']["http_auth_password"] as $password) {
-					if ($_SERVER['PHP_AUTH_PW'] == $password) {
-						$authorized = true;
-						break;
-					}
+			foreach ($auth_passwords as $password) {
+				if ($_SERVER['PHP_AUTH_PW'] == $password) {
+					$authorized = true;
+					break;
 				}
-				unset($password);
 			}
+			unset($password, $auth_passwords);
+
 			if (!$authorized) {
 				//access denied
 				syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempt but failed http basic authentication for ".check_str($_REQUEST['mac']));
 				header('HTTP/1.0 401 Unauthorized');
-				header('WWW-Authenticate: Basic realm="'.$_SESSION['domain_name'].'"');
+				header('WWW-Authenticate: Basic realm="'.$domain_name.'"');
 				unset($_SERVER['PHP_AUTH_USER'],$_SERVER['PHP_AUTH_PW']);
 				$content = 'Unauthorized';
 				header("Content-Length: ".strval(strlen($content)));
@@ -446,14 +351,14 @@
 	}
 
 //output template to string for header processing
-	$prov = new provision;
+	$prov = new provision(['settings'=>$settings]);
 	$prov->domain_uuid = $domain_uuid;
 	$prov->device_address = $device_address;
 	$prov->file = $file;
 	$file_contents = $prov->render();
 
-//clean the output buffer
-	ob_clean();
+//output buffer was not started
+//	ob_clean();
 
 //deliver the customized config over HTTP/HTTPS
 	//need to make sure content-type is correct
@@ -464,6 +369,15 @@
 		//replace the variable name with the value
 			$file_name = str_replace("{\$address}", $device_address, $file);
 			$file_name = str_replace("{\$mac}", $device_address, $file_name);
+
+		//send the content as HTML text
+			if (!empty($_REQUEST['debug']) && $_REQUEST['debug'] === 'true') {
+				echo "<!DOCTYPE HTML>";
+				echo "<html><pre>";
+				echo $file_contents;
+				echo "</pre>";
+				exit();
+			}
 
 		//set the headers
 			header('Content-Description: File Transfer');
