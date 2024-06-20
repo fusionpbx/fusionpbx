@@ -787,6 +787,103 @@ if (!class_exists('domains')) {
 				}
 		}
 
+		/**
+		 * Retrieves a list of domains from the database with optional filtering based on domain status.
+		 *
+		 * This function executes a SQL query to retrieve domain UUIDs and names from the v_domains table.
+		 * If $ignore_domain_enabled is set to false, the function will filter the results based on the $domain_status parameter,
+		 * including only domains with the specified enabled or disabled status. The results are returned as an associative array
+		 * where the keys are domain UUIDs and the values are domain names.
+		 *
+		 * @param database $database The database connection object to be used for executing the query.
+		 * @param bool $ignore_domain_enabled Optional. A flag to indicate whether to ignore the domain enabled status filter. Default is false.
+		 * @param bool $domain_status Optional. The desired status of the domains to be retrieved. If true, retrieves domains that are enabled. If false, retrieves domains that are disabled. This parameter is ignored if $ignore_domain_enabled is true. Default is true.
+		 * @return array An associative array where the keys are domain UUIDs and the values are domain names of the domains retrieved from the database.
+		 */
+		public static function get_list(database $database, bool $ignore_domain_enabled = false, bool $domain_status = true): array {
+			$domains = [];
+			$status_string = $domain_status ? 'true' : 'false';
+			$sql = "select domain_uuid, domain_name from v_domains";
+			if (!$ignore_domain_enabled) {
+				$sql .= " where domain_enabled='$status_string'";
+			}
+			$result = $database->select($sql);
+			if (!empty($result)) {
+				foreach ($result as $row) {
+					$domains[$row['domain_uuid']] = $row['domain_name'];
+				}
+			}
+			return $domains;
+		}
+
+		/**
+		 * Returns an array of domains including disabled with their domain UUID as the array key
+		 * @param database $database Database object
+		 * @return array List of domains with domain UUID as key
+		 * @depends database
+		 */
+		public static function get_list_all(database $database): array {
+			return self::get_list($database, true);
+		}
+
+		/**
+		 * Returns an array of disabled domains with their domain UUID as the array key
+		 * @param database $database
+		 * @return array List of domains with domain UUID as key
+		 */
+		public static function get_list_disabled(database $database): array {
+			return self::get_list($database, false, false);
+		}
+
+		/**
+		 * Used to return a single matching domain name or an empty string
+		 * @param database $database Database object
+		 * @param string $uuid Valid UUID of the domain
+		 * @param bool $ignore_domain_enabled When set to true, ignores the column domain_enabled
+		 * @param bool $domain_status When $ignore_domain_enabled is false, allows returning only enabled domains or disabled domains
+		 * @return string Returns domain name or empty string
+		 */
+		public static function get_name_by_uuid(database $database, string $uuid, bool $ignore_domain_enabled = false, bool $domain_status = true): string {
+			$domain_name = "";
+			$status_string = $domain_status ? 'true' : 'false';
+			$sql = "select domain_name from v_domains";
+			$sql .= " where domain_uuid = :uuid";
+			if (!$ignore_domain_enabled) {
+				$sql .= " and domain_enabled='$status_string'";
+			}
+			$parameters['uuid'] = $uuid;
+			$result = $database->select($sql, $parameters, 'column');
+			if (!empty($result)) {
+				$domain_name = $result;
+			}
+			return $domain_name;
+		}
+
+		/**
+		 * Used to get domain UUIDs from a matching a domain name. It is possible to have multiple domains with the same name
+		 * so the value returned will either be an empty array or an indexed array containing one or more domains
+		 * @param database $database Database object
+		 * @param string $name Domain name to match in the database
+		 * @param bool $ignore_domain_enabled When set to true, ignores the column domain_enabled
+		 * @param bool $domain_status When $ignore_domain_enabled is false, allows returning only enabled domains or disabled domains
+		 * @return array
+		 */
+		public static function get_domain_uuid_by_name(database $database, string $name, bool $ignore_domain_enabled = false, bool $domain_status = true): array {
+			$domains = [];
+			$status_string = $domain_status ? 'true' : 'false';
+			$sql = "select domain_uuid from v_domains";
+			$sql .= " where domain_name = :name";
+			if (!$ignore_domain_enabled) {
+				$sql .= " and domain_enabled='$status_string'";
+			}
+			$parameters['name'] = $name;
+			$result = $database->select($sql, $parameters, 'all');
+			if (!empty($result)) {
+				$domains = array_map(function ($row) { return $row['domain_uuid']; }, $result);
+			}
+			return $domains;
+		}
+
 	}
 }
 
