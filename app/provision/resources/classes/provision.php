@@ -171,7 +171,7 @@ class provision {
 		exit();
 	}
 
-	private function contact_append(&$contacts, &$line, $domain_uuid, $device_user_uuid, $category) {
+	private function contact_append(&$contacts, $domain_uuid, $device_user_uuid, $category) {
 
 		$sql = "select c.contact_uuid, c.contact_organization, c.contact_name_given, c.contact_name_family, ";
 		$sql .= "c.contact_type, c.contact_category, p.phone_label,";
@@ -225,7 +225,6 @@ class provision {
 					$contact['phone_extension'] = $row['phone_extension'];
 				}
 
-				$numbers[$x]['line_number'] = $line['line_number'] ?? null;
 				$numbers[$x]['phone_label'] = $phone_label;
 				$numbers[$x]['phone_number'] = $row['phone_number'];
 				$numbers[$x]['phone_extension'] = $row['phone_extension'];
@@ -839,16 +838,16 @@ class provision {
 			if ($this->settings->get('contact','permissions','false') === "true") {
 				//get the contacts assigned to the groups and add to the contacts array
 				if (is_uuid($device_user_uuid) && $this->settings->get('contact','contact_groups', 'false') === "true") {
-					$this->contact_append($contacts, $line, $domain_uuid, $device_user_uuid, 'groups');
+					$this->contact_append($contacts, $domain_uuid, $device_user_uuid, 'groups');
 				}
 
 				//get the contacts assigned to the user and add to the contacts array
 				if (is_uuid($device_user_uuid) && $this->settings->get('contact','contact_users', 'false') === "true") {
-					$this->contact_append($contacts, $line, $domain_uuid, $device_user_uuid, 'users');
+					$this->contact_append($contacts, $domain_uuid, $device_user_uuid, 'users');
 				}
 			} else {
 				//show all contacts for the domain
-				$this->contact_append($contacts, $line, $domain_uuid, null, 'all');
+				$this->contact_append($contacts, $domain_uuid, null, 'all');
 			}
 		}
 
