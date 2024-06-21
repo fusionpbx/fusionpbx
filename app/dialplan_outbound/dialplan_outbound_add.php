@@ -429,7 +429,7 @@
 						$array['dialplans'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
 						$array['dialplans'][$x]['dialplan_uuid'] = $dialplan_uuid;
 						$array['dialplans'][$x]['app_uuid'] = $app_uuid;
-						$array['dialplans'][$x]['dialplan_name'] = 'call_direction-outbound';
+						$array['dialplans'][$x]['dialplan_name'] = 'call_direction-outbound'.(empty($dialplan_description) && !empty($abbrv) ? '.'.$abbrv : null);
 						$array['dialplans'][$x]['dialplan_order'] = '22';
 						$array['dialplans'][$x]['dialplan_continue'] = 'true';
 						$array['dialplans'][$x]['dialplan_context'] = $dialplan_context;
