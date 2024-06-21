@@ -28,7 +28,7 @@
 	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
-	
+
 //check permissions
 	if (permission_exists('voicemail_view')) {
 		//access granted
@@ -93,7 +93,7 @@
 	$order_by = $_GET["order_by"] ?? 'voicemail_id';
 	$order = $_GET["order"] ?? 'asc';
 	$sort = $order_by == 'voicemail_id' ? 'natural' : null;
-	
+
 //set additional variables
 	$show = $_GET["show"] ?? '';
 
@@ -263,7 +263,7 @@
 	echo th_order_by('voicemail_mail_to', $text['label-voicemail_mail_to'], $order_by, $order, null, "class='hide-sm-dn'");
 	echo th_order_by('voicemail_file', $text['label-voicemail_file_attached'], $order_by, $order, null, "class='center hide-md-dn'");
 	echo th_order_by('voicemail_local_after_email', $text['label-voicemail_local_after_email'], $order_by, $order, null, "class='center hide-md-dn'");
-	if (!empty($_SESSION['voicemail']['transcribe_enabled']) && $_SESSION['voicemail']['transcribe_enabled']['boolean'] == 'true') {
+	if (permission_exists('voicemail_transcription_enabled') && ($_SESSION['transcribe']['enabled']['boolean'] ?? '') == "true") {
 		echo th_order_by('voicemail_transcription_enabled', $text['label-voicemail_transcribe_enabled'], $order_by, $order);
 	}
 	if (permission_exists('voicemail_message_view') || permission_exists('voicemail_greeting_view')) {
@@ -310,7 +310,7 @@
 			echo "	<td class='hide-sm-dn'>".escape($row['voicemail_mail_to'])."&nbsp;</td>\n";
 			echo "	<td class='center hide-md-dn'>".($row['voicemail_file'] == 'attach' ? $text['label-true'] : $text['label-false'])."</td>\n";
 			echo "	<td class='center hide-md-dn'>".ucwords(escape($row['voicemail_local_after_email']))."&nbsp;</td>\n";
-			if (!empty($_SESSION['voicemail']['transcribe_enabled']) && $_SESSION['voicemail']['transcribe_enabled']['boolean'] == 'true') {
+			if (permission_exists('voicemail_transcription_enabled') && ($_SESSION['transcribe']['enabled']['boolean'] ?? '') == "true") {
 				echo "	<td>".ucwords(escape($row['voicemail_transcription_enabled']))."&nbsp;</td>\n";
 			}
 			if (permission_exists('voicemail_message_view') || permission_exists('voicemail_greeting_view')) {

@@ -351,7 +351,7 @@
 //set the defaults
 	if (empty($voicemail_local_after_email)) { $voicemail_local_after_email = 'true'; }
 	if (empty($voicemail_enabled)) { $voicemail_enabled = 'true'; }
-	if (empty($voicemail_transcription_enabled)) { $voicemail_transcription_enabled = $_SESSION['voicemail']['transcription_enabled_default']['boolean']; }	
+	if (empty($voicemail_transcription_enabled)) { $voicemail_transcription_enabled = $_SESSION['voicemail']['transcription_enabled_default']['boolean']; }
 	if (empty($voicemail_tutorial)) { $voicemail_tutorial = 'false'; }
 	if (empty($voicemail_recording_instructions)) { $voicemail_recording_instructions = 'true'; }
 	if (empty($voicemail_recording_options)) { $voicemail_recording_options = 'true'; }
@@ -458,13 +458,13 @@
 //password complexity
 	$password_complexity = $_SESSION['voicemail']['password_complexity']['boolean'] ?? '';
 	if ($password_complexity == "true") {
-		echo "<script>\n";	
+		echo "<script>\n";
 		$req['length'] = $_SESSION['voicemail']['password_min_length']['numeric'];
 		echo "	function check_password_strength(pwd) {\n";
 		echo "		var msg_errors = [];\n";
 		//length
 		if (is_numeric($req['length']) && $req['length'] != 0) {
-			echo "	var re = /.{".$req['length'].",}/;\n"; 
+			echo "	var re = /.{".$req['length'].",}/;\n";
 			echo "	if (!re.test(pwd)) { msg_errors.push('".$req['length']."+ ".$text['label-digits']."'); }\n";
 		}
 		//numberic only
@@ -476,7 +476,7 @@
 		//sequential digits
 		echo "		var re = /(012|123|345|456|567|678|789|987|876|765|654|543|432|321|210)/;\n";
 		echo "		if (re.test(pwd)) { msg_errors.push('".$text['label-password_sequential']."'); }\n";
-	
+
 		echo "		if (msg_errors.length > 0) {\n";
 		echo "			var msg = '".$text['message-password_requirements'].": ' + msg_errors.join(', ');\n";
 		echo "			display_message(msg, 'negative', '6000');\n";
@@ -794,7 +794,7 @@
 		echo "</tr>\n";
 	}
 
-	if (permission_exists('voicemail_transcription_enabled') && ($_SESSION['voicemail']['transcribe_enabled']['boolean'] ?? '') == "true") {
+	if (permission_exists('voicemail_transcription_enabled') && ($_SESSION['transcribe']['enabled']['boolean'] ?? '') == "true") {
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-voicemail_transcription_enabled']."\n";
