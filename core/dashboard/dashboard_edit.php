@@ -82,9 +82,13 @@
 		$dashboard_groups = $_POST["dashboard_groups"] ?? '';
 		$dashboard_chart_type = $_POST["dashboard_chart_type"] ?? '';
 		$dashboard_heading_text_color = $_POST["dashboard_heading_text_color"] ?? '';
+		$dashboard_heading_text_color_hover = $_POST["dashboard_heading_text_color_hover"] ?? '';
 		$dashboard_heading_background_color = $_POST["dashboard_heading_background_color"] ?? '';
+		$dashboard_heading_background_color_hover = $_POST["dashboard_heading_background_color_hover"] ?? '';
 		$dashboard_number_text_color = $_POST["dashboard_number_text_color"] ?? '';
+		$dashboard_number_text_color_hover = $_POST["dashboard_number_text_color_hover"] ?? '';
 		$dashboard_background_color = $_POST["dashboard_background_color"] ?? '';
+		$dashboard_background_color_hover = $_POST["dashboard_background_color_hover"] ?? '';
 		$dashboard_detail_background_color = $_POST["dashboard_detail_background_color"] ?? '';
 		$dashboard_column_span = $_POST["dashboard_column_span"] ?? '';
 		$dashboard_row_span = $_POST["dashboard_row_span"] ?? '';
@@ -193,6 +197,17 @@
 					}
 				}
 			}
+			if (!empty($dashboard_background_color_hover)) {
+				if (is_array($dashboard_background_color_hover)) {
+					$dashboard_background_color_hover = array_filter($dashboard_background_color_hover);
+					if (count($dashboard_background_color_hover) > 0) {
+						$dashboard_background_color_hover = json_encode($dashboard_background_color_hover);
+					}
+					else {
+						$dashboard_background_color_hover = '';
+					}
+				}
+			}
 			if (!empty($dashboard_detail_background_color)) {
 				if (is_array($dashboard_detail_background_color)) {
 					$dashboard_detail_background_color = array_filter($dashboard_detail_background_color);
@@ -216,9 +231,13 @@
 			$array['dashboard'][0]['dashboard_content_details'] = $dashboard_content_details;
 			$array['dashboard'][0]['dashboard_chart_type'] = $dashboard_chart_type;
 			$array['dashboard'][0]['dashboard_heading_text_color'] = $dashboard_heading_text_color;
+			$array['dashboard'][0]['dashboard_heading_text_color_hover'] = $dashboard_heading_text_color_hover;
 			$array['dashboard'][0]['dashboard_heading_background_color'] = $dashboard_heading_background_color;
+			$array['dashboard'][0]['dashboard_heading_background_color_hover'] = $dashboard_heading_background_color_hover;
 			$array['dashboard'][0]['dashboard_number_text_color'] = $dashboard_number_text_color;
+			$array['dashboard'][0]['dashboard_number_text_color_hover'] = $dashboard_number_text_color_hover;
 			$array['dashboard'][0]['dashboard_background_color'] = $dashboard_background_color;
+			$array['dashboard'][0]['dashboard_background_color_hover'] = $dashboard_background_color_hover;
 			$array['dashboard'][0]['dashboard_detail_background_color'] = $dashboard_detail_background_color;
 			$array['dashboard'][0]['dashboard_column_span'] = $dashboard_column_span;
 			$array['dashboard'][0]['dashboard_row_span'] = $dashboard_row_span;
@@ -298,9 +317,13 @@
 			$dashboard_content_details = $row["dashboard_content_details"];
 			$dashboard_chart_type = $row["dashboard_chart_type"];
 			$dashboard_heading_text_color = $row["dashboard_heading_text_color"];
+			$dashboard_heading_text_color_hover = $row["dashboard_heading_text_color_hover"];
 			$dashboard_heading_background_color = $row["dashboard_heading_background_color"];
+			$dashboard_heading_background_color_hover = $row["dashboard_heading_background_color_hover"];
 			$dashboard_number_text_color = $row["dashboard_number_text_color"];
+			$dashboard_number_text_color_hover = $row["dashboard_number_text_color_hover"];
 			$dashboard_background_color = $row["dashboard_background_color"];
+			$dashboard_background_color_hover = $row["dashboard_background_color_hover"];
 			$dashboard_detail_background_color = $row["dashboard_detail_background_color"];
 			$dashboard_column_span = $row["dashboard_column_span"];
 			$dashboard_row_span = $row["dashboard_row_span"];
@@ -333,6 +356,9 @@
 //convert the json to an array
 	if (!empty($dashboard_background_color) && is_json($dashboard_background_color)) {
 		$dashboard_background_color = json_decode($dashboard_background_color, true);
+	}
+	if (!empty($dashboard_background_color_hover) && is_json($dashboard_background_color_hover)) {
+		$dashboard_background_color_hover = json_decode($dashboard_background_color_hover, true);
 	}
 	if (!empty($dashboard_detail_background_color) && is_json($dashboard_detail_background_color)) {
 		$dashboard_detail_background_color = json_decode($dashboard_detail_background_color, true);
@@ -659,6 +685,19 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
+	if ($action == "add" || $dashboard_path == "core/dashboard/resources/dashboard/icon.php") {
+		echo "<tr class='type_icon' ".($dashboard_path != 'core/dashboard/resources/dashboard/icon.php' ? "style='display: none;'" : null).">\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo $text['label-dashboard_heading_text_color_hover']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' style='position: relative;' align='left'>\n";
+		echo "	<input type='text' class='formfld colorpicker' name='dashboard_heading_text_color_hover' value='".escape($dashboard_heading_text_color_hover)."'>\n";
+		echo "<br />\n";
+		echo $text['description-dashboard_heading_text_color_hover']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
+
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo $text['label-dashboard_heading_background_color']."\n";
@@ -670,6 +709,19 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
+	if ($action == "add" || $dashboard_path == "core/dashboard/resources/dashboard/icon.php") {
+		echo "<tr class='type_icon' ".($dashboard_path != 'core/dashboard/resources/dashboard/icon.php' ? "style='display: none;'" : null).">\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo $text['label-dashboard_heading_background_color_hover']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' style='position: relative;' align='left'>\n";
+		echo "	<input type='text' class='formfld colorpicker' name='dashboard_heading_background_color_hover' value='".escape($dashboard_heading_background_color_hover)."'>\n";
+		echo "<br />\n";
+		echo $text['description-dashboard_heading_background_color_hover']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
+
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo $text['label-dashboard_number_text_color']."\n";
@@ -680,6 +732,19 @@
 	echo $text['description-dashboard_number_text_color']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
+
+	if ($action == "add" || $dashboard_path == "core/dashboard/resources/dashboard/icon.php") {
+		echo "<tr class='type_icon' ".($dashboard_path != 'core/dashboard/resources/dashboard/icon.php' ? "style='display: none;'" : null).">\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo $text['label-dashboard_number_text_color_hover']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' style='position: relative;' align='left'>\n";
+		echo "	<input type='text' class='formfld colorpicker' name='dashboard_number_text_color_hover' value='".escape($dashboard_number_text_color_hover)."'>\n";
+		echo "<br />\n";
+		echo $text['description-dashboard_number_text_color_hover']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
@@ -703,6 +768,31 @@
 	echo $text['description-dashboard_background_color']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
+
+	if ($action == "add" || $dashboard_path == "core/dashboard/resources/dashboard/icon.php") {
+		echo "<tr class='type_icon' ".($dashboard_path != 'core/dashboard/resources/dashboard/icon.php' ? "style='display: none;'" : null).">\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo $text['label-dashboard_background_color_hover']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' style='position: relative;' align='left'>\n";
+		if (!empty($dashboard_background_color_hover)) {
+			if (is_array($dashboard_background_color_hover)) {
+				foreach($dashboard_background_color_hover as $background_color) {
+					echo "	<input type='text' class='formfld colorpicker' name='dashboard_background_color_hover[]' value='".escape($background_color)."'><br />\n";
+				}
+			}
+		}
+		if (empty($dashboard_background_color_hover) || (is_array($dashboard_background_color_hover) && count($dashboard_background_color_hover) < 2)) {
+			echo "	<input type='text' class='formfld colorpicker' name='dashboard_background_color_hover[]' value='' onclick=\"document.getElementById('second_input').style.display = 'block';\">\n";
+			if (empty($dashboard_background_color_hover)) {
+				echo "	<input id='second_input' style='display: none;' type='text' class='formfld colorpicker' name='dashboard_background_color_hover[]'>\n";
+			}
+			echo "<br />\n";
+		}
+		echo $text['description-dashboard_background_color_hover']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
