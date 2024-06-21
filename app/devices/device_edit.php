@@ -43,8 +43,14 @@
 	$device_model = '';
 	$device_firmware_version = '';
 	$device_template ='';
+
+//get the domain uuid
 	$domain_uuid = $_SESSION['domain_uuid'] ?? '';
+
+//initialize the database object
 	$database = database::new();
+
+//initialize the settigns object
 	$settings = new settings(['database' => $database, 'domain_uuid' => $domain_uuid]);
 
 //action add or update
@@ -56,7 +62,7 @@
 		$action = "add";
 	}
 
-//get total device count from the database, check limit, if defined
+//get the total device count from the database, check the limit, if defined
 	if ($action == 'add') {
 		if (!empty($_SESSION['limit']['devices']['numeric']) && $_SESSION['limit']['devices']['numeric']) {
 			$sql = "select count(*) from v_devices where domain_uuid = :domain_uuid ";
