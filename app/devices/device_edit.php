@@ -47,9 +47,6 @@
 	$database = database::new();
 	$settings = new settings(['database' => $database, 'domain_uuid' => $domain_uuid]);
 
-// use auto loader
-//	require_once "app/devices/resources/classes/device.php";
-
 //action add or update
 	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
