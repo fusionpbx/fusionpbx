@@ -2600,7 +2600,6 @@ else { //default: white
 		text-align: center;
 		text-shadow: 0px 2px 2px <?=$dashboard_number_text_shadow_color?>;
 		width: 100%;
-		height: 100%;
 		color: <?=$dashboard_number_text_color?>;
 		font-family: <?=$dashboard_number_text_font?>;
 		font-size: <?=$dashboard_number_text_size?>;
