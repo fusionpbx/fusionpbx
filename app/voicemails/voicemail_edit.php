@@ -802,7 +802,7 @@
 		echo "<td class='vtable' align='left'>\n";
 		echo "	<select class='formfld' name='voicemail_transcription_enabled' id='voicemail_transcription_enabled'>\n";
 		echo "    	<option value='true' ".(($voicemail_transcription_enabled == "true") ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
-		echo "    	<option value='false' ".(($voicemail_transcription_enabled == "false") ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
+		echo "    	<option value='false' ".((empty($voicemail_transcription_enabled) || $voicemail_transcription_enabled == "false") ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
 		echo "	</select>\n";
 		echo "<br />\n";
 		echo $text['description-voicemail_transcription_enabled']."\n";
