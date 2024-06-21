@@ -99,6 +99,7 @@
 			$voicemail_file = $_POST["voicemail_file"];
 			$voicemail_local_after_email = $_POST["voicemail_local_after_email"];
 			$voicemail_destination = $_POST["voicemail_destination"];
+			$voicemail_local_after_forward = $_POST["voicemail_local_after_forward"];
 			$voicemail_enabled = $_POST["voicemail_enabled"] ?? 'false';
 			$voicemail_description = $_POST["voicemail_description"];
 			$voicemail_tutorial = $_POST["voicemail_tutorial"];
@@ -176,8 +177,23 @@
 					if (permission_exists('voicemail_file')) {
 						$array['voicemails'][0]['voicemail_file'] = $voicemail_file;
 					}
-					if (permission_exists('voicemail_local_after_email')) {
+					if (permission_exists('voicemail_local_after_email') && !empty($voicemail_mail_to)) {
 						$array['voicemails'][0]['voicemail_local_after_email'] = $voicemail_local_after_email;
+					}
+					else if (permission_exists('voicemail_local_after_forward')) {
+						$array['voicemails'][0]['voicemail_local_after_email'] = $voicemail_local_after_forward;
+					}
+					else {
+						$array['voicemails'][0]['voicemail_local_after_email'] = 'true';
+					}
+					if (permission_exists('voicemail_local_after_forward')) {
+						$array['voicemails'][0]['voicemail_local_after_forward'] = $voicemail_local_after_forward;
+					}
+					else if (permission_exists('voicemail_local_after_email') && !empty($voicemail_mail_to)) {
+						$array['voicemails'][0]['voicemail_local_after_forward'] = $voicemail_local_after_email;
+					}
+					else {
+						$array['voicemails'][0]['voicemail_local_after_forward'] = 'true';
 					}
 					$array['voicemails'][0]['voicemail_enabled'] = $voicemail_enabled;
 					$array['voicemails'][0]['voicemail_description'] = $voicemail_description;
@@ -333,6 +349,7 @@
 			$voicemail_recording_options = $row["voicemail_recording_options"];
 			$voicemail_file = $row["voicemail_file"];
 			$voicemail_local_after_email = $row["voicemail_local_after_email"];
+			$voicemail_local_after_forward = $row["voicemail_local_after_forward"];
 			$voicemail_enabled = $row["voicemail_enabled"];
 			$voicemail_description = $row["voicemail_description"];
 		}
@@ -341,6 +358,7 @@
 	else {
 		$voicemail_file = $_SESSION['voicemail']['voicemail_file']['text'];
 		$voicemail_local_after_email = $_SESSION['voicemail']['keep_local']['boolean'];
+		$voicemail_local_after_forward = $_SESSION['voicemail']['keep_local']['boolean'];
 	}
 
 //remove the spaces
@@ -350,6 +368,7 @@
 
 //set the defaults
 	if (empty($voicemail_local_after_email)) { $voicemail_local_after_email = 'true'; }
+	if (empty($voicemail_local_after_forward)) { $voicemail_local_after_forward = 'true'; }
 	if (empty($voicemail_enabled)) { $voicemail_enabled = 'true'; }
 	if (empty($voicemail_transcription_enabled)) { $voicemail_transcription_enabled = $_SESSION['voicemail']['transcription_enabled_default']['boolean']; }
 	if (empty($voicemail_tutorial)) { $voicemail_tutorial = 'false'; }
@@ -827,13 +846,16 @@
 		echo "</tr>\n";
 	}
 
-	if (permission_exists('voicemail_local_after_email')) {
+	if (
+		permission_exists('voicemail_file') &&
+		permission_exists('voicemail_local_after_email')
+		) {
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-voicemail_local_after_email']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<select class='formfld' name='voicemail_local_after_email' id='voicemail_local_after_email' onchange=\"if (this.selectedIndex == 1) { document.getElementById('voicemail_file').selectedIndex = 1; }\">\n";
+		echo "	<select class='formfld' name='voicemail_local_after_email' id='voicemail_local_after_email' onchange=\"if (this.selectedIndex == 1) { document.getElementById('voicemail_file').selectedIndex = 2; }\">\n";
 		echo "    	<option value='true' ".(($voicemail_local_after_email == "true") ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
 		echo "    	<option value='false' ".(($voicemail_local_after_email == "false") ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
 		echo "	</select>\n";
@@ -867,7 +889,7 @@
 				echo "				</tr>\n";
 			}
 		}
-		unset($voicemail_destinations_assigned, $field);
+		unset($field);
 
 		if (is_array($voicemail_destinations_available) && @sizeof($voicemail_destinations_available) != 0) {
 			echo "	<tr>\n";
@@ -891,6 +913,28 @@
 		echo "			".$text['description-forward_destinations']."\n";
 		echo "		</td>";
 		echo "	</tr>";
+	}
+
+	if (
+		permission_exists('voicemail_forward') &&
+		permission_exists('voicemail_local_after_forward') &&
+		!empty($voicemail_destinations_assigned) &&
+		is_array($voicemail_destinations_assigned)
+		) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-voicemail_local_after_forward']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<select class='formfld' name='voicemail_local_after_forward'>\n";
+		echo "    	<option value='true' ".(($voicemail_local_after_forward == "true") ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
+		echo "    	<option value='false' ".(($voicemail_local_after_forward == "false") ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
+		echo "	</select>\n";
+		echo "<br />\n";
+		echo $text['description-voicemail_local_after_forward']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+		unset($voicemail_destinations_assigned);
 	}
 
 	echo "<tr>\n";

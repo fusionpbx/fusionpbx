@@ -52,15 +52,19 @@
 				voicemail_transcription_enabled = row["voicemail_transcription_enabled"];
 				voicemail_file = row["voicemail_file"];
 				voicemail_local_after_email = row["voicemail_local_after_email"];
+				voicemail_local_after_forward = row["voicemail_local_after_forward"];
 				voicemail_description = row["voicemail_description"];
 			end);
 
 		--set default values
+			if (voicemail_file == nil) then
+				voicemail_file = "listen";
+			end
 			if (voicemail_local_after_email == nil) then
 				voicemail_local_after_email = "true";
 			end
-			if (voicemail_file == nil) then
-				voicemail_file = "listen";
+			if (voicemail_local_after_forward == nil) then
+				voicemail_local_after_forward = "true";
 			end
 
 		--require the email address to send the email
@@ -194,13 +198,20 @@
 				--get the link_address
 					link_address = http_protocol.."://"..domain_name..project_path;
 
+				--set proper delete status
+					if (voicemail_local_after_email == "false" and voicemail_local_after_forward == "false") then
+						local local_after_email = "false";
+					else
+						local local_after_email = "true";
+					end
+
 				--prepare the headers
 					local headers = {
 						["X-FusionPBX-Domain-UUID"] = domain_uuid;
 						["X-FusionPBX-Domain-Name"] = domain_name;
-						["X-FusionPBX-Call-UUID"]   = uuid;
-						["X-FusionPBX-Email-Type"]  = 'voicemail';
-						["X-FusionPBX-local_after_email"]  = voicemail_local_after_email;
+						["X-FusionPBX-Call-UUID"] = uuid;
+						["X-FusionPBX-Email-Type"] = 'voicemail';
+						["X-FusionPBX-local_after_email"] = local_after_email;
 					}
 
 				--prepare the voicemail_name_formatted
@@ -307,7 +318,7 @@
 
 		--whether to keep the voicemail message and details local after email
 			if (string.len(voicemail_mail_to) > 2 and email_queue_enabled == 'false') then
-				if (voicemail_local_after_email == "false") then
+				if (voicemail_local_after_email == "false" and voicemail_local_after_forward == "false") then
 					--delete the voicemail message details
 						local sql = [[DELETE FROM v_voicemail_messages
 							WHERE domain_uuid = :domain_uuid

@@ -288,16 +288,20 @@
 							voicemail_mail_to = row["voicemail_mail_to"];
 							voicemail_attach_file = row["voicemail_attach_file"];
 							voicemail_local_after_email = row["voicemail_local_after_email"];
+							voicemail_local_after_forward = row["voicemail_local_after_forward"];
 							voicemail_transcription_enabled = row["voicemail_transcription_enabled"];
 							voicemail_tutorial = row["voicemail_tutorial"];
 						end);
 
 					--set default values
+						if (voicemail_attach_file == nil) then
+							voicemail_attach_file = "true";
+						end
 						if (voicemail_local_after_email == nil) then
 							voicemail_local_after_email = "true";
 						end
-						if (voicemail_attach_file == nil) then
-							voicemail_attach_file = "true";
+						if (voicemail_local_after_forward == nil) then
+							voicemail_local_after_forward = "true";
 						end
 
 					--valid voicemail
@@ -392,15 +396,19 @@
 				end
 				dbh:query(sql, params, function(row)
 					voicemail_local_after_email = row["voicemail_local_after_email"];
+					voicemail_local_after_forward = row["voicemail_local_after_forward"];
 				end);
 
 			--set default values
 				if (voicemail_local_after_email == nil) then
 					voicemail_local_after_email = "true";
 				end
+				if (voicemail_local_after_forward == nil) then
+					voicemail_local_after_forward = "true";
+				end
 
 			--get the message count and send the mwi event
-				if (voicemail_local_after_email == 'true') then
+				if (voicemail_local_after_email == 'true' or voicemail_local_after_forward == 'true') then
 					message_waiting(voicemail_id, domain_uuid);
 				end
 			end
@@ -671,6 +679,37 @@
 								end
 							end
 					end --for
+
+				--whether to keep the voicemail message and details local after forward
+					if (voicemail_local_after_email == "false" and voicemail_local_after_forward == "false") then
+						--delete the voicemail message details
+							local sql = [[DELETE FROM v_voicemail_messages
+								WHERE domain_uuid = :domain_uuid
+								AND voicemail_uuid = :voicemail_uuid
+								AND voicemail_message_uuid = :uuid]]
+							local params = {
+								domain_uuid = domain_uuid,
+								voicemail_uuid = voicemail_uuid,
+								uuid = uuid
+								};
+							if (debug["sql"]) then
+								freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
+							end
+							dbh:query(sql, params);
+						--delete voicemail recording file
+							if (file_exists(full_path)) then
+								os.remove(full_path);
+							end
+						--set message waiting indicator
+							message_waiting(voicemail_id, domain_uuid);
+						--clear the variable
+							db_voicemail_uuid = '';
+					elseif (storage_type == "base64") then
+						--delete voicemail recording file
+							if (file_exists(full_path)) then
+								os.remove(full_path);
+							end
+					end
 
 			else
 				--voicemail not enabled or does not exist
