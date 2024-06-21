@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2023
+	Portions created by the Initial Developer are Copyright (C) 2008-2024
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -171,7 +171,7 @@
 				$gateway_3_name = '';
 			}
 		//set additional variables
-			$dialplan_enabled = $_POST["dialplan_enabled"] ?? 'true';
+			$dialplan_enabled = $_POST["dialplan_enabled"] ?? 'false';
 			$dialplan_description = $_POST["dialplan_description"];
 	}
 
