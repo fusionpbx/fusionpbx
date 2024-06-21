@@ -292,9 +292,13 @@
 		$sql .= " dashboard_content_details, ";
 		$sql .= " dashboard_chart_type, ";
 		$sql .= " dashboard_heading_text_color, ";
+		$sql .= " dashboard_heading_text_color_hover, ";
 		$sql .= " dashboard_heading_background_color, ";
+		$sql .= " dashboard_heading_background_color_hover, ";
 		$sql .= " dashboard_number_text_color, ";
+		$sql .= " dashboard_number_text_color_hover, ";
 		$sql .= " dashboard_background_color, ";
+		$sql .= " dashboard_background_color_hover, ";
 		$sql .= " dashboard_detail_background_color, ";
 		$sql .= " dashboard_column_span, ";
 		$sql .= " dashboard_row_span, ";
