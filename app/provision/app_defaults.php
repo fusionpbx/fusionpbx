@@ -37,7 +37,9 @@ if ($domains_processed == 1) {
 		foreach ($result as $row) {
 			//define update values
 				$device_uuid = $row["device_uuid"];
-				$device_address = provision::normalize_device_address($row['device_address']);
+				$device_address = $row["device_address"];
+				$device_address = strtolower($device_address);
+				$device_address = preg_replace('#[^a-fA-F0-9./]#', '', $device_address);
 			//build update array
 				$array['devices'][0]['device_uuid'] = $device_uuid;
 				$array['devices'][0]['device_address'] = $device_address;
