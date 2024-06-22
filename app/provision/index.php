@@ -358,7 +358,7 @@
 	$file_contents = $prov->render();
 
 //output buffer was not started
-//	ob_clean();
+	ob_clean();
 
 //deliver the customized config over HTTP/HTTPS
 	//need to make sure content-type is correct
@@ -369,15 +369,6 @@
 		//replace the variable name with the value
 			$file_name = str_replace("{\$address}", $device_address, $file);
 			$file_name = str_replace("{\$mac}", $device_address, $file_name);
-
-		//send the content as HTML text
-			if (!empty($_REQUEST['debug']) && $_REQUEST['debug'] === 'true') {
-				echo "<!DOCTYPE HTML>";
-				echo "<html><pre>";
-				echo $file_contents;
-				echo "</pre>";
-				exit();
-			}
 
 		//set the headers
 			header('Content-Description: File Transfer');
