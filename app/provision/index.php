@@ -36,6 +36,7 @@
 	$file_count = 0;
 	$row_count = 0;
 	$device_template = '';
+	$database = database::new(); //use an existing connection if possible
 
 //define PHP variables from the HTTP values
 	if (isset($_REQUEST['address'])) {
@@ -165,14 +166,12 @@
 	$sql .= "where device_address = :device_address ";
 	$sql .= "and d.domain_uuid = n.domain_uuid; ";
 	$parameters['device_address'] = $device_address;
-	$database = new database;
 	$row = $database->select($sql, $parameters, 'row');
 	if (is_array($row)) {
 		$device_uuid = $row['device_uuid'];
 		$domain_uuid = $row['domain_uuid'];
 		$domain_name = $row['domain_name'];
 		$device_vendor = $row['device_vendor'];
-		$_SESSION['domain_uuid'] = $domain_uuid;
 	}
 	unset($sql, $parameters);
 
@@ -191,105 +190,6 @@
 			unset($sql, $parameters);
 	}
 
-//get the default settings
-	$sql = "select * from v_default_settings ";
-	$sql .= "where default_setting_enabled = 'true' ";
-	$sql .= "order by default_setting_order asc ";
-	$database = new database;
-	$result = $database->select($sql, null, 'all');
-	//unset the previous settings
-	if (is_array($result) && @sizeof($result) != 0) {
-		foreach ($result as $row) {
-			unset($_SESSION[$row['default_setting_category']]);
-		}
-		//set the settings as a session
-		foreach ($result as $row) {
-			$name = $row['default_setting_name'];
-			$category = $row['default_setting_category'];
-			$subcategory = $row['default_setting_subcategory'];
-			if (empty($subcategory)) {
-				if ($name == "array") {
-					$_SESSION[$category][] = $row['default_setting_value'];
-				}
-				else {
-					$_SESSION[$category][$name] = $row['default_setting_value'];
-				}
-			}
-			else {
-				if ($name == "array") {
-					$_SESSION[$category][$subcategory][] = $row['default_setting_value'];
-				}
-				else {
-					$_SESSION[$category][$subcategory]['uuid'] = $row['default_setting_uuid'];
-					$_SESSION[$category][$subcategory][$name] = $row['default_setting_value'];
-				}
-			}
-		}
-	}
-	unset($sql, $result, $row);
-
-//get the domains settings
-	if (is_uuid($domain_uuid)) {
-		$sql = "select * from v_domain_settings ";
-		$sql .= "where domain_uuid = :domain_uuid ";
-		$sql .= "and domain_setting_enabled = 'true' ";
-		$sql .= "order by domain_setting_order asc ";
-		$parameters['domain_uuid'] = $domain_uuid;
-		$database = new database;
-		$result = $database->select($sql, $parameters, 'all');
-		//unset the arrays that domains are overriding
-		if (is_array($result) && @sizeof($result) != 0) {
-			foreach ($result as $row) {
-				$name = $row['domain_setting_name'];
-				$category = $row['domain_setting_category'];
-				$subcategory = $row['domain_setting_subcategory'];
-				if ($name == "array") {
-					unset($_SESSION[$category][$subcategory]);
-				}
-			}
-			//set the settings as a session
-			foreach ($result as $row) {
-				$name = $row['domain_setting_name'];
-				$category = $row['domain_setting_category'];
-				$subcategory = $row['domain_setting_subcategory'];
-				if (empty($subcategory)) {
-					//$$category[$name] = $row['domain_setting_value'];
-					if ($name == "array") {
-						$_SESSION[$category][] = $row['domain_setting_value'];
-					}
-					else {
-						$_SESSION[$category][$name] = $row['domain_setting_value'];
-					}
-				}
-				else {
-					//$$category[$subcategory][$name] = $row['domain_setting_value'];
-					if ($name == "array") {
-						$_SESSION[$category][$subcategory][] = $row['domain_setting_value'];
-					}
-					else {
-						$_SESSION[$category][$subcategory][$name] = $row['domain_setting_value'];
-					}
-				}
-			}
-		}
-	}
-
-//build the provision array
-	foreach($_SESSION['provision'] as $key=>$val) {
-		if (!empty($val['var'])) { $value = $val['var']; }
-		if (!empty($val['text'])) { $value = $val['text']; }
-		if (!empty($val['boolean'])) { $value = $val['boolean']; }
-		if (!empty($val['numeric'])) { $value = $val['numeric']; }
-		if (!empty($value)) { $provision[$key] = $value; }
-		unset($value);
-	}
-
-//check if provisioning has been enabled
-	if ($provision["enabled"] != "true") {
-		syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempt but provisioning is not enabled for ".escape($_REQUEST['mac']));
-		http_error('404');
-	}
-
 //send a request to a remote server to validate the MAC address and secret
 	if (!empty($_SERVER['auth_server'])) {
 		$result = send_http_request($_SERVER['auth_server'], 'mac='.url_encode($_REQUEST['mac']).'&secret='.url_encode($_REQUEST['secret']));
@@ -304,15 +204,22 @@
 		$device_vendor = device::get_vendor($device_address);
 	}
 
-//keep backwards compatibility
-	if (!empty($_SESSION['provision']["cidr"]["text"])) {
-		$_SESSION['provision']["cidr"][] = $_SESSION['provision']["cidr"]["text"];
+//use settings object instead of session
+	$settings = new settings(['database' => $database, 'domain_uuid' => $domain_uuid]);
+
+//check if provisioning has been enabled
+	if ($settings->get('provision', 'enabled', 'false') !== "true") {
+		syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempt but provisioning is not enabled for ".escape($_REQUEST['mac']));
+		http_error('404');
 	}
 
+//keep backwards compatibility
+	$provision_cidrs = $settings->get('provision','cidr', []);
+
 //check the cidr range
-	if (!empty($_SESSION['provision']["cidr"]) && is_array($_SESSION['provision']["cidr"])) {
+	if (!empty($provision_cidrs)) {
 		$found = false;
-		foreach($_SESSION['provision']["cidr"] as $cidr) {
+		foreach($provision_cidrs as $cidr) {
 			if (check_cidr($cidr, $_SERVER['REMOTE_ADDR'])) {
 				$found = true;
 				break;
@@ -323,6 +230,10 @@
 			http_error('404');
 		}
 	}
+
+//get all provision settings
+	$provision = $settings->get('provision', null, []);
+	$auth_passwords = $settings->get('provision', 'http_auth_password', []);
 
 //http authentication - digest
 	if (!empty($provision["http_auth_username"]) && empty($provision["http_auth_type"])) { $provision["http_auth_type"] = "digest"; }
@@ -353,7 +264,7 @@
 			}
 
 		//set the realm
-			$realm = $_SESSION['domain_name'];
+			$realm = $domain_name;
 
 		//request authentication
 			if (empty($_SERVER['PHP_AUTH_DIGEST'])) {
@@ -361,7 +272,7 @@
 			}
 
 		//check for valid digest authentication details
-			if (isset($provision["http_auth_username"]) > 0 && strlen($provision["http_auth_username"])) {
+			if (isset($provision["http_auth_username"]) && strlen($provision["http_auth_username"]) > 0) {
 				if (!($data = http_digest_parse($_SERVER['PHP_AUTH_DIGEST'])) || ($data['username'] != $provision["http_auth_username"])) {
 					header('HTTP/1.1 401 Unauthorized');
 					header("Content-Type: text/html");
@@ -374,8 +285,9 @@
 
 		//generate the valid response
 			$authorized = false;
-			if (!$authorized && is_array($_SESSION['provision']["http_auth_password"])) {
-				foreach ($_SESSION['provision']["http_auth_password"] as $password) {
+			$auth_passwords = $settings->get('provision', 'http_auth_password', []);
+			if (!$authorized && is_array($auth_passwords)) {
+				foreach ($auth_passwords as $password) {
 					$A1 = md5($provision["http_auth_username"].':'.$realm.':'.$password);
 					$A2 = md5($_SERVER['REQUEST_METHOD'].':'.$data['uri']);
 					$valid_response = md5($A1.':'.$data['nonce'].':'.$data['nc'].':'.$data['cnonce'].':'.$data['qop'].':'.$A2);
@@ -399,7 +311,7 @@
 //http authentication - basic
 	if (!empty($provision["http_auth_username"]) && $provision["http_auth_type"] === "basic" && $provision["http_auth_enabled"] === "true") {
 		if (!isset($_SERVER['PHP_AUTH_USER'])) {
-			header('WWW-Authenticate: Basic realm="'.$_SESSION['domain_name'].'"');
+			header('WWW-Authenticate: Basic realm="'.$domain_name.'"');
 			header('HTTP/1.0 401 Authorization Required');
 			header("Content-Type: text/html");
 			$content = 'Authorization Required';
@@ -409,20 +321,19 @@
 		}
 		else {
 			$authorized = false;
-			if (is_array($_SESSION['provision']["http_auth_password"])) {
-				foreach ($_SESSION['provision']["http_auth_password"] as $password) {
-					if ($_SERVER['PHP_AUTH_PW'] == $password) {
-						$authorized = true;
-						break;
-					}
+			foreach ($auth_passwords as $password) {
+				if ($_SERVER['PHP_AUTH_PW'] == $password) {
+					$authorized = true;
+					break;
 				}
-				unset($password);
 			}
+			unset($password, $auth_passwords);
+
 			if (!$authorized) {
 				//access denied
 				syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempt but failed http basic authentication for ".check_str($_REQUEST['mac']));
 				header('HTTP/1.0 401 Unauthorized');
-				header('WWW-Authenticate: Basic realm="'.$_SESSION['domain_name'].'"');
+				header('WWW-Authenticate: Basic realm="'.$domain_name.'"');
 				unset($_SERVER['PHP_AUTH_USER'],$_SERVER['PHP_AUTH_PW']);
 				$content = 'Unauthorized';
 				header("Content-Length: ".strval(strlen($content)));
@@ -445,8 +356,11 @@
 		}
 	}
 
+//start the buffer
+	ob_start();
+
 //output template to string for header processing
-	$prov = new provision;
+	$prov = new provision(['settings'=>$settings]);
 	$prov->domain_uuid = $domain_uuid;
 	$prov->device_address = $device_address;
 	$prov->file = $file;
