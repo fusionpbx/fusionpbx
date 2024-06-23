@@ -37,7 +37,6 @@
 	$row_count = 0;
 	$device_template = '';
 	$database = database::new(); //use an existing connection if possible
-	$active_domains = domains::get_list($database);
 
 //define PHP variables from the HTTP values
 	if (isset($_REQUEST['address'])) {
@@ -176,12 +175,25 @@
 	}
 	unset($sql, $parameters);
 
+//check if provisioning has been enabled
+	if ($provision["enabled"] != "true") {
+		syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempt but provisioning is not enabled for ".escape($_REQUEST['mac']));
+		http_error('404');
+	}
+
 //get the domain_name and domain_uuid
 	if (empty($domain_uuid)) {
 		//get the domain_name
-		$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
-		$domain_name = $domain_array[0];
-		$domain_uuid = array_search($domain_name, $active_domains);
+			$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
+			$domain_name = $domain_array[0];
+
+		//get the domain_uuid
+			$sql = "select domain_uuid from v_domains ";
+			$sql .= "where domain_name = :domain_name ";
+			$parameters['domain_name'] = $domain_name;
+			$database = new database;
+			$domain_uuid = $database->select($sql, $parameters, 'column');
+			unset($sql, $parameters);
 	}
 
 //send a request to a remote server to validate the MAC address and secret
