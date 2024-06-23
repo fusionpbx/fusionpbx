@@ -350,6 +350,9 @@
 		}
 	}
 
+//start the buffer
+	ob_start();
+
 //output template to string for header processing
 	$prov = new provision(['settings'=>$settings]);
 	$prov->domain_uuid = $domain_uuid;
@@ -357,7 +360,7 @@
 	$prov->file = $file;
 	$file_contents = $prov->render();
 
-//output buffer was not started
+//clean the output buffer
 	ob_clean();
 
 //deliver the customized config over HTTP/HTTPS
