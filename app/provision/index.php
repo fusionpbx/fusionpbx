@@ -175,12 +175,6 @@
 	}
 	unset($sql, $parameters);
 
-//check if provisioning has been enabled
-	if ($provision["enabled"] != "true") {
-		syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempt but provisioning is not enabled for ".escape($_REQUEST['mac']));
-		http_error('404');
-	}
-
 //get the domain_name and domain_uuid
 	if (empty($domain_uuid)) {
 		//get the domain_name
