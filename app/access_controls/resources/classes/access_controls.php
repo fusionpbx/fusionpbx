@@ -2,8 +2,6 @@
 
 /**
  * access controls class
- *
- * @method null download
  */
 if (!class_exists('access_controls')) {
 
@@ -14,18 +12,34 @@ if (!class_exists('access_controls')) {
 		const LIST_PAGE = 'access_controls.php';
 
 		/**
-		 * declare private variables
+		 * Database Connection Object
+		 * @var database Object
 		 */
+		private $database;
 
 		/**
-		 * called when the object is created
+		 * @param array $params Allows setting the database using an associative array
 		 */
-		public function __construct() {
+		public function __construct($params = []) {
+
+			// check if passed in the constructor
+			if (isset($params['database'])) {
+				// use existing object
+				$this->database = $params['database'];
+			} else {
+				// use an existing connection if possible
+				$this->database = database::new();
+			}
+
+			// set the database name and uuid used for tracking database transactions
+			$this->database->app_name = self::APP_NAME;
+			$this->database->app_uuid = self::APP_UUID;
 
 		}
 
 		/**
-		 * delete records
+		 * delete records 'checked' for deletion
+		 * @param array $records associative array for records to delete
 		 */
 		public function delete($records) {
 
@@ -67,10 +81,7 @@ if (!class_exists('access_controls')) {
 						$p->add('access_control_node_delete', 'temp');
 
 						//execute delete
-						$database = new database;
-						$database->app_name = self::APP_NAME;
-						$database->app_uuid = self::APP_UUID;
-						$database->delete($array);
+						$this->database->delete($array);
 						unset($array);
 
 						//revoke temporary permissions
@@ -91,6 +102,10 @@ if (!class_exists('access_controls')) {
 			}
 		}
 
+		/**
+		 * delete node records 'checked' for deletion and reloads the ACL using an event socket.
+		 * @param array $records associative array for records to delete
+		 */
 		public function delete_nodes($records) {
 
 			//assign local variables
@@ -126,10 +141,7 @@ if (!class_exists('access_controls')) {
 					if (is_array($array) && @sizeof($array) != 0) {
 
 						//execute delete
-						$database = new database;
-						$database->app_name = self::APP_NAME;
-						$database->app_uuid = self::APP_UUID;
-						$database->delete($array);
+						$this->database->delete($array);
 						unset($array);
 
 						//clear the cache
@@ -148,7 +160,8 @@ if (!class_exists('access_controls')) {
 		}
 
 		/**
-		 * copy records
+		 * copy records that are 'checked'. The word '(copy)' will be appended to the description using the currently selected language. Then reloads the ACL using an event socket.
+		 * @param array $records associative array for records to delete
 		 */
 		public function copy($records) {
 
@@ -187,8 +200,7 @@ if (!class_exists('access_controls')) {
 						//primary table
 						$sql = "select * from v_" . $table . " ";
 						$sql .= "where " . $uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
-						$database = new database;
-						$rows = $database->select($sql, $parameters, 'all');
+						$rows = $this->database->select($sql, null, 'all');
 						if (is_array($rows) && @sizeof($rows) != 0) {
 							$y = 0;
 							foreach ($rows as $x => $row) {
@@ -204,8 +216,7 @@ if (!class_exists('access_controls')) {
 								//nodes sub table
 								$sql_2 = "select * from v_access_control_nodes where access_control_uuid = :access_control_uuid";
 								$parameters_2['access_control_uuid'] = $row['access_control_uuid'];
-								$database = new database;
-								$rows_2 = $database->select($sql_2, $parameters_2, 'all');
+								$rows_2 = $this->database->select($sql_2, $parameters_2, 'all');
 								if (is_array($rows_2) && @sizeof($rows_2) != 0) {
 									foreach ($rows_2 as $row_2) {
 
@@ -223,7 +234,7 @@ if (!class_exists('access_controls')) {
 								unset($sql_2, $parameters_2, $rows_2, $row_2);
 							}
 						}
-						unset($sql, $parameters, $rows, $row);
+						unset($sql, $rows, $row);
 					}
 
 					//save the changes and set the message
@@ -234,10 +245,7 @@ if (!class_exists('access_controls')) {
 						$p->add('access_control_node_add', 'temp');
 
 						//save the array
-						$database = new database;
-						$database->app_name = self::APP_NAME;
-						$database->app_uuid = self::APP_UUID;
-						$database->save($array);
+						$this->database->save($array);
 						unset($array);
 
 						//revoke temporary permissions
