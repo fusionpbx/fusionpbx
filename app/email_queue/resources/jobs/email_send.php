@@ -348,7 +348,9 @@
 		$sql = "update v_email_queue ";
 		$sql .= "set email_status = 'sent', ";
 		if (isset($transcribe_message)) {
+			$sql .= "email_body = :email_body, ";
 			$sql .= "email_transcription = :email_transcription, ";
+			$parameters['email_body'] = $email_body;
 			$parameters['email_transcription'] = $transcribe_message;
 		}
 		if (isset($save_response) && $save_response == 'true') {
