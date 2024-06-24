@@ -31,25 +31,29 @@
 
 	//permission details
 		$y=0;
-		$apps[$x]['permissions'][0]['name'] = "call_active_view";
-		$apps[$x]['permissions'][0]['menu']['uuid'] = "eba3d07f-dd5c-6b7b-6880-493b44113ade";
-		$apps[$x]['permissions'][0]['groups'][] = "superadmin";
-		$apps[$x]['permissions'][0]['groups'][] = "admin";
+		$apps[$x]['permissions'][$y]['name'] = "call_active_view";
+		$apps[$x]['permissions'][$y]['menu']['uuid'] = "eba3d07f-dd5c-6b7b-6880-493b44113ade";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		//$y++;
-		//$apps[$x]['permissions'][1]['name'] = "call_active_transfer";
-		//$apps[$x]['permissions'][1]['groups'][] = "superadmin";
+		//$apps[$x]['permissions'][$y]['name'] = "call_active_transfer";
+		//$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
-		$apps[$x]['permissions'][2]['name'] = "call_active_hangup";
-		$apps[$x]['permissions'][2]['groups'][] = "superadmin";
-		$apps[$x]['permissions'][2]['groups'][] = "admin";
-		//$y++;
-		//$apps[$x]['permissions'][3]['name'] = "call_active_park";
-		//$apps[$x]['permissions'][3]['groups'][] = "superadmin";
-		//$y++;
-		//$apps[$x]['permissions'][4]['name'] = "call_active_rec";
-		//$apps[$x]['permissions'][4]['groups'][] = "superadmin";
+		$apps[$x]['permissions'][$y]['name'] = "call_active_eavesdrop";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$y++;
-		$apps[$x]['permissions'][5]['name'] = "call_active_all";
-		$apps[$x]['permissions'][5]['groups'][] = "superadmin";
+		$apps[$x]['permissions'][$y]['name'] = "call_active_hangup";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		//$y++;
+		//$apps[$x]['permissions'][$y]['name'] = "call_active_park";
+		//$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		//$y++;
+		//$apps[$x]['permissions'][$y]['name'] = "call_active_rec";
+		//$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "call_active_all";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 
 ?>

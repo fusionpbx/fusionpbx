@@ -44,9 +44,9 @@
 				//restore default permissions
 					$x = 0;
 					foreach ($apps as $row) {
-						if (is_array($row['permissions']) && @sizeof($row['permissions']) != 0) {
+						if (!empty($row['permissions']) && is_array($row['permissions']) && @sizeof($row['permissions']) != 0) {
 							foreach ($row['permissions'] as $permission) {
-								if (is_array($permission['groups'])) {
+								if (!empty($permission['groups']) && is_array($permission['groups'])) {
 									foreach ($permission['groups'] as $group_name) {
 										if (is_array($group_name_array) || !in_array($group_name, $group_name_array)) {
 											$group_name_array[] = $group_name;
@@ -138,10 +138,10 @@
 				//restore default permissions
 					$x = 0;
 					foreach ($apps as $row) {
-						if (is_array($row['permissions']) && @sizeof($row['permissions']) != 0) {
+						if (!empty($row['permissions']) && is_array($row['permissions']) && @sizeof($row['permissions']) != 0) {
 							foreach ($row['permissions'] as $permission) {
 								//set the variables
-								if ($permission['groups']) {
+								if (!empty($permission['groups'])) {
 									foreach ($permission['groups'] as $group_name) {
 										//check group protection
 										$group_uuid = null;

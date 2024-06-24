@@ -24,16 +24,18 @@ Contributor(s):
 Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-require_once "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (if_group('superadmin')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+//includes files
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (if_group('superadmin')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -72,9 +74,9 @@ else {
 			$web_server = $_SERVER['SERVER_SOFTWARE'];
 
 			// switch version
-			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-			if ($fp) {
-				$switch_result = event_socket_request($fp, 'api version');
+			$esl = event_socket::create();
+			if ($esl->is_connected()) {
+				$switch_result = event_socket::api('version');
 			}
 			$switch_ver = trim($switch_result);
 

@@ -17,17 +17,16 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2021
+ Portions created by the Initial Developer are Copyright (C) 2008-2023
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
  Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//includes
-require_once "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
+//includes files
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
+	require_once "resources/check_auth.php";
 
 //check permissions
 if (permission_exists('default_setting_view')) {
@@ -43,13 +42,12 @@ $language = new text;
 $text = $language->get();
 
 //set the variables
-$search = $_REQUEST['search'];
-$domain_uuid = $_GET['id'];
+$search = $_REQUEST['search'] ?? '';
+$domain_uuid = $_GET['id'] ?? null;
 
 //reload default settings
 require "resources/classes/domains.php";
 $domain = new domains();
-$domain->db = $db;
 $domain->set();
 
 //add a message

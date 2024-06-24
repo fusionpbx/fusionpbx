@@ -26,7 +26,10 @@
 
 //block directory browsing and send the user to the main index
 
-include "root.php";
-header("Location: ".PROJECT_PATH."/index.php");
+//includes files
+	require_once dirname(__DIR__) . "/resources/require.php";
+
+//set a redirect
+	header("Location: /core/dashboard/index.php");
 
 ?>

@@ -1250,7 +1250,7 @@
 
 <!--  DHCP Option 2 to Override Time Zone setting. 0 - No, 1 - Yes. -->
 <!--  When set to Yes(1), it will override the configured Time Zone setting if available. -->
-<P143>1</P143>
+{if isset($grandstream_dhcp_time_zone)}<P143>{$grandstream_dhcp_time_zone}</P143>{else}<P143>0</P143>{/if}
 
 <!--  Time Zone -->
 

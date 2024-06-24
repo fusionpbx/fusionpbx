@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <AddressBook>
-
+	<version>1</version>
 	<pbgroup>
 		<id>1</id>
 		<name>Users</name>
@@ -25,8 +25,8 @@
 			<id>{$start_id++}</id>
 			{if $row.contact_name_given != ""}
 			{if $row.contact_organization != ""}
-				<FirstName>{$row.contact_name_given} {$row.contact_name_family}</FirstName>
-				<FirstName>{$row.contact_name_given} {$row.contact_name_family}</FirstName>
+				<FirstName>{$row.contact_name_given}</FirstName>
+				<LastName>{$row.contact_name_family}</LastName>
 				<Company>{$row.contact_organization}</Company>
 			{else}
 				<FirstName>{$row.contact_name_given}</FirstName>
@@ -70,8 +70,8 @@
 			<id>{$start_id++}</id>
 			{if $row.contact_name_given != ""}
 			{if $row.contact_organization != ""}
-				<FirstName>{$row.contact_name_given} {$row.contact_name_family}</FirstName>
-				<FirstName>{$row.contact_name_given} {$row.contact_name_family}</FirstName>
+				<FirstName>{$row.contact_name_given}</FirstName>
+				<LastName>{$row.contact_name_family}</LastName>
 				<Company>{$row.contact_organization}</Company>
 			{else}
 				<FirstName>{$row.contact_name_given}</FirstName>
@@ -116,8 +116,8 @@
 			<id>{$start_id++}</id>
 			{if $row.contact_name_given != ""}
 			{if $row.contact_organization != ""}
-				<FirstName>{$row.contact_name_given} {$row.contact_name_family}</FirstName>
-				<FirstName>{$row.contact_name_given} {$row.contact_name_family}</FirstName>
+				<FirstName>{$row.contact_name_given}</FirstName>
+				<LastName>{$row.contact_name_family}</LastName>
 				<Company>{$row.contact_organization}</Company>
 			{else}
 				<FirstName>{$row.contact_name_given}</FirstName>

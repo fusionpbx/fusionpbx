@@ -17,119 +17,128 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2021
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//ensure that $_SERVER["DOCUMENT_ROOT"] is defined
-	include "root.php";
-
-//find and include the config.php file
-    $config_exists = false;
-	if (file_exists("/etc/fusionpbx/config.php")) {
-		$config_exists = true;
-		include "/etc/fusionpbx/config.php";
+//find the config.conf file
+	if (file_exists('/usr/local/etc/fusionpbx/config.conf')) {
+		$config_file = '/usr/local/etc/fusionpbx/config.conf';
 	}
-	elseif (file_exists("/usr/local/etc/fusionpbx/config.php")) {
-		$config_exists = true;
-		include "/usr/local/etc/fusionpbx/config.php";
+	elseif (file_exists('/etc/fusionpbx/config.conf')) {
+		$config_file = '/etc/fusionpbx/config.conf';
 	}
-	elseif (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/config.php")) {
-		$config_exists = true;
-		include "resources/config.php";
+	elseif (file_exists(__DIR__ . '/config.php')) {
+		//set a custom config_file variable after the config.php has been validated
+		$file_content = trim(file_get_contents(__DIR__ . '/config.php'));
+		$pattern = '/^<\?php\s+\$config_file\s+=\s+[\'"](.+?)[\'"];\s+\?>$/';
+		if (preg_match($pattern, $file_content, $matches) && file_exists($matches[1])) {
+			$config_file = $matches[1];
+		}
 	}
 
-//class auto loader
-	if (!class_exists('auto_loader')) {
-		class auto_loader {
-			public function __construct() {
-				spl_autoload_register(array($this, 'loader'));
-			}
-			private function loader($class_name) {
-				//set the default value
-					$class_found = false;
+//config.conf file not found re-direct the request to the install
+	if (empty($config_file)) {
+		header("Location: /core/install/install.php");
+		exit;
+	}
 
-				//sanitize the class name
-					$class_name = preg_replace('[^a-zA-Z0-9_]', '', $class_name);
+//parse the config.conf file
+	$conf = parse_ini_file($config_file);
 
-				//save the log to the syslog server
-					if ($_REQUEST['debug'] == 'true') {
-						openlog("XML CDR", LOG_PID | LOG_PERROR, LOG_LOCAL0);
-					}
+//set the include path
+	set_include_path($conf['document.root']);
 
-				//find the most relevant class name
-					if (!$class_found && file_exists($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/resources/classes/".$class_name.".php")) {
-						//first priority
-						$path = $_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/resources/classes/".$class_name.".php";
-						$class_found = true;
-						if ($_REQUEST['debug'] == 'true') {
-							syslog(LOG_WARNING, "[php][autoloader] name: ".$class_name.", path: ".$path.", line: ".__line__);
-						}
-						include $path;
-					}
-					elseif (!$class_found && file_exists($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/core/".$class_name."/resources/classes/".$class_name.".php")) {
-						//second priority
-						$path = $_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/core/".$class_name."/resources/classes/".$class_name.".php";
-						$class_found = true;
-						if ($_REQUEST['debug'] == 'true') {
-							syslog(LOG_WARNING, "[php][autoloader] name: ".$class_name.", path: ".$path.", line: ".__line__);
-						}
-						include $path;
-					}
-					elseif (!$class_found && file_exists($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/app/".$class_name."/resources/classes/".$class_name.".php")) {
-						//third priority
-						$path = $_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/app/".$class_name."/resources/classes/".$class_name.".php";
-						$class_found = true;
-						if ($_REQUEST['debug'] == 'true') {
-							syslog(LOG_WARNING, "[php][autoloader] name: ".$class_name.", path: ".$path.", line: ".__line__);
-						}
-						include $path;
-					}
+//set document root
+	$_SERVER["DOCUMENT_ROOT"] = substr($conf['document.root'], -1) === '/' ? substr($conf['document.root'], 0, -1) : $conf['document.root'];
 
-				//use glob for a more exensive search for the classes (note: GLOB_BRACE doesn't work on some systems)
-					if (!$class_found && !class_exists($class_name)) {
-						//fourth priority
-						$results_1 = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/resources/classes/".$class_name.".php");
-						$results_2 = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/resources/classes/".$class_name.".php");
-						$results = array_merge((array)$results_1,(array)$results_2);
-						unset($results_1, $results_2);
-						foreach ($results as &$class_file) {
-							if (!$class_found) {
-								$class_found = true;
-								if ($_REQUEST['debug'] == 'true') {
-									syslog(LOG_WARNING, "[php][autoloader] name: ".$class_name.", path: ".$class_file.", line: ".__line__);
-								}
-								include $class_file;
-								break;
-							}
-						}
-						unset($results);
-					}
-
-				//save the log to the syslog server
-					if ($_REQUEST['debug'] == 'true') {
-						closelog();
-					}
+//set project path
+	if (isset($conf['project.path']) && !defined('PROJECT_PATH')) {
+		if (substr($conf['project.path'], 0, 1) === '/') {
+			define("PROJECT_PATH", $conf['project.path']);
+		} else {
+			if (!empty($conf['project.path'])) {
+				define("PROJECT_PATH", '/' . $conf['project.path']);
+			} else {
+				define("PROJECT_PATH", '');
 			}
 		}
 	}
-	$autoload = new auto_loader();
+	$_SERVER["PROJECT_PATH"] = PROJECT_PATH;
+
+//set project root using project path
+	if (!defined('PROJECT_ROOT')) { define("PROJECT_ROOT", $conf['document.root'] . PROJECT_PATH); }
+	$_SERVER["PROJECT_ROOT"] = PROJECT_ROOT;
+
+//set the error reporting
+	ini_set('display_errors', '1');
+	if (isset($conf['error.reporting'])) {
+		$error_reporting_scope = $conf['error.reporting'];
+	}
+	else {
+		$error_reporting_scope = 'user';
+	}
+	switch ($error_reporting_scope) {
+	case 'user':
+		error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING ^ E_DEPRECATED);
+		break;
+	case 'dev':
+		error_reporting(E_ALL ^ E_NOTICE);
+		break;
+	case 'all':
+		error_reporting(E_ALL);
+		break;
+	default:
+		error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING ^ E_DEPRECATED);
+	}
+
+//get the database connection settings
+	//$db_type = $settings['database']['type'];
+	//$db_host = $settings['database']['host'];
+	//$db_port = $settings['database']['port'];
+	//$db_name = $settings['database']['name'];
+	//$db_username = $settings['database']['username'];
+	//$db_password = $settings['database']['password'];
+
+//get the database connection settings
+	$db_type = $conf['database.0.type'];
+	$db_host = $conf['database.0.host'];
+	$db_port = $conf['database.0.port'];
+	$db_name = $conf['database.0.name'];
+	$db_username = $conf['database.0.username'];
+	$db_password = $conf['database.0.password'];
+
+//debug info
+	//echo "Include Path: ".get_include_path()."\n";
+	//echo "Document Root: ".$_SERVER["DOCUMENT_ROOT"]."\n";
+	//echo "Project Root: ".$_SERVER["PROJECT_ROOT"]."\n";
+
+//class auto loader
+	if (!class_exists('auto_loader')) {
+		include "resources/classes/auto_loader.php";
+		$autoload = new auto_loader();
+	}
 
 //additional includes
-	require_once "resources/php.php";
+	if (!defined('STDIN')) {
+		require_once "resources/php.php";
+	}
 	require_once "resources/functions.php";
-	if ($config_exists) {
-		require "resources/pdo.php";
+	if (is_array($conf) && count($conf) > 0) {
+		require_once "resources/pdo.php";
+		if (!defined('STDIN')) {
+			require_once "resources/cidr.php";
+		}
 		if (file_exists($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/resources/switch.php")) {
 			require_once "resources/switch.php";
 		}
 	}
 
 //change language on the fly - for translate tool (if available)
-	if (isset($_REQUEST['view_lang_code']) && ($_REQUEST['view_lang_code']) != '') {
+	if (!defined('STDIN') && isset($_REQUEST['view_lang_code']) && ($_REQUEST['view_lang_code']) != '') {
 		$_SESSION['domain']['language']['code'] = $_REQUEST['view_lang_code'];
 	}
 

@@ -23,7 +23,6 @@
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-include "root.php";
 
 //define the device class
 	class device {
@@ -54,17 +53,16 @@ include "root.php";
 
 		}
 
-		public function __destruct() {
-			foreach ($this as $key => $value) {
-				unset($this->$key);
-			}
-		}
-
 		public function get_domain_uuid() {
 			return $this->domain_uuid;
 		}
 
-		public static function get_vendor($mac){
+		public static function get_vendor($mac) {
+			//return if the mac address is empty
+				if(empty($mac)) {
+					return '';
+				}
+
 			//use the mac address to find the vendor
 				$mac = preg_replace('#[^a-fA-F0-9./]#', '', $mac);
 				$mac = strtolower($mac);
@@ -120,6 +118,9 @@ include "root.php";
 				case "64167f":
 					$device_vendor = "polycom";
 					break;
+				case "482567":
+					$device_vendor = "polycom";
+					break;
 				case "000413":
 					$device_vendor = "snom";
 					break;
@@ -172,11 +173,11 @@ include "root.php";
 					if (preg_replace('/^.*?(aastra).*$/i', '$1', $agent) == "aastra") {
 						return "aastra";
 					}
-					if (preg_replace('/^.*?(cisco).*$/i', '$1', $agent) == "cisco") {
-						return "cisco";
-					}
 					if (preg_replace('/^.*?(cisco\/spa).*$/i', '$1', $agent) == "cisco/spa") {
 						return "cisco-spa";
+					}
+					if (preg_replace('/^.*?(cisco).*$/i', '$1', $agent) == "cisco") {
+						return "cisco";
 					}
 					if (preg_replace('/^.*?(digium).*$/i', '$1', $agent) == "digium") {
                                                 return "digium";
@@ -230,8 +231,11 @@ include "root.php";
 			//set the default template directory
 				if (PHP_OS == "Linux") {
 					//set the default template dir
-						if (strlen($this->template_dir) == 0) {
-							if (file_exists('/etc/fusionpbx/resources/templates/provision')) {
+						if (empty($this->template_dir)) {
+							if (file_exists('/usr/share/fusionpbx/templates/provision')) {
+								$this->template_dir = '/usr/share/fusionpbx/templates/provision';
+							}
+							elseif (file_exists('/etc/fusionpbx/resources/templates/provision')) {
 								$this->template_dir = '/etc/fusionpbx/resources/templates/provision';
 							}
 							else {
@@ -241,17 +245,12 @@ include "root.php";
 				}
 				elseif (PHP_OS == "FreeBSD") {
 					//if the FreeBSD port is installed use the following paths by default.
-						if (file_exists('/usr/local/etc/fusionpbx/resources/templates/provision')) {
-							if (strlen($this->template_dir) == 0) {
+						if (empty($this->template_dir)) {
+							if (file_exists('/usr/local/share/fusionpbx/templates/provision')) {
+								$this->template_dir = '/usr/local/share/fusionpbx/templates/provision';
+							}
+							elseif (file_exists('/usr/local/etc/fusionpbx/resources/templates/provision')) {
 								$this->template_dir = '/usr/local/etc/fusionpbx/resources/templates/provision';
-							}
-							else {
-								$this->template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/provision';
-							}
-						}
-						else {
-							if (strlen($this->template_dir) == 0) {
-								$this->template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/provision';
 							}
 							else {
 								$this->template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/provision';
@@ -260,19 +259,19 @@ include "root.php";
 				}
 				elseif (PHP_OS == "NetBSD") {
 					//set the default template_dir
-						if (strlen($this->template_dir) == 0) {
+						if (empty($this->template_dir)) {
 							$this->template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/provision';
 						}
 				}
 				elseif (PHP_OS == "OpenBSD") {
 					//set the default template_dir
-						if (strlen($this->template_dir) == 0) {
+						if (empty($this->template_dir)) {
 							$this->template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/provision';
 						}
 				}
 				else {
 					//set the default template_dir
-						if (strlen($this->template_dir) == 0) {
+						if (empty($this->template_dir)) {
 							$this->template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/provision';
 						}
 				}
@@ -316,7 +315,7 @@ include "root.php";
 
 						//build the delete array
 							foreach ($records as $x => $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$sql = "update v_devices set device_uuid_alternate = null where device_uuid_alternate = :device_uuid_alternate; ";
 									$parameters['device_uuid_alternate'] = $record['uuid'];
 									$database = new database;
@@ -352,7 +351,7 @@ include "root.php";
 									$p->delete('device_key_delete', 'temp');
 
 								//write the provision files
-									if (strlen($_SESSION['provision']['path']['text']) > 0) {
+									if (!empty($_SESSION['provision']['path']['text'])) {
 										$prov = new provision;
 										$prov->domain_uuid = $_SESSION['domain_uuid'];
 										$response = $prov->write();
@@ -393,7 +392,7 @@ include "root.php";
 						//filter out unchecked device lines, build delete array
 							$x = 0;
 							foreach ($records as $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
 									$array[$this->table][$x]['device_uuid'] = $this->device_uuid;
 									$x++;
@@ -401,7 +400,7 @@ include "root.php";
 							}
 
 						//delete the checked rows
-							if (is_array($array) && @sizeof($array) != 0) {
+							if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
 								//execute delete
 									$database = new database;
 									$database->app_name = $this->app_name;
@@ -440,7 +439,7 @@ include "root.php";
 						//filter out unchecked device keys, build delete array
 							$x = 0;
 							foreach ($records as $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
 									$array[$this->table][$x]['device_uuid'] = $this->device_uuid;
 									$x++;
@@ -448,7 +447,7 @@ include "root.php";
 							}
 
 						//delete the checked rows
-							if (is_array($array) && @sizeof($array) != 0) {
+							if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
 								//execute delete
 									$database = new database;
 									$database->app_name = $this->app_name;
@@ -487,7 +486,7 @@ include "root.php";
 						//filter out unchecked device settings, build delete array
 							$x = 0;
 							foreach ($records as $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
 									$array[$this->table][$x]['device_uuid'] = $this->device_uuid;
 									$x++;
@@ -495,7 +494,7 @@ include "root.php";
 							}
 
 						//delete the checked rows
-							if (is_array($array) && @sizeof($array) != 0) {
+							if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
 								//execute delete
 									$database = new database;
 									$database->app_name = $this->app_name;
@@ -537,7 +536,7 @@ include "root.php";
 
 						//build the delete array
 							foreach ($records as $x => $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									foreach ($this->tables as $table) {
 										$array[$table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
 									}
@@ -545,7 +544,7 @@ include "root.php";
 							}
 
 						//delete the checked rows
-							if (is_array($array) && @sizeof($array) != 0) {
+							if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
 
 								//grant temporary permissions
 									$p = new permissions;
@@ -600,7 +599,7 @@ include "root.php";
 
 						//build the delete array
 							foreach ($records as $x => $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									foreach ($this->tables as $table) {
 										$array[$table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
 									}
@@ -608,7 +607,7 @@ include "root.php";
 							}
 
 						//delete the checked rows
-							if (is_array($array) && @sizeof($array) != 0) {
+							if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
 
 								//grant temporary permissions
 									$p = new permissions;
@@ -662,7 +661,7 @@ include "root.php";
 
 						//build the delete array
 							foreach ($records as $x => $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									foreach ($this->tables as $table) {
 										$array[$table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
 									}
@@ -670,7 +669,7 @@ include "root.php";
 							}
 
 						//delete the checked rows
-							if (is_array($array) && @sizeof($array) != 0) {
+							if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
 
 								//grant temporary permissions
 									$p = new permissions;
@@ -724,13 +723,13 @@ include "root.php";
 
 						//build the delete array
 							foreach ($records as $x => $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
 								}
 							}
 
 						//execute delete
-							if (is_array($array) && @sizeof($array) != 0) {
+							if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
 								$database = new database;
 								$database->app_name = $this->app_name;
 								$database->app_uuid = $this->app_uuid;
@@ -770,13 +769,13 @@ include "root.php";
 
 						//build the delete array
 							foreach ($records as $x => $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
 								}
 							}
 
 						//execute delete
-							if (is_array($array) && @sizeof($array) != 0) {
+							if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
 								$database = new database;
 								$database->app_name = $this->app_name;
 								$database->app_uuid = $this->app_uuid;
@@ -820,8 +819,8 @@ include "root.php";
 					if (is_array($records) && @sizeof($records) != 0) {
 
 						//get current toggle state
-							foreach($records as $x => $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+							foreach ($records as $x => $record) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$uuids[] = "'".$record['uuid']."'";
 								}
 							}
@@ -842,14 +841,14 @@ include "root.php";
 
 						//build update array
 							$x = 0;
-							foreach($states as $uuid => $state) {
+							foreach ($states as $uuid => $state) {
 								$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $uuid;
 								$array[$this->table][$x][$this->toggle_field] = $state == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
 								$x++;
 							}
 
 						//save the changes
-							if (is_array($array) && @sizeof($array) != 0) {
+							if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
 
 								//save the array
 									$database = new database;
@@ -859,7 +858,7 @@ include "root.php";
 									unset($array);
 
 								//write the provision files
-									if (strlen($_SESSION['provision']['path']['text']) > 0) {
+									if (!empty($_SESSION['provision']['path']['text'])) {
 										$prov = new provision;
 										$prov->domain_uuid = $_SESSION['domain_uuid'];
 										$response = $prov->write();
@@ -902,8 +901,8 @@ include "root.php";
 					if (is_array($records) && @sizeof($records) != 0) {
 
 						//get current toggle state
-							foreach($records as $x => $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+							foreach ($records as $x => $record) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$uuids[] = "'".$record['uuid']."'";
 								}
 							}
@@ -911,7 +910,7 @@ include "root.php";
 								$sql = "select ".$this->uuid_prefix."uuid as uuid, ".$this->toggle_field." as toggle from v_".$this->table." ";
 								$sql .= "where ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
 								$database = new database;
-								$rows = $database->select($sql, $parameters, 'all');
+								$rows = $database->select($sql, $parameters ?? null, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
 										$states[$row['uuid']] = $row['toggle'];
@@ -922,14 +921,14 @@ include "root.php";
 
 						//build update array
 							$x = 0;
-							foreach($states as $uuid => $state) {
+							foreach ($states as $uuid => $state) {
 								$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $uuid;
 								$array[$this->table][$x][$this->toggle_field] = $state == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
 								$x++;
 							}
 
 						//save the changes
-							if (is_array($array) && @sizeof($array) != 0) {
+							if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
 
 								//save the array
 									$database = new database;
@@ -975,8 +974,8 @@ include "root.php";
 					if (is_array($records) && @sizeof($records) != 0) {
 
 						//get current toggle state
-							foreach($records as $x => $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+							foreach ($records as $x => $record) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$uuids[] = "'".$record['uuid']."'";
 								}
 							}
@@ -984,7 +983,7 @@ include "root.php";
 								$sql = "select ".$this->uuid_prefix."uuid as uuid, ".$this->toggle_field." as toggle from v_".$this->table." ";
 								$sql .= "where ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
 								$database = new database;
-								$rows = $database->select($sql, $parameters, 'all');
+								$rows = $database->select($sql, $parameters ?? null, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
 										$states[$row['uuid']] = $row['toggle'];
@@ -995,14 +994,14 @@ include "root.php";
 
 						//build update array
 							$x = 0;
-							foreach($states as $uuid => $state) {
+							foreach ($states as $uuid => $state) {
 								$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $uuid;
 								$array[$this->table][$x][$this->toggle_field] = $state == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
 								$x++;
 							}
 
 						//save the changes
-							if (is_array($array) && @sizeof($array) != 0) {
+							if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
 
 								//save the array
 									$database = new database;
@@ -1048,16 +1047,16 @@ include "root.php";
 					if (is_array($records) && @sizeof($records) != 0) {
 
 						//get current toggle state
-							foreach($records as $x => $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+							foreach ($records as $x => $record) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$uuids[] = "'".$record['uuid']."'";
 								}
 							}
-							if (is_array($uuids) && @sizeof($uuids) != 0) {
+							if (!empty($uuids) && is_array($uuids) && @sizeof($uuids) != 0) {
 								$sql = "select ".$this->uuid_prefix."uuid as uuid, ".$this->toggle_field." as toggle from v_".$this->table." ";
 								$sql .= "where ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
 								$database = new database;
-								$rows = $database->select($sql, $parameters, 'all');
+								$rows = $database->select($sql, $parameters ?? null, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
 										$states[$row['uuid']] = $row['toggle'];
@@ -1068,14 +1067,16 @@ include "root.php";
 
 						//build update array
 							$x = 0;
-							foreach($states as $uuid => $state) {
-								$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $uuid;
-								$array[$this->table][$x][$this->toggle_field] = $state == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
-								$x++;
+							if (!empty($states) && is_array($states) && @sizeof($states) != 0) {
+								foreach ($states as $uuid => $state) {
+									$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $uuid;
+									$array[$this->table][$x][$this->toggle_field] = $state == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
+									$x++;
+								}
 							}
 
 						//save the changes
-							if (is_array($array) && @sizeof($array) != 0) {
+							if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
 
 								//save the array
 									$database = new database;
@@ -1122,14 +1123,14 @@ include "root.php";
 					if (is_array($records) && @sizeof($records) != 0) {
 
 						//get checked records
-							foreach($records as $x => $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+							foreach ($records as $x => $record) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$uuids[] = "'".$record['uuid']."'";
 								}
 							}
 
 						//create insert array from existing data
-							if (is_array($uuids) && @sizeof($uuids) != 0) {
+							if (!empty($uuids) && is_array($uuids) && @sizeof($uuids) != 0) {
 								$sql = "select * from v_".$this->table." ";
 								$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
@@ -1207,7 +1208,7 @@ include "root.php";
 							}
 
 						//save the changes and set the message
-							if (is_array($array) && @sizeof($array) != 0) {
+							if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
 
 								//grant temporary permissions
 									$p = new permissions;

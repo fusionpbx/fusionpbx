@@ -228,7 +228,7 @@ class rfc822_addresses_class
 
 				case 'b':
 					if($e <= $t
-					|| strlen($binary = base64_decode($data = substr($value, $t, $e - $t))) == 0
+					|| empty($binary = base64_decode($data = substr($value, $t, $e - $t)))
 					|| GetType($binary) != 'string')
 						return($this->SetPositionedWarning('invalid Q-encoding b encoded data', $p + $t));
 					$decoded .= $binary;

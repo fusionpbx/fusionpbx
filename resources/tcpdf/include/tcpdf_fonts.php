@@ -1793,10 +1793,10 @@ class TCPDF_FONTS {
 	 * @public static
 	 */
 	public static function UTF8ArrSubString($strarr, $start='', $end='', $unicode=true) {
-		if (strlen($start) == 0) {
+		if (empty($start)) {
 			$start = 0;
 		}
-		if (strlen($end) == 0) {
+		if (empty($end)) {
 			$end = count($strarr);
 		}
 		$string = '';
@@ -1816,10 +1816,10 @@ class TCPDF_FONTS {
 	 * @public static
 	 */
 	public static function UniArrSubString($uniarr, $start='', $end='') {
-		if (strlen($start) == 0) {
+		if (empty($start)) {
 			$start = 0;
 		}
-		if (strlen($end) == 0) {
+		if (empty($end)) {
 			$end = count($uniarr);
 		}
 		$string = '';
@@ -1995,8 +1995,8 @@ class TCPDF_FONTS {
 	 * @author Nicola Asuni
 	 * @public static
 	 */
-	public static function UTF8StringToArray($str, $isunicode=true, &$currentfont) {
-		if ($isunicode) {
+	public static function UTF8StringToArray($str, $isunicode, &$currentfont) {
+		if ($isunicode == true) {
 			// requires PCRE unicode support turned on
 			$chars = TCPDF_STATIC::pregSplit('//','u', $str, -1, PREG_SPLIT_NO_EMPTY);
 			$carr = array_map(array('TCPDF_FONTS', 'uniord'), $chars);
@@ -2021,8 +2021,8 @@ class TCPDF_FONTS {
 	 * @since 3.2.000 (2008-06-23)
 	 * @public static
 	 */
-	public static function UTF8ToLatin1($str, $isunicode=true, &$currentfont) {
-		$unicode = self::UTF8StringToArray($str, $isunicode, $currentfont); // array containing UTF-8 unicode values
+	public static function UTF8ToLatin1($str, $isunicode, &$currentfont) {
+		$unicode = self::UTF8StringToArray($str, $isunicode ?? true, $currentfont); // array containing UTF-8 unicode values
 		return self::UTF8ArrToLatin1($unicode);
 	}
 
@@ -2037,12 +2037,12 @@ class TCPDF_FONTS {
 	 * @since 1.53.0.TC005 (2005-01-05)
 	 * @public static
 	 */
-	public static function UTF8ToUTF16BE($str, $setbom=false, $isunicode=true, &$currentfont) {
-		if (!$isunicode) {
+	public static function UTF8ToUTF16BE($str, $setbom, $isunicode, &$currentfont) {
+		if (!$isunicode ?? true) {
 			return $str; // string is not in unicode
 		}
 		$unicode = self::UTF8StringToArray($str, $isunicode, $currentfont); // array containing UTF-8 unicode values
-		return self::arrUTF8ToUTF16BE($unicode, $setbom);
+		return self::arrUTF8ToUTF16BE($unicode, $setbom ?? false);
 	}
 
 	/**
@@ -2057,8 +2057,8 @@ class TCPDF_FONTS {
 	 * @since 2.1.000 (2008-01-08)
 	 * @public static
 	 */
-	public static function utf8StrRev($str, $setbom=false, $forcertl=false, $isunicode=true, &$currentfont) {
-		return self::utf8StrArrRev(self::UTF8StringToArray($str, $isunicode, $currentfont), $str, $setbom, $forcertl, $isunicode, $currentfont);
+	public static function utf8StrRev($str, $setbom, $forcertl, $isunicode, &$currentfont) {
+		return self::utf8StrArrRev(self::UTF8StringToArray($str, $isunicode, $currentfont), $str, $setbom ?? false, $forcertl ?? false, $isunicode ?? true, $currentfont);
 	}
 
 	/**
@@ -2074,8 +2074,8 @@ class TCPDF_FONTS {
 	 * @since 4.9.000 (2010-03-27)
 	 * @public static
 	 */
-	public static function utf8StrArrRev($arr, $str='', $setbom=false, $forcertl=false, $isunicode=true, &$currentfont) {
-		return self::arrUTF8ToUTF16BE(self::utf8Bidi($arr, $str, $forcertl, $isunicode, $currentfont), $setbom);
+	public static function utf8StrArrRev($arr, $str, $setbom, $forcertl, $isunicode, &$currentfont) {
+		return self::arrUTF8ToUTF16BE(self::utf8Bidi($arr, $str ?? '', $forcertl ?? false, $isunicode ?? true, $currentfont), $setbom ?? false);
 	}
 
 	/**
@@ -2090,14 +2090,14 @@ class TCPDF_FONTS {
 	 * @since 2.4.000 (2008-03-06)
 	 * @public static
 	 */
-	public static function utf8Bidi($ta, $str='', $forcertl=false, $isunicode=true, &$currentfont) {
+	public static function utf8Bidi($ta, $str, $forcertl, $isunicode, &$currentfont) {
 		// paragraph embedding level
 		$pel = 0;
 		// max level
 		$maxlevel = 0;
-		if (TCPDF_STATIC::empty_string($str)) {
+		if (TCPDF_STATIC::empty_string($str ?? '')) {
 			// create string from array
-			$str = self::UTF8ArrSubString($ta, '', '', $isunicode);
+			$str = self::UTF8ArrSubString($ta, '', '', $isunicode ?? true);
 		}
 		// check if string contains arabic text
 		if (preg_match(TCPDF_FONT_DATA::$uni_RE_PATTERN_ARABIC, $str)) {
@@ -2106,16 +2106,16 @@ class TCPDF_FONTS {
 			$arabic = false;
 		}
 		// check if string contains RTL text
-		if (!($forcertl OR $arabic OR preg_match(TCPDF_FONT_DATA::$uni_RE_PATTERN_RTL, $str))) {
+		if (!($forcertl ?? false OR $arabic OR preg_match(TCPDF_FONT_DATA::$uni_RE_PATTERN_RTL, $str))) {
 			return $ta;
 		}
 
 		// get number of chars
 		$numchars = count($ta);
 
-		if ($forcertl == 'R') {
+		if ($forcertl ?? false == 'R') {
 			$pel = 1;
-		} elseif ($forcertl == 'L') {
+		} elseif ($forcertl ?? false == 'L') {
 			$pel = 0;
 		} else {
 			// P2. In each paragraph, find the first character of type L, AL, or R.

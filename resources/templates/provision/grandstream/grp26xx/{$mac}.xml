@@ -214,7 +214,15 @@
 {if $account.1.sip_transport == 'udp'}{$tp=0}{/if}
 {if $account.1.sip_transport == 'tcp'}{$tp=1}{/if}
 {if $account.1.sip_transport == 'tls'}{$tp=2}{/if}
-{if $account.1.sip_transport == 'dns srv'}{$tp=1}{/if}
+{if $account.1.sip_transport == 'dns srv'}	
+    {if isset($grandstream_dnssrv_transport)}	
+        {if $grandstream_dnssrv_transport == 'udp'}{$tp=0}	
+        {elseif $grandstream_dnssrv_transport == 'tls'}{$tp=2}	
+        {else}{$tp=1}	
+        {/if}	
+	{else}{$tp=1}	
+	{/if}	
+{/if}
     <P130>{$tp}</P130>
 
     <!-- # SIP Listening Mode.  -->
@@ -940,19 +948,19 @@
 
     <!-- #Do Not Disturb (DND) - On -->
     <!-- # String -->
-    <P2344></P2344>
+    <P2344>*78</P2344>
 
     <!-- #Do Not Disturb (DND) - Off -->
     <!-- # String -->
-    <P2345></P2345>
+    <P2345>*79</P2345>
 
     <!-- #Call Forward Unconditionally (All) - On -->
     <!-- # String -->
-    <P26013></P26013>
+    <P26013>*72</P26013>
 
     <!-- #Call Forward Unconditionally (All) - Off -->
     <!-- # String -->
-    <P26014></P26014>
+    <P26014>*73</P26014>
 
     <!-- #Call Forward Unconditionally (All) - Target -->
     <!-- # String -->
@@ -1195,7 +1203,15 @@
 {if $account.2.sip_transport == 'udp'}{$tp=0}{/if}
 {if $account.2.sip_transport == 'tcp'}{$tp=1}{/if}
 {if $account.2.sip_transport == 'tls'}{$tp=2}{/if}
-{if $account.2.sip_transport == 'dns srv'}{$tp=1}{/if}
+{if $account.2.sip_transport == 'dns srv'}	
+    {if isset($grandstream_dnssrv_transport)}	
+        {if $grandstream_dnssrv_transport == 'udp'}{$tp=0}	
+        {elseif $grandstream_dnssrv_transport == 'tls'}{$tp=2}	
+        {else}{$tp=1}	
+        {/if}	
+	{else}{$tp=1}	
+	{/if}	
+{/if}
     <P448>{$tp}</P448>
 
     <!-- # SIP Listening Mode.  -->
@@ -1913,19 +1929,19 @@
 
     <!-- #Do Not Disturb (DND) - On -->
     <!-- # String -->
-    <P2444></P2444>
+    <P2444>*78</P2444>
 
     <!-- #Do Not Disturb (DND) - Off -->
     <!-- # String -->
-    <P2445></P2445>
+    <P2445>*79</P2445>
 
     <!-- #Call Forward Unconditionally (All) - On -->
     <!-- # String -->
-    <P26113></P26113>
+    <P26113>*72</P26113>
 
     <!-- #Call Forward Unconditionally (All) - Off -->
     <!-- # String -->
-    <P26114></P26114>
+    <P26114>*73</P26114>
 
     <!-- #Call Forward Unconditionally (All) - Target -->
     <!-- # String -->
@@ -2166,7 +2182,15 @@
 {if $account.3.sip_transport == 'udp'}{$tp=0}{/if}
 {if $account.3.sip_transport == 'tcp'}{$tp=1}{/if}
 {if $account.3.sip_transport == 'tls'}{$tp=2}{/if}
-{if $account.3.sip_transport == 'dns srv'}{$tp=1}{/if}
+{if $account.3.sip_transport == 'dns srv'}	
+    {if isset($grandstream_dnssrv_transport)}	
+        {if $grandstream_dnssrv_transport == 'udp'}{$tp=0}	
+        {elseif $grandstream_dnssrv_transport == 'tls'}{$tp=2}	
+        {else}{$tp=1}	
+        {/if}	
+	{else}{$tp=1}	
+	{/if}	
+{/if}
     <P548>{$tp}</P548>
 
     <!-- # SIP Listening Mode.  -->
@@ -2885,19 +2909,19 @@
 
     <!-- #Do Not Disturb (DND) - On -->
     <!-- # String -->
-    <P2544></P2544>
+    <P2544>*78</P2544>
 
     <!-- #Do Not Disturb (DND) - Off -->
     <!-- # String -->
-    <P2545></P2545>
+    <P2545>*79</P2545>
 
     <!-- #Call Forward Unconditionally (All) - On -->
     <!-- # String -->
-    <P26213></P26213>
+    <P26213>*72</P26213>
 
     <!-- #Call Forward Unconditionally (All) - Off -->
     <!-- # String -->
-    <P26214></P26214>
+    <P26214>*73</P26214>
 
     <!-- #Call Forward Unconditionally (All) - Target -->
     <!-- # String -->
@@ -3139,7 +3163,15 @@
 {if $account.4.sip_transport == 'udp'}{$tp=0}{/if}
 {if $account.4.sip_transport == 'tcp'}{$tp=1}{/if}
 {if $account.4.sip_transport == 'tls'}{$tp=2}{/if}
-{if $account.4.sip_transport == 'dns srv'}{$tp=1}{/if}
+{if $account.4.sip_transport == 'dns srv'}	
+    {if isset($grandstream_dnssrv_transport)}	
+        {if $grandstream_dnssrv_transport == 'udp'}{$tp=0}	
+        {elseif $grandstream_dnssrv_transport == 'tls'}{$tp=2}	
+        {else}{$tp=1}	
+        {/if}	
+	{else}{$tp=1}	
+	{/if}	
+{/if}
     <P648>{$tp}</P648>
 
     <!-- # SIP Listening Mode.  -->
@@ -3860,19 +3892,19 @@
 
     <!-- #Do Not Disturb (DND) - On -->
     <!-- # String -->
-    <P2644></P2644>
+    <P2644>*78</P2644>
 
     <!-- #Do Not Disturb (DND) - Off -->
     <!-- # String -->
-    <P2645></P2645>
+    <P2645>*79</P2645>
 
     <!-- #Call Forward Unconditionally (All) - On -->
     <!-- # String -->
-    <P26313></P26313>
+    <P26313>*72</P26313>
 
     <!-- #Call Forward Unconditionally (All) - Off -->
     <!-- # String -->
-    <P26314></P26314>
+    <P26314>*73</P26314>
 
     <!-- #Call Forward Unconditionally (All) - Target -->
     <!-- # String -->
@@ -4114,7 +4146,15 @@
 {if $account.5.sip_transport == 'udp'}{$tp=0}{/if}
 {if $account.5.sip_transport == 'tcp'}{$tp=1}{/if}
 {if $account.5.sip_transport == 'tls'}{$tp=2}{/if}
-{if $account.5.sip_transport == 'dns srv'}{$tp=1}{/if}
+{if $account.5.sip_transport == 'dns srv'}	
+    {if isset($grandstream_dnssrv_transport)}	
+        {if $grandstream_dnssrv_transport == 'udp'}{$tp=0}	
+        {elseif $grandstream_dnssrv_transport == 'tls'}{$tp=2}	
+        {else}{$tp=1}	
+        {/if}	
+	{else}{$tp=1}	
+	{/if}	
+{/if}
     <P748>{$tp}</P748>
 
     <!-- # SIP Listening Mode.  -->
@@ -4835,19 +4875,19 @@
 
     <!-- #Do Not Disturb (DND) - On -->
     <!-- # String -->
-    <P2744></P2744>
+    <P2744>*78</P2744>
 
     <!-- #Do Not Disturb (DND) - Off -->
     <!-- # String -->
-    <P2745></P2745>
+    <P2745>*79</P2745>
 
     <!-- #Call Forward Unconditionally (All) - On -->
     <!-- # String -->
-    <P26413></P26413>
+    <P26413>*72</P26413>
 
     <!-- #Call Forward Unconditionally (All) - Off -->
     <!-- # String -->
-    <P26414></P26414>
+    <P26414>*73</P26414>
 
     <!-- #Call Forward Unconditionally (All) - Target -->
     <!-- # String -->
@@ -5906,7 +5946,12 @@
     <!-- # Periodic Inform Enable. 0 - No, 1 - Yes. Default is 1 -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P4506>0</P4506>
+    {if isset ($grandstream_tr069_periodic_inform_enable)}
+<P4506>{$grandstream_tr069_periodic_inform_enable}</P4506>
+{else}
+<P4506>0</P4506>
+{/if}
+
 
     <!-- # Periodic Inform Interval. Default is 86400. -->
     <!-- # Number -->
@@ -5914,11 +5959,11 @@
 
     <!-- # Connection Request Username	 -->
     <!-- # String: a-z, A-Z, 0-9 -->
-    <P4511></P4511>
+    <P4511>{$mac|replace:'-':''|upper}</P4511>
 
     <!-- # Connection Request Password	 -->
     <!-- # String: a-z, A-Z, 0-9 -->
-    <P4512></P4512>
+    <P4512>{$mac|replace:'-':''|upper}</P4512>
 
     <!-- # Connection Request Port. Default is 7547. -->
     <!-- # Number -->
@@ -5943,7 +5988,7 @@
     <!-- # Configuration Via Keypad Menu. 0 - Unrestricted, 1 - Basic settings only, 2 - Constraint mode, 3 - Locked Mode. Default is 0 -->
     <!-- # Number: 0, 1, 2, 3 -->
     <!-- # Mandatory -->
-    <P1357>0</P1357>
+    {if isset($grandstream_configuration_via_keypad)}<P1357>{$grandstream_configuration_via_keypad}</P1357>{else}<P1357>0</P1357>{/if}
 
     <!-- # Allow Configure MPK through LCD. 0 - No, 1 - Yes. Default is 1 -->
     <!-- # Number: 0, 1 -->
@@ -6235,10 +6280,6 @@
     <!-- # String: a-z, A-Z, 0-9, ".", ":" -->
     <P101></P101>
 
-    <!-- # STUN server -->
-    <!-- # String -->
-    <P76></P76>
-
     <!-- # Delay Registration. Default is 0. -->
     <!-- # Number: 0 - 90 -->
     <!-- # Mandatory -->
@@ -6248,19 +6289,19 @@
     <!-- # Number: 0, 1. 0 - No, 1 - Yes.  -->
     <P8468>0</P8468>
 
-    <!-- # Enable Public Mode. 0 - No, 1 - Yes. Default is 0 -->
+    <!-- # STUN server -->
+    <!-- # String -->
+{if isset($grandstream_stun_server) }
+    <P76>{$grandstream_stun_server}</P76>
+{else}
+    <P76></P76>
+{/if}
+
+    <!-- # Public Mode. 0 - No, 1 - Yes. Default is 0 -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-{if isset($public_mode) }
-{if $public_mode|strtolower == 'true'}
-    <P1345>1</P1345>
-{elseif $public_mode|strtolower == 'yes'}
-    <P1345>1</P1345>
-{elseif $public_mode == '1'}
-    <P1345>1</P1345>
-{else}
-    <P1345>0</P1345>
-{/if}
+{if isset($grandstream_public_mode) }
+    <P1345>{$grandstream_public_mode}</P1345>
 {else}
     <P1345>0</P1345>
 {/if}
@@ -6887,7 +6928,11 @@
     <!-- # Mute Key Functions While Idle. 0 - DND, 1 - Idle Mute, 2 - Disabled. Default is 0 -->
     <!-- # Number: 0,1,2 -->
     <!-- # Mandatory -->
+{if isset($grandstream_idle_mute_function)}
+    <P1565>{$grandstream_idle_mute_function}</P1565>
+{else}
     <P1565>0</P1565>
+{/if}
 
     <!-- # Enable Auto Unmute. 0 - No, 1 - Yes. Default is 1 -->
     <P8488>1</P8488>
@@ -7419,7 +7464,7 @@
 
     <!-- # Allow DHCP Option 2 to Override Time Zone Setting -->
     <!-- # Number: 0, 1 -->
-    <P143>1</P143>
+    {if isset($grandstream_dhcp_time_zone)}<P143>{$grandstream_dhcp_time_zone}</P143>{else}<P143>0</P143>{/if}
 
     <!-- # Self Defined Time Zone. Max length allowed is 64 characters -->
     <!-- # String -->
@@ -7659,7 +7704,11 @@
     <!-- # Lock Speaker Volume. 0 - No, 1 - Ring, 2 - Talk, 3 - Both. Default is 0 -->
     <!-- # Number: 0, 1, 2, 3 -->
     <!-- # Mandatory -->
+{if isset($grandstream_lock_volume)}
+    <P8392>{$grandstream_lock_volume}</P8392>
+{else}
     <P8392>0</P8392>
+{/if}
 
     <!-- # Default Ringtone. 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3, 4 - silent. Default is 0 -->
     <!-- # Number: 0, 1, 2, 3, 4 -->
@@ -7772,7 +7821,11 @@
     <!-- # Show Keys Label. 1 - Show, 2 - Hide, 0 - Toggle. Default is 0 -->
     <!-- # Number: 0, 1, 2 -->
     <!-- # Mandatory -->
-    <P8386>1</P8386>
+    {if isset($grandstream_show_key_labels)}
+        <P8386>{$grandstream_show_key_labels}</P8386>
+    {else}
+        <P8386>1</P8386>
+    {/if}
 
     <!-- ############################################################################## -->
     <!-- ##  Settings/Programmable Keys/Virtual Multi-Purpose Keys -->

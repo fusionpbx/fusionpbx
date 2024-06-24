@@ -156,17 +156,22 @@
     <!-- Periodic Inform Enable 0 - No, 1 - Yes (default is No) -->
     <!-- Number: 0,1 -->
     <!-- Mandatory -->
-    <P4506>0</P4506>
+    {if isset ($grandstream_tr069_periodic_inform_enable)}
+<P4506>{$grandstream_tr069_periodic_inform_enable}</P4506>
+{else}
+<P4506>0</P4506>
+{/if}
+
     <!-- Periodic Inform Interval (default is 300) -->
     <!-- String Max Length: 5 -->
     <P4507>300</P4507>
     <!-- Conncetion Request Username -->
     <!-- String Max Length: 64 -->
-    <P4511></P4511>
+    <P4511>{$mac|replace:'-':''|upper}</P4511>
     <!-- Connection Request Password -->
     <!-- String Max Length: 64 -->
     <!-- Mandatory -->
-    <P4512></P4512>
+    <P4512>{$mac|replace:'-':''|upper}</P4512>
     <!-- Connection Request Port (default is 7547) -->
     <!-- String -->
     <!-- Max Length: 5 characters -->
@@ -230,7 +235,11 @@
     <P4206></P4206>
     <!-- NTP Server -->
     <!-- String: serveraddress -->
-    <P30>us.pool.ntp.org</P30>
+    {if isset($ntp_server_primary)}
+	<P30>{$ntp_server_primary}</P30>
+	{else}
+	<P30>pool.ntp.org</P30>
+	{/if}
     <!-- NTP Update Interval in minutes(5-1440)(Default is set to 60 minutes) -->
     <!-- Number: 5 to 1440 -->
     <!-- Mandatory -->

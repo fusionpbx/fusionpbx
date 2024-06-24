@@ -1,8 +1,6 @@
-<context name="{v_context}">
-	<extension name="echo" number="*9196" continue="false" app_uuid="1f894dfb-0567-4e20-9026-d538bbaa5261" order="350">
-		<condition field="destination_number" expression="^\*9196$">
-			<action application="answer"/>
-			<action application="echo"/>
-		</condition>
-	</extension>
-</context>
+<extension name="echo" number="*9196" context="global" continue="false" app_uuid="1f894dfb-0567-4e20-9026-d538bbaa5261" global="true" order="350">
+	<condition field="destination_number" expression="^\*9196$">
+		<action application="answer"/>
+		<action application="echo"/>
+	</condition>
+</extension>

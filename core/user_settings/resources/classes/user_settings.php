@@ -54,22 +54,12 @@ if (!class_exists('user_settings')) {
 				$this->app_name = 'user_settings';
 				$this->app_uuid = '3a3337f7-78d1-23e3-0cfd-f14499b8ed97';
 				$this->permission_prefix = 'user_setting_';
-				$this->list_page = PROJECT_PATH."/core/user/user_edit.php?id=".urlencode($this->user_uuid);
+				$this->list_page = PROJECT_PATH."/core/user/user_edit.php?id=".urlencode($this->user_uuid ?? '');
 				$this->table = 'user_settings';
 				$this->uuid_prefix = 'user_setting_';
 				$this->toggle_field = 'user_setting_enabled';
 				$this->toggle_values = ['true','false'];
 
-		}
-
-		/**
-		 * called when there are no references to a particular object
-		 * unset the variables used in the class
-		 */
-		public function __destruct() {
-			foreach ($this as $key => $value) {
-				unset($this->$key);
-			}
 		}
 
 		/**

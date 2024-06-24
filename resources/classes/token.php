@@ -44,16 +44,6 @@ class token {
 	}
 
 	/**
-	 * Called when there are no references to a particular object
-	 * unset the variables used in the class
-	 */
-	public function __destruct() {
-		foreach ($this as $key => $value) {
-			unset($this->$key);
-		}
-	}
-
-	/**
 	 * Create the token
 	 * @var string $key
 	 */
@@ -85,13 +75,13 @@ class token {
 	 * @var string $key
 	 * @var string $value
 	 */
-	public function validate($key, $value = null) {
+	public function validate($key, $value = '') {
 
 		//allow only specific characters
 			$key = preg_replace('[^a-zA-Z0-9]', '', $key);
 
 		//get the token name
-			if (is_array($_SESSION['tokens'][$key]) && @sizeof($_SESSION['tokens'][$key]) != 0) {
+			if (!empty($_SESSION['tokens']) && is_array($_SESSION['tokens'][$key]) && @sizeof($_SESSION['tokens'][$key]) != 0) {
 				foreach ($_SESSION['tokens'][$key] as $t => $token) {
 					$token_name = $token['name'];
 					if (isset($_REQUEST[$token_name])) {
@@ -104,7 +94,7 @@ class token {
 			$value = preg_replace('[^a-zA-Z0-9]', '', $value);
 
 		//compare the hashed tokens
-			if (is_array($_SESSION['tokens'][$key]) && @sizeof($_SESSION['tokens'][$key]) != 0) {
+			if (!empty($_SESSION['tokens']) && is_array($_SESSION['tokens'][$key]) && @sizeof($_SESSION['tokens'][$key]) != 0) {
 				foreach ($_SESSION['tokens'][$key] as $t => $token) {
 					if (hash_equals($token['hash'], $value)) {
 						$_SESSION['tokens'][$key][$t]['validated'] = true;
@@ -120,7 +110,7 @@ class token {
 	 * clear previously validated tokens
 	 */
 	private function clear_validated() {
-		if (is_array($_SESSION['tokens']) && @sizeof($_SESSION['tokens']) != 0) {
+		if (!empty($_SESSION['tokens']) && is_array($_SESSION['tokens']) && @sizeof($_SESSION['tokens']) != 0) {
 			foreach ($_SESSION['tokens'] as $key => $tokens) {
 				if (is_array($tokens) && @sizeof($tokens) != 0) {
 					foreach ($tokens as $t => $token) {

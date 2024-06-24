@@ -2849,7 +2849,7 @@
 			<item name="pks.vpk.{$row.device_key_id}.keyMode">{$key_types[$row.device_key_type]}</item>
 
 			<!-- # Account. 0 - Account1, 1 - Account2, 2 - Account3, 3 - Account4 -->
-			<item name="pks.vpk.{$row.device_key_id}.account">{if !empty($row.device_key_line)}Account{$row.device_key_line}{/if}</item>
+			<item name="pks.vpk.{$row.device_key_id}.account">{if isset($row.device_key_line)}Account{$row.device_key_line}{/if}</item>
 
 			<!-- # Description. Max length allowed is 32 characters. -->
 			<!-- # String -->
@@ -2884,7 +2884,7 @@
 			<item name="pks.mpk.{$row.device_key_id}.keyMode">{$key_types[$row.device_key_type]}</item>
 
 			<!-- # Account. Account1, Account2, Account3, Account4 -->
-			<item name="pks.mpk.{$row.device_key_id}.account">{if !empty($row.device_key_line)}Account{$row.device_key_line}{/if}</item>
+			<item name="pks.mpk.{$row.device_key_id}.account">{if isset($row.device_key_line)}Account{$row.device_key_line}{/if}</item>
 
 			<!-- MPK Display Name -->
 			<item name="pks.mpk.{$row.device_key_id}.description">{$row.device_key_label}</item>
@@ -2977,7 +2977,7 @@
 			<item name="pks.softkey.{$row.device_key_id}.keyMode">{$programmable_key_types[$row.device_key_type]}</item>
 
 			<!-- # Account. 0 - Account1, 1 - Account2, 2 - Account3, 3 - Account4 -->
-			<item name="pks.softkey.{$row.device_key_id}.account">{if !empty($row.device_key_line)}Account{$row.device_key_line}{/if}</item>
+			<item name="pks.softkey.{$row.device_key_id}.account">{if isset($row.device_key_line)}Account{$row.device_key_line}{/if}</item>
 
 			<!-- # Description.  -->
 			<!-- # String.  -->
@@ -3037,7 +3037,7 @@
 			<item name="pks.ext.{$row.device_key_id}.keyMode">{$key_types[$row.device_key_type]}</item>
 
 			<!-- # Account. Account1, Account2, Account3, Account4, Account5, Account6 -->
-			<item name="pks.ext.{$row.device_key_id}.account">{if !empty($row.device_key_line)}Account{$row.device_key_line}{/if}</item>
+			<item name="pks.ext.{$row.device_key_id}.account">{if isset($row.device_key_line)}Account{$row.device_key_line}{/if}</item>
 
 			<!-- # Description -->
 			<item name="pks.ext.{$row.device_key_id}.description">{$row.device_key_label}</item>

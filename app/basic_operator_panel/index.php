@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -25,9 +25,8 @@
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 
-//includes
-	include "root.php";
-	require_once "resources/require.php";
+//includes files
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -98,21 +97,21 @@
 
 				//update the user_status
 					if (is_uuid($call_center_agent_uuid)) {
-						$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-						$switch_cmd .= "callcenter_config agent set status ".$call_center_agent_uuid." '".$user_status."'";
-						$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
+						$esl = event_socket::create();
+						$switch_cmd = "callcenter_config agent set status ".$call_center_agent_uuid." '".$user_status."'";
+						$switch_result = event_socket::api($switch_cmd);
 					}
 
 				//update the user state
 					if (is_uuid($call_center_agent_uuid)) {
 						$cmd = "api callcenter_config agent set state ".$call_center_agent_uuid." Waiting";
-						$response = event_socket_request($fp, $cmd);
+						$response = event_socket::api($cmd);
 					}
 
 				//update do not disturb
 					if ($user_status == "Do Not Disturb") {
 						$x = 0;
-						foreach($_SESSION['user']['extension'] as $row) {
+						foreach ($_SESSION['user']['extension'] as $row) {
 							//build the array
 							$array['extensions'][$x]['extension_uuid'] = $row['extension_uuid'];
 							$array['extensions'][$x]['dial_string'] = '!USER_BUSY';
@@ -120,8 +119,10 @@
 
 							//delete extension from the cache
 							$cache = new cache;
-							$cache->delete("directory:".$row['extension']."@".$_SESSION['user']['domain_name']);
-							if(strlen($number_alias) > 0){
+							if (!empty($row['extension'])) {
+								$cache->delete("directory:".$row['extension']."@".$_SESSION['user']['domain_name']);
+							}
+							if (!empty($number_alias)) {
 								$cache->delete("directory:".$row['number_alias']."@".$_SESSION['user']['domain_name']);
 							}
 
@@ -139,8 +140,10 @@
 
 							//delete extension from the cache
 							$cache = new cache;
-							$cache->delete("directory:".$row['extension']."@".$_SESSION['user']['domain_name']);
-							if(strlen($number_alias) > 0){
+							if (!empty($row['extension'])) {
+								$cache->delete("directory:".$row['extension']."@".$_SESSION['user']['domain_name']);
+							}
+							if (!empty($number_alias)) {
 								$cache->delete("directory:".$row['number_alias']."@".$_SESSION['user']['domain_name']);
 							}
 
@@ -165,8 +168,10 @@
 
 				//delete extension from the cache
 					$cache = new cache;
-					$cache->delete("directory:".$extension."@".$this->domain_name);
-					if(strlen($number_alias) > 0){
+					if (!empty($extension)) {
+						$cache->delete("directory:".$extension."@".$this->domain_name);
+					}
+					if (!empty($number_alias)) {
 						$cache->delete("directory:".$number_alias."@".$this->domain_name);
 					}
 			}
@@ -255,7 +260,7 @@ unset($refresh_default);
 
 		if (this.xmlHttp.readyState == 4 && (this.xmlHttp.status == 200 || !/^http/.test(window.location.href)))
 			//this.el.innerHTML = this.xmlHttp.responseText;
-			document.getElementById('ajax_reponse').innerHTML = this.xmlHttp.responseText;
+			document.getElementById('ajax_response').innerHTML = this.xmlHttp.responseText;
 		if (document.getElementById('sort')) {
 			if (document.getElementById('sort').value != "")
 				document.getElementById('sort1').value=document.getElementById('sort').value;
@@ -267,8 +272,7 @@ unset($refresh_default);
 		url += '&vd_ext_from=' + document.getElementById('vd_ext_from').value;
 		url += '&vd_ext_to=' + document.getElementById('vd_ext_to').value;
 		url += '&group=' + ((document.getElementById('group')) ? document.getElementById('group').value : '');
-		url += '&extension_filter=' + ((document.getElementById('extension_filter')) ? document.getElementById('extension_filter').value : '');
-		url += '&name_filter=' + ((document.getElementById('name_filter')) ? document.getElementById('name_filter').value : '');
+		url += '&filter=' + ((document.getElementById('search')) ? document.getElementById('search').value : '');
 		url += '&eavesdrop_dest=' + ((document.getElementById('eavesdrop_dest')) ? document.getElementById('eavesdrop_dest').value : '');
 		if (document.getElementById('sort1'))
 			if (document.getElementById('sort1').value == '1') url += '&sort';
@@ -277,7 +281,7 @@ unset($refresh_default);
 			echo "url += '&debug';";
 		}
 		?>
-		new loadXmlHttp(url, 'ajax_reponse');
+		new loadXmlHttp(url, 'ajax_response');
 		refresh_start();
 	}
 
@@ -345,19 +349,18 @@ unset($refresh_default);
 //refresh controls
 	function refresh_stop() {
 		clearInterval(interval_timer_id);
-		if (document.getElementById('refresh_state')) { document.getElementById('refresh_state').innerHTML = "<img src='resources/images/refresh_paused.png' style='width: 16px; height: 16px; border: none; margin-top: 1px; cursor: pointer;' onclick='refresh_start();' alt=\"<?php echo $text['label-refresh_enable']?>\" title=\"<?php echo $text['label-refresh_enable']?>\">"; }
+		if (document.getElementById('refresh_state')) { document.getElementById('refresh_state').innerHTML = "<?php echo button::create(['type'=>'button','title'=>$text['label-refresh_enable'],'icon'=>'pause','onclick'=>'refresh_start()']); ?>"; }
 	}
 
 	function refresh_start() {
-		if (document.getElementById('refresh_state')) { document.getElementById('refresh_state').innerHTML = "<img src='resources/images/refresh_active.gif' style='width: 16px; height: 16px; border: none; margin-top: 3px; cursor: pointer;' alt=\"<?php echo $text['label-refresh_pause']?>\" title=\"<?php echo $text['label-refresh_pause']?>\">"; }
+		if (document.getElementById('refresh_state')) { document.getElementById('refresh_state').innerHTML = "<?php echo button::create(['type'=>'button','title'=>$text['label-refresh_pause'],'icon'=>'sync-alt fa-spin','onclick'=>'refresh_stop()']); ?>"; }
 		refresh_stop();
 		interval_timer_id = setInterval( function() {
 			url = source_url;
 			url += '&vd_ext_from=' + document.getElementById('vd_ext_from').value;
 			url += '&vd_ext_to=' + document.getElementById('vd_ext_to').value;
 			url += '&group=' + ((document.getElementById('group')) ? document.getElementById('group').value : '');
-			url += '&extension_filter=' + ((document.getElementById('extension_filter')) ? document.getElementById('extension_filter').value : '');
-			url += '&name_filter=' + ((document.getElementById('name_filter')) ? document.getElementById('name_filter').value : '');
+			url += '&filter=' + ((document.getElementById('search')) ? document.getElementById('search').value : '');
 			url += '&eavesdrop_dest=' + ((document.getElementById('eavesdrop_dest')) ? document.getElementById('eavesdrop_dest').value : '');
 			if (document.getElementById('sort1'))
 				if (document.getElementById('sort1').value == '1') url += '&sort';
@@ -366,7 +369,7 @@ unset($refresh_default);
 				echo "url += '&debug';";
 			}
 			?>
-			new loadXmlHttp(url, 'ajax_reponse');
+			new loadXmlHttp(url, 'ajax_response');
 		}, refresh);
 	}
 
@@ -402,7 +405,7 @@ unset($refresh_default);
 		if (ext != '' && chan_uuid != '') {
 			cmd = get_eavesdrop_cmd(ext, chan_uuid, document.getElementById('eavesdrop_dest').value);
 			if (cmd != '') {
-				send_cmd(cmd)
+				send_cmd(cmd);
 			}
 		}
 	}
@@ -427,7 +430,7 @@ unset($refresh_default);
 		}
 		xmlhttp.open("GET",url,false);
 		xmlhttp.send(null);
-		document.getElementById('cmd_reponse').innerHTML=xmlhttp.responseText;
+		document.getElementById('cmd_response').innerHTML=xmlhttp.responseText;
 	}
 
 //hide/show destination input field
@@ -585,13 +588,9 @@ if (is_array($_SESSION['user']['extension'])) {
 	}
 }
 
-?>
-
-<div id='ajax_reponse'></div>
-<div id='cmd_reponse' style='display: none;'></div>
-<br><br>
-
-<?php
+echo "<div id='ajax_response'></div>\n";
+echo "<div id='cmd_response' style='display: none;'></div>\n";
+echo "<br><br>\n";
 
 //include the footer
 	require_once "resources/footer.php";

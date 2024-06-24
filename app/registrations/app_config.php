@@ -69,6 +69,5 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set whether to display the Reboot button on individual list rows.";
-		$y++;
 
 ?>

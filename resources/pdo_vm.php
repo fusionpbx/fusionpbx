@@ -23,8 +23,9 @@
  Contributor(s):
  Mark J Crane <markjcrane@fusionpbx.com>
 */
-include "root.php";
-require "resources/require.php";
+
+//includes files
+	require_once __DIR__ . "/require.php";
 
 //get the contents of xml_cdr.conf.xml
 	$conf_xml_string = file_get_contents($_SESSION['switch']['conf']['dir'].'/autoload_configs/voicemail.conf.xml');
@@ -55,7 +56,7 @@ require "resources/require.php";
 //database connection
 	try {
 		unset($db);
-		if (strlen($odbc_dsn) == 0) {
+		if (empty($odbc_dsn)) {
 			$db = new PDO('sqlite:'.$_SESSION['switch']['db']['dir'].'/voicemail_default.db'); //sqlite 3
 		}
 		else {

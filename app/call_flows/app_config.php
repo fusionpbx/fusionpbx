@@ -34,13 +34,29 @@
 		$apps[$x]['destinations'][$y]['type'] = "sql";
 		$apps[$x]['destinations'][$y]['label'] = "call_flows";
 		$apps[$x]['destinations'][$y]['name'] = "call_flows";
+		$apps[$x]['destinations'][$y]['sql'] = "select call_flow_name as name, call_flow_uuid, call_flow_uuid as uuid, call_flow_extension as destination, call_flow_extension as extension, call_flow_context as context from v_call_flows ";
 		$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '\${domain_uuid}' and call_flow_enabled = 'true' ";
-		$apps[$x]['destinations'][$y]['order_by'] = "call_flow_name asc";
+		$apps[$x]['destinations'][$y]['order_by'] = "natural_sort(call_flow_extension) asc";
 		$apps[$x]['destinations'][$y]['field']['call_flow_uuid'] = "call_flow_uuid";
 		$apps[$x]['destinations'][$y]['field']['name'] = "call_flow_name";
-		$apps[$x]['destinations'][$y]['field']['destination'] = "call_flow_extension";
-		$apps[$x]['destinations'][$y]['field']['extension'] = "call_flow_extension";
-		$apps[$x]['destinations'][$y]['field']['context'] = "call_flow_context";
+		$apps[$x]['destinations'][$y]['field']['destination'] = "destination";
+		$apps[$x]['destinations'][$y]['field']['extension'] = "destination";
+		$apps[$x]['destinations'][$y]['field']['context'] = "context";
+		$apps[$x]['destinations'][$y]['select_value']['dialplan'] = "transfer:\${destination} XML \${context}";
+		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "menu-exec-app:transfer \${destination} XML \${context}";
+		$apps[$x]['destinations'][$y]['select_label'] = "\${destination} \${name}";
+		$y++;
+		$apps[$x]['destinations'][$y]['type'] = "sql";
+		$apps[$x]['destinations'][$y]['label'] = "call_flows";
+		$apps[$x]['destinations'][$y]['name'] = "call_flows";
+		$apps[$x]['destinations'][$y]['sql'] = "select call_flow_name as name, call_flow_uuid, call_flow_uuid as uuid, call_flow_feature_code as extension, call_flow_feature_code as destination, call_flow_context as context from v_call_flows ";
+		$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '\${domain_uuid}' and call_flow_feature_code is not null and call_flow_enabled = 'true' ";
+		$apps[$x]['destinations'][$y]['order_by'] = "natural_sort(call_flow_feature_code) asc";
+		$apps[$x]['destinations'][$y]['field']['uuid'] = "uuid";
+		$apps[$x]['destinations'][$y]['field']['name'] = "name";
+		$apps[$x]['destinations'][$y]['field']['destination'] = "destination";
+		$apps[$x]['destinations'][$y]['field']['extension'] = "extension";
+		$apps[$x]['destinations'][$y]['field']['context'] = "context";
 		$apps[$x]['destinations'][$y]['select_value']['dialplan'] = "transfer:\${destination} XML \${context}";
 		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "menu-exec-app:transfer \${destination} XML \${context}";
 		$apps[$x]['destinations'][$y]['select_label'] = "\${destination} \${name}";
@@ -64,6 +80,9 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "call_flow_all";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "call_flow_context";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
@@ -71,6 +90,16 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$y++;
+
+	//default settings
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "425b6aed-5039-490a-ba31-e49aa57b5902";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "call_flow";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "extension_range";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "30-39";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the suggested extension range(s) for call flows";
 
 	//cache details
 		$apps[$x]['cache']['key'] = "dialplan.\${call_flow_context}";
@@ -178,5 +207,29 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the description.";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "insert_date";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'timestamptz';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'date';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = 'date';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "insert_user";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "char(36)";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "update_date";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'timestamptz';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'date';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = 'date';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "update_user";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "char(36)";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 
 ?>

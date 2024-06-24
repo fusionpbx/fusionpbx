@@ -24,7 +24,6 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 	KonradSC <konrd@yahoo.com>
 */
-include "root.php";
 
 //define the blf_notify class
 	class call_center_notify {
@@ -38,8 +37,8 @@ include "root.php";
 		//feature_event method
 		public function send_call_center_notify() {
 
-				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-				if ($fp) {
+				$esl = event_socket::create();
+				if ($esl->is_connected()) {
 					//send the event
 						$event = "sendevent PRESENCE_IN\n";
 						$event .= "proto: agent\n";
@@ -51,9 +50,8 @@ include "root.php";
 						$event .= "login: agent+".$this->agent_name."@".$this->domain_name."\n";
 						$event .= "unique-id: ".$this->agent_uuid."\n";
 						$event .= "answer-state: ".$this->answer_state."\n";
-						event_socket_request($fp, $event);
+						event_socket::command($event);
 						//echo $event."<br />";
-					fclose($fp);
 				}
 		} //function
 

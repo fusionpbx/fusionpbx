@@ -23,8 +23,8 @@
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-require_once "root.php";
-require_once "resources/require.php";
+//includes files
+require_once dirname(__DIR__, 2) . "/resources/require.php";
 require_once "resources/check_auth.php";
 if (permission_exists('contact_add')) {
 	//access granted

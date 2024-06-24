@@ -17,16 +17,16 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2008-2018
+	Copyright (C) 2008-2023
 	All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
+	Tony Fernandez <tfernandez@smartip.ca>
 */
 
-//include
-	include "root.php";
-	require_once "resources/require.php";
+//includes files
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -41,6 +41,49 @@
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
+
+//declare variables
+	$direction = "";
+	$caller_id_name = "";
+	$caller_id_number = "";
+	$destination_number = "";
+	$context = "";
+	$start_stamp_begin = "";
+	$start_stamp_end = "";
+	$answer_stamp_begin = "";
+	$answer_stamp_end = "";
+	$end_stamp_begin = "";
+	$end_stamp_end = "";
+	$duration_min = "";
+	$duration_max = "";
+	$billsec = "";
+	$hangup_cause = "";
+	$xml_cdr_uuid = "";
+	$bridge_uuid = "";
+	$accountcode = "";
+	$read_codec = "";
+	$write_codec = "";
+	$remote_media_ip = "";
+	$network_addr = "";
+	$mos_score = "";
+
+//get the list of extensions
+	$sql = "select extension_uuid, extension, number_alias from v_extensions ";
+	$sql .= "where domain_uuid = :domain_uuid ";
+	$sql .= "order by extension asc, number_alias asc ";
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$database = new database;
+	$extensions = $database->select($sql, $parameters, 'all');
+
+//get the list of call center queues
+	if (permission_exists('xml_cdr_call_center_queue')) {
+		$sql = "select call_center_queue_uuid, queue_name, queue_extension from v_call_center_queues ";
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$sql .= "order by queue_extension asc ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$database = new database;
+		$call_center_queues = $database->select($sql, $parameters, 'all');
+	}
 
 //send the header
 	$document['title'] = $text['title-advanced_search'];
@@ -60,13 +103,13 @@
 	echo "</script>";
 
 //start the html form
-	if ($_GET['redirect'] == 'xml_cdr_statistics') {
+	if (isset($_GET['redirect']) && $_GET['redirect'] == 'xml_cdr_statistics') {
 		echo "<form method='get' action='xml_cdr_statistics.php'>\n";
 	}
 	else {
 		echo "<form method='get' action='xml_cdr.php'>\n";
 	}
-	
+
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-advanced_search']."</b></div>\n";
 	echo "	<div class='actions'>\n";
@@ -79,7 +122,7 @@
 	echo "<table cellpadding='0' cellspacing='0' border='0' width='100%'>\n";
 	echo "	<tr>\n";
 	echo "		<td width='50%' style='vertical-align: top;'>\n";
-	
+
 		echo "<table width='100%' cellpadding='0' cellspacing='0'>\n";
 		echo "	<tr>\n";
 		echo "		<td width='30%' class='vncell' valign='top' nowrap='nowrap'>\n";
@@ -128,19 +171,13 @@
 		echo "		<td class='vtable'>";
 		echo "			<select class='formfld' name='extension_uuid' id='extension_uuid'>\n";
 		echo "				<option value=''></option>";
-		$sql = "select extension_uuid, extension, number_alias from v_extensions ";
-		$sql .= "where domain_uuid = :domain_uuid ";
-		$sql .= "order by extension asc, number_alias asc ";
-		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-		$database = new database;
-		$result_e = $database->select($sql, $parameters, 'all');
-		if (is_array($result_e) && @sizeof($result_e) != 0) {
-			foreach ($result_e as &$row) {
-				$selected = ($row['extension_uuid'] == $caller_extension_uuid) ? "selected" : null;
+		if (is_array($extensions) && @sizeof($extensions) != 0) {
+			foreach ($extensions as &$row) {
+				$selected = (!empty($caller_extension_uuid) && $row['extension_uuid'] == $caller_extension_uuid) ? "selected" : null;
 				echo "			<option value='".escape($row['extension_uuid'])."' ".escape($selected).">".((is_numeric($row['extension'])) ? escape($row['extension']) : escape($row['number_alias'])." (".escape($row['extension']).")")."</option>";
 			}
 		}
-		unset($sql, $parameters, $result_e, $row, $selected);
+		unset($sql, $parameters, $extensions, $row, $selected);
 		echo "			</select>\n";
 		echo "			<input type='text' class='formfld' style='display: none;' name='caller_id_number' id='caller_id_number' value='".escape($caller_id_number)."'>\n";
 		echo "			<input type='button' id='btn_toggle_source' class='btn' name='' alt='".$text['button-back']."' value='&#9665;' onclick=\"toggle('source');\">\n";
@@ -198,7 +235,7 @@
 			echo "	<tr>";
 			echo "		<td class='vncell'>".$text['button-show_all']."</td>";
 			echo "		<td class='vtable'>\n";
-			if (permission_exists('xml_cdr_all') && $_REQUEST['showall'] == "true") {
+			if (permission_exists('xml_cdr_all') && isset($_REQUEST['show']) && $_REQUEST['show'] == "all") {
 				echo "			<input type='checkbox' class='formfld' name='showall' checked='checked' value='true'>";
 			}
 			else {
@@ -229,10 +266,12 @@
 		echo "		<td class='vncell'>".$text['label-bridge_uuid']."</td>";
 		echo "		<td class='vtable'><input type='text' class='formfld' name='bleg_uuid' value='".escape($bridge_uuid)."'></td>";
 		echo "	</tr>";
-		echo "	<tr>";
-		echo "		<td class='vncell'>".$text['label-accountcode']."</td>";
-		echo "		<td class='vtable'><input type='text' class='formfld' name='accountcode' value='".escape($accountcode)."'></td>";
-		echo "	</tr>";
+		if (permission_exists('xml_cdr_account_code')) {
+			echo "	<tr>";
+			echo "		<td class='vncell'>".$text['label-accountcode']."</td>";
+			echo "		<td class='vtable'><input type='text' class='formfld' name='accountcode' value='".escape($accountcode)."'></td>";
+			echo "	</tr>";
+		}
 		echo "	<tr>";
 		echo "		<td class='vncell'>".$text['label-read_codec']."</td>";
 		echo "		<td class='vtable'><input type='text' class='formfld' name='read_codec' value='".escape($read_codec)."'></td>";
@@ -249,7 +288,7 @@
 		echo "		<td class='vncell'>".$text['label-network_addr']."</td>";
 		echo "		<td class='vtable'><input type='text' class='formfld' name='network_addr' value='".escape($network_addr)."'></td>";
 		echo "	</tr>";
-		if (is_array($_SESSION['cdr']['field'])) {
+		if (isset($_SESSION['cdr']['field']) && is_array($_SESSION['cdr']['field'])) {
 			foreach ($_SESSION['cdr']['field'] as $field) {
 				$array = explode(",", $field);
 				$field_name = end($array);
@@ -278,6 +317,24 @@
 		echo "			<input type='text' class='formfld' name='mos_score' value='".escape($mos_score)."'>\n";
 		echo "		</td>";
 		echo "	</tr>\n";
+
+		if (permission_exists('xml_cdr_search_call_center_queues')) {
+			echo "	<tr>";
+			echo "		<td class='vncell'>".$text['label-call_center_queue']."</td>";
+			echo "		<td class='vtable'>";
+			echo "			<select class='formfld' name='call_center_queue_uuid' id='call_center_queue_uuid'>\n";
+			echo "				<option value=''></option>";
+			if (is_array($call_center_queues) && @sizeof($call_center_queues) != 0) {
+				foreach ($call_center_queues as &$row) {
+					$selected = ($row['call_center_queue_uuid'] == $call_center_queue_uuid) ? "selected" : null;
+					echo "		<option value='".escape($row['call_center_queue_uuid'])."' ".escape($selected).">".((is_numeric($row['queue_extension'])) ? escape($row['queue_extension']." (".$row['queue_name'].")") : escape($row['queue_extension'])." (".escape($row['queue_extension']).")")."</option>";
+				}
+			}
+			echo "			</select>\n";
+			echo "		</td>";
+			echo "	</tr>\n";
+			unset($sql, $parameters, $call_center_queues, $row, $selected);
+		}
 
 		echo "</table>\n";
 	

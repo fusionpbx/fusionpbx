@@ -24,9 +24,8 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//includes
-	require_once "root.php";
-	require_once "resources/require.php";
+//includes files
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -44,13 +43,13 @@
 	$sql .= "and contact_uuid = :contact_uuid ";
 	$sql .= "order by phone_primary desc, phone_label asc ";
 	$parameters['domain_uuid'] = $domain_uuid;
-	$parameters['contact_uuid'] = $contact_uuid;
+	$parameters['contact_uuid'] = $contact_uuid ?? '';
 	$database = new database;
 	$contact_phones = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
 //show if exists
-	if (is_array($contact_phones) && @sizeof($contact_phones) != 0) {
+	if (!empty($contact_phones)) {
 
 		//javascript function: send_cmd
 			echo "<script type=\"text/javascript\">\n";
@@ -90,7 +89,7 @@
 			}
 			echo "</tr>\n";
 
-			if (is_array($contact_phones) && @sizeof($contact_phones) != 0) {
+			if (!empty($contact_phones)) {
 				$x = 0;
 				foreach ($contact_phones as $row) {
 					if (permission_exists('contact_phone_edit')) {

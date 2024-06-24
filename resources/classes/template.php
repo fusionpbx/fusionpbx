@@ -23,7 +23,6 @@
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-include "root.php";
 
 //define the template class
 	if (!class_exists('template')) {
@@ -45,6 +44,7 @@ include "root.php";
 					$this->object->setTemplateDir($this->template_dir);
 					$this->object->setCompileDir($this->cache_dir);
 					$this->object->setCacheDir($this->cache_dir);
+					$this->object->registerPlugin("modifier","in_array", "in_array");
 				}
 				if ($this->engine === 'raintpl') {
 					require_once "resources/templates/engine/raintpl/rain.tpl.class.php";
@@ -63,12 +63,6 @@ include "root.php";
 						'tag_variable' => array('{$', '}'),
 					));
 					$this->object->setLexer($lexer);
-				}
-			}
-
-			public function __destruct() {
-				foreach ($this as $key => $value) {
-					unset($this->$key);
 				}
 			}
 

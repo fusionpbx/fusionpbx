@@ -1,0 +1,32 @@
+; Author: Mark J Crane <markjcrane@fusionpbx.com>
+; cp /var/www/fusionpbx/app/fax_queue/resources/service/debian.service /etc/systemd/system/fax_queue.service
+; systemctl enable fax_queue
+; systemctl start fax_queue
+; systemctl daemon-reload
+
+[Unit]
+Description=FusionPBX FAX Queue
+Wants=network-online.target
+Requires=network.target local-fs.target
+;Requires=network.target local-fs.target postgresql.service
+After=network.target network-online.target local-fs.target
+;After=network.target network-online.target local-fs.target postgresql.service
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+;Type=forking
+PIDFile=/var/run/fusionpbx/fax_queue.pid
+WorkingDirectory=/var/www/fusionpbx
+;Environment="USER=www-data"
+;Environment="GROUP=www-data"
+;EnvironmentFile=-/etc/default/fusionpbx
+ExecStartPre=/bin/mkdir -p /var/run/fusionpbx
+;ExecStartPre=/bin/chown -R ${USER}:${GROUP} /var/www/fusionpbx
+ExecStart=/usr/bin/php /var/www/fusionpbx/app/fax_queue/resources/service/fax_queue.php
+TimeoutSec=55s
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+Also=

@@ -33,9 +33,9 @@
 		if ($num_rows == 0) {
 
 			//set the directory
-				$xml_dir = $_SESSION["switch"]["conf"]["dir"].'/autoload_configs';
+				$xml_dir = $setting->get('switch','conf').'/autoload_configs';
 				$xml_file = $xml_dir."/conference.conf";
-				$xml_file_alt = $_SERVER["DOCUMENT_ROOT"].'/'.PROJECT_PATH.'/resources/templates/conf/autoload_configs/conference.conf';
+				$xml_file_alt = $_SERVER["DOCUMENT_ROOT"].'/'.PROJECT_PATH.'/app/switch/resources/conf/autoload_configs/conference.conf';
 
 			//rename the file
 				if (file_exists($xml_dir.'/conference.conf.xml.noload')) {
@@ -93,7 +93,7 @@
 								$array['conference_control_details'][0]['conference_control_detail_uuid'] = $conference_control_detail_uuid;
 								$array['conference_control_details'][0]['control_digits'] = $control_digits;
 								$array['conference_control_details'][0]['control_action'] = $control_action;
-								if (strlen($control_data) > 0) {
+								if (!empty($control_data)) {
 									$array['conference_control_details'][0]['control_data'] = $control_data;
 								}
 								$array['conference_control_details'][0]['control_enabled'] = $control_enabled;

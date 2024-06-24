@@ -24,16 +24,23 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//includes
-	include "root.php";
-	require_once "resources/require.php";
+//includes files
+	require_once __DIR__ . "/resources/require.php";
+	
+//use custom logout destination if set otherwise redirect to the index page
+	if (isset($_SESSION["login"]["logout_destination"]["text"])){
+		$logout_destination = $_SESSION["login"]["logout_destination"]["text"];
+	}
+	else {
+		$logout_destination = PROJECT_PATH."/";
+	}
 
 //destroy session
 	session_unset();
 	session_destroy();
 
 //check for login return preference
-	if ($_SESSION["user_uuid"] != '') {
+	if (!empty($_SESSION["user_uuid"])) {
 		if (isset($_SESSION['login']['destination_last']) && ($_SESSION['login']['destination_last']['boolean'] == 'true')) {
 			if ($_SERVER['HTTP_REFERER'] != '') {
 				//convert to relative path
@@ -97,8 +104,8 @@
 		}
 	}
 
-//redirect the user to the index page
-	header("Location: ".PROJECT_PATH."/login.php");
+//redirect the user to the logout page
+	header("Location: ".$logout_destination);
 	exit;
 
 ?>

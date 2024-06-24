@@ -17,16 +17,15 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2021
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//includes
-	require_once "root.php";
-	require_once "resources/require.php";
+//includes files
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -55,13 +54,13 @@
 	}
 
 //set the max php execution time
-	ini_set('max_execution_time',7200);
+	ini_set('max_execution_time', 7200);
 
 //get the http get values and set them as php variables
-	$action = $_POST["action"];
-	$from_row = $_POST["from_row"];
-	$delimiter = $_POST["data_delimiter"];
-	$enclosure = $_POST["data_enclosure"];
+	$action = $_POST["action"] ?? '';
+	$from_row = $_POST["from_row"] ?? '';
+	$delimiter = $_POST["data_delimiter"] ?? '';
+	$enclosure = $_POST["data_enclosure"] ?? '';
 
 //save the data to the csv file
 	if (isset($_POST['data'])) {
@@ -72,19 +71,18 @@
 
 //copy the csv file
 	//$_POST['submit'] == "Upload" &&
-	if ( is_uploaded_file($_FILES['ulfile']['tmp_name']) && permission_exists('contact_upload')) {
+	if (!empty($_FILES['ulfile']['tmp_name']) && is_uploaded_file($_FILES['ulfile']['tmp_name']) && permission_exists('contact_upload')) {
 		if ($_POST['type'] == 'csv') {
 			move_uploaded_file($_FILES['ulfile']['tmp_name'], $_SESSION['server']['temp']['dir'].'/'.$_FILES['ulfile']['name']);
 			$save_msg = "Uploaded file to ".$_SESSION['server']['temp']['dir']."/". htmlentities($_FILES['ulfile']['name']);
 			//system('chmod -R 744 '.$_SESSION['server']['temp']['dir'].'*');
-			unset($_POST['txtCommand']);
 			$file = $_SESSION['server']['temp']['dir'].'/'.$_FILES['ulfile']['name'];
 			$_SESSION['file'] = $file;
 		}
 	}
 
 //get the schema
-	if (strlen($delimiter) > 0) {
+	if (!empty($delimiter)) {
 		//get the first line
 			$line = fgets(fopen($_SESSION['file'], 'r'));
 			$line_fields = explode($delimiter, $line);
@@ -114,8 +112,8 @@
 					$schema[$i]['table'] = $table_name;
 					$schema[$i]['parent'] = $parent_name;
 					foreach ($table['fields'] as $row) {
-						if ($row['deprecated'] !== 'true') {
-							if (is_array($row['name'])) {
+						if (empty($row['deprecated']) || !empty($row['deprecated']) && $row['deprecated'] !== 'true') {
+							if (!empty($row['name']['text'])) {
 								$field_name = $row['name']['text'];
 							}
 							else {
@@ -137,7 +135,7 @@
 	}
 
 //match the column names to the field names
-	if (strlen($delimiter) > 0 && file_exists($_SESSION['file']) && $action != 'import') {
+	if (!empty($delimiter) && file_exists($_SESSION['file']) && $action != 'import') {
 
 		//validate the token
 			$token = new token;
@@ -173,7 +171,7 @@
 			echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 			//define phone label options
-			if (is_array($_SESSION["contact"]["phone_label"]) && @sizeof($_SESSION["contact"]["phone_label"]) != 0) {
+			if (!empty($_SESSION["contact"]["phone_label"])) {
 				sort($_SESSION["contact"]["phone_label"]);
 				foreach($_SESSION["contact"]["phone_label"] as $row) {
 					$label_options[] = "<option value='".$row.">".$row."</option>";
@@ -197,7 +195,7 @@
 			//loop through user columns
 			$x = 0;
 			foreach ($line_fields as $line_field) {
-				$line_field = trim(trim($line_field), $enclosure);
+				$line_field = preg_replace('#[^a-zA-Z0-9_]#', '', $line_field);
 				echo "<tr>\n";
 				echo "	<td width='30%' class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 				echo $line_field;
@@ -208,8 +206,8 @@
 				foreach($schema as $row) {
 					echo "			<optgroup label='".$row['table']."'>\n";
 					foreach($row['fields'] as $field) {
-						if ($field == 'phone_label') { continue; }
- 						if ($field == 'contact_url') { continue; } // can remove this after field is removed from the table
+						//if ($field == 'phone_label') { continue; }
+ 						//if ($field == 'contact_url') { continue; } // can remove this after field is removed from the table
 						$selected = '';
 						if ($field == $line_field) {
 							$selected = "selected='selected'";
@@ -221,9 +219,9 @@
 					echo "			</optgroup>\n";
 				}
 				echo "		</select>\n";
-				echo "		<select class='formfld' style='display: none;' id='labels_$x' name='labels[$x]'>\n";
-				echo 			is_array($label_options) ? implode("\n", $label_options) : null;
-				echo "		</select>\n";
+				//echo "		<select class='formfld' style='display: none;' id='labels_$x' name='labels[$x]'>\n";
+				//echo 			is_array($label_options) ? implode("\n", $label_options) : null;
+				//echo "		</select>\n";
 				echo "	</td>\n";
 				echo "</tr>\n";
 				$x++;
@@ -265,7 +263,7 @@
 	}
 
 //upload the csv
-	if (file_exists($_SESSION['file']) && $action == 'import') {
+	if (!empty($_SESSION['file']) && file_exists($_SESSION['file']) && $action == 'import') {
 
 		//validate the token
 			$token = new token;
@@ -276,9 +274,9 @@
 			}
 
 		//user selected fields, labels
-			$fields = $_POST['fields'];
-			$labels = $_POST['labels'];
-			
+			$fields = $_POST['fields'] ?? [];
+			$labels = $_POST['labels'] ?? [];
+
 		//set the domain_uuid
 			$domain_uuid = $_SESSION['domain_uuid'];
 
@@ -310,7 +308,7 @@
 								foreach ($fields as $key => $value) {
 									//get the line
 									$result = str_getcsv($line, $delimiter, $enclosure);
-									
+
 									//get the table and field name
 									$field_array = explode(".",$value);
 									$table_name = $field_array[0];
@@ -318,59 +316,72 @@
 									//echo "value: $value<br />\n";
 									//echo "table_name: $table_name<br />\n";
 									//echo "field_name: $field_name<br />\n";
-									
+
 									//get the parent table name
 									$parent = get_parent($schema, $table_name);
-	
+
+									//count the field names
+									if (isset($field_count[$table_name][$field_name])) {
+										$field_count[$table_name][$field_name]++;
+									}
+									else {
+										$field_count[$table_name][$field_name] = 0;
+									}
+
+									//set the ordinal ID
+									$id = $field_count[$table_name][$field_name];
+
 									//remove formatting from the phone number
 									if ($field_name == "phone_number") {
 										$result[$key] = preg_replace('{(?!^\+)[\D]}', '', $result[$key]);
 									}
-	
+
 									//build the data array
-									if (strlen($table_name) > 0) {
-										if (strlen($parent) == 0) {
+									if (!empty($table_name)) {
+										if (empty($parent)) {
 											$array[$table_name][$row_id]['domain_uuid'] = $domain_uuid;
 											$array[$table_name][$row_id][$field_name] = $result[$key];
 										}
 										else {
 											if ($field_name != "username" && $field_name != "group_name") {
-												$array[$parent][$row_id][$table_name][$y]['domain_uuid'] = $domain_uuid;
-												$array[$parent][$row_id][$table_name][$y][$field_name] = $result[$key];
-												if ($field_name == 'phone_number') {
-													$array[$parent][$row_id][$table_name][$y]['phone_label'] = $labels[$key];
-												}
+												$array[$parent][$row_id][$table_name][$id]['domain_uuid'] = $domain_uuid;
+												$array[$parent][$row_id][$table_name][$id][$field_name] = $result[$key];
+												//if ($field_name == 'phone_number') {
+												//	$array[$parent][$row_id][$table_name][$id]['phone_label'] = $labels[$key];
+												//}
 											}
 										}
-	
+
 										if ($field_name == "group_name") {
 											foreach ($groups as $field) {
 												if ($field['group_name'] == $result[$key]) {
 													//$array[$parent][$row_id]['contact_group_uuid'] = uuid();
-													$array[$parent][$row_id]['contact_groups'][$y]['domain_uuid'] = $domain_uuid;
+													$array[$parent][$row_id]['contact_groups'][$id]['domain_uuid'] = $domain_uuid;
 													//$array['contact_groups'][$x]['contact_uuid'] = $row['contact_uuid'];
-													$array[$parent][$row_id]['contact_groups'][$y]['group_uuid'] = $field['group_uuid'];
+													$array[$parent][$row_id]['contact_groups'][$id]['group_uuid'] = $field['group_uuid'];
 												}
 											}
 										}
-	
+
 										if ($field_name == "username") {
 											foreach ($users as $field) {
 												if ($field['username'] == $result[$key]) {
-													//$array[$parent][$row_id]['contact_users'][$y]['contact_group_uuid'] = uuid();
-													$array[$parent][$row_id]['contact_users'][$y]['domain_uuid'] = $domain_uuid;
+													//$array[$parent][$row_id]['contact_users'][$id]['contact_group_uuid'] = uuid();
+													$array[$parent][$row_id]['contact_users'][$id]['domain_uuid'] = $domain_uuid;
 													//$array['contact_groups'][$x]['contact_uuid'] = $row['contact_uuid'];
-													$array[$parent][$row_id]['contact_users'][$y]['user_uuid'] = $field['user_uuid'];
+													$array[$parent][$row_id]['contact_users'][$id]['user_uuid'] = $field['user_uuid'];
 												}
 											}
 										}
 									}
-									if (is_array($array[$parent][$row_id])) { $y++; }
+									if (!empty($array[$parent][$row_id])) { $y++; }
 								}
-	
+
+							//debug information
+								//view_array($field_count);
+
 							//process a chunk of the array
 								if ($row_id === 1000) {
-
 									//save to the data
 										$database = new database;
 										$database->app_name = 'contacts';
@@ -383,16 +394,19 @@
 									//set the row id back to 0
 										$row_id = 0;
 								}
-	
+
 						} //if ($from_row <= $row_number)
+						unset($field_count);
 						$row_number++;
 						$row_id++;
 					} //end while
-
 					fclose($handle);
 
+				//debug information
+					//view_array($array);
+
 				//save to the data
-					if (is_array($array)) {
+					if (!empty($array)) {
 						$database = new database;
 						$database->app_name = 'contacts';
 						$database->app_uuid = '04481e0e-a478-c559-adad-52bd4174574c';
@@ -436,7 +450,7 @@
 	echo "    ".$text['label-import_data']."\n";
 	echo "</td>\n";
 	echo "<td width='70%' class='vtable' align='left'>\n";
-	echo "    <textarea name='data' id='data' class='formfld' style='width: 100%; min-height: 150px;' wrap='off'>$data</textarea>\n";
+	echo "    <textarea name='data' id='data' class='formfld' style='width: 100%; min-height: 150px;' wrap='off'></textarea>\n";
 	echo "<br />\n";
 	echo $text['description-import_data']."\n";
 	echo "</td>\n";
@@ -501,7 +515,7 @@
 	echo "</table>\n";
 	echo "<br />\n";
 
-	if (function_exists('curl_version') && $_SESSION['contact']['google_oauth_client_id']['text'] != '' && $_SESSION['contact']['google_oauth_client_secret']['text'] != '') {
+	if (function_exists('curl_version') && !empty($_SESSION['contact']['google_oauth_client_id']['text']) && !empty($_SESSION['contact']['google_oauth_client_secret']['text'])) {
 		echo "<a href='contact_import_google.php'><img src='resources/images/icon_gcontacts.png' style='width: 21px; height: 21px; border: none; text-decoration: none; margin-right: 5px;' align='absmiddle'>".$text['header-contacts_import_google']."</a>\n";
 	}
 

@@ -1,0 +1,12 @@
+<extension name="number_queue" number="*800[ext]" context="${domain_name}" app_uuid="eb837d10-890d-11e3-baa8-0800200c9a66" order="290">
+	<condition field="destination_number" expression="^\*800(.*)$" >
+		<action application="set" data="fifo_music=$${hold_music}" />
+		<action application="set" data="extension_queue=queue_$1@${domain_name}" />
+		<action application="set" data="fifo_simo=1" />
+		<action application="set" data="fifo_timeout=30" />
+		<action application="set" data="fifo_lag=10" />
+		<action application="set" data="fifo_destroy_after_use=true" />
+		<action application="set" data="fifo_extension_member=$1@${domain_name}" />
+		<action application="lua" data="extension_queue.lua" />
+	</condition>
+</extension>

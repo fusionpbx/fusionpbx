@@ -17,16 +17,15 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//includes
-	require_once "root.php";
-	require_once "resources/require.php";
+//includes files
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "xml_cdr_statistics_inc.php";
 
@@ -43,6 +42,9 @@
 	$language = new text;
 	$text = $language->get();
 
+//set default showall
+	$show_all = false;
+
 //additional includes
 	$document['title'] = $text['title-call-statistics'];
 	require_once "resources/header.php";
@@ -52,82 +54,83 @@
 	if (permission_exists('xml_cdr_search_advanced')) {
 		$search_url .= '&redirect=xml_cdr_statistics';
 	}
-	if(permission_exists('xml_cdr_all') && ($_GET['showall'] === 'true')){
+	if(permission_exists('xml_cdr_all') && (isset($_GET['showall']) && $_GET['showall'] === 'true')){
 		$search_url .= '&showall=true';
+		$show_all = true;
 	}
-	if (strlen($_GET['direction']) > 0) {
+	if (!empty($_GET['direction'])) {
 		$search_url .= '&direction='.urlencode($_GET['direction']);
 	}
-	if (strlen($_GET['leg']) > 0) {
+	if (!empty($_GET['leg'])) {
 		$search_url .= '&leg='.urlencode($_GET['leg']);
 	}
-	if (strlen($_GET['caller_id_name']) > 0) {
+	if (!empty($_GET['caller_id_name'])) {
 		$search_url .= '&caller_id_name='.urlencode($_GET['caller_id_name']);
 	}
-	if (strlen($_GET['caller_extension_uuid']) > 0) {
+	if (!empty($_GET['caller_extension_uuid'])) {
 		$search_url .= '&caller_extension_uuid='.urlencode($_GET['caller_extension_uuid']);
 	}
-	if (strlen($_GET['caller_id_number']) > 0) {
+	if (!empty($_GET['caller_id_number'])) {
 		$search_url .= '&caller_id_number='.urlencode($_GET['caller_id_number']);
 	}
-	if (strlen($_GET['destination_number']) > 0) {
+	if (!empty($_GET['destination_number'])) {
 		$search_url .= '&destination_number='.urlencode($_GET['destination_number']);
 	}
-	if (strlen($_GET['context']) > 0) {
+	if (!empty($_GET['context'])) {
 		$search_url .= '&context='.urlencode($_GET['context']);
 	}
-	if (strlen($_GET['start_stamp_begin']) > 0) {
+	if (!empty($_GET['start_stamp_begin'])) {
 		$search_url .= '&start_stamp_begin='.urlencode($_GET['start_stamp_begin']);
 	}
-	if (strlen($_GET['start_stamp_end']) > 0) {
+	if (!empty($_GET['start_stamp_end'])) {
 		$search_url .= '&start_stamp_end='.urlencode($_GET['start_stamp_end']);
 	}
-	if (strlen($_GET['answer_stamp_begin']) > 0) {
+	if (!empty($_GET['answer_stamp_begin'])) {
 		$search_url .= '&answer_stamp_begin='.urlencode($_GET['answer_stamp_begin']);
 	}
-	if (strlen($_GET['answer_stamp_end']) > 0) {
+	if (!empty($_GET['answer_stamp_end'])) {
 		$search_url .= '&answer_stamp_end='.urlencode($_GET['answer_stamp_end']);
 	}
-	if (strlen($_GET['end_stamp_begin']) > 0) {
+	if (!empty($_GET['end_stamp_begin'])) {
 		$search_url .= '&end_stamp_begin='.urlencode($_GET['end_stamp_begin']);
 	}
-	if (strlen($_GET['end_stamp_end']) > 0) {
+	if (!empty($_GET['end_stamp_end'])) {
 		$search_url .= '&end_stamp_end='.urlencode($_GET['end_stamp_end']);
 	}
-	if (strlen($_GET['duration']) > 0) {
+	if (!empty($_GET['duration'])) {
 		$search_url .= '&duration='.urlencode($_GET['duration']);
 	}
-	if (strlen($_GET['billsec']) > 0) {
+	if (!empty($_GET['billsec'])) {
 		$search_url .= '&billsec='.urlencode($_GET['billsec']);
 	}
-	if (strlen($_GET['hangup_cause']) > 0) {
+	if (!empty($_GET['hangup_cause'])) {
 		$search_url .= '&hangup_cause='.urlencode($_GET['hangup_cause']);
 	}
-	if (strlen($_GET['uuid']) > 0) {
+	if (!empty($_GET['uuid'])) {
 		$search_url .= '&uuid='.urlencode($_GET['uuid']);
 	}
-	if (strlen($_GET['bleg_uuid']) > 0) {
+	if (!empty($_GET['bleg_uuid'])) {
 		$search_url .= '&bleg_uuid='.urlencode($_GET['bleg_uuid']);
 	}
-	if (strlen($_GET['accountcode']) > 0) {
+	if (!empty($_GET['accountcode'])) {
 		$search_url .= '&accountcode='.urlencode($_GET['accountcode']);
 	}
-	if (strlen($_GET['read_codec']) > 0) {
+	if (!empty($_GET['read_codec'])) {
 		$search_url .= '&read_codec='.urlencode($_GET['read_codec']);
 	}
-	if (strlen($_GET['write_codec']) > 0) {
+	if (!empty($_GET['write_codec'])) {
 		$search_url .= '&write_codec='.urlencode($_GET['write_codec']);
 	}
-	if (strlen($_GET['remote_media_ip']) > 0) {
+	if (!empty($_GET['remote_media_ip'])) {
 		$search_url .= '&remote_media_ip='.urlencode($_GET['remote_media_ip']);
 	}
-	if (strlen($_GET['network_addr']) > 0) {
+	if (!empty($_GET['network_addr'])) {
 		$search_url .= '&network_addr='.urlencode($_GET['network_addr']);
 	}
-	if (strlen($_GET['mos_comparison']) > 0) {
+	if (!empty($_GET['mos_comparison'])) {
 		$search_url .= '&mos_comparison='.urlencode($_GET['mos_comparison']);
 	}
-	if (strlen($_GET['mos_score']) > 0) {
+	if (!empty($_GET['mos_score'])) {
 		$search_url .= '&mos_score='.urlencode($_GET['mos_score']);
 	}
 
@@ -141,7 +144,7 @@
 	if (permission_exists('xml_cdr_search_advanced')) {
 		echo button::create(['type'=>'button','label'=>$text['button-advanced_search'],'icon'=>'tools','link'=>'xml_cdr_search.php?type=advanced'.$search_url]);
 	}
-	if (permission_exists('xml_cdr_all') && $_GET['showall'] != 'true') {
+	if (permission_exists('xml_cdr_all') && !$show_all) {
 		echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$_SESSION['theme']['button_icon_all'],'link'=>'xml_cdr_statistics.php?showall=true'.$search_url]);
 	}
 	echo button::create(['type'=>'button','label'=>$text['button-extension_summary'],'icon'=>'list','link'=>'xml_cdr_extension_summary.php']);
@@ -154,107 +157,117 @@
 	echo "<br /><br />\n";
 
 	?>
+	<script src='/resources/chartjs/chart.min.js'></script>
+	<script src='/resources/chartjs/chartjs-adapter-date-fns.bundle.min.js'></script>
 
-	<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="<?php echo PROJECT_PATH; ?>/resources/jquery/flot/excanvas.min.js"></script><![endif]-->
-	<script language="javascript" type="text/javascript" src="<?php echo PROJECT_PATH; ?>/resources/jquery/flot/jquery.flot.js"></script>
-	<script language="javascript" type="text/javascript" src="<?php echo PROJECT_PATH; ?>/resources/jquery/flot/jquery.flot.time.js"></script>
-	<div align='center'>
-	<table>
-		<tr>
-			<td align='left' colspan='2'>
-				<div id="placeholder-legend" style="padding:2px;margin-bottom: 8px;border-radius: 3px 3px 3px 3px;border: 1px solid #E6E6E6;display: inline-block;margin: 0 auto;"></div>
-			</td>
-		</tr>
-		<tr>
-			<td align='left'>
-				<div id="placeholder" style="width:700px;height:180px;margin-right:25px;"></div>
-			</td>
-			<td align='left' valign='top'>
-				<p id="choices"></p>
-			</td>
-		</tr>
-	</table>
+	<div align='center' style="justify-content: center;">
+		<div style="max-width: 100%; width: 800px; height: 280px;">
+			<canvas id="cdr_stats_chart" style="width: 100%; height: 100%;"></canvas>
+		</div>
 	</div>
+
 	<script type="text/javascript">
-	$(function () {
-		var datasets = {
-			"volume": {
-				label: "Volume",
-				data: <?php echo json_encode($graph['volume']); ?>
-			},
-			"minutes": {
-				label: "Minutes",
-				data: <?php echo json_encode($graph['minutes']); ?>
-			},
-			"call_per_min": {
-				label: "Calls Per Min",
-				data: <?php echo json_encode($graph['call_per_min']); ?>
-			},
-			"missed": {
-				label: "Missed",
-				data: <?php echo json_encode($graph['missed']); ?>
-			},
-			"asr": {
-				label: "ASR",
-				data: <?php echo json_encode($graph['asr']); ?>
-			},
-			"aloc": {
-				label: "ALOC",
-				data: <?php echo json_encode($graph['aloc']); ?>
-			},
+		var ctx = document.getElementById("cdr_stats_chart").getContext('2d');
+
+		const cdr_stats_data = {
+			datasets: [
+				{
+					label: "Volume",
+					data: <?php echo json_encode($graph['volume']); ?>,
+					backgroundColor: "#EDC240",
+					borderColor: "#EDC240",
+					fill: false
+				},
+				{
+					label: "Minutes",
+					data: <?php echo json_encode($graph['minutes']); ?>,
+					backgroundColor: "#AFD8F8",
+					borderColor: "#AFD8F8",
+					fill: false
+				},
+				{
+					label: "Calls Per Min",
+					data: <?php echo json_encode($graph['call_per_min']); ?>,
+					backgroundColor: "#CB4B4B",
+					borderColor: "#CB4B4B",
+					fill: false
+				},
+				{
+					label: "Missed",
+					data: <?php echo json_encode($graph['missed']); ?>,
+					backgroundColor: "#4DA74D",
+					borderColor: "#4DA74D",
+					fill: false
+				},
+				{
+					label: "ASR",
+					data: <?php echo json_encode($graph['asr']); ?>,
+					backgroundColor: "#9440ED",
+					borderColor: "#9440ED",
+					fill: false
+				},
+				{
+					label: "ALOC",
+					data: <?php echo json_encode($graph['aloc']); ?>,
+					backgroundColor: "#BD9B33",
+					borderColor: "#BD9B33",
+					fill: false
+				}
+			]
 		};
 
-		// hard-code color indices to prevent them from shifting as
-		// countries are turned on/off
-		var i = 0;
-		$.each(datasets, function(key, val) {
-			val.color = i;
-			++i;
-		});
-
-		// insert checkboxes
-		var choiceContainer = $("#choices");
-		$.each(datasets, function(key, val) {
-			choiceContainer.append('<br /><span style="white-space: nowrap;"><input type="checkbox" name="' + key +
-								   '" checked="checked" id="id' + key + '">&nbsp;' +
-								   '<label for="id' + key + '">'
-									+ val.label + '</label></span>');
-		});
-		choiceContainer.find("input").on('click', plotAccordingToChoices);
-
-		function plotAccordingToChoices() {
-			var data = [];
-			choiceContainer.find("input:checked").each(function () {
-				var key = $(this).attr("name");
-				if (key && datasets[key])
-					data.push(datasets[key]);
-			});
-
-			if (data.length > 0)
-				$.plot($("#placeholder"), data, {
-					legend:{
-						show: true,
-						noColumns: 10,
-						container: $("#placeholder-legend"),
-						placement: 'outsideGrid',
+		const cdr_stats_config = {
+			type: 'line',
+			data: cdr_stats_data,
+			options: {
+				responsive: true,
+				maintainAspectRatio: false,
+				plugins: {
+					legend: {
+						display: true,
+						labels: {
+							usePointStyle: true,
+							pointStyle: 'rect',
+							color: '#444',
+							boxWidth: 15
+						}
+					}
+				},
+				scales: {
+					x: {
+						type: "time",
 					},
-					yaxis: { min: 0 },
-					<?php
-					if ($hours <= 48) {
-						echo "xaxis: {mode: \"time\",timeformat: \"%d:%H\",minTickSize: [1, \"hour\"]}";
+					y: {
+						min: 0
 					}
-					else if ($hours > 48 && $hours < 168) {
-						echo "xaxis: {mode: \"time\",timeformat: \"%m:%d\",minTickSize: [1, \"day\"]}";
+				},
+				elements: {
+					line: {
+						tension: 0.3
 					}
-					else {
-						echo "xaxis: {mode: \"time\",timeformat: \"%m:%d\",minTickSize: [1, \"month\"]}";
+				}
+			},
+			scales: {
+				<?php
+				if ($hours <= 48) {
+					echo "xAxes: {type: \"time\",timeFormat: \"%d:%H\",minTickSize: [1, \"hour\"]}";
+				}
+				else if ($hours > 48 && $hours < 168) {
+					echo "xAxes: {type: \"time\",timeFormat: \"%m:%d\",minTickSize: [1, \"day\"]}";
+				}
+				else {
+					echo "xAxes: {type: \"time\",timeFormat: \"%m:%d\",minTickSize: [1, \"month\"]}";
+				}
+				?>,
+				yAxes: [{
+					ticks: {
+						beginAtZero: true
 					}
-					?>
-				});
-		}
+				}]
+			}
+		};
 
-		plotAccordingToChoices();
-	});
+		const cdr_stats_chart = new Chart(ctx, cdr_stats_config);
 	</script>
 
 	<?php
@@ -262,22 +275,22 @@
 //show the results
 	echo "<table class='list'>\n";
 	echo "<tr class='list-header'>\n";
-	echo "	<th>".$text['table-hours']."</th>\n";
-	echo "	<th>".$text['table-date']."</th>\n";
-	echo "	<th class='no-wrap'>".$text['table-time']."</th>\n";
+	echo "	<th>".$text['label-hours']."</th>\n";
+	echo "	<th>".$text['label-date']."</th>\n";
+	echo "	<th class='no-wrap'>".$text['label-time']."</th>\n";
 	echo "	<th>Volume</th>\n";
-	echo "	<th>".$text['table-minutes']."</th>\n";
-	echo "	<th>".$text['table-calls-per-minute']."</th>\n";
-	echo "	<th class='center'>".$text['table-missed']."</th>\n";
+	echo "	<th>".$text['label-minutes']."</th>\n";
+	echo "	<th>".$text['label-calls-per-minute']."</th>\n";
+	echo "	<th class='center'>".$text['label-missed']."</th>\n";
 	echo "	<th>ASR</th>\n";
-	echo "	<th>ALOC</th>\n";
+	echo "	<th title='".$text['description-aloc']."'>".$text['label-aloc']."</th>\n";
 	echo "</tr>\n";
 
 	$i = 0;
 	foreach ($stats as $row) {
 		echo "<tr class='list-row'>\n";
 		if ($i <= $hours) {
-			echo "	<td>".($i+1)."</td>\n";
+			echo "	<td>".$row['hours']."</td>\n";
 		}
 		else if ($i == $hours+1) {
 			echo "	<br /><br />\n";
@@ -288,35 +301,35 @@
 			echo "	</td>\n";
 			echo "</tr>\n";
 			echo "<tr class='list-header'>\n";
-			echo "	<th class='no-wrap'>".$text['table-days']."</th>\n";
-			echo "	<th class='no-wrap'>".$text['table-date']."</th>\n";
-			echo "	<th class='no-wrap'>".$text['table-time']."</th>\n";
+			echo "	<th class='no-wrap'>".$text['label-days']."</th>\n";
+			echo "	<th class='no-wrap'>".$text['label-date']."</th>\n";
+			echo "	<th class='no-wrap'>".$text['label-time']."</th>\n";
 			echo "	<th>Volume</th>\n";
-			echo "	<th>".$text['table-minutes']."</th>\n";
-			echo "	<th class='no-wrap'>".$text['table-calls-per-minute']."</th>\n";
-			echo "	<th class='center'>".$text['table-missed']."</th>\n";
+			echo "	<th>".$text['label-minutes']."</th>\n";
+			echo "	<th class='no-wrap'>".$text['label-calls-per-minute']."</th>\n";
+			echo "	<th class='center'>".$text['label-missed']."</th>\n";
 			echo "	<th>ASR</th>\n";
 			echo "	<th>ALOC</th>\n";
 			echo "</tr>\n";
 			echo "<tr class='list-row'>\n";
 		}
 		if ($i > $hours) {
-			echo "	<td>" . floor(escape($row['hours'])/24) . "</td>\n";
+			echo "	<td>" . floor(escape($row['s_hour'])/24) . "</td>\n";
 		}
 		if ($i <= $hours) {
-			echo "	<td>".date('j M', $row['start_epoch'])."</td>\n";
-			echo "	<td>".date('H:i', $row['start_epoch'])." - ".date('H:i', $row['stop_epoch'])."&nbsp;</td>\n";
+			echo "	<td>".$row['date']."</td>\n";
+			echo "	<td>".$row['time']."&nbsp;</td>\n";
 		}
 		else {
-			echo "	<td>".date('j M', $row['start_epoch'])."&nbsp;</td>\n";
-			echo "	<td>".date('H:i', $row['start_epoch'])." - ".date('j M H:i', $row['stop_epoch'])."&nbsp;</td>\n";
+			echo "	<td>".$row['date']."</td>\n";
+			echo "	<td>".$row['time']."&nbsp;</td>\n";
 		}
 		echo "	<td>".escape($row['volume'])."&nbsp;</td>\n";
-		echo "	<td>".(round(escape($row['minutes']),2))."&nbsp;</td>\n";
-		echo "	<td>".(round(escape($row['avg_min']),2))."&nbsp;/&nbsp;".(round(escape($row['cpm_ans']),2))."&nbsp;</td>\n";
-		echo "	<td class='center'><a href=\"xml_cdr.php?call_result=missed&direction=$direction&start_epoch=".escape($row['start_epoch'])."&stop_epoch=".escape($row['stop_epoch'])."\">".escape($row['missed'])."</a>&nbsp;</td>\n";
-		echo "	<td>".(round(escape($row['asr']),2))."&nbsp;</td>\n";
-		echo "	<td>".(round(escape($row['aloc']),2))."&nbsp;</td>\n";
+		echo "	<td>".escape(round($row['minutes'] ?? 0, 2))."&nbsp;</td>\n";
+		echo "	<td>".escape(round($row['avg_min'] ?? 0, 2))."&nbsp;/&nbsp;".escape(round($row['cpm_ans'] ?? 0, 2))."&nbsp;</td>\n";
+		echo "	<td class='center'><a href=\"xml_cdr.php?call_result=missed&direction=".$direction."&start_epoch=".escape($row['start_epoch'] ?? '')."&stop_epoch=".escape($row['stop_epoch'] ?? '')."\">".escape($row['missed'] ?? '')."</a>&nbsp;</td>\n";
+		echo "	<td>".escape(round($row['asr'] ?? 0, 2))."&nbsp;</td>\n";
+		echo "	<td>".escape(round($row['aloc'] ?? 0, 2))."&nbsp;</td>\n";
 		echo "</tr >\n";
 		$i++;
 	}

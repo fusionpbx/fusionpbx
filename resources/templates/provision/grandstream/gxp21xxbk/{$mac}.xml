@@ -3444,7 +3444,12 @@
 <!-- Enable TR069. 0 - No, 1 - Yes. Default is 0 -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
+{if isset ($grandstream_tr069_enable)}
+<P1409>{$grandstream_tr069_enable}</P1409>
+{else}
 <P1409>0</P1409>
+{/if}
+
 
 <!-- ACS URL -->
 <!-- String -->
@@ -3461,7 +3466,12 @@
 <!-- Periodic Inform Enable. 0 - No, 1 - Yes. Default is 0 -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
+{if isset ($grandstream_tr069_periodic_inform_enable)}
+<P4506>{$grandstream_tr069_periodic_inform_enable}</P4506>
+{else}
 <P4506>0</P4506>
+{/if}
+
 
 <!-- Periodic Inform Interval. Default is 86400. -->
 <!-- Number -->
@@ -3469,11 +3479,11 @@
 
 <!-- Connection Request Username -->
 <!-- String: a-z, A-Z, 0-9 -->
-<P4511></P4511>
+<P4511>{$mac|replace:'-':''|upper}</P4511>
 
 <!-- Connection Request Password -->
 <!-- String: a-z, A-Z, 0-9 -->
-<P4512></P4512>
+<P4512>{$mac|replace:'-':''|upper}</P4512>
 
 <!-- Connection Request Port -->
 <!-- Number -->
@@ -3730,7 +3740,11 @@ Outgoing calls. 0 - No, 1 - Yes. Default is 0 -->
 <!-- Enable Idle Mute. 0 - No, 1 - Yes. Default is 0 -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
-<P1565>0</P1565>
+{if isset($grandstream_idle_mute_function_old)}
+    <P1565>{$grandstream_idle_mute_function_old}</P1565>
+{else}
+    <P1565>0</P1565>
+{/if}
 
 <!-- Disable Transfer. 0 - No, 1 - Yes. Defauls is 0 -->
 <!-- Number: 0, 1 -->
@@ -3849,7 +3863,11 @@ Outgoing calls. 0 - No, 1 - Yes. Default is 0 -->
 
 <!-- NTP Server -->
 <!-- String -->
-<P30>us.pool.ntp.org</P30>
+{if isset($ntp_server_primary)}
+<P30>{$ntp_server_primary}</P30>
+{else}
+<P30>pool.ntp.org</P30>
+{/if}
 
 <!-- Allow DHCP Option 42 to override NTP server. 0 - No, 1 - Yes. Default is 1 -->
 <!-- When set to Yes(1), it will override the configured NTP server -->

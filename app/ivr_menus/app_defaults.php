@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2019
+	Portions created by the Initial Developer are Copyright (C) 2019 - 2021
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -33,7 +33,7 @@ if ($domains_processed == 1) {
 	$ivr_menus = $database->select($sql, null, 'all');
 	unset($sql);
 
-	if (is_array($ivr_menus)) {
+	if (!empty($ivr_menus)) {
 
 		//get the domain list
 		$sql = "select * from v_domains ";
@@ -42,16 +42,18 @@ if ($domains_processed == 1) {
 
 		//update the ivr menu context
 		$x = 0;
-		foreach ($ivr_menus as $row) {
-			foreach ($domains as $domain) {
-				if ($row['domain_uuid'] == $domain['domain_uuid']) {
-					$array['ivr_menus'][$x]['ivr_menu_uuid'] = $row['ivr_menu_uuid'];
-					$array['ivr_menus'][$x]['ivr_menu_context'] = $domain['domain_name'];
-					$x++;
+		if (!empty($ivr_menus)) {
+			foreach ($ivr_menus as $row) {
+				foreach ($domains as $domain) {
+					if ($row['domain_uuid'] == $domain['domain_uuid']) {
+						$array['ivr_menus'][$x]['ivr_menu_uuid'] = $row['ivr_menu_uuid'];
+						$array['ivr_menus'][$x]['ivr_menu_context'] = $domain['domain_name'];
+						$x++;
+					}
 				}
 			}
 		}
-		if (is_array($array) && @sizeof($array) != 0) {
+		if (!empty($array)) {
 
 			$p = new permissions;
 			$p->add('ivr_menu_edit', 'temp');
@@ -59,7 +61,7 @@ if ($domains_processed == 1) {
 			$database = new database;
 			$database->app_name = 'ivr_menus';
 			$database->app_uuid = 'a5788e9b-58bc-bd1b-df59-fff5d51253ab';
-			$database->save($array);
+			$database->save($array, false);
 			unset($array);
 	
 			$p->delete('ivr_menu_edit', 'temp');
@@ -81,6 +83,14 @@ if ($domains_processed == 1) {
 	$sql .= "where ivr_menu_language like '%/%/%'; ";
 	$database = new database;
 	$ivr_menus = $database->select($sql, null, 'all');
+	unset($sql);
+
+	//enable existing ivr menu options by default
+	$sql = "update v_ivr_menu_options ";
+	$sql .= "set ivr_menu_option_enabled = true ";
+	$sql .= "where ivr_menu_option_enabled is null; ";
+	$database = new database;
+	$database->execute($sql, null);
 	unset($sql);
 
 }

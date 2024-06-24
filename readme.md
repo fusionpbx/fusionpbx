@@ -25,7 +25,7 @@ In addition to providing all of the usual PBX functionality, FusionPBX allows yo
 Software Requirements
 --------------------------------------
 
-- FusionPBX will run on Debian 9 & 10, Ubuntu 18.04 LTS, FreeBSD 10 & 11, CentOS, and more.
+- FusionPBX will run on Debian, Ubuntu LTS, FreeBSD, CentOS, and more.
 - [FusionPBX Installer](https://www.fusionpbx.com/download.php)
 
 How to Install FusionPBX
@@ -58,7 +58,7 @@ wget -O - https://raw.githubusercontent.com/fusionpbx/fusionpbx-install.sh/maste
 cd /usr/src/fusionpbx-install.sh/centos && ./install.sh
 ```
 
-This install script is designed to be an fast, simple, and in a modular way to install FusionPBX. Start with a minimal install of Debian 10 with SSH enabled. Run the following commands under root. The script installs FusionPBX, FreeSWITCH release package and its dependencies, IPTables, Fail2ban, NGINX, PHP FPM and PostgreSQL.
+This install script is designed to be an fast, simple, and in a modular way to install FusionPBX. Start with a minimal install with SSH enabled. Run the following commands under root. The script installs FusionPBX, FreeSWITCH release package and its dependencies, IPTables, Fail2ban, NGINX, PHP FPM and PostgreSQL.
 
 Some installations require special considerations. Visit https://github.com/fusionpbx/fusionpbx-install.sh readme section for more details.
 

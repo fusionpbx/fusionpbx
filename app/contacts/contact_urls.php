@@ -24,9 +24,8 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//includes
-	require_once "root.php";
-	require_once "resources/require.php";
+//includes files
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -39,7 +38,7 @@
 	}
 
 //set the uuid
-	if (is_uuid($_GET['id'])) {
+	if (!empty($_GET['id']) && is_uuid($_GET['id'])) {
 		$contact_uuid = $_GET['id'];
 	}
 
@@ -49,13 +48,13 @@
 	$sql .= "and contact_uuid = :contact_uuid ";
 	$sql .= "order by url_primary desc, url_label asc ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$parameters['contact_uuid'] = $contact_uuid;
+	$parameters['contact_uuid'] = $contact_uuid ?? '';
 	$database = new database;
 	$contact_urls = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
 //show if exists
-	if (is_array($contact_urls) && @sizeof($contact_urls) != 0) {
+	if (!empty($contact_urls)) {
 
 		//show the content
 			echo "<div class='action_bar sub shrink'>\n";
@@ -78,7 +77,7 @@
 			}
 			echo "</tr>\n";
 
-			if (is_array($contact_urls) && @sizeof($contact_urls) != 0) {
+			if (!empty($contact_urls)) {
 				$x = 0;
 				foreach ($contact_urls as $row) {
 					if (permission_exists('contact_url_edit')) {

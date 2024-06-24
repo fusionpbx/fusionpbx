@@ -24,9 +24,8 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//includes
-	require_once "root.php";
-	require_once "resources/require.php";
+//includes files
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/functions/google_get_groups.php";
 	require_once "resources/functions/google_get_contacts.php";
@@ -152,7 +151,7 @@ if ($_POST['a'] == 'import') {
 			}
 
 			//insert emails
-			if ($_POST['import_fields']['email'] && is_array($contact['emails']) && @sizeof($contact['emails']) != 0) {
+			if (!empty($contact['emails']) && $_POST['import_fields']['email']) {
 				foreach ($contact['emails'] as $index_2 => $contact_email) {
 					$contact_email_uuid = uuid();
 					$array['contact_emails'][$index_2]['domain_uuid'] = $_SESSION['domain_uuid'];
@@ -165,7 +164,7 @@ if ($_POST['a'] == 'import') {
 			}
 
 			//insert numbers
-			if ($_POST['import_fields']['number'] && is_array($contact['numbers']) && @sizeof($contact['numbers']) != 0) {
+			if (!empty($contact['numbers']) && $_POST['import_fields']['number']) {
 				foreach ($contact['numbers'] as $index_3 => $contact_number) {
 					$contact_phone_uuid = uuid();
 					$array['contact_phones'][$index_3]['domain_uuid'] = $domain_uuid;
@@ -180,7 +179,7 @@ if ($_POST['a'] == 'import') {
 			}
 
 			//insert urls
-			if ($_POST['import_fields']['url'] && is_array($contact['urls']) && @sizeof($contact['urls']) != 0) {
+			if (!empty($contact['urls']) && $_POST['import_fields']['url']) {
 				foreach ($contact['urls'] as $index_4 => $contact_url) {
 					$contact_url_uuid = uuid();
 					$array['contact_urls'][$index_4]['domain_uuid'] = $_SESSION['domain_uuid'];
@@ -193,7 +192,7 @@ if ($_POST['a'] == 'import') {
 			}
 
 			//insert addresses
-			if ($_POST['import_fields']['address'] && is_array($contact['addresses']) && @sizeof($contact['addresses']) != 0) {
+			if (!empty($contact['addresses']) && $_POST['import_fields']['address']) {
 				foreach ($contact['addresses'] as $index_5 => $contact_address) {
 					$contact_address_uuid = uuid();
 					$array['contact_addresses'][$index_5]['domain_uuid'] = $_SESSION['domain_uuid'];
@@ -272,7 +271,7 @@ if ($_POST['a'] == 'import') {
 //*******************************************************************************************
 
 //check if authenticated
-if ($_SESSION['contact_auth']['token'] == '') {
+if (empty($_SESSION['contact_auth']['token'])) {
 	$_SESSION['contact_auth']['referer'] = substr($_SERVER["HTTP_REFERER"], strrpos($_SERVER["HTTP_REFERER"],'/')+1);
 	header("Location: contact_auth.php?source=google&target=".substr($_SERVER["PHP_SELF"], strrpos($_SERVER["PHP_SELF"],'/')+1));
 	exit;
@@ -337,7 +336,7 @@ echo "<td width='30%' class='vncell' valign='top' align='left' nowrap='nowrap'>\
 echo "	".$text['label-contact_type']."\n";
 echo "</td>\n";
 echo "<td class='vtable' align='left'>\n";
-if (is_array($_SESSION["contact"]["type"])) {
+if (!empty($_SESSION["contact"]["type"])) {
 	sort($_SESSION["contact"]["type"]);
 	echo "	<select class='formfld' name='import_type'>\n";
 	echo "		<option value=''></option>\n";
@@ -372,7 +371,7 @@ echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 echo "	".$text['label-contact_category']."\n";
 echo "</td>\n";
 echo "<td class='vtable' align='left'>\n";
-if (is_array($_SESSION["contact"]["category"])) {
+if (!empty($_SESSION["contact"]["category"])) {
 	sort($_SESSION["contact"]["category"]);
 	echo "	<select class='formfld' name='import_category'>\n";
 	echo "		<option value=''></option>\n";

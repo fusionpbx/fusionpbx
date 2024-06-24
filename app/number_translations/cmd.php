@@ -24,9 +24,8 @@
 	Matthew Vale <github@mafoo.org>
 */
 
-//includes
-	require_once "root.php";
-	require_once "resources/require.php";
+//includes files
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -43,22 +42,20 @@
 	$rdr = $_GET['rdr'];
 
 //create the event socket connection
-	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-	if ($fp) {
+	$esl = event_socket::create();
+	if ($esl->is_connected()) {
 		//reloadxml
 			if ($cmd == "api reloadxml") {
-				message::add(rtrim(event_socket_request($fp, $cmd)), 'alert');
+				message::add(rtrim(event_socket::command($cmd)), 'alert');
 				unset($cmd);
 			}
 
 		//reload mod_translate
 			if ($cmd == "api reload mod_translate") {
-				message::add(rtrim(event_socket_request($fp, $cmd)), 'alert');
+				message::add(rtrim(event_socket::command($cmd)), 'alert');
 				unset($cmd);
 			}
 
-		//close the connection
-			fclose($fp);
 	}
 
 //redirect the user

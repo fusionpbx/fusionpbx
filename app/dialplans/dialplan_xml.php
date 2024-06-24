@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2024
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -25,9 +25,8 @@
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 
-//includes
-	require_once "root.php";
-	require_once "resources/require.php";
+//includes files
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -40,11 +39,118 @@
 	}
 
 //get the uuids
-	if (is_uuid($_REQUEST['id'])) {
+	if (!empty($_REQUEST['id']) && is_uuid($_REQUEST['id'])) {
 		$dialplan_uuid = $_REQUEST['id'];
 	}
-	if (is_uuid($_REQUEST['app_uuid'])) {
+	if (!empty($_REQUEST['app_uuid']) && is_uuid($_REQUEST['app_uuid'])) {
 		$app_uuid = $_REQUEST['app_uuid'];
+	}
+	$dialplan_xml = $_REQUEST['dialplan_xml'] ?? '';
+
+//process the HTTP POST
+	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
+
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: dialplans.php');
+				exit;
+			}
+
+		//get the dialplan xml
+			if (is_uuid($dialplan_uuid)) {
+				$sql = "select * from v_dialplans ";
+				$sql .= "where dialplan_uuid = :dialplan_uuid ";
+				$parameters['dialplan_uuid'] = $dialplan_uuid;
+				$database = new database;
+				$row = $database->select($sql, $parameters, 'row');
+				if (is_array($row) && @sizeof($row) != 0) {
+					$app_uuid = $row["app_uuid"];
+					$dialplan_context = $row["dialplan_context"];
+				}
+				unset($sql, $parameters, $row);
+			}
+
+		//validate the xml
+			$dialplan_valid = true;
+			if (preg_match("/.*([\"\'])system([\"\']).*>/i", $dialplan_xml)) {
+				$dialplan_valid = false;
+			}
+			if (preg_match("/.*([\"\'])bgsystem([\"\']).*>/i", $dialplan_xml)) {
+				$dialplan_valid = false;
+			}
+			if (preg_match("/.*([\"\'])bg_spawn([\"\']).*>/i", $dialplan_xml)) {
+				$dialplan_valid = false;
+			}
+			if (preg_match("/.*([\"\'])spawn([\"\']).*>/i", $dialplan_xml)) {
+				$dialplan_valid = false;
+			}
+			if (preg_match("/.*([\"\'])spawn_stream([\"\']).*>/i", $dialplan_xml)) {
+				$dialplan_valid = false;
+			}
+			if (preg_match("/.*{system.*/i", $dialplan_xml)) {
+				$dialplan_valid = false;
+			}
+			if (preg_match("/.*{bgsystem.*/i", $dialplan_xml)) {
+				$dialplan_valid = false;
+			}
+			if (preg_match("/.*{bg_spawn.*/i", $dialplan_xml)) {
+				$dialplan_valid = false;
+			}
+			if (preg_match("/.*{spawn.*/i", $dialplan_xml)) {
+				$dialplan_valid = false;
+			}
+			if (preg_match("/.*{spawn_stream.*/i", $dialplan_xml)) {
+				$dialplan_valid = false;
+			}
+
+		//disable xml entities and load the xml object to test if the xml is valid
+			if (PHP_VERSION_ID < 80000) { libxml_disable_entity_loader(true); }
+			preg_match_all('/^\s*<extension.+>(?:[\S\s])+<\/extension>\s*$/mU', $dialplan_xml, $matches);
+			foreach($matches as $match) {
+				$xml = simplexml_load_string($match[0], 'SimpleXMLElement', LIBXML_NOCDATA);
+				if (!$xml) {
+					//$errors = libxml_get_errors();
+					$dialplan_valid = false;
+					break;
+				}
+			}
+
+		//save the xml to the database
+			if ($dialplan_valid) {
+				//build the dialplan array
+					$x = 0;
+					//$array['dialplans'][$x]["domain_uuid"] = $_SESSION['domain_uuid'];
+					$array['dialplans'][$x]["dialplan_uuid"] = $dialplan_uuid;
+					$array['dialplans'][$x]["dialplan_xml"] =  $dialplan_xml;
+
+				//save to the data
+					$database = new database;
+					$database->app_name = 'dialplans';
+					$database->app_uuid = is_uuid($app_uuid) ? $app_uuid : '742714e5-8cdf-32fd-462c-cbe7e3d655db';
+					$database->save($array);
+					unset($array);
+
+				//clear the cache
+					$cache = new cache;
+					if ($dialplan_context == "\${domain_name}" or $dialplan_context == "global") {
+						$dialplan_context = "*";
+					}
+					$cache->delete("dialplan:".$dialplan_context);
+
+				//save the message to a session variable
+					message::add($text['message-update']);
+			}
+			else {
+				//save the message to a session variable
+					message::add($text['message-failed'], 'negative');
+			}
+
+		//redirect the user
+			header("Location: dialplan_edit.php?id=".$dialplan_uuid.(is_uuid($app_uuid) ? "&app_uuid=".$app_uuid : null));
+			exit;
+
 	}
 
 //get the dialplan xml
@@ -68,56 +174,16 @@
 		unset($sql, $parameters, $row);
 	}
 
-//process the HTTP POST
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
-		
-		//validate the token
-			$token = new token;
-			if (!$token->validate($_SERVER['PHP_SELF'])) {
-				message::add($text['message-invalid_token'],'negative');
-				header('Location: dialplans.php');
-				exit;
-			}
-
-		//build the dialplan array
-			$x = 0;
-			//$array['dialplans'][$x]["domain_uuid"] = $_SESSION['domain_uuid'];
-			$array['dialplans'][$x]["dialplan_uuid"] = $dialplan_uuid;
-			$array['dialplans'][$x]["dialplan_xml"] =  $_REQUEST['dialplan_xml'];
-
-		//save to the data
-			$database = new database;
-			$database->app_name = 'dialplans';
-			$database->app_uuid = is_uuid($app_uuid) ? $app_uuid : '742714e5-8cdf-32fd-462c-cbe7e3d655db';
-			$database->save($array);
-			unset($array);
-
-		//clear the cache
-			$cache = new cache;
-			if ($dialplan_context == "\${domain_name}" or $dialplan_context == "global") {
-				$dialplan_context = "*";
-			}
-			$cache->delete("dialplan:".$dialplan_context);
-
-		//save the message to a session variable
-			message::add($text['message-update']);
-
-		//redirect the user
-			header("Location: dialplan_edit.php?id=".$dialplan_uuid.(is_uuid($app_uuid) ? "&app_uuid=".$app_uuid : null));
-			exit;
-
-	}
-
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
 
 // load editor preferences/defaults
-	$setting_size = $_SESSION["editor"]["font_size"]["text"] != '' ? $_SESSION["editor"]["font_size"]["text"] : '12px';
-	$setting_theme = $_SESSION["editor"]["theme"]["text"] != '' ? $_SESSION["editor"]["theme"]["text"] : 'cobalt';
-	$setting_invisibles = $_SESSION["editor"]["invisibles"]["boolean"] != '' ? $_SESSION["editor"]["invisibles"]["boolean"] : 'false';
-	$setting_indenting = $_SESSION["editor"]["indent_guides"]["boolean"] != '' ? $_SESSION["editor"]["indent_guides"]["boolean"] : 'false';
-	$setting_numbering = $_SESSION["editor"]["line_numbers"]["boolean"] != '' ? $_SESSION["editor"]["line_numbers"]["boolean"] : 'true';
+	$setting_size = !empty($_SESSION["editor"]["font_size"]["text"]) ? $_SESSION["editor"]["font_size"]["text"] : '12px';
+	$setting_theme = !empty($_SESSION["editor"]["theme"]["text"]) ? $_SESSION["editor"]["theme"]["text"] : 'cobalt';
+	$setting_invisibles = isset($_SESSION["editor"]["invisibles"]["boolean"]) && $_SESSION["editor"]["invisibles"]["boolean"] != '' ? $_SESSION["editor"]["invisibles"]["boolean"] : 'false';
+	$setting_indenting = isset($_SESSION["editor"]["indent_guides"]["boolean"]) && $_SESSION["editor"]["indent_guides"]["boolean"] != '' ? $_SESSION["editor"]["indent_guides"]["boolean"] : 'false';
+	$setting_numbering = isset($_SESSION["editor"]["line_numbers"]["boolean"]) && $_SESSION["editor"]["line_numbers"]["boolean"] != '' ? $_SESSION["editor"]["line_numbers"]["boolean"] : 'true';
 
 //create token
 	$object = new token;
@@ -168,19 +234,6 @@
 	echo "</script>\n";
 
 	echo "<style>\n";
-
-	echo "	img.control {\n";
-	echo "		cursor: pointer;\n";
-	echo "		width: auto;\n";
-	echo "		height: 23px;\n";
-	echo "		border: none;\n";
-	echo "		opacity: 0.5;\n";
-	echo "		}\n";
-
-	echo "	img.control:hover {\n";
-	echo "		opacity: 1.0;\n";
-	echo "		}\n";
-
 	echo "	div#editor {\n";
 	echo "		box-shadow: 0 3px 10px #333;\n";
 	echo "		text-align: left;\n";
@@ -188,7 +241,6 @@
 	echo "		height: 600px;\n";
 	echo "		font-size: 12px;\n";
 	echo "		}\n";
-
 	echo "</style>\n";
 
 //show the content
@@ -197,7 +249,7 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-dialplan_edit']." XML</b></div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','link'=>'dialplan_edit.php?id='.urlencode($dialplan_uuid).(is_uuid($app_uuid) ? "&app_uuid=".urlencode($app_uuid) : null)]);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','link'=>'dialplan_edit.php?id='.urlencode($dialplan_uuid).(!empty($app_uuid) && is_uuid($app_uuid) ? "&app_uuid=".urlencode($app_uuid) : null)]);
 	echo button::create(['type'=>'button','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save','style'=>'margin-left: 15px;','onclick'=>"set_value(); $('#frm').submit();"]);
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
@@ -211,12 +263,12 @@
 	echo "		<tr>\n";
 	echo "			<td valign='middle' style='padding: 0 6px;' width='100%'><span id='description'></span></td>\n";
 	echo "			<td valign='middle' style='padding: 0;'><img src='resources/images/blank.gif' style='width: 1px; height: 30px; border: none;'></td>\n";
-	echo "			<td valign='middle' style='padding-left: 6px;'><img src='resources/images/icon_numbering.png' title='Toggle Line Numbers' class='control' onclick=\"toggle_option('numbering');\"></td>\n";
-	echo "			<td valign='middle' style='padding-left: 6px;'><img src='resources/images/icon_invisibles.png' title='Toggle Invisibles' class='control' onclick=\"toggle_option('invisibles');\"></td>\n";
-	echo "			<td valign='middle' style='padding-left: 6px;'><img src='resources/images/icon_indenting.png' title='Toggle Indent Guides' class='control' onclick=\"toggle_option('indenting');\"></td>\n";
-// 	echo "			<td valign='middle' style='padding-left: 6px;'><img src='resources/images/icon_replace.png' title='Show Find/Replace [Ctrl+H]' class='control' onclick=\"editor.execCommand('replace');\"></td>\n";
-	echo "			<td valign='middle' style='padding-left: 6px;'><img src='resources/images/icon_goto.png' title='Show Go To Line' class='control' onclick=\"editor.execCommand('gotoline');\"></td>\n";
-	echo "			<td valign='middle' style='padding-left: 4px;'>\n";
+	echo "			<td valign='middle' style='padding-left: 6px;'><i class='fas fa-list-ul fa-lg ace_control' title=\"".$text['label-toggle_line_numbers']."\" onclick=\"toggle_option('numbering');\"></i></td>\n";
+	echo "			<td valign='middle' style='padding-left: 6px;'><i class='fas fa-eye-slash fa-lg ace_control' title=\"".$text['label-toggle_invisibles']."\" onclick=\"toggle_option('invisibles');\"></i></td>\n";
+	echo "			<td valign='middle' style='padding-left: 6px;'><i class='fas fa-indent fa-lg ace_control' title=\"".$text['label-toggle_indent_guides']."\" onclick=\"toggle_option('indenting');\"></i></td>\n";
+	echo "			<td valign='middle' style='padding-left: 6px;'><i class='fas fa-search fa-lg ace_control' title=\"".$text['label-find_replace']."\" onclick=\"editor.execCommand('replace');\"></i></td>\n";
+	echo "			<td valign='middle' style='padding-left: 6px;'><i class='fas fa-chevron-down fa-lg ace_control' title=\"".$text['label-go_to_line']."\" onclick=\"editor.execCommand('gotoline');\"></i></td>\n";
+	echo "			<td valign='middle' style='padding-left: 15px;'>\n";
 	echo "				<select id='size' class='formfld' onchange=\"document.getElementById('editor').style.fontSize = this.options[this.selectedIndex].value; focus_editor();\">\n";
 	$sizes = explode(',','9px,10px,11px,12px,14px,16px,18px,20px');
 	if (!in_array($setting_size, $sizes)) {
@@ -230,7 +282,6 @@
 	echo "				</select>\n";
 	echo "			</td>\n";
 	echo "			<td valign='middle' style='padding-left: 4px; padding-right: 0px;'>\n";
-	echo "				<select id='theme' class='formfld' onchange=\"editor.setTheme('ace/theme/' + this.options[this.selectedIndex].value); focus_editor();\">\n";
 	$themes['Light']['chrome']= 'Chrome';
 	$themes['Light']['clouds']= 'Clouds';
 	$themes['Light']['crimson_editor']= 'Crimson Editor';
@@ -265,15 +316,15 @@
 	$themes['Dark']['tomorrow_night_eighties']= 'Tomorrow Night 80s';
 	$themes['Dark']['twilight']= 'Twilight';
 	$themes['Dark']['vibrant_ink']= 'Vibrant Ink';
+	echo "				<select id='theme' class='formfld' onchange=\"editor.setTheme('ace/theme/' + this.options[this.selectedIndex].value); focus_editor();\">\n";
 	foreach ($themes as $optgroup => $theme) {
-		echo "<optgroup label='".$optgroup."'>\n";
+		echo "				<optgroup label='".$optgroup."'>\n";
 		foreach ($theme as $value => $label) {
 			$selected = strtolower($label) == strtolower($setting_theme) ? 'selected' : null;
-			echo "<option value='".$value."' ".$selected.">".escape($label)."</option>\n";
+			echo "				<option value='".$value."' ".$selected.">".escape($label)."</option>\n";
 		}
-		echo "</optgroup>\n";
+		echo "				</optgroup>\n";
 	}
-
 	echo "				</select>\n";
 	echo "			</td>\n";
 	echo "		</tr>\n";
@@ -281,8 +332,8 @@
 	echo "	<div id='editor'></div>\n";
 	echo "	<br />\n";
 
-	echo "	<input type='hidden' name='app_uuid' value='".escape($app_uuid)."'>\n";
-	echo "	<input type='hidden' name='dialplan_uuid' value='".escape($dialplan_uuid)."'>\n";
+	echo "	<input type='hidden' name='app_uuid' value='".escape($app_uuid ?? null)."'>\n";
+	echo "	<input type='hidden' name='dialplan_uuid' value='".escape($dialplan_uuid ?? null)."'>\n";
 	echo "	<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 
 	echo "</form>\n";

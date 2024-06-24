@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2021
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -25,9 +25,8 @@
 	James Rose <james.o.rose@gmail.com>
 */
 
-//includes
-	include "root.php";
-	require_once "resources/require.php";
+//includes files
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -47,7 +46,7 @@
 	$queue_uuid = $_GET['queue_name'];
 
 //get the queues from the database
-	if (!is_array($_SESSION['queues'])) {
+	if (empty($_SESSION['queues']) || !is_array($_SESSION['queues'])) {
 		$sql = "select * from v_call_center_queues ";
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$sql .= "order by queue_name asc ";
@@ -91,10 +90,10 @@
 	}
 
 //create an event socket connection
-	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+	$esl = event_socket::create();
 
 //get the call center queue, agent and tiers list
-	if (!$fp) {
+	if (!$esl->is_connected()) {
 		$msg = "<div align='center'>Connection to Event Socket failed.<br /></div>";
 		echo "<div align='center'>\n";
 		echo "<table width='40%'>\n";
@@ -118,7 +117,7 @@
 			//send the event socket command and get the response
 				//callcenter_config queue list tiers [queue_name] |
 				$switch_command = 'callcenter_config queue list tiers '.$queue_extension."@".$_SESSION["domain_name"];
-				$event_socket_str = trim(event_socket_request($fp, 'api '.$switch_command));
+				$event_socket_str = trim(event_socket::api($switch_command));
 				$result = str_to_named_array($event_socket_str, '|');
 
 			//prepare the result for array_multisort
@@ -140,11 +139,11 @@
 			//send the event socket command and get the response
 				//callcenter_config queue list agents [queue_name] [status] |
 				$switch_command = 'callcenter_config queue list agents '.$queue_extension."@".$_SESSION["domain_name"];
-				$event_socket_str = trim(event_socket_request($fp, 'api '.$switch_command));
+				$event_socket_str = trim(event_socket::api($switch_command));
 				$agent_result = str_to_named_array($event_socket_str, '|');
 
 			//get the agents from the database
-				if (!is_array($_SESSION['agents'])) {
+				if (empty($_SESSION['agents']) || !is_array($_SESSION['agents'])) {
 					$sql = "select * from v_call_center_agents ";
 					$sql .= "where domain_uuid = :domain_uuid ";
 					$sql .= "order by agent_name asc ";
@@ -158,9 +157,10 @@
 				echo "<tr class='list-header'>\n";
 				echo "<th>".$text['label-name']."</th>\n";
 				echo "<th>".$text['label-extension']."</th>\n";
-				echo "<th>".$text['label-status']."</th>\n";
-				echo "<th>".$text['label-state']."</th>\n";
+				echo "<th title=\"".$text['description-status']."\">".$text['label-status']."</th>\n";
+				echo "<th title=\"".$text['description-state']."\">".$text['label-state']."</th>\n";
 				echo "<th>".$text['label-status_change']."</th>\n";
+				echo "<th>".$text['label-last_bridge_end']."</th>\n";
 				echo "<th class='center'>".$text['label-missed']."</th>\n";
 				echo "<th class='center'>".$text['label-answered']."</th>\n";
 				echo "<th>".$text['label-tier_state']."</th>\n";
@@ -219,13 +219,9 @@
 									$talk_time = $agent_row['talk_time'];
 									$ready_time = $agent_row['ready_time'];
 
-									$last_status_change_seconds = time() - $last_status_change;
-									$last_status_change_length_hour = floor($last_status_change_seconds/3600);
-									$last_status_change_length_min = floor($last_status_change_seconds/60 - ($last_status_change_length_hour * 60));
-									$last_status_change_length_sec = $last_status_change_seconds - (($last_status_change_length_hour * 3600) + ($last_status_change_length_min * 60));
-									$last_status_change_length_min = sprintf("%02d", $last_status_change_length_min);
-									$last_status_change_length_sec = sprintf("%02d", $last_status_change_length_sec);
-									$last_status_change_length = $last_status_change_length_hour.':'.$last_status_change_length_min.':'.$last_status_change_length_sec;
+									//format the seconds to hh:mm:ss
+									$last_status_change_length = format_seconds(time() - $last_status_change);
+									$last_bridge_end_length = format_seconds(time() - $last_bridge_end);
 
 									if (permission_exists('call_center_agent_edit')) {
 										$list_row_url = "../call_centers/call_center_agent_edit.php?id=".$agent_uuid;
@@ -244,6 +240,7 @@
 									echo "<td>".escape($status)."</td>\n";
 									echo "<td>".escape($state)."</td>\n";
 									echo "<td>".escape($last_status_change_length)."</td>\n";
+									echo "<td>".escape($last_bridge_end_length)."</td>\n";
 									echo "<td class='center'>".escape($no_answer_count)."</td>\n";
 									echo "<td class='center'>".escape($calls_answered)."</td>\n";
 									echo "<td>".escape($tier_state)."</td>\n";
@@ -261,7 +258,7 @@
 										}
 										else {
 											//$orig_call="{origination_caller_id_name=c2c-".urlencode(escape($name)).",origination_caller_id_number=".escape($agent_extension)."}user/".$_SESSION['user']['extension'][0]['user']."@".$_SESSION['domain_name']." %26bridge(user/".escape($agent_extension)."@".$_SESSION['domain_name'].")";
-											echo button::create(['type'=>'button','class'=>'link','label'=>$text['label-call'],'onclick'=>"if (confirm('".$text['message-confirm']."')) { send_command('call_center_exec.php?command=bridge&extension=".urlencode($agent_extension)."&caller_id_name=".urlencode($name)."'); } else { this.blur(); return false; }"]);
+											echo button::create(['type'=>'button','class'=>'link','label'=>$text['label-call'],'onclick'=>"if (confirm('".$text['message-confirm']."')) { send_command('call_center_exec.php?command=bridge&extension=".urlencode($agent_extension)."&caller_id_name=".urlencode($name ?? '')."'); } else { this.blur(); return false; }"]);
 										}
 										echo "</td>";
 									}
@@ -281,7 +278,7 @@
 				//callcenter_config queue list members [queue_name]
 				if (is_uuid($queue_uuid)) {
 					$switch_command = 'callcenter_config queue list members '.$queue_extension."@".$_SESSION["domain_name"];
-					$event_socket_str = trim(event_socket_request($fp, 'api '.$switch_command));
+					$event_socket_str = trim(event_socket::api($switch_command));
 					$result = str_to_named_array($event_socket_str, '|');
 					if (!is_array($result)) { unset($result); }
 				}
@@ -319,7 +316,7 @@
 			echo "<th>".$text['label-name']."</th>\n";
 			echo "<th>".$text['label-number']."</th>\n";
 			echo "<th>".$text['label-status']."</th>\n";
-			if ((if_group("admin") || if_group("superadmin"))) {
+			if (permission_exists('call_center_active_options')) {
 				echo "<th>".$text['label-options']."</th>\n";
 			}
 			echo "<th>".$text['label-agent']."</th>\n";
@@ -328,7 +325,7 @@
 			if (is_array($result)) {
 				foreach ($result as $row) {
 					$queue = $row['queue'];
-					$system = $row['system'];
+					$system = $row['system'] ?? null;
 					$uuid = $row['uuid'];
 					$session_uuid = $row['session_uuid'];
 					$caller_number = $row['cid_number'];
@@ -367,11 +364,12 @@
 					echo "<td>".escape($caller_name)."&nbsp;</td>\n";
 					echo "<td>".escape($caller_number)."&nbsp;</td>\n";
 					echo "<td>".escape($state)."</td>\n";
-					if (if_group("admin") || if_group("superadmin")) {
+					if (permission_exists('call_center_active_options')) {
 						echo "<td>";
 						if ($state != "Abandoned") {
-							$orig_command="{origination_caller_id_name=eavesdrop,origination_caller_id_number=".escape($q_caller_number)."}user/".escape($_SESSION['user']['extension'][0]['user'])."@".escape($_SESSION['domain_name'])." %26eavesdrop(".escape($session_uuid).")";
+							$orig_command = "{origination_caller_id_name=eavesdrop,origination_caller_id_number=".escape($q_caller_number ?? '')."}user/".escape($_SESSION['user']['extension'][0]['user'] ?? '')."@".escape($_SESSION['domain_name'])." %26eavesdrop(".escape($session_uuid).")";
 							echo button::create(['type'=>'button','class'=>'link','label'=>$text['label-eavesdrop'],'onclick'=>"if (confirm('".$text['message-confirm']."')) { send_command('call_center_exec.php?command=eavesdrop&caller_id_number=".urlencode($caller_number)."&uuid=".urlencode($session_uuid)."'); } else { this.blur(); return false; }"]);
+							echo button::create(['type'=>'button','class'=>'link','label'=>$text['label-transfer'],'style'=>'margin-left: 15px;','onclick'=>"if (confirm('".$text['message-confirm']."')) { send_command('call_center_exec.php?command=uuid_pickup&uuid=".urlencode($session_uuid)."'); } else { this.blur(); return false; }"]);
 						}
 						else {
 							echo "&nbsp;";

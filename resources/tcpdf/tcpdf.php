@@ -4134,8 +4134,8 @@ class TCPDF {
 			// SHY character will not be printed
 			return (0);
 		}
-		if (isset($this->CurrentFont['cw'][$char])) {
-			$w = $this->CurrentFont['cw'][$char];
+		if (isset($this->CurrentFont['cw'][floor($char)])) {
+			$w = $this->CurrentFont['cw'][floor($char)];
 		} elseif (isset($this->CurrentFont['dw'])) {
 			// default width
 			$w = $this->CurrentFont['dw'];
@@ -6309,7 +6309,7 @@ class TCPDF {
 	public function Write($h, $txt, $link='', $fill=false, $align='', $ln=false, $stretch=0, $firstline=false, $firstblock=false, $maxh=0, $wadj=0, $margin='') {
 		// check page for no-write regions and adapt page margins if necessary
 		list($this->x, $this->y) = $this->checkPageRegions($h, $this->x, $this->y);
-		if (strlen($txt) == 0) {
+		if (empty($txt)) {
 			// fix empty text
 			$txt = ' ';
 		}
@@ -7039,7 +7039,7 @@ class TCPDF {
 		}
 		if ($newimage) {
 			//First use of image, get info
-			$type = strtolower($type);
+			$type = strtolower($type ?? '');
 			if ($type == '') {
 				$type = TCPDF_IMAGES::getImageFileType($file, $imsize);
 			} elseif ($type == 'jpg') {
@@ -10432,7 +10432,7 @@ class TCPDF {
 			$lnkdata = explode(',', $url);
 			if (isset($lnkdata[0]) ) {
 				$page = substr($lnkdata[0], 1);
-				if (isset($lnkdata[1]) AND (strlen($lnkdata[1]) > 0)) {
+				if (isset($lnkdata[1]) AND (!empty($lnkdata[1]))) {
 					$lnky = floatval($lnkdata[1]);
 				} else {
 					$lnky = 0;
@@ -13476,10 +13476,10 @@ class TCPDF {
 		$this->sig_obj_id = $this->n; // signature widget
 		++$this->n; // signature object ($this->sig_obj_id + 1)
 		$this->signature_data = array();
-		if (strlen($signing_cert) == 0) {
+		if (empty($signing_cert)) {
 			$this->Error('Please provide a certificate file and password!');
 		}
-		if (strlen($private_key) == 0) {
+		if (empty($private_key)) {
 			$private_key = $signing_cert;
 		}
 		$this->signature_data['signcert'] = $signing_cert;
@@ -13574,7 +13574,7 @@ class TCPDF {
 		if (!function_exists('curl_init')) {
 			$this->Error('Please enable cURL PHP extension!');
 		}
-		if (strlen($tsa_host) == 0) {
+		if (empty($tsa_host)) {
 			$this->Error('Please specify the host of Time Stamping Authority (TSA)!');
 		}
 		$this->tsa_data['tsa_host'] = $tsa_host;
@@ -16326,7 +16326,7 @@ class TCPDF {
 						if (preg_match('/href[\s]*=[\s]*"([^"]*)"/', $link, $type) > 0) {
 							// read CSS data file
 							$cssdata = TCPDF_STATIC::fileGetContents(trim($type[1]));
-							if (($cssdata !== FALSE) AND (strlen($cssdata) > 0)) {
+							if (($cssdata !== FALSE) AND (!empty($cssdata))) {
 								$css = array_merge($css, TCPDF_STATIC::extractCSSproperties($cssdata));
 							}
 						}
@@ -17604,7 +17604,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 				}
 			}
 			// align lines
-			if ($this->newline AND (strlen($dom[$key]['value']) > 0) AND ($dom[$key]['value'] != 'td') AND ($dom[$key]['value'] != 'th')) {
+			if ($this->newline AND (!empty($dom[$key]['value'])) AND ($dom[$key]['value'] != 'td') AND ($dom[$key]['value'] != 'th')) {
 				$newline = true;
 				$fontaligned = false;
 				// we are at the beginning of a new line
@@ -18352,7 +18352,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 						$startlinepage = $this->page;
 					}
 				}
-			} elseif (strlen($dom[$key]['value']) > 0) {
+			} elseif (!empty($dom[$key]['value'])) {
 				// print list-item
 				if (!TCPDF_STATIC::empty_string($this->lispacer) AND ($this->lispacer != '^')) {
 					$this->SetFont($pfontname, $pfontstyle, $pfontsize);
@@ -18501,7 +18501,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 					}
 				}
 				$this->textindent = 0;
-				if (strlen($strrest) > 0) {
+				if (!empty($strrest)) {
 					// store the remaining string on the previous $key position
 					$this->newline = true;
 					if ($strrest == $dom[$key]['value']) {
@@ -18948,7 +18948,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 							if (empty($page) OR ($page <= 0)) {
 								$page = $this->page;
 							}
-							if (isset($lnkdata[1]) AND (strlen($lnkdata[1]) > 0)) {
+							if (isset($lnkdata[1]) AND (!empty($lnkdata[1]))) {
 								$lnky = floatval($lnkdata[1]);
 							} else {
 								$lnky = 0;

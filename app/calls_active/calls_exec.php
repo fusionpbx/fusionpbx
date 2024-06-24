@@ -24,9 +24,8 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//includes
-	include "root.php";
-	require_once "resources/require.php";
+//includes files
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -60,6 +59,7 @@
 			}
 
 		//verify submitted call uuids
+			$calls = [];
 			if (is_array($_POST['calls']) && @sizeof($_POST['calls']) != 0) {
 				foreach ($_POST['calls'] as $call) {
 					if ($call['checked'] == 'true' && is_uuid($call['uuid'])) {
@@ -67,29 +67,44 @@
 					}
 				}
 			}
-			if (is_uuid($_REQUEST['uuid'])) {
+			if (!empty($_REQUEST['uuid']) && is_uuid($_REQUEST['uuid'])) {
 				$calls[] = $_REQUEST['uuid'];
 			}
 
 		//iterate through calls
-			if (is_array($calls) && @sizeof($calls) != 0) {
+			if (count($calls) > 0) {
 
 				//setup the event socket connection
-					$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+					$event_socket = event_socket::create();
 
 				//execute hangup command
-					foreach ($calls as $call_uuid) {
-						$switch_result = event_socket_request($fp, 'api uuid_kill '.$call_uuid);
+					if ($event_socket->is_connected()) foreach ($calls as $call_uuid) {
+						event_socket::async("uuid_kill ".$call_uuid);
 					}
 
 				//set message
-					message::add($text['message-calls_ended'].': '.@sizeof($calls),'positive');
+					message::add($text['message-calls_ended'].': '.count($calls),'positive');
 
 			}
 
 		//redirect
 			header('Location: calls_active.php');
 			exit;
+
+	}
+	else if ($_REQUEST['action'] == 'eavesdrop' && permission_exists('call_active_eavesdrop')) {
+
+		$uuid_pattern = '/[^-A-Fa-f0-9]/';
+		$number_pattern = '/[^-A-Za-z0-9()*#]/';
+
+		$channnel_uuid = preg_replace($uuid_pattern,'',$_GET['chan_uuid']);
+		$extension = preg_replace($number_pattern,'',$_GET['ext']);
+		$destination = preg_replace($number_pattern,'',$_GET['destination']);
+
+		$api_cmd = 'bgapi originate {origination_caller_id_name='.$text['label-eavesdrop'].',origination_caller_id_number='.$extension.'}user/'.$destination.'@'.$_SESSION['domain_name'].' &eavesdrop('.$channnel_uuid.')';
+
+		//run the command
+		$switch_result = event_socket::api($api_cmd);
 
 	}
 	else {

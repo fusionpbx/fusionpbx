@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2022
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -28,8 +28,10 @@
 	if ($domains_processed == 1) {
 
 		//create the directory
-			if (strlen($_SESSION['switch']['extensions']['dir']) > 0) {
-				if (!is_dir($_SESSION['switch']['extensions']['dir'])) { event_socket_mkdir($_SESSION['switch']['extensions']['dir']); }
+			if (!empty($setting->get('switch','extensions'))) {
+				if (!is_dir($setting->get('switch','extensions'))) {
+					mkdir($setting->get('switch','extensions'), 0770, false);
+				}
 			}
 
 		//update the directory first and last names
@@ -42,7 +44,7 @@
 			if (is_array($extensions) && @sizeof($extensions) != 0) {
 				foreach($extensions as $index => $row) {
 					$name = explode(' ', $row['directory_first_name']);
-					if (strlen($name[1]) > 0) {
+					if (!empty($name[1])) {
 						$array['extensions'][$index]['extension_uuid'] = $row['extension_uuid'];
 						$array['extensions'][$index]['directory_first_name'] = $name[0];
 						$array['extensions'][$index]['directory_last_name'] = $name[1];
@@ -55,7 +57,7 @@
 					$database = new database;
 					$database->app_name = 'extensions';
 					$database->app_uuid = 'e68d9689-2769-e013-28fa-6214bf47fca3';
-					$database->save($array);
+					$database->save($array, false);
 					unset($array);
 
 					$p->delete('extension_edit', 'temp');
@@ -88,6 +90,24 @@
 				$database = new database;
 				$database->execute($sql);
 				unset($sql);
+			}
+		
+		//do not disturb no longer uses the extension dial_string set the value to null
+			$sql = "update v_extensions set dial_string = null where (dial_string = '!USER_BUSY' or dial_string = 'error/user_busy');\n";
+			$database->execute($sql);
+			unset($sql);
+
+		//update the extension_type when the value is null
+			$sql = "select count(*) from v_extensions ";
+			$sql .= "where extension_type is null; ";
+			$database = new database;
+			$num_rows = $database->select($sql, null, 'column');
+			if ($num_rows > 0) {
+				$sql = "update v_extensions ";
+				$sql .= "set extension_type = 'default' ";
+				$sql .= "where extension_type is null;";
+				$database = new database;
+				$database->execute($sql, null);
 			}
 
 	}

@@ -3569,12 +3569,21 @@
 
 <!-- # STUN server -->
 <!-- # String -->
-<P76></P76>
+{if isset($grandstream_stun_server) }
+    <P76>{$grandstream_stun_server}</P76>
+{else}
+    <P76></P76>
+{/if}
 
 <!-- # Public Mode. 0 - No, 1 - Yes. Default is 0 -->
 <!-- # Number: 0, 1 -->
 <!-- # Mandatory -->
-<P1345>0</P1345>
+{if isset($grandstream_public_mode) }
+    <P1345>{$grandstream_public_mode}</P1345>
+{else}
+    <P1345>0</P1345>
+{/if}
+
 <!-- ############################################################################## -->
 <!-- ##  Settings/Call Features -->
 <!-- ############################################################################## -->
@@ -3630,7 +3639,11 @@
 <!-- # Mute Key Functions While Idle. 0 - DND, 1 - Idle Mute, 2 - Disabled. Default is 0 -->
 <!-- # Number: 0,1,2 -->
 <!-- # Mandatory -->
-<P1565>0</P1565>
+{if isset($grandstream_idle_mute_function)}
+    <P1565>{$grandstream_idle_mute_function}</P1565>
+{else}
+    <P1565>0</P1565>
+{/if}
 
 <!-- # Disable Transfer. 0 - No, 1 - Yes. Defauls is 0 -->
 <!-- # Number: 0, 1 -->
@@ -3945,7 +3958,11 @@
 <!-- ############################################################################## -->
 <!-- # NTP Server -->
 <!-- # String -->
-<P30>us.pool.ntp.org</P30>
+{if isset($ntp_server_primary)}
+<P30>{$ntp_server_primary}</P30>
+{else}
+<P30>pool.ntp.org</P30>
+{/if}
 
 <!-- # NTP Update Interval -->
 <!-- # String -->
@@ -4028,7 +4045,7 @@
 <!-- # When set to Yes(1), it will override the configured Time Zone setting if available  -->
 <!-- # Number: 0, 1 -->
 <!-- # Mandatory -->
-<P143>1</P143>
+{if isset($grandstream_dhcp_time_zone)}<P143>{$grandstream_dhcp_time_zone}</P143>{else}<P143>0</P143>{/if}
 
 <!-- # Self Defined Time zone. Max length allowed is 64 characters -->
 <!-- # String -->
@@ -6273,7 +6290,12 @@
 <!-- # Periodic Inform Enable. 0 - No, 1 - Yes. Default is 0 -->
 <!-- # Number: 0, 1 -->
 <!-- # Mandatory -->
+{if isset ($grandstream_tr069_periodic_inform_enable)}
+<P4506>{$grandstream_tr069_periodic_inform_enable}</P4506>
+{else}
 <P4506>0</P4506>
+{/if}
+
 
 <!-- # Periodic Inform Interval. Default is 86400. -->
 <!-- # Number -->
@@ -6281,11 +6303,11 @@
 
 <!-- # Connection Request Username	 -->
 <!-- # String: a-z, A-Z, 0-9 -->
-<P4511></P4511>
+<P4511>{$mac|replace:'-':''|upper}</P4511>
 
 <!-- # Connection Request Password	 -->
 <!-- # String: a-z, A-Z, 0-9 -->
-<P4512></P4512>
+<P4512>{$mac|replace:'-':''|upper}</P4512>
 
 <!-- # Connection Request Port. Default is 7547. -->
 <!-- # Number -->

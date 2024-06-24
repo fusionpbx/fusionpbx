@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2019
+ Portions created by the Initial Developer are Copyright (C) 2008-2023
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -63,16 +63,6 @@ if (!class_exists('phrases')) {
 		}
 
 		/**
-		 * called when there are no references to a particular object
-		 * unset the variables used in the class
-		 */
-		public function __destruct() {
-			foreach ($this as $key => $value) {
-				unset($this->$key);
-			}
-		}
-
-		/**
 		 * delete records
 		 */
 		public function delete($records) {
@@ -95,7 +85,7 @@ if (!class_exists('phrases')) {
 
 						//filter out unchecked phrases, build where clause for below
 							foreach ($records as $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$uuids[] = "'".$record['uuid']."'";
 								}
 							}
@@ -191,7 +181,7 @@ if (!class_exists('phrases')) {
 
 						//filter out unchecked phrases, build the delete array
 							foreach ($records as $x => $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
 									$array[$this->table][$x]['phrase_uuid'] = $this->phrase_uuid;
 									$array[$this->table][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
@@ -199,7 +189,7 @@ if (!class_exists('phrases')) {
 							}
 
 						//get phrase languages
-							if (is_array($array) && @sizeof($array) != 0) {
+							if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
 								$sql = "select phrase_language as lang from v_phrases ";
 								$sql .= "where domain_uuid = :domain_uuid ";
 								$sql .= "and phrase_uuid = :phrase_uuid ";
@@ -211,7 +201,7 @@ if (!class_exists('phrases')) {
 							}
 
 						//delete the checked rows
-							if (is_array($array) && @sizeof($array) != 0) {
+							if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
 
 								//grant temporary permissions
 									$p = new permissions;
@@ -261,8 +251,8 @@ if (!class_exists('phrases')) {
 					if (is_array($records) && @sizeof($records) != 0) {
 
 						//get current toggle state and language
-							foreach($records as $x => $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+							foreach ($records as $x => $record) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$uuids[] = "'".$record['uuid']."'";
 								}
 							}
@@ -301,10 +291,12 @@ if (!class_exists('phrases')) {
 									unset($array);
 
 								//clear the cache
-									$phrase_languages = array_unique($phrase_languages);
-									$cache = new cache;
-									foreach ($phrase_languages as $phrase_language) {
-										$cache->delete("languages:".$phrase_language);
+									if (!empty($phrase_languages) && is_array($phrase_languages) && @sizeof($phrase_languages) != 0) {
+										$phrase_languages = array_unique($phrase_languages);
+										$cache = new cache;
+										foreach ($phrase_languages as $phrase_language) {
+											$cache->delete("languages:".$phrase_language);
+										}
 									}
 
 								//clear the destinations session array
@@ -343,8 +335,8 @@ if (!class_exists('phrases')) {
 					if (is_array($records) && @sizeof($records) != 0) {
 
 						//get checked records
-							foreach($records as $x => $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+							foreach ($records as $x => $record) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$uuids[] = "'".$record['uuid']."'";
 								}
 							}
@@ -394,7 +386,9 @@ if (!class_exists('phrases')) {
 												unset($sql_2, $parameters_2, $rows_2, $row_2);
 
 											//create array of languages
-												$phrase_languages[] = $row['phrase_languages'];
+												if (!empty($row['phrase_languages'])) {
+													$phrase_languages[] = $row['phrase_languages'];
+												}
 										}
 									}
 									unset($sql, $parameters, $rows, $row);
@@ -418,10 +412,12 @@ if (!class_exists('phrases')) {
 									$p->delete('phrase_detail_add', 'temp');
 
 								//clear the cache
-									$phrase_languages = array_unique($phrase_languages);
-									$cache = new cache;
-									foreach ($phrase_languages as $phrase_language) {
-										$cache->delete("languages:".$phrase_language);
+									if (!empty($phrase_languages) && is_array($phrase_languages) && @sizeof($phrase_languages) != 0) {
+										$phrase_languages = array_unique($phrase_languages);
+										$cache = new cache;
+										foreach ($phrase_languages as $phrase_language) {
+											$cache->delete("languages:".$phrase_language);
+										}
 									}
 
 								//set message

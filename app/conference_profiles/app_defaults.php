@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2016
+	Portions created by the Initial Developer are Copyright (C) 2016 - 2021
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -33,9 +33,9 @@
 		if ($num_rows == 0) {
 
 			//set the directory
-				$xml_dir = $_SESSION["switch"]["conf"]["dir"].'/autoload_configs';
+				$xml_dir = $setting->get('switch','conf').'/autoload_configs';
 				$xml_file = $xml_dir."/conference.conf";
-				$xml_file_alt = $_SERVER["DOCUMENT_ROOT"].'/'.PROJECT_PATH.'/resources/templates/conf/autoload_configs/conference.conf';
+				$xml_file_alt = $_SERVER["DOCUMENT_ROOT"].'/'.PROJECT_PATH.'/app/switch/resources/conf/autoload_configs/conference.conf';
 
 			//rename the file
 				if (file_exists($xml_dir.'/conference.conf.xml.noload')) {
@@ -72,7 +72,7 @@
 						$database = new database;
 						$database->app_name = 'conference_profiles';
 						$database->app_uuid = 'c33e2c2a-847f-44c1-8c0d-310df5d65ba9';
-						$database->save($array);
+						$database->save($array, false);
 						unset($array);
 
 						$p->delete('conference_profile_add', 'temp');
@@ -99,7 +99,7 @@
 								$database = new database;
 								$database->app_name = 'conference_profiles';
 								$database->app_uuid = 'c33e2c2a-847f-44c1-8c0d-310df5d65ba9';
-								$database->save($array);
+								$database->save($array, false);
 								unset($array);
 
 								$p->delete('conference_profile_param_add', 'temp');

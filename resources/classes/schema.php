@@ -17,20 +17,19 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2013 - 2019
+	Copyright (C) 2013 - 2023
 	All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-include "root.php";
 
 //define the schema class
 if (!class_exists('schema')) {
 	class schema {
 
 		//define variables
-			public $db;
+			private $database;
 			public $apps;
 			public $db_type;
 			public $result;
@@ -38,23 +37,22 @@ if (!class_exists('schema')) {
 
 		//class constructor
 			public function __construct() {
-				//connect to the database if not connected
-				if (!$this->db) {
-					require_once "resources/classes/database.php";
-					$database = new database;
-					$database->connect();
-					$this->db = $database->db;
-				}
+
+				//includes files
+				require dirname(__DIR__, 2) . "/resources/require.php";
+
+				//connect to the database
+				$this->database = database::new();
 
 				//get the list of installed apps from the core and mod directories
 				$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_config.php");
 				$x=0;
 				foreach ($config_list as &$config_path) {
 					try {
-					    include($config_path);
+						include($config_path);
 					}
 					catch (Exception $e) {
-					    //echo 'Caught exception: ',  $e->getMessage(), "\n";
+						//echo 'Caught exception: ',  $e->getMessage(), "\n";
 					}
 					$x++;
 				}
@@ -73,7 +71,7 @@ if (!class_exists('schema')) {
 								$sql = "CREATE TABLE " . $row['table']['name'] . " (\n";
 								$field_count = 0;
 								foreach ($row['fields'] as $field) {
-									if (isset($field['deprecated']) and ($field['deprecated'] == "true")) {
+									if (!empty($field['deprecated']) and ($field['deprecated'] == "true")) {
 										//skip this field
 									}
 									else {
@@ -124,16 +122,16 @@ if (!class_exists('schema')) {
 			public function exec() {
 				foreach ($this->result['sql'] as $sql) {
 					//start the sql transaction
-						$this->db->beginTransaction();
+						$this->database->beginTransaction();
 					//execute the sql query
 						try {
-							$this->db->query($sql);
+							$this->database->query($sql);
 						}
 						catch (PDOException $error) {
 							echo "error: " . $error->getMessage() . " sql: $sql<br/>";
 						}
 					//complete the transaction
-						$this->db->commit();
+						$this->database->commit();
 				}
 			}
 
@@ -160,7 +158,7 @@ if (!class_exists('schema')) {
 					}
 				}
 				if ($this->db_type == "pgsql") {
-					$sql = "SELECT attname FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = '$table_name') AND attname = '$column_name'; ";
+					$sql = "SELECT attname FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = '$table_name' limit 1) AND attname = '$column_name'; ";
 				}
 				if ($this->db_type == "mysql") {
 					//$sql .= "SELECT * FROM information_schema.COLUMNS where TABLE_SCHEMA = '$db_name' and TABLE_NAME = '$table_name' and COLUMN_NAME = '$column_name' ";
@@ -168,7 +166,7 @@ if (!class_exists('schema')) {
 				}
 
 				if ($sql) {
-					$prep_statement = $this->db->prepare($sql);
+					$prep_statement = $this->database->db->prepare($sql);
 					$prep_statement->execute();
 					$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 					if (!$result) {
@@ -186,7 +184,7 @@ if (!class_exists('schema')) {
 
 		//get the table information
 			public function table_info($db_name, $table_name) {
-				if (strlen($table_name) == 0) { return false; }
+				if (empty($table_name)) { return false; }
 				if ($this->db_type == "sqlite") {
 					$sql = "PRAGMA table_info(".$table_name.");";
 				}
@@ -206,7 +204,7 @@ if (!class_exists('schema')) {
 				if ($this->db_type == "mysql") {
 					$sql = "describe ".$table_name.";";
 				}
-				$prep_statement = $this->db->prepare($sql);
+				$prep_statement = $this->database->db->prepare($sql);
 				$prep_statement->execute();
 				return $prep_statement->fetchAll(PDO::FETCH_ASSOC);
 			}
@@ -214,7 +212,7 @@ if (!class_exists('schema')) {
 		//database table exists alternate
 			private function db_table_exists_alternate ($db_type, $table_name) {
 				$sql = "select count(*) from $table_name ";
-				$result = $this->db->query($sql);
+				$result = $this->database->query($sql);
 				if ($result > 0) {
 					return true; //table exists
 				}
@@ -235,7 +233,7 @@ if (!class_exists('schema')) {
 				if ($db_type == "mysql") {
 					$sql .= "SELECT TABLE_NAME FROM information_schema.tables WHERE table_schema = '$db_name' and TABLE_NAME = '$table_name' ";
 				}
-				$prep_statement = $this->db->prepare(check_sql($sql));
+				$prep_statement = $this->database->db->prepare(check_sql($sql));
 				$prep_statement->execute();
 				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 				if (count($result) > 0) {
@@ -248,7 +246,7 @@ if (!class_exists('schema')) {
 
 		//database table information
 			private function db_table_info($db_name, $db_type, $table_name) {
-				if (strlen($table_name) == 0) { return false; }
+				if (empty($table_name)) { return false; }
 				if ($db_type == "sqlite") {
 					$sql = "PRAGMA table_info(".$table_name.");";
 				}
@@ -268,7 +266,7 @@ if (!class_exists('schema')) {
 				if ($db_type == "mysql") {
 					$sql = "describe ".$table_name.";";
 				}
-				$prep_statement = $this->db->prepare($sql);
+				$prep_statement = $this->database->db->prepare($sql);
 				$prep_statement->execute();
 				return $prep_statement->fetchAll(PDO::FETCH_ASSOC);
 			}
@@ -321,20 +319,17 @@ if (!class_exists('schema')) {
 					}
 				}
 				if ($db_type == "pgsql") {
-					$sql = "SELECT attname FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = '$table_name') AND attname = '$column_name'; ";
+					$sql = "SELECT attname FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = '$table_name' limit 1) AND attname = '$column_name'; ";
 				}
 				if ($db_type == "mysql") {
 					//$sql .= "SELECT * FROM information_schema.COLUMNS where TABLE_SCHEMA = '$db_name' and TABLE_NAME = '$table_name' and COLUMN_NAME = '$column_name' ";
 					$sql = "show columns from $table_name where field = '$column_name' ";
 				}
 				if ($sql) {
-					$prep_statement = $this->db->prepare(check_sql($sql));
+					$prep_statement = $this->database->db->prepare(check_sql($sql));
 					$prep_statement->execute();
 					$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-					if (!$result) {
-						return false;
-					}
-					if (count($result) > 0) {
+					if (!empty($result)) {
 						return true;
 					}
 					else {
@@ -352,9 +347,10 @@ if (!class_exists('schema')) {
 
 		//database create table
 			public function db_create_table ($apps, $db_type, $table) {
+				if (empty($apps)) { return false; }
 				if (is_array($apps)) foreach ($apps as $x => &$app) {
-					if (is_array($app['db'])) foreach ($app['db'] as $y => $row) {
-						if (is_array($row['table']['name'])) {
+					if (!empty($app['db']) && is_array($app['db'])) foreach ($app['db'] as $y => $row) {
+						if (!empty($row['table']['name']) && is_array($row['table']['name'])) {
 							$table_name = $row['table']['name']['text'];
 						}
 						else {
@@ -362,26 +358,26 @@ if (!class_exists('schema')) {
 						}
 						if ($table_name == $table) {
 							$sql = "CREATE TABLE " . $table_name . " (\n";
-							$field_count = 0;
-							if (is_array($row['fields'])) foreach ($row['fields'] as $field) {
-								if ($field['deprecated'] == "true") {
+							(int)$field_count = 0;
+							if (!empty($row['fields']) && is_array($row['fields'])) foreach ($row['fields'] as $field) {
+								if (!empty($field['deprecated']) && $field['deprecated'] == "true") {
 									//skip this row
 								}
 								else {
 									if ($field_count > 0 ) { $sql .= ",\n"; }
-									if (is_array($field['name'])) {
+									if (!empty($field['name']) &&is_array($field['name'])) {
 										$sql .= $field['name']['text'] . " ";
 									}
 									else {
 										$sql .= $field['name'] . " ";
 									}
-									if (is_array($field['type'])) {
+									if (!empty($field['type']) &&is_array($field['type'])) {
 										$sql .= $field['type'][$db_type];
 									}
 									else {
 										$sql .= $field['type'];
 									}
-									if ($field['key']['type'] == "primary") {
+									if (!empty($field['key']['type']) && $field['key']['type'] == "primary") {
 										$sql .= " PRIMARY KEY";
 									}
 									$field_count++;
@@ -403,7 +399,7 @@ if (!class_exists('schema')) {
 							$sql = "INSERT INTO " . $row['table']['name'] . " (";
 							$field_count = 0;
 							foreach ($row['fields'] as $field) {
-								if ($field['deprecated'] == "true") {
+								if (!empty($field['deprecated']) && $field['deprecated'] == "true") {
 									//skip this field
 								}
 								else {
@@ -421,7 +417,7 @@ if (!class_exists('schema')) {
 							$sql .= "SELECT ";
 							$field_count = 0;
 							foreach ($row['fields'] as $field) {
-								if ($field['deprecated'] == "true") {
+								if (!empty($field['deprecated']) && $field['deprecated'] == "true") {
 									//skip this field
 								}
 								else {
@@ -467,28 +463,28 @@ if (!class_exists('schema')) {
 
 		//datatase schema
 			public function schema ($format = '') {
- 
+
  				//set the global variable
-					global $db, $text, $output_format;
+					global $text, $output_format;
 
 					if ($format == '') $format = $output_format;
 
 				//get the db variables
-					require_once "resources/classes/config.php";
-					$config = new config;
-					$config_exists = $config->exists();
-					$config_path = $config->find();
-					$config->get();
-					$db_type = $config->db_type;
-					$db_name = $config->db_name;
-					$db_username = $config->db_username;
-					$db_password = $config->db_password;
-					$db_host = $config->db_host;
-					$db_path = $config->db_path;
-					$db_port = $config->db_port;
+					//require_once "resources/classes/config.php";
+					//$config = new config;
+					//$config_exists = $config->exists();
+					//$config_path = $config->find();
+					//$config->get();
+					//$db_type = $config->db_type;
+					//$db_name = $config->db_name;
+					//$db_username = $config->db_username;
+					//$db_password = $config->db_password;
+					//$db_host = $config->db_host;
+					//$db_path = $config->db_path;
+					//$db_port = $config->db_port;
 
-				//get the PROJECT PATH
-					include "root.php";
+				//includes files
+					require dirname(__DIR__, 2) . "/resources/require.php";
 
 				//add multi-lingual support
 					if (!isset($text)) {
@@ -522,22 +518,9 @@ if (!class_exists('schema')) {
 						//check if table exists
 							// SELECT TABLE_NAME FROM ALL_TABLES
 
-				//get the $apps array from the installed apps from the core and mod directories
-					$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_config.php");
-					$x=0;
-					foreach ($config_list as &$config_path) {
-						try {
-							include($config_path);
-						}
-						catch (Exception $e) {
-						    //echo 'Caught exception: ',  $e->getMessage(), "\n";
-						}
-						$x++;
-					}
-
 				//update the app db array add exists true or false
 					$sql = '';
-					foreach ($apps as $x => &$app) {
+					foreach ($this->apps as $x => &$app) {
 						if (isset($app['db'])) foreach ($app['db'] as $y => &$row) {
 							if (isset($row['table']['name'])) {
 								if (is_array($row['table']['name'])) {
@@ -556,17 +539,18 @@ if (!class_exists('schema')) {
 									$table_name = $row['table'];
 								}
 							}
-							if (strlen($table_name) > 0) {
+							if (!empty($table_name)) {
+
 								//check if the table exists
 									if ($this->db_table_exists($db_type, $db_name, $table_name)) {
-										$apps[$x]['db'][$y]['exists'] = 'true';
+										$this->apps[$x]['db'][$y]['exists'] = 'true';
 									}
 									else {
-										$apps[$x]['db'][$y]['exists'] = 'false';
+										$this->apps[$x]['db'][$y]['exists'] = 'false';
 									}
 								//check if the column exists
 									foreach ($row['fields'] as $z => $field) {
-										if ($field['deprecated'] == "true") {
+										if (!empty($field['deprecated']) && $field['deprecated'] == "true") {
 											//skip this field
 										}
 										else {
@@ -576,14 +560,14 @@ if (!class_exists('schema')) {
 											else {
 												$field_name = $field['name'];
 											}
-											if (strlen($field_name) > 0) {
+											if (!empty($field_name)) {
 												if ($this->db_column_exists ($db_type, $db_name, $table_name, $field_name)) {
 													//found
-													$apps[$x]['db'][$y]['fields'][$z]['exists'] = 'true';
+													$this->apps[$x]['db'][$y]['fields'][$z]['exists'] = 'true';
 												}
 												else {
 													//not found
-													$apps[$x]['db'][$y]['fields'][$z]['exists'] = 'false';
+													$this->apps[$x]['db'][$y]['fields'][$z]['exists'] = 'false';
 												}
 											}
 											unset($field_name);
@@ -596,10 +580,9 @@ if (!class_exists('schema')) {
 
 				//prepare the variables
 					$sql_update = '';
-					$var_uuid = $_GET["id"];
 
 				//add missing tables and fields
-					foreach ($apps as $x => &$app) {
+					foreach ($this->apps as $x => &$app) {
 						if (isset($app['db'])) foreach ($app['db'] as $y => &$row) {
 							if (is_array($row['table']['name'])) {
 								$table_name = $row['table']['name']['text'];
@@ -621,18 +604,25 @@ if (!class_exists('schema')) {
 									}
 									else {
 										$row['exists'] = "false";
-										$sql_update .= $this->db_create_table($apps, $db_type, $row['table']['name']['text']);
+										$sql_update .= $this->db_create_table($this->apps, $db_type, $row['table']['name']['text']);
 									}
 								}
 							}
 							else {
+								if ($this->db_table_exists($db_type, $db_name, $row['table']['name'])) {
+									$row['exists'] = "true";
+								}
+								else {
+									$row['exists'] = "false";
+								}
 								$table_name = $row['table']['name'];
 							}
+
 							//check if the table exists
 								if ($row['exists'] == "true") {
 									if (count($row['fields']) > 0) {
 										foreach ($row['fields'] as $z => $field) {
-											if ($field['deprecated'] == "true") {
+											if (!empty($field['deprecated']) && $field['deprecated'] == "true") {
 												//skip this field
 											}
 											else {
@@ -646,13 +636,18 @@ if (!class_exists('schema')) {
 												//get the field name
 													if (is_array($field['name'])) {
 														$field_name = $field['name']['text'];
-														if (!$this->db_column_exists ($db_type, $db_name, $table_name, $field_name)) {
-															$field['exists'] == "false";
-														}
 													}
 													else {
 														$field_name = $field['name'];
 													}
+
+												//check if the field exists
+												//	if ($this->db_column_exists($db_type, $db_name, $table_name, $field_name)) {
+												//		$field['exists'] = "true";
+												//	}
+												//	else {
+												//		$field['exists'] = "false";
+												//	}
 
 												//add or rename fields
 													if (isset($field['name']['deprecated']) && $this->db_column_exists ($db_type, $db_name, $table_name, $field['name']['deprecated'])) {
@@ -665,7 +660,7 @@ if (!class_exists('schema')) {
 														}
 														if ($db_type == "sqlite") {
 															//a change has been made to the field name
-															$apps[$x]['db'][$y]['rebuild'] = 'true';
+															$this->apps[$x]['db'][$y]['rebuild'] = 'true';
 														}
 													}
 													else {
@@ -681,7 +676,7 @@ if (!class_exists('schema')) {
 														$db_field_type = $this->db_column_data_type ($db_type, $db_name, $table_name, $field_name);
 														$field_type_array = explode("(", $field_type);
 														$field_type = $field_type_array[0];
-														if (trim($db_field_type) != trim($field_type) && strlen($db_field_type) > 0) {
+														if (trim($db_field_type) != trim($field_type) && !empty($db_field_type)) {
 															if ($db_type == "pgsql") {
 																if (strtolower($field_type) == "uuid") {
 																	$sql_update .= "ALTER TABLE ".$table_name." ALTER COLUMN ".$field_name." TYPE uuid USING\n";
@@ -725,26 +720,22 @@ if (!class_exists('schema')) {
 															}
 															if ($db_type == "sqlite") {
 																//a change has been made to the field type
-																$apps[$x]['db'][$y]['rebuild'] = 'true';
+																$this->apps[$x]['db'][$y]['rebuild'] = 'true';
 															}
 														}
 													}
-
 											}
 										}
-										unset($column_array);
 									}
 								}
-								else {
+								elseif (!is_array($row['table']['name'])) {
 									//create table
-										if (!is_array($row['table']['name'])) {
-											$sql_update .= $this->db_create_table($apps, $db_type, $row['table']['name']);
-										}
+									$sql_update .= $this->db_create_table($this->apps, $db_type, $row['table']['name']);
 								}
 						}
 					}
 				//rebuild and populate the table
-					foreach ($apps as $x => &$app) {
+					foreach ($this->apps as $x => &$app) {
 						if (isset($app['db'])) foreach ($app['db'] as $y => &$row) {
 							if (is_array($row['table']['name'])) {
 								$table_name = $row['table']['name']['text'];
@@ -752,16 +743,16 @@ if (!class_exists('schema')) {
 							else {
 								$table_name = $row['table']['name'];
 							}
-							if ($row['rebuild'] == "true") {
+							if (!empty($field['rebuild']) && $row['rebuild'] == "true") {
 								if ($db_type == "sqlite") {
 									//start the transaction
 										//$sql_update .= "BEGIN TRANSACTION;\n";
 									//rename the table
 										$sql_update .= "ALTER TABLE ".$table_name." RENAME TO tmp_".$table_name.";\n";
 									//create the table
-										$sql_update .= $this->db_create_table($apps, $db_type, $table_name);
+										$sql_update .= $this->db_create_table($this->apps, $db_type, $table_name);
 									//insert the data into the new table
-										$sql_update .= $this->db_insert_into($apps, $db_type, $table_name);
+										$sql_update .= $this->db_insert_into($this->apps, $db_type, $table_name);
 									//drop the old table
 										$sql_update .= "DROP TABLE tmp_".$table_name.";\n";
 									//commit the transaction
@@ -781,7 +772,7 @@ if (!class_exists('schema')) {
 						//start the table
 							$response .= "<table width='100%' border='0' cellpadding='20' cellspacing='0'>\n";
 						//show the changes
-							if (strlen($sql_update) > 0) {
+							if (!empty($sql_update)) {
 								$response .= "<tr>\n";
 								$response .= "<td class='row_style1' colspan='3'>\n";
 								$response .= "<br />\n";
@@ -801,7 +792,7 @@ if (!class_exists('schema')) {
 							$response .= "<tr>\n";
 						//build the html while looping through the app db array
 							$sql = '';
-							foreach ($apps as &$app) {
+							foreach ($this->apps as &$app) {
 								if (isset($app['db'])) foreach ($app['db'] as $row) {
 									if (is_array($row['table']['name'])) {
 										$table_name = $row['table']['name']['text'];
@@ -826,7 +817,7 @@ if (!class_exists('schema')) {
 													$response .= "<th>".$text['label-exists']."</th>\n";
 													$response .= "</tr>\n";
 													foreach ($row['fields'] as $field) {
-														if ($field['deprecated'] == "true") {
+														if (!empty($field['deprecated']) && $field['deprecated'] == "true") {
 															//skip this field
 														}
 														else {
@@ -856,7 +847,6 @@ if (!class_exists('schema')) {
 															$response .= "</tr>\n";
 														}
 													}
-													unset($column_array);
 													$response .= "	</table>\n";
 													$response .= "</td>\n";
 											}
@@ -869,7 +859,6 @@ if (!class_exists('schema')) {
 										$response .= "</tr>\n";
 								}
 							}
-							unset ($prep_statement);
 						//end the list of tables
 							$response .= "</table>\n";
 							$response .= "<br />\n";
@@ -878,7 +867,7 @@ if (!class_exists('schema')) {
 
 					//loop line by line through all the lines of sql code
 						$x = 0;
-						if (strlen($sql_update) == 0 && $format == "text") {
+						if (empty($sql_update) && $format == "text") {
 							$response .= "	".$text['label-schema'].":			".$text['label-no_change']."\n";
 						}
 						else {
@@ -890,7 +879,7 @@ if (!class_exists('schema')) {
 							foreach($update_array as $sql) {
 								if (strlen(trim($sql))) {
 									try {
-										$this->db->query(trim($sql));
+										$this->database->db->query(trim($sql));
 										if ($format == "text") {
 											$response .= "	$sql;\n";
 										}
@@ -902,8 +891,23 @@ if (!class_exists('schema')) {
 							}
 							//$this->db->commit();
 							$response .= "\n";
-							unset ($file_contents, $sql_update, $sql);
+							unset ($sql_update, $sql);
 						}
+
+				//refresh each postgresql subscription with its publication
+					if ($db_type == "pgsql") {
+						//get the list of postgresql subscriptions
+						$sql = "select subname from pg_subscription; ";
+						$pg_subscriptions = $this->database->select($sql, null, 'all');
+						unset($sql, $parameters);
+
+						//refresh each subscription publication
+						foreach ($pg_subscriptions as $row) {
+							$sql = "ALTER SUBSCRIPTION ".$row['subname']." REFRESH PUBLICATION;";
+							$response .= $sql;
+							$this->database->execute($sql);
+						}
+					}
 
 				//handle response
 					//if ($output == "echo") {

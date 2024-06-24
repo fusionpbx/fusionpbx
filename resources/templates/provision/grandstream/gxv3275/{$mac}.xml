@@ -3193,7 +3193,7 @@
 <!-- DHCP Option 2 to Override Time Zone setting. 0 - No, 1 - Yes. Default value is 0 -->
 <!-- When set to Yes (1), it will override the configured Time Zone setting if available -->
 <!-- Number: 0, 1 -->
-<P143>0</P143>
+{if isset($grandstream_dhcp_time_zone)}<P143>{$grandstream_dhcp_time_zone}</P143>{else}<P143>0</P143>{/if}
 
 <!-- Time Zone -->
 <!-- Web GUI Option P Value- -->
@@ -3504,7 +3504,12 @@
 
 <!-- Enable TR-069. 0 - No, 1 - Yes. Default value is 0 -->
 <!-- Number: 0, 1 -->
+{if isset ($grandstream_tr069_enable)}
+<P1409>{$grandstream_tr069_enable}</P1409>
+{else}
 <P1409>0</P1409>
+{/if}
+
 
 <!-- ACS URL -->
 <P4503></P4503>
@@ -3517,17 +3522,22 @@
 
 <!-- Periodic Inform Enable. 0 - No, 1 - Yes. Default value is 0 -->
 <!-- Number: 0, 1 -->
+{if isset ($grandstream_tr069_periodic_inform_enable)}
+<P4506>{$grandstream_tr069_periodic_inform_enable}</P4506>
+{else}
 <P4506>0</P4506>
+{/if}
+
 
 <!-- Periodic Inform Interval (s). Default value is 86400 -->
 <!-- Number: 1 - 4294967295 -->
 <P4507>86400</P4507>
 
 <!-- Connection Request Username -->
-<P4511></P4511>
+<P4511>{$mac|replace:'-':''|upper}</P4511>
 
 <!-- Connection Request Password -->
-<P4512></P4512>
+<P4512>{$mac|replace:'-':''|upper}</P4512>
 
 <!-- Connection Request Port -->
 <P4518></P4518>
