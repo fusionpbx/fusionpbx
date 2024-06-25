@@ -1029,6 +1029,81 @@
 
 		}
 
+		/**
+		 * Removes old entries for in the database voicemails table
+		 * see {@link https://github.com/fusionpbx/fusionpbx-app-maintenance/} FusionPBX Maintenance App
+		 * @param settings $settings Settings object
+		 * @return void
+		 */
+		public static function database_maintenance(settings $settings): void {
+			//set table name for query
+			//$table = self::TABLE;
+			$table = 'voicemail_messages';
+
+			//get a database connection
+			$database = $settings->database();
+
+			//get a list of domains
+			$domains = maintenance::get_domains($database);
+			foreach ($domains as $domain_uuid => $domain_name) {
+				//get domain settings
+				$domain_settings = new settings(['database' => $database, 'domain_uuid' => $domain_uuid]);
+
+				//ensure we have a retention day
+				$retention_days = $domain_settings->get('maintenance', 'voicemail_database_retention_days', '');
+				if (!empty($retention_days) && is_numeric($retention_days)) {
+					//clear out old records
+					$sql = "delete from v_{$table} WHERE to_timestamp(created_epoch) < NOW() - INTERVAL '{$retention_days} days'"
+					. " and domain_uuid = '{$domain_uuid}'";
+					$database->execute($sql);
+					if ($database->message['code'] === 200) {
+						maintenance_service::log_write(self::class, "Successfully removed voicemail entries from $domain_name", $domain_uuid);
+					} else {
+						maintenance_service::log_write(self::class, "Unable to remove records for domain $domain_name", $domain_uuid, maintenance_service::LOG_ERROR);
+					}
+				}
+			}
+
+			//clear out any null domain_uuid entries
+			$sql = "delete from v_{$table} WHERE to_timestamp(created_epoch) < NOW() - INTERVAL '{$retention_days} days'"
+					. " and domain_uuid is null";
+			$database->execute($sql);
+			if ($database->message['code'] === 200) {
+				maintenance_service::log_write(self::class, "Successfully removed voicemail entries from $domain_name", $domain_uuid);
+			} else {
+				maintenance_service::log_write(self::class, "Unable to remove records for domain $domain_name", $domain_uuid, maintenance_service::LOG_ERROR);
+			}
+
+			//ensure logs are saved
+			maintenance_service::log_flush();
+		}
+
+		public static function filesystem_maintenance(settings $settings): void {
+			//get a list of domains
+			$domains = maintenance::get_domains($settings->database());
+			foreach ($domains as $domain_uuid => $domain_name) {
+				$domain_settings = new settings(['database' => $settings->database(), 'domain_uuid' => $domain_uuid]);
+				$voicemail_location = $domain_settings->get('switch', 'voicemail', '/var/lib/freeswitch/storage/voicemail') . '/default';
+				$retention_days = $domain_settings->get('maintenance', 'voicemail_filesystem_retention_days', '');
+				if (!empty($retention_days)) {
+					$mp3_files = glob("$voicemail_location/$domain_name/*/msg_*.mp3");
+					$wav_files = glob("$voicemail_location/$domain_name/*/msg_*.wav");
+					$domain_voicemail_files = array_merge($mp3_files, $wav_files);
+					foreach ($domain_voicemail_files as $file) {
+						if (maintenance_service::days_since_modified($file) > $retention_days) {
+							if (unlink($file)) {
+								maintenance_service::log_write(self::class, "Removed $file from voicemails", $domain_uuid);
+							} else {
+								maintenance_service::log_write(self::class, "Unable to remove $file", $domain_uuid, maintenance_service::LOG_ERROR);
+							}
+						}
+					}
+				}
+				else {
+					maintenance_service::log_write(self::class, "Retention days not set or not a valid number", $domain_uuid, maintenance_service::LOG_ERROR);
+				}
+			}
+		}
 
 	}
 
