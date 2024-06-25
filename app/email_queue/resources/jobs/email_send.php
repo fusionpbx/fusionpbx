@@ -134,6 +134,7 @@
 		$email_to = $row["email_to"];
 		$email_subject = $row["email_subject"];
 		$email_body = $row["email_body"];
+		$email_transcription = $row["email_transcription"];
 		$email_status = $row["email_status"];
 		$email_retry_count = $row["email_retry_count"];
 		$email_uuid = $row["email_uuid"];
@@ -225,20 +226,28 @@
 				//debug message
 				echo "transcribe enabled: true\n";
 
-				//add the settings object
-				$transcribe_engine = $settings->get('transcribe', 'engine', '');
+				//if email transcription has a value no need to transcribe again so run the transcription when the value is empty
+				if (empty($email_transcription)) {
+					//add the settings object
+					$transcribe_engine = $settings->get('transcribe', 'engine', '');
 
-				//add the transcribe object and get the languages arrays
-				if (!empty($transcribe_engine)) {
-					$transcribe = new transcribe($settings);
+					//add the transcribe object and get the languages arrays
+					if (!empty($transcribe_engine)) {
+						$transcribe = new transcribe($settings);
+					}
+
+					//transcribe the voicemail recording
+					$transcribe->audio_path = $email_attachment_path;
+					$transcribe->audio_filename = $email_attachment_name;
+					$transcribe_message = $transcribe->transcribe();
+
+					echo "transcribe path: ".$email_attachment_path."\n";
+					echo "transcribe name: ".$email_attachment_name."\n";
+				}
+				else {
+					$transcribe_message = $email_transcription;
 				}
 
-				//transcribe the voicemail recording
-				$transcribe->audio_path = $email_attachment_path;
-				$transcribe->audio_filename = $email_attachment_name;
-				$transcribe_message = $transcribe->transcribe();
-				echo "transcribe path: ".$email_attachment_path."\n";
-				echo "transcribe name: ".$email_attachment_name."\n";
 				echo "transcribe message: ".$transcribe_message."\n";
 
 				//prepare the email body
