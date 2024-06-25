@@ -23,7 +23,7 @@ dbh:release()
 
 if response then
     if response.domain_setting_value == "true" then
-        freeswitch.consoleLog("notice", "[check-suspended] Account suspended: " .. response.domain_setting_value)
+        freeswitch.consoleLog("warning", "[check-suspended] Account suspended: " .. response.domain_setting_value)
 
         if is_internal_call == "true" then
 
@@ -63,11 +63,3 @@ else
     freeswitch.consoleLog("notice", "[check-suspended] No result found for domain_uuid: " .. domain_uuid)
 end
 
---session:execute("set", "billing_suspended=" .. response.domain_setting_value .. "");
-
---session:execute("set", "billing_suspended=true" .. response.domain_setting_value .. "");
-
-
---session:execute("export", "billing_suspended=" .. response.domain_setting_value .. "");
-
- --   session:destroy();
