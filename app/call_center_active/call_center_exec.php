@@ -90,8 +90,7 @@
 
 //run the command
 	if (isset($switch_command)) {
-		$fp = event_socket_create();
-		$response = event_socket_request($fp, 'api '.$switch_command);
+		$response = event_socket::api($switch_command);
 	}
 
 /*
@@ -134,14 +133,14 @@
 		//fs cmd
 		if (!empty($switch_cmd)) {
 			//setup the event socket connection
-				$fp = event_socket_create();
+				$esl = event_socket::create();
 			//ensure the connection exists
-				if ($fp) {
+				if ($esl) {
 					//send the command
-						$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
+						$switch_result = event_socket::api($switch_cmd);
 					//set the user state
 						$cmd = "api callcenter_config agent set state ".$username."@".$_SESSION['domain_name']." Waiting";
-						$response = event_socket_request($fp, $cmd);
+						$response = event_socket::command($cmd);
 				}
 		}
 	}

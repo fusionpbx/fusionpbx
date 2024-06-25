@@ -61,14 +61,16 @@
 
 //get the menu array and save it to the session
 	$menu = new menu;
-	$menu->menu_uuid = $_SESSION['domain']['menu']['uuid'];
+	$menu->menu_uuid = $_SESSION['domain']['menu']['uuid'] ?? null;
 	$_SESSION['menu']['array'] = $menu->menu_array();
 	unset($menu);
 
 //redirect
 	if(!defined('STDIN')) {
 		//show a message to the user
-		message::add($text['message-restore']);
+		if (empty($included) || !$included) {
+			message::add($text['message-restore']);
+		}
 		header("Location: ".PROJECT_PATH."/core/menu/menu_edit.php?id=".urlencode($menu_uuid));
 		return;
 	}

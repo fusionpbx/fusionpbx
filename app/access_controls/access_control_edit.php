@@ -118,10 +118,7 @@
 					$cache->delete("configuration:acl.conf");
 
 					//create the event socket connection
-					$fp = event_socket_create();
-					if ($fp) {
-						event_socket_request($fp, "api reloadacl");
-					}
+					event_socket::api("reloadacl");
 
 					//redirect the user
 					header('Location: access_control_edit.php?id='.$id);
@@ -204,10 +201,7 @@
 			$cache->delete("configuration:acl.conf");
 
 		//create the event socket connection
-			$fp = event_socket_create();
-			if ($fp) {
-				event_socket_request($fp, "api reloadacl");
-			}
+			event_socket::async("reloadacl");
 
 		//redirect the user
 			if (isset($action)) {

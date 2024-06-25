@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2023
+	Portions created by the Initial Developer are Copyright (C) 2008-2024
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -28,7 +28,7 @@
 	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
-//check permissions 
+//check permissions
 	if (permission_exists('xml_cdr_details')) {
 		//access granted
 	}
@@ -40,6 +40,11 @@
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
+
+//add the settings object
+	$settings = new settings(["domain_uuid" => $_SESSION['domain_uuid'], "user_uuid" => $_SESSION['user_uuid']]);
+	$transcribe_enabled = $settings->get('transcribe', 'enabled', 'false');
+	$transcribe_engine = $settings->get('transcribe', 'engine', '');
 
 //get the http values and set them to a variable
 	if (is_uuid($_REQUEST["id"])) {
@@ -60,21 +65,133 @@
 	$database = new database;
 	$row = $database->select($sql, $parameters, 'row');
 	if (!empty($row) && is_array($row) && @sizeof($row) != 0) {
-		$caller_id_name = trim($row["caller_id_name"]);
-		$caller_id_number = trim($row["caller_id_number"]);
-		$caller_destination = trim($row["caller_destination"]);
-		$destination_number = trim($row["destination_number"]);
-		$duration = trim($row["billsec"]);
-		$missed_call = trim($row["missed_call"]);
-		$start_stamp = trim($row["start_stamp"]);
+		$caller_id_name = trim($row["caller_id_name"] ?? '');
+		$caller_id_number = trim($row["caller_id_number"] ?? '');
+		$caller_destination = trim($row["caller_destination"] ?? '');
+		$destination_number = trim($row["destination_number"] ?? '');
+		$duration = trim($row["billsec"] ?? '');
+		$missed_call = trim($row["missed_call"] ?? '');
+		$start_stamp = trim($row["start_stamp"] ?? '');
 		$xml_string = trim($row["xml"] ?? '');
-		$json_string = trim($row["json"]);
-		$call_flow = trim($row["call_flow"]);
-		$direction = trim($row["direction"]);
-		$call_direction = trim($row["direction"]);
-		$status = trim($row["status"]);
+		$json_string = trim($row["json"] ?? '');
+		$call_flow = trim($row["call_flow"] ?? '');
+		$direction = trim($row["direction"] ?? '');
+		$call_direction = trim($row["direction"] ?? '');
+		$record_path = trim($row["record_path"] ?? '');
+		$record_name = trim($row["record_name"] ?? '');
+		$record_transcription = trim($row["record_transcription"] ?? '');
+		$status = trim($row["status"] ?? '');
 	}
 	unset($sql, $parameters, $row);
+
+//transcribe, if enabled
+	if (
+		!empty($_GET['action']) &&
+		$_GET['action'] == 'transcribe' &&
+		$transcribe_enabled == 'true' &&
+		!empty($transcribe_engine) &&
+		empty($record_transcription) &&
+		!empty($record_path) &&
+		!empty($record_name) &&
+		file_exists($record_path.'/'.$record_name)
+		) {
+		//add the transcribe object
+			$transcribe = new transcribe($settings);
+		//audio to text - get the transcription from the audio file
+			$transcribe->audio_path = $record_path;
+			$transcribe->audio_filename = $record_name;
+			$record_transcription = $transcribe->transcribe();
+		//build call recording data array
+			if (!empty($record_transcription)) {
+				$array['xml_cdr'][0]['xml_cdr_uuid'] = $uuid;
+				$array['xml_cdr'][0]['record_transcription'] = $record_transcription;
+			}
+		//update the checked rows
+			if (is_array($array) && @sizeof($array) != 0) {
+
+				//add temporary permissions
+					$p = new permissions;
+					$p->add('xml_cdr_edit', 'temp');
+
+				//remove record_path, record_name and record_length
+					$database = new database;
+					$database->app_name = 'xml_cdr';
+					$database->app_uuid = '4a085c51-7635-ff03-f67b-86e834422848';
+					$database->save($array, false);
+					$message = $database->message;
+					unset($array);
+
+				//remove the temporary permissions
+					$p->delete('xml_cdr_edit', 'temp');
+
+				//set message
+					message::add($text['message-audio_transcribed']);
+
+			}
+		//redirect
+			header('Location: '.$_SERVER['PHP_SELF'].'?id='.$uuid);
+			exit;
+	}
+
+//get the cdr json from the database
+	if (empty($json_string)) {
+		$sql = "select * from v_xml_cdr_json ";
+		if (permission_exists('xml_cdr_all')) {
+			$sql .= "where xml_cdr_uuid  = :xml_cdr_uuid ";
+		}
+		else {
+			$sql .= "where xml_cdr_uuid  = :xml_cdr_uuid ";
+			$sql .= "and domain_uuid = :domain_uuid ";
+			$parameters['domain_uuid'] = $domain_uuid;
+		}
+		$parameters['xml_cdr_uuid'] = $uuid;
+		$database = new database;
+		$row = $database->select($sql, $parameters, 'row');
+		if (!empty($row) && is_array($row) && @sizeof($row) != 0) {
+			$json_string = trim($row["json"] ?? '');
+		}
+		unset($sql, $parameters, $row);
+	}
+
+//get the cdr flow from the database
+	if (empty($call_flow)) {
+		$sql = "select * from v_xml_cdr_flow ";
+		if (permission_exists('xml_cdr_all')) {
+			$sql .= "where xml_cdr_uuid  = :xml_cdr_uuid ";
+		}
+		else {
+			$sql .= "where xml_cdr_uuid  = :xml_cdr_uuid ";
+			$sql .= "and domain_uuid = :domain_uuid ";
+			$parameters['domain_uuid'] = $domain_uuid;
+		}
+		$parameters['xml_cdr_uuid'] = $uuid;
+		$database = new database;
+		$row = $database->select($sql, $parameters, 'row');
+		if (!empty($row) && is_array($row) && @sizeof($row) != 0) {
+			$call_flow = trim($row["call_flow"] ?? '');
+		}
+		unset($sql, $parameters, $row);
+	}
+
+//get the cdr log from the database
+	if ($_SESSION['cdr']['call_log_enabled']['boolean'] == 'true') {
+		$sql = "select * from v_xml_cdr_logs ";
+		if (permission_exists('xml_cdr_all')) {
+			$sql .= "where xml_cdr_uuid  = :xml_cdr_uuid ";
+		}
+		else {
+			$sql .= "where xml_cdr_uuid  = :xml_cdr_uuid ";
+			$sql .= "and domain_uuid = :domain_uuid ";
+			$parameters['domain_uuid'] = $domain_uuid;
+		}
+		$parameters['xml_cdr_uuid'] = $uuid;
+		$database = new database;
+		$row = $database->select($sql, $parameters, 'row');
+		if (!empty($row) && is_array($row) && @sizeof($row) != 0) {
+			$log_content = $row["log_content"];
+		}
+		unset($sql, $parameters, $row);
+	}
 
 //get the format
 	if (!empty($xml_string)) {
@@ -140,9 +257,9 @@
 	$remote_media_ip = urldecode($array["variables"]["remote_media_ip"] ?? '');
 	$hangup_cause = urldecode($array["variables"]["hangup_cause"]);
 	$hangup_cause_q850 = urldecode($array["variables"]["hangup_cause_q850"]);
-	$network_address = urldecode($array["variables"]["network_address"]);
-	$outbound_caller_id_name = urldecode($array["variables"]["outbound_caller_id_name"]);
-	$outbound_caller_id_number = urldecode($array["variables"]["outbound_caller_id_number"]);
+	$network_address = urldecode($array["variables"]["network_address"] ?? '');
+	$outbound_caller_id_name = urldecode($array["variables"]["outbound_caller_id_name"] ?? '');
+	$outbound_caller_id_number = urldecode($array["variables"]["outbound_caller_id_number"] ?? '');
 
 //set the time zone
 	if (isset($_SESSION['domain']['time_zone']['name'])) {
@@ -260,9 +377,15 @@
 //page title and description
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo "<td width='30%' align='left' valign='top' nowrap='nowrap'><b>".$text['title2']."</b></td>\n";
+	echo "<td width='30%' align='left' valign='top' nowrap='nowrap'><b>".$text['title2']."</b><br><br></td>\n";
 	echo "<td width='70%' align='right' valign='top'>\n";
-	echo "	<input type='button' class='btn' name='' alt='back' onclick=\"window.location='xml_cdr.php".(!empty($_SESSION['xml_cdr']['last_query']) ? "?".urlencode($_SESSION['xml_cdr']['last_query']) : null)."'\" value='".$text['button-back']."'>\n";
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'link'=>'xml_cdr.php'.(!empty($_SESSION['xml_cdr']['last_query']) ? '?'.urlencode($_SESSION['xml_cdr']['last_query']) : null)]);
+	if ($_SESSION['cdr']['call_log_enabled']['boolean'] == 'true' && isset($log_content) && !empty($log_content)) {
+		echo button::create(['type'=>'button','label'=>$text['button-call_log'],'icon'=>$_SESSION['theme']['button_icon_search'],'style'=>'margin-left: 15px;','link'=>'xml_cdr_log.php?id='.$uuid]);
+	}
+	if ($transcribe_enabled == 'true' && !empty($transcribe_engine) && empty($record_transcription)) {
+		echo button::create(['type'=>'button','label'=>$text['button-transcribe'],'icon'=>'quote-right','id'=>'btn_transcribe','name'=>'btn_transcribe','collapse'=>'hide-xs','style'=>'margin-left: 15px;','onclick'=>"window.location.href='?id=".$uuid."&action=transcribe';"]);
+	}
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
@@ -384,7 +507,7 @@
 		echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row["start_stamp"])."</td>\n";
 		echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row["end_stamp"])."</td>\n";
 		echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row["duration_formatted"])."</td>\n";
-		echo "	<td valign='top' class='".$row_style[$c]."'>".escape($text['label-'.$row["destination_status"]])."</td>\n";
+		echo "	<td valign='top' class='".$row_style[$c]."'>".escape($text['label-'.$row["destination_status"]] ?? '')."</td>\n";
 		echo "</tr>\n";
 
 		//alternate $c
@@ -395,6 +518,20 @@
 	}
 	echo "</table>";
 	echo "<br /><br />\n";
+
+//transcription, if enabled
+	if ($transcribe_enabled == 'true' && !empty($transcribe_engine) && !empty($record_transcription)) {
+		echo "<b>".$text['label-transcription']."</b><br>\n";
+		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+		echo "<tr>\n";
+		echo "	<th>".$text['label-text']."</th>\n";
+		echo "</tr>\n";
+		echo "<tr >\n";
+		echo "	<td valign='top' class='".$row_style[0]."'>".escape($record_transcription)."</td>\n";
+		echo "</tr>\n";
+		echo "</table>";
+		echo "<br /><br />\n";
+	}
 
 //call stats
 	if (permission_exists('xml_cdr_call_stats')) {
@@ -426,11 +563,13 @@
 								echo "			<td valign='top' width='15%' class='".$row_style[$c]."'>".$vk."&nbsp;&nbsp;&nbsp;&nbsp;</td>\n";
 								echo "			<td valign='top'>\n";
 									echo "			<table border='0' cellpadding='0' cellspacing='0'>\n";
-									foreach ($arrays as $k => $v) {
-										echo "			<tr>\n";
-										echo "				<td valign='top' class='".$row_style[$c]."'>".$k."&nbsp;&nbsp;&nbsp;&nbsp;</td>\n";
-										echo "				<td valign='top' class='".$row_style[$c]."'>".$v."</td>\n";
-										echo "			</tr>\n";
+									if (!empty($arrays) && is_array($arrays)) {
+										foreach ($arrays as $k => $v) {
+											echo "			<tr>\n";
+											echo "				<td valign='top' class='".$row_style[$c]."'>".$k."&nbsp;&nbsp;&nbsp;&nbsp;</td>\n";
+											echo "				<td valign='top' class='".$row_style[$c]."'>".$v."</td>\n";
+											echo "			</tr>\n";
+										}
 									}
 									echo "			</table>\n";
 									echo "		<td>\n";

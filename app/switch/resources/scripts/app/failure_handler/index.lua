@@ -190,7 +190,7 @@
 						end
 					end
 
-			elseif (originate_disposition == "NO_ANSWER") or (sip_code == "sip:480") then
+			elseif (originate_disposition == "NO_ANSWER") or (originate_disposition == "ALLOTTED_TIMEOUT") or (sip_code == "sip:480") then
 
 				--handle NO_ANSWER
 				forward_no_answer_enabled = session:getVariable("forward_no_answer_enabled");

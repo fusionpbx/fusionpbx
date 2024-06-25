@@ -57,8 +57,8 @@
 
 	$switch_cmd = 'fifo list_verbose '.$fifo_name.'';
 	
-	$fp = event_socket_create();
-	if (!$fp) {
+	$esl = event_socket::create();
+	if (!$esl->is_connected()) {
 		$msg = "<div align='center'>Connection to Event Socket failed.<br /></div>";
 		echo "<div align='center'>\n";
 		echo "<table width='40%'>\n";
@@ -73,7 +73,7 @@
 	}
 	else {
 		//send the api command over event socket
-			$xml_str = trim(event_socket_request($fp, 'api '.$switch_cmd));
+			$xml_str = trim(event_socket::api($switch_cmd));
 
 		//parse the response as xml
 			try {

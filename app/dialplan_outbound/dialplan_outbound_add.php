@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2023
+	Portions created by the Initial Developer are Copyright (C) 2008-2024
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -171,7 +171,7 @@
 				$gateway_3_name = '';
 			}
 		//set additional variables
-			$dialplan_enabled = $_POST["dialplan_enabled"] ?? 'true';
+			$dialplan_enabled = $_POST["dialplan_enabled"] ?? 'false';
 			$dialplan_description = $_POST["dialplan_description"];
 	}
 
@@ -248,7 +248,7 @@
 							$label = $text['label-north_america_intl'];
 							$abbrv = "011.9-17d";
 							break;
-						case "^\+?1?((?:264|268|242|246|441|284|345|767|809|829|849|473|658|876|664|787|939|869|758|784|721|868|649|340|684|671|670|808)\d{7})$":
+						case "^(?:\+1|1)((?:264|268|242|246|441|284|345|767|809|829|849|473|658|876|664|787|939|869|758|784|721|868|649|340|684|671|670|808)\d{7})$":
 							$label = $text['label-north_america_islands'];
 							$abbrv = "011.9-17d";
 							break;
@@ -300,7 +300,7 @@
 							$label = $text['label-9d.12-20'];
 							$abbrv = "9.12-20";
 							break;
-						case "^1?(8(00|33|44|55|66|77|88)[2-9]\d{6})$":
+						case "^(?:\+1|1)?(8(00|33|44|55|66|77|88)[2-9]\d{6})$":
 							$label = $text['label-800'];
 							$abbrv = "800";
 							break;
@@ -429,7 +429,7 @@
 						$array['dialplans'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
 						$array['dialplans'][$x]['dialplan_uuid'] = $dialplan_uuid;
 						$array['dialplans'][$x]['app_uuid'] = $app_uuid;
-						$array['dialplans'][$x]['dialplan_name'] = 'call_direction-outbound';
+						$array['dialplans'][$x]['dialplan_name'] = 'call_direction-outbound'.(empty($dialplan_description) && !empty($abbrv) ? '.'.$abbrv : null);
 						$array['dialplans'][$x]['dialplan_order'] = '22';
 						$array['dialplans'][$x]['dialplan_continue'] = 'true';
 						$array['dialplans'][$x]['dialplan_context'] = $dialplan_context;
@@ -627,8 +627,18 @@
 								$array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = $_SESSION['domain_uuid'];
 								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $dialplan_uuid;
 								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = 'action';
+								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = 'set';
+								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = 'call_date=${strftime(%d-%b-%Y %r)}';
+								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $y * 10;
+								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
+								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_enabled'] = 'false';
+								$y++;
+								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_uuid'] = uuid();
+								$array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = $_SESSION['domain_uuid'];
+								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $dialplan_uuid;
+								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = 'action';
 								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = 'lua';
-								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = "email.lua \${email_to} \${email_from} '' 'Emergency Call' '\${sip_from_user}@\${domain_name} has called 911 emergency'";
+								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = "app.lua emergency 1";
 								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $y * 10;
 								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
 								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_enabled'] = 'false';
@@ -1189,9 +1199,9 @@ function type_onchange(dialplan_detail_type) {
 	echo "	<option value='^(\\d{9})\$'>".$text['label-9d']."</option>\n";
 	echo "	<option value='^(\\d{10})\$'>".$text['label-10d']."</option>\n";
 	echo "	<option value='^\+?(\\d{11})\$'>".$text['label-11d']."</option>\n";
-	echo "	<option value='^\+?1?([2-9]\\d{2}[2-9]\\d{2}\\d{4})\$'>".$text['label-north_america']."</option>\n";
+	echo "	<option value='^(?:\+1|1)?([2-9]\\d{2}[2-9]\\d{2}\\d{4})\$'>".$text['label-north_america']."</option>\n";
 	echo "	<option value='^(011\\d{9,17})\$'>".$text['label-north_america_intl']."</option>\n";
-	echo "	<option value='^\+?1?((?:264|268|242|246|441|284|345|767|809|829|849|473|658|876|664|787|939|869|758|784|721|868|649|340|684|671|670|808)\d{7})\$'>".$text['label-north_america_islands']."</option>\n";
+	echo "	<option value='^(?:\+1|1)?((?:264|268|242|246|441|284|345|767|809|829|849|473|658|876|664|787|939|869|758|784|721|868|649|340|684|671|670|808)\d{7})\$'>".$text['label-north_america_islands']."</option>\n";
 	echo "	<option value='^(00\\d{9,17})\$'>".$text['label-europe_intl']."</option>\n";
 	echo "	<option value='^(\\d{12,20})\$'>".$text['label-intl']."</option>\n";
 	echo "	<option value='^(311)\$'>".$text['label-311']."</option>\n";
@@ -1199,7 +1209,7 @@ function type_onchange(dialplan_detail_type) {
 	echo "	<option value='^(711)\$'>".$text['label-711']."</option>\n";
 	echo "	<option value='(^911\$|^933\$)'>".$text['label-911']."</option>\n";
 	echo "  <option value='(^988\$)'>".$text['label-988']."</option>\n";
-	echo "	<option value='^1?(8(00|33|44|55|66|77|88)[2-9]\\d{6})\$'>".$text['label-800']."</option>\n";
+	echo "	<option value='^(?:\+1|1)?(8(00|33|44|55|66|77|88)[2-9]\\d{6})\$'>".$text['label-800']."</option>\n";
 	echo "	<option value='^0118835100\d{8}\$'>".$text['label-inum']."</option>\n";
 	echo "	<option value='^9(\\d{2})\$'>".$text['label-9d2']."</option>\n";
 	echo "	<option value='^9(\\d{3})\$'>".$text['label-9d3']."</option>\n";

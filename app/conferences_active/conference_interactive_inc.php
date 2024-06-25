@@ -61,8 +61,8 @@
 	$switch_cmd = "conference '".$conference_name."' xml_list";
 
 //connect to event socket, send the command and process the results
-	$fp = event_socket_create();
-	if (!$fp) {
+	$esl = event_socket::create();
+	if (!$esl->is_connected()) {
 		$msg = "<div align='center'>".$text['message-connection']."<br /></div>";
 		echo "<div align='center'>\n";
 		echo "<table width='40%'>\n";
@@ -77,7 +77,7 @@
 	}
 	else {
 		//show the content
-		$xml_str = trim(event_socket_request($fp, 'api '.$switch_cmd));
+		$xml_str = trim(event_socket::api($switch_cmd));
 		if (substr($xml_str, -9) == "not found") {
 			$valid_xml = false;
 		}
@@ -188,7 +188,7 @@
 				$caller_id_name = urldecode($caller_id_name);
 				$caller_id_number = $row->caller_id_number;
 				$switch_cmd = "uuid_getvar ".$uuid. " hand_raised";
-				$hand_raised = (trim(event_socket_request($fp, 'api '.$switch_cmd)) == "true") ? "true" : "false";
+				$hand_raised = (trim(event_socket::api($switch_cmd)) == "true") ? "true" : "false";
 				//format secondsfloor(floor($fifo_duration / 60) % 60)
 				$join_time_formatted = sprintf('%02d:%02d:%02d', floor($join_time / 3600), floor(floor($join_time / 60) % 60), $join_time % 60);
 				$last_talking_formatted = sprintf('%02d:%02d:%02d', floor($last_talking / 3600), floor(floor($last_talking / 60) % 60), $last_talking % 60);

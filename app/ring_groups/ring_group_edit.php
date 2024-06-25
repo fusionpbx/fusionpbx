@@ -29,7 +29,6 @@
 //includes files
 	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
-	require_once "resources/classes/ringbacks.php";
 
 //check permissions
 	if (permission_exists('ring_group_add') || permission_exists('ring_group_edit')) {
@@ -98,50 +97,52 @@
 	}
 
 //delete the user from the ring group
-	if (
-		(!empty($_GET["a"])) == "delete"
+	if ((!empty($_GET["a"])) == "delete"
 		&& is_uuid($_REQUEST["user_uuid"])
-		&& permission_exists("ring_group_edit")
-		) {
-		//set the variables
+		&& permission_exists("ring_group_edit")) {
+			//set the variables
 			$user_uuid = $_REQUEST["user_uuid"];
-		//build array
+
+			//build array
 			$array['ring_group_users'][0]['domain_uuid'] = $domain_uuid;
 			$array['ring_group_users'][0]['ring_group_uuid'] = $ring_group_uuid;
 			$array['ring_group_users'][0]['user_uuid'] = $user_uuid;
-		//grant temporary permissions
+
+			//grant temporary permissions
 			$p = new permissions;
 			$p->add('ring_group_user_delete', 'temp');
-		//execute delete
+
+			//execute delete
 			$database = new database;
 			$database->app_name = 'ring_groups';
 			$database->app_uuid = '1d61fb65-1eec-bc73-a6ee-a6203b4fe6f2';
 			$database->delete($array);
 			unset($array);
-		//revoke temporary permissions
+
+			//revoke temporary permissions
 			$p->delete('ring_group_user_delete', 'temp');
-		//save the message to a session variable
+
+			//save the message to a session variable
 			message::add($text['message-delete']);
-		//redirect the browser
+
+			//redirect the browser
 			header("Location: ring_group_edit.php?id=$ring_group_uuid");
 			exit;
 	}
 
 //get total ring group count from the database, check limit, if defined
-	if ($action == 'add') {
-		if ($_SESSION['limit']['ring_groups']['numeric'] ?? '') {
-			$sql = "select count(*) from v_ring_groups ";
-			$sql .= "where domain_uuid = :domain_uuid ";
-			$parameters['domain_uuid'] = $domain_uuid;
-			$database = new database;
-			$total_ring_groups = $database->select($sql, $parameters, 'column');
-			unset($sql, $parameters);
+	if ($action == 'add' && $_SESSION['limit']['ring_groups']['numeric'] ?? '') {
+		$sql = "select count(*) from v_ring_groups ";
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$parameters['domain_uuid'] = $domain_uuid;
+		$database = new database;
+		$total_ring_groups = $database->select($sql, $parameters, 'column');
+		unset($sql, $parameters);
 
-			if (is_numeric($_SESSION['limit']['ring_groups']['numeric']) && $total_ring_groups >= $_SESSION['limit']['ring_groups']['numeric']) {
-				message::add($text['message-maximum_ring_groups'].' '.$_SESSION['limit']['ring_groups']['numeric'], 'negative');
-				header('Location: ring_groups.php');
-				exit;
-			}
+		if (is_numeric($_SESSION['limit']['ring_groups']['numeric']) && $total_ring_groups >= $_SESSION['limit']['ring_groups']['numeric']) {
+			message::add($text['message-maximum_ring_groups'].' '.$_SESSION['limit']['ring_groups']['numeric'], 'negative');
+			header('Location: ring_groups.php');
+			exit;
 		}
 	}
 
@@ -201,6 +202,7 @@
 			$ring_group_timeout_app = array_shift($ring_group_timeout_array);
 			$ring_group_timeout_data = join(':', $ring_group_timeout_array);
 			$destination_number = $_POST["destination_number"] ?? null;
+			$destination_description = $_POST["destination_description"] ?? null;
 			$destination_delay = $_POST["destination_delay"] ?? null;
 			$destination_timeout = $_POST["destination_timeout"] ?? null;
 			$destination_prompt = $_POST["destination_prompt"] ?? null;
@@ -214,33 +216,58 @@
 				$ring_group_context = $_SESSION['domain_name'];
 			}
 
+		//if the user doesn't have the correct permission then
+		//override domain_uuid and ring_group_context values
+			if ($action == 'update' && is_uuid($ring_group_uuid)) {
+				$sql = "select * from v_ring_groups ";
+				$sql .= "where  ring_group_uuid = :ring_group_uuid ";
+				$parameters['ring_group_uuid'] = $ring_group_uuid;
+				$database = new database;
+				$row = $database->select($sql, $parameters, 'row');
+				if (!empty($row)) {
+					//if (!permission_exists(‘ring_group_domain')) {
+					//	$domain_uuid = $row["domain_uuid"];
+					//}
+					if (!permission_exists('ring_group_context')) {
+						$ring_group_context = $row["ring_group_context"];
+					}
+				}
+				unset($sql, $parameters, $row);
+			}
+
 	}
 
 //assign the user to the ring group
 	if (!empty($_REQUEST["user_uuid"]) && is_uuid($_REQUEST["id"]) && $_GET["a"] != "delete" && permission_exists("ring_group_edit")) {
 		//set the variables
-			$user_uuid = $_REQUEST["user_uuid"];
+		$user_uuid = $_REQUEST["user_uuid"];
+
 		//build array
-			$array['ring_group_users'][0]['ring_group_user_uuid'] = uuid();
-			$array['ring_group_users'][0]['domain_uuid'] = $domain_uuid;
-			$array['ring_group_users'][0]['ring_group_uuid'] = $ring_group_uuid;
-			$array['ring_group_users'][0]['user_uuid'] = $user_uuid;
+		$array['ring_group_users'][0]['ring_group_user_uuid'] = uuid();
+		$array['ring_group_users'][0]['domain_uuid'] = $domain_uuid;
+		$array['ring_group_users'][0]['ring_group_uuid'] = $ring_group_uuid;
+		$array['ring_group_users'][0]['user_uuid'] = $user_uuid;
+
 		//grant temporary permissions
-			$p = new permissions;
-			$p->add('ring_group_user_add', 'temp');
+		$p = new permissions;
+		$p->add('ring_group_user_add', 'temp');
+
 		//execute delete
-			$database = new database;
-			$database->app_name = 'ring_groups';
-			$database->app_uuid = '1d61fb65-1eec-bc73-a6ee-a6203b4fe6f2';
-			$database->save($array);
-			unset($array);
+		$database = new database;
+		$database->app_name = 'ring_groups';
+		$database->app_uuid = '1d61fb65-1eec-bc73-a6ee-a6203b4fe6f2';
+		$database->save($array);
+		unset($array);
+
 		//revoke temporary permissions
-			$p->delete('ring_group_user_add', 'temp');
+		$p->delete('ring_group_user_add', 'temp');
+
 		//set message
-			message::add($text['message-add']);
+		message::add($text['message-add']);
+
 		//redirect the browser
-			header("Location: ring_group_edit.php?id=".urlencode($ring_group_uuid));
-			exit;
+		header("Location: ring_group_edit.php?id=".urlencode($ring_group_uuid));
+		exit;
 	}
 
 //process the HTTP POST
@@ -381,10 +408,51 @@
 				else {
 					$ring_group_destination_uuid = uuid();
 				}
-				if (!empty($row['destination_number'])) {
+				if (!empty($row['destination_number']) && $_SESSION['ring_group']['destination_range_enabled']['boolean']) {
+					// check the range
+					$output_array = array();
+					preg_match('/[0-9]{1,}-[0-9]{1,}/', $row['destination_number'], $output_array);
+				}
+				if (is_uuid($ring_group_uuid) && !empty($output_array)) {
+					$ranges = explode('-', $row['destination_number']);
+					$range_first_extension = $ranges[0];
+					$range_second_extension = $ranges[1];
+					if ($range_first_extension <= $range_second_extension) {
+						// select range extension for ring group destintaions
+						$sql = "select DISTINCT ext.extension, ext.extension_uuid from v_extensions as ext ";
+						$sql .= "where ext.domain_uuid = :domain_uuid ";
+						$sql .= "and CAST(coalesce(ext.extension, '0') AS integer) >= :range_first_extension and CAST(coalesce(ext.extension, '0') AS integer) <= :range_second_extension ";
+						$sql .= "and ext.extension NOT IN ";
+						$sql .= "(select DISTINCT asd.destination_number as exten from v_ring_group_destinations as asd ";
+						$sql .= "where asd.ring_group_uuid = :ring_group_uuid ";
+						$sql .= "and asd.domain_uuid = :domain_uuid) ";
+						$sql .= "order by ext.extension asc ";
+						$parameters['domain_uuid'] = $domain_uuid;
+						$parameters['ring_group_uuid'] = $ring_group_uuid;
+						$parameters['range_first_extension'] = $range_first_extension;
+						$parameters['range_second_extension'] = $range_second_extension;
+						$database = new database;
+						$extensions = $database->select($sql, $parameters, 'all');
+						unset($sql, $parameters, $database);
+						// echo var_dump($extensions);
+						foreach ($extensions as $extension) {
+							$array["ring_groups"][0]["ring_group_destinations"][$y]["ring_group_uuid"] = $ring_group_uuid;
+							$array['ring_groups'][0]["ring_group_destinations"][$y]["ring_group_destination_uuid"] = uuid();
+							$array['ring_groups'][0]["ring_group_destinations"][$y]["destination_number"] = $extension['extension'];
+							$array['ring_groups'][0]["ring_group_destinations"][$y]["destination_description"] = $row['destination_description'];
+							$array['ring_groups'][0]["ring_group_destinations"][$y]["destination_delay"] = $row['destination_delay'];
+							$array['ring_groups'][0]["ring_group_destinations"][$y]["destination_timeout"] = $row['destination_timeout'];
+							$array['ring_groups'][0]["ring_group_destinations"][$y]["destination_prompt"] = $row['destination_prompt'];
+							$array['ring_groups'][0]["ring_group_destinations"][$y]["destination_enabled"] = $row['destination_enabled'] ?? 'false';
+							$array['ring_groups'][0]["ring_group_destinations"][$y]["domain_uuid"] = $domain_uuid;
+							$y++;
+						}
+					}
+				} elseif (!empty($row['destination_number']) > 0) {
 					$array["ring_groups"][0]["ring_group_destinations"][$y]["ring_group_uuid"] = $ring_group_uuid;
 					$array['ring_groups'][0]["ring_group_destinations"][$y]["ring_group_destination_uuid"] = $ring_group_destination_uuid;
 					$array['ring_groups'][0]["ring_group_destinations"][$y]["destination_number"] = $row['destination_number'];
+					$array['ring_groups'][0]["ring_group_destinations"][$y]["destination_description"] = $row['destination_description'];
 					$array['ring_groups'][0]["ring_group_destinations"][$y]["destination_delay"] = $row['destination_delay'];
 					$array['ring_groups'][0]["ring_group_destinations"][$y]["destination_timeout"] = $row['destination_timeout'];
 					$array['ring_groups'][0]["ring_group_destinations"][$y]["destination_prompt"] = $row['destination_prompt'];
@@ -392,6 +460,7 @@
 					$array['ring_groups'][0]["ring_group_destinations"][$y]["domain_uuid"] = $domain_uuid;
 				}
 				$y++;
+				unset($output_array, $range_first_extension, $range_second_extension);
 			}
 
 		//build the xml dialplan
@@ -516,9 +585,6 @@
 //set the defaults
 	$destination_delay_max = $_SESSION['ring_group']['destination_delay_max']['numeric'];
 	$destination_timeout_max = $_SESSION['ring_group']['destination_timeout_max']['numeric'];
-	if (empty($ring_group_ringback)) {
-		$ring_group_ringback = '${us-ring}';
-	}
 	if (empty($ring_group_call_timeout)) {
 		$ring_group_call_timeout = '30';
 	}
@@ -600,7 +666,7 @@
 
 //get the sounds
 	$sounds = new sounds;
-	$sounds = $sounds->get();
+	$audio_files = $sounds->get();
 
 //create token
 	$object = new token;
@@ -610,40 +676,74 @@
 	$document['title'] = $text['title-ring_group'];
 	require_once "resources/header.php";
 
-//option to change select to text
-	if (if_group("superadmin")) {
-		echo "<script>\n";
-		echo "var Objs;\n";
-		echo "\n";
-		echo "function changeToInput(obj){\n";
-		echo "	tb=document.createElement('INPUT');\n";
-		echo "	tb.type='text';\n";
-		echo "	tb.name=obj.name;\n";
-		echo "	tb.setAttribute('class', 'formfld');\n";
-		//echo "	tb.setAttribute('style', 'width: 380px;');\n";
-		echo "	tb.value=obj.options[obj.selectedIndex].value;\n";
-		echo "	tbb=document.createElement('INPUT');\n";
-		echo "	tbb.setAttribute('class', 'btn');\n";
-		echo "	tbb.setAttribute('style', 'margin-left: 4px;');\n";
-		echo "	tbb.type='button';\n";
-		echo "	tbb.value=$('<div />').html('&#9665;').text();\n";
-		echo "	tbb.objs=[obj,tb,tbb];\n";
-		echo "	tbb.onclick=function(){ Replace(this.objs); }\n";
-		echo "	obj.parentNode.insertBefore(tb,obj);\n";
-		echo "	obj.parentNode.insertBefore(tbb,obj);\n";
-		echo "	obj.parentNode.removeChild(obj);\n";
-		echo "}\n";
-		echo "\n";
-		echo "function Replace(obj){\n";
-		echo "	obj[2].parentNode.insertBefore(obj[0],obj[2]);\n";
-		echo "	obj[0].parentNode.removeChild(obj[1]);\n";
-		echo "	obj[0].parentNode.removeChild(obj[2]);\n";
-		echo "}\n";
+//show the content
+	if (permission_exists('recording_play') || permission_exists('recording_download')) {
+		echo "<script type='text/javascript' language='JavaScript'>\n";
+		echo "	function set_playable(id, audio_selected, audio_type) {\n";
+		echo "		file_ext = audio_selected.split('.').pop();\n";
+		echo "		var mime_type = '';\n";
+		echo "		switch (file_ext) {\n";
+		echo "			case 'wav': mime_type = 'audio/wav'; break;\n";
+		echo "			case 'mp3': mime_type = 'audio/mpeg'; break;\n";
+		echo "			case 'ogg': mime_type = 'audio/ogg'; break;\n";
+		echo "		}\n";
+		echo "		if (mime_type != '' && (audio_type == 'recordings' || audio_type == 'sounds')) {\n";
+		echo "			if (audio_type == 'recordings') {\n";
+		echo "				$('#recording_audio_' + id).attr('src', '../recordings/recordings.php?action=download&type=rec&filename=' + audio_selected);\n";
+		echo "			}\n";
+		echo "			else if (audio_type == 'sounds') {\n";
+		echo "				$('#recording_audio_' + id).attr('src', '../switch/sounds.php?action=download&filename=' + audio_selected);\n";
+		echo "			}\n";
+		echo "			$('#recording_audio_' + id).attr('type', mime_type);\n";
+		echo "			$('#recording_button_' + id).show();\n";
+		echo "		}\n";
+		echo "		else {\n";
+		echo "			$('#recording_button_' + id).hide();\n";
+		echo "			$('#recording_audio_' + id).attr('src','').attr('type','');\n";
+		echo "		}\n";
+		echo "	}\n";
 		echo "</script>\n";
-		echo "\n";
+	}
+	if (if_group("superadmin")) {
+		echo "<script type='text/javascript' language='JavaScript'>\n";
+		echo "	var objs;\n";
+		echo "	function toggle_select_input(obj, instance_id){\n";
+		echo "		tb=document.createElement('INPUT');\n";
+		echo "		tb.type='text';\n";
+		echo "		tb.name=obj.name;\n";
+		echo "		tb.className='formfld';\n";
+		echo "		tb.setAttribute('id', instance_id);\n";
+		echo "		tb.setAttribute('style', 'width: ' + obj.offsetWidth + 'px;');\n";
+		if (!empty($on_change)) {
+			echo "	tb.setAttribute('onchange', \"".$on_change."\");\n";
+			echo "	tb.setAttribute('onkeyup', \"".$on_change."\");\n";
+		}
+		echo "		tb.value=obj.options[obj.selectedIndex].value;\n";
+		echo "		document.getElementById('btn_select_to_input_' + instance_id).style.display = 'none';\n";
+		echo "		tbb=document.createElement('INPUT');\n";
+		echo "		tbb.setAttribute('class', 'btn');\n";
+		echo "		tbb.setAttribute('style', 'margin-left: 4px;');\n";
+		echo "		tbb.type='button';\n";
+		echo "		tbb.value=$('<div />').html('&#9665;').text();\n";
+		echo "		tbb.objs=[obj,tb,tbb];\n";
+		echo "		tbb.onclick=function(){ replace_element(this.objs, instance_id); }\n";
+		echo "		obj.parentNode.insertBefore(tb,obj);\n";
+		echo "		obj.parentNode.insertBefore(tbb,obj);\n";
+		echo "		obj.parentNode.removeChild(obj);\n";
+		echo "		replace_element(this.objs, instance_id);\n";
+		echo "	}\n";
+		echo "	function replace_element(obj, instance_id){\n";
+		echo "		obj[2].parentNode.insertBefore(obj[0],obj[2]);\n";
+		echo "		obj[0].parentNode.removeChild(obj[1]);\n";
+		echo "		obj[0].parentNode.removeChild(obj[2]);\n";
+		echo "		document.getElementById('btn_select_to_input_' + instance_id).style.display = 'inline';\n";
+		if (!empty($on_change)) {
+			echo "	".$on_change.";\n";
+		}
+		echo "	}\n";
+		echo "</script>\n";
 	}
 
-//show the content
 	echo "<form method='post' name='frm' id='frm'>\n";
 
 	echo "<div class='action_bar' id='action_bar'>\n";
@@ -696,42 +796,82 @@
 	echo "	".$text['label-extension']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='ring_group_extension' maxlength='255' value=\"".escape($ring_group_extension)."\" required='required'>\n";
+	echo "	<input class='formfld' type='text' name='ring_group_extension' maxlength='255' value=\"".escape($ring_group_extension)."\" required='required' placeholder=\"".($_SESSION['ring_group']['extension_range']['text'] ?? '')."\">\n";
 	echo "<br />\n";
 	echo $text['description-extension']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
+	$instance_id = 'ring_group_greeting';
+	$instance_label = 'greeting';
+	$instance_value = $ring_group_greeting;
 	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-greeting']."\n";
+	echo "<td class='vncell' rowspan='2' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-'.$instance_label]."\n";
 	echo "</td>\n";
+	echo "<td class='vtable playback_progress_bar_background' id='recording_progress_bar_".$instance_id."' onclick=\"recording_play('".$instance_id."', document.getElementById('".$instance_id."').value, document.getElementById('".$instance_id."').options[document.getElementById('".$instance_id."').selectedIndex].parentNode.getAttribute('data-type'));\" style='display: none; border-bottom: none; padding-top: 0 !important; padding-bottom: 0 !important;' align='left'><span class='playback_progress_bar' id='recording_progress_".$instance_id."'></span></td>\n";
+	echo "</tr>\n";
+	echo "<tr>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "<select name='ring_group_greeting' class='formfld' style='width: 200px;' ".((if_group("superadmin")) ? "onchange='changeToInput(this);'" : null).">\n";
+	echo "<select name='".$instance_id."' id='".$instance_id."' class='formfld' ".(permission_exists('recording_play') || permission_exists('recording_download') ? "onchange=\"recording_reset('".$instance_id."'); set_playable('".$instance_id."', this.value, this.options[this.selectedIndex].parentNode.getAttribute('data-type'));\"" : null).">\n";
 	echo "	<option value=''></option>\n";
-	foreach($sounds as $key => $value) {
-		echo "<optgroup label=".$text['label-'.$key].">\n";
-		$selected = false;
-		foreach ($value as $row) {
-			if (!empty($ring_group_greeting) && $ring_group_greeting == $row["value"]) {
-				$selected = true;
-				echo "	<option value='".escape($row["value"])."' selected='selected'>".escape($row["name"])."</option>\n";
+	$found = $playable = false;
+	if (!empty($audio_files) && is_array($audio_files) && @sizeof($audio_files) != 0) {
+		foreach ($audio_files as $key => $value) {
+			echo "<optgroup label=".$text['label-'.$key]." data-type='".$key."'>\n";
+			foreach ($value as $row) {
+				if ($key == 'recordings') {
+					if (
+						!empty($instance_value) &&
+						($instance_value == $row["value"] || $instance_value == $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name'].'/'.$row["value"]) &&
+						file_exists($_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name'].'/'.pathinfo($row["value"], PATHINFO_BASENAME))
+						) {
+						$selected = "selected='selected'";
+						$playable = '../recordings/recordings.php?action=download&type=rec&filename='.pathinfo($row["value"], PATHINFO_BASENAME);
+						$found = true;
+					}
+					else {
+						unset($selected);
+					}
+				}
+				else if ($key == 'sounds') {
+					if (!empty($instance_value) && $instance_value == $row["value"]) {
+						$selected = "selected='selected'";
+						$playable = '../switch/sounds.php?action=download&filename='.$row["value"];
+						$found = true;
+					}
+					else {
+						unset($selected);
+					}
+				}
+				else {
+					unset($selected);
+				}
+				echo "	<option value='".escape($row["value"])."' ".($selected ?? '').">".escape($row["name"])."</option>\n";
 			}
-			else {
-				echo "	<option value='".escape($row["value"])."'>".escape($row["name"])."</option>\n";
-			}
+			echo "</optgroup>\n";
 		}
-		echo "</optgroup>\n";
 	}
-	if (if_group("superadmin")) {
-		if (!$selected && !empty($ring_group_greeting)) {
-			echo "	<option value='".escape($ring_group_greeting)."' selected='selected'>".escape($ring_group_greeting)."</option>\n";
-		}
-		unset($selected);
+	if (if_group("superadmin") && !empty($instance_value) && !$found) {
+		echo "	<option value='".escape($instance_value)."' selected='selected'>".escape($instance_value)."</option>\n";
 	}
+	unset($selected);
 	echo "	</select>\n";
+	if (if_group("superadmin")) {
+		echo "<input type='button' id='btn_select_to_input_".$instance_id."' class='btn' name='' alt='back' onclick='toggle_select_input(document.getElementById(\"".$instance_id."\"), \"".$instance_id."\"); this.style.visibility=\"hidden\";' value='&#9665;'>";
+	}
+	if ((permission_exists('recording_play') || permission_exists('recording_download')) && (!empty($playable) || empty($instance_value))) {
+		switch (pathinfo($playable, PATHINFO_EXTENSION)) {
+			case 'wav' : $mime_type = 'audio/wav'; break;
+			case 'mp3' : $mime_type = 'audio/mpeg'; break;
+			case 'ogg' : $mime_type = 'audio/ogg'; break;
+		}
+		echo "<audio id='recording_audio_".$instance_id."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".$instance_id."')\" onended=\"recording_reset('".$instance_id."');\" src='".($playable ?? '')."' type='".($mime_type ?? '')."'></audio>";
+		echo button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'icon'=>$_SESSION['theme']['button_icon_play'],'id'=>'recording_button_'.$instance_id,'style'=>'display: '.(!empty($mime_type) ? 'inline' : 'none'),'onclick'=>"recording_play('".$instance_id."', document.getElementById('".$instance_id."').value, document.getElementById('".$instance_id."').options[document.getElementById('".$instance_id."').selectedIndex].parentNode.getAttribute('data-type'))"]);
+		unset($playable, $mime_type);
+	}
 	echo "<br />\n";
-	echo $text['description-greeting']."\n";
+	echo $text['description-'.$instance_label]."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -759,6 +899,7 @@
 	echo "			<table border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "				<tr>\n";
 	echo "					<td class='vtable'>".$text['label-destination_number']."</td>\n";
+
 	echo "					<td class='vtable' id='destination_delayorder'>";
 	echo 						($ring_group_strategy == 'sequence' || $ring_group_strategy == 'rollover') ? $text['label-destination_order'] : $text['label-destination_delay'];
 	echo "					</td>\n";
@@ -766,6 +907,7 @@
 	if (permission_exists('ring_group_prompt')) {
 		echo "				<td class='vtable'>".$text['label-destination_prompt']."</td>\n";
 	}
+	echo "					<td class='vtable'>".$text['label-destination_description']."</td>\n";
 	echo "					<td class='vtable'>".$text['label-destination_enabled']."</td>\n";
 	if ($show_destination_delete && permission_exists('ring_group_destination_delete')) {
 		echo "					<td class='vtable edit_delete_checkbox_all' onmouseover=\"swap_display('delete_label_destinations', 'delete_toggle_destinations');\" onmouseout=\"swap_display('delete_label_destinations', 'delete_toggle_destinations');\">\n";
@@ -776,6 +918,7 @@
 	echo "				</tr>\n";
 	$x = 0;
 	foreach ($ring_group_destinations as $row) {
+		if (empty($row['destination_description'])) { $row['destination_description'] = ""; }
 		if (empty($row['destination_delay'])) { $row['destination_delay'] = "0"; }
 		if (empty($row['destination_timeout'])) { $row['destination_timeout'] = "30"; }
 
@@ -833,6 +976,9 @@
 			echo "				</select>\n";
 			echo "			</td>\n";
 		}
+		echo "				<td class='formfld'>\n";
+		echo "					<input type=\"text\" name=\"ring_group_destinations[".$x."][destination_description]\" class=\"formfld\" value=\"".escape($row['destination_description'])."\">\n";
+		echo "				</td>\n";
 		echo "				<td class='formfld'>\n";
 		// switch
 		if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {

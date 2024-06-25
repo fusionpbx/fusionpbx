@@ -28,6 +28,8 @@
 if (!class_exists('contacts')) {
 	class contacts {
 
+		const APP_NAME = "contacts";
+		const APP_UUID = "04481e0e-a478-c559-adad-52bd4174574c";
 		/**
 		 * declare private variables
 		 */
@@ -49,8 +51,8 @@ if (!class_exists('contacts')) {
 		public function __construct() {
 
 			//assign private variables
-				$this->app_name = 'contacts';
-				$this->app_uuid = '04481e0e-a478-c559-adad-52bd4174574c';
+				$this->app_name = self::APP_NAME;
+				$this->app_uuid = self::APP_UUID;
 				$this->permission_prefix = 'contact_';
 				$this->list_page = 'contacts.php';
 				$this->tables[] = 'contact_addresses';

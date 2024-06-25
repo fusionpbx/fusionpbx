@@ -98,11 +98,11 @@
 	$switch_cmd = 'show channels as json';
 
 //create the event socket connection
-	$fp = event_socket_create();
+	$esl = event_socket::create();
 
 //send the event socket command and get the array
-	if ($fp) {
-		$json = trim(event_socket_request($fp, 'api '.$switch_cmd));
+	if ($esl->is_connected()) {
+		$json = trim($esl->api($switch_cmd));
 		$results = json_decode($json, "true");
 	}
 

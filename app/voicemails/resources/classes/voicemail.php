@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2023
+ Portions created by the Initial Developer are Copyright (C) 2008-2024
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -37,6 +37,7 @@
 		public $voicemail_message_uuid;
 		public $order_by;
 		public $order;
+		public $offset;
 		public $type;
 
 		/**
@@ -51,7 +52,13 @@
 		private $toggle_field;
 		private $toggle_values;
 
-		public function __construct() {
+		/**
+		 * pulls in settings object
+		 * @var settings settings object
+		 */
+		private $settings;
+
+		public function __construct(array $params = []) {
 
 			//assign private variables
 				$this->app_name = 'voicemail';
@@ -63,8 +70,16 @@
 				$this->toggle_field = 'voicemail_enabled';
 				$this->toggle_values = ['true','false'];
 
+			//assign the settings object
+				if (isset($params['settings'])) {
+					$this->settings = $params['settings'];
+				}
+				else {
+					$this->settings = new settings();
+				}
+
 			//set the domain_uuid if not provided
-				if (empty($this->domain_uuid)) {
+				if (empty($this->domain_uuid) || !is_uuid($this->domain_uuid)) {
 					$this->domain_uuid = $_SESSION['domain_uuid'];
 				}
 
@@ -238,6 +253,12 @@
 				}
 				else {
 					$sql .= "order by v.voicemail_id, m.".$this->order_by." ".$this->order." ";
+				}
+				//if paging offset defined, apply it along with rows per page
+				if (isset($this->offset)) {
+					$rows_per_page = $_SESSION['domain']['paging']['numeric'] != '' ? $_SESSION['domain']['paging']['numeric'] : 50;
+					$offset = isset($this->offset) && is_numeric($this->offset) ? $this->offset : 0;
+					$sql .= limit_offset($rows_per_page, $offset);
 				}
 				$parameters['domain_uuid'] = $this->domain_uuid;
 				$parameters['time_zone'] = $time_zone;
@@ -595,10 +616,10 @@
 
 			//send the message waiting status
 
-				$fp = event_socket_create();
-				if ($fp) {
+				$esl = event_socket::create();
+				if ($esl->is_connected()) {
 					$switch_cmd = "luarun app.lua voicemail mwi ".$this->voicemail_id."@".$_SESSION['domain_name'];
-					$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
+					$switch_result = event_socket::api($switch_cmd);
 				}
 		}
 
@@ -645,8 +666,8 @@
 
 			//execute delete
 				$database = new database;
-				$database->app_name = 'voicemails';
-				$database->app_uuid = 'b523c2d2-64cd-46f1-9520-ca4b4098e044';
+				$database->app_name = $this->app_name;
+				$database->app_name = $this->app_uuid;
 				$database->delete($array);
 				unset($array);
 
@@ -685,8 +706,8 @@
 
 			//execute update
 				$database = new database;
-				$database->app_name = 'voicemails';
-				$database->app_uuid = 'b523c2d2-64cd-46f1-9520-ca4b4098e044';
+				$database->app_name = $this->app_name;
+				$database->app_name = $this->app_uuid;
 				$database->save($array);
 				unset($array);
 
@@ -695,6 +716,71 @@
 
 			//check the message waiting status
 				$this->message_waiting();
+		}
+
+		public function message_transcribe() {
+
+			//get the voicemail id
+				$this->get_voicemail_id();
+
+			//check if for valid input
+				if (!is_numeric($this->voicemail_id)
+					|| !is_uuid($this->voicemail_uuid)
+					|| !is_uuid($this->domain_uuid)
+					|| !is_uuid($this->voicemail_message_uuid)
+					) {
+					return false;
+				}
+
+			//add the settings object
+			$settings = new settings(["domain_uuid" => $_SESSION['domain_uuid'], "user_uuid" => $_SESSION['user_uuid']]);
+			$transcribe_enabled = $settings->get('transcribe', 'enabled', 'false');
+			$transcribe_engine = $settings->get('transcribe', 'engine', '');
+
+			//transcribe multiple recordings
+			if ($transcribe_enabled == 'true' && !empty($transcribe_engine)) {
+
+				//add the transcribe object
+				$transcribe = new transcribe($settings);
+
+				//get each voicemail message file
+				$file_path = $_SESSION['switch']['voicemail']['dir']."/default/".$_SESSION['domain_name']."/".$this->voicemail_id;
+				foreach (glob($file_path."/msg_".$this->voicemail_message_uuid.".*") as $file_name) {
+					//audio to text - get the transcription from the audio file
+					$transcribe->audio_path = $file_path;
+					$transcribe->audio_filename = basename($file_name);
+					$message_transcription = $transcribe->transcribe();
+					//build voicemail message data array
+					if (!empty($message_transcription)) {
+						$array['voicemail_messages'][0]['voicemail_message_uuid'] = $this->voicemail_message_uuid;
+						$array['voicemail_messages'][0]['message_transcription'] = $message_transcription;
+						break;
+					}
+				}
+
+				//update the checked rows
+				if (is_array($array) && @sizeof($array) != 0) {
+
+					//grant temporary permissions
+					$p = new permissions;
+					$p->add('voicemail_message_edit', 'temp');
+
+					//execute update
+					$database = new database;
+					$database->app_name = $this->app_name;
+					$database->app_name = $this->app_uuid;
+					$database->save($array);
+					unset($array);
+
+					//revoke temporary permissions
+					$p->delete('voicemail_message_edit', 'temp');
+
+				}
+
+				return !empty($message_transcription) ? true : false;
+
+			}
+
 		}
 
 		public function message_saved() {
@@ -717,8 +803,8 @@
 
 			//execute update
 				$database = new database;
-				$database->app_name = 'voicemails';
-				$database->app_uuid = 'b523c2d2-64cd-46f1-9520-ca4b4098e044';
+				$database->app_name = $this->app_name;
+				$database->app_name = $this->app_uuid;
 				$database->save($array);
 				unset($array);
 
@@ -729,7 +815,16 @@
 				$this->message_waiting();
 		}
 
-		public function message_download() {
+		/**
+		 * download the voicemail message
+		 * @param string domain_name if domain name is not passed, then will be used from the session variable (if available) to generate the voicemail file path
+		 */
+		public function message_download(string $domain_name = '') {
+
+			//check domain name
+			if (empty($domain_name)) {
+				$domain_name = $_SESSION['domain_name'] ?? '';
+			}
 
 			//check if for valid input
 			if (!is_numeric($this->voicemail_id)
@@ -744,10 +839,10 @@
 			$this->message_saved();
 
 			//set source folder path
-			$path = $_SESSION['switch']['voicemail']['dir'].'/default/'.$_SESSION['domain_name'].'/'.$this->voicemail_id;
+			$path = realpath($this->settings->get('switch','voicemail','/var/lib/freeswitch/storage/voicemail').'/default/'.$domain_name).'/'.$this->voicemail_id;
 
 			//prepare base64 content from db, if enabled
-			if (!empty($_SESSION['voicemail']['storage_type']['text']) && $_SESSION['voicemail']['storage_type']['text'] == 'base64') {
+			if ($this->settings->get('voicemail','storage_type','') == 'base64') {
 				$sql = "select message_base64 ";
 				$sql .= "from ";
 				$sql .= "v_voicemail_messages as m, ";
@@ -788,13 +883,15 @@
 			//prepare and stream the file
 			if (file_exists($path.'/msg_'.$this->voicemail_message_uuid.'.wav')) {
 				$file_path = $path.'/msg_'.$this->voicemail_message_uuid.'.wav';
-			} else if (file_exists($path.'/msg_'.$this->voicemail_message_uuid.'.mp3')) {
+			}
+			else if (file_exists($path.'/msg_'.$this->voicemail_message_uuid.'.mp3')) {
 				$file_path = $path.'/msg_'.$this->voicemail_message_uuid.'.mp3';
-			} else {
+			}
+			else {
 				return false;
 			}
 
-			if ($file_path == '') {
+			if (empty($file_path)) {
 				return false;
 			}
 
@@ -806,16 +903,17 @@
 				header("Content-Description: File Transfer");
 				$file_ext = pathinfo($file_path, PATHINFO_EXTENSION);
 				switch ($file_ext) {
-					case "wav" : header('Content-Disposition: attachment; filename="msg_'.$this->voicemail_message_uuid.'.wav"'); break;
-					case "mp3" : header('Content-Disposition: attachment; filename="msg_'.$this->voicemail_message_uuid.'.mp3"'); break;
-					case "ogg" : header('Content-Disposition: attachment; filename="msg_'.$this->voicemail_message_uuid.'.ogg"'); break;
+					case "wav": header('Content-Disposition: attachment; filename="msg_'.$this->voicemail_message_uuid.'.wav"'); break;
+					case "mp3": header('Content-Disposition: attachment; filename="msg_'.$this->voicemail_message_uuid.'.mp3"'); break;
+					case "ogg": header('Content-Disposition: attachment; filename="msg_'.$this->voicemail_message_uuid.'.ogg"'); break;
 				}
-			} else {
+			}
+			else {
 				$file_ext = pathinfo($file_path, PATHINFO_EXTENSION);
 				switch ($file_ext) {
-					case "wav" : header("Content-Type: audio/x-wav"); break;
-					case "mp3" : header("Content-Type: audio/mpeg"); break;
-					case "ogg" : header("Content-Type: audio/ogg"); break;
+					case "wav": header("Content-Type: audio/x-wav"); break;
+					case "mp3": header("Content-Type: audio/mpeg"); break;
+					case "ogg": header("Content-Type: audio/ogg"); break;
 				}
 			}
 			header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
@@ -833,7 +931,7 @@
 			fpassthru($fd);
 
 			//if base64, remove temp file
-			if (!empty($_SESSION['voicemail']['storage_type']['text']) && $_SESSION['voicemail']['storage_type']['text'] == 'base64') {
+			if ($this->settings->get('voicemail','storage_type','') == 'base64') {
 				@unlink($path.'/msg_'.$this->voicemail_message_uuid.'.'.$file_ext);
 			}
 
@@ -843,7 +941,7 @@
 		 * range download method (helps safari play audio sources)
 		 */
 		private function range_download($file) {
-			$fp = @fopen($file, 'rb');
+			$esl = @fopen($file, 'rb');
 
 			$size   = filesize($file); // File size
 			$length = $size;           // Content length
@@ -909,7 +1007,7 @@
 				$start  = $c_start;
 				$end    = $c_end;
 				$length = $end - $start + 1; // Calculate new content length
-				fseek($fp, $start);
+				fseek($esl, $start);
 				header('HTTP/1.1 206 Partial Content');
 			}
 			// Notify the client the byte range we'll be outputting
@@ -918,18 +1016,17 @@
 
 			// Start buffered download
 			$buffer = 1024 * 8;
-			while(!feof($fp) && ($p = ftell($fp)) <= $end) {
+			while(!feof($esl) && ($p = ftell($esl)) <= $end) {
 				if ($p + $buffer > $end) {
 					// In case we're only outputtin a chunk, make sure we don't
 					// read past the length
 					$buffer = $end - $p + 1;
 				}
 				set_time_limit(0); // Reset time limit for big files
-				echo fread($fp, $buffer);
+				echo fread($esl, $buffer);
 				flush(); // Free up memory. Otherwise large files will trigger PHP's memory limit.
 			}
 
-			fclose($fp);
 		}
 
 

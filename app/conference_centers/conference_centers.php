@@ -136,6 +136,12 @@
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);
 
+//update the array to show only the greeting file name
+	$x = 0;
+	foreach ($conference_centers as &$row) {
+		$row['conference_center_greeting'] = basename($row['conference_center_greeting'] ?? '');
+	}
+
 //include the header
 	$document['title'] = $text['title-conference_centers'];
 	require_once "resources/header.php";

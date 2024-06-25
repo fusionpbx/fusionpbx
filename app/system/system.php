@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2023
+	Portions created by the Initial Developer are Copyright (C) 2008-2024
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -28,7 +28,6 @@
 //includes files
 	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
-
 //check permissions
 	if (permission_exists('system_view_info')
 		|| permission_exists('system_view_cpu')
@@ -46,33 +45,78 @@
 	$language = new text;
 	$text = $language->get();
 
+//load editor preferences/defaults
+	if (permission_exists("system_view_support")) {
+		$setting_size = !empty($_SESSION["editor"]["font_size"]["text"]) ? $_SESSION["editor"]["font_size"]["text"] : '12px';
+		$setting_theme = !empty($_SESSION["editor"]["theme"]["text"]) ? $_SESSION["editor"]["theme"]["text"] : 'cobalt';
+		$setting_invisibles = !empty($_SESSION["editor"]["invisibles"]["boolean"]) ? $_SESSION["editor"]["invisibles"]["boolean"] : 'false';
+		$setting_indenting = !empty($_SESSION["editor"]["indent_guides"]["boolean"]) ? $_SESSION["editor"]["indent_guides"]["boolean"] : 'false';
+		$setting_numbering = !empty($_SESSION["editor"]["line_numbers"]["boolean"]) ? $_SESSION["editor"]["line_numbers"]["boolean"] : 'true';
+	}
+
 //additional includes
 	require_once "resources/header.php";
+	require_once 'app/system/resources/functions/system_information.php';
+
+//ace editor helpers
+	if (permission_exists("system_view_support")) {
+		echo "<script language='JavaScript' type='text/javascript' src='resources/javascript/copy_to_clipboard.js'></script>";
+		echo "<script language='JavaScript' type='text/javascript'>\n";
+
+		echo "	function toggle_option(opt) {\n";
+		echo "		switch (opt) {\n";
+		echo "			case 'numbering':\n";
+		echo "				toggle_option_do('showLineNumbers');\n";
+		echo "				toggle_option_do('fadeFoldWidgets');\n";
+		echo "				break;\n";
+		echo "			case 'invisibles':\n";
+		echo "				toggle_option_do('showInvisibles');\n";
+		echo "				break;\n";
+		echo "			case 'indenting':\n";
+		echo "				toggle_option_do('displayIndentGuides');\n";
+		echo "				break;\n";
+		echo "		}\n";
+		echo "		focus_editor();\n";
+		echo "	}\n";
+
+		echo "	function toggle_option_do(opt_name) {\n";
+		echo "		var opt_val = editor.getOption(opt_name);\n";
+		echo "		editor.setOption(opt_name, ((opt_val) ? false : true));\n";
+		echo "	}\n";
+
+		echo "	function focus_editor() {\n";
+		echo "		editor.focus();\n";
+		echo "	}\n";
+
+		//load editor value from hidden textarea
+		echo "	function load_value() {\n";
+		echo "		editor.session.setValue($('#system_information').val());";
+		echo "	}\n";
+
+		//copy the value from the editor to the clipboard
+		echo "	function do_copy() {\n";
+		echo "		$('#system_information').val(editor.session.getValue());\n";
+		echo "		copy_to_clipboard();\n";
+		echo "		alert(\"".$text['message-copied_to_clipboard']."\");\n";
+		echo "	}\n";
+
+		echo "</script>\n";
+
+		echo "<style>\n";
+		echo "	div#editor {\n";
+		echo "		text-align: left;\n";
+		echo "		width: 100%;\n";
+		echo "		height: 300px;\n";
+		echo "		font-size: 12px;\n";
+		echo "		}\n";
+		echo "</style>\n";
+	}
+
+//Load an array of system information
+	$system_information = system_information();
 
 //set the page title
 	$document['title'] = $text['title-sys-status'];
-
-// OS Support
-	//
-	// For each section below wrap in an OS detection statement like:
-	//	if (stristr(PHP_OS, 'Linux')) {}
-	//
-	// Some possibilites for PHP_OS...
-	//
-	//	CYGWIN_NT-5.1
-	//	Darwin
-	//	FreeBSD
-	//	HP-UX
-	//	IRIX64
-	//	Linux
-	//	NetBSD
-	//	OpenBSD
-	//	SunOS
-	//	Unix
-	//	WIN32
-	//	WINNT
-	//	Windows
-	//
 
 //system information
 	echo "<b>".$text['header-sys-status']."</b>";
@@ -88,16 +132,13 @@
 		echo "		".$text['label-version']."\n";
 		echo "	</td>\n";
 		echo "	<td class=\"row_style1\">\n";
-		echo "		".software::version()."\n";
+		echo "		".$system_information['version']."\n";
 		echo "	</td>\n";
 		echo "</tr>\n";
 
-		$git_path = normalize_path_to_os($_SERVER['PROJECT_ROOT']."/.git");
+		$git_path = $system_information['git']['path'];
 		if(file_exists($git_path)){
-			$git_exe = 'git';
-			if (strtoupper(substr(PHP_OS, 0, 3)) === 'SUN') { $git_exe = shell_exec('which git'); }
-			exec($git_exe.' --git-dir='.$git_path.' status', $dummy, $returnCode);
-			if($returnCode){
+			if($system_information['git']['status'] === 'unknown'){
 				echo "<tr>\n";
 				echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
 				echo "		".$text['label-git_info']."\n";
@@ -107,29 +148,15 @@
 				echo "	</td>\n";
 				echo "</tr>\n";
 			}else{
-				$git_branch = shell_exec($git_exe.' --git-dir='.$git_path.' name-rev --name-only HEAD');
-				rtrim($git_branch);
-				$git_commit = shell_exec($git_exe.' --git-dir='.$git_path.' rev-parse HEAD');
-				rtrim($git_commit);
-				$git_origin = shell_exec($git_exe.' --git-dir='.$git_path.' config --get remote.origin.url');
-				rtrim($git_origin);
-				$git_origin = preg_replace('/\.git$/','',$git_origin);
-				$git_status = shell_exec($git_exe.' --git-dir='.$git_path.' status | grep "Your branch"');
-				if(!empty($git_status))
-					rtrim($git_status);
-				$git_age = shell_exec($git_exe.' --git-dir='.$git_path.' log --pretty=format:%at "HEAD^!"');
-				rtrim($git_age);
-				$git_date = DateTime::createFromFormat('U', $git_age);
-				$git_age = $git_date->diff(new DateTime('now'));
 				echo "<tr>\n";
 				echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
 				echo "		".$text['label-git_info']."\n";
 				echo "	</td>\n";
 				echo "	<td class=\"row_style1\">\n";
-				echo "		".$text['label-git_branch'].": ".$git_branch."<br>\n";
-				echo "		".$text['label-git_commit'].": <a href='$git_origin/commit/$git_commit'>".$git_commit."</a><br>\n";
-				echo "		".$text['label-git_origin'].": ".$git_origin."<br>\n";
-				echo "		".$text['label-git_status'].": ".$git_status.$git_age->format(' %R%a days ago')."<br>\n";
+				echo "		".$text['label-git_branch'].": ".$system_information['git']['branch']."<br>\n";
+				echo "		".$text['label-git_commit'].": <a href='{$system_information['git']['origin']}/commit/{$system_information['git']['commit']}'>".$system_information['git']['commit']."</a><br>\n";
+				echo "		".$text['label-git_origin'].": ".$system_information['git']['origin']."<br>\n";
+				echo "		".$text['label-git_status'].": ".$system_information['git']['status'].($system_information['git']['age'])->format(' %R%a days ago')."<br>\n";
 				echo "	</td>\n";
 				echo "</tr>\n";
 			}
@@ -144,26 +171,19 @@
 		echo "	</td>\n";
 		echo "</tr>\n";
 
-		$fp = event_socket_create();
-		if ($fp) {
-			$switch_version = event_socket_request($fp, 'api version');
-			preg_match("/FreeSWITCH Version (\d+\.\d+\.\d+(?:\.\d+)?).*\(.*?(\d+\w+)\s*\)/", $switch_version, $matches);
-			$switch_version = $matches[1];
-			$switch_bits = $matches[2];
+		if ($system_information['switch']['version'] !== 'connection failed') {
 			echo "<tr>\n";
 			echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
 			echo "		".$text['label-switch']." ".$text['label-version']."\n";
 			echo "	</td>\n";
-			echo "	<td class=\"row_style1\">$switch_version ($switch_bits)</td>\n";
+			echo "	<td class=\"row_style1\">{$system_information['switch']['version']} ({$system_information['switch']['bits']})</td>\n";
 			echo "</tr>\n";
-			preg_match("/\(git\s*(.*?)\s*\d+\w+\s*\)/", $switch_version, $matches);
-			$switch_git_info = $matches[1] ?? null;
-			if(!empty($switch_git_info)){
+			if($system_information['switch']['git']['info'] !== 'connection failed'){
 				echo "<tr>\n";
 				echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
 				echo "		".$text['label-switch']." ".$text['label-git_info']."\n";
 				echo "	</td>\n";
-				echo "	<td class=\"row_style1\">$switch_git_info</td>\n";
+				echo "	<td class=\"row_style1\">{$system_information['switch']['git']['info']}</td>\n";
 				echo "</tr>\n";
 			}
 		}
@@ -172,83 +192,61 @@
 		echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
 		echo "	".$text['label-php']." ".$text['label-version']."\n";
 		echo "	</td>\n";
-		echo "	<td class=\"row_style1\">".phpversion()."</td>\n";
+		echo "	<td class=\"row_style1\">".$system_information['php']['version']."</td>\n";
 		echo "</tr>\n";
 
 		echo "<tr>\n";
 		echo "	<th class='th' colspan='2' align='left' style='padding-top:2em'>".$text['title-os-info']."</th>\n";
 		echo "</tr>\n";
 
-		if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-			echo "<!--\n";
-			$data = explode("\n",shell_exec('systeminfo /FO CSV 2> nul'));
-			$data = array_combine(str_getcsv($data[0]), str_getcsv($data[1]));
-			$os_name = $data['OS Name'];
-			$os_version = $data['OS Version'];
-			unset($data);
-			echo "-->\n";
-		}
-		else {
-			echo "<!--\n";
-			$os_kernel = shell_exec('uname -a');
-			$os_name = shell_exec('lsb_release -is');
-			$os_version = shell_exec('lsb_release -rs');
-			echo "-->\n";
-		}
-		
-		if (!empty($os_name)) {
+		if ($system_information['os']['name'] !== 'permission denied') {
 			echo "<tr>\n";
 			echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
 			echo "		".$text['label-os']." \n";
 			echo "	</td>\n";
 			echo "	<td class=\"row_style1\">\n";
-			echo "		".$os_name." \n";
+			echo "		".$system_information['os']['name']." \n";
 			echo "	</td>\n";
 			echo "</tr>\n";
 		}
-		if (!empty($os_version)) {
+		if ($system_information['os']['version'] !== 'permission denied') {
 			echo "<tr>\n";
 			echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
 			echo "		".$text['label-version']." \n";
 			echo "	</td>\n";
 			echo "	<td class=\"row_style1\">\n";
-			echo "		".$os_version." \n";
+			echo "		".$system_information['os']['version']." \n";
 			echo "	</td>\n";
 			echo "</tr>\n";
 		}
-		if (!empty($os_kernel)) {
+		if (!empty($system_information['os']['kernel'])) {
 			echo "<tr>\n";
 			echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
 			echo "		".$text['label-kernel']." \n";
 			echo "	</td>\n";
 			echo "	<td class=\"row_style1\">\n";
-			echo "		".$os_kernel." \n";
+			echo "		".$system_information['os']['kernel']." \n";
 			echo "	</td>\n";
 			echo "</tr>\n";
 		}
-		unset($os_name, $os_version, $os_kernel);
 
-		echo "<!--\n";
-		$tmp_result = shell_exec('uptime');
-		echo "-->\n";
-		if (!empty($tmp_result)) {
+		if ($system_information['os']['uptime'] !== 'unknown') {
 			echo "<tr>\n";
 			echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
 			echo "		Uptime\n";
 			echo "	</td>\n";
 			echo "	<td class=\"row_style1\">\n";
-			echo "		".$tmp_result." \n";
+			echo "		".$system_information['os']['uptime']." \n";
 			echo "	</td>\n";
 			echo "</tr>\n";
 		}
-		unset($tmp_result);
 	}
 	echo "<tr>\n";
 	echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
 	echo "		Date\n";
 	echo "	</td>\n";
 	echo "	<td class=\"row_style1\">\n";
-	echo "		".date('r')." \n";
+	echo "		".$system_information['os']['date']." \n";
 	echo "	</td>\n";
 	echo "</tr>\n";
 	echo "</table>\n";
@@ -256,153 +254,45 @@
 
 //memory information
 	if (permission_exists('system_view_ram')) {
-		//linux
-		if (stristr(PHP_OS, 'Linux')) {
-			echo "<!--\n";
-			$shell_cmd = 'free -hw';
-			$shell_result = shell_exec($shell_cmd);
-			echo "-->\n";
-			if (!empty($shell_result)) {
-				echo "<table width=\"100%\" border=\"0\" cellpadding=\"7\" cellspacing=\"0\">\n";
-				echo "<tr>\n";
-				echo "	<th colspan='2' align='left' valign='top'>".$text['title-mem']."</th>\n";
-				echo "</tr>\n";
-				echo "<tr>\n";
-				echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
-				echo "	".$text['label-mem']."\n";
-				echo "	</td>\n";
-				echo "	<td class=\"row_style1\">\n";
-				echo "	<pre>\n";
-				echo "$shell_result<br>";
-				echo "</pre>\n";
-				unset($shell_result);
-				echo "	</td>\n";
-				echo "</tr>\n";
-				echo "</table>\n";
-				echo "<br /><br />";
-			}
-		}
-
-		//freebsd
-		if (stristr(PHP_OS, 'FreeBSD')) {
-			echo "<!--\n";
-			$shell_cmd = 'sysctl vm.vmtotal';
-			$shell_result = shell_exec($shell_cmd);
-			echo "-->\n";
-			if (!empty($shell_result)) {
-				echo "<table width=\"100%\" border=\"0\" cellpadding=\"7\" cellspacing=\"0\">\n";
-				echo "<tr>\n";
-				echo "	<th colspan='2' align='left' valign='top'>".$text['title-mem']."</th>\n";
-				echo "</tr>\n";
-				echo "<tr>\n";
-				echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
-				echo "	".$text['label-mem']."\n";
-				echo "	</td>\n";
-				echo "	<td class=\"row_style1\">\n";
-				echo "	<pre>\n";
-				echo "$shell_result<br>";
-				echo "</pre>\n";
-				unset($shell_result);
-				echo "	</td>\n";
-				echo "</tr>\n";
-				echo "</table>\n";
-				echo "<br /><br />";
-			}
-		}
-
-		//Windows
-		if (stristr(PHP_OS, 'WIN')) {
-			echo "<!--\n";
-			// connect to WMI
-			$wmi = new COM('WinMgmts:root/cimv2');
-			// Query this Computer for Total Physical RAM
-			$res = $wmi->ExecQuery('Select TotalPhysicalMemory from Win32_ComputerSystem');
-			// Fetch the first item from the results
-			$system = $res->ItemIndex(0);
-			$shell_result = round($system->TotalPhysicalMemory / 1024 /1024, 0);
-			echo "-->\n";
-			if (!empty($shell_result)) {
-				echo "<table width=\"100%\" border=\"0\" cellpadding=\"7\" cellspacing=\"0\">\n";
-				echo "<tr>\n";
-				echo "	<th class='th' colspan='2' align='left'>".$text['Physical Memory']."</th>\n";
-				echo "</tr>\n";
-				echo "<tr>\n";
-				echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
-				echo "		".$text['label-mem']." \n";
-				echo "	</td>\n";
-				echo "	<td class=\"row_style1\">\n";
-				echo "		$shell_result mb\n";
-				echo "	</td>\n";
-				echo "</tr>\n";
-				echo "</table>\n";
-				echo "<br /><br />";
-
-			}
+		if ($system_information['os']['mem'] !== 'unknown' && $system_information['os']['mem'] !== 'permission denied') {
+			echo "<table width=\"100%\" border=\"0\" cellpadding=\"7\" cellspacing=\"0\">\n";
+			echo "<tr>\n";
+			echo "	<th colspan='2' align='left' valign='top'>".$text['title-mem']."</th>\n";
+			echo "</tr>\n";
+			echo "<tr>\n";
+			echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
+			echo "	".$text['label-mem']."\n";
+			echo "	</td>\n";
+			echo "	<td class=\"row_style1\">\n";
+			echo "	<pre>\n";
+			echo "{$system_information['os']['mem']}<br>";
+			echo "</pre>\n";
+			echo "	</td>\n";
+			echo "</tr>\n";
+			echo "</table>\n";
+			echo "<br /><br />";
 		}
 	}
 
 //cpu information
 	if (permission_exists('system_view_cpu')) {
-		//linux
-		if (stristr(PHP_OS, 'Linux')) {
-			echo "<!--\n";
-			$shell_cmd = "ps -e -o pcpu,cpu,nice,state,cputime,args --sort pcpu | sed '/^ 0.0 /d'";
-			$shell_result = shell_exec($shell_cmd);
-			echo "-->\n";
-			if (!empty($shell_result)) {
-				echo "<table width=\"100%\" border=\"0\" cellpadding=\"7\" cellspacing=\"0\">\n";
-				echo "<tr>\n";
-				echo "	<th class='th' colspan='2' align='left' valign='top'>".$text['title-cpu']."</th>\n";
-				echo "</tr>\n";
-				echo "<tr>\n";
-				echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
-				echo "	".$text['label-cpu']."\n";
-				echo "	</td>\n";
-				echo "	<td class=\"row_style1\">\n";
-				echo "	<pre>\n";
-
-				//$last_line = shell_exec($shell_cmd, $shell_result);
-				//foreach ($shell_result as $value) {
-				//	echo substr($value, 0, 100);
-				//	echo "<br />";
-				//}
-
-				echo "$shell_result<br>";
-
-				echo "</pre>\n";
-				unset($shell_result);
-				echo "	</td>\n";
-				echo "</tr>\n";
-				echo "</table>\n";
-				echo "<br /><br />";
-			}
-		}
-
-		//freebsd
-		if (stristr(PHP_OS, 'FreeBSD')) {
-			echo "<!--\n";
-			$shell_cmd = 'top';
-			$shell_result = shell_exec($shell_cmd);
-			echo "-->\n";
-			if (!empty($shell_result)) {
-				echo "<table width=\"100%\" border=\"0\" cellpadding=\"7\" cellspacing=\"0\">\n";
-				echo "<tr>\n";
-				echo "	<th class='th' colspan='2' align='left' valign='top'>".$text['title-cpu']."</th>\n";
-				echo "</tr>\n";
-				echo "<tr>\n";
-				echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
-				echo "	".$text['label-cpu']."\n";
-				echo "	</td>\n";
-				echo "	<td class=\"row_style1\">\n";
-				echo "	<pre>\n";
-				echo "$shell_result<br>";
-				echo "</pre>\n";
-				unset($shell_result);
-				echo "	</td>\n";
-				echo "</tr>\n";
-				echo "</table>\n";
-				echo "<br /><br />";
-			}
+		if ($system_information['os']['cpu'] !== 'unknown' && $system_information['os']['cpu'] !== 'permission denied') {
+			echo "<table width=\"100%\" border=\"0\" cellpadding=\"7\" cellspacing=\"0\">\n";
+			echo "<tr>\n";
+			echo "	<th class='th' colspan='2' align='left' valign='top'>".$text['title-cpu']."</th>\n";
+			echo "</tr>\n";
+			echo "<tr>\n";
+			echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
+			echo "	".$text['label-cpu']."\n";
+			echo "	</td>\n";
+			echo "	<td class=\"row_style1\">\n";
+			echo "	<pre>\n";
+			echo "{$system_information['os']['cpu']}<br>";
+			echo "</pre>\n";
+			echo "	</td>\n";
+			echo "</tr>\n";
+			echo "</table>\n";
+			echo "<br /><br />";
 		}
 	}
 
@@ -410,8 +300,6 @@
 	if (permission_exists('system_view_hdd')) {
 		if (stristr(PHP_OS, 'Linux') || stristr(PHP_OS, 'FreeBSD')) {
 			echo "<!--\n";
-			$shell_cmd = 'df -hP --total';
-			$shell_result = shell_exec($shell_cmd);
 			echo "-->\n";
 			echo "<table width=\"100%\" border=\"0\" cellpadding=\"7\" cellspacing=\"0\">\n";
 			echo "<tr>\n";
@@ -423,7 +311,7 @@
 			echo "	</td>\n";
 			echo "	<td class=\"row_style1\">\n";
 			echo "<pre>\n";
-			echo "$shell_result<br>";
+			echo "{$system_information['os']['disk']['size']}<br>";
 			echo "</pre>\n";
 			echo "	</td>\n";
 			echo "</tr>\n";
@@ -446,7 +334,7 @@
 			echo "		".$text['label-drive-capacity']." \n";
 			echo "	</td>\n";
 			echo "	<td class=\"row_style1\">\n";
-			echo "		$disk_size mb\n";
+			echo "		{$system_information['os']['disk']['size']} mb\n";
 			echo "	</td>\n";
 			echo "</tr>\n";
 
@@ -455,7 +343,7 @@
 			echo "		".$text['label-drive-free']." \n";
 			echo "	</td>\n";
 			echo "	<td class=\"row_style1\">\n";
-			echo "		$disk_size_free mb\n";
+			echo "		{$system_information['os']['disk']['free']} mb\n";
 			echo "	</td>\n";
 			echo "</tr>\n";
 
@@ -464,7 +352,7 @@
 			echo "		".$text['label-drive-percent']." \n";
 			echo "	</td>\n";
 			echo "	<td class=\"row_style1\">\n";
-			echo "		$disk_percent_available% \n";
+			echo "		{$system_information['os']['disk']['available']}% \n";
 			echo "	</td>\n";
 			echo "</tr>\n";
 			echo "</table>\n";
@@ -474,24 +362,7 @@
 
 //database information
 	if (permission_exists('system_view_database')) {
-		if ($db_type == 'pgsql') {
-
-			//database version
-			$sql = "select version(); ";
-			$database = new database;
-			$database_version = $database->select($sql, null, 'column');
-
-			//database connections
-			$sql = "select count(*) from pg_stat_activity; ";
-			$database = new database;
-			$database_connections = $database->select($sql, null, 'column');
-
-			//database size
-			$sql = "SELECT pg_database.datname,\n";
-			$sql .= "pg_size_pretty(pg_database_size(pg_database.datname)) AS size \n";
-			$sql .= "FROM pg_database;\n";
-			$database = new database;
-			$database_size = $database->select($sql, null, 'all');
+		if ($system_information['database']['type'] == 'pgsql') {
 
 			echo "<table width=\"100%\" border=\"0\" cellpadding=\"7\" cellspacing=\"0\">\n";
 			echo "<tr>\n";
@@ -502,7 +373,7 @@
 			echo "		".$text['label-version']." \n";
 			echo "	</td>\n";
 			echo "	<td class=\"row_style1\">\n";
-			echo "		".$database_version."<br>\n";
+			echo "		".$system_information['database']['version']."<br>\n";
 			echo "	</td>\n";
 			echo "</tr>\n";
 
@@ -511,7 +382,7 @@
 			echo "		".$text['label-database_connections']." \n";
 			echo "	</td>\n";
 			echo "	<td class=\"row_style1\">\n";
-			echo "		".$database_connections."<br>\n";
+			echo "		".$system_information['database']['connections']."<br>\n";
 			echo "	</td>\n";
 			echo "</tr>\n";
 
@@ -522,8 +393,8 @@
 			echo "	<td class=\"row_style1\">\n";
 			echo "		<table border='0' cellpadding='3' cellspacing='0'>\n";
 			echo "			<tr><td>". $text['label-name'] ."</td><td>&nbsp;</td><td style='text-align: left;'>". $text['label-size'] ."</td></tr>\n";
-			foreach ($database_size as $row) {
-				echo "			<tr><td>".$row['datname'] ."</td><td>&nbsp;</td><td style='text-align: left;'>". $row['size'] ."</td></tr>\n";
+			foreach ($system_information['database']['sizes'] as $datname => $size) {
+				echo "			<tr><td>".$datname ."</td><td>&nbsp;</td><td style='text-align: left;'>". $size ."</td></tr>\n";
 			}
 			echo "		</table>\n";
 			echo "	</td>\n";
@@ -541,37 +412,17 @@
 		echo "		<th class='th' colspan='2' align='left'>".$text['title-memcache']."</th>\n";
 		echo "	</tr>\n";
 
-		$memcache_fail = false;
-		$mod = new modules;
-		if ($mod -> active("mod_memcache")) {
-			$fp = event_socket_create();
-			if ($fp) {
-				$switch_cmd = "memcache status verbose";
-				$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
-				$memcache_lines = preg_split('/\n/', $switch_result);
-				foreach($memcache_lines as $memcache_line) {
-					if (!empty(trim($memcache_line)) > 0 && substr_count($memcache_line, ': ')) {
-						$memcache_temp = explode(': ', $memcache_line);
-						$memcache_status[$memcache_temp[0]] = $memcache_temp[1];
-					}
-				}
-
-				if (is_array($memcache_status) && sizeof($memcache_status) > 0) {
-					foreach($memcache_status as $memcache_field => $memcache_value) {
+		if ($system_information['memcache'] !== 'none' && $system_information['memcache'] !== 'permission denied or unavailable') {
+				if (is_array($system_information['memcache']) && sizeof($system_information['memcache']) > 0) {
+					foreach($system_information['memcache'] as $memcache_field => $memcache_value) {
 						echo "<tr>\n";
 						echo "	<td width='20%' class='vncell' style='text-align: left;'>".$memcache_field."</td>\n";
 						echo "	<td class='row_style1'>".$memcache_value."</td>\n";
 						echo "</tr>\n";
 					}
 				}
-				else { $memcache_fail = true; }
-			}
-			else { $memcache_fail = true; }
-
 		}
-		else { $memcache_fail = true; }
-
-		if ($memcache_fail) {
+		else {
 			echo "<tr>\n";
 			echo "	<td width='20%' class='vncell' style='text-align: left;'>".$text['label-memcache_status']."</td>\n";
 			echo "	<td class='row_style1'>".$text['message-unavailable']."</td>\n";
@@ -580,6 +431,128 @@
 
 		echo "</table>\n";
 		echo "<br /><br />\n";
+	}
+
+	if (permission_exists("system_view_support")) {
+		echo "<table width='100%' border='0' cellpadding='7' cellspacing='0'>\n";
+		echo "<tr>\n";
+		echo "	<th class='th' align='left'>".$text['label-support']."</th>\n";
+		echo "	<th class='th' style='text-align: right;'>\n";
+		echo "		<button type='button' class='btn btn-default' id='btn_copy' alt=\"".$text['label-copy']."\" title=\"".$text['label-copy']."\" onclick='do_copy();'>".$text['label-copy']."<i class='fas fa-regular fa-clipboard pl-5'></i></button>\n";
+		echo "	</th>\n";
+		echo "</tr>\n";
+		echo "<tr>\n";
+		echo "	<td width='20%' class='vncell' style='text-align: left;'>\n";
+		echo "		&nbsp;\n";
+		echo "	</td>\n";
+		echo "	<td class='row_style1'>\n";
+		echo "		<textarea class='formfld' id='system_information' name='system_information' style='display: none;'>".json_encode($system_information, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)."</textarea>\n";
+		echo "		<div id='editor'></div>\n";
+		echo "		<table cellpadding='0' cellspacing='0' border='0' style='float: right; padding-top: 5px;'>\n";
+		echo "			<tr>\n";
+		echo "				<td valign='middle' style='padding-left: 6px;'><i class='fas fa-list-ul fa-lg ace_control' title=\"".$text['label-toggle_line_numbers']."\" onclick=\"toggle_option('numbering');\"></i></td>\n";
+		echo "				<td valign='middle' style='padding-left: 6px;'><i class='fas fa-eye-slash fa-lg ace_control' title=\"".$text['label-toggle_invisibles']."\" onclick=\"toggle_option('invisibles');\"></i></td>\n";
+		echo "				<td valign='middle' style='padding-left: 6px;'><i class='fas fa-indent fa-lg ace_control' title=\"".$text['label-toggle_indent_guides']."\" onclick=\"toggle_option('indenting');\"></i></td>\n";
+		echo "				<td valign='middle' style='padding-left: 6px;'><i class='fas fa-search fa-lg ace_control' title=\"".$text['label-find_replace']."\" onclick=\"editor.execCommand('replace');\"></i></td>\n";
+		echo "				<td valign='middle' style='padding-left: 6px;'><i class='fas fa-chevron-down fa-lg ace_control' title=\"".$text['label-go_to_line']."\" onclick=\"editor.execCommand('gotoline');\"></i></td>\n";
+		echo "				<td valign='middle' style='padding-left: 15px;'>\n";
+		echo "					<select id='size' class='formfld' onchange=\"document.getElementById('editor').style.fontSize = this.options[this.selectedIndex].value; focus_editor();\">\n";
+		$sizes = explode(',','9px,10px,11px,12px,14px,16px,18px,20px');
+		if (!in_array($setting_size, $sizes)) {
+			echo "					<option value='".$setting_size."'>".escape($setting_size)."</option>\n";
+			echo "					<option value='' disabled='disabled'></option>\n";
+		}
+		foreach ($sizes as $size) {
+			$selected = $size == $setting_size ? 'selected' : null;
+			echo "					<option value='".$size."' ".$selected.">".escape($size)."</option>\n";
+		}
+		echo "					</select>\n";
+		echo "				</td>\n";
+		echo "				<td valign='middle' style='padding-left: 4px; padding-right: 0px;'>\n";
+		$themes['Light']['chrome']= 'Chrome';
+		$themes['Light']['clouds']= 'Clouds';
+		$themes['Light']['crimson_editor']= 'Crimson Editor';
+		$themes['Light']['dawn']= 'Dawn';
+		$themes['Light']['dreamweaver']= 'Dreamweaver';
+		$themes['Light']['eclipse']= 'Eclipse';
+		$themes['Light']['github']= 'GitHub';
+		$themes['Light']['iplastic']= 'IPlastic';
+		$themes['Light']['solarized_light']= 'Solarized Light';
+		$themes['Light']['textmate']= 'TextMate';
+		$themes['Light']['tomorrow']= 'Tomorrow';
+		$themes['Light']['xcode']= 'XCode';
+		$themes['Light']['kuroir']= 'Kuroir';
+		$themes['Light']['katzenmilch']= 'KatzenMilch';
+		$themes['Light']['sqlserver']= 'SQL Server';
+		$themes['Dark']['ambiance']= 'Ambiance';
+		$themes['Dark']['chaos']= 'Chaos';
+		$themes['Dark']['clouds_midnight']= 'Clouds Midnight';
+		$themes['Dark']['cobalt']= 'Cobalt';
+		$themes['Dark']['idle_fingers']= 'idle Fingers';
+		$themes['Dark']['kr_theme']= 'krTheme';
+		$themes['Dark']['merbivore']= 'Merbivore';
+		$themes['Dark']['merbivore_soft']= 'Merbivore Soft';
+		$themes['Dark']['mono_industrial']= 'Mono Industrial';
+		$themes['Dark']['monokai']= 'Monokai';
+		$themes['Dark']['pastel_on_dark']= 'Pastel on dark';
+		$themes['Dark']['solarized_dark']= 'Solarized Dark';
+		$themes['Dark']['terminal']= 'Terminal';
+		$themes['Dark']['tomorrow_night']= 'Tomorrow Night';
+		$themes['Dark']['tomorrow_night_blue']= 'Tomorrow Night Blue';
+		$themes['Dark']['tomorrow_night_bright']= 'Tomorrow Night Bright';
+		$themes['Dark']['tomorrow_night_eighties']= 'Tomorrow Night 80s';
+		$themes['Dark']['twilight']= 'Twilight';
+		$themes['Dark']['vibrant_ink']= 'Vibrant Ink';
+		echo "					<select id='theme' class='formfld' onchange=\"editor.setTheme('ace/theme/' + this.options[this.selectedIndex].value); focus_editor();\">\n";
+		foreach ($themes as $optgroup => $theme) {
+			echo "					<optgroup label='".$optgroup."'>\n";
+			foreach ($theme as $value => $label) {
+				$selected = strtolower($label) == strtolower($setting_theme) ? 'selected' : null;
+				echo "					<option value='".$value."' ".$selected.">".escape($label)."</option>\n";
+			}
+			echo "					</optgroup>\n";
+		}
+		echo "					</select>\n";
+		echo "				</td>\n";
+		echo "			</tr>\n";
+		echo "		</table>\n";
+
+		echo "	</td>\n";
+		echo "</tr>\n";
+		echo "</table>\n";
+
+		echo "<script type='text/javascript' src='".PROJECT_PATH."/resources/ace/ace.js' charset='utf-8'></script>\n";
+		echo "<script type='text/javascript'>\n";
+
+		//load editor
+		echo "	var editor = ace.edit('editor');\n";
+		echo "	editor.setOptions({\n";
+		echo "		mode: 'ace/mode/json',\n";
+		echo "		theme: 'ace/theme/'+document.getElementById('theme').options[document.getElementById('theme').selectedIndex].value,\n";
+		echo "		selectionStyle: 'text',\n";
+		echo "		cursorStyle: 'smooth',\n";
+		echo "		showInvisibles: ".$setting_invisibles.",\n";
+		echo "		displayIndentGuides: ".$setting_indenting.",\n";
+		echo "		showLineNumbers: ".$setting_numbering.",\n";
+		echo "		showGutter: true,\n";
+		echo "		scrollPastEnd: true,\n";
+		echo "		fadeFoldWidgets: ".$setting_numbering.",\n";
+		echo "		showPrintMargin: false,\n";
+		echo "		highlightGutterLine: false,\n";
+		echo "		useSoftTabs: false\n";
+		echo "		});\n";
+		echo "	document.getElementById('editor').style.fontSize='".$setting_size."';\n";
+		//echo "focus_editor();\n";
+
+		//load value into editor
+		echo "	load_value();\n";
+
+		//remove certain keyboard shortcuts
+		echo "	editor.commands.bindKey('Ctrl-T', null);\n"; //disable transpose letters - prefer new browser tab
+		echo "	editor.commands.bindKey('Ctrl-F', null);\n"; //disable find - control broken with bootstrap
+		echo "	editor.commands.bindKey('Ctrl-H', null);\n"; //disable replace - control broken with bootstrap
+
+		echo "</script>\n";
 	}
 
 //include the footer

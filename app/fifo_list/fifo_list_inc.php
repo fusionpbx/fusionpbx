@@ -46,9 +46,9 @@
 
 //show the list
 	$switch_cmd = 'fifo list';
-	$fp = event_socket_create();
-	if ($fp) {
-		$xml_str = trim(event_socket_request($fp, 'api '.$switch_cmd));
+	$esl = event_socket::create();
+	if ($esl->is_connected()) {
+		$xml_str = trim(event_socket::api($switch_cmd));
 		try {
 			$xml = new SimpleXMLElement($xml_str);
 		}

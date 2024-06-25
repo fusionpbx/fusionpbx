@@ -75,7 +75,7 @@ if (!$included) {
 			if (permission_exists('fax_extension_view_domain')) {
 				//show all fax extensions
 				$sql = "select fax_uuid, fax_extension, fax_caller_id_name, fax_caller_id_number, ";
-				$sql .= "fax_toll_allow, accountcode, fax_send_greeting ";
+				$sql .= "fax_toll_allow, accountcode ";
 				$sql .= "from v_fax ";
 				$sql .= "where domain_uuid = :domain_uuid ";
 				$sql .= "and fax_uuid = :fax_uuid ";
@@ -85,7 +85,7 @@ if (!$included) {
 			else {
 				//show only assigned fax extensions
 				$sql = "select f.fax_uuid, f.fax_extension, f.fax_caller_id_name, f.fax_caller_id_number, ";
-				$sql .= "f.fax_toll_allow, f.accountcode, f.fax_send_greeting ";
+				$sql .= "f.fax_toll_allow, f.accountcode ";
 				$sql .= "from v_fax as f, v_fax_users as u ";
 				$sql .= "where f.fax_uuid = u.fax_uuid ";
 				$sql .= "and f.domain_uuid = :domain_uuid ";
@@ -105,7 +105,6 @@ if (!$included) {
 				$fax_caller_id_number = $row["fax_caller_id_number"];
 				$fax_toll_allow = $row["fax_toll_allow"];
 				$fax_accountcode = $row["accountcode"];
-				$fax_send_greeting = $row["fax_send_greeting"];
 			}
 			else {
 				if (!permission_exists('fax_extension_view_domain')) {
@@ -474,6 +473,7 @@ if (!function_exists('fax_split_dtmf')) {
 
 			//field labels
 			$pdf->SetFont($pdf_font, "B", 12);
+			$pdf->Text($x + 0.5, $y + 1.7, strtoupper($text['label-sent']).":");
 			if ($fax_recipient != '' || sizeof($fax_numbers) > 0) {
 				$pdf->Text($x + 0.5, $y + 2.0, strtoupper($text['label-fax-recipient']).":");
 			}
@@ -489,6 +489,12 @@ if (!function_exists('fax_split_dtmf')) {
 
 			//field values
 			$pdf->SetFont($pdf_font, "", 12);
+			$pdf->SetXY($x + 2.0, $y + 1.65);
+			if ($_REQUEST['submit'] != '' && $_REQUEST['submit'] != 'preview') {
+				$time_zone = isset($_SESSION['domain']['time_zone']['name']) ? $_SESSION['domain']['time_zone']['name'] : date_default_timezone_get();
+				$date = new DateTime('now', new DateTimeZone($time_zone) );
+				$pdf->Write(0.3, $date->format('d M Y'));
+			}
 			$pdf->SetXY($x + 2.0, $y + 1.95);
 			if ($fax_recipient != '') {
 				$pdf->Write(0.3, $fax_recipient);
@@ -1101,12 +1107,15 @@ if (!$included) {
 		echo "</tr>\n";
 
 		if (permission_exists('fax_subject')) {
+			$cover_subject_required = $setting->get('fax','cover_subject_required') ?? '';
+			$class = ($cover_subject_required == 'true') ? 'vncellreq' : 'vncell';
+			$required = ($cover_subject_required == 'true') ? 'required' : '';
 			echo "<tr>\n";
-			echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+			echo "<td class='".$class."' valign='top' align='left' nowrap>\n";
 			echo "	".$text['label-fax-subject']."\n";
 			echo "</td>\n";
 			echo "<td class='vtable' align='left'>\n";
-			echo "	<input type='text' name='fax_subject' class='formfld' style='' value=''>\n";
+			echo "	<input type='text' name='fax_subject' class='formfld' ".$required." style='' value=''>\n";
 			echo "	<br />\n";
 			echo "	".$text['description-fax-subject']."\n";
 			echo "</td>\n";
@@ -1114,12 +1123,15 @@ if (!$included) {
 		}
 
 		if (permission_exists('fax_message')) {
+			$cover_message_required = $setting->get('fax','cover_message_required') ?? '';
+			$class = ($cover_message_required == 'true') ? 'vncellreq' : 'vncell';
+			$required = ($cover_message_required == 'true') ? 'required' : '';
 			echo "<tr>\n";
-			echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+			echo "<td class='".$class."' valign='top' align='left' nowrap>\n";
 			echo "		".$text['label-fax-message']."\n";
 			echo "</td>\n";
 			echo "<td class='vtable' align='left'>\n";
-			echo "	<textarea type='text' name='fax_message' class='formfld' style='width: 65%; height: 175px;'></textarea>\n";
+			echo "	<textarea type='text' name='fax_message' class='formfld' ".$required." style='width: 65%; height: 175px;'></textarea>\n";
 			echo "<br />\n";
 			echo "	".$text['description-fax-message']."\n";
 			echo "</td>\n";

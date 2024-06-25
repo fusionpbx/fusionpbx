@@ -66,8 +66,8 @@ if (!class_exists('install')) {
 				$cache_location = '/var/cache/fusionpbx';
 				break;
 			case "WIN":
-				$config_path = $_SERVER["DOCUMENT_ROOT"].DIRECTORY_SEPARATOR.'resources';
-				$config_file = $config_path.DIRECTORY_SEPARATOR.'config.conf';
+				$system_drive = getenv('SystemDrive');
+				$config_path = $system_drive . DIRECTORY_SEPARATOR . 'ProgramData' . DIRECTORY_SEPARATOR . 'fusionpbx' ;
 				$config_file = $config_path.DIRECTORY_SEPARATOR.'config.conf';
 				$document_root = $_SERVER["DOCUMENT_ROOT"];
 

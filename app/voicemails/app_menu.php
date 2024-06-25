@@ -7,6 +7,7 @@
 	$apps[$x]['menu'][$y]['title']['de-at'] = "Sprachnachrichten";
 	$apps[$x]['menu'][$y]['title']['de-ch'] = "Sprachnachrichten";
 	$apps[$x]['menu'][$y]['title']['de-de'] = "Sprachnachrichten";
+	$apps[$x]['menu'][$y]['title']['el-gr'] = "Τηλεφωνητής";
 	$apps[$x]['menu'][$y]['title']['es-cl'] = "Mensaje de voz";
 	$apps[$x]['menu'][$y]['title']['es-mx'] = "Mensaje de voz";
 	$apps[$x]['menu'][$y]['title']['fr-ca'] = "Messagerie vocale";
@@ -21,6 +22,7 @@
 	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Голосовая почта";
 	$apps[$x]['menu'][$y]['title']['sv-se'] = "Röstbrevlåda";
 	$apps[$x]['menu'][$y]['title']['uk-ua'] = "Голосова пошта";
+	$apps[$x]['menu'][$y]['title']['tr-tr'] = "Sesli mesaj";
 	$apps[$x]['menu'][$y]['title']['zh-cn'] = "语音信箱";
 	$apps[$x]['menu'][$y]['title']['ja-jp'] = "ボイスメール";
 	$apps[$x]['menu'][$y]['title']['ko-kr'] = "음성사서함";

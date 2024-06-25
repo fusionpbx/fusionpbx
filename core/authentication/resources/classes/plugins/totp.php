@@ -57,6 +57,7 @@ class plugin_totp {
 			$settings['theme']['login_logo_width'] = !empty($_SESSION['theme']['login_logo_width']['text']) ? $_SESSION['theme']['login_logo_width']['text'] : 'auto; max-width: 300px';
 			$settings['theme']['login_logo_height'] = !empty($_SESSION['theme']['login_logo_height']['text']) ? $_SESSION['theme']['login_logo_height']['text'] : 'auto; max-height: 300px';
 			$settings['theme']['message_delay'] = isset($_SESSION['theme']['message_delay']) ? 1000 * (float) $_SESSION['theme']['message_delay'] : 3000;
+			$settings['theme']['background_video'] = isset($_SESSION['theme']['background_video'][0]) ? $_SESSION['theme']['background_video'][0] : null;
 
 		//get the username
 			if (isset($_SESSION["username"])) {
@@ -218,6 +219,7 @@ class plugin_totp {
 				$view->assign("login_logo_height", $settings['theme']['login_logo_height']);
 				$view->assign("login_logo_source", $settings['theme']['logo']);
 				$view->assign("favicon", $settings['theme']['favicon']);
+				$view->assign("background_video", $settings['theme']['background_video']);
 				if (!empty($_SESSION['username'])) {
 					$view->assign("username", $_SESSION['username']);
 					$view->assign("button_cancel", $text['button-cancel']);

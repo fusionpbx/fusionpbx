@@ -142,8 +142,8 @@ if ($domains_processed == 1) {
 		//save_phrases_xml();
 
 	//delete the phrase from memcache
-		$fp = event_socket_create();
-		if ($fp) {
+		$esl = event_socket::create();
+		if ($esl->is_connected()) {
 			//get phrase languages
 			$sql = "select distinct phrase_language from v_phrases order by phrase_language asc ";
 			$database = new database;
@@ -158,7 +158,7 @@ if ($domains_processed == 1) {
 			}
 			unset($sql, $result, $row);
 		}
-		unset($fp);
+		unset($esl);
 
 }
 

@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2023
+	Portions created by the Initial Developer are Copyright (C) 2008-2024
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -60,13 +60,12 @@ if (is_array($activity)) {
 }
 if (!empty($groups)) {
 	$groups = array_unique($groups);
-	sort($groups); 
+	sort($groups);
 }
 
 //get the valet info
-$fp = event_socket_create();
-if ($fp) {
-	$valet_info = event_socket_request($fp, 'api valet_info park@'.$_SESSION['domain_name']);
+$valet_info = event_socket::api('valet_info park@'.$_SESSION['domain_name']);
+if ($valet_info !== false) {
 
 	//get an array of the valet call uuid and park numbers
 	if (isset($valet_info)) {
@@ -78,10 +77,10 @@ if ($fp) {
 	//unset($_SESSION['valet']);
 	foreach($valet_matches as $row) {
 		if (!isset($_SESSION['valet']['uuid']['caller_id_name'])) {
-			$_SESSION['valet'][$row[1]]['caller_id_name'] = event_socket_request($fp, 'api uuid_getvar '.$row[1].' caller_id_name');
+			$_SESSION['valet'][$row[1]]['caller_id_name'] = event_socket::api('uuid_getvar '.$row[1].' caller_id_name');
 		}
 		if (!isset($_SESSION['valet']['uuid']['caller_id_number'])) {
-			$_SESSION['valet'][$row[1]]['caller_id_number'] = event_socket_request($fp, 'api uuid_getvar '.$row[1].' caller_id_number');
+			$_SESSION['valet'][$row[1]]['caller_id_number'] = event_socket::api('uuid_getvar '.$row[1].' caller_id_number');
 		}
 	}
 
@@ -155,8 +154,8 @@ echo "		</td>\n";
 echo "		<td valign='top' align='right' width='50%' nowrap>\n";
 echo "			<table cellpadding='0' cellspacing='0' border='0'>\n";
 echo "				<tr>\n";
-echo "					<td valign='middle' nowrap='nowrap' style='padding-right: 15px' id='refresh_state'>\n";
-echo "						<img src='resources/images/refresh_active.gif' style='width: 16px; height: 16px; border: none; margin-top: 3px; cursor: pointer;' onclick='refresh_stop();' alt=\"".$text['label-refresh_pause']."\" title=\"".$text['label-refresh_pause']."\">\n";
+echo "					<td valign='middle' nowrap='nowrap' style='padding-right: 15px'>\n";
+echo "						<span id='refresh_state'>".button::create(['type'=>'button','title'=>$text['label-refresh_pause'],'icon'=>'sync-alt fa-spin','onclick'=>'refresh_stop()'])."</span>";
 echo "					</td>\n";
 
 if (permission_exists('operator_panel_eavesdrop')) {
@@ -165,8 +164,10 @@ if (permission_exists('operator_panel_eavesdrop')) {
 		echo "				<input type='hidden' id='eavesdrop_dest' value=\"".(($_REQUEST['eavesdrop_dest'] == '') ? $_SESSION['user']['extension'][0]['destination'] : escape($_REQUEST['eavesdrop_dest']))."\">\n";
 		echo "				<img src='resources/images/eavesdrop.png' style='width: 12px; height: 12px; border: none; margin: 0px 5px; cursor: help;' title='".$text['description-eavesdrop_destination']."' align='absmiddle'>\n";
 		echo "				<select class='formfld' style='margin-right: 5px;' align='absmiddle' onchange=\"document.getElementById('eavesdrop_dest').value = this.options[this.selectedIndex].value; refresh_start();\" onfocus='refresh_stop();'>\n";
-		if (is_array($_SESSION['user']['extensions'])) foreach ($_SESSION['user']['extensions'] as $user_extension) {
-			echo "				<option value='".escape($user_extension)."' ".(($_REQUEST['eavesdrop_dest'] == $user_extension) ? "selected" : null).">".escape($user_extension)."</option>\n";
+		if (is_array($_SESSION['user']['extensions'])) {
+			foreach ($_SESSION['user']['extensions'] as $user_extension) {
+				echo "			<option value='".escape($user_extension)."' ".(($_REQUEST['eavesdrop_dest'] == $user_extension) ? "selected" : null).">".escape($user_extension)."</option>\n";
+			}
 		}
 		echo "				</select>\n";
 	}
@@ -228,7 +229,7 @@ if (is_array($activity)) {
 		unset($block);
 
 		//filter by group, if defined
-		if ($_REQUEST['group'] != '' && substr_count($ext['call_group'], $_REQUEST['group']) == 0 && !in_array($extension, $_SESSION['user']['extensions'])) { continue; }
+		if ($_REQUEST['group'] != '' && substr_count($ext['call_group'] ?? '', $_REQUEST['group']) == 0 && !in_array($extension, $_SESSION['user']['extensions'])) { continue; }
 
 		//filter by extension or name, if defined
 		if (!empty($_REQUEST['filter'])) {
@@ -240,6 +241,11 @@ if (is_array($activity)) {
 				)
 				) { continue; }
 		}
+
+		//set the default values
+		$call_name = '';
+		$call_number = '';
+		$dir_icon = '';
 
 		//check if feature code being called
 		$format_number = (!empty($ext['dest']) && substr($ext['dest'], 0, 1) == '*') ? false : true;
@@ -292,14 +298,20 @@ if (is_array($activity)) {
 		else if ($ext['state'] == 'CS_EXCHANGE_MEDIA' && $ext['callstate'] == 'ACTIVE' && $ext['direction'] == 'inbound') {
 			//valet park
 			$ext_state = 'active';
+			if (!empty($ext['dest'])) {
+				if (!empty($activity[$ext['dest']])) {
 					$call_name = $activity[$ext['dest']]['effective_caller_id_name'];
-					$call_number = format_phone($ext['dest']);
+				}
+			}
+			$call_number = format_phone($ext['dest']);
 		}
 		else if ($ext['state'] == 'CS_SOFT_EXECUTE' && $ext['callstate'] == 'ACTIVE' && $ext['direction'] == 'outbound') {
 			//valet park
 			$ext_state = 'active';
-					$call_name = $activity[$ext['dest']]['effective_caller_id_name'];
-					$call_number = format_phone($ext['dest']);
+			if (empty($ext['dest']) && empty($activity[$ext['dest']])) {
+				$call_name = $activity[$ext['dest'] ?? '']['effective_caller_id_name'];
+			}
+			$call_number = format_phone($ext['dest'] ?? '');
 		}
 		else if ($ext['state'] == 'CS_CONSUME_MEDIA' || $ext['state'] == 'CS_EXCHANGE_MEDIA') {
 			if ($ext['state'] == 'CS_CONSUME_MEDIA' && $ext['callstate'] == 'RINGING' && $ext['direction'] == 'outbound') {
@@ -318,7 +330,7 @@ if (is_array($activity)) {
 				$ext_state = 'held';
 			}
 			$dir_icon = 'inbound';
-			$call_name = $activity[$ext['cid_num']]['effective_caller_id_name'];
+			$call_name = $activity[$ext['cid_num']]['effective_caller_id_name'] ?? '';
 			$call_number = format_phone($ext['cid_num']);
 		}
 		else {
@@ -335,12 +347,18 @@ if (is_array($activity)) {
 				}
 			}
 		}
-		if ($found_count > 0) {	
+		if ($found_count > 0) {
 			//determine block style by state (if any) and register status
-			$style = !empty($ext_state) ? "op_ext op_state_".$ext_state : "op_ext";
+			$css_class = !empty($ext_state) ? "op_ext op_state_".$ext_state : "op_ext";
 		}
 		else {
-			$style = "off_ext";	
+			//unregistered extension
+			if (!empty($_SESSION['operator_panel']['show_unregistered']['boolean']) && $_SESSION['operator_panel']['show_unregistered']['boolean'] == 'true') {
+				$css_class = "ur_ext";
+			}
+			else {
+				continue;
+			}
 		}
 		unset($extension_number, $found_count, $array);
 
@@ -348,7 +366,7 @@ if (is_array($activity)) {
 		if ($ext['uuid'] == $ext['call_uuid'] && empty($ext['variable_bridge_uuid'])) { // transfer an outbound internal call
 			$call_identifier = $activity[$call_number ?? null]['uuid'] ?? null;
 		}
-		else if (($ext['variable_call_direction'] == 'outbound' || $ext['variable_call_direction'] == 'local') && $ext['variable_bridge_uuid'] != '') { // transfer an outbound external call
+		else if ((!empty($ext['variable_call_direction']) && ($ext['variable_call_direction'] == 'outbound' || $ext['variable_call_direction'] == 'local')) && !empty($ext['variable_bridge_uuid'])) { // transfer an outbound external call
 			$call_identifier = $ext['variable_bridge_uuid'];
 		}
 		else {
@@ -429,15 +447,15 @@ if (is_array($activity)) {
 		}
 
 		//build the list of extensions
-		$block = "<div id='".escape($extension)."' class='".$style."' ".(($_GET['vd_ext_from'] == $extension || $_GET['vd_ext_to'] == $extension) ? "style='border-style: dotted;'" : null)." ".((!empty($ext_state) && $ext_state != 'active' && $ext_state != 'ringing') ? "ondrop='drop(event, this.id);' ondragover='allowDrop(event, this.id);' ondragleave='discardDrop(event, this.id);'" : null).">"; // DRAG TO
-		$block .= "<table class='".$style."'>\n";
+		$block = "<div id='".escape($extension)."' class='".$css_class."' ".(($_GET['vd_ext_from'] == $extension || $_GET['vd_ext_to'] == $extension) ? "style='border-style: dotted;'" : null)." ".(empty($ext_state) || ($ext_state != 'active' && $ext_state != 'ringing') ? "ondrop='drop(event, this.id);' ondragover='allowDrop(event, this.id);' ondragleave='discardDrop(event, this.id);'" : null).">"; // DRAG TO
+		$block .= "<table class='".$css_class."'>\n";
 		$block .= "	<tr>\n";
 		$block .= "		<td class='op_ext_icon'>\n";
 		$block .= "			<span name='".escape($extension)."'>\n"; // DRAG FROM
 		$block .= 				"<img id='".escape($call_identifier)."' class='op_ext_icon' src='resources/images/status_".$status_icon.".png' title='".$status_hover."' ".(($draggable) ? "draggable='true' ondragstart=\"drag(event, this.parentNode.getAttribute('name'));\" onclick=\"virtual_drag('".escape($call_identifier)."', '".escape($extension)."');\"" : "onfocus='this.blur();' draggable='false' style='cursor: not-allowed;'").">\n";
 		$block .= 			"</span>\n";
 		$block .= "		</td>\n";
-		$block .= "		<td class='op_ext_info ".$style."'>\n";
+		$block .= "		<td class='op_ext_info ".$css_class."'>\n";
 		if ($dir_icon ?? '') {
 			$block .= "			<img src='resources/images/".$dir_icon.".png' align='right' style='margin-top: 3px; margin-right: 1px; width: 12px; height: 12px; cursor: help;' draggable='false' alt=\"".$text['label-call_direction']."\" title=\"".$text['label-call_direction']."\">\n";
 		}
@@ -474,7 +492,7 @@ if (is_array($activity)) {
 				if (empty($ext['variable_bridge_uuid']) && $ext_state == 'ringing') {
 					$call_identifier_hangup_uuid = $ext['uuid'];
 				}
-				else if ($dir_icon == 'outbound') {
+				elseif ($dir_icon == 'outbound') {
 					$call_identifier_hangup_uuid = $ext['uuid'];
 				}
 				else {
@@ -553,19 +571,19 @@ if (sizeof($user_extensions) > 0) {
 		foreach ($valet_array as $row) {
 			$extension = $row['extension'];
 			$ext_state = 'active';
-			$style = "op_ext op_valet_park_active";
+			$css_class = "op_ext op_valet_park_active";
 			$draggable = false;
 
 			//build the list of park extensions
-			$valet_block .= "<div id='".escape($extension)."' class='".$style."' ".(($_GET['vd_ext_from'] == $extension || $_GET['vd_ext_to'] == $extension) ? "style='border-style: dotted;'" : null)." ondrop='drop(event, this.id);' ondragover='allowDrop(event, this.id);' ondragleave='discardDrop(event, this.id);'>\n"; // DRAG TO
-			$valet_block .= "<table class='".$style."'>\n";
+			$valet_block .= "<div id='".escape($extension)."' class='".$css_class."' ".(($_GET['vd_ext_from'] == $extension || $_GET['vd_ext_to'] == $extension) ? "style='border-style: dotted;'" : null)." ondrop='drop(event, this.id);' ondragover='allowDrop(event, this.id);' ondragleave='discardDrop(event, this.id);'>\n"; // DRAG TO
+			$valet_block .= "<table class='".$css_class."'>\n";
 			$valet_block .= "	<tr>\n";
 			$valet_block .= "		<td class='op_ext_icon'>\n";
 			$valet_block .= "			<span name='".escape($extension)."'>"; // DRAG FROM
 			$valet_block .= 				"<img id='".escape($call_identifier)."' class='op_ext_icon' src='resources/images/status_".$status_icon.".png' title='".$status_hover."' ".(($draggable) ? "draggable='true' ondragstart=\"drag(event, this.parentNode.getAttribute('name'));\" onclick=\"virtual_drag('".escape($call_identifier)."', '".escape($extension)."');\"" : "onfocus='this.blur();' draggable='false' style='cursor: not-allowed;'").">\n";
 			$valet_block .= 			"</span>\n";
 			$valet_block .= "		</td>\n";
-			$valet_block .= "		<td class='op_ext_info ".$style."'>\n";
+			$valet_block .= "		<td class='op_ext_info ".$css_class."'>\n";
 			if ($dir_icon != '') {
 				$valet_block .= "			<img src='resources/images/".$dir_icon.".png' align='right' style='margin-top: 3px; margin-right: 1px; width: 12px; height: 12px; cursor: help;' draggable='false' alt=\"".$text['label-call_direction']."\" title=\"".$text['label-call_direction']."\">\n";
 			}
@@ -641,11 +659,10 @@ if (sizeof($user_extensions) > 0) {
 if (sizeof($grouped_extensions) > 0) {
 	//alphabetical order
 	ksort($grouped_extensions);
-	
+
 	//loop through the groups
 	foreach ($grouped_extensions as $group => $extensions) {
 		echo "<div class=\"heading\"><strong>".ucwords(escape($group))."</strong></div>\n";
-		echo "<br><br>\n";
 		echo "<table width='100%'><tr><td>\n";
 		foreach ($extensions as $ext_block) {
 			echo $ext_block;
@@ -656,8 +673,7 @@ if (sizeof($grouped_extensions) > 0) {
 
 //show the other extensions
 if (sizeof($other_extensions) > 0) {
-	echo "<div class=\"heading\"><strong>".$text['label-other_extensions']."</strong></div>\n";
-	echo "<br><br>\n";
+	//echo "<div class=\"heading\"><strong>".$text['label-other_extensions']."</strong></div>\n";
 	echo "<table width='100%'><tr><td>\n";
 	foreach ($other_extensions as $ext_block) {
 		echo $ext_block;

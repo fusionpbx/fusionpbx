@@ -44,8 +44,14 @@
 	$device_firmware_version = '';
 	$device_template ='';
 
-//include the device class
-	require_once "app/devices/resources/classes/device.php";
+//get the domain uuid
+	$domain_uuid = $_SESSION['domain_uuid'] ?? '';
+
+//initialize the database object
+	$database = database::new();
+
+//initialize the settigns object
+	$settings = new settings(['database' => $database, 'domain_uuid' => $domain_uuid]);
 
 //action add or update
 	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
@@ -56,12 +62,11 @@
 		$action = "add";
 	}
 
-//get total device count from the database, check limit, if defined
+//get the total device count from the database, check the limit, if defined
 	if ($action == 'add') {
 		if (!empty($_SESSION['limit']['devices']['numeric']) && $_SESSION['limit']['devices']['numeric']) {
 			$sql = "select count(*) from v_devices where domain_uuid = :domain_uuid ";
 			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-			$database = new database;
 			$total_devices = $database->select($sql, $parameters, 'column');
 			if ($total_devices >= $_SESSION['limit']['devices']['numeric']) {
 				message::add($text['message-maximum_devices'].' '.$_SESSION['limit']['devices']['numeric'], 'negative');
@@ -101,7 +106,6 @@
 				$sql = "select device_address from v_devices ";
 				$sql .= "where device_uuid = :device_uuid ";
 				$parameters['device_uuid'] = $device_uuid;
-				$database = new database;
 				$row = $database->select($sql, $parameters, 'row');
 				if (is_array($row) && @sizeof($row) != 0) {
 					$device_address = $row["device_address"];
@@ -224,7 +228,6 @@
 					$sql .= " and d1.device_uuid <> :device_uuid ";
 				}
 				$parameters['device_address'] = $device_address;
-				$database = new database;
 				$domain_name = $database->select($sql, $parameters, 'column');
 				if ($domain_name != '') {
 					$message = $text['message-duplicate'].(if_group("superadmin") && $_SESSION["domain_name"] != $domain_name ? ": ".$domain_name : null);
@@ -282,7 +285,7 @@
 					if (permission_exists('device_template')) {
 						$array['devices'][0]['device_template'] = $device_template;
 					}
-					if (permission_exists('device_profile_edit')) {
+					if (permission_exists('device_profile_view')) {
 						$array['devices'][0]['device_profile_uuid'] = is_uuid($device_profile_uuid) ? $device_profile_uuid : null;
 					}
 					if (permission_exists('device_description')) {
@@ -436,7 +439,6 @@
 					}
 
 				//save the device
-					$database = new database;
 					$database->app_name = 'devices';
 					$database->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
 					$database->save($array);
@@ -479,7 +481,7 @@
 
 				//write the provision files
 					if (!empty($_SESSION['provision']['path']['text'])) {
-						$prov = new provision;
+						$prov = new provision(['settings' => $settings]);
 						$prov->domain_uuid = $domain_uuid;
 						$response = $prov->write();
 					}
@@ -507,7 +509,7 @@
 		$sql = "select * from v_devices ";
 		$sql .= "where device_uuid = :device_uuid ";
 		$parameters['device_uuid'] = $device_uuid;
-		$database = new database;
+		
 		$row = $database->select($sql, $parameters, 'row');
 		if (is_array($row) && @sizeof($row) != 0) {
 			$device_address = $row["device_address"];
@@ -556,7 +558,6 @@
 		$sql .= "and device_uuid = :device_uuid ";
 		$parameters['domain_uuid'] = $domain_uuid;
 		$parameters['device_uuid'] = $device_uuid_alternate;
-		$database = new database;
 		$device_alternate = $database->select($sql, $parameters, 'all');
 		unset($sql, $parameters);
 	}
@@ -566,7 +567,7 @@
 	$sql .= "where device_uuid = :device_uuid ";
 	$sql .= "order by cast(line_number as int) asc ";
 	$parameters['device_uuid'] = $device_uuid ?? null;
-	$database = new database;
+	
 	$device_lines = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
@@ -606,26 +607,38 @@
 	$sql .= "else 100 end, ";
 	$sql .= $db_type == "mysql" ? "device_key_id asc " : "cast(device_key_id as numeric) asc ";
 	$parameters['device_uuid'] = $device_uuid ?? null;
-	$database = new database;
 	$device_keys = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
-	$device_keys[$x]['device_key_category'] = '';
-	$device_keys[$x]['device_key_id'] = '';
-	$device_keys[$x]['device_key_type'] = '';
-	$device_kesy[$x]['device_key_subtype'] = '';
-	$device_keys[$x]['device_key_line'] = '';
-	$device_keys[$x]['device_key_value'] = '';
-	$device_keys[$x]['device_key_extension'] = '';
-	$device_keys[$x]['device_key_label'] = '';
-	$device_keys[$x]['device_key_icon'] = '';
+//add empty device key row(s)
+	if (!is_uuid($device_uuid)) {
+		$rows = $_SESSION['devices']['key_add_rows']['numeric'] ?? 1;
+		$id = 0;
+	}
+	else {
+		$rows = $_SESSION['devices']['key_edit_rows']['numeric'] ?? 1;
+		$id = count($device_keys) + 1;
+	}
+	for ($x = 0; $x < $rows; $x++) {
+		$device_keys[$id]['device_key_category'] = '';
+		$device_keys[$id]['device_key_id'] = '';
+		$device_keys[$id]['device_key_type'] = '';
+		$device_keys[$id]['device_key_subtype'] = '';
+		$device_keys[$id]['device_key_line'] = '';
+		$device_keys[$id]['device_key_value'] = '';
+		$device_keys[$id]['device_key_extension'] = '';
+		$device_keys[$id]['device_key_label'] = '';
+		$device_keys[$id]['device_key_icon'] = '';
+		$id++;
+	}
+	unset($id);
 
 //get the device vendors
 	$sql = "select name ";
 	$sql .= "from v_device_vendors ";
 	$sql .= "where enabled = 'true' ";
 	$sql .= "order by name asc ";
-	$database = new database;
+	
 	$device_vendors = $database->select($sql, null, 'all');
 	unset($sql);
 
@@ -636,7 +649,6 @@
 	$sql .= "and v.enabled = 'true' ";
 	$sql .= "and f.enabled = 'true' ";
 	$sql .= "order by v.name asc, f.type asc ";
-	$database = new database;
 	$vendor_functions = $database->select($sql, null, 'all');
 	unset($sql);
 
@@ -645,14 +657,26 @@
 	$sql .= "where device_uuid = :device_uuid ";
 	$sql .= "order by device_setting_subcategory asc ";
 	$parameters['device_uuid'] = $device_uuid ?? null;
-	$database = new database;
 	$device_settings = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
-	$device_settings[$x]['device_setting_name'] = '';
-	$device_settings[$x]['device_setting_value'] = '';
-	$device_settings[$x]['enabled'] = '';
-	$device_settings[$x]['device_setting_description'] = '';
+//add empty device setting row(s)
+	if (!is_uuid($device_uuid)) {
+		$rows = $_SESSION['devices']['setting_add_rows']['numeric'] ?? 1;
+		$id = 0;
+	}
+	else {
+		$rows = $_SESSION['devices']['setting_edit_rows']['numeric'] ?? 1;
+		$id = count($device_settings) + 1;
+	}
+	for ($x = 0; $x < $rows; $x++) {
+		$device_settings[$id]['device_setting_name'] = '';
+		$device_settings[$id]['device_setting_value'] = '';
+		$device_settings[$id]['device_setting_enabled'] = '';
+		$device_settings[$id]['device_setting_description'] = '';
+		$id++;
+	}
+	unset($id);
 
 //get the users
 	$sql = "select * from v_users ";
@@ -660,7 +684,6 @@
 	$sql .= "and user_enabled = 'true' ";
 	$sql .= "order by username asc ";
 	$parameters['domain_uuid'] = $domain_uuid;
-	$database = new database;
 	$users = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
@@ -757,6 +780,9 @@
 	else if ($device_template == "sipnetic/default") {
 		$qr_code_enabled = true;
 	}
+	else if ($device_template == "acrobits/default") {
+		$qr_code_enabled = true;
+	}
 	else {
 		$qr_code_enabled = false;
 	}
@@ -825,7 +851,7 @@
 					$template = file_get_contents('/var/www/fusionpbx/resources/templates/provision/'.$device_template.'/template.csv');
 				}
 				if (!empty($template)) {
-					$template = str_replace('{$server_address}', $outbound_proxy_primary, $template);
+					$template = str_replace('{$server_address}', $row['server_address'], $template);
 					$template = str_replace('{$user_id}', $row['user_id'], $template);
 					$template = str_replace('{$password}', str_replace(';',';;',$row['password']), $template);
 					$template = str_replace('{$display_name}', ($row['display_name'] ?? $row['user_id']), $template);
@@ -835,6 +861,30 @@
 					$template = str_replace('{$sip_port}', $row['sip_port'], $template);
 					$content = $template;
 					unset($template);
+				}
+			}
+			//build content for acrobits
+			else if ($device_template == 'acrobits/default') {
+				//check custom template provision location
+				if (is_file('/usr/share/fusionpbx/templates/provision/'.$device_template.'/qr_template.txt')) {
+					$template = file_get_contents('/usr/share/fusionpbx/templates/provision/'.$device_template.'/qr_template.txt');
+				}
+				else if (is_file('/var/www/fusionpbx/resources/templates/provision/'.$device_template.'/qr_template.txt')) {
+					$template = file_get_contents('/var/www/fusionpbx/resources/templates/provision/'.$device_template.'/qr_template.txt');
+				}
+
+				//get the provision settings
+					$provision = new settings(["category" => "provision"]);
+					$acrobits_code = $provision->get('provision', 'acrobits_code');
+				
+				if (!empty($template) && isset($acrobits_code)) {
+					$template = str_replace('{$server_address}', $row['server_address'], $template);
+					$template = str_replace('{$user_id}', urlencode($row['user_id']), $template);
+					$template = str_replace('{$password}', urlencode(str_replace(';',';;',$row['password'])), $template);
+					$template = str_replace('{$code}', $acrobits_code, $template);
+					$content = trim($template, "\r\n");
+					unset($template);
+					unset($acrobits_code);
 				}
 			}
 
@@ -954,7 +1004,7 @@
 		}
 		if (permission_exists("device_files")) {
 			//get the template directory
-				$prov = new provision;
+				$prov = new provision(['settings' => $settings]);
 				$prov->domain_uuid = $domain_uuid;
 				$template_dir = $prov->template_dir;
 				$files = glob($template_dir.'/'.$device_template.'/*');
@@ -964,8 +1014,7 @@
 				echo "			<option value=''>".$text['label-download']."</option>\n";
 				foreach ($files as $file) {
 					//format the device address
-						$format = new provision();
-						$address = $format->format_address($device_address, $device_vendor);
+						$address = $prov->format_address($device_address, $device_vendor);
 					//render the file name
 						$file_name = str_replace("{\$address}", $address, basename($file));
 						$file_name = str_replace("{\$mac}", $address, basename($file_name));
@@ -1039,7 +1088,9 @@
 		echo escape(format_device_address($device_address ?? ''));
 	}
 	echo "	<div style='display: none;' id='duplicate_mac_response'></div>\n";
-	echo " ".escape($device_provisioned_ip ?? '')." (<a href='http://".escape($device_provisioned_ip ?? '')."' target='_blank'>http</a>|<a href='https://".escape($device_provisioned_ip ?? '')."' target='_blank'>https</a>)\n";
+	if (!empty($device_provisioned_ip)) {
+		echo " ".escape($device_provisioned_ip ?? '')." (<a href='http://".escape($device_provisioned_ip ?? '')."' target='_blank'>http</a>|<a href='https://".escape($device_provisioned_ip ?? '')."' target='_blank'>https</a>)\n";
+	}
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -1211,18 +1262,8 @@
 					if (empty($row['server_address'])) { $row['server_address'] = $_SESSION['domain_name']; }
 				}
 				if (empty($row['sip_transport'])) { $row['sip_transport'] = $_SESSION['provision']['line_sip_transport']['text']; }
-				if (empty($row['sip_port'])) { $row['sip_port'] = $_SESSION['provision']['line_sip_port']['numeric']; }
+				if (!isset($row['sip_port'])) { $row['sip_port'] = $_SESSION['provision']['line_sip_port']['numeric']; } //used !isset to support a value of 0 as empty the empty function considers a value of 0 as empty.
 				if (empty($row['register_expires'])) { $row['register_expires'] = $_SESSION['provision']['line_register_expires']['numeric']; }
-
-			//determine whether to hide the element
-				if (empty($device_line_uuid) || !is_uuid($device_line_uuid)) {
-					$element['hidden'] = false;
-					$element['visibility'] = "visibility:visible;";
-				}
-				else {
-					$element['hidden'] = true;
-					$element['visibility'] = "visibility:hidden;";
-				}
 
 			//add the primary key uuid
 				if (!empty($row['device_line_uuid']) && is_uuid($row['device_line_uuid'])) {
@@ -1413,7 +1454,6 @@
 		$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 		$sql .= "order by device_profile_name asc ";
 		$parameters['domain_uuid'] = $domain_uuid;
-		$database = new database;
 		$device_profiles = $database->select($sql, $parameters, 'all');
 		if (is_array($device_profiles) && @sizeof($device_profiles) != 0) {
 			echo "	<tr>";
@@ -1490,29 +1530,31 @@
 			}
 			if (is_array($device_keys) && @sizeof($device_keys) > 1 && permission_exists('device_key_delete')) {
 				echo "				<td class='vtable edit_delete_checkbox_all' onmouseover=\"swap_display('delete_label_keys', 'delete_toggle_keys');\" onmouseout=\"swap_display('delete_label_keys', 'delete_toggle_keys');\">\n";
-				echo "					<span id='delete_label_keys'>".$text['label-delete']."</span>\n";
-				echo "					<span id='delete_toggle_keys'><input type='checkbox' id='checkbox_all_keys' name='checkbox_all' onclick=\"edit_all_toggle('keys');\"></span>\n";
+				echo "					<span id='delete_label_keys_".$row['device_key_vendor']."'>".$text['label-delete']."</span>\n";
+				echo "					<span id='delete_toggle_keys_".$row['device_key_vendor']."'><input type='checkbox' id='checkbox_all_keys' name='checkbox_all' onclick=\"edit_all_toggle('keys');\"></span>\n";
 				echo "				</td>\n";
 			}
 			echo "			</tr>\n";
 		}
 
 		$x = 0;
+		$device_keys_generic_header_displayed = false;
 		foreach ($device_keys as $row) {
 			//set the column names
-				if (empty($row['device_key_vendor']) || empty($previous_device_key_vendor) || $previous_device_key_vendor != $row['device_key_vendor']) {
+				if ((empty($row['device_key_vendor']) || empty($previous_device_key_vendor) || $previous_device_key_vendor != $row['device_key_vendor']) && !$device_keys_generic_header_displayed) {
 					echo "			<tr>\n";
 					echo "				<td class='vtable'>".$text['label-device_key_category']."</td>\n";
 					if (permission_exists('device_key_id')) {
 						echo "				<td class='vtable'>".$text['label-device_key_id']."</td>\n";
 					}
 					if ($vendor_count > 1 && !empty($row['device_key_vendor'])) {
-						echo "				<td class='vtable'>".ucwords($row['device_key_vendor'])."</td>\n";
+						echo "				<td class='vtable'><i>".ucwords($row['device_key_vendor'])."</i></td>\n";
 						if ($show_key_subtype) {
 							echo "				<td class='vtable'>".$text['label-device_key_subtype']."</td>\n";
 						}
 					}
 					else {
+						$device_keys_generic_header_displayed = true;
 						echo "				<td class='vtable'>".$text['label-device_key_type']."</td>\n";
 						if ($show_key_subtype) {
 							echo "				<td class='vtable'>".$text['label-device_key_subtype']."</td>\n";
@@ -1529,23 +1571,15 @@
 					if (permission_exists('device_key_icon')) {
 						echo "				<td class='vtable'>".$text['label-device_key_icon']."</td>\n";
 					}
-					if (is_array($device_keys) && @sizeof($device_keys) > 1 && permission_exists('device_key_delete')) {
-						echo "				<td class='vtable edit_delete_checkbox_all' onmouseover=\"swap_display('delete_label_keys', 'delete_toggle_keys');\" onmouseout=\"swap_display('delete_label_keys', 'delete_toggle_keys');\">\n";
-						echo "					<span id='delete_label_keys'>".$text['label-delete']."</span>\n";
-						echo "					<span id='delete_toggle_keys'><input type='checkbox' id='checkbox_all_keys' name='checkbox_all' onclick=\"edit_all_toggle('keys');\"></span>\n";
+					if (is_array($device_keys) && @sizeof($device_keys) > 1 && permission_exists('device_key_delete') && !$device_keys_generic_header_displayed) {
+						echo "				<td class='vtable edit_delete_checkbox_all' onmouseover=\"swap_display('delete_label_keys_".$row['device_key_vendor']."', 'delete_toggle_keys_".$row['device_key_vendor']."');\" onmouseout=\"swap_display('delete_label_keys_".$row['device_key_vendor']."', 'delete_toggle_keys_".$row['device_key_vendor']."');\">\n";
+						echo "					<span id='delete_label_keys_".$row['device_key_vendor']."'>".$text['label-delete']."</span>\n";
+						echo "					<span id='delete_toggle_keys_".$row['device_key_vendor']."'><input type='checkbox' id='checkbox_all_keys_".$row['device_key_vendor']."' name='checkbox_all' onclick=\"edit_all_toggle('keys_".$row['device_key_vendor']."');\"></span>\n";
 						echo "				</td>\n";
 					}
 					echo "			</tr>\n";
 				}
-			//determine whether to hide the element
-				if (empty($device_key_uuid) || !is_uuid($device_key_uuid)) {
-					$element['hidden'] = false;
-					$element['visibility'] = "visibility:visible;";
-				}
-				else {
-					$element['hidden'] = true;
-					$element['visibility'] = "visibility:hidden;";
-				}
+
 			//add the primary key uuid
 				if (!empty($row['device_key_uuid']) && is_uuid($row['device_key_uuid'])) {
 					echo "	<input name='device_keys[".$x."][device_key_uuid]' type='hidden' value=\"".escape($row['device_key_uuid'])."\"/>\n";
@@ -1555,111 +1589,31 @@
 				echo "<td valign='top' align='left' nowrap='nowrap'>\n";
 				echo "	<select class='formfld' name='device_keys[".$x."][device_key_category]'>\n";
 				echo "	<option value=''></option>\n";
-				if ($row['device_key_category'] == "line") {
-					echo "	<option value='line' selected='selected'>".$text['label-line']."</option>\n";
-				}
-				else {
-					echo "	<option value='line'>".$text['label-line']."</option>\n";
-				}
+				echo "	<option value='line' ".($row['device_key_category'] == "line" ? "selected='selected'" : null).">".$text['label-line']."</option>\n";
 				if (empty($row['device_key_vendor']) || $row['device_key_vendor'] !== "polycom") {
-					if ($row['device_key_category'] == "memory") {
-						echo "	<option value='memory' selected='selected'>".$text['label-memory']."</option>\n";
-					}
-					else {
-						echo "	<option value='memory'>".$text['label-memory']."</option>\n";
-					}
+					echo "	<option value='memory' ".($row['device_key_category'] == "memory" ? "selected='selected'" : null).">".$text['label-memory']."</option>\n";
 				}
-				if ($row['device_key_category'] == "programmable") {
-					echo "	<option value='programmable' selected='selected'>".$text['label-programmable']."</option>\n";
-				}
-				else {
-					echo "	<option value='programmable'>".$text['label-programmable']."</option>\n";
-				}
+				echo "	<option value='programmable' ".($row['device_key_category'] == "programmable" ? "selected='selected'" : null).">".$text['label-programmable']."</option>\n";
 				if (empty($row['device_key_vendor']) || $row['device_key_vendor'] !== "polycom") {
 					if (empty($device_vendor)) {
-						if ($row['device_key_category'] == "expansion") {
-							echo "	<option value='expansion' selected='selected'>".$text['label-expansion']." 1</option>\n";
-						}
-						else {
-							echo "	<option value='expansion'>".$text['label-expansion']." 1</option>\n";
-						}
-						if ($row['device_key_category'] == "expansion-2") {
-							echo "	<option value='expansion-2' selected='selected'>".$text['label-expansion']." 2</option>\n";
-						}
-						else {
-							echo "	<option value='expansion-2'>".$text['label-expansion']." 2</option>\n";
-						}
-						if ($row['device_key_category'] == "expansion-3") {
-							echo "	<option value='expansion-3' selected='selected'>".$text['label-expansion']." 3</option>\n";
-						}
-						else {
-							echo "	<option value='expansion-3'>".$text['label-expansion']." 3</option>\n";
-						}
-						if ($row['device_key_category'] == "expansion-4") {
-							echo "	<option value='expansion-4' selected='selected'>".$text['label-expansion']." 4</option>\n";
-						}
-						else {
-							echo "	<option value='expansion-4'>".$text['label-expansion']." 4</option>\n";
-						}
-						if ($row['device_key_category'] == "expansion-5") {
-							echo "	<option value='expansion-5' selected='selected'>".$text['label-expansion']." 5</option>\n";
-						}
-						else {
-							echo "	<option value='expansion-5'>".$text['label-expansion']." 5</option>\n";
-						}
-						if ($row['device_key_category'] == "expansion-6") {
-							echo "	<option value='expansion-6' selected='selected'>".$text['label-expansion']." 6</option>\n";
-						}
-						else {
-							echo "	<option value='expansion-6'>".$text['label-expansion']." 6</option>\n";
-						}
+						echo "	<option value='expansion' ".($row['device_key_category'] == "expansion" ? "selected='selected'" : null).">".$text['label-expansion']." 1</option>\n";
+						echo "	<option value='expansion-2' ".($row['device_key_category'] == "expansion-2" ? "selected='selected'" : null).">".$text['label-expansion']." 2</option>\n";
+						echo "	<option value='expansion-3' ".($row['device_key_category'] == "expansion-3" ? "selected='selected'" : null).">".$text['label-expansion']." 3</option>\n";
+						echo "	<option value='expansion-4' ".($row['device_key_category'] == "expansion-4" ? "selected='selected'" : null).">".$text['label-expansion']." 4</option>\n";
+						echo "	<option value='expansion-5' ".($row['device_key_category'] == "expansion-5" ? "selected='selected'" : null).">".$text['label-expansion']." 5</option>\n";
+						echo "	<option value='expansion-6' ".($row['device_key_category'] == "expansion-6" ? "selected='selected'" : null).">".$text['label-expansion']." 6</option>\n";
 					}
 					else {
 						if ((!empty($device_vendor) && strtolower($device_vendor) == "cisco") || (!empty($row['device_key_vendor']) && strtolower($row['device_key_vendor']) == "yealink")) {
-							if ($row['device_key_category'] == "expansion-1" || $row['device_key_category'] == "expansion") {
-								echo "	<option value='expansion-1' selected='selected'>".$text['label-expansion']." 1</option>\n";
-							}
-							else {
-								echo "	<option value='expansion-1'>".$text['label-expansion']." 1</option>\n";
-							}
-							if ($row['device_key_category'] == "expansion-2") {
-								echo "	<option value='expansion-2' selected='selected'>".$text['label-expansion']." 2</option>\n";
-							}
-							else {
-								echo "	<option value='expansion-2'>".$text['label-expansion']." 2</option>\n";
-							}
-							if ($row['device_key_category'] == "expansion-3") {
-								echo "	<option value='expansion-3' selected='selected'>".$text['label-expansion']." 3</option>\n";
-							}
-							else {
-								echo "	<option value='expansion-3'>".$text['label-expansion']." 3</option>\n";
-							}
-							if ($row['device_key_category'] == "expansion-4") {
-								echo "	<option value='expansion-4' selected='selected'>".$text['label-expansion']." 4</option>\n";
-							}
-							else {
-								echo "	<option value='expansion-4'>".$text['label-expansion']." 4</option>\n";
-							}
-							if ($row['device_key_category'] == "expansion-5") {
-								echo "	<option value='expansion-5' selected='selected'>".$text['label-expansion']." 5</option>\n";
-							}
-							else {
-								echo "	<option value='expansion-5'>".$text['label-expansion']." 5</option>\n";
-							}
-							if ($row['device_key_category'] == "expansion-6") {
-								echo "	<option value='expansion-6' selected='selected'>".$text['label-expansion']." 6</option>\n";
-							}
-							else {
-								echo "	<option value='expansion-6'>".$text['label-expansion']." 6</option>\n";
-							}
+							echo "	<option value='expansion-1' ".($row['device_key_category'] == "expansion-1" || $row['device_key_category'] == "expansion" ? "selected='selected'" : null).">".$text['label-expansion']." 1</option>\n";
+							echo "	<option value='expansion-2' ".($row['device_key_category'] == "expansion-2" ? "selected='selected'" : null).">".$text['label-expansion']." 2</option>\n";
+							echo "	<option value='expansion-3' ".($row['device_key_category'] == "expansion-3" ? "selected='selected'" : null).">".$text['label-expansion']." 3</option>\n";
+							echo "	<option value='expansion-4' ".($row['device_key_category'] == "expansion-4" ? "selected='selected'" : null).">".$text['label-expansion']." 4</option>\n";
+							echo "	<option value='expansion-5' ".($row['device_key_category'] == "expansion-5" ? "selected='selected'" : null).">".$text['label-expansion']." 5</option>\n";
+							echo "	<option value='expansion-6' ".($row['device_key_category'] == "expansion-6" ? "selected='selected'" : null).">".$text['label-expansion']." 6</option>\n";
 						}
 						else {
-							if ($row['device_key_category'] == "expansion") {
-								echo "	<option value='expansion' selected='selected'>".$text['label-expansion']."</option>\n";
-							}
-							else {
-								echo "	<option value='expansion'>".$text['label-expansion']."</option>\n";
-							}
+							echo "	<option value='expansion' ".($row['device_key_category'] == "expansion" ? "selected='selected'" : null).">".$text['label-expansion']."</option>\n";
 						}
 					}
 				}
@@ -1689,7 +1643,7 @@
 
 				echo "<input type='hidden' id='key_vendor_".$x."' name='device_keys[".$x."][device_key_vendor]' value=\"".$device_key_vendor."\" />\n";
 
-				echo "<select class='formfld' name='device_keys[".$x."][device_key_type]' id='key_type_".$x."'>\n";
+				echo "<select class='formfld' name='device_keys[".$x."][device_key_type]' id='key_type_".$x."' onchange=\"document.getElementById('key_vendor_".$x."').value = this.options[this.selectedIndex].getAttribute('vendor');\">\n";
 				echo "	<option value=''></option>\n";
 				$previous_vendor = '';
 				$i=0;
@@ -1757,7 +1711,7 @@
 				if (is_array($device_keys) && @sizeof($device_keys) > 1 && permission_exists('device_key_delete')) {
 					if (!empty($row['device_key_uuid']) && is_uuid($row['device_key_uuid'])) {
 						echo "				<td class='vtable' style='text-align: center; padding-bottom: 3px;'>\n";
-						echo "					<input type='checkbox' name='device_keys_delete[".$x."][checked]' value='true' class='chk_delete checkbox_keys' onclick=\"edit_delete_action('keys');\">\n";
+						echo "					<input type='checkbox' name='device_keys_delete[".$x."][checked]' value='true' class='chk_delete checkbox_keys_".$row['device_key_vendor']."' onclick=\"edit_delete_action('keys');\">\n";
 						echo "					<input type='hidden' name='device_keys_delete[".$x."][uuid]' value='".escape($row['device_key_uuid'])."' />\n";
 					}
 					else {
@@ -1781,6 +1735,13 @@
 
 //device settings
 	if (permission_exists('device_setting_edit')) {
+		$device_setting_exists = false;
+		foreach ($device_settings as $row) {
+			if (!empty($row['device_setting_uuid']) && is_uuid($row['device_setting_uuid'])) {
+				$device_setting_exists = true;
+				break;
+			}
+		}
 		echo "	<tr>";
 		echo "		<td class='vncell' valign='top'>".$text['label-settings']."</td>";
 		echo "		<td class='vtable' align='left'>";
@@ -1790,7 +1751,7 @@
 		echo "				<td class='vtable'>".$text['label-device_setting_value']."</td>\n";
 		echo "				<td class='vtable'>".$text['label-enabled']."</td>\n";
 		echo "				<td class='vtable'>".$text['label-device_setting_description']."</td>\n";
-		if (is_array($device_settings) && @sizeof($device_settings) > 1 && permission_exists('device_setting_delete')) {
+		if (is_array($device_settings) && @sizeof($device_settings) > 1 && permission_exists('device_setting_delete') && $device_setting_exists) {
 			echo "				<td class='vtable edit_delete_checkbox_all' onmouseover=\"swap_display('delete_label_settings', 'delete_toggle_settings');\" onmouseout=\"swap_display('delete_label_settings', 'delete_toggle_settings');\">\n";
 			echo "					<span id='delete_label_settings'>".$text['label-delete']."</span>\n";
 			echo "					<span id='delete_toggle_settings'><input type='checkbox' id='checkbox_all_settings' name='checkbox_all' onclick=\"edit_all_toggle('settings');\"></span>\n";
@@ -1800,15 +1761,6 @@
 
 		$x = 0;
 		foreach ($device_settings as $row) {
-			//determine whether to hide the element
-				if (empty($device_setting_uuid) || !is_uuid($device_setting_uuid)) {
-					$element['hidden'] = false;
-					$element['visibility'] = "visibility:visible;";
-				}
-				else {
-					$element['hidden'] = true;
-					$element['visibility'] = "visibility:hidden;";
-				}
 			//add the primary key uuid
 				if (!empty($row['device_setting_uuid']) && is_uuid($row['device_setting_uuid'])) {
 					echo "	<input name='device_settings[".$x."][device_setting_uuid]' type='hidden' value=\"".escape($row['device_setting_uuid'])."\"/>\n";

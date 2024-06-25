@@ -89,7 +89,7 @@
 
 		//$contact_users = $_POST["contact_users"];
 		//$contact_groups = $_POST["contact_groups"];
-		$contact_user_uuid = $_POST["contact_user_uuid"] ?? null;
+		$contact_user_uuid = ($_SESSION['contact']['permissions']['boolean'] == "true") ? ($_POST["contact_user_uuid"] ?? $_SESSION["user_uuid"]) : ($contact_user_uuid = $_POST["contact_user_uuid"] ?? null);
 		$contact_group_uuid = $_POST["contact_group_uuid"] ?? null;
 
 		$contact_phones = $_POST["contact_phones"];
@@ -336,11 +336,23 @@
 
 			$y = 0;
 			if (isset($contact_user_uuid)) {
-				$array['contacts'][0]['contact_users'][$y]['domain_uuid'] = $_SESSION['domain_uuid'];
-				$array['contacts'][0]['contact_users'][$y]['contact_user_uuid'] = uuid();
-				$array['contacts'][0]['contact_users'][$y]['contact_uuid'] = $contact_uuid;
-				$array['contacts'][0]['contact_users'][$y]['user_uuid'] = $contact_user_uuid;
-				$y++;
+				$sql = "select contact_uuid from v_contact_users ";
+				$sql .= "where contact_uuid = :contact_uuid ";
+				$sql .= "and user_uuid = :user_uuid ";
+				$parameters['contact_uuid'] = $contact_uuid;
+				$parameters['user_uuid'] = $contact_user_uuid;
+				$database = new database;
+				$users = $database->select($sql, $parameters, 'all');
+				unset($sql, $parameters);
+
+				if (is_array($users) === false || count($users) === 0)
+				{
+						$array['contacts'][0]['contact_users'][$y]['domain_uuid'] = $_SESSION['domain_uuid'];
+						$array['contacts'][0]['contact_users'][$y]['contact_user_uuid'] = uuid();
+						$array['contacts'][0]['contact_users'][$y]['contact_uuid'] = $contact_uuid;
+						$array['contacts'][0]['contact_users'][$y]['user_uuid'] = $contact_user_uuid;
+						$y++;
+				}
 			}
 
 			$y = 0;
@@ -1512,7 +1524,7 @@ if ($_SESSION['contact']['permissions']['boolean'] == "true") {
 				echo "			<select name='contact_user_uuid' class='formfld' style='width: auto;'>\n";
 				echo "				<option value=''></option>\n";
 				foreach ($users as $field) {
-					if (in_array($field['user_uuid'], array_column($contact_users_assigned, 'user_uuid'))) { continue; } //skip users already assigned
+					if (!empty($contact_users_assigned) && in_array($field['user_uuid'], array_column($contact_users_assigned, 'user_uuid'))) { continue; } //skip users already assigned
 					echo "					<option value='".escape($field['user_uuid'])."'>".escape($field['username'])."</option>\n";
 				}
 				echo "			</select>\n";

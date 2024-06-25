@@ -51,38 +51,38 @@
 			/*
 			if ($action == "energy") {
 				//conference 3001-example.dyndns.org energy 103
-				$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
+				$switch_result = event_socket::api($switch_cmd);
 				$result_array = explode("=",$switch_result);
 				$tmp_value = $result_array[1];
 				if ($direction == "up") { $tmp_value = $tmp_value + 100; }
 				if ($direction == "down") { $tmp_value = $tmp_value - 100; }
 				//echo "energy $tmp_value<br />\n";
-				$switch_result = event_socket_request($fp, 'api '.$switch_cmd.' '.$tmp_value);
+				$switch_result = event_socket::api($switch_cmd.' '.$tmp_value);
 			}
 			if ($action == "volume_in") {
-				$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
+				$switch_result = event_socket::api($switch_cmd);
 				$result_array = explode("=",$switch_result);
 				$tmp_value = $result_array[1];
 				if ($direction == "up") { $tmp_value = $tmp_value + 1; }
 				if ($direction == "down") { $tmp_value = $tmp_value - 1; }
 				//echo "volume $tmp_value<br />\n";
-				$switch_result = event_socket_request($fp, 'api '.$switch_cmd.' '.$tmp_value);
+				$switch_result = event_socket::api($switch_cmd.' '.$tmp_value);
 			}
 			if ($action == "volume_out") {
-				$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
+				$switch_result = event_socket::api($switch_cmd);
 				$result_array = explode("=",$switch_result);
 				$tmp_value = $result_array[1];
 				if ($direction == "up") { $tmp_value = $tmp_value + 1; }
 				if ($direction == "down") { $tmp_value = $tmp_value - 1; }
 				//echo "volume $tmp_value<br />\n";
-				$switch_result = event_socket_request($fp, 'api '.$switch_cmd.' '.$tmp_value);
+				$switch_result = event_socket::api($switch_cmd.' '.$tmp_value);
 			}
 			*/
 		//connect to the event socket
-			//$fp = event_socket_create();
+			//$esl = event_socket::create();
 		//send the command over event socket
-			//if ($fp) {
-			//	$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
+			//if ($esl->is_connected()) {
+			//	$switch_result = event_socket::api($switch_cmd);
 			//}
 		}
 

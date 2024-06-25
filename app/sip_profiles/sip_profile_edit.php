@@ -247,9 +247,9 @@
 
 		//get the hostname
 			if ($sip_profile_hostname == '') {
-				$fp = event_socket_create();
-				if ($fp) {
-					$sip_profile_hostname = event_socket_request($fp, 'api switchname');
+				$esl = event_socket::create();
+				if ($esl->is_connected()) {
+					$sip_profile_hostname = event_socket::api('switchname');
 				}
 			}
 

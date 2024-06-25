@@ -11,7 +11,6 @@
 
 //include files
 	include "resources/classes/permissions.php";
-	require "app/email_queue/resources/functions/transcribe.php";
 
 //increase limits
 	set_time_limit(0);

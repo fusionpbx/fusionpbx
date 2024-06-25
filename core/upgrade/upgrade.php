@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2023
+	Portions created by the Initial Developer are Copyright (C) 2008-2024
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -28,7 +28,7 @@
 	require dirname(__DIR__, 2) . "/resources/require.php";
 
 //if the config file doesn't exist and the config.php does exist use it to write a new config file
-	if (!$config_exists && file_exists("/etc/fusionpbx/config.php")) {
+	if (isset($config_exists) && !$config_exists && file_exists("/etc/fusionpbx/config.php")) {
 		//include the config.php
 		include("/etc/fusionpbx/config.php");
 
@@ -151,8 +151,11 @@
 		}
 	}
 
-//show the upgrade type
-	//echo $upgrade_type."\n";
+//check for the upgrade menu option first
+	if ($upgrade_type == 'menu') {
+		require __DIR__ . '/upgrade_menu.php';
+		exit();
+	}
 
 //get the version of the software
 	if ($upgrade_type == 'version') {
@@ -180,7 +183,7 @@
 	}
 
 //restore the default menu
-	if ($upgrade_type == 'menu') {
+	if ($upgrade_type == 'menus') {
 
 		//get the menu uuid and language
 		$sql = "select menu_uuid, menu_language from v_menus ";
@@ -284,6 +287,24 @@
 			if ($display_type == "html") {
 				require_once "resources/footer.php";
 			}
+	}
+
+//upgrade optional apps
+	if ($upgrade_type == 'repos') {
+
+		$app_list = git_find_repos($_SERVER["PROJECT_ROOT"]."/app");
+
+		if (!is_array($app_list)) {
+			exit;
+		}
+		print_r($app_list);exit;
+		foreach ($app_list as $repo => $apps) {
+			$path = $repo;
+			$git_result = git_pull($path);
+			foreach ($git_result['message'] as $response_line) {
+				echo $repo . ": " . $response_line . "\n";
+			}
+		}
 	}
 
 ?>

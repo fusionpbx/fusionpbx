@@ -39,10 +39,10 @@
 				if ($this->enabled == "true") {
 					//update the call center status
 						$user_status = "Logged Out";
-						$fp = event_socket_create();
-						if ($fp) {
+						$esl = event_socket::create();
+						if ($esl->is_connected()) {
 							$switch_cmd .= "callcenter_config agent set status ".$_SESSION['username']."@".$this->domain_name." '".$user_status."'";
-							$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
+							$switch_result = event_socket::api($switch_cmd);
 						}
 
 					//update the database user_status
@@ -245,7 +245,7 @@
 											$feature_event_notify = new feature_event_notify;
 											$feature_event_notify->domain_name = $_SESSION['domain_name'];
 											$feature_event_notify->extension = $extension['extension'];
-											$feature_event_notify->do_not_disturb = $extension['do_not_disturb'];
+											$feature_event_notify->do_not_disturb = $extension['do_not_disturb'] == "true" ? "false" : "true";
 											$feature_event_notify->ring_count = ceil($extension['call_timeout'] / 6);
 											$feature_event_notify->forward_all_enabled = $extension['forward_all_enabled'];
 											$feature_event_notify->forward_busy_enabled = $extension['forward_busy_enabled'];

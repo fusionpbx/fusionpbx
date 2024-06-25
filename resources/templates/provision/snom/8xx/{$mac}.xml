@@ -4,7 +4,7 @@
 <language perm="">English</language>
 <update_policy perm="">{if isset($snom_update_policy)}{$snom_update_policy}{else}auto_update{/if}</update_policy>
 <setting_server perm="RW">http://{$domain_name}{$project_path}/app/provision/{literal}{mac}{/literal}.xml</setting_server>
-<dhcp perm="R">on</dhcp>
+{if isset($snom_dhcp)}<dhcp perm="R">{$snom_dhcp}</dhcp>{/if}
 <timezone perm="">{$snom_time_zone}</timezone>
 <firmware_status perm="R">http://{$domain_name}{$project_path}/app/provision/firmware.xml</firmware_status>
 {if isset($admin_password) }

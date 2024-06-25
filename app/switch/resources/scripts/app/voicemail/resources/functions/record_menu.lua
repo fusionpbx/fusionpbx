@@ -1,5 +1,5 @@
 --	Part of FusionPBX
---	Copyright (C) 2013-2015 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2013-2024 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,7 @@
 			--to listen to the recording press 1, to save the recording press 2, to re-record press 3
 				if (session:ready()) then
 					if (string.len(dtmf_digits) == 0) then
-						dtmf_digits = session:playAndGetDigits(0, 1, 1, 3000, "#", "phrase:voicemail_record_file_options:1:2:3", "", "\\d+");
+						dtmf_digits = session:playAndGetDigits(0, 1, 1, 3000, "#", "phrase:voicemail_record_file_options:1:2:3:7", "", "\\d+");
 					end
 				end
 			--process the dtmf
@@ -43,6 +43,7 @@
 							session:sleep('1000');
 						--listen to the recording
 							session:streamFile(tmp_file);
+							session:sleep('1000');
 							--session:streamFile(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext);
 						--record menu (1=listen, 2=save, 3=re-record)
 							record_menu(type, tmp_file, greeting_id, menu);
@@ -85,7 +86,7 @@
 									sql = sql .. "where domain_uuid = :domain_uuid ";
 									sql = sql .. "and voicemail_id = :voicemail_id ";
 									sql = sql .. "and greeting_id = :greeting_id ";
-									local params = {domain_uuid = domain_uuid, 
+									local params = {domain_uuid = domain_uuid,
 										voicemail_id = voicemail_id, greeting_id = greeting_id};
 									--freeswitch.consoleLog("notice", "[SQL] DELETING: " .. greeting_id .. "\n");
 									dbh:query(sql, params);
@@ -156,7 +157,7 @@
 									advanced();
 								end
 								if (menu == "tutorial") then
-									tutorial("finish")	
+									tutorial("finish")
 								end
 							end
 							if (type == "name") then
@@ -164,9 +165,8 @@
 									advanced();
 								end
 								if (menu == "tutorial") then
-									tutorial("change_password")	
+									tutorial("change_password")
 								end
-
 							end
 					elseif (dtmf_digits == "3") then
 						--re-record the message
@@ -184,6 +184,51 @@
 							end
 							if (type == "name") then
 								record_name(menu);
+							end
+					elseif (dtmf_digits == "7") then
+						--delete the message
+							dtmf_digits = '';
+							if (type == "name") then
+								if (file_exists(voicemail_dir.."/"..voicemail_id.."/recorded_name.wav")) then
+									os.remove(voicemail_dir.."/"..voicemail_id.."/recorded_name.wav");
+								end
+								session:sleep('500');
+								session:execute("playback", "phrase:voicemail_record_file_deleted");
+								session:sleep('500');
+								if (menu == "advanced") then
+									advanced();
+								elseif (menu == "tutorial") then
+									tutorial("change_password");
+								end
+							end
+							if (type == "message") then
+								if (storage_path == "http_cache") then
+									if (file_exists(storage_path.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext)) then
+										os.remove(storage_path.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext);
+									end
+								else
+									if (file_exists(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext)) then
+										os.remove(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext);
+									end
+								end
+								timeouts = 0;
+								message_length = 0;
+								session:setVariable("voicemail_message_seconds", 0);
+								session:sleep('500');
+								session:execute("playback", "phrase:voicemail_record_file_deleted");
+								session:sleep('500');
+								session:execute("playback", "phrase:voicemail_goodbye");
+								session:hangup();
+							end
+							if (type == 'greeting') then
+								if (file_exists(tmp_file)) then
+									os.remove(tmp_file);
+								end
+								timeouts = 0;
+								session:sleep('500');
+								session:execute("playback", "phrase:voicemail_record_file_deleted");
+								session:sleep('500');
+								advanced();
 							end
 					elseif (dtmf_digits == "*") then
 						if (type == "greeting") then
@@ -220,7 +265,7 @@
 										advanced();
 									end
 									if (menu == "tutorial") then
-										tutorial("finish")	
+										tutorial("finish")
 									end
 								end
 								if (type == "name") then

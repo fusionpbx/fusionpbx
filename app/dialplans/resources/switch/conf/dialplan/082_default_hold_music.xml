@@ -1,0 +1,5 @@
+<extension name="default_hold_music" number="" context="${domain_name}" continue="true" app_uuid="5c6f066d-1637-4b05-b896-979a8a5595f0" order="82">
+	<condition field="${hold_music}" expression="^$">
+		<action application="set" data="hold_music=local_stream://default" inline="true"/>
+	</condition>
+</extension>

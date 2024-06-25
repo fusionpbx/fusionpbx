@@ -59,14 +59,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_order'] = "30";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
-                $y++;
-                $apps[$x]['default_settings'][$y]['default_setting_uuid'] = "59295a4c-7315-4059-aa11-60b6e2f4db48";
-                $apps[$x]['default_settings'][$y]['default_setting_category'] = "authentication";
-                $apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "email_send_mode";
-                $apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-                $apps[$x]['default_settings'][$y]['default_setting_value'] = "email_queue";
-                $apps[$x]['default_settings'][$y]['default_setting_order'] = "40";
-                $apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-                $apps[$x]['default_settings'][$y]['default_setting_description'] = "Options: email_queue, direct";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "59295a4c-7315-4059-aa11-60b6e2f4db48";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "authentication";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "email_send_mode";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "email_queue";
+		$apps[$x]['default_settings'][$y]['default_setting_order'] = "40";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Options: email_queue, direct";
 
 ?>

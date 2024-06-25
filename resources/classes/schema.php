@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2013 - 2019
+	Copyright (C) 2013 - 2023
 	All Rights Reserved.
 
 	Contributor(s):
@@ -29,7 +29,7 @@ if (!class_exists('schema')) {
 	class schema {
 
 		//define variables
-			private $db;
+			private $database;
 			public $apps;
 			public $db_type;
 			public $result;
@@ -42,19 +42,17 @@ if (!class_exists('schema')) {
 				require dirname(__DIR__, 2) . "/resources/require.php";
 
 				//connect to the database
-				$database = new database;
-				$database->connect();
-				$this->db = $database->db;
+				$this->database = database::new();
 
 				//get the list of installed apps from the core and mod directories
 				$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_config.php");
 				$x=0;
 				foreach ($config_list as &$config_path) {
 					try {
-					    include($config_path);
+						include($config_path);
 					}
 					catch (Exception $e) {
-					    //echo 'Caught exception: ',  $e->getMessage(), "\n";
+						//echo 'Caught exception: ',  $e->getMessage(), "\n";
 					}
 					$x++;
 				}
@@ -124,16 +122,16 @@ if (!class_exists('schema')) {
 			public function exec() {
 				foreach ($this->result['sql'] as $sql) {
 					//start the sql transaction
-						$this->db->beginTransaction();
+						$this->database->beginTransaction();
 					//execute the sql query
 						try {
-							$this->db->query($sql);
+							$this->database->query($sql);
 						}
 						catch (PDOException $error) {
 							echo "error: " . $error->getMessage() . " sql: $sql<br/>";
 						}
 					//complete the transaction
-						$this->db->commit();
+						$this->database->commit();
 				}
 			}
 
@@ -168,7 +166,7 @@ if (!class_exists('schema')) {
 				}
 
 				if ($sql) {
-					$prep_statement = $this->db->prepare($sql);
+					$prep_statement = $this->database->db->prepare($sql);
 					$prep_statement->execute();
 					$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 					if (!$result) {
@@ -206,7 +204,7 @@ if (!class_exists('schema')) {
 				if ($this->db_type == "mysql") {
 					$sql = "describe ".$table_name.";";
 				}
-				$prep_statement = $this->db->prepare($sql);
+				$prep_statement = $this->database->db->prepare($sql);
 				$prep_statement->execute();
 				return $prep_statement->fetchAll(PDO::FETCH_ASSOC);
 			}
@@ -214,7 +212,7 @@ if (!class_exists('schema')) {
 		//database table exists alternate
 			private function db_table_exists_alternate ($db_type, $table_name) {
 				$sql = "select count(*) from $table_name ";
-				$result = $this->db->query($sql);
+				$result = $this->database->query($sql);
 				if ($result > 0) {
 					return true; //table exists
 				}
@@ -235,7 +233,7 @@ if (!class_exists('schema')) {
 				if ($db_type == "mysql") {
 					$sql .= "SELECT TABLE_NAME FROM information_schema.tables WHERE table_schema = '$db_name' and TABLE_NAME = '$table_name' ";
 				}
-				$prep_statement = $this->db->prepare(check_sql($sql));
+				$prep_statement = $this->database->db->prepare(check_sql($sql));
 				$prep_statement->execute();
 				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 				if (count($result) > 0) {
@@ -268,7 +266,7 @@ if (!class_exists('schema')) {
 				if ($db_type == "mysql") {
 					$sql = "describe ".$table_name.";";
 				}
-				$prep_statement = $this->db->prepare($sql);
+				$prep_statement = $this->database->db->prepare($sql);
 				$prep_statement->execute();
 				return $prep_statement->fetchAll(PDO::FETCH_ASSOC);
 			}
@@ -328,13 +326,10 @@ if (!class_exists('schema')) {
 					$sql = "show columns from $table_name where field = '$column_name' ";
 				}
 				if ($sql) {
-					$prep_statement = $this->db->prepare(check_sql($sql));
+					$prep_statement = $this->database->db->prepare(check_sql($sql));
 					$prep_statement->execute();
 					$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-					if (!$result) {
-						return false;
-					}
-					if (count($result) > 0) {
+					if (!empty($result)) {
 						return true;
 					}
 					else {
@@ -468,9 +463,9 @@ if (!class_exists('schema')) {
 
 		//datatase schema
 			public function schema ($format = '') {
- 
+
  				//set the global variable
-					global $db, $text, $output_format;
+					global $text, $output_format;
 
 					if ($format == '') $format = $output_format;
 
@@ -523,22 +518,9 @@ if (!class_exists('schema')) {
 						//check if table exists
 							// SELECT TABLE_NAME FROM ALL_TABLES
 
-				//get the $apps array from the installed apps from the core and mod directories
-					$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_config.php");
-					$x=0;
-					foreach ($config_list as &$config_path) {
-						try {
-							include($config_path);
-						}
-						catch (Exception $e) {
-						    //echo 'Caught exception: ',  $e->getMessage(), "\n";
-						}
-						$x++;
-					}
-
 				//update the app db array add exists true or false
 					$sql = '';
-					foreach ($apps as $x => &$app) {
+					foreach ($this->apps as $x => &$app) {
 						if (isset($app['db'])) foreach ($app['db'] as $y => &$row) {
 							if (isset($row['table']['name'])) {
 								if (is_array($row['table']['name'])) {
@@ -561,10 +543,10 @@ if (!class_exists('schema')) {
 
 								//check if the table exists
 									if ($this->db_table_exists($db_type, $db_name, $table_name)) {
-										$apps[$x]['db'][$y]['exists'] = 'true';
+										$this->apps[$x]['db'][$y]['exists'] = 'true';
 									}
 									else {
-										$apps[$x]['db'][$y]['exists'] = 'false';
+										$this->apps[$x]['db'][$y]['exists'] = 'false';
 									}
 								//check if the column exists
 									foreach ($row['fields'] as $z => $field) {
@@ -581,11 +563,11 @@ if (!class_exists('schema')) {
 											if (!empty($field_name)) {
 												if ($this->db_column_exists ($db_type, $db_name, $table_name, $field_name)) {
 													//found
-													$apps[$x]['db'][$y]['fields'][$z]['exists'] = 'true';
+													$this->apps[$x]['db'][$y]['fields'][$z]['exists'] = 'true';
 												}
 												else {
 													//not found
-													$apps[$x]['db'][$y]['fields'][$z]['exists'] = 'false';
+													$this->apps[$x]['db'][$y]['fields'][$z]['exists'] = 'false';
 												}
 											}
 											unset($field_name);
@@ -598,10 +580,9 @@ if (!class_exists('schema')) {
 
 				//prepare the variables
 					$sql_update = '';
-					$var_uuid = $_GET["id"] ?? '';
 
 				//add missing tables and fields
-					foreach ($apps as $x => &$app) {
+					foreach ($this->apps as $x => &$app) {
 						if (isset($app['db'])) foreach ($app['db'] as $y => &$row) {
 							if (is_array($row['table']['name'])) {
 								$table_name = $row['table']['name']['text'];
@@ -623,13 +604,20 @@ if (!class_exists('schema')) {
 									}
 									else {
 										$row['exists'] = "false";
-										$sql_update .= $this->db_create_table($apps, $db_type, $row['table']['name']['text']);
+										$sql_update .= $this->db_create_table($this->apps, $db_type, $row['table']['name']['text']);
 									}
 								}
 							}
 							else {
+								if ($this->db_table_exists($db_type, $db_name, $row['table']['name'])) {
+									$row['exists'] = "true";
+								}
+								else {
+									$row['exists'] = "false";
+								}
 								$table_name = $row['table']['name'];
 							}
+
 							//check if the table exists
 								if ($row['exists'] == "true") {
 									if (count($row['fields']) > 0) {
@@ -648,13 +636,18 @@ if (!class_exists('schema')) {
 												//get the field name
 													if (is_array($field['name'])) {
 														$field_name = $field['name']['text'];
-														if (!$this->db_column_exists ($db_type, $db_name, $table_name, $field_name)) {
-															$field['exists'] == "false";
-														}
 													}
 													else {
 														$field_name = $field['name'];
 													}
+
+												//check if the field exists
+												//	if ($this->db_column_exists($db_type, $db_name, $table_name, $field_name)) {
+												//		$field['exists'] = "true";
+												//	}
+												//	else {
+												//		$field['exists'] = "false";
+												//	}
 
 												//add or rename fields
 													if (isset($field['name']['deprecated']) && $this->db_column_exists ($db_type, $db_name, $table_name, $field['name']['deprecated'])) {
@@ -667,7 +660,7 @@ if (!class_exists('schema')) {
 														}
 														if ($db_type == "sqlite") {
 															//a change has been made to the field name
-															$apps[$x]['db'][$y]['rebuild'] = 'true';
+															$this->apps[$x]['db'][$y]['rebuild'] = 'true';
 														}
 													}
 													else {
@@ -727,26 +720,22 @@ if (!class_exists('schema')) {
 															}
 															if ($db_type == "sqlite") {
 																//a change has been made to the field type
-																$apps[$x]['db'][$y]['rebuild'] = 'true';
+																$this->apps[$x]['db'][$y]['rebuild'] = 'true';
 															}
 														}
 													}
-
 											}
 										}
-										unset($column_array);
 									}
 								}
-								else {
+								elseif (!is_array($row['table']['name'])) {
 									//create table
-										if (!is_array($row['table']['name'])) {
-											$sql_update .= $this->db_create_table($apps, $db_type, $row['table']['name']);
-										}
+									$sql_update .= $this->db_create_table($this->apps, $db_type, $row['table']['name']);
 								}
 						}
 					}
 				//rebuild and populate the table
-					foreach ($apps as $x => &$app) {
+					foreach ($this->apps as $x => &$app) {
 						if (isset($app['db'])) foreach ($app['db'] as $y => &$row) {
 							if (is_array($row['table']['name'])) {
 								$table_name = $row['table']['name']['text'];
@@ -761,9 +750,9 @@ if (!class_exists('schema')) {
 									//rename the table
 										$sql_update .= "ALTER TABLE ".$table_name." RENAME TO tmp_".$table_name.";\n";
 									//create the table
-										$sql_update .= $this->db_create_table($apps, $db_type, $table_name);
+										$sql_update .= $this->db_create_table($this->apps, $db_type, $table_name);
 									//insert the data into the new table
-										$sql_update .= $this->db_insert_into($apps, $db_type, $table_name);
+										$sql_update .= $this->db_insert_into($this->apps, $db_type, $table_name);
 									//drop the old table
 										$sql_update .= "DROP TABLE tmp_".$table_name.";\n";
 									//commit the transaction
@@ -803,7 +792,7 @@ if (!class_exists('schema')) {
 							$response .= "<tr>\n";
 						//build the html while looping through the app db array
 							$sql = '';
-							foreach ($apps as &$app) {
+							foreach ($this->apps as &$app) {
 								if (isset($app['db'])) foreach ($app['db'] as $row) {
 									if (is_array($row['table']['name'])) {
 										$table_name = $row['table']['name']['text'];
@@ -858,7 +847,6 @@ if (!class_exists('schema')) {
 															$response .= "</tr>\n";
 														}
 													}
-													unset($column_array);
 													$response .= "	</table>\n";
 													$response .= "</td>\n";
 											}
@@ -871,7 +859,6 @@ if (!class_exists('schema')) {
 										$response .= "</tr>\n";
 								}
 							}
-							unset ($prep_statement);
 						//end the list of tables
 							$response .= "</table>\n";
 							$response .= "<br />\n";
@@ -892,7 +879,7 @@ if (!class_exists('schema')) {
 							foreach($update_array as $sql) {
 								if (strlen(trim($sql))) {
 									try {
-										$this->db->query(trim($sql));
+										$this->database->db->query(trim($sql));
 										if ($format == "text") {
 											$response .= "	$sql;\n";
 										}
@@ -904,8 +891,23 @@ if (!class_exists('schema')) {
 							}
 							//$this->db->commit();
 							$response .= "\n";
-							unset ($file_contents, $sql_update, $sql);
+							unset ($sql_update, $sql);
 						}
+
+				//refresh each postgresql subscription with its publication
+					if ($db_type == "pgsql") {
+						//get the list of postgresql subscriptions
+						$sql = "select subname from pg_subscription; ";
+						$pg_subscriptions = $this->database->select($sql, null, 'all');
+						unset($sql, $parameters);
+
+						//refresh each subscription publication
+						foreach ($pg_subscriptions as $row) {
+							$sql = "ALTER SUBSCRIPTION ".$row['subname']." REFRESH PUBLICATION;";
+							$response .= $sql;
+							$this->database->execute($sql);
+						}
+					}
 
 				//handle response
 					//if ($output == "echo") {

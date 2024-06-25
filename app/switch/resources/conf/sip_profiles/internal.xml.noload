@@ -103,7 +103,7 @@
 		<!-- extended info parsing -->
 		<param name="extended-info-parsing" value="true" enabled="false"/>
 
-		<param name="aggressive-nat-detection" value="true" enabled="true"/>
+		<param name="aggressive-nat-detection" value="true" enabled="false"/>
 		<!--
 		There are known issues (asserts and segfaults) when 100rel is enabled.
 		It is not recommended to enable 100rel at this time.
@@ -310,11 +310,11 @@
 		<param name="force-register-db-domain" value="$${domain}" enabled="false"/>
 
 		<!-- for sip over websocket support -->
-		<param name="ws-binding"  value=":5066"/>
+		<param name="ws-binding" value=":5066" enabled="false"/>
 
 		<!-- for sip over secure websocket support -->
 		<!-- You need wss.pem in $${certs_dir} for wss or one will be created for you -->
-		<param name="wss-binding" value=":7443"/>
+		<param name="wss-binding" value=":7443" enabled="false"/>
 
 		<param name="delete-subs-on-register" value="false" enabled="false"/>
 

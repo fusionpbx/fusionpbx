@@ -70,15 +70,15 @@
 					$obj->delete($gateways);
 				}
 			case 'start':
-				$fp = event_socket_create();
-				if ($fp && permission_exists('gateway_edit')) {
+				$esl = event_socket::create();
+				if ($esl && permission_exists('gateway_edit')) {
 					$obj = new gateways;
 					$obj->start($gateways);
 				}
 				break;
 			case 'stop':
-				$fp = event_socket_create();
-				if ($fp && permission_exists('gateway_edit')) {
+				$esl = event_socket::create();
+				if ($esl && permission_exists('gateway_edit')) {
 					$obj = new gateways;
 					$obj->stop($gateways);
 				}
@@ -90,19 +90,19 @@
 	}
 
 //connect to event socket
-	$fp = event_socket_create();
+	$esl = event_socket::create();
 
 //gateway status function
 	if (!function_exists('switch_gateway_status')) {
 		function switch_gateway_status($gateway_uuid, $result_type = 'xml') {
-			global $fp;
-			if ($fp) {
-				$fp = event_socket_create();
-				$cmd = 'api sofia xmlstatus gateway '.$gateway_uuid;
-				$response = trim(event_socket_request($fp, $cmd));
+			global $esl;
+			if ($esl->is_connected()) {
+				$esl = event_socket::create();
+				$cmd = 'sofia xmlstatus gateway '.$gateway_uuid;
+				$response = trim(event_socket::api($cmd));
 				if ($response == "Invalid Gateway!") {
-					$cmd = 'api sofia xmlstatus gateway '.strtoupper($gateway_uuid);
-					$response = trim(event_socket_request($fp, $cmd));
+					$cmd = 'sofia xmlstatus gateway '.strtoupper($gateway_uuid);
+					$response = trim(event_socket::api($cmd));
 				}
 				return $response;
 			}
@@ -267,7 +267,7 @@
 	echo "<th class='hide-sm-dn'>".$text['label-proxy']."</th>\n";
 	echo th_order_by('context', $text['label-context'], $order_by, $order);
 	echo th_order_by('register', $text['label-register'], $order_by, $order);
-	if ($fp) {
+	if ($esl->is_connected()) {
 		echo "<th class='hide-sm-dn'>".$text['label-status']."</th>\n";
 		if (permission_exists('gateway_edit')) {
 			echo "<th class='center'>".$text['label-action']."</th>\n";
@@ -316,7 +316,7 @@
 			echo "	<td>".escape($row["proxy"])."</td>\n";
 			echo "	<td>".escape($row["context"])."</td>\n";
 			echo "	<td>".ucwords(escape($row["register"]))."</td>\n";
-			if ($fp) {
+			if ($esl->is_connected()) {
 				if ($row["enabled"] == "true") {
 					$response = switch_gateway_status($row["gateway_uuid"]);
 					if ($response == "Invalid Gateway!") {

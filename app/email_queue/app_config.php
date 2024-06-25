@@ -44,6 +44,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Limit the number of attempts before the email is set to failed.";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "27c6f91a-7362-4028-95d1-bf05539fdf3b";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "email_queue";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "save_response";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Save the SMTP send response. Use this for debugging SMTP response.";
+		$y++;
 		//$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "a9eb5a16-e018-4a83-975e-eee2ed31f923";
 		//$apps[$x]['default_settings'][$y]['default_setting_category'] = "email_queue";
 		//$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "retry_interval";

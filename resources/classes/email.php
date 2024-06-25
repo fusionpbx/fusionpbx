@@ -231,12 +231,18 @@ if (!class_exists('email')) {
 				//add the email_queue_uuid
 				$email_queue_uuid = uuid();
 
+				//set the email from address and name
+				$email_from = $this->from_address;
+				if (!empty($this->from_name)) {
+					$email_from = $this->from_name.'<'.$email_from.'>';
+				}
+
 				//prepare the array
 				$array['email_queue'][0]['email_queue_uuid'] = $email_queue_uuid;
 				$array['email_queue'][0]['domain_uuid'] = $this->domain_uuid;
 				$array['email_queue'][0]['hostname'] = gethostname();
 				$array['email_queue'][0]['email_date'] = 'now()';
-				$array['email_queue'][0]['email_from'] = $this->from_address;
+				$array['email_queue'][0]['email_from'] = $email_from;
 				$array['email_queue'][0]['email_to'] = $this->recipients;
 				$array['email_queue'][0]['email_subject'] = $this->subject;
 				$array['email_queue'][0]['email_body'] = $this->body;
@@ -415,17 +421,10 @@ if (!class_exists('email')) {
 					$smtp['auth'] 		= $setting->get('email','smtp_auth');
 					$smtp['username'] 	= $setting->get('email','smtp_username');
 					$smtp['password'] 	= $setting->get('email','smtp_password');
-					$smtp['from'] 		= $setting->get('email','smtp_from');
-					$smtp['from_name'] 	= $setting->get('email','smtp_from_name');
+					$smtp['from'] 		= $setting->get('voicemail','smtp_from') ?? $setting->get('email','smtp_from');
+					$smtp['from_name'] 	= $setting->get('voicemail','smtp_from_name') ?? $setting->get('email','smtp_from_name');
 					$smtp['validate_certificate'] = $setting->get('email','smtp_validate_certificate');
 					$smtp['crypto_method'] = $setting->get('email','smtp_crypto_method') ?? null;
-
-					if (!empty($setting->get('voicemail','smtp_from')) && !empty($setting->get('voicemail','smtp_from'))) {
-						$smtp['from'] = $setting->get('voicemail','smtp_from');
-					}
-					if (!empty($setting->get('voicemail','smtp_from_name')) && !empty($setting->get('voicemail','smtp_from_name'))) {
-						$smtp['from_name'] = $setting->get('voicemail','smtp_from_name');
-					}
 
 					//override the domain-specific smtp server settings, if any
 					$sql = "select domain_setting_subcategory, domain_setting_value ";
