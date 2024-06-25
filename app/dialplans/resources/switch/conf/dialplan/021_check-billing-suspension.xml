@@ -1,5 +1,6 @@
 <extension name="CHECK_BILLING_SUSPENSION" context="global" continue="true" app_uuid="a68852ff-22de-4648-b6c7-335047eaebb6" global="true" order="21">
 	<condition field="destination_number" expression="^(?!933\.?$|911\.?$)">
 		<action application="lua" data="check_billing_suspension.lua"/>
+        <action application="lua" data="check_ext_suspension.lua"/>
 	</condition>
 </extension>
