@@ -1039,13 +1039,16 @@
 			//set table name for query
 			//$table = self::TABLE;
 			$table = 'voicemail_messages';
+
 			//get a database connection
 			$database = $settings->database();
+
 			//get a list of domains
 			$domains = maintenance::get_domains($database);
 			foreach ($domains as $domain_uuid => $domain_name) {
 				//get domain settings
 				$domain_settings = new settings(['database' => $database, 'domain_uuid' => $domain_uuid]);
+
 				//ensure we have a retention day
 				$retention_days = $domain_settings->get('maintenance', 'voicemail_database_retention_days', '');
 				if (!empty($retention_days) && is_numeric($retention_days)) {
@@ -1060,6 +1063,7 @@
 					}
 				}
 			}
+
 			//clear out any null domain_uuid entries
 			$sql = "delete from v_{$table} WHERE to_timestamp(created_epoch) < NOW() - INTERVAL '{$retention_days} days'"
 					. " and domain_uuid is null";
@@ -1069,6 +1073,7 @@
 			} else {
 				maintenance_service::log_write(self::class, "Unable to remove records for domain $domain_name", $domain_uuid, maintenance_service::LOG_ERROR);
 			}
+
 			//ensure logs are saved
 			maintenance_service::log_flush();
 		}
@@ -1093,7 +1098,8 @@
 							}
 						}
 					}
-				} else {
+				}
+				else {
 					maintenance_service::log_write(self::class, "Retention days not set or not a valid number", $domain_uuid, maintenance_service::LOG_ERROR);
 				}
 			}
