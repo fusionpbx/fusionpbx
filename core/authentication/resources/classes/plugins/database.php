@@ -77,9 +77,6 @@ class plugin_database {
 					$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
 					$domain_name = $domain_array[0];
 
-				//temp directory
-					$_SESSION['server']['temp']['dir'] = '/tmp';
-
 				//create token
 					//$object = new token;
 					//$token = $object->create('login');
