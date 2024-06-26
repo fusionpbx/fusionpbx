@@ -92,7 +92,7 @@ class plugin_database {
 					$view = new template();
 					$view->engine = 'smarty';
 					$view->template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/core/authentication/resources/views/';
-					$view->cache_dir = $_SESSION['server']['temp']['dir'];
+					$view->cache_dir = sys_get_temp_dir();
 					$view->init();
 
 				//add translations
