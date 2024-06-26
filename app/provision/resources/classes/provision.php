@@ -662,7 +662,7 @@
 					$view->engine = "smarty";
 				}
 				$view->template_dir = $template_dir ."/".$device_template."/";
-				$view->cache_dir = $_SESSION['server']['temp']['dir'];
+				$view->cache_dir = sys_get_temp_dir();
 				$view->init();
 
 			//replace the variables in the template in the future loop through all the line numbers to do a replace for each possible line number
