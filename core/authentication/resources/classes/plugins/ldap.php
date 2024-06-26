@@ -38,9 +38,6 @@ class plugin_ldap {
 					$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
 					$domain_name = $domain_array[0];
 
-				//temp directory
-					$_SESSION['server']['temp']['dir'] = '/tmp';
-
 				//create token
 					//$object = new token;
 					//$token = $object->create('login');
@@ -53,7 +50,7 @@ class plugin_ldap {
 					$view = new template();
 					$view->engine = 'smarty';
 					$view->template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/core/authentication/resources/views/';
-					$view->cache_dir = $_SESSION['server']['temp']['dir'];
+					$view->cache_dir = sys_get_temp_dir();
 					$view->init();
 
 				//add translations
