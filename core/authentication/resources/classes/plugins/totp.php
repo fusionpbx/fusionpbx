@@ -80,9 +80,6 @@ class plugin_totp {
 				$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
 				$domain_name = $domain_array[0];
 
-				//temp directory
-				$_SESSION['server']['temp']['dir'] = '/tmp';
-
 				//create token
 				//$object = new token;
 				//$token = $object->create('login');
@@ -189,9 +186,6 @@ class plugin_totp {
 				//get the domain
 				$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
 				$domain_name = $domain_array[0];
-
-				//temp directory
-				$_SESSION['server']['temp']['dir'] = '/tmp';
 
 				//create token
 				//$object = new token;

@@ -350,9 +350,6 @@
 	$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
 	$domain_name = $domain_array[0];
 
-//temp directory
-	$_SESSION['server']['temp']['dir'] = '/tmp';
-
 //initialize a template object
 	$view = new template();
 	$view->engine = 'smarty';

@@ -68,9 +68,6 @@ class plugin_email {
 			$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
 			$domain_name = $domain_array[0];
 
-			//temp directory
-			$_SESSION['server']['temp']['dir'] = '/tmp';
-
 			//use the session username
 			if (isset($_SESSION['username'])) {
 				$_POST['username'] = $_SESSION['username'];
@@ -322,9 +319,6 @@ class plugin_email {
 				//get the domain
 				$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
 				$domain_name = $domain_array[0];
-
-				//temp directory
-				$_SESSION['server']['temp']['dir'] = '/tmp';
 
 				//create token
 				//$object = new token;
