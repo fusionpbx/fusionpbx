@@ -316,6 +316,14 @@
 				if (isset($params['domain_uuid'])) {
 					$this->domain_uuid = $params['domain_uuid'];
 				}
+
+				//allow passed user_uuid in the constructor to override the session user_uuid
+				if (isset($params['user_uuid'])) {
+					$this->user_uuid = $params['user_uuid'];
+				} else {
+					//try to determine the current user_uuid using the session
+					$this->user_uuid = (!empty($_SESSION['user_uuid']) ? $_SESSION['user_uuid'] : null);
+				}
 			}
 
 			/**
