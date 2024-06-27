@@ -2066,6 +2066,114 @@ if (!class_exists('xml_cdr')) {
 			unset($records);
 		} //method
 
+		/**
+		 * Removes old entries for in the database xml_cdr, xml_cdr_flow, xml_cdr_json, xml_cdr_logs table
+		 * see {@link https://github.com/fusionpbx/fusionpbx-app-maintenance/} FusionPBX Maintenance App
+		 * @param settings $settings Settings object
+		 * @return void
+		 */
+		public static function database_maintenance(settings $settings): void {
+			//set table name for query
+//			$table = self::TABLE;
+			$table = 'xml_cdr';
+
+			//get a database connection
+			$database = $settings->database();
+
+			//get a list of domains
+			$domains = maintenance::get_domains($database);
+			foreach ($domains as $domain_uuid => $domain_name) {
+
+				//get domain settings
+				$domain_settings = new settings(['database' => $database, 'domain_uuid' => $domain_uuid]);
+
+				//get the retention days for xml cdr table
+				$xml_cdr_retention_days = $domain_settings->get('maintenance', self::class . '_database_retention_days', '');
+
+				//get the retention days for xml cdr flow table
+				if ($database->table_exists('xml_cdr_flow')) {
+					$xml_cdr_flow_retention_days = $domain_settings->get('maintenance', 'xml_cdr_flow_database_retention_days', $xml_cdr_retention_days);
+				} else {
+					$xml_cdr_flow_retention_days = null;
+				}
+
+				//get the retention days for xml cdr json table
+				if ($database->table_exists('xml_cdr_json')) {
+					$xml_cdr_json_retention_days = $domain_settings->get('maintenance', 'xml_cdr_json_database_retention_days', $xml_cdr_retention_days);
+				} else {
+					$xml_cdr_json_retention_days = null;
+				}
+
+				//get the retention days for xml cdr logs table
+				if ($database->table_exists('xml_cdr_logs')) {
+					$xml_cdr_logs_retention_days = $domain_settings->get('maintenance', 'xml_cdr_logs_database_retention_days', $xml_cdr_retention_days);
+				} else {
+					$xml_cdr_logs_retention_days = null;
+				}
+
+				//ensure we have a retention days
+				if (!empty($xml_cdr_retention_days) && is_numeric($xml_cdr_retention_days)) {
+
+					//clear out old xml_cdr records
+					$sql = "delete from v_{$table} WHERE insert_date < NOW() - INTERVAL '{$xml_cdr_retention_days} days'"
+						. " and domain_uuid = '{$domain_uuid}'";
+					$database->execute($sql);
+
+					//record result
+					if ($database->message['code'] === 200) {
+						maintenance_service::log_write(self::class, "Successfully removed XML CDR entries from $domain_name", $domain_uuid);
+					} else {
+						maintenance_service::log_write(self::class, "Unable to remove XML CDR records for domain $domain_name", $domain_uuid, maintenance_service::LOG_ERROR);
+					}
+
+					//clear out old xml_cdr_flow records
+					if ($xml_cdr_flow_retention_days !== null) {
+						$sql = "delete from v_xml_cdr_flow WHERE insert_date < NOW() - INTERVAL '{$xml_cdr_flow_retention_days} days'"
+							. " and domain_uuid = '{$domain_uuid}";
+						$database->execute($sql);
+
+						//record result
+						if ($database->message['code'] === 200) {
+							maintenance_service::log_write(self::class, "Successfully removed XML CDR FLOW entries from $domain_name", $domain_uuid);
+						} else {
+							maintenance_service::log_write(self::class, "Unable to remove XML CDR FLOW records for domain $domain_name", $domain_uuid, maintenance_service::LOG_ERROR);
+						}
+					}
+
+					//clear out old xml_cdr_json records
+					if ($xml_cdr_json_retention_days !== null) {
+						$sql = "DELETE FROM v_xml_cdr_json WHERE insert_date < NOW() - INTERVAL '{$xml_cdr_json_retention_days} days'"
+							. " and domain_uuid = '{$domain_uuid}";
+						$database->execute($sql);
+
+						//record result
+						if ($database->message['code'] === 200) {
+							maintenance_service::log_write(self::class, "Successfully removed XML CDR JSON entries from $domain_name", $domain_uuid);
+						} else {
+							maintenance_service::log_write(self::class, "Unable to remove XML CDR JSON records for domain $domain_name", $domain_uuid, maintenance_service::LOG_ERROR);
+						}
+					}
+
+					//clear out old xml_cdr_logs records
+					if ($xml_cdr_logs_retention_days !== null) {
+						$sql = "DELETE FROM v_xml_cdr_logs WHERE insert_date < NOW() - INTERVAL '{$xml_cdr_logs_retention_days} days'"
+							. " and domain_uuid = '{$domain_uuid}'";
+						$database->execute($sql);
+
+						//record result
+						if ($database->message['code'] === 200) {
+							maintenance_service::log_write(self::class, "Successfully removed XML CDR LOG entries from $domain_name", $domain_uuid);
+						} else {
+							maintenance_service::log_write(self::class, "Unable to remove XML CDR LOG records for domain $domain_name", $domain_uuid, maintenance_service::LOG_ERROR);
+						}
+					}
+				}
+			}
+
+			//ensure logs are saved
+			maintenance_service::log_flush();
+		}
+
 	} //class
 }
 
