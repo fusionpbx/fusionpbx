@@ -672,7 +672,7 @@
 
 			//initialize a template object
 				$view = new template();
-				view->engine = $this->settings->get('provision', 'template_engine', 'smarty');
+				$view->engine = $this->settings->get('provision', 'template_engine', 'smarty');
 				$view->template_dir = $template_dir ."/".$device_template."/";
 				$view->cache_dir = sys_get_temp_dir();
 				$view->init();
