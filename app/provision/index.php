@@ -343,7 +343,7 @@
 		}
 	}
 
-//if password was defined in the system -> variables page then require the password.
+//if password was defined in the Default Settings page then require the password.
 	if (!empty($provision['password'])) {
 		//deny access if the password doesn't match
 		if ($provision['password'] != check_str($_REQUEST['password'])) {
