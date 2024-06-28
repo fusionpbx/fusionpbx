@@ -22,7 +22,7 @@ local response = dbh:first_row(sql, params)
 dbh:release()
 
 if response then
-    if response.domain_setting_value == 'True' then
+    if response.domain_setting_value == 'True' or response.domain_setting_value == 'true' then
         freeswitch.consoleLog("warning", "[check-suspension] Account suspension: " .. response.domain_setting_value)
 
         if is_internal_call == "true" then
