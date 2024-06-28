@@ -4,7 +4,7 @@ domain_uuid = session:getVariable("domain_uuid");
 is_internal_call = session:getVariable("from_user_exists");
 
 if not domain_uuid then
-    freeswitch.consoleLog("error", "[check-suspended] Missing domain_uuid argument")
+    freeswitch.consoleLog("error", "[check-suspension] Missing domain_uuid argument")
     return
 end
 
@@ -17,13 +17,13 @@ local sql = [[
 ]]
 
 local params = {domain_uuid = domain_uuid}
--- freeswitch.consoleLog("notice", "[check-suspended] sql: " .. sql)
+-- freeswitch.consoleLog("notice", "[check-suspension] sql: " .. sql)
 local response = dbh:first_row(sql, params)
 dbh:release()
 
 if response then
-    if response.domain_setting_value == "true" then
-        freeswitch.consoleLog("warning", "[check-suspended] Account suspended: " .. response.domain_setting_value)
+    if response.domain_setting_value == 'True' then
+        freeswitch.consoleLog("warning", "[check-suspension] Account suspension: " .. response.domain_setting_value)
 
         if is_internal_call == "true" then
 
@@ -50,16 +50,26 @@ if response then
             if session:ready() then
                 session:sleep(1000) -- Wait for 1 second (1000 milliseconds)
             end
-        end 
+        else  
+            if session:ready() then
+                session:execute("playback", "silence_stream://1000")
+            end
+            if session:ready() then
+                session:streamFile("ivr/ivr-no_route_destination.wav")
+            end
+            if session:ready() then
+                session:sleep(1000) -- Wait for 1 second (1000 milliseconds)
+            end
+        end
             
         if session:ready() then
-            freeswitch.consoleLog("notice", "[check-suspended] HANGUP ")
+            freeswitch.consoleLog("notice", "[check-suspension] HANGUP ")
             session:hangup("CALL_REJECTED")        
         end
         
         
     end
 else
-    freeswitch.consoleLog("notice", "[check-suspended] No result found for domain_uuid: " .. domain_uuid)
+    freeswitch.consoleLog("notice", "[check-suspension] No result found for domain_uuid: " .. domain_uuid)
 end
 
