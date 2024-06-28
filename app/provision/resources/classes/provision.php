@@ -140,6 +140,7 @@
 			//check in the devices table for a specific device address
 				$sql = "select count(*) from v_devices ";
 				$sql .= "where device_address = :device_address ";
+				$sql .= "and device_address <> '000000000000' ";
 				$parameters['device_address'] = $device_address;
 				$database = new database;
 				$num_rows = $database->select($sql, $parameters, 'column');
@@ -334,6 +335,7 @@
 						//get the device_template
 							$sql = "select * from v_devices ";
 							$sql .= "where device_address = :device_address ";
+							$sql .= "and device_address <> '000000000000' ";
 							if ($this->settings->get('provision','http_domain_filter', 'false') === "true") {
 								$sql  .= "and domain_uuid=:domain_uuid ";
 								$parameters['domain_uuid'] = $domain_uuid;
@@ -359,7 +361,8 @@
 								//register that we have seen the device
 									$sql = "update v_devices ";
 									$sql .= "set device_provisioned_date = :device_provisioned_date, device_provisioned_method = :device_provisioned_method, device_provisioned_ip = :device_provisioned_ip, device_provisioned_agent = :device_provisioned_agent ";
-									$sql .= "where domain_uuid = :domain_uuid and device_address = :device_address ";
+									$sql .= "where domain_uuid = :domain_uuid ";
+									$sql .= "and device_address = :device_address  ";
 									$parameters['domain_uuid'] = $domain_uuid;
 									$parameters['device_address'] = strtolower($device_address);
 									$parameters['device_provisioned_date'] = 'now()';
