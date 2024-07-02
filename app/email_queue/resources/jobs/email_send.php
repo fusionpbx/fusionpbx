@@ -232,14 +232,14 @@
 					$transcribe_engine = $settings->get('transcribe', 'engine', '');
 
 					//add the transcribe object and get the languages arrays
-					if (!empty($transcribe_engine)) {
+					if (!empty($transcribe_engine) && class_exists($transcribe_engine)) {
 						$transcribe = new transcribe($settings);
-					}
 
-					//transcribe the voicemail recording
-					$transcribe->audio_path = $email_attachment_path;
-					$transcribe->audio_filename = $email_attachment_name;
-					$transcribe_message = $transcribe->transcribe();
+						//transcribe the voicemail recording
+						$transcribe->audio_path = $email_attachment_path;
+						$transcribe->audio_filename = $email_attachment_name;
+						$transcribe_message = $transcribe->transcribe();
+					}
 
 					echo "transcribe path: ".$email_attachment_path."\n";
 					echo "transcribe name: ".$email_attachment_name."\n";
