@@ -165,11 +165,6 @@
 				return;
 			}
 
-		//include the classes
-			include "resources/classes/call_forward.php";
-			include "resources/classes/follow_me.php";
-			include "resources/classes/do_not_disturb.php";
-
 		//call forward config
 			if (permission_exists('call_forward')) {
 				//sanitize the destinations
