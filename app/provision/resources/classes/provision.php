@@ -349,6 +349,7 @@
 
 								//checks either device enabled
 									if ($row['device_enabled'] != 'true') {
+										syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempted but the device is not enabled for ".escape($device_address));
 										if ($this->settings->get('provision','debug', 'false') === 'true') {
 											echo "<br/>device disabled<br/>";
 										}
