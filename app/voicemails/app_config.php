@@ -386,7 +386,22 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Transcription enabled default false.";
-
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "275cf580-7b72-45e4-9af5-b8eed9a45ec0";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "voicemail";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "database_retention_days";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "90";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Number of days maintenance application will retain logs in the database.";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "9237cc82-7dea-4b5f-8225-eeed97938338";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "voicemail";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "filesystem_retention_days";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "90";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Number of days maintenance application will retain files.";
 	//schema details
 		$y=0;
 		$apps[$x]['db'][$y]['table']['name'] = "v_voicemails";
