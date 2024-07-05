@@ -443,6 +443,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "#d4d4d4";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "b4cc1590-68fe-4eee-bf79-982b2ae626bd";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "cdr";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "database_retention_days";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "730";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Number of days maintenance application will retain logs in the database.";
 
 	//schema details
 		$y=0;
