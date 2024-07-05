@@ -32,18 +32,6 @@
 if (!class_exists('xml_cdr')) {
 	class xml_cdr {
 
-		/*
-		 * Constants for maintenance methods
-		 */
-		const CDR_DATABASE_SUBCATEGORY = 'database_retention_days';
-		const FLOW_DATABASE_SUBCATEGORY = 'flow_database_retention_days';
-		const JSON_DATABASE_SUBCATEGORY = 'json_database_retention_days';
-		const LOGS_DATABASE_SUBCATEGORY = 'logs_database_retention_days';
-		const CDR_TABLE = 'xml_cdr';
-		const FLOW_TABLE = 'xml_cdr_flow';
-		const JSON_TABLE = 'xml_cdr_json';
-		const LOGS_TABLE = 'xml_cdr_logs';
-
 		/**
 		 * define variables
 		 */
@@ -2086,7 +2074,7 @@ if (!class_exists('xml_cdr')) {
 		 */
 		public static function database_maintenance(settings $settings): void {
 			//set table name for query
-			$table = self::CDR_TABLE;
+			$table = 'xml_cdr';
 
 			//get a database connection
 			$database = $settings->database();
@@ -2099,25 +2087,25 @@ if (!class_exists('xml_cdr')) {
 				$domain_settings = new settings(['database' => $database, 'domain_uuid' => $domain_uuid]);
 
 				//get the retention days for xml cdr table using 'cdr' and 'database_retention_days'
-				$xml_cdr_retention_days = $domain_settings->get(self::database_maintenance_category(), self::CDR_DATABASE_SUBCATEGORY, '');
+				$xml_cdr_retention_days = $domain_settings->get('cdr', 'database_retention_days', '');
 
 				//get the retention days for xml cdr flow table
-				if ($database->table_exists(self::FLOW_TABLE)) {
-					$xml_cdr_flow_retention_days = $domain_settings->get(self::database_maintenance_category(), self::FLOW_DATABASE_SUBCATEGORY, $xml_cdr_retention_days);
+				if ($database->table_exists('xml_cdr_flow')) {
+					$xml_cdr_flow_retention_days = $domain_settings->get('cdr', 'flow_database_retention_days', $xml_cdr_retention_days);
 				} else {
 					$xml_cdr_flow_retention_days = null;
 				}
 
 				//get the retention days for xml cdr json table
-				if ($database->table_exists(self::JSON_TABLE)) {
-					$xml_cdr_json_retention_days = $domain_settings->get(self::database_maintenance_category(), self::JSON_DATABASE_SUBCATEGORY, $xml_cdr_retention_days);
+				if ($database->table_exists('xml_cdr_json')) {
+					$xml_cdr_json_retention_days = $domain_settings->get('cdr', 'json_database_retention_days', $xml_cdr_retention_days);
 				} else {
 					$xml_cdr_json_retention_days = null;
 				}
 
 				//get the retention days for xml cdr logs table
-				if ($database->table_exists(self::LOGS_TABLE)) {
-					$xml_cdr_logs_retention_days = $domain_settings->get(self::database_maintenance_category(), self::LOGS_DATABASE_SUBCATEGORY, $xml_cdr_retention_days);
+				if ($database->table_exists('xml_cdr_logs')) {
+					$xml_cdr_logs_retention_days = $domain_settings->get('cdr', 'logs_database_retention_days', $xml_cdr_retention_days);
 				} else {
 					$xml_cdr_logs_retention_days = null;
 				}
