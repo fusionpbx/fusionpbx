@@ -261,6 +261,17 @@ class settings {
 		$result = $this->database->select($sql, $parameters, 'all');
 		unset($sql, $parameters);
 		if (!empty($result)) {
+			//domain setting array types override the default settings set as type array
+			foreach ($result as $row) {
+				$name = $row['domain_setting_name'];
+				$category = $row['domain_setting_category'];
+				$subcategory = $row['domain_setting_subcategory'];
+				if ($name == "array") {
+					$this->settings[$category][$subcategory] = array();
+				}
+			}
+
+			//add the domain settings to the $this->settings array
 			foreach ($result as $row) {
 				$name = $row['domain_setting_name'];
 				$category = $row['domain_setting_category'];
@@ -268,7 +279,7 @@ class settings {
 				if (empty($subcategory)) {
 					if ($name == "array") {
 						if (!isset($this->settings[$category]) || !is_array($this->settings[$category])) {
-						    $this->settings[$category] = array();
+							$this->settings[$category] = array();
 						}
 						$this->settings[$category][] = $row['domain_setting_value'];
 					}
@@ -279,7 +290,7 @@ class settings {
 				else {
 					if ($name == "array") {
 						if (!isset($this->settings[$category][$subcategory]) || !is_array($this->settings[$category][$subcategory])) {
-						    $this->settings[$category][$subcategory] = array();
+							$this->settings[$category][$subcategory] = array();
 						}
 						$this->settings[$category][$subcategory][] = $row['domain_setting_value'];
 					}
