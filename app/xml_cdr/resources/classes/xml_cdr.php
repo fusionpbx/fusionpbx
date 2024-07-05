@@ -2126,7 +2126,7 @@ if (!class_exists('xml_cdr')) {
 					}
 
 					//clear out old xml_cdr_flow records
-					if ($xml_cdr_flow_retention_days !== null) {
+					if (!empty($xml_cdr_flow_retention_days)) {
 						$sql = "delete from v_xml_cdr_flow WHERE insert_date < NOW() - INTERVAL '{$xml_cdr_flow_retention_days} days'"
 							. " and domain_uuid = '{$domain_uuid}";
 						$database->execute($sql);
@@ -2140,7 +2140,7 @@ if (!class_exists('xml_cdr')) {
 					}
 
 					//clear out old xml_cdr_json records
-					if ($xml_cdr_json_retention_days !== null) {
+					if (!empty($xml_cdr_json_retention_days)) {
 						$sql = "DELETE FROM v_xml_cdr_json WHERE insert_date < NOW() - INTERVAL '{$xml_cdr_json_retention_days} days'"
 							. " and domain_uuid = '{$domain_uuid}";
 						$database->execute($sql);
@@ -2154,7 +2154,7 @@ if (!class_exists('xml_cdr')) {
 					}
 
 					//clear out old xml_cdr_logs records
-					if ($xml_cdr_logs_retention_days !== null) {
+					if (!empty($xml_cdr_logs_retention_days)) {
 						$sql = "DELETE FROM v_xml_cdr_logs WHERE insert_date < NOW() - INTERVAL '{$xml_cdr_logs_retention_days} days'"
 							. " and domain_uuid = '{$domain_uuid}'";
 						$database->execute($sql);
