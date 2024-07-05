@@ -213,13 +213,13 @@
 		http_error('404');
 	}
 
-//keep backwards compatibility
-	$provision_cidrs = $settings->get('provision','cidr', []);
+//get all provision settings
+	$provision = $settings->get('provision', null, []);
 
 //check the cidr range
-	if (!empty($provision_cidrs)) {
+	if (!empty($provision['cidr'])) {
 		$found = false;
-		foreach($provision_cidrs as $cidr) {
+		foreach($provision['cidr'] as $cidr) {
 			if (check_cidr($cidr, $_SERVER['REMOTE_ADDR'])) {
 				$found = true;
 				break;
@@ -230,10 +230,6 @@
 			http_error('404');
 		}
 	}
-
-//get all provision settings
-	$provision = $settings->get('provision', null, []);
-	$auth_passwords = $settings->get('provision', 'http_auth_password', []);
 
 //http authentication - digest
 	if (!empty($provision["http_auth_username"]) && empty($provision["http_auth_type"])) { $provision["http_auth_type"] = "digest"; }
@@ -321,6 +317,7 @@
 		}
 		else {
 			$authorized = false;
+			$auth_passwords = $settings->get('provision', 'http_auth_password', []);
 			foreach ($auth_passwords as $password) {
 				if ($_SERVER['PHP_AUTH_PW'] == $password) {
 					$authorized = true;
@@ -343,7 +340,7 @@
 		}
 	}
 
-//if password was defined in the Default Settings page then require the password.
+//if the password was defined in the settings then require the password.
 	if (!empty($provision['password'])) {
 		//deny access if the password doesn't match
 		if ($provision['password'] != check_str($_REQUEST['password'])) {
