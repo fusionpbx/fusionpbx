@@ -1,0 +1,1 @@
+For Provisioning to work propery you will need to be on firmware 4.1.4.0.5 and greater

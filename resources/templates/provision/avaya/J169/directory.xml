@@ -1,0 +1,14 @@
+<IPPhoneDirectory>
+{foreach $contacts as $row}
+    <DirectoryEntry>
+    <LastName>{$row.contact_name_family}</LastName>
+    <FirstName>{$row.contact_name_given}</FirstName>
+    <PhoneNumbers>
+        <Phone>
+            <Number>{if $row.category == "extensions"}{$row.phone_extension}{else}{$row.phone_number}{/if}</Number>
+            <Type>Work</Type>                                      
+        </Phone>
+    </PhoneNumbers>
+    </DirectoryEntry> 
+{/foreach}
+</IPPhoneDirectory>

@@ -70,6 +70,162 @@
 				case "00085d":
 					$device_vendor = "aastra";
 					break;
+				case "00040d":
+					$device_vendor = "avaya";
+					break;
+				case "001b4f":
+					$device_vendor = "avaya";
+					break;
+				case "00549f":
+					$device_vendor = "avaya";
+					break;
+				case "048a15":
+					$device_vendor = "avaya";
+					break;
+				case "10cdae":
+					$device_vendor = "avaya";
+					break;
+				case "14612f":
+					$device_vendor = "avaya";
+					break;
+				case "24b209":
+					$device_vendor = "avaya";
+					break;
+				case "24d921":
+					$device_vendor = "avaya";
+					break;
+				case "2cf4c5":
+					$device_vendor = "avaya";
+					break;
+				case "3475c7":
+					$device_vendor = "avaya";
+					break;
+				case "38bb3c":
+					$device_vendor = "avaya";
+					break;
+				case "3c3a73":
+					$device_vendor = "avaya";
+					break;
+				case "3cb15b":
+					$device_vendor = "avaya";
+					break;
+				case "44322a":
+					$device_vendor = "avaya";
+					break;
+				case "506184":
+					$device_vendor = "avaya";
+					break;
+				case "50cd22":
+					$device_vendor = "avaya";
+					break;
+				case "581626":
+					$device_vendor = "avaya";
+					break;
+				case "6049c1":
+					$device_vendor = "avaya";
+					break;
+				case "646a52":
+					$device_vendor = "avaya";
+					break;
+				case "64a7dd":
+					$device_vendor = "avaya";
+					break;
+				case "64c354":
+					$device_vendor = "avaya";
+					break;
+				case "6ca849":
+					$device_vendor = "avaya";
+					break;
+				case "6cfa58":
+					$device_vendor = "avaya";
+					break;
+				case "703018":
+					$device_vendor = "avaya";
+					break;
+				case "7038ee":
+					$device_vendor = "avaya";
+					break;
+				case "7052c5":
+					$device_vendor = "avaya";
+					break;
+				case "707c69":
+					$device_vendor = "avaya";
+					break;
+				case "801daa":
+					$device_vendor = "avaya";
+					break;
+				case "848371":
+					$device_vendor = "avaya";
+					break;
+				case "90fb5b":
+					$device_vendor = "avaya";
+					break;
+				case "a009ed":
+					$device_vendor = "avaya";
+					break;
+				case "a01290":
+					$device_vendor = "avaya";
+					break;
+				case "a051c6":
+					$device_vendor = "avaya";
+					break;
+				case "a4251b":
+					$device_vendor = "avaya";
+					break;
+				case "a47886":
+					$device_vendor = "avaya";
+					break;
+				case "b0adaa":
+					$device_vendor = "avaya";
+					break;
+				case "b4475e":
+					$device_vendor = "avaya";
+					break;
+				case "b4a95a":
+					$device_vendor = "avaya";
+					break;
+				case "b4b017":
+					$device_vendor = "avaya";
+					break;
+				case "bcadab":
+					$device_vendor = "avaya";
+					break;
+				case "c057bc":
+					$device_vendor = "avaya";
+					break;
+				case "c4bed4":
+					$device_vendor = "avaya";
+					break;
+				case "c81fea":
+					$device_vendor = "avaya";
+					break;
+				case "c8f406":
+					$device_vendor = "avaya";
+					break;
+				case "ccf954":
+					$device_vendor = "avaya";
+					break;
+				case "d47856":
+					$device_vendor = "avaya";
+					break;
+				case "d4ea0e":
+					$device_vendor = "avaya";
+					break;
+				case "e45d52":
+					$device_vendor = "avaya";
+					break;
+				case "f81547":
+					$device_vendor = "avaya";
+					break;
+				case "f873a2":
+					$device_vendor = "avaya";
+					break;
+				case "fc8399":
+					$device_vendor = "avaya";
+					break;
+				case "fca841":
+					$device_vendor = "avaya";
+					break;
 				case "001873":
 					$device_vendor = "cisco";
 					break;
@@ -221,6 +377,9 @@
 					}
 					if (preg_replace('/^.*?(flyingvoice).*$/i', '$1', $agent) == "flyingvoice") {
 						return "flyingvoice";
+					}
+					if (preg_replace('/^.*?(avaya).*$/i', '$1', $agent) == "avaya") {
+						return "avaya";
 					}
 					// unknown vendor
 					return "";
