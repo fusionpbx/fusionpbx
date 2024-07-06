@@ -1470,10 +1470,11 @@
 		<!-- ########################################################################################## -->
 		<!-- ## Network/WiFi Settings         GRP2614/GRP2615/GRP2616/GRP2624/GRP2634/GRP2670/GRP2650/GRP2636           -->
 		<!-- ########################################################################################## -->
+		{if isset($grandstream_wifi_enabled) && $grandstream_wifi_enabled == 'Yes'}
 		<!-- # Enable/Disable WiFi -->
 		<!-- # No - Off, OffAndHideMenuFromLCD, Yes - On. -->
 		<!-- Pvalue P7800 -->
-		<item name="network.wifi.enable">Off</item>
+		<item name="network.wifi.enable">Yes</item>
 
 		<!-- # Access Point 1 -->
 		<!-- # SSID -->
@@ -1838,6 +1839,7 @@
 		<!-- # VoWLan Target Delay. Low, Medium, or High -->
 		<!-- Pvalue P82281 -->
 		<item name="wifi.vowlan_target_delay">Low</item>
+		{/if}
 
 		<!-- ############################################################################## -->
 		<!-- ##  Maintenance/ Web Access     ## -->
