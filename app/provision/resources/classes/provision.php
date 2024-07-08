@@ -36,7 +36,7 @@
 		private $settings;
 		private $database;
 
-		public function __construct() {
+		public function __construct($params = []) {
 
 			//preset the the values
 				$database = null;
