@@ -33,8 +33,6 @@
  */
 class database_transactions {
 
-	const TABLE = 'database_transactions';
-
 	/**
 	 * Removes old entries for in the database database_transactions table
 	 * see {@link https://github.com/fusionpbx/fusionpbx-app-maintenance/} FusionPBX Maintenance App
@@ -43,7 +41,7 @@ class database_transactions {
 	 */
 	public static function database_maintenance(settings $settings): void {
 		//set table name for query
-		$table = self::TABLE;
+		$table = 'database_transactions';
 		//get a database connection
 		$database = $settings->database();
 		//get a list of domains
@@ -51,28 +49,25 @@ class database_transactions {
 		foreach ($domains as $domain_uuid => $domain_name) {
 			//get domain settings
 			$domain_settings = new settings(['database' => $database, 'domain_uuid' => $domain_uuid]);
+			//get the retention days for this domain
+			$retention_days = $domain_settings->get('database_transactions', 'database_retention_days', '');
 			//ensure we have a retention day
-			$retention_days = $domain_settings->get('maintenance', 'database_transaction_database_retention_days', '');
 			if (!empty($retention_days) && is_numeric($retention_days)) {
 				//clear out old records
-				$sql = "delete from v_{$table} WHERE to_timestamp(created_epoch) < NOW() - INTERVAL '{$retention_days} days'"
+				$sql = "delete from v_{$table} WHERE transaction_date < NOW() - INTERVAL '{$retention_days} days'"
 					. " and domain_uuid = '{$domain_uuid}'";
 				$database->execute($sql);
 				if ($database->message['code'] === 200) {
+					//success
 					maintenance_service::log_write(self::class, "Successfully removed database_transaction entries from $domain_name", $domain_uuid);
 				} else {
+					//failure
 					maintenance_service::log_write(self::class, "Unable to remove records for domain $domain_name", $domain_uuid, maintenance_service::LOG_ERROR);
 				}
+			} else {
+				//report an invalid setting
+				maintenance_service::log_write(self::class, "Retention days not set or not a numeric value", $domain_uuid, maintenance_service::LOG_ERROR);
 			}
-		}
-		//clear out global entries
-		$sql = "delete from v_{$table} WHERE to_timestamp(created_epoch) < NOW() - INTERVAL '{$retention_days} days'"
-			. " and domain_uuid is null";
-		$database->execute($sql);
-		if ($database->message['code'] === 200) {
-			maintenance_service::log_write(self::class, "Successfully removed database_transaction entries from $domain_name", $domain_uuid);
-		} else {
-			maintenance_service::log_write(self::class, "Unable to remove records for domain $domain_name", $domain_uuid, maintenance_service::LOG_ERROR);
 		}
 		//ensure logs are saved
 		maintenance_service::log_flush();
