@@ -464,6 +464,65 @@ if (!class_exists('call_recordings')) {
 			fclose($fp);
 		}
 
+		/**
+		 * Called by the maintenance service to clean out old call recordings
+		 * @param settings $settings
+		 * @return void
+		 */
+		public static function filesystem_maintenance(settings $settings): void {
+			//get the database connection object
+			$database = $settings->database();
+
+			//get an associative array of domain_uuid => domain_names
+			$domains = maintenance::get_domains($database);
+
+			//loop over each domain
+			foreach ($domains as $domain_uuid => $domain_name) {
+				//get the settings for this domain
+				$domain_settings = new settings(['database' => $database, 'domain_uuid' => $domain_uuid]);
+
+				//get the recording location for this domain
+				$call_recording_location = $domain_settings->get('switch', 'recordings', '/var/lib/freeswitch/storage/recordings') . '/default';
+
+				//get the retention days for this domain
+				$retention_days = $domain_settings->get('call_recordings', 'filesystem_retention_days', '');
+
+				//ensure retention days are not empty
+				if (!empty($retention_days) && is_numeric($retention_days)) {
+					$retention_days = intval($retention_days);
+
+					//get list of mp3 and wav files
+					$mp3_files = glob("$call_recording_location/$domain_name/*/archive/*.mp3");
+					$wav_files = glob("$call_recording_location/$domain_name/*/archive/*.wav");
+
+					//combine to single array
+					$domain_call_recording_files = array_merge($mp3_files, $wav_files);
+
+					//loop over each call recording mp3 or wav file
+					foreach ($domain_call_recording_files as $file) {
+
+						//use the maintenance service class helper function to get the modified date and see if it is older
+						if (maintenance_service::days_since_modified($file) > $retention_days) {
+							//remove the file when it is older
+							if (unlink($file)) {
+								//log success
+								maintenance_service::log_write(self::class, "Removed $file from call_recordings", $domain_uuid);
+							} else {
+								//log failure
+								maintenance_service::log_write(self::class, "Unable to remove $file", $domain_uuid, maintenance_service::LOG_ERROR);
+							}
+						} else {
+							//file is not older - do nothing
+						}
+					}
+				}
+				else {
+					//report the retention days is not set correctly
+					maintenance_service::log_write(self::class, "Retention days not set or not a valid number", $domain_uuid, maintenance_service::LOG_ERROR);
+				}
+			}
+		}
+
 	} //class
 }
 

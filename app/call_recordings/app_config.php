@@ -34,5 +34,12 @@
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = 'call_recording_download';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
-
+		$y = 0;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "95cb740e-e377-4852-8894-06441c61e78b";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "call_recordings";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "filesystem_retention_days";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "90";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Number of days to retain the maintenance logs in the database.";
 ?>
