@@ -151,5 +151,12 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "char(36)";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
-
+		$y = 0;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "5cb285ea-c94b-41a8-8f3d-80680278d1ae";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "database_transactions";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "database_retention_days";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "30";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Number of days to retain the transaction logs by the maintenance service in the database.";
 ?>
