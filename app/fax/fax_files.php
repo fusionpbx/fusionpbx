@@ -305,6 +305,54 @@
 	}
 	require_once "resources/header.php";
 
+//pdf script, style and container
+	echo "<script>\n";
+	echo "	function fade_in(id, url) {\n";
+	echo "		var pdf_container = document.getElementById(id);\n";
+	echo "		pdf_container.style.opacity = 1;\n";
+	echo "		pdf_container.style.zIndex = 999999;\n";
+	echo "		document.getElementById('pdf-iframe').src = url;";
+	echo "	}\n";
+	echo "	function fade_out(pdf_container) {\n";
+	echo "		pdf_container.style.opacity = 0;\n";
+	echo "		setTimeout(function(){ pdf_container.style.zIndex = -1; }, 1000);\n";
+	echo "	}\n";
+	echo "</script>\n";
+	echo "\n";
+	echo "<style>\n";
+	echo "	div#pdf-container {\n";
+	echo "		z-index: -1;\n";
+	echo "		position: absolute;\n";
+	echo "		top: 0;\n";
+	echo "		left: 0;\n";
+	echo "		width: 100%;\n";
+	echo "		height: 100%;\n";
+	echo "		opacity: 0;\n";
+	echo "		transition: opacity 1s;\n";
+	echo "		padding: 20px;\n";
+	echo "	}\n";
+	echo "	div#pdf-div {\n";
+	echo "		display: block;\n";
+	//echo "		margin: max(0px, 0px) auto;\n";
+	echo "		width: 100%;\n";
+	echo "		max-width: 600px;\n";
+	echo "		min-width: 300px;\n";
+	echo "		height: auto;\n";
+	echo "		max-height: 800px;\n";
+	echo "		margin:0 auto; \n";
+	echo "		padding:0px;\n";
+	//echo "		-webkit-box-shadow: 0px 1px 20px #888;\n";
+	//echo "		-moz-box-shadow: 0px 1px 20px #888;\n";
+	//echo "		box-shadow: 0px 1px 20px #888;\n";
+	//echo "		border: 0px solid #fff;\n";
+	echo "	}\n";
+	echo "</style>";
+	echo "<div id='pdf-container' onclick='fade_out(this);'>\n";
+	echo "	<div id='pdf-div'>\n";
+	echo "		<iframe id=\"pdf-iframe\" src=\"\" width=\"600\" height=\"800\"></iframe>\n";
+	echo "	</div>\n";
+	echo "</div>\n";
+
 //show the content
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'>";
@@ -316,6 +364,7 @@
 	}
 	echo "	</div>\n";
 	echo "	<div class='actions'>\n";
+
 	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','link'=>'fax.php']);
 	$margin_left = false;
 	if (permission_exists('fax_file_edit') && $_REQUEST['box'] == 'inbox' && $fax_files) {
@@ -457,7 +506,7 @@
 				$list_row_url .= "&fax_file_uuid=".urlencode($row['fax_file_uuid']);
 				$list_row_url .= "&a=download";
 				$list_row_url .= "&type=fax_".urlencode($_REQUEST['box']);
-				$list_row_url .= "&t=bin";
+				//$list_row_url .= "&t=bin";
 				$list_row_url .= "&order_by=".urlencode($_REQUEST['order_by']);
 				$list_row_url .= "&order=".urlencode($_REQUEST['order']);
 				$list_row_url .= "&box=".urlencode($_REQUEST['box']);
@@ -479,7 +528,9 @@
 				echo "	<td>".escape(format_phone($row['fax_destination']))."&nbsp;</td>\n";
 			}
 			if (permission_exists('fax_download_view')) {
-				echo "  <td style='".$bold."'><a href='".$list_row_url."'>".$file_name."</a></td>\n";
+				echo "  <td style='".$bold."'>\n";
+				echo "		<a href='".$list_row_url."'>".$file_name."</a>";
+				echo "	</td>\n";
 			}
 			echo "  <td class='no-link' style='".$bold."'>\n";
 			if ($_REQUEST['box'] == 'inbox') {
@@ -489,7 +540,9 @@
 				$dir_fax = $dir_fax_sent;
 			}
 			if ((permission_exists('fax_inbox_view') || permission_exists('fax_sent_view')) && file_exists($dir_fax.'/'.$file_name.".pdf")) {
-				echo "	  <a href=\"".substr($list_row_url, 0, -4).".pdf\">PDF</a>\n";
+				echo "		<a href=\"javascript:void(0);\" onclick=\"fade_in('pdf-container', '".substr($list_row_url, 0, -4).".pdf');\">View</a>\n";
+				echo "		&nbsp;&nbsp;\n";
+				echo "		<a href=\"".substr($list_row_url, 0, -4).".pdf\">PDF</a>\n";
 			}
 			echo "  </td>\n";
 			echo "	<td style='".$bold."'>".$row['fax_date_formatted']." ".$row['fax_time_formatted']."&nbsp;</td>\n";
