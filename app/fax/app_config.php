@@ -493,6 +493,22 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "300-399";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the suggested extension range(s) for fax servers";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "f1528faa-e7a4-4460-b2ab-275fabd4b344";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "fax";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "filesystem_retention_days";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "90";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Number of days to retain the fax records in the database for the maintenance app.";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "c7e425cb-46c0-4875-9f81-12366cb0296a";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "fax";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "database_retention_days";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "90";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Number of days to retain the faxes on the filesystem for the maintenance app.";
 
 	//schema details
 		$y=0;

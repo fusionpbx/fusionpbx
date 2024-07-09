@@ -721,6 +721,71 @@ if (!class_exists('fax')) {
 
 		}
 
+		/**
+		 * Remove database entries for old fax entries in the database. Called by the maintenance_service app.
+		 * @param settings $settings
+		 * @return void
+		 */
+		public static function database_maintenance(settings $settings): void {
+			$database = $settings->database();
+			$domains = maintenance_service::get_domains($database);
+			foreach ($domains as $domain_uuid => $domain_name) {
+				$domain_settings = new settings(['database'=>$database, 'domain_uuid' => $domain_uuid]);
+				$retention_days = $domain_settings->get('fax', 'database_retention_days', '');
+				if (!empty($retention_days) && is_numeric($retention_days)) {
+					$sql = "delete from v_fax_files WHERE fax_date < NOW() - INTERVAL '$retention_days days'";
+					$sql .= " and domain_uuid = '$domain_uuid'";
+					$database->execute($sql);
+					if (!empty($database->message) && $database->message['code'] == 200) {
+						maintenance_service::log_write(self::class, 'Removed old entries', $domain_uuid);
+					} else {
+						maintenance_service::log_write(self::class, 'Unable to remove entries', $domain_uuid, maintenance_service::LOG_ERROR);
+					}
+					$sql = "delete from v_fax_logs WHERE fax_date < NOW() - INTERVAL '$retention_days days'";
+					$sql .= " and domain_uuid = '$domain_uuid'";
+					if (!empty($database->message['code']) && $database->message['code'] == 200) {
+						maintenance_service::log_write(self::class, 'Removed old entries', $domain_uuid);
+					}
+				} else {
+					maintenance_service::log_write(self::class, 'Retention days not set or not a numeric value', $domain_uuid, maintenance_service::LOG_ERROR);
+				}
+			}
+		}
+
+		/**
+		 * Remove old fax files. Called by the maintenance_service app.
+		 * @param settings $settings
+		 * @return void
+		 */
+		public static function filesystem_maintenance(settings $settings): void {
+			$database = $settings->database();
+			$fax_base_location = $settings->get('switch', 'storage', '/var/lib/freeswitch/storage') . '/fax';
+			$domains = maintenance_service::get_domains($database);
+			foreach ($domains as $domain_uuid => $domain_name) {
+				$domain_settings = new settings(['database' => $database, 'domain_uuid' => $domain_uuid]);
+				$retention_days = $domain_settings->get('fax', 'filesystem_retention_days', '');
+				if (!empty($retention_days) && is_numeric($retention_days)) {
+					//find in the extension_number/{inbox,sent,temp}/*.{tif,pdf} folders
+					$tif_files = glob($fax_base_location . '/' . $domain_name . '/*/*/*.tif');
+					$pdf_files = glob($fax_base_location . '/' . $domain_name . '/*/*/*.pdf');
+					$files = array_merge($tif_files, $pdf_files);
+					foreach ($files as $file) {
+						if (maintenance_service::days_since_modified($file) > $retention_days) {
+							if (unlink($file)) {
+								maintenance_service::log_write(self::class, "Removed $file", $domain_uuid);
+							} else {
+								maintenance_service::log_write(self::class, "Unable to remove $file", $domain_uuid, maintenance_service::LOG_ERROR);
+							}
+						} else {
+							//file not old enough do nothing
+						}
+					}
+				} else {
+					maintenance_service::log_write(self::class, "Retention days not set or not a number", $domain_uuid, maintenance_service::LOG_ERROR);
+				}
+			}
+		}
+
 	} //class
 }
 
