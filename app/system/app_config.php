@@ -161,5 +161,13 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "#d4d4d4";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "93193159-0033-43a6-99d5-5dc652b38724";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "session";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "filesystem_retention_days";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Number of days to keep PHP session files on the server until the maintenance application deletes them";
 
 ?>
