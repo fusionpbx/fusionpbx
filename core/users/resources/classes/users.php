@@ -287,6 +287,33 @@ if (!class_exists('users')) {
 			}
 		}
 
+		/**
+		 * Remove old user log entries. Called the maintenance service application.
+		 * @param settings $settings
+		 * @return void
+		 */
+		public static function database_maintenance(settings $settings): void {
+			$database = $settings->database();
+			$domains = maintenance_service::get_domains($database);
+			foreach ($domains as $domain_uuid => $domain_name) {
+				$domain_settings = new settings(['database' => $database, 'domain_uuid' => $domain_uuid]);
+				$retention_days = $domain_settings->get('users', 'database_retention_days', '');
+				if (!empty($retention_days) && is_numeric($retention_days)) {
+					$sql = "delete from v_user_logs where timestamp < NOW() - INTERVAL '$retention_days days'";
+					$sql.= " and domain_uuid = '$domain_uuid'";
+					$database->execute($sql);
+					$code = $database->message['code'] ?? 0;
+					if ($code == 200) {
+						maintenance_service::log_write(self::class, "Removed database entries older than $retention_days", $domain_uuid);
+					} else {
+						$message = $database->message['message'] ?? "An unknown error has occurred";
+						maintenance_service::log_write(self::class, "Unable to remove old database records. Error message: $message ($code)", $domain_uuid, maintenance_service::LOG_ERROR);
+					}
+				} else {
+					maintenance_service::log_write(self::class, "Database retention days not set or not numeric", $domain_uuid);
+				}
+			}
+		}
 	}
 }
 
