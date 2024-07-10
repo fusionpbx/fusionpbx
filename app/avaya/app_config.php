@@ -31,6 +31,14 @@
 
 	//default settings
 		$y=0;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "c58b1c0f-b0c9-42a2-a971-4da25fa9fafa";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "avaya_j139_firmware_url";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Firmware filename URL for J139 Phone";
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "98c04df8-35c8-4465-a52b-f1b7cdf08c30";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "avaya_j179_firmware_url";
@@ -101,7 +109,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "800 x 480 pixels max. JPG only. Max file size is 256KB";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "90222f45-3996-4b74-89bc-68f12ad78afe";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
@@ -109,7 +117,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "240 x 320 pixels max. JPG only. Max file size is 256KB";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "75d92d17-6096-47ec-89f6-bbf17479fb85";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
@@ -117,7 +125,15 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "320 x 240 pixels max. JPG only. Max file size is 256KB";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "4244f3b6-78cd-46a2-bdbd-e0d8452c4de3";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "avaya_j139_wallpaper_url";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "320 x 240 pixels max. JPG only. Max file size is 256KB";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "30cbfda7-f068-463f-80a4-aeecf8c48eaf";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
@@ -125,15 +141,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
-		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "a7d1d29f-e791-4b32-8a2c-7a6898c7cb53";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "avaya_jem24_wallpaper_url";
-		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "320 x 240 pixels max. JPG only. Max file size is 256KB";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "a53f2369-19fb-449d-8daa-189707b79cc6";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
