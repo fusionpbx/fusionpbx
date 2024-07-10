@@ -109,7 +109,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "800 x 480 pixels max. JPG only. Max file size is 256KB";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "90222f45-3996-4b74-89bc-68f12ad78afe";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
@@ -117,7 +117,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "240 x 320 pixels max. JPG only. Max file size is 256KB";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "75d92d17-6096-47ec-89f6-bbf17479fb85";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
@@ -125,7 +125,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "320 x 240 pixels max. JPG only. Max file size is 256KB";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "4244f3b6-78cd-46a2-bdbd-e0d8452c4de3";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
@@ -133,7 +133,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "320 x 240 pixels max. JPG only. Max file size is 256KB";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "30cbfda7-f068-463f-80a4-aeecf8c48eaf";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
@@ -141,7 +141,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "320 x 240 pixels max. JPG only. Max file size is 256KB";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "a53f2369-19fb-449d-8daa-189707b79cc6";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
