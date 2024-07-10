@@ -230,7 +230,7 @@
 					$transcribe_engine = $settings->get('transcribe', 'engine', '');
 
 					//add the transcribe object and get the languages arrays
-					if (!empty($transcribe_engine) && class_exists($transcribe_engine)) {
+					if (!empty($transcribe_engine) && class_exists('transcribe_' . $transcribe_engine)) {
 						$transcribe = new transcribe($settings);
 
 						//transcribe the voicemail recording
