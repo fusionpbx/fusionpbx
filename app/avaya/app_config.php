@@ -143,14 +143,6 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "a7d1d29f-e791-4b32-8a2c-7a6898c7cb53";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "avaya_jem24_wallpaper_url";
-		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
-		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "a53f2369-19fb-449d-8daa-189707b79cc6";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "avaya_ntp_server";
