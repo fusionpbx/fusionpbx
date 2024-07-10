@@ -906,12 +906,14 @@
 			btn_delete = document.getElementById("btn_delete");
 			btn_download = document.getElementById("btn_download");
 			btn_transcribe = document.getElementById("btn_transcribe");
+			btn_resend = document.getElementById("btn_resend");
 			if (checked == true) {
 				if (btn_copy) { btn_copy.style.display = "inline"; }
 				if (btn_toggle) { btn_toggle.style.display = "inline"; }
 				if (btn_delete) { btn_delete.style.display = "inline"; }
 				if (btn_download) { btn_download.style.display = "inline"; }
 				if (btn_transcribe) { btn_transcribe.style.display = "inline"; }
+				if (btn_resend) { btn_resend.style.display = "inline"; }
 			}
 		 	else {
 				if (btn_copy) { btn_copy.style.display = "none"; }
@@ -919,6 +921,7 @@
 				if (btn_delete) { btn_delete.style.display = "none"; }
 				if (btn_download) { btn_download.style.display = "none"; }
 				if (btn_transcribe) { btn_transcribe.style.display = "none"; }
+				if (btn_resend) { btn_resend.style.display = "none"; }
 		 	}
 		}
 		{/literal}

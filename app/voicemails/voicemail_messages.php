@@ -185,6 +185,28 @@
 							}
 					}
 					break;
+				case 'resend':
+					if (is_array($voicemail_messages) && @sizeof($voicemail_messages) != 0) {
+						$messages_resent = 0;
+						foreach ($voicemail_messages as $voicemail_message) {
+							if (!empty($voicemail_message['checked']) && $voicemail_message['checked'] == 'true' && is_uuid($voicemail_message['uuid']) && is_uuid($voicemail_message['voicemail_uuid'])) {
+								//resend (email) voicemail message
+									$voicemail = new voicemail;
+									$voicemail->domain_uuid = $_SESSION['domain_uuid'];
+									$voicemail->voicemail_uuid = $voicemail_message['voicemail_uuid'];
+									$voicemail->voicemail_message_uuid = $voicemail_message['uuid'];
+									$voicemail->message_resend();
+									unset($voicemail);
+								//increment counter
+									$messages_resent++;
+							}
+						}
+						//set message
+							if ($messages_resent != 0) {
+								message::add($text['message-toggle'].': '.$messages_resent);
+							}
+					}
+					break;
 				case 'delete':
 					if (permission_exists('voicemail_message_delete')) {
 						if (is_array($voicemail_messages) && @sizeof($voicemail_messages) != 0) {
@@ -302,6 +324,8 @@
 		$margin_left = true;
 	}
 	if ($num_rows) {
+		echo button::create(['type'=>'button','label'=>$text['button-resend'],'icon'=>$_SESSION['theme']['button_icon_email'],'id'=>'btn_resend','name'=>'btn_resend','collapse'=>'hide-xs','style'=>'display: none;'.(!$margin_left ? 'margin-left: 15px;' : null),'onclick'=>"modal_open('modal-resend','btn_resend');"]);
+		$margin_left = true;
 		echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$_SESSION['theme']['button_icon_toggle'],'id'=>'btn_toggle','name'=>'btn_toggle','collapse'=>'hide-xs','style'=>'display: none;'.(!$margin_left ? 'margin-left: 15px;' : null),'onclick'=>"modal_open('modal-toggle','btn_toggle');"]);
 		$margin_left = true;
 	}
@@ -316,6 +340,14 @@
 	echo "</div>\n";
 
 	if ($num_rows) {
+		echo modal::create([
+			'id'=>'modal-resend',
+			'title'=>$text['modal_title-resend'],
+			'message'=>$text['modal_message-resend'],
+			'actions'=>
+				button::create(['type'=>'button','label'=>$text['button-cancel'],'icon'=>$_SESSION['theme']['button_icon_cancel'],'collapse'=>'hide-xs','onclick'=>'modal_close();']).
+				button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','collapse'=>'never','style'=>'float: right;','onclick'=>"modal_close(); list_action_set('resend'); list_form_submit('form_list');"])
+			]);
 		echo modal::create(['id'=>'modal-toggle','type'=>'toggle','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_toggle','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('toggle'); list_form_submit('form_list');"])]);
 	}
 	if (permission_exists('voicemail_message_delete') && $num_rows) {

@@ -718,44 +718,309 @@
 				$this->message_waiting();
 		}
 
+		public function message_resend() {
+
+			//check if for valid input
+			if (!is_uuid($this->voicemail_uuid)
+				|| !is_uuid($this->domain_uuid)
+				|| !is_uuid($this->voicemail_message_uuid)
+				) {
+				return false;
+			}
+
+			//add multi-lingual support
+			$language = new text;
+			$text = $language->get();
+
+			//add the settings object
+			$settings = new settings(["domain_uuid" => $_SESSION['domain_uuid'], "user_uuid" => $_SESSION['user_uuid']]);
+			$email_from = $settings->get('email', 'smtp_from', '');
+			$email_from_name = $settings->get('email', 'smtp_from_name', 'PBX');
+			$switch_scripts = $settings->get('switch', 'scripts', '/usr/share/freeswitch/scripts');
+			$switch_voicemail = $settings->get('switch', 'voicemail', '/var/lib/freeswitch/storage/voicemail');
+			$language_dialect = $settings->get('domain', 'language', 'en-us');
+			$time_zone = $settings->get('domain', 'time_zone', 'UTC');
+			$display_domain_name = $settings->get('voicemail', 'display_domain_name', 'false');
+
+			//get voicemail message details
+			$sql = "select ";
+			$sql .= "	vm.*, ";
+			$sql .= "	to_char(timezone(:time_zone, to_timestamp(vm.created_epoch)), 'Day DD Mon YYYY HH:MI:SS PM') as message_date, ";
+			$sql .= "	v.voicemail_id, ";
+			$sql .= "	v.voicemail_mail_to, ";
+			$sql .= "	v.voicemail_description, ";
+			$sql .= "	v.voicemail_file, ";
+			$sql .= "	d.domain_name ";
+			$sql .= "from ";
+			$sql .= "	v_voicemail_messages as vm ";
+			$sql .= "	left join v_voicemails as v on vm.voicemail_uuid = v.voicemail_uuid ";
+			$sql .= "	left join v_domains as d on vm.domain_uuid = d.domain_uuid ";
+			$sql .= "where ";
+			$sql .= "	vm.voicemail_message_uuid = :voicemail_message_uuid ";
+			$sql .= "limit 1" ;
+			$parameters['time_zone'] = $time_zone;
+			$parameters['voicemail_message_uuid'] = $this->voicemail_message_uuid;
+			$database = new database;
+			$message = $database->select($sql, $parameters, 'row');
+			unset($sql, $parameters);
+
+			//retrieve appropriate email template
+			$sql = "select ";
+			$sql .= "	template_subject, ";
+			$sql .= "	template_body ";
+			$sql .= "from ";
+			$sql .= "	v_email_templates ";
+			$sql .= "where ";
+			$sql .= "	template_language = :template_language ";
+			$sql .= "	and template_category = 'voicemail' ";
+			$sql .= "	and template_subcategory = '".(!empty($message['message_transcription']) ? 'transcription' : 'default')."' ";
+			$sql .= "	and template_type = 'html' ";
+			$sql .= "	and template_enabled = 'true' ";
+			$sql .= "	and (domain_uuid = :domain_uuid or domain_uuid is null) ";
+			$sql .= "limit 1 ";
+			$parameters['template_language'] = $language_dialect;
+			$parameters['domain_uuid'] = $this->domain_uuid;
+			$template = $database->select($sql, $parameters, 'row');
+			unset($sql, $parameters);
+
+			//determine formatted voicemail name
+			$voicemail_name_formatted = $message['voicemail_id'];
+			if ($display_domain_name == 'true') {
+				$voicemail_name_formatted = $message['voicemail_id'].'@'.$message['domain_name'];
+			}
+			if (!empty($message['voicemail_description'])) {
+				$voicemail_name_formatted .= ' ('.$message['voicemail_description'].')';
+			}
+
+			//replace subject variables
+			if (!empty($template['template_subject'])) {
+				$template['template_subject'] = str_replace('${caller_id_name}', $message['caller_id_name'], $template['template_subject']);
+				$template['template_subject'] = str_replace('${caller_id_number}', $message['caller_id_number'], $template['template_subject']);
+				$template['template_subject'] = str_replace('${message_date}', $message['message_date'], $template['template_subject']);
+				$template['template_subject'] = str_replace('${message_duration}', '0'.gmdate("G:i:s", ($message['message_length'] ?? 0)), $template['template_subject']);
+				$template['template_subject'] = str_replace('${account}', $voicemail_name_formatted, $template['template_subject']);
+				$template['template_subject'] = str_replace('${voicemail_id}', $message['voicemail_id'], $template['template_subject']);
+				$template['template_subject'] = str_replace('${voicemail_description}', $message['voicemail_description'], $template['template_subject']);
+				$template['template_subject'] = str_replace('${voicemail_name_formatted}', $voicemail_name_formatted, $template['template_subject']);
+				$template['template_subject'] = str_replace('${domain_name}', $message['domain_name'], $template['template_subject']);
+			}
+			else {
+				$template['template_subject'] = $text['label-voicemail_from'].' '.$message['caller_id_name'].' <'.$message['caller_id_number'].'> 0'.gmdate("G:i:s", ($message['message_length'] ?? 0));
+			}
+
+			//encode subject
+			$template['template_subject'] = trim(iconv_mime_encode(null, $template['template_subject'], ['scheme'=>'B','output-charset'=>'utf-8', 'line-break-chars'=>"\n"]), ': ');
+
+			//determine voicemail message file path and type
+			$voicemail_message_path = $switch_voicemail.'/default/'.$message['domain_name'].'/'.$message['voicemail_id'];
+			if (
+				!empty($message['message_base64']) &&
+				!file_exists($voicemail_message_path.'/msg_'.$message['voicemail_message_uuid'].'.wav') &&
+				!file_exists($voicemail_message_path.'/msg_'.$message['voicemail_message_uuid'].'.mp3')
+				) {
+				$voicemail_message_decoded = base64_decode($message['message_base64']);
+				file_put_contents($voicemail_message_path.'/msg_'.$message['voicemail_message_uuid'].'.ext', $voicemail_message_decoded);
+				$finfo = finfo_open(FILEINFO_MIME_TYPE);
+				$voicemail_message_file_mime = finfo_file($finfo, $voicemail_message_path.'/msg_'.$message['voicemail_message_uuid'].'.ext');
+				finfo_close($finfo);
+				unset($voicemail_message_decoded);
+				switch ($voicemail_message_file_mime) {
+					case 'audio/x-wav':
+					case 'audio/wav':
+						$voicemail_message_file_ext = 'wav';
+						break;
+					case 'audio/mpeg':
+					case 'audio/mp3':
+						$voicemail_message_file_ext = 'mp3';
+						break;
+				}
+				rename($voicemail_message_path.'/msg_'.$message['voicemail_message_uuid'].'.ext', $voicemail_message_path.'/msg_'.$message['voicemail_message_uuid'].'.'.$voicemail_message_file_ext);
+				$voicemail_message_file = 'msg_'.$message['voicemail_message_uuid'].'.'.$voicemail_message_file_ext;
+			}
+			else {
+				if (file_exists($voicemail_message_path.'/msg_'.$message['voicemail_message_uuid'].'.wav')) { $voicemail_message_file_ext = 'wav'; }
+				if (file_exists($voicemail_message_path.'/msg_'.$message['voicemail_message_uuid'].'.mp3')) { $voicemail_message_file_ext = 'mp3'; }
+				$voicemail_message_file = 'msg_'.$message['voicemail_message_uuid'].'.'.$voicemail_message_file_ext;
+				$voicemail_message_file_mime = mime_content_type($voicemail_message_path.'/msg_'.$message['voicemail_message_uuid'].'.'.$voicemail_message_file_ext);
+			}
+
+			//replace body variables
+			if (!empty($template['template_body'])) {
+				$template['template_body'] = str_replace('${caller_id_name}', $message['caller_id_name'], $template['template_body']);
+				$template['template_body'] = str_replace('${caller_id_number}', $message['caller_id_number'], $template['template_body']);
+				$template['template_body'] = str_replace('${message_date}', $message['message_date'], $template['template_body']);
+				$template['template_body'] = str_replace('${message_text}', $message['message_transcription'], $template['template_body']);
+				$template['template_body'] = str_replace('${message_duration}', '0'.gmdate("G:i:s", ($message['message_length'] ?? 0)), $template['template_body']);
+				$template['template_body'] = str_replace('${account}', $voicemail_name_formatted, $template['template_body']);
+				$template['template_body'] = str_replace('${voicemail_id}', $message['voicemail_id'], $template['template_body']);
+				$template['template_body'] = str_replace('${voicemail_description}', $message['voicemail_description'], $template['template_body']);
+				$template['template_body'] = str_replace('${voicemail_name_formatted}', $voicemail_name_formatted, $template['template_body']);
+				$template['template_body'] = str_replace('${domain_name}', $message['domain_name'], $template['template_body']);
+				$template['template_body'] = str_replace('${sip_to_user}', $message['voicemail_id'], $template['template_body']);
+				$template['template_body'] = str_replace('${dialed_user}', $message['voicemail_id'], $template['template_body']);
+				if (!empty($message['voicemail_file'])) {
+					if ($message['voicemail_file'] == 'attach' && file_exists($voicemail_message_path.'/'.$voicemail_message_file)) {
+						$template['template_body'] = str_replace('${message}', $text['label-attached'], $template['template_body']);
+					}
+					else if ($message['voicemail_file'] == 'link') {
+						$template['template_body'] = str_replace('${message}', "<a href='https://".$message['domain_name'].PROJECT_PATH.'/app/voicemails/voicemail_messages.php?action=download&id='.$message['voicemail_id'].'&voicemail_uuid='.$message['voicemail_uuid'].'&uuid='.$message['voicemail_message_uuid']."&t=bin'>".$text['label-download']."</a>", $template['template_body']);
+					}
+					else { // listen
+						$template['template_body'] = str_replace('${message}', "<a href='https://".$message['domain_name'].PROJECT_PATH.'/app/voicemails/voicemail_messages.php?action=autoplay&id='.$message['voicemail_uuid'].'&uuid='.$message['voicemail_message_uuid'].'&vm='.$message['voicemail_id']."'>".$text['label-listen']."</a>", $template['template_body']);
+					}
+				}
+			}
+			else {
+				$template['template_body'] = "<html>\n<body>\n";
+				if (!empty($message['caller_id_name']) && $message['caller_id_name'] != $message['caller_id_number']) {
+					$template['template_body'] .= $message['caller_id_name']."<br>\n";
+				}
+				$template['template_body'] .= $message['caller_id_number']."<br>\n";
+				$template['template_body'] .= $message['message_date']."<br>\n";
+				if (!empty($message['voicemail_file'])) {
+					if ($message['voicemail_file'] == 'attach' && file_exists($voicemail_message_path.'/'.$voicemail_message_file)) {
+						$template['template_body'] .= "<br>\n".$text['label-attached'];
+					}
+					else if ($message['voicemail_file'] == 'link') {
+						$template['template_body'] .= "<br>\n<a href='https://".$message['domain_name'].PROJECT_PATH.'/app/voicemails/voicemail_messages.php?action=download&id='.$message['voicemail_id'].'&voicemail_uuid='.$message['voicemail_uuid'].'&uuid='.$message['voicemail_message_uuid']."&t=bin'>".$text['label-download'].'</a>';
+					}
+					else { // listen
+						$template['template_body'] .= "<br>\n<a href='https://".$message['domain_name'].PROJECT_PATH.'/app/voicemails/voicemail_messages.php?action=autoplay&id='.$message['voicemail_uuid'].'&uuid='.$message['voicemail_message_uuid'].'&vm='.$message['voicemail_id']."'>".$text['label-listen'].'</a>';
+					}
+				}
+				$template['template_body'] .= "\n</body>\n</html>";
+			}
+
+			//build message status update array
+			$array['email_queue'][0]['email_queue_uuid'] = $email_queue_uuid = uuid();
+			$array['email_queue'][0]['domain_uuid'] = $this->domain_uuid;
+			$array['email_queue'][0]['hostname'] = gethostname();
+			$array['email_queue'][0]['email_date'] = 'now()';
+			$array['email_queue'][0]['email_from'] = $email_from_name.'<'.$email_from.'>';
+			$array['email_queue'][0]['email_to'] = $message['voicemail_mail_to'];
+			$array['email_queue'][0]['email_subject'] = $template['template_subject'];
+			$array['email_queue'][0]['email_body'] = $template['template_body'];
+			$array['email_queue'][0]['email_status'] = 'waiting';
+			$array['email_queue'][0]['email_uuid'] = $this->voicemail_message_uuid;
+			$array['email_queue'][0]['email_transcription'] = $message['message_transcription'];
+			$array['email_queue'][0]['insert_date'] = 'now()';
+			$array['email_queue'][0]['insert_user'] = $_SESSION['user_uuid'];
+
+			//add voicemail file details (and/or base64) to queue attachments
+			if (!empty($message['voicemail_file']) && $message['voicemail_file'] == 'attach' && file_exists($voicemail_message_path.'/'.$voicemail_message_file)) {
+				$array['email_queue_attachments'][0]['email_queue_attachment_uuid'] = uuid();
+				$array['email_queue_attachments'][0]['domain_uuid'] = $this->domain_uuid;
+				$array['email_queue_attachments'][0]['email_queue_uuid'] = $email_queue_uuid;
+				$array['email_queue_attachments'][0]['email_attachment_type'] = $voicemail_message_file_ext;
+				$array['email_queue_attachments'][0]['email_attachment_path'] = $voicemail_message_path;
+				$array['email_queue_attachments'][0]['email_attachment_name'] = $voicemail_message_file;
+				$array['email_queue_attachments'][0]['email_attachment_base64'] = $message['message_base64'];
+				$array['email_queue_attachments'][0]['email_attachment_cid'] = !empty($message['message_base64']) ? uuid() : null;
+				$array['email_queue_attachments'][0]['email_attachment_mime_type'] = $voicemail_message_file_mime;
+				$array['email_queue_attachments'][0]['insert_date'] = 'now()';
+				$array['email_queue_attachments'][0]['insert_user'] = $_SESSION['user_uuid'];
+			}
+
+			//grant temporary permissions
+			$p = new permissions;
+			$p->add('email_queue_add', 'temp');
+			$p->add('email_queue_attachment_add', 'temp');
+
+			//execute update
+			$database = new database;
+			$database->app_name = $this->app_name;
+			$database->app_name = $this->app_uuid;
+			$database->save($array);
+			unset($array);
+
+			//revoke temporary permissions
+			$p->delete('email_queue_add', 'temp');
+			$p->delete('email_queue_attachment_add', 'temp');
+
+			//remove temp file from base64 output
+			if (!empty($message['message_base64']) && file_exists($voicemail_message_path.'/'.$voicemail_message_file)) {
+				@unlink($voicemail_message_path.'/'.$voicemail_message_file);
+			}
+
+		}
+
 		public function message_transcribe() {
 
 			//get the voicemail id
-				$this->get_voicemail_id();
+			$this->get_voicemail_id();
 
 			//check if for valid input
-				if (!is_numeric($this->voicemail_id)
-					|| !is_uuid($this->voicemail_uuid)
-					|| !is_uuid($this->domain_uuid)
-					|| !is_uuid($this->voicemail_message_uuid)
-					) {
-					return false;
-				}
+			if (!is_numeric($this->voicemail_id)
+				|| !is_uuid($this->voicemail_uuid)
+				|| !is_uuid($this->domain_uuid)
+				|| !is_uuid($this->voicemail_message_uuid)
+				) {
+				return false;
+			}
 
 			//add the settings object
 			$settings = new settings(["domain_uuid" => $_SESSION['domain_uuid'], "user_uuid" => $_SESSION['user_uuid']]);
 			$transcribe_enabled = $settings->get('transcribe', 'enabled', 'false');
 			$transcribe_engine = $settings->get('transcribe', 'engine', '');
+			$switch_voicemail = $settings->get('switch', 'voicemail', '/var/lib/freeswitch/storage/voicemail');
 
 			//transcribe multiple recordings
 			if ($transcribe_enabled == 'true' && !empty($transcribe_engine)) {
 
+				//get voicemail message base64
+				$sql = "select message_base64 from v_voicemail_messages where voicemail_message_uuid = :voicemail_message_uuid ";
+				$parameters['voicemail_message_uuid'] = $this->voicemail_message_uuid;
+				$database = new database;
+				$voicemail_message_base64 = $database->select($sql, $parameters, 'column');
+				unset($sql, $parameters);
+
+				//define voicemail message file path
+				$voicemail_message_path = $switch_voicemail.'/default/'.$_SESSION['domain_name'].'/'.$this->voicemail_id;
+
+				//determine voicemail message file properties (decode if base64)
+				if (
+					!empty($voicemail_message_base64) &&
+					!file_exists($voicemail_message_path.'/msg_'.$this->voicemail_message_uuid.'.wav') &&
+					!file_exists($voicemail_message_path.'/msg_'.$this->voicemail_message_uuid.'.mp3')
+					) {
+					$voicemail_message_decoded = base64_decode($voicemail_message_base64);
+					file_put_contents($voicemail_message_path.'/msg_'.$this->voicemail_message_uuid.'.ext', $voicemail_message_decoded);
+					$finfo = finfo_open(FILEINFO_MIME_TYPE);
+					$voicemail_message_file_mime = finfo_file($finfo, $voicemail_message_path.'/msg_'.$this->voicemail_message_uuid.'.ext');
+					finfo_close($finfo);
+					switch ($voicemail_message_file_mime) {
+						case 'audio/x-wav':
+						case 'audio/wav':
+							$voicemail_message_file_ext = 'wav';
+							break;
+						case 'audio/mpeg':
+						case 'audio/mp3':
+							$voicemail_message_file_ext = 'mp3';
+							break;
+					}
+					unset($voicemail_message_decoded, $voicemail_message_file_mime);
+					rename($voicemail_message_path.'/msg_'.$this->voicemail_message_uuid.'.ext', $voicemail_message_path.'/msg_'.$this->voicemail_message_uuid.'.'.$voicemail_message_file_ext);
+					$voicemail_message_file = 'msg_'.$this->voicemail_message_uuid.'.'.$voicemail_message_file_ext;
+				}
+				else {
+					if (file_exists($voicemail_message_path.'/msg_'.$this->voicemail_message_uuid.'.wav')) { $voicemail_message_file_ext = 'wav'; }
+					if (file_exists($voicemail_message_path.'/msg_'.$this->voicemail_message_uuid.'.mp3')) { $voicemail_message_file_ext = 'mp3'; }
+					$voicemail_message_file = 'msg_'.$this->voicemail_message_uuid.'.'.$voicemail_message_file_ext;
+				}
+				unset($voicemail_message_file_ext);
+
 				//add the transcribe object
 				$transcribe = new transcribe($settings);
 
-				//get each voicemail message file
-				$file_path = $_SESSION['switch']['voicemail']['dir']."/default/".$_SESSION['domain_name']."/".$this->voicemail_id;
-				foreach (glob($file_path."/msg_".$this->voicemail_message_uuid.".*") as $file_name) {
-					//audio to text - get the transcription from the audio file
-					$transcribe->audio_path = $file_path;
-					$transcribe->audio_filename = basename($file_name);
-					$message_transcription = $transcribe->transcribe();
-					//build voicemail message data array
-					if (!empty($message_transcription)) {
-						$array['voicemail_messages'][0]['voicemail_message_uuid'] = $this->voicemail_message_uuid;
-						$array['voicemail_messages'][0]['message_transcription'] = $message_transcription;
-						break;
-					}
+				//transcribe the voicemail message file
+				$transcribe->audio_path = $voicemail_message_path;
+				$transcribe->audio_filename = basename($voicemail_message_file);
+				$message_transcription = $transcribe->transcribe();
+
+				//build voicemail message data array
+				if (!empty($message_transcription)) {
+					$array['voicemail_messages'][0]['voicemail_message_uuid'] = $this->voicemail_message_uuid;
+					$array['voicemail_messages'][0]['message_transcription'] = $message_transcription;
 				}
 
 				//update the checked rows
@@ -775,6 +1040,11 @@
 					//revoke temporary permissions
 					$p->delete('voicemail_message_edit', 'temp');
 
+				}
+
+				//remove temp file from base64 output
+				if (!empty($voicemail_message_base64) && file_exists($voicemail_message_path.'/'.$voicemail_message_file)) {
+					@unlink($voicemail_message_path.'/'.$voicemail_message_file);
 				}
 
 				return !empty($message_transcription) ? true : false;
