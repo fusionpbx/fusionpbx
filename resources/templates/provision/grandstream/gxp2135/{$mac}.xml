@@ -2132,7 +2132,7 @@
 
 		<!-- # Transfer Mode via VPK/MPK. -->
 		<!-- BlindTransfer, AttendedTransfer,  NewCall -->
-		<item name="call.transfer.modeViaVpk">BlindTransfer</item>
+		<item name="call.transfer.modeViaVpk">{$grandstream_transfer_mode_via_vpk}</item>
 
 		<!-- # Show On Hold Duration. Yes or No -->
 		<item name="call.hold.showHoldDuration.enable">Yes</item>
