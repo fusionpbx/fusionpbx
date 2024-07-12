@@ -188,8 +188,15 @@ if ( session:ready() ) then
 				flags = "flags{}";
 			end
 
-		--if annouce delay is active then prompt for recording
+		--if announce delay is true then an option for a preset recording filename and length
 			if (delay == "true") then
+				recording_filename = session:getVariable("recording_filename");
+				recording_length = session:getVariable("recording_length");
+				dtmf_entered = 1;
+			end
+
+		--if announce delay is active and audio file is not provided then prompt for recording
+			if (delay == "true" and recording_filename == nil and recording_length == nil) then
 				--callback function for the delayed recording
 					function onInputCBF(s, _type, obj, arg)
 						local k, v = nil, nil
