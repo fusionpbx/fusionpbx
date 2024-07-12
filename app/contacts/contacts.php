@@ -135,7 +135,10 @@
 		if (is_numeric($search)) {
 			$sql_search = "and contact_uuid in ( ";
 			$sql_search .= "	select contact_uuid from v_contact_phones ";
-			$sql_search .= "	where phone_number like :search ";
+			$sql_search .= "	where ( ";
+			$sql_search .= "		concat(phone_country_code, phone_number) like :search ";
+			$sql_search .= "		or phone_number like :search ";
+			$sql_search .= "	) ";
 			$sql_search .= ") ";
 		}
 		else {
