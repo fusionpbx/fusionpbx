@@ -1201,6 +1201,12 @@
 				//replace the dynamic provision variables that are defined in default, domain, and device settings
 					if (is_array($provision)) {
 						foreach($provision as $key=>$val) {
+							if (!empty($val) && is_string($val) && strpos($val, '{$domain_name}') !== false) {
+								$val = str_replace('{$domain_name}', $domain_name, $val);
+							}
+							if (!empty($val) && is_string($val) && strpos($val, '${domain_name}') !== false) {
+								$val = str_replace('${domain_name}', $domain_name, $val);
+							}
 							$view->assign($key, $val);
 						}
 					}
