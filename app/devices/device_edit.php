@@ -850,6 +850,9 @@
 				else if (is_file('/var/www/fusionpbx/resources/templates/provision/'.$device_template.'/template.csv')) {
 					$template = file_get_contents('/var/www/fusionpbx/resources/templates/provision/'.$device_template.'/template.csv');
 				}
+				else if (is_file('/usr/local/www/fusionpbx/resources/templates/provision/'.$device_template.'/template.csv')) {
+					$template = file_get_contents('/usr/local/www/fusionpbx/resources/templates/provision/'.$device_template.'/template.csv');
+				}
 				if (!empty($template)) {
 					$template = str_replace('{$server_address}', $row['server_address'], $template);
 					$template = str_replace('{$user_id}', $row['user_id'], $template);
@@ -871,6 +874,9 @@
 				}
 				else if (is_file('/var/www/fusionpbx/resources/templates/provision/'.$device_template.'/qr_template.txt')) {
 					$template = file_get_contents('/var/www/fusionpbx/resources/templates/provision/'.$device_template.'/qr_template.txt');
+				}
+				else if (is_file('/usr/local/www/fusionpbx/resources/templates/provision/'.$device_template.'/qr_template.txt')) {
+					$template = file_get_contents('/usr/local/www/fusionpbx/resources/templates/provision/'.$device_template.'/qr_template.txt');
 				}
 
 				//get the provision settings
