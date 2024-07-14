@@ -35,7 +35,10 @@ if (!class_exists('install')) {
 			//set the default config file location
 			$os = strtoupper(substr(PHP_OS, 0, 3));
 			switch ($os) {
-			case "BSD":
+				case "FRE":
+				case "OPE":
+				case "NET":
+				case "BSD":
 				$config_path = '/usr/local/etc/fusionpbx';
 				$config_file = $config_path.'/config.conf';
 				$document_root = '/usr/local/www/fusionpbx';
