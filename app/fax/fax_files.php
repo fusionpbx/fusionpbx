@@ -542,7 +542,7 @@
 			if ((permission_exists('fax_inbox_view') || permission_exists('fax_sent_view')) && file_exists($dir_fax.'/'.$file_name.".pdf")) {
 				echo "		<a href=\"javascript:void(0);\" onclick=\"fade_in('pdf-container', '".substr($list_row_url, 0, -4).".pdf');\">View</a>\n";
 				echo "		&nbsp;&nbsp;\n";
-				echo "		<a href=\"".substr($list_row_url, 0, -4).".pdf\">PDF</a>\n";
+				echo "		<a href=\"".substr($list_row_url.'&t=bin', 0, -4).".pdf\">PDF</a>\n";
 			}
 			echo "  </td>\n";
 			echo "	<td style='".$bold."'>".$row['fax_date_formatted']." ".$row['fax_time_formatted']."&nbsp;</td>\n";
