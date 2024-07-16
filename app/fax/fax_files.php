@@ -506,7 +506,7 @@
 				$list_row_url .= "&fax_file_uuid=".urlencode($row['fax_file_uuid']);
 				$list_row_url .= "&a=download";
 				$list_row_url .= "&type=fax_".urlencode($_REQUEST['box']);
-				//$list_row_url .= "&t=bin";
+				$list_row_url .= "&t=bin";
 				$list_row_url .= "&order_by=".urlencode($_REQUEST['order_by']);
 				$list_row_url .= "&order=".urlencode($_REQUEST['order']);
 				$list_row_url .= "&box=".urlencode($_REQUEST['box']);
@@ -540,9 +540,9 @@
 				$dir_fax = $dir_fax_sent;
 			}
 			if ((permission_exists('fax_inbox_view') || permission_exists('fax_sent_view')) && file_exists($dir_fax.'/'.$file_name.".pdf")) {
-				echo "		<a href=\"javascript:void(0);\" onclick=\"fade_in('pdf-container', '".substr($list_row_url, 0, -4).".pdf');\">View</a>\n";
+				echo "		<a href=\"javascript:void(0);\" onclick=\"fade_in('pdf-container', '".substr(str_replace("&t=bin", "", $list_row_url), 0, -4).".pdf');\">View</a>\n";
 				echo "		&nbsp;&nbsp;\n";
-				echo "		<a href=\"".substr($list_row_url.'&t=bin', 0, -4).".pdf\">PDF</a>\n";
+				echo "		<a href=\"".substr($list_row_url, 0, -4).".pdf\">PDF</a>\n";
 			}
 			echo "  </td>\n";
 			echo "	<td style='".$bold."'>".$row['fax_date_formatted']." ".$row['fax_time_formatted']."&nbsp;</td>\n";
