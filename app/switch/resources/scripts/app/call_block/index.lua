@@ -102,6 +102,7 @@
 				sql = sql .. "where (domain_uuid = :domain_uuid or domain_uuid is null) \n";
 				sql = sql .. "and call_block_enabled = 'true' \n";
 				sql = sql .. "and call_block_direction = :call_block_direction \n";
+				sql = sql .. "and (call_block_name <> '' or call_block_number <> '') \n";
 				sql = sql .. "and ( \n";
 				sql = sql .. "	(\n";
 				sql = sql .. "		call_block_name = :call_block_name \n";
@@ -242,9 +243,9 @@
 			--update the call block count
 				if (call_block) then
 					sql = "update v_call_block ";
-					sql = sql .. "set call_block_count = :call_block_count ";
+					sql = sql .. "set call_block_count = call_block_count + 1 ";
 					sql = sql .. "where call_block_uuid = :call_block_uuid ";
-					local params = {call_block_uuid = call_block_uuid, call_block_count = #call_block_count + 1};
+					local params = {call_block_uuid = call_block_uuid};
 					if (debug["sql"]) then
 						freeswitch.consoleLog("notice", "[dialplan] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 					end
