@@ -281,6 +281,16 @@
 	unset($num_rows);
 
 //get the voicemail
+	//running $vm->messages() is used to get the count and then that information is used for paging and then we need to run $vm->messages() again to get the results with the paging
+	//when the messages method is run twice on the same object the second time fails so creating a new object resolves this issue. 
+	$vm = new voicemail;
+	$vm->domain_uuid = $_SESSION['domain_uuid'];
+	if (!empty($voicemail_uuid) && is_uuid($voicemail_uuid)) {
+		$vm->voicemail_uuid = $voicemail_uuid;
+	}
+	else if (!empty($voicemail_id) && is_numeric($voicemail_id)) {
+		$vm->voicemail_id = $voicemail_id;
+	}
 	$vm->order_by = $order_by;
 	$vm->order = $order;
 	$vm->offset = $offset;
@@ -424,7 +434,7 @@
 
 					//set the list row url as a variable
 					$list_row_url = "javascript:recording_play('".escape($row['voicemail_message_uuid'])."','".$row['voicemail_id'].'|'.$row['voicemail_uuid']."','message');";
-					
+
 					//playback progress bar
 					echo "<tr class='list-row' id='recording_progress_bar_".escape($row['voicemail_message_uuid'])."' style='display: none;' onclick=\"recording_play('".escape($row['voicemail_message_uuid'])."','".$row['voicemail_id'].'|'.$row['voicemail_uuid']."','message')\"><td id='playback_progress_bar_background_".escape($row['voicemail_message_uuid'])."' class='playback_progress_bar_background' style='padding: 0; border: none;' colspan='".$col_count."'><span class='playback_progress_bar' id='recording_progress_".escape($row['voicemail_message_uuid'])."'></span></td></tr>\n";
 					echo "<tr style='display: none;'><td></td></tr>\n"; // dummy row to maintain alternating background color
