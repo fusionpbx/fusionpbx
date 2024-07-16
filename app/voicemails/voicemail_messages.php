@@ -140,7 +140,7 @@
 					// no return, exit
 					exit;
 				case 'transcribe':
-					if ($transcribe_enabled == 'true' && !empty($transcribe_engine) && is_array($voicemail_messages) && @sizeof($voicemail_messages) != 0) {
+					if (permission_exists('voicemail_message_transcribe') && $transcribe_enabled == 'true' && !empty($transcribe_engine) && is_array($voicemail_messages) && @sizeof($voicemail_messages) != 0) {
 						$messages_transcribed = 0;
 						foreach ($voicemail_messages as $voicemail_message) {
 							if (!empty($voicemail_message['checked']) && $voicemail_message['checked'] == 'true' && is_uuid($voicemail_message['uuid']) && is_uuid($voicemail_message['voicemail_uuid'])) {
@@ -281,16 +281,6 @@
 	unset($num_rows);
 
 //get the voicemail
-	//running $vm->messages() is used to get the count and then that information is used for paging and then we need to run $vm->messages() again to get the results with the paging
-	//when the messages method is run twice on the same object the second time fails so creating a new object resolves this issue. 
-	$vm = new voicemail;
-	$vm->domain_uuid = $_SESSION['domain_uuid'];
-	if (!empty($voicemail_uuid) && is_uuid($voicemail_uuid)) {
-		$vm->voicemail_uuid = $voicemail_uuid;
-	}
-	else if (!empty($voicemail_id) && is_numeric($voicemail_id)) {
-		$vm->voicemail_id = $voicemail_id;
-	}
 	$vm->order_by = $order_by;
 	$vm->order = $order;
 	$vm->offset = $offset;
@@ -329,7 +319,7 @@
 	echo "	<div class='actions'>\n";
 	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','link'=>$_SESSION['back'][$_SERVER['PHP_SELF']]]);
 	$margin_left = false;
-	if ($transcribe_enabled == 'true' && !empty($transcribe_engine) && $num_rows) {
+	if (permission_exists('voicemail_message_transcribe') && $transcribe_enabled == 'true' && !empty($transcribe_engine) && $num_rows) {
 		echo button::create(['type'=>'button','label'=>$text['button-transcribe'],'icon'=>'quote-right','id'=>'btn_transcribe','name'=>'btn_transcribe','collapse'=>'hide-xs','style'=>'display: none; margin-left: 15px;','onclick'=>"list_action_set('transcribe'); list_form_submit('form_list');"]);
 		$margin_left = true;
 	}
@@ -434,7 +424,7 @@
 
 					//set the list row url as a variable
 					$list_row_url = "javascript:recording_play('".escape($row['voicemail_message_uuid'])."','".$row['voicemail_id'].'|'.$row['voicemail_uuid']."','message');";
-
+					
 					//playback progress bar
 					echo "<tr class='list-row' id='recording_progress_bar_".escape($row['voicemail_message_uuid'])."' style='display: none;' onclick=\"recording_play('".escape($row['voicemail_message_uuid'])."','".$row['voicemail_id'].'|'.$row['voicemail_uuid']."','message')\"><td id='playback_progress_bar_background_".escape($row['voicemail_message_uuid'])."' class='playback_progress_bar_background' style='padding: 0; border: none;' colspan='".$col_count."'><span class='playback_progress_bar' id='recording_progress_".escape($row['voicemail_message_uuid'])."'></span></td></tr>\n";
 					echo "<tr style='display: none;'><td></td></tr>\n"; // dummy row to maintain alternating background color
