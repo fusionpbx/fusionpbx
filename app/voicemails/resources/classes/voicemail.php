@@ -35,6 +35,7 @@
 		public $voicemail_uuid;
 		public $voicemail_id;
 		public $voicemail_message_uuid;
+		public $user_uuid;
 		public $order_by;
 		public $order;
 		public $offset;
@@ -53,12 +54,25 @@
 		private $toggle_values;
 
 		/**
-		 * pulls in settings object
-		 * @var settings settings object
+		 * Internal array structure that is populated from the database
+		 * @var array Array of settings loaded from Default Settings
 		 */
 		private $settings;
+		
+		/**
+		 * Set in the constructor. Must be a database object and cannot be null.
+		 * @var database Database Object
+		 */
+		private $database;
 
 		public function __construct(array $params = []) {
+
+			//database connection
+				if (empty($params['database'])) {
+					$this->database = database::new();
+				} else {
+					$this->database = $params['database'];
+				}
 
 			//assign private variables
 				$this->app_name = 'voicemail';
@@ -83,6 +97,10 @@
 					$this->domain_uuid = $_SESSION['domain_uuid'];
 				}
 
+			//set the user_uuid if not provided
+				if (empty($this->user_uuid) || !is_uuid($this->user_uuid)) {
+					$this->user_uuid = $_SESSION['user_uuid'];
+				}
 		}
 
 		public function get_voicemail_id() {
@@ -99,8 +117,7 @@
 					$sql .= "and voicemail_uuid = :voicemail_uuid ";
 					$parameters['domain_uuid'] = $this->domain_uuid;
 					$parameters['voicemail_uuid'] = $this->voicemail_uuid;
-					$database = new database;
-					$voicemail_id = $database->select($sql, $parameters, 'column');
+					$voicemail_id = $this->database->select($sql, $parameters, 'column');
 					if (is_numeric($voicemail_id)) {
 						$this->voicemail_id = $voicemail_id;
 					}
@@ -184,8 +201,7 @@
 				}
 				$sql .= "order by voicemail_id asc ";
 				$parameters['domain_uuid'] = $this->domain_uuid;
-				$database = new database;
-				$result = $database->select($sql, $parameters, 'all');
+				$result = $this->database->select($sql, $parameters, 'all');
 				unset($sql, $parameters);
 				return $result;
 		}
@@ -262,8 +278,7 @@
 				}
 				$parameters['domain_uuid'] = $this->domain_uuid;
 				$parameters['time_zone'] = $time_zone;
-				$database = new database;
-				$result = $database->select($sql, $parameters, 'all');
+				$result = $this->database->select($sql, $parameters, 'all');
 				unset($sql, $parameters);
 
 			//update the array with additional information
@@ -320,8 +335,7 @@
 							if (is_array($uuids) && @sizeof($uuids) != 0) {
 								$sql = "select ".$this->uuid_prefix."uuid as uuid, voicemail_id from v_".$this->table." ";
 								$sql .= "where ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
-								$database = new database;
-								$rows = $database->select($sql, $parameters ?? null, 'all');
+								$rows = $this->database->select($sql, $parameters ?? null, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
 										$voicemail_ids[$row['uuid']] = $row['voicemail_id'];
@@ -347,21 +361,21 @@
 									//reset message waiting indicator status
 										$this->voicemail_id = $voicemail_id;
 										$this->voicemail_uuid = $voicemail_uuid;
-										$this->domain_uuid = $_SESSION['domain_uuid'];
+										$this->domain_uuid = $this->domain_uuid;
 										$this->message_waiting();
 
 									//build the delete array
 										$array[$this->table][$x]['voicemail_uuid'] = $voicemail_uuid;
-										$array[$this->table][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+										$array[$this->table][$x]['domain_uuid'] = $this->domain_uuid;
 										$array['voicemail_options'][$x]['voicemail_uuid'] = $voicemail_uuid;
-										$array['voicemail_options'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+										$array['voicemail_options'][$x]['domain_uuid'] = $this->domain_uuid;
 										$array['voicemail_messages'][$x]['voicemail_uuid'] = $voicemail_uuid;
-										$array['voicemail_messages'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+										$array['voicemail_messages'][$x]['domain_uuid'] = $this->domain_uuid;
 										$array['voicemail_destinations'][$x]['voicemail_uuid'] = $voicemail_uuid;
-										$array['voicemail_destinations'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+										$array['voicemail_destinations'][$x]['domain_uuid'] = $this->domain_uuid;
 										if (is_numeric($voicemail_id)) {
 											$array['voicemail_greetings'][$x]['voicemail_id'] = $voicemail_id;
-											$array['voicemail_greetings'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+											$array['voicemail_greetings'][$x]['domain_uuid'] = $this->domain_uuid;
 										}
 										$x++;
 								}
@@ -379,10 +393,9 @@
 									$p->add('voicemail_greeting_delete', 'temp');
 
 								//execute delete
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->delete($array);
+									$this->database->app_name = $this->app_name;
+									$this->database->app_uuid = $this->app_uuid;
+									$this->database->delete($array);
 									unset($array);
 
 								//revoke temporary permissions
@@ -435,17 +448,16 @@
 									//build the delete array
 										$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
 										$array[$this->table][$x]['voicemail_uuid'] = $this->voicemail_uuid;
-										$array[$this->table][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+										$array[$this->table][$x]['domain_uuid'] = $this->domain_uuid;
 								}
 							}
 
 						//delete the checked rows
 							if (is_array($array) && @sizeof($array) != 0) {
 								//execute delete
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->delete($array);
+									$this->database->app_name = $this->app_name;
+									$this->database->app_uuid = $this->app_uuid;
+									$this->database->delete($array);
 									unset($array);
 							}
 							unset($records);
@@ -482,7 +494,7 @@
 									//build the delete array
 										$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
 										$array[$this->table][$x]['voicemail_uuid'] = $this->voicemail_uuid;
-										$array[$this->table][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+										$array[$this->table][$x]['domain_uuid'] = $this->domain_uuid;
 								}
 							}
 
@@ -493,10 +505,9 @@
 									$p->add('voicemail_destination_delete', 'temp');
 
 								//execute delete
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->delete($array);
+									$this->database->app_name = $this->app_name;
+									$this->database->app_uuid = $this->app_uuid;
+									$this->database->delete($array);
 									unset($array);
 
 								//revoke temporary permissions
@@ -537,9 +548,8 @@
 								$sql = "select ".$this->uuid_prefix."uuid as uuid, voicemail_id, ".$this->toggle_field." as toggle from v_".$this->table." ";
 								$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
-								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-								$database = new database;
-								$rows = $database->select($sql, $parameters, 'all');
+								$parameters['domain_uuid'] = $this->domain_uuid;
+								$rows = $this->database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
 										$voicemails[$row['uuid']]['state'] = $row['toggle'];
@@ -557,7 +567,7 @@
 									//reset message waiting indicator status
 										$this->voicemail_id = $voicemail['id'];
 										$this->voicemail_uuid = $voicemail_uuid;
-										$this->domain_uuid = $_SESSION['domain_uuid'];
+										$this->domain_uuid = $this->domain_uuid;
 										$this->message_waiting();
 
 									//build update array
@@ -571,10 +581,9 @@
 							if (is_array($array) && @sizeof($array) != 0) {
 
 								//save the array
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->save($array);
+									$this->database->app_name = $this->app_name;
+									$this->database->app_uuid = $this->app_uuid;
+									$this->database->save($array);
 									unset($array);
 
 								//clear the destinations session array
@@ -597,15 +606,14 @@
 				if (!is_uuid($this->voicemail_uuid) || !is_uuid($this->domain_uuid)) {
 					return false;
 				}
-		
+
 			//return the message count
 				$sql = "select count(*) from v_voicemail_messages ";
 				$sql .= "where domain_uuid = :domain_uuid ";
 				$sql .= "and voicemail_uuid = :voicemail_uuid ";
 				$parameters['domain_uuid'] = $this->domain_uuid;
 				$parameters['voicemail_uuid'] = $this->voicemail_uuid;
-				$database = new database;
-				return $database->select($sql, $parameters, 'column');
+				return $this->database->select($sql, $parameters, 'column');
 				unset($sql, $parameters);
 
 		}
@@ -665,10 +673,9 @@
 				$p->add('voicemail_message_delete', 'temp');
 
 			//execute delete
-				$database = new database;
-				$database->app_name = $this->app_name;
-				$database->app_name = $this->app_uuid;
-				$database->delete($array);
+				$this->database->app_name = $this->app_name;
+				$this->database->app_name = $this->app_uuid;
+				$this->database->delete($array);
 				unset($array);
 
 			//revoke temporary permissions
@@ -692,8 +699,7 @@
 				$sql = "select message_status from v_voicemail_messages ";
 				$sql .= "where voicemail_message_uuid = :voicemail_message_uuid ";
 				$parameters['voicemail_message_uuid'] = $this->voicemail_message_uuid;
-				$database = new database;
-				$new_status = $database->select($sql, $parameters, 'column') != 'saved' ? 'saved' : null;
+				$new_status = $this->database->select($sql, $parameters, 'column') != 'saved' ? 'saved' : null;
 				unset($sql, $parameters);
 
 			//build message status update array
@@ -705,10 +711,9 @@
 				$p->add('voicemail_message_edit', 'temp');
 
 			//execute update
-				$database = new database;
-				$database->app_name = $this->app_name;
-				$database->app_name = $this->app_uuid;
-				$database->save($array);
+				$this->database->app_name = $this->app_name;
+				$this->database->app_name = $this->app_uuid;
+				$this->database->save($array);
 				unset($array);
 
 			//revoke temporary permissions
@@ -733,7 +738,7 @@
 			$text = $language->get();
 
 			//add the settings object
-			$settings = new settings(["domain_uuid" => $_SESSION['domain_uuid'], "user_uuid" => $_SESSION['user_uuid']]);
+			$settings = new settings(["domain_uuid" => $this->domain_uuid, "user_uuid" => $this->user_uuid]);
 			$email_from = $settings->get('email', 'smtp_from', '');
 			$email_from_name = $settings->get('email', 'smtp_from_name', 'PBX');
 			$switch_scripts = $settings->get('switch', 'scripts', '/usr/share/freeswitch/scripts');
@@ -760,8 +765,7 @@
 			$sql .= "limit 1" ;
 			$parameters['time_zone'] = $time_zone;
 			$parameters['voicemail_message_uuid'] = $this->voicemail_message_uuid;
-			$database = new database;
-			$message = $database->select($sql, $parameters, 'row');
+			$message = $this->database->select($sql, $parameters, 'row');
 			unset($sql, $parameters);
 
 			//retrieve appropriate email template
@@ -780,7 +784,7 @@
 			$sql .= "limit 1 ";
 			$parameters['template_language'] = $language_dialect;
 			$parameters['domain_uuid'] = $this->domain_uuid;
-			$template = $database->select($sql, $parameters, 'row');
+			$template = $this->database->select($sql, $parameters, 'row');
 			unset($sql, $parameters);
 
 			//determine formatted voicemail name
@@ -904,7 +908,7 @@
 			$array['email_queue'][0]['email_uuid'] = $this->voicemail_message_uuid;
 			$array['email_queue'][0]['email_transcription'] = $message['message_transcription'];
 			$array['email_queue'][0]['insert_date'] = 'now()';
-			$array['email_queue'][0]['insert_user'] = $_SESSION['user_uuid'];
+			$array['email_queue'][0]['insert_user'] = $this->user_uuid;
 
 			//add voicemail file details (and/or base64) to queue attachments
 			if (!empty($message['voicemail_file']) && $message['voicemail_file'] == 'attach' && file_exists($voicemail_message_path.'/'.$voicemail_message_file)) {
@@ -918,7 +922,7 @@
 				$array['email_queue_attachments'][0]['email_attachment_cid'] = !empty($message['message_base64']) ? uuid() : null;
 				$array['email_queue_attachments'][0]['email_attachment_mime_type'] = $voicemail_message_file_mime;
 				$array['email_queue_attachments'][0]['insert_date'] = 'now()';
-				$array['email_queue_attachments'][0]['insert_user'] = $_SESSION['user_uuid'];
+				$array['email_queue_attachments'][0]['insert_user'] = $this->user_uuid;
 			}
 
 			//grant temporary permissions
@@ -927,10 +931,9 @@
 			$p->add('email_queue_attachment_add', 'temp');
 
 			//execute update
-			$database = new database;
-			$database->app_name = $this->app_name;
-			$database->app_name = $this->app_uuid;
-			$database->save($array);
+			$this->database->app_name = $this->app_name;
+			$this->database->app_name = $this->app_uuid;
+			$this->database->save($array);
 			unset($array);
 
 			//revoke temporary permissions
@@ -959,7 +962,7 @@
 			}
 
 			//add the settings object
-			$settings = new settings(["domain_uuid" => $_SESSION['domain_uuid'], "user_uuid" => $_SESSION['user_uuid']]);
+			$settings = new settings(["domain_uuid" => $this->domain_uuid, "user_uuid" => $this->user_uuid]);
 			$transcribe_enabled = $settings->get('transcribe', 'enabled', 'false');
 			$transcribe_engine = $settings->get('transcribe', 'engine', '');
 			$switch_voicemail = $settings->get('switch', 'voicemail', '/var/lib/freeswitch/storage/voicemail');
@@ -970,8 +973,7 @@
 				//get voicemail message base64
 				$sql = "select message_base64 from v_voicemail_messages where voicemail_message_uuid = :voicemail_message_uuid ";
 				$parameters['voicemail_message_uuid'] = $this->voicemail_message_uuid;
-				$database = new database;
-				$voicemail_message_base64 = $database->select($sql, $parameters, 'column');
+				$voicemail_message_base64 = $this->database->select($sql, $parameters, 'column');
 				unset($sql, $parameters);
 
 				//define voicemail message file path
@@ -1031,10 +1033,9 @@
 					$p->add('voicemail_message_edit', 'temp');
 
 					//execute update
-					$database = new database;
-					$database->app_name = $this->app_name;
-					$database->app_name = $this->app_uuid;
-					$database->save($array);
+					$this->database->app_name = $this->app_name;
+					$this->database->app_name = $this->app_uuid;
+					$this->database->save($array);
 					unset($array);
 
 					//revoke temporary permissions
@@ -1072,10 +1073,9 @@
 				$p->add('voicemail_message_edit', 'temp');
 
 			//execute update
-				$database = new database;
-				$database->app_name = $this->app_name;
-				$database->app_name = $this->app_uuid;
-				$database->save($array);
+				$this->database->app_name = $this->app_name;
+				$this->database->app_name = $this->app_uuid;
+				$this->database->save($array);
 				unset($array);
 
 			//revoke temporary permissions
@@ -1127,8 +1127,7 @@
 				$parameters['voicemail_uuid'] = $this->voicemail_uuid;
 				$parameters['domain_uuid'] = $this->domain_uuid;
 				$parameters['voicemail_message_uuid'] = $this->voicemail_message_uuid;
-				$database = new database;
-				$message_base64 = $database->select($sql, $parameters, 'column');
+				$message_base64 = $this->database->select($sql, $parameters, 'column');
 				if ($message_base64 != '') {
 					$message_decoded = base64_decode($message_base64);
 					file_put_contents($path.'/msg_'.$this->voicemail_message_uuid.'.ext', $message_decoded);
