@@ -741,7 +741,7 @@
 					$sql .= "select * from pg_tables where schemaname='public' and tablename = '$table_name' ";
 				}
 				if ($this->type == "mysql") {
-					$sql .= "SELECT TABLE_NAME FROM information_schema.tables WHERE table_schema = '$db_name' and TABLE_NAME = '$table_name' ";
+					$sql .= "SELECT TABLE_NAME FROM information_schema.tables WHERE table_schema = '".$this->db_name."' and TABLE_NAME = '$table_name' ";
 				}
 				$prep_statement = $this->db->prepare($sql);
 				$prep_statement->execute();
