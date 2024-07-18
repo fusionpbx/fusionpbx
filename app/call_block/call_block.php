@@ -103,8 +103,7 @@
 	$sql = "select count(*) from view_call_block ";
 	$sql .= "where true ";
 	if ($show == "all" && permission_exists('call_block_all')) {
-		//$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
-		//$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		//show all records across all domains
 	}
 	else {
 		$sql .= "and ( ";
@@ -115,7 +114,7 @@
 		$sql .= ") ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	}
-	if (!permission_exists('call_block_all') && !empty($_SESSION['user']['extension'])) {
+	if (!permission_exists('call_block_extension') && !empty($_SESSION['user']['extension'])) {
 		$sql .= "and extension_uuid in (";
 		$x = 0;
 		foreach ($_SESSION['user']['extension'] as $field) {
@@ -181,7 +180,7 @@
 		$sql .= ") ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	}
-	if (!permission_exists('call_block_all') && !empty($_SESSION['user']['extension']) && count($_SESSION['user']['extension']) > 0) {
+	if (!permission_exists('call_block_extension') && !empty($_SESSION['user']['extension']) && count($_SESSION['user']['extension']) > 0) {
 		$sql .= "and extension_uuid in (";
 		$x = 0;
 		foreach ($_SESSION['user']['extension'] as $field) {

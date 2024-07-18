@@ -5,7 +5,7 @@
 		$apps[$x]['uuid'] = "9ed63276-e085-4897-839c-4f2e36d92d6c";
 		$apps[$x]['category'] = "Switch";
 		$apps[$x]['subcategory'] = "";
-		$apps[$x]['version'] = "1.0";
+		$apps[$x]['version'] = "1.1";
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "A tool to block incoming numbers.";
@@ -73,7 +73,6 @@
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "call_block_all";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
-		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "call_block_extension";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";

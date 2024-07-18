@@ -317,7 +317,7 @@ if (!class_exists('call_block')) {
 								foreach ($rows as $x => $row) {
 
 									//build insert array
-										if (permission_exists('call_block_all')) {
+										if (permission_exists('call_block_extension')) {
 											$array['call_block'][$x]['call_block_uuid'] = uuid();
 											$array['call_block'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
 											$array['call_block'][$x]['call_block_direction'] = $this->call_block_direction;

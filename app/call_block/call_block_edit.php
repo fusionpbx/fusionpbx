@@ -75,7 +75,7 @@
 		$action_array = explode(':', $_POST["call_block_action"]);
 		$call_block_app = $action_array[0];
 		$call_block_data = $action_array[1] ?? null;
-		
+
 		//sanitize the data
 		$extension_uuid = preg_replace("#[^a-fA-F0-9./]#", "", $extension_uuid);
 		$call_block_country_code = preg_replace('#[^0-9./]#', '', $call_block_country_code ?? '');
@@ -176,7 +176,7 @@
 					}
 
 				//if user doesn't have call block all then use the assigned extension_uuid
-					if (!permission_exists('call_block_all')) {
+					if (!permission_exists('call_block_extension')) {
 						$extension_uuid = $_SESSION['user']['extension'][0]['extension_uuid'];
 					}
 
@@ -422,7 +422,7 @@ if (permission_exists('call_block_all') || permission_exists('call_block_ring_gr
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	if (permission_exists('call_block_all')) {
+	if (permission_exists('call_block_extension')) {
 		echo "<tr>\n";
 		echo "<td width='30%' class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-extension']."\n";
@@ -612,7 +612,7 @@ if (permission_exists('call_block_all') || permission_exists('call_block_ring_gr
 	if (empty($_REQUEST["id"])) {
 
 		//without block all permission, limit to assigned extension(s)
-		if (!permission_exists('call_block_all') && !empty($_SESSION['user']['extension'])) {
+		if (!permission_exists('call_block_extension') && !empty($_SESSION['user']['extension'])) {
 			foreach ($_SESSION['user']['extension'] as $assigned_extension) {
 				$assigned_extensions[$assigned_extension['extension_uuid']] = $assigned_extension['user'];
 			}
@@ -658,7 +658,7 @@ if (permission_exists('call_block_all') || permission_exists('call_block_ring_gr
 		echo button::create(['type'=>'button','id'=>'action_bar_sub_button_back','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'collapse'=>'hide-xs','style'=>'display: none;','link'=>'call_block.php']);
 		if ($result) {
 			$select_margin = 'margin-left: 15px;';
-			if (permission_exists('call_block_all')) {
+			if (permission_exists('call_block_extension')) {
 				echo 	"<select class='formfld' style='".$select_margin."' name='extension_uuid'>\n";
 				echo "		<option value='' disabled='disabled'>".$text['label-extension']."</option>\n";
 				echo "		<option value='' selected='selected'>".$text['label-all']."</option>\n";
