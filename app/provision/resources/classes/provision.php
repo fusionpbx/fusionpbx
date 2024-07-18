@@ -274,7 +274,7 @@
 					unset($contact, $numbers, $uuid, $phone_label);
 					$x++;
 				}
-				unset($parameters);
+				unset($sql, $parameters);
 
 			}
 		}
@@ -314,7 +314,7 @@
 					$parameters['domain_uuid'] = $domain_uuid;
 					$database = new database;
 					$domain_name = $database->select($sql, $parameters, 'column');
-					unset($parameters);
+					unset($sql, $parameters);
 				}
 
 			//build the provision array
@@ -343,7 +343,7 @@
 							$parameters['device_address'] = $device_address;
 							$database = new database;
 							$row = $database->select($sql, $parameters, 'row');
-							unset($parameters);
+							unset($sql, $parameters);
 
 							if (is_array($row) && sizeof($row) != 0) {
 
@@ -372,7 +372,7 @@
 									$parameters['device_provisioned_agent'] = $_SERVER['HTTP_USER_AGENT'];
 									$database = new database;
 									$database->execute($sql, $parameters);
-									unset($parameters);
+									unset($sql, $parameters);
 
 								//set the variables from values in the database
 									$device_uuid = $row["device_uuid"];
@@ -411,7 +411,7 @@
 									$device_enabled = $row["device_enabled"];
 									$device_description = $row["device_description"];
 								}
-								unset($row, $parameters);
+								unset($sql, $row, $parameters);
 							}
 					}
 					else {
@@ -596,7 +596,7 @@
 					$row = $database->select($sql, $parameters, 'row');
 					if (is_array($row) && sizeof($row) != 0) {
 						$device_uuid_alternate = $row["device_uuid_alternate"];
-						unset($row, $parameters);
+						unset($sql, $row, $parameters);
 						if (is_uuid($device_uuid_alternate)) {
 							//override the original device_uuid
 								$device_uuid = $device_uuid_alternate;
@@ -623,7 +623,7 @@
 										$device_description = $row["device_description"];
 									}
 								}
-								unset($row, $parameters);
+								unset($sql, $row, $parameters);
 						}
 					}
 				}
@@ -699,7 +699,7 @@
 								$id = $row['line_number'];
 								$device_lines[$id] = $row;
 							}
-							unset($parameters);
+							unset($sql, $parameters);
 
 						//get the device profile keys
 							if (is_uuid($device_profile_uuid)) {
@@ -765,7 +765,7 @@
 										$device_keys[$id]['device_key_owner'] = "profile";
 									}
 								}
-								unset($parameters, $keys);
+								unset($sql, $parameters, $keys);
 							}
 
 						//get the device keys
@@ -818,7 +818,7 @@
 									$device_keys[$id]['device_key_owner'] = "device";
 								}
 							}
-							unset($parameters, $keys);
+							unset($sql, $parameters, $keys);
 
 						//set the variables
 							if (is_array($device_lines) && sizeof($device_lines) != 0) {
@@ -966,7 +966,7 @@
 										unset($name_array, $contact_name_given, $contact_name_family, $phone_extension);
 								}
 							}
-							unset($parameters);
+							unset($sql, $parameters);
 					}
 
 				//assign the contacts array to the template
@@ -1166,7 +1166,7 @@
 						$contact_uuid = $database->select($sql, $parameters, 'column');
 						$view->assign("ldap_username", "uid=" . $contact_uuid . "," . $this->settings->get('provision','grandstream_ldap_user_base', ''));
 						$view->assign("ldap_password",md5($laddr_salt.$device_user_uuid));
-						unset($parameters);
+						unset($sql, $parameters);
 					}
 
 				//get the time zone
