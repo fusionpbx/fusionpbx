@@ -46,6 +46,8 @@
 	$dashboard_icon = '';
 	$dashboard_url = '';
 	$dashboard_target = 'self';
+	$dashboard_width = '';
+	$dashboard_height = '';
 	$dashboard_content = '';
 	$dashboard_content_details = '';
 	$dashboard_heading_text_color = '';
@@ -77,6 +79,8 @@
 		$dashboard_icon = $_POST["dashboard_icon"] ?? '';
 		$dashboard_url = $_POST["dashboard_url"] ?? '';
 		$dashboard_target = $_POST["dashboard_target"] ?? 'self';
+		$dashboard_width = $_POST["dashboard_width"] ?? '';
+		$dashboard_height = $_POST["dashboard_height"] ?? '';
 		$dashboard_content = $_POST["dashboard_content"] ?? '';
 		$dashboard_content_details = $_POST["dashboard_content_details"] ?? '';
 		$dashboard_groups = $_POST["dashboard_groups"] ?? '';
@@ -226,6 +230,8 @@
 			$array['dashboard'][0]['dashboard_path'] = $dashboard_path;
 			$array['dashboard'][0]['dashboard_icon'] = $dashboard_icon;
 			$array['dashboard'][0]['dashboard_url'] = $dashboard_url;
+			$array['dashboard'][0]['dashboard_width'] = $dashboard_width;
+			$array['dashboard'][0]['dashboard_height'] = $dashboard_height;
 			$array['dashboard'][0]['dashboard_target'] = $dashboard_target;
 			$array['dashboard'][0]['dashboard_content'] = $dashboard_content;
 			$array['dashboard'][0]['dashboard_content_details'] = $dashboard_content_details;
@@ -287,6 +293,8 @@
 		$sql .= " dashboard_path, ";
 		$sql .= " dashboard_icon, ";
 		$sql .= " dashboard_url, ";
+		$sql .= " dashboard_width, ";
+		$sql .= " dashboard_height, ";
 		$sql .= " dashboard_target, ";
 		$sql .= " dashboard_content, ";
 		$sql .= " dashboard_content_details, ";
@@ -316,6 +324,8 @@
 			$dashboard_path = $row["dashboard_path"];
 			$dashboard_icon = $row["dashboard_icon"];
 			$dashboard_url = $row["dashboard_url"];
+			$dashboard_width = $row["dashboard_width"];
+			$dashboard_height = $row["dashboard_height"];
 			$dashboard_target = $row["dashboard_target"];
 			$dashboard_content = $row["dashboard_content"];
 			$dashboard_content_details = $row["dashboard_content_details"];
@@ -558,14 +568,38 @@
 		echo "</td>\n";
 		echo "</tr>\n";
 
+		echo "<tr class='type_icon' ".($dashboard_path != 'core/dashboard/resources/dashboard/icon.php' ? "style='display: none;'" : null).">\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-width']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<input class='formfld' type='text' name='dashboard_width' maxlength='255' value='".escape($dashboard_width)."'>\n";
+		echo "<br />\n";
+		echo $text['description-dashboard_width'] ?? '';
+		echo "\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+
+		echo "<tr class='type_icon' ".($dashboard_path != 'core/dashboard/resources/dashboard/icon.php' ? "style='display: none;'" : null).">\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-height']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<input class='formfld' type='text' name='dashboard_height' maxlength='255' value='".escape($dashboard_height)."'>\n";
+		echo "<br />\n";
+		echo $text['description-dashboard_height'] ?? '';
+		echo "\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+
 		echo "<tr class='type_icon' ".($dashboard_path != 'core/dashboard/resources/dashboard/icon.php' ? "class='type_icon' style='display: none;'" : null).">\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo $text['label-target']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "	<select name='dashboard_target' class='formfld'>\n";
-		echo "		<option value='self'>".$text['label-current_window_tab']."</option>\n";
-		echo "		<option value='new' ".(!empty($dashboard_target) && $dashboard_target == 'new' ? "selected='selected'" : null).">".$text['label-new_window_tab']."</option>\n";
+		echo "		<option value='self'>".$text['label-current_window']."</option>\n";
+		echo "		<option value='new' ".(!empty($dashboard_target) && $dashboard_target == 'new' ? "selected='selected'" : null).">".$text['label-new_window']."</option>\n";
 		echo "	</select>\n";
 		echo "<br />\n";
 		echo $text['description-dashboard_target']."\n";
