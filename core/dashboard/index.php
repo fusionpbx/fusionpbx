@@ -75,6 +75,8 @@
 	$sql .= "dashboard_icon, ";
 	$sql .= "dashboard_url, ";
 	$sql .= "dashboard_target, ";
+	$sql .= "dashboard_width, ";
+	$sql .= "dashboard_height, ";
 	$sql .= "dashboard_content, ";
 	$sql .= "dashboard_content_details, ";
 	$sql .= "dashboard_chart_type, ";
@@ -123,6 +125,8 @@
 						$array['dashboard'][$x]['dashboard_content'] = $row['dashboard_content'];
 						$array['dashboard'][$x]['dashboard_content_details'] = $row['dashboard_content_details'];
 						$array['dashboard'][$x]['dashboard_target'] = $row['dashboard_target'];
+						$array['dashboard'][$x]['dashboard_width'] = $row['dashboard_width'];
+						$array['dashboard'][$x]['dashboard_height'] = $row['dashboard_height'];
 						$array['dashboard'][$x]['dashboard_uuid'] = $row['dashboard_uuid'];
 						$array['dashboard'][$x]['dashboard_order'] = $dashboard_order;
 						$x++;
@@ -170,7 +174,7 @@
 	echo "	Chart.defaults.plugins.legend.display = false;\n";
 	echo "</script>\n";
 
-// determine initial state all button to display
+//determine initial state all button to display
 	$expanded_all = true;
 	if (is_array($dashboard) && @sizeof($dashboard) != 0) {
 		foreach ($dashboard as $row) {
@@ -435,6 +439,8 @@ function toggle_grid_row_end(dashboard_name) {
 		$dashboard_icon = $row['dashboard_icon'] ?? '';
 		$dashboard_url  = $row['dashboard_url'] ?? '';
 		$dashboard_target  = $row['dashboard_target'] ?? '';
+		$dashboard_width  = $row['dashboard_width'] ?? '';
+		$dashboard_height  = $row['dashboard_height'] ?? '';
 		$dashboard_content  = $row['dashboard_content'] ?? '';
 		$dashboard_content_details  = $row['dashboard_content_details'] ?? '';
 		$dashboard_chart_type = $row['dashboard_chart_type'] ?? "doughnut";
