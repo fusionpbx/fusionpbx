@@ -1759,6 +1759,7 @@
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "    <select class='formfld' name='voicemail_enabled'>\n";
+		echo "    <option value=''></option>\n";
 		if ($voicemail_enabled == "true") {
 			echo "    <option value='true' selected='selected'>".$text['label-true']."</option>\n";
 		}
@@ -1795,6 +1796,7 @@
 			echo "</td>\n";
 			echo "<td class='vtable' align='left'>\n";
 			echo "	<select class='formfld' name='voicemail_transcription_enabled' id='voicemail_transcription_enabled'>\n";
+			echo "    <option value=''></option>\n";
 			echo "    	<option value='true' ".(($voicemail_transcription_enabled == "true") ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
 			echo "    	<option value='false' ".(($voicemail_transcription_enabled == "false") ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
 			echo "	</select>\n";
@@ -1932,6 +1934,7 @@
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "    <select class='formfld' name='call_screen_enabled'>\n";
+		echo "    <option value=''></option>\n";
 		if ($call_screen_enabled == "true") {
 			echo "    <option value='true' selected='selected'>".$text['label-true']."</option>\n";
 		}
@@ -2043,6 +2046,7 @@
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "	<select class='formfld' name='extension_type' id='extension_type'>\n";
+		echo "		<option value=''></option>\n";
 		echo "		<option value='default' ".(($extension_type == "default") ? "selected='selected'" : null).">".$text['label-default']."</option>\n";
 		echo "		<option value='virtual' ".(($extension_type == "virtual") ? "selected='selected'" : null).">".$text['label-virtual']."</option>\n";
 		echo "	</select>\n";
