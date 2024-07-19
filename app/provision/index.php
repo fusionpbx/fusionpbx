@@ -138,8 +138,8 @@
 		}
     
 		//Snom: $userAgent = "Mozilla/4.0 (compatible; snomD785-SIP 10.1.169.16 2010.12-00001-gd311851f1 (Feb 25 2019 - 14:19:43) 00041396D9B4 SXM:0 UXM:0 UXMC:0)"
-		if (substr($userAgent,25,4) == "snom") {
-			$snom_ua = explode(" ", $userAgent);
+		if (substr($_SERVER['HTTP_USER_AGENT'],25,4) == "snom") {
+			$snom_ua = explode(" ", $_SERVER['HTTP_USER_AGENT']);
 		        $device_address = $snom_ua[10];
 		        $device_address = preg_replace("#[^a-fA-F0-9./]#", "", $device_address);
 		}
