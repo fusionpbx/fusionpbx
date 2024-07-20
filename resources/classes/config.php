@@ -95,9 +95,6 @@ class config {
 			elseif (file_exists("/usr/local/etc/fusionpbx/config.conf")) {
 				$this->config_path = "/usr/local/etc/fusionpbx/config.conf";
 			}
-			elseif (file_exists(getenv('SystemDrive') . DIRECTORY_SEPARATOR . 'ProgramData' . DIRECTORY_SEPARATOR . 'fusionpbx' . DIRECTORY_SEPARATOR . 'config.conf')) {
-			$this->config_path = getenv('SystemDrive') . DIRECTORY_SEPARATOR . 'ProgramData' . DIRECTORY_SEPARATOR . 'fusionpbx' . DIRECTORY_SEPARATOR . 'config.conf';
-			}	
 			elseif (file_exists($_SERVER["PROJECT_ROOT"]."/resources/config.php")) {
 				$this->config_path = $_SERVER["PROJECT_ROOT"]."/resources/config.php";
 			}
@@ -106,6 +103,9 @@ class config {
 			}
 			elseif (file_exists("/usr/local/etc/fusionpbx/config.php")) {
 				$this->config_path = "/usr/local/etc/fusionpbx/config.php";
+			}
+			elseif (file_exists(getenv('SystemDrive') . DIRECTORY_SEPARATOR . 'ProgramData' . DIRECTORY_SEPARATOR . 'fusionpbx' . DIRECTORY_SEPARATOR . 'config.conf')) {
+				$this->config_path = getenv('SystemDrive') . DIRECTORY_SEPARATOR . 'ProgramData' . DIRECTORY_SEPARATOR . 'fusionpbx' . DIRECTORY_SEPARATOR . 'config.conf';
 			}
 			else {
 				$this->config_path = '';
