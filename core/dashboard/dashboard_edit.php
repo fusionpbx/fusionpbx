@@ -35,6 +35,9 @@
 		exit;
 	}
 
+//initialize the database
+	$database = new database;
+
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
@@ -49,6 +52,7 @@
 	$dashboard_width = '';
 	$dashboard_height = '';
 	$dashboard_content = '';
+	$dashboard_content_text_align = '';
 	$dashboard_content_details = '';
 	$dashboard_heading_text_color = '';
 	$dashboard_heading_background_color = '';
@@ -82,6 +86,7 @@
 		$dashboard_width = $_POST["dashboard_width"] ?? '';
 		$dashboard_height = $_POST["dashboard_height"] ?? '';
 		$dashboard_content = $_POST["dashboard_content"] ?? '';
+		$dashboard_content_text_align = $_POST["dashboard_content_text_align"] ?? '';
 		$dashboard_content_details = $_POST["dashboard_content_details"] ?? '';
 		$dashboard_groups = $_POST["dashboard_groups"] ?? '';
 		$dashboard_chart_type = $_POST["dashboard_chart_type"] ?? '';
@@ -109,7 +114,6 @@
 			$dashboard_uuid = $_GET["dashboard_uuid"];
 		//delete the group from the users
 			$array['dashboard_groups'][0]['dashboard_group_uuid'] = $dashboard_group_uuid;
-			$database = new database;
 			$database->app_name = 'dashboard';
 			$database->app_uuid = '55533bef-4f04-434a-92af-999c1e9927f7';
 			$database->delete($array);
@@ -138,20 +142,17 @@
 				switch ($_POST['action']) {
 					case 'copy':
 						if (permission_exists('dashboard_add')) {
-							$obj = new database;
-							$obj->copy($array);
+							$database->copy($array);
 						}
 						break;
 					case 'delete':
 						if (permission_exists('dashboard_delete')) {
-							$obj = new database;
-							$obj->delete($array);
+							$database->delete($array);
 						}
 						break;
 					case 'toggle':
 						if (permission_exists('dashboard_update')) {
-							$obj = new database;
-							$obj->toggle($array);
+							$database->toggle($array);
 						}
 						break;
 				}
@@ -234,6 +235,7 @@
 			$array['dashboard'][0]['dashboard_height'] = $dashboard_height;
 			$array['dashboard'][0]['dashboard_target'] = $dashboard_target;
 			$array['dashboard'][0]['dashboard_content'] = $dashboard_content;
+			$array['dashboard'][0]['dashboard_content_text_align'] = $dashboard_content_text_align;
 			$array['dashboard'][0]['dashboard_content_details'] = $dashboard_content_details;
 			$array['dashboard'][0]['dashboard_chart_type'] = $dashboard_chart_type;
 			$array['dashboard'][0]['dashboard_heading_text_color'] = $dashboard_heading_text_color;
@@ -263,13 +265,10 @@
 			}
 
 		//save the data
-			$database = new database;
 			$database->app_name = 'dashboard';
 			$database->app_uuid = '55533bef-4f04-434a-92af-999c1e9927f7';
-			$database->save($array);
-			//$result = $database->message;
+			$result = $database->save($array);
 			//view_array($result);
-			//exit;
 
 		//redirect the user
 			if (isset($action)) {
@@ -297,6 +296,7 @@
 		$sql .= " dashboard_height, ";
 		$sql .= " dashboard_target, ";
 		$sql .= " dashboard_content, ";
+		$sql .= " dashboard_content_text_align, ";
 		$sql .= " dashboard_content_details, ";
 		$sql .= " dashboard_chart_type, ";
 		$sql .= " dashboard_heading_text_color, ";
@@ -317,7 +317,6 @@
 		$sql .= "from v_dashboard ";
 		$sql .= "where dashboard_uuid = :dashboard_uuid ";
 		$parameters['dashboard_uuid'] = $dashboard_uuid;
-		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
 		if (is_array($row) && @sizeof($row) != 0) {
 			$dashboard_name = $row["dashboard_name"];
@@ -328,6 +327,7 @@
 			$dashboard_height = $row["dashboard_height"];
 			$dashboard_target = $row["dashboard_target"];
 			$dashboard_content = $row["dashboard_content"];
+			$dashboard_content_text_align = $row["dashboard_content_text_align"];
 			$dashboard_content_details = $row["dashboard_content_details"];
 			$dashboard_chart_type = $row["dashboard_chart_type"];
 			$dashboard_heading_text_color = $row["dashboard_heading_text_color"];
@@ -357,7 +357,6 @@
 		$sql .= "from v_dashboard_groups ";
 		$sql .= "where dashboard_uuid = :dashboard_uuid ";
 		$parameters['dashboard_uuid'] = $dashboard_uuid;
-		$database = new database;
 		$dashboard_groups = $database->select($sql, $parameters, 'all');
 		unset ($sql, $parameters);
 	}
@@ -388,7 +387,6 @@
 		$dashboard_row_span = 2;
 	}
 
-
 //add an empty row
 	$x = is_array($dashboard_groups) ? count($dashboard_groups) : 0;
 	$dashboard_groups[$x]['dashboard_uuid'] = $dashboard_uuid;
@@ -408,7 +406,6 @@
 	$sql .= "where x.dashboard_uuid = :dashboard_uuid ";
 	$sql .= "and x.group_uuid = g.group_uuid ";
 	$parameters['dashboard_uuid'] = $dashboard_uuid ?? '';
-	$database = new database;
 	$dashboard_groups = $database->select($sql, $parameters, 'all');
 	unset ($sql, $parameters);
 
@@ -417,7 +414,6 @@
 	$sql .= "WHERE (domain_uuid = :domain_uuid or domain_uuid is null)";
 	$sql .= "ORDER by group_name asc ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$database = new database;
 	$groups = $database->execute($sql, $parameters, 'all');
 	unset ($sql, $parameters);
 
@@ -619,6 +615,20 @@
 		echo "	<textarea class='formfld' style='height: 100px;' name='dashboard_content'>".$dashboard_content."</textarea>\n";
 		echo "<br />\n";
 		echo $text['description-dashboard_content']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+
+		echo "<tr class='type_content' ".($dashboard_path != 'core/dashboard/resources/dashboard/content.php' ? "style='display: none;'" : null).">\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-dashboard_content_text_align']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<select name='dashboard_content_text_align' class='formfld'>\n";
+		echo "		<option value='left' ".(!empty($dashboard_content_text_align) && $dashboard_content_text_align == 'left' ? "selected='selected'" : null).">".$text['label-left']."</option>\n";
+		echo "		<option value='right' ".(!empty($dashboard_content_text_align) && $dashboard_content_text_align == 'right' ? "selected='selected'" : null).">".$text['label-right']."</option>\n";
+		echo "		<option value='middle' ".(!empty($dashboard_content_text_align) && $dashboard_content_text_align == 'middle' ? "selected='selected'" : null).">".$text['label-middle']."</option>\n";
+		echo "	</select>\n";		echo "<br />\n";
+		echo $text['description-dashboard_content_text_align']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 	}
