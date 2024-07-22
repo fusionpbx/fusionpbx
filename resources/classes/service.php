@@ -225,7 +225,7 @@ abstract class service {
 		}
 
 		//notify user
-		self::log("CLI Options detected: " . implode(",", self::$parsed_command_options), LOG_DEBUG);
+		self::log("CLI Options detected: " . implode(",", array_map(function ($value, $key) { return "$key=$value"; },self::$parsed_command_options, array_keys(self::$parsed_command_options))), LOG_DEBUG);
 
 		//loop through the parsed options given on the command line
 		foreach ($options as $option_key => $option_value) {
@@ -402,8 +402,13 @@ abstract class service {
 			$level = self::$log_level;
 		}
 
+		// Output to console if we are in debug mode
+		if (self::$log_level >= LOG_DEBUG) {
+			echo "$message\n";
+		}
+
 		// Log the message to syslog
-		syslog($level, 'fusionpbx[' . posix_getpid() . ']: ['.self::class.'] '.$message);
+		syslog($level, '['.static::class.']: '.$message);
 	}
 
 	/**
@@ -703,15 +708,6 @@ abstract class service {
 	public static function create(): self {
 		//can only start from command line
 		defined('STDIN') or die('Unauthorized');
-
-		//force launching in a seperate process
-		if ($pid = pcntl_fork()) {
-			exit;
-		}
-
-		if ($cid = pcntl_fork()) {
-			exit;
-		}
 
 		//set the PID file we will use
 		self::$pid_file = self::get_pid_filename();
