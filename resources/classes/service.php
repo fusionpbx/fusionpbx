@@ -79,6 +79,12 @@ abstract class service {
 	protected static $config_file = "";
 
 	/**
+	 * Fork the service to it's own process ID
+	 * @var bool
+	 */
+	protected static $forking_enabled = true;
+
+	/**
 	 * Child classes must provide a mechanism to reload settings
 	 */
 	abstract protected function reload_settings(): void;
@@ -199,6 +205,12 @@ abstract class service {
 	 * @return void
 	 */
 	protected static function parse_service_command_options(): void {
+
+		//ensure we have a PID so that reload and exit send commands work
+		if (empty(self::$pid_file)) {
+			self::$pid_file = self::get_pid_filename();
+		}
+
 		//base class short options
 		self::$available_command_options = self::base_command_options();
 
@@ -402,8 +414,13 @@ abstract class service {
 			$level = self::$log_level;
 		}
 
+		//enable sending message to the console directly
+		if (self::$log_level === LOG_DEBUG || !self::$forking_enabled) {
+			echo $message . "\n";
+		}
+
 		// Log the message to syslog
-		syslog($level, 'fusionpbx[' . posix_getpid() . ']: ['.self::class.'] '.$message);
+		syslog($level, 'fusionpbx[' . posix_getpid() . ']: ['.static::class.'] '.$message);
 	}
 
 	/**
@@ -583,6 +600,13 @@ abstract class service {
 		$help_options[$index]['long_description'] = '--config <path>';
 		$help_options[$index]['functions'][] = 'set_config_file';
 		$index++;
+		$help_options[$index]['short_option'] = '1';
+		$help_options[$index]['long_option'] = 'no-fork';
+		$help_options[$index]['description'] = 'Do not fork the process';
+		$help_options[$index]['short_description'] = '-1';
+		$help_options[$index]['long_description'] = '--no-fork';
+		$help_options[$index]['functions'][] = 'set_no_fork';
+		$index++;
 		$help_options[$index]['short_option'] = 'x';
 		$help_options[$index]['long_option'] = 'exit';
 		$help_options[$index]['description'] = 'Exit the service gracefully';
@@ -591,6 +615,14 @@ abstract class service {
 		$help_options[$index]['functions'][] = 'send_shutdown';
 		$help_options[$index]['functions'][] = 'shutdown';
 		return $help_options;
+	}
+
+	/**
+	 * Set to not fork when started
+	 */
+	public static function set_no_fork() {
+		echo "Running in forground\n";
+		self::$forking_enabled = false;
 	}
 
 	/**
@@ -704,17 +736,21 @@ abstract class service {
 		//can only start from command line
 		defined('STDIN') or die('Unauthorized');
 
-		//force launching in a seperate process
-		if ($pid = pcntl_fork()) {
-			exit;
-		}
+		//parse the cli options and store them statically
+		self::parse_service_command_options();
 
-		if ($cid = pcntl_fork()) {
-			exit;
-		}
+		//fork process
+		if (self::$forking_enabled) {
+			echo "Running in daemon mode\n";
+			//force launching in a seperate process
+			if ($pid = pcntl_fork()) {
+				exit;
+			}
 
-		//set the PID file we will use
-		self::$pid_file = self::get_pid_filename();
+			if ($cid = pcntl_fork()) {
+				exit;
+			}
+		}
 
 		//TODO remove updated settings object after merge
 		if (file_exists( __DIR__ . '/settings.php')) {
@@ -725,9 +761,6 @@ abstract class service {
 		if (file_exists(dirname(__DIR__).'/functions.php')) {
 			require_once dirname(__DIR__).'/functions.php';
 		}
-
-		//parse the cli options and store them statically
-		self::parse_service_command_options();
 
 		//create the config object if not already created
 		if (self::$config === null) {
