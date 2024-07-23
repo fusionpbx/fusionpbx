@@ -36,7 +36,7 @@
 	}
 
 //get the vendor functions
-	$sql = "select v.name as vendor_name, f.name, f.value ";
+	$sql = "select v.name as vendor_name, f.type, f.value ";
 	$sql .= "from v_device_vendors as v, v_device_vendor_functions as f ";
 	$sql .= "where v.device_vendor_uuid = f.device_vendor_uuid ";
 	$sql .= "and f.device_vendor_function_uuid in ";
@@ -57,7 +57,7 @@
 	$sql .= ") ";
 	$sql .= "and v.enabled = 'true' ";
 	$sql .= "and f.enabled = 'true' ";
-	$sql .= "order by v.name asc, f.name asc ";
+	$sql .= "order by v.name asc, f.type asc ";
 	$vendor_functions = $database->select($sql, (is_array($parameters) ? $parameters : null), 'all');
 	unset($sql, $sql_where_or, $parameters);
 
@@ -266,7 +266,7 @@
 									//save the changes
 										$database->app_name = 'devices';
 										$database->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
-										$database->save($array);
+										$result = $database->save($array);
 
 									//remove the temporary permissions
 										$p->delete('device_keys_add', 'temp');
@@ -592,10 +592,10 @@
 							$selected = "selected='selected'";
 						}
 						if (empty($row['device_key_vendor'])) {
-							echo "					<option value='".$function['value']."' $selected >".$text['label-'.$function['name']]."</option>\n";
+							echo "					<option value='".$function['value']."' $selected >".$text['label-'.$function['type']]."</option>\n";
 						}
 						if (!empty($row['device_key_vendor']) && $row['device_key_vendor'] == $function['vendor_name']) {
-							echo "					<option value='".$function['value']."' $selected >".$text['label-'.$function['name']]."</option>\n";
+							echo "					<option value='".$function['value']."' $selected >".$text['label-'.$function['type']]."</option>\n";
 						}
 						$previous_vendor = $function['vendor_name'];
 						$i++;
