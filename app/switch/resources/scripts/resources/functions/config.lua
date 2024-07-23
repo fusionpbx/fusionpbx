@@ -11,7 +11,7 @@ function config()
 	elseif (file_exists("/etc/fusionpbx/config.conf")) then
 		return "/etc/fusionpbx/config.conf";
 	elseif file_exists(os.getenv("SystemDrive") .. "/ProgramData/fusionpbx/config.conf") then
-    	return os.getenv("SystemDrive") .. "/ProgramData/fusionpbx/config.conf"
+    		return os.getenv("SystemDrive") .. "/ProgramData/fusionpbx/config.conf"
 	else
 		require "resources.config";
 		return config_file;
