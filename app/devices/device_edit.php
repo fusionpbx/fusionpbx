@@ -256,7 +256,7 @@
 					if (permission_exists('device_label')) {
 						$array['devices'][0]['device_label'] = $device_label;
 					}
-					if (permission_exists('device_user') && is_uuid($device_user_uuid)) {
+					if (permission_exists('device_user') && (is_uuid($device_user_uuid) || empty($device_user_uuid))) {
 						$array['devices'][0]['device_user_uuid'] = $device_user_uuid;
 					}
 					if (permission_exists('device_username_password')) {
