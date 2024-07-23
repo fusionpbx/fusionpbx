@@ -50,7 +50,6 @@
 	$translate_enabled = false;
 	$language_enabled = false;
 
-
 //add the settings object
 	$settings = new settings(["domain_uuid" => $_SESSION['domain_uuid'], "user_uuid" => $_SESSION['user_uuid']]);
 	$speech_enabled = $settings->get('speech', 'enabled', 'false');
@@ -80,6 +79,10 @@
 //get recording id
 	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$recording_uuid = $_REQUEST["id"];
+		$action = 'update';
+	}
+	else {
+		$action = 'add';
 	}
 
 //get the form value and set to php variables
@@ -87,10 +90,10 @@
 		$recording_filename = $_POST["recording_filename"] ?? '';
 		$recording_filename_original = $_POST["recording_filename_original"] ?? '';
 		$recording_name = $_POST["recording_name"];
-		$recording_voice = $_POST["recording_voice"];
 		$recording_model = $_POST["recording_model"];
 		//$recording_language = $_POST["recording_language"];
 		//$translate = $_POST["translate"];
+		$recording_voice = $_POST["recording_voice"];
 		$recording_message = $_POST["recording_message"];
 		$recording_description = $_POST["recording_description"];
 		//sanitize recording filename and name
@@ -191,8 +194,19 @@
 					$recording_filename = str_replace("'", '', $recording_filename);
 				}
 
-				//text to audio - make a new audio file from the message
+				//determine whether to create the recording
+				$create_recording = false;
 				if ($speech_enabled == 'true' && !empty($recording_voice) && !empty($recording_message)) {
+					if ($action == 'add') {
+						$create_recording = true;
+					}
+					if ($action == 'update' && $_POST["create_recording"] == 'true') {
+						$create_recording = true;
+					}
+				}
+
+				//text to audio - make a new audio file from the message
+				if ($create_recording) {
 					$speech->audio_path = $recording_path;
 					$speech->audio_filename = $recording_filename;
 					$speech->audio_format = $recording_format;
@@ -227,6 +241,7 @@
 				$array['recordings'][0]['recording_filename'] = $recording_filename;
 				$array['recordings'][0]['recording_name'] = $recording_name;
 				if ($speech_enabled == 'true' || $transcribe_enabled == 'true') {
+					$array['recordings'][0]['recording_voice'] = $recording_voice;
 					$array['recordings'][0]['recording_message'] = $recording_message;
 				}
 				$array['recordings'][0]['recording_description'] = $recording_description;
@@ -251,7 +266,8 @@
 //pre-populate the form
 	if (!empty($_GET) && empty($_POST["persistformvar"])) {
 		$recording_uuid = $_GET["id"];
-		$sql = "select recording_name, recording_filename, recording_message, recording_description ";
+		$sql = "select recording_name, recording_filename, ";
+		$sql .= "recording_voice, recording_message, recording_description ";
 		$sql .= "from v_recordings ";
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$sql .= "and recording_uuid = :recording_uuid ";
@@ -262,6 +278,7 @@
 		if (is_array($row) && @sizeof($row) != 0) {
 			$recording_filename = $row["recording_filename"];
 			$recording_name = $row["recording_name"];
+			$recording_voice = $row["recording_voice"];
 			$recording_message = $row["recording_message"];
 			$recording_description = $row["recording_description"];
 		}
@@ -355,7 +372,8 @@
 			echo "	<select class='formfld' name='recording_voice'>\n";
 			echo "		<option value=''></option>\n";
 			foreach ($voices as $key => $voice) {
-				echo "		<option value='".escape(gettype($key) === "integer" ? $voice : $key)."' ".(!empty($recording_voice) && $voice == $recording_voice ? "selected='selected'" : null).">".escape(ucwords($voice))."</option>\n";
+				$recording_voice_selected = (!empty($recording_voice) && $key == $recording_voice) ? "selected='selected'" : null;
+				echo "		<option value='".escape($key)."' $recording_voice_selected>".escape(ucwords($voice))."</option>\n";
 			}
 			echo "	</select>\n";
 		}
@@ -425,6 +443,30 @@
 		echo $text['description-message']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
+
+		if ($action == 'update') {
+			echo "<tr>\n";
+			echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+			echo "	".$text['label-create_recording']."\n";
+			echo "</td>\n";
+			echo "<td class='vtable' style='position: relative;' align='left'>\n";
+			if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
+				echo "	<label class='switch'>\n";
+				echo "		<input type='checkbox' id='create_recording' name='create_recording' value='true' ".(!empty($create_recording) && $create_recording == 'true' ? "checked='checked'" : null).">\n";
+				echo "		<span class='slider'></span>\n";
+				echo "	</label>\n";
+			}
+			else {
+				echo "	<select class='formfld' id='create_recording' name='create_recording'>\n";
+				echo "		<option value='true' ".($create_recording == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+				echo "		<option value='false' ".($create_recording == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+				echo "	</select>\n";
+			}
+			echo "<br />\n";
+			echo $text['description-create_recording']."\n";
+			echo "</td>\n";
+			echo "</tr>\n";
+		}
 	}
 
 	echo "<tr>\n";
