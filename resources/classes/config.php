@@ -238,6 +238,9 @@ final class config {
 		elseif (file_exists("/usr/local/etc/fusionpbx/config.php")) {
 			$file = "/usr/local/etc/fusionpbx/config.php";
 		}
+ 		elseif (file_exists(getenv('SystemDrive') . DIRECTORY_SEPARATOR . 'ProgramData' . DIRECTORY_SEPARATOR . 'fusionpbx' . DIRECTORY_SEPARATOR . 'config.conf')) {
+				$file = getenv('SystemDrive') . DIRECTORY_SEPARATOR . 'ProgramData' . DIRECTORY_SEPARATOR . 'fusionpbx' . DIRECTORY_SEPARATOR . 'config.conf';
+		}
 		elseif (file_exists(dirname(__DIR__, 2) . "/resources/config.php")) {
 			//use the current web directory to find it as a last resort
 			$file = "/var/www/fusionpbx/resources/config.php";
