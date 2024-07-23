@@ -333,10 +333,7 @@
 //get the device keys in the right order where device keys are listed after the profile keys
 	if (!empty($device_uuid) && is_uuid($device_uuid)) {
 		$sql = "select * from v_device_keys ";
-		$sql .= "where (";
-		$sql .= "device_uuid = :device_uuid ";
-		$sql .= is_uuid($device_profile_uuid) ? "or device_profile_uuid = :device_profile_uuid " : null;
-		$sql .= ") ";
+		$sql .= "where device_uuid = :device_uuid ";
 		$sql .= "order by ";
 		$sql .= "device_key_vendor asc, ";
 		$sql .= "case device_key_category ";
@@ -348,9 +345,6 @@
 		$sql .= $db_type == "mysql" ? "device_key_id asc " : "cast(device_key_id as numeric) asc, ";
 		$sql .= "case when device_uuid is null then 0 else 1 end asc ";
 		$parameters['device_uuid'] = $device_uuid;
-		if (is_uuid($device_profile_uuid)) {
-			$parameters['device_profile_uuid'] = $device_profile_uuid;
-		}
 		$keys = $database->select($sql, $parameters, 'all');
 		unset($sql, $parameters);
 	}
