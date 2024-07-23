@@ -81,6 +81,10 @@
 		//linux
 		$config_exists = true;
 	}
+	elseif (file_exists(getenv('SystemDrive') . DIRECTORY_SEPARATOR . 'ProgramData' . DIRECTORY_SEPARATOR . 'fusionpbx' . DIRECTORY_SEPARATOR . 'config.conf')) {
+		//Windows
+		$config_exists = true;
+	}
 	if ($config_exists) {
 		$msg = "Already Installed";
 		//report to user
@@ -99,6 +103,10 @@
 		elseif (file_exists("/etc/fusionpbx/config.php")) {
 			//linux
 			$config_path = "/etc/fusionpbx";
+		}
+		elseif (file_exists(getenv('SystemDrive') . DIRECTORY_SEPARATOR . 'ProgramData' . DIRECTORY_SEPARATOR . 'fusionpbx' . DIRECTORY_SEPARATOR . 'config.php')) {
+			//Windows
+			$config_path =  getenv('SystemDrive') . DIRECTORY_SEPARATOR . 'ProgramData' . DIRECTORY_SEPARATOR . 'fusionpbx' ;
 		}
 		if (isset($config_path)) {
 			if (is_writable($config_path)) {
