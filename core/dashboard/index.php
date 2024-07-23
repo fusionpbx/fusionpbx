@@ -34,6 +34,9 @@
 	elseif (file_exists("/etc/fusionpbx/config.conf")){
 		//Linux
 	}
+	elseif (file_exists(getenv('SystemDrive') . DIRECTORY_SEPARATOR . 'ProgramData' . DIRECTORY_SEPARATOR . 'fusionpbx' . DIRECTORY_SEPARATOR . 'config.conf')) {
+		// Windows
+	} 	
 	else {
 		header("Location: /core/install/install.php");
 		exit;
