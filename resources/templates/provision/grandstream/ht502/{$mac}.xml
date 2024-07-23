@@ -126,10 +126,10 @@
 		<P4507>300</P4507>
 		<!-- Conncetion Request Username -->
 		<!-- Max Length: 64 characters -->
-		<P4511></P4511>
+		<P4511>{$mac|replace:'-':''|upper}</P4511>
 		<!-- Connection Request Password -->
 		<!-- Max Length: 64 characters -->
-		<P4512></P4512>
+		<P4512>{$mac|replace:'-':''|upper}</P4512>
 		<!-- Connection Request Port (default is 7547) -->
 		<!-- Max Length: 5 characters -->
 		<P4518>7547</P4518>
@@ -174,7 +174,11 @@
 		<!-- Disable Direct IP Call. 0 - No, 1 - Yes. -->
 		<P277>0</P277>
 		<!-- NTP Server. Server address -->
-		<P30>us.pool.ntp.org</P30>
+		{if isset($ntp_server_primary)}
+		<P30>{$ntp_server_primary}</P30>
+		{else}
+		<P30>pool.ntp.org</P30>
+		{/if}
 		<!-- NTP Update Interval in minutes(5-1440)(Default is set to 60 minutes) -->
 		<!-- Number: 5 to 1440 -->
 		<P5005>1440</P5005>

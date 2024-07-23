@@ -230,7 +230,7 @@
 
 
     <!-- # ACS URL -->
-    <!-- #P4503= -->
+    {if isset($grandstream_acs_url)}<P4503>{$grandstream_acs_url}</P4503>{else}<P4503></P4503>{/if}
 
     <!-- # ACS Username -->
     <!-- # String -->
@@ -256,11 +256,11 @@
 
     <!-- # Connection Request Username -->
     <!-- # String -->
-    <P4511></P4511>
+    <P4511>{$mac|replace:'-':''|upper}</P4511>
 
     <!-- # Connection Request Password -->
     <!-- # String -->
-    <P4512></P4512>
+    <P4512>{$mac|replace:'-':''|upper}</P4512>
 
     <!-- # CPE SSL Certificate -->
     <P8220></P8220>
@@ -480,7 +480,11 @@
 
     <!-- # NTP Server -->
     <!-- # Server address -->
-    <P30>us.pool.ntp.org</P30>
+    {if isset($ntp_server_primary)}
+	<P30>{$ntp_server_primary}</P30>
+	{else}
+	<P30>pool.ntp.org</P30>
+	{/if}
 
     <!-- # Allow DHCP Option 42 to override NTP server. 0 - No, 1 - Yes. Default is No. -->
     <!-- # When set to Yes(1), it will override the configured NTP server. -->
@@ -1390,12 +1394,24 @@
     <!-- # Disable Line Echo Canceller (LEC).  0 - No, 1 - Yes -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P824>0</P824>
+    {if isset($grandstream_line_echo_canceller)} 
+        <P824>{$grandstream_line_echo_canceller}</P824>
+    {elseif isset($grandstream_line_1_echo_canceller)} 
+        <P824>{$grandstream_line_1_echo_canceller}</P824>
+    {else}
+        <P824>0</P824>
+    {/if}
 
     <!-- # Disable Network Echo Suppressor.  0 - No, 1 - Yes -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P4441>0</P4441>
+    {if isset($grandstream_line_echo_suppressor)} 
+        <P4441>{$grandstream_line_echo_suppressor}</P4441>
+    {elseif isset($grandstream_line_1_echo_suppressor)} 
+        <P4441>{$grandstream_line_1_echo_suppressor}</P4441>
+    {else}
+        <P4441>0</P4441>
+    {/if}
 
     <!-- # Outgoing Call Duration Limit.  (0-180 minutes, default is 0 (No Limit)) -->
     <!-- # Number: 0~180 -->
@@ -1692,12 +1708,24 @@
     <!-- # Disable Line Echo Canceller (LEC).  0 - No, 1 - Yes -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P825>0</P825>
+   {if isset($grandstream_line_echo_canceller)} 
+        <P825>{$grandstream_line_echo_canceller}</P825>
+    {elseif isset($grandstream_line_2_echo_canceller)} 
+        <P825>{$grandstream_line_2_echo_canceller}</P825>
+    {else}
+        <P825>0</P825>
+    {/if}
 
     <!-- # Disable Network Echo Suppressor.  0 - No, 1 - Yes -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P4442>0</P4442>
+    {if isset($grandstream_line_echo_suppressor)} 
+        <P4442>{$grandstream_line_echo_suppressor}</P4442>
+    {elseif isset($grandstream_line_2_echo_suppressor)} 
+        <P4442>{$grandstream_line_2_echo_suppressor}</P4442>
+    {else}
+        <P4442>0</P4442>
+    {/if}
 
     <!-- # Outgoing Call Duration Limit.  (0-180 minutes, default is 0 (No Limit)) -->
     <!-- # Number: 0~180 -->

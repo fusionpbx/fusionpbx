@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2020
+ Portions created by the Initial Developer are Copyright (C) 2008-2024
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -28,7 +28,7 @@
 	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
-	
+
 //check permissions
 	if (permission_exists('voicemail_view')) {
 		//access granted
@@ -93,7 +93,7 @@
 	$order_by = $_GET["order_by"] ?? 'voicemail_id';
 	$order = $_GET["order"] ?? 'asc';
 	$sort = $order_by == 'voicemail_id' ? 'natural' : null;
-	
+
 //set additional variables
 	$show = $_GET["show"] ?? '';
 
@@ -146,7 +146,7 @@
 	if ($show == "all" && permission_exists('voicemail_all')) {
 		$param .= "&show=all";
 	}
-	$page = empty($_GET['page']) ? $page = 0 : $page = $_GET['page'];
+	$page = empty($_GET['page']) ? 0 : $_GET['page'];
 	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
 	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
@@ -173,6 +173,22 @@
 			$voicemails_count[$row['voicemail_uuid']] = $row['voicemail_count'];
 		}
 		unset($sql, $parameters, $voicemails_count_tmp);
+	}
+
+//get vm greeting count for each mailbox
+	if (permission_exists('voicemail_greeting_view')) {
+		$sql = "select voicemail_id, count(greeting_id) as greeting_count ";
+		$sql .= "from v_voicemail_greetings where domain_uuid = :domain_uuid";
+		$sql .= " group by voicemail_id";
+		$parameters['domain_uuid'] = $domain_uuid;
+		$database = new database;
+		$voicemail_greetings_count_tmp = $database->select($sql, $parameters, 'all');
+
+		$voicemail_greetings_count = array();
+		foreach ($voicemail_greetings_count_tmp as &$row) {
+			$voicemail_greetings_count[$row['voicemail_id']] = $row['greeting_count'];
+		}
+		unset($sql, $parameters, $voicemail_greetings_count_tmp);
 	}
 
 //create token
@@ -211,7 +227,7 @@
 	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=''>";
 	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search']);
 	//echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','link'=>'voicemails.php','style'=>($search == '' ? 'display: none;' : null)]);
-	if ($paging_controls_mini != '') {
+	if (!empty($paging_controls_mini)) {
 		echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>\n";
 	}
 	echo "		</form>\n";
@@ -247,7 +263,7 @@
 	echo th_order_by('voicemail_mail_to', $text['label-voicemail_mail_to'], $order_by, $order, null, "class='hide-sm-dn'");
 	echo th_order_by('voicemail_file', $text['label-voicemail_file_attached'], $order_by, $order, null, "class='center hide-md-dn'");
 	echo th_order_by('voicemail_local_after_email', $text['label-voicemail_local_after_email'], $order_by, $order, null, "class='center hide-md-dn'");
-	if (!empty($_SESSION['voicemail']['transcribe_enabled']) && $_SESSION['voicemail']['transcribe_enabled']['boolean'] == 'true') {
+	if (permission_exists('voicemail_transcription_enabled') && ($_SESSION['transcribe']['enabled']['boolean'] ?? '') == "true") {
 		echo th_order_by('voicemail_transcription_enabled', $text['label-voicemail_transcribe_enabled'], $order_by, $order);
 	}
 	if (permission_exists('voicemail_message_view') || permission_exists('voicemail_greeting_view')) {
@@ -294,13 +310,13 @@
 			echo "	<td class='hide-sm-dn'>".escape($row['voicemail_mail_to'])."&nbsp;</td>\n";
 			echo "	<td class='center hide-md-dn'>".($row['voicemail_file'] == 'attach' ? $text['label-true'] : $text['label-false'])."</td>\n";
 			echo "	<td class='center hide-md-dn'>".ucwords(escape($row['voicemail_local_after_email']))."&nbsp;</td>\n";
-			if (!empty($_SESSION['voicemail']['transcribe_enabled']) && $_SESSION['voicemail']['transcribe_enabled']['boolean'] == 'true') {
+			if (permission_exists('voicemail_transcription_enabled') && ($_SESSION['transcribe']['enabled']['boolean'] ?? '') == "true") {
 				echo "	<td>".ucwords(escape($row['voicemail_transcription_enabled']))."&nbsp;</td>\n";
 			}
 			if (permission_exists('voicemail_message_view') || permission_exists('voicemail_greeting_view')) {
 				echo "	<td class='no-link no-wrap'>\n";
 				if (permission_exists('voicemail_greeting_view')) {
-					echo "	<a href='".PROJECT_PATH."/app/voicemail_greetings/voicemail_greetings.php?id=".$row['voicemail_id']."&back=".urlencode($_SERVER["REQUEST_URI"])."' style='margin-right: 15px;'>".$text['label-greetings']."</a>\n";
+					echo "	<a href='".PROJECT_PATH."/app/voicemail_greetings/voicemail_greetings.php?id=".$row['voicemail_id']."&back=".urlencode($_SERVER["REQUEST_URI"])."' style='margin-right: 15px;'>".$text['label-greetings']." (".($voicemail_greetings_count[$row['voicemail_id']] ?? 0).")</a>\n";
 				}
 				if (permission_exists('voicemail_message_view')) {
 					$tmp_voicemail_string = (array_key_exists($row['voicemail_uuid'], $voicemails_count)) ? " (" . $voicemails_count[$row['voicemail_uuid']] . ")" : " (0)";

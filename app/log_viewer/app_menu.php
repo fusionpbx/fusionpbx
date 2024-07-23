@@ -7,6 +7,7 @@
 	$apps[$x]['menu'][$y]['title']['de-at'] = "Log Betrachter";
 	$apps[$x]['menu'][$y]['title']['de-ch'] = "Log Betrachter";
 	$apps[$x]['menu'][$y]['title']['de-de'] = "Log Betrachter";
+	$apps[$x]['menu'][$y]['title']['el-gr'] = "Προβολή καταγραφής";
 	$apps[$x]['menu'][$y]['title']['es-cl'] = "Visor de eventos";
 	$apps[$x]['menu'][$y]['title']['es-mx'] = "Log Viewer";
 	$apps[$x]['menu'][$y]['title']['fr-ca'] = "Log Viewer";
@@ -21,6 +22,7 @@
 	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Просмотр логов";
 	$apps[$x]['menu'][$y]['title']['sv-se'] = "Loggvisare";
 	$apps[$x]['menu'][$y]['title']['uk-ua'] = "Переглядач журналу";
+	$apps[$x]['menu'][$y]['title']['tr-tr'] = "Günlük Görüntüleyici";
 	$apps[$x]['menu'][$y]['title']['zh-cn'] = "日志查看器";
 	$apps[$x]['menu'][$y]['title']['ja-jp'] = "ログビューア";
 	$apps[$x]['menu'][$y]['title']['ko-kr'] = "로그 뷰어";

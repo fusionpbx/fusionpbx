@@ -238,7 +238,6 @@
 			}
 			catch(Exception $e) {
 				echo $e->getMessage();
-				exit;
 			}
 
 			echo "<div class='action_bar sub'>\n";

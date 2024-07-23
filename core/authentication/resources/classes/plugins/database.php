@@ -42,6 +42,7 @@ class plugin_database {
 	public $password;
 	public $key;
 	public $debug;
+	public $user_email;
 
 	/**
 	 * database checks the local database to authenticate the user or key
@@ -57,6 +58,7 @@ class plugin_database {
 			$settings['theme']['login_logo_width'] = !empty($_SESSION['theme']['login_logo_width']['text']) ? $_SESSION['theme']['login_logo_width']['text'] : 'auto; max-width: 300px';
 			$settings['theme']['login_logo_height'] = !empty($_SESSION['theme']['login_logo_height']['text']) ? $_SESSION['theme']['login_logo_height']['text'] : 'auto; max-height: 300px';
 			$settings['theme']['message_delay'] = isset($_SESSION['theme']['message_delay']) ? 1000 * (float) $_SESSION['theme']['message_delay'] : 3000;
+			$settings['theme']['background_video'] = isset($_SESSION['theme']['background_video'][0]) ? $_SESSION['theme']['background_video'][0] : null;
 
 		//already authorized
 			if (isset($_SESSION['authentication']['plugin']['database']) && $_SESSION['authentication']['plugin']['database']["authorized"]) {
@@ -75,9 +77,6 @@ class plugin_database {
 					$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
 					$domain_name = $domain_array[0];
 
-				//temp directory
-					$_SESSION['server']['temp']['dir'] = '/tmp';
-
 				//create token
 					//$object = new token;
 					//$token = $object->create('login');
@@ -90,7 +89,7 @@ class plugin_database {
 					$view = new template();
 					$view->engine = 'smarty';
 					$view->template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/core/authentication/resources/views/';
-					$view->cache_dir = $_SESSION['server']['temp']['dir'];
+					$view->cache_dir = sys_get_temp_dir();
 					$view->init();
 
 				//add translations
@@ -107,7 +106,8 @@ class plugin_database {
 					$view->assign("login_logo_height", $settings['theme']['login_logo_height']);
 					$view->assign("login_logo_source", $settings['theme']['logo']);
 					$view->assign("message_delay", $settings['theme']['message_delay']);
-// 					if (!empty($_SESSION['authentication']['plugin']['database']['authorized']) && $_SESSION['authentication']['plugin']['database']['authorized'] == 1 && !empty($_SESSION['username'])) {
+					$view->assign("background_video", $settings['theme']['background_video']);
+ 					//if (!empty($_SESSION['authentication']['plugin']['database']['authorized']) && $_SESSION['authentication']['plugin']['database']['authorized'] == 1 && !empty($_SESSION['username'])) {
 					if (!empty($_SESSION['username'])) {
 						$view->assign("login_password_description", $text['label-password_description']);
 						$view->assign("username", $_SESSION['username']);

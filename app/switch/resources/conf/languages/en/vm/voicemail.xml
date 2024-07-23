@@ -109,7 +109,7 @@
   
   <!-- similar to voicemail_record_file_check in vm/sounds.xml, but reorganized -->
   <macro name="voicemail_record_file_options">
-    <input pattern="^([0-9#*]):([0-9#*]):([0-9#*])$">
+    <input pattern="^([0-9#*]):([0-9#*]):([0-9#*]):([0-9#*])$">
       <match>
         <action function="play-file" data="voicemail/vm-listen_to_recording.wav"/>
         <action function="play-file" data="voicemail/vm-press.wav"/>
@@ -120,6 +120,18 @@
         <action function="play-file" data="voicemail/vm-rerecord.wav"/>
         <action function="play-file" data="voicemail/vm-press.wav"/>
         <action function="say" data="$3" method="pronounced" type="name_spelled"/>
+        <action function="play-file" data="voicemail/vm-delete_recording.wav"/>
+        <action function="play-file" data="voicemail/vm-press.wav"/>
+        <action function="say" data="$4" method="pronounced" type="name_spelled"/>
+      </match>
+    </input>
+  </macro>
+
+  <!-- name recording deleted -->
+  <macro name="voicemail_record_file_deleted">
+    <input>
+      <match>
+        <action function="play-file" data="voicemail/vm-deleted.wav"/>
       </match>
     </input>
   </macro>
@@ -179,6 +191,20 @@
        <action function="say" data="$1" method="pronounced" type="name_spelled"/>
       </match>
    </input>
+  </macro>
+
+  <!-- copy voicemail message to another extension -->
+  <macro name="voicemail_post_forward_action">
+    <input pattern="^(1):(2)$">
+      <match>
+        <action function="play-file" data="voicemail/vm-delete_message.wav"/>
+        <action function="play-file" data="voicemail/vm-press.wav"/>
+        <action function="say" data="$1" method="pronounced" type="name_spelled"/>
+        <action function="play-file" data="voicemail/vm-save_message.wav"/>
+        <action function="play-file" data="voicemail/vm-press.wav"/>
+        <action function="say" data="$2" method="pronounced" type="name_spelled"/>
+      </match>
+    </input>
   </macro>
 
 </include>

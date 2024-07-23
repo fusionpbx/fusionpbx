@@ -57,6 +57,7 @@ class plugin_email {
 			$settings['theme']['login_logo_width'] = !empty($_SESSION['theme']['login_logo_width']['text']) ? $_SESSION['theme']['login_logo_width']['text'] : 'auto; max-width: 300px';
 			$settings['theme']['login_logo_height'] = !empty($_SESSION['theme']['login_logo_height']['text']) ? $_SESSION['theme']['login_logo_height']['text'] : 'auto; max-height: 300px';
 			$settings['theme']['message_delay'] = isset($_SESSION['theme']['message_delay']) ? 1000 * (float) $_SESSION['theme']['message_delay'] : 3000;
+			$settings['theme']['background_video'] = isset($_SESSION['theme']['background_video'][0]) ? $_SESSION['theme']['background_video'][0] : null;
 
 			//set a default template
 			$_SESSION['domain']['template']['name'] = 'default';
@@ -66,9 +67,6 @@ class plugin_email {
 			//get the domain
 			$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
 			$domain_name = $domain_array[0];
-
-			//temp directory
-			$_SESSION['server']['temp']['dir'] = '/tmp';
 
 			//use the session username
 			if (isset($_SESSION['username'])) {
@@ -87,7 +85,7 @@ class plugin_email {
 				$view = new template();
 				$view->engine = 'smarty';
 				$view->template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/core/authentication/resources/views/';
-				$view->cache_dir = $_SESSION['server']['temp']['dir'];
+				$view->cache_dir = sys_get_temp_dir();
 				$view->init();
 
 				//assign default values to the template
@@ -101,6 +99,7 @@ class plugin_email {
 				$view->assign("login_logo_source", $settings['theme']['logo']);
 				$view->assign("button_login", $text['button-login']);
 				$view->assign("message_delay", $settings['theme']['message_delay']);
+				$view->assign("background_video", $settings['theme']['background_video']);
 
 				//messages
 				$view->assign('messages', message::html(true, '		'));
@@ -321,9 +320,6 @@ class plugin_email {
 				$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
 				$domain_name = $domain_array[0];
 
-				//temp directory
-				$_SESSION['server']['temp']['dir'] = '/tmp';
-
 				//create token
 				//$object = new token;
 				//$token = $object->create('login');
@@ -336,7 +332,7 @@ class plugin_email {
 				$view = new template();
 				$view->engine = 'smarty';
 				$view->template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/core/authentication/resources/views/';
-				$view->cache_dir = $_SESSION['server']['temp']['dir'];
+				$view->cache_dir = sys_get_temp_dir();
 				$view->init();
 
 				//assign default values to the template

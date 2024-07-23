@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2023
+	Portions created by the Initial Developer are Copyright (C) 2008-2024
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -171,7 +171,7 @@
 				$gateway_3_name = '';
 			}
 		//set additional variables
-			$dialplan_enabled = $_POST["dialplan_enabled"] ?? 'true';
+			$dialplan_enabled = $_POST["dialplan_enabled"] ?? 'false';
 			$dialplan_description = $_POST["dialplan_description"];
 	}
 
@@ -429,7 +429,7 @@
 						$array['dialplans'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
 						$array['dialplans'][$x]['dialplan_uuid'] = $dialplan_uuid;
 						$array['dialplans'][$x]['app_uuid'] = $app_uuid;
-						$array['dialplans'][$x]['dialplan_name'] = 'call_direction-outbound';
+						$array['dialplans'][$x]['dialplan_name'] = 'call_direction-outbound'.(empty($dialplan_description) && !empty($abbrv) ? '.'.$abbrv : null);
 						$array['dialplans'][$x]['dialplan_order'] = '22';
 						$array['dialplans'][$x]['dialplan_continue'] = 'true';
 						$array['dialplans'][$x]['dialplan_context'] = $dialplan_context;
@@ -613,7 +613,6 @@
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = 'set';
 							if ($dialplan_expression == '(^911$|^933$)') {
 								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = 'effective_caller_id_number=${emergency_caller_id_number}';
-								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = 'call_date=${strftime(%d-%b-%Y %r)}';
 							}
 							else {
 								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = 'effective_caller_id_number=${outbound_caller_id_number}';
@@ -623,6 +622,16 @@
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_enabled'] = 'true';
 
 							if ($dialplan_expression == '(^911$|^933$)') {
+								$y++;
+								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_uuid'] = uuid();
+								$array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = $_SESSION['domain_uuid'];
+								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $dialplan_uuid;
+								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = 'action';
+								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = 'set';
+								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = 'call_date=${strftime(%d-%b-%Y %r)}';
+								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $y * 10;
+								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
+								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_enabled'] = 'false';
 								$y++;
 								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_uuid'] = uuid();
 								$array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = $_SESSION['domain_uuid'];

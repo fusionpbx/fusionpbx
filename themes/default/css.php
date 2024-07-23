@@ -213,21 +213,21 @@ $dashboard_detail_background_color_center = $_SESSION['theme']['dashboard_detail
 $dashboard_border_radius = $_SESSION['theme']['dashboard_border_radius']['text'] ?? '5px';
 $dashboard_border_color = $_SESSION['theme']['dashboard_border_color']['text'] ?? '#dbe0ea';
 $dashboard_border_color_hover = $_SESSION['theme']['dashboard_border_color_hover']['text'] ?? '#cbd3e1';
-$dashboard_heading_text_color = $_SESSION['theme']['dashboard_heading_text_color']['text'] ?? '#fff';
-$dashboard_heading_text_color_hover = $_SESSION['theme']['dashboard_heading_text_color_hover']['text'] ?? '#fff';
-$dashboard_heading_text_size = $_SESSION['theme']['dashboard_heading_text_size']['text'] ?? '12pt';
-$dashboard_heading_text_font = $_SESSION['theme']['dashboard_heading_text_font']['text'] ?? 'Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif';
-$dashboard_heading_text_shadow_color = $_SESSION['theme']['dashboard_heading_text_shadow_color']['text'] ?? '#000';
-$dashboard_heading_background_color = $_SESSION['theme']['dashboard_heading_background_color']['text'] ?? '#8e96a5';
-$dashboard_heading_background_color_hover = $_SESSION['theme']['dashboard_heading_background_color_hover']['text'] ?? color_adjust($dashboard_heading_background_color, 0.03);
-$dashboard_number_text_color = $_SESSION['theme']['dashboard_number_text_color']['text'] ?? '#fff';
-$dashboard_number_text_color_hover = $_SESSION['theme']['dashboard_number_text_color_hover']['text'] ?? '#fff';
-$dashboard_number_text_font = $_SESSION['theme']['dashboard_number_text_font']['text'] ?? 'Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif';
+$dashboard_heading_text_color = $_SESSION['theme']['dashboard_heading_text_color']['text'] ?? '#444';
+$dashboard_heading_text_color_hover = $_SESSION['theme']['dashboard_heading_text_color_hover']['text'] ?? '';
+$dashboard_heading_text_size = $_SESSION['theme']['dashboard_heading_text_size']['text'] ?? '13px';
+$dashboard_heading_text_font = $_SESSION['theme']['dashboard_heading_text_font']['text'] ?? 'Arial, Calibri, Candara, Segoe, "Segoe UI", Optima, sans-serif';
+$dashboard_heading_text_shadow_color = $_SESSION['theme']['dashboard_heading_text_shadow_color']['text'] ?? 'rgba(0,0,0,0)';
+$dashboard_heading_background_color = $_SESSION['theme']['dashboard_heading_background_color']['text'] ?? '';
+$dashboard_heading_background_color_hover = $_SESSION['theme']['dashboard_heading_background_color_hover']['text'] ?? '';
+$dashboard_number_text_color = $_SESSION['theme']['dashboard_number_text_color']['text'] ?? '#444';
+$dashboard_number_text_color_hover = $_SESSION['theme']['dashboard_number_text_color_hover']['text'] ?? '';
+$dashboard_number_text_font = $_SESSION['theme']['dashboard_number_text_font']['text'] ?? 'Arial, Calibri, Candara, Segoe, "Segoe UI", Optima, sans-serif';
 $dashboard_number_text_size = $_SESSION['theme']['dashboard_number_text_size']['text'] ?? '60pt';
-$dashboard_number_text_shadow_color = $_SESSION['theme']['dashboard_number_text_shadow_color']['text'] ?? '#737983';
-$dashboard_number_text_shadow_color_hover = $_SESSION['theme']['dashboard_number_text_shadow_color_hover']['text'] ?? '#737983';
-$dashboard_number_background_color = $_SESSION['theme']['dashboard_number_background_color']['text'] ?? '#a4aebf';
-$dashboard_number_background_color_hover = $_SESSION['theme']['dashboard_number_background_color_hover']['text'] ?? color_adjust($dashboard_number_background_color, 0.03);
+$dashboard_number_text_shadow_color = $_SESSION['theme']['dashboard_number_text_shadow_color']['text'] ?? 'rgba(0,0,0,0)';
+$dashboard_number_text_shadow_color_hover = $_SESSION['theme']['dashboard_number_text_shadow_color_hover']['text'] ?? 'rgba(0,0,0,0)';
+$dashboard_number_background_color = $_SESSION['theme']['dashboard_number_background_color']['text'] ?? '';
+$dashboard_number_background_color_hover = $_SESSION['theme']['dashboard_number_background_color_hover']['text'] ?? '';
 $dashboard_number_title_text_color = $_SESSION['theme']['dashboard_number_title_text_color']['text'] ?? '#fff';
 $dashboard_number_title_text_size = $_SESSION['theme']['dashboard_number_title_text_size']['text'] ?? '14px';
 $dashboard_number_title_text_font = $_SESSION['theme']['dashboard_number_title_text_font']['text'] ?? 'Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif';
@@ -274,6 +274,9 @@ $modal_close_background_color_hover = $_SESSION['theme']['modal_close_background
 $modal_message_color = $_SESSION['theme']['modal_message_color']['text'] ?? '#444';
 $modal_message_alignment = $_SESSION['theme']['modal_message_alignment']['text'] ?? 'left';
 $modal_message_margin = $_SESSION['theme']['modal_message_margin']['text'] ?? '0 0 20px 0';
+$audio_player_indicator_color = $_SESSION['theme']['audio_player_indicator_color']['text'] ?? '#b90004';
+$audio_player_waveform_enabled = $_SESSION['theme']['audio_player_waveform_enabled']['boolean'] ?? 'false';
+$audio_player_waveform_height = $_SESSION['theme']['audio_player_waveform_height']['text'] ?? '70px';
 $custom_css_code = $_SESSION['theme']['custom_css_code']['text'] ?? null;
 
 /***********************************************************************************************************************************************/
@@ -474,6 +477,18 @@ else { //default: white
 		-moz-background-size:cover;
 		-o-background-size:cover;
 		background-size:cover;
+		}
+
+	#background-video {
+		width: 100vw;
+		height: 100vh;
+		object-fit: cover;
+		position: fixed;
+		left: 0;
+		right: 0;
+		top: 0;
+		bottom: 0;
+		z-index: -2;
 		}
 
 	pre {
@@ -1852,24 +1867,31 @@ else { //default: white
 		}
 
 	span.playback_progress_bar {
-		background-color: #b90004;
-		width: 17px;
-		height: 4px;
-		margin-bottom: 3px;
+		background-color: <?=$audio_player_indicator_color?>;
+		<?php if ($audio_player_waveform_enabled === 'true') { ?>
+			width: 2px;
+			height: <?=$audio_player_waveform_height?>;
+			margin-bottom: 0;
+			border-radius: 0;
+		<?php } else { ?>
+			width: 17px;
+			height: 4px;
+			margin-bottom: 3px;
+			border-radius: 0 0 6px 6px;
+		<?php } ?>
 		display: block;
 		-moz-border-radius: 0 0 6px 6px;
 		-webkit-border-radius: 0 0 6px 6px;
 		-khtml-border-radius: 0 0 6px 6px;
-		border-radius: 0 0 6px 6px;
-		-webkit-box-shadow: 0 0 3px 0px rgba(255,0,0,0.9);
-		-moz-box-shadow: 0 0 3px 0px rgba(255,0,0,0.9);
-		box-shadow: 0 0 3px 0px rgba(255,0,0,0.9);
+		-webkit-box-shadow: 0 0 3px 0px rgba(<?=hex_to_rgb($audio_player_indicator_color,',',true,0.8)?>);
+		-moz-box-shadow: 0 0 3px 0px rgba(<?=hex_to_rgb($audio_player_indicator_color,',',true,0.8)?>);
+		box-shadow: 0 0 3px 0px rgba(<?=hex_to_rgb($audio_player_indicator_color,',',true,0.8)?>);
 		}
 
 	td.vtable.playback_progress_bar_background,
 	table.list tr.list-row td.playback_progress_bar_background {
 		padding: 0;
-		border-bottom: none;
+		border: none;
 		background-image: -ms-linear-gradient(top, rgba(0,0,0,0.10) 0%, transparent 100%);
 		background-image: -moz-linear-gradient(top, rgba(0,0,0,0.10) 0%, transparent 100%);
 		background-image: -o-linear-gradient(top, rgba(0,0,0,0.10) 0%, transparent 100%);
@@ -1877,6 +1899,12 @@ else { //default: white
 		background-image: -webkit-linear-gradient(top, rgba(0,0,0,0.10) 0%, transparent 100%);
 		background-image: linear-gradient(to bottom, rgba(0,0,0,0.10) 0%, transparent 100%);
 		overflow: hidden;
+		<?php if ($audio_player_waveform_enabled === 'true') { ?>
+			padding-bottom: 3px;
+			background-size: 100% 100%;
+			background-repeat: no-repeat;
+			cursor: pointer;
+		<?php } ?>
 		}
 
 	div.pwstrength_progress {
@@ -2323,7 +2351,7 @@ else { //default: white
 		cursor: default;
 		}
 
-	div.off_ext {
+	div.ur_ext {
 		position: relative;
 		float: left;
 		width: 235px;
@@ -2342,21 +2370,21 @@ else { //default: white
 		cursor: not-allowed;
 		opacity: 0.5;
 		}
-		
-		div.off_ext:after {
-			position: absolute;
-			content: "";
-			z-index: 10;
-			-moz-border-radius: 5px;
-			-webkit-border-radius: 5px;
-			border-radius: 5px;
-			display: block;
-			height: 100%;
-			top: 0;
-			left: 0;
-			right: 0;
-			background: <?=$form_table_field_background_color?>;
-			opacity: 0.5;
+
+	div.ur_ext:after {
+		position: absolute;
+		content: "";
+		z-index: 10;
+		-moz-border-radius: 5px;
+		-webkit-border-radius: 5px;
+		border-radius: 5px;
+		display: block;
+		height: 100%;
+		top: 0;
+		left: 0;
+		right: 0;
+		background: <?=$form_table_field_background_color?>;
+		opacity: 0.5;
 		}
 
 	div.op_state_active {
@@ -2377,7 +2405,7 @@ else { //default: white
 		border-color: #B9A6FC;
 		}
 
-	table.op_ext, table.off_ext {
+	table.op_ext, table.ur_ext {
 		width: 100%;
 		height: 70px;
 		-moz-border-radius: 5px;
@@ -2552,6 +2580,7 @@ else { //default: white
 		letter-spacing: -0.02em;
 		color: <?=$dashboard_heading_text_color?>;
 		font-size: <?=$dashboard_heading_text_size?>;
+		font-weight: bold;
 		<?php
 		//calculate line height based on font size
 		$font_size = strtolower($dashboard_heading_text_size);
@@ -3303,6 +3332,16 @@ else { //default: white
 	div#editor {
 		resize: vertical;
 		overflow: auto;
+		}
+
+	i.ace_control {
+		cursor: pointer;
+		margin-right: 5px;
+		opacity: 0.5;
+		}
+
+	i.ace_control:hover {
+		opacity: 1.0;
 		}
 
 <?php

@@ -7,6 +7,7 @@
 	$apps[$x]['menu'][$y]['title']['de-at'] = "Variablen";
 	$apps[$x]['menu'][$y]['title']['de-ch'] = "Variablen";
 	$apps[$x]['menu'][$y]['title']['de-de'] = "Variablen";
+	$apps[$x]['menu'][$y]['title']['el-gr'] = "Μεταβλητές";
 	$apps[$x]['menu'][$y]['title']['es-cl'] = "Variables";
 	$apps[$x]['menu'][$y]['title']['es-mx'] = "Variables";
 	$apps[$x]['menu'][$y]['title']['fr-ca'] = "Variables";
@@ -21,6 +22,7 @@
 	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Переменные";
 	$apps[$x]['menu'][$y]['title']['sv-se'] = "Variabler";
 	$apps[$x]['menu'][$y]['title']['uk-ua'] = "Змінні";
+	$apps[$x]['menu'][$y]['title']['tr-tr'] = "Değişkenler";
 	$apps[$x]['menu'][$y]['title']['zh-cn'] = "变量";
 	$apps[$x]['menu'][$y]['title']['ja-jp'] = "変数";
 	$apps[$x]['menu'][$y]['title']['ko-kr'] = "변수";

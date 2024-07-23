@@ -87,26 +87,42 @@
 	$destination = new destinations;
 	$destination_array = $destination->all('dialplan');
 
-//add a function to return the action_name
-	function action_name($destination_array, $detail_action) {
-		$result = '';
-		if (!empty($destination_array)) {
-			foreach($destination_array as $group => $row) {
-				if (!empty($row)) {
-					foreach ($row as $key => $value) {
-						if ($value == $detail_action) {
-							//add multi-lingual support
-							if (file_exists($_SERVER["PROJECT_ROOT"]."/app/".$group."/app_languages.php")) {
-								$language2 = new text;
-								$text2 = $language2->get($_SESSION['domain']['language']['code'], 'app/'.$group);
-								$result = trim($text2['title-'.$group].' '.$key);
+//function to return the action names in the order defined
+	function action_name($destination_array, $destination_actions) {
+		$actions = [];
+		if (!empty($destination_array) && is_array($destination_array)) {
+			if (!empty($destination_actions) && is_array($destination_actions)) {
+				foreach ($destination_actions as $destination_action) {
+					if (!empty($destination_action)) {
+						foreach ($destination_array as $group => $row) {
+							if (!empty($row) && is_array($row)) {
+								foreach ($row as $key => $value) {
+									if ($destination_action == $value) {
+										if ($group == 'other') {
+											if (!isset($language2) && !isset($text2)) {
+												if (file_exists($_SERVER["PROJECT_ROOT"]."/app/dialplans/app_languages.php")) {
+													$language2 = new text;
+													$text2 = $language2->get($_SESSION['domain']['language']['code'], 'app/dialplans');
+												}
+											}
+											$actions[] = trim($text2['title-other'].' &#x203A; '.$text2['option-'.str_replace('&lowbar;','_',$key)]);
+										}
+										else {
+											if (file_exists($_SERVER["PROJECT_ROOT"]."/app/".$group."/app_languages.php")) {
+												$language3 = new text;
+												$text3 = $language3->get($_SESSION['domain']['language']['code'], 'app/'.$group);
+												$actions[] = trim($text3['title-'.$group].' &#x203A; '.$key);
+											}
+										}
+									}
+								}
 							}
-							return $result;
 						}
 					}
 				}
 			}
 		}
+		return $actions;
 	}
 
 //set the type
@@ -173,8 +189,27 @@
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = "select * from v_destinations ";
+	$sql = "select ";
+	$sql .= " d.destination_uuid, ";
+	$sql .= " d.domain_uuid, ";
 	if ($show == "all" && permission_exists('destination_all')) {
+		$sql .= " domain_name, ";
+	}
+	$sql .= " d.destination_type, ";
+	$sql .= " d.destination_prefix, ";
+	$sql .= " d.destination_trunk_prefix, ";
+	$sql .= " d.destination_area_code, ";
+	$sql .= " d.destination_number, ";
+	$sql .= " d.destination_actions, ";
+	$sql .= " d.destination_context, ";
+	$sql .= " d.destination_caller_id_name, ";
+	$sql .= " d.destination_caller_id_number, ";
+	$sql .= " d.destination_enabled, ";
+	$sql .= " d.destination_description ";
+	$sql .= "from v_destinations as d ";
+	if ($show == "all" && permission_exists('destination_all')) {
+		$sql .= "LEFT JOIN v_domains as dom ";
+		$sql .= "ON d.domain_uuid = dom.domain_uuid ";
 		$sql .= "where destination_type = :destination_type ";
 	}
 	else {
@@ -184,17 +219,17 @@
 	}
 	if (!empty($search)) {
 		$sql .= "and (";
-		$sql .= "lower(destination_type) like :search ";
-		$sql .= "or lower(destination_number) like :search ";
-		$sql .= "or lower(destination_context) like :search ";
-		$sql .= "or lower(destination_accountcode) like :search ";
+		$sql .= " lower(destination_type) like :search ";
+		$sql .= " or lower(destination_number) like :search ";
+		$sql .= " or lower(destination_context) like :search ";
+		$sql .= " or lower(destination_accountcode) like :search ";
 		if (permission_exists('outbound_caller_id_select')) {
-			$sql .= "or lower(destination_caller_id_name) like :search ";
-			$sql .= "or destination_caller_id_number like :search ";
+			$sql .= " or lower(destination_caller_id_name) like :search ";
+			$sql .= " or destination_caller_id_number like :search ";
 		}
-		$sql .= "or lower(destination_enabled) like :search ";
-		$sql .= "or lower(destination_description) like :search ";
-		$sql .= "or lower(destination_data) like :search ";
+		$sql .= " or lower(destination_enabled) like :search ";
+		$sql .= " or lower(destination_description) like :search ";
+		$sql .= " or lower(destination_data) like :search ";
 		$sql .= ") ";
 		$parameters['search'] = '%'.$search.'%';
 	}
@@ -203,6 +238,32 @@
 	$database = new database;
 	$destinations = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
+
+//update the array to add the actions
+	if (!$show == "all") {
+		$x = 0;
+		foreach ($destinations as $row) {
+			if (!empty($row['destination_actions'])) {
+				//prepare the destination actions
+				if (!empty(json_decode($row['destination_actions'], true))) {
+					foreach (json_decode($row['destination_actions'], true) as $action) {
+						$destination_app_data[] = $action['destination_app'].':'.$action['destination_data'];
+					}
+				}
+
+				//add the actions to the array
+				$actions = action_name($destination_array, $destination_app_data);
+				$destinations[$x]['actions'] = (!empty($actions)) ? implode(', ', $actions) : '';
+
+				//empty the array before the next iteration
+				unset($destination_app_data);
+			}
+			else {
+				$destinations[$x]['actions'] = '';
+			}
+			$x++;
+		}
+	}
 
 //create token
 	$object = new token;
@@ -302,22 +363,7 @@
 
 	if (!empty($destinations)) {
 		$x = 0;
-		foreach($destinations as $row) {
-
-			//define variables with an empty string
-			$destination_app = '';
-			$destination_data = '';
-
-			//prepare the destination actions
-			if (!empty($row['destination_actions'])) {
-				$destination_actions = json_decode($row['destination_actions'], true);
-				if (!empty($destination_actions)) {
-					foreach ($destination_actions as $action) {
-						$destination_app = $action['destination_app'];
-						$destination_data = $action['destination_data'];
-					}
-				}
-			}
+		foreach ($destinations as $row) {
 
 			//create the row link
 			if (permission_exists('destination_edit')) {
@@ -333,8 +379,8 @@
 				echo "	</td>\n";
 			}
 			if ($show == "all" && permission_exists('destination_all')) {
-				if (!empty($_SESSION['domains'][$row['domain_uuid']]['domain_name'])) {
-					$domain = $_SESSION['domains'][$row['domain_uuid']]['domain_name'];
+				if (!empty($row['domain_name'])) {
+					$domain = $row['domain_name'];
 				}
 				else {
 					$domain = $text['label-global'];
@@ -361,7 +407,7 @@
 			echo "	</td>\n";
 
 			if (!$show == "all") {
-				echo "	<td class='overflow' style='min-width: 125px;'>".action_name($destination_array, $destination_app.':'.$destination_data)."&nbsp;</td>\n";
+				echo "	<td class='overflow' style='min-width: 125px;'>".$row['actions']."&nbsp;</td>\n";
 			}
 			if (permission_exists("destination_context")) {
 				echo "	<td>".escape($row['destination_context'])."&nbsp;</td>\n";
@@ -379,8 +425,8 @@
 			}
 			echo "</tr>\n";
 
-			//unset the destination app and data
-			unset($destination_app, $destination_data);
+			//unset the destination app and data array
+			unset($destination_app_data);
 
 			//increment the id
 			$x++;

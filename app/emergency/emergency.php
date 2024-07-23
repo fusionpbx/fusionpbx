@@ -25,6 +25,11 @@ if (!empty($_POST['emergency_logs']) && is_array($_POST['emergency_logs'])) {
 	$emergency_logs = $_POST['emergency_logs'];
 }
 
+//prepare the database object
+$database = new database;
+$database->app_name = 'emergency_logs';
+$database->app_uuid = 'de63b1ae-7750-11ee-b3a5-005056a27559';
+
 //process the http post data by action
 if (!empty($action) && !empty($emergency_logs) && is_array($emergency_logs) && @sizeof($emergency_logs) != 0) {
 
@@ -44,11 +49,6 @@ if (!empty($action) && !empty($emergency_logs) && is_array($emergency_logs) && @
 			$x++;
 		}
 	}
-
-	//prepare the database object
-	$database = new database;
-	$database->app_name = 'emergency_logs';
-	$database->app_uuid = 'de63b1ae-7750-11ee-b3a5-005056a27559';
 
 	//send the array to the database class
 	if (!empty($action) && $action == 'delete') {
@@ -78,9 +78,8 @@ if (!empty($_GET["show"])) {
 	$show = $_GET["show"];
 }
 
-
 //get the count
-$sql = "select count(log_uuid) ";
+$sql = "select count(emergency_log_uuid) ";
 $sql .= "from v_emergency_logs ";
 if ($show == 'all') {
 	$sql .= "where true ";
@@ -95,7 +94,6 @@ if (!empty($search)) {
 	$sql .= ") ";
 	$parameters['search'] = '%'.$search.'%';
 }
-$database = new database;
 $num_rows = $database->select($sql, $parameters ?? null, 'column');
 unset($sql, $parameters);
 
@@ -117,7 +115,13 @@ else {
 }
 
 //get the list
-$sql = "select * ";
+$sql = "select emergency_log_uuid, ";
+$sql .= "domain_uuid, ";
+$sql .= "extension, ";
+$sql .= "event,  ";
+$sql .= "to_char(timezone(:time_zone, insert_date), 'DD Mon YYYY') as date_formatted, ";
+$sql .= "to_char(timezone(:time_zone, insert_date), 'HH12:MI:SS am') as time_formatted, ";
+$sql .= "insert_date ";
 $sql .= "from v_emergency_logs ";
 if ($show == 'all') {
 	$sql .= "where true ";
@@ -132,9 +136,9 @@ if (!empty($search)) {
 	$sql .= ") ";
 	$parameters['search'] = '%'.$search.'%';
 }
+$sql .= "order by insert_date desc ";
 $sql .= limit_offset($rows_per_page, $offset);
-
-$database = new database;
+$parameters['time_zone'] = $time_zone;
 $emergency_logs = $database->select($sql, $parameters ?? null, 'all');
 unset($sql, $parameters);
 
@@ -143,12 +147,12 @@ $object = new token;
 $token = $object->create($_SERVER['PHP_SELF']);
 
 //additional includes
-$document['title'] = 'Emergency Logs';
+$document['title'] = $text['title-emergency_logs'];
 require_once "resources/header.php";
 
 //show the content
 echo "<div class='action_bar' id='action_bar'>\n";
-echo "	<div class='heading'><b>Emergency Logs (".$num_rows.")</b></div>\n";
+echo "	<div class='heading'><b>".$text['title-emergency_logs']." (".$num_rows.")</b></div>\n";
 echo "	<div class='actions'>\n";
 if ($emergency_logs) {
 	echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','name'=>'btn_delete','style'=>'display:none;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
@@ -181,18 +185,24 @@ echo "<br /><br />\n";
 
 echo "<table class='list'>\n";
 echo "<tr class='list-header'>\n";
-echo "<th class='left'>Time</th>\n";
-echo "<th class='left'>Date</th>\n";
-echo "<th class='left'>Extension</th>\n";
-echo "<th class='left'>Event</th>\n";
+if (!empty($show) && $show == 'all' && permission_exists('emergency_logs_view_all')) {
+	echo th_order_by('domain_name', $text['label-domain'], $order_by, $order);
+}
+echo "<th class='left'>".$text['label-emergency_time']."</th>\n";
+echo "<th class='left'>".$text['label-emergency_date']."</th>\n";
+echo "<th class='left'>".$text['label-emergency_extension']."</th>\n";
+echo "<th class='left'>".$text['label-emergency_event']."</th>\n";
 echo "</tr>\n";
 
 if (!empty($emergency_logs) && is_array($emergency_logs) && @sizeof($emergency_logs) != 0) {
 	$x = 0;
 	foreach ($emergency_logs as $row) {
 		echo "<tr class='list-row'>\n";
-		echo "	<td>".escape($row['time'])."</td>\n";
-		echo "	<td>".escape($row['date'])."</td>\n";
+		if (!empty($_GET['show']) && $_GET['show'] == 'all' && permission_exists('emergency_logs_view_all')) {
+			echo "	<td>".escape($_SESSION['domains'][$row['domain_uuid']]['domain_name'])."</td>\n";
+		}
+		echo "	<td>".escape($row['time_formatted'])."</td>\n";
+		echo "	<td>".escape($row['date_formatted'])."</td>\n";
 		echo "	<td>".escape($row['extension'])."</td>\n";
 		echo "	<td>".escape($row['event'])."</td>\n";
 		echo "</tr>\n";

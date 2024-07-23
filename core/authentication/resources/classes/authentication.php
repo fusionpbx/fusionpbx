@@ -35,7 +35,9 @@ class authentication {
 	/**
 	 * Define variables and their scope
 	 */
+	private $database;
 	public $domain_uuid;
+	public $user_uuid;
 	public $domain_name;
 	public $username;
 	public $password;
@@ -44,7 +46,7 @@ class authentication {
 	 * Called when the object is created
 	 */
 	public function __construct() {
-
+		$this->database = new database();
 	}
 
 	/**
@@ -111,6 +113,12 @@ class authentication {
 						$result['domain_uuid'] = $array["domain_uuid"];
 						$result['authorized'] = $array["authorized"];
 
+						//set the domain_uuid
+						$this->domain_uuid = $array["domain_uuid"];
+
+						//set the user_uuid
+						$this->user_uuid = $array["user_uuid"];
+
 						//save the result to the authentication plugin
 						$_SESSION['authentication']['plugin'][$name] = $result;
 					}
@@ -169,11 +177,14 @@ class authentication {
 // 			}
 // 			$result["authorized"] = $authorized;
 
-		//add user logs
+		//add the result to the user logs
 			user_logs::add($result);
 
 		//user is authorized - get user settings, check user cidr
 			if ($authorized) {
+
+				//regenerate the session on login
+					session_regenerate_id(true);
 
 				//set a session variable to indicate authorized is set to true
 					$_SESSION['authorized'] = true;
@@ -188,8 +199,7 @@ class authentication {
 					$sql .= "and user_setting_enabled = 'true' ";
 					$parameters['domain_uuid'] = $result["domain_uuid"];
 					$parameters['user_uuid'] = $result["user_uuid"];
-					$database = new database;
-					$user_settings = $database->select($sql, $parameters, 'all');
+					$user_settings = $this->database->select($sql, $parameters, 'all');
 					unset($sql, $parameters);
 
 				//build the user cidr array
@@ -225,9 +235,19 @@ class authentication {
 
 				//set the session variables
 					$_SESSION["domain_uuid"] = $result["domain_uuid"];
-					//$_SESSION["domain_name"] = $result["domain_name"];
+					$_SESSION["domain_name"] = $result["domain_name"];
 					$_SESSION["user_uuid"] = $result["user_uuid"];
 					$_SESSION["context"] = $result['domain_name'];
+
+				//build the session server array to validate the session
+					global $conf;
+					if (!isset($conf['session.validate'])) { $conf['session.validate'][] = 'HTTP_USER_AGENT'; }
+					foreach($conf['session.validate'] as $name) {
+						$server_array[$name] = $_SERVER[$name];
+					}
+
+				//save the user hash to be used in validate the session
+					$_SESSION["user_hash"] = hash('sha256', implode($server_array));
 
 				//user session array
 					$_SESSION["user"]["domain_uuid"] = $result["domain_uuid"];
@@ -236,13 +256,20 @@ class authentication {
 					$_SESSION["user"]["username"] = $result["username"];
 					$_SESSION["user"]["contact_uuid"] = $result["contact_uuid"];
 
-				//get the groups assigned to the user 
-					$group = new groups;
-					$group->session($result["domain_uuid"], $result["user_uuid"]);
+				//empty the  permissions
+					if (isset($_SESSION['permissions'])) {
+						unset($_SESSION['permissions']);
+					}
+
+				//get the groups assigned to the user
+					$group = new groups($this->database, $result["domain_uuid"], $result["user_uuid"]);
+					$groups = $group->get_groups();
+					$group_level = $group->group_level;
+					$group->session();
 
 				//get the permissions assigned to the user through the assigned groups
-					$permission = new permissions;
-					$permission->session($result["domain_uuid"], $_SESSION["groups"]);
+					$permission = new permissions($this->database, $result["domain_uuid"], $result["user_uuid"]);
+					$permission->session();
 
 				//get the domains
 					if (file_exists($_SERVER["PROJECT_ROOT"]."/app/domains/app_config.php") && !is_cli()){
@@ -304,8 +331,7 @@ class authentication {
 								$sql .= "e.extension asc ";
 								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 								$parameters['user_uuid'] = $_SESSION['user_uuid'];
-								$database = new database;
-								$result = $database->select($sql, $parameters, 'all');
+								$result = $this->database->select($sql, $parameters, 'all');
 								if (is_array($result) && @sizeof($result) != 0) {
 									foreach($result as $x => $row) {
 										//set the destination

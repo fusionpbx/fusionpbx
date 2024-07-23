@@ -473,6 +473,7 @@ if (!function_exists('fax_split_dtmf')) {
 
 			//field labels
 			$pdf->SetFont($pdf_font, "B", 12);
+			$pdf->Text($x + 0.5, $y + 1.7, strtoupper($text['label-sent']).":");
 			if ($fax_recipient != '' || sizeof($fax_numbers) > 0) {
 				$pdf->Text($x + 0.5, $y + 2.0, strtoupper($text['label-fax-recipient']).":");
 			}
@@ -488,6 +489,12 @@ if (!function_exists('fax_split_dtmf')) {
 
 			//field values
 			$pdf->SetFont($pdf_font, "", 12);
+			$pdf->SetXY($x + 2.0, $y + 1.65);
+			if ($_REQUEST['submit'] != '' && $_REQUEST['submit'] != 'preview') {
+				$time_zone = isset($_SESSION['domain']['time_zone']['name']) ? $_SESSION['domain']['time_zone']['name'] : date_default_timezone_get();
+				$date = new DateTime('now', new DateTimeZone($time_zone) );
+				$pdf->Write(0.3, $date->format('d M Y'));
+			}
 			$pdf->SetXY($x + 2.0, $y + 1.95);
 			if ($fax_recipient != '') {
 				$pdf->Write(0.3, $fax_recipient);
@@ -1100,12 +1107,15 @@ if (!$included) {
 		echo "</tr>\n";
 
 		if (permission_exists('fax_subject')) {
+			$cover_subject_required = $setting->get('fax','cover_subject_required') ?? '';
+			$class = ($cover_subject_required == 'true') ? 'vncellreq' : 'vncell';
+			$required = ($cover_subject_required == 'true') ? 'required' : '';
 			echo "<tr>\n";
-			echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+			echo "<td class='".$class."' valign='top' align='left' nowrap>\n";
 			echo "	".$text['label-fax-subject']."\n";
 			echo "</td>\n";
 			echo "<td class='vtable' align='left'>\n";
-			echo "	<input type='text' name='fax_subject' class='formfld' style='' value=''>\n";
+			echo "	<input type='text' name='fax_subject' class='formfld' ".$required." style='' value=''>\n";
 			echo "	<br />\n";
 			echo "	".$text['description-fax-subject']."\n";
 			echo "</td>\n";
@@ -1113,12 +1123,15 @@ if (!$included) {
 		}
 
 		if (permission_exists('fax_message')) {
+			$cover_message_required = $setting->get('fax','cover_message_required') ?? '';
+			$class = ($cover_message_required == 'true') ? 'vncellreq' : 'vncell';
+			$required = ($cover_message_required == 'true') ? 'required' : '';
 			echo "<tr>\n";
-			echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+			echo "<td class='".$class."' valign='top' align='left' nowrap>\n";
 			echo "		".$text['label-fax-message']."\n";
 			echo "</td>\n";
 			echo "<td class='vtable' align='left'>\n";
-			echo "	<textarea type='text' name='fax_message' class='formfld' style='width: 65%; height: 175px;'></textarea>\n";
+			echo "	<textarea type='text' name='fax_message' class='formfld' ".$required." style='width: 65%; height: 175px;'></textarea>\n";
 			echo "<br />\n";
 			echo "	".$text['description-fax-message']."\n";
 			echo "</td>\n";

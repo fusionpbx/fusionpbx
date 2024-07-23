@@ -44,8 +44,14 @@
 	$device_firmware_version = '';
 	$device_template ='';
 
-//include the device class
-	require_once "app/devices/resources/classes/device.php";
+//get the domain uuid
+	$domain_uuid = $_SESSION['domain_uuid'] ?? '';
+
+//initialize the database object
+	$database = database::new();
+
+//initialize the settigns object
+	$settings = new settings(['database' => $database, 'domain_uuid' => $domain_uuid]);
 
 //action add or update
 	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
@@ -56,12 +62,11 @@
 		$action = "add";
 	}
 
-//get total device count from the database, check limit, if defined
+//get the total device count from the database, check the limit, if defined
 	if ($action == 'add') {
 		if (!empty($_SESSION['limit']['devices']['numeric']) && $_SESSION['limit']['devices']['numeric']) {
 			$sql = "select count(*) from v_devices where domain_uuid = :domain_uuid ";
 			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-			$database = new database;
 			$total_devices = $database->select($sql, $parameters, 'column');
 			if ($total_devices >= $_SESSION['limit']['devices']['numeric']) {
 				message::add($text['message-maximum_devices'].' '.$_SESSION['limit']['devices']['numeric'], 'negative');
@@ -101,7 +106,6 @@
 				$sql = "select device_address from v_devices ";
 				$sql .= "where device_uuid = :device_uuid ";
 				$parameters['device_uuid'] = $device_uuid;
-				$database = new database;
 				$row = $database->select($sql, $parameters, 'row');
 				if (is_array($row) && @sizeof($row) != 0) {
 					$device_address = $row["device_address"];
@@ -224,7 +228,6 @@
 					$sql .= " and d1.device_uuid <> :device_uuid ";
 				}
 				$parameters['device_address'] = $device_address;
-				$database = new database;
 				$domain_name = $database->select($sql, $parameters, 'column');
 				if ($domain_name != '') {
 					$message = $text['message-duplicate'].(if_group("superadmin") && $_SESSION["domain_name"] != $domain_name ? ": ".$domain_name : null);
@@ -436,7 +439,6 @@
 					}
 
 				//save the device
-					$database = new database;
 					$database->app_name = 'devices';
 					$database->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
 					$database->save($array);
@@ -479,7 +481,7 @@
 
 				//write the provision files
 					if (!empty($_SESSION['provision']['path']['text'])) {
-						$prov = new provision;
+						$prov = new provision(['settings' => $settings]);
 						$prov->domain_uuid = $domain_uuid;
 						$response = $prov->write();
 					}
@@ -507,7 +509,7 @@
 		$sql = "select * from v_devices ";
 		$sql .= "where device_uuid = :device_uuid ";
 		$parameters['device_uuid'] = $device_uuid;
-		$database = new database;
+		
 		$row = $database->select($sql, $parameters, 'row');
 		if (is_array($row) && @sizeof($row) != 0) {
 			$device_address = $row["device_address"];
@@ -556,7 +558,6 @@
 		$sql .= "and device_uuid = :device_uuid ";
 		$parameters['domain_uuid'] = $domain_uuid;
 		$parameters['device_uuid'] = $device_uuid_alternate;
-		$database = new database;
 		$device_alternate = $database->select($sql, $parameters, 'all');
 		unset($sql, $parameters);
 	}
@@ -566,7 +567,7 @@
 	$sql .= "where device_uuid = :device_uuid ";
 	$sql .= "order by cast(line_number as int) asc ";
 	$parameters['device_uuid'] = $device_uuid ?? null;
-	$database = new database;
+	
 	$device_lines = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
@@ -606,7 +607,6 @@
 	$sql .= "else 100 end, ";
 	$sql .= $db_type == "mysql" ? "device_key_id asc " : "cast(device_key_id as numeric) asc ";
 	$parameters['device_uuid'] = $device_uuid ?? null;
-	$database = new database;
 	$device_keys = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
@@ -638,7 +638,7 @@
 	$sql .= "from v_device_vendors ";
 	$sql .= "where enabled = 'true' ";
 	$sql .= "order by name asc ";
-	$database = new database;
+	
 	$device_vendors = $database->select($sql, null, 'all');
 	unset($sql);
 
@@ -649,7 +649,6 @@
 	$sql .= "and v.enabled = 'true' ";
 	$sql .= "and f.enabled = 'true' ";
 	$sql .= "order by v.name asc, f.type asc ";
-	$database = new database;
 	$vendor_functions = $database->select($sql, null, 'all');
 	unset($sql);
 
@@ -658,7 +657,6 @@
 	$sql .= "where device_uuid = :device_uuid ";
 	$sql .= "order by device_setting_subcategory asc ";
 	$parameters['device_uuid'] = $device_uuid ?? null;
-	$database = new database;
 	$device_settings = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
@@ -686,7 +684,6 @@
 	$sql .= "and user_enabled = 'true' ";
 	$sql .= "order by username asc ";
 	$parameters['domain_uuid'] = $domain_uuid;
-	$database = new database;
 	$users = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
@@ -783,6 +780,9 @@
 	else if ($device_template == "sipnetic/default") {
 		$qr_code_enabled = true;
 	}
+	else if ($device_template == "acrobits/default") {
+		$qr_code_enabled = true;
+	}
 	else {
 		$qr_code_enabled = false;
 	}
@@ -850,8 +850,11 @@
 				else if (is_file('/var/www/fusionpbx/resources/templates/provision/'.$device_template.'/template.csv')) {
 					$template = file_get_contents('/var/www/fusionpbx/resources/templates/provision/'.$device_template.'/template.csv');
 				}
+				else if (is_file('/usr/local/www/fusionpbx/resources/templates/provision/'.$device_template.'/template.csv')) {
+					$template = file_get_contents('/usr/local/www/fusionpbx/resources/templates/provision/'.$device_template.'/template.csv');
+				}
 				if (!empty($template)) {
-					$template = str_replace('{$server_address}', $outbound_proxy_primary, $template);
+					$template = str_replace('{$server_address}', $row['server_address'], $template);
 					$template = str_replace('{$user_id}', $row['user_id'], $template);
 					$template = str_replace('{$password}', str_replace(';',';;',$row['password']), $template);
 					$template = str_replace('{$display_name}', ($row['display_name'] ?? $row['user_id']), $template);
@@ -861,6 +864,33 @@
 					$template = str_replace('{$sip_port}', $row['sip_port'], $template);
 					$content = $template;
 					unset($template);
+				}
+			}
+			//build content for acrobits
+			else if ($device_template == 'acrobits/default') {
+				//check custom template provision location
+				if (is_file('/usr/share/fusionpbx/templates/provision/'.$device_template.'/qr_template.txt')) {
+					$template = file_get_contents('/usr/share/fusionpbx/templates/provision/'.$device_template.'/qr_template.txt');
+				}
+				else if (is_file('/var/www/fusionpbx/resources/templates/provision/'.$device_template.'/qr_template.txt')) {
+					$template = file_get_contents('/var/www/fusionpbx/resources/templates/provision/'.$device_template.'/qr_template.txt');
+				}
+				else if (is_file('/usr/local/www/fusionpbx/resources/templates/provision/'.$device_template.'/qr_template.txt')) {
+					$template = file_get_contents('/usr/local/www/fusionpbx/resources/templates/provision/'.$device_template.'/qr_template.txt');
+				}
+
+				//get the provision settings
+					$provision = new settings(["category" => "provision"]);
+					$acrobits_code = $provision->get('provision', 'acrobits_code');
+				
+				if (!empty($template) && isset($acrobits_code)) {
+					$template = str_replace('{$server_address}', $row['server_address'], $template);
+					$template = str_replace('{$user_id}', urlencode($row['user_id']), $template);
+					$template = str_replace('{$password}', urlencode(str_replace(';',';;',$row['password'])), $template);
+					$template = str_replace('{$code}', $acrobits_code, $template);
+					$content = trim($template, "\r\n");
+					unset($template);
+					unset($acrobits_code);
 				}
 			}
 
@@ -980,7 +1010,7 @@
 		}
 		if (permission_exists("device_files")) {
 			//get the template directory
-				$prov = new provision;
+				$prov = new provision(['settings' => $settings]);
 				$prov->domain_uuid = $domain_uuid;
 				$template_dir = $prov->template_dir;
 				$files = glob($template_dir.'/'.$device_template.'/*');
@@ -990,8 +1020,7 @@
 				echo "			<option value=''>".$text['label-download']."</option>\n";
 				foreach ($files as $file) {
 					//format the device address
-						$format = new provision();
-						$address = $format->format_address($device_address, $device_vendor);
+						$address = $prov->format_address($device_address, $device_vendor);
 					//render the file name
 						$file_name = str_replace("{\$address}", $address, basename($file));
 						$file_name = str_replace("{\$mac}", $address, basename($file_name));
@@ -1057,7 +1086,7 @@
 	echo "</td>\n";
 	echo "<td class='vtable' width='70%' align='left'>\n";
 	if (permission_exists('device_address')) {
-		echo "	<input class='formfld' type='text' name='device_address' id='device_address' style='width: 245px;' maxlength='36' value=\"".escape(format_device_address($device_address ?? ''))."\"/>\n";
+		echo "	<input class='formfld' type='text' name='device_address' id='device_address' style='width: 245px;' maxlength='36' value=\"".escape($prov->format_address($device_address, $device_vendor))."\"/>\n";
 		echo "<br />\n";
 		echo $text['description-device_address']."\n";
 	}
@@ -1239,7 +1268,7 @@
 					if (empty($row['server_address'])) { $row['server_address'] = $_SESSION['domain_name']; }
 				}
 				if (empty($row['sip_transport'])) { $row['sip_transport'] = $_SESSION['provision']['line_sip_transport']['text']; }
-				if (empty($row['sip_port'])) { $row['sip_port'] = $_SESSION['provision']['line_sip_port']['numeric']; }
+				if (!isset($row['sip_port'])) { $row['sip_port'] = $_SESSION['provision']['line_sip_port']['numeric']; } //used !isset to support a value of 0 as empty the empty function considers a value of 0 as empty.
 				if (empty($row['register_expires'])) { $row['register_expires'] = $_SESSION['provision']['line_register_expires']['numeric']; }
 
 			//add the primary key uuid
@@ -1431,7 +1460,6 @@
 		$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 		$sql .= "order by device_profile_name asc ";
 		$parameters['domain_uuid'] = $domain_uuid;
-		$database = new database;
 		$device_profiles = $database->select($sql, $parameters, 'all');
 		if (is_array($device_profiles) && @sizeof($device_profiles) != 0) {
 			echo "	<tr>";

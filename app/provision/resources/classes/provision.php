@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2014-2021
+	Copyright (C) 2014-2024
 	All Rights Reserved.
 
 	Contributor(s):
@@ -33,8 +33,48 @@
 		public $template_dir;
 		public $device_address;
 		public $device_template;
+		private $settings;
+		private $database;
 
-		public function __construct() {
+		public function __construct($params = []) {
+
+			//preset the the values
+				$database = null;
+				$settings = null;
+				$domain_uuid = null;
+
+			//use the parameters to set the values if they exist
+				if (isset($params['database'])) {
+					$database = $params['database'];
+				}
+				if (isset($params['settings'])) {
+					$settings = $params['settings'];
+				}
+				if (isset($params['domain_uuid'])) {
+					$domain_uuid = $params['domain_uuid'];
+				}
+
+			//check if we can use the settings object to get the database object
+				if (!empty($settings) && empty($database)) {
+					$database = $settings->database();
+				}
+
+			//fill in missing
+				if (empty($database)) {
+					$database = database::new();
+				}
+				if (empty($settings)) {
+					$settings = new settings(['database' => $database, 'domain_uuid' => $domain_uuid]);
+				}
+
+			//assign to the object
+				$this->database = $database;
+				$this->settings = $settings;
+				$this->domain_uuid = $domain_uuid;
+
+			//get the project root
+				$project_root = dirname(__DIR__, 4);
+
 			//set the default template directory
 				if (PHP_OS == "Linux") {
 					//set the default template dir
@@ -100,6 +140,7 @@
 			//check in the devices table for a specific device address
 				$sql = "select count(*) from v_devices ";
 				$sql .= "where device_address = :device_address ";
+				$sql .= "and device_address <> '000000000000' ";
 				$parameters['device_address'] = $device_address;
 				$database = new database;
 				$num_rows = $database->select($sql, $parameters, 'column');
@@ -117,37 +158,26 @@
 			switch (strtolower($vendor)) {
 				case "algo":
 					return strtoupper($device_address);
-					break;
 				case "aastra":
 					return strtoupper($device_address);
-					break;
 				case "cisco":
 					return strtoupper($device_address);
-					break;
 				case "linksys":
 					return strtolower($device_address);
-					break;
 				case "mitel":
 					return strtoupper($device_address);
-					break;
 				case "polycom":
 					return strtolower($device_address);
-					break;
 				case "snom":
 					return strtolower($device_address);
-					break;
 				case "escene":
 					return strtolower($device_address);
-					break;
 				case "grandstream":
 					return strtolower($device_address);
-					break;
 				case "yealink":
 					return strtolower($device_address);
-					break;
 				case "gigaset":
 					return strtoupper($device_address);
-					break;
 				default:
 					return strtolower($device_address);
 			}
@@ -244,7 +274,7 @@
 					unset($contact, $numbers, $uuid, $phone_label);
 					$x++;
 				}
-				unset($parameters);
+				unset($sql, $parameters);
 
 			}
 		}
@@ -256,6 +286,7 @@
 
 			//get the variables
 				$domain_uuid = $this->domain_uuid;
+				$domain_name = $this->domain_name;
 				$device_template = $this->device_template;
 				$template_dir = $this->template_dir;
 				$device_address = $this->device_address;
@@ -283,31 +314,18 @@
 					$parameters['domain_uuid'] = $domain_uuid;
 					$database = new database;
 					$domain_name = $database->select($sql, $parameters, 'column');
-					unset($parameters);
+					unset($sql, $parameters);
 				}
 
 			//build the provision array
-				$provision = array();
-				if (is_array($_SESSION['provision'])) {
-					foreach ($_SESSION['provision'] as $key => $val) {
-						if (isset($val['var'])) { $value = $val['var']; }
-						elseif (isset($val['text'])) { $value = $val['text']; }
-						elseif (isset($val['boolean'])) { $value = $val['boolean']; }
-						elseif (isset($val['numeric'])) { $value = $val['numeric']; }
-						elseif (isset($val) && is_array($val) && empty($val['uuid'])) { $value = $val; }
-						if (isset($value)) {
-							$value = str_replace('${domain_name}', $domain_name, $value);
-							$value = str_replace('${mac_address}', $device_address, $value);
-							$value = str_replace('${device_address}', $device_address, $value);
-							$provision[$key] = $value;
-						}
-						unset($value);
-					}
+				$provision = $this->settings->get('provision', null, []);
+				foreach ($provision as $key => $value) {
+					$provision[$key] = $value;
 				}
 
 			//add the http auth password to the array
-				if (isset($_SESSION['provision']["http_auth_password"]) && is_array($_SESSION['provision']["http_auth_password"])) {
-					$provision["http_auth_password"] = $_SESSION['provision']["http_auth_password"][0];
+				if (isset($provision["http_auth_password"]) && is_array($provision["http_auth_password"])) {
+					$provision["http_auth_password"] = $provision["http_auth_password"][0];
 				}
 
 			//check to see if the device_address exists in devices
@@ -317,20 +335,22 @@
 						//get the device_template
 							$sql = "select * from v_devices ";
 							$sql .= "where device_address = :device_address ";
-							if ($provision['http_domain_filter'] == "true") {
+							$sql .= "and device_address <> '000000000000' ";
+							if ($this->settings->get('provision','http_domain_filter', 'false') === "true") {
 								$sql  .= "and domain_uuid=:domain_uuid ";
 								$parameters['domain_uuid'] = $domain_uuid;
 							}
 							$parameters['device_address'] = $device_address;
 							$database = new database;
 							$row = $database->select($sql, $parameters, 'row');
-							unset($parameters);
+							unset($sql, $parameters);
 
 							if (is_array($row) && sizeof($row) != 0) {
 
 								//checks either device enabled
 									if ($row['device_enabled'] != 'true') {
-										if ($_SESSION['provision']['debug']['boolean'] == 'true') {
+										syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempted but the device is not enabled for ".escape($device_address));
+										if ($this->settings->get('provision','debug', 'false') === 'true') {
 											echo "<br/>device disabled<br/>";
 										}
 										else {
@@ -342,7 +362,8 @@
 								//register that we have seen the device
 									$sql = "update v_devices ";
 									$sql .= "set device_provisioned_date = :device_provisioned_date, device_provisioned_method = :device_provisioned_method, device_provisioned_ip = :device_provisioned_ip, device_provisioned_agent = :device_provisioned_agent ";
-									$sql .= "where domain_uuid = :domain_uuid and device_address = :device_address ";
+									$sql .= "where domain_uuid = :domain_uuid ";
+									$sql .= "and device_address = :device_address  ";
 									$parameters['domain_uuid'] = $domain_uuid;
 									$parameters['device_address'] = strtolower($device_address);
 									$parameters['device_provisioned_date'] = 'now()';
@@ -351,7 +372,7 @@
 									$parameters['device_provisioned_agent'] = $_SERVER['HTTP_USER_AGENT'];
 									$database = new database;
 									$database->execute($sql, $parameters);
-									unset($parameters);
+									unset($sql, $parameters);
 
 								//set the variables from values in the database
 									$device_uuid = $row["device_uuid"];
@@ -390,7 +411,7 @@
 									$device_enabled = $row["device_enabled"];
 									$device_description = $row["device_description"];
 								}
-								unset($row, $parameters);
+								unset($sql, $row, $parameters);
 							}
 					}
 					else {
@@ -417,7 +438,7 @@
 							$templates['snom370-SIP'] = 'snom/370';
 							$templates['snom820-SIP'] = 'snom/820';
 							$templates['snom-m3-SIP'] = 'snom/m3';
-							
+
 							$templates['Fanvil X6'] = 'fanvil/x6';
 							$templates['Fanvil i30'] = 'fanvil/i30';
 
@@ -514,7 +535,7 @@
 							$templates['Flyingvoice FIP15G'] = 'flyingvoice/fip15g';
 							$templates['Flyingvoice FIP16'] = 'flyingvoice/fip16';
 							$templates['Flyingvoice FIP16PLUS'] = 'flyingvoice/fip16plus';
-							
+
 							foreach ($templates as $key=>$value){
 								if(stripos($_SERVER['HTTP_USER_AGENT'],$key)!== false) {
 									$device_template = $value;
@@ -524,7 +545,7 @@
 							unset($templates);
 
 						//device address does not exist in the table so add it
-							if ($_SESSION['provision']['auto_insert_enabled']['boolean'] == "true" && is_uuid($domain_uuid)) {
+							if ($this->settings->get('provision','auto_insert_enabled','false') === "true") {
 
 								//get a new primary key
 								$device_uuid = uuid();
@@ -575,7 +596,7 @@
 					$row = $database->select($sql, $parameters, 'row');
 					if (is_array($row) && sizeof($row) != 0) {
 						$device_uuid_alternate = $row["device_uuid_alternate"];
-						unset($row, $parameters);
+						unset($sql, $row, $parameters);
 						if (is_uuid($device_uuid_alternate)) {
 							//override the original device_uuid
 								$device_uuid = $device_uuid_alternate;
@@ -602,7 +623,7 @@
 										$device_description = $row["device_description"];
 									}
 								}
-								unset($row, $parameters);
+								unset($sql, $row, $parameters);
 						}
 					}
 				}
@@ -655,14 +676,9 @@
 
 			//initialize a template object
 				$view = new template();
-				if (!empty($_SESSION['provision']['template_engine']['text'])) {
-					$view->engine = $_SESSION['provision']['template_engine']['text']; //raintpl, smarty, twig
-				}
-				else {
-					$view->engine = "smarty";
-				}
+				$view->engine = $this->settings->get('provision', 'template_engine', 'smarty');
 				$view->template_dir = $template_dir ."/".$device_template."/";
-				$view->cache_dir = $_SESSION['server']['temp']['dir'];
+				$view->cache_dir = sys_get_temp_dir();
 				$view->init();
 
 			//replace the variables in the template in the future loop through all the line numbers to do a replace for each possible line number
@@ -683,7 +699,7 @@
 								$id = $row['line_number'];
 								$device_lines[$id] = $row;
 							}
-							unset($parameters);
+							unset($sql, $parameters);
 
 						//get the device profile keys
 							if (is_uuid($device_profile_uuid)) {
@@ -749,7 +765,7 @@
 										$device_keys[$id]['device_key_owner'] = "profile";
 									}
 								}
-								unset($parameters, $keys);
+								unset($sql, $parameters, $keys);
 							}
 
 						//get the device keys
@@ -802,7 +818,7 @@
 									$device_keys[$id]['device_key_owner'] = "device";
 								}
 							}
-							unset($parameters, $keys);
+							unset($sql, $parameters, $keys);
 
 						//set the variables
 							if (is_array($device_lines) && sizeof($device_lines) != 0) {
@@ -887,14 +903,14 @@
 
 				//get the list of contact directly assigned to the user
 					if (is_uuid($domain_uuid)) {
-						if ($_SESSION['contact']['permissions']['boolean'] == "true") {
+						if ($this->settings->get('contact','permissions','false') === "true") {
 							//get the contacts assigned to the groups and add to the contacts array
-								if (is_uuid($device_user_uuid) && $_SESSION['provision']['contact_groups']['boolean'] == "true") {
+								if (is_uuid($device_user_uuid) && $this->settings->get('contact','contact_groups', 'false') === "true") {
 									$this->contact_append($contacts, $line, $domain_uuid, $device_user_uuid, 'groups');
 								}
-	
+
 							//get the contacts assigned to the user and add to the contacts array
-								if (is_uuid($device_user_uuid) && $_SESSION['provision']['contact_users']['boolean'] == "true") {
+								if (is_uuid($device_user_uuid) && $this->settings->get('contact','contact_users', 'false') === "true") {
 									$this->contact_append($contacts, $line, $domain_uuid, $device_user_uuid, 'users');
 								}
 						}
@@ -905,7 +921,7 @@
 					}
 
 				//get the extensions and add them to the contacts array
-					if (is_uuid($device_uuid) && is_uuid($domain_uuid) && !empty($_SESSION['provision']['contact_extensions']['boolean']) && $_SESSION['provision']['contact_extensions']['boolean'] == "true") {
+					if (is_uuid($device_uuid) && is_uuid($domain_uuid) && $this->settings->get('provision','contact_extensions','false') === "true") {
 						//get contacts from the database
 							$sql = "select extension_uuid as contact_uuid, directory_first_name, directory_last_name, ";
 							$sql .= "effective_caller_id_name, effective_caller_id_number, ";
@@ -950,7 +966,7 @@
 										unset($name_array, $contact_name_given, $contact_name_family, $phone_extension);
 								}
 							}
-							unset($parameters);
+							unset($sql, $parameters);
 					}
 
 				//assign the contacts array to the template
@@ -983,6 +999,8 @@
 					$variables['outbound_proxy_primary'] = $lines[$x]['outbound_proxy_primary'];
 					$variables['outbound_proxy_secondary'] = $lines[$x]['outbound_proxy_secondary'];
 					$variables['display_name'] = $lines[$x]['display_name'];
+					$variables['location'] = $device_location;
+					$variables['description'] = $device_description;
 
 				//update the device keys by replacing variables with their values
 					foreach($variables as $name => $value) {
@@ -1116,14 +1134,9 @@
 
 				//set the device address in the correct format
 					$device_address = $this->format_address($device_address, $device_vendor);
-				
-				// set date/time for versioning provisioning templates
-					if (!empty($_SESSION['provision']['version_format']['text'])) {
-						$time = date($_SESSION['provision']['version_format']['text']);
-					}
-					else {
-						$time = date("dmyHi");
-					}
+
+				//set date/time for versioning provisioning templates
+					$time = date($this->settings->get('provision','version_format', "dmyHi"));
 
 				//replace the variables in the template in the future loop through all the line numbers to do a replace for each possible line number
 					$view->assign("device_address", $device_address);
@@ -1151,13 +1164,13 @@
 						$parameters['device_user_uuid'] = $device_user_uuid;
 						$database = new database;
 						$contact_uuid = $database->select($sql, $parameters, 'column');
-						$view->assign("ldap_username","uid=".$contact_uuid.",".$_SESSION['provision']['grandstream_ldap_user_base']['text']);
+						$view->assign("ldap_username", "uid=" . $contact_uuid . "," . $this->settings->get('provision','grandstream_ldap_user_base', ''));
 						$view->assign("ldap_password",md5($laddr_salt.$device_user_uuid));
-						unset($parameters);
+						unset($sql, $parameters);
 					}
 
 				//get the time zone
-					$time_zone_name = $_SESSION['domain']['time_zone']['name'];
+					$time_zone_name = $this->settings->get('domain','time_zone', '');
 					if (!empty($time_zone_name)) {
 						$time_zone_offset_raw = get_time_zone_offset($time_zone_name)/3600;
 						$time_zone_offset_hours = floor($time_zone_offset_raw);
@@ -1188,6 +1201,12 @@
 				//replace the dynamic provision variables that are defined in default, domain, and device settings
 					if (is_array($provision)) {
 						foreach($provision as $key=>$val) {
+							if (!empty($val) && is_string($val) && strpos($val, '{$domain_name}') !== false) {
+								$val = str_replace('{$domain_name}', $domain_name, $val);
+							}
+							if (!empty($val) && is_string($val) && strpos($val, '${domain_name}') !== false) {
+								$val = str_replace('${domain_name}', $domain_name, $val);
+							}
 							$view->assign($key, $val);
 						}
 					}
@@ -1218,7 +1237,7 @@
 						//make sure the file exists
 						if (!file_exists($template_dir."/".$device_template ."/".$file)) {
 							$this->http_error('404');
-							if ($_SESSION['provision']['debug']['boolean'] == 'true') {
+							if ($this->settings->get('provision','debug','false') === 'true') {
 								echo ":$template_dir/$device_template/$file<br/>";
 								echo "template_dir: $template_dir<br/>";
 								echo "device_template: $device_template<br/>";
@@ -1232,7 +1251,7 @@
 					$file_contents = $view->render($file);
 
 				//log file for testing
-					if (!empty($_SESSION['provision']['debug']['boolean']) && $_SESSION['provision']['debug']['boolean'] == 'true') {
+					if ($this->settings->get('provision','debug','false') === 'true') {
 						$tmp_file = "/tmp/provisioning_log.txt";
 						$fh = fopen($tmp_file, 'w') or die("can't open file");
 						$tmp_string = $device_address."\n";
@@ -1248,17 +1267,23 @@
 
 		function write() {
 			//build the provision array
-				$provision = array();
-				if (is_array($_SESSION['provision'])) {
-					foreach ($_SESSION['provision'] as $key => $val) {
-						if (isset($val['var'])) { $value = $val['var']; }
-						elseif (isset($val['text'])) { $value = $val['text']; }
-						elseif (isset($val['boolean'])) { $value = $val['boolean']; }
-						elseif (isset($val['numeric'])) { $value = $val['numeric']; }
-						elseif (is_array($val) && !is_uuid($val['uuid'])) { $value = $val; }
-						if (isset($value)) { $provision[$key] = $value; }
-						unset($value);
+				$provision = $this->settings->get('provision', null, []);
+				foreach ($provision as $key => $val) {
+					if (isset($val['var'])) {
+						$value = $val['var'];
+					} elseif (isset($val['text'])) {
+						$value = $val['text'];
+					} elseif (isset($val['boolean'])) {
+						$value = $val['boolean'];
+					} elseif (isset($val['numeric'])) {
+						$value = $val['numeric'];
+					} elseif (is_array($val) && !is_uuid($val['uuid'])) {
+						$value = $val;
 					}
+					if (isset($value)) {
+						$provision[$key] = $value;
+					}
+					unset($value);
 				}
 
 			//check either we have destination path to write files

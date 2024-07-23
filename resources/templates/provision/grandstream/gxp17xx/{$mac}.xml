@@ -3958,7 +3958,11 @@
 <!-- ############################################################################## -->
 <!-- # NTP Server -->
 <!-- # String -->
-<P30>us.pool.ntp.org</P30>
+{if isset($ntp_server_primary)}
+<P30>{$ntp_server_primary}</P30>
+{else}
+<P30>pool.ntp.org</P30>
+{/if}
 
 <!-- # NTP Update Interval -->
 <!-- # String -->
@@ -6299,11 +6303,11 @@
 
 <!-- # Connection Request Username	 -->
 <!-- # String: a-z, A-Z, 0-9 -->
-<P4511></P4511>
+<P4511>{$mac|replace:'-':''|upper}</P4511>
 
 <!-- # Connection Request Password	 -->
 <!-- # String: a-z, A-Z, 0-9 -->
-<P4512></P4512>
+<P4512>{$mac|replace:'-':''|upper}</P4512>
 
 <!-- # Connection Request Port. Default is 7547. -->
 <!-- # Number -->

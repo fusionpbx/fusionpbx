@@ -52,15 +52,19 @@
 				voicemail_transcription_enabled = row["voicemail_transcription_enabled"];
 				voicemail_file = row["voicemail_file"];
 				voicemail_local_after_email = row["voicemail_local_after_email"];
+				voicemail_local_after_forward = row["voicemail_local_after_forward"];
 				voicemail_description = row["voicemail_description"];
 			end);
 
 		--set default values
+			if (voicemail_file == nil) then
+				voicemail_file = "listen";
+			end
 			if (voicemail_local_after_email == nil) then
 				voicemail_local_after_email = "true";
 			end
-			if (voicemail_file == nil) then
-				voicemail_file = "listen";
+			if (voicemail_local_after_forward == nil) then
+				voicemail_local_after_forward = "true";
 			end
 
 		--require the email address to send the email
@@ -194,13 +198,20 @@
 				--get the link_address
 					link_address = http_protocol.."://"..domain_name..project_path;
 
+				--set proper delete status
+					if (voicemail_local_after_email == "false" and voicemail_local_after_forward == "false") then
+						local local_after_email = "false";
+					else
+						local local_after_email = "true";
+					end
+
 				--prepare the headers
 					local headers = {
 						["X-FusionPBX-Domain-UUID"] = domain_uuid;
 						["X-FusionPBX-Domain-Name"] = domain_name;
-						["X-FusionPBX-Call-UUID"]   = uuid;
-						["X-FusionPBX-Email-Type"]  = 'voicemail';
-						["X-FusionPBX-local_after_email"]  = voicemail_local_after_email;
+						["X-FusionPBX-Call-UUID"] = uuid;
+						["X-FusionPBX-Email-Type"] = 'voicemail';
+						["X-FusionPBX-local_after_email"] = local_after_email;
 					}
 
 				--prepare the voicemail_name_formatted
@@ -260,7 +271,7 @@
 						elseif (voicemail_file == "link") then
 							body = body:gsub("${message}", "<a href='"..link_address.."/app/voicemails/voicemail_messages.php?action=download&id="..id.."&voicemail_uuid="..db_voicemail_uuid.."&uuid="..uuid.."&t=bin'>"..text['label-download'].."</a>");
 						else
-							body = body:gsub("${message}", "<a href='"..link_address.."/app/voicemails/voicemail_messages.php?action=autoplay&id="..db_voicemail_uuid.."&uuid="..uuid.."'>"..text['label-listen'].."</a>");
+							body = body:gsub("${message}", "<a href='"..link_address.."/app/voicemails/voicemail_messages.php?action=autoplay&id="..db_voicemail_uuid.."&uuid="..uuid.."&vm="..id.."'>"..text['label-listen'].."</a>");
 						end
 						--body = body:gsub(" ", "&nbsp;");
 						--body = body:gsub("%s+", "");
@@ -278,14 +289,27 @@
 						elseif (voicemail_file == "link") then
 							body = body .. "<br><a href='"..link_address.."/app/voicemails/voicemail_messages.php?action=download&id="..id.."&voicemail_uuid="..db_voicemail_uuid.."&uuid="..uuid.."&t=bin'>"..text['label-download'].."</a>";
 						else
-							body = body .. "<br><a href='"..link_address.."/app/voicemails/voicemail_messages.php?action=autoplay&id="..db_voicemail_uuid.."&uuid="..uuid.."'>"..text['label-listen'].."</a>";
+							body = body .. "<br><a href='"..link_address.."/app/voicemails/voicemail_messages.php?action=autoplay&id="..db_voicemail_uuid.."&uuid="..uuid.."&vm="..id.."'>"..text['label-listen'].."</a>";
 						end
 						body = body .. '</body></html>';
 					end
 
+				--get the smtp from address and name
+					smtp_from = settings:get('voicemail', 'smtp_from', 'text');
+					smtp_from_name = settings:get('voicemail', 'smtp_from_name', 'text');
+					if (smtp_from and string.len(smtp_from) > 2) then
+						smtp_from = settings:get('email', 'smtp_from', 'text');
+					end
+					if (smtp_from_name and string.len(smtp_from_name) > 0) then
+						smtp_from_name = settings:get('email', 'smtp_from_name', 'text');
+					end
+					if (smtp_from_name and string.len(smtp_from_name) > 0 and smtp_from and string.len(smtp_from) > 2) then
+						smtp_from = smtp_from_name.."<"..smtp_from..">";
+					end
+
 				--send the email
 					send_mail(headers,
-						nil,
+						smtp_from,
 						voicemail_mail_to,
 						{subject, body},
 						(voicemail_file == "attach") and file
@@ -294,7 +318,7 @@
 
 		--whether to keep the voicemail message and details local after email
 			if (string.len(voicemail_mail_to) > 2 and email_queue_enabled == 'false') then
-				if (voicemail_local_after_email == "false") then
+				if (voicemail_local_after_email == "false" and voicemail_local_after_forward == "false") then
 					--delete the voicemail message details
 						local sql = [[DELETE FROM v_voicemail_messages
 							WHERE domain_uuid = :domain_uuid

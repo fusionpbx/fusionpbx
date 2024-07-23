@@ -16,7 +16,7 @@
 --
 --	The Initial Developer of the Original Code is
 --	Mark J Crane <markjcrane@fusionpbx.com>
---	Copyright (C) 2015-2023
+--	Copyright (C) 2015-2024
 --	the Initial Developer. All Rights Reserved.
 --
 --	Contributor(s):
@@ -27,6 +27,9 @@
 
 --create the api object
 	api = freeswitch.API();
+
+--get the server hostname
+	hostname = api:executeString("hostname");
 
 --include config.lua
 	require "resources.functions.config";
@@ -312,7 +315,6 @@
 	end
 	sql = sql .. ":fax_time ";
 	sql = sql .. ")";
-
 	local params = {
 		uuid = uuid;
 		domain_uuid = domain_uuid;
@@ -333,11 +335,9 @@
 		fax_date = os.date("%Y-%m-%d %X");
 		fax_time = os.time();
 	};
-
 	if (debug["sql"]) then
 		freeswitch.consoleLog("notice", "[fax] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 	end
-
 	dbh:query(sql, params);
 
 --add the fax files
@@ -345,10 +345,10 @@
 		if (fax_success =="1") then
 			if (storage_type == "base64") then
 				--include the file io
-					local file = require "resources.functions.file"
+				local file = require "resources.functions.file"
 
 				--read file content as base64 string
-					fax_base64 = assert(file.read_base64(fax_file));
+				fax_base64 = assert(file.read_base64(fax_file));
 			end
 
 			local sql = {}
@@ -419,6 +419,66 @@
 				result = dbh:query(sql, params);
 			end
 		end
+	end
+
+--add to the fax queue when the fax_forward_number is set
+	if (fax_forward_number ~= nil) then
+		sql = "insert into v_fax_queue ";
+		sql = sql .. "(";
+		sql = sql .. "fax_queue_uuid, ";
+		sql = sql .. "domain_uuid, ";
+		if (fax_uuid ~= nil) then
+			sql = sql .. "fax_uuid, ";
+		end
+		sql = sql .. "fax_date, ";
+		sql = sql .. "hostname, ";
+		sql = sql .. "fax_caller_id_name, ";
+		sql = sql .. "fax_caller_id_number, ";
+		sql = sql .. "fax_number, ";
+		sql = sql .. "fax_prefix, ";
+		sql = sql .. "fax_email_address, ";
+		sql = sql .. "fax_file, ";
+		sql = sql .. "fax_status, ";
+		sql = sql .. "fax_retry_count, ";
+		sql = sql .. "fax_accountcode, ";
+		sql = sql .. "fax_command ";
+		sql = sql .. ") ";
+		sql = sql .. "values ";
+		sql = sql .. "(";
+		sql = sql .. ":uuid, ";
+		sql = sql .. ":domain_uuid, ";
+		if (fax_uuid ~= nil) then
+			sql = sql .. ":fax_uuid, ";
+		end
+		sql = sql .. "now(), ";
+		sql = sql .. ":hostname, ";
+		sql = sql .. ":fax_caller_id_name, ";
+		sql = sql .. ":fax_caller_id_number, ";
+		sql = sql .. ":fax_number, ";
+		sql = sql .. ":fax_prefix, ";
+		sql = sql .. ":fax_email_address, ";
+		sql = sql .. ":fax_file, ";
+		sql = sql .. ":fax_status, ";
+		sql = sql .. ":fax_retry_count, ";
+		sql = sql .. ":fax_accountcode, ";
+		sql = sql .. ":fax_command ";
+		sql = sql .. ")";
+		local params = {
+			uuid = uuid;
+			domain_uuid = domain_uuid;
+			fax_uuid = fax_uuid;
+			hostname = hostname;
+			fax_caller_id_name = fax_caller_id_name;
+			fax_caller_id_number = fax_caller_id_number;
+			fax_number = fax_forward_number;
+			fax_prefix = fax_prefix;
+			fax_email_address = fax_email;
+			fax_file = fax_file;
+			fax_status = 'waiting';
+			fax_retry_count = '0';
+			fax_accountcode = fax_accountcode;
+			fax_command = '';
+		};
 	end
 
 --send the selected variables to the console

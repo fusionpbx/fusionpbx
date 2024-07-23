@@ -29,7 +29,6 @@
 //includes files
 	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
-	require_once "resources/classes/ringbacks.php";
 
 //check permissions
 	if (permission_exists('ring_group_add') || permission_exists('ring_group_edit')) {
@@ -98,50 +97,52 @@
 	}
 
 //delete the user from the ring group
-	if (
-		(!empty($_GET["a"])) == "delete"
+	if ((!empty($_GET["a"])) == "delete"
 		&& is_uuid($_REQUEST["user_uuid"])
-		&& permission_exists("ring_group_edit")
-		) {
-		//set the variables
+		&& permission_exists("ring_group_edit")) {
+			//set the variables
 			$user_uuid = $_REQUEST["user_uuid"];
-		//build array
+
+			//build array
 			$array['ring_group_users'][0]['domain_uuid'] = $domain_uuid;
 			$array['ring_group_users'][0]['ring_group_uuid'] = $ring_group_uuid;
 			$array['ring_group_users'][0]['user_uuid'] = $user_uuid;
-		//grant temporary permissions
+
+			//grant temporary permissions
 			$p = new permissions;
 			$p->add('ring_group_user_delete', 'temp');
-		//execute delete
+
+			//execute delete
 			$database = new database;
 			$database->app_name = 'ring_groups';
 			$database->app_uuid = '1d61fb65-1eec-bc73-a6ee-a6203b4fe6f2';
 			$database->delete($array);
 			unset($array);
-		//revoke temporary permissions
+
+			//revoke temporary permissions
 			$p->delete('ring_group_user_delete', 'temp');
-		//save the message to a session variable
+
+			//save the message to a session variable
 			message::add($text['message-delete']);
-		//redirect the browser
+
+			//redirect the browser
 			header("Location: ring_group_edit.php?id=$ring_group_uuid");
 			exit;
 	}
 
 //get total ring group count from the database, check limit, if defined
-	if ($action == 'add') {
-		if ($_SESSION['limit']['ring_groups']['numeric'] ?? '') {
-			$sql = "select count(*) from v_ring_groups ";
-			$sql .= "where domain_uuid = :domain_uuid ";
-			$parameters['domain_uuid'] = $domain_uuid;
-			$database = new database;
-			$total_ring_groups = $database->select($sql, $parameters, 'column');
-			unset($sql, $parameters);
+	if ($action == 'add' && $_SESSION['limit']['ring_groups']['numeric'] ?? '') {
+		$sql = "select count(*) from v_ring_groups ";
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$parameters['domain_uuid'] = $domain_uuid;
+		$database = new database;
+		$total_ring_groups = $database->select($sql, $parameters, 'column');
+		unset($sql, $parameters);
 
-			if (is_numeric($_SESSION['limit']['ring_groups']['numeric']) && $total_ring_groups >= $_SESSION['limit']['ring_groups']['numeric']) {
-				message::add($text['message-maximum_ring_groups'].' '.$_SESSION['limit']['ring_groups']['numeric'], 'negative');
-				header('Location: ring_groups.php');
-				exit;
-			}
+		if (is_numeric($_SESSION['limit']['ring_groups']['numeric']) && $total_ring_groups >= $_SESSION['limit']['ring_groups']['numeric']) {
+			message::add($text['message-maximum_ring_groups'].' '.$_SESSION['limit']['ring_groups']['numeric'], 'negative');
+			header('Location: ring_groups.php');
+			exit;
 		}
 	}
 
@@ -201,6 +202,7 @@
 			$ring_group_timeout_app = array_shift($ring_group_timeout_array);
 			$ring_group_timeout_data = join(':', $ring_group_timeout_array);
 			$destination_number = $_POST["destination_number"] ?? null;
+			$destination_description = $_POST["destination_description"] ?? null;
 			$destination_delay = $_POST["destination_delay"] ?? null;
 			$destination_timeout = $_POST["destination_timeout"] ?? null;
 			$destination_prompt = $_POST["destination_prompt"] ?? null;
@@ -214,33 +216,58 @@
 				$ring_group_context = $_SESSION['domain_name'];
 			}
 
+		//if the user doesn't have the correct permission then
+		//override domain_uuid and ring_group_context values
+			if ($action == 'update' && is_uuid($ring_group_uuid)) {
+				$sql = "select * from v_ring_groups ";
+				$sql .= "where  ring_group_uuid = :ring_group_uuid ";
+				$parameters['ring_group_uuid'] = $ring_group_uuid;
+				$database = new database;
+				$row = $database->select($sql, $parameters, 'row');
+				if (!empty($row)) {
+					//if (!permission_exists(‘ring_group_domain')) {
+					//	$domain_uuid = $row["domain_uuid"];
+					//}
+					if (!permission_exists('ring_group_context')) {
+						$ring_group_context = $row["ring_group_context"];
+					}
+				}
+				unset($sql, $parameters, $row);
+			}
+
 	}
 
 //assign the user to the ring group
 	if (!empty($_REQUEST["user_uuid"]) && is_uuid($_REQUEST["id"]) && $_GET["a"] != "delete" && permission_exists("ring_group_edit")) {
 		//set the variables
-			$user_uuid = $_REQUEST["user_uuid"];
+		$user_uuid = $_REQUEST["user_uuid"];
+
 		//build array
-			$array['ring_group_users'][0]['ring_group_user_uuid'] = uuid();
-			$array['ring_group_users'][0]['domain_uuid'] = $domain_uuid;
-			$array['ring_group_users'][0]['ring_group_uuid'] = $ring_group_uuid;
-			$array['ring_group_users'][0]['user_uuid'] = $user_uuid;
+		$array['ring_group_users'][0]['ring_group_user_uuid'] = uuid();
+		$array['ring_group_users'][0]['domain_uuid'] = $domain_uuid;
+		$array['ring_group_users'][0]['ring_group_uuid'] = $ring_group_uuid;
+		$array['ring_group_users'][0]['user_uuid'] = $user_uuid;
+
 		//grant temporary permissions
-			$p = new permissions;
-			$p->add('ring_group_user_add', 'temp');
+		$p = new permissions;
+		$p->add('ring_group_user_add', 'temp');
+
 		//execute delete
-			$database = new database;
-			$database->app_name = 'ring_groups';
-			$database->app_uuid = '1d61fb65-1eec-bc73-a6ee-a6203b4fe6f2';
-			$database->save($array);
-			unset($array);
+		$database = new database;
+		$database->app_name = 'ring_groups';
+		$database->app_uuid = '1d61fb65-1eec-bc73-a6ee-a6203b4fe6f2';
+		$database->save($array);
+		unset($array);
+
 		//revoke temporary permissions
-			$p->delete('ring_group_user_add', 'temp');
+		$p->delete('ring_group_user_add', 'temp');
+
 		//set message
-			message::add($text['message-add']);
+		message::add($text['message-add']);
+
 		//redirect the browser
-			header("Location: ring_group_edit.php?id=".urlencode($ring_group_uuid));
-			exit;
+		header("Location: ring_group_edit.php?id=".urlencode($ring_group_uuid));
+		exit;
 	}
 
 //process the HTTP POST
@@ -412,6 +439,7 @@
 							$array["ring_groups"][0]["ring_group_destinations"][$y]["ring_group_uuid"] = $ring_group_uuid;
 							$array['ring_groups'][0]["ring_group_destinations"][$y]["ring_group_destination_uuid"] = uuid();
 							$array['ring_groups'][0]["ring_group_destinations"][$y]["destination_number"] = $extension['extension'];
+							$array['ring_groups'][0]["ring_group_destinations"][$y]["destination_description"] = $row['destination_description'];
 							$array['ring_groups'][0]["ring_group_destinations"][$y]["destination_delay"] = $row['destination_delay'];
 							$array['ring_groups'][0]["ring_group_destinations"][$y]["destination_timeout"] = $row['destination_timeout'];
 							$array['ring_groups'][0]["ring_group_destinations"][$y]["destination_prompt"] = $row['destination_prompt'];
@@ -424,6 +452,7 @@
 					$array["ring_groups"][0]["ring_group_destinations"][$y]["ring_group_uuid"] = $ring_group_uuid;
 					$array['ring_groups'][0]["ring_group_destinations"][$y]["ring_group_destination_uuid"] = $ring_group_destination_uuid;
 					$array['ring_groups'][0]["ring_group_destinations"][$y]["destination_number"] = $row['destination_number'];
+					$array['ring_groups'][0]["ring_group_destinations"][$y]["destination_description"] = $row['destination_description'];
 					$array['ring_groups'][0]["ring_group_destinations"][$y]["destination_delay"] = $row['destination_delay'];
 					$array['ring_groups'][0]["ring_group_destinations"][$y]["destination_timeout"] = $row['destination_timeout'];
 					$array['ring_groups'][0]["ring_group_destinations"][$y]["destination_prompt"] = $row['destination_prompt'];
@@ -556,9 +585,6 @@
 //set the defaults
 	$destination_delay_max = $_SESSION['ring_group']['destination_delay_max']['numeric'];
 	$destination_timeout_max = $_SESSION['ring_group']['destination_timeout_max']['numeric'];
-	if (empty($ring_group_ringback)) {
-		$ring_group_ringback = '${us-ring}';
-	}
 	if (empty($ring_group_call_timeout)) {
 		$ring_group_call_timeout = '30';
 	}
@@ -770,7 +796,7 @@
 	echo "	".$text['label-extension']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='ring_group_extension' maxlength='255' value=\"".escape($ring_group_extension)."\" required='required'>\n";
+	echo "	<input class='formfld' type='text' name='ring_group_extension' maxlength='255' value=\"".escape($ring_group_extension)."\" required='required' placeholder=\"".($_SESSION['ring_group']['extension_range']['text'] ?? '')."\">\n";
 	echo "<br />\n";
 	echo $text['description-extension']."\n";
 	echo "</td>\n";
@@ -783,7 +809,7 @@
 	echo "<td class='vncell' rowspan='2' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-'.$instance_label]."\n";
 	echo "</td>\n";
-	echo "<td class='vtable playback_progress_bar_background' id='recording_progress_bar_".$instance_id."' style='display: none; border-bottom: none; padding-top: 0 !important; padding-bottom: 0 !important;' align='left'><span class='playback_progress_bar' id='recording_progress_".$instance_id."'></span></td>\n";
+	echo "<td class='vtable playback_progress_bar_background' id='recording_progress_bar_".$instance_id."' onclick=\"recording_play('".$instance_id."', document.getElementById('".$instance_id."').value, document.getElementById('".$instance_id."').options[document.getElementById('".$instance_id."').selectedIndex].parentNode.getAttribute('data-type'));\" style='display: none; border-bottom: none; padding-top: 0 !important; padding-bottom: 0 !important;' align='left'><span class='playback_progress_bar' id='recording_progress_".$instance_id."'></span></td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
 	echo "<td class='vtable' align='left'>\n";
@@ -841,7 +867,7 @@
 			case 'ogg' : $mime_type = 'audio/ogg'; break;
 		}
 		echo "<audio id='recording_audio_".$instance_id."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".$instance_id."')\" onended=\"recording_reset('".$instance_id."');\" src='".($playable ?? '')."' type='".($mime_type ?? '')."'></audio>";
-		echo button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'icon'=>$_SESSION['theme']['button_icon_play'],'id'=>'recording_button_'.$instance_id,'style'=>'display: '.(!empty($mime_type) ? 'inline' : 'none'),'onclick'=>"recording_play('".$instance_id."')"]);
+		echo button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'icon'=>$_SESSION['theme']['button_icon_play'],'id'=>'recording_button_'.$instance_id,'style'=>'display: '.(!empty($mime_type) ? 'inline' : 'none'),'onclick'=>"recording_play('".$instance_id."', document.getElementById('".$instance_id."').value, document.getElementById('".$instance_id."').options[document.getElementById('".$instance_id."').selectedIndex].parentNode.getAttribute('data-type'))"]);
 		unset($playable, $mime_type);
 	}
 	echo "<br />\n";
@@ -873,6 +899,7 @@
 	echo "			<table border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "				<tr>\n";
 	echo "					<td class='vtable'>".$text['label-destination_number']."</td>\n";
+
 	echo "					<td class='vtable' id='destination_delayorder'>";
 	echo 						($ring_group_strategy == 'sequence' || $ring_group_strategy == 'rollover') ? $text['label-destination_order'] : $text['label-destination_delay'];
 	echo "					</td>\n";
@@ -880,6 +907,7 @@
 	if (permission_exists('ring_group_prompt')) {
 		echo "				<td class='vtable'>".$text['label-destination_prompt']."</td>\n";
 	}
+	echo "					<td class='vtable'>".$text['label-destination_description']."</td>\n";
 	echo "					<td class='vtable'>".$text['label-destination_enabled']."</td>\n";
 	if ($show_destination_delete && permission_exists('ring_group_destination_delete')) {
 		echo "					<td class='vtable edit_delete_checkbox_all' onmouseover=\"swap_display('delete_label_destinations', 'delete_toggle_destinations');\" onmouseout=\"swap_display('delete_label_destinations', 'delete_toggle_destinations');\">\n";
@@ -890,6 +918,7 @@
 	echo "				</tr>\n";
 	$x = 0;
 	foreach ($ring_group_destinations as $row) {
+		if (empty($row['destination_description'])) { $row['destination_description'] = ""; }
 		if (empty($row['destination_delay'])) { $row['destination_delay'] = "0"; }
 		if (empty($row['destination_timeout'])) { $row['destination_timeout'] = "30"; }
 
@@ -947,6 +976,9 @@
 			echo "				</select>\n";
 			echo "			</td>\n";
 		}
+		echo "				<td class='formfld'>\n";
+		echo "					<input type=\"text\" name=\"ring_group_destinations[".$x."][destination_description]\" class=\"formfld\" value=\"".escape($row['destination_description'])."\">\n";
+		echo "				</td>\n";
 		echo "				<td class='formfld'>\n";
 		// switch
 		if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {

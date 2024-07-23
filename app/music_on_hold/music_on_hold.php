@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2023
+	Portions created by the Initial Developer are Copyright (C) 2008-2024
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -565,9 +565,9 @@
 								case "ogg" : $stream_file_type = "audio/ogg"; break;
 							}
 							//playback progress bar
-								echo "<tr class='list-row' id='recording_progress_bar_".$row_uuid."' style='display: none;'><td class='playback_progress_bar_background' style='padding: 0; border: none;' colspan='5'><span class='playback_progress_bar' id='recording_progress_".$row_uuid."'></span></td></tr>\n";
+								echo "<tr class='list-row' id='recording_progress_bar_".$row_uuid."' style='display: none;' onclick=\"recording_play('".escape($row_uuid)."','".urlencode($stream_file)."')\"><td id='playback_progress_bar_background_".escape($row_uuid)."' class='playback_progress_bar_background' colspan='5'><span class='playback_progress_bar' id='recording_progress_".$row_uuid."'></span></td></tr>\n";
 								echo "<tr class='list-row' style='display: none;'><td></td></tr>\n"; // dummy row to maintain alternating background color
-							$list_row_link = "javascript:recording_play('".$row_uuid."');";
+							$list_row_link = "javascript:recording_play('".$row_uuid."','".urlencode($stream_file)."');";
 							echo "<tr class='list-row' href=\"".$list_row_link."\">\n";
 							if (permission_exists('music_on_hold_delete')) {
 								echo "	<td class='checkbox'>\n";
@@ -587,7 +587,7 @@
 							echo "	<td class='overflow'>".escape($stream_file)."</td>\n";
 							echo "	<td class='button center no-link no-wrap'>";
 							echo 		"<audio id='recording_audio_".$row_uuid."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".$row_uuid."')\" onended=\"recording_reset('".$row_uuid."');\" src='music_on_hold.php?action=download&id=".escape($row['music_on_hold_uuid'])."&file=".urlencode($stream_file)."' type='".$stream_file_type."'></audio>";
-							echo button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'icon'=>$_SESSION['theme']['button_icon_play'],'id'=>'recording_button_'.$row_uuid,'onclick'=>"recording_play('".$row_uuid."');"]);
+							echo button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'icon'=>$_SESSION['theme']['button_icon_play'],'id'=>'recording_button_'.$row_uuid,'onclick'=>"recording_play('".$row_uuid."','".urlencode($stream_file)."');"]);
 							echo button::create(['type'=>'button','title'=>$text['label-download'],'icon'=>$_SESSION['theme']['button_icon_download'],'link'=>"?action=download&id=".urlencode($row['music_on_hold_uuid'])."&file=".urlencode($stream_file)]);
 							echo "	</td>\n";
 							echo "	<td class='right no-wrap hide-xs'>".escape($stream_file_size)."</td>\n";

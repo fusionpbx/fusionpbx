@@ -7,6 +7,7 @@
 	$apps[$x]['menu'][$y]['title']['de-at'] = "Registrierungen";
 	$apps[$x]['menu'][$y]['title']['de-ch'] = "Registrierungen";
 	$apps[$x]['menu'][$y]['title']['de-de'] = "Registrierungen";
+	$apps[$x]['menu'][$y]['title']['el-gr'] = "Εγγραφές";
 	$apps[$x]['menu'][$y]['title']['es-cl'] = "Registros";
 	$apps[$x]['menu'][$y]['title']['es-mx'] = "Registros";
 	$apps[$x]['menu'][$y]['title']['fr-ca'] = "Inscriptions";
@@ -21,6 +22,7 @@
 	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Регистрации SIP";
 	$apps[$x]['menu'][$y]['title']['sv-se'] = "Registreringar";
 	$apps[$x]['menu'][$y]['title']['uk-ua'] = "Реєстрації";
+	$apps[$x]['menu'][$y]['title']['tr-tr'] = "Kayıtlar";
 	$apps[$x]['menu'][$y]['title']['zh-cn'] = "登记";
 	$apps[$x]['menu'][$y]['title']['ja-jp'] = "登録";
 	$apps[$x]['menu'][$y]['title']['ko-kr'] = "등록";

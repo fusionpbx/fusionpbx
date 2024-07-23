@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2023
+	Portions created by the Initial Developer are Copyright (C) 2008-2024
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -61,6 +61,9 @@
 		$action = "add";
 	}
 
+//get the domain_uuid
+	$domain_uuid = $_SESSION['domain_uuid'];
+
 //initialize the destinations object
 	$destination = new destinations;
 
@@ -69,7 +72,7 @@
 		if (!empty($_SESSION['limit']['call_center_queues']['numeric'])) {
 			$sql = "select count(*) from v_call_center_queues ";
 			$sql .= "where domain_uuid = :domain_uuid ";
-			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+			$parameters['domain_uuid'] = $domain_uuid;
 			$database = new database;
 			$total_call_center_queues = $database->select($sql, $parameters, 'column');
 			unset($sql, $parameters);
@@ -144,7 +147,7 @@
 			$sql .= "where t.domain_uuid = :domain_uuid  ";
 			$sql .= "and t.call_center_tier_uuid = :call_center_tier_uuid ";
 			$sql .= "and t.call_center_queue_uuid = q.call_center_queue_uuid; ";
-			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+			$parameters['domain_uuid'] = $domain_uuid;
 			$parameters['call_center_tier_uuid'] = $call_center_tier_uuid;
 			$database = new database;
 			$tiers = $database->select($sql, $parameters, 'all');
@@ -173,7 +176,7 @@
 		//delete the tier from the database
 			if (!empty($call_center_tier_uuid)) {
 				$array['call_center_tiers'][0]['call_center_tier_uuid'] = $call_center_tier_uuid;
-				$array['call_center_tiers'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
+				$array['call_center_tiers'][0]['domain_uuid'] = $domain_uuid;
 
 				$p = new permissions;
 				$p->add('call_center_tier_delete', 'temp');
@@ -194,6 +197,25 @@
 		//get the uuid from the POST
 			if ($action == "update") {
 				$call_center_queue_uuid = $_POST["call_center_queue_uuid"];
+			}
+
+		//if the user doesn't have the correct permission then
+		//override domain_uuid and queue_context values
+			if ($action == 'update' && is_uuid($call_center_queue_uuid)) {
+				$sql = "select * from v_call_center_queues ";
+				$sql .= "where call_center_queue_uuid = :call_center_queue_uuid ";
+				$parameters['call_center_queue_uuid'] = $call_center_queue_uuid;
+				$database = new database;
+				$row = $database->select($sql, $parameters, 'row');
+				if (!empty($row)) {
+					//if (!permission_exists('call_center_queue_domain')) {
+					//	$domain_uuid = $row["domain_uuid"];
+					//}
+					if (!permission_exists('call_center_queue_context')) {
+						$queue_context = $row["queue_context"];
+					}
+				}
+				unset($sql, $parameters, $row);
 			}
 
 		//validate the token
@@ -239,9 +261,6 @@
 				return;
 			}
 
-		//set the domain_uuid
-			$_POST["domain_uuid"] = $_SESSION["domain_uuid"];
-
 		//add the call_center_queue_uuid
 			if (empty($_POST["call_center_queue_uuid"])) {
 				$call_center_queue_uuid = uuid();
@@ -260,7 +279,7 @@
 				foreach ($_POST["call_center_tiers"] as $row) {
 					//add the domain_uuid
 						if (empty($row["domain_uuid"])) {
-							$_POST["call_center_tiers"][$x]["domain_uuid"] = $_SESSION['domain_uuid'];
+							$_POST["call_center_tiers"][$x]["domain_uuid"] = $domain_uuid;
 						}
 					//unset ring_group_destination_uuid if the field has no value
 						if (empty($row["call_center_agent_uuid"])) {
@@ -344,7 +363,7 @@
 						$array['call_center_queues'][0]["call_center_tiers"][$y]["call_center_agent_uuid"] = $row['call_center_agent_uuid'];
 						$array['call_center_queues'][0]["call_center_tiers"][$y]["tier_level"] = $row['tier_level'];
 						$array['call_center_queues'][0]["call_center_tiers"][$y]["tier_position"] = $row['tier_position'];
-						$array['call_center_queues'][0]["call_center_tiers"][$y]["domain_uuid"] = $_SESSION['domain_uuid'];
+						$array['call_center_queues'][0]["call_center_tiers"][$y]["domain_uuid"] = $domain_uuid;
 					}
 					$y++;
 				}
@@ -354,7 +373,7 @@
 			$export_variables = 'call_center_queue_uuid,sip_h_Alert-Info';
 			if (!empty($_SESSION['call_center']['export_vars'])) {
 				foreach ($_SESSION['call_center']['export_vars'] as $export_variable) {
-				    $export_variables .= ','.$export_variable;
+					$export_variables .= ','.$export_variable;
 				}
 			}
 
@@ -402,13 +421,11 @@
 			$dialplan_xml .= "</extension>\n";
 
 		//build the dialplan array
-			$array['dialplans'][0]["domain_uuid"] = $_SESSION['domain_uuid'];
+			$array['dialplans'][0]["domain_uuid"] = $domain_uuid;
 			$array['dialplans'][0]["dialplan_uuid"] = $dialplan_uuid;
 			$array['dialplans'][0]["dialplan_name"] = $queue_name;
 			$array['dialplans'][0]["dialplan_number"] = $queue_extension;
-			if (isset($queue_context)) {
-				$array['dialplans'][0]["dialplan_context"] = $queue_context;
-			}
+			$array['dialplans'][0]["dialplan_context"] = $queue_context;
 			$array['dialplans'][0]["dialplan_continue"] = "false";
 			$array['dialplans'][0]["dialplan_xml"] = $dialplan_xml;
 			$array['dialplans'][0]["dialplan_order"] = "230";
@@ -519,7 +536,7 @@
 		$sql = "select * from v_call_center_queues ";
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$sql .= "and call_center_queue_uuid = :call_center_queue_uuid ";
-		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$parameters['domain_uuid'] = $domain_uuid;
 		$parameters['call_center_queue_uuid'] = $call_center_queue_uuid;
 		$database = new database;
 		$call_center_queues = $database->select($sql, $parameters, 'all');
@@ -568,7 +585,7 @@
 	$sql .= "and t.call_center_agent_uuid = a.call_center_agent_uuid ";
 	$sql .= "and t.domain_uuid = :domain_uuid ";
 	$sql .= "order by tier_level asc, tier_position asc, a.agent_name asc";
-	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$parameters['domain_uuid'] = $domain_uuid;
 	$parameters['call_center_queue_uuid'] = $call_center_queue_uuid ?? null;
 	$database = new database;
 	$tiers = $database->select($sql, $parameters, 'all');
@@ -597,7 +614,7 @@
 	$sql = "select call_center_agent_uuid, agent_name from v_call_center_agents ";
 	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= "order by agent_name asc";
-	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$parameters['domain_uuid'] = $domain_uuid;
 	$database = new database;
 	$agents = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
@@ -773,7 +790,7 @@
 	echo "	".$text['label-extension']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='number' name='queue_extension' maxlength='255' min='0' step='1' value=\"".escape($queue_extension)."\" required='required'>\n";
+	echo "	<input class='formfld' type='number' name='queue_extension' maxlength='255' min='0' step='1' value=\"".escape($queue_extension)."\" required='required' placeholder=\"".($_SESSION['call_center']['extension_range']['text'] ?? '')."\">\n";
 	echo "<br />\n";
 	echo $text['description-extension']."\n";
 	echo "</td>\n";
@@ -786,7 +803,7 @@
 	echo "<td class='vncell' rowspan='2' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-'.$instance_label]."\n";
 	echo "</td>\n";
-	echo "<td class='vtable playback_progress_bar_background' id='recording_progress_bar_".$instance_id."' style='display: none; border-bottom: none; padding-top: 0 !important; padding-bottom: 0 !important;' align='left'><span class='playback_progress_bar' id='recording_progress_".$instance_id."'></span></td>\n";
+	echo "<td class='vtable playback_progress_bar_background' id='recording_progress_bar_".$instance_id."' onclick=\"recording_play('".$instance_id."', document.getElementById('".$instance_id."').value, document.getElementById('".$instance_id."').options[document.getElementById('".$instance_id."').selectedIndex].parentNode.getAttribute('data-type'));\" style='display: none; border-bottom: none; padding-top: 0 !important; padding-bottom: 0 !important;' align='left'><span class='playback_progress_bar' id='recording_progress_".$instance_id."'></span></td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
 	echo "<td class='vtable' align='left'>\n";
@@ -844,7 +861,7 @@
 			case 'ogg' : $mime_type = 'audio/ogg'; break;
 		}
 		echo "<audio id='recording_audio_".$instance_id."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".$instance_id."')\" onended=\"recording_reset('".$instance_id."');\" src='".($playable ?? '')."' type='".($mime_type ?? '')."'></audio>";
-		echo button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'icon'=>$_SESSION['theme']['button_icon_play'],'id'=>'recording_button_'.$instance_id,'style'=>'display: '.(!empty($mime_type) ? 'inline' : 'none'),'onclick'=>"recording_play('".$instance_id."')"]);
+		echo button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'icon'=>$_SESSION['theme']['button_icon_play'],'id'=>'recording_button_'.$instance_id,'style'=>'display: '.(!empty($mime_type) ? 'inline' : 'none'),'onclick'=>"recording_play('".$instance_id."', document.getElementById('".$instance_id."').value, document.getElementById('".$instance_id."').options[document.getElementById('".$instance_id."').selectedIndex].parentNode.getAttribute('data-type'))"]);
 		unset($playable, $mime_type);
 	}
 	echo "<br />\n";
@@ -1286,7 +1303,7 @@
 		echo "<td class='vncell' rowspan='2' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-'.$instance_label]."\n";
 		echo "</td>\n";
-		echo "<td class='vtable playback_progress_bar_background' id='recording_progress_bar_".$instance_id."' style='display: none; border-bottom: none; padding-top: 0 !important; padding-bottom: 0 !important;' align='left'><span class='playback_progress_bar' id='recording_progress_".$instance_id."'></span></td>\n";
+		echo "<td class='vtable playback_progress_bar_background' id='recording_progress_bar_".$instance_id."' onclick=\"recording_play('".$instance_id."', document.getElementById('".$instance_id."').value, document.getElementById('".$instance_id."').options[document.getElementById('".$instance_id."').selectedIndex].parentNode.getAttribute('data-type'));\" style='display: none; border-bottom: none; padding-top: 0 !important; padding-bottom: 0 !important;' align='left'><span class='playback_progress_bar' id='recording_progress_".$instance_id."'></span></td>\n";
 		echo "</tr>\n";
 		echo "<tr>\n";
 		echo "<td class='vtable' align='left'>\n";
@@ -1344,7 +1361,7 @@
 				case 'ogg' : $mime_type = 'audio/ogg'; break;
 			}
 			echo "<audio id='recording_audio_".$instance_id."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".$instance_id."')\" onended=\"recording_reset('".$instance_id."');\" src='".($playable ?? '')."' type='".($mime_type ?? '')."'></audio>";
-			echo button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'icon'=>$_SESSION['theme']['button_icon_play'],'id'=>'recording_button_'.$instance_id,'style'=>'display: '.(!empty($mime_type) ? 'inline' : 'none'),'onclick'=>"recording_play('".$instance_id."')"]);
+			echo button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'icon'=>$_SESSION['theme']['button_icon_play'],'id'=>'recording_button_'.$instance_id,'style'=>'display: '.(!empty($mime_type) ? 'inline' : 'none'),'onclick'=>"recording_play('".$instance_id."', document.getElementById('".$instance_id."').value, document.getElementById('".$instance_id."').options[document.getElementById('".$instance_id."').selectedIndex].parentNode.getAttribute('data-type'))"]);
 			unset($playable, $mime_type);
 		}
 		echo "<br />\n";
@@ -1429,4 +1446,3 @@
 	require_once "resources/footer.php";
 
 ?>
-

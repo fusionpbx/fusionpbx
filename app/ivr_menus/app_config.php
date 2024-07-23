@@ -132,6 +132,9 @@
 		$apps[$x]['permissions'][$y]['name'] = "ivr_menus_other_destinations";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "ivr_menu_audio_edit";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 
 	//default settings
 		$y=0;
@@ -214,6 +217,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Add answer to IVR Menu dialplan.";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "4f38d1d6-0d7f-4793-bf37-670b19951500";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "ivr_menu";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "extension_range";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "500-599";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the suggested extension range(s) for IVRs";
 
 	//cache details
 		$apps[$x]['cache']['key'] = "dialplan.\${ivr_menu_context}";

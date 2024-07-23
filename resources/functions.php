@@ -23,8 +23,36 @@
 
 	  Contributor(s):
 	  Mark J Crane <markjcrane@fusionpbx.com>
+	  Tim Fry <tim@fusionpbx.com>
 	  Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
-	 */
+	*/
+
+	if (!function_exists('str_starts_with')) {
+		/**
+		 * Checks if a string starts with a given substring
+		 * <p>Performs a case-sensitive check indicating if <b>haystack</b> begins with <b>needle</b>.</p>
+		 * @param string $haystack The string to search in.
+		 * @param string $needle The substring to search for in the <b>haystack</b>.
+		 * @return bool Returns <i>true</i> if <b>haystack</b> begins with <b>needle</b>, <i>false</i> otherwise
+		 * @link https://www.php.net/manual/en/function.str-starts-with.php Official PHP documentation
+		 */
+		function str_starts_with(string $haystack, string $needle): bool {
+			return substr_compare($haystack, $needle, 0, strlen($needle)) === 0;
+		}
+	}
+
+	if (!function_exists('str_ends_with')) {
+		/**
+		 * Checks if a string ends with a given substring
+		 * <p>Performs a case-sensitive check indicating if <b>haystack</b> ends with <b>needle</b>.</p>
+		 * @param string $haystack The string to search in.
+		 * @param string $needle The substring to search for in the <b>haystack</b>.
+		 * @return bool Returns <i>true</i> if <b>haystack</b> ends with <b>needle</b>, <i>false</i> otherwise.
+		 */
+		function str_ends_with(string $haystack, string $needle): bool {
+			return substr_compare($haystack, $needle, -1*strlen($needle)) === 0;
+		}
+	}
 
 	if (!function_exists('mb_strtoupper')) {
 
@@ -278,7 +306,7 @@
 			//set default false
 			$result = false;
 			//search for the permission
-			if (count($_SESSION["groups"]) > 0) {
+			if (isset($_SESSION['groups']) && count($_SESSION["groups"]) > 0) {
 				foreach ($_SESSION["groups"] as $row) {
 					if ($row['group_name'] == $group) {
 						$result = true;
@@ -296,7 +324,8 @@
 	if (!function_exists('permission_exists')) {
 
 		function permission_exists($permission_name, $operator = 'or') {
-			$permission = new permissions;
+			$database = database::new();
+			$permission = new permissions($database);
 			return $permission->exists($permission_name);
 		}
 
@@ -1135,25 +1164,55 @@
 //function to convert hexidecimal color value to rgb string/array value
 	if (!function_exists('hex_to_rgb')) {
 
-		function hex_to_rgb($hex, $delim = '') {
+		function hex_to_rgb($hex, $delim = null, $include_alpha = false, $alpha = 1) {
 			$hex = str_replace("#", "", $hex);
 
 			if (strlen($hex) == 3) {
 				$r = hexdec(substr($hex, 0, 1) . substr($hex, 0, 1));
 				$g = hexdec(substr($hex, 1, 1) . substr($hex, 1, 1));
 				$b = hexdec(substr($hex, 2, 1) . substr($hex, 2, 1));
-			} else {
+			}
+			else {
 				$r = hexdec(substr($hex, 0, 2));
 				$g = hexdec(substr($hex, 2, 2));
 				$b = hexdec(substr($hex, 4, 2));
 			}
 			$rgb = array($r, $g, $b);
+			if ($include_alpha) { $rgb[] = $alpha; }
 
 			if (!empty($delim)) {
 				return implode($delim, $rgb); // return rgb delimited string
-			} else {
+			}
+			else {
 				return $rgb; // return array of rgb values
 			}
+		}
+
+	}
+
+//function to convert a hex or rgb/a color to an rgba array
+	if (!function_exists('color_to_rgba_array')) {
+
+		function color_to_rgba_array($string, $alpha = null) {
+			if (!empty($string)) {
+				if (strpos($string, '#') === 0) { //is hex
+					return hex_to_rgb($string, null, true, $alpha);
+				}
+				else if (strpos($string, 'rgb') === 0) { //is rgb/a
+					$string = str_replace(['rgba(','rgb(',')'], '', $string); //values to csv
+					$array = explode(',', $string); //create array
+					if (!empty($array)) {
+						if (@sizeof($array) == 3) { //add alpha
+							$array[] = $alpha ?? 1;
+						}
+						else if (@sizeof($array) == 4 && !empty($alpha)) { //replace alpha
+							$array[3] = $alpha;
+						}
+					}
+					return !empty($array) && is_array($array) ? $array : false;
+				}
+			}
+			return false;
 		}
 
 	}
@@ -2099,7 +2158,7 @@
 			$dir = !empty($dir) && strtolower($dir) == 'desc' ? 'desc' : 'asc';
 			if (!empty($col)) {
 				if ($sort == 'natural' && $db_type == "pgsql") {
-					return $order_by . 'natural_sort(' . $col . ') ' . $dir . ' ';
+					return $order_by . 'natural_sort(' . $col . '::text) ' . $dir . ' ';
 				} else {
 					return $order_by . $col . ' ' . $dir . ' ';
 				}
@@ -2114,7 +2173,7 @@
 					}
 				} else {
 					if ($sort == 'natural' && $db_type == "pgsql") {
-						return $order_by . 'natural_sort(' . $col_default . ') ' . $dir_default . ' ';
+						return $order_by . 'natural_sort(' . $col_default . '::text) ' . $dir_default . ' ';
 					} else {
 						return $order_by . $col_default . ' ' . $dir_default . ' ';
 					}
@@ -2304,6 +2363,7 @@ if (!function_exists('git_pull')) {
 		$update_status = false;
 
 		if (sizeof($response_source_update) == 0) {
+			chdir($cwd);
 			return array('result' => false, 'message' => null);
 		}
 
@@ -2333,7 +2393,7 @@ if (!function_exists('is_git_repo')) {
 		chdir($path);
 		exec("git rev-parse --show-toplevel", $git_repo, $git_repo_response);
 		chdir($cwd);
-		if (($git_repo[0]) != $cwd && $git_repo_response == 0) {
+		if ((is_array($git_repo) && count($git_repo) > 0) && ($git_repo[0] != $cwd) && $git_repo_response == 0) {
 			return $git_repo[0];
 		}
 		return false;

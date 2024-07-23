@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2023
+	Portions created by the Initial Developer are Copyright (C) 2008-2024
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -54,7 +54,7 @@
 
 //set a default file size
 	if (!isset($_POST['size']) || empty($_POST['size'])) {
-		$_POST['size'] = "32";
+		$_POST['size'] = "512";
 	}
 
 //set a default filter
@@ -132,7 +132,17 @@
 	echo 		$text['label-filter']." <input type='text' name='filter' class='formfld' style='width: 150px; text-align: center; margin-right: 20px;' value=\"".escape($_POST['filter'])."\" onclick='this.select();'>";
 	echo 		"<label style='margin-right: 20px; margin-top: 4px;'><input type='checkbox' name='line_number' id='line_number' value='1' ".($_POST['line_number'] == 1 ? 'checked' : null)."> ".$text['label-line_number']."</label>";
 	echo 		"<label style='margin-right: 20px; margin-top: 4px;'><input type='checkbox' name='sort' id='sort' value='desc' ".($_POST['sort'] == 'desc' ? 'checked' : null)."> ".$text['label-sort']."</label>";
-	echo 		$text['label-display']." <input type='text' class='formfld' style='width: 50px; text-align: center;' name='size' value=\"".escape($_POST['size'])."\" onclick='this.select();'> ".$text['label-size'];
+	echo 		$text['label-display']." <select class='formfld' style='width: 60px; text-align: center;' name='size'>";
+	echo 			"<option value='32' ".($_POST['size'] == 32 ? "selected='selected'" : null).">32</option>";
+	echo 			"<option value='64' ".($_POST['size'] == 64 ? "selected='selected'" : null).">64</option>";
+	echo 			"<option value='128' ".($_POST['size'] == 128 ? "selected='selected'" : null).">128</option>";
+	echo 			"<option value='256' ".($_POST['size'] == 256 ? "selected='selected'" : null).">256</option>";
+	echo 			"<option value='512' ".($_POST['size'] == 512 ? "selected='selected'" : null).">512</option>";
+	echo 			"<option value='1024' ".($_POST['size'] == 1024 ? "selected='selected'" : null).">1024</option>";
+	echo 			"<option value='2048' ".($_POST['size'] == 2048 ? "selected='selected'" : null).">2048</option>";
+	echo 			"<option value='4096' ".($_POST['size'] == 4096 ? "selected='selected'" : null).">4096</option>";
+	echo 		"</select> ";
+	echo 		$text['label-size'];
 	echo button::create(['type'=>'submit','label'=>$text['button-update'],'icon'=>$_SESSION['theme']['button_icon_save'],'style'=>'margin-left: 15px;','name'=>'submit']);
 	if (permission_exists('log_download')) {
 		echo button::create(['type'=>'button','label'=>$text['button-download'],'icon'=>$_SESSION['theme']['button_icon_download'],'style'=>'margin-left: 15px;','link'=>'log_viewer.php?a=download&n='.basename($log_file)]);
@@ -201,19 +211,12 @@
 			$file_size = filesize($log_file);
 		}
 
-		/*
-		// removed: duplicate of above
-		if (isset($_POST['submit'])) {
-			if (empty($_POST['size'])) { $_POST['size'] = "32"; }
-		}
-		*/
-
 		echo "<div style='padding-bottom: 10px; text-align: right; color: #fff; margin-bottom: 15px; border-bottom: 1px solid #fff;'>";
 		$user_file_size = '32768';
 		if (isset($_POST['submit'])) {
 			if (!is_numeric($_POST['size'])) {
 				//should generate log warning here...
-				$user_file_size = 1024 * 32;
+				$user_file_size = 512 * 1024;
 			}
 			else {
 				$user_file_size = $_POST['size'] * 1024;

@@ -98,7 +98,7 @@
 				//update the user_status
 					if (is_uuid($call_center_agent_uuid)) {
 						$esl = event_socket::create();
-						$switch_cmd .= "callcenter_config agent set status ".$call_center_agent_uuid." '".$user_status."'";
+						$switch_cmd = "callcenter_config agent set status ".$call_center_agent_uuid." '".$user_status."'";
 						$switch_result = event_socket::api($switch_cmd);
 					}
 
@@ -260,7 +260,7 @@ unset($refresh_default);
 
 		if (this.xmlHttp.readyState == 4 && (this.xmlHttp.status == 200 || !/^http/.test(window.location.href)))
 			//this.el.innerHTML = this.xmlHttp.responseText;
-			document.getElementById('ajax_reponse').innerHTML = this.xmlHttp.responseText;
+			document.getElementById('ajax_response').innerHTML = this.xmlHttp.responseText;
 		if (document.getElementById('sort')) {
 			if (document.getElementById('sort').value != "")
 				document.getElementById('sort1').value=document.getElementById('sort').value;
@@ -281,7 +281,7 @@ unset($refresh_default);
 			echo "url += '&debug';";
 		}
 		?>
-		new loadXmlHttp(url, 'ajax_reponse');
+		new loadXmlHttp(url, 'ajax_response');
 		refresh_start();
 	}
 
@@ -369,7 +369,7 @@ unset($refresh_default);
 				echo "url += '&debug';";
 			}
 			?>
-			new loadXmlHttp(url, 'ajax_reponse');
+			new loadXmlHttp(url, 'ajax_response');
 		}, refresh);
 	}
 
@@ -588,7 +588,7 @@ if (is_array($_SESSION['user']['extension'])) {
 	}
 }
 
-echo "<div id='ajax_reponse'></div>\n";
+echo "<div id='ajax_response'></div>\n";
 echo "<div id='cmd_response' style='display: none;'></div>\n";
 echo "<br><br>\n";
 

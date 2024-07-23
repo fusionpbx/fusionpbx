@@ -7,6 +7,7 @@
 	$apps[$x]['menu'][$y]['title']['de-at'] = "SIP Profile";
 	$apps[$x]['menu'][$y]['title']['de-ch'] = "SIP Profile";
 	$apps[$x]['menu'][$y]['title']['de-de'] = "SIP Profile";
+	$apps[$x]['menu'][$y]['title']['el-gr'] = "Προφίλ SIP";
 	$apps[$x]['menu'][$y]['title']['es-cl'] = "Perfiles SIP";
 	$apps[$x]['menu'][$y]['title']['es-mx'] = "Perfiles SIP";
 	$apps[$x]['menu'][$y]['title']['fr-ca'] = "Profils SIP";
@@ -21,6 +22,7 @@
 	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Профили SIP";
 	$apps[$x]['menu'][$y]['title']['sv-se'] = "SIP Profiler";
 	$apps[$x]['menu'][$y]['title']['uk-ua'] = "SIP профілі";
+	$apps[$x]['menu'][$y]['title']['tr-tr'] = "SIP Profilleri";
 	$apps[$x]['menu'][$y]['title']['zh-cn'] = "SIP 配置文件";
 	$apps[$x]['menu'][$y]['title']['ja-jp'] = "SIP プロファイル";
 	$apps[$x]['menu'][$y]['title']['ko-kr'] = "SIP 프로필";

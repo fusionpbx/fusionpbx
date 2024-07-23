@@ -193,11 +193,11 @@
 
 <!-- Connection Request Username-->
 <!-- String-->
-<P4511></P4511>
+<P4511>{$mac|replace:'-':''|upper}</P4511>
 
 <!-- Connection Request Password-->
 <!-- String-->
-<P4512></P4512>
+<P4512>{$mac|replace:'-':''|upper}</P4512>
 
 <!-- CPE SSL Certificate-->
 <P8220></P8220>
@@ -262,7 +262,11 @@
 
 <!-- NTP Server-->
 <!-- Server address-->
-<P30>us.pool.ntp.org</P30>
+{if isset($ntp_server_primary)}
+<P30>{$ntp_server_primary}</P30>
+{else}
+<P30>pool.ntp.org</P30>
+{/if}
 
 <!-- Syslog Server (name of the server, max length is 64 characters)-->
 <!-- Server address-->

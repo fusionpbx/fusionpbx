@@ -73,7 +73,7 @@
 		$dialplan_number = $_POST["dialplan_number"];
 		$dialplan_order = $_POST["dialplan_order"];
 
-		$dialplan_anti_action = $_POST["dialplan_anti_action"];
+		$dialplan_anti_action = $_POST["dialplan_anti_action"] ?? '';
 		$dialplan_anti_action_array = explode(":", $dialplan_anti_action);
 		$dialplan_anti_action_app = array_shift($dialplan_anti_action_array);
 		$dialplan_anti_action_data = join(':', $dialplan_anti_action_array);
@@ -272,7 +272,7 @@
 			if (is_array($_REQUEST['variable'])) {
 				foreach ($_REQUEST['variable'] as $group_id => $meh) {
 					if (
-						(!empty($_REQUEST['preset']) && is_array($_REQUEST['preset']) && in_array($group_id, $_REQUEST['preset']) && $_REQUEST['dialplan_action'][$group_id] == '' && $_REQUEST['default_preset_action'] == '' && $_REQUEST['dialplan_anti_action'] == '') ||
+						(!empty($_REQUEST['preset']) && is_array($_REQUEST['preset']) && in_array($group_id, $_REQUEST['preset']) && empty($_REQUEST['dialplan_action'][$group_id]) && empty($_REQUEST['default_preset_action']) && empty($_REQUEST['dialplan_anti_action'])) ||
 						((empty($_REQUEST['preset']) || !is_array($_REQUEST['preset']) || !in_array($group_id, $_REQUEST['preset'])) && $_REQUEST['dialplan_action'][$group_id] == '')
 						) {
 						unset($_REQUEST['variable'][$group_id]);
@@ -777,8 +777,8 @@
 					case 'mon': //month names
 						<?php
 						for ($m = 1; $m <= 12; $m++) {
-							echo "sel_start.options[sel_start.options.length] = new Option('".date('F', strtotime('2015-'.number_pad($m,2).'-01'))."', ".$m.");\n";
-							echo "sel_stop.options[sel_stop.options.length] = new Option('".date('F', strtotime('2015-'.number_pad($m,2).'-01'))."', ".$m.");\n";
+							echo "sel_start.options[sel_start.options.length] = new Option('".$text[strtolower(date('F', strtotime('2015-'.$m.'-01')))]."', ".$m.");\n";
+							echo "sel_stop.options[sel_stop.options.length] = new Option('".$text[strtolower(date('F', strtotime('2015-'.$m.'-01')))]."', ".$m.");\n";
 						}
 						?>
 						break;
@@ -800,8 +800,8 @@
 					case 'wday': //week days
 						<?php
 						for ($d = 1; $d <= 7; $d++) {
-							echo "sel_start.options[sel_start.options.length] = new Option('".date('l', strtotime('Sunday +'.($d-1).' days'))."', ".$d.");\n";
-							echo "sel_stop.options[sel_stop.options.length] = new Option('".date('l', strtotime('Sunday +'.($d-1).' days'))."', ".$d.");\n";
+							echo "sel_start.options[sel_start.options.length] = new Option('".$text[strtolower(date('l', strtotime('Sunday +'.($d-1).' days')))]."', ".$d.");\n";
+							echo "sel_stop.options[sel_stop.options.length] = new Option('".$text[strtolower(date('l', strtotime('Sunday +'.($d-1).' days')))]."', ".$d.");\n";
 						}
 						?>
 						break;
@@ -821,24 +821,48 @@
 						break;
 
 					case 'hour': //hours of day
-						for (h = 0; h <= 23; h++) {
-							sel_start.options[sel_start.options.length] = new Option(((h != 0) ? ((h >= 12) ? ((h == 12) ? h : (h - 12)) + ' PM' : h + ' AM') : '12 AM'), h);
-							sel_stop.options[sel_stop.options.length] = new Option(((h != 0) ? ((h >= 12) ? ((h == 12) ? h : (h - 12)) + ' PM' : h + ' AM') : '12 AM'), h);
+						<?php
+						if ( $_SESSION['domain']['time_format']['text'] =="24h") {
+						
+							for ($h = 0; $h <= 23; $h++) {
+								echo "sel_start.options[sel_start.options.length] = new Option(".$h.", ".$h.");\n";
+								echo "sel_stop.options[sel_stop.options.length] = new Option(".$h.", ".$h.");\n";
+							}
+
+						} else {
+
+							for ($h = 0; $h <= 23; $h++) {
+								echo "sel_start.options[sel_start.options.length] = new Option(((".$h." != 0) ? ((".$h." >= 12) ? ((".$h." == 12) ? ".$h." : (".$h." - 12)) + ' PM' : ".$h." + ' AM') : '12 AM'), ".$h.");\n";
+								echo "sel_stop.options[sel_stop.options.length] = new Option(((".$h." != 0) ? ((".$h." >= 12) ? ((".$h." == 12) ? ".$h." : (".$h." - 12)) + ' PM' : ".$h." + ' AM') : '12 AM'), ".$h.");\n";
+							}
 						}
+						?>
 						break;
 
 					case 'time-of-day': //time of day
-						for (h = 0; h <= 23; h++) {
-							for (m = 0; m <= 59; m += 1) {
-								sel_start.options[sel_start.options.length] = new Option(((h != 0) ? ((h >= 12) ? ((h == 12) ? h : (h - 12)) + ':' + pad(m, 2) + ' PM' : h + ':' + pad(m, 2) + ' AM') : '12:' + pad(m, 2) + ' AM'), pad(h, 2) + ':' + pad(m, 2));
-								sel_stop.options[sel_stop.options.length] = new Option(((h != 0) ? ((h >= 12) ? ((h == 12) ? h : (h - 12)) + ':' + pad(m, 2) + ' PM' : h + ':' + pad(m, 2) + ' AM') : '12:' + pad(m, 2) + ' AM'), pad(h, 2)  + ':' + pad(m, 2));
+						<?php
+						if ( $_SESSION['domain']['time_format']['text'] =="24h") {
+
+							for ($h = 0; $h <= 23; $h++) {
+								for ($m = 0; $m <= 59; $m++) {
+									echo "sel_start.options[sel_start.options.length] = new Option(('0'+'".$h."').slice(-2)+':'+('0'+'".$m."').slice(-2),pad('".$h."', 2)  + ':' + pad(".$m.", 2));\n";
+									echo "sel_stop.options[sel_stop.options.length] = new Option(('0'+'".$h."').slice(-2)+':'+('0'+'".$m."').slice(-2),pad('".$h."', 2)  + ':' + pad(".$m.", 2));\n";
+								}
 							}
+
+						} else {
+							for ($h = 0; $h <= 23; $h++) {
+								for ($m = 0; $m <= 59; $m++) {
+									echo "sel_start.options[sel_start.options.length] = new Option(((".$h." != 0) ? ((".$h." >= 12) ? ((".$h." == 12) ? ".$h." : (".$h." - 12)) + ':' + pad(".$m.", 2) + ' PM' : ".$h." + ':' + pad(".$m.", 2) + ' AM') : '12:' + pad(".$m.", 2) + ' AM'), pad(".$h.", 2) + ':' + pad(".$m.", 2));\n";
+									echo "sel_stop.options[sel_stop.options.length] = new Option(((".$h." != 0) ? ((".$h." >= 12) ? ((".$h." == 12) ? ".$h." : (".$h." - 12)) + ':' + pad(".$m.", 2) + ' PM' : ".$h." + ':' + pad(".$m.", 2) + ' AM') : '12:' + pad(".$m.", 2) + ' AM'), pad(".$h.", 2) + ':' + pad(".$m.", 2));\n";
+								}
+						}
 						}
 						//h = 23;
 						//m = 59;
 						//sel_stop.options[sel_stop.options.length] = new Option(((h != 0) ? ((h >= 12) ? ((h == 12) ? h : (h - 12)) + ':' + pad(m, 2) + ' PM' : h + ':' + pad(m, 2) + ' AM') : '12:' + pad(m, 2) + ' AM'), pad(h, 2)  + ':' + pad(m, 2));
+						?>
 						break;
-
 				}
 
 			}
@@ -974,7 +998,7 @@ echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
 echo "	".$text['label-extension']."\n";
 echo "</td>\n";
 echo "<td class='vtable' align='left'>\n";
-echo "	<input class='formfld' type='text' name='dialplan_number' id='dialplan_number' maxlength='255' value=\"".escape($dialplan_number ?? null)."\">\n";
+echo "	<input class='formfld' type='text' name='dialplan_number' id='dialplan_number' maxlength='255' value=\"".escape($dialplan_number ?? null)."\" required='required' placeholder=\"".($_SESSION['time_conditions']['extension_range']['text'] ?? '')."\">\n";
 echo "	<br />\n";
 echo "	".$text['description-extension']."<br />\n";
 echo "</td>\n";
@@ -1005,7 +1029,7 @@ function add_custom_condition($destination, $group_id, $dialplan_action = '') {
 	//$destination = new destinations;
 	echo $destination->select('dialplan', 'dialplan_action['.$group_id.']', $dialplan_action);
 	echo "						</td>\n";
-	echo "						<td width='100%'><input class='formfld' style='margin-left: 5px;' type='text' name='group_".$group_id."' id='group_".$group_id."' maxlength='255' value=\"".$group_id."\"></td>\n";
+	echo "						<td><input class='formfld' style='margin-left: 5px; max-width: 50px; text-align: center;' type='text' name='group_".$group_id."' id='group_".$group_id."' maxlength='6' value=\"".$group_id."\"></td>\n";
 	echo "					</tr>";
 	echo "				</table>\n";
 	echo "			</td>\n";
@@ -1173,9 +1197,17 @@ if ($action == 'update') {
 									echo "<script>\n";
 									echo "	condition_id = add_condition(".$preset_group_id.",'preset');\n";
 									echo "	$('#variable_".$preset_group_id."_' + condition_id + ' option[value=\"".$preset_variable."\"]').prop('selected', true);\n";
-									echo "	load_value_fields(".$preset_group_id.", condition_id, '".$preset_variable."');\n";
-									echo "	$('#value_".$preset_group_id."_' + condition_id + '_start option[value=\"".$preset_value_start."\"]').prop('selected', true);\n";
-									echo "	$('#value_".$preset_group_id."_' + condition_id + '_stop option[value=\"".$preset_value_stop."\"]').prop('selected', true);\n";
+									if ($preset_variable == 'date-time') {
+										echo "	change_to_input(document.getElementById('value_".$preset_group_id."_' + condition_id + '_start'));\n";
+										echo "	change_to_input(document.getElementById('value_".$preset_group_id."_' + condition_id + '_stop'));\n";
+										echo "	$('#value_".$preset_group_id."_' + condition_id + '_start').val('".$preset_value_start."');\n";
+										echo "	$('#value_".$preset_group_id."_' + condition_id + '_stop').val('".$preset_value_stop."');\n";
+									}
+									else {
+										echo "	load_value_fields(".$preset_group_id.", condition_id, '".$preset_variable."');\n";
+										echo "	$('#value_".$preset_group_id."_' + condition_id + '_start option[value=\"".$preset_value_start."\"]').prop('selected', true);\n";
+										echo "	$('#value_".$preset_group_id."_' + condition_id + '_stop option[value=\"".$preset_value_stop."\"]').prop('selected', true);\n";
+									}
 									echo "</script>\n\n";
 								}
 							}
