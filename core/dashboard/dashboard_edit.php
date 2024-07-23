@@ -626,7 +626,7 @@
 		echo "	<select name='dashboard_content_text_align' class='formfld'>\n";
 		echo "		<option value='left' ".(!empty($dashboard_content_text_align) && $dashboard_content_text_align == 'left' ? "selected='selected'" : null).">".$text['label-left']."</option>\n";
 		echo "		<option value='right' ".(!empty($dashboard_content_text_align) && $dashboard_content_text_align == 'right' ? "selected='selected'" : null).">".$text['label-right']."</option>\n";
-		echo "		<option value='middle' ".(!empty($dashboard_content_text_align) && $dashboard_content_text_align == 'middle' ? "selected='selected'" : null).">".$text['label-middle']."</option>\n";
+		echo "		<option value='center' ".(!empty($dashboard_content_text_align) && $dashboard_content_text_align == 'center' ? "selected='selected'" : null).">".$text['label-center']."</option>\n";
 		echo "	</select>\n";		echo "<br />\n";
 		echo $text['description-dashboard_content_text_align']."\n";
 		echo "</td>\n";
