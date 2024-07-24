@@ -204,7 +204,10 @@
 	echo "	<div class='heading'><b>".$text['title-voicemails']." (".$num_rows.")</b></div>\n";
 	echo "	<div class='actions'>\n";
 	if (permission_exists('voicemail_import')) {
-		echo button::create(['type'=>'button','label'=>$text['button-import'],'icon'=>$_SESSION['theme']['button_icon_import'],'style'=>'margin-right: 15px;','link'=>'voicemail_imports.php']);
+		echo button::create(['type'=>'button','label'=>$text['button-import'],'icon'=>$_SESSION['theme']['button_icon_import'],'style'=>'','link'=>'voicemail_imports.php']);
+	}
+	if (permission_exists('voicemail_export')) {
+		echo button::create(['type'=>'button','label'=>$text['button-export'],'icon'=>$_SESSION['theme']['button_icon_export'],'style'=>'margin-right: 15px;','link'=>'voicemail_export.php']);
 	}
 	if (permission_exists('voicemail_add')) {
 		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'id'=>'btn_add','link'=>'voicemail_edit.php']);
