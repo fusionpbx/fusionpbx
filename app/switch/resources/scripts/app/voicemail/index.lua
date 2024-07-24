@@ -500,6 +500,9 @@
 				--save the message
 					record_message();
 
+				-- build full path to file
+					local full_path = voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext
+
 				--process base64
 					if (storage_type == "base64") then
 						--show the storage type
@@ -507,9 +510,6 @@
 
 						--include the file io
 							local file = require "resources.functions.file"
-
-						-- build full path to file
-							local full_path = voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext
 
 							if file_exists(full_path) then
 								--read file content as base64 string
@@ -537,16 +537,16 @@
 				--show the storage type
 					freeswitch.consoleLog("notice", "[voicemail] ".. storage_type .. "\n");
 
-					count = 0
+					destination_count = 0
 					for k,v in pairs(destinations) do
-						count = count + 1
+						destination_count = destination_count + 1
 					end
 
 				--loop through the voicemail destinations
 					y = 1;
 					for key,row in pairs(destinations) do
 						--determine uuid
-							if (y == count) then
+							if (y == destination_count) then
 								voicemail_message_uuid = uuid;
 							else
 								voicemail_message_uuid = api:execute("create_uuid");
@@ -680,8 +680,8 @@
 							end
 					end --for
 
-				--whether to keep the voicemail message and details local after forward
-					if (voicemail_local_after_email == "false" and voicemail_local_after_forward == "false") then
+				--whether to keep the voicemail message and details local after forward (local after email is handled elsewhere)
+					if (string.len(voicemail_mail_to) <= 2 and destination_count > 1 and voicemail_local_after_forward == "false") then
 						--delete the voicemail message details
 							local sql = [[DELETE FROM v_voicemail_messages
 								WHERE domain_uuid = :domain_uuid
