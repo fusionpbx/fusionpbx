@@ -41,23 +41,17 @@ class session {
 	public static function filesystem_maintenance(settings $settings): void {
 		$retention_days = $settings->get('session', 'filesystem_retention_days', '');
 		if (!empty($retention_days) && is_numeric($retention_days)) {
+
 			//get the session location
-			if (session_status() === PHP_SESSION_ACTIVE) {
-				//session should not normally be running already in a service
-				$session_location = session_save_path();
-			} else {
-				//session has to be started to get the path
-				session_start();
-				$session_location = session_save_path();
-				session_destroy();
-			}
+			$session_location = ini_get('session.save_path');
+
 			//loop through all files and check the modified time
 			$files = glob($session_location . '/sess_*');
 			foreach ($files as $file) {
 				if (maintenance_service::days_since_modified($file) > $retention_days) {
 					//remove old file
 					if (unlink($file)) {
-						maintenance_service::log_write(self::class, "Removed old session file $file");
+						maintenance_service::log_write(self::class, "Removed old session file $file that was older than $retention_days days");
 					} else {
 						maintenance_service::log_write(self::class, "Unable to remove old session file $file", null, maintenance_service::LOG_ERROR);
 					}
