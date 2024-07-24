@@ -783,6 +783,9 @@
 	else if ($device_template == "acrobits/default") {
 		$qr_code_enabled = true;
 	}
+	else if ($device_template == "groundwire/default") {
+		$qr_code_enabled = true;
+	}
 	else {
 		$qr_code_enabled = false;
 	}
@@ -891,6 +894,26 @@
 					$content = trim($template, "\r\n");
 					unset($template);
 					unset($acrobits_code);
+				}
+			}
+
+			//build content for groundwire
+			else if ($device_template == 'groundwire/default') {
+				//check custom template provision location
+				if (is_file('/usr/share/fusionpbx/templates/provision/'.$device_template.'/qr_template.txt')) {
+					$template = file_get_contents('/usr/share/fusionpbx/templates/provision/'.$device_template.'/qr_template.txt');
+				}
+				else if (is_file('/var/www/fusionpbx/resources/templates/provision/'.$device_template.'/qr_template.txt')) {
+					$template = file_get_contents('/var/www/fusionpbx/resources/templates/provision/'.$device_template.'/qr_template.txt');
+				}
+				else if (is_file('/usr/local/www/fusionpbx/resources/templates/provision/'.$device_template.'/qr_template.txt')) {
+					$template = file_get_contents('/usr/local/www/fusionpbx/resources/templates/provision/'.$device_template.'/qr_template.txt');
+				}
+				if (!empty($template)) {
+					$template = str_replace('{$server_address}', $row['server_address'], $template);
+					$template = str_replace('{$mac}', $device_address, $template);
+					$content = trim($template, "\r\n");
+					unset($template);
 				}
 			}
 
