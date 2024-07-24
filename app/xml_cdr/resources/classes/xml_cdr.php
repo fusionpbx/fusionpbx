@@ -2117,12 +2117,13 @@ if (!class_exists('xml_cdr')) {
 					$sql = "delete from v_{$table} WHERE insert_date < NOW() - INTERVAL '{$xml_cdr_retention_days} days'"
 						. " and domain_uuid = '{$domain_uuid}'";
 					$database->execute($sql);
-
+					$code = $database->message['code'] ?? 0;
 					//record result
-					if ($database->message['code'] === 200) {
-						maintenance_service::log_write(self::class, "Successfully removed XML CDR entries from $domain_name", $domain_uuid);
+					if ($code == 200) {
+						maintenance_service::log_write(self::class, "Successfully removed entries older than $xml_cdr_retention_days", $domain_uuid);
 					} else {
-						maintenance_service::log_write(self::class, "Unable to remove XML CDR records for domain $domain_name", $domain_uuid, maintenance_service::LOG_ERROR);
+						$message = $database->message['message'] ?? "An unknown error has occurred";
+						maintenance_service::log_write(self::class, "XML CDR " . "Unable to remove old database records. Error message: $message ($code)", $domain_uuid, maintenance_service::LOG_ERROR);
 					}
 
 					//clear out old xml_cdr_flow records
@@ -2130,12 +2131,13 @@ if (!class_exists('xml_cdr')) {
 						$sql = "delete from v_xml_cdr_flow WHERE insert_date < NOW() - INTERVAL '{$xml_cdr_flow_retention_days} days'"
 							. " and domain_uuid = '{$domain_uuid}";
 						$database->execute($sql);
-
+						$code = $database->message['code'] ?? 0;
 						//record result
-						if ($database->message['code'] === 200) {
+						if ($database->message['code'] == 200) {
 							maintenance_service::log_write(self::class, "Successfully removed XML CDR FLOW entries from $domain_name", $domain_uuid);
 						} else {
-							maintenance_service::log_write(self::class, "Unable to remove XML CDR FLOW records for domain $domain_name", $domain_uuid, maintenance_service::LOG_ERROR);
+							$message = $database->message['message'] ?? "An unknown error has occurred";
+							maintenance_service::log_write(self::class, "XML CDR FLOW " . "Unable to remove old database records. Error message: $message ($code)", $domain_uuid, maintenance_service::LOG_ERROR);
 						}
 					}
 
@@ -2144,12 +2146,13 @@ if (!class_exists('xml_cdr')) {
 						$sql = "DELETE FROM v_xml_cdr_json WHERE insert_date < NOW() - INTERVAL '{$xml_cdr_json_retention_days} days'"
 							. " and domain_uuid = '{$domain_uuid}";
 						$database->execute($sql);
-
+						$code = $database->message['code'] ?? 0;
 						//record result
-						if ($database->message['code'] === 200) {
+						if ($database->message['code'] == 200) {
 							maintenance_service::log_write(self::class, "Successfully removed XML CDR JSON entries from $domain_name", $domain_uuid);
 						} else {
-							maintenance_service::log_write(self::class, "Unable to remove XML CDR JSON records for domain $domain_name", $domain_uuid, maintenance_service::LOG_ERROR);
+							$message = $database->message['message'] ?? "An unknown error has occurred";
+							maintenance_service::log_write(self::class, "XML CDR JSON " . "Unable to remove old database records. Error message: $message ($code)", $domain_uuid, maintenance_service::LOG_ERROR);
 						}
 					}
 
@@ -2158,12 +2161,13 @@ if (!class_exists('xml_cdr')) {
 						$sql = "DELETE FROM v_xml_cdr_logs WHERE insert_date < NOW() - INTERVAL '{$xml_cdr_logs_retention_days} days'"
 							. " and domain_uuid = '{$domain_uuid}'";
 						$database->execute($sql);
-
+						$code = $database->message['code'] ?? 0;
 						//record result
 						if ($database->message['code'] === 200) {
 							maintenance_service::log_write(self::class, "Successfully removed XML CDR LOG entries from $domain_name", $domain_uuid);
 						} else {
-							maintenance_service::log_write(self::class, "Unable to remove XML CDR LOG records for domain $domain_name", $domain_uuid, maintenance_service::LOG_ERROR);
+							$message = $database->message['message'] ?? "An unknown error has occurred";
+							maintenance_service::log_write(self::class, "XML CDR LOG " . "Unable to remove old database records. Error message: $message ($code)", $domain_uuid, maintenance_service::LOG_ERROR);
 						}
 					}
 				}
