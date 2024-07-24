@@ -1325,10 +1325,12 @@
 					$sql = "delete from v_{$table} WHERE to_timestamp(created_epoch) < NOW() - INTERVAL '{$retention_days} days'"
 					. " and domain_uuid = '{$domain_uuid}'";
 					$database->execute($sql);
-					if ($database->message['code'] === 200) {
-						maintenance_service::log_write(self::class, "Successfully removed voicemail entries from $domain_name", $domain_uuid);
+					$code = $database->message['code'] ?? 0;
+					if ($database->message['code'] == 200) {
+						maintenance_service::log_write(self::class, "Successfully removed entries older than $retention_days", $domain_uuid);
 					} else {
-						maintenance_service::log_write(self::class, "Unable to remove records for domain $domain_name", $domain_uuid, maintenance_service::LOG_ERROR);
+						$message = $database->message['message'] ?? "An unknown error has occurred";
+						maintenance_service::log_write(self::class, "Unable to remove old database records. Error message: $message ($code)", $domain_uuid, maintenance_service::LOG_ERROR);
 					}
 				}
 			}
