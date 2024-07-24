@@ -263,10 +263,12 @@ if (!class_exists('fax_queue')) {
 					$sql = "delete from v_fax_queue where fax_status = 'sent' and fax_date < NOW() - INTERVAL '$retention_days days'";
 					$sql .= " and domain_uuid = '$domain_uuid'";
 					$database->execute($sql);
-					if (!empty($database->message['code']) && $database->message['code'] == 200) {
-						maintenance_service::log_write(self::class, "removed successfully", $domain_uuid);
+					$code = $database->message['code'] ?? 0;
+					if ($code == 200) {
+						maintenance_service::log_write(self::class, "Successfully removed entries older than $retention_days", $domain_uuid);
 					} else {
-						maintenance_service::log_write(self::class, "Unable to remove database entries", $domain_uuid, maintenance_service::LOG_ERROR);
+						$message = $database->message['message'] ?? "An unknown error has occurred";
+						maintenance_service::log_write(self::class, "Unable to remove old database records. Error message: $message ($code)", $domain_uuid, maintenance_service::LOG_ERROR);
 					}
 				}
 			}

@@ -57,12 +57,14 @@ class database_transactions {
 				$sql = "delete from v_{$table} WHERE transaction_date < NOW() - INTERVAL '{$retention_days} days'"
 					. " and domain_uuid = '{$domain_uuid}'";
 				$database->execute($sql);
-				if ($database->message['code'] === 200) {
+				$code = $database->message['code'] ?? 0;
+				if ($code == 200) {
 					//success
-					maintenance_service::log_write(self::class, "Successfully removed database_transaction entries from $domain_name", $domain_uuid);
+					maintenance_service::log_write(self::class, "Successfully removed entries older than $retention_days", $domain_uuid);
 				} else {
 					//failure
-					maintenance_service::log_write(self::class, "Unable to remove records for domain $domain_name", $domain_uuid, maintenance_service::LOG_ERROR);
+					$message = $database->message['message'] ?? "An unknown error has occurred";
+					maintenance_service::log_write(self::class, "Unable to remove old database records. Error message: $message ($code)", $domain_uuid, maintenance_service::LOG_ERROR);
 				}
 			} else {
 				//report an invalid setting

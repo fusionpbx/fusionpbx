@@ -304,7 +304,7 @@ if (!class_exists('users')) {
 					$database->execute($sql);
 					$code = $database->message['code'] ?? 0;
 					if ($code == 200) {
-						maintenance_service::log_write(self::class, "Removed database entries older than $retention_days", $domain_uuid);
+						maintenance_service::log_write(self::class, "Successfully removed entries older than $retention_days", $domain_uuid);
 					} else {
 						$message = $database->message['message'] ?? "An unknown error has occurred";
 						maintenance_service::log_write(self::class, "Unable to remove old database records. Error message: $message ($code)", $domain_uuid, maintenance_service::LOG_ERROR);
