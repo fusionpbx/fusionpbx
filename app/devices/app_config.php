@@ -4319,4 +4319,10 @@
 		$vendors[$y]['name'] = "acrobits";
 		$z=0;
 
+	//groundwire details
+		$y++;
+		$vendors[$y]['uuid'] = "c0a455ea-756e-48eb-991c-fb144770a059";
+		$vendors[$y]['name'] = "groundwire";
+		$z=0;
+
 ?>
