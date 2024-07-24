@@ -123,6 +123,10 @@ abstract class service {
 			self::log("Initiating Shutdown...", LOG_NOTICE);
 			$this->running = false;
 		}
+		//destroy the session if it is active
+		if (session_status() === PHP_SESSION_ACTIVE) {
+			session_destroy();
+		}
 		//this should remain the last statement to execute before exit
 		closelog();
 	}
@@ -621,7 +625,6 @@ abstract class service {
 	 * Set to not fork when started
 	 */
 	public static function set_no_fork() {
-		echo "Running in forground\n";
 		self::$forking_enabled = false;
 	}
 
@@ -741,7 +744,6 @@ abstract class service {
 
 		//fork process
 		if (self::$forking_enabled) {
-			echo "Running in daemon mode\n";
 			//force launching in a seperate process
 			if ($pid = pcntl_fork()) {
 				exit;
@@ -750,6 +752,13 @@ abstract class service {
 			if ($cid = pcntl_fork()) {
 				exit;
 			}
+			//required for detecting session location
+			session_start();
+			echo "Running in daemon mode\n";
+		} else {
+			//required for detecting session location
+			session_start();
+			echo "Running in forground\n";
 		}
 
 		//TODO remove updated settings object after merge
