@@ -44,8 +44,8 @@
 
 //set the defaults
 	$dashboard_name = '';
-	$dashboard_path = 'core/dashboard/resources/dashboard/icon.php';
-// 	$dashboard_path = '';
+	$dashboard_path = '/core/dashboard/resources/dashboard/icon.php';
+ 	//$dashboard_path = '';
 	$dashboard_icon = '';
 	$dashboard_url = '';
 	$dashboard_target = 'self';
@@ -429,7 +429,36 @@
 		}
 	}
 
-// adjust form by type entered
+//build the $dashboard_tools array
+	$i = 0;
+	foreach(glob($_SERVER["DOCUMENT_ROOT"].'/*/*/resources/dashboard/*.php') as $value) {
+
+		//skip adding config.php to the array
+		if (basename($value) === 'config.php') {
+			continue;
+		}
+
+		//ensure the slashes are consistent
+		$value = str_replace('\\', '/', $value);
+
+		//prepare the key
+		$key_replace[] = $_SERVER["DOCUMENT_ROOT"].'/core/';
+		$key_replace[] = $_SERVER["DOCUMENT_ROOT"].'/app/';
+		$key_replace[] = 'resources/dashboard/';
+		$key_replace[] = '.php';
+		$key = str_replace($key_replace, '', $value);
+
+		//prepare the value
+		$value_replace[] = $_SERVER["DOCUMENT_ROOT"].'/';
+		$value = str_replace($value_replace, '', $value);
+
+		//build the array
+		$dashboard_tools[$key] = $value;
+
+		$i++;
+	}
+
+//adjust form by type entered
 	echo "<script>\n";
 	echo "	function adjust_form() {\n";
 	echo "		if ($('#dashboard_path').val() == 'core/dashboard/resources/dashboard/icon.php') {\n";
@@ -467,7 +496,6 @@
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
-
 	//echo $text['title_description-dashboard']."\n";
 	echo "<br /><br />\n";
 
@@ -499,7 +527,12 @@
 	echo "	".$text['label-dashboard_path']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='dashboard_path' id='dashboard_path' maxlength='255' value='".escape($dashboard_path)."' onblur=\"adjust_form();\">\n";
+	echo "	<select name='dashboard_path' class='formfld'>\n";
+	echo "		<option value=''></option>\n";
+	foreach($dashboard_tools as $key => $value) {
+		echo "		<option value='$value' ".($value == $dashboard_path ? "selected='selected'" : null).">".$key."</option>\n";
+	}
+	echo "	</select>\n";
 	echo "<br />\n";
 	echo $text['description-dashboard_path']."\n";
 	echo "</td>\n";
