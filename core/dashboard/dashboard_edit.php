@@ -527,7 +527,7 @@
 	echo "	".$text['label-dashboard_path']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<select name='dashboard_path' class='formfld'>\n";
+	echo "	<select name='dashboard_path' class='formfld' id='dashboard_path' onchange=\"adjust_form();\">\n";
 	echo "		<option value=''></option>\n";
 	foreach($dashboard_tools as $key => $value) {
 		echo "		<option value='$value' ".($value == $dashboard_path ? "selected='selected'" : null).">".$key."</option>\n";
