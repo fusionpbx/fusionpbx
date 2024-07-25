@@ -1507,8 +1507,8 @@ $text['header-voicemail_import']['zh-cn'] = "语音信箱导入";
 $text['header-voicemail_import']['ja-jp'] = "ボイスメールのインポート";
 $text['header-voicemail_import']['ko-kr'] = "음성 메일 가져오기";
 
-$text['header-voicemail_export']['en-us'] = "Destination Export";
-$text['header-voicemail_export']['en-gb'] = "Destination Export";
+$text['header-voicemail_export']['en-us'] = "Voicemail Export";
+$text['header-voicemail_export']['en-gb'] = "Voicemail Export";
 $text['header-voicemail_export']['ar-eg'] = "التصدير";
 $text['header-voicemail_export']['de-at'] = "Exportieren";
 $text['header-voicemail_export']['de-ch'] = "Exportieren";
