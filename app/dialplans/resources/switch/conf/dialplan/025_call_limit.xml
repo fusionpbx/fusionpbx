@@ -1,5 +1,11 @@
 <extension name="call-limit" number="" context="${domain_name}" continue="true" app_uuid="4670c44c-45dd-4bae-97ba-b0dfe0aca639" enabled="false" order="25">
 	<condition field="${call_direction}" expression="^(inbound|outbound)$">
-		<action application="limit" data="hash inbound ${domain_uuid} ${max_calls} !USER_BUSY"/>
+		<action application="set" data="domain_max_calls=4" enabled="false"/>
+		<action application="set" data="domain_max_calls_destination=!USER_BUSY"/>
+		<action application="limit" data="hash max_calls ${domain_uuid} ${domain_max_calls} ${domain_max_calls_destination}"/>
+	</condition>
+	<condition field="${call_direction}" expression="^(inbound|outbound)$">
+		<action application="set" data="ext_max_calls=${limit_max}"/>
+		<action application="limit" data="hash max_calls ${extension_uuid} ${ext_max_calls} ${limit_destination}"/>
 	</condition>
 </extension>
