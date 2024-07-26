@@ -73,6 +73,7 @@ if (!class_exists('extension')) {
 		public $enabled;
 		public $description;
 		public $delete_voicemail;
+		private $database;
 
 		/**
 		 * declare private variables
@@ -90,6 +91,11 @@ if (!class_exists('extension')) {
 		 * called when the object is created
 		 */
 		public function __construct() {
+
+			//connect to the database
+				if (!isset($database)) {
+					$this->database = new database;
+				}
 
 			//assign private variables
 				$this->app_name = 'extensions';
@@ -113,8 +119,7 @@ if (!class_exists('extension')) {
 			$sql .= "and enabled = 'true' ";
 			$parameters['domain_uuid'] = $domain_uuid;
 			$parameters['extension'] = $extension;
-			$database = new database;
-			return $database->select($sql, $parameters, 'column') != 0 ? true : false;
+			return $this->database->select($sql, $parameters, 'column') != 0 ? true : false;
 			unset($sql, $parameters);
 		}
 
@@ -141,8 +146,7 @@ if (!class_exists('extension')) {
 				$sql .= "and voicemail_id = :voicemail_id ";
 				$parameters['domain_uuid'] = $this->domain_uuid;
 				$parameters['voicemail_id'] = $this->voicemail_id;
-				$database = new database;
-				$voicemail_uuid = $database->select($sql, $parameters, 'column');
+				$voicemail_uuid = $this->database->select($sql, $parameters, 'column');
 				unset($sql, $parameters);
 
 				if (is_uuid($voicemail_uuid)) {
@@ -170,10 +174,9 @@ if (!class_exists('extension')) {
 						$array['voicemails'][0]['voicemail_enabled'] = $this->voicemail_enabled;
 						$array['voicemails'][0]['voicemail_description'] = $this->description;
 					//execute insert/update
-						$database = new database;
-						$database->app_name = 'extensions';
-						$database->app_uuid = 'e68d9689-2769-e013-28fa-6214bf47fca3';
-						$database->save($array);
+						$this->database->app_name = 'extensions';
+						$this->database->app_uuid = 'e68d9689-2769-e013-28fa-6214bf47fca3';
+						$this->database->save($array);
 						unset($array);
 					//revoke temporary permissions
 						$p->delete('voicemail_edit', 'temp');
@@ -204,8 +207,7 @@ if (!class_exists('extension')) {
 					$sql .= "and coalesce(nullif(e.number_alias,''),e.extension) = cast(v.voicemail_id as varchar) ";
 					$sql .= "order by e.call_group asc ";
 					$parameters['domain_uuid'] = $domain_uuid;
-					$database = new database;
-					$rows = $database->select($sql, $parameters, 'all');
+					$rows = $this->database->select($sql, $parameters, 'all');
 					unset($sql, $parameters);
 
 					$extension_xml_condensed = false;
@@ -567,8 +569,7 @@ if (!class_exists('extension')) {
 										$sql .= "and extension_uuid = :extension_uuid ";
 										$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 										$parameters['extension_uuid'] = $record['uuid'];
-										$database = new database;
-										$row = $database->select($sql, $parameters, 'row');
+										$row = $this->database->select($sql, $parameters, 'row');
 										if (is_array($row) && @sizeof($row) != 0) {
 
 											//for use below and to clear cache (bottom)
@@ -622,8 +623,7 @@ if (!class_exists('extension')) {
 											$sql .= "where domain_uuid = :domain_uuid ";
 											$sql .= "and voicemail_id in ('".implode("','", $voicemail_ids)."') ";
 											$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-											$database = new database;
-											$rows = $database->select($sql, $parameters, 'all');
+											$rows = $this->database->select($sql, $parameters, 'all');
 											if (is_array($rows) && @sizeof($rows) != 0) {
 												foreach ($rows as $r => $row) {
 													$voicemails[$r]['checked'] = 'true';
@@ -646,10 +646,9 @@ if (!class_exists('extension')) {
 									$p->add('ring_group_destination_delete', 'temp');
 
 								//execute delete
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->delete($array);
+									$this->database->app_name = $this->app_name;
+									$this->database->app_uuid = $this->app_uuid;
+									$this->database->delete($array);
 									unset($array);
 
 								//revoke temporary permissions
@@ -719,8 +718,7 @@ if (!class_exists('extension')) {
 								$sql .= "where domain_uuid = :domain_uuid ";
 								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
 								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-								$database = new database;
-								$rows = $database->select($sql, $parameters, 'all');
+								$rows = $this->database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
 										//for use below and to clear cache (bottom)
@@ -749,10 +747,9 @@ if (!class_exists('extension')) {
 									$p->add('extension_edit', 'temp');
 
 								//save the array
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->save($array);
+									$this->database->app_name = $this->app_name;
+									$this->database->app_uuid = $this->app_uuid;
+									$this->database->save($array);
 									unset($array);
 
 								//revoke temporary permissions
@@ -801,3 +798,4 @@ if (!class_exists('extension')) {
 }
 
 ?>
+
