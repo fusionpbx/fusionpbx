@@ -321,7 +321,7 @@ if (!class_exists('call_block')) {
 								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 								$destination_country_code = $this->database->select($sql, $parameters ?? null, 'column');
 								unset($sql, $parameters);
-								
+
 								//use the the destination country code to set the country code
 								if (!empty($destination_country_code)) {
 									$destination_country_code = trim($destination_country_code, "+ ");
@@ -357,8 +357,8 @@ if (!class_exists('call_block')) {
 													$call_block_number = ltrim(trim($row["caller_id_number"]), $country_code ?? '');
 												}
 												//build the array
-												$array['call_block'][$x]['call_block_country_code'] = trim($country_code ?? '');
 												$array['call_block'][$x]['call_block_name'] = '';
+												$array['call_block'][$x]['call_block_country_code'] = trim($country_code ?? '');
 												$array['call_block'][$x]['call_block_number'] = $call_block_number;
 												$array['call_block'][$x]['call_block_description'] = trim($row["caller_id_name"]);
 											}
@@ -373,8 +373,16 @@ if (!class_exists('call_block')) {
 											$x++;
 										}
 										else {
-											if (is_array($_SESSION['user']['extension'])) {
-												foreach ($_SESSION['user']['extension'] as $field) {
+
+											//get the users that are assigned to the extension
+											$sql = "select extension_uuid from v_extension_users ";
+											$sql .= "where user_uuid = :user_uuid ";
+											$parameters['user_uuid'] = $_SESSION['user_uuid'];
+											$user_extensions = $this->database->select($sql, $parameters ?? null, 'all');
+											unset($sql, $parameters);
+
+											if (is_array($user_extensions)) {
+												foreach ($user_extensions as $field) {
 													if (is_uuid($field['extension_uuid'])) {
 														$array['call_block'][$x]['call_block_uuid'] = uuid();
 														$array['call_block'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
@@ -382,10 +390,11 @@ if (!class_exists('call_block')) {
 														$array['call_block'][$x]['extension_uuid'] = $field['extension_uuid'];
 														if ($this->call_block_direction == 'inbound') {
 															//remove e.164 and country code
-															$call_block_number = str_replace("+".trim($_SESSION['domain']['country_code']['numeric']), "", trim($row["caller_id_number"]));
+															$call_block_number = str_replace("+".trim($country_code), "", trim($row["caller_id_number"]));
 
 															//build the array
 															$array['call_block'][$x]['call_block_name'] = '';
+															$array['call_block'][$x]['call_block_country_code'] = trim($country_code ?? '');
 															$array['call_block'][$x]['call_block_number'] = $call_block_number;
 															$array['call_block'][$x]['call_block_description'] = trim($row["caller_id_name"]);
 														}
