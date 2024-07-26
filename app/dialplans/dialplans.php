@@ -494,7 +494,7 @@
 		case "8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3": echo $text['description-outbound_routes']; break;
 		case "16589224-c876-aeb3-f59f-523a1c0801f7": echo $text['description-queues']; break;
 		case "4b821450-926b-175a-af93-a03c441818b1": echo $text['description-time_conditions']; break;
-		default: echo $text['description-dialplan_manager'.(if_group("superadmin") ? '-superadmin' : null)];
+		default: echo $text['description-dialplan_manager'.(permission_exists('dialplan_edit') ? '-superadmin' : '')];
 	}
 	echo "\n<br /><br />\n";
 
