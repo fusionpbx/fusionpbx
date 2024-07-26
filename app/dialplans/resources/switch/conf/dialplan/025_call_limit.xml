@@ -6,6 +6,7 @@
 	</condition>
 	<condition field="${call_direction}" expression="^(inbound|outbound)$">
 		<action application="set" data="ext_max_calls=${limit_max}"/>
-		<action application="limit" data="hash max_calls ${extension_uuid} ${ext_max_calls} ${limit_destination}"/>
+		<action application="set" data="ext_max_calls_destination=${limit_destination}"/>
+		<action application="limit" data="hash max_calls ${extension_uuid} ${ext_max_calls} ${ext_max_calls_destination}"/>
 	</condition>
 </extension>
