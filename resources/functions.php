@@ -2455,4 +2455,17 @@ if (!function_exists('git_find_repos')) {
 	}
 }
 
+//get contents of the supplied url
+if (!function_exists('url_get_contents')) {
+	function url_get_contents($URL){
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_VERBOSE, 1);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_URL, $URL);
+		$data = curl_exec($ch);
+		curl_close($ch);
+		return $data;
+	}
+}
+
 ?>
