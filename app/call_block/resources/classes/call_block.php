@@ -317,6 +317,7 @@ if (!class_exists('call_block')) {
 								$sql .= "from v_destinations as d ";
 								$sql .= "where domain_uuid = :domain_uuid ";
 								$sql .= "and destination_prefix <> '' ";
+								$sql .= "and destination_enabled = 'true' ";
 								$sql .= "order by count desc limit 1; ";
 								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 								$destination_country_code = $this->database->select($sql, $parameters ?? null, 'column');
@@ -329,6 +330,15 @@ if (!class_exists('call_block')) {
 								}
 							}
 
+						//get the users that are assigned to the extension
+							if (!permission_exists('call_block_extension')) {
+								$sql = "select extension_uuid from v_extension_users ";
+								$sql .= "where user_uuid = :user_uuid ";
+								$parameters['user_uuid'] = $_SESSION['user_uuid'];
+								$user_extensions = $this->database->select($sql, $parameters ?? null, 'all');
+								unset($sql, $parameters);
+							}
+
 						//get the country code from default settings
 							if (!empty($_SESSION['domain']['country_code']['numeric'])) {
 								$country_code = $_SESSION['domain']['country_code']['numeric'];
@@ -337,6 +347,19 @@ if (!class_exists('call_block')) {
 						//loop through records
 							if (is_array($rows) && @sizeof($rows) != 0) {
 								foreach ($rows as $x => $row) {
+
+									//remove e.164 and country code
+										if (substr($row["caller_id_number"],0,1) == "+") {
+											//format e.164
+											$call_block_number = str_replace("+".trim($country_code), "", trim($row["caller_id_number"]));
+										}
+										elseif (!empty($row["caller_id_number"])) {
+											//remove the country code if its the first in the string
+											$call_block_number = ltrim(trim($row["caller_id_number"]), $country_code ?? '');
+										}
+										else {
+											$call_block_number = '';
+										}
 
 									//build insert array
 										if (permission_exists('call_block_extension')) {
@@ -347,16 +370,6 @@ if (!class_exists('call_block')) {
 												$array['call_block'][$x]['extension_uuid'] = $this->extension_uuid;
 											}
 											if ($this->call_block_direction == 'inbound') {
-												//remove e.164 and country code
-												if (trim($row["caller_id_number"])[0] == "+") {
-													//format e.164
-													$call_block_number = str_replace("+".trim($country_code), "", trim($row["caller_id_number"]));
-												}
-												else {
-													//remove the country code if its the first in the string
-													$call_block_number = ltrim(trim($row["caller_id_number"]), $country_code ?? '');
-												}
-												//build the array
 												$array['call_block'][$x]['call_block_name'] = '';
 												$array['call_block'][$x]['call_block_country_code'] = trim($country_code ?? '');
 												$array['call_block'][$x]['call_block_number'] = $call_block_number;
@@ -373,14 +386,6 @@ if (!class_exists('call_block')) {
 											$x++;
 										}
 										else {
-
-											//get the users that are assigned to the extension
-											$sql = "select extension_uuid from v_extension_users ";
-											$sql .= "where user_uuid = :user_uuid ";
-											$parameters['user_uuid'] = $_SESSION['user_uuid'];
-											$user_extensions = $this->database->select($sql, $parameters ?? null, 'all');
-											unset($sql, $parameters);
-
 											if (is_array($user_extensions)) {
 												foreach ($user_extensions as $field) {
 													if (is_uuid($field['extension_uuid'])) {
@@ -389,10 +394,6 @@ if (!class_exists('call_block')) {
 														$array['call_block'][$x]['call_block_direction'] = $this->call_block_direction;
 														$array['call_block'][$x]['extension_uuid'] = $field['extension_uuid'];
 														if ($this->call_block_direction == 'inbound') {
-															//remove e.164 and country code
-															$call_block_number = str_replace("+".trim($country_code), "", trim($row["caller_id_number"]));
-
-															//build the array
 															$array['call_block'][$x]['call_block_name'] = '';
 															$array['call_block'][$x]['call_block_country_code'] = trim($country_code ?? '');
 															$array['call_block'][$x]['call_block_number'] = $call_block_number;

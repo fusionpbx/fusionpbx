@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2023
+	Portions created by the Initial Developer are Copyright (C) 2008-2024
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -39,6 +39,9 @@
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
+
+//initialize the database object
+	$database = new database;
 
 //set the defaults
 	$call_block_name = '';
@@ -155,7 +158,6 @@
 						if (!empty($domain_uuid) && is_uuid($domain_uuid)) {
 							$parameters['domain_uuid'] = $domain_uuid;
 						}
-						$database = new database;
 						$rows = $database->select($sql, $parameters);
 
 						if (!empty($rows)) {
@@ -167,7 +169,6 @@
 							$p = new permissions;
 							$p->add('dialplan_edit', 'temp');
 
-							$database = new database;
 							$database->save($array);
 							unset($array);
 
@@ -198,11 +199,9 @@
 						$array['call_block'][0]['date_added'] = time();
 						$array['call_block'][0]['call_block_description'] = $call_block_description;
 
-						$database = new database;
 						$database->app_name = 'call_block';
 						$database->app_uuid = '9ed63276-e085-4897-839c-4f2e36d92d6c';
 						$database->save($array);
-						$response = $database->message;
 						unset($array);
 
 						message::add($text['label-add-complete']);
@@ -225,7 +224,6 @@
 							$sql .= "and c.call_block_uuid = :call_block_uuid ";
 						}
 						$parameters['call_block_uuid'] = $call_block_uuid;
-						$database = new database;
 						$result = $database->select($sql, $parameters);
 						if (!empty($result)) {
 							//set the domain_name
@@ -252,11 +250,9 @@
 						$array['call_block'][0]['date_added'] = time();
 						$array['call_block'][0]['call_block_description'] = $call_block_description;
 
-						$database = new database;
 						$database->app_name = 'call_block';
 						$database->app_uuid = '9ed63276-e085-4897-839c-4f2e36d92d6c';
 						$database->save($array);
-						$response = $database->message;
 						unset($array);
 
 						message::add($text['label-update-complete']);
@@ -279,7 +275,6 @@
 		$sql .= "and call_block_uuid = :call_block_uuid ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$parameters['call_block_uuid'] = $call_block_uuid;
-		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
 		if (!empty($row)) {
 			$domain_uuid = $row["domain_uuid"];
@@ -311,7 +306,6 @@
 		$sql .= "and enabled = 'true' ";
 		$sql .= "order by extension asc ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-		$database = new database;
 		$extensions = $database->select($sql, $parameters);
 	}
 
@@ -327,7 +321,6 @@ if (permission_exists('call_block_all') || permission_exists('call_block_ivr')) 
 	// $sql .= "and enabled = 'true' ";
 	$sql .= "order by ivr_menu_extension asc ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$database = new database;
 	$ivrs = $database->select($sql, $parameters);
 }
 
@@ -343,7 +336,6 @@ if (permission_exists('call_block_all') || permission_exists('call_block_ring_gr
 	// $sql .= "and ring_group_enabled = 'true' ";
 	$sql .= "order by ring_group_extension asc ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$database = new database;
 	$ring_groups = $database->select($sql, $parameters);
 }
 
@@ -359,7 +351,6 @@ if (permission_exists('call_block_all') || permission_exists('call_block_ring_gr
 	$sql .= "and voicemail_enabled = 'true' ";
 	$sql .= "order by voicemail_id asc ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$database = new database;
 	$voicemails = $database->select($sql, $parameters);
 
 //create token
@@ -630,7 +621,7 @@ if (permission_exists('call_block_all') || permission_exists('call_block_ring_gr
 			}
 		}
 
-		//get recent calls
+		//get the recent calls
 		$sql = "select caller_id_name, caller_id_number, caller_destination, start_epoch, direction, hangup_cause, duration, billsec, xml_cdr_uuid ";
 		$sql .= "from v_xml_cdr where domain_uuid = :domain_uuid ";
 		$sql .= "and direction <> 'local' ";
@@ -638,8 +629,7 @@ if (permission_exists('call_block_all') || permission_exists('call_block_ring_gr
 		$sql .= "order by start_stamp desc ";
 		$sql .= limit_offset($_SESSION['call_block']['recent_call_limit']['text']);
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-		$database = new database;
-		$result = $database->select($sql, $parameters);
+		$recent_calls = $database->select($sql, $parameters);
 		unset($sql, $parameters);
 
 		echo "<form id='form_list' method='post'>\n";
@@ -656,7 +646,7 @@ if (permission_exists('call_block_all') || permission_exists('call_block_ring_gr
 		echo "	</div>\n";
 		echo "	<div class='actions'>\n";
 		echo button::create(['type'=>'button','id'=>'action_bar_sub_button_back','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'collapse'=>'hide-xs','style'=>'display: none;','link'=>'call_block.php']);
-		if ($result) {
+		if ($recent_calls) {
 			$select_margin = 'margin-left: 15px;';
 			if (permission_exists('call_block_extension')) {
 				echo 	"<select class='formfld' style='".$select_margin."' name='extension_uuid'>\n";
@@ -678,7 +668,7 @@ if (permission_exists('call_block_all') || permission_exists('call_block_ring_gr
 		echo "	<div style='clear: both;'></div>\n";
 		echo "</div>\n";
 
-		if ($result) {
+		if ($recent_calls) {
 			echo modal::create(['id'=>'modal-block','type'=>'general','message'=>$text['confirm-block'],'actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_block','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_form_submit('form_list');"])]);
 		}
 
@@ -691,13 +681,13 @@ if (permission_exists('call_block_all') || permission_exists('call_block_ring_gr
 			echo "<th style='width: 1%;'>&nbsp;</th>\n";
 			echo th_order_by('caller_id_name', $text['label-name'], $order_by, $order);
 			echo th_order_by('caller_id_number', $text['label-number'], $order_by, $order);
-			echo th_order_by('caller_id_number', $text['label-destination'], $order_by, $order);
+			echo th_order_by('caller_destination', $text['label-destination'], $order_by, $order);
 			echo th_order_by('start_stamp', $text['label-called'], $order_by, $order);
 			echo th_order_by('duration', $text['label-duration'], $order_by, $order, null, "class='right hide-sm-dn'");
 			echo "</tr>";
 
-			if (!empty($result)) {
-				foreach ($result as $x => $row) {
+			if (!empty($recent_calls)) {
+				foreach ($recent_calls as $x => $row) {
 					if ($row['direction'] == $direction) {
 						$list_row_onclick_uncheck = "if (!this.checked) { document.getElementById('checkbox_all_".$direction."').checked = false; }";
 						$list_row_onclick_toggle = "onclick=\"document.getElementById('checkbox_".$x."').checked = document.getElementById('checkbox_".$x."').checked ? false : true; ".$list_row_onclick_uncheck."\"";
@@ -761,7 +751,6 @@ if (permission_exists('call_block_all') || permission_exists('call_block_ring_gr
 			}
 			echo "</table>\n";
 		}
-		unset($result);
 
 		echo "<br />\n";
 		echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
