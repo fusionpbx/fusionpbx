@@ -38,6 +38,9 @@
 		exit;
 	}
 
+//initialize the database object
+	$database = new database;
+
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
@@ -59,7 +62,6 @@
 			$sql .= "from v_extensions ";
 			$sql .= "where domain_uuid = :domain_uuid ";
 			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-			$database = new database;
 			$total_extensions = $database->select($sql, $parameters, 'column');
 			unset($sql, $parameters);
 
@@ -81,7 +83,6 @@
 			else { //lookup extension based on submitted uuid
 				$sql = "select extension from v_extensions where extension_uuid = :extension_uuid";
 				$parameters['extension_uuid'] = $extension_uuid;
-				$database = new database;
 				$extension = $database->select($sql, $parameters, 'column');
 				unset($sql, $parameters);
 			}
@@ -186,7 +187,6 @@
 				}
 				$sql .= "order by device_address asc ";
 				$parameters['domain_uuid'] = $domain_uuid;
-				$database = new database;
 				$total_devices = $database->select($sql, $parameters, 'column');
 				unset($sql, $parameters);
 
@@ -227,7 +227,6 @@
 					$sql .= "d1.domain_uuid = d2.domain_uuid and ";
 					$sql .= "d1.device_address = :device_address ";
 					$parameters['device_address'] = $device_address;
-					$database = new database;
 					$row = $database->select($sql, $parameters, 'row');
 					if (is_array($row)) {
 						if ($_SESSION['domain_uuid'] == $row['domain_uuid']) {
@@ -266,7 +265,6 @@
 			$p->add('extension_user_delete', 'temp');
 
 		//save the array
-			$database = new database;
 			$database->app_name = 'extensions';
 			$database->app_uuid = 'e68d9689-2769-e013-28fa-6214bf47fca3';
 			$database->delete($array);
@@ -294,7 +292,6 @@
 				$p->add('device_line_delete', 'temp');
 
 			//save the array
-				$database = new database;
 				$database->app_name = 'extensions';
 				$database->app_uuid = 'e68d9689-2769-e013-28fa-6214bf47fca3';
 				$database->delete($array);
@@ -690,7 +687,6 @@
 											$sql .= "and domain_uuid = :domain_uuid ";
 											$parameters['voicemail_id'] = $voicemail_id;
 											$parameters['domain_uuid'] = $domain_uuid;
-											$database = new database;
 											$row = $database->select($sql, $parameters, 'row');
 											if (is_array($row) && @sizeof($row) != 0) {
 												$voicemail_uuid = $row["voicemail_uuid"];
@@ -766,7 +762,6 @@
 						$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 						$parameters['server_address'] = $_SESSION['domain_name'];
 						$parameters['user_id'] = $extension;
-						$database = new database;
 						$database->execute($sql, $parameters);
 						unset($sql, $parameters);
 					}
@@ -780,23 +775,20 @@
 						$parameters['device_key_label'] = $effective_caller_id_name;
 						$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 						$parameters['device_key_value'] = $extension;
-						$database = new database;
 						$database->execute($sql, $parameters);
 						unset($sql, $parameters);
 					}
 
 				//save to the data
-					$database = new database;
 					$database->app_name = 'extensions';
 					$database->app_uuid = 'e68d9689-2769-e013-28fa-6214bf47fca3';
-					$database->save($array);
-					$message = $database->message;
+					$message = $database->save($array);
 					unset($array);
 
-				//reload acl if allowed
+				//reload the access control list
 					if (permission_exists("extension_cidr")) {
-						$esl = event_socket::create();
-						if ($esl->is_connected()) { event_socket::api("reloadacl"); }
+						$event_socket = event_socket::create();
+						if ($event_socket->is_connected()) { event_socket::api("reloadacl"); }
 					}
 
 				//check the permissions
@@ -824,7 +816,6 @@
 								$sql = "select user_context from v_extensions ";
 								$sql .= "where extension_uuid = :extension_uuid ";
 								$parameters['extension_uuid'] = $extension_uuid;
-								$database = new database;
 								$user_context = $database->select($sql, $parameters, 'column');
 							}
 							$cache = new cache;
@@ -863,7 +854,6 @@
 		$sql = "select * from v_extensions ";
 		$sql .= "where extension_uuid = :extension_uuid ";
 		$parameters['extension_uuid'] = $extension_uuid;
-		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
 		if (is_array($row) && @sizeof($row) != 0) {
 			$domain_uuid = $row["domain_uuid"];
@@ -924,7 +914,6 @@
 			$sql .= "and voicemail_id = :voicemail_id ";
 			$parameters['domain_uuid'] = $domain_uuid;
 			$parameters['voicemail_id'] = is_numeric($number_alias) ? $number_alias : $extension;
-			$database = new database;
 			$row = $database->select($sql, $parameters, 'row');
 			if (is_array($row) && @sizeof($row) != 0) {
 				$voicemail_password = str_replace("#", "", $row["voicemail_password"] ?? '');
@@ -956,7 +945,6 @@
 	$parameters['user_id_2'] = $number_alias ?? null;
 	$parameters['password'] = $password ?? null;
 	$parameters['domain_uuid'] = $domain_uuid;
-	$database = new database;
 	$device_lines = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
@@ -969,7 +957,6 @@
 	}
 	$sql .= "order by device_address asc ";
 	$parameters['domain_uuid'] = $domain_uuid;
-	$database = new database;
 	$devices = $database->select($sql, $parameters, 'all');
 	if (!empty($devices) && is_array($devices)) {
 		$total_devices = @sizeof($devices);
@@ -981,7 +968,6 @@
 	$sql .= "from v_device_vendors ";
 	$sql .= "where enabled = 'true' ";
 	$sql .= "order by name asc ";
-	$database = new database;
 	$device_vendors = $database->select($sql, null, 'all');
 	unset($sql);
 
@@ -996,7 +982,6 @@
 		$sql .= "order by u.username asc ";
 		$parameters['domain_uuid'] = $domain_uuid;
 		$parameters['extension_uuid'] = $extension_uuid;
-		$database = new database;
 		$assigned_users = $database->select($sql, $parameters, 'all');
 		if (is_array($assigned_users) && @sizeof($assigned_users) != 0) {
 			foreach($assigned_users as $row) {
@@ -1018,7 +1003,6 @@
 	$sql .= "and user_enabled = 'true' ";
 	$sql .= "order by username asc ";
 	$parameters['domain_uuid'] = $domain_uuid;
-	$database = new database;
 	$users = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters, $assigned_user_uuids, $assigned_user_uuid);
 
@@ -1028,7 +1012,6 @@
 	$sql .= "and destination_type = 'inbound' ";
 	$sql .= "order by destination_number asc ";
 	$parameters['domain_uuid'] = $domain_uuid;
-	$database = new database;
 	$destinations = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
@@ -1040,7 +1023,6 @@
 		$sql .= "and destination_type_emergency = 1 ";
 		$sql .= "order by destination_number asc ";
 		$parameters['domain_uuid'] = $domain_uuid;
-		$database = new database;
 		$emergency_destinations = $database->select($sql, $parameters, 'all');
 		unset($sql, $parameters);
 	}
@@ -2008,7 +1990,7 @@
 		echo "</td>\n";
 		echo "</tr>\n";
 	}
-	
+
 	if (permission_exists('extension_language')) {
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
