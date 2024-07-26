@@ -52,6 +52,7 @@
 						if (debug["sql"]) then
 							freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 						end
+						local voicemail_found = false;
 						dbh:query(sql, params, function(row)
 							voicemail_uuid = string.lower(row["voicemail_uuid"]);
 							voicemail_password = row["voicemail_password"];
@@ -59,7 +60,16 @@
 							voicemail_mail_to = row["voicemail_mail_to"];
 							voicemail_attach_file = row["voicemail_attach_file"];
 							voicemail_local_after_email = row["voicemail_local_after_email"];
+							voicemail_found = true;
 						end);
+
+					--hangup if extension does not have voicemail enabled
+						if not voicemail_found then
+					            session:answer();
+					            freeswitch.consoleLog("notice", "[voicemail] Extension " .. voicemail_id .. " does not have voicemail enabled. Hanging up. \n");
+					            session:execute("playback", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-disabled.wav")
+					            session:hangup("NORMAL_CLEARING");
+	        				end
 					end
 				end
 
