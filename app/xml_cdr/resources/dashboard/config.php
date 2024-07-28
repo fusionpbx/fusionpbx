@@ -1,9 +1,32 @@
 <?php
 
+//missed calls
 $array['dashboard'][$x]['dashboard_uuid'] = '6ad0e056-bf3d-465a-956d-bd77d513ab36';
 $array['dashboard'][$x]['dashboard_name'] = 'Missed Calls';
 $array['dashboard'][$x]['dashboard_path'] = 'app/xml_cdr/resources/dashboard/missed_calls.php';
-$array['dashboard'][$x]['dashboard_order'] = '40';
+$array['dashboard'][$x]['dashboard_icon'] = '';
+$array['dashboard'][$x]['dashboard_url'] = '';
+$array['dashboard'][$x]['dashboard_target'] = '';
+$array['dashboard'][$x]['dashboard_width'] = '';
+$array['dashboard'][$x]['dashboard_height'] = '';
+$array['dashboard'][$x]['dashboard_content'] = '';
+$array['dashboard'][$x]['dashboard_content_text_align'] = '';
+$array['dashboard'][$x]['dashboard_content_details'] = '';
+$array['dashboard'][$x]['dashboard_chart_type'] = 'doughnut';
+$array['dashboard'][$x]['dashboard_heading_text_color'] = '';
+$array['dashboard'][$x]['dashboard_heading_text_color_hover'] = '';
+$array['dashboard'][$x]['dashboard_heading_background_color'] = '';
+$array['dashboard'][$x]['dashboard_heading_background_color_hover'] = '';
+$array['dashboard'][$x]['dashboard_number_background_color'] = '';
+$array['dashboard'][$x]['dashboard_number_text_color'] = '#0292ff';
+$array['dashboard'][$x]['dashboard_number_text_color_hover'] = '';
+$array['dashboard'][$x]['dashboard_background_color'] ='["#ffffff"]';
+$array['dashboard'][$x]['dashboard_background_color_hover'] = '';
+$array['dashboard'][$x]['dashboard_detail_background_color'] = '#ffffff';
+$array['dashboard'][$x]['dashboard_column_span'] = '1';
+$array['dashboard'][$x]['dashboard_row_span'] = '1';
+$array['dashboard'][$x]['dashboard_details_state'] = 'disabled';
+$array['dashboard'][$x]['dashboard_order'] = '70';
 $array['dashboard'][$x]['dashboard_enabled'] = 'true';
 $array['dashboard'][$x]['dashboard_description'] = 'Show number and list of calls that were missed.';
 $y = 0;
@@ -20,10 +43,33 @@ $array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_uuid'] = '6ad0e056-bf
 $array['dashboard'][$x]['dashboard_groups'][$y]['group_name'] = 'user';
 $x++;
 
+//recent calls
 $array['dashboard'][$x]['dashboard_uuid'] = 'c323e296-b1cf-42ea-9c57-fc00697915b7';
 $array['dashboard'][$x]['dashboard_name'] = 'Recent Calls';
 $array['dashboard'][$x]['dashboard_path'] = 'app/xml_cdr/resources/dashboard/recent_calls.php';
-$array['dashboard'][$x]['dashboard_order'] = '60';
+$array['dashboard'][$x]['dashboard_icon'] = '';
+$array['dashboard'][$x]['dashboard_url'] = '';
+$array['dashboard'][$x]['dashboard_target'] = '';
+$array['dashboard'][$x]['dashboard_width'] = '';
+$array['dashboard'][$x]['dashboard_height'] = '';
+$array['dashboard'][$x]['dashboard_content'] = '';
+$array['dashboard'][$x]['dashboard_content_text_align'] = '';
+$array['dashboard'][$x]['dashboard_content_details'] = '';
+$array['dashboard'][$x]['dashboard_chart_type'] = 'doughnut';
+$array['dashboard'][$x]['dashboard_heading_text_color'] = '';
+$array['dashboard'][$x]['dashboard_heading_text_color_hover'] = '';
+$array['dashboard'][$x]['dashboard_heading_background_color'] = '';
+$array['dashboard'][$x]['dashboard_heading_background_color_hover'] = '';
+$array['dashboard'][$x]['dashboard_number_background_color'] = '';
+$array['dashboard'][$x]['dashboard_number_text_color'] = '#0292ff';
+$array['dashboard'][$x]['dashboard_number_text_color_hover'] = '';
+$array['dashboard'][$x]['dashboard_background_color'] ='["#ffffff"]';
+$array['dashboard'][$x]['dashboard_background_color_hover'] = '';
+$array['dashboard'][$x]['dashboard_detail_background_color'] = '#ffffff';
+$array['dashboard'][$x]['dashboard_column_span'] = '1';
+$array['dashboard'][$x]['dashboard_row_span'] = '1';
+$array['dashboard'][$x]['dashboard_details_state'] = 'disabled';
+$array['dashboard'][$x]['dashboard_order'] = '70';
 $array['dashboard'][$x]['dashboard_enabled'] = 'true';
 $array['dashboard'][$x]['dashboard_description'] = 'List of recent calls.';
 $y = 0;
