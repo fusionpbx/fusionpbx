@@ -18,9 +18,8 @@ $y++;
 $array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_group_uuid'] = 'b6e6c697-5351-484c-808d-884589c6d527';
 $array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_uuid'] = '6ad0e056-bf3d-465a-956d-bd77d513ab36';
 $array['dashboard'][$x]['dashboard_groups'][$y]['group_name'] = 'user';
-
-
 $x++;
+
 $array['dashboard'][$x]['dashboard_uuid'] = 'c323e296-b1cf-42ea-9c57-fc00697915b7';
 $array['dashboard'][$x]['dashboard_name'] = 'Recent Calls';
 $array['dashboard'][$x]['dashboard_path'] = 'app/xml_cdr/resources/dashboard/recent_calls.php';
@@ -39,5 +38,45 @@ $y++;
 $array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_group_uuid'] = 'a923b923-f1c9-4244-abfd-132c5a2f5b6e';
 $array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_uuid'] = 'c323e296-b1cf-42ea-9c57-fc00697915b7';
 $array['dashboard'][$x]['dashboard_groups'][$y]['group_name'] = 'user';
+$x++;
+
+//call detail records icon
+$array['dashboard'][$x]['dashboard_uuid'] = '57fd7761-6ffb-4a11-bdf0-4ce632f50c3c';
+$array['dashboard'][$x]['dashboard_name'] = 'Call Detail Records';
+$array['dashboard'][$x]['dashboard_path'] = 'core/dashboard/resources/dashboard/icon.php';
+$array['dashboard'][$x]['dashboard_icon'] = 'fa-list-ul';
+$array['dashboard'][$x]['dashboard_url'] = '/app/xml_cdr/xml_cdr.php';
+$array['dashboard'][$x]['dashboard_target'] = 'self';
+$array['dashboard'][$x]['dashboard_width'] = '';
+$array['dashboard'][$x]['dashboard_height'] = '';
+$array['dashboard'][$x]['dashboard_content'] = '';
+$array['dashboard'][$x]['dashboard_content_text_align'] = '';
+$array['dashboard'][$x]['dashboard_content_details'] = '';
+$array['dashboard'][$x]['dashboard_chart_type'] = '';
+$array['dashboard'][$x]['dashboard_heading_text_color'] = '';
+$array['dashboard'][$x]['dashboard_heading_text_color_hover'] = '';
+$array['dashboard'][$x]['dashboard_heading_background_color'] = '';
+$array['dashboard'][$x]['dashboard_heading_background_color_hover'] = '';
+$array['dashboard'][$x]['dashboard_number_background_color'] = '';
+$array['dashboard'][$x]['dashboard_number_text_color'] = '#0292ff';
+$array['dashboard'][$x]['dashboard_number_text_color_hover'] = '';
+$array['dashboard'][$x]['dashboard_background_color'] ='["#ffffff"]';
+$array['dashboard'][$x]['dashboard_background_color_hover'] = '';
+$array['dashboard'][$x]['dashboard_detail_background_color'] = '';
+$array['dashboard'][$x]['dashboard_column_span'] = '1';
+$array['dashboard'][$x]['dashboard_row_span'] = '1';
+$array['dashboard'][$x]['dashboard_details_state'] = 'disabled';
+$array['dashboard'][$x]['dashboard_order'] = '60';
+$array['dashboard'][$x]['dashboard_enabled'] = 'true';
+$array['dashboard'][$x]['dashboard_description'] = '';
+$y = 0;
+$array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_group_uuid'] = 'e4054bae-108a-48f1-9a9e-35f7d464af4c';
+$array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_uuid'] = '57fd7761-6ffb-4a11-bdf0-4ce632f50c3c';
+$array['dashboard'][$x]['dashboard_groups'][$y]['group_name'] = 'superadmin';
+$y++;
+$array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_group_uuid'] = 'cc976e00-66c4-498d-8a97-383b5ee9dc80';
+$array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_uuid'] = '57fd7761-6ffb-4a11-bdf0-4ce632f50c3c';
+$array['dashboard'][$x]['dashboard_groups'][$y]['group_name'] = 'admin';
+$y++;
 
 ?>
