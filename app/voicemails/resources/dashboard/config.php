@@ -19,6 +19,7 @@ $y++;
 $array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_group_uuid'] = '9052c80b-802f-4111-baa4-202a41ec7ffc';
 $array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_uuid'] = 'be2aaa22-d8f1-4d9b-b5f9-14a26da329cb';
 $array['dashboard'][$x]['dashboard_groups'][$y]['group_name'] = 'user';
+$x++;
 
 //voicemails icon
 $array['dashboard'][$x]['dashboard_uuid'] = '230f2857-f14a-44cd-9c33-577f26a5ce45';
