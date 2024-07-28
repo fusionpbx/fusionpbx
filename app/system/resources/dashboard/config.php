@@ -4,7 +4,7 @@ $x++;
 $array['dashboard'][$x]['dashboard_uuid'] = 'c9b1f67a-d78a-4299-a16e-594a4b7cd246';
 $array['dashboard'][$x]['dashboard_name'] = 'System Status';
 $array['dashboard'][$x]['dashboard_path'] = 'app/system/resources/dashboard/system_status.php';
-$array['dashboard'][$x]['dashboard_order'] = '80';
+$array['dashboard'][$x]['dashboard_order'] = '90';
 $array['dashboard'][$x]['dashboard_enabled'] = 'true';
 $array['dashboard'][$x]['dashboard_description'] = 'System information like Disk usage.';
 $y = 0;
