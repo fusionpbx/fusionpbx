@@ -1,7 +1,7 @@
 <?php
 
 //time conditions icon
-$array['dashboard'][$x]['dashboard_uuid'] = '57fd7761-6ffb-4a11-bdf0-4ce632f50c3c';
+$array['dashboard'][$x]['dashboard_uuid'] = 'b27b4a0e-bc45-4d0a-aabc-141b3bcca6d4';
 $array['dashboard'][$x]['dashboard_name'] = 'Time Conditions';
 $array['dashboard'][$x]['dashboard_path'] = 'core/dashboard/resources/dashboard/icon.php';
 $array['dashboard'][$x]['dashboard_icon'] = 'fa-business-time';
@@ -31,11 +31,11 @@ $array['dashboard'][$x]['dashboard_enabled'] = 'true';
 $array['dashboard'][$x]['dashboard_description'] = '';
 $y = 0;
 $array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_group_uuid'] = '57214759-8195-40cd-8085-607d1d57e7c3';
-$array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_uuid'] = '57fd7761-6ffb-4a11-bdf0-4ce632f50c3c';
+$array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_uuid'] = 'b07b4a0e-bc45-4d0a-aabc-141b3bcca6d4';
 $array['dashboard'][$x]['dashboard_groups'][$y]['group_name'] = 'superadmin';
 $y++;
 $array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_group_uuid'] = 'da24bced-cefd-4567-90e3-4bf971dcd007';
-$array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_uuid'] = '57fd7761-6ffb-4a11-bdf0-4ce632f50c3c';
+$array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_uuid'] = 'b27b4a0e-bc45-4d0a-aabc-141b3bcca6d4';
 $array['dashboard'][$x]['dashboard_groups'][$y]['group_name'] = 'admin';
 $y++;
 
