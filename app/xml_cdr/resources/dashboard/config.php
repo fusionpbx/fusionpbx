@@ -41,7 +41,7 @@ $array['dashboard'][$x]['dashboard_groups'][$y]['group_name'] = 'user';
 $x++;
 
 //call detail records icon
-$array['dashboard'][$x]['dashboard_uuid'] = '57fd7761-6ffb-4a11-bdf0-4ce632f50c3c';
+$array['dashboard'][$x]['dashboard_uuid'] = '7fb8c79b-3fc4-4977-992a-eb0404f80fe8';
 $array['dashboard'][$x]['dashboard_name'] = 'Call Detail Records';
 $array['dashboard'][$x]['dashboard_path'] = 'core/dashboard/resources/dashboard/icon.php';
 $array['dashboard'][$x]['dashboard_icon'] = 'fa-list-ul';
@@ -71,11 +71,11 @@ $array['dashboard'][$x]['dashboard_enabled'] = 'true';
 $array['dashboard'][$x]['dashboard_description'] = '';
 $y = 0;
 $array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_group_uuid'] = 'e4054bae-108a-48f1-9a9e-35f7d464af4c';
-$array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_uuid'] = '57fd7761-6ffb-4a11-bdf0-4ce632f50c3c';
+$array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_uuid'] = '7fb8c79b-3fc4-4977-992a-eb0404f80fe8';
 $array['dashboard'][$x]['dashboard_groups'][$y]['group_name'] = 'superadmin';
 $y++;
 $array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_group_uuid'] = 'cc976e00-66c4-498d-8a97-383b5ee9dc80';
-$array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_uuid'] = '57fd7761-6ffb-4a11-bdf0-4ce632f50c3c';
+$array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_uuid'] = '7fb8c79b-3fc4-4977-992a-eb0404f80fe8';
 $array['dashboard'][$x]['dashboard_groups'][$y]['group_name'] = 'admin';
 $y++;
 
