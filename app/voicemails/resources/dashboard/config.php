@@ -81,5 +81,9 @@ $array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_group_uuid'] = '8f9f1
 $array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_uuid'] = '230f2857-f14a-44cd-9c33-577f26a5ce45';
 $array['dashboard'][$x]['dashboard_groups'][$y]['group_name'] = 'admin';
 $y++;
+$array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_group_uuid'] = '2f8cb6c2-c4cb-4602-af3e-713196c4965b';
+$array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_uuid'] = '230f2857-f14a-44cd-9c33-577f26a5ce45';
+$array['dashboard'][$x]['dashboard_groups'][$y]['group_name'] = 'user';
+$y++;
 
 ?>
