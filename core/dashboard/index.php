@@ -45,6 +45,9 @@
 //additional includes
 	require_once "resources/check_auth.php";
 
+//initialize the database
+	$database = new database;
+
 //disable login message
 	if (isset($_GET['msg']) && $_GET['msg'] == 'dismiss') {
 		unset($_SESSION['login']['message']['text']);
@@ -55,7 +58,6 @@
 		$sql .= "default_setting_category = 'login' ";
 		$sql .= "and default_setting_subcategory = 'message' ";
 		$sql .= "and default_setting_name = 'text' ";
-		$database = new database;
 		$database->execute($sql);
 		unset($sql);
 	}
@@ -106,8 +108,7 @@
 	$sql .= "		".$group_uuids_in." ";
 	$sql .= "	)";
 	$sql .= ")";
-	$sql .= "order by dashboard_order asc ";
-	$database = new database;
+	$sql .= "order by dashboard_order, dashboard_name asc ";
 	$dashboard = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 
@@ -126,7 +127,7 @@
 						$array['dashboard'][$x]['dashboard_name'] = $row['dashboard_name'];
 						$array['dashboard'][$x]['dashboard_icon'] = $row['dashboard_icon'];
 						$array['dashboard'][$x]['dashboard_url'] = $row['dashboard_url'];
-						$array['dashboard'][$x]['dashboard_content'] = $row['dashboard_content'];
+						$array['dashboard'][$x][''] = $row['dashboard_content'];
 						$array['dashboard'][$x]['dashboard_content_text_align'] = $row['dashboard_content_text_align'];
 						$array['dashboard'][$x]['dashboard_content_details'] = $row['dashboard_content_details'];
 						$array['dashboard'][$x]['dashboard_target'] = $row['dashboard_target'];
@@ -140,7 +141,6 @@
 			}
 
 			//save the data
-			$database = new database;
 			$database->app_name = 'dashboard';
 			$database->app_uuid = '55533bef-4f04-434a-92af-999c1e9927f7';
 			$database->save($array);
