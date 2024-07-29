@@ -124,5 +124,9 @@ $array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_group_uuid'] = 'cc976
 $array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_uuid'] = '7fb8c79b-3fc4-4977-992a-eb0404f80fe8';
 $array['dashboard'][$x]['dashboard_groups'][$y]['group_name'] = 'admin';
 $y++;
+$array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_group_uuid'] = '23e473d3-5eb6-4289-beb4-89f37d365ea0';
+$array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_uuid'] = '7fb8c79b-3fc4-4977-992a-eb0404f80fe8';
+$array['dashboard'][$x]['dashboard_groups'][$y]['group_name'] = 'user';
+$y++;
 
 ?>
