@@ -36,7 +36,7 @@
 	}
 	elseif (file_exists(getenv('SystemDrive') . DIRECTORY_SEPARATOR . 'ProgramData' . DIRECTORY_SEPARATOR . 'fusionpbx' . DIRECTORY_SEPARATOR . 'config.conf')) {
 		// Windows
-	} 	
+	}
 	else {
 		header("Location: /core/install/install.php");
 		exit;
@@ -312,7 +312,7 @@ foreach ($dashboard as $row) {
 			echo "	height: 89.5px;\n";
 			echo "}\n";
 			echo "#".$dashboard_name." .hud_stat {\n";
-			echo "	line-height: 0.1;\n";
+			echo "	line-height: 0;\n";
 			echo "	font-size: 30pt;\n";
 			echo "}\n";
 			echo "#".$dashboard_name." .hud_chart {\n";
@@ -321,7 +321,7 @@ foreach ($dashboard as $row) {
 			echo "	padding-top: 0;\n";
 			echo "}\n";
 			echo "#".$dashboard_name." div.hud_content .fas {\n";
-			echo "	line-height: 0.1;\n";
+			echo "	line-height: 0;\n";
 			echo "	font-size: 30pt;\n";
 			echo "}\n";
 			break;
