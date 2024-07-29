@@ -52,11 +52,11 @@ $array['dashboard'][$x]['dashboard_enabled'] = 'true';
 $array['dashboard'][$x]['dashboard_description'] = '';
 $y = 0;
 $array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_group_uuid'] = 'ded58e5c-2f87-4f54-80c3-32bb411b034a';
-$array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_uuid'] = '2f0ef341-724e-4578-84bb-803e0fc0b14c';
+$array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_uuid'] = '97e69ceb-89f6-43a0-9a92-c89c5b02e6ee';
 $array['dashboard'][$x]['dashboard_groups'][$y]['group_name'] = 'superadmin';
 $y++;
 $array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_group_uuid'] = '42f0327f-c2a5-44bc-9c8b-82ca9c8c4e92';
-$array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_uuid'] = '2f0ef341-724e-4578-84bb-803e0fc0b14c';
+$array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_uuid'] = '97e69ceb-89f6-43a0-9a92-c89c5b02e6ee';
 $array['dashboard'][$x]['dashboard_groups'][$y]['group_name'] = 'admin';
 $y++;
 
