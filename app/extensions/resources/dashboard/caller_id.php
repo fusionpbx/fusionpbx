@@ -95,8 +95,7 @@
 				//save to the data
 					$database->app_name = 'extensions';
 					$database->app_uuid = 'e68d9689-2769-e013-28fa-6214bf47fca3';
-					$database->save($array);
-					$message = $database->message;
+					$message = $database->save($array);
 
 				//update the session array
 					if ($message['message'] == 'OK' && $message['code'] == '200') {

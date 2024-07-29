@@ -293,9 +293,9 @@
 				echo "	<td class='overflow hide-sm-dn shrink'>".escape($row['domain_name'])."</td>\n";
 			}
 			echo "	<td class='hide-sm-dn shrink'>".escape($row['caller_id_name'])."</td>\n";
-			echo "	<td class='shrink'>".escape($row['caller_id_number'])."</td>\n";
-			echo "	<td class='hide-sm-dn shrink'>".escape($row['caller_destination'])."</td>\n";
-			echo "	<td class='shrink'>".escape($row['destination_number'])."</td>\n";
+			echo "	<td class='shrink'>".escape(format_phone(substr($row['caller_id_number'], 0, 20)))."</td>\n";
+			echo "	<td class='hide-sm-dn shrink'>".escape(format_phone(substr($row['caller_destination'], 0, 20)))."</td>\n";
+			echo "	<td class='shrink'>".escape(format_phone(substr($row['destination_number'], 0, 20)))."</td>\n";
 			echo "	<td class='overflow hide-sm-dn nowrap'>".escape($row['call_recording_name'])."</td>\n";
 			if (permission_exists('call_recording_play') || permission_exists('call_recording_download')) {
 				echo "	<td class='middle button center no-link no-wrap'>";

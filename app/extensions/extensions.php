@@ -39,6 +39,9 @@
 		exit;
 	}
 
+//initialize the database object
+	$database = new database;
+
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
@@ -85,7 +88,6 @@
 		$sql = "select count(*) from v_extensions ";
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-		$database = new database;
 		$total_extensions = $database->select($sql, $parameters, 'column');
 		unset($sql, $parameters);
 	}
@@ -121,7 +123,6 @@
 		$sql .= ") ";
 		$parameters['search'] = '%'.$search.'%';
 	}
-	$database = new database;
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 
 //prepare to page the results
@@ -198,7 +199,6 @@
 	}
 	$sql .= order_by($order_by, $order, null, null, $sort);
 	$sql .= limit_offset($rows_per_page, $offset);
-	$database = new database;
 	$extensions = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 
