@@ -1,11 +1,11 @@
 <?php
 
-//ivr menus icon
-$array['dashboard'][$x]['dashboard_uuid'] = '3af7af65-7861-4d05-a0bc-36d704458fa0';
-$array['dashboard'][$x]['dashboard_name'] = 'IVR Menus';
+//call block icon
+$array['dashboard'][$x]['dashboard_uuid'] = '230f2857-f14a-44cd-9c33-577f26a5ce45';
+$array['dashboard'][$x]['dashboard_name'] = 'Call Block';
 $array['dashboard'][$x]['dashboard_path'] = 'core/dashboard/resources/dashboard/icon.php';
-$array['dashboard'][$x]['dashboard_icon'] = 'fa-project-diagram';
-$array['dashboard'][$x]['dashboard_url'] = '/app/ivr_menus/ivr_menus.php';
+$array['dashboard'][$x]['dashboard_icon'] = 'fa-ban';
+$array['dashboard'][$x]['dashboard_url'] = '/app/call_block/call_block.php';
 $array['dashboard'][$x]['dashboard_target'] = 'self';
 $array['dashboard'][$x]['dashboard_width'] = '';
 $array['dashboard'][$x]['dashboard_height'] = '';
@@ -18,7 +18,7 @@ $array['dashboard'][$x]['dashboard_heading_text_color_hover'] = '';
 $array['dashboard'][$x]['dashboard_heading_background_color'] = '';
 $array['dashboard'][$x]['dashboard_heading_background_color_hover'] = '';
 $array['dashboard'][$x]['dashboard_number_background_color'] = '';
-$array['dashboard'][$x]['dashboard_number_text_color'] = '#0292ff';
+$array['dashboard'][$x]['dashboard_number_text_color'] = '#5d5ce3';
 $array['dashboard'][$x]['dashboard_number_text_color_hover'] = '';
 $array['dashboard'][$x]['dashboard_background_color'] ='';
 $array['dashboard'][$x]['dashboard_background_color_hover'] = '';
@@ -30,13 +30,17 @@ $array['dashboard'][$x]['dashboard_order'] = '50';
 $array['dashboard'][$x]['dashboard_enabled'] = 'true';
 $array['dashboard'][$x]['dashboard_description'] = '';
 $y = 0;
-$array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_group_uuid'] = 'ccf52583-0806-4cdc-868b-2fecc5b423b8';
-$array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_uuid'] = '3af7af65-7861-4d05-a0bc-36d704458fa0';
+$array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_group_uuid'] = '7919f503-397c-4f98-a661-a60a738a1b1c';
+$array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_uuid'] = '230f2857-f14a-44cd-9c33-577f26a5ce45';
 $array['dashboard'][$x]['dashboard_groups'][$y]['group_name'] = 'superadmin';
 $y++;
-$array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_group_uuid'] = '7b2c391a-881a-4400-a9e1-d38765c89dc0';
-$array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_uuid'] = '3af7af65-7861-4d05-a0bc-36d704458fa0';
+$array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_group_uuid'] = '8f9f1b96-660b-469c-ab02-fbdf65f994f1';
+$array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_uuid'] = '230f2857-f14a-44cd-9c33-577f26a5ce45';
 $array['dashboard'][$x]['dashboard_groups'][$y]['group_name'] = 'admin';
+$y++;
+$array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_group_uuid'] = '2f8cb6c2-c4cb-4602-af3e-713196c4965b';
+$array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_uuid'] = '230f2857-f14a-44cd-9c33-577f26a5ce45';
+$array['dashboard'][$x]['dashboard_groups'][$y]['group_name'] = 'user';
 $y++;
 
 ?>
