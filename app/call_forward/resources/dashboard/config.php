@@ -3,7 +3,7 @@
 //call forward
 $array['dashboard'][$x]['dashboard_uuid'] = 'ba60799a-1c40-44a8-80ef-c2be4f4692fb';
 $array['dashboard'][$x]['dashboard_name'] = 'Call Forward';
-$array['dashboard'][$x]['dashboard_path'] = 'core/dashboard/resources/dashboard/icon.php';
+$array['dashboard'][$x]['dashboard_path'] = 'app/call_forward/resources/dashboard/call_forward.ph';
 $array['dashboard'][$x]['dashboard_icon'] = 'fa-forward';
 $array['dashboard'][$x]['dashboard_url'] = '/app/call_forward/resources/dashboard/call_forward.php';
 $array['dashboard'][$x]['dashboard_target'] = 'self';
@@ -18,14 +18,14 @@ $array['dashboard'][$x]['dashboard_heading_text_color_hover'] = '';
 $array['dashboard'][$x]['dashboard_heading_background_color'] = '';
 $array['dashboard'][$x]['dashboard_heading_background_color_hover'] = '';
 $array['dashboard'][$x]['dashboard_number_background_color'] = '';
-$array['dashboard'][$x]['dashboard_number_text_color'] = '#F9FBFE';
+$array['dashboard'][$x]['dashboard_number_text_color'] = '';
 $array['dashboard'][$x]['dashboard_number_text_color_hover'] = '';
 $array['dashboard'][$x]['dashboard_background_color'] ='';
 $array['dashboard'][$x]['dashboard_background_color_hover'] = '';
 $array['dashboard'][$x]['dashboard_detail_background_color'] = '';
 $array['dashboard'][$x]['dashboard_column_span'] = '1';
 $array['dashboard'][$x]['dashboard_row_span'] = '1';
-$array['dashboard'][$x]['dashboard_details_state'] = 'disabled';
+$array['dashboard'][$x]['dashboard_details_state'] = 'expanded';
 $array['dashboard'][$x]['dashboard_order'] = '130';
 $array['dashboard'][$x]['dashboard_enabled'] = 'true';
 $array['dashboard'][$x]['dashboard_description'] = 'Call routing for extension using Call forward, Follow Me and Do Not Disturb.';
