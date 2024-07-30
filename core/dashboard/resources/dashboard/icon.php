@@ -17,8 +17,8 @@
 
 //dashboard icon
 	echo "<div class='hud_box'>\n";
-	echo "	<div class='hud_content' ".(!empty($row['dashboard_background_color']) ? "style='background: ".$row['dashboard_background_color'].";'" : null)." ".(empty($dashboard_details_state) || $dashboard_details_state != "disabled" ? "onclick=\"$('#hud_icon_details').slideToggle('fast'); toggle_grid_row_end('".trim(preg_replace("/[^a-z]/", '_', strtolower($row['dashboard_name'])),'_')."');\"" : null).">\n";
-	echo "		<span class='hud_title' ".(!empty($row['dashboard_heading_background_color']) ? "style='background: ".$row['dashboard_heading_background_color'].";'" : null)." onclick=\"window.open('".$dashboard_url."', '".$dashboard_target."', '".$window_parameters."')\">".escape($dashboard_name)."</span>";
+	echo "	<div class='hud_content' ".(empty($dashboard_details_state) || $dashboard_details_state != "disabled" ? "onclick=\"$('#hud_icon_details').slideToggle('fast'); toggle_grid_row_end('".trim(preg_replace("/[^a-z]/", '_', strtolower($row['dashboard_name'])),'_')."');\"" : null).">\n";
+	echo "		<span class='hud_title' onclick=\"window.open('".$dashboard_url."', '".$dashboard_target."', '".$window_parameters."')\">".escape($dashboard_name)."</span>";
 	echo "		<span class='hud_stat' onclick=\"window.open('".$dashboard_url."', '".$dashboard_target."', '".$window_parameters."')\"><i class=\"fas ".$dashboard_icon."\" style=\"font-size: 0.8em;\"></i></span>\n";
 	echo "	</div>\n";
 	if (empty($dashboard_details_state) || $dashboard_details_state != "disabled") {

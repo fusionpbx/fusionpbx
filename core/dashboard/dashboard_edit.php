@@ -832,11 +832,9 @@
 	echo $text['label-dashboard_background_color']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	if (!empty($dashboard_background_color)) {
-		if (is_array($dashboard_background_color)) {
-			foreach($dashboard_background_color as $background_color) {
-				echo "	<input type='text' class='formfld colorpicker' name='dashboard_background_color[]' value='".escape($background_color)."'><br />\n";
-			}
+	if (!empty($dashboard_background_color) && is_array($dashboard_background_color)) {
+		foreach($dashboard_background_color as $background_color) {
+			echo "	<input type='text' class='formfld colorpicker' name='dashboard_background_color[]' value='".escape($background_color)."'><br />\n";
 		}
 	}
 	if (empty($dashboard_background_color) || (is_array($dashboard_background_color) && count($dashboard_background_color) < 2)) {
@@ -856,11 +854,9 @@
 		echo $text['label-dashboard_background_color_hover']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' style='position: relative;' align='left'>\n";
-		if (!empty($dashboard_background_color_hover)) {
-			if (is_array($dashboard_background_color_hover)) {
-				foreach($dashboard_background_color_hover as $background_color) {
-					echo "	<input type='text' class='formfld colorpicker' name='dashboard_background_color_hover[]' value='".escape($background_color)."'><br />\n";
-				}
+		if (!empty($dashboard_background_color_hover) && is_array($dashboard_background_color_hover)) {
+			foreach($dashboard_background_color_hover as $background_color) {
+				echo "	<input type='text' class='formfld colorpicker' name='dashboard_background_color_hover[]' value='".escape($background_color)."'><br />\n";
 			}
 		}
 		if (empty($dashboard_background_color_hover) || (is_array($dashboard_background_color_hover) && count($dashboard_background_color_hover) < 2)) {
@@ -880,11 +876,9 @@
 	echo $text['label-dashboard_detail_background_color']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	if (!empty($dashboard_detail_background_color)) {
-		if (is_array($dashboard_detail_background_color)) {
-			foreach($dashboard_detail_background_color as $detail_background_color) {
-				echo "	<input type='text' class='formfld colorpicker' name='dashboard_detail_background_color[]' value='".escape($detail_background_color)."'><br />\n";
-			}
+	if (!empty($dashboard_detail_background_color) && is_array($dashboard_detail_background_color)) {
+		foreach($dashboard_detail_background_color as $detail_background_color) {
+			echo "	<input type='text' class='formfld colorpicker' name='dashboard_detail_background_color[]' value='".escape($detail_background_color)."'><br />\n";
 		}
 	}
 	if (empty($dashboard_detail_background_color) || (is_array($dashboard_detail_background_color) && count($dashboard_detail_background_color) < 2)) {
