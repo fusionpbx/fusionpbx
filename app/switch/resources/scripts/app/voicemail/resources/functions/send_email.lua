@@ -1,5 +1,5 @@
 --	Part of FusionPBX
---	Copyright (C) 2013 - 2020 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2013 - 2024 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -199,10 +199,11 @@
 					link_address = http_protocol.."://"..domain_name..project_path;
 
 				--set proper delete status
-					if (voicemail_local_after_email == "false" and voicemail_local_after_forward == "false") then
-						local local_after_email = "false";
+					local local_after_email = '';
+					if (voicemail_local_after_email == "false" or voicemail_local_after_forward == "false") then
+						local_after_email = "false";
 					else
-						local local_after_email = "true";
+						local_after_email = "true";
 					end
 
 				--prepare the headers
