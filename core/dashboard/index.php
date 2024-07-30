@@ -127,7 +127,7 @@
 						$array['dashboard'][$x]['dashboard_name'] = $row['dashboard_name'];
 						$array['dashboard'][$x]['dashboard_icon'] = $row['dashboard_icon'];
 						$array['dashboard'][$x]['dashboard_url'] = $row['dashboard_url'];
-						$array['dashboard'][$x][''] = $row['dashboard_content'];
+						$array['dashboard'][$x]['dashboard_content'] = $row['dashboard_content'];
 						$array['dashboard'][$x]['dashboard_content_text_align'] = $row['dashboard_content_text_align'];
 						$array['dashboard'][$x]['dashboard_content_details'] = $row['dashboard_content_details'];
 						$array['dashboard'][$x]['dashboard_target'] = $row['dashboard_target'];
@@ -442,13 +442,13 @@ function toggle_grid_row_end(dashboard_name) {
 	foreach ($dashboard as $row) {
 		$dashboard_name = $row['dashboard_name'];
 		$dashboard_icon = $row['dashboard_icon'] ?? '';
-		$dashboard_url  = $row['dashboard_url'] ?? '';
-		$dashboard_target  = $row['dashboard_target'] ?? '';
-		$dashboard_width  = $row['dashboard_width'] ?? '';
-		$dashboard_height  = $row['dashboard_height'] ?? '';
-		$dashboard_content  = $row['dashboard_content'] ?? '';
+		$dashboard_url = $row['dashboard_url'] ?? '';
+		$dashboard_target = $row['dashboard_target'] ?? '';
+		$dashboard_width = $row['dashboard_width'] ?? '';
+		$dashboard_height = $row['dashboard_height'] ?? '';
+		$dashboard_content = $row['dashboard_content'] ?? '';
 		$dashboard_content_text_align = $row['dashboard_content_text_align'] ?? '';
-		$dashboard_content_details  = $row['dashboard_content_details'] ?? '';
+		$dashboard_content_details = $row['dashboard_content_details'] ?? '';
 		$dashboard_chart_type = $row['dashboard_chart_type'] ?? "doughnut";
 		$dashboard_heading_text_color = $row['dashboard_heading_text_color'] ?? $settings->get('theme', 'dashboard_heading_text_color');
 		$dashboard_number_text_color = $row['dashboard_number_text_color'] ?? $settings->get('theme', 'dashboard_number_text_color');
