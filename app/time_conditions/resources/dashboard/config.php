@@ -4,7 +4,7 @@
 $array['dashboard'][$x]['dashboard_uuid'] = 'e9f06ed4-ddfc-4611-b246-fdeab36a49ca';
 $array['dashboard'][$x]['dashboard_name'] = 'Time Conditions';
 $array['dashboard'][$x]['dashboard_path'] = 'core/dashboard/resources/dashboard/icon.php';
-$array['dashboard'][$x]['dashboard_icon'] = 'fa-business-time';
+$array['dashboard'][$x]['dashboard_icon'] = 'fa-clock';
 $array['dashboard'][$x]['dashboard_url'] = '/app/time_conditions/time_conditions.php';
 $array['dashboard'][$x]['dashboard_target'] = 'self';
 $array['dashboard'][$x]['dashboard_width'] = '';

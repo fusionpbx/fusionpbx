@@ -4,7 +4,7 @@
 $array['dashboard'][$x]['dashboard_uuid'] = '3d8efe65-49c3-4783-844e-4ebc1c97db68';
 $array['dashboard'][$x]['dashboard_name'] = 'Recordings';
 $array['dashboard'][$x]['dashboard_path'] = 'core/dashboard/resources/dashboard/icon.php';
-$array['dashboard'][$x]['dashboard_icon'] = 'fa-play-circle';
+$array['dashboard'][$x]['dashboard_icon'] = 'fa-microphone';
 $array['dashboard'][$x]['dashboard_url'] = '/app/recordings/recordings.php';
 $array['dashboard'][$x]['dashboard_target'] = 'self';
 $array['dashboard'][$x]['dashboard_width'] = '';

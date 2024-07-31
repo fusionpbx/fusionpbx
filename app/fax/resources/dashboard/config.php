@@ -4,7 +4,7 @@
 $array['dashboard'][$x]['dashboard_uuid'] = 'ea3f5a8a-fc93-47d7-a632-a733522affc3';
 $array['dashboard'][$x]['dashboard_name'] = 'Fax Server';
 $array['dashboard'][$x]['dashboard_path'] = 'core/dashboard/resources/dashboard/icon.php';
-$array['dashboard'][$x]['dashboard_icon'] = 'fa-fax';
+$array['dashboard'][$x]['dashboard_icon'] = 'fa-print';
 $array['dashboard'][$x]['dashboard_url'] = '/app/fax/fax.php';
 $array['dashboard'][$x]['dashboard_target'] = 'self';
 $array['dashboard'][$x]['dashboard_width'] = '';
